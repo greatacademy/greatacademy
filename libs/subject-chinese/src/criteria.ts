@@ -796,6 +796,92 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     question: "Does a theme emerge from the story itself, and does the ending bring it out without a moral simply tacked on?",
     quoteWhenMet: true,
   },
+  // Grade 9: a modern poem with a note on how it was made.
+  {
+    id: "zh9-poem-image",
+    version: "1",
+    question:
+      "Does the poem carry its feeling or thought through concrete images, rather than stating it outright, and do the images fit together?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh9-poem-form",
+    version: "1",
+    question:
+      "Is the poem set out in lines and stanzas of at least the length the task asks, with breaks, repetition or rhythm that serve its sense rather than prose cut into pieces?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh9-poem-note",
+    version: "1",
+    question:
+      "Does the note on how the poem was made name its images and methods and say truly what they carry, matching the poem as written?",
+    quoteWhenMet: true,
+  },
+  // Grade 9: a very short story.
+  {
+    id: "zh9-short-focus",
+    version: "1",
+    question:
+      "Is the story built on a few people and one or two closely linked scenes, told economically, without side events that lead nowhere?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh9-short-turn",
+    version: "1",
+    question:
+      "Does the story turn at or near its end in a way that surprises yet is prepared for by earlier details, so that it makes sense on rereading?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh9-short-people",
+    version: "1",
+    question:
+      "Are the people shown through a telling detail, action or line of speech, so that the theme comes out of them rather than being explained?",
+    quoteWhenMet: true,
+  },
+  // Grade 9: a review.
+  {
+    id: "zh9-review-object",
+    version: "1",
+    question:
+      "Does the review say clearly what it judges, a work, a person in it or a matter of life, and give briefly only what the reader needs to follow the judgment?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh9-review-judgment",
+    version: "1",
+    question: "Does the review make one clear judgment of its own, stated early, rather than only retelling or describing?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh9-review-grounds",
+    version: "1",
+    question:
+      "Is the judgment argued from the thing reviewed, its lines, events or facts, fairly, granting what speaks on the other side before answering it?",
+    quoteWhenMet: true,
+  },
+  // Grade 9: a refutation.
+  {
+    id: "zh9-refute-target",
+    version: "1",
+    question: "Does the essay state the view it refutes fairly and clearly, and say early that, and in short why, it is wrong?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh9-refute-flaw",
+    version: "1",
+    question:
+      "Does the essay show where the view goes wrong, in its claim, its grounds or its reasoning, with facts and reasons that bear on that very fault?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh9-refute-stand",
+    version: "1",
+    question:
+      "Does the essay, having refuted the view, set up a sound view of its own and grant what is right in the other, without overstating either?",
+    quoteWhenMet: true,
+  },
   // Grade 10: writing on given material.
   {
     id: "zh10-task-material",

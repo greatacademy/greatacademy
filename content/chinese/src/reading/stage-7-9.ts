@@ -4,8 +4,12 @@
 // classical poems for their images and feeling. Grade 8 reads exposition for its order and language, science writing for
 // its method and spirit, arguments for their claims and material, non-continuous texts of several materials, fiction for
 // its plot and people, classical prose for its words, sentences and lesson, and classical poems for the force of their
-// words and their methods and feeling. Each topic asks two knowledge points of its ten texts, three questions
-// a text, and each comes after the recognition batch by which nearly every character of its texts has been taught.
+// words and their methods and feeling. Grade 9 reads arguments for their methods and line, fiction for its theme and
+// craft, drama for its conflict and lines, pieces of several kinds for their modes, forms and what is real or made up,
+// materials of several media on one matter, classical prose for its words and how it makes its point, and classical
+// poems for their famous lines and the poet behind them. Each topic asks two knowledge points of its ten texts, three
+// questions a text, and each comes after the recognition batch by which nearly every character of its texts has been
+// taught.
 
 import { t } from "@ga/content";
 
@@ -20,6 +24,10 @@ import { EXPOSITORY_8, SCIENCE_8 } from "./texts-8a.ts";
 import { ARGUMENT_8, NONCONT_8 } from "./texts-8b.ts";
 import { FICTION_8 } from "./texts-8c.ts";
 import { CLASSICAL_8, POEMS_8 } from "./texts-8d.ts";
+import { ARGUMENT_9, FICTION_9 } from "./texts-9a.ts";
+import { DRAMA_9, FORMS_9 } from "./texts-9b.ts";
+import { CROSSMEDIA_9 } from "./texts-9c.ts";
+import { CLASSICAL_9, POEMS_9 } from "./texts-9d.ts";
 import { PASSAGE, POEM, type ReadingSpec, readingTopicOf as topicOf } from "./topic-kit.ts";
 
 /** SPECS are the reading topics of grades 7 to 9, in order. */
@@ -496,6 +504,244 @@ const SPECS: readonly ReadingSpec[] = [
         t(
           "Name the method and say what it does: a scene that carries the feeling (借景抒情); a bright scene against a sad heart (以乐景写哀); sound that deepens silence (以动衬静); the past against the present (对比); a thing seen standing for one far away (由此及彼). Then name the feeling and what it is for.\n\nIn “春望”, the spring grass is thick in the ruined city: a lush scene, yet it shows how empty the city is, a bright scene that deepens grief.\n\n> **Watch out.** A happy scene does not mean a happy poem: ask what the poet feels on seeing it. And name the feeling exactly, for whom or what: longing for home, sorrow at parting, frustration at talent unused.",
           "说出写法，再说它的作用：借景物表达感情，是借景抒情；用美好的景物反衬悲伤的心情，是以乐景写哀；用声响衬托寂静，是以动衬静；把从前和现在放在一起写，是对比；由眼前的事物想到远方的人，是由此及彼。最后说出是什么感情，对谁、对什么。\n\n《春望》里，“城春草木深”：长安城里春草长得很深，景色茂盛，却说明城中荒凉无人，是以乐景写哀，加深了悲痛。\n\n> **注意。** 景色欢快，不一定诗就欢快，要看诗人看到这景物时是什么心情。感情要说准确，说出是对什么的感情：思念家乡、离别的伤感、怀才不遇的苦闷。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 9,
+    id: "reading-9-argument",
+    title: t("Methods and Line of Argument", "论证方法和论证思路"),
+    summary: t(
+      "Arguments written for the subject: the methods by which each proves its claim, and the line along which it moves from start to end.",
+      "读为本学科写的议论文：用了哪些论证方法、有什么作用，全文按怎样的思路一步步展开。",
+    ),
+    intro: t(
+      "An argument proves its claim by methods and in an order. Han Yu's “师说” claims that everyone needs a teacher. It sets the sages of old, who still asked teachers, against people of his day, who are ashamed to learn: a comparison. It names Confucius, who learned from several men: an example.\n\nIt also moves in a line: first the claim, then why, then the wrong habits of the day, last what to do. The first knowledge point asks the methods and what they do, the second the line of argument.",
+      "议论文用一定的方法、按一定的思路来证明观点。韩愈的《师说》认为，人人都需要老师。文章把古代的圣人和当时的一般人放在一起：圣人尚且向老师请教，一般人却以向别人学习为耻，这是对比论证；又举孔子向好几个人学习的事，这是举例论证。\n\n文章还有一条思路：先提出观点，再讲为什么，然后批评当时不好的风气，最后说应该怎样做。第一个知识点问论证方法和作用，第二个问论证思路。",
+    ),
+    data: ARGUMENT_9,
+    kind: PASSAGE,
+    after: "reading-8-argument",
+    points: [
+      [
+        "methods",
+        t("Methods of Argument", "论证方法"),
+        t(
+          "Name the method, then say what it proves. An example (举例论证) gives a fact that makes the claim concrete and believable. A reason (道理论证) cites a saying or explains why. A comparison (对比论证) sets right against wrong so the claim stands out. A likening (比喻论证) explains a hard idea through a familiar thing.\n\nAn essay on learning likens knowledge to bricks: only laid one by one do they rise into a tall building. A hard idea is made easy to see.\n\n> **Watch out.** The answer has three parts: the method, what it is used on, and the claim it proves. “用了举例论证，使文章生动” says nothing; say which fact proves which claim. And a story told to prove a point is an example, not a likening.",
+          "先说出用了什么论证方法，再说它证明了什么。举出事实，使观点具体、可信，是举例论证；引用名言或讲清道理，是道理论证；把正反两方面放在一起比较，使观点更鲜明，是对比论证；用人们熟悉的事物来说明难懂的道理，是比喻论证。\n\n一篇谈学习的文章，把知识比作砖块：一块一块地垒，才能盖起高楼。把难懂的道理说得浅显易懂，这是比喻论证。\n\n> **注意。** 答作用要说全三点：什么方法，用在哪里，证明了什么观点。“用了举例论证，使文章生动”等于没说，要说出哪个事例证明了哪个观点。为了证明观点而讲的一件事，是举例论证，不是比喻论证。",
+        ),
+      ],
+      [
+        "line",
+        t("The Line of Argument", "论证思路"),
+        t(
+          "Find what each part does: raise the question, give the claim, prove it, deal with the other side, and say what to do. Many arguments go “what, why, how” (是什么、为什么、怎么办); some set several reasons side by side, some go one step deeper each time, some prove the right side then the wrong.\n\nAn essay on sport might ask what exercise is for, answer that it trains the will as well as the body, prove it by two runners, then end with how to keep at it: what, why, how.\n\n> **Watch out.** A line of argument is the order of the reasoning, not a list of paragraphs: say what each part does for the claim. And the claim is often stated early but may be restated at the end; the end is not always a new idea.",
+          "弄清每一部分在干什么：提出问题，摆出观点，证明观点，回应不同看法，提出做法。很多议论文按“是什么、为什么、怎么办”展开；有的把几个理由并列着讲，有的一层比一层深，有的先从正面讲、再从反面讲。\n\n一篇谈锻炼的文章，先问锻炼有什么用，再提出锻炼不只练身体，也练意志，用两个长跑的人的事来证明，最后讲怎样坚持下去：这就是“是什么、为什么、怎么办”的思路。\n\n> **注意。** 论证思路是推理的顺序，不是把段落一个个列出来，要说出每一部分对观点起什么作用。观点常常在开头提出，结尾也可能再说一遍，结尾不一定是一个新的意思。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 9,
+    id: "reading-9-fiction",
+    title: t("Fiction: Theme and Craft", "小说：主题和写法"),
+    summary: t(
+      "Short stories written for the subject: what each says beneath its events, and the craft by which it says it.",
+      "读为本学科写的短篇小说：读出故事背后的主题，体会作者是用什么写法表现主题的。",
+    ),
+    intro: t(
+      "A story says more than what happens. In Lu Xun's “孔乙己”, a poor scholar is laughed at by everyone in a wine shop, then disappears; nobody asks where he went. Beneath the events lies the theme: a cold world that crushed the weak and laughed as it did.\n\nThe craft serves it: the story is told by a boy who serves wine, who laughs along with the rest, so the coldness is shown, not stated. The first knowledge point asks the theme, the second the craft.",
+      "小说说的不只是发生了什么事。鲁迅的《孔乙己》里，一个穷读书人在酒店里被大家取笑，后来再也没有出现，也没有人问起他去了哪里。故事背后是主题：那个冷漠的社会压垮了弱者，还把他当成笑料。\n\n写法为主题服务：小说借酒店里一个小伙计的眼睛来讲，小伙计也跟着大家笑，冷漠就不用说出来，读者自己就看到了。第一个知识点问主题，第二个问写法。",
+    ),
+    data: FICTION_9,
+    kind: PASSAGE,
+    after: "reading-8-fiction",
+    points: [
+      [
+        "theme",
+        t("The Theme", "主题"),
+        t(
+          "Find the theme from the whole story: what changes in the main person, how the conflict ends, and the lines that seem to carry more than they say, often near the end. Then say it as “the story, through …, shows …”, naming both the events and what they mean.\n\nIn Chekhov's “The Chameleon”, a police officer changes his verdict on a dog five times as he hears whose dog it is: the story mocks those who bow to power and bully the weak.\n\n> **Watch out.** A theme is not the plot retold: “讲了一只狗咬人的事” is the event, not the meaning. And it must come from the whole story, not from one person's single remark.",
+          "主题要从全文读出来：主要人物有了什么变化，矛盾是怎样结束的，哪些话好像话里有话，这样的话常在结尾附近。再用“小说通过……，表现了……”的说法概括，既说出写了什么事，又说出这些事的意义。\n\n契诃夫的《变色龙》里，一个警官听说狗主人是谁，就改变一次对狗的判决，前后变了五次：小说讽刺了见到有权的人就讨好、见到弱者就欺负的人。\n\n> **注意。** 主题不是把情节再说一遍：“讲了一只狗咬人的事”只是事情，不是意义。主题要从全文得出，不能只凭某个人物说的一句话。",
+        ),
+      ],
+      [
+        "craft",
+        t("The Craft", "写法"),
+        t(
+          "Name the device, then say what it does for the theme: who tells the story and what they can see (视角); a setting that sets the mood or foretells events; an object that runs through the story as its thread; two people or two moments set against each other (对比); an ending left open (留白).\n\nIn “The Chameleon”, the officer takes his coat off and puts it on again as his verdict changes: one object, used each time he turns, makes his changes visible.\n\n> **Watch out.** A device is answered by its effect on this story: “用了对比，突出人物” is too thin; say what is set against what, and what it shows. And the narrator “我” is a person in the story, not the author.",
+          "先说出用了什么写法，再说它对表现主题起了什么作用：故事由谁来讲，他能看到什么，是叙述视角；环境渲染气氛，或者暗示情节的发展；一件物品贯穿全文，是线索；两个人、两个时刻放在一起写，是对比；结尾不把话说完，是留白。\n\n《变色龙》里，警官的判决每变一次，他就把大衣脱下或穿上：同一件大衣，用在他每一次转变的时候，把他的反复无常写得看得见。\n\n> **注意。** 答写法要落到这篇小说上：“用了对比，突出人物”太空，要说出把什么和什么对比，表现了什么。小说里的“我”是故事中的人物，不等于作者。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 9,
+    id: "reading-9-drama",
+    title: t("Drama: Conflict and Lines", "读戏剧：冲突和台词"),
+    summary: t(
+      "Short scenes written for the subject: the conflict each turns on and how it is settled, and what the lines and stage directions show beneath their words.",
+      "读为本学科写的短剧片段：抓住戏剧冲突，看它怎样发展、怎样解决；品味台词和舞台说明的言外之意。",
+    ),
+    intro: t(
+      "A play lives on conflict. In Shakespeare's “The Merchant of Venice”, Shylock demands a pound of flesh from the merchant who owes him money; in court, Portia grants it, but forbids him a drop of blood. The conflict rises to its height and turns in one line.\n\nA play has no narrator: only lines and stage directions. What the people do not say is often what matters. The first knowledge point asks the conflict, the second the lines and directions.",
+      "戏剧离不开冲突。莎士比亚的《威尼斯商人》里，夏洛克要欠他钱的商人用一磅肉来还债；在法庭上，鲍西娅同意他割肉，却不许他流一滴血。冲突到了最尖锐的时候，一句话就让局面转了过来。\n\n戏剧没有叙述人，只有台词和舞台说明。人物没说出口的，往往最要紧。第一个知识点问戏剧冲突，第二个问台词和舞台说明。",
+    ),
+    data: DRAMA_9,
+    kind: PASSAGE,
+    after: "reading-9-fiction",
+    points: [
+      [
+        "conflict",
+        t("The Conflict", "戏剧冲突"),
+        t(
+          "Say who stands against whom, or what two wishes pull inside one person, and why. Then follow it: where it starts, where it is sharpest, the line or event that turns it, and how it ends, settled or only eased.\n\nIn Guan Hanqing's “窦娥冤”, Dou E, wrongly sentenced, swears that snow will fall in June if she is innocent: her cry against an unjust court is the height of the conflict.\n\n> **Watch out.** A conflict is a clash of wills or wishes, not a quarrel only: two people may not raise their voices at all. And an eased conflict is not a solved one: say what still remains.",
+          "说出谁和谁对立，或者一个人心里哪两种想法在斗争，为什么。再看它怎样发展：从哪里开始，在哪里最尖锐，哪一句话或哪件事让它转折，最后怎样结束，是解决了，还是只是缓和了。\n\n关汉卿的《窦娥冤》里，窦娥被冤判死刑，临刑前发誓：如果她是冤枉的，六月就会下雪。她对不公的官府的控诉，是全剧冲突最尖锐的地方。\n\n> **注意。** 冲突是意愿和想法的对立，不只是吵架：两个人可能一句重话都没说。缓和了不等于解决了，要说出还剩下什么问题。",
+        ),
+      ],
+      [
+        "lines",
+        t("Lines and Stage Directions", "台词和舞台说明"),
+        t(
+          "Read a line for what lies beneath it (潜台词): what the speaker means but does not say, found from the situation and the directions. Read how it fits the speaker: short or long, plain or proud. Read each direction, an action, a pause, a tone, for what it shows of feeling or what it does to the plot.\n\nIn “The Merchant of Venice”, Shylock says “I will have my bond”, again and again: the repeated short line shows a will that nothing can move.\n\n> **Watch out.** A line's surface may be the opposite of its meaning: “随你” may hide deep feeling. And a direction is part of the play, not a note for the actor alone: an action without a word may be the turning point.",
+          "读台词要读出潜台词：人物心里想、嘴上没说的意思，要结合情境和舞台说明去找。还要看台词合不合人物的身份和性格：是简短还是啰嗦，是平和还是傲气。读舞台说明，看每一个动作、停顿、语气表现了人物怎样的心情，对情节起了什么作用。\n\n《威尼斯商人》里，夏洛克一遍又一遍地说“我要照约处罚”：这句短短的话不断重复，写出了他谁也劝不动的决心。\n\n> **注意。** 台词的字面意思可能和真正的意思相反：“随你”背后可能是很深的感情。舞台说明也是剧本的一部分，不只是写给演员看的：一个不说话的动作，可能就是情节的转折。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 9,
+    id: "reading-9-forms",
+    title: t("Modes and Forms; Fact and Fiction", "表达方式、文学样式、写实与虚构"),
+    summary: t(
+      "Prose, stories, fables and tales written for the subject: the modes of expression in each passage, the literary form it belongs to, and what in it is real or made up.",
+      "读为本学科写的散文、小说、童话和传说：辨认各段的表达方式，判断文章属于什么文学样式，分清哪些是写实、哪些是虚构。",
+    ),
+    intro: t(
+      "Writers tell, describe, explain, argue and express feeling, often in one piece. Zhu Ziqing's “背影” tells of his father seeing him off, describes him climbing the platform, and ends in tears: narration, description, feeling.\n\nIt is prose, and true: it records what happened. “西游记” is a novel, and its Monkey King is made up, yet it carries real wishes. The first knowledge point asks the modes and forms, the second fact and fiction.",
+      "作者写文章，会用记叙、描写、说明、议论、抒情，一篇文章里常常不止一种。朱自清的《背影》讲父亲送他上火车，描写父亲爬上月台的样子，最后写自己流泪：有记叙，有描写，也有抒情。\n\n《背影》是散文，写的是真事。《西游记》是小说，孙悟空是虚构的，却寄托着人们真实的愿望。第一个知识点问表达方式和文学样式，第二个问写实和虚构。",
+    ),
+    data: FORMS_9,
+    kind: PASSAGE,
+    after: "reading-8-fiction",
+    points: [
+      [
+        "modes",
+        t("Modes of Expression and Literary Forms", "表达方式和文学样式"),
+        t(
+          "For a passage, ask what it mainly does: tell what happened (记叙), paint how something looks or feels (描写), explain what a thing is (说明), give a view (议论), or pour out feeling (抒情). For a whole piece, name its form: poem, prose, story, play, fable, fairy tale, myth.\n\nA travel note says “这座桥建于隋朝，长五十多米”: that is explanation, though the note is prose; and “我爱这座桥” is feeling.\n\n> **Watch out.** Judge the passage asked, not the whole piece: prose may explain in one paragraph and argue in the next. And a figure of speech is not a mode: a likening is a way of describing.",
+          "看一段话主要在干什么：讲事情的经过，是记叙；写出人和景物的样子、感觉，是描写；介绍事物是什么，是说明；说出自己的看法，是议论；直接抒发感情，是抒情。看整篇文章，要说出它的文学样式：诗歌、散文、小说、戏剧、寓言、童话、神话。\n\n一篇游记写道“这座桥建于隋朝，长五十多米”：这一句是说明，虽然整篇是散文；“我爱这座桥”则是抒情。\n\n> **注意。** 问哪一段就看哪一段，不能用整篇的样式来答：散文里可以有一段说明、一段议论。修辞不是表达方式：比喻是描写时用的一种手法。",
+        ),
+      ],
+      [
+        "fiction",
+        t("Fact and Fiction", "写实与虚构"),
+        t(
+          "Prose and reports usually record real people, places and feelings; fairy tales, myths and fables invent, and stories may invent people yet stay true to life. Find what in a piece is real and what is made up, then say why it was invented: to make a lesson lively, to carry a wish, to show a real feeling.\n\nA myth says a goddess patched the broken sky with stones of five colours: made up, yet it carries the wish to master nature.\n\n> **Watch out.** Made up is not worthless: ask what real wish or feeling the invention carries. And “好像”, a dream or a fancy inside a true piece is the writer's imagining, not a claim of fact.",
+          "散文和新闻一般写真实的人、事、地方和感受；童话、神话、寓言是虚构的；小说的人物可以虚构，却要合乎生活的情理。读文章要分清哪些是写实，哪些是虚构，还要说出为什么虚构：是为了把道理讲得生动，是为了寄托愿望，还是为了写出真实的感情。\n\n神话说女娲炼五色石来补天：这是虚构的，却寄托着人们战胜自然的愿望。\n\n> **注意。** 虚构的不等于没有价值，要想一想它寄托了什么真实的愿望和感情。写实的文章里出现“好像”、梦境或想象，是作者的想象，不是在说事实。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 9,
+    id: "reading-9-cross-media",
+    title: t("Reading Across Media", "跨媒介阅读"),
+    summary: t(
+      "Sets of materials made up for the subject, a report, a post, a notice, a script, a table, on one matter: what each medium gives, and how far each is to be trusted.",
+      "读为本学科编写的组合材料：同一件事的新闻、帖子、公告、视频解说词、数据表，比较不同媒介怎样呈现信息，判断各自的目的和可信程度。",
+    ),
+    intro: t(
+      "One event reaches us through many media. A school's sports day may appear as a news story with times and records, a pupil's post full of excitement, and a short video of the last runner crossing the line.\n\nEach gives something the others lack, and each is made for a purpose. The first knowledge point asks to compare what each medium gives and how, the second to judge purpose and reliability.",
+      "同一件事，会通过不同的媒介传到我们这里。一所学校的运动会，可能有一篇新闻，写着比赛时间和成绩；一个学生的帖子，满是激动的心情；还有一段短视频，拍下最后一名选手冲过终点的样子。\n\n每一种媒介都有别的媒介没有的东西，每一则材料都有它的目的。第一个知识点问比较不同媒介呈现的信息和方式，第二个问判断目的和可信程度。",
+    ),
+    data: CROSSMEDIA_9,
+    kind: PASSAGE,
+    after: "reading-8-non-continuous",
+    points: [
+      [
+        "compare",
+        t("Comparing the Media", "比较不同媒介"),
+        t(
+          "First see what kind each material is: a report, a notice, a post, a video, a table. Then find what each tells: facts and figures, a person's feeling, a picture of the scene. Say where they agree, where they differ, and what each adds to the others.\n\nOn a new bus line, a city notice gives the route and the fare, a passenger's post says it saves her half an hour, and a video shows the first bus at dawn: rules, feeling, scene.\n\n> **Watch out.** Answer from the material asked: a figure in the notice is not in the post. And a difference of manner, numbers against feelings, is not a contradiction: both may be true.",
+          "先看每一则材料是什么类型：新闻、公告、帖子、视频、表格。再看它们各自说了什么：事实和数字，个人的感受，现场的画面。说出它们哪里一致，哪里不同，每一则补充了什么。\n\n一条新公交线路开通：市里的公告说明路线和票价，乘客的帖子说每天能省半个小时，短视频拍下天亮时开出的第一班车。一个给规定，一个给感受，一个给画面。\n\n> **注意。** 问哪一则就从哪一则里找：公告里的数字，帖子里不一定有。写法不同不等于说法矛盾：一个用数字、一个说感受，可能都是真的。",
+        ),
+      ],
+      [
+        "judge",
+        t("Purpose and Reliability", "目的和可信程度"),
+        t(
+          "Ask who made each material and why: to inform, to sell, to persuade, to share a feeling. Then weigh how far to trust it: a source that is named and responsible, facts that can be checked, figures with an origin, agreement with other materials. One person's experience is true of one place, not of all.\n\nAn advert says a drink “喝了就能长高”: it is made to sell, names no proof, and no other source bears it out.\n\n> **Watch out.** Popular is not proven: many shares or buyers say nothing of truth. And an urgent tone or a call to forward is a warning sign, not a mark of importance.",
+          "问一问每一则材料是谁做的、为什么做：是为了告知，为了卖东西，为了说服别人，还是为了分享感受。再判断能信几分：来源有没有名字、是不是负责任的部门，事实能不能核实，数字有没有出处，和别的材料能不能互相印证。一个人的经历，说明的只是一个地方的情况。\n\n一则广告说某种饮料“喝了就能长高”：它是为了卖东西，没有拿出证据，也没有别的材料能证明。\n\n> **注意。** 转发的人多、买的人多，不等于说的是真的。语气紧急、催人转发，不是消息重要的标志，反而要多加小心。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 9,
+    id: "reading-9-classical",
+    title: t("Classical Prose", "阅读文言文"),
+    summary: t(
+      "Classical passages in the public domain, with notes: words and whole sentences put into modern Chinese, and how each passage makes its point.",
+      "读公有领域的文言短文，附注释：理解词语、翻译句子；读懂文章怎样借人物和事情说明道理。",
+    ),
+    intro: t(
+      "Grade 9 reads classical prose for how it argues, too. Mencius's “得道者多助，失道者寡助” sums up a passage on war: he who follows the right way gets much help. The passage reaches it in steps, from weather, to ground, to the hearts of men.\n\nThe words still come first: 道 here is “the right way”, 寡 “few”. The first knowledge point asks words and sentences, the second how the passage makes its point.",
+      "九年级读文言文，还要看文章怎样讲道理。孟子的“得道者多助，失道者寡助”，是一段论战争的文字的结论：施行仁政的人，得到的帮助就多。文章一层层推到这里：先说天时，再说地利，最后说人和。\n\n读懂词语仍是第一步：“道”在这里是正确的道路，“寡”是少。第一个知识点问词语和句子，第二个问文章怎样说明道理。",
+    ),
+    data: CLASSICAL_9,
+    kind: PASSAGE,
+    after: "reading-8-classical",
+    points: [
+      [
+        "words",
+        t("Words and Sentences", "词语和句子"),
+        t(
+          "For a word, take its sentence and the lines around it, and pick the meaning that joins them; watch words whose meaning has changed and words that act as another part of speech. For a sentence, render every word, add what is left out, and set the order as modern Chinese would.\n\nIn “学而不思则罔”, 罔 is “confused”: the line is “只学习而不思考，就会迷惑”.\n\n> **Watch out.** A smooth translation that skips a word is still wrong: 则 must become 就. And do not read a modern word into an old one: 去 is “to leave”, not “to go to”.",
+          "理解词语，要把它放回句子，联系上下文，选一个能把前后连起来的意思；要留心古今意思不同的词，和临时改变用法的词。翻译句子，要把每个词都落实，补出省略的成分，按现代汉语调整语序。\n\n“学而不思则罔”里，“罔”是迷惑：整句是“只学习而不思考，就会迷惑”。\n\n> **注意。** 翻译读起来通顺，漏掉一个词也不对：“则”要译出“就”。不能用今天的意思去套古代的词：“去”是离开，不是到哪里去。",
+        ),
+      ],
+      [
+        "point",
+        t("How the Passage Makes Its Point", "文章怎样说明道理"),
+        t(
+          "Tell what happens, then find how it leads to its point: a story whose ending shows the lesson, a person's speech that states it, a comparison of two people or two acts, an image that stands for the idea. Say the point in a sentence that fits this passage.\n\nIn “揠苗助长”, a man pulls up his rice shoots to help them grow, and they wither: the ending itself is the lesson, that forcing things against their nature spoils them.\n\n> **Watch out.** The lesson is the passage's whole point, not one person's mistake told again. And the speaker of the lesson may be a minor person, not the hero: find the line that sums it up.",
+          "先说清写了什么事，再看文章怎样引出道理：故事的结局本身就是道理；人物的一段话把道理说出来；把两个人、两种做法放在一起比较；用一个形象来代表一个意思。最后用一句扣住这篇文章的话把道理说出来。\n\n《揠苗助长》里，一个人把禾苗往上拔，想帮它们长高，结果禾苗都枯死了：结局本身就是道理，违背事物的规律，急于求成，反而会把事情办坏。\n\n> **注意。** 道理是全文要说明的意思，不是把某个人的错误再说一遍。说出道理的人可能不是主角，要找到总结全文的那句话。",
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 9,
+    id: "reading-9-poems",
+    title: t("Classical Poems", "古诗词鉴赏"),
+    summary: t(
+      "Classical poems in the public domain, with notes: what famous lines mean and hold, and the poet's life and times behind the feeling.",
+      "读公有领域的古诗词，附注释：理解名句的含义和意蕴，联系诗人的经历和时代背景，体会诗中的感情。",
+    ),
+    intro: t(
+      "A famous line says more than its words. Su Shi's “但愿人长久，千里共婵娟” wishes that loved ones live long and share the same moon though a thousand miles apart: a wish for every parted family.\n\nIt was written at mid-autumn in Mizhou, when Su Shi had not seen his brother for seven years. Knowing the poet and his times (知人论世) makes the feeling exact. The first knowledge point asks the famous lines, the second the poet and his times.",
+      "名句的意思往往比字面更深。苏轼的“但愿人长久，千里共婵娟”，希望亲人长久平安，虽然相隔千里，也能一同看到这轮明月：这是给所有分离的亲人的祝愿。\n\n这首词写于中秋，苏轼在密州，已经七年没见到弟弟了。了解诗人的经历和时代，就是知人论世，能把感情读得更准确。第一个知识点问名句，第二个问诗人和背景。",
+    ),
+    data: POEMS_9,
+    kind: POEM,
+    after: "reading-8-poems",
+    points: [
+      [
+        "lines",
+        t("The Sense of Famous Lines", "名句的含义"),
+        t(
+          "Put the line into modern Chinese first; then say what it shows beyond the words: an image that stands for something, a scene that becomes a truth, a feeling that reaches past the poet. Last, say why it is still quoted: what it means to readers now.\n\nWang Bo's “海内存知己，天涯若比邻” says that a true friend, though at the ends of the earth, is as near as a neighbour: a parting turned to comfort, still said at farewells today.\n\n> **Watch out.** A literal reading is only the first step: “会当凌绝顶，一览众山小” is not about a mountain alone. And do not stretch a line beyond the poem: its deeper sense must still grow from its picture.",
+          "先把名句译成现代汉语，再说它在字面之外表现了什么：一个形象代表什么，一处景物怎样变成了道理，一种感情怎样超出了诗人自己。最后说说它为什么一直被人引用，对今天的读者有什么意义。\n\n王勃的“海内存知己，天涯若比邻”，是说只要有真正的朋友，即使远在天边，也像邻居一样近：把离别的伤感变成了安慰，今天送别时人们还常常说起。\n\n> **注意。** 理解字面只是第一步：“会当凌绝顶，一览众山小”说的不只是登山。也不能离开诗去乱想：更深的意思要从诗里的画面中来。",
+        ),
+      ],
+      [
+        "poet",
+        t("Poet, Times and Feeling", "知人论世"),
+        t(
+          "Read the poem with what the notes tell of the poet: where he was, what had happened to him, what his country was going through. Then say how that shapes the feeling: why a moon makes him homesick, why a war makes his grief so deep, why a setback turns into resolve.\n\nWang Wei wrote “九月九日忆山东兄弟” at seventeen, alone in the capital far from home: that is why “每逢佳节倍思亲”, on every festival he misses his family twice as much.\n\n> **Watch out.** The background explains the feeling, it does not replace it: name the feeling, then show how the life gives it. And use only what the notes or the poem give; do not invent a story about the poet.",
+          "读诗要结合注释里写到的诗人情况：他在哪里，遇到了什么事，国家正在经历什么。再说这些怎样影响了诗中的感情：为什么一轮月亮就让他想家，为什么一场战乱让他的悲伤这样深，为什么一次挫折反而变成了决心。\n\n王维写《九月九日忆山东兄弟》时才十七岁，一个人在京城，离家很远：所以“每逢佳节倍思亲”，一到节日就加倍地想念亲人。\n\n> **注意。** 背景是用来解释感情的，不能代替感情：先说出是什么感情，再说经历怎样带来了这种感情。只用注释和诗里给出的信息，不要替诗人编故事。",
         ),
       ],
     ],

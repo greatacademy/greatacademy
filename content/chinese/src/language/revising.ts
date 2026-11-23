@@ -1,15 +1,15 @@
-// The revising topics of grades 3 to 6 and 8 (docs/chinese-curriculum.md §18.9): correcting the obvious mistakes of a
-// draft, a wrong character or a wrong word, in grade 3; faulty sentences and the better word in grade 4; smooth
+// The revising topics of grades 3 to 6, 8 and 9 (docs/chinese-curriculum.md §18.9): correcting the obvious mistakes of
+// a draft, a wrong character or a wrong word, in grade 3; faulty sentences and the better word in grade 4; smooth
 // sentences and their order in grade 5; the form of a page and punctuation in grade 6; the kinds of faulty sentence,
-// missing parts and mismatched words, order, mixed patterns and faulty logic, in grade 8. Each sentence is written for
-// this subject with one mistake in it; the options are ways to correct it, and the wrong ones either change what was
-// right or correct it the wrong way.
+// missing parts and mismatched words, order, mixed patterns and faulty logic, in grade 8; the centre, the build and the
+// language of a whole essay in grade 9. Each sentence or draft is written for this subject with one fault in it; the
+// options are ways to revise it, and the wrong ones either change what was right or revise it the wrong way.
 
 import { type Text, t } from "@ga/content";
 import { point } from "@ga/subject-chinese";
 
 import type { GradeTopic } from "../grammar/index.ts";
-import { bilingual, type Choice, choice, choiceTopicGenerator, type Heads, listedChoices, rows } from "./choice-kit.ts";
+import { bilingual, type Choice, choice, choiceTopicGenerator, type Heads, type ListedSteps, listedChoices, rows } from "./choice-kit.ts";
 
 /** differing is the one character in which two words of the same length differ, failing when there is not just one. */
 function differing(a: string, b: string): readonly [string, string] {
@@ -399,6 +399,38 @@ const ORDER_AND_LOGIC = `
 这次活动的目的是为了让同学们了解家乡的历史。 | 这次活动的目的是让同学们了解家乡的历史。 | “目的是”和“为了”意思重复，糅在了一起 ~ 目的是 and 为了 both state the aim and are mixed | 这次活动的目的是为了让同学们更好地了解家乡的历史。 | 加了“更好地”，“目的是为了”还在 ~ adding 更好地 leaves 目的是为了 | 这次活动的目的就是为了让同学们了解家乡的历史。 | 加了“就”，重复还在 ~ adding 就 leaves the repetition
 `;
 
+/** CENTRE_AND_ORDER are the questions of grade 9 on the centre and the build of a whole essay, each about a draft made up for this subject. */
+const CENTRE_AND_ORDER = `
+作文《妈妈的手》要写妈妈的勤劳，第三段却写妈妈爱看电视剧、追到半夜。修改时这一段应该怎样处理？ ~ An essay on a mother's hard work has a paragraph on her late-night TV. What should be done with it? | 删去，或者换成一件表现妈妈勤劳的事 | 这一段和中心无关，留着会把文章写散 ~ it has nothing to do with the centre and scatters the essay | 把这一段写得更详细一些 | 写得越详细，离中心越远 ~ the more detail, the further from the centre | 把这一段移到文章的开头 | 移到开头，文章一开始就偏离了中心 ~ at the start it would lead the essay astray from the outset
+作文写自己帮邻居奶奶买药，结尾是“这件事让我觉得很累”。怎样修改结尾，立意更好？ ~ An essay on fetching medicine for an old neighbour ends “it made me very tired”. Which ending gives a better centre? | 改成写奶奶的笑容让“我”懂得了帮助别人的快乐 | 从这件事里写出一点体会，立意就明确了 ~ drawing a lesson from the event gives the essay its point | 改成“这件事让我觉得非常非常累” | 只是把累说得更重，立意没有提高 ~ it only stresses the tiredness and lifts nothing | 删去结尾，文章写到买完药就结束 | 没有结尾，读者不知道这件事有什么意义 ~ without an ending the reader cannot tell what the event meant
+作文题目是《一次难忘的比赛》，开头用了三段写天气、早饭和路上的风景，第四段才写到比赛。怎样修改？ ~ An essay on an unforgettable match spends three paragraphs on weather, breakfast and the road. How should it be revised? | 把开头压缩成一两句，尽快写到比赛 | 开头太长，和中心无关的内容要删去 ~ the opening is too long, and what is off the centre goes | 在开头再加一段，写比赛前一天的晚上 | 开头更长了，离比赛更远 ~ it makes the opening longer still | 把三段开头移到文章最后 | 移到最后，结尾就和比赛无关了 ~ at the end they would leave the close off the subject
+作文写爷爷教“我”下棋，先写“我”赢了爷爷，再写爷爷第一次教“我”认棋子，中间没有交代。怎样修改？ ~ An essay jumps from beating Grandpa at chess to the day he first taught the pieces, with nothing between. What is the fix? | 在两部分之间加一句过渡，说明是回忆 | 有了过渡，读者就知道这里是倒叙 ~ a bridging line tells the reader this is a flashback | 删去“我”赢了爷爷的那一部分 | 删了以后，文章少了最重要的结果 ~ cutting it loses the most important outcome | 把两部分的段落都写长一点 | 写长了，跳跃的问题还在 ~ length does not mend the jump
+作文开头写“我家门前有一棵老槐树”，中间写一家人在树下的事，结尾只写“这就是我的家”。怎样修改结尾更好？ ~ An essay opens on an old tree by the door and ends only “this is my home”. Which ending is better? | 结尾回到老槐树，写出它对一家人的意义 | 首尾照应，文章结构就完整了 ~ returning to the tree joins the ending to the opening | 结尾再介绍一下家里的其他东西 | 又引出新的内容，文章更散了 ~ it brings in new matter and scatters the essay | 结尾写“我爱我的家，我爱我的家” | 只是重复口号，没有和开头照应 ~ it repeats a slogan and does not answer the opening
+作文要写“我”从害怕上台到敢于上台的变化，可全文只写了上台那一天。怎样修改？ ~ An essay on growing from stage fright to confidence tells only the day on stage. How should it be revised? | 补写“我”以前害怕上台的情景，再写那一天的变化 | 有了前后对比，变化才写得出来 ~ with the before set against the after, the change appears | 把那一天写得更详细 | 只写一天，还是看不出变化 ~ one day alone still shows no change | 换一个题目，只写上台那一天 | 改了题目，就没有写出原来想写的变化 ~ it gives up the change the essay set out to show
+作文写春游，每一个景点都用一样多的笔墨，读起来像流水账。怎样修改？ ~ An essay on a school trip gives every sight the same space and reads like a list. What is the fix? | 选一两处最有感受的地方详写，其余略写 | 详略得当，文章才有重点 ~ with some parts close and others brief, the essay has a focus | 再加几个景点，写得更全面 | 景点更多，更像流水账 ~ more sights make it more of a list | 每个景点都写得一样长，再加长一些 | 一样长的毛病还在 ~ equal length remains the fault
+作文的中心是“读书让我学会思考”，第二段写自己去图书馆的路线。怎样修改？ ~ An essay on how reading taught thinking has a paragraph on the route to the library. What should be done? | 删去路线，换成读书时思考的具体例子 | 路线和中心无关，要换成能表现中心的材料 ~ the route is off the centre and must give way to fitting matter | 把路线写得更清楚 | 写得再清楚，也和中心无关 ~ however clear, it is still off the centre | 把这一段放在结尾 | 放在结尾，文章就结束在无关的内容上 ~ at the end it closes the essay off the subject
+作文写“我”和同学吵架又和好，三段的顺序是：和好、吵架的原因、吵架。怎样修改顺序更清楚？ ~ An essay on a quarrel and making up runs: making up, the cause, the quarrel. Which order is clearer? | 原因、吵架、和好 | 按事情发展的先后顺序写，读者最容易看懂 ~ the order in which things happened is easiest to follow | 吵架、和好、原因 | 原因放在最后，前面的事就不好理解 ~ with the cause last, what comes before is hard to follow | 和好、吵架、原因 | 顺序更乱了 ~ the order is more confused still
+作文《我的同桌》写同桌乐于助人，只写了一句“他经常帮助同学”。怎样修改？ ~ An essay on a helpful desk-mate says only “he often helps others”. How should it be revised? | 写一件同桌帮助同学的具体事情 | 有了具体的事，人物的特点才能让人信服 ~ a real incident makes the trait believable | 改成“他非常经常帮助同学” | 只是加了程度，还是没有事例 ~ it adds degree but no example | 再写几遍“他经常帮助同学” | 重复一句话，还是空洞 ~ repeating the line is still empty
+作文的题目是《坚持》，内容写的却是学游泳时教练对“我”很好。怎样修改？ ~ An essay titled “Persevering” tells how kind the swimming coach was. How should it be revised? | 围绕“我”怎样坚持学会游泳来写，教练只作为陪衬 | 内容要扣住题目，写出坚持的过程 ~ the matter must keep to the title and show the persevering | 把题目改成《游泳》 | 题目变了，立意也变得不明确 ~ the new title leaves the point unclear | 再多写几件教练对“我”好的事 | 离题目更远了 ~ it takes the essay further from the title
+作文结尾写“总之，我们要热爱生活，热爱学习，热爱祖国，热爱一切”。怎样修改？ ~ An essay ends “we must love life, study, our country, everything”. How should it be revised? | 只写从文中这件事里得到的一点真实体会 | 结尾要扣住全文，不能说空话套话 ~ the close must keep to the essay, not utter empty slogans | 再加上“热爱自然，热爱家乡” | 口号更多，更空洞了 ~ more slogans make it emptier | 把“热爱”换成“喜欢” | 换了词，还是空洞的口号 ~ another word leaves an empty slogan
+`;
+
+/** WHOLE_LANGUAGE are the questions of grade 9 on the language of a whole essay, each about a line of a draft made up for this subject. */
+const WHOLE_LANGUAGE = `
+作文写道：“他很生气。”怎样修改，最能写出人物？ ~ A draft says “he was very angry”. Which revision best shows him? | 他把书往桌上一摔，脸涨得通红 | 用动作和神态写出生气，比直接说更生动 ~ action and face show the anger more vividly than saying it | 他非常非常生气 | 只是加了程度，还是直接说 ~ it only adds degree and still tells | 他很生气，十分生气 | 意思重复，没有写出样子 ~ it repeats itself and shows nothing
+作文写道：“我们怀着激动的心情，心情很激动地走进了考场。”怎样修改？ ~ A draft says “with excited hearts, very excitedly, we entered the hall”. How should it be revised? | 我们怀着激动的心情走进了考场 | 删去重复的部分，句子就简洁了 ~ cutting the repetition makes it concise | 我们怀着非常激动的心情，心情很激动地走进了考场 | 加了“非常”，重复更明显 ~ adding 非常 makes the repetition plainer | 我们心情很激动地，怀着激动的心情走进了考场 | 换了顺序，重复还在 ~ reordering leaves the repetition
+一篇写给校长的建议书里写道：“校长，食堂的饭太难吃了，你们赶紧改！”怎样修改更得体？ ~ A suggestion to the head says “the food is awful, fix it now!” Which is more fitting? | 校长，同学们觉得食堂的菜偏咸，建议适当少放盐 | 对校长要有礼貌，说清问题，提出具体的建议 ~ to the head, be polite, name the problem and give a concrete suggestion | 校长，食堂的饭太太太难吃了，赶紧改！ | 语气更冲，更不得体 ~ the tone is harsher still | 校长，食堂的饭难吃，你们看着办吧 | 语气不礼貌，也没有提出建议 ~ it is rude and suggests nothing
+作文写秋天：“树叶黄了，掉下来了。”怎样修改，景物更生动？ ~ A draft says “the leaves turned yellow and fell”. Which revision is livelier? | 树叶黄了，像一只只蝴蝶，打着旋儿飘下来 | 用比喻和动作写出落叶的样子，画面更生动 ~ a likening and its motion bring the scene alive | 树叶很黄很黄，掉下来了 | 只是加了程度，没有画面 ~ it only adds degree and paints nothing | 树叶黄了，树叶掉下来了 | 只是重复了“树叶”，更啰嗦 ~ repeating 树叶 only makes it wordier
+作文写道：“那天的夕阳非常美丽，非常好看，非常漂亮。”怎样修改？ ~ A draft says the sunset was “very beautiful, very pretty, very lovely”. How should it be revised? | 那天的夕阳把半边天都染红了 | 用具体的画面代替空洞的形容词，又简洁又生动 ~ a concrete picture replaces empty adjectives, concise and vivid | 那天的夕阳非常非常美丽 | 还是空洞的形容词 ~ the adjectives are still empty | 那天的夕阳美丽、好看、漂亮 | 去掉了“非常”，三个词还是重复 ~ dropping 非常 leaves three words for one thing
+作文写奶奶：“奶奶的爱就像大海一样，像天空一样，像大地一样。”怎样修改更好？ ~ A draft likens Grandma's love to the sea, the sky and the earth at once. Which is better? | 写一件奶奶关心“我”的小事，让爱在细节里表现出来 | 堆砌比喻很空，具体的细节更能打动人 ~ heaped likenings are empty, and a real detail moves the reader more | 再加上“像太阳一样” | 比喻堆得更多，更空洞 ~ more likenings are emptier still | 改成“奶奶的爱非常伟大” | 换成空话，还是没有写出爱 ~ it swaps in a slogan and still shows no love
+作文写同学讲话：“他说道：‘我说，我们一起去吧。’他说。”怎样修改？ ~ A draft has “he said: ‘I say, let us go,’ he said”. How should it be revised? | 他说：“我们一起去吧。” | 删去多余的“说”，句子干净了 ~ cutting the extra 说 makes it clean | 他说道：“我说，我们一起去吧。” | 还多了一个“我说” ~ an extra 我说 remains | 他说道：“我们一起去吧。”他说。 | 后面的“他说”还是多余 ~ the trailing 他说 is still extra
+一篇作文全是“然后”：“我起床，然后刷牙，然后吃饭，然后上学。”怎样修改？ ~ A draft strings everything with 然后. How should it be revised? | 我匆匆起床，刷完牙，吃了几口饭，就背起书包出了门 | 去掉重复的“然后”，用动词连起来，句子才流畅 ~ dropping the repeated 然后 and linking by verbs makes it flow | 我起床，接着刷牙，接着吃饭，接着上学 | 换成“接着”，毛病还在 ~ 接着 leaves the same fault | 我起床然后刷牙然后吃饭然后上学 | 去掉了逗号，更难读了 ~ removing the commas makes it harder to read
+作文写道：“这个问题困扰了我很久，我终于茅塞顿开，豁然开朗，恍然大悟。”怎样修改？ ~ A draft heaps three idioms for “suddenly saw”. How should it be revised? | 这个问题困扰了我很久，我终于恍然大悟 | 三个成语意思相近，用一个就够了 ~ the three idioms mean much the same; one is enough | 这个问题困扰了我很久，我终于茅塞顿开，恍然大悟 | 还剩两个意思相近的成语 ~ two like idioms remain | 这个问题困扰了我很久，我终于非常恍然大悟 | “恍然大悟”前面不能加“非常” ~ 恍然大悟 cannot take 非常
+一篇写给远方朋友的信里写道：“兹定于本周六与你会面，望准时到达。”怎样修改更合适？ ~ A letter to a friend says “it is hereby fixed that we meet on Saturday; be punctual”. Which fits better? | 这个星期六我们见个面吧，我在老地方等你 | 给朋友写信，语气要亲切自然，不用公文的说法 ~ a letter to a friend should be warm and plain, not official | 兹定于本周六与你会面，务必准时到达 | 更像公文，更不合适 ~ it is still more official | 本周六与你会面，望准时 | 还是公文的语气 ~ the tone is still official
+作文写道：“通过这次活动，使我明白了团结的重要。”怎样修改？ ~ A draft says “through this activity made me see the value of unity”. How should it be revised? | 这次活动使我明白了团结的重要 | 去掉“通过”，句子就有了主语 ~ dropping 通过 gives the sentence a subject | 通过这次活动，使我们明白了团结的重要 | 换成“我们”，还是缺主语 ~ 我们 still leaves the subject missing | 通过这次活动，使我深深地明白了团结的重要 | 加了“深深地”，毛病还在 ~ adding 深深地 leaves the fault
+作文结尾写道：“啊！多么难忘的一天啊！啊！我永远也忘不了啊！”怎样修改？ ~ A draft ends in a string of 啊 and exclamations. How should it be revised? | 这一天，我会一直记在心里 | 感情要真，不靠堆叠叹词，一句平实的话更有力量 ~ true feeling needs no heap of cries; a plain line is stronger | 啊！啊！多么难忘的一天啊！ | 叹词更多，更空 ~ more cries are emptier | 多么难忘的一天啊！我永远也忘不了啊！啊！ | 换了顺序，堆叠的毛病还在 ~ reordering leaves the heap
+`;
+
 /** ORDER_HEADS, FORM_HEADS and PUNCTUATION_HEADS are the headings of the steps of ordering, the form of a page and punctuation. */
 const ORDER_HEADS: Heads = {
   find: t("**Step 1: find the words that mark the order.**", "**第一步：找出表示顺序的词。**"),
@@ -433,7 +465,26 @@ const BETTER_HEADS: Heads = {
   choose: t("**Step 2: choose the word that goes with the rest.**", "**第二步：选出和前后搭配的词。**"),
 };
 
-/** revisingTopics are the revising topics of grades 3 to 6 and of grade 8. */
+/** WHOLE_HEADS are the headings of the steps of revising a whole essay. */
+const WHOLE_HEADS: Heads = {
+  find: t("**Step 1: find what the draft is for.**", "**第一步：弄清这篇文章要写什么。**"),
+  choose: t("**Step 2: choose the revision that serves it.**", "**第二步：选出为它服务的改法。**"),
+};
+
+/** WHOLE_STEPS are the first step and the check of revising a whole essay. */
+const WHOLE_STEPS: ListedSteps = {
+  find: t(
+    "Say in a sentence what the essay sets out to show, then ask how the part in question serves it, or what it lacks.",
+    "先用一句话说出这篇文章要表现什么，再看问到的这一处是不是为它服务，缺了什么。",
+  ),
+  check: (right) =>
+    t(
+      `Read the draft again with “${right}”: it keeps to its centre, its parts follow, and nothing is lost that it needed.`,
+      `按“${right}”改好以后再读一遍：文章扣住了中心，前后连贯，该有的也没有丢。`,
+    ),
+};
+
+/** revisingTopics are the revising topics of grades 3 to 6, 8 and 9. */
 export const revisingTopics: readonly GradeTopic[] = [
   {
     grade: 3,
@@ -645,6 +696,45 @@ export const revisingTopics: readonly GradeTopic[] = [
             "不但看成分，还要读懂句子的意思：几个修饰语的顺序不对；前后主语相同，关联词却放在了主语前面；两种句式糅在一起，比如“原因是……”和“由于……造成的”；两个意思相同的词放在一起；几层否定把意思说反了；把大概念和它包含的小概念并列；把减少说成“降低了几倍”；一个短语可以有两种理解。\n\n比如“产生这种现象的原因是由于管理不严造成的。”把“原因是……”和“由于……造成的”糅在了一起，应改成“产生这种现象的原因是管理不严。”\n\n> **注意。** 数一数“防止”“切忌”“否认”“不”这些表示否定的词：双数是肯定，单数是否定。改完要检查句子说的还是作者本来的意思。",
           ),
           choiceTopicGenerator(sentenceChoices(ORDER_AND_LOGIC), SENTENCE_HEADS),
+        ),
+      ],
+    },
+  },
+  {
+    grade: 9,
+    topic: {
+      id: "revising-9",
+      title: t("Revising a Whole Essay", "修改全文：立意、结构和语言"),
+      summary: t(
+        "Revising a draft as a whole: keeping it to its centre and lifting its point, putting its parts in order with fitting detail, and making its language vivid, concise and fit for its reader.",
+        "从整篇文章着眼修改：让内容扣住中心，提高立意；调整结构，详略得当，前后照应；让语言生动、简洁、得体。",
+      ),
+      intro: t(
+        "By grade 9 a draft is revised as a whole, not sentence by sentence only. First its **centre and build**: does every part serve what the essay sets out to show, are the parts in a clear order, is the important part told in detail, does the end answer the opening? Then its **language**: is it vivid where it shows, concise where it tells, and fit for the person who will read it?\n\nSay a draft on learning to cook spends its first half on the shopping. Cutting that to two sentences and telling the first burnt dish in detail puts the weight where the essay's point lies. The first knowledge point revises the centre and build, the second the language.",
+        "到了九年级，修改要着眼于整篇文章，不只是一句一句地改。先看**立意和结构**：每一部分是不是都为文章的中心服务，顺序是不是清楚，重要的地方有没有详写，结尾有没有照应开头？再看**语言**：该描写的地方生动不生动，该叙述的地方简洁不简洁，对读的人是不是得体？\n\n比如一篇写学做饭的作文，前一半都在写买菜。把买菜压缩成两句，把第一次做糊了的那道菜详细写出来，文章的分量就落到了中心上。第一个知识点修改立意和结构，第二个修改语言。",
+      ),
+      prerequisites: ["revising-8"],
+      encompasses: [],
+      xp: 14,
+      strand: "writing",
+      knowledgePoints: [
+        point(
+          "revising-9-centre",
+          t("Centre and Build", "立意和结构"),
+          t(
+            "Name the centre in a sentence, then go through the draft part by part. Cut or replace what does not serve it; lift an ending that only reports into one that draws a true lesson from the event; put the parts in an order the reader can follow, with a bridging line where the time jumps; tell in detail the part that carries the centre and in brief the rest; let the end answer the opening.\n\nAn essay on a grandmother's kindness that ends “那天我们吃了饺子” stops at what happened; ending on the grandmother wrapping the last dumpling for a neighbour brings the centre home.\n\n> **Watch out.** Making a part longer does not mend a part that is off the centre, and a slogan at the end does not lift the point. The point must come out of the essay's own matter.",
+            "先用一句话说出文章的中心，再一部分一部分地检查。和中心无关的，删去或者换掉；结尾只交代了事情的，改成从这件事里得出的真实体会；顺序要让读者看得懂，时间跳开的地方加一句过渡；能表现中心的部分详写，其余略写；结尾要照应开头。\n\n一篇写奶奶善良的作文，结尾是“那天我们吃了饺子”，只说了发生了什么；改成写奶奶把最后一个饺子包好，给邻居送去，中心就点出来了。\n\n> **注意。** 偏离中心的部分，写长了也改不好；结尾加一句口号，立意也不会提高。立意要从文章自己的内容里来。",
+          ),
+          choiceTopicGenerator(listedChoices(CENTRE_AND_ORDER, WHOLE_STEPS), WHOLE_HEADS),
+        ),
+        point(
+          "revising-9-language",
+          t("Language", "语言"),
+          t(
+            "Read each sentence for what it must do. Where it should show a person or a scene, put an action, a look or a picture in place of words such as 很 and 非常. Where it only tells, cut what is said twice, idioms piled on one another, and connectives such as 然后 repeated. And fit the words to the reader: polite to a head teacher, warm to a friend, plain in a story.\n\n“我很紧张” shows nothing; “我的手心全是汗，连笔都握不稳” shows the fear.\n\n> **Watch out.** More adjectives, more likenings and more cries of 啊 do not make writing livelier; they make it emptier. One exact detail is worth them all.",
+            "读每一句，想想它要做什么。要写出人物和景物的地方，用动作、神态和画面代替“很”“非常”这样的词；只是叙述的地方，删去重复的话、堆在一起的成语和一再出现的“然后”。用词还要看读的人：对校长要礼貌，对朋友要亲切，写故事要平实。\n\n“我很紧张”什么也没写出来；“我的手心全是汗，连笔都握不稳”就写出了紧张。\n\n> **注意。** 形容词、比喻和“啊”堆得越多，文章不会越生动，只会越空洞。一个准确的细节，比它们都有用。",
+          ),
+          choiceTopicGenerator(listedChoices(WHOLE_LANGUAGE, WHOLE_STEPS), WHOLE_HEADS),
         ),
       ],
     },

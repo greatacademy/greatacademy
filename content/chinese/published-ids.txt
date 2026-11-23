@@ -35,6 +35,7 @@ topic book-chinese-myths book-chinese-myths-questions
 topic book-dawn-blossoms book-dawn-blossoms-questions
 topic book-dream-of-red-chamber book-dream-of-red-chamber-questions
 topic book-insect-world book-insect-world-questions
+topic book-jane-eyre book-jane-eyre-questions
 topic book-journey-to-the-west book-journey-to-the-west-questions
 topic book-robinson-crusoe book-robinson-crusoe-questions
 topic book-steel-tempered book-steel-tempered-questions
@@ -2630,6 +2631,13 @@ topic reading-8-fiction reading-8-fiction-people reading-8-fiction-plot
 topic reading-8-non-continuous reading-8-non-continuous-apply reading-8-non-continuous-find
 topic reading-8-poems reading-8-poems-feeling reading-8-poems-words
 topic reading-8-science reading-8-science-method reading-8-science-spirit
+topic reading-9-argument reading-9-argument-line reading-9-argument-methods
+topic reading-9-classical reading-9-classical-point reading-9-classical-words
+topic reading-9-cross-media reading-9-cross-media-compare reading-9-cross-media-judge
+topic reading-9-drama reading-9-drama-conflict reading-9-drama-lines
+topic reading-9-fiction reading-9-fiction-craft reading-9-fiction-theme
+topic reading-9-forms reading-9-forms-fiction reading-9-forms-modes
+topic reading-9-poems reading-9-poems-lines reading-9-poems-poet
 topic reading-aloud-1 reading-aloud-1-texts
 topic reading-aloud-10 reading-aloud-10-texts
 topic reading-aloud-11 reading-aloud-11-texts
@@ -3128,6 +3136,7 @@ topic revising-4 revising-4-sentences revising-4-words
 topic revising-5 revising-5-order revising-5-sentences
 topic revising-6 revising-6-form revising-6-punctuation
 topic revising-8 revising-8-logic revising-8-parts
+topic revising-9 revising-9-centre revising-9-language
 topic rhetoric-1 rhetoric-1-finding rhetoric-1-naming
 topic rhetoric-2 rhetoric-2-finding rhetoric-2-naming
 topic rhetoric-3 rhetoric-3-finding rhetoric-3-naming
@@ -3173,6 +3182,10 @@ topic speaking-8-discussion-focus speaking-8-discussion-focus-focus speaking-8-d
 topic speaking-8-interview speaking-8-interview-plan speaking-8-interview-record
 topic speaking-8-persuading speaking-8-persuading-manner speaking-8-persuading-reason
 topic speaking-8-speech speaking-8-speech-opening speaking-8-speech-spoken
+topic speaking-9-debate speaking-9-debate-refute speaking-9-debate-stand
+topic speaking-9-hosting speaking-9-hosting-links speaking-9-hosting-remarks
+topic speaking-9-listening-argument speaking-9-listening-argument-claim speaking-9-listening-argument-grounds
+topic speaking-9-reporting speaking-9-reporting-answer speaking-9-reporting-findings
 topic strokes-basic strokes-basic-count strokes-basic-first
 topic strokes-order strokes-order-next strokes-order-rule
 topic strokes-turning strokes-turning-count strokes-turning-next
@@ -3262,6 +3275,10 @@ topic writing-8-rewrite writing-8-rewrite-form writing-8-rewrite-person
 topic writing-8-speech writing-8-speech-spoken writing-8-speech-view
 topic writing-8-travel writing-8-travel-route writing-8-travel-scene
 topic writing-9-argue writing-9-argue-methods writing-9-argue-thesis
+topic writing-9-poem writing-9-poem-form writing-9-poem-image
+topic writing-9-refute writing-9-refute-flaw writing-9-refute-stand
+topic writing-9-review writing-9-review-grounds writing-9-review-judgment
+topic writing-9-short-story writing-9-short-story-people writing-9-short-story-turn
 topic writing-9-story writing-9-story-theme writing-9-story-thread
 topic writing-characters-1-01 writing-characters-1-01-tracing writing-characters-1-01-writing
 topic writing-characters-1-02 writing-characters-1-02-tracing writing-characters-1-02-writing

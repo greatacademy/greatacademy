@@ -179,6 +179,8 @@ export const REASONS = {
   unlinked: ["this does not start from the moment and the people at hand.", "没有从眼前的场合、眼前的人和事说起。"],
   // Grades 7 to 9: a reading the text does not bear out.
   misread: ["the text does not show this; read it again where it says: “{s}”", "文中表现的不是这个意思，再读读这一句：“{s}”"],
+  // Grade 9: a debate.
+  yield: ["this gives up your own side's stand instead of answering for it.", "放弃了己方的立场，没有为它作答。"],
 } as const;
 
 /** Context is what a reason may quote: the sentence that answers the question, and the sentence the text ends with. */

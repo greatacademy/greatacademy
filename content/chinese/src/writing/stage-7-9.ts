@@ -1,7 +1,7 @@
-// The judged writing of grades 7 and 8 added by docs/chinese-curriculum.md §18.9: for grade 7, writing with feeling,
+// The judged writing of grades 7 to 9 added by docs/chinese-curriculum.md §18.9: for grade 7, writing with feeling,
 // expanding and condensing, association and imagination, and applications and suggestions; for grade 8, news, travel
-// writing, rewriting and research reports. A Chinese character counts as a word in every length; the compositions meet
-// the stage 4 standard of at least 500 characters.
+// writing, rewriting and research reports; for grade 9, poems, very short stories, reviews and refutations. A Chinese
+// character counts as a word in every length; the compositions meet the stage 4 standard of at least 500 characters.
 
 import { type CriterionSpec, type Text, t } from "@ga/content";
 import { criterionById, point, writingGenerator } from "@ga/subject-chinese";
@@ -11,6 +11,8 @@ import { feelingBank, imaginationBank7 } from "./bank-g.ts";
 import { applicationBank, condenseBank, expandBank, suggestionBank } from "./bank-h.ts";
 import { newsBank, travelBank } from "./bank-i.ts";
 import { reportBank, rewriteBank } from "./bank-j.ts";
+import { poemBank, shortStoryBank } from "./bank-k.ts";
+import { refuteBank, reviewBank } from "./bank-l.ts";
 
 /** criterion finds a criterion by its id, failing when there is none. */
 const criterion = (id: string): CriterionSpec => {
@@ -642,6 +644,310 @@ export const stageSevenNineJudged: readonly GradeTopic[] = [
               t(
                 "For each sentence of your conclusion, point to the finding it rests on; for each suggestion, point to the problem in the conclusion it answers.",
                 "结论里的每一句，都能指出它依据的是哪一条结果；每一条建议，都能指出它针对的是结论里的哪个问题。",
+              ),
+            ),
+          ),
+        ),
+      ],
+    },
+  },
+  {
+    grade: 9,
+    topic: {
+      id: "writing-9-poem",
+      title: t("Trying a Poem", "尝试写诗"),
+      summary: t(
+        "Write a modern poem in Chinese of at least sixteen lines in stanzas, its feeling carried by images, and a note on how it was made; at least 500 characters in all.",
+        "用中文写一首不少于16行、分成几节的现代诗，借意象表达感情；再写一段创作说明，全文不少于500字。",
+      ),
+      intro: t(
+        "A poem does not say “I miss home”; it shows a thing that holds the missing. That thing is an **image** (意象). A poem is also set out in **lines and stanzas**: a break makes the reader pause, a repeated opening gives a beat.\n\nSay a pupil writes of her grandfather's bicycle: “那辆旧自行车，/还靠在墙角，/车铃锈了，/可我一按，/就听见了他喊我的声音。” The bicycle carries the feeling; the short lines slow the reading to the last one. The first knowledge point builds a poem on images, the second shapes its lines and explains how it was made.",
+        "写诗不说“我想家”，而是写出一样装着想念的东西，这就是**意象**。诗还要**分行分节**：在哪里断开，读者就在哪里停一停；每一节用同样的话开头，就有了节奏。\n\n比如一个同学写爷爷的自行车：“那辆旧自行车，/还靠在墙角，/车铃锈了，/可我一按，/就听见了他喊我的声音。”自行车装着感情；短短的几行，让人读得慢下来，一直读到最后一行。第一个知识点借意象写诗，第二个安排分行，并写出创作说明。",
+      ),
+      prerequisites: ["writing-7-imagination"],
+      xp: 24,
+      strand: "writing",
+      encompasses: [],
+      criteria: ["zh9-poem-image", "zh9-poem-form", "zh9-poem-note"].map(criterion),
+      knowledgePoints: [
+        point(
+          "writing-9-poem-image",
+          t("Building on Images", "借意象表达感情"),
+          t(
+            "Choose one or a few things you have truly seen that hold the feeling: an object, a scene, a sound. Give each a fresh likening or let it act like a person, and let the images grow from one to the next, so that the feeling deepens stanza by stanza. Say the feeling outright once at most, near the end, or not at all.\n\nFor parting, “站台上，/他挥着手，/手越来越小，/小成了一粒/不肯落下的星星” turns a waving hand into a star.\n\n> **Watch out.** Images that do not belong together scatter the feeling: a winter of snow and a summer of cicadas in one short poem pull two ways. And a line such as “我非常非常想念” tells what an image should show.",
+            "选一样或几样自己真正见过、装着感情的东西：一件物品，一处景物，一种声音。给它一个新鲜的比喻，或者让它像人一样做事；意象之间要一个接一个地展开，让感情一节比一节深。直接说出感情的话，最多在结尾说一次，也可以不说。\n\n写离别：“站台上，/他挥着手，/手越来越小，/小成了一粒/不肯落下的星星。”挥动的手变成了一颗星。\n\n> **注意。** 意象之间不相干，感情就散了：一首短诗里既写冬天的雪，又写夏天的蝉，会把感情往两个方向拉。“我非常非常想念”这样的句子，是在说出本该由意象表现的东西。",
+          ),
+          writingGenerator(
+            t(
+              "Write in Chinese the poem the task asks for, at least sixteen lines in stanzas, and a note on how it was made, at least 500 characters in all. Carry the feeling through images that belong together.",
+              "按题目的要求，用中文写一首不少于16行、分成几节的现代诗，再写一段创作说明，全文不少于500字。用彼此相关的意象来表达感情。",
+            ),
+            poemBank,
+            ["zh9-poem-image", "zh9-poem-note"],
+            ESSAY,
+            worked(
+              t(
+                "Name the feeling in a word for yourself; list three or four things you have seen that hold it, and pick those that belong together; give each a likening, and order them so the feeling grows.",
+                "先给自己说出要表达的感情；列出三四样你见过的、装着这种感情的东西，选出能放在一起的几样；给每一样想一个比喻，再排好顺序，让感情一步步加深。",
+              ),
+              t(
+                "Cover the note and read the poem alone: can a reader feel it without being told? Then check the note names each image and what it carries, as the poem has it.",
+                "先遮住创作说明，只读诗：不说出来，读者也能感受到吗？再检查创作说明说出了每一个意象和它表达的意思，和诗里写的一致。",
+              ),
+            ),
+          ),
+        ),
+        point(
+          "writing-9-poem-form",
+          t("Lines, Stanzas and the Note", "分行分节和创作说明"),
+          t(
+            "Break a line where you want the reader to pause, and give the key word a line, or the end of one, to itself. Group lines into stanzas by time, place or step of feeling; a repeated opening gives the stanzas a beat. Then write the note: what moved you to write, which images you chose and why, and what a break or repetition does.\n\n“我等你，/等到/路灯都亮了” makes the reader wait at “等到”, as the speaker waited.\n\n> **Watch out.** Prose cut into short lines is not a poem: each break must do something. And a note that only praises the poem, or names an image the poem does not have, explains nothing.",
+            "在想让读者停顿的地方断行，把最要紧的词单独放一行，或者放在一行的末尾。按时间、地点或感情的变化分节；每一节用同样的话开头，就有了节奏。然后写创作说明：是什么让你想写这首诗，选了哪些意象、为什么，某处断行或反复起了什么作用。\n\n“我等你，/等到/路灯都亮了”，读者在“等到”那里停一下，就像诗中的人一直在等。\n\n> **注意。** 把散文切成短行，不是诗：每一次断行都要有它的作用。创作说明只夸自己写得好，或者说到诗里根本没有的意象，就什么也没说明。",
+          ),
+          writingGenerator(
+            t(
+              "Write in Chinese the poem the task asks for, at least sixteen lines in stanzas, and a note on how it was made, at least 500 characters in all. Let every break and stanza serve the sense, and say in the note what they do.",
+              "按题目的要求，用中文写一首不少于16行、分成几节的现代诗，再写一段创作说明，全文不少于500字。每一次断行、每一节都要为意思服务，并在说明里讲出它们的作用。",
+            ),
+            poemBank,
+            ["zh9-poem-form", "zh9-poem-note"],
+            ESSAY,
+            worked(
+              t(
+                "Decide what each stanza holds, a time, a place or a step of feeling, and whether they open alike; mark the word in each stanza that should stand alone; plan the note in three parts: why, which images, what the form does.",
+                "先想好每一节写什么：一个时间、一个地方，或者感情的一步；要不要用同样的话开头。在每一节里标出要单独成行的词。创作说明分三部分想：为什么写，选了哪些意象，分行分节起了什么作用。",
+              ),
+              t(
+                "Read the poem aloud and stop at each break: if a pause there does nothing, join the lines. Count the lines, then check every claim in the note against the poem.",
+                "把诗读出声来，在每一处断行都停一停：停在那里没有作用，就把两行合起来。数一数行数，再把创作说明里的每一句话和诗对照一遍。",
+              ),
+            ),
+          ),
+        ),
+      ],
+    },
+  },
+  {
+    grade: 9,
+    topic: {
+      id: "writing-9-short-story",
+      title: t("A Very Short Story", "写小小说"),
+      summary: t(
+        "Write a very short story in Chinese of at least 500 characters: a few people, one or two scenes, a telling detail, and a turn at the end that surprises yet fits.",
+        "用中文写一篇不少于500字的小小说：人物少，情节集中，有一两处传神的细节，结尾有转折，出人意料又在情理之中。",
+      ),
+      intro: t(
+        "A very short story has no room to spare. It keeps to **a few people and one or two scenes**, shows them through **a telling detail**, and often ends on **a turn** that makes the reader look back.\n\nSay a story tells of a boy who sells newspapers at a crossing and always keeps one paper unsold. At the end we learn why: a blind old man comes each evening, and the boy reads him the news. One small habit, set early, explains everything at the close. The first knowledge point keeps the story focused and shows its people, the second builds the turn.",
+        "小小说篇幅短，没有一句是多余的。它只写**少数几个人、一两个场景**，用**一处传神的细节**写出人物，结尾常常有**一个转折**，让读者回过头去再想一想。\n\n比如写一个在路口卖报的男孩，他每天都留下一份报纸不卖。结尾才知道为什么：每天傍晚，有一位看不见的老人会来，男孩要把报纸念给他听。开头写下的一个小习惯，到结尾把一切都说明白了。第一个知识点让故事集中、写好人物，第二个安排结尾的转折。",
+      ),
+      prerequisites: ["writing-9-story"],
+      xp: 24,
+      strand: "writing",
+      encompasses: [],
+      criteria: ["zh9-short-focus", "zh9-short-turn", "zh9-short-people"].map(criterion),
+      knowledgePoints: [
+        point(
+          "writing-9-short-story-people",
+          t("Focus and People", "情节集中，人物传神"),
+          t(
+            "Pick one moment that tests a person, and tell only what leads to it and from it: two or three people, one or two places, a short span of time. Show each person through one telling detail, an action, a line of speech, an object, rather than a description of their character.\n\nA miser is shown in a line: before lending a pen, he pulls off its cap and keeps it in his pocket.\n\n> **Watch out.** A story that starts from the morning and walks through the whole day has no focus: start near the moment that matters. And “她是一个善良的人” tells what a detail should show.",
+            "选一个考验人物的时刻，只写通向它和由它引出的事：两三个人，一两个地方，一小段时间。每个人物用一处传神的细节来表现：一个动作、一句话、一样东西，而不是直接介绍他的性格。\n\n写一个小气的人，一句话就够：借给别人钢笔之前，他先把笔帽拔下来，揣进自己的口袋。\n\n> **注意。** 从早上起床一直写到晚上，故事就没有了中心：要从离关键时刻不远的地方写起。“她是一个善良的人”这样的话，是在说出本该由细节表现的东西。",
+          ),
+          writingGenerator(
+            t(
+              "Write in Chinese the very short story the task asks for, at least 500 characters. Keep to a few people and one or two scenes, and show each person through a telling detail.",
+              "按题目的要求，用中文写一篇不少于500字的小小说。只写少数几个人、一两个场景，用传神的细节写出人物。",
+            ),
+            shortStoryBank,
+            ["zh9-short-focus", "zh9-short-people"],
+            ESSAY,
+            worked(
+              t(
+                "Name the one moment the story is about; list the people and places you need and strike out the rest; for each person, choose the one detail that shows them best.",
+                "先说出故事写的是哪一个时刻；列出需要的人物和地点，把用不上的划掉；给每个人物选一处最能表现他的细节。",
+              ),
+              t(
+                "Strike out any paragraph in your mind: if the story still stands without it, cut it. Then find each person's detail and check it shows them without your saying what they are like.",
+                "在心里把每一段拿掉试试：没有它故事也成立，就删掉。再找到每个人物的细节，检查它不用你说明，就能表现出人物。",
+              ),
+            ),
+          ),
+        ),
+        point(
+          "writing-9-short-story-turn",
+          t("The Turn at the End", "结尾的转折"),
+          t(
+            "Decide the ending first, then plant early the small clues it will explain: a habit, an object, an odd remark. Lead the reader to expect one thing, and at the close reveal another that the clues have prepared. End soon after the turn, with an image or a line, not an explanation.\n\nA girl is scolded for coming home late each day; at the end her mother finds she has been walking a lost dog back to its owner, who lives across town. The dog hair on her coat, mentioned early, was the clue.\n\n> **Watch out.** A turn with no clue before it feels like a trick, and an ending that explains its own lesson spoils it. A surprise must still fit everything that came before.",
+            "先想好结尾，再在前面埋下结尾要照应的小线索：一个习惯、一样东西、一句有点奇怪的话。让读者以为会是这样，到结尾却揭开另一个结果，而这个结果前面的线索早有准备。转折之后很快结束，用一个画面或一句话收尾，不要再解释。\n\n一个女孩每天回家都很晚，常常挨妈妈的骂；结尾妈妈才知道，她每天都把一只走丢的小狗送回城那头的主人家。前面写到她衣服上的狗毛，就是线索。\n\n> **注意。** 前面没有线索的转折，像是在变魔术；结尾再把道理讲一遍，就把转折的力量冲淡了。出人意料，还要和前面写的处处相合。",
+          ),
+          writingGenerator(
+            t(
+              "Write in Chinese the very short story the task asks for, at least 500 characters. Plant clues early, turn the story at the end in a way they prepare, and close soon after.",
+              "按题目的要求，用中文写一篇不少于500字的小小说。前面埋下线索，结尾有一个由线索铺垫好的转折，转折之后很快收尾。",
+            ),
+            shortStoryBank,
+            ["zh9-short-turn", "zh9-short-focus"],
+            ESSAY,
+            worked(
+              t(
+                "Write the last scene in a sentence; list two clues it needs and the paragraphs where they will go; write the false expectation the reader should hold before the turn.",
+                "先用一句话写出最后的场景；列出它需要的两条线索，想好放在哪两段；再写下转折以前读者应该有的那个误会。",
+              ),
+              t(
+                "Read the ending, then point to each clue earlier that it explains; check that nothing after the turn explains the lesson in so many words.",
+                "读结尾，再在前文里一一找出它照应的线索；检查转折之后，没有一句话把道理直接讲出来。",
+              ),
+            ),
+          ),
+        ),
+      ],
+    },
+  },
+  {
+    grade: 9,
+    topic: {
+      id: "writing-9-review",
+      title: t("A Review", "写评论"),
+      summary: t(
+        "Write a review in Chinese of at least 500 characters: of a work, a person in it or a matter of life, with a clear judgment of your own argued fairly from the thing itself.",
+        "用中文写一篇不少于500字的评论：评一部作品、作品中的人物或生活中的一种现象，提出自己明确的看法，并从评论对象本身出发，公正地分析。",
+      ),
+      intro: t(
+        "A review judges. It says briefly **what it judges**, gives **one clear judgment**, and argues it **from the thing itself**, granting what speaks the other way.\n\nTake the fable “守株待兔”. A review does not retell it at length; it might judge that the farmer's fault is not bad luck but taking one chance for a rule, and prove it from the story: one hare struck the stump, and he gave up his plough to wait for another. The first knowledge point sets out what is judged and the judgment, the second argues it fairly.",
+        "评论要作出评价。它先简要说清**评的是什么**，提出**一个明确的看法**，再**从评论对象本身**出发去论证，也要承认另一面的道理。\n\n比如评寓言《守株待兔》。评论不用把故事从头讲一遍，可以提出：农夫的错不在运气不好，而在把一次偶然当成了规律；再用故事来证明：一只兔子撞死在树桩上，他就放下农具，天天等着下一只。第一个知识点写清评论对象，提出看法；第二个公正地分析论证。",
+      ),
+      prerequisites: ["writing-9-argue"],
+      xp: 26,
+      strand: "writing",
+      encompasses: [],
+      criteria: ["zh9-review-object", "zh9-review-judgment", "zh9-review-grounds"].map(criterion),
+      knowledgePoints: [
+        point(
+          "writing-9-review-judgment",
+          t("The Thing and the Judgment", "评论对象和看法"),
+          t(
+            "Open with the thing judged in a few sentences: for a work, the part that matters to your judgment; for a matter of life, a scene that shows it. Then state your judgment in one sentence that could be argued against, early, and keep the whole review to it.\n\n“《守株待兔》告诉我们不能不劳而获” only repeats the usual lesson; “农夫错在把偶然当成必然” is a judgment of one's own.\n\n> **Watch out.** A retelling that fills half the review leaves no room to judge. And “这个故事很好” is a feeling, not a judgment: say in what way, and why.",
+            "开头用几句话交代评论的对象：评作品，只写和你的看法有关的部分；评现象，写一个能看出这种现象的场景。然后尽早用一句话提出你的看法，这句话要是别人可以反对的，全文都围绕它来写。\n\n“《守株待兔》告诉我们不能不劳而获”，只是重复了常见的道理；“农夫错在把偶然当成必然”，才是自己的看法。\n\n> **注意。** 复述占了一半篇幅，就没有地方评了。“这个故事很好”是感受，不是看法：要说出好在哪里，为什么好。",
+          ),
+          writingGenerator(
+            t(
+              "Write in Chinese the review the task asks for, at least 500 characters. Say briefly what you judge, and state early one clear judgment of your own that the whole review argues.",
+              "按题目的要求，用中文写一篇不少于500字的评论。简要说清评论的对象，尽早提出一个明确的、自己的看法，全文都围绕它来论证。",
+            ),
+            reviewBank,
+            ["zh9-review-object", "zh9-review-judgment"],
+            ESSAY,
+            worked(
+              t(
+                "Write the judgment in one sentence first and test it: could someone reasonably disagree? Then note only the facts of the thing your judgment needs, and plan the review in three or four parts.",
+                "先用一句话写出你的看法，检验一下：会不会有人有理由反对它？再只记下看法要用到的那几处事实，把评论分成三四部分来安排。",
+              ),
+              t(
+                "Find your judgment and check it stands in the first third; then measure the retelling: it should be a small part of the whole.",
+                "找到你的看法，看它是不是在前三分之一的地方；再看看复述的部分，它只应占全文很小的一部分。",
+              ),
+            ),
+          ),
+        ),
+        point(
+          "writing-9-review-grounds",
+          t("Arguing It Fairly", "有理有据，公正分析"),
+          t(
+            "Prove the judgment point by point, each from the thing itself: a line of the work, an event, a fact of the matter, and say how it bears on the judgment. Grant what speaks the other way, then show why your judgment still holds. End by saying what the judgment means for readers now.\n\nOn “守株待兔”: one may say the farmer only hoped for luck, and hope is no crime; but he “释其耒”, gave up his plough, and hope that stops work is the fault.\n\n> **Watch out.** A ground from outside the thing, a story you heard, proves nothing about the work. And a review that sees only one side reads as an attack or as praise, not a judgment.",
+            "一条一条地论证你的看法，每一条都从评论对象本身找依据：作品里的一句话，一个情节，现象中的一个事实，并说出它怎样证明你的看法。还要承认另一面的道理，再说明你的看法为什么仍然成立。结尾说说这个看法对今天的读者有什么意义。\n\n评《守株待兔》：有人会说，农夫只是盼着好运气，盼望没有错；可是他“释其耒”，放下了农具，因为盼望而不再干活，这才是错。\n\n> **注意。** 依据要从评论对象里来，别处听来的故事，证明不了这部作品怎样。只看到一面的评论，读起来像攻击或者吹捧，不像评价。",
+          ),
+          writingGenerator(
+            t(
+              "Write in Chinese the review the task asks for, at least 500 characters. Argue your judgment from the thing itself, and grant what speaks on the other side before answering it.",
+              "按题目的要求，用中文写一篇不少于500字的评论。从评论对象本身出发论证你的看法，并先承认另一面的道理，再作出回应。",
+            ),
+            reviewBank,
+            ["zh9-review-grounds", "zh9-review-judgment"],
+            ESSAY,
+            worked(
+              t(
+                "Under your judgment, list two or three grounds, each with the line, event or fact it rests on; write down the strongest point against you, and the sentence that answers it.",
+                "在你的看法下面列出两三条理由，每一条都写上它依据的那句话、那个情节或那个事实；再写下反对你的最有力的理由，和回应它的那句话。",
+              ),
+              t(
+                "For each ground, point to where it comes from in the thing reviewed; then find the paragraph that grants the other side, and check it answers it rather than ignoring it.",
+                "每一条理由，都能指出它来自评论对象的哪里；再找到承认另一面的那一段，检查它作出了回应，而不是一笔带过。",
+              ),
+            ),
+          ),
+        ),
+      ],
+    },
+  },
+  {
+    grade: 9,
+    topic: {
+      id: "writing-9-refute",
+      title: t("Refuting a View", "驳论"),
+      summary: t(
+        "Write a refutation in Chinese of at least 500 characters: state a mistaken view fairly, show where it goes wrong, in its claim, its grounds or its reasoning, and set up a sound view in its place.",
+        "用中文写一篇不少于500字的驳论文：准确地摆出错误的观点，指出它错在论点、论据还是论证，摆事实、讲道理加以反驳，再树立正确的观点。",
+      ),
+      intro: t(
+        "A refutation first states the view it opposes, fairly, then shows **where it goes wrong**: the claim itself, the grounds it rests on, or the step from grounds to claim. Last it **sets up a sound view** in place of the wrong one.\n\nSuppose someone says “天下乌鸦一般黑, so all people in that trade are dishonest”. The fault is in the reasoning: a few cases do not make all; one can answer with an honest worker one knows, then set up the view that people must be judged one by one. The first knowledge point finds the fault and refutes it, the second sets up the sound view.",
+        "驳论文先准确地摆出要反驳的观点，再指出**它错在哪里**：是论点本身错了，是它依据的论据站不住，还是从论据推出论点的过程有问题。最后**树立正确的观点**，代替错误的观点。\n\n比如有人说：“天下乌鸦一般黑，干那一行的人都不老实。”错在论证：几个例子推不出“都”；可以举出一个自己知道的老实人来反驳，再提出看人要一个一个地看。第一个知识点找出错误并加以反驳，第二个树立正确的观点。",
+      ),
+      prerequisites: ["writing-9-argue"],
+      xp: 26,
+      strand: "writing",
+      encompasses: [],
+      criteria: ["zh9-refute-target", "zh9-refute-flaw", "zh9-refute-stand"].map(criterion),
+      knowledgePoints: [
+        point(
+          "writing-9-refute-flaw",
+          t("Finding and Refuting the Fault", "找准错误，加以反驳"),
+          t(
+            "State the view as its holders would, with the reason they give, then say plainly that it is wrong. Find the fault: a claim that is false (驳论点), a ground that is untrue or too narrow (驳论据), or a step that does not follow, such as a few cases taken for all (驳论证). Answer that very fault with facts and reasons, one point at a time.\n\n“某某每天只睡五个小时，也考了第一，所以多睡觉是浪费时间” takes one case for all, and ignores what that pupil may have lost and what most people need: the fault is in the reasoning.\n\n> **Watch out.** Twisting the view into a sillier one and knocking that down refutes nothing. And proving your own view is not yet refuting theirs: show where theirs goes wrong.",
+            "先把对方的观点和理由照原样摆出来，再明确地说它是错的。找出错在哪里：论点本身不对，是驳论点；依据的事实不真实或者太片面，是驳论据；推理推不出来，比如用几个例子代替全部，是驳论证。针对这个错误，摆事实、讲道理，一条一条地反驳。\n\n“某某每天只睡五个小时，也考了第一，所以多睡觉是浪费时间”，用一个人代替了所有人，也没看到他可能因此失去了什么、大多数人需要睡多久：错在论证。\n\n> **注意。** 把对方的观点歪曲成更荒唐的说法再去反驳，等于什么也没驳。证明了自己的观点，也不等于驳倒了对方：要指出对方错在哪里。",
+          ),
+          writingGenerator(
+            t(
+              "Write in Chinese the refutation the task asks for, at least 500 characters. State the view fairly, say where it goes wrong, and answer that fault with facts and reasons.",
+              "按题目的要求，用中文写一篇不少于500字的驳论文。准确地摆出对方的观点，指出它错在哪里，针对这个错误摆事实、讲道理。",
+            ),
+            refuteBank,
+            ["zh9-refute-target", "zh9-refute-flaw"],
+            ESSAY,
+            worked(
+              t(
+                "Write the view and the reason its holders give; mark whether the fault lies in the claim, the grounds or the reasoning; list one fact and one reason that hit that fault.",
+                "先写出对方的观点和他们给出的理由；标出错误是在论点、论据还是论证上；列出一个事实和一条道理，都要正好打在这个错误上。",
+              ),
+              t(
+                "Ask whether a holder of the view would accept your statement of it; then, for each paragraph of refutation, name the fault it answers.",
+                "问一问：持这种观点的人，会不会承认你摆出的就是他的观点？再给每一段反驳说出它针对的是哪一处错误。",
+              ),
+            ),
+          ),
+        ),
+        point(
+          "writing-9-refute-stand",
+          t("Setting Up the Sound View", "树立正确的观点"),
+          t(
+            "After refuting, say what is right instead, and argue it briefly with its own grounds. Grant what the opposed view gets right, so that your view does not swing to the other extreme. End with what follows for the reader.\n\nAgainst “多睡觉是浪费时间”, the sound view is not “睡得越多越好” but that enough sleep is what makes the hours of study count.\n\n> **Watch out.** Refuting one extreme by another is no better: “只要努力就一定成功” is not answered by “努力没有用”. And an essay that ends on the refutation leaves the reader with nothing to hold.",
+            "驳完之后，要说出正确的看法是什么，并用它自己的理由简要地论证。还要承认对方说对了的地方，让自己的观点不走到另一个极端。结尾说说这对读者意味着什么。\n\n反驳“多睡觉是浪费时间”，正确的观点不是“睡得越多越好”，而是：睡够了，学习的时间才真正有效。\n\n> **注意。** 用一个极端去反驳另一个极端，并没有更好：反驳“只要努力就一定成功”，不能说“努力没有用”。只驳不立，读者读完不知道该怎样想。",
+          ),
+          writingGenerator(
+            t(
+              "Write in Chinese the refutation the task asks for, at least 500 characters. After refuting the view, set up a sound view of your own, granting what the other view gets right.",
+              "按题目的要求，用中文写一篇不少于500字的驳论文。驳倒对方的观点以后，树立自己正确的观点，并承认对方说对的地方。",
+            ),
+            refuteBank,
+            ["zh9-refute-stand", "zh9-refute-flaw"],
+            ESSAY,
+            worked(
+              t(
+                "Write the sound view in one sentence that is not simply the opposite extreme; note what the opposed view gets right; list one ground for your view.",
+                "先用一句话写出正确的观点，它不能只是对方的反面极端；记下对方说对的地方；再给你的观点列一条理由。",
+              ),
+              t(
+                "Find the sentence that sets up your view and check it stands after the refutation; check that a paragraph grants what the other side gets right.",
+                "找到树立观点的那句话，看它是不是在反驳之后；再检查有一段承认了对方说对的地方。",
               ),
             ),
           ),
