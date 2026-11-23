@@ -17,8 +17,11 @@ import {
   levelListeningId,
   levelSpeakingId,
   listeningBanks,
+  readExplanation,
+  sayExplanation,
   sentencesExplanation,
   speakingBanks,
+  speakingIntro,
   unitSpeechSpecs,
   wordsExplanation,
 } from "../level-1/listening.ts";
@@ -567,6 +570,7 @@ function speechExam(spec: HskSpec): readonly TopicDef[] {
   const example = listening[0]!.example;
   const w = example.word.word;
   const speaking = units.map(speakingBanks);
+  const spoken = speaking[0]!.example;
   const mixed = (banks: readonly (readonly Asked[])[]): Generator => fromBank(interleave(banks));
   return [
     {
@@ -602,6 +606,13 @@ function speechExam(spec: HskSpec): readonly TopicDef[] {
         `Saying words after a recording and reading sentences aloud, from every unit of the levels HSK ${spec.name} tests, every theme mixed.`,
         `跟着录音说词语，朗读句子，内容来自 HSK ${spec.name} 所考等级的各个单元，各个话题混在一起。`,
       ),
+      intro: speakingIntro(
+        spoken,
+        t(
+          `Here the words and sentences come from every unit of the levels HSK ${spec.name} tests, every theme mixed, as the speaking test mixes them.`,
+          `这里的词语和句子来自 HSK ${spec.name} 所考等级的各个单元，各个话题混在一起，像口语考试那样。`,
+        ),
+      ),
       prerequisites: [levelSpeakingId(last.level, last.unit)],
       encompasses: [],
       xp: 12,
@@ -609,22 +620,11 @@ function speechExam(spec: HskSpec): readonly TopicDef[] {
       strand: "speaking",
       spoken: "zh-CN",
       knowledgePoints: [
-        point(
-          id("speaking-words"),
-          t("Saying Words", "说词语"),
-          t(
-            "Listen, then say the word at the same pace, each syllable in its tone, copying the recording where tones change in speech.",
-            "先听录音，再用同样的速度说出这个词，每个音节读准声调；说话时变调的地方，照录音说。",
-          ),
-          mixed(speaking.map((b) => b.sayWord)),
-        ),
+        point(id("speaking-words"), t("Saying Words", "说词语"), sayExplanation(spoken), mixed(speaking.map((b) => b.sayWord))),
         point(
           id("speaking-sentences"),
           t("Reading Sentences Aloud", "朗读句子"),
-          t(
-            "Read at a calm speed, keeping the words of a phrase together and pausing at the commas.",
-            "用平稳的速度朗读，一个词组里的字连起来读，在逗号处稍作停顿。",
-          ),
+          readExplanation(spoken),
           mixed(speaking.map((b) => b.readSentence)),
         ),
       ],

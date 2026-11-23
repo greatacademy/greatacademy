@@ -6,8 +6,8 @@
 import { heardResponse, type Problem, type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-chinese";
 
-import { parts } from "../hsk/oral.ts";
-import { fromBank } from "../level-1/listening.ts";
+import { otherPassage, parts, passageSolution } from "../hsk/oral.ts";
+import { fromBank, pauseStep, phrasesOf } from "../level-1/listening.ts";
 import { chineseReading } from "../reading/index.ts";
 
 /** LANGUAGE is the language read aloud. */
@@ -74,6 +74,7 @@ function readingAloudTopic(grade: number): TopicDef {
   const { parts: all, after } = gradeParts(grade);
   if (all.length < MIN_ITEMS) throw new Error(`${id}: ${all.length} parts, needs ${MIN_ITEMS}`);
   const { secondsPerChar } = paceOf(grade);
+  const other = (i: number): string => all[(i + Math.floor(all.length / 2)) % all.length]!;
   const bank = all.map(
     (p, i) => (): Problem => ({
       prompt: t(`Read aloud:\n\n> ${p}`, `朗读：\n\n> ${p}`),
@@ -88,20 +89,22 @@ function readingAloudTopic(grade: number): TopicDef {
           maxSeconds: Math.min(30, 5 + Math.ceil([...p].length * secondsPerChar)),
         },
       },
-      solution: t(
-        "Read it again, word by word as written, keeping the words of a phrase together.",
-        "照着原文再读一遍，不加字、不漏字，一个词语里的字连起来读。",
-      ),
+      solution: passageSolution(p, false),
       canonical: heardAs(p),
-      wrong: [heardAs(all[(i + Math.floor(all.length / 2)) % all.length]!)],
+      mistakes: [{ response: heardAs(other(i)), feedback: otherPassage(other(i)) }],
     }),
   );
+  const shown = all.find((p) => phrasesOf(p).length > 1) ?? all[0]!;
   return {
     id,
     title: t(`Reading Aloud, Grade ${grade}`, `朗读：${gradeName(grade)}`),
     summary: t(
       `The grade's passages read aloud a few sentences at a time, correctly, fluently and in order.`,
       `朗读本年级的文章，每次几句，正确、流利，不加字、不漏字。`,
+    ),
+    intro: t(
+      `Take “${shown}”, from a passage of the grade: you read it aloud as it is written. ${pauseStep(shown).en} Every passage of the grade is read like this, a few sentences at a time. A speech service hears that every character is read, in order; an accent of your region costs nothing.`,
+      `比如课文里的“${shown}”：照着原文大声读。${pauseStep(shown)["zh-CN"]}本年级的每篇课文都这样读，每次几句。语音服务听你是不是按顺序读出了每一个字；带一点地方口音不要紧。`,
     ),
     prerequisites: [after],
     encompasses: [],
@@ -113,8 +116,8 @@ function readingAloudTopic(grade: number): TopicDef {
         `${id}-texts`,
         t("Reading Aloud", "朗读课文"),
         t(
-          "Read in standard Mandarin, clearly and at an even speed, as if reading to a listener. Read every character as written, without adding, leaving out or repeating any. Keep the characters of a word together, pause a little at a comma and longer at a full stop, and let a question rise and an exclamation sound like one. An accent of your region does not count against you.",
-          "用普通话朗读，声音响亮，速度均匀，像读给别人听。照着原文读，不加字、不漏字、不重复。一个词语里的字连起来读，逗号处稍停，句号处停得长一些，问句和感叹句读出相应的语气。带一点地方口音不要紧。",
+          `Read in standard Mandarin, clearly and at an even speed, as if reading to a listener. Keep the characters of a word together, pause a little at a comma and longer at a full stop, and let a question rise and an exclamation sound like one. Take “${shown}”. ${pauseStep(shown).en} An accent of your region does not count against you.\n\n> **Watch out.** Read every character as written, without adding, leaving out or repeating any, even a small one such as 的 or 了: the reading is checked character by character.`,
+          `用普通话朗读，声音响亮，速度均匀，像读给别人听。一个词语里的字连起来读，逗号处稍停，句号处停得长一些，问句和感叹句读出相应的语气。比如“${shown}”：${pauseStep(shown)["zh-CN"]}带一点地方口音不要紧。\n\n> **注意。** 照着原文读，不加字、不漏字、不重复，“的”“了”这样的小字也一样：朗读是一个字一个字核对的。`,
         ),
         fromBank(bank),
       ),

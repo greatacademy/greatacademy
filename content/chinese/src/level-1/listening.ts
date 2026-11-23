@@ -8,6 +8,7 @@ import { point, toneless, zhQuote } from "@ga/subject-chinese";
 
 import { heard } from "../audio.ts";
 import type { LevelOneCharacter } from "./characters.ts";
+import { toneOf, withTone } from "./kit.ts";
 import { GAP, type LevelOneWord, pinyinOf } from "./words.ts";
 
 /** LANGUAGE is the language the levels' speaking is heard in: standard Mandarin. */
@@ -380,12 +381,12 @@ const heardAs = (text: string) => heardResponse({ text, confidence: 0.95, second
 /** readSeconds is how long a reading of a sentence may take: about half a second a character, and some to start and stop. */
 const readSeconds = (text: string) => Math.min(30, 5 + Math.ceil([...text].length * 0.5));
 
-/** spokenProblem is a problem answered by saying a text, after its recording or read from the screen. */
+/** spokenProblem is a problem answered by saying a text, after its recording or read from the screen, with the text said instead and why it is wrong. */
 function spokenProblem(
   fields: Pick<Problem, "prompt" | "listen" | "solution">,
   mode: "repeat" | "read",
   text: string,
-  other: string,
+  other: { readonly text: string; readonly feedback: Text },
   maxSeconds: number,
 ): Problem {
   return {
@@ -396,23 +397,166 @@ function spokenProblem(
       input: { kind: "speech", language: LANGUAGE, mode, text, maxSeconds },
     },
     canonical: heardAs(text),
-    wrong: [heardAs(other)],
+    mistakes: [{ response: heardAs(other.text), feedback: other.feedback }],
   };
 }
 
+/** TONE_NAMES name the tones by their digit, 0 for the neutral tone, with how each sounds. */
+const TONE_NAMES: readonly Text[] = [
+  t("the neutral tone, short and light", "轻声，又短又轻"),
+  t("the first tone, high and level", "第一声，高而平"),
+  t("the second tone, rising", "第二声，往上扬"),
+  t("the third tone, dipping low", "第三声，先降后升"),
+  t("the fourth tone, falling", "第四声，往下降"),
+];
+
+/** tonesOf names the tone of each syllable of a word, in turn. */
+function tonesOf(w: LevelOneWord): Text {
+  const named = w.syllables.map((s) => ({ s, name: TONE_NAMES[toneOf(s)]! }));
+  return t(named.map((x) => `${x.s}, ${x.name.en}`).join("; "), named.map((x) => `${x.s} 是${x.name["zh-CN"]}`).join("；"));
+}
+
+/** thirdPairs are the places where a syllable of a word in the third tone comes before another, so it is said in the second. */
+const thirdPairs = (w: LevelOneWord): readonly number[] =>
+  w.syllables.flatMap((s, i) => (toneOf(s) === 3 && toneOf(w.syllables[i + 1] ?? "") === 3 ? [i] : []));
+
+/** changes says where the tones of a word change in speech: 一 and 不, marked as said, and a third tone before another, which is not marked. */
+function changes(w: LevelOneWord): Text {
+  const chars = [...w.word];
+  const whole = chars.length === w.syllables.length;
+  const notes: Text[] = [];
+  if (whole) {
+    for (const [i, s] of w.syllables.entries()) {
+      const ch = chars[i]!;
+      if (ch === "一" && toneless(s) === "yi" && toneOf(s) === 2)
+        notes.push(t(`一 is marked ${s}: before a fourth tone it is said in the second.`, `“一”标作 ${s}：在第四声前读第二声。`));
+      else if (ch === "一" && toneless(s) === "yi" && toneOf(s) === 4 && i + 1 < chars.length)
+        notes.push(t(`一 is marked ${s}: before the other tones it is said in the fourth.`, `“一”标作 ${s}：在其他声调前读第四声。`));
+      else if (ch === "不" && toneless(s) === "bu" && toneOf(s) === 2)
+        notes.push(t(`不 is marked ${s}: before a fourth tone it is said in the second.`, `“不”标作 ${s}：在第四声前读第二声。`));
+    }
+  }
+  for (const i of thirdPairs(w)) {
+    const s = w.syllables[i]!;
+    const said = withTone(s, 2);
+    const which = whole ? t(`**${chars[i]}** ${s}`, `“${chars[i]}”${s}`) : t(s, s);
+    notes.push(
+      t(
+        `${which.en} comes before another third tone, so it is said ${said}, though written ${s}.`,
+        `${which["zh-CN"]}后面还是第三声，要读成 ${said}，拼音仍写 ${s}。`,
+      ),
+    );
+  }
+  return t(notes.map((n) => ` ${n.en}`).join(""), notes.map((n) => n["zh-CN"]).join(""));
+}
+
+/** syllableCount says how many syllables a word has, and lists them. */
+const syllableCount = (w: LevelOneWord): Text =>
+  t(
+    `**${w.word}** has ${w.syllables.length} syllable${w.syllables.length === 1 ? "" : "s"}: ${syllableList(w).en}.`,
+    `“${w.word}”有${w.syllables.length}个音节：${syllableList(w)["zh-CN"]}。`,
+  );
+
+/** ReadItem is a text read aloud: a sentence of a unit's word, or two in a row, with the word of the first. */
+export interface ReadItem {
+  readonly text: string;
+  readonly word: LevelOneWord;
+}
+
+/** phrasesOf are the parts of a text between its punctuation, where a reader pauses. */
+export const phrasesOf = (text: string): readonly string[] =>
+  text
+    .split(/[，、；：。！？…—“”‘’（）《》\s]+/u)
+    .map((p) => p.trim())
+    .filter((p) => p !== "");
+
+/** hanCount is the number of characters of a text, punctuation left out. */
+export const hanCount = (text: string): number => [...text].filter((c) => /\p{Script=Han}/u.test(c)).length;
+
+/** boldIn is a text with the first time a word occurs in it in bold. */
+const boldIn = (text: string, word: string): string => text.replace(word, `**${word}**`);
+
+/** ending says how the voice ends a text, by its last mark. */
+function ending(text: string): Text {
+  const last = text
+    .trim()
+    .replace(/[”’）》]+$/u, "")
+    .slice(-1);
+  if (last === "？")
+    return t(
+      "It ends in a question mark: say it as a question, and keep 吗 or 呢 at the end light.",
+      "它以问号结尾：读出问的语气，句末的“吗”“呢”读得轻一些。",
+    );
+  if (last === "！") return t("It ends in an exclamation mark: say it with feeling.", "它以感叹号结尾：读出感叹的语气。");
+  return t("It ends in a full stop: let the voice settle at the end.", "它以句号结尾：句末语气平稳地收住。");
+}
+
+/** pauseStep is the step of reading a text in its parts, pausing only where its punctuation is. */
+export function pauseStep(text: string): Text {
+  const parts = phrasesOf(text);
+  const shown = parts.join(" / ");
+  return parts.length === 1
+    ? t(`It has no comma inside: read it in one breath. ${ending(text).en}`, `句子中间没有标点：一口气读完。${ending(text)["zh-CN"]}`)
+    : t(
+        `Read it in ${parts.length} parts, pausing only where the punctuation is: ${shown}. ${ending(text).en}`,
+        `分成${parts.length}段读，只在有标点的地方停：${shown}。${ending(text)["zh-CN"]}`,
+      );
+}
+
+/** SpeakingExample is a turn of each knowledge point of speaking, to explain them with. */
+export interface SpeakingExample {
+  readonly word: LevelOneWord;
+  readonly sentence: ReadItem;
+}
+
+/** sayExplanation explains saying a word after its recording with an example word. */
+export function sayExplanation(ex: SpeakingExample): Text {
+  const w = ex.word;
+  const p = pinyinOf(w.syllables);
+  const pair = thirdPairs(w)[0];
+  const watch =
+    pair === undefined
+      ? t(
+          "> **Watch out.** Two third tones together are not said as written: 你好 is marked nǐ hǎo but said ní hǎo. Where the recording and the marks differ, copy the recording.",
+          "> **注意。** 两个第三声连在一起，不按拼音照读：“你好”标作 nǐ hǎo，却读 ní hǎo。录音和拼音不一样的地方，照录音说。",
+        )
+      : t(
+          `> **Watch out.** **${w.word}** is marked ${p}, but ${w.syllables[pair]} before another third tone is said ${withTone(w.syllables[pair]!, 2)}. Where the recording and the marks differ, copy the recording.`,
+          `> **注意。** “${w.word}”标作 ${p}，可是第三声的 ${w.syllables[pair]} 在另一个第三声前要读 ${withTone(w.syllables[pair]!, 2)}。录音和拼音不一样的地方，照录音说。`,
+        );
+  return t(
+    `Listen to the recording, then say the word at the same pace. First count its syllables, then give each its tone. Take **${w.word}** ${p}, "${w.meaning.en}": ${syllableCount(w).en} Their tones: ${tonesOf(w).en}.${changes(w).en} Say the syllables as one word, without a gap between them.\n\n${watch.en}`,
+    `先听录音，再用同样的速度说出这个词。先数音节，再读准每个音节的声调。比如 **${w.word}** ${p}，意思是${zhQuote(w.meaning["zh-CN"])}：${syllableCount(w)["zh-CN"]}声调是：${tonesOf(w)["zh-CN"]}。${changes(w)["zh-CN"]}几个音节连成一个词说，中间不要断开。\n\n${watch["zh-CN"]}`,
+  );
+}
+
+/** readExplanation explains reading a sentence aloud with an example sentence. */
+export function readExplanation(ex: SpeakingExample): Text {
+  const { text, word: w } = ex.sentence;
+  const p = pinyinOf(w.syllables);
+  return t(
+    `Read the sentence aloud at a calm speed, as if telling someone. First find the unit's word and keep it together, then read the sentence in its parts. Take “${text}”: the word is **${w.word}** ${p}, its ${w.syllables.length} syllable${w.syllables.length === 1 ? "" : "s"} said in one go. ${pauseStep(text).en}\n\n> **Watch out.** Do not read one character at a time with the same gap after each: the characters of a word go together. If you stumble, finish the sentence, then read it again from the start.`,
+    `用平稳的速度大声朗读句子，像在讲给别人听。先找出本单元的词，把它连起来读；再按句子的段落读。比如“${text}”：本单元的词是 **${w.word}** ${p}，${w.syllables.length}个音节一口气读出来。${pauseStep(text)["zh-CN"]}\n\n> **注意。** 不要一个字一个字地读、每个字后面停得一样长：一个词里的字要连起来读。读错了不要停在半路改，先把句子读完，再从头读一遍。`,
+  );
+}
+
 /** speakingBanks are the problems of a unit's speaking: a word said after its recording, and a sentence read aloud. */
-export function speakingBanks(spec: UnitSpeechSpec): { readonly sayWord: readonly Asked[]; readonly readSentence: readonly Asked[] } {
+export function speakingBanks(spec: UnitSpeechSpec): {
+  readonly sayWord: readonly Asked[];
+  readonly readSentence: readonly Asked[];
+  readonly example: SpeakingExample;
+} {
   const id = levelSpeakingId(spec.level, spec.unit);
   const { words } = spec;
   if (words.length < 20) throw new Error(`${id}: ${words.length} words, fewer than 20`);
   // Another text of the unit, said instead, is the wrong answer: the first from seven along that shares too few
   // characters with the right one to pass for it.
-  const otherOf = (texts: readonly string[], i: number, share: number): string => {
+  const otherOf = (texts: readonly string[], i: number, share: number): number => {
     const own = new Set(texts[i]);
     for (let d = 7; d < texts.length + 7; d++) {
-      const other = texts[(i + d) % texts.length]!;
-      const common = [...other].filter((c) => own.has(c) && /\p{Script=Han}/u.test(c)).length;
-      if (common <= share * [...own].length) return other;
+      const j = (i + d) % texts.length;
+      const common = [...texts[j]!].filter((c) => own.has(c) && /\p{Script=Han}/u.test(c)).length;
+      if (common <= share * [...own].length) return j;
     }
     throw new Error(`${id}: nothing to say instead of ${texts[i]}`);
   };
@@ -428,6 +572,7 @@ export function speakingBanks(spec: UnitSpeechSpec): { readonly sayWord: readonl
   const sayAudio = said.map(heard);
   const sayWord: readonly Asked[] = sayable.map((w, i) => () => {
     const p = pinyinOf(w.syllables);
+    const o = sayable[otherOf(said, i, 0)]!;
     return spokenProblem(
       {
         prompt: t(
@@ -435,39 +580,80 @@ export function speakingBanks(spec: UnitSpeechSpec): { readonly sayWord: readonl
           `听录音，然后跟着说这个词：\n\n**${w.word}** ${p}`,
         ),
         listen: [sayAudio[i]!],
-        solution: t(`Say each syllable in its tone: ${p}.`, `每个音节读准声调：${p}。`),
+        solution: t(
+          `**Step 1: count the syllables.** ${syllableCount(w).en}\n\n**Step 2: give each syllable its tone.** ${tonesOf(w).en}.${changes(w).en}\n\n**Check.** Play the recording and say the word with it: ${w.syllables.length} syllable${w.syllables.length === 1 ? "" : "s"}, ending on ${w.syllables.at(-1)}, and **${w.word}** means "${w.meaning.en}".`,
+          `**第一步：数音节。** ${syllableCount(w)["zh-CN"]}\n\n**第二步：读准每个音节的声调。** ${tonesOf(w)["zh-CN"]}。${changes(w)["zh-CN"]}\n\n**检验。** 播放录音，跟着再说一遍：${w.syllables.length}个音节，最后一个是 ${w.syllables.at(-1)}，“${w.word}”的意思是${zhQuote(w.meaning["zh-CN"])}。`,
+        ),
       },
       "repeat",
       w.word,
-      otherOf(said, i, 0),
+      {
+        text: o.word,
+        feedback: t(
+          `That was heard as **${o.word}**, another word of the unit, not **${w.word}**: ${contrast(w, o).en}.`,
+          `听到的是本单元的另一个词“${o.word}”，不是“${w.word}”：${contrast(w, o)["zh-CN"]}。`,
+        ),
+      },
       5,
     );
   });
   // A unit with fewer than MIN_ITEMS sentences also reads two of its sentences in a row, each with the one after it.
-  const single = [...new Set(words.map(filled))];
-  const pairs = single.map((x, i) => `${x}${single[(i + 1) % single.length]}`);
+  const single: ReadItem[] = [];
+  for (const w of words) {
+    const text = filled(w);
+    if (!single.some((x) => x.text === text)) single.push({ text, word: w });
+  }
+  const pairs = single.map((x, i): ReadItem => ({ text: `${x.text}${single[(i + 1) % single.length]!.text}`, word: x.word }));
   const read = [...single, ...pairs.slice(0, Math.max(0, MIN_ITEMS - single.length))];
-  const readAudio = read.map(heard);
-  const readSentence: readonly Asked[] = read.map((s, i) => () => {
+  const readTexts = read.map((x) => x.text);
+  const readAudio = readTexts.map(heard);
+  const readSentence: readonly Asked[] = read.map((item, i) => () => {
+    const { text: s, word: w } = item;
+    const other = readTexts[otherOf(readTexts, i, 0.3)]!;
+    const n = hanCount(s);
     return spokenProblem(
       {
         prompt: t(`Read the sentence aloud:\n\n> ${s}`, `大声朗读这个句子：\n\n> ${s}`),
         listen: [readAudio[i]!],
-        solution: t("Listen to the sentence read aloud, and read it once more with it.", "听一听这个句子的朗读，再跟着读一遍。"),
+        solution: t(
+          `**Step 1: find the unit's word.** ${boldIn(s, w.word)} Keep **${w.word}** ${pinyinOf(w.syllables)} together.\n\n**Step 2: read it in its parts.** ${pauseStep(s).en}\n\n**Check.** Read it once more with the recording: ${n} characters, none added or left out, and **${w.word}** said in one go.`,
+          `**第一步：找出本单元的词。** ${boldIn(s, w.word)}“${w.word}”${pinyinOf(w.syllables)}要连起来读。\n\n**第二步：按段落读。** ${pauseStep(s)["zh-CN"]}\n\n**检验。** 跟着录音再读一遍：${n}个字，不加字、不漏字，“${w.word}”一口气读出来。`,
+        ),
       },
       "read",
       s,
-      otherOf(read, i, 0.3),
+      {
+        text: other,
+        feedback: t(
+          `That was heard as another sentence of the unit, “${other}”, not the one shown: read the sentence on the screen.`,
+          `听到的是本单元的另一个句子“${other}”，不是题目里的句子：要读屏幕上的这一句。`,
+        ),
+      },
       readSeconds(s),
     );
   });
-  return { sayWord, readSentence };
+  const changing = words.find((w) => w.syllables.length > 1 && changes(w).en !== "");
+  const example: SpeakingExample = {
+    word: changing ?? words.find((w) => w.syllables.length > 1) ?? words[0]!,
+    sentence: single.find((x) => phrasesOf(x.text).length > 1) ?? single[0]!,
+  };
+  return { sayWord, readSentence, example };
+}
+
+/** speakingIntro introduces the speaking of a unit, or of the units an HSK course mixes, with its example. */
+export function speakingIntro(ex: SpeakingExample, where: Text): Text {
+  const w = ex.word;
+  const s = ex.sentence;
+  return t(
+    `Take **${w.word}** ${pinyinOf(w.syllables)}, "${w.meaning.en}": you hear it, then say it after the recording, ${w.syllables.length} syllable${w.syllables.length === 1 ? "" : "s"}, each in its tone. Then you read sentences aloud, such as “${s.text}”, keeping **${s.word.word}** together and pausing at the punctuation. ${where.en} A speech service hears what you say and checks that it is the word or sentence shown.`,
+    `比如 **${w.word}** ${pinyinOf(w.syllables)}，意思是${zhQuote(w.meaning["zh-CN"])}：先听录音，再跟着说，${w.syllables.length}个音节，每个都读准声调。然后大声朗读句子，比如“${s.text}”，把“${s.word.word}”连起来读，在标点处停顿。${where["zh-CN"]}语音服务听你说的话，检查是不是题目里的词或句子。`,
+  );
 }
 
 /** buildUnitSpeakingTopic builds the speaking topic of a unit: its words said after a recording, then its sentences read aloud. */
 function buildUnitSpeakingTopic(spec: UnitSpeechSpec): TopicDef {
   const id = levelSpeakingId(spec.level, spec.unit);
-  const { sayWord, readSentence } = speakingBanks(spec);
+  const { sayWord, readSentence, example } = speakingBanks(spec);
   return {
     id,
     title: t(
@@ -478,30 +664,18 @@ function buildUnitSpeakingTopic(spec: UnitSpeechSpec): TopicDef {
       `Saying the words of the unit ${spec.theme.en} after a recording, and reading its sentences aloud.`,
       `跟着录音说“${spec.theme["zh-CN"]}”单元的词语，并朗读它们的句子。`,
     ),
+    intro: speakingIntro(
+      example,
+      t(`The words and sentences are those of the unit ${spec.theme.en}.`, `词语和句子都来自“${spec.theme["zh-CN"]}”单元。`),
+    ),
     prerequisites: [levelListeningId(spec.level, spec.unit)],
     encompasses: [],
     xp: 10,
     strand: "speaking",
     spoken: LANGUAGE,
     knowledgePoints: [
-      point(
-        `${id}-words`,
-        t("Saying Words", "说词语"),
-        t(
-          "Listen to the recording, then say the word at the same pace, each syllable in its tone. 一 and 不 are written in the tone they are said in; where two third tones meet, the first is written as a third tone but said in the second, so copy the recording rather than the written tones.",
-          "先听录音，再用同样的速度说出这个词，每个音节读准声调。“一”“不”的拼音按实际读的变调标写；两个第三声相连时，前一个仍标第三声，却要读第二声，这里照录音说，不要照着拼音的原调说。",
-        ),
-        fromBank(sayWord),
-      ),
-      point(
-        `${id}-sentences`,
-        t("Reading Sentences Aloud", "朗读句子"),
-        t(
-          "Read the sentence aloud at a calm speed, as if you were telling someone, keeping the words of a phrase together. If a word is hard, listen to the recording, then read again.",
-          "用平稳的速度大声朗读句子，像在讲给别人听，一个词组里的字要连起来读。遇到难读的词，先听录音，再读一遍。",
-        ),
-        fromBank(readSentence),
-      ),
+      point(`${id}-words`, t("Saying Words", "说词语"), sayExplanation(example), fromBank(sayWord)),
+      point(`${id}-sentences`, t("Reading Sentences Aloud", "朗读句子"), readExplanation(example), fromBank(readSentence)),
     ],
   };
 }
