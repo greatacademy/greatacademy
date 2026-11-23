@@ -742,8 +742,8 @@ const rootsOnCircle: KnowledgePointDef = {
   figure: precalculusDrawings3["higher-roots-of-complex-numbers#the-number-from-its-roots-on-a-circle"],
   title: t("A number from its roots on a circle", "由圆上的根求原数"),
   explanation: t(
-    "The $n$-th roots of a complex number lie evenly spaced on a circle around the origin. So the number of points gives $n$, and the radius of the circle is the $n$-th root of the size of the number. Reversing this, the size of the number is the radius raised to the power $n$, which can be read directly from a drawing of the roots.",
-    "复数的 $n$ 次方根均匀分布在以原点为中心的圆上。所以点的个数就是 $n$，圆的半径是这个数的模的 $n$ 次方根。反过来，这个数的模就是半径的 $n$ 次方，可以直接从根的图中读出。",
+    "The $n$-th roots of a complex number lie evenly spaced on a circle around the origin. So the number of points gives $n$, and the radius of the circle is the $n$-th root of the size of the number. Reversing this, the size of the number is the radius raised to the power $n$, which can be read directly from a drawing of the roots.\n\nFor example, $5$ dots on a circle of radius $2$ are the fifth roots of a number $w$ with $|w| = 2^{5} = 32$. Check: each dot $z$ has $|z| = 2$, and $|z^{5}| = |z|^{5} = 32$.\n\n> **Watch out.** Raise the radius to the power $n$. Multiplying the radius by $n$, or raising $n$ to the power of the radius, gives a different number.",
+    "复数的 $n$ 次方根均匀分布在以原点为中心的圆上。所以点的个数就是 $n$，圆的半径是这个数的模的 $n$ 次方根。反过来，这个数的模就是半径的 $n$ 次方，可以直接从根的图中读出。\n\n例如，半径为 $2$ 的圆上有 $5$ 个点，它们是某个数 $w$ 的五次方根，$|w| = 2^{5} = 32$。检验：每个点 $z$ 都有 $|z| = 2$，而 $|z^{5}| = |z|^{5} = 32$。\n\n> **注意。** 要把半径取 $n$ 次方。把半径乘以 $n$，或者求 $n$ 的半径次方，得到的都是别的数。",
   ),
   generate(rng) {
     const n = rng.int(3, 6);
@@ -754,6 +754,9 @@ const rootsOnCircle: KnowledgePointDef = {
       (_, i): Point => [r * Math.cos(offset + (2 * Math.PI * i) / n), r * Math.sin(offset + (2 * Math.PI * i) / n)],
     );
     const answer = r ** n;
+    const s1 = stepLabel(1, "Count the dots", "数点");
+    const s2 = stepLabel(2, "Raise the radius to the power", "半径取幂");
+    const product = Array.from({ length: n }, () => String(r)).join(" \\cdot ");
     return numeric(
       t(
         "The dots are all the roots of an equation $z^n = w$, for one complex number $w$. What is $|w|$?",
@@ -762,8 +765,8 @@ const rootsOnCircle: KnowledgePointDef = {
       answer,
       [r * n, r, n, r ** (n - 1), n ** r, answer * r],
       t(
-        `There are ${n} dots on a circle of radius ${r}, so $|w| = ${r}^{${n}} = ${answer}$.`,
-        `半径为 ${r} 的圆上有 ${n} 个点，所以 $|w| = ${r}^{${n}} = ${answer}$。`,
+        `${s1.en} There are $${n}$ dots, so they are the roots of $z^{${n}} = w$.\n\n${s2.en} The circle has radius $${r}$, so each root has modulus $${r}$ and $|w| = ${r}^{${n}} = ${answer}$.\n\n**Check.** Take any dot $z$. Since $z^{${n}} = w$, the modulus of $w$ is $|z|$ multiplied by itself $${n}$ times:\n\n$$${product} = ${answer}$$\n\nThis agrees with $${r}^{${n}}$.`,
+        `${s1["zh-CN"]}共有 $${n}$ 个点，所以它们是 $z^{${n}} = w$ 的根。\n\n${s2["zh-CN"]}圆的半径是 $${r}$，所以每个根的模都是 $${r}$，$|w| = ${r}^{${n}} = ${answer}$。\n\n**检验。** 任取一个点 $z$。因为 $z^{${n}} = w$，$w$ 的模是 $|z|$ 自乘 $${n}$ 次：\n\n$$${product} = ${answer}$$\n\n与 $${r}^{${n}}$ 一致。`,
       ),
       drawn(
         square(4),

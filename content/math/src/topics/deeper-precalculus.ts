@@ -1814,13 +1814,15 @@ const smallestRealPower: KnowledgePointDef = {
   id: "the-smallest-power-of-a-complex-number-that-is-real",
   title: t("The smallest power of a complex number that is real", "使复数的幂成为实数的最小指数"),
   explanation: t(
-    "By De Moivre's theorem, raising a number in polar form to a power multiplies its argument by that power and leaves the size as a separate factor. A complex number is real exactly when its argument is a whole multiple of a straight angle, whether positive or negative. So the smallest power that is real is the smallest multiplier that turns the argument into such a multiple. The modulus plays no part in this at all.",
-    "由棣莫弗定理，极坐标形式的数乘方时，幅角乘以指数，大小则是单独的因子。复数是实数，当且仅当它的幅角是平角的整数倍，不管结果是正还是负。所以使幂为实数的最小指数，就是把幅角变成这种倍数的最小乘数。模在这里完全不起作用。",
+    "By De Moivre's theorem, raising a number in polar form to a power multiplies its argument by that power and leaves the size as a separate factor. A complex number is real exactly when its argument is a whole multiple of a straight angle, whether positive or negative. So the smallest power that is real is the smallest multiplier that turns the argument into such a multiple. The modulus plays no part in this at all.\n\nFor example, for $z = 2(\\cos 75^{\\circ} + i\\sin 75^{\\circ})$, the fraction $\\frac{75}{180}$ reduces to $\\frac{5}{12}$, so the smallest power is $n = 12$. Check: $12 \\cdot 75^{\\circ} = 900^{\\circ} = 5 \\cdot 180^{\\circ}$, a multiple of a straight angle.\n\n> **Watch out.** A real number may be negative, so the argument only has to reach a multiple of $180^{\\circ}$, not of $360^{\\circ}$. Waiting for a full turn gives twice the answer whenever the multiple of $180^{\\circ}$ is odd.",
+    "由棣莫弗定理，极坐标形式的数乘方时，幅角乘以指数，大小则是单独的因子。复数是实数，当且仅当它的幅角是平角的整数倍，不管结果是正还是负。所以使幂为实数的最小指数，就是把幅角变成这种倍数的最小乘数。模在这里完全不起作用。\n\n例如，对 $z = 2(\\cos 75^{\\circ} + i\\sin 75^{\\circ})$，分数 $\\frac{75}{180}$ 约简为 $\\frac{5}{12}$，所以最小指数是 $n = 12$。检验：$12 \\cdot 75^{\\circ} = 900^{\\circ} = 5 \\cdot 180^{\\circ}$，是平角的倍数。\n\n> **注意。** 实数可以是负数，所以幅角只需达到 $180^{\\circ}$ 的倍数，而不必是 $360^{\\circ}$ 的倍数。若等到转满整圈，当 $180^{\\circ}$ 的倍数是奇数时，就会得到答案的两倍。",
   ),
   generate(rng) {
     const theta = 5 * rng.pick(Array.from({ length: 35 }, (_, i) => i + 1).filter((v) => v !== 18));
     const r = rng.int(2, 5);
-    const answer = 180 / gcd(theta, 180);
+    const g = gcd(theta, 180);
+    const answer = 180 / g;
+    const halves = theta / g;
     return numberProblem({
       prompt: t(
         `Let $z = ${r}(\\cos ${theta}^{\\circ} + i\\sin ${theta}^{\\circ})$. Find the smallest positive integer $n$ for which $z^{n}$ is a real number.`,
@@ -1830,8 +1832,8 @@ const smallestRealPower: KnowledgePointDef = {
       form: "integer",
       wrong: [2 * answer, answer + 1, answer - 1, answer + 2],
       solution: t(
-        `By De Moivre's theorem, $z^{n}$ has argument $${theta}n$ degrees, and it is real exactly when this is a multiple of $180$. The greatest common divisor of $${theta}$ and $180$ is $${gcd(theta, 180)}$, so the smallest such $n$ is $${answer}$.`,
-        `由棣莫弗定理，$z^{n}$ 的幅角是 $${theta}n$ 度，当且仅当它是 $180$ 的倍数时 $z^{n}$ 为实数。$${theta}$ 与 $180$ 的最大公因数是 $${gcd(theta, 180)}$，所以最小的 $n$ 是 $${answer}$。`,
+        `${stepLabel(1, "Write the condition", "写出条件").en} By De Moivre's theorem, $z^{n}$ has argument $${theta}n$ degrees, and it is real exactly when this is a multiple of $180$.\n\n${stepLabel(2, "Reduce the fraction", "约简分数").en} In lowest terms\n\n$$\\frac{${theta}}{180} = \\frac{${halves}}{${answer}}$$\n\nSo $n$ must be a multiple of $${answer}$, and the smallest is $${answer}$.\n\n**Check.** With $n = ${answer}$ the argument is $${theta * answer}^{\\circ}$, which is $${halves}$ straight angle${halves === 1 ? "" : "s"}, so $z^{${answer}}$ is real. Since $${halves}$ and $${answer}$ share no factor, no smaller $n$ makes $${theta}n$ a multiple of $180$.`,
+        `${stepLabel(1, "Write the condition", "写出条件")["zh-CN"]}由棣莫弗定理，$z^{n}$ 的幅角是 $${theta}n$ 度，当且仅当它是 $180$ 的倍数时 $z^{n}$ 为实数。\n\n${stepLabel(2, "Reduce the fraction", "约简分数")["zh-CN"]}化成最简分数：\n\n$$\\frac{${theta}}{180} = \\frac{${halves}}{${answer}}$$\n\n所以 $n$ 必须是 $${answer}$ 的倍数，最小的是 $${answer}$。\n\n**检验。** 取 $n = ${answer}$，幅角是 $${theta * answer}^{\\circ}$，即 $${halves}$ 个平角，所以 $z^{${answer}}$ 是实数。因为 $${halves}$ 与 $${answer}$ 没有公因数，更小的 $n$ 都不能使 $${theta}n$ 成为 $180$ 的倍数。`,
       ),
     });
   },

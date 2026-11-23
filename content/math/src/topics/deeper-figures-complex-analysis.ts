@@ -7,6 +7,7 @@ import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
 import { gcd } from "@ga/subject-math";
 import { complexDrawings1 } from "../explanation-drawings-complex-analysis-1.ts";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
+import { stepLabel } from "../solution-kit.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -311,8 +312,8 @@ const rootsFromPicture = {
     "the-equation-from-its-roots-on-a-circle",
     ["The equation from its roots on a circle", "由圆上的根读方程"],
     [
-      "The solutions of $z^n = w$ are $n$ points evenly spaced on a circle centered at the origin. So the number of dots gives $n$, the radius $R$ gives $|w| = R^n$, and multiplying the angle of any one dot by $n$ gives the angle of $w$. A dot on the positive real axis means that $w$ is positive.",
-      "$z^n = w$ 的解是以原点为圆心的圆上均匀分布的 $n$ 个点。所以点的个数给出 $n$，半径 $R$ 给出 $|w| = R^n$，任一点的辐角乘以 $n$ 给出 $w$ 的辐角。正实轴上有点就说明 $w$ 为正。",
+      "The solutions of $z^n = w$ are $n$ points evenly spaced on a circle centered at the origin. So the number of dots gives $n$, the radius $R$ gives $|w| = R^n$, and multiplying the angle of any one dot by $n$ gives the angle of $w$. A dot on the positive real axis means that $w$ is positive.\n\nFor example, $4$ dots on a circle of radius $2$, one of them at the angle $\\frac{\\pi}{4}$, solve $z^{4} = w$ with $|w| = 2^{4} = 16$ and the angle of $w$ equal to $4 \\cdot \\frac{\\pi}{4} = \\pi$. So $w = -16$. Check: that dot is $\\sqrt{2} + \\sqrt{2}i$, whose square is $4i$, and $(4i)^{2} = -16$.\n\n> **Watch out.** The modulus of $w$ is the radius raised to the power $n$, not $n$ times the radius. When no dot lies on the positive real axis, $w$ is not a positive number.",
+      "$z^n = w$ 的解是以原点为圆心的圆上均匀分布的 $n$ 个点。所以点的个数给出 $n$，半径 $R$ 给出 $|w| = R^n$，任一点的辐角乘以 $n$ 给出 $w$ 的辐角。正实轴上有点就说明 $w$ 为正。\n\n例如，半径为 $2$ 的圆上有 $4$ 个点，其中一个的辐角是 $\\frac{\\pi}{4}$，它们是 $z^{4} = w$ 的解，$|w| = 2^{4} = 16$，$w$ 的辐角为 $4 \\cdot \\frac{\\pi}{4} = \\pi$，所以 $w = -16$。检验：这个点是 $\\sqrt{2} + \\sqrt{2}i$，它的平方是 $4i$，而 $(4i)^{2} = -16$。\n\n> **注意。** $w$ 的模是半径的 $n$ 次方，而不是半径的 $n$ 倍。正实轴上没有点时，$w$ 不是正数。",
     ],
     (rng) => {
       const n = rng.int(3, 7);
@@ -325,6 +326,11 @@ const rootsFromPicture = {
         const a = start + (2 * Math.PI * j) / n;
         marks.push({ kind: "point", at: [R * Math.cos(a), R * Math.sin(a)], accent: true });
       }
+      const s1 = stepLabel(1, "Count the dots", "数点");
+      const s2 = stepLabel(2, "Read the radius", "读出半径");
+      const s3 = stepLabel(3, "Find the direction", "确定方向");
+      const other = positive ? piTimes(2, n) : piTimes(3, n);
+      const otherTurns = positive ? "2\\pi" : "3\\pi = \\pi + 2\\pi";
       return ask(
         [
           "The dots are all the solutions of an equation $z^n = w$ with $w$ a real number. What is $w$?",
@@ -333,8 +339,8 @@ const rootsFromPicture = {
         answer,
         [-answer, n * R, R ** (n - 1)],
         [
-          `There are $${n}$ dots at distance $${R}$ from the origin, so $n = ${n}$ and $|w| = ${R}^{${n}}$. ${positive ? "One dot lies on the positive real axis, so $w$ is positive" : `The first dot above the positive real axis has angle $${piTimes(1, n)}$, and $${n}$ times that is $\\pi$, so $w$ is negative`}, which gives $w = ${answer}$.`,
-          `共有 $${n}$ 个点，到原点的距离为 $${R}$，所以 $n = ${n}$，$|w| = ${R}^{${n}}$。${positive ? "有一个点在正实轴上，所以 $w$ 为正" : `正实轴上方第一个点的辐角是 $${piTimes(1, n)}$，乘以 $${n}$ 得 $\\pi$，所以 $w$ 为负`}，于是 $w = ${answer}$。`,
+          `${s1.en} There are $${n}$ dots, so the equation is $z^{${n}} = w$.\n\n${s2.en} The dots lie at distance $${R}$ from the origin, so $|w| = ${R}^{${n}} = ${R ** n}$.\n\n${s3.en} ${positive ? `One dot lies on the positive real axis, at the angle $0$, and $${n} \\cdot 0 = 0$, so $w$ is positive` : `The first dot above the positive real axis has the angle $${piTimes(1, n)}$, and $${n}$ times that is $\\pi$, so $w$ is negative`}. This gives $w = ${answer}$.\n\n**Check.** Use another dot. The next one has the angle $${other}$, and $${n}$ times that is $${otherTurns}$, the same direction again. Its modulus $${R}$ raised to the power $${n}$ is $${R ** n}$, so it too gives $w = ${answer}$.`,
+          `${s1["zh-CN"]}共有 $${n}$ 个点，所以方程是 $z^{${n}} = w$。\n\n${s2["zh-CN"]}这些点到原点的距离为 $${R}$，所以 $|w| = ${R}^{${n}} = ${R ** n}$。\n\n${s3["zh-CN"]}${positive ? `有一个点在正实轴上，辐角为 $0$，$${n} \\cdot 0 = 0$，所以 $w$ 为正` : `正实轴上方第一个点的辐角是 $${piTimes(1, n)}$，乘以 $${n}$ 得 $\\pi$，所以 $w$ 为负`}，于是 $w = ${answer}$。\n\n**检验。** 换一个点来看。下一个点的辐角是 $${other}$，乘以 $${n}$ 得 $${otherTurns}$，方向相同。它的模 $${R}$ 的 $${n}$ 次方是 $${R ** n}$，同样得到 $w = ${answer}$。`,
         ],
         fig(argand(4), marks, [
           `${n} dots evenly spaced on a dashed circle of radius ${R} about the origin.`,
