@@ -257,8 +257,8 @@ export function comprehensionExplanation(blocks: readonly Block[], listening: bo
   const why = w === undefined ? undefined : reasonText(b, q, 0);
   const shown = quote(transcript(b));
   return t(
-    `${advice.en}\n\nTake this ${listening ? "recording" : "text"}:\n\n${shown}\n\nThe question is **${q.ask}** ${ground.en} So the answer is ${zhQuote(q.right)}.${why ? ` ${zhQuote(w!)} is wrong: ${why.en}` : ""}\n\n> **Watch out.** An answer that repeats words you ${listening ? "heard" : "read"} is not always right. Find the part the question is about and check that the answer says what that part means.`,
-    `${advice["zh-CN"]}\n\n比如这段${listening ? "录音" : "短文"}：\n\n${shown}\n\n问题是“${q.ask}”。${ground["zh-CN"]}所以答案是${zhQuote(q.right)}。${why ? `${zhQuote(w!)}不对：${why["zh-CN"]}` : ""}\n\n> **注意。** 和${listening ? "录音" : "原文"}里的词一样的选项不一定对。要找到问题问的那一部分，看选项说的是不是那部分的意思。`,
+    `${advice.en}\n\nTake this ${listening ? "recording" : "text"}:\n\n${shown}\n\nThe question is **${q.ask}** ${ground.en} The answer is ${zhQuote(q.right)}.${why ? ` ${zhQuote(w!)} is wrong: ${why.en}` : ""}\n\n> **Watch out.** An answer that repeats words you ${listening ? "heard" : "read"} is not always right. Find the part the question is about and check that the answer says what that part means.`,
+    `${advice["zh-CN"]}\n\n比如这段${listening ? "录音" : "短文"}：\n\n${shown}\n\n问题是“${q.ask}”。${ground["zh-CN"]}答案是${zhQuote(q.right)}。${why ? `${zhQuote(w!)}不对：${why["zh-CN"]}` : ""}\n\n> **注意。** 和${listening ? "录音" : "原文"}里的词一样的选项不一定对。要找到问题问的那一部分，看选项说的是不是那部分的意思。`,
   );
 }
 
@@ -310,8 +310,8 @@ function explainedSolution(shown: string, q: Question, listening: boolean): Text
   const ground = q.ground!;
   const reasons = reasonsOf(q);
   return t(
-    `${listening ? "You hear:" : "The text says:"}\n\n${quote(shown)}\n\n${ground.en} So the answer to **${q.ask}** is ${zhQuote(q.right)}.\n\n${reasons.map(([w, r]) => `${zhQuote(w)} is wrong: ${r.en}`).join("\n\n")}\n\n**Check.** Ask the question again with the answer in it, **${q.ask}** ${zhQuote(q.right)}, and ${listening ? "play the recording" : "read the text"} once more: it agrees, and each other answer fell for its own reason above.`,
-    `${listening ? "你听到的是：" : "短文里说："}\n\n${quote(shown)}\n\n${ground["zh-CN"]}所以“${q.ask}”的答案是${zhQuote(q.right)}。\n\n${reasons.map(([w, r]) => `${zhQuote(w)}不对：${r["zh-CN"]}`).join("\n\n")}\n\n**检验。** 把答案代回问题：“${q.ask}”——${zhQuote(q.right)}。再${listening ? "听一遍录音" : "读一遍短文"}，内容和它一致，其他选项都已按各自的理由排除。`,
+    `${listening ? "You hear:" : "The text says:"}\n\n${quote(shown)}\n\n${ground.en} The answer to **${q.ask}** is ${zhQuote(q.right)}.\n\n${reasons.map(([w, r]) => `${zhQuote(w)} is wrong: ${r.en}`).join("\n\n")}\n\n**Check.** Ask the question again with the answer in it, **${q.ask}** ${zhQuote(q.right)}, and ${listening ? "play the recording" : "read the text"} once more: it agrees, and each other answer fell for its own reason above.`,
+    `${listening ? "你听到的是：" : "短文里说："}\n\n${quote(shown)}\n\n${ground["zh-CN"]}“${q.ask}”的答案是${zhQuote(q.right)}。\n\n${reasons.map(([w, r]) => `${zhQuote(w)}不对：${r["zh-CN"]}`).join("\n\n")}\n\n**检验。** 把答案代回问题：“${q.ask}”——${zhQuote(q.right)}。再${listening ? "听一遍录音" : "读一遍短文"}，内容和它一致，其他选项都已按各自的理由排除。`,
   );
 }
 
