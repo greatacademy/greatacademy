@@ -400,6 +400,33 @@ const zhe = `
 二者不可得兼（者） | 3 | 两样东西不能同时得到
 `;
 
+const oldAndNewReasons = `
+率妻子邑人来此绝境（妻子） | 妻子的娘家人 | 先人逃难带的是自己的一家人，原文没有提到娘家。 | The forebears fled with their own household; the text says nothing of in-laws.
+率妻子邑人来此绝境（妻子） | 妻子和邻居 | 邻居是后面的“邑人”，“妻子”不会把邻居再说一遍。 | The neighbours are 邑人, after it; 妻子 does not name them twice.
+率妻子邑人来此绝境（绝境） | 风景绝美的地方 | 这里的“绝”不是好到极点，后文说他们“遂与外人间隔”。 | 绝 here is not "supremely": they were, the text says, cut off from outsiders (遂与外人间隔).
+率妻子邑人来此绝境（绝境） | 偏远的边境 | 桃花源不是国家的边境，原文也没有写边防。 | The valley is no border of a state, and the text speaks of no frontier.
+乃不知有汉，无论魏晋（无论） | 没有讨论 | 桃花源中的人并没有在讨论什么，句子说的是他们知道多少。 | The people of the valley are not discussing anything; the sentence is about how much they know.
+乃不知有汉，无论魏晋（无论） | 无法评论 | 句子不是在说评论，“无论”后面跟着的是朝代。 | It is not about commenting: dynasties follow 无论.
+古之学者必有师（学者） | 学校里的老师 | “学者”一定要有老师，可见学者自己不是老师。 | The 学者 must have a teacher, so he is not one himself.
+古之学者必有师（学者） | 读书做官的人 | 句子讲的是学习要从师，和做官无关。 | The sentence is about learning from a teacher, not about holding office.
+备他盗之出入与非常也（非常） | 不平常的人 | 句子要防备的是事，原文没有说有什么不平常的人。 | What is guarded against is events; the text names no remarkable person.
+备他盗之出入与非常也（非常） | 违法的事情 | 违法的人已经由“他盗”说了，“非常”是另一样要防备的事。 | Lawbreakers are already covered by 他盗; 非常 is a second thing to guard against.
+先帝不以臣卑鄙（卑鄙） | 胆小怕事 | 诸葛亮说的是先帝不嫌弃他，和胆量无关。 | Zhuge Liang speaks of not being looked down on, which has nothing to do with courage.
+先帝不以臣卑鄙（卑鄙） | 为人吝啬 | 吝啬和“卑”“鄙”两个字的意思都不相关。 | Stinginess has nothing to do with the senses of 卑 or 鄙.
+今齐地方千里（地方） | 地方政府 | 战国时没有今天说的“地方政府”，“地方政府千里”也讲不通。 | There was no local government in the modern sense, and "local government a thousand li" makes no sense.
+今齐地方千里（地方） | 本地 | “本地千里”讲不通，句子要说的是齐国的大小。 | "This place a thousand li" makes no sense; the sentence gives the size of Qi.
+山东豪俊遂并起而亡秦族矣（山东） | 东边的山 | “山东”是豪杰起来的地区，不是某一座山。 | 山东 is the region the heroes rose from, not a mountain.
+山东豪俊遂并起而亡秦族矣（山东） | 泰山以东 | 泰山在齐地，泰山以东只是一小块，起来反秦的是六国各地的豪杰。 | Mount Tai is in Qi and east of it is a small corner, but the heroes came from all six states.
+出则无敌国外患者（敌国） | 被打败的国家 | 被打败的国家构不成威胁，也就不能使一个国家警醒。 | A defeated state is no threat, so it keeps no state alert.
+出则无敌国外患者（敌国） | 遥远的国家 | 遥远的国家威胁不到本国，和“外患”连不起来。 | A distant state threatens nothing, and does not go with 外患.
+未尝不叹息痛恨于桓灵也（痛恨） | 非常后悔 | 桓帝、灵帝的过失不是刘备做的，他没有什么可后悔的。 | The faults of Emperors Huan and Ling were not Liu Bei's, so he had nothing to regret.
+未尝不叹息痛恨于桓灵也（痛恨） | 十分愤怒 | 和前面的“叹息”配不上：叹息是低沉的，愤怒是激烈的。 | It does not go with 叹息 before it: a sigh is low, anger fierce.
+吾从而师之（从而） | 然后 | “然后”只表示先后，丢了“从”这个跟从的动作。 | 然后 only orders events and loses the act of 从, following.
+吾从而师之（从而） | 于是就 | “于是就”也丢了“从”这个动作，句子就只剩下“师之”了。 | 于是就 too loses the act of 从, leaving only 师之.
+中间力拉崩倒之声（中间） | 事物的中心 | 声音谈不上中心，“中心力拉崩倒之声”讲不通。 | Sounds have no centre; the phrase would make no sense.
+中间力拉崩倒之声（中间） | 一段时间之内 | 原文没有说时间的长短，写的是这些声音本身。 | The text says nothing of a span of time; it describes the sounds themselves.
+`;
+
 /** WordPart is one word of a drill of two function words: its point, its usages, its items and how it is taught. */
 interface WordPart {
   readonly word: string;
@@ -886,6 +913,7 @@ export const seniorClassicalDrills: readonly ClassicalDrill[] = [
         question: t("What does the word in brackets mean in this sentence?", "括号里的词在这句话中是什么意思？"),
         kind: "changed",
         data: oldAndNew,
+        reasons: oldAndNewReasons,
       }),
     ],
   },

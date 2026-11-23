@@ -38,6 +38,26 @@ const contentWords = `
 兔不可复得（得） | 得到 | 必须 | 得意 | 获胜 | 兔子不可能再得到了 | 他想要的是再捡到一只兔子，“得”说的就是把兔子拿到手。 | What he wanted was to pick up another hare; 得 is getting it into his hands.
 `;
 
+const contentReasons = `
+兔走触株（走） | 离开 | “离开”说不出兔子怎样撞上树桩；它是一头撞上去，连脖子都折断了。 | 离开 does not say how the hare came to hit the stump hard enough to break its neck.
+兔走触株（走） | 前往 | “前往”要有去的地方，句中的兔子并不是去哪里，而是撞上了树桩。 | 前往 needs a destination, and the hare is going nowhere: it crashes into a stump.
+因释其耒而守株（释） | 拿起 | 拿起农具是要干活，可他从此守着树桩，不再耕地，意思正好反了。 | Picking up the tool means going to work, but he gives up ploughing to wait by the stump: the opposite.
+冀复得兔（冀） | 害怕 | 他守着树桩是想要兔子再来，不是怕兔子来。 | He waits by the stump wanting a hare to come, not fearing one.
+冀复得兔（冀） | 打算 | “打算”是自己要去做的事，可兔子会不会再撞上来，由不得他安排。 | 打算 is a plan of one's own, but whether a hare comes again is not his to arrange.
+冀复得兔（冀） | 等待 | 等待已经由“守株”说了；这一句另说一件事，说的是他心里的念头。 | Waiting is already said by 守株; this sentence says something else, what is in his mind.
+孔君平诣其父（诣） | 告诉 | “告诉”后面要有告诉的内容，句中没有；何况后文说父亲不在。 | 告诉 needs something told, and nothing is; besides, the father turns out to be away.
+孔君平诣其父（诣） | 询问 | 孔君平并没有问什么，接下来是孩子招待他。 | Kong Junping asks nothing; what follows is the boy serving him.
+孔君平诣其父（诣） | 寻找 | 孔君平知道要见的是谁、在哪里，后文孩子在家里招待他，他不是在到处找人。 | Kong knows whom he means to see and where; the boy serves him at the house, so he is not searching.
+未闻孔雀是夫子家禽（闻） | 看见 | 一只鸟是谁家的，眼睛是看不出来的。 | Whose bird a peacock is cannot be seen with the eyes.
+胤恭勤不倦（倦） | 卷起 | “卷起”是“卷”的意思，“卷”和“倦”字形相近，放进“恭勤不倦”讲不通。 | 卷起 is the sense of 卷, which looks like 倦, and makes no sense in 恭勤不倦.
+胤恭勤不倦（倦） | 休息 | 车胤夜里读书，也总要睡觉；“不倦”夸的是他的劲头，不是说他从不歇息。 | Che Yin had to sleep some time; 不倦 praises his spirit, not a claim that he never rested.
+胤恭勤不倦（倦） | 害怕 | 读书没有什么可怕的，“恭勤”后面接着说的还是他勤奋，不是他的胆量。 | There is nothing to fear in reading; after 恭勤 the sentence goes on about his diligence, not his courage.
+学而时习之（习） | 风俗 | “风俗”是名词，可“时习之”的“习”带着宾语“之”，是一个动作。 | 风俗 is a noun, but 习 in 时习之 takes 之 as object: it is an action.
+学而时习之（习） | 学会 | 前面已经说了“学”，“学会”和它重复；“学会”也不是能“按时”去做的事。 | 学 is already said, so 学会 repeats it, and learning something is not done at set times.
+兔不可复得（得） | 必须 | 表示“必须”的“得”读děi，可句子并没有说必须做什么。 | The 得 of "must" is read děi, and the sentence names nothing that must be done.
+兔不可复得（得） | 获胜 | 守株等兔不是比赛，无所谓胜负。 | Waiting by a stump for hares is no contest; there is nothing to win.
+`;
+
 const sentences = `
 兔走触株，折颈而死
 = 一只兔子奔跑着撞到树桩上，折断脖子死了
@@ -245,6 +265,20 @@ const juniorWords = `
 陶后鲜有闻（鲜） | 少 | 新鲜 | 鲜艳 | 鲜美 | 陶渊明以后很少听说了 | 周敦颐感叹喜爱菊花的人在陶渊明以后就不多了，“鲜有闻”是很少听说。 | Zhou Dunyi laments that since Tao Yuanming few have loved the chrysanthemum: 鲜有闻 is seldom heard of.
 `;
 
+const juniorReasons = `
+尊君在不（不） | 没有 | “没有”就成了说父亲不在，可朋友是在向元方发问，不是告诉他。 | 没有 would state that the father is out, but the friend is asking Yuanfang, not telling him.
+撒盐空中差可拟（拟） | 打算 | “差不多可以打算”讲不通，句子没有说打算做什么。 | 差可打算 makes no sense: nothing is said to be planned.
+孰若孤（孰） | 熟悉 | “熟悉”是“熟”的意思，“熟”和“孰”字形相近，放进句中讲不通。 | 熟悉 is the sense of 熟, which looks like 孰, and makes no sense here.
+孰若孤（孰） | 成熟 | “成熟”也是“熟”的意思，和“孰”只是字形相近。 | 成熟 too is the sense of 熟, which only looks like 孰.
+孰若孤（孰） | 什么 | “什么”问的是事物，可孙权拿来和自己比的是吕蒙这个人。 | 什么 asks about things, but what Sun Quan sets against himself is a man, Lü Meng.
+但微颔之（颔） | 下巴 | “下巴”是名词，可“微颔之”带着宾语“之”，前面还有“微”，是一个动作。 | 下巴 is a noun, but 微颔之 takes 之 as object, after 微: an action.
+但微颔之（颔） | 摇头 | 摇头是否定，可卖油翁看到“发矢十中八九”，并没有否定他射得准。 | Shaking the head denies, but the oil seller does not deny that the arrows hit.
+但微颔之（颔） | 弯腰 | “颔”以“页”为偏旁，和头部有关，跟腰无关。 | 颔 has the radical 页, which marks the head, not the waist.
+公亦以此自矜（矜） | 怜悯 | 陈尧咨箭术当世无双，没有什么要可怜自己的。 | Chen Yaozi is the finest archer of his day, with nothing to pity himself for.
+公亦以此自矜（矜） | 拘谨 | 拘谨和他的得意不合：后文他见卖油翁不以为然，就“忿然”质问。 | Reserve does not fit him: when the oil seller is unimpressed, he challenges him in anger (忿然).
+公亦以此自矜（矜） | 谨慎 | 后文他一见有人不服就发怒，谈不上谨慎；“自矜”也不是对自己小心。 | He flares up the moment someone is unimpressed, which is not caution, and 自矜 is not care for oneself.
+`;
+
 const juniorSentences = `
 待君久不至，已去
 = 等您很久您都没来，他已经走了
@@ -415,6 +449,27 @@ const eighthWords = `
 讲信修睦（修） | 培养 | 修理 | 修建 | 修改 | 讲求诚信，培养和睦 | “修”后面是“睦”，和睦不是能修理、修建的东西，而是要慢慢培养的。 | 修 takes 睦, harmony, which is not repaired or built but cultivated.
 `;
 
+const eighthReasons = `
+略无阙处（阙） | 城楼 | 三峡写的是两岸的山，不是城；“没有城楼的地方”和上下文接不上。 | The Three Gorges passage describes mountains, not a city; "no place without towers" does not follow.
+略无阙处（阙） | 缺点 | “缺点”说的是人或事物的毛病，这里写的是山的样子，不是评论好坏。 | 缺点 is a fault of a person or thing; the passage pictures the mountains, it does not judge them.
+不见曦月（曦） | 月光 | 后面已经有“月”，“曦月”是两样东西，“曦”不会也是月光。 | 月 already follows; 曦月 names two things, so 曦 is not moonlight too.
+不见曦月（曦） | 星光 | 白天本来就看不见星光，说它“不见”就显不出山的高峻了。 | Stars are not seen by day anyway, so saying they are unseen would show nothing of the height of the cliffs.
+不见曦月（曦） | 早晨 | “早晨”是时间，和“月”并列的应当是天上能看见的东西。 | 早晨 is a time, but what stands beside 月 must be something seen in the sky.
+沿溯阻绝（溯） | 顺流而下 | 这是“沿”的意思；“沿溯”说的是两个方向，不会把一个方向说两遍。 | That is what 沿 means; 沿溯 names two directions, not one twice.
+沿溯阻绝（溯） | 回忆 | “回忆”是从“追溯往事”引申来的意思，句子说的是江上的航路。 | 回忆 grows out of tracing back the past, but the sentence is about travel on the river.
+虽乘奔御风（奔） | 逃跑 | “乘”后面要跟能骑乘的东西，逃跑是骑不了的。 | 乘 needs something to ride, and flight cannot be ridden.
+晓雾将歇（歇） | 休息 | 休息是人的事，雾不会休息。 | Resting is what people do; mist does not rest.
+晓雾将歇（歇） | 睡觉 | 雾不会睡觉；而且是早晨的雾，人刚醒来的时候。 | Mist does not sleep, and this is morning mist, at waking time.
+夕日欲颓（颓） | 倒塌 | “倒塌”说的是房屋墙壁，太阳不会倒塌。 | 倒塌 is said of walls and houses; the sun does not collapse.
+夕日欲颓（颓） | 衰败 | “衰败”说的是家业、国势，一天里的太阳谈不上衰败。 | 衰败 is said of families and states; the sun of one day does not decline so.
+盖竹柏影也（盖） | 建造 | 作“建造”讲，“盖”后面要有房屋，这里跟着的是影子。 | As "build", 盖 needs a building after it, but here comes a shadow.
+互相轩邈（邈） | 渺小 | 山峰争着往高处伸展，说它们渺小正好相反。 | The peaks vie upwards; calling them small is the opposite.
+互相轩邈（邈） | 模糊 | “轩邈”写的是山势伸展，不是看不清楚。 | 轩邈 pictures how the mountains reach out, not that they are hard to see.
+互相轩邈（邈） | 美貌 | “美貌”是“貌”的意思，“貌”和“邈”音同形近，放进句中讲不通。 | 美貌 is the sense of 貌, which sounds and looks like 邈, and makes no sense here.
+一食或尽粟一石（或） | 也许 | 作者不是在猜，后文“食马者不知其能千里而食也”把这个食量当作事实。 | The writer is not guessing: the next sentence treats this appetite as fact.
+一食或尽粟一石（或） | 有人 | “有人”要指人，句子说的是千里马的饭量。 | 有人 names people, but the sentence is about the horse's appetite.
+`;
+
 const borrowed = `
 便要还家（要） | 同“邀”，邀请 | 要求 | 重要 | 同“腰”，腰部 | 就邀请渔人到自己家里去 | 桃花源里的人问清渔人的来历，就把他带回家“设酒杀鸡作食”，是热情地请他去。 | The people of the valley hear where the fisherman is from and take him home to wine and chicken: they are inviting him.
 才美不外见（见） | 同“现”，表现 | 看见 | 见解 | 拜见 | 才能和美好的素质不能表现在外面 | 千里马吃不饱，力气不足，它的才能“不外见”，是没法显露出来。 | Underfed, the horse lacks strength, and its gifts cannot show outwardly.
@@ -545,6 +600,7 @@ export const classicalDrills: readonly ClassicalDrill[] = [
         question: WORD_QUESTION,
         kind: "content",
         data: contentWords,
+        reasons: contentReasons,
       }),
       sentencePoint({
         suffix: "sentences",
@@ -642,6 +698,7 @@ export const classicalDrills: readonly ClassicalDrill[] = [
         question: WORD_QUESTION,
         kind: "content",
         data: juniorWords,
+        reasons: juniorReasons,
       }),
       sentencePoint({
         suffix: "sentences",
@@ -701,6 +758,7 @@ export const classicalDrills: readonly ClassicalDrill[] = [
         question: WORD_QUESTION,
         kind: "content",
         data: eighthWords,
+        reasons: eighthReasons,
       }),
     ],
   },

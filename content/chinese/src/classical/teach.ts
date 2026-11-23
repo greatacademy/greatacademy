@@ -11,6 +11,12 @@ import { type DrillItem, type DrillPoint, drillItem } from "../grammar/drill.ts"
 /** nested turns the quotation marks of a text into inner ones, for it to be quoted in turn. */
 const nested = (text: string): string => text.replaceAll("“", "‘").replaceAll("”", "’");
 
+/** ENDED is a text that already ends a sentence. */
+const ENDED = /[。！？.!?][”’"']*$/u;
+
+/** stop is the mark that ends a sentence after a quoted text: none when the text ends one itself. */
+const stop = (quoted: string, mark: string): string => (ENDED.test(quoted) ? "" : mark);
+
 /** cap starts a text with a capital letter. */
 const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -151,12 +157,12 @@ export function usagePoint(spec: UsageSpec): DrillPoint {
         );
     const check = word
       ? t(
-          `**Check.** Put the whole sentence into modern Chinese: “${note.reading}”. Taken this way, ${word} makes the sentence read smoothly${analogue ? `, just as in ${analogue}, where ${sameWord ? word : likeWord} is used the same way` : ""}.`,
-          `**检验。** 把整句译成现代汉语：“${nested(note.reading)}”。这样理解“${word}”，句子通顺${analogue ? `；“${analogue}”中的“${sameWord ? word : likeWord}”也是这样用的，可以对照` : ""}。`,
+          `**Check.** Put the whole sentence into modern Chinese: “${nested(note.reading)}”${stop(note.reading, ".")} Taken this way, ${word} makes the sentence read smoothly${analogue ? `, just as in ${analogue}, where ${sameWord ? word : likeWord} is used the same way` : ""}.`,
+          `**检验。** 把整句译成现代汉语：“${nested(note.reading)}”${stop(note.reading, "。")}这样理解“${word}”，句子通顺${analogue ? `；“${nested(analogue)}”中的“${sameWord ? word : likeWord}”也是这样用的，可以对照` : ""}。`,
         )
       : t(
-          `**Check.** Put the whole sentence into modern Chinese, in the order modern Chinese needs: “${note.reading}”. Read so, it says just what the original does${analogue ? `, and ${analogue} is a sentence of the same kind` : ""}.`,
-          `**检验。** 按现代汉语的说法把整句译出来：“${nested(note.reading)}”，意思和原句完全一致${analogue ? `；“${analogue}”也是同一种句式，可以对照` : ""}。`,
+          `**Check.** Put the whole sentence into modern Chinese, in the order modern Chinese needs: “${nested(note.reading)}”${stop(note.reading, ".")} Read so, it says just what the original does${analogue ? `, and ${analogue} is a sentence of the same kind` : ""}.`,
+          `**检验。** 按现代汉语的说法把整句译出来：“${nested(note.reading)}”，意思和原句完全一致${analogue ? `；“${nested(analogue)}”也是同一种句式，可以对照` : ""}。`,
         );
     return t(
       `${head.en} ${clue("en")}\n\n${step2.en}\n\n${check.en}`,
@@ -171,9 +177,12 @@ export function usagePoint(spec: UsageSpec): DrillPoint {
     return word
       ? t(
           `Not ${wrong}: ${u.cue.en}, as in ${ex}; ${word} in this sentence is not used so.`,
-          `不是“${nested(wrong)}”：${u.cue["zh-CN"]}，如“${ex}”；本句的“${word}”不是这样用的。`,
+          `不是“${nested(wrong)}”：${u.cue["zh-CN"]}，如“${nested(ex)}”；本句的“${word}”不是这样用的。`,
         )
-      : t(`Not ${wrong}: ${u.cue.en}, as in ${ex}; this sentence does not.`, `不是${wrong}：${u.cue["zh-CN"]}，如“${ex}”；这句不是这样。`);
+      : t(
+          `Not ${wrong}: ${u.cue.en}, as in ${ex}; this sentence does not.`,
+          `不是${wrong}：${u.cue["zh-CN"]}，如“${nested(ex)}”；这句不是这样。`,
+        );
   };
   return {
     suffix: spec.suffix,
@@ -195,6 +204,11 @@ export interface WordSpec extends PointText {
   readonly kind: "content" | "borrowed" | "changed";
   /** data holds a line an item: the shown sentence, the right meaning, three wrong ones, the sentence in modern Chinese, and a clue in Chinese and English. */
   readonly data: string;
+  /**
+   * reasons holds a line a wrong option that is neither today's meaning nor a borrowed reading: the shown sentence, the
+   * wrong option, and why it is wrong in Chinese and English.
+   */
+  readonly reasons?: string;
 }
 
 /** standsFor is the character a borrowed one stands for, from a meaning written 同“X”. */
@@ -218,6 +232,12 @@ export function wordPoint(spec: WordSpec): DrillPoint {
     return drillItem(shown, right, [a, b, c]);
   });
   const wrongOf = new Map(items.map((i) => [i.shown, i.wrong]));
+  const own = new Map<string, Text>();
+  for (const line of rows(spec.reasons ?? "")) {
+    const [shown, wrong, zh, en] = fields(line);
+    if (!shown || !wrong || !zh || !en || !wrongOf.get(shown)?.includes(wrong)) throw new Error(`classical drill: reason ${line}`);
+    own.set(`${shown}|${wrong}`, t(en, zh));
+  }
   /** today says whether a wrong option is a meaning the word has in today's words. */
   const today = (wrong: string, shown: string): boolean => {
     const [, word] = split(shown);
@@ -248,7 +268,7 @@ export function wordPoint(spec: WordSpec): DrillPoint {
               )
             : t("", "");
     return t(
-      `**Step 1: see what the sentence needs.** ${note.clue!.en}\n\n**Step 2: choose the meaning that fits.** So ${word} here is: ${right}.${more.en}\n\n**Check.** Put the meaning back into the sentence and read it in modern Chinese: “${note.reading}”. It reads smoothly and says what the original does.`,
+      `**Step 1: see what the sentence needs.** ${note.clue!.en}\n\n**Step 2: choose the meaning that fits.** So ${word} here is: ${right}.${more.en}\n\n**Check.** Put the meaning back into the sentence and read it in modern Chinese: “${nested(note.reading)}”${stop(note.reading, ".")} It reads smoothly and says what the original does.`,
       `**第一步：看句子需要什么意思。**${note.clue!["zh-CN"]}\n\n**第二步：选出合乎句意的解释。**所以“${word}”在这里是：${right}。${more["zh-CN"]}\n\n**检验。** 把这个意思代回原句，译成现代汉语：“${nested(note.reading)}”，句子通顺，和原句的意思一致。`,
     );
   };
@@ -258,25 +278,24 @@ export function wordPoint(spec: WordSpec): DrillPoint {
     if (other !== undefined) {
       return t(
         `${wrong} takes ${word} to stand for ${other}, but ${other} makes no sense in ${sentence}.`,
-        `“${nested(wrong)}”是把“${word}”当作“${other}”的通假字，可“${other}”放进“${sentence}”讲不通。`,
+        `“${nested(wrong)}”是把“${word}”当作“${other}”的通假字，可“${other}”放进“${nested(sentence)}”讲不通。`,
       );
     }
     if (spec.kind === "borrowed") {
       return t(
         `${wrong} is a meaning ${word} has of its own, and it makes no sense in ${sentence}: here ${word} stands for a character that sounds like it.`,
-        `“${wrong}”是“${word}”本来的意思，放进“${sentence}”讲不通：这里的“${word}”是借来代替一个读音相近的字的。`,
+        `“${wrong}”是“${word}”本来的意思，放进“${nested(sentence)}”讲不通：这里的“${word}”是借来代替一个读音相近的字的。`,
       );
     }
     if (today(wrong, shown)) {
       return t(
         `${wrong} is what ${word} means in today's words, and it does not fit ${sentence}: a classical word often meant something else.`,
-        `“${wrong}”是“${word}”在今天的词语里的意思，放进“${sentence}”讲不通；文言词的意思常和今天不同。`,
+        `“${wrong}”是“${word}”在今天的词语里的意思，放进“${nested(sentence)}”讲不通；文言词的意思常和今天不同。`,
       );
     }
-    return t(
-      `${wrong} does not fit ${sentence}: put in its place, the sentence no longer hangs together.`,
-      `“${wrong}”放进“${sentence}”，句子前后意思接不上。`,
-    );
+    const reason = own.get(`${shown}|${wrong}`);
+    if (!reason) throw new Error(`classical drill: no reason for ${wrong} in ${shown}`);
+    return t(`${wrong}: ${reason.en}`, `“${nested(wrong)}”：${reason["zh-CN"]}`);
   };
   return { suffix: spec.suffix, title: spec.title, explanation: spec.explanation, question: spec.question, items, why, whyNot };
 }

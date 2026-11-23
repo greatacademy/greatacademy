@@ -3,14 +3,13 @@
 // beside this file holds every listed topic to it.
 
 /** taughtStrands lists the strands whose every topic is written to the teaching standard. */
-export const taughtStrands: readonly string[] = ["recitation", "classical"];
+export const taughtStrands: readonly string[] = ["recitation", "classical", "pinyin"];
 
 /**
  * taughtTopics lists further topics written to the standard while their strand is still being rewritten; once the
  * strand is listed in taughtStrands, its topics leave this list.
  */
 export const taughtTopics: readonly string[] = [
-  "pinyin-alphabet",
   "reading-1-rhymes",
   "reading-1-stories",
   "reading-1-signs",

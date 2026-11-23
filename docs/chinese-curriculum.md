@@ -146,6 +146,8 @@ Levels follow GF 0025-2021, `chinese-level-1` to `chinese-level-9`. The standard
 
 New items per level, with the cumulative total in brackets. Level 1 begins with tones and the sounds a speaker of English or Japanese confuses, heard and said from recordings, then pinyin, then characters; the first characters are basic ones, as for native learners (§5.2). Practice follows the four strands of Nation, as in English.
 
+The pinyin topics teach each rule with a syllable or word of their own: each opens with one instance worked through, and each knowledge point gives its rule, walks one instance and names the mistake its wrong options record, such as zh taken for z, an for ang, or 一 said yí before a tone that is not the fourth. A solution goes in steps, from the mark, the letters before the first vowel, the spelling rule or the tone after 一 and 不, to the answer, and checks it another way: against the four tones of ma, by putting the syllable back together, by undoing the spelling rule, against another word of the same tone change, or, for a word said aloud, by humming its pitch first. Every wrong option is answered with its own reason, a syllable heard included.
+
 ### 8.4 Units
 
 | Part | In a unit on the market | Judged by |
