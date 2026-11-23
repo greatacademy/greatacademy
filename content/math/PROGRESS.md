@@ -175,9 +175,9 @@ Stage 2: AP Calculus AB and BC, Calculus I and II. Counts are topics of these co
 | `calculus-i-continuity.ts` | 13 | done | |  |
 | `calculus-i-differentiation.ts` | 9 | done | |  |
 | `calculus-i-derivative-rules.ts` | 12 | done | |  |
-| `calculus-i-chain-rule.ts` | 7 | in progress | |  |
+| `calculus-i-chain-rule.ts` | 7 | done | |  |
 | `calculus-i-implicit-inverse.ts` | 11 | in progress | |  |
-| `calculus-i-hyperbolic.ts` | 6 | open | |  |
+| `calculus-i-hyperbolic.ts` | 6 | in progress | |  |
 | `calculus-i-contextual.ts` | 16 | open | |  |
 | `calculus-i-extrema.ts` | 11 | open | |  |
 | `calculus-i-curves.ts` | 8 | open | |  |
