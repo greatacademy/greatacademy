@@ -8,6 +8,7 @@ import { gcd } from "@ga/subject-math";
 import { complexDrawings1 } from "../explanation-drawings-complex-analysis-1.ts";
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { drawn } from "./figure-reading-more.ts";
 
 /** argand is the complex plane from -r to r on both axes. */
@@ -80,19 +81,68 @@ const relativesOfAPoint = point(
   "reading-a-point-and-its-relatives",
   ["Reading a point and its relatives", "读点及其相关的数"],
   [
-    "A complex number is read from the plane with its real part across and its imaginary part up. Its conjugate is the mirror image in the real axis, its negative is the point through the origin, and multiplying by $i$ turns it a quarter turn counterclockwise. Reading the point first and then applying the rule avoids sign slips.",
-    "从平面上读复数时，实部是横向，虚部是纵向。共轭是关于实轴的镜像，相反数是关于原点的对称点，乘以 $i$ 是逆时针旋转四分之一圈。先读出点，再套用规则，可以避免符号错误。",
+    "A complex number is read from the plane with its real part across and its imaginary part up. Its conjugate is the mirror image in the real axis, its negative is the point through the origin, and multiplying by $i$ turns it a quarter turn counterclockwise. Reading the point first and then applying the rule avoids sign slips.\n\nFor example, the point $(2, 3)$ is $z = 2 + 3i$. Then $\\overline{z} = 2 - 3i$, $-z = -2 - 3i$ and $iz = 2i + 3i^2 = -3 + 2i$. Check: $iz$ is the point $(-3, 2)$, at the same distance $\\sqrt{13}$ from the origin, and $(2)(-3) + (3)(2) = 0$, so it is a quarter turn from $(2, 3)$.\n\n> **Watch out.** The conjugate is a reflection, not a turn, and swapping the two parts is a third, different move: for $2 + 3i$ it gives $3 + 2i$, which is none of $\\overline{z}$, $-z$ or $iz$.",
+    "从平面上读复数时，实部是横向，虚部是纵向。共轭是关于实轴的镜像，相反数是关于原点的对称点，乘以 $i$ 是逆时针旋转四分之一圈。先读出点，再套用规则，可以避免符号错误。\n\n例如，点 $(2, 3)$ 是 $z = 2 + 3i$。于是 $\\overline{z} = 2 - 3i$，$-z = -2 - 3i$，$iz = 2i + 3i^2 = -3 + 2i$。检验：$iz$ 是点 $(-3, 2)$，到原点的距离同样是 $\\sqrt{13}$，而且 $(2)(-3) + (3)(2) = 0$，所以它与 $(2, 3)$ 相差四分之一圈。\n\n> **注意。** 共轭是反射，不是旋转；交换两部分又是另一种变换：对 $2 + 3i$ 它给出 $3 + 2i$，既不是 $\\overline{z}$，也不是 $-z$ 或 $iz$。",
   ],
   (rng) => {
     const [x, y] = [rng.nonZero(-5, 5), rng.nonZero(-5, 5)];
-    const options: [string, string][] = [
-      ["\\overline{z}", cx(x, -y)],
-      ["-z", cx(-x, -y)],
-      ["iz", cx(-y, x)],
-      ["-iz", cx(y, -x)],
-      ["z", cx(x, y)],
+    /** Relative is a number made from z: its name in LaTeX, its value, what it is in English and Chinese, and a check of it. */
+    type Relative = readonly [name: string, value: string, what: Pair, check: Pair];
+    const relatives: readonly Relative[] = [
+      [
+        "\\overline{z}",
+        cx(x, -y),
+        ["the conjugate of $z$, its mirror image in the real axis", "$z$ 的共轭，即关于实轴的镜像"],
+        [`$z + \\overline{z} = ${2 * x}$ is real, as the imaginary parts cancel.`, `$z + \\overline{z} = ${2 * x}$ 是实数，虚部相消。`],
+      ],
+      [
+        "-z",
+        cx(-x, -y),
+        ["the negative of $z$, the point through the origin", "$z$ 的相反数，即关于原点的对称点"],
+        [
+          "$z + (-z) = 0$, and the two points are the same distance from the origin on opposite sides.",
+          "$z + (-z) = 0$，两点在原点两侧，到原点距离相同。",
+        ],
+      ],
+      [
+        "iz",
+        cx(-y, x),
+        ["$z$ turned a quarter turn counterclockwise, which is $iz$", "$z$ 逆时针旋转四分之一圈，即 $iz$"],
+        [
+          `the point $(${-y}, ${x})$ has the same squared distance $${x * x + y * y}$ from the origin, and $(${x})(${-y}) + (${y})(${x})$ is $0$, so it is a quarter turn away.`,
+          `点 $(${-y}, ${x})$ 到原点距离的平方同样是 $${x * x + y * y}$，而 $(${x})(${-y}) + (${y})(${x})$ 等于 $0$，所以相差四分之一圈。`,
+        ],
+      ],
+      [
+        "-iz",
+        cx(y, -x),
+        ["$z$ turned a quarter turn clockwise, which is $-iz$", "$z$ 顺时针旋转四分之一圈，即 $-iz$"],
+        [
+          `the point $(${y}, ${-x})$ has the same squared distance $${x * x + y * y}$ from the origin, and $(${x})(${y}) + (${y})(${-x})$ is $0$, so it is a quarter turn away.`,
+          `点 $(${y}, ${-x})$ 到原点距离的平方同样是 $${x * x + y * y}$，而 $(${x})(${y}) + (${y})(${-x})$ 等于 $0$，所以相差四分之一圈。`,
+        ],
+      ],
+      [
+        "z",
+        cx(x, y),
+        ["$z$ itself", "$z$ 本身"],
+        [
+          `the point is $${Math.abs(x)}$ ${x > 0 ? "right of" : "left of"} the imaginary axis and $${Math.abs(y)}$ ${y > 0 ? "above" : "below"} the real axis.`,
+          `这个点在虚轴${x > 0 ? "右" : "左"}边 $${Math.abs(x)}$ 处，在实轴${y > 0 ? "上" : "下"}方 $${Math.abs(y)}$ 处。`,
+        ],
+      ],
     ];
-    const [name, value] = rng.pick(options);
+    const others: readonly (readonly [string, Pair])[] = [
+      [
+        cx(y, x),
+        [
+          "$z$ with its real and imaginary parts swapped, its mirror image in the line $y = x$",
+          "交换 $z$ 的实部和虚部，即关于直线 $y = x$ 的镜像",
+        ],
+      ],
+      [cx(-y, -x), ["the mirror image of $z$ in the line $y = -x$", "$z$ 关于直线 $y = -x$ 的镜像"]],
+    ];
+    const [name, value, what, check] = rng.pick(relatives);
     const rule: Pair =
       name === "z"
         ? ["the point itself is asked for", "所求就是这个点本身"]
@@ -109,20 +159,24 @@ const relativesOfAPoint = point(
                   "since $-i(a + bi) = b - ai$, the point turns a quarter turn clockwise",
                   "因为 $-i(a + bi) = b - ai$，点顺时针旋转四分之一圈",
                 ];
-    return choose(
-      rng,
-      [`The point $z$ is drawn in the complex plane. What is $${name}$?`, `图中画出了复平面上的点 $z$。$${name}$ 是多少？`],
-      same(value),
-      options.map(([, v]) => same(v)).concat([same(cx(y, x)), same(cx(-y, -x))]),
-      [
-        `The drawing gives $z = ${cx(x, y)}$, and ${rule[0]}. So the value is $${value}$.`,
-        `由图得 $z = ${cx(x, y)}$，${rule[1]}。所以结果是 $${value}$。`,
-      ],
-      fig(
-        argand(6),
-        [{ kind: "point", at: [x, y], label: "z", dir: y > 0 ? "ne" : "se", accent: true }],
-        [`A point z at (${x}, ${y}) in the complex plane.`, `复平面上的点 z，位于 (${x}, ${y})。`],
+    const described = [...relatives.map(([, v, w]) => [v, w] as const), ...others];
+    return reasoned(
+      choose(
+        rng,
+        [`The point $z$ is drawn in the complex plane. What is $${name}$?`, `图中画出了复平面上的点 $z$。$${name}$ 是多少？`],
+        same(value),
+        described.map(([v]) => same(v)),
+        [
+          `**Step 1: Read the point.** The point is at $(${x}, ${y})$, so $z = ${cx(x, y)}$.\n\n**Step 2: Apply the rule.** We want ${what[0]}, and ${rule[0]}. So $${name} = ${value}$.\n\n**Check.** For $${value}$, ${check[0]}`,
+          `**第一步：读点。**点在 $(${x}, ${y})$，所以 $z = ${cx(x, y)}$。\n\n**第二步：套用规则。**所求是${what[1]}，${rule[1]}。所以 $${name} = ${value}$。\n\n**检验。**对 $${value}$，${check[1]}`,
+        ],
+        fig(
+          argand(6),
+          [{ kind: "point", at: [x, y], label: "z", dir: y > 0 ? "ne" : "se", accent: true }],
+          [`A point z at (${x}, ${y}) in the complex plane.`, `复平面上的点 z，位于 (${x}, ${y})。`],
+        ),
       ),
+      described.map(([v, [en, zh]]) => [`$${v}$`, `This is ${en}, not $${name}$.`, `这是${zh}，不是 $${name}$。`] as const),
     );
   },
 );
@@ -131,8 +185,8 @@ const distanceBetweenPoints = point(
   "the-distance-between-two-drawn-numbers",
   ["The distance between two drawn numbers", "图中两个复数的距离"],
   [
-    "The modulus of a difference is a distance in the plane: the number $|z - w|$ is how far apart the two points are. Read how far apart they are across and how far apart they are up, then use the Pythagorean theorem. Adding the two offsets gives the length of a detour along the grid, which is too long.",
-    "差的模是平面上的距离：$|z - w|$ 就是两点相距多远。读出两点的横向距离和纵向距离，再用勾股定理。把两个距离相加得到的是沿网格绕行的长度，它太长了。",
+    "The modulus of a difference is a distance in the plane: the number $|z - w|$ is how far apart the two points are. Read how far apart they are across and how far apart they are up, then use the Pythagorean theorem. Adding the two offsets gives the length of a detour along the grid, which is too long.\n\nFor example, $z = 1 + 5i$ and $w = 4 + i$ are $3$ apart across and $4$ apart up, so $|z - w| = \\sqrt{9 + 16} = 5$. Check: $z - w = -3 + 4i$, whose modulus is $\\sqrt{(-3)^2 + 4^2} = 5$.\n\n> **Watch out.** The distance is not the sum of the offsets, $3 + 4 = 7$, nor their difference. Square them, add, and take the square root.",
+    "差的模是平面上的距离：$|z - w|$ 就是两点相距多远。读出两点的横向距离和纵向距离，再用勾股定理。把两个距离相加得到的是沿网格绕行的长度，它太长了。\n\n例如，$z = 1 + 5i$ 与 $w = 4 + i$ 横向相差 $3$，纵向相差 $4$，所以 $|z - w| = \\sqrt{9 + 16} = 5$。检验：$z - w = -3 + 4i$，它的模是 $\\sqrt{(-3)^2 + 4^2} = 5$。\n\n> **注意。** 距离不是两个差的和 $3 + 4 = 7$，也不是它们的差。要把它们平方、相加，再开平方。",
   ],
   (rng) => {
     const { dx, dy, length } = tripleStep(rng);
@@ -140,6 +194,7 @@ const distanceBetweenPoints = point(
     const flip = rng.bool();
     const z: Point = flip ? [x, y + dy] : [x, y];
     const w: Point = flip ? [x + dx, y] : [x + dx, y + dy];
+    const [re, im] = [z[0] - w[0], z[1] - w[1]];
     return ask(
       [
         "The points $z$ and $w$ are drawn in the complex plane. What is $|z - w|$?",
@@ -148,8 +203,8 @@ const distanceBetweenPoints = point(
       length,
       [dx + dy, Math.abs(dx - dy), Math.max(dx, dy)],
       [
-        `The points differ by $${dx}$ across and $${dy}$ up, so the distance is $\\sqrt{${dx}^2 + ${dy}^2} = ${length}$.`,
-        `两点横向相差 $${dx}$，纵向相差 $${dy}$，所以距离是 $\\sqrt{${dx}^2 + ${dy}^2} = ${length}$。`,
+        `**Step 1: Read the offsets.** The drawing gives $z = ${cx(z[0], z[1])}$ and $w = ${cx(w[0], w[1])}$. They differ by $${dx}$ across and by $${dy}$ up.\n\n**Step 2: Use the Pythagorean theorem.** The distance is the hypotenuse of a right triangle with these legs:\n\n$$|z - w| = \\sqrt{${dx}^2 + ${dy}^2} = \\sqrt{${dx * dx + dy * dy}} = ${length}$$\n\n**Check.** Subtract the numbers directly: $z - w = ${cx(re, im)}$, and $(${re})^2 + (${im})^2 = ${length * length} = ${length}^2$.`,
+        `**第一步：读出差。**由图，$z = ${cx(z[0], z[1])}$，$w = ${cx(w[0], w[1])}$。两点横向相差 $${dx}$，纵向相差 $${dy}$。\n\n**第二步：用勾股定理。**距离是以它们为直角边的直角三角形的斜边：\n\n$$|z - w| = \\sqrt{${dx}^2 + ${dy}^2} = \\sqrt{${dx * dx + dy * dy}} = ${length}$$\n\n**检验。**直接相减：$z - w = ${cx(re, im)}$，而 $(${re})^2 + (${im})^2 = ${length * length} = ${length}^2$。`,
       ],
       fig(
         argand(7),
@@ -168,8 +223,8 @@ const principalArgument = {
     "the-principal-argument-from-a-drawing",
     ["The principal argument from a drawing", "由图读主辐角"],
     [
-      "The principal argument is the one angle of a point that lies above $-\\pi$ and at most $\\pi$. Points above the real axis have positive principal argument. Points below it have negative principal argument, measured clockwise from the positive real axis, even though the same direction also has a positive angle larger than $\\pi$.",
-      "主辐角是点的辐角中大于 $-\\pi$ 且不超过 $\\pi$ 的那一个。实轴上方的点主辐角为正。实轴下方的点主辐角为负，从正实轴按顺时针方向量取，尽管同一方向也有大于 $\\pi$ 的正角。",
+      "The principal argument is the one angle of a point that lies above $-\\pi$ and at most $\\pi$. Points above the real axis have positive principal argument. Points below it have negative principal argument, measured clockwise from the positive real axis, even though the same direction also has a positive angle larger than $\\pi$.\n\nFor example, the point $(1, -1)$ is reached by turning clockwise through $\\frac{\\pi}{4}$, so its principal argument is $-\\frac{\\pi}{4}$. Check: the other angles of this direction, such as $\\frac{7\\pi}{4}$, differ from it by full turns of $2\\pi$ and lie outside $(-\\pi, \\pi]$.\n\n> **Watch out.** The range includes $\\pi$ but not $-\\pi$: a point on the negative real axis has principal argument $\\pi$.",
+      "主辐角是点的辐角中大于 $-\\pi$ 且不超过 $\\pi$ 的那一个。实轴上方的点主辐角为正。实轴下方的点主辐角为负，从正实轴按顺时针方向量取，尽管同一方向也有大于 $\\pi$ 的正角。\n\n例如，点 $(1, -1)$ 由正实轴顺时针转 $\\frac{\\pi}{4}$ 得到，所以它的主辐角是 $-\\frac{\\pi}{4}$。检验：这个方向的其他角，如 $\\frac{7\\pi}{4}$，与它相差整数圈 $2\\pi$，都不在 $(-\\pi, \\pi]$ 内。\n\n> **注意。** 范围包含 $\\pi$ 而不包含 $-\\pi$：负实轴上的点主辐角是 $\\pi$。",
     ],
     (rng) => {
       const k = rng.int(-3, 4);
@@ -177,30 +232,74 @@ const principalArgument = {
       const unit = octant(k);
       const z: Point = [a * unit[0], a * unit[1]];
       const answer = piTimes(k, 4);
-      return choose(
-        rng,
-        [
-          "The point $z$ is drawn with the ray from the origin. What is the principal argument of $z$?",
-          "图中画出了点 $z$ 和从原点出发的射线。$z$ 的主辐角是多少？",
-        ],
-        same(answer),
-        [same(piTimes(k + 8, 4)), same(piTimes(-k, 4)), same(piTimes(k > 0 ? k - 4 : k + 4, 4)), same(piTimes(k + 2, 4))],
-        [
-          k < 0
-            ? `The point lies below the real axis, so the angle is measured clockwise and is negative: it is $${answer}$. Its positive partner $${piTimes(k + 8, 4)}$ lies outside the principal range.`
-            : `The ray turns counterclockwise from the positive real axis through $${answer}$, and this angle lies in the principal range, so it is the principal argument.`,
-          k < 0
-            ? `点在实轴下方，所以角按顺时针量取，为负：它是 $${answer}$。与之对应的正角 $${piTimes(k + 8, 4)}$ 不在主值范围内。`
-            : `射线从正实轴逆时针转过 $${answer}$，这个角在主值范围内，所以它就是主辐角。`,
-        ],
-        fig(
-          argand(5),
+      const partner = piTimes(k + 8, 4);
+      const mirrored = piTimes(-k, 4);
+      const opposite = piTimes(k > 0 ? k - 4 : k + 4, 4);
+      const turned = piTimes(k + 2, 4);
+      const quadrant = k === 1 ? 1 : k === 3 ? 2 : k === -3 ? 3 : 4;
+      const where: Pair =
+        k === 0
+          ? ["lies on the positive real axis", "在正实轴上"]
+          : k === 4
+            ? ["lies on the negative real axis", "在负实轴上"]
+            : k === 2
+              ? ["lies on the positive imaginary axis", "在正虚轴上"]
+              : k === -2
+                ? ["lies on the negative imaginary axis", "在负虚轴上"]
+                : [
+                    `lies on the diagonal of Quadrant ${["I", "II", "III", "IV"][quadrant - 1]}, ${k > 0 ? "above" : "below"} the real axis`,
+                    `在第${["一", "二", "三", "四"][quadrant - 1]}象限的对角线上，位于实轴${k > 0 ? "上" : "下"}方`,
+                  ];
+      return reasoned(
+        choose(
+          rng,
           [
-            { kind: "segment", a: [0, 0], b: z, accent: true },
-            { kind: "point", at: z, label: "z", dir: z[1] < 0 ? "s" : "n", accent: true },
+            "The point $z$ is drawn with the ray from the origin. What is the principal argument of $z$?",
+            "图中画出了点 $z$ 和从原点出发的射线。$z$ 的主辐角是多少？",
           ],
-          [`A ray from the origin to the point z at (${z[0]}, ${z[1]}).`, `从原点到点 z 的射线，z 位于 (${z[0]}, ${z[1]})。`],
+          same(answer),
+          [same(partner), same(mirrored), same(opposite), same(turned)],
+          [
+            `**Step 1: Read the direction.** The ray goes from the origin to $(${z[0]}, ${z[1]})$, which ${where[0]}.\n\n**Step 2: Measure within the principal range.** ${
+              k < 0
+                ? `The point lies below the real axis, so the angle is measured clockwise and is negative: it is $${answer}$. Its positive partner $${partner}$ lies outside the principal range.`
+                : `The ray turns counterclockwise from the positive real axis through $${answer}$, and this angle lies in the principal range, so it is the principal argument.`
+            }\n\n**Check.** Any other angle of this direction differs by a full turn: $${partner}$ and $${piTimes(k - 8, 4)}$ both lie outside $(-\\pi, \\pi]$, so $${answer}$ is the only one in the range.`,
+            `**第一步：读方向。**射线从原点指向 $(${z[0]}, ${z[1]})$，${where[1]}。\n\n**第二步：在主值范围内量角。**${
+              k < 0
+                ? `点在实轴下方，所以角按顺时针量取，为负：它是 $${answer}$。与之对应的正角 $${partner}$ 不在主值范围内。`
+                : `射线从正实轴逆时针转过 $${answer}$，这个角在主值范围内，所以它就是主辐角。`
+            }\n\n**检验。**这个方向的其他角都与它相差整数圈：$${partner}$ 和 $${piTimes(k - 8, 4)}$ 都不在 $(-\\pi, \\pi]$ 内，所以只有 $${answer}$ 在范围内。`,
+          ],
+          fig(
+            argand(5),
+            [
+              { kind: "segment", a: [0, 0], b: z, accent: true },
+              { kind: "point", at: z, label: "z", dir: z[1] < 0 ? "s" : "n", accent: true },
+            ],
+            [`A ray from the origin to the point z at (${z[0]}, ${z[1]}).`, `从原点到点 z 的射线，z 位于 (${z[0]}, ${z[1]})。`],
+          ),
         ),
+        [
+          [
+            `$${partner}$`,
+            "This is the same direction plus a full turn of 2π, which lies outside the principal range from −π to π.",
+            "这是同一方向再加一整圈 2π，不在 −π 到 π 的主值范围内。",
+          ],
+          k === 4
+            ? [
+                `$${mirrored}$`,
+                "The range excludes −π; the negative real axis has principal argument π.",
+                "主值范围不含 −π；负实轴的主辐角是 π。",
+              ]
+            : [
+                `$${mirrored}$`,
+                "This is the angle of the mirror image in the real axis: the sign is wrong.",
+                "这是关于实轴的镜像点的辐角：符号反了。",
+              ],
+          [`$${opposite}$`, "This points the opposite way, through the origin.", "这指向相反方向，经过原点的另一侧。"],
+          [`$${turned}$`, "This is a quarter turn, π/2, counterclockwise from the ray.", "这比射线逆时针多转了四分之一圈 π/2。"],
+        ],
       );
     },
   ),

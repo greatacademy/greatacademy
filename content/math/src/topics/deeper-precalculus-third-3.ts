@@ -966,8 +966,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "an-equation-with-the-conjugate",
       ["An equation with the conjugate", "含共轭的方程"],
       [
-        "An equation with both $z$ and $\\bar{z}$ cannot be solved by moving terms around. Write $z = x + yi$ and match the real and imaginary parts, which gives two ordinary equations.",
-        "同时含 $z$ 和 $\\bar{z}$ 的方程，不能靠移项解。令 $z = x + yi$，比较实部和虚部，得到两个普通方程。",
+        "An equation with both $z$ and $\\bar{z}$ cannot be solved by moving terms around. Write $z = x + yi$ and match the real and imaginary parts, which gives two ordinary equations.\n\nFor example, in $z + 2\\bar{z} = 9 - 2i$ the left side is $(x + yi) + 2(x - yi) = 3x - yi$. Matching parts gives $3x = 9$ and $-y = -2$, so $z = 3 + 2i$. Check: $(3 + 2i) + 2(3 - 2i) = 9 - 2i$.\n\n> **Watch out.** The conjugate changes only the sign of the imaginary part. In $k\\bar{z}$ the real part is $kx$ and the imaginary part is $-ky$, so the imaginary parts of $z$ and $k\\bar{z}$ partly cancel.",
+        "同时含 $z$ 和 $\\bar{z}$ 的方程，不能靠移项解。令 $z = x + yi$，比较实部和虚部，得到两个普通方程。\n\n例如，在 $z + 2\\bar{z} = 9 - 2i$ 中，左边是 $(x + yi) + 2(x - yi) = 3x - yi$。比较两部分得 $3x = 9$，$-y = -2$，所以 $z = 3 + 2i$。检验：$(3 + 2i) + 2(3 - 2i) = 9 - 2i$。\n\n> **注意。** 共轭只改变虚部的符号。在 $k\\bar{z}$ 中，实部是 $kx$，虚部是 $-ky$，所以 $z$ 与 $k\\bar{z}$ 的虚部会部分抵消。",
       ],
       (rng) => {
         const k = rng.int(2, 5);
@@ -975,14 +975,34 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
         const y = size(rng, 9);
         const re = (1 + k) * x;
         const im = (1 - k) * y;
-        return chooseFilled(
-          rng,
-          [`Solve $z + ${k}\\bar{z} = ${complex(re, im)}$.`, `解方程 $z + ${k}\\bar{z} = ${complex(re, im)}$。`],
-          `z = ${complex(x, y)}`,
-          [`z = ${complex(x, -y)}`, `z = ${complex(-x, y)}`, `z = ${complex(re, im)}`],
+        const left = `${1 + k}x - ${k - 1 === 1 ? "" : k - 1}yi`;
+        return reasoned(
+          chooseFilled(
+            rng,
+            [`Solve $z + ${k}\\bar{z} = ${complex(re, im)}$.`, `解方程 $z + ${k}\\bar{z} = ${complex(re, im)}$。`],
+            `z = ${complex(x, y)}`,
+            [`z = ${complex(x, -y)}`, `z = ${complex(-x, y)}`, `z = ${complex(re, im)}`],
+            [
+              `**Step 1: Write out the left side.** Put $z = x + yi$, so $\\bar{z} = x - yi$:\n\n$$z + ${k}\\bar{z} = (x + yi) + ${k}(x - yi) = ${left}$$\n\n**Step 2: Match the parts.** The real parts give $${1 + k}x = ${re}$, so $x = ${x}$. The imaginary parts give $${k === 2 ? "-" : 1 - k}y = ${im}$, so $y = ${y}$. Hence $z = ${complex(x, y)}$.\n\n**Check.** Put the answer back into the equation:\n\n$$(${complex(x, y)}) + ${k}(${complex(x, -y)}) = ${complex(re, im)}$$\n\nThis is the right-hand side.`,
+              `**第一步：写出左边。** 令 $z = x + yi$，则 $\\bar{z} = x - yi$：\n\n$$z + ${k}\\bar{z} = (x + yi) + ${k}(x - yi) = ${left}$$\n\n**第二步：比较两部分。** 实部给出 $${1 + k}x = ${re}$，所以 $x = ${x}$。虚部给出 $${k === 2 ? "-" : 1 - k}y = ${im}$，所以 $y = ${y}$。因此 $z = ${complex(x, y)}$。\n\n**检验。** 把答案代回方程：\n\n$$(${complex(x, y)}) + ${k}(${complex(x, -y)}) = ${complex(re, im)}$$\n\n正是右边。`,
+            ],
+          ),
           [
-            `$z + ${k}\\bar{z} = ${1 + k}x ${k === 2 ? "-" : `- ${k - 1}`}${k === 2 ? " " : ""}yi$, so $x = ${x}$ and $y = ${y}$.`,
-            `$z + ${k}\\bar{z} = ${1 + k}x ${k === 2 ? "-" : `- ${k - 1}`}${k === 2 ? " " : ""}yi$，所以 $x = ${x}$，$y = ${y}$。`,
+            [
+              `$z = ${complex(x, -y)}$`,
+              `This is the conjugate of the solution. Putting it in gives $${complex(re, -im)}$: the imaginary part has the wrong sign.`,
+              `这是解的共轭。代入得 $${complex(re, -im)}$：虚部符号不对。`,
+            ],
+            [
+              `$z = ${complex(-x, y)}$`,
+              `Putting this in gives $${complex(-re, im)}$: the real part has the wrong sign.`,
+              `代入得 $${complex(-re, im)}$：实部符号不对。`,
+            ],
+            [
+              `$z = ${complex(re, im)}$`,
+              `This is the right-hand side, not $z$. Putting it in gives $${complex((1 + k) * re, (1 - k) * im)}$.`,
+              `这是右边，不是 $z$。代入得 $${complex((1 + k) * re, (1 - k) * im)}$。`,
+            ],
           ],
         );
       },
@@ -993,23 +1013,25 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "the-conjugate-root",
       ["The conjugate root", "共轭根"],
       [
-        "A polynomial with real coefficients has its complex roots in conjugate pairs. So one root of a real quadratic gives the other, and then the sum and product of the roots give the coefficients.",
-        "实系数多项式的复数根成共轭对出现。所以实系数二次方程的一个根给出另一个根，由根的和与积得到系数。",
+        "A polynomial with real coefficients has its complex roots in conjugate pairs. So one root of a real quadratic gives the other, and then the sum and product of the roots give the coefficients.\n\nFor example, if $x^{2} + px + q = 0$ has the root $2 + 3i$, the other root is $2 - 3i$. Their sum is $4$, so $p = -4$, and their product is $2^{2} + 3^{2} = 13$, so $q = 13$. Check: $(2 + 3i)^{2} = -5 + 12i$, and adding $-4(2 + 3i) + 13$ gives $0$.\n\n> **Watch out.** The coefficient $p$ is minus the sum of the roots, so a sum of $4$ gives $p = -4$. The product of $a + bi$ and $a - bi$ is $a^{2} + b^{2}$, not $a^{2} - b^{2}$.",
+        "实系数多项式的复数根成共轭对出现。所以实系数二次方程的一个根给出另一个根，由根的和与积得到系数。\n\n例如，若 $x^{2} + px + q = 0$ 有根 $2 + 3i$，则另一个根是 $2 - 3i$。两根之和是 $4$，所以 $p = -4$；两根之积是 $2^{2} + 3^{2} = 13$，所以 $q = 13$。检验：$(2 + 3i)^{2} = -5 + 12i$，再加上 $-4(2 + 3i) + 13$ 得 $0$。\n\n> **注意。** 系数 $p$ 是两根之和的相反数，所以和为 $4$ 时 $p = -4$。$a + bi$ 与 $a - bi$ 的积是 $a^{2} + b^{2}$，不是 $a^{2} - b^{2}$。",
       ],
       (rng) => {
         const a = size(rng, 9);
         const b = rng.int(1, 9);
         const askP = rng.bool();
+        const [p, q] = [-2 * a, a * a + b * b];
+        const bi = b === 1 ? "i" : `${b}i`;
         return integer(
           [
             `The equation $x^{2} + px + q = 0$ has real $p$ and $q$, and one root is $${complex(a, b)}$. What is $${askP ? "p" : "q"}$?`,
             `方程 $x^{2} + px + q = 0$ 中 $p$、$q$ 是实数，一个根是 $${complex(a, b)}$。$${askP ? "p" : "q"}$ 是多少？`,
           ],
-          askP ? -2 * a : a * a + b * b,
+          askP ? p : q,
           askP ? [2 * a, a, a * a + b * b] : [a * a - b * b, -2 * a, a * a + b],
           [
-            `The other root is $${complex(a, -b)}$. The sum is ${2 * a}, so $p = ${-2 * a}$, and the product is $${paren(a)}^{2} + ${b}^{2}$, so $q = ${a * a + b * b}$.`,
-            `另一个根是 $${complex(a, -b)}$。和是 ${2 * a}，所以 $p = ${-2 * a}$；积是 $${paren(a)}^{2} + ${b}^{2}$，所以 $q = ${a * a + b * b}$。`,
+            `**Step 1: Find the other root.** The coefficients are real, so the conjugate $${complex(a, -b)}$ is also a root.\n\n**Step 2: Use the sum and the product.** The sum of the roots is $${2 * a}$, so $p = ${p}$. The product is\n\n$$(${complex(a, b)})(${complex(a, -b)}) = ${paren(a)}^{2} + ${b}^{2} = ${q}$$\n\nSo $q = ${q}$.\n\n**Check.** The quadratic formula for $x^{2} ${p < 0 ? "-" : "+"} ${Math.abs(p)}x + ${q} = 0$ gives\n\n$$x = ${a} \\pm \\sqrt{${paren(a)}^{2} - ${q}} = ${a} \\pm \\sqrt{${-b * b}} = ${a} \\pm ${bi}$$\n\nThese are the two conjugate roots.`,
+            `**第一步：求另一个根。** 系数是实数，所以共轭 $${complex(a, -b)}$ 也是根。\n\n**第二步：用和与积。** 两根之和是 $${2 * a}$，所以 $p = ${p}$。两根之积是\n\n$$(${complex(a, b)})(${complex(a, -b)}) = ${paren(a)}^{2} + ${b}^{2} = ${q}$$\n\n所以 $q = ${q}$。\n\n**检验。** 对 $x^{2} ${p < 0 ? "-" : "+"} ${Math.abs(p)}x + ${q} = 0$ 用求根公式：\n\n$$x = ${a} \\pm \\sqrt{${paren(a)}^{2} - ${q}} = ${a} \\pm \\sqrt{${-b * b}} = ${a} \\pm ${bi}$$\n\n正是这两个共轭根。`,
           ],
         );
       },
@@ -1020,8 +1042,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "dividing-by-an-imaginary-number",
       ["Dividing by an imaginary number", "除以纯虚数"],
       [
-        "To divide by a pure imaginary number, multiply the top and bottom by $i$, because $i \\cdot i = -1$ makes the bottom real. The real and imaginary parts swap, and one sign changes.",
-        "除以纯虚数时，分子分母同乘 $i$，因为 $i \\cdot i = -1$ 使分母成为实数。实部和虚部互换，其中一个变号。",
+        "To divide by a pure imaginary number, multiply the top and bottom by $i$, because $i \\cdot i = -1$ makes the bottom real. The real and imaginary parts swap, and one sign changes.\n\nFor example, multiplying the top and bottom of $\\frac{6 + 4i}{2i}$ by $i$ gives $\\frac{-4 + 6i}{-2}$, which is $2 - 3i$. Check: $2i(2 - 3i) = 4i - 6i^{2} = 6 + 4i$.\n\n> **Watch out.** The bottom becomes negative, $2i \\cdot i = -2$, so dividing by it changes the signs of both parts. Dividing by $i$ is the same as multiplying by $-i$, not by $i$.",
+        "除以纯虚数时，分子分母同乘 $i$，因为 $i \\cdot i = -1$ 使分母成为实数。实部和虚部互换，其中一个变号。\n\n例如，$\\frac{6 + 4i}{2i}$ 的分子分母同乘 $i$，得 $\\frac{-4 + 6i}{-2}$，即 $2 - 3i$。检验：$2i(2 - 3i) = 4i - 6i^{2} = 6 + 4i$。\n\n> **注意。** 分母变成负数，$2i \\cdot i = -2$，所以除以它会改变两部分的符号。除以 $i$ 等于乘以 $-i$，而不是乘以 $i$。",
       ],
       (rng) => {
         const k = rng.int(2, 6);
@@ -1032,10 +1054,13 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
             rng,
             [`Evaluate $\\frac{${complex(k * m, k * n)}}{${k}i}$.`, `计算 $\\frac{${complex(k * m, k * n)}}{${k}i}$。`],
             complex(n, -m),
-            [complex(-n, m), complex(m, n), complex(n, m)],
+            // The last two slips stand in when m and n are equal or opposite and the first three coincide.
+            [...new Set([complex(-n, m), complex(m, n), complex(n, m), complex(m, -n), complex(-n, -m)])]
+              .filter((o) => o !== complex(n, -m))
+              .slice(0, 3),
             [
-              `Multiplying the top and bottom by $i$ makes the bottom ${-k}, and dividing gives $${complex(n, -m)}$.`,
-              `分子分母同乘 $i$，分母变成 ${-k}，相除得 $${complex(n, -m)}$。`,
+              `**Step 1: Multiply the top and bottom by $i$.** The bottom becomes $${k}i \\cdot i = ${-k}$, and the top becomes\n\n$$(${complex(k * m, k * n)})i = ${complex(-k * n, k * m)}$$\n\n**Step 2: Divide each part by $${-k}$.** This gives\n\n$$\\frac{${complex(-k * n, k * m)}}{${-k}} = ${complex(n, -m)}$$\n\n**Check.** Multiply the answer by the bottom:\n\n$$${k}i(${complex(n, -m)}) = ${complex(k * m, k * n)}$$\n\nThis is the top, as it should be.`,
+              `**第一步：分子分母同乘 $i$。** 分母变成 $${k}i \\cdot i = ${-k}$，分子变成\n\n$$(${complex(k * m, k * n)})i = ${complex(-k * n, k * m)}$$\n\n**第二步：每部分除以 $${-k}$。** 得\n\n$$\\frac{${complex(-k * n, k * m)}}{${-k}} = ${complex(n, -m)}$$\n\n**检验。** 用答案乘以分母：\n\n$$${k}i(${complex(n, -m)}) = ${complex(k * m, k * n)}$$\n\n正是分子。`,
             ],
           ),
           [
@@ -1054,6 +1079,16 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
               "The parts are exchanged, but one must change sign because $i \\cdot i = -1$.",
               "实部和虚部交换了，但因为 $i \\cdot i = -1$，其中一个要变号。",
             ],
+            [
+              `$${complex(m, -n)}$`,
+              "This only changes the sign of the imaginary part; dividing by $i$ also exchanges the real and imaginary parts.",
+              "这只改变了虚部的符号；除以 $i$ 还要交换实部和虚部。",
+            ],
+            [
+              `$${complex(-n, -m)}$`,
+              "The parts are exchanged, but only the new imaginary part changes sign, not both.",
+              "实部和虚部交换了，但只有新的虚部变号，而不是两个都变。",
+            ],
           ],
         );
       },
@@ -1064,18 +1099,40 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "a-sum-of-squares-with-a-coefficient",
       ["A sum of squares with a coefficient", "带系数的平方和"],
       [
-        "Since $(ax + bi)(ax - bi) = a^{2}x^{2} + b^{2}$, any sum of two squares factors over the complex numbers. So first write each term as a square, and then use conjugate factors.",
-        "因为 $(ax + bi)(ax - bi) = a^{2}x^{2} + b^{2}$，任何两个平方的和都能在复数范围内分解。所以先把每一项写成平方，再用共轭因式。",
+        "Since $(ax + bi)(ax - bi) = a^{2}x^{2} + b^{2}$, any sum of two squares factors over the complex numbers. So first write each term as a square, and then use conjugate factors.\n\nFor example, $4x^{2} + 9$ is $(2x)^{2} + 3^{2}$, so it factors as $(2x + 3i)(2x - 3i)$. Check: the middle terms $-6xi$ and $6xi$ cancel, and $-9i^{2} = 9$.\n\n> **Watch out.** The factors $(2x + 3)(2x - 3)$ give $4x^{2} - 9$, a difference of squares. The square $(2x + 3i)^{2}$ is not a factorization of the sum either, because its middle term $12xi$ does not cancel.",
+        "因为 $(ax + bi)(ax - bi) = a^{2}x^{2} + b^{2}$，任何两个平方的和都能在复数范围内分解。所以先把每一项写成平方，再用共轭因式。\n\n例如，$4x^{2} + 9$ 是 $(2x)^{2} + 3^{2}$，所以分解为 $(2x + 3i)(2x - 3i)$。检验：中间项 $-6xi$ 与 $6xi$ 相消，而 $-9i^{2} = 9$。\n\n> **注意。** 因式 $(2x + 3)(2x - 3)$ 给出 $4x^{2} - 9$，是平方差。平方 $(2x + 3i)^{2}$ 也不是这个和的分解，因为它的中间项 $12xi$ 不会抵消。",
       ],
       (rng) => {
         const a = rng.int(2, 9);
         const b = rng.int(2, 9);
-        return chooseFilled(
-          rng,
-          [`Factor $${a * a}x^{2} + ${b * b}$ over the complex numbers.`, `在复数范围内分解 $${a * a}x^{2} + ${b * b}$。`],
-          `(${a}x + ${b}i)(${a}x - ${b}i)`,
-          [`(${a}x + ${b})(${a}x - ${b})`, `(${a}x + ${b}i)^{2}`, `(x + ${b}i)(${a * a}x - ${b}i)`],
-          [`The terms are $(${a}x)^{2}$ and $${b}^{2}$, which take conjugate factors.`, `两项是 $(${a}x)^{2}$ 和 $${b}^{2}$，用共轭因式。`],
+        return reasoned(
+          chooseFilled(
+            rng,
+            [`Factor $${a * a}x^{2} + ${b * b}$ over the complex numbers.`, `在复数范围内分解 $${a * a}x^{2} + ${b * b}$。`],
+            `(${a}x + ${b}i)(${a}x - ${b}i)`,
+            [`(${a}x + ${b})(${a}x - ${b})`, `(${a}x + ${b}i)^{2}`, `(x + ${b}i)(${a * a}x - ${b}i)`],
+            [
+              `**Step 1: Write each term as a square.** The terms are $${a * a}x^{2} = (${a}x)^{2}$ and $${b * b} = ${b}^{2}$.\n\n**Step 2: Use conjugate factors.** A sum $u^{2} + v^{2}$ factors as $(u + vi)(u - vi)$, so with $u = ${a}x$ and $v = ${b}$ the factors are $(${a}x + ${b}i)(${a}x - ${b}i)$.\n\n**Check.** Multiply out:\n\n$$(${a}x + ${b}i)(${a}x - ${b}i) = ${a * a}x^{2} - ${a * b}xi + ${a * b}xi - ${b * b}i^{2} = ${a * a}x^{2} + ${b * b}$$\n\nThe middle terms cancel, and $i^{2} = -1$ makes the last term positive.`,
+              `**第一步：把每一项写成平方。** 两项是 $${a * a}x^{2} = (${a}x)^{2}$ 和 $${b * b} = ${b}^{2}$。\n\n**第二步：用共轭因式。** 和 $u^{2} + v^{2}$ 分解为 $(u + vi)(u - vi)$，取 $u = ${a}x$、$v = ${b}$，因式是 $(${a}x + ${b}i)(${a}x - ${b}i)$。\n\n**检验。** 乘开：\n\n$$(${a}x + ${b}i)(${a}x - ${b}i) = ${a * a}x^{2} - ${a * b}xi + ${a * b}xi - ${b * b}i^{2} = ${a * a}x^{2} + ${b * b}$$\n\n中间项相消，而 $i^{2} = -1$ 使最后一项为正。`,
+            ],
+          ),
+          [
+            [
+              `$(${a}x + ${b})(${a}x - ${b})$`,
+              `This multiplies out to $${a * a}x^{2} - ${b * b}$, a difference of squares, not the sum.`,
+              `乘开得 $${a * a}x^{2} - ${b * b}$，是平方差，不是这个和。`,
+            ],
+            [
+              `$(${a}x + ${b}i)^{2}$`,
+              `This square is $${a * a}x^{2} + ${2 * a * b}xi - ${b * b}$: it has a middle term, and its constant is negative.`,
+              `这个平方是 $${a * a}x^{2} + ${2 * a * b}xi - ${b * b}$：它有中间项，常数项还是负的。`,
+            ],
+            [
+              `$(x + ${b}i)(${a * a}x - ${b}i)$`,
+              `The factors are not conjugates, so the middle terms leave $${(a * a - 1) * b}xi$ behind.`,
+              `两个因式不是共轭的，所以中间项留下 $${(a * a - 1) * b}xi$。`,
+            ],
+          ],
         );
       },
     ),
@@ -1085,28 +1142,50 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "powers-in-polar-form",
       ["Powers in polar form", "极坐标形式的幂"],
       [
-        "A power is a repeated product, so the modulus is raised to the power and the argument is multiplied by it. This is de Moivre's theorem, which makes high powers quick.",
-        "幂是重复的积，所以模取这个幂，辐角乘这个指数。这就是棣莫弗定理，它让高次幂的计算变得很快。",
+        "A power is a repeated product, so the modulus is raised to the power and the argument is multiplied by it. This is de Moivre's theorem, which makes high powers quick.\n\nFor example, the cube of $2(\\cos 30^{\\circ} + i\\sin 30^{\\circ})$ has modulus $2^{3} = 8$ and argument $3 \\times 30^{\\circ} = 90^{\\circ}$, so it is $8i$. Check: in rectangular form the number is $\\sqrt{3} + i$. Its square is $2 + 2\\sqrt{3}i$, and multiplying once more by $\\sqrt{3} + i$ gives $8i$.\n\n> **Watch out.** The modulus is raised to the power, $2^{3} = 8$, not multiplied by it. The argument is multiplied by the power, not left alone.",
+        "幂是重复的积，所以模取这个幂，辐角乘这个指数。这就是棣莫弗定理，它让高次幂的计算变得很快。\n\n例如，$2(\\cos 30^{\\circ} + i\\sin 30^{\\circ})$ 的立方，模是 $2^{3} = 8$，辐角是 $3 \\times 30^{\\circ} = 90^{\\circ}$，所以它是 $8i$。检验：这个数的直角坐标形式是 $\\sqrt{3} + i$。它的平方是 $2 + 2\\sqrt{3}i$，再乘一次 $\\sqrt{3} + i$ 得 $8i$。\n\n> **注意。** 模是取幂，$2^{3} = 8$，而不是乘以指数。辐角要乘以指数，不能保持不变。",
       ],
       (rng) => {
         const r = rng.int(2, 5);
         const n = rng.int(2, 4);
         const angle = rng.int(1, 16) * 5;
-        return chooseFilled(
-          rng,
+        const polar = (modulus: number, degrees: number) => `${modulus}(\\cos ${degrees}^{\\circ} + i\\sin ${degrees}^{\\circ})`;
+        // When r times n equals r to the n, as for 2 squared, the slip of multiplying the modulus gives the answer, so the slip of adding the power to the argument stands in for it.
+        const slip: [string, string, string] =
+          r * n !== r ** n
+            ? [
+                polar(r * n, n * angle),
+                `This multiplies the modulus by $${n}$; it must be raised to the power, $${r}^{${n}} = ${r ** n}$.`,
+                `这是把模乘以 $${n}$；模应取幂，$${r}^{${n}} = ${r ** n}$。`,
+              ]
+            : [
+                polar(r ** n, angle + n),
+                `This adds $${n}$ to the argument; it must be multiplied by $${n}$, giving $${n * angle}^{\\circ}$.`,
+                `这是把辐角加上 $${n}$；辐角应乘以 $${n}$，得 $${n * angle}^{\\circ}$。`,
+              ];
+        return reasoned(
+          chooseFilled(
+            rng,
+            [`Evaluate $\\left[${polar(r, angle)}\\right]^{${n}}$.`, `计算 $\\left[${polar(r, angle)}\\right]^{${n}}$。`],
+            polar(r ** n, n * angle),
+            [slip[0], polar(r ** n, angle), polar(r, n * angle)],
+            [
+              `**Step 1: Raise the modulus to the power.** The modulus becomes $${r}^{${n}} = ${r ** n}$.\n\n**Step 2: Multiply the argument by the power.** The argument becomes $${n} \\times ${angle}^{\\circ} = ${n * angle}^{\\circ}$, so the power is\n\n$$${polar(r ** n, n * angle)}$$\n\n**Check.** Multiply the $${n}$ copies one at a time instead. The moduli multiply:\n\n$$${Array.from({ length: n }, () => r).join(" \\cdot ")} = ${r ** n}$$\n\nThe arguments add:\n\n$$${Array.from({ length: n }, () => `${angle}^{\\circ}`).join(" + ")} = ${n * angle}^{\\circ}$$\n\nBoth agree with the answer.`,
+              `**第一步：模取幂。** 模变为 $${r}^{${n}} = ${r ** n}$。\n\n**第二步：辐角乘以指数。** 辐角变为 $${n} \\times ${angle}^{\\circ} = ${n * angle}^{\\circ}$，所以这个幂是\n\n$$${polar(r ** n, n * angle)}$$\n\n**检验。** 改为把 $${n}$ 个因数逐个相乘。模相乘：\n\n$$${Array.from({ length: n }, () => r).join(" \\cdot ")} = ${r ** n}$$\n\n辐角相加：\n\n$$${Array.from({ length: n }, () => `${angle}^{\\circ}`).join(" + ")} = ${n * angle}^{\\circ}$$\n\n两者都与答案一致。`,
+            ],
+          ),
           [
-            `Evaluate $\\left[${r}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})\\right]^{${n}}$.`,
-            `计算 $\\left[${r}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})\\right]^{${n}}$。`,
-          ],
-          `${r ** n}(\\cos ${n * angle}^{\\circ} + i\\sin ${n * angle}^{\\circ})`,
-          [
-            `${r * n}(\\cos ${n * angle}^{\\circ} + i\\sin ${n * angle}^{\\circ})`,
-            `${r ** n}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})`,
-            `${r ** n}(\\cos ${angle ** 2}^{\\circ} + i\\sin ${angle ** 2}^{\\circ})`,
-          ],
-          [
-            `The modulus is $${r}^{${n}} = ${r ** n}$, and the argument is $${n} \\times ${angle}^{\\circ}$.`,
-            `模是 $${r}^{${n}} = ${r ** n}$，辐角是 $${n} \\times ${angle}^{\\circ}$。`,
+            [`$${slip[0]}$`, slip[1], slip[2]],
+            [
+              `$${polar(r ** n, angle)}$`,
+              `The modulus is right, but the argument must be multiplied by $${n}$ as well, giving $${n * angle}^{\\circ}$.`,
+              `模是对的，但辐角也要乘以 $${n}$，得 $${n * angle}^{\\circ}$。`,
+            ],
+            [
+              `$${polar(r, n * angle)}$`,
+              `The argument is right, but the modulus must be raised to the power as well, giving $${r ** n}$.`,
+              `辐角是对的，但模也要取幂，得 $${r ** n}$。`,
+            ],
           ],
         );
       },
@@ -1117,27 +1196,46 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "the-reciprocal-in-polar-form",
       ["The reciprocal in polar form", "极坐标形式的倒数"],
       [
-        "The number 1 has modulus 1 and argument 0, so the quotient rule gives the reciprocal at once. The modulus is inverted, and the argument changes sign.",
-        "数 1 的模是 1，辐角是 0，所以由商的法则立刻得到倒数。模取倒数，辐角变号。",
+        "The number 1 has modulus 1 and argument 0, so the quotient rule gives the reciprocal at once. The modulus is inverted, and the argument changes sign.\n\nFor example, the reciprocal of $2(\\cos 60^{\\circ} + i\\sin 60^{\\circ})$ has modulus $\\frac{1}{2}$ and argument $-60^{\\circ}$. Check: multiplying the number by its reciprocal multiplies the moduli to $1$ and adds the arguments to $0^{\\circ}$, which gives $1$.\n\n> **Watch out.** The reciprocal is not the negative of the number, and not its conjugate. The conjugate also has argument $-60^{\\circ}$, but its modulus stays $2$, while the reciprocal has modulus $\\frac{1}{2}$.",
+        "数 1 的模是 1，辐角是 0，所以由商的法则立刻得到倒数。模取倒数，辐角变号。\n\n例如，$2(\\cos 60^{\\circ} + i\\sin 60^{\\circ})$ 的倒数，模是 $\\frac{1}{2}$，辐角是 $-60^{\\circ}$。检验：这个数乘以它的倒数，模相乘得 $1$，辐角相加得 $0^{\\circ}$，结果是 $1$。\n\n> **注意。** 倒数不是这个数的相反数，也不是它的共轭。共轭的辐角也是 $-60^{\\circ}$，但模仍是 $2$，而倒数的模是 $\\frac{1}{2}$。",
       ],
       (rng) => {
         const r = rng.int(2, 12);
         const angle = rng.int(1, 35) * 5;
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Find the reciprocal of $${r}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})$.`,
+              `求 $${r}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})$ 的倒数。`,
+            ],
+            `${frac(1, r)}(\\cos(-${angle}^{\\circ}) + i\\sin(-${angle}^{\\circ}))`,
+            [
+              `${frac(1, r)}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})`,
+              `${r}(\\cos(-${angle}^{\\circ}) + i\\sin(-${angle}^{\\circ}))`,
+              `-${r}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})`,
+            ],
+            [
+              `**Step 1: Write 1 in polar form.** The number $1$ is $1(\\cos 0^{\\circ} + i\\sin 0^{\\circ})$.\n\n**Step 2: Use the quotient rule.** Divide the moduli and subtract the arguments. The modulus is $${frac(1, r)}$, and the argument is $0^{\\circ} - ${angle}^{\\circ} = -${angle}^{\\circ}$.\n\n**Check.** Multiply the number by the answer. The moduli give $${r} \\cdot ${frac(1, r)} = 1$, and the arguments give $${angle}^{\\circ} + (-${angle}^{\\circ}) = 0^{\\circ}$. The product is $1$, as a reciprocal must give.`,
+              `**第一步：把 1 写成极坐标形式。** 数 $1$ 是 $1(\\cos 0^{\\circ} + i\\sin 0^{\\circ})$。\n\n**第二步：用商的法则。** 模相除，辐角相减。模是 $${frac(1, r)}$，辐角是 $0^{\\circ} - ${angle}^{\\circ} = -${angle}^{\\circ}$。\n\n**检验。** 用这个数乘以答案。模得 $${r} \\cdot ${frac(1, r)} = 1$，辐角得 $${angle}^{\\circ} + (-${angle}^{\\circ}) = 0^{\\circ}$。积是 $1$，正是倒数应有的结果。`,
+            ],
+          ),
           [
-            `Find the reciprocal of $${r}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})$.`,
-            `求 $${r}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})$ 的倒数。`,
-          ],
-          `${frac(1, r)}(\\cos(-${angle}^{\\circ}) + i\\sin(-${angle}^{\\circ}))`,
-          [
-            `${frac(1, r)}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})`,
-            `${r}(\\cos(-${angle}^{\\circ}) + i\\sin(-${angle}^{\\circ}))`,
-            `-${r}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})`,
-          ],
-          [
-            `Invert the modulus to $${frac(1, r)}$, and change the argument to $-${angle}^{\\circ}$.`,
-            `模取倒数得 $${frac(1, r)}$，辐角变为 $-${angle}^{\\circ}$。`,
+            [
+              `$${frac(1, r)}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})$`,
+              `The modulus is inverted, but the argument must change sign: dividing 1 by the number subtracts $${angle}^{\\circ}$ from $0^{\\circ}$.`,
+              `模取了倒数，但辐角也要变号：用 1 除以这个数，是从 $0^{\\circ}$ 中减去 $${angle}^{\\circ}$。`,
+            ],
+            [
+              `$${r}(\\cos(-${angle}^{\\circ}) + i\\sin(-${angle}^{\\circ}))$`,
+              `This is the conjugate: the argument changes sign, but the modulus must be inverted to $${frac(1, r)}$.`,
+              `这是共轭：辐角变了号，但模还要取倒数，变为 $${frac(1, r)}$。`,
+            ],
+            [
+              `$-${r}(\\cos ${angle}^{\\circ} + i\\sin ${angle}^{\\circ})$`,
+              "This is the negative of the number, which points the opposite way, not its reciprocal.",
+              "这是这个数的相反数，方向正好相反，不是它的倒数。",
+            ],
           ],
         );
       },
@@ -1149,12 +1247,14 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
         "the-power-that-returns-to-one",
         ["The power that returns to one", "回到 1 的幂"],
         [
-          "Powers of $\\text{cis}\\,\\theta$ walk around the unit circle by steps of $\\theta$. The power first equals 1 when the steps add up to a whole number of full turns.",
-          "$\\text{cis}\\,\\theta$ 的幂沿单位圆按步长 $\\theta$ 前进。步长累计达到整数圈时，幂第一次等于 1。",
+          "Powers of $\\text{cis}\\,\\theta$ walk around the unit circle by steps of $\\theta$. The power first equals 1 when the steps add up to a whole number of full turns.\n\nFor example, for $\\text{cis}\\,150^{\\circ}$ the steps must add up to a multiple of $360^{\\circ}$. In lowest terms $\\frac{150}{360} = \\frac{5}{12}$, so the smallest power is $n = 12$. Check: $12 \\times 150 = 1800 = 5 \\times 360$, five full turns.\n\n> **Watch out.** The answer is not $360$ divided by the step, which need not be a whole number: $360 \\div 150$ is not whole. Reduce the fraction of a turn first, and its denominator is the answer.",
+          "$\\text{cis}\\,\\theta$ 的幂沿单位圆按步长 $\\theta$ 前进。步长累计达到整数圈时，幂第一次等于 1。\n\n例如，对 $\\text{cis}\\,150^{\\circ}$，步长之和必须是 $360^{\\circ}$ 的倍数。约成最简分数 $\\frac{150}{360} = \\frac{5}{12}$，所以最小的幂是 $n = 12$。检验：$12 \\times 150 = 1800 = 5 \\times 360$，正好五整圈。\n\n> **注意。** 答案不是 $360$ 除以步长，那不一定是整数：$360 \\div 150$ 就不是整数。先把占一圈的分数约到最简，它的分母就是答案。",
         ],
         (rng) => {
           const angle = rng.int(1, 35) * 5;
-          const n = 360 / gcd(angle, 360);
+          const g = gcd(angle, 360);
+          const n = 360 / g;
+          const turns = angle / g;
           return whole(
             [
               `What is the smallest positive integer $n$ with $(\\text{cis}\\,${angle}^{\\circ})^{n} = 1$?`,
@@ -1163,8 +1263,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
             n,
             [n * 2, angle, 360 - angle],
             [
-              `$n \\times ${angle}$ must be a multiple of $360$, which first happens at $n = ${n}$.`,
-              `$n \\times ${angle}$ 必须是 $360$ 的倍数，第一次是在 $n = ${n}$ 时。`,
+              `**Step 1: Turn the condition into whole turns.** Each power turns a further $${angle}^{\\circ}$, and the power is $1$ exactly when $n \\times ${angle}$ is a multiple of $360$.\n\n**Step 2: Reduce the fraction of a turn.** In lowest terms\n\n$$\\frac{${angle}}{360} = ${frac(turns, n)}$$\n\nSo $n$ must be a multiple of $${n}$, and the smallest is $n = ${n}$.\n\n**Check.** With $n = ${n}$ the total turn is $${n} \\times ${angle} = ${n * angle}$, which is $${turns}$ full turn${turns === 1 ? "" : "s"}. Since $${turns}$ and $${n}$ share no factor, no smaller $n$ gives whole turns.`,
+              `**第一步：把条件化为整圈。** 每多一次幂就再转 $${angle}^{\\circ}$，当且仅当 $n \\times ${angle}$ 是 $360$ 的倍数时幂等于 $1$。\n\n**第二步：约简占一圈的分数。** 化成最简分数：\n\n$$\\frac{${angle}}{360} = ${frac(turns, n)}$$\n\n所以 $n$ 必须是 $${n}$ 的倍数，最小的是 $n = ${n}$。\n\n**检验。** 取 $n = ${n}$，总共转了 $${n} \\times ${angle} = ${n * angle}$，即 $${turns}$ 整圈。因为 $${turns}$ 与 $${n}$ 没有公因数，更小的 $n$ 都转不成整圈。`,
             ],
           );
         },

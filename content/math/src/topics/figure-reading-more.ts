@@ -560,8 +560,8 @@ const sumOnComplexPlane: KnowledgePointDef = {
   figure: precalculusDrawings4["arithmetic-in-the-complex-plane#reading-a-sum-on-the-complex-plane"],
   title: t("Reading a sum on the complex plane", "在复平面上读和"),
   explanation: t(
-    "A complex number is a point of the plane, with the real part across and the imaginary part up. Adding complex numbers works like adding vectors: the real parts add and the imaginary parts add, which forms a parallelogram with the origin. So reading two points off the grid and adding by parts gives the fourth corner of that parallelogram.",
-    "复数是平面上的点，实部是横向，虚部是纵向。复数加法和向量加法一样：实部相加，虚部相加，并和原点形成一个平行四边形。所以从网格读出两个点再按部分相加，就得到平行四边形的第四个顶点。",
+    "A complex number is a point of the plane, with the real part across and the imaginary part up. Adding complex numbers works like adding vectors: the real parts add and the imaginary parts add, which forms a parallelogram with the origin. So reading two points off the grid and adding by parts gives the fourth corner of that parallelogram.\n\nFor example, the points $(2, 1)$ and $(-1, 2)$ are $z = 2 + i$ and $w = -1 + 2i$, so $z + w = 1 + 3i$. Check: starting at $z$ and moving as $w$ does, $1$ left and $2$ up, ends at $(1, 3)$.\n\n> **Watch out.** Read the real part across and the imaginary part up: the point $(2, 1)$ is $2 + i$, not $1 + 2i$. For a difference, both parts of $w$ are subtracted, and $z - w$ is not the same as $w - z$.",
+    "复数是平面上的点，实部是横向，虚部是纵向。复数加法和向量加法一样：实部相加，虚部相加，并和原点形成一个平行四边形。所以从网格读出两个点再按部分相加，就得到平行四边形的第四个顶点。\n\n例如，点 $(2, 1)$ 和 $(-1, 2)$ 是 $z = 2 + i$ 和 $w = -1 + 2i$，所以 $z + w = 1 + 3i$。检验：从 $z$ 出发，按 $w$ 的方式移动，向左 $1$、向上 $2$，到达 $(1, 3)$。\n\n> **注意。** 实部横着读，虚部竖着读：点 $(2, 1)$ 是 $2 + i$，不是 $1 + 2i$。做减法时，$w$ 的两部分都要减去，而且 $z - w$ 与 $w - z$ 不同。",
   ),
   generate(rng) {
     const pickNonZero = () => rng.pick([-3, -2, -1, 1, 2, 3]);
@@ -572,51 +572,83 @@ const sumOnComplexPlane: KnowledgePointDef = {
       if (x === 0) return `${y < 0 ? "-" : ""}${im}`;
       return `${x} ${y < 0 ? "-" : "+"} ${im}`;
     };
-    const asksProduct = rng.bool();
-    if (asksProduct) {
-      return pickChoice(
+    const paren = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+    const read: [string, string] = [
+      `${stepLabel(1, "Read the points", "读出两点").en} The point $z$ is at $(${a}, ${b})$ and $w$ is at $(${c}, ${d})$, so $z = ${write(a, b)}$ and $w = ${write(c, d)}$.`,
+      `${stepLabel(1, "Read the points", "读出两点")["zh-CN"]}点 $z$ 在 $(${a}, ${b})$，$w$ 在 $(${c}, ${d})$，所以 $z = ${write(a, b)}$，$w = ${write(c, d)}$。`,
+    ];
+    const figure = drawn(
+      square(4),
+      [
+        { kind: "point", at: [a, b], label: "z", dir: "ne", accent: true },
+        { kind: "point", at: [c, d], label: "w", dir: "sw" },
+      ],
+      t(
+        `Two points in the complex plane: z at (${a}, ${b}) and w at (${c}, ${d}).`,
+        `复平面上的两个点：z 在 (${a}, ${b})，w 在 (${c}, ${d})。`,
+      ),
+    );
+    const asksDifference = rng.bool();
+    if (asksDifference) {
+      const problem = pickChoice(
         rng,
         t("The points show $z$ and $w$ in the complex plane. What is $z - w$?", "图中的点是复平面上的 $z$ 和 $w$。$z - w$ 是多少？"),
         math(write(a - c, b - d)),
         [math(write(c - a, d - b)), math(write(a + c, b + d)), math(write(a - c, b + d)), math(write(a + c, b - d))],
         t(
-          `$z = ${write(a, b)}$ and $w = ${write(c, d)}$, and subtracting by parts gives $${write(a - c, b - d)}$.`,
-          `$z = ${write(a, b)}$，$w = ${write(c, d)}$，按部分相减得 $${write(a - c, b - d)}$。`,
+          `${read[0]}\n\n${stepLabel(2, "Subtract by parts", "按部分相减").en} Subtract the real parts and the imaginary parts separately:\n\n$$z - w = (${a} - ${paren(c)}) + (${b} - ${paren(d)})i = ${write(a - c, b - d)}$$\n\n**Check.** Adding $w$ back must give $z$:\n\n$$(${write(a - c, b - d)}) + (${write(c, d)}) = ${write(a, b)}$$\n\nThis is $z$.`,
+          `${read[1]}\n\n${stepLabel(2, "Subtract by parts", "按部分相减")["zh-CN"]}实部与虚部分别相减：\n\n$$z - w = (${a} - ${paren(c)}) + (${b} - ${paren(d)})i = ${write(a - c, b - d)}$$\n\n**检验。** 再加上 $w$ 应得回 $z$：\n\n$$(${write(a - c, b - d)}) + (${write(c, d)}) = ${write(a, b)}$$\n\n正是 $z$。`,
         ),
-        drawn(
-          square(4),
-          [
-            { kind: "point", at: [a, b], label: "z", dir: "ne", accent: true },
-            { kind: "point", at: [c, d], label: "w", dir: "sw" },
-          ],
-          t(
-            `Two points in the complex plane: z at (${a}, ${b}) and w at (${c}, ${d}).`,
-            `复平面上的两个点：z 在 (${a}, ${b})，w 在 (${c}, ${d})。`,
-          ),
-        ),
+        figure,
       );
+      return reasoned(problem, [
+        [
+          `$${write(c - a, d - b)}$`,
+          "This is $w - z$: the subtraction is the wrong way round, so both parts have the wrong sign.",
+          "这是 $w - z$：减反了，所以两部分的符号都错了。",
+        ],
+        [
+          `$${write(a + c, b + d)}$`,
+          "This is $z + w$: the parts of $w$ were added, not subtracted.",
+          "这是 $z + w$：把 $w$ 的两部分加上了，而不是减去。",
+        ],
+        [
+          `$${write(a - c, b + d)}$`,
+          "The real parts are subtracted correctly, but the imaginary part of $w$ was added.",
+          "实部减对了，但 $w$ 的虚部被加上了。",
+        ],
+        [
+          `$${write(a + c, b - d)}$`,
+          "The imaginary parts are subtracted correctly, but the real part of $w$ was added.",
+          "虚部减对了，但 $w$ 的实部被加上了。",
+        ],
+      ]);
     }
-    return pickChoice(
+    const problem = pickChoice(
       rng,
       t("The points show $z$ and $w$ in the complex plane. What is $z + w$?", "图中的点是复平面上的 $z$ 和 $w$。$z + w$ 是多少？"),
       math(write(a + c, b + d)),
       [math(write(a - c, b - d)), math(write(c - a, d - b)), math(write(a + c, b - d)), math(write(a * c - b * d, a * d + b * c))],
       t(
-        `$z = ${write(a, b)}$ and $w = ${write(c, d)}$, and adding by parts gives $${write(a + c, b + d)}$.`,
-        `$z = ${write(a, b)}$，$w = ${write(c, d)}$，按部分相加得 $${write(a + c, b + d)}$。`,
+        `${read[0]}\n\n${stepLabel(2, "Add by parts", "按部分相加").en} Add the real parts and the imaginary parts separately:\n\n$$z + w = (${a} + ${paren(c)}) + (${b} + ${paren(d)})i = ${write(a + c, b + d)}$$\n\n**Check.** Start at $z$ and move as $w$ does, $${Math.abs(c)}$ ${c > 0 ? "right" : "left"} and $${Math.abs(d)}$ ${d > 0 ? "up" : "down"}. This ends at $(${a + c}, ${b + d})$, the corner of the parallelogram opposite the origin.`,
+        `${read[1]}\n\n${stepLabel(2, "Add by parts", "按部分相加")["zh-CN"]}实部与虚部分别相加：\n\n$$z + w = (${a} + ${paren(c)}) + (${b} + ${paren(d)})i = ${write(a + c, b + d)}$$\n\n**检验。** 从 $z$ 出发，按 $w$ 的方式移动，向${c > 0 ? "右" : "左"} $${Math.abs(c)}$、向${d > 0 ? "上" : "下"} $${Math.abs(d)}$，到达 $(${a + c}, ${b + d})$，正是平行四边形中与原点相对的顶点。`,
       ),
-      drawn(
-        square(4),
-        [
-          { kind: "point", at: [a, b], label: "z", dir: "ne", accent: true },
-          { kind: "point", at: [c, d], label: "w", dir: "sw" },
-        ],
-        t(
-          `Two points in the complex plane: z at (${a}, ${b}) and w at (${c}, ${d}).`,
-          `复平面上的两个点：z 在 (${a}, ${b})，w 在 (${c}, ${d})。`,
-        ),
-      ),
+      figure,
     );
+    return reasoned(problem, [
+      [
+        `$${write(a - c, b - d)}$`,
+        "This is $z - w$: the parts of $w$ were subtracted, not added.",
+        "这是 $z - w$：把 $w$ 的两部分减去了，而不是加上。",
+      ],
+      [`$${write(c - a, d - b)}$`, "This is $w - z$, a difference, not a sum.", "这是 $w - z$，是差而不是和。"],
+      [
+        `$${write(a + c, b - d)}$`,
+        "The real parts are added correctly, but the imaginary part of $w$ was subtracted.",
+        "实部加对了，但 $w$ 的虚部被减去了。",
+      ],
+      [`$${write(a * c - b * d, a * d + b * c)}$`, "This is the product $zw$, not the sum.", "这是积 $zw$，不是和。"],
+    ]);
   },
 };
 
@@ -625,32 +657,51 @@ const argumentFromDrawing: KnowledgePointDef = {
   figure: precalculusDrawings3["the-argument-of-a-complex-number#the-argument-from-a-drawn-point"],
   title: t("The argument from a drawn point", "由图中的点求辐角"),
   explanation: t(
-    "The principal argument is the angle from the positive real axis to the point, between $-\\pi$ and $\\pi$. The quadrant must come from the picture, because the arctangent of the imaginary part over the real part cannot tell opposite points apart. So for a point in the third quadrant, the argument is a negative angle beyond minus a right angle, and not the angle given by the arctangent.",
-    "主辐角是从正实轴到这个点的角，在 $-\\pi$ 到 $\\pi$ 之间。象限必须从图上看，因为虚部除以实部的反正切分不清相对的两个点。所以第三象限的点，辐角是比负直角更负的角，而不是反正切给出的那个角。",
+    "The principal argument is the angle from the positive real axis to the point, between $-\\pi$ and $\\pi$. The quadrant must come from the picture, because the arctangent of the imaginary part over the real part cannot tell opposite points apart. So for a point in the third quadrant, the argument is a negative angle beyond minus a right angle, and not the angle given by the arctangent.\n\nFor example, the point $(-1, -1)$ lies in the third quadrant, so its principal argument is $-\\frac{3\\pi}{4}$. Check: the arctangent of $\\frac{-1}{-1} = 1$ is $\\frac{\\pi}{4}$, which points into the first quadrant, the opposite way, so it is not the argument.\n\n> **Watch out.** Points below the real axis have negative principal arguments, such as $-\\frac{\\pi}{2}$ for a point straight down. A point on the negative real axis has argument $\\pi$, not $-\\pi$.",
+    "主辐角是从正实轴到这个点的角，在 $-\\pi$ 到 $\\pi$ 之间。象限必须从图上看，因为虚部除以实部的反正切分不清相对的两个点。所以第三象限的点，辐角是比负直角更负的角，而不是反正切给出的那个角。\n\n例如，点 $(-1, -1)$ 在第三象限，所以它的主辐角是 $-\\frac{3\\pi}{4}$。检验：$\\frac{-1}{-1} = 1$ 的反正切是 $\\frac{\\pi}{4}$，它指向第一象限，方向正好相反，所以不是辐角。\n\n> **注意。** 实轴下方的点主辐角为负，例如正下方的点是 $-\\frac{\\pi}{2}$。负实轴上的点辐角是 $\\pi$，不是 $-\\pi$。",
   ),
   generate(rng) {
     const s = rng.int(1, 4);
     const options = [
-      { x: 1, y: 0, tex: "0" },
-      { x: 1, y: 1, tex: "\\frac{\\pi}{4}" },
-      { x: 0, y: 1, tex: "\\frac{\\pi}{2}" },
-      { x: -1, y: 1, tex: "\\frac{3\\pi}{4}" },
-      { x: -1, y: 0, tex: "\\pi" },
-      { x: -1, y: -1, tex: "-\\frac{3\\pi}{4}" },
-      { x: 0, y: -1, tex: "-\\frac{\\pi}{2}" },
-      { x: 1, y: -1, tex: "-\\frac{\\pi}{4}" },
-    ];
+      { x: 1, y: 0, tex: "0", where: ["along the positive real axis", "沿正实轴"] },
+      { x: 1, y: 1, tex: "\\frac{\\pi}{4}", where: ["into Quadrant I", "指向第一象限"] },
+      { x: 0, y: 1, tex: "\\frac{\\pi}{2}", where: ["up the positive imaginary axis", "沿正虚轴向上"] },
+      { x: -1, y: 1, tex: "\\frac{3\\pi}{4}", where: ["into Quadrant II", "指向第二象限"] },
+      { x: -1, y: 0, tex: "\\pi", where: ["along the negative real axis", "沿负实轴"] },
+      { x: -1, y: -1, tex: "-\\frac{3\\pi}{4}", where: ["into Quadrant III", "指向第三象限"] },
+      { x: 0, y: -1, tex: "-\\frac{\\pi}{2}", where: ["down the negative imaginary axis", "沿负虚轴向下"] },
+      { x: 1, y: -1, tex: "-\\frac{\\pi}{4}", where: ["into Quadrant IV", "指向第四象限"] },
+    ] as const;
     const right = rng.pick(options);
     const [x, y] = [right.x * s, right.y * s];
     const others = rng.shuffle(options.filter((o) => o !== right));
-    return pickChoice(
+    const diagonal = right.x !== 0 && right.y !== 0;
+    const modulus = diagonal ? (s === 1 ? "\\sqrt{2}" : `${s}\\sqrt{2}`) : `${s}`;
+    const turn: [string, string] =
+      y > 0
+        ? [
+            "The point is above the real axis, so the angle is turned counterclockwise and is positive",
+            "点在实轴上方，所以角按逆时针方向转，为正",
+          ]
+        : y < 0
+          ? [
+              "The point is below the real axis, so the angle is turned clockwise and is negative",
+              "点在实轴下方，所以角按顺时针方向转，为负",
+            ]
+          : x > 0
+            ? ["The point is on the positive real axis, so no turn is needed", "点在正实轴上，不需要转"]
+            : [
+                "The point is on the negative real axis, a half turn away, and the range includes $\\pi$ but not $-\\pi$",
+                "点在负实轴上，相差半圈，而范围包含 $\\pi$、不包含 $-\\pi$",
+              ];
+    const problem = pickChoice(
       rng,
       t("What is the principal argument of the complex number $z$ drawn here?", "图中复数 $z$ 的主辐角是多少？"),
       math(right.tex),
       others.map((o) => math(o.tex)),
       t(
-        `The point is at $(${x}, ${y})$. Measured from the positive real axis, with angles in $(-\\pi, \\pi]$, its angle is $${right.tex}$.`,
-        `这个点在 $(${x}, ${y})$。从正实轴量起，角度取在 $(-\\pi, \\pi]$，它的角是 $${right.tex}$。`,
+        `${stepLabel(1, "Read the direction", "读方向").en} The arrow ends at $(${x}, ${y})$, so it points ${right.where[0]}.\n\n${stepLabel(2, "Measure the angle", "量角").en} ${turn[0]}. Measured from the positive real axis, with angles in $(-\\pi, \\pi]$, the angle is $${right.tex}$.\n\n**Check.** The distance from the origin is $|z| = ${modulus}$. Then $|z| \\cos ${right.tex} = ${x}$ and $|z| \\sin ${right.tex} = ${y}$ give back the drawn point.`,
+        `${stepLabel(1, "Read the direction", "读方向")["zh-CN"]}箭头指向 $(${x}, ${y})$，所以它${right.where[1]}。\n\n${stepLabel(2, "Measure the angle", "量角")["zh-CN"]}${turn[1]}。从正实轴量起，角度取在 $(-\\pi, \\pi]$，它的角是 $${right.tex}$。\n\n**检验。** 点到原点的距离是 $|z| = ${modulus}$。由 $|z| \\cos ${right.tex} = ${x}$ 和 $|z| \\sin ${right.tex} = ${y}$ 正好得回图中的点。`,
       ),
       drawn(
         square(5),
@@ -659,6 +710,28 @@ const argumentFromDrawing: KnowledgePointDef = {
           { kind: "point", at: [x, y], label: "z", dir: x >= 0 ? "ne" : "nw" },
         ],
         t(`An arrow from the origin to z at (${x}, ${y}).`, `从原点指向 z 的箭头，z 在 (${x}, ${y})。`),
+      ),
+    );
+    return reasoned(
+      problem,
+      others.map((o) =>
+        o.x === right.x && o.y === -right.y
+          ? [
+              `$${o.tex}$`,
+              "This is the argument of the mirror image of $z$ in the real axis: the sign is wrong.",
+              "这是 $z$ 关于实轴的镜像点的辐角：符号反了。",
+            ]
+          : o.x === -right.x && o.y === -right.y
+            ? [
+                `$${o.tex}$`,
+                "This is the argument of $-z$, which points the opposite way. The ratio of the parts is the same, but the quadrant is not.",
+                "这是 $-z$ 的辐角，方向正好相反。两部分之比相同，但象限不同。",
+              ]
+            : [
+                `$${o.tex}$`,
+                `This angle points ${o.where[0]}, but the arrow to $z$ points ${right.where[0]}.`,
+                `这个角${o.where[1]}，但指向 $z$ 的箭头${right.where[1]}。`,
+              ],
       ),
     );
   },

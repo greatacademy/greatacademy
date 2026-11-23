@@ -39,25 +39,38 @@ const addingArguments = {
     "arguments-of-products-and-quotients",
     ["Arguments of products and quotients", "积与商的辐角"],
     [
-      "Multiplying complex numbers multiplies their moduli and adds their arguments, and dividing subtracts the arguments. So the polar form makes multiplication a rotation combined with a scaling. Reduce the resulting angle to the range from 0 up to a full turn, because arguments repeat every full turn.",
-      "复数相乘时模相乘、辐角相加，相除时辐角相减。所以极坐标形式把乘法变成旋转加伸缩。要把得到的角化到从 0 到一整圈的范围内，因为辐角每一整圈重复一次。",
+      "Multiplying complex numbers multiplies their moduli and adds their arguments, and dividing subtracts the arguments. So the polar form makes multiplication a rotation combined with a scaling. Reduce the resulting angle to the range from 0 up to a full turn, because arguments repeat every full turn.\n\nFor example, if $z$ has argument $300^\\circ$ and $w$ has argument $150^\\circ$, then $zw$ has argument $450^\\circ$, which is $90^\\circ$ after removing a full turn, and $\\frac{z}{w}$ has argument $150^\\circ$. Check: multiplying $\\frac{z}{w}$ by $w$ gives $150^\\circ + 150^\\circ = 300^\\circ$, the argument of $z$.\n\n> **Watch out.** The moduli do not affect the argument at all, and the arguments are added or subtracted, never multiplied.",
+      "复数相乘时模相乘、辐角相加，相除时辐角相减。所以极坐标形式把乘法变成旋转加伸缩。要把得到的角化到从 0 到一整圈的范围内，因为辐角每一整圈重复一次。\n\n例如，若 $z$ 的辐角是 $300^\\circ$，$w$ 的辐角是 $150^\\circ$，则 $zw$ 的辐角是 $450^\\circ$，去掉一整圈后为 $90^\\circ$；$\\frac{z}{w}$ 的辐角是 $150^\\circ$。检验：$\\frac{z}{w}$ 乘以 $w$，辐角为 $150^\\circ + 150^\\circ = 300^\\circ$，正是 $z$ 的辐角。\n\n> **注意。** 模对辐角毫无影响；辐角只做加减，从不相乘。",
     ],
     (rng) => {
       const [a, b] = [15 * rng.int(1, 23), 15 * rng.int(1, 23)];
       const [r, s] = [rng.int(2, 9), rng.int(2, 9)];
       const product = rng.bool();
-      const answer = ((product ? a + b : a - b) + 720) % 360;
+      const raw = product ? a + b : a - b;
+      const answer = (raw + 720) % 360;
+      const turns = (answer - raw) / 360;
       const [word, wordZh] = product ? ["zw", "zw"] : ["\\frac{z}{w}", "\\frac{z}{w}"];
+      const reduce: [string, string] =
+        turns === 0
+          ? [
+              `This is already from 0 up to 360, so the argument is $${answer}^\\circ$.`,
+              `它已在 0 到 360 之间，所以辐角是 $${answer}^\\circ$。`,
+            ]
+          : [
+              `${turns > 0 ? "Adding" : "Removing"} a full turn of $360^\\circ$ brings this into the range: $${raw} ${turns > 0 ? "+" : "-"} 360 = ${answer}$.`,
+              `${turns > 0 ? "加上" : "减去"}一整圈 $360^\\circ$ 使它落入范围：$${raw} ${turns > 0 ? "+" : "-"} 360 = ${answer}$。`,
+            ];
+      const back = product ? (answer - b + 360) % 360 : (answer + b) % 360;
       return ask(
         [
           `$|z| = ${r}$ with argument $${a}^\\circ$, and $|w| = ${s}$ with argument $${b}^\\circ$. What is the argument of $${word}$ in degrees, from 0 up to 360?`,
           `$|z| = ${r}$，辐角 $${a}^\\circ$；$|w| = ${s}$，辐角 $${b}^\\circ$。$${wordZh}$ 的辐角是多少度（从 0 到 360）？`,
         ],
         answer,
-        [(a + b + 180) % 360, ((a - b + 720) % 360) + (product ? 0 : 15), (a * b) % 360, (answer + 90) % 360],
+        [(a + b + 180) % 360, (a - b + 720 + (product ? 0 : 15)) % 360, (a * b) % 360, (answer + 90) % 360],
         [
-          `Arguments ${product ? "add when numbers multiply" : "subtract when numbers divide"}: $${a} ${product ? "+" : "-"} ${b} = ${product ? a + b : a - b}$. Adding or removing whole turns of $360$ brings this to ${answer} degrees. The moduli play no part.`,
-          `${product ? "相乘时辐角相加" : "相除时辐角相减"}：$${a} ${product ? "+" : "-"} ${b} = ${product ? a + b : a - b}$。加上或减去整数个 $360$ 后，得 ${answer} 度。模不起作用。`,
+          `**Step 1: ${product ? "Add" : "Subtract"} the arguments.** Arguments ${product ? "add when numbers multiply" : "subtract when numbers divide"}, and the moduli $${r}$ and $${s}$ play no part: $${a} ${product ? "+" : "-"} ${b} = ${raw}$.\n\n**Step 2: Reduce to one turn.** ${reduce[0]}\n\n**Check.** ${product ? `Dividing $zw$ by $w$ must give back $z$: $${answer} - ${b}$` : `Multiplying $\\frac{z}{w}$ by $w$ must give back $z$: $${answer} + ${b}$`} reduces to $${back}^\\circ$, the argument of $z$.`,
+          `**第一步：辐角${product ? "相加" : "相减"}。**${product ? "相乘时辐角相加" : "相除时辐角相减"}，模 $${r}$ 和 $${s}$ 不起作用：$${a} ${product ? "+" : "-"} ${b} = ${raw}$。\n\n**第二步：化到一圈之内。**${reduce[1]}\n\n**检验。**${product ? `用 $zw$ 除以 $w$ 应得回 $z$：$${answer} - ${b}$` : `用 $\\frac{z}{w}$ 乘以 $w$ 应得回 $z$：$${answer} + ${b}$`} 化简后为 $${back}^\\circ$，正是 $z$ 的辐角。`,
         ],
       );
     },

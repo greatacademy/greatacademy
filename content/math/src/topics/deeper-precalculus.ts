@@ -1667,14 +1667,19 @@ const modulusOfQuotient: KnowledgePointDef = {
   id: "the-modulus-of-a-product-and-quotient-without-multiplying",
   title: t("The modulus of a product and quotient without multiplying", "不必相乘就能求积与商的模"),
   explanation: t(
-    "The modulus respects multiplication and division: the modulus of a product is the product of the moduli, and the modulus of a quotient is the quotient of the moduli. So a long expression in complex numbers does not have to be simplified before its size is measured. Find each modulus separately, then combine them as ordinary numbers. Note that this rule does not hold for sums, where the moduli cannot simply be added.",
-    "模与乘除运算相容：积的模等于模的积，商的模等于模的商。所以不必先化简复数的长表达式，就能量出它的大小。分别求出每个模，再把它们当作普通的数来运算。注意这个规则对和不成立，和的模不能简单地把模相加。",
+    "The modulus respects multiplication and division: the modulus of a product is the product of the moduli, and the modulus of a quotient is the quotient of the moduli. So a long expression in complex numbers does not have to be simplified before its size is measured. Find each modulus separately, then combine them as ordinary numbers. Note that this rule does not hold for sums, where the moduli cannot simply be added.\n\nFor example, $|3 + 4i| = 5$ and $|1 + i| = \\sqrt{2}$, so $|(3 + 4i)(1 + i)| = 5\\sqrt{2}$. Check: the product is $-1 + 7i$, and $\\sqrt{1 + 49} = \\sqrt{50} = 5\\sqrt{2}$.\n\n> **Watch out.** For a sum the rule fails. The moduli of $3 + 4i$ and $-3 - 4i$ add up to $10$, but the sum $(3 + 4i) + (-3 - 4i)$ is $0$, whose modulus is $0$.",
+    "模与乘除运算相容：积的模等于模的积，商的模等于模的商。所以不必先化简复数的长表达式，就能量出它的大小。分别求出每个模，再把它们当作普通的数来运算。注意这个规则对和不成立，和的模不能简单地把模相加。\n\n例如，$|3 + 4i| = 5$，$|1 + i| = \\sqrt{2}$，所以 $|(3 + 4i)(1 + i)| = 5\\sqrt{2}$。检验：乘积是 $-1 + 7i$，而 $\\sqrt{1 + 49} = \\sqrt{50} = 5\\sqrt{2}$。\n\n> **注意。** 对和，这个规则不成立。$3 + 4i$ 与 $-3 - 4i$ 的模之和是 $10$，但和 $(3 + 4i) + (-3 - 4i)$ 等于 $0$，它的模是 $0$。",
   ),
   generate(rng) {
     const [a1, b1, L1] = complexOnCircle(rng);
-    const [a2, b2, L2] = complexOnCircle(rng);
+    // Keeping |z_1 z_2| below 1000 keeps the parts of the product, multiplied out in the check, to three digits.
+    const [x2, y2, L2] = rng.pick(triples.filter((triple) => L1 * triple[2] < 1000));
+    const [a2, b2] = rng.bool() ? [rng.sign() * x2, rng.sign() * y2] : [rng.sign() * y2, rng.sign() * x2];
     const [a3, b3, L3] = complexOnCircle(rng);
     const answer = Q.of(L1 * L2, L3);
+    const square = (v: number) => (v < 0 ? `(${v})^{2}` : `${v}^{2}`);
+    const mod = (a: number, b: number, L: number) => `\\sqrt{${square(a)} + ${square(b)}} = \\sqrt{${L * L}} = ${L}`;
+    const [pr, pi] = [a1 * a2 - b1 * b2, a1 * b2 + a2 * b1];
     return numberProblem({
       prompt: t(
         `Let $z_1 = ${complex(a1, b1)}$, $z_2 = ${complex(a2, b2)}$ and $z_3 = ${complex(a3, b3)}$. Find $\\left|\\frac{z_1 z_2}{z_3}\\right|$.`,
@@ -1683,8 +1688,8 @@ const modulusOfQuotient: KnowledgePointDef = {
       answer,
       wrong: [L1 + L2 - L3, L1 * L2 * L3, Q.of(L1, L2 * L3), L1 * L2],
       solution: t(
-        `The moduli are $|z_1| = ${L1}$, $|z_2| = ${L2}$ and $|z_3| = ${L3}$. The modulus of a product and of a quotient can be taken factor by factor, so the answer is $\\frac{${L1} \\cdot ${L2}}{${L3}} = ${answer.toLatex()}$.`,
-        `各模分别是 $|z_1| = ${L1}$，$|z_2| = ${L2}$，$|z_3| = ${L3}$。积与商的模可以逐个因子求，所以答案是 $\\frac{${L1} \\cdot ${L2}}{${L3}} = ${answer.toLatex()}$。`,
+        `${stepLabel(1, "Find each modulus", "求各个模").en} The modulus is the square root of the sum of the squares of the parts:\n\n$$|z_1| = ${mod(a1, b1, L1)}$$\n\n$$|z_2| = ${mod(a2, b2, L2)}$$\n\n$$|z_3| = ${mod(a3, b3, L3)}$$\n\n${stepLabel(2, "Combine them", "组合起来").en} The modulus of a product and of a quotient can be taken factor by factor:\n\n$$\\left|\\frac{z_1 z_2}{z_3}\\right| = \\frac{${L1} \\cdot ${L2}}{${L3}} = ${answer.toLatex()}$$\n\n**Check.** Multiply out the numerator instead: $z_1 z_2 = ${complex(pr, pi)}$, and its parts give\n\n$$${square(pr)} + ${square(pi)} = ${pr * pr + pi * pi} = ${L1 * L2}^{2}$$\n\nSo $|z_1 z_2| = ${L1 * L2}$, and dividing by $${L3}$ gives the same answer.`,
+        `${stepLabel(1, "Find each modulus", "求各个模")["zh-CN"]}模等于两部分平方和的平方根：\n\n$$|z_1| = ${mod(a1, b1, L1)}$$\n\n$$|z_2| = ${mod(a2, b2, L2)}$$\n\n$$|z_3| = ${mod(a3, b3, L3)}$$\n\n${stepLabel(2, "Combine them", "组合起来")["zh-CN"]}积与商的模可以逐个因子求：\n\n$$\\left|\\frac{z_1 z_2}{z_3}\\right| = \\frac{${L1} \\cdot ${L2}}{${L3}} = ${answer.toLatex()}$$\n\n**检验。** 改为先把分子乘出来：$z_1 z_2 = ${complex(pr, pi)}$，它的两部分给出\n\n$$${square(pr)} + ${square(pi)} = ${pr * pr + pi * pi} = ${L1 * L2}^{2}$$\n\n所以 $|z_1 z_2| = ${L1 * L2}$，再除以 $${L3}$ 得到同样的答案。`,
       ),
     });
   },
@@ -1695,14 +1700,32 @@ const farthestOnCircle: KnowledgePointDef = {
   figure: precalculusDrawings3["geometry-in-the-complex-plane#the-largest-and-smallest-modulus-on-a-circle"],
   title: t("The largest and smallest modulus on a circle", "圆上模的最大值与最小值"),
   explanation: t(
-    "The modulus of a complex number is its distance from the origin, so asking for the largest or smallest modulus on a circle is a question about geometry. The extreme points lie on the line through the origin and the center of the circle. The largest modulus is the distance to the center plus the radius. The smallest is the difference between these two lengths, taken in the positive order, which also covers an origin inside the circle.",
-    "复数的模是它到原点的距离，所以问圆上模的最大值或最小值，其实是几何问题。取到极值的点在经过原点和圆心的直线上。最大的模是到圆心的距离加上半径。最小的模是这两个长度之差（取正值），这也包括了原点在圆内的情形。",
+    "The modulus of a complex number is its distance from the origin, so asking for the largest or smallest modulus on a circle is a question about geometry. The extreme points lie on the line through the origin and the center of the circle. The largest modulus is the distance to the center plus the radius. The smallest is the difference between these two lengths, taken in the positive order, which also covers an origin inside the circle.\n\nFor example, on the circle $|z - w| = 2$ with $w = 3 + 4i$, the center is $5$ from the origin, so the largest modulus is $5 + 2 = 7$ and the smallest is $5 - 2 = 3$. Check: the farthest point is $z = \\frac{7}{5} w$, and $z - w = \\frac{2}{5} w$ has modulus $\\frac{2}{5} \\cdot 5 = 2$, so this point is on the circle.\n\n> **Watch out.** When the radius is larger than the distance to the center, the origin is inside the circle. With radius $8$ and the same center, the smallest modulus is $8 - 5 = 3$, not $5 - 8$, because a modulus is never negative.",
+    "复数的模是它到原点的距离，所以问圆上模的最大值或最小值，其实是几何问题。取到极值的点在经过原点和圆心的直线上。最大的模是到圆心的距离加上半径。最小的模是这两个长度之差（取正值），这也包括了原点在圆内的情形。\n\n例如，在圆 $|z - w| = 2$ 上，$w = 3 + 4i$，圆心到原点的距离是 $5$，所以最大的模是 $5 + 2 = 7$，最小的模是 $5 - 2 = 3$。检验：最远的点是 $z = \\frac{7}{5} w$，而 $z - w = \\frac{2}{5} w$ 的模是 $\\frac{2}{5} \\cdot 5 = 2$，所以这个点在圆上。\n\n> **注意。** 当半径大于到圆心的距离时，原点在圆内。若半径是 $8$、圆心不变，最小的模是 $8 - 5 = 3$，而不是 $5 - 8$，因为模不会是负数。",
   ),
   generate(rng) {
     const [p, q, L] = complexOnCircle(rng);
     const r = rng.pick(Array.from({ length: 30 }, (_, i) => i + 1).filter((v) => v !== L));
     const largest = rng.bool();
     const answer = largest ? L + r : Math.abs(L - r);
+    const square = (v: number) => (v < 0 ? `(${v})^{2}` : `${v}^{2}`);
+    const inside = !largest && r > L;
+    const scale = frac(largest ? L + r : L - r, L);
+    const offset = largest ? frac(r, L) : frac(-r, L);
+    const move: [string, string] = largest
+      ? [
+          `The farthest point lies beyond the center, one radius further from the origin:\n\n$$${L} + ${r} = ${answer}$$`,
+          `最远的点在圆心外侧，比圆心离原点再远一个半径：\n\n$$${L} + ${r} = ${answer}$$`,
+        ]
+      : inside
+        ? [
+            `The radius $${r}$ is larger than $${L}$, so the origin is inside the circle. The nearest point lies on the far side of the origin, at distance\n\n$$${r} - ${L} = ${answer}$$`,
+            `半径 $${r}$ 大于 $${L}$，所以原点在圆内。最近的点在原点的另一侧，距离为\n\n$$${r} - ${L} = ${answer}$$`,
+          ]
+        : [
+            `The nearest point lies between the origin and the center, one radius closer to the origin:\n\n$$${L} - ${r} = ${answer}$$`,
+            `最近的点在原点与圆心之间，比圆心离原点近一个半径：\n\n$$${L} - ${r} = ${answer}$$`,
+          ];
     return numberProblem({
       prompt: t(
         `The complex number $z$ lies on the circle $|z - w| = ${r}$, where $w = ${complex(p, q)}$. Find the ${largest ? "largest" : "smallest"} possible value of $|z|$.`,
@@ -1712,8 +1735,8 @@ const farthestOnCircle: KnowledgePointDef = {
       form: "integer",
       wrong: [largest ? Math.abs(L - r) : L + r, L, r, L * L + r, L + 2 * r],
       solution: t(
-        `The center is $${L}$ from the origin, and the radius is $${r}$. The extreme points lie on the line through the origin and the center, so the ${largest ? "largest" : "smallest"} modulus is ${largest ? `$${L} + ${r} = ${answer}$` : `the difference of these lengths, $${answer}$`}.`,
-        `圆心到原点的距离是 $${L}$，半径是 $${r}$。取到极值的点在经过原点和圆心的直线上，所以${largest ? "最大" : "最小"}的模是${largest ? `$${L} + ${r} = ${answer}$` : `这两个长度之差 $${answer}$`}。`,
+        `${stepLabel(1, "Find the distance to the center", "求到圆心的距离").en} The center is $w$, and its distance from the origin is\n\n$$|w| = \\sqrt{${square(p)} + ${square(q)}} = ${L}$$\n\n${stepLabel(2, "Move along the line through the center", "沿过圆心的直线移动").en} The extreme points lie on the line through the origin and the center. ${move[0]}\n\n**Check.** Take the point $z = ${scale} w$ on that line. Then $z - w = ${offset} w$ has modulus $${frac(r, L)} \\cdot ${L} = ${r}$, so $z$ is on the circle. Its own modulus is $${frac(answer, L)} \\cdot ${L} = ${answer}$.`,
+        `${stepLabel(1, "Find the distance to the center", "求到圆心的距离")["zh-CN"]}圆心是 $w$，它到原点的距离是\n\n$$|w| = \\sqrt{${square(p)} + ${square(q)}} = ${L}$$\n\n${stepLabel(2, "Move along the line through the center", "沿过圆心的直线移动")["zh-CN"]}取到极值的点在经过原点和圆心的直线上。${move[1]}\n\n**检验。** 取这条直线上的点 $z = ${scale} w$。则 $z - w = ${offset} w$ 的模是 $${frac(r, L)} \\cdot ${L} = ${r}$，所以 $z$ 在圆上。它自己的模是 $${frac(answer, L)} \\cdot ${L} = ${answer}$。`,
       ),
     });
   },
@@ -1723,8 +1746,8 @@ const cubicWithComplexRoot: KnowledgePointDef = {
   id: "the-coefficients-of-a-cubic-with-a-complex-root",
   title: t("The coefficients of a cubic with a complex root", "含复数根的三次方程的系数"),
   explanation: t(
-    "The conjugate root theorem works for polynomials of every degree with real coefficients, not only for quadratics. If a cubic with real coefficients has one non-real root, its conjugate is a root as well, and this leaves exactly one more root, which must be real. The two conjugate roots multiply out to a real quadratic factor. Multiplying that factor by the linear factor of the real root then gives every coefficient of the cubic.",
-    "共轭根定理对任何次数的实系数多项式都成立，不只是二次的。如果实系数三次方程有一个非实根，它的共轭也是根，这样只剩下一个根，它必须是实数。两个共轭根相乘得到一个实系数二次因式。再把它乘以实根对应的一次因式，就得到三次式的所有系数。",
+    "The conjugate root theorem works for polynomials of every degree with real coefficients, not only for quadratics. If a cubic with real coefficients has one non-real root, its conjugate is a root as well, and this leaves exactly one more root, which must be real. The two conjugate roots multiply out to a real quadratic factor. Multiplying that factor by the linear factor of the real root then gives every coefficient of the cubic.\n\nFor example, if $1 + 2i$ and $3$ are roots, then so is $1 - 2i$. The conjugate pair gives the factor $x^{2} - 2x + 5$, and the cubic is\n\n$$(x^{2} - 2x + 5)(x - 3) = x^{3} - 5x^{2} + 11x - 15$$\n\nCheck: putting in $x = 3$ gives $27 - 45 + 33 - 15 = 0$.\n\n> **Watch out.** The given non-real root alone is not enough to build the cubic: its conjugate must be included, or the coefficients would not be real. Also, the coefficient of $x^{2}$ is minus the sum of the roots, so its sign is opposite to that sum.",
+    "共轭根定理对任何次数的实系数多项式都成立，不只是二次的。如果实系数三次方程有一个非实根，它的共轭也是根，这样只剩下一个根，它必须是实数。两个共轭根相乘得到一个实系数二次因式。再把它乘以实根对应的一次因式，就得到三次式的所有系数。\n\n例如，若 $1 + 2i$ 和 $3$ 是根，则 $1 - 2i$ 也是根。这对共轭根给出因式 $x^{2} - 2x + 5$，三次式为\n\n$$(x^{2} - 2x + 5)(x - 3) = x^{3} - 5x^{2} + 11x - 15$$\n\n检验：代入 $x = 3$ 得 $27 - 45 + 33 - 15 = 0$。\n\n> **注意。** 只用给出的那个非实根不能构造出三次式：必须把它的共轭也算进去，否则系数不是实数。另外，$x^{2}$ 的系数是各根之和的相反数，符号与这个和相反。",
   ),
   generate(rng) {
     const p = nonzero(rng, 5);
@@ -1732,7 +1755,11 @@ const cubicWithComplexRoot: KnowledgePointDef = {
     const r = nonzero(rng, 6);
     const modulusSquared = p * p + q * q;
     const askConstant = rng.bool();
-    const answer = askConstant ? -r * modulusSquared : -(2 * p + r);
+    const A = -(2 * p + r);
+    const C = -r * modulusSquared;
+    const answer = askConstant ? C : A;
+    const quadratic = poly([1, "x^{2}"], [-2 * p, "x"], [modulusSquared, ""]);
+    const cubic = poly([1, "x^{3}"], [A, "x^{2}"], [modulusSquared + 2 * p * r, "x"], [C, ""]);
     return numberProblem({
       prompt: t(
         `The cubic $x^{3} + Ax^{2} + Bx + C$ has real coefficients, and two of its roots are $${complex(p, q)}$ and $${r}$. Find ${askConstant ? "$C$" : "$A$"}.`,
@@ -1744,8 +1771,8 @@ const cubicWithComplexRoot: KnowledgePointDef = {
         ? [r * modulusSquared, -modulusSquared, -r * (p * p - q * q), -2 * r * p]
         : [2 * p + r, -(p + r), -2 * p, r - 2 * p, answer + 1],
       solution: t(
-        `The coefficients are real, so $${complex(p, -q)}$ is also a root. Together, these two roots give the factor $${poly([1, "x^{2}"], [-2 * p, "x"], [modulusSquared, ""])}$. The cubic is this factor times $(${minus(r)})$, so $A = ${-(2 * p + r)}$ and $C = ${-r * modulusSquared}$.`,
-        `系数是实数，所以 $${complex(p, -q)}$ 也是根。这两个根合起来给出因式 $${poly([1, "x^{2}"], [-2 * p, "x"], [modulusSquared, ""])}$。三次式就是这个因式乘以 $(${minus(r)})$，所以 $A = ${-(2 * p + r)}$，$C = ${-r * modulusSquared}$。`,
+        `${stepLabel(1, "Add the conjugate root", "补上共轭根").en} The coefficients are real, so $${complex(p, -q)}$ is also a root. The two conjugate roots give the real quadratic factor\n\n$$(${minus(p)})^{2} + ${q * q} = ${quadratic}$$\n\n${stepLabel(2, "Multiply by the real root's factor", "乘以实根的因式").en} The third root is $${r}$, so the cubic is\n\n$$(${quadratic})(${minus(r)}) = ${cubic}$$\n\nReading off the coefficients, $A = ${A}$ and $C = ${C}$.\n\n**Check.** For a monic cubic the sum of the roots is $-A$ and their product is $-C$. The imaginary parts cancel in the sum, which is $${2 * p} ${r < 0 ? "-" : "+"} ${Math.abs(r)} = ${2 * p + r}$, matching $-A$. The conjugate pair multiplies to $${modulusSquared}$, so the product is $${modulusSquared} \\cdot ${r < 0 ? `(${r})` : r} = ${r * modulusSquared}$, matching $-C$.`,
+        `${stepLabel(1, "Add the conjugate root", "补上共轭根")["zh-CN"]}系数是实数，所以 $${complex(p, -q)}$ 也是根。这两个共轭根给出实系数二次因式\n\n$$(${minus(p)})^{2} + ${q * q} = ${quadratic}$$\n\n${stepLabel(2, "Multiply by the real root's factor", "乘以实根的因式")["zh-CN"]}第三个根是 $${r}$，所以三次式是\n\n$$(${quadratic})(${minus(r)}) = ${cubic}$$\n\n读出系数，$A = ${A}$，$C = ${C}$。\n\n**检验。** 首项系数为 1 的三次式，各根之和是 $-A$，各根之积是 $-C$。和中虚部相消，为 $${2 * p} ${r < 0 ? "-" : "+"} ${Math.abs(r)} = ${2 * p + r}$，与 $-A$ 一致。共轭的一对根之积是 $${modulusSquared}$，所以三根之积是 $${modulusSquared} \\cdot ${r < 0 ? `(${r})` : r} = ${r * modulusSquared}$，与 $-C$ 一致。`,
       ),
     });
   },
@@ -1755,8 +1782,8 @@ const squareRootOfComplex: KnowledgePointDef = {
   id: "a-square-root-of-a-complex-number-by-equating-parts",
   title: t("A square root of a complex number by equating parts", "用比较实部虚部的方法求复数的平方根"),
   explanation: t(
-    "Equating real and imaginary parts also works when the unknown is squared. Writing the unknown number with two real parts and expanding its square gives two equations: the difference of the squares is the real part, and twice the product is the imaginary part. These are not linear, but the modulus supplies a third fact, because the sum of the squares equals the modulus of the given number. Adding and subtracting then gives each square at once.",
-    "比较实部和虚部的方法在未知数被平方时同样适用。把未知复数写成两个实数部分并展开平方，得到两个方程：平方差等于实部，积的两倍等于虚部。它们不是一次的，但模提供了第三个事实，因为平方和等于已知复数的模。两式相加、相减，就立刻得到每个平方。",
+    "Equating real and imaginary parts also works when the unknown is squared. Writing the unknown number with two real parts and expanding its square gives two equations: the difference of the squares is the real part, and twice the product is the imaginary part. These are not linear, but the modulus supplies a third fact, because the sum of the squares equals the modulus of the given number. Adding and subtracting then gives each square at once.\n\nFor example, if $(x + yi)^{2} = 3 + 4i$, then $x^{2} - y^{2} = 3$ and $2xy = 4$. The modulus of $3 + 4i$ is $5$, so $x^{2} + y^{2} = 5$. Adding gives $x^{2} = 4$ and subtracting gives $y^{2} = 1$, so one square root is $2 + i$. Check: $(2 + i)^{2} = 4 + 4i - 1 = 3 + 4i$.\n\n> **Watch out.** The squares fix $x$ and $y$ only up to sign. The sign of $2xy$ decides whether $y$ has the same sign as $x$, and a condition such as $x > 0$ picks one of the two square roots.",
+    "比较实部和虚部的方法在未知数被平方时同样适用。把未知复数写成两个实数部分并展开平方，得到两个方程：平方差等于实部，积的两倍等于虚部。它们不是一次的，但模提供了第三个事实，因为平方和等于已知复数的模。两式相加、相减，就立刻得到每个平方。\n\n例如，若 $(x + yi)^{2} = 3 + 4i$，则 $x^{2} - y^{2} = 3$，$2xy = 4$。$3 + 4i$ 的模是 $5$，所以 $x^{2} + y^{2} = 5$。相加得 $x^{2} = 4$，相减得 $y^{2} = 1$，所以一个平方根是 $2 + i$。检验：$(2 + i)^{2} = 4 + 4i - 1 = 3 + 4i$。\n\n> **注意。** 由平方只能确定 $x$ 和 $y$ 的绝对值。$2xy$ 的符号决定 $y$ 与 $x$ 是否同号，而 $x > 0$ 这样的条件从两个平方根中选出一个。",
   ),
   generate(rng) {
     const x = rng.int(2, 9);
@@ -1766,6 +1793,7 @@ const squareRootOfComplex: KnowledgePointDef = {
     const askX = rng.bool();
     const answer = askX ? x : y;
     const sum = x * x + y * y;
+    const square = (v: number) => (v < 0 ? `(${v})^{2}` : `${v}^{2}`);
     return numberProblem({
       prompt: t(
         `The complex number $z = x + yi$, with $x$ and $y$ real and $x > 0$, satisfies $z^{2} = ${complex(a, b)}$. Find $${askX ? "x" : "y"}$.`,
@@ -1775,8 +1803,8 @@ const squareRootOfComplex: KnowledgePointDef = {
       form: "integer",
       wrong: askX ? [Math.abs(y), x * Math.abs(y), a, x + 1, 2 * x] : [-y, x, x * y, a, 2 * y],
       solution: t(
-        `Equating parts gives $x^{2} - y^{2} = ${a}$ and $2xy = ${b}$. Also $x^{2} + y^{2} = |z^{2}| = ${sum}$. Adding and subtracting gives $x^{2} = ${x * x}$ and $y^{2} = ${y * y}$. Since $x > 0$, we have $x = ${x}$, and $2xy = ${b}$ then gives $y = ${y}$.`,
-        `比较实部和虚部得 $x^{2} - y^{2} = ${a}$，$2xy = ${b}$。又 $x^{2} + y^{2} = |z^{2}| = ${sum}$。两式相加、相减得 $x^{2} = ${x * x}$，$y^{2} = ${y * y}$。因为 $x > 0$，所以 $x = ${x}$，再由 $2xy = ${b}$ 得 $y = ${y}$。`,
+        `${stepLabel(1, "Equate the parts", "比较实部和虚部").en} Expanding gives $z^{2} = x^{2} - y^{2} + 2xyi$, so\n\n$$x^{2} - y^{2} = ${a}, \\quad 2xy = ${b}$$\n\n${stepLabel(2, "Use the modulus", "利用模").en} The sum of the squares is the modulus of $z^{2}$:\n\n$$x^{2} + y^{2} = \\sqrt{${square(a)} + ${square(b)}} = ${sum}$$\n\n${stepLabel(3, "Add and subtract", "相加与相减").en} Adding the first and last equations gives $2x^{2} = ${a + sum}$, so $x^{2} = ${x * x}$. Subtracting gives $2y^{2} = ${sum - a}$, so $y^{2} = ${y * y}$. Since $x > 0$, $x = ${x}$, and $2xy = ${b}$ is ${b > 0 ? "positive" : "negative"}, so $y = ${y}$.\n\n**Check.** Square the result directly:\n\n$$(${complex(x, y)})^{2} = ${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)}i - ${y * y} = ${complex(a, b)}$$\n\nThis is the given number.`,
+        `${stepLabel(1, "Equate the parts", "比较实部和虚部")["zh-CN"]}展开得 $z^{2} = x^{2} - y^{2} + 2xyi$，所以\n\n$$x^{2} - y^{2} = ${a}, \\quad 2xy = ${b}$$\n\n${stepLabel(2, "Use the modulus", "利用模")["zh-CN"]}平方和等于 $z^{2}$ 的模：\n\n$$x^{2} + y^{2} = \\sqrt{${square(a)} + ${square(b)}} = ${sum}$$\n\n${stepLabel(3, "Add and subtract", "相加与相减")["zh-CN"]}第一个方程与最后一个相加得 $2x^{2} = ${a + sum}$，所以 $x^{2} = ${x * x}$。相减得 $2y^{2} = ${sum - a}$，所以 $y^{2} = ${y * y}$。因为 $x > 0$，所以 $x = ${x}$；$2xy = ${b}$ 是${b > 0 ? "正" : "负"}数，所以 $y = ${y}$。\n\n**检验。** 直接把结果平方：\n\n$$(${complex(x, y)})^{2} = ${x * x} ${b < 0 ? "-" : "+"} ${Math.abs(b)}i - ${y * y} = ${complex(a, b)}$$\n\n正是已知的数。`,
       ),
     });
   },
