@@ -11,17 +11,18 @@ const earlyFigureWidth = 320;
 
 const accent = `class="accent" fill="currentColor"`;
 
-/** earlyPoint builds a knowledge point from its id, its title and explanation as [English, Chinese] pairs, and its generator. */
+/** earlyPoint builds a knowledge point from its id, its title and explanation as [English, Chinese] pairs, its generator, and the drawing shown after its explanation. */
 export function earlyPoint(
   id: string,
   title: readonly [string, string],
   explanation: readonly [string, string],
   generate: (rng: Rng) => Problem,
+  figure?: Figure,
 ): KnowledgePointDef {
-  return { id, title: t(title[0], title[1]), explanation: t(explanation[0], explanation[1]), generate };
+  return { id, title: t(title[0], title[1]), explanation: t(explanation[0], explanation[1]), generate, ...(figure && { figure }) };
 }
 
-/** earlyTopic builds a topic from its id, its title and summary as [English, Chinese] pairs, its prerequisites, its Common Core codes and its points. */
+/** earlyTopic builds a topic from its id, its title and summary as [English, Chinese] pairs, its prerequisites, its Common Core codes, its points and its introduction. */
 export function earlyTopic(
   id: string,
   title: readonly [string, string],
@@ -29,8 +30,10 @@ export function earlyTopic(
   prerequisites: readonly string[],
   standards: readonly string[],
   knowledgePoints: readonly KnowledgePointDef[],
+  intro?: readonly [string, string],
 ): TopicDef {
   return {
+    ...(intro && { intro: t(intro[0], intro[1]) }),
     id,
     title: t(title[0], title[1]),
     summary: t(summary[0], summary[1]),

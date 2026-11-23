@@ -7,8 +7,9 @@ import { same, t } from "@ga/content";
 import { svgDocument } from "@ga/subject-math";
 
 import { nearbyWrong } from "../early-grades-kit.ts";
-import { numberProblem } from "../problems.ts";
-import { pickChoice } from "./grade-4-fractions.ts";
+import { explainedChoice, numberProblem, steps, withMistakes } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
+import { compareProblem, pickChoice } from "./grade-4-fractions.ts";
 
 /** Pair is a text as an English and a Chinese string. */
 export type Pair = readonly [string, string];
@@ -780,3 +781,106 @@ export function lShapeFigure(
 
 /** many writes a count before a word, adding an s unless the count is 1. */
 export const many = (count: number, word: string): string => `${count} ${word}${count === 1 ? "" : "s"}`;
+
+/** captioned gives a drawing the caption a knowledge point shows under it. */
+export const captioned = (figure: Figure, en: string, zh: string): Figure => ({ ...figure, alt: t(en, zh) });
+
+/** Walk is a labelled step of a worked solution: its title, what it says, and lines of mathematics shown under it. */
+export type Walk = readonly [title: Pair, said: Pair, lines?: readonly string[]];
+
+/** walkThrough writes labelled steps, then a check that reaches the answer another way. */
+export function walkThrough(walk: readonly Walk[], check: Pair): Text {
+  const write = (k: 0 | 1) =>
+    walk
+      .map(([title, said, lines = []], i) => {
+        const label = stepLabel(i + 1, title[0], title[1])[k === 0 ? "en" : "zh-CN"];
+        const gap = k === 0 && said[0] !== "" ? " " : "";
+        return `${label}${gap}${said[k]}${lines.length > 0 ? steps(...lines) : "\n\n"}`;
+      })
+      .join("") + (k === 0 ? `**Check.** ${check[0]}` : `**检验。**${check[1]}`);
+  return t(write(0), write(1));
+}
+
+/** Slip is a wrong whole-number answer with the reason a learner reaches it, in English and Chinese. */
+export type Slip = readonly [value: number, en: string, zh: string];
+
+/** solved asks for a whole number, works it in labelled steps with a check, and answers each distinct wrong value with its reason; negative values are dropped. */
+export function solved(prompt: Pair, answer: number, walk: readonly Walk[], check: Pair, slips: readonly Slip[], figure?: Figure): Problem {
+  const kept = slips.filter(([v], i) => v >= 0 && v !== answer && slips.findIndex(([w]) => w === v) === i);
+  const problem = numberProblem({
+    prompt: t(prompt[0], prompt[1]),
+    answer,
+    form: "integer",
+    mistakes: kept.map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+    solution: walkThrough(walk, check),
+  });
+  return figure ? { ...problem, figure } : problem;
+}
+
+/** Wrong is a wrong option of a choice with the reason it is wrong, in English and Chinese. */
+export type Wrong = readonly [option: Pair, en: string, zh: string];
+
+/** picked asks to choose among options given as pairs of strings, works the right one in labelled steps with a check, and says why each other option is wrong. */
+export function picked(
+  rng: Rng,
+  prompt: Pair,
+  correct: Pair,
+  wrong: readonly Wrong[],
+  walk: readonly Walk[],
+  check: Pair,
+  figure?: Figure,
+): Problem {
+  return explainedChoice(rng, {
+    prompt: t(prompt[0], prompt[1]),
+    correct: t(correct[0], correct[1]),
+    wrong: wrong.map(([option, en, zh]) => ({ option: t(option[0], option[1]), why: t(en, zh) })),
+    solution: walkThrough(walk, check),
+    ...(figure && { figure }),
+  });
+}
+
+/** compared asks which of <, = and > makes "a □ b" true, works it in labelled steps with a check, and says why each other symbol is wrong; reasons holds one for each of <, = and > in that order, and the right symbol's is not used. */
+export function compared(
+  a: string,
+  b: string,
+  rel: number,
+  walk: readonly Walk[],
+  check: Pair,
+  reasons: readonly [Pair, Pair, Pair],
+  figure?: Figure,
+): Problem {
+  const symbols = ["<", "=", ">"];
+  const others = [0, 1, 2].filter((i) => i !== rel);
+  const worked = walkThrough(walk, check);
+  const list = (k: 0 | 1) => others.map((i) => `- $${symbols[i]}$${k === 0 ? ": " : "："}${reasons[i]?.[k]}`).join("\n");
+  const solution = t(`${worked.en}\n\nThe other options:\n\n${list(0)}`, `${worked["zh-CN"]}\n\n其他选项：\n\n${list(1)}`);
+  return withMistakes(
+    compareProblem(a, b, rel, solution, figure),
+    others.map((i) => ({ response: `$${symbols[i]}$`, why: t(reasons[i]?.[0] ?? "", reasons[i]?.[1] ?? "") })),
+  );
+}
+
+/** MathWrong is a wrong option written in LaTeX with the reason it is wrong. */
+export type MathWrong = readonly [option: string, en: string, zh: string];
+
+/** pickedMath is picked with options that are each one LaTeX expression, the same in both languages. */
+export function pickedMath(
+  rng: Rng,
+  prompt: Pair,
+  correct: string,
+  wrong: readonly MathWrong[],
+  walk: readonly Walk[],
+  check: Pair,
+  figure?: Figure,
+): Problem {
+  const math = (s: string): Pair => [`$${s}$`, `$${s}$`];
+  return picked(
+    rng,
+    prompt,
+    math(correct),
+    wrong.map(([option, en, zh]) => [math(option), en, zh] as const),
+    walk,
+    check,
+    figure,
+  );
+}
