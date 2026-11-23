@@ -37,6 +37,7 @@ topic book-dream-of-red-chamber book-dream-of-red-chamber-questions
 topic book-insect-world book-insect-world-questions
 topic book-journey-to-the-west book-journey-to-the-west-questions
 topic book-robinson-crusoe book-robinson-crusoe-questions
+topic book-steel-tempered book-steel-tempered-questions
 topic book-twenty-thousand-leagues book-twenty-thousand-leagues-questions
 topic book-water-margin book-water-margin-questions
 topic classical-function-words-10-01 classical-function-words-10-01-nai classical-function-words-10-01-qie
@@ -200,6 +201,7 @@ topic idioms-9-02 idioms-9-02-meaning idioms-9-02-use idioms-9-02-writing
 topic idioms-9-03 idioms-9-03-meaning idioms-9-03-use idioms-9-03-writing
 topic idioms-9-04 idioms-9-04-meaning idioms-9-04-use idioms-9-04-writing
 topic inquiry-5-sources inquiry-5-sources-answers inquiry-5-sources-where
+topic inquiry-8-sources inquiry-8-sources-citing inquiry-8-sources-primary
 topic language-3-similar-characters language-3-similar-characters-form language-3-similar-characters-sound
 topic language-4-polyphones language-4-polyphones-meaning language-4-polyphones-word
 topic language-5-character-formation language-5-character-formation-phonetic language-5-character-formation-pictograph
@@ -2621,6 +2623,13 @@ topic reading-7-narrative reading-7-narrative-detail reading-7-narrative-thread
 topic reading-7-news reading-7-news-elements reading-7-news-fact
 topic reading-7-poems reading-7-poems-feeling reading-7-poems-scene
 topic reading-7-prose reading-7-prose-feeling reading-7-prose-language
+topic reading-8-argument reading-8-argument-claim reading-8-argument-material
+topic reading-8-classical reading-8-classical-meaning reading-8-classical-words
+topic reading-8-expository reading-8-expository-language reading-8-expository-order
+topic reading-8-fiction reading-8-fiction-people reading-8-fiction-plot
+topic reading-8-non-continuous reading-8-non-continuous-apply reading-8-non-continuous-find
+topic reading-8-poems reading-8-poems-feeling reading-8-poems-words
+topic reading-8-science reading-8-science-method reading-8-science-spirit
 topic reading-aloud-1 reading-aloud-1-texts
 topic reading-aloud-10 reading-aloud-10-texts
 topic reading-aloud-11 reading-aloud-11-texts
@@ -3118,6 +3127,7 @@ topic revising-3 revising-3-characters revising-3-words
 topic revising-4 revising-4-sentences revising-4-words
 topic revising-5 revising-5-order revising-5-sentences
 topic revising-6 revising-6-form revising-6-punctuation
+topic revising-8 revising-8-logic revising-8-parts
 topic rhetoric-1 rhetoric-1-finding rhetoric-1-naming
 topic rhetoric-2 rhetoric-2-finding rhetoric-2-naming
 topic rhetoric-3 rhetoric-3-finding rhetoric-3-naming
@@ -3159,6 +3169,10 @@ topic speaking-7-impromptu speaking-7-impromptu-moment speaking-7-impromptu-poin
 topic speaking-7-intent speaking-7-intent-meaning speaking-7-intent-reply
 topic speaking-7-proper speaking-7-proper-listener speaking-7-proper-occasion
 topic speaking-7-retelling speaking-7-retelling-relay speaking-7-retelling-retell
+topic speaking-8-discussion-focus speaking-8-discussion-focus-focus speaking-8-discussion-focus-keep
+topic speaking-8-interview speaking-8-interview-plan speaking-8-interview-record
+topic speaking-8-persuading speaking-8-persuading-manner speaking-8-persuading-reason
+topic speaking-8-speech speaking-8-speech-opening speaking-8-speech-spoken
 topic strokes-basic strokes-basic-count strokes-basic-first
 topic strokes-order strokes-order-next strokes-order-rule
 topic strokes-turning strokes-turning-count strokes-turning-next
@@ -3242,7 +3256,11 @@ topic writing-7-feeling writing-7-feeling-carry writing-7-feeling-express
 topic writing-7-imagination writing-7-imagination-link writing-7-imagination-meaning
 topic writing-7-practical writing-7-practical-application writing-7-practical-suggestion
 topic writing-8-explain writing-8-explain-accurate writing-8-explain-order
+topic writing-8-news writing-8-news-facts writing-8-news-lead
+topic writing-8-research-report writing-8-research-report-conclusion writing-8-research-report-findings
+topic writing-8-rewrite writing-8-rewrite-form writing-8-rewrite-person
 topic writing-8-speech writing-8-speech-spoken writing-8-speech-view
+topic writing-8-travel writing-8-travel-route writing-8-travel-scene
 topic writing-9-argue writing-9-argue-methods writing-9-argue-thesis
 topic writing-9-story writing-9-story-theme writing-9-story-thread
 topic writing-characters-1-01 writing-characters-1-01-tracing writing-characters-1-01-writing

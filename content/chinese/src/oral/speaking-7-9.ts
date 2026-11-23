@@ -1,6 +1,8 @@
-// The speaking topics of grade 7 (docs/chinese-curriculum.md §18.9): hearing what is meant, retelling and relaying,
-// speaking fittingly to the listener and the occasion, and speaking off the cuff. The scenes and the words said are
-// written for this subject. Until their recordings are made, what is said is shown as text to be read as if heard.
+// The speaking topics of grades 7 and 8 (docs/chinese-curriculum.md §18.9): for grade 7, hearing what is meant,
+// retelling and relaying, speaking fittingly to the listener and the occasion, and speaking off the cuff; for grade 8,
+// a prepared speech, interviewing, keeping to the focus of a discussion, and speaking persuasively. The scenes and the
+// words said are written for this subject. Until their recordings are made, what is said is shown as text to be read as
+// if heard.
 
 import { t } from "@ga/content";
 
@@ -13,7 +15,7 @@ import { rule, ruleTexts, type Spec, stageSpeakingTopics, topicOf } from "./spea
 import { stageThreeFourSpeaking } from "./speaking-3-4.ts";
 import { stageFiveSixSpeaking } from "./speaking-5-6.ts";
 
-/** checked reads the scenes of a knowledge point of grade 7, each of which carries its own check, resting on its clues. */
+/** checked reads the scenes of a knowledge point of grades 7 and 8, each of which carries its own check, resting on its clues. */
 function checked(data: string): readonly RuleItem[] {
   const items = parseRules(data);
   const bare = items.filter((item) => item.check === undefined);
@@ -777,10 +779,770 @@ const SPECS_7: readonly Spec[] = [
   },
 ];
 
+/** OPENING_8 are the scenes of speaking-8-speech: an opening that names the theme and draws in these listeners. */
+const OPENING_8 = checked(`
+学校举行“珍惜粮食”主题演讲，台下是全校同学，大家刚在食堂吃过午饭。
+= 同学们，刚才在食堂，你们的餐盘里还剩下多少饭菜？今天，我想和大家谈谈珍惜粮食。
+- 水稻原产于亚洲，七千多年前，我们的祖先就开始种植水稻了…… ~noopening
+- 大家好，我演讲的题目是《珍惜粮食》，下面开始。 ~dull
+% 线索是大家“刚吃过午饭”，听众是“全校同学”。从每个人刚刚看过的餐盘问起，一下子就把听众拉进来，接着点明要讲珍惜粮食。从水稻的来历讲起，一开口就是细节，听众不知道要讲什么；只报一个题目，平平淡淡，抓不住人。 | The clues: everyone has just eaten lunch, and the listeners are the whole school. Asking about the trays they have just seen draws them in, and the theme follows at once. Starting from where rice came from plunges into detail with no theme; only announcing the title holds no one.
+
+社区举行敬老节活动，你代表学生演讲，台下坐着许多老人，主题是“听爷爷奶奶讲过去”。
+= 爷爷奶奶们好！我小时候最爱听奶奶讲她年轻时的故事。今天，我想说说这些故事教会了我什么。
+- 哥们儿姐们儿，今天咱们随便聊聊老一辈儿的事。 ~unfit
+- 今天我要讲三个问题。第一个问题分三点，我们先讲第一个问题的第一点。 ~dull
+% 线索是听众是“许多老人”，场合是“敬老节”。称呼“爷爷奶奶们”合乎听众，从自己听奶奶讲故事说起，又正扣住“听爷爷奶奶讲过去”这个主题。“哥们儿姐们儿”对老人太随便，不合场合；一上来就数“第一个问题的第一点”，干巴巴的，听众提不起兴趣。 | The clues: the listeners are old people, and the occasion honours them. 爷爷奶奶们 suits them, and starting from one's own grandmother's stories meets the theme. 哥们儿姐们儿 is far too casual for them; counting off “the first point of the first question” is dry and holds no one.
+
+运动会开幕那天，升旗仪式后你作为学生代表演讲，主题是“赛出风格”。天上正下着小雨。
+= 同学们，小雨没有挡住我们的热情。今天我想说：比赛场上，名次重要，风格更重要。
+- 我先说一下，我昨天没睡好，稿子也没准备好，大家凑合听吧。 ~unfit
+- 我最近读了一本讲古代奥运会的书，书里说，最早的比赛只有赛跑一项…… ~noopening
+% 线索是“下着小雨”和“赛出风格”的主题。从眼前的小雨说到大家的热情，再一句话点明“风格更重要”，开头既切合当时，又直奔主题。在开幕式上说自己没准备好，不合场合，也让听众失了兴致；讲古代奥运会的细节，迟迟不说主题。 | The clues: the light rain, and the theme of sportsmanship. Moving from the rain at hand to everyone's spirit, then naming the theme in one sentence, fits the moment and goes straight to the point. Saying one is unprepared does not suit an opening ceremony; the ancient Olympics delays the theme.
+
+读书节上，你给刚入学的七年级新生演讲，主题是“我和一本书”。
+= 同学们，你们有没有过一本书读到半夜还舍不得放下？我有。今天，我就讲讲我和这本书的故事。
+- 读书有很多好处：第一，增长知识；第二，开阔眼界；第三，陶冶情操。 ~dull
+- 我读过的书比你们多多了，你们应该好好听我讲。 ~rude
+% 线索是听众是“七年级新生”，主题是“我和一本书”。用一个人人可能有过的经历来问，新生容易接上话，接着点出要讲自己和一本书的故事。罗列读书的三点好处，谁都听过，平平地说吸引不了人；在新同学面前炫耀自己读书多，不礼貌，听众会反感。 | The clues: the listeners are new pupils, and the theme is “a book and I”. A question about something most have felt lets them in, then the story is named. Listing three benefits of reading is stale; boasting to newcomers is rude and puts them off.
+
+环保演讲比赛的主题是“少用一个塑料袋”。你手里拿着一个塑料袋走上台。
+= （举起塑料袋）这个塑料袋，我们用几分钟就扔了，可它要在土里待上几百年。
+- 今天天气真不错，我早上吃了两个包子，下面说说环保吧。 ~offtopic
+- 塑料是一种合成材料，是用石油里提炼出来的原料一步步制成的…… ~noopening
+% 线索是你手里“拿着一个塑料袋”。举起它，把“用几分钟”和“待上几百年”放在一起，一开口就让听众看见问题，也点明了主题。说天气和早饭，离开了主题；讲塑料怎样制成，是一上来就讲细节，听众不知道你要说什么。 | The clue: the bag in your hand. Holding it up and setting minutes of use against centuries in the soil shows the problem and names the theme at once. The weather and breakfast stray from the theme; how plastic is made is detail before any point.
+
+学校为九年级学长举行送别会，你代表八年级同学演讲，主题是“谢谢你们，学长”。
+= 学长学姐们，还记得吗？我们刚进校时找不到教室，是你们把我们领了进去。今天，我们想对你们说一声谢谢。
+- 学长们终于要走了，以后篮球场就归我们了！ ~unfit
+- “谢”字是言字旁，本来的意思是认错、道歉，后来才有了感谢的意思…… ~noopening
+% 线索是“送别会”和“谢谢你们”的主题。从学长领新生进教室这件小事说起，是听众都记得的经历，再自然地说出“谢谢”。“篮球场就归我们了”在送别的场合听起来像是盼着人家走，不合场合；讲“谢”字的本义，扯到了别处，没有说出要讲什么。 | The clues: a farewell, and the theme of thanks. Starting from the seniors leading lost newcomers to class, a memory all share, the thanks follow naturally. “The court is ours now” sounds glad to see them go; the origin of the character 谢 strays before any point.
+
+安全教育班会上，你要做一个“安全过马路”的演讲。上周三放学时，校门口刚有一辆车险些撞到一位同学。
+= 同学们，上周三放学，就在校门口，一辆车差点撞上我们的同学。今天，我想和大家谈谈怎样安全过马路。
+- 世界上最早的红绿灯，一百多年前出现在英国伦敦…… ~noopening
+- 我要讲的是过马路，这个大家都懂，我就不多说了。 ~dull
+% 线索是“上周三”“校门口”刚发生的险情。从这件大家都知道、就在身边的事说起，听众立刻会警觉，接着点明主题。讲红绿灯的历史，是从远处的细节开头，迟迟不说要讲什么；说“大家都懂，我就不多说了”，把自己的演讲说得没有必要，听众也就不想听了。 | The clue: the near miss at the gate last Wednesday. Starting from what everyone knows happened right here makes them alert, then the theme follows. The history of traffic lights opens far off in detail; “you all know this” makes the speech pointless.
+
+科技节上，你要演讲“我心中的未来学校”，听众有同学，也有来参观的家长。
+= 各位家长、同学们，请想象一下：十年以后的早上，你走进教室，课桌会跟你说“早上好”。今天，我想讲讲我心中的未来学校。
+- 我家的电脑是五年前买的，花了四千多块钱，后来又换了键盘…… ~noopening
+- 未来的学校，就是未来的学校，大家想想就知道了。 ~dull
+% 线索是听众有“同学”也有“家长”，主题是想象中的“未来学校”。先向两种听众问好，再用一个具体的想象场面引出主题，听众马上有了画面。讲家里电脑的价钱，是一开口就讲不相干的细节；“未来的学校就是未来的学校”什么也没说，平淡无味。 | The clues: both pupils and parents listen, and the theme is an imagined school. Greeting both, then a concrete imagined scene, gives them a picture and the theme. The price of a home computer is detail with no point; a tautology says nothing.
+
+班里举行“感恩父母”主题演讲，这一天正好是母亲节。
+= 同学们，今天是母亲节。早上出门的时候，你们对妈妈说了什么吗？今天，我想和大家说说我妈妈的一双手。
+- 我妈妈管我太严了，今天正好借这个机会吐吐苦水。 ~offtopic
+- 父母，就是生育和养育自己的人，这个词最早见于…… ~noopening
+% 线索是“母亲节”和“感恩父母”的主题。借今天这个日子问大家对妈妈说了什么，人人都会想一想，再点出要讲妈妈的一双手。借感恩的演讲吐苦水，离开了主题；给“父母”下定义、讲出处，是一开口就讲细节，听众不知道你要讲什么。 | The clues: Mother's Day and the theme of gratitude. Using the day to ask what each said to Mother sets everyone thinking, then the hands are named. Complaining strays from gratitude; defining 父母 opens in detail with no point.
+
+你刚跑完学校的三千米长跑，台下的同学都看到你最后几百米跑得很吃力。接着，你要做主题为“坚持”的演讲。
+= 刚才最后那几百米，我好几次想停下来。是什么让我跑到了终点？这就是我今天想讲的：坚持。
+- “坚持”的意思是坚决保持、维护或进行，下面我分几点来讲。 ~dull
+- 我跑得太丢人了，大家别看我，我随便讲两句就下去。 ~unfit
+% 线索是同学们都看见了你“最后几百米跑得很吃力”。从大家刚刚亲眼看到的这一幕说起，再用一个问题引出“坚持”，开头和主题扣得很紧。照着词典解释“坚持”，干巴巴的；说“随便讲两句就下去”，不合演讲的场合，也丢掉了眼前最好的例子。 | The clue: everyone has just seen you struggle through the last few hundred metres. Starting from that sight and asking what kept you going leads straight to the theme. A dictionary definition is dry; “I'll just say a few words” does not suit the occasion and wastes the best example at hand.
+`);
+
+/** SPOKEN_8 are the scenes of speaking-8-speech: sentences made to be heard, concrete and fitted to the listeners. */
+const SPOKEN_8 = checked(`
+你在给五年级的小同学演讲“爱护眼睛”，要说看书时眼睛离书多远。
+= 看书的时候，眼睛离书要有一尺远，差不多是从你的手肘到指尖那么长。
+- 阅读时应保持眼睛与书本之间约三十三厘米的距离，以避免睫状肌长期处于紧张状态。 ~stiff
+- 眼睛很重要，大家要爱护眼睛，眼睛真的非常非常重要。 ~rambling
+% 线索是听众是“五年级的小同学”。“一尺”再比成“从手肘到指尖”，小同学一比划就明白，句子也短，听一遍就记得住。“睫状肌”这样的书面说法太生硬，小同学听不懂；反复说“眼睛很重要”，绕来绕去，没说出到底离多远。 | The clue: the listeners are fifth-graders. One chi, likened to elbow to fingertip, is something they can measure on their own arms, in a short sentence heard once. Words such as 睫状肌 are too stiff for them; repeating “eyes matter” never says how far.
+
+你在全校演讲“节约用水”，想让大家觉得浪费的水很多。
+= 一个没关紧的水龙头，一滴一滴地漏，一天下来，能漏掉好几桶水。
+- 根据相关统计数据分析，水龙头滴漏现象所造成的水资源浪费问题不容忽视。 ~stiff
+- 水，我们天天都用：喝水、洗手、洗脸、洗澡、洗菜、洗碗、拖地、浇花、冲厕所…… ~rambling
+% 线索是要让“全校”的同学觉得浪费的水“很多”。“一滴一滴”到“好几桶”，用大家见过的东西说数量，听得见也想得出。长长的书面句子念出来生硬，听众记不住；把用水的地方一样样数下去，越说越散，听众抓不住要点。 | The clue: the whole school must feel how much is wasted. From drop by drop to several buckets, an amount in things everyone has seen, is easy to hear and picture. The long written sentence is stiff and forgettable; the endless list of uses rambles.
+
+你在演讲“诚信”，想用一个例子让大家信服。
+= 上个月，我在操场上捡到一个钱包，里面有三百块钱。我犹豫了一会儿，还是把它交给了老师。
+- 诚信是中华民族的传统美德，是做人之本、立身之基，是社会和谐的基础。 ~dull
+- 诚信嘛，就是那个……怎么说呢，反正大家都懂的。 ~unclear
+% 线索是要用“一个例子”。捡钱包、犹豫、交给老师，有人、有事、有心理，是听众能想象出来的具体经历。一串大道理没有例子，平平地念，听众留不下印象；“就是那个……反正都懂”，什么也没说清楚。 | The clue: an example is wanted. Finding a wallet, hesitating and handing it in has a person, an event and a thought the listeners can picture. A string of maxims has no example and leaves nothing behind; “you know what I mean” says nothing clearly.
+
+演讲进行到一半，你想让台下的同学跟着你一起想一想。
+= 大家闭上眼睛想一想：如果明天早上醒来，世界上一本书也没有了，会是什么样子？
+- 请诸位同学对上述问题进行深入的思考，并得出各自的结论。 ~stiff
+- 你们想不想都行，反正我接着往下讲。 ~rude
+% 线索是要让听众“跟着一起想”。“闭上眼睛想一想”是直接对听众说的话，又给了一个具体的场面，大家马上就能想起来。“诸位”“上述问题”是写在纸上的说法，听起来生硬；“想不想都行”对听众不礼貌，也就没人想了。 | The clue: the listeners are to think along. “Close your eyes and imagine” speaks to them directly and gives a concrete scene. 诸位 and 上述问题 belong on paper and sound stiff; “think or don't” is rude, so no one will.
+
+你在演讲“亲情”，讲到最感人的地方。
+= 那天，爷爷一直站在村口。直到我的车拐了弯，他还在挥手。
+- 那天的情景使我产生了一种难以用语言来形容的复杂的情感体验。 ~stiff
+- 爷爷站在村口，村口有一棵大树，树是爷爷小时候种的，那时候村里还没通路…… ~rambling
+% 线索是讲到“最感人的地方”。两句短话，一个“站着”、一个“挥手”的画面，听众自己就会被打动。长长的抽象句子念出来生硬，听众看不到画面；从大树扯到村里修路，越说越远，感人的一刻就被冲淡了。 | The clue: the most moving moment. Two short sentences, a man standing and a hand still waving, move the listeners by themselves. The long abstract sentence is stiff and shows nothing; drifting from the tree to the village road dilutes the moment.
+
+你给全年级同学演讲“用好课间十分钟”，想说说现在的问题。
+= 现在一下课，很多同学还趴在桌上写作业，十分钟过去了，连口水都没喝。
+- 课间活动时间不合理利用的现象，较为普遍地存在于我校学生群体之中。 ~stiff
+- 有些同学下课也不出去，真是懒得要命，跟木头一样。 ~harsh
+% 线索是听众就是“全年级同学”，要说“现在的问题”。“趴在桌上写作业”“连口水都没喝”是大家每天看得见的样子，一听就明白。长长的书面句子生硬难懂；骂同学“懒得要命”，语气太冲，听的人会不高兴，也就听不进去了。 | The clues: the listeners are the grade itself, and the problem is to be named. Pupils bent over homework, not even a sip of water, is what all of them see daily. The long written sentence is stiff; calling them lazy as logs is harsh and shuts their ears.
+
+演讲快结束了，主题是“每天读点书”，你想让大家记住它。
+= 所以，同学们，从今天起，每天读二十分钟书吧，让书陪着我们长大。
+- 综上所述，阅读对于青少年的健康成长具有不可替代的重要意义。 ~stiff
+- 好了，我讲完了，就这样吧。 ~dull
+% 线索是要让大家“记住”主题。结尾把主题变成一件人人做得到的事，“每天二十分钟”，再用一句短短的话收住，听众带得走。“综上所述”是作文的写法，念出来生硬；“就这样吧”草草收场，什么也没留给听众。 | The clue: the theme is to be remembered. Turning it into something anyone can do, twenty minutes a day, and closing on a short line gives them something to take away. 综上所述 is essay language, stiff aloud; “that's it” leaves nothing behind.
+
+你在社区给居民讲“垃圾分类”，听众大多是老人。
+= 吃剩的饭菜、果皮，放进厨余垃圾桶；废纸、塑料瓶，放进可回收物的桶。
+- 依据有关标准，生活垃圾分为可回收物、有害垃圾、厨余垃圾和其他垃圾四个大类。 ~stiff
+- 这个很简单，老人家也学得会，就是你们记性不太好，得多说几遍。 ~rude
+% 线索是听众“大多是老人”。从他们每天手里会有的饭菜、果皮、废纸说起，告诉他们放进哪个桶，具体又好记。照着标准念条文，生硬，老人不容易记住；说老人“记性不好”，不礼貌，听的人会不高兴。 | The clue: most listeners are old. Starting from the leftovers, peel and paper in their own hands and saying which bin each goes in is concrete and memorable. Reading out the standard is stiff; saying they forget things is rude.
+
+你在演讲中要说明“坚持锻炼”的好处。
+= 我坚持跳绳一年。以前跑八百米要五分钟，现在三分半钟就跑完了。
+- 体育锻炼能够有效地促进人体各项生理机能的全面协调发展。 ~stiff
+- 锻炼的好处可多了，多得说也说不完，反正就是好，特别好。 ~rambling
+% 线索是要说明“好处”。用自己跳绳一年、跑八百米快了一分半这样的事实和数字来说，听众一听就信。抽象的书面句子念出来生硬，听不出到底好在哪儿；“说也说不完”“反正就是好”，绕来绕去，一个好处也没说出来。 | The clue: the benefit must be shown. One's own year of skipping and a minute and a half off the 800 metres, a fact with figures, is believed at once. The abstract sentence is stiff and names nothing; “too many to tell” names none.
+
+开学典礼上，你代表八年级同学对七年级新生讲话。
+= 刚进校的时候，我也找不到食堂在哪儿。别着急，过一个星期，你们就会觉得这里像家一样。
+- 新生应当尽快适应初中阶段的学习生活，树立正确的学习目标。 ~stiff
+- 你们这些小孩子什么都不懂，以后多听我们的就行了。 ~rude
+% 线索是听众是刚来的“七年级新生”，你是学长。从自己当初找不到食堂说起，像朋友一样安慰他们，新生听了会放下心来。像文件一样的“应当……树立……”太生硬，不像对人说话；叫他们“小孩子什么都不懂”，不礼貌，新生会不舒服。 | The clues: the listeners are newcomers, and you are a year ahead. Starting from your own lost search for the canteen and reassuring them as a friend puts them at ease. “Newcomers shall …” is stiff, like a notice; calling them know-nothing kids is rude.
+`);
+
+/** PLAN_8 are the scenes of speaking-8-interview: the question that serves the interview's aim and suits the person asked. */
+const PLAN_8 = checked(`
+你要为校报采访学校食堂的厨师长，目的是了解食堂怎样保证饭菜卫生。
+= 每天的菜从进食堂到端上桌，要经过哪几道检查？
+- 您自己最喜欢吃什么菜？ ~offtopic
+- 食堂的饭菜卫生吗？ ~closed
+% 线索是采访的目的：“怎样保证饭菜卫生”。问“要经过哪几道检查”，正冲着“怎样”，厨师长要一步步讲出来。问他爱吃什么菜，离开了这次采访的目的；问“卫生吗”，他只要答“卫生”就完了，什么也问不出来。 | The clue: the aim is how hygiene is kept. Asking what checks the food passes goes at that “how”, and the chef must tell them step by step. His favourite dish strays from the aim; “is it clean?” is answered with one word.
+
+你要采访一位种了三十年地的老农，了解节气和农活的关系。
+= 您种地的时候，哪个节气该干哪些农活，能给我举个例子吗？
+- 您知不知道二十四节气是哪个朝代定下来的？ ~unfit
+- 您种了三十年地，累不累？ ~closed
+% 线索是对象是“种了三十年地的老农”，目的是“节气和农活的关系”。请他就自己种地的经验举例子，正问到他最熟悉、又最合目的的内容。节气定于哪个朝代，是考历史的问题，不合老农的身份，也不是他的经验；“累不累”只能答一个字。 | The clues: a farmer of thirty years, and the link between solar terms and farm work. Asking for an example from his own fields draws on what he knows best and what the aim needs. Which dynasty fixed the terms is a history question that does not suit him; “is it tiring?” takes one word.
+
+你要采访获得市作文比赛一等奖的同学，想了解她怎样积累写作材料。
+= 你平时是怎样把看到、听到的事记下来，后来又用到作文里的？
+- 你得了一等奖，是不是觉得自己特别了不起？ ~rude
+- 你知道比赛一共有多少人参加吗？ ~offtopic
+% 线索是目的是“怎样积累写作材料”。问她“怎样记下来”“又怎样用到作文里”，正好让她讲出自己的做法。“是不是觉得自己特别了不起”带着讥讽，不礼貌；问参赛人数，和积累材料没有关系。 | The clue: the aim is how she gathers material. Asking how she notes things down and later uses them lets her tell her method. “Do you think you're something special?” sneers and is rude; the number of entrants has nothing to do with gathering material.
+
+你要采访一位消防员，了解他们怎样做到随时出警。
+= 警铃一响，从听到铃声到消防车开出大门，你们要做哪些事？
+- 当消防员是不是很危险？ ~closed
+- 你们一个月能拿多少工资？ ~rude
+% 线索是目的是“怎样做到随时出警”。从“警铃一响”问到“车开出大门”，请他讲中间的每一步，正是目的要的内容。“是不是很危险”只能答是或不是；第一次见面就问人家的工资，不礼貌，也和出警无关。 | The clue: the aim is how they stay ready. Asking what happens between the alarm and the engine leaving the gate draws out each step. “Is it dangerous?” takes yes or no; asking a stranger's pay is rude and beside the point.
+
+你要采访小区里开了二十年早点铺的阿姨，了解小区这些年的变化。
+= 这二十年里，来吃早点的人和小区的样子，有哪些变化让您印象最深？
+- 您家的油条是怎么炸的？能把做法告诉我吗？ ~offtopic
+- 这些年小区变化大吗？ ~closed
+% 线索是对象“开了二十年早点铺”，目的是“小区的变化”。从她每天看到的“来吃早点的人”问起，正是她最清楚的变化，又要她说出“印象最深”的具体事。问油条的做法，离开了目的；“变化大吗”只能答大或不大。 | The clues: twenty years at her stall, and the aim of the estate's changes. Asking about the customers she sees each morning draws on what she knows best and asks for what struck her most. Her fritter recipe strays from the aim; “has it changed much?” takes one word.
+
+你要采访学校的图书管理员，为“读书节”写一篇报道，想了解同学们借书的情况。
+= 这学期同学们借得最多的是哪几类书？和去年比有什么不同？
+- 您每天几点上班，几点下班？ ~offtopic
+- 同学们爱不爱借书？ ~closed
+% 线索是目的是“同学们借书的情况”。问“借得最多的是哪几类”“和去年比有什么不同”，管理员要说出具体的类别和变化，报道就有了材料。上下班时间和借书情况无关；“爱不爱借书”答一个“爱”字就完了。 | The clue: the aim is what pupils borrow. Asking which kinds go out most and how this compares with last year draws out kinds and change, material for the report. Working hours are beside it; “do they like borrowing?” takes one word.
+
+你要采访一位退休的老教师，了解他刚教书时学校是什么样子。
+= 您第一次走进教室的时候，教室里是什么样的？学生们用什么上课？
+- 老师，您今年多大岁数了？身体还能撑几年？ ~rude
+- 您以前教书的学校好不好？ ~closed
+% 线索是目的是“刚教书时学校是什么样子”。问“第一次走进教室”看到了什么、学生用什么上课，老教师会回忆出具体的情景。“身体还能撑几年”对老人很不礼貌；“好不好”只能答好或不好，问不出样子来。 | The clue: the aim is what the school was like when he began. Asking what he saw the first time he walked into class and what the pupils used calls up a concrete scene. “How many years have you left?” is very rude to an old man; “was it good?” takes one word.
+
+你要访谈刚从外地转来的同学，了解他适应新学校的情况。他看上去有点拘谨。
+= 来这里快一个月了，有没有哪件事让你觉得和原来的学校不一样？
+- 你为什么转学？是不是在原来的学校犯了错？ ~rude
+- 你在这里习惯了吗？ ~closed
+% 线索是对方“有点拘谨”，目的是“适应新学校的情况”。从“哪件事不一样”这样轻松具体的问题问起，他容易打开话匣子，也正说到适应的情况。追问“是不是犯了错”，既不礼貌，又会让拘谨的他更紧张；“习惯了吗”只能答是或不是。 | The clues: he seems shy, and the aim is how he is settling in. A light, concrete question about what feels different lets him open up and goes to the aim. Asking whether he did something wrong is rude and makes him tenser; “are you used to it?” takes one word.
+
+你要采访一位剪纸艺人，了解她是怎样学会剪纸的。
+= 您刚开始学剪纸的时候，师傅是怎样教的？最难学的是哪一步？
+- 您的剪纸一张能卖多少钱？ ~offtopic
+- 剪纸难不难学？ ~closed
+% 线索是目的是“怎样学会剪纸”。问师傅“怎样教”、哪一步“最难学”，她要讲出学艺的过程和难处。卖多少钱和学剪纸的过程无关；“难不难”只能答难或不难，问不出过程。 | The clue: the aim is how she learned. Asking how her teacher taught her and which step was hardest draws out the path and its difficulty. Prices are beside the point; “is it hard?” takes one word.
+
+你要采访校篮球队的教练，了解球队怎样准备下个月的比赛。教练只给了你十分钟。
+= 离比赛还有两周，这两周的训练主要练什么？为什么练这个？
+- 您能从小时候讲起，说说您整个打篮球的经历吗？ ~offtopic
+- 你们这次能赢吗？ ~closed
+% 线索是目的是“怎样准备比赛”，时间“只有十分钟”。问这两周“练什么”“为什么”，直奔目的，十分钟里就能问清。请他从小时候讲起，离开了这次的目的，十分钟也讲不完；“能赢吗”只能答能或不能。 | The clues: the aim is the preparation, and there are only ten minutes. Asking what the next two weeks train and why goes straight to it and fits the time. His whole life in basketball strays from the aim and would never fit; “will you win?” takes one word.
+`);
+
+/** RECORD_8 are the scenes of speaking-8-interview: the note that keeps what the interviewee said, nothing added or turned round. */
+const RECORD_8 = checked(`
+食堂的厨师长说：“菜进来先挑掉烂叶子，再泡一泡，然后洗三遍。每天的饭菜还要留一份样品，放进冰箱存两天。”
+= 菜要先挑、再泡、洗三遍；每天的饭菜都留样，在冰箱里存放两天。
+- 厨师长说，我们食堂的菜是全市最干净的。 ~added
+- 厨师长说，菜要洗三遍。 ~trivial
+% 线索是厨师长说了两件事：洗菜的三个步骤，和“留一份样品”“存两天”。对的记录两件都记下了，顺序和数字都没错。他没有说过“全市最干净”，这是加进去的；只记“洗三遍”，丢了挑、泡和留样，抓住的是一个细节。 | The clue: he named two things, the three steps of washing and the sample kept two days. The right note keeps both, with the order and numbers right. He never said “cleanest in the city”; “washed three times” alone drops the picking, the soaking and the sample.
+
+种地的老农说：“清明前后，种瓜点豆。我们这儿冷得晚，要过了清明才敢下种，早了怕冻坏。”
+= 当地天冷得晚，要过了清明才下种，太早了怕种子冻坏。
+- 老农说，清明节要去扫墓。 ~added
+- 老农说，清明以前一定要把种子种下去。 ~misgrasp
+% 线索是“过了清明才敢下种”和“早了怕冻坏”。对的记录写出了时间，也写出了原因。老农一句也没提扫墓，是加进去的；“清明以前一定要种下”，正好把“过了清明”说反了。 | The clues: sowing only after Qingming, and the fear of frost if earlier. The right note keeps the time and the reason. He never mentioned sweeping graves; “sow before Qingming” turns “after” round.
+
+获奖的同学说：“我有一个小本子，看到有意思的事就记两句。写作文的时候翻一翻，常常就找到了材料。”
+= 她用小本子随手记下有意思的事，写作文时从里面找材料。
+- 她每天都写一篇日记，已经坚持了三年。 ~added
+- 她说写好作文主要靠多读范文。 ~misgrasp
+% 线索是“小本子”“记两句”“翻一翻”“找到了材料”。对的记录把这几点都概括进去了。她说的是随手记两句，不是每天写日记，“坚持了三年”更是加上去的；她也没说靠读范文，这是把她的意思理解错了。 | The clues: a small notebook, a line or two, leafing through, finding material. The right note sums these up. She spoke of jotting a line, not of a daily diary for three years; she said nothing of model essays, which misreads her.
+
+消防员说：“铃一响，一分钟之内要穿好衣服、登上车。衣服和靴子都按顺序摆好，一套就能穿上。”
+= 警铃响后，一分钟内要穿好装备上车；装备事先按顺序摆好，好快速穿上。
+- 消防员说，他们一分钟就能把火扑灭。 ~misgrasp
+- 消防员说，他们的靴子是放在衣服旁边的。 ~trivial
+% 线索是“一分钟之内”是“穿好衣服、登上车”的时间，“按顺序摆好”是为了“一套就能穿上”。对的记录把这两层都记对了。把一分钟说成扑灭火的时间，理解错了；只记靴子放在哪儿，丢了要点。 | The clues: one minute is for dressing and boarding, and the order of the kit is for putting it on at once. The right note keeps both. Making the minute the time to put out a fire misreads him; where the boots stand drops the point.
+
+开早点铺的阿姨说：“以前来吃早点的，都是附近厂里的工人。现在厂子搬走了，来的多是送孩子上学的家长。”
+= 来吃早点的人，从过去附近工厂的工人，变成了现在送孩子上学的家长。
+- 阿姨说，现在的生意比以前差多了。 ~added
+- 阿姨说，厂里的工人现在都去送孩子上学了。 ~misgrasp
+% 线索是“以前……工人”“现在……家长”和“厂子搬走了”。对的记录写出了顾客从谁变成了谁。阿姨没说生意好坏，“差多了”是加的；她说的是顾客换了一批人，不是工人改去送孩子，这是理解错了。 | The clues: workers then, parents now, and the factory gone. The right note says who the customers were and who they are. She said nothing of trade getting worse; she meant other people come, not that the workers now do the school run.
+
+图书管理员说：“这学期借得最多的是科普书，比去年多了一倍；小说还是很受欢迎，不过漫画借得少了。”
+= 这学期科普书借得最多，比去年多了一倍；小说仍然受欢迎，漫画借得少了。
+- 管理员说，同学们已经不看小说了。 ~misgrasp
+- 管理员说，学校应该多买一些科普书。 ~added
+% 线索是三类书各有一句：科普书“最多”“多了一倍”，小说“还是很受欢迎”，漫画“少了”。对的记录三类都记对了。说同学们不看小说，正和“还是很受欢迎”相反；“应该多买科普书”是管理员没说过的建议。 | The clues: a sentence for each of three kinds. The right note keeps all three. “No one reads novels now” contradicts “still popular”; “the school should buy more” is advice she never gave.
+
+退休的老教师说：“那时候一间教室坐六十多个学生。冬天没有暖气，大家轮流往炉子里添煤。”
+= 当时一间教室有六十多个学生；冬天没有暖气，学生们轮流给炉子添煤取暖。
+- 老教师说，那时候的学生比现在的学生更爱学习。 ~added
+- 老教师说，那时候教室里有暖气，也有炉子。 ~misgrasp
+% 线索是“六十多个学生”“没有暖气”“轮流往炉子里添煤”。对的记录数字和情况都没错。老教师没有比较过学生爱不爱学习，这是加的；他明明说“没有暖气”，记成“有暖气”就理解错了。 | The clues: over sixty pupils, no heating, coal added by turns. The right note keeps the number and the facts. He compared no one's love of study; he said there was no heating, so “there was heating” misreads him.
+
+转来的同学说：“这里的同学说话快，我一开始常常听不清。不过同桌很热心，下课总给我讲笔记。”
+= 他起初常听不清同学们说话，但同桌很热心，下课常给他讲笔记。
+- 他说这里的同学都不愿意理他。 ~misgrasp
+- 他说他很想回原来的学校。 ~added
+% 线索是“听不清”是开始的难处，“不过同桌很热心”是转折后的好事。对的记录把一难一好都记下了。他说同桌热心，记成“都不愿意理他”，正好理解反了；他一句也没说想回去，是加进去的。 | The clues: trouble hearing at first, then “but” the kind deskmate. The right note keeps both. “No one will talk to him” turns his words round; he never said he wanted to go back.
+
+剪纸艺人说：“我十二岁跟着奶奶学。先剪最简单的窗花，光是剪圆，就练了一个月。”
+= 她十二岁跟奶奶学剪纸，从简单的窗花剪起，光剪圆就练了一个月。
+- 她说剪纸是她家祖传的手艺，已经传了五代。 ~added
+- 她说只要练一个月，就能学会剪纸。 ~misgrasp
+% 线索是“十二岁”“跟着奶奶”“先剪窗花”“剪圆练了一个月”。对的记录这几点都在。她没说传了几代，“五代”是加的；“练了一个月”说的只是剪圆，说成一个月就能学会剪纸，是理解错了。 | The clues: age twelve, her grandmother, window flowers first, a month on circles alone. The right note keeps them all. Five generations is added; the month was for circles only, so “a month to learn paper-cutting” misreads her.
+
+篮球队教练说：“这两周主要练防守。上次比赛我们就输在防守上，对方连着投进了好几个三分球。”
+= 这两周主要练防守，因为上次比赛输在了防守上。
+- 教练说，这次比赛我们一定能赢。 ~added
+- 教练说，这两周主要练三分球投篮。 ~misgrasp
+% 线索是“主要练防守”和“输在防守上”，三分球是对方投进的。对的记录写出了练什么和为什么。教练没有说一定能赢，这是加的；三分球是对方投的，说成主要练投三分，把意思弄错了。 | The clues: defence is the training, because defence lost the last game; the three-pointers were the other side's. The right note keeps what and why. “We will surely win” is added; making the drill three-point shooting misreads whose shots they were.
+`);
+
+/** FOCUS_8 are the scenes of speaking-8-discussion-focus: the point on which the speakers really differ. */
+const FOCUS_8 = checked(`
+班会讨论春游去哪里。小林说：“去科技馆，能学到东西。”小王说：“科技馆也不错，可春游就该到户外去，去森林公园吧。”小李说：“我也想去户外。”
+= 春游是去室内学东西，还是到户外去活动。
+- 森林公园离学校有多远。 ~trivial
+- 科技馆里有哪些展品。 ~offtopic
+% 线索是小王的“可春游就该到户外去”，小李又说“也想去户外”。大家争的是室内还是户外，这就是焦点。路远不远是次要的细节，谁也没争；科技馆有哪些展品，离开了讨论的话题。 | The clues: Xiao Wang's “but a spring outing should be outdoors”, and Xiao Li joining him. They differ on indoors or out: that is the focus. The distance is a minor detail no one argues; the exhibits stray from the topic.
+
+小组讨论“中学生该不该带手机进校园”。甲说：“带手机方便和家里联系。”乙说：“可上课的时候总有人偷偷玩。”丙说：“那就规定上课时交给老师保管。”
+= 带手机进校园，方便联系和影响学习怎样兼顾。
+- 手机是哪一年发明的。 ~offtopic
+- 大家都认为不应该带手机进校园。 ~misgrasp
+% 线索是甲说“方便联系”，乙用“可”说出“偷偷玩”，丙想的是两边兼顾的办法。焦点是怎样既能联系、又不影响学习。手机的发明和讨论无关；甲明明赞成带手机，说“大家都认为不应该”是把大家的意思弄错了。 | The clues: A says it helps contact, B's “but” raises playing in class, and C seeks a middle way. The focus is keeping contact without harming study. The phone's invention is beside it; A is for phones, so “all are against” misreads them.
+
+讨论班级图书角怎样借书。甲说：“每人每周只能借一本。”乙说：“一本太少了，读得快的同学不够看。”丙说：“可借多了，别人就没得借了。”
+= 每人一次能借几本书。
+- 图书角放在教室的哪个角落。 ~offtopic
+- 大家都同意每周只借一本。 ~misgrasp
+% 线索是甲说“一本”，乙说“一本太少”，丙又说“借多了别人没得借”，三个人说的都是借几本。图书角放在哪儿，没有人提；乙明明反对只借一本，说“大家都同意”就理解错了。 | The clues: one book, too few, too many and others go without: all are about how many. Where the corner stands no one raised; B opposes one book, so “all agree” misreads them.
+
+讨论运动会的班级口号。甲说：“口号要响亮好记。”乙说：“我觉得要有我们班的特色。”丙说：“有特色也得好记啊，太长了大家喊不齐。”
+= 口号是要突出班级特色，还是要简短好记，怎样兼顾。
+- 运动会在哪一天开幕。 ~offtopic
+- 口号要不要用成语。 ~trivial
+% 线索是甲要“好记”，乙要“特色”，丙说“有特色也得好记”，两种要求碰到了一起，这就是焦点。开幕日期离开了话题；用不用成语，谁也没说，是个小细节。 | The clues: A wants it memorable, B wants it distinctive, and C says it must be both: the two demands meet there. The date strays from the topic; idioms are a small detail no one raised.
+
+讨论小组作业怎样分工。甲说：“按各人的特长来分，谁字好谁抄写，谁会画谁画图。”乙说：“那每次都是字好的抄，别人就一直得不到锻炼了。”
+= 分工是按各人的特长，还是让每个人都得到锻炼。
+- 小组里谁的字写得最好。 ~trivial
+- 这次的小组作业要不要做。 ~misgrasp
+% 线索是甲主张“按特长”，乙担心“别人得不到锻炼”。两人分歧在分工的原则上。谁的字最好只是一个小细节；两人都在商量怎样分工，没有人说不做，说成“要不要做”是理解错了。 | The clues: A wants strengths to decide, B fears the rest never learn. They differ on the principle. Whose writing is best is a detail; both plan how to share the work, so “whether to do it” misreads them.
+
+讨论课间要不要开放篮球场。甲说：“十分钟太短，打一会儿就满头大汗地回去上课。”乙说：“可是大家坐了一节课，需要活动一下。”
+= 课间打篮球，是能活动身体，还是会影响下一节课。
+- 篮球场的地面是不是太滑。 ~offtopic
+- 乙同学喜不喜欢打篮球。 ~trivial
+% 线索是甲说会“满头大汗地回去上课”，乙说“需要活动一下”，一个说坏处，一个说好处，焦点就在这里。地面滑不滑，没有人说到；乙喜不喜欢打篮球，和他的理由无关，只是个小问题。 | The clues: A says they come back sweating, B says they need to move: the harm against the good is the focus. The surface no one mentioned; whether B likes basketball is a small question beside his reason.
+
+讨论毕业纪念册做成什么样。甲说：“做电子版，省钱，还能放视频。”乙说：“纸质的能拿在手里，过多少年都能翻。”
+= 纪念册做电子版好，还是做纸质版好。
+- 纪念册上放谁的照片。 ~offtopic
+- 视频要拍多长时间。 ~trivial
+% 线索是甲说“电子版”，乙说“纸质的”，各说各的好处。焦点是做哪一种。放谁的照片，两人都没提；视频拍多长，是在电子版里才有的小细节，不是两人的分歧。 | The clues: A argues for digital, B for paper, each with its merits. The focus is which. Whose photos go in neither raised; the video's length is a detail inside one side, not the difference.
+
+讨论班里要不要设“无作业日”。甲说：“每周有一天不留作业，大家能多读点书。”乙说：“那天落下的练习谁来补？”丙说：“那天可以留阅读任务。”
+= 设“无作业日”会不会耽误练习，那一天又该怎样安排。
+- 哪位老师留的作业最多。 ~offtopic
+- 大家都不想写作业。 ~misgrasp
+% 线索是甲说能“多读点书”，乙问“落下的练习谁来补”，丙想怎样“安排”那一天。焦点是会不会耽误练习、怎样安排。哪位老师作业多，离开了话题；甲是为了多读书，不是不想写作业，说“都不想写”是理解错了。 | The clues: A wants time to read, B asks who makes up the practice, C plans the day. The focus is the practice lost and how the day is spent. Which teacher sets most strays; A wants to read, not to dodge work.
+
+讨论班级值日怎样排。甲说：“按学号轮流最公平。”乙说：“可有的同学住得远，早上值日来不及。”
+= 值日是按学号轮流，还是照顾住得远的同学。
+- 值日要打扫哪些地方。 ~offtopic
+- 乙同学不想值日。 ~misgrasp
+% 线索是甲讲“公平”，乙讲“住得远……来不及”。分歧在于排值日时要不要照顾住得远的同学。扫哪些地方，没有人争；乙说的是有人来不及，不是自己不想值日，这是把他的意思理解错了。 | The clues: A speaks of fairness, B of those living far who cannot come early. They differ on whether to allow for distance. What is swept no one disputes; B speaks of others' trouble, not of shirking.
+
+讨论读书会读哪本书。甲说：“读《西游记》吧，故事有意思。”乙说：“我们小学就看过动画片了，换一本没读过的吧。”
+= 是选大家熟悉、有趣的书，还是选大家没读过的书。
+- 《西游记》的作者是谁。 ~offtopic
+- 动画片拍得好不好。 ~trivial
+% 线索是甲看重“有意思”，乙看重“没读过”。焦点是选书看重哪一样。作者是谁，与选书的分歧无关；动画片拍得好不好，只是乙话里顺带提到的小事。 | The clues: A values an interesting story, B a book not read before. The focus is which matters more. The author has nothing to do with the difference; the cartoon's quality is a side remark in B's words.
+`);
+
+/** KEEP_8 are the scenes of speaking-8-discussion-focus: a remark that keeps to the focus, gives its reason and moves the talk on. */
+const KEEP_8 = checked(`
+讨论的焦点是：春游去室内学东西，还是到户外去活动。你想发言。
+= 我赞成去户外。我们平时总坐在教室里，春游正好去走走；在森林公园里观察植物，也一样能学到东西。
+- 说到户外，我上个月去爬山，山上有一块石头，长得像一只猴子…… ~offtopic
+- 想去科技馆的人，都是书呆子。 ~attack
+% 线索是焦点在“室内还是户外”，又有人看重“能学东西”。对的发言先表明赞成户外，说出理由，还回应了“学东西”这一点，讨论就往前走了。讲爬山看到的石头，离开了焦点；说别人是“书呆子”，针对的是人，不是观点。 | The clues: the focus is indoors or out, and some value learning. The right remark takes a side, gives a reason and answers the point about learning. The monkey-shaped rock strays; calling others bookworms goes at the people.
+
+讨论的焦点是：每人一次能借几本书。甲主张一本，乙嫌太少。
+= 能不能每人一次借两本，但一周之内必须还？这样读得快的同学够看，书也转得开。
+- 我觉得图书角的书架颜色不好看，应该换一个。 ~offtopic
+- 反正就借一本，别争了，我说了算。 ~pushy
+% 线索是甲说一本、乙嫌少，又有人担心“别人没得借”。对的发言提出“两本、一周内还”，同时照顾了两边的担心，正扣住焦点。书架颜色离开了话题；“我说了算”只坚持自己的想法，不和别人商量。 | The clues: one book against too few, and the worry that others go without. Two books returned within a week meets both worries on the focus. The shelf's colour strays; “I decide” only insists.
+
+讨论的焦点是：带手机进校园，方便联系和影响学习怎样兼顾。
+= 可以带，但进校门就交给班主任统一保管，放学再领回去。这样能和家里联系，上课也不会分心。
+- 我觉得手机很重要，就该带。 ~noreason
+- 你们这些反对的人，自己在家玩得最多。 ~attack
+% 线索是焦点里有两头：“方便联系”和“影响学习”。对的发言给出具体办法，并说明它怎样同时照顾这两头。只说“手机很重要”，没说为什么，也没回应影响学习的担心；说反对的人自己玩得多，是攻击人，不是讨论观点。 | The clues: the focus has two ends, contact and study. The right remark offers a way and says how it serves both. “Phones matter” gives no reason and ignores the worry; saying opponents play most attacks people, not views.
+
+讨论的焦点是：班级口号要突出特色，还是简短好记。
+= 我们班叫“飞鹰班”，口号就用“飞鹰飞鹰，展翅高飞”，八个字好记，又有我们班的特色。
+- 我同意乙的看法。 ~noreason
+- 口号喊什么都行，我们还是先说说运动会带什么零食吧。 ~offtopic
+% 线索是焦点要兼顾“特色”和“好记”。对的发言拿出一句具体的口号，并说明它八个字好记、又带着班名的特色。只说“同意乙”，没有理由，讨论也没往前走；说零食，离开了焦点。 | The clues: the focus asks for both distinction and memory. The right remark offers an actual slogan and shows it does both. “I agree with B” gives no reason and moves nothing; snacks stray from the focus.
+
+讨论的焦点是：小组分工按各人的特长，还是让每个人都得到锻炼。
+= 可以两样结合：每次让擅长的同学负责一部分，再配一个不太擅长的跟着学，下一次轮换。
+- 不管怎么分，反正我只负责画图。 ~pushy
+- 你的字那么难看，当然不能让你抄。 ~attack
+% 线索是焦点里一边是“特长”，一边是“锻炼”。对的发言提出把两样结合起来的具体做法，照顾了双方。“反正我只负责画图”只顾自己，不和大家商量；说别人字难看，是针对人，还会伤人。 | The clues: strengths on one side, practice on the other. The right remark joins them in a concrete way. “I only draw” insists on oneself; mocking someone's writing goes at the person.
+
+讨论的焦点是：课间打篮球会不会影响下一节课。乙刚说了“大家需要活动一下”。
+= 乙说得对，课间是该活动。不过可以只练五分钟投篮，不打全场，就不会满头大汗地进教室了。
+- 乙的意见不对，不用考虑。 ~dismiss
+- 我觉得打篮球没有踢足球好玩。 ~offtopic
+% 线索是乙刚说了“需要活动一下”，甲担心“满头大汗”。对的发言先回应乙，再针对甲的担心提出办法，正围着焦点。说乙“不对，不用考虑”，却不说为什么，是不听别人的意见；比较篮球和足球，离开了焦点。 | The clues: B has just said they need to move, and A fears sweating. The right remark answers B, then meets A's worry with a plan. Dismissing B without a word of why ignores his view; football against basketball strays.
+
+讨论的焦点是：毕业纪念册做电子版好，还是纸质版好。
+= 纸质的留得久，电子版能放视频，可以印一本薄一点的纸质册，再附一个二维码，一扫就能看视频。
+- 我就要纸质的，别的我不听。 ~pushy
+- 电子版就是好，因为我喜欢电子版。 ~weak
+% 线索是两种做法各有好处：纸质“留得久”，电子版“能放视频”。对的发言把两种好处合在了一起，提出具体做法。“别的我不听”只坚持自己；“因为我喜欢”算不上理由，和哪种更好没有关系。 | The clues: each has its merit, lasting paper and video. The right remark joins both in one plan. “I won't hear anything else” only insists; “because I like it” is no reason for which is better.
+
+讨论的焦点是：设“无作业日”会不会耽误练习，那天该怎样安排。
+= 可以把“无作业日”定在周五。这一周的练习前几天都做过了，周末再留一点复习，就不会落下。
+- 作业太多了，老师们都太狠心了。 ~attack
+- 我昨天的数学作业一直写到晚上十点。 ~offtopic
+% 线索是焦点在“会不会耽误练习”和“怎样安排”。对的发言定了哪一天，又说明练习怎样不落下，两点都答到了。说老师“狠心”，针对的是人；讲自己昨天写到几点，没有回答怎样安排，离开了焦点。 | The clues: whether practice is lost, and how the day is used. The right remark names the day and says how practice is kept. Calling teachers heartless goes at people; one's late night answers neither point.
+
+讨论的焦点是：值日按学号轮流，还是照顾住得远的同学。
+= 住得远的同学可以排在放学后值日，住得近的排在早上，这样人人都轮得到，路远的同学也来得及。
+- 我家住得近，所以怎么排我都无所谓。 ~weak
+- 甲的办法不行，别再说了。 ~dismiss
+% 线索是一边要“公平”，一边要照顾“住得远”。对的发言提出早上、放学后分开排，人人轮到，又照顾了路远的同学。“我家住得近”和怎样排得好没有关系，算不上理由；“别再说了”是不回应甲的意见。 | The clues: fairness on one side, distance on the other. Splitting mornings and afternoons keeps everyone's turn and helps those far away. One's own short walk is no reason; “say no more” brushes A aside.
+
+讨论的焦点是：读书会选大家熟悉、有趣的书，还是选大家没读过的书。
+= 可以读《西游记》的原著。动画片只讲了几个故事，原著里很多章节大家都没读过，又不会觉得陌生。
+- 我最喜欢的书是一本魔法小说，它讲的是一个魔法学校的故事…… ~offtopic
+- 选哪本都一样，随便吧。 ~noreason
+% 线索是一边看重“有意思”，一边看重“没读过”。对的发言指出原著既有趣，又有大家没读过的章节，正好两边都照顾到。讲自己喜欢的魔法小说，离开了焦点；“随便吧”没有态度也没有理由，讨论没往前走。 | The clues: interest on one side, newness on the other. The unabridged novel is both interesting and largely unread. One's favourite magic novel strays; “whatever” gives no view and no reason.
+`);
+
+/** REASON_8 are the scenes of speaking-8-persuading: the reason that touches what the listener cares about. */
+const REASON_8 = checked(`
+爷爷每天抽烟，你想劝他少抽一点。爷爷最疼小孙女，天天抱着她。
+= 爷爷，妹妹天天让您抱着，烟味对她的身体不好。您少抽点，她才能健健康康的。
+- 爷爷，抽烟会把牙齿熏黄，不好看。 ~unmoved
+- 爷爷，您再抽烟，我就不理您了。 ~harsh
+% 线索是爷爷“最疼小孙女，天天抱着她”。从他最在意的小孙女说起，他为了孙女也会愿意少抽。牙齿黄不黄，爷爷未必在乎，打动不了他；“不理您了”是赌气威胁，语气太冲，爷爷听了会不高兴。 | The clue: he dotes on his granddaughter and holds her every day. Speaking of her touches what he cares for most. Yellow teeth may not matter to him; “I won't speak to you” is a sulky threat.
+
+同桌常常熬夜打游戏，第二天上课打瞌睡。他最想进校篮球队。
+= 篮球队选人要看体能，你天天熬夜，跑两圈就喘，怎么选得上？早点睡吧。
+- 熬夜打游戏的人，以后都没出息。 ~harsh
+- 熬夜会让家里多交电费。 ~weak
+% 线索是他“最想进校篮球队”。把熬夜和他最想要的事连起来，他才会听得进去。“都没出息”语气太冲，会伤人；电费和他熬夜打瞌睡的事关系不大，算不上有力的理由。 | The clue: he wants a place on the team above all. Linking late nights to that is what he will hear. “Such people come to nothing” is harsh; the electricity bill is hardly the point.
+
+妈妈舍不得倒掉冰箱里放了好几天的剩菜。她最关心全家人的身体。
+= 妈妈，剩菜放久了会变质，吃了容易拉肚子。您总说身体最要紧，这些就别吃了吧。
+- 妈妈，剩菜看上去太难看了。 ~unmoved
+- 剩菜都舍不得倒，您也太小气了。 ~rude
+% 线索是妈妈“最关心全家人的身体”。说剩菜会让人拉肚子，又用上她自己常说的“身体最要紧”，正说到她心上。好不好看，节省的妈妈不在乎；说妈妈“小气”，对长辈不礼貌。 | The clue: she cares most about the family's health. Spoiled food and an upset stomach, in her own words about health, reach her. Looks do not move a thrifty mother; calling her stingy is rude to a parent.
+
+弟弟晚上不愿意刷牙。他最怕去医院打针。
+= 不刷牙会长蛀牙，长了蛀牙就得去医院补牙，可疼了。还是刷吧。
+- 刷牙是国家规定的，必须刷。 ~weak
+- 不刷牙你就是个臭小孩。 ~harsh
+% 线索是弟弟“最怕去医院”。从不刷牙到蛀牙、再到去医院，一步步说到他最怕的事，他就愿意刷了。国家并没有这样的规定，这个理由站不住；骂他“臭小孩”，语气太冲，弟弟只会更不想刷。 | The clue: he dreads the hospital. Step by step from no brushing to decay to the dentist reaches his fear. No law requires brushing, so the reason fails; calling him smelly only makes him dig in.
+
+邻居阿姨常把电动车推进楼道里充电。她家孩子就住在楼上的房间里。
+= 阿姨，楼道里充电万一起火，烟会往楼上走，孩子们都在楼上，太危险了。
+- 阿姨，电动车放在楼道里，挡着我拿快递了。 ~unmoved
+- 阿姨，您这样做太没素质了。 ~attack
+% 线索是阿姨家“孩子就住在楼上”。说起火时烟往楼上走，危及她的孩子，她最能听进去。挡着你拿快递，是你自己的不方便，打动不了她；说她“没素质”，是针对人，她只会生气。 | The clue: her child sleeps upstairs. Smoke rising to the children is what she will hear. Your parcel is your own trouble and will not move her; calling her uncivil attacks her.
+
+好朋友想抄你的作业。他下星期就要期中考试了。
+= 抄了作业，这些题你还是不会，期中考试的时候可没人给你抄。我给你讲讲吧？
+- 抄作业被老师发现了，我也要挨批评。 ~unmoved
+- 自己不会做，还好意思抄？ ~harsh
+% 线索是他“下星期就要期中考试”。抄了作业到考试还是不会，这和他自己的成绩直接相关，再主动帮他讲，他容易接受。你挨不挨批评是你的事，打动不了他；“还好意思”语气太冲，朋友会难堪。 | The clue: his exam is next week. Copying leaves him unable to do it in the exam, which touches him directly, and the offer to explain helps. Your own scolding will not move him; “have you no shame?” is harsh.
+
+爸爸开车时常常低头看手机。他最在意家里人的安全。
+= 爸爸，开车时看一眼手机，车就开出去好几十米，我们一家人都坐在车上呢。
+- 爸爸，手机屏幕那么亮，看多了伤眼睛。 ~weak
+- 您再这样开车，我就再也不坐您的车了。 ~harsh
+% 线索是爸爸“最在意家里人的安全”。说一低头车就开出好几十米，而全家人都在车上，正说到他最在意的事。屏幕伤眼睛，说的不是开车看手机的真正危险；“再也不坐”是赌气，语气太冲。 | The clue: he cares most for the family's safety. A glance that covers dozens of metres with all of you aboard reaches that care. Eye strain misses the real danger; “I'll never ride with you” is a sulk.
+
+同学想放弃学了三年的古筝，因为最近练得很苦。她一直盼着在新年晚会上表演。
+= 你不是一直盼着在新年晚会上弹一曲吗？现在放弃，三年的功夫就白费了。再坚持一下吧。
+- 古筝那么贵，不学太浪费钱了。 ~unmoved
+- 吃一点苦就放弃，你真没用。 ~harsh
+% 线索是她“一直盼着在新年晚会上表演”，又已经学了“三年”。用她自己的心愿和三年的付出来劝，最能让她重新鼓起劲。古筝贵不贵，不是她此刻在意的；骂她“没用”，只会让她更灰心。 | The clues: she has long hoped to play at the New Year show, and has studied three years. Her own wish and her three years are what will rekindle her. The cost is not her concern now; “you're useless” only discourages her.
+
+奶奶有老年卡，坐公交不要钱，可她总是走很远的路去买菜。她的膝盖不好。
+= 奶奶，您膝盖不好，每次走远路回来都喊疼。坐公交又不要钱，几站就到了。
+- 奶奶，坐在公交车上还能看看风景。 ~unmoved
+- 奶奶，您走得太慢了，总跟不上别人。 ~rude
+% 线索是奶奶“膝盖不好”，坐公交“不要钱”。说她回来喊疼，又说不花钱，正解开她舍不得、又受罪的心结。看风景不是她走路买菜时在意的；说她走得慢、跟不上别人，对长辈不礼貌。 | The clues: her knees are bad, and the bus is free. Her pain on coming home and the free ride answer both her thrift and her suffering. Views are not her concern; saying she is slow is rude to an elder.
+
+表弟总把零食袋随手扔在小区的草坪上。他很喜欢常在草坪上玩的几只小猫。
+= 小猫常在草坪上玩，要是把塑料袋吃下去，会生病的。垃圾还是扔进桶里吧。
+- 垃圾桶刷成了绿色，挺好看的。 ~weak
+- 乱扔垃圾的孩子，长大了也没出息。 ~harsh
+% 线索是表弟“很喜欢”草坪上的小猫。说塑料袋会让小猫生病，从他喜欢的小猫说起，他就会在意。垃圾桶好不好看，和该不该乱扔没有关系；“长大了没出息”语气太冲，表弟听了只会不高兴。 | The clue: he loves the kittens on the lawn. Plastic that makes them ill starts from what he loves. A pretty bin has nothing to do with littering; “you'll come to nothing” is harsh.
+`);
+
+/** MANNER_8 are the scenes of speaking-8-persuading: persuading with understanding and an offer, not pressure. */
+const MANNER_8 = checked(`
+同桌上课总找你说话，你想劝他别说了。
+= 我知道你有好多话想说，咱们下课再聊好吗？上课我怕漏听了老师讲的。
+- 你烦不烦啊，闭嘴！ ~harsh
+- 你再说，我就告诉老师，让你写检讨。 ~rude
+% 线索是要“劝”同桌，不是要和他吵。先体谅他“有好多话想说”，再商量“下课再聊”，并说出自己的担心，他容易接受。“闭嘴”语气太冲，会伤人；拿告老师来吓他，不礼貌，同桌之间也伤了和气。 | The clue: you mean to persuade, not to quarrel. Granting he has much to say, proposing after class and naming your worry makes it easy to accept. “Shut up” is harsh; threatening him with the teacher is rude and sours the friendship.
+
+爸爸答应周末陪你去图书馆，后来又说要加班。你想劝他抽出半天。
+= 爸爸，我知道您工作忙。要不周六上午您先加班，下午陪我去两个小时，好吗？
+- 您每次都说话不算话！ ~harsh
+- 不陪就算了，我以后什么都不跟您说了。 ~rude
+% 线索是爸爸“要加班”，你想要的是“半天”。先说“我知道您工作忙”，再提一个两头都顾得上的办法，用商量的口气，爸爸容易答应。“每次都说话不算话”语气太冲；“什么都不跟您说了”是赌气，对长辈不礼貌。 | The clues: he must work, and you want half a day. Granting he is busy, then offering a plan that serves both in a questioning tone, makes yes easy. “You never keep your word” is harsh; “I'll tell you nothing” is a sulk, rude to a parent.
+
+你是文艺委员，想劝几位不愿意周末来排练合唱的同学。
+= 我知道大家周末都有安排。排练只占周六上午两个小时，比赛那天我们一起拿个好名次，好不好？
+- 必须来，不来的扣班级分。 ~pushy
+- 不来的人就是不爱集体。 ~attack
+% 线索是同学们“不愿意”周末来。先体谅大家“都有安排”，说清只占“两个小时”，再说一起拿名次的盼头，用“好不好”来商量，大家更愿意来。“必须来”“扣分”只是硬压；说不来的人“不爱集体”，是给人扣帽子，针对的是人。 | The clue: they are unwilling to give up the weekend. Granting their plans, saying it is only two hours and sharing the hope of a prize, then asking, wins them. “You must, or lose points” only forces; “you don't care for the class” labels people.
+
+朋友把你借给他的书弄湿了几页，现在又想再借一本。你想劝他爱惜书。
+= 这本可以借你。上次那本有几页沾了水，这次看的时候包个书皮吧，我帮你一起包。
+- 你上次把书弄成那样，还好意思再借？ ~harsh
+- 不借，你这个人就是不爱惜东西。 ~attack
+% 线索是要劝他“爱惜书”，又不想伤了朋友。先答应借，再平和地提上次的事，给出“包书皮”的办法，还主动帮忙，朋友容易接受。“还好意思”语气太冲；说他“这个人就是不爱惜”，是针对人，不是针对这件事。 | The clue: you want him to take care, and to stay friends. Lending first, mentioning last time calmly and offering to help cover it is easy to accept. “Have you the nerve?” is harsh; “you're careless” attacks the person, not the act.
+
+妹妹看动画片，到了时间还不肯去写作业。你想劝她。
+= 这一集还有五分钟就完了，看完我们就去写作业，写完了还能再看一集，好不好？
+- 马上关掉！不然我告诉妈妈。 ~harsh
+- 只有笨孩子才一直看动画片。 ~rude
+% 线索是妹妹“不肯”停下。先让她把这一集看完，再说写完作业还能看，用商量的口气，她容易答应。“马上关掉”加上告状，是硬压，语气太冲；说她是“笨孩子”，不礼貌，还会伤她的心。 | The clue: she refuses to stop. Letting her finish the episode and promising another after homework, as a question, makes yes easy. “Off now, or I tell Mum” is harsh; calling her stupid is rude and hurts.
+
+小组里一位同学坚持用他的方案，可他的方案要三天，你们只有两天。你想劝他改一改。
+= 你的方案想得很周到，就是要花三天，我们只有两天。能不能把第三步简化一点？
+- 你的方案根本不行，听我的。 ~pushy
+- 你总是这么自以为是。 ~attack
+% 线索是他“坚持”自己的方案，问题在于“三天”和“两天”。先肯定他想得周到，再说出时间不够这个具体的问题，并用商量的口气提出改法，他才听得进去。“根本不行，听我的”只坚持自己；说他“自以为是”，针对的是人。 | The clues: he holds to his plan, and the trouble is three days against two. Praising its care, naming the time and suggesting a change as a question lets him listen. “It's no good, do it my way” only insists; “you always think you know best” attacks him.
+
+邻居家的小狗晚上总是叫，奶奶被吵得睡不着。你想请邻居想想办法。
+= 叔叔，您家小狗挺可爱的，就是晚上一叫，我奶奶就睡不着。能不能晚上让它待在里屋？
+- 你们家的狗吵死人了，再叫我们就报警。 ~harsh
+- 养狗的人从来不考虑别人。 ~attack
+% 线索是你是去“请”邻居想办法。先说小狗可爱，再说奶奶睡不着这个具体的困难，提出一个邻居做得到的办法，邻居容易答应。“吵死人了”“报警”语气太冲；说“养狗的人从来不考虑别人”，是冲着人去的，邻居只会生气。 | The clue: you are asking a favour. Saying the dog is sweet, naming Grandma's sleepless nights and proposing something he can do makes it easy to agree. “It's deafening, we'll call the police” is harsh; “dog owners never think of others” attacks him.
+
+同学在作文比赛报名前想放弃，说自己写得不好。你想劝他参加。
+= 你上次写的那篇《外婆的菜园》，老师还在班上读过呢。去试试吧，就当一次练习。
+- 你不去，就是胆小鬼。 ~harsh
+- 去不去随你，反正我看你也得不了奖。 ~rude
+% 线索是他觉得“自己写得不好”。用他自己被老师读过的作文让他看到长处，再说“就当一次练习”，减轻他的压力，他才敢去。骂他“胆小鬼”语气太冲；“反正得不了奖”是泼冷水，不礼貌，也劝不动他。 | The clue: he thinks he writes badly. His own essay read in class shows him his strength, and “just as practice” lightens the load. “Coward” is harsh; “you won't win anyway” is rude and persuades no one.
+
+妈妈要把你的旧玩具全部扔掉，你想劝她留下几件。
+= 妈妈，我知道东西太多了。我自己挑几件最有纪念意义的留下，其余的送给楼下的小朋友，好吗？
+- 不许扔！那是我的东西！ ~pushy
+- 您就是不尊重我。 ~attack
+% 线索是妈妈嫌东西多，你想“留下几件”。先承认“东西太多了”，再提出只留几件、其余送人的办法，两人的想法都照顾到了，妈妈容易答应。“不许扔”只坚持自己；说妈妈“不尊重我”，把事情变成了指责人。 | The clues: she finds too much clutter, and you want only a few. Granting the clutter, keeping a few and giving the rest away serves you both. “Don't you dare” only insists; “you don't respect me” turns it into blame.
+
+爷爷总把药随手放在桌上，你担心常来家里的小表弟误吃。
+= 爷爷，药放在桌上您拿着方便，可表弟老爱翻东西。我帮您放进抽屉，贴个标签，好找又安全。
+- 爷爷，您年纪大了，记性太差了。 ~rude
+- 您必须把药收起来，听见没有？ ~pushy
+% 线索是爷爷把药放桌上是图“方便”，你担心的是表弟。先体谅他“拿着方便”，再说出担心，并主动帮他放好、贴标签，既方便又安全，爷爷容易接受。说爷爷“记性太差”，不礼貌；“必须……听见没有”是命令的口气，只是硬压。 | The clues: he keeps the pills out for ease, and you fear for the cousin. Granting the ease, naming the worry and offering to store and label them keeps both, which he can accept. “Your memory's gone” is rude; “you must, do you hear?” only commands.
+`);
+
+/** SPECS_8 are the speaking topics of grade 8, in order. */
+const SPECS_8: readonly Spec[] = [
+  {
+    grade: 8,
+    id: "speaking-8-speech",
+    title: t("A Prepared Speech", "主题演讲"),
+    summary: t(
+      "Giving a prepared speech on a theme: an opening that names the theme and draws in these listeners, and sentences made to be heard, short, concrete and fitted to them.",
+      "围绕一个主题做有准备的演讲：开头点明主题、吸引眼前的听众；句子要适合听，简短、具体，合乎听众的身份。",
+    ),
+    intro: t(
+      "A speech is heard once, by particular people, on a particular day. Its opening must say what it is about and give the listeners a reason to listen; its sentences must be ones the ear can follow.\n\nA pupil speaks on “爱护课桌” to his class. He does not begin with how desks are made; he taps the desk in front of him and asks, “这张桌子上，有没有你刻下的字？” Then he tells of the desk he sat at in grade 3, with a name carved in it by someone ten years before. The first knowledge point opens the speech, the second speaks for the ear.",
+      "演讲只讲一遍，讲给特定的人、在特定的日子听。开头要说清讲什么，还要让听众愿意听下去；句子要让耳朵跟得上。\n\n比如一个同学在班里演讲“爱护课桌”。他没有从课桌是怎样做成的讲起，而是敲了敲面前的桌子，问：“这张桌子上，有没有你刻下的字？”接着讲他三年级时坐过的一张课桌，上面刻着十年前一个人的名字。第一个知识点学演讲的开头，第二个学说适合听的话。",
+    ),
+    texts: [...ruleTexts(OPENING_8), ...ruleTexts(SPOKEN_8)],
+    after: ["speaking-7-impromptu"],
+    points: [
+      [
+        "opening",
+        t("Opening a Speech", "演讲的开头"),
+        t(
+          "In the first two or three sentences, start from something these listeners share, the place, the day, a thing in your hand, a question they can answer in their heads, and then name the theme plainly.\n\nAt a tree-planting day, “同学们，你们脚下这片空地，明年春天会长出什么？今天我想讲讲种树。”\n\n> **Watch out.** An opening that plunges into a definition or a history, or only announces the title, loses the listeners before the speech begins; and one that does not suit the occasion, a joke at a farewell or an excuse at a ceremony, loses them as surely.",
+          "在开头两三句里，先从眼前的听众都知道的东西说起：这个地方、这一天、手里的一样东西、一个大家能在心里回答的问题；再明白地说出主题。\n\n比如在植树节上说：“同学们，你们脚下这片空地，明年春天会长出什么？今天我想讲讲种树。”\n\n> **注意。** 一开口就下定义、讲历史，或者只报个题目，演讲还没开始就失去了听众；开头不合场合，比如在送别时开玩笑、在典礼上说自己没准备好，同样会失去听众。",
+        ),
+        ruleGenerator(
+          t("Which opening fits this speech best?", "哪一个开头最适合这次演讲？"),
+          OPENING_8,
+          rule(
+            t(
+              "Look at who is listening, on what occasion, and what the theme is; then find the opening that starts from what they share and names the theme.",
+              "看清听众是谁、什么场合、主题是什么；再找出从听众共同知道的东西说起、又点明了主题的开头。",
+            ),
+            t(
+              "Imagine hearing that opening in that hall: you know what the speech is about, and you want to hear the next sentence.",
+              "想象自己在那个场合听到这个开头：你知道了要讲什么，也想接着听下一句。",
+            ),
+            {
+              find: t("Step 1: see the listeners, the occasion and the theme.", "第一步：看清听众、场合和主题。"),
+              choose: t("Step 2: choose the opening that starts from them.", "第二步：选出从眼前说起的开头。"),
+            },
+          ),
+        ),
+      ],
+      [
+        "spoken",
+        t("Speaking for the Ear", "说适合听的话"),
+        t(
+          "Say it as you would to a person in front of you: short sentences, words the listeners use, a number turned into something they can picture, a real example rather than a maxim, and now and then a question put to them.\n\nNot “我校图书馆藏书量较为丰富”, but “我们图书馆的书，一个人每天读一本，要读三十年”.\n\n> **Watch out.** A sentence that reads well on paper, long and full of written words, is lost on the ear; and a sentence that circles the same point, or talks down to the listeners, loses them too.",
+          "像对着面前的人说话那样说：句子短，用听众平时用的词，把数字变成看得见的东西，用真实的事例代替大道理，时不时向听众提个问题。\n\n不说“我校图书馆藏书量较为丰富”，而说“我们图书馆的书，一个人每天读一本，要读三十年”。\n\n> **注意。** 写在纸上很通顺的句子，又长又满是书面词，耳朵听不进去；绕着一个意思说来说去，或者用居高临下的口气说话，也会失去听众。",
+        ),
+        ruleGenerator(
+          t("Which sentence is better said to these listeners?", "哪一句更适合讲给这些听众听？"),
+          SPOKEN_8,
+          rule(
+            t(
+              "Think who is listening, then find the sentence that is short, concrete and in words they would use.",
+              "想一想听众是谁，再找出简短、具体、用的是他们平常说的话的那一句。",
+            ),
+            t(
+              "Say the sentence aloud once: these listeners would take it in at a single hearing and remember it.",
+              "把这句话说出声来：这些听众听一遍就能明白，也记得住。",
+            ),
+          ),
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 8,
+    id: "speaking-8-interview",
+    title: t("Interviewing", "采访和访谈"),
+    summary: t(
+      "Preparing an interview around its aim and the person asked, with questions that draw out what is wanted, and keeping a faithful note of what was said, nothing added and nothing turned round.",
+      "围绕采访的目的和对象准备问题，问出想了解的内容；如实记录和整理对方的话，不添加，不曲解。",
+    ),
+    intro: t(
+      "An interview begins before it starts, with its aim, “what do I want to know?”, and with the person: what do they know that no one else does? Questions are chosen for both. And it ends after it is over, when what was said is written down: the note must keep the speaker's points, not your own.\n\nInterviewing a bus driver about early shifts, “您每天几点出车，出车前要做哪些准备？” suits both the aim and the man; the note then reads “他每天五点半出车，出车前要检查刹车和车门”, and not “他觉得早班太辛苦”, which he never said. The first knowledge point prepares the questions, the second records the answers.",
+      "采访在开始之前就开始了：先想好目的，“我想了解什么？”，再想对象，“他知道哪些别人不知道的事？”，问题要照着这两点来选。采访结束以后也还没结束：要把对方说的话整理下来，记的必须是对方的意思，而不是自己的。\n\n比如采访一位公交司机，了解早班的情况。问“您每天几点出车，出车前要做哪些准备？”，既合目的，又合对象；记录写“他每天五点半出车，出车前要检查刹车和车门”，而不是写“他觉得早班太辛苦”，因为他没这样说过。第一个知识点准备问题，第二个整理记录。",
+    ),
+    texts: [...ruleTexts(PLAN_8), ...ruleTexts(RECORD_8)],
+    after: ["speaking-6-interview", "speaking-7-proper"],
+    points: [
+      [
+        "plan",
+        t("Questions for the Aim and the Person", "围绕目的和对象设计问题"),
+        t(
+          "Write the aim in one sentence, then ask what this person, from their work or their life, can tell about it. A good question asks how, what or which, so it cannot be answered in one word; it asks about what they have done or seen; and it is polite, keeping away from pay, age or blame.\n\nInterviewing a postman about his round: “您每天送信要走哪几条街？遇到地址写错的信怎么办？” rather than “送信辛苦吗？”\n\n> **Watch out.** A question asked out of curiosity that has nothing to do with the aim wastes the time you were given; and a question that does not suit the person, a scholar's question to a farmer, gets no good answer.",
+          "先用一句话写下采访的目的，再想一想这个人凭他的工作或经历，能告诉你哪些和目的有关的事。好的问题问“怎样”“什么”“哪些”，不能用一个字回答；问的是他做过、见过的事；还要有礼貌，不问工资、年龄，也不问带着责怪的话。\n\n比如采访一位邮递员，了解他怎样送信，问“您每天送信要走哪几条街？遇到地址写错的信怎么办？”，而不是“送信辛苦吗？”\n\n> **注意。** 出于好奇、却和目的无关的问题，浪费了对方给你的时间；不合对方身份的问题，比如拿学者的问题去问农民，也问不出好的回答。",
+        ),
+        ruleGenerator(
+          t("Which question best serves this interview?", "哪个问题最能达到这次采访的目的？"),
+          PLAN_8,
+          rule(
+            t(
+              "Say the aim of the interview in one sentence and think what this person can tell about it; find the open, polite question that goes straight there.",
+              "用一句话说出采访的目的，想一想这个人能讲出哪些相关的事；找出直奔目的、开放又有礼貌的那个问题。",
+            ),
+            t(
+              "Imagine the person answering it: the answer is a few sentences of just what the aim needs, and they are glad to give it.",
+              "想象对方回答这个问题：他会说上几句，说的正是目的所需要的，而且乐意回答。",
+            ),
+          ),
+        ),
+      ],
+      [
+        "record",
+        t("Recording Faithfully", "如实整理访谈"),
+        t(
+          "After the interview, sum up each point the person made in a sentence of your own: keep the numbers, the order of steps and any “but”, which often carries the point; add no judgement of your own, and do not let a detail stand for the whole.\n\nA shopkeeper says, “以前一天卖两百个包子，现在早上就卖完三百个，下午还要再蒸一锅。” The note: “包子的销量从一天两百个增加到上午就卖完三百个，下午还要加蒸。”\n\n> **Watch out.** A word or a number that changes its owner, the other side's shots made yours, a minute to dress made a minute to put out a fire, turns the interview round; read the note back against the words before you use it.",
+          "采访结束后，把对方说的每一个要点用自己的一句话概括出来：数字、步骤的顺序、“不过”“可是”这样常常带着要点的转折都要保留；不加进自己的评价，也不拿一个细节代替全部。\n\n比如店主说：“以前一天卖两百个包子，现在早上就卖完三百个，下午还要再蒸一锅。”记录写：“包子的销量从一天两百个增加到上午就卖完三百个，下午还要加蒸。”\n\n> **注意。** 一个词、一个数字换了主人，比如把对方投进的球说成自己练的，把一分钟穿好衣服说成一分钟灭火，访谈的意思就被弄反了；用之前，要拿记录和原话对一遍。",
+        ),
+        ruleGenerator(
+          t("Which note records what was said faithfully?", "哪一条记录如实地整理了对方的话？"),
+          RECORD_8,
+          rule(
+            t(
+              "Mark each point of what was said, its numbers and its turns; then find the note that keeps them all and adds nothing.",
+              "把对方话里的每个要点、数字和转折标出来；再找出全都保留、又没有添加的那条记录。",
+            ),
+            t(
+              "Read the note against the words: each point is there, each number belongs where it did, and there is nothing the speaker did not say.",
+              "把记录和原话对一遍：每个要点都在，每个数字都在原来的位置上，也没有对方没说过的话。",
+            ),
+            {
+              find: t("Step 1: mark the points of what was said.", "第一步：标出原话的要点。"),
+              choose: t("Step 2: choose the note that keeps them.", "第二步：选出如实保留它们的记录。"),
+            },
+          ),
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 8,
+    id: "speaking-8-discussion-focus",
+    title: t("Keeping to the Focus", "抓住讨论焦点"),
+    summary: t(
+      "Finding the point on which a discussion really turns, and speaking to it: taking a side or joining the sides, with a reason, without straying, attacking or insisting.",
+      "找出讨论中大家真正的分歧所在，围绕这个焦点发言：表明态度或提出兼顾的办法，说出理由，不跑题，不针对人，也不固执己见。",
+    ),
+    intro: t(
+      "A discussion has a **focus**: the point on which the speakers differ. It is often hidden behind a “可是” or a “那……”: one speaker says what is good, the next turns with “but” to what is bad. Once it is found, every remark should speak to it.\n\nA class discusses whether to keep a hamster in the classroom. One says, “养它能学会照顾小动物”; another, “可是放假的时候谁来喂？” The focus is not whether hamsters are cute but who looks after it in the holidays; a useful remark answers that, “可以排一张假期轮流带回家的表”. The first knowledge point finds the focus, the second speaks to it.",
+      "讨论都有一个**焦点**：大家意见不同的地方。它常常藏在“可是”“那……”后面：一个人说了好处，下一个人用“可是”转到了坏处。找到了焦点，每一次发言都要围着它说。\n\n比如一个班讨论要不要在教室里养仓鼠。有人说：“养它能学会照顾小动物。”有人说：“可是放假的时候谁来喂？”焦点不是仓鼠可不可爱，而是放假时谁来照顾；有用的发言要回答这个问题，比如“可以排一张假期轮流带回家的表”。第一个知识点找出焦点，第二个围绕焦点发言。",
+    ),
+    texts: [...ruleTexts(FOCUS_8), ...ruleTexts(KEEP_8)],
+    after: ["speaking-7-intent"],
+    points: [
+      [
+        "focus",
+        t("Finding the Focus", "找出讨论焦点"),
+        t(
+          "Listen for where one speaker turns against the last, at “可是”, “不过”, “那……”, and say in one sentence what both sides are weighing: this or that, or how to have both.\n\nOn a class trip: “坐大巴便宜。”“可是要坐四个小时。” The focus is cost against time.\n\n> **Watch out.** A detail someone happens to mention is not the focus, nor is a question nobody disputes; and do not turn a speaker's view round, taking a worry about one point for opposition to the whole plan.",
+          "留心一个人在哪里转过来反对前一个人，比如说“可是”“不过”“那……”的地方；再用一句话说出两边在比较什么：是这样还是那样，或者怎样两样都顾到。\n\n比如讨论班级出游：“坐大巴便宜。”“可是要坐四个小时。”焦点是省钱和省时间哪个更重要。\n\n> **注意。** 有人顺口提到的一个细节不是焦点，没有人争的问题也不是；也不要把别人的意思弄反了，把对某一点的担心当成反对整件事。",
+        ),
+        ruleGenerator(
+          t("What is the focus of this discussion?", "这次讨论的焦点是什么？"),
+          FOCUS_8,
+          rule(
+            t(
+              "Find where one speaker turns against another, and say what the two sides are weighing against each other.",
+              "找出一个人转过来反对另一个人的地方，说出两边在比较什么。",
+            ),
+            t(
+              "Put the focus to each speaker in turn: every one of them has said something about it.",
+              "拿这个焦点去对照每一个发言的人：每个人说的话都和它有关。",
+            ),
+          ),
+        ),
+      ],
+      [
+        "keep",
+        t("Speaking to the Focus", "围绕焦点发言"),
+        t(
+          "Say where you stand on the focus, or offer a way that serves both sides, and give the reason; if someone has just spoken, answer what they said. Speak to the view, not the person, and leave room to talk it over.\n\nOn the bus or the train: “我赞成坐火车。贵一点，可是只要一个半小时，省下的时间能多参观一个地方。”\n\n> **Watch out.** A story of your own that does not touch the focus pulls the talk away; “I agree” with no reason moves nothing; and “that's wrong, say no more” or a word against the speaker ends the discussion instead of moving it on.",
+          "针对焦点说出自己的态度，或者提出两边都能接受的办法，并说出理由；如果有人刚发了言，就回应他说的话。针对观点，不针对人，也给商量留下余地。\n\n比如讨论坐大巴还是坐火车：“我赞成坐火车。贵一点，可是只要一个半小时，省下的时间能多参观一个地方。”\n\n> **注意。** 讲一件和焦点无关的自己的事，会把讨论带偏；只说“我同意”却没有理由，讨论就停在原地；说“不对，别说了”或者针对发言的人，是结束讨论，而不是推进讨论。",
+        ),
+        ruleGenerator(
+          t("Which remark keeps to the focus and moves the discussion on?", "哪一句发言紧扣焦点，推进了讨论？"),
+          KEEP_8,
+          rule(
+            t(
+              "Hold the focus in mind; find the remark that takes a side on it or joins the sides, and says why.",
+              "记住焦点；找出针对它表明态度或提出兼顾办法、并说出理由的那一句。",
+            ),
+            t(
+              "Imagine the next speaker after that remark: they have something new to answer, and no one has been put down.",
+              "想象这句话之后下一个人发言：他有了新的内容可以回应，也没有人受到贬低。",
+            ),
+          ),
+        ),
+      ],
+    ],
+  },
+  {
+    grade: 8,
+    id: "speaking-8-persuading",
+    title: t("Speaking Persuasively", "增强说服力"),
+    summary: t(
+      "Persuading someone by a reason that touches what they care about, and in a manner that understands them, offers a way and asks rather than orders.",
+      "用对方在乎的理由去说服人，并且体谅对方，提出办法，用商量而不是命令的口气。",
+    ),
+    intro: t(
+      "To persuade is to make someone want to do what you ask. Two things do it: a **reason** that matters to them, not to you, and a **manner** that shows you understand why they did otherwise and offers a way out.\n\nA friend keeps borrowing your pen and losing it. “笔是我爸爸送的” matters to you; “你下周要考试，自己有一支用惯了的笔，写起来更顺手” matters to him. And “我知道你总是急着用，我们去小卖部一起挑一支吧” works where “你怎么又弄丢了！” fails. The first knowledge point chooses the reason, the second the manner.",
+      "说服，就是让对方心甘情愿地照你说的去做。靠两样东西：一是对方在乎的**理由**，而不是你自己在乎的；二是**态度和方式**：体谅对方为什么那样做，再给他一个台阶和办法。\n\n比如朋友总借你的笔，又总弄丢。“笔是我爸爸送的”，是你在乎的；“你下周要考试，自己有一支用惯了的笔，写起来更顺手”，才是他在乎的。“我知道你总是急着用，我们去小卖部一起挑一支吧”能说动他，“你怎么又弄丢了！”却不能。第一个知识点选理由，第二个选说法。",
+    ),
+    texts: [...ruleTexts(REASON_8), ...ruleTexts(MANNER_8)],
+    after: ["speaking-8-discussion-focus"],
+    points: [
+      [
+        "reason",
+        t("A Reason That Moves Them", "用对方在乎的理由"),
+        t(
+          "Find what this person cares about, a child, a goal, their health, their pride, and link what you ask to it: if they do it, that thing is kept safe or comes nearer.\n\nA classmate who wants to be a pilot will not stop reading in the dark for “费电”, but may for “飞行员要视力好，你现在就得保护眼睛”.\n\n> **Watch out.** A reason that matters only to you, a reason with nothing to do with the matter, and a threat or an insult in place of a reason move no one; the last makes them dig in.",
+          "找出这个人在乎什么，比如孩子、目标、身体、面子，把你劝他做的事和这一点连起来：照你说的做，他在乎的东西就能保住，或者离他更近。\n\n比如一个想当飞行员的同学，不会因为“费电”就不在暗处看书，却可能因为“飞行员要视力好，你现在就得保护眼睛”而改掉。\n\n> **注意。** 只有你自己在乎的理由、和这件事没关系的理由，还有用威胁、骂人代替理由，都打动不了人；最后一种还会让对方更不肯听。",
+        ),
+        ruleGenerator(
+          t("Which reason is most likely to persuade them?", "哪一个理由最能说服对方？"),
+          REASON_8,
+          rule(
+            t(
+              "Find in the scene what the person cares about most; choose the reason that links what you ask to that.",
+              "从情境里找出对方最在乎的东西；选出把你劝的事和它连起来的理由。",
+            ),
+            t(
+              "Put yourself in their place and hear the reason: it speaks of what you care about, and it is true.",
+              "站在对方的位置听这个理由：它说的正是你在乎的事，而且是实情。",
+            ),
+          ),
+        ),
+      ],
+      [
+        "manner",
+        t("Understanding and Offering a Way", "体谅对方，商量着说"),
+        t(
+          "Begin by showing you understand why they do as they do; then name the trouble plainly, offer a way that is easy to take, help if you can, and ask rather than order: “……好吗？”\n\nTo a neighbour practising the drum at night: “您打得真好听，就是九点以后我弟弟要睡觉，能不能早一点练？”\n\n> **Watch out.** An order, a threat, a label such as “你就是自私” or a jab at their age or ability turns persuading into a quarrel; even a good reason is lost when it is said that way.",
+          "先表示你理解对方为什么这样做；再平和地说出问题，提出一个容易做到的办法，能帮就主动帮一把，用商量的口气，比如“……好吗？”，而不是命令。\n\n比如劝晚上练鼓的邻居：“您打得真好听，就是九点以后我弟弟要睡觉，能不能早一点练？”\n\n> **注意。** 命令、威胁，给人扣上“你就是自私”这样的帽子，或者拿对方的年纪、能力说事，都会把劝说变成吵架；理由再好，这样说出来也没有用。",
+        ),
+        ruleGenerator(
+          t("Which way of saying it are they most likely to accept?", "哪一种说法对方最容易接受？"),
+          MANNER_8,
+          rule(
+            t(
+              "Look for the words that first understand the other person, then offer a way and ask.",
+              "找出先体谅对方、再提出办法、用商量的口气说的那一句。",
+            ),
+            t(
+              "Imagine being spoken to so: you feel understood, the way offered is easy, and you could say yes without losing face.",
+              "想象别人这样对你说：你觉得被理解了，办法也容易做到，答应下来不会丢面子。",
+            ),
+          ),
+        ),
+      ],
+    ],
+  },
+];
+
 /** stageSevenNineSpeaking are the speaking topics of grades 7 to 9, in order, each after the reading and speaking before it. */
 export const stageSevenNineSpeaking: readonly GradeTopic[] = (() => {
   const built: GradeTopic[] = [];
-  for (const spec of SPECS_7)
+  for (const spec of [...SPECS_7, ...SPECS_8])
     built.push(
       topicOf(
         spec,

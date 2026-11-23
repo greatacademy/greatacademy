@@ -668,6 +668,94 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
       "Does the speech suit being spoken: addressing the listeners directly, in sentences easy to follow by ear, with at least one device such as a question to the audience, repetition or a call to act?",
     quoteWhenMet: true,
   },
+  // Grade 8: news.
+  {
+    id: "zh8-news-form",
+    version: "1",
+    question:
+      "Is the text set out as a news report: a headline that states the main fact, a lead that gives when, where, who and what happened in a sentence or two, then a body that tells it more fully?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh8-news-facts",
+    version: "1",
+    question:
+      "Does the report tell facts the reader could check, such as times, numbers, names and what people did or said, with the writer's own opinion kept out or limited to a short closing?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh8-news-order",
+    version: "1",
+    question:
+      "Does the report put the most important fact first and the rest after it in order of importance, keeping to the one event of the task without wandering?",
+    quoteWhenMet: false,
+  },
+  // Grade 8: travel writing.
+  {
+    id: "zh8-travel-route",
+    version: "1",
+    question:
+      "Is the route of the visit clear, the reader always knowing where the writer is, with words of moving such as 走进, 沿着 or 登上 that lead from one place to the next?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh8-travel-scene",
+    version: "1",
+    question:
+      "Does the writing pick out and describe in concrete detail what is special about the main sights, rather than listing every place in the same few words?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh8-travel-feeling",
+    version: "1",
+    question:
+      "Does the writer's own feeling or thought about the place come through, woven into the scenes or said at the end, so that it grows from what was seen?",
+    quoteWhenMet: true,
+  },
+  // Grade 8: rewriting.
+  {
+    id: "zh8-rewrite-faithful",
+    version: "1",
+    question:
+      "Does the rewriting keep the people, the events, the ending and the meaning of the original the task gives, contradicting none of them?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh8-rewrite-change",
+    version: "1",
+    question:
+      "Does the rewriting make the change the task asks for, such as telling it in another person, in another order or in another form, and keep to that change throughout?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh8-rewrite-detail",
+    version: "1",
+    question:
+      "Does the rewriting fill out the original with fitting detail, scenes, actions, words and thoughts that suit its time and people, so that it reads as a whole new piece?",
+    quoteWhenMet: true,
+  },
+  // Grade 8: a simple research report.
+  {
+    id: "zh8-report-form",
+    version: "1",
+    question:
+      "Is the text set out as a simple research report, with a title and parts for the question, the method, the findings and the conclusion?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh8-report-findings",
+    version: "1",
+    question:
+      "Does the report say how the information was gathered and give concrete findings, such as figures, observations or what sources say, naming the sources it uses?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh8-report-conclusion",
+    version: "1",
+    question:
+      "Does the conclusion follow from the findings and answer the question the report set, without claiming more than they show, and does any suggestion fit them?",
+    quoteWhenMet: true,
+  },
   // Grade 9: an argument.
   {
     id: "zh9-argue-thesis",

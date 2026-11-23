@@ -11,7 +11,7 @@ import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhe
 import { heritageTopics } from "./heritage/topics.ts";
 import { hskCourses } from "./hsk/courses.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
-import { planningTopics, revisingTopics, stageFiveSixLanguage, stageThreeFourLanguage } from "./language/index.ts";
+import { planningTopics, revisingTopics, stageFiveSixLanguage, stageSevenNineLanguage, stageThreeFourLanguage } from "./language/index.ts";
 import { levelOneCourse } from "./level-1/index.ts";
 import { levelTwoCourse } from "./level-2/index.ts";
 import { levelThreeCourse } from "./level-3/index.ts";
@@ -232,14 +232,14 @@ function gradeCourse(grade: number, description: CourseDef["description"]): Cour
       { title: t("Characters", "识字"), modules: recognitionModules(grade) },
       ...(handOf(grade).length > 0 ? [{ title: t("Writing Characters", "写字"), modules: setModules(handOf(grade)) }] : []),
       ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
-      ...(ofGrade([...stageThreeFourLanguage, ...stageFiveSixLanguage], grade).length > 0
+      ...(ofGrade([...stageThreeFourLanguage, ...stageFiveSixLanguage, ...stageSevenNineLanguage], grade).length > 0
         ? [
             {
               title: t("Using Characters and Words", "字词运用"),
               modules: [
                 {
                   title: t("Using Characters and Words", "字词运用"),
-                  topics: ofGrade([...stageThreeFourLanguage, ...stageFiveSixLanguage], grade),
+                  topics: ofGrade([...stageThreeFourLanguage, ...stageFiveSixLanguage, ...stageSevenNineLanguage], grade),
                 },
               ],
             },

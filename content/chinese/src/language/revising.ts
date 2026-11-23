@@ -1,6 +1,7 @@
-// The revising topics of grades 3 to 6 (docs/chinese-curriculum.md §18.9): correcting the obvious mistakes of a
+// The revising topics of grades 3 to 6 and 8 (docs/chinese-curriculum.md §18.9): correcting the obvious mistakes of a
 // draft, a wrong character or a wrong word, in grade 3; faulty sentences and the better word in grade 4; smooth
-// sentences and their order in grade 5; the form of a page and punctuation in grade 6. Each sentence is written for
+// sentences and their order in grade 5; the form of a page and punctuation in grade 6; the kinds of faulty sentence,
+// missing parts and mismatched words, order, mixed patterns and faulty logic, in grade 8. Each sentence is written for
 // this subject with one mistake in it; the options are ways to correct it, and the wrong ones either change what was
 // right or correct it the wrong way.
 
@@ -366,6 +367,38 @@ const PUNCTUATION = `
 妈妈问我：“作业写完了吗。” | 妈妈问我：“作业写完了吗？” | 妈妈问的是问句，引号里面要用问号 ~ Mother asks, so the quotation ends with a question mark | 妈妈问我：“作业写完了吗”？ | 问号是引用的话里的，要放在引号里面 ~ the question mark belongs inside the quotes | 妈妈问我：“作业写完了吗！” | 这是问话，不是感叹 ~ it asks; it does not exclaim
 `;
 
+/** PARTS_AND_PAIRS are the sentences of grade 8 with a part missing or words that do not go together, each with one fault. */
+const PARTS_AND_PAIRS = `
+下午，全校师生在操场上一个隆重的开学典礼。 | 下午，全校师生在操场上举行了一个隆重的开学典礼。 | 句子缺了谓语，没说师生在操场上做什么 ~ the verb is missing: it does not say what they did on the playground | 下午，全校师生在操场上一个非常隆重的开学典礼。 | 加了“非常”，句子还是缺谓语 ~ adding 非常 still leaves out the verb | 上午，全校师生在操场上一个隆重的开学典礼。 | 换成“上午”，句子还是缺谓语 ~ putting 上午 for 下午 still leaves out the verb
+我们能不能赢得这场比赛，取决于大家团结一心。 | 我们能不能赢得这场比赛，取决于大家能不能团结一心。 | 前面的“能不能”有两面，后面只说了一面，前后不对应 ~ 能不能 has two sides and what follows only one | 我们能不能赢得这场比赛，完全取决于大家团结一心。 | 加了“完全”，两面对一面的毛病还在 ~ adding 完全 leaves two sides against one | 我们能不能赢得这次比赛，取决于大家团结一心。 | 换成“这次”，前后还是不对应 ~ putting 这次 for 这场 leaves the sides unmatched
+爷爷那慈祥的笑声，常常浮现在我的眼前。 | 爷爷那慈祥的笑容，常常浮现在我的眼前。 | 笑声是听到的，不能“浮现在眼前”，搭配不当 ~ a laugh is heard and cannot rise before the eyes | 爷爷那爽朗的笑声，常常浮现在我的眼前。 | 换了形容词，笑声还是“浮现在眼前” ~ another adjective leaves the laugh before the eyes | 爷爷那慈祥的笑声，时时浮现在我的眼前。 | 换成“时时”，搭配不当还在 ~ 时时 leaves the mismatch
+在老师的帮助下，我的写作水平有了明显的改进。 | 在老师的帮助下，我的写作水平有了明显的提高。 | “水平”只能说“提高”，不能说“改进” ~ a level is raised with 提高, not 改进 | 在老师耐心的帮助下，我的写作水平有了明显的改进。 | 加了“耐心的”，“水平”和“改进”还是不搭配 ~ adding 耐心的 leaves 水平 with 改进 | 在老师的帮助下，我的写作水平有了很大的改进。 | 换成“很大”，搭配还是不当 ~ 很大 leaves the mismatch
+学校开展了“好书伴我成长”，同学们热情很高。 | 学校开展了“好书伴我成长”读书活动，同学们热情很高。 | 开展的是活动，句子缺了“活动”这个中心词 ~ one carries out an activity, and the word 活动 is missing | 学校开展了“好书伴我成长”，同学们的热情很高。 | 加了“的”，开展了什么还是没说完 ~ adding 的 still leaves what was carried out unsaid | 学校举行了“好书伴我成长”，同学们热情很高。 | 换成“举行”，还是没说举行了什么 ~ 举行 still does not say what was held
+他用颤抖的双手，接过了奖状和同学们的祝贺。 | 他用颤抖的双手接过了奖状，也接受了同学们的祝贺。 | 祝贺不能“接过”，“接过”只能和奖状搭配 ~ one cannot take congratulations in one's hands: 接过 goes only with the certificate | 他用颤抖的双手，接过了奖状和同学们热烈的祝贺。 | 加了“热烈的”，祝贺还是被“接过” ~ adding 热烈的 still has the congratulations handed over | 他用双手，接过了奖状和同学们的祝贺。 | 删了“颤抖的”，没有改到错处 ~ dropping 颤抖的 does not touch the fault
+我们一定要发扬勤俭节约。 | 我们一定要发扬勤俭节约的好传统。 | “发扬”的是传统、精神，句子缺了宾语的中心词 ~ 发扬 needs a word such as 传统 after it, and it is missing | 我们一定要大力发扬勤俭节约。 | 加了“大力”，宾语还是缺 ~ adding 大力 leaves the object missing | 我们一定要继承勤俭节约。 | 换成“继承”，还是缺宾语的中心词 ~ 继承 still lacks its object
+他的家乡风景优美，人们热情好客，物产丰富。 | 他的家乡风景优美，物产丰富，人们热情好客。 | “物产丰富”跟在“人们”后面，说成了人们物产丰富，搭配不当 ~ placed after 人们, 物产丰富 is said of the people | 他的家乡风景优美，人们非常热情好客，物产丰富。 | 加了“非常”，“人们……物产丰富”还在 ~ adding 非常 leaves 人们 … 物产丰富 | 他的家乡风景秀丽，人们热情好客，物产丰富。 | 换了“秀丽”，没有改到错处 ~ 秀丽 does not touch the fault
+这次活动增强了同学们的环保。 | 这次活动增强了同学们的环保意识。 | “增强”的是意识，缺了“意识”这个中心词 ~ one strengthens an awareness, and 意识 is missing | 这次活动大大增强了同学们的环保。 | 加了“大大”，中心词还是缺 ~ adding 大大 leaves the head word missing | 这次活动提高了同学们的环保。 | 换成“提高”，还是没说提高了什么 ~ 提高 still does not say what was raised
+春节期间，商场里的人流量熙熙攘攘。 | 春节期间，商场里的人熙熙攘攘。 | “熙熙攘攘”说的是人来人往，不能和“人流量”这个数量搭配 ~ 熙熙攘攘 describes crowds, not a figure such as 人流量 | 春节期间，商场里的人流量非常熙熙攘攘。 | 加了“非常”，搭配不当还在 ~ adding 非常 leaves the mismatch | 国庆期间，商场里的人流量熙熙攘攘。 | 换了时间，没有改到错处 ~ another holiday does not touch the fault
+他养成了每天早上起来锻炼身体的好方法。 | 他养成了每天早上起来锻炼身体的好习惯。 | “养成”的是习惯，不能“养成方法” ~ one forms a habit, not a method | 他养成了每天早上起来锻炼身体的好办法。 | 换成“办法”，还是不能“养成” ~ 办法 still cannot be formed | 他学会了每天早上起来锻炼身体的好方法。 | 改了动词，意思也变了：原句说的是坚持锻炼的习惯 ~ changing the verb changes the meaning: the sentence was about a habit of exercising
+人们坐在院子里，吃着西瓜和凉风。 | 人们坐在院子里，吃着西瓜，吹着凉风。 | 凉风不能“吃”，要用“吹” ~ a breeze is not eaten; it blows | 人们坐在院子里，吃着甜甜的西瓜和凉风。 | 加了“甜甜的”，凉风还是被“吃” ~ adding 甜甜的 leaves the breeze eaten | 人们坐在院子里，吃着西瓜和习习的凉风。 | 加了“习习的”，搭配不当还在 ~ adding 习习的 leaves the mismatch
+`;
+
+/** ORDER_AND_LOGIC are the sentences of grade 8 with words out of order, mixed patterns, repetition or faulty logic, each with one fault. */
+const ORDER_AND_LOGIC = `
+写作文时，切忌不要照抄别人的文章。 | 写作文时，切忌照抄别人的文章。 | “切忌”已经是“千万不要”，再加“不要”，意思就说反了 ~ 切忌 already means “never”, and adding 不要 reverses it | 写作文时，切忌不要抄袭别人的文章。 | 换成“抄袭”，意思还是反的 ~ 抄袭 leaves the meaning reversed | 写作文时，一定切忌不要照抄别人的文章。 | 加了“一定”，“切忌不要”还在 ~ adding 一定 leaves 切忌不要
+他的成功，靠的是勤奋取得的。 | 他的成功，靠的是勤奋。 | “靠的是……”和“是……取得的”两种说法糅在了一起 ~ “what it rests on is …” and “it was won by …” are mixed | 他的成功，靠的是长期的勤奋取得的。 | 加了“长期的”，两种说法还是糅在一起 ~ adding 长期的 leaves the two patterns mixed | 他的成功，全靠的是勤奋取得的。 | 加了“全”，没有改到错处 ~ adding 全 does not touch the fault
+我们对这个问题已经充分地进行了讨论。 | 我们已经对这个问题进行了充分的讨论。 | “充分”说的是讨论，放错了位置，语序不当 ~ 充分 belongs to the discussion and is misplaced | 我们对这个问题已经非常充分地进行了讨论。 | 加了“非常”，语序还是不对 ~ adding 非常 leaves the order wrong | 我们对这个问题充分地已经进行了讨论。 | 挪了“已经”，语序更乱了 ~ moving 已经 makes the order worse
+他是一位优秀的有二十多年教龄的语文老师。 | 他是一位有二十多年教龄的优秀语文老师。 | 几个修饰语的顺序不对，说经历的短语应放在“优秀”前面 ~ the modifiers are out of order: the phrase of experience goes before 优秀 | 他是一位很优秀的有二十多年教龄的语文老师。 | 加了“很”，顺序还是不对 ~ adding 很 leaves the order wrong | 他是一位优秀的语文有二十多年教龄的老师。 | 把短语挪到“语文”后面，句子更不通了 ~ moving the phrase after 语文 makes it worse
+公园里的花有红的、黄的、紫的，五颜六色，色彩缤纷。 | 公园里的花有红的、黄的、紫的，五颜六色。 | “五颜六色”和“色彩缤纷”意思重复 ~ 五颜六色 and 色彩缤纷 say the same | 公园里的花有红的、黄的、紫的，五颜六色，五彩缤纷。 | 换成“五彩缤纷”，还是重复 ~ 五彩缤纷 still repeats | 公园里的花有红的、黄的、紫的，真是五颜六色，色彩缤纷。 | 加了“真是”，重复还在 ~ adding 真是 leaves the repetition
+在场的所有观众，几乎都被感动得流下了眼泪。 | 在场的观众，几乎都被感动得流下了眼泪。 | “所有”是全部，“几乎”是差一点全部，前后矛盾 ~ 所有 is all and 几乎 nearly all: they contradict | 在场的所有观众，差不多都被感动得流下了眼泪。 | 换成“差不多”，矛盾还在 ~ 差不多 leaves the contradiction | 在场的所有观众，几乎都被深深地感动得流下了眼泪。 | 加了“深深地”，矛盾还在 ~ adding 深深地 leaves the contradiction
+我喜欢读书，尤其是小说、散文、诗歌和文学作品。 | 我喜欢读书，尤其是小说、散文和诗歌。 | 小说、散文、诗歌都属于文学作品，不能和它并列 ~ novels, essays and poems are literature and cannot stand beside it | 我喜欢读书，尤其是小说、散文、诗歌和优秀的文学作品。 | 加了“优秀的”，不同层次的概念还是并列 ~ adding 优秀的 leaves a whole beside its parts | 我喜欢读书，尤其是小说、诗歌和文学作品。 | 删了“散文”，“文学作品”还和小说、诗歌并列 ~ dropping 散文 leaves 文学作品 beside its parts
+小王和小李的妈妈都是医生。 | 小王的妈妈和小李的妈妈都是医生。 | 可以理解成小王和小李的妈妈两个人，也可以理解成两个人的妈妈，意思不明 ~ it may mean Xiao Wang and Xiao Li's mother, or the two boys' mothers | 小王和小李的妈妈也都是医生。 | 加了“也”，两种理解还在 ~ adding 也 leaves both readings | 小王和小李的妈妈都是好医生。 | 加了“好”，意思还是不明 ~ adding 好 leaves it unclear
+不但他学习成绩好，而且品德也很高尚。 | 他不但学习成绩好，而且品德也很高尚。 | 前后说的是同一个人，“不但”应放在主语“他”的后面 ~ both halves are about one person, so 不但 goes after 他 | 不但他学习成绩很好，而且品德也很高尚。 | 加了“很”，关联词的位置还是错的 ~ adding 很 leaves the connective misplaced | 不但他学习成绩好，并且品德也很高尚。 | 换成“并且”，“不但”的位置还是错的 ~ 并且 leaves 不但 misplaced
+学校把这个任务交给了刚毕业的一位年轻老师。 | 学校把这个任务交给了一位刚毕业的年轻老师。 | 数量词“一位”放错了位置，应放在几个修饰语的最前面 ~ the measure phrase 一位 should lead the modifiers | 学校把这个任务交给了刚毕业的年轻的一位老师。 | 挪到“老师”前面，句子更不通了 ~ moving it before 老师 makes it worse | 学校把这个任务交给了刚毕业的一位很年轻的老师。 | 加了“很”，“一位”的位置还是错的 ~ adding 很 leaves 一位 misplaced
+由于干旱，今年小麦的产量比去年降低了一倍。 | 由于干旱，今年小麦的产量比去年降低了一半。 | 减少不能用“倍”来说，“降低了一倍”不合逻辑 ~ a fall cannot be counted in 倍, times: 降低了一倍 makes no sense | 由于干旱，今年小麦的产量比去年降低了两倍。 | 换成“两倍”，更不合逻辑 ~ 两倍 makes even less sense | 由于干旱，今年小麦的产量比去年大约降低了一倍。 | 加了“大约”，毛病还在 ~ adding 大约 leaves the fault
+这次活动的目的是为了让同学们了解家乡的历史。 | 这次活动的目的是让同学们了解家乡的历史。 | “目的是”和“为了”意思重复，糅在了一起 ~ 目的是 and 为了 both state the aim and are mixed | 这次活动的目的是为了让同学们更好地了解家乡的历史。 | 加了“更好地”，“目的是为了”还在 ~ adding 更好地 leaves 目的是为了 | 这次活动的目的就是为了让同学们了解家乡的历史。 | 加了“就”，重复还在 ~ adding 就 leaves the repetition
+`;
+
 /** ORDER_HEADS, FORM_HEADS and PUNCTUATION_HEADS are the headings of the steps of ordering, the form of a page and punctuation. */
 const ORDER_HEADS: Heads = {
   find: t("**Step 1: find the words that mark the order.**", "**第一步：找出表示顺序的词。**"),
@@ -400,7 +433,7 @@ const BETTER_HEADS: Heads = {
   choose: t("**Step 2: choose the word that goes with the rest.**", "**第二步：选出和前后搭配的词。**"),
 };
 
-/** revisingTopics are the revising topics of grades 3 to 6. */
+/** revisingTopics are the revising topics of grades 3 to 6 and of grade 8. */
 export const revisingTopics: readonly GradeTopic[] = [
   {
     grade: 3,
@@ -573,6 +606,45 @@ export const revisingTopics: readonly GradeTopic[] = [
             "读一读句子的停顿和语气。问句末尾用问号，感叹句末尾用感叹号；并列的词语之间用顿号；并列的分句里已经有逗号时，分句之间用分号；冒号引出后面的具体说明；引用的话说完了，标点放在引号里面。\n\n比如“小明高兴地说：‘我考了一百分’！”感叹是小明的话里的，要放进引号：“小明高兴地说：‘我考了一百分！’”\n\n> **注意。** 只是转述别人问了什么，句子不是问句：“他问我今天去不去图书馆。”句末用句号。",
           ),
           choiceTopicGenerator(punctuationChoices(PUNCTUATION), PUNCTUATION_HEADS),
+        ),
+      ],
+    },
+  },
+  {
+    grade: 8,
+    topic: {
+      id: "revising-8",
+      title: t("Revising to Read Smoothly", "修改：文从字顺"),
+      summary: t(
+        "Making the sentences of a piece whole and fluent: mending missing parts and words that do not go together, words out of order, mixed patterns, repetition and faulty logic.",
+        "让文章文从字顺：改正成分残缺和搭配不当，改正语序不当、句式杂糅、重复啰嗦和不合逻辑的句子。",
+      ),
+      intro: t(
+        "By grade 8 a draft is revised by the kinds of fault a sentence can have. Some faults are in its **parts**: a part is missing, or two words that must go together do not. Others are in its **order and logic**: words are out of order, two patterns are mixed into one, a thing is said twice, or the sentence says the opposite of what is meant.\n\n“经过这次比赛，让我们认识到了不足。” lacks a subject, because 经过 … 让 hides who learned; “这次比赛让我们认识到了不足。” is whole. The first knowledge point mends parts and pairs, the second order and logic.",
+        "到了八年级，修改句子要按病因来改。有的毛病出在**成分**上：缺了成分，或者该搭配的词语搭配不上。有的毛病出在**语序和逻辑**上：词语顺序不对，两种句式糅在一起，意思重复，或者说出来的意思正好相反。\n\n比如“经过这次比赛，让我们认识到了不足。”用了“经过……让……”，句子没有了主语；改成“这次比赛让我们认识到了不足。”就完整了。第一个知识点改成分残缺和搭配不当，第二个改语序、杂糅、重复和不合逻辑。",
+      ),
+      prerequisites: ["revising-6"],
+      encompasses: [],
+      xp: 14,
+      strand: "writing",
+      knowledgePoints: [
+        point(
+          "revising-8-parts",
+          t("Missing Parts and Mismatched Words", "成分残缺和搭配不当"),
+          t(
+            "Strip the sentence to its trunk, who, does, what, and see whether each is there and each goes with the next: a subject hidden by 通过 or 经过 … 使, a verb or an object left out, a subject that cannot do the verb, a verb that cannot take its object, or 能否 on one side and one side only on the other.\n\n“他提出的建议，引起了同学们的兴趣和赞同。” makes 引起 take 赞同, which it cannot; mend it as “引起了同学们的兴趣，也得到了大家的赞同”.\n\n> **Watch out.** A correction that adds a word, such as 很 or 非常, without touching the trunk leaves the fault where it was. Mend the very part that is missing or mismatched, and keep the meaning.",
+            "把句子压缩成主干，看“谁、做什么、什么”是不是都有、是不是互相搭配：被“通过”“经过……使”藏起来的主语，漏掉的谓语或宾语，做不了这个动作的主语，带不了这个宾语的动词，还有前面用“能否”两面、后面只有一面的句子。\n\n比如“他提出的建议，引起了同学们的兴趣和赞同。”“引起”可以带“兴趣”，却带不了“赞同”；要改成“引起了同学们的兴趣，也得到了大家的赞同”。\n\n> **注意。** 只加上“很”“非常”之类的词，却没有动主干，毛病还在原处。要改正正好缺了或搭配不上的那一处，意思也不能变。",
+          ),
+          choiceTopicGenerator(sentenceChoices(PARTS_AND_PAIRS), SENTENCE_HEADS),
+        ),
+        point(
+          "revising-8-logic",
+          t("Order, Mixed Patterns and Logic", "语序、杂糅和逻辑"),
+          t(
+            "Read for what the sentence means, not only for its parts: modifiers in the wrong order, a connective before the subject when both halves share one, two patterns run together such as 原因是 … 造成的, two words of one meaning, negatives that turn the meaning round, a whole set beside its own parts, a fall counted in 倍, or a phrase that can be read two ways.\n\n“产生这种现象的原因是由于管理不严造成的。” runs 原因是 … and 由于 … 造成的 together; it should be “产生这种现象的原因是管理不严。”\n\n> **Watch out.** Count the negatives in words such as 防止, 切忌, 否认 and 不: an even number says yes, an odd number says no. Check the corrected sentence still says what the writer meant.",
+            "不但看成分，还要读懂句子的意思：几个修饰语的顺序不对；前后主语相同，关联词却放在了主语前面；两种句式糅在一起，比如“原因是……”和“由于……造成的”；两个意思相同的词放在一起；几层否定把意思说反了；把大概念和它包含的小概念并列；把减少说成“降低了几倍”；一个短语可以有两种理解。\n\n比如“产生这种现象的原因是由于管理不严造成的。”把“原因是……”和“由于……造成的”糅在了一起，应改成“产生这种现象的原因是管理不严。”\n\n> **注意。** 数一数“防止”“切忌”“否认”“不”这些表示否定的词：双数是肯定，单数是否定。改完要检查句子说的还是作者本来的意思。",
+          ),
+          choiceTopicGenerator(sentenceChoices(ORDER_AND_LOGIC), SENTENCE_HEADS),
         ),
       ],
     },

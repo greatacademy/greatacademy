@@ -12,7 +12,7 @@ import { gaokaoTopics } from "../gaokao/index.ts";
 import { grammarTopics } from "../grammar/index.ts";
 import { heritageTopics } from "../heritage/topics.ts";
 import { idiomTopics } from "../idioms/index.ts";
-import { planningTopics, revisingTopics, stageFiveSixLanguage, stageThreeFourLanguage } from "../language/index.ts";
+import { planningTopics, revisingTopics, stageFiveSixLanguage, stageSevenNineLanguage, stageThreeFourLanguage } from "../language/index.ts";
 import { readingAloudTopics } from "../oral/reading-aloud.ts";
 import { stageSpeakingTopics } from "../oral/speaking-1-2.ts";
 import { stageThreeFourSpeaking } from "../oral/speaking-3-4.ts";
@@ -61,6 +61,7 @@ export const coreShardTopics: readonly TopicDef[] = [
   ...planningTopics.map((x) => x.topic),
   ...stageThreeFourLanguage.map((x) => x.topic),
   ...stageFiveSixLanguage.map((x) => x.topic),
+  ...stageSevenNineLanguage.map((x) => x.topic),
   ...recitationTopics,
   ...readingAloudTopics.map((x) => x.topic),
   ...stageReadingTopics.map((x) => x.topic),
