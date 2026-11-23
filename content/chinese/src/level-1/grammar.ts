@@ -153,7 +153,7 @@ function differences(right: string, wrong: readonly string[], glossary: Glossary
 
 /** firstSentence is the first sentence of a text: in an explanation of order, the rule of order. */
 const firstSentence = (text: Text): Text =>
-  t(text.en.split(/(?<=[.!?])\s/u)[0] ?? text.en, `${text["zh-CN"].split("。")[0] ?? text["zh-CN"]}。`);
+  t(text.en.split(/(?<=[.!?])\s|(?<=。)\s*/u)[0] ?? text.en, `${text["zh-CN"].split("。")[0] ?? text["zh-CN"]}。`);
 
 /** lower starts a reason with a small letter, to follow a colon. */
 const lower = (s: string): string => (/^[A-Z][a-z]/u.test(s) ? s[0]!.toLowerCase() + s.slice(1) : s);

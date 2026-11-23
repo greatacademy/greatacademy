@@ -29,8 +29,11 @@ const LONGEST = 6;
 /** APART are taught words whose characters the grammar sentences mostly use as two words: 只有…才能 is 才 and 能. */
 const APART: ReadonlySet<string> = new Set(["才能"]);
 
+/** EXTRA are words the grammar sentences use that no level's word list teaches: 节约 is one word, not 节 and 约. */
+const EXTRA: ReadonlySet<string> = new Set(["节约"]);
+
 /** isWord says whether a text is a taught word or a grammar word. */
-const isWord = (s: string, glossary: Glossary): boolean => !APART.has(s) && (glossary.meanings.has(s) || usage.has(s));
+const isWord = (s: string, glossary: Glossary): boolean => !APART.has(s) && (glossary.meanings.has(s) || usage.has(s) || EXTRA.has(s));
 
 /** wordsOf splits a sentence into words, taking the longest taught word at each place. */
 export function wordsOf(sentence: string, glossary: Glossary): readonly string[] {
@@ -68,6 +71,26 @@ export function differenceOf(right: string, wrong: string, glossary: Glossary): 
 
 const sorted = (s: string): string => [...s].sort().join("");
 const joined = (words: readonly string[]): string => words.join("");
+
+/** NEAR is how many characters on each side of a difference a written pair may take in, to tell its sentence apart. */
+const NEAR = 6;
+
+/** writtenNear finds a written pair that takes in the text around a difference: the widest that fits wins, so a pair
+ * written for one sentence (从下个月起 against 从下个月来) is not used where the same words differ elsewhere. */
+function writtenNear(d: Difference): Text | undefined {
+  const before = [...joined(d.whole.slice(0, d.at))];
+  const after = [...joined(d.whole.slice(d.at + d.right.length))];
+  const r = joined(d.right);
+  const w = joined(d.wrong);
+  for (let n = Math.min(NEAR, before.length) + Math.min(NEAR, after.length); n > 0; n--)
+    for (let i = Math.min(NEAR, before.length, n); i >= 0 && n - i <= Math.min(NEAR, after.length); i--) {
+      const a = before.slice(before.length - i).join("");
+      const b = after.slice(0, n - i).join("");
+      const hit = pairReasons.get(`${a}${r}${b}|${a}${w}${b}`);
+      if (hit) return hit;
+    }
+  return undefined;
+}
 
 /** kindOf names how a wrong text differs from the right one, for grouping the mistakes of a knowledge point. */
 export function kindOf(d: Difference): string {
@@ -143,6 +166,15 @@ function placeRule(piece: readonly string[], start: number, whole: readonly stri
     following && [...following].length === 1 && !isWord(following, glossary) && beyond && !isMark(beyond)
       ? `${following}${beyond}`
       : following;
+  const pair = /([^，。？！、]{1,3})是\1(?=，)/.exec(joined(whole));
+  const at = joined(whole.slice(0, start)).length;
+  if (pair && at >= pair.index && at < pair.index + pair[0].length) {
+    const a = pair[1] ?? "";
+    return t(
+      `In this pattern the same word stands on each side of 是, ${a}是${a}, and the turn to the problem comes after the comma.`,
+      `这个格式是“A是A”：“是”的两边是同一个词，${a}是${a}，逗号后面再转到问题。`,
+    );
+  }
   if ((kind === "adv" || kind === "neg") && piece.length === 1 && !isMark(after))
     return t(
       `${x} is ${CLASS_NAMES[kind].en}: it goes before the verb or adjective it goes with, here before ${after}.`,
@@ -157,11 +189,21 @@ function placeRule(piece: readonly string[], start: number, whole: readonly stri
     return t(`${x} is a number: it comes before the measure word, ${x}${next}.`, `“${x}”是数词，放在量词前面：${x}${next}。`);
   if (kind === "loc" && piece.length === 1 && hasPrev)
     return t(`${x} goes after the noun of the place: ${prev}${x}.`, `“${x}”放在表示地方的名词后面：${prev}${x}。`);
-  if (kind === "conj" && piece.length === 1 && plain(prev) && hasNext && !JOINERS.has(x))
-    return t(
-      `${x} goes at the head of its part, right after the subject ${prev}: ${prev}${x}${next}.`,
-      `“${x}”放在它那一部分的开头，紧跟在主语${q(prev ?? "")}后面：${prev}${x}${next}。`,
-    );
+  if (kind === "conj" && piece.length === 1 && plain(prev) && hasNext && !JOINERS.has(x)) {
+    let from = start;
+    while (from > 0 && !isMark(whole[from - 1])) from--;
+    let to = start + 1;
+    while (to < whole.length && !isMark(whole[to])) to++;
+    const before = whole.slice(from, start);
+    if (before.every((w) => plain(w) || classOf(w) === "pointer" || classOf(w) === "measure" || classOf(w) === "struct")) {
+      const head = joined(before);
+      const part = joined(whole.slice(from, to));
+      return t(
+        `${x} goes right after ${head}, what this part is about, and before the rest: ${part}.`,
+        `“${x}”紧跟在这一部分所说的对象${q(head)}后面，放在其余词语前面：${part}。`,
+      );
+    }
+  }
   if (kind === "prep" && hasNext)
     return t(
       `A phrase with ${x} goes before the verb: here ${text} comes before ${next}.`,
@@ -183,6 +225,12 @@ function placeRule(piece: readonly string[], start: number, whole: readonly stri
     return t(
       `Here 得 means “must”: like a helping verb, it goes before the main verb, here before ${next}.`,
       `这里的“得”表示“必须”，像能愿动词一样放在主要动词前面，这里在${q(next ?? "")}前面。`,
+    );
+  const comment = whole[start + 2];
+  if (x === "得" && hasPrev && nextKind === "adv" && comment !== undefined && !isMark(comment) && piece.length === 1)
+    return t(
+      `${x} joins ${prev} to the comment on it, ${next}${comment}: ${prev}${x}${next}${comment}.`,
+      `“${x}”把${q(prev ?? "")}和对它的评价${q(`${next}${comment}`)}连起来：${prev}${x}${next}${comment}。`,
     );
   if (kind === "struct" && hasPrev && hasNext && piece.length === 1)
     return t(`${x} joins ${prev} to ${next}: ${prev}${x}${next}.`, `“${x}”连接${q(prev ?? "")}和${q(next ?? "")}：${prev}${x}${next}。`);
@@ -369,11 +417,33 @@ const sameMeaning = (a: Text, b: Text): boolean => {
 /** GLUE are the kinds of grammar words that never stand inside another word. */
 const GLUE: ReadonlySet<string> = new Set(["struct", "aspect", "end", "neg"]);
 
+/** INSIDE are the kinds of grammar words a wrong option may put inside a word. */
+const INSIDE: ReadonlySet<string> = new Set(["struct", "aspect"]);
+
+/** SEPARABLE are the words made of a verb and its object, whose two parts may take 了, 着, 过 or a count between them. */
+const SEPARABLE: ReadonlySet<string> = new Set(
+  "花钱 说话 排队 生气 开车 走路 办事 熬夜 见面 吃饭 睡觉 洗澡 结婚 离婚 帮忙 聊天 跑步 游泳 上课 下课 上班 下班 唱歌 跳舞 打球 考试 毕业 散步 照相 请假 生病 吵架 担心 鼓掌 干杯 握手 理发 发烧 读书 写字 做饭 看病 住院 出院 留学 放假 跑步 抽烟 喝酒 省钱 洗澡 受伤 搬家 起床 下雨 下雪 打针 加班 报名 上网 唱歌 点头 出差 投票".split(
+    " ",
+  ),
+);
+
 /** broken says why a wrong text that is no word, made from a word of the right one with a character lost or changed, fails;
  * undefined when the wrong text is not such a broken word. */
 function broken(r: string, w: string, glossary: Glossary): Text | undefined {
   const rc = [...r];
   const wc = [...w];
+  if (rc.length >= 2 && wc.length === rc.length + 1 && isWord(r, glossary) && !SEPARABLE.has(r)) {
+    for (let i = 1; i < rc.length; i++) {
+      const g = wc[i] ?? "";
+      if (wc.slice(0, i).join("") + wc.slice(i + 1).join("") !== r || !INSIDE.has(classOf(g) ?? "")) continue;
+      const m = meaningOf(r, glossary);
+      const said = m ? t(`, “${m.en}”`, `，意思是“${m["zh-CN"]}”`) : t("", "");
+      return t(
+        `${r} is one word${said.en}, and its characters stay together. ${g} cannot go inside it.`,
+        `${q(r)}是一个词${said["zh-CN"]}，字要连在一起，${q(g)}不能放进中间。`,
+      );
+    }
+  }
   if (rc.length < 2 || !isWord(r, glossary) || isWord(w, glossary) || wc.length > rc.length) return undefined;
   if (wordsOf(w, glossary).every((x) => isWord(x, glossary))) return undefined;
   if (wc[0] !== rc[0] && wc.at(-1) !== rc.at(-1)) return undefined;
@@ -394,6 +464,36 @@ function broken(r: string, w: string, glossary: Glossary): Text | undefined {
   return t(`${head.en} ${tail.en}`, `${head["zh-CN"]}${tail["zh-CN"]}`);
 }
 
+/** IN_CONTEXT are notes on a word that hold only in sentences of a certain shape, tried in order before its usage note:
+ * 也 after 哪怕 or 即使 says the result still holds, not “also”. */
+const IN_CONTEXT: readonly { readonly word: string; readonly cue: RegExp; readonly note: Text }[] = [
+  {
+    word: "也",
+    cue: /宁可/,
+    note: t("goes with 宁可 and names the thing one will not do", "和“宁可”搭配，说出不愿意做的另一件事"),
+  },
+  {
+    word: "也",
+    cue: /连|谁也|一[^，。]{0,4}也[不没]/,
+    note: t("goes with 不 or 没 here and means “not even” or “not at all”", "在这里和“不、没”一起，表示完全否定"),
+  },
+  {
+    word: "也",
+    cue: /哪怕|即使|就算|无论|不管|再[^，。]{1,4}[，]?[^，。]{0,4}也/,
+    note: t("says the result still holds, “even so”", "表示结果仍然不变"),
+  },
+  {
+    word: "再",
+    cue: /再[^，。]{1,4}[，]?[^，。]{0,4}也/,
+    note: t(", with an adjective and then 也, says “however …”, as in 再累也", "和形容词连用，后面接“也”，表示“无论多么……”"),
+  },
+  {
+    word: "再",
+    cue: /不再/,
+    note: t(", after 不, says “no longer”: 不再 means it does not happen any more", "用在“不”后面，“不再”表示以后不这样了"),
+  },
+];
+
 /** replaced says what one word put for another does, and why it fails here. */
 function replaced(d: Difference, glossary: Glossary, whole = true): Text {
   const r = joined(d.right);
@@ -402,7 +502,10 @@ function replaced(d: Difference, glossary: Glossary, whole = true): Text {
   if (written) return written;
   const rw = what(r, glossary);
   const need = (x: Text) => t(`This sentence needs ${x.en}.`, `这里要用${x["zh-CN"]}。`);
+  const sentence = joined(d.whole);
   const named = (x: string): Text | undefined => {
+    const c = IN_CONTEXT.find((n) => n.word === x && n.cue.test(sentence));
+    if (c) return t(`${x}, which ${c.note.en}`, `${q(x)}，它${c.note["zh-CN"]}`);
     const u = usage.get(x);
     if (u) return t(`${x}, which ${u.note.en}`, `${q(x)}，它${u.note["zh-CN"]}`);
     const m = meaningOf(x, glossary);
@@ -537,11 +640,31 @@ function mixed(d: Difference, glossary: Glossary): Text | undefined {
   return t(`${base.en} ${order.en}`, `${base["zh-CN"]}${order["zh-CN"]}`);
 }
 
+/** reasons keeps the reasons already found for each glossary, since the same sentences are explained again and again. */
+const reasons = new WeakMap<Glossary, Map<string, Text>>();
+
 /** reasonOf says what is wrong with a wrong sentence, compared with the right one. */
 export function reasonOf(right: string, wrong: string, glossary: Glossary): Text {
+  let known = reasons.get(glossary);
+  if (!known) {
+    known = new Map();
+    reasons.set(glossary, known);
+  }
+  const key = `${right}\n${wrong}`;
+  const found = known.get(key);
+  if (found) return found;
+  const reason = freshReason(right, wrong, glossary);
+  known.set(key, reason);
+  return reason;
+}
+
+/** freshReason finds the reason reasonOf gives, without looking at those already found. */
+function freshReason(right: string, wrong: string, glossary: Glossary): Text {
   const d = differenceOf(right, wrong, glossary);
   const r = joined(d.right);
   const w = joined(d.wrong);
+  const near = writtenNear(d);
+  if (near) return near;
   if (pairReasons.has(`${r}|${w}`)) return pairReasons.get(`${r}|${w}`)!;
   if (sorted(r) === sorted(w)) return reorder(d, glossary);
   if (w === "") return dropped(d.right, glossary);

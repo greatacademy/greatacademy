@@ -40,6 +40,90 @@ const USAGE = `
   把 | prep | brings the thing acted on before the verb | 把动作的对象提到动词前面
   结果 | conj | opens the part that tells how things turned out | 引出事情最后的结果
   早点儿 | adv | says a bit earlier | 表示早一些
+  以免 | conj | opens a part that says what is to be avoided, “so as not to” | 引出要避免的结果，意思是“免得”
+  尚且 | adv | says even this one is so, before 何况 adds a stronger case | 说这一种情况都如此，后面常用“何况”引出更进一步的情况
+  况且 | conj | adds a further reason | 再补充一个理由
+  此外 | conj | adds something else, “besides this” | 表示除此以外还有别的
+  总之 | conj | sums up what was said, “in short” | 总括上面说的话
+  固然 | adv | grants a point before 但是 turns to another | 承认一个事实，后面用“但是”转到另一层意思
+  难免 | adv | says something is hard to avoid | 说某事不容易避免
+  未必 | adv | says “not necessarily” | 表示“不一定”
+  不见得 | adv | says “not necessarily”, in speech | 口语，表示“不一定”
+  何必 | adv | asks why one needs to, meaning there is no need | 用反问说没有必要
+  何尝 | adv | asks “when did I ever not”, meaning one did | 用反问表示并非不、其实是
+  所谓 | other | brings in a term to be explained, “what is called” | 引出要解释的说法
+  之所以 | conj | opens the result, before 是因为 gives its reason | 先说结果，后面用“是因为”说原因
+  毫无 | neg | means “not any at all”, before a noun | 放在名词前，表示一点儿也没有
+  毫不 | neg | means “not at all”, before a verb or adjective | 放在动词、形容词前，表示一点儿也不
+  加以 | verb | goes before a two-character verb to say it is done to something already named | 放在双音节动词前，表示对前面说到的事物进行这个动作
+  依照 | prep | means “according to”, a rule or a plan | 按照规定、计划等
+  据说 | other | says “it is said”, at the head of a sentence | 用在句首，表示“听别人说”
+  以来 | loc | goes after a time to say “since then until now” | 放在时间后面，表示从那时到现在
+  每当 | conj | opens a part that says “whenever” | 表示“每到……的时候”
+  自从 | prep | marks a time in the past from which something has been so | 引出过去的某个时间，从那时起一直如此
+  倘若 | conj | means “if”, in formal writing | 书面语，表示“如果”
+  纷纷 | adv | says many people or things do it one after another | 说很多人或事物接连这样做
+  偏偏 | adv | says something goes against what one wants or expects | 说事情偏和愿望、预料相反
+  明明 | adv | says something is plainly so, before a turn such as 却 | 说事情明显是这样，后面常有转折
+  难道 | adv | opens a question that expects “of course not” | 用在反问句中，加强反问语气
+  总算 | adv | says something happened at last, after a long time or effort | 说经过很长时间或努力，最后终于实现
+  仿佛 | verb | says something seems like another | 说好像是另一种情况
+  照样 | adv | says something goes on as before, whatever happens | 说情况不变，仍然照旧
+  而言 | other | ends the phrase 对…而言, “for …” | 用在“对……而言”里，表示“从……来说”
+  可谓 | verb | says “one may well call it”, in formal writing | 书面语，表示“可以说是”
+  可见 | conj | opens what follows from the facts, “so we can see” | 引出从前面事实得出的结论
+  由此可见 | conj | opens what follows from the facts just given | 引出由前面事实得出的结论
+  也就是说 | conj | says the same in other words | 换一种说法解释前面的话
+  换句话说 | conj | says the same in other words | 换一种说法解释前面的话
+  幸亏 | adv | says luckily something helped and a bad thing did not happen | 说幸好有某种有利情况，避免了不好的结果
+  恐怕 | adv | says “I am afraid that”, a guess about something unwelcome | 表示估计，多用于不希望发生的事
+  根本 | adv | before 不 or 没, says “not at all” | 用在“不、没”前面，表示完全不
+  完全 | adv | says “completely”, to the full | 表示全部、彻底
+  作为 | prep | means “as”, in the role of | 表示以某种身份
+  成为 | verb | means “to become” | 表示变成
+  有关 | verb | means “to be related to”, after 跟 or 与 | 用在“跟、与”后面，表示有关系
+  某 | pointer | points to a person or thing not named | 指不说出名字的人或事物
+  各 | pointer | means “each, every”, before a measure word or a noun | 放在量词或名词前，表示每一个
+  任何 | pointer | means “any at all”, usually before 都 or 也 | 表示不论哪一个，后面常用“都、也”
+  是否 | adv | asks “whether or not”, in formal writing | 书面语，表示“是不是”
+  再说 | conj | adds another reason, in speech | 口语，再补充一个理由
+  加上 | conj | adds another cause | 再加上一个原因
+  不至于 | adv | says things will not go as far as that | 说不会达到某种程度
+  不得 | modal | says “must not”, in rules | 用在规定里，表示不允许
+  不得不 | modal | says one has to, with no other choice | 表示没有别的办法，只好这样
+  越 | adv | in 越…越…, says one thing grows with another | 用在“越……越……”里，表示程度随着变化
+  则 | conj | means “then”, in formal writing | 书面语，表示“就”
+  亦 | adv | means “also”, in formal writing | 书面语，表示“也”
+  皆 | adv | means “all”, in formal writing | 书面语，表示“都”
+  均 | adv | means “all, without exception”, in formal writing | 书面语，表示“都”
+  已 | adv | means “already”, in formal writing | 书面语，表示“已经”
+  曾 | adv | says something happened before, in formal writing | 书面语，表示曾经
+  仍 | adv | means “still”, in formal writing | 书面语，表示“仍然”
+  并 | adv | before 不 or 没, stresses that it is not so | 用在“不、没”前面，加强否定
+  及 | conj | joins nouns, “and”, in formal writing | 书面语，连接名词
+  与 | conj | joins two nouns, “and”, in formal writing | 书面语，连接两个名词
+  或 | conj | means “or”, in formal writing | 书面语，表示“或者”
+  若 | conj | means “if”, in formal writing | 书面语，表示“如果”
+  不论 | conj | means “no matter”, before a choice or a question word | 后面接选择或疑问词，表示条件不同结果都一样
+  因而 | conj | gives the result, in formal writing | 书面语，说结果
+  从而 | conj | gives the result that follows, in formal writing | 书面语，引出因此达到的结果
+  以至于 | conj | gives how far something went as a result | 说由此达到的程度或结果
+  难以 | modal | says something is hard to do | 表示不容易做到
+  不由得 | adv | says one cannot help doing it | 表示控制不住，忍不住
+  一向 | adv | says something has always been so | 说从来就是这样
+  向来 | adv | says something has always been so | 说从来就是这样
+  始终 | adv | says something stays so from start to end | 说从开始到最后一直如此
+  简直 | adv | says “simply”, to make it stronger | 加强语气，表示完全如此或差不多如此
+  毕竟 | adv | says “after all”, giving the deciding fact | 说出起决定作用的事实
+  反正 | adv | says “anyway”, the result is the same | 说不管怎样，结果都一样
+  好在 | adv | says luckily there is a good side | 说幸好有有利的条件
+  幸好 | adv | says luckily | 表示幸亏
+  务必 | adv | says “be sure to” | 表示一定要
+  必定 | adv | says “surely, certainly” | 表示一定
+  似乎 | adv | says “it seems” | 表示好像
+  似的 | other | ends 像…似的, “as if” | 用在“像……似的”里，表示相像
+  一般 | other | ends 像…一般, “like”, in writing | 用在“像……一般”里，表示相像
+  进行 | verb | goes before a two-character verb, “to carry out”, in formal writing | 书面语，放在双音节动词前，表示从事某种活动
   让 | verb | says someone makes or lets another do something | 说使别人做某事或允许别人做某事
   给 | prep | marks the person who receives something | 引出接受东西的人
   对 | prep | marks who or what an action or a feeling is aimed at | 引出动作、态度所对着的人或事
