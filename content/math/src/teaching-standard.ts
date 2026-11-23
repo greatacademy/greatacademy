@@ -172,4 +172,12 @@ export const taughtTopics: readonly string[] = [
   "roots-of-rational-functions",
   "vertical-asymptotes-of-rational-functions",
   "locating-holes-in-rational-functions",
+  "horizontal-asymptotes-of-rational-functions",
+  "end-behavior-of-rational-functions",
+  "infinite-limits-of-rational-functions",
+  "infinite-limits-of-rational-functions-advanced-cases",
+  "the-domain-and-range-of-a-rational-function",
+  "identifying-a-rational-function-from-a-graph",
+  "identifying-a-rational-function-from-a-graph-containing-holes",
+  "identifying-the-graph-of-a-rational-function",
 ];

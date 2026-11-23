@@ -262,6 +262,46 @@ const nearSign = (f: (x: number) => number, a: number, side: 1 | -1) => Math.sig
 const sideWord = (side: 1 | -1): Text =>
   side > 0 ? t("a tiny positive number", "很小的正数") : t("a tiny negative number", "绝对值很小的负数");
 
+/** limitReasons says what is wrong with each wrong limit option, from the signs of f just left and just right of the point. */
+function limitReasons(left: number, right: number, oneSided: boolean): Reason[] {
+  if (left === right) {
+    const [en, zh] = left > 0 ? ["positive", "正"] : ["negative", "负"];
+    return [
+      why(
+        limitOptions[left > 0 ? 1 : 0]!,
+        `The sign is wrong: the fraction is ${en} ${oneSided ? "on this side of" : "on both sides of"} the asymptote, so it goes to $${infL(left)}$.`,
+        `符号错了：分式在渐近线${oneSided ? "这一侧" : "两侧都"}为${zh}，所以趋于 $${infL(left)}$。`,
+      ),
+      why(
+        limitOptions[2]!,
+        oneSided
+          ? `A one-sided limit looks at one side only, and there the fraction is ${en} and grows without bound: the limit is $${infL(left)}$.`
+          : `Both sides go to $${infL(left)}$, so the two-sided limit is $${infL(left)}$.`,
+        oneSided
+          ? `单侧极限只看一侧，而这一侧分式为${zh}且无界增大：极限是 $${infL(left)}$。`
+          : `两侧都趋于 $${infL(left)}$，所以双侧极限是 $${infL(left)}$。`,
+      ),
+    ];
+  }
+  const side = (s: number): [string, string] => (left === s ? ["left", "左"] : ["right", "右"]);
+  return [1, -1].map((s) =>
+    why(
+      limitOptions[s > 0 ? 0 : 1]!,
+      `Only the ${side(s)[0]} side goes to $${infL(s)}$; the ${side(-s)[0]} side goes to $${infL(-s)}$, so the two-sided limit does not exist.`,
+      `只有${side(s)[1]}侧趋于 $${infL(s)}$；${side(-s)[1]}侧趋于 $${infL(-s)}$，所以双侧极限不存在。`,
+    ),
+  );
+}
+
+/** sideCheck evaluates f a distance d to the given sides of a. */
+function sideCheck(f: (x: number) => number, a: number, sides: readonly (1 | -1)[], d: number): Text {
+  const lines = sides.map((side) => Number((a + side * d).toFixed(2))).map((x) => `f(${x}) \\approx ${approx(f(x))}`);
+  return t(
+    `Try ${sides.length > 1 ? "values" : "a value"} close to $${a}$:${steps(...lines)}The sign${sides.length > 1 ? "s match" : " matches"}, and $|f(x)|$ grows as $x$ gets closer to $${a}$.`,
+    `取接近 $${a}$ 的值：${steps(...lines)}符号一致，且 $x$ 越接近 $${a}$，$|f(x)|$ 越大。`,
+  );
+}
+
 // Graphs.
 
 const view: PlaneView = { xMin: -6, xMax: 6, yMin: -6, yMax: 6 };
@@ -2373,6 +2413,24 @@ In this lesson we find the coordinates of holes from factored and from expanded 
 
 // ─── 2.5.4 Horizontal asymptotes of rational functions ─────────────────────
 
+/** approx writes a number to three significant figures: "3.07", "-0.486". */
+const approx = (v: number) => String(Number(v.toPrecision(3)));
+
+/** scaled writes a·(inner), leaving out a unit coefficient and its parentheses. */
+const scaled = (a: number, inner: string) => (a === 1 ? inner : `${front(a)}(${inner})`);
+
+/** nearCheck compares f at a large x with the value it should approach. */
+const nearCheck = (x: number, fx: number, target: Q): Text =>
+  target.isInteger()
+    ? t(
+        `Try $x = ${x}$:${steps(`f(${x}) \\approx ${approx(fx)}`)}which is close to $${num(target)}$.`,
+        `取 $x = ${x}$：${steps(`f(${x}) \\approx ${approx(fx)}`)}接近 $${num(target)}$。`,
+      )
+    : t(
+        `Try $x = ${x}$:${steps(`f(${x}) \\approx ${approx(fx)}`, `${num(target)} \\approx ${approx(target.toNumber())}`)}The two are close.`,
+        `取 $x = ${x}$：${steps(`f(${x}) \\approx ${approx(fx)}`, `${num(target)} \\approx ${approx(target.toNumber())}`)}两者很接近。`,
+      );
+
 /** ratioText writes a/b as a fraction, followed by its lowest terms when they differ. */
 const ratioText = (a: number, b: number) => {
   const f = frac(String(a), String(b));
@@ -2392,14 +2450,26 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
   encompasses: [],
   xp: 13,
   standards: ["CCSS.HSF.IF.C.7.D"],
+  intro: t(
+    `For $f(x) = \\frac{3x + 1}{x - 2}$, both the numerator and the denominator have degree $1$. When $|x|$ is large, the constants hardly matter and $f(x) \\approx \\frac{3x}{x} = 3$. So the graph levels off at the line $y = 3$, its horizontal asymptote.
+
+Check: $f(100) = \\frac{301}{98} \\approx 3.07$ and $f(1000) = \\frac{3001}{998} \\approx 3.007$, closer and closer to $3$.
+
+In this lesson we find the horizontal asymptote when the degrees are equal, decide it by comparing the degrees in general, and read it from factored forms without expanding.`,
+    `对 $f(x) = \\frac{3x + 1}{x - 2}$，分子和分母都是一次。当 $|x|$ 很大时，常数几乎不起作用，$f(x) \\approx \\frac{3x}{x} = 3$。所以图象逐渐贴近直线 $y = 3$，这就是它的水平渐近线。
+
+检验：$f(100) = \\frac{301}{98} \\approx 3.07$，$f(1000) = \\frac{3001}{998} \\approx 3.007$，越来越接近 $3$。
+
+这节课我们求次数相等时的水平渐近线，一般地通过比较次数判断水平渐近线，并不展开而直接由因式分解形式读出它。`,
+  ),
   knowledgePoints: [
     {
       id: "equal-degrees",
       figure: precalculusDrawings["horizontal-asymptotes-of-rational-functions#equal-degrees"],
       title: t("Equal degrees", "次数相等"),
       explanation: t(
-        "For large $|x|$, every polynomial is dominated by its leading term. So when the numerator and the denominator have the **same degree**,\n\n$$f(x) = \\frac{6x^{2} - x + 5}{3 - 4x^{2}} \\approx \\frac{6x^{2}}{-4x^{2}} = -\\frac{3}{2}$$\n\nand $f(x) \\to -\\frac{3}{2}$ as $x \\to \\pm\\infty$. The horizontal asymptote is $y = -\\frac{3}{2}$, the ratio of the **leading** coefficients. Find the leading terms carefully when the terms are not in order.",
-        "当 $|x|$ 很大时，每个多项式都由首项（最高次项）主导。所以当分子与分母**次数相同**时，\n\n$$f(x) = \\frac{6x^{2} - x + 5}{3 - 4x^{2}} \\approx \\frac{6x^{2}}{-4x^{2}} = -\\frac{3}{2}$$\n\n当 $x \\to \\pm\\infty$ 时 $f(x) \\to -\\frac{3}{2}$。水平渐近线是 $y = -\\frac{3}{2}$，即两个**首项**系数之比。各项没有按次序排列时，要仔细找出首项。",
+        "For large $|x|$, every polynomial is dominated by its leading term. So when the numerator and the denominator have the **same degree**,\n\n$$f(x) = \\frac{6x^{2} - x + 5}{3 - 4x^{2}} \\approx \\frac{6x^{2}}{-4x^{2}} = -\\frac{3}{2}$$\n\nand $f(x) \\to -\\frac{3}{2}$ as $x \\to \\pm\\infty$. The horizontal asymptote is $y = -\\frac{3}{2}$, the ratio of the **leading** coefficients. Find the leading terms carefully when the terms are not in order.\n\nFor $f(x) = \\frac{5 - 2x}{4x + 1}$, the leading terms are $-2x$ and $4x$, so the horizontal asymptote is $y = \\frac{-2}{4} = -\\frac{1}{2}$. Check: $f(100) = \\frac{-195}{401} \\approx -0.486$, close to $-0.5$.\n\n> **Watch out.** The ratio of the constant terms, here $\\frac{5}{1}$, is $f(0)$, the $y$-intercept, not the asymptote. Take each leading coefficient with its sign.",
+        "当 $|x|$ 很大时，每个多项式都由首项（最高次项）主导。所以当分子与分母**次数相同**时，\n\n$$f(x) = \\frac{6x^{2} - x + 5}{3 - 4x^{2}} \\approx \\frac{6x^{2}}{-4x^{2}} = -\\frac{3}{2}$$\n\n当 $x \\to \\pm\\infty$ 时 $f(x) \\to -\\frac{3}{2}$。水平渐近线是 $y = -\\frac{3}{2}$，即两个**首项**系数之比。各项没有按次序排列时，要仔细找出首项。\n\n对 $f(x) = \\frac{5 - 2x}{4x + 1}$，首项是 $-2x$ 和 $4x$，所以水平渐近线是 $y = \\frac{-2}{4} = -\\frac{1}{2}$。检验：$f(100) = \\frac{-195}{401} \\approx -0.486$，接近 $-0.5$。\n\n> **注意。** 常数项之比（这里是 $\\frac{5}{1}$）是 $f(0)$，即 $y$ 轴截距，不是渐近线。首项系数要连同符号一起取。",
       ),
       generate(rng) {
         for (;;) {
@@ -2418,9 +2488,22 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
             answer,
             solveFor: "y",
             wrong: [Q.of(b, a), ...(D[0] !== 0 ? [Q.of(N[0]!, D[0]!)] : []), 0, 1],
-            solution: t(
-              `The numerator and the denominator both have degree $${n}$. The leading terms are $${poly([a, termOf(n)])}$ and $${poly([b, termOf(n)])}$, so the horizontal asymptote is $y = ${ratioText(a, b)}$.`,
-              `分子和分母都是 $${n}$ 次。首项分别是 $${poly([a, termOf(n)])}$ 和 $${poly([b, termOf(n)])}$，所以水平渐近线是 $y = ${ratioText(a, b)}$。`,
+            solution: walked(
+              [
+                [
+                  ["Compare the degrees", "比较次数"],
+                  t(
+                    `The numerator and the denominator both have degree $${n}$, so for large $|x|$ only the leading terms matter.`,
+                    `分子和分母都是 $${n}$ 次，所以当 $|x|$ 很大时只有首项起作用。`,
+                  ),
+                ],
+                [
+                  ["Divide the leading terms", "首项相除"],
+                  t(`The leading terms are $${lead1(a, n)}$ and $${lead1(b, n)}$:`, `首项分别是 $${lead1(a, n)}$ 和 $${lead1(b, n)}$：`),
+                  [`y = ${frac(lead1(a, n), lead1(b, n))} = ${num(answer)}`],
+                ],
+              ],
+              nearCheck(1000, at(N, 1000) / at(D, 1000), answer),
             ),
           });
         }
@@ -2431,8 +2514,8 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
       figure: precalculusDrawings["horizontal-asymptotes-of-rational-functions#comparing-degrees"],
       title: t("Comparing degrees", "比较次数"),
       explanation: t(
-        "Let $n$ be the degree of the numerator and $m$ the degree of the denominator.\n\n- $n < m$: the denominator grows faster, $f(x) \\to 0$, and the horizontal asymptote is $y = 0$.\n- $n = m$: the horizontal asymptote is $y = \\frac{a}{b}$, the ratio of the leading coefficients.\n- $n > m$: $|f(x)|$ grows without bound, and there is **no** horizontal asymptote.\n\nFor example, $\\frac{5x + 1}{x^{2} - 4}$ has $y = 0$, $\\frac{5x^{2} + 1}{x^{2} - 4}$ has $y = 5$, and $\\frac{5x^{3} + 1}{x^{2} - 4}$ has none.",
-        "设分子的次数为 $n$，分母的次数为 $m$。\n\n- $n < m$：分母增长得更快，$f(x) \\to 0$，水平渐近线是 $y = 0$。\n- $n = m$：水平渐近线是 $y = \\frac{a}{b}$，即首项系数之比。\n- $n > m$：$|f(x)|$ 无界增大，**没有**水平渐近线。\n\n例如 $\\frac{5x + 1}{x^{2} - 4}$ 的水平渐近线是 $y = 0$，$\\frac{5x^{2} + 1}{x^{2} - 4}$ 的是 $y = 5$，$\\frac{5x^{3} + 1}{x^{2} - 4}$ 没有水平渐近线。",
+        "Let $n$ be the degree of the numerator and $m$ the degree of the denominator.\n\n- $n < m$: the denominator grows faster, $f(x) \\to 0$, and the horizontal asymptote is $y = 0$.\n- $n = m$: the horizontal asymptote is $y = \\frac{a}{b}$, the ratio of the leading coefficients.\n- $n > m$: $|f(x)|$ grows without bound, and there is **no** horizontal asymptote.\n\nFor example, $\\frac{5x + 1}{x^{2} - 4}$ has $y = 0$, $\\frac{5x^{2} + 1}{x^{2} - 4}$ has $y = 5$, and $\\frac{5x^{3} + 1}{x^{2} - 4}$ has none.\n\nFor $f(x) = \\frac{2x^{2} - 3}{x^{3} + x}$, the numerator has degree $2$ and the denominator degree $3$, so the horizontal asymptote is $y = 0$. Check: $f(10) = \\frac{197}{1010} \\approx 0.195$ and $f(20) = \\frac{797}{8020} \\approx 0.099$, shrinking towards $0$.\n\n> **Watch out.** Compare the degrees first. The ratio of the leading coefficients is the asymptote only when the degrees are equal; a higher degree on top means there is no horizontal asymptote at all.",
+        "设分子的次数为 $n$，分母的次数为 $m$。\n\n- $n < m$：分母增长得更快，$f(x) \\to 0$，水平渐近线是 $y = 0$。\n- $n = m$：水平渐近线是 $y = \\frac{a}{b}$，即首项系数之比。\n- $n > m$：$|f(x)|$ 无界增大，**没有**水平渐近线。\n\n例如 $\\frac{5x + 1}{x^{2} - 4}$ 的水平渐近线是 $y = 0$，$\\frac{5x^{2} + 1}{x^{2} - 4}$ 的是 $y = 5$，$\\frac{5x^{3} + 1}{x^{2} - 4}$ 没有水平渐近线。\n\n对 $f(x) = \\frac{2x^{2} - 3}{x^{3} + x}$，分子是 $2$ 次，分母是 $3$ 次，所以水平渐近线是 $y = 0$。检验：$f(10) = \\frac{197}{1010} \\approx 0.195$，$f(20) = \\frac{797}{8020} \\approx 0.099$，逐渐缩小趋于 $0$。\n\n> **注意。** 先比较次数。只有次数相等时，首项系数之比才是渐近线；分子次数更高时根本没有水平渐近线。",
       ),
       generate(rng) {
         const m = rng.int(1, 3);
@@ -2452,20 +2535,74 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
           ),
           right,
           wrong,
-          n < m
-            ? t(
-                `The numerator has degree $${n}$, less than the degree $${m}$ of the denominator, so $f(x) \\to 0$: the horizontal asymptote is $y = 0$.`,
-                `分子的次数 $${n}$ 小于分母的次数 $${m}$，所以 $f(x) \\to 0$：水平渐近线是 $y = 0$。`,
-              )
-            : n === m
-              ? t(
-                  `Both have degree $${n}$, so the horizontal asymptote is the ratio of the leading coefficients: $y = ${ratioText(a, b)}$.`,
-                  `两者都是 $${n}$ 次，所以水平渐近线是首项系数之比：$y = ${ratioText(a, b)}$。`,
-                )
-              : t(
-                  `The numerator has degree $${n}$, more than the degree $${m}$ of the denominator, so $|f(x)|$ grows without bound: there is no horizontal asymptote.`,
-                  `分子的次数 $${n}$ 大于分母的次数 $${m}$，所以 $|f(x)|$ 无界增大：没有水平渐近线。`,
+          walked(
+            [
+              [
+                ["Compare the degrees", "比较次数"],
+                t(
+                  `The numerator has degree $${n}$ and the denominator has degree $${m}$${n < m ? `, so the denominator grows faster` : n === m ? ": they are equal" : `, so the numerator grows faster`}.`,
+                  `分子是 $${n}$ 次，分母是 $${m}$ 次${n < m ? "，所以分母增长得更快" : n === m ? "：两者相等" : "，所以分子增长得更快"}。`,
                 ),
+              ],
+              n < m
+                ? [
+                    ["Read the asymptote", "读出渐近线"],
+                    t(
+                      "So $f(x) \\to 0$ at both ends: the horizontal asymptote is $y = 0$.",
+                      "所以在两端 $f(x) \\to 0$：水平渐近线是 $y = 0$。",
+                    ),
+                  ]
+                : n === m
+                  ? [
+                      ["Divide the leading coefficients", "首项系数相除"],
+                      t("The horizontal asymptote is the ratio of the leading coefficients:", "水平渐近线是首项系数之比："),
+                      [`y = ${ratioText(a, b)}`],
+                    ]
+                  : [
+                      ["Read the end behavior", "读出端点行为"],
+                      t("So $|f(x)|$ grows without bound: there is no horizontal asymptote.", "所以 $|f(x)|$ 无界增大：没有水平渐近线。"),
+                    ],
+            ],
+            n < m
+              ? nearCheck(100, at(N, 100) / at(D, 100), Q.zero)
+              : n === m
+                ? nearCheck(1000, at(N, 1000) / at(D, 1000), Q.of(a, b))
+                : t(
+                    `For large $|x|$ the leading terms give${steps(`${frac(lead1(a, n), lead1(b, m))} = ${poly([Q.of(a, b), termOf(n - m)])}`)}which is unbounded.`,
+                    `当 $|x|$ 很大时，由首项得${steps(`${frac(lead1(a, n), lead1(b, m))} = ${poly([Q.of(a, b), termOf(n - m)])}`)}它无界。`,
+                  ),
+          ),
+          [
+            why(
+              yIs(Q.zero),
+              `$y = 0$ is the asymptote when the numerator has the lower degree; here it has degree $${n}$ against $${m}$.`,
+              `分子次数较低时渐近线才是 $y = 0$；这里分子是 $${n}$ 次，分母是 $${m}$ 次。`,
+            ),
+            why(
+              none,
+              `There is no horizontal asymptote only when the numerator has the higher degree; here it has degree $${n}$ against $${m}$.`,
+              `只有分子次数更高时才没有水平渐近线；这里分子是 $${n}$ 次，分母是 $${m}$ 次。`,
+            ),
+            why(
+              yIs(Q.of(a, b)),
+              `The ratio of the leading coefficients is the asymptote only when the degrees are equal; here they are $${n}$ and $${m}$.`,
+              `只有次数相等时首项系数之比才是渐近线；这里次数是 $${n}$ 和 $${m}$。`,
+            ),
+            why(
+              yIs(Q.of(b, a)),
+              "This divides the denominator's leading coefficient by the numerator's: the ratio is upside down.",
+              "这是用分母的首项系数除以分子的首项系数：比倒过来了。",
+            ),
+            ...(D[0] !== 0
+              ? [
+                  why(
+                    yIs(Q.of(N[0]!, D[0]!)),
+                    "This is the ratio of the constant terms, $f(0)$: the $y$-intercept, not the value for large $|x|$.",
+                    "这是常数项之比，即 $f(0)$：$y$ 轴截距，而不是 $|x|$ 很大时的值。",
+                  ),
+                ]
+              : []),
+          ],
         );
       },
     },
@@ -2473,8 +2610,8 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
       id: "horizontal-asymptotes-of-factored-functions",
       title: t("Factored forms", "因式分解形式"),
       explanation: t(
-        "When the function is written as a product of factors, you do not need to expand it: the leading coefficient of a product is the product of the leading coefficients of its factors. Watch factors written backward, such as $3 - 2x$, whose leading coefficient is $-2$.\n\n$$f(x) = \\frac{(2x - 1)(3 - x)}{(3x + 1)(x + 4)}: \\quad y = \\frac{2 \\cdot (-1)}{3 \\cdot 1} = -\\frac{2}{3}$$",
-        "函数写成因式乘积时不必展开：乘积的首项系数等于各因式首项系数之积。注意倒着写的因式，如 $3 - 2x$ 的首项系数是 $-2$。\n\n$$f(x) = \\frac{(2x - 1)(3 - x)}{(3x + 1)(x + 4)}: \\quad y = \\frac{2 \\cdot (-1)}{3 \\cdot 1} = -\\frac{2}{3}$$",
+        "When the function is written as a product of factors, you do not need to expand it: the leading coefficient of a product is the product of the leading coefficients of its factors. Watch factors written backward, such as $3 - 2x$, whose leading coefficient is $-2$.\n\n$$f(x) = \\frac{(2x - 1)(3 - x)}{(3x + 1)(x + 4)}: \\quad y = \\frac{2 \\cdot (-1)}{3 \\cdot 1} = -\\frac{2}{3}$$\n\nFor $f(x) = \\frac{(3x + 2)(1 - x)}{(x - 4)(2x + 5)}$, the leading coefficients are $3 \\cdot (-1) = -3$ and $1 \\cdot 2 = 2$, so $y = -\\frac{3}{2}$. Check: $f(100) = \\frac{302 \\cdot (-99)}{96 \\cdot 205} \\approx -1.52$, close to $-1.5$.\n\n> **Watch out.** In a factor written backward, such as $1 - x$, the leading coefficient is $-1$, not $1$. The constant terms give $f(0)$, not the asymptote.",
+        "函数写成因式乘积时不必展开：乘积的首项系数等于各因式首项系数之积。注意倒着写的因式，如 $3 - 2x$ 的首项系数是 $-2$。\n\n$$f(x) = \\frac{(2x - 1)(3 - x)}{(3x + 1)(x + 4)}: \\quad y = \\frac{2 \\cdot (-1)}{3 \\cdot 1} = -\\frac{2}{3}$$\n\n对 $f(x) = \\frac{(3x + 2)(1 - x)}{(x - 4)(2x + 5)}$，首项系数分别是 $3 \\cdot (-1) = -3$ 和 $1 \\cdot 2 = 2$，所以 $y = -\\frac{3}{2}$。检验：$f(100) = \\frac{302 \\cdot (-99)}{96 \\cdot 205} \\approx -1.52$，接近 $-1.5$。\n\n> **注意。** 倒着写的因式如 $1 - x$，首项系数是 $-1$ 而不是 $1$。常数项给出的是 $f(0)$，不是渐近线。",
       ),
       generate(rng) {
         for (;;) {
@@ -2498,9 +2635,28 @@ export const horizontalAsymptotesOfRationalFunctions: TopicDef = {
             answer,
             solveFor: "y",
             wrong: [Q.of(lead * b1 * b2, d1 * d2), answer.neg(), ...(c1 + c2 !== 0 ? [Q.of(lead * (a1 + a2), c1 + c2)] : [])],
-            solution: t(
-              `Both have degree $2$. The leading coefficient of the numerator is $${lead === 1 ? "" : `${paren(lead)} \\cdot `}${paren(a1)} \\cdot ${paren(a2)} = ${lead * a1 * a2}$ and that of the denominator is $${paren(c1)} \\cdot ${paren(c2)} = ${c1 * c2}$, so the horizontal asymptote is $y = ${num(answer)}$.`,
-              `分子和分母都是二次。分子的首项系数是 $${lead === 1 ? "" : `${paren(lead)} \\cdot `}${paren(a1)} \\cdot ${paren(a2)} = ${lead * a1 * a2}$，分母的首项系数是 $${paren(c1)} \\cdot ${paren(c2)} = ${c1 * c2}$，所以水平渐近线是 $y = ${num(answer)}$。`,
+            solution: walked(
+              [
+                [
+                  ["Compare the degrees", "比较次数"],
+                  t(
+                    "The numerator and the denominator are each a product of two linear factors, so both have degree $2$.",
+                    "分子和分母都是两个一次因式之积，所以都是二次。",
+                  ),
+                ],
+                [
+                  ["Multiply the leading coefficients", "首项系数相乘"],
+                  t(
+                    "The leading coefficient of a product is the product of the leading coefficients:",
+                    "乘积的首项系数等于各因式首项系数之积：",
+                  ),
+                  [
+                    `${lead === 1 ? "" : `${paren(lead)} \\cdot `}${paren(a1)} \\cdot ${paren(a2)} = ${lead * a1 * a2}, \\quad ${paren(c1)} \\cdot ${paren(c2)} = ${c1 * c2}`,
+                    `y = ${ratioText(lead * a1 * a2, c1 * c2)}`,
+                  ],
+                ],
+              ],
+              nearCheck(1000, (lead * (a1 * 1000 + b1) * (a2 * 1000 + b2)) / ((c1 * 1000 + d1) * (c2 * 1000 + d2)), answer),
             ),
           });
         }
@@ -2548,14 +2704,26 @@ export const endBehaviorOfRationalFunctions: TopicDef = {
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.D"],
+  intro: t(
+    `Divide $f(x) = \\frac{x^{2} + 1}{x}$ term by term: $f(x) = x + \\frac{1}{x}$. As $x \\to \\pm\\infty$ the part $\\frac{1}{x}$ tends to $0$, so the graph gets closer and closer to the line $y = x$. It has no horizontal asymptote, but it follows a slant one.
+
+Check: $f(10) = \\frac{101}{10} = 10.1$, just above the line's value $10$.
+
+In this lesson we find limits at infinity, describe the end behavior when the numerator has the higher degree, and find slant asymptotes by division.`,
+    `把 $f(x) = \\frac{x^{2} + 1}{x}$ 逐项相除：$f(x) = x + \\frac{1}{x}$。当 $x \\to \\pm\\infty$ 时 $\\frac{1}{x}$ 趋于 $0$，所以图象越来越接近直线 $y = x$。它没有水平渐近线，但沿一条斜渐近线变化。
+
+检验：$f(10) = \\frac{101}{10} = 10.1$，略高于直线上的值 $10$。
+
+这节课我们求无穷远处的极限，描述分子次数更高时的端点行为，并用除法求斜渐近线。`,
+  ),
   knowledgePoints: [
     {
       id: "limits-at-infinity",
       figure: precalculusDrawings["end-behavior-of-rational-functions#limits-at-infinity"],
       title: t("Limits at infinity", "无穷远处的极限"),
       explanation: t(
-        "$\\lim_{x \\to \\infty} f(x) = L$ means that $f(x)$ gets as close to $L$ as we like when $x$ is large enough; $\\lim_{x \\to -\\infty}$ is the same for large negative $x$. For a rational function whose numerator degree is at most the denominator degree, the limit at both ends is the horizontal asymptote:\n\n$$\\lim_{x \\to -\\infty} \\frac{4x^{3} - 1}{2x^{3} + x} = \\frac{4}{2} = 2, \\qquad \\lim_{x \\to \\infty} \\frac{4x - 1}{2x^{3} + x} = 0$$",
-        "$\\lim_{x \\to \\infty} f(x) = L$ 表示只要 $x$ 足够大，$f(x)$ 就可以任意接近 $L$；$\\lim_{x \\to -\\infty}$ 则对绝对值很大的负数 $x$ 而言。对分子次数不超过分母次数的分式函数，两端的极限都是水平渐近线的值：\n\n$$\\lim_{x \\to -\\infty} \\frac{4x^{3} - 1}{2x^{3} + x} = \\frac{4}{2} = 2, \\qquad \\lim_{x \\to \\infty} \\frac{4x - 1}{2x^{3} + x} = 0$$",
+        "$\\lim_{x \\to \\infty} f(x) = L$ means that $f(x)$ gets as close to $L$ as we like when $x$ is large enough; $\\lim_{x \\to -\\infty}$ is the same for large negative $x$. For a rational function whose numerator degree is at most the denominator degree, the limit at both ends is the horizontal asymptote:\n\n$$\\lim_{x \\to -\\infty} \\frac{4x^{3} - 1}{2x^{3} + x} = \\frac{4}{2} = 2, \\qquad \\lim_{x \\to \\infty} \\frac{4x - 1}{2x^{3} + x} = 0$$\n\nFor $\\lim_{x \\to \\infty} \\frac{3x^{2} - 5}{1 - 6x^{2}}$, both have degree $2$, so the limit is $\\frac{3}{-6} = -\\frac{1}{2}$. Check: at $x = 10$ the fraction is $\\frac{295}{-599} \\approx -0.492$.\n\n> **Watch out.** When the numerator has the lower degree the limit is $0$, not the ratio of the leading coefficients. The constant terms never decide a limit at infinity.",
+        "$\\lim_{x \\to \\infty} f(x) = L$ 表示只要 $x$ 足够大，$f(x)$ 就可以任意接近 $L$；$\\lim_{x \\to -\\infty}$ 则对绝对值很大的负数 $x$ 而言。对分子次数不超过分母次数的分式函数，两端的极限都是水平渐近线的值：\n\n$$\\lim_{x \\to -\\infty} \\frac{4x^{3} - 1}{2x^{3} + x} = \\frac{4}{2} = 2, \\qquad \\lim_{x \\to \\infty} \\frac{4x - 1}{2x^{3} + x} = 0$$\n\n对 $\\lim_{x \\to \\infty} \\frac{3x^{2} - 5}{1 - 6x^{2}}$，两者都是二次，所以极限是 $\\frac{3}{-6} = -\\frac{1}{2}$。检验：$x = 10$ 时分式等于 $\\frac{295}{-599} \\approx -0.492$。\n\n> **注意。** 分子次数较低时极限是 $0$，而不是首项系数之比。常数项决定不了无穷远处的极限。",
       ),
       generate(rng) {
         for (;;) {
@@ -2571,16 +2739,32 @@ export const endBehaviorOfRationalFunctions: TopicDef = {
             prompt: t(`Find $\\lim_{x \\to ${dir}} ${frac(pl(N), pl(D))}$.`, `求 $\\lim_{x \\to ${dir}} ${frac(pl(N), pl(D))}$。`),
             answer,
             wrong: [Q.of(a, b), Q.of(b, a), ...(D[0] !== 0 ? [Q.of(N[0]!, D[0]!)] : []), Q.zero],
-            solution:
-              n < m
-                ? t(
-                    `The numerator has lower degree ($${n}$) than the denominator ($${m}$), so the fraction approaches $0$ at both ends. The limit is $0$.`,
-                    `分子的次数（$${n}$）低于分母的次数（$${m}$），所以分式在两端都趋于 $0$。极限是 $0$。`,
-                  )
-                : t(
-                    `Both have degree $${n}$, so the limit at either end is the ratio of the leading coefficients: $${ratioText(a, b)}$.`,
-                    `两者都是 $${n}$ 次，所以在任一端的极限都是首项系数之比：$${ratioText(a, b)}$。`,
-                  ),
+            solution: walked(
+              [
+                [
+                  ["Compare the degrees", "比较次数"],
+                  n < m
+                    ? t(
+                        `The numerator has lower degree ($${n}$) than the denominator ($${m}$), so the fraction tends to $0$ at both ends.`,
+                        `分子的次数（$${n}$）低于分母的次数（$${m}$），所以分式在两端都趋于 $0$。`,
+                      )
+                    : t(
+                        `Both have degree $${n}$, so for large $|x|$ only the leading terms matter.`,
+                        `两者都是 $${n}$ 次，所以当 $|x|$ 很大时只有首项起作用。`,
+                      ),
+                ],
+                [
+                  ["Take the limit", "求极限"],
+                  n < m ? t("So:", "所以：") : t("The limit is the ratio of the leading coefficients:", "极限是首项系数之比："),
+                  [
+                    n < m
+                      ? `\\lim_{x \\to ${dir}} f(x) = 0`
+                      : `\\lim_{x \\to ${dir}} f(x) = ${frac(lead1(a, n), lead1(b, n))} = ${num(answer)}`,
+                  ],
+                ],
+              ],
+              ((x) => nearCheck(x, at(N, x) / at(D, x), answer))((dir === "\\infty" ? 1 : -1) * (n < m ? 100 : 1000)),
+            ),
           });
         }
       },
@@ -2589,8 +2773,8 @@ export const endBehaviorOfRationalFunctions: TopicDef = {
       id: "unbounded-end-behavior",
       title: t("Unbounded end behavior", "无界的端点行为"),
       explanation: t(
-        "When the numerator has the higher degree, $f(x)$ behaves at both ends like the quotient of the leading terms, a power of $x$:\n\n$$f(x) = \\frac{-2x^{4} + x}{x^{2} - 5} \\approx \\frac{-2x^{4}}{x^{2}} = -2x^{2}$$\n\nSo $f(x) \\to -\\infty$ as $x \\to \\infty$ and as $x \\to -\\infty$. For an odd power such as $3x$, the two ends go in opposite directions.",
-        "当分子次数更高时，$f(x)$ 在两端的行为与两个首项之商（$x$ 的一个幂）相同：\n\n$$f(x) = \\frac{-2x^{4} + x}{x^{2} - 5} \\approx \\frac{-2x^{4}}{x^{2}} = -2x^{2}$$\n\n所以当 $x \\to \\infty$ 和 $x \\to -\\infty$ 时都有 $f(x) \\to -\\infty$。对奇次幂如 $3x$，两端趋向相反。",
+        "When the numerator has the higher degree, $f(x)$ behaves at both ends like the quotient of the leading terms, a power of $x$:\n\n$$f(x) = \\frac{-2x^{4} + x}{x^{2} - 5} \\approx \\frac{-2x^{4}}{x^{2}} = -2x^{2}$$\n\nSo $f(x) \\to -\\infty$ as $x \\to \\infty$ and as $x \\to -\\infty$. For an odd power such as $3x$, the two ends go in opposite directions.\n\nFor $f(x) = \\frac{3x^{3} - 1}{x^{2} + 2} \\approx \\frac{3x^{3}}{x^{2}} = 3x$, an odd power with a positive coefficient: $f(x) \\to \\infty$ as $x \\to \\infty$ and $f(x) \\to -\\infty$ as $x \\to -\\infty$. Check: $f(10) = \\frac{2999}{102} \\approx 29.4 > 0$ and $f(-10) = \\frac{-3001}{102} \\approx -29.4 < 0$.\n\n> **Watch out.** Divide the leading terms with their signs: a negative leading coefficient in the denominator flips both ends. Only the power left over, $n - m$, decides whether the two ends agree.",
+        "当分子次数更高时，$f(x)$ 在两端的行为与两个首项之商（$x$ 的一个幂）相同：\n\n$$f(x) = \\frac{-2x^{4} + x}{x^{2} - 5} \\approx \\frac{-2x^{4}}{x^{2}} = -2x^{2}$$\n\n所以当 $x \\to \\infty$ 和 $x \\to -\\infty$ 时都有 $f(x) \\to -\\infty$。对奇次幂如 $3x$，两端趋向相反。\n\n对 $f(x) = \\frac{3x^{3} - 1}{x^{2} + 2} \\approx \\frac{3x^{3}}{x^{2}} = 3x$，这是系数为正的奇次幂：当 $x \\to \\infty$ 时 $f(x) \\to \\infty$，当 $x \\to -\\infty$ 时 $f(x) \\to -\\infty$。检验：$f(10) = \\frac{2999}{102} \\approx 29.4 > 0$，$f(-10) = \\frac{-3001}{102} \\approx -29.4 < 0$。\n\n> **注意。** 首项要连同符号相除：分母首项系数为负会让两端都反过来。只有剩下的次数 $n - m$ 决定两端是否同向。",
       ),
       generate(rng) {
         const m = rng.int(1, 2);
@@ -2602,15 +2786,62 @@ export const endBehaviorOfRationalFunctions: TopicDef = {
         const s = Math.sign(a * b);
         const atMinus = k % 2 === 0 ? s : -s;
         const lead = Q.of(a, b);
-        return choiceProblem({
-          prompt: t(`Describe the end behavior of $f(x) = ${frac(pl(N), pl(D))}$.`, `描述 $f(x) = ${frac(pl(N), pl(D))}$ 的端点行为。`),
-          options: endOptions,
-          correct: endIndex(s, atMinus),
-          solution: t(
-            `For large $|x|$, $f(x) \\approx ${frac(poly([a, termOf(n)]), poly([b, termOf(m)]))} = ${poly([lead, termOf(k)])}$. ${k === 2 ? "An even power has the same sign at both ends" : "An odd power changes sign between the ends"}, so $f(x) \\to ${infL(s)}$ as $x \\to \\infty$ and $f(x) \\to ${infL(atMinus)}$ as $x \\to -\\infty$.`,
-            `当 $|x|$ 很大时，$f(x) \\approx ${frac(poly([a, termOf(n)]), poly([b, termOf(m)]))} = ${poly([lead, termOf(k)])}$。${k === 2 ? "偶次幂在两端符号相同" : "奇次幂在两端符号相反"}，所以当 $x \\to \\infty$ 时 $f(x) \\to ${infL(s)}$，当 $x \\to -\\infty$ 时 $f(x) \\to ${infL(atMinus)}$。`,
-          ),
-        });
+        const correct = endIndex(s, atMinus);
+        const quotient = poly([lead, termOf(k)]);
+        const far = (x: number) => at(N, x) / at(D, x);
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Describe the end behavior of $f(x) = ${frac(pl(N), pl(D))}$.`, `描述 $f(x) = ${frac(pl(N), pl(D))}$ 的端点行为。`),
+            options: endOptions,
+            correct,
+            solution: walked(
+              [
+                [
+                  ["Divide the leading terms", "首项相除"],
+                  t("For large $|x|$ only the leading terms matter:", "当 $|x|$ 很大时只有首项起作用："),
+                  [`f(x) \\approx ${frac(lead1(a, n), lead1(b, m))} = ${quotient}`],
+                ],
+                [
+                  ["Read each end", "读出两端"],
+                  t(
+                    `${k === 2 ? "An even power has the same sign at both ends" : "An odd power changes sign between the ends"}, so $f(x) \\to ${infL(s)}$ as $x \\to \\infty$ and $f(x) \\to ${infL(atMinus)}$ as $x \\to -\\infty$.`,
+                    `${k === 2 ? "偶次幂在两端符号相同" : "奇次幂在两端符号相反"}，所以当 $x \\to \\infty$ 时 $f(x) \\to ${infL(s)}$，当 $x \\to -\\infty$ 时 $f(x) \\to ${infL(atMinus)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Far out the signs agree:${steps(`f(100) ${far(100) > 0 ? ">" : "<"} 0, \\quad f(-100) ${far(-100) > 0 ? ">" : "<"} 0`)}`,
+                `离原点很远时符号一致：${steps(`f(100) ${far(100) > 0 ? ">" : "<"} 0, \\quad f(-100) ${far(-100) > 0 ? ">" : "<"} 0`)}`,
+              ),
+            ),
+          }),
+          endOptions.flatMap((option, i) => {
+            if (i === correct) return [];
+            const [up, down] = (
+              [
+                [1, 1],
+                [-1, -1],
+                [1, -1],
+                [-1, 1],
+              ] as const
+            )[i]!;
+            return (up === down) !== (s === atMinus)
+              ? [
+                  why(
+                    option,
+                    `The quotient $${quotient}$ is an ${k === 2 ? "even power of $x$, so both ends go the same way" : "odd power of $x$, so the two ends go opposite ways"}.`,
+                    `商 $${quotient}$ 是 $x$ 的${k === 2 ? "偶次幂，所以两端趋向相同" : "奇次幂，所以两端趋向相反"}。`,
+                  ),
+                ]
+              : [
+                  why(
+                    option,
+                    `The signs are reversed: the coefficient of $${quotient}$ is ${s > 0 ? "positive" : "negative"}, so $f(x) \\to ${infL(s)}$ as $x \\to \\infty$.`,
+                    `符号反了：$${quotient}$ 的系数${s > 0 ? "为正" : "为负"}，所以当 $x \\to \\infty$ 时 $f(x) \\to ${infL(s)}$。`,
+                  ),
+                ];
+          }),
+        );
       },
     },
     {
@@ -2618,8 +2849,8 @@ export const endBehaviorOfRationalFunctions: TopicDef = {
       figure: precalculusDrawings["end-behavior-of-rational-functions#slant-asymptotes"],
       title: t("Slant asymptotes", "斜渐近线"),
       explanation: t(
-        "When the numerator's degree is exactly one more than the denominator's, divide. The quotient is a linear function, and the remainder over the denominator tends to $0$, so the graph approaches the line $y = $ quotient: a **slant** (oblique) **asymptote**.\n\n$$f(x) = \\frac{2x^{2} - 3x + 4}{x - 2} = 2x + 1 + \\frac{6}{x - 2}$$\n\nAs $x \\to \\pm\\infty$, $\\frac{6}{x - 2} \\to 0$, so the slant asymptote is $y = 2x + 1$.",
-        "当分子次数恰比分母次数多 $1$ 时，做除法。商是一次函数，余式除以分母趋于 $0$，所以图象趋近直线 $y = $ 商，这条直线叫**斜渐近线**。\n\n$$f(x) = \\frac{2x^{2} - 3x + 4}{x - 2} = 2x + 1 + \\frac{6}{x - 2}$$\n\n当 $x \\to \\pm\\infty$ 时 $\\frac{6}{x - 2} \\to 0$，所以斜渐近线是 $y = 2x + 1$。",
+        "When the numerator's degree is exactly one more than the denominator's, divide. The quotient is a linear function, and the remainder over the denominator tends to $0$, so the graph approaches the line $y = $ quotient: a **slant** (oblique) **asymptote**.\n\n$$f(x) = \\frac{2x^{2} - 3x + 4}{x - 2} = 2x + 1 + \\frac{6}{x - 2}$$\n\nAs $x \\to \\pm\\infty$, $\\frac{6}{x - 2} \\to 0$, so the slant asymptote is $y = 2x + 1$.\n\nFor $f(x) = \\frac{x^{2} + 4x + 1}{x + 1}$, synthetic division by $-1$ gives $1$, then $4 - 1 = 3$, then $1 - 3 = -2$, so $f(x) = x + 3 - \\frac{2}{x + 1}$ and the slant asymptote is $y = x + 3$. Check: $(x + 1)(x + 3) - 2 = x^{2} + 4x + 1$.\n\n> **Watch out.** To divide by $x + 1$, use $-1$ in synthetic division, not $1$. The remainder term tends to $0$ and is not part of the asymptote.",
+        "当分子次数恰比分母次数多 $1$ 时，做除法。商是一次函数，余式除以分母趋于 $0$，所以图象趋近直线 $y = $ 商，这条直线叫**斜渐近线**。\n\n$$f(x) = \\frac{2x^{2} - 3x + 4}{x - 2} = 2x + 1 + \\frac{6}{x - 2}$$\n\n当 $x \\to \\pm\\infty$ 时 $\\frac{6}{x - 2} \\to 0$，所以斜渐近线是 $y = 2x + 1$。\n\n对 $f(x) = \\frac{x^{2} + 4x + 1}{x + 1}$，用 $-1$ 做综合除法得 $1$，再得 $4 - 1 = 3$，再得 $1 - 3 = -2$，所以 $f(x) = x + 3 - \\frac{2}{x + 1}$，斜渐近线是 $y = x + 3$。检验：$(x + 1)(x + 3) - 2 = x^{2} + 4x + 1$。\n\n> **注意。** 除以 $x + 1$ 时，综合除法要用 $-1$，而不是 $1$。余式项趋于 $0$，不属于渐近线。",
       ),
       keyPrerequisites: ["dividing-polynomials-using-synthetic-division"],
       generate(rng) {
@@ -2640,9 +2871,29 @@ export const endBehaviorOfRationalFunctions: TopicDef = {
             answer: linear(a, q0),
             prefix: "y =",
             wrong: [linear(a, b), linear(a, b - a * p), linear(a, -q0), linear(a, q0 + rem)],
-            solution: t(
-              `Divide by $${bare(p)}$ (synthetic division with $${p}$):${steps(`f(x) = ${linear(a, q0)} ${then("", rem, bare(p)).trim()}`)}The remainder term tends to $0$ as $x \\to \\pm\\infty$, so the slant asymptote is $y = ${linear(a, q0)}$.`,
-              `除以 $${bare(p)}$（用 $${p}$ 做综合除法）：${steps(`f(x) = ${linear(a, q0)} ${then("", rem, bare(p)).trim()}`)}当 $x \\to \\pm\\infty$ 时余式项趋于 $0$，所以斜渐近线是 $y = ${linear(a, q0)}$。`,
+            solution: walked(
+              [
+                [
+                  ["Divide", "做除法"],
+                  t(`Synthetic division by $${p}$ brings down $${a}$, then:`, `用 $${p}$ 做综合除法，先落下 $${a}$，再算：`),
+                  [
+                    `${b} + ${paren(a)} \\cdot ${paren(p)} = ${q0}`,
+                    `${c} + ${paren(q0)} \\cdot ${paren(p)} = ${rem}`,
+                    `f(x) = ${linear(a, q0)} ${then("", rem, bare(p)).trim()}`,
+                  ],
+                ],
+                [
+                  ["Drop the remainder term", "去掉余式项"],
+                  t(
+                    `The remainder term tends to $0$ as $x \\to \\pm\\infty$, so the slant asymptote is $y = ${linear(a, q0)}$.`,
+                    `当 $x \\to \\pm\\infty$ 时余式项趋于 $0$，所以斜渐近线是 $y = ${linear(a, q0)}$。`,
+                  ),
+                ],
+              ],
+              t(
+                `Multiply back: $(${bare(p)})(${linear(a, q0)}) + ${paren(rem)}$ has $x$-coefficient and constant term${steps(`${paren(a)} \\cdot ${paren(-p)} + ${paren(q0)} = ${b}, \\quad ${paren(-p)} \\cdot ${paren(q0)} + ${paren(rem)} = ${c}`)}matching the numerator.`,
+                `乘回去：$(${bare(p)})(${linear(a, q0)}) + ${paren(rem)}$ 的 $x$ 项系数和常数项是${steps(`${paren(a)} \\cdot ${paren(-p)} + ${paren(q0)} = ${b}, \\quad ${paren(-p)} \\cdot ${paren(q0)} + ${paren(rem)} = ${c}`)}与分子一致。`,
+              ),
             ),
           });
         }
@@ -2671,14 +2922,26 @@ export const infiniteLimitsOfRationalFunctions: TopicDef = {
   encompasses: [{ topic: "unbounded-behavior-of-functions-near-a-point", weight: 0.3 }],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.D"],
+  intro: t(
+    `Take $f(x) = \\frac{1}{x - 2}$. Just right of $2$, $x - 2$ is a tiny positive number, so $f(x)$ is huge and positive: $\\lim_{x \\to 2^{+}} f(x) = \\infty$. Just left of $2$, $x - 2$ is a tiny negative number, so $\\lim_{x \\to 2^{-}} f(x) = -\\infty$. The two sides disagree, so the two-sided limit does not exist.
+
+Check: $f(2.01) = \\frac{1}{0.01} = 100$ and $f(1.99) = \\frac{1}{-0.01} = -100$.
+
+In this lesson we find one-sided limits at a vertical asymptote from the signs of the factors, decide two-sided limits, and handle factors written backward.`,
+    `取 $f(x) = \\frac{1}{x - 2}$。在 $2$ 右侧附近，$x - 2$ 是很小的正数，所以 $f(x)$ 为正且很大：$\\lim_{x \\to 2^{+}} f(x) = \\infty$。在 $2$ 左侧附近，$x - 2$ 是绝对值很小的负数，所以 $\\lim_{x \\to 2^{-}} f(x) = -\\infty$。两侧不一致，所以双侧极限不存在。
+
+检验：$f(2.01) = \\frac{1}{0.01} = 100$，$f(1.99) = \\frac{1}{-0.01} = -100$。
+
+这节课我们由因式的符号求竖直渐近线处的单侧极限，判断双侧极限，并处理倒着写的因式。`,
+  ),
   knowledgePoints: [
     {
       id: "one-sided-infinite-limits",
       figure: precalculusDrawings["infinite-limits-of-rational-functions#one-sided-infinite-limits"],
       title: t("One-sided infinite limits", "单侧无穷极限"),
       explanation: t(
-        "$\\lim_{x \\to a^{+}} f(x) = \\infty$ means that $f(x)$ grows without bound as $x$ approaches $a$ from the right ($x > a$); $x \\to a^{-}$ means from the left. At a vertical asymptote, find the sign of each factor near $a$:\n\n$$\\lim_{x \\to 2^{-}} \\frac{x + 1}{(x - 2)(x - 4)}$$\n\nNear $x = 2$, $x + 1 \\approx 3$ is positive and $x - 4 \\approx -2$ is negative. For $x$ just left of $2$, $x - 2$ is a tiny negative number. So the fraction is $\\frac{+}{(-)(-)}$, positive and huge: the limit is $\\infty$.",
-        "$\\lim_{x \\to a^{+}} f(x) = \\infty$ 表示 $x$ 从右侧（$x > a$）趋近 $a$ 时 $f(x)$ 无界增大；$x \\to a^{-}$ 表示从左侧趋近。在竖直渐近线处，判断 $a$ 附近每个因式的符号：\n\n$$\\lim_{x \\to 2^{-}} \\frac{x + 1}{(x - 2)(x - 4)}$$\n\n在 $x = 2$ 附近，$x + 1 \\approx 3$ 为正，$x - 4 \\approx -2$ 为负。$x$ 在 $2$ 左侧附近时，$x - 2$ 是绝对值很小的负数。所以分式的符号是 $\\frac{+}{(-)(-)}$，为正且绝对值很大：极限是 $\\infty$。",
+        "$\\lim_{x \\to a^{+}} f(x) = \\infty$ means that $f(x)$ grows without bound as $x$ approaches $a$ from the right ($x > a$); $x \\to a^{-}$ means from the left. At a vertical asymptote, find the sign of each factor near $a$:\n\n$$\\lim_{x \\to 2^{-}} \\frac{x + 1}{(x - 2)(x - 4)}$$\n\nNear $x = 2$, $x + 1 \\approx 3$ is positive and $x - 4 \\approx -2$ is negative. For $x$ just left of $2$, $x - 2$ is a tiny negative number. So the fraction is $\\frac{+}{(-)(-)}$, positive and huge: the limit is $\\infty$.\n\nFor $\\lim_{x \\to -1^{+}} \\frac{x - 3}{(x + 1)(x - 2)}$: near $-1$, $x - 3 \\approx -4$ and $x - 2 \\approx -3$, while $x + 1$ is a tiny positive number. The fraction is $\\frac{-}{(+)(-)}$, positive: the limit is $\\infty$. Check: $f(-0.99) = \\frac{-3.99}{(0.01)(-2.99)} \\approx 133$.\n\n> **Watch out.** $x \\to a^{+}$ is from the right, where $x - a$ is **positive**; $x \\to a^{-}$ is from the left, where it is negative. The other factors keep the sign of their value at $a$.",
+        "$\\lim_{x \\to a^{+}} f(x) = \\infty$ 表示 $x$ 从右侧（$x > a$）趋近 $a$ 时 $f(x)$ 无界增大；$x \\to a^{-}$ 表示从左侧趋近。在竖直渐近线处，判断 $a$ 附近每个因式的符号：\n\n$$\\lim_{x \\to 2^{-}} \\frac{x + 1}{(x - 2)(x - 4)}$$\n\n在 $x = 2$ 附近，$x + 1 \\approx 3$ 为正，$x - 4 \\approx -2$ 为负。$x$ 在 $2$ 左侧附近时，$x - 2$ 是绝对值很小的负数。所以分式的符号是 $\\frac{+}{(-)(-)}$，为正且绝对值很大：极限是 $\\infty$。\n\n对 $\\lim_{x \\to -1^{+}} \\frac{x - 3}{(x + 1)(x - 2)}$：在 $-1$ 附近，$x - 3 \\approx -4$，$x - 2 \\approx -3$，而 $x + 1$ 是很小的正数。分式的符号是 $\\frac{-}{(+)(-)}$，为正：极限是 $\\infty$。检验：$f(-0.99) = \\frac{-3.99}{(0.01)(-2.99)} \\approx 133$。\n\n> **注意。** $x \\to a^{+}$ 是从右侧趋近，那里 $x - a$ 为**正**；$x \\to a^{-}$ 是从左侧趋近，那里 $x - a$ 为负。其他因式的符号与它们在 $a$ 处的值相同。",
       ),
       keyPrerequisites: ["unbounded-behavior-of-functions-near-a-point"],
       generate(rng) {
@@ -2689,23 +2952,41 @@ export const infiniteLimitsOfRationalFunctions: TopicDef = {
         const s = nearSign(f, p, side);
         const w = sideWord(side);
         const latex = frac(prodL(simple([r]), a), `${fac(p)}${fac(q)}`);
-        return choiceProblem({
-          prompt: t(`Find $${sidedLimit(p, side)} ${latex}$.`, `求 $${sidedLimit(p, side)} ${latex}$。`),
-          options: limitOptions,
-          correct: limitIndex(s, s),
-          solution: t(
-            `Near $x = ${p}$, the numerator is about $${a * (p - r)}$ and $${bare(q)}$ is about $${p - q}$, while $${bare(p)}$ is ${w.en}. So the fraction is ${s > 0 ? "positive" : "negative"} and huge: the limit is $${infL(s)}$.`,
-            `在 $x = ${p}$ 附近，分子约为 $${a * (p - r)}$，$${bare(q)}$ 约为 $${p - q}$，而 $${bare(p)}$ 是${w["zh-CN"]}。所以分式${s > 0 ? "为正" : "为负"}且绝对值很大：极限是 $${infL(s)}$。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Find $${sidedLimit(p, side)} ${latex}$.`, `求 $${sidedLimit(p, side)} ${latex}$。`),
+            options: limitOptions,
+            correct: limitIndex(s, s),
+            solution: walked(
+              [
+                [
+                  ["Find the sign of each factor", "判断每个因式的符号"],
+                  t(
+                    `Near $x = ${p}$, the numerator is about $${a * (p - r)}$ and $${bare(q)}$ is about $${p - q}$, while $${bare(p)}$ is ${w.en}.`,
+                    `在 $x = ${p}$ 附近，分子约为 $${a * (p - r)}$，$${bare(q)}$ 约为 $${p - q}$，而 $${bare(p)}$ 是${w["zh-CN"]}。`,
+                  ),
+                ],
+                [
+                  ["Combine the signs", "合并符号"],
+                  t(
+                    `So the fraction is ${s > 0 ? "positive" : "negative"} and huge: the limit is $${infL(s)}$.`,
+                    `所以分式${s > 0 ? "为正" : "为负"}且绝对值很大：极限是 $${infL(s)}$。`,
+                  ),
+                ],
+              ],
+              sideCheck(f, p, [side], 0.01),
+            ),
+          }),
+          limitReasons(s, s, true),
+        );
       },
     },
     {
       id: "two-sided-infinite-limits",
       title: t("Two-sided infinite limits", "双侧无穷极限"),
       explanation: t(
-        "The two-sided limit $\\lim_{x \\to a} f(x)$ is $\\infty$ (or $-\\infty$) only when both one-sided limits are. If they differ, the limit does not exist.\n\nThe power of $x - a$ decides: an **odd** power changes sign at $a$, so the two sides go in opposite directions; an **even** power is positive on both sides.\n\n$$\\lim_{x \\to 1} \\frac{-3}{(x - 1)^{2}} = -\\infty, \\qquad \\lim_{x \\to 1} \\frac{-3}{x - 1} \\text{ does not exist.}$$",
-        "只有当两个单侧极限都是 $\\infty$（或都是 $-\\infty$）时，双侧极限 $\\lim_{x \\to a} f(x)$ 才是 $\\infty$（或 $-\\infty$）。若两者不同，则极限不存在。\n\n由 $x - a$ 的次数决定：**奇**次幂在 $a$ 两侧变号，两侧趋向相反；**偶**次幂在两侧都为正。\n\n$$\\lim_{x \\to 1} \\frac{-3}{(x - 1)^{2}} = -\\infty, \\qquad \\lim_{x \\to 1} \\frac{-3}{x - 1} \\text{ 不存在。}$$",
+        "The two-sided limit $\\lim_{x \\to a} f(x)$ is $\\infty$ (or $-\\infty$) only when both one-sided limits are. If they differ, the limit does not exist.\n\nThe power of $x - a$ decides: an **odd** power changes sign at $a$, so the two sides go in opposite directions; an **even** power is positive on both sides.\n\n$$\\lim_{x \\to 1} \\frac{-3}{(x - 1)^{2}} = -\\infty, \\qquad \\lim_{x \\to 1} \\frac{-3}{x - 1} \\text{ does not exist.}$$\n\nFor $\\lim_{x \\to -2} \\frac{5}{(x + 2)^{2}}$, the square is a tiny positive number on both sides and $5 > 0$, so both one-sided limits are $\\infty$ and the limit is $\\infty$. Check: $f(-1.9) = \\frac{5}{0.01} = 500$ and $f(-2.1) = 500$.\n\n> **Watch out.** An even power never changes sign, so the rest of the fraction decides both sides at once. An odd power always makes the two sides disagree, so the limit does not exist however the rest looks.",
+        "只有当两个单侧极限都是 $\\infty$（或都是 $-\\infty$）时，双侧极限 $\\lim_{x \\to a} f(x)$ 才是 $\\infty$（或 $-\\infty$）。若两者不同，则极限不存在。\n\n由 $x - a$ 的次数决定：**奇**次幂在 $a$ 两侧变号，两侧趋向相反；**偶**次幂在两侧都为正。\n\n$$\\lim_{x \\to 1} \\frac{-3}{(x - 1)^{2}} = -\\infty, \\qquad \\lim_{x \\to 1} \\frac{-3}{x - 1} \\text{ 不存在。}$$\n\n对 $\\lim_{x \\to -2} \\frac{5}{(x + 2)^{2}}$，平方在两侧都是很小的正数，且 $5 > 0$，所以两个单侧极限都是 $\\infty$，极限是 $\\infty$。检验：$f(-1.9) = \\frac{5}{0.01} = 500$，$f(-2.1) = 500$。\n\n> **注意。** 偶次幂不会变号，所以分式的其余部分同时决定两侧。奇次幂总使两侧不一致，所以不论其余部分如何，极限都不存在。",
       ),
       generate(rng) {
         const [p, q, r] = rng.sample(range(-6, 6), 3) as [number, number, number];
@@ -2720,23 +3001,45 @@ export const infiniteLimitsOfRationalFunctions: TopicDef = {
         const latex = frac(withR ? prodL(top, a) : String(a), prodL(bottom));
         const restQ = Q.of(productAt(a, top, p), productAt(1, withQ ? [[q, 1]] : [], p));
         const rest = restQ.toNumber();
-        return choiceProblem({
-          prompt: t(`Find $${sidedLimit(p, 0)} ${latex}$.`, `求 $${sidedLimit(p, 0)} ${latex}$。`),
-          options: limitOptions,
-          correct: limitIndex(left, right),
-          solution: t(
-            `Apart from $${facPow(p, m)}$, the fraction is about $${num(restQ)}$ near $x = ${p}$, which is ${rest > 0 ? "positive" : "negative"}. ${m === 2 ? `The square $${facPow(p, m)}$ is a tiny positive number on both sides, so both one-sided limits are $${infL(left)}$ and the limit is $${infL(left)}$.` : `The factor $${bare(p)}$ is negative on the left and positive on the right, so the one-sided limits are $${infL(left)}$ and $${infL(right)}$: the limit does not exist.`}`,
-            `除 $${facPow(p, m)}$ 外，分式在 $x = ${p}$ 附近约为 $${num(restQ)}$，${rest > 0 ? "为正" : "为负"}。${m === 2 ? `平方 $${facPow(p, m)}$ 在两侧都是很小的正数，所以两个单侧极限都是 $${infL(left)}$，极限是 $${infL(left)}$。` : `因式 $${bare(p)}$ 在左侧为负、右侧为正，所以两个单侧极限分别是 $${infL(left)}$ 和 $${infL(right)}$：极限不存在。`}`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Find $${sidedLimit(p, 0)} ${latex}$.`, `求 $${sidedLimit(p, 0)} ${latex}$。`),
+            options: limitOptions,
+            correct: limitIndex(left, right),
+            solution: walked(
+              [
+                [
+                  ["Find the sign of the rest", "判断其余部分的符号"],
+                  t(
+                    `Apart from $${facPow(p, m)}$, the fraction is about $${num(restQ)}$ near $x = ${p}$, which is ${rest > 0 ? "positive" : "negative"}.`,
+                    `除 $${facPow(p, m)}$ 外，分式在 $x = ${p}$ 附近约为 $${num(restQ)}$，${rest > 0 ? "为正" : "为负"}。`,
+                  ),
+                ],
+                [
+                  ["Compare the two sides", "比较两侧"],
+                  t(
+                    m === 2
+                      ? `The square $${facPow(p, m)}$ is a tiny positive number on both sides, so both one-sided limits are $${infL(left)}$ and the limit is $${infL(left)}$.`
+                      : `The factor $${bare(p)}$ is negative on the left and positive on the right, so the one-sided limits are $${infL(left)}$ and $${infL(right)}$: the limit does not exist.`,
+                    m === 2
+                      ? `平方 $${facPow(p, m)}$ 在两侧都是很小的正数，所以两个单侧极限都是 $${infL(left)}$，极限是 $${infL(left)}$。`
+                      : `因式 $${bare(p)}$ 在左侧为负、右侧为正，所以两个单侧极限分别是 $${infL(left)}$ 和 $${infL(right)}$：极限不存在。`,
+                  ),
+                ],
+              ],
+              sideCheck(f, p, [-1, 1], 0.1),
+            ),
+          }),
+          limitReasons(left, right, false),
+        );
       },
     },
     {
       id: "factors-written-backward",
       title: t("Factors written backward", "倒着写的因式"),
       explanation: t(
-        "A factor such as $3 - x$ is $0$ at $x = 3$ but has the opposite sign of $x - 3$: just right of $3$ it is a tiny **negative** number.\n\n$$\\lim_{x \\to 3^{+}} \\frac{2x}{3 - x}$$\n\nThe numerator is about $6$, positive; the denominator is a tiny negative number. The limit is $-\\infty$.",
-        "像 $3 - x$ 这样的因式在 $x = 3$ 处为 $0$，但符号与 $x - 3$ 相反：在 $3$ 右侧附近它是绝对值很小的**负数**。\n\n$$\\lim_{x \\to 3^{+}} \\frac{2x}{3 - x}$$\n\n分子约为 $6$，为正；分母是绝对值很小的负数。极限是 $-\\infty$。",
+        "A factor such as $3 - x$ is $0$ at $x = 3$ but has the opposite sign of $x - 3$: just right of $3$ it is a tiny **negative** number.\n\n$$\\lim_{x \\to 3^{+}} \\frac{2x}{3 - x}$$\n\nThe numerator is about $6$, positive; the denominator is a tiny negative number. The limit is $-\\infty$.\n\nFor $\\lim_{x \\to 2^{-}} \\frac{x + 1}{2 - x}$: the numerator is about $3$, and just left of $2$, $2 - x$ is a tiny **positive** number. The limit is $\\infty$. Check: $f(1.99) = \\frac{2.99}{0.01} = 299$.\n\n> **Watch out.** $2 - x$ is positive to the left of $2$ and negative to the right, the reverse of $x - 2$. Rewrite it as $-(x - 2)$ if that helps.",
+        "像 $3 - x$ 这样的因式在 $x = 3$ 处为 $0$，但符号与 $x - 3$ 相反：在 $3$ 右侧附近它是绝对值很小的**负数**。\n\n$$\\lim_{x \\to 3^{+}} \\frac{2x}{3 - x}$$\n\n分子约为 $6$，为正；分母是绝对值很小的负数。极限是 $-\\infty$。\n\n对 $\\lim_{x \\to 2^{-}} \\frac{x + 1}{2 - x}$：分子约为 $3$，而在 $2$ 左侧附近 $2 - x$ 是很小的**正数**。极限是 $\\infty$。检验：$f(1.99) = \\frac{2.99}{0.01} = 299$。\n\n> **注意。** $2 - x$ 在 $2$ 的左侧为正、右侧为负，与 $x - 2$ 正好相反。需要时可把它改写成 $-(x - 2)$。",
       ),
       generate(rng) {
         const p = rng.nonZero(-6, 6);
@@ -2748,15 +3051,33 @@ export const infiniteLimitsOfRationalFunctions: TopicDef = {
         const f = (x: number) => (a * (x - r)) / (sq ? (p - x) ** 2 : p - x);
         const s = nearSign(f, p, side);
         const latex = frac(prodL(simple([r]), a), den);
-        return choiceProblem({
-          prompt: t(`Find $${sidedLimit(p, side)} ${latex}$.`, `求 $${sidedLimit(p, side)} ${latex}$。`),
-          options: limitOptions,
-          correct: limitIndex(s, s),
-          solution: t(
-            `The numerator is about $${a * (p - r)}$. For $x$ just ${side > 0 ? "right" : "left"} of $${p}$, $${p} - x$ is a tiny ${side > 0 ? "negative" : "positive"} number${sq ? ", and its square is a tiny positive number" : ""}. So the fraction is ${s > 0 ? "positive" : "negative"} and huge: the limit is $${infL(s)}$.`,
-            `分子约为 $${a * (p - r)}$。$x$ 在 $${p}$ ${side > 0 ? "右" : "左"}侧附近时，$${p} - x$ 是绝对值很小的${side > 0 ? "负数" : "正数"}${sq ? "，它的平方是很小的正数" : ""}。所以分式${s > 0 ? "为正" : "为负"}且绝对值很大：极限是 $${infL(s)}$。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Find $${sidedLimit(p, side)} ${latex}$.`, `求 $${sidedLimit(p, side)} ${latex}$。`),
+            options: limitOptions,
+            correct: limitIndex(s, s),
+            solution: walked(
+              [
+                [
+                  ["Find the sign of each factor", "判断每个因式的符号"],
+                  t(
+                    `The numerator is about $${a * (p - r)}$. For $x$ just ${side > 0 ? "right" : "left"} of $${p}$, $${p} - x$ is a tiny ${side > 0 ? "negative" : "positive"} number${sq ? ", and its square is a tiny positive number" : ""}.`,
+                    `分子约为 $${a * (p - r)}$。$x$ 在 $${p}$ ${side > 0 ? "右" : "左"}侧附近时，$${p} - x$ 是绝对值很小的${side > 0 ? "负数" : "正数"}${sq ? "，它的平方是很小的正数" : ""}。`,
+                  ),
+                ],
+                [
+                  ["Combine the signs", "合并符号"],
+                  t(
+                    `So the fraction is ${s > 0 ? "positive" : "negative"} and huge: the limit is $${infL(s)}$.`,
+                    `所以分式${s > 0 ? "为正" : "为负"}且绝对值很大：极限是 $${infL(s)}$。`,
+                  ),
+                ],
+              ],
+              sideCheck(f, p, [side], sq ? 0.1 : 0.01),
+            ),
+          }),
+          limitReasons(s, s, true),
+        );
       },
     },
   ],
@@ -2776,13 +3097,25 @@ export const infiniteLimitsOfRationalFunctionsAdvancedCases: TopicDef = {
   encompasses: [{ topic: "infinite-limits-of-rational-functions", weight: 0.6 }],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.D"],
+  intro: t(
+    `Factor $f(x) = \\frac{x - 2}{x^{2} - 5x + 6} = \\frac{x - 2}{(x - 2)(x - 3)}$. For $x \\neq 2$ it equals $\\frac{1}{x - 3}$. At $x = 2$ the factor cancels, so there is a hole and $\\lim_{x \\to 2} f(x) = \\frac{1}{2 - 3} = -1$. At $x = 3$ the factor stays, so the limit is infinite: $\\lim_{x \\to 3^{+}} f(x) = \\infty$.
+
+Check: $f(2.01) = \\frac{1}{-0.99} \\approx -1.01$ and $f(3.01) = \\frac{1}{0.01} = 100$.
+
+In this lesson we factor before taking a limit, find limits at holes, and read the power of a factor left after cancelling.`,
+    `把 $f(x) = \\frac{x - 2}{x^{2} - 5x + 6} = \\frac{x - 2}{(x - 2)(x - 3)}$ 因式分解。当 $x \\neq 2$ 时它等于 $\\frac{1}{x - 3}$。在 $x = 2$ 处因式约去，所以那里是空洞，$\\lim_{x \\to 2} f(x) = \\frac{1}{2 - 3} = -1$。在 $x = 3$ 处因式保留，所以极限是无穷：$\\lim_{x \\to 3^{+}} f(x) = \\infty$。
+
+检验：$f(2.01) = \\frac{1}{-0.99} \\approx -1.01$，$f(3.01) = \\frac{1}{0.01} = 100$。
+
+这节课我们先因式分解再求极限，求空洞处的极限，并看约分后剩余因式的次数。`,
+  ),
   knowledgePoints: [
     {
       id: "factoring-before-taking-the-limit",
       title: t("Factoring before taking the limit", "先因式分解再求极限"),
       explanation: t(
-        "When the denominator is expanded, factor it to see the sign of each factor:\n\n$$\\lim_{x \\to -1^{+}} \\frac{x - 5}{x^{2} - x - 2} = \\lim_{x \\to -1^{+}} \\frac{x - 5}{(x + 1)(x - 2)}$$\n\nNear $-1$: $x - 5 \\approx -6$ and $x - 2 \\approx -3$, while $x + 1$ is a tiny positive number. The fraction is $\\frac{-}{(+)(-)}$, positive: the limit is $\\infty$.",
-        "分母是展开式时，先把它因式分解，再看每个因式的符号：\n\n$$\\lim_{x \\to -1^{+}} \\frac{x - 5}{x^{2} - x - 2} = \\lim_{x \\to -1^{+}} \\frac{x - 5}{(x + 1)(x - 2)}$$\n\n在 $-1$ 附近：$x - 5 \\approx -6$，$x - 2 \\approx -3$，而 $x + 1$ 是很小的正数。分式的符号是 $\\frac{-}{(+)(-)}$，为正：极限是 $\\infty$。",
+        "When the denominator is expanded, factor it to see the sign of each factor:\n\n$$\\lim_{x \\to -1^{+}} \\frac{x - 5}{x^{2} - x - 2} = \\lim_{x \\to -1^{+}} \\frac{x - 5}{(x + 1)(x - 2)}$$\n\nNear $-1$: $x - 5 \\approx -6$ and $x - 2 \\approx -3$, while $x + 1$ is a tiny positive number. The fraction is $\\frac{-}{(+)(-)}$, positive: the limit is $\\infty$.\n\nFor $\\lim_{x \\to 3^{-}} \\frac{x + 1}{x^{2} - x - 6} = \\lim_{x \\to 3^{-}} \\frac{x + 1}{(x - 3)(x + 2)}$: near $3$, $x + 1 \\approx 4$ and $x + 2 \\approx 5$, while $x - 3$ is a tiny negative number. The limit is $-\\infty$. Check: $f(2.99) = \\frac{3.99}{(-0.01)(4.99)} \\approx -80$.\n\n> **Watch out.** Factor completely before reading signs, and keep the leading coefficient: $2x^{2} - 2 = 2(x - 1)(x + 1)$, not $(x - 1)(x + 1)$.",
+        "分母是展开式时，先把它因式分解，再看每个因式的符号：\n\n$$\\lim_{x \\to -1^{+}} \\frac{x - 5}{x^{2} - x - 2} = \\lim_{x \\to -1^{+}} \\frac{x - 5}{(x + 1)(x - 2)}$$\n\n在 $-1$ 附近：$x - 5 \\approx -6$，$x - 2 \\approx -3$，而 $x + 1$ 是很小的正数。分式的符号是 $\\frac{-}{(+)(-)}$，为正：极限是 $\\infty$。\n\n对 $\\lim_{x \\to 3^{-}} \\frac{x + 1}{x^{2} - x - 6} = \\lim_{x \\to 3^{-}} \\frac{x + 1}{(x - 3)(x + 2)}$：在 $3$ 附近，$x + 1 \\approx 4$，$x + 2 \\approx 5$，而 $x - 3$ 是绝对值很小的负数。极限是 $-\\infty$。检验：$f(2.99) = \\frac{3.99}{(-0.01)(4.99)} \\approx -80$。\n\n> **注意。** 先完全因式分解再看符号，并保留首项系数：$2x^{2} - 2 = 2(x - 1)(x + 1)$，而不是 $(x - 1)(x + 1)$。",
       ),
       generate(rng) {
         const [p, q, r] = rng.sample(range(-6, 6), 3) as [number, number, number];
@@ -2793,23 +3126,42 @@ export const infiniteLimitsOfRationalFunctionsAdvancedCases: TopicDef = {
         const f = (x: number) => (a * (x - r)) / at(D, x);
         const s = nearSign(f, p, side);
         const top = prodL(simple([r]), a);
-        return choiceProblem({
-          prompt: t(`Find $${sidedLimit(p, side)} ${frac(top, pl(D))}$.`, `求 $${sidedLimit(p, side)} ${frac(top, pl(D))}$。`),
-          options: limitOptions,
-          correct: limitIndex(s, s),
-          solution: t(
-            `Factor the denominator: $${pl(D)} = ${front(lead)}${fac(p)}${fac(q)}$. Near $x = ${p}$, the numerator is about $${a * (p - r)}$ and $${front(lead)}${fac(q)}$ is about $${lead * (p - q)}$, while $${bare(p)}$ is ${sideWord(side).en}. So the fraction is ${s > 0 ? "positive" : "negative"} and huge: the limit is $${infL(s)}$.`,
-            `分解分母：$${pl(D)} = ${front(lead)}${fac(p)}${fac(q)}$。在 $x = ${p}$ 附近，分子约为 $${a * (p - r)}$，$${front(lead)}${fac(q)}$ 约为 $${lead * (p - q)}$，而 $${bare(p)}$ 是${sideWord(side)["zh-CN"]}。所以分式${s > 0 ? "为正" : "为负"}且绝对值很大：极限是 $${infL(s)}$。`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(`Find $${sidedLimit(p, side)} ${frac(top, pl(D))}$.`, `求 $${sidedLimit(p, side)} ${frac(top, pl(D))}$。`),
+            options: limitOptions,
+            correct: limitIndex(s, s),
+            solution: walked(
+              [
+                [["Factor", "因式分解"], t("Factor the denominator:", "分解分母："), [`${pl(D)} = ${front(lead)}${fac(p)}${fac(q)}`]],
+                [
+                  ["Find the sign of each factor", "判断每个因式的符号"],
+                  t(
+                    `Near $x = ${p}$, the numerator is about $${a * (p - r)}$ and $${front(lead)}${fac(q)}$ is about $${lead * (p - q)}$, while $${bare(p)}$ is ${sideWord(side).en}.`,
+                    `在 $x = ${p}$ 附近，分子约为 $${a * (p - r)}$，$${front(lead)}${fac(q)}$ 约为 $${lead * (p - q)}$，而 $${bare(p)}$ 是${sideWord(side)["zh-CN"]}。`,
+                  ),
+                ],
+                [
+                  ["Combine the signs", "合并符号"],
+                  t(
+                    `So the fraction is ${s > 0 ? "positive" : "negative"} and huge: the limit is $${infL(s)}$.`,
+                    `所以分式${s > 0 ? "为正" : "为负"}且绝对值很大：极限是 $${infL(s)}$。`,
+                  ),
+                ],
+              ],
+              sideCheck(f, p, [side], 0.01),
+            ),
+          }),
+          limitReasons(s, s, true),
+        );
       },
     },
     {
       id: "limits-at-holes",
       title: t("Limits at holes", "空洞处的极限"),
       explanation: t(
-        "At a hole the function is undefined, but its limit is an ordinary number: cancel the common factor and substitute.\n\n$$\\lim_{x \\to 3} \\frac{x^{2} - 9}{x^{2} - x - 6} = \\lim_{x \\to 3} \\frac{(x - 3)(x + 3)}{(x - 3)(x + 2)} = \\lim_{x \\to 3} \\frac{x + 3}{x + 2} = \\frac{6}{5}$$\n\nThe limit is the $y$-coordinate of the hole.",
-        "函数在空洞处无意义，但它的极限是一个普通的数：约去公因式后代入。\n\n$$\\lim_{x \\to 3} \\frac{x^{2} - 9}{x^{2} - x - 6} = \\lim_{x \\to 3} \\frac{(x - 3)(x + 3)}{(x - 3)(x + 2)} = \\lim_{x \\to 3} \\frac{x + 3}{x + 2} = \\frac{6}{5}$$\n\n这个极限就是空洞的纵坐标。",
+        "At a hole the function is undefined, but its limit is an ordinary number: cancel the common factor and substitute.\n\n$$\\lim_{x \\to 3} \\frac{x^{2} - 9}{x^{2} - x - 6} = \\lim_{x \\to 3} \\frac{(x - 3)(x + 3)}{(x - 3)(x + 2)} = \\lim_{x \\to 3} \\frac{x + 3}{x + 2} = \\frac{6}{5}$$\n\nThe limit is the $y$-coordinate of the hole.\n\nFor $\\lim_{x \\to -1} \\frac{x^{2} - 1}{x^{2} + 3x + 2} = \\lim_{x \\to -1} \\frac{(x - 1)(x + 1)}{(x + 1)(x + 2)} = \\lim_{x \\to -1} \\frac{x - 1}{x + 2} = \\frac{-2}{1} = -2$. Check: $f(-0.99) = \\frac{-1.99}{1.01} \\approx -1.97$.\n\n> **Watch out.** Substituting before cancelling gives $\\frac{0}{0}$, which is not an answer but a signal to cancel. The limit exists even though $f(-1)$ does not.",
+        "函数在空洞处无意义，但它的极限是一个普通的数：约去公因式后代入。\n\n$$\\lim_{x \\to 3} \\frac{x^{2} - 9}{x^{2} - x - 6} = \\lim_{x \\to 3} \\frac{(x - 3)(x + 3)}{(x - 3)(x + 2)} = \\lim_{x \\to 3} \\frac{x + 3}{x + 2} = \\frac{6}{5}$$\n\n这个极限就是空洞的纵坐标。\n\n$\\lim_{x \\to -1} \\frac{x^{2} - 1}{x^{2} + 3x + 2} = \\lim_{x \\to -1} \\frac{(x - 1)(x + 1)}{(x + 1)(x + 2)} = \\lim_{x \\to -1} \\frac{x - 1}{x + 2} = \\frac{-2}{1} = -2$。检验：$f(-0.99) = \\frac{-1.99}{1.01} \\approx -1.97$。\n\n> **注意。** 约分前直接代入得 $\\frac{0}{0}$，这不是答案，而是提示要约分。即使 $f(-1)$ 无意义，极限仍然存在。",
       ),
       keyPrerequisites: ["locating-holes-in-rational-functions"],
       generate(rng) {
@@ -2822,9 +3174,27 @@ export const infiniteLimitsOfRationalFunctionsAdvancedCases: TopicDef = {
           prompt: t(`Find $${sidedLimit(h, 0)} ${frac(pl(N), pl(D))}$.`, `求 $${sidedLimit(h, 0)} ${frac(pl(N), pl(D))}$。`),
           answer,
           wrong: [Q.zero, Q.of(a * (h - p), h - r), Q.of(a * (h + r), h + p || 1)],
-          solution: t(
-            `Factor and cancel $${bare(h)}$:${steps(`${sidedLimit(h, 0)} ${frac(`${front(a)}${fac(h)}${fac(r)}`, `${fac(h)}${fac(p)}`)} = ${sidedLimit(h, 0)} ${frac(prodL(simple([r]), a), bare(p))} = ${num(answer)}`)}The limit is $${num(answer)}$.`,
-            `因式分解并约去 $${bare(h)}$：${steps(`${sidedLimit(h, 0)} ${frac(`${front(a)}${fac(h)}${fac(r)}`, `${fac(h)}${fac(p)}`)} = ${sidedLimit(h, 0)} ${frac(prodL(simple([r]), a), bare(p))} = ${num(answer)}`)}极限是 $${num(answer)}$。`,
+          solution: walked(
+            [
+              [
+                ["Factor and cancel", "因式分解并约分"],
+                t(`Cancel $${bare(h)}$:`, `约去 $${bare(h)}$：`),
+                [
+                  `${sidedLimit(h, 0)} ${frac(`${front(a)}${fac(h)}${fac(r)}`, `${fac(h)}${fac(p)}`)} = ${sidedLimit(h, 0)} ${frac(prodL(simple([r]), a), bare(p))}`,
+                ],
+              ],
+              [
+                ["Substitute", "代入"],
+                t(`The cancelled form is defined at $x = ${h}$, so substitute:`, `约分后的式子在 $x = ${h}$ 处有意义，所以代入：`),
+                [
+                  `${frac(`${a === 1 ? "" : `${paren(a)} \\cdot `}(${h} - ${paren(r)})`, `${h} - ${paren(p)}`)} = ${frac(String(a * (h - r)), String(h - p))} = ${num(answer)}`,
+                ],
+              ],
+            ],
+            t(
+              `The original fraction near $x = ${h}$:${steps(`f(${Number((h + 0.01).toFixed(2))}) \\approx ${approx(at(N, h + 0.01) / at(D, h + 0.01))}, \\quad ${num(answer)} \\approx ${approx(answer.toNumber())}`)}The two are close.`,
+              `原分式在 $x = ${h}$ 附近：${steps(`f(${Number((h + 0.01).toFixed(2))}) \\approx ${approx(at(N, h + 0.01) / at(D, h + 0.01))}, \\quad ${num(answer)} \\approx ${approx(answer.toNumber())}`)}两者很接近。`,
+            ),
           ),
         });
       },
@@ -2833,8 +3203,8 @@ export const infiniteLimitsOfRationalFunctionsAdvancedCases: TopicDef = {
       id: "factors-left-after-cancelling",
       title: t("Factors left after cancelling", "约分后剩余的因式"),
       explanation: t(
-        "When $x - a$ appears more times in the denominator than in the numerator, cancelling leaves a power of $x - a$ in the denominator, and the limit at $a$ is infinite or does not exist. The **leftover** power decides, not the original one:\n\n$$\\lim_{x \\to 2} \\frac{(x - 2)(x + 1)}{(x - 2)^{3}} = \\lim_{x \\to 2} \\frac{x + 1}{(x - 2)^{2}} = \\infty$$\n\nbecause $x + 1 \\approx 3 > 0$ and $(x - 2)^{2}$ is positive on both sides.",
-        "当 $x - a$ 在分母中出现的次数多于分子时，约分后分母中还剩 $x - a$ 的某次幂，在 $a$ 处的极限是无穷或不存在。起决定作用的是**剩余**的次数，而不是原来的次数：\n\n$$\\lim_{x \\to 2} \\frac{(x - 2)(x + 1)}{(x - 2)^{3}} = \\lim_{x \\to 2} \\frac{x + 1}{(x - 2)^{2}} = \\infty$$\n\n因为 $x + 1 \\approx 3 > 0$，且 $(x - 2)^{2}$ 在两侧都为正。",
+        "When $x - a$ appears more times in the denominator than in the numerator, cancelling leaves a power of $x - a$ in the denominator, and the limit at $a$ is infinite or does not exist. The **leftover** power decides, not the original one:\n\n$$\\lim_{x \\to 2} \\frac{(x - 2)(x + 1)}{(x - 2)^{3}} = \\lim_{x \\to 2} \\frac{x + 1}{(x - 2)^{2}} = \\infty$$\n\nbecause $x + 1 \\approx 3 > 0$ and $(x - 2)^{2}$ is positive on both sides.\n\nFor $\\lim_{x \\to 1} \\frac{(x - 1)^{2}(x + 2)}{(x - 1)^{3}} = \\lim_{x \\to 1} \\frac{x + 2}{x - 1}$, the leftover power is odd: the right side goes to $\\infty$ and the left side to $-\\infty$, so the limit does not exist. Check: $f(1.1) = \\frac{3.1}{0.1} = 31$ and $f(0.9) = \\frac{2.9}{-0.1} = -29$.\n\n> **Watch out.** Subtract the powers before deciding: $(x - 1)^{3}$ over $(x - 1)^{2}$ leaves an odd power even though $3$ and $2$ include an even one.",
+        "当 $x - a$ 在分母中出现的次数多于分子时，约分后分母中还剩 $x - a$ 的某次幂，在 $a$ 处的极限是无穷或不存在。起决定作用的是**剩余**的次数，而不是原来的次数：\n\n$$\\lim_{x \\to 2} \\frac{(x - 2)(x + 1)}{(x - 2)^{3}} = \\lim_{x \\to 2} \\frac{x + 1}{(x - 2)^{2}} = \\infty$$\n\n因为 $x + 1 \\approx 3 > 0$，且 $(x - 2)^{2}$ 在两侧都为正。\n\n对 $\\lim_{x \\to 1} \\frac{(x - 1)^{2}(x + 2)}{(x - 1)^{3}} = \\lim_{x \\to 1} \\frac{x + 2}{x - 1}$，剩余的次数是奇数：右侧趋于 $\\infty$，左侧趋于 $-\\infty$，所以极限不存在。检验：$f(1.1) = \\frac{3.1}{0.1} = 31$，$f(0.9) = \\frac{2.9}{-0.1} = -29$。\n\n> **注意。** 先把次数相减再判断：$(x - 1)^{3}$ 除以 $(x - 1)^{2}$ 剩下的是奇次幂，尽管 $3$ 和 $2$ 中有一个是偶数。",
       ),
       generate(rng) {
         const [p, r, q] = rng.sample(range(-5, 5), 3) as [number, number, number];
@@ -2852,18 +3222,34 @@ export const infiniteLimitsOfRationalFunctionsAdvancedCases: TopicDef = {
         const left2 = frac(prodL([[r, 1]], a), prodL([[p, j], ...(withQ ? ([[q, 1]] as Factor[]) : [])]));
         const restPositive = productAt(a, [[r, 1]], p) / (withQ ? productAt(1, [[q, 1]], p) : 1) > 0;
         const [restEn, restZh] = restPositive ? ["positive", "正"] : ["negative", "负"];
-        return choiceProblem({
-          prompt: t(
-            `Find $${sidedLimit(p, 0)} ${frac(prodL(top, a), prodL(bottom))}$.`,
-            `求 $${sidedLimit(p, 0)} ${frac(prodL(top, a), prodL(bottom))}$。`,
-          ),
-          options: limitOptions,
-          correct: limitIndex(left, right),
-          solution: t(
-            `Cancel $${facPow(p, k)}$:${steps(`${sidedLimit(p, 0)} ${left2}`)}${j === 2 ? `Near $x = ${p}$ the rest of the fraction is ${restEn}, and the leftover square $${facPow(p, 2)}$ is positive on both sides, so both one-sided limits are $${infL(left)}$, and the limit is $${infL(left)}$.` : `Near $x = ${p}$ the rest of the fraction is ${restEn}, and the leftover factor $${bare(p)}$ changes sign at $x = ${p}$, so the one-sided limits are $${infL(left)}$ and $${infL(right)}$: the limit does not exist.`}`,
-            `约去 $${facPow(p, k)}$：${steps(`${sidedLimit(p, 0)} ${left2}`)}${j === 2 ? `在 $x = ${p}$ 附近，其余部分为${restZh}，剩余的平方 $${facPow(p, 2)}$ 在两侧都为正，所以两个单侧极限都是 $${infL(left)}$，极限是 $${infL(left)}$。` : `在 $x = ${p}$ 附近，其余部分为${restZh}，剩余的因式 $${bare(p)}$ 在 $x = ${p}$ 处变号，所以两个单侧极限分别是 $${infL(left)}$ 和 $${infL(right)}$：极限不存在。`}`,
-          ),
-        });
+        return reasoned(
+          choiceProblem({
+            prompt: t(
+              `Find $${sidedLimit(p, 0)} ${frac(prodL(top, a), prodL(bottom))}$.`,
+              `求 $${sidedLimit(p, 0)} ${frac(prodL(top, a), prodL(bottom))}$。`,
+            ),
+            options: limitOptions,
+            correct: limitIndex(left, right),
+            solution: walked(
+              [
+                [["Cancel", "约分"], t(`Cancel $${facPow(p, k)}$:`, `约去 $${facPow(p, k)}$：`), [`${sidedLimit(p, 0)} ${left2}`]],
+                [
+                  ["Read the leftover power", "看剩余的次数"],
+                  t(
+                    j === 2
+                      ? `Near $x = ${p}$ the rest of the fraction is ${restEn}, and the leftover square $${facPow(p, 2)}$ is positive on both sides, so both one-sided limits are $${infL(left)}$, and the limit is $${infL(left)}$.`
+                      : `Near $x = ${p}$ the rest of the fraction is ${restEn}, and the leftover factor $${bare(p)}$ changes sign at $x = ${p}$, so the one-sided limits are $${infL(left)}$ and $${infL(right)}$: the limit does not exist.`,
+                    j === 2
+                      ? `在 $x = ${p}$ 附近，其余部分为${restZh}，剩余的平方 $${facPow(p, 2)}$ 在两侧都为正，所以两个单侧极限都是 $${infL(left)}$，极限是 $${infL(left)}$。`
+                      : `在 $x = ${p}$ 附近，其余部分为${restZh}，剩余的因式 $${bare(p)}$ 在 $x = ${p}$ 处变号，所以两个单侧极限分别是 $${infL(left)}$ 和 $${infL(right)}$：极限不存在。`,
+                  ),
+                ],
+              ],
+              sideCheck(f, p, [-1, 1], 0.1),
+            ),
+          }),
+          limitReasons(left, right, false),
+        );
       },
     },
   ],
@@ -2894,14 +3280,26 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.D"],
+  intro: t(
+    `Take $f(x) = \\frac{2x - 1}{x + 3}$. The denominator is $0$ at $x = -3$, so the domain is every real number except $-3$. The horizontal asymptote is $y = \\frac{2}{1} = 2$, and $f$ never takes that value, so the range is every real number except $2$.
+
+Check: $f(x) = 2$ would mean $2x - 1 = 2(x + 3) = 2x + 6$, that is $-1 = 6$, which is false.
+
+In this lesson we find the domain of a rational function, holes included, the range of a linear-over-linear function, and the range when the graph has a hole.`,
+    `取 $f(x) = \\frac{2x - 1}{x + 3}$。分母在 $x = -3$ 处为 $0$，所以定义域是除 $-3$ 外的全体实数。水平渐近线是 $y = \\frac{2}{1} = 2$，而 $f$ 永远取不到这个值，所以值域是除 $2$ 外的全体实数。
+
+检验：若 $f(x) = 2$，则 $2x - 1 = 2(x + 3) = 2x + 6$，即 $-1 = 6$，不成立。
+
+这节课我们求分式函数的定义域（包括空洞），一次比一次型函数的值域，以及图象有空洞时的值域。`,
+  ),
   knowledgePoints: [
     {
       id: "domain-of-a-rational-function",
       figure: precalculusDrawings["the-domain-and-range-of-a-rational-function#domain-of-a-rational-function"],
       title: t("The domain", "定义域"),
       explanation: t(
-        "The domain of a rational function is every real number except the zeros of the denominator, **including** those that cancel. A hole is still a missing point.\n\n$$f(x) = \\frac{x - 1}{x^{2} + 2x - 3} = \\frac{x - 1}{(x - 1)(x + 3)}$$\n\nThe domain is $(-\\infty, -3) \\cup (-3, 1) \\cup (1, \\infty)$: $x = -3$ is a vertical asymptote and $x = 1$ is a hole.",
-        "分式函数的定义域是除去分母零点之外的全体实数，**包括**能约去的零点。空洞仍是缺失的点。\n\n$$f(x) = \\frac{x - 1}{x^{2} + 2x - 3} = \\frac{x - 1}{(x - 1)(x + 3)}$$\n\n定义域是 $(-\\infty, -3) \\cup (-3, 1) \\cup (1, \\infty)$：$x = -3$ 是竖直渐近线，$x = 1$ 是空洞。",
+        "The domain of a rational function is every real number except the zeros of the denominator, **including** those that cancel. A hole is still a missing point.\n\n$$f(x) = \\frac{x - 1}{x^{2} + 2x - 3} = \\frac{x - 1}{(x - 1)(x + 3)}$$\n\nThe domain is $(-\\infty, -3) \\cup (-3, 1) \\cup (1, \\infty)$: $x = -3$ is a vertical asymptote and $x = 1$ is a hole.\n\nFor $f(x) = \\frac{x + 2}{x^{2} - 4} = \\frac{x + 2}{(x - 2)(x + 2)}$, the domain is $(-\\infty, -2) \\cup (-2, 2) \\cup (2, \\infty)$. Check: $f(2) = \\frac{4}{0}$ and $f(-2) = \\frac{0}{0}$ are both undefined.\n\n> **Watch out.** Read the domain before cancelling. The cancelled form $\\frac{1}{x - 2}$ is defined at $x = -2$, but $f$ is not: the hole stays out of the domain.",
+        "分式函数的定义域是除去分母零点之外的全体实数，**包括**能约去的零点。空洞仍是缺失的点。\n\n$$f(x) = \\frac{x - 1}{x^{2} + 2x - 3} = \\frac{x - 1}{(x - 1)(x + 3)}$$\n\n定义域是 $(-\\infty, -3) \\cup (-3, 1) \\cup (1, \\infty)$：$x = -3$ 是竖直渐近线，$x = 1$ 是空洞。\n\n对 $f(x) = \\frac{x + 2}{x^{2} - 4} = \\frac{x + 2}{(x - 2)(x + 2)}$，定义域是 $(-\\infty, -2) \\cup (-2, 2) \\cup (2, \\infty)$。检验：$f(2) = \\frac{4}{0}$ 和 $f(-2) = \\frac{0}{0}$ 都无意义。\n\n> **注意。** 要在约分前读定义域。约分后的 $\\frac{1}{x - 2}$ 在 $x = -2$ 处有意义，但 $f$ 没有：空洞仍不在定义域内。",
       ),
       generate(rng) {
         const [p, q] = rng.sample(range(-7, 7), 2) as [number, number];
@@ -2923,9 +3321,25 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
           wrong: [exceptN(...vas), exceptN(-p, -q), realLine, ...(top === bare(s) ? [exceptN(p, q, s)] : [])].filter(
             (w) => intervalLatex(w) !== intervalLatex(answer),
           ),
-          solution: t(
-            `The denominator $${pl(D)} = ${front(lead)}${fac(p)}${fac(q)}$ is $0$ at $x = ${p}$ and $x = ${q}$.${shared ? ` The factor $${bare(s)}$ cancels, but $f(${s})$ is still not defined: there is a hole.` : ""} The domain is ${setText(answer)}.`,
-            `分母 $${pl(D)} = ${front(lead)}${fac(p)}${fac(q)}$ 在 $x = ${p}$ 和 $x = ${q}$ 处为 $0$。${shared ? `因式 $${bare(s)}$ 能约去，但 $f(${s})$ 仍无意义：那里是空洞。` : ""}定义域是 ${setText(answer)}。`,
+          solution: walked(
+            [
+              [
+                ["Factor the denominator", "分解分母"],
+                t(`The denominator is $0$ at $x = ${p}$ and $x = ${q}$:`, `分母在 $x = ${p}$ 和 $x = ${q}$ 处为 $0$：`),
+                [`${pl(D)} = ${front(lead)}${fac(p)}${fac(q)}`],
+              ],
+              [
+                ["Remove those values", "去掉这些值"],
+                t(
+                  `${shared ? `The factor $${bare(s)}$ cancels, but $f(${s})$ is still not defined: there is a hole. ` : ""}The domain is ${setText(answer)}.`,
+                  `${shared ? `因式 $${bare(s)}$ 能约去，但 $f(${s})$ 仍无意义：那里是空洞。` : ""}定义域是 ${setText(answer)}。`,
+                ),
+              ],
+            ],
+            t(
+              `Substitute each excluded value into the factored denominator:${steps(...[p, q].map((x) => `${lead === 1 ? "" : `${lead} \\cdot `}(${x} - ${paren(p)})(${x} - ${paren(q)}) = 0`))}`,
+              `把每个去掉的值代入分解后的分母：${steps(...[p, q].map((x) => `${lead === 1 ? "" : `${lead} \\cdot `}(${x} - ${paren(p)})(${x} - ${paren(q)}) = 0`))}`,
+            ),
           ),
         });
       },
@@ -2935,8 +3349,8 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
       figure: precalculusDrawings["the-domain-and-range-of-a-rational-function#range-of-a-linear-over-linear-function"],
       title: t("The range of $\\frac{ax + b}{cx + d}$", "$\\frac{ax + b}{cx + d}$ 的值域"),
       explanation: t(
-        "A function $f(x) = \\frac{ax + b}{cx + d}$ with $ad - bc \\neq 0$ is a transformed reciprocal function. It takes every value except its horizontal asymptote $y = \\frac{a}{c}$.\n\nTo see why, solve $y = \\frac{ax + b}{cx + d}$ for $x$: $x = \\frac{b - dy}{cy - a}$, which works for every $y$ except $y = \\frac{a}{c}$.\n\nSo the range of $\\frac{4x - 1}{2x + 3}$ is $(-\\infty, 2) \\cup (2, \\infty)$.",
-        "当 $ad - bc \\neq 0$ 时，函数 $f(x) = \\frac{ax + b}{cx + d}$ 是平移伸缩后的反比例函数。它取到除水平渐近线 $y = \\frac{a}{c}$ 之外的一切值。\n\n原因：从 $y = \\frac{ax + b}{cx + d}$ 解出 $x$，得 $x = \\frac{b - dy}{cy - a}$，对除 $y = \\frac{a}{c}$ 外的每个 $y$ 都成立。\n\n所以 $\\frac{4x - 1}{2x + 3}$ 的值域是 $(-\\infty, 2) \\cup (2, \\infty)$。",
+        "A function $f(x) = \\frac{ax + b}{cx + d}$ with $ad - bc \\neq 0$ is a transformed reciprocal function. It takes every value except its horizontal asymptote $y = \\frac{a}{c}$.\n\nTo see why, solve $y = \\frac{ax + b}{cx + d}$ for $x$: $x = \\frac{b - dy}{cy - a}$, which works for every $y$ except $y = \\frac{a}{c}$.\n\nSo the range of $\\frac{4x - 1}{2x + 3}$ is $(-\\infty, 2) \\cup (2, \\infty)$.\n\nFor $f(x) = \\frac{3 - x}{2x + 5}$, $a = -1$ and $c = 2$, so the range is every value except $y = -\\frac{1}{2}$. Check: $ad - bc = (-1)(5) - (3)(2) = -11 \\neq 0$, so $f$ is not constant.\n\n> **Watch out.** The value left out of the range is $\\frac{a}{c}$, from the horizontal asymptote. The value $-\\frac{d}{c}$, here $-\\frac{5}{2}$, is left out of the **domain**.",
+        "当 $ad - bc \\neq 0$ 时，函数 $f(x) = \\frac{ax + b}{cx + d}$ 是平移伸缩后的反比例函数。它取到除水平渐近线 $y = \\frac{a}{c}$ 之外的一切值。\n\n原因：从 $y = \\frac{ax + b}{cx + d}$ 解出 $x$，得 $x = \\frac{b - dy}{cy - a}$，对除 $y = \\frac{a}{c}$ 外的每个 $y$ 都成立。\n\n所以 $\\frac{4x - 1}{2x + 3}$ 的值域是 $(-\\infty, 2) \\cup (2, \\infty)$。\n\n对 $f(x) = \\frac{3 - x}{2x + 5}$，$a = -1$，$c = 2$，所以值域是除 $y = -\\frac{1}{2}$ 外的一切值。检验：$ad - bc = (-1)(5) - (3)(2) = -11 \\neq 0$，所以 $f$ 不是常数。\n\n> **注意。** 值域中去掉的是来自水平渐近线的 $\\frac{a}{c}$。$-\\frac{d}{c}$（这里是 $-\\frac{5}{2}$）是从**定义域**中去掉的值。",
       ),
       keyPrerequisites: ["domain-and-range-of-transformed-reciprocal-functions"],
       generate(rng) {
@@ -2958,9 +3372,33 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
             wrong: [except(Q.of(-d, c)), ...(b !== 0 ? [except(Q.of(b, d === 0 ? 1 : d))] : []), except(Q.of(c, a)), realLine].filter(
               (w) => intervalLatex(w) !== intervalLatex(answer),
             ),
-            solution: t(
-              `The numerator and denominator have the same degree, so the horizontal asymptote is $y = ${frac(String(a), String(c))} = ${num(ha)}$. Since $ad - bc = ${a * d - b * c} \\neq 0$, $f$ takes every other value. The range is ${setText(answer)}.`,
-              `分子和分母次数相同，所以水平渐近线是 $y = ${frac(String(a), String(c))} = ${num(ha)}$。因为 $ad - bc = ${a * d - b * c} \\neq 0$，$f$ 取到其余一切值。值域是 ${setText(answer)}。`,
+            solution: walked(
+              [
+                [
+                  ["Find the horizontal asymptote", "求水平渐近线"],
+                  t(
+                    "The numerator and denominator have the same degree, so the horizontal asymptote is the ratio of the leading coefficients:",
+                    "分子和分母次数相同，所以水平渐近线是首项系数之比：",
+                  ),
+                  [`y = ${frac(String(a), String(c))} = ${num(ha)}`],
+                ],
+                [
+                  ["Check that $f$ is not constant", "确认 $f$ 不是常数"],
+                  t("The value of $ad - bc$ is not $0$:", "$ad - bc$ 的值不为 $0$："),
+                  [`ad - bc = ${paren(a)} \\cdot ${paren(d)} - ${paren(b)} \\cdot ${paren(c)} = ${a * d - b * c} \\neq 0`],
+                ],
+                [
+                  ["Write the range", "写出值域"],
+                  t(
+                    `So $f$ takes every value except the horizontal asymptote. The range is ${setText(answer)}.`,
+                    `所以 $f$ 取到除水平渐近线外的一切值。值域是 ${setText(answer)}。`,
+                  ),
+                ],
+              ],
+              t(
+                `Set $f(x) = ${num(ha)}$ and multiply by the denominator:${steps(`${num(ha)} \\left(${linear(c, d)}\\right) = ${linear(a, b)}`)}The $x$-terms cancel and leave $${num(Q.of(a * d, c))} = ${b}$, which is false, so this value is never reached.`,
+                `令 $f(x) = ${num(ha)}$，两边乘以分母：${steps(`${num(ha)} \\left(${linear(c, d)}\\right) = ${linear(a, b)}`)}$x$ 项相消，剩下 $${num(Q.of(a * d, c))} = ${b}$，不成立，所以这个值取不到。`,
+              ),
             ),
           });
         }
@@ -2971,8 +3409,8 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
       figure: precalculusDrawings["the-domain-and-range-of-a-rational-function#range-with-a-hole"],
       title: t("The range when there is a hole", "有空洞时的值域"),
       explanation: t(
-        "A hole removes one more value from the range: the $y$-coordinate of the hole, unless the graph reaches that value somewhere else. For a simplified function $\\frac{ax + b}{cx + d}$, every value except $\\frac{a}{c}$ is reached exactly once, so the hole's value is missing.\n\n$$f(x) = \\frac{(x - 1)(2x + 1)}{(x - 1)(x + 2)} = \\frac{2x + 1}{x + 2} \\quad (x \\neq 1)$$\n\nThe hole is at $(1, 1)$ and the horizontal asymptote is $y = 2$, so the range is $(-\\infty, 1) \\cup (1, 2) \\cup (2, \\infty)$.",
-        "空洞会让值域再少一个值：空洞的纵坐标，除非图象在别处取到这个值。对化简后的函数 $\\frac{ax + b}{cx + d}$，除 $\\frac{a}{c}$ 外的每个值都恰好取到一次，所以空洞处的值缺失。\n\n$$f(x) = \\frac{(x - 1)(2x + 1)}{(x - 1)(x + 2)} = \\frac{2x + 1}{x + 2} \\quad (x \\neq 1)$$\n\n空洞在 $(1, 1)$，水平渐近线是 $y = 2$，所以值域是 $(-\\infty, 1) \\cup (1, 2) \\cup (2, \\infty)$。",
+        "A hole removes one more value from the range: the $y$-coordinate of the hole, unless the graph reaches that value somewhere else. For a simplified function $\\frac{ax + b}{cx + d}$, every value except $\\frac{a}{c}$ is reached exactly once, so the hole's value is missing.\n\n$$f(x) = \\frac{(x - 1)(2x + 1)}{(x - 1)(x + 2)} = \\frac{2x + 1}{x + 2} \\quad (x \\neq 1)$$\n\nThe hole is at $(1, 1)$ and the horizontal asymptote is $y = 2$, so the range is $(-\\infty, 1) \\cup (1, 2) \\cup (2, \\infty)$.\n\nFor $f(x) = \\frac{(x + 2)(x - 3)}{(x + 2)(x - 1)} = \\frac{x - 3}{x - 1}$ with $x \\neq -2$, the horizontal asymptote is $y = 1$ and the hole is at $\\left(-2, \\frac{5}{3}\\right)$. The range is every value except $1$ and $\\frac{5}{3}$. Check: $\\frac{-2 - 3}{-2 - 1} = \\frac{-5}{-3} = \\frac{5}{3}$.\n\n> **Watch out.** The hole's $x$-value $-2$ leaves the domain; its $y$-value $\\frac{5}{3}$ is what leaves the range.",
+        "空洞会让值域再少一个值：空洞的纵坐标，除非图象在别处取到这个值。对化简后的函数 $\\frac{ax + b}{cx + d}$，除 $\\frac{a}{c}$ 外的每个值都恰好取到一次，所以空洞处的值缺失。\n\n$$f(x) = \\frac{(x - 1)(2x + 1)}{(x - 1)(x + 2)} = \\frac{2x + 1}{x + 2} \\quad (x \\neq 1)$$\n\n空洞在 $(1, 1)$，水平渐近线是 $y = 2$，所以值域是 $(-\\infty, 1) \\cup (1, 2) \\cup (2, \\infty)$。\n\n对 $f(x) = \\frac{(x + 2)(x - 3)}{(x + 2)(x - 1)} = \\frac{x - 3}{x - 1}$（$x \\neq -2$），水平渐近线是 $y = 1$，空洞在 $\\left(-2, \\frac{5}{3}\\right)$。值域是除 $1$ 和 $\\frac{5}{3}$ 外的一切值。检验：$\\frac{-2 - 3}{-2 - 1} = \\frac{-5}{-3} = \\frac{5}{3}$。\n\n> **注意。** 空洞的横坐标 $-2$ 从定义域中去掉；从值域中去掉的是它的纵坐标 $\\frac{5}{3}$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2984,6 +3422,8 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
           const ha = Q.of(a);
           const yh = Q.of(a * h + b, h + d);
           const answer = except(ha, yh);
+          const [xTop, xBottom] = [Q.of(b).sub(Q.of(d).mul(yh)), yh.sub(ha)];
+          const byLine = `x = ${num(xTop)} \\div ${xBottom.sign() < 0 ? `\\left(${num(xBottom)}\\right)` : num(xBottom)} = ${h}`;
           const f = frac(`${fac(h)}(${linear(a, b)})`, `${fac(h)}${fac(-d)}`);
           return intervalProblem({
             prompt: t(`Find the range of $f(x) = ${f}$. Write it in interval notation.`, `求 $f(x) = ${f}$ 的值域，用区间记号表示。`),
@@ -2992,9 +3432,27 @@ export const theDomainAndRangeOfARationalFunction: TopicDef = {
             wrong: [except(ha), except(yh), except(Q.of(-d), Q.of(h)), except(ha, Q.of(h))].filter(
               (w) => intervalLatex(w) !== intervalLatex(answer),
             ),
-            solution: t(
-              `Cancel $${bare(h)}$: $f(x) = ${frac(linear(a, b), bare(-d))}$ for $x \\neq ${h}$. This takes every value except the horizontal asymptote $y = ${a}$, but the hole at $x = ${h}$ removes the value $${frac(linear(a, b).replace(/x/g, `(${h})`), `${h} ${sgn(d)} ${Math.abs(d)}`)} = ${num(yh)}$. The range is ${setText(answer)}.`,
-              `约去 $${bare(h)}$：当 $x \\neq ${h}$ 时 $f(x) = ${frac(linear(a, b), bare(-d))}$。它取到除水平渐近线 $y = ${a}$ 外的一切值，但 $x = ${h}$ 处的空洞去掉了值 $${frac(linear(a, b).replace(/x/g, `(${h})`), `${h} ${sgn(d)} ${Math.abs(d)}`)} = ${num(yh)}$。值域是 ${setText(answer)}。`,
+            solution: walked(
+              [
+                [
+                  ["Cancel", "约分"],
+                  t(`Cancel $${bare(h)}$:`, `约去 $${bare(h)}$：`),
+                  [`f(x) = ${frac(linear(a, b), bare(-d))}, \\quad x \\neq ${h}`],
+                ],
+                [
+                  ["Find the missing values", "找出取不到的值"],
+                  t(
+                    `This takes every value except the horizontal asymptote $y = ${a}$, and the hole at $x = ${h}$ removes its height:`,
+                    `它取到除水平渐近线 $y = ${a}$ 外的一切值，而 $x = ${h}$ 处的空洞再去掉它的高度：`,
+                  ),
+                  [`${frac(`${scaled(a, String(h))}${plus(b)}`, d === 0 ? String(h) : `${h}${plus(d)}`)} = ${num(yh)}`],
+                ],
+                [["Write the range", "写出值域"], t(`The range is ${setText(answer)}.`, `值域是 ${setText(answer)}。`)],
+              ],
+              t(
+                `Solve $y = ${frac(linear(a, b), bare(-d))}$ for $x$ and put in $y = ${num(yh)}$:${steps(`x = ${frac(poly([b, ""], [-d, "y"]), poly([1, "y"], [-a, ""]))}`, byLine)}Only the removed $x = ${h}$ gives this value, and no $x$ gives $y = ${a}$.`,
+                `从 $y = ${frac(linear(a, b), bare(-d))}$ 解出 $x$，再代入 $y = ${num(yh)}$：${steps(`x = ${frac(poly([b, ""], [-d, "y"]), poly([1, "y"], [-a, ""]))}`, byLine)}只有被去掉的 $x = ${h}$ 给出这个值，而没有 $x$ 给出 $y = ${a}$。`,
+              ),
             ),
           });
         }
@@ -3027,14 +3485,30 @@ export const identifyingARationalFunctionFromAGraph: TopicDef = {
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.D", "CCSS.HSF.BF.A.1"],
+  intro: t(
+    `A graph has the vertical asymptote $x = 1$, the horizontal asymptote $y = 2$ and the $x$-intercept $(-3, 0)$. The root gives the factor $x + 3$ on top, the vertical asymptote gives $x - 1$ below, and the horizontal asymptote gives the leading coefficient $2$:
+
+$$f(x) = \\frac{2(x + 3)}{x - 1}$$
+
+Check: $f(-3) = \\frac{2 \\cdot 0}{-4} = 0$, and $f(0) = \\frac{6}{-1} = -6$ is where the graph crosses the $y$-axis.
+
+In this lesson we read a linear-over-linear function from its graph, find the constant of a function with two vertical asymptotes from a marked point, and tell odd powers from even ones.`,
+    `某图象有竖直渐近线 $x = 1$、水平渐近线 $y = 2$ 和 $x$ 轴截点 $(-3, 0)$。零点给出分子的因式 $x + 3$，竖直渐近线给出分母的 $x - 1$，水平渐近线给出首项系数 $2$：
+
+$$f(x) = \\frac{2(x + 3)}{x - 1}$$
+
+检验：$f(-3) = \\frac{2 \\cdot 0}{-4} = 0$，而 $f(0) = \\frac{6}{-1} = -6$ 正是图象与 $y$ 轴的交点。
+
+这节课我们由图象读出一次比一次型函数，由标出的点求有两条竖直渐近线的函数中的常数，并区分奇次幂和偶次幂。`,
+  ),
   knowledgePoints: [
     {
       id: "linear-over-linear-from-a-graph",
       figure: precalculusDrawings["identifying-a-rational-function-from-a-graph#linear-over-linear-from-a-graph"],
       title: t("A root and two asymptotes", "一个零点和两条渐近线"),
       explanation: t(
-        "A graph with one vertical asymptote $x = p$, horizontal asymptote $y = a$ and $x$-intercept $(r, 0)$ belongs to\n\n$$f(x) = \\frac{a(x - r)}{x - p}$$\n\nThe root puts $x - r$ in the numerator, the vertical asymptote puts $x - p$ in the denominator, and since both have degree $1$, the horizontal asymptote is the leading coefficient $a$.",
-        "若图象有一条竖直渐近线 $x = p$、水平渐近线 $y = a$ 和 $x$ 轴截点 $(r, 0)$，则它是\n\n$$f(x) = \\frac{a(x - r)}{x - p}$$\n\n的图象。零点使分子含 $x - r$，竖直渐近线使分母含 $x - p$；两者都是一次，所以水平渐近线就是首项系数 $a$。",
+        "A graph with one vertical asymptote $x = p$, horizontal asymptote $y = a$ and $x$-intercept $(r, 0)$ belongs to\n\n$$f(x) = \\frac{a(x - r)}{x - p}$$\n\nThe root puts $x - r$ in the numerator, the vertical asymptote puts $x - p$ in the denominator, and since both have degree $1$, the horizontal asymptote is the leading coefficient $a$.\n\nWith vertical asymptote $x = -2$, horizontal asymptote $y = -1$ and $x$-intercept $(3, 0)$: $f(x) = \\frac{-(x - 3)}{x + 2}$. Check: $f(3) = 0$, and for large $x$, $f(x) \\approx \\frac{-x}{x} = -1$.\n\n> **Watch out.** A root at $x = 3$ gives the factor $x - 3$, not $x + 3$; likewise the asymptote $x = -2$ gives $x + 2$.",
+        "若图象有一条竖直渐近线 $x = p$、水平渐近线 $y = a$ 和 $x$ 轴截点 $(r, 0)$，则它是\n\n$$f(x) = \\frac{a(x - r)}{x - p}$$\n\n的图象。零点使分子含 $x - r$，竖直渐近线使分母含 $x - p$；两者都是一次，所以水平渐近线就是首项系数 $a$。\n\n若竖直渐近线是 $x = -2$，水平渐近线是 $y = -1$，$x$ 轴截点是 $(3, 0)$，则 $f(x) = \\frac{-(x - 3)}{x + 2}$。检验：$f(3) = 0$，且 $x$ 很大时 $f(x) \\approx \\frac{-x}{x} = -1$。\n\n> **注意。** $x = 3$ 处的零点给出因式 $x - 3$，而不是 $x + 3$；同样，渐近线 $x = -2$ 给出 $x + 2$。",
       ),
       generate(rng) {
         let [p, r] = rng.sample(range(-4, 4), 2) as [number, number];
@@ -3055,9 +3529,28 @@ export const identifyingARationalFunctionFromAGraph: TopicDef = {
             wrong: [ratioLatex(a, p, r), ratioLatex(-a, r, p), ratioLatex(a, -r, -p)].filter(
               (w, i, ws) => ws.indexOf(w) === i && w !== ratioLatex(a, r, p),
             ),
-            solution: t(
-              `The vertical asymptote is $x = ${p}$, so the denominator is $${bare(p)}$. The $x$-intercept is $(${r}, 0)$, so the numerator has the factor $${bare(r)}$. The horizontal asymptote $y = ${a}$ gives $a = ${a}$. So $f(x) = ${ratioLatex(a, r, p)}$.`,
-              `竖直渐近线是 $x = ${p}$，所以分母是 $${bare(p)}$。$x$ 轴截点是 $(${r}, 0)$，所以分子含因式 $${bare(r)}$。水平渐近线 $y = ${a}$ 给出 $a = ${a}$。所以 $f(x) = ${ratioLatex(a, r, p)}$。`,
+            solution: walked(
+              [
+                [
+                  ["Read the asymptotes", "读出渐近线"],
+                  t(
+                    `The vertical asymptote $x = ${p}$ makes the denominator $${bare(p)}$, and the horizontal asymptote $y = ${a}$ gives $a = ${a}$.`,
+                    `竖直渐近线 $x = ${p}$ 使分母为 $${bare(p)}$，水平渐近线 $y = ${a}$ 给出 $a = ${a}$。`,
+                  ),
+                ],
+                [
+                  ["Read the intercept", "读出截点"],
+                  t(
+                    `The $x$-intercept $(${r}, 0)$ puts the factor $${bare(r)}$ in the numerator. So:`,
+                    `$x$ 轴截点 $(${r}, 0)$ 使分子含因式 $${bare(r)}$。所以：`,
+                  ),
+                  [`f(x) = ${ratioLatex(a, r, p)}`],
+                ],
+              ],
+              t(
+                `At the intercept and far out:${steps(`f(${r}) = ${frac(`${scaled(a, `${r} - ${paren(r)}`)}`, `${r} - ${paren(p)}`)} = 0`, `f(1000) \\approx ${approx((a * (1000 - r)) / (1000 - p))}`)}matching the $x$-intercept and the horizontal asymptote $y = ${a}$.`,
+                `在截点处和很远处：${steps(`f(${r}) = ${frac(`${scaled(a, `${r} - ${paren(r)}`)}`, `${r} - ${paren(p)}`)} = 0`, `f(1000) \\approx ${approx((a * (1000 - r)) / (1000 - p))}`)}与 $x$ 轴截点和水平渐近线 $y = ${a}$ 一致。`,
+              ),
             ),
           }),
           figure: figureOf(d),
@@ -3069,8 +3562,8 @@ export const identifyingARationalFunctionFromAGraph: TopicDef = {
       figure: precalculusDrawings["identifying-a-rational-function-from-a-graph#two-vertical-asymptotes-and-a-point"],
       title: t("Two vertical asymptotes and a point", "两条竖直渐近线和一个点"),
       explanation: t(
-        "A graph with vertical asymptotes $x = p$ and $x = q$, horizontal asymptote $y = 0$ and no roots belongs to\n\n$$f(x) = \\frac{k}{(x - p)(x - q)}$$\n\nTo find $k$, substitute a marked point. If the graph passes through $(0, 2)$ and the asymptotes are $x = -1$ and $x = 3$, then $2 = \\frac{k}{(1)(-3)}$, so $k = -6$.",
-        "若图象有竖直渐近线 $x = p$ 和 $x = q$、水平渐近线 $y = 0$，且没有零点，则它是\n\n$$f(x) = \\frac{k}{(x - p)(x - q)}$$\n\n的图象。代入标出的点求 $k$。若图象经过 $(0, 2)$，渐近线是 $x = -1$ 和 $x = 3$，则 $2 = \\frac{k}{(1)(-3)}$，所以 $k = -6$。",
+        "A graph with vertical asymptotes $x = p$ and $x = q$, horizontal asymptote $y = 0$ and no roots belongs to\n\n$$f(x) = \\frac{k}{(x - p)(x - q)}$$\n\nTo find $k$, substitute a marked point. If the graph passes through $(0, 2)$ and the asymptotes are $x = -1$ and $x = 3$, then $2 = \\frac{k}{(1)(-3)}$, so $k = -6$.\n\nWith asymptotes $x = 1$ and $x = -2$ and the point $(0, 3)$: $3 = \\frac{k}{(0 - 1)(0 + 2)} = \\frac{k}{-2}$, so $k = -6$ and $f(x) = \\frac{-6}{(x - 1)(x + 2)}$. Check: $f(0) = \\frac{-6}{-2} = 3$.\n\n> **Watch out.** Substitute the point into the factors with their signs: $(0 - 1)(0 + 2) = -2$, not $2$. Then multiply, do not divide, to find $k$.",
+        "若图象有竖直渐近线 $x = p$ 和 $x = q$、水平渐近线 $y = 0$，且没有零点，则它是\n\n$$f(x) = \\frac{k}{(x - p)(x - q)}$$\n\n的图象。代入标出的点求 $k$。若图象经过 $(0, 2)$，渐近线是 $x = -1$ 和 $x = 3$，则 $2 = \\frac{k}{(1)(-3)}$，所以 $k = -6$。\n\n若渐近线是 $x = 1$ 和 $x = -2$，点是 $(0, 3)$：$3 = \\frac{k}{(0 - 1)(0 + 2)} = \\frac{k}{-2}$，所以 $k = -6$，$f(x) = \\frac{-6}{(x - 1)(x + 2)}$。检验：$f(0) = \\frac{-6}{-2} = 3$。\n\n> **注意。** 把点代入因式时要带符号：$(0 - 1)(0 + 2) = -2$，而不是 $2$。然后用乘法而不是除法求 $k$。",
       ),
       generate(rng) {
         for (;;) {
@@ -3094,9 +3587,29 @@ export const identifyingARationalFunctionFromAGraph: TopicDef = {
                 frac(String(-k), `${fac(p)}${fac(q)}`),
                 frac(String(k), `${fac(-p)}${fac(-q)}`),
               ].filter((w, i, ws) => ws.indexOf(w) === i && w !== answer),
-              solution: t(
-                `The vertical asymptotes are $x = ${p}$ and $x = ${q}$, so $f(x) = ${frac("k", `${fac(p)}${fac(q)}`)}$. Substitute the point:${steps(`${y0} = ${frac("k", `(${x0} ${sgn(-p)} ${Math.abs(p)})(${x0} ${sgn(-q)} ${Math.abs(q)})`)} = ${frac("k", String((x0 - p) * (x0 - q)))}`)}So $k = ${k}$ and $f(x) = ${answer}$.`,
-                `竖直渐近线是 $x = ${p}$ 和 $x = ${q}$，所以 $f(x) = ${frac("k", `${fac(p)}${fac(q)}`)}$。代入该点：${steps(`${y0} = ${frac("k", `(${x0} ${sgn(-p)} ${Math.abs(p)})(${x0} ${sgn(-q)} ${Math.abs(q)})`)} = ${frac("k", String((x0 - p) * (x0 - q)))}`)}所以 $k = ${k}$，$f(x) = ${answer}$。`,
+              solution: walked(
+                [
+                  [
+                    ["Write the form", "写出形式"],
+                    t(
+                      `The vertical asymptotes are $x = ${p}$ and $x = ${q}$, and there is no root, so:`,
+                      `竖直渐近线是 $x = ${p}$ 和 $x = ${q}$，且没有零点，所以：`,
+                    ),
+                    [`f(x) = ${frac("k", `${fac(p)}${fac(q)}`)}`],
+                  ],
+                  [
+                    ["Substitute the point", "代入该点"],
+                    t(`Put in $(${x0}, ${y0})$ and solve for $k$:`, `代入 $(${x0}, ${y0})$，解出 $k$：`),
+                    [
+                      `${y0} = ${frac("k", `(${x0} - ${paren(p)})(${x0} - ${paren(q)})`)} = ${frac("k", String((x0 - p) * (x0 - q)))}`,
+                      `k = ${paren(y0)} \\cdot ${paren((x0 - p) * (x0 - q))} = ${k}, \\quad f(x) = ${answer}`,
+                    ],
+                  ],
+                ],
+                t(
+                  `At the marked point:${steps(`f(${x0}) = ${frac(String(k), String((x0 - p) * (x0 - q)))} = ${y0}`)}`,
+                  `在标出的点处：${steps(`f(${x0}) = ${frac(String(k), String((x0 - p) * (x0 - q)))} = ${y0}`)}`,
+                ),
               ),
             }),
             figure: figureOf(d),
@@ -3109,8 +3622,8 @@ export const identifyingARationalFunctionFromAGraph: TopicDef = {
       figure: precalculusDrawings["identifying-a-rational-function-from-a-graph#even-multiplicity-asymptotes"],
       title: t("Both sides going the same way", "两侧趋向相同"),
       explanation: t(
-        "Near a vertical asymptote $x = p$, the power of $x - p$ shows in the graph:\n\n- $\\frac{k}{x - p}$: the two sides go in **opposite** directions;\n- $\\frac{k}{(x - p)^{2}}$: both sides go the **same** way, up when $k > 0$ and down when $k < 0$.\n\nAdding $c$ moves the horizontal asymptote to $y = c$.",
-        "在竖直渐近线 $x = p$ 附近，$x - p$ 的次数会体现在图象上：\n\n- $\\frac{k}{x - p}$：两侧趋向**相反**；\n- $\\frac{k}{(x - p)^{2}}$：两侧趋向**相同**，$k > 0$ 时都向上，$k < 0$ 时都向下。\n\n加上 $c$ 会把水平渐近线移到 $y = c$。",
+        "Near a vertical asymptote $x = p$, the power of $x - p$ shows in the graph:\n\n- $\\frac{k}{x - p}$: the two sides go in **opposite** directions;\n- $\\frac{k}{(x - p)^{2}}$: both sides go the **same** way, up when $k > 0$ and down when $k < 0$.\n\nAdding $c$ moves the horizontal asymptote to $y = c$.\n\nThe graph of $y = \\frac{-2}{(x - 1)^{2}} + 3$ has the asymptotes $x = 1$ and $y = 3$, and both sides go **down**. Check: at $x = 1.1$ and $x = 0.9$, $y = \\frac{-2}{0.01} + 3 = -197$.\n\n> **Watch out.** For an odd power, look at the right side to find the sign of $k$: the left side always goes the other way.",
+        "在竖直渐近线 $x = p$ 附近，$x - p$ 的次数会体现在图象上：\n\n- $\\frac{k}{x - p}$：两侧趋向**相反**；\n- $\\frac{k}{(x - p)^{2}}$：两侧趋向**相同**，$k > 0$ 时都向上，$k < 0$ 时都向下。\n\n加上 $c$ 会把水平渐近线移到 $y = c$。\n\n$y = \\frac{-2}{(x - 1)^{2}} + 3$ 的图象有渐近线 $x = 1$ 和 $y = 3$，两侧都**向下**。检验：$x = 1.1$ 和 $x = 0.9$ 时，$y = \\frac{-2}{0.01} + 3 = -197$。\n\n> **注意。** 对奇次幂，要看右侧来判断 $k$ 的符号：左侧总是趋向相反。",
       ),
       generate(rng) {
         const p = rng.nonZero(-3, 3);
@@ -3125,10 +3638,51 @@ export const identifyingARationalFunctionFromAGraph: TopicDef = {
             t("Which equation does the graph show?", "图中是哪个方程的图象？"),
             write(k, p, square),
             [write(k, p, !square), write(-k, p, square), write(k, -p, square)],
-            t(
-              `The vertical asymptote is $x = ${p}$ and the horizontal asymptote is $y = ${c}$. ${square ? `Both sides go ${k > 0 ? "up" : "down"}, so the power is even and $k ${k > 0 ? ">" : "<"} 0$` : `The two sides go in opposite directions, so the power is odd; the right side goes ${k > 0 ? "up" : "down"}, so $k ${k > 0 ? ">" : "<"} 0$`}. The equation is ${write(k, p, square).en}.`,
-              `竖直渐近线是 $x = ${p}$，水平渐近线是 $y = ${c}$。${square ? `两侧都${k > 0 ? "向上" : "向下"}，所以次数为偶数，且 $k ${k > 0 ? ">" : "<"} 0$` : `两侧趋向相反，所以次数为奇数；右侧${k > 0 ? "向上" : "向下"}，所以 $k ${k > 0 ? ">" : "<"} 0$`}。方程是 ${write(k, p, square).en}。`,
+            walked(
+              [
+                [
+                  ["Read the asymptotes", "读出渐近线"],
+                  t(
+                    `The vertical asymptote is $x = ${p}$ and the horizontal asymptote is $y = ${c}$.`,
+                    `竖直渐近线是 $x = ${p}$，水平渐近线是 $y = ${c}$。`,
+                  ),
+                ],
+                [
+                  ["Read the two sides", "看两侧"],
+                  t(
+                    `${square ? `Both sides go ${k > 0 ? "up" : "down"}, so the power is even and $k ${k > 0 ? ">" : "<"} 0$` : `The two sides go in opposite directions, so the power is odd; the right side goes ${k > 0 ? "up" : "down"}, so $k ${k > 0 ? ">" : "<"} 0$`}. The equation is ${write(k, p, square).en}.`,
+                    `${square ? `两侧都${k > 0 ? "向上" : "向下"}，所以次数为偶数，且 $k ${k > 0 ? ">" : "<"} 0$` : `两侧趋向相反，所以次数为奇数；右侧${k > 0 ? "向上" : "向下"}，所以 $k ${k > 0 ? ">" : "<"} 0$`}。方程是 ${write(k, p, square).en}。`,
+                  ),
+                ],
+              ],
+              t(
+                `Just left and right of the asymptote:${steps(...[-1, 1].map((side) => `x = ${Number((p + side * 0.1).toFixed(1))}: \\quad y \\approx ${approx(d.f(p + side * 0.1))}`))}${square ? `both far ${k > 0 ? "above" : "below"} $y = ${c}$, as in the graph.` : "one far above and one far below, as in the graph."}`,
+                `在渐近线左右两侧附近：${steps(...[-1, 1].map((side) => `x = ${Number((p + side * 0.1).toFixed(1))}: \\quad y \\approx ${approx(d.f(p + side * 0.1))}`))}${square ? `都远在 $y = ${c}$ ${k > 0 ? "上方" : "下方"}，与图象一致。` : "一侧远在上方，一侧远在下方，与图象一致。"}`,
+              ),
             ),
+            [
+              why(
+                write(k, p, !square),
+                square
+                  ? "With an odd power the two sides would go in opposite directions, but in the graph both go the same way."
+                  : "With a square both sides would go the same way, but in the graph they go in opposite directions.",
+                square ? "若是奇次幂，两侧会趋向相反，但图中两侧趋向相同。" : "若是平方，两侧会趋向相同，但图中两侧趋向相反。",
+              ),
+              why(
+                write(-k, p, square),
+                square
+                  ? `With this sign both sides would go ${k > 0 ? "down" : "up"}, but in the graph they go ${k > 0 ? "up" : "down"}.`
+                  : `With this sign the right side would go ${k > 0 ? "down" : "up"}, but in the graph it goes ${k > 0 ? "up" : "down"}.`,
+                square
+                  ? `取这个符号时两侧都会${k > 0 ? "向下" : "向上"}，但图中两侧都${k > 0 ? "向上" : "向下"}。`
+                  : `取这个符号时右侧会${k > 0 ? "向下" : "向上"}，但图中右侧${k > 0 ? "向上" : "向下"}。`,
+              ),
+              why(
+                write(k, -p, square),
+                `This has its vertical asymptote at $x = ${-p}$, but the graph's is at $x = ${p}$.`,
+                `它的竖直渐近线是 $x = ${-p}$，但图中的是 $x = ${p}$。`,
+              ),
+            ],
           ),
           figure: figureOf(d),
         };
@@ -3158,14 +3712,26 @@ export const identifyingARationalFunctionFromAGraphContainingHoles: TopicDef = {
   ],
   xp: 14,
   standards: ["CCSS.HSF.IF.C.7.D", "CCSS.HSF.BF.A.1"],
+  intro: t(
+    `The graph of $f(x) = \\frac{(x - 1)(x + 2)}{(x - 1)(x - 3)}$ is the graph of $\\frac{x + 2}{x - 3}$ with one point removed: at $x = 1$ there is an open circle. Its height is the value of the simplified function there.
+
+Check: $\\frac{1 + 2}{1 - 3} = -\\frac{3}{2}$, so the hole is at $\\left(1, -\\frac{3}{2}\\right)$.
+
+In this lesson we read the formula of a graph that has a hole, a root and asymptotes, and find an unknown constant from the coordinates of a hole.`,
+    `$f(x) = \\frac{(x - 1)(x + 2)}{(x - 1)(x - 3)}$ 的图象就是 $\\frac{x + 2}{x - 3}$ 的图象去掉一个点：在 $x = 1$ 处有一个空心圆圈。它的高度是化简后的函数在那里的值。
+
+检验：$\\frac{1 + 2}{1 - 3} = -\\frac{3}{2}$，所以空洞在 $\\left(1, -\\frac{3}{2}\\right)$。
+
+这节课我们读出有空洞、零点和渐近线的图象的解析式，并由空洞的坐标求未知常数。`,
+  ),
   knowledgePoints: [
     {
       id: "a-hole-and-a-root",
       figure: precalculusDrawings["identifying-a-rational-function-from-a-graph-containing-holes#a-hole-and-a-root"],
       title: t("A hole, a root and two asymptotes", "空洞、零点和两条渐近线"),
       explanation: t(
-        "An open circle at $x = h$ means a factor $x - h$ in **both** the numerator and the denominator. Read the rest of the formula as usual: roots give numerator factors, vertical asymptotes give denominator factors, and the horizontal asymptote gives the leading coefficient.\n\nA graph with a hole at $x = 1$, vertical asymptote $x = -2$, root $x = 3$ and horizontal asymptote $y = 2$ is\n\n$$f(x) = \\frac{2(x - 3)(x - 1)}{(x + 2)(x - 1)}$$",
-        "$x = h$ 处的空心圆圈表示分子和分母**都**含有因式 $x - h$。其余部分照常读出：零点给出分子的因式，竖直渐近线给出分母的因式，水平渐近线给出首项系数。\n\n空洞在 $x = 1$、竖直渐近线为 $x = -2$、零点为 $x = 3$、水平渐近线为 $y = 2$ 的图象是\n\n$$f(x) = \\frac{2(x - 3)(x - 1)}{(x + 2)(x - 1)}$$",
+        "An open circle at $x = h$ means a factor $x - h$ in **both** the numerator and the denominator. Read the rest of the formula as usual: roots give numerator factors, vertical asymptotes give denominator factors, and the horizontal asymptote gives the leading coefficient.\n\nA graph with a hole at $x = 1$, vertical asymptote $x = -2$, root $x = 3$ and horizontal asymptote $y = 2$ is\n\n$$f(x) = \\frac{2(x - 3)(x - 1)}{(x + 2)(x - 1)}$$\n\nA hole at $x = -1$, vertical asymptote $x = 2$, root $x = 4$ and horizontal asymptote $y = -1$ give $f(x) = \\frac{-(x - 4)(x + 1)}{(x - 2)(x + 1)}$. Check: the hole's height is $\\frac{-(-1 - 4)}{-1 - 2} = -\\frac{5}{3}$, where the open circle is drawn.\n\n> **Watch out.** The hole's factor must be in **both** places. In the denominator only, $x = h$ would be a vertical asymptote; left out, the graph would have no gap.",
+        "$x = h$ 处的空心圆圈表示分子和分母**都**含有因式 $x - h$。其余部分照常读出：零点给出分子的因式，竖直渐近线给出分母的因式，水平渐近线给出首项系数。\n\n空洞在 $x = 1$、竖直渐近线为 $x = -2$、零点为 $x = 3$、水平渐近线为 $y = 2$ 的图象是\n\n$$f(x) = \\frac{2(x - 3)(x - 1)}{(x + 2)(x - 1)}$$\n\n空洞在 $x = -1$、竖直渐近线为 $x = 2$、零点为 $x = 4$、水平渐近线为 $y = -1$，得 $f(x) = \\frac{-(x - 4)(x + 1)}{(x - 2)(x + 1)}$。检验：空洞的高度是 $\\frac{-(-1 - 4)}{-1 - 2} = -\\frac{5}{3}$，正是空心圆圈的位置。\n\n> **注意。** 空洞的因式必须在分子、分母**两处**都有。只在分母中，$x = h$ 会是竖直渐近线；两处都没有，图象就没有缺口。",
       ),
       keyPrerequisites: ["locating-holes-in-rational-functions"],
       generate(rng) {
@@ -3182,10 +3748,45 @@ export const identifyingARationalFunctionFromAGraphContainingHoles: TopicDef = {
               t("Which equation does the graph show? The open circle is a hole.", "图中是哪个方程的图象？空心圆圈是空洞。"),
               write(a, r, p, h),
               [same(`$y = ${ratioLatex(a, r, p)}$`), write(a, r, p, -h), write(a, p, r, h)],
-              t(
-                `The hole at $x = ${h}$ puts $${bare(h)}$ in the numerator and the denominator. The vertical asymptote $x = ${p}$ gives $${bare(p)}$ in the denominator, the root $x = ${r}$ gives $${bare(r)}$ in the numerator, and the horizontal asymptote is $y = ${a}$. The equation is ${write(a, r, p, h).en}.`,
-                `$x = ${h}$ 处的空洞使分子和分母都含 $${bare(h)}$。竖直渐近线 $x = ${p}$ 使分母含 $${bare(p)}$，零点 $x = ${r}$ 使分子含 $${bare(r)}$，水平渐近线是 $y = ${a}$。方程是 ${write(a, r, p, h).en}。`,
+              walked(
+                [
+                  [
+                    ["Read the hole", "读出空洞"],
+                    t(
+                      `The hole at $x = ${h}$ puts $${bare(h)}$ in the numerator and the denominator.`,
+                      `$x = ${h}$ 处的空洞使分子和分母都含 $${bare(h)}$。`,
+                    ),
+                  ],
+                  [
+                    ["Read the rest", "读出其余部分"],
+                    t(
+                      `The vertical asymptote $x = ${p}$ gives $${bare(p)}$ in the denominator, the root $x = ${r}$ gives $${bare(r)}$ in the numerator, and the horizontal asymptote is $y = ${a}$. The equation is ${write(a, r, p, h).en}.`,
+                      `竖直渐近线 $x = ${p}$ 使分母含 $${bare(p)}$，零点 $x = ${r}$ 使分子含 $${bare(r)}$，水平渐近线是 $y = ${a}$。方程是 ${write(a, r, p, h).en}。`,
+                    ),
+                  ],
+                ],
+                t(
+                  `The hole's height from the simplified function:${steps(`${frac(`${scaled(a, `${h} - ${paren(r)}`)}`, `${h} - ${paren(p)}`)} = ${num(Q.of(a * (h - r), h - p))}`)}which is where the open circle is drawn.`,
+                  `由化简后的函数求空洞的高度：${steps(`${frac(`${scaled(a, `${h} - ${paren(r)}`)}`, `${h} - ${paren(p)}`)} = ${num(Q.of(a * (h - r), h - p))}`)}正是空心圆圈的位置。`,
+                ),
               ),
+              [
+                why(
+                  same(`$y = ${ratioLatex(a, r, p)}$`),
+                  `This has no factor $${bare(h)}$, so its graph has no hole at $x = ${h}$.`,
+                  `它没有因式 $${bare(h)}$，所以图象在 $x = ${h}$ 处没有空洞。`,
+                ),
+                why(
+                  write(a, r, p, -h),
+                  `This puts the hole at $x = ${-h}$, but the open circle is at $x = ${h}$.`,
+                  `它的空洞在 $x = ${-h}$，但空心圆圈在 $x = ${h}$。`,
+                ),
+                why(
+                  write(a, p, r, h),
+                  `This swaps the root and the asymptote: it is $0$ at $x = ${p}$ and has its vertical asymptote at $x = ${r}$.`,
+                  `它把零点和渐近线弄反了：它在 $x = ${p}$ 处为 $0$，竖直渐近线是 $x = ${r}$。`,
+                ),
+              ],
             ),
             figure: figureOf(d),
           };
@@ -3197,8 +3798,8 @@ export const identifyingARationalFunctionFromAGraphContainingHoles: TopicDef = {
       figure: precalculusDrawings["identifying-a-rational-function-from-a-graph-containing-holes#reading-k-from-a-hole"],
       title: t("Reading the constant from the hole", "由空洞求常数"),
       explanation: t(
-        "The coordinates of a hole can fix an unknown constant. For $f(x) = \\frac{k(x - h)}{(x - p)(x - h)}$, the simplified function is $\\frac{k}{x - p}$, and the hole lies on it.\n\nIf the vertical asymptote is $x = 1$ and the hole is at $(3, -2)$, then $-2 = \\frac{k}{3 - 1}$, so $k = -4$ and\n\n$$f(x) = \\frac{-4(x - 3)}{(x - 1)(x - 3)}$$",
-        "空洞的坐标可以确定未知常数。对 $f(x) = \\frac{k(x - h)}{(x - p)(x - h)}$，化简后的函数是 $\\frac{k}{x - p}$，空洞在它的图象上。\n\n若竖直渐近线是 $x = 1$，空洞在 $(3, -2)$，则 $-2 = \\frac{k}{3 - 1}$，所以 $k = -4$，\n\n$$f(x) = \\frac{-4(x - 3)}{(x - 1)(x - 3)}$$",
+        "The coordinates of a hole can fix an unknown constant. For $f(x) = \\frac{k(x - h)}{(x - p)(x - h)}$, the simplified function is $\\frac{k}{x - p}$, and the hole lies on it.\n\nIf the vertical asymptote is $x = 1$ and the hole is at $(3, -2)$, then $-2 = \\frac{k}{3 - 1}$, so $k = -4$ and\n\n$$f(x) = \\frac{-4(x - 3)}{(x - 1)(x - 3)}$$\n\nWith vertical asymptote $x = -1$ and a hole at $(2, 4)$: $4 = \\frac{k}{2 + 1}$, so $k = 12$ and $f(x) = \\frac{12(x - 2)}{(x + 1)(x - 2)}$. Check: $\\frac{12}{2 + 1} = 4$.\n\n> **Watch out.** Substitute into the simplified $\\frac{k}{x - p}$: the original fraction is $\\frac{0}{0}$ at the hole and tells nothing. The constant is $k$, not the hole's height.",
+        "空洞的坐标可以确定未知常数。对 $f(x) = \\frac{k(x - h)}{(x - p)(x - h)}$，化简后的函数是 $\\frac{k}{x - p}$，空洞在它的图象上。\n\n若竖直渐近线是 $x = 1$，空洞在 $(3, -2)$，则 $-2 = \\frac{k}{3 - 1}$，所以 $k = -4$，\n\n$$f(x) = \\frac{-4(x - 3)}{(x - 1)(x - 3)}$$\n\n若竖直渐近线是 $x = -1$，空洞在 $(2, 4)$：$4 = \\frac{k}{2 + 1}$，所以 $k = 12$，$f(x) = \\frac{12(x - 2)}{(x + 1)(x - 2)}$。检验：$\\frac{12}{2 + 1} = 4$。\n\n> **注意。** 要代入化简后的 $\\frac{k}{x - p}$：原分式在空洞处是 $\\frac{0}{0}$，什么也说明不了。常数是 $k$，不是空洞的高度。",
       ),
       generate(rng) {
         for (;;) {
@@ -3223,10 +3824,48 @@ export const identifyingARationalFunctionFromAGraphContainingHoles: TopicDef = {
                 write(holeRatioLatex(yh, undefined, p, h)),
                 write(holeRatioLatex(k, undefined, p, -h)),
               ],
-              t(
-                `The hole at $x = ${h}$ puts $${bare(h)}$ in the numerator and the denominator, and the vertical asymptote gives $${bare(p)}$. The hole lies on $y = ${frac("k", bare(p))}$:${steps(`${yh} = ${frac("k", `${h} ${sgn(-p)} ${Math.abs(p)}`)}, \\quad k = ${k}`)}The equation is ${right.en}.`,
-                `$x = ${h}$ 处的空洞使分子和分母都含 $${bare(h)}$，竖直渐近线给出 $${bare(p)}$。空洞在 $y = ${frac("k", bare(p))}$ 上：${steps(`${yh} = ${frac("k", `${h} ${sgn(-p)} ${Math.abs(p)}`)}, \\quad k = ${k}`)}方程是 ${right.en}。`,
+              walked(
+                [
+                  [
+                    ["Read the factors", "读出因式"],
+                    t(
+                      `The hole at $x = ${h}$ puts $${bare(h)}$ in the numerator and the denominator, and the vertical asymptote gives $${bare(p)}$.`,
+                      `$x = ${h}$ 处的空洞使分子和分母都含 $${bare(h)}$，竖直渐近线给出 $${bare(p)}$。`,
+                    ),
+                  ],
+                  [
+                    ["Use the hole", "利用空洞"],
+                    t(`The hole lies on $y = ${frac("k", bare(p))}$:`, `空洞在 $y = ${frac("k", bare(p))}$ 上：`),
+                    [`${yh} = ${frac("k", `${h} - ${paren(p)}`)}, \\quad k = ${paren(yh)} \\cdot ${paren(h - p)} = ${k}`],
+                  ],
+                ],
+                t(
+                  `The equation is ${right.en}, and at the hole the simplified function gives${steps(`${frac(String(k), `${h} - ${paren(p)}`)} = ${yh}`)}`,
+                  `方程是 ${right.en}，在空洞处化简后的函数给出${steps(`${frac(String(k), `${h} - ${paren(p)}`)} = ${yh}`)}`,
+                ),
               ),
+              [
+                why(
+                  write(sfrac(k, bare(p))),
+                  `This has no factor $${bare(h)}$, so its graph has no hole.`,
+                  `它没有因式 $${bare(h)}$，所以图象没有空洞。`,
+                ),
+                why(
+                  write(sfrac(k, `${fac(p)}${fac(h)}`)),
+                  `With $${bare(h)}$ only in the denominator, $x = ${h}$ is a second vertical asymptote, not a hole.`,
+                  `$${bare(h)}$ 只在分母中时，$x = ${h}$ 是第二条竖直渐近线，而不是空洞。`,
+                ),
+                why(
+                  write(holeRatioLatex(yh, undefined, p, h)),
+                  `This uses the hole's height $${yh}$ as $k$, but $${frac("k", `${h} - ${paren(p)}`)}$ must equal $${yh}$, so $k = ${k}$.`,
+                  `它把空洞的高度 $${yh}$ 当成了 $k$，但 $${frac("k", `${h} - ${paren(p)}`)}$ 要等于 $${yh}$，所以 $k = ${k}$。`,
+                ),
+                why(
+                  write(holeRatioLatex(k, undefined, p, -h)),
+                  `This puts the hole at $x = ${-h}$, but it is at $x = ${h}$.`,
+                  `它的空洞在 $x = ${-h}$，但空洞在 $x = ${h}$。`,
+                ),
+              ],
             ),
             figure: figureOf(d),
           };
@@ -3238,11 +3877,14 @@ export const identifyingARationalFunctionFromAGraphContainingHoles: TopicDef = {
 
 // ─── 2.5.11 Identifying the graph of a rational function ───────────────────
 
-/** pick4 shuffles four drawings with the correct one first, returning the figure and the correct letter. */
-function pick4(rng: Rng, ds: readonly [Drawing, Drawing, Drawing, Drawing]): [Figure, number] {
+/** pick4 shuffles four drawings with the correct one first, returning the figure, the correct letter and where each drawing went. */
+function pick4(rng: Rng, ds: readonly [Drawing, Drawing, Drawing, Drawing]): [Figure, number, number[]] {
   const order = rng.shuffle([0, 1, 2, 3]);
-  return [panels(order.map((i) => ds[i]!)), order.indexOf(0)];
+  return [panels(order.map((i) => ds[i]!)), order.indexOf(0), order];
 }
+
+/** letterWhy pairs the letter of drawing i with what is wrong with it. */
+const letterWhy = (order: readonly number[], i: number, en: string, zh: string): Reason => why(letterOptions[order.indexOf(i)]!, en, zh);
 
 /** identifyingTheGraphOfARationalFunction matches a rational function to its graph using asymptotes, intercepts and signs. */
 export const identifyingTheGraphOfARationalFunction: TopicDef = {
@@ -3260,14 +3902,26 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
   encompasses: [{ topic: "identifying-a-rational-function-from-a-graph", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSF.IF.C.7.D"],
+  intro: t(
+    `Picture $f(x) = \\frac{x - 2}{x + 1}$ before looking at any graph: the vertical asymptote is $x = -1$, the horizontal asymptote is $y = 1$, and the $x$-intercept is $(2, 0)$. The sign changes only at $-1$ and $2$: it is positive left of $-1$, negative between, and positive right of $2$.
+
+Check: $f(-2) = \\frac{-4}{-1} = 4 > 0$, $f(0) = -2 < 0$ and $f(3) = \\frac{1}{4} > 0$.
+
+In this lesson we match graphs by their asymptotes and intercepts, use sign charts to tell where a graph is above the axis, and match graphs with two vertical asymptotes.`,
+    `先不看图，设想 $f(x) = \\frac{x - 2}{x + 1}$ 的图象：竖直渐近线是 $x = -1$，水平渐近线是 $y = 1$，$x$ 轴截点是 $(2, 0)$。符号只在 $-1$ 和 $2$ 处改变：在 $-1$ 左侧为正，两者之间为负，$2$ 右侧为正。
+
+检验：$f(-2) = \\frac{-4}{-1} = 4 > 0$，$f(0) = -2 < 0$，$f(3) = \\frac{1}{4} > 0$。
+
+这节课我们由渐近线和截距对应图象，用符号表判断图象在 $x$ 轴上方的部分，并对应有两条竖直渐近线的图象。`,
+  ),
   knowledgePoints: [
     {
       id: "matching-linear-over-linear-graphs",
       title: t("Matching by asymptotes and intercepts", "由渐近线和截距对应"),
       figure: remainingDrawings5["identifying-the-graph-of-a-rational-function#matching-linear-over-linear-graphs"],
       explanation: t(
-        "To match $f(x) = \\frac{a(x - r)}{x - p}$ with its graph, check in turn:\n\n1. the vertical asymptote $x = p$;\n2. the horizontal asymptote $y = a$;\n3. the $x$-intercept $(r, 0)$.\n\nGraphs that differ in only one of these can still be told apart by that one feature.",
-        "要把 $f(x) = \\frac{a(x - r)}{x - p}$ 与它的图象对应，依次检查：\n\n1. 竖直渐近线 $x = p$；\n2. 水平渐近线 $y = a$；\n3. $x$ 轴截点 $(r, 0)$。\n\n只在其中一项上不同的图象，也能凭这一项区分。",
+        "To match $f(x) = \\frac{a(x - r)}{x - p}$ with its graph, check in turn:\n\n1. the vertical asymptote $x = p$;\n2. the horizontal asymptote $y = a$;\n3. the $x$-intercept $(r, 0)$.\n\nGraphs that differ in only one of these can still be told apart by that one feature.\n\nFor $f(x) = \\frac{-2(x - 1)}{x + 3}$, look for the asymptotes $x = -3$ and $y = -2$ and the intercept $(1, 0)$. Check: $f(0) = \\frac{-2 \\cdot (-1)}{3} = \\frac{2}{3}$, so the right graph crosses the $y$-axis just above the origin.\n\n> **Watch out.** A graph with $y = 2$ in place of $y = -2$, or with the root and the asymptote swapped, can look much the same. Check all three features before choosing.",
+        "要把 $f(x) = \\frac{a(x - r)}{x - p}$ 与它的图象对应，依次检查：\n\n1. 竖直渐近线 $x = p$；\n2. 水平渐近线 $y = a$；\n3. $x$ 轴截点 $(r, 0)$。\n\n只在其中一项上不同的图象，也能凭这一项区分。\n\n对 $f(x) = \\frac{-2(x - 1)}{x + 3}$，要找渐近线 $x = -3$、$y = -2$ 和截点 $(1, 0)$。检验：$f(0) = \\frac{-2 \\cdot (-1)}{3} = \\frac{2}{3}$，所以正确的图象在原点稍上方与 $y$ 轴相交。\n\n> **注意。** 把 $y = -2$ 换成 $y = 2$，或把零点和渐近线对调的图象，看上去可能差不多。三项特征都检查过再选。",
       ),
       generate(rng) {
         for (;;) {
@@ -3280,20 +3934,57 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
             ha: aa,
             dots: [[rr, 0]],
           });
-          const [figure, correct] = pick4(rng, [draw(a, r, p), draw(-a, r, p), draw(a, p, r), draw(a, r, -p)]);
+          const [figure, correct, order] = pick4(rng, [draw(a, r, p), draw(-a, r, p), draw(a, p, r), draw(a, r, -p)]);
           return {
-            ...choiceProblem({
-              prompt: t(
-                `Which graph is the graph of $f(x) = ${ratioLatex(a, r, p)}$? Asymptotes are dashed and $x$-intercepts are marked.`,
-                `哪个是 $f(x) = ${ratioLatex(a, r, p)}$ 的图象？渐近线画成虚线，并标出了 $x$ 轴截点。`,
-              ),
-              options: letterOptions,
-              correct,
-              solution: t(
-                `The graph needs the vertical asymptote $x = ${p}$, the horizontal asymptote $y = ${a}$ and the $x$-intercept $(${r}, 0)$. Only graph ${letters[correct]} has all three.`,
-                `图象应有竖直渐近线 $x = ${p}$、水平渐近线 $y = ${a}$ 和 $x$ 轴截点 $(${r}, 0)$。只有图象 ${letters[correct]} 三者都具备。`,
-              ),
-            }),
+            ...reasoned(
+              choiceProblem({
+                prompt: t(
+                  `Which graph is the graph of $f(x) = ${ratioLatex(a, r, p)}$? Asymptotes are dashed and $x$-intercepts are marked.`,
+                  `哪个是 $f(x) = ${ratioLatex(a, r, p)}$ 的图象？渐近线画成虚线，并标出了 $x$ 轴截点。`,
+                ),
+                options: letterOptions,
+                correct,
+                solution: walked(
+                  [
+                    [
+                      ["List the features", "列出特征"],
+                      t(
+                        `The graph needs the vertical asymptote $x = ${p}$, the horizontal asymptote $y = ${a}$ and the $x$-intercept $(${r}, 0)$.`,
+                        `图象应有竖直渐近线 $x = ${p}$、水平渐近线 $y = ${a}$ 和 $x$ 轴截点 $(${r}, 0)$。`,
+                      ),
+                    ],
+                    [
+                      ["Compare the graphs", "比较各图"],
+                      t(`Only graph ${letters[correct]} has all three.`, `只有图象 ${letters[correct]} 三者都具备。`),
+                    ],
+                  ],
+                  t(
+                    `The $y$-intercept of $f$ is${steps(`f(0) = ${frac(`${scaled(a, `0 - ${paren(r)}`)}`, `0 - ${paren(p)}`)} = ${num(Q.of(a * r, p))}`)}and graph ${letters[correct]} crosses the $y$-axis there.`,
+                    `$f$ 的 $y$ 轴截距是${steps(`f(0) = ${frac(`${scaled(a, `0 - ${paren(r)}`)}`, `0 - ${paren(p)}`)} = ${num(Q.of(a * r, p))}`)}图象 ${letters[correct]} 正在那里与 $y$ 轴相交。`,
+                  ),
+                ),
+              }),
+              [
+                letterWhy(
+                  order,
+                  1,
+                  `Its horizontal asymptote is $y = ${-a}$, not $y = ${a}$.`,
+                  `它的水平渐近线是 $y = ${-a}$，不是 $y = ${a}$。`,
+                ),
+                letterWhy(
+                  order,
+                  2,
+                  `Its asymptote and intercept are swapped: it has $x = ${r}$ as asymptote and $(${p}, 0)$ as intercept.`,
+                  `它的渐近线和截点对调了：渐近线是 $x = ${r}$，截点是 $(${p}, 0)$。`,
+                ),
+                letterWhy(
+                  order,
+                  3,
+                  `Its vertical asymptote is $x = ${-p}$, not $x = ${p}$.`,
+                  `它的竖直渐近线是 $x = ${-p}$，不是 $x = ${p}$。`,
+                ),
+              ],
+            ),
             figure,
           };
         }
@@ -3304,8 +3995,8 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
       figure: precalculusDrawings["identifying-the-graph-of-a-rational-function#sign-charts"],
       title: t("Sign charts", "符号表"),
       explanation: t(
-        "A rational function can change sign only at its zeros and vertical asymptotes. Mark them on the number line and test one point in each interval: this is a **sign chart**, and it tells where the graph is above or below the $x$-axis.\n\n$$f(x) = \\frac{x - 2}{(x + 1)(x - 4)}$$\n\nThe critical points are $-1, 2, 4$. Testing $x = -2, 0, 3, 5$ gives the signs $-, +, -, +$, so $f(x) > 0$ on $(-1, 2) \\cup (4, \\infty)$.",
-        "分式函数只可能在零点和竖直渐近线处变号。把它们标在数轴上，并在每个区间里检验一个点，这就是**符号表**，它说明图象在 $x$ 轴上方还是下方。\n\n$$f(x) = \\frac{x - 2}{(x + 1)(x - 4)}$$\n\n临界点是 $-1, 2, 4$。检验 $x = -2, 0, 3, 5$ 得符号 $-, +, -, +$，所以 $f(x) > 0$ 的解集是 $(-1, 2) \\cup (4, \\infty)$。",
+        "A rational function can change sign only at its zeros and vertical asymptotes. Mark them on the number line and test one point in each interval: this is a **sign chart**, and it tells where the graph is above or below the $x$-axis.\n\n$$f(x) = \\frac{x - 2}{(x + 1)(x - 4)}$$\n\nThe critical points are $-1, 2, 4$. Testing $x = -2, 0, 3, 5$ gives the signs $-, +, -, +$, so $f(x) > 0$ on $(-1, 2) \\cup (4, \\infty)$.\n\nFor $f(x) = \\frac{-(x - 1)}{x(x + 2)}$ the critical points are $-2, 0, 1$, and testing $x = -3, -1, \\frac{1}{2}, 2$ gives $+, -, +, -$. So $f(x) < 0$ on $(-2, 0) \\cup (1, \\infty)$. Check: $f(2) = \\frac{-1}{8} < 0$.\n\n> **Watch out.** The vertical asymptotes are critical points too, even though $f$ is not $0$ there. They are never part of the answer.",
+        "分式函数只可能在零点和竖直渐近线处变号。把它们标在数轴上，并在每个区间里检验一个点，这就是**符号表**，它说明图象在 $x$ 轴上方还是下方。\n\n$$f(x) = \\frac{x - 2}{(x + 1)(x - 4)}$$\n\n临界点是 $-1, 2, 4$。检验 $x = -2, 0, 3, 5$ 得符号 $-, +, -, +$，所以 $f(x) > 0$ 的解集是 $(-1, 2) \\cup (4, \\infty)$。\n\n对 $f(x) = \\frac{-(x - 1)}{x(x + 2)}$，临界点是 $-2, 0, 1$，检验 $x = -3, -1, \\frac{1}{2}, 2$ 得符号 $+, -, +, -$。所以 $f(x) < 0$ 的解集是 $(-2, 0) \\cup (1, \\infty)$。检验：$f(2) = \\frac{-1}{8} < 0$。\n\n> **注意。** 竖直渐近线也是临界点，虽然 $f$ 在那里不为 $0$。它们永远不在答案里。",
       ),
       generate(rng) {
         const [p, q, r] = rng.sample(range(-6, 6), 3) as [number, number, number];
@@ -3316,6 +4007,8 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
         const answer = signSet(f, crit, positive);
         const latex = frac(prodL(simple([r]), a), `${fac(p)}${fac(q)}`);
         const op = positive ? ">" : "<";
+        const [c1, c2, c3] = [...crit].sort((u, v) => u - v) as [number, number, number];
+        const probe = [c1 - 1, (c1 + c2) / 2, (c2 + c3) / 2, c3 + 1].find((x) => f(x) > 0 === positive)!;
         return intervalProblem({
           prompt: t(
             `Where is $f(x) = ${latex}$ ${positive ? "positive" : "negative"}? Write the set of $x$ with $f(x) ${op} 0$ in interval notation.`,
@@ -3333,12 +4026,27 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
           ].filter(
             (w, i, ws) => intervalLatex(w) !== intervalLatex(answer) && ws.findIndex((o) => intervalLatex(o) === intervalLatex(w)) === i,
           ),
-          solution: t(
-            `The critical points are ${listText([...crit].sort((u, v) => u - v))}. Testing a point in each interval gives${steps(signChart(f, crit))}So $f(x) ${op} 0$ on ${setText(answer)}.`,
-            `临界点是 ${listText(
-              [...crit].sort((u, v) => u - v),
-              "、",
-            )}。在每个区间里检验一个点，得${steps(signChart(f, crit))}所以 $f(x) ${op} 0$ 的解集是 ${setText(answer)}。`,
+          solution: walked(
+            [
+              [
+                ["Find the critical points", "找出临界点"],
+                t(
+                  `The numerator is $0$ at $x = ${r}$ and the denominator at $x = ${p}$ and $x = ${q}$, so the critical points are ${listText([c1, c2, c3])}.`,
+                  `分子在 $x = ${r}$ 处为 $0$，分母在 $x = ${p}$ 和 $x = ${q}$ 处为 $0$，所以临界点是 ${listText([c1, c2, c3], "、")}。`,
+                ),
+              ],
+              [
+                ["Test each interval", "检验每个区间"],
+                t(
+                  `Testing a point in each interval gives${steps(signChart(f, crit))}So $f(x) ${op} 0$ on ${setText(answer)}.`,
+                  `在每个区间里检验一个点，得${steps(signChart(f, crit))}所以 $f(x) ${op} 0$ 的解集是 ${setText(answer)}。`,
+                ),
+              ],
+            ],
+            t(
+              `A point of the answer:${steps(`f(${probe}) \\approx ${approx(f(probe))} ${op} 0`)}`,
+              `答案中的一个点：${steps(`f(${probe}) \\approx ${approx(f(probe))} ${op} 0`)}`,
+            ),
           ),
         });
       },
@@ -3348,8 +4056,8 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
       figure: precalculusDrawings["identifying-the-graph-of-a-rational-function#matching-graphs-with-two-vertical-asymptotes"],
       title: t("Graphs with two vertical asymptotes", "有两条竖直渐近线的图象"),
       explanation: t(
-        "For $f(x) = \\frac{k}{(x - p)(x - q)}$, the horizontal asymptote is $y = 0$ and there are no roots. The sign of $k$ decides the middle piece: between $p$ and $q$ the denominator is negative, so the middle piece is below the $x$-axis when $k > 0$ and above it when $k < 0$. The outer pieces have the opposite sign.\n\nCompare also with $\\frac{kx}{(x - p)(x - q)}$, which has a root at $x = 0$.",
-        "对 $f(x) = \\frac{k}{(x - p)(x - q)}$，水平渐近线是 $y = 0$，没有零点。$k$ 的符号决定中间那一段：在 $p$ 与 $q$ 之间分母为负，所以 $k > 0$ 时中间一段在 $x$ 轴下方，$k < 0$ 时在上方。两侧的分支符号与之相反。\n\n再与 $\\frac{kx}{(x - p)(x - q)}$ 比较：它在 $x = 0$ 处有零点。",
+        "For $f(x) = \\frac{k}{(x - p)(x - q)}$, the horizontal asymptote is $y = 0$ and there are no roots. The sign of $k$ decides the middle piece: between $p$ and $q$ the denominator is negative, so the middle piece is below the $x$-axis when $k > 0$ and above it when $k < 0$. The outer pieces have the opposite sign.\n\nCompare also with $\\frac{kx}{(x - p)(x - q)}$, which has a root at $x = 0$.\n\nFor $f(x) = \\frac{4}{(x + 1)(x - 3)}$, $k = 4 > 0$, so the middle piece, between $-1$ and $3$, is below the $x$-axis. Check: $f(1) = \\frac{4}{(2)(-2)} = -1 < 0$.\n\n> **Watch out.** The middle piece has the **opposite** sign of $k$, because the denominator is negative there. The outer pieces have the sign of $k$.",
+        "对 $f(x) = \\frac{k}{(x - p)(x - q)}$，水平渐近线是 $y = 0$，没有零点。$k$ 的符号决定中间那一段：在 $p$ 与 $q$ 之间分母为负，所以 $k > 0$ 时中间一段在 $x$ 轴下方，$k < 0$ 时在上方。两侧的分支符号与之相反。\n\n再与 $\\frac{kx}{(x - p)(x - q)}$ 比较：它在 $x = 0$ 处有零点。\n\n对 $f(x) = \\frac{4}{(x + 1)(x - 3)}$，$k = 4 > 0$，所以介于 $-1$ 和 $3$ 之间的中间一段在 $x$ 轴下方。检验：$f(1) = \\frac{4}{(2)(-2)} = -1 < 0$。\n\n> **注意。** 中间一段的符号与 $k$ **相反**，因为那里分母为负。两侧分支的符号与 $k$ 相同。",
       ),
       generate(rng) {
         for (;;) {
@@ -3362,21 +4070,67 @@ export const identifyingTheGraphOfARationalFunction: TopicDef = {
             ha: 0,
             ...(root && { dots: [[0, 0] as Point] }),
           });
-          const [figure, correct] = pick4(rng, [draw(k, p, q, false), draw(-k, p, q, false), draw(k, -p, -q, false), draw(k, p, q, true)]);
+          const [figure, correct, order] = pick4(rng, [
+            draw(k, p, q, false),
+            draw(-k, p, q, false),
+            draw(k, -p, -q, false),
+            draw(k, p, q, true),
+          ]);
+          const mid = (p + q) / 2;
           const latex = frac(String(k), `${fac(p)}${fac(q)}`);
           return {
-            ...choiceProblem({
-              prompt: t(
-                `Which graph is the graph of $f(x) = ${latex}$? Asymptotes are dashed.`,
-                `哪个是 $f(x) = ${latex}$ 的图象？渐近线画成虚线。`,
-              ),
-              options: letterOptions,
-              correct,
-              solution: t(
-                `The vertical asymptotes are $x = ${p}$ and $x = ${q}$, and there is no root. Between them the denominator is negative and $k = ${k}$ is ${k > 0 ? "positive" : "negative"}, so the middle piece is ${k > 0 ? "below" : "above"} the $x$-axis. That is graph ${letters[correct]}.`,
-                `竖直渐近线是 $x = ${p}$ 和 $x = ${q}$，没有零点。在两者之间分母为负，而 $k = ${k}$ ${k > 0 ? "为正" : "为负"}，所以中间一段在 $x$ 轴${k > 0 ? "下方" : "上方"}。这是图象 ${letters[correct]}。`,
-              ),
-            }),
+            ...reasoned(
+              choiceProblem({
+                prompt: t(
+                  `Which graph is the graph of $f(x) = ${latex}$? Asymptotes are dashed.`,
+                  `哪个是 $f(x) = ${latex}$ 的图象？渐近线画成虚线。`,
+                ),
+                options: letterOptions,
+                correct,
+                solution: walked(
+                  [
+                    [
+                      ["Read the asymptotes", "读出渐近线"],
+                      t(
+                        `The vertical asymptotes are $x = ${p}$ and $x = ${q}$, the horizontal asymptote is $y = 0$, and there is no root.`,
+                        `竖直渐近线是 $x = ${p}$ 和 $x = ${q}$，水平渐近线是 $y = 0$，没有零点。`,
+                      ),
+                    ],
+                    [
+                      ["Find the middle piece", "判断中间一段"],
+                      t(
+                        `Between them the denominator is negative and $k = ${k}$ is ${k > 0 ? "positive" : "negative"}, so the middle piece is ${k > 0 ? "below" : "above"} the $x$-axis. That is graph ${letters[correct]}.`,
+                        `在两者之间分母为负，而 $k = ${k}$ ${k > 0 ? "为正" : "为负"}，所以中间一段在 $x$ 轴${k > 0 ? "下方" : "上方"}。这是图象 ${letters[correct]}。`,
+                      ),
+                    ],
+                  ],
+                  t(
+                    `Halfway between the asymptotes:${steps(`f(${mid}) = ${frac(String(k), `(${mid - p})(${mid - q})`)} \\approx ${approx(k / ((mid - p) * (mid - q)))}`)}`,
+                    `在两条渐近线正中间：${steps(`f(${mid}) = ${frac(String(k), `(${mid - p})(${mid - q})`)} \\approx ${approx(k / ((mid - p) * (mid - q)))}`)}`,
+                  ),
+                ),
+              }),
+              [
+                letterWhy(
+                  order,
+                  1,
+                  `Its middle piece is ${k > 0 ? "above" : "below"} the $x$-axis; with $k = ${k}$ it must be ${k > 0 ? "below" : "above"}.`,
+                  `它的中间一段在 $x$ 轴${k > 0 ? "上方" : "下方"}；$k = ${k}$ 时应在${k > 0 ? "下方" : "上方"}。`,
+                ),
+                letterWhy(
+                  order,
+                  2,
+                  `Its vertical asymptotes are $x = ${-q}$ and $x = ${-p}$, not $x = ${p}$ and $x = ${q}$.`,
+                  `它的竖直渐近线是 $x = ${-q}$ 和 $x = ${-p}$，不是 $x = ${p}$ 和 $x = ${q}$。`,
+                ),
+                letterWhy(
+                  order,
+                  3,
+                  "It crosses the $x$-axis at the origin, but $f$ has no root: its numerator is a constant.",
+                  "它在原点与 $x$ 轴相交，但 $f$ 没有零点：它的分子是常数。",
+                ),
+              ],
+            ),
             figure,
           };
         }

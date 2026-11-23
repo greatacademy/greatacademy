@@ -67,8 +67,8 @@ const constantForHole: KnowledgePointDef = {
   id: "the-constant-that-makes-a-hole-instead-of-an-asymptote",
   title: t("The constant that makes a hole instead of an asymptote", "使图像出现空心点而非渐近线的常数"),
   explanation: t(
-    "A zero of the denominator gives a vertical asymptote unless the same factor cancels with the numerator, and then the graph has only a hole. So asking for a hole is really a condition on the numerator: it must equal zero at that value of $x$. Substituting the value turns the condition into an equation for an unknown coefficient, and this can be solved without factoring anything first.",
-    "分母的零点会产生竖直渐近线，除非同一个因式能与分子约去，这时图像只有一个空心点。所以要求出现空心点，实际上是对分子提出条件：分子在这个 $x$ 值处必须等于零。代入这个值，条件就变成关于未知系数的方程，不必先分解因式就能解出。",
+    "A zero of the denominator gives a vertical asymptote unless the same factor cancels with the numerator, and then the graph has only a hole. So asking for a hole is really a condition on the numerator: it must equal zero at that value of $x$. Substituting the value turns the condition into an equation for an unknown coefficient, and this can be solved without factoring anything first.\n\nFor $f(x) = \\frac{x^{2} - 5x + c}{x - 2}$ to have a hole at $x = 2$, the numerator must be $0$ there: $4 - 10 + c = 0$, so $c = 6$. Check: $x^{2} - 5x + 6 = (x - 2)(x - 3)$, so the factor $x - 2$ cancels.\n\n> **Watch out.** The condition is on the numerator at the zero of the denominator. Setting $c$ equal to that zero, or making the denominator vanish somewhere else, does not make the factor cancel.",
+    "分母的零点会产生竖直渐近线，除非同一个因式能与分子约去，这时图像只有一个空心点。所以要求出现空心点，实际上是对分子提出条件：分子在这个 $x$ 值处必须等于零。代入这个值，条件就变成关于未知系数的方程，不必先分解因式就能解出。\n\n要使 $f(x) = \\frac{x^{2} - 5x + c}{x - 2}$ 在 $x = 2$ 处是空心点，分子在那里必须为 $0$：$4 - 10 + c = 0$，所以 $c = 6$。检验：$x^{2} - 5x + 6 = (x - 2)(x - 3)$，所以因式 $x - 2$ 能约去。\n\n> **注意。** 条件是分子在分母零点处的值。让 $c$ 等于这个零点，或让分母在别处为零，都不能使因式约去。",
   ),
   generate(rng) {
     const a = nonzero(rng, 7);
@@ -85,8 +85,8 @@ const constantForHole: KnowledgePointDef = {
       form: "integer",
       wrong: [-answer, a * a, -a * a, a * b, r],
       solution: t(
-        `For the factor $${minus(a)}$ to cancel, the numerator must be zero at $x = ${a}$. So $${inParens(a)}^{2} + ${inParens(b)} \\cdot ${inParens(a)} + c = 0$, which is $${a * a + a * b} + c = 0$. Hence $c = ${answer}$.`,
-        `要约去因式 $${minus(a)}$，分子在 $x = ${a}$ 处必须为零。所以 $${inParens(a)}^{2} + ${inParens(b)} \\cdot ${inParens(a)} + c = 0$，即 $${a * a + a * b} + c = 0$。因此 $c = ${answer}$。`,
+        `${stepLabel(1, "Set the numerator to zero", "令分子为零").en} For the factor $${minus(a)}$ to cancel, the numerator must be zero at $x = ${a}$:\n\n$$${inParens(a)}^{2} + ${inParens(b)} \\cdot ${inParens(a)} + c = 0$$\n\n${stepLabel(2, "Solve for c", "解出 c").en} This is $${a * a + a * b} + c = 0$, so $c = ${answer}$.\n\n**Check.** With $c = ${answer}$ the numerator factors as $${poly([1, "x^{2}"], [b, "x"], [answer, ""])} = (${minus(a)})(${minus(r)})$, so $${minus(a)}$ cancels and $x = ${a}$ is a hole.`,
+        `${stepLabel(1, "Set the numerator to zero", "令分子为零")["zh-CN"]}要约去因式 $${minus(a)}$，分子在 $x = ${a}$ 处必须为零：\n\n$$${inParens(a)}^{2} + ${inParens(b)} \\cdot ${inParens(a)} + c = 0$$\n\n${stepLabel(2, "Solve for c", "解出 c")["zh-CN"]}即 $${a * a + a * b} + c = 0$，所以 $c = ${answer}$。\n\n**检验。**$c = ${answer}$ 时分子分解为 $${poly([1, "x^{2}"], [b, "x"], [answer, ""])} = (${minus(a)})(${minus(r)})$，所以 $${minus(a)}$ 能约去，$x = ${a}$ 是空心点。`,
       ),
     });
   },
