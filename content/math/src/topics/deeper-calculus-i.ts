@@ -705,8 +705,8 @@ const rateThatSolvesAnEquation: KnowledgePointDef = {
   id: "an-exponential-that-satisfies-an-equation-in-its-derivatives",
   title: t("An exponential that satisfies an equation in its derivatives", "满足导数方程的指数函数"),
   explanation: t(
-    "By the chain rule, $y = e^{kx}$ has $y' = ky$ and $y'' = k^2y$. Substituting into an equation in $y$ and its derivatives gives a common factor $e^{kx}$, which is never zero. So the condition reduces to a quadratic equation in $k$.",
-    "由链式法则，$y = e^{kx}$ 满足 $y' = ky$，$y'' = k^2y$。代入关于 $y$ 及其导数的方程，会出现公因子 $e^{kx}$，它永不为零。所以条件化为关于 $k$ 的二次方程。",
+    "By the chain rule, $y = e^{kx}$ has $y' = ky$ and $y'' = k^2y$. Substituting into an equation in $y$ and its derivatives gives a common factor $e^{kx}$, which is never zero. So the condition reduces to a quadratic equation in $k$.\n\nFor example, $y'' - 5y' + 6y = 0$ becomes $(k^{2} - 5k + 6)e^{kx} = 0$, so $k^{2} - 5k + 6 = 0$ and $k = 2$ or $k = 3$.\n\nCheck: with $y = e^{3x}$, $y' = 3e^{3x}$ and $y'' = 9e^{3x}$, and $9 - 15 + 6 = 0$.\n\n> **Watch out.** The roots of $k^{2} + bk + c = 0$ have the opposite signs to the numbers in its factors: $(k - 2)(k - 3)$ gives $2$ and $3$, not $-2$ and $-3$.",
+    "由链式法则，$y = e^{kx}$ 满足 $y' = ky$，$y'' = k^2y$。代入关于 $y$ 及其导数的方程，会出现公因子 $e^{kx}$，它永不为零。所以条件化为关于 $k$ 的二次方程。\n\n例如 $y'' - 5y' + 6y = 0$ 化为 $(k^{2} - 5k + 6)e^{kx} = 0$，所以 $k^{2} - 5k + 6 = 0$，$k = 2$ 或 $k = 3$。\n\n检验：取 $y = e^{3x}$，$y' = 3e^{3x}$，$y'' = 9e^{3x}$，而 $9 - 15 + 6 = 0$。\n\n> **注意。** $k^{2} + bk + c = 0$ 的根与因式中的数符号相反：$(k - 2)(k - 3)$ 给出 $2$ 和 $3$，不是 $-2$ 和 $-3$。",
   ),
   generate(rng) {
     const r = rng.int(-6, 5);
@@ -714,6 +714,8 @@ const rateThatSolvesAnEquation: KnowledgePointDef = {
     const b = -(r + s);
     const c = r * s;
     const equation = poly([1, "y''"], [b, "y'"], [c, "y"]);
+    const quadratic = poly([1, "k^2"], [b, "k"], [c, ""]);
+    const factor = (root: number) => (root === 0 ? "k" : `(${poly([1, "k"], [-root, ""])})`);
     return numberProblem({
       prompt: t(
         `For two values of $k$, the function $y = e^{kx}$ satisfies $${equation} = 0$. Find the larger value.`,
@@ -721,10 +723,45 @@ const rateThatSolvesAnEquation: KnowledgePointDef = {
       ),
       answer: s,
       solveFor: "k",
-      wrong: [r, -s, b],
-      solution: t(
-        `Substituting and dividing by $e^{kx}$ gives $${poly([1, "k^2"], [b, "k"], [c, ""])} = 0$, whose roots are $k = ${r}$ and $k = ${s}$. The larger is $${s}$.`,
-        `代入并除以 $e^{kx}$ 得 $${poly([1, "k^2"], [b, "k"], [c, ""])} = 0$，两根是 $k = ${r}$ 和 $k = ${s}$。较大的是 $${s}$。`,
+      mistakes: firstMistakes(s, [
+        why(r, `This is the smaller root; the question asks for the larger, $${s}$.`, `这是较小的根；题目问的是较大的根 $${s}$。`),
+        why(
+          -s,
+          "This flips the sign of a root: the factor $(k - a)$ gives the root $a$.",
+          "这把根的符号弄反了：因式 $(k - a)$ 给出的根是 $a$。",
+        ),
+        why(
+          -r,
+          "This flips the sign of a root: the factor $(k - a)$ gives the root $a$.",
+          "这把根的符号弄反了：因式 $(k - a)$ 给出的根是 $a$。",
+        ),
+        why(b, `This is the coefficient of $y'$, not a value of $k$.`, `这是 $y'$ 的系数，不是 $k$ 的值。`),
+      ]),
+      solution: walk(
+        [
+          [
+            "Differentiate",
+            "求导",
+            "By the chain rule, $y' = ke^{kx}$ and $y'' = k^{2}e^{kx}$.",
+            "由链式法则，$y' = ke^{kx}$，$y'' = k^{2}e^{kx}$。",
+          ],
+          [
+            "Substitute and divide by $e^{kx}$",
+            "代入并除以 $e^{kx}$",
+            `The equation becomes $(${quadratic})e^{kx} = 0$, and $e^{kx}$ is never $0$, so $${quadratic} = 0$.`,
+            `方程化为 $(${quadratic})e^{kx} = 0$，而 $e^{kx}$ 永不为 $0$，所以 $${quadratic} = 0$。`,
+          ],
+          [
+            "Solve",
+            "求解",
+            `$${factor(r)}${factor(s)} = 0$, so $k = ${r}$ or $k = ${s}$. The larger is $${s}$.`,
+            `$${factor(r)}${factor(s)} = 0$，所以 $k = ${r}$ 或 $k = ${s}$。较大的是 $${s}$。`,
+          ],
+        ],
+        [
+          `With $y = e^{${s}x}$, $y' = ${s}y$ and $y'' = ${s * s}y$, so $${equation}$ is $(${s * s} + ${inParens(b * s)} + ${inParens(c)})y = ${s * s + b * s + c}$.`,
+          `取 $y = e^{${s}x}$，$y' = ${s}y$，$y'' = ${s * s}y$，所以 $${equation}$ 等于 $(${s * s} + ${inParens(b * s)} + ${inParens(c)})y = ${s * s + b * s + c}$。`,
+        ],
       ),
     });
   },
@@ -2021,8 +2058,8 @@ const logOfTrig: KnowledgePointDef = {
   id: "a-logarithm-of-a-trigonometric-function-at-a-point",
   title: t("A logarithm of a trigonometric function at a point", "三角函数的对数在一点的导数"),
   explanation: t(
-    "The rule for a logarithm divides the derivative of the inside by the inside, and a trigonometric inside then simplifies. The derivative of $\\ln(\\sin u)$ with respect to $u$ becomes a cotangent, and that of $\\ln(\\cos u)$ becomes a negative tangent. The chain rule still multiplies by the derivative of the angle, a step that is easy to forget.",
-    "对数的求导法则是内层的导数除以内层，而内层是三角函数时还能进一步化简。$\\ln(\\sin u)$ 对 $u$ 的导数化为余切，$\\ln(\\cos u)$ 对 $u$ 的导数化为负的正切。链式法则还要再乘以角的导数，这一步很容易漏掉。",
+    "The rule for a logarithm divides the derivative of the inside by the inside, and a trigonometric inside then simplifies. The derivative of $\\ln(\\sin u)$ with respect to $u$ becomes a cotangent, and that of $\\ln(\\cos u)$ becomes a negative tangent. The chain rule still multiplies by the derivative of the angle, a step that is easy to forget.\n\nFor example, $f(x) = \\ln(\\sin 2x)$ has $f'(x) = \\frac{2\\cos 2x}{\\sin 2x} = 2\\cot 2x$. At $x = \\frac{\\pi}{8}$ the angle is $\\frac{\\pi}{4}$, where $\\cot = 1$, so $f'\\left(\\frac{\\pi}{8}\\right) = 2$.\n\nCheck: $\\frac{\\pi}{8} \\approx 0.3927$, and the difference quotients there with $h = 0.01$ and $h = -0.01$ are about $1.961$ and $2.041$, on either side of $2$.\n\n> **Watch out.** Multiply by the derivative of the angle, here $2$. And $\\ln(\\cos u)$ has derivative $-\\tan u$, with a minus sign.",
+    "对数的求导法则是内层的导数除以内层，而内层是三角函数时还能进一步化简。$\\ln(\\sin u)$ 对 $u$ 的导数化为余切，$\\ln(\\cos u)$ 对 $u$ 的导数化为负的正切。链式法则还要再乘以角的导数，这一步很容易漏掉。\n\n例如 $f(x) = \\ln(\\sin 2x)$ 的导数是 $f'(x) = \\frac{2\\cos 2x}{\\sin 2x} = 2\\cot 2x$。在 $x = \\frac{\\pi}{8}$ 处角为 $\\frac{\\pi}{4}$，此时 $\\cot = 1$，所以 $f'\\left(\\frac{\\pi}{8}\\right) = 2$。\n\n检验：$\\frac{\\pi}{8} \\approx 0.3927$，在该处取 $h = 0.01$ 和 $h = -0.01$ 的差商约为 $1.961$ 和 $2.041$，位于 $2$ 的两侧。\n\n> **注意。** 要乘以角的导数，这里是 $2$。$\\ln(\\cos u)$ 的导数是 $-\\tan u$，带负号。",
   ),
   generate(rng) {
     const big = nonzero(rng, 6);
@@ -2037,14 +2074,62 @@ const logOfTrig: KnowledgePointDef = {
     const f = poly([big, `\\ln\\left(${name} ${u}\\right)`]);
     const at = `\\frac{\\pi}{${4 * b}}`;
     const rate = factor === 1 ? `\\cot ${u}` : factor === -1 ? `\\left(-\\tan ${u}\\right)` : `\\frac{\\sec^{2} ${u}}{\\tan ${u}}`;
+    const value =
+      factor === 1
+        ? "\\cot \\frac{\\pi}{4} = 1"
+        : factor === -1
+          ? "-\\tan \\frac{\\pi}{4} = -1"
+          : "\\frac{\\sec^{2} \\frac{\\pi}{4}}{\\tan \\frac{\\pi}{4}} = \\frac{2}{1} = 2";
+    const trig = factor === 1 ? Math.sin : factor === -1 ? Math.cos : Math.tan;
+    const fn = (x: number) => big * Math.log(trig(b * x));
+    const x0 = Math.PI / (4 * b);
+    const dq = (h: number) => (fn(x0 + h) - fn(x0)) / h;
     return numberProblem({
       prompt: t(`Let $f(x) = ${f}$. Find $f'\\left(${at}\\right)$.`, `设 $f(x) = ${f}$。求 $f'\\left(${at}\\right)$。`),
       answer,
       form: "integer",
-      wrong: [-answer, 2 * answer, big * factor, 3 * answer],
-      solution: t(
-        `$f'(x) = ${big * b} \\cdot ${rate}$. At $x = ${at}$ the angle $${u}$ is $\\frac{\\pi}{4}$, where this last factor equals $${factor}$, so the derivative is $${answer}$.`,
-        `$f'(x) = ${big * b} \\cdot ${rate}$。在 $x = ${at}$ 处，角 $${u}$ 等于 $\\frac{\\pi}{4}$，此时最后这个因子等于 $${factor}$，所以导数是 $${answer}$。`,
+      mistakes: firstMistakes(answer, [
+        why(big * factor, `This leaves out the derivative of the angle, $${b}$.`, `这漏掉了角的导数 $${b}$。`),
+        factor === -1
+          ? why(
+              -answer,
+              "The derivative of $\\ln(\\cos u)$ is $-\\tan u$; the minus sign is missing.",
+              "$\\ln(\\cos u)$ 的导数是 $-\\tan u$；这里漏了负号。",
+            )
+          : why(
+              -answer,
+              `This has the wrong sign: at $\\frac{\\pi}{4}$ the last factor is $${factor}$, which is positive.`,
+              `符号错了：在 $\\frac{\\pi}{4}$ 处最后的因子是 $${factor}$，是正数。`,
+            ),
+        ...(factor === 2
+          ? [
+              why(
+                big * b,
+                "This takes $\\sec^{2} \\frac{\\pi}{4}$ as $1$; it is $2$.",
+                "这把 $\\sec^{2} \\frac{\\pi}{4}$ 当成了 $1$；它是 $2$。",
+              ),
+            ]
+          : []),
+      ]),
+      solution: walk(
+        [
+          [
+            "Differentiate",
+            "求导",
+            `The derivative of $\\ln(${name} u)$ is the derivative of $${name} u$ over $${name} u$, and $u = ${u}$ has derivative $${b}$, so $f'(x) = ${big * b} \\cdot ${rate}$.`,
+            `$\\ln(${name} u)$ 的导数是 $${name} u$ 的导数除以 $${name} u$，而 $u = ${u}$ 的导数是 $${b}$，所以 $f'(x) = ${big * b} \\cdot ${rate}$。`,
+          ],
+          [
+            "Evaluate at the point",
+            "在该点求值",
+            `At $x = ${at}$ the angle $${u}$ is $\\frac{\\pi}{4}$, where $${value}$. So $f'\\left(${at}\\right) = ${big * b} \\cdot ${inParens(factor)} = ${answer}$.`,
+            `在 $x = ${at}$ 处，角 $${u}$ 等于 $\\frac{\\pi}{4}$，此时 $${value}$。所以 $f'\\left(${at}\\right) = ${big * b} \\cdot ${inParens(factor)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `$${at} \\approx ${num(x0)}$. The difference quotients of $f$ there are about $${num(dq(0.01))}$ for $h = 0.01$ and $${num(dq(-0.01))}$ for $h = -0.01$; their average, $${num((dq(0.01) + dq(-0.01)) / 2)}$, is close to $${answer}$.`,
+          `$${at} \\approx ${num(x0)}$。$f$ 在该处的差商，$h = 0.01$ 时约为 $${num(dq(0.01))}$，$h = -0.01$ 时约为 $${num(dq(-0.01))}$；它们的平均值 $${num((dq(0.01) + dq(-0.01)) / 2)}$ 接近 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -2054,31 +2139,80 @@ const powerOfTrigOfMultiple: KnowledgePointDef = {
   id: "a-power-of-a-trigonometric-function-of-a-multiple",
   title: t("A power of a trigonometric function of a multiple", "倍角三角函数的幂"),
   explanation: t(
-    "A function such as $\\tan^{2}(bx)$ has three layers: the square, the tangent and the multiple of $x$. The chain rule produces one factor for each layer, working from the outside in. Evaluating at a point where the angle is $\\frac{\\pi}{4}$ keeps the values simple and shows clearly whether a factor from any layer was dropped.",
-    "$\\tan^{2}(bx)$ 这样的函数有三层：平方、正切和 $x$ 的倍数。链式法则由外向内为每一层产生一个因子。在角等于 $\\frac{\\pi}{4}$ 的点求值，数值简单，也能清楚地看出是否漏掉了某一层的因子。",
+    "A function such as $\\tan^{2}(bx)$ has three layers: the square, the tangent and the multiple of $x$. The chain rule produces one factor for each layer, working from the outside in. Evaluating at a point where the angle is $\\frac{\\pi}{4}$ keeps the values simple and shows clearly whether a factor from any layer was dropped.\n\nFor example, for $f(x) = \\tan^{2}(3x)$ at $x = \\frac{\\pi}{12}$, the angle is $u = \\frac{\\pi}{4}$. The square gives $2\\tan u = 2$, the tangent gives $\\sec^{2} u = 2$, and the multiple gives $3$, so $f'\\left(\\frac{\\pi}{12}\\right) = 2 \\cdot 2 \\cdot 3 = 12$.\n\nCheck: $\\frac{\\pi}{12} \\approx 0.2618$, and the difference quotients there with $h = 0.01$ and $h = -0.01$ are about $12.76$ and $11.31$, on either side of $12$.\n\n> **Watch out.** Three layers give three factors. Leaving out the $3$ from $3x$, or the $\\sec^{2} u$ from the tangent, are the common slips.",
+    "$\\tan^{2}(bx)$ 这样的函数有三层：平方、正切和 $x$ 的倍数。链式法则由外向内为每一层产生一个因子。在角等于 $\\frac{\\pi}{4}$ 的点求值，数值简单，也能清楚地看出是否漏掉了某一层的因子。\n\n例如，对 $f(x) = \\tan^{2}(3x)$ 在 $x = \\frac{\\pi}{12}$ 处，角为 $u = \\frac{\\pi}{4}$。平方给出 $2\\tan u = 2$，正切给出 $\\sec^{2} u = 2$，倍数给出 $3$，所以 $f'\\left(\\frac{\\pi}{12}\\right) = 2 \\cdot 2 \\cdot 3 = 12$。\n\n检验：$\\frac{\\pi}{12} \\approx 0.2618$，在该处取 $h = 0.01$ 和 $h = -0.01$ 的差商约为 $12.76$ 和 $11.31$，位于 $12$ 的两侧。\n\n> **注意。** 三层给出三个因子。漏掉 $3x$ 带来的 $3$，或漏掉正切带来的 $\\sec^{2} u$，是常见的错误。",
   ),
   generate(rng) {
     const big = nonzero(rng, 6);
     const b = rng.int(1, 6);
-    const [outer, factor, steps] = rng.pick([
-      ["\\tan^{2}", 4, "2\\tan u \\sec^{2} u = 2 \\cdot 1 \\cdot 2"],
-      ["\\sec^{2}", 4, "2\\sec^{2} u \\tan u = 2 \\cdot 2 \\cdot 1"],
-      ["\\sin^{2}", 1, "2\\sin u \\cos u = \\sin 2u = 1"],
-      ["\\cos^{2}", -1, "-2\\cos u \\sin u = -\\sin 2u = -1"],
-      ["\\tan^{3}", 6, "3\\tan^{2} u \\sec^{2} u = 3 \\cdot 1 \\cdot 2"],
+    const [outer, factor, steps, fn, drop] = rng.pick([
+      ["\\tan^{2}", 4, "2\\tan u \\sec^{2} u = 2 \\cdot 1 \\cdot 2 = 4", (v: number) => Math.tan(v) ** 2, 2],
+      ["\\sec^{2}", 4, "2\\sec^{2} u \\tan u = 2 \\cdot 2 \\cdot 1 = 4", (v: number) => 1 / Math.cos(v) ** 2, 0],
+      ["\\sin^{2}", 1, "2\\sin u \\cos u = \\sin 2u = 1", (v: number) => Math.sin(v) ** 2, 0],
+      ["\\cos^{2}", -1, "-2\\cos u \\sin u = -\\sin 2u = -1", (v: number) => Math.cos(v) ** 2, 0],
+      ["\\tan^{3}", 6, "3\\tan^{2} u \\sec^{2} u = 3 \\cdot 1 \\cdot 2 = 6", (v: number) => Math.tan(v) ** 3, 3],
     ] as const);
     const answer = big * b * factor;
     const u = timesX(b);
     const f = poly([big, `${outer}(${u})`]);
     const at = `\\frac{\\pi}{${4 * b}}`;
+    const x0 = Math.PI / (4 * b);
+    const dq = (h: number) => (big * fn(b * (x0 + h)) - big * fn(b * x0)) / h;
     return numberProblem({
       prompt: t(`Let $f(x) = ${f}$. Find $f'\\left(${at}\\right)$.`, `设 $f(x) = ${f}$。求 $f'\\left(${at}\\right)$。`),
       answer,
       form: "integer",
-      wrong: [big * factor, 2 * answer, -answer, big * b, 3 * answer],
-      solution: t(
-        `Let $u = ${u}$, so $u = \\frac{\\pi}{4}$ at this point. The derivative of $${outer} u$ with respect to $u$ is $${steps}$ there. Multiplying by the coefficient $${big}$ and by $\\frac{du}{dx} = ${b}$ gives $${answer}$.`,
-        `令 $u = ${u}$，此时 $u = \\frac{\\pi}{4}$。$${outer} u$ 关于 $u$ 的导数在此处是 $${steps}$。再乘以系数 $${big}$ 和 $\\frac{du}{dx} = ${b}$，得 $${answer}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          big * factor,
+          `This leaves out $\\frac{du}{dx} = ${b}$, the factor from the multiple of $x$.`,
+          `这漏掉了 $\\frac{du}{dx} = ${b}$，即 $x$ 的倍数带来的因子。`,
+        ),
+        why(
+          -answer,
+          `This has the wrong sign: at $u = \\frac{\\pi}{4}$ the derivative of $${outer} u$ is $${factor}$.`,
+          `符号错了：在 $u = \\frac{\\pi}{4}$ 处，$${outer} u$ 的导数是 $${factor}$。`,
+        ),
+        ...(drop !== 0
+          ? [
+              why(
+                big * b * drop,
+                "This differentiates the power but leaves out $\\sec^{2} u = 2$, the derivative of the tangent.",
+                "这对幂求了导，但漏掉了正切的导数 $\\sec^{2} u = 2$。",
+              ),
+            ]
+          : []),
+        why(
+          big * b,
+          `This leaves out the derivative of the outer layers, $${factor}$ at $u = \\frac{\\pi}{4}$.`,
+          `这漏掉了外面几层的导数，它在 $u = \\frac{\\pi}{4}$ 处等于 $${factor}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Name the layers",
+            "分出各层",
+            `Let $u = ${u}$, so $f = ${poly([big, `${outer} u`])}$ and $u = \\frac{\\pi}{4}$ at $x = ${at}$.`,
+            `令 $u = ${u}$，则 $f = ${poly([big, `${outer} u`])}$，且在 $x = ${at}$ 处 $u = \\frac{\\pi}{4}$。`,
+          ],
+          [
+            "Differentiate with respect to $u$",
+            "对 $u$ 求导",
+            `The derivative of $${outer} u$ with respect to $u$ is $${steps}$ there.`,
+            `$${outer} u$ 关于 $u$ 的导数在此处是 $${steps}$。`,
+          ],
+          [
+            "Multiply the factors",
+            "把各因子相乘",
+            `Multiplying by the coefficient $${big}$ and by $\\frac{du}{dx} = ${b}$ gives $${inParens(big)} \\cdot ${inParens(factor)} \\cdot ${b} = ${answer}$.`,
+            `再乘以系数 $${big}$ 和 $\\frac{du}{dx} = ${b}$，得 $${inParens(big)} \\cdot ${inParens(factor)} \\cdot ${b} = ${answer}$。`,
+          ],
+        ],
+        [
+          `$${at} \\approx ${num(x0)}$. The difference quotients of $f$ there are about $${num(dq(0.01))}$ for $h = 0.01$ and $${num(dq(-0.01))}$ for $h = -0.01$; their average, $${num((dq(0.01) + dq(-0.01)) / 2)}$, is close to $${answer}$.`,
+          `$${at} \\approx ${num(x0)}$。$f$ 在该处的差商，$h = 0.01$ 时约为 $${num(dq(0.01))}$，$h = -0.01$ 时约为 $${num(dq(-0.01))}$；它们的平均值 $${num((dq(0.01) + dq(-0.01)) / 2)}$ 接近 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -3478,8 +3612,8 @@ const chainRuleOfThree: KnowledgePointDef = {
   id: "the-chain-rule-for-three-functions-from-values",
   title: t("The chain rule for three functions from values", "由函数值用链式法则求三层复合的导数"),
   explanation: t(
-    "For $y = f(g(h(x)))$, the chain rule gives three factors: $f'(g(h(x)))$, $g'(h(x))$ and $h'(x)$. Each derivative is taken at a different point, namely at whatever is fed into that function. So working from the inside out, $h$ first turns the input into a value for $g$, and $g$ then turns that into a value for $f$. Evaluating every derivative at the original $x$ is the common mistake.",
-    "对 $y = f(g(h(x)))$，链式法则给出三个因子：$f'(g(h(x)))$、$g'(h(x))$ 和 $h'(x)$。每个导数在不同的点取值，也就是输入该函数的那个值。所以从内向外计算，先由 $h$ 把输入变成 $g$ 的输入值，再由 $g$ 把它变成 $f$ 的输入值。把每个导数都在原来的 $x$ 处取值是常见的错误。",
+    "For $y = f(g(h(x)))$, the chain rule gives three factors: $f'(g(h(x)))$, $g'(h(x))$ and $h'(x)$. Each derivative is taken at a different point, namely at whatever is fed into that function. So working from the inside out, $h$ first turns the input into a value for $g$, and $g$ then turns that into a value for $f$. Evaluating every derivative at the original $x$ is the common mistake.\n\nFor example, if $h(1) = 2$, $h'(1) = 3$, $g(2) = 5$, $g'(2) = -1$ and $f'(5) = 4$, then $y'(1) = f'(5)g'(2)h'(1) = 4 \\cdot (-1) \\cdot 3 = -12$.\n\nCheck: $h(x) = 3x - 1$, $g(x) = 7 - x$ and $f(x) = 4x$ have these values, and $f(g(h(x))) = 4(8 - 3x) = 32 - 12x$, whose slope is $-12$.\n\n> **Watch out.** Read $g'$ at $h(a)$ and $f'$ at $g(h(a))$. The values given at the other points are there to tempt you.",
+    "对 $y = f(g(h(x)))$，链式法则给出三个因子：$f'(g(h(x)))$、$g'(h(x))$ 和 $h'(x)$。每个导数在不同的点取值，也就是输入该函数的那个值。所以从内向外计算，先由 $h$ 把输入变成 $g$ 的输入值，再由 $g$ 把它变成 $f$ 的输入值。把每个导数都在原来的 $x$ 处取值是常见的错误。\n\n例如，若 $h(1) = 2$，$h'(1) = 3$，$g(2) = 5$，$g'(2) = -1$，$f'(5) = 4$，则 $y'(1) = f'(5)g'(2)h'(1) = 4 \\cdot (-1) \\cdot 3 = -12$。\n\n检验：$h(x) = 3x - 1$，$g(x) = 7 - x$，$f(x) = 4x$ 符合这些值，而 $f(g(h(x))) = 4(8 - 3x) = 32 - 12x$，斜率是 $-12$。\n\n> **注意。** $g'$ 要在 $h(a)$ 处读，$f'$ 要在 $g(h(a))$ 处读。题中给出的其他点的值是用来干扰的。",
   ),
   generate(rng) {
     const a = rng.int(1, 3);
@@ -3492,14 +3626,54 @@ const chainRuleOfThree: KnowledgePointDef = {
     const decoyF = nonzero(rng, 6);
     const answer = r * q * p;
     const values = `h(${a}) = ${b}, \\; h'(${a}) = ${p}, \\; g(${b}) = ${c}, \\; g'(${b}) = ${q}, \\; g'(${a}) = ${decoyG}, \\; f'(${c}) = ${r}, \\; f'(${b}) = ${decoyF}`;
+    const step = (v: number) => num(v * 0.01);
     return numberProblem({
       prompt: t(`$${values}$. Let $y = f(g(h(x)))$. Find $y'(${a})$.`, `$${values}$。设 $y = f(g(h(x)))$。求 $y'(${a})$。`),
       answer,
       form: "integer",
-      wrong: [decoyF * decoyG * p, r * decoyG * p, decoyF * q * p, r * q, -answer],
-      solution: t(
-        `Working from the inside, the inputs are $${a}$ for $h$, $${b}$ for $g$ and $${c}$ for $f$. So $y'(${a}) = f'(${c})g'(${b})h'(${a}) = ${r} \\cdot ${inParens(q)} \\cdot ${inParens(p)} = ${answer}$.`,
-        `从内向外，$h$ 的输入是 $${a}$，$g$ 的输入是 $${b}$，$f$ 的输入是 $${c}$。所以 $y'(${a}) = f'(${c})g'(${b})h'(${a}) = ${r} \\cdot ${inParens(q)} \\cdot ${inParens(p)} = ${answer}$。`,
+      mistakes: firstMistakes(answer, [
+        why(
+          decoyF * decoyG * p,
+          `This reads $g'$ at $${a}$ and $f'$ at $${b}$. Each derivative belongs at its own input: $g'$ at $${b}$, $f'$ at $${c}$.`,
+          `这是在 $${a}$ 处读 $g'$、在 $${b}$ 处读 $f'$。每个导数要在它自己的输入处读：$g'$ 在 $${b}$，$f'$ 在 $${c}$。`,
+        ),
+        why(
+          r * decoyG * p,
+          `This reads $g'$ at $${a}$. The input of $g$ is $h(${a}) = ${b}$.`,
+          `这是在 $${a}$ 处读的 $g'$。$g$ 的输入是 $h(${a}) = ${b}$。`,
+        ),
+        why(
+          decoyF * q * p,
+          `This reads $f'$ at $${b}$. The input of $f$ is $g(${b}) = ${c}$.`,
+          `这是在 $${b}$ 处读的 $f'$。$f$ 的输入是 $g(${b}) = ${c}$。`,
+        ),
+        why(r * q, `This leaves out the innermost factor $h'(${a}) = ${p}$.`, `这漏掉了最内层的因子 $h'(${a}) = ${p}$。`),
+      ]),
+      solution: walk(
+        [
+          [
+            "Follow the inputs from the inside",
+            "由内向外跟踪输入",
+            `$h(${a}) = ${b}$ is the input of $g$, and $g(${b}) = ${c}$ is the input of $f$.`,
+            `$h(${a}) = ${b}$ 是 $g$ 的输入，$g(${b}) = ${c}$ 是 $f$ 的输入。`,
+          ],
+          [
+            "Read each derivative at its own input",
+            "在各自的输入处读导数",
+            `$h'(${a}) = ${p}$, $g'(${b}) = ${q}$ and $f'(${c}) = ${r}$.`,
+            `$h'(${a}) = ${p}$，$g'(${b}) = ${q}$，$f'(${c}) = ${r}$。`,
+          ],
+          [
+            "Multiply",
+            "相乘",
+            `$y'(${a}) = f'(${c})g'(${b})h'(${a}) = ${r} \\cdot ${inParens(q)} \\cdot ${inParens(p)} = ${answer}$.`,
+            `$y'(${a}) = f'(${c})g'(${b})h'(${a}) = ${r} \\cdot ${inParens(q)} \\cdot ${inParens(p)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Follow a small step. When $x$ moves from $${a}$ by $0.01$, $h$ moves by about $${step(p)}$; then $g$ moves by about $${q}$ times that, $${step(p * q)}$; then $f$ moves by about $${r}$ times that, $${step(answer)}$. Dividing by $0.01$ gives $${answer}$ again.`,
+          `跟着一小步走。当 $x$ 从 $${a}$ 移动 $0.01$ 时，$h$ 大约移动 $${step(p)}$；$g$ 大约移动它的 $${q}$ 倍，即 $${step(p * q)}$；$f$ 再大约移动它的 $${r}$ 倍，即 $${step(answer)}$。除以 $0.01$，又得到 $${answer}$。`,
+        ],
       ),
     });
   },

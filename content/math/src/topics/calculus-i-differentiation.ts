@@ -24,10 +24,10 @@ import { bare, fac, graphAltOf, lim, oneOf, type Poly, pAt, par, pDer, pLatex, p
 // is the existing the-average-rate-of-change-of-a-function.
 
 /** Step is one labelled step of a solution: its title in each locale, what it says, and the lines it displays. */
-type Step = readonly [title: readonly [string, string], say: Text, lines?: readonly string[]];
+export type Step = readonly [title: readonly [string, string], say: Text, lines?: readonly string[]];
 
 /** walked writes labelled steps, each with its displayed lines, followed by a check that takes a second route. */
-function walked(parts: readonly Step[], check: Text): Text {
+export function walked(parts: readonly Step[], check: Text): Text {
   const write = (locale: keyof Text) =>
     parts
       .map(([[en, zh], said, lines = []], i) => {
@@ -39,10 +39,10 @@ function walked(parts: readonly Step[], check: Text): Text {
 }
 
 /** none is a step that only displays its lines. */
-const none = t("", "");
+export const none = t("", "");
 
 /** fmt writes a value to four decimal places without trailing zeros, or as m × 10^k when it is very large or very small. */
-function fmt(v: number): string {
+export function fmt(v: number): string {
   const a = Math.abs(v);
   if (a >= 1e6 || (a > 0 && a < 1e-4)) {
     let k = Math.floor(Math.log10(a));
@@ -57,37 +57,73 @@ function fmt(v: number): string {
 }
 
 /** shown writes a value, with a decimal next to it when it is not a whole number. */
-const shown = (q: Q) => (q.isInteger() ? q.toLatex() : `${q.toLatex()} = ${fmt(q.toNumber())}`);
+export const shown = (q: Q) => (q.isInteger() ? q.toLatex() : `${q.toLatex()} = ${fmt(q.toNumber())}`);
 
-/** quotients checks a rate of change at a with difference quotients on both sides, h = 0.01 and h = −0.01, and their average. */
-function quotients(f: (x: number) => number, a: number, value: string, name = "f", v = "x", lead?: Text): Text {
+/** Value is a value to check against: a number, a fraction, or its LaTeX with its decimal value. */
+export type Value = number | Q | readonly [latex: string, value: number];
+
+/** quotients checks a rate of change at a with difference quotients on both sides, step = 0.01 and step = −0.01, and their average, which is exact when f is a quadratic. */
+export function quotients(f: (x: number) => number, a: number, value: Value, name = "f", v = "x", lead?: Text, step = "h"): Text {
   const at = (h: number) => (f(a + h) - f(a)) / h;
   const line = (h: number) => `$$\\frac{${name}(${fmt(a + h)}) - ${name}(${fmt(a)})}{${fmt(h)}} \\approx ${fmt(at(h))}$$`;
   const lines = `${line(0.01)}\n\n${line(-0.01)}`;
-  const mean = fmt((at(0.01) + at(-0.01)) / 2);
+  const target = typeof value === "number" ? value : value instanceof Q ? value.toNumber() : value[1];
+  const shownValue =
+    typeof value === "number"
+      ? String(value)
+      : value instanceof Q
+        ? shown(value)
+        : `${value[0]}${Number.isInteger(value[1]) ? "" : ` \\approx ${fmt(value[1])}`}`;
+  const average = (at(0.01) + at(-0.01)) / 2;
+  const mean = fmt(average);
+  const off = (x: number) => Math.abs(x - target);
+  const isExact = (x: number) => off(x) < 1e-7 * Math.max(1, Math.abs(target));
+  const closer = off(average) < Math.min(off(at(0.01)), off(at(-0.01)));
+  const [en, zh] =
+    isExact(at(0.01)) && isExact(at(-0.01))
+      ? [`Both are exactly $${shownValue}$.`, `两者都恰好是 $${shownValue}$。`]
+      : isExact(average)
+        ? [
+            `Both are close to $${shownValue}$, and their average is exactly $${shownValue}$.`,
+            `两者都接近 $${shownValue}$，它们的平均值恰好是 $${shownValue}$。`,
+          ]
+        : mean === fmt(target)
+          ? [
+              `Both are close to $${shownValue}$, and their average, $${mean}$, agrees with it to four decimal places.`,
+              `两者都接近 $${shownValue}$，它们的平均值 $${mean}$ 与它在四位小数内一致。`,
+            ]
+          : closer
+            ? [
+                `Both are close to $${shownValue}$, and their average, $${mean}$, is closer still.`,
+                `两者都接近 $${shownValue}$，它们的平均值 $${mean}$ 更接近。`,
+              ]
+            : [
+                `Both are close to $${shownValue}$, and so is their average, $${mean}$.`,
+                `两者都接近 $${shownValue}$，它们的平均值 $${mean}$ 也接近。`,
+              ];
   return t(
-    `${lead ? `${lead.en} ` : ""}Estimate the rate of change at $${v} = ${a}$ with a difference quotient on each side, $h = 0.01$ and $h = -0.01$:\n\n${lines}\n\nBoth are close to $${value}$, and their average, $${mean}$, is closer still.`,
-    `${lead ? lead["zh-CN"] : ""}用两侧的差商估计 $${v} = ${a}$ 处的变化率，取 $h = 0.01$ 和 $h = -0.01$：\n\n${lines}\n\n两者都接近 $${value}$，它们的平均值 $${mean}$ 更接近。`,
+    `${lead ? `${lead.en} ` : ""}Estimate the rate of change at $${v} = ${a}$ with a difference quotient on each side, $${step} = 0.01$ and $${step} = -0.01$:\n\n${lines}\n\n${en}`,
+    `${lead ? lead["zh-CN"] : ""}用两侧的差商估计 $${v} = ${a}$ 处的变化率，取 $${step} = 0.01$ 和 $${step} = -0.01$：\n\n${lines}\n\n${zh}`,
   );
 }
 
 /** Mistake is a wrong value with what to say about it. */
-type Mistake = ReturnType<typeof why>;
+export type Mistake = ReturnType<typeof why>;
 
 /** firsts keeps the first mistake for each value, so no response gets two reasons. */
-function firsts(ms: readonly Mistake[]): Mistake[] {
+export function firsts(ms: readonly Mistake[]): Mistake[] {
   const key = (m: Mistake) => (typeof m.value === "number" ? Q.of(m.value) : m.value).toString();
   return ms.filter((m, i) => ms.findIndex((n) => key(n) === key(m)) === i);
 }
 
 /** Said is a wrong response with what to say about it. */
-type Said = ReturnType<typeof say>;
+export type Said = ReturnType<typeof say>;
 
 /** once keeps the first reason for each response. */
-const once = (ms: readonly Said[]) => ms.filter((m, i) => ms.findIndex((n) => n.response === m.response) === i);
+export const once = (ms: readonly Said[]) => ms.filter((m, i) => ms.findIndex((n) => n.response === m.response) === i);
 
 /** functionWith builds a function problem whose wrong responses each get a reason of their own. */
-function functionWith(p: Omit<FunctionProblem, "wrong">, mistakes: readonly Said[]): Problem {
+export function functionWith(p: Omit<FunctionProblem, "wrong">, mistakes: readonly Said[]): Problem {
   const kept = once(mistakes);
   const problem = functionProblem({ ...p, wrong: kept.map((m) => m.response) });
   return withMistakes(
@@ -335,7 +371,7 @@ export const theInstantaneousRateOfChangeOfAFunctionAtAPoint: TopicDef = {
                 [`${lim(0, undefined, "h")} \\left(${poly([s, "h"], [answer, ""])}\\right) = ${answer}`],
               ],
             ],
-            quotients((x) => pAt(p, x), a, String(answer)),
+            quotients((x) => pAt(p, x), a, answer),
           ),
         });
       },
@@ -460,7 +496,7 @@ export const theInstantaneousRateOfChangeOfAFunctionAtAPoint: TopicDef = {
                 ),
               ],
             ],
-            quotients((x) => pAt(p, x), a, String(answer), "s", "t"),
+            quotients((x) => pAt(p, x), a, answer, "s", "t"),
           ),
         });
       },
@@ -538,7 +574,7 @@ export const definingTheDerivativeUsingDerivativeNotation: TopicDef = {
             quotients(
               (x) => pAt(p, x),
               1,
-              String(at1),
+              at1,
               "f",
               "x",
               t(`At $x = 1$ the answer gives $f'(1) = ${at1}$.`, `在 $x = 1$ 处，答案给出 $f'(1) = ${at1}$。`),
@@ -603,7 +639,7 @@ export const definingTheDerivativeUsingDerivativeNotation: TopicDef = {
             quotients(
               (x) => pAt(p, x),
               a,
-              String(answer),
+              answer,
               "f",
               "x",
               t(
@@ -658,7 +694,7 @@ export const definingTheDerivativeUsingDerivativeNotation: TopicDef = {
               quotients(
                 (x) => k / (x + c),
                 x0,
-                shown(at),
+                at,
                 "f",
                 "x",
                 t(
@@ -1073,7 +1109,7 @@ export const thePowerRuleForDifferentiation: TopicDef = {
               quotients(
                 (x) => k * x ** n,
                 1,
-                String(k * n),
+                k * n,
                 "f",
                 "x",
                 t(
@@ -1141,7 +1177,7 @@ export const thePowerRuleForDifferentiation: TopicDef = {
               quotients(
                 (x) => k * x ** e,
                 1,
-                shown(coef),
+                coef,
                 "f",
                 "x",
                 t(
@@ -1246,7 +1282,7 @@ export const theSumAndConstantMultipleRulesForDifferentiation: TopicDef = {
               quotients(
                 (x) => pAt(p, x),
                 1,
-                String(at1),
+                at1,
                 "f",
                 "x",
                 t(`At $x = 1$ the answer gives $f'(1) = ${at1}$.`, `在 $x = 1$ 处，答案给出 $f'(1) = ${at1}$。`),
@@ -1318,7 +1354,7 @@ export const theSumAndConstantMultipleRulesForDifferentiation: TopicDef = {
               quotients(
                 (x) => terms.reduce((s, term) => s + term.k.toNumber() * x ** term.e.toNumber(), c),
                 1,
-                shown(at1),
+                at1,
                 "f",
                 "x",
                 t(
@@ -1382,7 +1418,7 @@ export const theSumAndConstantMultipleRulesForDifferentiation: TopicDef = {
               [["Differentiate", "求导"], t("Use the power rule on each term:", "对每一项用幂法则："), [`f'(x) = ${pLatex(d)}`]],
               [["Substitute", "代入"], none, [`f'(${a}) = ${pSub(d, a)} = ${answer}`]],
             ],
-            quotients((x) => pAt(p, x), a, String(answer)),
+            quotients((x) => pAt(p, x), a, answer),
           ),
         });
       },
@@ -1439,7 +1475,7 @@ export const calculatingTheSlopeOfATangentLineUsingDifferentiation: TopicDef = {
               [["Differentiate", "求导"], t("The slope of the curve at each $x$ is", "曲线在每个 $x$ 处的斜率是"), [`y' = ${pLatex(d)}`]],
               [["Substitute the point", "代入切点"], none, [`y'(${a}) = ${pSub(d, a)} = ${answer}`]],
             ],
-            quotients((x) => pAt(p, x), a, String(answer), "f", "x", t("Call the curve $y = f(x)$.", "把曲线记作 $y = f(x)$。")),
+            quotients((x) => pAt(p, x), a, answer, "f", "x", t("Call the curve $y = f(x)$.", "把曲线记作 $y = f(x)$。")),
           ),
         });
       },

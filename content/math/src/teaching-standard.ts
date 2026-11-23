@@ -75,4 +75,11 @@ export const taughtTopics: readonly string[] = [
   "calculating-derivatives-from-data-and-tables",
   "calculating-derivatives-from-graphs",
   "recognizing-derivatives-in-limits",
+  "the-chain-rule-for-differentiation",
+  "the-chain-rule-with-exponential-functions",
+  "the-chain-rule-with-logarithmic-functions",
+  "the-chain-rule-with-trigonometric-functions",
+  "calculating-derivatives-from-data-using-the-chain-rule",
+  "calculating-derivatives-from-graphs-using-the-chain-rule",
+  "selecting-procedures-for-calculating-derivatives",
 ];

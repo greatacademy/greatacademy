@@ -1467,8 +1467,8 @@ const composeFromTable = point(
   "a-composition-of-two-functions-from-a-table",
   ["A composition of two functions from a table", "由表格求两个函数的复合"],
   [
-    "For $h(x) = f(g(x))$, $h'(a) = f'(g(a)) \\cdot g'(a)$. The trap is reading $f'$ at $a$: the outer derivative is read at the inner value $g(a)$, which is usually in a different row of the table.",
-    "对 $h(x) = f(g(x))$，有 $h'(a) = f'(g(a)) \\cdot g'(a)$。常见的陷阱是读取 $a$ 处的 $f'$：外层导数要在内层的值 $g(a)$ 处读取，它通常在表格的另一行。",
+    "For $h(x) = f(g(x))$, $h'(a) = f'(g(a)) \\cdot g'(a)$. The outer derivative is read at the inner value $g(a)$, which is usually in a different row of the table. The inner derivative is read at $a$ itself.\n\nFor example, if $g(0) = 3$, $g'(0) = 2$ and $f'(3) = -1$, then $h'(0) = f'(3) \\cdot g'(0) = (-1) \\cdot 2 = -2$.\n\nCheck: $g(x) = 2x + 3$ and $f(x) = -x$ have these values, and $f(g(x)) = -2x - 3$, whose slope is $-2$.\n\n> **Watch out.** Do not read $f'$ in the row of $a$. Go to the row of $g(a)$ for $f'$, and use the slope $f'$ there, not the value $f$.",
+    "对 $h(x) = f(g(x))$，有 $h'(a) = f'(g(a)) \\cdot g'(a)$。外层导数要在内层的值 $g(a)$ 处读取，它通常在表格的另一行。内层导数则在 $a$ 处读取。\n\n例如，若 $g(0) = 3$，$g'(0) = 2$，$f'(3) = -1$，则 $h'(0) = f'(3) \\cdot g'(0) = (-1) \\cdot 2 = -2$。\n\n检验：$g(x) = 2x + 3$ 和 $f(x) = -x$ 符合这些值，而 $f(g(x)) = -2x - 3$，斜率是 $-2$。\n\n> **注意。** 不要在 $a$ 那一行读 $f'$。要到 $g(a)$ 那一行去读 $f'$，并且用那里的斜率 $f'$，不是函数值 $f$。",
   ],
   (rng) => {
     const a = rng.int(0, 3);
@@ -1486,18 +1486,67 @@ const composeFromTable = point(
     const rowOf = (x: number) =>
       x === a ? `| $${x}$ | $${fa}$ | $${fpa}$ | $${inner}$ | $${gpa}$ |` : `| $${x}$ | $${fi}$ | $${fpi}$ | $${gi}$ | $${gpi}$ |`;
     const table = `| $x$ | $f(x)$ | $f'(x)$ | $g(x)$ | $g'(x)$ |\n| :---: | :---: | :---: | :---: | :---: |\n${rows.map(rowOf).join("\n")}`;
-    return ask(
+    const seen = new Set<number>([answer]);
+    const mistakes = [
+      why(
+        fpa * gpa,
+        `This reads $f'$ in the row $x = ${a}$. The outer derivative belongs at $g(${a}) = ${inner}$.`,
+        `这是在 $x = ${a}$ 那一行读的 $f'$。外层导数应在 $g(${a}) = ${inner}$ 处读取。`,
+      ),
+      why(
+        fpi,
+        `This is $f'(${inner})$ alone; it leaves out the factor $g'(${a}) = ${gpa}$.`,
+        `这只是 $f'(${inner})$；漏掉了因子 $g'(${a}) = ${gpa}$。`,
+      ),
+      why(
+        fpi * gi,
+        `This multiplies by $g(${inner}) = ${gi}$ from the row $x = ${inner}$. The inner factor is the slope $g'(${a}) = ${gpa}$.`,
+        `这乘的是 $x = ${inner}$ 那一行的 $g(${inner}) = ${gi}$。内层的因子是斜率 $g'(${a}) = ${gpa}$。`,
+      ),
+      why(
+        fi * gpa,
+        `This uses the value $f(${inner}) = ${fi}$ instead of the slope $f'(${inner}) = ${fpi}$.`,
+        `这用的是函数值 $f(${inner}) = ${fi}$，而不是斜率 $f'(${inner}) = ${fpi}$。`,
+      ),
+    ].filter((w) => {
+      const v = Number(w.value);
+      return !seen.has(v) && Boolean(seen.add(v));
+    });
+    const [solutionEn, solutionZh] = walk(
       [
-        `The table gives values of $f$, $g$ and their derivatives.\n\n${table}\n\nLet $h(x) = f(g(x))$. Find $h'(${a})$.`,
-        `表中给出 $f$、$g$ 及其导数的值。\n\n${table}\n\n设 $h(x) = f(g(x))$。求 $h'(${a})$。`,
+        [
+          "Find the inner value",
+          "求内层的值",
+          `In the row $x = ${a}$, $g(${a}) = ${inner}$ and $g'(${a}) = ${gpa}$.`,
+          `在 $x = ${a}$ 那一行，$g(${a}) = ${inner}$，$g'(${a}) = ${gpa}$。`,
+        ],
+        [
+          "Read the outer derivative there",
+          "在该处读外层导数",
+          `In the row $x = ${inner}$, $f'(${inner}) = ${fpi}$.`,
+          `在 $x = ${inner}$ 那一行，$f'(${inner}) = ${fpi}$。`,
+        ],
+        [
+          "Multiply",
+          "相乘",
+          `$h'(${a}) = f'(${inner}) \\cdot g'(${a}) = ${paren(fpi)} \\cdot ${paren(gpa)} = ${answer}$.`,
+          `$h'(${a}) = f'(${inner}) \\cdot g'(${a}) = ${paren(fpi)} \\cdot ${paren(gpa)} = ${answer}$。`,
+        ],
       ],
-      answer,
-      [fpa * gpa, fpi, fpi * gi, fi * gpa],
       [
-        `$g(${a}) = ${inner}$, so the outer derivative is read at $${inner}$: $h'(${a}) = f'(${inner}) \\cdot g'(${a}) = ${paren(fpi)} \\cdot ${paren(gpa)} = ${answer}$.`,
-        `$g(${a}) = ${inner}$，所以外层导数在 $${inner}$ 处读取：$h'(${a}) = f'(${inner}) \\cdot g'(${a}) = ${paren(fpi)} \\cdot ${paren(gpa)} = ${answer}$。`,
+        `Follow a small step. When $x$ moves from $${a}$ by $0.01$, $g$ moves from $${inner}$ by about $${paren(gpa)} \\cdot 0.01 = ${num(gpa * 0.01)}$, and then $f$ moves by about $${fpi}$ times that, $${num(answer * 0.01)}$. Dividing by $0.01$ gives $${answer}$ again.`,
+        `跟着一小步走。当 $x$ 从 $${a}$ 移动 $0.01$ 时，$g$ 从 $${inner}$ 大约移动 $${paren(gpa)} \\cdot 0.01 = ${num(gpa * 0.01)}$，$f$ 再大约移动它的 $${fpi}$ 倍，即 $${num(answer * 0.01)}$。除以 $0.01$，又得到 $${answer}$。`,
       ],
     );
+    return numberProblem({
+      prompt: t(
+        `The table gives values of $f$, $g$ and their derivatives.\n\n${table}\n\nLet $h(x) = f(g(x))$. Find $h'(${a})$.`,
+        `表中给出 $f$、$g$ 及其导数的值。\n\n${table}\n\n设 $h(x) = f(g(x))$。求 $h'(${a})$。`,
+      ),
+      answer,
+      mistakes,
+      solution: t(solutionEn, solutionZh),
+    });
   },
 );
 
