@@ -9,258 +9,290 @@ export const comprehension: ComprehensionData = {
 女：据统计，今年一季度全市新注册的小微企业数量同比增长了近两成，这个势头比预想的要好。
 男：增长固然可喜，但我更关心这些企业能撑过头三年的比例，那才是衡量营商环境的硬指标。
 问：男的认为衡量营商环境更重要的是什么？
+据：男的说“我更关心这些企业能撑过头三年的比例，那才是衡量营商环境的硬指标”。 | He says what matters more is how many firms survive their first three years; that is the hard measure.
 答：新企业头三年的存活比例
-错：新注册企业的数量
-错：一季度的同比增长率
-错：小微企业的规模
+错：新注册企业的数量 | 注册数量是女的说的，男的说“增长固然可喜”，但更关心存活。 | Registrations are her figure; he cares more about survival.
+错：一季度的同比增长率 | 同比增长率也是女的的数据，不是他说的硬指标。 | The growth rate is hers, not his hard measure.
+错：小微企业的规模 | 对话没有谈企业规模。 | Firm size is not discussed.
 
 男：这篇论文的样本只有两百来人，却得出了适用于全体青少年的结论，未免有些草率。
 女：我倒觉得作者在讨论部分已经承认了这个局限，只是摘要里写得过于笼统，容易引起误读。
 问：女的认为这篇论文的问题主要出在哪里？
+据：女的说作者在讨论部分已经承认了局限，“只是摘要里写得过于笼统，容易引起误读”。 | She says the limits are admitted in the discussion; only the abstract is too vague and misleading.
 答：摘要写得太笼统
-错：样本数量太少
-错：作者没有承认局限
-错：结论完全错误
+错：样本数量太少 | 样本少是男的的意见，女的说作者已经承认了。 | Small samples are his point; she says the author admits it.
+错：作者没有承认局限 | 她说作者“已经承认了这个局限”。 | She says the author admitted it.
+错：结论完全错误 | 她只说摘要容易引起误读，没有说结论完全错。 | She only faults the abstract.
 
 女：博物馆这次把馆藏的古籍全部数字化，公众在网上就能免费查阅，这对研究者是个好消息。
 男：可不是嘛，以前为了看一页原件，得提前好几个月申请，还不一定批得下来。
 问：关于以前查阅古籍，可以知道什么？
+据：男的说“以前为了看一页原件，得提前好几个月申请，还不一定批得下来”。 | He says one used to apply months ahead to see a page, with no guarantee.
 答：手续麻烦，等待时间长
-错：可以在网上免费查阅
-错：研究者很少需要
-错：只要当天申请就行
+错：可以在网上免费查阅 | 网上免费查阅是现在数字化以后才有的。 | Free online access is new.
+错：研究者很少需要 | 研究者要提前几个月申请，说明需要。 | Scholars applied months ahead, so they did need it.
+错：只要当天申请就行 | 要提前好几个月，不是当天。 | Months ahead, not the same day.
 
 男：听说你们出版社准备把那套经典丛书重新翻译一遍，旧译本不是挺好的吗？
 女：旧译本文笔确实漂亮，可几十年过去，不少用语已经过时，有些地方还译得不够准确。
 问：出版社为什么要重新翻译那套丛书？
+据：女的说“几十年过去，不少用语已经过时，有些地方还译得不够准确”。 | She says over decades much wording has dated and some passages are inaccurate.
 答：旧译本用语过时，有些不准确
-错：旧译本文笔不好
-错：旧译本已经卖完了
-错：原作者要求重译
+错：旧译本文笔不好 | 她说旧译本“文笔确实漂亮”。 | She says the old style is lovely.
+错：旧译本已经卖完了 | 对话没有说卖完。 | Selling out is not mentioned.
+错：原作者要求重译 | 对话没有说原作者。 | The author is not mentioned.
 
 女：这次台风虽然强度很大，但由于预警及时、转移得力，全省没有出现人员伤亡。
 男：看来这几年在防灾体系上的投入没有白费，关键时刻真正发挥了作用。
 问：男的对这次防台风的结果是什么态度？
+据：男的说“这几年在防灾体系上的投入没有白费，关键时刻真正发挥了作用”。 | He says investment in disaster prevention paid off when it counted.
 答：认为防灾投入起了作用
-错：认为台风强度被夸大了
-错：对预警工作很不满意
-错：担心以后会出现伤亡
+错：认为台风强度被夸大了 | 女的说台风“强度很大”，男的没有说夸大。 | She says it was strong; he does not dispute it.
+错：对预警工作很不满意 | 女的说“预警及时”，他认为起了作用。 | She says warnings were timely; he approves.
+错：担心以后会出现伤亡 | 这次没有伤亡，他说的是投入没白费，不是担心。 | No casualties; he praises, not worries.
 
 男：我们这款产品的价格已经比同类低了百分之十五，为什么市场份额还是上不去？
 女：问题恐怕不在价格，而在售后。不少用户反映，出了故障找不到人维修，口碑就这么坏了。
 问：女的认为市场份额上不去的原因是什么？
+据：女的说“问题恐怕不在价格，而在售后……出了故障找不到人维修，口碑就这么坏了”。 | She says it is not price but after-sales: no repairs, so word of mouth soured.
 答：售后服务跟不上
-错：价格太高
-错：产品种类太少
-错：广告做得不够
+错：价格太高 | 男的说价格已经比同类低了百分之十五。 | He says it is already fifteen per cent cheaper.
+错：产品种类太少 | 对话没有说产品种类。 | Product range is not mentioned.
+错：广告做得不够 | 对话没有说广告。 | Advertising is not mentioned.
 
 女：最近不少城市取消了落户限制，你觉得这会不会让大城市变得更拥挤？
 男：短期内也许会，但人口流动本来就是跟着就业机会走的，关键在于公共服务能不能跟得上。
 问：男的认为关键问题是什么？
+据：男的说“关键在于公共服务能不能跟得上”。 | He says the key is whether public services keep up.
 答：公共服务能否跟上
-错：是否应当取消落户限制
-错：如何减少人口流动
-错：大城市会不会更拥挤
+错：是否应当取消落户限制 | 取消落户限制已经是事实，他没有讨论该不该。 | The rule is already lifted; he does not debate it.
+错：如何减少人口流动 | 他说人口流动是跟着就业走的，没有说要减少。 | He says people follow jobs, not that movement should fall.
+错：大城市会不会更拥挤 | 更拥挤是女的问的，他说短期内也许会，但关键不在这里。 | Crowding is her question; he says it is not the key.
 
 男：这部纪录片拍的是一个即将消失的手艺，可我看完并没有感到多么悲伤。
 女：那是因为导演没有刻意煽情，而是让手艺人自己讲述，反倒显得真实而克制。
 问：女的怎样评价这部纪录片？
+据：女的说导演“没有刻意煽情，而是让手艺人自己讲述，反倒显得真实而克制”。 | She says the director avoided melodrama and let the craftsman speak, so it feels real and restrained.
 答：真实、克制，不刻意煽情
-错：情节过于悲伤
-错：导演讲得太多
-错：内容不够真实
+错：情节过于悲伤 | 男的说看完并没有多么悲伤。 | He says it did not make him sad.
+错：导演讲得太多 | 是让手艺人自己讲，不是导演讲得多。 | The craftsman speaks, not the director.
+错：内容不够真实 | 她说“真实而克制”。 | She calls it real.
 
 女：你在报告里建议把实验周期延长到两年，这样一来经费恐怕要超出预算不少。
 男：我明白，但如果只做半年，季节因素根本排除不掉，得出的数据说服力会大打折扣。
 问：男的为什么坚持延长实验周期？
+据：男的说“如果只做半年，季节因素根本排除不掉，得出的数据说服力会大打折扣”。 | He says six months cannot rule out seasonal effects, weakening the data.
 答：为了排除季节因素的影响
-错：为了申请更多经费
-错：因为实验已经失败了
-错：因为半年时间太长
+错：为了申请更多经费 | 经费超预算是女的的担心，不是他的目的。 | Overspending is her worry, not his aim.
+错：因为实验已经失败了 | 对话没有说实验失败。 | Failure is not mentioned.
+错：因为半年时间太长 | 他嫌半年太短，不是太长。 | Six months is too short for him.
 
 男：现在一提起传统村落保护，很多地方的做法就是拆旧建新，再搞成千篇一律的仿古街。
 女：真正的保护应该让原来的居民留下来，生活在里面，否则村落只剩下一个空壳子。
 问：女的认为真正的保护应该怎样做？
+据：女的说“真正的保护应该让原来的居民留下来，生活在里面”。 | She says real protection keeps the original residents living there.
 答：让原来的居民继续在村里生活
-错：拆掉旧房子建仿古街
-错：把居民全部迁走
-错：只保留建筑外观
+错：拆掉旧房子建仿古街 | 拆旧建新是男的批评的做法。 | Demolish and rebuild is what he criticises.
+错：把居民全部迁走 | 她要居民留下，不是迁走。 | She wants them to stay.
+错：只保留建筑外观 | 她说只剩建筑就是一个空壳子。 | Buildings alone are an empty shell.
 
 女：这家公司宣布全面实行弹性工作制，员工可以自己决定几点上班，你怎么看？
 男：出发点是好的，可如果考核仍然只看在办公室待了多久，所谓弹性也就只是一句空话。
 问：男的担心什么？
+据：男的说“如果考核仍然只看在办公室待了多久，所谓弹性也就只是一句空话”。 | He says if appraisal still counts office hours, flexibility is empty talk.
 答：考核方式不变，弹性工作制流于形式
-错：员工会迟到
-错：公司会降低工资
-错：员工不愿意上班
+错：员工会迟到 | 员工可以自己定上班时间，他没有说迟到。 | Staff choose their hours; lateness is not his point.
+错：公司会降低工资 | 他没有说工资。 | He does not mention pay.
+错：员工不愿意上班 | 他没有说员工不愿意上班。 | He does not say that.
 
 男：考古队在这处遗址里发现了大量炭化的稻米，这说明什么呢？
 女：说明早在几千年前，这一带的先民就已经开始种植水稻了，比原来推测的时间还要早。
 问：根据对话，可以知道什么？
+据：女的说先民已经开始种水稻，“比原来推测的时间还要早”。 | She says the ancestors grew rice even earlier than estimated.
 答：当地种植水稻的时间比原来推测的早
-错：遗址里发现了大量小麦
-错：先民不会种水稻
-错：这处遗址是近代的
+错：遗址里发现了大量小麦 | 发现的是稻米，不是小麦。 | Rice, not wheat.
+错：先民不会种水稻 | 稻米说明先民会种水稻。 | The rice shows they did grow it.
+错：这处遗址是近代的 | 是几千年前的，不是近代。 | Thousands of years old, not modern.
 
 女：你们平台推出的“先用后付”服务，会不会助长年轻人的超前消费？
 男：我们设置了额度上限，并且每笔都会提醒还款日期，尽量避免用户过度借贷。
 问：男的介绍了平台的什么措施？
+据：男的说“我们设置了额度上限，并且每笔都会提醒还款日期”。 | He says they set a credit limit and send repayment reminders.
 答：设置额度上限，提醒还款
-错：取消了这项服务
-错：只向年轻人提供服务
-错：降低了商品价格
+错：取消了这项服务 | 服务还在，他介绍的是怎么控制。 | The service continues; he explains controls.
+错：只向年轻人提供服务 | 年轻人是女的提到的，他没有说只给年轻人。 | Young people are her topic.
+错：降低了商品价格 | 他没有说价格。 | He does not mention prices.
 
 男：明天的新闻发布会，记者如果追问裁员的传闻，我们该怎么回应？
 女：如实说明正在进行的是业务调整，具体方案还没确定，千万不要含糊其辞，那样只会让传闻越传越真。
 问：女的认为应该怎样回应记者？
+据：女的说“如实说明正在进行的是业务调整……千万不要含糊其辞”。 | She says state truthfully that it is a restructuring and never be evasive.
 答：如实说明情况，不要含糊
-错：拒绝回答所有问题
-错：直接承认要裁员
-错：取消新闻发布会
+错：拒绝回答所有问题 | 她让如实说明，不是不回答。 | She says answer truthfully.
+错：直接承认要裁员 | 她说是业务调整，方案还没确定，不是承认裁员。 | She calls it restructuring, plan not set.
+错：取消新闻发布会 | 她在讲发布会上怎么说，不是取消。 | She plans what to say there.
 
 女：这座城市的地铁票价十年没调过，可运营成本年年在涨，亏损全靠财政补贴。
 男：票价是该适当调整，但必须听证，同时对低收入群体和老人保留优惠，不能一刀切。
 问：男的对调整地铁票价是什么态度？
+据：男的说“票价是该适当调整，但必须听证，同时对低收入群体和老人保留优惠”。 | He says fares should rise moderately, with hearings and discounts kept.
 答：可以调整，但要听证并保留优惠
-错：坚决反对调整
-错：应该大幅提高票价
-错：应该取消财政补贴
+错：坚决反对调整 | 他说“是该适当调整”。 | He says they should be adjusted.
+错：应该大幅提高票价 | 他说“适当”，还要保留优惠，不是大幅提高。 | Moderately, with discounts, not steeply.
+错：应该取消财政补贴 | 财政补贴是女的说的现状，他没有说取消。 | Subsidy is her point; he does not end it.
 
 男：你们团队研发的这种可降解塑料，成本比普通塑料高多少？
 女：目前大约高出一倍，不过随着产量上去，我们估计三年内能把差距缩小到三成以内。
 问：关于这种可降解塑料，可以知道什么？
+据：女的说成本“目前大约高出一倍”。高出一倍就是普通塑料的两倍。 | She says it costs about one time more, that is, twice as much.
 答：目前成本约为普通塑料的两倍
-错：成本比普通塑料低
-错：三年后成本会高出三倍
-错：已经大规模生产了
+错：成本比普通塑料低 | 是高出一倍，不是更低。 | Higher, not lower.
+错：三年后成本会高出三倍 | 三年后差距缩小到三成以内，不是三倍。 | In three years the gap shrinks to under thirty per cent.
+错：已经大规模生产了 | 她说“随着产量上去”，说明还没大规模生产。 | Output must still grow, so not mass production yet.
 
 女：这本历史小说写得很好看，可里面有不少情节跟史书记载对不上。
 男：小说毕竟不是史书，允许一定的虚构，只要大的历史背景没歪曲，我觉得无可厚非。
 问：男的对小说中的虚构情节怎么看？
+据：男的说“小说毕竟不是史书，允许一定的虚构……我觉得无可厚非”。无可厚非就是可以接受。 | He says a novel may invent within limits; 无可厚非 means acceptable.
 答：可以接受
-错：坚决反对
-错：认为是作者的失误
-错：认为必须修改
+错：坚决反对 | 他说允许虚构，不反对。 | He allows invention.
+错：认为是作者的失误 | 他认为是小说允许的，不是失误。 | He sees it as allowed, not an error.
+错：认为必须修改 | 他说无可厚非，不用改。 | He sees no need to change it.
 
 男：学校打算从下学期起禁止学生带手机进教室，家长们反应怎么样？
 女：大部分家长支持，但也有人提出，孩子放学后要联系家里，建议在门口设置统一保管的柜子。
 问：一些家长提出了什么建议？
+据：女的说有家长“建议在门口设置统一保管的柜子”。 | She says some parents suggest lockers at the door.
 答：在门口设统一保管手机的柜子
-错：允许学生在课上用手机
-错：取消这项规定
-错：让孩子不再带手机上学
+错：允许学生在课上用手机 | 规定是不带进教室，家长没有说课上用。 | Phones stay out of class; no one asks for use there.
+错：取消这项规定 | 大部分家长支持这项规定。 | Most parents support it.
+错：让孩子不再带手机上学 | 孩子放学要联系家里，还要带手机。 | Children still need phones after school.
 
 女：最近“轻断食”特别流行，我的几个同事都在试，据说减重效果很明显。
 男：营养师提醒过，这种方法并不适合所有人，尤其是有胃病或者正在长身体的青少年，最好先咨询医生。
 问：男的想表达什么？
+据：男的说营养师提醒“这种方法并不适合所有人”。 | He says a nutritionist warns it does not suit everyone.
 答：轻断食不是人人都适合
-错：轻断食效果很好，值得推广
-错：青少年应该尝试轻断食
-错：营养师都反对节食
+错：轻断食效果很好，值得推广 | 减重效果是女的说的，他在提醒风险。 | Weight loss is her point; he warns.
+错：青少年应该尝试轻断食 | 他说正在长身体的青少年最好先咨询医生。 | He says growing teens should see a doctor first.
+错：营养师都反对节食 | 营养师只说不适合所有人，不是都反对。 | It is not for everyone, not banned.
 
 男：这次评选，你为什么投给了那位年轻的建筑师，而不是名气更大的那位？
 女：名气大不等于方案好。年轻人的设计考虑到了老人和残疾人的通行，细节上更用心。
 问：女的为什么投票给年轻建筑师？
+据：女的说“年轻人的设计考虑到了老人和残疾人的通行，细节上更用心”。 | She says his design considered access for the elderly and disabled, with more care in detail.
 答：他的设计细节更用心
-错：他的名气更大
-错：他是女的的朋友
-错：他的方案更便宜
+错：他的名气更大 | 名气更大的是另一位。 | The other one is more famous.
+错：他是女的的朋友 | 对话没有说是朋友。 | Friendship is not mentioned.
+错：他的方案更便宜 | 对话没有说价钱。 | Cost is not mentioned.
 
 女：这次国际会议的同声传译全部由人工智能完成，效果出乎意料地好。
 男：日常交流也许够用了，但涉及专业术语和文化背景的时候，机器还是常常闹笑话。
 问：男的对人工智能同声传译是什么看法？
+据：男的说“日常交流也许够用了，但涉及专业术语和文化背景的时候，机器还是常常闹笑话”。 | He says it may do for everyday talk but blunders on jargon and culture.
 答：日常够用，专业场合仍有不足
-错：完全可以取代人工
-错：效果非常差
-错：只适合国际会议
+错：完全可以取代人工 | 他说专业场合常闹笑话，不能完全取代。 | It blunders on jargon, so it cannot replace people.
+错：效果非常差 | 他说日常够用，不是很差。 | He says it suffices for daily use.
+错：只适合国际会议 | 国际会议是女的说的场合，他说的是专业内容不行。 | The conference is her setting; he says specialist content fails.
 
 男：老城区那片厂房改造成了文化园区，周末人特别多，可附近居民却抱怨噪音太大。
 女：这说明当初规划时没有充分征求居民意见，现在只能通过限制营业时间来补救了。
 问：女的认为问题出在哪里？
+据：女的说“这说明当初规划时没有充分征求居民意见”。 | She says planning did not consult residents enough.
 答：规划时没有充分听取居民意见
-错：周末人太少
-错：厂房不应该改造
-错：营业时间太短
+错：周末人太少 | 男的说周末人特别多。 | He says weekends are crowded.
+错：厂房不应该改造 | 她没有说不该改造。 | She does not oppose the conversion.
+错：营业时间太短 | 她要限制营业时间，说明现在时间长。 | She would limit hours, so they are long now.
 
 女：这家老字号去年开始做网上直播，销售额居然翻了一番。
 男：其实关键不在直播本身，而在于他们借机把产品的故事讲清楚了，年轻人才愿意买账。
 问：男的认为销售额增长的关键是什么？
+据：男的说“关键不在直播本身，而在于他们借机把产品的故事讲清楚了”。 | He says the key was not live streaming but telling the product's story clearly.
 答：把产品的故事讲清楚了
-错：直播本身
-错：降低了价格
-错：增加了新产品
+错：直播本身 | 他说“关键不在直播本身”。 | He says not the streaming itself.
+错：降低了价格 | 他没有说价格。 | He does not mention price.
+错：增加了新产品 | 他没有说新产品。 | He does not mention new products.
 
 男：你研究各地方言这么多年了，觉得方言最终会彻底消失吗？
 女：使用的人确实在减少，但只要还有人在家里说、在歌里唱，它就不会真正消失，只是形态会变。
 问：女的对方言的未来是什么看法？
+据：女的说“它就不会真正消失，只是形态会变”。 | She says it will not truly vanish, only change form.
 答：不会真正消失，但会变化
-错：很快就会消失
-错：会越来越流行
-错：完全不会改变
+错：很快就会消失 | 她说不会真正消失。 | She says it will not vanish.
+错：会越来越流行 | 她说“使用的人确实在减少”。 | She says speakers are declining.
+错：完全不会改变 | 她说“形态会变”。 | She says its form will change.
 
 女：今年的毕业生人数又创了新高，就业形势恐怕不太乐观。
 男：总量压力是大，可结构性问题更突出：一边是很多人找不到工作，一边是不少技术岗位招不到人。
 问：男的认为就业更突出的问题是什么？
+据：男的说“可结构性问题更突出：一边是很多人找不到工作，一边是不少技术岗位招不到人”。 | He says the structural mismatch is sharper: many jobless while technical posts go unfilled.
 答：结构性矛盾
-错：毕业生人数太少
-错：技术岗位太多人抢
-错：工资太低
+错：毕业生人数太少 | 女的说人数创了新高，不是少。 | She says numbers hit a record.
+错：技术岗位太多人抢 | 他说技术岗位招不到人，不是人太多。 | Technical posts lack applicants.
+错：工资太低 | 他没有说工资。 | He does not mention pay.
 
 男：我们这期杂志的封面，到底用那张获奖的照片，还是用插画？
 女：照片冲击力强，但题材有点儿沉重；插画虽然温和，却能更好地呼应“重建家园”这个主题。
 问：女的更倾向于选哪一种封面？
+据：女的说照片“题材有点儿沉重”，插画“却能更好地呼应‘重建家园’这个主题”。先说照片的缺点，后用“却”说插画更好，所以她倾向插画。 | She calls the photo heavy and says the illustration better fits the theme; her 却 points to the illustration.
 答：插画
-错：获奖的照片
-错：两种都不用
-错：还没有想法
+错：获奖的照片 | 她说照片题材沉重。 | She calls the photo heavy.
+错：两种都不用 | 她在两种里比较，要选一种。 | She weighs the two to pick one.
+错：还没有想法 | 她说插画更能呼应主题，有想法。 | She has a clear lean.
 
 女：有研究说，经常阅读纸质书的孩子，注意力比只用电子屏幕阅读的孩子更集中。
 男：这类研究很多只是发现了相关性，未必是因果关系，说不定是爱读纸质书的家庭本身就有别的优势。
 问：男的对这项研究持什么态度？
+据：男的说“这类研究很多只是发现了相关性，未必是因果关系”。他不否定发现，但不全信，就是有所保留。 | He says such studies often show correlation, not cause; he neither rejects nor fully accepts.
 答：有所保留
-错：完全赞同
-错：完全否定
-错：不感兴趣
+错：完全赞同 | 他说未必是因果，不是完全赞同。 | Not necessarily causal, so not full agreement.
+错：完全否定 | 他说“未必”，也没有完全否定。 | 'Not necessarily' is not denial.
+错：不感兴趣 | 他认真分析了，感兴趣。 | He analyses it, so he is interested.
 
 男：咱们公司的年度报告，今年为什么要专门增加一章讲碳排放？
 女：一方面监管部门有新要求，另一方面，越来越多的投资者把环保表现当作评估企业的重要依据。
 问：年度报告增加碳排放内容的原因不包括哪一项？
+据：女的说的原因是“监管部门有新要求”和投资者“把环保表现当作评估企业的重要依据”，没有说员工。 | She gives regulators' rules and investors' use in assessing firms; staff are never mentioned.
 答：员工强烈要求
-错：监管部门的新要求
-错：投资者重视环保表现
-错：评估企业的需要
+错：监管部门的新要求 | 监管部门的新要求是她说的原因。 | Regulators are one reason.
+错：投资者重视环保表现 | 投资者重视环保是她说的原因。 | Investors are one reason.
+错：评估企业的需要 | 评估企业是投资者的需要，也是她说的。 | Assessing firms is part of her reason.
 
 女：这场演出的票十分钟就卖光了，可转眼二手平台上就出现了几倍价格的票。
 男：主办方应该实行实名购票，入场时核对身份证，否则倒票的人永远比真正的观众手快。
 问：男的建议主办方怎么做？
+据：男的说“主办方应该实行实名购票，入场时核对身份证”。 | He says use named tickets and check ID at entry.
 答：实行实名购票和入场核对
-错：提高票价
-错：增加演出场次
-错：在二手平台卖票
+错：提高票价 | 他没有说提高票价。 | He does not mention raising prices.
+错：增加演出场次 | 他没有说加场。 | He does not mention more shows.
+错：在二手平台卖票 | 二手平台是倒票的地方。 | Resale sites are where touts sell.
 
 男：这片湿地恢复以后，听说来过冬的候鸟比五年前多了好几倍。
 女：是啊，当年把周围的鱼塘退还给湿地，渔民也不太情愿，后来政府帮他们转做生态旅游，收入反而提高了。
 问：关于当地渔民，可以知道什么？
+据：女的说“政府帮他们转做生态旅游，收入反而提高了”。 | She says the government helped them switch to eco-tourism and incomes rose.
 答：转做生态旅游后收入提高了
-错：一直反对恢复湿地
-错：现在还在养鱼
-错：离开了这个地方
+错：一直反对恢复湿地 | 他们当初“不太情愿”，后来转做旅游，不是一直反对。 | They were reluctant at first, not always opposed.
+错：现在还在养鱼 | 鱼塘已经退还给湿地。 | The ponds were returned to the wetland.
+错：离开了这个地方 | 他们在当地做旅游，没有离开。 | They stayed to run tourism.
 
 女：你的书里说，历史上很多重大发明都不是一个人的功劳，能举个例子吗？
 男：比如造纸术，在被记载为发明者的那个人之前，民间已经有人在做类似的尝试了，他做的主要是改进和推广。
 问：男的通过造纸术想说明什么？
+据：女的问书里说重大发明“不是一个人的功劳”，男的用造纸术举例：在记载的发明者之前，民间已经有人尝试，他主要是改进和推广。 | Asked about inventions being no one person's work, he cites papermaking: others tried before the recorded inventor, who improved and spread it.
 答：重大发明往往是许多人共同完成的
-错：造纸术是一个人发明的
-错：造纸术的发明者不存在
-错：民间没有人做过尝试
+错：造纸术是一个人发明的 | 他正是要说不是一个人发明的。 | His point is that it was not one person.
+错：造纸术的发明者不存在 | 他说那个人做了改进和推广，人是存在的。 | That person existed and improved it.
+错：民间没有人做过尝试 | 他说民间已经有人尝试。 | He says others had tried.
 
 男：现在不少年轻人选择回到县城创业，你觉得是一种趋势吗？
 女：至少说明县城的机会在变多，房价低、生活压力小，加上网络销售打破了地域限制。
 问：女的提到县城吸引年轻人的原因不包括哪一项？
+据：女的说的原因是“房价低、生活压力小，加上网络销售打破了地域限制”，没有说工资。 | She lists cheap housing, less pressure and online sales; pay is not mentioned.
 答：工资比大城市高
-错：房价低
-错：生活压力小
-错：网络销售打破地域限制
+错：房价低 | 房价低是她说的。 | Cheap housing is listed.
+错：生活压力小 | 生活压力小是她说的。 | Less pressure is listed.
+错：网络销售打破地域限制 | 网络销售是她说的。 | Online sales are listed.
 `,
     long: `
 女：赵教授，您主持的这项关于城市热岛效应的研究，最近引起了很大关注。能先给我们解释一下什么是热岛效应吗？
@@ -274,47 +306,55 @@ export const comprehension: ComprehensionData = {
 女：这些措施实施起来难度大吗？
 男：技术上不难，难的是协调。屋顶属于谁、维护费谁出，这些都需要政策上的配套。
 问：关于热岛效应，下列哪项是正确的？
+据：男的说热岛效应“就是城市中心的气温明显高于周边郊区”。 | He says it means the city centre is clearly hotter than the suburbs.
 答：城市中心气温高于郊区
-错：郊区气温高于城市中心
-错：只在冬天出现
-错：与绿地多少无关
+错：郊区气温高于城市中心 | 正好说反了，是城市中心更热。 | Reversed: the centre is hotter.
+错：只在冬天出现 | 他说的是白天吸热、晚上放热，没有说只在冬天。 | He speaks of day and night, not winter only.
+错：与绿地多少无关 | 他说绿地太少是原因之一。 | Too little green space is one cause.
 问：男的的研究有什么新发现？
+据：男的说“同样面积的绿地，分散成许多小块，比集中成一个大公园的降温效果更好”。 | He says the same green area in many patches cools better than one big park.
 答：分散的小块绿地降温效果更好
-错：大公园降温效果最好
-错：绿地对降温没有作用
-错：水面越多气温越高
+错：大公园降温效果最好 | 他说分散比集中好，不是大公园最好。 | Scattered beats one big park.
+错：绿地对降温没有作用 | 他说绿地能降温。 | He says green space cools.
+错：水面越多气温越高 | 他说水面太少降温能力弱，水面多是降温。 | Water cools, so more is not hotter.
 问：男的建议城市规划应该怎么做？
+据：男的说“不如在居民区、街道之间多布置一些小型绿地”。 | He says better to scatter small green spaces among homes and streets.
 答：在居民区和街道间多布置小型绿地
-错：集中建设一个大型公园
-错：减少屋顶绿化
-错：禁止使用空调
+错：集中建设一个大型公园 | 他说“与其花大价钱建一个大型公园”，不如建小的。 | He rejects one big costly park.
+错：减少屋顶绿化 | 他建议配合屋顶绿化，不是减少。 | He adds roof greening.
+错：禁止使用空调 | 空调排热是原因之一，他没有建议禁止。 | Air conditioning is a cause; he does not ban it.
 问：男的认为实施这些措施最难的是什么？
+据：男的说“技术上不难，难的是协调……需要政策上的配套”。 | He says the technology is easy; coordination and supporting policy are hard.
 答：各方的协调和政策配套
-错：技术问题
-错：没有足够的土地
-错：市民不支持
+错：技术问题 | 他说“技术上不难”。 | He says technology is not hard.
+错：没有足够的土地 | 他没有说土地。 | He does not mention land.
+错：市民不支持 | 他没有说市民不支持。 | He does not mention public opposition.
 
 讲：本台消息，记者从省交通运输厅获悉，连接本省东部山区与省会的高速铁路今天正式开通运营。这条铁路全长约二百八十公里，设计时速三百五十公里，沿线设有九个车站。开通后，从山区中心城市到省会的时间由原来的四个多小时缩短到一小时二十分钟左右。据介绍，这条铁路穿越地形复杂的山区，桥梁和隧道占线路总长的百分之七十以上，建设过程中攻克了多项技术难题。为了保护沿线的自然保护区，线路设计时专门绕开了核心区域，并在部分路段修建了供野生动物通行的通道。当地干部表示，高铁的开通将带动沿线的旅游和特色农产品销售，帮助山区群众增收。目前，铁路部门每天安排开行列车二十四对，并将根据客流情况适时调整。
 问：这条高速铁路开通后，从山区中心城市到省会需要多长时间？
+据：新闻说时间“由原来的四个多小时缩短到一小时二十分钟左右”。 | The report says the trip falls from over four hours to about one hour twenty.
 答：一小时二十分钟左右
-错：四个多小时
-错：两个半小时
-错：三十分钟
+错：四个多小时 | 四个多小时是原来的时间。 | Over four hours was before.
+错：两个半小时 | 新闻没有说两个半小时。 | Two and a half hours is not said.
+错：三十分钟 | 新闻没有说三十分钟。 | Thirty minutes is not said.
 问：关于这条铁路，下列哪项是正确的？
+据：新闻说“桥梁和隧道占线路总长的百分之七十以上”。百分之七十就是七成。 | The report says bridges and tunnels are over seventy per cent of the line.
 答：桥梁和隧道占线路七成以上
-错：全长三百五十公里
-错：沿线设有二十四个车站
-错：穿过了自然保护区的核心区
+错：全长三百五十公里 | 全长二百八十公里，三百五十是时速。 | It is 280 km long; 350 is the speed.
+错：沿线设有二十四个车站 | 沿线是九个车站，二十四是每天开行的列车对数。 | Nine stations; 24 is daily train pairs.
+错：穿过了自然保护区的核心区 | 线路“专门绕开了核心区域”。 | The line skirts the core zone.
 问：为了保护自然环境，建设方采取了什么措施？
+据：新闻说线路“专门绕开了核心区域，并在部分路段修建了供野生动物通行的通道”。 | The report says it skirts the core zone and adds wildlife crossings.
 答：绕开核心区并修建动物通道
-错：减少了列车数量
-错：降低了设计时速
-错：停止了部分路段的建设
+错：减少了列车数量 | 列车对数会根据客流调整，和环保无关。 | Train numbers follow demand, not ecology.
+错：降低了设计时速 | 时速三百五十是设计速度，没有降低。 | The design speed was not cut.
+错：停止了部分路段的建设 | 铁路已经开通，没有停止建设。 | The line is open.
 问：当地干部认为高铁会带来什么影响？
+据：当地干部说高铁“将带动沿线的旅游和特色农产品销售”。 | Local officials say it will boost tourism and farm sales.
 答：带动旅游和农产品销售
-错：让山区人口减少
-错：提高当地房价
-错：增加交通事故
+错：让山区人口减少 | 干部说帮助群众增收，没有说人口减少。 | They speak of higher incomes, not depopulation.
+错：提高当地房价 | 新闻没有说房价。 | House prices are not mentioned.
+错：增加交通事故 | 新闻没有说事故。 | Accidents are not mentioned.
 
 男：刘总，这次收购方案，董事会内部好像意见分歧挺大的。
 女：是啊，支持的一方认为，对方掌握的核心技术正是我们短板，买下来至少能节省五年的研发时间。
@@ -327,47 +367,55 @@ export const comprehension: ComprehensionData = {
 男：这样既能锁定技术，又能控制风险。
 女：没错，下周董事会上我会正式提出这个方案。
 问：支持收购的一方认为有什么好处？
+据：女的说支持的一方认为“买下来至少能节省五年的研发时间”。 | She says supporters think buying saves at least five years of research.
 答：能节省研发时间
-错：对方营收在增长
-错：收购价格很低
-错：可以减少员工
+错：对方营收在增长 | 女的说对方营收“这两年其实在下滑”。 | She says their revenue is falling.
+错：收购价格很低 | 估值比去年高了将近一半，价格不低。 | The valuation rose almost half, so it is not cheap.
+错：可以减少员工 | 对话没有说员工。 | Staff are not mentioned.
 问：反对收购的主要理由是什么？
+据：女的说反对的理由“主要是价格……估值比去年高了将近一半，而且他们的营收这两年其实在下滑”。 | She says opponents cite price: a valuation up nearly half while revenue falls.
 答：估值太高，营收下滑
-错：对方没有核心技术
-错：对方产品已经上市
-错：公司没有资金
+错：对方没有核心技术 | 对方掌握核心技术，是支持的理由。 | Their core technology is the case for buying.
+错：对方产品已经上市 | 新产品能不能上市还说不准，还没上市。 | The new product is not yet out.
+错：公司没有资金 | 对话没有说资金不足。 | Lack of funds is not mentioned.
 问：女的提出了什么方案？
+据：女的说“先买下百分之三十的股份……如果新产品按时上市并达到销售目标，再收购剩余部分”。 | She proposes buying thirty per cent first and the rest only if the product hits its targets.
 答：分两步收购，第二步看条件
-错：立即全部收购
-错：放弃收购
-错：只购买对方的产品
+错：立即全部收购 | 她是分两步，不是立即全部。 | Two steps, not all at once.
+错：放弃收购 | 她说“我支持收购”。 | She supports the deal.
+错：只购买对方的产品 | 她买的是股份，不是产品。 | She buys shares, not products.
 问：男的对女的的方案是什么看法？
+据：男的说“这样既能锁定技术，又能控制风险”。 | He says it secures the technology and controls risk.
 答：认为可以兼顾技术和风险
-错：认为风险太大
-错：认为价格太低
-错：认为应该推迟讨论
+错：认为风险太大 | 他说能控制风险。 | He says risk is controlled.
+错：认为价格太低 | 他没有说价格低。 | He does not call it cheap.
+错：认为应该推迟讨论 | 女的说下周就提出，他没有说推迟。 | She will table it next week; he does not delay.
 
 讲：各位同学，今天这节课我们讨论一个问题：历史上的大航海，为什么首先出现在欧洲，而不是航海技术同样发达的东方？过去有一种流行的解释，认为这是因为欧洲人更富有冒险精神。但这种说法很难经得起推敲，因为冒险精神本身很难衡量。更有说服力的解释，要从经济和政治结构中去找。当时，欧洲处于众多国家相互竞争的状态，一个国家拒绝资助航海，探险家完全可以转身去另一个国家寻求支持。同时，香料等商品经过陆路运到欧洲，价格被层层抬高，开辟新航路有着巨大的经济诱惑。而在同时期的东方，统一的政权更关心边疆的稳定，海外贸易带来的利益相对有限，远洋航行也就难以持续。当然，任何单一因素都不足以解释如此复杂的历史现象，希望大家课后阅读材料，形成自己的看法。
 问：说话人对“冒险精神”这一解释是什么态度？
+据：说话人说这种说法“很难经得起推敲，因为冒险精神本身很难衡量”。 | The speaker says it does not stand up, since adventurousness cannot be measured.
 答：认为难以成立
-错：完全赞同
-错：认为最有说服力
-错：没有表明态度
+错：完全赞同 | 说话人说很难经得起推敲。 | The speaker says it does not hold up.
+错：认为最有说服力 | 说话人说“更有说服力的解释”在经济和政治结构里。 | The stronger account lies in economics and politics.
+错：没有表明态度 | 说话人明确说了难以成立。 | The speaker states a clear view.
 问：根据说话人的观点，欧洲国家间的竞争有什么作用？
+据：说话人说“一个国家拒绝资助航海，探险家完全可以转身去另一个国家寻求支持”。 | The speaker says if one state refused, an explorer could turn to another.
 答：探险家可以向不同国家寻求资助
-错：使航海技术落后
-错：让香料价格降低
-错：阻止了远洋航行
+错：使航海技术落后 | 说话人说东方航海技术同样发达，没有说欧洲落后。 | The speaker says technology was comparable.
+错：让香料价格降低 | 香料价格被抬高，不是降低。 | Spice prices rose.
+错：阻止了远洋航行 | 竞争让探险家找到支持，推动了航行。 | Competition helped voyages happen.
 问：香料经陆路运到欧洲有什么特点？
+据：说话人说香料“经过陆路运到欧洲，价格被层层抬高”。 | The speaker says spices overland grew dearer at every stage.
 答：价格被层层抬高
-错：运输时间很短
-错：价格非常便宜
-错：只运到东方
+错：运输时间很短 | 说话人没有说运输时间。 | Transit time is not mentioned.
+错：价格非常便宜 | 价格被层层抬高，不是便宜。 | Prices rose, not fell.
+错：只运到东方 | 香料是运到欧洲的。 | Spices went to Europe.
 问：说话人最后强调了什么？
+据：说话人最后说“任何单一因素都不足以解释如此复杂的历史现象”。 | The speaker ends by saying no single factor explains so complex an event.
 答：单一因素不足以解释历史
-错：冒险精神最重要
-错：东方航海技术落后
-错：课后不必阅读材料
+错：冒险精神最重要 | 冒险精神是说话人否定的解释。 | Adventurousness is the view rejected.
+错：东方航海技术落后 | 说话人说东方航海技术“同样发达”。 | The speaker says the East's seafaring was as advanced.
+错：课后不必阅读材料 | 说话人希望大家课后阅读材料。 | The speaker wants the reading done.
 
 女：陈主任，听说市里准备在老旧小区推广加装电梯，您能介绍一下进展吗？
 男：目前已经完成了第一批三十个小区的试点，共加装了一百二十多部电梯，居民反映很好。
@@ -380,47 +428,55 @@ export const comprehension: ComprehensionData = {
 女：下一步有什么计划？
 男：明年计划再推广二百个小区，同时探索由企业投资建设、居民按次付费的新模式。
 问：加装电梯最大的难点是什么？
+据：男的说“是意见统一”，低层住户用不上电梯还有担心，高层住户需求迫切。 | He says reaching agreement, as low-floor residents gain nothing while high-floor ones badly need it.
 答：住户之间意见难以统一
-错：资金不够
-错：技术不成熟
-错：电梯质量不好
+错：资金不够 | 他说最难是意见统一，资金有分摊和补贴。 | Agreement is hardest; costs are shared and subsidised.
+错：技术不成熟 | 他没有说技术。 | He does not mention technology.
+错：电梯质量不好 | 他说居民反映很好。 | He says residents are pleased.
 问：关于费用分摊，下列哪项是正确的？
+据：男的说“按楼层分摊费用，楼层越高出得越多”。 | He says costs are shared by floor, higher floors paying more.
 答：楼层越高出钱越多
-错：每户平均分摊
-错：全部由政府出
-错：一楼住户出得最多
+错：每户平均分摊 | 是按楼层，不是平均。 | By floor, not equally.
+错：全部由政府出 | 政府给补贴，不是全部出。 | The government subsidises, not pays all.
+错：一楼住户出得最多 | 低层住户少出或不出。 | Low floors pay little or nothing.
 问：政府在审批方面做了什么？
+据：男的说“简化审批流程，过去要跑十几个部门，现在一个窗口就能办完”。 | He says approvals were simplified to a single window.
 答：简化流程，一个窗口办完
-错：增加了审批部门
-错：取消了全部审批
-错：交给企业审批
+错：增加了审批部门 | 部门从十几个变成一个窗口，是减少。 | From a dozen offices to one window, fewer.
+错：取消了全部审批 | 还要审批，只是简化。 | Approval remains, simplified.
+错：交给企业审批 | 审批在政府窗口，不是企业。 | Approval is at a government window.
 问：明年计划探索什么新模式？
+据：男的说“探索由企业投资建设、居民按次付费的新模式”。 | He says they will try firm-financed lifts with pay-per-ride.
 答：企业投资、居民按次付费
-错：全部由政府投资
-错：居民自己安装
-错：只在新小区安装
+错：全部由政府投资 | 是企业投资，不是政府全部投资。 | Firms invest, not the state.
+错：居民自己安装 | 是企业建设，不是居民自己装。 | Firms build them.
+错：只在新小区安装 | 说的是老旧小区，不是新小区。 | Old estates, not new ones.
 
 讲：本台消息，国家统计局今天发布数据显示，上半年全国居民人均可支配收入同比实际增长百分之五点三，其中农村居民收入增速连续多个季度快于城镇居民，城乡收入差距进一步缩小。从收入来源看，工资性收入仍是居民收入的主要部分，占比超过一半；经营净收入增长较快，这与个体工商户和网络零售的活跃密切相关。在消费方面，居民人均消费支出中，服务性消费比重明显上升，旅游、文化娱乐、教育培训等方面的支出增幅均在两位数以上。专家分析认为，这表明居民消费结构正从满足基本生活需要向追求更高质量生活转变。不过专家也指出，部分行业收入增长仍然乏力，下半年需要进一步稳定就业，增强居民消费信心。
 问：关于城乡居民收入，可以知道什么？
+据：新闻说“农村居民收入增速连续多个季度快于城镇居民”。 | The report says rural income growth has outpaced urban for several quarters.
 答：农村居民收入增长快于城镇
-错：城乡差距在扩大
-错：城镇居民收入增长更快
-错：农村居民收入下降
+错：城乡差距在扩大 | 新闻说差距“进一步缩小”。 | The gap narrowed.
+错：城镇居民收入增长更快 | 农村增速更快，不是城镇。 | Rural growth is faster.
+错：农村居民收入下降 | 农村收入在增长，增速还更快。 | Rural income grows, faster.
 问：居民收入的主要部分是什么？
+据：新闻说“工资性收入仍是居民收入的主要部分，占比超过一半”。 | The report says wages remain the main part, over half.
 答：工资性收入
-错：经营净收入
-错：财产收入
-错：网络零售收入
+错：经营净收入 | 经营净收入是增长较快的，不是主要部分。 | Business income grew fast but is not the main share.
+错：财产收入 | 新闻没有说财产收入。 | Property income is not mentioned.
+错：网络零售收入 | 网络零售是经营收入增长的原因之一。 | Online retail is behind business income.
 问：服务性消费比重上升说明了什么？
+据：专家说“这表明居民消费结构正从满足基本生活需要向追求更高质量生活转变”。 | Experts say spending is shifting from basic needs to a better life.
 答：消费结构向更高质量转变
-错：居民收入减少了
-错：基本生活需要无法满足
-错：旅游业正在衰退
+错：居民收入减少了 | 收入同比在增长。 | Income grew.
+错：基本生活需要无法满足 | 是从基本需要往上走，不是满足不了。 | It moves beyond basics, not failing them.
+错：旅游业正在衰退 | 旅游支出增幅在两位数以上。 | Travel spending rose by double digits.
 问：专家认为下半年需要做什么？
+据：专家说“下半年需要进一步稳定就业，增强居民消费信心”。 | Experts say the second half needs stable jobs and stronger consumer confidence.
 答：稳定就业，增强消费信心
-错：减少服务性消费
-错：提高物价
-错：限制网络零售
+错：减少服务性消费 | 服务性消费上升被看作好事。 | Rising service spending is seen as good.
+错：提高物价 | 新闻没有说提高物价。 | Raising prices is not said.
+错：限制网络零售 | 网络零售让收入增长，没有说限制。 | Online retail lifted income.
 
 男：孙老师，您做了二十多年古籍修复，这门手艺最难的是什么？
 女：最难的是耐心和判断。一本破损严重的古书，修复一页可能就要好几天，而且每一步都不能出错，否则就是不可挽回的损失。
@@ -433,47 +489,55 @@ export const comprehension: ComprehensionData = {
 男：您对年轻人有什么寄语？
 女：修复古书，其实也是在修炼自己。别着急，慢就是快。
 问：女的认为古籍修复最难的是什么？
+据：女的说“最难的是耐心和判断”。 | She says the hardest is patience and judgement.
 答：耐心和判断
-错：寻找古书
-错：使用数字化技术
-错：装订古书
+错：寻找古书 | 她修的书已经在手里，没有说找书难。 | The books are at hand.
+错：使用数字化技术 | 数字化是男的问的另一回事。 | Digitisation is his separate question.
+错：装订古书 | 她没有说装订难。 | She does not single out binding.
 问：关于修复用纸，可以知道什么？
+据：女的说“用纸要尽量和原书的纸张接近”。 | She says the paper must be as close to the original as possible.
 答：要尽量接近原书纸张
-错：越新越好
-错：颜色不重要
-错：可以随便选
+错：越新越好 | 要接近原书，不是越新越好。 | Close to the original, not newest.
+错：颜色不重要 | 她说颜色、厚薄、纤维都要考虑。 | She says colour, weight and fibre all matter.
+错：可以随便选 | 她要跑好几个产地找，不能随便选。 | She travels to find it.
 问：女的为什么认为传统修复仍有必要？
+据：女的说“数字化保存的是内容，而修复保存的是实物本身……这是图像代替不了的”。 | She says digitising saves content, but repair saves the object, whose history images cannot replace.
 答：实物本身含有图像无法替代的历史信息
-错：数字化技术太贵
-错：数字化技术不成熟
-错：古书内容需要修改
+错：数字化技术太贵 | 她没有说数字化贵。 | She does not mention cost.
+错：数字化技术不成熟 | 她没有说数字化不成熟。 | She does not say it is immature.
+错：古书内容需要修改 | 修复是保存，不是改内容。 | Repair preserves, not edits.
 问：“慢就是快”在这里是什么意思？
+据：女的说“别着急，慢就是快”，前面说要坐得住、沉下心，还要再磨练七八年。沉下心慢慢练，才能真正学会。 | She says don't hurry; after speaking of patience and seven or eight more years of training, she means slow, steady work is how mastery comes.
 答：沉下心慢慢磨练，反而能真正掌握手艺
-错：修复速度越慢越好
-错：年轻人应该放弃
-错：做事要尽量快
+错：修复速度越慢越好 | 她说的是学手艺的态度，不是修得越慢越好。 | She means attitude to learning, not slower repairs.
+错：年轻人应该放弃 | 她在鼓励年轻人，不是让他们放弃。 | She encourages, not discourages.
+错：做事要尽量快 | 她说“别着急”，不是要快。 | She says don't hurry.
 
 讲：大家好，欢迎收听今天的科学讲座。今天我们来谈谈睡眠与记忆的关系。很多学生在考试前习惯通宵复习，认为多看一遍就多记住一点。然而大量研究表明，这种做法往往适得其反。在睡眠过程中，大脑并没有停止工作，而是在对白天获得的信息进行整理：重要的内容被加以巩固，转入长期记忆；无关的信息则被筛除。有实验发现，学习新知识后睡上一觉的人，第二天的回忆成绩明显好于整夜不睡的人，即便后者用于复习的时间更多。另外，睡眠不足还会削弱注意力和情绪调节能力，使人在考场上更容易紧张出错。因此，与其熬夜突击，不如把复习分散到平时，并保证考前有充足的睡眠。当然，偶尔一次晚睡并不可怕，真正需要注意的是长期睡眠不足。
 问：说话人对考前通宵复习是什么看法？
+据：说话人说“大量研究表明，这种做法往往适得其反”。 | The speaker says research shows it often backfires.
 答：往往适得其反
-错：效果很好
-错：值得提倡
-错：没有影响
+错：效果很好 | 说话人说适得其反。 | The speaker says it backfires.
+错：值得提倡 | 说话人建议不要熬夜。 | The speaker advises against it.
+错：没有影响 | 说话人说睡眠不足会削弱注意力。 | Lack of sleep weakens attention.
 问：睡眠中大脑在做什么？
+据：说话人说“大脑并没有停止工作，而是在对白天获得的信息进行整理”。 | The speaker says the brain does not stop but sorts the day's information.
 答：整理白天获得的信息
-错：完全停止工作
-错：删除所有记忆
-错：学习新知识
+错：完全停止工作 | 说话人说没有停止工作。 | It does not stop.
+错：删除所有记忆 | 重要的内容被巩固，只筛除无关的信息。 | Important content is kept; only the irrelevant goes.
+错：学习新知识 | 是整理白天学的，不是学新的。 | It sorts what was learned.
 问：根据实验，学习后睡一觉的人有什么表现？
+据：说话人说“学习新知识后睡上一觉的人，第二天的回忆成绩明显好于整夜不睡的人”。 | The speaker says those who slept recalled clearly better the next day.
 答：第二天回忆成绩更好
-错：复习时间更多
-错：更容易紧张
-错：注意力下降
+错：复习时间更多 | 复习时间更多的是整夜不睡的人。 | The all-nighters revised longer.
+错：更容易紧张 | 更容易紧张的是睡眠不足的人。 | The sleep-deprived get nervous.
+错：注意力下降 | 注意力下降的是睡眠不足的人。 | Attention falls without sleep.
 问：说话人最后提醒人们注意什么？
+据：说话人最后说“偶尔一次晚睡并不可怕，真正需要注意的是长期睡眠不足”。 | The speaker ends: an odd late night is fine; long-term lack of sleep is the worry.
 答：长期睡眠不足
-错：偶尔晚睡
-错：把复习分散到平时
-错：考前睡得太多
+错：偶尔晚睡 | 说话人说偶尔一次并不可怕。 | One late night is fine.
+错：把复习分散到平时 | 分散复习是建议，不是最后提醒要注意的。 | Spreading revision is advice, not the closing warning.
+错：考前睡得太多 | 说话人要大家睡够，没说睡太多。 | The speaker wants enough sleep.
 `,
   },
   passages: {

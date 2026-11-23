@@ -17,8 +17,10 @@ import {
   levelListeningId,
   levelSpeakingId,
   listeningBanks,
+  sentencesExplanation,
   speakingBanks,
   unitSpeechSpecs,
+  wordsExplanation,
 } from "../level-1/listening.ts";
 import { levelOnePlan } from "../level-1/plan.ts";
 import { sentences as levelOneSentences } from "../level-1/sentence-data.ts";
@@ -562,6 +564,8 @@ function speechExam(spec: HskSpec): readonly TopicDef[] {
   const last = units.at(-1);
   if (!last) throw new Error(`HSK ${spec.name}: no units with listening`);
   const listening = units.map(listeningBanks);
+  const example = listening[0]!.example;
+  const w = example.word.word;
   const speaking = units.map(speakingBanks);
   const mixed = (banks: readonly (readonly Asked[])[]): Generator => fromBank(interleave(banks));
   return [
@@ -572,28 +576,21 @@ function speechExam(spec: HskSpec): readonly TopicDef[] {
         `Words and sentences of every unit of the levels HSK ${spec.name} tests, heard without being seen, every theme mixed.`,
         `不看文字，听 HSK ${spec.name} 所考等级各个单元的词语和句子，各个话题混在一起。`,
       ),
+      intro: t(
+        `Take **${w.word}** ${pinyinOf(w.syllables)}, which means "${w.meaning.en}": here it comes up among the words of every unit of the levels HSK ${spec.name} tests, every theme mixed, heard without being seen. You choose what a word you hear means, then which word a sentence you hear says, as the listening paper asks.`,
+        `比如 **${w.word}** ${pinyinOf(w.syllables)}，意思是${zhQuote(w.meaning["zh-CN"])}：这里它和 HSK ${spec.name} 所考等级各个单元的词语混在一起，只听不看。先选出听到的词是什么意思，再选出听到的句子里说了哪个词，像听力试卷那样。`,
+      ),
       prerequisites: [levelListeningId(last.level, last.unit)],
       encompasses: [],
       xp: 12,
       practiceOnly: true,
       strand: "listening",
       knowledgePoints: [
-        point(
-          id("listening-words"),
-          t("Words You Hear", "听词语"),
-          t(
-            "Listen to every syllable and its tone before you look at the meanings: words of different themes may sound alike but for one tone.",
-            "先听清每个音节和它的声调，再看意思：不同话题的词可能只差一个声调。",
-          ),
-          mixed(listening.map((b) => b.hearWord)),
-        ),
+        point(id("listening-words"), t("Words You Hear", "听词语"), wordsExplanation(example), mixed(listening.map((b) => b.hearWord))),
         point(
           id("listening-sentences"),
           t("Words in Sentences", "句子里的词"),
-          t(
-            "Listen to the whole sentence first; then check each word offered for its syllables, one after another, in what you heard.",
-            "先听完整个句子，再看每个选项的几个音节是不是连着出现在你听到的话里。",
-          ),
+          sentencesExplanation(example),
           mixed(listening.map((b) => b.hearSentence)),
         ),
       ],

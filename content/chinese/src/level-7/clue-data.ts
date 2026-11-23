@@ -46,7 +46,7 @@ export const levelSevenClues = parseClues(`
 抛弃/1 | “女孩子不用读书”这种旧观念 | Discard the old idea, so the word must mean to abandon.
 沿袭/1 | 村子至今还保留古老的婚礼习俗 | The village keeps old customs, so the word must mean to carry on.
 守旧/1 | 奶奶七十岁还学会网上购物 | Grandma is not old-fashioned, so the word must mean conservative.
-少子化/1 | 日本和韩国新生儿越来越少 | Fewer babies are born, so the word must mean declining birth rate.
+少子化/1 | 日本和韩国新生儿越来越少 | In Japan and Korea fewer and fewer babies are born, so the word must mean declining birth rate.
 生育率/1 | 人口稳定需要大约二点一 | It must be about 2.1, so the word must mean fertility rate.
 人均寿命/1 | 医疗改善以后不断提高 | People live longer, so the word must mean life expectancy.
 独生子女/1 | 小时候羡慕有哥哥姐姐的同学 | He had no siblings, so the word must mean only child.
@@ -56,7 +56,7 @@ export const levelSevenClues = parseClues(`
 二孩/1 | 政策放开后有了第二个孩子 | Families had a second child, so the word must mean second child.
 银发族/1 | 越来越多的开始学用手机上网 | Seniors go online, so the word must mean silver-haired generation.
 四世同堂/1 | 王奶奶的重孙子刚出生 | Four generations live together, so the word must mean four generations under one roof.
-住宅/1 | 土地只能用来建，不能建工厂 | Only homes may be built, so the word must mean residence.
+住宅/1 | 土地只能用来建，不能建工厂 | The land may be used only for homes, not for factories, so the word must mean residence.
 豪宅/1 | 富商住在海边的 | A rich man's seaside mansion, so the word must mean mansion.
 楼梯/1 | 电梯坏了只好走 | We took the stairs, so the word must mean stairs.
 电梯/1 | 老楼没有，老人上下楼不方便 | The old building has no lift, so the word must mean lift.
@@ -82,7 +82,7 @@ export const levelSevenClues = parseClues(`
 超前消费/1 | 用信用卡买用不上的东西 | Spending before earning, so the word must mean overspending.
 勤俭节约/1 | 老一辈人保持的好习惯 | Thrift is the elders' habit, so the word must mean thrift.
 带货/1 | 网红直播卖东西 | Selling while streaming, so the word must mean to sell products via livestream.
-消费主义/1 | 买得越多不一定越幸福 | Buying more is not happiness, so the word must mean consumerism.
+消费主义/1 | 买得越多不一定越幸福 | Its critics say that buying more does not make one happier, so the word must mean consumerism.
 旺季/1 | 夏天海边酒店很难订 | Summer is peak season, so the word must mean peak season.
 淡季/1 | 冬天机票很便宜 | Winter is low season, so the word must mean off season.
 滞销/1 | 苹果大丰收怕卖不出去 | Apples may not sell, so the word must mean to sell poorly.
@@ -102,7 +102,7 @@ export const levelSevenClues = parseClues(`
 媒人/1 | 过去结婚要靠介绍的人 | A go-between, so the word must mean matchmaker.
 门当户对/1 | 不太讲究家庭条件一样 | Matching family status, so the word must mean well-matched families.
 单亲家庭/1 | 妈妈一个人把他养大 | One parent raised him, so the word must mean single-parent family.
-核心家庭/1 | 爷爷奶奶不和孙子住在一起 | Just parents and children, so the word must mean nuclear family.
+核心家庭/1 | 爷爷奶奶不和孙子住在一起 | Most city households now hold just parents and children, without the grandparents, so the word must mean nuclear family.
 双职工/1 | 父母都上班，孩子由爷爷奶奶接 | Both parents work, so the word must mean dual-income.
 家庭主妇/1 | 结婚后几年在家不工作 | She stayed home for years, so the word must mean housewife.
 晚婚/1 | 很多人三十多岁才结婚 | Marrying in one's thirties, so the word must mean late marriage.
@@ -119,7 +119,7 @@ export const levelSevenClues = parseClues(`
 城镇化/1 | 越来越多农民住进城镇 | Farmers move to towns, so the word must mean urbanisation.
 机械化/1 | 一台机器干几十个人的活 | Machines replace labour, so the word must mean mechanisation.
 种地/1 | 爷爷一辈子在农村 | Grandpa farmed all his life, so the word must mean to farm.
-化肥/1 | 用太多会让土地变差 | Too much harms the soil, so the word must mean fertiliser.
+化肥/1 | 用太多会让土地变差 | Using too much of it harms the soil, so the word must mean fertiliser.
 水利/1 | 修了工程再也不怕旱 | Water works ended drought, so the word must mean water conservancy.
 老乡/1 | 在外地遇到听到家乡话 | Someone from home, so the word must mean fellow townsman.
 思乡/1 | 中秋节在外地工作特别想家 | Homesick at Mid-Autumn, so the word must mean homesick.
@@ -128,7 +128,7 @@ export const levelSevenClues = parseClues(`
 迈向/1 | 小村子一步一步走向现代化 | The village strides toward modernity, so the word must mean to stride toward.
 赶超/1 | 技术正在追上并超过世界水平 | Catching up and overtaking, so the word must mean to catch up and surpass.
 追赶/1 | 拼命跑终于追上前面的人 | He chased and caught up, so the word must mean to chase.
-涌现/1 | 近些年出了一批优秀作家 | Many writers emerged, so the word must mean to emerge in large numbers.
+涌现/1 | 近些年出了一批优秀作家 | In recent years a whole group of fine young writers has appeared, so the word must mean to emerge in large numbers.
 奔波/1 | 为了生活每天在城市里跑 | He rushes about to make a living, so the word must mean to rush about.
 奔小康/1 | 一起种果树走上的路 | The road to a comfortable life, so the word must mean to strive for moderate prosperity.
 逆转/1 | 最后五分钟进两球 | Two late goals reversed the match, so the word must mean to reverse.
@@ -224,7 +224,7 @@ export const levelSevenClues = parseClues(`
 学妹/1 | 比我晚一年进学校的女生 | A year behind me, so the word must mean junior schoolmate.
 班风/1 | 同学们都努力、互相帮助 | The class's spirit, so the word must mean class ethos.
 三好学生/1 | 学习好、身体好、品德好 | Good in study, health and conduct, so the word must mean merit student.
-尖子生/1 | 每次考试都是第一名 | Always top, so the word must mean top student.
+尖子生/1 | 每次考试都是第一名 | He comes first in every exam, so the word must mean top student.
 后进生/1 | 老师耐心帮他们补课 | Pupils who lag behind, so the word must mean underachiever.
 温习/1 | 考试前把课本看一遍 | Review before the exam, so the word must mean to revise.
 巩固/1 | 做练习让课上学的更牢 | Practice consolidates learning, so the word must mean to consolidate.
@@ -235,7 +235,7 @@ export const levelSevenClues = parseClues(`
 循序渐进/1 | 学外语不能一下子太难 | Step by step, so the word must mean to proceed step by step.
 熟能生巧/1 | 打字练多了自然快 | Practice makes perfect, so the word must mean practice makes perfect.
 钻牛角尖/1 | 想不出来就先放一放 | Do not get stuck, so the word must mean to split hairs.
-谨慎/1 | 做化学实验按老师说的做 | Be careful in the lab, so the word must mean cautious.
+谨慎/1 | 做化学实验按老师说的做 | A chemistry experiment must be done with care, exactly as the teacher says, so the word must mean cautious.
 领悟/1 | 读书后慢慢明白坚持的意义 | He grasped the meaning of perseverance, so the word must mean to comprehend.
 醒悟/1 | 考试不及格才明白过来 | Failing woke him up, so the word must mean to come to one's senses.
 感悟/1 | 读完书以后的体会 | Thoughts after reading, so the word must mean insight.
@@ -251,7 +251,7 @@ export const levelSevenClues = parseClues(`
 笨拙/1 | 第一次包饺子动作 | His first dumplings are clumsy, so the word must mean clumsy.
 发呆/1 | 上课看着窗外 | Staring out of the window, so the word must mean to stare blankly.
 天分/1 | 三岁就会弹钢琴 | Gifted at three, so the word must mean talent.
-资质/1 | 学习好坏不光看这个，更看努力 | Not only natural ability, so the word must mean aptitude.
+资质/1 | 学习好坏不光看这个，更看努力 | How well one learns depends not only on natural ability but more on effort, so the word must mean aptitude.
 呆板/1 | 文章读起来没有意思 | The essay is stiff, so the word must mean rigid, dull.
 大智若愚/1 | 话不多看上去笨，其实很聪明 | Wise but seeming slow, so the word must mean great wisdom appearing foolish.
 心灵手巧/1 | 一张纸剪出漂亮的小鸟 | Clever hands, so the word must mean clever and deft.
@@ -404,7 +404,7 @@ export const levelSevenClues = parseClues(`
 拖延/1 | 工作到最后一天才做 | He delays to the last day, so the word must mean to procrastinate.
 拖拉/1 | 一天的工作要三天 | He dawdles, so the word must mean dilatory.
 马虎/1 | 报告里有很多错字 | Careless report, so the word must mean careless.
-苟且/1 | 过一天算一天 | Just getting by, so the word must mean to drift along.
+苟且/1 | 过一天算一天 | One must not just get by, living one day at a time, so the word must mean to drift along.
 内耗/1 | 部门之间互相不配合 | Internal friction, so the word must mean internal friction.
 忙碌/1 | 结束了一天的工作 | A busy day ends, so the word must mean busy.
 疲惫/1 | 连续加班一周 | Worn out after a week, so the word must mean exhausted.
@@ -437,7 +437,7 @@ export const levelSevenClues = parseClues(`
 渎职/1 | 官员造成严重损失被撤职 | An official's dereliction, so the word must mean dereliction of duty.
 失职/1 | 保安睡着让小偷进来 | The guard failed his duty, so the word must mean neglect of duty.
 窍门/1 | 用冷水洗不容易变形 | A handy trick, so the word must mean knack.
-一窍不通/1 | 对电脑连开机都要问别人 | Knows nothing of computers, so the word must mean to know nothing about.
+一窍不通/1 | 对电脑连开机都要问别人 | The speaker knows so little about computers that he must ask even how to switch one on, so the word must mean to know nothing about.
 门道/1 | 外行看热闹，内行看 | Experts see the know-how, so the word must mean know-how.
 内行/1 | 说到修汽车他是 | An expert at cars, so the word must mean expert.
 外行/1 | 看不懂设计图 | A layman, so the word must mean layman.
@@ -643,7 +643,7 @@ export const levelSevenClues = parseClues(`
 食疗/1 | 合适的饮食也能治病 | Healing through food, so the word must mean food therapy.
 补品/1 | 给生病的奶奶买了很多 | Tonics for Grandma, so the word must mean tonic.
 调理/1 | 病好以后吃中药养身体 | Recuperating with medicine, so the word must mean to recuperate.
-上火/1 | 吃了太多辣的东西 | Too much spice, so the word must mean to have excess internal heat.
+上火/1 | 吃了太多辣的东西 | He has eaten too much spicy food lately, so the word must mean to have excess internal heat.
 阴阳/1 | 中医用来解释身体的变化 | Yin and yang, so the word must mean yin and yang.
 中成药/1 | 比自己熬汤药方便 | Ready-made Chinese medicine, so the word must mean patent Chinese medicine.
 栖息/1 | 树林里住着很多种鸟 | Birds dwell there, so the word must mean to inhabit.
@@ -654,7 +654,7 @@ export const levelSevenClues = parseClues(`
 筑巢/1 | 小鸟衔小树枝 | Birds build nests, so the word must mean to build a nest.
 生态系统/1 | 一片森林里生物互相依存 | A forest ecosystem, so the word must mean ecosystem.
 食物链/1 | 草被羊吃，羊被狼吃 | Grass, sheep, wolf, so the word must mean food chain.
-候鸟/1 | 每年秋天飞到南方过冬 | Birds that fly south, so the word must mean migratory bird.
+候鸟/1 | 每年秋天飞到南方过冬 | The birds fly south every autumn to spend the winter, so the word must mean migratory bird.
 冬眠/1 | 熊在洞里到春天才出来 | Bears sleep all winter, so the word must mean to hibernate.
 濒危/1 | 鸟已经很少了 | Endangered birds, so the word must mean endangered.
 稀有/1 | 全世界只有几个地方能看到 | A rare flower, so the word must mean rare.
@@ -1028,7 +1028,7 @@ export const levelSevenClues = parseClues(`
 侵略/1 | 人民团结起来抵抗外国 | Foreign invasion, so the word must mean aggression.
 战役/1 | 赤壁之战是有名的一场 | A famous battle, so the word must mean battle, campaign.
 打仗/1 | 将军不仅要会这个 | Fighting wars, so the word must mean to fight a war.
-胜仗/1 | 将军从来没有输过 | Never lost, so the word must mean victory.
+胜仗/1 | 将军从来没有输过 | The general fought many battles and never lost one, so the word must mean victory.
 败仗/1 | 打输以后总结原因 | A lost battle, so the word must mean defeat.
 兵役/1 | 成年男子必须服 | Military service, so the word must mean military service.
 服役/1 | 船已经用了三十年快退役 | In service, so the word must mean to be in service.
@@ -1093,7 +1093,7 @@ export const levelSevenClues = parseClues(`
 祭祀/1 | 皇帝举行仪式敬上天 | Offering to Heaven, so the word must mean to offer sacrifices.
 追溯/1 | 节日的来历可以往前找到 | Traced back, so the word must mean to trace back.
 回溯/1 | 回头看过去十年 | Looking back, so the word must mean to look back.
-诞生/1 | 第一台电子计算机一九四六年 | Was born, so the word must mean to be born.
+诞生/1 | 第一台电子计算机一九四六年 | The first electronic computer in the world came into being in 1946, so the word must mean to be born.
 家谱/1 | 他家住了三百多年的记录 | A family tree, so the word must mean family tree.
 祖籍/1 | 出生在上海，祖上在广东 | Ancestral home, so the word must mean ancestral home.
 古希腊/1 | 很多西方哲学思想起源于 | Western philosophy began there, so the word must mean ancient Greece.
@@ -1177,7 +1177,7 @@ export const levelSevenClues = parseClues(`
 唯唯诺诺/1 | 在老板面前不敢说想法 | Meek, so the word must mean submissive.
 唯命是从/1 | 不能别人说什么就做什么 | Blind obedience, so the word must mean to obey blindly.
 唯一/1 | 班里只有他会说法语 | The only one, so the word must mean only.
-唯有/1 | 坚持下去才能成功 | Only by persisting, so the word must mean only.
+唯有/1 | 坚持下去才能成功 | Success comes only to those who keep going, so the word must mean only.
 唯独/1 | 大家都来了，只有他没来 | All but him, so the word must mean only, alone.
 唯利是图/1 | 公司只想赚钱质量很差 | Profit above all, so the word must mean profit-seeking.
 诡计/1 | 坏人想出的主意被识破 | A trick, so the word must mean trick.
@@ -1213,7 +1213,7 @@ export const levelSevenClues = parseClues(`
 坐禅/1 | 和尚每天早上静坐一小时 | Sitting in meditation, so the word must mean to meditate.
 禅师/1 | 说话很少但很有道理 | A Zen master, so the word must mean Zen master.
 寺院/1 | 山上一千年历史的 | A temple, so the word must mean monastery.
-出家/1 | 他二十岁当了和尚 | Became a monk, so the word must mean to become a monk.
+出家/1 | 他二十岁当了和尚 | At twenty he left home to become a monk, so the word must mean to become a monk.
 修行/1 | 在山里小庙住了很多年 | Religious practice, so the word must mean to practise religion.
 念经/1 | 寺庙里传来的声音 | Chanting, so the word must mean to chant sutras.
 灵魂/1 | 很多宗教认为人死后还存在 | The soul lives on, so the word must mean soul.
@@ -1268,7 +1268,7 @@ export const levelSevenClues = parseClues(`
 戒烟/1 | 爸爸为了健康不再抽烟 | Quitting smoking, so the word must mean to quit smoking.
 戒律/1 | 寺院规定和尚不吃肉 | Monastic rules, so the word must mean precepts.
 供奉/1 | 庙里放着佛像让人拜 | Enshrined, so the word must mean to enshrine.
-香火/1 | 寺庙每天有很多人来 | Many worshippers, so the word must mean incense offerings.
+香火/1 | 寺庙每天有很多人来 | Many people come to burn incense at the temple every day, so the word must mean incense offerings.
 朝拜/1 | 佛教徒每年到名山 | Pilgrimage, so the word must mean to make a pilgrimage.
 灵验/1 | 求什么就能得到什么 | Effective, so the word must mean efficacious.
 禅意/1 | 小院子很安静 | A Zen feeling, so the word must mean Zen spirit.
@@ -1330,7 +1330,7 @@ export const levelSevenClues = parseClues(`
 岂有此理/1 | 借书不还还说是我的错 | Outrageous, so the word must mean preposterous.
 岂能/1 | 大家都在工作我怎么能休息 | How could I, so the word must mean how could.
 乃至/1 | 对中国甚至整个世界 | And even, so the word must mean and even.
-乃是/1 | 诚实是做人的根本 | Is in fact, so the word must mean is.
+乃是/1 | 诚实是做人的根本 | Honesty is declared to be the very root of being a good person, so the word must mean is.
 吾辈/1 | 保护传统文化是我们的责任 | Our duty, so the word must mean we, our generation.
 亦步亦趋/1 | 学写作不能完全照着名家 | Blind copying, so the word must mean to imitate slavishly.
 知己知彼/1 | 才能百战百胜 | Know yourself and the enemy, so the word must mean know oneself and the enemy.
@@ -1629,7 +1629,7 @@ export const levelSevenClues = parseClues(`
 盗窃/1 | 违法会受到法律处罚 | Theft, so the word must mean theft.
 偷窃/1 | 猴子常常拿游客的食物 | Stealing, so the word must mean to steal.
 窃取/1 | 黑客偷走了客户资料 | Stealing data, so the word must mean to steal.
-失窃/1 | 博物馆丢了一幅名画 | Was stolen, so the word must mean to be stolen.
+失窃/1 | 博物馆丢了一幅名画 | A famous painting has been stolen from the museum, so the word must mean to be stolen.
 赃物/1 | 小偷家里找到偷来的手机 | Stolen goods, so the word must mean stolen goods.
 赃款/1 | 官员把收来的钱藏在老家 | Illicit money, so the word must mean stolen money.
 挪用/1 | 会计拿公司的钱去买房 | Embezzling, so the word must mean to misappropriate.
@@ -1696,7 +1696,7 @@ export const levelSevenClues = parseClues(`
 加密/1 | 文件没有密码打不开 | Encrypted, so the word must mean to encrypt.
 监控/1 | 小区门口看到进出的人 | Surveillance, so the word must mean monitoring.
 指纹/1 | 很多手机用它解锁 | Fingerprints, so the word must mean fingerprint.
-涉及/1 | 书谈到历史、地理等很多方面 | Covering many fields, so the word must mean to involve.
+涉及/1 | 书谈到历史、地理等很多方面 | The book deals with history, geography and many other fields, so the word must mean to involve.
 牵涉/1 | 案子跟好几家公司有关 | Implicating firms, so the word must mean to implicate.
 干涉/1 | 父母不应该过多管孩子交朋友 | Interfering, so the word must mean to interfere.
 交涉/1 | 大使馆跟当地政府谈 | Negotiating, so the word must mean to negotiate.

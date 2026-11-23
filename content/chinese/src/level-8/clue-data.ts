@@ -90,7 +90,7 @@ export const levelEightClues = parseClues(`
 阻止/1 | 老师及时停住两个学生的争吵 | Preventing a fight, so the word must mean to prevent.
 阻碍/1 | 交通不便影响山村发展 | Hindering, so the word must mean to hinder.
 妨碍/1 | 车不要挡住别人通行 | Obstructing, so the word must mean to obstruct.
-不妨/1 | 周末有空可以来看看 | Might as well, so the word must mean might as well.
+不妨/1 | 周末有空可以来看看 | If you are free at the weekend, there is no harm in visiting the library, so the word must mean might as well.
 阻力/1 | 改革总会遇到 | Resistance, so the word must mean resistance.
 阻挡/1 | 大雨也挡不住志愿者的热情 | Holding back, so the word must mean to block.
 劝阻/1 | 保安上前劝人不要下水 | Dissuading, so the word must mean to dissuade.
@@ -190,7 +190,7 @@ export const levelEightClues = parseClues(`
 殊途同归/1 | 不同方法得出相同结论 | Same end, so the word must mean different roads to the same end.
 悬殊/1 | 两队实力差得太远 | A huge gap, so the word must mean wide disparity.
 罕见/1 | 全世界只有几百个病例 | Rare, so the word must mean rare.
-罕有/1 | 几十年没有过的大雪 | Seldom seen, so the word must mean rare.
+罕有/1 | 几十年没有过的大雪 | The snow this winter was heavier than any seen for decades, so the word must mean rare.
 稀罕/1 | 谁要你的东西 | Caring about it, so the word must mean to value, care for.
 人迹罕至/1 | 深山里发现新植物 | Untrodden, so the word must mean rarely visited.
 广泛/1 | 从小学生到老人都爱看 | Wide readership, so the word must mean wide.
@@ -295,7 +295,7 @@ export const levelEightClues = parseClues(`
 玄妙/1 | 宇宙起源的道理至今没答案 | Mysterious, so the word must mean abstruse.
 玄机/1 | 题目看似简单其实暗藏 | A hidden trick, so the word must mean hidden meaning.
 惟妙惟肖/1 | 模仿鸟叫学得一模一样 | Lifelike, so the word must mean true to life.
-惟有/1 | 坚持下去才能看到成果 | Only by persisting, so the word must mean only.
+惟有/1 | 坚持下去才能看到成果 | Results come only to those who keep going, so the word must mean only.
 胚胎/1 | 观察鸡蛋里研究动物发育 | An embryo, so the word must mean embryo.
 霉菌/1 | 面包放久了长出来的 | Mould, so the word must mean mould.
 发霉/1 | 南方春天潮湿衣服容易 | Going mouldy, so the word must mean to go mouldy.
@@ -1319,7 +1319,7 @@ export const levelEightClues = parseClues(`
 皎洁/1 | 中秋一轮月亮 | Bright and clear, so the word must mean bright and clear.
 明月/1 | 李白诗里表达思乡 | The bright moon, so the word must mean bright moon.
 月色/1 | 窗外很好去散步 | Moonlight, so the word must mean moonlight.
-月明星稀/1 | 只能看到几颗星星 | Bright moon, few stars, so the word must mean bright moon and sparse stars.
+月明星稀/1 | 只能看到几颗星星 | On such a night only a few stars can be seen in the sky, so the word must mean bright moon and sparse stars.
 眺望/1 | 站在山顶看远方大海 | Gazing afar, so the word must mean to gaze into the distance.
 远眺/1 | 登上塔顶整座城在眼前 | Looking far, so the word must mean to look into the distance.
 登高/1 | 重阳节去爬山 | Climbing heights, so the word must mean to ascend a height.

@@ -135,10 +135,10 @@ export const levelFourClues = parseClues(`
 到达/1 | 路上堵车，十点才到酒店 | Traffic held us up until ten, so the word must mean to reach.
 达到/1 | 工厂生产了一万件 | The factory's output reached ten thousand, so the word must mean to reach a level.
 随时/1 | 有问题什么时候都可以打电话 | Call me whenever you have a question, so the word must mean at any time.
-岛/1 | 海上的小地方，住着几户人家 | A small piece of land in the sea, so the word must mean island.
-大陆/1 | 从岛上坐船一小时到 | One hour by boat from the island, so the word must mean mainland.
+岛/1 | 海上的小地方，住着几户人家 | A small piece of land out at sea has a few families living on it, so the word must mean island.
+大陆/1 | 从岛上坐船一小时到 | The place is reached from the island in an hour by boat, so the word must mean mainland.
 陆地/1 | 地球上的海比它大得多 | The seas are much larger than it, so the word must mean land.
-沿海/1 | 上海这样靠海的城市 | Cities by the sea such as Shanghai, so the word must mean coastal.
+沿海/1 | 上海这样靠海的城市 | Shanghai is given as one of these cities by the sea, so the word must mean coastal.
 省/1 | 中国有很多个，我从南方的一个来 | China has many of them, so the word must mean province.
 州/1 | 美国有五十个 | The United States has fifty of them, so the word must mean state.
 沿着/1 | 顺着这条河一直走 | Follow this river all the way, so the word must mean along.
@@ -463,7 +463,7 @@ export const levelFourClues = parseClues(`
 原告/1 | 告对方拿东西不付钱的人 | This person accuses the other of not paying, so the word must mean plaintiff.
 辩论/1 | 两个班就一个题目各说各的道理 | Two classes argue over a topic, so the word must mean to debate.
 辩护/1 | 律师在法庭上替他说话 | The lawyer speaks for him in court, so the word must mean to defend.
-某/1 | 有一天下午，没说是哪天 | One afternoon, no matter which, so the word must mean a certain.
+某/1 | 有一天下午，没说是哪天 | The sentence speaks of one afternoon without saying which, so the word must mean a certain.
 某人/1 | 一定是有一个人告诉他的 | Someone must have told him, so the word must mean someone.
 案件/1 | 警察正在调查 | The police are investigating it, so the word must mean case.
 小偷/1 | 拿走我钱包的人 | My wallet was taken by this person, so the word must mean thief.
@@ -701,7 +701,7 @@ export const levelFourClues = parseClues(`
 湿度/1 | 空气里水多，衣服不容易干 | Damp air keeps the washing wet, so the word must mean humidity.
 雷雨/1 | 夏天下午常常又打雷又下雨 | Summer afternoons often bring thunder and rain, so the word must mean thunderstorm.
 打雷/1 | 外面有很大的响声，快关窗户 | There is thunder outside, shut the window, so the word must mean to thunder.
-闪电/1 | 天上一道光，接着是一声大雷 | A flash in the sky, then a clap of thunder, so the word must mean lightning.
+闪电/1 | 天上一道光，接着是一声大雷 | A flash crosses the sky and a clap of thunder follows, so the word must mean lightning.
 阵雨/1 | 天气预报说明天下午会下一会儿雨 | Showers are forecast for tomorrow afternoon, so the word must mean shower.
 一阵/1 | 刮了一会儿大风，天就晴了 | After a gust of wind the sky cleared, so the word must mean a burst of.
 雨季/1 | 每年六月到八月雨很多 | June to August is wet every year, so the word must mean rainy season.
@@ -923,7 +923,7 @@ export const levelFourClues = parseClues(`
 种类/1 | 商店水果有很多样 | The shop has many kinds of fruit, so the word must mean kind, variety.
 状态/1 | 今天跑得很快，身体很好 | He is in good form today, so the word must mean condition, state.
 形状/1 | 石头的样子像一只鸟 | The stone is shaped like a bird, so the word must mean shape.
-之类/1 | 足球、篮球这样的运动 | Sports like football and basketball, so the word must mean and the like.
+之类/1 | 足球、篮球这样的运动 | Football and basketball are named as examples of the sports he likes, so the word must mean and the like.
 结论/1 | 做了很多次实验以后得出的 | He reached it after many experiments, so the word must mean conclusion.
 公式/1 | 要记住的数学 | It is a maths one to remember, so the word must mean formula.
 方式/1 | 每个人学习的办法不一样 | Everyone learns in their own way, so the word must mean way.

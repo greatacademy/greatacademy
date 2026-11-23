@@ -63,7 +63,7 @@ export const levelFiveClues = parseClues(`
 品德/1 | 学校不只教知识，还重视学生的为人 | School also cares about pupils' character, so the word must mean moral character.
 稳定/1 | 想找一份不常变的工作 | He wants a steady job, so the word must mean stable.
 平稳/1 | 飞机飞得很稳，大家都睡着了 | The flight was smooth and everyone slept, so the word must mean smooth.
-稳重/1 | 年轻但做事不急不乱 | Young but steady in his work, so the word must mean steady, sedate.
+稳重/1 | 年轻但做事不急不乱 | He is young, yet he works without haste or muddle, so the word must mean steady, sedate.
 顺序/1 | 书按出版时间先后放 | The books are shelved by date, so the word must mean order, sequence.
 公德/1 | 在电影院大声打电话不对 | Loud calls in a cinema show a lack of it, so the word must mean public morality.
 矛盾/1 | 两个人闹别扭，很久没说话 | The two have fallen out and not spoken for long, so the word must mean conflict.
@@ -111,11 +111,11 @@ export const levelFiveClues = parseClues(`
 背诵/1 | 老师让我们把诗记住说出来 | The teacher wants us to recite the poem, so the word must mean to recite.
 默写/1 | 老师说一个词，我们写一个 | The teacher says a word and we write it from memory, so the word must mean to write from memory.
 拼音/1 | 学中文先要学好 | It is the first thing to learn in Chinese, so the word must mean pinyin.
-概念/1 | 老师讲了很多遍才懂的新东西 | A new idea we grasped only after many explanations, so the word must mean concept.
+概念/1 | 老师讲了很多遍才懂的新东西 | The new idea made sense to us only after the teacher had explained it many times, so the word must mean concept.
 大概/1 | 他差不多十分钟以后到 | He will be here in about ten minutes, so the word must mean probably, about.
 疑惑/1 | 对答案不太明白，又去问老师 | Unsure of the answer, he asked the teacher, so the word must mean doubt.
 启发/1 | 书让我想到了很多 | The book gave me much to think about, so the word must mean inspiration.
-补充/1 | 我说完了，你还要加什么 | Anything to add, so the word must mean to add.
+补充/1 | 我说完了，你还要加什么 | The speaker has finished and asks whether you have anything to add, so the word must mean to add.
 表扬/1 | 上课认真，老师在全班面前说他好 | The teacher praised him before the class, so the word must mean to praise.
 鼓励/1 | 父母一直支持我做喜欢的事 | My parents always urge me on, so the word must mean to encourage.
 奖励/1 | 得了第一名学校给的一千元 | The school gave him a thousand yuan for first place, so the word must mean reward.
@@ -162,7 +162,7 @@ export const levelFiveClues = parseClues(`
 补课/1 | 生病一星期，老师放学后给他上课 | The teacher gave him catch-up lessons, so the word must mean to make up lessons.
 初学者/1 | 书很简单，适合刚开始学的人 | The book suits beginners, so the word must mean beginner.
 当初/1 | 那时候我选中文是因为喜欢中国电影 | Back then I chose Chinese for its films, so the word must mean at the time.
-初次/1 | 第一次见面，请多关照 | Meeting for the first time, so the word must mean first time.
+初次/1 | 第一次见面，请多关照 | The two are meeting for the first time, so the word must mean first time.
 默认/1 | 他没有反对，大家当他同意了 | He did not object, so it was taken as consent, so the word must mean to tacitly accept.
 赞扬/1 | 救人的行为受到大家的称赞 | Everyone praised his rescue, so the word must mean praise.
 堂/1 | 今天下午有两节数学课 | There are two maths lessons this afternoon, so the word must mean measure word for lessons.
@@ -302,7 +302,7 @@ export const levelFiveClues = parseClues(`
 编程/1 | 十岁就开始学写程序 | He began coding at ten, so the word must mean programming.
 代码/1 | 工程师写了几千行 | The engineer wrote thousands of lines, so the word must mean code.
 算法/1 | 网站用它决定先给用户看什么 | The site uses it to pick videos, so the word must mean algorithm.
-漏洞/1 | 软件的一个安全问题 | A security flaw in the software, so the word must mean loophole, bug.
+漏洞/1 | 软件的一个安全问题 | The engineer found a security weakness in the software, so the word must mean loophole, bug.
 黑客/1 | 偷走了公司的数据 | This person stole the company's data, so the word must mean hacker.
 漏/1 | 水杯有水流出来，不能用了 | The cup leaks, so the word must mean to leak.
 洞/1 | 墙上有一个小的 | There is a small one in the wall, so the word must mean hole.
@@ -366,7 +366,7 @@ export const levelFiveClues = parseClues(`
 电动车/1 | 不用油，没有尾气 | It needs no petrol and gives no fumes, so the word must mean electric vehicle.
 钢笔/1 | 爷爷喜欢用它写字 | Grandpa likes to write with it, so the word must mean fountain pen.
 扫地机器人/1 | 家里有了它打扫容易多了 | With it cleaning is much easier, so the word must mean robot vacuum.
-除夕/1 | 春节的前一天 | The day before Spring Festival, so the word must mean New Year's Eve.
+除夕/1 | 春节的前一天 | The sentence names the day before Spring Festival, so the word must mean New Year's Eve.
 年夜饭/1 | 离家多远也要回家吃的 | People go home from afar to eat it, so the word must mean New Year's Eve dinner.
 鞭炮/1 | 为了安全很多城市不让放 | Many cities ban them for safety, so the word must mean firecrackers.
 春联/1 | 大门两边写着吉祥话的红纸 | Red paper strips by the door bear lucky words, so the word must mean Spring Festival couplets.
@@ -384,7 +384,7 @@ export const levelFiveClues = parseClues(`
 重阳节/1 | 农历九月初九去爬山 | On the ninth of the ninth month people climb hills, so the word must mean Double Ninth Festival.
 七夕/1 | 被叫做中国的情人节 | It is called Chinese Valentine's Day, so the word must mean Qixi Festival.
 腊月/1 | 到了这个月就准备过年 | People start preparing for New Year in it, so the word must mean twelfth lunar month.
-腊八/1 | 农历十二月初八 | The eighth day of the twelfth month, so the word must mean Laba Festival.
+腊八/1 | 农历十二月初八 | The sentence names the eighth day of the twelfth lunar month, so the word must mean Laba Festival.
 中秋/1 | 那天的月亮又大又亮 | The moon is big and bright then, so the word must mean Mid-Autumn.
 新郎/1 | 婚礼上穿黑西服的 | He wears a black suit at the wedding, so the word must mean bridegroom.
 新娘/1 | 穿着白色长裙很漂亮 | She wears a long white dress, so the word must mean bride.
@@ -548,11 +548,11 @@ export const levelFiveClues = parseClues(`
 公共服务/1 | 图书馆、公园和医院都是 | Libraries, parks and hospitals are part of it, so the word must mean public services.
 亚洲/1 | 中国、日本和印度都在 | China, Japan and India are in it, so the word must mean Asia.
 欧洲/1 | 法国和意大利都在 | France and Italy are in it, so the word must mean Europe.
-非洲/1 | 世界第二大洲，野生动物很多 | The second largest continent with much wildlife, so the word must mean Africa.
+非洲/1 | 世界第二大洲，野生动物很多 | The place is the second largest continent and has a lot of wildlife, so the word must mean Africa.
 北美洲/1 | 加拿大和美国都在 | Canada and the US are in it, so the word must mean North America.
 南美洲/1 | 巴西是最大的国家 | Brazil is its largest country, so the word must mean South America.
 大洋洲/1 | 澳大利亚和太平洋岛国都在 | Australia and the Pacific islands are in it, so the word must mean Oceania.
-南极洲/1 | 世界上最冷的地方，到处是冰 | The coldest place on earth, all ice, so the word must mean Antarctica.
+南极洲/1 | 世界上最冷的地方，到处是冰 | The place is the coldest on earth and covered in ice, so the word must mean Antarctica.
 印度洋/1 | 在亚洲、非洲和大洋洲之间 | It lies between Asia, Africa and Oceania, so the word must mean Indian Ocean.
 北冰洋/1 | 在地球最北边，被冰盖着 | It lies furthest north under ice, so the word must mean Arctic Ocean.
 东南亚/1 | 越南和马来西亚都在 | Vietnam and Malaysia are in it, so the word must mean Southeast Asia.
@@ -564,8 +564,8 @@ export const levelFiveClues = parseClues(`
 意大利/1 | 罗马是它的首都 | Rome is its capital, so the word must mean Italy.
 西班牙/1 | 首都是马德里 | Its capital is Madrid, so the word must mean Spain.
 加拿大/1 | 在美国北边，冬天很冷 | North of the US with cold winters, so the word must mean Canada.
-墨西哥/1 | 在美国南边，说西班牙语 | South of the US, Spanish-speaking, so the word must mean Mexico.
-印度/1 | 在中国西南边，人口最多的国家之一 | Southwest of China with a huge population, so the word must mean India.
+墨西哥/1 | 在美国南边，说西班牙语 | The country lies south of the US and its people speak Spanish, so the word must mean Mexico.
+印度/1 | 在中国西南边，人口最多的国家之一 | The country lies southwest of China and has one of the largest populations in the world, so the word must mean India.
 法语/1 | 法国和加拿大一些地方说的 | It is spoken in France and parts of Canada, so the word must mean French.
 德语/1 | 去德国读大学要学 | He studies it to attend a German university, so the word must mean German.
 俄语/1 | 在俄罗斯大家都说 | Everyone in Russia speaks it, so the word must mean Russian.
@@ -787,7 +787,7 @@ export const levelFiveClues = parseClues(`
 难忘/1 | 那次旅行忘不了 | It was an unforgettable trip, so the word must mean unforgettable.
 往事/1 | 爷爷讲年轻时候的事 | Grandpa tells of his youth, so the word must mean past events.
 注意力/1 | 上课时要集中 | Concentrate in class, so the word must mean attention.
-集中/1 | 外面太吵，没办法专心 | Too much noise to concentrate, so the word must mean to concentrate.
+集中/1 | 外面太吵，没办法专心 | It is so noisy outside the classroom that the speaker cannot focus, so the word must mean to concentrate.
 分心/1 | 做作业时看手机 | A phone distracts you from homework, so the word must mean to be distracted.
 走神/1 | 上课没听到老师的问题 | His mind wandered in class, so the word must mean to be absent-minded.
 入迷/1 | 小说好看得饭都忘了吃 | He was so absorbed he forgot to eat, so the word must mean to be absorbed.
@@ -884,7 +884,7 @@ export const levelFiveClues = parseClues(`
 民间故事/1 | 在老百姓中间传了几百年，没有作者 | It has passed among the people for centuries, so the word must mean folk tale.
 儿童文学/1 | 她写的书很受孩子们欢迎 | Her books are loved by children, so the word must mean children's literature.
 故事书/1 | 弟弟每天睡觉前都要看 | My brother reads them every night, so the word must mean storybook.
-绘本/1 | 字很少，每页都是画 | Few words and pictures on every page, so the word must mean picture book.
+绘本/1 | 字很少，每页都是画 | The book has very few words and a picture on every page, so the word must mean picture book.
 插图/1 | 小说里有很多漂亮的画 | The novel has many fine illustrations, so the word must mean illustration.
 红楼梦/1 | 作者是曹雪芹 | Cao Xueqin wrote it, so the word must mean Dream of the Red Chamber.
 西游记/1 | 唐朝的人去印度取经的故事 | It tells of a monk fetching scriptures from India, so the word must mean Journey to the West.
@@ -926,7 +926,7 @@ export const levelFiveClues = parseClues(`
 煮熟/1 | 肉一定要做熟了再吃 | Meat must be cooked through, so the word must mean to cook thoroughly.
 加热/1 | 饭凉了再热一下 | The rice is cold, so warm it up, so the word must mean to heat.
 生吃/1 | 这种菜不用做熟 | This vegetable needs no cooking, so the word must mean to eat raw.
-调料/1 | 有盐、糖、醋和酱油 | Salt, sugar, vinegar and soy sauce, so the word must mean seasoning.
+调料/1 | 有盐、糖、醋和酱油 | Salt, sugar, vinegar and soy sauce are named as what the kitchen holds, so the word must mean seasoning.
 盐/1 | 菜太咸了，你放了多少 | The dish is too salty, so the word must mean salt.
 酱油/1 | 做红烧肉要放一点，颜色才好看 | Braised pork needs it for colour, so the word must mean soy sauce.
 醋/1 | 菜有点酸 | The dish is a little sour, so the word must mean vinegar.
@@ -934,9 +934,9 @@ export const levelFiveClues = parseClues(`
 辣酱/1 | 吃面条放一点更香 | He adds some to his noodles, so the word must mean chilli sauce.
 味精/1 | 很多人觉得不健康不放 | Many leave it out as unhealthy, so the word must mean MSG.
 白糖/1 | 做蛋糕要面粉、鸡蛋和它 | Cake needs flour, eggs and it, so the word must mean white sugar.
-果酱/1 | 用苹果做的，放在面包上吃 | Apple spread for bread, so the word must mean jam.
+果酱/1 | 用苹果做的，放在面包上吃 | It is made from apples and spread on bread, so the word must mean jam.
 香料/1 | 印度菜里很多，味道特别 | Indian food has many of them, so the word must mean spice.
-咸/1 | 盐放得太多了 | Too much salt, so the word must mean salty.
+咸/1 | 盐放得太多了 | Too much salt has gone into the soup, so the word must mean salty.
 淡/1 | 汤没放盐 | The soup has no salt, so the word must mean bland.
 清淡/1 | 生病了，医生让他少油少盐 | The doctor wants him to eat light food, so the word must mean light.
 可口/1 | 妈妈做的饭菜又香又好吃 | Mum's food is tasty, so the word must mean tasty.
@@ -1022,14 +1022,14 @@ export const levelFiveClues = parseClues(`
 守信/1 | 答应别人的事一定做到 | He always keeps his word, so the word must mean to keep one's promise.
 信用/1 | 借钱总是准时还 | He always repays on time, so the word must mean credit.
 承诺/1 | 公司答应三天以内送到 | The firm promises delivery in three days, so the word must mean promise.
-虚伪/1 | 当面说好话，背后说坏话 | Nice to your face, nasty behind your back, so the word must mean hypocritical.
+虚伪/1 | 当面说好话，背后说坏话 | He speaks well of people to their faces and badly behind their backs, so the word must mean hypocritical.
 守时/1 | 从来没有迟到过 | He has never been late, so the word must mean punctual.
 实事求是/1 | 做调查不能自己编数字 | A survey must not invent figures, so the word must mean to seek truth from facts.
 以诚待人/1 | 真心对人，别人也真心对他 | Treat others sincerely and they will do the same, so the word must mean to treat people sincerely.
 省吃俭用/1 | 父母把钱都花在孩子教育上 | The parents scrimp for their child's schooling, so the word must mean to scrimp and save.
 节俭/1 | 奶奶一件衣服穿了十年 | Grandma wore one coat for ten years, so the word must mean frugal.
 朴素/1 | 她从来不买贵的衣服 | She never buys expensive clothes, so the word must mean plain.
-简朴/1 | 房子里只有一张床和一张桌子 | Just a bed and a table, so the word must mean simple and frugal.
+简朴/1 | 房子里只有一张床和一张桌子 | His home holds only a bed and a table, so the word must mean simple and frugal.
 贪心/1 | 拿一个就够了 | Take only one, so the word must mean greedy.
 知足/1 | 觉得现在的生活已经很好 | He thinks his life good enough, so the word must mean content.
 名利/1 | 不追求，只想安静地画画 | He seeks neither fame nor gain, so the word must mean fame and gain.

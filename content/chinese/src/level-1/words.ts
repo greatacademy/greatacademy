@@ -7,6 +7,7 @@ import { joinPinyin, point, spokenSyllables, toneless, zhQuote } from "@ga/subje
 import { toneName } from "../characters/teach.ts";
 import { type Clue, clueKey } from "../words/clues.ts";
 import type { LevelOneCharacter } from "./characters.ts";
+import { companionOf } from "./companions.ts";
 import { type Asked, askedGenerator, dataLines, fields, nearOf, spread, three, threeOf, toneOf, withTone } from "./kit.ts";
 
 /** GAP marks where the word goes in a sentence. */
@@ -115,13 +116,24 @@ function joinedNote(w: LevelOneWord): Text {
     : t("Written as one word, they are joined with no space.", "连成一个词来写，音节之间不空格。");
 }
 
-/** backCheck checks a reading of a word the other way, from each syllable of the pinyin back to its character. */
-function backCheck(w: LevelOneWord): Text {
+/**
+ * backCheck checks a reading of a word the other way. A word of one character is read in a second word that has it,
+ * so the check does not repeat the answer; a longer word is read back from each syllable of the pinyin to its character.
+ */
+function backCheck(w: LevelOneWord, level: number): Text {
   const chars = [...w.word];
   const right = pinyinOf(w.syllables);
+  const [only] = w.syllables;
+  if (chars.length === 1 && only !== undefined) {
+    const other = companionOf(w.word, only, level);
+    return t(
+      `**Check.** Find ${w.word} in another word: in ${other.word} (${other.pinyin}) it is read ${only} as well, so ${right} is its reading here too.`,
+      `**检验。** 在别的词里找“${w.word}”：“${other.word}”（${other.pinyin}）里的“${w.word}”也读 ${only}，所以这里读 ${right}。`,
+    );
+  }
   return t(
-    `**Check.** Read ${right} back into characters: ${w.syllables.map((s, i) => `${s} is ${chars[i]}`).join(", ")}, which writes ${w.word}.`,
-    `**检验。** 从拼音 ${right} 读回汉字：${w.syllables.map((s, i) => `${s} 是“${chars[i]}”`).join("，")}，正好是“${w.word}”。`,
+    `**Check.** Read ${right} back into characters: ${w.syllables.map((s, i) => `${s} is ${chars[i]}`).join(", ")}, which writes ${w.word}, the word asked about.`,
+    `**检验。** 从拼音 ${right} 读回汉字：${w.syllables.map((s, i) => `${s} 是“${chars[i]}”`).join("，")}，合起来写作“${w.word}”，和题目里的词一致。`,
   );
 }
 
@@ -223,8 +235,8 @@ function buildLevelOneWordTopic(spec: LevelOneWordSpec): TopicDef {
       right: same(right),
       wrong: three(wrong),
       solution: t(
-        `**${w.word}** means "${w.meaning.en}". Syllable by syllable: ${syllablesOf(w, "en")}.${keptNote.en}\n\n${joinedNote(w).en}\n\n${backCheck(w).en}`,
-        `**${w.word}**的意思是${zhQuote(w.meaning["zh-CN"])}。一个字一个字地读：${syllablesOf(w, "zh-CN")}。${keptNote["zh-CN"]}\n\n${joinedNote(w)["zh-CN"]}\n\n${backCheck(w)["zh-CN"]}`,
+        `**${w.word}** means "${w.meaning.en}". Syllable by syllable: ${syllablesOf(w, "en")}.${keptNote.en}\n\n${joinedNote(w).en}\n\n${backCheck(w, level).en}`,
+        `**${w.word}**的意思是${zhQuote(w.meaning["zh-CN"])}。一个字一个字地读：${syllablesOf(w, "zh-CN")}。${keptNote["zh-CN"]}\n\n${joinedNote(w)["zh-CN"]}\n\n${backCheck(w, level)["zh-CN"]}`,
       ),
       reasons: [notThe(wrong[0]), notThe(wrong[1]), notThe(wrong[2])],
     };

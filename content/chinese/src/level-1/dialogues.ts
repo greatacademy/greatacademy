@@ -7,7 +7,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point } from "@ga/subject-chinese";
 
-import { checkBlocks, comprehensionGenerator, parseBlocks } from "../hsk/comprehension.ts";
+import { checkBlocks, comprehensionExplanation, comprehensionGenerator, comprehensionIntro, parseBlocks } from "../hsk/comprehension.ts";
 import { levelListeningId } from "./listening.ts";
 
 /** LevelDialogues are the dialogues that end a unit, as written: blocks of 女：/男： lines and 问：/答：/错： questions. */
@@ -52,6 +52,7 @@ export function unitDialogueTopics(spec: DialogueSpec): readonly TopicDef[] {
     taught: spec.taught,
     lines: [2, 8],
     talks: "never",
+    explained: true,
   });
   const from = unit - UNITS_PER_TOPIC + 1;
   return [
@@ -62,6 +63,14 @@ export function unitDialogueTopics(spec: DialogueSpec): readonly TopicDef[] {
         `Dialogues on the themes of units ${from} to ${unit}, heard without being seen, each with a question on what was said.`,
         `不看文字，听第 ${from} 至 ${unit} 单元话题上的对话，回答关于它的问题。`,
       ),
+      intro: comprehensionIntro(
+        blocks,
+        true,
+        t(
+          `Here every dialogue is on the themes of units ${from} to ${unit}, read by a woman and a man, each with a question on what was said.`,
+          `这里的对话都围绕第 ${from} 至 ${unit} 单元的话题，由一个女的和一个男的读出，每段后面有关于内容的问题。`,
+        ),
+      ),
       prerequisites: [levelListeningId(spec.level, unit)],
       encompasses: [],
       xp: 12,
@@ -70,9 +79,13 @@ export function unitDialogueTopics(spec: DialogueSpec): readonly TopicDef[] {
         point(
           `${id}-dialogues`,
           t("Dialogues", "听对话"),
-          t(
-            "Read the question and the answers before you listen, so that you know what to listen for: who, where, when, what or why. A woman and a man speak; the question may ask what 女的 or 男的 says, wants or will do. Listen to the whole dialogue: a later line often answers or changes an earlier one. You can play it again as often as you like.",
-            "听之前先看问题和选项，知道要听什么：谁、在哪儿、什么时候、做什么、为什么。对话里一个女的、一个男的在说话，问题可能问“女的”或“男的”说了什么、想要什么、要做什么。要听完整个对话：后面的话常常回答或者改变前面的意思。录音可以反复播放。",
+          comprehensionExplanation(
+            blocks,
+            true,
+            t(
+              "Read the question and the answers before you listen, so that you know what to listen for: who, where, when, what or why. A woman and a man speak; the question may ask what 女的 or 男的 says, wants or will do. Listen to the whole dialogue: a later line often answers or changes an earlier one. You can play it again as often as you like.",
+              "听之前先看问题和选项，知道要听什么：谁、在哪儿、什么时候、做什么、为什么。对话里一个女的、一个男的在说话，问题可能问“女的”或“男的”说了什么、想要什么、要做什么。要听完整个对话：后面的话常常回答或者改变前面的意思。录音可以反复播放。",
+            ),
           ),
           comprehensionGenerator(blocks, true),
         ),

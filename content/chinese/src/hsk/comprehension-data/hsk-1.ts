@@ -9,233 +9,266 @@ export const comprehension: ComprehensionData = {
 女：你明天几点去学校？
 男：我明天早上八点去。
 问：男的什么时候去学校？
+据：男的说“我明天早上八点去”。 | The man says he will go at eight tomorrow morning.
 答：明天早上八点
-错：今天早上八点
-错：明天下午八点
+错：今天早上八点 | 他说的是明天，不是今天。 | He says tomorrow, not today.
+错：明天下午八点 | 他说的是早上，不是下午。 | He says morning, not afternoon.
 
 女：你想喝茶还是喝水？
 男：我不喝茶，给我一杯水吧。
 问：男的想喝什么？
+据：男的说“我不喝茶，给我一杯水吧”。 | The man says he does not drink tea and asks for water.
 答：水
-错：茶
-错：牛奶
+错：茶 | 他说“我不喝茶”。 | He says he does not drink tea.
+错：牛奶 | 对话没有说到牛奶。 | Milk is never mentioned.
 
 女：这件衣服多少钱？
 男：三百块，一点儿也不贵。
 问：这件衣服多少钱？
+据：男的说“三百块”。 | The man says three hundred kuai.
 答：三百块
-错：三十块
-错：三千块
+错：三十块 | 他说的是三百，不是三十。 | He says three hundred, not thirty.
+错：三千块 | 他说的是三百，不是三千。 | He says three hundred, not three thousand.
 
 女：你爸爸在家吗？
 男：不在，他去医院了。
 问：男的爸爸现在在哪儿？
+据：男的说“不在，他去医院了”。 | The man says he is out; he has gone to the hospital.
 答：医院
-错：家里
-错：学校
+错：家里 | 女的问在不在家，男的说“不在”。 | Asked if he is home, the man says no.
+错：学校 | 他说的是医院，不是学校。 | He says the hospital, not school.
 
 女：请问你是哪国人？
 男：我是中国人，我住在北京。
 问：男的住在哪儿？
+据：男的说“我住在北京”。 | The man says he lives in Beijing.
 答：北京
-错：南京
-错：东京
+错：南京 | 他说的是北京，不是南京。 | He says Beijing, not Nanjing.
+错：东京 | 他说的是北京，不是东京。 | He says Beijing, not Tokyo.
 
 女：你今天怎么没去上课？
 男：我头疼，在家休息了。
 问：男的为什么没去上课？
+据：男的说“我头疼，在家休息了”。 | The man says he had a headache and rested at home.
 答：他头疼
-错：他很忙
-错：他去玩了
+错：他很忙 | 他说的是头疼，不是忙。 | He says headache, not busy.
+错：他去玩了 | 他在家休息，没有去玩。 | He rested at home, not out playing.
 
 女：明天会下雨吗？
 男：不会，明天是晴天。
 问：明天天气怎么样？
+据：男的说“不会，明天是晴天”。 | The man says no rain; tomorrow will be sunny.
 答：是晴天
-错：会下雨
-错：会下雪
+错：会下雨 | 女的问会不会下雨，男的说“不会”。 | Asked about rain, he says no.
+错：会下雪 | 对话没有说到雪。 | Snow is never mentioned.
 
 女：你的汉语老师是哪里人？
 男：她是北京人，说话很慢。
 问：男的汉语老师是哪里人？
+据：男的说“她是北京人”。 | The man says she is from Beijing.
 答：北京人
-错：南京人
-错：外国人
+错：南京人 | 他说的是北京，不是南京。 | He says Beijing, not Nanjing.
+错：外国人 | 她是北京人，是中国人，不是外国人。 | From Beijing, she is Chinese, not foreign.
 
 女：你家里有几个人？
 男：四个，爸爸、妈妈、妹妹和我。
 问：男的家里有几个人？
+据：男的说“四个，爸爸、妈妈、妹妹和我”。 | The man says four: Dad, Mum, his sister and himself.
 答：四个
-错：三个
-错：五个
+错：三个 | 三个是漏了他自己：爸爸、妈妈、妹妹，再加上他是四个。 | Three leaves him out; with him it is four.
+错：五个 | 他说的是四个，数出来也是四个。 | He says four and names four.
 
 女：你在哪儿工作？
 男：我在一家医院工作。
 问：男的在哪儿工作？
+据：男的说“我在一家医院工作”。 | The man says he works at a hospital.
 答：医院
-错：学校
-错：商店
+错：学校 | 他说的是医院，不是学校。 | He says a hospital, not a school.
+错：商店 | 他说的是医院，不是商店。 | He says a hospital, not a shop.
 
 女：我们坐飞机去还是坐火车去？
 男：坐火车吧，飞机票太贵了。
 问：他们可能怎么去？
+据：男的说“坐火车吧，飞机票太贵了”。 | The man says take the train; plane tickets are too dear.
 答：坐火车
-错：坐飞机
-错：坐船
+错：坐飞机 | 飞机票太贵，所以不坐飞机。 | Flights are too dear, so not by plane.
+错：坐船 | 对话没有说到船。 | A boat is never mentioned.
 
 女：你昨天几点睡觉的？
 男：十二点，所以今天很累。
 问：男的昨天几点睡觉？
+据：男的说“十二点，所以今天很累”。 | The man says twelve, which is why he is tired today.
 答：十二点
-错：十点
-错：两点
+错：十点 | 他说的是十二点，不是十点。 | He says twelve, not ten.
+错：两点 | 他说的是十二点，不是两点。 | He says twelve, shí'èr, not two.
 
 女：你喜欢看电影吗？
 男：喜欢，可是我没时间看。
 问：男的是什么意思？
+据：男的说“喜欢，可是我没时间看”。没时间就是很忙。 | The man says he likes films but has no time: he is busy.
 答：他很忙
-错：他不喜欢电影
-错：他每天看电影
+错：他不喜欢电影 | 他说“喜欢”。 | He says he likes them.
+错：他每天看电影 | 他说没时间看，不是每天看。 | He says he has no time, not that he watches daily.
 
 女：请问，火车站怎么走？
 男：往前走，就在右边。
 问：火车站在哪儿？
+据：男的说“往前走，就在右边”。 | The man says walk on; it is on the right.
 答：往前走，在右边
-错：往前走，在左边
-错：往后走，在右边
+错：往前走，在左边 | 他说的是右边，不是左边。 | He says right, not left.
+错：往后走，在右边 | 他说的是往前走，不是往后走。 | He says go forward, not back.
 
 女：我的手机呢？你看见了吗？
 男：在你的书包里。
 问：女的手机在哪儿？
+据：男的说“在你的书包里”。 | The man says it is in her schoolbag.
 答：书包里
-错：书里
-错：车里
+错：书里 | 他说的是书包，不是书。 | He says the schoolbag, not a book.
+错：车里 | 对话没有说到车。 | No car is mentioned.
 
 女：你妹妹今年多大了？
 男：她今年七岁，是小学生。
 问：男的妹妹几岁？
+据：男的说“她今年七岁，是小学生”。 | The man says she is seven and at primary school.
 答：七岁
-错：一岁
-错：十七岁
+错：一岁 | 他说的是七岁，不是一岁。 | He says seven, not one.
+错：十七岁 | 十七岁前面多了“十”，她是小学生，七岁。 | Seventeen adds a 十; she is a primary pupil of seven.
 
 女：对不起，我来晚了。
 男：没关系，电影八点开，现在七点半。
 问：他们要做什么？
+据：男的说“电影八点开，现在七点半”。他们是等着看电影。 | The man says the film starts at eight and it is now half past seven: they are going to a film.
 答：看电影
-错：吃饭
-错：上课
+错：吃饭 | 对话没有说吃饭。 | Eating is never mentioned.
+错：上课 | 男的说的是电影，不是上课。 | He speaks of a film, not a class.
 
 女：你会说汉语吗？
 男：会一点儿，我学了半年。
 问：男的学了多长时间汉语？
+据：男的说“我学了半年”。 | The man says he has studied for half a year.
 答：半年
-错：一年
-错：两年
+错：一年 | 他说的是半年，不是一年。 | He says half a year, not a year.
+错：两年 | 他说的是半年，不是两年。 | He says half a year, not two.
 
 女：这些水果怎么卖？
 男：五块钱一个，很便宜。
 问：水果多少钱一个？
+据：男的说“五块钱一个”。 | The man says five kuai each.
 答：五块
-错：十五块
-错：五十块
+错：十五块 | 他说的是五块，不是十五块。 | He says five, not fifteen.
+错：五十块 | 他说的是五块，不是五十块。 | He says five, not fifty.
 
 女：你下午想做什么？
 男：我想去公园打球。
 问：男的下午想去哪儿？
+据：男的说“我想去公园打球”。 | The man says he wants to play ball in the park.
 答：公园
-错：商店
-错：医院
+错：商店 | 他说的是公园，不是商店。 | He says the park, not a shop.
+错：医院 | 他说的是公园，不是医院。 | He says the park, not the hospital.
 
 女：你哥哥是做什么的？
 男：他是医生，工作很忙。
 问：男的哥哥做什么工作？
+据：男的说“他是医生”。 | The man says his brother is a doctor.
 答：医生
-错：老师
-错：学生
+错：老师 | 他说的是医生，不是老师。 | He says a doctor, not a teacher.
+错：学生 | 他说哥哥“工作很忙”，不是学生。 | He says his brother works, not studies.
 
 女：我饿了，我们去吃饭吧。
 男：好，去学校东边那家饭店。
 问：他们要去哪儿吃饭？
+据：男的说“去学校东边那家饭店”。 | The man says the restaurant east of the school.
 答：学校东边的饭店
-错：学校西边的饭店
-错：学校里的饭店
+错：学校西边的饭店 | 他说的是东边，不是西边。 | He says east, not west.
+错：学校里的饭店 | 他说的是学校东边，不是学校里。 | He says east of the school, not inside it.
 
 女：今天是星期几？
 男：星期三，明天我们有考试。
 问：考试是星期几？
+据：男的说“星期三，明天我们有考试”。今天星期三，明天就是星期四。 | The man says today is Wednesday and the exam is tomorrow, so Thursday.
 答：星期四
-错：星期三
-错：星期二
+错：星期三 | 星期三是今天，考试是明天。 | Wednesday is today; the exam is tomorrow.
+错：星期二 | 星期二是昨天。 | Tuesday was yesterday.
 
 女：你看见我妈妈了吗？
 男：看见了，她在商店买东西。
 问：女的妈妈在做什么？
+据：男的说“她在商店买东西”。 | The man says she is shopping in a shop.
 答：买东西
-错：卖东西
-错：做饭
+错：卖东西 | 他说的是买，不是卖。 | He says buying, not selling.
+错：做饭 | 她在商店，没有在做饭。 | She is in a shop, not cooking.
 
 女：外边很冷，多穿一件衣服。
 男：好的，我穿那件黑的。
 问：男的要穿哪件衣服？
+据：男的说“我穿那件黑的”。 | The man says he will wear the black one.
 答：黑的
-错：白的
-错：红的
+错：白的 | 他说的是黑的，不是白的。 | He says black, not white.
+错：红的 | 他说的是黑的，不是红的。 | He says black, not red.
 
 女：你认识那个男孩吗？
 男：认识，他是我同学的弟弟。
 问：那个男孩是谁？
+据：男的说“他是我同学的弟弟”。 | The man says he is his classmate's younger brother.
 答：男的同学的弟弟
-错：男的弟弟
-错：男的同学
+错：男的弟弟 | 是他同学的弟弟，不是他自己的弟弟。 | He is the classmate's brother, not the man's.
+错：男的同学 | 是同学的弟弟，不是同学本人。 | He is the classmate's brother, not the classmate.
 
 女：你每天怎么去学校？
 男：我住得很近，每天走路去。
 问：男的怎么去学校？
+据：男的说“我住得很近，每天走路去”。 | The man says he lives close and walks every day.
 答：走路
-错：坐车
-错：坐地铁
+错：坐车 | 他说的是走路，不是坐车。 | He says he walks, not rides.
+错：坐地铁 | 他说的是走路，不是地铁。 | He says he walks, not takes the underground.
 
 女：明天是你的生日吧？
 男：不是明天，是后天。
 问：男的生日是哪天？
+据：男的说“不是明天，是后天”。 | The man says not tomorrow, the day after.
 答：后天
-错：明天
-错：今天
+错：明天 | 女的问明天，男的说“不是明天”。 | Asked if it is tomorrow, he says no.
+错：今天 | 对话没有说今天。 | Today is never said.
 
 女：你喜欢打球吗？
 男：喜欢，我每个星期打三次。
 问：男的一个星期打几次球？
+据：男的说“我每个星期打三次”。 | The man says three times a week.
 答：三次
-错：两次
-错：四次
+错：两次 | 他说的是三次，不是两次。 | He says three, not two.
+错：四次 | 他说的是三次，不是四次。 | He says three, not four.
 
 女：医生，这个药我要吃几天？
 男：吃三天，每天吃两次。
 问：女的要吃几天药？
+据：医生说“吃三天，每天吃两次”。 | The doctor says three days, twice a day.
 答：三天
-错：两天
-错：六天
+错：两天 | 两次是每天吃的次数，不是天数。 | Two is the times per day, not the days.
+错：六天 | 六是三天乘两次的总次数，不是天数。 | Six is the total doses, not the days.
 
 女：你昨天去哪儿了？
 男：我和爸爸去看奶奶了。
 问：男的昨天去看谁了？
+据：男的说“我和爸爸去看奶奶了”。 | The man says he and his father went to see Grandma.
 答：奶奶
-错：爸爸
-错：爷爷
+错：爸爸 | 爸爸是和他一起去的。 | Dad went with him.
+错：爷爷 | 他说的是奶奶，不是爷爷。 | He says Grandma, not Grandpa.
 
 女：这个字怎么读？
 男：我也不知道，你问老师吧。
 问：男的让女的做什么？
+据：男的说“我也不知道，你问老师吧”。 | The man says he does not know and she should ask the teacher.
 答：问老师
-错：读书
-错：写字
+错：读书 | 他让她问老师，不是读书。 | He says ask the teacher, not read.
+错：写字 | 她问的是怎么读，不是写字。 | She asks how to read it, not to write.
 
 女：你的房间在几楼？
 男：在六楼，左边第一个。
 问：男的房间在几楼？
+据：男的说“在六楼”。 | The man says the sixth floor.
 答：六楼
-错：一楼
-错：九楼
+错：一楼 | “左边第一个”是房间的位置，不是一楼。 | "First on the left" is the room's place, not the first floor.
+错：九楼 | 他说的是六楼，不是九楼。 | He says six, liù, not nine, jiǔ.
 `,
     long: `
 女：你好，我想买一个杯子。
@@ -243,196 +276,230 @@ export const comprehension: ComprehensionData = {
 女：太贵了，有便宜一点儿的吗？
 男：有，这个红的二十块。
 问：女的想买什么？
+据：女的说“我想买一个杯子”。 | The woman says she wants a cup.
 答：杯子
-错：衣服
-错：书包
+错：衣服 | 她说的是杯子，不是衣服。 | She says a cup, not clothes.
+错：书包 | 她说的是杯子，不是书包。 | She says a cup, not a schoolbag.
 问：白的杯子多少钱？
+据：男的说“这个白的怎么样？三十块”。 | The man says the white one is thirty.
 答：三十块
-错：二十块
-错：十三块
+错：二十块 | 二十块是红的杯子。 | Twenty is the red cup.
+错：十三块 | 他说的是三十，不是十三。 | He says thirty, sānshí, not thirteen.
 问：女的觉得白的杯子怎么样？
+据：女的说“太贵了，有便宜一点儿的吗”。 | The woman says it is too dear and asks for a cheaper one.
 答：太贵了
-错：太小了
-错：很便宜
+错：太小了 | 她说的是贵，没有说大小。 | She says dear, not small.
+错：很便宜 | 她说太贵了，不是便宜。 | She says too dear, not cheap.
 
 女：你明天上午有时间吗？
 男：上午我要去医院看爷爷。
 女：那下午呢？我们去看电影吧。
 男：好，下午两点我去你家找你。
 问：男的明天上午要做什么？
+据：男的说“上午我要去医院看爷爷”。 | The man says in the morning he will visit Grandpa in hospital.
 答：去医院看爷爷
-错：看电影
-错：去女的家
+错：看电影 | 看电影是下午。 | The film is in the afternoon.
+错：去女的家 | 去女的家是下午两点。 | Going to her home is at two in the afternoon.
 问：他们明天下午做什么？
+据：女的说“那下午呢？我们去看电影吧”，男的说“好”。 | The woman suggests a film in the afternoon, and the man agrees.
 答：看电影
-错：去医院
-错：上课
+错：去医院 | 去医院是上午。 | The hospital is in the morning.
+错：上课 | 对话没有说上课。 | Classes are never mentioned.
 问：男的下午几点去找女的？
+据：男的说“下午两点我去你家找你”。 | The man says he will come to her home at two.
 答：两点
-错：十二点
-错：三点
+错：十二点 | 他说的是两点，不是十二点。 | He says two, not twelve.
+错：三点 | 他说的是两点，不是三点。 | He says two, not three.
 
 男：你今天怎么这么开心？
 女：我的汉语考试考了一百分。
 男：真好！你学了多长时间汉语？
 女：一年多了，我每天都听、说、读、写。
 问：女的为什么开心？
+据：女的说“我的汉语考试考了一百分”。 | The woman says she got a hundred in her Chinese exam.
 答：她考得很好
-错：今天是她的生日
-错：她认识了新朋友
+错：今天是她的生日 | 对话没有说生日。 | No birthday is mentioned.
+错：她认识了新朋友 | 对话没有说新朋友。 | New friends are never mentioned.
 问：女的学汉语多长时间了？
+据：女的说“一年多了”。 | The woman says over a year.
 答：一年多
-错：半年
-错：两年多
+错：半年 | 她说的是一年多，不是半年。 | She says over a year, not half.
+错：两年多 | 她说的是一年多，不是两年多。 | She says over one year, not two.
 
 女：你家在学校北边吗？
 男：不是，在南边，坐地铁要半个小时。
 女：你每天几点出门？
 男：七点，七点半就到学校了。
 问：男的家在学校的哪边？
+据：男的说“不是，在南边”。 | The man says no, it is to the south.
 答：南边
-错：北边
-错：东边
+错：北边 | 女的问北边，男的说“不是”。 | Asked about the north, he says no.
+错：东边 | 他说的是南边，不是东边。 | He says south, not east.
 问：男的怎么去学校？
+据：男的说“坐地铁要半个小时”。 | The man says it takes half an hour by underground.
 答：坐地铁
-错：走路
-错：坐火车
+错：走路 | 他坐地铁要半个小时，不是走路。 | He takes the underground, not walks.
+错：坐火车 | 他说的是地铁，不是火车。 | He says the underground, not a train.
 问：男的每天几点到学校？
+据：男的说“七点，七点半就到学校了”。七点出门，七点半到。 | The man says he leaves at seven and arrives at half past.
 答：七点半
-错：七点
-错：八点
+错：七点 | 七点是出门的时间。 | Seven is when he leaves.
+错：八点 | 他说的是七点半到，不是八点。 | He says half past seven, not eight.
 
 男：你现在在做什么？
 女：我在家里做饭，我爸妈晚上来。
 男：要我帮你买些东西吗？
 女：好，你帮我买些水果和牛奶吧。
 问：女的现在在做什么？
+据：女的说“我在家里做饭”。 | The woman says she is cooking at home.
 答：做饭
-错：买东西
-错：看电视
+错：买东西 | 买东西是她让男的做的。 | Shopping is what she asks the man to do.
+错：看电视 | 对话没有说电视。 | Television is never mentioned.
 问：谁晚上要来女的家？
+据：女的说“我爸妈晚上来”。 | The woman says her parents are coming tonight.
 答：她的爸爸妈妈
-错：她的朋友
-错：她的哥哥
+错：她的朋友 | 她说的是爸妈，不是朋友。 | She says her parents, not friends.
+错：她的哥哥 | 她说的是爸妈，不是哥哥。 | She says her parents, not her brother.
 问：女的让男的买什么？
+据：女的说“你帮我买些水果和牛奶吧”。 | The woman asks him to buy fruit and milk.
 答：水果和牛奶
-错：鸡蛋和牛奶
-错：水果和米
+错：鸡蛋和牛奶 | 她说的是水果，不是鸡蛋。 | She says fruit, not eggs.
+错：水果和米 | 她说的是牛奶，不是米。 | She says milk, not rice.
 
 女：先生，您想吃什么？
 男：我要一个鸡肉米饭，一杯茶。
 女：对不起，今天没有鸡肉了，有鱼。
 男：那我要鱼吧，再给我一杯热水。
 问：他们可能在哪儿？
+据：女的叫男的“先生”，问“您想吃什么”，男的点了米饭和茶。点菜吃饭是在饭店。 | The woman asks what he would like to eat and he orders rice and tea: ordering food happens in a restaurant.
 答：饭店
-错：商店
-错：医院
+错：商店 | 商店里不问吃什么，也不点饭。 | A shop takes no food orders.
+错：医院 | 医院里不点饭菜。 | A hospital takes no orders.
 问：男的为什么没吃鸡肉？
+据：女的说“对不起，今天没有鸡肉了”。 | The woman says there is no chicken today.
 答：今天没有鸡肉了
-错：鸡肉太贵了
-错：他不喜欢鸡肉
+错：鸡肉太贵了 | 对话没有说价钱。 | Price is never mentioned.
+错：他不喜欢鸡肉 | 他先点的就是鸡肉，是喜欢的。 | Chicken was his first order, so he likes it.
 问：男的最后要了什么？
+据：男的先要了一杯茶，后来说“那我要鱼吧，再给我一杯热水”。合起来是鱼、茶和热水。 | He first asks for tea, then says fish, and a glass of hot water: fish, tea and hot water.
 答：鱼、茶和热水
-错：鸡肉和茶
-错：鱼和牛奶
+错：鸡肉和茶 | 今天没有鸡肉了，他改成了鱼。 | There is no chicken, so he switched to fish.
+错：鱼和牛奶 | 他要的是茶和热水，没有牛奶。 | He wants tea and hot water, not milk.
 
 男：你看，外边下雪了！
 女：真的？这是今年的第一场雪。
 男：我们出去玩吧！
 女：好，可是外边很冷，你多穿点儿衣服。
 问：现在天气怎么样？
+据：男的说“你看，外边下雪了”。 | The man says, "Look, it's snowing."
 答：在下雪
-错：在下雨
-错：是晴天
+错：在下雨 | 他说的是雪，不是雨。 | He says snow, not rain.
+错：是晴天 | 在下雪，不是晴天。 | It is snowing, so not sunny.
 问：男的想做什么？
+据：男的说“我们出去玩吧”。 | The man says, "Let's go out and play."
 答：出去玩
-错：在家睡觉
-错：去买衣服
+错：在家睡觉 | 他要出去，不是在家睡觉。 | He wants to go out, not sleep.
+错：去买衣服 | 买衣服没有说，女的让他多穿衣服。 | Buying clothes is not said; she tells him to wear more.
 问：女的让男的做什么？
+据：女的说“外边很冷，你多穿点儿衣服”。 | The woman says it is cold, so he should wear more.
 答：多穿衣服
-错：在家休息
-错：去商店
+错：在家休息 | 她答应出去玩，没有让他在家休息。 | She agrees to go out.
+错：去商店 | 对话没有说商店。 | No shop is mentioned.
 
 女：你认识新来的同学吗？
 男：认识，他叫小天，是从南京来的。
 女：他会说汉语吗？
 男：会，说得很好，他爸爸是中国人。
 问：新同学是从哪儿来的？
+据：男的说“他叫小天，是从南京来的”。 | The man says he is Xiaotian, from Nanjing.
 答：南京
-错：北京
-错：东京
+错：北京 | 他说的是南京，不是北京。 | He says Nanjing, not Beijing.
+错：东京 | 他说的是南京，不是东京。 | He says Nanjing, not Tokyo.
 问：新同学的汉语怎么样？
+据：男的说“会，说得很好”。 | The man says he speaks it very well.
 答：说得很好
-错：说得不好
-错：不会说
+错：说得不好 | 他说说得很好，不是不好。 | He says very well, not badly.
+错：不会说 | 他说“会”。 | He says he can.
 问：新同学的汉语为什么很好？
+据：男的说“他爸爸是中国人”。 | The man says his father is Chinese.
 答：他爸爸是中国人
-错：他在北京学习
-错：他每天看中国电影
+错：他在北京学习 | 他是从南京来的，没有说在北京学习。 | He is from Nanjing; no Beijing study is mentioned.
+错：他每天看中国电影 | 对话没有说电影。 | Films are never mentioned.
 
 男：今天下午我们有什么课？
 女：两点有汉语课，四点有考试。
 男：什么考试？我怎么不知道？
 女：老师昨天说了，你没来上课。
 问：今天下午几点考试？
+据：女的说“两点有汉语课，四点有考试”。 | The woman says Chinese class at two, the exam at four.
 答：四点
-错：两点
-错：十点
+错：两点 | 两点是汉语课。 | Two is the Chinese class.
+错：十点 | 她说的是四点，不是十点。 | She says four, not ten.
 问：男的为什么不知道有考试？
+据：女的说“老师昨天说了，你没来上课”。 | The woman says the teacher said so yesterday, when he missed class.
 答：他昨天没来上课
-错：老师没说
-错：他今天来晚了
+错：老师没说 | 女的说“老师昨天说了”。 | She says the teacher did say.
+错：他今天来晚了 | 他不知道是因为昨天没来，不是今天来晚。 | He missed yesterday, not came late today.
 
 女：这是你的新手机吗？
 男：是，昨天在商店买的。
 女：这个手机多少钱？
 男：两千块，很贵，可是很好用。
 问：手机是什么时候买的？
+据：男的说“是，昨天在商店买的”。 | The man says he bought it yesterday in a shop.
 答：昨天
-错：今天
-错：前天
+错：今天 | 他说的是昨天，不是今天。 | He says yesterday, not today.
+错：前天 | 他说的是昨天，不是前天。 | He says yesterday, not the day before.
 问：手机多少钱？
+据：男的说“两千块”。 | The man says two thousand.
 答：两千块
-错：两百块
-错：两万块
+错：两百块 | 他说的是两千，不是两百。 | He says two thousand, not two hundred.
+错：两万块 | 他说的是两千，不是两万。 | He says two thousand, not twenty thousand.
 问：男的觉得手机怎么样？
+据：男的说“很贵，可是很好用”。 | The man says it is dear but works well.
 答：贵，可是很好用
-错：很便宜
-错：不好用
+错：很便宜 | 他说很贵。 | He says it is dear.
+错：不好用 | 他说很好用。 | He says it works well.
 
 男：你好，我想要一个房间，住两天。
 女：好的，一天三百块，可以吗？
 男：可以。房间里有电视吗？
 女：有，您的房间在八楼八零六。
 问：男的要住几天？
+据：男的说“我想要一个房间，住两天”。 | The man says he wants a room for two nights.
 答：两天
-错：三天
-错：八天
+错：三天 | 三是一天的价钱三百，不是天数。 | Three is from the price, three hundred, not the nights.
+错：八天 | 八是房间的楼层，不是天数。 | Eight is the floor, not the nights.
 问：住一天多少钱？
+据：女的说“一天三百块”。 | The woman says three hundred a night.
 答：三百块
-错：两百块
-错：八百块
+错：两百块 | 她说的是三百，不是两百。 | She says three hundred, not two.
+错：八百块 | 八是楼层，不是价钱。 | Eight is the floor, not the price.
 问：男的房间在几楼？
+据：女的说“您的房间在八楼八零六”。 | The woman says his room is 806 on the eighth floor.
 答：八楼
-错：六楼
-错：三楼
+错：六楼 | 六是房间号的最后一位，楼层是八。 | Six is the last digit of the room number; the floor is eight.
+错：三楼 | 三是价钱三百里的，不是楼层。 | Three is in the price, not the floor.
 
 女：你怎么了？病了吗？
 男：没有，我昨天晚上没睡觉，很累。
 女：为什么没睡觉？
 男：我在看书，明天有考试。
 问：男的现在怎么样？
+据：男的说“我昨天晚上没睡觉，很累”。 | The man says he did not sleep last night and is tired.
 答：很累
-错：病了
-错：很饿
+错：病了 | 女的问病了吗，男的说“没有”。 | Asked if he is ill, he says no.
+错：很饿 | 他说的是累，不是饿。 | He says tired, not hungry.
 问：男的昨天晚上做什么了？
+据：男的说“我在看书，明天有考试”。 | The man says he was reading because of tomorrow's exam.
 答：看书
-错：睡觉
-错：考试
+错：睡觉 | 他说“没睡觉”。 | He says he did not sleep.
+错：考试 | 考试是明天，昨天晚上在看书。 | The exam is tomorrow; last night he read.
 问：男的什么时候考试？
+据：男的说“明天有考试”。 | The man says the exam is tomorrow.
 答：明天
-错：今天
-错：昨天
+错：今天 | 他说的是明天，不是今天。 | He says tomorrow, not today.
+错：昨天 | 昨天晚上他在看书准备考试。 | Last night he was preparing.
 `,
   },
   passages: {

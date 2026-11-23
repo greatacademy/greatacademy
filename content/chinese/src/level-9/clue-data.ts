@@ -231,7 +231,7 @@ export const levelNineClues = parseClues(`
 悬梁刺股/1 | 困了把头发系在房梁上 | Fierce study, so the word must mean to study with grim determination.
 程门立雪/1 | 在老师门外雪里站着等 | Respect for teachers, so the word must mean to stand in the snow at a teacher's door.
 孟母三迁/1 | 为孩子好环境搬好几次家 | Moving for a child, so the word must mean Mencius's mother moving three times.
-手不释卷/1 | 八十岁每天读两小时书 | Always reading, so the word must mean never putting down a book.
+手不释卷/1 | 八十岁每天读两小时书 | At eighty Grandpa still reads for two hours every day, so the word must mean never putting down a book.
 学富五车/1 | 老教授什么问题都难不倒 | Learned, so the word must mean very learned.
 才高八斗/1 | 写的诗文没人比得上 | Highly talented, so the word must mean of great talent.
 七步成诗/1 | 曹植走七步作一首诗 | A poem in seven steps, so the word must mean quick literary talent.
@@ -272,7 +272,7 @@ export const levelNineClues = parseClues(`
 大器晚成/1 | 五十岁才出版第一本小说 | A late bloomer, so the word must mean great talents mature late.
 少年老成/1 | 十二岁说话做事很稳重 | Mature beyond his years, so the word must mean old head on young shoulders.
 乳臭未干/1 | 别看不起他年纪小 | Wet behind the ears, so the word must mean very young and inexperienced.
-宝刀不老/1 | 七十岁教练示范动作标准 | Still in form, so the word must mean still as capable as ever.
+宝刀不老/1 | 七十岁教练示范动作标准 | At seventy the old coach still shows the moves perfectly, so the word must mean still as capable as ever.
 老当益壮/1 | 爷爷退休后学会开车锻炼 | Vigorous in old age, so the word must mean old but still vigorous.
 后起之秀/1 | 年轻棋手赢了好几位老将 | A rising star, so the word must mean promising newcomer.
 年富力强/1 | 三十多岁正是好时候 | In his prime, so the word must mean in the prime of life.
@@ -640,7 +640,7 @@ export const levelNineClues = parseClues(`
 蒙混过关/1 | 抄作业想过去被发现 | Getting away with it, so the word must mean to muddle through.
 混为一谈/1 | 学习好和品德好是两回事 | Lumping together, so the word must mean to confuse one with another.
 鱼目混珠/1 | 用假货冒充名牌 | Passing off fakes, so the word must mean to pass off the fake as genuine.
-弄错/1 | 对不起把名字搞错 | Got wrong, so the word must mean to get wrong.
+弄错/1 | 对不起把名字搞错 | The speaker apologises for getting your name wrong, so the word must mean to get wrong.
 弄清/1 | 先找到原因再解决 | Clearing up, so the word must mean to make clear.
 弄虚作假/1 | 科学数据必须真实 | Faking, so the word must mean to practise fraud.
 糊弄/1 | 报告随便写来应付我 | Fobbing off, so the word must mean to fool.
@@ -1045,7 +1045,7 @@ export const levelNineClues = parseClues(`
 遏制/1 | 各国联手阻止病毒传播 | Containing, so the word must mean to curb.
 严峻/1 | 全球变暖形势 | Grim, so the word must mean severe.
 化险为夷/1 | 及时沟通危机过去 | Averted, so the word must mean to turn danger into safety.
-堪称/1 | 会晤是关系史上的大事 | Can be called, so the word must mean to be worthy of being called.
+堪称/1 | 会晤是关系史上的大事 | The meeting is held to be a major event in the history of the two countries' relations, so the word must mean to be worthy of being called.
 华侨/1 | 捐钱回家乡修学校 | Overseas Chinese, so the word must mean overseas Chinese.
 侨胞/1 | 大使馆邀请一起包饺子 | Compatriots abroad, so the word must mean overseas compatriot.
 侨乡/1 | 江门很多人家有亲戚在国外 | A hometown of emigrants, so the word must mean home of overseas Chinese.
@@ -1095,7 +1095,7 @@ export const levelNineClues = parseClues(`
 内陆国/1 | 蒙古四周没有海 | A landlocked country, so the word must mean landlocked country.
 专属经济区/1 | 最远到二百海里 | The exclusive economic zone, so the word must mean exclusive economic zone.
 滨海/1 | 青岛美丽的城市 | Coastal, so the word must mean seaside.
-宛如/1 | 小岛像撒在海上的珍珠 | Just like, so the word must mean as if.
+宛如/1 | 小岛像撒在海上的珍珠 | Seen from the plane, the little islands look like pearls scattered on the sea, so the word must mean as if.
 边境/1 | 中越小镇越南商人来 | The border, so the word must mean border area.
 国界/1 | 这条河对岸是另一个国家 | The boundary, so the word must mean national boundary.
 边检/1 | 把护照交给工作人员 | Border control, so the word must mean frontier inspection.
@@ -1715,7 +1715,7 @@ export const levelNineClues = parseClues(`
 闭幕式/1 | 大家依依不舍告别 | The closing ceremony, so the word must mean closing ceremony.
 圣火/1 | 在希腊点燃传到举办城市 | The Olympic flame, so the word must mean sacred flame.
 奖牌榜/1 | 最后一天排第一 | The medal table, so the word must mean medal table.
-不胜枚举/1 | 奖牌奖杯数不过来 | Too many to count, so the word must mean too numerous to list.
+不胜枚举/1 | 奖牌奖杯数不过来 | The athlete has won more medals and cups than anyone could count, so the word must mean too numerous to list.
 前锋/1 | 这个赛季进了二十个球 | A striker, so the word must mean forward.
 后卫/1 | 防守好对方一球未进 | The defenders, so the word must mean defender.
 中锋/1 | 身高两米一篮球队的 | The centre, so the word must mean centre.

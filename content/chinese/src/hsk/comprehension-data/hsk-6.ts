@@ -9,266 +9,299 @@ export const comprehension: ComprehensionData = {
 女：这个项目的预算又超了，财务部那边恐怕不会同意。
 男：那我们把宣传的部分减少一些，先保证产品质量。
 问：男的打算怎么解决预算问题？
+据：男的说“那我们把宣传的部分减少一些，先保证产品质量”。 | The man says cut the publicity part and protect product quality first.
 答：减少宣传方面的费用
-错：降低产品质量
-错：让财务部多给钱
-错：放弃这个项目
+错：降低产品质量 | 他说“先保证产品质量”，不是降低。 | He says protect quality, not cut it.
+错：让财务部多给钱 | 女的说财务部恐怕不会同意，他没有说再要钱。 | She says finance will refuse; he does not ask for more.
+错：放弃这个项目 | 他是想办法减少费用，不是放弃。 | He trims costs, not abandons it.
 
 男：你觉得这部电影怎么样？网上的评价可是两极分化。
 女：画面确实很美，可是故事讲得太乱了，看完我都没明白。
 问：女的对这部电影有什么看法？
+据：女的说“画面确实很美，可是故事讲得太乱了，看完我都没明白”。 | She says the visuals are lovely but the story is a muddle.
 答：画面好，但故事不清楚
-错：各方面都很完美
-错：画面和故事都不好
-错：比网上说的好多了
+错：各方面都很完美 | 她说故事太乱，不是完美。 | She calls the story a muddle.
+错：画面和故事都不好 | 她说画面确实很美。 | She says the visuals are lovely.
+错：比网上说的好多了 | 她没有拿电影和网上的评价比。 | She does not compare it with reviews.
 
 女：听说你们公司要实行四天工作制了？真让人羡慕。
 男：别高兴得太早，每天的工作时间可是要延长两个小时。
 问：关于四天工作制，男的是什么意思？
+据：男的说“别高兴得太早，每天的工作时间可是要延长两个小时”。 | He says don't celebrate yet: each day grows two hours longer.
 答：每天要工作更长时间
-错：工作时间减少了很多
-错：公司不会实行
-错：他非常羡慕女的
+错：工作时间减少了很多 | 每天多两个小时，总时间没有减少很多。 | Two more hours a day, so not much less in all.
+错：公司不会实行 | 他说的是怎么实行，说明公司会实行。 | He describes how it will run, so it will happen.
+错：他非常羡慕女的 | “羡慕”是女的说的。 | Envy is her word.
 
 男：这次学术会议的论文，你准备得差不多了吧？
 女：数据都整理好了，就差结论部分，我还想再找导师讨论一下。
 问：女的还需要做什么？
+据：女的说“就差结论部分，我还想再找导师讨论一下”。 | She says only the conclusion is left and she wants to discuss it with her supervisor.
 答：和导师讨论结论
-错：整理数据
-错：参加学术会议
-错：重新写论文
+错：整理数据 | 她说数据都整理好了。 | She says the data are done.
+错：参加学术会议 | 会议还没开，她在准备论文。 | The conference is ahead; she is preparing.
+错：重新写论文 | 只差结论，不用重写。 | Only the conclusion is left.
 
 女：现在网上买东西这么方便，你怎么还常去那家旧书店？
 男：在那儿翻书的感觉网上找不到，有时候还能发现意外的好书。
 问：男的为什么还去旧书店？
+据：男的说“在那儿翻书的感觉网上找不到，有时候还能发现意外的好书”。 | He says the feel of browsing is not online, and he finds unexpected gems.
 答：喜欢翻书的感觉，能发现好书
-错：那儿的书更便宜
-错：他不会在网上买东西
-错：他在旧书店工作
+错：那儿的书更便宜 | 他没有说便宜。 | He does not mention price.
+错：他不会在网上买东西 | 女的说网上买方便，他没有说不会买。 | She mentions online shopping; he does not say he can't.
+错：他在旧书店工作 | 他是常去，不是在那儿工作。 | He visits, not works there.
 
 男：小区新装的充电车位总是停着汽油车，电动车根本停不进去。
 女：我已经向物业反映了，他们说下周会安排专人管理。
 问：女的做了什么？
+据：女的说“我已经向物业反映了”。 | She says she has reported it to the management.
 答：向物业反映了问题
-错：把汽油车开走了
-错：买了一辆电动车
-错：自己去管理停车
+错：把汽油车开走了 | 她没有自己去开车。 | She did not move the cars.
+错：买了一辆电动车 | 她没有说买车。 | She does not mention buying a car.
+错：自己去管理停车 | 物业说会安排专人管理，不是她自己管。 | Management will assign someone, not her.
 
 女：你一个学理科的，怎么突然对古代历史感兴趣了？
 男：前段时间看了一部纪录片，发现很多古代的发明其实非常了不起。
 问：男的为什么对古代历史产生了兴趣？
+据：男的说“前段时间看了一部纪录片，发现很多古代的发明其实非常了不起”。 | He says a documentary showed him how remarkable ancient inventions were.
 答：看了一部纪录片
-错：他是学历史的
-错：老师让他学
-错：他去参观了博物馆
+错：他是学历史的 | 女的说他是学理科的。 | She says he studies science.
+错：老师让他学 | 他没有说老师。 | He does not mention a teacher.
+错：他去参观了博物馆 | 他看的是纪录片，没有说博物馆。 | He watched a film, not visited a museum.
 
 男：这个月的销售额比上个月下降了百分之十五，你怎么看？
 女：主要是天气原因，雨下了大半个月，来店里的顾客少了很多。
 问：女的认为销售额下降的主要原因是什么？
+据：女的说“主要是天气原因，雨下了大半个月，来店里的顾客少了很多”。 | She says it is the weather: rain for half the month kept customers away.
 答：下雨天多，顾客少了
-错：产品价格太高
-错：服务质量下降
-错：竞争对手太多
+错：产品价格太高 | 她没有说价格。 | She does not mention price.
+错：服务质量下降 | 她没有说服务。 | She does not mention service.
+错：竞争对手太多 | 她没有说对手。 | She does not mention competitors.
 
 女：我打算辞职去读个研究生，可是又担心年纪太大了。
 男：学习哪有什么年龄限制？只要你想清楚了，什么时候开始都不晚。
 问：男的是什么态度？
+据：男的说“学习哪有什么年龄限制？……什么时候开始都不晚”。 | He says there is no age limit on learning; it is never too late.
 答：支持女的去读书
-错：反对女的辞职
-错：觉得女的年纪太大
-错：建议女的再工作几年
+错：反对女的辞职 | 他没有反对辞职，说想清楚就行。 | He does not object; he says decide clearly.
+错：觉得女的年纪太大 | 担心年纪大的是女的，他说没有年龄限制。 | She worries about age; he says there is no limit.
+错：建议女的再工作几年 | 他说什么时候开始都不晚，不是再等几年。 | He says never too late, not wait.
 
 男：这家餐厅的菜单上为什么都标着热量？
 女：现在大家越来越关心健康了，标出来方便顾客选择。
 问：餐厅为什么在菜单上标热量？
+据：女的说“现在大家越来越关心健康了，标出来方便顾客选择”。 | She says people care about health, so it helps them choose.
 答：方便关心健康的顾客选择
-错：政府要求这样做
-错：为了让菜看起来更贵
-错：顾客不知道吃什么
+错：政府要求这样做 | 她没有说政府。 | She does not mention the government.
+错：为了让菜看起来更贵 | 她没有说价格。 | She does not mention price.
+错：顾客不知道吃什么 | 是方便选择，不是顾客不知道吃什么。 | It helps choice, not ends indecision.
 
 女：听说那座老桥要被推倒了，你知道是怎么回事吗？
 男：不是推倒，是要加固。专家检查发现桥下面有几个地方不太安全。
 问：关于那座老桥，可以知道什么？
+据：男的说“不是推倒，是要加固”。 | He says it is not being pulled down but strengthened.
 答：要进行加固
-错：马上要被推倒
-错：已经修好了
-错：没有任何问题
+错：马上要被推倒 | 他说“不是推倒”。 | He says not pulled down.
+错：已经修好了 | 是“要加固”，还没修。 | It is to be strengthened, not done.
+错：没有任何问题 | 专家发现有几个地方不太安全。 | Experts found unsafe spots.
 
 男：我们的志愿者活动下个月就要开始了，报名的人多吗？
 女：比去年多了一半，其中大部分是大学生。
 问：关于今年报名的人，可以知道什么？
+据：女的说“比去年多了一半”。 | She says half as many again as last year.
 答：比去年多了一半
-错：比去年少了很多
-错：都是大学生
-错：和去年差不多
+错：比去年少了很多 | 是多了，不是少了。 | More, not fewer.
+错：都是大学生 | 她说“大部分是大学生”，不是都是。 | She says most are students, not all.
+错：和去年差不多 | 多了一半，不是差不多。 | Half as many again, not about the same.
 
 女：你这篇文章的观点很新，不过例子好像有点儿少。
 男：您说得对，我再补充两三个具体的例子，让论证更有说服力。
 问：男的接下来要做什么？
+据：男的说“我再补充两三个具体的例子”。 | He says he will add two or three concrete examples.
 答：在文章里补充例子
-错：改变文章的观点
-错：重新选一个题目
-错：删掉一些例子
+错：改变文章的观点 | 女的说观点很新，他没有改观点。 | She praises the view; he keeps it.
+错：重新选一个题目 | 他没有说换题目。 | He does not change the topic.
+错：删掉一些例子 | 例子少，要补充，不是删。 | Examples are few, so he adds them.
 
 男：这次去西部旅行，最让你难忘的是什么？
 女：是当地人的热情。我们在路上车坏了，一位牧民主动帮我们拉到了县城。
 问：女的为什么觉得当地人热情？
+据：女的说“我们在路上车坏了，一位牧民主动帮我们拉到了县城”。 | She says when their car broke down a herder towed them to town unasked.
 答：牧民主动帮了他们
-错：当地人请他们吃饭
-错：当地人带他们参观
-错：当地人送了他们礼物
+错：当地人请他们吃饭 | 她没有说请吃饭。 | She does not mention a meal.
+错：当地人带他们参观 | 牧民是拉车，不是带参观。 | He towed them, not guided them.
+错：当地人送了他们礼物 | 她没有说礼物。 | She does not mention gifts.
 
 女：最近我们部门的同事都在讨论人工智能，你担不担心工作被它抢走？
 男：说不担心是假的，不过我觉得与其担心，不如尽快学会使用它。
 问：男的对人工智能是什么态度？
+据：男的说“与其担心，不如尽快学会使用它”。 | He says rather than worry, learn to use it soon.
 答：积极学习使用
-错：完全不担心
-错：非常害怕
-错：觉得没有用
+错：完全不担心 | 他说“说不担心是假的”，还是有点儿担心。 | He admits some worry.
+错：非常害怕 | 他不是害怕，是要学。 | He is not afraid; he will learn.
+错：觉得没有用 | 他要学会用，说明觉得有用。 | He wants to use it, so it is useful.
 
 男：你家孩子学的那个编程课效果怎么样？
 女：一开始很有兴趣的，后来内容越来越难，他就有点儿想放弃了。
 问：女的孩子现在对编程课是什么态度？
+据：女的说“后来内容越来越难，他就有点儿想放弃了”。 | She says as it grew harder he started wanting to quit.
 答：想放弃
-错：越来越有兴趣
-错：觉得太简单
-错：想换一个老师
+错：越来越有兴趣 | 一开始有兴趣，后来想放弃了。 | Interest came first, then wanting to quit.
+错：觉得太简单 | 内容越来越难，不是简单。 | It got harder, not easier.
+错：想换一个老师 | 她没有说老师。 | She does not mention a teacher.
 
 女：这件瓷器上的图案真漂亮，是手工画的吗？
 男：对，这是一位老艺人一笔一笔画出来的，花了整整一个月。
 问：关于这件瓷器，可以知道什么？
+据：男的说“这是一位老艺人一笔一笔画出来的”。 | He says an old craftsman painted it stroke by stroke.
 答：图案是手工画的
-错：是机器生产的
-错：只用了一天
-错：是男的自己画的
+错：是机器生产的 | 是手工画的，不是机器。 | Hand painted, not machine made.
+错：只用了一天 | 花了整整一个月，不是一天。 | It took a month, not a day.
+错：是男的自己画的 | 画的是一位老艺人，不是男的。 | An old craftsman painted it, not he.
 
 男：明天的面试我特别紧张，你有什么经验可以分享吗？
 女：提前了解一下公司的情况，回答问题的时候诚实一些，别夸大自己。
 问：女的建议男的面试时怎么做？
+据：女的说“回答问题的时候诚实一些，别夸大自己”。 | She says answer honestly and do not exaggerate.
 答：诚实回答，不要夸大
-错：多说自己的优点
-错：不用做准备
-错：问公司的工资
+错：多说自己的优点 | 她说别夸大自己。 | She says do not boast.
+错：不用做准备 | 她说要提前了解公司。 | She says research the firm first.
+错：问公司的工资 | 她没有说工资。 | She does not mention pay.
 
 女：你们这个城市的地铁怎么这么干净？
 男：一方面是管理严格，另一方面是市民的素质也越来越高了。
 问：男的认为地铁干净的原因有哪些？
+据：男的说“一方面是管理严格，另一方面是市民的素质也越来越高了”。 | He says strict management on one hand and better-mannered citizens on the other.
 答：管理严格，市民素质高
-错：地铁是新修的
-错：乘客很少
-错：每天有很多人打扫
+错：地铁是新修的 | 他没有说新修。 | He does not say it is new.
+错：乘客很少 | 他没有说人少。 | He does not say it is quiet.
+错：每天有很多人打扫 | 他没有说打扫的人。 | He does not mention cleaners.
 
 男：你在那家公司实习了半年，最大的收获是什么？
 女：学会了怎么和不同性格的人合作，这比专业知识还重要。
 问：女的认为自己最大的收获是什么？
+据：女的说“学会了怎么和不同性格的人合作，这比专业知识还重要”。 | She says learning to work with different people mattered more than expertise.
 答：学会了和不同的人合作
-错：学到了很多专业知识
-错：找到了正式工作
-错：赚了很多钱
+错：学到了很多专业知识 | 她说合作比专业知识还重要。 | She ranks cooperation above expertise.
+错：找到了正式工作 | 她没有说找到工作。 | She does not mention a job offer.
+错：赚了很多钱 | 她没有说钱。 | She does not mention money.
 
 女：现在很多人一边吃饭一边看手机，你觉得这样好吗？
 男：对消化不好，而且一家人坐在一起，却谁也不跟谁说话，太可惜了。
 问：男的对吃饭时看手机是什么看法？
+据：男的说“对消化不好，而且……谁也不跟谁说话，太可惜了”。 | He says it is bad for digestion and a pity no one talks.
 答：不赞成
-错：很支持
-错：无所谓
-错：觉得很方便
+错：很支持 | 他说了两个坏处，不支持。 | He gives two drawbacks.
+错：无所谓 | 他说“太可惜了”，不是无所谓。 | He says it is a pity, so he cares.
+错：觉得很方便 | 他没有说方便。 | He does not call it convenient.
 
 男：这家博物馆从今年开始免费开放了，参观的人一定很多吧？
 女：是啊，不过需要提前一天在网上预约，每天限五千人。
 问：参观这家博物馆需要做什么？
+据：女的说“需要提前一天在网上预约”。 | She says one must book online a day ahead.
 答：提前在网上预约
-错：买门票
-错：带学生证
-错：早上排队
+错：买门票 | 男的说免费开放了。 | He says it is now free.
+错：带学生证 | 对话没有说学生证。 | No student card is mentioned.
+错：早上排队 | 是网上预约，不是排队。 | Online booking, not queuing.
 
 女：你说那家老字号的点心店为什么能开一百多年？
 男：我觉得关键是一直坚持传统做法，从来不偷工减料。
 问：男的认为那家店能开这么久的原因是什么？
+据：男的说“关键是一直坚持传统做法，从来不偷工减料”。 | He says the key is sticking to tradition and never cutting corners.
 答：坚持传统，不偷工减料
-错：价格便宜
-错：一直在改变做法
-错：地点很好
+错：价格便宜 | 他没有说价格。 | He does not mention price.
+错：一直在改变做法 | 他说的是坚持，不是改变。 | He says keeping to tradition, not changing.
+错：地点很好 | 他没有说地点。 | He does not mention location.
 
 男：这个城市的房价这几年涨得太快了，年轻人都买不起。
 女：所以政府开始建设更多可以出租的房子，让年轻人先租得起。
 问：政府采取了什么措施？
+据：女的说“政府开始建设更多可以出租的房子”。 | She says the government is building more rental housing.
 答：建设更多出租的房子
-错：降低房价
-错：给年轻人发钱
-错：限制外地人买房
+错：降低房价 | 她没有说降房价。 | She does not say prices are cut.
+错：给年轻人发钱 | 她没有说发钱。 | She does not mention cash.
+错：限制外地人买房 | 她没有说限制买房。 | She does not mention purchase limits.
 
 女：您好，我订的这批材料什么时候能到？
 男：很抱歉，工厂那边出了点儿问题，可能要推迟三天左右。
 问：材料可能会怎么样？
+据：男的说“可能要推迟三天左右”。推迟就是晚到。 | He says it may be about three days late.
 答：晚到三天左右
-错：今天就到
-错：提前三天到
-错：不能送了
+错：今天就到 | 是推迟，不是今天到。 | Delayed, not today.
+错：提前三天到 | 是推迟，不是提前。 | Later, not earlier.
+错：不能送了 | 只是推迟，还会送。 | Only delayed, still coming.
 
 男：你每天早上都去公园跑步，跑了这么久，膝盖不疼吗？
 女：刚开始有点儿，后来我换了一双专业的跑鞋，又注意了姿势，就好多了。
 问：女的是怎么解决膝盖疼的问题的？
+据：女的说“我换了一双专业的跑鞋，又注意了姿势，就好多了”。 | She says new running shoes and better form fixed it.
 答：换跑鞋，注意姿势
-错：不再跑步了
-错：去医院治疗
-错：减少了跑步时间
+错：不再跑步了 | 她每天早上还在跑。 | She still runs each morning.
+错：去医院治疗 | 她没有说医院。 | She does not mention a hospital.
+错：减少了跑步时间 | 她没有说少跑。 | She does not say she ran less.
 
 女：这个周末的讲座是讲什么的？我看海报上写着“城市与记忆”。
 男：主要讲老建筑的保护，请的是一位研究城市历史的教授。
 问：讲座的主要内容是什么？
+据：男的说“主要讲老建筑的保护”。 | He says it is mainly about preserving old buildings.
 答：老建筑的保护
-错：怎样提高记忆力
-错：城市交通的发展
-错：教授的个人经历
+错：怎样提高记忆力 | “记忆”是题目里的词，讲的不是记忆力。 | 'Memory' is in the title but it is not about memory skills.
+错：城市交通的发展 | 他没有说交通。 | He does not mention transport.
+错：教授的个人经历 | 他没有说教授的经历。 | He does not mention the professor's life.
 
 男：你写的那本小说终于出版了，祝贺你！销量怎么样？
 女：谢谢！销量一般，不过收到不少读者来信，说很受感动，我已经很满足了。
 问：女的为什么觉得满足？
+据：女的说“收到不少读者来信，说很受感动，我已经很满足了”。 | She says many readers wrote that they were moved, and she is content.
 答：读者被她的小说感动了
-错：小说卖得非常好
-错：她得了一个大奖
-错：出版社给了她很多钱
+错：小说卖得非常好 | 她说“销量一般”。 | She says sales are modest.
+错：她得了一个大奖 | 她没有说得奖。 | She does not mention a prize.
+错：出版社给了她很多钱 | 她没有说钱。 | She does not mention money.
 
 女：你们学校的食堂改革以后，学生满意吗？
 男：满意多了，现在每道菜都可以选大份小份，浪费也少了很多。
 问：食堂改革以后有什么变化？
+据：男的说“现在每道菜都可以选大份小份，浪费也少了很多”。 | He says every dish now comes large or small, and waste fell.
 答：可以选份量，浪费减少了
-错：菜的价格降低了
-错：增加了很多新菜
-错：学生必须吃完
+错：菜的价格降低了 | 他没有说价格。 | He does not mention price.
+错：增加了很多新菜 | 他没有说新菜。 | He does not mention new dishes.
+错：学生必须吃完 | 他没有说必须吃完。 | He does not say plates must be cleared.
 
 男：这台机器的说明书全是外文，我一点儿也看不懂。
 女：别着急，我用手机上的翻译软件帮你扫一下，应该能看个大概。
 问：女的打算怎么帮男的？
+据：女的说“我用手机上的翻译软件帮你扫一下”。 | She says she will scan it with a translation app.
 答：用翻译软件翻译说明书
-错：给厂家打电话
-错：自己把说明书翻译出来
-错：找一个懂外文的人
+错：给厂家打电话 | 她没有说厂家。 | She does not mention the maker.
+错：自己把说明书翻译出来 | 她用软件，不是自己翻译。 | She uses an app, not her own skill.
+错：找一个懂外文的人 | 她自己帮，不是找别人。 | She helps herself, not finds someone.
 
 女：你为什么选择去山区当老师？那儿条件那么差。
 男：我小时候也是在山里长大的，是一位支教老师改变了我的命运。
 问：男的为什么去山区当老师？
+据：男的说“我小时候也是在山里长大的，是一位支教老师改变了我的命运”。他是想像那位老师一样帮助山里的孩子。 | He grew up in the mountains and a volunteer teacher changed his life, so he wants to do the same.
 答：他自己曾经被支教老师帮助过
-错：山区的工资很高
-错：学校派他去的
-错：他不喜欢城市
+错：山区的工资很高 | 女的说那儿条件差。 | She says conditions are poor.
+错：学校派他去的 | 他没有说学校派他。 | He does not say he was sent.
+错：他不喜欢城市 | 他没有说不喜欢城市。 | He does not say he dislikes cities.
 
 男：最近几年，来这个古镇旅游的人越来越多，你觉得是好事吗？
 女：对经济当然有好处，但是太商业化了，古镇原来的安静也没了。
 问：女的对古镇旅游业的发展是什么看法？
+据：女的说“对经济当然有好处，但是太商业化了，古镇原来的安静也没了”。有好处也有坏处，就是有利有弊。 | She says it helps the economy but over-commercialises the town and ends its quiet: good and bad.
 答：有利有弊
-错：完全是好事
-错：完全是坏事
-错：和自己没关系
+错：完全是好事 | 她说了坏处，不完全是好事。 | She names drawbacks.
+错：完全是坏事 | 她说对经济有好处，不完全是坏事。 | She names a benefit.
+错：和自己没关系 | 她有自己的看法，不是没关系。 | She has a view.
 
 女：你们研究的这种新材料有什么特别的地方？
 男：它比钢还结实，重量却只有钢的四分之一，以后可以用来造飞机。
 问：关于这种新材料，可以知道什么？
+据：男的说“它比钢还结实，重量却只有钢的四分之一”。 | He says it is stronger than steel at a quarter of its weight.
 答：又轻又结实
-错：比钢还重
-错：已经用来造飞机了
-错：价格很低
+错：比钢还重 | 它只有钢的四分之一重，不是更重。 | It is a quarter the weight, not heavier.
+错：已经用来造飞机了 | 他说“以后可以”造飞机，还没用。 | He says it could be used later, not yet.
+错：价格很低 | 他没有说价格。 | He does not mention price.
 `,
     long: `
 女：李教授，您好！感谢您来参加我们的节目。您最近出版了一本关于睡眠的书，能简单介绍一下吗？
@@ -279,37 +312,43 @@ export const comprehension: ComprehensionData = {
 男：首先要固定睡觉和起床的时间，周末也不要差别太大；其次，睡前一个小时尽量不要看手机。
 女：好的，谢谢李教授！
 问：这段对话最可能发生在什么地方？
+据：女的说“感谢您来参加我们的节目”。 | She thanks him for coming on the programme.
 答：一个节目中
-错：医院里
-错：教室里
-错：书店里
+错：医院里 | 男的是教授，在谈他的书，不是医院。 | He is a professor talking about a book, not in hospital.
+错：教室里 | 她说的是节目，不是课。 | She says programme, not class.
+错：书店里 | 书是介绍的内容，不在书店。 | The book is the topic, not the place.
 问：男的认为长期熬夜会有什么影响？
+据：男的说“如果长期这样，身体的免疫力会下降，还容易焦虑”。 | He says long-term it lowers immunity and brings anxiety.
 答：免疫力下降，容易焦虑
-错：记忆力变好
-错：身体越来越强
-错：没有什么影响
+错：记忆力变好 | 他说睡眠对记忆有影响，熬夜不会让记忆变好。 | Sleep affects memory; late nights don't help it.
+错：身体越来越强 | 免疫力会下降，身体不会更强。 | Immunity falls, so not stronger.
+错：没有什么影响 | 他说偶尔一次问题不大，长期就有影响。 | Only once is fine; long-term harms.
 问：男的建议经常熬夜的人怎么做？
+据：男的说“首先要固定睡觉和起床的时间”。 | He says first keep fixed bed and rising times.
 答：固定睡觉和起床的时间
-错：周末多睡一会儿
-错：睡前多看书
-错：白天多喝咖啡
+错：周末多睡一会儿 | 他说周末也不要差别太大。 | He says weekends should not differ much.
+错：睡前多看书 | 他说睡前不要看手机，没有说看书。 | He says no phone before bed, not reading.
+错：白天多喝咖啡 | 他没有说咖啡。 | He does not mention coffee.
 
 讲：大家好，今天我想谈谈“慢阅读”。在信息时代，我们每天在手机上看到大量的文章，可是真正记住的却很少。很多人只看标题，或者快速地往下滑，看起来读了很多，其实只是在接收一些零散的信息。所谓“慢阅读”，就是选择一本值得读的书，放慢速度，一边读一边思考，有时候还会做一些笔记。这样读书虽然花的时间多，但是理解更深，也更容易把书里的道理和自己的生活联系起来。我建议大家每天抽出半个小时，放下手机，试着慢慢读一本书。
 问：说话人认为现在人们读手机上的文章有什么问题？
+据：说话人说“我们每天在手机上看到大量的文章，可是真正记住的却很少”。 | The speaker says we see many articles but remember few.
 答：读得多，记住的少
-错：文章太长了
-错：手机太贵了
-错：没有好文章
+错：文章太长了 | 说话人没有说太长。 | Length is not mentioned.
+错：手机太贵了 | 说话人没有说价钱。 | Price is not mentioned.
+错：没有好文章 | 说话人没有说没有好文章。 | The speaker does not say there are none.
 问：“慢阅读”是什么意思？
+据：说话人说慢阅读“就是选择一本值得读的书，放慢速度，一边读一边思考”。 | The speaker defines it as slowing down and thinking as you read.
 答：放慢速度，一边读一边思考
-错：每天只读一页书
-错：用手机读书
-错：只读标题
+错：每天只读一页书 | 说话人没有说只读一页。 | One page a day is not said.
+错：用手机读书 | 说话人让大家放下手机读书。 | The speaker says put the phone down.
+错：只读标题 | 只看标题是说话人批评的。 | Reading headlines is criticised.
 问：说话人建议大家每天怎么做？
+据：说话人说“我建议大家每天抽出半个小时，放下手机，试着慢慢读一本书”。 | The speaker suggests half an hour a day without the phone, reading slowly.
 答：抽出半小时放下手机读书
-错：读很多篇文章
-错：快速地看新闻
-错：写读书笔记给别人看
+错：读很多篇文章 | 说话人说要读一本书，不是很多篇文章。 | One book, not many articles.
+错：快速地看新闻 | 快速地看是说话人批评的。 | Skimming is criticised.
+错：写读书笔记给别人看 | 笔记是自己做的，没有说给别人看。 | Notes are for oneself.
 
 男：张经理，我想跟您谈谈下个季度的市场计划。
 女：好啊，你有什么新想法？
@@ -319,20 +358,23 @@ export const comprehension: ComprehensionData = {
 女：那你先选两三个合适的作者，做一份完整的方案，下周一开会讨论。
 男：好的，我这周就准备。
 问：男的发现了什么问题？
+据：男的说“我发现我们的产品在年轻人中知名度不高”。 | He says the product is little known among the young.
 答：产品在年轻人中知名度不高
-错：产品质量不好
-错：广告费太高
-错：年轻人不用社交平台
+错：产品质量不好 | 他没有说质量。 | He does not mention quality.
+错：广告费太高 | 费用是女的问的，他说更便宜。 | Cost is her question; he says it is cheaper.
+错：年轻人不用社交平台 | 他要在社交平台推广，说明年轻人用。 | He targets social media, so the young use it.
 问：和电视广告相比，男的的方案有什么优点？
+据：男的说“比在电视上做广告便宜一半，而且效果更容易统计”。 | He says it costs half of TV ads and is easier to measure.
 答：更便宜，效果容易统计
-错：影响的人更多
-错：更有创意
-错：不需要花钱
+错：影响的人更多 | 他没有说影响的人数。 | He does not mention reach.
+错：更有创意 | 他没有说创意。 | He does not mention creativity.
+错：不需要花钱 | 是便宜一半，还要花钱。 | Half the cost, still a cost.
 问：女的让男的做什么？
+据：女的说“你先选两三个合适的作者，做一份完整的方案，下周一开会讨论”。 | She says choose a few writers, draft a full plan, and discuss on Monday.
 答：做一份方案，下周一讨论
-错：马上和作者签合同
-错：在电视上做广告
-错：重新调查市场
+错：马上和作者签合同 | 先做方案讨论，没有说签合同。 | A plan first, no contract.
+错：在电视上做广告 | 电视广告是比较的对象，太贵。 | TV ads are the dearer option.
+错：重新调查市场 | 她没有说调查。 | She does not mention a survey.
 
 女：你听说了吗？我们市要建一个大型的垃圾处理厂。
 男：听说了，不少居民反对，担心会污染空气。
@@ -341,37 +383,43 @@ export const comprehension: ComprehensionData = {
 女：所以政府计划把它建在离居民区比较远的地方，还会定期公开检测数据。
 男：如果真能做到公开透明，我觉得大家慢慢会接受的。
 问：居民为什么反对建处理厂？
+据：男的说“不少居民反对，担心会污染空气”。 | He says many residents object, fearing air pollution.
 答：担心污染空气
-错：担心房价下降
-错：觉得费用太高
-错：不知道处理厂是什么
+错：担心房价下降 | 对话没有说房价。 | House prices are not mentioned.
+错：觉得费用太高 | 对话没有说费用。 | Cost is not mentioned.
+错：不知道处理厂是什么 | 居民担心污染，说明知道是什么。 | They fear pollution, so they know what it is.
 问：根据女的的话，政府打算怎么做？
+据：女的说“政府计划把它建在离居民区比较远的地方，还会定期公开检测数据”。 | She says it will be built far from homes, with test data published regularly.
 答：建在远离居民区的地方，并公开数据
-错：放弃这个计划
-错：给居民发补贴
-错：把处理厂建在市中心
+错：放弃这个计划 | 政府还要建，没有放弃。 | It will still be built.
+错：给居民发补贴 | 她没有说补贴。 | She does not mention subsidies.
+错：把处理厂建在市中心 | 是远离居民区，不是市中心。 | Far from homes, not downtown.
 问：男的认为什么最重要？
+据：男的说“如果真能做到公开透明，我觉得大家慢慢会接受的”。 | He says if it is truly open, people will come round.
 答：公开透明
-错：技术先进
-错：费用低
-错：建得快
+错：技术先进 | 技术先进是女的看到的报道说的。 | Advanced technology is from her news report.
+错：费用低 | 对话没有说费用。 | Cost is not mentioned.
+错：建得快 | 对话没有说速度。 | Speed is not mentioned.
 
 讲：各位游客，欢迎来到古城博物馆。我们博物馆建于一九五八年，是当地最早的综合性博物馆，共有三层展厅。一楼主要展出古城的历史，包括城墙的变化和古代居民的生活用品；二楼是陶瓷和书画展，其中有一张清代的山水画，是我们馆的镇馆之宝；三楼是特别展厅，这个月展出的是当地的民间剪纸艺术。参观时请不要用闪光灯拍照，也不要用手接触展品。参观结束后，大家可以在一楼的纪念品商店购买书籍和文创产品。
 问：这段话最可能是谁说的？
+据：说话人说“各位游客，欢迎来到古城博物馆”，然后一层一层介绍展厅。这是讲解员的话。 | The speaker welcomes visitors and introduces each floor, as a guide does.
 答：博物馆的讲解员
-错：一位游客
-错：画家
-错：商店的老板
+错：一位游客 | 说话人对游客说话，自己不是游客。 | The speaker addresses visitors.
+错：画家 | 画是展品，说话人不是画家。 | Paintings are exhibits; the speaker is no painter.
+错：商店的老板 | 商店只是最后提到的地方。 | The shop is only mentioned at the end.
 问：博物馆的镇馆之宝在哪一层？
+据：说话人说“二楼是陶瓷和书画展，其中有一张清代的山水画，是我们馆的镇馆之宝”。 | The speaker says the Qing landscape on the second floor is the museum's treasure.
 答：二楼
-错：一楼
-错：三楼
-错：纪念品商店
+错：一楼 | 一楼是古城的历史。 | The ground floor is the town's history.
+错：三楼 | 三楼是剪纸。 | The third floor is paper cutting.
+错：纪念品商店 | 商店卖书和文创产品。 | The shop sells books and gifts.
 问：参观时游客不能做什么？
+据：说话人说“也不要用手接触展品”。 | The speaker says do not touch the exhibits.
 答：用手接触展品
-错：拍照
-错：购买纪念品
-错：去三楼参观
+错：拍照 | 不能用闪光灯，不是不能拍照。 | No flash, but photos are allowed.
+错：购买纪念品 | 参观结束后可以买纪念品。 | Souvenirs may be bought afterwards.
+错：去三楼参观 | 三楼是特别展厅，可以参观。 | The third floor is open.
 
 男：王老师，我们班有几个学生最近成绩下降得很厉害，我有点儿担心。
 女：你了解过原因吗？
@@ -381,20 +429,23 @@ export const comprehension: ComprehensionData = {
 女：对。不要一上来就批评，先听他们说。另外，也可以跟家长沟通一下，大家一起想办法。
 男：好的，我这周就找他们单独聊聊。
 问：男的担心什么？
+据：男的说“我们班有几个学生最近成绩下降得很厉害，我有点儿担心”。 | He says several students' marks have fallen sharply.
 答：几个学生成绩下降很快
-错：自己的工作太忙
-错：学生不喜欢他
-错：家长不配合
+错：自己的工作太忙 | 他没有说自己忙，是父母忙。 | Busy parents, not he.
+错：学生不喜欢他 | 他没有说学生不喜欢他。 | He does not say that.
+错：家长不配合 | 和家长沟通是女的的建议，没有说家长不配合。 | Talking to parents is her idea; no refusal is said.
 问：女的认为最关键的是什么？
+据：女的说“关键是要了解清楚孩子心里在想什么”。 | She says the key is understanding what the child is thinking.
 答：了解孩子心里的想法
-错：严厉批评学生
-错：让学生多做练习
-错：不让学生玩游戏
+错：严厉批评学生 | 她说“不要一上来就批评”。 | She says don't start by scolding.
+错：让学生多做练习 | 她没有说多做练习。 | She does not mention drills.
+错：不让学生玩游戏 | 玩游戏是学生说的原因，她没有说不让玩。 | Games are a reason given; she does not ban them.
 问：男的接下来会做什么？
+据：男的说“我这周就找他们单独聊聊”。 | He says he will talk with each of them this week.
 答：单独和学生聊天
-错：给学生补课
-错：开家长会
-错：换一个班
+错：给学生补课 | 他没有说补课。 | He does not mention extra lessons.
+错：开家长会 | 跟家长沟通是女的说的，没有说开家长会。 | She suggests talking to parents, not a meeting.
+错：换一个班 | 他没有说换班。 | He does not mention changing class.
 
 女：我最近在考虑要不要买一辆电动汽车，你开了两年了，感觉怎么样？
 男：总的来说很满意的。最明显的是省钱，充电比加油便宜多了。
@@ -403,37 +454,43 @@ export const comprehension: ComprehensionData = {
 女：充电方便吗？
 男：我们小区有充电的车位，晚上充一夜就满了。如果你家附近没有充电的地方，就要考虑清楚了。
 问：男的觉得电动汽车最明显的优点是什么？
+据：男的说“最明显的是省钱，充电比加油便宜多了”。 | He says the clearest gain is saving money.
 答：省钱
-错：速度快
-错：外形好看
-错：冬天续航长
+错：速度快 | 他没有说速度。 | He does not mention speed.
+错：外形好看 | 他没有说外形。 | He does not mention looks.
+错：冬天续航长 | 冬天续航会少，不是长。 | Range drops in winter.
 问：冬天电动汽车有什么问题？
+据：男的说“冬天大概会少百分之二十”，说的是续航。 | He says range falls about twenty per cent in winter.
 答：续航会减少
-错：充不了电
-错：开不快
-错：容易坏
+错：充不了电 | 他说晚上充一夜就满了。 | He says it charges overnight.
+错：开不快 | 他没有说速度。 | He does not mention speed.
+错：容易坏 | 他没有说坏。 | He does not mention breakdowns.
 问：男的提醒女的要考虑什么？
+据：男的说“如果你家附近没有充电的地方，就要考虑清楚了”。 | He says if there is no charging near her home, think it over.
 答：家附近有没有充电的地方
-错：车的颜色
-错：车的价格
-错：每天开多远
+错：车的颜色 | 他没有说颜色。 | He does not mention colour.
+错：车的价格 | 他没有说价格。 | He does not mention price.
+错：每天开多远 | 五十公里是他自己每天开的路。 | Fifty km is his own daily drive.
 
 讲：近年来，越来越多的城市开始建设“口袋公园”。所谓口袋公园，就是利用城市里的小块空地建成的小型公园，面积一般只有几百到几千平方米。它们分布在居民区附近，走几分钟就能到。和大公园相比，口袋公园虽然小，但是更方便，老人可以在这里晒太阳、下棋，孩子们放学后可以在这里玩一会儿。有专家认为，口袋公园不但美化了城市环境，还为邻居之间的交流提供了空间，让城市变得更有人情味。
 问：口袋公园有什么特点？
+据：说话人说口袋公园“面积一般只有几百到几千平方米”，“分布在居民区附近，走几分钟就能到”。 | The speaker says they are a few hundred to a few thousand square metres, minutes from homes.
 答：面积小，离居民区近
-错：面积比大公园大
-错：只在市中心
-错：需要买门票
+错：面积比大公园大 | 说话人说它比大公园小。 | Smaller than big parks.
+错：只在市中心 | 说话人说它们在居民区附近。 | Near homes, not only downtown.
+错：需要买门票 | 说话人没有说门票。 | Tickets are not mentioned.
 问：根据这段话，口袋公园有什么作用？
+据：说话人说老人可以晒太阳下棋，孩子可以玩，还“为邻居之间的交流提供了空间”。 | The speaker says elders relax there, children play, and neighbours have room to talk.
 答：方便居民休闲和交流
-错：增加城市的停车位
-错：吸引外地游客
-错：提高附近的房价
+错：增加城市的停车位 | 说话人没有说停车。 | Parking is not mentioned.
+错：吸引外地游客 | 口袋公园是给附近居民的，不是游客。 | They serve residents, not tourists.
+错：提高附近的房价 | 说话人没有说房价。 | Property prices are not mentioned.
 问：专家对口袋公园是什么态度？
+据：专家认为口袋公园“不但美化了城市环境，还为邻居之间的交流提供了空间”，说的全是好处。 | Experts say they beautify the city and give neighbours space, all praise.
 答：肯定
-错：反对
-错：怀疑
-错：没有说明
+错：反对 | 专家说的都是好处。 | Experts list only benefits.
+错：怀疑 | 专家说得很肯定，不是怀疑。 | Experts speak with certainty.
+错：没有说明 | 说话人说了“有专家认为”。 | The speaker reports the experts' view.
 
 男：小林，听说你们公司开始允许员工在家办公了？
 女：对，每周可以有两天在家，其他时间到公司。
@@ -443,37 +500,43 @@ export const comprehension: ComprehensionData = {
 女：我把书房收拾出来当办公室，工作的时候关上门，家人也知道不能来找我。
 男：这个办法不错。我也想跟我们领导提提这个建议。
 问：女的公司实行的是什么制度？
+据：女的说“每周可以有两天在家，其他时间到公司”。 | She says two days a week at home, the rest in the office.
 答：每周可以在家办公两天
-错：每天都在家办公
-错：不允许在家办公
-错：每周只上班三天
+错：每天都在家办公 | 只有两天在家，其他时间到公司。 | Only two days at home.
+错：不允许在家办公 | 公司开始允许在家办公了。 | The firm now allows it.
+错：每周只上班三天 | 其他时间要到公司，不是只上三天。 | The other days are in the office.
 问：女的在家办公遇到了什么问题？
+据：女的说“有时候家里人会来找我，很难集中精力”。 | She says family come to her and she struggles to focus.
 答：容易受到家人的影响
-错：网络不好
-错：没有电脑
-错：领导不同意
+错：网络不好 | 她没有说网络。 | She does not mention the internet.
+错：没有电脑 | 她没有说电脑。 | She does not mention a computer.
+错：领导不同意 | 公司允许在家办公，领导同意。 | The firm allows it.
 问：男的打算做什么？
+据：男的说“我也想跟我们领导提提这个建议”。 | He says he wants to suggest it to his own boss.
 答：向领导建议在家办公
-错：搬到离公司近的地方
-错：换一份工作
-错：去女的公司工作
+错：搬到离公司近的地方 | 离公司远的是女的。 | She is the one far from work.
+错：换一份工作 | 他没有说换工作。 | He does not mention a new job.
+错：去女的公司工作 | 他是想在自己公司提建议。 | He will suggest it at his own firm.
 
 讲：现代人越来越重视饮食健康，“少油少盐”成了很多家庭的新标准。研究表明，长期吃太咸的食物，会增加得高血压的风险。按照专家的建议，成年人每天吃的盐最好不超过五克，差不多是一个啤酒瓶盖那么多。可是实际上，很多人吃的盐比这个数字多出很多。除了做菜时少放盐，我们还要注意那些“看不见的盐”，比如方便面、咸菜和一些零食里都有很多盐。在超市买东西时，多看看包装上的营养成分表，是一个好习惯。
 问：长期吃太咸的食物有什么风险？
+据：说话人说“长期吃太咸的食物，会增加得高血压的风险”。 | The speaker says too much salt raises the risk of high blood pressure.
 答：容易得高血压
-错：容易感冒
-错：皮肤变差
-错：记忆力下降
+错：容易感冒 | 说话人没有说感冒。 | Colds are not mentioned.
+错：皮肤变差 | 说话人没有说皮肤。 | Skin is not mentioned.
+错：记忆力下降 | 说话人没有说记忆。 | Memory is not mentioned.
 问：专家建议成年人每天吃多少盐？
+据：说话人说“成年人每天吃的盐最好不超过五克”。 | The speaker says no more than five grams a day.
 答：不超过五克
-错：十克左右
-错：越多越好
-错：完全不吃
+错：十克左右 | 是五克，不是十克。 | Five grams, not ten.
+错：越多越好 | 说话人说要少，不是越多越好。 | Less, not more.
+错：完全不吃 | 是不超过五克，不是完全不吃。 | Up to five grams, not none.
 问：说话人提醒人们注意什么？
+据：说话人说“我们还要注意那些‘看不见的盐’，比如方便面、咸菜和一些零食里都有很多盐”。 | The speaker warns of hidden salt in instant noodles, pickles and snacks.
 答：一些食品里看不见的盐
-错：不要去超市买东西
-错：多吃零食
-错：做菜一定要放盐
+错：不要去超市买东西 | 说话人让大家在超市看包装，不是不去。 | The speaker says read labels in the shop.
+错：多吃零食 | 零食里有很多盐，要少吃。 | Snacks are salty, so eat fewer.
+错：做菜一定要放盐 | 说话人让少放盐，不是一定要放。 | The speaker says use less salt.
 
 女：你好，我想咨询一下你们的二手物品回收服务。
 男：您好，请问您想回收什么东西？
@@ -482,20 +545,23 @@ export const comprehension: ComprehensionData = {
 女：太好了。上门要收费吗？
 男：市区范围内免费。您留一下地址和电话，我们明天下午联系您确定时间。
 问：女的想回收什么东西？
+据：女的说“家里有一台旧冰箱和一些旧衣服”。 | She says an old fridge and some old clothes.
 答：旧冰箱和旧衣服
-错：旧电脑和旧书
-错：旧家具
-错：旧手机
+错：旧电脑和旧书 | 她没有说电脑和书。 | She does not mention computers or books.
+错：旧家具 | 她没有说家具。 | She does not mention furniture.
+错：旧手机 | 她没有说手机。 | She does not mention phones.
 问：回收的旧衣服会怎么处理？
+据：男的说衣服“洗干净以后捐给山区的孩子”。 | He says clothes are washed and given to mountain children.
 答：洗干净后捐给山区的孩子
-错：卖给二手商店
-错：做成新衣服
-错：直接当垃圾处理
+错：卖给二手商店 | 卖的是冰箱，衣服免费收。 | The fridge is bought; clothes are free.
+错：做成新衣服 | 他没有说做新衣服。 | He does not mention remaking.
+错：直接当垃圾处理 | 衣服是捐出去，不是当垃圾。 | Clothes are donated, not binned.
 问：关于上门服务，可以知道什么？
+据：男的说“市区范围内免费”。 | He says it is free within the city.
 答：市区内不收费
-错：每次收五十块
-错：需要等一个星期
-错：只回收衣服
+错：每次收五十块 | 是免费，不收五十块。 | Free, not fifty.
+错：需要等一个星期 | 男的说明天下午联系，不是一个星期。 | He will call tomorrow afternoon, not in a week.
+错：只回收衣服 | 冰箱也上门检查回收。 | Fridges are collected too.
 `,
   },
   passages: {

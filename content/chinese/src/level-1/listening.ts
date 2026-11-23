@@ -4,7 +4,7 @@
 // are made by tools/audio from the words and sentences of the unit, so the topics need no data of their own.
 
 import { type Generator, heardResponse, type Problem, type Rng, same, slimmed, type Text, type TopicDef, t } from "@ga/content";
-import { point, toneless } from "@ga/subject-chinese";
+import { point, toneless, zhQuote } from "@ga/subject-chinese";
 
 import { heard } from "../audio.ts";
 import type { LevelOneCharacter } from "./characters.ts";
@@ -69,7 +69,7 @@ function choiceProblem(fields: Pick<Problem, "prompt" | "listen" | "solution">, 
 }
 
 /** Item is a word or sentence to play, the word that is right and two that are wrong. */
-interface Item {
+export interface Item {
   readonly word: LevelOneWord;
   readonly wrong: readonly [LevelOneWord, LevelOneWord];
 }
@@ -113,8 +113,142 @@ export const fromBank =
   (rng) =>
     rng.cycle(bank)(rng);
 
+const ORDINALS = ["first", "second", "third", "fourth", "fifth", "sixth"];
+
+/** ordinal names a syllable's place in a word, counting from 0. */
+const ordinal = (k: number): Text => t(ORDINALS[k] ?? `${k + 1}th`, `第${"一二三四五六"[k] ?? k + 1}个`);
+
+/** contrast tells how a word offered against a word heard sounds different from it: its count of syllables, or the first syllable that differs. */
+function contrast(heardWord: LevelOneWord, other: LevelOneWord): Text {
+  const h = heardWord.syllables;
+  const o = other.syllables;
+  const p = pinyinOf(o);
+  if (h.length !== o.length)
+    return t(
+      `**${other.word}** ${p} has ${o.length} syllable${o.length === 1 ? "" : "s"}, not ${h.length}`,
+      `“${other.word}”${p}有${o.length}个音节，不是${h.length}个`,
+    );
+  const k = Math.max(
+    0,
+    h.findIndex((x, i) => x !== o[i]),
+  );
+  const sameBase = toneless(h[k] ?? "") === toneless(o[k] ?? "");
+  const place = ordinal(k);
+  return sameBase
+    ? t(
+        `**${other.word}** ${p} has the same ${place.en} syllable in another tone: ${o[k]}, not ${h[k]}`,
+        `“${other.word}”${p}的${place["zh-CN"]}音节声调不同：是 ${o[k]}，不是 ${h[k]}`,
+      )
+    : t(
+        `**${other.word}** ${p} has ${o[k]} as its ${place.en} syllable, not ${h[k]}`,
+        `“${other.word}”${p}的${place["zh-CN"]}音节是 ${o[k]}，不是 ${h[k]}`,
+      );
+}
+
+/** syllableList spells a word's syllables one by one. */
+const syllableList = (w: LevelOneWord): Text => t(w.syllables.join(", "), w.syllables.join("、"));
+
+/** marked is a sentence with its word in bold. */
+const marked = (w: LevelOneWord): string => filled(w).replace(w.word, `**${w.word}**`);
+
+/** around is a word in its sentence with the characters said next to it: up to two before and one after. */
+function around(w: LevelOneWord): string {
+  const s = [...filled(w)];
+  const n = [...w.word].length;
+  const at = [...w.sentence.split(GAP)[0]!].length;
+  const han = (c: string | undefined) => c !== undefined && /\p{Script=Han}/u.test(c);
+  let from = at;
+  while (from > at - 2 && han(s[from - 1])) from--;
+  const to = han(s[at + n]) ? at + n + 1 : at + n;
+  return s.slice(from, to).join("");
+}
+
+/** foundIn says where a word's syllables are heard in its sentence: one syllable, or several one after another. */
+function foundIn(w: LevelOneWord): Text {
+  const where = around(w);
+  return w.syllables.length === 1
+    ? t(`you hear ${w.syllables[0]} in ${where}`, `在“${where}”里听到了 ${w.syllables[0]}`)
+    : t(`you hear ${w.syllables.join(" ")} one after another in ${where}`, `在“${where}”里连着听到了 ${w.syllables.join(" ")}`);
+}
+
+/** absent says how a word offered against a sentence would sound, and that the sentence has no such sound, so it can be checked against the recording. */
+function absent(o: LevelOneWord): Text {
+  const p = pinyinOf(o.syllables);
+  return o.syllables.length === 1
+    ? t(
+        `**${o.word}** would be ${p}, and the sentence has no ${p}, nor ${toneless(p)} in another tone`,
+        `“${o.word}”读 ${p}，句子里没有 ${p}，别的声调的 ${toneless(p)} 也没有`,
+      )
+    : t(
+        `**${o.word}** would be ${p}, and the sentence never has ${o.syllables.join(" ")} together`,
+        `“${o.word}”读 ${p}，句子里没有连着出现 ${o.syllables.join(" ")}`,
+      );
+}
+
+/**
+ * wordCheck checks a word heard alone. A word of several syllables is said back against the recording a syllable at a
+ * time; a word of one syllable, which that would only repeat, is put back into its sentence and read for its meaning.
+ */
+function wordCheck(w: LevelOneWord): Text {
+  const p = pinyinOf(w.syllables);
+  return w.syllables.length === 1
+    ? t(
+        `**Check.** Put **${w.word}** ${p} back into a sentence of this unit and read it for sense: ${marked(w)} There it means "${w.meaning.en}", and the sentence makes sense.`,
+        `**检验。** 把“${w.word}”${p}放回本单元的句子里读一读：${marked(w)}在这里它的意思是${zhQuote(w.meaning["zh-CN"])}，句子说得通。`,
+      )
+    : t(
+        `**Check.** Say ${p} back against the recording, a syllable at a time: ${syllableList(w).en}. Every syllable and tone matches, and **${w.word}** means "${w.meaning.en}".`,
+        `**检验。** 对着录音，一个音节一个音节地说一遍 ${p}：${syllableList(w)["zh-CN"]}。每个音节和声调都对得上，“${w.word}”的意思正是${zhQuote(w.meaning["zh-CN"])}。`,
+      );
+}
+
+/** ListeningExample is a turn of each knowledge point, to explain them with. */
+export interface ListeningExample {
+  /** word is a word heard alone with the two offered against it. */
+  readonly word: Item;
+  /** sentence is a word heard in its sentence with the two offered against it. */
+  readonly sentence: Item;
+  /** alike are two words of the unit that start with the same syllable, if there are any. */
+  readonly alike?: readonly [LevelOneWord, LevelOneWord];
+}
+
+/** wordsExplanation explains hearing a word alone with an example turn. */
+export function wordsExplanation(ex: ListeningExample): Text {
+  const { word: w, wrong } = ex.word;
+  const [a, b] = wrong;
+  const p = pinyinOf(w.syllables);
+  const alike = ex.alike;
+  const watch = alike
+    ? t(
+        `> **Watch out.** Do not choose after the first syllable: **${alike[0].word}** ${pinyinOf(alike[0].syllables)} and **${alike[1].word}** ${pinyinOf(alike[1].syllables)} start alike. Hear the word to its last syllable.`,
+        `> **注意。** 不要只听第一个音节就选：“${alike[0].word}”${pinyinOf(alike[0].syllables)}和“${alike[1].word}”${pinyinOf(alike[1].syllables)}开头一样。要把词听到最后一个音节。`,
+      )
+    : t(
+        `> **Watch out.** Do not choose after the first syllable: hear the word to its last syllable, tone and all, before you look at the meanings.`,
+        `> **注意。** 不要只听第一个音节就选：把词连同声调听到最后一个音节，再看意思。`,
+      );
+  return t(
+    `A word is played and you do not see it. Count its syllables and hear the tone of each, then match the sound to a meaning. Take a recording of **${w.word}**: you hear ${w.syllables.length} syllable${w.syllables.length === 1 ? "" : "s"}, ${syllableList(w).en}, so it is ${p}, which means "${w.meaning.en}". Against it you might see "${a.meaning.en}", but ${contrast(w, a).en}; and "${b.meaning.en}", but ${contrast(w, b).en}. You can play the recording again as often as you like.\n\n${watch.en}`,
+    `播放一个词，你看不到它。先数有几个音节，听清每个音节的声调，再把听到的音和意思对上。比如录音里是 **${w.word}**：听到${w.syllables.length}个音节，${syllableList(w)["zh-CN"]}，就是 ${p}，意思是${zhQuote(w.meaning["zh-CN"])}。选项里可能有${zhQuote(a.meaning["zh-CN"])}，可是${contrast(w, a)["zh-CN"]}；还有${zhQuote(b.meaning["zh-CN"])}，可是${contrast(w, b)["zh-CN"]}。录音可以反复播放。\n\n${watch["zh-CN"]}`,
+  );
+}
+
+/** sentencesExplanation explains hearing a word in a sentence with an example turn. */
+export function sentencesExplanation(ex: ListeningExample): Text {
+  const { word: w, wrong } = ex.sentence;
+  const [a] = wrong;
+  return t(
+    `A sentence is played and you do not see it. Hear it to the end, then look for each word offered: is it there, every syllable in turn? Take the sentence ${filled(w)} Here ${foundIn(w).en}, so **${w.word}** was said. ${absent(a).en}, so it was not.\n\n> **Watch out.** In speech words run together, and one syllable of a word may turn up inside another word. Count a word as heard only when all its syllables come one after another.`,
+    `播放一个句子，你看不到它。先听完整句，再看每个选项：它的每个音节是不是依次出现了？比如句子“${filled(w)}”，${foundIn(w)["zh-CN"]}，所以说到了 **${w.word}**。${absent(a)["zh-CN"]}，所以没有说到它。\n\n> **注意。** 说话时词和词连在一起，一个词的某个音节可能出现在别的词里。只有一个词的几个音节都连着出现，才算听到了这个词。`,
+  );
+}
+
 /** listeningBanks are the problems of a unit's listening: a word heard by its meaning, and a word heard in a sentence. */
-export function listeningBanks(spec: UnitSpeechSpec): { readonly hearWord: readonly Asked[]; readonly hearSentence: readonly Asked[] } {
+export function listeningBanks(spec: UnitSpeechSpec): {
+  readonly hearWord: readonly Asked[];
+  readonly hearSentence: readonly Asked[];
+  readonly example: ListeningExample;
+} {
   const id = levelListeningId(spec.level, spec.unit);
   const { words, chars } = spec;
   const pinyin = (w: LevelOneWord) => pinyinOf(w.syllables);
@@ -128,7 +262,8 @@ export function listeningBanks(spec: UnitSpeechSpec): { readonly hearWord: reado
     }
     return s;
   };
-  const sameSound = (a: LevelOneWord, b: LevelOneWord) => soundOf(a.word).join(" ") === soundOf(b.word).join(" ");
+  const sameSound = (a: LevelOneWord, b: LevelOneWord) =>
+    soundOf(a.word).join(" ") === soundOf(b.word).join(" ") || a.syllables.map(toneless).join(" ") === b.syllables.map(toneless).join(" ");
 
   const byWord = items(words, (w, o) => !sameSound(w, o) && o.meaning.en !== w.meaning.en && o.meaning["zh-CN"] !== w.meaning["zh-CN"]);
   ensure(id, "words", byWord.length);
@@ -141,8 +276,8 @@ export function listeningBanks(spec: UnitSpeechSpec): { readonly hearWord: reado
             prompt: t("Listen. What does the word you hear mean?", "听录音。你听到的词是什么意思？"),
             listen: [heard(word.word)],
             solution: t(
-              `You hear **${word.word}** ${pinyin(word)}, which means “${word.meaning.en}”.`,
-              `你听到的是 **${word.word}** ${pinyin(word)}，意思是“${word.meaning["zh-CN"]}”。`,
+              `You hear ${word.syllables.length} syllable${word.syllables.length === 1 ? "" : "s"}, ${syllableList(word).en}: the word **${word.word}** ${pinyin(word)}, which means "${word.meaning.en}".\n\n${wrong.map((o) => `"${o.meaning.en}" is not it: ${contrast(word, o).en}.`).join("\n\n")}\n\n${wordCheck(word).en}`,
+              `你听到${word.syllables.length}个音节，${syllableList(word)["zh-CN"]}：是 **${word.word}** ${pinyin(word)}，意思是${zhQuote(word.meaning["zh-CN"])}。\n\n${wrong.map((o) => `${zhQuote(o.meaning["zh-CN"])}不对：${contrast(word, o)["zh-CN"]}。`).join("\n\n")}\n\n${wordCheck(word)["zh-CN"]}`,
             ),
           },
           rng,
@@ -171,14 +306,22 @@ export function listeningBanks(spec: UnitSpeechSpec): { readonly hearWord: reado
       {
         prompt: t("Listen to the sentence. Which of these words do you hear in it?", "听句子。你在句子里听到了下面哪个词？"),
         listen: [heard(s)],
-        solution: t(`You hear:\n\n> ${s}\n\nThe word is **${word.word}**.`, `你听到的是：\n\n> ${s}\n\n这个词是 **${word.word}**。`),
+        solution: t(
+          `You hear:\n\n> ${s}\n\nIn it ${foundIn(word).en}: the word is **${word.word}** ${pinyin(word)}.\n\n${wrong.map((o) => `${absent(o).en}.`).join("\n\n")}\n\n**Check.** Read the sentence again and stop at the word: ${marked(word)} There **${word.word}** is said whole, ${pinyin(word)}.`,
+          `你听到的是：\n\n> ${s}\n\n句子里，${foundIn(word)["zh-CN"]}：这个词是 **${word.word}** ${pinyin(word)}。\n\n${wrong.map((o) => `${absent(o)["zh-CN"]}。`).join("\n\n")}\n\n**检验。** 再读一遍句子，停在这个词上：${marked(word)}这里完整地说出了“${word.word}”，${pinyin(word)}。`,
+        ),
       },
       rng,
       same(word.word),
       wrong.map((o) => same(o.word)),
     );
   });
-  return { hearWord, hearSentence };
+  const toneless1 = (w: LevelOneWord) => toneless(w.syllables[0] ?? "");
+  const alike = words.flatMap((w, i) =>
+    words.slice(i + 1).flatMap((o): [LevelOneWord, LevelOneWord][] => (toneless1(w) === toneless1(o) && w.word !== o.word ? [[w, o]] : [])),
+  )[0];
+  const example: ListeningExample = { word: byWord[0]!, sentence: inSentence[0]!, ...(alike ? { alike } : {}) };
+  return { hearWord, hearSentence, example };
 }
 
 /** specs are the units of each level, by level, filled as the levels are planned: the HSK courses mix them. */
@@ -199,7 +342,9 @@ export function unitSpeechSpecs(level: number): readonly UnitSpeechSpec[] {
 /** buildUnitListeningTopic builds the listening topic of a unit: a word heard by its meaning, then a word heard in a sentence. */
 function buildUnitListeningTopic(spec: UnitSpeechSpec): TopicDef {
   const id = levelListeningId(spec.level, spec.unit);
-  const { hearWord, hearSentence } = listeningBanks(spec);
+  const { hearWord, hearSentence, example } = listeningBanks(spec);
+  const w = example.word.word;
+  const sw = example.sentence.word;
 
   return {
     id,
@@ -211,29 +356,17 @@ function buildUnitListeningTopic(spec: UnitSpeechSpec): TopicDef {
       `Hearing the words of the unit ${spec.theme.en}, alone and in sentences, without seeing them.`,
       `不看文字，听懂“${spec.theme["zh-CN"]}”单元的词语，单说的和在句子里的。`,
     ),
+    intro: t(
+      `Take **${w.word}** ${pinyinOf(w.syllables)}: here you hear it played without seeing it, and choose what it means, "${w.meaning.en}". Then you hear the unit's words in their sentences, as in ${filled(sw)}, and pick out the word that was said, **${sw.word}**. Listen for every syllable and its tone; you can play each recording as often as you like.`,
+      `比如 **${w.word}** ${pinyinOf(w.syllables)}：这里只听录音、不看文字，选出它的意思${zhQuote(w.meaning["zh-CN"])}。然后听本单元的词语在句子里怎么说，比如“${filled(sw)}”，找出句子里说到的词“${sw.word}”。要听清每个音节和它的声调；录音可以反复播放。`,
+    ),
     prerequisites: [spec.after],
     encompasses: [],
     xp: 10,
     strand: "listening",
     knowledgePoints: [
-      point(
-        `${id}-words`,
-        t("Words You Hear", "听词语"),
-        t(
-          "A word of this unit is played; you do not see it. Listen to every syllable and its tone: words of the unit may sound alike but for one tone. Then choose what it means. You can play it again as often as you like.",
-          "播放本单元的一个词，你看不到它。注意听每个音节和它的声调：本单元有些词只差一个声调。然后选出它的意思。录音可以反复播放。",
-        ),
-        fromBank(hearWord),
-      ),
-      point(
-        `${id}-sentences`,
-        t("Words in Sentences", "句子里的词"),
-        t(
-          "A sentence with a word of this unit is played; you do not see it. Listen to the whole sentence first, then think which of the three words was in it. In speech, words run together: listen for the syllables of each word one after another.",
-          "播放一个含有本单元词语的句子，你看不到句子。先听完整个句子，再想三个词里哪一个出现过。说话时词和词连在一起，注意听每个词的几个音节是不是连着出现。",
-        ),
-        fromBank(hearSentence),
-      ),
+      point(`${id}-words`, t("Words You Hear", "听词语"), wordsExplanation(example), fromBank(hearWord)),
+      point(`${id}-sentences`, t("Words in Sentences", "句子里的词"), sentencesExplanation(example), fromBank(hearSentence)),
     ],
   };
 }
