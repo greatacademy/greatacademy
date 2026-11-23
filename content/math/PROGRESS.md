@@ -196,8 +196,8 @@ Stage 2: AP Calculus AB and BC, Calculus I and II. Counts are topics of these co
 | `calculus-ii-polar.ts` | 10 | done | |  |
 | `calculus-ii-vectors.ts` | 8 | done | |  |
 | `calculus-ii-sequences.ts` | 19 | done | |  |
-| `calculus-ii-convergence.ts` | 13 | in progress | |  |
-| `calculus-ii-taylor.ts` | 14 | in progress | |  |
+| `calculus-ii-convergence.ts` | 13 | done | |  |
+| `calculus-ii-taylor.ts` | 14 | done | |  |
 | `ap-calculus-technology.ts` | 9 | done | |  |
 | other files | 18 | done | | Already taught by earlier stages when checked on 2026-11-23 |
 
