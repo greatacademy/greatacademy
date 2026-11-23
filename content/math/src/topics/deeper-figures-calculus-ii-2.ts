@@ -740,8 +740,8 @@ const parametricSlope = point(
   "the-slope-at-a-marked-point-of-a-drawn-parametric-curve",
   ["The slope at a marked point of a drawn parametric curve", "所画参数曲线上标记点处的斜率"],
   [
-    "On $x = a\\cos t$, $y = b\\sin t$, the slope is $\\frac{dy}{dx} = \\frac{b\\cos t}{-a\\sin t}$. Read $a$ and $b$ from where the curve meets the axes, then get $\\cos t = \\frac{x}{a}$ and $\\sin t = \\frac{y}{b}$ from the marked point.",
-    "在 $x = a\\cos t$，$y = b\\sin t$ 上，斜率为 $\\frac{dy}{dx} = \\frac{b\\cos t}{-a\\sin t}$。由曲线与坐标轴的交点读出 $a$、$b$，再由标记点得 $\\cos t = \\frac{x}{a}$，$\\sin t = \\frac{y}{b}$。",
+    "On $x = a\\cos t$, $y = b\\sin t$ the slope is the quotient of the two rates:\n\n$$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt} = \\frac{b\\cos t}{-a\\sin t}$$\n\nRead $a$ and $b$ from where the curve meets the axes, then get $\\cos t = \\frac{x}{a}$ and $\\sin t = \\frac{y}{b}$ from the marked point. For example, on the ellipse with $a = 10$ and $b = 5$ through $P(6, 4)$, $\\cos t = \\frac{3}{5}$ and $\\sin t = \\frac{4}{5}$, so the slope is $\\frac{3}{-8} = -\\frac{3}{8}$.\n\nCheck: the ellipse is $\\frac{x^{2}}{100} + \\frac{y^{2}}{25} = 1$, and implicit differentiation gives $\\frac{dy}{dx} = -\\frac{25x}{100y} = -\\frac{150}{400}$, which is $-\\frac{3}{8}$.\n\n> **Watch out.** Divide $\\frac{dy}{dt}$ by $\\frac{dx}{dt}$, not the other way round, and keep the minus sign from the derivative of $\\cos t$.",
+    "在 $x = a\\cos t$，$y = b\\sin t$ 上，斜率是两个变化率之商：\n\n$$\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt} = \\frac{b\\cos t}{-a\\sin t}$$\n\n由曲线与坐标轴的交点读出 $a$、$b$，再由标记点得 $\\cos t = \\frac{x}{a}$，$\\sin t = \\frac{y}{b}$。例如，在 $a = 10$、$b = 5$ 且过 $P(6, 4)$ 的椭圆上，$\\cos t = \\frac{3}{5}$，$\\sin t = \\frac{4}{5}$，所以斜率是 $\\frac{3}{-8} = -\\frac{3}{8}$。\n\n检验：椭圆是 $\\frac{x^{2}}{100} + \\frac{y^{2}}{25} = 1$，隐函数求导得 $\\frac{dy}{dx} = -\\frac{25x}{100y} = -\\frac{150}{400}$，即 $-\\frac{3}{8}$。\n\n> **注意。** 要用 $\\frac{dy}{dt}$ 除以 $\\frac{dx}{dt}$，不要反过来；还要保留 $\\cos t$ 求导带来的负号。",
   ],
   (rng) => {
     const a = rng.pick([5, 10]);
@@ -755,18 +755,79 @@ const parametricSlope = point(
     const px = (a * cs) / 5;
     const py = (b * sn) / 5;
     const slope = Q.of(-b * cs, a * sn);
-    return ask(
-      [
-        "The curve is traced by $x = a\\cos t$, $y = b\\sin t$ with positive $a$ and $b$. Find $\\frac{dy}{dx}$ at the marked point $P$.",
-        "曲线由 $x = a\\cos t$，$y = b\\sin t$ 描出，$a$、$b$ 为正。求标记点 $P$ 处的 $\\frac{dy}{dx}$。",
-      ],
-      slope,
-      [slope.neg(), Q.of(a * sn, b * cs), Q.of(-py, px), Q.of(py, px), Q.of(-a * cs, b * sn)],
-      [
-        `Here $a = ${a}$, $b = ${b}$, $\\cos t = ${Q.of(cs, 5).toLatex()}$ and $\\sin t = ${Q.of(sn, 5).toLatex()}$. So $\\frac{dy}{dx} = \\frac{b\\cos t}{-a\\sin t} = ${slope.toLatex()}$.`,
-        `这里 $a = ${a}$，$b = ${b}$，$\\cos t = ${Q.of(cs, 5).toLatex()}$，$\\sin t = ${Q.of(sn, 5).toLatex()}$。所以 $\\frac{dy}{dx} = \\frac{b\\cos t}{-a\\sin t} = ${slope.toLatex()}$。`,
-      ],
-      drawn(
+    const cosT = Q.of(cs, 5).toLatex();
+    const sinT = Q.of(sn, 5).toLatex();
+    const dxdt = Q.of(-a * sn, 5);
+    const dydt = Q.of(b * cs, 5);
+    const all = [
+      {
+        value: slope.neg(),
+        why: t(
+          "The sign is wrong: the derivative of $a\\cos t$ is $-a\\sin t$, with a minus sign.",
+          "符号错了：$a\\cos t$ 的导数是 $-a\\sin t$，带有负号。",
+        ),
+      },
+      {
+        value: Q.of(-a * sn, b * cs),
+        why: t(
+          "This divides $\\frac{dx}{dt}$ by $\\frac{dy}{dt}$, which gives $\\frac{dx}{dy}$; the slope is $\\frac{dy}{dt}$ over $\\frac{dx}{dt}$.",
+          "这里用 $\\frac{dx}{dt}$ 除以 $\\frac{dy}{dt}$，得到的是 $\\frac{dx}{dy}$；斜率是 $\\frac{dy}{dt}$ 除以 $\\frac{dx}{dt}$。",
+        ),
+      },
+      {
+        value: Q.of(py, px),
+        why: t(
+          `This is $\\frac{y}{x}$, the slope of the segment from the origin to $P$, not of the tangent.`,
+          `这是 $\\frac{y}{x}$，即从原点到 $P$ 的线段的斜率，不是切线的斜率。`,
+        ),
+      },
+      {
+        value: Q.of(-px, py),
+        why: t(
+          `This is $-\\frac{x}{y}$, the tangent slope of a circle; on this ellipse the semi-axes $${a}$ and $${b}$ differ.`,
+          `这是 $-\\frac{x}{y}$，即圆的切线斜率；这个椭圆的半轴 $${a}$ 和 $${b}$ 不相等。`,
+        ),
+      },
+    ];
+    const mistakes = all.filter((m, i) => !m.value.eq(slope) && all.findIndex((n) => n.value.eq(m.value)) === i);
+    return {
+      ...numberProblem({
+        prompt: t(
+          "The curve is traced by $x = a\\cos t$, $y = b\\sin t$ with positive $a$ and $b$. Find $\\frac{dy}{dx}$ at the marked point $P$.",
+          "曲线由 $x = a\\cos t$，$y = b\\sin t$ 描出，$a$、$b$ 为正。求标记点 $P$ 处的 $\\frac{dy}{dx}$。",
+        ),
+        answer: slope,
+        mistakes,
+        solution: walked(
+          [
+            [
+              ["Read the drawing", "读图"],
+              t(
+                `The curve meets the $x$-axis at $\\pm ${a}$ and the $y$-axis at $\\pm ${b}$, so $a = ${a}$ and $b = ${b}$. The point is $P(${px}, ${py})$, so`,
+                `曲线与 $x$ 轴交于 $\\pm ${a}$，与 $y$ 轴交于 $\\pm ${b}$，所以 $a = ${a}$，$b = ${b}$。点是 $P(${px}, ${py})$，所以`,
+              ),
+              [`\\cos t = \\frac{${px}}{${a}} = ${cosT}, \\quad \\sin t = \\frac{${py}}{${b}} = ${sinT}`],
+            ],
+            [
+              ["Find the rates", "求变化率"],
+              t("Differentiate both coordinates and put in these values:", "对两个坐标求导，代入这些值："),
+              [`\\frac{dx}{dt} = -${a}\\sin t = ${dxdt.toLatex()}, \\quad \\frac{dy}{dt} = ${b}\\cos t = ${dydt.toLatex()}`],
+            ],
+            [
+              ["Divide", "相除"],
+              t("The slope is the quotient of the rates:", "斜率是两个变化率之商："),
+              [
+                `\\frac{dy}{dx} = ${dydt.toLatex()} \\div ${dxdt.sign() < 0 ? `\\left(${dxdt.toLatex()}\\right)` : dxdt.toLatex()} = ${slope.toLatex()}`,
+              ],
+            ],
+          ],
+          t(
+            `Eliminate $t$ instead. Since $\\cos^{2} t + \\sin^{2} t = 1$, the curve is $${b * b}x^{2} + ${a * a}y^{2} = ${a * a * b * b}$. Differentiating implicitly,\n\n$$\\frac{dy}{dx} = -\\frac{${b * b}x}{${a * a}y} = -\\frac{${b * b} \\cdot ${px < 0 ? `(${px})` : px}}{${a * a} \\cdot ${py < 0 ? `(${py})` : py}} = ${slope.toLatex()}$$\n\nThis agrees with the parametric route.`,
+            `改为消去 $t$。由 $\\cos^{2} t + \\sin^{2} t = 1$，曲线是 $${b * b}x^{2} + ${a * a}y^{2} = ${a * a * b * b}$。隐函数求导，\n\n$$\\frac{dy}{dx} = -\\frac{${b * b}x}{${a * a}y} = -\\frac{${b * b} \\cdot ${px < 0 ? `(${px})` : px}}{${a * a} \\cdot ${py < 0 ? `(${py})` : py}} = ${slope.toLatex()}$$\n\n这与参数方法的结果一致。`,
+          ),
+        ),
+      }),
+      figure: drawn(
         ellipseView,
         [
           { kind: "path", points: arc(0, 0, 1, 0, 2 * Math.PI).map(([u, v]): Point => [a * u, b * v]), accent: true },
@@ -777,7 +838,7 @@ const parametricSlope = point(
           `半轴为 ${a} 和 ${b} 的椭圆，点 P 位于 (${px}, ${py})。`,
         ),
       ),
-    );
+    };
   },
 );
 
@@ -786,29 +847,90 @@ const parametricArea = {
     "the-area-inside-a-drawn-parametric-ellipse",
     ["The area inside a drawn parametric ellipse", "所画参数椭圆内的面积"],
     [
-      "The area inside a closed parametric curve is $\\left|\\int y\\,\\frac{dx}{dt}\\,dt\\right|$ over one loop. For $x = a\\cos t$, $y = b\\sin t$, the integral is $ab\\int_0^{2\\pi}\\sin^2 t\\,dt = \\pi ab$. A circle is the special case $a = b$, which gives the familiar $\\pi r^2$.",
-      "闭合参数曲线内的面积是一圈上的 $\\left|\\int y\\,\\frac{dx}{dt}\\,dt\\right|$。对 $x = a\\cos t$，$y = b\\sin t$，积分为 $ab\\int_0^{2\\pi}\\sin^2 t\\,dt = \\pi ab$。圆是 $a = b$ 的特例，得到熟悉的 $\\pi r^2$。",
+      "The area inside a closed parametric curve is $\\left|\\int y\\,\\frac{dx}{dt}\\,dt\\right|$ over one loop. For $x = a\\cos t$, $y = b\\sin t$,\n\n$$\\int_{0}^{2\\pi} b\\sin t \\cdot (-a\\sin t) \\, dt = -ab\\int_{0}^{2\\pi} \\sin^{2} t \\, dt = -\\pi ab$$\n\nSo the area is $\\pi ab$. For example, the ellipse with $a = 3$ and $b = 2$ encloses $6\\pi$. A circle is the special case $a = b$, which gives the familiar $\\pi r^{2}$.\n\nCheck: the area is also $\\frac{1}{2}\\oint (x\\,dy - y\\,dx)$. Here $x\\frac{dy}{dt} - y\\frac{dx}{dt} = 6\\cos^{2} t + 6\\sin^{2} t = 6$, and $\\frac{1}{2} \\cdot 6 \\cdot 2\\pi = 6\\pi$.\n\n> **Watch out.** Traced counterclockwise, $\\int y\\,\\frac{dx}{dt}\\,dt$ is negative, because $x$ decreases along the upper half. Take its absolute value; an area is never negative.",
+      "闭合参数曲线内的面积是一圈上的 $\\left|\\int y\\,\\frac{dx}{dt}\\,dt\\right|$。对 $x = a\\cos t$，$y = b\\sin t$，\n\n$$\\int_{0}^{2\\pi} b\\sin t \\cdot (-a\\sin t) \\, dt = -ab\\int_{0}^{2\\pi} \\sin^{2} t \\, dt = -\\pi ab$$\n\n所以面积是 $\\pi ab$。例如，$a = 3$、$b = 2$ 的椭圆围成 $6\\pi$。圆是 $a = b$ 的特例，得到熟悉的 $\\pi r^{2}$。\n\n检验：面积也等于 $\\frac{1}{2}\\oint (x\\,dy - y\\,dx)$。这里 $x\\frac{dy}{dt} - y\\frac{dx}{dt} = 6\\cos^{2} t + 6\\sin^{2} t = 6$，而 $\\frac{1}{2} \\cdot 6 \\cdot 2\\pi = 6\\pi$。\n\n> **注意。** 逆时针描出时 $\\int y\\,\\frac{dx}{dt}\\,dt$ 是负的，因为沿上半部分 $x$ 在减小。要取绝对值；面积不会是负数。",
     ],
     (rng) => {
       const a = rng.int(1, 7);
       const b = rng.pick([1, 2, 3, 4, 5, 6, 7].filter((v) => v !== a));
-      return ask(
-        [
-          "The curve is traced once by $x = a\\cos t$, $y = b\\sin t$, for $0 \\le t \\le 2\\pi$, with positive $a$ and $b$. Find the area inside it divided by $\\pi$.",
-          "曲线由 $x = a\\cos t$，$y = b\\sin t$（$0 \\le t \\le 2\\pi$）描出一圈，$a$、$b$ 为正。求它内部的面积除以 $\\pi$。",
-        ],
-        a * b,
-        [a + b, 2 * a * b, 4 * a * b, a * a, b * b, Q.of(a * b, 2)],
-        [
-          `The curve meets the axes at $a = ${a}$ and $b = ${b}$. The area is $\\pi ab = ${a * b}\\pi$.`,
-          `曲线与坐标轴的交点给出 $a = ${a}$，$b = ${b}$。面积为 $\\pi ab = ${a * b}\\pi$。`,
-        ],
-        drawn(
+      const answer = a * b;
+      const co = (n: number) => (n === 1 ? "" : `${n}`);
+      const all = [
+        {
+          value: a + b,
+          why: t("This adds the semi-axes; the area $\\pi ab$ multiplies them.", "这里把两个半轴相加了；面积 $\\pi ab$ 是把它们相乘。"),
+        },
+        {
+          value: 4 * a * b,
+          why: t(
+            `This uses the full axes $${2 * a}$ and $${2 * b}$; the formula $\\pi ab$ takes the semi-axes, from the centre to the curve.`,
+            `这里用了整条轴长 $${2 * a}$ 和 $${2 * b}$；公式 $\\pi ab$ 用的是半轴，即从中心到曲线的距离。`,
+          ),
+        },
+        {
+          value: 2 * a * b,
+          why: t(
+            "This takes $\\int_{0}^{2\\pi} \\sin^{2} t \\, dt$ as $2\\pi$; since $\\sin^{2} t$ averages $\\frac{1}{2}$, it is $\\pi$.",
+            "这里把 $\\int_{0}^{2\\pi} \\sin^{2} t \\, dt$ 当成了 $2\\pi$；$\\sin^{2} t$ 的平均值是 $\\frac{1}{2}$，所以它等于 $\\pi$。",
+          ),
+        },
+        {
+          value: a * a,
+          why: t(
+            `This is the disc of radius $${a}$; the curve reaches only $${b}$ along the $y$-axis.`,
+            `这是半径为 $${a}$ 的圆盘；曲线沿 $y$ 轴只到 $${b}$。`,
+          ),
+        },
+      ];
+      const mistakes = all.filter((m, i) => m.value !== answer && all.findIndex((n) => n.value === m.value) === i);
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The curve is traced once by $x = a\\cos t$, $y = b\\sin t$, for $0 \\le t \\le 2\\pi$, with positive $a$ and $b$. Find the area inside it divided by $\\pi$.",
+            "曲线由 $x = a\\cos t$，$y = b\\sin t$（$0 \\le t \\le 2\\pi$）描出一圈，$a$、$b$ 为正。求它内部的面积除以 $\\pi$。",
+          ),
+          answer,
+          form: "integer",
+          mistakes,
+          solution: walked(
+            [
+              [
+                ["Read the drawing", "读图"],
+                t(
+                  `The curve meets the $x$-axis at $\\pm ${a}$ and the $y$-axis at $\\pm ${b}$, so $a = ${a}$ and $b = ${b}$.`,
+                  `曲线与 $x$ 轴交于 $\\pm ${a}$，与 $y$ 轴交于 $\\pm ${b}$，所以 $a = ${a}$，$b = ${b}$。`,
+                ),
+              ],
+              [
+                ["Integrate over one loop", "在一圈上积分"],
+                t(
+                  `Here $\\frac{dx}{dt} = -${co(a)}\\sin t$, and $\\sin^{2} t$ averages $\\frac{1}{2}$ over a whole turn:`,
+                  `这里 $\\frac{dx}{dt} = -${co(a)}\\sin t$，而 $\\sin^{2} t$ 在一整圈上的平均值是 $\\frac{1}{2}$：`,
+                ),
+                [
+                  `\\int_{0}^{2\\pi} ${co(b)}\\sin t \\cdot \\left(-${co(a)}\\sin t\\right) dt = -${answer}\\int_{0}^{2\\pi} \\sin^{2} t \\, dt = -${answer}\\pi`,
+                ],
+              ],
+              [
+                ["Take the absolute value", "取绝对值"],
+                t(
+                  `The negative sign only records that $x$ decreases along the upper half. The area is $${answer}\\pi$, and divided by $\\pi$ it is $${answer}$.`,
+                  `负号只说明沿上半部分 $x$ 在减小。面积是 $${answer}\\pi$。除以 $\\pi$ 得 $${answer}$。`,
+                ),
+              ],
+            ],
+            t(
+              `Use the symmetric formula $\\frac{1}{2}\\oint (x\\,dy - y\\,dx)$ instead. Here\n\n$$x\\frac{dy}{dt} - y\\frac{dx}{dt} = ${answer}\\cos^{2} t + ${answer}\\sin^{2} t = ${answer}$$\n\nSo the area is $\\frac{1}{2} \\cdot ${answer} \\cdot 2\\pi = ${answer}\\pi$.`,
+              `改用对称的公式 $\\frac{1}{2}\\oint (x\\,dy - y\\,dx)$。这里\n\n$$x\\frac{dy}{dt} - y\\frac{dx}{dt} = ${answer}\\cos^{2} t + ${answer}\\sin^{2} t = ${answer}$$\n\n所以面积为 $\\frac{1}{2} \\cdot ${answer} \\cdot 2\\pi = ${answer}\\pi$。`,
+            ),
+          ),
+        }),
+        figure: drawn(
           { xMin: -8, xMax: 8, yMin: -8, yMax: 8 },
           [{ kind: "path", points: arc(0, 0, 1, 0, 2 * Math.PI).map(([u, v]): Point => [a * u, b * v]), accent: true }],
           t(`An ellipse with semi-axes ${a} and ${b}.`, `半轴为 ${a} 和 ${b} 的椭圆。`),
         ),
-      );
+      };
     },
   ),
   figure: calculusDrawings5["calculating-areas-bounded-by-parametric-functions#the-area-inside-a-drawn-parametric-ellipse"],
@@ -819,8 +941,8 @@ const parametricLength = {
     "the-length-of-a-drawn-arc-traced-parametrically",
     ["The length of a drawn arc traced parametrically", "参数曲线所画圆弧的长度"],
     [
-      "For a curve $x(t)$, $y(t)$, the length is $\\int \\sqrt{x'(t)^2 + y'(t)^2}\\,dt$. On $x = R\\cos t$, $y = R\\sin t$, the integrand is the constant $R$, so the length is $R$ times the range of $t$.",
-      "对曲线 $x(t)$、$y(t)$，长度为 $\\int \\sqrt{x'(t)^2 + y'(t)^2}\\,dt$。在 $x = R\\cos t$，$y = R\\sin t$ 上，被积函数是常数 $R$，所以长度等于 $R$ 乘 $t$ 的范围。",
+      "For a curve $x(t)$, $y(t)$, the length is $\\int \\sqrt{x'(t)^{2} + y'(t)^{2}}\\,dt$. On $x = R\\cos t$, $y = R\\sin t$ the integrand is a constant:\n\n$$\\sqrt{R^{2}\\sin^{2} t + R^{2}\\cos^{2} t} = R$$\n\nSo the length is $R$ times the range of $t$. For example, with $R = 4$ an arc from $t = 0$ to $t = \\pi$ has length $4\\pi$.\n\nCheck: that arc is half of the circle, whose circumference is $2\\pi \\cdot 4 = 8\\pi$, and half of $8\\pi$ is $4\\pi$.\n\n> **Watch out.** Measure the range of $t$ in radians: a quarter turn is $\\frac{\\pi}{2}$, not $\\frac{\\pi}{4}$. And keep the square root, so the integrand is $R$, not $R^{2}$.",
+      "对曲线 $x(t)$、$y(t)$，长度为 $\\int \\sqrt{x'(t)^{2} + y'(t)^{2}}\\,dt$。在 $x = R\\cos t$，$y = R\\sin t$ 上，被积函数是常数：\n\n$$\\sqrt{R^{2}\\sin^{2} t + R^{2}\\cos^{2} t} = R$$\n\n所以长度等于 $R$ 乘 $t$ 的范围。例如，$R = 4$ 时从 $t = 0$ 到 $t = \\pi$ 的弧长为 $4\\pi$。\n\n检验：这段弧是半个圆，圆周长为 $2\\pi \\cdot 4 = 8\\pi$，它的一半是 $4\\pi$。\n\n> **注意。** $t$ 的范围要用弧度：四分之一圈是 $\\frac{\\pi}{2}$，不是 $\\frac{\\pi}{4}$。还要保留根号，被积函数是 $R$，不是 $R^{2}$。",
     ],
     (rng) => {
       const R = rng.int(1, 6);
@@ -830,31 +952,105 @@ const parametricLength = {
       const answer = Q.of(R * quarters, 2);
       const a0 = (start * Math.PI) / 2;
       const a1 = a0 + (quarters * Math.PI) / 2;
-      return ask(
-        [
-          "The solid arc is the part traced counterclockwise by $x = R\\cos t$, $y = R\\sin t$ between the two marked points. Find its length divided by $\\pi$.",
-          "实线弧是 $x = R\\cos t$，$y = R\\sin t$ 在两个标记点之间逆时针描出的部分。求它的长度除以 $\\pi$。",
-        ],
-        answer,
-        [Q.of(R * quarters, 4), R * quarters, span, 2 * R, Q.of(R * R * quarters, 2)],
-        [
-          `The radius is $R = ${R}$, and the arc covers ${quarters} quarter${quarters > 1 ? "s" : ""} of a turn, so $t$ has range $${span.toLatex()}\\pi$. The length is $${R} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$.`,
-          `半径 $R = ${R}$，弧占 ${quarters} 个四分之一圈，所以 $t$ 的范围为 $${span.toLatex()}\\pi$。长度为 $${R} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$。`,
-        ],
-        drawn(
+      /** halfPi writes k times a half of pi. */
+      const halfPi = (k: number) => (k === 0 ? "0" : k % 2 === 0 ? `${k === 2 ? "" : k / 2}\\pi` : `\\frac{${k === 1 ? "" : k}\\pi}{2}`);
+      const piQ = (q: Q) => `${q.eq(Q.of(1)) ? "" : q.toLatex()}\\pi`;
+      const R2 = R === 1 ? "" : `${R * R}`;
+      const P0: Point = [Math.round(R * Math.cos(a0)), Math.round(R * Math.sin(a0))];
+      const P1: Point = [Math.round(R * Math.cos(a1)), Math.round(R * Math.sin(a1))];
+      const all = [
+        {
+          value: Q.of(R * quarters, 4),
+          why: t(
+            "This counts a quarter turn as $\\frac{\\pi}{4}$; in radians a quarter turn is $\\frac{\\pi}{2}$.",
+            "这里把四分之一圈当成了 $\\frac{\\pi}{4}$；用弧度表示，四分之一圈是 $\\frac{\\pi}{2}$。",
+          ),
+        },
+        {
+          value: Q.of(R * quarters),
+          why: t(
+            "This counts a quarter turn as $\\pi$; in radians a quarter turn is $\\frac{\\pi}{2}$.",
+            "这里把四分之一圈当成了 $\\pi$；用弧度表示，四分之一圈是 $\\frac{\\pi}{2}$。",
+          ),
+        },
+        {
+          value: span,
+          why: t(
+            `This is the range of $t$ alone; the point moves at speed $R = ${R}$, so multiply by $${R}$.`,
+            `这只是 $t$ 的范围；点以速率 $R = ${R}$ 运动，所以还要乘以 $${R}$。`,
+          ),
+        },
+        {
+          value: Q.of(R * R * quarters, 2),
+          why: t(
+            `This leaves out the square root: the integrand is $\\sqrt{${R * R}} = ${R}$, not $${R * R}$.`,
+            `这里漏掉了根号：被积函数是 $\\sqrt{${R * R}} = ${R}$，不是 $${R * R}$。`,
+          ),
+        },
+        {
+          value: Q.of(2 * R),
+          why: t(
+            "This is the whole circumference divided by $\\pi$; the solid arc is only part of the circle.",
+            "这是整个圆周长除以 $\\pi$；实线弧只是圆的一部分。",
+          ),
+        },
+      ];
+      const mistakes = all.filter((m, i) => !m.value.eq(answer) && all.findIndex((n) => n.value.eq(m.value)) === i);
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The solid arc is the part traced counterclockwise by $x = R\\cos t$, $y = R\\sin t$ between the two marked points. Find its length divided by $\\pi$.",
+            "实线弧是 $x = R\\cos t$，$y = R\\sin t$ 在两个标记点之间逆时针描出的部分。求它的长度除以 $\\pi$。",
+          ),
+          answer,
+          mistakes,
+          solution: walked(
+            [
+              [
+                ["Read the drawing", "读图"],
+                t(
+                  `The circle has radius $R = ${R}$. The arc starts at $(${P0[0]}, ${P0[1]})$, where $t = ${halfPi(start)}$, and turns counterclockwise through ${quarters} quarter${quarters > 1 ? "s" : ""} of a turn, so $t$ runs over a range of`,
+                  `圆的半径 $R = ${R}$。弧从 $(${P0[0]}, ${P0[1]})$ 开始，那里 $t = ${halfPi(start)}$，逆时针转过 ${quarters} 个四分之一圈，所以 $t$ 的范围是`,
+                ),
+                [`${halfPi(start + quarters)} - ${halfPi(start)} = ${halfPi(quarters)}`],
+              ],
+              [
+                ["Find the speed", "求速率"],
+                t(
+                  "Differentiate both coordinates; since $\\sin^{2} t + \\cos^{2} t = 1$, the speed is",
+                  "对两个坐标求导；因为 $\\sin^{2} t + \\cos^{2} t = 1$，速率为",
+                ),
+                [`\\sqrt{${R2}\\sin^{2} t + ${R2}\\cos^{2} t} = ${R}`],
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  "The speed is constant, so the length is the speed times the range of $t$:",
+                  "速率是常数，所以长度等于速率乘 $t$ 的范围：",
+                ),
+                [`L = ${R === 1 ? "" : `${R} \\cdot `}${halfPi(quarters)} = ${piQ(answer)}`],
+              ],
+            ],
+            t(
+              `Compare with the circumference. The whole circle has length $2\\pi R = ${2 * R}\\pi$, and the arc is ${quarters} of its four quarters, ending at $(${P1[0]}, ${P1[1]})$. So the arc has length $${Q.of(quarters, 4).toLatex()} \\cdot ${2 * R}\\pi = ${piQ(answer)}$. Divided by $\\pi$, that is $${answer.toLatex()}$.`,
+              `与圆周长比较。整个圆长 $2\\pi R = ${2 * R}\\pi$，弧占四个四分之一中的 ${quarters} 个，终点在 $(${P1[0]}, ${P1[1]})$。所以弧长为 $${Q.of(quarters, 4).toLatex()} \\cdot ${2 * R}\\pi = ${piQ(answer)}$。除以 $\\pi$ 得 $${answer.toLatex()}$。`,
+            ),
+          ),
+        }),
+        figure: drawn(
           { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
           [
             { kind: "circle", center: [0, 0], r: R, dashed: true },
             { kind: "path", points: arc(0, 0, R, a0, a1), accent: true },
-            { kind: "point", at: [Math.round(R * Math.cos(a0)), Math.round(R * Math.sin(a0))] },
-            { kind: "point", at: [Math.round(R * Math.cos(a1)), Math.round(R * Math.sin(a1))] },
+            { kind: "point", at: P0 },
+            { kind: "point", at: P1 },
           ],
           t(
             `A circle of radius ${R} about the origin, with a solid arc of ${quarters} quarter turns.`,
             `以原点为圆心、半径为 ${R} 的圆，实线弧占 ${quarters} 个四分之一圈。`,
           ),
         ),
-      );
+      };
     },
   ),
   figure: calculusDrawings5["the-arc-length-of-a-parametric-curve#the-length-of-a-drawn-arc-traced-parametrically"],
@@ -865,8 +1061,8 @@ const polarLength = {
     "the-length-of-a-drawn-polar-arc",
     ["The length of a drawn polar arc", "所画极坐标弧的长度"],
     [
-      "A polar curve has length $\\int \\sqrt{r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2}\\,d\\theta$. For $r = 2a\\cos\\theta$ or $r = 2a\\sin\\theta$, the integrand is the constant $2a$, so the length is $2a$ times the range of $\\theta$.",
-      "极坐标曲线的长度为 $\\int \\sqrt{r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2}\\,d\\theta$。对 $r = 2a\\cos\\theta$ 或 $r = 2a\\sin\\theta$，被积函数是常数 $2a$，所以长度等于 $2a$ 乘 $\\theta$ 的范围。",
+      "A polar curve has length $\\int \\sqrt{r^{2} + \\left(\\frac{dr}{d\\theta}\\right)^{2}}\\,d\\theta$. For $r = 2a\\cos\\theta$ the derivative is $-2a\\sin\\theta$, and the integrand is a constant:\n\n$$\\sqrt{4a^{2}\\cos^{2}\\theta + 4a^{2}\\sin^{2}\\theta} = 2a$$\n\nThe same holds for $r = 2a\\sin\\theta$. So the length is $2a$ times the range of $\\theta$. For example, $r = 4\\cos\\theta$ for $0 \\le \\theta \\le \\frac{\\pi}{2}$ has length $4 \\cdot \\frac{\\pi}{2} = 2\\pi$.\n\nCheck: $r = 4\\cos\\theta$ is the circle of radius $2$ about $(2, 0)$, and this range traces its upper half, from $(4, 0)$ back to the pole. Half the circumference is $\\pi \\cdot 2 = 2\\pi$.\n\n> **Watch out.** The circle has radius $a$, but the integrand is $2a$. The arc's angle at the centre is twice the range of $\\theta$, so radius times range of $\\theta$ gives only half the length.",
+      "极坐标曲线的长度为 $\\int \\sqrt{r^{2} + \\left(\\frac{dr}{d\\theta}\\right)^{2}}\\,d\\theta$。对 $r = 2a\\cos\\theta$，导数是 $-2a\\sin\\theta$，被积函数是常数：\n\n$$\\sqrt{4a^{2}\\cos^{2}\\theta + 4a^{2}\\sin^{2}\\theta} = 2a$$\n\n$r = 2a\\sin\\theta$ 也一样。所以长度等于 $2a$ 乘 $\\theta$ 的范围。例如，$r = 4\\cos\\theta$（$0 \\le \\theta \\le \\frac{\\pi}{2}$）的长度为 $4 \\cdot \\frac{\\pi}{2} = 2\\pi$。\n\n检验：$r = 4\\cos\\theta$ 是以 $(2, 0)$ 为圆心、半径为 $2$ 的圆，这个范围描出它的上半部分，从 $(4, 0)$ 回到极点。半个圆周长是 $\\pi \\cdot 2 = 2\\pi$。\n\n> **注意。** 圆的半径是 $a$，但被积函数是 $2a$。弧在圆心处所对的角是 $\\theta$ 范围的两倍，所以用半径乘 $\\theta$ 的范围只得到一半的长度。",
     ],
     (rng) => {
       const a = rng.int(1, 6);
@@ -886,6 +1082,7 @@ const polarLength = {
       );
       const span = Q.of(to - from, 4);
       const answer = Q.of(2 * a * (to - from), 4);
+      const central = Q.of(to - from, 2);
       const angle = (q: number) =>
         q === 0
           ? "0"
@@ -894,25 +1091,81 @@ const polarLength = {
               .replace(/^(-?)\\frac\{(\d+)\}\{(\d+)\}$/, "$1\\frac{$2\\pi}{$3}")
               .replace("{1\\pi}", "{\\pi}")
               .replace(/^1$/, "\\pi");
+      const piQ = (q: Q) => `${q.eq(Q.of(1)) ? "" : q.toLatex()}\\pi`;
       const range = `${angle(from)} \\le \\theta \\le ${angle(to)}`;
       const trace = (th: number): Point => {
         const r = 2 * a * (cosine ? Math.cos(th) : Math.sin(th));
         return [r * Math.cos(th), r * Math.sin(th)];
       };
       const points = Array.from({ length: 61 }, (_, i) => trace(((from + ((to - from) * i) / 60) * Math.PI) / 4));
-      const name = cosine ? `r = ${2 * a}\\cos\\theta` : `r = ${2 * a}\\sin\\theta`;
-      return ask(
-        [
-          `The solid part of the drawn circle is $${name}$ for $${range}$. Find its length divided by $\\pi$.`,
-          `所画圆的实线部分是 $${name}$，$${range}$。求它的长度除以 $\\pi$。`,
-        ],
-        answer,
-        [span, 2 * a, Q.of(a * (to - from), 8), Q.of(4 * a * (to - from), 4), Q.of(4 * a * a * (to - from), 4)],
-        [
-          `The integrand is $\\sqrt{r^2 + r'^2} = ${2 * a}$, and $\\theta$ has range $${span.toLatex()}\\pi$. The length is $${2 * a} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$.`,
-          `被积函数为 $\\sqrt{r^2 + r'^2} = ${2 * a}$，$\\theta$ 的范围为 $${span.toLatex()}\\pi$。长度为 $${2 * a} \\cdot ${span.toLatex()}\\pi = ${answer.toLatex()}\\pi$。`,
-        ],
-        drawn(
+      const [fn, dfn] = cosine ? ["\\cos", `-${2 * a}\\sin`] : ["\\sin", `${2 * a}\\cos`];
+      const name = `r = ${2 * a}${fn}\\theta`;
+      const centre = cosine ? `(${a}, 0)` : `(0, ${a})`;
+      const all = [
+        {
+          value: span,
+          why: t(
+            `This is the range of $\\theta$ alone; the integrand $\\sqrt{r^{2} + r'^{2}}$ is $${2 * a}$, so multiply by $${2 * a}$.`,
+            `这只是 $\\theta$ 的范围；被积函数 $\\sqrt{r^{2} + r'^{2}}$ 等于 $${2 * a}$，所以还要乘以 $${2 * a}$。`,
+          ),
+        },
+        {
+          value: Q.of(a * (to - from), 4),
+          why: t(
+            `This multiplies the radius $${a}$ by the range of $\\theta$; the angle at the centre is twice that range, so the length is twice this.`,
+            `这里用半径 $${a}$ 乘 $\\theta$ 的范围；圆心角是这个范围的两倍，所以长度也是它的两倍。`,
+          ),
+        },
+        {
+          value: Q.of(4 * a * a * (to - from), 4),
+          why: t(
+            `This leaves out the square root: the integrand is $\\sqrt{${4 * a * a}} = ${2 * a}$, not $${4 * a * a}$.`,
+            `这里漏掉了根号：被积函数是 $\\sqrt{${4 * a * a}} = ${2 * a}$，不是 $${4 * a * a}$。`,
+          ),
+        },
+        {
+          value: Q.of(2 * a),
+          why: t(
+            `This is the whole circumference $${2 * a}\\pi$ divided by $\\pi$; the solid part is only some of the circle.`,
+            `这是整个圆周长 $${2 * a}\\pi$ 除以 $\\pi$；实线部分只是圆的一部分。`,
+          ),
+        },
+      ];
+      const mistakes = all.filter((m, i) => !m.value.eq(answer) && all.findIndex((n) => n.value.eq(m.value)) === i);
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The solid part of the drawn circle is $${name}$ for $${range}$. Find its length divided by $\\pi$.`,
+            `所画圆的实线部分是 $${name}$，$${range}$。求它的长度除以 $\\pi$。`,
+          ),
+          answer,
+          mistakes,
+          solution: walked(
+            [
+              [
+                ["Simplify the integrand", "化简被积函数"],
+                t(
+                  `Here $r' = ${dfn}\\theta$, and $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$:`,
+                  `这里 $r' = ${dfn}\\theta$，且 $\\cos^{2}\\theta + \\sin^{2}\\theta = 1$：`,
+                ),
+                [`\\sqrt{r^{2} + r'^{2}} = \\sqrt{${4 * a * a}\\cos^{2}\\theta + ${4 * a * a}\\sin^{2}\\theta} = ${2 * a}`],
+              ],
+              [
+                ["Integrate", "积分"],
+                t(
+                  `The integrand is constant, so the length is $${2 * a}$ times the range of $\\theta$, which is $${angle(to - from)}$:`,
+                  `被积函数是常数，所以长度等于 $${2 * a}$ 乘 $\\theta$ 的范围 $${angle(to - from)}$：`,
+                ),
+                [`L = \\int_{${angle(from)}}^{${angle(to)}} ${2 * a} \\, d\\theta = ${2 * a} \\cdot ${angle(to - from)} = ${piQ(answer)}`],
+              ],
+            ],
+            t(
+              `Use the geometry of the circle. The curve is the circle of radius $${a}$ about $${centre}$, which passes through the pole. By the inscribed angle theorem, the arc's angle at the centre is twice the range of $\\theta$, that is $${piQ(central)}$. So the arc has length ${a === 1 ? `$${piQ(central)}$` : `$${a} \\cdot ${piQ(central)} = ${piQ(answer)}$`}. Divided by $\\pi$, that is $${answer.toLatex()}$.`,
+              `用圆的几何性质。这条曲线是以 $${centre}$ 为圆心、半径为 $${a}$ 的圆，它经过极点。由圆周角定理，弧在圆心处所对的角是 $\\theta$ 范围的两倍，即 $${piQ(central)}$。所以弧长为 ${a === 1 ? `$${piQ(central)}$` : `$${a} \\cdot ${piQ(central)} = ${piQ(answer)}$`}。除以 $\\pi$ 得 $${answer.toLatex()}$。`,
+            ),
+          ),
+        }),
+        figure: drawn(
           { xMin: -13, xMax: 13, yMin: -13, yMax: 13, step: 1, labelEvery: 2 },
           [
             { kind: "circle", center: cosine ? [a, 0] : [0, a], r: a, dashed: true },
@@ -923,7 +1176,7 @@ const polarLength = {
             `过原点、圆心为 (${cosine ? a : 0}, ${cosine ? 0 : a}) 的圆，实线弧对应给定范围。`,
           ),
         ),
-      );
+      };
     },
   ),
   figure: calculusDrawings5["the-arc-length-of-a-polar-curve#the-length-of-a-drawn-polar-arc"],
@@ -933,32 +1186,98 @@ const roseArea = point(
   "the-area-of-a-drawn-rose",
   ["The area of a drawn rose", "所画玫瑰线的面积"],
   [
-    "A polar region has area $\\int \\frac{1}{2}r^2\\,d\\theta$. One petal of $r = a\\cos(n\\theta)$ has area $\\frac{\\pi a^2}{4n}$. An odd $n$ gives $n$ petals, and an even $n$ gives $2n$ petals, so count the petals to find $n$.",
-    "极坐标区域的面积为 $\\int \\frac{1}{2}r^2\\,d\\theta$。$r = a\\cos(n\\theta)$ 的一片花瓣面积为 $\\frac{\\pi a^2}{4n}$。$n$ 为奇数时有 $n$ 片花瓣，为偶数时有 $2n$ 片，所以数花瓣可以求 $n$。",
+    "A polar region has area $\\int \\frac{1}{2}r^{2}\\,d\\theta$. One petal of $r = a\\cos(n\\theta)$ lies between consecutive zeros of $r$, an angle of $\\frac{\\pi}{n}$ apart, where $\\cos^{2}(n\\theta)$ averages $\\frac{1}{2}$:\n\n$$\\frac{1}{2} \\cdot a^{2} \\cdot \\frac{1}{2} \\cdot \\frac{\\pi}{n} = \\frac{\\pi a^{2}}{4n}$$\n\nAn odd $n$ gives $n$ petals and an even $n$ gives $2n$, so count the petals to find $n$. For example, a drawn rose with $4$ petals reaching $3$ has $n = 2$, and its area is $4 \\cdot \\frac{9\\pi}{8} = \\frac{9}{2}\\pi$.\n\nCheck: for even $n$ the interval $[0, 2\\pi]$ traces every petal once, and $\\frac{1}{2}\\int_{0}^{2\\pi} 9\\cos^{2} 2\\theta \\, d\\theta = \\frac{1}{2} \\cdot 9 \\cdot \\pi = \\frac{9}{2}\\pi$.\n\n> **Watch out.** Four petals mean $n = 2$, not $n = 4$. Taking $n$ to be the number of petals gives each petal the wrong width.",
+    "极坐标区域的面积为 $\\int \\frac{1}{2}r^{2}\\,d\\theta$。$r = a\\cos(n\\theta)$ 的一片花瓣位于 $r$ 的相邻两个零点之间，两者相隔 $\\frac{\\pi}{n}$，在那里 $\\cos^{2}(n\\theta)$ 的平均值为 $\\frac{1}{2}$：\n\n$$\\frac{1}{2} \\cdot a^{2} \\cdot \\frac{1}{2} \\cdot \\frac{\\pi}{n} = \\frac{\\pi a^{2}}{4n}$$\n\n$n$ 为奇数时有 $n$ 片花瓣，为偶数时有 $2n$ 片，所以数花瓣可以求 $n$。例如，所画玫瑰线有 $4$ 片花瓣、长度为 $3$，则 $n = 2$，面积为 $4 \\cdot \\frac{9\\pi}{8} = \\frac{9}{2}\\pi$。\n\n检验：$n$ 为偶数时区间 $[0, 2\\pi]$ 把每片花瓣描一次，而 $\\frac{1}{2}\\int_{0}^{2\\pi} 9\\cos^{2} 2\\theta \\, d\\theta = \\frac{1}{2} \\cdot 9 \\cdot \\pi = \\frac{9}{2}\\pi$。\n\n> **注意。** 四片花瓣意味着 $n = 2$，不是 $n = 4$。把 $n$ 当成花瓣数，会把每片花瓣的宽度弄错。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
     const n = rng.int(2, 5);
     const cosine = rng.bool();
-    const petals = n % 2 === 0 ? 2 * n : n;
+    const odd = n % 2 === 1;
+    const petals = odd ? n : 2 * n;
     const answer = Q.of(a * a * petals, 4 * n);
+    const one = Q.of(a * a, 4 * n);
+    const piQ = (q: Q) => `${q.eq(Q.of(1)) ? "" : q.toLatex()}\\pi`;
+    const fn = cosine ? "\\cos" : "\\sin";
+    const A2 = a === 1 ? "" : `${a * a}`;
+    const product = ["\\frac{1}{2}", ...(a === 1 ? [] : [`${a * a}`]), "\\frac{1}{2}", `\\frac{\\pi}{${n}}`].join(" \\cdot ");
+    const wholeLatex = odd ? "\\pi" : "2\\pi";
     const points = Array.from({ length: 481 }, (_, i): Point => {
       const th = (2 * Math.PI * i) / 480;
       const r = a * (cosine ? Math.cos(n * th) : Math.sin(n * th));
       return [r * Math.cos(th), r * Math.sin(th)];
     });
-    return ask(
-      [
-        `The curve is a rose $r = a\\${cosine ? "cos" : "sin"}(n\\theta)$ with positive $a$ and whole number $n$. Find the area inside all its petals, divided by $\\pi$.`,
-        `曲线是玫瑰线 $r = a\\${cosine ? "cos" : "sin"}(n\\theta)$，$a$ 为正，$n$ 为整数。求所有花瓣内的总面积除以 $\\pi$。`,
-      ],
-      answer,
-      [Q.of(a * a, 4), Q.of(a * a, 2), a * a, Q.of(a * a * petals, 2 * n), Q.of(a * petals, 4 * n)],
-      [
-        `The petals reach distance $a = ${a}$, and there are $${petals}$ of them, so $n = ${n}$. The area is $${petals} \\cdot \\frac{\\pi \\cdot ${a}^2}{4 \\cdot ${n}} = ${answer.toLatex()}\\pi$.`,
-        `花瓣长度为 $a = ${a}$，共有 $${petals}$ 片，所以 $n = ${n}$。面积为 $${petals} \\cdot \\frac{\\pi \\cdot ${a}^2}{4 \\cdot ${n}} = ${answer.toLatex()}\\pi$。`,
-      ],
-      drawn(
+    const all = [
+      odd
+        ? {
+            value: Q.of(a * a, 2),
+            why: t(
+              "This counts every petal twice: for odd $n$ the rose is traced once on $[0, \\pi]$, and $[0, 2\\pi]$ goes round it twice.",
+              "这里每片花瓣算了两次：$n$ 为奇数时玫瑰线在 $[0, \\pi]$ 上就描完一次，$[0, 2\\pi]$ 会描两次。",
+            ),
+          }
+        : {
+            value: Q.of(a * a, 4),
+            why: t(
+              `This takes $n = ${petals}$, the number of petals; for even $n$ there are $2n$ petals, so $n = ${n}$ and each petal is twice as wide.`,
+              `这里取 $n = ${petals}$，即花瓣数；$n$ 为偶数时有 $2n$ 片花瓣，所以 $n = ${n}$，每片花瓣宽一倍。`,
+            ),
+          },
+      {
+        value: one,
+        why: t(`This is one petal; the rose has $${petals}$ of them.`, `这只是一片花瓣；玫瑰线有 $${petals}$ 片。`),
+      },
+      {
+        value: Q.of(a * a),
+        why: t(
+          `This is the disc of radius $${a}$ that the petals reach; they cover only part of it.`,
+          `这是花瓣所能到达的半径为 $${a}$ 的圆盘；花瓣只覆盖其中一部分。`,
+        ),
+      },
+      {
+        value: Q.of(a * petals, 4 * n),
+        why: t(`This uses $a = ${a}$ where the formula has $a^{2} = ${a * a}$.`, `公式中是 $a^{2} = ${a * a}$，这里却用了 $a = ${a}$。`),
+      },
+    ];
+    const mistakes = all.filter((m, i) => !m.value.eq(answer) && all.findIndex((k) => k.value.eq(m.value)) === i);
+    return {
+      ...numberProblem({
+        prompt: t(
+          `The curve is a rose $r = a${fn}(n\\theta)$ with positive $a$ and whole number $n$. Find the area inside all its petals, divided by $\\pi$.`,
+          `曲线是玫瑰线 $r = a${fn}(n\\theta)$，$a$ 为正，$n$ 为整数。求所有花瓣内的总面积除以 $\\pi$。`,
+        ),
+        answer,
+        mistakes,
+        solution: walked(
+          [
+            [
+              ["Read the drawing", "读图"],
+              t(
+                `The petals reach distance $a = ${a}$ from the pole, and there are $${petals}$ of them. ${odd ? `An odd number of petals means $n = ${petals}$.` : `An even number of petals is $2n$, so $n = ${n}$.`}`,
+                `花瓣到极点的最远距离为 $a = ${a}$，共有 $${petals}$ 片。${odd ? `花瓣数为奇数，所以 $n = ${petals}$。` : `花瓣数为偶数，等于 $2n$，所以 $n = ${n}$。`}`,
+              ),
+            ],
+            [
+              ["Find one petal", "求一片花瓣"],
+              t(
+                `One petal spans $\\frac{\\pi}{${n}}$ between consecutive zeros of $r$, where $${fn}^{2}(${n}\\theta)$ averages $\\frac{1}{2}$:`,
+                `一片花瓣位于 $r$ 的相邻两个零点之间，跨度为 $\\frac{\\pi}{${n}}$，在那里 $${fn}^{2}(${n}\\theta)$ 的平均值为 $\\frac{1}{2}$：`,
+              ),
+              [`${product} = ${piQ(one)}`],
+            ],
+            [
+              ["Add the petals", "把花瓣加起来"],
+              t("The petals are congruent:", "各片花瓣全等："),
+              [`${petals} \\cdot ${piQ(one)} = ${piQ(answer)}`],
+            ],
+          ],
+          t(
+            `Integrate over one interval that traces the rose once, $[0, ${wholeLatex}]$ for ${odd ? "odd" : "even"} $n$. There $${fn}^{2}(${n}\\theta)$ averages $\\frac{1}{2}$, so the area is\n\n$$\\frac{1}{2}\\int_{0}^{${wholeLatex}} ${A2}${fn}^{2}(${n}\\theta) \\, d\\theta = ${["\\frac{1}{2}", ...(a === 1 ? [] : [`${a * a}`]), "\\frac{1}{2}", wholeLatex].join(" \\cdot ")} = ${piQ(answer)}$$\n\nDivided by $\\pi$ this is $${answer.toLatex()}$.`,
+            `在恰好把玫瑰线描一次的区间上积分：$n$ 为${odd ? "奇数" : "偶数"}时取 $[0, ${wholeLatex}]$。在那里 $${fn}^{2}(${n}\\theta)$ 的平均值为 $\\frac{1}{2}$，所以面积为\n\n$$\\frac{1}{2}\\int_{0}^{${wholeLatex}} ${A2}${fn}^{2}(${n}\\theta) \\, d\\theta = ${["\\frac{1}{2}", ...(a === 1 ? [] : [`${a * a}`]), "\\frac{1}{2}", wholeLatex].join(" \\cdot ")} = ${piQ(answer)}$$\n\n除以 $\\pi$ 得 $${answer.toLatex()}$。`,
+          ),
+        ),
+      }),
+      figure: drawn(
         { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
         [{ kind: "path", points, accent: true }],
         t(
@@ -966,7 +1285,7 @@ const roseArea = point(
           `有 ${petals} 片花瓣的玫瑰线，每片到原点的最远距离为 ${a}。`,
         ),
       ),
-    );
+    };
   },
 );
 

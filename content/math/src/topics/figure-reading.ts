@@ -1715,36 +1715,75 @@ const recognizingPolarCurves: KnowledgePointDef = {
   id: "recognizing-a-polar-curve",
   title: t("Recognizing a polar curve", "辨认极坐标曲线"),
   explanation: t(
-    "Before setting up an area in polar coordinates, it helps to know the curve. The form $r = a(1 + \\cos\\theta)$ is a cardioid; $r = a\\cos n\\theta$ is a rose, with $n$ petals for odd $n$ and $2n$ for even $n$, so the three-petal rose drawn here is $r = 3\\cos 3\\theta$; and $r = 2a\\cos\\theta$ is a circle through the origin. Testing $\\theta = 0$ and $\\theta = \\frac{\\pi}{2}$ separates most candidates.",
-    "在极坐标下计算面积之前，先认识曲线会有帮助。$r = a(1 + \\cos\\theta)$ 是心形线；$r = a\\cos n\\theta$ 是玫瑰线，$n$ 为奇数时有 $n$ 瓣，$n$ 为偶数时有 $2n$ 瓣，所以这里画出的三瓣玫瑰线是 $r = 3\\cos 3\\theta$；$r = 2a\\cos\\theta$ 是过原点的圆。检验 $\\theta = 0$ 和 $\\theta = \\frac{\\pi}{2}$ 可以排除大多数候选。",
+    "Before setting up an area in polar coordinates, it helps to know the curve. The common shapes are\n\n$$r = a(1 + \\cos\\theta): \\text{ cardioid}, \\qquad r = a\\cos n\\theta: \\text{ rose}, \\qquad r = 2a\\cos\\theta: \\text{ circle through the origin}$$\n\nA rose has $n$ petals for odd $n$ and $2n$ for even $n$, so the three-petal rose of length $3$ drawn here is $r = 3\\cos 3\\theta$. Testing $\\theta = 0$ and $\\theta = \\frac{\\pi}{2}$ separates most candidates.\n\nCheck: at $\\theta = 0$, $r = 3\\cos 0 = 3$, the tip on the positive $x$-axis, and at $\\theta = \\frac{\\pi}{6}$, $r = 3\\cos\\frac{\\pi}{2} = 0$, so the petal closes at the origin, as drawn.\n\n> **Watch out.** $r = 2a\\cos\\theta$ is a whole circle, not a petal, and a rose with four petals is $r = a\\cos 2\\theta$, not $r = a\\cos 4\\theta$.",
+    "在极坐标下计算面积之前，先认识曲线会有帮助。常见的形状有\n\n$$r = a(1 + \\cos\\theta): \\text{ 心形线}, \\qquad r = a\\cos n\\theta: \\text{ 玫瑰线}, \\qquad r = 2a\\cos\\theta: \\text{ 过原点的圆}$$\n\n玫瑰线在 $n$ 为奇数时有 $n$ 瓣，$n$ 为偶数时有 $2n$ 瓣，所以这里画出的瓣长为 $3$ 的三瓣玫瑰线是 $r = 3\\cos 3\\theta$。检验 $\\theta = 0$ 和 $\\theta = \\frac{\\pi}{2}$ 可以排除大多数候选。\n\n检验：在 $\\theta = 0$ 处 $r = 3\\cos 0 = 3$，即正 $x$ 轴上的尖端；在 $\\theta = \\frac{\\pi}{6}$ 处 $r = 3\\cos\\frac{\\pi}{2} = 0$，花瓣在原点闭合，与图相符。\n\n> **注意。** $r = 2a\\cos\\theta$ 是一个完整的圆，不是花瓣；四瓣玫瑰线是 $r = a\\cos 2\\theta$，不是 $r = a\\cos 4\\theta$。",
   ),
   figure: polarDrawing(
     (th) => 3 * Math.cos(3 * th),
     t("A rose with three petals, of length 3, one of them along the positive x-axis.", "三瓣玫瑰线，瓣长为 3，其中一瓣沿 x 轴正半轴。"),
   ),
   generate(rng: Rng): Problem {
-    const a = rng.int(1, 4);
+    const a = rng.int(2, 4);
     const family = polarFamily(a);
     const chosen = rng.int(0, family.length - 1);
     const pick = family[chosen] as (typeof family)[number];
-    return withFigure(
-      pickChoice(
-        rng,
-        t("Which polar equation has this graph?", "这个图象是哪个极坐标方程？"),
-        math(pick.equation),
-        rng.shuffle(family.filter((_, i) => i !== chosen)).map((o) => math(o.equation)),
-        t(
-          `The curve is ${pick.look.en}. ${pick.why.en} The size of the drawing gives $a = ${a}$.`,
-          `曲线是${pick.look["zh-CN"]}。${pick.why["zh-CN"]}图形的大小给出 $a = ${a}$。`,
+    const reach = chosen === 4 || chosen === 0 || chosen === 1 ? 2 * a : a;
+    /** probes gives, for each member of the family in order, an angle, the radius there and the point it gives, then an angle where the radius is zero. */
+    const probes: readonly (readonly [string, number, string, string | null])[] = [
+      ["0", 2 * a, `(${2 * a}, 0)`, "\\pi"],
+      ["\\frac{\\pi}{2}", 2 * a, `(0, ${2 * a})`, "\\frac{3\\pi}{2}"],
+      ["0", a, `(${a}, 0)`, "\\frac{\\pi}{4}"],
+      ["0", a, `(${a}, 0)`, "\\frac{\\pi}{6}"],
+      ["0", 2 * a, `(${2 * a}, 0)`, "\\frac{\\pi}{2}"],
+      ["\\frac{\\pi}{2}", a, `(0, ${a})`, null],
+    ];
+    const [th, value, at, zero] = probes[chosen] as (typeof probes)[number];
+    const size: Text =
+      reach === 2 * a
+        ? t(
+            `Its farthest point is $${reach}$ from the origin, which is $2a$, so $a = ${a}$.`,
+            `它离原点最远 $${reach}$，即 $2a$，所以 $a = ${a}$。`,
+          )
+        : t(
+            `Its farthest point is $${reach}$ from the origin, which is $a$, so $a = ${a}$.`,
+            `它离原点最远 $${reach}$，即 $a$，所以 $a = ${a}$。`,
+          );
+    const back: Text = zero
+      ? t(
+          ` At $\\theta = ${zero}$ it gives $r = 0$, so the curve passes through the origin there, as drawn.`,
+          `在 $\\theta = ${zero}$ 处得 $r = 0$，所以曲线在那里经过原点，与图相符。`,
+        )
+      : t(
+          " Every angle gives the same $r$, so the curve never reaches the origin, as drawn.",
+          "每个角度都给出同样的 $r$，所以曲线不经过原点，与图相符。",
+        );
+    const solution = t(
+      `**Step 1: Name the shape.** The curve is ${pick.look.en}. ${pick.why.en}\n\n**Step 2: Read the size.** ${size.en} So the equation is\n\n$$${pick.equation}$$\n\n**Check.** Put $\\theta = ${th}$ into $${pick.equation}$: it gives $r = ${value}$, the point $${at}$ on the drawing.${back.en}`,
+      `**第一步：判断形状。**曲线是${pick.look["zh-CN"]}。${pick.why["zh-CN"]}\n\n**第二步：读出大小。**${size["zh-CN"]}所以方程是\n\n$$${pick.equation}$$\n\n**检验。**把 $\\theta = ${th}$ 代入 $${pick.equation}$：得 $r = ${value}$，即图上的点 $${at}$。${back["zh-CN"]}`,
+    );
+    const others = family.filter((_, i) => i !== chosen);
+    return reasoned(
+      withFigure(
+        pickChoice(
+          rng,
+          t("Which polar equation has this graph?", "这个图象是哪个极坐标方程？"),
+          math(pick.equation),
+          rng.shuffle(others).map((o) => math(o.equation)),
+          solution,
+        ),
+        polarDrawing(
+          pick.r,
+          t(
+            `A polar curve: ${pick.look.en}, reaching a distance of ${reach} from the origin.`,
+            `极坐标曲线：${pick.look["zh-CN"]}，离原点最远的距离为 ${reach}。`,
+          ),
         ),
       ),
-      polarDrawing(
-        pick.r,
-        t(
-          `A polar curve: ${pick.look.en}, reaching a distance of ${chosen === 4 || chosen === 0 || chosen === 1 ? 2 * a : a} from the origin.`,
-          `极坐标曲线：${pick.look["zh-CN"]}，离原点最远的距离为 ${chosen === 4 || chosen === 0 || chosen === 1 ? 2 * a : a}。`,
-        ),
-      ),
+      others.map((o) => [
+        math(o.equation).en,
+        `This graph is ${o.look.en}, but the drawing shows ${pick.look.en}.`,
+        `这个方程的图象是${o.look["zh-CN"]}，而图中是${pick.look["zh-CN"]}。`,
+      ]),
     );
   },
 };

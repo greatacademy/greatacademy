@@ -447,8 +447,8 @@ const petalLimits: KnowledgePointDef = {
   figure: calculusDrawings5["finding-the-limits-of-integration-for-a-given-polar-region#the-limits-of-one-petal-from-a-drawing"],
   title: t("The limits of one petal", "一片花瓣的积分限"),
   explanation: t(
-    "A petal of a polar rose starts and ends where the radius is zero. For $r = a \\cos(k\\theta)$ this happens when $k\\theta$ is an odd multiple of a right angle, so the petal along the positive $x$-axis runs from $-\\frac{\\pi}{2k}$ to $\\frac{\\pi}{2k}$. Those values, and not a full turn, are the limits of the area integral for that single petal.",
-    "极坐标玫瑰线的一片花瓣在半径为零处开始和结束。对 $r = a \\cos(k\\theta)$，这发生在 $k\\theta$ 是直角的奇数倍时，所以沿 $x$ 轴正向的花瓣从 $-\\frac{\\pi}{2k}$ 到 $\\frac{\\pi}{2k}$。单片花瓣的面积积分用这两个值作积分限，而不是转一整圈。",
+    "A petal of a polar rose starts and ends where the radius is zero. For $r = a \\cos(k\\theta)$ this happens when $k\\theta$ is an odd multiple of a right angle, so the petal along the positive $x$-axis runs between\n\n$$k\\theta = \\pm\\frac{\\pi}{2} \\implies \\theta = \\pm\\frac{\\pi}{2k}$$\n\nThose values, and not a full turn, are the limits of the area integral for that single petal. For example, the petal of $r = 4\\cos(3\\theta)$ along the positive $x$-axis runs from $-\\frac{\\pi}{6}$ to $\\frac{\\pi}{6}$.\n\nCheck: at $\\theta = \\frac{\\pi}{6}$, $r = 4\\cos\\frac{\\pi}{2} = 0$, so the petal closes there, and at $\\theta = 0$, $r = 4$, its tip on the axis.\n\n> **Watch out.** From $0$ to $\\frac{\\pi}{2k}$ is only the upper half of the petal, and $0$ to $2\\pi$ is the whole rose.",
+    "极坐标玫瑰线的一片花瓣在半径为零处开始和结束。对 $r = a \\cos(k\\theta)$，这发生在 $k\\theta$ 是直角的奇数倍时，所以沿 $x$ 轴正向的花瓣位于\n\n$$k\\theta = \\pm\\frac{\\pi}{2} \\implies \\theta = \\pm\\frac{\\pi}{2k}$$\n\n之间。单片花瓣的面积积分用这两个值作积分限，而不是转一整圈。例如，$r = 4\\cos(3\\theta)$ 沿 $x$ 轴正向的花瓣从 $-\\frac{\\pi}{6}$ 到 $\\frac{\\pi}{6}$。\n\n检验：在 $\\theta = \\frac{\\pi}{6}$ 处 $r = 4\\cos\\frac{\\pi}{2} = 0$，花瓣在那里闭合；在 $\\theta = 0$ 处 $r = 4$，是它在轴上的尖端。\n\n> **注意。** 从 $0$ 到 $\\frac{\\pi}{2k}$ 只是花瓣的上半部分，从 $0$ 到 $2\\pi$ 是整条玫瑰线。",
   ),
   generate(rng) {
     const k = rng.int(2, 8);
@@ -461,32 +461,75 @@ const petalLimits: KnowledgePointDef = {
       40,
     );
     const whole = parametric((s) => [a * Math.cos(k * s) * Math.cos(s), a * Math.cos(k * s) * Math.sin(s)], 0, 2 * Math.PI, 720);
-    const limit = (d: number) => `\\theta \\text{ from } -${end(d)} \\text{ to } ${end(d)}`;
-    return pickChoice(
-      rng,
-      t(
-        `The drawing shows $r = ${a} \\cos(${k}\\theta)$. For the shaded petal, what are the limits of the area integral?`,
-        `图中是 $r = ${a} \\cos(${k}\\theta)$。阴影花瓣的面积积分限是什么？`,
-      ),
-      math(limit(2 * k)),
+    const limit = (d: number) => `-${end(d)} \\le \\theta \\le ${end(d)}`;
+    const halfOnly = `0 \\le \\theta \\le ${end(2 * k)}`;
+    const fullTurn = "0 \\le \\theta \\le 2\\pi";
+    const odd = k % 2 === 1;
+    const petals = odd ? k : 2 * k;
+    const solution = walked(
       [
-        math(limit(k)),
-        math(`\\theta \\text{ from } 0 \\text{ to } ${end(2 * k)}`),
-        math(`\\theta \\text{ from } 0 \\text{ to } 2\\pi`),
-        math(limit(4 * k)),
+        [
+          ["Find where the radius is zero", "求半径为零处"],
+          t(
+            `The petal starts and ends at the pole, where $${a}\\cos(${k}\\theta) = 0$:`,
+            `花瓣在极点处开始和结束，即 $${a}\\cos(${k}\\theta) = 0$ 处：`,
+          ),
+          [`${k}\\theta = \\pm\\frac{\\pi}{2} \\implies \\theta = \\pm ${end(2 * k)}`],
+        ],
+        [
+          ["Pick the shaded petal", "确定阴影花瓣"],
+          t(
+            `At $\\theta = 0$ the radius is $${a}$, the tip on the positive $x$-axis, and $r$ stays positive between the two zeros. So the shaded petal runs from $-${end(2 * k)}$ to $${end(2 * k)}$.`,
+            `在 $\\theta = 0$ 处半径为 $${a}$，即正 $x$ 轴上的尖端，并且在两个零点之间 $r$ 保持为正。所以阴影花瓣从 $-${end(2 * k)}$ 到 $${end(2 * k)}$。`,
+          ),
+        ],
       ],
       t(
-        `The radius is zero when $${k}\\theta = \\pm \\frac{\\pi}{2}$, that is at $\\theta = \\pm ${end(2 * k)}$, and the shaded petal lies between these values.`,
-        `当 $${k}\\theta = \\pm \\frac{\\pi}{2}$，即 $\\theta = \\pm ${end(2 * k)}$ 时半径为零，阴影花瓣就在这两个值之间。`,
+        `Count the petals another way. The rose has $${petals}$ petals, traced once as $\\theta$ runs over an interval of length $${odd ? "\\pi" : "2\\pi"}$, so each petal takes $${odd ? "\\pi" : "2\\pi"} \\div ${petals} = ${end(k)}$ of $\\theta$. The interval from $-${end(2 * k)}$ to $${end(2 * k)}$ has exactly this length.`,
+        `换一种方式数花瓣。玫瑰线有 $${petals}$ 片花瓣，$\\theta$ 走过长为 $${odd ? "\\pi" : "2\\pi"}$ 的区间时描一次，所以每片花瓣占 $\\theta$ 的 $${odd ? "\\pi" : "2\\pi"} \\div ${petals} = ${end(k)}$。从 $-${end(2 * k)}$ 到 $${end(2 * k)}$ 的区间恰好这么长。`,
       ),
-      drawn(
-        square(a + 1),
+    );
+    return reasoned(
+      pickChoice(
+        rng,
+        t(
+          `The drawing shows $r = ${a} \\cos(${k}\\theta)$. For the shaded petal, what are the limits of the area integral?`,
+          `图中是 $r = ${a} \\cos(${k}\\theta)$。阴影花瓣的面积积分限是什么？`,
+        ),
+        math(limit(2 * k)),
+        [math(limit(k)), math(halfOnly), math(fullTurn), math(limit(4 * k))],
+        solution,
+        drawn(
+          square(a + 1),
+          [
+            { kind: "polygon", points: shaded },
+            { kind: "path", points: whole, accent: true },
+          ],
+          t(`A polar rose with its petal along the positive x-axis shaded.`, `一条极坐标玫瑰线，沿 x 轴正向的花瓣涂了阴影。`),
+        ),
+      ),
+      [
         [
-          { kind: "polygon", points: shaded },
-          { kind: "path", points: whole, accent: true },
+          math(limit(k)).en,
+          `At $\\theta = \\pm ${end(2 * k)}$ the radius is already zero; beyond that $r$ is negative and traces other petals, so these limits take in more than the shaded one.`,
+          `在 $\\theta = \\pm ${end(2 * k)}$ 处半径已经为零；再往外 $r$ 为负，描出的是别的花瓣，所以这个范围超出了阴影花瓣。`,
         ],
-        t(`A polar rose with its petal along the positive x-axis shaded.`, `一条极坐标玫瑰线，沿 x 轴正向的花瓣涂了阴影。`),
-      ),
+        [
+          math(halfOnly).en,
+          "This is only the upper half of the petal; it is symmetric about the $x$-axis and starts below it.",
+          "这只是花瓣的上半部分；花瓣关于 $x$ 轴对称，从轴下方开始。",
+        ],
+        [
+          math(fullTurn).en,
+          `A full turn traces the whole rose, all $${petals}$ petals${odd ? " twice over" : ""}, not the single shaded petal.`,
+          `转一整圈描出整条玫瑰线，即全部 $${petals}$ 片花瓣${odd ? "，而且描了两遍" : ""}，而不是单独的阴影花瓣。`,
+        ],
+        [
+          math(limit(4 * k)).en,
+          `At $\\theta = \\pm ${end(4 * k)}$ the radius is $${a}\\cos\\frac{\\pi}{4}$, not zero, so these limits cut off the ends of the petal.`,
+          `在 $\\theta = \\pm ${end(4 * k)}$ 处半径是 $${a}\\cos\\frac{\\pi}{4}$，不为零，所以这个范围切掉了花瓣的两端。`,
+        ],
+      ],
     );
   },
 };

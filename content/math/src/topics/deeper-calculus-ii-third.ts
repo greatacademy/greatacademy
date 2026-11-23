@@ -1309,29 +1309,131 @@ const astroidSurface = point(
   "surfaces-from-an-astroid",
   ["Surfaces from an astroid", "星形线旋转所得的曲面"],
   [
-    "The astroid $x = a\\cos^{3}t$, $y = a\\sin^{3}t$ has speed $3a|\\sin t\\cos t|$. The absolute value matters: beyond $t = \\frac{\\pi}{2}$ the factor $\\cos t$ is negative, and ignoring this makes the integral over the upper half cancel to zero.",
-    "星形线 $x = a\\cos^{3}t$，$y = a\\sin^{3}t$ 的速率是 $3a|\\sin t\\cos t|$。绝对值很重要：$t$ 超过 $\\frac{\\pi}{2}$ 后 $\\cos t$ 为负，忽略这一点会使上半部分的积分抵消为零。",
+    "The astroid $x = a\\cos^{3}t$, $y = a\\sin^{3}t$ has $\\frac{dx}{dt} = -3a\\cos^{2}t\\sin t$ and $\\frac{dy}{dt} = 3a\\sin^{2}t\\cos t$, so its speed is $3a|\\sin t\\cos t|$. The surface swept by an arc about the $x$-axis has area $\\int 2\\pi y \\, ds$. For $a = 1$ and the first quarter, $0 \\le t \\le \\frac{\\pi}{2}$, both factors are positive, and $u = \\sin t$ gives\n\n$$S = 2\\pi\\int_{0}^{\\pi/2} \\sin^{3}t \\cdot 3\\sin t\\cos t \\, dt = 6\\pi\\int_{0}^{1} u^{4} \\, du = \\frac{6}{5}\\pi$$\n\nCheck: in Cartesian form the quarter is $y = (1 - x^{2/3})^{3/2}$, with $1 + (y')^{2} = x^{-2/3}$, so $ds = x^{-1/3} \\, dx$. With $w = x^{2/3}$, $x^{-1/3} \\, dx = \\frac{3}{2} \\, dw$, and $2\\pi \\cdot \\frac{3}{2}\\int_{0}^{1} (1 - w)^{3/2} \\, dw = 3\\pi \\cdot \\frac{2}{5}$, which is $\\frac{6}{5}\\pi$.\n\n> **Watch out.** Keep the absolute value. Beyond $t = \\frac{\\pi}{2}$ the factor $\\cos t$ is negative, and without the bars the integral over the upper half, $0 \\le t \\le \\pi$, cancels to $0$.",
+    "星形线 $x = a\\cos^{3}t$，$y = a\\sin^{3}t$ 有 $\\frac{dx}{dt} = -3a\\cos^{2}t\\sin t$，$\\frac{dy}{dt} = 3a\\sin^{2}t\\cos t$，所以速率是 $3a|\\sin t\\cos t|$。弧绕 $x$ 轴旋转所得曲面的面积是 $\\int 2\\pi y \\, ds$。取 $a = 1$ 和第一个四分之一段 $0 \\le t \\le \\frac{\\pi}{2}$，两个因子都为正，令 $u = \\sin t$ 得\n\n$$S = 2\\pi\\int_{0}^{\\pi/2} \\sin^{3}t \\cdot 3\\sin t\\cos t \\, dt = 6\\pi\\int_{0}^{1} u^{4} \\, du = \\frac{6}{5}\\pi$$\n\n检验：用直角坐标，这一段是 $y = (1 - x^{2/3})^{3/2}$，$1 + (y')^{2} = x^{-2/3}$，所以 $ds = x^{-1/3} \\, dx$。令 $w = x^{2/3}$，则 $x^{-1/3} \\, dx = \\frac{3}{2} \\, dw$，而 $2\\pi \\cdot \\frac{3}{2}\\int_{0}^{1} (1 - w)^{3/2} \\, dw = 3\\pi \\cdot \\frac{2}{5}$，即 $\\frac{6}{5}\\pi$。\n\n> **注意。** 要保留绝对值。$t$ 超过 $\\frac{\\pi}{2}$ 后 $\\cos t$ 为负，不带绝对值时，上半部分 $0 \\le t \\le \\pi$ 的积分会抵消为 $0$。",
   ],
   (rng) => {
     const a = rng.int(1, 20);
     const kind = rng.pick(["x", "y", "half"] as const);
-    const answer = kind === "half" ? Q.of(12 * a * a, 5) : Q.of(6 * a * a, 5);
+    const half = kind === "half";
+    const quarter = Q.of(6 * a * a, 5);
+    const answer = half ? quarter.mul(Q.of(2)) : quarter;
+    const A = a === 1 ? "" : `${a}`;
     const axis = kind === "y" ? "y" : "x";
-    const top = kind === "half" ? "\\pi" : "\\frac{\\pi}{2}";
-    const radius = kind === "y" ? `${a === 1 ? "" : a}\\cos^{3}t` : `${a === 1 ? "" : a}\\sin^{3}t`;
+    const top = half ? "\\pi" : "\\frac{\\pi}{2}";
+    const [radius, power, u, other] =
+      kind === "y" ? ["x", "\\cos^{4}t\\sin t", "\\cos t", "y"] : ["y", "\\sin^{4}t\\cos t", "\\sin t", "x"];
     const [en, zh] = kpi(
-      `Find the area of the surface obtained by rotating $x = ${a === 1 ? "" : a}\\cos^{3}t, \\; y = ${a === 1 ? "" : a}\\sin^{3}t$, $0 \\le t \\le ${top}$, about the $${axis}$-axis.`,
-      `求曲线 $x = ${a === 1 ? "" : a}\\cos^{3}t, \\; y = ${a === 1 ? "" : a}\\sin^{3}t$，$0 \\le t \\le ${top}$，绕 $${axis}$ 轴旋转所得曲面的面积。`,
+      `Find the area of the surface obtained by rotating $x = ${A}\\cos^{3}t, \\; y = ${A}\\sin^{3}t$, $0 \\le t \\le ${top}$, about the $${axis}$-axis.`,
+      `求曲线 $x = ${A}\\cos^{3}t, \\; y = ${A}\\sin^{3}t$，$0 \\le t \\le ${top}$，绕 $${axis}$ 轴旋转所得曲面的面积。`,
     );
-    return ask(
-      [en, zh],
+    const mistakes = half
+      ? [
+          {
+            value: 0,
+            why: t(
+              "This drops the absolute value of the speed: $\\cos t$ is negative on the second quarter, and an area cannot cancel.",
+              "这里丢掉了速率的绝对值：$\\cos t$ 在第二段上为负，而面积不会抵消。",
+            ),
+          },
+          {
+            value: quarter,
+            why: t(
+              "This is the first quarter alone; the second quarter, its mirror image in the $y$-axis, sweeps an equal surface.",
+              "这只是第一段；第二段是它关于 $y$ 轴的镜像，扫出的曲面一样大。",
+            ),
+          },
+          {
+            value: Q.of(4 * a * a, 5),
+            why: t(
+              `This takes the speed as $${a === 1 ? "" : a}|\\sin t\\cos t|$; the chain rule on $\\cos^{3}t$ and $\\sin^{3}t$ brings a factor $3$.`,
+              `这里把速率当成 $${a === 1 ? "" : a}|\\sin t\\cos t|$；对 $\\cos^{3}t$ 和 $\\sin^{3}t$ 用链式法则会带出因子 $3$。`,
+            ),
+          },
+        ]
+      : [
+          {
+            value: Q.of(3 * a * a, 5),
+            why: t(
+              "This leaves out the $2$ of $2\\pi$: each point travels a circle of length $2\\pi$ times its radius.",
+              "这里漏掉了 $2\\pi$ 中的 $2$：每个点走过的圆周长是 $2\\pi$ 乘以半径。",
+            ),
+          },
+          {
+            value: Q.of(2 * a * a, 5),
+            why: t(
+              `This takes the speed as $${a === 1 ? "" : a}\\sin t\\cos t$; the chain rule on $\\cos^{3}t$ and $\\sin^{3}t$ brings a factor $3$.`,
+              `这里把速率当成 $${a === 1 ? "" : a}\\sin t\\cos t$；对 $\\cos^{3}t$ 和 $\\sin^{3}t$ 用链式法则会带出因子 $3$。`,
+            ),
+          },
+          {
+            value: Q.of(3 * a * a, 2),
+            why: t(
+              `This loses the factor $${u}$ of the speed, so the integrand has $${u}$ to the power $3$, not $4$, and integrates to $\\frac{1}{4}$ instead of $\\frac{1}{5}$.`,
+              `这里漏掉了速率中的因子 $${u}$，被积式中 $${u}$ 的幂次成了 $3$ 而不是 $4$，积分得 $\\frac{1}{4}$ 而不是 $\\frac{1}{5}$。`,
+            ),
+          },
+        ];
+    const substitute =
+      kind === "y"
+        ? "Let $u = \\cos t$; then $du = -\\sin t \\, dt$ and the limits $0$, $\\frac{\\pi}{2}$ become $1$, $0$:"
+        : "Let $u = \\sin t$; then $du = \\cos t \\, dt$ and the limits $0$, $\\frac{\\pi}{2}$ become $0$, $1$:";
+    const substituteZh =
+      kind === "y"
+        ? "令 $u = \\cos t$，则 $du = -\\sin t \\, dt$，积分限 $0$、$\\frac{\\pi}{2}$ 变为 $1$、$0$："
+        : "令 $u = \\sin t$，则 $du = \\cos t \\, dt$，积分限 $0$、$\\frac{\\pi}{2}$ 变为 $0$、$1$：";
+    const radiusLatex = kind === "y" ? `${A}\\cos^{3}t` : `${A}\\sin^{3}t`;
+    return numberProblem({
+      prompt: t(en, zh),
       answer,
-      kind === "half" ? [0, Q.of(6 * a * a, 5), Q.of(3 * a * a, 5)] : [Q.of(3 * a * a, 5), Q.of(12 * a * a, 5), Q.of(a * a)],
-      [
-        `The radius is $${radius}$ and the speed is $${3 * a}|\\sin t\\cos t|$. Integrating $2\\pi$ times their product gives $${answer.toLatex()}\\pi$${kind === "half" ? ", which is twice the first quadrant value because of the absolute value" : ""}.`,
-        `半径是 $${radius}$，速率是 $${3 * a}|\\sin t\\cos t|$。对它们的积乘 $2\\pi$ 积分，得 $${answer.toLatex()}\\pi$${kind === "half" ? "。因为有绝对值，这是第一象限部分的两倍" : ""}。`,
-      ],
-    );
+      mistakes,
+      solution: walked(
+        [
+          [
+            ["Find the speed", "求速率"],
+            t(
+              "Differentiate both coordinates and use $\\cos^{2}t + \\sin^{2}t = 1$:",
+              "对两个坐标求导，并用 $\\cos^{2}t + \\sin^{2}t = 1$：",
+            ),
+            [
+              `\\frac{dx}{dt} = -${3 * a}\\cos^{2}t\\sin t, \\quad \\frac{dy}{dt} = ${3 * a}\\sin^{2}t\\cos t`,
+              `\\frac{ds}{dt} = ${3 * a}|\\sin t\\cos t|`,
+            ],
+          ],
+          [
+            ["Set up the first quarter", "列出第一段"],
+            t(
+              `The radius is the distance to the $${axis}$-axis, $${radius} = ${radiusLatex}$. On $0 \\le t \\le \\frac{\\pi}{2}$ both $\\sin t$ and $\\cos t$ are positive, so the bars can go:`,
+              `半径是到 $${axis}$ 轴的距离 $${radius} = ${radiusLatex}$。在 $0 \\le t \\le \\frac{\\pi}{2}$ 上 $\\sin t$ 和 $\\cos t$ 都为正，所以可以去掉绝对值：`,
+            ),
+            [
+              `S_{1} = 2\\pi\\int_{0}^{\\pi/2} ${radiusLatex} \\cdot ${3 * a}\\sin t\\cos t \\, dt = ${6 * a * a}\\pi\\int_{0}^{\\pi/2} ${power} \\, dt`,
+            ],
+          ],
+          [
+            ["Substitute", "换元"],
+            t(substitute, substituteZh),
+            [`S_{1} = ${6 * a * a}\\pi\\int_{0}^{1} u^{4} \\, du = ${quarter.toLatex()}\\pi`],
+          ],
+          ...(half
+            ? [
+                [
+                  ["Add the second quarter", "加上第二段"],
+                  t(
+                    "On $\\frac{\\pi}{2} \\le t \\le \\pi$ the speed is $-\\cos t$ times the positive rest, and this quarter is the mirror image of the first in the $y$-axis, so it sweeps the same area:",
+                    "在 $\\frac{\\pi}{2} \\le t \\le \\pi$ 上速率等于 $-\\cos t$ 乘以其余的正因子，这一段是第一段关于 $y$ 轴的镜像，扫出同样的面积：",
+                  ),
+                  [`S = 2 \\cdot ${quarter.toLatex()}\\pi = ${answer.toLatex()}\\pi`],
+                ] as Parameters<typeof walked>[0][number],
+              ]
+            : []),
+        ],
+        t(
+          `Work in Cartesian form instead. The first quarter is $${radius} = (a^{2/3} - ${other}^{2/3})^{3/2}$ for $0 \\le ${other} \\le a$, with $a = ${a}$. Then\n\n$$1 + \\left(\\frac{d${radius}}{d${other}}\\right)^{2} = \\frac{a^{2/3}}{${other}^{2/3}}$$\n\nSo $ds = a^{1/3}${other}^{-1/3} \\, d${other}$. With $w = ${other}^{2/3}$ we have $${other}^{-1/3} \\, d${other} = \\frac{3}{2} \\, dw$, and\n\n$$S_{1} = 2\\pi a^{1/3} \\cdot \\frac{3}{2}\\int_{0}^{a^{2/3}} (a^{2/3} - w)^{3/2} \\, dw = 3\\pi a^{1/3} \\cdot \\frac{2}{5}a^{5/3} = \\frac{6}{5}\\pi a^{2}$$\n\nWith $a = ${a}$ this is $${quarter.toLatex()}\\pi$${half ? `, and the two mirror-image quarters give $${answer.toLatex()}\\pi$` : ""}.`,
+          `改用直角坐标。第一段是 $${radius} = (a^{2/3} - ${other}^{2/3})^{3/2}$，$0 \\le ${other} \\le a$，其中 $a = ${a}$。于是\n\n$$1 + \\left(\\frac{d${radius}}{d${other}}\\right)^{2} = \\frac{a^{2/3}}{${other}^{2/3}}$$\n\n所以 $ds = a^{1/3}${other}^{-1/3} \\, d${other}$。令 $w = ${other}^{2/3}$，则 $${other}^{-1/3} \\, d${other} = \\frac{3}{2} \\, dw$，而\n\n$$S_{1} = 2\\pi a^{1/3} \\cdot \\frac{3}{2}\\int_{0}^{a^{2/3}} (a^{2/3} - w)^{3/2} \\, dw = 3\\pi a^{1/3} \\cdot \\frac{2}{5}a^{5/3} = \\frac{6}{5}\\pi a^{2}$$\n\n当 $a = ${a}$ 时它等于 $${quarter.toLatex()}\\pi$${half ? `，两段互为镜像，合计 $${answer.toLatex()}\\pi$` : ""}。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1411,26 +1513,91 @@ const slopeFromValues = point(
   "the-slope-from-values-of-r-and-its-derivative",
   ["The slope from values of r and its derivative", "由 r 及其导数的值求斜率"],
   [
-    "At $\\theta = 0$ and $\\theta = \\pi$ the slope of a polar curve is $\\frac{r}{r'}$, and at $\\theta = \\frac{\\pi}{2}$ and $\\theta = \\frac{3\\pi}{2}$ it is $-\\frac{r'}{r}$. The value of $r'$ alone is not the slope, because $r'$ measures change in distance from the pole.",
-    "在 $\\theta = 0$ 和 $\\theta = \\pi$ 处，极坐标曲线的斜率是 $\\frac{r}{r'}$；在 $\\theta = \\frac{\\pi}{2}$ 和 $\\theta = \\frac{3\\pi}{2}$ 处，斜率是 $-\\frac{r'}{r}$。单独的 $r'$ 不是斜率，因为 $r'$ 度量的是到极点距离的变化。",
+    "With $x = r\\cos\\theta$ and $y = r\\sin\\theta$, the product rule gives the slope of a polar curve:\n\n$$\\frac{dy}{dx} = \\frac{r'\\sin\\theta + r\\cos\\theta}{r'\\cos\\theta - r\\sin\\theta}$$\n\nOn the axes one of $\\sin\\theta$, $\\cos\\theta$ is zero, so the slope is $\\frac{r}{r'}$ at $\\theta = 0$ and $\\theta = \\pi$, and $-\\frac{r'}{r}$ at $\\theta = \\frac{\\pi}{2}$ and $\\theta = \\frac{3\\pi}{2}$. For example, if $r = 3$ and $r' = 2$ at $\\theta = \\frac{\\pi}{2}$, then $\\frac{dx}{d\\theta} = -3$ and $\\frac{dy}{d\\theta} = 2$, so the slope is $-\\frac{2}{3}$.\n\nCheck: the angle $\\psi$ from the radius to the tangent has $\\tan\\psi = \\frac{r}{r'} = \\frac{3}{2}$, and the tangent points at angle $\\frac{\\pi}{2} + \\psi$, whose tangent is $-\\cot\\psi = -\\frac{2}{3}$.\n\n> **Watch out.** The value of $r'$ alone is not the slope: here $r' = 2$ but the slope is $-\\frac{2}{3}$. The derivative $r'$ measures how fast the distance from the pole changes.",
+    "由 $x = r\\cos\\theta$、$y = r\\sin\\theta$ 和乘积法则，得极坐标曲线的斜率：\n\n$$\\frac{dy}{dx} = \\frac{r'\\sin\\theta + r\\cos\\theta}{r'\\cos\\theta - r\\sin\\theta}$$\n\n在坐标轴上 $\\sin\\theta$、$\\cos\\theta$ 中有一个为零，所以在 $\\theta = 0$ 和 $\\theta = \\pi$ 处斜率是 $\\frac{r}{r'}$，在 $\\theta = \\frac{\\pi}{2}$ 和 $\\theta = \\frac{3\\pi}{2}$ 处斜率是 $-\\frac{r'}{r}$。例如，若在 $\\theta = \\frac{\\pi}{2}$ 处 $r = 3$，$r' = 2$，则 $\\frac{dx}{d\\theta} = -3$，$\\frac{dy}{d\\theta} = 2$，所以斜率是 $-\\frac{2}{3}$。\n\n检验：从半径到切线的角 $\\psi$ 满足 $\\tan\\psi = \\frac{r}{r'} = \\frac{3}{2}$，切线方向的角是 $\\frac{\\pi}{2} + \\psi$，它的正切是 $-\\cot\\psi = -\\frac{2}{3}$。\n\n> **注意。** 单独的 $r'$ 不是斜率：这里 $r' = 2$，斜率却是 $-\\frac{2}{3}$。导数 $r'$ 度量的是到极点距离变化的快慢。",
   ],
   (rng) => {
     const turn = rng.pick(quarterTurns);
     const r = nz(rng, 9);
     const d = nz(rng, 9);
     const answer = turn.swap ? Q.of(-d, r) : Q.of(r, d);
-    return ask(
-      [
+    /** rates gives cos and sin at the angle, then dx/dθ and dy/dθ in terms of r and r'. */
+    const rates = {
+      "0": { cos: "1", sin: "0", x: "r'", y: "r", vx: d, vy: r, turned: "" },
+      "\\frac{\\pi}{2}": { cos: "0", sin: "1", x: "-r", y: "r'", vx: -r, vy: d, turned: "\\frac{\\pi}{2} + " },
+      "\\pi": { cos: "-1", sin: "0", x: "-r'", y: "-r", vx: -d, vy: -r, turned: "\\pi + " },
+      "\\frac{3\\pi}{2}": { cos: "0", sin: "-1", x: "r", y: "-r'", vx: r, vy: -d, turned: "\\frac{3\\pi}{2} + " },
+    }[turn.at];
+    const rule = turn.swap ? "-\\frac{r'}{r}" : "\\frac{r}{r'}";
+    const tanPsi = Q.of(r, d);
+    const read = turn.swap
+      ? t(
+          `The tangent points at angle $${rates.turned}\\psi$, and $\\tan\\left(${rates.turned}\\psi\\right) = -\\cot\\psi = ${answer.toLatex()}$.`,
+          `切线方向的角是 $${rates.turned}\\psi$，而 $\\tan\\left(${rates.turned}\\psi\\right) = -\\cot\\psi = ${answer.toLatex()}$。`,
+        )
+      : t(
+          `The tangent points at angle $${rates.turned}\\psi$, and ${turn.at === "0" ? "its tangent is" : "since tangent has period $\\pi$, its tangent is"} $\\tan\\psi = ${answer.toLatex()}$.`,
+          `切线方向的角是 $${rates.turned}\\psi$，${turn.at === "0" ? "它的正切是" : "由于正切的周期是 $\\pi$，它的正切是"} $\\tan\\psi = ${answer.toLatex()}$。`,
+        );
+    return numberProblem({
+      prompt: t(
         `A polar curve $r = f(\\theta)$ has $f\\left(${turn.at}\\right) = ${r}$ and $f'\\left(${turn.at}\\right) = ${d}$. Find the slope $\\frac{dy}{dx}$ of the curve at $\\theta = ${turn.at}$.`,
         `极坐标曲线 $r = f(\\theta)$ 满足 $f\\left(${turn.at}\\right) = ${r}$，$f'\\left(${turn.at}\\right) = ${d}$。求曲线在 $\\theta = ${turn.at}$ 处的斜率 $\\frac{dy}{dx}$。`,
-      ],
+      ),
       answer,
-      [d, turn.swap ? Q.of(r, d) : Q.of(-d, r), answer.neg()],
-      [
-        `Use $\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta$ and $\\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta$ at this angle. The quotient simplifies to $${turn.swap ? "-\\frac{r'}{r}" : "\\frac{r}{r'}"} = ${answer.toLatex()}$.`,
-        `在这个角度上用 $\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta$ 和 $\\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta$。商化简为 $${turn.swap ? "-\\frac{r'}{r}" : "\\frac{r}{r'}"} = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: d,
+          why: t(
+            "This takes $r'$ as the slope; $r'$ is the rate of change of the distance from the pole, not of $y$ with respect to $x$.",
+            "这里把 $r'$ 当成了斜率；$r'$ 是到极点距离的变化率，不是 $y$ 对 $x$ 的变化率。",
+          ),
+        },
+        {
+          value: turn.swap ? Q.of(r, d) : Q.of(-d, r),
+          why: t(
+            `This uses the rule for the other pair of axis angles; at $\\theta = ${turn.at}$, $\\cos\\theta = ${rates.cos}$ and $\\sin\\theta = ${rates.sin}$, which give $${rule}$.`,
+            `这里用了另一对坐标轴角度的规则；在 $\\theta = ${turn.at}$ 处 $\\cos\\theta = ${rates.cos}$，$\\sin\\theta = ${rates.sin}$，给出的是 $${rule}$。`,
+          ),
+        },
+        {
+          value: answer.neg(),
+          why: t(
+            "The sign is wrong: the derivative of $x = r\\cos\\theta$ is $r'\\cos\\theta - r\\sin\\theta$, with a minus sign.",
+            "符号错了：$x = r\\cos\\theta$ 的导数是 $r'\\cos\\theta - r\\sin\\theta$，中间是减号。",
+          ),
+        },
       ],
-    );
+      solution: walked(
+        [
+          [
+            ["Write the rates", "写出变化率"],
+            t(
+              "Differentiate $x = r\\cos\\theta$ and $y = r\\sin\\theta$ by the product rule:",
+              "用乘积法则对 $x = r\\cos\\theta$ 和 $y = r\\sin\\theta$ 求导：",
+            ),
+            ["\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta, \\quad \\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta"],
+          ],
+          [
+            ["Put in the angle", "代入角度"],
+            t(
+              `At $\\theta = ${turn.at}$, $\\cos\\theta = ${rates.cos}$ and $\\sin\\theta = ${rates.sin}$, with $r = ${r}$ and $r' = ${d}$:`,
+              `在 $\\theta = ${turn.at}$ 处 $\\cos\\theta = ${rates.cos}$，$\\sin\\theta = ${rates.sin}$，且 $r = ${r}$，$r' = ${d}$：`,
+            ),
+            [`\\frac{dx}{d\\theta} = ${rates.x} = ${rates.vx}, \\quad \\frac{dy}{d\\theta} = ${rates.y} = ${rates.vy}`],
+          ],
+          [
+            ["Divide", "相除"],
+            t("The slope is the quotient of the two rates:", "斜率是两个变化率之商："),
+            [`\\frac{dy}{dx} = ${rule} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `Use the angle $\\psi$ from the radius to the tangent, which has $\\tan\\psi = \\frac{r}{r'} = ${tanPsi.toLatex()}$. ${read.en}`,
+          `用从半径到切线的角 $\\psi$，它满足 $\\tan\\psi = \\frac{r}{r'} = ${tanPsi.toLatex()}$。${read["zh-CN"]}`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1446,8 +1613,8 @@ const diagonalSlopeFromValues = point(
   "diagonal-slopes-from-values-of-r-and-its-derivative",
   ["Diagonal slopes from values of r and its derivative", "由 r 及其导数的值求对角方向的斜率"],
   [
-    "At odd multiples of $\\frac{\\pi}{4}$ the sine and cosine have equal size, so the factor $\\frac{\\sqrt{2}}{2}$ cancels and the slope is a rational function of $r$ and $r'$. Whether the sum or the difference is on top depends on the quadrant.",
-    "在 $\\frac{\\pi}{4}$ 的奇数倍处，正弦和余弦大小相等，所以因子 $\\frac{\\sqrt{2}}{2}$ 被约去，斜率是 $r$ 和 $r'$ 的有理式。分子是和还是差，取决于象限。",
+    "At odd multiples of $\\frac{\\pi}{4}$ the sine and cosine have equal size $\\frac{\\sqrt{2}}{2}$, so that factor cancels from the slope formula and the slope is a quotient of $r$ and $r'$. At $\\theta = \\frac{\\pi}{4}$ both are positive:\n\n$$\\frac{dy}{dx} = \\frac{r'\\sin\\theta + r\\cos\\theta}{r'\\cos\\theta - r\\sin\\theta} = \\frac{r' + r}{r' - r}$$\n\nFor example, $r = 3$ and $r' = 1$ there give the slope $\\frac{1 + 3}{1 - 3} = -2$. Whether the sum or the difference is on top depends on the signs of $\\sin\\theta$ and $\\cos\\theta$ in that quadrant.\n\nCheck: the angle $\\psi$ from the radius to the tangent has $\\tan\\psi = \\frac{r}{r'} = 3$, and the tangent points at angle $\\frac{\\pi}{4} + \\psi$. By the addition formula, $\\tan\\left(\\frac{\\pi}{4} + \\psi\\right) = \\frac{1 + 3}{1 - 3} = -2$.\n\n> **Watch out.** At $\\theta = \\frac{3\\pi}{4}$ the cosine is negative, and the slope is $\\frac{r - r'}{r + r'}$. Using the formula for $\\frac{\\pi}{4}$ there gives a wrong slope.",
+    "在 $\\frac{\\pi}{4}$ 的奇数倍处，正弦和余弦大小都是 $\\frac{\\sqrt{2}}{2}$，所以这个因子在斜率公式中约去，斜率是 $r$ 与 $r'$ 的商式。在 $\\theta = \\frac{\\pi}{4}$ 处二者都为正：\n\n$$\\frac{dy}{dx} = \\frac{r'\\sin\\theta + r\\cos\\theta}{r'\\cos\\theta - r\\sin\\theta} = \\frac{r' + r}{r' - r}$$\n\n例如，那里 $r = 3$，$r' = 1$，斜率是 $\\frac{1 + 3}{1 - 3} = -2$。分子是和还是差，取决于该象限中 $\\sin\\theta$ 和 $\\cos\\theta$ 的符号。\n\n检验：从半径到切线的角 $\\psi$ 满足 $\\tan\\psi = \\frac{r}{r'} = 3$，切线方向的角是 $\\frac{\\pi}{4} + \\psi$。由和角公式，$\\tan\\left(\\frac{\\pi}{4} + \\psi\\right) = \\frac{1 + 3}{1 - 3} = -2$。\n\n> **注意。** 在 $\\theta = \\frac{3\\pi}{4}$ 处余弦为负，斜率是 $\\frac{r - r'}{r + r'}$。在那里套用 $\\frac{\\pi}{4}$ 的公式会得到错误的斜率。",
   ],
   (rng) => {
     const turn = rng.pick(diagonalTurns);
@@ -1456,18 +1623,81 @@ const diagonalSlopeFromValues = point(
     const d = rng.pick(options) * rng.pick([-1, 1]);
     const answer = turn.sumOnTop ? Q.of(d + r, d - r) : Q.of(r - d, r + d);
     const other = turn.sumOnTop ? Q.of(r - d, r + d) : Q.of(d + r, d - r);
-    return ask(
-      [
+    /** signs gives the signs of cos and sin at the angle, the tangent of the angle, and how the factor cancels. */
+    const signs = {
+      "\\frac{\\pi}{4}": { cos: "", sin: "", tan: "1" },
+      "\\frac{3\\pi}{4}": { cos: "-", sin: "", tan: "-1" },
+      "\\frac{5\\pi}{4}": { cos: "-", sin: "-", tan: "1" },
+      "\\frac{7\\pi}{4}": { cos: "", sin: "-", tan: "-1" },
+    }[turn.at];
+    const half = "\\frac{\\sqrt{2}}{2}";
+    const symbolic = turn.sumOnTop ? "\\frac{r' + r}{r' - r}" : "\\frac{r - r'}{r + r'}";
+    const [top, bottom] = turn.sumOnTop ? [d + r, d - r] : [r - d, r + d];
+    const [topSay, bottomSay] = turn.sumOnTop ? ["r' + r", "r' - r"] : ["r - r'", "r + r'"];
+    const tanPsi = Q.of(r, d);
+    const addition = turn.sumOnTop ? "\\frac{1 + \\tan\\psi}{1 - \\tan\\psi}" : "\\frac{-1 + \\tan\\psi}{1 + \\tan\\psi}";
+    return numberProblem({
+      prompt: t(
         `A polar curve $r = f(\\theta)$ has $f\\left(${turn.at}\\right) = ${r}$ and $f'\\left(${turn.at}\\right) = ${d}$. Find the slope $\\frac{dy}{dx}$ of the curve at $\\theta = ${turn.at}$.`,
         `极坐标曲线 $r = f(\\theta)$ 满足 $f\\left(${turn.at}\\right) = ${r}$，$f'\\left(${turn.at}\\right) = ${d}$。求曲线在 $\\theta = ${turn.at}$ 处的斜率 $\\frac{dy}{dx}$。`,
-      ],
+      ),
       answer,
-      [other, answer.neg(), d],
-      [
-        `The factor $\\frac{\\sqrt{2}}{2}$ cancels in $\\frac{r'\\sin\\theta + r\\cos\\theta}{r'\\cos\\theta - r\\sin\\theta}$, leaving $${turn.sumOnTop ? "\\frac{r' + r}{r' - r}" : "\\frac{r - r'}{r + r'}"} = ${answer.toLatex()}$.`,
-        `在 $\\frac{r'\\sin\\theta + r\\cos\\theta}{r'\\cos\\theta - r\\sin\\theta}$ 中，因子 $\\frac{\\sqrt{2}}{2}$ 被约去，得 $${turn.sumOnTop ? "\\frac{r' + r}{r' - r}" : "\\frac{r - r'}{r + r'}"} = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: other,
+          why: t(
+            `This is the quotient for the neighbouring quadrant; at $\\theta = ${turn.at}$, $\\cos\\theta = ${signs.cos}${half}$ and $\\sin\\theta = ${signs.sin}${half}$, which give $${symbolic}$.`,
+            `这是相邻象限的商式；在 $\\theta = ${turn.at}$ 处 $\\cos\\theta = ${signs.cos}${half}$，$\\sin\\theta = ${signs.sin}${half}$，给出的是 $${symbolic}$。`,
+          ),
+        },
+        {
+          value: answer.neg(),
+          why: t(
+            "The sign is wrong: the derivative of $x = r\\cos\\theta$ is $r'\\cos\\theta - r\\sin\\theta$, with a minus sign.",
+            "符号错了：$x = r\\cos\\theta$ 的导数是 $r'\\cos\\theta - r\\sin\\theta$，中间是减号。",
+          ),
+        },
+        {
+          value: d,
+          why: t(
+            "This takes $r'$ as the slope; $r'$ is the rate of change of the distance from the pole, not of $y$ with respect to $x$.",
+            "这里把 $r'$ 当成了斜率；$r'$ 是到极点距离的变化率，不是 $y$ 对 $x$ 的变化率。",
+          ),
+        },
       ],
-    );
+      solution: walked(
+        [
+          [
+            ["Write the slope formula", "写出斜率公式"],
+            t(
+              "Differentiate $x = r\\cos\\theta$ and $y = r\\sin\\theta$ by the product rule and divide:",
+              "用乘积法则对 $x = r\\cos\\theta$ 和 $y = r\\sin\\theta$ 求导再相除：",
+            ),
+            ["\\frac{dy}{dx} = \\frac{r'\\sin\\theta + r\\cos\\theta}{r'\\cos\\theta - r\\sin\\theta}"],
+          ],
+          [
+            ["Cancel the common factor", "约去公因子"],
+            t(
+              `At $\\theta = ${turn.at}$, $\\cos\\theta = ${signs.cos}${half}$ and $\\sin\\theta = ${signs.sin}${half}$. The factor $${half}$ cancels and only the signs remain:`,
+              `在 $\\theta = ${turn.at}$ 处 $\\cos\\theta = ${signs.cos}${half}$，$\\sin\\theta = ${signs.sin}${half}$。因子 $${half}$ 约去，只留下符号：`,
+            ),
+            [`\\frac{dy}{dx} = ${symbolic}`],
+          ],
+          [
+            ["Put in the values", "代入数值"],
+            t(
+              `With $r = ${r}$ and $r' = ${d}$, the top is $${topSay} = ${top}$ and the bottom is $${bottomSay} = ${bottom}$:`,
+              `由 $r = ${r}$，$r' = ${d}$，分子 $${topSay} = ${top}$，分母 $${bottomSay} = ${bottom}$：`,
+            ),
+            [`\\frac{dy}{dx} = ${answer.toLatex()}`],
+          ],
+        ],
+        t(
+          `Use the angle $\\psi$ from the radius to the tangent, which has $\\tan\\psi = \\frac{r}{r'} = ${tanPsi.toLatex()}$. The tangent points at angle $${turn.at} + \\psi$, and $\\tan ${turn.at} = ${signs.tan}$, so the addition formula gives\n\n$$\\tan\\left(${turn.at} + \\psi\\right) = ${addition} = ${answer.toLatex()}$$\n\nThis agrees with the slope found above.`,
+          `用从半径到切线的角 $\\psi$，它满足 $\\tan\\psi = \\frac{r}{r'} = ${tanPsi.toLatex()}$。切线方向的角是 $${turn.at} + \\psi$，而 $\\tan ${turn.at} = ${signs.tan}$，所以由和角公式\n\n$$\\tan\\left(${turn.at} + \\psi\\right) = ${addition} = ${answer.toLatex()}$$\n\n这与上面求得的斜率一致。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1486,28 +1716,128 @@ const zeroRadialDerivative = {
     "dr-zero-does-not-mean-a-horizontal-tangent",
     ["A zero of dr does not mean a horizontal tangent", "dr 为零并不意味着水平切线"],
     [
-      "Where $r' = 0$ and $r \\ne 0$, the curve is momentarily at a constant distance from the pole, so the tangent is perpendicular to the radius. Its direction therefore depends on $\\theta$: vertical on the $x$-axis, horizontal on the $y$-axis, and slanted in between.",
-      "当 $r' = 0$ 且 $r \\ne 0$ 时，曲线此刻到极点的距离不变，所以切线垂直于半径。因此切线方向取决于 $\\theta$：在 $x$ 轴上是竖直的，在 $y$ 轴上是水平的，在其他方向是倾斜的。",
+      "Where $r' = 0$ and $r \\ne 0$, the curve is momentarily at a constant distance from the pole, so the tangent is perpendicular to the radius. The rates of $x = r\\cos\\theta$ and $y = r\\sin\\theta$ lose their $r'$ terms:\n\n$$\\frac{dx}{d\\theta} = -r\\sin\\theta, \\qquad \\frac{dy}{d\\theta} = r\\cos\\theta$$\n\nSo the tangent is vertical on the $x$-axis, horizontal on the $y$-axis, and slanted in between. For example, if $r = 3$ and $r' = 0$ at $\\theta = \\frac{\\pi}{4}$, the rates are $-\\frac{3\\sqrt{2}}{2}$ and $\\frac{3\\sqrt{2}}{2}$, so the slope is $-1$.\n\nCheck: the radius at $\\theta = \\frac{\\pi}{4}$ has slope $\\tan\\frac{\\pi}{4} = 1$, and $1 \\cdot (-1) = -1$, so the tangent is indeed perpendicular to the radius.\n\n> **Watch out.** $r' = 0$ does not make $\\frac{dy}{d\\theta}$ zero. The tangent is horizontal only where $\\cos\\theta = 0$ as well.",
+      "当 $r' = 0$ 且 $r \\ne 0$ 时，曲线此刻到极点的距离不变，所以切线垂直于半径。$x = r\\cos\\theta$ 和 $y = r\\sin\\theta$ 的变化率中含 $r'$ 的项消失：\n\n$$\\frac{dx}{d\\theta} = -r\\sin\\theta, \\qquad \\frac{dy}{d\\theta} = r\\cos\\theta$$\n\n所以切线在 $x$ 轴上竖直，在 $y$ 轴上水平，在其他方向倾斜。例如，若在 $\\theta = \\frac{\\pi}{4}$ 处 $r = 3$，$r' = 0$，两个变化率分别是 $-\\frac{3\\sqrt{2}}{2}$ 和 $\\frac{3\\sqrt{2}}{2}$，所以斜率是 $-1$。\n\n检验：$\\theta = \\frac{\\pi}{4}$ 处半径的斜率是 $\\tan\\frac{\\pi}{4} = 1$，而 $1 \\cdot (-1) = -1$，所以切线确实垂直于半径。\n\n> **注意。** $r' = 0$ 并不使 $\\frac{dy}{d\\theta}$ 为零。只有同时 $\\cos\\theta = 0$ 时切线才水平。",
     ],
     (rng) => {
       const turn = rng.pick(zeroDerivativeTurns);
       const r = nz(rng, 12);
+      /** at gives sin and cos at the angle as multiples of 1 or of the square root of 2 over 2, and the direction of the radius. */
+      const at = {
+        "0": { s: 0, c: 1, root: false, radius: "along the $x$-axis", radiusZh: "沿 $x$ 轴" },
+        "\\pi": { s: 0, c: -1, root: false, radius: "along the $x$-axis", radiusZh: "沿 $x$ 轴" },
+        "\\frac{\\pi}{2}": { s: 1, c: 0, root: false, radius: "along the $y$-axis", radiusZh: "沿 $y$ 轴" },
+        "\\frac{3\\pi}{2}": { s: -1, c: 0, root: false, radius: "along the $y$-axis", radiusZh: "沿 $y$ 轴" },
+        "\\frac{\\pi}{4}": {
+          s: 1,
+          c: 1,
+          root: true,
+          radius: "along the line $y = x$, of slope $1$",
+          radiusZh: "沿直线 $y = x$，斜率为 $1$",
+        },
+        "\\frac{3\\pi}{4}": {
+          s: 1,
+          c: -1,
+          root: true,
+          radius: "along the line $y = -x$, of slope $-1$",
+          radiusZh: "沿直线 $y = -x$，斜率为 $-1$",
+        },
+      }[turn.at];
+      /** value writes n, or n times the square root of 2 over 2 at a diagonal angle, in lowest terms. */
+      const value = (n: number) => {
+        if (n === 0 || !at.root) return `${n === 0 ? 0 : n}`;
+        const sign = n < 0 ? "-" : "";
+        const m = Math.abs(n);
+        if (m % 2 === 0) return `${sign}${m === 2 ? "" : m / 2}\\sqrt{2}`;
+        return `${sign}\\frac{${m === 1 ? "" : m}\\sqrt{2}}{2}`;
+      };
+      const trig = (n: number) => (at.root ? value(n) : `${n}`);
+      const vx = value(-r * at.s);
+      const vy = value(r * at.c);
       const horizontal: Pair = ["Horizontal", "水平"];
       const vertical: Pair = ["Vertical", "竖直"];
       const slanted: Pair = ["Neither horizontal nor vertical", "既不水平也不竖直"];
       const none: Pair = ["There is no tangent, because $r'$ is zero", "没有切线，因为 $r'$ 为零"];
       const correct = turn.kind === "horizontal" ? horizontal : turn.kind === "vertical" ? vertical : slanted;
-      return choose(
-        rng,
+      const slope = -at.c * at.s;
+      const read: Pair =
+        turn.kind === "horizontal"
+          ? [
+              "$\\frac{dy}{d\\theta} = 0$ while $\\frac{dx}{d\\theta} \\ne 0$, so the tangent is horizontal.",
+              "$\\frac{dy}{d\\theta} = 0$ 而 $\\frac{dx}{d\\theta} \\ne 0$，所以切线水平。",
+            ]
+          : turn.kind === "vertical"
+            ? [
+                "$\\frac{dx}{d\\theta} = 0$ while $\\frac{dy}{d\\theta} \\ne 0$, so the tangent is vertical.",
+                "$\\frac{dx}{d\\theta} = 0$ 而 $\\frac{dy}{d\\theta} \\ne 0$，所以切线竖直。",
+              ]
+            : [
+                `Neither rate is zero, and their quotient is the slope $${slope}$, so the tangent is slanted.`,
+                `两个变化率都不为零，它们的商是斜率 $${slope}$，所以切线是倾斜的。`,
+              ];
+      const perpendicular: Pair =
+        turn.kind === "horizontal"
+          ? ["A line perpendicular to the $y$-axis is horizontal.", "垂直于 $y$ 轴的直线是水平的。"]
+          : turn.kind === "vertical"
+            ? ["A line perpendicular to the $x$-axis is vertical.", "垂直于 $x$ 轴的直线是竖直的。"]
+            : [
+                `A line perpendicular to it has slope $${slope}$, neither horizontal nor vertical.`,
+                `与它垂直的直线斜率为 $${slope}$，既不水平也不竖直。`,
+              ];
+      const solution = walked(
         [
-          `A polar curve $r = f(\\theta)$ has $f\\left(${turn.at}\\right) = ${r}$ and $f'\\left(${turn.at}\\right) = 0$. What is the tangent line to the curve at $\\theta = ${turn.at}$ like?`,
-          `极坐标曲线 $r = f(\\theta)$ 满足 $f\\left(${turn.at}\\right) = ${r}$，$f'\\left(${turn.at}\\right) = 0$。曲线在 $\\theta = ${turn.at}$ 处的切线是怎样的？`,
+          [
+            ["Drop the r' terms", "去掉含 r' 的项"],
+            t("With $r' = 0$, the product rule leaves only the terms with $r$:", "当 $r' = 0$ 时，乘积法则只留下含 $r$ 的项："),
+            ["\\frac{dx}{d\\theta} = -r\\sin\\theta, \\quad \\frac{dy}{d\\theta} = r\\cos\\theta"],
+          ],
+          [
+            ["Put in the angle", "代入角度"],
+            t(
+              `At $\\theta = ${turn.at}$, $\\sin\\theta = ${trig(at.s)}$ and $\\cos\\theta = ${trig(at.c)}$, with $r = ${r}$:`,
+              `在 $\\theta = ${turn.at}$ 处 $\\sin\\theta = ${trig(at.s)}$，$\\cos\\theta = ${trig(at.c)}$，且 $r = ${r}$：`,
+            ),
+            [`\\frac{dx}{d\\theta} = ${vx}, \\quad \\frac{dy}{d\\theta} = ${vy}`],
+          ],
+          [["Read the tangent", "判断切线"], t(...read)],
         ],
-        correct,
-        [horizontal, vertical, slanted, none].filter((o) => o !== correct),
+        t(
+          `Since $r' = 0$, the tangent is perpendicular to the radius. At $\\theta = ${turn.at}$ the radius lies ${at.radius}. ${perpendicular[0]}`,
+          `因为 $r' = 0$，切线垂直于半径。在 $\\theta = ${turn.at}$ 处半径${at.radiusZh}。${perpendicular[1]}`,
+        ),
+      );
+      return reasoned(
+        choose(
+          rng,
+          [
+            `A polar curve $r = f(\\theta)$ has $f\\left(${turn.at}\\right) = ${r}$ and $f'\\left(${turn.at}\\right) = 0$. What is the tangent line to the curve at $\\theta = ${turn.at}$ like?`,
+            `极坐标曲线 $r = f(\\theta)$ 满足 $f\\left(${turn.at}\\right) = ${r}$，$f'\\left(${turn.at}\\right) = 0$。曲线在 $\\theta = ${turn.at}$ 处的切线是怎样的？`,
+          ],
+          correct,
+          [horizontal, vertical, slanted, none].filter((o) => o !== correct),
+          [solution.en, solution["zh-CN"]],
+        ),
         [
-          `With $r' = 0$, $\\frac{dx}{d\\theta} = -r\\sin\\theta$ and $\\frac{dy}{d\\theta} = r\\cos\\theta$. At this angle, ${turn.kind === "horizontal" ? "$\\frac{dy}{d\\theta} = 0$ and $\\frac{dx}{d\\theta} \\ne 0$, so the tangent is horizontal" : turn.kind === "vertical" ? "$\\frac{dx}{d\\theta} = 0$ and $\\frac{dy}{d\\theta} \\ne 0$, so the tangent is vertical" : "neither is zero, so the tangent is slanted"}.`,
-          `当 $r' = 0$ 时，$\\frac{dx}{d\\theta} = -r\\sin\\theta$，$\\frac{dy}{d\\theta} = r\\cos\\theta$。在这个角度上，${turn.kind === "horizontal" ? "$\\frac{dy}{d\\theta} = 0$ 而 $\\frac{dx}{d\\theta} \\ne 0$，所以切线水平" : turn.kind === "vertical" ? "$\\frac{dx}{d\\theta} = 0$ 而 $\\frac{dy}{d\\theta} \\ne 0$，所以切线竖直" : "二者都不为零，所以切线是倾斜的"}。`,
+          [
+            horizontal[0],
+            "Here $\\cos\\theta \\ne 0$, so $\\frac{dy}{d\\theta} = r\\cos\\theta$ is not zero; $r' = 0$ alone does not make the tangent horizontal.",
+            "这里 $\\cos\\theta \\ne 0$，所以 $\\frac{dy}{d\\theta} = r\\cos\\theta$ 不为零；仅凭 $r' = 0$ 不能使切线水平。",
+          ],
+          [
+            vertical[0],
+            "Here $\\sin\\theta \\ne 0$, so $\\frac{dx}{d\\theta} = -r\\sin\\theta$ is not zero and the tangent is not vertical.",
+            "这里 $\\sin\\theta \\ne 0$，所以 $\\frac{dx}{d\\theta} = -r\\sin\\theta$ 不为零，切线不竖直。",
+          ],
+          [
+            slanted[0],
+            "On an axis one of $\\sin\\theta$ and $\\cos\\theta$ is zero, so one of the two rates vanishes and the tangent is horizontal or vertical.",
+            "在坐标轴上 $\\sin\\theta$ 和 $\\cos\\theta$ 中有一个为零，所以两个变化率中有一个为零，切线水平或竖直。",
+          ],
+          [
+            none[0],
+            "Since $r \\ne 0$, the rates $-r\\sin\\theta$ and $r\\cos\\theta$ are not both zero, so there is a tangent; $r' = 0$ only means the distance from the pole is momentarily constant.",
+            "因为 $r \\ne 0$，变化率 $-r\\sin\\theta$ 和 $r\\cos\\theta$ 不会同时为零，所以有切线；$r' = 0$ 只说明到极点的距离此刻不变。",
+          ],
         ],
       );
     },
@@ -1520,23 +1850,68 @@ const roseTangentsAtPole = {
     "counting-the-tangent-lines-at-the-pole",
     ["Counting the tangent lines at the pole", "数极点处的切线"],
     [
-      "A polar curve passing through the pole at $\\theta = \\alpha$ has tangent line $\\theta = \\alpha$ there. A rose $r = a\\cos n\\theta$ or $r = a\\sin n\\theta$ has $n$ such angles in $[0, \\pi)$, and larger angles repeat the same lines, even when $n$ is even and there are $2n$ petals.",
-      "极坐标曲线在 $\\theta = \\alpha$ 处经过极点时，那里的切线是 $\\theta = \\alpha$。玫瑰线 $r = a\\cos n\\theta$ 或 $r = a\\sin n\\theta$ 在 $[0, \\pi)$ 中有 $n$ 个这样的角，更大的角只是重复相同的直线，即使 $n$ 为偶数、有 $2n$ 个花瓣也是如此。",
+      "A polar curve passing through the pole at $\\theta = \\alpha$, with $r' \\ne 0$ there, has the tangent line $\\theta = \\alpha$. For a rose $r = a\\cos n\\theta$ the zeros of $r$ are\n\n$$\\theta = \\frac{(2k + 1)\\pi}{2n}, \\qquad k = 0, 1, \\ldots, n - 1$$\n\nin $[0, \\pi)$, and angles $\\pi$ further on give the same lines. For example, $r = 2\\cos 2\\theta$ has four petals but meets the pole only along $\\theta = \\frac{\\pi}{4}$ and $\\theta = \\frac{3\\pi}{4}$: two tangent lines, $y = x$ and $y = -x$.\n\nCheck: over a whole turn $\\cos 2\\theta = 0$ at $\\frac{\\pi}{4}$, $\\frac{3\\pi}{4}$, $\\frac{5\\pi}{4}$ and $\\frac{7\\pi}{4}$. These are four rays out of the pole, and opposite rays make up one line, so there are $4 \\div 2 = 2$ lines.\n\n> **Watch out.** Count lines, not petals. When $n$ is even the rose has $2n$ petals but still only $n$ tangent lines at the pole.",
+      "极坐标曲线在 $\\theta = \\alpha$ 处经过极点且那里 $r' \\ne 0$ 时，切线是 $\\theta = \\alpha$。对玫瑰线 $r = a\\cos n\\theta$，$r$ 在 $[0, \\pi)$ 中的零点是\n\n$$\\theta = \\frac{(2k + 1)\\pi}{2n}, \\qquad k = 0, 1, \\ldots, n - 1$$\n\n再加 $\\pi$ 的角给出同样的直线。例如，$r = 2\\cos 2\\theta$ 有四片花瓣，却只沿 $\\theta = \\frac{\\pi}{4}$ 和 $\\theta = \\frac{3\\pi}{4}$ 经过极点：两条切线 $y = x$ 和 $y = -x$。\n\n检验：在一整圈上，$\\cos 2\\theta = 0$ 的角是 $\\frac{\\pi}{4}$、$\\frac{3\\pi}{4}$、$\\frac{5\\pi}{4}$ 和 $\\frac{7\\pi}{4}$。它们是从极点出发的四条射线，相反的两条射线组成一条直线，所以有 $4 \\div 2 = 2$ 条直线。\n\n> **注意。** 数的是直线，不是花瓣。$n$ 为偶数时玫瑰线有 $2n$ 片花瓣，但在极点处仍然只有 $n$ 条切线。",
     ],
     (rng) => {
       const n = rng.int(2, 9);
       const a = rng.int(1, 9);
       const fn = rng.pick(["\\cos", "\\sin"] as const);
       const eq = `r = ${a === 1 ? "" : a}${fn} ${n}\\theta`;
-      return ask(
-        [`How many different lines are tangent to the rose $${eq}$ at the pole?`, `玫瑰线 $${eq}$ 在极点处有多少条不同的切线？`],
-        n,
-        [2 * n, n + 1, n - 1],
-        [
-          `$r = 0$ when $${fn} ${n}\\theta = 0$, which has $${n}$ solutions in $[0, \\pi)$, spaced $\\frac{\\pi}{${n}}$ apart. Angles that differ by $\\pi$ give the same line, so there are $${n}$ tangent lines.`,
-          `当 $${fn} ${n}\\theta = 0$ 时 $r = 0$，它在 $[0, \\pi)$ 中有 $${n}$ 个解，间隔 $\\frac{\\pi}{${n}}$。相差 $\\pi$ 的角给出同一条直线，所以有 $${n}$ 条切线。`,
+      const ks = n <= 4 ? [...Array(n).keys()].join(", ") : `0, 1, \\ldots, ${n - 1}`;
+      const zeros = fn === "\\cos" ? `\\theta = \\frac{(2k + 1)\\pi}{${2 * n}}` : `\\theta = \\frac{k\\pi}{${n}}`;
+      const petals = n % 2 === 0 ? 2 * n : n;
+      return numberProblem({
+        prompt: t(`How many different lines are tangent to the rose $${eq}$ at the pole?`, `玫瑰线 $${eq}$ 在极点处有多少条不同的切线？`),
+        answer: n,
+        form: "integer",
+        mistakes: [
+          {
+            value: 2 * n,
+            why: t(
+              `This counts the $${2 * n}$ rays along which the rose leaves the pole${n % 2 === 0 ? ", which is also the number of petals" : ""}; two opposite rays lie on one line.`,
+              `这数的是玫瑰线离开极点的 $${2 * n}$ 条射线${n % 2 === 0 ? "，也就是花瓣数" : ""}；相反的两条射线在同一条直线上。`,
+            ),
+          },
+          {
+            value: n + 1,
+            why: t(
+              "This counts both ends of $[0, \\pi]$, but $\\theta$ and $\\theta + \\pi$ give the same line.",
+              "这里把 $[0, \\pi]$ 的两个端点都算上了，但 $\\theta$ 和 $\\theta + \\pi$ 给出同一条直线。",
+            ),
+          },
+          {
+            value: n - 1,
+            why: t(
+              `This misses one of the zeros; $${fn} ${n}\\theta = 0$ has exactly $${n}$ solutions in $[0, \\pi)$.`,
+              `这里漏掉了一个零点；$${fn} ${n}\\theta = 0$ 在 $[0, \\pi)$ 中恰有 $${n}$ 个解。`,
+            ),
+          },
         ],
-      );
+        solution: walked(
+          [
+            [
+              ["Find where r is zero", "求 r 的零点"],
+              t(
+                `The rose reaches the pole where $${fn} ${n}\\theta = 0$. In $[0, \\pi)$ this happens at`,
+                `玫瑰线在 $${fn} ${n}\\theta = 0$ 处到达极点。在 $[0, \\pi)$ 中，这发生在`,
+              ),
+              [`${zeros}, \\quad k = ${ks}`],
+            ],
+            [
+              ["Count the lines", "数直线"],
+              t(
+                `At each zero $r' \\ne 0$, so the tangent there is the line through the pole at that angle. A zero $\\pi$ further on gives the same line again. So the $${n}$ angles give $${n}$ different lines${n % 2 === 0 ? `, though the rose has $${petals}$ petals` : ""}.`,
+                `在每个零点处 $r' \\ne 0$，所以那里的切线是沿该角度过极点的直线。比某个零点大 $\\pi$ 的零点给出同一条直线。所以这 $${n}$ 个角给出 $${n}$ 条不同的直线${n % 2 === 0 ? `，尽管玫瑰线有 $${petals}$ 片花瓣` : ""}。`,
+              ),
+            ],
+          ],
+          t(
+            `Count over a whole turn instead. On $[0, 2\\pi)$ the equation $${fn} ${n}\\theta = 0$ has $${2 * n}$ solutions, spaced $\\frac{\\pi}{${n}}$ apart, so the rose leaves the pole along $${2 * n}$ rays. Each line through the pole holds two opposite rays, so there are $${2 * n} \\div 2 = ${n}$ lines.`,
+            `改为在一整圈上数。在 $[0, 2\\pi)$ 上方程 $${fn} ${n}\\theta = 0$ 有 $${2 * n}$ 个解，间隔 $\\frac{\\pi}{${n}}$，所以玫瑰线沿 $${2 * n}$ 条射线离开极点。过极点的每条直线包含两条相反的射线，所以有 $${2 * n} \\div 2 = ${n}$ 条直线。`,
+          ),
+        ),
+      });
     },
   ),
   figure:
@@ -1549,27 +1924,92 @@ const parameterFromTangentSlope = point(
   "a-parameter-from-a-tangent-or-normal-slope",
   ["A parameter from a tangent or normal slope", "由切线或法线的斜率求参数"],
   [
-    "The reverse of finding a tangent: for $r = a + b\\cos\\theta$ at $\\theta = \\frac{\\pi}{2}$, we have $r = a$ and $r' = -b$, so the slope of the tangent is $\\frac{b}{a}$. A normal has the negative reciprocal slope, so convert it before solving.",
-    "这是求切线的逆问题：对 $r = a + b\\cos\\theta$，在 $\\theta = \\frac{\\pi}{2}$ 处有 $r = a$，$r' = -b$，所以切线斜率是 $\\frac{b}{a}$。法线的斜率是它的负倒数，所以求解前要先换算。",
+    "This is the reverse of finding a tangent. For $r = a + b\\cos\\theta$ at $\\theta = \\frac{\\pi}{2}$ we have $r = a$ and $r' = -b\\sin\\frac{\\pi}{2} = -b$, and on the $y$-axis the slope is $-\\frac{r'}{r}$:\n\n$$\\frac{dy}{dx} = -\\frac{r'}{r} = \\frac{b}{a}$$\n\nSet this equal to the given slope and solve. A normal has the negative reciprocal slope, so convert it first. For example, if the normal to $r = 4 + b\\cos\\theta$ at $\\theta = \\frac{\\pi}{2}$ has slope $-2$, the tangent has slope $\\frac{1}{2}$, so $\\frac{b}{4} = \\frac{1}{2}$ and $b = 2$.\n\nCheck: with $b = 2$, $r = 4$ and $r' = -2$, so $\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta = -4$ and $\\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta = -2$. The tangent slope is $\\frac{1}{2}$ and the normal slope is $-2$, as given.\n\n> **Watch out.** Do not set the normal slope equal to $\\frac{b}{a}$. Here that would give $b = -8$.",
+    "这是求切线的逆问题。对 $r = a + b\\cos\\theta$，在 $\\theta = \\frac{\\pi}{2}$ 处有 $r = a$，$r' = -b\\sin\\frac{\\pi}{2} = -b$，而在 $y$ 轴上斜率是 $-\\frac{r'}{r}$：\n\n$$\\frac{dy}{dx} = -\\frac{r'}{r} = \\frac{b}{a}$$\n\n令它等于给定的斜率再求解。法线的斜率是切线斜率的负倒数，所以要先换算。例如，若 $r = 4 + b\\cos\\theta$ 在 $\\theta = \\frac{\\pi}{2}$ 处的法线斜率是 $-2$，则切线斜率是 $\\frac{1}{2}$，所以 $\\frac{b}{4} = \\frac{1}{2}$，$b = 2$。\n\n检验：$b = 2$ 时 $r = 4$，$r' = -2$，所以 $\\frac{dx}{d\\theta} = r'\\cos\\theta - r\\sin\\theta = -4$，$\\frac{dy}{d\\theta} = r'\\sin\\theta + r\\cos\\theta = -2$。切线斜率是 $\\frac{1}{2}$，法线斜率是 $-2$，与给定的一致。\n\n> **注意。** 不要让法线斜率等于 $\\frac{b}{a}$。这里那样做会得到 $b = -8$。",
   ],
   (rng) => {
-    const a = rng.int(1, 9);
+    const a = rng.int(2, 9);
     const b = nz(rng, 12);
     const normal = rng.bool();
-    const given = normal ? Q.of(-a, b) : Q.of(b, a);
+    const tangent = Q.of(b, a);
+    const given = normal ? Q.of(-a, b) : tangent;
     const line: Pair = normal ? ["normal", "法线"] : ["tangent", "切线"];
-    return ask(
-      [
-        `The ${line[0]} line to the polar curve $r = ${a} + b\\cos\\theta$ at $\\theta = \\frac{\\pi}{2}$ has slope $${given.toLatex()}$. Find $b$.`,
-        `极坐标曲线 $r = ${a} + b\\cos\\theta$ 在 $\\theta = \\frac{\\pi}{2}$ 处的${line[1]}斜率是 $${given.toLatex()}$。求 $b$。`,
-      ],
-      b,
-      [-b, given.mul(Q.of(a)).neg(), normal ? given.mul(Q.of(a)) : Q.of(a).div(given)],
-      [
-        `At this angle $r = ${a}$ and $r' = -b$, so the tangent has slope $\\frac{b}{${a}}$.${normal ? ` The normal slope $${given.toLatex()}$ means the tangent slope is $${Q.of(b, a).toLatex()}$.` : ""} So $b = ${b}$.`,
-        `在这个角度上 $r = ${a}$，$r' = -b$，所以切线斜率是 $\\frac{b}{${a}}$。${normal ? `法线斜率 $${given.toLatex()}$ 说明切线斜率是 $${Q.of(b, a).toLatex()}$。` : ""}所以 $b = ${b}$。`,
-      ],
-    );
+    const curve = `r = ${a} + b\\cos\\theta`;
+    const mistakes = [
+      {
+        value: -b,
+        why: t(
+          "The sign of $r'$ is lost: the derivative of $b\\cos\\theta$ is $-b\\sin\\theta$, so $r' = -b$ at this angle.",
+          "$r'$ 的符号丢了：$b\\cos\\theta$ 的导数是 $-b\\sin\\theta$，所以在这个角度上 $r' = -b$。",
+        ),
+      },
+      normal
+        ? {
+            value: given.mul(Q.of(a)),
+            why: t(
+              `This sets the normal slope equal to $\\frac{b}{${a}}$; the tangent slope is the negative reciprocal, $${tangent.toLatex()}$.`,
+              `这里让法线斜率等于 $\\frac{b}{${a}}$；切线斜率是它的负倒数 $${tangent.toLatex()}$。`,
+            ),
+          }
+        : {
+            value: Q.of(a).div(given),
+            why: t(
+              `This uses the slope $\\frac{${a}}{b}$, upside down; on the $y$-axis the slope is $-\\frac{r'}{r} = \\frac{b}{${a}}$.`,
+              `这里用了上下颠倒的斜率 $\\frac{${a}}{b}$；在 $y$ 轴上斜率是 $-\\frac{r'}{r} = \\frac{b}{${a}}$。`,
+            ),
+          },
+      normal
+        ? {
+            value: tangent,
+            why: t(
+              `This is the tangent slope $\\frac{b}{${a}}$ itself; $b$ is $${a}$ times it.`,
+              `这是切线斜率 $\\frac{b}{${a}}$ 本身；$b$ 是它的 $${a}$ 倍。`,
+            ),
+          }
+        : {
+            value: given.div(Q.of(a)),
+            why: t(
+              `This divides the slope by $${a}$; from $\\frac{b}{${a}} = ${given.toLatex()}$, multiply by $${a}$.`,
+              `这里把斜率除以了 $${a}$；由 $\\frac{b}{${a}} = ${given.toLatex()}$，应乘以 $${a}$。`,
+            ),
+          },
+    ];
+    const dx = -a;
+    const dy = -b;
+    return numberProblem({
+      prompt: t(
+        `The ${line[0]} line to the polar curve $${curve}$ at $\\theta = \\frac{\\pi}{2}$ has slope $${given.toLatex()}$. Find $b$.`,
+        `极坐标曲线 $${curve}$ 在 $\\theta = \\frac{\\pi}{2}$ 处的${line[1]}斜率是 $${given.toLatex()}$。求 $b$。`,
+      ),
+      answer: b,
+      form: "integer",
+      mistakes,
+      solution: walked(
+        [
+          [
+            ["Find r and r' at the angle", "求该角度处的 r 和 r'"],
+            t(
+              "At $\\theta = \\frac{\\pi}{2}$, $\\cos\\theta = 0$ and $\\sin\\theta = 1$:",
+              "在 $\\theta = \\frac{\\pi}{2}$ 处 $\\cos\\theta = 0$，$\\sin\\theta = 1$：",
+            ),
+            [`r = ${a}, \\quad r' = -b\\sin\\frac{\\pi}{2} = -b`],
+          ],
+          [
+            ["Write the tangent slope", "写出切线斜率"],
+            t(
+              `On the $y$-axis the slope is $-\\frac{r'}{r} = \\frac{b}{${a}}$.${normal ? ` The normal slope $${given.toLatex()}$ is the negative reciprocal of the tangent slope, so the tangent slope is $${tangent.toLatex()}$.` : ""}`,
+              `在 $y$ 轴上斜率是 $-\\frac{r'}{r} = \\frac{b}{${a}}$。${normal ? `法线斜率 $${given.toLatex()}$ 是切线斜率的负倒数，所以切线斜率是 $${tangent.toLatex()}$。` : ""}`,
+            ),
+            [`\\frac{b}{${a}} = ${tangent.toLatex()}`],
+          ],
+          [["Solve", "求解"], t(`Multiply by $${a}$:`, `两边乘以 $${a}$：`), [`b = ${b}`]],
+        ],
+        t(
+          `Put $b = ${b}$ back. At $\\theta = \\frac{\\pi}{2}$, $r = ${a}$ and $r' = ${-b}$, so $\\frac{dx}{d\\theta} = -r = ${dx}$ and $\\frac{dy}{d\\theta} = r' = ${dy}$. The tangent slope is $${tangent.toLatex()}$${normal ? `, and the normal slope is its negative reciprocal $${given.toLatex()}$` : ""}, as given.`,
+          `把 $b = ${b}$ 代回。在 $\\theta = \\frac{\\pi}{2}$ 处 $r = ${a}$，$r' = ${-b}$，所以 $\\frac{dx}{d\\theta} = -r = ${dx}$，$\\frac{dy}{d\\theta} = r' = ${dy}$。切线斜率是 $${tangent.toLatex()}$${normal ? `，法线斜率是它的负倒数 $${given.toLatex()}$` : ""}，与给定的一致。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -1578,28 +2018,75 @@ const commonRegion = {
     "the-region-common-to-two-circles",
     ["The region common to two circles", "两圆的公共区域"],
     [
-      "For the region inside both curves, use whichever $r$ is smaller at each angle, so the integral splits at the intersection. Inside $r = 2a\\cos\\theta$ and $r = 2a\\sin\\theta$ the sine bounds $\\left[0, \\frac{\\pi}{4}\\right]$ and the cosine bounds $\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$.",
-      "对于同时在两条曲线内部的区域，每个角度都取较小的 $r$，所以积分要在交点处分开。在 $r = 2a\\cos\\theta$ 和 $r = 2a\\sin\\theta$ 的内部，$\\left[0, \\frac{\\pi}{4}\\right]$ 上由正弦界定，$\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$ 上由余弦界定。",
+      "For the region inside both curves, use whichever $r$ is smaller at each angle, so the integral splits where the curves cross. The circles $r = 2\\cos\\theta$ and $r = 2\\sin\\theta$ cross at $\\theta = \\frac{\\pi}{4}$. The sine is smaller on $\\left[0, \\frac{\\pi}{4}\\right]$, the cosine on $\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$, and the two pieces are mirror images in $y = x$, so\n\n$$A = 2 \\cdot \\frac{1}{2}\\int_{0}^{\\pi/4} 4\\sin^{2}\\theta \\, d\\theta = 2\\left[\\theta - \\frac{\\sin 2\\theta}{2}\\right]_{0}^{\\pi/4} = \\frac{\\pi}{2} - 1$$\n\nCheck: the circles have radius $1$ and centres $(1, 0)$ and $(0, 1)$, and the lens is two circular segments cut off by the chord from $(0, 0)$ to $(1, 1)$. That chord subtends a right angle at each centre, so each segment has area $\\frac{\\pi}{4} - \\frac{1}{2}$, and two of them make $\\frac{\\pi}{2} - 1$.\n\n> **Watch out.** Integrating $\\frac{1}{2}r^{2}$ with the larger $r$, or with one formula over the whole range, gives the region inside either circle, not inside both.",
+      "对于同时在两条曲线内部的区域，每个角度都取较小的 $r$，所以积分要在两曲线相交处分开。圆 $r = 2\\cos\\theta$ 和 $r = 2\\sin\\theta$ 交于 $\\theta = \\frac{\\pi}{4}$。在 $\\left[0, \\frac{\\pi}{4}\\right]$ 上正弦较小，在 $\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$ 上余弦较小，两部分关于 $y = x$ 互为镜像，所以\n\n$$A = 2 \\cdot \\frac{1}{2}\\int_{0}^{\\pi/4} 4\\sin^{2}\\theta \\, d\\theta = 2\\left[\\theta - \\frac{\\sin 2\\theta}{2}\\right]_{0}^{\\pi/4} = \\frac{\\pi}{2} - 1$$\n\n检验：两圆半径为 $1$，圆心是 $(1, 0)$ 和 $(0, 1)$，透镜形区域是被从 $(0, 0)$ 到 $(1, 1)$ 的弦切下的两个弓形。这条弦在每个圆心处所对的角是直角，所以每个弓形的面积是 $\\frac{\\pi}{4} - \\frac{1}{2}$，两个合起来是 $\\frac{\\pi}{2} - 1$。\n\n> **注意。** 用较大的 $r$ 积分 $\\frac{1}{2}r^{2}$，或在整个范围上只用一个公式，得到的是在某一个圆内的区域，而不是同时在两个圆内的区域。",
     ],
     (rng) => {
       const a = rng.int(1, 30);
       const s = a * a;
       const c = s === 1 ? "" : `${s}`;
-      return choose(
-        rng,
+      const answer = `${c}\\left(\\frac{\\pi}{2} - 1\\right)`;
+      const doubled = `${c}\\left(\\pi - 2\\right)`;
+      const halfOnly = `${c}\\left(\\frac{\\pi}{4} - \\frac{1}{2}\\right)`;
+      const quarterDisc = poly([Q.of(s, 2), "\\pi"]);
+      const solution = walked(
         [
-          `Find the area of the region inside both $r = ${2 * a}\\cos\\theta$ and $r = ${2 * a}\\sin\\theta$.`,
-          `求同时在 $r = ${2 * a}\\cos\\theta$ 和 $r = ${2 * a}\\sin\\theta$ 内部的区域的面积。`,
+          [
+            ["Find where the circles cross", "求两圆的交点"],
+            t(
+              `Set $${2 * a}\\cos\\theta = ${2 * a}\\sin\\theta$, so $\\tan\\theta = 1$:`,
+              `令 $${2 * a}\\cos\\theta = ${2 * a}\\sin\\theta$，则 $\\tan\\theta = 1$：`,
+            ),
+            ["\\theta = \\frac{\\pi}{4}"],
+          ],
+          [
+            ["Take the smaller radius", "取较小的半径"],
+            t(
+              "On $\\left[0, \\frac{\\pi}{4}\\right]$ the sine circle is nearer the pole, and on $\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$ the cosine circle is. The two pieces are mirror images in $y = x$, so take twice the first:",
+              "在 $\\left[0, \\frac{\\pi}{4}\\right]$ 上正弦圆离极点较近，在 $\\left[\\frac{\\pi}{4}, \\frac{\\pi}{2}\\right]$ 上余弦圆较近。两部分关于 $y = x$ 互为镜像，所以取第一部分的两倍：",
+            ),
+            [`A = 2 \\cdot \\frac{1}{2}\\int_{0}^{\\pi/4} ${4 * s}\\sin^{2}\\theta \\, d\\theta`],
+          ],
+          [
+            ["Integrate", "积分"],
+            t("Use $\\sin^{2}\\theta = \\frac{1 - \\cos 2\\theta}{2}$:", "用 $\\sin^{2}\\theta = \\frac{1 - \\cos 2\\theta}{2}$："),
+            [
+              `A = ${2 * s}\\left[\\theta - \\frac{\\sin 2\\theta}{2}\\right]_{0}^{\\pi/4} = ${2 * s}\\left(\\frac{\\pi}{4} - \\frac{1}{2}\\right) = ${answer}`,
+            ],
+          ],
         ],
-        same2(`${c}\\left(\\frac{\\pi}{2} - 1\\right)`),
+        t(
+          `Use plane geometry. The circles have radius $${a}$ and centres $(${a}, 0)$ and $(0, ${a})$, and the region is two circular segments cut off by the common chord from $(0, 0)$ to $(${a}, ${a})$. The chord subtends a right angle at each centre, so each segment is a quarter disc less a right triangle:\n\n$$${poly([Q.of(s, 4), "\\pi"])} - ${Q.of(s, 2).toLatex()} = ${halfOnly}$$\n\nTwo segments make $${answer}$.`,
+          `用平面几何。两圆半径为 $${a}$，圆心是 $(${a}, 0)$ 和 $(0, ${a})$，区域是被公共弦（从 $(0, 0)$ 到 $(${a}, ${a})$）切下的两个弓形。这条弦在每个圆心处所对的角是直角，所以每个弓形是四分之一圆减去一个直角三角形：\n\n$$${poly([Q.of(s, 4), "\\pi"])} - ${Q.of(s, 2).toLatex()} = ${halfOnly}$$\n\n两个弓形合起来是 $${answer}$。`,
+        ),
+      );
+      return reasoned(
+        choose(
+          rng,
+          [
+            `Find the area of the region inside both $r = ${2 * a}\\cos\\theta$ and $r = ${2 * a}\\sin\\theta$.`,
+            `求同时在 $r = ${2 * a}\\cos\\theta$ 和 $r = ${2 * a}\\sin\\theta$ 内部的区域的面积。`,
+          ],
+          same2(answer),
+          [same2(doubled), same2(halfOnly), same2(quarterDisc)],
+          [solution.en, solution["zh-CN"]],
+        ),
         [
-          same2(`${c}\\left(\\pi - 2\\right)`),
-          same2(`${c}\\left(\\frac{\\pi}{4} - \\frac{1}{2}\\right)`),
-          same2(poly([Q.of(s, 2), "\\pi"])),
-        ],
-        [
-          `The curves meet at $\\theta = \\frac{\\pi}{4}$, and by symmetry the area is $2 \\cdot \\frac{1}{2}\\int_{0}^{\\pi/4} (${2 * a}\\sin\\theta)^{2} \\, d\\theta = ${c}\\left(\\frac{\\pi}{2} - 1\\right)$.`,
-          `两曲线交于 $\\theta = \\frac{\\pi}{4}$，由对称性，面积是 $2 \\cdot \\frac{1}{2}\\int_{0}^{\\pi/4} (${2 * a}\\sin\\theta)^{2} \\, d\\theta = ${c}\\left(\\frac{\\pi}{2} - 1\\right)$。`,
+          [
+            same2(doubled)[0],
+            "This leaves out the $\\frac{1}{2}$ of the polar area formula $\\frac{1}{2}\\int r^{2} \\, d\\theta$.",
+            "这里漏掉了极坐标面积公式 $\\frac{1}{2}\\int r^{2} \\, d\\theta$ 中的 $\\frac{1}{2}$。",
+          ],
+          [
+            same2(halfOnly)[0],
+            "This is only the piece on $\\left[0, \\frac{\\pi}{4}\\right]$; the piece bounded by the cosine circle is its mirror image and adds the same.",
+            "这只是 $\\left[0, \\frac{\\pi}{4}\\right]$ 上的部分；由余弦圆界定的部分是它的镜像，面积相同，也要加上。",
+          ],
+          [
+            same2(quarterDisc)[0],
+            "This is half of one disc, from a single formula over the whole range; at each angle the smaller of the two radii must be used.",
+            "这是一个圆盘的一半，是在整个范围上只用一个公式得到的；每个角度都要取两个半径中较小的那个。",
+          ],
         ],
       );
     },

@@ -735,8 +735,8 @@ const selfCrossing: KnowledgePointDef = {
   id: "tangents-where-a-parametric-curve-crosses-itself",
   title: t("Tangents where a parametric curve crosses itself", "参数曲线自交处的切线"),
   explanation: t(
-    "A parametric curve can pass through the same point at two values of the parameter. Find these by solving $x(t) = x_0$ and $y(t) = y_0$ together. Each value gives its own $\\frac{dy}{dx}$, so a self-crossing has two tangent lines rather than one.",
-    "参数曲线可以在两个参数值处经过同一点。联立 $x(t) = x_0$ 和 $y(t) = y_0$ 就能找到它们。每个参数值都有自己的 $\\frac{dy}{dx}$，所以自交点处有两条切线，而不是一条。",
+    "A parametric curve can pass through the same point at two values of the parameter. Find them by solving $x(t) = x_0$ and $y(t) = y_0$ together. Each value gives its own slope $\\frac{dy}{dx}$, so at a self-crossing there are two tangent lines. For $x = t^{2} - 1$, $y = t^{3} - t$, both coordinates are $0$ at $t = \\pm 1$, and\n\n$$\\frac{dy}{dx} = \\frac{3t^{2} - 1}{2t}$$\n\nThis is $1$ at $t = 1$ and $-1$ at $t = -1$.\n\nCheck: since $y = t(t^{2} - 1) = tx$, squaring gives $y^{2} = t^{2}x^{2} = (x + 1)x^{2}$. Near the origin $x + 1$ is close to $1$, so $y^{2} \\approx x^{2}$ and the curve looks like the two lines $y = \\pm x$, with slopes $\\pm 1$.\n\n> **Watch out.** Use each value of $t$ separately. Substituting only one of them finds one of the two tangents and misses the other.",
+    "参数曲线可以在两个参数值处经过同一点。联立 $x(t) = x_0$ 与 $y(t) = y_0$ 就能找到它们。每个参数值都有自己的斜率 $\\frac{dy}{dx}$，所以自交点处有两条切线。对 $x = t^{2} - 1$、$y = t^{3} - t$，两个坐标都在 $t = \\pm 1$ 时为 $0$，而\n\n$$\\frac{dy}{dx} = \\frac{3t^{2} - 1}{2t}$$\n\n它在 $t = 1$ 处为 $1$，在 $t = -1$ 处为 $-1$。\n\n检验：因为 $y = t(t^{2} - 1) = tx$，平方得 $y^{2} = t^{2}x^{2} = (x + 1)x^{2}$。在原点附近 $x + 1$ 接近 $1$，所以 $y^{2} \\approx x^{2}$，曲线看起来像两条直线 $y = \\pm x$，斜率为 $\\pm 1$。\n\n> **注意。** 每个 $t$ 值要分别代入。只代入其中一个，只能找到两条切线中的一条。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -744,6 +744,7 @@ const selfCrossing: KnowledgePointDef = {
     const answer = a * m;
     const x = poly([1, "t^2"], [-a * a, ""]);
     const y = poly([m, "t^3"], [-m * a * a, "t"]);
+    const dy = poly([3 * m, "t^2"], [-m * a * a, ""]);
     return numberProblem({
       prompt: t(
         `The curve $x = ${x}$, $y = ${y}$ passes through the origin twice. Find the positive slope among its two tangent lines there.`,
@@ -751,10 +752,53 @@ const selfCrossing: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 * answer, a, m],
-      solution: t(
-        `Both coordinates vanish at $t = \\pm ${a}$. The slope is $\\frac{dy}{dx} = \\frac{${poly([3 * m, "t^2"], [-m * a * a, ""])}}{2t}$, which equals $\\pm ${answer}$ at these values. The positive slope is $${answer}$.`,
-        `两个坐标都在 $t = \\pm ${a}$ 时为零。斜率 $\\frac{dy}{dx} = \\frac{${poly([3 * m, "t^2"], [-m * a * a, ""])}}{2t}$，在这两个值处等于 $\\pm ${answer}$。为正的斜率是 $${answer}$。`,
+      mistakes: [
+        {
+          value: Q.of(3 * answer, 2),
+          why: t(
+            `This drops the term $-${m * a * a}$ from $\\frac{dy}{dt}$: the derivative of $${y}$ is $${dy}$.`,
+            `这里漏掉了 $\\frac{dy}{dt}$ 中的 $-${m * a * a}$：$${y}$ 的导数是 $${dy}$。`,
+          ),
+        },
+        {
+          value: 2 * answer,
+          why: t("This divides by $t$ instead of $\\frac{dx}{dt} = 2t$.", "这里除以的是 $t$，而不是 $\\frac{dx}{dt} = 2t$。"),
+        },
+        {
+          value: 2 * m * a * a,
+          why: t(
+            "This is $\\frac{dy}{dt}$ alone; the slope divides it by $\\frac{dx}{dt}$.",
+            "这只是 $\\frac{dy}{dt}$；斜率还要除以 $\\frac{dx}{dt}$。",
+          ),
+        },
+        {
+          value: Q.of(1, answer),
+          why: t("This is $\\frac{dx/dt}{dy/dt}$, the slope upside down.", "这是 $\\frac{dx/dt}{dy/dt}$，斜率上下颠倒了。"),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Find both values of t", "求两个 t 值"],
+            [
+              `Setting $x = 0$ gives $t = \\pm ${a}$, and both make $y = ${m === 1 ? "" : m}t(t^{2} - ${a * a}) = 0$.`,
+              `令 $x = 0$ 得 $t = \\pm ${a}$，它们都使 $y = ${m === 1 ? "" : m}t(t^{2} - ${a * a}) = 0$。`,
+            ],
+          ],
+          [["Find the slope", "求斜率"], ["Divide the two rates:", "两个变化率相除："], [`\\frac{dy}{dx} = \\frac{${dy}}{2t}`]],
+          [
+            ["Evaluate at each value", "在每个值处求值"],
+            [
+              `At $t = ${a}$ and $t = -${a}$ the numerator is $${2 * m * a * a}$, and the denominators are $${2 * a}$ and $-${2 * a}$:`,
+              `在 $t = ${a}$ 与 $t = -${a}$ 处分子都是 $${2 * m * a * a}$，分母分别是 $${2 * a}$ 与 $-${2 * a}$：`,
+            ],
+            [`\\frac{dy}{dx} = \\pm ${answer}`],
+          ],
+        ],
+        [
+          `Eliminate the parameter. Since $y = ${m === 1 ? "" : m}tx$, squaring gives\n\n$$y^{2} = ${m === 1 ? "" : m * m}t^{2}x^{2} = ${m === 1 ? "" : m * m}(x + ${a * a})x^{2}$$\n\nNear the origin $x + ${a * a}$ is close to $${a * a}$, so $y^{2} \\approx ${coefficientOf(answer * answer)}x^{2}$ and the two branches look like the lines $y = \\pm ${coefficientOf(answer)}x$.`,
+          `消去参数。因为 $y = ${m === 1 ? "" : m}tx$，平方得\n\n$$y^{2} = ${m === 1 ? "" : m * m}t^{2}x^{2} = ${m === 1 ? "" : m * m}(x + ${a * a})x^{2}$$\n\n在原点附近 $x + ${a * a}$ 接近 $${a * a}$，所以 $y^{2} \\approx ${coefficientOf(answer * answer)}x^{2}$，两支曲线看起来像直线 $y = \\pm ${coefficientOf(answer)}x$。`,
+        ],
       ),
     });
   },
@@ -2499,12 +2543,13 @@ const astroidLength: KnowledgePointDef = {
   id: "the-length-of-an-astroid",
   title: t("The length of an astroid", "星形线的长度"),
   explanation: t(
-    "The astroid $x = a\\cos^3 t$, $y = a\\sin^3 t$ has speed $3a|\\sin t\\cos t|$. The absolute value means that a direct integral over the whole turn would give zero if the bars were dropped. So use symmetry: integrate over a quarter of the curve, where the sine and cosine are both positive, and multiply by four.",
-    "星形线 $x = a\\cos^3 t$，$y = a\\sin^3 t$ 的速率是 $3a|\\sin t\\cos t|$。如果去掉绝对值，直接在一整圈上积分会得到零。所以要利用对称性：在四分之一条曲线上积分，这里正弦和余弦都是正的，再乘以四。",
+    "The astroid $x = a\\cos^{3} t$, $y = a\\sin^{3} t$ has $\\frac{dx}{dt} = -3a\\cos^{2} t\\sin t$ and $\\frac{dy}{dt} = 3a\\sin^{2} t\\cos t$, so its speed is\n\n$$\\sqrt{9a^{2}\\sin^{2} t\\cos^{2} t(\\cos^{2} t + \\sin^{2} t)} = 3a|\\sin t\\cos t|$$\n\nOn the first quarter, $0 \\le t \\le \\frac{\\pi}{2}$, both factors are positive. For $a = 1$ that quarter has length $\\int_{0}^{\\pi/2} 3\\sin t\\cos t \\, dt = \\frac{3}{2}$, and the four congruent quarters give $6$.\n\nCheck: without symmetry, $3|\\sin t\\cos t| = \\frac{3}{2}|\\sin 2t|$, and over a whole turn $|\\sin 2t|$ has four arches of area $1$ each. So the length is $\\frac{3}{2} \\cdot 4 = 6$.\n\n> **Watch out.** Keep the absolute value. Over $[0, 2\\pi]$ the integral of $3\\sin t\\cos t$ without the bars is $0$, which cannot be a length.",
+    "星形线 $x = a\\cos^{3} t$、$y = a\\sin^{3} t$ 有 $\\frac{dx}{dt} = -3a\\cos^{2} t\\sin t$，$\\frac{dy}{dt} = 3a\\sin^{2} t\\cos t$，所以它的速率为\n\n$$\\sqrt{9a^{2}\\sin^{2} t\\cos^{2} t(\\cos^{2} t + \\sin^{2} t)} = 3a|\\sin t\\cos t|$$\n\n在第一个四分之一段 $0 \\le t \\le \\frac{\\pi}{2}$ 上两个因子都为正。取 $a = 1$，这一段长 $\\int_{0}^{\\pi/2} 3\\sin t\\cos t \\, dt = \\frac{3}{2}$，四段全等，合计 $6$。\n\n检验：不用对称性，$3|\\sin t\\cos t| = \\frac{3}{2}|\\sin 2t|$，而在一整圈上 $|\\sin 2t|$ 有四个拱，每个面积为 $1$。所以长度为 $\\frac{3}{2} \\cdot 4 = 6$。\n\n> **注意。** 要保留绝对值。在 $[0, 2\\pi]$ 上不带绝对值地积分 $3\\sin t\\cos t$ 得 $0$，这不可能是长度。",
   ),
   generate(rng) {
     const a = rng.int(1, 30);
     const answer = 6 * a;
+    const quarter = Q.of(3 * a, 2).toLatex();
     return numberProblem({
       prompt: t(
         `Find the length of the curve $x = ${coefficientOf(a)}\\cos^3 t$, $y = ${coefficientOf(a)}\\sin^3 t$, $0 \\le t \\le 2\\pi$.`,
@@ -2512,10 +2557,64 @@ const astroidLength: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [0, 3 * a, 12 * a],
-      solution: t(
-        `On a quarter of the curve the length is $\\int_0^{\\pi/2} ${3 * a}\\sin t\\cos t\\,dt = ${Q.of(3 * a, 2).toLatex()}$. Four of these give $${answer}$.`,
-        `四分之一条曲线的长度是 $\\int_0^{\\pi/2} ${3 * a}\\sin t\\cos t\\,dt = ${Q.of(3 * a, 2).toLatex()}$。四段合计 $${answer}$。`,
+      mistakes: [
+        {
+          value: 0,
+          why: t(
+            "This drops the absolute value: $\\sin t\\cos t$ is negative on two of the four quarters, and a length cannot cancel.",
+            "这里丢掉了绝对值：$\\sin t\\cos t$ 在四段中的两段上为负，而长度不会互相抵消。",
+          ),
+        },
+        {
+          value: Q.of(3 * a, 2),
+          why: t(
+            "This is the length of one quarter; the astroid has four congruent quarters.",
+            "这只是一段的长度；星形线有四段全等的部分。",
+          ),
+        },
+        {
+          value: 3 * a,
+          why: t("This is half the astroid, only two of its four quarters.", "这只是半条星形线，四段中的两段。"),
+        },
+        {
+          value: 12 * a,
+          why: t(
+            "This takes $\\sin t\\cos t$ as $\\sin 2t$; in fact $\\sin t\\cos t = \\frac{1}{2}\\sin 2t$.",
+            "这里把 $\\sin t\\cos t$ 当成了 $\\sin 2t$；实际上 $\\sin t\\cos t = \\frac{1}{2}\\sin 2t$。",
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Find the speed", "求速率"],
+            [
+              "Differentiate both coordinates and use $\\cos^{2} t + \\sin^{2} t = 1$:",
+              "对两个坐标求导，并用 $\\cos^{2} t + \\sin^{2} t = 1$：",
+            ],
+            [
+              `\\frac{dx}{dt} = -${3 * a}\\cos^{2} t\\sin t, \\quad \\frac{dy}{dt} = ${3 * a}\\sin^{2} t\\cos t`,
+              `\\sqrt{\\left(\\frac{dx}{dt}\\right)^{2} + \\left(\\frac{dy}{dt}\\right)^{2}} = ${3 * a}|\\sin t\\cos t|`,
+            ],
+          ],
+          [
+            ["Measure one quarter", "求一段"],
+            [
+              "On $0 \\le t \\le \\frac{\\pi}{2}$ both factors are positive. Substitute $u = \\sin t$, $du = \\cos t \\, dt$:",
+              "在 $0 \\le t \\le \\frac{\\pi}{2}$ 上两个因子都为正。令 $u = \\sin t$，$du = \\cos t \\, dt$：",
+            ],
+            [`\\int_{0}^{\\pi/2} ${3 * a}\\sin t\\cos t \\, dt = \\int_{0}^{1} ${3 * a}u \\, du = ${quarter}`],
+          ],
+          [
+            ["Use symmetry", "利用对称性"],
+            ["The astroid has four congruent quarters:", "星形线有四段全等的部分："],
+            [`L = 4 \\cdot ${quarter} = ${answer}`],
+          ],
+        ],
+        [
+          `Integrate over the whole turn instead. Since $\\sin t\\cos t = \\frac{1}{2}\\sin 2t$, the speed is $${quarter}|\\sin 2t|$, and $|\\sin 2t|$ has four arches on $[0, 2\\pi]$, each of area $1$. So $L = ${quarter} \\cdot 4 = ${answer}$.`,
+          `改为在一整圈上积分。因为 $\\sin t\\cos t = \\frac{1}{2}\\sin 2t$，速率为 $${quarter}|\\sin 2t|$，而 $|\\sin 2t|$ 在 $[0, 2\\pi]$ 上有四个拱，每个面积为 $1$。所以 $L = ${quarter} \\cdot 4 = ${answer}$。`,
+        ],
       ),
     });
   },
@@ -2526,22 +2625,73 @@ const astroidArea: KnowledgePointDef = {
   figure: calculusDrawings5["calculating-areas-bounded-by-parametric-functions#the-area-inside-an-astroid"],
   title: t("The area inside an astroid", "星形线围成的面积"),
   explanation: t(
-    "The area inside a closed parametric curve is the integral of $y\\,dx$ with suitable orientation. For the astroid this gives a constant times $\\int \\sin^4 t\\cos^2 t\\,dt$, which reduces by the double angle formulas. Using symmetry, take one quarter of the region, where the integrand has a single sign, and multiply by four.",
-    "参数曲线围成的面积，是取合适方向的 $y\\,dx$ 的积分。对星形线，这给出常数乘以 $\\int \\sin^4 t\\cos^2 t\\,dt$，可以用二倍角公式化简。利用对称性，取区域的四分之一，这里被积函数符号不变，再乘以四。",
+    "The area under a parametric arc is $\\int y \\, dx = \\int y\\frac{dx}{dt} \\, dt$, with the limits taken in the direction of increasing $x$. For the astroid $x = a\\cos^{3} t$, $y = a\\sin^{3} t$, the first quarter runs from $t = \\frac{\\pi}{2}$ (where $x = 0$) to $t = 0$ (where $x = a$), so\n\n$$\\frac{A}{4} = \\int_{\\pi/2}^{0} a\\sin^{3} t\\left(-3a\\cos^{2} t\\sin t\\right) dt = 3a^{2}\\int_{0}^{\\pi/2} \\sin^{4} t\\cos^{2} t \\, dt = \\frac{3\\pi a^{2}}{32}$$\n\nSo $A = \\frac{3\\pi a^{2}}{8}$; for $a = 1$ it is $\\frac{3\\pi}{8}$.\n\nCheck: the whole closed curve has area $\\frac{1}{2}\\oint (x \\, dy - y \\, dx)$. Here $x\\frac{dy}{dt} - y\\frac{dx}{dt} = 3a^{2}\\sin^{2} t\\cos^{2} t = \\frac{3a^{2}}{4}\\sin^{2} 2t$, and $\\sin^{2} 2t$ integrates to $\\pi$ over a whole turn, so $A = \\frac{1}{2} \\cdot \\frac{3a^{2}}{4} \\cdot \\pi = \\frac{3\\pi a^{2}}{8}$.\n\n> **Watch out.** As $t$ increases from $0$ to $\\frac{\\pi}{2}$, $x$ decreases. Integrating from $0$ to $\\frac{\\pi}{2}$ without reversing gives $-\\frac{3\\pi a^{2}}{32}$, a negative area.",
+    "参数弧下方的面积为 $\\int y \\, dx = \\int y\\frac{dx}{dt} \\, dt$，积分限按 $x$ 增大的方向取。对星形线 $x = a\\cos^{3} t$、$y = a\\sin^{3} t$，第一象限的部分从 $t = \\frac{\\pi}{2}$（$x = 0$）走到 $t = 0$（$x = a$），所以\n\n$$\\frac{A}{4} = \\int_{\\pi/2}^{0} a\\sin^{3} t\\left(-3a\\cos^{2} t\\sin t\\right) dt = 3a^{2}\\int_{0}^{\\pi/2} \\sin^{4} t\\cos^{2} t \\, dt = \\frac{3\\pi a^{2}}{32}$$\n\n所以 $A = \\frac{3\\pi a^{2}}{8}$；$a = 1$ 时为 $\\frac{3\\pi}{8}$。\n\n检验：整条闭曲线围成的面积为 $\\frac{1}{2}\\oint (x \\, dy - y \\, dx)$。这里 $x\\frac{dy}{dt} - y\\frac{dx}{dt} = 3a^{2}\\sin^{2} t\\cos^{2} t = \\frac{3a^{2}}{4}\\sin^{2} 2t$，而 $\\sin^{2} 2t$ 在一整圈上的积分为 $\\pi$，所以 $A = \\frac{1}{2} \\cdot \\frac{3a^{2}}{4} \\cdot \\pi = \\frac{3\\pi a^{2}}{8}$。\n\n> **注意。** $t$ 从 $0$ 增到 $\\frac{\\pi}{2}$ 时 $x$ 在减小。若从 $0$ 积到 $\\frac{\\pi}{2}$ 而不调换积分限，会得到 $-\\frac{3\\pi a^{2}}{32}$，面积成了负数。",
   ),
   generate(rng) {
     const a = rng.int(1, 30);
     const answer = Q.of(3 * a * a, 8);
+    const quarter = Q.of(3 * a * a, 32);
     return numberProblem({
       prompt: t(
         `The region enclosed by $x = ${coefficientOf(a)}\\cos^3 t$, $y = ${coefficientOf(a)}\\sin^3 t$ has area $c\\pi$. Find $c$.`,
         `曲线 $x = ${coefficientOf(a)}\\cos^3 t$，$y = ${coefficientOf(a)}\\sin^3 t$ 围成的区域面积是 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(3 * a * a, 4), Q.of(a * a, 2), Q.of(3 * a * a, 16)],
-      solution: t(
-        `A quarter of the area is $3 \\cdot ${a * a} \\cdot \\int_0^{\\pi/2} \\sin^4 t\\cos^2 t\\,dt = 3 \\cdot ${a * a} \\cdot \\frac{\\pi}{32}$. Multiplying by four gives $c = ${answer.toLatex()}$.`,
-        `四分之一的面积是 $3 \\cdot ${a * a} \\cdot \\int_0^{\\pi/2} \\sin^4 t\\cos^2 t\\,dt = 3 \\cdot ${a * a} \\cdot \\frac{\\pi}{32}$。乘以四，得 $c = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: answer.neg(),
+          why: t(
+            "The sign is wrong: on the first quarter $x$ decreases as $t$ goes from $0$ to $\\frac{\\pi}{2}$, so the limits must be reversed.",
+            "符号错了：在第一象限部分，$t$ 从 $0$ 到 $\\frac{\\pi}{2}$ 时 $x$ 在减小，所以积分限要调换。",
+          ),
+        },
+        {
+          value: quarter,
+          why: t("This is the area of one quarter of the region; multiply by $4$.", "这只是区域四分之一的面积；还要乘以 $4$。"),
+        },
+        {
+          value: Q.of(3 * a * a, 16),
+          why: t("This is half the region, two of its four quarters.", "这只是半个区域，四份中的两份。"),
+        },
+        {
+          value: Q.of(a * a),
+          why: t(
+            `This is the disc of radius $${a}$; the astroid curves inward and encloses much less.`,
+            `这是半径为 $${a}$ 的圆盘；星形线向内弯曲，围成的面积小得多。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Set up one quarter", "列出四分之一"],
+            [
+              `In the first quadrant $x$ runs from $0$ to $${a}$ as $t$ runs from $\\frac{\\pi}{2}$ down to $0$, and $\\frac{dx}{dt} = -${3 * a}\\cos^{2} t\\sin t$:`,
+              `在第一象限，$t$ 从 $\\frac{\\pi}{2}$ 减到 $0$ 时 $x$ 从 $0$ 增到 $${a}$，且 $\\frac{dx}{dt} = -${3 * a}\\cos^{2} t\\sin t$：`,
+            ],
+            [
+              `\\frac{A}{4} = \\int_{\\pi/2}^{0} ${coefficientOf(a)}\\sin^{3} t\\left(-${3 * a}\\cos^{2} t\\sin t\\right) dt = ${3 * a * a}\\int_{0}^{\\pi/2} \\sin^{4} t\\cos^{2} t \\, dt`,
+            ],
+          ],
+          [
+            ["Lower the powers", "降幂"],
+            [
+              "Write $\\sin^{4} t\\cos^{2} t = \\sin^{2} t \\cdot \\frac{1}{4}\\sin^{2} 2t = \\frac{1}{8}\\left(\\sin^{2} 2t - \\cos 2t\\sin^{2} 2t\\right)$. On $\\left[0, \\frac{\\pi}{2}\\right]$ the first part integrates to $\\frac{\\pi}{4}$ and the second to $0$:",
+              "写成 $\\sin^{4} t\\cos^{2} t = \\sin^{2} t \\cdot \\frac{1}{4}\\sin^{2} 2t = \\frac{1}{8}\\left(\\sin^{2} 2t - \\cos 2t\\sin^{2} 2t\\right)$。在 $\\left[0, \\frac{\\pi}{2}\\right]$ 上前一部分积分为 $\\frac{\\pi}{4}$，后一部分为 $0$：",
+            ],
+            [`\\int_{0}^{\\pi/2} \\sin^{4} t\\cos^{2} t \\, dt = \\frac{\\pi}{32}, \\quad \\frac{A}{4} = ${quarter.toLatex()}\\pi`],
+          ],
+          [
+            ["Use symmetry", "利用对称性"],
+            ["The four quarters are congruent:", "四个部分全等："],
+            [`A = 4 \\cdot ${quarter.toLatex()}\\pi = ${answer.toLatex()}\\pi`],
+          ],
+        ],
+        [
+          `Use the area of the whole closed curve, $\\frac{1}{2}\\oint (x \\, dy - y \\, dx)$. Here\n\n$$x\\frac{dy}{dt} - y\\frac{dx}{dt} = ${3 * a * a}\\sin^{2} t\\cos^{2} t(\\cos^{2} t + \\sin^{2} t) = ${Q.of(3 * a * a, 4).toLatex()}\\sin^{2} 2t$$\n\nOver a whole turn $\\sin^{2} 2t$ integrates to $\\pi$, so\n\n$$A = \\frac{1}{2} \\cdot ${Q.of(3 * a * a, 4).toLatex()}\\pi = ${answer.toLatex()}\\pi$$\n\nThus $c = ${answer.toLatex()}$.`,
+          `用整条闭曲线的面积公式 $\\frac{1}{2}\\oint (x \\, dy - y \\, dx)$。这里\n\n$$x\\frac{dy}{dt} - y\\frac{dx}{dt} = ${3 * a * a}\\sin^{2} t\\cos^{2} t(\\cos^{2} t + \\sin^{2} t) = ${Q.of(3 * a * a, 4).toLatex()}\\sin^{2} 2t$$\n\n在一整圈上 $\\sin^{2} 2t$ 的积分为 $\\pi$，所以\n\n$$A = \\frac{1}{2} \\cdot ${Q.of(3 * a * a, 4).toLatex()}\\pi = ${answer.toLatex()}\\pi$$\n\n因此 $c = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -2551,26 +2701,83 @@ const roseArea: KnowledgePointDef = {
   id: "the-total-area-of-a-rose-curve",
   title: t("The total area of a rose curve", "玫瑰线的总面积"),
   explanation: t(
-    "A rose $r = a\\cos n\\theta$ has $n$ petals when $n$ is odd and $2n$ when $n$ is even. When $n$ is odd, the curve is traced twice over $[0, 2\\pi]$, so one must integrate only over $[0, \\pi]$. As a result, the total area is $\\frac{\\pi a^2}{4}$ for odd $n$ and $\\frac{\\pi a^2}{2}$ for even $n$, whatever $n$ is.",
-    "玫瑰线 $r = a\\cos n\\theta$ 在 $n$ 为奇数时有 $n$ 片花瓣，为偶数时有 $2n$ 片。$n$ 为奇数时，曲线在 $[0, 2\\pi]$ 上被描了两遍，所以只应在 $[0, \\pi]$ 上积分。因此总面积在 $n$ 为奇数时是 $\\frac{\\pi a^2}{4}$，为偶数时是 $\\frac{\\pi a^2}{2}$，与 $n$ 的具体值无关。",
+    "A rose $r = a\\cos n\\theta$ has $n$ petals when $n$ is odd and $2n$ when $n$ is even. One petal lies between consecutive zeros of $r$, such as $-\\frac{\\pi}{2n} \\le \\theta \\le \\frac{\\pi}{2n}$, and since $\\cos^{2} n\\theta$ averages $\\frac{1}{2}$ there,\n\n$$\\frac{1}{2}\\int_{-\\pi/(2n)}^{\\pi/(2n)} a^{2}\\cos^{2} n\\theta \\, d\\theta = \\frac{\\pi a^{2}}{4n}$$\n\nFor $r = 2\\cos 3\\theta$: three petals of area $\\frac{\\pi}{3}$ each, $\\pi$ in all.\n\nCheck: for odd $n$ the interval $[0, \\pi]$ traces the rose once, and $\\frac{1}{2}\\int_{0}^{\\pi} 4\\cos^{2} 3\\theta \\, d\\theta = 2 \\cdot \\frac{\\pi}{2} = \\pi$.\n\n> **Watch out.** For odd $n$ the interval $[0, 2\\pi]$ traces every petal twice: for $r = 2\\cos 3\\theta$ it gives $2\\pi$, double the true area.",
+    "玫瑰线 $r = a\\cos n\\theta$ 在 $n$ 为奇数时有 $n$ 片花瓣，为偶数时有 $2n$ 片。一片花瓣位于 $r$ 的相邻两个零点之间，例如 $-\\frac{\\pi}{2n} \\le \\theta \\le \\frac{\\pi}{2n}$，而 $\\cos^{2} n\\theta$ 在那里的平均值为 $\\frac{1}{2}$，所以\n\n$$\\frac{1}{2}\\int_{-\\pi/(2n)}^{\\pi/(2n)} a^{2}\\cos^{2} n\\theta \\, d\\theta = \\frac{\\pi a^{2}}{4n}$$\n\n对 $r = 2\\cos 3\\theta$：三片花瓣，每片面积 $\\frac{\\pi}{3}$，共 $\\pi$。\n\n检验：$n$ 为奇数时区间 $[0, \\pi]$ 恰好把玫瑰线描一次，而 $\\frac{1}{2}\\int_{0}^{\\pi} 4\\cos^{2} 3\\theta \\, d\\theta = 2 \\cdot \\frac{\\pi}{2} = \\pi$。\n\n> **注意。** $n$ 为奇数时区间 $[0, 2\\pi]$ 会把每片花瓣描两次：对 $r = 2\\cos 3\\theta$ 会得到 $2\\pi$，是真实面积的两倍。",
   ),
   generate(rng) {
     const n = rng.int(2, 7);
     const a = rng.int(1, 9);
     const odd = n % 2 === 1;
     const answer = Q.of(a * a, odd ? 4 : 2);
-    const other = Q.of(a * a, odd ? 2 : 4);
     const petals = odd ? n : 2 * n;
+    const one = Q.of(a * a, 4 * n);
+    const A2 = coefficientOf(a * a);
+    const whole = odd ? "\\pi" : "2\\pi";
     return numberProblem({
       prompt: t(
         `The total area enclosed by all the petals of $r = ${coefficientOf(a)}\\cos ${n}\\theta$ is $c\\pi$. Find $c$.`,
         `$r = ${coefficientOf(a)}\\cos ${n}\\theta$ 所有花瓣围成的总面积是 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [other, Q.of(a * a), Q.of(n * a * a, 4)],
-      solution: t(
-        `The rose has ${petals} petals, each of area $\\frac{${a === 1 ? "" : a * a}\\pi}{${4 * n}}$. Their total gives $c = ${answer.toLatex()}$.`,
-        `这条玫瑰线有 ${petals} 片花瓣，每片的面积是 $\\frac{${a === 1 ? "" : a * a}\\pi}{${4 * n}}$。它们的总和给出 $c = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: Q.of(a * a, odd ? 2 : 4),
+          why: odd
+            ? t(
+                "This integrates over $[0, 2\\pi]$, which traces every petal twice when $n$ is odd.",
+                "这是在 $[0, 2\\pi]$ 上积分，$n$ 为奇数时会把每片花瓣描两次。",
+              )
+            : t(
+                `This counts $${n}$ petals; when $n$ is even the rose has $2n = ${2 * n}$.`,
+                `这里数成 $${n}$ 片；$n$ 为偶数时玫瑰线有 $2n = ${2 * n}$ 片。`,
+              ),
+        },
+        {
+          value: one,
+          why: t("This is the area of one petal.", "这是一片花瓣的面积。"),
+        },
+        {
+          value: Q.of(a * a),
+          why: t(
+            `This is the disc of radius $${a}$; the petals cover only part of it.`,
+            `这是半径为 $${a}$ 的圆盘；花瓣只覆盖其中一部分。`,
+          ),
+        },
+        {
+          value: Q.of(petals * a * a, 4),
+          why: t(
+            "This gives every petal the area $\\frac{\\pi a^{2}}{4}$; a single petal has area $\\frac{\\pi a^{2}}{4n}$.",
+            "这里把每片花瓣的面积都当成 $\\frac{\\pi a^{2}}{4}$；一片花瓣的面积是 $\\frac{\\pi a^{2}}{4n}$。",
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Count the petals", "数花瓣"],
+            [
+              `Since $n = ${n}$ is ${odd ? "odd" : "even"}, the rose has $${petals}$ petals.`,
+              `因为 $n = ${n}$ 是${odd ? "奇数" : "偶数"}，玫瑰线有 $${petals}$ 片花瓣。`,
+            ],
+          ],
+          [
+            ["Find one petal", "求一片花瓣"],
+            [
+              `One petal lies between the zeros $\\theta = \\pm\\frac{\\pi}{${2 * n}}$, where $\\cos^{2} ${n}\\theta$ averages $\\frac{1}{2}$:`,
+              `一片花瓣位于零点 $\\theta = \\pm\\frac{\\pi}{${2 * n}}$ 之间，$\\cos^{2} ${n}\\theta$ 在那里的平均值为 $\\frac{1}{2}$：`,
+            ],
+            [`\\frac{1}{2}\\int_{-\\pi/${2 * n}}^{\\pi/${2 * n}} ${A2}\\cos^{2} ${n}\\theta \\, d\\theta = ${piTimes(one)}`],
+          ],
+          [
+            ["Add the petals", "把花瓣加起来"],
+            ["The petals are congruent:", "各片花瓣全等："],
+            [`${petals} \\cdot ${piTimes(one)} = ${piTimes(answer)}`],
+          ],
+        ],
+        [
+          `Integrate over one interval that traces the rose once, $[0, ${whole}]$ for ${odd ? "odd" : "even"} $n$. There $\\cos^{2} ${n}\\theta$ averages $\\frac{1}{2}$, so the area is\n\n$$\\frac{1}{2} \\cdot ${A2 ? `${A2} \\cdot ` : ""} \\frac{1}{2} \\cdot ${whole} = ${piTimes(answer)}$$\n\nThus $c = ${answer.toLatex()}$.`,
+          `在恰好把玫瑰线描一次的区间上积分：$n$ 为${odd ? "奇数" : "偶数"}时取 $[0, ${whole}]$。在那里 $\\cos^{2} ${n}\\theta$ 的平均值为 $\\frac{1}{2}$，所以面积为\n\n$$\\frac{1}{2} \\cdot ${A2 ? `${A2} \\cdot ` : ""} \\frac{1}{2} \\cdot ${whole} = ${piTimes(answer)}$$\n\n因此 $c = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -4318,15 +4525,19 @@ const parametricConcavityChange: KnowledgePointDef = {
   id: "where-a-parametric-curve-changes-concavity",
   title: t("Where a parametric curve changes concavity", "参数曲线改变凹凸性的位置"),
   explanation: t(
-    "For a parametric curve, $\\frac{d^{2}y}{dx^{2}}$ is the $t$-derivative of $\\frac{dy}{dx}$ divided by $\\frac{dx}{dt}$. Concavity changes where this quotient changes sign. Keep the result as a single fraction in $t$ rather than evaluating it at a point: the sign of the denominator is often fixed on the given range of $t$, so only the zeros of the numerator matter.",
-    "对参数曲线，$\\frac{d^{2}y}{dx^{2}}$ 等于 $\\frac{dy}{dx}$ 对 $t$ 的导数除以 $\\frac{dx}{dt}$。这个商改变符号的地方，就是凹凸性改变的地方。把结果保留为 $t$ 的一个分式，而不是代入某一点：分母的符号在给定的 $t$ 范围内常常是固定的，所以只需看分子的零点。",
+    "For a parametric curve, $\\frac{d^{2}y}{dx^{2}}$ is the $t$-derivative of $\\frac{dy}{dx}$ divided by $\\frac{dx}{dt}$, and concavity changes where it changes sign. Keep it as one fraction in $t$: often the denominator has a fixed sign on the given range, so only the zeros of the numerator matter. For $x = t^{2}$, $y = t^{3} + 3t$ with $t > 0$,\n\n$$\\frac{dy}{dx} = \\frac{3}{2}\\left(t + \\frac{1}{t}\\right), \\qquad \\frac{d^{2}y}{dx^{2}} = \\frac{\\frac{3}{2}\\left(1 - \\frac{1}{t^{2}}\\right)}{2t} = \\frac{3(t^{2} - 1)}{4t^{3}}$$\n\nThe denominator is positive, so the sign changes only at $t = 1$.\n\nCheck: the formula $\\frac{d^{2}y}{dx^{2}} = \\frac{x'y'' - y'x''}{(x')^{3}}$ gives $\\frac{2t \\cdot 6t - (3t^{2} + 3) \\cdot 2}{8t^{3}} = \\frac{6t^{2} - 6}{8t^{3}}$, the same fraction.\n\n> **Watch out.** $\\frac{d^{2}y}{dx^{2}}$ is not $\\frac{d^{2}y/dt^{2}}{d^{2}x/dt^{2}}$. Here that quotient is $\\frac{6t}{2} = 3t$, which never changes sign for $t > 0$.",
+    "对参数曲线，$\\frac{d^{2}y}{dx^{2}}$ 等于 $\\frac{dy}{dx}$ 对 $t$ 的导数除以 $\\frac{dx}{dt}$，它改变符号处就是凹凸性改变处。把它保留为 $t$ 的一个分式：分母在给定范围内常常符号固定，所以只需看分子的零点。对 $x = t^{2}$、$y = t^{3} + 3t$（$t > 0$），\n\n$$\\frac{dy}{dx} = \\frac{3}{2}\\left(t + \\frac{1}{t}\\right), \\qquad \\frac{d^{2}y}{dx^{2}} = \\frac{\\frac{3}{2}\\left(1 - \\frac{1}{t^{2}}\\right)}{2t} = \\frac{3(t^{2} - 1)}{4t^{3}}$$\n\n分母为正，所以只在 $t = 1$ 处改变符号。\n\n检验：用公式 $\\frac{d^{2}y}{dx^{2}} = \\frac{x'y'' - y'x''}{(x')^{3}}$ 得 $\\frac{2t \\cdot 6t - (3t^{2} + 3) \\cdot 2}{8t^{3}} = \\frac{6t^{2} - 6}{8t^{3}}$，是同一个分式。\n\n> **注意。** $\\frac{d^{2}y}{dx^{2}}$ 不是 $\\frac{d^{2}y/dt^{2}}{d^{2}x/dt^{2}}$。这里那个商是 $\\frac{6t}{2} = 3t$，在 $t > 0$ 时从不改变符号。",
   ),
   generate(rng) {
     const m = rng.int(1, 6);
     const alpha = rng.int(1, 4);
     const beta = nonzero(rng, 3);
     const y = poly([beta, "t^3"], [3 * beta * m * m, "t"]);
-    const numerator = 6 * alpha * beta;
+    const dy = poly([3 * beta, "t^2"], [3 * beta * m * m, ""]);
+    const k = Q.of(3 * beta, 2 * alpha);
+    const second = Q.of(3 * beta, 4 * alpha * alpha);
+    const inner = (sign: string) => `${m === 1 ? `1 ${sign} \\frac{1}{t^{2}}` : `1 ${sign} \\frac{${m * m}}{t^{2}}`}`;
+    const over = m === 1 ? "\\frac{1}{t}" : `\\frac{${m * m}}{t}`;
     return numberProblem({
       prompt: t(
         `A curve is given by $x = ${coefficientOf(alpha)}t^2, \\; y = ${y}$ for $t > 0$. At which value of $t$ does $\\frac{d^{2}y}{dx^{2}}$ change sign?`,
@@ -4334,10 +4545,58 @@ const parametricConcavityChange: KnowledgePointDef = {
       ),
       answer: m,
       form: "integer",
-      wrong: [m * m, 3 * m * m, m + 1, 6 * m * m],
-      solution: t(
-        `$\\frac{dy}{dx} = \\frac{${poly([3 * beta, "t^2"], [3 * beta * m * m, ""])}}{${2 * alpha}t}$. Differentiating in $t$ and dividing by $${2 * alpha}t$ gives $\\frac{d^{2}y}{dx^{2}} = \\frac{${numerator}(t^2 - ${m * m})}{${8 * alpha ** 3}t^3}$. For $t > 0$ the denominator is positive, so the sign changes only at $t = ${m}$.`,
-        `$\\frac{dy}{dx} = \\frac{${poly([3 * beta, "t^2"], [3 * beta * m * m, ""])}}{${2 * alpha}t}$。对 $t$ 求导再除以 $${2 * alpha}t$，得 $\\frac{d^{2}y}{dx^{2}} = \\frac{${numerator}(t^2 - ${m * m})}{${8 * alpha ** 3}t^3}$。$t > 0$ 时分母为正，所以只在 $t = ${m}$ 处改变符号。`,
+      mistakes: [
+        {
+          value: m * m,
+          why: t(
+            `This is $t^{2}$ where the sign changes; the value of $t$ is $\\sqrt{${m * m}}$.`,
+            `这是变号处的 $t^{2}$；$t$ 的值是 $\\sqrt{${m * m}}$。`,
+          ),
+        },
+        {
+          value: -m,
+          why: t(
+            `This root of $t^{2} = ${m * m}$ is negative, outside the range $t > 0$.`,
+            `$t^{2} = ${m * m}$ 的这个根是负的，不在 $t > 0$ 的范围内。`,
+          ),
+        },
+        {
+          value: 0,
+          why: t(
+            `This is where $\\frac{d^{2}y/dt^{2}}{d^{2}x/dt^{2}} = ${coefQ(Q.of(3 * beta, alpha))}t$ changes sign, but that quotient is not $\\frac{d^{2}y}{dx^{2}}$, and $t = 0$ is outside the range.`,
+            `这是 $\\frac{d^{2}y/dt^{2}}{d^{2}x/dt^{2}} = ${coefQ(Q.of(3 * beta, alpha))}t$ 变号的地方，但这个商不是 $\\frac{d^{2}y}{dx^{2}}$，而且 $t = 0$ 不在范围内。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Find the first derivative", "求一阶导数"],
+            [
+              `Divide $\\frac{dy}{dt} = ${dy}$ by $\\frac{dx}{dt} = ${2 * alpha}t$:`,
+              `用 $\\frac{dy}{dt} = ${dy}$ 除以 $\\frac{dx}{dt} = ${2 * alpha}t$：`,
+            ],
+            [`\\frac{dy}{dx} = ${coefQ(k)}\\left(t + ${over}\\right)`],
+          ],
+          [
+            ["Find the second derivative", "求二阶导数"],
+            [`Differentiate in $t$ and divide by $${2 * alpha}t$ again:`, `对 $t$ 求导，再除以 $${2 * alpha}t$：`],
+            [
+              `\\frac{d^{2}y}{dx^{2}} = \\frac{${coefQ(k)}\\left(${inner("-")}\\right)}{${2 * alpha}t} = ${coefQ(second)}\\frac{t^{2} - ${m * m}}{t^{3}}`,
+            ],
+          ],
+          [
+            ["Read off the sign change", "找出变号处"],
+            [
+              `For $t > 0$ the denominator $t^{3}$ is positive, so the sign changes only where $t^{2} = ${m * m}$, at $t = ${m}$.`,
+              `当 $t > 0$ 时分母 $t^{3}$ 为正，所以只在 $t^{2} = ${m * m}$ 处变号，即 $t = ${m}$。`,
+            ],
+          ],
+        ],
+        [
+          `Use the formula with second derivatives in $t$. Here $x' = ${2 * alpha}t$, $x'' = ${2 * alpha}$, $y' = ${dy}$ and $y'' = ${6 * beta}t$, so\n\n$$\\frac{d^{2}y}{dx^{2}} = \\frac{x'y'' - y'x''}{(x')^{3}} = \\frac{${6 * alpha * beta}(t^{2} - ${m * m})}{${8 * alpha ** 3}t^{3}}$$\n\nIts numerator is zero only at $t = ${m}$ for $t > 0$.`,
+          `用含 $t$ 的二阶导数的公式。这里 $x' = ${2 * alpha}t$，$x'' = ${2 * alpha}$，$y' = ${dy}$，$y'' = ${6 * beta}t$，所以\n\n$$\\frac{d^{2}y}{dx^{2}} = \\frac{x'y'' - y'x''}{(x')^{3}} = \\frac{${6 * alpha * beta}(t^{2} - ${m * m})}{${8 * alpha ** 3}t^{3}}$$\n\n当 $t > 0$ 时它的分子只在 $t = ${m}$ 处为零。`,
+        ],
       ),
     });
   },
@@ -4378,26 +4637,84 @@ const lengthOfLogarithmicSpiral: KnowledgePointDef = {
   figure: calculusDrawings5["the-arc-length-of-a-polar-curve#the-length-of-a-logarithmic-spiral"],
   title: t("The length of a logarithmic spiral", "对数螺线的长度"),
   explanation: t(
-    "On the spiral $r = e^{k\\theta}$, the derivative of $r$ is $k$ times $r$, so $r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2$ has $r^2$ as a factor and the root in the length formula simplifies. Changing variable from $\\theta$ to $r$ then shows that length is proportional to the change in distance from the pole, so the angle never needs to be found.",
-    "在螺线 $r = e^{k\\theta}$ 上，$r$ 的导数是 $r$ 的 $k$ 倍，所以 $r^2 + \\left(\\frac{dr}{d\\theta}\\right)^2$ 含有因子 $r^2$，弧长公式中的根号得以化简。再把变量从 $\\theta$ 换成 $r$，可以看到长度与到极点距离的变化量成正比，所以根本不需要求出角度。",
+    "On the spiral $r = e^{k\\theta}$ the derivative of $r$ is $kr$, so $r^{2} + \\left(\\frac{dr}{d\\theta}\\right)^{2} = r^{2}(1 + k^{2})$ and the root in the length formula simplifies to $r\\sqrt{1 + k^{2}}$. Changing the variable from $\\theta$ to $r$, with $dr = kr \\, d\\theta$, gives\n\n$$ds = r\\sqrt{1 + k^{2}} \\, d\\theta = \\frac{\\sqrt{1 + k^{2}}}{k} \\, dr$$\n\nSo the length is proportional to the change in distance from the pole. For $k = \\frac{3}{4}$, $\\sqrt{1 + k^{2}} = \\frac{5}{4}$ and $ds = \\frac{5}{3} \\, dr$, so the arc from $r = 1$ to $r = 4$ has length $\\frac{5}{3} \\cdot 3 = 5$.\n\nCheck: integrate in $\\theta$ instead, from $\\frac{4}{3}\\ln 1 = 0$ to $\\frac{4}{3}\\ln 4$. The integrand $\\frac{5}{4}e^{3\\theta/4}$ has antiderivative $\\frac{5}{3}e^{3\\theta/4}$, which grows from $\\frac{5}{3}$ to $\\frac{20}{3}$, a change of $5$.\n\n> **Watch out.** Divide by $k$ when changing to $r$. Using $ds = \\sqrt{1 + k^{2}} \\, dr$ gives $\\frac{5}{4} \\cdot 3 = \\frac{15}{4}$ here.",
+    "在螺线 $r = e^{k\\theta}$ 上，$r$ 的导数是 $kr$，所以 $r^{2} + \\left(\\frac{dr}{d\\theta}\\right)^{2} = r^{2}(1 + k^{2})$，弧长公式中的根号化为 $r\\sqrt{1 + k^{2}}$。把变量从 $\\theta$ 换成 $r$，由 $dr = kr \\, d\\theta$ 得\n\n$$ds = r\\sqrt{1 + k^{2}} \\, d\\theta = \\frac{\\sqrt{1 + k^{2}}}{k} \\, dr$$\n\n所以长度与到极点距离的变化量成正比。取 $k = \\frac{3}{4}$，$\\sqrt{1 + k^{2}} = \\frac{5}{4}$，$ds = \\frac{5}{3} \\, dr$，所以从 $r = 1$ 到 $r = 4$ 的弧长为 $\\frac{5}{3} \\cdot 3 = 5$。\n\n检验：改为对 $\\theta$ 积分，从 $\\frac{4}{3}\\ln 1 = 0$ 到 $\\frac{4}{3}\\ln 4$。被积函数 $\\frac{5}{4}e^{3\\theta/4}$ 的原函数是 $\\frac{5}{3}e^{3\\theta/4}$，它从 $\\frac{5}{3}$ 增到 $\\frac{20}{3}$，改变量为 $5$。\n\n> **注意。** 换成 $r$ 时要除以 $k$。若用 $ds = \\sqrt{1 + k^{2}} \\, dr$，这里会得到 $\\frac{5}{4} \\cdot 3 = \\frac{15}{4}$。",
   ),
   generate(rng) {
     const { a, b, h } = pythagorean(rng);
     const p = rng.int(1, 4);
     const q = rng.int(p + 1, 9);
     const k = Q.of(a, b);
+    const root = Q.of(h, b);
     const factor = Q.of(h, a);
     const answer = factor.mul(Q.of(q - p));
+    const kInv = Q.of(b, a);
+    const theta = (n: number) => (n === 1 ? "0" : `${coefQ(kInv)}\\ln ${n}`);
+    const scaled = (n: number) => factor.mul(Q.of(n)).toLatex();
     return numberProblem({
       prompt: t(
         `Find the length of the spiral $r = e^{${k.toLatex()}\\theta}$ from the point where $r = ${p}$ to the point where $r = ${q}$.`,
         `求螺线 $r = e^{${k.toLatex()}\\theta}$ 从 $r = ${p}$ 的点到 $r = ${q}$ 的点的长度。`,
       ),
       answer,
-      wrong: [Q.of(h * (q - p), b), Q.of(a * (q - p), h), Q.of(q - p), Q.of(h * (q * q - p * p), 2 * a)],
-      solution: t(
-        `Here $k = ${k.toLatex()}$ and $\\frac{dr}{d\\theta} = kr$, so $ds = r\\sqrt{1 + k^2}\\,d\\theta$ with $\\sqrt{1 + k^2} = ${Q.of(h, b).toLatex()}$. Since $dr = kr\\,d\\theta$, this is $ds = ${factor.toLatex()}\\,dr$. So the length is $${factor.toLatex()} \\cdot ${q - p} = ${answer.toLatex()}$.`,
-        `这里 $k = ${k.toLatex()}$，$\\frac{dr}{d\\theta} = kr$，所以 $ds = r\\sqrt{1 + k^2}\\,d\\theta$，其中 $\\sqrt{1 + k^2} = ${Q.of(h, b).toLatex()}$。因为 $dr = kr\\,d\\theta$，所以 $ds = ${factor.toLatex()}\\,dr$。于是长度是 $${factor.toLatex()} \\cdot ${q - p} = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: root.mul(Q.of(q - p)),
+          why: t(
+            `This uses $ds = \\sqrt{1 + k^{2}} \\, dr$; since $dr = kr \\, d\\theta$, the factor is $\\frac{\\sqrt{1 + k^{2}}}{k} = ${factor.toLatex()}$.`,
+            `这里用了 $ds = \\sqrt{1 + k^{2}} \\, dr$；因为 $dr = kr \\, d\\theta$，系数应为 $\\frac{\\sqrt{1 + k^{2}}}{k} = ${factor.toLatex()}$。`,
+          ),
+        },
+        {
+          value: Q.of(a * (q - p), h),
+          why: t(
+            `This multiplies by $\\frac{k}{\\sqrt{1 + k^{2}}}$, the factor upside down.`,
+            `这里乘的是 $\\frac{k}{\\sqrt{1 + k^{2}}}$，系数上下颠倒了。`,
+          ),
+        },
+        {
+          value: Q.of(q - p),
+          why: t(
+            "This is the change in $r$, the distance straight out from the pole; the spiral also turns, so it is longer.",
+            "这是 $r$ 的改变量，即沿径向直接向外的距离；螺线还在转动，所以更长。",
+          ),
+        },
+        {
+          value: Q.of(h * (q * q - p * p), 2 * a),
+          why: t(
+            "This integrates $r \\, dr$; after the change of variable the integrand is a constant times $dr$.",
+            "这里积分的是 $r \\, dr$；换元后被积式是常数乘以 $dr$。",
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Simplify the root", "化简根号"],
+            [
+              `Here $k = ${k.toLatex()}$ and $\\frac{dr}{d\\theta} = kr$, so $r$ comes out of the root:`,
+              `这里 $k = ${k.toLatex()}$，$\\frac{dr}{d\\theta} = kr$，所以 $r$ 可以提到根号外：`,
+            ],
+            [`\\sqrt{r^{2} + (kr)^{2}} = r\\sqrt{1 + k^{2}} = ${root.toLatex()}r`],
+          ],
+          [
+            ["Change the variable to r", "把变量换成 r"],
+            [
+              "Since $dr = kr \\, d\\theta$, $r \\, d\\theta = \\frac{dr}{k}$:",
+              "因为 $dr = kr \\, d\\theta$，$r \\, d\\theta = \\frac{dr}{k}$：",
+            ],
+            [`ds = ${root.toLatex()}r \\, d\\theta = ${factor.toLatex()} \\, dr`],
+          ],
+          [
+            ["Integrate", "积分"],
+            [`As $r$ runs from $${p}$ to $${q}$,`, `当 $r$ 从 $${p}$ 变到 $${q}$ 时，`],
+            [q - p === 1 ? `L = ${answer.toLatex()}` : `L = ${factor.toLatex()} \\cdot ${q - p} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Integrate in $\\theta$ instead. The arc runs from $\\theta = ${theta(p)}$ to $\\theta = ${theta(q)}$, and\n\n$$\\int ${root.toLatex()}e^{${k.toLatex()}\\theta} \\, d\\theta = ${factor.toLatex()}e^{${k.toLatex()}\\theta}$$\n\nAt the two ends $e^{${k.toLatex()}\\theta}$ is $${p}$ and $${q}$, so the antiderivative grows from $${scaled(p)}$ to $${scaled(q)}$, a change of $${answer.toLatex()}$.`,
+          `改为对 $\\theta$ 积分。这段弧从 $\\theta = ${theta(p)}$ 到 $\\theta = ${theta(q)}$，而\n\n$$\\int ${root.toLatex()}e^{${k.toLatex()}\\theta} \\, d\\theta = ${factor.toLatex()}e^{${k.toLatex()}\\theta}$$\n\n在两端 $e^{${k.toLatex()}\\theta}$ 分别为 $${p}$ 和 $${q}$，所以原函数从 $${scaled(p)}$ 增到 $${scaled(q)}$，改变量为 $${answer.toLatex()}$。`,
+        ],
       ),
     });
   },

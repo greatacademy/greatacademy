@@ -540,34 +540,70 @@ const polarEquation = {
     "the-equation-of-a-drawn-polar-curve",
     ["The equation of a drawn polar curve", "图中极坐标曲线的方程"],
     [
-      "Before computing a polar area, match the curve to its equation. A rose with an odd multiple $n$ of the angle has $n$ petals, and an even multiple $n$ has $2n$ petals. A cardioid has one dent at the origin and reaches farthest in the direction where its sine or cosine term adds most.",
-      "计算极坐标面积之前，先把曲线与方程对应起来。角度倍数 $n$ 为奇数的玫瑰线有 $n$ 个花瓣，倍数 $n$ 为偶数的有 $2n$ 个花瓣。心形线在原点有一个凹陷，在正弦或余弦项增加最多的方向上最远。",
+      "Before computing a polar area, match the curve to its equation. A rose $r = a\\cos n\\theta$ or $r = a\\sin n\\theta$ has $n$ petals when $n$ is odd and $2n$ when $n$ is even, each of length $a$. A cardioid $r = a(1 \\pm \\cos\\theta)$ or $r = a(1 \\pm \\sin\\theta)$ has one dent at the pole and reaches $2a$ in the direction where its trigonometric term is $+1$:\n\n$$r = 3\\cos 2\\theta: \\; 4 \\text{ petals}, \\qquad r = 3\\cos 3\\theta: \\; 3 \\text{ petals}, \\qquad r = 3(1 + \\cos\\theta): \\; \\text{reach } 6$$\n\nFor example, four petals of length $3$ with tips on the axes are $r = 3\\cos 2\\theta$.\n\nCheck: at $\\theta = 0$ that equation gives $r = 3$, the tip at $(3, 0)$, and at $\\theta = \\frac{\\pi}{4}$ it gives $r = 0$, so the curve returns to the pole between the axes, as drawn.\n\n> **Watch out.** A cardioid $r = a(1 + \\cos\\theta)$ reaches $2a$, not $a$, so read $a$ as half the farthest reach. And a rose with four petals has $n = 2$, not $n = 4$.",
+      "计算极坐标面积之前，先把曲线与方程对应起来。玫瑰线 $r = a\\cos n\\theta$ 或 $r = a\\sin n\\theta$ 在 $n$ 为奇数时有 $n$ 个花瓣，为偶数时有 $2n$ 个，每个长 $a$。心形线 $r = a(1 \\pm \\cos\\theta)$ 或 $r = a(1 \\pm \\sin\\theta)$ 在极点有一个凹陷，在三角函数项等于 $+1$ 的方向上到达 $2a$：\n\n$$r = 3\\cos 2\\theta: \\; 4 \\text{ 个花瓣}, \\qquad r = 3\\cos 3\\theta: \\; 3 \\text{ 个花瓣}, \\qquad r = 3(1 + \\cos\\theta): \\; \\text{最远 } 6$$\n\n例如，四个长为 $3$、尖端在坐标轴上的花瓣是 $r = 3\\cos 2\\theta$。\n\n检验：在 $\\theta = 0$ 处这个方程给出 $r = 3$，即尖端 $(3, 0)$；在 $\\theta = \\frac{\\pi}{4}$ 处给出 $r = 0$，所以曲线在坐标轴之间回到极点，与图相符。\n\n> **注意。** 心形线 $r = a(1 + \\cos\\theta)$ 最远到达 $2a$，不是 $a$，所以 $a$ 是最远距离的一半。四个花瓣的玫瑰线 $n = 2$，不是 $n = 4$。",
     ],
     (rng) => {
       const right = rng.pick(polarCases);
       const a = rng.pick([2, 3, 4]);
-      const reach = right.tex(1).includes("(1") ? 2 * a : a;
+      const cardioid = right.tex(1).includes("(1");
+      const reach = cardioid ? 2 * a : a;
       const size = Math.ceil(reach) + 1;
       const points = Array.from({ length: 241 }, (_, i): Point => {
         const th = (right.span * Math.PI * i) / 240;
         const r = right.r(a, th);
         return [r * Math.cos(th), r * Math.sin(th)];
       });
-      return choose(
-        rng,
-        ["Which equation describes the polar curve drawn?", "哪个方程描述图中的极坐标曲线？"],
-        same(right.tex(a)),
-        rng
-          .sample(
-            polarCases.filter((c) => c !== right),
-            4,
-          )
-          .map((c) => same(c.tex(a))),
+      /** probes gives, for each case in order, an angle to put in, the value of r there, what that point is, and an angle where r is zero. */
+      const probes: readonly (readonly [string, number, Pair, string])[] = [
+        ["0", a, [`the tip at $(${a}, 0)$ on the positive $x$-axis`, `即正 $x$ 轴上的尖端 $(${a}, 0)$`], "\\frac{\\pi}{4}"],
+        ["\\frac{\\pi}{4}", a, [`a tip at distance $${a}$ along the line $y = x$`, `即沿直线 $y = x$、距离为 $${a}$ 的尖端`], "0"],
+        ["0", a, [`the tip at $(${a}, 0)$ on the positive $x$-axis`, `即正 $x$ 轴上的尖端 $(${a}, 0)$`], "\\frac{\\pi}{6}"],
         [
-          `The drawing shows ${right.clue[0]}, and its farthest reach is $${reach}$, which matches $${right.tex(a)}$.`,
-          `图中是${right.clue[1]}，最远距离为 $${reach}$，与 $${right.tex(a)}$ 相符。`,
+          "\\frac{\\pi}{2}",
+          -a,
+          [
+            `and a negative $r$ points the opposite way, to the tip $(0, -${a})$ on the negative $y$-axis`,
+            `负的 $r$ 指向相反方向，即负 $y$ 轴上的尖端 $(0, -${a})$`,
+          ],
+          "0",
         ],
-        fig(
+        ["0", 2 * a, [`the farthest point $(${2 * a}, 0)$`, `即最远点 $(${2 * a}, 0)$`], "\\pi"],
+        ["\\pi", 2 * a, [`the farthest point $(-${2 * a}, 0)$`, `即最远点 $(-${2 * a}, 0)$`], "0"],
+        ["\\frac{\\pi}{2}", 2 * a, [`the farthest point $(0, ${2 * a})$`, `即最远点 $(0, ${2 * a})$`], "\\frac{3\\pi}{2}"],
+        ["\\frac{3\\pi}{2}", 2 * a, [`the farthest point $(0, -${2 * a})$`, `即最远点 $(0, -${2 * a})$`], "\\frac{\\pi}{2}"],
+      ];
+      const [th, value, where, zero] = probes[polarCases.indexOf(right)] as (typeof probes)[number];
+      const eq = right.tex(a);
+      const family: Pair = cardioid
+        ? [
+            `The curve has a single dent at the pole, so it is a cardioid. Its farthest reach is $${reach}$, which is $2a$, so $a = ${a}$.`,
+            `曲线在极点只有一个凹陷，所以是心形线。它最远到达 $${reach}$，即 $2a$，所以 $a = ${a}$。`,
+          ]
+        : [
+            `The curve is made of petals, so it is a rose. Each petal has length $${a}$, so $a = ${a}$.`,
+            `曲线由花瓣组成，所以是玫瑰线。每个花瓣长 $${a}$，所以 $a = ${a}$。`,
+          ];
+      const solution = t(
+        `**Step 1: Name the family.** ${family[0]}\n\n**Step 2: Place the curve.** The drawing shows ${right.clue[0]}. Among the options only one curve has this shape and position:\n\n$$${eq}$$\n\n**Check.** Put $\\theta = ${th}$ into $${eq}$: it gives $r = ${value}$, ${where[0]}. At $\\theta = ${zero}$ it gives $r = 0$, so the curve passes through the pole there, as drawn.`,
+        `**第一步：判断类型。**${family[1]}\n\n**第二步：确定位置。**图中是${right.clue[1]}。选项中只有一条曲线有这样的形状和位置：\n\n$$${eq}$$\n\n**检验。**把 $\\theta = ${th}$ 代入 $${eq}$：得 $r = ${value}$，${where[1]}。在 $\\theta = ${zero}$ 处得 $r = 0$，所以曲线在那里经过极点，与图相符。`,
+      );
+      const wrong = rng.sample(
+        polarCases.filter((c) => c !== right),
+        4,
+      );
+      return explainedChoice(rng, {
+        prompt: t("Which equation describes the polar curve drawn?", "哪个方程描述图中的极坐标曲线？"),
+        correct: t(...same(eq)),
+        wrong: wrong.map((c) => ({
+          option: t(...same(c.tex(a))),
+          why: t(
+            `This curve is ${c.clue[0]}, but the drawing shows ${right.clue[0]}.`,
+            `这条曲线是${c.clue[1]}，而图中是${right.clue[1]}。`,
+          ),
+        })),
+        solution,
+        figure: fig(
           { xMin: -size, xMax: size, yMin: -size, yMax: size },
           [{ kind: "path", points, accent: true }],
           [
@@ -575,7 +611,7 @@ const polarEquation = {
             `极坐标曲线：${right.clue[1].replaceAll("$", "")}，距原点最远 ${reach}。`,
           ],
         ),
-      );
+      });
     },
   ),
   figure: calculusDrawings5["the-total-area-bounded-by-a-single-polar-curve#the-equation-of-a-drawn-polar-curve"],
@@ -586,8 +622,8 @@ const polarBetween = {
     "the-area-between-two-drawn-polar-circles",
     ["The area between two drawn polar circles", "图中两个极坐标圆之间的面积"],
     [
-      "To find the area inside one polar curve and outside another, integrate one half of the outer radius squared minus the inner radius squared. The limits are the angles of the rays through the intersection points. A drawing shows which curve is the outer one, and which angles bound the shaded part.",
-      "求在一条极坐标曲线内部、另一条外部的面积，就对外半径的平方减内半径的平方的一半积分。积分限是经过交点的射线的角度。图能显示哪条曲线在外，以及哪些角度围成阴影部分。",
+      "To find the area inside one polar curve and outside another, integrate one half of the outer radius squared minus the inner radius squared. The limits are the angles of the rays through the intersection points, where the two radii are equal. For example, inside $r = 4\\cos\\theta$ and outside $r = 2$, the circles cross where $4\\cos\\theta = 2$, at $\\theta = \\pm\\frac{\\pi}{3}$, so\n\n$$A = \\frac{1}{2}\\int_{-\\pi/3}^{\\pi/3} \\left[(4\\cos\\theta)^{2} - 2^{2}\\right] d\\theta$$\n\nCheck: at $\\theta = \\frac{\\pi}{3}$ the outer radius is $4 \\cdot \\frac{1}{2} = 2$, equal to the inner one, so the integrand is zero at the limits; at $\\theta = 0$ it is $16 - 4 = 12 > 0$, so the outer curve is subtracted from correctly.\n\n> **Watch out.** Square each radius before subtracting. The integrand is $R^{2} - r^{2}$, not $(R - r)^{2}$, and the factor $\\frac{1}{2}$ stays in front.",
+      "求在一条极坐标曲线内部、另一条外部的面积，就对外半径的平方减内半径的平方的一半积分。积分限是经过交点的射线的角度，在那里两个半径相等。例如，在 $r = 4\\cos\\theta$ 内、$r = 2$ 外，两圆在 $4\\cos\\theta = 2$ 处相交，即 $\\theta = \\pm\\frac{\\pi}{3}$，所以\n\n$$A = \\frac{1}{2}\\int_{-\\pi/3}^{\\pi/3} \\left[(4\\cos\\theta)^{2} - 2^{2}\\right] d\\theta$$\n\n检验：在 $\\theta = \\frac{\\pi}{3}$ 处外半径是 $4 \\cdot \\frac{1}{2} = 2$，与内半径相等，所以被积函数在积分限处为零；在 $\\theta = 0$ 处它是 $16 - 4 = 12 > 0$，说明减的顺序是对的。\n\n> **注意。** 先把每个半径平方再相减。被积函数是 $R^{2} - r^{2}$，不是 $(R - r)^{2}$，而且前面的 $\\frac{1}{2}$ 要保留。",
     ],
     (rng) => {
       const a = rng.int(1, 3);
@@ -632,24 +668,52 @@ const polarBetween = {
         b: [big * dir.g(th) * Math.cos(th), big * dir.g(th) * Math.sin(th)],
         dashed: true,
       });
-      return choose(
-        rng,
-        [
+      const trig = dir.f.replace("-", "").replace("\\theta", "");
+      const quarter = Q.of(square, 4).toLatex();
+      const axis = piTimes(dir.base, 2);
+      const [lo, hi] = [lower(halfDen), upper(halfDen)];
+      const solution = t(
+        `**Step 1: Find the rays.** The circles cross where the two radii are equal. Squaring removes the sign:\n\n$$${4 * a * a}${trig}^{2}\\theta = ${radius2} \\implies ${trig}^{2}\\theta = ${quarter}$$\n\nThe solutions on either side of $\\theta = ${axis}$, the axis of symmetry of the shaded part, are $${lo}$ and $${hi}$, the dashed rays.\n\n**Step 2: Tell outer from inner.** Between the rays the circle $r = ${outer}$ is farther from the pole: at $\\theta = ${axis}$ its distance is $${big}$, while the circle about the origin has radius squared $${radius2}$.\n\n**Step 3: Assemble the integral.** A polar area carries the factor $\\frac{1}{2}$, and the integrand is the outer radius squared minus the inner one:\n\n$$${form(true, lo, hi, false)[0].slice(1, -1)}$$\n\n**Check.** At $\\theta = ${hi}$ the outer radius squared is $(${outer})^{2} = ${4 * a * a} \\cdot ${quarter} = ${radius2}$. This is the inner radius squared, so the integrand is zero at the limits. At $\\theta = ${axis}$ the integrand is $${4 * a * a} - ${radius2} = ${4 * a * a - radius2}$. It is positive, so the order of subtraction is right.`,
+        `**第一步：求射线。**两圆在两个半径相等处相交。平方后去掉符号：\n\n$$${4 * a * a}${trig}^{2}\\theta = ${radius2} \\implies ${trig}^{2}\\theta = ${quarter}$$\n\n阴影部分的对称轴是 $\\theta = ${axis}$，它两侧的解是 $${lo}$ 和 $${hi}$，即两条虚线射线。\n\n**第二步：分清内外。**在两条射线之间，圆 $r = ${outer}$ 离极点较远：在 $\\theta = ${axis}$ 处它的距离是 $${big}$，而以原点为中心的圆半径平方为 $${radius2}$。\n\n**第三步：写出积分。**极坐标面积带有因子 $\\frac{1}{2}$，被积函数是外半径的平方减内半径的平方：\n\n$$${form(true, lo, hi, false)[0].slice(1, -1)}$$\n\n**检验。**在 $\\theta = ${hi}$ 处，外半径的平方是 $(${outer})^{2} = ${4 * a * a} \\cdot ${quarter} = ${radius2}$。这等于内半径的平方，所以被积函数在积分限处为零。在 $\\theta = ${axis}$ 处被积函数等于 $${4 * a * a} - ${radius2} = ${4 * a * a - radius2}$。它为正，所以相减的顺序是对的。`,
+      );
+      return explainedChoice(rng, {
+        prompt: t(
           `The shaded region lies inside the circle $r = ${outer}$ and outside a circle centered at the origin, and dashed rays pass through their intersections. Which integral gives its area?`,
           `阴影区域在圆 $r = ${outer}$ 内、以原点为中心的圆外，虚线射线经过它们的交点。哪个积分给出它的面积？`,
+        ),
+        correct: t(...form(true, lo, hi, false)),
+        wrong: [
+          {
+            option: t(...form(false, lo, hi, false)),
+            why: t(
+              "This leaves out the factor $\\frac{1}{2}$ of the polar area formula, so it gives twice the area.",
+              "这里漏掉了极坐标面积公式中的因子 $\\frac{1}{2}$，得到的是面积的两倍。",
+            ),
+          },
+          {
+            option: t(...form(true, lo, hi, true)),
+            why: t(
+              `This subtracts the outer radius squared from the inner one, so the integrand is negative between the rays: at $\\theta = ${axis}$ it is $${radius2 - 4 * a * a}$.`,
+              `这里用内半径的平方减外半径的平方，所以被积函数在两条射线之间为负：在 $\\theta = ${axis}$ 处它等于 $${radius2 - 4 * a * a}$。`,
+            ),
+          },
+          {
+            option: t(...form(true, lower(other), upper(other), false)),
+            why: t(
+              `These rays are not where the circles cross; the radii are equal where $${trig}^{2}\\theta = ${quarter}$, at $${lo}$ and $${hi}$.`,
+              `这两条射线不经过两圆的交点；两个半径在 $${trig}^{2}\\theta = ${quarter}$ 处相等，即 $${lo}$ 和 $${hi}$。`,
+            ),
+          },
+          {
+            option: t(...form(true, axis, hi, false)),
+            why: t(
+              `This starts at $${axis}$, the axis of symmetry, so it covers only half of the shaded region.`,
+              `这里从对称轴 $${axis}$ 开始，只覆盖了阴影区域的一半。`,
+            ),
+          },
         ],
-        form(true, lower(halfDen), upper(halfDen), false),
-        [
-          form(false, lower(halfDen), upper(halfDen), false),
-          form(true, lower(halfDen), upper(halfDen), true),
-          form(true, lower(other), upper(other), false),
-          form(true, piTimes(dir.base, 2), upper(halfDen), false),
-        ],
-        [
-          `The circle about the origin has radius squared $${radius2}$, and the rays make angles $${lower(halfDen)}$ and $${upper(halfDen)}$. The other circle is the outer curve between them, and an area in polar form carries the factor one half.`,
-          `以原点为中心的圆的半径平方为 $${radius2}$，射线的角度是 $${lower(halfDen)}$ 和 $${upper(halfDen)}$。在它们之间另一个圆是外边界，极坐标面积带有二分之一的系数。`,
-        ],
-        fig(
+        solution,
+        figure: fig(
           { xMin: -size, xMax: size, yMin: -size, yMax: size },
           [
             { kind: "polygon", points: polygon },
@@ -663,7 +727,7 @@ const polarBetween = {
             `以原点为中心、半径平方为 ${radius2} 的圆，和过原点、圆心为 (${Math.round(c[0])}, ${Math.round(c[1])}) 的圆；第二个圆在第一个圆外的部分是阴影。`,
           ],
         ),
-      );
+      });
     },
   ),
   figure: calculusDrawings5["the-area-bounded-by-two-polar-curves#the-area-between-two-drawn-polar-circles"],
