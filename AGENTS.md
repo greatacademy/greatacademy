@@ -13,7 +13,7 @@ This is the working guide for AI coding agents and contributors. It summarizes t
 | [docs/development.md](docs/development.md) | Toolchain, commands, local database, running the apps |
 | [docs/roadmap.md](docs/roadmap.md) | Phases, completion criteria, status, risks |
 | [docs/math-curriculum.md](docs/math-curriculum.md) | Reference catalog of a complete mathematics curriculum (37 courses), the plan for content |
-| [docs/english-curriculum.md](docs/english-curriculum.md) | Design of the English subject: graph, native and foreign-language courses, writing and speaking, technology and deployment |
+| [docs/english-curriculum.md](docs/english-curriculum.md) | Design of the English subject: graph, native and foreign-language courses, writing and speaking, technology and deployment, and the map against CCSS ELA and the Ministry of Education's English standards |
 | [docs/english-development-plan.md](docs/english-development-plan.md) | Milestones, files, acceptance criteria and gates for building English |
 | [docs/english-illustrations.md](docs/english-illustrations.md) | Instructions for the agent that generates the color illustrations of English: the style, the cast, the scenes, the review and the files |
 | [docs/chinese-curriculum.md](docs/chinese-curriculum.md) | Design of the Chinese subject: sources, native, heritage and foreign-language courses, characters and recitation, sizes in topics, knowledge points and problems; the first slice, native grades 3 to 6, is built |

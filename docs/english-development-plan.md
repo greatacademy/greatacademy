@@ -267,6 +267,17 @@ English had 652 topics and 1,599 knowledge points when the level, native and exa
 
 E8 is complete for a grade when its course compiles and passes sampling, the statistics show no knowledge point below its depth, simulated students finish it, and it has been reviewed.
 
+### E9. The Standards, Requirement by Requirement (L)
+
+Curriculum §16 maps the native courses against CCSS ELA and the levels against the Ministry of Education's English curriculum standards. This milestone closes the gaps it lists.
+
+- **E9.1 The teaching standard.** A list `content/english/src/teaching-standard.ts`, as in mathematics and Chinese, names the topics written to the teaching standard, and a test checks them: an introduction with its own instance, explanations that end with a warning, solutions in steps that end with a check, and why each other option of a choice is wrong. Every new topic joins it when written; existing topics join it as they are rewritten, course by course.
+- **E9.2 Core changes.** A readability measure on every passage, from a published formula, with a band per grade and level; reading units that are whole works read in order; judged pieces that span several sessions; minimum lengths per grade.
+- **E9.3 Native courses.** `english-kindergarten`, then the new topics and moves of grades 1 and 2 and of `english-phonics`, then grades 6 to 12 with their public-domain works, then grades 3 to 5 (curriculum §16.6). Topics marked for speech wait for E5.
+- **E9.4 Levels.** Word batches that complete each stage's list, A1 and A2 first; the added grammar topics; units that cover the stage's themes and text types; reading volume per level.
+
+E9 is complete for a course when its map in curriculum §16 shows no gap that rules or available judgment can close, every topic is in `teaching-standard.ts`, and it passes sampling and review.
+
 ## 7. Across All Stages
 
 ### 7.1 Testing

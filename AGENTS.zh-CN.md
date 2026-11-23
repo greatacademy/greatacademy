@@ -13,7 +13,7 @@
 | [docs/development.zh-CN.md](docs/development.zh-CN.md) | 工具链、命令、本地数据库、运行应用 |
 | [docs/roadmap.zh-CN.md](docs/roadmap.zh-CN.md) | 阶段、完成标准、状态、风险 |
 | [docs/math-curriculum.zh-CN.md](docs/math-curriculum.zh-CN.md) | 完整数学课程体系的参考目录（37 门课），即内容规划依据 |
-| [docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) | 英语学科的设计：图谱、母语和外语课程、写作与口语、技术与部署 |
+| [docs/english-curriculum.zh-CN.md](docs/english-curriculum.zh-CN.md) | 英语学科的设计：图谱、母语和外语课程、写作与口语、技术与部署，以及与 CCSS ELA 和教育部英语课程标准的对照 |
 | [docs/english-development-plan.zh-CN.md](docs/english-development-plan.zh-CN.md) | 构建英语的里程碑、文件、验收标准和关卡 |
 | [docs/english-illustrations.zh-CN.md](docs/english-illustrations.zh-CN.md) | 给生成英语彩色插图的智能体的说明：风格、角色、场景、审核与文件 |
 | [docs/chinese-curriculum.zh-CN.md](docs/chinese-curriculum.zh-CN.md) | 中文学科的设计：依据、母语华裔和外语课程、汉字与背诵、按主题知识点和题目计的规模；第一切片母语三至六年级已建成 |

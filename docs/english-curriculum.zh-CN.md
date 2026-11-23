@@ -15,6 +15,7 @@
 5. **尽量使用确定性判定。** 规则能判定的交给规则。规则判定不了的才交给 AI，而且要先与人工校准（§8.3）。
 6. **阅读量是课程的一部分。** 语言能力和阅读理解还依赖大量阅读、听力和知识，主题掌握不能替代它们（§5）。
 7. **绝不降低标准。** 反馈指出问题，但不替学习者改正。口语以能否听懂为标准，绝不以口音为标准。
+8. **遵循学校的课程标准。** 学习者随时可能转去学校，所以每门课程教官方标准对这一级的要求，放在标准规定的年级，不自创内容。母语课程遵循美国《共同核心州立标准·英语语言艺术》（CCSS ELA）；外语课程的级别取自 CEFR，词汇、语法、主题、语篇类型和阅读量取自中国教育部的英语课程标准，即《义务教育英语课程标准（2022年版）》和《普通高中英语课程标准（2017年版2020年修订）》，因为许多学习者讲中文。§16 逐条对照这两套标准。
 
 ## 2. 哪些可以沿用数学的做法
 
@@ -66,7 +67,9 @@
 
 - **用图谱分级。** 每篇文章声明它依赖的主题和单词，只推荐给掌握足够内容的学习者。已知词的目标比例从 98% 开始，这个数字来自 Hu 和 Nation（2000）。它存在争议：Schmitt 等人（2011）发现已知词比例与理解大致呈线性关系，后来的一项复制研究也没有完全复现原结果。所以它是需要校准的参数，不是规则。
 - **知识单元。** 文章按同一领域组成序列，每读一篇，下一篇就更容易读。
-- **来源。** 文章为原创或公版文本。绝不复制已出版课程和考试的文本、题目和词表。
+- **来源。** 文章为原创或公版文本。标准点名的作品，例如莎士比亚的剧本或美国的建国文献，学习者读公版原文；整部作品作为一组按顺序阅读的篇章来读（§16.4）。绝不复制已出版课程和考试的文本、题目和词表。
+- **难度。** 每篇文章带一个按公开公式由词和句子算出的可读性指标，每个年级和级别为它设一个区间，并设篇幅；区间是待校准的参数，起初按标准的要求设定（§16.4）。
+- **阅读量。** 每门课程规定学习者在其中读到的词数，至少达到它的标准的要求：各级别按教育部课标的累计课外阅读量（§16.5）。
 - **积分。** 阅读按所用时间获得 XP，并给它依赖的主题部分积分。
 
 理解检查需要大量文章，因为读过的文章不能再检验理解。
@@ -93,25 +96,29 @@
 
 ### 6.2 外语课程
 
-级别采用 CEFR，考试和教材广泛使用它的级别。这些课程在工作顺序上优先（§12）。
+级别采用 CEFR，考试和教材广泛使用它的级别。每一级教什么，遵循中国教育部的英语课程标准：每一级学完学校一个阶段的词汇表、语法项目、主题和语篇类型，学习者因而可以进入那个阶段（§16.5）。这些课程在工作顺序上优先（§12）。
 
-| 课程 | 重点 |
-| :--- | :--- |
-| Pre-A1 | 字母与发音、最初一百个词、课堂用语、大量听力 |
-| A1 | 家庭、学校、食物、图书馆等日常主题；现在时、疑问句、简单句和简短留言 |
-| A2 | 过去和将来、比较、短故事和书信、描述和解释 |
-| B1 | 真实文本、复杂句、段落、表达观点、较长的对话 |
-| B2 | 论证与讨论、文章、流畅阅读一般文本 |
-| C1 至 C2 | **与母语的中学和大学课程汇合** |
-| 考试课程 | IELTS、TOEFL、剑桥、高考：基于图谱已有主题的纯练习课程；每门课程的大纲给出考试官方与 CEFR 的对应（IELTS 5.5 到 6.5、TOEFL 4 到 4.5 为 B2） |
+| 课程 | 重点 | 对应教育部课标中学完的阶段 |
+| :--- | :--- | :--- |
+| Pre-A1 | 字母与发音、最初一百个词、课堂用语、大量听力 | 一级，3、4 年级 |
+| A1 | 家庭、学校、食物、图书馆等日常主题；现在时、疑问句、简单句和简短留言 | 二级，5、6 年级：约 500 词 |
+| A2 | 过去和将来、比较、短故事和书信、描述和解释 | 三级，7 至 9 年级：约 1,600 词 |
+| B1 | 真实文本、复杂句、段落、表达观点、较长的对话 | 高中必修：2,000 至 2,100 词 |
+| B2 | 论证与讨论、文章、流畅阅读一般文本 | 高中选择性必修，即高考的水平：3,000 至 3,200 词 |
+| C1 至 C2 | **与母语的中学和大学课程汇合** | 高中选修（提高类）：4,000 至 4,200 词 |
+| 考试课程 | IELTS、TOEFL、剑桥、高考：基于图谱已有主题的纯练习课程；每门课程的大纲给出考试官方与 CEFR 的对应（IELTS 5.5 到 6.5、TOEFL 4 到 4.5 为 B2） | 高考练习高中选择性必修 |
+
+第三栏把教育部课标的阶段放到我们的级别上，并不是两套量表之间的官方对应。
 
 这些课程的练习遵循 Nation 的四条线，时间大致相等：意义输入、意义输出、语言知识学习和流畅度训练。没有这种平衡，课程就会变成语法和词表（§6.4）。
 
 ### 6.3 母语课程
 
+母语课程逐年级遵循 CCSS ELA：每门课教本年级在文学阅读、信息类文本阅读、基础读写技能（到 5 年级）、写作、听说和语言各部分的标准，一个 topic 放在 CCSS 最早要求它的年级（§16）。
+
 | 课程 | 重点 |
 | :--- | :--- |
-| 幼儿园至 2 年级 | 自然拼读、朗读流畅度、听力理解、造句 |
+| 幼儿园至 2 年级 | 文字概念、语音意识、自然拼读、朗读流畅度、听力理解、造句，最初的观点、事实和故事 |
 | 3、4、5 年级 | 语法、词根、段落、知识型阅读 |
 | 6、7、8 年级 | 文章结构、论证、文学分析 |
 | 9、10、11、12 年级 | 修辞、文学、学术写作、大学入学和进阶先修考试 |
@@ -119,9 +126,9 @@
 
 母语课程用同样的方式构建：一个年级的单元是知识单元和文体，每个单元围绕主题阅读、讨论和写作。重点一栏说明这几个年级最看重什么，而不是只教什么。
 
-从 3 年级起每个年级一门课，和数学一样，因为一学年需要一学年的学习量：一个年级约有十个主题单元、100 到 130 个 topic、1,500 到 2,000 XP 的课时，以及八到十个阅读单元，接近数学 4 到 8 年级的一门课。一个年级教它各主题的词和这一学年的学术词汇，以及这一年的语法、阅读技能和写作，各技能大致按词汇 40%、语法和书写规范 20%、阅读 20%、规则判定的写作 12%、模型判定的写作 8% 分配。一个年级段（3 到 5、6 到 8、9 到 12 年级）共用的 topic 放在教它们的那个年级。C1 和 C2 仍然并入 9 到 12 年级和大学课程（§6.2）：它们的学术词汇、搭配和文体放进这些课程。
+从 3 年级起每个年级一门课，和数学一样，因为一学年需要一学年的学习量：一个年级约有十个主题单元、100 到 130 个 topic、1,500 到 2,000 XP 的课时，以及八到十个阅读单元，接近数学 4 到 8 年级的一门课。一个年级按 CCSS 的要求（L.4 至 L.6）教它的阅读所需的学术词汇和学科词汇，以及这一年的语法、阅读技能和写作，各技能大致按词汇 40%、语法和书写规范 20%、阅读 20%、规则判定的写作 12%、模型判定的写作 8% 分配。给外语学习者的日常词汇属于各级别，不属于各年级。一个年级段（3 到 5、6 到 8、9 到 12 年级）共用的 topic 放在教它们的那个年级。C1 和 C2 仍然并入 9 到 12 年级和大学课程（§6.2）：它们的学术词汇、搭配和文体放进这些课程。
 
-1、2 年级也各有一门课，规模较小，因为年幼的孩子学习时间短，需要大人在旁陪伴：六个主题单元，教自然拼读、造句、短故事和讲事实的短文，每个单元最后听本单元篇章的录音并朗读其中的句子，录音事先做好。它们没有对话，也没有由模型评判的写作；`english-phonics` 课程仍单独教声音与文字这条线。母语课程从自然拼读起，经 1 至 12 年级一门接一门；大学写作建立在 12 年级和英语 B2 之上，因为它的许多学生是把英语当外语学的，而 B2 是进入英语国家大学的常见门槛。
+幼儿园和 1、2 年级也各有一门课，规模较小，因为年幼的孩子学习时间短，需要大人在旁陪伴：六个主题单元，教自然拼读、造句、短故事和讲事实的短文，每个单元最后听本单元篇章的录音并朗读其中的句子，录音事先做好。它们没有对话；它们的写作是 CCSS 要求的简短观点、说明和事件叙述（W.1 至 W.3），一句或几句，由模型评判，幼儿园的孩子可以口述。`english-phonics` 课程仍单独教声音与文字这条线。母语课程从幼儿园和自然拼读起，经 1 至 12 年级一门接一门；大学写作建立在 12 年级和英语 B2 之上，因为它的许多学生是把英语当外语学的，而 B2 是进入英语国家大学的常见门槛。
 
 ### 6.4 各条线的平衡
 
@@ -150,6 +157,7 @@
 - **音频。** 题目可以播放音频，回答可以是录音。
 - **主题单元。** 课程的单元带有主题，并列出使用这个主题的文章、听力和对话（§6.1）。
 - **线。** 每个主题注明所属的线，以便审核课程并在各条线之间平衡（§6.4）。
+- **整部作品、难度和长篇写作。** 一个阅读单元可以是按顺序阅读的一整部作品；每篇文章带它的可读性指标；一篇评判的作文可以跨几次学习完成（§16.4）。
 
 ## 8. 写作
 
@@ -165,6 +173,8 @@
 | W6 长篇 | 研究论文、专业写作 | AI 反馈，可选人工审阅 |
 
 大部分练习放在 W1 到 W3，那里的判定便宜又可靠。Graham 和 Perin（2007）发现，教授计划、修改和编辑策略效果很强，也支持摘要写作和句子合并。*The Writing Revolution*（Hochman & Wexler）是从明确的句子教学逐步走向完整作文的范例。
+
+篇幅和时间遵循标准。一个年级的作文按 CCSS 对它的要求定长度，例如 4 年级一次写完一页打字稿，5 年级两页，6 年级三页（W.4.6 至 W.6.6）；从 3 年级起，每个年级都有研究项目，以及分几次完成的作文：构思、起草、修改、发布，这是 W.5 至 W.7 和 W.10 的要求；每次的成果都随作文保存，直到交稿（§16.4）。
 
 ### 8.2 评判规则
 
@@ -284,6 +294,7 @@
 4. **B1、B2 和母语各年级段，** 用同样的方式构建。
 5. **对话与两端：** 语音服务上的 S5 和 S6；向下是自然拼读，向上是大学写作和考试课程。
 6. **按年级的母语课程：** 1 到 12 年级每个年级一门课（§6.3），先 3 到 5 年级，再 6 到 8 年级，再 9 到 12 年级，然后是 1、2 年级。
+7. **逐条对照课程标准**（§16）：每门课程按教学标准重写；母语课程对齐 CCSS，先幼儿园到 2 年级，再 6 到 12 年级，再 3 到 5 年级；各级别对齐教育部课标的词汇表、语法项目、主题和阅读量，先 A1 和 A2。
 
 | 改动 | 范围 |
 | :--- | :--- |
@@ -406,12 +417,104 @@ S6 的对话运行在 `apps/voice` 的 **Pipecat** 上。它是平台中唯一�
 ## 15. 参考文献
 
 - Beck, I. L., McKeown, M. G., & Kucan, L. *Bringing Words to Life*.
+- Council of Europe (2020). *Common European Framework of Reference for Languages: Learning, Teaching, Assessment. Companion Volume*.
 - Gough, P. B., & Tunmer, W. E. (1986). Decoding, reading, and reading disability. *Remedial and Special Education*.
 - Graham, S., & Perin, D. (2007). A meta-analysis of writing instruction for adolescent students. *Journal of Educational Psychology*, 99, 445–476.
 - Hochman, J. C., & Wexler, N. *The Writing Revolution*.
 - Hu, M., & Nation, P. (2000). Unknown vocabulary density and reading comprehension. *Reading in a Foreign Language*.
 - Levis, J. M. (2005). Changing contexts and shifting paradigms in pronunciation teaching. *TESOL Quarterly*.
+- Ministry of Education of the People's Republic of China (2020). *普通高中英语课程标准（2017年版2020年修订）*.
+- Ministry of Education of the People's Republic of China (2022). *义务教育英语课程标准（2022年版）*.
 - Nation, P. The four strands. *Innovation in Language Learning and Teaching*.
+- National Governors Association Center for Best Practices & Council of Chief State School Officers (2010). *Common Core State Standards for English Language Arts & Literacy in History/Social Studies, Science, and Technical Subjects*.
 - Recht, D. R., & Leslie, L. (1988). Effect of prior knowledge on good and poor readers' memory of text. *Journal of Educational Psychology*.
 - Scarborough, H. S. (2001). Connecting early language and literacy to later reading (dis)abilities. In *Handbook of Early Literacy Research*.
 - Schmitt, N., Jiang, X., & Grabe, W. (2011). The percentage of words known in a text and reading comprehension. *The Modern Language Journal*.
+
+## 16. 逐条对照课程标准
+
+学习者随时可能转去学校，所以每门课程教它的标准对本年级或本级别的要求，放在标准规定的位置，标准不要求的不教（§1）。本节把 CCSS ELA 从幼儿园到 12 年级的分年级标准与母语课程对照，把教育部两份英语课程标准的词汇表、语法项目、主题、语篇类型和阅读量与各级别对照，并列出补齐缺口的 topic 和改动。对标准只作概括，不作引用。
+
+### 16.1 怎样读这张对照图
+
+一条标准，topic 按它的要求练习了，算**覆盖**；只练了一部分，或者标准要求学习者产出（写、说、展示、研究）而我们只用选择题考识别，算**部分覆盖**；什么都没有练，算**缺口**。书写（L.K.1a、L.1.1a）无法在应用里检查，交给旁边的大人。小组讨论（SL.1）只能通过与 AI 导师的对话来接近。
+
+本节之前英语共有 1,969 个 topic，没有一个按教学标准写成：没有 topic 有引入，讲解几乎都不以“注意”结尾。没有一门课程对照过学校的课程标准。
+
+### 16.2 母语课程对照 CCSS
+
+| 年级 | 标准条数 | 覆盖 | 部分覆盖 | 缺口 |
+| :--- | ---: | ---: | ---: | ---: |
+| 幼儿园 | 41 | 1 | 8 | 32 |
+| 1 | 41 | 5 | 13 | 23 |
+| 2 | 40 | 5 | 18 | 17 |
+| 3 | 42 | 22 | 16 | 4 |
+| 4 | 43 | 23 | 17 | 3 |
+| 5 | 43 | 24 | 16 | 3 |
+| 6 | 41 | 16 | 19 | 6 |
+| 7 | 41 | 19 | 17 | 5 |
+| 8 | 41 | 20 | 16 | 5 |
+| 9、10 | 41 | 20 | 15 | 6 |
+| 11、12 | 41 | 8 | 25 | 8 |
+| **合计** | **455** | **163（36%）** | **180（40%）** | **112（25%）** |
+
+语言和信息类文本阅读两部分最好。每个年级的缺口都集中在同几条标准：把文本和它的音频、影视或舞台版本比较（RL.7、RI.7），所读文本的范围和难度（第 10 条），发布与研究（W.6、W.7），以及展示（SL.4、SL.5）。
+
+- **幼儿园**没有课程：听读文本的理解、文字概念、口头的语音意识，以及画、口述或写出一个观点、一些事实和一件事，全都缺。
+- **1、2 年级**缺评判的写作（W.1 至 W.3）、口头合成和切分音素、五个元音组合以外的拼读（r 控元音、其余元音组合、软音 c 和 g、词尾、双音节词）、有语速和语调要求的计时朗读，以及大部分信息类文本阅读；许多语言条目晚了一年。
+- **3 至 5 年级**基本齐全；缺研究项目、口头报告，4 年级的主题和关系代词（放在了 6 年级），以及多音节词的解码。
+- **6 至 8 年级**的引证和客观概括晚了一年，戏剧和诗歌的形式晚了两年，还缺研究、展示和不同媒介的版本。
+- **9 至 12 年级**没有读过一整部作品，也没有读过点名的文献；年级课程里没有长期研究论文和展示，MLA 格式放在 12 年级而不是 9、10 年级，43% 到 60% 的 topic 是词汇批次，其中有属于各级别的日常词汇和短语动词。
+
+### 16.3 我们教了而 CCSS 并不要求的内容
+
+- **晚了：** 关系代词和主题（CCSS 在 4 年级，我们在 6 年级），神话典故和文本结构（4 年级，我们在 5、6 年级），引证和客观概括（6 年级，我们在 7 年级），并列复合句（7 年级，我们在 8 年级），典故（7 年级，我们在 9 年级），戏剧和诗歌的形式（7 年级，我们在 9、10 年级），抄袭（7 年级，我们在 9 年级），MLA 格式（9、10 年级，我们在 12 年级），独立主格结构（9、10 年级，我们在 11 年级），以及幼儿园到 2 年级的几处语言和信息类阅读条目，都晚了一年。它们移到 CCSS 规定的年级。
+- **早了：** 主动和被动语态与语气、并列形容词、错位修饰语、有争议的用法和连字符。它们保留，因为并无损失；CCSS 规定的那个年级另加一个复习它们的 topic。
+- **不要求的：** `the-heros-journey` 和 `archetypes-in-stories` 删去；书信和职场文体、略读和扫读、体育专栏和新闻标题只作为 W.1 至 W.3 或 RI 的实例保留；9 年级的日常词汇和短语动词单元移到 B1 和 B2；10 至 12 年级背后没有阅读的词汇批次，换成本年级阅读所需的学术词汇和学科词汇。
+
+### 16.4 跨年级的改动
+
+- **幼儿园。** 新课程 `english-kindergarten`：文字概念、押韵和音节、首音与韵、分离和替换音素、听读故事和讲事实的文本、书的各部分、疑问词和介词、给词分类，以及画出并讲出一个观点、一些事实和一件事。
+- **到 5 年级为止的基础读写技能。** `english-phonics` 增加口头合成和切分音素、听辨长短元音、词尾、r 控元音、其余元音组合、软音 c 和 g、双音节词和后缀；3 至 5 年级增加多音节词的解码；1 至 5 年级每个年级都计时朗读一篇本年级的文章，以每分钟读对的词数为目标。
+- **难度和整部作品。** 每篇文章带一个按公开公式算出的可读性指标，每个年级一个区间，起初按 CCSS 的要求设定，之后校准；文章逐步加长到一章的篇幅；一个阅读单元可以是按顺序阅读的一整部作品。CCSS 点名作品的地方，读公版原文：8 年级读神话和圣经故事，9、10 年级读一整部莎士比亚剧本和美国的重要演讲，11、12 年级读美国建国文献、美国奠基时期的文学、《联邦党人文集》第 10 篇和一份 1929 年以前的最高法院判决书。
+- **写作。** 1、2 年级增加三类简短的评判写作；从 3 年级起，每个年级都有分几次完成的研究项目，以及经过构思、起草、修改、发布的作文；篇幅从 W.4.6 至 W.6.6 起逐年增加。
+- **听和说。** 每个年级增加口头报告或展示，从 6 年级起增加评价录音中的演讲者；这些要等语音评判（§9.1，S5 和 S6）。
+- **幼儿园到 3 年级的插图。** 一部分插图承载内容，以便教插图补充了什么（RL.7、RI.7）。
+
+### 16.5 各级别对照教育部课标
+
+| 学段 | 累计词汇 | 累计课外阅读量 | 我们的级别 | 我们到该级别教了它的词表的多少 |
+| :--- | ---: | ---: | :--- | ---: |
+| 一级，3、4 年级 | — | 1,500 至 2,000 词 | Pre-A1 | — |
+| 二级，5、6 年级 | 约 500 | 4,000 至 5,000 词 | A1 | 80% |
+| 三级，7 至 9 年级 | 约 1,600 | 到 9 年级 15 万词 | A2 | 二级以外的词的 55% |
+| 高中必修 | 2,000 至 2,100 | 本阶段 4.5 万词 | B1 | 到 B1 为其新词的 51% |
+| 高中选择性必修 | 3,000 至 3,200 | 本阶段 10 万词 | B2 | 到 B2 为其新词的 54% |
+| 高中选修（提高类） | 4,000 至 4,200 | — | C1，已汇合 | — |
+
+这些比例是把两份课标的词表与我们的词汇 topic 所教的词相比得出的。学完 B2 以后，义务教育词表中仍有 296 个词没教，其中许多是基础词（activity、autumn、diary）或国家和民族的名称。词表用英式拼写，旁注美式拼写，两种都接受。
+
+- **词汇。** A1 至 B2 每一级都学完本阶段的词表，按本阶段的主题分批；教育部词表不列词组，所以词组来自主题和文本。
+- **语法。** 每个阶段的语法项目放在对应的级别；增加过去将来时（高中必修）、按短语成分分析长难句（高中选择性必修），以及给讲中文的学习者讲英语语法与汉语语法的不同。
+- **主题和语篇类型。** 每一级的单元覆盖本阶段在课标三大主题语境下的主题，即人与自我、人与社会、人与自然，它的文章覆盖本阶段列出的语篇类型。
+- **阅读量。** 每一级提供的阅读至少达到本阶段的要求（§5）。
+
+### 16.6 新增的 topic
+
+每个新 topic 从一开始就按教学标准写成：带自己实例的引入，用实例来讲、以“注意”结尾的讲解，分步骤、以检验结尾的解答，以及说明其他每个选项为什么错的选择题解答。**[J]** 表示由模型评判，**[S]** 表示需要语音评判。
+
+- **幼儿园：** `concepts-of-print`、`rhyming-and-syllables-aloud` [S]、`onset-and-rime` [S]、`isolating-sounds-in-words` [S]、`changing-a-sound-to-make-a-word` [S]、`kindergarten-listening-<unit>`、`parts-of-a-book`、`storybook-or-poem`、`question-words`、`common-prepositions`、`sorting-words-into-groups`、`drawing-and-telling-an-opinion` [J]、`drawing-and-telling-facts` [J]、`drawing-and-telling-what-happened` [J]。
+- **自然拼读：** `blending-and-segmenting-sounds` [S]、`long-or-short-vowel`、`reading-words-with-endings`、`spelling-words-with-endings`、`reading-r-controlled-vowels`、`spelling-r-controlled-vowels`、`reading-more-vowel-teams`、`spelling-more-vowel-teams`、`soft-c-and-g`、`reading-two-syllable-words`、`reading-words-with-suffixes`；1 至 5 年级各有 `reading-a-passage-fluently-grade-<n>` [S]，3 至 5 年级有 `reading-multisyllable-words`。
+- **1 年级：** `central-message-of-a-story`、`words-for-feelings-and-senses`、`who-is-telling-the-story`、`comparing-two-characters-experiences`、`how-two-things-are-connected`、`headings-and-table-of-contents`、`pictures-or-words`、`reasons-an-author-gives`、`two-texts-same-or-different`、`writing-an-opinion-sentence` [J]、`writing-facts-about-a-topic` [J]、`writing-what-happened` [J]、`verbs-that-match-the-naming-word`、`joining-with-but-or-so-because`、`words-that-tell-where-and-when`、`commands-and-exclamations`、`commas-in-dates-and-lists`、`using-the-sentence-to-find-meaning`、`endings-that-change-a-word`、`sorting-and-defining-words`、`look-peek-and-stare`、`describing-with-details` [S]；下移到本年级的：虚构与非虚构、主要话题、所有格、加 -ed 的过去时、this 和 that。
+- **2 年级：** `sound-and-rhythm-in-poems`、`characters-see-it-differently`、`the-focus-of-each-paragraph`、`why-the-author-wrote-it`、`reading-a-diagram`、`reasons-that-support-a-point`、`writing-an-opinion-with-reasons` [J]、`writing-a-how-to-or-report` [J]、`writing-a-story-with-an-ending` [J]、`fixing-my-sentences`、`capitals-for-holidays-and-places`、`rearranging-a-sentence`、`telling-about-an-experience` [S]；下移到本年级的：故事的道理、一个故事的两个版本、操作步骤、文本特征、同一话题的两篇文本、集合名词、反身代词、形容词和副词、复合词、上下文线索、词典和词汇表、正式和非正式英语。
+- **3 年级：** `my-view-and-the-narrators`、`my-view-and-the-authors`、`stories-in-a-series`、`what-the-pictures-add`、`spoken-and-written-english`、`a-short-research-project-grade-3` [J]、`giving-a-short-report` [S]。
+- **4 年级：** `relative-pronouns-and-adverbs`、`writing-a-one-page-report` [J]、`a-short-research-project-grade-4` [J]、`presenting-a-report-grade-4` [S]；下移到本年级的：主题、源自人名和神话的词、文本结构。
+- **5 年级：** `theme-of-a-story-or-poem`、`figurative-language-in-context`、`how-the-narrator-shapes-events`、`pictures-and-media-in-a-story`、`dialects-and-registers-in-stories`、`a-research-project-from-several-sources` [J]、`presenting-an-opinion` [S]。
+- **6 年级：** `citing-several-pieces-of-evidence`（7 年级的加深版）、`reading-and-hearing-a-story`、`information-in-several-media`、`how-a-scene-or-stanza-fits`、`nonstandard-and-standard-english`、`checking-a-word-in-a-dictionary`、`word-relationships`、`a-short-research-project-grade-6` [J]、`following-a-speakers-argument`、`presenting-claims-and-findings` [S]；下移到本年级的：引用文本证据、客观概括。
+- **7 年级：** `how-a-sonnet-or-soliloquy-works`、`a-story-and-its-film`、`a-basic-citation`、`a-research-project-with-follow-up-questions` [J]、`delivering-a-persuasive-speech` [S]；下移到本年级的：句子种类（加上并列复合句）、典故、同一话题的文本比较、避免抄袭。
+- **8 年级：** `comparing-the-structure-of-two-texts`、`theme-in-plot-and-character`、`analogies-and-allusions-in-word-choice`、`print-or-video-or-audio`、`connotation-and-denotation`、`a-research-project-grade-8` [J]、`evaluating-a-speakers-argument`、`presenting-an-argument` [S]；RL.8.9 的神话和圣经故事读公版文本。
+- **9、10 年级：** `reading-a-seminal-us-speech`、`a-text-in-two-mediums`、`how-an-author-transforms-a-source`、`reading-a-whole-play`、`a-sustained-research-paper-grade-10` [J]、`evaluating-a-recorded-speech`、`presenting-findings-grade-10` [S]；下移到本年级的：说明文、MLA 和 APA 引用格式、独立主格结构；移到各级别的：9 年级的日常词汇和短语动词单元。
+- **11、12 年级：** `reading-a-founding-document-in-full`、`reading-the-federalist`、`reasoning-in-a-supreme-court-opinion`、`foundational-american-literature`、`writing-about-american-literature` [J]、`two-productions-of-a-play`、`how-an-ending-shapes-a-work`、`themes-that-interact`、`understatement-and-sarcasm`、`figures-of-speech-and-their-role`、`hyphenation-conventions`、`a-sustained-research-paper-grade-12` [J]、`presenting-a-perspective` [S]、`presenting-with-digital-media` [S]；上移到本年级的：有争议的用法。
+- **各级别：** 学完各阶段词表的词汇批次；`the-future-in-the-past`、`analyzing-long-sentences`、`english-and-chinese-grammar-compared`。
+
+比较一部剧的不同演出，或把文本和它的电影比较，需要我们有权使用的录像；在有录像之前，这些 topic 把文本和一份演出的文字描述相比较。

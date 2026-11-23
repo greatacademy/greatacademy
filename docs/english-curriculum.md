@@ -15,6 +15,7 @@ This document specifies the design of the English subject: its knowledge graph, 
 5. **Deterministic judgment wherever possible.** Rules judge what rules can judge. AI judges only what they cannot, and only after calibration against people (§8.3).
 6. **Volume is part of the curriculum.** Language ability and reading comprehension also depend on large amounts of reading, listening and knowledge. Mastery of topics does not replace them (§5).
 7. **Never lower the bar.** Feedback points at a problem and does not fix it for the learner. Speaking is judged by intelligibility, never by accent.
+8. **Follow the school standards.** A learner may leave for a school at any point, so each course teaches what an official standard asks of its level, in the grade where the standard puts it, and invents no content of its own. Native courses follow the Common Core State Standards for English Language Arts (CCSS ELA); foreign-language courses take their levels from the CEFR and their words, grammar, themes, text types and reading volume from the English curriculum standards of China's Ministry of Education, for compulsory education (2022) and for senior secondary school (2017, revised 2020), because many learners speak Chinese. §16 maps both standards requirement by requirement.
 
 ## 2. What Carries Over from Mathematics
 
@@ -66,7 +67,9 @@ A new **reading task** gives a graded passage with a short comprehension check.
 
 - **Graded by the graph.** Each passage declares the topics and words it depends on, and is offered only to learners who know enough of them. The target for known running words starts at 98%, the figure from Hu and Nation (2000). That figure is contested: Schmitt and colleagues (2011) found a roughly linear relationship between known words and comprehension, and a later replication did not fully reproduce the original. So the target is a parameter to calibrate, not a rule.
 - **Knowledge units.** Passages come in sequences on one domain, so that each passage makes the next easier to read.
-- **Sources.** Passages are original or in the public domain. Texts, questions and word lists from published courses and tests are never copied.
+- **Sources.** Passages are original or in the public domain. Where a standard names works, such as a play of Shakespeare or a founding document of the United States, the learner reads the public-domain original, and a whole work is read as a sequence of passages in order (§16.4). Texts, questions and word lists from published courses and tests are never copied.
+- **Complexity.** Each passage carries a readability measure computed by a published formula from its words and sentences, and each grade and level a band for it, with its length; the bands are parameters to calibrate, set at first from the standards' expectations (§16.4).
+- **Volume.** Each course sets the words of reading a learner meets in it, at least what its standard asks: for the levels, the cumulative reading of the Ministry's standards (§16.5).
 - **Credit.** Reading earns XP for the time it takes and gives partial credit to the topics it depends on.
 
 Comprehension checks draw on many passages, because a passage read before no longer tests comprehension.
@@ -93,25 +96,29 @@ Themes wrap the content; they do not set the order of learning. Every part is a 
 
 ### 6.2 Foreign-Language Courses
 
-Levels follow the CEFR, whose levels are widely used by tests and textbooks. These courses come first in the order of work (§12).
+Levels follow the CEFR, whose levels are widely used by tests and textbooks. What each level teaches follows the English curriculum standards of China's Ministry of Education: each level completes the word list, grammar items, themes and text types of one stage of school, so that a learner can move to that stage (§16.5). These courses come first in the order of work (§12).
 
-| Course | Focus |
-| :--- | :--- |
-| Pre-A1 | Letters and sounds, the first hundred words, classroom phrases, a large amount of listening |
-| A1 | Everyday themes such as family, school, food and the library; the present, questions, simple sentences and short messages |
-| A2 | The past and the future, comparisons, short stories and letters, describing and explaining |
-| B1 | Authentic texts, complex sentences, paragraphs, opinions, longer conversations |
-| B2 | Argument and discussion, essays, fluent reading of general texts |
-| C1 to C2 | **Merge with the native secondary and college courses** |
-| Exam courses | IELTS, TOEFL, Cambridge, Gaokao: practice-only courses over topics already in the graph; each outline gives the test's official alignment with the CEFR (IELTS 5.5 to 6.5 and TOEFL 4 to 4.5 are B2) |
+| Course | Focus | Completes, in the Ministry's standards |
+| :--- | :--- | :--- |
+| Pre-A1 | Letters and sounds, the first hundred words, classroom phrases, a large amount of listening | Level 1, grades 3 and 4 |
+| A1 | Everyday themes such as family, school, food and the library; the present, questions, simple sentences and short messages | Level 2, grades 5 and 6: about 500 words |
+| A2 | The past and the future, comparisons, short stories and letters, describing and explaining | Level 3, grades 7 to 9: about 1,600 words |
+| B1 | Authentic texts, complex sentences, paragraphs, opinions, longer conversations | Senior required course: 2,000 to 2,100 words |
+| B2 | Argument and discussion, essays, fluent reading of general texts | Senior selective required course, the level of the Gaokao: 3,000 to 3,200 words |
+| C1 to C2 | **Merge with the native secondary and college courses** | Senior electives for raising the level: 4,000 to 4,200 words |
+| Exam courses | IELTS, TOEFL, Cambridge, Gaokao: practice-only courses over topics already in the graph; each outline gives the test's official alignment with the CEFR (IELTS 5.5 to 6.5 and TOEFL 4 to 4.5 are B2) | Gaokao practises the senior selective required course |
+
+The third column places the Ministry's stages on our levels; it is not an official equivalence between the two scales.
 
 Practice in these courses follows Nation's four strands, in roughly equal time: meaning-focused input, meaning-focused output, language-focused learning and fluency development. Without this balance a course turns into grammar and word lists (§6.4).
 
 ### 6.3 Native Courses
 
+Native courses follow CCSS ELA grade by grade: each teaches the standards of its grade in Reading Literature, Reading Informational Text, Foundational Skills (to grade 5), Writing, Speaking and Listening and Language, and a topic sits in the grade where CCSS first asks for it (§16).
+
 | Course | Focus |
 | :--- | :--- |
-| Kindergarten to grade 2 | Phonics, oral reading fluency, listening comprehension, sentence building |
+| Kindergarten to grade 2 | Concepts of print, phonological awareness, phonics, oral reading fluency, listening comprehension, sentence building, first opinions, facts and stories |
 | Grades 3, 4 and 5 | Grammar, word roots, paragraphs, knowledge-based reading |
 | Grades 6, 7 and 8 | Essay structure, argument, literary analysis |
 | Grades 9, 10, 11 and 12 | Rhetoric, literature, academic writing, college admission and advanced placement exams |
@@ -119,9 +126,9 @@ Practice in these courses follows Nation's four strands, in roughly equal time: 
 
 Native courses are built the same way: a grade's units are knowledge units and genres, and each unit reads, discusses and writes about its theme. The focus column says what weighs most in those grades, not what they teach alone.
 
-From grade 3 there is one course per grade, as in mathematics, because a year of school needs a year of work: a grade has about ten themed units, 100 to 130 topics with 1,500 to 2,000 XP of lessons, and eight to ten reading units, close to a mathematics course of grades 4 to 8. A grade teaches the words of its themes and the academic words of its year, and its grammar, reading skills and writing, so the strands share it roughly as vocabulary 40%, grammar and mechanics 20%, reading 20%, writing checked by rules 12% and writing judged by a model 8%. The topics shared by a band of grades (3 to 5, 6 to 8 and 9 to 12) sit in the grade that teaches them. The levels C1 and C2 stay merged with grades 9 to 12 and college (§6.2): their academic words, collocations and style go into those courses.
+From grade 3 there is one course per grade, as in mathematics, because a year of school needs a year of work: a grade has about ten themed units, 100 to 130 topics with 1,500 to 2,000 XP of lessons, and eight to ten reading units, close to a mathematics course of grades 4 to 8. A grade teaches the academic and domain words its reading needs, as CCSS asks (L.4 to L.6), and its grammar, reading skills and writing, so the strands share it roughly as vocabulary 40%, grammar and mechanics 20%, reading 20%, writing checked by rules 12% and writing judged by a model 8%. Everyday words for learners of English as a foreign language belong to the levels, not to the grades. The topics shared by a band of grades (3 to 5, 6 to 8 and 9 to 12) sit in the grade that teaches them. The levels C1 and C2 stay merged with grades 9 to 12 and college (§6.2): their academic words, collocations and style go into those courses.
 
-Grades 1 and 2 have a course each too, smaller because a young child learns in short sessions with an adult nearby: six themed units of phonics, sentence building, short stories and texts of facts, each closed by listening to its passages and reading their sentences aloud, from recordings made ahead of time. They have no conversation and no judged writing; the course `english-phonics` still teaches the sound and print strand on its own. The native courses follow one another from phonics through grades 1 to 12; college writing builds on grade 12 and on English B2, because many of its students learned English as a foreign language and B2 is the usual bar for entering an English-speaking university.
+Kindergarten and grades 1 and 2 have a course each too, smaller because a young child learns in short sessions with an adult nearby: six themed units of phonics, sentence building, short stories and texts of facts, each closed by listening to its passages and reading their sentences aloud, from recordings made ahead of time. They have no conversation; their writing is the short opinions, explanations and accounts of events that CCSS asks for (W.1 to W.3), a sentence or a few, judged by a model, which a kindergartner may dictate. The course `english-phonics` still teaches the sound and print strand on its own. The native courses follow one another from kindergarten and phonics through grades 1 to 12; college writing builds on grade 12 and on English B2, because many of its students learned English as a foreign language and B2 is the usual bar for entering an English-speaking university.
 
 ### 6.4 Balance Across Strands
 
@@ -150,6 +157,7 @@ The core stays subject-agnostic. `libs/subject-english` holds the checkers and `
 - **Audio.** Prompts can play audio, and responses can be recordings.
 - **Themed units.** A course's units carry a theme, and list the passages, listening and conversation that use it (§6.1).
 - **Strands.** Each topic names its strand, so that a course can be reviewed and balanced across strands (§6.4).
+- **Works, complexity and long writing.** A reading unit can be a whole work read in order; each passage carries its readability measure; a judged piece can span several sessions (§16.4).
 
 ## 8. Writing
 
@@ -165,6 +173,8 @@ The core stays subject-agnostic. `libs/subject-english` holds the checkers and `
 | W6 Long works | Research papers, professional writing | AI feedback, with optional human review |
 
 Most practice sits in W1 to W3, where judgment is cheap and reliable. Graham and Perin (2007) found strong effects for teaching strategies of planning, revising and editing, and also support summarizing and sentence combining. *The Writing Revolution* (Hochman & Wexler) is the model for building from explicit sentence instruction up to compositions.
+
+Lengths and time follow the standards. A grade's pieces are as long as CCSS asks of it, such as one typed page in a sitting in grade 4, two in grade 5 and three in grade 6 (W.4.6 to W.6.6), and from grade 3 each grade has research projects and pieces written over several sessions, planned, drafted, revised and published, as W.5 to W.7 and W.10 ask; a session's work is kept with the piece until it is handed in (§16.4).
 
 ### 8.2 Rules of Assessment
 
@@ -284,6 +294,7 @@ The reading strand of §3 began with 15 topics judged by rules, each item a shor
 4. **B1, B2 and the native grade bands,** built the same way.
 5. **Conversation and both ends:** S5 and S6 on the voice service; phonics below; college writing and exam courses above.
 6. **Native courses by grade:** grades 1 to 12 one course each (§6.3), first 3 to 5, then 6 to 8, then 9 to 12, then 1 and 2.
+7. **The standards, requirement by requirement** (§16): every course rewritten to the teaching standard; the native courses brought to CCSS, kindergarten to grade 2 first, then 6 to 12, then 3 to 5; the levels brought to the Ministry's word lists, grammar items, themes and reading volume, A1 and A2 first.
 
 | Change | Scope |
 | :--- | :--- |
@@ -406,12 +417,104 @@ Local tests use **containers only, not Kubernetes**.
 ## 15. References
 
 - Beck, I. L., McKeown, M. G., & Kucan, L. *Bringing Words to Life*.
+- Council of Europe (2020). *Common European Framework of Reference for Languages: Learning, Teaching, Assessment. Companion Volume*.
 - Gough, P. B., & Tunmer, W. E. (1986). Decoding, reading, and reading disability. *Remedial and Special Education*.
 - Graham, S., & Perin, D. (2007). A meta-analysis of writing instruction for adolescent students. *Journal of Educational Psychology*, 99, 445–476.
 - Hochman, J. C., & Wexler, N. *The Writing Revolution*.
 - Hu, M., & Nation, P. (2000). Unknown vocabulary density and reading comprehension. *Reading in a Foreign Language*.
 - Levis, J. M. (2005). Changing contexts and shifting paradigms in pronunciation teaching. *TESOL Quarterly*.
+- Ministry of Education of the People's Republic of China (2020). *普通高中英语课程标准（2017年版2020年修订）* [English curriculum standards for senior secondary school].
+- Ministry of Education of the People's Republic of China (2022). *义务教育英语课程标准（2022年版）* [English curriculum standards for compulsory education].
 - Nation, P. The four strands. *Innovation in Language Learning and Teaching*.
+- National Governors Association Center for Best Practices & Council of Chief State School Officers (2010). *Common Core State Standards for English Language Arts & Literacy in History/Social Studies, Science, and Technical Subjects*.
 - Recht, D. R., & Leslie, L. (1988). Effect of prior knowledge on good and poor readers' memory of text. *Journal of Educational Psychology*.
 - Scarborough, H. S. (2001). Connecting early language and literacy to later reading (dis)abilities. In *Handbook of Early Literacy Research*.
 - Schmitt, N., Jiang, X., & Grabe, W. (2011). The percentage of words known in a text and reading comprehension. *The Modern Language Journal*.
+
+## 16. The Standards, Requirement by Requirement
+
+A learner may leave for a school at any point, so each course teaches what its standard requires of its grade or level, where the standard puts it, and nothing it does not ask for (§1). This section maps the grade-specific standards of CCSS ELA, kindergarten to grade 12, against the native courses, and the word lists, grammar items, themes, text types and reading volume of the Ministry of Education's two English curriculum standards against the levels, and sets out the topics and changes that close the gaps. Requirements are summarized, not quoted.
+
+### 16.1 How the Map Reads
+
+A standard is **covered** when topics practise it as it asks, **partly** when they practise some of it, or only recognize by choice what it asks the learner to produce (write, speak, present, research), and a **gap** when nothing does. Handwriting (L.K.1a, L.1.1a) cannot be checked in the app and is left to the adult nearby. Group discussion (SL.1) can only be approached by conversation with the AI tutor.
+
+Before this section English held 1,969 topics, none written to the teaching standard: no topic had an introduction and almost no explanation ended with a warning. No course had been mapped against a school standard.
+
+### 16.2 The Native Courses Against CCSS
+
+| Grade | Standards | Covered | Partly | Gap |
+| :--- | ---: | ---: | ---: | ---: |
+| Kindergarten | 41 | 1 | 8 | 32 |
+| 1 | 41 | 5 | 13 | 23 |
+| 2 | 40 | 5 | 18 | 17 |
+| 3 | 42 | 22 | 16 | 4 |
+| 4 | 43 | 23 | 17 | 3 |
+| 5 | 43 | 24 | 16 | 3 |
+| 6 | 41 | 16 | 19 | 6 |
+| 7 | 41 | 19 | 17 | 5 |
+| 8 | 41 | 20 | 16 | 5 |
+| 9 and 10 | 41 | 20 | 15 | 6 |
+| 11 and 12 | 41 | 8 | 25 | 8 |
+| **All** | **455** | **163 (36%)** | **180 (40%)** | **112 (25%)** |
+
+Language and Reading Informational Text are strongest. In every grade the gaps are the same few standards: comparing a text with its audio, film or staged version (RL.7, RI.7), the range and complexity of texts read (standard 10), publishing and research (W.6, W.7) and presenting (SL.4, SL.5).
+
+- **Kindergarten** had no course: listening comprehension of read-aloud texts, concepts of print, phonological awareness spoken aloud and drawing, dictating or writing an opinion, facts and an event were all missing.
+- **Grades 1 and 2** lacked judged writing (W.1 to W.3), oral blending and segmenting of sounds, phonics past five vowel teams (r-controlled vowels, the other vowel teams, soft c and g, endings, two-syllable words), timed reading with rate and expression, and most of Reading Informational Text; many language items came a year late.
+- **Grades 3 to 5** were nearly complete; they lacked research projects, oral reports, theme and relative pronouns in grade 4 (taught in grade 6), and multisyllable decoding.
+- **Grades 6 to 8** taught citing evidence and objective summary a year late and drama and poem forms two years late, and lacked research, presenting and media versions.
+- **Grades 9 to 12** read no whole work and no named document; they lacked sustained research papers in the grade courses and presentations, taught MLA style in grade 12 rather than 9 and 10, and filled 43% to 60% of their topics with word batches, among them everyday words and phrasal verbs that belong to the levels.
+
+### 16.3 What We Taught That CCSS Does Not Ask
+
+- **Late:** relative pronouns and theme (grade 4 in CCSS, taught in 6), allusions to myth and text structures (grade 4, taught in 5 and 6), citing evidence and objective summary (6, taught in 7), compound-complex sentences (7, taught in 8), allusions (7, taught in 9), drama and poem forms (7, taught in 9 and 10), plagiarism (7, taught in 9), MLA style (9 and 10, taught in 12), absolute phrases (9 and 10, taught in 11), and in kindergarten to grade 2 several language and informational-reading items a year late. They move to the grade CCSS names.
+- **Early:** active and passive voice and verb moods, coordinate adjectives, misplaced modifiers, contested usage and hyphenation. They stay, since nothing is lost, and the grade CCSS names gains a topic of its own that reviews them.
+- **Not asked for:** `the-heros-journey` and `archetypes-in-stories` go; letters and workplace pieces, skimming and scanning, sports columns and headlines stay only as instances of W.1 to W.3 or RI; the grade-9 units of everyday words and phrasal verbs move to B1 and B2; word batches in grades 10 to 12 with no reading behind them give way to the academic and domain words of the grade's reading.
+
+### 16.4 Changes Across Grades
+
+- **Kindergarten.** A course `english-kindergarten`: concepts of print, rhyme and syllables, onset and rime, isolating and changing sounds, listening to read-aloud stories and information, parts of a book, question words and prepositions, sorting words, and drawing and telling an opinion, facts and an event.
+- **Foundational skills to grade 5.** `english-phonics` gains oral blending and segmenting, long and short vowels by ear, endings, r-controlled vowels, the remaining vowel teams, soft c and g, two-syllable words and suffixes; grades 3 to 5 gain decoding multisyllable words; each grade from 1 to 5 reads a grade-level passage aloud, timed, against a target of words correct per minute.
+- **Complexity and whole works.** Each passage carries a readability measure from a published formula, with a band per grade set at first from the CCSS expectations and calibrated later; passages grow toward the length of a chapter; a reading unit can be a whole work read in order. Where CCSS names works, the public-domain originals are read: myths and Bible stories in grade 8, a whole play of Shakespeare and the seminal speeches of the United States in grades 9 and 10, its founding documents, foundational American literature, Federalist No. 10 and a Supreme Court opinion before 1929 in grades 11 and 12.
+- **Writing.** Grades 1 and 2 gain short judged pieces of the three types; from grade 3 each grade has a research project over several sessions and pieces planned, drafted, revised and published; lengths follow W.4.6 to W.6.6 and grow from there.
+- **Speaking and listening.** Each grade gains an oral report or presentation and, from grade 6, evaluating a recorded speaker; they wait for speech judgment (§9.1, S5 and S6).
+- **Illustrations in kindergarten to grade 3.** Some illustrations carry content, so that what a picture adds can be taught (RL.7, RI.7).
+
+### 16.5 The Levels Against the Ministry's Standards
+
+| Stage of school | Words, cumulative | Reading outside class, cumulative | Our level | Of its list taught by our level |
+| :--- | ---: | ---: | :--- | ---: |
+| Level 1, grades 3 and 4 | — | 1,500 to 2,000 words | Pre-A1 | — |
+| Level 2, grades 5 and 6 | about 500 | 4,000 to 5,000 words | A1 | 80% |
+| Level 3, grades 7 to 9 | about 1,600 | 150,000 words by grade 9 | A2 | 55% of the words beyond level 2 |
+| Senior required | 2,000 to 2,100 | 45,000 words in the course | B1 | 51% of its new words by B1 |
+| Senior selective required | 3,000 to 3,200 | 100,000 words in the course | B2 | 54% of its new words by B2 |
+| Senior electives for raising the level | 4,000 to 4,200 | — | C1, merged | — |
+
+The shares compare the lists of the two standards with the words our vocabulary topics teach. Even after B2, 296 words of the compulsory list were not taught, many of them basic (activity, autumn, diary) or the names of countries and peoples. The lists use British spellings with American ones beside them, and both are accepted.
+
+- **Words.** A1 to B2 each complete the list of their stage, in batches on the stage's themes; the Ministry lists no phrases, so phrases come from the themes and texts.
+- **Grammar.** The grammar items of each stage sit in its level; added are the future in the past (senior required), the analysis of long sentences by their phrases (senior selective required) and, for speakers of Chinese, where English grammar differs from Chinese.
+- **Themes and text types.** Each level's units cover the themes of its stage under the three contexts of the standards, people and themselves, people and society, and people and nature, and its passages the text types the stage lists.
+- **Reading volume.** Each level offers at least the reading its stage asks for (§5).
+
+### 16.6 The New Topics
+
+Every new topic is written to the teaching standard from the start: an introduction with its own instance, explanations that teach with an instance and end with a warning, solutions in steps that end with a check, and choice solutions that say why each other option is wrong. **[J]** marks a topic judged by a model, **[S]** one that needs speech judgment.
+
+- **Kindergarten:** `concepts-of-print`, `rhyming-and-syllables-aloud` [S], `onset-and-rime` [S], `isolating-sounds-in-words` [S], `changing-a-sound-to-make-a-word` [S], `kindergarten-listening-<unit>`, `parts-of-a-book`, `storybook-or-poem`, `question-words`, `common-prepositions`, `sorting-words-into-groups`, `drawing-and-telling-an-opinion` [J], `drawing-and-telling-facts` [J], `drawing-and-telling-what-happened` [J].
+- **Phonics:** `blending-and-segmenting-sounds` [S], `long-or-short-vowel`, `reading-words-with-endings`, `spelling-words-with-endings`, `reading-r-controlled-vowels`, `spelling-r-controlled-vowels`, `reading-more-vowel-teams`, `spelling-more-vowel-teams`, `soft-c-and-g`, `reading-two-syllable-words`, `reading-words-with-suffixes`; for grades 1 to 5 `reading-a-passage-fluently-grade-<n>` [S], and for grades 3 to 5 `reading-multisyllable-words`.
+- **Grade 1:** `central-message-of-a-story`, `words-for-feelings-and-senses`, `who-is-telling-the-story`, `comparing-two-characters-experiences`, `how-two-things-are-connected`, `headings-and-table-of-contents`, `pictures-or-words`, `reasons-an-author-gives`, `two-texts-same-or-different`, `writing-an-opinion-sentence` [J], `writing-facts-about-a-topic` [J], `writing-what-happened` [J], `verbs-that-match-the-naming-word`, `joining-with-but-or-so-because`, `words-that-tell-where-and-when`, `commands-and-exclamations`, `commas-in-dates-and-lists`, `using-the-sentence-to-find-meaning`, `endings-that-change-a-word`, `sorting-and-defining-words`, `look-peek-and-stare`, `describing-with-details` [S]; moved down: fiction and nonfiction, the main topic, possessives, the past with -ed, this and that.
+- **Grade 2:** `sound-and-rhythm-in-poems`, `characters-see-it-differently`, `the-focus-of-each-paragraph`, `why-the-author-wrote-it`, `reading-a-diagram`, `reasons-that-support-a-point`, `writing-an-opinion-with-reasons` [J], `writing-a-how-to-or-report` [J], `writing-a-story-with-an-ending` [J], `fixing-my-sentences`, `capitals-for-holidays-and-places`, `rearranging-a-sentence`, `telling-about-an-experience` [S]; moved down: the lesson of a story, two versions of a story, steps in a procedure, text features, two texts on one topic, collective nouns, reflexive pronouns, adjectives and adverbs, compound words, context clues, dictionaries and glossaries, formal and informal English.
+- **Grade 3:** `my-view-and-the-narrators`, `my-view-and-the-authors`, `stories-in-a-series`, `what-the-pictures-add`, `spoken-and-written-english`, `a-short-research-project-grade-3` [J], `giving-a-short-report` [S].
+- **Grade 4:** `relative-pronouns-and-adverbs`, `writing-a-one-page-report` [J], `a-short-research-project-grade-4` [J], `presenting-a-report-grade-4` [S]; moved down: theme, words from names and myths, text structures.
+- **Grade 5:** `theme-of-a-story-or-poem`, `figurative-language-in-context`, `how-the-narrator-shapes-events`, `pictures-and-media-in-a-story`, `dialects-and-registers-in-stories`, `a-research-project-from-several-sources` [J], `presenting-an-opinion` [S].
+- **Grade 6:** `citing-several-pieces-of-evidence` (the grade-7 deepening), `reading-and-hearing-a-story`, `information-in-several-media`, `how-a-scene-or-stanza-fits`, `nonstandard-and-standard-english`, `checking-a-word-in-a-dictionary`, `word-relationships`, `a-short-research-project-grade-6` [J], `following-a-speakers-argument`, `presenting-claims-and-findings` [S]; moved down: citing textual evidence, objective summary.
+- **Grade 7:** `how-a-sonnet-or-soliloquy-works`, `a-story-and-its-film`, `a-basic-citation`, `a-research-project-with-follow-up-questions` [J], `delivering-a-persuasive-speech` [S]; moved down: kinds of sentences with compound-complex added, allusion, comparing texts on a topic, avoiding plagiarism.
+- **Grade 8:** `comparing-the-structure-of-two-texts`, `theme-in-plot-and-character`, `analogies-and-allusions-in-word-choice`, `print-or-video-or-audio`, `connotation-and-denotation`, `a-research-project-grade-8` [J], `evaluating-a-speakers-argument`, `presenting-an-argument` [S]; the myths and Bible stories of RL.8.9 read in public-domain form.
+- **Grades 9 and 10:** `reading-a-seminal-us-speech`, `a-text-in-two-mediums`, `how-an-author-transforms-a-source`, `reading-a-whole-play`, `a-sustained-research-paper-grade-10` [J], `evaluating-a-recorded-speech`, `presenting-findings-grade-10` [S]; moved down: the explanatory essay, MLA and APA citation, absolute phrases; moved to the levels: the everyday word and phrasal-verb units of grade 9.
+- **Grades 11 and 12:** `reading-a-founding-document-in-full`, `reading-the-federalist`, `reasoning-in-a-supreme-court-opinion`, `foundational-american-literature`, `writing-about-american-literature` [J], `two-productions-of-a-play`, `how-an-ending-shapes-a-work`, `themes-that-interact`, `understatement-and-sarcasm`, `figures-of-speech-and-their-role`, `hyphenation-conventions`, `a-sustained-research-paper-grade-12` [J], `presenting-a-perspective` [S], `presenting-with-digital-media` [S]; moved up: contested usage.
+- **Levels:** word batches that complete each stage's list; `the-future-in-the-past`, `analyzing-long-sentences`, `english-and-chinese-grammar-compared`.
+
+Comparing productions of a play, or a text with its film, needs recordings we may use; until they exist, those topics compare a text with a written account of a production.
