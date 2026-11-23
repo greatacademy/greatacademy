@@ -1421,8 +1421,8 @@ const twoInitialConditions: KnowledgePointDef = {
   id: "a-function-from-its-second-derivative",
   title: t("A function from its second derivative", "由二阶导数求函数"),
   explanation: t(
-    "Integrating a second derivative twice introduces two constants, so two conditions are needed. Use the value of $f'$ to fix the constant in the first integration, and the value of $f$ to fix the constant in the second. Keep the two steps in this order.",
-    "把二阶导数积分两次会引入两个常数，所以需要两个条件。用 $f'$ 的值确定第一次积分的常数，用 $f$ 的值确定第二次积分的常数。这两步的顺序不能颠倒。",
+    "Integrating a second derivative twice introduces two constants, so two conditions are needed. Use the value of $f'$ to fix the constant in the first integration, and the value of $f$ to fix the constant in the second. For example, if $f''(x) = 6x$, $f'(0) = 2$ and $f(0) = 1$, then $f'(x) = 3x^2 + 2$ and $f(x) = x^3 + 2x + 1$.\n\nCheck: differentiating $x^3 + 2x + 1$ twice gives $3x^2 + 2$ and then $6x$, and at $0$ the two functions are $2$ and $1$, as required.\n\n> **Watch out.** Fix the first constant before integrating again. Integrating twice and adding a single $+ C$ at the end loses the term $2x$ that comes from $f'(0) = 2$.",
+    "把二阶导数积分两次会引入两个常数，所以需要两个条件。用 $f'$ 的值确定第一次积分的常数，用 $f$ 的值确定第二次积分的常数。例如，若 $f''(x) = 6x$，$f'(0) = 2$，$f(0) = 1$，则 $f'(x) = 3x^2 + 2$，$f(x) = x^3 + 2x + 1$。\n\n检验：对 $x^3 + 2x + 1$ 求导两次，依次得 $3x^2 + 2$ 和 $6x$，而这两个函数在 $0$ 处的值是 $2$ 和 $1$，符合要求。\n\n> **注意。** 再次积分之前，先确定第一个常数。如果积分两次后只在最后加一个 $+ C$，就会丢掉由 $f'(0) = 2$ 得到的 $2x$ 项。",
   ),
   generate(rng) {
     const A = nonzero(rng, 3);
@@ -1432,6 +1432,10 @@ const twoInitialConditions: KnowledgePointDef = {
     const x = rng.int(1, 3);
     const answer = A * x ** 3 + B * x ** 2 + c * x + d;
     const second = poly([6 * A, "x"], [2 * B, ""]);
+    const first = poly([3 * A, "x^2"], [2 * B, "x"], [c, ""]);
+    const f = poly([A, "x^3"], [B, "x^2"], [c, "x"], [d, ""]);
+    const parts = [A * x ** 3, B * x ** 2, c * x, d];
+    const sum = parts.map((v, i) => (i === 0 ? `${v}` : v < 0 ? ` - ${-v}` : ` + ${v}`)).join("");
     return numberProblem({
       prompt: t(
         `$f''(x) = ${second}$, $f'(0) = ${c}$ and $f(0) = ${d}$. Find $f(${x})$.`,
@@ -1440,9 +1444,31 @@ const twoInitialConditions: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [A * x ** 3 + B * x ** 2 + d, A * x ** 3 + B * x ** 2 + c * x, 6 * A * x + 2 * B],
-      solution: t(
-        `Integrating once and using $f'(0)$ gives $f'(x) = ${poly([3 * A, "x^2"], [2 * B, "x"], [c, ""])}$. Integrating again and using $f(0)$ gives $f(x) = ${poly([A, "x^3"], [B, "x^2"], [c, "x"], [d, ""])}$, so $f(${x}) = ${answer}$.`,
-        `积分一次并用 $f'(0)$，得 $f'(x) = ${poly([3 * A, "x^2"], [2 * B, "x"], [c, ""])}$。再积分并用 $f(0)$，得 $f(x) = ${poly([A, "x^3"], [B, "x^2"], [c, "x"], [d, ""])}$，所以 $f(${x}) = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Integrate once",
+            "积分一次",
+            `Integrating $f''$ gives $${poly([3 * A, "x^2"], [2 * B, "x"])} + C_1$, and at $x = 0$ this is $C_1$. Since $f'(0) = ${c}$:\n\n$$f'(x) = ${first}$$`,
+            `对 $f''$ 积分得 $${poly([3 * A, "x^2"], [2 * B, "x"])} + C_1$，它在 $x = 0$ 处的值是 $C_1$。由 $f'(0) = ${c}$：\n\n$$f'(x) = ${first}$$`,
+          ],
+          [
+            "Integrate again",
+            "再积分一次",
+            `Integrating $f'$ gives $${poly([A, "x^3"], [B, "x^2"], [c, "x"])} + C_2$, and at $x = 0$ this is $C_2$. Since $f(0) = ${d}$:\n\n$$f(x) = ${f}$$`,
+            `对 $f'$ 积分得 $${poly([A, "x^3"], [B, "x^2"], [c, "x"])} + C_2$，它在 $x = 0$ 处的值是 $C_2$。由 $f(0) = ${d}$：\n\n$$f(x) = ${f}$$`,
+          ],
+          [
+            "Evaluate",
+            "代入求值",
+            `Substitute $x = ${x}$:\n\n$$f(${x}) = ${sum} = ${answer}$$`,
+            `代入 $x = ${x}$：\n\n$$f(${x}) = ${sum} = ${answer}$$`,
+          ],
+        ],
+        [
+          `Differentiate $f$ twice: $f'(x) = ${first}$ and $f''(x) = ${second}$, as given. At $0$, $f'(0) = ${c}$ and $f(0) = ${d}$, so both conditions hold.`,
+          `对 $f$ 求导两次：$f'(x) = ${first}$，$f''(x) = ${second}$，与已知相同。在 $0$ 处 $f'(0) = ${c}$，$f(0) = ${d}$，两个条件都满足。`,
+        ],
       ),
     });
   },
@@ -5082,8 +5108,8 @@ const integralAsOneLogarithm: KnowledgePointDef = {
   id: "a-logarithmic-integral-written-as-one-logarithm",
   title: t("A logarithmic integral written as one logarithm", "把对数积分写成一个对数"),
   explanation: t(
-    "A definite integral of $\\frac{k}{x}$ on a positive interval gives $k(\\ln b - \\ln a)$. The rules of logarithms then combine this into a single logarithm: the difference becomes a quotient, and the coefficient becomes a power, so the result is $\\ln\\left(\\frac{b}{a}\\right)^k$. Notice that the value depends only on the ratio of the limits, so the integrals over $[1, 2]$ and $[3, 6]$ are equal. This is what makes the logarithm special.",
-    "$\\frac{k}{x}$ 在正区间上的定积分是 $k(\\ln b - \\ln a)$。再用对数法则合并成一个对数：差变成商，系数变成幂，结果是 $\\ln\\left(\\frac{b}{a}\\right)^k$。注意积分值只取决于上下限的比，所以在 $[1, 2]$ 和 $[3, 6]$ 上的积分相等。这正是对数的特别之处。",
+    "On $x > 0$, $k\\ln x$ is an antiderivative of $\\frac{k}{x}$. So for any antiderivative $F$, the change $F(b) - F(a)$ is $k(\\ln b - \\ln a)$: the constant cancels. The rules of logarithms combine this into one logarithm. The difference becomes a quotient and the coefficient becomes a power, giving $\\ln\\left(\\frac{b}{a}\\right)^k$. So the change depends only on the ratio of $b$ to $a$. For example, with $k = 2$, $a = 3$ and $b = 6$ the change is $2\\ln 2$, which is $\\ln 4$.\n\nCheck: $\\ln 6 - \\ln 3 \\approx 1.792 - 1.099 = 0.693$, and $\\ln 2 \\approx 0.693$ too. Twice that is $1.386$, and $\\ln 4 \\approx 1.386$.\n\n> **Watch out.** Divide the two values of $x$, do not subtract them: $\\ln 6 - \\ln 3$ is $\\ln 2$, not $\\ln 3$. Then the coefficient becomes the exponent: $2\\ln 2$ is $\\ln 4$.",
+    "在 $x > 0$ 上，$k\\ln x$ 是 $\\frac{k}{x}$ 的一个原函数。所以对任意原函数 $F$，变化量 $F(b) - F(a)$ 等于 $k(\\ln b - \\ln a)$：常数被消去。再用对数法则合并成一个对数：差变成商，系数变成幂，得 $\\ln\\left(\\frac{b}{a}\\right)^k$。所以变化量只取决于 $b$ 与 $a$ 的比。例如，取 $k = 2$，$a = 3$，$b = 6$，变化量是 $2\\ln 2$，即 $\\ln 4$。\n\n检验：$\\ln 6 - \\ln 3 \\approx 1.792 - 1.099 = 0.693$，而 $\\ln 2 \\approx 0.693$ 也一样。它的两倍是 $1.386$，而 $\\ln 4 \\approx 1.386$。\n\n> **注意。** 两个 $x$ 的值要相除，不是相减：$\\ln 6 - \\ln 3$ 是 $\\ln 2$，不是 $\\ln 3$。然后系数变成指数：$2\\ln 2$ 是 $\\ln 4$。",
   ),
   generate(rng) {
     const a = rng.int(1, 4);
@@ -5091,17 +5117,34 @@ const integralAsOneLogarithm: KnowledgePointDef = {
     const k = rng.int(2, 4);
     const b = a * ratio;
     const answer = ratio ** k;
+    const quotient = a === 1 ? `${k}\\ln ${ratio}` : `${k}\\ln \\frac{${b}}{${a}} = ${k}\\ln ${ratio}`;
     return numberProblem({
       prompt: t(
-        `$\\int_{${a}}^{${b}} \\frac{${k}}{x}\\,dx = \\ln c$. Find $c$.`,
-        `$\\int_{${a}}^{${b}} \\frac{${k}}{x}\\,dx = \\ln c$。求 $c$。`,
+        `$F$ is an antiderivative of $\\frac{${k}}{x}$ on $x > 0$, and $F(${b}) - F(${a}) = \\ln c$. Find $c$.`,
+        `$F$ 是 $\\frac{${k}}{x}$ 在 $x > 0$ 上的一个原函数，且 $F(${b}) - F(${a}) = \\ln c$。求 $c$。`,
       ),
       answer,
       form: "integer",
       wrong: [ratio * k, b ** k, ratio, (b - a) ** k],
-      solution: t(
-        `The integral is $${k}(\\ln ${b} - \\ln ${a}) = ${k}\\ln ${ratio} = \\ln ${ratio}^{${k}}$. So $c = ${answer}$.`,
-        `积分等于 $${k}(\\ln ${b} - \\ln ${a}) = ${k}\\ln ${ratio} = \\ln ${ratio}^{${k}}$。所以 $c = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Take an antiderivative",
+            "取一个原函数",
+            `Every antiderivative is $${k}\\ln x + C$, and the constant cancels in the difference:\n\n$$F(${b}) - F(${a}) = ${k}(\\ln ${b} - \\ln ${a})$$`,
+            `每个原函数都是 $${k}\\ln x + C$，常数在差中消去：\n\n$$F(${b}) - F(${a}) = ${k}(\\ln ${b} - \\ln ${a})$$`,
+          ],
+          [
+            "Combine the logarithms",
+            "合并对数",
+            `The difference is the logarithm of the quotient, and the coefficient becomes a power:\n\n$$${quotient} = \\ln ${ratio}^{${k}} = \\ln ${answer}$$\n\nSo $c = ${answer}$.`,
+            `差是商的对数，系数变成幂：\n\n$$${quotient} = \\ln ${ratio}^{${k}} = \\ln ${answer}$$\n\n所以 $c = ${answer}$。`,
+          ],
+        ],
+        [
+          `In decimals, $${k}(\\ln ${b} - \\ln ${a}) \\approx ${num(k * (Math.log(b) - Math.log(a)))}$ and $\\ln ${answer} \\approx ${num(Math.log(answer))}$, which agree.`,
+          `用小数验证：$${k}(\\ln ${b} - \\ln ${a}) \\approx ${num(k * (Math.log(b) - Math.log(a)))}$，$\\ln ${answer} \\approx ${num(Math.log(answer))}$，二者一致。`,
+        ],
       ),
     });
   },
@@ -5111,8 +5154,8 @@ const exponentialOverLogOfBase: KnowledgePointDef = {
   id: "an-exponential-integral-over-ln-of-the-base",
   title: t("An exponential integral over the logarithm of its base", "含底数对数的指数积分"),
   explanation: t(
-    "The derivative of $a^x$ is $a^x\\ln a$, so an antiderivative of $a^x$ is $\\frac{a^x}{\\ln a}$. Bases other than $e$ therefore leave a factor of $\\frac{1}{\\ln a}$ in every definite integral. When evaluating, remember the lower limit: at $x = 0$, the value $a^0 = 1$ is not zero, and it must be subtracted. Forgetting it, or treating $a^x$ like a power of $x$, are the usual mistakes.",
-    "$a^x$ 的导数是 $a^x\\ln a$，所以 $a^x$ 的一个原函数是 $\\frac{a^x}{\\ln a}$。因此底数不是 $e$ 时，每个定积分中都留下因子 $\\frac{1}{\\ln a}$。计算时要记住下限：在 $x = 0$ 处，$a^0 = 1$ 不是零，必须减去。忘记减去，或把 $a^x$ 当成 $x$ 的幂，是常见的错误。",
+    "The derivative of $a^x$ is $a^x\\ln a$, so $\\frac{a^x}{\\ln a}$ is an antiderivative of $a^x$. Bases other than $e$ therefore leave a factor of $\\frac{1}{\\ln a}$ in every change $F(n) - F(0)$. At $x = 0$ the value $a^0 = 1$ is not zero, and it must be subtracted. For example, for $2^x$ the change from $0$ to $3$ is $\\frac{2^3 - 1}{\\ln 2}$, which is $\\frac{7}{\\ln 2}$.\n\nCheck: differentiating $\\frac{2^x}{\\ln 2}$ gives back $2^x$, and $\\frac{8}{\\ln 2}$ minus $\\frac{1}{\\ln 2}$ is $\\frac{7}{\\ln 2}$.\n\n> **Watch out.** Do not forget $a^0 = 1$ at $x = 0$. And $a^x$ is not a power of $x$: its antiderivative is not $\\frac{a^{x + 1}}{x + 1}$.",
+    "$a^x$ 的导数是 $a^x\\ln a$，所以 $\\frac{a^x}{\\ln a}$ 是 $a^x$ 的一个原函数。因此底数不是 $e$ 时，每个变化量 $F(n) - F(0)$ 中都留下因子 $\\frac{1}{\\ln a}$。在 $x = 0$ 处，$a^0 = 1$ 不是零，必须减去。例如，$2^x$ 从 $0$ 到 $3$ 的变化量是 $\\frac{2^3 - 1}{\\ln 2}$，即 $\\frac{7}{\\ln 2}$。\n\n检验：对 $\\frac{2^x}{\\ln 2}$ 求导得回 $2^x$，而 $\\frac{8}{\\ln 2}$ 减去 $\\frac{1}{\\ln 2}$ 是 $\\frac{7}{\\ln 2}$。\n\n> **注意。** 不要忘记 $x = 0$ 处的 $a^0 = 1$。另外 $a^x$ 不是 $x$ 的幂：它的原函数不是 $\\frac{a^{x + 1}}{x + 1}$。",
   ),
   generate(rng) {
     const a = rng.pick([2, 3, 5, 6, 7, 10]);
@@ -5121,17 +5164,36 @@ const exponentialOverLogOfBase: KnowledgePointDef = {
     const top = a ** n;
     const answer = k * (top - 1);
     const scale = k === 1 ? "" : `${k} \\cdot `;
+    const times = k === 1 ? "" : `${k}`;
+    const high = num((k * top) / Math.log(a));
+    const low = num(k / Math.log(a));
     return numberProblem({
       prompt: t(
-        `$\\int_0^{${n}} ${scale}${a}^x\\,dx = \\frac{c}{\\ln ${a}}$. Find $c$.`,
-        `$\\int_0^{${n}} ${scale}${a}^x\\,dx = \\frac{c}{\\ln ${a}}$。求 $c$。`,
+        `$F$ is an antiderivative of $${scale}${a}^x$, and $F(${n}) - F(0) = \\frac{c}{\\ln ${a}}$. Find $c$.`,
+        `$F$ 是 $${scale}${a}^x$ 的一个原函数，且 $F(${n}) - F(0) = \\frac{c}{\\ln ${a}}$。求 $c$。`,
       ),
       answer,
       form: "integer",
       wrong: [k * top, top - 1, k * n * a ** (n - 1), k * (a ** (n + 1) - 1)],
-      solution: t(
-        `An antiderivative is $\\frac{${scale}${a}^x}{\\ln ${a}}$. Evaluating at $x = ${n}$ and $x = 0$ gives a numerator of $${k}(${top} - 1)$, so $c = ${answer}$.`,
-        `一个原函数是 $\\frac{${scale}${a}^x}{\\ln ${a}}$。在 $x = ${n}$ 和 $x = 0$ 处取值，分子是 $${k}(${top} - 1)$，所以 $c = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Take an antiderivative",
+            "取一个原函数",
+            `The derivative of $${a}^x$ is $${a}^x\\ln ${a}$, so every antiderivative is\n\n$$F(x) = \\frac{${scale}${a}^x}{\\ln ${a}} + C$$`,
+            `$${a}^x$ 的导数是 $${a}^x\\ln ${a}$，所以每个原函数都是\n\n$$F(x) = \\frac{${scale}${a}^x}{\\ln ${a}} + C$$`,
+          ],
+          [
+            "Subtract the value at 0",
+            "减去 0 处的值",
+            `The constant cancels, and $${a}^0 = 1$:\n\n$$F(${n}) - F(0) = \\frac{${times}(${a}^{${n}} - 1)}{\\ln ${a}} = \\frac{${times}(${top} - 1)}{\\ln ${a}}$$\n\nSo $c = ${answer}$.`,
+            `常数被消去，且 $${a}^0 = 1$：\n\n$$F(${n}) - F(0) = \\frac{${times}(${a}^{${n}} - 1)}{\\ln ${a}} = \\frac{${times}(${top} - 1)}{\\ln ${a}}$$\n\n所以 $c = ${answer}$。`,
+          ],
+        ],
+        [
+          `In decimals, taking $C = 0$: $F(${n}) \\approx ${high}$ and $F(0) \\approx ${low}$, a difference of about $${num((k * top) / Math.log(a) - k / Math.log(a))}$. And $\\frac{${answer}}{\\ln ${a}}$ is about $${num(answer / Math.log(a))}$, the same.`,
+          `用小数验证，取 $C = 0$：$F(${n}) \\approx ${high}$，$F(0) \\approx ${low}$，差约为 $${num((k * top) / Math.log(a) - k / Math.log(a))}$。而 $\\frac{${answer}}{\\ln ${a}}$ 约为 $${num(answer / Math.log(a))}$，结果相同。`,
+        ],
       ),
     });
   },
@@ -5141,8 +5203,8 @@ const integralOfTanSquared: KnowledgePointDef = {
   id: "an-integral-of-tan-squared-plus-a-constant",
   title: t("An integral of tan squared plus a constant", "tan 平方加常数的积分"),
   explanation: t(
-    "There is no direct rule for $\\tan^2 x$, but the identity $\\tan^2 x = \\sec^2 x - 1$ turns it into two functions with known antiderivatives. So the integral is $\\tan x - x$. The term $-x$ is easy to overlook, yet it is where the factor of $\\pi$ comes from on an interval with limits in terms of $\\pi$. Any added constant combines with this term, because it also integrates to a multiple of $x$.",
-    "$\\tan^2 x$ 没有直接的积分法则，但恒等式 $\\tan^2 x = \\sec^2 x - 1$ 把它变成两个已知原函数的函数。所以积分是 $\\tan x - x$。$-x$ 这一项容易被忽略，但当积分限用 $\\pi$ 表示时，$\\pi$ 的因子正是来自这里。任何加上的常数都与这一项合并，因为它积分后也是 $x$ 的倍数。",
+    "There is no direct rule for $\\tan^2 x$, but the identity $\\tan^2 x = \\sec^2 x - 1$ turns it into two functions with known antiderivatives, so $\\int \\tan^2 x \\, dx = \\tan x - x + C$. The term $-x$ is easy to overlook, yet it is where a multiple of $\\pi$ comes from at $x = \\frac{\\pi}{4}$. An added constant $m$ integrates to $mx$ and combines with this term. For example, $\\int (\\tan^2 x + 3) \\, dx = \\tan x + 2x + C$.\n\nCheck: differentiating $\\tan x + 2x$ gives $\\sec^2 x + 2$, and $\\sec^2 x$ is $\\tan^2 x + 1$, so this is $\\tan^2 x + 3$.\n\n> **Watch out.** The identity is $\\tan^2 x = \\sec^2 x - 1$, with a minus sign. And $\\tan^2 x$ is not a power of $x$, so it does not integrate to $\\frac{\\tan^3 x}{3}$.",
+    "$\\tan^2 x$ 没有直接的积分法则，但恒等式 $\\tan^2 x = \\sec^2 x - 1$ 把它变成两个已知原函数的函数，所以 $\\int \\tan^2 x \\, dx = \\tan x - x + C$。$-x$ 这一项容易被忽略，但在 $x = \\frac{\\pi}{4}$ 处，$\\pi$ 的倍数正是来自这里。加上的常数 $m$ 积分后是 $mx$，与这一项合并。例如，$\\int (\\tan^2 x + 3) \\, dx = \\tan x + 2x + C$。\n\n检验：对 $\\tan x + 2x$ 求导得 $\\sec^2 x + 2$，而 $\\sec^2 x$ 是 $\\tan^2 x + 1$，所以结果是 $\\tan^2 x + 3$。\n\n> **注意。** 恒等式是 $\\tan^2 x = \\sec^2 x - 1$，带负号。另外 $\\tan^2 x$ 不是 $x$ 的幂，它的积分不是 $\\frac{\\tan^3 x}{3}$。",
   ),
   generate(rng) {
     const k = rng.int(1, 9);
@@ -5150,16 +5212,40 @@ const integralOfTanSquared: KnowledgePointDef = {
     const answer = Q.of(m - k, 4);
     const integrand = poly([k, "\\tan^2 x"], [m, ""]);
     const rewritten = poly([k, "\\sec^2 x"], [m - k, ""]);
+    const F = poly([k, "\\tan x"], [m - k, "x"]);
+    const tail = answer.sign() < 0 ? ` - ${answer.neg().toLatex()}\\pi` : ` + ${answer.toLatex()}\\pi`;
     return numberProblem({
       prompt: t(
-        `$\\int_0^{\\pi/4} (${integrand})\\,dx = A + B\\pi$ with $A$ and $B$ rational. Find $B$.`,
-        `$\\int_0^{\\pi/4} (${integrand})\\,dx = A + B\\pi$，其中 $A$ 和 $B$ 是有理数。求 $B$。`,
+        `$F$ is the antiderivative of $${integrand}$ with $F(0) = 0$, and $F\\left(\\frac{\\pi}{4}\\right) = A + B\\pi$ with $A$ and $B$ rational. Find $B$.`,
+        `$F$ 是 $${integrand}$ 满足 $F(0) = 0$ 的原函数，且 $F\\left(\\frac{\\pi}{4}\\right) = A + B\\pi$，其中 $A$ 和 $B$ 是有理数。求 $B$。`,
       ),
       answer,
       wrong: [Q.of(k, 4), Q.of(m, 4), Q.of(m + k, 4), Q.of(k - m, 4)],
-      solution: t(
-        `Since $\\tan^2 x = \\sec^2 x - 1$, the integrand is $${rewritten}$. The secant term gives the rational part $${k}$, and the constant gives $${inParens(m - k)} \\cdot \\frac{\\pi}{4}$. So $B = ${answer.toLatex()}$.`,
-        `由于 $\\tan^2 x = \\sec^2 x - 1$，被积函数是 $${rewritten}$。正割项给出有理部分 $${k}$，常数给出 $${inParens(m - k)} \\cdot \\frac{\\pi}{4}$。所以 $B = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Rewrite with the identity",
+            "用恒等式改写",
+            `Since $\\tan^2 x = \\sec^2 x - 1$, the integrand is $${rewritten}$.`,
+            `由于 $\\tan^2 x = \\sec^2 x - 1$，被积函数是 $${rewritten}$。`,
+          ],
+          [
+            "Integrate",
+            "积分",
+            `The secant term gives a tangent, and the constant gives a multiple of $x$. Since $\\tan 0 = 0$, the antiderivative with $F(0) = 0$ needs no added constant:\n\n$$F(x) = ${F}$$`,
+            `正割项积分得正切，常数积分得 $x$ 的倍数。由于 $\\tan 0 = 0$，满足 $F(0) = 0$ 的原函数不需要再加常数：\n\n$$F(x) = ${F}$$`,
+          ],
+          [
+            "Evaluate",
+            "代入求值",
+            `Use $\\tan\\frac{\\pi}{4} = 1$:\n\n$$F\\left(\\frac{\\pi}{4}\\right) = ${k} + ${inParens(m - k)} \\cdot \\frac{\\pi}{4} = ${k}${tail}$$\n\nSo $B = ${answer.toLatex()}$.`,
+            `用 $\\tan\\frac{\\pi}{4} = 1$：\n\n$$F\\left(\\frac{\\pi}{4}\\right) = ${k} + ${inParens(m - k)} \\cdot \\frac{\\pi}{4} = ${k}${tail}$$\n\n所以 $B = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Differentiate $F$: $F'(x) = ${rewritten}$, and replacing $\\sec^2 x$ with $\\tan^2 x + 1$ gives $${integrand}$. Also $F(0) = 0$, since $\\tan 0 = 0$.`,
+          `对 $F$ 求导：$F'(x) = ${rewritten}$，把 $\\sec^2 x$ 换成 $\\tan^2 x + 1$ 得 $${integrand}$。另外由 $\\tan 0 = 0$ 得 $F(0) = 0$。`,
+        ],
       ),
     });
   },
@@ -5169,26 +5255,49 @@ const scaledArctangent: KnowledgePointDef = {
   id: "an-arctangent-integral-with-a-scaled-variable",
   title: t("An arctangent integral with a scaled variable", "变量带系数的反正切积分"),
   explanation: t(
-    "The rule $\\int \\frac{dx}{a^2 + x^2} = \\frac{1}{a}\\arctan\\frac{x}{a} + C$ needs $x^2$ to have a coefficient of 1. When the variable has a coefficient, as in $a^2 + b^2x^2$, the substitution $u = bx$ brings this about, at the cost of an extra factor of $\\frac{1}{b}$. So the antiderivative is $\\frac{1}{ab}\\arctan\\frac{bx}{a}$. Both constants appear in the denominator, and leaving one out is the usual slip.",
-    "公式 $\\int \\frac{dx}{a^2 + x^2} = \\frac{1}{a}\\arctan\\frac{x}{a} + C$ 要求 $x^2$ 的系数为 1。当变量带系数时，如 $a^2 + b^2x^2$，代换 $u = bx$ 可以做到这一点，代价是多出因子 $\\frac{1}{b}$。所以原函数是 $\\frac{1}{ab}\\arctan\\frac{bx}{a}$。两个常数都出现在分母中，漏掉一个是常见的失误。",
+    "The arctangent rule gives $\\frac{1}{a}\\arctan\\frac{x}{a}$ as an antiderivative of $\\frac{1}{a^2 + x^2}$, and it needs $x^2$ to have a coefficient of 1. When the variable has a coefficient, as in $a^2 + b^2x^2$, write the denominator as $a^2 + (bx)^2$. The rule then applies with $bx$ in place of $x$, and differentiating brings out an extra factor $b$ by the chain rule, so divide by $b$ as well. An antiderivative is $\\frac{1}{ab}\\arctan\\frac{bx}{a}$. For example, for $\\frac{1}{4 + 9x^2}$ it is $\\frac{1}{6}\\arctan\\frac{3x}{2}$.\n\nCheck: at $x = 0$ the integrand is $\\frac{1}{4}$, and the slope of $\\frac{1}{6}\\arctan\\frac{3x}{2}$ there is $\\frac{1}{6} \\cdot \\frac{3}{2}$, also $\\frac{1}{4}$.\n\n> **Watch out.** Both constants go in the denominator: the factor is $\\frac{1}{ab}$, not $\\frac{1}{a}$ or $\\frac{1}{b}$. Leaving one out is the usual slip.",
+    "反正切公式给出 $\\frac{1}{a^2 + x^2}$ 的原函数 $\\frac{1}{a}\\arctan\\frac{x}{a}$，它要求 $x^2$ 的系数为 1。当变量带系数时，如 $a^2 + b^2x^2$，把分母写成 $a^2 + (bx)^2$。这时公式中的 $x$ 换成 $bx$，而由链式法则，求导会多出因子 $b$，所以还要除以 $b$。一个原函数是 $\\frac{1}{ab}\\arctan\\frac{bx}{a}$。例如，$\\frac{1}{4 + 9x^2}$ 的原函数是 $\\frac{1}{6}\\arctan\\frac{3x}{2}$。\n\n检验：在 $x = 0$ 处被积函数等于 $\\frac{1}{4}$，而 $\\frac{1}{6}\\arctan\\frac{3x}{2}$ 在那里的斜率是 $\\frac{1}{6} \\cdot \\frac{3}{2}$，也是 $\\frac{1}{4}$。\n\n> **注意。** 两个常数都在分母中：因子是 $\\frac{1}{ab}$，不是 $\\frac{1}{a}$ 或 $\\frac{1}{b}$。漏掉一个是常见的失误。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
-    // A reduced fraction a/b, so that the limit and the arctangent read cleanly.
+    // A reduced fraction a/b, so that the value of x and the arctangent read cleanly.
     const b = rng.pick([2, 3, 4, 5, 6, 7].filter((v) => Q.of(a, v).toLatex() === `\\frac{${a}}{${v}}`));
     const k = rng.int(1, 9);
     const upper = Q.of(a, b);
     const answer = Q.of(k, 4 * a * b);
+    const lead = Q.of(k, a * b);
     return numberProblem({
       prompt: t(
-        `$\\int_0^{${upper.toLatex()}} \\frac{${k}}{${a * a} + ${b * b}x^2}\\,dx = c\\pi$. Find $c$.`,
-        `$\\int_0^{${upper.toLatex()}} \\frac{${k}}{${a * a} + ${b * b}x^2}\\,dx = c\\pi$。求 $c$。`,
+        `$F$ is the antiderivative of $\\frac{${k}}{${a * a} + ${b * b}x^2}$ with $F(0) = 0$, and $F\\left(${upper.toLatex()}\\right) = c\\pi$. Find $c$.`,
+        `$F$ 是 $\\frac{${k}}{${a * a} + ${b * b}x^2}$ 满足 $F(0) = 0$ 的原函数，且 $F\\left(${upper.toLatex()}\\right) = c\\pi$。求 $c$。`,
       ),
       answer,
       wrong: [Q.of(k, 4 * a), Q.of(k, 4 * b), Q.of(k, 2 * a * b), Q.of(k, a * b)],
-      solution: t(
-        `With $u = ${b}x$, an antiderivative is $${k} \\cdot \\frac{1}{${a * b}}\\arctan\\frac{${b}x}{${a}}$. At the upper limit the arctangent is that of $1$, which is $\\frac{\\pi}{4}$, and at $0$ it vanishes. So $c = ${answer.toLatex()}$.`,
-        `令 $u = ${b}x$，一个原函数是 $${k} \\cdot \\frac{1}{${a * b}}\\arctan\\frac{${b}x}{${a}}$。在上限处是 $1$ 的反正切，即 $\\frac{\\pi}{4}$，在 $0$ 处为零。所以 $c = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Write the denominator as a sum of squares",
+            "把分母写成平方和",
+            `$${a * a} + ${b * b}x^2 = ${a}^2 + (${b}x)^2$, so the arctangent rule applies with $a = ${a}$ and $${b}x$ in place of $x$.`,
+            `$${a * a} + ${b * b}x^2 = ${a}^2 + (${b}x)^2$，所以可以用反正切公式，其中 $a = ${a}$，并用 $${b}x$ 代替 $x$。`,
+          ],
+          [
+            "Find the antiderivative",
+            "求原函数",
+            `The rule gives the factor $\\frac{1}{${a}}$, and the chain rule's factor $${b}$ means dividing by $${b}$ too. Since $\\arctan 0 = 0$, this antiderivative has $F(0) = 0$:\n\n$$F(x) = \\frac{${k}}{${a * b}}\\arctan\\frac{${b}x}{${a}}$$`,
+            `公式给出因子 $\\frac{1}{${a}}$，而链式法则的因子 $${b}$ 意味着还要除以 $${b}$。由于 $\\arctan 0 = 0$，这个原函数满足 $F(0) = 0$：\n\n$$F(x) = \\frac{${k}}{${a * b}}\\arctan\\frac{${b}x}{${a}}$$`,
+          ],
+          [
+            "Evaluate",
+            "代入求值",
+            `At $x = ${upper.toLatex()}$ the argument $\\frac{${b}x}{${a}}$ is $1$, and $\\arctan 1$ is $\\frac{\\pi}{4}$:\n\n$$F\\left(${upper.toLatex()}\\right) = \\frac{${k}}{${a * b}} \\cdot \\frac{\\pi}{4} = ${answer.toLatex()}\\pi$$\n\nSo $c = ${answer.toLatex()}$.`,
+            `在 $x = ${upper.toLatex()}$ 处，自变量 $\\frac{${b}x}{${a}}$ 等于 $1$，而 $\\arctan 1$ 是 $\\frac{\\pi}{4}$：\n\n$$F\\left(${upper.toLatex()}\\right) = \\frac{${k}}{${a * b}} \\cdot \\frac{\\pi}{4} = ${answer.toLatex()}\\pi$$\n\n所以 $c = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Compare slopes at $x = 0$. The integrand there is $${Q.of(k, a * a).toLatex()}$. Since $\\arctan u \\approx u$ near $0$, the slope of $F$ there is $${lead.toLatex()} \\cdot ${Q.of(b, a).toLatex()}$, which is also $${Q.of(k, a * a).toLatex()}$.`,
+          `比较 $x = 0$ 处的斜率。被积函数在那里等于 $${Q.of(k, a * a).toLatex()}$。由于在 $0$ 附近 $\\arctan u \\approx u$，$F$ 在那里的斜率是 $${lead.toLatex()} \\cdot ${Q.of(b, a).toLatex()}$，也等于 $${Q.of(k, a * a).toLatex()}$。`,
+        ],
       ),
     });
   },

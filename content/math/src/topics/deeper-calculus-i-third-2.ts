@@ -1128,24 +1128,39 @@ const coefficientFromAntiderivative = point(
   "the-constant-multiple-from-its-antiderivative",
   ["The constant multiple from its antiderivative", "由原函数求常数倍数"],
   [
-    "The reverse question gives the antiderivative and asks for the constant in the integrand. Since differentiating undoes integrating, differentiate the answer: the power rule brings the exponent down, so the constant is the coefficient times the exponent, not the coefficient divided by it.",
-    "反过来的问题是给出原函数，求被积函数中的常数。因为求导抵消积分，所以对结果求导：幂法则把指数乘到前面，所以这个常数等于系数乘以指数，而不是系数除以指数。",
+    "The reverse question gives the antiderivative and asks for the constant in the integrand. Since differentiating undoes integrating, differentiate the answer: the power rule brings the exponent down, so the constant is the coefficient times the exponent, not the coefficient divided by it. For example, if $\\int kx^{3} \\, dx = 2x^{4} + C$, differentiating gives $8x^{3}$, so $k = 8$.\n\nCheck: by the power rule, $\\int 8x^{3} \\, dx$ is $8 \\cdot \\frac{x^{4}}{4} + C$, which is $2x^{4} + C$.\n\n> **Watch out.** Multiply the coefficient by the new exponent, do not divide: here $k$ is $2 \\cdot 4$, not $2 \\div 4$.",
+    "反过来的问题是给出原函数，求被积函数中的常数。因为求导抵消积分，所以对结果求导：幂法则把指数乘到前面，所以这个常数等于系数乘以指数，而不是系数除以指数。例如，若 $\\int kx^{3} \\, dx = 2x^{4} + C$，求导得 $8x^{3}$，所以 $k = 8$。\n\n检验：由幂法则，$\\int 8x^{3} \\, dx$ 是 $8 \\cdot \\frac{x^{4}}{4} + C$，即 $2x^{4} + C$。\n\n> **注意。** 系数要乘以新的指数，不是除以它：这里 $k$ 是 $2 \\cdot 4$，不是 $2 \\div 4$。",
   ],
   (rng) => {
     const n = rng.int(2, 7);
     const a = nz(rng, 9);
     const answer = a * (n + 1);
+    const F = poly([a, `x^{${n + 1}}`]);
+    const back = poly([answer, `x^{${n}}`]);
     return ask(
-      [
-        `$\\int kx^{${n}} \\, dx = ${poly([a, `x^{${n + 1}}`])} + C$. Find $k$.`,
-        `$\\int kx^{${n}} \\, dx = ${poly([a, `x^{${n + 1}}`])} + C$。求 $k$。`,
-      ],
+      [`$\\int kx^{${n}} \\, dx = ${F} + C$. Find $k$.`, `$\\int kx^{${n}} \\, dx = ${F} + C$。求 $k$。`],
       answer,
       [Q.of(a, n + 1), a * n, a],
-      [
-        `Differentiating the right side gives $${paren(a)} \\cdot ${n + 1}x^{${n}} = ${answer}x^{${n}}$, so $k = ${answer}$.`,
-        `对右边求导得 $${paren(a)} \\cdot ${n + 1}x^{${n}} = ${answer}x^{${n}}$，所以 $k = ${answer}$。`,
-      ],
+      walkPair(
+        [
+          [
+            "Differentiate the right side",
+            "对右边求导",
+            `Differentiating undoes integrating, so $kx^{${n}}$ is the derivative of $${F}$. The power rule brings the exponent $${n + 1}$ down:\n\n$$\\frac{d}{dx}\\left(${F}\\right) = ${paren(a)} \\cdot ${n + 1}x^{${n}} = ${back}$$`,
+            `求导抵消积分，所以 $kx^{${n}}$ 是 $${F}$ 的导数。幂法则把指数 $${n + 1}$ 乘到前面：\n\n$$\\frac{d}{dx}\\left(${F}\\right) = ${paren(a)} \\cdot ${n + 1}x^{${n}} = ${back}$$`,
+          ],
+          [
+            "Compare coefficients",
+            "比较系数",
+            `So $kx^{${n}} = ${back}$, and $k = ${answer}$.`,
+            `所以 $kx^{${n}} = ${back}$，$k = ${answer}$。`,
+          ],
+        ],
+        [
+          `Integrate $${back}$ with the power rule: the exponent becomes $${n + 1}$, and $${answer} \\div ${n + 1} = ${a}$, so the result is $${F} + C$, as given.`,
+          `用幂法则积分 $${back}$：指数变为 $${n + 1}$，且 $${answer} \\div ${n + 1} = ${a}$，所以结果是 $${F} + C$，与已知相同。`,
+        ],
+      ),
     );
   },
 );
@@ -1154,17 +1169,40 @@ const noProductRule = point(
   "there-is-no-product-rule-for-integrals",
   ["There is no product rule for integrals", "积分没有乘法法则"],
   [
-    "The integral of a sum is the sum of the integrals, but the integral of a product is not the product of the integrals. So multiply out first and then use the sum rule. Differentiating the wrong answer with the product rule shows that it fails.",
-    "和的积分等于积分的和，但积的积分不等于积分的积。所以要先展开，再用和的法则。用乘法法则对错误答案求导，就能看出它不对。",
+    "The integral of a sum is the sum of the integrals, but the integral of a product is not the product of the integrals. So multiply out first and then use the sum rule. For example,\n\n$$\\int x(x + 1) \\, dx = \\int (x^{2} + x) \\, dx = \\frac{x^{3}}{3} + \\frac{x^{2}}{2} + C.$$\n\nCheck: differentiating $\\frac{x^{3}}{3} + \\frac{x^{2}}{2}$ gives $x^{2} + x$, which is $x(x + 1)$.\n\n> **Watch out.** $\\int x \\, dx$ times $\\int (x + 1) \\, dx$ is not the answer. By the product rule, the derivative of $\\frac{x^{2}}{2}\\left(\\frac{x^{2}}{2} + x\\right)$ is not $x(x + 1)$.",
+    "和的积分等于积分的和，但积的积分不等于积分的积。所以要先展开，再用和的法则。例如\n\n$$\\int x(x + 1) \\, dx = \\int (x^{2} + x) \\, dx = \\frac{x^{3}}{3} + \\frac{x^{2}}{2} + C$$\n\n检验：对 $\\frac{x^{3}}{3} + \\frac{x^{2}}{2}$ 求导得 $x^{2} + x$，即 $x(x + 1)$。\n\n> **注意。** $\\int x \\, dx$ 乘以 $\\int (x + 1) \\, dx$ 不是答案。由乘法法则，$\\frac{x^{2}}{2}\\left(\\frac{x^{2}}{2} + x\\right)$ 的导数不是 $x(x + 1)$。",
   ],
   (rng) => {
     const a = nz(rng, 7);
     const b = rng.pick([-7, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 7]);
+    const F = poly([Q.of(1, 3), "x^{3}"], [Q.of(a + b, 2), "x^{2}"], [a * b, "x"]);
     const answer = poly([Q.of(1, 3), "x^{3}"], [Q.of(a + b, 2), "x^{2}"], [a * b, "x"], [1, "C"]);
     const half = (c: number) => poly([Q.of(1, 2), "x^{2}"], [c, "x"]);
     const wrongOne = `\\left(${half(a)}\\right)\\left(${half(b)}\\right) + C`;
+    const product = `(${linear(1, a)})(${linear(1, b)})`;
+    const expanded = poly([1, "x^{2}"], [a + b, "x"], [a * b, ""]);
+    const [en, zh] = walkPair(
+      [
+        [
+          "Expand",
+          "展开",
+          `There is no product rule for integrals, so multiply out first:\n\n$$${product} = ${expanded}$$`,
+          `积分没有乘法法则，所以先乘开：\n\n$$${product} = ${expanded}$$`,
+        ],
+        [
+          "Integrate term by term",
+          "逐项积分",
+          `Use the power rule on each term, with one constant:\n\n$$\\int (${expanded}) \\, dx = ${answer}$$`,
+          `对每一项用幂法则，只写一个常数：\n\n$$\\int (${expanded}) \\, dx = ${answer}$$`,
+        ],
+      ],
+      [
+        `Differentiate the answer:\n\n$$\\frac{d}{dx}\\left(${F}\\right) = ${expanded}$$\n\nThis is the expanded product.`,
+        `对答案求导：\n\n$$\\frac{d}{dx}\\left(${F}\\right) = ${expanded}$$\n\n这正是展开后的乘积。`,
+      ],
+    );
     return functionProblem({
-      prompt: t(`Find $\\int (${linear(1, a)})(${linear(1, b)}) \\, dx$.`, `求 $\\int (${linear(1, a)})(${linear(1, b)}) \\, dx$。`),
+      prompt: t(`Find $\\int ${product} \\, dx$.`, `求 $\\int ${product} \\, dx$。`),
       answer,
       antiderivative: true,
       wrong: [
@@ -1172,10 +1210,7 @@ const noProductRule = point(
         poly([Q.of(1, 3), "x^{3}"], [a + b, "x^{2}"], [a * b, "x"], [1, "C"]),
         poly([Q.of(1, 3), "x^{3}"], [Q.of(a + b, 2), "x^{2}"], [1, "C"]),
       ],
-      solution: t(
-        `Expand first: $(${linear(1, a)})(${linear(1, b)}) = ${poly([1, "x^{2}"], [a + b, "x"], [a * b, ""])}$. Integrating term by term gives $${answer}$.`,
-        `先展开：$(${linear(1, a)})(${linear(1, b)}) = ${poly([1, "x^{2}"], [a + b, "x"], [a * b, ""])}$。逐项积分得 $${answer}$。`,
-      ),
+      solution: t(en, zh),
     });
   },
 );
@@ -1184,8 +1219,8 @@ const hyperbolicIdentityIntegral = point(
   "integrating-with-a-hyperbolic-identity",
   ["Integrating with a hyperbolic identity", "用双曲恒等式求积分"],
   [
-    "Powers such as $\\tanh^{2}x$ have no direct formula, but identities turn them into known integrals: $\\tanh^{2}x = 1 - \\operatorname{sech}^{2}x$, $\\coth^{2}x = 1 + \\operatorname{csch}^{2}x$, and $\\cosh^{2}x - \\sinh^{2}x = 1$. The signs differ from the circular identities.",
-    "$\\tanh^{2}x$ 这样的幂没有直接的公式，但恒等式能把它们化成已知积分：$\\tanh^{2}x = 1 - \\operatorname{sech}^{2}x$，$\\coth^{2}x = 1 + \\operatorname{csch}^{2}x$，$\\cosh^{2}x - \\sinh^{2}x = 1$。这些符号与三角恒等式不同。",
+    "Powers such as $\\tanh^{2}x$ have no direct formula, but identities turn them into known integrals: $\\tanh^{2}x = 1 - \\operatorname{sech}^{2}x$, $\\coth^{2}x = 1 + \\operatorname{csch}^{2}x$, and $\\cosh^{2}x - \\sinh^{2}x = 1$. For example, $\\int \\tanh^{2}x \\, dx = \\int (1 - \\operatorname{sech}^{2}x) \\, dx = x - \\tanh x + C$.\n\nCheck: differentiating $x - \\tanh x$ gives $1 - \\operatorname{sech}^{2}x$, which is $\\tanh^{2}x$.\n\n> **Watch out.** The signs differ from the circular identities: $\\tanh^{2}x = 1 - \\operatorname{sech}^{2}x$, while $\\tan^{2}x = \\sec^{2}x - 1$.",
+    "$\\tanh^{2}x$ 这样的幂没有直接的公式，但恒等式能把它们化成已知积分：$\\tanh^{2}x = 1 - \\operatorname{sech}^{2}x$，$\\coth^{2}x = 1 + \\operatorname{csch}^{2}x$，$\\cosh^{2}x - \\sinh^{2}x = 1$。例如，$\\int \\tanh^{2}x \\, dx = \\int (1 - \\operatorname{sech}^{2}x) \\, dx = x - \\tanh x + C$。\n\n检验：对 $x - \\tanh x$ 求导得 $1 - \\operatorname{sech}^{2}x$，即 $\\tanh^{2}x$。\n\n> **注意。** 这些符号与三角恒等式不同：$\\tanh^{2}x = 1 - \\operatorname{sech}^{2}x$，而 $\\tan^{2}x = \\sec^{2}x - 1$。",
   ],
   (rng) => {
     const k = nz(rng, 9);
@@ -1196,7 +1231,8 @@ const hyperbolicIdentityIntegral = point(
         : kind === "coth"
           ? poly([k, "\\coth^{2}x"])
           : `${k === 1 ? "" : k === -1 ? "-" : k}\\left(\\cosh^{2}x - \\sinh^{2}x\\right)`;
-    const answer = kind === "unit" ? poly([k, "x"], [1, "C"]) : poly([k, "x"], [-k, `\\${kind} x`], [1, "C"]);
+    const F = kind === "unit" ? poly([k, "x"]) : poly([k, "x"], [-k, `\\${kind} x`]);
+    const answer = `${F} + C`;
     const wrong =
       kind === "unit"
         ? [poly([k, "\\sinh x"], [-k, "\\cosh x"], [1, "C"]), poly([-k, "x"], [1, "C"])]
@@ -1207,15 +1243,42 @@ const hyperbolicIdentityIntegral = point(
         : kind === "coth"
           ? "\\coth^{2}x = 1 + \\operatorname{csch}^{2}x"
           : "\\cosh^{2}x - \\sinh^{2}x = 1";
+    const rewritten =
+      kind === "tanh"
+        ? poly([k, ""], [-k, "\\operatorname{sech}^{2}x"])
+        : kind === "coth"
+          ? poly([k, ""], [k, "\\operatorname{csch}^{2}x"])
+          : `${k}`;
+    const [en, zh] = walkPair(
+      [
+        [
+          "Rewrite with an identity",
+          "用恒等式改写",
+          `Use $${identity}$:\n\n$$${integrand} = ${rewritten}$$`,
+          `用 $${identity}$：\n\n$$${integrand} = ${rewritten}$$`,
+        ],
+        [
+          kind === "unit" ? "Integrate the constant" : "Integrate term by term",
+          kind === "unit" ? "对常数积分" : "逐项积分",
+          kind === "unit"
+            ? `The integrand is the constant $${k}$, which integrates to a multiple of $x$:\n\n$$\\int ${integrand} \\, dx = ${answer}$$`
+            : `The constant integrates to a multiple of $x$, and the integral of $\\operatorname{${kind === "tanh" ? "sech" : "csch"}}^{2}x$ is $${kind === "tanh" ? "\\tanh x" : "-\\coth x"}$:\n\n$$\\int ${integrand} \\, dx = ${answer}$$`,
+          kind === "unit"
+            ? `被积函数是常数 $${k}$，积分后是 $x$ 的倍数：\n\n$$\\int ${integrand} \\, dx = ${answer}$$`
+            : `常数积分后是 $x$ 的倍数，而 $\\operatorname{${kind === "tanh" ? "sech" : "csch"}}^{2}x$ 的积分是 $${kind === "tanh" ? "\\tanh x" : "-\\coth x"}$：\n\n$$\\int ${integrand} \\, dx = ${answer}$$`,
+        ],
+      ],
+      [
+        `Differentiate the answer:\n\n$$\\frac{d}{dx}\\left(${F}\\right) = ${rewritten}$$\n\nBy the identity, this is $${integrand}$.`,
+        `对答案求导：\n\n$$\\frac{d}{dx}\\left(${F}\\right) = ${rewritten}$$\n\n由恒等式，这正是 $${integrand}$。`,
+      ],
+    );
     return functionProblem({
       prompt: t(`Find $\\int ${integrand} \\, dx$.`, `求 $\\int ${integrand} \\, dx$。`),
       answer,
       antiderivative: true,
       wrong,
-      solution: t(
-        `Use $${identity}$. ${kind === "unit" ? `The integrand is the constant $${k}$` : `The integral of $\\operatorname{${kind === "tanh" ? "sech" : "csch"}}^{2}x$ is $${kind === "tanh" ? "\\tanh x" : "-\\coth x"}$`}, so the result is $${answer}$.`,
-        `用 $${identity}$。${kind === "unit" ? `被积函数是常数 $${k}$` : `$\\operatorname{${kind === "tanh" ? "sech" : "csch"}}^{2}x$ 的积分是 $${kind === "tanh" ? "\\tanh x" : "-\\coth x"}$`}，所以结果是 $${answer}$。`,
-      ),
+      solution: t(en, zh),
     });
   },
 );
@@ -1224,8 +1287,8 @@ const arsinhScaled = point(
   "integrating-to-arsinh-with-a-coefficient-inside",
   ["Integrating to arsinh with a coefficient inside", "根号内有系数时积分为 arsinh"],
   [
-    "When $x^{2}$ has a coefficient under the root, write it as a square and use a linear substitution: $\\int \\frac{dx}{\\sqrt{k^{2}x^{2} + b^{2}}} = \\frac{1}{k}\\operatorname{arsinh}\\frac{kx}{b} + C$. The factor $\\frac{1}{k}$ is what the chain rule requires, and it is easy to lose.",
-    "根号下 $x^{2}$ 带系数时，把它写成平方并作线性换元：$\\int \\frac{dx}{\\sqrt{k^{2}x^{2} + b^{2}}} = \\frac{1}{k}\\operatorname{arsinh}\\frac{kx}{b} + C$。因子 $\\frac{1}{k}$ 是链式法则所要求的，很容易漏掉。",
+    "When $x^{2}$ has a coefficient under the root, write it as a square and use a linear substitution:\n\n$$\\int \\frac{dx}{\\sqrt{k^{2}x^{2} + b^{2}}} = \\frac{1}{k}\\operatorname{arsinh}\\frac{kx}{b} + C$$\n\nThe factor $\\frac{1}{k}$ is what the chain rule requires. For example, an antiderivative of $\\frac{1}{\\sqrt{4x^{2} + 9}}$ is $\\frac{1}{2}\\operatorname{arsinh}\\frac{2x}{3}$.\n\nCheck: by the chain rule, the derivative of $\\frac{1}{2}\\operatorname{arsinh}\\frac{2x}{3}$ is $\\frac{1}{2} \\cdot \\frac{2}{3} \\cdot \\frac{1}{\\sqrt{1 + 4x^{2}/9}}$, and multiplying the root by $3$ turns this into $\\frac{1}{\\sqrt{4x^{2} + 9}}$.\n\n> **Watch out.** The factor $\\frac{1}{k}$ is easy to lose. Without it, the derivative of the answer is $k$ times the integrand.",
+    "根号下 $x^{2}$ 带系数时，把它写成平方并作线性换元：\n\n$$\\int \\frac{dx}{\\sqrt{k^{2}x^{2} + b^{2}}} = \\frac{1}{k}\\operatorname{arsinh}\\frac{kx}{b} + C$$\n\n因子 $\\frac{1}{k}$ 是链式法则所要求的。例如，$\\frac{1}{\\sqrt{4x^{2} + 9}}$ 的一个原函数是 $\\frac{1}{2}\\operatorname{arsinh}\\frac{2x}{3}$。\n\n检验：由链式法则，$\\frac{1}{2}\\operatorname{arsinh}\\frac{2x}{3}$ 的导数是 $\\frac{1}{2} \\cdot \\frac{2}{3} \\cdot \\frac{1}{\\sqrt{1 + 4x^{2}/9}}$，把根式乘以 $3$，就化成 $\\frac{1}{\\sqrt{4x^{2} + 9}}$。\n\n> **注意。** 因子 $\\frac{1}{k}$ 很容易漏掉。漏掉它，答案的导数就是被积函数的 $k$ 倍。",
   ],
   (rng) => {
     const [k, b] = rng.pick([
@@ -1246,19 +1309,38 @@ const arsinhScaled = point(
     const c = rng.pick([1, 2, 3, 4, 5, 6, 8, 10, 12, -1, -2, -3, -4, -6]);
     const inner = b === 1 ? `${k}x` : `\\frac{${k}x}{${b}}`;
     const fn = `\\operatorname{arsinh}\\left(${inner}\\right)`;
-    const answer = poly([Q.of(c, k), fn], [1, "C"]);
+    const F = poly([Q.of(c, k), fn]);
+    const answer = `${F} + C`;
     const root = `\\sqrt{${k * k}x^{2} + ${b * b}}`;
+    const integrand = `${c < 0 ? "-" : ""}\\frac{${Math.abs(c)}}{${root}}`;
     const squares = `(${k}x)^{2} + ${b === 1 ? "1" : `${b}^{2}`}`;
-    const inU = poly([Q.of(c, k), `\\operatorname{arsinh}${b === 1 ? " u" : `\\frac{u}{${b}}`}`]);
+    const slope = b === 1 ? `${k}` : `\\frac{${k}}{${b}}`;
+    const [en, zh] = walkPair(
+      [
+        [
+          "Write the root with a square",
+          "把根式写成平方",
+          `The coefficient $${k * k}$ is $${k}^{2}$, so\n\n$$${root} = \\sqrt{${squares}}$$\n\nThe rule applies with $${k}x$ in place of $x$ and $b = ${b}$.`,
+          `系数 $${k * k}$ 是 $${k}^{2}$，所以\n\n$$${root} = \\sqrt{${squares}}$$\n\n用 $${k}x$ 代替 $x$，并取 $b = ${b}$，就可以用公式。`,
+        ],
+        [
+          "Apply the rule and divide by the coefficient",
+          "用公式并除以系数",
+          `The chain rule's factor $${k}$ means dividing by $${k}$:\n\n$$\\int ${integrand} \\, dx = ${answer}$$`,
+          `链式法则的因子 $${k}$ 意味着要除以 $${k}$：\n\n$$\\int ${integrand} \\, dx = ${answer}$$`,
+        ],
+      ],
+      [
+        `Differentiate the arsinh term with the chain rule:\n\n$$\\frac{d}{dx}${fn} = ${slope} \\cdot \\frac{1}{\\sqrt{1 + \\left(${inner}\\right)^{2}}} = \\frac{${k}}{${root}}$$\n\nSo the derivative of the answer is $${Q.of(c, k).toLatex()} \\cdot \\frac{${k}}{${root}}$, which is the integrand.`,
+        `用链式法则对 arsinh 项求导：\n\n$$\\frac{d}{dx}${fn} = ${slope} \\cdot \\frac{1}{\\sqrt{1 + \\left(${inner}\\right)^{2}}} = \\frac{${k}}{${root}}$$\n\n所以答案的导数是 $${Q.of(c, k).toLatex()} \\cdot \\frac{${k}}{${root}}$，正是被积函数。`,
+      ],
+    );
     return functionProblem({
-      prompt: t(`Find $\\int \\frac{${c}}{${root}} \\, dx$.`, `求 $\\int \\frac{${c}}{${root}} \\, dx$。`),
+      prompt: t(`Find $\\int ${integrand} \\, dx$.`, `求 $\\int ${integrand} \\, dx$。`),
       answer,
       antiderivative: true,
       wrong: [poly([c, fn], [1, "C"]), poly([Q.of(c * k), fn], [1, "C"]), poly([Q.of(c, b), fn], [1, "C"])],
-      solution: t(
-        `Write the root as $\\sqrt{${squares}}$ and let $u = ${k}x$, so $dx = \\frac{du}{${k}}$. The integral is $${inU} + C = ${answer}$.`,
-        `把根式写成 $\\sqrt{${squares}}$，令 $u = ${k}x$，则 $dx = \\frac{du}{${k}}$。积分是 $${inU} + C = ${answer}$。`,
-      ),
+      solution: t(en, zh),
     });
   },
 );
@@ -1267,28 +1349,56 @@ const artanhOrArcoth = point(
   "artanh-or-arcoth-by-the-domain",
   ["Artanh or arcoth by the domain", "由定义域选择 artanh 或 arcoth"],
   [
-    "$\\frac{1}{a^{2} - x^{2}}$ has two antiderivatives of the same form, and the domain chooses: $\\frac{1}{a}\\operatorname{artanh}\\frac{x}{a}$ for $|x| < a$ and $\\frac{1}{a}\\operatorname{arcoth}\\frac{x}{a}$ for $|x| > a$. Neither function is defined on the other's interval.",
-    "$\\frac{1}{a^{2} - x^{2}}$ 有两个形式相同的原函数，由定义域决定选哪个：$|x| < a$ 时是 $\\frac{1}{a}\\operatorname{artanh}\\frac{x}{a}$，$|x| > a$ 时是 $\\frac{1}{a}\\operatorname{arcoth}\\frac{x}{a}$。这两个函数都在对方的区间上没有定义。",
+    "$\\frac{1}{a^{2} - x^{2}}$ has two antiderivatives of the same form, and the domain chooses: $\\frac{1}{a}\\operatorname{artanh}\\frac{x}{a}$ for $|x| < a$ and $\\frac{1}{a}\\operatorname{arcoth}\\frac{x}{a}$ for $|x| > a$. For example, for $\\frac{1}{4 - x^{2}}$ with $|x| > 2$, an antiderivative is $\\frac{1}{2}\\operatorname{arcoth}\\frac{x}{2}$.\n\nCheck: by the chain rule, its derivative is $\\frac{1}{2} \\cdot \\frac{1}{2} \\cdot \\frac{1}{1 - x^{2}/4}$, which is $\\frac{1}{4 - x^{2}}$. The derivatives of artanh and arcoth have the same formula, so only the domain tells them apart.\n\n> **Watch out.** Read the domain before choosing. Artanh is defined only between $-1$ and $1$, and arcoth only outside that interval, so neither function is defined on the other's interval.",
+    "$\\frac{1}{a^{2} - x^{2}}$ 有两个形式相同的原函数，由定义域决定选哪个：$|x| < a$ 时是 $\\frac{1}{a}\\operatorname{artanh}\\frac{x}{a}$，$|x| > a$ 时是 $\\frac{1}{a}\\operatorname{arcoth}\\frac{x}{a}$。例如，$|x| > 2$ 时，$\\frac{1}{4 - x^{2}}$ 的一个原函数是 $\\frac{1}{2}\\operatorname{arcoth}\\frac{x}{2}$。\n\n检验：由链式法则，它的导数是 $\\frac{1}{2} \\cdot \\frac{1}{2} \\cdot \\frac{1}{1 - x^{2}/4}$，即 $\\frac{1}{4 - x^{2}}$。artanh 和 arcoth 的导数公式相同，只有定义域能区分它们。\n\n> **注意。** 先看定义域再选择。artanh 只在 $-1$ 和 $1$ 之间有定义，arcoth 只在这个区间之外有定义，所以两个函数都在对方的区间上没有定义。",
   ],
   (rng) => {
     const a = rng.int(2, 9);
     const c = nz(rng, 9);
     const inside = rng.bool();
+    const rel = inside ? "<" : ">";
     const coef = Q.of(c, a);
     const fn = (name: string, co: Q) => `${poly([co, `\\operatorname{${name}}\\frac{x}{${a}}`])} + C`;
     const right = inside ? "artanh" : "arcoth";
     const other = inside ? "arcoth" : "artanh";
-    return choose(
-      rng,
+    const integrand = `${c < 0 ? "-" : ""}\\frac{${Math.abs(c)}}{${a * a} - x^{2}}`;
+    const F = poly([coef, `\\operatorname{${right}}\\frac{x}{${a}}`]);
+    const [en, zh] = walkPair(
       [
-        `Find $\\int \\frac{${c}}{${a * a} - x^{2}} \\, dx$ for $|x| ${inside ? "<" : ">"} ${a}$.`,
-        `当 $|x| ${inside ? "<" : ">"} ${a}$ 时，求 $\\int \\frac{${c}}{${a * a} - x^{2}} \\, dx$。`,
+        [
+          "Read the domain",
+          "看定义域",
+          `Here $a = ${a}$ and $|x| ${rel} ${a}$, so $\\frac{x}{${a}}$ lies ${inside ? "between $-1$ and $1$" : "outside the interval from $-1$ to $1$"}, where $\\operatorname{${right}}$ is defined.`,
+          `这里 $a = ${a}$，$|x| ${rel} ${a}$，所以 $\\frac{x}{${a}}$ 在 ${inside ? "$-1$ 和 $1$ 之间" : "$-1$ 到 $1$ 的区间之外"}，$\\operatorname{${right}}$ 在那里有定义。`,
+        ],
+        [
+          "Apply the rule",
+          "用公式",
+          `The rule gives the factor $\\frac{1}{${a}}$:\n\n$$\\int ${integrand} \\, dx = ${fn(right, coef)}$$`,
+          `公式给出因子 $\\frac{1}{${a}}$：\n\n$$\\int ${integrand} \\, dx = ${fn(right, coef)}$$`,
+        ],
       ],
-      same2(fn(right, coef)),
-      [same2(fn(other, coef)), same2(fn(right, Q.of(c))), same2(fn(other, Q.of(c)))],
       [
-        `Here $a = ${a}$ and $|x| ${inside ? "<" : ">"} a$, so $\\frac{x}{${a}}$ is in the domain of $\\operatorname{${right}}$. The chain rule gives the factor $\\frac{1}{${a}}$, and the result is $${fn(right, coef)}$.`,
-        `这里 $a = ${a}$，$|x| ${inside ? "<" : ">"} a$，所以 $\\frac{x}{${a}}$ 在 $\\operatorname{${right}}$ 的定义域内。链式法则给出因子 $\\frac{1}{${a}}$，结果是 $${fn(right, coef)}$。`,
+        `Differentiate with the chain rule:\n\n$$\\frac{d}{dx}\\left(${F}\\right) = ${coef.toLatex()} \\cdot \\frac{1}{${a}} \\cdot \\frac{1}{1 - \\frac{x^{2}}{${a * a}}} = ${integrand}$$\n\nThis is the integrand.`,
+        `用链式法则求导：\n\n$$\\frac{d}{dx}\\left(${F}\\right) = ${coef.toLatex()} \\cdot \\frac{1}{${a}} \\cdot \\frac{1}{1 - \\frac{x^{2}}{${a * a}}} = ${integrand}$$\n\n这正是被积函数。`,
+      ],
+    );
+    const domainEn = `$\\operatorname{${other}}\\frac{x}{${a}}$ is not defined for $|x| ${rel} ${a}$`;
+    const domainZh = `$|x| ${rel} ${a}$ 时 $\\operatorname{${other}}\\frac{x}{${a}}$ 没有定义`;
+    const factorEn = `the factor $\\frac{1}{${a}}$ from the chain rule is missing, so the derivative is $${a}$ times the integrand`;
+    const factorZh = `漏掉了链式法则的因子 $\\frac{1}{${a}}$，导数是被积函数的 $${a}$ 倍`;
+    return reasoned(
+      choose(
+        rng,
+        [`Find $\\int ${integrand} \\, dx$ for $|x| ${rel} ${a}$.`, `当 $|x| ${rel} ${a}$ 时，求 $\\int ${integrand} \\, dx$。`],
+        same2(fn(right, coef)),
+        [same2(fn(other, coef)), same2(fn(right, Q.of(c))), same2(fn(other, Q.of(c)))],
+        [en, zh],
+      ),
+      [
+        [`$${fn(other, coef)}$`, `The wrong function: ${domainEn}.`, `函数选错了：${domainZh}。`],
+        [`$${fn(right, Q.of(c))}$`, `The right function, but ${factorEn}.`, `函数对了，但${factorZh}。`],
+        [`$${fn(other, Q.of(c))}$`, `Two slips: ${domainEn}, and ${factorEn}.`, `两处错误：${domainZh}，而且${factorZh}。`],
       ],
     );
   },
