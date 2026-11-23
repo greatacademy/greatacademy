@@ -721,21 +721,47 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "swapping-the-order",
       ["Swapping the order", "交换次序"],
       [
-        "The cross product is not commutative: swapping the factors reverses the direction. So $\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$, and the magnitude stays the same.",
-        "叉积不满足交换律：交换因子方向相反。所以 $\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$，模不变。",
+        "The cross product is not commutative: swapping the factors reverses the direction. So $\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$, and the magnitude stays the same. A scalar on either factor comes out in front.\n\nIf $\\mathbf{u} \\times \\mathbf{v} = \\langle 1, -2, 3 \\rangle$, then $(2\\mathbf{v}) \\times \\mathbf{u} = -2\\langle 1, -2, 3 \\rangle = \\langle -2, 4, -6 \\rangle$. Check: with $\\mathbf{u} = \\mathbf{i}$ and $\\mathbf{v} = \\mathbf{j}$, $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{k}$, while $(2\\mathbf{j}) \\times \\mathbf{i} = -2\\mathbf{k}$.\n\n> **Watch out.** Two things change at once: the sign flips because of the swap, and every component is multiplied by the scalar. Apply both.",
+        "叉积不满足交换律：交换因子方向相反。所以 $\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$，模不变。任一因子上的数都可以提到前面。\n\n若 $\\mathbf{u} \\times \\mathbf{v} = \\langle 1, -2, 3 \\rangle$，则 $(2\\mathbf{v}) \\times \\mathbf{u} = -2\\langle 1, -2, 3 \\rangle = \\langle -2, 4, -6 \\rangle$。检验：取 $\\mathbf{u} = \\mathbf{i}$、$\\mathbf{v} = \\mathbf{j}$，$\\mathbf{u} \\times \\mathbf{v} = \\mathbf{k}$，而 $(2\\mathbf{j}) \\times \\mathbf{i} = -2\\mathbf{k}$。\n\n> **注意。** 有两处同时变化：交换使符号相反，数乘使每个分量都乘以这个数。两者都要用上。",
       ],
       (rng) => {
         const x = [nz(rng, 9), nz(rng, 9), nz(rng, 9)] as const;
         const k = rng.int(2, 6);
-        return chooseFilled(
-          rng,
+        const answer = vec(-k * x[0], -k * x[1], -k * x[2]);
+        const kept = vec(k * x[0], k * x[1], k * x[2]);
+        const flipped = vec(-x[0], -x[1], -x[2]);
+        const same = vec(x[0], x[1], x[2]);
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `If $\\mathbf{u} \\times \\mathbf{v} = ${vec(...x)}$, find $(${k}\\mathbf{v}) \\times \\mathbf{u}$.`,
+              `若 $\\mathbf{u} \\times \\mathbf{v} = ${vec(...x)}$，求 $(${k}\\mathbf{v}) \\times \\mathbf{u}$。`,
+            ],
+            answer,
+            [kept, flipped, same],
+            [
+              `**Step 1: Take out the scalar.** A scalar on a factor comes out in front:\n\n$$(${k}\\mathbf{v}) \\times \\mathbf{u} = ${k}(\\mathbf{v} \\times \\mathbf{u})$$\n\n**Step 2: Swap the factors.** Swapping reverses the sign:\n\n$$${k}(\\mathbf{v} \\times \\mathbf{u}) = -${k}(\\mathbf{u} \\times \\mathbf{v}) = -${k}${vec(...x)} = ${answer}$$\n\n**Check.** Swap first and scale second: $\\mathbf{v} \\times \\mathbf{u} = ${flipped}$, and multiplying each component by $${k}$ gives $${answer}$ again.`,
+              `**第一步：提出数乘。**因子上的数可以提到前面：\n\n$$(${k}\\mathbf{v}) \\times \\mathbf{u} = ${k}(\\mathbf{v} \\times \\mathbf{u})$$\n\n**第二步：交换因子。**交换使符号相反：\n\n$$${k}(\\mathbf{v} \\times \\mathbf{u}) = -${k}(\\mathbf{u} \\times \\mathbf{v}) = -${k}${vec(...x)} = ${answer}$$\n\n**检验。**先交换再数乘：$\\mathbf{v} \\times \\mathbf{u} = ${flipped}$，每个分量乘以 $${k}$，仍得 $${answer}$。`,
+            ],
+          ),
           [
-            `If $\\mathbf{u} \\times \\mathbf{v} = ${vec(...x)}$, find $(${k}\\mathbf{v}) \\times \\mathbf{u}$.`,
-            `若 $\\mathbf{u} \\times \\mathbf{v} = ${vec(...x)}$，求 $(${k}\\mathbf{v}) \\times \\mathbf{u}$。`,
+            [
+              `$${kept}$`,
+              "The scalar is right, but swapping the factors also reverses the sign.",
+              "数乘是对的，但交换因子还会使符号相反。",
+            ],
+            [
+              `$${flipped}$`,
+              `The sign is right, but every component must also be multiplied by ${k}.`,
+              `符号是对的，但每个分量还要乘以 ${k}。`,
+            ],
+            [
+              `$${same}$`,
+              `This is u × v itself: the swap reverses the sign and the scalar multiplies by ${k}.`,
+              `这就是 u × v 本身：交换会使符号相反，数乘还要乘以 ${k}。`,
+            ],
           ],
-          vec(-k * x[0], -k * x[1], -k * x[2]),
-          [vec(k * x[0], k * x[1], k * x[2]), vec(-x[0], -x[1], -x[2]), vec(x[0], x[1], x[2])],
-          [`Swapping changes the sign, and the scalar ${k} comes out.`, `交换改变符号，标量 ${k} 可以提出来。`],
         );
       },
     ),
@@ -745,24 +771,26 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "parallel-vectors-have-zero-cross-product",
       ["Parallel vectors have zero cross product", "平行向量的叉积为零"],
       [
-        "The cross product measures an area, which vanishes when the vectors are parallel. So setting the cross product to zero is a test for one vector being a multiple of the other.",
-        "叉积度量面积，向量平行时面积为零。所以令叉积为零，可以检验一个向量是否是另一个的倍数。",
+        "The cross product measures an area, which vanishes when the vectors are parallel. So setting the cross product to zero is a test for one vector being a multiple of the other.\n\nFor $\\langle 1, 2, 3 \\rangle \\times \\langle 2, 4, t \\rangle = \\mathbf{0}$, the first two components show the second vector is $2$ times the first, so $t = 6$. Check: $\\langle 1, 2, 3 \\rangle \\times \\langle 2, 4, 6 \\rangle$ has components $2 \\cdot 6 - 3 \\cdot 4 = 0$, $3 \\cdot 2 - 1 \\cdot 6 = 0$ and $1 \\cdot 4 - 2 \\cdot 2 = 0$.\n\n> **Watch out.** The multiple is fixed by the components you know, and it can be negative. Multiply the third component by that same multiple; do not copy it unchanged.",
+        "叉积度量面积，向量平行时面积为零。所以令叉积为零，可以检验一个向量是否是另一个的倍数。\n\n对 $\\langle 1, 2, 3 \\rangle \\times \\langle 2, 4, t \\rangle = \\mathbf{0}$，前两个分量说明第二个向量是第一个的 $2$ 倍，所以 $t = 6$。检验：$\\langle 1, 2, 3 \\rangle \\times \\langle 2, 4, 6 \\rangle$ 的分量是 $2 \\cdot 6 - 3 \\cdot 4 = 0$、$3 \\cdot 2 - 1 \\cdot 6 = 0$、$1 \\cdot 4 - 2 \\cdot 2 = 0$。\n\n> **注意。** 倍数由已知的分量确定，它可以是负数。第三个分量要乘以同一个倍数，不能原样照抄。",
       ],
       (rng) => {
         const a = nz(rng, 6);
         const b = nz(rng, 6);
         const c = nz(rng, 6);
         const k = rng.int(2, 6) * (rng.bool() ? 1 : -1);
+        const t = k * c;
+        const second = vec(k * a, k * b, 0).replace(", 0 ", ", t ");
         return integer(
           [
-            `For what value of $t$ is $${vec(a, b, c)} \\times ${vec(k * a, k * b, 0).replace(", 0 ", ", t ")} = \\mathbf{0}$?`,
-            `$t$ 为何值时，$${vec(a, b, c)} \\times ${vec(k * a, k * b, 0).replace(", 0 ", ", t ")} = \\mathbf{0}$？`,
+            `For what value of $t$ is $${vec(a, b, c)} \\times ${second} = \\mathbf{0}$?`,
+            `$t$ 为何值时，$${vec(a, b, c)} \\times ${second} = \\mathbf{0}$？`,
           ],
-          k * c,
-          [-k * c, c, k],
+          t,
+          [-t, c, k],
           [
-            `The second vector must be ${k} times the first, so $t = ${k} \\times (${c}) = ${k * c}$.`,
-            `第二个向量必须是第一个的 ${k} 倍，所以 $t = ${k} \\times (${c}) = ${k * c}$。`,
+            `**Step 1: Find the multiple.** A zero cross product means the vectors are parallel. The first components give the multiple, and the second components give the same one:\n\n$$${frac(k * a, a)} = ${frac(k * b, b)} = ${k}$$\n\n**Step 2: Scale the third component.** The third component must also be multiplied by $${k}$:\n\n$$t = ${paren(k)} \\cdot ${paren(c)} = ${t}$$\n\n**Check.** With $t = ${t}$, each component of the cross product is zero:\n\n$$${paren(b)} \\cdot ${paren(t)} - ${paren(c)} \\cdot ${paren(k * b)} = 0, \\quad ${paren(c)} \\cdot ${paren(k * a)} - ${paren(a)} \\cdot ${paren(t)} = 0, \\quad ${paren(a)} \\cdot ${paren(k * b)} - ${paren(b)} \\cdot ${paren(k * a)} = 0$$`,
+            `**第一步：求倍数。**叉积为零说明两个向量平行。第一个分量给出倍数，第二个分量给出同一个倍数：\n\n$$${frac(k * a, a)} = ${frac(k * b, b)} = ${k}$$\n\n**第二步：把第三个分量乘以倍数。**第三个分量也必须乘以 $${k}$：\n\n$$t = ${paren(k)} \\cdot ${paren(c)} = ${t}$$\n\n**检验。**当 $t = ${t}$ 时，叉积的每个分量都为零：\n\n$$${paren(b)} \\cdot ${paren(t)} - ${paren(c)} \\cdot ${paren(k * b)} = 0, \\quad ${paren(c)} \\cdot ${paren(k * a)} - ${paren(a)} \\cdot ${paren(t)} = 0, \\quad ${paren(a)} \\cdot ${paren(k * b)} - ${paren(b)} \\cdot ${paren(k * a)} = 0$$`,
           ],
         );
       },
@@ -773,30 +801,31 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-area-of-a-triangle-in-the-plane",
       ["The area of a triangle in the plane", "平面上三角形的面积"],
       [
-        "Two plane vectors can be given a third component of 0, so their cross product points straight up. Half the absolute value of $ad - bc$ is then the area of the triangle they span.",
-        "平面向量可以加上第三个分量 0，它们的叉积就竖直向上。所以 $ad - bc$ 绝对值的一半，就是它们张成的三角形面积。",
+        "Two plane vectors can be given a third component of 0, so their cross product points straight up. Half the absolute value of $ad - bc$ is then the area of the triangle they span.\n\nFor the vertices $(0, 0)$, $(4, 1)$ and $(2, 3)$: $\\langle 4, 1, 0 \\rangle \\times \\langle 2, 3, 0 \\rangle = \\langle 0, 0, 10 \\rangle$, so the area is $5$. Check: the box $0 \\le x \\le 4$, $0 \\le y \\le 3$ has area $12$, and the three corner triangles outside the triangle have areas $2$, $3$ and $2$, leaving $12 - 7 = 5$.\n\n> **Watch out.** The value $ad - bc$ is the parallelogram's signed area. Take its absolute value and then half of it for the triangle.",
+        "平面向量可以加上第三个分量 0，它们的叉积就竖直向上。所以 $ad - bc$ 绝对值的一半，就是它们张成的三角形面积。\n\n对顶点 $(0, 0)$、$(4, 1)$、$(2, 3)$：$\\langle 4, 1, 0 \\rangle \\times \\langle 2, 3, 0 \\rangle = \\langle 0, 0, 10 \\rangle$，所以面积是 $5$。检验：长方形 $0 \\le x \\le 4$、$0 \\le y \\le 3$ 的面积是 $12$，三角形外面三个角上的三角形面积是 $2$、$3$、$2$，剩下 $12 - 7 = 5$。\n\n> **注意。** $ad - bc$ 是平行四边形的有向面积。先取绝对值，再取一半才是三角形的面积。",
       ],
       (rng) => {
         const a = rng.int(1, 9) * 2;
         const b = rng.int(1, 9);
         const c = rng.int(1, 9);
         const d = rng.int(1, 9) * 2;
-        const x = a * d - b * c === 0 ? 2 : Math.abs(a * d - b * c);
         const dd = a * d - b * c === 0 ? d + 2 : d;
         const det = Math.abs(a * dd - b * c);
         const even = det % 2 === 0 ? det : 2 * det;
         const aa = det % 2 === 0 ? a : 2 * a;
         const bb = det % 2 === 0 ? b : 2 * b;
+        const z = aa * dd - bb * c;
+        const zFromP = -aa * (dd - bb) + bb * (c - aa);
         return whole(
           [
             `Find the area of the triangle with vertices $(0, 0)$, $(${aa}, ${bb})$ and $(${c}, ${dd})$.`,
             `求顶点为 $(0, 0)$、$(${aa}, ${bb})$ 和 $(${c}, ${dd})$ 的三角形面积。`,
           ],
           even / 2,
-          [even, even / 2 + 1, x + 1],
+          [even, even / 2 + 1, Math.abs(aa * dd + bb * c) / 2],
           [
-            `$\\frac{1}{2}|${aa} \\cdot ${dd} - ${bb} \\cdot ${c}| = ${even / 2}$.`,
-            `$\\frac{1}{2}|${aa} \\cdot ${dd} - ${bb} \\cdot ${c}| = ${even / 2}$。`,
+            `**Step 1: Cross the edge vectors.** Give both edges from the origin a third component of $0$:\n\n$$${vec(aa, bb, 0)} \\times ${vec(c, dd, 0)} = ${vec(0, 0, z)}$$\n\n**Step 2: Take half the length.** The triangle is half the parallelogram:\n\n$$\\frac{1}{2}|${aa} \\cdot ${dd} - ${bb} \\cdot ${c}| = \\frac{1}{2} \\cdot ${even} = ${even / 2}$$\n\n**Check.** Use the edges from the vertex $(${aa}, ${bb})$ instead. They are $${vec(-aa, -bb)}$ and $${vec(c - aa, dd - bb)}$, and\n\n$$${paren(-aa)} \\cdot ${paren(dd - bb)} - ${paren(-bb)} \\cdot ${paren(c - aa)} = ${zFromP}$$\n\nHalf of its absolute value is $${even / 2}$ again.`,
+            `**第一步：求边向量的叉积。**给从原点出发的两条边添上第三个分量 $0$：\n\n$$${vec(aa, bb, 0)} \\times ${vec(c, dd, 0)} = ${vec(0, 0, z)}$$\n\n**第二步：取长度的一半。**三角形是平行四边形的一半：\n\n$$\\frac{1}{2}|${aa} \\cdot ${dd} - ${bb} \\cdot ${c}| = \\frac{1}{2} \\cdot ${even} = ${even / 2}$$\n\n**检验。**改用从顶点 $(${aa}, ${bb})$ 出发的两条边。它们是 $${vec(-aa, -bb)}$ 和 $${vec(c - aa, dd - bb)}$，而\n\n$$${paren(-aa)} \\cdot ${paren(dd - bb)} - ${paren(-bb)} \\cdot ${paren(c - aa)} = ${zFromP}$$\n\n它的绝对值的一半仍是 $${even / 2}$。`,
           ],
         );
       },
@@ -807,8 +836,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-volume-of-a-parallelepiped",
       ["The volume of a parallelepiped", "平行六面体的体积"],
       [
-        "The absolute value of the triple product gives the volume of the box that three vectors span. A value of zero means that the three vectors lie in one plane.",
-        "三重积的绝对值给出三个向量张成的平行六面体的体积。值为零表示三个向量在同一平面内。",
+        "The absolute value of the triple product gives the volume of the box that three vectors span, and a tetrahedron or pyramid takes a fraction of it. A value of zero means that the three vectors lie in one plane. When the rows have zeros below the diagonal, the determinant is the product of the diagonal entries.\n\nFor $\\langle 2, 1, 1 \\rangle$, $\\langle 0, 3, 1 \\rangle$ and $\\langle 0, 0, 4 \\rangle$ the volume is $2 \\cdot 3 \\cdot 4 = 24$. Check: $\\langle 0, 3, 1 \\rangle \\times \\langle 0, 0, 4 \\rangle = \\langle 12, 0, 0 \\rangle$, and its dot product with $\\langle 2, 1, 1 \\rangle$ is $24$.\n\n> **Watch out.** The whole box is asked for here, so do not divide by $6$ or $3$: those factors are for tetrahedrons and pyramids.",
+        "三重积的绝对值给出三个向量张成的平行六面体的体积，四面体或棱锥取它的一部分。值为零表示三个向量在同一平面内。当各行在对角线下方都是零时，行列式等于对角线元素之积。\n\n对 $\\langle 2, 1, 1 \\rangle$、$\\langle 0, 3, 1 \\rangle$、$\\langle 0, 0, 4 \\rangle$，体积是 $2 \\cdot 3 \\cdot 4 = 24$。检验：$\\langle 0, 3, 1 \\rangle \\times \\langle 0, 0, 4 \\rangle = \\langle 12, 0, 0 \\rangle$，它与 $\\langle 2, 1, 1 \\rangle$ 的点积是 $24$。\n\n> **注意。** 这里求的是整个平行六面体，不要除以 $6$ 或 $3$：那是四面体和棱锥用的系数。",
       ],
       (rng) => {
         const a = rng.int(1, 9);
@@ -816,16 +845,17 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         const c = rng.int(1, 9);
         const p = rng.int(1, 5);
         const q = rng.int(1, 5);
+        const V = a * b * c;
         return whole(
           [
             `Find the volume of the parallelepiped spanned by $${vec(a, p, q)}$, $${vec(0, b, q)}$ and $${vec(0, 0, c)}$.`,
             `求 $${vec(a, p, q)}$、$${vec(0, b, q)}$ 和 $${vec(0, 0, c)}$ 张成的平行六面体的体积。`,
           ],
-          a * b * c,
-          [(a * b * c) / 6 === Math.floor((a * b * c) / 6) ? (a * b * c) / 6 : a * b * c + 1, a + b + c, a * b * c + p * q],
+          V,
+          [V % 6 === 0 ? V / 6 : V + 1, V % 3 === 0 ? V / 3 : V + 2, a + b + c, V + p * q],
           [
-            `The matrix of the three vectors is triangular, so the determinant is $${a} \\cdot ${b} \\cdot ${c} = ${a * b * c}$.`,
-            `三个向量组成的矩阵是三角矩阵，所以行列式是 $${a} \\cdot ${b} \\cdot ${c} = ${a * b * c}$。`,
+            `**Step 1: Write the determinant.** Put the three vectors as rows:\n\n$$${mat([a, p, q], [0, b, q], [0, 0, c]).replace(/pmatrix/g, "vmatrix")}$$\n\n**Step 2: Expand down the first column.** Only the entry $${a}$ is nonzero there, and the minor left is triangular too:\n\n$$${a} \\cdot (${b} \\cdot ${c} - ${q} \\cdot 0) = ${V}$$\n\nThe volume is $${V}$.\n\n**Check.** Cross the last two vectors and dot with the first:\n\n$$${vec(0, b, q)} \\times ${vec(0, 0, c)} = ${vec(b * c, 0, 0)}, \\quad ${vec(a, p, q)} \\cdot ${vec(b * c, 0, 0)} = ${V}$$`,
+            `**第一步：写出行列式。**把三个向量作为三行：\n\n$$${mat([a, p, q], [0, b, q], [0, 0, c]).replace(/pmatrix/g, "vmatrix")}$$\n\n**第二步：沿第一列展开。**这一列只有 $${a}$ 不为零，剩下的子式也是三角形的：\n\n$$${a} \\cdot (${b} \\cdot ${c} - ${q} \\cdot 0) = ${V}$$\n\n体积是 $${V}$。\n\n**检验。**先求后两个向量的叉积，再与第一个作点积：\n\n$$${vec(0, b, q)} \\times ${vec(0, 0, c)} = ${vec(b * c, 0, 0)}, \\quad ${vec(a, p, q)} \\cdot ${vec(b * c, 0, 0)} = ${V}$$`,
           ],
         );
       },

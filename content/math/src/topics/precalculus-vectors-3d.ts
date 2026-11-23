@@ -1703,14 +1703,30 @@ export const theCrossProductOfTwoVectors: TopicDef = {
   encompasses: [],
   xp: 15,
   standards: ["CCSS.HSN.VM.C.11"],
+  intro: t(
+    `The dot product turns two vectors into a number. In three dimensions there is also a product that gives a vector: it points at right angles to both factors, and its length is the area of the parallelogram they span. For $\\mathbf{u} = \\langle 2, 0, 0 \\rangle$ and $\\mathbf{v} = \\langle 0, 3, 0 \\rangle$ the parallelogram is a $2$ by $3$ rectangle in the $xy$-plane, so this product is
+
+$$\\mathbf{u} \\times \\mathbf{v} = \\langle 0, 0, 6 \\rangle$$
+
+Check: $\\langle 0, 0, 6 \\rangle$ has no $x$- or $y$-component, so its dot products with $\\mathbf{u}$ and $\\mathbf{v}$ are both $0$. It is perpendicular to both, and its length $6$ is the area $2 \\cdot 3$.
+
+In this lesson we find the length of a cross product from the angle between the vectors, and its direction from the right-hand rule.`,
+    `点积把两个向量变成一个数。在三维空间中还有一种乘积得到的是向量：它与两个因子都垂直，长度等于它们张成的平行四边形的面积。对 $\\mathbf{u} = \\langle 2, 0, 0 \\rangle$ 和 $\\mathbf{v} = \\langle 0, 3, 0 \\rangle$，平行四边形是 $xy$ 平面里 $2$ 乘 $3$ 的长方形，所以这个乘积是
+
+$$\\mathbf{u} \\times \\mathbf{v} = \\langle 0, 0, 6 \\rangle$$
+
+检验：$\\langle 0, 0, 6 \\rangle$ 没有 $x$、$y$ 分量，所以它与 $\\mathbf{u}$、$\\mathbf{v}$ 的点积都是 $0$，与两者都垂直；它的长度 $6$ 正是面积 $2 \\cdot 3$。
+
+这节课我们由两向量的夹角求叉积的长度，并用右手定则确定它的方向。`,
+  ),
   knowledgePoints: [
     {
       id: "geometric-definition-and-magnitude-of-cross-product",
       title: t("Geometric definition and magnitude of cross product", "叉积的几何定义与模长"),
       figure: remainingDrawings7["the-cross-product-of-two-vectors#geometric-definition-and-magnitude-of-cross-product"],
       explanation: t(
-        "Unlike the dot product, the cross product $\\mathbf{u} \\times \\mathbf{v}$ is a vector in $\\mathbb{R}^3$. Its magnitude is given by:\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta$$\n\nwhere $\\theta \\in [0, \\pi]$ is the angle between the two vectors.",
-        "与数量积不同，叉积（向量积）$\\mathbf{u} \\times \\mathbf{v}$ 的结果是三维空间中的一个向量。其模长公式为：\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta$$\n\n其中 $\\theta \\in [0, \\pi]$ 是两向量的夹角。",
+        "Unlike the dot product, the cross product $\\mathbf{u} \\times \\mathbf{v}$ is a vector in $\\mathbb{R}^3$. Its magnitude is given by:\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta$$\n\nwhere $\\theta \\in [0, \\pi]$ is the angle between the two vectors.\n\nFor $\\|\\mathbf{u}\\| = 4$, $\\|\\mathbf{v}\\| = 6$ and $\\theta = 30^\\circ$ the magnitude is $4 \\cdot 6 \\cdot \\frac{1}{2} = 12$. Check: with $\\mathbf{v}$ as the base, the height of the parallelogram is $4 \\sin 30^\\circ = 2$, and the area is $6 \\cdot 2 = 12$.\n\n> **Watch out.** The magnitude uses the sine of the angle, not the cosine. Parallel vectors, at $0^\\circ$ or $180^\\circ$, span a flat parallelogram, so their cross product has magnitude $0$.",
+        "与数量积不同，叉积（向量积）$\\mathbf{u} \\times \\mathbf{v}$ 的结果是三维空间中的一个向量。其模长公式为：\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta$$\n\n其中 $\\theta \\in [0, \\pi]$ 是两向量的夹角。\n\n对 $\\|\\mathbf{u}\\| = 4$、$\\|\\mathbf{v}\\| = 6$、$\\theta = 30^\\circ$，模长是 $4 \\cdot 6 \\cdot \\frac{1}{2} = 12$。检验：以 $\\mathbf{v}$ 为底，平行四边形的高是 $4 \\sin 30^\\circ = 2$，面积是 $6 \\cdot 2 = 12$。\n\n> **注意。** 模长用的是夹角的正弦，不是余弦。平行的向量（夹角 $0^\\circ$ 或 $180^\\circ$）张成的平行四边形是扁的，所以叉积的模长为 $0$。",
       ),
       generate(rng) {
         const uMag = rng.pick([2, 4, 6, 8, 10]);
@@ -1725,6 +1741,8 @@ export const theCrossProductOfTwoVectors: TopicDef = {
 
         const prod = uMag * vMag;
         const ans = Math.round(prod * angle.sinVal);
+        const height = Math.round(uMag * angle.sinVal);
+        const flat = angle.sinVal === 0;
 
         return numberProblem({
           prompt: t(
@@ -1734,9 +1752,28 @@ export const theCrossProductOfTwoVectors: TopicDef = {
           answer: ans,
           form: "integer",
           wrong: [prod, 0, uMag + vMag, Math.round(prod / 4)],
-          solution: t(
-            `$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta = (${uMag})(${vMag})(${angle.sinTex}) = ${ans}$$`,
-            `$$\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta = (${uMag})(${vMag})(${angle.sinTex}) = ${ans}$$`,
+          solution: walked(
+            [
+              [
+                ["Find the sine of the angle", "求夹角的正弦"],
+                t("The magnitude depends on the sine:", "模长取决于正弦："),
+                [`\\sin ${angle.deg} = ${angle.sinTex}`],
+              ],
+              [
+                ["Multiply", "相乘"],
+                t("Multiply the two lengths by the sine:", "两个长度乘以正弦："),
+                [`\\|\\mathbf{u} \\times \\mathbf{v}\\| = ${uMag} \\cdot ${vMag} \\cdot ${angle.sinTex} = ${ans}`],
+              ],
+            ],
+            flat
+              ? t(
+                  `At $${angle.deg}$ the vectors are parallel, so the height of the parallelogram above $\\mathbf{v}$ is $${uMag} \\sin ${angle.deg} = 0$. A flat parallelogram has area $0$.`,
+                  `夹角为 $${angle.deg}$ 时两向量平行，所以平行四边形在 $\\mathbf{v}$ 上方的高是 $${uMag} \\sin ${angle.deg} = 0$。扁平的平行四边形面积为 $0$。`,
+                )
+              : t(
+                  `The magnitude is the area of the parallelogram. With $\\mathbf{v}$ as the base, the height is $${uMag} \\sin ${angle.deg} = ${height}$, and base times height is $${vMag} \\cdot ${height} = ${ans}$.`,
+                  `模长就是平行四边形的面积。以 $\\mathbf{v}$ 为底，高是 $${uMag} \\sin ${angle.deg} = ${height}$，底乘高是 $${vMag} \\cdot ${height} = ${ans}$。`,
+                ),
           ),
         });
       },
@@ -1746,44 +1783,85 @@ export const theCrossProductOfTwoVectors: TopicDef = {
       title: t("Direction of cross product and orthogonality", "叉积的方向与右手定则"),
       figure: remainingDrawings7["the-cross-product-of-two-vectors#direction-of-cross-product-and-orthogonality"],
       explanation: t(
-        "The direction of $\\mathbf{u} \\times \\mathbf{v}$ is perpendicular to both $\\mathbf{u}$ and $\\mathbf{v}$, following the right-hand rule. For the standard basis vectors:\n\n$$\\mathbf{i} \\times \\mathbf{j} = \\mathbf{k}, \\quad \\mathbf{j} \\times \\mathbf{k} = \\mathbf{i}, \\quad \\mathbf{k} \\times \\mathbf{i} = \\mathbf{j}$$\n\n$$\\mathbf{j} \\times \\mathbf{i} = -\\mathbf{k}, \\quad \\mathbf{k} \\times \\mathbf{j} = -\\mathbf{i}, \\quad \\mathbf{i} \\times \\mathbf{k} = -\\mathbf{j}$$",
-        "叉积 $\\mathbf{u} \\times \\mathbf{v}$ 的方向同时垂直于 $\\mathbf{u}$ 和 $\\mathbf{v}$，满足右手定则。标准基向量的叉积关系为：\n\n$$\\mathbf{i} \\times \\mathbf{j} = \\mathbf{k}, \\quad \\mathbf{j} \\times \\mathbf{k} = \\mathbf{i}, \\quad \\mathbf{k} \\times \\mathbf{i} = \\mathbf{j}$$\n\n$$\\mathbf{j} \\times \\mathbf{i} = -\\mathbf{k}, \\quad \\mathbf{k} \\times \\mathbf{j} = -\\mathbf{i}, \\quad \\mathbf{i} \\times \\mathbf{k} = -\\mathbf{j}$$",
+        "The direction of $\\mathbf{u} \\times \\mathbf{v}$ is perpendicular to both $\\mathbf{u}$ and $\\mathbf{v}$, following the right-hand rule. For the standard basis vectors:\n\n$$\\mathbf{i} \\times \\mathbf{j} = \\mathbf{k}, \\quad \\mathbf{j} \\times \\mathbf{k} = \\mathbf{i}, \\quad \\mathbf{k} \\times \\mathbf{i} = \\mathbf{j}$$\n\n$$\\mathbf{j} \\times \\mathbf{i} = -\\mathbf{k}, \\quad \\mathbf{k} \\times \\mathbf{j} = -\\mathbf{i}, \\quad \\mathbf{i} \\times \\mathbf{k} = -\\mathbf{j}$$\n\nFor $(2\\mathbf{i}) \\times (3\\mathbf{j})$ the scalars come out, giving $6(\\mathbf{i} \\times \\mathbf{j}) = 6\\mathbf{k}$. Check: $6\\mathbf{k}$ is perpendicular to both $\\mathbf{i}$ and $\\mathbf{j}$, and its length $6$ is $2 \\cdot 3 \\cdot \\sin 90^\\circ$.\n\n> **Watch out.** Going round the cycle $\\mathbf{i} \\to \\mathbf{j} \\to \\mathbf{k} \\to \\mathbf{i}$ gives a plus sign, and going against it gives a minus sign. The product never lies along either factor.",
+        "叉积 $\\mathbf{u} \\times \\mathbf{v}$ 的方向同时垂直于 $\\mathbf{u}$ 和 $\\mathbf{v}$，满足右手定则。标准基向量的叉积关系为：\n\n$$\\mathbf{i} \\times \\mathbf{j} = \\mathbf{k}, \\quad \\mathbf{j} \\times \\mathbf{k} = \\mathbf{i}, \\quad \\mathbf{k} \\times \\mathbf{i} = \\mathbf{j}$$\n\n$$\\mathbf{j} \\times \\mathbf{i} = -\\mathbf{k}, \\quad \\mathbf{k} \\times \\mathbf{j} = -\\mathbf{i}, \\quad \\mathbf{i} \\times \\mathbf{k} = -\\mathbf{j}$$\n\n对 $(2\\mathbf{i}) \\times (3\\mathbf{j})$，把数提出来得 $6(\\mathbf{i} \\times \\mathbf{j}) = 6\\mathbf{k}$。检验：$6\\mathbf{k}$ 与 $\\mathbf{i}$、$\\mathbf{j}$ 都垂直，长度 $6$ 等于 $2 \\cdot 3 \\cdot \\sin 90^\\circ$。\n\n> **注意。** 沿 $\\mathbf{i} \\to \\mathbf{j} \\to \\mathbf{k} \\to \\mathbf{i}$ 的顺序取正号，逆着这个顺序取负号。叉积永远不会沿着任何一个因子的方向。",
       ),
       generate(rng) {
         const item = rng.pick([
-          { expr: "\\mathbf{i} \\times \\mathbf{j}", ans: "\\mathbf{k}", wrong: ["-\\mathbf{k}", "\\mathbf{0}", "\\mathbf{j}"] },
-          { expr: "\\mathbf{j} \\times \\mathbf{i}", ans: "-\\mathbf{k}", wrong: ["\\mathbf{k}", "\\mathbf{0}", "\\mathbf{i}"] },
-          { expr: "\\mathbf{j} \\times \\mathbf{k}", ans: "\\mathbf{i}", wrong: ["-\\mathbf{i}", "\\mathbf{k}", "\\mathbf{0}"] },
-          { expr: "\\mathbf{k} \\times \\mathbf{j}", ans: "-\\mathbf{i}", wrong: ["\\mathbf{i}", "-\\mathbf{k}", "\\mathbf{0}"] },
-          { expr: "\\mathbf{k} \\times \\mathbf{i}", ans: "\\mathbf{j}", wrong: ["-\\mathbf{j}", "\\mathbf{i}", "\\mathbf{0}"] },
-          { expr: "\\mathbf{i} \\times \\mathbf{k}", ans: "-\\mathbf{j}", wrong: ["\\mathbf{j}", "-\\mathbf{i}", "\\mathbf{0}"] },
+          { first: "\\mathbf{i}", second: "\\mathbf{j}", ans: "\\mathbf{k}" },
+          { first: "\\mathbf{j}", second: "\\mathbf{i}", ans: "-\\mathbf{k}" },
+          { first: "\\mathbf{j}", second: "\\mathbf{k}", ans: "\\mathbf{i}" },
+          { first: "\\mathbf{k}", second: "\\mathbf{j}", ans: "-\\mathbf{i}" },
+          { first: "\\mathbf{k}", second: "\\mathbf{i}", ans: "\\mathbf{j}" },
+          { first: "\\mathbf{i}", second: "\\mathbf{k}", ans: "-\\mathbf{j}" },
         ]);
         const a = rng.pick([2, 3, -2, -3]);
         const b = rng.pick([2, 4, -1]);
         const coeff = a * b;
+        /** scaled writes n times a basis vector, leaving out a factor of 1. */
+        const scaled = (n: number, symbol: string) => (n === 1 ? symbol : n === -1 ? `-${symbol}` : `${n}${symbol}`);
+        const basis: Record<string, Vec3> = { "\\mathbf{i}": [1, 0, 0], "\\mathbf{j}": [0, 1, 0], "\\mathbf{k}": [0, 0, 1] };
 
-        const exprParts = item.expr.split("\\times");
-        const term1 = a === 1 ? exprParts[0]!.trim() : a === -1 ? `(-${exprParts[0]!.trim()})` : `(${a}${exprParts[0]!.trim()})`;
-        const term2 = b === 1 ? exprParts[1]!.trim() : b === -1 ? `(-${exprParts[1]!.trim()})` : `(${b}${exprParts[1]!.trim()})`;
+        const term1 = `(${a}${item.first})`;
+        const term2 = b === -1 ? `(-${item.second})` : `(${b}${item.second})`;
         const promptExpr = `${term1} \\times ${term2}`;
 
         const baseSign = item.ans.startsWith("-") ? -1 : 1;
         const baseSymbol = item.ans.replace("-", "");
         const finalCoeff = coeff * baseSign;
-        const right = finalCoeff === 1 ? baseSymbol : finalCoeff === -1 ? `-${baseSymbol}` : `${finalCoeff}${baseSymbol}`;
-        const w1 = finalCoeff === 1 ? `-${baseSymbol}` : `${-finalCoeff}${baseSymbol}`;
-        const w2 = "\\mathbf{0}";
-        const w3 = `${finalCoeff}\\mathbf{k}`;
+        const right = t(`$${scaled(finalCoeff, baseSymbol)}$`, `$${scaled(finalCoeff, baseSymbol)}$`);
+        const flipped = t(`$${scaled(-finalCoeff, baseSymbol)}$`, `$${scaled(-finalCoeff, baseSymbol)}$`);
+        const zero = t("$\\mathbf{0}$", "$\\mathbf{0}$");
+        const along = t(`$${scaled(finalCoeff, item.first)}$`, `$${scaled(finalCoeff, item.first)}$`);
+        const components = cross3(basis[item.first]!, basis[item.second]!);
 
         return oneOf(
           rng,
           t(`Evaluate the vector expression $${promptExpr}$.`, `计算向量表达式 $${promptExpr}$。`),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`)],
-          t(
-            `Pull out the scalars: $(${a})(${b})(${item.expr}) = ${coeff}(${item.ans}) = ${right}$.`,
-            `先提出标量系数：$(${a})(${b})(${item.expr}) = ${coeff}(${item.ans}) = ${right}$。`,
+          right,
+          [flipped, zero, along],
+          walked(
+            [
+              [
+                ["Pull out the scalars", "提出标量"],
+                t("Scalar multiples come out of a cross product:", "数乘可以从叉积中提出来："),
+                [`${promptExpr} = (${a})(${b})(${item.first} \\times ${item.second}) = ${coeff}(${item.first} \\times ${item.second})`],
+              ],
+              [
+                ["Multiply the basis vectors", "求基向量的叉积"],
+                t(
+                  baseSign === 1
+                    ? "The pair follows the cycle $\\mathbf{i} \\to \\mathbf{j} \\to \\mathbf{k} \\to \\mathbf{i}$, so the sign is plus:"
+                    : "The pair goes against the cycle $\\mathbf{i} \\to \\mathbf{j} \\to \\mathbf{k} \\to \\mathbf{i}$, so the sign is minus:",
+                  baseSign === 1
+                    ? "这一对沿着 $\\mathbf{i} \\to \\mathbf{j} \\to \\mathbf{k} \\to \\mathbf{i}$ 的顺序，所以取正号："
+                    : "这一对逆着 $\\mathbf{i} \\to \\mathbf{j} \\to \\mathbf{k} \\to \\mathbf{i}$ 的顺序，所以取负号：",
+                ),
+                [`${item.first} \\times ${item.second} = ${item.ans}`, `${coeff}(${item.ans}) = ${scaled(finalCoeff, baseSymbol)}`],
+              ],
+            ],
+            t(
+              `Work in components. $${item.first} = ${vec3Latex(basis[item.first]!)}$ and $${item.second} = ${vec3Latex(basis[item.second]!)}$ have cross product $${vec3Latex(components)}$, which is $${item.ans}$. Times $${coeff}$ it gives $${scaled(finalCoeff, baseSymbol)}$ again.`,
+              `用分量计算。$${item.first} = ${vec3Latex(basis[item.first]!)}$ 与 $${item.second} = ${vec3Latex(basis[item.second]!)}$ 的叉积是 $${vec3Latex(components)}$，即 $${item.ans}$。乘以 $${coeff}$ 仍得 $${scaled(finalCoeff, baseSymbol)}$。`,
+            ),
           ),
+          [
+            why(
+              flipped,
+              `The sign is reversed: $${item.first} \\times ${item.second} = ${item.ans}$, and the scalars multiply to $${coeff}$.`,
+              `符号反了：$${item.first} \\times ${item.second} = ${item.ans}$，而数的乘积是 $${coeff}$。`,
+            ),
+            why(
+              zero,
+              "Only parallel vectors have a zero cross product, and two different basis vectors are perpendicular.",
+              "只有平行的向量叉积才为零，而两个不同的基向量互相垂直。",
+            ),
+            why(
+              along,
+              `A cross product is perpendicular to both factors, so it cannot point along $${item.first}$.`,
+              `叉积与两个因子都垂直，所以不可能沿 $${item.first}$ 的方向。`,
+            ),
+          ],
         );
       },
     },
@@ -1804,14 +1882,30 @@ export const propertiesOfTheCrossProduct: TopicDef = {
   encompasses: [{ topic: "the-cross-product-of-two-vectors", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSN.VM.C.11"],
+  intro: t(
+    `The basis products already show how the cross product differs from ordinary multiplication. Swapping the factors flips the direction, and a vector crossed with itself spans no area at all:
+
+$$\\mathbf{i} \\times \\mathbf{j} = \\mathbf{k}, \\quad \\mathbf{j} \\times \\mathbf{i} = -\\mathbf{k}, \\quad \\mathbf{i} \\times \\mathbf{i} = \\mathbf{0}$$
+
+Check: by the right-hand rule, curling from $\\mathbf{j}$ to $\\mathbf{i}$ points the thumb down, along $-\\mathbf{k}$, and $\\mathbf{i}$ with itself makes an angle of $0^\\circ$, so the magnitude is $1 \\cdot 1 \\cdot \\sin 0^\\circ = 0$.
+
+In this lesson we use these rules, with distributivity and scalar multiples, to simplify cross products without working out components.`,
+    `基向量的叉积已经显示出叉积与普通乘法的不同。交换因子会使方向反向，而向量与自身的叉积根本张不出面积：
+
+$$\\mathbf{i} \\times \\mathbf{j} = \\mathbf{k}, \\quad \\mathbf{j} \\times \\mathbf{i} = -\\mathbf{k}, \\quad \\mathbf{i} \\times \\mathbf{i} = \\mathbf{0}$$
+
+检验：按右手定则，从 $\\mathbf{j}$ 弯向 $\\mathbf{i}$ 时拇指朝下，沿 $-\\mathbf{k}$；$\\mathbf{i}$ 与自身的夹角是 $0^\\circ$，所以模长是 $1 \\cdot 1 \\cdot \\sin 0^\\circ = 0$。
+
+这节课我们用这些规则，再加上分配律和数乘，不算分量就化简叉积。`,
+  ),
   knowledgePoints: [
     {
       id: "anti-commutativity-and-parallel-vectors",
       title: t("Anti-commutativity and parallel vectors", "反交换律与平行向量"),
       figure: remainingDrawings7["properties-of-the-cross-product#anti-commutativity-and-parallel-vectors"],
       explanation: t(
-        "Key properties of the cross product include:\n\n1. **Anti-commutativity**: $\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$\n2. **Self-product**: $\\mathbf{u} \\times \\mathbf{u} = \\mathbf{0}$\n3. **Collinearity / Parallel vectors**: Two nonzero vectors $\\mathbf{u}$ and $\\mathbf{v}$ are parallel if and only if $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{0}$.",
-        "向量叉积的关键代数性质包括：\n\n1. **反交换律**：$\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$\n2. **自身叉积**：$\\mathbf{u} \\times \\mathbf{u} = \\mathbf{0}$\n3. **共线 / 平行判定**：两非零向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 平行当且仅当 $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{0}$。",
+        "Key properties of the cross product include:\n\n1. **Anti-commutativity**: $\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$\n2. **Self-product**: $\\mathbf{u} \\times \\mathbf{u} = \\mathbf{0}$\n3. **Collinearity / Parallel vectors**: Two nonzero vectors $\\mathbf{u}$ and $\\mathbf{v}$ are parallel if and only if $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{0}$.\n\nIf $\\mathbf{u} \\times \\mathbf{v} = \\langle 1, 2, 3 \\rangle$, then $(2\\mathbf{v}) \\times \\mathbf{u} = 2(\\mathbf{v} \\times \\mathbf{u}) = -2\\langle 1, 2, 3 \\rangle = \\langle -2, -4, -6 \\rangle$. Check: in the original order, $\\mathbf{u} \\times (2\\mathbf{v}) = \\langle 2, 4, 6 \\rangle$, and swapping the factors gives its opposite.\n\n> **Watch out.** Each swap of the two factors flips the sign once; pulling out scalars never changes the sign by itself. A negative scalar such as $-1$ does change it, but through the multiplication, not the swap.",
+        "向量叉积的关键代数性质包括：\n\n1. **反交换律**：$\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$\n2. **自身叉积**：$\\mathbf{u} \\times \\mathbf{u} = \\mathbf{0}$\n3. **共线 / 平行判定**：两非零向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 平行当且仅当 $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{0}$。\n\n若 $\\mathbf{u} \\times \\mathbf{v} = \\langle 1, 2, 3 \\rangle$，则 $(2\\mathbf{v}) \\times \\mathbf{u} = 2(\\mathbf{v} \\times \\mathbf{u}) = -2\\langle 1, 2, 3 \\rangle = \\langle -2, -4, -6 \\rangle$。检验：按原来的顺序，$\\mathbf{u} \\times (2\\mathbf{v}) = \\langle 2, 4, 6 \\rangle$，交换因子得到它的相反向量。\n\n> **注意。** 两个因子每交换一次，符号变一次；提出标量本身不会改变符号。像 $-1$ 这样的负数会改变符号，但那是乘法造成的，不是交换造成的。",
       ),
       generate(rng) {
         if (rng.bool()) {
@@ -1824,8 +1918,8 @@ export const propertiesOfTheCrossProduct: TopicDef = {
           const b = rng.pick([2, 4, -1]);
           const factor = -a * b;
           const ans = smul3(factor, w);
-          const aStr = a === 1 ? "\\mathbf{v}" : a === -1 ? "-\\mathbf{v}" : `${a}\\mathbf{v}`;
-          const bStr = b === 1 ? "\\mathbf{u}" : b === -1 ? "-\\mathbf{u}" : `${b}\\mathbf{u}`;
+          const aStr = `${a}\\mathbf{v}`;
+          const bStr = b === -1 ? "-\\mathbf{u}" : `${b}\\mathbf{u}`;
 
           return pointProblem({
             prompt: t(
@@ -1836,9 +1930,26 @@ export const propertiesOfTheCrossProduct: TopicDef = {
             vars: ["x", "y", "z"],
             vector: true,
             wrong: [smul3(-factor, w), smul3(a * b, w), [0, 0, 0]],
-            solution: t(
-              `By anti-commutativity and scalar associativity:\n\n$$(${aStr}) \\times (${bStr}) = ${poly([a * b, "(\\mathbf{v} \\times \\mathbf{u})"])} = ${poly([-a * b, "(\\mathbf{u} \\times \\mathbf{v})"])} = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
-              `根据反交换律与数乘结合律：\n\n$$(${aStr}) \\times (${bStr}) = ${poly([a * b, "(\\mathbf{v} \\times \\mathbf{u})"])} = ${poly([-a * b, "(\\mathbf{u} \\times \\mathbf{v})"])} = ${factor}${vec3Latex(w)} = ${vec3Latex(ans)}$$`,
+            solution: walked(
+              [
+                [
+                  ["Pull out the scalars", "提出标量"],
+                  t("Scalar multiples come out of a cross product:", "数乘可以从叉积中提出来："),
+                  [`(${aStr}) \\times (${bStr}) = ${poly([a * b, "(\\mathbf{v} \\times \\mathbf{u})"])}`],
+                ],
+                [
+                  ["Swap the factors", "交换因子"],
+                  t("Swapping the factors flips the sign:", "交换因子要变号："),
+                  [
+                    `${poly([a * b, "(\\mathbf{v} \\times \\mathbf{u})"])} = ${poly([factor, "(\\mathbf{u} \\times \\mathbf{v})"])}`,
+                    `${factor}${vec3Latex(w)} = ${vec3Latex(ans)}`,
+                  ],
+                ],
+              ],
+              t(
+                `Swap first instead. $(${bStr}) \\times (${aStr})$ has the factors in the order $\\mathbf{u}$, $\\mathbf{v}$, so it is $${a * b}(\\mathbf{u} \\times \\mathbf{v}) = ${vec3Latex(smul3(a * b, w))}$. The product asked for has the factors the other way round, so it is the opposite vector, $${vec3Latex(ans)}$.`,
+                `也可以先交换。$(${bStr}) \\times (${aStr})$ 的因子顺序是 $\\mathbf{u}$、$\\mathbf{v}$，所以它等于 $${a * b}(\\mathbf{u} \\times \\mathbf{v}) = ${vec3Latex(smul3(a * b, w))}$。所求乘积的因子顺序相反，所以是它的相反向量 $${vec3Latex(ans)}$。`,
+              ),
             ),
           });
         }
@@ -1847,8 +1958,10 @@ export const propertiesOfTheCrossProduct: TopicDef = {
         const k = rng.pick([-3, -2, 2, 3, 4]);
         const parallelVec = smul3(k, base);
         const nonParallel1: Vec3 = [parallelVec[0], parallelVec[1], parallelVec[2] + 1];
-        const nonParallel2: Vec3 = [parallelVec[1], parallelVec[0], parallelVec[2]];
+        const nonParallel2: Vec3 = [parallelVec[0], -parallelVec[1], parallelVec[2]];
         const nonParallel3: Vec3 = [parallelVec[0] + 1, parallelVec[1] - 1, parallelVec[2]];
+        const option = (w: Vec3) => t(`$${vec3Latex(w)}$`, `$${vec3Latex(w)}$`);
+        const ratios = `\\frac{${parallelVec[0]}}{${base[0]}} = \\frac{${parallelVec[1]}}{${base[1]}} = \\frac{${parallelVec[2]}}{${base[2]}} = ${k}`;
 
         return oneOf(
           rng,
@@ -1856,16 +1969,48 @@ export const propertiesOfTheCrossProduct: TopicDef = {
             `Which of the following vectors is parallel to $\\mathbf{u} = ${vec3Latex(base)}$ (i.e. satisfies $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{0}$)?`,
             `下列哪个向量与 $\\mathbf{u} = ${vec3Latex(base)}$ 平行（即满足 $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{0}$）？`,
           ),
-          t(`$${vec3Latex(parallelVec)}$`, `$${vec3Latex(parallelVec)}$`),
-          [
-            t(`$${vec3Latex(nonParallel1)}$`, `$${vec3Latex(nonParallel1)}$`),
-            t(`$${vec3Latex(nonParallel2)}$`, `$${vec3Latex(nonParallel2)}$`),
-            t(`$${vec3Latex(nonParallel3)}$`, `$${vec3Latex(nonParallel3)}$`),
-          ],
-          t(
-            `Two vectors have zero cross product if and only if one is a scalar multiple of the other. Here $${vec3Latex(parallelVec)} = ${k}${vec3Latex(base)}$.`,
-            `两向量叉积为零当且仅当它们互为数乘倍数。这里 $${vec3Latex(parallelVec)} = ${k}${vec3Latex(base)}$。`,
+          option(parallelVec),
+          [option(nonParallel1), option(nonParallel2), option(nonParallel3)],
+          walked(
+            [
+              [
+                ["Compare the components", "比较分量"],
+                t(
+                  `A parallel vector is a multiple of $\\mathbf{u}$, so each component divided by the matching one of $\\mathbf{u}$ gives the same number. For $${vec3Latex(parallelVec)}$:`,
+                  `平行的向量是 $\\mathbf{u}$ 的倍数，所以每个分量除以 $\\mathbf{u}$ 的对应分量都得到同一个数。对 $${vec3Latex(parallelVec)}$：`,
+                ),
+                [ratios],
+              ],
+              [
+                ["Conclude", "得出结论"],
+                t(
+                  `So $${vec3Latex(parallelVec)} = ${k}\\mathbf{u}$ is parallel to $\\mathbf{u}$. In each of the other options the three ratios are not all equal.`,
+                  `所以 $${vec3Latex(parallelVec)} = ${k}\\mathbf{u}$ 与 $\\mathbf{u}$ 平行。其他选项的三个比值不全相等。`,
+                ),
+              ],
+            ],
+            t(
+              `Compute the cross product directly; every component cancels:\n\n$$${vec3Latex(base)} \\times ${vec3Latex(parallelVec)} = ${vec3Latex(cross3(base, parallelVec))}$$`,
+              `直接计算叉积，每个分量都抵消：\n\n$$${vec3Latex(base)} \\times ${vec3Latex(parallelVec)} = ${vec3Latex(cross3(base, parallelVec))}$$`,
+            ),
           ),
+          [
+            why(
+              option(nonParallel1),
+              `The first two components are $${k}$ times those of $\\mathbf{u}$, but the third is not.`,
+              `前两个分量是 $\\mathbf{u}$ 的 $${k}$ 倍，第三个分量却不是。`,
+            ),
+            why(
+              option(nonParallel2),
+              `The second component has the wrong sign: it is $${-k}$ times that of $\\mathbf{u}$, while the others are $${k}$ times.`,
+              `第二个分量符号不对：它是 $\\mathbf{u}$ 的 $${-k}$ 倍，而其他分量是 $${k}$ 倍。`,
+            ),
+            why(
+              option(nonParallel3),
+              `The third component is $${k}$ times that of $\\mathbf{u}$, but the first two are not.`,
+              `第三个分量是 $\\mathbf{u}$ 的 $${k}$ 倍，前两个分量却不是。`,
+            ),
+          ],
         );
       },
     },
@@ -1873,8 +2018,8 @@ export const propertiesOfTheCrossProduct: TopicDef = {
       id: "distributivity-and-scalar-associativity-of-cross-product",
       title: t("Distributivity and scalar associativity of cross product", "叉积的分配律与数乘结合律"),
       explanation: t(
-        "The cross product behaves like ordinary multiplication in many ways, but the order of the factors matters, because swapping them reverses the sign. The cross product distributes over addition:\n\n$$\\mathbf{u} \\times (\\mathbf{v} + \\mathbf{w}) = \\mathbf{u} \\times \\mathbf{v} + \\mathbf{u} \\times \\mathbf{w}$$\n\n$$(\\mathbf{u} + \\mathbf{v}) \\times \\mathbf{w} = \\mathbf{u} \\times \\mathbf{w} + \\mathbf{v} \\times \\mathbf{w}$$\n\nNotice that $(\\mathbf{u} + a\\mathbf{v}) \\times (\\mathbf{u} + b\\mathbf{v}) = (b - a)(\\mathbf{u} \\times \\mathbf{v})$.",
-        "叉积在许多方面像普通乘法一样，但因子的顺序很重要，交换它们会改变符号。向量叉积对加法满足分配律：\n\n$$\\mathbf{u} \\times (\\mathbf{v} + \\mathbf{w}) = \\mathbf{u} \\times \\mathbf{v} + \\mathbf{u} \\times \\mathbf{w}$$\n\n$$(\\mathbf{u} + \\mathbf{v}) \\times \\mathbf{w} = \\mathbf{u} \\times \\mathbf{w} + \\mathbf{v} \\times \\mathbf{w}$$\n\n注意 $(\\mathbf{u} + a\\mathbf{v}) \\times (\\mathbf{u} + b\\mathbf{v}) = (b - a)(\\mathbf{u} \\times \\mathbf{v})$。",
+        "The cross product behaves like ordinary multiplication in many ways, but the order of the factors matters, because swapping them reverses the sign. The cross product distributes over addition:\n\n$$\\mathbf{u} \\times (\\mathbf{v} + \\mathbf{w}) = \\mathbf{u} \\times \\mathbf{v} + \\mathbf{u} \\times \\mathbf{w}$$\n\n$$(\\mathbf{u} + \\mathbf{v}) \\times \\mathbf{w} = \\mathbf{u} \\times \\mathbf{w} + \\mathbf{v} \\times \\mathbf{w}$$\n\nNotice that $(\\mathbf{u} + a\\mathbf{v}) \\times (\\mathbf{u} + b\\mathbf{v}) = (b - a)(\\mathbf{u} \\times \\mathbf{v})$.\n\nFor $(\\mathbf{u} + 2\\mathbf{v}) \\times (\\mathbf{u} + 5\\mathbf{v})$ the four products are $\\mathbf{u} \\times \\mathbf{u} = \\mathbf{0}$, $5(\\mathbf{u} \\times \\mathbf{v})$, $2(\\mathbf{v} \\times \\mathbf{u}) = -2(\\mathbf{u} \\times \\mathbf{v})$ and $10(\\mathbf{v} \\times \\mathbf{v}) = \\mathbf{0}$, which leaves $3(\\mathbf{u} \\times \\mathbf{v})$. Check: the rule above with $a = 2$ and $b = 5$ gives $5 - 2 = 3$.\n\n> **Watch out.** The term with $\\mathbf{v} \\times \\mathbf{u}$ is subtracted, because $\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$. And $\\mathbf{u} \\times \\mathbf{u}$ is $\\mathbf{0}$, not a square.",
+        "叉积在许多方面像普通乘法一样，但因子的顺序很重要，交换它们会改变符号。向量叉积对加法满足分配律：\n\n$$\\mathbf{u} \\times (\\mathbf{v} + \\mathbf{w}) = \\mathbf{u} \\times \\mathbf{v} + \\mathbf{u} \\times \\mathbf{w}$$\n\n$$(\\mathbf{u} + \\mathbf{v}) \\times \\mathbf{w} = \\mathbf{u} \\times \\mathbf{w} + \\mathbf{v} \\times \\mathbf{w}$$\n\n注意 $(\\mathbf{u} + a\\mathbf{v}) \\times (\\mathbf{u} + b\\mathbf{v}) = (b - a)(\\mathbf{u} \\times \\mathbf{v})$。\n\n对 $(\\mathbf{u} + 2\\mathbf{v}) \\times (\\mathbf{u} + 5\\mathbf{v})$，四个乘积是 $\\mathbf{u} \\times \\mathbf{u} = \\mathbf{0}$、$5(\\mathbf{u} \\times \\mathbf{v})$、$2(\\mathbf{v} \\times \\mathbf{u}) = -2(\\mathbf{u} \\times \\mathbf{v})$ 和 $10(\\mathbf{v} \\times \\mathbf{v}) = \\mathbf{0}$，剩下 $3(\\mathbf{u} \\times \\mathbf{v})$。检验：用上面的规则，$a = 2$、$b = 5$，得 $5 - 2 = 3$。\n\n> **注意。** 含 $\\mathbf{v} \\times \\mathbf{u}$ 的项要减去，因为 $\\mathbf{v} \\times \\mathbf{u} = -(\\mathbf{u} \\times \\mathbf{v})$。而 $\\mathbf{u} \\times \\mathbf{u}$ 是 $\\mathbf{0}$，不是平方。",
       ),
       generate(rng) {
         const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4]);
@@ -1884,6 +2029,7 @@ export const propertiesOfTheCrossProduct: TopicDef = {
 
         const det = a * d - b * c;
         const times = (n: number) => (n === 0 ? "\\mathbf{0}" : `${n === 1 ? "" : n === -1 ? "-" : n}(\\mathbf{u} \\times \\mathbf{v})`);
+        const option = (latex: string) => t(`$${latex}$`, `$${latex}$`);
         const right = times(det);
         const w1 = times(a * d + b * c);
         const w2 = times(-det + (det === 0 ? 1 : 0));
@@ -1894,6 +2040,7 @@ export const propertiesOfTheCrossProduct: TopicDef = {
         const bStr = b > 0 ? (b === 1 ? "+ \\mathbf{v}" : `+ ${b}\\mathbf{v}`) : b === -1 ? "- \\mathbf{v}" : `- ${-b}\\mathbf{v}`;
         const cStr = c === 1 ? "\\mathbf{u}" : c === -1 ? "-\\mathbf{u}" : `${c}\\mathbf{u}`;
         const dStr = d > 0 ? (d === 1 ? "+ \\mathbf{v}" : `+ ${d}\\mathbf{v}`) : d === -1 ? "- \\mathbf{v}" : `- ${-d}\\mathbf{v}`;
+        const coefficient = `${a * d} - ${paren(b * c)} = ${det}`;
 
         return oneOf(
           rng,
@@ -1901,12 +2048,49 @@ export const propertiesOfTheCrossProduct: TopicDef = {
             `Simplify the expression $(${aStr} ${bStr}) \\times (${cStr} ${dStr})$ in terms of $\\mathbf{u} \\times \\mathbf{v}$.`,
             `将表达式 $(${aStr} ${bStr}) \\times (${cStr} ${dStr})$ 化简为关于 $\\mathbf{u} \\times \\mathbf{v}$ 的形式。`,
           ),
-          t(`$${right}$`, `$${right}$`),
-          [t(`$${w1}$`, `$${w1}$`), t(`$${w2}$`, `$${w2}$`), t(`$${w3}$`, `$${w3}$`), t(`$${w4}$`, `$${w4}$`)],
-          t(
-            `Expand using distributivity:\n\n$$(${aStr} ${bStr}) \\times (${cStr} ${dStr}) = (${a})(${c})(\\mathbf{u}\\times\\mathbf{u}) + (${a})(${d})(\\mathbf{u}\\times\\mathbf{v}) + (${b})(${c})(\\mathbf{v}\\times\\mathbf{u}) + (${b})(${d})(\\mathbf{v}\\times\\mathbf{v})$$\n\nSince $\\mathbf{u}\\times\\mathbf{u} = \\mathbf{v}\\times\\mathbf{v} = \\mathbf{0}$ and $\\mathbf{v}\\times\\mathbf{u} = -(\\mathbf{u}\\times\\mathbf{v})$:\n\n$$= (${a * d} - ${paren(b * c)})(\\mathbf{u} \\times \\mathbf{v}) = ${right}$$`,
-            `利用分配律展开：\n\n$$(${aStr} ${bStr}) \\times (${cStr} ${dStr}) = (${a})(${c})(\\mathbf{u}\\times\\mathbf{u}) + (${a})(${d})(\\mathbf{u}\\times\\mathbf{v}) + (${b})(${c})(\\mathbf{v}\\times\\mathbf{u}) + (${b})(${d})(\\mathbf{v}\\times\\mathbf{v})$$\n\n由于 $\\mathbf{u}\\times\\mathbf{u} = \\mathbf{v}\\times\\mathbf{v} = \\mathbf{0}$ 且 $\\mathbf{v}\\times\\mathbf{u} = -(\\mathbf{u}\\times\\mathbf{v})$：\n\n$$= (${a * d} - ${paren(b * c)})(\\mathbf{u} \\times \\mathbf{v}) = ${right}$$`,
+          option(right),
+          [option(w1), option(w2), option(w3), option(w4)],
+          walked(
+            [
+              [
+                ["Expand", "展开"],
+                t("Distribute both factors, keeping the order of each product:", "把两个因子展开，每个乘积保持原来的顺序："),
+                [
+                  `(${aStr} ${bStr}) \\times (${cStr} ${dStr}) = (${a})(${c})(\\mathbf{u}\\times\\mathbf{u}) + (${a})(${d})(\\mathbf{u}\\times\\mathbf{v}) + (${b})(${c})(\\mathbf{v}\\times\\mathbf{u}) + (${b})(${d})(\\mathbf{v}\\times\\mathbf{v})`,
+                ],
+              ],
+              [
+                ["Simplify", "化简"],
+                t(
+                  "Use $\\mathbf{u}\\times\\mathbf{u} = \\mathbf{v}\\times\\mathbf{v} = \\mathbf{0}$ and $\\mathbf{v}\\times\\mathbf{u} = -(\\mathbf{u}\\times\\mathbf{v})$:",
+                  "利用 $\\mathbf{u}\\times\\mathbf{u} = \\mathbf{v}\\times\\mathbf{v} = \\mathbf{0}$ 和 $\\mathbf{v}\\times\\mathbf{u} = -(\\mathbf{u}\\times\\mathbf{v})$：",
+                ),
+                [`(${a * d} - ${paren(b * c)})(\\mathbf{u} \\times \\mathbf{v}) = ${right}`],
+              ],
+            ],
+            t(
+              `Try $\\mathbf{u} = \\mathbf{i}$ and $\\mathbf{v} = \\mathbf{j}$, so that $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{k}$. The two factors become $${vec3Latex([a, b, 0])}$ and $${vec3Latex([c, d, 0])}$, and in components\n\n$$${vec3Latex([a, b, 0])} \\times ${vec3Latex([c, d, 0])} = ${vec3Latex(cross3([a, b, 0], [c, d, 0]))}$$\n\nThat is $${det}\\mathbf{k}$, as found.`,
+              `取 $\\mathbf{u} = \\mathbf{i}$、$\\mathbf{v} = \\mathbf{j}$，则 $\\mathbf{u} \\times \\mathbf{v} = \\mathbf{k}$。两个因子变成 $${vec3Latex([a, b, 0])}$ 和 $${vec3Latex([c, d, 0])}$，用分量计算\n\n$$${vec3Latex([a, b, 0])} \\times ${vec3Latex([c, d, 0])} = ${vec3Latex(cross3([a, b, 0], [c, d, 0]))}$$\n\n即 $${det}\\mathbf{k}$，与所得结果一致。`,
+            ),
           ),
+          [
+            why(
+              option(w1),
+              `This adds the term with $\\mathbf{v} \\times \\mathbf{u}$, but that term is subtracted: the coefficient is $${coefficient}$.`,
+              `这里把含 $\\mathbf{v} \\times \\mathbf{u}$ 的项加上了，但这一项要减去：系数是 $${coefficient}$。`,
+            ),
+            why(option(w2), `The sign is wrong: the coefficient is $${coefficient}$.`, `符号不对：系数是 $${coefficient}$。`),
+            why(
+              option(w3),
+              "This keeps the products $\\mathbf{u} \\times \\mathbf{u}$ and $\\mathbf{v} \\times \\mathbf{v}$, which are $\\mathbf{0}$; only the mixed products remain.",
+              "这里保留了 $\\mathbf{u} \\times \\mathbf{u}$ 和 $\\mathbf{v} \\times \\mathbf{v}$，而它们都是 $\\mathbf{0}$；只有交叉的乘积留下来。",
+            ),
+            why(
+              option(w4),
+              `The mixed products do not cancel: their coefficient is $${coefficient}$.`,
+              `交叉的乘积并没有抵消：它们的系数是 $${coefficient}$。`,
+            ),
+          ],
         );
       },
     },
@@ -1927,13 +2111,29 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
   encompasses: [],
   xp: 15,
   standards: ["CCSS.HSN.VM.C.11"],
+  intro: t(
+    `Every vector is a combination of $\\mathbf{i}$, $\\mathbf{j}$ and $\\mathbf{k}$, so distributivity and the basis products are enough to cross any two vectors. For $\\langle 1, 2, 0 \\rangle = \\mathbf{i} + 2\\mathbf{j}$ and $\\langle 0, 1, 0 \\rangle = \\mathbf{j}$:
+
+$$(\\mathbf{i} + 2\\mathbf{j}) \\times \\mathbf{j} = \\mathbf{i} \\times \\mathbf{j} + 2(\\mathbf{j} \\times \\mathbf{j}) = \\mathbf{k}$$
+
+Check: $\\mathbf{k} = \\langle 0, 0, 1 \\rangle$ has no $x$- or $y$-component, so its dot products with both vectors are $0$.
+
+In this lesson we organize this expansion as a determinant, giving each component of $\\mathbf{u} \\times \\mathbf{v}$ directly, and use it to find vectors perpendicular to two given ones.`,
+    `每个向量都是 $\\mathbf{i}$、$\\mathbf{j}$、$\\mathbf{k}$ 的组合，所以靠分配律和基向量的叉积就能算出任意两个向量的叉积。对 $\\langle 1, 2, 0 \\rangle = \\mathbf{i} + 2\\mathbf{j}$ 和 $\\langle 0, 1, 0 \\rangle = \\mathbf{j}$：
+
+$$(\\mathbf{i} + 2\\mathbf{j}) \\times \\mathbf{j} = \\mathbf{i} \\times \\mathbf{j} + 2(\\mathbf{j} \\times \\mathbf{j}) = \\mathbf{k}$$
+
+检验：$\\mathbf{k} = \\langle 0, 0, 1 \\rangle$ 没有 $x$、$y$ 分量，所以它与两个向量的点积都是 $0$。
+
+这节课我们把这种展开整理成行列式，直接得到 $\\mathbf{u} \\times \\mathbf{v}$ 的各个分量，并用它求与两个已知向量都垂直的向量。`,
+  ),
   knowledgePoints: [
     {
       id: "determinant-formula-for-cross-product",
       title: t("Determinant formula for cross product", "利用三阶行列式展开计算叉积"),
       explanation: t(
-        "Writing the unit vectors in the first row of a determinant is a memory aid: expanding along that row produces each component of the cross product. The cross product of $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ is calculated using the formal determinant:\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix} = \\langle u_2 v_3 - u_3 v_2, \\; -(u_1 v_3 - u_3 v_1), \\; u_1 v_2 - u_2 v_1 \\rangle$$",
-        "把单位向量写在行列式的第一行是一种记忆方法：沿这一行展开就得到叉积的各个分量。向量 $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ 与 $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ 的叉积可用形式三阶行列式计算：\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix} = \\langle u_2 v_3 - u_3 v_2, \\; -(u_1 v_3 - u_3 v_1), \\; u_1 v_2 - u_2 v_1 \\rangle$$",
+        "Writing the unit vectors in the first row of a determinant is a memory aid: expanding along that row produces each component of the cross product. The cross product of $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ is calculated using the formal determinant:\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix} = \\langle u_2 v_3 - u_3 v_2, \\; -(u_1 v_3 - u_3 v_1), \\; u_1 v_2 - u_2 v_1 \\rangle$$\n\nFor $\\langle 1, 2, 3 \\rangle \\times \\langle 4, 5, 6 \\rangle$ the components are $12 - 15 = -3$, $-(6 - 12) = 6$ and $5 - 8 = -3$, so the product is $\\langle -3, 6, -3 \\rangle$. Check: its dot products with the two vectors are $-3 + 12 - 9 = 0$ and $-12 + 30 - 18 = 0$.\n\n> **Watch out.** The middle component carries a minus sign in front of its $2 \\times 2$ determinant. Leaving it out gives a vector that is no longer perpendicular to $\\mathbf{u}$ and $\\mathbf{v}$.",
+        "把单位向量写在行列式的第一行是一种记忆方法：沿这一行展开就得到叉积的各个分量。向量 $\\mathbf{u} = \\langle u_1, u_2, u_3 \\rangle$ 与 $\\mathbf{v} = \\langle v_1, v_2, v_3 \\rangle$ 的叉积可用形式三阶行列式计算：\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\end{vmatrix} = \\langle u_2 v_3 - u_3 v_2, \\; -(u_1 v_3 - u_3 v_1), \\; u_1 v_2 - u_2 v_1 \\rangle$$\n\n对 $\\langle 1, 2, 3 \\rangle \\times \\langle 4, 5, 6 \\rangle$，三个分量是 $12 - 15 = -3$、$-(6 - 12) = 6$、$5 - 8 = -3$，所以叉积是 $\\langle -3, 6, -3 \\rangle$。检验：它与两个向量的点积分别是 $-3 + 12 - 9 = 0$ 和 $-12 + 30 - 18 = 0$。\n\n> **注意。** 中间的分量在它的二阶行列式前面带一个负号。漏掉负号，得到的向量就不再与 $\\mathbf{u}$、$\\mathbf{v}$ 垂直。",
       ),
       generate(rng) {
         const u: Vec3 = [
@@ -1952,6 +2152,7 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
         const swapErr: Vec3 = [cp[1], cp[0], cp[2]];
         const offset1: Vec3 = [cp[0] + 1, cp[1] - 1, cp[2] + 2];
         const offset2: Vec3 = [cp[0] - 2, cp[1] + 2, cp[2] - 1];
+        const dots = (w: Vec3) => `(${cp[0]})(${w[0]}) + (${cp[1]})(${w[1]}) + (${cp[2]})(${w[2]}) = ${dot3(cp, w)}`;
 
         return pointProblem({
           prompt: t(
@@ -1962,9 +2163,37 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
           vars: ["x", "y", "z"],
           vector: true,
           wrong: [opp, signErrY, swapErr, offset1, offset2],
-          solution: t(
-            `Expand along the first row:\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix} = \\langle (${u[1]})(${v[2]}) - (${u[2]})(${v[1]}), \\; -((${u[0]})(${v[2]}) - (${u[2]})(${v[0]})), \\; (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rangle = ${vec3Latex(cp)}$$`,
-            `按第一行展开三阶行列式：\n\n$$\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix} = \\langle (${u[1]})(${v[2]}) - (${u[2]})(${v[1]}), \\; -((${u[0]})(${v[2]}) - (${u[2]})(${v[0]})), \\; (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) \\rangle = ${vec3Latex(cp)}$$`,
+          solution: walked(
+            [
+              [
+                ["Set up the determinant", "写出行列式"],
+                t("Put the unit vectors in the first row and the two vectors below:", "第一行写单位向量，下面两行写两个向量："),
+                [
+                  `\\mathbf{u} \\times \\mathbf{v} = \\begin{vmatrix} \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\ ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\end{vmatrix}`,
+                ],
+              ],
+              [
+                ["Expand along the first row", "沿第一行展开"],
+                t(
+                  "Each component is a $2 \\times 2$ determinant, and the middle one takes a minus sign:",
+                  "每个分量是一个二阶行列式，中间的一个带负号：",
+                ),
+                [
+                  `\\mathbf{i}: \\; (${u[1]})(${v[2]}) - (${u[2]})(${v[1]}) = ${cp[0]}`,
+                  `\\mathbf{j}: \\; -\\big((${u[0]})(${v[2]}) - (${u[2]})(${v[0]})\\big) = ${cp[1]}`,
+                  `\\mathbf{k}: \\; (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) = ${cp[2]}`,
+                ],
+              ],
+              [
+                ["Write the vector", "写出向量"],
+                t("Collect the components:", "把分量合起来："),
+                [`\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(cp)}`],
+              ],
+            ],
+            t(
+              `The cross product must be perpendicular to both vectors, so both dot products are $0$:\n\n$$${dots(u)}$$\n\n$$${dots(v)}$$`,
+              `叉积必须与两个向量都垂直，所以两个点积都是 $0$：\n\n$$${dots(u)}$$\n\n$$${dots(v)}$$`,
+            ),
           ),
         });
       },
@@ -1974,14 +2203,27 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
       title: t("Finding a vector orthogonal to two vectors", "求与已知两向量均正交的向量"),
       figure: remainingDrawings7["calculating-the-cross-product-using-determinants#finding-a-vector-orthogonal-to-two-vectors"],
       explanation: t(
-        "A vector orthogonal (perpendicular) to both $\\mathbf{u}$ and $\\mathbf{v}$ can always be obtained by calculating their cross product $\\mathbf{u} \\times \\mathbf{v}$ (or any nonzero scalar multiple of it).",
-        "求同时与 $\\mathbf{u}$ 和 $\\mathbf{v}$ 正交（垂直）的向量，可以通过计算它们的叉积 $\\mathbf{u} \\times \\mathbf{v}$（或其任意非零数乘倍数）得到。",
+        "A vector orthogonal (perpendicular) to both $\\mathbf{u}$ and $\\mathbf{v}$ can always be obtained by calculating their cross product $\\mathbf{u} \\times \\mathbf{v}$ (or any nonzero scalar multiple of it).\n\nFor $\\mathbf{u} = \\langle 1, 0, 1 \\rangle$ and $\\mathbf{v} = \\langle 0, 1, 1 \\rangle$ the cross product is $\\langle -1, -1, 1 \\rangle$. Check: $-1 + 0 + 1 = 0$ and $0 - 1 + 1 = 0$, so it is perpendicular to both.\n\n> **Watch out.** Sums and differences such as $\\mathbf{u} + \\mathbf{v}$ lie in the same plane as $\\mathbf{u}$ and $\\mathbf{v}$, so they are not perpendicular to them. A candidate must have dot product $0$ with each of the two vectors, not just one.",
+        "求同时与 $\\mathbf{u}$ 和 $\\mathbf{v}$ 正交（垂直）的向量，可以通过计算它们的叉积 $\\mathbf{u} \\times \\mathbf{v}$（或其任意非零数乘倍数）得到。\n\n对 $\\mathbf{u} = \\langle 1, 0, 1 \\rangle$ 和 $\\mathbf{v} = \\langle 0, 1, 1 \\rangle$，叉积是 $\\langle -1, -1, 1 \\rangle$。检验：$-1 + 0 + 1 = 0$，$0 - 1 + 1 = 0$，所以它与两者都垂直。\n\n> **注意。** 像 $\\mathbf{u} + \\mathbf{v}$ 这样的和与差，与 $\\mathbf{u}$、$\\mathbf{v}$ 在同一平面内，所以不与它们垂直。候选向量必须与两个向量的点积都为 $0$，只满足一个不行。",
       ),
       generate(rng) {
         const u: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
-        const v: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
-        const cp = cross3(u, v);
-        const target = magSq3(cp) > 0 ? cp : ([1, 0, 0] as Vec3);
+        const v0: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
+        const v: Vec3 = magSq3(cross3(u, v0)) > 0 ? v0 : [v0[0], v0[1], v0[2] > 0 ? v0[2] - 1 : v0[2] + 1];
+        const target = cross3(u, v);
+        const option = (w: Vec3) => t(`$${vec3Latex(w)}$`, `$${vec3Latex(w)}$`);
+        /** miss names a dot product of a wrong option that is not zero. */
+        const miss = (w: Vec3): Reason => {
+          const du = dot3(w, u);
+          return du !== 0
+            ? [option(w).en, `Its dot product with $\\mathbf{u}$ is $${du}$, not $0$.`, `它与 $\\mathbf{u}$ 的点积是 $${du}$，不是 $0$。`]
+            : [
+                option(w).en,
+                `Its dot product with $\\mathbf{v}$ is $${dot3(w, v)}$, not $0$.`,
+                `它与 $\\mathbf{v}$ 的点积是 $${dot3(w, v)}$，不是 $0$。`,
+              ];
+        };
+        const dots = (w: Vec3) => `(${target[0]})(${w[0]}) + (${target[1]})(${w[1]}) + (${target[2]})(${w[2]}) = ${dot3(target, w)}`;
 
         const w1 = add3(u, v);
         const w2 = sub3(u, v);
@@ -1994,17 +2236,33 @@ export const calculatingTheCrossProductUsingDeterminants: TopicDef = {
             `Which of the following vectors is orthogonal to both $\\mathbf{u} = ${vec3Latex(u)}$ and $\\mathbf{v} = ${vec3Latex(v)}$?`,
             `下列哪个向量同时与 $\\mathbf{u} = ${vec3Latex(u)}$ 和 $\\mathbf{v} = ${vec3Latex(v)}$ 正交（垂直）？`,
           ),
-          t(`$${vec3Latex(target)}$`, `$${vec3Latex(target)}$`),
-          [
-            t(`$${vec3Latex(w1)}$`, `$${vec3Latex(w1)}$`),
-            t(`$${vec3Latex(w2)}$`, `$${vec3Latex(w2)}$`),
-            t(`$${vec3Latex(w3)}$`, `$${vec3Latex(w3)}$`),
-            t(`$${vec3Latex(w4)}$`, `$${vec3Latex(w4)}$`),
-          ],
-          t(
-            `The cross product $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(target)}$ is guaranteed to be perpendicular to both $\\mathbf{u}$ and $\\mathbf{v}$.`,
-            `叉积 $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(target)}$ 一定同时垂直于 $\\mathbf{u}$ 和 $\\mathbf{v}$。`,
+          option(target),
+          [option(w1), option(w2), option(w3), option(w4)],
+          walked(
+            [
+              [
+                ["Compute the cross product", "计算叉积"],
+                t("Expand the determinant along its first row:", "沿第一行展开行列式："),
+                [
+                  `\\mathbf{i}: \\; (${u[1]})(${v[2]}) - (${u[2]})(${v[1]}) = ${target[0]}`,
+                  `\\mathbf{j}: \\; -\\big((${u[0]})(${v[2]}) - (${u[2]})(${v[0]})\\big) = ${target[1]}`,
+                  `\\mathbf{k}: \\; (${u[0]})(${v[1]}) - (${u[1]})(${v[0]}) = ${target[2]}`,
+                ],
+              ],
+              [
+                ["Use its direction", "利用它的方向"],
+                t(
+                  `A cross product is perpendicular to both of its factors, so $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(target)}$ is the vector we want.`,
+                  `叉积与两个因子都垂直，所以 $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(target)}$ 就是所求的向量。`,
+                ),
+              ],
+            ],
+            t(
+              `Dot it with each vector; both results are $0$:\n\n$$${dots(u)}$$\n\n$$${dots(v)}$$`,
+              `分别与两个向量作点积，结果都是 $0$：\n\n$$${dots(u)}$$\n\n$$${dots(v)}$$`,
+            ),
           ),
+          [miss(w1), miss(w2), miss(w3), miss(w4)],
         );
       },
     },
@@ -2025,17 +2283,38 @@ export const findingAreasUsingTheCrossProduct: TopicDef = {
   encompasses: [{ topic: "calculating-the-cross-product-using-determinants", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSN.VM.C.11"],
+  intro: t(
+    `The length of $\\mathbf{u} \\times \\mathbf{v}$ is $\\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta$, which is base times height for the parallelogram on $\\mathbf{u}$ and $\\mathbf{v}$. The determinant gives the cross product from components, so it gives that area too. For $\\mathbf{u} = \\langle 3, 0, 0 \\rangle$ and $\\mathbf{v} = \\langle 1, 4, 0 \\rangle$:
+
+$$\\mathbf{u} \\times \\mathbf{v} = \\langle 0, 0, 12 \\rangle$$
+
+so the area is $12$.
+
+Check: the parallelogram lies in the $xy$-plane with base $3$ along the $x$-axis, and $\\mathbf{v}$ rises $4$ above that base, so its area is $3 \\cdot 4 = 12$.
+
+In this lesson we find areas of parallelograms and triangles in space from cross products.`,
+    `$\\mathbf{u} \\times \\mathbf{v}$ 的长度是 $\\|\\mathbf{u}\\| \\|\\mathbf{v}\\| \\sin\\theta$，也就是以 $\\mathbf{u}$、$\\mathbf{v}$ 为边的平行四边形的底乘高。行列式由分量给出叉积，所以也给出这个面积。对 $\\mathbf{u} = \\langle 3, 0, 0 \\rangle$ 和 $\\mathbf{v} = \\langle 1, 4, 0 \\rangle$：
+
+$$\\mathbf{u} \\times \\mathbf{v} = \\langle 0, 0, 12 \\rangle$$
+
+所以面积是 $12$。
+
+检验：这个平行四边形在 $xy$ 平面内，底边沿 $x$ 轴长 $3$，$\\mathbf{v}$ 在底边上方升高 $4$，所以面积是 $3 \\cdot 4 = 12$。
+
+这节课我们由叉积求空间中平行四边形和三角形的面积。`,
+  ),
   knowledgePoints: [
     {
       id: "area-of-a-parallelogram-in-3d",
       title: t("Area of a parallelogram in 3D", "三维空间中平行四边形的面积"),
       figure: remainingDrawings7["finding-areas-using-the-cross-product#area-of-a-parallelogram-in-3d"],
       explanation: t(
-        "The area of the parallelogram spanned by adjacent vectors $\\mathbf{u}$ and $\\mathbf{v}$ equals the magnitude of their cross product:\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\|$$",
-        "以相邻向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 为邻边的平行四边形的面积等于两向量叉积的模长：\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\|$$",
+        "The area of the parallelogram spanned by adjacent vectors $\\mathbf{u}$ and $\\mathbf{v}$ equals the magnitude of their cross product:\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\|$$\n\nFor $\\mathbf{u} = \\langle 1, 2, 2 \\rangle$ and $\\mathbf{v} = \\langle 2, 1, -2 \\rangle$ the cross product is $\\langle -6, 6, -3 \\rangle$, of length $\\sqrt{36 + 36 + 9} = 9$, so the area is $9$. Check: $\\mathbf{u} \\cdot \\mathbf{v} = 0$, so the parallelogram is a rectangle with sides $\\|\\mathbf{u}\\| = 3$ and $\\|\\mathbf{v}\\| = 3$, and $3 \\cdot 3 = 9$.\n\n> **Watch out.** The area is the length of the cross product, a number, not the vector itself. Do not halve it: half the parallelogram is a triangle.",
+        "以相邻向量 $\\mathbf{u}$ 与 $\\mathbf{v}$ 为邻边的平行四边形的面积等于两向量叉积的模长：\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\|$$\n\n对 $\\mathbf{u} = \\langle 1, 2, 2 \\rangle$ 和 $\\mathbf{v} = \\langle 2, 1, -2 \\rangle$，叉积是 $\\langle -6, 6, -3 \\rangle$，长度为 $\\sqrt{36 + 36 + 9} = 9$，所以面积是 $9$。检验：$\\mathbf{u} \\cdot \\mathbf{v} = 0$，所以这个平行四边形是长方形，两边长 $\\|\\mathbf{u}\\| = 3$、$\\|\\mathbf{v}\\| = 3$，而 $3 \\cdot 3 = 9$。\n\n> **注意。** 面积是叉积的长度，是一个数，而不是叉积这个向量本身。不要除以 $2$：平行四边形的一半才是三角形。",
       ),
       generate(rng) {
         const [uVec, vVec, cp, L] = pickIntegerCrossProduct(rng);
+        const dot = dot3(uVec, vVec);
 
         return numberProblem({
           prompt: t(
@@ -2045,9 +2324,27 @@ export const findingAreasUsingTheCrossProduct: TopicDef = {
           answer: L,
           form: "integer",
           wrong: [L + 1, Math.max(1, L - 1), L + 2, 2 * L],
-          solution: t(
-            `First compute the cross product $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(cp)}$.\n\nThe area is the magnitude:\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\| = \\sqrt{(${cp[0]})^2 + (${cp[1]})^2 + (${cp[2]})^2} = \\sqrt{${L * L}} = ${L}$$`,
-            `首先计算叉积 $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(cp)}$。\n\n面积等于其模长：\n\n$$A = \\|\\mathbf{u} \\times \\mathbf{v}\\| = \\sqrt{(${cp[0]})^2 + (${cp[1]})^2 + (${cp[2]})^2} = \\sqrt{${L * L}} = ${L}$$`,
+          solution: walked(
+            [
+              [
+                ["Compute the cross product", "计算叉积"],
+                t("Expand the determinant along its first row:", "沿第一行展开行列式："),
+                [
+                  `\\mathbf{i}: \\; (${uVec[1]})(${vVec[2]}) - (${uVec[2]})(${vVec[1]}) = ${cp[0]}`,
+                  `\\mathbf{j}: \\; -\\big((${uVec[0]})(${vVec[2]}) - (${uVec[2]})(${vVec[0]})\\big) = ${cp[1]}`,
+                  `\\mathbf{k}: \\; (${uVec[0]})(${vVec[1]}) - (${uVec[1]})(${vVec[0]}) = ${cp[2]}`,
+                ],
+              ],
+              [
+                ["Take its length", "求它的长度"],
+                t("The area is the magnitude of the cross product:", "面积是叉积的模长："),
+                [`A = \\sqrt{(${cp[0]})^2 + (${cp[1]})^2 + (${cp[2]})^2} = \\sqrt{${L * L}} = ${L}`],
+              ],
+            ],
+            t(
+              `The squared area is also $\\|\\mathbf{u}\\|^2 \\|\\mathbf{v}\\|^2 - (\\mathbf{u} \\cdot \\mathbf{v})^2$, since $\\sin^2\\theta = 1 - \\cos^2\\theta$. Here $\\|\\mathbf{u}\\|^2 = ${magSq3(uVec)}$, $\\|\\mathbf{v}\\|^2 = ${magSq3(vVec)}$ and $\\mathbf{u} \\cdot \\mathbf{v} = ${dot}$:\n\n$$${magSq3(uVec)} \\cdot ${magSq3(vVec)} - ${paren(dot)}^2 = ${L * L} = ${L}^2$$`,
+              `面积的平方也等于 $\\|\\mathbf{u}\\|^2 \\|\\mathbf{v}\\|^2 - (\\mathbf{u} \\cdot \\mathbf{v})^2$，因为 $\\sin^2\\theta = 1 - \\cos^2\\theta$。这里 $\\|\\mathbf{u}\\|^2 = ${magSq3(uVec)}$，$\\|\\mathbf{v}\\|^2 = ${magSq3(vVec)}$，$\\mathbf{u} \\cdot \\mathbf{v} = ${dot}$：\n\n$$${magSq3(uVec)} \\cdot ${magSq3(vVec)} - ${paren(dot)}^2 = ${L * L} = ${L}^2$$`,
+            ),
           ),
         });
       },
@@ -2057,8 +2354,8 @@ export const findingAreasUsingTheCrossProduct: TopicDef = {
       title: t("Area of a triangle in 3D", "三维空间中三角形的面积"),
       figure: remainingDrawings7["finding-areas-using-the-cross-product#area-of-a-triangle-in-3d"],
       explanation: t(
-        "A triangle with vertices $A, B, C$ has area equal to half the area of the parallelogram formed by $\\vec{AB}$ and $\\vec{AC}$:\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\|$$",
-        "以 $A, B, C$ 为顶点的三角形的面积等于由 $\\vec{AB}$ 和 $\\vec{AC}$ 构成的平行四边形面积的一半：\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\|$$",
+        "A triangle with vertices $A, B, C$ has area equal to half the area of the parallelogram formed by $\\vec{AB}$ and $\\vec{AC}$:\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\|$$\n\nFor $A(0, 0, 0)$, $B(3, 0, 0)$ and $C(1, 4, 0)$: $\\vec{AB} \\times \\vec{AC} = \\langle 0, 0, 12 \\rangle$, so the area is $\\frac{1}{2} \\cdot 12 = 6$. Check: the triangle has base $3$ along the $x$-axis and height $4$, and $\\frac{1}{2} \\cdot 3 \\cdot 4 = 6$.\n\n> **Watch out.** Both edge vectors must start at the same vertex, and the coordinates of the vertices themselves are not edge vectors. The triangle is half the parallelogram, so remember the $\\frac{1}{2}$.",
+        "以 $A, B, C$ 为顶点的三角形的面积等于由 $\\vec{AB}$ 和 $\\vec{AC}$ 构成的平行四边形面积的一半：\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\|$$\n\n对 $A(0, 0, 0)$、$B(3, 0, 0)$、$C(1, 4, 0)$：$\\vec{AB} \\times \\vec{AC} = \\langle 0, 0, 12 \\rangle$，所以面积是 $\\frac{1}{2} \\cdot 12 = 6$。检验：这个三角形的底沿 $x$ 轴长 $3$，高是 $4$，而 $\\frac{1}{2} \\cdot 3 \\cdot 4 = 6$。\n\n> **注意。** 两条边向量必须从同一个顶点出发，顶点本身的坐标不是边向量。三角形是平行四边形的一半，别忘了 $\\frac{1}{2}$。",
       ),
       generate(rng) {
         const [u, v, cp, L] = pickIntegerCrossProduct(rng);
@@ -2069,17 +2366,38 @@ export const findingAreasUsingTheCrossProduct: TopicDef = {
         const B = add3(A, u);
         const C = add3(A, v);
         const areaQ = Q.of(L, 2);
+        const dot = dot3(u, v);
+        const point = (P: Vec3) => `(${P[0]}, ${P[1]}, ${P[2]})`;
 
         return numberProblem({
           prompt: t(
-            `Find the area of the triangle with vertices $A(${A[0]}, ${A[1]}, ${A[2]})$, $B(${B[0]}, ${B[1]}, ${B[2]})$, and $C(${C[0]}, ${C[1]}, ${C[2]})$.`,
-            `求空间中顶点为 $A(${A[0]}, ${A[1]}, ${A[2]})$、$B(${B[0]}, ${B[1]}, ${B[2]})$ 与 $C(${C[0]}, ${C[1]}, ${C[2]})$ 的三角形的面积。`,
+            `Find the area of the triangle with vertices $A${point(A)}$, $B${point(B)}$, and $C${point(C)}$.`,
+            `求空间中顶点为 $A${point(A)}$、$B${point(B)}$ 与 $C${point(C)}$ 的三角形的面积。`,
           ),
           answer: areaQ,
           wrong: [L, Q.of(L, 4), Q.of(L + 2, 2)],
-          solution: t(
-            `Form vectors $\\vec{AB} = ${vec3Latex(u)}$ and $\\vec{AC} = ${vec3Latex(v)}$.\n\nCompute the cross product:\n\n$$\\vec{AB} \\times \\vec{AC} = ${vec3Latex(cp)}$$\n\nThe area is:\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\| = \\frac{1}{2}(${L}) = ${areaQ.toLatex()}$$`,
-            `求向量 $\\vec{AB} = ${vec3Latex(u)}$ 及 $\\vec{AC} = ${vec3Latex(v)}$。\n\n计算叉积：\n\n$$\\vec{AB} \\times \\vec{AC} = ${vec3Latex(cp)}$$\n\n三角形面积为：\n\n$$A = \\frac{1}{2}\\|\\vec{AB} \\times \\vec{AC}\\| = \\frac{1}{2}(${L}) = ${areaQ.toLatex()}$$`,
+          solution: walked(
+            [
+              [
+                ["Find two edge vectors", "求两条边向量"],
+                t("Subtract the coordinates of $A$ from those of $B$ and $C$:", "用 $B$、$C$ 的坐标减去 $A$ 的坐标："),
+                [`\\vec{AB} = ${vec3Latex(u)}, \\quad \\vec{AC} = ${vec3Latex(v)}`],
+              ],
+              [
+                ["Compute the cross product", "计算叉积"],
+                t("Expand the determinant along its first row:", "沿第一行展开行列式："),
+                [`\\vec{AB} \\times \\vec{AC} = ${vec3Latex(cp)}`, `\\|\\vec{AB} \\times \\vec{AC}\\| = \\sqrt{${L * L}} = ${L}`],
+              ],
+              [
+                ["Take half", "取一半"],
+                t("The triangle is half of the parallelogram:", "三角形是平行四边形的一半："),
+                [`\\frac{1}{2} \\cdot ${L} = ${areaQ.toLatex()}`],
+              ],
+            ],
+            t(
+              `Use lengths and the dot product instead: $\\|\\vec{AB}\\|^2 = ${magSq3(u)}$, $\\|\\vec{AC}\\|^2 = ${magSq3(v)}$ and $\\vec{AB} \\cdot \\vec{AC} = ${dot}$. The parallelogram's squared area is\n\n$$${magSq3(u)} \\cdot ${magSq3(v)} - ${paren(dot)}^2 = ${L * L} = ${L}^2$$\n\nSo the triangle's area is again half of $${L}$, which is $${areaQ.toLatex()}$.`,
+              `改用长度和点积：$\\|\\vec{AB}\\|^2 = ${magSq3(u)}$，$\\|\\vec{AC}\\|^2 = ${magSq3(v)}$，$\\vec{AB} \\cdot \\vec{AC} = ${dot}$。平行四边形面积的平方是\n\n$$${magSq3(u)} \\cdot ${magSq3(v)} - ${paren(dot)}^2 = ${L * L} = ${L}^2$$\n\n所以三角形的面积仍是 $${L}$ 的一半，即 $${areaQ.toLatex()}$。`,
+            ),
           ),
         });
       },
@@ -2101,20 +2419,38 @@ export const theScalarTripleProduct: TopicDef = {
   encompasses: [{ topic: "calculating-the-cross-product-using-determinants", weight: 0.4 }],
   xp: 15,
   standards: ["CCSS.HSN.VM.C.11"],
+  intro: t(
+    `The determinant turns two vectors into their cross product, and the dot product turns two vectors into a number. Doing both, crossing $\\mathbf{v}$ with $\\mathbf{w}$ and then dotting with $\\mathbf{u}$, turns three vectors into one number. For $\\mathbf{u} = \\langle 1, 1, 1 \\rangle$, $\\mathbf{v} = \\mathbf{i}$ and $\\mathbf{w} = \\mathbf{j}$:
+
+$$\\mathbf{v} \\times \\mathbf{w} = \\mathbf{k}, \\qquad \\mathbf{u} \\cdot \\mathbf{k} = 1$$
+
+Check: putting the three vectors as the rows of a determinant gives the same number, since expanding along the first row multiplies each entry of $\\mathbf{u}$ by a component of $\\mathbf{v} \\times \\mathbf{w}$.
+
+In this lesson we evaluate this scalar triple product and use it to tell when three vectors lie in one plane.`,
+    `行列式把两个向量变成它们的叉积，点积把两个向量变成一个数。两者都做，先求 $\\mathbf{v}$ 与 $\\mathbf{w}$ 的叉积，再与 $\\mathbf{u}$ 作点积，就把三个向量变成一个数。对 $\\mathbf{u} = \\langle 1, 1, 1 \\rangle$、$\\mathbf{v} = \\mathbf{i}$、$\\mathbf{w} = \\mathbf{j}$：
+
+$$\\mathbf{v} \\times \\mathbf{w} = \\mathbf{k}, \\qquad \\mathbf{u} \\cdot \\mathbf{k} = 1$$
+
+检验：把三个向量作为行列式的三行，得到同一个数，因为沿第一行展开时，$\\mathbf{u}$ 的每个分量正好乘以 $\\mathbf{v} \\times \\mathbf{w}$ 的一个分量。
+
+这节课我们计算这个混合积，并用它判断三个向量何时在同一平面内。`,
+  ),
   knowledgePoints: [
     {
       id: "evaluating-the-scalar-triple-product",
       title: t("Evaluating the scalar triple product", "计算标量三重积"),
       explanation: t(
-        "The scalar triple product is a single number, and it equals the determinant of the matrix whose rows are the three vectors. The scalar triple product of three vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ is defined as $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$ and equals the $3\\times 3$ determinant:\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = \\begin{vmatrix} u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\\\ w_1 & w_2 & w_3 \\end{vmatrix}$$",
-        "标量三重积是一个数，它等于以三个向量为行的矩阵的行列式。三向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 的标量三重积（混合积）定义为 $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$，其值等于相应的三阶行列式：\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = \\begin{vmatrix} u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\\\ w_1 & w_2 & w_3 \\end{vmatrix}$$",
+        "The scalar triple product is a single number, and it equals the determinant of the matrix whose rows are the three vectors. The scalar triple product of three vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ is defined as $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$ and equals the $3\\times 3$ determinant:\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = \\begin{vmatrix} u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\\\ w_1 & w_2 & w_3 \\end{vmatrix}$$\n\nFor $\\mathbf{u} = \\langle 2, 1, 0 \\rangle$, $\\mathbf{v} = \\langle 0, 3, 1 \\rangle$ and $\\mathbf{w} = \\langle 1, 0, 1 \\rangle$, expanding along the first row gives $2(3 - 0) - 1(0 - 1) + 0 = 7$. Check: $\\mathbf{v} \\times \\mathbf{w} = \\langle 3, 1, -3 \\rangle$, and its dot product with $\\mathbf{u}$ is $6 + 1 + 0 = 7$.\n\n> **Watch out.** The middle term of the expansion carries a minus sign. Swapping two of the vectors changes the sign of the result, so keep them in the order given.",
+        "标量三重积是一个数，它等于以三个向量为行的矩阵的行列式。三向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 的标量三重积（混合积）定义为 $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})$，其值等于相应的三阶行列式：\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = \\begin{vmatrix} u_1 & u_2 & u_3 \\\\ v_1 & v_2 & v_3 \\\\ w_1 & w_2 & w_3 \\end{vmatrix}$$\n\n对 $\\mathbf{u} = \\langle 2, 1, 0 \\rangle$、$\\mathbf{v} = \\langle 0, 3, 1 \\rangle$、$\\mathbf{w} = \\langle 1, 0, 1 \\rangle$，沿第一行展开得 $2(3 - 0) - 1(0 - 1) + 0 = 7$。检验：$\\mathbf{v} \\times \\mathbf{w} = \\langle 3, 1, -3 \\rangle$，它与 $\\mathbf{u}$ 的点积是 $6 + 1 + 0 = 7$。\n\n> **注意。** 展开式的中间一项带负号。交换其中两个向量会改变结果的符号，所以要按给定的顺序排列。",
       ),
       generate(rng) {
-        const u: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
-        const v: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
-        const w: Vec3 = [rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-3, -2, -1, 1, 2, 3])];
-
+        const entries = [-3, -2, -1, 1, 2, 3];
+        const u: Vec3 = [rng.pick(entries), rng.pick(entries), rng.pick(entries)];
+        const v: Vec3 = [rng.pick(entries), rng.pick(entries), rng.pick(entries)];
+        const w: Vec3 = [rng.pick(entries), rng.pick(entries), rng.pick(entries)];
         const ans = det3(u, v, w);
+        const vw = cross3(v, w);
+        const uv = cross3(u, v);
 
         return numberProblem({
           prompt: t(
@@ -2124,9 +2460,34 @@ export const theScalarTripleProduct: TopicDef = {
           answer: ans,
           form: "integer",
           wrong: [-ans, ans + 6, ans - 5, ans + 2],
-          solution: t(
-            `$$\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} = ${u[0]}(${v[1] * w[2] - v[2] * w[1]}) - (${u[1]})(${v[0] * w[2] - v[2] * w[0]}) + (${u[2]})(${v[0] * w[1] - v[1] * w[0]}) = ${ans}$$`,
-            `$$\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} = ${u[0]}(${v[1] * w[2] - v[2] * w[1]}) - (${u[1]})(${v[0] * w[2] - v[2] * w[0]}) + (${u[2]})(${v[0] * w[1] - v[1] * w[0]}) = ${ans}$$`,
+          solution: walked(
+            [
+              [
+                ["Write the determinant", "写出行列式"],
+                t(
+                  "Put $\\mathbf{u}$, $\\mathbf{v}$ and $\\mathbf{w}$ as the rows, in that order:",
+                  "按顺序把 $\\mathbf{u}$、$\\mathbf{v}$、$\\mathbf{w}$ 作为三行：",
+                ),
+                [
+                  `\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix}`,
+                ],
+              ],
+              [
+                ["Expand along the first row", "沿第一行展开"],
+                t(
+                  "Each $2 \\times 2$ minor is a component of $\\mathbf{v} \\times \\mathbf{w}$, and the middle term is subtracted:",
+                  "每个二阶子式是 $\\mathbf{v} \\times \\mathbf{w}$ 的一个分量，中间一项要减去：",
+                ),
+                [
+                  `${u[0]}(${vw[0]}) - ${paren(u[1])}(${-vw[1]}) + ${paren(u[2])}(${vw[2]})`,
+                  `= ${u[0] * vw[0]} ${u[1] * vw[1] < 0 ? "-" : "+"} ${Math.abs(u[1] * vw[1])} ${u[2] * vw[2] < 0 ? "-" : "+"} ${Math.abs(u[2] * vw[2])} = ${ans}`,
+                ],
+              ],
+            ],
+            t(
+              `The scalar triple product is unchanged when the vectors are moved round in a cycle, so it also equals $(\\mathbf{u} \\times \\mathbf{v}) \\cdot \\mathbf{w}$. Here $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(uv)}$, and\n\n$$${vec3Latex(uv)} \\cdot ${vec3Latex(w)} = ${ans}$$`,
+              `把三个向量轮换，混合积不变，所以它也等于 $(\\mathbf{u} \\times \\mathbf{v}) \\cdot \\mathbf{w}$。这里 $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(uv)}$，且\n\n$$${vec3Latex(uv)} \\cdot ${vec3Latex(w)} = ${ans}$$`,
+            ),
           ),
         });
       },
@@ -2135,37 +2496,76 @@ export const theScalarTripleProduct: TopicDef = {
       id: "coplanarity-condition-for-three-vectors",
       title: t("Coplanarity condition for three vectors", "利用混合积判定三向量共面"),
       explanation: t(
-        "Three vectors in $\\mathbb{R}^3$ are coplanar (lie in the same plane) if and only if their scalar triple product is zero:\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$$",
-        "三维空间中的三个向量共面（处于同一平面内）当且仅当它们的混合积等于零：\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$$",
+        "Three vectors in $\\mathbb{R}^3$ are coplanar (lie in the same plane) if and only if their scalar triple product is zero:\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$$\n\nThe vector $\\mathbf{v} \\times \\mathbf{w}$ is perpendicular to the plane of $\\mathbf{v}$ and $\\mathbf{w}$, so its dot product with $\\mathbf{u}$ is zero exactly when $\\mathbf{u}$ lies in that plane. For $\\mathbf{u} = \\langle 1, 1, 0 \\rangle$, $\\mathbf{v} = \\mathbf{i}$ and $\\mathbf{w} = \\mathbf{j}$: $\\mathbf{v} \\times \\mathbf{w} = \\mathbf{k}$ and $\\mathbf{u} \\cdot \\mathbf{k} = 0$, so the three are coplanar. Check: $\\mathbf{u} = \\mathbf{v} + \\mathbf{w}$, so $\\mathbf{u}$ lies in the plane of $\\mathbf{v}$ and $\\mathbf{w}$.\n\n> **Watch out.** Coplanar vectors need not add up to $\\mathbf{0}$ and need not be parallel. The test is that one of them is a combination of the other two, which is what a zero determinant says.",
+        "三维空间中的三个向量共面（处于同一平面内）当且仅当它们的混合积等于零：\n\n$$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$$\n\n向量 $\\mathbf{v} \\times \\mathbf{w}$ 垂直于 $\\mathbf{v}$、$\\mathbf{w}$ 所在的平面，所以它与 $\\mathbf{u}$ 的点积为零恰好表示 $\\mathbf{u}$ 在这个平面内。对 $\\mathbf{u} = \\langle 1, 1, 0 \\rangle$、$\\mathbf{v} = \\mathbf{i}$、$\\mathbf{w} = \\mathbf{j}$：$\\mathbf{v} \\times \\mathbf{w} = \\mathbf{k}$，$\\mathbf{u} \\cdot \\mathbf{k} = 0$，所以三者共面。检验：$\\mathbf{u} = \\mathbf{v} + \\mathbf{w}$，所以 $\\mathbf{u}$ 在 $\\mathbf{v}$、$\\mathbf{w}$ 所在的平面内。\n\n> **注意。** 共面的向量不一定相加为 $\\mathbf{0}$，也不一定平行。判定的是其中一个能由另外两个组合出来，这正是行列式为零的含义。",
       ),
       generate(rng) {
         const u: Vec3 = [rng.pick([1, 2, 3]), rng.pick([-2, -1, 1, 2]), rng.pick([-2, -1, 1, 2])];
-        const v: Vec3 = [rng.pick([-2, -1, 1, 2]), rng.pick([1, 2, 3]), rng.pick([-2, -1, 1, 2])];
+        const v0: Vec3 = [rng.pick([-2, -1, 1, 2]), rng.pick([1, 2, 3]), rng.pick([-2, -1, 1, 2])];
+        // The coefficient of k is the k-component of u x v; shifting v's first entry by 1 changes it by -u[1], which is never 0.
+        const v: Vec3 = u[0] * v0[1] - u[1] * v0[0] === 0 ? [v0[0] + 1, v0[1], v0[2]] : v0;
 
         if (rng.bool()) {
           const prompt = t(
             `Which of the following conditions is necessary and sufficient for three nonzero vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ in $\\mathbb{R}^3$ to be coplanar?`,
             `下列哪个条件是三维空间中三个非零向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 共面的充要条件？`,
           );
+          const nested = t(
+            "$\\mathbf{u} \\times (\\mathbf{v} \\times \\mathbf{w}) = \\mathbf{0}$",
+            "$\\mathbf{u} \\times (\\mathbf{v} \\times \\mathbf{w}) = \\mathbf{0}$",
+          );
+          const equalDots = t(
+            "$\\mathbf{u} \\cdot \\mathbf{v} = \\mathbf{v} \\cdot \\mathbf{w}$",
+            "$\\mathbf{u} \\cdot \\mathbf{v} = \\mathbf{v} \\cdot \\mathbf{w}$",
+          );
+          const sumZero = t(
+            "$\\mathbf{u} + \\mathbf{v} + \\mathbf{w} = \\mathbf{0}$",
+            "$\\mathbf{u} + \\mathbf{v} + \\mathbf{w} = \\mathbf{0}$",
+          );
           return oneOf(
             rng,
             prompt,
             t("$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$", "$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$"),
-            [
+            [nested, equalDots, sumZero],
+            walked(
+              [
+                [
+                  ["Find a normal to the plane", "找出平面的法向量"],
+                  t(
+                    "The vector $\\mathbf{v} \\times \\mathbf{w}$ is perpendicular to both $\\mathbf{v}$ and $\\mathbf{w}$, so it is perpendicular to the plane they span.",
+                    "向量 $\\mathbf{v} \\times \\mathbf{w}$ 同时垂直于 $\\mathbf{v}$ 和 $\\mathbf{w}$，所以垂直于它们张成的平面。",
+                  ),
+                ],
+                [
+                  ["Test the third vector", "检验第三个向量"],
+                  t(
+                    "The vector $\\mathbf{u}$ lies in that plane exactly when it is perpendicular to the normal, that is, when $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$. This is also the volume of the parallelepiped on the three vectors, which is zero exactly when it is flat.",
+                    "向量 $\\mathbf{u}$ 在这个平面内，恰好当它垂直于法向量，即 $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$。这也是三向量张成的平行六面体的体积，它恰好在立体被压扁时为零。",
+                  ),
+                ],
+              ],
               t(
-                "$\\mathbf{u} \\times (\\mathbf{v} \\times \\mathbf{w}) = \\mathbf{0}$",
-                "$\\mathbf{u} \\times (\\mathbf{v} \\times \\mathbf{w}) = \\mathbf{0}$",
+                "Try $\\mathbf{u} = \\mathbf{i}$, $\\mathbf{v} = \\mathbf{j}$ and $\\mathbf{w} = \\mathbf{i} + \\mathbf{j}$, which all lie in the $xy$-plane. Then $\\mathbf{v} \\times \\mathbf{w} = -\\mathbf{k}$ and $\\mathbf{i} \\cdot (-\\mathbf{k}) = 0$, as the condition says.",
+                "取 $\\mathbf{u} = \\mathbf{i}$、$\\mathbf{v} = \\mathbf{j}$、$\\mathbf{w} = \\mathbf{i} + \\mathbf{j}$，它们都在 $xy$ 平面内。此时 $\\mathbf{v} \\times \\mathbf{w} = -\\mathbf{k}$，$\\mathbf{i} \\cdot (-\\mathbf{k}) = 0$，与条件相符。",
               ),
-              t(
-                "$\\mathbf{u} \\cdot \\mathbf{v} = \\mathbf{v} \\cdot \\mathbf{w}$",
-                "$\\mathbf{u} \\cdot \\mathbf{v} = \\mathbf{v} \\cdot \\mathbf{w}$",
-              ),
-              t("$\\mathbf{u} + \\mathbf{v} + \\mathbf{w} = \\mathbf{0}$", "$\\mathbf{u} + \\mathbf{v} + \\mathbf{w} = \\mathbf{0}$"),
-            ],
-            t(
-              "Three vectors are coplanar if and only if the volume of the parallelepiped they span is zero, which means $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$.",
-              "三个向量共面当且仅当它们张成的平行六面体体积为零，即标量三重积 $\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = 0$。",
             ),
+            [
+              why(
+                nested,
+                "This says u is parallel to v × w, so u is perpendicular to the plane of v and w. That is the opposite of lying in it.",
+                "这表示 u 与 v × w 平行，即 u 垂直于 v、w 所在的平面，恰好与在平面内相反。",
+              ),
+              why(
+                equalDots,
+                "Equal dot products say nothing about a common plane: i, j and k give u · v = v · w = 0, yet they are not coplanar.",
+                "点积相等与是否共面无关：i、j、k 满足 u · v = v · w = 0，但它们不共面。",
+              ),
+              why(
+                sumZero,
+                "Vectors that add to 0 are coplanar, but coplanar vectors need not add to 0: i, j and i + j are coplanar and their sum is not 0. The condition is not necessary.",
+                "相加为 0 的向量一定共面，但共面的向量不一定相加为 0：i、j、i + j 共面，和却不是 0。这个条件不是必要的。",
+              ),
+            ],
           );
         }
 
@@ -2173,7 +2573,11 @@ export const theScalarTripleProduct: TopicDef = {
         const b = rng.pick([-2, -1, 1, 2]);
         const wCop: Vec3 = add3(smul3(a, u), smul3(b, v));
         const ansK = wCop[2];
+        const c = cross3(u, v);
+        const known = wCop[0] * c[0] + wCop[1] * c[1];
         const wPrompt = `\\langle ${wCop[0]}, ${wCop[1]}, k \\rangle`;
+        const au = smul3(a, u);
+        const bv = smul3(b, v);
 
         return numberProblem({
           prompt: t(
@@ -2184,9 +2588,33 @@ export const theScalarTripleProduct: TopicDef = {
           solveFor: "k",
           form: "integer",
           wrong: [-ansK, ansK + 1, ansK - 2, ansK + 3],
-          solution: t(
-            `Three vectors are coplanar if and only if their determinant is zero:\n\n$$\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${wCop[0]} & ${wCop[1]} & k \\end{vmatrix} = 0 \\implies k = ${ansK}$$`,
-            `三个向量共面当且仅当它们构成的行列式为零：\n\n$$\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${wCop[0]} & ${wCop[1]} & k \\end{vmatrix} = 0 \\implies k = ${ansK}$$`,
+          solution: walked(
+            [
+              [
+                ["Set the determinant to zero", "令行列式为零"],
+                t("Three vectors are coplanar exactly when their determinant is zero:", "三个向量共面当且仅当它们的行列式为零："),
+                [
+                  `\\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${wCop[0]} & ${wCop[1]} & k \\end{vmatrix} = 0`,
+                ],
+              ],
+              [
+                ["Expand along the third row", "沿第三行展开"],
+                t(
+                  `The cofactors of the third row are the components of $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(c)}$:`,
+                  `第三行的代数余子式就是 $\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(c)}$ 的分量：`,
+                ),
+                [`${wCop[0]}(${c[0]}) + ${paren(wCop[1])}(${c[1]}) + (${c[2]})k = 0`, `${poly([known, ""], [c[2], "k"])} = 0`],
+              ],
+              [
+                ["Solve for k", "解出 k"],
+                t("Move the constant term across, then divide by the coefficient of $k$:", "把常数项移到右边，再除以 $k$ 的系数："),
+                [`${poly([c[2], "k"])} = ${-known}`, `k = ${ansK}`],
+              ],
+            ],
+            t(
+              `With $k = ${ansK}$, $\\mathbf{w}$ is a combination of $\\mathbf{u}$ and $\\mathbf{v}$, so it lies in their plane:\n\n$$${a === 1 ? "" : a === -1 ? "-" : a}\\mathbf{u} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}\\mathbf{v} = ${vec3Latex(au)} + ${vec3Latex(bv)} = ${vec3Latex(wCop)}$$`,
+              `当 $k = ${ansK}$ 时，$\\mathbf{w}$ 能由 $\\mathbf{u}$、$\\mathbf{v}$ 组合出来，所以在它们的平面内：\n\n$$${a === 1 ? "" : a === -1 ? "-" : a}\\mathbf{u} ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}\\mathbf{v} = ${vec3Latex(au)} + ${vec3Latex(bv)} = ${vec3Latex(wCop)}$$`,
+            ),
           ),
         });
       },
@@ -2208,21 +2636,38 @@ export const volumesOfParallelepipeds: TopicDef = {
   encompasses: [{ topic: "the-scalar-triple-product", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSN.VM.C.11"],
+  intro: t(
+    `A parallelepiped is a slanted box whose three edges from one corner are $\\mathbf{u}$, $\\mathbf{v}$ and $\\mathbf{w}$. Its volume is base area times height. The base on $\\mathbf{v}$ and $\\mathbf{w}$ has area $\\|\\mathbf{v} \\times \\mathbf{w}\\|$, and the height is the length of the projection of $\\mathbf{u}$ onto $\\mathbf{v} \\times \\mathbf{w}$. Multiplying the two gives the size of the scalar triple product. For the box with edges $2\\mathbf{i}$, $3\\mathbf{j}$ and $4\\mathbf{k}$:
+
+$$\\begin{vmatrix} 2 & 0 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & 4 \\end{vmatrix} = 24$$
+
+Check: this box is rectangular, and $2 \\cdot 3 \\cdot 4 = 24$.
+
+In this lesson we find volumes of parallelepipeds from their edge vectors and from their vertices.`,
+    `平行六面体是一个斜的盒子，从一个顶点出发的三条棱是 $\\mathbf{u}$、$\\mathbf{v}$、$\\mathbf{w}$。它的体积是底面积乘高。以 $\\mathbf{v}$、$\\mathbf{w}$ 为边的底面面积是 $\\|\\mathbf{v} \\times \\mathbf{w}\\|$，高是 $\\mathbf{u}$ 在 $\\mathbf{v} \\times \\mathbf{w}$ 方向上投影的长度。两者相乘就是混合积的大小。对棱为 $2\\mathbf{i}$、$3\\mathbf{j}$、$4\\mathbf{k}$ 的盒子：
+
+$$\\begin{vmatrix} 2 & 0 & 0 \\\\ 0 & 3 & 0 \\\\ 0 & 0 & 4 \\end{vmatrix} = 24$$
+
+检验：这个盒子是长方体，而 $2 \\cdot 3 \\cdot 4 = 24$。
+
+这节课我们由棱向量和由顶点求平行六面体的体积。`,
+  ),
   knowledgePoints: [
     {
       id: "volume-of-a-parallelepiped-from-coterminous-vectors",
       title: t("Volume of a parallelepiped from coterminous vectors", "共起点向量构成的平行六面体体积"),
       figure: remainingDrawings7["volumes-of-parallelepipeds#volume-of-a-parallelepiped-from-coterminous-vectors"],
       explanation: t(
-        "The volume of a parallelepiped determined by three coterminous vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ is the absolute value of their scalar triple product:\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$",
-        "由三个共起点向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 确定的平行六面体的体积等于它们混合积的绝对值：\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$",
+        "The volume of a parallelepiped determined by three coterminous vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ is the absolute value of their scalar triple product:\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$\n\nFor $\\mathbf{u} = \\langle 1, 2, 0 \\rangle$, $\\mathbf{v} = \\langle 0, 1, 3 \\rangle$ and $\\mathbf{w} = \\langle 2, 0, 1 \\rangle$, expanding along the first row gives $1(1 - 0) - 2(0 - 6) + 0 = 13$. So the volume is $13$. Check: $\\mathbf{u} \\times \\mathbf{v} = \\langle 6, -3, 1 \\rangle$, and its dot product with $\\mathbf{w}$ is $12 + 0 + 1 = 13$.\n\n> **Watch out.** The determinant can be negative when the vectors are listed in the other orientation. A volume is never negative, so take the absolute value.",
+        "由三个共起点向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 确定的平行六面体的体积等于它们混合积的绝对值：\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$\n\n对 $\\mathbf{u} = \\langle 1, 2, 0 \\rangle$、$\\mathbf{v} = \\langle 0, 1, 3 \\rangle$、$\\mathbf{w} = \\langle 2, 0, 1 \\rangle$，沿第一行展开得 $1(1 - 0) - 2(0 - 6) + 0 = 13$。所以体积是 $13$。检验：$\\mathbf{u} \\times \\mathbf{v} = \\langle 6, -3, 1 \\rangle$，它与 $\\mathbf{w}$ 的点积是 $12 + 0 + 1 = 13$。\n\n> **注意。** 向量按另一种定向排列时，行列式可能是负数。体积不会是负的，所以要取绝对值。",
       ),
       generate(rng) {
         const u: Vec3 = [rng.pick([1, 2, 3]), rng.pick([-2, -1, 0, 1, 2]), rng.pick([-2, -1, 0, 1, 2])];
-        const v: Vec3 = [0, rng.pick([1, 2, 3]), rng.pick([-2, -1, 0, 1, 2])];
+        const v: Vec3 = [0, rng.pick([-3, -2, -1, 1, 2, 3]), rng.pick([-2, -1, 0, 1, 2])];
         const w: Vec3 = [0, 0, rng.pick([2, 3, 4, 5])];
         const d = det3(u, v, w);
         const V = Math.abs(d);
+        const vw = cross3(v, w);
 
         return numberProblem({
           prompt: t(
@@ -2231,10 +2676,25 @@ export const volumesOfParallelepipeds: TopicDef = {
           ),
           answer: V,
           form: "integer",
-          wrong: [V * 2, Math.max(1, V - 3), V + 4, Math.round(V / 2)],
-          solution: t(
-            `The volume is the absolute value of the scalar triple product:\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} \\right| = |${d}| = ${V}$$`,
-            `体积等于混合积的绝对值：\n\n$$V = |\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\left| \\begin{vmatrix} ${u[0]} & ${u[1]} & ${u[2]} \\\\ ${v[0]} & ${v[1]} & ${v[2]} \\\\ ${w[0]} & ${w[1]} & ${w[2]} \\end{vmatrix} \\right| = |${d}| = ${V}$$`,
+          wrong: [V * 2, Math.max(1, V - 3), V + 4, Math.max(1, Math.round(V / 2))],
+          solution: walked(
+            [
+              [
+                ["Cross the last two vectors", "求后两个向量的叉积"],
+                t("Expand the determinant for $\\mathbf{v} \\times \\mathbf{w}$:", "展开行列式求 $\\mathbf{v} \\times \\mathbf{w}$："),
+                [`\\mathbf{v} \\times \\mathbf{w} = ${vec3Latex(vw)}`],
+              ],
+              [
+                ["Dot with the first vector", "与第一个向量作点积"],
+                t("This is the scalar triple product:", "这就是混合积："),
+                [`\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = ${vec3Latex(u)} \\cdot ${vec3Latex(vw)} = ${d}`],
+              ],
+              [["Take the absolute value", "取绝对值"], t("A volume is not negative:", "体积不是负数："), [`V = |${d}| = ${V}`]],
+            ],
+            t(
+              `The rows $\\mathbf{u}$, $\\mathbf{v}$, $\\mathbf{w}$ have zeros below the diagonal, so the determinant is the product of the diagonal entries: $${u[0]} \\cdot ${paren(v[1])} \\cdot ${w[2]} = ${d}$. Its absolute value is $${V}$ again.`,
+              `行 $\\mathbf{u}$、$\\mathbf{v}$、$\\mathbf{w}$ 在对角线下方都是零，所以行列式等于对角线元素之积：$${u[0]} \\cdot ${paren(v[1])} \\cdot ${w[2]} = ${d}$。它的绝对值仍是 $${V}$。`,
+            ),
           ),
         });
       },
@@ -2244,32 +2704,52 @@ export const volumesOfParallelepipeds: TopicDef = {
       title: t("Volume of a parallelepiped from vertices", "由顶点坐标计算平行六面体体积"),
       figure: remainingDrawings7["volumes-of-parallelepipeds#volume-of-a-parallelepiped-from-vertices"],
       explanation: t(
-        "Subtract the coordinates of the shared vertex from the other three to get the edge vectors, then take the absolute value of their triple product. If a parallelepiped has a vertex $A$ with three adjacent vertices $B, C, D$, its volume is:\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$",
-        "用另外三个顶点的坐标减去公共顶点的坐标得到棱向量，再取它们三重积的绝对值。若平行六面体的一个顶点为 $A$，且与之相邻的三个顶点为 $B, C, D$，则其体积为：\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$",
+        "Subtract the coordinates of the shared vertex from the other three to get the edge vectors, then take the absolute value of their triple product. If a parallelepiped has a vertex $A$ with three adjacent vertices $B, C, D$, its volume is:\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$\n\nFor $A(1, 1, 1)$, $B(3, 1, 1)$, $C(1, 4, 1)$ and $D(1, 1, 2)$ the edge vectors are $\\langle 2, 0, 0 \\rangle$, $\\langle 0, 3, 0 \\rangle$ and $\\langle 0, 0, 1 \\rangle$, so the volume is $2 \\cdot 3 \\cdot 1 = 6$. Check: the edges lie along the axes, so this is a rectangular box $2$ by $3$ by $1$.\n\n> **Watch out.** Use the edge vectors from $A$, not the coordinates of $B$, $C$ and $D$. The vertices must all be adjacent to $A$; the corner opposite $A$ is not an edge endpoint.",
+        "用另外三个顶点的坐标减去公共顶点的坐标得到棱向量，再取它们三重积的绝对值。若平行六面体的一个顶点为 $A$，且与之相邻的三个顶点为 $B, C, D$，则其体积为：\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})|$$\n\n对 $A(1, 1, 1)$、$B(3, 1, 1)$、$C(1, 4, 1)$、$D(1, 1, 2)$，棱向量是 $\\langle 2, 0, 0 \\rangle$、$\\langle 0, 3, 0 \\rangle$、$\\langle 0, 0, 1 \\rangle$，所以体积是 $2 \\cdot 3 \\cdot 1 = 6$。检验：三条棱沿坐标轴，所以这是一个 $2 \\times 3 \\times 1$ 的长方体。\n\n> **注意。** 要用从 $A$ 出发的棱向量，而不是 $B$、$C$、$D$ 的坐标。这三个顶点都必须与 $A$ 相邻；与 $A$ 相对的那个顶点不是棱的端点。",
       ),
       generate(rng) {
         const A: Vec3 = [rng.pick([-2, -1, 0, 1, 2]), rng.pick([-2, -1, 0, 1, 2]), rng.pick([-2, -1, 0, 1, 2])];
         const u: Vec3 = [rng.pick([2, 3, 4]), 0, 0];
-        const v: Vec3 = [1, rng.pick([2, 3]), 0];
-        const w: Vec3 = [0, 1, rng.pick([2, 3, 4])];
-
+        const v: Vec3 = [rng.pick([-1, 1, 2]), rng.pick([2, 3]), 0];
+        const w: Vec3 = [0, rng.pick([-1, 1, 2]), rng.pick([2, 3, 4])];
         const B = add3(A, u);
         const C = add3(A, v);
         const D = add3(A, w);
-
-        const V = Math.abs(det3(u, v, w));
+        const d = det3(u, v, w);
+        const V = Math.abs(d);
+        const vw = cross3(v, w);
+        const point = (P: Vec3) => `(${P[0]}, ${P[1]}, ${P[2]})`;
 
         return numberProblem({
           prompt: t(
-            `Find the volume of the parallelepiped with vertex $A(${A[0]}, ${A[1]}, ${A[2]})$ and adjacent vertices $B(${B[0]}, ${B[1]}, ${B[2]})$, $C(${C[0]}, ${C[1]}, ${C[2]})$, and $D(${D[0]}, ${D[1]}, ${D[2]})$.`,
-            `求以 $A(${A[0]}, ${A[1]}, ${A[2]})$ 为顶点，且与之相邻的三个顶点为 $B(${B[0]}, ${B[1]}, ${B[2]})$、$C(${C[0]}, ${C[1]}, ${C[2]})$ 与 $D(${D[0]}, ${D[1]}, ${D[2]})$ 的平行六面体的体积。`,
+            `Find the volume of the parallelepiped with vertex $A${point(A)}$ and adjacent vertices $B${point(B)}$, $C${point(C)}$, and $D${point(D)}$.`,
+            `求以 $A${point(A)}$ 为顶点，且与之相邻的三个顶点为 $B${point(B)}$、$C${point(C)}$ 与 $D${point(D)}$ 的平行六面体的体积。`,
           ),
           answer: V,
           form: "integer",
-          wrong: [V * 2, Math.max(1, V - 2), V + 3, Math.round(V / 3)],
-          solution: t(
-            `Form edge vectors $\\vec{AB} = ${vec3Latex(u)}$, $\\vec{AC} = ${vec3Latex(v)}$, $\\vec{AD} = ${vec3Latex(w)}$.\n\nThen evaluate the determinant:\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})| = ${V}$$`,
-            `求棱向量 $\\vec{AB} = ${vec3Latex(u)}$、$\\vec{AC} = ${vec3Latex(v)}$ 与 $\\vec{AD} = ${vec3Latex(w)}$。\n\n计算行列式绝对值：\n\n$$V = |\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD})| = ${V}$$`,
+          wrong: [V * 2, Math.max(1, V - 2), V + 3, Math.max(1, Math.round(V / 3))],
+          solution: walked(
+            [
+              [
+                ["Find the edge vectors", "求棱向量"],
+                t("Subtract the coordinates of $A$:", "减去 $A$ 的坐标："),
+                [`\\vec{AB} = ${vec3Latex(u)}, \\quad \\vec{AC} = ${vec3Latex(v)}, \\quad \\vec{AD} = ${vec3Latex(w)}`],
+              ],
+              [
+                ["Compute the triple product", "计算混合积"],
+                t("Cross the last two edges, then dot with the first:", "先求后两条棱的叉积，再与第一条作点积："),
+                [`\\vec{AC} \\times \\vec{AD} = ${vec3Latex(vw)}`, `\\vec{AB} \\cdot (\\vec{AC} \\times \\vec{AD}) = ${d}`],
+              ],
+              [
+                ["Take the absolute value", "取绝对值"],
+                t("The volume is the size of that number:", "体积是这个数的绝对值："),
+                [`V = |${d}| = ${V}`],
+              ],
+            ],
+            t(
+              `In the determinant with rows $\\vec{AB}$, $\\vec{AC}$, $\\vec{AD}$, every entry above the diagonal is $0$, so it equals the product of the diagonal entries: $${u[0]} \\cdot ${v[1]} \\cdot ${w[2]} = ${V}$.`,
+              `以 $\\vec{AB}$、$\\vec{AC}$、$\\vec{AD}$ 为行的行列式中，对角线上方的元素都是 $0$，所以它等于对角线元素之积：$${u[0]} \\cdot ${v[1]} \\cdot ${w[2]} = ${V}$。`,
+            ),
           ),
         });
       },
@@ -2291,14 +2771,26 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
   encompasses: [{ topic: "volumes-of-parallelepipeds", weight: 0.5 }],
   xp: 15,
   standards: ["CCSS.HSN.VM.C.11"],
+  intro: t(
+    `A parallelepiped on $\\mathbf{u}$, $\\mathbf{v}$, $\\mathbf{w}$ has volume $|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})|$, which is base area times height. A pyramid with the same base and the same height has one third of that volume. If its base is only the triangle on two of the edges, half the parallelogram, it has one sixth. For the edges $2\\mathbf{i}$, $3\\mathbf{j}$ and $6\\mathbf{k}$ the box has volume $36$, so the tetrahedron on these edges has volume $6$.
+
+Check: the tetrahedron's base is a right triangle of area $\\frac{1}{2} \\cdot 2 \\cdot 3 = 3$ and its height is $6$, and $\\frac{1}{3} \\cdot 3 \\cdot 6 = 6$.
+
+In this lesson we find volumes of tetrahedrons and of pyramids with parallelogram bases from the scalar triple product.`,
+    `以 $\\mathbf{u}$、$\\mathbf{v}$、$\\mathbf{w}$ 为棱的平行六面体体积是 $|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})|$，即底面积乘高。同底等高的棱锥体积是它的三分之一。如果底面只是两条棱构成的三角形，即平行四边形的一半，体积就是六分之一。对棱 $2\\mathbf{i}$、$3\\mathbf{j}$、$6\\mathbf{k}$，盒子的体积是 $36$，所以以它们为棱的四面体体积是 $6$。
+
+检验：这个四面体的底面是直角三角形，面积 $\\frac{1}{2} \\cdot 2 \\cdot 3 = 3$，高是 $6$，而 $\\frac{1}{3} \\cdot 3 \\cdot 6 = 6$。
+
+这节课我们由混合积求四面体以及平行四边形底棱锥的体积。`,
+  ),
   knowledgePoints: [
     {
       id: "volume-of-a-tetrahedron",
       title: t("Volume of a tetrahedron", "四面体的体积"),
       figure: remainingDrawings7["finding-volumes-of-tetrahedrons-and-pyramids-using-vector-products#volume-of-a-tetrahedron"],
       explanation: t(
-        "A tetrahedron (triangular pyramid) spanned by three vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ has volume equal to $\\frac{1}{6}$ of the volume of the corresponding parallelepiped:\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}\\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$",
-        "由三个向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 确定的四面体（三棱锥）的体积等于相应平行六面体体积的 $\\frac{1}{6}$：\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}\\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$",
+        "A tetrahedron (triangular pyramid) spanned by three vectors $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ has volume equal to $\\frac{1}{6}$ of the volume of the corresponding parallelepiped:\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}\\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$\n\nThe factor is $\\frac{1}{3}$ for a pyramid times $\\frac{1}{2}$ for a triangular base. For $\\mathbf{u} = \\langle 1, 0, 0 \\rangle$, $\\mathbf{v} = \\langle 0, 2, 0 \\rangle$ and $\\mathbf{w} = \\langle 1, 1, 3 \\rangle$ the determinant is $1 \\cdot 2 \\cdot 3 = 6$, so the volume is $1$. Check: the base triangle in the $xy$-plane has area $\\frac{1}{2} \\cdot 1 \\cdot 2 = 1$, the apex is $3$ above it, and $\\frac{1}{3} \\cdot 1 \\cdot 3 = 1$.\n\n> **Watch out.** The tetrahedron is one sixth of the parallelepiped, not one third: one third is for a pyramid whose base is the whole parallelogram.",
+        "由三个向量 $\\mathbf{u}, \\mathbf{v}, \\mathbf{w}$ 确定的四面体（三棱锥）的体积等于相应平行六面体体积的 $\\frac{1}{6}$：\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}\\left| \\det[\\mathbf{u}, \\mathbf{v}, \\mathbf{w}] \\right|$$\n\n这个系数是棱锥的 $\\frac{1}{3}$ 乘以三角形底面的 $\\frac{1}{2}$。对 $\\mathbf{u} = \\langle 1, 0, 0 \\rangle$、$\\mathbf{v} = \\langle 0, 2, 0 \\rangle$、$\\mathbf{w} = \\langle 1, 1, 3 \\rangle$，行列式是 $1 \\cdot 2 \\cdot 3 = 6$，所以体积是 $1$。检验：$xy$ 平面内的底面三角形面积是 $\\frac{1}{2} \\cdot 1 \\cdot 2 = 1$，顶点在它上方 $3$，而 $\\frac{1}{3} \\cdot 1 \\cdot 3 = 1$。\n\n> **注意。** 四面体是平行六面体的六分之一，不是三分之一：三分之一是底面为整个平行四边形的棱锥。",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6]);
@@ -2307,9 +2799,9 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
         const base = u[0] * v[1];
         const wZ = (base % 6 === 0 ? 1 : base % 3 === 0 ? 2 : base % 2 === 0 ? 3 : 6) * k;
         const w: Vec3 = [rng.pick([0, 1]), rng.pick([0, 1]), wZ];
-
-        const detVal = Math.round(Math.abs(det3(u, v, w)));
-        const V = Math.round(detVal / 6);
+        const detVal = Math.abs(det3(u, v, w));
+        const V = detVal / 6;
+        const triangle = Q.of(base, 2);
 
         return numberProblem({
           prompt: t(
@@ -2318,10 +2810,27 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
           ),
           answer: V,
           form: "integer",
-          wrong: [detVal, Math.round(detVal / 3), Math.round(detVal / 2), V + 2],
-          solution: t(
-            `The volume of a tetrahedron is $\\frac{1}{6}$ of the scalar triple product:\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}(${detVal}) = ${V}$$`,
-            `四面体的体积为标量三重积绝对值的 $\\frac{1}{6}$：\n\n$$V = \\frac{1}{6}|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = \\frac{1}{6}(${detVal}) = ${V}$$`,
+          wrong: [detVal, detVal / 3, detVal / 2, V + 2],
+          solution: walked(
+            [
+              [
+                ["Compute the triple product", "计算混合积"],
+                t(
+                  "The rows $\\mathbf{u}$, $\\mathbf{v}$, $\\mathbf{w}$ have zeros above the diagonal, so the determinant is the product of the diagonal entries:",
+                  "行 $\\mathbf{u}$、$\\mathbf{v}$、$\\mathbf{w}$ 在对角线上方都是零，所以行列式等于对角线元素之积：",
+                ),
+                [`|\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})| = ${u[0]} \\cdot ${v[1]} \\cdot ${wZ} = ${detVal}`],
+              ],
+              [
+                ["Take one sixth", "取六分之一"],
+                t("A tetrahedron is one sixth of the parallelepiped on the same edges:", "四面体是同棱平行六面体的六分之一："),
+                [`V = \\frac{1}{6} \\cdot ${detVal} = ${V}`],
+              ],
+            ],
+            t(
+              `Use base and height. The edges $\\mathbf{u}$ and $\\mathbf{v}$ lie in the $xy$-plane and form a right triangle of area $\\frac{1}{2} \\cdot ${u[0]} \\cdot ${v[1]} = ${triangle.toLatex()}$. The apex is $${wZ}$ above that plane, so\n\n$$V = \\frac{1}{3} \\cdot ${triangle.toLatex()} \\cdot ${wZ} = ${V}$$`,
+              `用底面积和高。棱 $\\mathbf{u}$、$\\mathbf{v}$ 在 $xy$ 平面内，构成面积为 $\\frac{1}{2} \\cdot ${u[0]} \\cdot ${v[1]} = ${triangle.toLatex()}$ 的直角三角形。顶点在该平面上方 $${wZ}$，所以\n\n$$V = \\frac{1}{3} \\cdot ${triangle.toLatex()} \\cdot ${wZ} = ${V}$$`,
+            ),
           ),
         });
       },
@@ -2334,18 +2843,19 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
           "finding-volumes-of-tetrahedrons-and-pyramids-using-vector-products#volume-of-a-pyramid-with-parallelogram-base"
         ],
       explanation: t(
-        "A pyramid whose base is a parallelogram spanned by $\\mathbf{u}$ and $\\mathbf{v}$, and whose apex is located by vector $\\mathbf{w}$ from the same corner, has volume:\n\n$$V = \\frac{1}{3}\\times \\text{Base Area} \\times \\text{Height} = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})|$$",
-        "底面为由 $\\mathbf{u}$ 与 $\\mathbf{v}$ 张成的平行四边形，且从同一起点指向顶点的向量为 $\\mathbf{w}$ 的四棱锥，其体积为：\n\n$$V = \\frac{1}{3}\\times \\text{底面积} \\times \\text{高} = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})|$$",
+        "A pyramid whose base is a parallelogram spanned by $\\mathbf{u}$ and $\\mathbf{v}$, and whose apex is located by vector $\\mathbf{w}$ from the same corner, has volume:\n\n$$V = \\frac{1}{3}\\times \\text{Base Area} \\times \\text{Height} = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})|$$\n\nFor $\\mathbf{u} = \\langle 2, 0, 0 \\rangle$, $\\mathbf{v} = \\langle 0, 3, 0 \\rangle$ and $\\mathbf{w} = \\langle 1, 0, 2 \\rangle$: $\\mathbf{u} \\times \\mathbf{v} = \\langle 0, 0, 6 \\rangle$ and $\\mathbf{w} \\cdot \\langle 0, 0, 6 \\rangle = 12$, so the volume is $4$. Check: the base is a $2$ by $3$ rectangle of area $6$, the apex is $2$ above it, and $\\frac{1}{3} \\cdot 6 \\cdot 2 = 4$.\n\n> **Watch out.** The base here is the whole parallelogram, so the factor is $\\frac{1}{3}$, not $\\frac{1}{6}$. Sliding the apex sideways does not change the height or the volume.",
+        "底面为由 $\\mathbf{u}$ 与 $\\mathbf{v}$ 张成的平行四边形，且从同一起点指向顶点的向量为 $\\mathbf{w}$ 的四棱锥，其体积为：\n\n$$V = \\frac{1}{3}\\times \\text{底面积} \\times \\text{高} = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})|$$\n\n对 $\\mathbf{u} = \\langle 2, 0, 0 \\rangle$、$\\mathbf{v} = \\langle 0, 3, 0 \\rangle$、$\\mathbf{w} = \\langle 1, 0, 2 \\rangle$：$\\mathbf{u} \\times \\mathbf{v} = \\langle 0, 0, 6 \\rangle$，$\\mathbf{w} \\cdot \\langle 0, 0, 6 \\rangle = 12$，所以体积是 $4$。检验：底面是 $2 \\times 3$ 的长方形，面积 $6$，顶点在它上方 $2$，而 $\\frac{1}{3} \\cdot 6 \\cdot 2 = 4$。\n\n> **注意。** 这里的底面是整个平行四边形，所以系数是 $\\frac{1}{3}$，不是 $\\frac{1}{6}$。顶点沿水平方向移动不改变高，也不改变体积。",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6, 7]);
         const u: Vec3 = [rng.pick([1, 2, 3]), 0, 0];
         const v: Vec3 = [0, rng.pick([1, 2, 3]), 0];
-        const wZ = ((u[0] * v[1]) % 3 === 0 ? 1 : 3) * k;
+        const base = u[0] * v[1];
+        const wZ = (base % 3 === 0 ? 1 : 3) * k;
         const w: Vec3 = [rng.pick([0, 1]), rng.pick([0, 1]), wZ];
-
-        const detVal = Math.round(Math.abs(det3(u, v, w)));
-        const V = Math.round(detVal / 3);
+        const uv = cross3(u, v);
+        const detVal = Math.abs(dot3(w, uv));
+        const V = detVal / 3;
 
         return numberProblem({
           prompt: t(
@@ -2354,10 +2864,32 @@ export const findingVolumesOfTetrahedronsAndPyramidsUsingVectorProducts: TopicDe
           ),
           answer: V,
           form: "integer",
-          wrong: [detVal, Math.round(detVal / 6), V + 2, Math.max(1, V - 2)],
-          solution: t(
-            `The volume of a pyramid with a parallelogram base is $\\frac{1}{3}$ of the parallelepiped volume:\n\n$$V = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})| = \\frac{1}{3}(${detVal}) = ${V}$$`,
-            `底面为平行四边形的棱锥体积是相应平行六面体体积的 $\\frac{1}{3}$：\n\n$$V = \\frac{1}{3}|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})| = \\frac{1}{3}(${detVal}) = ${V}$$`,
+          wrong: [detVal, detVal % 6 === 0 ? detVal / 6 : 2 * V, V + 2, Math.max(1, V - 2)],
+          solution: walked(
+            [
+              [
+                ["Cross the base edges", "求底面两边的叉积"],
+                t("The base edges both lie in the $xy$-plane:", "底面两边都在 $xy$ 平面内："),
+                [`\\mathbf{u} \\times \\mathbf{v} = ${vec3Latex(uv)}`],
+              ],
+              [
+                ["Dot with the apex vector", "与指向顶点的向量作点积"],
+                t("This gives the volume of the parallelepiped on the three vectors:", "这给出三向量张成的平行六面体的体积："),
+                [`|\\mathbf{w} \\cdot (\\mathbf{u} \\times \\mathbf{v})| = |${vec3Latex(w)} \\cdot ${vec3Latex(uv)}| = ${detVal}`],
+              ],
+              [
+                ["Take one third", "取三分之一"],
+                t(
+                  "A pyramid on the whole parallelogram is one third of the parallelepiped:",
+                  "以整个平行四边形为底的棱锥是平行六面体的三分之一：",
+                ),
+                [`V = \\frac{1}{3} \\cdot ${detVal} = ${V}`],
+              ],
+            ],
+            t(
+              `Use base and height. The base is a rectangle of area $${u[0]} \\cdot ${v[1]} = ${base}$ in the $xy$-plane, and the apex is $${wZ}$ above it, so\n\n$$V = \\frac{1}{3} \\cdot ${base} \\cdot ${wZ} = ${V}$$`,
+              `用底面积和高。底面是 $xy$ 平面内面积为 $${u[0]} \\cdot ${v[1]} = ${base}$ 的长方形，顶点在它上方 $${wZ}$，所以\n\n$$V = \\frac{1}{3} \\cdot ${base} \\cdot ${wZ} = ${V}$$`,
+            ),
           ),
         });
       },

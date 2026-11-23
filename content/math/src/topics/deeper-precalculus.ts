@@ -895,18 +895,24 @@ const distanceToLine: KnowledgePointDef = {
   },
 };
 
+/** crossFromDot finds the squared length of a cross product from the two lengths and the dot product. */
 const crossFromDot: KnowledgePointDef = {
   id: "the-magnitude-of-a-cross-product-from-a-dot-product",
   title: t("The magnitude of a cross product from a dot product", "由点积求叉积的模"),
   explanation: t(
-    "The cross product and the dot product of two vectors are tied together by the angle between them: one involves the sine and the other involves the cosine. Squaring and adding removes the angle, because the squares of sine and cosine add up to one. The result says that the square of the cross product's magnitude and the square of the dot product add up to the product of the squared magnitudes, so no components are needed.",
-    "两个向量的叉积和点积通过它们的夹角联系在一起：一个含正弦，另一个含余弦。平方后相加可以消去角，因为正弦与余弦的平方和是一。结果说明，叉积的模的平方加上点积的平方，等于两个向量模的平方之积，所以不需要任何分量。",
+    "The cross product and the dot product of two vectors are tied together by the angle between them: one involves the sine and the other involves the cosine. Squaring and adding removes the angle, because the squares of sine and cosine add up to one:\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\|^{2} + (\\mathbf{u} \\cdot \\mathbf{v})^{2} = \\|\\mathbf{u}\\|^{2}\\|\\mathbf{v}\\|^{2}$$\n\nSo no components are needed. For $\\|\\mathbf{u}\\| = 3$, $\\|\\mathbf{v}\\| = 4$ and $\\mathbf{u} \\cdot \\mathbf{v} = 6$: $\\|\\mathbf{u} \\times \\mathbf{v}\\|^{2} = 9 \\cdot 16 - 36 = 108$. Check: $\\cos\\theta = \\frac{6}{12} = \\frac{1}{2}$, so $\\theta = 60^\\circ$ and $\\|\\mathbf{u} \\times \\mathbf{v}\\| = 12 \\cdot \\frac{\\sqrt{3}}{2} = 6\\sqrt{3}$, whose square is $108$.\n\n> **Watch out.** Subtract the square of the dot product, not the dot product itself. The question asks for the squared length, so do not take a square root at the end.",
+    "两个向量的叉积和点积通过它们的夹角联系在一起：一个含正弦，另一个含余弦。平方后相加可以消去角，因为正弦与余弦的平方和是一：\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\|^{2} + (\\mathbf{u} \\cdot \\mathbf{v})^{2} = \\|\\mathbf{u}\\|^{2}\\|\\mathbf{v}\\|^{2}$$\n\n所以不需要任何分量。对 $\\|\\mathbf{u}\\| = 3$、$\\|\\mathbf{v}\\| = 4$、$\\mathbf{u} \\cdot \\mathbf{v} = 6$：$\\|\\mathbf{u} \\times \\mathbf{v}\\|^{2} = 9 \\cdot 16 - 36 = 108$。检验：$\\cos\\theta = \\frac{6}{12} = \\frac{1}{2}$，所以 $\\theta = 60^\\circ$，$\\|\\mathbf{u} \\times \\mathbf{v}\\| = 12 \\cdot \\frac{\\sqrt{3}}{2} = 6\\sqrt{3}$，它的平方是 $108$。\n\n> **注意。** 要减去点积的平方，而不是点积本身。题目求的是长度的平方，最后不要再开方。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
     const b = rng.int(2, 9);
     const d = rng.sign() * rng.int(1, a * b - 1);
     const answer = a * a * b * b - d * d;
+    const ab2 = a * a * b * b;
+    const solved = (locale: "en" | "zh-CN") => {
+      const en = locale === "en";
+      return `${stepLabel(1, "Remove the angle", "消去夹角")[locale]}${en ? " The cross product has $\\sin\\theta$ and the dot product has $\\cos\\theta$, and $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$:" : "叉积含 $\\sin\\theta$，点积含 $\\cos\\theta$，而 $\\sin^{2}\\theta + \\cos^{2}\\theta = 1$："}\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\|^{2} = \\|\\mathbf{u}\\|^{2}\\|\\mathbf{v}\\|^{2} - (\\mathbf{u} \\cdot \\mathbf{v})^{2}$$\n\n${stepLabel(2, "Substitute", "代入")[locale]}${en ? " Put in the two lengths and the dot product:" : "代入两个长度和点积："}\n\n$$\\|\\mathbf{u} \\times \\mathbf{v}\\|^{2} = ${a * a} \\cdot ${b * b} - ${inParens(d)}^{2} = ${ab2} - ${d * d} = ${answer}$$\n\n${en ? "**Check.** Go through the angle instead. The dot product gives $\\cos\\theta$, and then $\\sin^{2}\\theta = 1 - \\cos^{2}\\theta$:" : "**检验。**改为经过夹角计算。点积给出 $\\cos\\theta$，再由 $\\sin^{2}\\theta = 1 - \\cos^{2}\\theta$："}\n\n$$\\cos\\theta = ${frac(d, a * b)}, \\quad \\sin^{2}\\theta = ${frac(answer, ab2)}$$\n\n$$${ab2} \\cdot ${frac(answer, ab2)} = ${answer}$$`;
+    };
     return numberProblem({
       prompt: t(
         `Vectors have $\\|\\mathbf{u}\\| = ${a}$, $\\|\\mathbf{v}\\| = ${b}$ and $\\mathbf{u} \\cdot \\mathbf{v} = ${d}$. Find $\\|\\mathbf{u} \\times \\mathbf{v}\\|^{2}$.`,
@@ -915,29 +921,32 @@ const crossFromDot: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [a * a * b * b + d * d, a * b - Math.abs(d), a * a * b * b - Math.abs(d), (a * b - Math.abs(d)) ** 2],
-      solution: t(
-        `Since $\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\sin\\theta$ and $\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$, their squares add up to $\\|\\mathbf{u}\\|^{2}\\|\\mathbf{v}\\|^{2}$. So the answer is $${a * a} \\cdot ${b * b} - ${d * d} = ${answer}$.`,
-        `因为 $\\|\\mathbf{u} \\times \\mathbf{v}\\| = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\sin\\theta$，$\\mathbf{u} \\cdot \\mathbf{v} = \\|\\mathbf{u}\\|\\|\\mathbf{v}\\|\\cos\\theta$，它们的平方和是 $\\|\\mathbf{u}\\|^{2}\\|\\mathbf{v}\\|^{2}$。所以答案是 $${a * a} \\cdot ${b * b} - ${d * d} = ${answer}$。`,
-      ),
+      solution: t(solved("en"), solved("zh-CN")),
     });
   },
 };
 
+/** coplanarParameter finds the entry that makes three vectors coplanar by writing the third as a combination of the other two. */
 const coplanarParameter: KnowledgePointDef = {
   id: "the-parameter-that-makes-three-vectors-coplanar",
   title: t("The parameter that makes three vectors coplanar", "使三个向量共面的参数"),
   explanation: t(
-    "Three vectors lie in one plane when one of them is a combination of the other two, which is the same as their scalar triple product being zero. If two of the vectors span a plane, the third can be tested by writing it as a combination of them. The components without the parameter fix the two coefficients, and then the component with the parameter is forced. This often takes less work than expanding a determinant in full.",
-    "三个向量在同一平面内，是指其中一个是另外两个的组合，也就是它们的混合积为零。如果两个向量张成一个平面，就可以把第三个向量写成它们的组合来检验。不含参数的分量确定两个系数，于是含参数的分量也被确定了。这往往比完整展开行列式省事。",
+    "Three vectors lie in one plane when one of them is a combination of the other two, which is the same as their scalar triple product being zero. If two of the vectors span a plane, the third can be tested by writing it as a combination of them. The components without the parameter fix the two coefficients, and then the component with the parameter is forced. This often takes less work than expanding a determinant in full.\n\nFor $\\mathbf{u} = \\langle 1, 0, 2 \\rangle$, $\\mathbf{v} = \\langle 0, 1, 3 \\rangle$ and $\\mathbf{w} = \\langle 2, 3, k \\rangle$, the first two components give $\\mathbf{w} = 2\\mathbf{u} + 3\\mathbf{v}$, so $k = 2 \\cdot 2 + 3 \\cdot 3 = 13$. Check: $\\mathbf{u} \\times \\mathbf{v} = \\langle -2, -3, 1 \\rangle$, and its dot product with $\\langle 2, 3, 13 \\rangle$ is $-4 - 9 + 13 = 0$.\n\n> **Watch out.** Find both coefficients from the components without $k$ before using the third. Adding or comparing the components directly does not give $k$.",
+    "三个向量在同一平面内，是指其中一个是另外两个的组合，也就是它们的混合积为零。如果两个向量张成一个平面，就可以把第三个向量写成它们的组合来检验。不含参数的分量确定两个系数，于是含参数的分量也被确定了。这往往比完整展开行列式省事。\n\n对 $\\mathbf{u} = \\langle 1, 0, 2 \\rangle$、$\\mathbf{v} = \\langle 0, 1, 3 \\rangle$、$\\mathbf{w} = \\langle 2, 3, k \\rangle$，前两个分量给出 $\\mathbf{w} = 2\\mathbf{u} + 3\\mathbf{v}$，所以 $k = 2 \\cdot 2 + 3 \\cdot 3 = 13$。检验：$\\mathbf{u} \\times \\mathbf{v} = \\langle -2, -3, 1 \\rangle$，它与 $\\langle 2, 3, 13 \\rangle$ 的点积是 $-4 - 9 + 13 = 0$。\n\n> **注意。** 先用不含 $k$ 的分量求出两个系数，再用第三个分量。直接把分量相加或比较得不到 $k$。",
   ),
   generate(rng) {
     const [u1, u2, v1] = [nonzero(rng, 4), nonzero(rng, 4), nonzero(rng, 4)];
-    let v2 = nonzero(rng, 4);
-    while (u1 * v2 - u2 * v1 === 0) v2 = nonzero(rng, 4);
+    const v2 = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4].filter((x) => u1 * x - u2 * v1 !== 0));
     const [u3, v3] = [rng.int(-4, 4), rng.int(-4, 4)];
     const [alpha, beta] = [nonzero(rng, 3), nonzero(rng, 3)];
     const [w1, w2] = [alpha * u1 + beta * v1, alpha * u2 + beta * v2];
     const answer = alpha * u3 + beta * v3;
+    const c = [u2 * v3 - u3 * v2, u3 * v1 - u1 * v3, u1 * v2 - u2 * v1] as const;
+    const [al, be] = ["\\alpha", "\\beta"];
+    const solved = (locale: "en" | "zh-CN") => {
+      const en = locale === "en";
+      return `${stepLabel(1, "Write w as a combination", "把 w 写成组合")[locale]}${en ? " The first two components of $\\mathbf{u}$ and $\\mathbf{v}$ are not proportional, so they span a plane, and coplanar means $\\mathbf{w} = \\alpha\\mathbf{u} + \\beta\\mathbf{v}$. The first two components give:" : "$\\mathbf{u}$、$\\mathbf{v}$ 的前两个分量不成比例，所以它们张成一个平面，共面意味着 $\\mathbf{w} = \\alpha\\mathbf{u} + \\beta\\mathbf{v}$。前两个分量给出："}\n\n$$${poly([u1, al], [v1, be])} = ${w1}$$\n\n$$${poly([u2, al], [v2, be])} = ${w2}$$\n\n${stepLabel(2, "Solve for the coefficients", "解出系数")[locale]}${en ? " Eliminate one unknown and substitute back:" : "消去一个未知数再回代："}\n\n$$\\alpha = ${alpha}, \\quad \\beta = ${beta}$$\n\n${stepLabel(3, "Read off k", "求出 k")[locale]}${en ? " The third component must match as well:" : "第三个分量也必须相符："}\n\n$$k = ${alpha} \\cdot ${inParens(u3)} + ${inParens(beta)} \\cdot ${inParens(v3)} = ${answer}$$\n\n${en ? "**Check.** The scalar triple product must be zero. Here $\\mathbf{u} \\times \\mathbf{v} = " : "**检验。**混合积必须为零。这里 $\\mathbf{u} \\times \\mathbf{v} = "}${vec(...c)}$${en ? ", and its dot product with $\\mathbf{w}$ is" : "，它与 $\\mathbf{w}$ 的点积是"}\n\n$$${w1} \\cdot ${inParens(c[0])} + ${inParens(w2)} \\cdot ${inParens(c[1])} + ${inParens(answer)} \\cdot ${inParens(c[2])} = 0$$`;
+    };
     return numberProblem({
       prompt: t(
         `The vectors $\\mathbf{u} = ${vec(u1, u2, u3)}$, $\\mathbf{v} = ${vec(v1, v2, v3)}$ and $\\mathbf{w} = \\langle ${w1}, ${w2}, k \\rangle$ are coplanar. Find $k$.`,
@@ -946,20 +955,18 @@ const coplanarParameter: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [-answer, w1 + w2, alpha + beta, u3 + v3, answer + 1, answer - 1, answer + 2],
-      solution: t(
-        `The first two components of $\\mathbf{u}$ and $\\mathbf{v}$ are not proportional, so these vectors span a plane, and coplanarity means $\\mathbf{w} = \\alpha\\mathbf{u} + \\beta\\mathbf{v}$. The first two components give $\\alpha = ${alpha}$ and $\\beta = ${beta}$. The third then gives $k = ${alpha} \\cdot ${inParens(u3)} + ${inParens(beta)} \\cdot ${inParens(v3)} = ${answer}$.`,
-        `$\\mathbf{u}$、$\\mathbf{v}$ 的前两个分量不成比例，所以它们张成一个平面，共面意味着 $\\mathbf{w} = \\alpha\\mathbf{u} + \\beta\\mathbf{v}$。前两个分量给出 $\\alpha = ${alpha}$，$\\beta = ${beta}$。于是第三个分量给出 $k = ${alpha} \\cdot ${inParens(u3)} + ${inParens(beta)} \\cdot ${inParens(v3)} = ${answer}$。`,
-      ),
+      solution: t(solved("en"), solved("zh-CN")),
     });
   },
 };
 
+/** volumeOfCombinations finds how a volume scales when two edges are replaced by combinations of them and the third is scaled. */
 const volumeOfCombinations: KnowledgePointDef = {
   id: "the-volume-after-replacing-the-edges-by-combinations",
   title: t("The volume after replacing the edges by combinations", "把棱换成组合向量后的体积"),
   explanation: t(
-    "A scalar triple product can be expanded term by term, and this shows how a volume changes when its edges are replaced by combinations of the old ones. Any term in which a vector appears twice vanishes, because the cross product of a vector with itself is zero. What remains is a single multiple of the original triple product. Its size is given by a small determinant of the coefficients, multiplied by any scaling of the third edge.",
-    "混合积可以逐项展开，这说明了把棱换成旧棱的组合时体积如何变化。凡是一个向量出现两次的项都等于零，因为向量与自身的叉积为零。剩下的是原混合积的一个倍数。这个倍数的大小由系数组成的小行列式给出，再乘以第三条棱的数乘系数。",
+    "A scalar triple product can be expanded term by term, and this shows how a volume changes when its edges are replaced by combinations of the old ones. Any term in which a vector appears twice vanishes, because the cross product of a vector with itself is zero. What remains is a single multiple of the original triple product. Its size is given by a small determinant of the coefficients, multiplied by any scaling of the third edge.\n\nIf $\\mathbf{u}$, $\\mathbf{v}$, $\\mathbf{w}$ give volume $5$, the edges $2\\mathbf{u} + \\mathbf{v}$, $\\mathbf{u} + \\mathbf{v}$ and $3\\mathbf{w}$ give $|2 \\cdot 1 - 1 \\cdot 1| \\cdot 3 \\cdot 5 = 15$. Check: subtracting one edge from another only shears the solid, so it keeps the volume. Taking $\\mathbf{u} + \\mathbf{v}$ from the first edge leaves $\\mathbf{u}$, then taking $\\mathbf{u}$ from the second leaves $\\mathbf{v}$, and the edges $\\mathbf{u}$, $\\mathbf{v}$, $3\\mathbf{w}$ give $3 \\cdot 5 = 15$.\n\n> **Watch out.** Since $\\mathbf{v} \\times \\mathbf{u} = -\\mathbf{u} \\times \\mathbf{v}$, the cross terms are subtracted: the factor is $ad - bc$, not $ad + bc$ or $ad$ alone. Take its absolute value, since a volume is not negative.",
+    "混合积可以逐项展开，这说明了把棱换成旧棱的组合时体积如何变化。凡是一个向量出现两次的项都等于零，因为向量与自身的叉积为零。剩下的是原混合积的一个倍数。这个倍数的大小由系数组成的小行列式给出，再乘以第三条棱的数乘系数。\n\n若 $\\mathbf{u}$、$\\mathbf{v}$、$\\mathbf{w}$ 给出体积 $5$，则棱 $2\\mathbf{u} + \\mathbf{v}$、$\\mathbf{u} + \\mathbf{v}$、$3\\mathbf{w}$ 给出 $|2 \\cdot 1 - 1 \\cdot 1| \\cdot 3 \\cdot 5 = 15$。检验：从一条棱中减去另一条棱只是把立体错切，不改变体积。从第一条棱减去 $\\mathbf{u} + \\mathbf{v}$ 得 $\\mathbf{u}$，再从第二条棱减去 $\\mathbf{u}$ 得 $\\mathbf{v}$，棱 $\\mathbf{u}$、$\\mathbf{v}$、$3\\mathbf{w}$ 给出 $3 \\cdot 5 = 15$。\n\n> **注意。** 因为 $\\mathbf{v} \\times \\mathbf{u} = -\\mathbf{u} \\times \\mathbf{v}$，交叉项要相减：系数是 $ad - bc$，不是 $ad + bc$，也不只是 $ad$。还要取绝对值，因为体积不是负数。",
   ),
   generate(rng) {
     const volume = rng.int(2, 20);
@@ -968,9 +975,15 @@ const volumeOfCombinations: KnowledgePointDef = {
     const cChoices = [-3, -2, -1, 1, 2, 3].filter((v) => a * d - b * v !== 0);
     const c = rng.pick(cChoices);
     const e = rng.int(2, 4);
-    const delta = Math.abs(a * d - b * c);
+    const det = a * d - b * c;
+    const delta = Math.abs(det);
     const answer = delta * e * volume;
     const [u, v, w] = ["\\mathbf{u}", "\\mathbf{v}", "\\mathbf{w}"];
+    const uv = `(${u} \\times ${v})`;
+    const solved = (locale: "en" | "zh-CN") => {
+      const en = locale === "en";
+      return `${stepLabel(1, "Cross the first two edges", "求前两条棱的叉积")[locale]}${en ? ` The terms with $${u} \\times ${u}$ and $${v} \\times ${v}$ vanish, and $${v} \\times ${u} = -${u} \\times ${v}$:` : `含 $${u} \\times ${u}$ 和 $${v} \\times ${v}$ 的项为零，且 $${v} \\times ${u} = -${u} \\times ${v}$：`}\n\n$$(${poly([a, u], [b, v])}) \\times (${poly([c, u], [d, v])}) = ${poly([a * d, uv], [-b * c, uv])}$$\n\n$$${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)} = ${det}$$\n\n${stepLabel(2, "Bring in the third edge", "引入第三条棱")[locale]}${en ? ` The scalar $${e}$ comes out of the dot product, so the new triple product is $${det * e}$ times the old one:` : `数 $${e}$ 可以从点积中提出，所以新的混合积是原来的 $${det * e}$ 倍：`}\n\n$$V = |${det * e}| \\cdot ${volume} = ${answer}$$\n\n${en ? `**Check.** Take $${u} = \\mathbf{i}$, $${v} = \\mathbf{j}$ and $${w} = ${volume}\\mathbf{k}$, which give volume $${volume}$. The new edges are $${vec(a, b, 0)}$, $${vec(c, d, 0)}$ and $${vec(0, 0, e * volume)}$, and their determinant expands along the last column:` : `**检验。**取 $${u} = \\mathbf{i}$、$${v} = \\mathbf{j}$、$${w} = ${volume}\\mathbf{k}$，它们给出体积 $${volume}$。新的棱是 $${vec(a, b, 0)}$、$${vec(c, d, 0)}$、$${vec(0, 0, e * volume)}$，行列式按最后一列展开：`}\n\n$$(${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)}) \\cdot ${e * volume} = ${det * e * volume}$$\n\n${en ? `Its absolute value is $${answer}$.` : `它的绝对值是 $${answer}$。`}`;
+    };
     return numberProblem({
       prompt: t(
         `The parallelepiped with edges $${u}$, $${v}$ and $${w}$ has volume $${volume}$. Find the volume of the parallelepiped with edges $${poly([a, u], [b, v])}$, $${poly([c, u], [d, v])}$ and $${e}${w}$.`,
@@ -987,10 +1000,7 @@ const volumeOfCombinations: KnowledgePointDef = {
         e * volume,
         2 * answer,
       ],
-      solution: t(
-        `Expanding the cross product of the first two edges, the terms with $${u} \\times ${u}$ and $${v} \\times ${v}$ vanish, which leaves $${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)}$ times $${u} \\times ${v}$. So the volume is $${delta} \\cdot ${e} \\cdot ${volume} = ${answer}$.`,
-        `展开前两条棱的叉积，含 $${u} \\times ${u}$ 和 $${v} \\times ${v}$ 的项都为零，剩下 $${u} \\times ${v}$ 的 $${inParens(a)} \\cdot ${inParens(d)} - ${inParens(b)} \\cdot ${inParens(c)}$ 倍。所以体积是 $${delta} \\cdot ${e} \\cdot ${volume} = ${answer}$。`,
-      ),
+      solution: t(solved("en"), solved("zh-CN")),
     });
   },
 };

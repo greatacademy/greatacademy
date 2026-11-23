@@ -188,4 +188,11 @@ export const taughtTopics: readonly string[] = [
   "the-angle-between-two-vectors",
   "calculating-a-scalar-projection",
   "calculating-a-vector-projection",
+  "the-cross-product-of-two-vectors",
+  "properties-of-the-cross-product",
+  "calculating-the-cross-product-using-determinants",
+  "finding-areas-using-the-cross-product",
+  "the-scalar-triple-product",
+  "volumes-of-parallelepipeds",
+  "finding-volumes-of-tetrahedrons-and-pyramids-using-vector-products",
 ];
