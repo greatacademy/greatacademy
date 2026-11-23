@@ -281,5 +281,8 @@ const spellingWords = phonicsTopic({
   ],
 });
 
+/** blendContrast maps each blend picture word to the spelling with one consonant of its blend dropped. */
+export const blendContrast: ReadonlyMap<string, string> = new Map(spellings.map((s) => [s.word, s.drop]));
+
 /** blendTopics are the phonics topics of words with a consonant blend. */
 export const blendTopics: readonly TopicDef[] = [readingWords, spellingWords];

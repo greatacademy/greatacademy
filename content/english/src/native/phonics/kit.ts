@@ -2,7 +2,7 @@
 
 import { type Figure, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
 import { withSounds } from "../../audio.ts";
-import { allPictureWords, picture } from "./pictures.ts";
+import { allPictureWords, allSilentEPictureWords, picture } from "./pictures.ts";
 import { wordSounds } from "./sounds.ts";
 
 /** Spellings are a picture word with near spellings: two that change the vowel, two the first letter, two the last. */
@@ -89,6 +89,30 @@ if (spellings.map((s) => s.word).join() !== allPictureWords.join()) throw new Er
 
 /** letters writes a word letter by letter: "c-a-t". */
 export const letters = (word: string) => [...word].join("-");
+
+const silentEWords = new Set(allSilentEPictureWords);
+const macrons: Record<string, string> = { a: "ā", e: "ē", i: "ī", o: "ō", u: "ū" };
+
+/** soundOut splits a phonics word into its sounds, marking long vowels in silent-e words and keeping -ce/-se together. */
+export const soundOut = (word: string): string => {
+  if (silentEWords.has(word)) {
+    const [c1 = "", v = "", c2 = ""] = word;
+    const longV = macrons[v] ?? v;
+    const ending = word.endsWith("ce") || word.endsWith("se") ? word.slice(-2) : c2;
+    return `${c1}-${longV}-${ending}`;
+  }
+  return (word.match(/sh|ch|th|ck|qu|wh|ee|ea|ai|ay|oa|ll|ss|ff|./gu) ?? []).join("-");
+};
+
+/** soundLabel formats a phonics word's sound-by-sound breakdown, noting the long vowel and silent e when present. */
+export const soundLabel = (word: string): Text => {
+  const parts = soundOut(word);
+  if (silentEWords.has(word)) {
+    const v = word[1] ?? "";
+    return t(`*${parts}* (**${v}** says its name, **e** is silent)`, `*${parts}*（**${v}** 读字母名，**e** 不发音）`);
+  }
+  return same(`*${parts}*`);
+};
 
 /** caps writes a word in capital letters. */
 export const caps = (word: string) => word.toUpperCase();

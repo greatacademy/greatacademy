@@ -260,5 +260,8 @@ const spellingWords = phonicsTopic({
   ],
 });
 
+/** vowelTeamContrast maps each vowel-team picture word to a near spelling that differs in its vowel team. */
+export const vowelTeamContrast: ReadonlyMap<string, string> = new Map(spellings.map((s) => [s.word, s.other]));
+
 /** vowelTeamTopics are the phonics topics of words with a vowel team. */
 export const vowelTeamTopics: readonly TopicDef[] = [readingWords, spellingWords];

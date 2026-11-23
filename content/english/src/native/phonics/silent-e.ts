@@ -249,5 +249,10 @@ const spellingWords = phonicsTopic({
   ],
 });
 
+const softCContrast: Record<string, string> = { mice: "miss", dice: "diss", rice: "riss" };
+
+/** silentEContrast maps each silent-e picture word to a short-vowel contrast word. */
+export const silentEContrast: ReadonlyMap<string, string> = new Map(spellings.map((s) => [s.word, softCContrast[s.word] ?? s.short]));
+
 /** silentETopics are the phonics topics of words with a silent e. */
 export const silentETopics: readonly TopicDef[] = [readingWords, spellingWords];

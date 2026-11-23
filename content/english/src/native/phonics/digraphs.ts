@@ -271,5 +271,24 @@ const spellingWords = phonicsTopic({
   ],
 });
 
+const ckContrast: Record<string, string> = {
+  duck: "dug",
+  sock: "sog",
+  rock: "rod",
+  lock: "log",
+  neck: "net",
+  sack: "sad",
+  tick: "tin",
+  clock: "clog",
+  truck: "track",
+  brick: "brim",
+  kick: "kid",
+};
+
+/** digraphContrast maps each digraph picture word to a near spelling with a different sound. */
+export const digraphContrast: ReadonlyMap<string, string> = new Map(
+  spellings.map((s) => [s.word, ckContrast[s.word] ?? (s.word === "chick" ? s.swap : s.half)]),
+);
+
 /** digraphTopics are the phonics topics of words with a digraph. */
 export const digraphTopics: readonly TopicDef[] = [readingWords, spellingWords];
