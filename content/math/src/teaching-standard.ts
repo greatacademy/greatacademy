@@ -140,4 +140,12 @@ export const taughtTopics: readonly string[] = [
   "modeling-with-arithmetic-series",
   "the-sum-of-a-finite-geometric-series",
   "the-sum-of-the-first-n-terms-of-a-geometric-series",
+  "introduction-to-vectors",
+  "the-triangle-law-for-the-addition-of-two-vectors",
+  "the-magnitude-of-a-vector",
+  "problem-solving-using-vector-diagrams",
+  "parallel-vectors",
+  "unit-vectors",
+  "linear-combinations-of-vectors-and-their-properties",
+  "describing-the-position-vector-of-a-point-using-known-vectors",
 ];

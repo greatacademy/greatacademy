@@ -43,8 +43,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         "equal-vectors-in-a-parallelogram",
         ["Equal vectors in a parallelogram", "平行四边形中的相等向量"],
         [
-          "Two vectors are equal when they have the same length and direction, wherever they start. Opposite sides of a parallelogram, read in the same direction, are therefore equal vectors.",
-          "两个向量长度和方向都相同就相等，不管起点在哪里。所以平行四边形的对边，按相同方向读，是相等的向量。",
+          "Two vectors are equal when they have the same length and direction, wherever they start. Opposite sides of a parallelogram, read in the same direction, are therefore equal vectors.\n\nIn parallelogram $PQRS$: $\\vec{PQ} = \\vec{SR}$ and $\\vec{QR} = \\vec{PS}$. Check: both paths from $P$ to $R$ agree, $\\vec{PQ} + \\vec{QR} = \\vec{PS} + \\vec{SR}$.\n\n> **Watch out.** Read the opposite side in the same direction. In $ABCD$ the side opposite $\\vec{AB}$ is $\\vec{DC}$, while $\\vec{CD}$ points the other way and equals $-\\vec{AB}$.",
+          "两个向量长度和方向都相同就相等，不管起点在哪里。所以平行四边形的对边，按相同方向读，是相等的向量。\n\n在平行四边形 $PQRS$ 中：$\\vec{PQ} = \\vec{SR}$，$\\vec{QR} = \\vec{PS}$。检验：从 $P$ 到 $R$ 的两条路径一致，$\\vec{PQ} + \\vec{QR} = \\vec{PS} + \\vec{SR}$。\n\n> **注意。** 对边要按相同方向读。在 $ABCD$ 中，与 $\\vec{AB}$ 相对的是 $\\vec{DC}$，而 $\\vec{CD}$ 方向相反，等于 $-\\vec{AB}$。",
         ],
         (rng) => {
           const [A, B, C, D] = rng.sample(["A", "B", "C", "D", "P", "Q", "R", "S", "K", "L", "M", "N"], 4) as [
@@ -63,8 +63,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
               `\\vec{${D}${C}}`,
               [`\\vec{${C}${D}}`, `\\vec{${A}${D}}`, `\\vec{${B}${C}}`],
               [
-                `$\\vec{${D}${C}}$ runs along the opposite side in the same direction as $\\vec{${A}${B}}$.`,
-                `$\\vec{${D}${C}}$ 沿对边，方向与 $\\vec{${A}${B}}$ 相同。`,
+                `**Step 1: Find the opposite side.** Going round $${A}${B}${C}${D}$, the side opposite $${A}${B}$ is $${C}${D}$. It is parallel to $${A}${B}$ and just as long.\n\n**Step 2: Match the direction.** $\\vec{${A}${B}}$ goes from the first vertex to the second. Along the opposite side the same direction runs from $${D}$, opposite $${A}$, to $${C}$, opposite $${B}$, so the equal vector is $\\vec{${D}${C}}$.\n\n**Check.** If $\\vec{${A}${B}} = \\vec{${D}${C}}$, the two paths from $${A}$ to $${C}$ agree: $\\vec{${A}${B}} + \\vec{${B}${C}} = \\vec{${A}${D}} + \\vec{${D}${C}}$, since $\\vec{${B}${C}} = \\vec{${A}${D}}$ as well.`,
+                `**第一步：找对边。**绕 $${A}${B}${C}${D}$ 一圈，与 $${A}${B}$ 相对的边是 $${C}${D}$。它与 $${A}${B}$ 平行且等长。\n\n**第二步：对齐方向。**$\\vec{${A}${B}}$ 从第一个顶点指向第二个顶点。在对边上，同样的方向是从 $${D}$（与 $${A}$ 相对）指向 $${C}$（与 $${B}$ 相对），所以相等的向量是 $\\vec{${D}${C}}$。\n\n**检验。**若 $\\vec{${A}${B}} = \\vec{${D}${C}}$，从 $${A}$ 到 $${C}$ 的两条路径一致：$\\vec{${A}${B}} + \\vec{${B}${C}} = \\vec{${A}${D}} + \\vec{${D}${C}}$，因为 $\\vec{${B}${C}} = \\vec{${A}${D}}$ 也成立。`,
               ],
             ),
             [
@@ -95,8 +95,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-longest-and-shortest-sum",
       ["The longest and shortest sum", "和的最大值和最小值"],
       [
-        "The sum of two vectors is longest when they point the same way and shortest when they point in opposite ways. Every other direction gives a length between these two extremes.",
-        "两个向量方向相同时和最长，方向相反时和最短。其他方向的和，长度都在这两个极值之间。",
+        "The sum of two vectors is longest when they point the same way and shortest when they point in opposite ways. Every other direction gives a length between these two extremes.\n\nFor magnitudes $5$ and $8$: pointing the same way the sum has length $5 + 8 = 13$, and pointing in opposite ways it has length $8 - 5 = 3$. Check: any triangle with sides $5$ and $8$ has its third side between $3$ and $13$.\n\n> **Watch out.** The least magnitude is the difference $|a - b|$, not the smaller of the two magnitudes, and it is $0$ when the magnitudes are equal.",
+        "两个向量方向相同时和最长，方向相反时和最短。其他方向的和，长度都在这两个极值之间。\n\n模为 $5$ 和 $8$ 时：方向相同，和的长度是 $5 + 8 = 13$；方向相反，长度是 $8 - 5 = 3$。检验：两边为 $5$ 和 $8$ 的三角形，第三边在 $3$ 和 $13$ 之间。\n\n> **注意。** 最小值是差 $|a - b|$，不是两个模中较小的那个；两个模相等时最小值是 $0$。",
       ],
       (rng) => {
         const a = rng.int(3, 30);
@@ -110,12 +110,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           most ? a + b : Math.abs(a - b),
           most ? [Math.abs(a - b), Math.max(a, b), a * b] : [a + b, Math.min(a, b), Math.abs(a - b) + 1],
           [
-            most
-              ? `By the triangle law, the sum is longest when the vectors point the same way: $${a} + ${b} = ${a + b}$.`
-              : `By the triangle law, the sum is shortest when the vectors point in opposite ways: $|${a} - ${b}| = ${Math.abs(a - b)}$.`,
-            most
-              ? `由三角形法则，方向相同时和最长：$${a} + ${b} = ${a + b}$。`
-              : `由三角形法则，方向相反时和最短：$|${a} - ${b}| = ${Math.abs(a - b)}$。`,
+            `**Step 1: Choose the directions.** By the triangle law the sum closes a triangle with sides ${a} and ${b}. It is ${most ? "longest when the two vectors point the same way, so that the triangle lies flat with the sides end to end" : "shortest when the two vectors point in opposite ways, so that the second side runs back over the first"}.\n\n**Step 2: Combine the lengths.** ${most ? `The lengths add: $${a} + ${b} = ${a + b}$.` : `The shorter is taken from the longer: $|${a} - ${b}| = ${Math.abs(a - b)}$.`}\n\n**Check.** The third side of a triangle with sides ${a} and ${b} lies between $${Math.abs(a - b)}$ and $${a + b}$, so the ${most ? "greatest" : "least"} possible value is $${most ? a + b : Math.abs(a - b)}$.`,
+            `**第一步：选方向。**由三角形法则，和与两边 ${a}、${b} 构成三角形。${most ? "两个向量方向相同时和最长，此时三角形压平，两边首尾相接成一条线" : "两个向量方向相反时和最短，此时第二条边沿第一条边折回"}。\n\n**第二步：合并长度。**${most ? `长度相加：$${a} + ${b} = ${a + b}$。` : `长的减去短的：$|${a} - ${b}| = ${Math.abs(a - b)}$。`}\n\n**检验。**两边为 ${a} 和 ${b} 的三角形，第三边在 $${Math.abs(a - b)}$ 和 $${a + b}$ 之间，所以${most ? "最大" : "最小"}可能值是 $${most ? a + b : Math.abs(a - b)}$。`,
           ],
         );
       },
@@ -127,8 +123,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         "perpendicular-vectors-and-their-sum",
         ["Perpendicular vectors and their sum", "垂直向量及其和"],
         [
-          "When two vectors are perpendicular, the triangle law gives a right triangle. So the magnitude of the sum comes from the Pythagorean theorem and not from adding the magnitudes.",
-          "两个向量垂直时，三角形法则得到直角三角形。所以和的模由勾股定理求，而不是把模相加。",
+          "When two vectors are perpendicular, the triangle law gives a right triangle. So the magnitude of the sum comes from the Pythagorean theorem and not from adding the magnitudes.\n\nFor perpendicular vectors of magnitudes $6$ and $8$: the sum is the hypotenuse, $\\sqrt{6^{2} + 8^{2}} = \\sqrt{100} = 10$. Check: $10$ lies between $8 - 6 = 2$ and $8 + 6 = 14$, as the third side of any triangle must.\n\n> **Watch out.** Square the magnitudes before adding and take the square root at the end: $\\|\\mathbf{u} + \\mathbf{v}\\|$ is $10$ here, not $6 + 8 = 14$.",
+          "两个向量垂直时，三角形法则得到直角三角形。所以和的模由勾股定理求，而不是把模相加。\n\n模为 $6$ 和 $8$ 的两个垂直向量：和是斜边，$\\sqrt{6^{2} + 8^{2}} = \\sqrt{100} = 10$。检验：$10$ 在 $8 - 6 = 2$ 和 $8 + 6 = 14$ 之间，任何三角形的第三边都应如此。\n\n> **注意。** 先把模平方再相加，最后开平方：这里 $\\|\\mathbf{u} + \\mathbf{v}\\|$ 是 $10$，不是 $6 + 8 = 14$。",
         ],
         (rng) => {
           const [p, q, r] = rng.pick(triples);
@@ -141,7 +137,10 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
             ],
             c,
             [a + b, b - a, a * b],
-            [`$\\sqrt{${a}^{2} + ${b}^{2}} = ${c}$.`, `$\\sqrt{${a}^{2} + ${b}^{2}} = ${c}$。`],
+            [
+              `**Step 1: Draw the triangle.** Place $\\mathbf{v}$ at the end of $\\mathbf{u}$. The two sides meet at a right angle, and $\\mathbf{u} + \\mathbf{v}$ is the hypotenuse.\n\n**Step 2: Use the Pythagorean theorem.**\n\n$$\\|\\mathbf{u} + \\mathbf{v}\\| = \\sqrt{${a}^{2} + ${b}^{2}} = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${c * c}} = ${c}$$\n\n**Check.** $${c}^{2} = ${c * c} = ${a * a} + ${b * b}$, and $${c}$ lies between $${Math.abs(b - a)}$ and $${a + b}$, as the third side of a triangle must.`,
+              `**第一步：画三角形。**把 $\\mathbf{v}$ 接在 $\\mathbf{u}$ 的终点。两边成直角，$\\mathbf{u} + \\mathbf{v}$ 是斜边。\n\n**第二步：用勾股定理。**\n\n$$\\|\\mathbf{u} + \\mathbf{v}\\| = \\sqrt{${a}^{2} + ${b}^{2}} = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${c * c}} = ${c}$$\n\n**检验。**$${c}^{2} = ${c * c} = ${a * a} + ${b * b}$，且 $${c}$ 在 $${Math.abs(b - a)}$ 和 $${a + b}$ 之间，三角形的第三边应如此。`,
+            ],
           );
         },
       ),
@@ -153,8 +152,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "a-point-dividing-a-side",
       ["A point dividing a side", "分一条边的点"],
       [
-        "A point that cuts a side in a given ratio gives a fraction of that side's vector. To reach it, walk to the start of the side and then along that fraction of the side.",
-        "按给定比分一条边的点，对应这条边向量的若干分之几。要到达它，先走到这条边的起点，再沿这条边走这个分数。",
+        "A point that cuts a side in a given ratio gives a fraction of that side's vector. To reach it, walk to the start of the side and then along that fraction of the side.\n\nIn $\\triangle OAB$ with $AP : PB = 1 : 3$: $P$ is $1/4$ of the way from $A$ to $B$, so $\\vec{OP} = \\mathbf{a} + \\tfrac{1}{4}(\\mathbf{b} - \\mathbf{a}) = \\tfrac{3}{4}\\mathbf{a} + \\tfrac{1}{4}\\mathbf{b}$. Check: the coefficients add to $1$, and $P$ is nearer $A$, so $\\mathbf{a}$ has the larger coefficient.\n\n> **Watch out.** The fraction of the side is the first part over the whole, $AP : AB = 1 : 4$, not $1/3$. Each end gets the coefficient of the part on the far side of $P$.",
+        "按给定比分一条边的点，对应这条边向量的若干分之几。要到达它，先走到这条边的起点，再沿这条边走这个分数。\n\n在 $\\triangle OAB$ 中，$AP : PB = 1 : 3$：$P$ 在从 $A$ 到 $B$ 的 $1/4$ 处，所以 $\\vec{OP} = \\mathbf{a} + \\tfrac{1}{4}(\\mathbf{b} - \\mathbf{a}) = \\tfrac{3}{4}\\mathbf{a} + \\tfrac{1}{4}\\mathbf{b}$。检验：系数之和为 $1$，且 $P$ 离 $A$ 较近，所以 $\\mathbf{a}$ 的系数较大。\n\n> **注意。** 边上的分数是前一段比整条边，$AP : AB = 1 : 4$，不是 $1/3$。每个端点的系数是 $P$ 另一侧那一段所占的份额。",
       ],
       (rng) => {
         const [p, q] = rng.pick<[number, number]>([
@@ -188,17 +187,40 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         const t = p + q;
         const first = Q.of(q, t).toLatex();
         const second = Q.of(p, t).toLatex();
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `In $\\triangle OAB$, $\\vec{OA} = \\mathbf{a}$ and $\\vec{OB} = \\mathbf{b}$. Point $P$ on $AB$ has $AP : PB = ${p} : ${q}$. Find $\\vec{OP}$.`,
+              `在 $\\triangle OAB$ 中，$\\vec{OA} = \\mathbf{a}$，$\\vec{OB} = \\mathbf{b}$。$AB$ 上的点 $P$ 满足 $AP : PB = ${p} : ${q}$。求 $\\vec{OP}$。`,
+            ],
+            `${first}\\mathbf{a} + ${second}\\mathbf{b}`,
+            [
+              `${second}\\mathbf{a} + ${first}\\mathbf{b}`,
+              `${first}\\mathbf{a} - ${second}\\mathbf{b}`,
+              `${p}\\mathbf{a} + ${q}\\mathbf{b}`,
+            ],
+            [
+              `**Step 1: Write the side as a vector.** Go from $A$ back to $O$ and then to $B$:\n\n$$\\vec{AB} = \\vec{AO} + \\vec{OB} = \\mathbf{b} - \\mathbf{a}$$\n\n**Step 2: Walk to $P$.** $AP : PB = ${p} : ${q}$ cuts $AB$ into ${t} equal parts, and $P$ is ${p} of them from $A$, so $\\vec{AP} = ${second}\\vec{AB}$:\n\n$$\\vec{OP} = \\mathbf{a} + ${second}(\\mathbf{b} - \\mathbf{a}) = ${first}\\mathbf{a} + ${second}\\mathbf{b}$$\n\n**Check.** A point on $AB$ has coefficients that add to $1$, and these do:\n\n$$${first} + ${second} = 1$$\n\nThe rest of the side is $\\vec{PB} = \\mathbf{b} - \\vec{OP}$, so the two parts are in the given ratio:\n\n$$\\vec{PB} = ${first}(\\mathbf{b} - \\mathbf{a}), \\quad AP : PB = ${second} : ${first} = ${p} : ${q}$$`,
+              `**第一步：把边写成向量。**从 $A$ 回到 $O$，再到 $B$：\n\n$$\\vec{AB} = \\vec{AO} + \\vec{OB} = \\mathbf{b} - \\mathbf{a}$$\n\n**第二步：走到 $P$。**$AP : PB = ${p} : ${q}$ 把 $AB$ 分成 ${t} 等份，$P$ 离 $A$ 有 ${p} 份，所以 $\\vec{AP} = ${second}\\vec{AB}$：\n\n$$\\vec{OP} = \\mathbf{a} + ${second}(\\mathbf{b} - \\mathbf{a}) = ${first}\\mathbf{a} + ${second}\\mathbf{b}$$\n\n**检验。**$AB$ 上的点的系数之和为 $1$，这里正是如此：\n\n$$${first} + ${second} = 1$$\n\n边的其余部分是 $\\vec{PB} = \\mathbf{b} - \\vec{OP}$，所以两段之比正是所给的比：\n\n$$\\vec{PB} = ${first}(\\mathbf{b} - \\mathbf{a}), \\quad AP : PB = ${second} : ${first} = ${p} : ${q}$$`,
+            ],
+          ),
           [
-            `In $\\triangle OAB$, $\\vec{OA} = \\mathbf{a}$ and $\\vec{OB} = \\mathbf{b}$. Point $P$ on $AB$ has $AP : PB = ${p} : ${q}$. Find $\\vec{OP}$.`,
-            `在 $\\triangle OAB$ 中，$\\vec{OA} = \\mathbf{a}$，$\\vec{OB} = \\mathbf{b}$。$AB$ 上的点 $P$ 满足 $AP : PB = ${p} : ${q}$。求 $\\vec{OP}$。`,
-          ],
-          `${first}\\mathbf{a} + ${second}\\mathbf{b}`,
-          [`${second}\\mathbf{a} + ${first}\\mathbf{b}`, `${first}\\mathbf{a} - ${second}\\mathbf{b}`, `${p}\\mathbf{a} + ${q}\\mathbf{b}`],
-          [
-            `$\\vec{OP} = \\mathbf{a} + ${second}(\\mathbf{b} - \\mathbf{a})$, which collects to the result.`,
-            `$\\vec{OP} = \\mathbf{a} + ${second}(\\mathbf{b} - \\mathbf{a})$，合并后得到结果。`,
+            [
+              `$${second}\\mathbf{a} + ${first}\\mathbf{b}$`,
+              "The fractions are swapped: each end gets the share of the part on the far side of $P$, so $\\mathbf{a}$ gets $PB : AB$.",
+              "两个分数对调了：每个端点的系数是 $P$ 另一侧那一段的份额，所以 $\\mathbf{a}$ 的系数是 $PB : AB$。",
+            ],
+            [
+              `$${first}\\mathbf{a} - ${second}\\mathbf{b}$`,
+              "Expanding $\\mathbf{a} + k(\\mathbf{b} - \\mathbf{a})$ gives $+k\\mathbf{b}$; the minus sign belongs to the $\\mathbf{a}$ inside the bracket.",
+              "展开 $\\mathbf{a} + k(\\mathbf{b} - \\mathbf{a})$ 得 $+k\\mathbf{b}$；负号属于括号里的 $\\mathbf{a}$。",
+            ],
+            [
+              `$${p}\\mathbf{a} + ${q}\\mathbf{b}$`,
+              "The ratio numbers are not the coefficients; they must be divided by the whole and their roles swapped, so that the coefficients add to $1$.",
+              "比的数不是系数；要除以总份数并交换位置，使系数之和为 $1$。",
+            ],
           ],
         );
       },
@@ -209,24 +231,43 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "a-vector-of-a-given-length",
       ["A vector of a given length", "给定长度的向量"],
       [
-        "A unit vector carries only a direction, so scaling it by a number gives a vector of that length in that direction. This is how a direction and a length combine into components.",
-        "单位向量只含方向，所以乘一个数就得到这个方向上这个长度的向量。方向和长度就是这样合成分量的。",
+        "A unit vector carries only a direction, so scaling it by a number gives a vector of that length in that direction. This is how a direction and a length combine into components.\n\nFor length $10$ along $\\langle 3, 4 \\rangle$: the magnitude is $5$, so multiply by $10 \\div 5 = 2$ to get $\\langle 6, 8 \\rangle$. Check: $\\sqrt{36 + 64} = 10$, and $6 : 8 = 3 : 4$, so the direction is unchanged.\n\n> **Watch out.** Divide by the magnitude before multiplying by the new length. $10\\langle 3, 4 \\rangle = \\langle 30, 40 \\rangle$ points the right way but has length $50$.",
+        "单位向量只含方向，所以乘一个数就得到这个方向上这个长度的向量。方向和长度就是这样合成分量的。\n\n沿 $\\langle 3, 4 \\rangle$ 方向、长度为 $10$：模是 $5$，所以乘 $10 \\div 5 = 2$，得 $\\langle 6, 8 \\rangle$。检验：$\\sqrt{36 + 64} = 10$，且 $6 : 8 = 3 : 4$，方向不变。\n\n> **注意。** 先除以模长，再乘以新长度。$10\\langle 3, 4 \\rangle = \\langle 30, 40 \\rangle$ 方向对，但长度是 $50$。",
       ],
       (rng) => {
         const [a, b, c] = rng.pick(triples);
         const len = c * rng.int(2, 6);
         const k = len / c;
-        return chooseFilled(
-          rng,
+        return reasoned(
+          chooseFilled(
+            rng,
+            [
+              `Find the vector of magnitude ${len} in the same direction as $${vec(a, b)}$.`,
+              `求与 $${vec(a, b)}$ 同方向、模为 ${len} 的向量。`,
+            ],
+            vec(a * k, b * k),
+            [vec(a * len, b * len), vec(b * k, a * k), vec(a + len, b + len)],
+            [
+              `**Step 1: Find the magnitude.** $\\|${vec(a, b)}\\| = \\sqrt{${a}^{2} + ${b}^{2}} = \\sqrt{${a * a + b * b}} = ${c}$.\n\n**Step 2: Scale to the new length.** Dividing by ${c} gives a unit vector, and multiplying that by ${len} gives length ${len}, so multiply by $${len} \\div ${c} = ${k}$:\n\n$$${k}${vec(a, b)} = ${vec(a * k, b * k)}$$\n\n**Check.** The length is $\\sqrt{${a * k}^{2} + ${b * k}^{2}} = \\sqrt{${(a * k) ** 2 + (b * k) ** 2}} = ${len}$, and the components keep the ratio $${a} : ${b}$, so the direction is unchanged.`,
+              `**第一步：求模长。**$\\|${vec(a, b)}\\| = \\sqrt{${a}^{2} + ${b}^{2}} = \\sqrt{${a * a + b * b}} = ${c}$。\n\n**第二步：伸缩到新长度。**除以 ${c} 得到单位向量，再乘 ${len} 得到长度 ${len}，所以乘 $${len} \\div ${c} = ${k}$：\n\n$$${k}${vec(a, b)} = ${vec(a * k, b * k)}$$\n\n**检验。**长度是 $\\sqrt{${a * k}^{2} + ${b * k}^{2}} = \\sqrt{${(a * k) ** 2 + (b * k) ** 2}} = ${len}$，且分量之比仍是 $${a} : ${b}$，方向不变。`,
+            ],
+          ),
           [
-            `Find the vector of magnitude ${len} in the same direction as $${vec(a, b)}$.`,
-            `求与 $${vec(a, b)}$ 同方向、模为 ${len} 的向量。`,
-          ],
-          vec(a * k, b * k),
-          [vec(a * len, b * len), vec(b * k, a * k), vec(a + len, b + len)],
-          [
-            `$${vec(a, b)}$ has magnitude ${c}, so multiply it by $${len} \\div ${c} = ${k}$.`,
-            `$${vec(a, b)}$ 的模是 ${c}，所以乘 $${len} \\div ${c} = ${k}$。`,
+            [
+              `$${vec(a * len, b * len)}$`,
+              `This multiplies by ${len} without first dividing by the magnitude ${c}, so its length is ${c * len}.`,
+              `这直接乘了 ${len}，没有先除以模长 ${c}，所以长度是 ${c * len}。`,
+            ],
+            [
+              `$${vec(b * k, a * k)}$`,
+              "The components are swapped, so this vector points in a different direction.",
+              "分量对调了，所以这个向量的方向不同。",
+            ],
+            [
+              `$${vec(a + len, b + len)}$`,
+              "Adding the length to each component does not scale the vector; it changes its direction and gives the wrong length.",
+              "给每个分量加上长度并不是伸缩向量；这会改变方向，长度也不对。",
+            ],
           ],
         );
       },
