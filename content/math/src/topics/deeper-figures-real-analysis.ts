@@ -4,17 +4,37 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, PlaneView, Point } from "@ga/subject-math";
-import { Q, svgDocument } from "@ga/subject-math";
+import { dec, Q, svgDocument } from "@ga/subject-math";
 import { calculusDrawings1 } from "../explanation-drawings-calculus-1.ts";
 import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
+import { stepLabel } from "../solution-kit.ts";
 import { ask, choose, observed, type Pair, point } from "../university-kit.ts";
+import { table } from "./calculus-common.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
 /** fig wraps marks in a figure with its description in both languages. */
 const fig = (v: PlaneView, marks: readonly PlaneMark[], [en, zh]: Pair) => drawn(v, marks, t(en, zh));
+
+/** walk writes a solution as labelled steps, each a title and what it says in both languages, followed by a check that takes a second route. */
+function walk(parts: readonly (readonly [en: string, zh: string, sayEn: string, sayZh: string])[], check: Pair): Pair {
+  const write = (zh: boolean) =>
+    `${parts.map(([en, z, se, sz], i) => `${stepLabel(i + 1, en, z)[zh ? "zh-CN" : "en"]} ${zh ? sz : se}`).join("\n\n")}\n\n${zh ? `**检验。** ${check[1]}` : `**Check.** ${check[0]}`}`;
+  return [write(false), write(true)];
+}
+
+/** num writes a value rounded to three decimal places, without trailing zeros. */
+const num = (v: number) => dec(Q.of(Math.round(v * 1000) || 0, 1000));
+
+/** around gives a − 0.01, a − 0.001, a + 0.001 and a + 0.01, rounded to three decimal places. */
+const around = (a: number) => [-0.01, -0.001, 0.001, 0.01].map((d) => Math.round((a + d) * 1000) / 1000);
+
+/** valueTable tabulates functions at some x-values to three decimal places; each row is a name in LaTeX and a function. */
+function valueTable(xs: readonly number[], rows: readonly (readonly [string, (x: number) => number])[]): string {
+  return table(["$x$", ...xs.map((x) => `$${x}$`)], ...rows.map(([name, f]) => [`$${name}$`, ...xs.map((x) => `$${num(f(x))}$`)]));
+}
 
 /** dots draws a list of values as points above the positions 1, 2, 3 and so on. */
 const dots = (values: readonly number[]): PlaneMark[] => values.map((v, i): PlaneMark => ({ kind: "point", at: [i + 1, v], accent: true }));
@@ -144,8 +164,8 @@ const holeValue = {
     "the-value-that-repairs-a-hole",
     ["The value that repairs a hole", "补上空洞的值"],
     [
-      "A function is continuous at a point when its limit there exists and equals its value. If the graph has a hole at $a$ and a separate dot, the limit is the height of the hole, whatever the dot does. To repair the discontinuity, the function value must be moved to the height of the hole.",
-      "函数在一点连续，是指它在该点的极限存在并等于函数值。如果图在 $a$ 处有空洞，另有一个单独的点，那么极限是空洞的高度，与那个点无关。要消除间断，函数值必须移到空洞的高度。",
+      "A function is continuous at a point when its limit there exists and equals its value. If the graph has a hole at $a$ and a separate dot, the limit is the height of the hole, whatever the dot does. To repair the discontinuity, the function value must be moved to the height of the hole.\n\nFor example, if the curve runs into an open circle at $(1, 3)$ and a filled dot sits at $(1, 5)$, the limit at $1$ is $3$ and $f(1) = 5$, so $f(1)$ must be changed to $3$.\n\nCheck: if the curve is $y = x + 2$ near $x = 1$, its heights at $0.99$ and $1.01$ are $2.99$ and $3.01$, close to $3$ and not to $5$.\n\n> **Watch out.** The filled dot is the current value, not the limit. The limit is read from the open circle that the curve runs into.",
+      "函数在一点连续，是指它在该点的极限存在并等于函数值。如果图在 $a$ 处有空洞，另有一个单独的点，那么极限是空洞的高度，与那个点无关。要消除间断，函数值必须移到空洞的高度。\n\n例如，若曲线通向 $(1, 3)$ 处的空心圆，而实心点在 $(1, 5)$，那么在 $1$ 处的极限是 $3$，$f(1) = 5$，所以 $f(1)$ 必须改为 $3$。\n\n检验：若曲线在 $x = 1$ 附近是 $y = x + 2$，它在 $0.99$ 和 $1.01$ 处的高度是 $2.99$ 和 $3.01$，接近 $3$ 而不是 $5$。\n\n> **注意。** 实心点是当前的函数值，不是极限。极限要从曲线所通向的空心圆读出。",
     ],
     (rng) => {
       const a = rng.int(-3, 3);
@@ -155,6 +175,7 @@ const holeValue = {
       const slope = rng.pick([-1, -0.5, 0.5, 1]);
       const bend = rng.pick([-0.2, 0, 0.15]);
       const f = (x: number) => hole + slope * (x - a) + bend * (x - a) ** 2;
+      const rows = valueTable(around(a), [["f(x)", f]]);
       return ask(
         [
           "The graph of $f$ has one point of discontinuity. To what value must $f$ be changed at that point to make it continuous there?",
@@ -162,10 +183,26 @@ const holeValue = {
         ],
         hole,
         [dot, a === hole || a === dot ? hole + 1 : a, hole - 1],
-        [
-          `Approaching from both sides, the graph heads to the open circle at height $${hole}$, so that is the limit. The separate dot at height $${dot}$ is the current value, which must be moved to match.`,
-          `从两侧趋近时，图都趋向高度 $${hole}$ 的空心圆，所以这就是极限。高度 $${dot}$ 的单独的点是当前的函数值，必须移过去才能相等。`,
-        ],
+        walk(
+          [
+            [
+              "Read the limit",
+              "读出极限",
+              `Approaching $x = ${a}$ from both sides, the graph heads to the open circle at height $${hole}$, so the limit is $${hole}$.`,
+              `从两侧趋近 $x = ${a}$ 时，图都趋向高度 $${hole}$ 的空心圆，所以极限是 $${hole}$。`,
+            ],
+            [
+              "Compare with the value",
+              "与函数值比较",
+              `The separate dot gives $f(${a}) = ${dot}$, the current value. It must be moved to $${hole}$ to match the limit.`,
+              `单独的点给出 $f(${a}) = ${dot}$，这是当前的函数值。必须把它移到 $${hole}$ 才能与极限相等。`,
+            ],
+          ],
+          [
+            `Read the heights of the drawn curve just beside $x = ${a}$:\n\n${rows}\n\nThey close in on $${hole}$, not on $${dot}$, so $${hole}$ is the value that repairs the hole.`,
+            `读出图中曲线在 $x = ${a}$ 两旁的高度：\n\n${rows}\n\n这些值逼近 $${hole}$ 而不是 $${dot}$，所以补上空洞的值是 $${hole}$。`,
+          ],
+        ),
         fig(
           { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
           [
@@ -359,8 +396,8 @@ const crossings = {
     "intermediate-values-at-a-drawn-level",
     ["Intermediate values at a drawn level", "图中水平线处的介值"],
     [
-      "If a continuous function is below a level at one point and above it at another, the intermediate value theorem gives a solution between them. Each change of side forces a separate crossing. Counting the changes of side along a graph gives the number of solutions the theorem guarantees, and the drawn graph shows how the sides change.",
-      "如果连续函数在一点低于某水平，在另一点高于它，介值定理就保证它们之间有解。每换一次边都迫使出现一次单独的穿越。沿着图数换边的次数，就得到定理保证的解的个数，而图显示了换边的情况。",
+      "If a continuous function is below a level at one point and above it at another, the intermediate value theorem gives a solution between them. Each change of side forces a separate crossing. Counting the changes of side along a graph gives the number of solutions the theorem guarantees, and the drawn graph shows how the sides change.\n\nFor example, straight pieces through the heights $2, -1, 3, 4$ against the level $0$ go above, below, above, above. The side changes twice, so $f(x) = 0$ has two solutions.\n\nCheck: the piece from $2$ to $-1$ crosses $0$, the piece from $-1$ to $3$ crosses it again, and the piece from $3$ to $4$ stays above.\n\n> **Watch out.** Count changes of side, not pieces or peaks. A piece that stays on one side of the level, however steep, gives no solution.",
+      "如果连续函数在一点低于某水平，在另一点高于它，介值定理就保证它们之间有解。每换一次边都迫使出现一次单独的穿越。沿着图数换边的次数，就得到定理保证的解的个数，而图显示了换边的情况。\n\n例如，经过高度 $2, -1, 3, 4$ 的直线段相对于水平 $0$ 依次在上、下、上、上。换边两次，所以 $f(x) = 0$ 有两个解。\n\n检验：从 $2$ 到 $-1$ 的一段穿过 $0$，从 $-1$ 到 $3$ 的一段再次穿过，从 $3$ 到 $4$ 的一段始终在上方。\n\n> **注意。** 要数换边的次数，而不是线段或峰的个数。始终在水平线同一侧的线段，无论多陡，都不给出解。",
     ],
     (rng) => {
       const n = rng.int(5, 8);
@@ -369,6 +406,11 @@ const crossings = {
       const adjusted = h.map((v) => (v === level ? v + 1 : v));
       let count = 0;
       for (let i = 0; i < n; i++) if (((adjusted[i] as number) - level) * ((adjusted[i + 1] as number) - level) < 0) count++;
+      const xs = adjusted.map((_, i) => i);
+      const rows = valueTable(xs, [
+        ["f(x)", (x) => adjusted[x] as number],
+        ["f(x) - k", (x) => (adjusted[x] as number) - level],
+      ]);
       return ask(
         [
           "The continuous function drawn is defined on the whole interval shown, and the dashed line is a level $k$. How many solutions does $f(x) = k$ have on the interval?",
@@ -376,10 +418,26 @@ const crossings = {
         ],
         count,
         [count + 1, count === 0 ? 2 : count - 1, n],
-        [
-          `The graph is made of straight pieces, so each piece meets the level at most once, and it does so exactly when it changes side. There are $${count}$ such changes.`,
-          `图由直线段组成，所以每段至多与水平线相交一次，恰好在换边时相交。这样的换边有 $${count}$ 次。`,
-        ],
+        walk(
+          [
+            [
+              "Read the pieces",
+              "读出各段",
+              `The graph is made of straight pieces between $x = 0$ and $x = ${n}$, and the level is $k = ${level}$. Each piece meets the level at most once, and does so exactly when it changes side.`,
+              `图由 $x = 0$ 到 $x = ${n}$ 之间的直线段组成，水平是 $k = ${level}$。每段至多与水平线相交一次，恰好在换边时相交。`,
+            ],
+            [
+              "Count the changes of side",
+              "数换边的次数",
+              `Going from left to right, the graph changes side $${count}$ times, so $f(x) = k$ has $${count}$ solutions.`,
+              `从左到右，图换边 $${count}$ 次，所以 $f(x) = k$ 有 $${count}$ 个解。`,
+            ],
+          ],
+          [
+            `Read the height at each corner and subtract the level:\n\n${rows}\n\nThe sign of $f(x) - k$ changes between adjacent corners exactly $${count}$ times, once for each solution.`,
+            `读出每个拐点的高度并减去水平值：\n\n${rows}\n\n$f(x) - k$ 的符号在相邻拐点之间恰好改变 $${count}$ 次，每次对应一个解。`,
+          ],
+        ),
         fig(
           { xMin: -1, xMax: 9, yMin: -5, yMax: 7 },
           [

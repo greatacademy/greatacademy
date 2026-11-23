@@ -4,11 +4,14 @@
 import type { Figure, KnowledgePointDef, Text } from "@ga/content";
 import { t } from "@ga/content";
 import type { PlaneMark, Point } from "@ga/subject-math";
-import { Q, svgDocument } from "@ga/subject-math";
+import { dec, Q, svgDocument } from "@ga/subject-math";
 import { proofDrawings1 } from "../explanation-drawings-methods-of-proof-1.ts";
 import { numberTheoryDrawings1 } from "../explanation-drawings-number-theory-1.ts";
 import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
+import { explainedChoice } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
+import { table } from "./calculus-common.ts";
 import { arrowLine, drawn, label, node, numeric, pickChoice, ring } from "./figure-reading-more.ts";
 
 /** math writes the same formula as an option in both languages. */
@@ -519,8 +522,8 @@ const continuityFailure: KnowledgePointDef = {
   id: "which-condition-of-continuity-fails",
   title: t("Which condition of continuity fails", "连续性的哪个条件不成立"),
   explanation: t(
-    "Continuity at $a$ has three parts: $f(a)$ is defined, the limit at $a$ exists, and the two are equal. A hollow dot with no solid dot means no value. Two sides heading to different heights means no limit. A hollow dot with a solid dot elsewhere means a limit and a value that disagree. Name the first part that fails.",
-    "在 $a$ 处连续有三个条件：$f(a)$ 有定义，$a$ 处的极限存在，两者相等。只有空心点没有实心点，说明没有函数值。两侧趋向不同高度，说明极限不存在。空心点之外另有实心点，说明极限和函数值不相等。要说出最先不成立的条件。",
+    "Continuity at $a$ has three parts: $f(a)$ is defined, the limit at $a$ exists, and the two are equal. A hollow dot with no solid dot means no value. Two sides heading to different heights means no limit. A hollow dot with a solid dot elsewhere means a limit and a value that disagree. Name the first part that fails.\n\nFor example, if both pieces run into a hollow dot at $(2, 3)$ and a solid dot sits at $(2, 5)$, the value $f(2) = 5$ is defined and the limit $3$ exists, so the third part fails.\n\nCheck: the heights just beside $x = 2$, such as at $1.99$ and $2.01$, are close to $3$, not to $5$.\n\n> **Watch out.** Name the first part that fails. With a hollow dot and no solid dot, the value is missing even though the limit exists.",
+    "在 $a$ 处连续有三个条件：$f(a)$ 有定义，$a$ 处的极限存在，两者相等。只有空心点没有实心点，说明没有函数值。两侧趋向不同高度，说明极限不存在。空心点之外另有实心点，说明极限和函数值不相等。要说出最先不成立的条件。\n\n例如，若两段都通向 $(2, 3)$ 处的空心点，而实心点在 $(2, 5)$，那么函数值 $f(2) = 5$ 有定义，极限 $3$ 存在，不成立的是第三个条件。\n\n检验：$x = 2$ 两旁的高度，例如在 $1.99$ 和 $2.01$ 处，都接近 $3$ 而不是 $5$。\n\n> **注意。** 要说出最先不成立的条件。只有空心点而没有实心点时，即使极限存在，函数值也是缺失的。",
   ),
   generate(rng) {
     const a = rng.int(3, 5);
@@ -568,14 +571,58 @@ const continuityFailure: KnowledgePointDef = {
         `两侧都趋近 ${level}，极限是 ${level}，但实心点说 $f(${a}) = ${moved}$。两者不相等。`,
       ),
     };
-    const { [kind]: correct, ...others } = options;
-    return pickChoice(
-      rng,
-      t(`Which statement describes this function at $x = ${a}$?`, `哪句话描述了这个函数在 $x = ${a}$ 处的情况？`),
-      correct,
-      Object.values(others),
-      why[kind],
-      drawn(
+    const value = kind === "hole" ? undefined : kind === "moved" ? moved : level;
+    const notThis: Record<typeof kind, Text> = {
+      continuous:
+        kind === "hole"
+          ? t(`There is no solid dot at $x = ${a}$, so $f(${a})$ is not defined.`, `$x = ${a}$ 处没有实心点，所以 $f(${a})$ 没有定义。`)
+          : kind === "jump"
+            ? t(`The two sides approach ${level} and ${right}, so there is no limit.`, `两侧分别趋近 ${level} 和 ${right}，所以没有极限。`)
+            : t(`The value $f(${a}) = ${moved}$ differs from the limit ${level}.`, `函数值 $f(${a}) = ${moved}$ 与极限 ${level} 不相等。`),
+      hole: t(`The solid dot gives a value, $f(${a}) = ${value}$.`, `实心点给出了函数值 $f(${a}) = ${value}$。`),
+      jump: kind === "jump" ? t("", "") : t(`Both sides approach ${level}, so the limit exists.`, `两侧都趋近 ${level}，所以极限存在。`),
+      moved:
+        kind === "continuous"
+          ? t(`The limit ${level} equals $f(${a}) = ${level}$.`, `极限 ${level} 等于 $f(${a}) = ${level}$。`)
+          : kind === "hole"
+            ? t(
+                "There is no value to compare with the limit; the first condition already fails.",
+                "没有函数值可与极限比较；第一个条件就已经不成立。",
+              )
+            : t(
+                `The sides approach ${level} and ${right}, so the limit does not exist.`,
+                `两侧分别趋近 ${level} 和 ${right}，所以极限不存在。`,
+              ),
+    };
+    const xs = [a - 0.01, a - 0.001, a + 0.001, a + 0.01].map((x) => Math.round(x * 1000) / 1000);
+    const height = (x: number) => (x < a ? level + m1 * (x - a) : right + m2 * (x - a));
+    const rows = table(
+      ["$x$", ...xs.map((x) => `$${x}$`)],
+      ["$f(x)$", ...xs.map((x) => `$${dec(Q.of(Math.round(height(x) * 1000), 1000))}$`)],
+    );
+    const side = (zh: boolean) =>
+      kind === "jump"
+        ? zh
+          ? `左侧的高度趋近 $${level}$，右侧的趋近 $${right}$，所以极限不存在。`
+          : `The left heights approach $${level}$ and the right heights $${right}$, so there is no limit.`
+        : zh
+          ? `两侧的高度都趋近 $${level}$，${value === undefined ? "但没有函数值与之比较" : value === level ? `与 $f(${a}) = ${level}$ 相等` : `与 $f(${a}) = ${value}$ 不相等`}。`
+          : `Both sides approach $${level}$, ${value === undefined ? "but there is no value to match" : value === level ? `which matches $f(${a}) = ${level}$` : `which does not match $f(${a}) = ${value}$`}.`;
+    const step1 = stepLabel(1, "Read the value", "读出函数值");
+    const step2 = stepLabel(2, "Read the limit", "读出极限");
+    const step3 = stepLabel(3, "Compare", "比较");
+    const solution = t(
+      `${step1.en} ${value === undefined ? `There is only a hollow dot at $x = ${a}$, so $f(${a})$ is not defined.` : `The solid dot gives $f(${a}) = ${value}$.`}\n\n${step2.en} ${kind === "jump" ? `The left piece heads to ${level} and the right piece to ${right}.` : `Both pieces head to ${level}, so the limit is ${level}.`}\n\n${step3.en} ${why[kind].en}\n\n**Check.** Read the heights of the pieces just beside $x = ${a}$:\n\n${rows}\n\n${side(false)}`,
+      `${step1["zh-CN"]} ${value === undefined ? `$x = ${a}$ 处只有空心点，所以 $f(${a})$ 没有定义。` : `实心点给出 $f(${a}) = ${value}$。`}\n\n${step2["zh-CN"]} ${kind === "jump" ? `左段趋向 ${level}，右段趋向 ${right}。` : `两段都趋向 ${level}，所以极限是 ${level}。`}\n\n${step3["zh-CN"]} ${why[kind]["zh-CN"]}\n\n**检验。** 读出两段在 $x = ${a}$ 两旁的高度：\n\n${rows}\n\n${side(true)}`,
+    );
+    return explainedChoice(rng, {
+      prompt: t(`Which statement describes this function at $x = ${a}$?`, `哪句话描述了这个函数在 $x = ${a}$ 处的情况？`),
+      correct: options[kind],
+      wrong: (["continuous", "hole", "jump", "moved"] as const)
+        .filter((k) => k !== kind)
+        .map((k) => ({ option: options[k], why: notThis[k] })),
+      solution,
+      figure: drawn(
         { xMin: 0, xMax: 8, yMin: 0, yMax: 8 },
         marks,
         t(
@@ -583,7 +630,7 @@ const continuityFailure: KnowledgePointDef = {
           `由两段组成的函数图像，两段在 $x = ${a}$ 处相接或断开。`,
         ),
       ),
-    );
+    });
   },
 };
 

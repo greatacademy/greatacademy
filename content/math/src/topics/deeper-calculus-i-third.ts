@@ -806,8 +806,8 @@ const whichConditionFails = point(
   "which-condition-of-continuity-fails",
   ["Which condition of continuity fails", "连续性的哪一条不满足"],
   [
-    "Continuity at $a$ asks three things in order: $f(a)$ is defined, $\\lim_{x \\to a} f(x)$ exists, and the two are equal. Naming the first condition that fails also tells the kind of discontinuity: a missing value or a moved point can be repaired, a jump cannot.",
-    "在 $a$ 处连续依次要求三件事：$f(a)$ 有定义，$\\lim_{x \\to a} f(x)$ 存在，二者相等。说出第一条不满足的条件，也就知道了间断的类型：缺失的值或移动的点可以修补，跳跃则不能。",
+    "Continuity at $a$ asks three things in order: $f(a)$ is defined, $\\lim_{x \\to a} f(x)$ exists, and the two are equal. Naming the first condition that fails also tells the kind of discontinuity: a missing value or a moved point can be repaired, a jump cannot.\n\nFor example, if both one-sided limits at $2$ are $5$ but $f(2) = 1$, the value is defined and the limit exists, so the third condition is the one that fails.\n\nCheck: a function with these facts, such as $f(x) = x + 3$ for $x \\ne 2$ with $f(2) = 1$, gives $f(1.99) = 4.99$ and $f(2.01) = 5.01$, close to $5$ rather than to $1$.\n\n> **Watch out.** Test the conditions in order. When $f(a)$ is not defined, the first condition already fails, whatever the limit does.",
+    "在 $a$ 处连续依次要求三件事：$f(a)$ 有定义，$\\lim_{x \\to a} f(x)$ 存在，二者相等。说出第一条不满足的条件，也就知道了间断的类型：缺失的值或移动的点可以修补，跳跃则不能。\n\n例如，若在 $2$ 处两个单侧极限都是 $5$，而 $f(2) = 1$，那么函数值有定义，极限也存在，不满足的是第三条。\n\n检验：满足这些条件的一个函数，例如 $x \\ne 2$ 时 $f(x) = x + 3$、$f(2) = 1$，有 $f(1.99) = 4.99$，$f(2.01) = 5.01$，接近 $5$ 而不是 $1$。\n\n> **注意。** 要按顺序检验这几条。$f(a)$ 没有定义时，第一条就已经不满足，与极限如何无关。",
   ],
   (rng) => {
     const a = rng.int(-5, 5);
@@ -835,15 +835,71 @@ const whichConditionFails = point(
       `极限是 $${L}$，函数值却是 $${v}$。`,
       `极限是 $${L}$，等于函数值，所以三条都满足。`,
     ][answer]!;
-    return choose(
-      rng,
+    const reasons: Reason[] = [
+      [options[0]![0], `$f(${a}) = ${v}$ is given, so the value is defined.`, `题目给出了 $f(${a}) = ${v}$，所以函数值有定义。`],
       [
-        `A function has $\\lim_{x \\to ${a}^{-}} f(x) = ${L}$ and $\\lim_{x \\to ${a}^{+}} f(x) = ${R}$, and ${given[0]}. What can be said about continuity at $x = ${a}$?`,
-        `函数满足 $\\lim_{x \\to ${a}^{-}} f(x) = ${L}$，$\\lim_{x \\to ${a}^{+}} f(x) = ${R}$，并且 ${given[1]}。关于它在 $x = ${a}$ 处的连续性可以说什么？`,
+        options[1]![0],
+        `Both one-sided limits are $${L}$, so the limit exists and equals $${L}$.`,
+        `两个单侧极限都是 $${L}$，所以极限存在，等于 $${L}$。`,
       ],
-      options[answer]!,
-      options.filter((_, i) => i !== answer),
-      [whyEn, whyZh],
+      kind === 0
+        ? [
+            options[2]![0],
+            "There is no value $f(a)$ for the limit to differ from; the first condition already fails.",
+            "没有函数值 $f(a)$ 可供比较；第一条就已经不满足。",
+          ]
+        : kind === 1
+          ? [
+              options[2]![0],
+              `The one-sided limits $${L}$ and $${R}$ differ, so there is no limit to compare with $f(${a})$.`,
+              `单侧极限 $${L}$ 与 $${R}$ 不相等，所以没有极限可与 $f(${a})$ 比较。`,
+            ]
+          : [options[2]![0], `The limit $${L}$ equals $f(${a}) = ${v}$.`, `极限 $${L}$ 等于 $f(${a}) = ${v}$。`],
+      kind === 0
+        ? [
+            options[3]![0],
+            `$f(${a})$ is not defined, so $f$ cannot be continuous at $${a}$.`,
+            `$f(${a})$ 没有定义，所以 $f$ 在 $${a}$ 处不可能连续。`,
+          ]
+        : kind === 1
+          ? [
+              options[3]![0],
+              `The one-sided limits $${L}$ and $${R}$ differ, so the limit does not exist.`,
+              `单侧极限 $${L}$ 与 $${R}$ 不相等，所以极限不存在。`,
+            ]
+          : [options[3]![0], `The limit $${L}$ differs from the value $${v}$.`, `极限 $${L}$ 与函数值 $${v}$ 不相等。`],
+    ];
+    const g = (x: number) => (x < a ? x - a + L : x - a + R);
+    const rows = valueTable(around(a), [["g(x)", g]]);
+    const valueEn = kind === 0 ? "It is not defined" : `It is $${v}$`;
+    const valueZh = kind === 0 ? "它没有定义" : `它是 $${v}$`;
+    return reasoned(
+      choose(
+        rng,
+        [
+          `A function has $\\lim_{x \\to ${a}^{-}} f(x) = ${L}$ and $\\lim_{x \\to ${a}^{+}} f(x) = ${R}$, and ${given[0]}. What can be said about continuity at $x = ${a}$?`,
+          `函数满足 $\\lim_{x \\to ${a}^{-}} f(x) = ${L}$，$\\lim_{x \\to ${a}^{+}} f(x) = ${R}$，并且 ${given[1]}。关于它在 $x = ${a}$ 处的连续性可以说什么？`,
+        ],
+        options[answer]!,
+        options.filter((_, i) => i !== answer),
+        walk(
+          [
+            ["Look at the value", "看函数值", `${valueEn}.`, `${valueZh}。`],
+            [
+              "Compare the one-sided limits",
+              "比较单侧极限",
+              kind === 1 ? `They are $${L}$ and $${R}$, which differ.` : `Both are $${L}$, so the limit is $${L}$.`,
+              kind === 1 ? `它们是 $${L}$ 和 $${R}$，不相等。` : `两者都是 $${L}$，所以极限是 $${L}$。`,
+            ],
+            ["Name the first failure", "找出第一条不满足的条件", whyEn, whyZh],
+          ],
+          [
+            `A function with these one-sided limits is $g(x) = x${tail(L - a)}$ for $x < ${a}$ and $g(x) = x${tail(R - a)}$ for $x > ${a}$. Its values beside $x = ${a}$ are:\n\n${rows}\n\n${kind === 1 ? `The left values approach $${L}$ and the right values $${R}$, so no single limit exists.` : `Both sides approach $${L}$, which ${kind === 0 ? "has no value of $f$ to match" : kind === 2 ? `does not match $f(${a}) = ${v}$` : `matches $f(${a}) = ${v}$`}.`}`,
+            `具有这些单侧极限的一个函数是：$x < ${a}$ 时 $g(x) = x${tail(L - a)}$，$x > ${a}$ 时 $g(x) = x${tail(R - a)}$。它在 $x = ${a}$ 两旁的值是：\n\n${rows}\n\n${kind === 1 ? `左侧的值趋近 $${L}$，右侧的值趋近 $${R}$，所以极限不存在。` : `两侧都趋近 $${L}$，${kind === 0 ? "没有 $f$ 的值与之比较" : kind === 2 ? `与 $f(${a}) = ${v}$ 不等` : `与 $f(${a}) = ${v}$ 相等`}。`}`,
+          ],
+        ),
+      ),
+      reasons.filter((_, i) => i !== answer),
     );
   },
 );
@@ -852,8 +908,8 @@ const valueForOneSidedContinuity = point(
   "the-value-that-gives-one-sided-continuity",
   ["The value that gives one-sided continuity", "使函数单侧连续的取值"],
   [
-    "At a jump the function cannot be continuous from both sides, but the value $f(a)$ can be chosen to match one side. Continuity from the left needs $f(a)$ to equal the left limit, and continuity from the right needs it to equal the right limit.",
-    "在跳跃处，函数不可能在两侧都连续，但可以选择 $f(a)$ 与某一侧相符。左连续要求 $f(a)$ 等于左极限，右连续要求 $f(a)$ 等于右极限。",
+    "At a jump the function cannot be continuous from both sides, but the value $f(a)$ can be chosen to match one side. Continuity from the left needs $f(a)$ to equal the left limit, and continuity from the right needs it to equal the right limit.\n\nFor example, let $f(x) = x + 1$ for $x < 2$, $f(2) = k$ and $f(x) = 3x$ for $x > 2$. The left limit is $3$ and the right limit is $6$, so $k = 3$ gives continuity from the left and $k = 6$ from the right.\n\nCheck: $f(1.99) = 2.99$, close to $3$, and $f(2.01) = 6.03$, close to $6$.\n\n> **Watch out.** Continuity from the left uses the formula for $x < a$, the side the values come from. Using the other piece gives the value for the other side.",
+    "在跳跃处，函数不可能在两侧都连续，但可以选择 $f(a)$ 与某一侧相符。左连续要求 $f(a)$ 等于左极限，右连续要求 $f(a)$ 等于右极限。\n\n例如，设 $x < 2$ 时 $f(x) = x + 1$，$f(2) = k$，$x > 2$ 时 $f(x) = 3x$。左极限是 $3$，右极限是 $6$，所以 $k = 3$ 时左连续，$k = 6$ 时右连续。\n\n检验：$f(1.99) = 2.99$，接近 $3$；$f(2.01) = 6.03$，接近 $6$。\n\n> **注意。** 左连续用的是 $x < a$ 时的表达式，即函数值所来自的那一侧。用另一段得到的是另一侧所需的值。",
   ],
   (rng) => {
     const a = rng.int(-4, 4);
@@ -866,6 +922,8 @@ const valueForOneSidedContinuity = point(
     const fromLeft = rng.bool();
     const f = `\\begin{cases} ${linear(p, q)} & x < ${a} \\\\ k & x = ${a} \\\\ ${linear(r, s)} & x > ${a} \\end{cases}`;
     const answer = fromLeft ? L : R;
+    const piece = fromLeft ? linear(p, q) : linear(r, s);
+    const rows = valueTable(around(a), [["f(x)", (x) => (x < a ? p * x + q : r * x + s)]]);
     return ask(
       [
         `Let $f(x) = ${f}$. Find the value of $k$ that makes $f$ continuous from the ${fromLeft ? "left" : "right"} at $x = ${a}$.`,
@@ -873,10 +931,26 @@ const valueForOneSidedContinuity = point(
       ],
       answer,
       [fromLeft ? R : L, Q.of(L + R, 2)],
-      [
-        `Continuity from the ${fromLeft ? "left" : "right"} needs $f(${a})$ to equal the ${fromLeft ? "left" : "right"} limit, found by substituting $x = ${a}$ into $${fromLeft ? linear(p, q) : linear(r, s)}$. That gives $k = ${answer}$.`,
-        `${fromLeft ? "左" : "右"}连续要求 $f(${a})$ 等于${fromLeft ? "左" : "右"}极限，把 $x = ${a}$ 代入 $${fromLeft ? linear(p, q) : linear(r, s)}$ 就得到它。所以 $k = ${answer}$。`,
-      ],
+      walk(
+        [
+          [
+            "Pick the side",
+            "确定哪一侧",
+            `Continuity from the ${fromLeft ? "left" : "right"} needs $f(${a})$ to equal the ${fromLeft ? "left" : "right"} limit, which comes from $${piece}$, the formula for $x ${fromLeft ? "<" : ">"} ${a}$.`,
+            `${fromLeft ? "左" : "右"}连续要求 $f(${a})$ 等于${fromLeft ? "左" : "右"}极限，它由 $x ${fromLeft ? "<" : ">"} ${a}$ 时的表达式 $${piece}$ 给出。`,
+          ],
+          [
+            "Substitute",
+            "代入",
+            `Substituting $x = ${a}$ into $${piece}$ gives $${answer}$, so $k = ${answer}$.`,
+            `把 $x = ${a}$ 代入 $${piece}$ 得 $${answer}$，所以 $k = ${answer}$。`,
+          ],
+        ],
+        [
+          `Evaluate $f$ beside $x = ${a}$:\n\n${rows}\n\nThe values on the left approach $${L}$ and those on the right approach $${R}$. The ${fromLeft ? "left" : "right"} side is the one that must meet $f(${a})$, so $k = ${answer}$.`,
+          `计算 $f$ 在 $x = ${a}$ 两旁的值：\n\n${rows}\n\n左侧的值趋近 $${L}$，右侧的值趋近 $${R}$。必须与 $f(${a})$ 相接的是${fromLeft ? "左" : "右"}侧，所以 $k = ${answer}$。`,
+        ],
+      ),
     );
   },
 );
@@ -885,8 +959,8 @@ const twoValuesOfK = point(
   "two-values-of-a-constant-that-make-a-function-continuous",
   ["Two values of a constant that make a function continuous", "使函数连续的常数有两个取值"],
   [
-    "When the constant appears squared, matching the two pieces at the break gives a quadratic equation in the constant. Both roots make the pieces meet, so both must be reported and each can be checked by substituting back.",
-    "当常数以平方形式出现时，令两段在分段点处相等，会得到关于这个常数的二次方程。两个根都能使两段相接，所以都要写出，并且可以分别代回检验。",
+    "When the constant appears squared, matching the two pieces at the break gives a quadratic equation in the constant. Both roots make the pieces meet, so both must be reported and each can be checked by substituting back.\n\nFor example, for $f(x) = k^{2}x + 1$ when $x < 1$ and $f(x) = 3kx - 1$ when $x \\ge 1$, matching at $x = 1$ gives $k^{2} + 1 = 3k - 1$, so $k^{2} - 3k + 2 = 0$ and $k = 1$ or $k = 2$.\n\nCheck: with $k = 2$ the pieces give $4 + 1 = 5$ and $6 - 1 = 5$; with $k = 1$ they give $2$ and $2$.\n\n> **Watch out.** Substitute the break point for $x$ in both pieces before solving. Leaving out the factor $x$ changes the quadratic and its roots.",
+    "当常数以平方形式出现时，令两段在分段点处相等，会得到关于这个常数的二次方程。两个根都能使两段相接，所以都要写出，并且可以分别代回检验。\n\n例如，对于 $x < 1$ 时 $f(x) = k^{2}x + 1$、$x \\ge 1$ 时 $f(x) = 3kx - 1$，在 $x = 1$ 处相等得 $k^{2} + 1 = 3k - 1$，即 $k^{2} - 3k + 2 = 0$，所以 $k = 1$ 或 $k = 2$。\n\n检验：$k = 2$ 时两段给出 $4 + 1 = 5$ 和 $6 - 1 = 5$；$k = 1$ 时都给出 $2$。\n\n> **注意。** 求解之前要把分段点代入两段中的 $x$。漏掉因子 $x$ 会改变二次方程和它的根。",
   ],
   (rng) => {
     const c = rng.pick([1, 2, 3, -1, -2]);
@@ -897,6 +971,15 @@ const twoValuesOfK = point(
     const p = c * r1 * r2 + right;
     const f = `\\begin{cases} ${poly([1, "k^{2}x"], [p, ""])} & x < ${c} \\\\ ${poly([s, "kx"], [right, ""])} & x \\ge ${c} \\end{cases}`;
     const eq = `${poly([c, "k^{2}"], [-c * s, "k"], [c * r1 * r2, ""])} = 0`;
+    const lead = c === 1 ? "" : c === -1 ? "-" : String(c);
+    const rows = table(
+      ["$k$", `left piece at $x = ${c}$`, `right piece at $x = ${c}$`],
+      ...[r1, r2].map((k) => [`$${k}$`, `$${c * k * k + p}$`, `$${s * k * c + right}$`]),
+    );
+    const rowsZh = table(
+      ["$k$", `左段在 $x = ${c}$ 处`, `右段在 $x = ${c}$ 处`],
+      ...[r1, r2].map((k) => [`$${k}$`, `$${c * k * k + p}$`, `$${s * k * c + right}$`]),
+    );
     return solutionsProblem({
       prompt: t(
         `Let $f(x) = ${f}$. Find every value of $k$ that makes $f$ continuous everywhere.`,
@@ -906,8 +989,26 @@ const twoValuesOfK = point(
       values: [String(r1), String(r2)],
       wrong: [[String(r1)], [String(r2)], [String(-r1), String(-r2)]],
       solution: t(
-        `Both pieces are continuous, so only $x = ${c}$ matters. Setting the pieces equal there gives $${eq}$, so $k = ${r1}$ or $k = ${r2}$.`,
-        `两段各自连续，所以只需考虑 $x = ${c}$。令两段在此相等，得 $${eq}$，所以 $k = ${r1}$ 或 $k = ${r2}$。`,
+        ...walk(
+          [
+            [
+              "Set the pieces equal",
+              "令两段相等",
+              `Both pieces are continuous, so only $x = ${c}$ matters. Substituting it into both and setting them equal gives $${eq}$.`,
+              `两段各自连续，所以只需考虑 $x = ${c}$。代入两段并令其相等，得 $${eq}$。`,
+            ],
+            [
+              "Factor",
+              "因式分解",
+              `The equation factors as $${lead}(${linear(1, -r1, "k")})(${linear(1, -r2, "k")}) = 0$, so $k = ${r1}$ or $k = ${r2}$.`,
+              `方程分解为 $${lead}(${linear(1, -r1, "k")})(${linear(1, -r2, "k")}) = 0$，所以 $k = ${r1}$ 或 $k = ${r2}$。`,
+            ],
+          ],
+          [
+            `Substitute each value of $k$ into both pieces at $x = ${c}$:\n\n${rows}\n\nFor each value the two pieces give the same height, so both values close the gap.`,
+            `把每个 $k$ 值代入两段，计算 $x = ${c}$ 处的值：\n\n${rowsZh}\n\n每个值都使两段给出相同的高度，所以两个值都能使两段相接。`,
+          ],
+        ),
       ),
     });
   },
@@ -917,8 +1018,8 @@ const constantFromHole = point(
   "the-constant-from-the-location-of-a-hole",
   ["The constant from the location of a hole", "由洞的位置求常数"],
   [
-    "A hole at $x = a$ means that $x - a$ is a factor of the numerator and cancels. If the quotient simplifies to $x + e$, the height of the hole is $a + e$, and multiplying $(x - a)(x + e)$ back out recovers the numerator.",
-    "在 $x = a$ 处有洞，说明 $x - a$ 是分子的因式并被约去。如果商化简为 $x + e$，洞的高度就是 $a + e$，把 $(x - a)(x + e)$ 展开就得到分子。",
+    "A hole at $x = a$ means that $x - a$ is a factor of the numerator and cancels. If the quotient simplifies to $x + e$, the height of the hole is $a + e$, and multiplying $(x - a)(x + e)$ back out recovers the numerator.\n\nFor example, a hole of $\\frac{x^{2} + kx - 6}{x - 2}$ at $(2, 5)$ needs $2 + e = 5$, so $e = 3$. The numerator is $(x - 2)(x + 3) = x^{2} + x - 6$, and $k = 1$.\n\nCheck: with $k = 1$, the quotient at $x = 2.01$ is $\\frac{0.0501}{0.01} = 5.01$, close to $5$.\n\n> **Watch out.** The height of the hole is the value of the simplified quotient, not of the numerator, which is $0$ at $x = a$.",
+    "在 $x = a$ 处有洞，说明 $x - a$ 是分子的因式并被约去。如果商化简为 $x + e$，洞的高度就是 $a + e$，把 $(x - a)(x + e)$ 展开就得到分子。\n\n例如，$\\frac{x^{2} + kx - 6}{x - 2}$ 在 $(2, 5)$ 处有洞，要求 $2 + e = 5$，所以 $e = 3$。分子是 $(x - 2)(x + 3) = x^{2} + x - 6$，所以 $k = 1$。\n\n检验：取 $k = 1$，商在 $x = 2.01$ 处为 $\\frac{0.0501}{0.01} = 5.01$，接近 $5$。\n\n> **注意。** 洞的高度是化简后的商的值，而不是分子的值，分子在 $x = a$ 处是 $0$。",
   ],
   (rng) => {
     const a = nz(rng, 6);
@@ -927,6 +1028,8 @@ const constantFromHole = point(
     const k = e - a;
     const m = -a * e;
     const askK = rng.bool();
+    const numerator = poly([1, "x^{2}"], [k, "x"], [m, ""]);
+    const rows = valueTable(around(a), [["f(x)", (x) => (x * x + k * x + m) / (x - a)]]);
     return ask(
       askK
         ? [
@@ -939,10 +1042,26 @@ const constantFromHole = point(
           ],
       askK ? k : m,
       askK ? [h, h + 2 * a, -k] : [-m, h, a * h],
-      [
-        `The numerator must be $(${minus(a)})(x + e)$, and after cancelling, the height is $${a} + e = ${h}$, so $e = ${e}$. Expanding gives $${poly([1, "x^{2}"], [k, "x"], [m, ""])}$, so ${askK ? `$k = ${k}$` : `$m = ${m}$`}.`,
-        `分子必为 $(${minus(a)})(x + e)$，约分后高度是 $${a} + e = ${h}$，所以 $e = ${e}$。展开得 $${poly([1, "x^{2}"], [k, "x"], [m, ""])}$，所以${askK ? `$k = ${k}$` : `$m = ${m}$`}。`,
-      ],
+      walk(
+        [
+          [
+            "Use the height",
+            "利用高度",
+            `The numerator must be $(${minus(a)})(x + e)$, and after cancelling, the height of the hole is $${a} + e = ${h}$, so $e = ${e}$.`,
+            `分子必为 $(${minus(a)})(x + e)$，约分后洞的高度是 $${a} + e = ${h}$，所以 $e = ${e}$。`,
+          ],
+          [
+            "Expand",
+            "展开",
+            `Expanding $(${minus(a)})(${minus(-e)})$ gives $${numerator}$, so ${askK ? `$k = ${k}$` : `$m = ${m}$`}.`,
+            `展开 $(${minus(a)})(${minus(-e)})$ 得 $${numerator}$，所以${askK ? `$k = ${k}$` : `$m = ${m}$`}。`,
+          ],
+        ],
+        [
+          `With ${askK ? `$k = ${k}$` : `$m = ${m}$`}, evaluate $f$ beside $x = ${a}$:\n\n${rows}\n\nThe values close in on $${h}$ from both sides, so the hole is at height $${h}$ as required.`,
+          `取${askK ? `$k = ${k}$` : `$m = ${m}$`}，计算 $f$ 在 $x = ${a}$ 两旁的值：\n\n${rows}\n\n这些值从两侧逼近 $${h}$，所以洞的高度正是 $${h}$。`,
+        ],
+      ),
     );
   },
 );
@@ -952,8 +1071,8 @@ const countingAsymptotes = {
     "counting-vertical-asymptotes-after-cancelling",
     ["Counting vertical asymptotes after cancelling", "约分后数垂直渐近线"],
     [
-      "A zero of the denominator gives a vertical asymptote only if a factor of it survives cancelling. Compare the power of each factor on top and bottom: more on the bottom gives an asymptote, otherwise the point is a hole.",
-      "分母的零点只有在对应因式约分后仍然留在分母时，才给出垂直渐近线。比较每个因式在分子和分母中的次数：分母次数更高就是渐近线，否则那一点是洞。",
+      "A zero of the denominator gives a vertical asymptote only if a factor of it survives cancelling. Compare the power of each factor on top and bottom: more on the bottom gives an asymptote, otherwise the point is a hole.\n\nFor example, $\\frac{x - 1}{(x - 1)^{2}(x + 2)}$ keeps one factor $x - 1$ and the factor $x + 2$ on the bottom after cancelling, so it has two vertical asymptotes, $x = 1$ and $x = -2$.\n\nCheck: $f(1.01) \\approx 33.2$ and $f(1.001) \\approx 333.2$, growing tenfold each time $x$ comes ten times closer to $1$.\n\n> **Watch out.** A shared factor does not always cancel completely. $\\frac{x - 1}{(x - 1)^{2}}$ still leaves $x - 1$ on the bottom, so $x = 1$ is an asymptote, not a hole.",
+      "分母的零点只有在对应因式约分后仍然留在分母时，才给出垂直渐近线。比较每个因式在分子和分母中的次数：分母次数更高就是渐近线，否则那一点是洞。\n\n例如，$\\frac{x - 1}{(x - 1)^{2}(x + 2)}$ 约分后分母仍留有一个因式 $x - 1$ 和因式 $x + 2$，所以它有两条垂直渐近线 $x = 1$ 和 $x = -2$。\n\n检验：$f(1.01) \\approx 33.2$，$f(1.001) \\approx 333.2$，$x$ 每向 $1$ 靠近十倍，函数值就增大约十倍。\n\n> **注意。** 公共因式不一定能完全约去。$\\frac{x - 1}{(x - 1)^{2}}$ 约分后分母仍留有 $x - 1$，所以 $x = 1$ 是渐近线而不是洞。",
     ],
     (rng) => {
       const roots = rng.sample([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6], 3);
@@ -963,14 +1082,39 @@ const countingAsymptotes = {
       const f = `\\frac{${factors(roots, top)}}{${factors(roots, bottom)}}`;
       const lines = roots.map((r, i) => `$x = ${r}$: ${top[i]} / ${bottom[i]}`).join("; ");
       const linesZh = roots.map((r, i) => `$x = ${r}$：${top[i]} / ${bottom[i]}`).join("；");
+      const fx = (x: number) => roots.reduce((acc, r, i) => acc * (x - r) ** (top[i]! - bottom[i]!), 1);
+      const xs = roots.flatMap((r) => [r + 0.01, r + 0.001].map((x) => Math.round(x * 1000) / 1000));
+      const rows = valueTable(xs, [["f(x)", fx]]);
+      const left = roots.filter((_, i) => bottom[i]! > top[i]!);
+      const list = left.length === 0 ? "" : left.map((r) => `$x = ${r}$`).join(", ");
       return ask(
         [`How many vertical asymptotes does the graph of $f(x) = ${f}$ have?`, `$f(x) = ${f}$ 的图像有多少条垂直渐近线？`],
         answer,
         [3, 0, 1, 2],
-        [
-          `Compare the powers, top over bottom: ${lines}. An asymptote occurs where the bottom power is larger, and the number of such points is $${answer}$.`,
-          `比较次数（分子次数 / 分母次数）：${linesZh}。分母次数更大的地方才有渐近线，这样的点有 $${answer}$ 个。`,
-        ],
+        walk(
+          [
+            [
+              "Compare the powers",
+              "比较次数",
+              `For each zero of the denominator, compare the power on top with the power on the bottom: ${lines}.`,
+              `对分母的每个零点，比较分子与分母中的次数：${linesZh}。`,
+            ],
+            [
+              "Count",
+              "计数",
+              answer === 0
+                ? "No factor has a larger power on the bottom, so every zero cancels and there is no vertical asymptote."
+                : `A factor survives on the bottom only at ${list}, so the number of vertical asymptotes is $${answer}$.`,
+              answer === 0
+                ? "没有哪个因式在分母中的次数更高，所以每个零点都被约去，没有垂直渐近线。"
+                : `只有在 ${list} 处有因式留在分母，所以垂直渐近线有 $${answer}$ 条。`,
+            ],
+          ],
+          [
+            `Evaluate $f$ at $0.01$ and then $0.001$ to the right of each zero:\n\n${rows}\n\nWhere a factor survives on the bottom, the value grows about tenfold or more as $x$ comes ten times closer; at the other zeros it settles or shrinks. That happens at exactly $${answer}$ of the zeros.`,
+            `在每个零点右侧 $0.01$ 和 $0.001$ 处计算 $f$ 的值：\n\n${rows}\n\n有因式留在分母的地方，$x$ 靠近十倍，函数值增大约十倍或更多；在其他零点处，函数值趋于稳定或变小。这样的零点恰好有 $${answer}$ 个。`,
+          ],
+        ),
       );
     },
   ),
@@ -981,8 +1125,8 @@ const continuityOfLogOverLinear = point(
   "continuity-of-a-quotient-with-a-logarithm-or-root",
   ["Continuity of a quotient with a logarithm or root", "含对数或根式的商的连续性"],
   [
-    "An elementary function is continuous wherever it is defined, so combine the conditions: the argument of a logarithm is positive, the inside of a square root is nonnegative, and the denominator is not zero. A zero of the denominator outside the other condition removes nothing.",
-    "初等函数在其定义的地方都连续，所以把各条件合起来：对数的真数为正，平方根下非负，分母不为零。如果分母的零点不满足其他条件，那它并不会再去掉什么。",
+    "An elementary function is continuous wherever it is defined, so combine the conditions: the argument of a logarithm is positive, the inside of a square root is nonnegative, and the denominator is not zero. A zero of the denominator outside the other condition removes nothing.\n\nFor example, $\\frac{\\ln(x - 1)}{x - 3}$ needs $x > 1$ and $x \\ne 3$, so it is continuous on $(1, 3) \\cup (3, \\infty)$.\n\nCheck: at $x = 2$ the quotient is $\\frac{\\ln 1}{-1} = 0$, defined, while at $x = 3$ the denominator is $0$.\n\n> **Watch out.** A zero of the denominator that is outside the domain of the numerator removes nothing. For $\\frac{\\sqrt{x - 2}}{x}$, the point $x = 0$ is already excluded, so the answer is $[2, \\infty)$.",
+    "初等函数在其定义的地方都连续，所以把各条件合起来：对数的真数为正，平方根下非负，分母不为零。如果分母的零点不满足其他条件，那它并不会再去掉什么。\n\n例如，$\\frac{\\ln(x - 1)}{x - 3}$ 要求 $x > 1$ 且 $x \\ne 3$，所以它在 $(1, 3) \\cup (3, \\infty)$ 上连续。\n\n检验：$x = 2$ 时商为 $\\frac{\\ln 1}{-1} = 0$，有定义；而 $x = 3$ 时分母为 $0$。\n\n> **注意。** 分母的零点若不在分子的定义域内，就不会再去掉什么。对于 $\\frac{\\sqrt{x - 2}}{x}$，$x = 0$ 本来就被排除了，所以答案是 $[2, \\infty)$。",
   ],
   (rng) => {
     const a = rng.int(-5, 5);
@@ -996,6 +1140,9 @@ const continuityOfLogOverLinear = point(
     const set = inside
       ? union({ lo: Q.of(a), hi: Q.of(b), loClosed: closed, hiClosed: false }, { lo: Q.of(b), loClosed: false, hiClosed: false })
       : union(start(closed));
+    const fx = (x: number) => (log ? Math.log(x - a) : Math.sqrt(x - a)) / (x - b);
+    const xs = (inside ? [a + 0.01, b - 0.01, b + 0.01] : [a + 0.01, a + 1, a + 5]).map((x) => Math.round(x * 100) / 100);
+    const rows = valueTable(xs, [["f(x)", fx]]);
     return intervalProblem({
       prompt: t(`On what set is $f(x) = ${f}$ continuous? Answer in interval notation.`, `$f(x) = ${f}$ 在什么集合上连续？用区间表示。`),
       form: "interval",
@@ -1006,8 +1153,26 @@ const continuityOfLogOverLinear = point(
         union({ hi: Q.of(b), loClosed: false, hiClosed: false }, { lo: Q.of(b), loClosed: false, hiClosed: false }),
       ],
       solution: t(
-        `The numerator needs $x ${log ? ">" : "\\ge"} ${a}$ and the denominator needs $x \\ne ${b}$. ${inside ? `The point $${b}$ lies in that range, so it is removed.` : `The point $${b}$ lies outside that range, so it removes nothing.`}`,
-        `分子要求 $x ${log ? ">" : "\\ge"} ${a}$，分母要求 $x \\ne ${b}$。${inside ? `$${b}$ 在这个范围内，所以要去掉。` : `$${b}$ 不在这个范围内，所以不用再去掉什么。`}`,
+        ...walk(
+          [
+            [
+              "The numerator",
+              "分子",
+              `${log ? "The logarithm needs a positive argument" : "The square root needs a nonnegative inside"}, so $x ${log ? ">" : "\\ge"} ${a}$.`,
+              `${log ? "对数要求真数为正" : "平方根要求根号下非负"}，所以 $x ${log ? ">" : "\\ge"} ${a}$。`,
+            ],
+            [
+              "The denominator",
+              "分母",
+              `The denominator needs $x \\ne ${b}$. ${inside ? `The point $${b}$ lies in that range, so it is removed.` : `The point $${b}$ lies outside that range, so it removes nothing.`}`,
+              `分母要求 $x \\ne ${b}$。${inside ? `$${b}$ 在这个范围内，所以要去掉。` : `$${b}$ 不在这个范围内，所以不用再去掉什么。`}`,
+            ],
+          ],
+          [
+            `Evaluate $f$ at some points of the answer:\n\n${rows}\n\nEach value is defined. For $x < ${a}$ the ${log ? "logarithm" : "square root"} has no real value, ${inside ? `and at $x = ${b}$ the denominator is $0$, so these are the only points left out.` : `and the denominator is never $0$ for $x \\ge ${a}$, so nothing else is left out.`}`,
+            `在答案中的一些点计算 $f$：\n\n${rows}\n\n每个值都有定义。当 $x < ${a}$ 时${log ? "对数" : "平方根"}没有实数值，${inside ? `而 $x = ${b}$ 时分母为 $0$，所以只有这些点被排除。` : `而当 $x \\ge ${a}$ 时分母从不为 $0$，所以没有别的点被排除。`}`,
+          ],
+        ),
       ),
     });
   },
@@ -1018,8 +1183,8 @@ const notEveryGapRemovable = {
     "not-every-gap-can-be-removed",
     ["Not every gap can be removed", "并非每个缺口都可去"],
     [
-      "A quotient undefined at $a$ can be repaired by a value of $f(a)$ only if its limit at $a$ exists. Check the numerator first: if it is zero at $a$, factor and cancel to find the limit; if it is not zero, the graph has a vertical asymptote and no value helps.",
-      "在 $a$ 处无定义的商，只有在 $a$ 处极限存在时才能通过规定 $f(a)$ 来修补。先检查分子：若分子在 $a$ 处为零，就因式分解并约分求极限；若不为零，图像有垂直渐近线，取什么值都没有用。",
+      "A quotient undefined at $a$ can be repaired by a value of $f(a)$ only if its limit at $a$ exists. Check the numerator first: if it is zero at $a$, factor and cancel to find the limit; if it is not zero, the graph has a vertical asymptote and no value helps.\n\nFor example, $\\frac{x^{2} - x - 2}{x - 2} = x + 1$ for $x \\ne 2$, so $f(2) = 3$ repairs it. But $\\frac{x^{2} - x - 1}{x - 2}$ has numerator $1$ at $x = 2$, so no value works.\n\nCheck: the first quotient at $x = 2.01$ is $3.01$, while the second is $\\frac{1.0301}{0.01} = 103.01$.\n\n> **Watch out.** Test the numerator before cancelling. The factor $x - a$ cancels only when the numerator is $0$ at $x = a$.",
+      "在 $a$ 处无定义的商，只有在 $a$ 处极限存在时才能通过规定 $f(a)$ 来修补。先检查分子：若分子在 $a$ 处为零，就因式分解并约分求极限；若不为零，图像有垂直渐近线，取什么值都没有用。\n\n例如，当 $x \\ne 2$ 时 $\\frac{x^{2} - x - 2}{x - 2} = x + 1$，所以令 $f(2) = 3$ 就修补好了。但 $\\frac{x^{2} - x - 1}{x - 2}$ 的分子在 $x = 2$ 处是 $1$，所以取什么值都不行。\n\n检验：第一个商在 $x = 2.01$ 处为 $3.01$，而第二个是 $\\frac{1.0301}{0.01} = 103.01$。\n\n> **注意。** 先检验分子再约分。只有分子在 $x = a$ 处为 $0$ 时，因式 $x - a$ 才能约去。",
     ],
     (rng) => {
       const a = nz(rng, 6);
@@ -1035,22 +1200,80 @@ const notEveryGapRemovable = {
         `没有这样的值，因为图像在 $x = ${a}$ 处有垂直渐近线`,
       ];
       const set = (v: number): Pair => [`$f(${a}) = ${v}$`, `$f(${a}) = ${v}$`];
-      return choose(
-        rng,
-        [
-          `Let $f(x) = ${f}$ for $x \\ne ${a}$. What value of $f(${a})$ makes $f$ continuous at $x = ${a}$?`,
-          `对 $x \\ne ${a}$，设 $f(x) = ${f}$。$f(${a})$ 取什么值时 $f$ 在 $x = ${a}$ 处连续？`,
-        ],
-        holds ? set(limit) : no,
-        holds ? [no, set(e), set(0)] : [set(limit), set(e), set(0)],
-        [
-          holds
-            ? `The numerator is zero at $${a}$ and factors as $(${minus(a)})(${linear(1, e)})$. After cancelling, the limit is $${a} + ${paren(e)} = ${limit}$.`
-            : `At $x = ${a}$ the numerator is $${at}$, not zero, while the denominator tends to $0$. The quotient is unbounded near $${a}$, so no value repairs it.`,
-          holds
-            ? `分子在 $${a}$ 处为零，可分解为 $(${minus(a)})(${linear(1, e)})$。约分后极限是 $${a} + ${paren(e)} = ${limit}$。`
-            : `在 $x = ${a}$ 处分子是 $${at}$，不为零，而分母趋于 $0$。商在 $${a}$ 附近无界，所以取什么值都修补不了。`,
-        ],
+      const rows = valueTable(around(a), [["f(x)", (x) => (x * x + b * x + c) / (x - a)]]);
+      const reasons: Reason[] = holds
+        ? [
+            [
+              no[0],
+              `The numerator is $0$ at $x = ${a}$, so $${minus(a)}$ cancels and the limit $${limit}$ exists.`,
+              `分子在 $x = ${a}$ 处为 $0$，所以 $${minus(a)}$ 能约去，极限 $${limit}$ 存在。`,
+            ],
+            [
+              set(e)[0],
+              `$${e}$ is the constant of the factor $${linear(1, e)}$; the simplified quotient must be evaluated at $x = ${a}$, giving $${limit}$.`,
+              `$${e}$ 是因式 $${linear(1, e)}$ 的常数项；要把化简后的商在 $x = ${a}$ 处求值，得 $${limit}$。`,
+            ],
+            [
+              set(0)[0],
+              `$0$ is the value of the numerator at $x = ${a}$, not of the quotient; the limit is $${limit}$.`,
+              `$0$ 是分子在 $x = ${a}$ 处的值，而不是商的值；极限是 $${limit}$。`,
+            ],
+          ]
+        : [
+            [
+              set(limit)[0],
+              `Cancelling $${minus(a)}$ needs the numerator to be $0$ at $x = ${a}$, but it is $${at}$.`,
+              `约去 $${minus(a)}$ 要求分子在 $x = ${a}$ 处为 $0$，但它是 $${at}$。`,
+            ],
+            [
+              set(e)[0],
+              `The quotient is unbounded near $x = ${a}$, so no value, $${e}$ included, makes it continuous.`,
+              `商在 $x = ${a}$ 附近无界，所以任何值（包括 $${e}$）都不能使它连续。`,
+            ],
+            [
+              set(0)[0],
+              `The numerator at $x = ${a}$ is $${at}$, not $0$, and the quotient is unbounded there; no value works.`,
+              `分子在 $x = ${a}$ 处是 $${at}$，不是 $0$，商在那里无界；取什么值都不行。`,
+            ],
+          ];
+      return reasoned(
+        choose(
+          rng,
+          [
+            `Let $f(x) = ${f}$ for $x \\ne ${a}$. What value of $f(${a})$ makes $f$ continuous at $x = ${a}$?`,
+            `对 $x \\ne ${a}$，设 $f(x) = ${f}$。$f(${a})$ 取什么值时 $f$ 在 $x = ${a}$ 处连续？`,
+          ],
+          holds ? set(limit) : no,
+          holds ? [no, set(e), set(0)] : [set(limit), set(e), set(0)],
+          walk(
+            [
+              [
+                "Test the numerator",
+                "检验分子",
+                `At $x = ${a}$ the numerator is $${at}$${holds ? `, so $${minus(a)}$ is a factor of it.` : ", not zero, while the denominator tends to $0$."}`,
+                `在 $x = ${a}$ 处分子是 $${at}$${holds ? `，所以 $${minus(a)}$ 是它的因式。` : "，不为零，而分母趋于 $0$。"}`,
+              ],
+              holds
+                ? [
+                    "Cancel and substitute",
+                    "约分并代入",
+                    `The numerator is $(${minus(a)})(${linear(1, e)})$. After cancelling, the limit is $${a} + ${paren(e)} = ${limit}$, so $f(${a}) = ${limit}$.`,
+                    `分子是 $(${minus(a)})(${linear(1, e)})$。约分后极限是 $${a} + ${paren(e)} = ${limit}$，所以 $f(${a}) = ${limit}$。`,
+                  ]
+                : [
+                    "Conclude",
+                    "下结论",
+                    `The quotient is unbounded near $x = ${a}$, so the limit does not exist and no value of $f(${a})$ repairs it.`,
+                    `商在 $x = ${a}$ 附近无界，所以极限不存在，$f(${a})$ 取什么值都修补不了。`,
+                  ],
+            ],
+            [
+              `Evaluate the quotient beside $x = ${a}$:\n\n${rows}\n\n${holds ? `The values close in on $${limit}$ from both sides, the value that fills the gap.` : "The values grow without bound and change sign across the point, the mark of a vertical asymptote."}`,
+              `计算商在 $x = ${a}$ 两旁的值：\n\n${rows}\n\n${holds ? `这些值从两侧逼近 $${limit}$，正是填补缺口所需的值。` : "这些值无界增大，并在该点两侧变号，这是垂直渐近线的特征。"}`,
+            ],
+          ),
+        ),
+        reasons,
       );
     },
   ),
@@ -1061,8 +1284,8 @@ const jumpSize = point(
   "the-shift-that-closes-a-jump",
   ["The shift that closes a jump", "消除跳跃所需的平移"],
   [
-    "Changing the single value $f(a)$ cannot remove a jump, since the two one-sided limits stay different. To close it, one whole piece must move: adding a constant to the right-hand formula shifts its limit at $a$, and the needed constant is the left limit minus the right limit.",
-    "只改变 $f(a)$ 这一个值无法消除跳跃，因为两个单侧极限仍然不同。要消除它，必须移动整段：给右边的表达式加一个常数会平移它在 $a$ 处的极限，所需的常数等于左极限减右极限。",
+    "Changing the single value $f(a)$ cannot remove a jump, since the two one-sided limits stay different. To close it, one whole piece must move: adding a constant to the right-hand formula shifts its limit at $a$, and the needed constant is the left limit minus the right limit.\n\nFor example, for $f(x) = x^{2}$ when $x < 1$ and $f(x) = 2x + 3$ when $x \\ge 1$, the left limit is $1$ and the right limit is $5$. Adding $1 - 5 = -4$ turns the right piece into $2x - 1$, which starts at $1$.\n\nCheck: after the shift, $f(0.99) = 0.9801$ and $f(1.01) = 1.02$, both close to $1$.\n\n> **Watch out.** The constant is the left limit minus the right limit. Adding the right limit minus the left limit doubles the jump instead of closing it.",
+    "只改变 $f(a)$ 这一个值无法消除跳跃，因为两个单侧极限仍然不同。要消除它，必须移动整段：给右边的表达式加一个常数会平移它在 $a$ 处的极限，所需的常数等于左极限减右极限。\n\n例如，对于 $x < 1$ 时 $f(x) = x^{2}$、$x \\ge 1$ 时 $f(x) = 2x + 3$，左极限是 $1$，右极限是 $5$。加上 $1 - 5 = -4$，右段变为 $2x - 1$，它从 $1$ 开始。\n\n检验：平移后 $f(0.99) = 0.9801$，$f(1.01) = 1.02$，都接近 $1$。\n\n> **注意。** 常数等于左极限减右极限。加上右极限减左极限会使跳跃加倍，而不是消除它。",
   ],
   (rng) => {
     const a = rng.int(-4, 4);
@@ -1074,6 +1297,7 @@ const jumpSize = point(
     const s = R - r * a;
     const answer = L - R;
     const f = `\\begin{cases} ${poly([p, "x^{2}"], [q, ""])} & x < ${a} \\\\ ${linear(r, s)} & x \\ge ${a} \\end{cases}`;
+    const rows = valueTable(around(a), [["f(x)", (x) => (x < a ? p * x * x + q : r * x + s + answer)]]);
     return ask(
       [
         `Let $f(x) = ${f}$. What constant must be added to the formula for $x \\ge ${a}$ so that $f$ becomes continuous?`,
@@ -1081,10 +1305,26 @@ const jumpSize = point(
       ],
       answer,
       [-answer, L, R],
-      [
-        `The left limit is $${L}$ and the right limit is $${R}$. The right piece must shift by $${L} - ${paren(R)} = ${answer}$ to meet the left one.`,
-        `左极限是 $${L}$，右极限是 $${R}$。右段要变化 $${L} - ${paren(R)} = ${answer}$ 才能与左段相接。`,
-      ],
+      walk(
+        [
+          [
+            "Find the one-sided limits",
+            "求单侧极限",
+            `Substituting $x = ${a}$ into each piece gives the left limit $${L}$ and the right limit $${R}$.`,
+            `把 $x = ${a}$ 代入两段，得左极限 $${L}$，右极限 $${R}$。`,
+          ],
+          [
+            "Find the shift",
+            "求平移量",
+            `The right piece must move from $${R}$ to $${L}$, a shift of $${L} - ${paren(R)} = ${answer}$.`,
+            `右段要从 $${R}$ 移到 $${L}$，平移量是 $${L} - ${paren(R)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `After adding $${answer}$, the right piece is $${linear(r, s + answer)}$. Evaluate the new $f$ beside $x = ${a}$:\n\n${rows}\n\nBoth sides now close in on $${L}$, so the jump is gone.`,
+          `加上 $${answer}$ 后，右段为 $${linear(r, s + answer)}$。计算新的 $f$ 在 $x = ${a}$ 两旁的值：\n\n${rows}\n\n现在两侧都逼近 $${L}$，跳跃消失了。`,
+        ],
+      ),
     );
   },
 );
@@ -1093,14 +1333,17 @@ const coefficientMakingHole = point(
   "the-coefficient-that-makes-a-discontinuity-removable",
   ["The coefficient that makes a discontinuity removable", "使间断点可去的系数"],
   [
-    "A zero of the denominator is removable only when the numerator vanishes there too, since otherwise the quotient blows up. So substitute the point into the numerator, set the result to zero, and solve for the unknown coefficient.",
-    "分母的零点只有在分子也为零时才可去，否则商会趋于无穷。所以把该点代入分子，令结果为零，再解出未知系数。",
+    "A zero of the denominator is removable only when the numerator vanishes there too, since otherwise the quotient blows up. So substitute the point into the numerator, set the result to zero, and solve for the unknown coefficient.\n\nFor example, for $\\frac{x^{2} + kx + 6}{(x - 2)(x - 5)}$ at $x = 2$, the numerator gives $4 + 2k + 6 = 0$, so $k = -5$, and the numerator becomes $(x - 2)(x - 3)$.\n\nCheck: with $k = -5$, the quotient at $x = 2.01$ is $\\frac{-0.99}{-2.99} \\approx 0.331$, close to $\\frac{1}{3}$ rather than large.\n\n> **Watch out.** Substitute only the point asked about. Making the numerator vanish at the other zero of the denominator gives a different $k$.",
+    "分母的零点只有在分子也为零时才可去，否则商会趋于无穷。所以把该点代入分子，令结果为零，再解出未知系数。\n\n例如，对于 $\\frac{x^{2} + kx + 6}{(x - 2)(x - 5)}$ 在 $x = 2$ 处，分子给出 $4 + 2k + 6 = 0$，所以 $k = -5$，分子变为 $(x - 2)(x - 3)$。\n\n检验：取 $k = -5$，商在 $x = 2.01$ 处为 $\\frac{-0.99}{-2.99} \\approx 0.331$，接近 $\\frac{1}{3}$，而不是很大。\n\n> **注意。** 只代入题目所问的那个点。令分子在分母的另一个零点处为零，会得到另一个 $k$。",
   ],
   (rng) => {
     const a = nz(rng, 5);
     const b = rng.pick([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6].filter((x) => x !== a));
     const m = nz(rng, 12);
     const answer = Q.of(-(a * a + m), a);
+    const k = answer.toNumber();
+    const limit = (a - m / a) / (a - b);
+    const rows = valueTable(around(a), [["f(x)", (x) => (x * x + k * x + m) / ((x - a) * (x - b))]]);
     return ask(
       [
         `For which $k$ is the discontinuity of $f(x) = \\frac{x^{2} + kx${tail(m)}}{(${minus(a)})(${minus(b)})}$ at $x = ${a}$ removable?`,
@@ -1108,10 +1351,21 @@ const coefficientMakingHole = point(
       ],
       answer,
       [Q.of(a * a + m, a), Q.of(-m, a), Q.of(-(b * b + m), b), Q.of(-(a * a - m), a)],
-      [
-        `The numerator must vanish at $x = ${a}$: $${poly([a * a, ""], [a, "k"], [m, ""])} = 0$, so $k = ${answer.toLatex()}$.`,
-        `分子必须在 $x = ${a}$ 处为零：$${poly([a * a, ""], [a, "k"], [m, ""])} = 0$，所以 $k = ${answer.toLatex()}$。`,
-      ],
+      walk(
+        [
+          [
+            "Make the numerator vanish",
+            "令分子为零",
+            `The discontinuity is removable only if the numerator is $0$ at $x = ${a}$: $${poly([a * a, ""], [a, "k"], [m, ""])} = 0$.`,
+            `只有分子在 $x = ${a}$ 处为 $0$ 时间断点才可去：$${poly([a * a, ""], [a, "k"], [m, ""])} = 0$。`,
+          ],
+          ["Solve", "求解", `Solving for $k$ gives $k = ${answer.toLatex()}$.`, `解得 $k = ${answer.toLatex()}$。`],
+        ],
+        [
+          `With $k = ${answer.toLatex()}$, evaluate $f$ beside $x = ${a}$:\n\n${rows}\n\nThe values settle near $${num(limit)}$ instead of growing without bound, so the discontinuity at $x = ${a}$ is a hole that can be removed.`,
+          `取 $k = ${answer.toLatex()}$，计算 $f$ 在 $x = ${a}$ 两旁的值：\n\n${rows}\n\n这些值稳定在 $${num(limit)}$ 附近，而不是无界增大，所以 $x = ${a}$ 处的间断点是可以消除的洞。`,
+        ],
+      ),
     );
   },
 );

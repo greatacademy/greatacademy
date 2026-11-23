@@ -2852,8 +2852,8 @@ const continuityOfRadicalQuotient: KnowledgePointDef = {
   id: "counting-the-integers-where-a-radical-quotient-is-continuous",
   title: t("Counting the integers where a radical quotient is continuous", "计算根式商连续的整数个数"),
   explanation: t(
-    "A combination of continuous functions is continuous wherever it is defined. So continuity can be read off from the domain: a square root needs a nonnegative input, and a denominator must not be zero. At the left end of the domain of the root, only the right side of the point exists, so that continuity there means continuity from the right. Points outside the domain cannot be continuous, because the function has no value there.",
-    "连续函数的组合在有定义的地方都连续。所以连续性可以从定义域读出：平方根要求被开方数非负，分母不能为零。在根式定义域的左端点，只存在该点的右侧，所以那里的连续指右连续。定义域之外的点不可能连续，因为函数在那里没有值。",
+    "A combination of continuous functions is continuous wherever it is defined. So continuity can be read off from the domain: a square root needs a nonnegative input, and a denominator must not be zero. At the left end of the domain of the root, only the right side of the point exists, so that continuity there means continuity from the right. Points outside the domain cannot be continuous, because the function has no value there.\n\nFor example, $f(x) = \\frac{\\sqrt{x - 1}}{x - 3}$ needs $x \\ge 1$ and $x \\ne 3$. Of the integers from $0$ to $5$, that leaves $1$, $2$, $4$ and $5$, four in all.\n\nCheck: $f(1) = 0$, $f(2) = -1$, $f(4) = \\sqrt{3}$ and $f(5) = 1$ are all defined, while $f(0)$ needs $\\sqrt{-1}$ and $f(3)$ divides by $0$.\n\n> **Watch out.** The left end of the domain counts. There the root is $0$, so $f$ is defined and continuous from the right.",
+    "连续函数的组合在有定义的地方都连续。所以连续性可以从定义域读出：平方根要求被开方数非负，分母不能为零。在根式定义域的左端点，只存在该点的右侧，所以那里的连续指右连续。定义域之外的点不可能连续，因为函数在那里没有值。\n\n例如，$f(x) = \\frac{\\sqrt{x - 1}}{x - 3}$ 要求 $x \\ge 1$ 且 $x \\ne 3$。从 $0$ 到 $5$ 的整数中剩下 $1$、$2$、$4$、$5$，共四个。\n\n检验：$f(1) = 0$，$f(2) = -1$，$f(4) = \\sqrt{3}$，$f(5) = 1$ 都有定义；而 $f(0)$ 需要 $\\sqrt{-1}$，$f(3)$ 要除以 $0$。\n\n> **注意。** 定义域的左端点要算上。那里根式为 $0$，所以 $f$ 有定义，并且右连续。",
   ),
   generate(rng) {
     const a = rng.int(-5, 5);
@@ -2862,6 +2862,8 @@ const continuityOfRadicalQuotient: KnowledgePointDef = {
     const high = b + rng.int(1, 8);
     const answer = high - a;
     const f = `\\frac{\\sqrt{${poly([1, "x"], [-a, ""])}}}{${poly([1, "x"], [-b, ""])}}`;
+    const xs = [...new Set([a, a + 1, b - 1, b + 1, high])].filter((x) => x !== b).sort((x, y) => x - y);
+    const rows = valueTable(xs, [["f(x)", (x) => Math.sqrt(x - a) / (x - b)]]);
     return numberProblem({
       prompt: t(
         `Let $f(x) = ${f}$. At how many integers from $${low}$ to $${high}$ is $f$ continuous? At the left end of its domain, continuity from the right counts.`,
@@ -2870,9 +2872,25 @@ const continuityOfRadicalQuotient: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [answer + 1, answer - 1, high - low, high - low + 1],
-      solution: t(
-        `The root needs $x \\ge ${a}$, which leaves the $${answer + 1}$ integers from $${a}$ to $${high}$. Leaving out $x = ${b}$, where the denominator vanishes, gives $${answer}$.`,
-        `根式要求 $x \\ge ${a}$，这样剩下从 $${a}$ 到 $${high}$ 的 $${answer + 1}$ 个整数。去掉使分母为零的 $x = ${b}$，得 $${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Use the root",
+            "利用根式",
+            `The root needs $x \\ge ${a}$, which leaves the $${answer + 1}$ integers from $${a}$ to $${high}$. At $x = ${a}$ the root is $0$, and $f$ is continuous from the right.`,
+            `根式要求 $x \\ge ${a}$，这样剩下从 $${a}$ 到 $${high}$ 的 $${answer + 1}$ 个整数。在 $x = ${a}$ 处根式为 $0$，$f$ 右连续。`,
+          ],
+          [
+            "Use the denominator",
+            "利用分母",
+            `Leaving out $x = ${b}$, where the denominator vanishes, gives $${answer}$.`,
+            `去掉使分母为零的 $x = ${b}$，得 $${answer}$。`,
+          ],
+        ],
+        [
+          `Count the other way. There are $${high - low + 1}$ integers from $${low}$ to $${high}$; the $${a - low}$ below $${a}$ have no real root, and $x = ${b}$ divides by $0$, leaving $${high - low + 1} - ${a - low} - 1 = ${answer}$.\n\nSome of the values that remain:\n\n${rows}\n\nEach is a real number, so $f$ is defined there.`,
+          `换一种方法数。从 $${low}$ 到 $${high}$ 共有 $${high - low + 1}$ 个整数；小于 $${a}$ 的 $${a - low}$ 个没有实数根，$x = ${b}$ 要除以 $0$，剩下 $${high - low + 1} - ${a - low} - 1 = ${answer}$ 个。\n\n剩下的点处的一些函数值：\n\n${rows}\n\n每个都是实数，所以 $f$ 在这些点有定义。`,
+        ],
       ),
     });
   },
@@ -2883,13 +2901,15 @@ const jumpsOfFloor: KnowledgePointDef = {
   figure: calculusDrawings1["jump-discontinuities#the-number-of-jumps-of-a-floor-function"],
   title: t("The number of jumps of a floor function", "取整函数的跳跃次数"),
   explanation: t(
-    "The floor function $\\lfloor u \\rfloor$ jumps by 1 whenever $u$ reaches an integer. So $\\lfloor kx \\rfloor$ jumps wherever $kx$ is an integer, which happens at each multiple of $\\frac{1}{k}$. Compressing the graph horizontally in this way makes the jumps more frequent, with $k$ of them for each unit of $x$. When counting over an interval, check whether the ends are included, since a jump at an end of the interval would not count as an interior one.",
-    "取整函数 $\\lfloor u \\rfloor$ 在 $u$ 到达整数时跳跃 1。所以 $\\lfloor kx \\rfloor$ 在 $kx$ 为整数处跳跃，这发生在 $\\frac{1}{k}$ 的每个倍数处。这样水平压缩图像使跳跃更频繁，$x$ 每一个单位内有 $k$ 次。在区间上计数时要看端点是否包含，因为区间端点处的跳跃不算内部的跳跃。",
+    "The floor function $\\lfloor u \\rfloor$ jumps by 1 whenever $u$ reaches an integer. So $\\lfloor kx \\rfloor$ jumps wherever $kx$ is an integer, which happens at each multiple of $\\frac{1}{k}$. Compressing the graph horizontally in this way makes the jumps more frequent, with $k$ of them for each unit of $x$. When counting over an interval, check whether the ends are included, since a jump at an end of the interval would not count as an interior one.\n\nFor example, $\\lfloor 2x \\rfloor$ on $(0, 3)$ jumps at $0.5, 1, 1.5, 2$ and $2.5$, five times, which is $2 \\cdot 3 - 1$.\n\nCheck: $\\lfloor 2(0.49) \\rfloor = 0$ and $\\lfloor 2(0.51) \\rfloor = 1$, so the first jump is at $0.5$.\n\n> **Watch out.** The open interval leaves out its right end $x = n$, where $kx = kn$ is also an integer. Counting it gives one too many.",
+    "取整函数 $\\lfloor u \\rfloor$ 在 $u$ 到达整数时跳跃 1。所以 $\\lfloor kx \\rfloor$ 在 $kx$ 为整数处跳跃，这发生在 $\\frac{1}{k}$ 的每个倍数处。这样水平压缩图像使跳跃更频繁，$x$ 每一个单位内有 $k$ 次。在区间上计数时要看端点是否包含，因为区间端点处的跳跃不算内部的跳跃。\n\n例如，$\\lfloor 2x \\rfloor$ 在 $(0, 3)$ 上于 $0.5, 1, 1.5, 2, 2.5$ 处跳跃，共五次，即 $2 \\cdot 3 - 1$。\n\n检验：$\\lfloor 2(0.49) \\rfloor = 0$，$\\lfloor 2(0.51) \\rfloor = 1$，所以第一次跳跃在 $0.5$ 处。\n\n> **注意。** 开区间不包含右端点 $x = n$，而那里 $kx = kn$ 也是整数。把它算进去就多了一个。",
   ),
   generate(rng) {
     const k = rng.int(2, 9);
     const n = rng.int(2, 12);
     const answer = k * n - 1;
+    const xs = [1 / k - 0.01, 1 / k + 0.01, 2 / k - 0.01, 2 / k + 0.01].map((x) => Math.round(x * 1000) / 1000);
+    const rows = valueTable(xs, [["f(x)", (x) => Math.floor(k * x + 1e-9)]]);
     return numberProblem({
       prompt: t(
         `How many jump discontinuities does $f(x) = \\lfloor ${k}x \\rfloor$ have on the open interval $(0, ${n})$?`,
@@ -2898,9 +2918,25 @@ const jumpsOfFloor: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [answer + 1, answer + 2, n - 1, k - 1],
-      solution: t(
-        `A jump occurs where $${k}x$ is an integer, at $x = \\frac{j}{${k}}$. Inside the interval, $j$ runs from $1$ to $${k * n - 1}$, because $j = ${k * n}$ gives the excluded end. That makes $${answer}$.`,
-        `当 $${k}x$ 为整数时发生跳跃，即 $x = \\frac{j}{${k}}$。在区间内部，$j$ 从 $1$ 取到 $${k * n - 1}$，因为 $j = ${k * n}$ 对应被排除的端点。共 $${answer}$ 个。`,
+      solution: walk(
+        [
+          [
+            "Find where the jumps are",
+            "找出跳跃的位置",
+            `A jump occurs where $${k}x$ is an integer, at $x = \\frac{j}{${k}}$.`,
+            `当 $${k}x$ 为整数时发生跳跃，即 $x = \\frac{j}{${k}}$。`,
+          ],
+          [
+            "Count those inside",
+            "数出内部的跳跃",
+            `Inside the interval, $j$ runs from $1$ to $${k * n - 1}$, because $j = ${k * n}$ gives the excluded end. That makes $${answer}$.`,
+            `在区间内部，$j$ 从 $1$ 取到 $${k * n - 1}$，因为 $j = ${k * n}$ 对应被排除的端点。共 $${answer}$ 个。`,
+          ],
+        ],
+        [
+          `Count unit by unit. Each of the $${n}$ intervals $(m, m + 1)$ holds $${k - 1}$ jumps, and the $${n - 1}$ whole numbers from $1$ to $${n - 1}$ add one each: $${n} \\cdot ${k - 1} + ${n - 1} = ${answer}$.\n\nThe first two jumps can be seen in the values:\n\n${rows}\n\nThe value steps up by $1$ across $x = \\frac{1}{${k}}$ and again across $x = \\frac{2}{${k}}$.`,
+          `逐个单位地数。$${n}$ 个区间 $(m, m + 1)$ 中每个有 $${k - 1}$ 次跳跃，$1$ 到 $${n - 1}$ 这 $${n - 1}$ 个整数处各有一次：$${n} \\cdot ${k - 1} + ${n - 1} = ${answer}$。\n\n从函数值可以看到前两次跳跃：\n\n${rows}\n\n函数值在 $x = \\frac{1}{${k}}$ 两侧增加 $1$，在 $x = \\frac{2}{${k}}$ 两侧又增加 $1$。`,
+        ],
       ),
     });
   },
