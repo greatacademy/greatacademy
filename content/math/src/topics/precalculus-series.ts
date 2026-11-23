@@ -113,15 +113,67 @@ function nearHalf(v: Q, places: number): boolean {
   return frac.sub(Q.of(1, 2)).abs().cmp(Q.of(1, 50)) < 0;
 }
 
-/** money writes an amount of money with two decimal places and thousands separators: "12{,}345.60". */
+/**
+ * thousands separates the thousands of a whole number of five or more digits, "12{,}345", and leaves a four-digit number
+ * as it is, "3000", as the polish step does.
+ */
+const thousands = (digits: string) => (digits.replace("-", "").length > 4 ? digits.replace(/\B(?=(\d{3})+$)/g, "{,}") : digits);
+
+/** money writes an amount of money with two decimal places and thousands separators from five digits on: "12{,}345.60". */
 function money(v: Q): string {
   const [whole = "", frac] = dec(v).split(".");
-  const g = whole.replace(/\B(?=(\d{3})+$)/g, "{,}");
+  const g = thousands(whole);
   return frac ? `${g}.${frac.padEnd(2, "0")}` : g;
 }
 
-/** grouped writes an integer with thousands separators: "12{,}345". */
-const grouped = (v: number | Q) => num(v).replace(/\B(?=(\d{3})+$)/g, "{,}");
+/** grouped writes an integer with thousands separators from five digits on: "12{,}345", but "3000". */
+const grouped = (v: number | Q) => thousands(num(v));
+
+/** mathSpans matches a span of display or inline math, skipping an escaped dollar sign. */
+const mathSpans = /\\\$|\$\$[\s\S]*?\$\$|\$(?:\\.|[^$\\])*\$/g;
+
+/** keptTex matches TeX whose digits are names, not quantities: "\text{...}" or a subscript "_{...}". */
+const keptTex = /(\\(?:text|mathrm|operatorname)\{[^{}]*\}|_\{[^{}]*\})/;
+
+/** longWhole matches a whole number of five or more digits that does not start with 0, outside a decimal part and a subscript base. */
+const longWhole = /(?<![\d.])[1-9]\d{4,}(?![\d_])/g;
+
+/**
+ * separateLong separates the thousands of every whole number of five or more digits in the math of a text, so that the
+ * polish step finds no long number to group and leaves the four-digit numbers beside it as they are: "3000" and
+ * "16{,}576" in one span, never "3{,}000".
+ */
+function separateLong(text: Text): Text {
+  const fix = (s: string) =>
+    s.replace(mathSpans, (span) =>
+      span
+        .split(keptTex)
+        .map((part, i) => (i % 2 ? part : part.replace(longWhole, (digits) => thousands(digits))))
+        .join(""),
+    );
+  return { ...text, en: fix(text.en), "zh-CN": fix(text["zh-CN"]) };
+}
+
+/** withFourDigits makes the generators of a topic write four-digit numbers without a separator, through separateLong. */
+function withFourDigits(topic: TopicDef): TopicDef {
+  return {
+    ...topic,
+    knowledgePoints: topic.knowledgePoints.map((kp) => ({
+      ...kp,
+      generate: (rng, difficulty) => {
+        const problem = kp.generate(rng, difficulty);
+        const { input } = problem.answer;
+        return {
+          ...problem,
+          prompt: separateLong(problem.prompt),
+          solution: separateLong(problem.solution),
+          answer:
+            input.kind === "choice" ? { ...problem.answer, input: { ...input, options: input.options.map(separateLong) } } : problem.answer,
+        };
+      },
+    })),
+  };
+}
 
 /** SigmaOption is a way of writing a series in sigma notation, with the kth term as a function. */
 interface SigmaOption {
@@ -3705,4 +3757,4 @@ export const precalculusSeriesTopics: readonly TopicDef[] = [
   expandingABinomialUsingBinomialCoefficients,
   theSpecialCaseOfTheBinomialTheorem,
   approximatingValuesUsingTheBinomialTheorem,
-];
+].map(withFourDigits);

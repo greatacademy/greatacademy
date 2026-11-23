@@ -1177,8 +1177,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
       "the-size-of-the-next-term",
       ["The size of the next term", "下一项的大小"],
       [
-        "When $x$ is small, each term of $(1 + x)^{n}$ is much smaller than the one before. So the first term left out tells how far off the approximation is likely to be.",
-        "$x$ 很小时，$(1 + x)^{n}$ 的每一项都比前一项小得多。所以舍去的第一项说明近似值大约差多少。",
+        "When $x$ is small, each term of $(1 + x)^{n}$ is much smaller than the one before. So the first term left out tells how far off the approximation is likely to be.\n\nFor $1.02^{5}$, the first two terms give $1 + 5(0.02) = 1.1$. The first term left out is\n\n$$\\binom{5}{2}(0.02)^{2} = 10 \\times 0.0004 = 0.004$$\n\nCheck: $1.02^{5} = 1.1040808\\ldots$, which is $0.00408\\ldots$ above $1.1$, close to $0.004$.\n\n> **Watch out.** The term left out is $\\binom{n}{2}x^{2}$, with the coefficient $\\binom{n}{2} = \\frac{n(n - 1)}{2}$, not $n^{2}$. It is positive even when $x$ is negative, and $(0.0k)^{2}$ has four decimal places: $0.03^{2} = 0.0009$, not $0.009$.",
+        "$x$ 很小时，$(1 + x)^{n}$ 的每一项都比前一项小得多。所以舍去的第一项说明近似值大约差多少。\n\n对 $1.02^{5}$，前两项给出 $1 + 5(0.02) = 1.1$。舍去的第一项是\n\n$$\\binom{5}{2}(0.02)^{2} = 10 \\times 0.0004 = 0.004$$\n\n检验：$1.02^{5} = 1.1040808\\ldots$，比 $1.1$ 大 $0.00408\\ldots$，与 $0.004$ 很接近。\n\n> **注意。** 舍去的项是 $\\binom{n}{2}x^{2}$，系数是 $\\binom{n}{2} = \\frac{n(n - 1)}{2}$，不是 $n^{2}$。即使 $x$ 是负数，这一项也是正的；而且 $(0.0k)^{2}$ 有四位小数：$0.03^{2} = 0.0009$，不是 $0.009$。",
       ],
       (rng) => {
         const k = rng.int(1, 5);
@@ -1187,6 +1187,13 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
         const base = minus ? 100 - k : 100 + k;
         const term = (n * (n - 1) * k * k) / 2;
         const shown = `${Math.floor(base / 100)}.${String(base % 100).padStart(2, "0")}`;
+        const x = `${minus ? "-" : ""}0.0${k}`;
+        const sign = minus ? "-" : "+";
+        const pairs = (n * (n - 1)) / 2;
+        const square = String((k * k) / 10000);
+        const answer = String(term / 10000);
+        const second = String((n * k) / 100);
+        const ratio = String(((n - 1) * k) / 200);
         return decimal(
           [
             `$${shown}^{${n}}$ is approximated by the first two terms of a binomial expansion. What is the first term left out?`,
@@ -1195,8 +1202,8 @@ export const deeperPrecalculusThird3Points: Readonly<Record<string, readonly Kno
           Q.of(term, 10000),
           [Q.of(n * k, 100), Q.of(n * n * k * k, 10000), Q.of(term, 1000)],
           [
-            `It is $\\binom{${n}}{2}(0.0${k})^{2}$, which is positive for either sign of the small part.`,
-            `它是 $\\binom{${n}}{2}(0.0${k})^{2}$，小量无论正负，这一项都是正的。`,
+            `**Step 1: Write the number as one plus a small part.** $${shown} = 1 ${sign} 0.0${k}$, so the expansion is\n\n$$${minus ? `(1 + (${x}))` : `(1 + ${x})`}^{${n}} = 1 ${sign} \\binom{${n}}{1}(0.0${k}) + \\binom{${n}}{2}(0.0${k})^{2} ${sign} \\cdots$$\n\n**Step 2: Find the first term left out.** The first two terms are $1 ${sign} ${second}$, so the next one is $\\binom{${n}}{2}(${x})^{2}$. The square makes it positive.\n\n**Step 3: Compute it.**\n\n$$\\binom{${n}}{2}(0.0${k})^{2} = \\frac{${n} \\times ${n - 1}}{2} \\times ${square} = ${pairs} \\times ${square} = ${answer}$$\n\n**Check.** Going from the term in $x$ to the term in $x^{2}$ multiplies the size by $\\frac{${n - 1}}{2} \\times 0.0${k} = ${ratio}$. Starting from the second term $${second}$:\n\n$$${second} \\times ${ratio} = ${answer}$$`,
+            `**第一步：把这个数写成 1 加一个小量。** $${shown} = 1 ${sign} 0.0${k}$，所以展开式是\n\n$$${minus ? `(1 + (${x}))` : `(1 + ${x})`}^{${n}} = 1 ${sign} \\binom{${n}}{1}(0.0${k}) + \\binom{${n}}{2}(0.0${k})^{2} ${sign} \\cdots$$\n\n**第二步：找出舍去的第一项。** 前两项是 $1 ${sign} ${second}$，所以下一项是 $\\binom{${n}}{2}(${x})^{2}$。平方使它为正。\n\n**第三步：计算。**\n\n$$\\binom{${n}}{2}(0.0${k})^{2} = \\frac{${n} \\times ${n - 1}}{2} \\times ${square} = ${pairs} \\times ${square} = ${answer}$$\n\n**检验。** 从含 $x$ 的项到含 $x^{2}$ 的项，大小乘以 $\\frac{${n - 1}}{2} \\times 0.0${k} = ${ratio}$。从第二项 $${second}$ 出发：\n\n$$${second} \\times ${ratio} = ${answer}$$`,
           ],
         );
       },

@@ -163,4 +163,5 @@ export const taughtTopics: readonly string[] = [
   "calculating-the-components-of-cartesian-vectors-in-2d",
   "velocity-and-acceleration-for-plane-motion",
   "calculating-displacement-for-plane-motion",
+  "approximating-values-using-the-binomial-theorem",
 ];
