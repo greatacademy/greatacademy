@@ -18,7 +18,7 @@ export const levelSevenClues = parseClues(`
 衰老/1 | 运动可以延缓身体的 | Exercise slows what happens to the body as the years pass, so the word must mean ageing.
 巨变/1 | 小渔村现在到处是高楼 | A small fishing village is now full of tall buildings, so the word must mean great change.
 缓慢/1 | 老人走路很慢 | We must wait patiently because the old man walks at a slow pace, so the word must mean slow.
-迅猛/1 | 网上购物发展很快 | So many people now buy online that few go to shops, so the word must mean rapid.
+迅猛/1 | 网上购物发展很快 | Within a few years most people have come to buy online and few go to shops, so the word must mean rapid.
 飞跃/1 | 从写信到电子邮件 | Going from letters to email was a sudden step forward in how people write to each other, so the word must mean leap.
 突飞猛进/1 | 一年努力汉语水平进步很快 | After one year of hard work his Chinese improved very quickly, so the word must mean to advance by leaps and bounds.
 日新月异/1 | 去年的手机今年就有新型号 | A phone bought last year already has a newer model this year, so the word must mean to change with each passing day.
@@ -41,7 +41,7 @@ export const levelSevenClues = parseClues(`
 赶时髦/1 | 买新手机不是因为需要 | He bought a new phone not out of need but to keep up with others, so the word must mean to follow fashion.
 落伍/1 | 爷爷连用手机付钱都不会 | Grandpa laughs that he cannot even pay with a phone, so the word must mean outdated.
 昔日/1 | 过去的小渔村如今是旅游城市 | The village of the past has now become a busy tourist city, so the word must mean former days.
-今非昔比/1 | 小镇的变化太大了 | The town has changed so much that it is nothing like before, so the word must mean the present is not like the past.
+今非昔比/1 | 小镇的变化太大了 | The town has changed beyond recognition and is nothing like before, so the word must mean the present is not like the past.
 与时俱进/1 | 教材加入新知识 | Textbooks should add new knowledge as times change, so the word must mean to keep up with the times.
 抛弃/1 | “女孩子不用读书”这种旧观念 | The old idea that girls need no schooling is something we should throw away, so the word must mean to abandon.
 沿袭/1 | 村子至今还保留古老的婚礼习俗 | The village still keeps its ancient wedding customs, so the word must mean to carry on.
@@ -58,14 +58,14 @@ export const levelSevenClues = parseClues(`
 四世同堂/1 | 王奶奶的重孙子刚出生 | Grandma Wang's great-grandson has just been born, so the word must mean four generations under one roof.
 住宅/1 | 土地只能用来建，不能建工厂 | The land may be used for homes but not for factories, so the word must mean residence.
 豪宅/1 | 富商住在海边的 | A rich merchant lives in this house by the sea, so the word must mean mansion.
-楼梯/1 | 电梯坏了只好走 | The lift is broken, so they have to walk up to the tenth floor, so the word must mean stairs.
+楼梯/1 | 电梯坏了只好走 | The lift is broken and they have to walk up to the tenth floor, so the word must mean stairs.
 电梯/1 | 老楼没有，老人上下楼不方便 | Old people find going up and down hard because the old building lacks this, so the word must mean lift.
 简陋/1 | 只有一张床和一张桌子 | The house had only a bed and a table, so the word must mean crude, simple.
 平房/1 | 小时候住的，院子里种着花 | They lived there as children, with flowers growing in the yard, so the word must mean bungalow.
 楼房/1 | 村里盖起了三层的 | Many village families have built three-storey houses, so the word must mean multi-storey building.
 四合院/1 | 北京的老胡同里很多 | The old hutongs of Beijing have many of these, so the word must mean courtyard house.
 房贷/1 | 工资的一半用来还 | Half his monthly pay goes to paying back the loan on his home, so the word must mean mortgage.
-租金/1 | 市中心房子的很高 | Flats in the centre cost too much to rent, so he lives in the suburbs, so the word must mean rent.
+租金/1 | 市中心房子的很高 | Flats in the centre cost too much to rent, which is why he lives in the suburbs, so the word must mean rent.
 温饱/1 | 几十年前最大的愿望是吃饱穿暖 | Decades ago many families wanted above all to have enough to eat and wear, so the word must mean basic needs.
 小康/1 | 一家过上了不错的生活 | After years of effort the family now lives comfortably, so the word must mean moderate prosperity.
 脱贫/1 | 山村靠种茶叶不再穷 | Growing tea has let the mountain village stop being poor, so the word must mean to escape poverty.
@@ -103,7 +103,7 @@ export const levelSevenClues = parseClues(`
 门当户对/1 | 不太讲究家庭条件一样 | Young people now care about feelings more than about matching family status, so the word must mean well-matched families.
 单亲家庭/1 | 妈妈一个人把他养大 | His mother raised him by herself, so the word must mean single-parent family.
 核心家庭/1 | 爷爷奶奶不和孙子住在一起 | In the city grandparents do not live with their grandchildren, so the word must mean nuclear family.
-双职工/1 | 父母都上班，孩子由爷爷奶奶接 | Both parents work, so the grandparents collect the child from school, so the word must mean dual-income.
+双职工/1 | 父母都上班，孩子由爷爷奶奶接 | Both parents work and the grandparents collect the child from school, so the word must mean dual-income.
 家庭主妇/1 | 结婚后几年在家不工作 | After marrying she spent a few years at home before returning to work, so the word must mean housewife.
 晚婚/1 | 很多人三十多岁才结婚 | Many people do not marry until their thirties, so the word must mean late marriage.
 开明/1 | 父母支持他选喜欢的专业 | His parents support his choice of subject, so the word must mean enlightened.
@@ -113,7 +113,7 @@ export const levelSevenClues = parseClues(`
 依恋/1 | 小孩子对妈妈 | Small children feel a strong pull toward their mothers, so the word must mean attachment.
 留恋/1 | 毕业时舍不得校园生活 | At graduation everyone hates to leave campus life behind, so the word must mean to be reluctant to leave.
 逆境/1 | 在困难中也不放弃 | Only those who do not give up when things go wrong succeed, so the word must mean adversity.
-顺境/1 | 容易骄傲的时候 | People grow proud when all goes well, so they must keep reminding themselves, so the word must mean favourable circumstances.
+顺境/1 | 容易骄傲的时候 | People grow proud when all goes well and must keep reminding themselves, so the word must mean favourable circumstances.
 刻薄/1 | 说话常常让人下不了台 | His words often leave people humiliated in front of others, so the word must mean harsh.
 自豪/1 | 看到家乡的变化 | Seeing how his home town has changed fills him with a good feeling about it, so the word must mean proud.
 城镇化/1 | 越来越多农民住进城镇 | More and more farmers have moved into towns, so the word must mean urbanisation.
@@ -172,23 +172,23 @@ export const levelSevenClues = parseClues(`
 高等教育/1 | 年轻人走进大学校园 | More and more young people get to walk onto a university campus, so the word must mean higher education.
 职业教育/1 | 培养厨师、电工 | It trains cooks, electricians and mechanics, so the word must mean vocational education.
 成人教育/1 | 成年人在工作之余接受的 | The sentence defines it as what grown-ups study alongside their jobs, so the word must mean adult education.
-终身学习/1 | 毕业了也要继续学 | Society changes fast, so people cannot stop learning when they graduate, so the word must mean lifelong learning.
+终身学习/1 | 毕业了也要继续学 | Society changes fast and people cannot stop learning when they graduate, so the word must mean lifelong learning.
 夜校/1 | 白天上班，晚上去学会计 | He works by day and studies accounting in the evening, so the word must mean night school.
 远程教育/1 | 山区的孩子听城里老师的课 | Children in the mountains can follow classes given by teachers in the city, so the word must mean distance education.
 私立/1 | 学校不是政府办的，学费很高 | The school is not run by the government and its fees are high, so the word must mean private.
 名校/1 | 百年的，培养了很多人才 | The hundred-year-old middle school has produced many talented people, so the word must mean famous school.
 学府/1 | 北京大学是著名的高等 | Peking University is named with 高等 as a famous seat of learning, so the word must mean institution of learning.
-公立/1 | 学校由政府出钱办 | The government pays to run the school, so its fees are low, so the word must mean public.
+公立/1 | 学校由政府出钱办 | The government pays to run the school and its fees are low, so the word must mean public.
 母校/1 | 毕业二十年后回去做讲座 | Twenty years after graduating he goes back to the school he left to give a talk, so the word must mean alma mater.
 寄宿学校/1 | 每个月只回家一次 | He goes home only once a month, so the word must mean boarding school.
 学堂/1 | 一百多年前县里第一所新式的 | Over a century ago the county opened its first new-style place of learning here, so the word must mean school, old term.
 补习班/1 | 周末去提高数学成绩 | He spends weekends in extra classes to raise his maths marks, so the word must mean cram class.
 兴趣班/1 | 画画和跳舞两个 | She signed her daughter up for painting and dancing, so the word must mean hobby class.
 家教/1 | 大学生每周来讲两次英语 | A university student comes twice a week to teach him English, so the word must mean private tutor.
-学区房/1 | 为了上好学校花大价钱买 | They paid a great deal for a home so their child could go to a good school, so the word must mean school-district housing.
+学区房/1 | 为了上好学校花大价钱买 | They paid a great deal for a home in order that their child could go to a good school, so the word must mean school-district housing.
 学士/1 | 大学毕业拿到的学位 | He has finished university and been awarded his first degree, so the word must mean bachelor.
 博士后/1 | 拿到博士学位以后又做了两年 | After his doctorate he did two more years of research abroad, so the word must mean postdoc.
-本科生/1 | 这门课只对研究生开放 | The course is open only to graduate students, so the others may not take it, so the word must mean undergraduate.
+本科生/1 | 这门课只对研究生开放 | The course is open only to graduate students and others may not take it, so the word must mean undergraduate.
 大专/1 | 没有读本科，读三年制的 | He did not do a four-year degree but a three-year course, so the word must mean junior college.
 院士/1 | 当选为科学院的 | At eighty the scientist was elected to the Chinese Academy of Sciences, so the word must mean academician.
 副教授/1 | 三十五岁当上，四十岁成了教授 | She got this rank at thirty-five and became a full professor at forty, so the word must mean associate professor.
@@ -204,7 +204,7 @@ export const levelSevenClues = parseClues(`
 晚自习/1 | 高三学生九点半才放学 | Final-year pupils stay at school until half past nine every night, so the word must mean evening self-study.
 上课铃/1 | 响了，同学们跑回教室 | When it rings, the pupils run back to their classroom, so the word must mean school bell.
 走读/1 | 家离学校近，不在学校住 | He lives near the school and does not board there, so the word must mean to attend as a day pupil.
-住校/1 | 家在山里，周末才回家 | His home in the mountains is too far, so he goes home only at weekends, so the word must mean to live at school.
+住校/1 | 家在山里，周末才回家 | His home in the mountains is too far away and he goes home only at weekends, so the word must mean to live at school.
 校服/1 | 每周一升国旗时要穿 | Everyone must wear it at the Monday flag-raising, so the word must mean school uniform.
 铅笔/1 | 画图时用，画错了可以擦掉 | Mistakes in a drawing can be rubbed out if it is drawn with this, so the word must mean pencil.
 橡皮/1 | 写错了字借来用一下 | The speaker wrote a character wrong and wants to borrow something to fix it, so the word must mean eraser.
@@ -245,9 +245,9 @@ export const levelSevenClues = parseClues(`
 似懂非懂/1 | 听完解释还是不太明白地点头 | After the explanation he nodded without really understanding, so the word must mean to half understand.
 心领神会/1 | 老师看了他一眼他马上明白 | One glance from the teacher and he understood at once and fell silent, so the word must mean to understand tacitly.
 迷惑/1 | 题的说法让同学们不明白 | The wording of the problem left many pupils unsure what it meant, so the word must mean puzzled.
-专心致志/1 | 做作业连妈妈叫他也没听见 | He was so absorbed in his homework that he did not hear his mother call, so the word must mean wholly absorbed.
+专心致志/1 | 做作业连妈妈叫他也没听见 | He was absorbed in his homework and did not even hear his mother call, so the word must mean wholly absorbed.
 愚笨/1 | 觉得自己笨，其实是方法不对 | He thinks he is not clever, but he just has not found a good way to study, so the word must mean stupid.
-迟钝/1 | 没睡好，今天反应慢 | He slept badly, so today he reacts slowly, so the word must mean slow-witted.
+迟钝/1 | 没睡好，今天反应慢 | He slept badly and today he reacts slowly, so the word must mean slow-witted.
 笨拙/1 | 第一次包饺子动作 | It is his first time making dumplings, so the word must mean clumsy.
 发呆/1 | 上课看着窗外 | In class he often gazes out of the window, so the word must mean to stare blankly.
 天分/1 | 三岁就会弹钢琴 | She could play the piano at three, so the word must mean talent.
@@ -264,7 +264,7 @@ export const levelSevenClues = parseClues(`
 半途而废/1 | 开始了就不要停下 | Once you have started, you should not stop before the end, so the word must mean to give up halfway.
 闻鸡起舞/1 | 天不亮就起床练习 | He gets up before dawn every day to practise, so the word must mean to rise at cockcrow to practise.
 好学/1 | 不懂的问题总要问明白 | Whenever the child meets something he does not know, he asks until he understands, so the word must mean fond of learning.
-笨鸟先飞/1 | 学得慢就早到一小时练习 | The speaker learns slowly and so arrives an hour early to practise, so the word must mean the slow bird sets off early.
+笨鸟先飞/1 | 学得慢就早到一小时练习 | The speaker learns slowly and therefore arrives an hour early to practise, so the word must mean the slow bird sets off early.
 十年寒窗/1 | 苦读多年考上理想大学 | After long years of hard study he got into the university he wanted, so the word must mean years of hard study.
 恩师/1 | 获奖后第一个感谢的老师 | After winning the prize, the first person he rang to thank was his teacher, so the word must mean beloved teacher.
 教诲/1 | 老师说做人要诚实 | He has always kept the teacher's words: be honest, so the word must mean teaching, instruction.
@@ -285,29 +285,29 @@ export const levelSevenClues = parseClues(`
 分数线/1 | 比大学的高了二十分 | His score was twenty points above what the university requires, so the word must mean cutoff score.
 中考/1 | 初三学生正在准备 | Pupils in the last year of junior middle school are preparing for it, so the word must mean senior high entrance exam.
 统考/1 | 全市初二学生一起参加 | All second-year pupils in the city take the same maths exam next week, so the word must mean unified exam.
-复读/1 | 高考不理想再读一年 | His entrance exam results were poor, so he will study the year again, so the word must mean to repeat a year.
+复读/1 | 高考不理想再读一年 | His entrance exam results were poor and he will study the year again, so the word must mean to repeat a year.
 录取通知书/1 | 收到大学的，高兴得跳起来 | He received it from the university and jumped for joy, so the word must mean admission letter.
 保送/1 | 数学比赛一等奖直接上大学 | His first prize in the national maths contest got him into university without the exam, so the word must mean to recommend for admission.
 填报/1 | 高考成绩出来后考生要做的 | Once results are out, candidates list the schools they want, so the word must mean to fill in.
-调剂/1 | 没被第一志愿录取被安排到别的专业 | His first choice did not take him, so he was placed in another subject, so the word must mean to reassign.
+调剂/1 | 没被第一志愿录取被安排到别的专业 | His first choice did not take him and he was placed in another subject, so the word must mean to reassign.
 慎重/1 | 选专业是大事要认真考虑 | Choosing a subject is a big decision that needs careful thought, so the word must mean prudent.
 升学/1 | 家长关心孩子能不能上更高的学校 | Parents care a lot about whether their children go on to the next school, so the word must mean to go on to higher school.
 择校/1 | 家长打听各个学校的情况 | Some parents start asking about every school very early, so the word must mean to choose a school.
 插班/1 | 从外地转来进我们班 | He transferred from elsewhere and joined the class partway through, so the word must mean to join a class midway.
 跳级/1 | 从三年级直接到五年级 | He went straight from the third year to the fifth, so the word must mean to skip a grade.
-留级/1 | 生病缺课多，再读一年 | He missed so many classes through illness that he must stay in the same year, so the word must mean to repeat a grade.
+留级/1 | 生病缺课多，再读一年 | He missed many classes through illness and must stay in the same year, so the word must mean to repeat a grade.
 挫折/1 | 遇到了不要怕，要从失败中学习 | The speaker says not to fear it but to learn from failure, so the word must mean setback.
 屡次/1 | 多次迟到被批评 | He was late again and again and the teacher criticised him, so the word must mean repeatedly.
 气馁/1 | 一次没考好不要灰心 | One bad exam is no reason to lose heart, and 不要 tells you not to, so the word must mean discouraged.
 沮丧/1 | 比赛输了队员们 | The players have just lost the match, so the word must mean dejected.
 丧失/1 | 失败让他失去了信心 | The failure took away his confidence, so the word must mean to lose.
-被迫/1 | 雨太大比赛停止 | The rain was so heavy that the match had to stop, so the word must mean to be forced.
+被迫/1 | 雨太大比赛停止 | The rain was too heavy for the match to go on, so the word must mean to be forced.
 逼迫/1 | 父母不应该强迫孩子学 | Parents should not push children to learn things they dislike, so the word must mean to force.
 迫切/1 | 山区孩子很需要好老师 | Mountain children need more good teachers very badly, so the word must mean urgent.
 辍学/1 | 农村孩子因为家穷不上学了 | In the past some village children left school because their families were poor, so the word must mean to drop out.
 屡见不鲜/1 | 中学生戴眼镜很常见 | Middle-school pupils wearing glasses for short sight is now seen everywhere, so the word must mean commonplace.
 溺爱/1 | 父母过分爱孩子 | Parents who indulge their children too much may raise children who can do nothing, so the word must mean to spoil.
-娇惯/1 | 从小被爷爷奶奶宠，吃不了苦 | His grandparents spoilt him, so he cannot bear any hardship, so the word must mean to pamper.
+娇惯/1 | 从小被爷爷奶奶宠，吃不了苦 | His grandparents spoilt him from childhood and he cannot bear any hardship, so the word must mean to pamper.
 纵容/1 | 孩子犯错大人不能不管 | When a child does wrong, adults must not let it pass but explain patiently, so the word must mean to connive at.
 放纵/1 | 放假也不能每天玩到半夜 | Even on holiday you should not play until midnight every day, so the word must mean to indulge.
 叮嘱/1 | 妈妈说路上注意安全 | Before he goes out, Mum tells him to be careful on the way, so the word must mean to urge again and again.
@@ -338,9 +338,9 @@ export const levelSevenClues = parseClues(`
 转正/1 | 工作认真，提前成了正式员工 | His hard work got him a permanent post a month early, so the word must mean to become a full employee.
 劳动合同/1 | 上班前公司和员工签 | The company and the employee sign it before work begins, so the word must mean employment contract.
 续约/1 | 合同到期公司希望再签 | The contract ends next month and the company wants to keep him, so the word must mean to renew a contract.
-解约/1 | 公司不按时发工资，提前结束合同 | The company never pays on time, so he will end the contract early, so the word must mean to terminate a contract.
-薪酬/1 | 公司的很高吸引年轻人 | The company pays so well that it attracts many young people, so the word must mean remuneration.
-底薪/1 | 销售员靠提成，这个不高 | Salespeople earn mainly through commission, so this part is low, so the word must mean basic salary.
+解约/1 | 公司不按时发工资，提前结束合同 | The company never pays on time and he will end the contract early, so the word must mean to terminate a contract.
+薪酬/1 | 公司的很高吸引年轻人 | The company pays well enough to attract many young people, so the word must mean remuneration.
+底薪/1 | 销售员靠提成，这个不高 | Salespeople earn mainly through commission and this part is low, so the word must mean basic salary.
 津贴/1 | 高温天气工作的工人每月有 | Workers who work in the heat get an extra sum each month, so the word must mean allowance.
 加班费/1 | 每天工作到十点，工资多了 | He worked until ten every night this month and his pay grew, so the word must mean overtime pay.
 年终奖/1 | 公司效益好每人拿到 | The company did well this year and every employee got an extra sum, so the word must mean year-end bonus.
@@ -350,7 +350,7 @@ export const levelSevenClues = parseClues(`
 考勤/1 | 制度严格，迟到三次扣钱 | Being late three times costs money under the strict rules, so the word must mean attendance check.
 旷工/1 | 没请假三天不来上班 | He stayed away three days without asking for leave, so the word must mean absenteeism.
 早退/1 | 没到下班时间就走了 | He went home in the afternoon before work was over, so the word must mean to leave early.
-调休/1 | 周末加了班这周休一天 | He worked last weekend, so he can have a day off this week, so the word must mean to take a day off in lieu.
+调休/1 | 周末加了班这周休一天 | He worked last weekend and can have a day off this week, so the word must mean to take a day off in lieu.
 年假/1 | 用了五天带家人去海边 | He took five days off to go to the seaside with his family, so the word must mean annual leave.
 病假/1 | 发烧了请了两天 | He has a fever and has asked for two days off, so the word must mean sick leave.
 产假/1 | 生完孩子休了三个多月 | After having her baby she was off work for over three months, so the word must mean maternity leave.
@@ -365,18 +365,18 @@ export const levelSevenClues = parseClues(`
 前台/1 | 客人到了先在这里登记 | Visitors sign in here first when they arrive, so the word must mean reception.
 文员/1 | 每天整理文件、打印资料 | She files documents and prints material all day, so the word must mean clerk.
 后勤/1 | 负责员工的食堂和宿舍 | This department runs the staff canteen and dormitories, so the word must mean logistics.
-客服/1 | 东西坏了打电话要求换货 | What he bought broke, so he phoned to ask for an exchange, so the word must mean customer service.
+客服/1 | 东西坏了打电话要求换货 | What he bought broke and he phoned to ask for an exchange, so the word must mean customer service.
 赴任/1 | 被派到南方分公司下个月去 | He has been posted as manager of the southern branch and goes next month, so the word must mean to go to one's post.
 走马上任/1 | 新校长昨天第一天上班 | The new principal started yesterday and sat in on several lessons on day one, so the word must mean to take office.
 卸任/1 | 明年从总经理的位置上下来 | He will leave the post of general manager next year, so the word must mean to leave office.
 撤职/1 | 因为严重失职 | He was removed for serious neglect of duty, so the word must mean to dismiss from a post.
 接替/1 | 老王退休由小李做他的工作 | When Lao Wang retires, Xiao Li will do his job, so the word must mean to take over.
-留任/1 | 董事会让他再干三年 | His work is excellent, so the board keeps him for three more years, so the word must mean to remain in office.
+留任/1 | 董事会让他再干三年 | His work is excellent and the board keeps him for three more years, so the word must mean to remain in office.
 前任/1 | 新经理改变了上一任的做法 | The new manager changed many of the ways of the man before him, so the word must mean predecessor.
 现任/1 | 学校的校长干了五年 | He has been the school's principal for five years, so the word must mean current.
 兼任/1 | 数学老师同时当班主任 | He teaches maths and is also form teacher, so the word must mean to hold concurrently.
 出任/1 | 学者被请来当所长 | The famous scholar was invited to become head of the institute, so the word must mean to take up a post.
-顶替/1 | 小王生病由我替他值班 | Xiao Wang is ill, so the speaker does his duty today, so the word must mean to replace, stand in.
+顶替/1 | 小王生病由我替他值班 | Xiao Wang is ill and the speaker does his duty today, so the word must mean to replace, stand in.
 替补/1 | 主力受伤时才上场 | He plays only when a regular player is hurt, so the word must mean substitute.
 替换/1 | 旧电脑太慢该换新的 | The old computer is too slow and should give way to a new one, so the word must mean to replace.
 搭档/1 | 多年的工作伙伴配合好 | The two have worked side by side for years and get on well, so the word must mean partner.
@@ -443,7 +443,7 @@ export const levelSevenClues = parseClues(`
 外行/1 | 看不懂设计图 | The speaker cannot read these design drawings, so the word must mean layman.
 匠心/1 | 作品体现了工匠的 | Every part of the work shows the craftsman's inventive care, so the word must mean ingenuity.
 学徒/1 | 十六岁到饭馆学做菜 | At sixteen he went to work in a restaurant to learn cooking, so the word must mean apprentice.
-摸索/1 | 没人教自己找出好方法 | No one taught him, so he worked out a good method by trial, so the word must mean to grope for.
+摸索/1 | 没人教自己找出好方法 | No one taught him, and he worked out a good method by trial, so the word must mean to grope for.
 得心应手/1 | 做了三年这份工作 | After three years he does the job with ease, so the word must mean with facility.
 本行/1 | 当了几年老师又回去做医生 | After some years as a teacher he went back to being a doctor, so the word must mean one's own profession.
 转行/1 | 当了五年记者后做教师 | He was a reporter for five years and then became a teacher, so the word must mean to change profession.
@@ -451,7 +451,7 @@ export const levelSevenClues = parseClues(`
 待业/1 | 毕业后在家半年才找到工作 | After graduating he stayed at home for half a year before finding work, so the word must mean to be unemployed.
 在职/1 | 一边工作一边读研究生 | He studies for a master's while keeping his job, so the word must mean on the job.
 停职/1 | 调查结束以前不能上班 | He may not work until the investigation ends, so the word must mean to be suspended.
-复职/1 | 调查证明他没问题回去上班 | The investigation cleared him, so he can go back to work next month, so the word must mean to be reinstated.
+复职/1 | 调查证明他没问题回去上班 | The investigation cleared him and he can go back to work next month, so the word must mean to be reinstated.
 入职/1 | 上个月刚到公司 | He started at the company only last month, so the word must mean to join a company.
 自由职业者/1 | 在家给杂志画画 | He works from home drawing for several magazines, so the word must mean freelancer.
 远程办公/1 | 有了网络会议在家 | With online meetings many people can work from home, so the word must mean remote work.
@@ -460,7 +460,7 @@ export const levelSevenClues = parseClues(`
 罢工/1 | 工资太低工人停止工作 | The workers stop work for three days because pay is too low, so the word must mean to strike.
 劳资/1 | 双方谈判签新合同 | The two sides, workers and employers, negotiated a new contract, so the word must mean labour and capital.
 纠纷/1 | 两家公司因为合同 | The two companies have fallen out over a contract, so the word must mean dispute.
-仲裁/1 | 谈不出结果只好申请 | Long talks brought no result, so the two sides asked a third party to decide, so the word must mean arbitration.
+仲裁/1 | 谈不出结果只好申请 | Long talks brought no result and the two sides asked a third party to decide, so the word must mean arbitration.
 维权/1 | 工人依法保护自己 | The workers use the law to protect what is theirs, so the word must mean to defend one's rights.
 欠薪/1 | 三个月没发的工资 | The company has paid no wages for three months and staff want them back, so the word must mean wage arrears.
 拖欠/1 | 公司三个月没给工资 | The company has not paid its workers for three months, so the word must mean to be in arrears.
@@ -494,19 +494,19 @@ export const levelSevenClues = parseClues(`
 肠道/1 | 有好几米长，分小肠大肠 | It is several metres long and has a small and a large part, so the word must mean intestines.
 大肠/1 | 食物经过小肠以后进入 | Food passes through the small intestine before entering it, so the word must mean large intestine.
 小肠/1 | 营养主要在里面被吸收 | Most of the nourishment in food is absorbed there, so the word must mean small intestine.
-声带/1 | 大声喊了一天，几天说不出话 | Shouting all day hurt him so that he could not speak for days, so the word must mean vocal cords.
+声带/1 | 大声喊了一天，几天说不出话 | Shouting all day left him unable to speak for days, so the word must mean vocal cords.
 颈部/1 | 长时间低头看手机会累 | Looking down at a phone for a long time tires it, so the word must mean neck.
 脊椎/1 | 从头下面到腰下面三十多节 | It runs from below the head to below the waist in over thirty pieces, so the word must mean spine.
 颈椎/1 | 整天低头看手机容易得病 | Looking down at a phone all day brings trouble in this part of the neck, so the word must mean cervical spine.
 腰椎/1 | 弯腰搬重东西容易伤到 | Bending over to lift heavy things can injure this part of the back, so the word must mean lumbar spine.
-手腕/1 | 打字太多有点儿疼 | She has typed so much that it hurts where her hand meets her arm, so the word must mean wrist.
+手腕/1 | 打字太多有点儿疼 | She has typed a lot and it hurts where her hand meets her arm, so the word must mean wrist.
 四肢/1 | 两只手臂和两条腿 | The sentence lists two arms and two legs, so the word must mean limbs.
 肢体/1 | 演员不说话只用动作 | The actor does not speak and shows feelings only by moving, so the word must mean body.
 筋骨/1 | 爷爷打太极拳活动 | Grandpa does tai chi every morning to loosen up his body, so the word must mean muscles and bones.
 抽筋/1 | 游泳时腿突然不能动 | His leg suddenly seized up while swimming and he got out, so the word must mean cramp.
 假肢/1 | 失去一条腿装上以后能走路 | He lost a leg and can walk again with an artificial one, so the word must mean prosthesis.
 伤筋动骨/1 | 骨头伤了要一百天 | The saying says it takes a hundred days, since broken bones need long rest, so the word must mean to injure bones and muscles.
-咳嗽/1 | 感冒了晚上睡不好 | He has a cold and keeps doing this at night, so he cannot sleep, so the word must mean to cough.
+咳嗽/1 | 感冒了晚上睡不好 | He has a cold and keeps doing this at night and cannot sleep, so the word must mean to cough.
 干咳/1 | 咳不出痰来 | He keeps coughing but brings nothing up, so the word must mean dry cough.
 喉咙/1 | 医生用小灯照了照 | The doctor shone a small light into it and found some inflammation, so the word must mean throat.
 咽/1 | 药片太大吞不下去 | The pill is too big for him to get down, so the word must mean to swallow.
@@ -514,10 +514,10 @@ export const levelSevenClues = parseClues(`
 化痰/1 | 药喝了嗓子里舒服多了 | After the medicine his throat feels much clearer, so the word must mean to resolve phlegm.
 止咳/1 | 咳得厉害的时候喝一点 | You take a little when coughing is bad, so the word must mean to relieve a cough.
 喘气/1 | 一口气跑上十楼累得 | He ran up ten floors without stopping and is breathing hard, so the word must mean to pant.
-呼吸道/1 | 冬天这类疾病比较多 | Winter brings many illnesses of breathing, so wear a mask outdoors, so the word must mean respiratory tract.
+呼吸道/1 | 冬天这类疾病比较多 | Winter brings many illnesses of breathing and people wear masks outdoors, so the word must mean respiratory tract.
 气喘/1 | 不能做太激烈的运动的毛病 | He cannot do hard exercise because of this condition, so the word must mean asthma.
 痒/1 | 被虫子叮了皮肤又红又 | The insect bite left his skin red and wanting to be scratched, so the word must mean itchy.
-发痒/1 | 对羊毛过敏全身 | He is allergic to wool, so the sweater makes his whole body want scratching, so the word must mean to itch.
+发痒/1 | 对羊毛过敏全身 | He is allergic to wool and the sweater makes his whole body want scratching, so the word must mean to itch.
 湿疹/1 | 天气潮湿时又犯了 | Her skin condition comes back whenever the weather is damp, so the word must mean eczema.
 水痘/1 | 小时候身上起了很多小红点 | As a child he was covered in small red spots, so the word must mean chickenpox.
 麻疹/1 | 打疫苗可以预防 | Vaccination prevents this illness, so the word must mean measles.
@@ -525,8 +525,8 @@ export const levelSevenClues = parseClues(`
 疤痕/1 | 手术以后肚子上留下 | The operation left a mark on his stomach, so the word must mean scar.
 伤疤/1 | 好了就忘了疼 | The saying is about forgetting the pain once the wound has healed, so the word must mean scar.
 脱皮/1 | 晒了一天第二天背上 | He spent a whole day in the sun and his back began to come off in flakes, so the word must mean to peel.
-皮肤科/1 | 脸上起了红点去医院看 | His face broke out in red spots, so his mother took him to this department, so the word must mean dermatology.
-呕吐/1 | 坐船晕得厉害 | He was so seasick on the boat that he threw up several times, so the word must mean to vomit.
+皮肤科/1 | 脸上起了红点去医院看 | His face broke out in red spots and his mother took him to this department, so the word must mean dermatology.
+呕吐/1 | 坐船晕得厉害 | He was badly seasick on the boat and threw up several times, so the word must mean to vomit.
 干呕/1 | 一闻味道就想吐但吐不出 | The smell made him heave, but nothing came up, so the word must mean to retch.
 腹泻/1 | 人们常说的拉肚子 | The sentence says it is what people call an upset stomach, so the word must mean diarrhoea.
 肠胃/1 | 不好，不能吃太辣 | He cannot eat very spicy food because his digestion is weak, so the word must mean stomach and intestines.
@@ -538,18 +538,18 @@ export const levelSevenClues = parseClues(`
 食物中毒/1 | 夏天饭菜容易坏 | Food goes off easily in summer, so the word must mean food poisoning.
 眩晕/1 | 突然一阵，赶紧扶住墙 | He suddenly felt his head spin and grabbed the wall, so the word must mean dizziness.
 头晕目眩/1 | 饿了一天站起来时 | He has not eaten all day and everything spins when he stands up, so the word must mean dizzy.
-晕倒/1 | 天太热有个老人在路上 | It is so hot that an old man collapsed in the street, so the word must mean to faint.
+晕倒/1 | 天太热有个老人在路上 | In the great heat an old man collapsed in the street, so the word must mean to faint.
 发抖/1 | 穿得太少冻得直 | He is dressed too lightly and is shaking with cold, so the word must mean to shiver.
-颤抖/1 | 太紧张说话的声音 | She is so nervous that her voice shakes, so the word must mean to tremble.
+颤抖/1 | 太紧张说话的声音 | She is very nervous and her voice shakes, so the word must mean to tremble.
 打颤/1 | 冷得牙齿直 | The wind is strong and his teeth are chattering with cold, so the word must mean to shiver, chatter.
 抖/1 | 进门前把身上的雪弄掉 | Before going in, he shook the snow off himself, so the word must mean to shake.
 抖动/1 | 洗衣机转起来整台机器 | When the washing machine spins, the whole machine shakes, so the word must mean to vibrate.
-发麻/1 | 盘着腿坐太久 | He sat cross-legged so long that his legs lost feeling, so the word must mean to go numb.
-麻木/1 | 看多了新闻一点儿也不关心 | After so much such news some people care not at all, so the word must mean numb.
-麻醉/1 | 做手术前医生打的 | Before the operation the doctor gave him an injection so he would feel nothing, so the word must mean anaesthesia.
+发麻/1 | 盘着腿坐太久 | He sat cross-legged too long and his legs lost feeling, so the word must mean to go numb.
+麻木/1 | 看多了新闻一点儿也不关心 | After a great deal of such news some people care not at all, so the word must mean numb.
+麻醉/1 | 做手术前医生打的 | Before the operation the doctor gave him an injection to stop him feeling anything, so the word must mean anaesthesia.
 麻醉师/1 | 手术中一直观察病人 | During the operation this doctor watches the patient the whole time, so the word must mean anaesthetist.
 局部/1 | 小手术只需要这样麻醉 | A small operation needs numbing in only one part of the body, so the word must mean local.
-剖腹产/1 | 孩子太大医生建议 | The baby is too big, so the doctor advises delivering it by operation, so the word must mean caesarean section.
+剖腹产/1 | 孩子太大医生建议 | The baby is too big and the doctor advises delivering it by operation, so the word must mean caesarean section.
 缝合/1 | 手术后把伤口缝好 | After the operation the doctor stitched the wound closed, so the word must mean to suture.
 缝针/1 | 伤口很深要去医院 | The wound is deep and needs stitching at hospital, so the word must mean to get stitches.
 解剖/1 | 医学生了解人体结构的课 | Medical students take this course to learn the body's structure, so the word must mean anatomy.
@@ -562,11 +562,11 @@ export const levelSevenClues = parseClues(`
 冷敷/1 | 脚扭伤后马上减少肿胀 | After twisting an ankle, apply something cold to reduce swelling, so the word must mean cold compress.
 热敷/1 | 腰酸背疼用热水袋 | A hot-water bottle helps an aching back, so the word must mean hot compress.
 药膏/1 | 被虫子叮了擦一点儿 | An insect bit his hand and Mum rubbed something on it, so the word must mean ointment.
-愈合/1 | 伤口还没有完全好 | The wound is not fully closed, so take care when washing, so the word must mean to heal.
+愈合/1 | 伤口还没有完全好 | The wound is not fully closed and needs care when washing, so the word must mean to heal.
 伤痕/1 | 手臂上有一道很长的 | There is a long mark on his arm, so the word must mean scar, wound mark.
-止血/1 | 伤口流了很多血要先 | The wound is bleeding heavily, so that must be dealt with first, so the word must mean to stop bleeding.
+止血/1 | 伤口流了很多血要先 | The wound is bleeding heavily and that must be dealt with first, so the word must mean to stop bleeding.
 红肿/1 | 伤口可能发炎了 | His wound may be inflamed, so the word must mean red and swollen.
-副作用/1 | 药让人想睡觉，不要开车 | The medicine makes people sleepy, so do not drive after taking it, so the word must mean side effect.
+副作用/1 | 药让人想睡觉，不要开车 | The medicine makes people sleepy and they should not drive after taking it, so the word must mean side effect.
 服药/1 | 按医生说的时间 | Please take it at the times the doctor says, so the word must mean to take medicine.
 用药/1 | 孩子不能随便吃大人的药 | Children must not take adults' medicine at will, so the word must mean to use medicine.
 疗效/1 | 新药吃了一个星期就好多了 | Patients on the new medicine were much better within a week, so the word must mean curative effect.
@@ -576,7 +576,7 @@ export const levelSevenClues = parseClues(`
 药丸/1 | 很小容易咽下去 | It is small and easy to swallow, so the word must mean pill.
 退烧药/1 | 发烧到三十九度医生开的 | He has a temperature of thirty-nine and the doctor prescribed this, so the word must mean fever reducer.
 止痛药/1 | 牙疼得厉害吃了一片 | His tooth hurt badly and he took a tablet, so the word must mean painkiller.
-脂肪/1 | 这种肉很多，不要多吃 | This meat has a lot of it, so do not eat too much, so the word must mean fat.
+脂肪/1 | 这种肉很多，不要多吃 | This meat has a lot of it and should not be eaten in large amounts, so the word must mean fat.
 减脂/1 | 每天跑步想要 | He runs every day to slim down, so the word must mean to reduce body fat.
 油脂/1 | 炸的食物含有很多 | Fried food contains a lot of it, so the word must mean grease.
 高血脂/1 | 医生让他少吃肥肉 | The doctor told Dad to eat less fatty meat after his check-up, so the word must mean hyperlipidaemia.
@@ -607,7 +607,7 @@ export const levelSevenClues = parseClues(`
 疏导/1 | 老师耐心地帮他平静 | The teacher patiently helped him calm down, so the word must mean to guide, ease.
 心理问题/1 | 长期压力太大可能会产生 | Long-term stress may cause trouble of the mind, so the word must mean psychological problem.
 聋人/1 | 用手语跟别人交流 | Many of them talk with others in sign language, so the word must mean deaf person.
-耳聋/1 | 年纪大了，说话要大声点 | Grandpa is old, so you must speak up, so the word must mean deaf.
+耳聋/1 | 年纪大了，说话要大声点 | Grandpa is old and you must speak up, so the word must mean deaf.
 聋哑/1 | 学校专门教的儿童 | The school teaches children who cannot hear or speak, so the word must mean deaf and mute.
 障碍/1 | 语言不通是最大的 | Not speaking the language is the biggest thing in his way abroad, so the word must mean obstacle.
 残障/1 | 公司愿意招聘这样的人士 | The company is willing to hire people with disabilities, so the word must mean disability.
@@ -656,7 +656,7 @@ export const levelSevenClues = parseClues(`
 食物链/1 | 草被羊吃，羊被狼吃 | Sheep eat grass and wolves eat sheep, so the word must mean food chain.
 候鸟/1 | 每年秋天飞到南方过冬 | Every autumn these birds fly south for the winter, so the word must mean migratory bird.
 冬眠/1 | 熊在洞里到春天才出来 | Bears sleep in their dens through the winter and come out in spring, so the word must mean to hibernate.
-濒危/1 | 鸟已经很少了 | So few of these birds are left that they are listed for protection, so the word must mean endangered.
+濒危/1 | 鸟已经很少了 | Few of these birds are left and they are listed for protection, so the word must mean endangered.
 稀有/1 | 全世界只有几个地方能看到 | The flower can be seen in only a few places in the world, so the word must mean rare.
 偷猎/1 | 法律严禁 | The law strictly forbids hunting wild animals illegally, so the word must mean to poach.
 大熊猫/1 | 中国特有，主要吃竹子 | It is found only in China and eats mainly bamboo, so the word must mean giant panda.
@@ -695,12 +695,12 @@ export const levelSevenClues = parseClues(`
 羽翼/1 | 小鸟还没长好不能飞 | The little bird cannot fly yet because these have not grown, so the word must mean wings.
 机翼/1 | 从飞机窗口看到长长的 | From the plane's window you see it stretching out, so the word must mean aircraft wing.
 遍体鳞伤/1 | 小狗被救回来时全身是伤 | The puppy was hurt all over when it was rescued, so the word must mean covered in cuts.
-打草惊蛇/1 | 先别说出去，免得 | We should not tell anyone yet, so as not to warn them, so the word must mean to alert the enemy.
+打草惊蛇/1 | 先别说出去，免得 | We should not tell anyone yet, to avoid warning them, so the word must mean to alert the enemy.
 蚊子/1 | 夏天晚上叮得人起包 | On summer nights they bite and leave bumps on the skin, so the word must mean mosquito.
 蚊帐/1 | 以前夏天睡觉时挂 | People used to hang one over the bed in summer, so the word must mean mosquito net.
 蚊香/1 | 屋里点了一盘 | He lit a coil of it in the room, so the word must mean mosquito coil.
 驱蚊/1 | 露营别忘了带这种水 | Do not forget the spray that keeps insects off when camping, so the word must mean to repel mosquitoes.
-灭蚊/1 | 社区组织大家清理积水 | The community clears standing water so insects cannot breed, so the word must mean to kill mosquitoes.
+灭蚊/1 | 社区组织大家清理积水 | The community clears standing water to stop insects breeding, so the word must mean to kill mosquitoes.
 益虫/1 | 蜜蜂帮植物传花粉 | Bees help plants by carrying pollen, so the word must mean beneficial insect.
 虫卵/1 | 叶子背面过几天变成小虫 | In a few days they will turn into small insects, so the word must mean insect eggs.
 寄生/1 | 虫子在动物身体里让动物生病 | Some worms live inside animals and make them ill, so the word must mean parasitic.
@@ -731,15 +731,15 @@ export const levelSevenClues = parseClues(`
 旱涝/1 | 修了水渠以后都不怕 | Since the channels were dug, the crops fear neither too little rain nor too much, so the word must mean drought and flood.
 内涝/1 | 大雨以后城里路段被水淹 | After heavy rain many streets in the city were under water, so the word must mean urban waterlogging.
 排涝/1 | 大雨以后工人连夜把水排走 | After heavy rain workers pumped water away all night, so the word must mean to drain waterlogged land.
-积水/1 | 下完雨路上很多，开车慢点 | After the rain the roads are full of puddles, so drive slowly, so the word must mean standing water.
-决堤/1 | 河水太大，村子都进了水 | The river rose so high that nearby villages flooded, so the word must mean to burst a dyke.
+积水/1 | 下完雨路上很多，开车慢点 | After the rain the roads are full of puddles and drivers should slow down, so the word must mean standing water.
+决堤/1 | 河水太大，村子都进了水 | The river rose high enough to flood nearby villages, so the word must mean to burst a dyke.
 枯水期/1 | 冬天河里的水很少 | In winter the river has very little water, so the word must mean dry season.
 水位/1 | 下了几天雨河里涨了很多 | Days of rain have raised the river a lot, so the word must mean water level.
 旱灾/1 | 很多庄稼都干死了 | Many crops have dried up and died this year, so the word must mean drought.
 霜/1 | 早上地上铺了一层白白的 | In the morning a white layer covers the ground, so the word must mean frost.
 霜冻/1 | 让果园里的花都冻坏了 | The cold froze the blossoms in the orchard, so the word must mean frost damage.
 霜降/1 | 以后天气越来越冷 | After this solar term the weather gets colder and colder, so the word must mean Frost's Descent.
-结霜/1 | 天太冷窗户上 | It is so cold that the windows have turned white, so the word must mean to frost over.
+结霜/1 | 天太冷窗户上 | In the bitter cold the windows have turned white, so the word must mean to frost over.
 寒潮/1 | 来了气温一天下降十几度 | The temperature fell more than ten degrees in a day, so the word must mean cold wave.
 冰霜/1 | 她脸上冷若 | The set phrase 冷若 describes her cold, silent face, so the word must mean ice and frost.
 风霜/1 | 老人的脸上写满了 | The old man's face shows a lifetime of hardship, so the word must mean hardships.
@@ -793,8 +793,8 @@ export const levelSevenClues = parseClues(`
 重金属/1 | 河水受到污染鱼都死了 | The river was polluted and its fish died, so the word must mean heavy metal.
 铅/1 | 很重的金属，进入人体损害健康 | It is a heavy metal that harms health inside the body, so the word must mean lead.
 含铅/1 | 玩具对孩子健康有害 | The toy is harmful to children's health, so the word must mean lead-containing.
-防腐/1 | 木头经过处理可以用很多年 | The wood was treated so it will last many years, so the word must mean anticorrosion.
-防腐剂/1 | 面包不含，要早点吃完 | The bread has none, so eat it soon, so the word must mean preservative.
+防腐/1 | 木头经过处理可以用很多年 | The wood was treated to last many years, so the word must mean anticorrosion.
+防腐剂/1 | 面包不含，要早点吃完 | The bread has none and should be eaten soon, so the word must mean preservative.
 腐败/1 | 夏天食物容易坏 | In summer food goes off easily, so the word must mean to go bad.
 生态平衡/1 | 乱捕野生动物会破坏 | Catching wild animals at will upsets it, so the word must mean ecological balance.
 植树造林/1 | 几十年把沙地变成森林 | Decades of planting have turned sand into forest, so the word must mean afforestation.
@@ -814,7 +814,7 @@ export const levelSevenClues = parseClues(`
 沸水/1 | 把鸡蛋放进去煮十分钟 | The eggs are cooked in it for ten minutes, so the word must mean boiling water.
 沸腾/1 | 水加热到一百度就会 | Water does this when heated to a hundred degrees, so the word must mean to boil.
 气化/1 | 水受热变成水蒸气 | Heated water turns into steam, so the word must mean to vaporise.
-液化/1 | 天然气用船运走之前 | Natural gas is changed so it can be shipped far away, so the word must mean to liquefy.
+液化/1 | 天然气用船运走之前 | Natural gas is changed before it can be shipped far away, so the word must mean to liquefy.
 化学式/1 | 用符号表示物质由哪些元素组成 | It uses symbols to show which elements a substance is made of, so the word must mean chemical formula.
 过滤/1 | 河水要经过才能喝 | River water must pass through something before it can be drunk, so the word must mean to filter.
 滤网/1 | 空调的要经常清洗 | The air conditioner's one needs frequent cleaning, so the word must mean filter screen.
@@ -827,17 +827,17 @@ export const levelSevenClues = parseClues(`
 渗出/1 | 伤口里出来了一点儿血 | A little blood seeped from the wound, so the word must mean to ooze.
 试纸/1 | 测出水是酸的还是碱的 | It shows whether water is acid or alkaline, so the word must mean test strip.
 裂缝/1 | 地震以后墙上出现了一道 | After the earthquake a crack appeared in the wall, so the word must mean crack.
-裂开/1 | 天太干地都 | It is so dry that the ground has cracked, so the word must mean to split open.
+裂开/1 | 天太干地都 | In the dry weather the ground has cracked, so the word must mean to split open.
 分裂/1 | 一个细胞变成两个 | One cell becomes two, so the word must mean to divide.
 裂变/1 | 核电站利用原子核的 | Nuclear power stations use energy released when nuclei split, so the word must mean fission.
 破裂/1 | 气球充气太多一下子 | The balloon was blown up too much and suddenly popped, so the word must mean to burst.
-断裂/1 | 钢管受力太大已经 | The steel pipe was under so much stress that it broke, so the word must mean to fracture.
+断裂/1 | 钢管受力太大已经 | The steel pipe broke under too much stress, so the word must mean to fracture.
 裂痕/1 | 吵架以后友谊有了 | After that quarrel their friendship was damaged, so the word must mean rift.
 四分五裂/1 | 杯子掉在地上摔得 | The cup fell to the floor and broke into pieces, so the word must mean to fall apart.
 核裂变/1 | 原子弹的能量来自 | An atomic bomb's energy comes from splitting nuclei, so the word must mean nuclear fission.
-裂口/1 | 嘴唇干得起了 | His lips are so dry they have cracked, so the word must mean split.
+裂口/1 | 嘴唇干得起了 | His lips are dry enough to crack, so the word must mean split.
 氮/1 | 空气中大约百分之七十八 | It makes up about seventy-eight per cent of the air, so the word must mean nitrogen.
-氮气/1 | 食品包装袋里常常充 | Food bags are often filled with this gas so the food keeps, so the word must mean nitrogen gas.
+氮气/1 | 食品包装袋里常常充 | Food bags are often filled with this gas to keep the food fresh, so the word must mean nitrogen gas.
 氯/1 | 游泳池水里加含它的东西消毒 | Swimming pools add a substance containing this element to kill germs, so the word must mean chlorine.
 氯气/1 | 黄绿色，有很强的味道 | The gas is yellowish green with a strong smell, so the word must mean chlorine gas.
 铝/1 | 锅又轻又不容易生锈 | The pan is light and does not rust easily, so the word must mean aluminium.
@@ -901,7 +901,7 @@ export const levelSevenClues = parseClues(`
 圆柱/1 | 杯子的形状一般是 | It is the usual shape of a cup, so the word must mean cylinder.
 圆锥/1 | 帽子上面尖尖的 | The hat comes to a point on top, so the word must mean cone.
 凹/1 | 车门被打了一下陷进去一块 | The car door was hit and sank in, so the word must mean concave, dented.
-凸/1 | 吃得太多肚子出来了 | He ate so much that his belly sticks out, so the word must mean convex, bulging.
+凸/1 | 吃得太多肚子出来了 | He ate too much and his belly sticks out, so the word must mean convex, bulging.
 凹凸不平/1 | 山路骑车很危险 | The mountain road is bumpy and dangerous to cycle, so the word must mean uneven.
 柱子/1 | 大殿里有几十根红色的 | The ancient hall has dozens of red ones, so the word must mean pillar.
 凸透镜/1 | 把太阳光集中到一个点 | It can focus sunlight onto one point, so the word must mean convex lens.
@@ -913,7 +913,7 @@ export const levelSevenClues = parseClues(`
 口径/1 | 水管的是五厘米 | The pipe measures five centimetres across inside, so the word must mean calibre, bore.
 途径/1 | 读书是获得知识的重要 | Reading is an important means of gaining knowledge, so the word must mean way, channel.
 径直/1 | 下了车直接走进办公室 | He got out of the car and walked right into the office, so the word must mean straight.
-锥子/1 | 奶奶先打一个孔再缝 | The sole is hard, so Grandma first punches a hole before sewing, so the word must mean awl.
+锥子/1 | 奶奶先打一个孔再缝 | The sole is hard and Grandma first punches a hole before sewing, so the word must mean awl.
 柱形/1 | 图清楚显示每个月的数据 | The chart shows each month's sales as bars, so the word must mean column-shaped.
 圆锥形/1 | 山顶尖尖的 | The mountain has a pointed peak, so the word must mean conical.
 边缘/1 | 不要站在悬崖的 | The speaker warns against standing at the cliff's brink, so the word must mean edge.
@@ -951,7 +951,7 @@ export const levelSevenClues = parseClues(`
 新材料/1 | 航天器上又轻又结实的 | Spacecraft use many light, strong materials, so the word must mean new material.
 气凝胶/1 | 世界上最轻的固体材料之一 | It is one of the lightest solids in the world, so the word must mean aerogel.
 失重/1 | 在太空航天员浮在空中 | In space astronauts float in the air, so the word must mean weightlessness.
-真空/1 | 没有空气，声音传不过去 | Space has almost no air, so sound cannot travel, so the word must mean vacuum.
+真空/1 | 没有空气，声音传不过去 | Space has almost no air and sound cannot travel there, so the word must mean vacuum.
 返回舱/1 | 航天员坐着它落回地面 | The astronauts came safely back to earth in it, so the word must mean re-entry capsule.
 天体/1 | 太阳、月亮和星星都属于 | The sun, moon and stars all belong to this class, so the word must mean celestial body.
 小行星/1 | 火星和木星之间有很多 | A belt of them lies between Mars and Jupiter, so the word must mean asteroid.
@@ -1044,7 +1044,7 @@ export const levelSevenClues = parseClues(`
 宗旨/1 | 组织是为了帮助孩子上学 | The organisation exists to help children in poor areas go to school, so the word must mean purpose.
 主旨/1 | 用一句话说出文章的 | You are asked to state in one sentence what the article is mainly about, so the word must mean main idea.
 起义/1 | 秦朝末年农民反抗朝廷 | At the end of the Qin many peasants rose against the court, so the word must mean uprising.
-摄政/1 | 皇帝只有六岁，叔叔代替他 | The emperor is only six, so his uncle rules for him, so the word must mean to act as regent.
+摄政/1 | 皇帝只有六岁，叔叔代替他 | The emperor is only six and his uncle rules for him, so the word must mean to act as regent.
 复辟/1 | 清朝灭亡后有人想让皇帝回来 | After the Qing fell some people tried to bring the emperor back, so the word must mean restoration.
 发掘/1 | 考古学家挖出了一座古墓 | Archaeologists dug up a tomb over two thousand years old here, so the word must mean to excavate.
 古墓/1 | 农民种地时意外发现 | Farmers working the land found one by chance, so the word must mean ancient tomb.
@@ -1152,7 +1152,7 @@ export const levelSevenClues = parseClues(`
 宽恕/1 | 他道歉以后朋友原谅了 | He apologised sincerely and his friend let it go, so the word must mean to forgive.
 忠恕/1 | 孔子的道理两个字概括 | A disciple of Confucius summed up the teaching in two words, so the word must mean loyalty and consideration.
 良知/1 | 不会做伤害别人的事 | Someone with it will not hurt others, so the word must mean conscience.
-善意/1 | 他这样说是出于好心 | He said it meaning well, so do not misunderstand, so the word must mean goodwill.
+善意/1 | 他这样说是出于好心 | He said it meaning well and should not be misunderstood, so the word must mean goodwill.
 恶意/1 | 这是意外，他不是故意的 | It was an accident and he did not mean harm, so the word must mean malice.
 罪恶/1 | 贪心被看作根源之一 | Many religions see greed as a root of wrongdoing, so the word must mean evil, sin.
 邪恶/1 | 童话里的坏人很 | The villains in fairy tales are always beaten in the end, so the word must mean wicked.
@@ -1161,7 +1161,7 @@ export const levelSevenClues = parseClues(`
 求知欲/1 | 孩子什么都想知道 | The child wants to know about everything, so the word must mean curiosity.
 贪欲/1 | 他被贪心害了 | His greed ruined him and he lost everything, so the word must mean greed.
 随心所欲/1 | 自由不是想干什么就干什么 | Freedom does not mean doing whatever you like; rules still apply, so the word must mean to do as one pleases.
-欲罢不能/1 | 小说太好看停不下来 | The novel is so good the speaker cannot put it down, so the word must mean unable to stop.
+欲罢不能/1 | 小说太好看停不下来 | The novel is too good for the speaker to put down, so the word must mean unable to stop.
 欲速则不达/1 | 学语言要一步一步来 | Language learning must go step by step, so the word must mean more haste, less speed.
 戒备/1 | 对陌生人很小心不说地址 | He is careful with strangers and does not give out his address, so the word must mean wariness.
 戒心/1 | 刚认识时她对我有一点 | When they first met she was a little guarded with the speaker, so the word must mean wariness.
@@ -1177,7 +1177,7 @@ export const levelSevenClues = parseClues(`
 唯唯诺诺/1 | 在老板面前不敢说想法 | In front of his boss he never dares say what he thinks, so the word must mean submissive.
 唯命是从/1 | 不能别人说什么就做什么 | We must judge for ourselves and not just do whatever others say, so the word must mean to obey blindly.
 唯一/1 | 班里只有他会说法语 | No one else in the class speaks French, so the word must mean only.
-唯有/1 | 坚持下去才能成功 | The second half begins with 才能, so the first names the one condition for success, so the word must mean only.
+唯有/1 | 坚持下去才能成功 | The second half begins with 才能 and the first names the one condition for success, so the word must mean only.
 唯独/1 | 大家都来了，只有他没来 | Everyone came except him, so the word must mean only, alone.
 唯利是图/1 | 公司只想赚钱质量很差 | The company cares about nothing but money and sells poor goods, so the word must mean profit-seeking.
 诡计/1 | 坏人想出的主意被识破 | The villain's scheme was seen through by a clever girl, so the word must mean trick.
@@ -1185,7 +1185,7 @@ export const levelSevenClues = parseClues(`
 邪门/1 | 手机刚放下就不见了 | The phone just put on the table has vanished, so the word must mean weird.
 歪门邪道/1 | 成功靠努力，不能走 | Success comes from hard work, and 不能走 rules out dishonest routes, so the word must mean crooked ways.
 无与伦比/1 | 山顶日出的美 | Nothing compares with the sunrise seen from the summit, so the word must mean incomparable.
-妄言/1 | 没调查清楚不要乱说 | Nothing has been investigated yet, so no one should speak carelessly, so the word must mean to speak rashly.
+妄言/1 | 没调查清楚不要乱说 | Nothing has been investigated yet and no one should speak carelessly, so the word must mean to speak rashly.
 崇拜/1 | 古代很多民族把太阳当神 | Many ancient peoples treated the sun as a god, so the word must mean to worship.
 崇高/1 | 教师是这样的职业 | Teaching is praised as a noble calling, so the word must mean lofty.
 崇尚/1 | 这个民族看重勤劳和节俭 | This people values hard work and thrift, so the word must mean to uphold.
@@ -1226,7 +1226,7 @@ export const levelSevenClues = parseClues(`
 来世/1 | 死后再出生开始的生活 | He believes people are reborn and begin another existence, so the word must mean next life.
 前世/1 | 一见如故是因为有缘 | Some say people who click at once were bound in an earlier existence, so the word must mean previous life.
 永恒/1 | 世界上没有不变的东西 | Nothing in the world stays unchanged forever, so the word must mean eternal.
-神仙/1 | 真想住在这儿像他们一样 | The scenery is so lovely the speaker wishes to live here like an immortal, so the word must mean immortal.
+神仙/1 | 真想住在这儿像他们一样 | The scenery is lovely enough that the speaker wishes to live here like an immortal, so the word must mean immortal.
 仙人/1 | 传说山上活了一千岁 | Legend says someone on this mountain has lived a thousand years, so the word must mean immortal.
 仙女/1 | 穿着白裙子很美 | In her long white dress she is as lovely as a fairy, so the word must mean fairy.
 八仙/1 | 过海，各显神通 | The famous saying is about them crossing the sea, each showing his powers, so the word must mean Eight Immortals.
@@ -1260,7 +1260,7 @@ export const levelSevenClues = parseClues(`
 气魄/1 | 长城非常雄伟 | The Great Wall is magnificent, so the word must mean grandeur.
 体魄/1 | 经常锻炼身体健康 | Regular exercise makes the body strong, so the word must mean physique.
 失魂落魄/1 | 丢了文件整个下午都 | He lost an important document and was beside himself all afternoon, so the word must mean distraught.
-魂不守舍/1 | 上课没听见老师的问题 | He was so distracted in class that he did not hear the teacher's questions, so the word must mean absent-minded.
+魂不守舍/1 | 上课没听见老师的问题 | He was distracted in class and did not hear the teacher's questions, so the word must mean absent-minded.
 惊心动魄/1 | 最后一秒才分出胜负 | The match was decided only in the last second, so the word must mean thrilling.
 胆小鬼/1 | 别害怕，勇敢上台 | The speaker urges someone not to be afraid but to go on stage bravely, so the word must mean coward.
 机灵鬼/1 | 一下子就猜出了答案 | The little one guessed the answer at once, so the word must mean clever kid.
@@ -1278,8 +1278,8 @@ export const levelSevenClues = parseClues(`
 报应/1 | 做了坏事总会得到 | Buddhism holds that wrongdoing is always paid back, so the word must mean retribution.
 占有/1 | 公司拥有全国一半的市场 | The company holds half the national market, so the word must mean to occupy.
 占领/1 | 军队在城墙上插上旗 | The army planted its flag on the city wall after taking the city, so the word must mean to capture.
-占据/1 | 这个问题一直在他心里 | The question has filled his mind so that he cannot sleep, so the word must mean to occupy.
-占用/1 | 对不起用了你这么多时间 | The speaker apologises for taking so much of your time, so the word must mean to take up.
+占据/1 | 这个问题一直在他心里 | The question has filled his mind and he cannot sleep, so the word must mean to occupy.
+占用/1 | 对不起用了你这么多时间 | The speaker apologises for taking up a lot of your time, so the word must mean to take up.
 占线/1 | 打了好几次电话 | The speaker phoned several times and could not get through, so the word must mean busy line.
 占便宜/1 | 跟朋友吃饭从来不付钱 | He never pays when he eats with friends, so the word must mean to take advantage.
 戒指/1 | 手上戴着一个金 | She wears a gold one on her finger, so the word must mean ring.
@@ -1328,7 +1328,7 @@ export const levelSevenClues = parseClues(`
 余味/1 | 文章读完以后无穷 | After you finish the essay it stays with you, so the word must mean aftertaste.
 之乎者也/1 | 说话文绉绉大家听不懂 | He always talks in such old-fashioned words that no one understands, so the word must mean pedantic language.
 岂有此理/1 | 借书不还还说是我的错 | He kept the speaker's book and then blamed the speaker, so the word must mean preposterous.
-岂能/1 | 大家都在工作我怎么能休息 | Everyone else is working, so the speaker asks how they could rest alone, so the word must mean how could.
+岂能/1 | 大家都在工作我怎么能休息 | Everyone else is working and the speaker asks how they could rest alone, so the word must mean how could.
 乃至/1 | 对中国甚至整个世界 | The discovery matters for China and beyond, for the whole world, so the word must mean and even.
 乃是/1 | 诚实是做人的根本 | Honesty is the foundation of being a good person, so the word must mean is.
 吾辈/1 | 保护传统文化是我们的责任 | Protecting traditional culture is the duty of people like us, so the word must mean we, our generation.
@@ -1441,20 +1441,20 @@ export const levelSevenClues = parseClues(`
 紫色/1 | 红色和蓝色调出 | Mixing red and blue paint gives this colour, so the word must mean purple.
 碧绿/1 | 湖水像一块大玉石 | The lake looks like a great piece of jade, so the word must mean emerald green.
 翠绿/1 | 雨后山上的竹子 | After rain the bamboo on the hill looks even fresher green, so the word must mean verdant.
-浅色/1 | 夏天穿吸收的热少 | It absorbs less heat, so it is cooler in summer, so the word must mean light-coloured.
+浅色/1 | 夏天穿吸收的热少 | It absorbs less heat and is cooler in summer, so the word must mean light-coloured.
 漆黑/1 | 停电了屋子里一片 | The power went off and the room was completely dark, so the word must mean pitch-black.
 浓淡/1 | 画水墨画墨要控制好 | In ink painting you must control how dark or pale the ink is, so the word must mean shade.
 纯色/1 | 衣服只有一种颜色 | The garment is one colour from top to bottom, so the word must mean solid colour.
-色调/1 | 画用了很多蓝和绿比较冷 | The painting uses much blue and green, so it feels cool, so the word must mean tone.
+色调/1 | 画用了很多蓝和绿比较冷 | The painting uses much blue and green and feels cool, so the word must mean tone.
 颜料/1 | 挤在一起调出想要的颜色 | He squeezed several together to mix the colour he wanted, so the word must mean pigment.
 画布/1 | 油画画在上面再装框 | Oil paintings are usually done on it and then framed, so the word must mean canvas.
 画纸/1 | 水彩落上去慢慢化开 | The watercolour slowly spreads as it touches it, so the word must mean drawing paper.
 涂料/1 | 新房子墙上刷了一层白的 | The walls of the new house have a coat of white, so the word must mean coating.
-油漆/1 | 门上的还没干 | It is still wet on the door, so do not touch, so the word must mean paint.
+油漆/1 | 门上的还没干 | It is still wet on the door and should not be touched, so the word must mean paint.
 上色/1 | 先画线条再给画加颜色 | He draws the lines in pencil first and then adds colour, so the word must mean to colour.
 笔触/1 | 粗粗的线能感觉到画家的激情 | The painter's passion shows in the thick strokes, so the word must mean brushstroke.
 水彩画/1 | 颜色透明看起来清新 | Its colours are transparent and fresh, so the word must mean watercolour.
-油画/1 | 颜料干得慢可以一层层画 | Its paint dries slowly, so it can be built up in layers, so the word must mean oil painting.
+油画/1 | 颜料干得慢可以一层层画 | Its paint dries slowly and can be built up in layers, so the word must mean oil painting.
 素描/1 | 学画画先练线条和明暗 | Art learners usually begin by practising line and shading, so the word must mean sketch.
 版画/1 | 可以印出很多张 | Many nearly identical copies can be printed, so the word must mean print.
 花鸟画/1 | 两只小鸟站在树枝上 | Two little birds stand on a branch in it, so the word must mean flower-and-bird painting.
@@ -1464,7 +1464,7 @@ export const levelSevenClues = parseClues(`
 写生/1 | 老师带我们到公园画画 | The art teacher took them to paint in the park, so the word must mean to sketch from life.
 写实/1 | 树叶上的水珠都画出来 | Even the drops of water on the leaves are painted, so the word must mean realistic.
 写意/1 | 不追求细节几笔画出神态 | Unlike fine-line painting, it catches the spirit in a few strokes, so the word must mean freehand style.
-工笔/1 | 一根羽毛也画得清清楚楚 | Its brushwork is so fine that every feather is clear, so the word must mean meticulous style.
+工笔/1 | 一根羽毛也画得清清楚楚 | Its brushwork is fine enough to make every feather clear, so the word must mean meticulous style.
 画师/1 | 宫里专门为皇帝画像的人 | In old times the palace had artists to paint the emperor, so the word must mean painter.
 线条/1 | 画很简单却很有力量 | The painting's strokes are simple yet strong, so the word must mean line.
 图案/1 | 盘子上印着熊猫 | A panda is printed on the plate, so the word must mean pattern.
@@ -1492,19 +1492,19 @@ export const levelSevenClues = parseClues(`
 珍珠/1 | 项链上又圆又亮 | Those on the necklace are round and glossy, so the word must mean pearl.
 珠宝/1 | 钻石玉石价格很贵 | The shop sells diamonds and jade at high prices, so the word must mean jewellery.
 项链/1 | 胸前戴着一条银 | She wears a silver one round her neck, so the word must mean necklace.
-耳环/1 | 戴在耳上几乎看不见 | They are so small they are almost invisible on her ears, so the word must mean earring.
+耳环/1 | 戴在耳上几乎看不见 | They are tiny and almost invisible on her ears, so the word must mean earring.
 修饰/1 | 作文很朴实没有过多 | The essay is plain without much ornament, so the word must mean embellishment.
 漆器/1 | 中国表面又亮又光滑的器物 | China has a long history of it, and its surface is glossy and smooth, so the word must mean lacquerware.
 摆设/1 | 客厅里只有桌子花瓶 | The sitting room holds only a table, a vase and some chairs, so the word must mean furnishings.
 衬衫/1 | 穿着白的打着领带 | He wore a white one and a tie to the interview, so the word must mean shirt.
-袖子/1 | 太长盖住了手 | They are so long they cover his hands, so the word must mean sleeve.
+袖子/1 | 太长盖住了手 | They are too long and cover his hands, so the word must mean sleeve.
 长袖/1 | 山上早晚冷带一件 | Mornings and evenings on the mountain are cold, so the word must mean long-sleeved.
 短袖/1 | 天气热换上了 | The weather has turned hot, so the word must mean short-sleeved.
 服饰/1 | 各民族的衣服和装饰 | The clothes and ornaments of each people show their way of life, so the word must mean clothing and adornment.
 款式/1 | 鞋有好几种 | The shoes come in several designs, so the word must mean style.
 面料/1 | 衣服是纯棉的 | The clothing is pure cotton, so the word must mean fabric.
 纺织/1 | 城市生产大量的布 | The city's industry produces great amounts of cloth, so the word must mean textile.
-羽绒服/1 | 下雪了穿上暖和的 | It is snowing, so he puts on a warm padded coat, so the word must mean down jacket.
+羽绒服/1 | 下雪了穿上暖和的 | It is snowing and he puts on a warm padded coat, so the word must mean down jacket.
 服装设计/1 | 大学学的，现在自己做衣服卖 | She studied it and now makes clothes to sell, so the word must mean fashion design.
 工艺/1 | 瓷器要经过几十道工序 | Making this porcelain takes dozens of steps, so the word must mean craft.
 工艺品/1 | 旅游时买的当地手工东西 | She bought some local crafts as presents, so the word must mean handicraft.
@@ -1634,7 +1634,7 @@ export const levelSevenClues = parseClues(`
 赃款/1 | 官员把收来的钱藏在老家 | The official hid the money he had taken at his old home, so the word must mean stolen money.
 挪用/1 | 会计拿公司的钱去买房 | The accountant used company money to buy a flat, so the word must mean to misappropriate.
 逮住/1 | 小猫一下子抓住老鼠 | The kitten got hold of a mouse at once, so the word must mean to catch.
-报案/1 | 东西被偷去派出所 | His things were stolen, so he went straight to the police station, so the word must mean to report a case.
+报案/1 | 东西被偷去派出所 | His things were stolen and he went straight to the police station, so the word must mean to report a case.
 追回/1 | 警察帮他找回钱包 | The police got his lost wallet back for him, so the word must mean to recover.
 贿赂/1 | 用钱请官员帮忙被拒绝 | He offered an official money for a favour and was refused, so the word must mean to bribe.
 行贿/1 | 给官员送钱请他办事 | Someone gives an official money to get something done, so the word must mean to offer a bribe.
@@ -1673,7 +1673,7 @@ export const levelSevenClues = parseClues(`
 噪声/1 | 城市里越来越大影响休息 | It keeps growing in the city and spoils people's rest, so the word must mean noise.
 扰民/1 | 晚上十点以后装修 | Renovation after ten at night bothers the neighbours, so the word must mean to disturb residents.
 困扰/1 | 睡不着觉的问题一直让他烦 | Being unable to sleep has long bothered him, so the word must mean to trouble.
-投诉/1 | 邻居的狗天天叫，他向物业 | The neighbour's dog barks all day, so he went to the property office, so the word must mean to complain.
+投诉/1 | 邻居的狗天天叫，他向物业 | The neighbour's dog barks all day and he went to the property office, so the word must mean to complain.
 静音/1 | 开会时把手机调成 | Phones should make no sound during the meeting, so the word must mean mute.
 纷扰/1 | 搬到乡下离开城市的 | He moved to the countryside to get away from the city's bustle, so the word must mean confusion, turmoil.
 隐瞒/1 | 他没告诉父母考试成绩 | He did not tell his parents his exam results, so the word must mean to conceal.
@@ -1692,7 +1692,7 @@ export const levelSevenClues = parseClues(`
 窃听/1 | 电话里装了偷听的东西 | Someone put a device in his phone to listen secretly, so the word must mean to eavesdrop.
 个人信息/1 | 注册时不要随便填太多 | When signing up you should not fill in too much about yourself, so the word must mean personal information.
 网络安全/1 | 学校教大家怎样保护自己 | The school taught pupils how to protect themselves online, so the word must mean cybersecurity.
-泄漏/1 | 厨房里有煤气的味道 | There is a smell of gas in the kitchen, so open the windows at once, so the word must mean to leak.
+泄漏/1 | 厨房里有煤气的味道 | There is a smell of gas in the kitchen and the windows must be opened at once, so the word must mean to leak.
 加密/1 | 文件没有密码打不开 | The file cannot be opened without a password, so the word must mean to encrypt.
 监控/1 | 小区门口看到进出的人 | Cameras at the estate gate show who comes and goes, so the word must mean monitoring.
 指纹/1 | 很多手机用它解锁 | Many phones unlock with a touch of the finger, so the word must mean fingerprint.
@@ -1705,7 +1705,7 @@ export const levelSevenClues = parseClues(`
 旁观者/1 | 当局者迷，他们清 | The saying goes that those involved are confused while those outside see clearly, so the word must mean onlooker.
 威胁/1 | 全球变暖影响动物生存 | Global warming endangers the survival of many animals, so the word must mean to threaten.
 谴责/1 | 国际社会强烈批评破坏文物 | The international community strongly criticises the destruction of relics, so the word must mean to condemn.
-胁迫/1 | 被逼签的字合同无效 | He signed under pressure, so the contract is invalid, so the word must mean to coerce.
+胁迫/1 | 被逼签的字合同无效 | He signed under pressure and the contract is invalid, so the word must mean to coerce.
 欺诈/1 | 把旧手机当新的卖 | The seller passes old phones off as new, so the word must mean fraud.
 假冒/1 | 名牌包都是假的 | The brand-name bags are poorly made and not the real thing, so the word must mean counterfeit.
 伪劣/1 | 这批产品被没收 | The whole batch of goods has been seized, so the word must mean fake and shoddy.
@@ -1737,9 +1737,9 @@ export const levelSevenClues = parseClues(`
 低保/1 | 政府给收入特别低的家庭 | The government gives families with very low income enough to live on, so the word must mean basic living allowance.
 监护人/1 | 未成年人的父母一般是 | The parents of minors usually fill this role, so the word must mean guardian.
 缩小/1 | 城乡收入差距在变小 | The income gap between town and country is slowly getting smaller, so the word must mean to narrow.
-紧缩/1 | 收入不好只能少花钱 | Income is poor this year, so the company must spend less, so the word must mean to tighten.
+紧缩/1 | 收入不好只能少花钱 | Income is poor this year and the company must spend less, so the word must mean to tighten.
 萎缩/1 | 行业市场不断变小，工厂关门 | The market keeps getting smaller and many factories have closed, so the word must mean to shrink.
-缩减/1 | 经费不够减少买书数量 | There was not enough money, so the school bought fewer books, so the word must mean to cut.
+缩减/1 | 经费不够减少买书数量 | There was not enough money and the school bought fewer books, so the word must mean to cut.
 缩水/1 | 衣服洗一次小了一号 | The garment became a size smaller after one wash, so the word must mean to shrink.
 收缩/1 | 天冷时铁轨变短 | Rails become a little shorter in cold weather, so the word must mean to contract.
 压缩/1 | 文件太大才能发出去 | The file is too large to send as it is, so the word must mean to compress.
@@ -1772,7 +1772,7 @@ export const levelSevenClues = parseClues(`
 贫乏/1 | 读书少知识比较 | He reads very little, so the word must mean meagre.
 畅通/1 | 新路修好交通更好 | Traffic flows better since the new road was built, so the word must mean unimpeded.
 顺畅/1 | 新系统让付款更方便 | The new system makes paying easier, so the word must mean smooth.
-断货/1 | 手机太受欢迎很多店 | The phone is so popular that many shops have none left, so the word must mean out of stock.
+断货/1 | 手机太受欢迎很多店 | The phone is very popular and many shops have none left, so the word must mean out of stock.
 抢购/1 | 大米要涨价，大家去超市 | People heard that rice would go up and hurried to the supermarket, so the word must mean to rush to buy.
 货源/1 | 店里的菜来自几个大农场 | The shop's vegetables come from several big farms, so the word must mean source of goods.
 积压/1 | 卖不出去，冬衣堆在店里 | The winter clothes did not sell and are piled up in the shop, so the word must mean to pile up.
@@ -1797,7 +1797,7 @@ export const levelSevenClues = parseClues(`
 承揽/1 | 公司接下大桥建设工程 | The company has taken on building the bridge, so the word must mean to undertake.
 时薪/1 | 干一小时给三十元 | The job pays thirty yuan for each hour worked, so the word must mean hourly wage.
 钞票/1 | 口袋里拿出几张付车钱 | He took a few notes from his pocket to pay the fare, so the word must mean banknote.
-现钞/1 | 大家用手机付款，用纸钱的少 | Everyone pays by phone now, so fewer people use paper money, so the word must mean cash.
+现钞/1 | 大家用手机付款，用纸钱的少 | Everyone pays by phone now and fewer people use paper money, so the word must mean cash.
 验钞机/1 | 银行检查钱的真假 | Banks use a machine to tell real money from fake, so the word must mean banknote checker.
 假钞/1 | 使用它是违法的 | Using fake money is against the law, so the word must mean counterfeit note.
 账簿/1 | 古代商人记收入和支出 | Ancient merchants recorded each day's income and spending, so the word must mean ledger.
@@ -1824,14 +1824,14 @@ export const levelSevenClues = parseClues(`
 一揽子/1 | 政府帮助小企业的整体计划 | The government has issued a whole set of measures to help small firms, so the word must mean package.
 网店/1 | 在网上卖手工艺品 | She sells her handicrafts online, so the word must mean online shop.
 电商/1 | 农民可以在网上卖水果 | Many farmers can now sell fruit online, so the word must mean e-commerce.
-实体店/1 | 网购方便让它生意受影响 | Online shopping is so easy that shops in the street have lost business, so the word must mean physical store.
+实体店/1 | 网购方便让它生意受影响 | Online shopping is easy and shops in the street have lost business, so the word must mean physical store.
 商家/1 | 节日推出打折活动 | Many sellers offer discounts during festivals, so the word must mean merchant.
 逾期/1 | 图书馆的书过了日子不还 | Library books not returned in time cost a small fine, so the word must mean overdue.
 到期/1 | 存款下个月可以取 | The deposit can be withdrawn next month, so the word must mean to fall due.
 罚息/1 | 信用卡没按时还款银行收 | The bank charges extra when a card is not paid on time, so the word must mean penalty interest.
 借款/1 | 说好一年后还清 | He borrowed money from a friend and promised to repay it in a year, so the word must mean loan.
-讨债/1 | 钱没还只好上门 | The money he lent was never returned, so he went to ask for it, so the word must mean to collect a debt.
-负债/1 | 公司欠得太多还不起 | The company owes so much it cannot repay, so the word must mean to be in debt.
+讨债/1 | 钱没还只好上门 | The money he lent was never returned and he went to ask for it, so the word must mean to collect a debt.
+负债/1 | 公司欠得太多还不起 | The company owes more than it can repay, so the word must mean to be in debt.
 坏账/1 | 借钱的公司破产了 | The company that borrowed the money went bankrupt, so the word must mean bad debt.
 担保/1 | 贷款时请父亲为他 | His father stood behind his bank loan, so the word must mean to guarantee.
 赖账/1 | 借了钱还说没借过 | He borrowed money and now says he never did, so the word must mean to refuse to pay.
