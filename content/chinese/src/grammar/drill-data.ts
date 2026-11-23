@@ -375,27 +375,7 @@ const sentencesBaBei: DrillData = {
           `**第一步：找出做事的人和被处置的事物。**“${shown}”里，做事的是“${a}”，被处置的是“${b}”。\n\n**第二步：从被处置的事物说起。**“${b}”放在前面，接着是“被”和“${a}”，最后是“${vp}”：${right}\n\n**检验。** 问一问两句里是谁“${vp}”：都是“${a}”，“${b}”都是被处置的，意思没有变。`,
         );
       },
-      whyNot: (wrong, _right, shown) =>
-        about(
-          wrong,
-          ((): Text => {
-            const { a, b } = babei(shown);
-            if (wrong.startsWith("被"))
-              return t(
-                `Nothing stands before 被: what it is done to, ${b}, must come first.`,
-                `“被”前面没有东西，被处置的“${b}”应该放在句首。`,
-              );
-            if (wrong.startsWith(`${a}被`))
-              return t(
-                `It puts 被 after the doer ${a}, which makes ${a} the one it is done to: the meaning turns round.`,
-                `“被”放在了做事的“${a}”后面，“${a}”反倒成了被处置的一方，意思反了。`,
-              );
-            return t(
-              `It swaps the two but keeps 把, so now ${b} does it to ${a}: the meaning turns round.`,
-              `换了位置却还用“把”，成了“${b}”去处置“${a}”，意思反了。`,
-            );
-          })(),
-        ),
+      whyNot: (wrong, _right, shown) => about(wrong, whyNotBei(wrong, shown)),
     },
     {
       suffix: "to-ba",
@@ -415,24 +395,7 @@ const sentencesBaBei: DrillData = {
           `**第一步：找出做事的人和被处置的事物。**“${shown}”里，被处置的是“${b}”，“被”后面做事的是“${a}”。\n\n**第二步：从做事的人说起。**“${a}”放在前面，接着是“把”和“${b}”，最后是“${vp}”：${right}\n\n**检验。** 问一问两句里是谁“${vp}”：都是“${a}”，“${b}”都是被处置的，意思没有变。`,
         );
       },
-      whyNot: (wrong, _right, shown) =>
-        about(
-          wrong,
-          ((): Text => {
-            const { a, b } = babei(shown);
-            if (wrong.startsWith("把"))
-              return t(`Nothing stands before 把: the doer, ${a}, must come first.`, `“把”前面没有做事的人，“${a}”应该放在句首。`);
-            if (wrong.startsWith(`${b}把`))
-              return t(
-                `It puts ${b}, what it is done to, before 把, as if ${b} did it to ${a}: the meaning turns round.`,
-                `把被处置的“${b}”放在了“把”前面，成了“${b}”处置“${a}”，意思反了。`,
-              );
-            return t(
-              `It swaps the two but keeps 被, so now ${a} has it done to it by ${b}: the meaning turns round.`,
-              `换了位置却还用“被”，成了“${a}”被“${b}”处置，意思反了。`,
-            );
-          })(),
-        ),
+      whyNot: (wrong, _right, shown) => about(wrong, whyNotBa(wrong, shown)),
     },
   ],
 };
@@ -513,24 +476,7 @@ const sentencesRhetorical: DrillData = {
           `**第一步：看字面。**“${shown}”字面是${form["zh-CN"]}的，意思就是${meaning["zh-CN"]}的。\n\n**第二步：改成陈述句。**去掉表示反问的词，${form["zh-CN"]}改${meaning["zh-CN"]}，问号改成句号：${right}\n\n**检验。** 照问话人想要的答案回答这个问题，答案正是“${right}”陈述句和反问句意思相同。`,
         );
       },
-      whyNot: (wrong, _right, shown) =>
-        about(
-          wrong,
-          ((): Text => {
-            const r = rhetoricalOf.get(shown)!;
-            if (wrong === r.opposite)
-              return t(
-                "It copies the form of the question instead of turning it round, and so says the opposite of what the question means.",
-                "它照着反问句的字面写，没有把肯定否定反过来，说出的意思和反问句正好相反。",
-              );
-            if (wrong === r.plain)
-              return t("It is still a question that waits for an answer, not a statement.", "它仍是问句，还在等人回答，不是陈述句。");
-            return t(
-              "It is still a question, and it turns the form round inside the question, so its meaning turns round too.",
-              "它仍是问句，而且在问句里把肯定否定弄反了，意思也跟着反了。",
-            );
-          })(),
-        ),
+      whyNot: (wrong, _right, shown) => about(wrong, whyNotStatement(wrong, shown)),
     },
     {
       suffix: "to-question",
@@ -551,27 +497,7 @@ const sentencesRhetorical: DrillData = {
           `**第一步：看陈述句。**“${shown}”是${meaning["zh-CN"]}的说法，改成反问句，字面就要是${form["zh-CN"]}的。\n\n**第二步：改成反问句。**加上“难道”“怎么”等词，${meaning["zh-CN"]}改${form["zh-CN"]}，句号改成问号：${right}\n\n**检验。** 再改回去：去掉表示反问的词，肯定否定再反过来，就是原来的“${shown}”`,
         );
       },
-      whyNot: (wrong, _right, shown) =>
-        about(
-          wrong,
-          ((): Text => {
-            const r = rhetoricalOf.get(shown)!;
-            if (wrong === r.plain)
-              return t(
-                "It asks a real question that wants an answer; a rhetorical question holds its answer already.",
-                "这是真正的提问，需要别人回答；反问句的答案就在问句里。",
-              );
-            if (wrong === r.reversed)
-              return t(
-                "Its form is not turned round: a rhetorical question means the opposite of its form, so this one means the opposite of the statement.",
-                "它的字面没有反过来：反问句的意思和字面相反，这一句的意思就和陈述句相反了。",
-              );
-            return t(
-              "It is a statement, not a question, and it says the opposite of the one given.",
-              "这是陈述句，不是反问句，意思还和原句相反。",
-            );
-          })(),
-        ),
+      whyNot: (wrong, _right, shown) => about(wrong, whyNotRhetorical(wrong, shown)),
     },
   ],
 };
@@ -1192,3 +1118,67 @@ export const drillData: Readonly<Record<"connectives" | "sentences" | "rhetoric"
   sentences: [sentencesBaBei, sentencesRhetorical, sentencesReported],
   rhetoric: [rhetoricOne, rhetoricTwo, rhetoricThree, rhetoricFour],
 };
+
+/** whyNotBei says why a wrong answer is not the sentence as a 被 sentence. */
+function whyNotBei(wrong: string, shown: string): Text {
+  const { a, b } = babei(shown);
+  if (wrong.startsWith("被"))
+    return t(`Nothing stands before 被: what it is done to, ${b}, must come first.`, `“被”前面没有东西，被处置的“${b}”应该放在句首。`);
+  if (wrong.startsWith(`${a}被`))
+    return t(
+      `It puts 被 after the doer ${a}, which makes ${a} the one it is done to: the meaning turns round.`,
+      `“被”放在了做事的“${a}”后面，“${a}”反倒成了被处置的一方，意思反了。`,
+    );
+  return t(
+    `It swaps the two but keeps 把, so now ${b} does it to ${a}: the meaning turns round.`,
+    `换了位置却还用“把”，成了“${b}”去处置“${a}”，意思反了。`,
+  );
+}
+
+/** whyNotBa says why a wrong answer is not the sentence as a 把 sentence. */
+function whyNotBa(wrong: string, shown: string): Text {
+  const { a, b } = babei(shown);
+  if (wrong.startsWith("把"))
+    return t(`Nothing stands before 把: the doer, ${a}, must come first.`, `“把”前面没有做事的人，“${a}”应该放在句首。`);
+  if (wrong.startsWith(`${b}把`))
+    return t(
+      `It puts ${b}, what it is done to, before 把, as if ${b} did it to ${a}: the meaning turns round.`,
+      `把被处置的“${b}”放在了“把”前面，成了“${b}”处置“${a}”，意思反了。`,
+    );
+  return t(
+    `It swaps the two but keeps 被, so now ${a} has it done to it by ${b}: the meaning turns round.`,
+    `换了位置却还用“被”，成了“${a}”被“${b}”处置，意思反了。`,
+  );
+}
+
+/** whyNotStatement says why a wrong answer is not the rhetorical question as a statement. */
+function whyNotStatement(wrong: string, shown: string): Text {
+  const r = rhetoricalOf.get(shown)!;
+  if (wrong === r.opposite)
+    return t(
+      "It copies the form of the question instead of turning it round, and so says the opposite of what the question means.",
+      "它照着反问句的字面写，没有把肯定否定反过来，说出的意思和反问句正好相反。",
+    );
+  if (wrong === r.plain)
+    return t("It is still a question that waits for an answer, not a statement.", "它仍是问句，还在等人回答，不是陈述句。");
+  return t(
+    "It is still a question, and it turns the form round inside the question, so its meaning turns round too.",
+    "它仍是问句，而且在问句里把肯定否定弄反了，意思也跟着反了。",
+  );
+}
+
+/** whyNotRhetorical says why a wrong answer is not the statement as a rhetorical question. */
+function whyNotRhetorical(wrong: string, shown: string): Text {
+  const r = rhetoricalOf.get(shown)!;
+  if (wrong === r.plain)
+    return t(
+      "It asks a real question that wants an answer; a rhetorical question holds its answer already.",
+      "这是真正的提问，需要别人回答；反问句的答案就在问句里。",
+    );
+  if (wrong === r.reversed)
+    return t(
+      "Its form is not turned round: a rhetorical question means the opposite of its form, so this one means the opposite of the statement.",
+      "它的字面没有反过来：反问句的意思和字面相反，这一句的意思就和陈述句相反了。",
+    );
+  return t("It is a statement, not a question, and it says the opposite of the one given.", "这是陈述句，不是反问句，意思还和原句相反。");
+}

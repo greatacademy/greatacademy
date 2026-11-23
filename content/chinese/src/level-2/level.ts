@@ -39,6 +39,8 @@ export interface LevelSpec {
   readonly earlierCharacters: ReadonlyMap<string, LevelOneCharacter>;
   /** earlierWords are the words of the earlier levels. */
   readonly earlierWords: readonly string[];
+  /** earlierMeanings are the meanings of the words of the earlier levels, by word. */
+  readonly earlierMeanings: ReadonlyMap<string, Text>;
   /** after is the last word topic of the level before, which itself needs the rest of that level. */
   readonly after: string;
   /** grammar are the level's grammar topics, each naming its unit. */
@@ -81,6 +83,8 @@ export interface LevelPlan {
   readonly characters: ReadonlyMap<string, LevelOneCharacter>;
   /** words are the words of this level and the earlier ones. */
   readonly words: readonly string[];
+  /** meanings are the meanings of the words of this level and the earlier ones, by word. */
+  readonly meanings: ReadonlyMap<string, Text>;
   /** characterBatches and wordBatches are this level's own batches, in order. */
   readonly characterBatches: readonly (readonly LevelOneCharacter[])[];
   readonly wordBatches: readonly (readonly LevelOneWord[])[];
@@ -104,6 +108,8 @@ export function planLevel(spec: LevelSpec): LevelPlan {
   const words = [...spec.earlierWords, ...wordBatches.flat().map((w) => w.word)];
   const twice = firstTwice(words);
   if (twice) throw new Error(`${where}: ${twice} is taught twice`);
+  const meanings = new Map(spec.earlierMeanings);
+  for (const w of wordBatches.flat()) meanings.set(w.word, w.meaning);
   const characterCount = spec.units.reduce((n, u) => n + u.characters, 0);
   const wordCount = spec.units.reduce((n, u) => n + u.words, 0);
   if (characterCount !== characterBatches.length || wordCount !== wordBatches.length)
@@ -120,6 +126,7 @@ export function planLevel(spec: LevelSpec): LevelPlan {
     spec,
     characters,
     words,
+    meanings,
     characterBatches,
     wordBatches,
     speech,
@@ -197,6 +204,8 @@ export function buildLevel(plan: LevelPlan): Level {
       grammar: grammar.filter((x) => x.unit === u + 1),
       taught,
       after: levelWordId(level, w),
+      meanings: plan.meanings,
+      characters,
     });
     g += unitGrammar.length;
     topics.push(...unitGrammar);

@@ -42,5 +42,6 @@ export const levelFourPlan: LevelPlan = planLevel({
   dialogues,
   earlierCharacters: levelThreePlan.characters,
   earlierWords: levelThreePlan.words,
+  earlierMeanings: levelThreePlan.meanings,
   after: levelThreePlan.last.words,
 });

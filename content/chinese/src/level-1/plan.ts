@@ -78,6 +78,8 @@ export const levelOneSpeech: readonly UnitSpeechSpec[] = (() => {
 export const levelOnePlan: {
   readonly characters: ReadonlyMap<string, LevelOneCharacter>;
   readonly words: readonly string[];
+  /** meanings are the meanings of the words of level 1, by word. */
+  readonly meanings: ReadonlyMap<string, Text>;
   readonly characterBatches: readonly (readonly LevelOneCharacter[])[];
   readonly wordBatches: readonly (readonly LevelOneWord[])[];
   readonly speech: readonly UnitSpeechSpec[];
@@ -85,6 +87,7 @@ export const levelOnePlan: {
 } = {
   characters: levelOneCharacters,
   words: levelOneWords,
+  meanings: new Map(levelOneWordBatches.flat().map((w) => [w.word, w.meaning])),
   characterBatches: levelOneCharacterBatches,
   wordBatches: levelOneWordBatches,
   speech: levelOneSpeech,

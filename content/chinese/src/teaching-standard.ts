@@ -2,6 +2,12 @@
 // explanation that walks one instance and ends with a callout, and solutions in steps that end with a check. The test
 // beside this file holds every listed topic to it.
 
+import { levelGrammarId } from "./level-1/grammar.ts";
+
+/** levelGrammar lists the ids of the first count grammar topics of a level. */
+const levelGrammar = (level: number, count: number): readonly string[] =>
+  Array.from({ length: count }, (_, k) => levelGrammarId(level, k + 1));
+
 /** taughtStrands lists the strands whose every topic is written to the teaching standard. */
 export const taughtStrands: readonly string[] = ["recitation", "classical", "pinyin"];
 
@@ -187,4 +193,7 @@ export const taughtTopics: readonly string[] = [
   "rhetoric-3",
   "rhetoric-4",
   "gaokao-language",
+  ...levelGrammar(1, 48),
+  ...levelGrammar(2, 70),
+  ...levelGrammar(3, 81),
 ];

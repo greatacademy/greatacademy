@@ -10,8 +10,8 @@ export const quote = (s: string): string =>
 /** quoted sets a text as a block quote in every locale. */
 const quoted = (text: Text): Text => t(quote(text.en), quote(text["zh-CN"]));
 
-/** Why builds the solution of an item from its right answer and what was shown, in every locale. */
-export type Why = (right: string, shown: string) => Text;
+/** Why builds the solution of an item from its right answer, what was shown and the wrong options shown, in every locale. */
+export type Why = (right: string, shown: string, wrong?: readonly string[]) => Text;
 
 /** WhyNot builds the feedback for a wrong option: what it shows about the learner's reading, without the solution. */
 export type WhyNot = (wrong: string, right: string, shown: string) => Text;
@@ -42,7 +42,7 @@ export function choiceGenerator(question: Text, bank: readonly ChoiceItem[], why
     return {
       prompt: shown === "" ? question : joinText([question, show ? quoted(show(shown)) : same(quote(shown))]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map((o) => same(o)) } },
-      solution: reasons.length === 0 ? why(right, shown) : withReasons(why(right, shown), reasons),
+      solution: reasons.length === 0 ? why(right, shown, wrong) : withReasons(why(right, shown, wrong), reasons),
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
       ...(whyNot && {

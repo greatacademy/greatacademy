@@ -15,6 +15,7 @@ import {
   levelOneCharacterBatches,
   levelOneCharacterId,
   levelOneCharacters,
+  levelOnePlan,
   levelOneSpeech,
   levelOneWordBatches,
   levelOneWordId,
@@ -104,6 +105,8 @@ function build(): Built {
       grammar: grammar.filter((x) => x.unit === u + 1),
       taught,
       after: levelOneWordId(w),
+      meanings: levelOnePlan.meanings,
+      characters: levelOneCharacters,
     });
     g += unitGrammar.length;
     topics.push(...unitGrammar);
