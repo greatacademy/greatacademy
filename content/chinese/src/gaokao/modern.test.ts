@@ -1,4 +1,4 @@
-import { createRng } from "@ga/content";
+import { createRng, t } from "@ga/content";
 import { describe, expect, it } from "vitest";
 
 import { informationalSpec, type ModernPassage, modernTopics } from "./modern.ts";
@@ -9,6 +9,8 @@ const passage = (k: number, length = 900): ModernPassage => {
     ask: `${q}${k}`,
     right: `对${q}${k}`,
     wrong: [`错甲${q}${k}`, `错乙${q}${k}`, `错丙${q}${k}`] as const,
+    ground: "文文",
+    reasons: [t("first", "甲的理由"), t("second", "乙的理由"), t("third", "丙的理由")] as const,
   });
   return {
     title: `文章${k}`,
@@ -60,7 +62,29 @@ describe("the reading of modern texts", () => {
   it("rejects too few passages, passages of the wrong length and repeated options", () => {
     expect(() => modernTopics(informationalSpec([], six.slice(1)))).toThrow(/6 passages/);
     expect(() => modernTopics(informationalSpec([], [...six.slice(1), passage(9, 500)]))).toThrow(/not 800 to 2000/);
-    const twice = { ...passage(7), analysis: [{ ask: "问", right: "同", wrong: ["同", "乙", "丙"] }, passage(7).analysis[1]] } as const;
+    const twice = {
+      ...passage(7),
+      analysis: [{ ...passage(7).analysis[0], wrong: [passage(7).analysis[0].right, "乙", "丙"] }, passage(7).analysis[1]],
+    } as const;
     expect(() => modernTopics(informationalSpec([], [...six.slice(1), twice]))).toThrow(/options/);
+  });
+
+  it("rejects a ground not in the passage and a reason given twice", () => {
+    const astray = { ...passage(7), analysis: [{ ...passage(7).analysis[0], ground: "不在文中" }, passage(7).analysis[1]] } as const;
+    expect(() => modernTopics(informationalSpec([], [...six.slice(1), astray]))).toThrow(/not in the passage/);
+    const same = t("same", "同一个理由");
+    const repeated = {
+      ...passage(7),
+      analysis: [{ ...passage(7).analysis[0], reasons: [same, same, same] }, passage(7).analysis[1]],
+    } as const;
+    expect(() => modernTopics(informationalSpec([], [...six.slice(1), repeated]))).toThrow(/one reason twice/);
+  });
+
+  it("gives each wrong option shown its own reason and works the question from its ground", () => {
+    const [reading] = modernTopics(informationalSpec([], six));
+    const p = reading.knowledgePoints[0]!.generate(createRng(0));
+    expect(p.mistakes).toHaveLength(2);
+    for (const m of p.mistakes ?? []) expect(m.feedback["zh-CN"]).toMatch(/的理由$/u);
+    expect(p.solution["zh-CN"]).toContain("依据的是原文“文文”");
   });
 });

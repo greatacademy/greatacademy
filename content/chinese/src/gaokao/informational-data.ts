@@ -1,6 +1,8 @@
 // The informational texts of the Gaokao's reading of modern texts: arguments and expositions written for the subject,
 // each with two questions on what it says, two on how it reasons, and two to answer in a few sentences.
 
+import { t } from "@ga/content";
+
 import type { ModernPassage } from "./modern.ts";
 
 /** informationalPassages are the informational texts of the Gaokao's reading of modern texts, written for the subject. */
@@ -27,6 +29,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "多次测量取平均值，可以使偶然误差和系统误差全部相互抵消",
           "测量结果与理论预言一旦出现差距，就说明理论中藏着未知的问题",
         ],
+        ground: "系统误差不能靠重复来消除，只能靠找出原因、校正仪器来解决。",
+        reasons: [
+          t(
+            "Confuses two terms: paragraph 1 says mistakes can be avoided but error cannot be wholly removed; the option makes them the same.",
+            "混淆概念：第一段说错误“本可以避免”，误差却“是测量本身无法完全消除的伴随者”，选项把误差和错误说成了一样。",
+          ),
+          t(
+            "Widens the scope: averaging helps only random error, and only “in part”; paragraph 3 says systematic error is not removed by repetition.",
+            "扩大范围：取平均只对偶然误差有效，而且只抵消“一部分”；第三段明说系统误差“不能靠重复来消除”。",
+          ),
+          t(
+            "Drops a condition: paragraph 4 first asks whether the gap exceeds the error; if not, the theory is not to be blamed.",
+            "漏掉条件：第四段说先要问差距是否超出误差范围，没有超出就“不能轻易说理论错了”，选项把有条件的判断说成了无条件。",
+          ),
+        ],
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -35,6 +52,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "开普勒认为八角分的差距属于误差范围，因而坚持了圆形轨道的设想",
           "作者认为，把不符合预期的结果都推给误差，是一种不诚实的做法",
           "实验结果与课本上的数值不一致，说明实验方法上一定存在偏差",
+        ],
+        ground: "一个标明了误差范围的结论，看上去不如“绝对准确”那样有气势，却更值得信赖，因为它清楚地说明了自己知道什么、不知道什么。",
+        reasons: [
+          t(
+            "The reverse of the text: Kepler would not call it error, and so gave up circular orbits.",
+            "与原文相反：第四段说开普勒认为“不应把它归为误差”，正因此放弃了圆形轨道设想。",
+          ),
+          t(
+            "Swaps the labels: hiding error is “dishonest”, blaming everything on error is “lazy”.",
+            "张冠李戴：第五段说掩盖误差是“不诚实的”，把一切推给误差是“懒惰的”，选项把两种评价对调了。",
+          ),
+          t(
+            "Turns a possibility into a certainty: the last paragraph says a mismatch may be chance or method; the option insists on method.",
+            "把可能说成必然：末段说不一致“并不一定意味着实验失败”，要分析是偶然波动还是方法偏差，选项一口咬定是后者。",
+          ),
         ],
       },
     ],
@@ -47,6 +79,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "第三段以“短了一点的尺子”作类比，说明了偶然误差时大时小的特点",
           "第五段运用对比论证，说明掩盖误差比把结果推给误差的危害更大",
         ],
+        ground: "正是对这八角分的认真对待，使他放弃了沿袭已久的圆形轨道设想，最终得出行星沿椭圆轨道运行的结论。",
+        reasons: [
+          t(
+            "Confuses terms: the opening list shows error is unavoidable; mistakes, the text says, can be avoided.",
+            "混淆概念：开篇列举尺子、仪器、读数的人和环境，说明的是误差不可避免；原文恰恰说错误“本可以避免”。",
+          ),
+          t(
+            "Wrong target: the short ruler illustrates systematic error, not random error, and it is an example, not an analogy.",
+            "张冠李戴：第三段“短了一点的尺子”说明的是系统误差总朝同一方向偏，不是偶然误差的时大时小，而且那是举例，不是类比。",
+          ),
+          t(
+            "Invents a comparison: paragraph 5 sets the two attitudes side by side without ranking them.",
+            "无中生有：第五段把掩盖误差和推给误差并列为两种不对的态度，没有比较哪一种危害更大。",
+          ),
+        ],
       },
       {
         ask: "下列对文章思路的分析，正确的一项是",
@@ -55,6 +102,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "文章先提出“误差是科学发现的入口”这一中心论点，再从正反两面论证，最后以开普勒的事例总结全文",
           "文章第二段和第三段是因果关系，第二段说明误差产生的原因，第三段说明误差造成的结果",
           "文章最后一段是对前文的简单重复，强调做实验时结果必须与课本上的数值保持一致",
+        ],
+        ground: "更有意思的是，误差不仅是需要控制的对象，有时还是发现的入口。",
+        reasons: [
+          t(
+            "Wrong order: the “way to discovery” comes only in paragraph 4, and so does Kepler, not at the end.",
+            "顺序错乱：开篇讲的是测量不可能绝对准确、误差不同于错误，“发现的入口”到第四段才提出；开普勒的事例也在第四段，不在结尾。",
+          ),
+          t(
+            "Wrong relation: paragraph 2 gives methods of control, paragraph 3 two kinds of error; they are not cause and effect.",
+            "关系判断错：第二段讲控制误差的几种办法，第三段区分两类误差，两段不是“原因”和“结果”。",
+          ),
+          t(
+            "Misreads: the last paragraph extends the point to learners and warns against forcing the textbook value.",
+            "曲解内容：末段把话题推到学习科学的人身上，是延伸不是重复；它说的恰恰是不必凑出课本上的标准答案。",
+          ),
         ],
       },
     ],
@@ -95,6 +157,18 @@ export const informationalPassages: readonly ModernPassage[] = [
           "只要使用推荐算法，人就必然会陷入“信息茧房”而且无法自拔",
           "推荐算法让所有原本不容易被看到的作品都找到了自己的读者",
         ],
+        ground: "算法推荐的依据，主要是一个人过去的选择。它擅长回答“你曾经喜欢什么”",
+        reasons: [
+          t(
+            "The reverse: paragraph 3 says it is poor at guessing what you may still need.",
+            "与原文相反：第三段说算法“不太擅长回答‘你还可能需要什么’”，选项却说它能判断“全部需要”。",
+          ),
+          t(
+            "Possibility made certain: the world “may” narrow, and changing one's choices changes the feed.",
+            "把可能说成必然：原文说视野“可能越来越窄”，第五段又说人改变选择推荐也会改变，选项说成“必然”“无法自拔”。",
+          ),
+          t("Widens the scope: “many” works, not “all”.", "扩大范围：第二段说让“许多”原本不容易被看到的作品找到读者，选项改成了“所有”。"),
+        ],
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -103,6 +177,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "作者认为，推荐算法弊大于利，青少年应当尽量远离各类手机应用",
           "作者认为，视野变窄的主要影响，在于人们知道的事情比过去少了",
           "正因为一个人的看法变得固执，算法才更多地向他推送同类内容",
+        ],
+        ground: "问题不在于工具本身，而在于人怎样使用工具。算法是根据人的行为来推荐的，人改变了自己的选择，推荐的结果也会随之改变。",
+        reasons: [
+          t(
+            "Misstates the view: the writer says there is no need to reject it, only to keep it as a helper.",
+            "曲解观点：第五段说不必拒绝算法，作者主张“让算法做助手”，既没说弊大于利，也没让青少年远离应用。",
+          ),
+          t(
+            "Wrong emphasis: paragraph 4 says the harm is “not only” knowing less.",
+            "轻重颠倒：第四段说影响“不只在于少知道一些事情”，更要紧的是遇不到意外、看法变得固执。",
+          ),
+          t(
+            "Cause and effect swapped: repetition makes views rigid, not the other way round.",
+            "因果倒置：原文是同类内容推得越多，看法越容易在重复中变得固执，选项把结果说成了原因。",
+          ),
         ],
       },
     ],
@@ -115,6 +204,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "第三段引用“信息茧房”的说法，是为了驳斥这一说法的片面性",
           "第五段运用对比论证，说明图书馆和书店比手机应用更加可靠",
         ],
+        ground: "然而，便利的背后也隐藏着值得警惕的倾向。",
+        reasons: [
+          t(
+            "Wrong function: the basketball and food examples introduce the topic; they prove no harm.",
+            "作用说错：第一段的篮球、美食是引出话题，描述推送越来越合口味的现象，没有论证弊大于利。",
+          ),
+          t(
+            "The reverse: paragraph 3 borrows the phrase to describe the narrowing, it does not refute it.",
+            "与原文相反：第三段借“信息茧房”来形容视野变窄，是认同并借用这个说法，不是驳斥。",
+          ),
+          t(
+            "Invents a comparison: libraries are one way to keep a window open, not compared for reliability.",
+            "无中生有：第五段把去图书馆、书店列为在算法之外“保留一扇窗”的做法，没有和手机应用比较可靠与否。",
+          ),
+        ],
       },
       {
         ask: "下列对文章结构的分析，正确的一项是",
@@ -123,6 +227,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "第四段与第三段是转折关系，第四段否定了第三段视野变窄的说法",
           "第六段转换了话题，开始讨论中学阶段学生考试负担过重的问题",
           "最后一段提出了一个新的论点，与前文的论述没有直接的联系",
+        ],
+        ground: "那么，是不是应该拒绝推荐算法呢？恐怕也不必。",
+        reasons: [
+          t(
+            "Wrong relation: paragraph 4 goes further than paragraph 3; it does not deny it.",
+            "关系判断错：第四段承接第三段，说视野变窄的影响“不只在于少知道一些事情”，是递进，不是否定。",
+          ),
+          t(
+            "Invented topic: paragraph 6 is about initiative; exams are never mentioned.",
+            "无中生有：第六段说的是青少年要培养主动选择信息的能力，文中没有提到考试负担。",
+          ),
+          t(
+            "Wrong relation: the last paragraph sums up the argument.",
+            "关系判断错：最后一段“让算法做助手，而不是做主人”收束全文、点明观点，和前文紧密相连。",
+          ),
         ],
       },
     ],
@@ -163,6 +282,22 @@ export const informationalPassages: readonly ModernPassage[] = [
           "二十四个节气的名称，都是用来反映一年中气温的冷暖变化的",
           "节气形成于黄河流域，因而对其他地区的农业生产毫无用处",
         ],
+        ground:
+          "节气是按照太阳在一年中的位置来划分的：太阳在黄道上每移动十五度，就到了一个新的节气。正因为如此，节气在公历中的日期相当稳定",
+        reasons: [
+          t(
+            "The reverse: paragraph 2 denies the solar terms are lunar; the moon sets months, the sun sets terms.",
+            "与原文相反：第二段开头说“很多人以为节气属于‘阴历’，其实不然”，月亮圆缺定的是月份，节气按太阳划分。",
+          ),
+          t(
+            "Part for whole: only some terms, like Minor Heat and Major Cold, mark temperature.",
+            "以偏概全：第一段说节气有的标示季节、有的反映气温、有的记录降水、有的描述物候，反映气温的只是小暑、大寒一类。",
+          ),
+          t(
+            "Overreaches: paragraph 6 says other regions adapted the terms, not that they were useless.",
+            "推断绝对化：第六段说各地根据本地气候对农时和农谚作了调整，说明节气是改着用，不是“毫无用处”。",
+          ),
+        ],
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -171,6 +306,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "作者赞同现代农业不再需要节气，认为节气已经完成了历史使命",
           "因为被列入非物质文化遗产名录，节气才能够流传两千多年",
           "各地调整农时和农谚，说明节气在南方等地已被完全放弃",
+        ],
+        ground: "这种看法有一定道理，却失之简单。",
+        reasons: [
+          t(
+            "Wrong speaker: “its mission is done” is what “some people” say; the writer calls it too simple.",
+            "张冠李戴：“已经完成了历史使命”是第四段转述的“有人认为”，作者紧接着说它“失之简单”。",
+          ),
+          t(
+            "Wrong cause: listing came in 2016; the terms lasted because they stayed part of life.",
+            "因果错位：列入名录是2016年的事；末段说节气流传两千多年，是因为“一直与人们的生活息息相关”。",
+          ),
+          t(
+            "Misreads: adjusting means using; nothing says they were abandoned.",
+            "曲解原文：第六段说各地“调整”农时和农谚，正说明一直在用；“完全放弃”在文中找不到。",
+          ),
         ],
       },
     ],
@@ -183,6 +333,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "第四段运用类比论证，把二十四节气比作博物馆里收藏的文物",
           "第六段列举学校和社区的活动，证明节气已完全融入现代生活",
         ],
+        ground: "首先，节气所包含的观察自然的方法并没有过时。",
+        reasons: [
+          t(
+            "Wrong era: the proverbs show the original farming use, before forecasts.",
+            "时代错位：第三段的农谚说明节气“最初的用途在农业生产”，讲的是没有天气预报的年代，不是现代农业。",
+          ),
+          t(
+            "No analogy: “kept in a museum” is the quoted view, not the writer's comparison.",
+            "无中生有：第四段是转述一种看法，“保存在博物馆里”是那种看法自己的说法，作者没有在作类比。",
+          ),
+          t(
+            "Overstates: these are “attempts”, not complete success.",
+            "夸大：第六段说学校、社区的活动是“让节气重新进入生活的尝试”，选项把“尝试”说成“已完全融入”。",
+          ),
+        ],
       },
       {
         ask: "下列对文章思路的分析，正确的一项是",
@@ -191,6 +356,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "文章开篇即提出中心论点，接着全部用事例证明节气是农耕社会的“时间表”，最后总结全文",
           "文章第二段纠正“节气属于阴历”的误解，这一段是全文中心论点所在，其余各段都围绕它展开",
           "文章各段之间是并列关系，分别介绍二十四节气在黄河流域、南方和西北等地的流传情况",
+        ],
+        ground: "那么，在城市化和农业机械化的今天，这张时间表还有没有用？",
+        reasons: [
+          t(
+            "Wrong outline: the opening defines the terms, the timetable is paragraph 3, and the core is the rebuttal after it.",
+            "思路说错：开篇介绍节气是什么，“时间表”只是第三段对原初用途的概括；全文的重点在第四段以后的辩驳，并非全部用事例。",
+          ),
+          t(
+            "Wrong thesis: paragraph 2 corrects a misconception; the thesis is in paragraphs 5 to 7.",
+            "中心论点找错：第二段只是纠正一个常识误解；全文观点是节气今天仍有价值、要在使用中传承，在第五至七段。",
+          ),
+          t(
+            "Wrong structure: the regions appear only in paragraph 6; the paragraphs run introduction, use, rebuttal, conclusion.",
+            "结构说错：黄河流域、南方、西北只在第六段一处提到，各段依次是介绍、用途、辩驳、结论，不是并列的地域介绍。",
+          ),
         ],
       },
     ],
@@ -231,6 +411,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "湿地被称为“地球之肾”，是因为它能吸收和储存大量的雨水",
           "泥炭地的面积十分广大，因此其中储存的碳也相当可观",
         ],
+        ground: "按照国际上通行的定义，水库、稻田等人工水域也可以算作湿地。",
+        reasons: [
+          t(
+            "The reverse: paragraph 3 says the cleaning power has limits.",
+            "与原文相反：第三段说“这种净化能力是有限度的”，污染物超过承受能力，湿地本身也会遭到破坏。",
+          ),
+          t(
+            "Wrong label: “kidney” is about cleaning water; storing rain is the “sponge”.",
+            "张冠李戴：“地球之肾”说的是净化水质；吸收、储存雨水是第四段“海绵”的比喻。",
+          ),
+          t(
+            "The reverse: peatlands are small in area but store much carbon.",
+            "与原文相反：第六段说泥炭地“面积虽然不大，储存的碳却相当可观”。",
+          ),
+        ],
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -239,6 +434,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "一片停歇地消失，必然导致整条迁徙路线上的鸟群全部消失",
           "湿地长期被低估，是因为它容易滋生蚊虫，而且种不了庄稼",
           "1971年签订湿地公约时，各国当即把2月2日定为世界湿地日",
+        ],
+        ground: "一旦排水开垦，泥炭暴露在空气中加速分解，原本封存的碳就会重新释放出来。",
+        reasons: [
+          t(
+            "Possibility made certain: it “may affect” the flocks, not destroy them all.",
+            "把可能说成必然：第五段说一片停歇地消失“就可能影响”整条迁徙路线上的鸟群，选项改成“必然”“全部消失”。",
+          ),
+          t(
+            "Wrong cause: mosquitoes are the popular image; the cause given is that value is not turned into grain or houses.",
+            "原因找错：蚊虫、种不了庄稼是第一段“许多人的印象”；末段说被低估是因为价值“大多不能直接换成粮食或房屋”。",
+          ),
+          t(
+            "Wrong time: the day was set “later”, not at once.",
+            "时间混淆：第二段说签约“此后”才把2月2日定为世界湿地日，选项改成了“当即”。",
+          ),
         ],
       },
     ],
@@ -251,6 +461,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "第五段举候鸟迁徙的例子，意在说明湿地具有调节水量的功能",
           "第三段运用对比论证，说明湿地中泥沙的作用比植物更为重要",
         ],
+        ground: "湿地还像一块巨大的海绵，能够调节水量。",
+        reasons: [
+          t(
+            "Wrong function: the convention shows international concern; the limit on cleaning is in paragraph 3.",
+            "作用张冠李戴：第二段提公约是交代湿地受到国际重视；净化能力有限是第三段末尾说的，与公约无关。",
+          ),
+          t(
+            "Wrong function: migrating birds show biodiversity, not water control.",
+            "功能张冠李戴：候鸟迁徙在第五段，说明的是湿地维持生物多样性、为鸟类提供停歇地。",
+          ),
+          t(
+            "Invents a comparison: silt and plants are listed together, not ranked.",
+            "无中生有：第三段依次说泥沙沉积和植物、微生物分解，两者并列，没有比较谁更重要。",
+          ),
+        ],
       },
       {
         ask: "下列对文章结构的分析，正确的一项是",
@@ -259,6 +484,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "第一段先肯定排干湿地的做法，以下各段再逐一论证这种做法的合理性，最后总结全文",
           "第二段介绍了湿地的定义和国际公约，这一段是全文的中心论点所在，统领以下各段",
           "最后一段与前文是转折关系，指出湿地的种种功能平时并不显眼，因而其实并不重要",
+        ],
+        ground: "此外，湿地在储存碳方面也有重要作用。",
+        reasons: [
+          t(
+            "The reverse: draining is the old view, which the passage overturns.",
+            "与原文相反：第一段说排干湿地是“过去”的看法，随后笔锋一转说湿地的功能难以替代，全文是否定这种做法的。",
+          ),
+          t(
+            "Wrong thesis: paragraph 2 defines wetlands; the thesis is in the last paragraph.",
+            "中心论点找错：第二段只交代湿地的定义和公约；全文观点在末段，即土地的价值还在于它为整个自然系统做了什么。",
+          ),
+          t(
+            "Misreads: “not conspicuous” explains why wetlands are undervalued, not that they matter little.",
+            "曲解：末段说功能“平时并不显眼”、失去后才知道价值，是要说明湿地重要却被低估，不是“并不重要”。",
+          ),
         ],
       },
     ],
@@ -299,6 +539,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "古汉语中的“走”和“行”意思相同，都表示今天“走”的意思",
           "“牺牲”一词由褒义变为贬义，说明词语的感情色彩会改变",
         ],
+        ground: "“江”和“河”在上古时期原本是专名，“江”指长江，“河”指黄河。后来，这两个字渐渐用来泛指较大的河流",
+        reasons: [
+          t(
+            "Wrong category: 臭 is narrowing; shift is 走 and 闻.",
+            "类别混淆：第二段把“臭”列为“范围缩小”的例子；词义转移是第三段“走”“闻”一类。",
+          ),
+          t(
+            "The reverse: in old Chinese 走 meant run and 行 meant walk.",
+            "与原文相反：第三段说古汉语的“走”是跑，表示今天“走”的意思用“行”，两字意思不同。",
+          ),
+          t(
+            "Wrong word: 爪牙 turned bad; 牺牲 grew solemn and noble.",
+            "张冠李戴：由褒变贬的是“爪牙”；“牺牲”是从祭祀的牲畜变得“庄重而崇高”。",
+          ),
+        ],
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -307,6 +562,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "词义变化的根本原因，在于人们说话时喜欢借用比喻和引申",
           "只要了解了词语的来龙去脉，就一定能读懂所有的古代典籍",
           "词语延伸出来的意思，久而久之一定会取代它原来的意思",
+        ],
+        ground: "很多误读，正是由于用今天的意思去理解古代的词语，也就是所谓“以今释古”。",
+        reasons: [
+          t(
+            "Part for whole: figures of speech are one cause among several; at root it is the need to communicate.",
+            "以偏概全：第五段说原因是多方面的，比喻引申只是“此外”的一条；“归根到底”是为了满足交流的需要。",
+          ),
+          t(
+            "Absolute claim: knowing changes makes one more careful, not able to read everything.",
+            "绝对化：第六段说了解词义变化会让人“多一分警惕”，还要结合上下文推敲，没有说一定能读懂所有古籍。",
+          ),
+          t(
+            "Possibility made certain: “may replace”, not “will”.",
+            "把可能说成必然：第五段说延伸出来的意思“可能取代原来的意思”，选项改成“一定会”。",
+          ),
         ],
       },
     ],
@@ -319,6 +589,18 @@ export const informationalPassages: readonly ModernPassage[] = [
           "第四段列举“爪牙”“牺牲”两例，都是为了说明词义范围的缩小",
           "第五段引用古书中的原话，论证了词义变化有多方面的复杂原因",
         ],
+        ground: "“守株待兔”的故事里，兔子就是“走”着撞上树桩的，那是在奔跑。",
+        reasons: [
+          t(
+            "Wrong method: the opening likens words to people; it does not contrast them.",
+            "方法说错：开篇说词语“像人一样，也有自己的一生”，是比喻二者相似，不是对比二者的不同。",
+          ),
+          t(
+            "Wrong category: paragraph 4 is about connotation; narrowing is in paragraph 2.",
+            "类别混淆：第四段两例说明的是感情色彩的改变；范围缩小是第二段的“臭”“丈人”。",
+          ),
+          t("Invented: paragraph 5 quotes no old text.", "无中生有：第五段直接分析原因，没有引用古书原话。"),
+        ],
       },
       {
         ask: "下列对文章思路的分析，正确的一项是",
@@ -327,6 +609,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "文章先分析词义变化的原因，再举例加以说明，最后号召人们保护古代的词语不被改变",
           "第二段到第四段是层层递进的关系，后一种变化情形都以前一种变化情形为基础",
           "最后一段否定了前一段的观点，认为读懂古书并不重要，查字典只是一次文化旅行",
+        ],
+        ground: "词义为什么会变化？原因是多方面的。",
+        reasons: [
+          t(
+            "Wrong order and view: types come first, causes in paragraph 5, and no one is told to stop change.",
+            "顺序和观点都错：文章先分类举例，第五段才讲原因；作者说变化是为了满足交流需要，并没有号召阻止词语变化。",
+          ),
+          t(
+            "Wrong relation: paragraphs 2 to 4 are parallel types.",
+            "关系判断错：第二至四段分别说范围、转移、感情色彩几种情形，是并列，后一种不以前一种为基础。",
+          ),
+          t(
+            "The reverse: “going deeper” builds on the previous paragraph.",
+            "与原文相反：末段用“更深一层说”承接上段，在读懂古书之外再进一层讲文化意义，不是否定。",
+          ),
         ],
       },
     ],
@@ -365,6 +662,18 @@ export const informationalPassages: readonly ModernPassage[] = [
           "江南私家园林的面积都很大，因此能让人觉得山重水复、意趣无穷",
           "借景就是看见什么就借什么，园外的一切景物都可以借入园中",
         ],
+        ground: "所谓“借”，是把园外的景物纳入园内的视野。",
+        reasons: [
+          t(
+            "Confuses terms: 因 follows the site; 借 draws in outside scenery.",
+            "混淆概念：第二段说“因”是依循地势和环境、因地制宜，“借”才是把园外景物纳入视野，两者不同。",
+          ),
+          t("The reverse: the gardens are usually small.", "与原文相反：第一段说园林面积“往往不大”，许多私家园林“只占城中一角”。"),
+          t(
+            "The reverse: paragraph 5 says not everything is borrowed.",
+            "与原文相反：第五段开头说“借景并不是看见什么就借什么”，还要“俗则屏之，嘉则收之”。",
+          ),
+        ],
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -373,6 +682,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "拙政园和颐和园都把北寺塔借入园中，使园内园外连成一片",
           "园林中的道路曲折迂回，主要是为了遮挡园外那些不美的景物",
           "现代城市建筑彼此遮挡，是因为设计者完全不了解古典园林",
+        ],
+        ground: "人从这里望出去，看到的是被框起来的一幅画",
+        reasons: [
+          t(
+            "Wrong garden: the Humble Administrator's Garden borrows the North Temple Pagoda; the Summer Palace borrows Jade Spring Hill and the Western Hills.",
+            "张冠李戴：借北寺塔的是苏州拙政园，颐和园借的是玉泉山上的塔和西山。",
+          ),
+          t(
+            "Wrong purpose: winding paths change the view; trees, rockeries and walls hide ugliness.",
+            "目的说错：道路曲折是为了“移步换景”、引人向前；遮挡不美的景物靠的是树木、假山或高墙。",
+          ),
+          t(
+            "Invented cause: the text faults designers' focus, not their ignorance.",
+            "无中生有：末段说现代建筑有时只顾自身造型、不考虑周围环境，没有说设计者完全不了解古典园林。",
+          ),
         ],
       },
     ],
@@ -385,6 +709,18 @@ export const informationalPassages: readonly ModernPassage[] = [
           "第四段运用比喻论证，把园林比作一幅画，论证了框景比借景更为重要",
           "最后一段运用对比论证，说明现代城市的设计已经全面超越了古典园林",
         ],
+        ground: "明代末年的造园家计成在《园冶》中说：“园林巧于因借，精在体宜。”",
+        reasons: [
+          t(
+            "Invents a comparison: both gardens illustrate distant borrowing.",
+            "无中生有：两例一南一北，都用来说明远借，文中没有比较哪方更善于借景。",
+          ),
+          t("Wrong relation: framing and borrowing complement each other.", "关系说错：第四段说框景与借景“相辅相成”，没有说哪个更重要。"),
+          t(
+            "The reverse: modern cities should learn from the old gardens.",
+            "与原文相反：末段说现代城市有时彼此遮挡，主张向古人学“借”，不是现代超越了古典。",
+          ),
+        ],
       },
       {
         ask: "下列对文章思路的分析，正确的一项是",
@@ -393,6 +729,21 @@ export const informationalPassages: readonly ModernPassage[] = [
           "文章先批评现代城市建筑彼此遮挡的现象，再以古典园林为例，提出改进城市设计的具体办法",
           "第四段与第三段是转折关系，第四段介绍框景和移步换景，否定了第三段所说借景的作用",
           "第五段是全文的总结，指出借景只需要开放的眼光，园外的景物越多，园子就越显得丰富",
+        ],
+        ground: "造园者是怎样在有限的空间里创造出丰富的景致的？其中一个重要的办法，就是“借”。",
+        reasons: [
+          t(
+            "Wrong order: modern cities come only at the end.",
+            "顺序颠倒：文章从园林的现象写起，到最后一段才联系现代城市，现代城市不是开头。",
+          ),
+          t(
+            "Wrong relation: paragraph 4 adds to borrowing, it does not deny it.",
+            "关系判断错：第四段开头说框景等手法“与借景相辅相成”，是补充，不是否定。",
+          ),
+          t(
+            "Part for whole: borrowing needs both openness and selection; the summary is the last paragraph.",
+            "以偏概全：第五段说借景“既需要开放的眼光，也需要严格的取舍”，不美的要遮挡；全文的总结也在最后一段，不在第五段。",
+          ),
         ],
       },
     ],

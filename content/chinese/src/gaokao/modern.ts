@@ -6,11 +6,18 @@
 import { type CriterionSpec, type Generator, joinText, type Problem, type Rng, same, type Text, type TopicDef, t } from "@ga/content";
 import { criterionById, point, quote, zhQuote } from "@ga/subject-chinese";
 
-/** ModernChoice is a choice question on a passage: what it asks, the right option and three wrong ones. */
+/**
+ * ModernChoice is a choice question on a passage: what it asks, the right option and three wrong ones, each written by
+ * hand with the words of the passage the right option rests on and the reason each wrong one fails.
+ */
 export interface ModernChoice {
   readonly ask: string;
   readonly right: string;
   readonly wrong: readonly [string, string, string];
+  /** ground is the words of the passage the right option rests on, copied from it exactly. */
+  readonly ground: string;
+  /** reasons say why each wrong option fails, in the order of wrong: the kind of error and where it lies. */
+  readonly reasons: readonly [Text, Text, Text];
 }
 
 /** ModernAnswer is a question answered in a few sentences, with one good answer written for the subject. */
@@ -90,96 +97,45 @@ const criterion = (id: string): CriterionSpec => {
   return found;
 };
 
-/** bigrams are the pairs of Han characters side by side in a text. */
-const bigrams = (text: string): Set<string> => {
-  const hans = [...text].filter((ch) => /\p{Script=Han}/u.test(ch));
-  return new Set(hans.slice(1).map((ch, i) => `${hans[i]}${ch}`));
-};
+/** whereText says where the right option of a question points: the words of the passage it rests on. */
+const whereText = (q: ModernChoice): Text => t(`goes back to ${zhQuote(q.ground)}`, `依据的是原文${zhQuote(q.ground)}`);
 
-/** sentencesOf splits a passage into its sentences, or a poem into its lines. */
-const sentencesOf = (p: ModernPassage): readonly string[] =>
-  p.body
-    .split(/(?<=[。！？；])|\n/u)
-    .map((x) => x.trim())
-    .filter((x) => bigrams(x).size > 0);
+/** whyNot says why the wrong option at index i of a question fails. */
+const whyNot = (q: ModernChoice, i: number): Text =>
+  t(`${zhQuote(q.wrong[i]!)} is wrong. ${q.reasons[i]!.en}`, `${zhQuote(q.wrong[i]!)}不对。${q.reasons[i]!["zh-CN"]}`);
 
-/** STRUCTURE finds an option about how a passage or poem is built as a whole: its paragraphs, its opening, its order. */
-const STRUCTURE = /第[一二三四五六七八九十至、]+[段句]|全文|全诗|通篇|开篇|开头|结尾|首段|末段|各段|文章(?:先|以|采用|运用)/u;
-
-/**
- * restsOn is the sentence of a passage an option goes back to: the one holding a line the option quotes, or else the one
- * sharing most pairs of characters with it, leaving out those of the question; none when no sentence shares two.
- */
-function restsOn(p: ModernPassage, option: string, ask: string): string | undefined {
-  const sentences = sentencesOf(p);
-  for (const [, quoted] of option.matchAll(/“([^”]+)”/gu)) {
-    const found = sentences.find((x) => x.includes(quoted!));
-    if (found) return found;
-  }
-  if (STRUCTURE.test(option)) return undefined;
-  const asked = bigrams(ask);
-  const own = [...bigrams(option)].filter((b) => !asked.has(b));
-  let best: string | undefined;
-  let most = 1;
-  for (const x of sentences) {
-    const pairs = bigrams(x);
-    const n = own.filter((b) => pairs.has(b)).length;
-    if (n > most) {
-      most = n;
-      best = x;
-    }
-  }
-  return best;
-}
-
-/** whereText says where an option points: a sentence of the passage, or the passage as a whole. */
-const whereText = (ground: string | undefined): Text =>
-  ground ? t(`goes back to ${zhQuote(ground)}`, `依据的是${zhQuote(ground)}这一句`) : t("speaks of the passage as a whole", "说的是全文");
-
-/** wrongReason gives a wrong option its own reason: the sentence it goes back to and does not match, or none at all. */
-function wrongReason(p: ModernPassage, q: ModernChoice, wrong: string): Text {
-  const ground = restsOn(p, q.right, q.ask);
-  const near = restsOn(p, wrong, q.ask);
-  if (!near && STRUCTURE.test(wrong))
-    return t(
-      `${zhQuote(wrong)} describes how the whole is built, but the ${p.author ? "poem" : "passage"} does not go that way: follow its ${p.author ? "lines" : "paragraphs"} in order again.`,
-      `${zhQuote(wrong)}说的是${p.author ? "全诗" : "全文"}的写法或结构，可${p.author ? "诗" : "文章"}并不是这样写的：按顺序再看一遍各${p.author ? "句" : "段"}。`,
-    );
-  if (!near)
-    return t(
-      `${zhQuote(wrong)} rests on nothing in the passage: no sentence says or does what it claims.`,
-      `${zhQuote(wrong)}在文中找不到依据：没有哪一句说了或做了它说的事。`,
-    );
-  if (near === ground)
-    return t(
-      `${zhQuote(wrong)} goes back to the same sentence as the right option, ${zhQuote(near)}, but changes what it says.`,
-      `${zhQuote(wrong)}和正确选项依据的是同一句${zhQuote(near)}，却改变了这句话的意思。`,
-    );
-  return t(
-    `${zhQuote(wrong)} goes back to ${zhQuote(near)}, but that sentence does not say what the option says.`,
-    `${zhQuote(wrong)}依据的是${zhQuote(near)}这一句，可这句话并没有选项说的意思。`,
-  );
-}
-
-/** choiceSolution works a choice question: where the options point, the right one matched, each wrong one's reason, a check. */
-function choiceSolution(p: ModernPassage, q: ModernChoice, wrong: readonly string[]): Text {
-  const where = whereText(restsOn(p, q.right, q.ask));
-  const reasons = wrong.map((w) => wrongReason(p, q, w));
+/** choiceSolution works a choice question: where the right option points, why each wrong one shown fails, a check. */
+function choiceSolution(q: ModernChoice, shown: readonly number[]): Text {
+  const reasons = shown.map((i) => whyNot(q, i));
   const list = (l: "en" | "zh-CN") => reasons.map((r) => r[l]).join("\n\n");
   return t(
-    `**Step 1: find where each option points.** The question is **${q.ask}** Take each option back to the sentence of the passage it rests on.\n\n**Step 2: compare, word by word.** The right option, ${zhQuote(q.right)}, ${where.en}, and says what it says, no more and no less.\n\n${list("en")}\n\n**Check.** Read the right option against the passage once more: nothing is widened or narrowed, no cause and effect is swapped, nothing is added. Each other option fell for its own reason above.`,
-    `**第一步：找出每个选项的依据。**题目是“${q.ask}”。把每个选项带回文中，找到它依据的句子。\n\n**第二步：逐词比较。**正确选项${zhQuote(q.right)}${where["zh-CN"]}，说的正是原文的意思，不多也不少。\n\n${list("zh-CN")}\n\n**检验。** 再拿正确选项和原文对一遍：范围没有扩大或缩小，因果没有颠倒，也没有添加内容。其他选项都已按各自的理由排除。`,
+    `**Step 1: find where each option points.** The question is **${q.ask}** Take each option back to the words of the passage it rests on.\n\n**Step 2: compare, word by word.** The right option, ${zhQuote(q.right)}, ${whereText(q).en}, and says what it says, no more and no less.\n\n${list("en")}\n\n**Check.** Read ${zhQuote(q.ground)} once more beside the right option: nothing is widened or narrowed, no cause and effect is swapped, nothing is added. Each other option fell for its own reason above.`,
+    `**第一步：找出每个选项的依据。**题目是“${q.ask}”。把每个选项带回文中，找到它依据的语句。\n\n**第二步：逐词比较。**正确选项${zhQuote(q.right)}${whereText(q)["zh-CN"]}，说的正是原文的意思，不多也不少。\n\n${list("zh-CN")}\n\n**检验。** 再把${zhQuote(q.ground)}和正确选项对一遍：范围没有扩大或缩小，因果没有颠倒，也没有添加内容。其他选项都已按各自的理由排除。`,
   );
 }
 
 /** choiceInstance walks the first question of a knowledge point: where its right option and one wrong option point. */
 function choiceInstance(p: ModernPassage, q: ModernChoice): Text {
-  const where = whereText(restsOn(p, q.right, q.ask));
-  const why = wrongReason(p, q, q.wrong[0]);
+  const why = whyNot(q, 0);
   return t(
-    `In 《${p.title}》, asked **${q.ask}**, the right option ${zhQuote(q.right)} ${where.en}. ${why.en}`,
-    `比如《${p.title}》问“${q.ask}”，正确选项${zhQuote(q.right)}${where["zh-CN"]}。${why["zh-CN"]}`,
+    `In 《${p.title}》, asked **${q.ask}**, the right option ${zhQuote(q.right)} ${whereText(q).en}. ${why.en}`,
+    `比如《${p.title}》问“${q.ask}”，正确选项${zhQuote(q.right)}${whereText(q)["zh-CN"]}。${why["zh-CN"]}`,
   );
+}
+
+/** squeezed is a text without its white space, so a ground can be found in a passage or poem across its line breaks. */
+const squeezed = (text: string): string => text.replace(/\s+/gu, "");
+
+/** explainedChoice fails unless a question rests on words of its passage and gives a reason of its own for each wrong option. */
+function explainedChoice(id: string, p: ModernPassage, q: ModernChoice): void {
+  if (!q.ground.trim() || !squeezed(p.body).includes(squeezed(q.ground)))
+    throw new Error(`${id}: the ground of ${q.ask} in 《${p.title}》 is not in the passage`);
+  if (q.reasons.length !== q.wrong.length) throw new Error(`${id}: ${q.ask} in 《${p.title}》 needs a reason for each wrong option`);
+  for (const r of q.reasons) {
+    if (!r.en.trim() || !r["zh-CN"].trim()) throw new Error(`${id}: a reason of ${q.ask} in 《${p.title}》 is empty`);
+  }
+  if (new Set(q.reasons.map((r) => r["zh-CN"])).size !== q.reasons.length)
+    throw new Error(`${id}: ${q.ask} in 《${p.title}》 gives one reason twice`);
 }
 
 /** explained is a knowledge point's explanation, then its instance, then its warning. */
@@ -204,21 +160,22 @@ function choicePoint(
   pick: (p: ModernPassage) => readonly ModernChoice[],
 ) {
   const items = passages.flatMap((p) => pick(p).map((q) => ({ p, q })));
-  for (const { q } of items) {
+  for (const { p, q } of items) {
     if (new Set([q.right, ...q.wrong]).size !== 4) throw new Error(`${id}: the options of ${q.ask}`);
+    explainedChoice(id, p, q);
   }
-  const bank = PAIRS.flatMap(([a, b]) => items.map(({ p, q }) => ({ p, q, wrong: [q.wrong[a], q.wrong[b]] })));
+  const bank = PAIRS.flatMap(([a, b]) => items.map(({ p, q }) => ({ p, q, shown: [a, b] as const })));
   const generate = (rng: Rng): Problem => {
-    const { p, q, wrong } = rng.cycle(bank);
-    const options = rng.shuffle([q.right, ...wrong]);
+    const { p, q, shown } = rng.cycle(bank);
+    const options = rng.shuffle([q.right, ...shown.map((i) => q.wrong[i])]);
     const answer = options.indexOf(q.right);
     return {
       prompt: joinText([spec.question, same(quote(`${shownPassage(p)}\n\n${q.ask}`))]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map((o) => same(o)) } },
-      solution: choiceSolution(p, q, wrong),
+      solution: choiceSolution(q, shown),
       canonical: String(answer),
       wrong: [],
-      mistakes: wrong.map((w) => ({ response: String(options.indexOf(w)), feedback: wrongReason(p, q, w) })),
+      mistakes: shown.map((i) => ({ response: String(options.indexOf(q.wrong[i])), feedback: whyNot(q, i) })),
     };
   };
   const first = items[0]!;
@@ -264,7 +221,7 @@ export function modernTopics(spec: ModernSpec): readonly [TopicDef, TopicDef] {
   const first = spec.passages[0]!;
   const asked = first.understanding[0];
   const answered = first.answers[0];
-  const where = whereText(restsOn(first, asked.right, asked.ask));
+  const where = whereText(asked);
   return [
     {
       id: reading,

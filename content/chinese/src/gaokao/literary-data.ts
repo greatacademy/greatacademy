@@ -1,6 +1,8 @@
 // The literary texts of the Gaokao's reading of modern texts: four short stories and two literary essays, written for
 // the subject, each with two questions of understanding, two of craft and two to answer in a few sentences.
 
+import { t } from "@ga/content";
+
 import type { ModernPassage } from "./modern.ts";
 
 /** literaryPassages are the literary texts of the Gaokao's reading of modern texts, written for the subject. */
@@ -49,6 +51,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "老秦第二年没有来，是因为他对巷子里的人改用磨刀器心怀不满，有意不再上门。",
           "父亲劝母亲用磨刀器，说明他看不起老秦的手艺，和母亲在这件事上矛盾很深。",
         ],
+        ground: "母亲给他钱，他只收五毛。母亲要多给，他就摆摆手：“多了，刀不快。”",
+        reasons: [
+          t(
+            "Wrong reason: the sharpener costs two yuan and they own one; she says she cannot get used to it.",
+            "原因说错：磨刀器“一个才两块钱”，家里也已经买了；母亲说的是“我用不惯，还是您磨的经用”。",
+          ),
+          t(
+            "Invented motive: no reason is given, and he had promised to come back.",
+            "无中生有：文中没有交代老秦为什么没来，上一年他还许诺“明年再来一回”，看不出心怀不满。",
+          ),
+          t(
+            "Reads too much: the father only suggests the easy way; there is no scorn and no quarrel.",
+            "过度解读：父亲只是说“用磨刀器拉几下就行了”，图个省事，文中看不出他看不起手艺，也没有夫妻矛盾。",
+          ),
+        ],
       },
       {
         ask: "下列对文中母亲的理解，正确的一项是",
@@ -57,6 +74,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "母亲一直留着那把旧菜刀，是因为新买的刀不好用，她始终没能习惯新刀的分量。",
           "收废品的人来时母亲“脸上淡淡的”，说明她对老秦来不来其实并不怎么在意。",
           "结尾母亲说“慢一点”，是在责怪“我”做事急躁，表现出她对孩子十分严厉。",
+        ],
+        ground: "母亲把刀拿起来看看，又放回去，说：“再等等。”",
+        reasons: [
+          t(
+            "Wrong reason: the new knife is for cooking; the old one is kept as a keepsake.",
+            "原因说错：她另买新刀是为了“切菜”，旧刀却擦了又挂，留着是作念想，文中没说新刀不好用。",
+          ),
+          t(
+            "Feeling reversed: she runs out eagerly, and her flat face is disappointment.",
+            "情感说反：她“擦着手跑出去”见出盼望之切，“脸上淡淡的”是落空后的失望，正说明她在意。",
+          ),
+          t(
+            "Wrong motive: she is remembering him, not scolding.",
+            "动机误读：“他是慢慢磨的”是在想老秦，借他的样子提醒“我”，透出的是怀念，不是责怪。",
+          ),
         ],
       },
     ],
@@ -69,6 +101,18 @@ export const literaryPassages: readonly ModernPassage[] = [
           "小说以五金店的开张为线索，串联起青石巷几十年间翻天覆地的变化。",
           "小说语言华丽铺张，大量运用排比和夸张，渲染出浓烈而伤感的怀旧情绪。",
         ],
+        ground: "我蹲在旁边看，看灰黑的水从磨石上流下来，看刀口慢慢亮出一道细细的白线。",
+        reasons: [
+          t("Invented: nothing is told of his past.", "无中生有：小说没有交代老秦的身世，他从哪里来、后来为何不来，都没有写。"),
+          t(
+            "Wrong thread: the shop appears once; the chipped knife runs through the story.",
+            "线索说错：五金店只在后半出现一次；贯穿全文的是那把有缺口的菜刀，从开头写到结尾，而且小说也没写几十年的巨变。",
+          ),
+          t(
+            "Wrong style: short plain sentences, nothing ornate.",
+            "语言风格说错：小说多用短句白描，如“可是第二年秋天，老秦没有来”，朴素平实，没有华丽铺张。",
+          ),
+        ],
       },
       {
         ask: "下列对文中语句的分析，正确的一项是",
@@ -77,6 +121,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "“钢还是好钢”一语双关，暗中讽刺母亲舍不得换新刀、过分节俭的习惯。",
           "“出来的人少了一大半”运用夸张，表现巷子里的人对老秦已经十分厌烦。",
           "“桂花落了，又开了一茬晚的，也落了”是环境描写，主要交代故事发生在城市新区。",
+        ],
+        ground: "那声音不急不躁，像有人在远处扫落叶。",
+        reasons: [
+          t(
+            "Reads too much: he praises the steel, he does not mock her.",
+            "过度解读：“钢还是好钢”是老秦看过刀口后的赞许，说刀的材料好、值得磨，没有讽刺母亲。",
+          ),
+          t(
+            "Wrong device and feeling: it is a plain fact, and people wanted cheapness, not to be rid of him.",
+            "手法和情感都错：“少了一大半”是如实写人们改用磨刀器，不是夸张；人们图便宜，并不是厌烦老秦。",
+          ),
+          t(
+            "Wrong function: the blossoms mark time passing; the lane is old, not a new district.",
+            "作用说错：桂花落了又开、又落，写时间推移和等待之久；故事在青石巷，不在城市新区。",
+          ),
         ],
       },
     ],
@@ -145,6 +204,18 @@ export const literaryPassages: readonly ModernPassage[] = [
           "车间里的年轻人叫周师傅“周听听”，是出于对他技术的由衷敬佩。",
           "周师傅按下急停按钮后，许晴立刻明白了他的用意，并为此深感愧疚。",
         ],
+        ground: "她在技校里车工考的是第一名，来这里是想干活的，不是来当清洁工的。",
+        reasons: [
+          t(
+            "Wrong motive: he wants her to know the machine first.",
+            "动机误读：周师傅说“你连它身上哪儿有灰都不知道，怎么知道它哪儿不舒服”，是要她先熟悉机床，不是认定她技术差。",
+          ),
+          t("Feeling reversed: the nickname was mockery.", "情感说反：“周听听”是背后取笑，许晴“也跟着笑过”，后来才“再没人叫”。"),
+          t(
+            "The reverse: she is stunned and protests; she understands only later.",
+            "与原文相反：急停后许晴“愣住了，脸一下子红了”，还喊“我没做错啊”，也“什么也没听见”，并没有立刻明白。",
+          ),
+        ],
       },
       {
         ask: "下列对小说人物和情感的理解，正确的一项是",
@@ -153,6 +224,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "维修工“吸了口气”，表现出他对周师傅多管闲事、耽误生产的不满和埋怨。",
           "周师傅退休时没有说什么话，说明他对工厂心怀怨气，不愿意和人告别。",
           "结尾许晴没有马上回答徒弟，是因为她对两个新徒弟不满意，不想理睬他们。",
+        ],
+        ground: "许晴走在周师傅后面，看着他的背影，觉得他好像比平时高了一点。",
+        reasons: [
+          t(
+            "Feeling reversed: the fitter is alarmed at the danger, not annoyed.",
+            "情感说反：维修工“吸了口气”后说再转一个钟头齿轮就要报废、人也危险，是后怕，不是埋怨。",
+          ),
+          t(
+            "Invented: he leaves with care for the lathe, not with resentment.",
+            "无中生有：他照常擦完车床、叠好棉纱、“拍了拍床身”才走，是不舍，文中看不出怨气。",
+          ),
+          t(
+            "Wrong motive: she is listening first, as he did; that is her answer.",
+            "动机误读：她把手放在床身上站一会儿，是学师傅先“听”机床，正是在回答“先干啥”，不是不理徒弟。",
+          ),
         ],
       },
     ],
@@ -165,6 +251,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "小说以倒叙开篇，先写周师傅退休，再回忆师徒二人相处的往事。",
           "小说的环境描写意在渲染车间阴森压抑的气氛，暗示这家工厂即将倒闭。",
         ],
+        ground: "车间里，那条声音的河，又开始流了。",
+        reasons: [
+          t(
+            "Wrong person: it is told in the third person, through actions and speech.",
+            "人称说错：小说用第三人称写“许晴”，没有大段内心独白，周师傅的形象主要靠动作和语言的细节。",
+          ),
+          t(
+            "Wrong order: it runs forward from her first night.",
+            "叙述顺序说错：小说从许晴第一天上夜班写起，按时间顺序写到周师傅退休，不是倒叙。",
+          ),
+          t(
+            "Wrong mood: the workshop is busy and alive.",
+            "氛围说错：日光灯、轰隆声写车间的忙碌，“声音像一条河”带着生气，文中没有工厂要倒闭的暗示。",
+          ),
+        ],
       },
       {
         ask: "下列对小说细节和情节的分析，正确的一项是",
@@ -173,6 +274,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "“露出两条细瘦的胳膊”的外貌描写，意在表明周师傅体弱多病，不宜再上夜班。",
           "维修工的话从侧面说明，是许晴操作失误才导致轴承的保持架出现了裂缝。",
           "许晴学会分辨各台车床的声音，这一情节是闲笔，与前文周师傅听声没有关联。",
+        ],
+        ground: "周师傅正把一块棉纱叠成方块，头也不抬",
+        reasons: [
+          t(
+            "Wrong function: he moves fast at three in the morning; he is not frail.",
+            "作用说错：外貌写他朴素精干，后文他半夜三点还能快步走来、蹲在床下刮油泥，看不出体弱多病。",
+          ),
+          t(
+            "The reverse: the bearing failed; nothing blames her.",
+            "与原文相反：许晴的车床“转得平平稳稳”，裂缝是轴承本身的毛病，维修工只说继续转的后果，没说她操作失误。",
+          ),
+          t(
+            "Wrong relation: her listening answers his; she becomes “Little Listener”.",
+            "关系说错：许晴学会听声正承接周师傅听声的情节，她还被叫作“小听听”，是前后呼应，不是闲笔。",
+          ),
         ],
       },
     ],
@@ -235,6 +351,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "同学们叫何小川“三十七号”，表明全班同学都瞧不起他，平时常常孤立他。",
           "林老师把排名表夹进教案，说明她认为这次期末考试的题目出得很不合理。",
         ],
+        ground: "她忽然发现，自己教了他一年多，竟然不知道他会种地，不知道他家在城郊，爷爷是菜农",
+        reasons: [
+          t(
+            "Wrong motive: he volunteers slowly and works through mockery; no flattery.",
+            "动机误读：没人愿意时他才“慢慢”举手，后来顶着风凉话、冒雨挖沟，是踏实肯干，文中看不出讨好老师。",
+          ),
+          t(
+            "Widens it: the nickname is a joke, and the class later admires him.",
+            "扩大范围：“三十七号”是“开玩笑”，他“也不恼”；后来同学们轮流去看蒜苗、竖大拇指，并没有孤立他。",
+          ),
+          t(
+            "Wrong motive: she sees what rank cannot measure; the exam is not blamed.",
+            "动机误读：林老师收起排名表，是看到了排名衡量不了的长处，文中没说考题不合理。",
+          ),
+        ],
       },
       {
         ask: "下列对小说人物和情感的理解，正确的一项是",
@@ -243,6 +374,18 @@ export const literaryPassages: readonly ModernPassage[] = [
           "何小川听见风凉话“没吭声”，说明他性格软弱，不敢为自己争辩。",
           "同学们把蒜苗的照片发到群里，是想借机继续嘲笑何小川的成绩。",
           "结尾同学们鼓掌，是因为林老师宣布下学期取消所有的月考和期末考。",
+        ],
+        ground: "“林老师，”他最后说，“蒜苗不怕冷，就是长得慢。”",
+        reasons: [
+          t(
+            "Misreads him: silence and the bucket next day are persistence.",
+            "性格误读：他“没吭声，第二天照样提着桶去了”，是不争口舌、用行动回应，不是软弱。",
+          ),
+          t(
+            "Feeling reversed: “this time no one laughed”, and thumbs went up.",
+            "情感说反：照片配的是“三十七号的作品”，“这一回，没有人笑”，后面是一串竖大拇指，是称赞。",
+          ),
+          t("Invented: she asks for more land, not fewer exams.", "无中生有：林老师写的是“下学期，我们多要一块地”，没有宣布取消考试。"),
         ],
       },
     ],
@@ -255,6 +398,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "小说开头把排名表比作“梯子”，意在赞美学校用排名激励学生力争上游的做法。",
           "寒潮的环境描写主要是为了渲染悲凉的气氛，预示墙根下的蒜苗终将被冻死。",
         ],
+        ground: "他也不恼，嘿嘿一笑，露出一颗有点歪的门牙。",
+        reasons: [
+          t(
+            "Wrong person: it is third person, and the thread is the garlic.",
+            "人称说错：小说用第三人称写“林老师”“何小川”，不是第一人称；贯穿全篇的是何小川种蒜苗这件事。",
+          ),
+          t(
+            "Feeling reversed: the ladder hints at the limits of ranking.",
+            "情感说反：“像一架梯子”写名次排得分明，何小川总在“下半截”，暗含对只看排名的反思，不是赞美。",
+          ),
+          t(
+            "Wrong function: after the cold the shoots appear; it shows their strength.",
+            "作用说错：寒潮过后墙根下“冒出了一排细细的绿芽”，后来长到一拃高，寒潮正反衬蒜苗的生命力。",
+          ),
+        ],
       },
       {
         ask: "下列对小说情节安排的分析，正确的一项是",
@@ -263,6 +421,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "林老师与何小川在办公室谈话的情节，运用插叙交代了何小川的成长经历。",
           "小说的语言幽默夸张，大量运用反讽，尖锐地批判了林老师的冷漠无情。",
           "结尾写林老师当众撕毁排名表，动作描写激烈，表现出她对学生的愤怒。",
+        ],
+        ground: "到了十一月，别的班的地上已经长出了青菜，他们班那条墙根还是光秃秃的。",
+        reasons: [
+          t(
+            "Wrong device: the office scene has no flashback; she learns his family later.",
+            "手法说错：办公室谈话只写何小川站得笔直、点头，没有插叙成长经历；他的家世是林老师后来在地边才知道的。",
+          ),
+          t(
+            "Wrong style and stance: plain language, and the teacher changes.",
+            "语言和态度都错：语言朴实含蓄，没有大量反讽；林老师后来反思并改变了做法，小说没有尖锐地批判她。",
+          ),
+          t(
+            "The reverse: she folds it quietly; she does not tear it.",
+            "与原文相反：林老师把表“对折，又对折，夹进了教案里”，动作轻缓，没有撕毁，也不是愤怒。",
+          ),
         ],
       },
     ],
@@ -343,6 +516,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "女孩下车后径直走上山路，是因为她不信任老杨，不愿意再和陌生人打交道。",
           "老杨想给家里打电话，是因为担心回程的雪太大，想让家里人开车来接他。",
         ],
+        ground: "他想起自己的女儿，也是十二岁，今年过年，他要到初一晚上才回得去。",
+        reasons: [
+          t(
+            "Reads too much: she relays the station's rule about fuel.",
+            "过度解读：小吴是转达“站里说了，人少可以不发”，考虑的是油钱，后来也随车同行，看不出自私冷漠。",
+          ),
+          t(
+            "Wrong motive: the route ends there; she thanks him and goes, not from distrust.",
+            "动机误读：按规定车到石门乡就到头了，女孩鞠躬道谢才走，是懂事、不想添麻烦，不是不信任。",
+          ),
+          t(
+            "Wrong reason: he misses his family; no one is to fetch him.",
+            "原因说错：他看着村口马灯的光、想起自己过年回不去，是想念家人；文中没说担心雪大要人来接。",
+          ),
+        ],
       },
       {
         ask: "下列对小说人物的理解，正确的一项是",
@@ -351,6 +539,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "女孩的父亲过年不回家，说明他对家人缺少感情，小说对这种做法有所批评。",
           "村口的人们举着手电和马灯，是因为村里停了电，大家正在等电工来抢修。",
           "老杨说“我没笑”，表现他对这次额外出车心怀不满，只是不便说出口。",
+        ],
+        ground: "女孩也正看着他，眼睛黑亮黑亮的，什么也没说，只是把布包抱得更紧了。",
+        reasons: [
+          t(
+            "Invented: he sends medicine, which shows care.",
+            "无中生有：父亲在工地过年回不来，还托女儿给奶奶捎膏药，正见出他牵挂家人；小说没有批评。",
+          ),
+          t(
+            "Wrong reason: they wait for the girl; there is no power cut.",
+            "原因说错：人们打着灯站在村口，老太太“往车灯这边使劲地望”，是在等女孩，文中没有停电。",
+          ),
+          t(
+            "Feeling reversed: he is smiling and will not admit it.",
+            "心理说反：后视镜里“他的嘴角一直往上翘着”，“我没笑”是不好意思承认的高兴。",
+          ),
         ],
       },
     ],
@@ -363,6 +566,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "小说运用插叙详细交代了老杨女儿的生活，形成了明暗交织的双线结构。",
           "小说结尾交代老杨终于打通了家里的电话，使情节完整，不留一点空白。",
         ],
+        ground: "老杨把车速放得很慢，两只手紧紧握着方向盘，身子往前探着。",
+        reasons: [
+          t(
+            "Wrong viewpoint: it follows Old Yang, watching in the mirror.",
+            "视角说错：小说主要从老杨这边写，常写他“从后视镜里看”女孩，推动情节的是老杨的决定。",
+          ),
+          t(
+            "Invented: his daughter is one line, not a second plot.",
+            "无中生有：老杨的女儿只在他心里一闪而过，一句话，没有插叙她的生活，也没有双线结构。",
+          ),
+          t(
+            "The reverse: there is no signal; the call is never made.",
+            "与原文相反：手机“屏幕上一格信号也没有”，电话没打通，结尾正留着空白。",
+          ),
+        ],
       },
       {
         ask: "下列对小说语言和细节的分析，正确的一项是",
@@ -371,6 +589,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "“像蹲着的什么大东西”运用拟人手法，表现出大山的雄伟壮丽和勃勃生机。",
           "老杨与小吴的对话语言幽默诙谐，有意冲淡了全文温暖而含蓄的情感。",
           "“车上只坐着一个人”是闲笔，与后文情节的发展并没有什么联系。",
+        ],
+        ground: "红棉袄在黑地里一晃一晃，很快就只剩一个小点了。",
+        reasons: [
+          t(
+            "Wrong device and effect: a simile of menace in the dark.",
+            "手法和效果都错：“像蹲着的什么大东西”是比喻，写夜里大山黑沉沉的压迫感，不是雄伟壮丽、勃勃生机。",
+          ),
+          t(
+            "Wrong style: the talk is terse and understated, not comic.",
+            "语言风格说错：两人的对话简短平实，“咱掉头吧？”“我没笑”，并不幽默，反而含蓄地烘托了温情。",
+          ),
+          t(
+            "Wrong function: one passenger starts the whole plot.",
+            "作用说错：只有一个乘客，才引出发不发车的选择，这是全文情节的起点，不是闲笔。",
+          ),
         ],
       },
     ],
@@ -425,6 +658,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "祖父晚年擦拭算盘、“数日子”，表明他对时代的变化充满怨恨和抵触。",
           "“我”大学选择学会计，完全是因为祖父生前一再要求“我”这样做。",
         ],
+        ground: "他一连熬了三个晚上，把一年的账从头到尾又打了一遍，终于查出是仓库记错了一笔。",
+        reasons: [
+          t(
+            "No ground: he teaches a child at play; no succession is planned.",
+            "动机无据：祖父是在“我”拿算盘当玩具时顺手教的，文中没写他要“我”接班当会计。",
+          ),
+          t(
+            "Feeling reversed: he smiles; it is nostalgia, not resentment.",
+            "情感说反：擦算盘、慢慢拨珠是怀念过去的日子，他“笑笑”说“数日子”，看不出怨恨抵触。",
+          ),
+          t(
+            "Absolute and baseless: nothing says he demanded it.",
+            "绝对化且无据：文中只说祖父去世那年“我”学了会计，没写他要求过，“完全是因为”把原因说死了。",
+          ),
+        ],
       },
       {
         ask: "下列对文中作者情感的理解，正确的一项是",
@@ -433,6 +681,18 @@ export const literaryPassages: readonly ModernPassage[] = [
           "作者认为计算器和电脑不如算盘可靠，主张会计工作重新使用算盘。",
           "作者写小时候把算盘当玩具，表达了对自己童年不懂事的深深悔恨。",
           "文章主要赞美算盘制作工艺的精巧，表达了对传统手工艺失传的惋惜。",
+        ],
+        ground: "只有那一句“一个也不能是假的”，像算盘的那根横梁，一直稳稳地架在我心里。",
+        reasons: [
+          t(
+            "Invented: he uses a computer himself; he praises honesty, not the abacus.",
+            "无中生有：作者如今自己就用电脑记账，怀念的是算盘背后的诚信，没有主张重用算盘。",
+          ),
+          t(
+            "Wrong feeling: it shows play and a kind grandfather, not regret.",
+            "情感说错：祖父看见“也不生气”，还教“我”打算盘；这一段写童趣和祖父的慈爱，不是悔恨。",
+          ),
+          t("Wrong theme: the abacus stands for honesty, not craft.", "主旨说错：文章写算盘是为了写祖父的诚信，没有写算盘的制作工艺。"),
         ],
       },
     ],
@@ -445,6 +705,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "文章以议论为主要表达方式，开头直接抒情，结尾又以议论收束全文。",
           "文章采用第三人称叙述，笔调客观冷静，作者的情感几乎没有流露。",
         ],
+        ground: "我家的柜子顶上，放着一把算盘。",
+        reasons: [
+          t(
+            "Wrong order: it runs through time, not from place to place.",
+            "顺序说错：文章大体按时间写祖父从管账到晚年，再到“我”上大学和工作，不是空间转换；仓库只在转述里一笔带过。",
+          ),
+          t(
+            "Wrong mode: it narrates, and opens plainly.",
+            "表达方式说错：文章以记叙为主，开头“我家的柜子顶上，放着一把算盘”是平实的叙述，不是直接抒情。",
+          ),
+          t(
+            "Wrong person: first person, with open feeling at the end.",
+            "人称说错：文章用第一人称“我”写祖父，结尾直接抒发情感，并不冷静客观。",
+          ),
+        ],
       },
       {
         ask: "下列对文中语句的分析，正确的一项是",
@@ -453,6 +728,18 @@ export const literaryPassages: readonly ModernPassage[] = [
           "“像下一场急雨”运用夸张，表现了年底分红时屋里人们互相争吵的激烈场面。",
           "“数日子”一语双关，暗示祖父还在悄悄计算自己欠了别人多少钱。",
           "结尾把那句话比作算盘的“横梁”，意在说明横梁在算盘结构中的重要性。",
+        ],
+        ground: "算珠在他指下跳，像一群听话的小鸟。",
+        reasons: [
+          t(
+            "Wrong device and content: a simile for the beads' rattle; no one quarrels.",
+            "手法和内容都错：“像下一场急雨”是比喻，写算珠声又快又密；屋里的人是来等分红的，文中没有争吵。",
+          ),
+          t("Reads too much: he counts the years, not debts.", "过度解读：“数日子”是老人怀念过去的岁月，文中没有欠钱的事。"),
+          t(
+            "Wrong function: the beam is what the saying holds up in him.",
+            "作用说错：用横梁作比，说的是那句话在“我”心里的支撑作用，重点在诚信，不在讲算盘构造。",
+          ),
         ],
       },
     ],
@@ -507,6 +794,18 @@ export const literaryPassages: readonly ModernPassage[] = [
           "作者第一次到书摊，是专门去寻找那本扉页上写着钢笔字的旧诗集。",
           "老头给作者留下旧游记，是因为那本书很难卖出去，他想早点处理掉。",
         ],
+        ground: "翻来覆去地看，最后又轻轻地放了回去。",
+        reasons: [
+          t(
+            "Wrong character: quiet but kind, as his deeds show.",
+            "性格说错：老头话少，却给躲雨的“我”让地方、给“我”留书、把字典送给男孩，是沉静而热心，不是冷漠。",
+          ),
+          t("Wrong reason: he came to shelter from rain.", "原因说错：作者第一次去是“因为躲雨”，诗集是在摊上偶然翻到的。"),
+          t(
+            "Motive reversed: someone wanted it; he kept it back.",
+            "动机说反：老头说“给你留着的，有人要，我没给”，书并不难卖，是特意替“我”留的。",
+          ),
+        ],
       },
       {
         ask: "下列对文中作者观点和情感的理解，正确的一项是",
@@ -515,6 +814,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "作者认为网上买书毫无价值，劝读者都回到旧书摊上去买书。",
           "作者常去书摊，主要是因为那里的书价格便宜，可以节省开支。",
           "作者对旧书曾被别人读过感到不快，更希望买到没有批注的书。",
+        ],
+        ground: "只是那样的书，来得太快，好像缺了点什么。",
+        reasons: [
+          t(
+            "Absolute: he buys online too and only feels something missing.",
+            "绝对化：作者说“我也常常这样买书”，只是觉得“缺了点什么”，没有否定网购，也没有劝人回去。",
+          ),
+          t(
+            "Wrong reason: he goes for chance finds, not low prices.",
+            "原因说错：作者常去，是为了不知道“下一回会遇见哪一颗”的偶遇，不是图便宜。",
+          ),
+          t(
+            "Feeling reversed: he treasures the traces of past readers.",
+            "情感说反：作者珍惜书里前人的痕迹，称赞批注画得“一丝不苟”，还把票根夹回原处，说“那是书自己的记忆”。",
+          ),
         ],
       },
     ],
@@ -527,6 +841,21 @@ export const literaryPassages: readonly ModernPassage[] = [
           "文章以议论开头，先提出“书是会找人的”这一观点，再举例加以论证。",
           "文章着重描写桥头的自然风光，抒发了作者对家乡山水的热爱之情。",
         ],
+        ground: "新书店里的书，是排好了队等人挑的，整整齐齐，各有各的位置；旧书摊上的书，却像是随手撒在路边的种子",
+        reasons: [
+          t(
+            "Wrong content: only episodes at the stall; nothing of the old man's life.",
+            "内容说错：文章写的是作者与书摊交往的几个片段，老人的一生经历一字未提。",
+          ),
+          t(
+            "Wrong structure: the saying comes at the end, after the story.",
+            "结构说错：文章从住处和书摊写起，“书是会找人的”到结尾才点出，是先叙后议。",
+          ),
+          t(
+            "Wrong focus: the setting is backdrop; the books and the man are the subject.",
+            "重点说错：桥、河、雨只是背景，文章着重写书和摊主，没有抒发对家乡山水的热爱。",
+          ),
+        ],
       },
       {
         ask: "下列对文中语句的分析，正确的一项是",
@@ -535,6 +864,18 @@ export const literaryPassages: readonly ModernPassage[] = [
           "“书页黄得像秋天的叶子”运用拟人，表现了作者对诗集主人的深切同情。",
           "“雨水顺着桥沿挂下来，像一道珠帘”运用排比，渲染了夏天暴雨的可怕。",
           "文中老人的语言华丽典雅，与他小小摊主的身份形成了鲜明的反差。",
+        ],
+        ground: "旧书摊上的书，却像是随手撒在路边的种子，你不知道下一回会遇见哪一颗。",
+        reasons: [
+          t(
+            "Wrong device and feeling: a simile for age; he is curious, not pitying.",
+            "手法和情感都错：“黄得像秋天的叶子”是比喻，写书页陈旧；作者对诗集主人是好奇和想象，不是同情。",
+          ),
+          t(
+            "Wrong device and effect: a simile of a bead curtain, pretty, not frightening.",
+            "手法和效果都错：“像一道珠帘”是比喻，不是排比；它写雨帘密而美，没有渲染可怕。",
+          ),
+          t("Wrong style: his words are short and plain.", "语言说错：老人的话简短朴素，“两块”“拿去”，正合他的身份，并不华丽典雅。"),
         ],
       },
     ],

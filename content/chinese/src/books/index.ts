@@ -26,18 +26,32 @@ export interface BookData {
   readonly guide: { readonly en: string; readonly zh: string };
   /** callout is the warning the explanation ends with: the mix-up this book's questions invite. */
   readonly callout: { readonly en: string; readonly zh: string };
-  /** questions are blocks of 问：, 答： and three 错： lines, separated by blank lines. */
+  /**
+   * questions are blocks separated by blank lines: 问： the question, 答： the answer, 据： where the book answers it, three
+   * 错： lines each with its own reason, and 验： a check from another angle. 据 and 验 hold Chinese || English; each 错
+   * holds the wrong answer || its reason in Chinese || in English. All are written by hand.
+   */
   readonly questions: string;
 }
 
-/** Question is a question on a book with its right answer and three wrong ones. */
+/** Question is a question on a book with its answer, its ground, three wrong answers with their reasons, and a check. */
 interface Question {
   readonly ask: string;
   readonly right: string;
+  readonly ground: Text;
   readonly wrong: readonly string[];
+  readonly reasons: readonly Text[];
+  readonly check: Text;
 }
 
-/** parseQuestions reads blocks of a question, its answer and its wrong answers. */
+/** bilingual splits a line of Chinese || English into a text, failing when either half is missing. */
+function bilingual(where: string, body: string): Text {
+  const [zh, en, ...rest] = body.split("||").map((x) => x.trim());
+  if (!zh || !en || rest.length > 0) throw new Error(`${where}: ${body.slice(0, 30)} needs Chinese || English`);
+  return t(en, zh);
+}
+
+/** parseQuestions reads blocks of a question, its answer, its ground, its wrong answers with their reasons and its check. */
 export function parseQuestions(where: string, data: string): readonly Question[] {
   const out = data
     .split(/\n\s*\n/u)
@@ -46,7 +60,10 @@ export function parseQuestions(where: string, data: string): readonly Question[]
     .map((block): Question => {
       let ask = "";
       let right = "";
+      let ground: Text | undefined;
+      let check: Text | undefined;
       const wrong: string[] = [];
+      const reasons: Text[] = [];
       for (const raw of block.split("\n")) {
         const line = raw.trim();
         const tag = line.slice(0, 2);
@@ -54,35 +71,37 @@ export function parseQuestions(where: string, data: string): readonly Question[]
         if (body === "") throw new Error(`${where}: an empty line ${line}`);
         if (tag === "问：" && ask === "") ask = body;
         else if (tag === "答：" && right === "") right = body;
-        else if (tag === "错：") wrong.push(body);
-        else throw new Error(`${where}: the line ${line} is out of place`);
+        else if (tag === "据：" && !ground) ground = bilingual(where, body);
+        else if (tag === "验：" && !check) check = bilingual(where, body);
+        else if (tag === "错：") {
+          const [w, ...why] = body.split("||");
+          wrong.push(w!.trim());
+          reasons.push(bilingual(where, why.join("||")));
+        } else throw new Error(`${where}: the line ${line} is out of place`);
       }
       if (ask === "" || right === "" || wrong.length !== OPTIONS - 1)
         throw new Error(`${where}: ${block.slice(0, 20)} needs a question, an answer and ${OPTIONS - 1} wrong ones`);
+      if (!ground || !check) throw new Error(`${where}: ${ask} needs its ground and its check, written by hand`);
       if (new Set([right, ...wrong]).size !== OPTIONS) throw new Error(`${where}: ${ask} repeats an answer`);
-      return { ask, right, wrong };
+      if (new Set(reasons.map((r) => r["zh-CN"])).size !== reasons.length) throw new Error(`${where}: ${ask} gives one reason twice`);
+      if (check["zh-CN"] === ground["zh-CN"]) throw new Error(`${where}: ${ask} checks by repeating its ground`);
+      return { ask, right, ground, wrong, reasons, check };
     });
   if (new Set(out.map((q) => q.ask)).size !== out.length) throw new Error(`${where}: a question is asked twice`);
   if (out.length < MIN_QUESTIONS) throw new Error(`${where}: ${out.length} questions, needs ${MIN_QUESTIONS}`);
   return out;
 }
 
-/** told is a question with its answer, said whole. */
-const told = (q: Question): string => `${q.ask.replace(/[？?]$/u, "")}——${q.right}`;
+/** whyNot is a wrong answer with its own reason. */
+const whyNot = (q: Question, i: number): Text =>
+  t(`${zhQuote(q.wrong[i]!)} is wrong: ${q.reasons[i]!.en}`, `${zhQuote(q.wrong[i]!)}不对：${q.reasons[i]!["zh-CN"]}`);
 
-/** notTold gives a wrong answer its reason: it is not what the book tells, which is the right answer. */
-const notTold = (name: string, q: Question, wrong: string): Text =>
-  t(
-    `${zhQuote(wrong)} is not what the book tells: there, ${zhQuote(told(q))}.`,
-    `${zhQuote(wrong)}不是${name}里写的：书里是${zhQuote(told(q))}。`,
-  );
-
-/** bookSolution works a question on a book: the part of the book it is about, the answer, each other answer's reason, a check. */
-function bookSolution(name: string, q: Question, others: readonly string[]): Text {
-  const reasons = others.map((w) => notTold(name, q, w));
+/** bookSolution works a question on a book: where the book answers it, the answer, each wrong answer's reason, a check. */
+function bookSolution(q: Question): Text {
+  const reasons = q.wrong.map((_, i) => whyNot(q, i));
   return t(
-    `**Step 1: find the part of the book.** The question is ${zhQuote(q.ask)}. Recall the chapter, tale or person of the book it is about before you look at the answers.\n\n**Step 2: answer from the book.** There, ${zhQuote(told(q))}: the answer is ${zhQuote(q.right)}.\n\n${reasons.map((r) => r.en).join("\n\n")}\n\n**Check.** Say the question and the answer together, ${zhQuote(told(q))}, and set it against what happens in the book: it agrees, and it answers this question, not one about another part of the book.`,
-    `**第一步：找到书里的那一部分。**题目是${zhQuote(q.ask)}。先回想它说的是${name}的哪一章、哪个故事或哪个人物，再看选项。\n\n**第二步：按书里的内容作答。**书里是${zhQuote(told(q))}，答案是${zhQuote(q.right)}。\n\n${reasons.map((r) => r["zh-CN"]).join("\n\n")}\n\n**检验。** 把问题和答案连起来说一遍：${zhQuote(told(q))}。和书里的情节对照，是一致的，而且回答的正是这个问题，不是书里另一部分的问题。`,
+    `**Step 1: find the part of the book.** ${q.ground.en}\n\n**Step 2: answer from it.** The answer is ${zhQuote(q.right)}.\n\n${reasons.map((r) => r.en).join("\n\n")}\n\n**Check.** ${q.check.en}`,
+    `**第一步：找到书里的那一部分。**${q.ground["zh-CN"]}\n\n**第二步：按书里的内容作答。**答案是${zhQuote(q.right)}。\n\n${reasons.map((r) => r["zh-CN"]).join("\n\n")}\n\n**检验。** ${q.check["zh-CN"]}`,
   );
 }
 
@@ -101,10 +120,10 @@ function bookTopic(book: BookData, after: string): TopicDef {
     return {
       prompt: joinText([same(name), same(q.ask)]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options } },
-      solution: bookSolution(name, q, q.wrong),
+      solution: bookSolution(q),
       canonical: String(answer),
       wrong: [],
-      mistakes: q.wrong.map((w) => ({ response: String(options.findIndex((o) => o.en === w)), feedback: notTold(name, q, w) })),
+      mistakes: q.wrong.map((w, i) => ({ response: String(options.findIndex((o) => o.en === w)), feedback: whyNot(q, i) })),
     };
   });
   return {
@@ -128,8 +147,8 @@ function bookTopic(book: BookData, after: string): TopicDef {
         `${id}-questions`,
         t(`Reading ${book.title.en}`, `读${name}`),
         t(
-          `${book.guide.en}\n\nFor instance, asked ${zhQuote(first.ask)}, the book answers ${zhQuote(first.right)}; ${notTold(name, first, first.wrong[0]!).en}\n\n> **Watch out.** ${book.callout.en}`,
-          `${book.guide.zh}\n\n比如问${zhQuote(first.ask)}，书里的答案是${zhQuote(first.right)}；${notTold(name, first, first.wrong[0]!)["zh-CN"]}\n\n> **注意。** ${book.callout.zh}`,
+          `${book.guide.en}\n\nFor instance, asked ${zhQuote(first.ask)}, the book answers ${zhQuote(first.right)}: ${first.ground.en} ${whyNot(first, 0).en}\n\n> **Watch out.** ${book.callout.en}`,
+          `${book.guide.zh}\n\n比如问${zhQuote(first.ask)}，书里的答案是${zhQuote(first.right)}：${first.ground["zh-CN"]}${whyNot(first, 0)["zh-CN"]}\n\n> **注意。** ${book.callout.zh}`,
         ),
         fromBank(bank),
       ),
