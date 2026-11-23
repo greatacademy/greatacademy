@@ -1293,8 +1293,8 @@ const priceForMostRevenue: KnowledgePointDef = {
   figure: calculusDrawings3["optimization-problems-in-economics#the-price-that-maximizes-revenue"],
   title: t("The price that maximizes revenue", "使收入最大的价格"),
   explanation: t(
-    "Raising a price brings in more per sale but loses sales. If a rise of $x$ takes the price to $p + x$ and the sales to $n - mx$, then the revenue is their product, a downward parabola in $x$. Its maximum lies halfway between its two roots.",
-    "涨价使每笔收入增加，但销量减少。如果涨价 $x$ 后价格变成 $p + x$，销量变成 $n - mx$，收入就是二者之积，是关于 $x$ 的开口向下的抛物线。最大值在两根的正中间。",
+    "Raising a price brings in more per sale but loses sales. If a rise of $x$ takes the price to $p + x$ and the sales to $n - mx$, then the revenue is their product, a downward parabola in $x$. Its maximum is where the derivative is zero, halfway between its two roots.\n\nFor example, $100$ items sell at $10$ dollars, and each dollar more loses $2$ sales. Then $R(x) = (10 + x)(100 - 2x)$ and $R'(x) = (100 - 2x) - 2(10 + x) = 80 - 4x$, which is zero at $x = 20$. The best price is $10 + 20 = 30$ dollars, bringing in $30 \\cdot 60 = 1800$ dollars a week.\n\nCheck: the roots of $R$ are $x = -10$ and $x = 50$, and halfway between them is $x = 20$. A price of $29$ or $31$ dollars brings in $29 \\cdot 62 = 31 \\cdot 58 = 1798$ dollars, a little less.\n\n> **Watch out.** $x$ is the rise, not the price: add it to the current price. Differentiate the whole product, not just the sales.",
+    "涨价使每笔收入增加，但销量减少。如果涨价 $x$ 后价格变成 $p + x$，销量变成 $n - mx$，收入就是二者之积，是关于 $x$ 的开口向下的抛物线。最大值在导数为零处，也就是两根的正中间。\n\n例如以 $10$ 美元的价格能卖出 $100$ 件，每涨一美元少卖 $2$ 件。于是 $R(x) = (10 + x)(100 - 2x)$，$R'(x) = (100 - 2x) - 2(10 + x) = 80 - 4x$，在 $x = 20$ 处为零。最佳价格是 $10 + 20 = 30$ 美元，每周收入 $30 \\cdot 60 = 1800$ 美元。\n\n检验：$R$ 的两根是 $x = -10$ 和 $x = 50$，正中间是 $x = 20$。定价 $29$ 或 $31$ 美元时收入为 $29 \\cdot 62 = 31 \\cdot 58 = 1798$ 美元，略少一些。\n\n> **注意。** $x$ 是涨价的幅度，不是价格：要加到现价上。要对整个乘积求导，而不只是对销量求导。",
   ),
   generate(rng) {
     const p = rng.int(5, 20);
@@ -1302,6 +1302,9 @@ const priceForMostRevenue: KnowledgePointDef = {
     const k = rng.int(1, 20);
     const n = m * p + 2 * m * k;
     const answer = p + k;
+    const sales = poly([n, ""], [-m, "x"]);
+    const slope = poly([n - m * p, ""], [-2 * m, "x"]);
+    const times = m === 1 ? "" : `${m}`;
     return numberProblem({
       prompt: t(
         `A shop sells $${n}$ items a week at $${p}$ dollars each. Every dollar added to the price loses $${m}$ ${m === 1 ? "sale" : "sales"} a week. Which price gives the greatest weekly revenue, in dollars?`,
@@ -1309,10 +1312,49 @@ const priceForMostRevenue: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [p + 2 * k, k, p],
-      solution: t(
-        `The revenue after a rise of $x$ is $(${p} + x)(${n} - ${m}x)$. Its derivative is $${n} - ${m * p} - ${2 * m}x$, which vanishes at $x = ${k}$. So the best price is $${p} + ${k} = ${answer}$.`,
-        `涨价 $x$ 后的收入是 $(${p} + x)(${n} - ${m}x)$。它的导数是 $${n} - ${m * p} - ${2 * m}x$，在 $x = ${k}$ 处为零。所以最佳价格是 $${p} + ${k} = ${answer}$。`,
+      mistakes: distinctWhys([
+        why(k, `This is the best rise $x = ${k}$; the price is $${p} + ${k}$.`, `这是最佳的涨价幅度 $x = ${k}$；价格是 $${p} + ${k}$。`),
+        why(
+          p,
+          `This keeps the current price, but $R'(0) = ${n - m * p} > 0$: raising the price still adds revenue.`,
+          `这是保持现价，但 $R'(0) = ${n - m * p} > 0$：涨价还能增加收入。`,
+        ),
+        why(
+          p + 2 * k,
+          `This is the rise $x = ${p + 2 * k}$ at which the sales fall to zero, so the revenue there is $0$.`,
+          `这是使销量降为零的涨价幅度 $x = ${p + 2 * k}$，那里的收入是 $0$。`,
+        ),
+        why(
+          2 * p + 2 * k,
+          "This is the price at which nothing sells, where the revenue is $0$.",
+          "这是一件也卖不出去时的价格，那里的收入是 $0$。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Write the revenue",
+            "写出收入",
+            `After a rise of $x$ dollars the price is $${p} + x$ and the weekly sales are $${sales}$, so $R(x) = (${p} + x)(${sales})$.`,
+            `涨价 $x$ 美元后价格是 $${p} + x$，每周销量是 $${sales}$，所以 $R(x) = (${p} + x)(${sales})$。`,
+          ],
+          [
+            "Differentiate",
+            "求导",
+            `By the product rule, $R'(x) = (${sales}) - ${times}(${p} + x) = ${slope}$, which is zero at $x = ${k}$.`,
+            `由乘积法则，$R'(x) = (${sales}) - ${times}(${p} + x) = ${slope}$，在 $x = ${k}$ 处为零。`,
+          ],
+          [
+            "Find the price",
+            "求价格",
+            `The best rise is $${k}$ dollars, so the price is $${p} + ${k} = ${answer}$ dollars.`,
+            `最佳涨价幅度是 $${k}$ 美元，所以价格是 $${p} + ${k} = ${answer}$ 美元。`,
+          ],
+        ],
+        [
+          `$R(x) = 0$ at $x = -${p}$, where the price is zero, and at $x = ${p + 2 * k}$, where the sales are zero. Halfway between is $x = \\frac{-${p} + ${p + 2 * k}}{2} = ${k}$, the same rise.`,
+          `$R(x) = 0$ 的根是 $x = -${p}$（价格为零）和 $x = ${p + 2 * k}$（销量为零）。正中间是 $x = \\frac{-${p} + ${p + 2 * k}}{2} = ${k}$，涨价幅度相同。`,
+        ],
       ),
     });
   },
@@ -1322,13 +1364,14 @@ const newtonFails: KnowledgePointDef = {
   id: "a-starting-point-where-newtons-method-fails",
   title: t("A starting point where Newton's method fails", "牛顿法失效的起点"),
   explanation: t(
-    "Newton's method divides by $f'(x_n)$, so it breaks down at a point where the derivative is zero. Geometrically, the tangent line there is horizontal and never meets the $x$-axis. Such a starting point has to be avoided, and starting near one sends the next estimate far away.",
-    "牛顿法要除以 $f'(x_n)$，所以在导数为零的点会失效。从几何上看，那里的切线是水平的，与 $x$ 轴不相交。必须避开这样的起点，而在它附近出发，下一个估计值会跑得很远。",
+    "Newton's method divides by $f'(x_n)$, so it breaks down at a point where the derivative is zero. Geometrically, the tangent line there is horizontal and never meets the $x$-axis. Such a starting point has to be avoided, and starting near one sends the next estimate far away.\n\nFor example, $f(x) = x^{3} - 12x + 1$ has $f'(x) = 3x^{2} - 12$, which is zero at $x = \\pm 2$. From $x_0 = 2$ the step $x_1 = 2 - \\frac{f(2)}{f'(2)}$ would divide by $0$.\n\nCheck: the tangent at $x = 2$ is the horizontal line $y = f(2) = -15$, which never meets the axis. Starting at $x_0 = 2.1$ instead, $f'(2.1) = 1.23$ and $f(2.1) = -14.939$, so $x_1 \\approx 14.25$, far from any root.\n\n> **Watch out.** The method fails where $f'$ is zero, not where $f$ is zero: a zero of $f$ is what it is looking for.",
+    "牛顿法要除以 $f'(x_n)$，所以在导数为零的点会失效。从几何上看，那里的切线是水平的，与 $x$ 轴不相交。必须避开这样的起点，而在它附近出发，下一个估计值会跑得很远。\n\n例如 $f(x) = x^{3} - 12x + 1$ 的导数 $f'(x) = 3x^{2} - 12$ 在 $x = \\pm 2$ 处为零。从 $x_0 = 2$ 出发，$x_1 = 2 - \\frac{f(2)}{f'(2)}$ 要除以 $0$。\n\n检验：$x = 2$ 处的切线是水平线 $y = f(2) = -15$，与坐标轴不相交。改从 $x_0 = 2.1$ 出发，$f'(2.1) = 1.23$，$f(2.1) = -14.939$，得 $x_1 \\approx 14.25$，离哪个根都很远。\n\n> **注意。** 牛顿法在 $f'$ 为零处失效，而不是在 $f$ 为零处：$f$ 的零点正是它要找的。",
   ),
   generate(rng) {
-    const k = rng.int(1, 9);
+    const k = rng.int(2, 9);
     const m = nonzero(rng, 9);
     const f = poly([1, "x^3"], [-3 * k * k, "x"], [m, ""]);
+    const atK = m - 2 * k ** 3;
     return numberProblem({
       prompt: t(
         `Newton's method is applied to $f(x) = ${f}$. For which positive starting value $x_0$ can $x_1$ not be computed?`,
@@ -1336,10 +1379,39 @@ const newtonFails: KnowledgePointDef = {
       ),
       answer: k,
       solveFor: "x_0",
-      wrong: [k * k, 3 * k * k, 2 * k],
-      solution: t(
-        `Computing $x_1$ requires dividing by $f'(x_0) = 3x_0^2 - ${3 * k * k}$. This is zero at $x_0 = \\pm ${k}$, and the positive value is $${k}$.`,
-        `计算 $x_1$ 要除以 $f'(x_0) = 3x_0^2 - ${3 * k * k}$。它在 $x_0 = \\pm ${k}$ 处为零，正值是 $${k}$。`,
+      mistakes: distinctWhys([
+        why(-k, "This is the negative zero of $f'$; the question asks for the positive one.", "这是 $f'$ 的负零点；题目要的是正的那个。"),
+        why(
+          k * k,
+          `This solves $x_0^{2} = ${k * k}$ as $x_0 = ${k * k}$; take the square root.`,
+          `这把 $x_0^{2} = ${k * k}$ 解成了 $x_0 = ${k * k}$；应该开平方。`,
+        ),
+        why(
+          3 * k * k,
+          `This takes the constant $${3 * k * k}$ in $f'(x_0) = 3x_0^{2} - ${3 * k * k}$ as $x_0$; divide by $3$ and take the square root.`,
+          `这把 $f'(x_0) = 3x_0^{2} - ${3 * k * k}$ 中的常数 $${3 * k * k}$ 当成了 $x_0$；应该除以 $3$ 再开平方。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Write the step",
+            "写出迭代式",
+            "$x_1 = x_0 - \\frac{f(x_0)}{f'(x_0)}$, which cannot be computed when $f'(x_0) = 0$.",
+            "$x_1 = x_0 - \\frac{f(x_0)}{f'(x_0)}$，当 $f'(x_0) = 0$ 时无法计算。",
+          ],
+          ["Differentiate", "求导", `$f'(x) = 3x^{2} - ${3 * k * k}$.`, `$f'(x) = 3x^{2} - ${3 * k * k}$。`],
+          [
+            "Solve $f'(x_0) = 0$",
+            "解 $f'(x_0) = 0$",
+            `$3x_0^{2} = ${3 * k * k}$, so $x_0^{2} = ${k * k}$ and $x_0 = \\pm ${k}$. The positive value is $${k}$.`,
+            `$3x_0^{2} = ${3 * k * k}$，所以 $x_0^{2} = ${k * k}$，$x_0 = \\pm ${k}$。正值是 $${k}$。`,
+          ],
+        ],
+        [
+          `At $x_0 = ${k}$ the tangent line is $y = f(${k}) = ${atK}$, a horizontal line. Since $${atK} \\ne 0$, it never meets the $x$-axis, so there is no $x_1$.`,
+          `在 $x_0 = ${k}$ 处切线是 $y = f(${k}) = ${atK}$，是一条水平线。由于 $${atK} \\ne 0$，它与 $x$ 轴不相交，所以没有 $x_1$。`,
+        ],
       ),
     });
   },
@@ -2982,8 +3054,8 @@ const cylinderInCone: KnowledgePointDef = {
   figure: calculusDrawings3["optimization-problems-with-inscribed-shapes#the-largest-cylinder-in-a-cone"],
   title: t("The largest cylinder in a cone", "圆锥内最大的圆柱"),
   explanation: t(
-    "An inscribed cylinder has a radius and a height, but they are not independent: similar triangles in a vertical slice of the cone tie them together along a straight line. Writing the height in terms of the radius leaves a cubic volume function of one variable, and setting its derivative to zero locates the best radius.",
-    "内接圆柱有半径和高，但二者并不独立：圆锥竖直截面中的相似三角形把它们联系在一条直线上。把高用半径表示后，体积就成为一个单变量的三次函数，令其导数为零即可确定最佳半径。",
+    "An inscribed cylinder has a radius and a height, but they are not independent: similar triangles in a vertical slice of the cone tie them together along a straight line. Writing the height in terms of the radius leaves a cubic volume function of one variable, and setting its derivative to zero locates the best radius.\n\nFor example, in a cone of radius $3$ and height $6$, a cylinder of radius $r$ has height $h = 6 - 2r$. Then $V = \\pi r^{2}(6 - 2r) = \\pi(6r^{2} - 2r^{3})$ and $V' = \\pi(12r - 6r^{2})$, which is zero at $r = 2$. There $h = 2$ and $V = 8\\pi$.\n\nCheck: $r = 1.9$ gives $\\pi \\cdot 3.61 \\cdot 2.2 \\approx 7.94\\pi$ and $r = 2.1$ gives $\\pi \\cdot 4.41 \\cdot 1.8 \\approx 7.94\\pi$, both less than $8\\pi$.\n\n> **Watch out.** The cylinder's height is not the cone's height: it shrinks as the radius grows. The best cylinder has two thirds of the cone's radius and one third of its height.",
+    "内接圆柱有半径和高，但二者并不独立：圆锥竖直截面中的相似三角形把它们联系在一条直线上。把高用半径表示后，体积就成为一个单变量的三次函数，令其导数为零即可确定最佳半径。\n\n例如在半径 $3$、高 $6$ 的圆锥内，半径为 $r$ 的圆柱高 $h = 6 - 2r$。于是 $V = \\pi r^{2}(6 - 2r) = \\pi(6r^{2} - 2r^{3})$，$V' = \\pi(12r - 6r^{2})$ 在 $r = 2$ 处为零。此时 $h = 2$，$V = 8\\pi$。\n\n检验：$r = 1.9$ 时 $V = \\pi \\cdot 3.61 \\cdot 2.2 \\approx 7.94\\pi$，$r = 2.1$ 时 $V = \\pi \\cdot 4.41 \\cdot 1.8 \\approx 7.94\\pi$，都小于 $8\\pi$。\n\n> **注意。** 圆柱的高不是圆锥的高：半径越大，它越矮。最佳圆柱的半径是圆锥半径的三分之二，高是圆锥高的三分之一。",
   ),
   generate(rng) {
     const k = rng.int(1, 5);
@@ -2991,6 +3063,11 @@ const cylinderInCone: KnowledgePointDef = {
     const R = 3 * k;
     const H = 3 * j;
     const answer = 4 * k * k * j;
+    const drop = Q.of(j, k);
+    const volume = (r: number) => Q.of(r * r).mul(Q.of(H).sub(drop.mul(Q.of(r))));
+    const below = volume(2 * k - 1);
+    const above = volume(2 * k + 1);
+    const height = poly([H, ""], [drop.neg(), "r"]);
     return numberProblem({
       prompt: t(
         `A cylinder stands inside a cone of base radius $${R}$ and height $${H}$, with its base on the base of the cone. Its largest possible volume is $V\\pi$. Find $V$.`,
@@ -2998,10 +3075,59 @@ const cylinderInCone: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [9 * k * k * j, 12 * k * k * j, 2 * k * k * j, 3 * k * k * j],
-      solution: t(
-        `Similar triangles give $h = ${H}\\left(1 - \\frac{r}{${R}}\\right)$, so $V(r) = \\pi r^{2} h$. Setting $V'(r) = 0$ gives $r = ${2 * k}$, two thirds of the cone's radius, and then $h = ${j}$. The volume is $\\pi (${2 * k})^{2}(${j}) = ${answer}\\pi$.`,
-        `由相似三角形得 $h = ${H}\\left(1 - \\frac{r}{${R}}\\right)$，所以 $V(r) = \\pi r^{2} h$。令 $V'(r) = 0$ 得 $r = ${2 * k}$，即圆锥半径的三分之二，此时 $h = ${j}$。体积是 $\\pi (${2 * k})^{2}(${j}) = ${answer}\\pi$。`,
+      mistakes: distinctWhys([
+        why(
+          9 * k * k * j,
+          `This is the volume of the cone itself, $\\frac{1}{3}\\pi \\cdot ${R}^{2} \\cdot ${H}$.`,
+          `这是圆锥本身的体积 $\\frac{1}{3}\\pi \\cdot ${R}^{2} \\cdot ${H}$。`,
+        ),
+        why(
+          12 * k * k * j,
+          `This keeps the cone's full height $${H}$; a cylinder of radius $${2 * k}$ is only $${j}$ tall.`,
+          `这用了圆锥的全高 $${H}$；半径为 $${2 * k}$ 的圆柱只有 $${j}$ 高。`,
+        ),
+        why(
+          2 * k * k * j,
+          `This swaps the thirds: the radius is two thirds of $${R}$ and the height one third of $${H}$, not the other way round.`,
+          `这把两个比例弄反了：半径是 $${R}$ 的三分之二，高是 $${H}$ 的三分之一，而不是反过来。`,
+        ),
+        why(
+          Q.of(27 * k * k * j, 8),
+          "This takes half the radius and half the height, which gives the largest rectangle in the slice, not the largest cylinder.",
+          "这取了一半的半径和一半的高，这样得到的是截面中最大的矩形，而不是最大的圆柱。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Relate $h$ to $r$",
+            "用 $r$ 表示 $h$",
+            `In a vertical slice, the height falls from $${H}$ at the axis to $0$ at radius $${R}$, so $h = ${height}$.`,
+            `在竖直截面中，高从轴上的 $${H}$ 降到半径 $${R}$ 处的 $0$，所以 $h = ${height}$。`,
+          ],
+          [
+            "Write the volume",
+            "写出体积",
+            `$V(r) = \\pi r^{2}h = \\pi\\left(${poly([H, "r^{2}"], [drop.neg(), "r^{3}"])}\\right)$.`,
+            `$V(r) = \\pi r^{2}h = \\pi\\left(${poly([H, "r^{2}"], [drop.neg(), "r^{3}"])}\\right)$。`,
+          ],
+          [
+            "Differentiate",
+            "求导",
+            `$V'(r) = \\pi\\left(${poly([2 * H, "r"], [drop.mul(Q.of(-3)), "r^{2}"])}\\right)$, which is zero at $r = 0$ and at $r = ${2 * k}$, two thirds of $${R}$.`,
+            `$V'(r) = \\pi\\left(${poly([2 * H, "r"], [drop.mul(Q.of(-3)), "r^{2}"])}\\right)$，在 $r = 0$ 和 $r = ${2 * k}$ 处为零，后者是 $${R}$ 的三分之二。`,
+          ],
+          [
+            "Find the volume",
+            "求体积",
+            `Then $h = ${j}$, so the volume is $\\pi \\cdot ${2 * k}^{2} \\cdot ${j} = ${answer}\\pi$ and $V = ${answer}$.`,
+            `此时 $h = ${j}$，所以体积是 $\\pi \\cdot ${2 * k}^{2} \\cdot ${j} = ${answer}\\pi$，$V = ${answer}$。`,
+          ],
+        ],
+        [
+          `Nearby radii give less: $\\frac{V(r)}{\\pi}$ is $${below.toLatex()}${approx(below)}$ at $r = ${2 * k - 1}$ and $${above.toLatex()}${approx(above)}$ at $r = ${2 * k + 1}$, both below $${answer}$.`,
+          `附近的半径体积更小：$\\frac{V(r)}{\\pi}$ 在 $r = ${2 * k - 1}$ 时为 $${below.toLatex()}${approx(below)}$，在 $r = ${2 * k + 1}$ 时为 $${above.toLatex()}${approx(above)}$，都小于 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -3011,8 +3137,8 @@ const canWithCostlyEnds: KnowledgePointDef = {
   id: "a-can-whose-ends-cost-more-than-its-side",
   title: t("A can whose ends cost more than its side", "两端比侧面更贵的罐子"),
   explanation: t(
-    "When the materials differ in price, the quantity to minimize is the cost and not the surface area. Each area is weighted by its price before differentiating. The fixed volume still removes the height, leaving a function of the radius alone. Dearer ends push the best can to be taller and narrower than the can of least material.",
-    "材料价格不同时，要最小化的是成本而不是表面积。求导之前，每部分面积都要乘以各自的单价。固定的体积仍然可以消去高，只留下半径的函数。两端越贵，最佳的罐子就比用料最少的罐子越高越细。",
+    "When the materials differ in price, the quantity to minimize is the cost and not the surface area. Each area is weighted by its price before differentiating. The fixed volume still removes the height, leaving a function of the radius alone. Dearer ends push the best can to be taller and narrower than the can of least material.\n\nFor example, a can holding $32\\pi$ cm³, with ends at $2$ cents and the side at $1$ cent per cm², costs $C(r) = 4\\pi r^{2} + \\frac{64\\pi}{r}$ cents. Then $C'(r) = 8\\pi r - \\frac{64\\pi}{r^{2}} = 0$ gives $r^{3} = 8$, so $r = 2$ and $h = \\frac{32}{4} = 8$ cm.\n\nCheck: $C(2) = 48\\pi$, while $C(1.9) \\approx 48.12\\pi$ and $C(2.1) \\approx 48.12\\pi$ are both more.\n\n> **Watch out.** Weight each area by its price before differentiating. The height $8$ here is $4r$, not the $2r$ of the can of least material.",
+    "材料价格不同时，要最小化的是成本而不是表面积。求导之前，每部分面积都要乘以各自的单价。固定的体积仍然可以消去高，只留下半径的函数。两端越贵，最佳的罐子就比用料最少的罐子越高越细。\n\n例如罐子容积 $32\\pi$ cm³，两端每 cm² $2$ 分，侧面每 cm² $1$ 分，成本为 $C(r) = 4\\pi r^{2} + \\frac{64\\pi}{r}$ 分。由 $C'(r) = 8\\pi r - \\frac{64\\pi}{r^{2}} = 0$ 得 $r^{3} = 8$，所以 $r = 2$，$h = \\frac{32}{4} = 8$ cm。\n\n检验：$C(2) = 48\\pi$，而 $C(1.9) \\approx 48.12\\pi$，$C(2.1) \\approx 48.12\\pi$，都更大。\n\n> **注意。** 求导之前先把每部分面积乘以单价。这里的高 $8$ 是 $4r$，而不是用料最少的罐子的 $2r$。",
   ),
   generate(rng) {
     const r = rng.int(1, 6);
@@ -3028,17 +3154,57 @@ const canWithCostlyEnds: KnowledgePointDef = {
     const volume = Q.of(2 * ends * r ** 3, side);
     const answer = Q.of(2 * ends * r, side);
     const held = `${volume.toLatex()}\\pi`;
-    const cost = `${2 * ends}\\pi r^{2} + \\frac{${volume.mul(Q.of(2 * side)).toLatex()}\\pi}{r}`;
+    const sideCost = 4 * ends * r ** 3;
+    const cost = `${2 * ends}\\pi r^{2} + \\frac{${sideCost}\\pi}{r}`;
     return numberProblem({
       prompt: t(
         `A closed cylindrical can must hold $${held}$ cm³. Its top and bottom cost $${ends}$ cents per cm², and its side costs $${side}$ ${side === 1 ? "cent" : "cents"} per cm². Find the height, in cm, of the cheapest can.`,
         `一个有盖的圆柱形罐子必须容纳 $${held}$ cm³。顶和底的成本是每 cm² $${ends}$ 分，侧面的成本是每 cm² $${side}$ 分。求最便宜的罐子的高，单位为 cm。`,
       ),
       answer,
-      wrong: [Q.of(2 * r), Q.of(r), Q.of(2 * side * r, ends), Q.of(ends * r, side), Q.of(4 * ends * r, side)],
-      solution: t(
-        `Removing the height with the volume, the cost is $C(r) = ${cost}$ in cents. Setting $C'(r) = 0$ gives $r = ${r}$, and the volume then gives $h = ${answer.toLatex()}$.`,
-        `用体积消去高，成本（单位：分）是 $C(r) = ${cost}$。令 $C'(r) = 0$ 得 $r = ${r}$，再由体积得 $h = ${answer.toLatex()}$。`,
+      mistakes: distinctWhys([
+        why(
+          2 * r,
+          "This is the height $2r$ of the can of least material, as if the ends cost the same as the side.",
+          "这是用料最少的罐子的高 $2r$，相当于两端和侧面一样贵。",
+        ),
+        why(r, `This is the radius $r = ${r}$, not the height.`, `这是半径 $r = ${r}$，不是高。`),
+        why(
+          Q.of(2 * side * r, ends),
+          `This puts the prices the wrong way round. Dearer ends make the can taller: $h = ${Q.of(2 * ends, side).toLatex()}r$.`,
+          `这把两个单价弄反了。两端更贵会使罐子更高：$h = ${Q.of(2 * ends, side).toLatex()}r$。`,
+        ),
+        why(
+          Q.of(ends * r, side),
+          "This makes the side cost as much as the two ends; at the cheapest can the side costs twice as much as the ends.",
+          "这使侧面的成本等于两端的成本；最便宜的罐子侧面成本是两端的两倍。",
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Write the cost in $r$",
+            "用 $r$ 表示成本",
+            `The ends cost $${ends} \\cdot 2\\pi r^{2}$ and the side $${side} \\cdot 2\\pi rh$. Since $\\pi r^{2}h = ${held}$, the side area $2\\pi rh$ is $\\frac{2}{r}$ times $${held}$, so $C(r) = ${cost}$ cents.`,
+            `两端成本为 $${ends} \\cdot 2\\pi r^{2}$，侧面为 $${side} \\cdot 2\\pi rh$。由 $\\pi r^{2}h = ${held}$ 知侧面积 $2\\pi rh$ 是 $${held}$ 的 $\\frac{2}{r}$ 倍，所以 $C(r) = ${cost}$ 分。`,
+          ],
+          [
+            "Differentiate",
+            "求导",
+            `$C'(r) = ${4 * ends}\\pi r - \\frac{${sideCost}\\pi}{r^{2}} = 0$ gives $r^{3} = ${r ** 3}$, so $r = ${r}$.`,
+            `由 $C'(r) = ${4 * ends}\\pi r - \\frac{${sideCost}\\pi}{r^{2}} = 0$ 得 $r^{3} = ${r ** 3}$，所以 $r = ${r}$。`,
+          ],
+          [
+            "Find the height",
+            "求高",
+            `Dividing the volume by $\\pi r^{2} = ${r * r}\\pi$ gives $h = ${volume.toLatex()} \\div ${r * r} = ${answer.toLatex()}$ cm.`,
+            `用体积除以 $\\pi r^{2} = ${r * r}\\pi$，得 $h = ${volume.toLatex()} \\div ${r * r} = ${answer.toLatex()}$ cm。`,
+          ],
+        ],
+        [
+          `$\\frac{${sideCost}\\pi}{r^{2}}$ is $2 \\cdot ${side} \\cdot \\frac{\\pi r^{2}h}{r^{2}} = ${2 * side}\\pi h$, so $C'(r) = 0$ says $${4 * ends}\\pi r = ${2 * side}\\pi h$. With $r = ${r}$ this gives $h = \\frac{${4 * ends * r}}{${2 * side}} = ${answer.toLatex()}$ again.`,
+          `$\\frac{${sideCost}\\pi}{r^{2}}$ 等于 $2 \\cdot ${side} \\cdot \\frac{\\pi r^{2}h}{r^{2}} = ${2 * side}\\pi h$，所以 $C'(r) = 0$ 即 $${4 * ends}\\pi r = ${2 * side}\\pi h$。代入 $r = ${r}$，同样得 $h = \\frac{${4 * ends * r}}{${2 * side}} = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -3048,8 +3214,8 @@ const cableAcrossRiver: KnowledgePointDef = {
   id: "the-cheapest-cable-across-a-river",
   title: t("The cheapest cable across a river", "过河电缆的最低成本路线"),
   explanation: t(
-    "A cable that crosses water at a high price and then runs along the bank at a low price should not take the shortest path, nor should it cross straight over. Its cost is a root plus a linear term in the landing point. At the best landing point the two rates balance, and that point does not depend on how far the destination is.",
-    "电缆在水下成本高、沿岸成本低时，既不该走最短路线，也不该笔直过河。总成本是着陆点的一个根式加一个一次项。在最佳着陆点，两种变化率相互平衡，而这个点与目的地有多远无关。",
+    "A cable that crosses water at a high price and then runs along the bank at a low price should not take the shortest path, nor should it cross straight over. Its cost is a root plus a linear term in the landing point. At the best landing point the two rates balance, and that point does not depend on how far the destination is.\n\nFor example, for a river $4$ m wide, a destination $10$ m downstream, $5$ dollars a metre under water and $3$ along the bank, $C(x) = 5\\sqrt{16 + x^{2}} + 3(10 - x)$. Setting $C'(x) = \\frac{5x}{\\sqrt{16 + x^{2}}} - 3 = 0$ gives $25x^{2} = 9(16 + x^{2})$, so $x^{2} = 9$ and $x = 3$.\n\nCheck: $C(3) = 25 + 21 = 46$, less than crossing straight over, $C(0) = 20 + 30 = 50$, or heading straight for the destination, $C(10) = 5\\sqrt{116} \\approx 53.85$.\n\n> **Watch out.** Measure $x$ from the point directly opposite. The best $x$ does not change with the distance to the destination, as long as it fits.",
+    "电缆在水下成本高、沿岸成本低时，既不该走最短路线，也不该笔直过河。总成本是着陆点的一个根式加一个一次项。在最佳着陆点，两种变化率相互平衡，而这个点与目的地有多远无关。\n\n例如河宽 $4$ m，目的地在下游 $10$ m，水下每米 $5$ 美元，沿岸每米 $3$ 美元，则 $C(x) = 5\\sqrt{16 + x^{2}} + 3(10 - x)$。令 $C'(x) = \\frac{5x}{\\sqrt{16 + x^{2}}} - 3 = 0$，得 $25x^{2} = 9(16 + x^{2})$，所以 $x^{2} = 9$，$x = 3$。\n\n检验：$C(3) = 25 + 21 = 46$，比笔直过河的 $C(0) = 20 + 30 = 50$ 和直奔目的地的 $C(10) = 5\\sqrt{116} \\approx 53.85$ 都少。\n\n> **注意。** $x$ 从正对岸的点量起。只要目的地够远，最佳的 $x$ 与目的地的距离无关。",
   ),
   generate(rng) {
     const [water, land, across, along] = rng.pick([
@@ -3064,16 +3230,64 @@ const cableAcrossRiver: KnowledgePointDef = {
     const width = across * k;
     const answer = along * k;
     const total = answer + rng.int(1, 20);
+    const best = water * water * k + land * (total - answer);
+    const straight = water * width + land * total;
+    const direct = water * Math.sqrt(width * width + total * total);
+    const w2 = width * width;
     return numberProblem({
       prompt: t(
         `A cable must run from a point on one bank of a straight river $${width}$ m wide to a point on the other bank, $${total}$ m downstream of the point directly opposite. Cable costs $${water}$ dollars per metre under water and $${land}$ dollars per metre along the far bank. How far downstream of the point directly opposite, in metres, should the cable land to cost the least?`,
         `一条电缆要从笔直河流一岸的某点铺到对岸一点，河宽 $${width}$ m，终点在正对岸点的下游 $${total}$ m 处。电缆水下每米 $${water}$ 美元，沿对岸每米 $${land}$ 美元。为使成本最低，电缆应在正对岸点下游多少米处上岸？`,
       ),
       answer,
-      wrong: [Q.of(width), Q.of(total), Q.of(width * across, along), Q.of(width * land, water)],
-      solution: t(
-        `Landing $x$ m downstream costs $C(x) = ${water}\\sqrt{${width * width} + x^{2}} + ${land}(${total} - x)$. Setting $C'(x) = 0$ gives $${water}x = ${land}\\sqrt{${width * width} + x^{2}}$. Squaring and solving for positive $x$ gives $x = ${answer}$, which is within the $${total}$ m available.`,
-        `在下游 $x$ m 处上岸的成本是 $C(x) = ${water}\\sqrt{${width * width} + x^{2}} + ${land}(${total} - x)$。令 $C'(x) = 0$ 得 $${water}x = ${land}\\sqrt{${width * width} + x^{2}}$。两边平方并取正解，得 $x = ${answer}$，它在 $${total}$ m 的范围之内。`,
+      mistakes: distinctWhys([
+        why(
+          0,
+          `This crosses straight over and runs all $${total}$ m along the bank; landing further downstream costs less.`,
+          `这是笔直过河，再沿岸铺满 $${total}$ m；在更下游处上岸成本更低。`,
+        ),
+        why(total, "This lays the whole cable under water, straight to the destination.", "这是把整条电缆都铺在水下，直通目的地。"),
+        why(
+          total - answer,
+          `This is the length along the bank, $${total} - x$, not the landing point $x$.`,
+          `这是沿岸的长度 $${total} - x$，不是上岸点 $x$。`,
+        ),
+        why(
+          Q.of(width * land, water),
+          `This drops the $x^{2}$ under the root, solving $${water}x = ${land} \\cdot ${width}$.`,
+          `这漏掉了根号下的 $x^{2}$，解的是 $${water}x = ${land} \\cdot ${width}$。`,
+        ),
+        why(
+          Q.of(width * across, along),
+          `This turns the ratio upside down: $\\frac{x}{${width}} = \\frac{${land}}{${across}}$, not $\\frac{${across}}{${land}}$.`,
+          `这把比值弄倒了：$\\frac{x}{${width}} = \\frac{${land}}{${across}}$，而不是 $\\frac{${across}}{${land}}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Write the cost",
+            "写出成本",
+            `Landing $x$ m downstream of the point opposite, the cable runs $\\sqrt{${w2} + x^{2}}$ m under water and $${total} - x$ m along the bank, so $C(x) = ${water}\\sqrt{${w2} + x^{2}} + ${land}(${total} - x)$.`,
+            `在正对岸点下游 $x$ m 处上岸，水下长 $\\sqrt{${w2} + x^{2}}$ m，沿岸长 $${total} - x$ m，所以 $C(x) = ${water}\\sqrt{${w2} + x^{2}} + ${land}(${total} - x)$。`,
+          ],
+          [
+            "Differentiate",
+            "求导",
+            `$C'(x) = \\frac{${water}x}{\\sqrt{${w2} + x^{2}}} - ${land} = 0$, so $${water}x = ${land}\\sqrt{${w2} + x^{2}}$.`,
+            `$C'(x) = \\frac{${water}x}{\\sqrt{${w2} + x^{2}}} - ${land} = 0$，所以 $${water}x = ${land}\\sqrt{${w2} + x^{2}}$。`,
+          ],
+          [
+            "Square and solve",
+            "平方并求解",
+            `$${water * water}x^{2} = ${land * land}(${w2} + x^{2})$, so $${water * water - land * land}x^{2} = ${land * land * w2}$ and $x^{2} = ${answer * answer}$. The positive root is $x = ${answer}$, within the $${total}$ m available.`,
+            `$${water * water}x^{2} = ${land * land}(${w2} + x^{2})$，所以 $${water * water - land * land}x^{2} = ${land * land * w2}$，$x^{2} = ${answer * answer}$。正根是 $x = ${answer}$，在 $${total}$ m 的范围之内。`,
+          ],
+        ],
+        [
+          `Compare the costs: $C(${answer}) = ${water} \\cdot ${water * k} + ${land} \\cdot ${total - answer} = ${best}$, crossing straight over costs $C(0) = ${straight}$, and heading straight for the destination costs $C(${total}) \\approx ${num(direct)}$. Landing $${answer}$ m downstream is the cheapest.`,
+          `比较成本：$C(${answer}) = ${water} \\cdot ${water * k} + ${land} \\cdot ${total - answer} = ${best}$，笔直过河的成本是 $C(0) = ${straight}$，直奔目的地的成本是 $C(${total}) \\approx ${num(direct)}$。在下游 $${answer}$ m 处上岸最便宜。`,
+        ],
       ),
     });
   },
@@ -3083,8 +3297,8 @@ const greatestSpeed: KnowledgePointDef = {
   id: "the-greatest-speed-over-a-time-interval",
   title: t("The greatest speed over a time interval", "一段时间内的最大速率"),
   explanation: t(
-    "Speed is the absolute value of velocity, so its greatest value need not be where velocity is greatest. The candidates are the endpoints and the moment when acceleration is zero, where velocity reaches an extreme. A velocity that dips far below zero can produce the highest speed of all, so compare absolute values and not signed ones.",
-    "速率是速度的绝对值，所以它的最大值不一定出现在速度最大的时刻。候选点是两个端点，以及加速度为零的时刻，那时速度达到极值。速度如果向下深入零以下，可能产生全程最高的速率，所以要比较绝对值，而不是带符号的值。",
+    "Speed is the absolute value of velocity, so its greatest value need not be where velocity is greatest. The candidates are the endpoints and the moment when acceleration is zero, where velocity reaches an extreme. A velocity that dips far below zero can produce the highest speed of all, so compare absolute values and not signed ones.\n\nFor example, $s(t) = t^{3} - 6t^{2} + 5t$ on $0 \\le t \\le 3$ has $v(t) = 3t^{2} - 12t + 5$, and $v'(t) = 6t - 12$ is zero at $t = 2$. The candidates are $v(0) = 5$, $v(2) = -7$ and $v(3) = -4$, so the greatest speed is $7$ m/s, at $t = 2$.\n\nCheck: $v(1.9) = v(2.1) = -6.97$, so the speed just either side of $t = 2$ is a little below $7$.\n\n> **Watch out.** The greatest velocity, $5$ here, is not the greatest speed. Compare absolute values, and include the moment when $v' = 0$.",
+    "速率是速度的绝对值，所以它的最大值不一定出现在速度最大的时刻。候选点是两个端点，以及加速度为零的时刻，那时速度达到极值。速度如果向下深入零以下，可能产生全程最高的速率，所以要比较绝对值，而不是带符号的值。\n\n例如 $s(t) = t^{3} - 6t^{2} + 5t$，$0 \\le t \\le 3$，$v(t) = 3t^{2} - 12t + 5$，$v'(t) = 6t - 12$ 在 $t = 2$ 处为零。候选值是 $v(0) = 5$，$v(2) = -7$，$v(3) = -4$，所以最大速率是 $7$ m/s，在 $t = 2$ 时。\n\n检验：$v(1.9) = v(2.1) = -6.97$，所以 $t = 2$ 两侧的速率都略小于 $7$。\n\n> **注意。** 最大的速度（这里是 $5$）不是最大的速率。要比较绝对值，并且把 $v' = 0$ 的时刻也算进去。",
   ),
   generate(rng) {
     const t0 = rng.int(1, 4);
@@ -3092,8 +3306,27 @@ const greatestSpeed: KnowledgePointDef = {
     const q = rng.int(1, 20);
     const r = rng.int(1, 9);
     const v = (x: number) => 3 * x * x - 6 * t0 * x + q;
-    const answer = Math.max(Math.abs(v(0)), Math.abs(v(t0)), Math.abs(v(end)));
+    const position = (x: number) => x ** 3 - 3 * t0 * x * x + q * x + r;
+    const times = [0, t0, end];
+    const answer = Math.max(...times.map((x) => Math.abs(v(x))));
+    const best = times.find((x) => Math.abs(v(x)) === answer) ?? 0;
+    const low = q - 3 * t0 * t0;
+    const high = Math.max(v(0), v(end));
     const s = poly([1, "t^3"], [-3 * t0, "t^2"], [q, "t"], [r, ""]);
+    const velocity = poly([3, "t^2"], [-6 * t0, "t"], [q, ""]);
+    const square = `3(t - ${t0})^{2}${low === 0 ? "" : low < 0 ? ` - ${-low}` : ` + ${low}`}`;
+    const candidate = (x: number) =>
+      Math.abs(v(x)) === answer
+        ? why(
+            v(x),
+            `This is the velocity $v(${x}) = ${v(x)}$ itself; the speed is its absolute value, $${answer}$.`,
+            `这是速度 $v(${x}) = ${v(x)}$ 本身；速率是它的绝对值 $${answer}$。`,
+          )
+        : why(
+            Math.abs(v(x)),
+            `This is the speed at $t = ${x}$, but the speed at $t = ${best}$ is $${answer}$, which is greater.`,
+            `这是 $t = ${x}$ 时的速率，但 $t = ${best}$ 时的速率是 $${answer}$，更大。`,
+          );
     return numberProblem({
       prompt: t(
         `A particle moves along a line with position $s(t) = ${s}$ metres after $t$ seconds. Find its greatest speed, in m/s, for $0 \\le t \\le ${end}$.`,
@@ -3101,10 +3334,44 @@ const greatestSpeed: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [v(0), v(t0), v(end), q + 3 * t0 * t0, 6 * (end - t0), answer + 6 * t0, 2 * answer, 3 * answer],
-      solution: t(
-        `$v(t) = ${poly([3, "t^2"], [-6 * t0, "t"], [q, ""])}$, and $v'(t) = 0$ at $t = ${t0}$. Then $v(0) = ${v(0)}$, $v(${t0}) = ${v(t0)}$ and $v(${end}) = ${v(end)}$. The greatest absolute value is $${answer}$.`,
-        `$v(t) = ${poly([3, "t^2"], [-6 * t0, "t"], [q, ""])}$，且 $v'(t) = 0$ 在 $t = ${t0}$ 处。于是 $v(0) = ${v(0)}$，$v(${t0}) = ${v(t0)}$，$v(${end}) = ${v(end)}$。绝对值最大的是 $${answer}$。`,
+      mistakes: distinctWhys([
+        ...times.map(candidate),
+        why(
+          position(best),
+          `This is the position $s(${best})$; the speed comes from the velocity $v = s'$.`,
+          `这是位置 $s(${best})$；速率要由速度 $v = s'$ 求得。`,
+        ),
+        why(
+          6 * (end - t0),
+          `This is the acceleration $a(${end})$; the speed is the size of the velocity, not of the acceleration.`,
+          `这是加速度 $a(${end})$；速率是速度的大小，不是加速度的大小。`,
+        ),
+        why(
+          q + 3 * t0 * t0,
+          `This takes $v(${t0})$ as $${q} + ${3 * t0 * t0}$, but $3 \\cdot ${t0}^{2} - 6 \\cdot ${t0} \\cdot ${t0} = -${3 * t0 * t0}$, so $v(${t0}) = ${low}$.`,
+          `这把 $v(${t0})$ 算成了 $${q} + ${3 * t0 * t0}$，但 $3 \\cdot ${t0}^{2} - 6 \\cdot ${t0} \\cdot ${t0} = -${3 * t0 * t0}$，所以 $v(${t0}) = ${low}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          ["Find the velocity", "求速度", `$v(t) = s'(t) = ${velocity}$.`, `$v(t) = s'(t) = ${velocity}$。`],
+          [
+            "Find where $v$ turns",
+            "找速度的极值点",
+            `$v'(t) = ${poly([6, "t"], [-6 * t0, ""])} = 0$ at $t = ${t0}$, inside the interval.`,
+            `$v'(t) = ${poly([6, "t"], [-6 * t0, ""])}$ 在 $t = ${t0}$ 处为零，在区间之内。`,
+          ],
+          [
+            "Compare the speeds",
+            "比较速率",
+            `$v(0) = ${v(0)}$, $v(${t0}) = ${low}$ and $v(${end}) = ${v(end)}$, so the speeds are $${Math.abs(v(0))}$, $${Math.abs(low)}$ and $${Math.abs(v(end))}$. The greatest is $${answer}$, at $t = ${best}$.`,
+            `$v(0) = ${v(0)}$，$v(${t0}) = ${low}$，$v(${end}) = ${v(end)}$，所以速率分别是 $${Math.abs(v(0))}$、$${Math.abs(low)}$ 和 $${Math.abs(v(end))}$。最大的是 $${answer}$，在 $t = ${best}$ 时。`,
+          ],
+        ],
+        [
+          `Completing the square, $v(t) = ${square}$. So $v$ runs from its least value $${low}$ at $t = ${t0}$ up to $${high}$ at an endpoint, and the largest size it reaches is the larger of $${Math.abs(low)}$ and $${high}$, which is $${answer}$.`,
+          `配方得 $v(t) = ${square}$。所以 $v$ 从 $t = ${t0}$ 时的最小值 $${low}$ 变到端点处的 $${high}$，它达到的最大绝对值是 $${Math.abs(low)}$ 和 $${high}$ 中较大的那个，即 $${answer}$。`,
+        ],
       ),
     });
   },
@@ -4607,14 +4874,15 @@ const rectangleUnderParabola: KnowledgePointDef = {
   figure: calculusDrawings3["solving-optimization-problems-using-derivatives#the-largest-rectangle-under-a-parabola"],
   title: t("The largest rectangle under a parabola", "抛物线下的最大矩形"),
   explanation: t(
-    "A rectangle with its base on the $x$-axis and its top corners on a symmetric parabola is fixed by one number: the $x$-coordinate of its right corner. Its width is twice this, and its height is the value of the function there. Writing the area in terms of $x$ turns a geometric question into a cubic to maximize. Only values of $x$ between 0 and the root of the parabola make sense as a rectangle.",
-    "底边在 $x$ 轴上、上方两个顶点在对称抛物线上的矩形，由一个数确定：右顶点的 $x$ 坐标。宽是它的两倍，高是函数在那里的值。把面积写成 $x$ 的式子，就把几何问题变成求三次式的最大值。只有 0 和抛物线的根之间的 $x$ 才构成矩形。",
+    "A rectangle with its base on the $x$-axis and its top corners on a symmetric parabola is fixed by one number: the $x$-coordinate of its right corner. Its width is twice this, and its height is the value of the function there. Writing the area in terms of $x$ turns a geometric question into a cubic to maximize. Only values of $x$ between 0 and the root of the parabola make sense as a rectangle.\n\nFor example, under $y = 12 - x^{2}$, $A(x) = 2x(12 - x^{2}) = 24x - 2x^{3}$ and $A'(x) = 24 - 6x^{2}$, which is zero at $x = 2$. The rectangle is $4$ wide and $8$ high, with area $32$.\n\nCheck: $A(1.9) = 3.8 \\cdot 8.39 \\approx 31.88$ and $A(2.1) = 4.2 \\cdot 7.59 \\approx 31.88$, both less than $32$.\n\n> **Watch out.** The width is $2x$, not $x$, and the height is the value of the function at the corner, not at the vertex.",
+    "底边在 $x$ 轴上、上方两个顶点在对称抛物线上的矩形，由一个数确定：右顶点的 $x$ 坐标。宽是它的两倍，高是函数在那里的值。把面积写成 $x$ 的式子，就把几何问题变成求三次式的最大值。只有 0 和抛物线的根之间的 $x$ 才构成矩形。\n\n例如在 $y = 12 - x^{2}$ 下，$A(x) = 2x(12 - x^{2}) = 24x - 2x^{3}$，$A'(x) = 24 - 6x^{2}$ 在 $x = 2$ 处为零。矩形宽 $4$、高 $8$，面积 $32$。\n\n检验：$A(1.9) = 3.8 \\cdot 8.39 \\approx 31.88$，$A(2.1) = 4.2 \\cdot 7.59 \\approx 31.88$，都小于 $32$。\n\n> **注意。** 宽是 $2x$ 而不是 $x$；高是函数在矩形右上角 $x$ 处的值，而不是抛物线顶点的高度。",
   ),
   generate(rng) {
     const k = rng.int(1, 5);
     const r = rng.int(1, 6);
     const answer = 4 * k * r ** 3;
     const curve = poly([3 * k * r * r, ""], [-k, "x^2"]);
+    const area = poly([6 * k * r * r, "x"], [-2 * k, "x^3"]);
     return numberProblem({
       prompt: t(
         `A rectangle has its base on the $x$-axis and its two top corners on the parabola $y = ${curve}$. Find the largest possible area of the rectangle.`,
@@ -4622,10 +4890,45 @@ const rectangleUnderParabola: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [2 * k * r ** 3, 4 * k * r * r, 3 * k * r * r, 8 * k * r ** 3],
-      solution: t(
-        `With corners at $\\pm x$, the area is $A = 2x(${curve})$, and $A' = ${poly([6 * k * r * r, ""], [-6 * k, "x^2"])} = 0$ gives $x = ${r}$. The height there is $${2 * k * r * r}$ and the width is $${2 * r}$, so the area is $${answer}$.`,
-        `设顶点在 $\\pm x$ 处，面积 $A = 2x(${curve})$，由 $A' = ${poly([6 * k * r * r, ""], [-6 * k, "x^2"])} = 0$ 得 $x = ${r}$。此时高是 $${2 * k * r * r}$，宽是 $${2 * r}$，所以面积是 $${answer}$。`,
+      mistakes: distinctWhys([
+        why(
+          2 * k * r ** 3,
+          "This takes the width as $x$; the corners are at $\\pm x$, so the width is $2x$.",
+          "这把宽当成了 $x$；两个顶点在 $\\pm x$ 处，所以宽是 $2x$。",
+        ),
+        why(
+          6 * k * r ** 3,
+          `This uses the height $${3 * k * r * r}$ of the parabola's vertex; the corners at $x = \\pm ${r}$ are only $${2 * k * r * r}$ high.`,
+          `这用了抛物线顶点的高度 $${3 * k * r * r}$；矩形在 $x = \\pm ${r}$ 处的顶点只有 $${2 * k * r * r}$ 高。`,
+        ),
+        why(2 * k * r * r, "This is the height of the best rectangle, not its area.", "这是最佳矩形的高，不是它的面积。"),
+        why(r, "This is the $x$-coordinate of the right corner, not the area.", "这是右顶点的 $x$ 坐标，不是面积。"),
+      ]),
+      solution: walk(
+        [
+          [
+            "Write the area",
+            "写出面积",
+            `For $0 < x < \\sqrt{${3 * r * r}}$, with the top corners at $x$ and $-x$, the width is $2x$ and the height is $${curve}$, so $A(x) = 2x(${curve}) = ${area}$.`,
+            `当 $0 < x < \\sqrt{${3 * r * r}}$ 时，设上方两个顶点在 $x$ 和 $-x$ 处，宽是 $2x$，高是 $${curve}$，所以 $A(x) = 2x(${curve}) = ${area}$。`,
+          ],
+          [
+            "Differentiate",
+            "求导",
+            `$A'(x) = ${poly([6 * k * r * r, ""], [-6 * k, "x^2"])} = 0$ gives $x^{2} = ${r * r}$, so $x = ${r}$.`,
+            `由 $A'(x) = ${poly([6 * k * r * r, ""], [-6 * k, "x^2"])} = 0$ 得 $x^{2} = ${r * r}$，所以 $x = ${r}$。`,
+          ],
+          [
+            "Find the area",
+            "求面积",
+            `The width is $${2 * r}$ and the height is $${3 * k * r * r} - ${k * r * r} = ${2 * k * r * r}$, so the area is $${2 * r} \\cdot ${2 * k * r * r} = ${answer}$.`,
+            `宽是 $${2 * r}$，高是 $${3 * k * r * r} - ${k * r * r} = ${2 * k * r * r}$，所以面积是 $${2 * r} \\cdot ${2 * k * r * r} = ${answer}$。`,
+          ],
+        ],
+        [
+          `$A''(x) = -${12 * k}x$ is negative at $x = ${r}$, so this is a maximum. The area is $0$ at both ends, $x = 0$ and $x = \\sqrt{${3 * r * r}}$, so it is the largest on the whole range.`,
+          `$A''(x) = -${12 * k}x$ 在 $x = ${r}$ 处为负，所以这是极大值。面积在两端 $x = 0$ 和 $x = \\sqrt{${3 * r * r}}$ 处都是 $0$，所以它是整个范围内的最大值。`,
+        ],
       ),
     });
   },
@@ -4635,8 +4938,8 @@ const distanceBetweenTurningPoints: KnowledgePointDef = {
   id: "the-distance-between-two-turning-points",
   title: t("The distance between two turning points", "两个转向点之间的距离"),
   explanation: t(
-    "A particle turns around where its velocity changes sign. When the position is a cubic, the velocity is a quadratic, and its two roots give the two moments of turning. The particle reaches an extreme position at each of them. So the distance between those positions is found by evaluating the position function, not the velocity. Note that this is the difference in position at two times, and not a time difference.",
-    "质点在速度变号时转向。当位置是三次函数时，速度是二次函数，它的两个根给出两个转向时刻。质点在每个时刻都到达一个极端位置。所以这两个位置之间的距离要代入位置函数来求，而不是速度。注意这是两个时刻的位置之差，而不是时间差。",
+    "A particle turns around where its velocity changes sign. When the position is a cubic, the velocity is a quadratic, and its two roots give the two moments of turning. The particle reaches an extreme position at each of them. So the distance between those positions is found by evaluating the position function, not the velocity. Note that this is the difference in position at two times, and not a time difference.\n\nFor example, $s(t) = t^{3} - 6t^{2} + 9t$ has $v(t) = 3t^{2} - 12t + 9 = 3(t - 1)(t - 3)$. It turns at $t = 1$, where $s = 4$, and at $t = 3$, where $s = 0$, so the turning positions are $4$ apart.\n\nCheck: $v(0) = 9 > 0$, $v(2) = -3 < 0$ and $v(4) = 9 > 0$, so the particle goes out to $4$, comes back to $0$, and turns again.\n\n> **Watch out.** Subtract the positions, not the times: the turns here are $2$ seconds apart but $4$ units apart.",
+    "质点在速度变号时转向。当位置是三次函数时，速度是二次函数，它的两个根给出两个转向时刻。质点在每个时刻都到达一个极端位置。所以这两个位置之间的距离要代入位置函数来求，而不是速度。注意这是两个时刻的位置之差，而不是时间差。\n\n例如 $s(t) = t^{3} - 6t^{2} + 9t$，$v(t) = 3t^{2} - 12t + 9 = 3(t - 1)(t - 3)$。它在 $t = 1$（$s = 4$）和 $t = 3$（$s = 0$）时转向，所以两个转向位置相距 $4$。\n\n检验：$v(0) = 9 > 0$，$v(2) = -3 < 0$，$v(4) = 9 > 0$，所以质点先走到 $4$，再退回 $0$，然后再次转向。\n\n> **注意。** 要把位置相减，而不是时刻相减：这里两次转向相隔 $2$ 秒，位置却相距 $4$。",
   ),
   generate(rng) {
     const p = rng.int(1, 8);
@@ -4645,6 +4948,10 @@ const distanceBetweenTurningPoints: KnowledgePointDef = {
     const middle = (-3 * (p + q)) / 2;
     const position = (time: number) => time ** 3 + middle * time ** 2 + 3 * p * q * time;
     const answer = d ** 3 / 2;
+    const first = position(p);
+    const second = position(q);
+    const c = p - d / 2;
+    const factor = c === 0 ? "t" : `(${poly([1, "t"], [-c, ""])})`;
     return numberProblem({
       prompt: t(
         `A particle has position $s(t) = ${poly([1, "t^3"], [middle, "t^2"], [3 * p * q, "t"])}$ for $t \\ge 0$. It changes direction twice. How far apart are the two positions where it turns?`,
@@ -4652,10 +4959,53 @@ const distanceBetweenTurningPoints: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [d, d ** 3, d * d, 3 * d * d],
-      solution: t(
-        `The velocity $${poly([3, "t^2"], [2 * middle, "t"], [3 * p * q, ""])}$ vanishes at $t = ${p}$ and $t = ${q}$. There $s(${p}) = ${position(p)}$ and $s(${q}) = ${position(q)}$, which are $${answer}$ apart.`,
-        `速度 $${poly([3, "t^2"], [2 * middle, "t"], [3 * p * q, ""])}$ 在 $t = ${p}$ 和 $t = ${q}$ 时为零。此时 $s(${p}) = ${position(p)}$，$s(${q}) = ${position(q)}$，相距 $${answer}$。`,
+      mistakes: distinctWhys([
+        why(
+          d,
+          `This is the time between the turns, $${q} - ${p}$ seconds, not the distance between the two positions.`,
+          `这是两次转向之间的时间 $${q} - ${p}$ 秒，不是两个位置之间的距离。`,
+        ),
+        why(
+          first,
+          `This is the position $s(${p})$ of the first turn, measured from $s = 0$ rather than from the second turn.`,
+          `这是第一次转向的位置 $s(${p})$，是从 $s = 0$ 量起的，而不是从第二次转向处量起。`,
+        ),
+        why(
+          second,
+          `This is the position $s(${q})$ of the second turn, measured from $s = 0$.`,
+          `这是第二次转向的位置 $s(${q})$，是从 $s = 0$ 量起的。`,
+        ),
+        why(
+          2 * first - second,
+          `This is the total distance travelled from $t = 0$ to the second turn, out to $${first}$ and back to $${second}$.`,
+          `这是从 $t = 0$ 到第二次转向走过的总路程：先到 $${first}$，再退回 $${second}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Find the velocity",
+            "求速度",
+            `$v(t) = s'(t) = ${poly([3, "t^2"], [2 * middle, "t"], [3 * p * q, ""])} = 3(t - ${p})(t - ${q})$.`,
+            `$v(t) = s'(t) = ${poly([3, "t^2"], [2 * middle, "t"], [3 * p * q, ""])} = 3(t - ${p})(t - ${q})$。`,
+          ],
+          [
+            "Find the turns",
+            "找转向时刻",
+            `$v$ changes sign at $t = ${p}$ and at $t = ${q}$, so the particle turns at those times.`,
+            `$v$ 在 $t = ${p}$ 和 $t = ${q}$ 处变号，所以质点在这两个时刻转向。`,
+          ],
+          [
+            "Subtract the positions",
+            "位置相减",
+            `$s(${p}) = ${first}$ and $s(${q}) = ${second}$, so the positions are $${first} - ${inParens(second)} = ${answer}$ apart.`,
+            `$s(${p}) = ${first}$，$s(${q}) = ${second}$，所以两个位置相距 $${first} - ${inParens(second)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Since $s'(${q}) = 0$, $s(t) - s(${q})$ has a double root at $t = ${q}$, and matching the $t^{2}$ term gives $s(t) - s(${q}) = (t - ${q})^{2}${factor}$. At $t = ${p}$ this is $${d * d} \\cdot ${d / 2} = ${answer}$.`,
+          `因为 $s'(${q}) = 0$，$s(t) - s(${q})$ 在 $t = ${q}$ 处有二重根，比较 $t^{2}$ 项得 $s(t) - s(${q}) = (t - ${q})^{2}${factor}$。在 $t = ${p}$ 处它等于 $${d * d} \\cdot ${d / 2} = ${answer}$。`,
+        ],
       ),
     });
   },
@@ -4666,8 +5016,8 @@ const powerFromForce: KnowledgePointDef = {
   figure: calculusDrawings3["newtons-second-law#the-rate-of-work-of-the-net-force"],
   title: t("The rate of work of the net force", "合力做功的功率"),
   explanation: t(
-    "Newton's second law gives the net force on an object as $F = ma$, and the rate at which that force does work is the power $P = Fv$. Both acceleration and velocity come from differentiating the position. With a quadratic position, the acceleration and the force are constant, yet the power still grows with time, because the object is moving faster. The unit of power is the watt, which is one newton metre per second.",
-    "牛顿第二定律给出物体所受合力 $F = ma$，这个力做功的快慢是功率 $P = Fv$。加速度和速度都由位置求导得到。当位置是二次函数时，加速度和力是常数，但功率仍随时间增大，因为物体运动得更快了。功率的单位是瓦特，即每秒一牛顿米。",
+    "Newton's second law gives the net force on an object as $F = ma$, and the rate at which that force does work is the power $P = Fv$. Both acceleration and velocity come from differentiating the position. With a quadratic position, the acceleration and the force are constant, yet the power still grows with time, because the object is moving faster. The unit of power is the watt, which is one newton metre per second.\n\nFor example, a $3$ kg object with $s(t) = 2t^{2} + 5t$ has $v(t) = 4t + 5$ and $a = 4$, so $F = 12$ N. At $t = 1$, $v = 9$ m/s and $P = 12 \\cdot 9 = 108$ W.\n\nCheck: the power is also the rate of change of the kinetic energy $E = \\frac{1}{2}mv^{2}$, which is $mv\\frac{dv}{dt} = 3 \\cdot 9 \\cdot 4 = 108$ W.\n\n> **Watch out.** The acceleration is twice the coefficient of $t^{2}$, and the velocity includes the starting term, $5$ here.",
+    "牛顿第二定律给出物体所受合力 $F = ma$，这个力做功的快慢是功率 $P = Fv$。加速度和速度都由位置求导得到。当位置是二次函数时，加速度和力是常数，但功率仍随时间增大，因为物体运动得更快了。功率的单位是瓦特，即每秒一牛顿米。\n\n例如质量 $3$ kg 的物体，$s(t) = 2t^{2} + 5t$，则 $v(t) = 4t + 5$，$a = 4$，所以 $F = 12$ 牛。$t = 1$ 时 $v = 9$ m/s，$P = 12 \\cdot 9 = 108$ 瓦。\n\n检验：功率也是动能 $E = \\frac{1}{2}mv^{2}$ 的变化率，即 $mv\\frac{dv}{dt} = 3 \\cdot 9 \\cdot 4 = 108$ 瓦。\n\n> **注意。** 加速度是 $t^{2}$ 系数的两倍；速度要包括初始项，这里是 $5$。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -4684,10 +5034,45 @@ const powerFromForce: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [force, velocity, m * velocity, force * 2 * a * time],
-      solution: t(
-        `The acceleration is $${2 * a}$, so $F = ${m} \\cdot ${2 * a} = ${force}$ N. The velocity at this time is $${velocity}$ m/s. So $P = ${force} \\cdot ${velocity} = ${answer}$ W.`,
-        `加速度是 $${2 * a}$，所以 $F = ${m} \\cdot ${2 * a} = ${force}$ 牛。此时的速度是每秒 $${velocity}$ 米。所以 $P = ${force} \\cdot ${velocity} = ${answer}$ 瓦。`,
+      mistakes: distinctWhys([
+        why(
+          force,
+          `This is the force $F = ${force}$ N; the power multiplies it by the velocity.`,
+          `这是力 $F = ${force}$ 牛；功率还要乘以速度。`,
+        ),
+        why(velocity, `This is the velocity $${velocity}$ m/s; multiply it by the force.`, `这是速度 $${velocity}$ m/s；还要乘以力。`),
+        why(m * velocity, "This is the momentum $mv$; the power is $Fv = mav$.", "这是动量 $mv$；功率是 $Fv = mav$。"),
+        why(
+          force * 2 * a * time,
+          `This leaves out the starting velocity: $v = ${poly([2 * a, "t"], [b, ""])}$, so at $t = ${time}$ it is $${velocity}$, not $${2 * a * time}$.`,
+          `这漏掉了初速度：$v = ${poly([2 * a, "t"], [b, ""])}$，所以 $t = ${time}$ 时是 $${velocity}$，不是 $${2 * a * time}$。`,
+        ),
+        why(
+          a * m * velocity,
+          `This takes the acceleration as $${a}$; the second derivative of $${poly([a, "t^2"])}$ is $${2 * a}$.`,
+          `这把加速度当成了 $${a}$；$${poly([a, "t^2"])}$ 的二阶导数是 $${2 * a}$。`,
+        ),
+      ]),
+      solution: walk(
+        [
+          [
+            "Differentiate the position",
+            "对位置求导",
+            `$v(t) = ${poly([2 * a, "t"], [b, ""])}$ and $a(t) = ${2 * a}$.`,
+            `$v(t) = ${poly([2 * a, "t"], [b, ""])}$，$a(t) = ${2 * a}$。`,
+          ],
+          ["Find the force", "求力", `$F = ma = ${m} \\cdot ${2 * a} = ${force}$ N.`, `$F = ma = ${m} \\cdot ${2 * a} = ${force}$ 牛。`],
+          [
+            "Find the power",
+            "求功率",
+            `$v(${time}) = ${velocity}$ m/s, so $P = Fv = ${force} \\cdot ${velocity} = ${answer}$ W.`,
+            `$v(${time}) = ${velocity}$ m/s，所以 $P = Fv = ${force} \\cdot ${velocity} = ${answer}$ 瓦。`,
+          ],
+        ],
+        [
+          `The power is also the rate of change of the kinetic energy $E = \\frac{1}{2}mv^{2}$: $\\frac{dE}{dt} = mv\\frac{dv}{dt} = ${m} \\cdot ${velocity} \\cdot ${2 * a} = ${answer}$ W.`,
+          `功率也是动能 $E = \\frac{1}{2}mv^{2}$ 的变化率：$\\frac{dE}{dt} = mv\\frac{dv}{dt} = ${m} \\cdot ${velocity} \\cdot ${2 * a} = ${answer}$ 瓦。`,
+        ],
       ),
     });
   },

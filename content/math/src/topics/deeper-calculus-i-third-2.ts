@@ -660,8 +660,8 @@ const leastPerimeterSector = {
     "the-least-perimeter-for-a-given-area",
     ["The least perimeter for a given area", "给定面积时的最小周长"],
     [
-      "This is the reverse of the largest area for a given perimeter. With area $A$ and radius $r$, the arc is $\\frac{2A}{r}$, so the perimeter is $P = 2r + \\frac{2A}{r}$. Then $P'(r) = 0$ gives $r = \\sqrt{A}$ and $P = 4\\sqrt{A}$, and the central angle is $2$ radians, as before.",
-      "这是给定周长求最大面积的逆问题。面积为 $A$、半径为 $r$ 时，弧长是 $\\frac{2A}{r}$，所以周长 $P = 2r + \\frac{2A}{r}$。由 $P'(r) = 0$ 得 $r = \\sqrt{A}$，$P = 4\\sqrt{A}$，圆心角同样是 $2$ 弧度。",
+      "This is the reverse of the largest area for a given perimeter. With area $A$ and radius $r$, the arc is $\\frac{2A}{r}$, so the perimeter is $P = 2r + \\frac{2A}{r}$. Then $P'(r) = 0$ gives $r = \\sqrt{A}$ and $P = 4\\sqrt{A}$, and the central angle is $2$ radians, as before.\n\nFor example, with area $25$, $P(r) = 2r + \\frac{50}{r}$ and $P'(r) = 2 - \\frac{50}{r^{2}} = 0$ at $r = 5$. The arc is $10$ and the perimeter is $5 + 5 + 10 = 20$.\n\nCheck: $P(4) = 8 + 12.5 = 20.5$ and $P(6) = 12 + \\frac{50}{6} \\approx 20.33$, both more than $20$.\n\n> **Watch out.** The perimeter counts both radii as well as the arc, and the arc comes from the sector's area $\\frac{1}{2}rs$, not from $\\pi r^{2}$.",
+      "这是给定周长求最大面积的逆问题。面积为 $A$、半径为 $r$ 时，弧长是 $\\frac{2A}{r}$，所以周长 $P = 2r + \\frac{2A}{r}$。由 $P'(r) = 0$ 得 $r = \\sqrt{A}$，$P = 4\\sqrt{A}$，圆心角同样是 $2$ 弧度。\n\n例如面积为 $25$ 时，$P(r) = 2r + \\frac{50}{r}$，$P'(r) = 2 - \\frac{50}{r^{2}}$ 在 $r = 5$ 处为零。弧长是 $10$，周长是 $5 + 5 + 10 = 20$。\n\n检验：$P(4) = 8 + 12.5 = 20.5$，$P(6) = 12 + \\frac{50}{6} \\approx 20.33$，都大于 $20$。\n\n> **注意。** 周长包括两条半径和弧；弧长由扇形面积 $\\frac{1}{2}rs$ 求得，而不是由 $\\pi r^{2}$。",
     ],
     (rng) => {
       const m = rng.int(2, 40);
@@ -670,18 +670,50 @@ const leastPerimeterSector = {
         ["cm", "厘米"],
         ["m", "米"],
       ] as const);
-      return ask(
-        [
+      return numberProblem({
+        prompt: t(
           `A sector of a circle has area $${A}$ ${unit[0]}². Find the least possible perimeter, in ${unit[0]}, including both radii and the arc.`,
           `一个扇形的面积是 $${A}$ 平方${unit[1]}。求它的最小周长（包括两条半径和弧），单位是${unit[1]}。`,
-        ],
-        4 * m,
-        [2 * m, m, 3 * m, A],
-        [
-          `$P(r) = 2r + \\frac{${2 * A}}{r}$, and $P'(r) = 2 - \\frac{${2 * A}}{r^{2}} = 0$ gives $r = ${m}$. Then the arc is $${2 * m}$ and $P = ${m} + ${m} + ${2 * m} = ${4 * m}$.`,
-          `$P(r) = 2r + \\frac{${2 * A}}{r}$，由 $P'(r) = 2 - \\frac{${2 * A}}{r^{2}} = 0$ 得 $r = ${m}$。此时弧长是 $${2 * m}$，$P = ${m} + ${m} + ${2 * m} = ${4 * m}$。`,
-        ],
-      );
+        ),
+        answer: 4 * m,
+        mistakes: distinctWhys([
+          why(
+            2 * m,
+            `This is the arc alone, $${2 * m}$ ${unit[0]}; the perimeter adds the two radii.`,
+            `这只是弧长 $${2 * m}$ ${unit[1]}；周长还要加上两条半径。`,
+          ),
+          why(m, "This is the best radius, not the perimeter.", "这是最佳半径，不是周长。"),
+          why(3 * m, "This counts only one radius; the perimeter is $r + r + s$.", "这只算了一条半径；周长是 $r + r + s$。"),
+        ]),
+        solution: t(
+          ...walkPair(
+            [
+              [
+                "Write the arc in terms of $r$",
+                "用 $r$ 表示弧长",
+                `The area is $\\frac{1}{2}rs = ${A}$, so the arc is $s = \\frac{${2 * A}}{r}$.`,
+                `面积 $\\frac{1}{2}rs = ${A}$，所以弧长 $s = \\frac{${2 * A}}{r}$。`,
+              ],
+              [
+                "Minimize the perimeter",
+                "求周长的最小值",
+                `$P(r) = 2r + \\frac{${2 * A}}{r}$, and $P'(r) = 2 - \\frac{${2 * A}}{r^{2}} = 0$ gives $r^{2} = ${A}$, so $r = ${m}$.`,
+                `$P(r) = 2r + \\frac{${2 * A}}{r}$，由 $P'(r) = 2 - \\frac{${2 * A}}{r^{2}} = 0$ 得 $r^{2} = ${A}$，所以 $r = ${m}$。`,
+              ],
+              [
+                "Find the perimeter",
+                "求周长",
+                `The arc is $\\frac{${2 * A}}{${m}} = ${2 * m}$, so $P = ${m} + ${m} + ${2 * m} = ${4 * m}$ ${unit[0]}.`,
+                `弧长是 $\\frac{${2 * A}}{${m}} = ${2 * m}$，所以 $P = ${m} + ${m} + ${2 * m} = ${4 * m}$ ${unit[1]}。`,
+              ],
+            ],
+            [
+              `$P(r) - ${4 * m} = \\frac{2r^{2} - ${4 * m}r + ${2 * A}}{r} = \\frac{2(r - ${m})^{2}}{r}$, which is never negative and is zero only at $r = ${m}$. So $${4 * m}$ is the least perimeter.`,
+              `$P(r) - ${4 * m} = \\frac{2r^{2} - ${4 * m}r + ${2 * A}}{r} = \\frac{2(r - ${m})^{2}}{r}$，它不会为负，只在 $r = ${m}$ 时为零。所以 $${4 * m}$ 是最小周长。`,
+            ],
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings3["optimization-problems-involving-sectors-of-circles#the-least-perimeter-for-a-given-area"],
@@ -698,8 +730,8 @@ const trayFromRectangle = point(
   "trays-folded-from-rectangular-sheets",
   ["Trays folded from rectangular sheets", "用长方形纸板折成的盘子"],
   [
-    "With unequal sides $w$ and $l$, the volume is $V(x) = x(w - 2x)(l - 2x)$, and $V'(x) = 0$ is a quadratic with two roots. Only a root with $0 < x < \\frac{w}{2}$ makes a tray, and the shortcut $x = \\frac{w}{6}$ for a square sheet no longer applies.",
-    "两边 $w$ 和 $l$ 不相等时，容积是 $V(x) = x(w - 2x)(l - 2x)$，$V'(x) = 0$ 是有两个根的二次方程。只有满足 $0 < x < \\frac{w}{2}$ 的根才能折成盘子，而且正方形纸板的简便结论 $x = \\frac{w}{6}$ 不再适用。",
+    "With unequal sides $w$ and $l$, the volume is $V(x) = x(w - 2x)(l - 2x)$, and $V'(x) = 0$ is a quadratic with two roots. Only a root with $0 < x < \\frac{w}{2}$ makes a tray, and the shortcut $x = \\frac{w}{6}$ for a square sheet no longer applies.\n\nFor example, for a $5$ by $8$ sheet, $V(x) = x(5 - 2x)(8 - 2x) = 4x^{3} - 26x^{2} + 40x$ and $V'(x) = 12x^{2} - 52x + 40 = 4(3x - 10)(x - 1)$. The root $\\frac{10}{3}$ is more than $2.5$, so $x = 1$ and $V = 1 \\cdot 3 \\cdot 6 = 18$.\n\nCheck: $V(0.9) = 0.9 \\cdot 3.2 \\cdot 6.2 \\approx 17.86$ and $V(1.1) = 1.1 \\cdot 2.8 \\cdot 5.8 \\approx 17.86$, both less than $18$.\n\n> **Watch out.** Discard a root of $V'$ above $\\frac{w}{2}$, and do not use $\\frac{w}{6}$: here it gives $V\\left(\\frac{5}{6}\\right) \\approx 17.59$, less than $18$.",
+    "两边 $w$ 和 $l$ 不相等时，容积是 $V(x) = x(w - 2x)(l - 2x)$，$V'(x) = 0$ 是有两个根的二次方程。只有满足 $0 < x < \\frac{w}{2}$ 的根才能折成盘子，而且正方形纸板的简便结论 $x = \\frac{w}{6}$ 不再适用。\n\n例如 $5$ 乘 $8$ 的纸板，$V(x) = x(5 - 2x)(8 - 2x) = 4x^{3} - 26x^{2} + 40x$，$V'(x) = 12x^{2} - 52x + 40 = 4(3x - 10)(x - 1)$。根 $\\frac{10}{3}$ 超过 $2.5$，所以 $x = 1$，$V = 1 \\cdot 3 \\cdot 6 = 18$。\n\n检验：$V(0.9) = 0.9 \\cdot 3.2 \\cdot 6.2 \\approx 17.86$，$V(1.1) = 1.1 \\cdot 2.8 \\cdot 5.8 \\approx 17.86$，都小于 $18$。\n\n> **注意。** 舍去大于 $\\frac{w}{2}$ 的根，也不要用 $\\frac{w}{6}$：这里它给出 $V\\left(\\frac{5}{6}\\right) \\approx 17.59$，小于 $18$。",
   ],
   (rng) => {
     const s = rng.pick(sheets);
@@ -710,28 +742,98 @@ const trayFromRectangle = point(
     const other = s.other.mul(Q.of(k));
     const vol = (h: Q) => h.mul(Q.of(w).sub(h.mul(Q.of(2)))).mul(Q.of(l).sub(h.mul(Q.of(2))));
     const six = Q.of(w, 6);
+    const long = Q.of(l, 6);
     const askVolume = rng.bool();
     const setup: Pair = [
       `An open tray is made from a $${w}$ cm by $${l}$ cm sheet by cutting equal squares from the corners and folding up the sides.`,
       `把一张 $${w}$ 厘米乘 $${l}$ 厘米的纸板四角各剪去相同的正方形，折起四边做成无盖盘子。`,
     ];
-    const sol: Pair = [
-      `$V'(x) = 12x^{2} - ${4 * (w + l)}x + ${w * l} = 0$ has roots $${x.toLatex()}$ and $${other.toLatex()}$. The second is more than half of $${w}$, so the height is $${x.toLatex()}$ and the volume is $${vol(x).toLatex()}$ cm³.`,
-      `$V'(x) = 12x^{2} - ${4 * (w + l)}x + ${w * l} = 0$ 的根是 $${x.toLatex()}$ 和 $${other.toLatex()}$。后者超过 $${w}$ 的一半，所以高是 $${x.toLatex()}$，容积是 $${vol(x).toLatex()}$ 立方厘米。`,
+    const cubic = poly([4, "x^{3}"], [-2 * (w + l), "x^{2}"], [w * l, "x"]);
+    const quad = poly([12, "x^{2}"], [-4 * (w + l), "x"], [w * l, ""]);
+    const base = [Q.of(w).sub(x.mul(Q.of(2))), Q.of(l).sub(x.mul(Q.of(2)))];
+    const steps: [string, string, string, string][] = [
+      [
+        "Write the volume",
+        "写出容积",
+        `Cutting squares of side $x$ leaves a base $${w} - 2x$ by $${l} - 2x$, so $V(x) = x(${w} - 2x)(${l} - 2x) = ${cubic}$.`,
+        `剪去边长为 $x$ 的正方形后，底面是 $${w} - 2x$ 乘 $${l} - 2x$，所以 $V(x) = x(${w} - 2x)(${l} - 2x) = ${cubic}$。`,
+      ],
+      [
+        "Differentiate",
+        "求导",
+        `$V'(x) = ${quad} = 0$ has the roots $x = ${x.toLatex()}$ and $x = ${other.toLatex()}$.`,
+        `$V'(x) = ${quad} = 0$ 的根是 $x = ${x.toLatex()}$ 和 $x = ${other.toLatex()}$。`,
+      ],
+      [
+        "Keep the root that makes a tray",
+        "保留能折成盘子的根",
+        `$${other.toLatex()}$ is more than half of $${w}$ and would leave no base, so the height is $${x.toLatex()}$ cm.`,
+        `$${other.toLatex()}$ 超过 $${w}$ 的一半，会使底面不存在，所以高是 $${x.toLatex()}$ 厘米。`,
+      ],
     ];
+    if (askVolume)
+      steps.push([
+        "Find the volume",
+        "求容积",
+        `$V\\left(${x.toLatex()}\\right) = ${x.toLatex()} \\cdot ${base[0]!.toLatex()} \\cdot ${base[1]!.toLatex()} = ${vol(x).toLatex()}$ cm³.`,
+        `$V\\left(${x.toLatex()}\\right) = ${x.toLatex()} \\cdot ${base[0]!.toLatex()} \\cdot ${base[1]!.toLatex()} = ${vol(x).toLatex()}$ 立方厘米。`,
+      ]);
+    const solution = t(
+      ...walkPair(steps, [
+        `$V'(x) = 12\\left(x - ${x.toLatex()}\\right)\\left(x - ${other.toLatex()}\\right)$ is positive for $0 < x < ${x.toLatex()}$ and negative for $${x.toLatex()} < x < ${Q.of(w, 2).toLatex()}$. So $V$ rises and then falls, and $x = ${x.toLatex()}$ gives the largest volume.`,
+        `$V'(x) = 12\\left(x - ${x.toLatex()}\\right)\\left(x - ${other.toLatex()}\\right)$ 在 $0 < x < ${x.toLatex()}$ 时为正，在 $${x.toLatex()} < x < ${Q.of(w, 2).toLatex()}$ 时为负。所以 $V$ 先增后减，$x = ${x.toLatex()}$ 时容积最大。`,
+      ]),
+    );
     return askVolume
-      ? ask(
-          [`${setup[0]} Find the largest possible volume, in cm³.`, `${setup[1]}求最大容积，单位是立方厘米。`],
-          vol(x),
-          [vol(six), Q.of(w * l).mul(x), vol(Q.of(l, 6))],
-          sol,
-        )
-      : ask(
-          [`${setup[0]} Find the height, in cm, that gives the largest volume.`, `${setup[1]}求使容积最大的高，单位是厘米。`],
-          x,
-          [six, other, Q.of(l, 6)],
-          sol,
-        );
+      ? numberProblem({
+          prompt: t(`${setup[0]} Find the largest possible volume, in cm³.`, `${setup[1]}求最大容积，单位是立方厘米。`),
+          answer: vol(x),
+          mistakes: distinctWhys([
+            why(
+              vol(six),
+              `This uses the square-sheet height $\\frac{${w}}{6}$, which does not give the largest volume when the sides differ.`,
+              `这用了正方形纸板的高 $\\frac{${w}}{6}$，两边不等时它给不出最大容积。`,
+            ),
+            why(
+              Q.of(w * l).mul(x),
+              `This multiplies the whole sheet by the height; cutting the corners shrinks the base to $(${w} - 2x)(${l} - 2x)$.`,
+              `这是用整张纸板的面积乘以高；剪去四角后底面缩小为 $(${w} - 2x)(${l} - 2x)$。`,
+            ),
+            why(
+              vol(long),
+              `This uses the height $\\frac{${l}}{6}$, the square-sheet shortcut applied to the long side.`,
+              `这用了高 $\\frac{${l}}{6}$，即把正方形纸板的简便结论用在长边上。`,
+            ),
+            why(
+              vol(other),
+              `This uses the other root $${other.toLatex()}$, which makes $${w} - 2x$ negative.`,
+              `这用了另一个根 $${other.toLatex()}$，它使 $${w} - 2x$ 为负。`,
+            ),
+          ]),
+          solution,
+        })
+      : numberProblem({
+          prompt: t(`${setup[0]} Find the height, in cm, that gives the largest volume.`, `${setup[1]}求使容积最大的高，单位是厘米。`),
+          answer: x,
+          mistakes: distinctWhys([
+            why(
+              six,
+              `This is the square-sheet shortcut $\\frac{${w}}{6}$, which does not apply when the sides differ.`,
+              `这是正方形纸板的简便结论 $\\frac{${w}}{6}$，两边不等时不适用。`,
+            ),
+            why(
+              other,
+              `This is the other root of $V'(x) = 0$; it is more than half of $${w}$, so there would be no base.`,
+              `这是 $V'(x) = 0$ 的另一个根；它超过 $${w}$ 的一半，底面就不存在了。`,
+            ),
+            why(
+              long,
+              `This is $\\frac{${l}}{6}$, the square-sheet shortcut applied to the long side.`,
+              `这是 $\\frac{${l}}{6}$，即把正方形纸板的简便结论用在长边上。`,
+            ),
+          ]),
+          solution,
+        });
   },
 );
 
@@ -740,8 +842,8 @@ const leastDistanceSquared = {
     "the-least-distance-and-an-endpoint-trap",
     ["The least distance and an endpoint trap", "最短距离与端点陷阱"],
     [
-      "To minimize distance, minimize its square. For $y = \\sqrt{kx}$ and the point $(a, 0)$, $D^{2} = (x - a)^{2} + kx$, a parabola in $x$ with vertex at $x = a - \\frac{k}{2}$. But the curve only has $x \\ge 0$: if the vertex is negative, the closest point is the endpoint $(0, 0)$.",
-      "要使距离最小，就使它的平方最小。对 $y = \\sqrt{kx}$ 和点 $(a, 0)$，$D^{2} = (x - a)^{2} + kx$ 是关于 $x$ 的抛物线，顶点在 $x = a - \\frac{k}{2}$。但曲线只有 $x \\ge 0$ 的部分：如果顶点为负，最近的点就是端点 $(0, 0)$。",
+      "To minimize distance, minimize its square. For $y = \\sqrt{kx}$ and the point $(a, 0)$, $D^{2} = (x - a)^{2} + kx$, a parabola in $x$ with vertex at $x = a - \\frac{k}{2}$. But the curve only has $x \\ge 0$: if the vertex is negative, the closest point is the endpoint $(0, 0)$.\n\nFor example, for $y = \\sqrt{2x}$ and the point $(3, 0)$, $D^{2} = (x - 3)^{2} + 2x = x^{2} - 4x + 9$, with vertex $x = 2$ and $D^{2} = 5$. For $y = \\sqrt{4x}$ and $(1, 0)$ the vertex is $x = -1$, off the curve, so the closest point is $(0, 0)$ with $D^{2} = 1$.\n\nCheck: on $y = \\sqrt{2x}$, $x = 1$ and $x = 3$ both give $D^{2} = 6$, more than $5$.\n\n> **Watch out.** Check that the vertex has $x \\ge 0$ before using it; otherwise the endpoint gives the least distance.",
+      "要使距离最小，就使它的平方最小。对 $y = \\sqrt{kx}$ 和点 $(a, 0)$，$D^{2} = (x - a)^{2} + kx$ 是关于 $x$ 的抛物线，顶点在 $x = a - \\frac{k}{2}$。但曲线只有 $x \\ge 0$ 的部分：如果顶点为负，最近的点就是端点 $(0, 0)$。\n\n例如对 $y = \\sqrt{2x}$ 和点 $(3, 0)$，$D^{2} = (x - 3)^{2} + 2x = x^{2} - 4x + 9$，顶点 $x = 2$，$D^{2} = 5$。对 $y = \\sqrt{4x}$ 和点 $(1, 0)$，顶点 $x = -1$ 不在曲线上，所以最近点是 $(0, 0)$，$D^{2} = 1$。\n\n检验：在 $y = \\sqrt{2x}$ 上，$x = 1$ 和 $x = 3$ 都给出 $D^{2} = 6$，大于 $5$。\n\n> **注意。** 用顶点之前先检查它是否满足 $x \\ge 0$；否则最短距离在端点取到。",
     ],
     (rng) => {
       const k = rng.int(1, 8);
@@ -751,18 +853,85 @@ const leastDistanceSquared = {
       const formula = Q.of(k * a).sub(Q.of(k * k, 4));
       const answer = inside ? formula : Q.of(a * a);
       const f = k === 1 ? "\\sqrt{x}" : `\\sqrt{${k}x}`;
-      return ask(
-        [
+      const v = vertex.toLatex();
+      const d2 = poly([1, "x^{2}"], [k - 2 * a, "x"], [a * a, ""]);
+      const rest = formula.isZero() ? "" : ` ${formula.sign() < 0 ? "-" : "+"} ${formula.abs().toLatex()}`;
+      const square = `${vertex.isZero() ? "x^{2}" : `\\left(${poly([1, "x"], [vertex.neg(), ""])}\\right)^{2}`}${rest}`;
+      const last: [string, string, string, string] = inside
+        ? [
+            "Evaluate at the vertex",
+            "在顶点处求值",
+            `$x = ${v}$ is on the curve, so the least value is $D^{2} = ${answer.toLatex()}$.`,
+            `$x = ${v}$ 在曲线上，所以最小值是 $D^{2} = ${answer.toLatex()}$。`,
+          ]
+        : [
+            "Use the endpoint",
+            "取端点",
+            vertex.isZero()
+              ? `The vertex is the endpoint $x = 0$, so the least value is $D^{2} = ${a * a}$.`
+              : `$x = ${v}$ is not on the curve, and $D^{2}$ increases for $x \\ge 0$, so the least value is at $x = 0$, where $D^{2} = ${a * a}$.`,
+            vertex.isZero()
+              ? `顶点就是端点 $x = 0$，所以最小值是 $D^{2} = ${a * a}$。`
+              : `$x = ${v}$ 不在曲线上，而 $D^{2}$ 在 $x \\ge 0$ 上递增，所以最小值在 $x = 0$ 处，$D^{2} = ${a * a}$。`,
+          ];
+      return numberProblem({
+        prompt: t(
           `Find the square of the least distance from the point $(${a}, 0)$ to the curve $y = ${f}$.`,
           `求点 $(${a}, 0)$ 到曲线 $y = ${f}$ 的最短距离的平方。`,
-        ],
+        ),
         answer,
-        [inside ? Q.of(a * a) : formula, vertex, Q.of(k * a)],
-        [
-          `$D^{2} = (x - ${a})^{2} + ${k}x$ has its vertex at $x = ${vertex.toLatex()}$. ${inside ? `That is on the curve, and substituting gives $D^{2} = ${answer.toLatex()}$.` : `${vertex.isZero() ? "That is the endpoint" : "That is not on the curve, so the least value on $x \\ge 0$ is at the endpoint"} $x = 0$, which gives $D^{2} = ${answer.toLatex()}$.`}`,
-          `$D^{2} = (x - ${a})^{2} + ${k}x$ 的顶点在 $x = ${vertex.toLatex()}$。${inside ? `它在曲线上，代入得 $D^{2} = ${answer.toLatex()}$。` : `${vertex.isZero() ? "它就是端点" : "它不在曲线上，所以在 $x \\ge 0$ 上最小值在端点"} $x = 0$ 处取到，得 $D^{2} = ${answer.toLatex()}$。`}`,
-        ],
-      );
+        mistakes: distinctWhys([
+          inside
+            ? why(
+                a * a,
+                `This is $D^{2}$ at the endpoint $(0, 0)$; the vertex $x = ${v}$ is on the curve and gives less.`,
+                `这是端点 $(0, 0)$ 处的 $D^{2}$；顶点 $x = ${v}$ 在曲线上，给出的值更小。`,
+              )
+            : why(
+                formula,
+                `This uses the vertex $x = ${v}$, which is negative, so it is not on the curve.`,
+                `这用了顶点 $x = ${v}$，它是负的，不在曲线上。`,
+              ),
+          why(
+            vertex,
+            `This is the $x$-coordinate ${inside ? "of the closest point" : "of the vertex"}, not a squared distance.`,
+            `这是${inside ? "最近点" : "顶点"}的 $x$ 坐标，不是距离的平方。`,
+          ),
+          why(
+            k * a,
+            `This is $D^{2}$ at $x = ${a}$, the point of the curve straight above $(${a}, 0)$; ${inside ? "the closest point is further left" : "the endpoint is closer"}.`,
+            `这是 $x = ${a}$ 处，即 $(${a}, 0)$ 正上方那一点的 $D^{2}$；${inside ? "最近点在它左边" : "端点更近"}。`,
+          ),
+        ]),
+        solution: t(
+          ...walkPair(
+            [
+              [
+                "Write the squared distance",
+                "写出距离的平方",
+                `For $x \\ge 0$ a point of the curve is $(x, ${f})$, so $D^{2} = (x - ${a})^{2} + ${poly([k, "x"])} = ${d2}$.`,
+                `当 $x \\ge 0$ 时，曲线上的点是 $(x, ${f})$，所以 $D^{2} = (x - ${a})^{2} + ${poly([k, "x"])} = ${d2}$。`,
+              ],
+              [
+                "Find the vertex",
+                "求顶点",
+                `$\\frac{d}{dx}D^{2} = 2(x - ${a}) + ${k}$ is zero at $x = ${v}$.`,
+                `$\\frac{d}{dx}D^{2} = 2(x - ${a}) + ${k}$ 在 $x = ${v}$ 处为零。`,
+              ],
+              last,
+            ],
+            inside
+              ? [
+                  `Completing the square, $D^{2} = ${square}$. The square is $0$ at $x = ${v}$, so the least value is $${formula.toLatex()}$.`,
+                  `配方得 $D^{2} = ${square}$。平方项在 $x = ${v}$ 处为 $0$，所以最小值是 $${formula.toLatex()}$。`,
+                ]
+              : [
+                  `Completing the square, $D^{2} = ${square}$. For $x \\ge 0$ the square is smallest at $x = 0$, which gives $D^{2} = ${a * a}$ again.`,
+                  `配方得 $D^{2} = ${square}$。在 $x \\ge 0$ 上，平方项在 $x = 0$ 处最小，同样得 $D^{2} = ${a * a}$。`,
+                ],
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings3["optimizing-distances-to-curves#the-least-distance-and-an-endpoint-trap"],
@@ -773,8 +942,8 @@ const newtonOnQuadratic = {
     "one-newton-step-on-a-quadratic",
     ["One Newton step on a quadratic", "二次函数上的一步牛顿法"],
     [
-      "For optimization, Newton's method uses $x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}$, which is not the root-finding step $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$. On a quadratic, $f'$ is linear, so one step lands exactly on the vertex from any start: a useful check.",
-      "用于最优化时，牛顿法的迭代是 $x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}$，而不是求根的迭代 $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$。对二次函数，$f'$ 是一次函数，所以从任何起点出发一步就恰好到达顶点：这是一个有用的检验。",
+      "For optimization, Newton's method uses $x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}$, which is not the root-finding step $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$. On a quadratic, $f'$ is linear, so one step lands exactly on the vertex from any start: a useful check.\n\nFor example, for $f(x) = 2x^{2} - 8x + 3$ from $x_{0} = 5$, $f'(5) = 12$ and $f'' = 4$, so $x_{1} = 5 - \\frac{12}{4} = 2$, the vertex.\n\nCheck: $f'(2) = 4 \\cdot 2 - 8 = 0$, so $x_{1}$ is the stationary point.\n\n> **Watch out.** Divide $f'$ by $f''$, not $f$ by $f'$: the root-finding step would give $5 - \\frac{13}{12} = \\frac{47}{12}$ here.",
+      "用于最优化时，牛顿法的迭代是 $x_{1} = x_{0} - \\frac{f'(x_{0})}{f''(x_{0})}$，而不是求根的迭代 $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$。对二次函数，$f'$ 是一次函数，所以从任何起点出发一步就恰好到达顶点：这是一个有用的检验。\n\n例如对 $f(x) = 2x^{2} - 8x + 3$，从 $x_{0} = 5$ 出发，$f'(5) = 12$，$f'' = 4$，所以 $x_{1} = 5 - \\frac{12}{4} = 2$，正是顶点。\n\n检验：$f'(2) = 4 \\cdot 2 - 8 = 0$，所以 $x_{1}$ 是驻点。\n\n> **注意。** 是用 $f'$ 除以 $f''$，不是用 $f$ 除以 $f'$：这里求根的迭代会给出 $5 - \\frac{13}{12} = \\frac{47}{12}$。",
     ],
     (rng) => {
       const a = nz(rng, 5);
@@ -785,19 +954,60 @@ const newtonOnQuadratic = {
       const x0 = 2 * a * pick + b === 0 ? pick + 1 : pick;
       const f0 = a * x0 * x0 + b * x0 + c;
       const d0 = 2 * a * x0 + b;
-      const wrong = [Q.of(x0).sub(Q.of(f0, d0)), vertex.neg(), Q.of(x0).sub(Q.of(d0))];
-      return ask(
-        [
-          `Apply one step of Newton's method for optimization to $f(x) = ${poly([a, "x^{2}"], [b, "x"], [c, ""])}$, with $x_{0} = ${x0}$. Find $x_{1}$.`,
-          `对 $f(x) = ${poly([a, "x^{2}"], [b, "x"], [c, ""])}$ 用牛顿法做一步最优化迭代，取 $x_{0} = ${x0}$。求 $x_{1}$。`,
-        ],
-        vertex,
-        wrong,
-        [
-          `$f'(${x0}) = ${d0}$ and $f'' = ${2 * a}$, so $x_{1} = ${x0} - \\frac{${d0}}{${2 * a}} = ${vertex.toLatex()}$, which is the vertex of the parabola.`,
-          `$f'(${x0}) = ${d0}$，$f'' = ${2 * a}$，所以 $x_{1} = ${x0} - \\frac{${d0}}{${2 * a}} = ${vertex.toLatex()}$，这正是抛物线的顶点。`,
-        ],
-      );
+      const f = poly([a, "x^{2}"], [b, "x"], [c, ""]);
+      const tall = vertex.sign() < 0 ? `\\left(${vertex.toLatex()}\\right)` : vertex.toLatex();
+      return numberProblem({
+        prompt: t(
+          `Apply one step of Newton's method for optimization to $f(x) = ${f}$, with $x_{0} = ${x0}$. Find $x_{1}$.`,
+          `对 $f(x) = ${f}$ 用牛顿法做一步最优化迭代，取 $x_{0} = ${x0}$。求 $x_{1}$。`,
+        ),
+        answer: vertex,
+        mistakes: distinctWhys([
+          why(
+            Q.of(x0).sub(Q.of(f0, d0)),
+            "This is the root-finding step $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$; optimization uses $\\frac{f'(x_{0})}{f''(x_{0})}$.",
+            "这是求根的迭代 $x_{0} - \\frac{f(x_{0})}{f'(x_{0})}$；最优化用的是 $\\frac{f'(x_{0})}{f''(x_{0})}$。",
+          ),
+          why(
+            Q.of(x0).add(Q.of(d0, 2 * a)),
+            "This adds $\\frac{f'(x_{0})}{f''(x_{0})}$; subtract it.",
+            "这加上了 $\\frac{f'(x_{0})}{f''(x_{0})}$；应该减去。",
+          ),
+          why(
+            Q.of(x0 - d0),
+            `This subtracts $f'(x_{0})$ without dividing by $f''(x_{0}) = ${2 * a}$.`,
+            `这减去了 $f'(x_{0})$，却没有除以 $f''(x_{0}) = ${2 * a}$。`,
+          ),
+          why(
+            Q.of(x0).sub(Q.of(d0, a)),
+            `This divides by $${a}$, the coefficient of $x^{2}$, instead of $f'' = ${2 * a}$.`,
+            `这除以的是 $x^{2}$ 的系数 $${a}$，而不是 $f'' = ${2 * a}$。`,
+          ),
+        ]),
+        solution: t(
+          ...walkPair(
+            [
+              [
+                "Differentiate twice",
+                "求两次导数",
+                `$f'(x) = ${poly([2 * a, "x"], [b, ""])}$ and $f''(x) = ${2 * a}$.`,
+                `$f'(x) = ${poly([2 * a, "x"], [b, ""])}$，$f''(x) = ${2 * a}$。`,
+              ],
+              ["Evaluate at $x_{0}$", "在 $x_{0}$ 处求值", `$f'(${x0}) = ${d0}$.`, `$f'(${x0}) = ${d0}$。`],
+              [
+                "Take the step",
+                "迭代一步",
+                `$x_{1} = ${x0} - \\frac{${d0}}{${2 * a}} = ${vertex.toLatex()}$.`,
+                `$x_{1} = ${x0} - \\frac{${d0}}{${2 * a}} = ${vertex.toLatex()}$。`,
+              ],
+            ],
+            [
+              `$f'\\left(${vertex.toLatex()}\\right) = ${2 * a} \\cdot ${tall} + ${paren(b)} = 0$, so $x_{1}$ is the vertex of the parabola, as one step on a quadratic always gives.`,
+              `$f'\\left(${vertex.toLatex()}\\right) = ${2 * a} \\cdot ${tall} + ${paren(b)} = 0$，所以 $x_{1}$ 是抛物线的顶点，对二次函数一步迭代总是如此。`,
+            ],
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings3["newtons-method-for-optimizing-single-variable-functions#one-newton-step-on-a-quadratic"],
@@ -807,8 +1017,8 @@ const speedingUp = point(
   "speeding-up-or-slowing-down",
   ["Speeding up or slowing down", "加速还是减速"],
   [
-    "A particle speeds up when its velocity and acceleration have the same sign and slows down when they have opposite signs. A positive acceleration alone does not mean speeding up: if the particle is moving in the negative direction, it is slowing down.",
-    "速度和加速度同号时质点加速，异号时质点减速。只看加速度为正并不能说明在加速：如果质点正沿负方向运动，它其实在减速。",
+    "A particle speeds up when its velocity and acceleration have the same sign and slows down when they have opposite signs. A positive acceleration alone does not mean speeding up: if the particle is moving in the negative direction, it is slowing down.\n\nFor example, $s(t) = t^{3} - 6t^{2}$ has $v(t) = 3t^{2} - 12t$ and $a(t) = 6t - 12$. At $t = 1$, $v = -9$ and $a = -6$ have the same sign, so it is speeding up. At $t = 3$, $v = -9$ and $a = 6$ have opposite signs, so it is slowing down.\n\nCheck: just after $t = 1$ the speed is $|v(1.1)| = 9.57$, more than $9$, and just after $t = 3$ it is $|v(3.1)| = 8.37$, less than $9$.\n\n> **Watch out.** A positive acceleration alone does not mean speeding up: compare its sign with the sign of the velocity.",
+    "速度和加速度同号时质点加速，异号时质点减速。只看加速度为正并不能说明在加速：如果质点正沿负方向运动，它其实在减速。\n\n例如 $s(t) = t^{3} - 6t^{2}$，$v(t) = 3t^{2} - 12t$，$a(t) = 6t - 12$。$t = 1$ 时 $v = -9$，$a = -6$，同号，所以在加速。$t = 3$ 时 $v = -9$，$a = 6$，异号，所以在减速。\n\n检验：$t = 1$ 之后不久速率 $|v(1.1)| = 9.57$，大于 $9$；$t = 3$ 之后不久速率 $|v(3.1)| = 8.37$，小于 $9$。\n\n> **注意。** 只看加速度为正并不能说明在加速：要把它的符号和速度的符号比较。",
   ],
   (rng) => {
     const T = rng.int(1, 5);
@@ -821,6 +1031,7 @@ const speedingUp = point(
     const same = v > 0 === acc > 0;
     const up: Pair = [`Speeding up, because $v$ and $a$ have the same sign`, `加速，因为 $v$ 和 $a$ 同号`];
     const down: Pair = [`Slowing down, because $v$ and $a$ have opposite signs`, `减速，因为 $v$ 和 $a$ 异号`];
+    const neither: Pair = [`Neither, since its speed is constant at that moment`, `都不是，此刻速率不变`];
     const trap: Pair =
       acc > 0
         ? v < 0
@@ -829,18 +1040,85 @@ const speedingUp = point(
         : v < 0
           ? [`Slowing down, because $a$ is negative`, `减速，因为 $a$ 为负`]
           : [`Speeding up, because $v$ is positive`, `加速，因为 $v$ 为正`];
+    const trapWhy: Pair =
+      acc > 0
+        ? v < 0
+          ? [
+              `A positive acceleration slows a particle moving in the negative direction, and $v(${T}) = ${v}$ is negative.`,
+              `正的加速度会使沿负方向运动的质点减速，而 $v(${T}) = ${v}$ 为负。`,
+            ]
+          : [
+              "How large $a$ is compared with $v$ does not matter, only the signs, and both are positive.",
+              "$a$ 与 $v$ 的大小比较无关紧要，要看的是符号，而二者都为正。",
+            ]
+        : v < 0
+          ? [
+              `A negative acceleration speeds up a particle moving in the negative direction, and $v(${T}) = ${v}$ is negative.`,
+              `负的加速度会使沿负方向运动的质点加速，而 $v(${T}) = ${v}$ 为负。`,
+            ]
+          : [
+              `A positive velocity gives the direction of motion, not whether the speed grows; $a(${T}) = ${acc}$ is negative, so the particle slows down.`,
+              `速度为正只说明运动方向，不说明速率是否增大；$a(${T}) = ${acc}$ 为负，所以质点在减速。`,
+            ];
+    const nearby = (h: number) => Q.of(10000 * v + 100 * acc * h + 3, 10000).abs();
     const s = poly([1, "t^{3}"], [b, "t^{2}"], [c, "t"]);
-    return choose(
-      rng,
+    const signs: Pair = same
+      ? [
+          `$v(${T}) = ${v}$ and $a(${T}) = ${acc}$ have the same sign, so the speed is growing.`,
+          `$v(${T}) = ${v}$ 与 $a(${T}) = ${acc}$ 同号，所以速率在增大。`,
+        ]
+      : [
+          `$v(${T}) = ${v}$ and $a(${T}) = ${acc}$ have opposite signs, so the speed is shrinking.`,
+          `$v(${T}) = ${v}$ 与 $a(${T}) = ${acc}$ 异号，所以速率在减小。`,
+        ];
+    const before = dec(Q.of(100 * T - 1, 100));
+    const after = dec(Q.of(100 * T + 1, 100));
+    return reasoned(
+      choose(
+        rng,
+        [
+          `A particle has position $s(t) = ${s}$ metres after $t$ seconds. What is happening to its speed at $t = ${T}$?`,
+          `质点 $t$ 秒时的位置是 $s(t) = ${s}$ 米。在 $t = ${T}$ 时它的速率如何变化？`,
+        ],
+        same ? up : down,
+        [same ? down : up, trap, neither],
+        walkPair(
+          [
+            [
+              "Find the velocity",
+              "求速度",
+              `$v(t) = ${poly([3, "t^{2}"], [2 * b, "t"], [c, ""])}$, so $v(${T}) = ${v}$.`,
+              `$v(t) = ${poly([3, "t^{2}"], [2 * b, "t"], [c, ""])}$，所以 $v(${T}) = ${v}$。`,
+            ],
+            [
+              "Find the acceleration",
+              "求加速度",
+              `$a(t) = ${poly([6, "t"], [2 * b, ""])}$, so $a(${T}) = ${acc}$.`,
+              `$a(t) = ${poly([6, "t"], [2 * b, ""])}$，所以 $a(${T}) = ${acc}$。`,
+            ],
+            [
+              "Compare the signs",
+              "比较符号",
+              same
+                ? "They have the same sign, so the particle is speeding up."
+                : "They have opposite signs, so the particle is slowing down.",
+              same ? "二者同号，所以质点在加速。" : "二者异号，所以质点在减速。",
+            ],
+          ],
+          [
+            `The speed $|v|$ is $${dec(nearby(-1))}$ at $t = ${before}$ and $${dec(nearby(1))}$ at $t = ${after}$, so it is ${same ? "rising" : "falling"}.`,
+            `速率 $|v|$ 在 $t = ${before}$ 时为 $${dec(nearby(-1))}$，在 $t = ${after}$ 时为 $${dec(nearby(1))}$，所以它在${same ? "增大" : "减小"}。`,
+          ],
+        ),
+      ),
       [
-        `A particle has position $s(t) = ${s}$ metres after $t$ seconds. What is happening to its speed at $t = ${T}$?`,
-        `质点 $t$ 秒时的位置是 $s(t) = ${s}$ 米。在 $t = ${T}$ 时它的速率如何变化？`,
-      ],
-      same ? up : down,
-      [same ? down : up, trap, [`Neither: its speed is constant at that moment`, `都不是：此刻速率不变`]],
-      [
-        `$v(${T}) = ${v}$ and $a(${T}) = ${acc}$. They have ${same ? "the same sign, so the particle is speeding up" : "opposite signs, so the particle is slowing down"}.`,
-        `$v(${T}) = ${v}$，$a(${T}) = ${acc}$。它们${same ? "同号，所以质点在加速" : "异号，所以质点在减速"}。`,
+        [(same ? down : up)[0], ...signs],
+        [trap[0], ...trapWhy],
+        [
+          neither[0],
+          `The speed would be steady at that moment only if $a(${T})$ were $0$, but it is $${acc}$.`,
+          `只有 $a(${T})$ 为 $0$ 时此刻速率才不变，但它是 $${acc}$。`,
+        ],
       ],
     );
   },
