@@ -191,11 +191,11 @@ Stage 2: AP Calculus AB and BC, Calculus I and II. Counts are topics of these co
 | `calculus-ii-areas.ts` | 11 | done | |  |
 | `calculus-ii-revolution.ts` | 9 | done | |  |
 | `calculus-ii-motion.ts` | 6 | done | |  |
-| `calculus-ii-differential-equations.ts` | 23 | in progress | |  |
+| `calculus-ii-differential-equations.ts` | 23 | done | |  |
 | `calculus-ii-parametric.ts` | 6 | in progress | |  |
 | `calculus-ii-polar.ts` | 10 | in progress | |  |
-| `calculus-ii-vectors.ts` | 8 | open | |  |
-| `calculus-ii-sequences.ts` | 19 | open | |  |
+| `calculus-ii-vectors.ts` | 8 | in progress | |  |
+| `calculus-ii-sequences.ts` | 19 | in progress | |  |
 | `calculus-ii-convergence.ts` | 13 | open | |  |
 | `calculus-ii-taylor.ts` | 14 | open | |  |
 | `ap-calculus-technology.ts` | 9 | open | |  |
