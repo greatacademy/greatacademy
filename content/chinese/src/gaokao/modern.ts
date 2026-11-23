@@ -8,7 +8,7 @@ import { criterionById, point, quote, zhQuote } from "@ga/subject-chinese";
 
 /**
  * ModernChoice is a choice question on a passage: what it asks, the right option and three wrong ones, each written by
- * hand with the words of the passage the right option rests on and the reason each wrong one fails.
+ * hand with the words of the passage the right option rests on, the reason each wrong one fails, and a check of its own.
  */
 export interface ModernChoice {
   readonly ask: string;
@@ -18,6 +18,8 @@ export interface ModernChoice {
   readonly ground: string;
   /** reasons say why each wrong option fails, in the order of wrong: the kind of error and where it lies. */
   readonly reasons: readonly [Text, Text, Text];
+  /** check tests the right option from another angle: another place in the passage it explains or agrees with. */
+  readonly check: Text;
 }
 
 /** ModernAnswer is a question answered in a few sentences, with one good answer written for the subject. */
@@ -109,8 +111,8 @@ function choiceSolution(q: ModernChoice, shown: readonly number[]): Text {
   const reasons = shown.map((i) => whyNot(q, i));
   const list = (l: "en" | "zh-CN") => reasons.map((r) => r[l]).join("\n\n");
   return t(
-    `**Step 1: find where each option points.** The question is **${q.ask}** Take each option back to the words of the passage it rests on.\n\n**Step 2: compare, word by word.** The right option, ${zhQuote(q.right)}, ${whereText(q).en}, and says what it says, no more and no less.\n\n${list("en")}\n\n**Check.** Read ${zhQuote(q.ground)} once more beside the right option: nothing is widened or narrowed, no cause and effect is swapped, nothing is added. Each other option fell for its own reason above.`,
-    `**第一步：找出每个选项的依据。**题目是“${q.ask}”。把每个选项带回文中，找到它依据的语句。\n\n**第二步：逐词比较。**正确选项${zhQuote(q.right)}${whereText(q)["zh-CN"]}，说的正是原文的意思，不多也不少。\n\n${list("zh-CN")}\n\n**检验。** 再把${zhQuote(q.ground)}和正确选项对一遍：范围没有扩大或缩小，因果没有颠倒，也没有添加内容。其他选项都已按各自的理由排除。`,
+    `**Step 1: find where each option points.** The question is **${q.ask}** Take each option back to the words of the passage it rests on.\n\n**Step 2: compare, word by word.** The right option, ${zhQuote(q.right)}, ${whereText(q).en}, and says what it says, no more and no less.\n\n${list("en")}\n\n**Check.** ${q.check.en}`,
+    `**第一步：找出每个选项的依据。**题目是“${q.ask}”。把每个选项带回文中，找到它依据的语句。\n\n**第二步：逐词比较。**正确选项${zhQuote(q.right)}${whereText(q)["zh-CN"]}，说的正是原文的意思，不多也不少。\n\n${list("zh-CN")}\n\n**检验。** ${q.check["zh-CN"]}`,
   );
 }
 
@@ -126,7 +128,10 @@ function choiceInstance(p: ModernPassage, q: ModernChoice): Text {
 /** squeezed is a text without its white space, so a ground can be found in a passage or poem across its line breaks. */
 const squeezed = (text: string): string => text.replace(/\s+/gu, "");
 
-/** explainedChoice fails unless a question rests on words of its passage and gives a reason of its own for each wrong option. */
+/**
+ * explainedChoice fails unless a question rests on words of its passage, gives a reason of its own for each wrong option,
+ * and checks its answer in words other than the ground's.
+ */
 function explainedChoice(id: string, p: ModernPassage, q: ModernChoice): void {
   if (!q.ground.trim() || !squeezed(p.body).includes(squeezed(q.ground)))
     throw new Error(`${id}: the ground of ${q.ask} in 《${p.title}》 is not in the passage`);
@@ -136,6 +141,8 @@ function explainedChoice(id: string, p: ModernPassage, q: ModernChoice): void {
   }
   if (new Set(q.reasons.map((r) => r["zh-CN"])).size !== q.reasons.length)
     throw new Error(`${id}: ${q.ask} in 《${p.title}》 gives one reason twice`);
+  if (!q.check.en.trim() || !q.check["zh-CN"].trim() || squeezed(q.check["zh-CN"]) === squeezed(q.ground))
+    throw new Error(`${id}: ${q.ask} in 《${p.title}》 needs a check of its own, not the ground again`);
 }
 
 /** explained is a knowledge point's explanation, then its instance, then its warning. */

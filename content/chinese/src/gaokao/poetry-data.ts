@@ -35,6 +35,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "人物和情感都错：“独归”的是灵澈，诗人是送行的人；画面闲淡，看不出被抛下的怨愤。",
           ),
         ],
+        check: t(
+          "Check by the last two lines: Lingche walks into the green hills under his hat with the sun behind him, going back to the temple at dusk; the first two lines name the time and his destination.",
+          "用后两句再对：灵澈戴着斗笠，背着斜阳，独自走向青山，正是在傍晚走回竹林寺去；前两句的山寺和晚钟，正好点明了送别的时间和他的归处。",
+        ),
       },
       {
         ask: "下列对这首诗情感的理解，正确的一项是",
@@ -53,6 +57,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Invented: no career; dusk and bell make stillness.", "无中生有：诗写送别，没有提到仕途；暮色、钟声烘托的是清寂，不是轻快。"),
           t("Reversed: he watches quietly, with no reproach.", "情感说反：诗人静静目送友人远去，没有一句责备。"),
         ],
+        check: t(
+          "Check by the title: the friend is a monk returning to his temple; no word of parting or sorrow appears, only watching him go.",
+          "用题目和人物再对：题为“送灵澈上人”，灵澈是僧人，回山寺是他的本分；全诗没有一个“别”字、“愁”字，只写目送，离情和闲淡都在画面里。",
+        ),
       },
     ],
     analysis: [
@@ -73,6 +81,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "手法和气氛都错：“杳杳”写钟声幽远而非响亮，诗中也没有险路，气氛清幽而不紧张。",
           ),
         ],
+        check: t(
+          "Check by the words: temple, bell, hat, sun, hills; images only, no argument or allusion, and the figure grows smaller.",
+          "用全诗的用字再对：竹林寺、钟声、斗笠、斜阳、青山，四句都是景和人，没有一句议论，也没有用典；人在画面里一点点走远，余味也就留了下来。",
+        ),
       },
       {
         ask: "下列对诗中词语的分析，正确的一项是",
@@ -91,6 +103,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "过度解读：“独”写他独自归去、身影渐远，诗人带着惜别，没有批评他孤僻。",
           ),
         ],
+        check: t(
+          "Check by “evening” and the low sun: an evening bell from afar is faint; at dusk the woods grow darker, which “cangcang” names.",
+          "用“晚”和“斜阳”再对：傍晚的钟声从远处传来，才说得上“杳杳”；暮色里山林的颜色更深，“苍苍”写的正是深青，两词合起来是一片清幽。",
+        ),
       },
     ],
     answers: [
@@ -131,6 +147,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "情节说错：诗人在桐庐江上，是把泪“遥寄海西头”的扬州，并没有重逢。",
           ),
         ],
+        check: t(
+          "Check by the title: a night away from home, verses sent to old friends in Yangzhou; the first couplet lays the traveller's sorrow that line 5 names.",
+          "用题目再对：题为“宿桐庐江寄广陵旧游”，是夜宿异乡时寄诗给扬州旧友；首联的暗山、猿声、急流为羁旅之愁铺底，颈联才说出“建德非吾土”。",
+        ),
       },
       {
         ask: "下列对这首诗情感的理解，正确的一项是",
@@ -149,6 +169,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Wrong feeling: travel sorrow, not ambition.", "情感说错：猿愁、孤舟写的是羁旅愁苦，没有建功立业的豪情。"),
           t("Invented: the tears are longing, not blame.", "无中生有：泪是思念旧友而流，诗中没有一句怨恨对方不肯同行。"),
         ],
+        check: t(
+          "Check by the last couplet: he sends two lines of tears to Yangzhou, “the head of the sea's west”; longing for friends and loneliness in a strange land go together.",
+          "用尾联再对：“还将两行泪，遥寄海西头”，海西头指扬州，诗人把眼泪远寄给那里的旧友，思念之深和“非吾土”的孤寂互为表里。",
+        ),
       },
     ],
     analysis: [
@@ -169,6 +193,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Wrong device: the moon lights a lonely boat.", "手法说错：月照的是“孤舟”，景色清冷，写的是孤独，不是乐景写乐情。"),
           t("Invented: no lit houses; he sleeps alone on a boat.", "无中生有：诗中没有两岸人家的灯火，诗人宿在孤舟上，谈不上富足安乐。"),
         ],
+        check: t(
+          "Check by the first couplet: the hills are dark and the river runs at night; one boat lit by the moon, the wind loud on both banks, and the boat lonelier for it.",
+          "用首联再对：首联已写“山暝”“夜流”，四下昏暗；颔联只有一叶孤舟被月光照着，两岸风声越响，舟中越显冷清，孤独由此衬出。",
+        ),
       },
       {
         ask: "下列对这首诗结构和语言的分析，正确的一项是",
@@ -190,6 +218,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           ),
           t("Reversed: 急 means swift.", "词义说反：“急”是江水流得急，衬出诗人心绪不宁，不是慢。"),
         ],
+        check: t(
+          "Check by the first four lines: gibbons, current, leaves and boat are all that night on the river; line 5 turns to feeling and the poem ends on the tears.",
+          "用前四句的内容再对：猿声、江流、风叶、孤舟，都是当夜在桐庐江上的所见所闻；到第五句“建德非吾土”才转入抒情，最后落到寄泪，由景到情。",
+        ),
       },
     ],
     answers: [
@@ -233,6 +265,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "情调说反：“千里暮云平”写原野辽阔、心胸开阔，是猎罢从容回望，没有叹老伤感。",
           ),
         ],
+        check: t(
+          "Check by “suddenly past” and “back again”: two verbs in quick succession show the speed, and on looking back the hunting ground lies under a thousand miles of evening cloud.",
+          "用一“忽”一“还”再对：“忽过”写转眼已过新丰，“还归”写随即回到细柳营，两个动词紧接着用，写出马快、归途短促，接下来“回看”时猎场已在千里暮云之下。",
+        ),
       },
       {
         ask: "下列对诗中将军形象的理解，正确的一项是",
@@ -248,6 +284,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Reversed: swift hawk and horse, a vigorous general.", "形象说反：“鹰眼疾”“马蹄轻”写驰猎迅捷，将军英武，不是年老体衰。"),
           t("Reversed: he rides out in the wind and returns at ease.", "形象说反：风劲时他照样出猎，猎罢从容回望，诗中没有收兵退缩。"),
         ],
+        check: t(
+          "Check by the other lines: a strong bow, a keen hawk, light hooves and the place he shot an eagle all show his skill; nothing suggests idleness or weakness.",
+          "用全诗的其他句子再对：“风劲角弓鸣”写弓力强，“鹰眼疾”“马蹄轻”写驰猎快，“射雕处”用射雕写箭术精，处处写将军英武，没有一处写他耽于游乐或力不从心。",
+        ),
       },
     ],
     analysis: [
@@ -271,6 +311,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "顺序说错：首联出猎，颔联驰猎，颈联归营，尾联回望，是顺叙，不是倒叙。",
           ),
         ],
+        check: t(
+          "Check by reversing the lines: put the general first and it is a plain statement; sound first, then the man, seizes the reader at once.",
+          "把两句颠倒一下再对：若写成“将军猎渭城，风劲角弓鸣”，只是平平的交代；先闻弓声、后见将军，读者先被声音抓住，才看到人物，这正是先声夺人。",
+        ),
       },
       {
         ask: "下列对诗中炼字的分析，正确的一项是",
@@ -286,6 +330,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Wrong sense: 轻 is light-footed on dry ground.", "词义说错：“轻”写马跑得轻快，是因为雪尽路干，不是马瘦弱。"),
           t("Reversed: 平 is calm and level, not looming war.", "意思说反：“平”写暮云与原野相接、平静辽阔，是猎罢后的宁静，没有战事。"),
         ],
+        check: t(
+          "Check by the season: withered grass hides no prey, so the hawk sees at once; with the snow gone the ground is firm, so the hooves are light.",
+          "用季节再对：草枯了，猎物无处藏身，鹰眼一扫就能看见；雪化尽了，地面不滑不陷，马才跑得轻快，“草枯”“雪尽”正好解释了“疾”和“轻”。",
+        ),
       },
     ],
     answers: [
@@ -329,6 +377,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "无中生有：“青旗沽酒有人家”只是写山路边有挂着酒旗的人家，没写词人买醉浇愁。",
           ),
         ],
+        check: t(
+          "Check by the season: mulberry just budding, silkworms just hatching, the woods still cold; in midsummer the leaves would be thick and the cocoons spun.",
+          "用季节的线索再对：桑芽刚“破”，蚕种才“生些”，林是“寒林”，处处是初春的样子；若是盛夏，桑叶早已茂密，蚕也早已结茧。",
+        ),
       },
       {
         ask: "下列对这首词情感的理解，正确的一项是",
@@ -353,6 +405,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "过度解读：辛弃疾别的词常写收复失地，这首却写乡村春景，“愁风雨”是说城中桃李经不起风雨，不涉山河破碎。",
           ),
         ],
+        check: t(
+          "Check by the first stanza: buds, silkworms, calves and crows are all rural life; the close places spring by the stream, and the love of the countryside needs no saying.",
+          "用上阕再对：上阕写的桑芽、蚕种、黄犊、暮鸦，都是乡间的生机；结尾说“春在溪头荠菜花”，把春天的所在归给乡野，喜爱之情不言自明。",
+        ),
       },
     ],
     analysis: [
@@ -379,6 +435,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "关系说错：结尾的荠菜花正接着上阕的桑芽、黄犊，是乡村春景的收束，不是毫无联系。",
           ),
         ],
+        check: t(
+          "Check by “dreading”: the town's blossoms fear wind and rain, the shepherd's purse by the stream does not; joined to the first stanza, it shows where spring is.",
+          "用“愁”字再对：“愁风雨”把桃李写得娇弱，经不起风雨；荠菜花开在溪头，不怕风雨，一怕一不怕，再和上阕的乡野生机连起来，春在乡野的意思就点出来了。",
+        ),
       },
       {
         ask: "下列对这首词写景的分析，正确的一项是",
@@ -397,6 +457,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "过度解读：“山远近，路横斜”写山路远近错落，紧接着是“青旗沽酒有人家”，是乡野的画面，没有仕途的暗示。",
           ),
         ],
+        check: t(
+          "Check by the season: in early spring buds push out of their scales, which is “breaking”; at dusk crows settle in bare trees like dabs of ink, which is “dotting”.",
+          "用所写的时节再对：早春桑枝萌芽，嫩芽从芽苞里钻出来，正是“破”；傍晚乌鸦三三两两落在叶子落尽的寒林上，远看像一个个墨点，正是“点”。",
+        ),
       },
     ],
     answers: [
@@ -431,6 +495,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Reversed: no distance is too wide for it.", "词义说反：“所向无空阔”是说它跑到哪里，哪里都不算辽阔，不是只能在狭窄处跑。"),
           t("Reversed: it can range ten thousand li; it is not old.", "意思说反：“万里可横行”是说它能驰骋万里，诗中没有写马老。"),
         ],
+        check: t(
+          "Check by the second couplet: pointed ears and light hooves, like the lean frame, are marks of a fine horse; “lean” means spirited, not weak.",
+          "用颔联再对：“竹批双耳峻，风入四蹄轻”接着写耳朵尖挺、四蹄轻快，和“锋棱瘦骨”一样都是良马的特征，可见“瘦”写的是神骏，不是瘦弱。",
+        ),
       },
       {
         ask: "下列对这首诗情感的理解，正确的一项是",
@@ -449,6 +517,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Invented: the horse is praised; the owner is not mocked.", "无中生有：诗题是写房兵曹的胡马，诗人赞的是马，没有讽刺主人。"),
           t("Reversed: it is ambition, not hatred of war.", "情感说反：“万里可横行”是赞马能建功，诗人借此寄托抱负，不是厌恶战争。"),
         ],
+        check: t(
+          "Check by the third couplet: no distance is too wide and it can be trusted with one's life; the horse is a comrade, and the last line speaks the poet's own ambition.",
+          "用颈联再对：“所向无空阔，真堪托死生”，说它奔向哪里都不觉得远，可以托付生死，已经把马写成能共患难的伙伴，尾联“万里可横行”便是借马言志。",
+        ),
       },
     ],
     analysis: [
@@ -466,6 +538,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Wrong mode: it describes the horse; it tells no story.", "表达方式说错：全诗写马的形与神，没有记叙房兵曹得马的经过。"),
           t("Invented: no man is compared with it.", "无中生有：诗中只写马，没有拿人来比，也没有写马高大、人渺小。"),
         ],
+        check: t(
+          "Check by the words: bones, ears and hooves in the first four lines, deeds and character in the last four; form turns to spirit between lines 4 and 5.",
+          "用前后的字眼再对：前四句的“瘦骨”“双耳”“四蹄”都是身体部位，后四句的“所向”“托死生”“骁腾”“横行”都是品性和作为，由形到神的分界正在第四、五句之间。",
+        ),
       },
       {
         ask: "下列对诗中修辞和用词的分析，正确的一项是",
@@ -481,6 +557,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Reversed: wind in its hooves means speed.", "意思说反：“风入四蹄轻”是说马奔驰时四蹄生风、轻快，不是站不稳。"),
           t("Wrong sense: one may trust it with one's life.", "词义说错：“托死生”是说可以把性命托付给它，形容马可靠，不是起死回生。"),
         ],
+        check: t(
+          "Check by the images: a slant-cut bamboo tube is sharp and upright like the ears; wind passing under the hooves means they barely touch ground.",
+          "用比喻本身再对：斜削的竹筒尖而挺，正像马耳竖立的样子；“风入四蹄”说风仿佛从蹄下穿过，蹄子几乎不着地，所以说“轻”。",
+        ),
       },
     ],
     answers: [
@@ -524,6 +604,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "理解说错：“无情”是说柳不知兴亡、依旧繁茂，诗人怨的是物是人非，不是柳挡了视线。",
           ),
         ],
+        check: t(
+          "Check by “in vain”: birdsong is not empty in itself; it is so because the dynasties are gone like a dream while the birds sing on.",
+          "用“空”字再对：鸟啼本身无所谓空，诗人说“空啼”，是因为六朝已如梦一般逝去，鸟却照旧啼叫，听的人只觉得空寂，景里带着感伤。",
+        ),
       },
       {
         ask: "下列对这首诗情感的理解，正确的一项是",
@@ -545,6 +629,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "情感说错：诗人说六朝“如梦”，感叹繁华成空，没有追慕帝王功业。",
           ),
         ],
+        check: t(
+          "Check by the title: Taicheng was the palace city of the Six Dynasties; “like a dream” and “as before” set past glory against the present, a lament, not a spring outing or a farewell.",
+          "用诗题再对：台城是六朝宫城的旧址，诗人到此凭吊，“六朝如梦”“依旧”都在说昔盛今衰，所以是吊古伤今，不是游春，也不是送别。",
+        ),
       },
     ],
     analysis: [
@@ -571,6 +659,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "理解说反：说柳“无情”是反语，柳不懂兴亡，正衬出人的多情和伤感，不是厌恶景物。",
           ),
         ],
+        check: t(
+          "Check by “as before”: after the dynasties fell the willows stay the same; the poet calls them heartless to set off his own grief.",
+          "用“依旧”再对：柳“依旧烟笼十里堤”，六朝兴亡之后柳色不变；人有情而世事已变，柳无情而颜色不改，所以说柳“无情”是诗人移情于柳，反衬自己的伤感。",
+        ),
       },
       {
         ask: "下列对这首诗写景的分析，正确的一项是",
@@ -589,6 +681,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Invented: no palace appears.", "无中生有：诗中没有写宫殿，只写江雨、江草、鸟和柳，宫殿早已不在。"),
           t("Reversed: rain and grass first, willows last.", "顺序说反：诗先写江雨、江草，再写鸟，最后写台城柳，不是由柳写到江雨。"),
         ],
+        check: t(
+          "Check by the last two lines: willows mist the long dyke, so it is spring and the scene is bright; the poet thinks of vanished dynasties, and the sorrow deepens against it.",
+          "用后两句再对：柳“依旧烟笼十里堤”，可见正是柳色浓密的春天，景物本是明丽的；诗人却由此想到“六朝如梦”，乐景中的哀情更深。",
+        ),
       },
     ],
     answers: [
@@ -632,6 +728,10 @@ export const poetryPassages: readonly ModernPassage[] = [
             "意思说反：潮生划船、潮平系缆、潮落归去，渔父随潮而动，唱的是“浩歌”，是放声高歌，不是悲歌。",
           ),
         ],
+        check: t(
+          "Check by the second half: “still less” moves from the city gate to the heart of the dusty world; if he fears the one, he will not go to the other.",
+          "用后半句再对：“况肯到红尘深处”，“况”是“何况”，从近城门到红尘深处，一层进一层；连前者都怕，后者更不肯去，正合正确选项。",
+        ),
       },
       {
         ask: "下列对这首词情感的理解，正确的一项是",
@@ -647,6 +747,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Wrong feeling: he lives freely; no poverty or tyranny.", "情感说错：词中渔父一竿一蓑，过得自在，没有写贫困和苛政。"),
           t("Reversed: he fears the city gate.", "情感说反：他“生怕近城门”，更不肯到“红尘深处”，不是向往城市。"),
         ],
+        check: t(
+          "Check by the opening: a rod, a straw cape, wind, moon, mist and rain are all he has; with “nameless fisherman” at the end, it is indifference to fame.",
+          "用开头再对：“一竿风月，一蓑烟雨”，渔父所有的只是一根钓竿、一件蓑衣，伴着风月烟雨，生活清简自在，和结尾的“无名渔父”合起来，正是淡泊名利。",
+        ),
       },
     ],
     analysis: [
@@ -670,6 +774,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           ),
           t("Reversed: wind, moon and mist are ease, not hardship.", "情感说反：风月烟雨是渔父自在生活的画面，透着闲适，不是苦景苦情。"),
         ],
+        check: t(
+          "Check by the pattern: each line starts with the tide, rising, level, falling, and each ends with his action; same frame, linked sense, a parallel series.",
+          "用三句的句式再对：三句都以“潮”开头，“生”“平”“落”依次写潮水的变化，“理棹”“系缆”“浩歌归去”依次写渔父的动作，结构相同、意思相连，正是排比。",
+        ),
       },
       {
         ask: "下列对词的结尾的分析，正确的一项是",
@@ -691,6 +799,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           ),
           t("Reversed: he refuses the comparison.", "情感说反：渔父说“错把”，是不认这个比，自称“无名”，不是得意。"),
         ],
+        check: t(
+          "Check by Yan Guang's story: the old friend of Emperor Guangwu refused office and fished on the Fuchun, where his “fishing terrace” is named; the fisherman lives west of it and goes further, wanting no name at all.",
+          "用严光的故事再对：严光是东汉光武帝的旧友，不肯做官，隐居富春江钓鱼，后人把他钓鱼的地方叫严子陵钓台；词中“家在钓台西住”正接着这个典故，结尾再翻进一层，说自己连名也不要。",
+        ),
       },
     ],
     answers: [
@@ -728,6 +840,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           ),
           t("Reversed: the sounds deepen the quiet he loves.", "理解说反：蝉噪鸟鸣反衬出林更静、山更幽，诗人喜爱这里，并非嫌吵。"),
         ],
+        check: t(
+          "Check by the doubled words: floating and far-reaching, both slow; a rushing stream could not share the sky's calm reach.",
+          "用“泛泛”“悠悠”再对：“泛泛”是漂浮的样子，“悠悠”是悠远的样子，两组叠词都舒缓；若水流湍急，诗人就写不出天空和溪水“共悠悠”的开阔。",
+        ),
       },
       {
         ask: "下列对这首诗情感的理解，正确的一项是",
@@ -746,6 +862,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           ),
           t("Reversed: weary of office, not seeking it.", "情感说反：“悲倦游”是厌倦在外为官奔波，想要归去，不是渴望入朝。"),
         ],
+        check: t(
+          "Check by the last couplet: the wish to go home, weariness of office far away, and “many years”; the scenery stirs a long-gathered fatigue.",
+          "用尾联的两个词再对：“归念”是想回去，“倦游”是厌倦在外宦游，“长年”说明在外已久，正是若耶溪的美景触动了久积的倦意。",
+        ),
       },
     ],
     analysis: [
@@ -766,6 +886,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("Wrong device: no personification, no quarrel.", "手法说错：诗只写蝉在噪、鸟在鸣，没有把它们写成人，也没有争吵。"),
           t("Wrong device and feeling: quiet delight, not unrest.", "手法和情感都错：这两句以动衬静，写幽静的乐趣，诗人并不焦躁。"),
         ],
+        check: t(
+          "Check by experience: total silence goes unnoticed; cicadas and birds make the stillness felt, hence “quieter still”.",
+          "用常理再对：林中若真的一片死寂，人反而不觉得“静”；正因为有蝉噪、鸟鸣，四周的静才被衬托出来，所以说“逾静”“更幽”。",
+        ),
       },
       {
         ask: "下列对这首诗结构和写景的分析，正确的一项是",
@@ -781,6 +905,10 @@ export const poetryPassages: readonly ModernPassage[] = [
           t("The reverse: clouds and sunlight, no storm.", "与原文相反：颔联写云霞生于远山、日影追逐回流，景色明丽，没有狂风骤雨。"),
           t("Not so: the last couplet states feeling.", "与原文不符：尾联“动归念”“悲倦游”是直接抒情，并非只写景物。"),
         ],
+        check: t(
+          "Check by each couplet: boat and water, haze and sunlight, cicadas and birds are scenes; only the last couplet brings thoughts of home and weariness.",
+          "用各联的内容再对：首联写船与水，颔联写霞与日影，颈联写蝉与鸟，都是景；到尾联才出现“归念”“倦游”，情在最后，由景生情。",
+        ),
       },
     ],
     answers: [

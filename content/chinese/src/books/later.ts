@@ -282,13 +282,13 @@ export const laterBooks: readonly BookData[] = [
 错：留在日本教书 || 他回国了，不是留在日本教书。 || he does not stay to teach.
 验：从他的道理对：他说愚弱的国民，体格再健壮也只能做示众的材料，所以要改变精神，就离开了仙台。 || Check by his reason: to change the spirit, not the body.
 
-问：“我”和范爱农第一次相见是在哪里？
-答：日本东京
-据：《范爱农》：在东京的同乡会上，“我”和范爱农为给徐锡麟发电报的事争执，书中两人的交往从这里开始（文中说更早在横滨码头见过一面）。 || “Fan Ainong”: at a meeting in Tokyo the two argue over a telegram about Xu Xilin; their friendship in the book begins there, though he recalls glimpsing Fan earlier at the Yokohama docks.
-错：日本仙台 || 仙台是作者学医的地方，没有遇到范爱农。 || Sendai is where he studied medicine; Fan is not there.
-错：南京 || 南京是作者读书的地方，不是相识处。 || Nanjing is where he studied, not where they met.
-错：绍兴 || 绍兴是后来重逢的地方。 || Shaoxing is where they meet again later.
-验：从后来重逢对：辛亥前后两人在绍兴重逢，范爱农说起在东京时就讨厌“我”，可见是在日本认识的。 || Check by their reunion: in Shaoxing Fan admits he disliked him back in Tokyo.
+问：据《范爱农》，“我”最早是在哪里见到范爱农的？
+答：日本横滨的码头
+据：《范爱农》：“我”和同乡去横滨码头接新到的留学生，看不惯他们带着绣花弓鞋、上了火车还互相让座，对他们摇头，范爱农就在这群人里；后来两人在东京同乡会上为发电报的事争执，辛亥革命后又在绍兴重逢。 || “Fan Ainong”: meeting new students at the Yokohama docks, the narrator shakes his head at their embroidered shoes and their bowing over seats on the train, and Fan is among them; later the two clash in Tokyo over a telegram, and after 1911 they meet again in Shaoxing.
+错：日本东京 || 东京同乡会上两人为给徐锡麟发电报的事当众争执，文章也从这一幕写起，最容易被当成初次见面；可那是第二次碰面，横滨码头那一面更早。 || The Tokyo clash over the telegram for Xu Xilin opens the essay and is easily taken for the first meeting; but it is the second, after the Yokohama docks.
+错：日本仙台 || 仙台是作者学医的地方，《藤野先生》写的就是那里，容易和留日的经历混在一起；范爱农没有到过仙台，两人在那里也没见过。 || Sendai is where he studied medicine, the setting of “Mr Fujino”, and blends with his years in Japan; Fan was never there.
+错：绍兴 || 两人都是绍兴人，辛亥革命后又在绍兴重逢、在师范学校共事，容易当成相识的地方；可那是重逢，两人早在日本就见过。 || Both were from Shaoxing and worked together at its normal school after 1911, so it seems the place they met; but that is a reunion, long after Japan.
+验：从文章的顺序对：文章先写东京同乡会上的争执，再回头补叙更早的横滨码头那一幕，最后写绍兴重逢，三次见面的先后由此可见。 || Check by the order of the essay: it opens on the Tokyo clash, then turns back to the earlier scene at the Yokohama docks, and only then tells of the Shaoxing reunion.
 
 问：范爱农是一个怎样的人？
 答：正直倔强，不肯随波逐流
@@ -580,8 +580,8 @@ export const laterBooks: readonly BookData[] = [
 答：法国
 据：作者生平：法布尔是法国昆虫学家，晚年住在法国南部的塞里尼昂，在那里写完了《昆虫记》。 || The author: Fabre was a French entomologist who spent his last decades at Sérignan in southern France, where he finished the book.
 错：英国 || 法布尔不是英国人，英国的达尔文还写信称赞过他。 || Fabre was not English; it was the Englishman Darwin who praised him.
-错：德国 || 法布尔不是德国人。 || he was not German.
-错：意大利 || 法布尔不是意大利人。 || he was not Italian.
+错：德国 || 德国出过许多博物学家，容易把这位用实验研究昆虫的学者想成德国人；可法布尔生在法国南部的鲁埃格山区，一生没有离开过法国。 || Germany produced many naturalists, so an experimenting entomologist may seem German; but Fabre was born in the Rouergue in southern France and never left France.
+错：意大利 || 法布尔晚年住的塞里尼昂在法国南部，靠近地中海，风土和意大利相近，容易弄混；那里仍是法国的普罗旺斯。 || Sérignan, his home in old age, lies on the Mediterranean side near Italy, which invites the mix-up; but it is Provence, in France.
 验：从《蝉》里的寓言对：他要纠正的是法国诗人拉封丹的《蝉和蚂蚁》，他写的正是法国乡间的蝉。 || Check by “The Cicada”: he corrects the French poet La Fontaine, about the cicadas of southern France.
 
 问：法布尔主要用什么方法研究昆虫？
@@ -596,7 +596,7 @@ export const laterBooks: readonly BookData[] = [
 答：荒石园
 据：《荒石园》：他买下一块长满荆棘、乱石的荒地，叫它“荒石园”，在那里观察昆虫。 || “The Harmas”: he buys a stony waste of thistles and calls it his harmas, the place of his observations.
 错：百草园 || 百草园是鲁迅童年的后园。 || the Hundred-Plant Garden is Lu Xun's childhood garden.
-错：昆虫园 || 书里没有“昆虫园”这个名字。 || there is no “insect garden”.
+错：昆虫园 || 这是照着“动物园”“植物园”的样子拼出来的名字，听着很像；法布尔用的是普罗旺斯方言 harmas，指长满荒草乱石的荒地，所以译作“荒石园”。 || It is a name made on the pattern of “zoo” and “botanical garden”, so it sounds right; Fabre's word is the Provençal harmas, a waste of weeds and stones, hence “the Harmas”.
 错：大观园 || 大观园在《红楼梦》里。 || the Grand View Garden is in Dream of the Red Chamber.
 验：从荒地的样子对：那里满是石头，没人耕种，却正好是昆虫的乐园，名字就叫“荒石园”。 || Check by the place: stony and untilled, a paradise for insects.
 
@@ -611,7 +611,7 @@ export const laterBooks: readonly BookData[] = [
 问：法布尔观察的蝉，幼虫在地下生活多少年？
 答：四年
 据：《蝉》：法布尔说，蝉的幼虫要在地下待四年。 || “The Cicada”: Fabre says the larva lives four years underground.
-错：一年 || 一年太短，书里是四年。 || one year is too short.
+错：一年 || 一年是许多昆虫一代的长度，书里的蟋蟀、螳螂都是一年一代，容易套到蝉身上；法布尔写蝉的幼虫要在地下熬四年。 || One year is the cycle of many insects, such as the book's cricket and mantis, and is easily carried over; the cicada larva spends four years below.
 错：十七年 || 十七年是美洲一种周期蝉，不是法布尔写的蝉。 || seventeen years belongs to an American periodical cicada, not his.
 错：一个月 || 一个月是它出土以后的生活时间。 || a month is its life above ground.
 验：从下一题对：地下四年，地上一个多月，作者用这对比感叹蝉的一生。 || Check by the contrast he draws: four years below, a month in the sun.
@@ -620,8 +620,8 @@ export const laterBooks: readonly BookData[] = [
 答：一个多月
 据：《蝉》：蝉在地下四年，出土后在阳光下只能活一个多月。 || “The Cicada”: after four years below, it lives little more than a month in the sun.
 错：四年 || 四年是它在地下的时间。 || four years is its time underground.
-错：一年 || 一年不是书里的数。 || a year is not the book's number.
-错：一天 || 一天太短。 || a day is far too short.
+错：一年 || 蝉每年夏天都会出现，容易以为一只蝉能活一整年；其实每年的蝉都是新出土的，一只蝉在阳光下只活一个多月。 || Cicadas appear every summer, so one may think a cicada lives a year; each summer's are newly emerged, and each lives little more than a month in the sun.
+错：一天 || 这是和朝生暮死的蜉蝣混在了一起，又把“生命短暂”想得过了头；法布尔写的是一个多月，并感叹四年黑暗只换来一个月阳光。 || It confuses the cicada with the mayfly that lives a day; Fabre gives a little over a month, four years of dark for one month of sun.
 验：从作者的感叹对：“四年黑暗中的苦工，一个月阳光下的享乐”，正是这两个时间的对比。 || Check by his words: four years of toil in the dark, a month of joy in the light.
 
 问：蝉的地洞口为什么没有一堆土？
@@ -636,7 +636,7 @@ export const laterBooks: readonly BookData[] = [
 答：爬到树枝或草茎上
 据：《蝉》：幼虫出洞后，爬到附近的树枝或草茎上，抓牢了再蜕皮。 || “The Cicada”: out of the hole, the larva climbs a twig or stem, holds fast and sheds its skin.
 错：在地洞里 || 它是出了地洞才蜕皮的。 || it moults only after it leaves the hole.
-错：在水里 || 书里没有在水里蜕皮。 || it does not moult in water.
+错：在水里 || 蜻蜓的幼虫在水里长大，爬出水面才蜕皮，容易和蝉混淆；蝉的幼虫一直在干燥的土里，出洞后爬上树枝或草茎蜕皮，和水无关。 || The dragonfly nymph grows in water and moults on leaving it, which invites the mix-up; the cicada larva lives in dry soil and moults on a twig or stalk.
 错：在平地上 || 它要爬到高处抓牢，不在平地上。 || it climbs; it does not moult on the ground.
 验：从蜕皮的样子对：它倒挂着慢慢翻出身子，必须先抓住树枝，才能悬在空中蜕皮。 || Check by how it moults: it hangs head down, which needs a grip on a twig.
 
@@ -651,24 +651,24 @@ export const laterBooks: readonly BookData[] = [
 问：法布尔为了试一试蝉的听觉，做了什么？
 答：在树下放土炮
 据：《蝉》：法布尔借来乡里过节用的土炮，在梧桐树下放了两响，试蝉听不听得见。 || “The Cicada”: he borrows the village's festival cannon and fires it twice beneath the plane trees.
-错：在树下敲锣 || 书里用的是土炮，不是锣。 || a cannon, not a gong.
-错：在树下大声喊叫 || 书里不是喊叫。 || not shouting.
+错：在树下敲锣 || 乡下常敲锣放炮吓唬鸟兽，所以听着像；可法布尔要的是最响的声音，借来的是乡里过节用的土炮，放了两响。 || Country people bang gongs to scare birds, so it sounds right; but Fabre wanted the loudest noise and borrowed the village's festival cannon.
+错：在树下大声喊叫 || 喊叫是试听觉最先想到的办法；可法布尔说人在树下说话、拍手、吹口哨，蝉都不理，要试就得用更响的声音，于是放了土炮。 || Shouting is the first test one thinks of; but Fabre notes the cicadas ignore talk, clapping and whistling below, so he needed something louder, the cannon.
 错：把蝉捉进屋里 || 他是在树下现场试，没有捉进屋。 || he tests them in the tree, not indoors.
 验：从实验的设计对：要试听觉，声音越响越好，所以用了最响的土炮。 || Check by the design: the loudest sound he could find.
 
 问：放炮以后，树上的蝉怎么样？
 答：照样唱，像没听见一样
 据：《蝉》：放炮以后，树上的蝉照样唱，像什么也没听见一样。 || “The Cicada”: after the shots the cicadas sing on as if they heard nothing.
-错：全都飞走了 || 蝉没有被吓走。 || none flies away.
-错：停止了歌唱 || 蝉没有停止歌唱。 || none stops singing.
-错：唱得更响了 || 它们的声音没有变化。 || their song does not change.
+错：全都飞走了 || 这是照常理推的：枪声一响鸟会惊飞，蝉似乎也该飞走；可书里一只也没飞，法布尔正由此推想蝉可能听不见。 || By common sense a shot scatters birds, so the cicadas should fly; none did, which is why Fabre suspects they cannot hear.
+错：停止了歌唱 || 人走近树下时，蝉确实会忽然停叫，容易想到放炮也会让它停；可那是它眼睛灵、看见了人影，放炮时它们照样唱。 || A cicada does fall silent when someone comes near, which suggests this; but that is its sharp sight, and at the shots they sang on.
+错：唱得更响了 || 有人以为受惊的蝉会像受惊的鸟兽那样叫得更急；书里放炮前后，蝉的歌声节奏和音量都没有一点变化。 || One might expect a startled cicada to call louder like a startled bird; before and after the shots its song did not change at all.
 验：从他的结论对：他说蝉也许听觉很迟钝，或者根本听不见，正因为放炮后毫无反应。 || Check by his conclusion: they hear poorly or not at all.
 
 问：法布尔发现，蝉刚产下的卵常被谁破坏？
 答：一种很小的蚋
 据：《蝉》：蝉刚产下卵，一种很小的蚋就跟在后面，把自己的卵产进蝉的卵里。 || “The Cicada”: no sooner has she laid than a tiny gnat follows and lays its eggs among hers.
 错：蚂蚁 || 书里破坏蝉卵的是蚋，不是蚂蚁。 || the gnat, not the ant.
-错：蜘蛛 || 书里不是蜘蛛。 || not a spider.
+错：蜘蛛 || 蜘蛛在树上结网，专捉小虫，容易想成是它破坏了蝉卵；书里那个是一种很小的蚋，跟在产卵的蝉后面，把自己的卵产进蝉卵里，孵出的幼虫吃掉蝉卵。 || Spiders web the trees and catch small insects, so they seem likely; the culprit is a tiny gnat that lays in the cicada's eggs, and its grubs eat them.
 错：螳螂 || 螳螂会吃蝉，但不是破坏卵的那一个。 || the mantis eats cicadas but does not spoil the eggs.
 验：从蚋的样子对：它小得蝉都不在意，就在蝉身边产卵，蝉却毫无办法。 || Check by its size: so small the cicada ignores it.
 
@@ -685,21 +685,21 @@ export const laterBooks: readonly BookData[] = [
 据：《螳螂》：遇到大蝗虫，螳螂张开翅膀，竖起身子，摆出吓人的姿势。 || “The Mantis”: faced with a big locust, it spreads its wings and rears up in a fearsome pose.
 错：缩成一团装死 || 它不装死，而是摆出吓人的样子。 || it does not play dead; it threatens.
 错：飞到高处躲起来 || 它不躲，而是正面迎上去。 || it does not hide; it faces the prey.
-错：吐出难闻的液体 || 书里没写它吐液体。 || it sprays nothing.
+错：吐出难闻的液体 || 椿象一类的虫受惊时会放出臭液，容易套到螳螂身上；螳螂对付大猎物靠的是张开翅膀、竖起身子、摆出吓人的姿势。 || Stink bugs release a foul liquid when alarmed, which is easily carried over; the mantis instead spreads its wings and rears up to frighten.
 验：从结果对：蝗虫被吓得不敢动，螳螂就扑上去，可见这姿势是为了吓住猎物。 || Check by the result: the locust freezes, and the mantis strikes.
 
 问：法布尔观察到雌螳螂有时会做出什么令人吃惊的事？
 答：吃掉雄螳螂
 据：《螳螂》：法布尔看到雌螳螂有时会吃掉雄螳螂。 || “The Mantis”: Fabre sees the female sometimes eat the male.
-错：吃掉自己的卵 || 书里没写它吃自己的卵。 || it does not eat its eggs.
+错：吃掉自己的卵 || 这是从“雌螳螂吃掉雄螳螂”这件惊人的事推出去的；书里她吃的是雄螳螂，卵则好好地封在泡沫卵囊里。 || It stretches the startling fact that she eats the male; her eggs stay sealed in the froth case.
 错：和雄螳螂一起照顾卵 || 书里雄螳螂常被吃掉，不会一起照顾卵。 || the male is often eaten; he tends no eggs.
-错：把卵送给别的螳螂 || 书里没写它把卵送人。 || it gives its eggs to none.
+错：把卵送给别的螳螂 || 这像是和杜鹃把蛋下在别的鸟巢里混在了一起；螳螂把卵产在自己做的泡沫卵囊里，产完就走，不托给别人。 || It seems confused with the cuckoo that lays in other nests; the mantis lays in her own froth case and leaves it.
 验：从作者的态度对：他说这种事让人吃惊，正和螳螂“祈祷”的样子形成反差。 || Check by his surprise: so unlike its praying look.
 
 问：螳螂把卵产在哪里？
 答：泡沫凝成的卵囊里
 据：《螳螂》：雌螳螂产卵时排出泡沫，泡沫凝固成卵囊，卵就在里面。 || “The Mantis”: the female lays in a froth that hardens into an egg case.
-错：泥土下的洞穴里 || 书里不是地下的洞穴。 || not a burrow.
+错：泥土下的洞穴里 || 书里的蝉、蟋蟀、黄蜂都住在地下的洞里，容易把螳螂也想成这样；螳螂的卵囊是泡沫凝成的，粘在树枝、石头上，露在地面以上。 || The book's cicada, cricket and wasp all live in burrows, so the mantis seems to as well; its egg case is hardened froth, stuck to twigs or stones above ground.
 错：蝉的卵里 || 螳螂不把卵产在蝉卵里，那是蚋。 || the gnat lays in the cicada's eggs, not the mantis.
 错：树叶背面的丝网上 || 丝网是蜘蛛的。 || silk is the spider's.
 验：从卵囊的样子对：法布尔描写它像一团硬化的泡沫，能挡住冬天的寒冷。 || Check by its look: a hardened froth against the winter.
@@ -707,25 +707,25 @@ export const laterBooks: readonly BookData[] = [
 问：圣甲虫滚粪球时，常有另一只来“帮忙”，它其实想做什么？
 答：趁机把粪球抢走
 据：《圣甲虫》：一只圣甲虫滚粪球时，常有另一只赶来装作帮忙，其实是想把粪球抢走。 || “The Sacred Beetle”: while one rolls its ball, another often comes as if to help, but means to steal it.
-错：帮配偶一起干活 || 法布尔说这不是配偶。 || Fabre says it is no mate.
-错：教小圣甲虫滚球 || 不是教小圣甲虫。 || it teaches no young.
-错：真心帮朋友的忙 || 它不是真心帮忙。 || it is not a true friend.
+错：帮配偶一起干活 || 两只圣甲虫一起推一个粪球，看上去像夫妻合作，从前许多人也这样以为；法布尔观察到赶来的那只常和推球的同是一个性别，不是配偶，是来抢球的。 || Two beetles pushing one ball look like a couple, as many once believed; Fabre found the newcomer is often of the same sex, no mate but a thief.
+错：教小圣甲虫滚球 || 两只一前一后地推，容易想成大的在教小的；可圣甲虫的幼虫在地下的梨形粪团里长大，从不跟着父母学滚球，赶来的那只是想抢球的成虫。 || Two pushing together may look like a parent teaching; but the larva grows underground in its pear and never learns from a parent; the newcomer is an adult thief.
+错：真心帮朋友的忙 || 这是照“帮忙”两个字的字面去理解的，可题目里的“帮忙”加了引号；法布尔写那只一有机会就推开主人，把粪球抢走。 || It takes “help” literally, though the question puts it in quotation marks; Fabre shows the helper seizing the ball at the first chance.
 验：从结果对：主人一不留神，“帮忙”的那只就推着粪球跑了，可见是小偷。 || Check by the result: the helper makes off with the ball.
 
 问：雌圣甲虫给幼虫准备的粪团是什么形状？
 答：梨形
 据：《圣甲虫》：雌圣甲虫给幼虫做的粪团是梨形的，卵就产在细的那一头。 || “The Sacred Beetle”: for its larva the female shapes a pear, and lays the egg in the neck.
 错：圆球形 || 圆球是它滚着吃的粪球。 || the round ball is food for itself.
-错：方块形 || 书里没有方块形。 || there is no cube.
-错：长条形 || 书里没有长条形。 || there is no long strip.
+错：方块形 || 方块是人想出来的规整形状，听着像精心做成的；可圣甲虫是用头、足一点点拍压粪料，做出来只能是圆的，雌虫再拉出细颈，成为梨形。 || A cube is a tidy human shape and sounds carefully made; but the beetle pats the dung with head and legs, which yields only a round mass, drawn out into a pear with a neck.
+错：长条形 || 也许是想到幼虫是长条的，就以为粪团也做成长条；书里的粪团是梨形，粗的一头给幼虫吃，卵产在细颈那头，细颈里通着空气。 || Perhaps one pictures the long larva and imagines a long roll; the mass is a pear, the thick end food for the larva and the egg in the airy neck.
 验：从幼虫对：梨形的细颈里通气，幼虫出生就有食物，形状正是为幼虫设计的。 || Check by the larva: air in the neck, food all round.
 
 问：古埃及人怎样看待圣甲虫？
 答：把它当作神圣的象征
 据：《圣甲虫》：古埃及人把圣甲虫当作神圣的象征，把它刻在石头上。 || “The Sacred Beetle”: the ancient Egyptians held it sacred and carved it in stone.
 错：把它当作可怕的害虫 || 古埃及人敬它，不是当害虫。 || they revered it, not feared it.
-错：把它当作美味的食物 || 书里没写他们吃它。 || they did not eat it.
-错：把它当作治病的药 || 书里没写拿它治病。 || it was no medicine.
+错：把它当作美味的食物 || 有些地方的人确实吃虫，法布尔在《蝉》里还照古书的说法试着尝过蝉的幼虫，容易推到圣甲虫身上；古埃及人敬它，把它刻在石头上当神圣的象征。 || Some people do eat insects, and in “The Cicada” Fabre even tastes a larva to test an old book; but the Egyptians revered the scarab and carved it as a sacred sign.
+错：把它当作治病的药 || 中药里有用蝉蜕入药的，容易把“昆虫入药”套到圣甲虫上；古埃及人看它滚粪球像太阳运行，把它当作神圣的象征。 || Chinese medicine does use cicada skins, which invites the transfer; the Egyptians saw the rolling ball as the sun's course and held the scarab sacred.
 验：从名字对：“圣甲虫”的“圣”字就来自古埃及人对它的崇拜。 || Check by the name: “sacred” comes from that worship.
 
 问：蟋蟀的住宅通常选在什么地方？
@@ -739,25 +739,25 @@ export const laterBooks: readonly BookData[] = [
 问：法布尔为什么称赞蟋蟀的住宅？
 答：工具简单，却建得十分用心
 据：《蟋蟀》：蟋蟀的工具只有前足和大颚，却把住宅建得很用心，经常修整。 || “The Cricket”: with only its forelegs and jaws, it builds and keeps its home with care.
-错：住宅比别的昆虫都大 || 它的住宅并不大。 || its home is not large.
-错：是许多蟋蟀一起建的 || 是一只蟋蟀自己建的。 || one cricket builds alone.
-错：里面装饰得很漂亮 || 它看重的是实用，不是装饰。 || it is practical, not decorated.
+错：住宅比别的昆虫都大 || 题目说“称赞”，容易以为是因为又大又气派；书里蟋蟀的洞只是一条斜斜的隧道，法布尔称赞的是它工具简单，却选址讲究、经常修整。 || “Praise” suggests something grand; the burrow is a simple slanting tunnel, and Fabre praises the care of its siting and upkeep with such simple tools.
+错：是许多蟋蟀一起建的 || 蚂蚁、蜜蜂是成群筑巢的，容易和它们混淆；蟋蟀独居，一只用前足和大颚自己挖洞，也不让别的蟋蟀住进来。 || Ants and bees build in crowds, which invites the mix-up; the cricket lives alone, digging with its forelegs and jaws and admitting no other.
+错：里面装饰得很漂亮 || 说到“住宅”，容易想到房子要好看；法布尔写它的家朴素实用，讲的是向阳、干燥、排水好，门口有一丛草半掩着。 || A “house” suggests ornament; Fabre's cricket home is plain and useful, sunny, dry and drained, with a tuft of grass half hiding the door.
 验：从工具对：工具那么简单，住宅却那么整齐，作者才称赞它是建筑家。 || Check by the tools: so simple, so neat a house.
 
 问：蟋蟀是怎样“唱歌”的？
 答：两片前翅互相摩擦
 据：《蟋蟀》：蟋蟀把两片前翅互相摩擦，发出声音。 || “The Cricket”: it rubs its two forewings together.
-错：张开嘴巴鸣叫 || 蟋蟀不是用嘴叫的。 || it does not sing with its mouth.
-错：用后腿敲打地面 || 书里不是用后腿敲地。 || not by drumming its legs.
+错：张开嘴巴鸣叫 || 人和鸟都用嘴唱歌，“唱歌”两个字容易让人想到嘴；蟋蟀的嘴不出声，是右前翅上的音锉刮着左前翅发声的。 || People and birds sing with their mouths, so “singing” suggests one; the cricket's sound comes from the file on one forewing scraping the other.
+错：用后腿敲打地面 || 蝗虫是用后腿摩擦翅膀发声的，容易把“后腿”记到蟋蟀身上；蟋蟀发声靠的是两片前翅互相摩擦，不用腿。 || Grasshoppers sound by rubbing hind legs on wings, and the legs get transferred; the cricket rubs its two forewings and uses no legs.
 错：振动腹部的鼓膜 || 用腹部发声的是蝉。 || the abdomen is the cicada's.
 验：从翅膀的构造对：一片前翅上有像锉一样的齿，一片上有刮片，一擦就响。 || Check by the wing: a file on one, a scraper on the other.
 
 问：萤火虫主要吃什么？
 答：蜗牛
 据：《萤火虫》：萤火虫主要吃蜗牛。 || “The Glow-worm”: it feeds mainly on snails.
-错：花蜜 || 书里不是花蜜。 || not nectar.
-错：树叶 || 书里不是树叶。 || not leaves.
-错：蚂蚁 || 书里不是蚂蚁。 || not ants.
+错：花蜜 || 萤火虫夏夜在花草间飞，容易以为它像蜜蜂、蝴蝶那样采蜜；法布尔写的萤火虫是肉食的猎手，专吃蜗牛。 || Glow-worms fly among flowers on summer nights, so they seem to sip nectar like bees; Fabre's glow-worm is a hunter that eats snails.
+错：树叶 || 萤火虫的幼虫样子像小毛虫，容易想成它和毛虫一样啃树叶；书里它是吃肉的，捕食蜗牛。 || Its larva looks like a little caterpillar, so it seems to eat leaves; in the book it is a meat-eater that hunts snails.
+错：蚂蚁 || 小虫吃更小的蚂蚁，听上去合乎常理；可萤火虫吃的是比它大得多的蜗牛，靠的正是先麻醉、再化成汁液吸食。 || A small insect eating smaller ants sounds natural; but the glow-worm eats snails far bigger than itself, by numbing and then liquefying them.
 验：从下一题对：法布尔写它怎样对付蜗牛，正说明蜗牛是它的食物。 || Check by the next scene: it is snails it hunts.
 
 问：萤火虫是怎样对付蜗牛的？
@@ -771,32 +771,32 @@ export const laterBooks: readonly BookData[] = [
 问：萤火虫的光是从哪里发出来的？
 答：腹部的末端
 据：《萤火虫》：萤火虫的光是从腹部末端发出来的。 || “The Glow-worm”: its light comes from the tip of the abdomen.
-错：头部 || 头部不发光。 || not the head.
-错：翅膀 || 翅膀不发光。 || not the wings.
-错：腿上 || 腿不发光。 || not the legs.
+错：头部 || 容易想到矿工帽上的灯，以为光在前头照路；萤火虫的光在腹部末端的几节，法布尔说那是它尾上的“灯”。 || One thinks of a miner's lamp lighting the way ahead; the glow-worm's light is in the last segments of the abdomen, its lamp at the tail.
+错：翅膀 || 夜里看萤火虫飞，光点随着翅膀移动，容易以为翅膀在发光；可法布尔写的雌萤火虫几乎没有翅膀，却亮得最明，光在腹部末端。 || In flight the light moves with the wings, which suggests them; but Fabre's female is almost wingless and shines brightest, from the tip of the abdomen.
+错：腿上 || 萤火虫的光确实在身体下面，从底下看像是挨着腿，容易弄混；法布尔写清楚了，发光的是腹部最后几节，不是腿。 || The light is on the underside and may seem near the legs from below; Fabre is clear it comes from the last segments of the abdomen.
 验：从它的样子对：夜里看到的光点都在它身体的尾部。 || Check by the night: the glow is at its tail.
 
 问：松毛虫外出时有什么特点？
 答：一条跟着一条排成长队
 据：《松毛虫》：松毛虫外出时一条跟着一条，排成长长的队伍。 || “The Pine Processionary”: it goes out in single file, a long procession.
-错：成群地乱飞乱爬 || 它们不乱，排得整整齐齐。 || they never scatter.
-错：总是单独行动 || 它们总是成队行动。 || they always go together.
-错：由最大的一条背着走 || 没有背着走的。 || no one carries another.
+错：成群地乱飞乱爬 || 这是把松毛虫想成了成群的蝗虫、蚊子；松毛虫是毛虫，还不会飞，书里它们出门一条接一条，排得整整齐齐。 || It pictures them as swarming locusts or gnats; caterpillars cannot fly, and in the book they leave nose to tail in perfect order.
+错：总是单独行动 || 大多数毛毛虫是独自在叶子上啃食的，容易套过来；松毛虫是群居的，同住一个丝巢，外出也成队。 || Most caterpillars feed alone on a leaf, which is easily carried over; the processionary lives in a shared silk nest and goes out in file.
+错：由最大的一条背着走 || 书里写过狼蛛把小蜘蛛背在背上，容易把“背着走”记到松毛虫身上；松毛虫各爬各的，只是首尾相连。 || The book's wolf spider carries her young on her back, and the image gets transferred; each caterpillar crawls by itself, nose to tail.
 验：从名字对：它的法文名字就是“列队行进的毛虫”。 || Check by its name: the procession caterpillar.
 
 问：松毛虫靠什么跟住前面的伙伴？
 答：前面的虫吐下的丝
 据：《松毛虫》：每条松毛虫一边走一边吐丝，后面的就顺着丝走。 || “The Pine Processionary”: each spins a thread as it goes, and the next follows it.
-错：伙伴身上的气味 || 书里靠的是丝，不是气味。 || silk, not scent.
-错：伙伴发出的声音 || 书里没写它们发声。 || they make no sound.
+错：伙伴身上的气味 || 蚂蚁靠气味认路，这是最容易想到的答案；法布尔看到的是每条虫边走边吐丝，路上留下一条丝带，后面的顺着丝走。 || Ants follow scent, so it is the obvious guess; Fabre saw each caterpillar spin as it goes, laying a ribbon of silk for the next.
+错：伙伴发出的声音 || 雁群、羊群会叫着招呼同伴，容易套到虫队上；松毛虫一路不出声，靠的是前面伙伴吐下的丝。 || Geese and sheep call to keep together, which is easily carried over; the caterpillars move in silence, guided by the silk ahead.
 错：伙伴身上的亮光 || 发光的是萤火虫。 || the glow-worm is the one that shines.
 验：从花盆实验对：法布尔擦掉丝，后面的就走不下去，可见靠的是丝。 || Check by the rim: wipe the thread and they stop.
 
 问：法布尔让松毛虫队伍在花盆边上首尾相接，结果怎样？
 答：绕着盆沿转了好几天
 据：《松毛虫》：法布尔让队伍在花盆边上首尾相接，它们绕着盆沿转了七天。 || “The Pine Processionary”: when the file closes into a ring on a vase rim, they circle for seven days.
-错：马上找到了出路 || 它们找不到出路。 || they find no way out.
-错：领头的带大家爬了下来 || 首尾相接后就没有领头的了。 || once the ring closes there is no leader.
+错：马上找到了出路 || 照常理，饿了就会离开去找吃的；可它们只顺着盆沿上的丝一圈圈转，好几天都离不开，不远处的松叶也不去吃。 || By common sense hunger should drive them off; but they keep to the silk on the rim for days, ignoring the pine needles close by.
+错：领头的带大家爬了下来 || 平时队伍确实有领头的那一条，容易以为它会带大家下来；首尾一接上，领头的也成了跟随者，只顺着前面的丝走。 || A procession normally has a leader, so it seems one would lead them down; once the ring closes, the leader is a follower too.
 错：当天就全部饿死了 || 它们转了好几天，没有当天饿死。 || they circle for days, not dying that day.
 验：从下一题对：转了那么久都走不出去，正说明它们只会跟着走。 || Check by the next question: they only follow.
 
@@ -804,24 +804,24 @@ export const laterBooks: readonly BookData[] = [
 答：它们只会盲目地跟随
 据：《松毛虫》：几天里它们一直跟着前面的丝转，明明不远处就有松叶，却不会离开圈子。 || “The Pine Processionary”: for days they follow the thread, though pine needles lie close by.
 错：它们非常聪明 || 正相反，这实验说明它们不聪明。 || on the contrary, it shows no intelligence.
-错：它们记忆力很好 || 它们只是跟着丝，不靠记忆。 || they follow silk, not memory.
-错：它们喜欢转圈游戏 || 它们是饿着转圈，不是在玩。 || they circle hungry, not at play.
+错：它们记忆力很好 || 有人以为它们是记住了路线才回巢的；可实验里它们一点也不记得这圈已经走过无数次，这正说明靠的是丝，不是记忆。 || Some think they find home by remembering the way; but they never notice they have walked the ring countless times, which shows it is silk, not memory.
+错：它们喜欢转圈游戏 || 只看一圈圈地转，像在玩耍，这是从表面看的；法布尔写它们又饿又累，几天走不出来，是被跟随的本能困住了。 || Seen from outside the circling looks like play; Fabre shows them hungry and tired for days, trapped by the instinct to follow.
 验：从食物对：饿了好几天还不离开圈子去吃近处的松叶，只能说是盲目跟随。 || Check by the food: hungry, they still will not leave the ring.
 
 问：园蛛躲在网外，怎样知道网上有了猎物？
 答：靠一根信号丝感到振动
 据：《园蛛》：园蛛躲在网外，用一根丝连着网，网上一有动静，丝就振动报信。 || “The Garden Spider”: hidden outside its web, it holds a thread tied to it, which trembles when prey is caught.
-错：用眼睛一直盯着网 || 它躲在外面，不盯着网。 || it hides; it does not watch.
-错：闻到猎物的气味 || 书里不是靠气味。 || not by smell.
-错：听到猎物的叫声 || 书里不是靠听声音。 || not by sound.
+错：用眼睛一直盯着网 || 我们常在网中央看见蜘蛛，容易以为它一直守着网看；园蛛白天多躲在旁边的叶子下，看不见网，全凭信号丝。 || We often see a spider at the hub and assume it watches; the garden spider hides by day under a nearby leaf, out of sight of the web.
+错：闻到猎物的气味 || 许多动物靠嗅觉找猎物，容易推到园蛛身上；园蛛隔着一段距离躲着，靠的是脚下那根信号丝传来的振动。 || Many animals hunt by smell, so it seems likely; the spider hides at a distance and feels the shaking of the signal line under its foot.
+错：听到猎物的叫声 || 猎物落网会拼命挣扎，人容易想成蜘蛛是“听见”了；园蛛感到的是挣扎带来的丝的振动，不是声音。 || A trapped insect struggles, so one imagines the spider hears it; what reaches the spider is the trembling of the line, not sound.
 验：从作者的比喻对：他把这根丝比作电报线，靠的正是振动。 || Check by his figure: he calls it a telegraph wire.
 
 问：一些捕猎的蜂为什么把猎物蜇得不死不活？
 答：让幼虫一直有新鲜的食物
 据：《昆虫记》写捕猎蜂的篇章：蜂把猎物蜇得麻醉而不死，让幼虫一直吃到新鲜的食物。 || The chapters on hunting wasps: they paralyse their prey without killing it, so the larva has fresh food.
 错：它们自己吃不完 || 书里说是为了幼虫，不是吃不完。 || it is for the larva, not surplus.
-错：想把猎物养作宠物 || 不是当宠物。 || not as pets.
-错：怕猎物死后报复 || 不是怕报复。 || not for fear of revenge.
+错：想把猎物养作宠物 || 这是从“不死不活地养着”联想出来的；蜂把猎物麻醉后放在洞里，产卵在它身上，是给幼虫留着当食物的。 || It comes from the idea of keeping the prey alive; the wasp stores the numbed prey in its burrow and lays an egg on it as food for the larva.
+错：怕猎物死后报复 || 这是把人的心思加到了蜂身上；法布尔写蜂刺的是猎物的神经中枢，让它不能动又不腐烂，幼虫就能一直吃到新鲜的肉。 || It gives the wasp a human motive; Fabre shows it stings the prey's nerve centres so that it can neither move nor rot, and the larva eats fresh meat.
 验：从幼虫对：猎物死了会腐烂，活着又会反抗，只有麻醉不死才最合适。 || Check by the larva: dead prey rots, live prey fights back.
 
 问：法布尔写的黄蜂，把巢建在哪里？
@@ -829,7 +829,7 @@ export const laterBooks: readonly BookData[] = [
 据：《黄蜂》：法布尔写的黄蜂把巢建在地下的洞里。 || “The Wasp”: the wasps Fabre describes build their nest in a hole in the ground.
 错：高高的树枝上 || 把巢挂在树上的是别的蜂类，书里写的黄蜂在地下。 || others hang nests in trees; his wasps live underground.
 错：人家的屋檐下 || 屋檐下筑巢的是别的蜂，书里不是。 || eave-nesting is another kind.
-错：小河的水面上 || 水面上不能筑巢。 || no nest floats on a stream.
+错：小河的水面上 || 这像是和水边常见的蜻蜓、水黾混在了一起；黄蜂的巢是嚼碎木屑做成的纸质巢，怕水，书里它们把巢建在地下的洞里。 || It seems mixed up with the dragonflies and pond skaters of the water's edge; the wasp's nest is paper made of chewed wood, which water ruins, and it is built underground.
 验：从实验对：他用玻璃罩罩住地下巢的出口，观察黄蜂怎样出不来，正说明巢在地下。 || Check by his experiment: he covers the hole in the ground with a glass bell.
 
 问：法布尔在书中常常怎样写昆虫？
@@ -844,15 +844,15 @@ export const laterBooks: readonly BookData[] = [
 答：一连几个小时耐心等待
 据：全书：法布尔观察昆虫常常一连几个小时守在一处，耐心等待。 || The book as a whole: he often waits for hours in one spot.
 错：看一眼就下结论 || 他从不草率下结论，反复观察。 || he never concludes in haste.
-错：请别人替他观察 || 他坚持亲自观察。 || he watches for himself.
-错：只在实验室里观察 || 他主要在野外观察。 || he watches mostly in the open.
+错：请别人替他观察 || 法布尔的家人确实帮过他，孩子们常在园里替他留意虫子，容易由此以为他让别人代劳；可书里关键的观察都是他亲自守着，一连几个小时等待。 || His family did help, the children watching the garden for him, which invites this; but every key observation in the book he makes himself, waiting for hours.
+错：只在实验室里观察 || 说到做实验，容易想到实验室；法布尔的“实验室”就是荒石园和野地，他在活的昆虫身边观察，不把它们关在屋里。 || Experiments suggest a laboratory; Fabre's laboratory is the Harmas and the open field, where he watches living insects instead of shutting them indoors.
 验：从园蛛对：他为看园蛛织网，常常天不亮就起来守着，正是耐心等待。 || Check by the spider: he rises before dawn to watch it spin.
 
 问：《昆虫记》最能体现法布尔什么精神？
 答：热爱生命，严谨求实
 据：全书：法布尔一生热爱昆虫，几十年如一日地观察和实验，严谨求实。 || The book as a whole: he loves insects all his life and observes for decades with rigour.
 错：为了出名，不择手段 || 他晚年才出名，不是为了名声。 || he won fame only late, and never sought it.
-错：只关心有用的害虫 || 他关心所有昆虫，不只害虫。 || he cares for every insect, not just pests.
+错：只关心有用的害虫 || 农学家常只研究害虫和益虫，容易以为他也只看对人有用的；可他写的蝉、圣甲虫、萤火虫，大多和庄稼无关，他关心的是它们怎样生活。 || Agricultural scientists often study only pests, so one may assume he did; but his cicada, scarab and glow-worm mostly have nothing to do with crops; he cares how they live.
 错：相信书本，不信观察 || 他相信观察，常纠正书本上的错误。 || he trusts observation and corrects books.
 验：从蝉的寓言对：他用观察纠正了拉封丹寓言里“蝉向蚂蚁借粮”的说法，正是求实精神。 || Check by the fable: he corrects La Fontaine's cicada begging from the ant.
 `,
@@ -1449,7 +1449,7 @@ export const laterBooks: readonly BookData[] = [
 答：英国
 据：勃朗特一家住在英格兰约克郡的哈沃斯，书里的盖茨黑德、洛伍德、桑菲尔德都在英格兰北部。 || The Brontës lived at Haworth in Yorkshire, and Gateshead, Lowood and Thornfield are all in northern England.
 错：法国 || 法国是阿黛勒和她母亲的故乡，不是作者的国家。 || France is Adèle's homeland, not the author's.
-错：美国 || 美国在书里没有出现。 || America plays no part in the book.
+错：美国 || 说到用英语写作的大作家，有人先想到美国；可勃朗特一家住在英格兰北部约克郡的哈沃斯，书里的盖茨黑德、桑菲尔德也都在英格兰。 || English-language writers bring America to mind for some; but the Brontës lived at Haworth in Yorkshire, and Gateshead and Thornfield are in England.
 错：俄国 || 俄国作家是托尔斯泰、屠格涅夫那一类，勃朗特是英国人。 || Russian writers are Tolstoy or Turgenev; Brontë is English.
 验：从书里的远方对：要去传教的地方是英国的殖民地印度，罗切斯特的妻子来自西印度群岛，都是从英国看出去的“远方”。 || Check by the far places: India and the West Indies are distant lands seen from England.
 
@@ -1459,12 +1459,12 @@ export const laterBooks: readonly BookData[] = [
 错：十五世纪 || 十五世纪英国还没有长篇小说。 || in the fifteenth century England had no novels yet.
 错：十七世纪 || 十七世纪还早；连《鲁滨逊漂流记》也是1719年，十八世纪才出。 || the seventeenth is too early; even Robinson Crusoe came out in 1719.
 错：二十世纪末 || 二十世纪末离作者去世已经一百多年。 || the late twentieth century is more than a century after her death.
-验：从书里的交通对：简去桑菲尔德、离开桑菲尔德都坐马车，还没有坐火车的情节，是十九世纪上半叶的英国。 || Check by travel: Jane goes everywhere by coach, early nineteenth-century England.
+验：从书里的新书对：第三十二章圣约翰给在莫尔顿教书的简送来一本新出版的书，是司各特的长诗《玛米恩》，这首诗1808年出版，可见故事本身就发生在十九世纪初，小说当然写于十九世纪。 || Check by a new book: in chapter 32 St John brings Jane at Morton a new publication, Scott's Marmion, which came out in 1808; the story itself is set early in the nineteenth century, so the novel can be no earlier.
 
 问：这部小说是用什么人称来讲述的？
 答：第一人称，由简自己讲述
 据：全书由简用“我”来讲，最后一章开头就是“读者，我嫁给了他”。 || Jane tells it as “I”; the last chapter opens “Reader, I married him.”
-错：第三人称，由一位旁观者讲述 || 书里没有旁观者，简自己说“我”。 || there is no onlooker; Jane says “I”.
+错：第三人称，由一位旁观者讲述 || 许多小说用第三人称讲，像《雾都孤儿》，所以容易选；可《简·爱》从第一句起就是“我”在讲，没有一个旁观的叙述者。 || Many novels, Oliver Twist among them, use the third person, so it tempts; but Jane Eyre is told by “I” from its first sentence, with no onlooking narrator.
 错：由罗切斯特写的日记组成 || 书里没有罗切斯特的日记，他的往事是他自己对简讲的。 || there is no diary; Rochester tells his past to Jane.
 错：由几个人轮流讲述 || 只有简一个人讲，别人的事都是从简听来的。 || Jane alone narrates; others' stories reach us through her.
 验：从她对读者说话对：她常直接说“读者”，只有讲故事的人自己才能这样跟读者说话。 || Check by the asides: she speaks to “reader” directly.
@@ -1472,16 +1472,16 @@ export const laterBooks: readonly BookData[] = [
 问：简小时候为什么住在舅妈里德太太家？
 答：她的父母都去世了
 据：第二、三章：简的父亲是牧师，父母都染上伤寒去世，舅舅里德先生收养了她，临死前叫太太答应照顾她。 || Chapters 2 and 3: her clergyman father and her mother died of typhus; her uncle Reed took her in and made his wife promise to keep her.
-错：她的父母去外国工作了 || 她的父母没有出国，是病死的。 || her parents went nowhere; they died.
+错：她的父母去外国工作了 || 这像是和书里的叔叔约翰·爱在马德拉经商混在了一起；简的父母都没出国，父亲是穷牧师，探望穷人时染上伤寒，父母相继去世。 || It seems mixed up with her uncle John Eyre trading in Madeira; her parents never went abroad: her father, a poor clergyman, caught typhus among the poor, and both died.
 错：她自己离家出走了 || 她太小了，是被舅舅接去的，不是自己跑去的。 || she was a baby, brought by her uncle.
-错：舅妈花钱买下了她 || 书里没有买卖孩子的事，是舅舅收养的。 || no one bought her; her uncle adopted her.
+错：舅妈花钱买下了她 || 里德太太常拿“你靠我们养活”压简，容易反过来想成是买来的；其实是舅舅里德先生临死前要太太答应，把简当自己的孩子养大。 || Mrs Reed keeps telling Jane she lives on their charity, which may suggest she was bought; in fact Mr Reed, dying, made his wife promise to raise her as her own.
 验：从红房子对：舅舅就死在那间红房子里，简被关进去时最怕的就是舅舅的鬼魂，可见是舅舅收养了她。 || Check by the red room: her uncle died in it, which is why it frightens her.
 
 问：表哥约翰·里德欺负简，简还了手以后，受到了什么惩罚？
 答：被关进了一间阴森的“红房子”
 据：第一、二章：约翰·里德拿书砸简，简还手，被关进了舅舅去世的那间“红房子”。 || Chapters 1 and 2: John Reed throws a book at her, she fights back, and she is locked in the red room where her uncle died.
 错：被赶到街上过夜 || 她没有被赶到街上，是关在屋里。 || she is not turned out; she is locked in.
-错：一整天不许吃饭 || 书里没写罚饿，罚的是关房间。 || no fast; the punishment is the room.
+错：一整天不许吃饭 || 关禁闭的孩子常被罚不许吃饭，容易这样想；简受的罚是被关进舅舅死去的那间红房子，她怕的是那里的阴森和鬼魂。 || Confined children were often denied meals, so it seems likely; Jane's punishment is the red-room where her uncle died, and what she dreads is its gloom and ghost.
 错：被送去当了女仆 || 当女仆是她后来担心的出路，这时并没有被送去。 || she is not sent to service.
 验：从后果对：她在红房子里吓昏过去，药剂师劳埃德先生来看她，才提议送她去上学。 || Check by what follows: she faints there, and Mr Lloyd's visit leads to school.
 
@@ -1489,8 +1489,8 @@ export const laterBooks: readonly BookData[] = [
 答：洛伍德慈善学校
 据：第四、五章：里德太太把简交给布洛克赫斯特先生，送到洛伍德慈善学校。 || Chapters 4 and 5: Mrs Reed hands her to Mr Brocklehurst and sends her to Lowood, a charity school.
 错：桑菲尔德庄园 || 桑菲尔德是她十八岁后去当家庭教师的地方。 || Thornfield is where she goes as a governess at eighteen.
-错：一所伦敦的大学 || 书里没有大学，那时女孩也上不了大学。 || there is no university; girls could not go then.
-错：一位亲戚的农场 || 书里没有亲戚的农场；收留她的表亲住在荒原的沼泽居。 || there is no farm; her cousins live at Moor House.
+错：一所伦敦的大学 || 简后来懂法语、会画画，学问不错，容易以为她上过大学；那时英国的大学不收女子，她上的是洛伍德慈善学校。 || Jane later knows French and draws well, so she may seem university-trained; English universities then admitted no women, and she went to the Lowood charity school.
+错：一位亲戚的农场 || 简后来在荒原上被表亲收留，容易把“亲戚家”提前到这里；这时里德太太一心要摆脱她，把她送进了慈善学校洛伍德。 || Jane is later taken in by cousins on the moor, which may be moved forward to here; at this point Mrs Reed wants rid of her and sends her to the Lowood charity school.
 验：从“慈善”二字对：洛伍德收的是孤儿和穷人家的女孩，正合里德太太不想花钱养她的心思。 || Check by “charity”: it took orphans cheaply, as Mrs Reed wished.
 
 问：洛伍德学校的生活条件怎样？
@@ -1504,8 +1504,8 @@ export const laterBooks: readonly BookData[] = [
 问：学校的主管当众说简是一个说谎的孩子，并罚她做什么？
 答：站在凳子上让全校的人看
 据：第七章：布洛克赫斯特先生当众说简是说谎的孩子，罚她站在凳子上半个小时，不许人跟她说话。 || Chapter 7: Mr Brocklehurst calls her a liar before the school and makes her stand on a stool for half an hour.
-错：在雨里跑十圈 || 书里没有罚跑圈。 || there is no running.
-错：抄写一整本书 || 书里没有罚抄书。 || there is no copying.
+错：在雨里跑十圈 || 今天学校常罚跑圈，容易拿来套；布洛克赫斯特要的是羞辱，罚她站在凳子上让全校看，说她是说谎的孩子。 || Laps are a common school punishment today, which slips in; Brocklehurst wants to shame her, standing her on a stool before the school as a liar.
+错：抄写一整本书 || 罚抄书是学校里常见的罚法，容易套过来；布洛克赫斯特要的是当众示人，让她在凳子上站半个钟头，还叫同学们躲着她。 || Copying lines is a common school penalty; Brocklehurst wants public shame, half an hour on the stool and the girls told to shun her.
 错：一个人打扫全校 || 打扫不是她受的罚；海伦受的罚是挨打和戴“邋遢”的牌子。 || cleaning is not it; Helen's punishments are the rod and the “slattern” label.
 验：从海伦对：简站在凳子上时，海伦走过朝她笑了一笑，给了她勇气，罚的正是“让人看”。 || Check by Helen: she passes and smiles at Jane on the stool.
 
@@ -1552,9 +1552,9 @@ export const laterBooks: readonly BookData[] = [
 问：简离开洛伍德以后，去桑菲尔德庄园做什么？
 答：当家庭教师
 据：第十章、十一章：简登报求职，费尔法克斯太太回信，请她去桑菲尔德当家庭教师。 || Chapters 10 and 11: she advertises, and Mrs Fairfax engages her as governess at Thornfield.
-错：当厨师 || 厨房里有别的仆人，她教书。 || there are servants for the kitchen; she teaches.
+错：当厨师 || 庄园里要用许多仆人，容易以为她是去帮佣；她登报找的是家庭教师的职位，费尔法克斯太太回信请她来教一个小女孩。 || A great house needs servants, so she may seem one; she advertised for a governess's post, and Mrs Fairfax replied asking her to teach a little girl.
 错：当女主人 || 女主人要等她嫁给罗切斯特，婚礼却被打断了。 || mistress would come by marriage, which is stopped.
-错：当医生 || 书里没有女医生，她也没学过医。 || she never studies medicine.
+错：当医生 || 简后来在桑菲尔德守护过受伤的梅森，替他擦血，容易以为她懂医；那时女子不能当医生，她去桑菲尔德是当家庭教师。 || She later nurses the wounded Mason through the night, which suggests medicine; women could not be doctors then, and she came to Thornfield as a governess.
 验：从她的学生对：她到了才知道要教的是阿黛勒，正是家庭教师的工作。 || Check by her pupil: Adèle.
 
 问：简在桑菲尔德教的学生是谁？
@@ -1569,8 +1569,8 @@ export const laterBooks: readonly BookData[] = [
 答：他的马在结冰的路上滑倒，简上前帮了他
 据：第十二章：一月的黄昏，简去村里寄信，罗切斯特的马在结冰的路上滑倒，简上前帮他扶上马。 || Chapter 12: on a January dusk, going to post a letter, Jane helps Rochester when his horse slips on the ice.
 错：他在宴会上请简跳舞 || 宴会是后来请客时的事，简坐在角落里，没跳舞。 || the party comes later; Jane sits in a corner.
-错：他在学校里给简上课 || 罗切斯特没有在学校教过书。 || Rochester never teaches in a school.
-错：他在街上抢了简的钱包 || 书里没有抢钱包的事。 || there is no robbery.
+错：他在学校里给简上课 || 罗切斯特和简谈话时常像在考她，还看她的画、问她的学问，容易想成老师；他们第一次见面是在通往海镇的路上，他的马滑倒了。 || Rochester's talks with Jane are like an examination, inspecting her drawings, which suggests a teacher; they first meet on the road to Hay when his horse slips.
+错：他在街上抢了简的钱包 || 冷清的路上一个陌生男子骑马冲来，容易想成拦路抢劫；其实是他的马在结冰的路上滑倒，简扶他重新上了马。 || A stranger riding at her on a lonely road may suggest a robbery; in fact his horse slips on the ice and Jane helps him back into the saddle.
 验：从那条狗对：她回到庄园，看见那只叫派洛特的狗在客厅里，才知道刚才的骑马人就是主人。 || Check by the dog Pilot: she finds it at the house and knows who the rider was.
 
 问：一天夜里，罗切斯特的房间着火了，是谁救了他？
@@ -1617,7 +1617,7 @@ export const laterBooks: readonly BookData[] = [
 答：虽然还爱着他，仍然悄悄离开了桑菲尔德
 据：第二十七章：罗切斯特求她跟他去法国南部，简虽然爱他，仍在天亮前悄悄离开。 || Chapter 27: he begs her to come to the south of France; loving him still, she leaves before dawn.
 错：留下来做了庄园的女主人 || 她不肯在他有妻子时做他的情人，所以走了。 || she will not be his mistress while his wife lives.
-错：去法院告了罗切斯特 || 书里没有打官司。 || there is no lawsuit.
+错：去法院告了罗切斯特 || 被骗婚可以告到法院，这是今天的想法；简既不愿做他的情人，也不愿让他身败名裂，只是天亮前一个人悄悄走了。 || Suing for a false marriage is a modern idea; Jane will neither be his mistress nor ruin him, and simply slips away before dawn.
 错：回到舅妈家住了下来 || 舅妈已经去世了，盖茨黑德也没有她的家。 || Mrs Reed is dead; Gateshead is no home.
 验：从她留下的东西对：她把罗切斯特送的珍珠项链留下，只带了二十先令，可见是下了决心走的。 || Check by what she leaves: his pearls behind, twenty shillings in her purse.
 
@@ -1640,8 +1640,8 @@ export const laterBooks: readonly BookData[] = [
 问：圣约翰后来给简找了一份什么工作？
 答：在乡村小学教穷人家的女孩
 据：第三十一章：圣约翰让她在莫尔顿村的乡村小学教穷人家的女孩。 || Chapter 31: St John gives her the village school for poor girls at Morton.
-错：在城里的商店卖东西 || 书里没写她卖东西。 || she never works in a shop.
-错：在大船上做饭 || 船是圣约翰要去印度时坐的。 || the ship is for St John's India.
+错：在城里的商店卖东西 || 简流浪时到村里的面包店想拿手套换面包，容易记成她做过买卖；圣约翰给她找的是莫尔顿乡村女校的教职。 || While wandering she offers her gloves for bread at a village shop, which may be remembered as trade; St John finds her the post at the Morton village school.
+错：在大船上做饭 || “船”是从圣约翰要坐船去印度联想来的；圣约翰给简安排的是留在英国，在莫尔顿教穷人家的女孩。 || The ship comes from St John's voyage to India; the work he finds Jane keeps her in England, teaching poor girls at Morton.
 错：在医院照顾病人 || 照顾病人是她小时候在洛伍德见过的伤寒，不是她的工作。 || nursing is not her post.
 验：从她以前的经历对：她在洛伍德当过两年教师，教书正是她会做的事。 || Check by her past: two years teaching at Lowood.
 
@@ -1657,15 +1657,15 @@ export const laterBooks: readonly BookData[] = [
 答：和表哥表姐们平分了这笔钱
 据：第三十三、三十四章：她把两万英镑分成四份，自己和三位表亲各得五千。 || Chapters 33 and 34: she divides it into four, five thousand each for herself and her cousins.
 错：一个人全留了下来 || 她坚持分，说一个人拿太多不公平。 || she insists it is unjust to keep it all.
-错：全部捐给了洛伍德学校 || 书里没写捐给洛伍德。 || she gives nothing to Lowood.
-错：用来买了桑菲尔德庄园 || 桑菲尔德烧毁了，她也没买。 || Thornfield is burned; she buys nothing.
+错：全部捐给了洛伍德学校 || 简在洛伍德长大，又在那里当过教师，容易以为她会回报学校；她想要的是亲人，把两万英镑分成四份，自己和三个表亲每人五千。 || Jane grew up and taught at Lowood, so she might repay it; she wants family, and splits the twenty thousand pounds four ways, five thousand each.
+错：用来买了桑菲尔德庄园 || 简有了钱后回到桑菲尔德，容易想成是去买下它；可庄园已经烧成废墟，她是在芬丁庄园找到罗切斯特的。 || She returns to Thornfield once rich, which may suggest buying it; but it is a burnt ruin, and she finds Rochester at Ferndean.
 验：从她最想要的东西对：她说宁要亲人也不要钱，分钱正是为了有一个家。 || Check by her wish: she would rather have family than money.
 
 问：简后来知道了，圣约翰和她是什么关系？
 答：表兄妹
 据：第三十三章：圣约翰的母亲是简父亲的姐妹，他们是表兄妹。 || Chapter 33: St John's mother was her father's sister; they are cousins.
-错：亲兄妹 || 他们不同父母，不是亲兄妹。 || different parents; not siblings.
-错：同学 || 他们没一起上过学。 || they never studied together.
+错：亲兄妹 || 两人一度相处得像兄妹，简还说愿意作为妹妹随他去印度，容易想成亲兄妹；他们的母亲是简父亲的姐妹，所以是表兄妹。 || They live like brother and sister and Jane offers to go to India as his sister, which suggests siblings; his mother was her father's sister, so they are cousins.
+错：同学 || 两人都受过教育，年纪也相近，容易想成同学；可简是流浪到沼泽居门口才第一次见到圣约翰，以前从不相识。 || Both are educated and close in age, so schoolfellows seems possible; but Jane first meets St John when she collapses at Moor House.
 错：师生 || 圣约翰给她找工作，教她印度斯坦语，但不是她的老师那种师生关系。 || he teaches her Hindustani, but they are not teacher and pupil.
 验：从遗产对：叔叔约翰·爱也是他们的舅舅，所以遗产本该有他们一份，简才平分。 || Check by the will: the same uncle is theirs too.
 
@@ -1673,15 +1673,15 @@ export const laterBooks: readonly BookData[] = [
 答：去印度传教
 据：第三十四章：圣约翰要去印度传教，求简做他的妻子同去。 || Chapter 34: St John is going to India as a missionary and asks her to come as his wife.
 错：去法国旅行 || 去法国南部是罗切斯特当初求她去的。 || the south of France is Rochester's plea.
-错：回桑菲尔德 || 圣约翰跟桑菲尔德毫无关系。 || St John has nothing to do with Thornfield.
-错：去伦敦做生意 || 他不做生意，是牧师。 || he is a clergyman, not a trader.
+错：回桑菲尔德 || 简后来真的回了桑菲尔德，容易把这件事安到圣约翰的求婚上；圣约翰要她同去的是印度，他和桑菲尔德毫无关系。 || Jane does go back to Thornfield later, and that gets attached to St John's proposal; he asks her to India and has nothing to do with Thornfield.
+错：去伦敦做生意 || 做生意的是简的叔叔约翰·爱，在马德拉经商发了财，容易混到圣约翰身上；圣约翰是牧师，要她做传教士的妻子去印度。 || The merchant is Jane's uncle John Eyre, rich from Madeira, who gets confused with St John; St John is a clergyman wanting a missionary wife for India.
 验：从他教她的语言对：他让她学印度斯坦语，正为了去印度。 || Check by the language: Hindustani.
 
 问：简为什么拒绝了圣约翰的求婚？
 答：他们之间没有爱情，他只是需要一个帮手
 据：第三十四、三十五章：简说他要的是一个传教的帮手，不是爱人；没有爱的婚姻她不能接受。 || Chapters 34 and 35: he wants a helper, not a beloved; she will not marry without love.
 错：圣约翰太穷了 || 简不在乎贫富，她自己穷时也不肯为钱嫁人。 || money never decides her choices.
-错：简已经嫁给了别人 || 她那时还没结婚。 || she is not yet married.
+错：简已经嫁给了别人 || 圣约翰求婚时简心里还想着罗切斯特，容易误会她已有了归宿；可她那时既没出嫁，也没有婚约，拒绝是因为两人之间没有爱情。 || Jane still thinks of Rochester, which may suggest she is spoken for; but she is neither married nor engaged, and refuses for want of love.
 错：简不愿意离开那所小学 || 得了遗产后她已经把学校交出去了。 || she has already given up the school.
 验：从她的让步对：她说愿意作为妹妹跟他去印度，就是不愿做妻子，可见问题在于没有爱情。 || Check by her offer: she would go as his sister, not his wife.
 
@@ -1690,22 +1690,22 @@ export const laterBooks: readonly BookData[] = [
 据：第三十五章：夜里她仿佛听到罗切斯特在远方喊“简！简！简！”，第二天就动身去找他。 || Chapter 35: at night she seems to hear Rochester calling “Jane! Jane! Jane!” and sets out next day.
 错：罗切斯特写信请她回去 || 罗切斯特不知道她在哪里，没写过信。 || he does not know where she is and writes nothing.
 错：圣约翰劝她回去 || 圣约翰正要她去印度，不会劝她回去。 || St John wants her for India.
-错：她在报上看到了庄园要卖的消息 || 书里没写看报。 || there is no newspaper.
+错：她在报上看到了庄园要卖的消息 || 简当年是登报找到桑菲尔德的工作的，容易以为这次又是从报上得了消息；这次是夜里她好像听见罗切斯特在远方喊她的名字。 || Jane once found the Thornfield post by advertisement, so the papers seem likely again; this time she seems to hear Rochester calling her name in the night.
 验：从罗切斯特那边对：第三十七章他说那夜他也在喊她的名字，并听见她回答，两边对上了。 || Check by Rochester's side: he called her that very night.
 
 问：简回到桑菲尔德时，看到了什么？
 答：庄园被大火烧成了废墟
 据：第三十六章：桑菲尔德被大火烧成了废墟，旅店老板告诉她是伯莎放的火。 || Chapter 36: Thornfield is a burnt ruin; the innkeeper tells her Bertha set the fire.
-错：庄园比以前更热闹了 || 庄园已成废墟，没人住了。 || it is empty ruins.
-错：罗切斯特又娶了别人 || 罗切斯特没有再娶。 || he has not remarried.
+错：庄园比以前更热闹了 || 简离开前，桑菲尔德办过宴会，住满了客人，容易记成热闹的样子；她回来时只见一片烧黑的废墟，没有人住。 || Before she left, Thornfield was full of guests and parties, which may stick in the mind; she returns to a blackened, empty ruin.
+错：罗切斯特又娶了别人 || 罗切斯特当初确实装作要娶英格拉姆小姐，容易想成他后来另娶了；可伯莎死后他独自住在芬丁庄园，又瞎又残，一直没有再娶。 || Rochester once pretended to court Miss Ingram, which suggests he married later; but after Bertha's death he lives alone at Ferndean, blind and maimed, unmarried.
 错：阿黛勒成了庄园的主人 || 阿黛勒在学校里，庄园也没了。 || Adèle is at school.
 验：从罗切斯特的住处对：她只好再去芬丁庄园找他，正因为桑菲尔德没法住了。 || Check by Ferndean: he has moved, as Thornfield is gone.
 
 问：那场大火以后，罗切斯特怎么样了？
 答：眼睛瞎了，还失去了一只手
 据：第三十六章：罗切斯特救火时被砸伤，一只眼睛没了，另一只瞎了，还失去了一只手。 || Chapter 36: hurt in the fire, he loses one eye and the sight of the other, and one hand.
-错：一点伤也没有受 || 他受了重伤。 || he is badly hurt.
-错：去了外国，再也没回来 || 他住在芬丁庄园，没去外国。 || he lives at Ferndean.
+错：一点伤也没有受 || 简一路上听说主人还活着，容易以为他安然无恙；客店老板告诉她，罗切斯特在大火里想救人，结果瞎了眼睛、断了一只手。 || Hearing he is alive, one may think him unharmed; the innkeeper tells Jane he lost his sight and a hand trying to save others from the fire.
+错：去了外国，再也没回来 || 罗切斯特年轻时在西印度群岛，后来又在欧洲各地漂泊，容易以为他又出了国；大火后他住在离桑菲尔德三十英里的芬丁庄园。 || He spent his youth in the West Indies and later roamed Europe, so he might seem gone abroad again; after the fire he lives at Ferndean, thirty miles from Thornfield.
 错：在大火中死去了 || 死的是伯莎，她从屋顶跳下摔死了。 || it is Bertha who dies, leaping from the roof.
 验：从第三十五题对：结局写他一只眼睛后来渐渐看得见了，可见他活了下来，眼睛受了伤。 || Check by the end: his sight partly returns.
 
@@ -1713,16 +1713,16 @@ export const laterBooks: readonly BookData[] = [
 答：简和罗切斯特结了婚，罗切斯特的一只眼睛后来渐渐看得见了
 据：第三十八章：“读者，我嫁给了他。”两年后罗切斯特一只眼睛恢复视力，看见了他们的儿子。 || Chapter 38: “Reader, I married him.” Two years on, one eye recovers and he sees their son.
 错：简和圣约翰一起去了印度 || 圣约翰一个人去了印度，结尾简收到他的信。 || St John goes alone; she gets his letter at the end.
-错：简一个人回到了洛伍德 || 她没回洛伍德。 || she does not return to Lowood.
+错：简一个人回到了洛伍德 || 洛伍德是简长大的地方，容易以为她最后会回去；她得到遗产后在沼泽居和表亲团聚，结尾是在芬丁嫁给了罗切斯特。 || Lowood is where she grew up, so a return seems natural; after her inheritance she gathers her cousins at Moor House and ends married to Rochester at Ferndean.
 错：简回到了舅妈家，照顾她到老 || 舅妈在第二十一章就去世了。 || Mrs Reed died in chapter 21.
 验：从最后一段对：小说结尾写的是圣约翰在印度，可见简没跟他去。 || Check by the last paragraph: it is about St John in India.
 
 问：舅妈里德太太临死前，向简承认了什么？
 答：她瞒下了简的叔叔想收养简的信
 据：第二十一章：里德太太临死承认，三年前简的叔叔来信想收养简，她回信说简已经死在洛伍德。 || Chapter 21: dying, Mrs Reed confesses that three years ago Jane's uncle wrote to adopt her and she replied that Jane had died at Lowood.
-错：她偷了简父母的钱 || 书里没写她偷钱。 || there is no theft.
+错：她偷了简父母的钱 || 里德太太对简刻薄，后来家道败落，容易以为她贪了简家的钱；她承认的是瞒下了叔叔要收养简的信，还回信骗叔叔说简已经死了。 || Mrs Reed is cruel and later ruined, so she may seem to have taken Jane's money; she confesses to hiding the uncle's letter and writing that Jane had died.
 错：她才是简的亲生母亲 || 简的母亲是里德先生的妹妹，里德太太只是舅妈。 || Jane's mother was Mr Reed's sister.
-错：她把简的朋友赶走了 || 简在里德家没有朋友被赶走。 || there is no friend sent away.
+错：她把简的朋友赶走了 || 里德太太对简百般刻薄，容易以为她还赶走过简的朋友；简在盖茨黑德唯一亲近的是女仆贝茜，并没有被赶走，舅妈临死承认的是瞒下了那封信。 || Mrs Reed's cruelty may suggest she drove off a friend; Jane's only friend at Gateshead was the maid Bessie, who was never sent away; the confession is the hidden letter.
 验：从第二十六题对：叔叔后来知道简还活着，才托梅森阻止了婚礼，前后呼应。 || Check by the wedding: the uncle knows she lives and sends Mason.
 
 问：简听说舅妈病重，还回去看望她，这表现了简的什么品质？
@@ -1761,7 +1761,7 @@ export const laterBooks: readonly BookData[] = [
 答：一个女子追求独立、平等和真正的爱情
 据：全书：简从孤女到家庭教师，始终追求独立、平等和真正的爱情。 || The whole book: from orphan to governess, Jane seeks independence, equality and true love.
 错：一个穷人怎样发财 || 她得到遗产却平分出去，发财不是主题。 || she shares her fortune away; wealth is not the theme.
-错：一场战争的经过 || 书里没有战争。 || there is no war.
+错：一场战争的经过 || 十九世纪的英国小说常以拿破仑战争为背景，像《名利场》，容易套过来；《简·爱》写的是一个孤女的成长和爱情，没有战争。 || Many nineteenth-century English novels, such as Vanity Fair, are set against the Napoleonic wars; Jane Eyre is an orphan's growth and love, with no war.
 错：一次海上探险的经历 || 海上探险是《鲁滨逊漂流记》。 || sea adventure is Robinson Crusoe.
 验：从结尾对：她是在自己有了财产、能独立以后才回去和罗切斯特平等地结婚的。 || Check by the end: she returns as an independent equal.
 `,
@@ -2090,24 +2090,24 @@ export const laterBooks: readonly BookData[] = [
 据：书的《后记》：这是社会学家费孝通在西南联大、云南大学讲“乡村社会学”的讲稿整理而成。 || The postscript: sociologist Fei Xiaotong assembled it from his lectures on rural sociology at Southwest Associated University and Yunnan University.
 错：鲁迅 || 鲁迅写的是《呐喊》《朝花夕拾》，是小说和散文。 || Lu Xun wrote Call to Arms and Dawn Blossoms, stories and essays.
 错：梁启超 || 梁启超写过《少年中国说》，是清末的政论家。 || Liang Qichao, a late-Qing essayist, wrote “Young China”.
-错：钱锺书 || 钱锺书写的是小说《围城》。 || Qian Zhongshu wrote the novel Fortress Besieged.
+错：钱锺书 || 钱锺书和费孝通是同时代的学者，他的《围城》也在四十年代后期出版，容易弄混；可《围城》是写知识分子的长篇小说，不研究乡村社会。 || Qian Zhongshu was Fei's contemporary and Fortress Besieged also came out in the late 1940s, which invites the mix-up; but it is a novel about intellectuals, not a study of rural society.
 验：从作者的另一本书对：费孝通早年写过调查江苏一个村子的《江村经济》，研究乡村正是他的本行。 || Check by his other book: Peasant Life in China, a study of one Jiangsu village.
 
 问：《乡土中国》属于哪一类著作？
 答：社会学著作
 据：《后记》和全书：它用概念分析中国乡村社会的结构，是一部社会学著作。 || The postscript and the book: it analyses rural society through concepts, a work of sociology.
-错：长篇小说 || 书里没有人物和情节，是一篇篇说理的文章。 || there are no characters or plot, only argued essays.
-错：诗歌集 || 全书是散文体的论述，不是诗。 || it is prose argument, not verse.
-错：游记 || 作者讲的是理论，不是记一路的见闻。 || it is theory, not a travelogue.
+错：长篇小说 || 书名有“乡土”二字，容易让人想到写乡村的小说，像沈从文的《边城》；可书里没有人物和情节，是一篇篇说理的文章。 || “Native soil” in the title suggests rural fiction such as Shen Congwen's Border Town; but there are no characters or plot, only argued essays.
+错：诗歌集 || “乡土”二字有诗意，书里又有石头丢进水里激起波纹这样形象的比喻，容易当成诗；全书是论述的散文，每篇讲一个概念。 || “Native soil” sounds poetic and the book has vivid images such as the ripples of a stone, so it may seem verse; it is prose argument, one concept to an essay.
+错：游记 || 作者确实到过许多村子调查，书里也常举乡下的见闻，容易想成游记；可他举例是为了讲清概念，不是记一路的见闻。 || Fei did fieldwork in many villages and cites what he saw, so it may seem a travelogue; but his examples serve concepts, not a record of a journey.
 验：从篇名对：“差序格局”“礼治秩序”“长老统治”都是概念，小说和游记不会用这样的题目。 || Check by the titles: they are concepts.
 
 问：这本书最初是怎样形成的？
 答：作者在大学讲课的讲稿整理而成
 据：《后记》：书是作者在大学讲“乡村社会学”时的讲稿，先在《世纪评论》上连载，后结集出版。 || The postscript: the lectures were serialised in Century Review and then published as a book.
-错：作者在国外写的日记 || 书写的是中国乡下，不是在国外写的日记。 || it is about rural China, not a diary abroad.
-错：作者写给家人的书信 || 全书是给读者和学生讲的，不是家书。 || it addresses students, not family.
-错：作者创作的一组小说 || 它是论文集，不是小说。 || these are essays, not stories.
-验：从文章的口气对：书里常说“我们”“我曾提出”，像是在课堂上一步步讲给学生听。 || Check by the voice: it sounds like a lecturer guiding a class.
+错：作者在国外写的日记 || 费孝通在英国留过学，书里又常拿西洋社会作比，容易想到是在国外写的；这些是他回国后在大学讲课的讲稿，也不是日记。 || Fei studied in England and often compares the West, so it may seem written abroad; these are lectures given at home, and no diary.
+错：作者写给家人的书信 || 书里常用“我们”这样亲切的口吻，容易想成书信；那是对学生讲课的口吻，文章先在《世纪评论》上连载，是写给公众的。 || The friendly “we” may suggest letters; it is a lecturer's voice, and the essays first ran in Century Review for the public.
+错：作者创作的一组小说 || 书里有乡下人在马路上躲汽车这样的小故事，容易当成小说；这些是论证里的例子，全书是论文集。 || Small scenes such as the villager dodging a car may read like fiction; they are examples in an argument, and the book is a set of essays.
+验：从文章的口气对：书里常用“我们”称呼听讲的人，又常回头提起前面讲过的概念，像是在课堂上一步步讲给学生听。 || Check by the voice: it sounds like a lecturer guiding a class.
 
 问：这本书大约写成于什么时候？
 答：二十世纪四十年代后期
@@ -2115,27 +2115,27 @@ export const laterBooks: readonly BookData[] = [
 错：十九世纪初 || 十九世纪初费孝通还没出生，他生于1910年。 || Fei was born in 1910.
 错：二十世纪八十年代 || 二十世纪八十年代他研究的是小城镇，写了《小城镇 大问题》。 || in the 1980s he studied small towns.
 错：二十一世纪初 || 二十一世纪初他已年过九十，2005年去世。 || by then he was over ninety and died in 2005.
-验：从书里的背景对：书里讲“司法下乡”“新式教育”刚进入乡村，正是民国后期的情形。 || Check by the setting: courts and new schools just reaching villages, late Republican China.
+验：从书里的背景对：书里讲现代的司法制度和新式学校刚推行到乡下，正是民国后期的情形。 || Check by the setting: courts and new schools just reaching villages, late Republican China.
 
 问：书中说中国基层社会是“乡土性”的，最主要的根据是什么？
 答：人们靠种地为生，世代住在一个地方
 据：《乡土本色》：“从基层上看去，中国社会是乡土性的”，乡下人靠种地谋生，粘在土地上，世代定居。 || “Native Soil”: at its base Chinese society is rural; farmers are bound to the land and stay put for generations.
-错：人们大多住在城市里 || 书里说的是基层的乡下人，不是城里人。 || it concerns villagers, not townsfolk.
+错：人们大多住在城市里 || 这是用今天城市化的眼光去看；作者说的是“基层”，基层是住在乡下、靠种地为生的大多数人，城里人只是少数。 || It looks with today's urban eyes; Fei means the base of society, the farming majority in the villages, not the urban few.
 错：人们经常到各地经商 || 经商的流动是《血缘和地缘》里说的集市那一面，不是乡土的根据。 || travelling trade belongs to the market essay, not to the soil.
 错：人们以打猎为生 || 靠打猎为生的是游牧、渔猎民族，作者正拿他们和农民对比。 || hunting peoples are the contrast, not the rule.
-验：从作者举的例子对：他说中国人到了西伯利亚也要下些种子试试能不能种地，可见离不开土。 || Check by his example: even in Siberia Chinese settlers plant seeds.
+验：从作者举的例子对：书中举例说，中国人就算到了西伯利亚，也要撒些种子试试能不能种地，可见离不开土。 || Check by his example: even in Siberia Chinese settlers plant seeds.
 
 问：作者说“土气”这个词，在书里有什么意思？
 答：不是骂人的话，说的是人们离不开泥土
 据：《乡土本色》：作者说“土气”这个词常被看作骂人，其实它正说明乡下人离不开泥土。 || “Native Soil”: “earthy” sounds like an insult, but it rightly says country people cannot leave the soil.
-错：是在嘲笑乡下人穿得不时髦 || 作者正要纠正这种嘲笑。 || he is correcting that very sneer.
-错：是说乡下的空气不好 || “土”说的是泥土，不是空气。 || “soil” is the soil, not the air.
-错：是说乡下人脾气很坏 || 书里没有说乡下人脾气坏。 || he says nothing of temper.
+错：是在嘲笑乡下人穿得不时髦 || 这是“土气”在日常口语里最常见的用法，所以容易选；作者正要纠正这种看法，说这个“土”字用得并不错，乡下人确实离不了泥土。 || This is the everyday sense of the word, so it tempts; Fei corrects it, saying the word is apt because country people truly live by the soil.
+错：是说乡下的空气不好 || “气”字容易让人想到空气；作者讲的是“土”字，说的是泥土，“土气”是乡下人对泥土的依恋。 || The second character suggests air; Fei is explaining “soil”, and the word names the villager's bond with the earth.
+错：是说乡下人脾气很坏 || “土”有时被用来说人粗鲁，容易联想到脾气；作者说的“土气”只和泥土有关，讲的是靠土地谋生，和脾气无关。 || “Rustic” can mean rough, which suggests temper; Fei's word concerns only the soil and a living from the land.
 验：从“土”的另一个意思对：作者说农民把泥土当成神，土地庙到处都有，“土气”本是这种依恋。 || Check by the earth god: shrines to the soil are everywhere.
 
 问：书中认为，乡土社会的一个重要特点是什么？
 答：人们很少流动，生于斯、长于斯
-据：《乡土本色》：乡土社会不流动，人们“生于斯、长于斯、死于斯”。 || “Native Soil”: rural people are born, grow up and die in one place.
+据：《乡土本色》：乡土社会不流动，人们生在这里、长在这里、老死在这里，世代守着一块地方。 || “Native Soil”: rural people are born, grow up and die in one place.
 错：人们常常搬到别的地方去住 || 常常搬家正是作者说乡土社会少有的事。 || frequent moving is exactly what is rare.
 错：人们彼此都不认识 || 不流动所以彼此都熟悉，是熟人社会。 || staying put makes everyone familiar.
 错：人们主要靠法律来解决问题 || 靠法律解决问题是现代社会，《无讼》里正讲乡下人不爱打官司。 || law is modern; “No Lawsuits” shows villagers avoid it.
@@ -2147,29 +2147,29 @@ export const laterBooks: readonly BookData[] = [
 错：大家互不相识，是陌生人社会 || 陌生人社会是作者说的现代社会。 || a society of strangers is the modern one.
 错：大家只靠契约来往 || 乡下人借钱常常不立契约，靠熟悉和信任。 || villagers lend without contracts.
 错：大家都住在高楼里 || 乡下人住的是平房院落，高楼是城市的。 || tall buildings are urban.
-验：从“信任”对：作者说乡下人的信任不是对契约的重视，而是“发生于对一种行为的规矩熟悉到不加思索时的可靠性”。 || Check by trust: it rests on familiarity, not contracts.
+验：从“信任”对：书中说，乡下人的信用不靠契约，而靠彼此对规矩熟悉到不用想就知道对方会怎么做。 || Check by trust: it rests on familiarity, not contracts.
 
 问：在熟人社会里，人们做事主要靠什么来规范？
 答：从小熟悉的规矩和习惯
-据：《乡土本色》：熟人社会里的规矩是从小学来的，“从心所欲而不逾规矩”。 || “Native Soil”: rules are learned from childhood until one follows them without thinking.
+据：《乡土本色》：熟人社会里的规矩是从小学来的，熟到随心去做也不会越出规矩。 || “Native Soil”: rules are learned from childhood until one follows them without thinking.
 错：一份份签好的合同 || 签合同是陌生人之间的事，乡下人看到签字画押反而觉得见外。 || contracts are for strangers; villagers find them cold.
-错：报纸上的广告 || 乡下人不识字，不靠报纸。 || they cannot read papers.
+错：报纸上的广告 || 报纸广告是城里陌生人之间传递消息的办法，正和熟人社会相反；乡下人多不识字，做事靠的是从小熟悉的规矩。 || Newspaper advertisements are how strangers in towns inform each other, the opposite of a familiar society; villagers, mostly unlettered, rely on rules known from childhood.
 错：外来的命令 || 外来的命令正是乡下人不熟悉的东西。 || outside orders are what they do not know.
-验：从“规矩”和“法律”的对比对：作者说乡土社会“是‘礼俗社会’”，靠习惯而不是条文。 || Check by the contrast: a society of custom, not statute.
+验：从“规矩”和“法律”的对比对：作者借社会学里的分法，把乡土社会叫作礼俗社会，和现代的法理社会相对，前者靠习惯而不是条文。 || Check by the contrast: a society of custom, not statute.
 
 问：作者认为，乡下人不识字，主要原因是什么？
 答：在面对面的熟人社会里，文字用处不大
 据：《文字下乡》：乡下人不识字不是愚，面对面的熟人社会里，说话和表情就够了，文字用处不大。 || “Writing Goes to the Countryside”: illiteracy is not stupidity; face to face, words and looks suffice.
-错：乡下人天生比城里人笨 || 作者正反驳“乡下人笨”，举例说教授的孩子捉蚱蜢不如乡下孩子。 || he refutes it: a professor's child catches grasshoppers worse than a village child.
+错：乡下人天生比城里人笨 || 城里人常笑乡下人土、笨，这个选项正是那种成见；作者反驳它，书中举例说，教授的孩子到了乡下捉蚱蜢，远不如乡下孩子灵巧，那也不是笨，是不熟悉。 || It is the townsman's prejudice that villagers are dull, which Fei refutes; he gives the example of professors' children catching grasshoppers far worse than village children, unfamiliarity, not stupidity.
 错：乡下没有纸和笔 || 作者讲的是用不着，不是没有纸笔。 || it is need, not paper, that is lacking.
-错：政府不许乡下人识字 || 书里没说政府禁止识字。 || no government forbids it.
-验：从作者举的城里例子对：乡下人在马路上听到汽车喇叭慌了手脚，不是笨，是不熟悉，和城里人不懂庄稼一样。 || Check by the car horn: unfamiliarity, not stupidity.
+错：政府不许乡下人识字 || 这是把“不识字”想成了被禁止，像是听来的古时愚民的说法；作者说乡下人不识字是因为用不着，没有谁禁止，文字下乡要先有用字的需要。 || It turns illiteracy into a ban, like tales of keeping the people ignorant; Fei says they simply have no need of writing, and nobody forbids it.
+验：从作者举的城里例子对：书中举例说，乡下人在城里马路上听到背后的汽车喇叭，慌得不知往哪边躲，这不是笨，是不熟悉，和城里人不懂庄稼一样。 || Check by the car horn: unfamiliarity, not stupidity.
 
 问：在《文字下乡》中，作者认为文字的产生主要是为了什么？
 答：克服空间和时间上的阻隔
 据：《文字下乡》：文字是为了克服空间上的阻隔；《再论文字下乡》又讲时间上的阻隔。 || “Writing Goes to the Countryside” on distance, and the sequel on time: writing overcomes separation.
 错：让人显得更有学问 || 作者说的是交流的需要，不是显学问。 || it serves communication, not show.
-错：用来装饰房屋 || 书里没有讲文字装饰房子。 || there is no decoration.
+错：用来装饰房屋 || 乡下人家门上贴春联、挂匾额，字确实常拿来装点房子，容易这样想；作者讲的是文字的用处在于传话，克服空间和时间上的阻隔。 || Couplets and plaques do decorate village houses, which suggests this; Fei's point is that writing carries words across distance and time.
 错：代替说话，让人不再开口 || 文字补的是说话传不到的地方，并不代替说话。 || it reaches where speech cannot; it does not replace speech.
 验：从书信对：人分隔两地才需要写信，在同一个村里面对面就不用写了。 || Check by letters: needed only when apart.
 
@@ -2185,16 +2185,16 @@ export const laterBooks: readonly BookData[] = [
 答：把石头丢进水里，一圈圈推出去的波纹
 据：《差序格局》：中国人的关系像“把一块石头丢在水面上所发生的一圈圈推出去的波纹”。 || “Differential Mode”: relations are like ripples spreading from a stone thrown into water.
 错：一棵大树的树根 || 书里比喻关系没有用树根，树根是读者容易拿“根”字联想的。 || tree roots are not his image.
-错：一座高高的宝塔 || 宝塔是层层叠高的东西，书里没有。 || a pagoda is not his image.
-错：一条长长的河流 || 河流书里没有用来说关系。 || a river is not his image.
+错：一座高高的宝塔 || 宝塔一层层往上，像在讲上下等级，容易和“差序”的“序”混在一起；作者用的是水面的波纹，讲的是由近及远，不是由下往上。 || A pagoda rises tier on tier like a hierarchy, which the word “order” may suggest; Fei uses ripples, near to far, not low to high.
+错：一条长长的河流 || 河流也是水，又和流动有关，容易和水面的波纹混在一起；作者用的是石头丢进水里激起的一圈圈波纹，河流在书里没有用来说关系。 || A river is water and flows, so it is easily confused with the ripples; Fei's image is rings spreading from a stone, and no river describes relations.
 验：从“推”字对：作者说“推己及人”，从自己向外推，正和波纹从中心往外推相合。 || Check by “extend oneself to others”: outward from the centre.
 
 问：与“差序格局”相对，作者用什么比喻说明西方社会的“团体格局”？
 答：一捆一捆扎好的柴
-据：《差序格局》：西洋的团体格局“好像我们在田里捆柴”，几根成一把，几把成一扎，界限分明。 || “Differential Mode”: the Western mode is like bundled firewood, sticks tied into bundles with clear bounds.
+据：《差序格局》：书中说西洋的团体格局有些像在田里捆柴，几根稻草束成一把，几把束成一扎，哪根属于哪捆界限分明。 || “Differential Mode”: the Western mode is like bundled firewood, sticks tied into bundles with clear bounds.
 错：水面上的波纹 || 水面的波纹正是用来说中国的差序格局。 || ripples describe the Chinese mode.
-错：天上的星星 || 星星书里没用来比喻。 || stars are not used.
-错：一张蜘蛛网 || 蜘蛛网是作者说差序格局时提到的“网”，不是团体格局。 || the web is part of his differential picture, not the Western one.
+错：天上的星星 || 星星满天、各不相连，有人会拿来比西方各自独立的个人；书中说团体格局用的是捆柴：几根束成一把，几把束成一扎，界限分明。 || Scattered stars might stand for independent Western individuals; Fei's image is bundled firewood, sticks into bundles with clear bounds.
+错：一张蜘蛛网 || 作者确实用过蜘蛛网作比，但那是说差序格局：这张关系网有个中心，就是自己；团体格局用的是捆柴。 || the web is part of his differential picture, not the Western one.
 验：从“界限”对：一捆柴里哪根属于哪捆清清楚楚，团体格局里谁是团体的人也清楚。 || Check by the boundaries: each stick belongs to one bundle.
 
 问：在“差序格局”中，一个人社会关系的中心是什么？
@@ -2207,7 +2207,7 @@ export const laterBooks: readonly BookData[] = [
 
 问：差序格局中的关系有什么特点？
 答：离自己越近越亲，越远越疏，远近可以伸缩
-据：《差序格局》：关系“愈推愈远，也愈推愈薄”，而且可以伸缩：“家”可以只指太太，也可以大到“天下一家”。 || “Differential Mode”: the further out, the thinner; and the circle stretches — “family” may mean a wife or all under heaven.
+据：《差序格局》：关系越往外推越远，也越薄，而且可以伸缩：书中举例说，同一个“家”字，“家里的”可以只指太太一人，“家门”却可以指伯叔侄子一大批。 || “Differential Mode”: the further out, the thinner; and the circle stretches: the same word for family may mean a wife alone or a whole clan of uncles and nephews.
 错：每个人和所有人都一样亲近 || 一样亲近正是团体格局的特点。 || equal ties are the Western mode.
 错：关系一旦定下就永远不变 || 作者恰恰说它能伸缩。 || he stresses that it stretches.
 错：和陌生人的关系最亲近 || 陌生人在最外圈，最疏远。 || strangers are the outermost ring.
@@ -2226,15 +2226,15 @@ export const laterBooks: readonly BookData[] = [
 据：《家族》：中国乡下的家是“小家族”，除了生育，还是做事业的团体，要管生产、政治、宗教等许多事。 || “Clan”: the rural family is a small clan, an enterprise for farming and more besides reproduction.
 错：它只是夫妻两个人一起生活的地方 || 夫妻两人的小家是西方的家庭。 || a couple alone is the Western family.
 错：它和别人家没有任何来往 || 家和亲戚邻里都连在差序格局里，不是不来往。 || it is woven into the web of kin.
-错：它一年只团聚一次 || 一家人平日就住在一起。 || they live together every day.
+错：它一年只团聚一次 || 这是把今天在外打工、过年才回家的情形套了进来；书里乡下的家一家人平日住在一起，还一同种地，是做事业的团体。 || It reads in today's migrant workers home for New Year; in the book the rural family lives and farms together every day as an enterprise.
 验：从下一题对：家要做事业，才需要父子这条传承的主轴，夫妻感情反成次要。 || Check by the next question: an enterprise needs the father-son axis.
 
 问：作者认为，在乡土社会的家庭里，哪一种关系是主轴？
 答：父子之间的关系
 据：《家族》：家庭的主轴在父子之间、在婆媳之间，夫妇是配轴。 || “Clan”: the main axis is father and son, mother- and daughter-in-law; husband and wife are secondary.
 错：夫妻之间的关系 || 夫妻关系是西方家庭的主轴，在中国乡下是配轴。 || the couple is the Western axis, secondary here.
-错：朋友之间的关系 || 朋友不在家里。 || friends are outside the family.
-错：邻居之间的关系 || 邻居也不在家里。 || neighbours are outside too.
+错：朋友之间的关系 || 朋友是“五伦”里的一伦，说到人伦容易想进来；可题目问的是家庭内部，朋友不在家里，家的主轴是父子，夫妇只是配轴。 || Friendship is one of the five relations, so it comes to mind; but the question is about the household, where the axis is father and son.
+错：邻居之间的关系 || 邻居是乡下人天天打交道的人，容易想成最要紧的关系；可题目问的是家庭内部，邻居在家门之外，家的主轴是父子。 || Neighbours are met daily and seem important; but the question concerns the household, and neighbours are outside its door.
 验：从“纪律”对：作者说乡下夫妇之间相敬如宾，很少说亲热话，可见夫妻不是主轴。 || Check by restraint: couples are reserved with each other.
 
 问：作者认为乡土社会讲究“男女有别”，主要是为了什么？
@@ -2242,7 +2242,7 @@ export const laterBooks: readonly BookData[] = [
 据：《男女有别》：乡土社会讲“男女有别”，是为了避免感情冲动，维持社会关系的稳定。 || “Separate Spheres”: separating the sexes avoids emotional upheaval and keeps relations stable.
 错：让男女互相仇视 || 作者说的是保持距离，不是仇视。 || distance, not hostility.
 错：让男女不能说话 || 男女照样说话来往，只是不讲亲密的感情。 || they talk; they avoid intimacy.
-错：让家庭变得更热闹 || 恰恰相反，乡下家庭“不求热闹”而求安稳。 || the aim is calm, not bustle.
+错：让家庭变得更热闹 || “热闹”是今天对家庭的好愿望，容易套进来；作者说乡下的家求的是安稳，男女有别正是为了少些感情上的波动。 || the aim is calm, not bustle.
 验：从上一篇对：既然家要做事业、要稳定，就得防住夫妻之外的感情冲动。 || Check by the previous essay: a working family must be stable.
 
 问：书中说乡土社会是“礼治”的社会，这里的“礼”指什么？
@@ -2257,25 +2257,25 @@ export const laterBooks: readonly BookData[] = [
 答：维持礼的是传统，推行法的是国家的权力
 据：《礼治秩序》：维持礼的是传统，推行法的是国家的权力。 || “Rule of Rites”: tradition upholds rites; state power enforces law.
 错：礼是写下来的，法是口头说的 || 乡土社会的礼大多不写下来，靠习惯。 || rites are largely unwritten.
-错：礼只管城里人，法只管乡下人 || 书里没有这样分，礼正是乡土社会的。 || rites belong to the countryside.
-错：礼和法完全是一回事 || 作者正在讲两者不同。 || he is distinguishing them.
-验：从“主动服膺”对：作者说礼靠人们从小教化、“主动服膺”，不用警察来逼。 || Check by willing obedience: no police are needed.
+错：礼只管城里人，法只管乡下人 || 书里处处拿城里和乡下对比，容易以为礼和法也按城乡来分；作者说礼是乡土社会的规范，法靠国家推行，两者分的是靠什么力量维持。 || The book contrasts town and country throughout, so rite and law may seem split that way; Fei divides them by what upholds them, tradition or the state.
+错：礼和法完全是一回事 || 日常说“礼法”常连在一起，容易当成一回事；作者正是要把二者分开：礼靠传统，法靠国家的权力。 || Everyday speech joins “rite and law” in one word, which suggests they are the same; Fei separates them: tradition upholds the one, state power the other.
+验：从守礼的心态对：作者说礼是从小教化养成的，人们服礼是主动的，出于敬畏，不用警察来逼。 || Check by willing obedience: no police are needed.
 
 问：作者说的“礼治”，是不是就等于“人治”？
 答：不是，礼治靠的是传统规范，不是个人的好恶
 据：《礼治秩序》：作者说礼治不是人治，礼治靠的是传统规范，不是个人的好恶。 || “Rule of Rites”: rule by rites is not rule by men; it rests on tradition, not personal whim.
-错：是，礼治就是谁说了算听谁的 || 作者正好否定了这个说法。 || he denies exactly that.
-错：是，礼治就是没有任何规矩 || 礼治恰恰是有规矩的。 || rites are rules.
+错：是，礼治就是谁说了算听谁的 || “人治”字面上就是靠人来治，容易理解成谁有权谁说了算；作者说礼治靠的是传统规范，连长老也得照礼办事。 || “Rule by men” literally suggests whoever has power decides; Fei says rule by rites follows tradition, which binds even the elders.
+错：是，礼治就是没有任何规矩 || 有人把礼治和法治对立起来，以为没有成文的法就没有规矩；作者说礼本身就是规矩，而且是人人从小熟悉的规矩。 || Setting rites against law, some think no written law means no rules; Fei says rites are rules, ones everyone knows from childhood.
 错：书中没有讨论这个问题 || 这正是《礼治秩序》开头讨论的问题。 || the essay opens with this question.
 验：从“传统”对：长老也得照礼办事，不能凭一己之意改，可见不是谁说了算。 || Check by tradition: even elders must follow the rites.
 
 问：《无讼》中，乡土社会的人们怎样看待打官司？
 答：觉得打官司是丢脸的事，最好不要打
 据：《无讼》：乡下人把打官司看作可羞的事，说明教化不够。 || “No Lawsuits”: going to court is shameful, a sign of poor upbringing.
-错：觉得打官司是光荣的事 || 正相反，是丢脸的事。 || it is shameful.
-错：每遇到小事都去打官司 || 小事都在乡里调解掉了。 || small matters are mediated.
-错：只相信打官司能解决问题 || 作者说乡下人宁可调解。 || they prefer mediation.
-验：从调解的场面对：作者写乡绅调解时先把双方骂一顿，说他们丢了村子的脸，可见打官司是可羞的。 || Check by the scene: the mediator scolds both for shaming the village.
+错：觉得打官司是光荣的事 || 今天常说依法维权是好事，容易用今天的眼光去看；乡土社会里打官司是可羞的事，说明教化没做好。 || Today standing up for one's rights in court is praised, and that view slips in; in rural society going to law was shameful, a failure of upbringing.
+错：每遇到小事都去打官司 || 有人以为乡下人常为鸡毛蒜皮争吵，就会常去告状；书里说这些小事在乡里由长者调解掉，到不了衙门。 || Some imagine villagers, quarrelling over trifles, would sue often; in the book such matters are settled by elders and never reach the yamen.
+错：只相信打官司能解决问题 || 这是把题目说的乡下人和现代司法下乡后的情形混在了一起；乡下人宁可请乡绅评理调解，把打官司看作丢脸。 || It mixes the villagers with what came after modern courts arrived; they preferred a gentleman's mediation and thought lawsuits shameful.
+验：从调解的场面对：书中举例说，作者参加过一次乡里的调解，调解的乡绅一开口先把双方都骂一顿，说这种事丢了全村的脸，要他们认错回家，可见打官司是可羞的。 || Check by the scene: the mediator scolds both for shaming the village.
 
 问：在乡土社会里，发生了纠纷通常怎样解决？
 答：由乡里有威望的长者出面调解
@@ -2288,17 +2288,17 @@ export const laterBooks: readonly BookData[] = [
 问：作者认为，在乡土社会里简单地推行现代司法，可能带来什么问题？
 答：旧的礼治秩序被破坏了，新的法治秩序却还没有建立起来
 据：《无讼》：司法下乡后，“法治秩序的好处未得，而破坏礼治秩序的弊病却已先发生了”。 || “No Lawsuits”: modern courts arrive, the old order breaks before the new one can work.
-错：所有的纠纷马上都消失了 || 作者说纠纷反而更难处理。 || disputes become harder.
+错：所有的纠纷马上都消失了 || 司法下乡本意是让纠纷有法可依，容易以为纠纷从此能解决；作者说结果是礼治秩序先被破坏，法治的好处还没得到。 || Courts were meant to settle disputes by law, so this seems the result; Fei says the rite order broke first while the gains of law had not come.
 错：人们会更加团结 || 有人钻法律的空子，乡里反而不和。 || people exploit the law and villages quarrel.
-错：乡下人会全部搬到城里去 || 书里没写乡下人搬进城。 || no one moves to town.
-验：从作者的例子对：有人在乡里做了违礼的事，却去城里告状，还打赢了，乡里人看了不服。 || Check by his example: the offender sues and wins, to the village's outrage.
+错：乡下人会全部搬到城里去 || 现代化让很多人进城，容易把“现代”和“进城”连在一起；作者讲的是司法下乡后乡里的秩序乱了，没有说乡下人搬走。 || Modernisation sent many to the cities, so the two are linked; Fei speaks of village order disturbed by the courts, not of people leaving.
+验：从作者的例子对：书中举例说，有人在乡下做了按礼该受责罚的事，反倒到城里的司法处去告状，还告赢了，乡里人都看不下去。 || Check by his example: the offender sues and wins, to the village's outrage.
 
 问：《无为政治》中，作者把权力分成哪两种？
 答：横暴权力和同意权力
 据：《无为政治》：作者把权力分为横暴权力和同意权力两种。 || “Inactive Government”: he names two kinds of power, coercive and consensual.
-错：大权力和小权力 || 书里没用大小来分。 || size is not his measure.
-错：城市权力和乡村权力 || 书里没用城乡来分。 || town and country are not his measure.
-错：男性权力和女性权力 || 书里没用男女来分。 || sex is not his measure.
+错：大权力和小权力 || 说到权力，最先想到的是大小，听着很自然；作者是按权力从哪里来分的：一种来自压迫，一种来自社会分工中大家的同意。 || Size is the first way one thinks of dividing power; Fei divides it by source: one from domination, one from consent in the division of labour.
+错：城市权力和乡村权力 || 全书处处拿城乡对比，容易以为权力也按城乡来分；作者分的是权力的性质：横暴的和同意的。 || The book contrasts town and country throughout, so power seems divided that way; Fei divides it by nature, domination and consent.
+错：男性权力和女性权力 || 《男女有别》一篇讲过男女，容易混进来；《无为政治》讲的是权力的来源，横暴权力来自压迫，同意权力来自社会契约式的同意。 || The essay on the sexes may slip in here; “Inactive Government” concerns where power comes from, domination or consent.
 验：从《长老统治》对：作者后来又补上第三种“教化性的权力”，说前两种都说不尽乡土社会。 || Check by the next essay: he adds a third kind.
 
 问：作者认为，传统中国的皇权对乡村基层的影响怎样？
@@ -2306,7 +2306,7 @@ export const laterBooks: readonly BookData[] = [
 据：《无为政治》：农业社会剩余少，养不起强大的权力，皇权虽然表面强大，实际上很少干预乡村，被称作“无为”。 || “Inactive Government”: a farming society cannot feed strong power, so the throne seems mighty but leaves villages alone.
 错：每天都直接管理每一户人家 || 皇权到不了每家每户，“天高皇帝远”。 || the throne does not reach every house.
 错：乡村完全没有受到皇权的影响 || 乡村也交税、服役，不是完全不受影响。 || villages still paid taxes.
-错：皇帝亲自到每个村庄去收税 || 皇帝不会亲自下乡收税。 || the emperor collects no taxes himself.
+错：皇帝亲自到每个村庄去收税 || 皇权和收税确实有关，容易拼出这个说法；可皇帝从不亲自下乡，赋税靠地方官吏层层收取，正是“天高皇帝远”。 || Imperial power did mean taxes, so the phrase is assembled; but the emperor never went to villages, and taxes came up through local officials.
 验：从篇名对：“无为政治”四个字就是说皇权在基层少有作为。 || Check by the title: inactive government.
 
 问：《长老统治》中，作者提出的是哪一种权力？
@@ -2314,7 +2314,7 @@ export const laterBooks: readonly BookData[] = [
 据：《长老统治》：作者提出第三种权力，“教化性的权力”。 || “Rule of Elders”: he names a third power, the power of teaching.
 错：横暴权力 || 横暴权力是《无为政治》里说的，作者说它说不尽乡土社会。 || coercive power is from the previous essay.
 错：同意权力 || 同意权力也是《无为政治》里说的。 || consensual power is too.
-错：商业权力 || 书里没有“商业权力”。 || there is no commercial power.
+错：商业权力 || 《血缘和地缘》讲到集市和商业，容易拼出“商业权力”这个说法；《长老统治》提出的第三种权力是教化性的权力，来自长幼之间的传授。 || The essay on kinship and place discusses markets, which suggests a “commercial power”; the third power in “Rule by Elders” is educative, passed from old to young.
 验：从父母管孩子对：作者说父母教孩子既不是压迫，也不是双方同意，而是教化，这就是第三种。 || Check by parents: neither coercion nor consent, but teaching.
 
 问：长老之所以有权力，主要是因为什么？
@@ -2322,14 +2322,14 @@ export const laterBooks: readonly BookData[] = [
 据：《长老统治》：长老年长，掌握代代相传的经验，所以有教化的权力。 || “Rule of Elders”: elders hold inherited experience and so have the power to teach.
 错：他们最有钱 || 长老的权力来自年纪和经验，不来自钱。 || it comes from age, not wealth.
 错：他们力气最大 || 长老年纪大，力气不比年轻人大。 || elders are not the strongest.
-错：他们是外来的官员 || 长老是本乡本土的人。 || elders are local.
+错：他们是外来的官员 || 说到有权力的人，容易想到官府派来的官；长老是本村土生土长的老人，靠经验受人敬重，外来的人在村里反而只是“客”。 || Power suggests an official sent from outside; elders are natives of the village respected for experience, and outsiders remain mere guests.
 验：从“长幼之序”对：乡下讲究兄长弟幼，按年龄排先后，就因为年长的懂得多。 || Check by seniority: the older know more.
 
 问：作者认为，教化性的权力在什么样的社会里最容易发生？
 答：变化很慢、经验可以代代相传的社会
 据：《长老统治》：在变化很慢、经验可以照用的社会里，教化性的权力最容易发生。 || “Rule of Elders”: the power of teaching arises where change is slow and experience holds good.
 错：变化很快的社会 || 变化快的社会里经验会过时，出现的是《名实的分离》里的时势权力。 || in fast change, experience fails and power of circumstance arises.
-错：没有老人的社会 || 没有老人就没有长老。 || without elders there are no elders.
+错：没有老人的社会 || “变化”容易让人想到年轻人当家、老人退场；可教化性的权力恰恰要有长者，没有老人，经验就无从传下去。 || Change suggests the young taking over from the old; but educative power needs elders, without whom there is no one to pass experience on.
 错：完全靠商业维持的社会 || 商业社会是陌生人的契约，作者在《血缘和地缘》里讲。 || commerce rests on contracts between strangers.
 验：从《再论文字下乡》对：生活定型、经验代代相同，长老的经验才有用。 || Check by the writing essay: settled life makes experience valid.
 
@@ -2344,16 +2344,16 @@ export const laterBooks: readonly BookData[] = [
 问：作者认为，商业往往在什么样的地方发展起来？
 答：血缘之外、陌生人来往的地方，比如集市
 据：《血缘和地缘》：亲戚之间讲人情不好算账，所以商业多在血缘之外的集市、街上发展。 || “Blood and Place”: kin cannot keep strict accounts, so trade grows outside kinship, at markets.
-错：一家人之内 || 一家人之内不算账。 || families do not keep accounts.
+错：一家人之内 || 生意常从家里做起，说到做生意容易想到家族买卖；作者说一家人之内讲人情，不能当场算清账，生意要到血缘之外去做。 || Businesses often start in the family, which suggests this; Fei says kin cannot square accounts on the spot, so trade grows outside kinship.
 错：最亲密的亲戚之间 || 亲戚之间讲人情，算清了就伤感情。 || exact accounts hurt kin.
-错：没有人的荒野里 || 没有人就谈不上做生意。 || no people, no trade.
-验：从“当场清算”对：作者说在集市上大家都是陌生人，可以当场钱货两清，不欠人情。 || Check by settling on the spot: strangers can square accounts at once.
+错：没有人的荒野里 || 也许是从“血缘之外”联想到远离人群的地方；作者说的“外”是陌生人之间，集市正是陌生人聚在一起的地方，荒野没人，谈不上买卖。 || Perhaps “outside kinship” suggests a place far from people; Fei means among strangers, as in a market, while a wilderness has no one to trade with.
+验：从当场算清对：作者说在集市上大家都是陌生人，可以当场钱货两清，不欠人情。 || Check by settling on the spot: strangers can square accounts at once.
 
 问：书中提到，从外地迁来、在村里住了很久的人，常常仍被看作什么？
 答：外来的“客”，难以完全融入
 据：《血缘和地缘》：外来户在村里住了几代，仍常被叫作“客边”“新客”，难以完全融入。 || “Blood and Place”: newcomers, even after generations, are still called guests.
 错：村里最有权力的人 || 外来的人在村里没有根，不会是最有权的。 || newcomers have no roots and no power.
-错：村里的长老 || 长老是本村的老人。 || elders are native.
+错：村里的长老 || 长老在村里最受敬重，容易想成住得久了也会成长老；长老是本村土生土长的老人，外来户住得再久，在村里也只是“客”。 || Elders are the most respected, so long residence might seem to make one; but elders are born in the village, and newcomers stay guests however long they live there.
 错：从来不被注意的人 || 他们常被注意，还被另眼看待。 || they are marked out.
 验：从血缘对：村里的地位跟着血缘走，外来的没有血缘，所以总是“客”。 || Check by kinship: no kin, always a guest.
 
@@ -2368,16 +2368,16 @@ export const laterBooks: readonly BookData[] = [
 问：作者说的“名实的分离”，指的是什么？
 答：表面上照旧尊重老规矩，实际的内容已经变了
 据：《名实的分离》：长老权力不许人公开反对，人们就用“注释”的办法，表面照旧尊重，内容却悄悄改了。 || “Name and Reality”: elders forbid open dissent, so people reinterpret, keeping the form while the content changes.
-错：人的名字和长相不一样 || 书里说的不是人名和长相。 || it is not names and faces.
-错：东西的名称和价格不一样 || 书里说的不是商品价格。 || it is not prices.
-错：城市和乡村的名字不同 || 书里说的不是地名。 || it is not place names.
+错：人的名字和长相不一样 || “名实”二字容易理解成人的名字和本人对不上；作者说的“名”是表面上照旧的老规矩，“实”是被悄悄改了的内容。 || “Name and reality” may suggest a person's name not fitting them; Fei's “name” is the old rule kept in form, the “reality” its quietly changed content.
+错：东西的名称和价格不一样 || “名不副实”常用来说货物名不副实，容易联想过来；书里说的是长老权力之下，人们表面尊重传统，实际改了内容。 || “Not living up to the name” is often said of goods, which suggests this; Fei means that under elders' power people honour tradition outwardly and change it inwardly.
+错：城市和乡村的名字不同 || 城里乡下叫法不同，也算一种“名”的差别，容易这样拼凑；作者说的是规矩的名义和实际分开了，和地名无关。 || Different names for town and country are a kind of name difference too; Fei means the form of a rule parting from its substance, nothing to do with place names.
 验：从篇名对：“名”是表面的说法，“实”是实际的内容，两者分开了。 || Check by the title: name and reality part.
 
 问：《从欲望到需要》中，作者认为乡土社会的人们行动主要靠什么？
 答：在传统中养成、经过文化塑造的欲望
 据：《从欲望到需要》：乡土社会里人们靠欲望行事，这欲望是文化塑造的，在传统中养成。 || “From Desire to Need”: rural people act on desires shaped by culture and tradition.
 错：周密的科学计划 || 科学计划是现代社会依“需要”行事时才有的。 || scientific planning comes with need, in modern society.
-错：每天看报纸的消息 || 乡下人不看报。 || villagers read no papers.
+错：每天看报纸的消息 || 现代人靠新闻知道该做什么，容易套到乡下；乡下人多不识字，行动靠的是传统里养成的欲望。 || Modern people act on the news, which is easily carried over; villagers, mostly unlettered, act on desires shaped by tradition.
 错：完全随心所欲 || 作者说欲望是文化塑造的，并非随心所欲。 || desires are shaped by culture, not whim.
 验：从篇名对：“从欲望到需要”说的是变化，乡土社会在“欲望”这一头。 || Check by the title: rural society is at the desire end.
 
@@ -2393,14 +2393,14 @@ export const laterBooks: readonly BookData[] = [
 答：和西方社会、现代社会作对比
 据：全书：作者常拿中国乡土社会和西方社会、现代社会对比，例如差序格局对团体格局。 || The whole book: he constantly sets rural China against Western and modern society.
 错：讲一个从头到尾的故事 || 全书是一篇篇论文，没有贯穿的故事。 || it is essays, not one story.
-错：列出大量的数学公式 || 书里没有数学公式。 || there are no formulas.
+错：列出大量的数学公式 || 社会学听起来像一门科学，容易想到公式和数据；可这本书是讲课稿，用的是比喻和对比，如波纹和捆柴，没有公式。 || Sociology sounds like a science with formulas; but these are lectures that work by images and contrasts, ripples and firewood, with no formulas.
 错：只引用古代的诗词 || 书里引孔子、孟子的话，但主要是分析，不是引诗。 || it quotes Confucius, but mainly analyses.
 验：从“捆柴”和“波纹”对：两个比喻一中一西摆在一起，正是对比的方法。 || Check by the two images side by side.
 
 问：读《乡土中国》，比较恰当的方法是什么？
 答：抓住每一篇的核心概念，结合今天的生活去思考
 据：全书：每篇有一个核心概念，如“差序格局”“礼治秩序”“长老统治”，读时要抓概念、联系生活。 || The whole book: each essay turns on one concept; read for it and test it against life.
-错：只记住书里的故事情节 || 书里没有故事情节。 || there is no plot.
+错：只记住书里的故事情节 || 书里有乡下人躲汽车、乡绅调解这样的小场面，容易当成故事来读；但它们只是论证用的例子，全书没有连贯的情节，要抓的是概念。 || Scenes such as the villager and the car may be read as stories; they only illustrate the argument, and what one must grasp are the concepts.
 错：只背诵书中的优美句子 || 它是说理的书，重在概念，不在美句。 || it argues; fine phrases are not the point.
 错：只看目录，不读正文 || 目录只有篇名，不读正文就不懂概念。 || titles alone teach nothing.
 验：从差序格局对：读懂它，就能理解今天为什么还讲“熟人好办事”，可见要联系生活。 || Check by today: “acquaintances get things done” still holds.
@@ -2441,7 +2441,7 @@ export const laterBooks: readonly BookData[] = [
 答：十四篇
 据：全书目录：从《狂人日记》到《社戏》，一共十四篇。 || The contents: from Diary of a Madman to Village Opera, fourteen stories.
 错：八篇 || 八篇是鲁迅另一本《故事新编》的篇数。 || eight is the count of Old Tales Retold.
-错：二十篇 || 二十篇书里没有这个数。 || twenty is no count here.
+错：二十篇 || 二十是个顺口的整数，也容易把《呐喊》和后来的《彷徨》合在一起算；《呐喊》从《狂人日记》到《社戏》是十四篇，初版本有十五篇，后来抽出了《不周山》。 || Twenty is a round guess, or Call to Arms counted together with the later Wandering; it runs to fourteen stories, fifteen in the first edition before “Buzhou Mountain” was taken out.
 错：三十篇 || 三十篇更多，全书只到第十四篇《社戏》。 || thirty is far too many.
 验：从首尾对：第一篇《狂人日记》，最后一篇《社戏》，数下来正是十四篇。 || Check by first and last: count from the Madman to the Opera.
 
@@ -2456,7 +2456,7 @@ export const laterBooks: readonly BookData[] = [
 问：在《自序》里，作者用什么比喻来说明当时中国人的处境？
 答：一间没有窗户、很难打破的铁屋子，里面的人都睡着了
 据：《自序》：他对金心异说，有一间铁屋子，绝无窗户，万难破毁，里面许多熟睡的人快要闷死了。 || The preface: he tells Jin Xinyi of an iron house without windows, almost indestructible, its sleepers about to suffocate.
-错：一艘在海上漂流、找不到方向的小船 || 小船漂流的比喻书里没有。 || there is no drifting boat.
+错：一艘在海上漂流、找不到方向的小船 || 这像是从《故乡》结尾“我”坐船离开故乡联想出来的；《自序》用的是铁屋子：里面的人都熟睡着，不久要闷死，从昏睡进入死灭。 || It seems to come from the boat that carries the narrator away at the end of “My Old Home”; the preface uses an iron house whose sleepers will suffocate, passing from sleep to death.
 错：一座很久没有人照料的花园 || 花园是《朝花夕拾》里的百草园，不是比喻。 || the garden is the Hundred Plant Garden in another book.
 错：一条怎么也走不到头的长路 || 路的比喻在《故乡》结尾，说的是希望。 || the road is in My Old Home, about hope.
 验：从金心异的回答对：他说“然而几个人既然起来，你不能说决没有毁坏这铁屋的希望”，鲁迅这才答应写文章。 || Check by the reply: if a few wake, there is hope of breaking it.
@@ -2466,7 +2466,7 @@ export const laterBooks: readonly BookData[] = [
 据：《自序》：在仙台看日俄战争的幻灯片，围观同胞被杀的中国人神情麻木，他觉得医好身体不如改变精神。 || The preface: at Sendai he saw slides of a Chinese man executed before a numb Chinese crowd, and turned from bodies to minds.
 错：因为学医的考试没有通过 || 他在仙台医专成绩并不差，《藤野先生》里还写老师给他改笔记。 || his grades were fine; Fujino corrected his notes.
 错：因为家里人不同意他学医 || 他学医正是因为父亲被庸医耽误了，家里并不反对。 || he chose medicine after quacks failed his father.
-错：因为他自己的身体不好 || 书里没写他身体不好。 || his health is not the reason.
+错：因为他自己的身体不好 || 《自序》开头写的是父亲久病，“我”天天出入当铺和药店，容易把“病”记到他本人身上；他放弃学医，是因为幻灯片里那些麻木的看客。 || The preface opens on his father's long illness and his trips to pawnshop and pharmacy, so illness gets pinned on him; he gave up medicine because of the numb onlookers in the slide.
 验：从他后来做的事对：他弃医后去东京办文艺杂志《新生》，正是为了改变精神。 || Check by what he did next: a literary magazine in Tokyo.
 
 问：按照《自序》的说法，书名“呐喊”是什么意思？
@@ -2480,33 +2480,33 @@ export const laterBooks: readonly BookData[] = [
 问：《狂人日记》是用什么形式写成的？
 答：一个“狂人”写的日记
 据：《狂人日记》：前面一段文言小序说明来历，正文是狂人写的十三则白话日记。 || “Diary of a Madman”: a classical preface explains its source, then thirteen vernacular entries.
-错：几封往来的书信 || 书里没有书信。 || there are no letters.
-错：一部多幕的剧本 || 它是小说，不是剧本。 || it is a story, not a play.
-错：一组长短不一的诗 || 它是白话散文，不是诗。 || it is prose, not verse.
+错：几封往来的书信 || 小序说这本日记是狂人的哥哥拿出来给“余”看的，交来交去，容易让人想到书信；正文是十三则日记，没有一封信。 || The preface says the madman's brother handed the diary over, which may suggest letters; the text is thirteen diary entries and not one letter.
+错：一部多幕的剧本 || 全篇有赵贵翁的眼色、大哥请来的医生、狂人和来人的对话，场面一个接一个，读起来像戏；但它是日记体小说，没有分幕，也没有人物表和舞台说明。 || Its scenes, Mr Zhao's looks, the doctor his brother brings, the madman's exchanges, read like a play; but it is a diary story with no acts, cast list or stage directions.
+错：一组长短不一的诗 || 十三则日记长短不一、分段很短，看上去容易像一组诗；它开头就是“今天晚上，很好的月光”这样的白话散文句子，是小说。 || The thirteen entries are of uneven length and short paragraphs, which can look like a sequence of poems; it opens on a plain prose sentence about the moonlight, and is fiction.
 验：从篇名对：题目就叫“日记”，小序也说是从狂人的日记里摘出来的。 || Check by the title and preface.
 
 问：《狂人日记》中，“狂人”在古书的字缝里看出了哪两个字？
 答：吃人
 据：《狂人日记》第三则：“仔细看了半夜，才从字缝里看出字来，满本都写着两个字是‘吃人’！” || Entry 3: after half the night he sees between the lines two words: “eat people”.
 错：仁义 || “仁义道德”是书面上写着的字，“吃人”藏在字缝里。 || “benevolence and righteousness” are on the page; the words between them are “eat people”.
-错：读书 || “读书”书里没有。 || “study” is not there.
-错：革命 || “革命”书里没有。 || “revolution” is not there.
+错：读书 || 这是从狂人“翻开历史一查”这个动作联想出来的：他确实在读书，可读书是他做的事，他在字缝里看出来的是“吃人”两个字。 || It comes from the madman opening the history book: reading is what he does, but what he sees between the lines is “eat people”.
+错：革命 || 《呐喊》常被说成写辛亥革命前后，“革命”二字容易冒出来；可《狂人日记》里看出的是“吃人”，革命要到《阿Q正传》《风波》里才正面写到。 || Call to Arms is often said to be about the 1911 revolution, so the word comes to mind; but the madman sees “eat people”, and revolution appears only in “Ah Q” and “Storm in a Teacup”.
 验：从书上的字和字缝对：“这历史没有年代，歪歪斜斜的每叶上都写着‘仁义道德’几个字”，字缝里才是另两个字。 || Check by the page: virtue written, cannibalism beneath.
 
 问：《狂人日记》的结尾发出了怎样的呼喊？
 答：救救孩子
 据：《狂人日记》第十三则：“没有吃过人的孩子，或者还有？救救孩子……” || The last entry: “Perhaps there are still children who have not eaten men? Save the children…”
 错：打倒列强 || “打倒列强”是二十年代北伐时的口号。 || “Down with the powers” is a 1920s slogan.
-错：回到故乡 || 书里没有回故乡。 || there is no homecoming.
+错：回到故乡 || 回故乡是《故乡》的情节，同在一本书里，容易混进来；《狂人日记》正文最后一则只有一句“救救孩子……”。 || Going home is the plot of “My Old Home” in the same book, and slips in here; the madman's last entry is the single cry “Save the children…”.
 错：天下太平 || “天下太平”和全篇的惊恐正相反。 || peace is the opposite of its terror.
 验：从孩子对：狂人觉得大人都吃过人，只有孩子还可能没有，所以希望在孩子身上。 || Check by the children: only they may be innocent.
 
 问：《孔乙己》是通过谁的眼睛来写孔乙己的？
 答：咸亨酒店里的一个小伙计
 据：《孔乙己》：“我从十二岁起，便在镇口的咸亨酒店里当伙计”，故事由这个小伙计讲。 || “Kong Yiji”: “From twelve I worked as a boy at the Xianheng tavern” — the boy tells it.
-错：孔乙己本人 || 孔乙己是被讲的人。 || Kong Yiji is the subject.
-错：丁举人 || 丁举人只在别人嘴里出现。 || Mr Ding appears only in talk.
-错：孔乙己的邻居 || 书里没有他的邻居出场。 || no neighbour narrates.
+错：孔乙己本人 || 全篇写的都是孔乙己，容易以为是他自己讲；可叙述的“我”是十二岁起在咸亨酒店当伙计的孩子，孔乙己的事都是从柜台里看到、听到的。 || The story is all about Kong Yiji, so it may seem his own telling; the “I” is the boy who served at the Xianheng tavern from twelve, seeing him from behind the counter.
+错：丁举人 || 丁举人和孔乙己断腿的事有关，像是知道内情、能讲故事的人；可他在书中从没出场，只在酒客的闲谈里被提到。 || Mr Ding is bound up with the broken legs and seems to know the story; but he never appears, and is only mentioned in the drinkers' talk.
+错：孔乙己的邻居 || 书里讲孔乙己旧事的是酒客，容易把这些知情人想成邻居；可全篇的叙述者是酒店的小伙计，他的邻居一个也没有出场。 || The drinkers who tell his past may be imagined as neighbours; but the narrator is the tavern boy, and no neighbour of Kong Yiji appears.
 验：从结尾那句对：“我到现在终于没有见——大约孔乙己的确死了”，正是伙计多年后的回忆。 || Check by the last line: the boy, years later.
 
 问：孔乙己是一个怎样的人？
@@ -2520,40 +2520,40 @@ export const laterBooks: readonly BookData[] = [
 问：孔乙己的腿是怎么断的？
 答：偷了丁举人家的东西，被打断了
 据：《孔乙己》：他偷到丁举人家里，被打了大半夜，又打折了腿。 || “Kong Yiji”: he stole from Mr Ding and was beaten half the night, his legs broken.
-错：喝醉了酒，在路上摔断了 || 书里没写他醉后摔断。 || he did not fall drunk.
-错：在战场上受了伤 || 他没有上过战场。 || he never went to war.
-错：得了重病，慢慢不能走了 || 是被打断的，不是病的。 || beaten, not ill.
+错：喝醉了酒，在路上摔断了 || 孔乙己最后一次来，自己说是“跌断，跌，跌……”，这个辩解容易被当真；掌柜和酒客都知道他是偷丁举人家的东西被打断的。 || On his last visit he himself says he “fell”, and the excuse can be taken at face value; the owner and the drinkers know he was beaten for stealing from Mr Ding.
+错：在战场上受了伤 || 断了腿容易让人想到打仗受伤；孔乙己是个落魄的读书人，一辈子在鲁镇抄书度日，从没离开过这里去打仗。 || Broken legs suggest a war wound; Kong Yiji is a down-at-heel scholar copying books in Luzhen who never went off to any war.
+错：得了重病，慢慢不能走了 || 他后来很久没来，再来时脸上黑而且瘦，用手撑着“走”来，像是病了；酒客说的是他偷丁举人家，被打了大半夜，打折了腿。 || He stays away long and comes back thin and dark, shuffling on his hands, as if ill; the drinkers say he was beaten half the night for stealing and had his legs broken.
 验：从他最后一次来对：他用手撑着“走”来，说是“跌断，跌，跌……”，众人一笑，可见大家都知道是打断的。 || Check by his lie: he says he fell, and they laugh.
 
 问：《药》中，华老栓为了给儿子治病，买来的“药”是什么？
 答：蘸了人血的馒头
 据：《药》：华老栓向刽子手康大叔买了蘸着革命者鲜血的馒头。 || “Medicine”: Old Shuan buys from the executioner a bun soaked in a revolutionary's blood.
-错：从山里采来的草药 || 书里不是草药。 || it is no herb.
-错：从城里买来的西药 || 书里不是西药。 || it is no foreign medicine.
-错：一碗熬了很久的米粥 || 书里不是米粥。 || it is no porridge.
+错：从山里采来的草药 || 治病用草药是最平常的想法；可华老栓天不亮赶到刑场，拿洋钱换回来的是康大叔递来的人血馒头，正因为信这个偏方才显出愚昧。 || Herbs are the ordinary remedy; but Old Shuan hurries to the execution ground before dawn and pays for the blood-soaked bun, and his faith in it is the point.
+错：从城里买来的西药 || 鲁迅自己学的是西医，容易把西药想进来；可《药》里老栓一家信的是人血馒头，西医西药在篇中根本没有出现。 || Lu Xun studied Western medicine, which brings it to mind; but the Huas trust the blood-soaked bun, and Western medicine never appears in the story.
+错：一碗熬了很久的米粥 || 华大妈在灶下忙着，又把药放进灶里烧，容易想成熬粥；放进灶里的是用荷叶包着的人血馒头，烧好了掰开给小栓吃。 || Mrs Hua busies herself at the stove, which suggests porridge; what goes into the stove is the bun wrapped in a lotus leaf, roasted and broken open for Little Shuan.
 验：从康大叔的话对：他在茶馆里说“这样的人血馒头，什么痨病都包好”。 || Check by Kang: “a blood bun cures any consumption”.
 
 问：《药》中被杀害的革命者叫什么名字？
 答：夏瑜
 据：《药》：被杀的是夏三奶奶的儿子夏瑜。 || “Medicine”: the executed man is Xia Yu, son of Granny Xia.
 错：华小栓 || 华小栓是吃人血馒头的病孩子。 || Little Shuan is the sick boy.
-错：阿Q || 阿Q是《阿Q正传》里的人。 || Ah Q is another story's.
-错：闰土 || 闰土是《故乡》里的人。 || Runtu is in My Old Home.
+错：阿Q || 阿Q最后也被杀了，同样是被杀的人，容易弄混；可阿Q糊里糊涂地被当作抢劫犯枪毙，不是革命者，《药》里被杀的革命者是夏瑜。 || Ah Q is executed too, which invites confusion; but he dies bewildered as a supposed robber, no revolutionary; the revolutionary killed in “Medicine” is Xia Yu.
+错：闰土 || 闰土也是《呐喊》里一个苦命人，容易混在一起；可他在《故乡》里活着，只是被生活压得麻木，不是被杀的革命者。 || Runtu is another of the book's sufferers, which invites the mix-up; but he lives on in “My Old Home”, numbed by hardship, and is no executed revolutionary.
 验：从两家的姓对：“华”“夏”合起来是“华夏”，两家的悲剧就是整个中国的。 || Check by the surnames: Hua and Xia together mean China.
 
 问：《药》的结尾，夏瑜的坟上出现了什么？
 答：一圈红白相间的花
 据：《药》第四节：夏瑜坟顶上有“一圈红白的花”，夏妈妈很吃惊。 || “Medicine”, part 4: a wreath of red and white flowers lies on Xia Yu's grave.
 错：一棵新栽的大树 || 坟边有一株没有叶的树，上面停着乌鸦，不是新栽的。 || there is a leafless tree with a crow, not a new one.
-错：一块刻着名字的石碑 || 书里没有刻名字的碑。 || there is no stone.
+错：一块刻着名字的石碑 || 坟前该有碑，所以“刻着名字的石碑”听着顺；可夏瑜和小栓都葬在城外丛葬的地方，只是一个个土坟，夏瑜坟上多出来的是一圈红白的花。 || A grave should have a stone, so it sounds natural; but both boys lie in the crowded common burial ground outside the city, plain mounds, and what appears on Xia Yu's is a wreath of red and white flowers.
 错：一只白色的鸽子 || 结尾飞起来的是乌鸦，不是鸽子。 || it is a crow that flies, not a dove.
 验：从《自序》对：鲁迅说他“不恤用了曲笔，在《药》的瑜儿的坟上平空添上一个花环”。 || Check by the preface: he added the wreath on purpose.
 
 问：《故乡》中，“我”回故乡是为了什么？
 答：告别老屋，把家人接到“我”谋生的地方去
 据：《故乡》：“我这次是专为了别他而来的”，老屋卖了，要把母亲接到“我”谋食的异地。 || “My Old Home”: the house is sold, and he comes to say goodbye and take his mother away.
-错：给家里的长辈过生日 || 书里没写给长辈过生日。 || there is no birthday.
-错：在故乡找一份工作 || 他是来离开故乡的。 || he comes to leave.
+错：给家里的长辈过生日 || 回乡总像是为家里的什么喜事，过生日是常见的理由；《故乡》开头就说这次是专为告别而来：老屋已经卖给别姓，年内就要交屋。 || A trip home suggests a family celebration such as a birthday; the story says at once he comes to say goodbye: the old house is sold and must be handed over within the year.
+错：在故乡找一份工作 || 回乡谋生是许多人的出路，听着合理；可“我”已经在异地有了谋食的地方，是回来把母亲和侄儿宏儿接走的。 || Seeking work at home was many people's way, so it sounds plausible; but the narrator already makes a living elsewhere and comes to take his mother and nephew Hong'er away.
 错：回去看一场社戏 || 看社戏是另一篇《社戏》。 || the opera is another story.
 验：从结尾对：小说最后写的是“我”坐船离开，看着故乡远去，可见是来告别的。 || Check by the end: he sails away.
 
@@ -2562,13 +2562,13 @@ export const laterBooks: readonly BookData[] = [
 据：《故乡》：闰土恭敬地叫了一声“老爷！……”，“我”觉得“我们之间已经隔了一层可悲的厚障壁了”。 || “My Old Home”: Runtu says respectfully “Master!” and the narrator feels a thick wall between them.
 错：迅哥儿 || “迅哥儿”是少年闰土的叫法，中年时已不这样叫了。 || “Brother Xun” was the boy's word.
 错：哥哥 || 闰土让儿子水生给“我”磕头，自己没叫哥哥。 || Runtu makes his son bow.
-错：朋友 || “朋友”书里没有这样叫。 || “friend” is not said.
+错：朋友 || 两人少年时是好朋友，容易以为重逢时会以朋友相称；闰土却恭敬地叫了一声“老爷”，还叫水生给“我”磕头，正是这声称呼隔开了两人。 || They were friends as boys, so a friendly word seems likely; Runtu says “Master” and has Shuisheng bow, and that word divides them.
 验：从少年对：少年闰土和“我”无话不谈，叫“迅哥儿”，正对比出“老爷”的隔膜。 || Check by the boy: the old name shows the distance.
 
 问：《故乡》结尾关于路的一段话，表达的是什么意思？
 答：希望就像地上的路，走的人多了，也就有了
 据：《故乡》结尾：“其实地上本没有路，走的人多了，也便成了路。” || The end: “There was no road; when many walk it, it becomes one.”
-错：出门在外，一定要认清方向 || 这句话不是讲认方向。 || it is not about direction.
+错：出门在外，一定要认清方向 || “路”字容易让人想到出门认路；可这段话的前一句说的是希望，路只是比喻：希望要靠走的人多了才会出现。 || “Road” suggests finding one's way; but the sentence before is about hope, and the road is a figure: hope appears when enough people walk.
 错：故乡的路已经和从前不一样了 || 路是比喻，不是说真的路变了。 || the road is a figure.
 错：人生的路会越走越窄 || 作者说的是路会出来，不是变窄。 || he says a road appears.
 验：从上一句对：“希望本是无所谓有，无所谓无的”，下一句才用路来比希望。 || Check by the line before: hope neither exists nor not.
@@ -2576,8 +2576,8 @@ export const laterBooks: readonly BookData[] = [
 问：《阿Q正传》中，阿Q被人欺负以后，常用什么办法安慰自己？
 答：在心里把失败想成胜利，比如当作是儿子打了老子
 据：《阿Q正传》第二章“优胜记略”：阿Q被打了，就想“我总算被儿子打了”，于是心满意足。 || Ah Q chapter 2: beaten, he tells himself his son has beaten him, and feels victorious.
-错：到县里去告状 || 他不告状，也告不起。 || he never sues.
-错：偷偷练武，准备报仇 || 他没有练武。 || he does not train.
+错：到县里去告状 || 受了欺负去告状是常人的想法；可阿Q没钱没势，连说自己姓赵都被赵太爷打了嘴巴，根本告不了状，只能在心里转败为胜。 || Going to law is the ordinary response; but Ah Q has neither money nor standing, and was slapped by Mr Zhao merely for claiming his surname; he can only win in his head.
+错：偷偷练武，准备报仇 || 挨了打就练武报仇，是武侠故事的路子；阿Q连王胡都打不过，也从不想练本事报仇，挨了打就在心里说是“儿子打老子”。 || Training for revenge is the martial-tale pattern; Ah Q cannot even beat Whiskers Wang and never thinks of training; he tells himself “a son is beating his father”.
 错：搬到别的村子去住 || 他后来进城是去谋生，不是为躲人搬走。 || he goes to town for work, not to flee.
 验：从“精神胜利法”对：他打不过人就在心里转败为胜，所以挨打后反而得意。 || Check by his method: defeat turned to victory in his head.
 
@@ -2601,15 +2601,15 @@ export const laterBooks: readonly BookData[] = [
 答：圆圈画得不够圆
 据：《阿Q正传》第九章：他画圆圈，“画得不圆”而羞愧，又安慰自己“孙子才画得很圆的圆圈呢”。 || Chapter 9: ashamed that his circle is not round, he consoles himself that only grandsons draw round circles.
 错：自己的性命保不住了 || 他到游街时才隐约觉得要杀头，画圈时并不在意。 || only on the cart does he sense death.
-错：没有人给他送饭 || 书里没写他在意送饭。 || food is not his worry.
-错：赵太爷会不会来看他 || 书里没写他想赵太爷来看。 || he does not await Zhao.
+错：没有人给他送饭 || 坐牢的人常盼家里送饭，容易这样想；可阿Q无家无业，画押时只羞愧圈没画圆，后来还想“孙子才画得很圆的圆圈呢”。 || Prisoners long for food from home, which suggests this; but Ah Q has no home, and is ashamed only of his crooked circle, consoling himself that only a grandson could draw it round.
+错：赵太爷会不会来看他 || 赵太爷是阿Q一直又怕又想攀附的人，容易以为他念着赵太爷；可画圈时他心里只有那个不圆的圈，而赵家这时正因为被抢而恨着他。 || Mr Zhao is the man Ah Q both fears and courts, so he might seem to hope for him; but at the signing he thinks only of his circle, and the Zhaos, just robbed, hate him.
 验：从精神胜利法对：连性命攸关的时刻他也只在乎面子，这正是第二章那套办法的结局。 || Check by his method: face matters even at death.
 
 问：《社戏》中，“我”和小伙伴们是怎样去看戏的？
 答：晚上划着船去赵庄
 据：《社戏》：“我”和小伙伴们夜里借了航船，划到赵庄去看戏。 || “Village Opera”: at night he and the boys borrow a boat and row to Zhao Village.
-错：白天走路进城 || 是晚上，而且划船去。 || at night, by boat.
-错：坐着马车去县里 || 他们划船，没有马车。 || by boat, not cart.
+错：白天走路进城 || 看戏常是白天进城去看，听着平常；“我”他们看的是邻村赵庄的夜戏，是晚上借了八叔的航船划去的。 || Going to town by day for a play sounds ordinary; the boys go to the night opera at Zhao village, rowing there in Uncle Eight's boat.
+错：坐着马车去县里 || 坐车去看戏是北方的样子；“我”外婆家在水乡平桥村，出门全靠船，他们是划着航船去的，也不是去县里。 || Riding a cart is a northern picture; Pingqiao is a water village where everyone goes by boat, and they row to a neighbouring village, not the county town.
 错：跟着大人坐轿子去 || 大人没跟去，是小伙伴担保的。 || no adults go; the boys vouch for him.
 验：从回来的路上对：他们在船上偷吃六一公公的罗汉豆，可见是坐船去的。 || Check by the beans: they steal them on the way back by boat.
 
@@ -2625,24 +2625,24 @@ export const laterBooks: readonly BookData[] = [
 答：一个人力车夫
 据：《一件小事》：车夫撞了老女人，主动扶她去巡警分驻所，“我”觉得自己的“小”。 || “A Small Incident”: the rickshaw man knocks a woman over and helps her to the police post; the narrator feels small.
 错：一个巡警 || 巡警只是来传话的，“我”还托他把铜元给车夫。 || the policeman only passes word.
-错：一个老女人 || 老女人是被撞的人。 || the woman is the one hurt.
-错：一个学生 || 书里没有学生。 || there is no student.
+错：一个老女人 || 老女人是事故里的另一个主角，“我”还嫌她装腔作势，容易以为惭愧和她有关；“我”惭愧的是自己先怪车夫多事，车夫却扶着她走向巡警分驻所。 || The old woman is the other party, and the narrator thinks she is shamming, so shame seems to concern her; he is ashamed because he blamed the puller, who helped her to the police post.
+错：一个学生 || “我”本人是读书人，容易想到让他惭愧的是另一个读书人；可书里出场的只有车夫、老女人和巡警，没有学生。 || The narrator is educated, so another student may come to mind; but only the puller, the old woman and the policeman appear.
 验：从“我”的反应对：“我”先嫌老女人装腔作势、怪车夫多事，后来看到车夫的背影高大起来，才惭愧。 || Check by his turn: first annoyed, then ashamed.
 
 问：《风波》中的“风波”是怎样引起的？
 答：传说皇帝又坐了龙庭，而七斤已经剪了辫子
 据：《风波》：张勋复辟，传说“皇帝坐了龙庭”，而七斤进城时已被剪了辫子。 || “A Storm in a Teacup”: rumour says the emperor is back, and Sevenpounds has lost his queue in town.
-错：村里发了一场大水 || 书里没写发大水。 || there is no flood.
-错：七斤家里失了火 || 书里没写失火。 || there is no fire.
+错：村里发了一场大水 || 乡村的“风波”常是天灾，大水最容易想到；《风波》里一切平静，乱子出在城里传来的消息：皇帝坐了龙庭，要辫子了。 || A village “storm” suggests a natural disaster such as a flood; in the story all is calm, and trouble comes with the news that the emperor is back and wants queues.
+错：七斤家里失了火 || 失火也是乡下常见的祸事，听着像；这场风波却没有一点实际的损失，全家只是因为七斤没了辫子担惊受怕了一场。 || Fire is another common village disaster, so it sounds right; this storm costs nothing at all, only a family's fright over Sevenpounds' missing queue.
 错：七斤的女儿要出嫁 || 女儿六斤还小，正在裹脚。 || his daughter is a small girl.
 验：从赵七爷对：他特意穿上长衫来看七斤有没有辫子，可见风波就因为辫子。 || Check by Mr Zhao: he comes in his gown to look at the queue.
 
 问：《明天》中，单四嫂子失去了谁？
 答：她的儿子宝儿
 据：《明天》：寡妇单四嫂子的儿子宝儿病死了。 || “Tomorrow”: the widow Fourth Shan's son Bao'er dies of illness.
-错：她的丈夫 || 她早已守寡，丈夫不在了。 || her husband is long dead.
-错：她的母亲 || 书里没写她母亲。 || her mother is absent.
-错：她的女儿 || 她只有宝儿一个孩子。 || Bao'er is her only child.
+错：她的丈夫 || 失去丈夫是旧时妇女最常见的不幸，容易这样想；单四嫂子早已守寡，这回失去的是她唯一的指望，三岁的儿子宝儿。 || Losing a husband was the commonest misfortune, so it seems likely; Mrs Fourth Shan is long widowed, and now loses her only hope, her three-year-old son.
+错：她的母亲 || 单四嫂子孤苦伶仃，容易以为她失去的是长辈；她是年轻的寡妇，一心盼着儿子长大，篇里病死的是三岁的宝儿。 || Mrs Fourth Shan is so alone that one may think she lost a parent; she is a young widow living for her son, and it is three-year-old Bao'er who dies.
+错：她的女儿 || 也许是和《风波》里七斤家的女儿六斤混在了一起；单四嫂子只有宝儿一个孩子，病死的是儿子。 || Perhaps confused with Sevenpounds' daughter Sixpounds in “Storm in a Teacup”; Mrs Fourth Shan has only Bao'er, a son.
 验：从篇名对：她夜里盼着“明天”宝儿会好，可宝儿还是死了。 || Check by the title: she hopes for tomorrow.
 
 问：《头发的故事》借谈什么来回顾辛亥革命前后的事？
@@ -2656,24 +2656,24 @@ export const laterBooks: readonly BookData[] = [
 问：《白光》中的陈士成是一个怎样的人？
 答：一次又一次考不中、最后发了疯的读书人
 据：《白光》：陈士成考了十六回县考都没中，发疯去挖银子，最后淹死在湖里。 || “White Light”: after sixteen failed exams Chen Shicheng goes mad digging for silver and drowns.
-错：一个走南闯北的商人 || 他一辈子没离开过家乡。 || he never leaves home.
+错：一个走南闯北的商人 || “走南闯北”正和陈士成相反；他一次次进城看县考的榜，一辈子守着祖传的老屋，最后在屋里掘地，想挖出祖上埋的银子。 || “Travelling far and wide” is his opposite; he goes again and again to read the exam list, never leaves his ancestral house, and ends digging there for buried silver.
 错：一个为革命牺牲的青年 || 他和革命无关；为革命牺牲的是《药》里的夏瑜。 || that is Xia Yu in Medicine.
-错：一个勤劳的农民 || 他是读书人，不种地。 || he is a scholar, not a farmer.
+错：一个勤劳的农民 || 《呐喊》写过不少农民，像《故乡》里的闰土，容易混进来；陈士成是一心考功名的读书人，从不种地。 || The book has farmers such as Runtu, who may slip in here; Chen Shicheng is a scholar bent on the examinations who never farms.
 验：从孔乙己对：两人都是考不中的读书人，一个被打断腿，一个发了疯。 || Check by Kong Yiji: both failed scholars.
 
 问：《兔和猫》《鸭的喜剧》和书中其他各篇相比，有什么不同？
 答：写的是小动物和日常小事，语气比较轻松
 据：《兔和猫》《鸭的喜剧》：写北京寓所里的小兔、小鸭和盲诗人爱罗先珂，语气轻松。 || “Rabbits and a Cat”, “The Comedy of the Ducks”: rabbits, ducklings and the blind poet Eroshenko in a Beijing house, lightly told.
 错：都是很长的长篇小说 || 它们是全书最短的几篇。 || they are among the shortest.
-错：写的是外国的战争 || 书里写的是院子里的小事，没有战争。 || there is no war.
-错：都是用诗写成的 || 它们和其他各篇一样是白话散文体小说。 || they are prose like the rest.
+错：写的是外国的战争 || 《鸭的喜剧》写的是俄国诗人爱罗先珂，容易由“外国人”想到外国的事；可篇里写的是他在北京养蝌蚪、小鸭，没有战争。 || “The Comedy of the Ducks” concerns the Russian poet Eroshenko, which may suggest foreign affairs; but it tells of his tadpoles and ducklings in Beijing, with no war.
+错：都是用诗写成的 || 《鸭的喜剧》的主人公爱罗先珂是诗人，篇里还写他在北京觉得寂寞，容易联想到诗；但两篇和其他各篇一样，是白话小说。 || The hero of “The Comedy of the Ducks” is a poet, lonely in Beijing, which suggests verse; but both pieces are vernacular stories like the rest.
 验：从《狂人日记》对：放在一起看，一边是“吃人”，一边是小鸭小兔，轻重差别很明显。 || Check by contrast with the Madman.
 
 问：《呐喊》中很多小说写到的地方，如鲁镇、未庄，大多以哪里为原型？
 答：作者的家乡浙江绍兴一带
 据：全书：鲁镇、未庄、赵庄多以作者家乡浙江绍兴一带为原型，有乌篷船、社戏和黄酒。 || The book: Luzhen, Weizhuang and Zhao Village are modelled on Shaoxing, with its awning boats, operas and yellow wine.
 错：北京城里的胡同 || 《一件小事》《兔和猫》写在北京，但鲁镇、未庄不是北京。 || some stories are set in Beijing, but not these villages.
-错：上海的租界 || 书里没写上海租界。 || the Shanghai concessions are absent.
+错：上海的租界 || 鲁迅晚年住在上海，容易把他的作品都和上海联系起来；可写《呐喊》时他在北京，小说里的鲁镇、未庄写的是绍兴一带的水乡。 || Lu Xun spent his last years in Shanghai, so his work is linked with it; but he wrote these stories in Beijing, and Luzhen and Weizhuang are Shaoxing water towns.
 错：日本的东京 || 鲁迅在日本学医是在仙台，不是这些小镇的原型。 || Japan is in the preface, not the villages.
 验：从咸亨酒店对：绍兴至今还有咸亨酒店，卖的正是书里的黄酒和茴香豆。 || Check by the Xianheng: it still stands in Shaoxing.
 

@@ -44,6 +44,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "漏掉条件：第四段说先要问差距是否超出误差范围，没有超出就“不能轻易说理论错了”，选项把有条件的判断说成了无条件。",
           ),
         ],
+        check: t(
+          "Check against the end of paragraph 3: someone who only repeats may repeat one bias a hundred times and think it reliable, a warning that would make no sense if repetition removed systematic error.",
+          "用第三段末句再对：只会机械重复而不追问原因的人，会把同一个偏差重复一百次还以为可靠；要是重复能消除系统误差，这句警告就无从说起。",
+        ),
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -68,6 +72,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "把可能说成必然：末段说不一致“并不一定意味着实验失败”，要分析是偶然波动还是方法偏差，选项一口咬定是后者。",
           ),
         ],
+        check: t(
+          "Check against the end of paragraph 2: the writer calls stating the error range the more important practice, since it tells others how far to trust the result; paragraph 5 echoes it.",
+          "用第二段末句再对：作者把“如实写出误差的范围”称为“更重要的做法”，因为它告诉别人这个结论有多大的把握，和第五段的判断前后呼应。",
+        ),
       },
     ],
     analysis: [
@@ -94,6 +102,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "无中生有：第五段把掩盖误差和推给误差并列为两种不对的态度，没有比较哪一种危害更大。",
           ),
         ],
+        check: t(
+          "Check against the start of paragraph 4: the claim that a gap beyond the error may hide something unknown comes first, and Kepler follows to prove it.",
+          "用第四段开头再对：先说差距明显超出误差范围，“背后可能藏着尚未认识的东西”，紧接着才举开普勒，可见事例是为证明误差可以成为发现的入口。",
+        ),
       },
       {
         ask: "下列对文章思路的分析，正确的一项是",
@@ -118,6 +130,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "曲解内容：末段把话题推到学习科学的人身上，是延伸不是重复；它说的恰恰是不必凑出课本上的标准答案。",
           ),
         ],
+        check: t(
+          "Check by the links that open the paragraphs: “since error cannot be removed”, “more interesting still”, “it follows”, “for those learning science” follow the same order as the right option.",
+          "看各段开头的关联语：“既然误差无法消除”转入控制，“更有意思的是”转入发现，“由此可见”收束为态度，“对于学习科学的人来说”落到学习，顺序和正确选项一致。",
+        ),
       },
     ],
     answers: [
@@ -169,6 +185,10 @@ export const informationalPassages: readonly ModernPassage[] = [
           ),
           t("Widens the scope: “many” works, not “all”.", "扩大范围：第二段说让“许多”原本不容易被看到的作品找到读者，选项改成了“所有”。"),
         ],
+        check: t(
+          "Check by the loop in paragraph 3: it arises only because the feed rests on past choices; if it could see what you may still need, it would not narrow.",
+          "用第三段的循环再对：点开越多推送越多、推送越多点开越多，这个循环正因为算法依据过去的选择才会形成；它若能看出“你还可能需要什么”，就不会越推越窄。",
+        ),
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -193,6 +213,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "因果倒置：原文是同类内容推得越多，看法越容易在重复中变得固执，选项把结果说成了原因。",
           ),
         ],
+        check: t(
+          "Check by the remedies in paragraph 5: searching unfamiliar topics, reading whole classics and browsing libraries all change one's own choices, which is how the tool is used differently.",
+          "用第五段的对策再对：主动搜索陌生的话题、读整本的经典、去图书馆书店翻看，都是靠人改变自己的选择来改变推荐，正是“问题在于怎样使用工具”的落实。",
+        ),
       },
     ],
     analysis: [
@@ -219,6 +243,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "无中生有：第五段把去图书馆、书店列为在算法之外“保留一扇窗”的做法，没有和手机应用比较可靠与否。",
           ),
         ],
+        check: t(
+          "Check by the paragraphs' roles: “it must be granted” praises, “however” turns to the risks, and “not necessarily” refuses outright rejection; both sides are kept.",
+          "看段落的分工再对：第二段以“应当承认”肯定作用，第三、四段以“然而”转入隐患，第五段又说拒绝算法“恐怕也不必”，两面都顾到，正是辩证分析。",
+        ),
       },
       {
         ask: "下列对文章结构的分析，正确的一项是",
@@ -243,6 +271,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "关系判断错：最后一段“让算法做助手，而不是做主人”收束全文、点明观点，和前文紧密相连。",
           ),
         ],
+        check: t(
+          "Check by what follows: paragraph 6 on cultivating initiative and the close on keeping the algorithm a helper both build on the active choice raised in paragraph 5.",
+          "看第五段之后的内容：第六段讲青少年要培养主动性，末段讲“让算法做助手，而不是做主人”，都承接第五段提出的主动选择，可见设问确实引出了下文的对策。",
+        ),
       },
     ],
     answers: [
@@ -298,6 +330,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "推断绝对化：第六段说各地根据本地气候对农时和农谚作了调整，说明节气是改着用，不是“毫无用处”。",
           ),
         ],
+        check: t(
+          "Check by the solstices in paragraph 2: the shortest and longest days are set by the sun, which is why the dates hold in the solar calendar; by the moon they would wander.",
+          "用第二段的冬至、夏至再对：冬至前后白天最短、夏至前后白天最长，这是由太阳的位置决定的，所以节气在公历里日子稳定；若按月亮圆缺划分，日期就会年年游移。",
+        ),
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -322,6 +358,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "曲解原文：第六段说各地“调整”农时和农谚，正说明一直在用；“完全放弃”在文中找不到。",
           ),
         ],
+        check: t(
+          "Check by what follows: paragraph 5 lists the value that remains while saying it lies “not only” in farming, granting part of the claim, exactly “some truth, but too simple”.",
+          "看作者接下来的写法：第五段一面列出节气今天的价值，一面说它的价值“并不只在于指导耕种”，承认了它不再主要用于耕种的一面，正是“有一定道理，却失之简单”。",
+        ),
       },
     ],
     analysis: [
@@ -348,6 +388,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "夸大：第六段说学校、社区的活动是“让节气重新进入生活的尝试”，选项把“尝试”说成“已完全融入”。",
           ),
         ],
+        check: t(
+          "Check by where each point lands: a method akin to science, customs that mark time's rhythm, poems that open classical culture.",
+          "看三层各自的落点：观察自然的方法“与今天的科学精神是相通的”，习俗让人“感受到时间的节奏”，诗词是“打开古典文化的钥匙”，正好是方法、生活、文化三方面。",
+        ),
       },
       {
         ask: "下列对文章思路的分析，正确的一项是",
@@ -372,6 +416,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "结构说错：黄河流域、南方、西北只在第六段一处提到，各段依次是介绍、用途、辩驳、结论，不是并列的地域介绍。",
           ),
         ],
+        check: t(
+          "Check by paragraph 4's role: it states the “mission accomplished” view and calls it too simple; paragraphs 5 and 6 rebut it, and the last states the view.",
+          "看第四段的作用：它先摆出节气“已经完成了历史使命”的看法，再判为“失之简单”，第五、六段才逐层辩驳，末段说传统文化的生命力“在于被人们使用”，点明观点，与正确选项的顺序一致。",
+        ),
       },
     ],
     answers: [
@@ -426,6 +474,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "与原文相反：第六段说泥炭地“面积虽然不大，储存的碳却相当可观”。",
           ),
         ],
+        check: t(
+          "Check by the wording: natural wetlands are listed first, then “by the international definition” adds man-made waters; the option keeps “may also count”, not “are”.",
+          "看句子的说法再对：前面先列沼泽、滩涂、河流等天然湿地，再用“按照国际上通行的定义”把人工水域加进来，原文说的是“也可以算作”，选项保留了“也可以”，没有说成“都是”。",
+        ),
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -450,6 +502,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "时间混淆：第二段说签约“此后”才把2月2日定为世界湿地日，选项改成了“当即”。",
           ),
         ],
+        check: t(
+          "Check by the last sentence of paragraph 6: this is a reason peatland protection draws attention; if draining released no carbon, there would be no such reason.",
+          "用第六段末句再对：作者说这“也是泥炭地的保护越来越受到重视的原因之一”；如果排水开垦不会放出封存的碳，就谈不上为此保护泥炭地。",
+        ),
       },
     ],
     analysis: [
@@ -476,6 +532,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "无中生有：第三段依次说泥沙沉积和植物、微生物分解，两者并列，没有比较谁更重要。",
           ),
         ],
+        check: t(
+          "Check by the sponge's two powers: it soaks up water and gives it back, matching storage in the rainy season and slow release in the dry season.",
+          "用海绵的两种本事再对：海绵能吸水，一挤又把水放出来，正对应原文“雨季时，它吸收和储存大量雨水”和“旱季时，它又把储存的水慢慢释放出来”，比喻的两面都在下文落实了。",
+        ),
       },
       {
         ask: "下列对文章结构的分析，正确的一项是",
@@ -500,6 +560,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "曲解：末段说功能“平时并不显眼”、失去后才知道价值，是要说明湿地重要却被低估，不是“并不重要”。",
           ),
         ],
+        check: t(
+          "Check by the openings “is often called”, “is also like”, “is moreover”, “besides”: each brings one function, side by side, none derived from another.",
+          "看四段开头的词：“湿地常被称为”“湿地还像”“湿地又是”“此外”，一段引出一种功能，彼此不分先后、也不互相推导，正是并列关系。",
+        ),
       },
     ],
     answers: [
@@ -554,6 +618,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "张冠李戴：由褒变贬的是“爪牙”；“牺牲”是从祭祀的牲畜变得“庄重而崇高”。",
           ),
         ],
+        check: t(
+          "Check by “in contrast” in the same paragraph: “smell” and “father-in-law” come under narrowing, the opposite of the two rivers, so the rivers are widening.",
+          "用同段的“与此相反”再对：“臭”和“丈人”被放在“与此相反的情形是范围缩小”之下，和“江”“河”一缩一扩，可见“江”“河”属于扩大。",
+        ),
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -578,6 +646,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "把可能说成必然：第五段说延伸出来的意思“可能取代原来的意思”，选项改成“一定会”。",
           ),
         ],
+        check: t(
+          "Check by the hare in paragraph 3: reading the old word for “run” as “walk” turns a racing hare into a stroller, a live case of the misreading paragraph 6 describes.",
+          "用第三段的兔子再对：读者若把“走”当成今天的步行，就会把狂奔的兔子想成慢慢踱步，这正是以今释古造成误读的实例，第六段的判断有了着落。",
+        ),
       },
     ],
     analysis: [
@@ -601,6 +673,10 @@ export const informationalPassages: readonly ModernPassage[] = [
           ),
           t("Invented: paragraph 5 quotes no old text.", "无中生有：第五段直接分析原因，没有引用古书原话。"),
         ],
+        check: t(
+          "Check by the second example in the paragraph: a word for hearing that came to mean smelling sits beside “zou” as transfer, so the hare shows the old and new senses of one word.",
+          "用同段的“闻”再对：“闻”本义是听见，后来多指用鼻子嗅，和“走”同属词义的转移；两例并举，说明这一段讲的是转移，兔子一例是要具体显出“走”的古今之别。",
+        ),
       },
       {
         ask: "下列对文章思路的分析，正确的一项是",
@@ -625,6 +701,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "与原文相反：末段用“更深一层说”承接上段，在读懂古书之外再进一层讲文化意义，不是否定。",
           ),
         ],
+        check: t(
+          "Check by the openings: paragraphs 2 to 4 sort the kinds of change, paragraph 5 asks why, and paragraphs 6 and 7 ask what use it is, the order of the right option.",
+          "看各段的开头：第二至四段以“一种常见情形”“还有一种情形”“感情色彩也会改变”分类，第五段“为什么会变化”讲原因，第六、七段“有什么用处”“更深一层说”讲意义，顺序与正确选项一致。",
+        ),
       },
     ],
     answers: [
@@ -674,6 +754,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "与原文相反：第五段开头说“借景并不是看见什么就借什么”，还要“俗则屏之，嘉则收之”。",
           ),
         ],
+        check: t(
+          "Check by the Humble Administrator's Garden in paragraph 3: the pagoda outside seems to stand among the garden's trees and water, the outside taken into the view and the garden stretched outward.",
+          "用第三段的拙政园再对：从园中向西望能看到园外的北寺塔，“塔影仿佛就立在园中的树木和水面之上”，这正是把园外景物纳入园内视野，使园子向远方延伸。",
+        ),
       },
       {
         ask: "下列对原文内容的理解，正确的一项是",
@@ -698,6 +782,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "无中生有：末段说现代建筑有时只顾自身造型、不考虑周围环境，没有说设计者完全不了解古典园林。",
           ),
         ],
+        check: t(
+          "Check by “stillness and motion” in the same paragraph: framing “makes one stop and look”, set against the shifting views that draw one on; a framed scene holds the eye like a picture.",
+          "用同段的“一静一动”再对：作者说框景“让人停下来细看”，和移步换景“引人不断向前”相对，被框起来的景物让人驻足观看，正像在看一幅画。",
+        ),
       },
     ],
     analysis: [
@@ -721,6 +809,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "与原文相反：末段说现代城市有时彼此遮挡，主张向古人学“借”，不是现代超越了古典。",
           ),
         ],
+        check: t(
+          "Check by the two uses of the treatise: paragraph 2 explains the two words, and paragraph 5 returns to “fitness” and adds “screen the vulgar, take in the fine” to ground the choosing.",
+          "看《园冶》两处引文的用途：第二段用“巧于因借，精在体宜”解释“因”和“借”，第五段又回到“宜”字，并引“俗则屏之，嘉则收之”说明借景要有取舍，一处释义，一处立据。",
+        ),
       },
       {
         ask: "下列对文章思路的分析，正确的一项是",
@@ -745,6 +837,10 @@ export const informationalPassages: readonly ModernPassage[] = [
             "以偏概全：第五段说借景“既需要开放的眼光，也需要严格的取舍”，不美的要遮挡；全文的总结也在最后一段，不在第五段。",
           ),
         ],
+        check: t(
+          "Check by the opening and the close: the first paragraph's question leads to borrowing, the last brings it to modern cities, and meaning, methods and principle come between.",
+          "看首尾是否相应：首段用问句从“有限的空间”引出“借”，末段说“如果设计者也能学一学古人的‘借’”，联系现代城市，中间依次是含义、方式、原则，与正确选项一致。",
+        ),
       },
     ],
     answers: [

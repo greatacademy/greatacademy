@@ -66,6 +66,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "过度解读：父亲只是说“用磨刀器拉几下就行了”，图个省事，文中看不出他看不起手艺，也没有夫妻矛盾。",
           ),
         ],
+        check: t(
+          "Check by his other ways: he grinds even a child's pencil knife with care and rewinds the handle with a knot that lasts years; little money, much labour.",
+          "用他的其他做法再对：他给“我”削铅笔的小刀也“一样细细地磨”，还把刀把上松了的布条重新缠好，结打得“用好几年都不散”；钱收得少，工夫却花得多，可见看重的是手艺。",
+        ),
       },
       {
         ask: "下列对文中母亲的理解，正确的一项是",
@@ -90,6 +94,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "动机误读：“他是慢慢磨的”是在想老秦，借他的样子提醒“我”，透出的是怀念，不是责怪。",
           ),
         ],
+        check: t(
+          "Check by the old knife later: she buys a new one but keeps the old, wipes it, and years on says “slowly, he ground slowly”; the concern lasts.",
+          "用后文的旧刀再对：搬进新楼后，母亲另买了新刀，却从不扔掉旧刀，还常取下来擦一擦；多年后又提醒“我”“慢一点，他是慢慢磨的”，这份牵挂一直延续下来。",
+        ),
       },
     ],
     analysis: [
@@ -113,6 +121,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "语言风格说错：小说多用短句白描，如“可是第二年秋天，老秦没有来”，朴素平实，没有华丽铺张。",
           ),
         ],
+        check: t(
+          "Check by the voice: “I crouched”, “I asked”, “years later” are the narrator's memories; nothing is told of Qin's past.",
+          "用叙述的口吻再对：“我蹲在旁边看”“我问过他”“许多年后”，写的都是“我”的所见所忆；老秦从哪里来、有过什么经历，文中一字未提，并没有插叙他的身世。",
+        ),
       },
       {
         ask: "下列对文中语句的分析，正确的一项是",
@@ -137,6 +149,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "作用说错：桂花落了又开、又落，写时间推移和等待之久；故事在青石巷，不在城市新区。",
           ),
         ],
+        check: t(
+          "Check by his other actions: he squints at the edge a while, accepts dinner after refusals, washes the bowl before returning it; all unhurried, like the sound.",
+          "用老秦的其他举动再对：他看刀口要“眯着眼睛”看一会儿，被留饭推了几回才坐下，吃完把碗筷洗干净才还回来，处处不慌不忙，正和磨刀声的“不急不躁”相合。",
+        ),
       },
     ],
     answers: [
@@ -216,6 +232,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "与原文相反：急停后许晴“愣住了，脸一下子红了”，还喊“我没做错啊”，也“什么也没听见”，并没有立刻明白。",
           ),
         ],
+        check: t(
+          "Check by her blush: seeing him re-scrape her machine, her face burns, because she had thought the cleaning beneath her.",
+          "用她的脸红再对：看见周师傅把她擦过的车床又刮一遍，许晴“脸却有些发烫”；正因为她原本觉得擦机床是“当清洁工”，自视甚高，这一刻才感到惭愧。",
+        ),
       },
       {
         ask: "下列对小说人物和情感的理解，正确的一项是",
@@ -240,6 +260,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "动机误读：她把手放在床身上站一会儿，是学师傅先“听”机床，正是在回答“先干啥”，不是不理徒弟。",
           ),
         ],
+        check: t(
+          "Check by the nickname: before, she laughed at his nickname; after, she cleans with care and is glad to be called “Little Listen”.",
+          "用前后对外号的态度再对：急停之前她“也跟着笑过”周师傅的外号；急停之后她擦机床“格外仔细”，别人叫她“小听听”，她“竟有点高兴”，可见由不解转为敬佩。",
+        ),
       },
     ],
     analysis: [
@@ -266,6 +290,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "氛围说错：日光灯、轰隆声写车间的忙碌，“声音像一条河”带着生气，文中没有工厂要倒闭的暗示。",
           ),
         ],
+        check: t(
+          "Check by the opening: paragraph 2 likens the noise to a river running end to end; the ending's “flowing again” picks it up, with Xu Qing now in charge.",
+          "用开头再对：第二段写车床开起来，“轰隆隆的声音像一条河，从这头流到那头”；结尾“又开始流了”正接着这条河说，而此时带班的已是许晴。",
+        ),
       },
       {
         ask: "下列对小说细节和情节的分析，正确的一项是",
@@ -290,6 +318,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "关系说错：许晴学会听声正承接周师傅听声的情节，她还被叫作“小听听”，是前后呼应，不是闲笔。",
           ),
         ],
+        check: t(
+          "Check by the two occasions: once while he teaches her, once on his last shift; ordinary day or farewell, the same square of cotton.",
+          "用两处的场合再对：一处在他对许晴说“机床是有脾气的”时，一处在他退休前的最后一个班；平常干活和告别时都照样叠成方块，可见是一贯的习惯。",
+        ),
       },
     ],
     answers: [
@@ -366,6 +398,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "动机误读：林老师收起排名表，是看到了排名衡量不了的长处，文中没说考题不合理。",
           ),
         ],
+        check: t(
+          "Check by her actions: she watches a long while and repeats his words on the way back; she is taking stock of how little she knew.",
+          "用她的举动再对：林老师在他身后“看了很久”，回办公室的路上又把他的话“在心里念了好几遍”，可见她在反省自己过去对这个学生的不了解。",
+        ),
       },
       {
         ask: "下列对小说人物和情感的理解，正确的一项是",
@@ -387,6 +423,10 @@ export const literaryPassages: readonly ModernPassage[] = [
           ),
           t("Invented: she asks for more land, not fewer exams.", "无中生有：林老师写的是“下学期，我们多要一块地”，没有宣布取消考试。"),
         ],
+        check: t(
+          "Check by how he studies: he frowns while others nod and makes many mistakes, yet copies each problem into his notebook; hardy but slow.",
+          "用他学习的样子再对：前文写他上课“别人点头了，他还皱着眉”，作业“错得多”，却照样把题抄在本子最后一页，正像蒜苗不怕冷，只是长得慢。",
+        ),
       },
     ],
     analysis: [
@@ -413,6 +453,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "作用说错：寒潮过后墙根下“冒出了一排细细的绿芽”，后来长到一拃高，寒潮正反衬蒜苗的生命力。",
           ),
         ],
+        check: t(
+          "Check by the middle: as he talks of the garlic, the crooked tooth shows; three times, each with a smile.",
+          "用中间一处再对：他给林老师讲蒜苗时，“那颗歪门牙一直露在外面”；开头、中间、结尾三次写到门牙，每次都伴着笑，人物的憨厚乐观由此鲜明。",
+        ),
       },
       {
         ask: "下列对小说情节安排的分析，正确的一项是",
@@ -437,6 +481,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "与原文相反：林老师把表“对折，又对折，夹进了教案里”，动作轻缓，没有撕毁，也不是愤怒。",
           ),
         ],
+        check: t(
+          "Check by what follows: cold rain, the ditch, the lateness press further until shoots appear after the cold snap; the contrast builds toward it.",
+          "用后文的冷雨和寒潮再对：光秃秃之后又写冷雨积水、挖沟迟到，一层层压下去，到寒潮过后“冒出了一排细细的绿芽”才放开，前面的对比正是为这一刻蓄势。",
+        ),
       },
     ],
     answers: [
@@ -531,6 +579,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "原因说错：他看着村口马灯的光、想起自己过年回不去，是想念家人；文中没说担心雪大要人来接。",
           ),
         ],
+        check: t(
+          "Check by the phone: watching the lantern he suddenly wants to call home; the girl's reunion stirs thoughts of his own daughter.",
+          "用后文的电话再对：老杨看着马灯的光在雪地上晃，“忽然很想给家里打个电话”；女孩和奶奶团聚的场面勾起了他对自己女儿的想念，和开头的想起女儿对得上。",
+        ),
       },
       {
         ask: "下列对小说人物的理解，正确的一项是",
@@ -555,6 +607,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "心理说反：后视镜里“他的嘴角一直往上翘着”，“我没笑”是不好意思承认的高兴。",
           ),
         ],
+        check: t(
+          "Check by the egg: she offers her boiled egg and, refused, leaves it on the dashboard; the bag stays in her arms throughout.",
+          "用递鸡蛋再对：女孩把煮鸡蛋递给老杨，被推辞后又放在仪表台上，懂事有礼不只在鞠躬一处；布包则从上车到说起膏药，一直抱在怀里。",
+        ),
       },
     ],
     analysis: [
@@ -581,6 +637,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "与原文相反：手机“屏幕上一格信号也没有”，电话没打通，结尾正留着空白。",
           ),
         ],
+        check: t(
+          "Check by the skid: his back breaks out in sweat; with roads this bad he still takes the narrower dirt track after her.",
+          "用打滑一段再对：下坡时车轮打滑，老杨“后背上出了一层汗”；路险到这样，他到了石门乡还开上更窄更颠的土路去追女孩，环境越难，这份心意越可贵。",
+        ),
       },
       {
         ask: "下列对小说语言和细节的分析，正确的一项是",
@@ -605,6 +665,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "作用说错：只有一个乘客，才引出发不发车的选择，这是全文情节的起点，不是闲笔。",
           ),
         ],
+        check: t(
+          "Check by its first appearance: a red jacket a size too big on boarding, then bobbing in the dark; red against the black and white.",
+          "用第一次出现再对：女孩上车时穿着“明显大了一号的红棉袄”，下车后又写红棉袄在黑地里一晃一晃；一前一后，在雪夜的黑白之间，这一点红格外显眼。",
+        ),
       },
     ],
     answers: [
@@ -673,6 +737,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "绝对化且无据：文中只说祖父去世那年“我”学了会计，没写他要求过，“完全是因为”把原因说死了。",
           ),
         ],
+        check: t(
+          "Check by his words: no figure may be false, and the abacus has no such way; his words match his deeds.",
+          "用他说过的话再对：祖父对“我”说“账上的数，一个也不能是假的”，有人劝他“想想办法”时，他答“算盘上没有这个办法”，话和行动完全一致。",
+        ),
       },
       {
         ask: "下列对文中作者情感的理解，正确的一项是",
@@ -694,6 +762,10 @@ export const literaryPassages: readonly ModernPassage[] = [
           ),
           t("Wrong theme: the abacus stands for honesty, not craft.", "主旨说错：文章写算盘是为了写祖父的诚信，没有写算盘的制作工艺。"),
         ],
+        check: t(
+          "Check by his present work: late at night after an account he thinks of the abacus keeping watch, and links “integrity first” to his grandfather reading out the sums.",
+          "用作者现在的工作再对：作者说深夜对完一笔账，会想起柜顶上的算盘，觉得它“替我守着什么”，又把“诚信为本”和祖父念数的样子连在一起，敬重化成了自己的准则。",
+        ),
       },
     ],
     analysis: [
@@ -720,6 +792,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "人称说错：文章用第一人称“我”写祖父，结尾直接抒发情感，并不冷静客观。",
           ),
         ],
+        check: t(
+          "Check by the ending: the abacus atop the cupboard opens, recurs and closes the essay, and each memory hangs on it.",
+          "用结尾再对：开头写算盘放在“柜子顶上”，中间写它“上了柜顶”，结尾又想起“柜顶上的那把算盘”，几段往事都挂在这把算盘上，首尾相连。",
+        ),
       },
       {
         ask: "下列对文中语句的分析，正确的一项是",
@@ -741,6 +817,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "作用说错：用横梁作比，说的是那句话在“我”心里的支撑作用，重点在诚信，不在讲算盘构造。",
           ),
         ],
+        check: t(
+          "Check by the first half: thick, short, calloused fingers turn nimble on the abacus; the simile follows that contrast.",
+          "用前半句再对：同一处先写祖父的手指“又粗又短，指节上都是老茧”，可一放到算盘上“就变得灵巧起来”，比喻正接在这个反差上，写的是熟练灵巧。",
+        ),
       },
     ],
     answers: [
@@ -806,6 +886,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "动机说反：老头说“给你留着的，有人要，我没给”，书并不难卖，是特意替“我”留的。",
           ),
         ],
+        check: t(
+          "Check by the old man's words: “more use in your hands than here”, and “I don't sell books, I find them homes”.",
+          "用老头的话再对：他把字典塞给男孩时说“书在你手里比在我这儿有用”，又说自己“不是卖书，是给书找人家”，送字典正因为看出了男孩的需要。",
+        ),
       },
       {
         ask: "下列对文中作者观点和情感的理解，正确的一项是",
@@ -830,6 +914,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "情感说反：作者珍惜书里前人的痕迹，称赞批注画得“一丝不苟”，还把票根夹回原处，说“那是书自己的记忆”。",
           ),
         ],
+        check: t(
+          "Check by what is missing: the rain and the inked line, chance encounters; he buys online himself and regrets only the chance.",
+          "用缺的是什么再对：作者接着说，缺的是“那一场雨，那一行钢笔字”，都是偶然遇到的东西；他自己也常网上买书，惋惜的是偶遇的意味，并不否定方便。",
+        ),
       },
     ],
     analysis: [
@@ -856,6 +944,10 @@ export const literaryPassages: readonly ModernPassage[] = [
             "重点说错：桥、河、雨只是背景，文章着重写书和摊主，没有抒发对家乡山水的热爱。",
           ),
         ],
+        check: t(
+          "Check by what he finds next: an old textbook, an annotated herbal, a ticket stub; the contrast points to chance meetings.",
+          "用作者在书摊上的遇见再对：对比之后紧接着写他在那里遇见算术课本、植物图谱，翻出电影票根，“你不知道下一回会遇见哪一颗”，对比突出的正是不期而遇的乐趣。",
+        ),
       },
       {
         ask: "下列对文中语句的分析，正确的一项是",
@@ -877,6 +969,10 @@ export const literaryPassages: readonly ModernPassage[] = [
           ),
           t("Wrong style: his words are short and plain.", "语言说错：老人的话简短朴素，“两块”“拿去”，正合他的身份，并不华丽典雅。"),
         ],
+        check: t(
+          "Check by the stall itself: stacks of old magazines, textbooks, coverless novels and nameless pamphlets, mixed and of every origin, like seeds scattered by the road.",
+          "用书摊的样子再对：书“一摞一摞地码着”，有旧杂志、旧课本、缺了封面的小说，也有说不出名目的小册子，种类杂、来路不一，正合“随手撒在路边的种子”。",
+        ),
       },
     ],
     answers: [

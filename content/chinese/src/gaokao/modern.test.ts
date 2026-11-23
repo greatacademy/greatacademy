@@ -11,6 +11,7 @@ const passage = (k: number, length = 900): ModernPassage => {
     wrong: [`错甲${q}${k}`, `错乙${q}${k}`, `错丙${q}${k}`] as const,
     ground: "文文",
     reasons: [t("first", "甲的理由"), t("second", "乙的理由"), t("third", "丙的理由")] as const,
+    check: t("Check by another place.", "用别处再对。"),
   });
   return {
     title: `文章${k}`,
@@ -69,7 +70,7 @@ describe("the reading of modern texts", () => {
     expect(() => modernTopics(informationalSpec([], [...six.slice(1), twice]))).toThrow(/options/);
   });
 
-  it("rejects a ground not in the passage and a reason given twice", () => {
+  it("rejects a ground not in the passage, a reason given twice and a check that only repeats the ground", () => {
     const astray = { ...passage(7), analysis: [{ ...passage(7).analysis[0], ground: "不在文中" }, passage(7).analysis[1]] } as const;
     expect(() => modernTopics(informationalSpec([], [...six.slice(1), astray]))).toThrow(/not in the passage/);
     const same = t("same", "同一个理由");
@@ -78,6 +79,11 @@ describe("the reading of modern texts", () => {
       analysis: [{ ...passage(7).analysis[0], reasons: [same, same, same] }, passage(7).analysis[1]],
     } as const;
     expect(() => modernTopics(informationalSpec([], [...six.slice(1), repeated]))).toThrow(/one reason twice/);
+    const echo = {
+      ...passage(7),
+      analysis: [{ ...passage(7).analysis[0], check: t("again", "文 文") }, passage(7).analysis[1]],
+    } as const;
+    expect(() => modernTopics(informationalSpec([], [...six.slice(1), echo]))).toThrow(/a check of its own/);
   });
 
   it("gives each wrong option shown its own reason and works the question from its ground", () => {
@@ -86,5 +92,6 @@ describe("the reading of modern texts", () => {
     expect(p.mistakes).toHaveLength(2);
     for (const m of p.mistakes ?? []) expect(m.feedback["zh-CN"]).toMatch(/的理由$/u);
     expect(p.solution["zh-CN"]).toContain("依据的是原文“文文”");
+    expect(p.solution["zh-CN"]).toContain("**检验。** 用别处再对。");
   });
 });
