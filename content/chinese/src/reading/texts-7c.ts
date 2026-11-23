@@ -152,8 +152,8 @@ export const NEWS_7 = `
 - 第一次 ~opposite
 ?2 “作文里的海就有了颜色”是什么意思？ | What does “the sea in their essays has colour” mean?
 ≈ 孩子们亲眼看过了海，写起来就能写得真实生动 | 这次他们亲眼看见了，作文里的海就有了颜色 | 很多孩子以前只在课本上见过海
-- 孩子们用彩笔写作文 ~literal
-- 孩子们的作文都写了蓝色 ~literal
+- 孩子们用彩笔写作文 ~face
+- 孩子们的作文都写了蓝色 ~face
 ?2 写田小花“光着脚站在浪花里，不停地跳”，有什么作用？ | What does the picture of Tian Xiaohua do?
 ≈ 用具体的细节写出孩子们第一次看到海的兴奋 | 光着脚站在浪花里，不停地跳 | 海比我想的大多了
 - 说明海水很冷 ~unsaid
@@ -234,7 +234,7 @@ export const NEWS_7 = `
 初一学生林可说：“以前我叫不出几种鸟的名字，现在一听叫声就知道是谁来了。”
 ?1 “小鸟医生”指的是谁？ | Who are the “bird doctors”?
 = 学校生物社团的二十多名学生 | 学校生物社团的二十多名学生
-- 一群会治病的鸟 ~literal
+- 一群会治病的鸟 ~face
 - 学校请来的兽医 ~unsaid
 ?1 学生们为什么要挂人工鸟窝？ | Why did they hang the boxes?
 = 学校的老树多，可树洞少，鸟儿没地方做窝 | 学校的老树多，可树洞少，鸟儿没地方做窝
@@ -251,7 +251,7 @@ export const NEWS_7 = `
 ?2 林可说“现在一听叫声就知道是谁来了”，说明了什么？ | What does Lin Ke's remark show?
 ≈ 这项活动让学生增长了知识，更了解鸟了 | 以前我叫不出几种鸟的名字 | 现在一听叫声就知道是谁来了
 - 林可的耳朵特别好 ~narrow
-- 鸟会说出自己的名字 ~literal
+- 鸟会说出自己的名字 ~face
 ?2 “三十个鸟窝住进了十九个‘房客’”是事实还是看法？ | Fact or view?
 ≈ 事实 | 三十个鸟窝住进了十九个“房客”
 % 这句话说的是鸟窝里实际住进了多少鸟，是发生了的、可以查证的事，所以是事实。“房客”加引号，只是把鸟说得形象。 | It says how many boxes are really taken, something that happened and can be checked: a fact. 房客 in quotation marks only makes the birds vivid.
@@ -353,7 +353,7 @@ export const CLASSICAL_7 = `
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 ≈ 做人要诚实守信，父母要以身作则 | 婴儿非有知也，待父母而学者也 | 是教子欺也 | 遂烹彘也
 - 不能带孩子去集市 ~detail
-- 孩子哭了就要杀猪 ~literal
+- 孩子哭了就要杀猪 ~face
 
 # 杨布打狗（《列子》）
 杨朱之弟曰布，衣素衣而出。天雨，解素衣，衣缁衣而反。其狗不知，迎而吠之。杨布怒，将扑之。杨朱曰：“子无扑矣！子亦犹是也。向者使汝狗白而往，黑而来，岂能无怪哉？”
@@ -510,7 +510,7 @@ export const CLASSICAL_7 = `
 ?2 这个故事讽刺了什么样的人？ | Whom does the story mock?
 ≈ 借着别人的势力欺压人的人，也讽刺了看不清真相的人 | 狐曰：“子无敢食我也 | 虎不知兽畏己而走也
 - 跑得很快的人 ~unsaid
-- 爱吃肉的人 ~literal
+- 爱吃肉的人 ~face
 # 宋有富人（《韩非子》）
 宋有富人，天雨墙坏。其子曰：“不筑，必将有盗。”其邻人之父亦云。暮而果大亡其财，其家甚智其子，而疑邻人之父。
 注：宋，宋国。雨（yù），下雨。筑，修补。盗，小偷。邻人之父，邻居家的老人。亦，也。暮，晚上。果，果然。甚，很。
@@ -540,7 +540,7 @@ export const CLASSICAL_7 = `
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 ≈ 判断一句话，要看事实，不能因为和说话人亲疏不同就有偏见 | 甚智其子，而疑邻人之父 | 其邻人之父亦云
 % 两个人说的话一模一样，后来也都应验了。富人家却夸儿子聪明，怀疑邻居老人，不是因为话不同，而是因为人不同：一个是自家人，一个是外人。看人说话，应当看事实，不能因为亲疏就有偏见。说故事是教人下雨后要修墙，只看到了故事的表面。 | The two said exactly the same, and both came true. Yet the family praises the son and suspects the neighbour, not because the words differ but the speakers do: one family, one outsider. Words should be judged by the facts, not by how close the speaker is to us. To take it as “mend walls after rain” sees only the surface.
-- 下雨以后要及时修墙 ~literal
+- 下雨以后要及时修墙 ~face
 - 不要和邻居说话 ~unsaid
 
 # 陶侃惜谷（《晋书》）
@@ -572,7 +572,7 @@ export const CLASSICAL_7 = `
 ?2 从这个故事可以看出陶侃是怎样的人？ | What kind of man is Tao Kan?
 ≈ 爱惜粮食、关心农事 | 侃大怒曰 | 汝既不田，而戏贼人稻
 - 脾气暴躁，乱打百姓 ~misread
-- 喜欢到处游玩 ~literal
+- 喜欢到处游玩 ~face
 
 # 刻舟求剑（《吕氏春秋》）
 楚人有涉江者，其剑自舟中坠于水，遽契其舟，曰：“是吾剑之所从坠。”舟止，从其所契者入水求之。舟已行矣，而剑不行，求剑若此，不亦惑乎？
@@ -649,7 +649,7 @@ export const POEMS_7 = `
 - 花草和小鸟 ~unsaid
 ?1 “明月来相照”中，把明月写成了什么？ | What is the moon made into?
 ≈ 把明月当作知心的朋友，来陪伴诗人 | 明月来相照 | 深林人不知
-- 天上的一盏灯 ~literal
+- 天上的一盏灯 ~face
 - 一个吵闹的客人 ~misread
 ?1 这首诗描绘了一个怎样的境界？ | What setting does the poem paint?
 ≈ 月夜竹林里幽静、清冷的境界 | 独坐幽篁里 | 深林人不知 | 明月来相照
@@ -696,7 +696,7 @@ export const POEMS_7 = `
 ?2 “海日生残夜，江春入旧年”蕴含着什么道理？ | What truth lies in these lines?
 ≈ 新的事物在旧的还没过去时就已产生，时光不停地向前 | 海日生残夜 | 江春入旧年
 % 夜还没完，太阳已经升起；旧年还没过完，江上已经有了春意。新的在旧的里面生出来，时光催着人向前，也让漂泊在外的诗人更想家。 | The night is not over and the sun is up; the old year is not out and spring is on the river. The new grows inside the old and time presses on, which makes the wanderer long for home the more.
-- 太阳总是从海里升起来 ~literal
+- 太阳总是从海里升起来 ~face
 - 坐船比走路快 ~unsaid
 ?2 全诗表达了诗人怎样的感情？ | What feeling does the whole poem carry?
 ≈ 漂泊在外的思乡之情 | 客路青山外 | 乡书何处达 | 归雁洛阳边
@@ -754,7 +754,7 @@ export const POEMS_7 = `
 ?2 “我寄愁心与明月，随君直到夜郎西”表达了怎样的感情？ | What feeling is in the last two lines?
 ≈ 对朋友被贬的同情和深深的牵挂 | 我寄愁心与明月 | 随君直到夜郎西
 - 为朋友去远方做官而高兴 ~opposite
-- 对明月的赞美 ~literal
+- 对明月的赞美 ~face
 ?2 第一句写杨花落尽、子规啼叫，有什么作用？ | Why open with fallen catkins and a calling cuckoo?
 ≈ 用暮春的衰落和凄切的鸟叫，烘托离别的哀愁 | 杨花落尽子规啼 | 闻道龙标过五溪
 % 杨花落尽，春天就要过去了；子规的叫声凄切，古诗里常和愁思连在一起。诗人把这样的景物写在听到朋友被贬的消息之前，正好烘托出他心里的哀伤。 | With the catkins gone, spring is passing, and the cuckoo's cry is mournful, often joined to sorrow in old poems. Set just before the news of his friend's banishment, the scene sets off the poet's grief.
@@ -763,7 +763,7 @@ export const POEMS_7 = `
 ?2 诗人为什么要把愁心寄给明月？ | Why send his sorrow by the moon?
 ≈ 明月两地都照得到，能一路陪着朋友，借它表达自己的牵挂 | 我寄愁心与明月 | 随君直到夜郎西
 % 诗人不能陪朋友去远方，明月却同时照着两个地方，可以一路跟着朋友“直到夜郎西”。把愁心交给明月，就像自己陪着朋友走一样，写出了深深的牵挂。 | The poet cannot go with his friend, but the moon shines on both places and can follow him all the way west of Yelang. Giving his heart to the moon is like going with him himself: it shows how deeply he cares.
-- 因为明月可以替他送信 ~literal
+- 因为明月可以替他送信 ~face
 - 因为夜里黑，诗人看不见路 ~unsaid
 
 # 乌衣巷（唐·刘禹锡）
@@ -784,7 +784,7 @@ export const POEMS_7 = `
 - 从南方飞到了北方 ~unsaid
 ?2 诗人借燕子想说明什么？ | What does the swallow say for the poet?
 ≈ 当年显赫的王谢大族早已衰落，世事变迁 | 旧时王谢堂前燕 | 飞入寻常百姓家
-- 燕子喜欢住在百姓家 ~literal
+- 燕子喜欢住在百姓家 ~face
 - 百姓家比王谢家更大 ~unsaid
 ?2 这首诗表达了诗人怎样的感情？ | What feeling does it carry?
 ≈ 对世事变化、繁华不再的感慨 | 野草花 | 夕阳斜 | 飞入寻常百姓家
@@ -806,17 +806,17 @@ export const POEMS_7 = `
 - 很多 ~literal
 ?1 “闻说鸡鸣见日升”写的是什么？ | What does the second line say?
 = 听说在塔上鸡叫时就能看见太阳升起 | 闻说鸡鸣见日升
-- 诗人听见了鸡叫 ~literal
+- 诗人听见了鸡叫 ~face
 - 太阳落山了 ~opposite
 ?1 “浮云”在诗中指什么？ | What is the floating cloud?
 ≈ 表面指飘浮的云，也比喻遮挡视线的东西 | 不畏浮云遮望眼 | 自缘身在最高层
 % 浮云会“遮望眼”，挡住人往远处看的眼睛；诗人说不怕它，是因为自己站在最高层。站得高就不怕被挡住，可见这里的浮云不只是天上的云，也比喻那些挡住人看清远处的东西。 | Floating clouds “block the gazing eye”, keeping one from seeing far; the poet does not fear them because he stands at the top. Standing high, one is not blocked, so the clouds are not only clouds in the sky but stand for whatever keeps one from seeing far and clear.
-- 只是天上的云，没有别的意思 ~literal
+- 只是天上的云，没有别的意思 ~face
 - 下雨的乌云 ~unsaid
 ?2 “不畏浮云遮望眼，自缘身在最高层”说明了什么道理？ | What truth do the last lines tell?
 ≈ 站得高才能看得远，不被眼前的东西迷惑 | 不畏浮云遮望眼 | 自缘身在最高层
 - 登山很危险 ~nomood
-- 云彩会遮住太阳 ~literal
+- 云彩会遮住太阳 ~face
 ?2 这首诗表现了诗人怎样的情怀？ | What spirit does the poem show?
 ≈ 积极进取、不怕困难的豪情 | 不畏浮云遮望眼 | 自缘身在最高层
 - 对登山的害怕 ~nomood
@@ -842,7 +842,7 @@ export const POEMS_7 = `
 ?1 “断肠人”指的是什么人？ | Who is the 断肠人?
 ≈ 漂泊在远方、伤心到极点的旅人 | 断肠人在天涯 | 古道西风瘦马
 % “断肠”是说伤心得肠子都要断了，形容悲伤到了极点；这个人在“天涯”，离家乡很远，前面又写他骑着瘦马走在古道上，迎着西风。所以“断肠人”是漂泊在外、思念家乡、伤心到极点的旅人。 | 断肠, a broken gut, is grief at its utmost; this person is at the edge of the world, far from home, and before that rides a thin horse on an old road into the west wind. So the 断肠人 is a traveler far from home, grieving beyond measure.
-- 肚子疼得厉害的人 ~literal
+- 肚子疼得厉害的人 ~face
 - 住在小桥边的人家 ~who
 ?2 “小桥流水人家”和其他景物有什么不同？起什么作用？ | How does 小桥流水人家 differ from the rest, and why is it there?
 ≈ 它温暖安宁，反衬出旅人无家可归的凄凉 | 小桥流水人家 | 断肠人在天涯
@@ -866,7 +866,7 @@ export const POEMS_7 = `
 ?1 前两句写了怎样的景色？ | What scene do the first two lines show?
 ≈ 月光下，沙地白得像雪，月色冷得像霜 | 回乐烽前沙似雪 | 受降城外月如霜
 - 白天里黄沙漫天 ~opposite
-- 下了一场大雪，城外白茫茫一片 ~literal
+- 下了一场大雪，城外白茫茫一片 ~face
 ?1 征人听到了什么声音？ | What sound do the soldiers hear?
 = 不知从哪里传来的芦管声 | 不知何处吹芦管
 - 战鼓声 ~unsaid

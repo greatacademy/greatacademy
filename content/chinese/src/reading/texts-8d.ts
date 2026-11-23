@@ -154,7 +154,7 @@ export const CLASSICAL_8 = `
 - 他欠了杨震的钱 ~unsaid
 ?2 “天知，神知，我知，子知”表现了杨震怎样的品质？ | What does Yang Zhen's reply show of him?
 ≈ 清廉自律，没有人知道也不做亏心事 | 天知，神知，我知，子知 | 暮夜无知者 | 密愧而出
-- 相信鬼神，怕被神惩罚 ~literal
+- 相信鬼神，怕被神惩罚 ~face
 - 嫌王密的金子太少 ~unsaid
 
 # 两小儿辩日（《列子》）
@@ -323,7 +323,7 @@ export const POEMS_8 = `
 ?1 “初闻涕泪满衣裳”写的是什么样的眼泪？ | What kind of tears are these?
 ≈ 喜极而泣的眼泪 | 初闻涕泪满衣裳 | 漫卷诗书喜欲狂
 - 悲伤难过的眼泪 ~nomood
-- 被雨淋湿的水 ~literal
+- 被雨淋湿的水 ~face
 ?1 “漫卷诗书喜欲狂”中的“漫卷”好在哪里？ | What is good in 漫卷?
 ≈ 胡乱卷起诗书，写出诗人高兴得无心读书、急着收拾回乡的样子 | 漫卷诗书喜欲狂 | 青春作伴好还乡
 - 写出诗人爱惜书本、慢慢整理 ~opposite
@@ -331,7 +331,7 @@ export const POEMS_8 = `
 ?1 “即从巴峡穿巫峡，便下襄阳向洛阳”用了什么写法？ | How are the last two lines written?
 ≈ 连用四个地名，用“穿”“下”“向”写出想象中回乡的路程飞快 | 即从巴峡穿巫峡，便下襄阳向洛阳
 % 两句里接连出现巴峡、巫峡、襄阳、洛阳四个地名，中间只用“穿”“下”“向”几个动词连起来，一句之间就越过千里。诗人这时还在剑外，这是他想象中的回乡路线，“即”“便”写出了他恨不得马上动身的急切。 | Four places follow one another, Ba Gorge, Wu Gorge, Xiangyang, Luoyang, joined only by the verbs 穿, 下 and 向, so a line spans a thousand li. The poet is still beyond Jianmen: this is the way home as he imagines it, and 即 and 便 show his longing to set out at once.
-- 记录诗人已经走过的路线 ~real
+- 记录诗人已经走过的路线 ~imagined
 - 写沿途的山水很美 ~unsaid
 ?2 这首诗表达了诗人怎样的感情？ | What feeling does the poem carry?
 ≈ 听到失地收复的狂喜，和急于回到家乡的心情 | 喜欲狂 | 青春作伴好还乡 | 初闻涕泪满衣裳
@@ -366,7 +366,7 @@ export const POEMS_8 = `
 ?2 “云从窗里出”运用了什么写法？有什么作用？ | How is the cloud line written, and to what end?
 ≈ 运用想象，好像云是从屋里飘出去的，写出山居之高，也写出诗人对山居的喜爱 | 云从窗里出 | 鸟向檐上飞
 % 云当然不是从屋子里生出来的，是住处太高，云就在窗外飘过，看上去好像从窗里出来一样。这样大胆的想象，把山居的高和幽写活了，也流露出诗人对这种生活的喜爱。 | Clouds are not born indoors; the house is so high that they drift past the window and seem to come out of it. The bold image brings the height and quiet of the hills to life, and shows the poet's love of such a life.
-- 写出屋里着火冒烟了 ~literal
+- 写出屋里着火冒烟了 ~face
 - 直接抒发对家乡的思念 ~notlyric
 ?2 这首诗在写法上有什么特点？ | What marks the way the poem is written?
 ≈ 全诗只写景，不直接抒情，借山间的景物表现隐居的闲适 | 山际见来烟，竹中窥落日 | 鸟向檐上飞，云从窗里出
@@ -388,7 +388,7 @@ export const POEMS_8 = `
 ?1 “散入春风满洛城”用了什么手法？ | What method is this line?
 ≈ 夸张和想象，写笛声随春风传遍全城 | 散入春风满洛城 | 谁家玉笛暗飞声
 - 拟人，写春风会吹笛子 ~unsaid
-- 写实，洛城真的到处都在吹笛 ~real
+- 写实，洛城真的到处都在吹笛 ~imagined
 ?1 “何人不起故园情”是什么句式？有什么作用？ | What kind of sentence is the last line, and to what end?
 ≈ 反问句，强调人人都会想起家乡，思乡之情更强烈 | 何人不起故园情
 % “何人不起”是用问的形式说出肯定的意思：哪个人能不想家呢？就是人人都想家。用反问比直接说“人人都想家”语气更强，也把诗人自己的思乡之情推广到所有听笛的人身上。 | 何人不起 asks in order to affirm: who would not think of home? Everyone does. Asking says it more strongly than a plain statement, and widens the poet's homesickness to all who hear the flute.
@@ -424,7 +424,7 @@ export const POEMS_8 = `
 ?1 “不堪盈手赠”的意思是什么？ | What does 不堪盈手赠 mean?
 ≈ 月光不能捧满双手送给远方的人 | 不堪盈手赠 | 还寝梦佳期
 % “不堪”是不能，“盈手”是满手。诗人想把这美好的月光捧起来送给远方的人，可是月光捧不起来，只好回去睡觉，盼着在梦里相见。 | 不堪 is “cannot”, 盈手 “a handful”. He would gather the lovely moonlight and give it to the one far away, but moonlight cannot be held, so he goes back to bed hoping to meet in a dream.
-- 礼物太重，双手拿不动 ~literal
+- 礼物太重，双手拿不动 ~face
 - 不愿意把月光送给别人 ~misread
 ?2 “海上生明月，天涯共此时”写景和抒情有什么关系？ | How do scene and feeling join in the first two lines?
 ≈ 由眼前的明月，想到远方的亲人此时也在看同一轮月亮，景中含情 | 海上生明月 | 天涯共此时
@@ -433,7 +433,7 @@ export const POEMS_8 = `
 ?2 “情人怨遥夜，竟夕起相思”用了什么写法？ | How are lines three and four written?
 ≈ 从对方写起，想象远方的亲人也在长夜里思念自己 | 情人怨遥夜 | 竟夕起相思
 - 写诗人埋怨亲人不来看他 ~misread
-- 写诗人不喜欢夜晚 ~literal
+- 写诗人不喜欢夜晚 ~face
 ?2 全诗表达了怎样的感情？ | What feeling does the poem carry?
 ≈ 望月怀念远方亲人的深切思念 | 竟夕起相思 | 还寝梦佳期 | 天涯共此时
 - 对仕途不顺的愤怒 ~nomood
@@ -505,7 +505,7 @@ export const POEMS_8 = `
 注：都城，指长安。南庄，城南的村庄。人面，指一位姑娘的脸。相映，互相映衬。依旧，仍旧。
 ?1 “人面桃花相映红”写出了什么？ | What does the second line show?
 ≈ 姑娘的脸和桃花互相映衬，都显得红润美丽 | 人面桃花相映红 | 去年今日此门中
-- 桃花长在姑娘的脸上 ~literal
+- 桃花长在姑娘的脸上 ~face
 - 姑娘因为生气脸红了 ~unsaid
 ?1 “桃花依旧笑春风”用了什么修辞手法？ | What figure is the last line?
 ≈ 拟人，把桃花写得像人一样在春风里笑 | 桃花依旧笑春风
@@ -515,7 +515,7 @@ export const POEMS_8 = `
 ?1 诗中两次写到“人面”和“桃花”，有什么作用？ | What does naming face and blossom twice do?
 ≈ 前后呼应，形成对照，突出物是人非 | 人面桃花相映红 | 人面不知何处去，桃花依旧笑春风
 - 诗人忘了前面已经写过 ~misread
-- 说明人和桃花一模一样 ~literal
+- 说明人和桃花一模一样 ~face
 ?2 这首诗用了什么手法表达感情？ | What method carries the feeling?
 ≈ 今昔对比：去年人花相映，今年花在人去 | 去年今日此门中 | 人面不知何处去 | 桃花依旧笑春风
 - 借古讽今 ~unsaid
@@ -545,7 +545,7 @@ export const POEMS_8 = `
 ?1 “多少楼台烟雨中”描绘了怎样的画面？ | What picture does the last line paint?
 ≈ 许多寺庙楼台隐没在蒙蒙的烟雨里，朦胧迷离 | 多少楼台烟雨中 | 南朝四百八十寺
 % “烟雨”是像烟一样的细雨；楼台在“烟雨中”，看得见又看不清，若隐若现。前一句说寺庙有四百八十座，这一句就让它们都笼罩在细雨里，画面朦胧。 | 烟雨 is fine rain like mist; towers in it can be seen yet not clearly. The line before has four hundred and eighty temples, and this one veils them all in drizzle: a hazy picture.
-- 楼台着了火，冒出浓烟 ~literal
+- 楼台着了火，冒出浓烟 ~face
 - 雨后天晴，楼台看得清清楚楚 ~opposite
 ?2 前两句和后两句写的景色有什么不同？ | How do the first and last two lines differ?
 ≈ 前两句写晴天的明丽热闹，后两句写烟雨中的朦胧，晴雨相映 | 千里莺啼绿映红 | 多少楼台烟雨中
@@ -553,7 +553,7 @@ export const POEMS_8 = `
 - 前两句写冬天，后两句写春天 ~unsaid
 ?2 诗人写“南朝四百八十寺”，用意是什么？ | Why does the poet name the temples of the Southern Dynasties?
 ≈ 由眼前的寺庙想到南朝的往事，含有怀古的感慨 | 南朝四百八十寺 | 多少楼台烟雨中
-- 统计江南寺庙的准确数目 ~real
+- 统计江南寺庙的准确数目 ~face
 - 劝人们都去寺庙烧香 ~unsaid
 ?2 全诗表达了诗人怎样的感情？ | What feeling does the poem carry?
 ≈ 对江南春景的赞美，也含着对历史兴亡的感慨 | 千里莺啼绿映红 | 南朝四百八十寺 | 多少楼台烟雨中
@@ -576,7 +576,7 @@ export const POEMS_8 = `
 ?1 “天涯一望断人肠”中的“断人肠”用了什么手法？ | What method is 断人肠?
 ≈ 夸张，极言离别的伤心 | 天涯一望断人肠
 % 伤心不会真的让肠子断掉，“断人肠”是夸大地说，表现悲伤到了极点。和“天涯一望”连起来，望得越远越看不见朋友，伤心也就越深。 | Grief does not really break the bowels; 断人肠 overstates to show sorrow at its height. With 天涯一望, the farther he looks, the less he sees his friend, and the deeper the grief.
-- 写实，诗人真的病了 ~real
+- 写实，诗人真的病了 ~face
 - 比喻，把肠子比作江水 ~nolikening
 ?2 第一句“荆吴相接水为乡”写的是什么？ | What does the first line tell?
 = 朋友要去的地方和这里水路相连，是水乡 | 荆吴相接水为乡
@@ -597,7 +597,7 @@ export const POEMS_8 = `
 注：程，路程。榆关，即山海关。那畔，那边。千帐灯，许多帐篷里亮着灯。更，旧时夜里计时的单位。聒，声音嘈杂。故园，家乡。
 ?1 “山一程，水一程”的反复有什么作用？ | What does repeating 一程 do?
 ≈ 写出路途遥远、跋山涉水，一程又一程走不完 | 山一程，水一程 | 身向榆关那畔行
-- 说明只走了一段山路和一段水路 ~literal
+- 说明只走了一段山路和一段水路 ~face
 - 说明路途很近 ~opposite
 ?1 “聒碎乡心梦不成”中的“碎”字好在哪里？ | What is good in 碎?
 ≈ 风雪声把思乡的心搅碎了，写出思乡的痛苦和夜不能眠 | 聒碎乡心梦不成 | 风一更，雪一更
@@ -615,7 +615,7 @@ export const POEMS_8 = `
 ?2 “故园无此声”用了什么写法？ | How is the last line written?
 ≈ 对比：用家乡的安宁对比边地风雪的嘈杂，把思乡之情推向深处 | 故园无此声 | 聒碎乡心梦不成
 - 直接描写家乡的风雪 ~misread
-- 夸张，写家乡没有任何声音 ~literal
+- 夸张，写家乡没有任何声音 ~face
 ?2 这首词表达了怎样的感情？ | What feeling does the poem carry?
 ≈ 远在边塞、长夜难眠的思乡之情 | 乡心 | 故园无此声 | 梦不成
 - 行军打仗的豪迈 ~part

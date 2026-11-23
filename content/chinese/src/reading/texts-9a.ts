@@ -147,7 +147,7 @@ export const ARGUMENT_9 = `
 ?1 第四段引用俗语“问路不走冤枉路”，有什么作用？ | What does the saying in paragraph four do?
 ≈ 道理论证，用通俗的俗语说明不懂就问能少走弯路 | 问路不走冤枉路 | 问一句，省下的是自己的弯路
 - 举例论证，讲了一个问路的故事 ~noexample
-- 说明走路时一定要问路 ~literal
+- 说明走路时一定要问路 ~face
 ?1 第三段举“一遇到难题就问，自己一点也不想”的例子，是为了说明什么？ | What does the example in paragraph three show?
 = 提问不是乱问，要自己想过以后再问 | 提问不是乱问 | 真正的提问，是自己想过以后，把想不通的地方问出来
 - 问题是思考的开始 ~elsewhere
@@ -251,7 +251,7 @@ export const ARGUMENT_9 = `
 ?2 本文的中心论点是什么？ | What is the central claim?
 ≈ 不要小看笨办法，笨办法往往最管用 | 我却觉得，笨办法往往最管用 | 很多人喜欢巧办法，看不起笨办法
 - 很多人喜欢巧办法 ~notview
-- 一天能记住一百个单词 ~opposite
+- 一天能记住一百个单词 ~detail
 ?2 最后一段在论证上有什么作用？ | What does the last paragraph do?
 ≈ 补充说明不是否定巧办法，而是要把巧办法和笨功夫结合，使观点更全面 | 当然，这不是说巧办法都不好 | 把巧办法和笨功夫结合起来，才能把事情做好
 % 全文一直在为笨办法说话，到最后一段用“当然”一转，承认好方法能“事半功倍”，再说明方法离不开下功夫。这样就避免了把巧办法一概否定，把话说得周全。 | The text has spoken for the plodding way throughout; the last paragraph turns with 当然, grants that a good method doubles the result, and adds that no method spares the work. It avoids rejecting all clever ways, and says the whole.
@@ -274,12 +274,12 @@ export const ARGUMENT_9 = `
 - 道理论证，引用孔子的话 ~elsewhere
 ?1 第四段把诚信比作镜子，有什么作用？ | What does the mirror do?
 ≈ 比喻论证，形象地说明诚信一旦失去就很难弥补 | 诚信像一面镜子，一旦打碎，再怎么粘也会留下裂痕 | 失去别人的信任很容易，要重新赢回来却很难
-- 介绍镜子容易打碎 ~literal
+- 介绍镜子容易打碎 ~face
 - 举例论证，讲了一个打碎镜子的故事 ~noexample
 ?1 第二段引用孔子的话，有什么作用？ | What does the quotation from Confucius do?
 ≈ 道理论证，用名言说明古人看重诚信，增强说服力 | 孔子说：“人而无信，不知其可也。” | 古人很看重诚信
 - 举例论证，讲孔子守信的故事 ~noexample
-- 说明孔子不知道诚信是什么 ~literal
+- 说明孔子不知道诚信是什么 ~face
 ?2 本文的中心论点是什么？ | What is the central claim?
 = 诚信是一个人立身的根本 | 诚信是一个人立身的根本
 - 一个人可以没有钱 ~part
@@ -410,7 +410,7 @@ export const FICTION_9 = `
 - 介绍怎样记账 ~detail
 ?1 结尾“省下的都是我的路”是什么意思？ | What does the last line mean?
 ≈ 父亲一点一点节省下来的钱，都用来供“我”读书、走向更远的地方 | 原来，那些一毛一毛记下来的账，省下的都是我的路 | 儿子上学用，每月存一百
-- 父亲把钱用来修路了 ~literal
+- 父亲把钱用来修路了 ~face
 - 父亲每天走很远的路去买东西 ~unsaid
 ?1 “我一下子说不出话来”表现了“我”怎样的心情？ | What feeling is in “I could not speak”?
 ≈ 感动和惭愧，明白了父亲的苦心，后悔以前瞧不起他 | 我一下子说不出话来 | 抠门儿
@@ -463,7 +463,7 @@ export const FICTION_9 = `
 ?2 “年轻人愣了一下，深深鞠了一躬”这个细节写出了什么？ | What does his bow show?
 ≈ 年轻人明白了老吴的好意，心里充满感激 | 年轻人愣了一下，深深鞠了一躬，走进了雪里 | 你都拿走吧，算一块钱
 - 年轻人不想要那么多馒头 ~misread
-- 年轻人冷得弯下了腰 ~literal
+- 年轻人冷得弯下了腰 ~face
 
 # 手表
 十五岁生日那天，爷爷送给我一块旧手表。表是上海产的，表带换过好几次，表面有一道细细的划痕。
@@ -546,7 +546,7 @@ export const FICTION_9 = `
 ≈ 把刘师傅的“明天还”反过来说，表达对他的感谢，也把关爱传递回去 | 这一把，不用还 | 明天还
 % 刘师傅借伞时说的是“明天还”，伞是要还回来再借给别人的；同学们送伞时写“不用还”，这把伞是送给他的。一借一送，一“还”一“不用还”，善意在两代人之间来回传递。 | Lending, Liu says return it tomorrow: his umbrellas come back to be lent again. Giving, the pupils write no need to return: this one is his. Lent and given, return and no return, kindness passes back and forth.
 - 同学们以后不再来学校了 ~misread
-- 这把伞质量很好，不会坏 ~literal
+- 这把伞质量很好，不会坏 ~face
 ?1 刘师傅为什么要收着孩子们的伞借给别人？ | Why does Liu keep and lend the umbrellas?
 ≈ 他的孙子曾经因为下雨没伞淋病了，他心疼在雨里跑的学生 | 刘师傅的孙子在外地上学，有一次下雨没伞，淋病了一场 | 他每次看见学生在雨里跑，就心疼
 - 他想把伞卖掉 ~unsaid
@@ -582,7 +582,7 @@ export const FICTION_9 = `
 - 她怕给女儿添麻烦 ~unsaid
 ?1 结尾“每次浇水，外婆都要先看看那张纸”有什么含义？ | What does reading the note before watering mean?
 ≈ 外婆其实早就记住了浇水的方法，看纸条是在怀念外公 | 每次浇水，外婆都要先看看那张纸 | 纸已经发黄，字迹还清清楚楚
-- 外婆记性不好，记不住浇水的方法 ~literal
+- 外婆记性不好，记不住浇水的方法 ~face
 - 外婆在学认字 ~sense
 ?2 小说以“那盆花”为题，有什么作用？ | Why call it “That Pot of Flowers”?
 ≈ 那盆花是贯穿全文的线索，也寄托着外婆对外公的思念 | 外婆家的窗台上有一盆君子兰 | 只带了那盆君子兰 | 如今，那盆花摆在我家的阳台上
@@ -649,7 +649,7 @@ export const FICTION_9 = `
 - 老赵打电话向他们求救 ~unsaid
 ?1 结尾“那盏灯，又每天晚上亮了起来”有什么含义？ | What does the light shining again mean?
 ≈ 老赵又回到岗位，继续坚守，灯象征着他的坚守，也象征着人与人之间的守望 | 那盏灯，又每天晚上亮了起来 | 老赵病好了，又回到了山上
-- 山上安装了新的电灯 ~literal
+- 山上安装了新的电灯 ~face
 - 老赵怕黑，晚上要开灯 ~unsaid
 ?2 小说以“灯”为题，有什么作用？ | Why call it “The Light”?
 ≈ 灯是贯穿全文的线索，灯亮灯灭推动了情节，又象征老赵的坚守 | 站房的窗口都亮着一盏灯 | 山上的灯没亮 | 那盏灯，又每天晚上亮了起来

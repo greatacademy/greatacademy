@@ -181,6 +181,31 @@ export const REASONS = {
   misread: ["the text does not show this; read it again where it says: “{s}”", "文中表现的不是这个意思，再读读这一句：“{s}”"],
   // Grade 9: a debate.
   yield: ["this gives up your own side's stand instead of answering for it.", "放弃了己方的立场，没有为它作答。"],
+  // The senior course: a likening, a side or a flaw taken wrongly, and words read only at their face.
+  likening: [
+    "this takes a likening of the text for what the writer argues; it is there only to picture the point.",
+    "这是把文中打比方的话当成了作者的观点，那句话只是用来打比方的。",
+  ],
+  oneside: [
+    "this is the view of one side the text sets out, not the writer's own: “{s}”",
+    "这只是文中摆出的一方的看法，不是作者自己的态度：“{s}”",
+  ],
+  face: [
+    "this takes the words at their face; here they mean more than they say: “{s}”",
+    "这是只按字面去理解，没有读出这句话里比喻、象征或言外的意思：“{s}”",
+  ],
+  sound: [
+    "this calls the reasoning sound, but it does not hold; see where it says: “{s}”",
+    "认为这样推理没有问题，可它站不住，看这一句：“{s}”",
+  ],
+  notflaw: ["this names another error than the one the reasoning makes: “{s}”", "说错了推理的毛病，这里犯的不是这种错误：“{s}”"],
+  offpoint: ["this misses the point and fastens on something beside it.", "没有说到要害，抓住的是不相干的枝节。"],
+  nopersonify: ["the sentence does not write of the thing as if it were a person: “{s}”", "句中没有把它当作人来写：“{s}”"],
+  otheruse: [
+    "this is what the word means in another sentence of the text, not in this one: “{s}”",
+    "这是这个字在文中另一句里的意思，放在这一句里讲不通：“{s}”",
+  ],
+  noexaggerate: ["the sentence does not make the thing larger or smaller than it is: “{s}”", "句中没有故意把事物说得更大或更小：“{s}”"],
 } as const;
 
 /** Context is what a reason may quote: the sentence that answers the question, and the sentence the text ends with. */

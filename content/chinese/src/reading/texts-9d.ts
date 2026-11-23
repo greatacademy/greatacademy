@@ -128,7 +128,7 @@ export const CLASSICAL_9 = `
 - 说明太阳比蜡烛更亮 ~detail
 ?2 这个故事告诉我们什么道理？ | What does the story teach?
 ≈ 学习不分早晚，什么年纪开始学都有益处 | 老而好学，如炳烛之明 | 孰与昧行乎 | 善哉
-- 晚上读书一定要点蜡烛 ~literal
+- 晚上读书一定要点蜡烛 ~face
 - 年纪大了就不必再学习 ~reversed
 
 # 郢书燕说（《韩非子》）
@@ -150,7 +150,7 @@ export const CLASSICAL_9 = `
 - 治理国家一定要按照信里说的去做 ~sense
 ?2 燕相国是怎样解释“举烛”的？ | How does the minister read 举烛?
 = 举烛就是崇尚光明，崇尚光明就是选拔贤人、任用他们 | 举烛者，尚明也；尚明也者，举贤而任之
-- 举烛就是夜里要点灯 ~literal
+- 举烛就是夜里要点灯 ~face
 - 举烛就是写信要小心 ~unsaid
 ?2 文章最后一句“今世学者多似此类”有什么作用？ | What does the last sentence do?
 ≈ 由故事推到当时的读书人，讽刺他们牵强附会地解释古书 | 今世学者多似此类 | 非书之意也
@@ -191,7 +191,7 @@ export const CLASSICAL_9 = `
 ?2 这则故事说明了什么道理？ | What does the story teach?
 ≈ 上行下效，在上位的人一举一动都会影响下面的人 | 齐桓公好服紫，一国尽服紫 | 三日，境内莫衣紫也
 % 开头，桓公喜欢紫衣，全国都穿紫衣；结尾，桓公说讨厌紫色，三天之内全国都不穿了。一好一恶，结果正好相反，可见老百姓跟着国君走。要改变风气，先要改变自己。 | At the start the duke loves purple and the whole state wears it; at the end he says he hates it, and in three days no one does. Liking, then disliking, and the result reverses: the people follow their ruler. To change a custom, change yourself first.
-- 紫色的衣服气味难闻 ~literal
+- 紫色的衣服气味难闻 ~face
 - 穿衣服要选便宜的颜色 ~misread
 
 # 乐羊子妻（《后汉书》）
@@ -254,7 +254,7 @@ export const CLASSICAL_9 = `
 ?2 “五十步笑百步”比喻什么？ | What does fifty paces mocking a hundred stand for?
 ≈ 自己和别人有同样的缺点，只是程度轻一些，却去嘲笑别人 | 以五十步笑百步 | 是亦走也
 - 跑得慢的人比跑得快的人好 ~misread
-- 打仗时要跑得远一些 ~literal
+- 打仗时要跑得远一些 ~face
 
 # 荆人遗弓（《吕氏春秋》）
 荆人有遗弓者，而不肯索，曰：“荆人遗之，荆人得之，又何索焉？”孔子闻之曰：“去其‘荆’而可矣。”老聃闻之曰：“去其‘人’而可矣。”故老聃则至公矣。
@@ -329,16 +329,16 @@ export const POEMS_9 = `
 ?1 “沉舟侧畔千帆过，病树前头万木春”字面上写了什么？ | What do these two lines say on their face?
 = 沉没的船旁边有千帆驶过，枯病的树前面万木生机勃勃 | 沉舟侧畔千帆过，病树前头万木春
 - 很多船都沉没了，树也都病了 ~opposite
-- 诗人坐船回乡，路上看见了病树 ~real
+- 诗人坐船回乡，路上看见了病树 ~face
 ?1 诗人用“沉舟”“病树”比喻什么？ | What do the sunken boat and the sick tree stand for?
 ≈ 被贬多年、远离朝廷的自己 | 沉舟侧畔千帆过 | 二十三年弃置身
 % 诗的前四句写自己被丢在“巴山楚水”二十三年，回来已经物是人非。紧接着出现的“沉舟”和“病树”，一个沉了、一个病了，正好对应被弃置多年的自己；“千帆”“万木”则是不断出现的新人新事。 | The first four lines tell of twenty-three years cast off in the south and a return to a changed world. The boat that sank and the tree that sickened answer to that cast-off self; the thousand sails and ten thousand trees are the new men and things that keep coming.
-- 被贬的地方风景很荒凉 ~literal
+- 被贬的地方风景很荒凉 ~face
 - 诗人的朋友白居易 ~who
 ?1 “沉舟侧畔千帆过，病树前头万木春”今天常用来说明什么道理？ | What truth do people use these lines for today?
 ≈ 新事物必将代替旧事物，前途总是光明的 | 沉舟侧畔千帆过，病树前头万木春
 % 两句写的都是一边是衰败的，一边是兴旺的：沉舟旁千帆竞过，病树前万木争春。衰败的停在那里，兴旺的不断向前。人们从中读出的，是新的总要代替旧的、世界总在向前的道理。 | Each line sets decay beside life: sails pass the sunken boat, spring fills the trees around the sick one. What decays stays; what thrives goes on. Readers take from it that the new replaces the old and the world moves forward.
-- 坐船要小心，不然会沉船 ~literal
+- 坐船要小心，不然会沉船 ~face
 - 病了的树一定会死去 ~misread
 ?2 读懂这首诗，需要知道诗人怎样的经历？ | What of the poet's life do you need to know?
 ≈ 他因参加政治革新被贬到南方，前后二十三年，这首诗是回京途中写的 | 二十三年弃置身 | 巴山楚水凄凉地
@@ -366,15 +366,15 @@ export const POEMS_9 = `
 ≈ 面对美酒佳肴却吃不下，拔出剑四处张望，心中一片茫然 | 停杯投箸不能食，拔剑四顾心茫然 | 金樽清酒斗十千，玉盘珍羞直万钱
 % 前两句写酒好菜贵，按理该痛快地吃喝；诗人却“停杯”“投箸”，放下杯子、扔下筷子，又“拔剑四顾”，不知道该往哪里去。“停”“投”“拔”“顾”一连串动作，写出他心里的苦闷和不知所措。 | The first lines give fine wine and costly dishes, a feast to enjoy; he puts down the cup and throws down the chopsticks, draws his sword and looks round, not knowing where to turn. The run of verbs, 停, 投, 拔, 顾, shows his gloom and loss.
 - 酒菜不好吃，诗人很生气 ~opposite
-- 诗人要拔剑和别人比武 ~literal
+- 诗人要拔剑和别人比武 ~face
 ?1 “欲渡黄河冰塞川，将登太行雪满山”用的是什么写法？ | How are these lines written?
 ≈ 借冰塞黄河、雪满太行的景象，比喻人生道路上的重重阻碍 | 欲渡黄河冰塞川，将登太行雪满山 | 行路难！行路难！
-- 写诗人冬天去旅行时看到的风景 ~real
+- 写诗人冬天去旅行时看到的风景 ~face
 - 说明黄河和太行山离得很近 ~unsaid
 ?1 “长风破浪会有时，直挂云帆济沧海”这句名句表达了什么？ | What does this famous line say?
 ≈ 相信总有一天能乘着长风、冲破巨浪，挂起高帆渡过大海，实现远大的理想 | 长风破浪会有时，直挂云帆济沧海 | 多歧路，今安在
 % “会有时”是总会有那么一天；“济沧海”是渡过大海。前面刚说“行路难”，到处是岔路，不知道路在哪里；这两句却一下振作起来，说总有一天能乘风破浪。今天人们常用它表达不怕困难、对未来充满信心。 | 会有时 is “the day will come”; 济沧海 “to cross the sea”. Just after crying how hard the road is, where is it among so many forks, the lines rise up: one day I will ride the wind and break the waves. People use them today for confidence against hardship.
-- 诗人准备去海边坐船 ~literal
+- 诗人准备去海边坐船 ~face
 - 大风大浪太危险，不能出海 ~opposite
 ?2 读懂这首诗，需要知道诗人怎样的经历？ | What of the poet's life do you need to know?
 ≈ 他被召进京城，想施展抱负，却受到排挤，被迫离开长安 | 拔剑四顾心茫然 | 多歧路，今安在
@@ -383,7 +383,7 @@ export const POEMS_9 = `
 ?2 “闲来垂钓碧溪上，忽复乘舟梦日边”表达了诗人怎样的心情？ | What feeling is in these lines?
 ≈ 借古人先不得志、后被重用的故事，表达自己对重新得到重用的希望 | 闲来垂钓碧溪上，忽复乘舟梦日边 | 长风破浪会有时
 % 注释说这两句用了两个古人的故事，他们都是先不得志，后来被重用。诗人刚被排挤出京城，想到他们，心里又生出希望：说不定自己也有被重用的一天。所以诗的结尾才能振作起来。 | The note says the lines recall two men who were overlooked and later raised up. Just driven from the capital, the poet thinks of them and hopes again that his day may come, which is why the poem can rise at the end.
-- 诗人喜欢钓鱼和坐船 ~real
+- 诗人喜欢钓鱼和坐船 ~face
 - 诗人想放弃理想，去过隐居的日子 ~opposite
 ?2 这首诗的感情是怎样变化的？ | How does the feeling move through the poem?
 ≈ 从苦闷茫然，到又生希望，再到连声感叹行路难，最后坚信理想终会实现，起伏跌宕 | 拔剑四顾心茫然 | 忽复乘舟梦日边 | 行路难！行路难！ | 长风破浪会有时
@@ -410,8 +410,8 @@ export const POEMS_9 = `
 - 交代作者喝醉的原因 ~role
 ?2 结合作者的经历，“沙场秋点兵”写的是现实还是梦境？ | Is the review of troops real or a dream?
 ≈ 梦境，作者南归后长期被闲置，不能上前线，只能在梦中带兵 | 梦回吹角连营 | 沙场秋点兵 | 可怜白发生
-- 现实，作者正在前线带兵打仗 ~real
-- 现实，作者在看别人练兵 ~real
+- 现实，作者正在前线带兵打仗 ~imagined
+- 现实，作者在看别人练兵 ~imagined
 ?2 这首词表达了作者怎样的感情？ | What feeling does the poem carry?
 ≈ 渴望杀敌报国、收复失地的壮志，和壮志难酬的悲愤 | 了却君王天下事 | 可怜白发生 | 醉里挑灯看剑
 - 对朋友陈同甫的思念 ~nomood
@@ -419,7 +419,7 @@ export const POEMS_9 = `
 ?2 题目说“赋壮词以寄之”，写给陈同甫有什么意义？ | Why send such a poem to Chen Tongfu?
 ≈ 陈同甫也主张抗金，作者把壮志和苦闷说给志同道合的朋友，互相激励 | 为陈同甫赋壮词以寄之 | 了却君王天下事
 - 向朋友炫耀自己打了胜仗 ~unsaid
-- 请朋友帮自己找一匹好马 ~literal
+- 请朋友帮自己找一匹好马 ~face
 
 # 过零丁洋（宋·文天祥）
 辛苦遭逢起一经，干戈寥落四周星。
@@ -478,7 +478,7 @@ export const POEMS_9 = `
 - 诗人自己 ~who
 ?2 “何当共剪西窗烛”表达了诗人怎样的心愿？ | What wish is in 何当共剪西窗烛?
 ≈ 盼望早日回去，和亲人在西窗下一起剪烛夜谈 | 何当共剪西窗烛 | 君问归期未有期
-- 希望买到更亮的蜡烛 ~literal
+- 希望买到更亮的蜡烛 ~face
 - 想一个人在西窗下读书 ~sense
 ?2 这首诗表达了诗人怎样的感情？ | What feeling does the poem carry?
 ≈ 客居他乡的孤寂和对北方亲人的深切思念 | 君问归期未有期 | 何当共剪西窗烛 | 巴山夜雨涨秋池
@@ -494,8 +494,8 @@ export const POEMS_9 = `
 ?1 “露从今夜白，月是故乡明”有什么特别的地方？ | What is special in these lines?
 ≈ 月亮哪里都一样，诗人偏说故乡的明，把思乡之情写进了景物 | 露从今夜白，月是故乡明 | 有弟皆分散
 % 月亮本来到处一样亮，诗人却说“月是故乡明”，这不是事实，是心里的感觉：心在故乡，就觉得故乡的月亮最亮。这样写，思乡的感情不说出来，也从景物里透了出来。 | The moon shines alike everywhere, yet he says it is brightest at home: not fact but feeling. His heart is at home, so home's moon seems brightest, and the longing shows through the scene without being named.
-- 故乡的月亮真的比别处亮 ~real
-- 今天晚上露水很多，月亮很圆 ~literal
+- 故乡的月亮真的比别处亮 ~face
+- 今天晚上露水很多，月亮很圆 ~face
 ?1 “戍鼓断人行，边秋一雁声”营造了怎样的气氛？ | What mood do the first lines make?
 ≈ 鼓声响起，路上断了行人，只有一只孤雁在叫，冷清而凄凉 | 戍鼓断人行，边秋一雁声 | 戍鼓，城楼上报时或报警的鼓
 - 热闹欢快的节日气氛 ~opposite
@@ -527,16 +527,16 @@ export const POEMS_9 = `
 ?1 “春蚕到死丝方尽，蜡炬成灰泪始干”字面上写了什么？ | What do these lines say on their face?
 = 春蚕到死才吐完丝，蜡烛烧成了灰，蜡油才流干 | 春蚕到死丝方尽，蜡炬成灰泪始干
 - 春蚕很快就吐完了丝 ~opposite
-- 有人看着蜡烛流下了眼泪 ~literal
+- 有人看着蜡烛流下了眼泪 ~face
 ?1 “春蚕到死丝方尽”中的“丝”有什么妙处？ | What is clever in 丝?
 ≈ “丝”和“思”同音，表面写蚕丝，实际写相思，到死才会停止 | 春蚕到死丝方尽 | 丝，和“思”同音
 % 注释说“丝”和“思”同音。春蚕吐丝，一直到死才吐完；人的相思也一样，到死才会停止。一个字两层意思，把看不见的思念写成了看得见的蚕丝。 | The note says 丝 sounds like 思, longing. The silkworm spins till it dies; so does longing, ending only with death. One word, two senses, makes an unseen longing into thread one can see.
 - 说明春蚕吐的丝很长 ~literal
-- 说明诗人家里养蚕 ~real
+- 说明诗人家里养蚕 ~face
 ?1 “春蚕到死丝方尽，蜡炬成灰泪始干”今天常用来赞美什么？ | Whom do people praise with these lines today?
 ≈ 无私奉献、至死不渝的人，比如老师 | 春蚕到死丝方尽，蜡炬成灰泪始干
 % 春蚕吐完了丝才死，蜡烛烧成灰才停止流泪，都是把自己的一切都献了出来，直到最后。原诗写的是到死不变的相思，今天人们借这种至死不变的精神，来赞美默默奉献的人。 | The silkworm dies only when its thread is spent, the candle stops weeping only as ash: each gives all it has to the end. The poem means longing that lasts till death; people now borrow that constancy to praise those who give quietly.
-- 会养蚕、会做蜡烛的人 ~literal
+- 会养蚕、会做蜡烛的人 ~face
 - 喜欢在夜里读书的人 ~unsaid
 ?2 结合注释，这首诗写的是什么感情？ | Given the note, what feeling does the poem carry?
 ≈ 和所爱的人离别后的相思，到死也不改变 | 相见时难别亦难 | 春蚕到死丝方尽 | 多写相思离别之情
@@ -549,8 +549,8 @@ export const POEMS_9 = `
 ?2 最后两句“蓬山此去无多路，青鸟殷勤为探看”表达了怎样的心愿？ | What wish do the last lines carry?
 ≈ 虽然难以相见，仍盼望有人替自己去看望对方、传递消息 | 青鸟殷勤为探看 | 蓬山此去无多路
 % 注释说“蓬山”指对方住的地方，“青鸟”是传递消息的鸟。诗人和对方不能相见，只好请青鸟替自己勤勤恳恳地去看望。见不到，还念着，盼着，相思之情更深了一层。 | The note says 蓬山 is where the beloved lives, and the blue bird carries messages. Unable to meet, he begs the bird to go and see her for him. Kept apart, still longing and hoping, his love grows deeper.
-- 诗人想去蓬山游玩 ~literal
-- 诗人想养一只青鸟 ~literal
+- 诗人想去蓬山游玩 ~face
+- 诗人想养一只青鸟 ~face
 
 # 武陵春·春晚（宋·李清照）
 风住尘香花已尽，日晚倦梳头。物是人非事事休，欲语泪先流。
@@ -559,7 +559,7 @@ export const POEMS_9 = `
 ?1 “只恐双溪舴艋舟，载不动许多愁”好在哪里？ | What is good in the last lines?
 ≈ 把看不见的愁写成有重量的东西，连小船都载不动，写出愁的深重 | 只恐双溪舴艋舟，载不动许多愁
 % 愁本来看不见、摸不着，词人却说小船“载不动”它，好像愁有分量，多得能把船压住。这样，愁就变得具体可感，读者一下子就体会到它有多重。 | Sorrow cannot be seen or held, yet she says the little boat cannot carry it, as if it had weight enough to sink the boat. Sorrow becomes something felt, and the reader grasps at once how heavy it is.
-- 说明双溪的船太小，坐不了人 ~literal
+- 说明双溪的船太小，坐不了人 ~face
 - 说明词人不喜欢坐船 ~unsaid
 ?1 “物是人非事事休，欲语泪先流”写出了什么？ | What do these words show?
 ≈ 东西还是原来的，人却已经不在了，一切都完了，想说话眼泪就先流了下来 | 物是人非事事休，欲语泪先流 | 风住尘香花已尽
@@ -568,7 +568,7 @@ export const POEMS_9 = `
 ?1 “日晚倦梳头”写出了词人怎样的状态？ | What does 日晚倦梳头 show of her?
 ≈ 太阳很高了还懒得梳头，写出她心情沉重、无心打扮 | 日晚倦梳头 | 物是人非事事休
 - 她起得很早，梳头很认真 ~opposite
-- 她的头发很长，梳起来很累 ~literal
+- 她的头发很长，梳起来很累 ~face
 ?2 结合词人的经历，“物是人非”中的“人非”指什么？ | Given her life, what is 人非?
 ≈ 丈夫已经去世，家人离散 | 物是人非事事休 | 欲语泪先流
 % 注释说词人晚年经历了国破、家亡、丈夫去世。“物是”是东西还在，“人非”是人已经不在。眼前的东西都是旧的，和她一起看这些东西的丈夫却没了，所以“事事休”，一切都没有意思了。 | The note tells of her country lost, home gone, husband dead. 物是, things remain; 人非, the person does not. The old things are there, but the husband who shared them is gone, so all is over.
@@ -595,11 +595,11 @@ export const POEMS_9 = `
 ?1 “夜阑卧听风吹雨，铁马冰河入梦来”是怎样把风雨和梦连起来的？ | How do the wind and rain lead to the dream?
 ≈ 夜里听到风雨声，像战马奔腾的声音，于是梦见了披甲的战马踏过冰河 | 夜阑卧听风吹雨 | 铁马冰河入梦来
 - 风雨太大，诗人一夜没睡着 ~opposite
-- 诗人梦见下了一场大雨 ~literal
+- 诗人梦见下了一场大雨 ~face
 ?1 “铁马冰河入梦来”这句名句写出了什么？ | What does this famous line show?
 ≈ 诗人日夜想着上阵杀敌，连做梦都梦见自己骑着战马驰过冰河 | 铁马冰河入梦来 | 尚思为国戍轮台
 - 诗人害怕打仗，做了噩梦 ~nomood
-- 冬天到了，河面结了冰 ~literal
+- 冬天到了，河面结了冰 ~face
 ?2 结合诗人的经历，他为什么连做梦都梦到战场？ | Given his life, why does he dream of battle?
 ≈ 他一生主张抗金，到老闲居乡村，壮志仍然没有实现 | 尚思为国戍轮台 | 铁马冰河入梦来
 - 他年轻时最喜欢骑马 ~unsaid
@@ -625,10 +625,10 @@ export const POEMS_9 = `
 ≈ 辞官离开朝廷的诗人自己 | 落红不是无情物 | 吟鞭东指即天涯
 % 花落了，离开了枝头，就像诗人辞了官，离开了北京。诗人说落花“不是无情物”，还要化作泥土去护花，是借落花说自己：虽然离开了官场，仍然关心着国家。 | A fallen petal has left its branch, as the poet has left office and the capital. Saying it is not unfeeling and will turn to soil to guard the flowers, he speaks of himself: out of office, still caring for his country.
 - 春天开得最美的花 ~opposite
-- 路上看到的风景 ~literal
+- 路上看到的风景 ~face
 ?1 “化作春泥更护花”今天常用来比喻什么？ | What do people use this line for today?
 ≈ 甘愿奉献，为培养下一代付出自己的一切，比如赞美老师 | 化作春泥更护花 | 落红不是无情物
-- 种花要多施肥 ~literal
+- 种花要多施肥 ~face
 - 花落了就应该扫掉 ~misread
 ?2 结合诗人的经历，“浩荡离愁”是怎样的愁？ | Given his life, what is this vast sorrow?
 ≈ 辞官离开京城，告别多年的官场和朋友，心里的离愁无边无际 | 浩荡离愁白日斜 | 吟鞭东指即天涯

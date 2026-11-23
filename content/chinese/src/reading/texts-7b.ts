@@ -19,8 +19,8 @@ export const PROSE_7 = `
 - 说明妈妈在吹气 ~literal
 ?1 “可吃起来总少了点什么”，“少了点什么”指的是什么？ | What is the something missing?
 ≈ 少了妈妈做的味道和家的感情 | 可吃起来总少了点什么 | 那一锅槐花饭，还是从前的味道
-- 少了一些面粉 ~literal
-- 少了一些盐 ~literal
+- 少了一些面粉 ~face
+- 少了一些盐 ~face
 ?2 本文表达了作者怎样的感情？ | What feeling does the piece carry?
 ≈ 对妈妈的爱和对童年、家的怀念 | 小时候，每到这个季节 | 再也没吃过那样的槐花饭 | 那一锅槐花饭，还是从前的味道
 - 对城里饭店的不满 ~misread
@@ -28,7 +28,7 @@ export const PROSE_7 = `
 ?2 写妈妈“背已经有些驼了，够不着高处的花枝”，流露出作者怎样的心情？ | What feeling shows in Mother's bent back?
 ≈ 感到妈妈老了，心里有心疼和感慨 | 妈妈的背已经有些驼了 | 我接过竹竿，学着她当年的样子
 - 嫌妈妈做事太慢 ~misread
-- 觉得槐花树长得太高 ~literal
+- 觉得槐花树长得太高 ~face
 ?2 “我接过竹竿，学着她当年的样子”，这一细节表达了什么？ | What does taking the pole show?
 ≈ 我长大了，愿意像妈妈当年照顾我那样去照顾妈妈 | 我接过竹竿，学着她当年的样子 | 妈妈就搬来梯子，踮着脚
 - 我想学会做槐花饭去卖 ~unsaid
@@ -42,7 +42,7 @@ export const PROSE_7 = `
 井不说话。可是它什么都记得。
 ?1 把井绳磨出的沟比作“老人额头上的皱纹”，有什么效果？ | What does the likeness to wrinkles do?
 ≈ 形象地写出老井经历的岁月长久 | 像老人额头上的皱纹 | 不知道是哪一辈人挖的
-- 说明井边住着一位老人 ~literal
+- 说明井边住着一位老人 ~face
 - 说明井沿就要坏了 ~unsaid
 ?1 “切开一咬，凉到心里”中的“凉到心里”有什么表达效果？ | What does “cold to the heart” do?
 ≈ 写出井水镇过的西瓜特别凉爽，也写出童年的快乐 | 切开一咬，凉到心里 | 夏天，井水冰凉冰凉的
@@ -50,15 +50,15 @@ export const PROSE_7 = `
 - 说明我心里很难过 ~misread
 ?1 结尾“井不说话。可是它什么都记得”用了什么手法？好在哪里？ | What figure is the last line, and why is it good?
 ≈ 拟人：把井当作人来写，写出井见证了村里过去的日子 | 可是它什么都记得 | 大人们挑着水桶，一边打水，一边说着今年的庄稼
-- 夸张：说明井很大 ~literal
-- 比喻：把井比作一个哑巴 ~literal
+- 夸张：说明井很大 ~face
+- 比喻：把井比作一个哑巴 ~face
 ?2 “井口盖上了一块木板，井边长出了青苔”流露出作者怎样的感情？ | What feeling shows in the covered well?
 ≈ 老井被冷落了，作者有些失落和感慨 | 井边长出了青苔 | 再也没有人去打水了
 - 作者为通了自来水而失望 ~misread
 - 作者觉得青苔很好看 ~misread
 ?2 作者“好像又听见了那‘吱呀吱呀’的声音”，表达了什么？ | What does hearing the old creak again express?
 ≈ 对过去村里生活和奶奶的怀念 | 我好像又听见了那“吱呀吱呀”的声音 | 听见了奶奶喊我回家吃瓜
-- 井边真的有人在打水 ~literal
+- 井边真的有人在打水 ~face
 - 作者的耳朵出了问题 ~unsaid
 ?2 全文主要表达了作者怎样的感情？ | What feeling does the whole piece carry?
 ≈ 对老井和它连着的旧日乡村生活的怀念 | 小时候，天还没亮 | 可是它什么都记得 | 前几天回村，我掀开木板往下看
@@ -73,16 +73,16 @@ export const PROSE_7 = `
 春天，奶奶出院了。窗台上的花，一盆一盆地又绿了起来。
 ?1 “像一群抢着说话的小孩子”写出了太阳花怎样的特点？ | What does the likeness to chattering children show?
 ≈ 开得多、颜色多、热闹有生气 | 像一群抢着说话的小孩子 | 一到中午就开得热热闹闹
-- 太阳花会说话 ~literal
+- 太阳花会说话 ~face
 - 太阳花长得很矮 ~unsaid
 ?1 “绿得发亮”写出了吊兰怎样的样子？ | What does 绿得发亮 give of the spider plant?
 ≈ 长得很好，绿油油的，很有精神 | 绿得发亮 | 一棵吊兰从茶壶嘴里垂下来
-- 叶子上涂了油漆 ~literal
+- 叶子上涂了油漆 ~face
 - 吊兰快要枯死了 ~opposite
 ?1 “叶子垂着，像在等谁”，这样写有什么效果？ | What does “as if waiting for someone” do?
 ≈ 把花当作人来写，写出花也在想念奶奶，衬托家里人的牵挂 | 叶子垂着，像在等谁 | 奶奶住院了，一个多月没回家
 - 说明花在等我来浇水 ~narrow
-- 说明叶子长得太长了 ~literal
+- 说明叶子长得太长了 ~face
 ?2 奶奶用旧搪瓷缸、破茶壶种花，表现了奶奶什么？ | What do the old mugs and teapots show of Grandma?
 ≈ 节俭、热爱生活 | 其实是旧搪瓷缸、破茶壶 | 别人送什么，她就种什么 | 喝吧，喝饱了好长
 - 奶奶买不起花盆 ~unsaid
@@ -93,7 +93,7 @@ export const PROSE_7 = `
 - 奶奶在跟我说话 ~who
 ?2 结尾“窗台上的花，一盆一盆地又绿了起来”表达了什么？ | What does the last line express?
 ≈ 奶奶回来了，花和家又有了生机，充满了欣喜 | 一盆一盆地又绿了起来 | 春天，奶奶出院了
-- 说明春天的花都会变绿 ~literal
+- 说明春天的花都会变绿 ~face
 - 说明我浇水浇得很好 ~narrow
 
 # 灯下
@@ -107,12 +107,12 @@ export const PROSE_7 = `
 - 说明灯光很刺眼 ~opposite
 ?1 “他翻得很轻，好像怕吵醒书里的人”，这样写有什么效果？ | What does “afraid to wake the people in the book” do?
 ≈ 写出爸爸读书的专注和对书的爱惜 | 他翻得很轻，好像怕吵醒书里的人 | 爸爸就坐在这盏灯下看书
-- 说明书里真的睡着人 ~literal
+- 说明书里真的睡着人 ~face
 - 说明爸爸怕吵醒我 ~who
 ?1 把爸爸念书的声音比作“夜里的流水”，写出了声音怎样的特点？ | What does the likeness to water at night give of his voice?
 ≈ 低沉、柔和、让人安心 | 声音低低的，像夜里的流水 | 可我喜欢听他念
 - 声音又大又急 ~opposite
-- 窗外有一条河 ~literal
+- 窗外有一条河 ~face
 ?2 本文借台灯表达了作者怎样的感情？ | What feeling does the lamp carry?
 ≈ 对爸爸的敬爱和对灯下读书时光的珍惜 | 爸爸就坐在这盏灯下看书 | 可我喜欢听他念 | 我也坐在灯下读书
 - 对旧台灯的嫌弃 ~opposite
@@ -120,7 +120,7 @@ export const PROSE_7 = `
 ?2 结尾“只是照着的，换成了我的手”有什么含意？ | What is meant by “now it lights my hands”?
 ≈ 爸爸爱读书的习惯传给了我，我接着在灯下读书 | 只是照着的，换成了我的手 | 每天晚上，我也坐在灯下读书
 - 爸爸已经不读书了 ~unsaid
-- 我的手比爸爸的手大 ~literal
+- 我的手比爸爸的手大 ~face
 ?2 “暖暖的，静静的”除了写灯光，还写出了什么？ | What else do 暖暖的, 静静的 give?
 ≈ 写出灯下读书时温馨、宁静的气氛和我心里的感受 | 暖暖的，静静的 | 我常常趴在他旁边，看他翻书
 - 说明那天晚上停电了 ~unsaid
@@ -134,7 +134,7 @@ export const PROSE_7 = `
 前年，村里修了一座水泥大桥，汽车可以开过去。可每次回村，我还是要绕到小石桥上，站一会儿。
 ?1 “我像是从云里走过去”写出了怎样的情景？ | What scene does “walking through cloud” give?
 ≈ 早上河上雾气很浓，走在桥上像走在云里 | 桥下的河面上浮着一层白雾 | 我像是从云里走过去
-- 石桥架在天上 ~literal
+- 石桥架在天上 ~face
 - 那天在下大雨 ~unsaid
 ?1 “我的影子长长地躺在桥面上”中的“躺”字有什么表达效果？ | What does 躺 do?
 ≈ 把影子当作人来写，写出夕阳下影子又长又安静 | 我的影子长长地躺在桥面上 | 夕阳把河水染红了
@@ -167,12 +167,12 @@ export const PROSE_7 = `
 ?1 “冷冰冰的，落在脸上像针”写出了冬雨怎样的特点？ | What does “like needles” give of the winter rain?
 ≈ 又冷又刺人，让人很不舒服 | 冷冰冰的，落在脸上像针
 % “冷冰冰的”写出了雨的冷，“落在脸上像针”把雨点比作针，写出了雨打在脸上的刺痛。两处合起来，冬雨又冷又刺人，正和作者盼的雪相反。 | “冷冰冰的” gives the cold of the rain, and “落在脸上像针” likens the drops to needles for the sting on the face. Together the winter rain is cold and stinging, the opposite of the snow the writer longs for.
-- 雨是针做的 ~literal
+- 雨是针做的 ~face
 - 雨很温暖 ~opposite
 ?1 “外婆的眼睛里有光”是什么意思？ | What does the light in Grandma's eyes mean?
 ≈ 外婆回忆那场大雪时，心里充满了快乐和向往 | 外婆的眼睛里有光 | 还咯咯地笑
-- 外婆的眼睛生病了 ~literal
-- 屋里的灯照在外婆的眼睛上 ~literal
+- 外婆的眼睛生病了 ~face
+- 屋里的灯照在外婆的眼睛上 ~face
 ?1 “一片，两片，轻轻地落在窗台上”这样写有什么好处？ | What is good in “one flake, two”?
 ≈ 写出雪下得很小、很轻，也写出我看得仔细、心里惊喜 | 一片，两片，轻轻地落在窗台上 | 我推开窗，愣住了
 - 说明雪下得很大 ~opposite
@@ -202,12 +202,12 @@ export const PROSE_7 = `
 - 说明炊烟很黑很浓 ~opposite
 ?1 “风一来，它们就弯下腰……像一群赶路的人”，这样写有什么效果？ | What does “bending like travellers” do?
 ≈ 把炊烟写成人，写出风中炊烟飘动的样子，生动形象 | 风一来，它们就弯下腰 | 像一群赶路的人
-- 说明村里有很多人在赶路 ~literal
+- 说明村里有很多人在赶路 ~face
 - 说明风很小 ~opposite
 ?1 “我心里还会升起那么一缕”，这“一缕”指的是什么？ | What is the wisp that rises in my heart?
 ≈ 对家乡和家的思念 | 我心里还会升起那么一缕 | 一直飘回那个小山村
-- 真的炊烟 ~literal
-- 城里高楼的烟 ~literal
+- 真的炊烟 ~face
+- 城里高楼的烟 ~face
 ?2 “看见炊烟，我就知道，该回家了”这句话表达了什么？ | What does this sentence express?
 ≈ 炊烟是家的召唤，连着妈妈和饭菜的温暖 | 看见炊烟，我就知道，该回家了 | 洗手，吃饭
 - 我害怕天黑 ~unsaid
@@ -215,7 +215,7 @@ export const PROSE_7 = `
 ?2 妈妈只说了“洗手，吃饭”，这样写有什么好处？ | What is good in Mother's four words?
 ≈ 平常的一句话，写出了家的温暖和母爱，让人觉得亲切 | 洗手，吃饭 | 推开门，灶膛里的火正旺
 - 说明妈妈对我很冷淡 ~misread
-- 说明妈妈不爱说话 ~literal
+- 说明妈妈不爱说话 ~face
 ?2 全文表达了作者怎样的感情？ | What feeling does the whole piece carry?
 ≈ 对家乡、童年和母爱的思念 | 小时候放了学 | 再也看不见炊烟了 | 一直飘回那个小山村
 - 对城市生活的赞美 ~misread
@@ -233,7 +233,7 @@ export const PROSE_7 = `
 - 只从摸到的感觉来写 ~nosense
 ?1 “我呼出的白气，一团一团地跟着我”，这样写有什么效果？ | What does “the white breath followed me” do?
 ≈ 写出冬天的寒冷，又写得有趣，带着童年的快乐 | 一团一团地跟着我 | 冬天，路上结了霜
-- 说明有人在后面跟着我 ~literal
+- 说明有人在后面跟着我 ~face
 - 说明我生病了 ~unsaid
 ?1 文章写小路的四季，是按什么顺序写的？ | In what order are the seasons written?
 ≈ 按春、夏、秋、冬的时间顺序 | 春天，路两边的油菜花开了 | 夏天，雨后的小路很滑 | 秋天，稻子熟了 | 冬天，路上结了霜
@@ -245,11 +245,11 @@ export const PROSE_7 = `
 - 我很难过，偷偷哭了 ~opposite
 ?2 “路边的每一棵树，每一块石头，我都认得”表达了什么？ | What does knowing every tree and stone express?
 ≈ 我对这条小路非常熟悉，有很深的感情 | 路边的每一棵树，每一块石头，我都认得 | 这条路，我走了六年
-- 我喜欢数树和石头 ~literal
+- 我喜欢数树和石头 ~face
 - 小路上只有几棵树 ~unsaid
 ?2 结尾写小路“好像在跟我说：‘路上小心。’”，表达了什么？ | What does the path's “take care” express?
 ≈ 我舍不得小路，觉得它像亲人一样牵挂着我 | 我总忍不住回头看一眼 | 好像在跟我说：“路上小心。”
-- 小路真的会说话 ~literal
+- 小路真的会说话 ~face
 - 坐车上学很危险 ~unsaid
 
 # 老屋的门槛
@@ -260,11 +260,11 @@ export const PROSE_7 = `
 爷爷走后，老屋卖了。我最后一次跨过那道门槛，回头看了好久。它还是那样凹着，静静的，像在等我再坐上去。
 ?1 把门槛凹下去的地方比作“一只浅浅的木碗”，写出了什么？ | What does the likeness to a bowl give?
 ≈ 写出门槛被踩得很深，也写出老屋的年代久远 | 像一只浅浅的木碗 | 被几代人的脚踩得中间凹了下去
-- 说明门槛可以用来盛饭 ~literal
+- 说明门槛可以用来盛饭 ~face
 - 说明门槛是新做的 ~opposite
 ?1 “烟一明一灭的，像一颗小小的星星”有什么表达效果？ | What does the likeness of the pipe to a star do?
 ≈ 写出傍晚烟火一闪一闪的样子，衬托出安静温馨的气氛 | 像一颗小小的星星 | 我们不说话，听院子里的蟋蟀叫
-- 说明爷爷在看星星 ~literal
+- 说明爷爷在看星星 ~face
 - 说明天还没黑 ~sense
 ?1 “我们不说话，听院子里的蟋蟀叫”，这一句写出了怎样的气氛？ | What mood does this sentence give?
 ≈ 安静、温馨，祖孙两人默默相伴 | 我们不说话，听院子里的蟋蟀叫 | 爷爷坐在旁边的竹椅上抽烟
@@ -292,15 +292,15 @@ export const PROSE_7 = `
 从那以后，我再也没有敲过树。
 ?1 “好像在试嗓子”写出了第一声蝉鸣怎样的特点？ | What does “trying its voice” give of the first cicada?
 ≈ 声音长长的，还有些生涩，像刚开始唱歌的人 | 拖得长长的，好像在试嗓子 | 窗外忽然响起了第一声蝉鸣
-- 蝉的嗓子哑了 ~literal
+- 蝉的嗓子哑了 ~face
 - 蝉叫得又短又急 ~opposite
 ?1 “像谁把一锅水烧开了，咕嘟咕嘟地翻滚着”写出了蝉声怎样的特点？ | What does the boiling pot give of the cicadas?
 ≈ 蝉多，叫声密集、热闹，此起彼伏 | 一声高过一声 | 像谁把一锅水烧开了
-- 天气热得能把水烧开 ~literal
+- 天气热得能把水烧开 ~face
 - 蝉声很轻很小 ~opposite
 ?1 “好像要把攒了好几年的话，一口气说完”，这样写有什么好处？ | What is good in “all the years' words at once”?
 ≈ 把蝉当作人来写，写出蝉珍惜短暂的夏天、拼命歌唱 | 好像要把攒了好几年的话，一口气说完 | 蝉在地下要待好几年
-- 说明蝉很爱说话 ~literal
+- 说明蝉很爱说话 ~face
 - 说明蝉叫得很难听 ~misread
 ?2 “我以前嫌蝉吵”，后来为什么“再也没有敲过树”？ | Why did I stop striking the tree?
 ≈ 知道了蝉生命的不易和短暂，开始尊重和珍惜它们 | 蝉在地下要待好几年 | 夏天一过，它就死了 | 从那以后，我再也没有敲过树
@@ -392,7 +392,7 @@ export const EXPOSITORY_7 = `
 ?1 银杏为什么被叫作“活化石”？ | Why is it called a living fossil?
 ≈ 它两亿多年前就有了，冰川时期在中国活了下来 | 早在两亿多年前，它就生活在地球上了 | 只有在中国的一些地方，银杏活了下来
 - 它的叶子像石头一样硬 ~unsaid
-- 它是石头变成的 ~literal
+- 它是石头变成的 ~face
 ?1 民间为什么又叫它“公孙树”？ | Why is it called the grandfather-grandson tree?
 = 爷爷种树，孙子才能吃到果子 | 意思是爷爷种树，孙子才能吃到果子
 - 爷爷和孙子都喜欢它 ~unsaid
@@ -440,7 +440,7 @@ export const EXPOSITORY_7 = `
 - 作比较，说明秦始皇很强壮 ~nocompare
 ?2 说“学富五车”这个成语，有什么作用？ | What does the idiom do?
 ≈ 引用说法，说明竹简又多又重，读书多就要用车拉 | 所以那时候说一个人学问大，叫“学富五车” | 竹简很重
-- 说明古代的车很多 ~literal
+- 说明古代的车很多 ~face
 - 说明古人不喜欢读书 ~opposite
 
 # 豆腐
@@ -524,7 +524,7 @@ export const EXPOSITORY_7 = `
 ?2 第三段用“第一”“第二”“第三”来说明，有什么好处？ | What is good in “first, second, third”?
 ≈ 条理清楚，一条一条地说明屏蔽门的作用 | 屏蔽门的作用主要有三点 | 第一，安全 | 第三，安静
 - 说明三点一样重要，可以随便调换 ~sense
-- 说明屏蔽门有三道 ~literal
+- 说明屏蔽门有三道 ~face
 ?2 “可以节省三成左右的空调用电”中，“左右”能不能去掉？ | Can 左右 be dropped?
 ≈ 不能，这是测算出的大概数字，“左右”使说明更准确 | 据测算，可以节省三成左右的空调用电
 % “据测算”说明这个数是算出来的，不同的车站、不同的季节，节省的电不会正好是三成。用“左右”，表示是个大约的数，说得更准确；去掉了，就成了一个说死的数。 | “据测算” shows the figure is estimated, and stations and seasons will not save exactly three tenths. 左右 marks it as rough and keeps it accurate; without it the figure is fixed.
@@ -554,7 +554,7 @@ export const EXPOSITORY_7 = `
 - 在冻土上烧火让它化开 ~opposite
 ?2 把冻土比作“冰冻蛋糕”，有什么作用？ | What does the frozen cake do?
 ≈ 打比方，形象地说明冻土分上下两层 | 冻土的样子像一块大大的“冰冻蛋糕” | 最上面一层 | 下面的一层
-- 说明冻土可以吃 ~literal
+- 说明冻土可以吃 ~face
 - 列数字，说明冻土有多厚 ~nonumber
 ?2 第四段用“比如”“又比如”，用了什么说明方法？ | What method do “for instance” and “or again” mark?
 ≈ 举例子，具体说明工程师怎样克服冻土难题 | 比如，在路基里插上一根根“热棒” | 又比如，在一些地方架起桥
@@ -562,7 +562,7 @@ export const EXPOSITORY_7 = `
 - 下定义 ~nodefine
 ?2 “让铁路从冻土上面‘跨’过去”中，“跨”为什么加引号？ | Why is 跨 in quotation marks?
 ≈ 把铁路当作人来写，形象地说明铁路架在桥上，不压在冻土上 | 让铁路从冻土上面“跨”过去 | 在一些地方架起桥
-- 表示铁路真的会迈腿 ~literal
+- 表示铁路真的会迈腿 ~face
 - 表示引用别人的话 ~nocite
 
 # 啄木鸟

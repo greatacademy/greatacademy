@@ -179,7 +179,7 @@ export const DRAMA_9 = `
 ≈ 儿子理解并敬重父亲的选择，不再劝他 | 看着父亲的背影，慢慢摘下了帽子 | 老船工撑船离岸
 % 摘下帽子是表示敬意的动作。父亲撑船走了，儿子没有再拦，也没有再说话，只是看着他的背影摘下帽子。可见儿子明白了父亲对这条船、对渡口的人的感情，从劝阻变成了敬重。 | Removing a cap is a mark of respect. The father pushes off; the son neither stops him nor speaks, but watches him go and takes off his cap. He has understood what the boat and its passengers mean to his father, and his urging turns to respect.
 - 儿子生气了，转身回家 ~nomood
-- 风太大，帽子快被吹掉了 ~literal
+- 风太大，帽子快被吹掉了 ~face
 ?2 老船工只说“嗯”“我不去”，台词很短，有什么作用？ | Why are the boatman's lines so short?
 ≈ 简短的台词写出他话少倔强，也写出他心里不好受 | 老船工：（望着江面）嗯 | 我不去
 - 说明他没听懂儿子的话 ~sense
@@ -259,7 +259,7 @@ export const DRAMA_9 = `
 ?2 母亲说“你们看着办”，潜台词是什么？ | What lies under “You decide”?
 ≈ 她不愿意卖，但不想让孩子为难，所以不直接说出来 | 她说“你们看着办”，就是不愿意 | 这棵树是你爸栽的
 - 她真的无所谓卖不卖 ~surface
-- 她让孩子们自己去看房子 ~literal
+- 她让孩子们自己去看房子 ~face
 ?2 母亲说“这棵树是你爸栽的”，有什么作用？ | What does her line about the tree do?
 ≈ 不直接反对，而是借枣树说出老屋里的家人和回忆，委婉地表达不舍 | 这棵树是你爸栽的，栽的那年，你刚会走路 | 今年的枣，甜着呢
 - 介绍枣树的品种 ~role
@@ -444,11 +444,11 @@ export const FORMS_9 = `
 ?2 作者为什么要虚构“书包会说话”？ | Why make the satchel talk?
 ≈ 借书包的话，生动有趣地告诉读者要爱护自己的东西 | 我也要休息，可你不能把我扔在泥里呀 | 从那以后，他每天都把书包轻轻地放好
 % 一个人随手扔书包，生活里很常见，直接说“要爱护书包”，读者未必听得进去。让书包自己叫疼、自己抱怨，读者就像听见了它的感受，道理就变得有趣、好懂。虚构是为了把道理讲得更动人。 | Tossing a satchel is common, and “take care of your things” might go unheard. Let the satchel cry out and complain, and the reader seems to hear it feel; the lesson becomes lively and clear. The invention serves the lesson.
-- 因为书包真的会说话 ~real
+- 因为书包真的会说话 ~imagined
 - 为了介绍书包的结构 ~misread
 ?2 结尾“它在笑”是写实还是想象？有什么作用？ | Is “it was smiling” real or imagined, and why?
 ≈ 是小明的想象，写出小明改正了坏习惯后心里的愉快 | 不过，小明总觉得，它在笑 | 书包再也没叫过
-- 是写实，书包真的笑了 ~real
+- 是写实，书包真的笑了 ~imagined
 - 是写实，有人在旁边笑 ~unsaid
 
 # 校园里的银杏
@@ -479,7 +479,7 @@ export const FORMS_9 = `
 - 让文章变得很长 ~misread
 ?2 最后一段把学校比作银杏，这是事实还是作者的联想？ | Is the school-as-ginkgo a fact or the author's thought?
 ≈ 作者由眼前的银杏产生的联想，表达自己的看法 | 一所学校，也像一棵银杏 | 我却觉得
-- 是事实，学校真的会长高 ~literal
+- 是事实，学校真的会长高 ~face
 - 是别人说的话 ~who
 
 # 爷爷的烟袋
@@ -502,7 +502,7 @@ export const FORMS_9 = `
 ?2 结尾“我好像还能闻到那股淡淡的烟味”是写实还是想象？ | Is the smell at the end real or imagined?
 ≈ 是“我”的感觉和想象，“好像”说明不是真的闻到，表达对爷爷的怀念 | 我好像还能闻到那股淡淡的烟味 | 爷爷去世那年
 % 爷爷去世已经有些年了，烟袋也早就没人用，按理说不会还有烟味。“好像”两个字说明这是“我”的感觉：一拉开抽屉，就想起爷爷抽烟的样子。这是由真实的物件引起的想象，写出了“我”的怀念。 | Grandfather has been dead for years and the pipe long unused, so no smell should remain. 好像, “as if”, marks it as feeling: opening the drawer, he recalls the old man smoking. A real object stirs an imagined smell, and shows his longing.
-- 是写实，抽屉里真的有烟味 ~real
+- 是写实，抽屉里真的有烟味 ~imagined
 - 是写实，“我”也开始抽烟了 ~unsaid
 ?2 这篇文章是叙事散文，它的内容来自哪里？ | Where does this narrative prose come from?
 ≈ 来自作者真实的生活和对爷爷的回忆 | 爷爷有一杆烟袋 | 爷爷去世那年，我把烟袋收进了自己的抽屉
@@ -537,11 +537,11 @@ export const FORMS_9 = `
 ?2 这个传说为什么要虚构白兔救人的故事？ | Why invent the tale of the rescuing hare?
 ≈ 寄托人们战胜疾病的愿望，也解释了中秋看月亮的习俗 | 照到哪里，哪里的病人就好了起来 | 人们每到中秋，都要抬头看看月亮
 % 瘟疫让很多人病倒，人们盼着有药能治好所有人，这个愿望在现实里很难实现，就放进了故事里。故事最后落到中秋看月亮的习俗上，又给这个真实的习俗一个美丽的来历。虚构的故事寄托着真实的愿望。 | Plague struck many, and people longed for a cure for all, a wish hard to meet in life, so it went into a tale. The tale ends with the real custom of moon-gazing at mid-autumn and gives it a lovely origin. The invented story holds a real wish.
-- 因为月亮上真的有兔子 ~real
+- 因为月亮上真的有兔子 ~imagined
 - 为了介绍治病的药方 ~misread
 ?2 读神话传说，应该怎样看待其中虚构的内容？ | How should one read what such a tale invents?
 ≈ 知道它不是真事，体会其中寄托的愿望和感情 | 很久以前，月亮上住着一只白兔 | 人们每到中秋，都要抬头看看月亮
-- 把它当成真实的历史来读 ~real
+- 把它当成真实的历史来读 ~imagined
 - 认为它是假的，没有价值 ~misread
 
 # 一张照片
@@ -599,11 +599,11 @@ export const FORMS_9 = `
 ?2 作者借梦虚构这些情节，想表达什么？ | What does the invented dream serve?
 ≈ 借梦写出“我”心里对考试的担心，提醒自己不能贪玩 | 主人在打游戏，根本不理我们 | 我一骨碌爬起来，翻开数学书
 % 梦里的“主人”在打游戏不复习，其实就是“我”自己；书本着急，其实是“我”心里着急。醒来后“我”马上翻开数学书，说明梦把心里的担心说了出来。虚构的梦，写的是真实的心情。 | The owner gaming instead of revising is the narrator himself; the books' worry is his own. Waking, he opens the maths book at once: the dream spoke his worry. An invented dream tells a real feeling.
-- 说明书本真的会说话 ~real
+- 说明书本真的会说话 ~imagined
 - 说明数学书比语文书好 ~misread
 ?2 这篇短文的虚构和童话里的虚构有什么不同？ | How does this invention differ from a fairy tale's?
 ≈ 它借“做梦”来虚构，梦醒后回到真实的生活，虚构是为了写真实的心理 | 我做了一个梦 | 我急得大叫一声，醒了。窗外天已经亮了
-- 没有不同，都是真事 ~real
+- 没有不同，都是真事 ~imagined
 - 它比童话更长 ~misread
 
 # 戏台
@@ -631,11 +631,11 @@ export const FORMS_9 = `
 ?2 “他们跟着锣鼓，轻轻地打着拍子”这个细节写出了什么？ | What does the tapping show?
 ≈ 老人们对戏的喜爱和对过去的怀念 | 台下坐的，大多是头发白了的老人 | 他们跟着锣鼓，轻轻地打着拍子
 % 来看戏的大多是头发白了的老人，他们小时候正是挤在台下看戏的人。锣鼓一响，他们不由自主地打起拍子，说明这些戏他们熟悉，也喜欢；跟着节拍，他们好像又回到了从前。 | Most in the audience are white-haired, those who once crowded below the stage as children. When the drums sound they tap along unbidden: they know and love these plays, and with the beat seem to go back in time.
-- 老人们在跳舞 ~literal
+- 老人们在跳舞 ~face
 - 老人们觉得戏太吵 ~opposite
 ?2 文章写“台顶长出了草”，有什么作用？ | What does the grass on the roof do?
 ≈ 用真实的细节写出戏台被冷落后的荒凉 | 戏台空了，台顶长出了草 | 来看戏的人越来越少
-- 说明戏台的屋顶是用草盖的 ~literal
+- 说明戏台的屋顶是用草盖的 ~face
 - 说明镇上的人喜欢种草 ~unsaid
 
 # 小草的旅行
@@ -663,12 +663,12 @@ export const FORMS_9 = `
 ?2 作者把种子写得会想事情，有什么用意？ | Why give the seed thoughts?
 ≈ 借种子的想法，写出它面对困难不灰心的精神，让读者受到鼓舞 | 种子想：“这里这么挤，我能长大吗？” | 它没有灰心
 % 种子当然不会想事情，作者让它在石缝里问“我能长大吗”，又写它“没有灰心”，就把种子写成了一个遇到困难的人。读者看到它最后钻出了石缝，就像看到一个人战胜了困难。虚构让道理变得生动。 | A seed cannot think; given a question, can I grow?, and no despair, it becomes a person meeting hardship. Seeing it break from the rock, the reader sees a person overcome. The invention makes the lesson live.
-- 因为种子真的会想 ~real
+- 因为种子真的会想 ~imagined
 - 为了说明石头很硬 ~misread
 ?2 这篇童话和《会说话的书包》有什么相同的地方？ | What does it share with the talking satchel?
 ≈ 都把物写得像人一样，用虚构的故事讲道理 | 种子想 | 它没有灰心
-- 都是写真人真事 ~real
-- 都是新闻报道 ~real
+- 都是写真人真事 ~imagined
+- 都是新闻报道 ~imagined
 
 # 外婆的菜园
 外婆家的后院有一个菜园，不大，却种了十几样菜。
@@ -695,10 +695,10 @@ export const FORMS_9 = `
 ?2 外婆说黄瓜“比城里买的甜”，这是事实还是外婆的感受？ | Is “sweeter than the city's” fact or feeling?
 ≈ 主要是外婆的感受，带着她对自己种的菜的喜爱和自豪 | 尝尝，比城里买的甜 | 在衣服上擦擦，递给我
 % 外婆并没有拿两种黄瓜比过，这句话说的是她心里的感觉：自己一棵棵种出来、一桶桶浇大的菜，吃着当然最甜。读这句话，要读出外婆的自豪和对“我”的疼爱，不必去查哪种黄瓜更甜。 | She has not compared two cucumbers; it is how she feels. Vegetables she sowed and watered by the bucket taste sweetest to her. Read it for her pride and her love for the child, not as a claim to check.
-- 是经过测量的事实 ~real
+- 是经过测量的事实 ~misread
 - 是城里人说的话 ~who
 ?2 “那个菜园里种的，不只是菜”中，“不只是菜”还有什么？ | What more than vegetables grows there?
 ≈ 外婆勤劳的习惯、对生活的热爱和对家人的爱 | 种惯了，一天不去，心里就空落落的 | 递给我：“尝尝，比城里买的甜。”
-- 还有花和草 ~literal
+- 还有花和草 ~face
 - 还有外婆养的鸡 ~unsaid
 `;

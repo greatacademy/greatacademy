@@ -34,7 +34,7 @@ export const NARRATIVE_7 = `
 - 这六年里没有发生任何事 ~unsaid
 ?2 “缝几针，就用牙咬一下线头”这个细节表现了什么？ | What does biting the thread show?
 ≈ 奶奶缝得认真，一直缝到半夜，对我充满了爱 | 缝几针，就用牙咬一下线头 | 半夜醒来，灯还亮着
-- 奶奶的牙齿很好 ~literal
+- 奶奶的牙齿很好 ~face
 - 奶奶家里没有剪刀 ~unsaid
 
 # 那把伞
@@ -133,7 +133,7 @@ export const NARRATIVE_7 = `
 - 说明修表是一件无聊的事 ~misread
 ?2 结尾“有些东西，是会一直走下去的”中的“有些东西”指什么？ | What are the things that keep going?
 ≈ 不只是手表，还有陈师傅和爷爷那一代人的情义和认真 | 有些东西，是会一直走下去的 | 你爷爷当年在我这儿修过二十年的表 | 可这块表还在走
-- 只是那块旧手表 ~literal
+- 只是那块旧手表 ~face
 - 老街上来来往往的行人 ~unsaid
 
 # 小黑回来了
@@ -164,7 +164,7 @@ export const NARRATIVE_7 = `
 - 铁丝很容易剪断 ~unsaid
 ?2 “晚饭我一口也吃不下，饭碗端起来又放下”这一细节表现了什么？ | What does the untouched supper show?
 ≈ 我找不到小黑时的着急和难过 | 晚饭我一口也吃不下，饭碗端起来又放下 | 喊哑了嗓子，也没有它的影子
-- 晚饭做得不好吃 ~literal
+- 晚饭做得不好吃 ~face
 - 我生病了 ~unsaid
 
 # 外公的二胡
@@ -230,7 +230,7 @@ export const NARRATIVE_7 = `
 - 作者不记得后面的节目了 ~unsaid
 ?2 结尾写“夕阳照在走廊上，我觉得自己的脚步轻快极了”有什么作用？ | What does the closing image do?
 ≈ 借景写出我战胜紧张以后的轻松和喜悦 | 我觉得自己的脚步轻快极了 | 主持得不错，那个错，你接得很好
-- 说明那天的天气很好 ~literal
+- 说明那天的天气很好 ~face
 - 说明我急着回家 ~unsaid
 
 # 赶集
@@ -262,7 +262,7 @@ export const NARRATIVE_7 = `
 - 糖人是集上最便宜的东西 ~unsaid
 ?2 结尾把糖公鸡比作“一块会发光的琥珀”，表达了什么？ | What does the amber likeness express?
 ≈ 我对糖公鸡的喜爱和赶集的快乐 | 像一块会发光的琥珀 | 舍不得吃一口
-- 糖公鸡已经化了 ~literal
+- 糖公鸡已经化了 ~face
 - 我想把糖公鸡卖掉 ~unsaid
 
 # 一百二十级台阶
@@ -294,7 +294,7 @@ export const NARRATIVE_7 = `
 - 作者觉得爬山很无聊 ~unsaid
 ?2 结尾“谁也不用再数了”是什么意思？ | What does “no one needs to count now” mean?
 ≈ 妈妈已经能稳稳地走完台阶，不再需要我扶着她一级一级地数了 | 谁也不用再数了 | 我扶着她的胳膊，一级一级地数
-- 我们忘了台阶有多少级 ~literal
+- 我们忘了台阶有多少级 ~face
 - 山上的台阶被拆掉了 ~unsaid
 
 # 雪地里的脚印
@@ -362,7 +362,7 @@ export const DESCRIPTION_7 = `
 - 老人不会挑红薯 ~sense
 ?2 结尾把老人比作“一尊小小的雕像”，有什么效果？ | What does the likeness to a statue do?
 ≈ 写出老人在寒风里一动不动守着炉子的样子，让人又敬佩又心疼 | 像一尊小小的雕像 | 老人又缩着身子坐回了炉子旁边
-- 说明老人是石头做的 ~literal
+- 说明老人是石头做的 ~face
 - 说明老人生气了 ~unsaid
 
 # 数学考试
@@ -428,7 +428,7 @@ export const DESCRIPTION_7 = `
 ?2 第三段的侧面描写有什么作用？ | What does the indirect description do?
 ≈ 用场边观众的反应衬托出最后一投时的紧张气氛 | 场边一下子安静了 | 连手里的矿泉水瓶被捏扁了都没发觉
 - 介绍啦啦队的表演 ~role
-- 说明小胖想喝水 ~literal
+- 说明小胖想喝水 ~face
 ?2 结尾阿杰“愣了一下，才咧开嘴笑了”，写出了什么？ | What does his pause before smiling show?
 ≈ 他自己都没想到会投进，愣了一下才反应过来，满心惊喜 | 球进了 | 愣了一下，才咧开嘴笑了
 - 他投丢了这个球 ~opposite
@@ -456,7 +456,7 @@ export const DESCRIPTION_7 = `
 ?2 “叶子承不住了，身子一歪……”把荷叶当作人来写，有什么效果？ | What does writing the leaf as a person do?
 ≈ 写得生动形象，让人看到荷叶倒水又弹起的样子 | 叶子承不住了，身子一歪 | 叶子又弹了回来，轻轻地摇着
 - 说明荷叶被雨打坏了 ~opposite
-- 说明荷叶会说话 ~literal
+- 说明荷叶会说话 ~face
 ?2 “整个荷塘只有雨声，却让人觉得格外安静”，这样写有什么作用？ | What does “only the rain, yet so quiet” do?
 ≈ 以声写静，用雨声衬托荷塘的宁静 | 整个荷塘只有雨声，却让人觉得格外安静 | 一动不动，好像在听雨
 - 说明雨下得很大，非常吵 ~opposite
@@ -493,7 +493,7 @@ export const DESCRIPTION_7 = `
 - 说明我一直不喜欢爷爷 ~onepart
 ?2 “好像怕把我碰碎了”表现了什么？ | What does “as if afraid to break me” show?
 ≈ 爷爷照顾我时的小心和疼爱 | 好像怕把我碰碎了 | 把湿毛巾拧干，叠成方块
-- 我的身体像玻璃一样容易碎 ~literal
+- 我的身体像玻璃一样容易碎 ~face
 - 爷爷的手上没有力气 ~unsaid
 ?2 “窗外的知了叫了一夜，爷爷也守了一夜”有什么作用？ | What does the night of cicadas do?
 ≈ 用知了叫了一夜写出夜的漫长，衬托爷爷守护的辛苦 | 窗外的知了叫了一夜，爷爷也守了一夜 | 爷爷靠在椅子上睡着了
@@ -531,7 +531,7 @@ export const DESCRIPTION_7 = `
 - 他想帮妈妈提菜 ~unsaid
 ?2 把早市比作“一锅煮开了的粥”，好在哪里？ | What is good in likening it to a pot of boiling porridge?
 ≈ 形象地写出各种声音混在一起、热气腾腾的热闹 | 整个早市像一锅煮开了的粥 | 吆喝声、讨价声、油锅的“滋滋”声混在一起
-- 说明早市上有人卖粥 ~literal
+- 说明早市上有人卖粥 ~face
 - 说明早市乱糟糟的，没人买东西 ~misread
 
 # 新来的语文老师
@@ -559,7 +559,7 @@ export const DESCRIPTION_7 = `
 ?2 “眼镜后面的眼睛弯弯的，好像随时都要笑出来”表现了老师怎样的特点？ | What does this show of the teacher?
 ≈ 亲切、爱笑 | 好像随时都要笑出来 | 笑眯眯地等着
 - 很严厉 ~misread
-- 眼睛不好 ~literal
+- 眼睛不好 ~face
 ?2 老师“也不急”，“笑眯眯地等着”，这样写有什么作用？ | What does her calm waiting do?
 ≈ 写出她有耐心，也正好和她讲的“慢”字相合 | 她也不急 | 心里不着急，才能读出味道来
 - 说明她不会讲课 ~misread
@@ -620,7 +620,7 @@ export const DESCRIPTION_7 = `
 - 外貌描写 ~nolooks
 ?1 “路两边的梧桐树一棵一棵往后退”写的是什么？ | What does “the plane trees fell back one by one” give?
 ≈ 我骑快了以后看到的景物 | 路两边的梧桐树一棵一棵往后退 | 我越骑越快
-- 梧桐树真的在往后走 ~literal
+- 梧桐树真的在往后走 ~face
 - 爸爸在往后退 ~who
 ?2 “眼睛只敢盯着前面一米的地面”表现了什么？ | What does staring at the ground a metre ahead show?
 ≈ 刚学骑车时的紧张和害怕 | 眼睛只敢盯着前面一米的地面 | 我心里直打鼓
@@ -628,7 +628,7 @@ export const DESCRIPTION_7 = `
 - 我很自信 ~misread
 ?2 “心里一下子敞亮了”写出了我怎样的心情？ | What does “my heart cleared at once” show?
 ≈ 学会骑车的兴奋和得意 | 心里一下子敞亮了 | 我会骑了
-- 天一下子变亮了 ~literal
+- 天一下子变亮了 ~face
 - 很害怕 ~misread
 ?2 摔倒了，我为什么还“哈哈大笑起来”？ | Why did I laugh after falling?
 ≈ 我已经学会了骑车，摔一跤也挡不住心里的高兴 | 我却躺在草地上哈哈大笑起来 | 原来他早就松手了 | 我会骑了
@@ -663,7 +663,7 @@ export const DESCRIPTION_7 = `
 ?2 王老师进来后“没有说话”，只帮大家整衣领，这样写有什么作用？ | What does her silent care do?
 ≈ 用安静的动作稳住大家，写出她的细心和对学生的关爱 | 她没有说话，只是挨个儿帮大家整了整衣领 | 后台一下子静了 | 原来帽子早就被她拿去缝好了松掉的耳朵
 - 说明王老师生气了 ~misread
-- 说明王老师不会说话 ~literal
+- 说明王老师不会说话 ~face
 ?2 结尾“我们一个跟着一个走上了舞台”说明了什么？ | What does the last line show?
 ≈ 大家已经不慌了，安心地上台演出 | 我们一个跟着一个走上了舞台 | 台下的人，都是来看你们开心的
 - 演出被取消了 ~opposite

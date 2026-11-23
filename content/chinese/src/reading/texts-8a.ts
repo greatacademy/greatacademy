@@ -149,7 +149,7 @@ export const EXPOSITORY_8 = `
 - 时间顺序，按一年四季 ~wrongorder
 ?1 第一段为什么先写溶洞里的奇石？ | Why does paragraph one open with the rocks?
 ≈ 先写看到的现象，引起读者的兴趣，再引出“怎样形成”的问题 | 千姿百态 | 这些溶洞是怎样形成的呢
-- 为了说明石笋是竹笋变的 ~literal
+- 为了说明石笋是竹笋变的 ~face
 - 为了说明溶洞的形成原因 ~role
 ?1 第四段和第三段是什么关系？ | How does paragraph four follow paragraph three?
 ≈ 先说溶洞的形成，再说溶洞里石钟乳和石笋的形成，按事物发展的先后 | 溶洞形成以后 | 这就是溶洞
@@ -523,7 +523,7 @@ export const SCIENCE_8 = `
 - 和专家吵了起来 ~unsaid
 ?2 “就像大海里捞针”有什么作用？ | What does the needle in the sea do?
 ≈ 比喻寻找不育株非常难，衬托出袁隆平的耐心和毅力 | 就像大海里捞针 | 看了一万多株稻穗，终于找到了第一株
-- 说明袁隆平在海边找针 ~literal
+- 说明袁隆平在海边找针 ~face
 - 说明这样的稻株很容易找 ~opposite
 ?2 杂交水稻的成功说明了怎样的道理？ | What does the success teach?
 ≈ 科学研究要敢想敢试，还要长期坚持、众人合作，才能取得造福人类的成果 | 他和助手们又试了很多年 | 他的学生在海南的野生稻里 | 让更多的人吃饱了饭

@@ -11,7 +11,7 @@ export const CLASSICAL_10 = `
 ?1 “我欲之楚”中的“之”是什么意思？ | What does 之 mean in 我欲之楚?
 ≈ 到、往 | 我欲之楚 | 君之楚，将奚为北面
 % 这里的“之”后面跟着地名“楚”，季梁接着问“君之楚，将奚为北面”：你要去楚国，为什么往北走？可见“之”是动词，到、往的意思，不是今天常用的助词。 | 之 is followed by a place, 楚, and the reply asks why one going to Chu heads north: 之 is a verb, “go to”, not today's particle.
-- 的 ~modern
+- 的 ~literal
 - 他（代词） ~sense
 ?1 “吾用多”中的“用”是什么意思？ | What does 用 mean in 吾用多?
 ≈ 路费、用度 | 吾用多 | 用虽多，此非楚之路也
@@ -22,7 +22,7 @@ export const CLASSICAL_10 = `
 ≈ 大王这样的行动越多，离称霸天下的目标就越远 | 王之动愈数，而离王愈远耳 | 今王动欲成霸王
 % “数”是多次；“离王”的“王”，承接前面“成霸王”，是称王、称霸的意思。季梁是说，大王越是打仗扩地，离成就霸业反而越远，就像那个往北走的人越走离楚国越远。 | 数 is “often”; the 王 in 离王, taking up 成霸王, means ruling as overlord. The more the king campaigns, the further he is from leadership, like the traveller walking north.
 - 大王行动越快，离魏国就越远 ~sense
-- 大王做的事越多，就越离不开大臣 ~misread
+- 大王做的事越多，就越离不开大臣 ~sense
 ?2 季梁讲“南辕北辙”的故事，是要说明什么道理？ | What is Ji Liang's point?
 ≈ 方向错了，条件越好，离目标就越远 | 此数者愈善，而离楚愈远耳 | 此非楚之路也
 % 车主马好、钱多、车夫好，可他走的“非楚之路”。季梁说“此数者愈善，而离楚愈远耳”：条件越好，走错方向走得越快，离目标也越远。所以关键在方向，而不在条件。 | Good horses, money and driver, but the wrong road. The better these are, the further from Chu: direction matters more than means.
@@ -45,16 +45,16 @@ export const CLASSICAL_10 = `
 ≈ 显然 | 居然可知 | 不闻人从日边来
 % 明帝的理由是“不闻人从日边来”：只听说有人从长安来，没听说有人从太阳那里来，所以太阳远是明摆着的。“居然”在这里是显然的意思，不是今天表示出乎意料的“居然”。 | His reason: no one is heard to come from the sun, so its distance is plain. 居然 here means “clearly”, not today's “unexpectedly”.
 - 竟然，出乎意料 ~modern
-- 居住的地方 ~literal
+- 居住的地方 ~sense
 ?1 “元帝异之”中的“异”是什么意思？ | What does 异 mean in 元帝异之?
 ≈ 对……感到惊奇 | 元帝异之 | 不闻人从日边来，居然可知
 % 几岁的孩子回答得这样有道理，元帝感到惊奇，所以第二天还要在群臣面前再问一次。“异”在这里是意动用法，“认为……奇异”。 | A small child answers so cleverly that the emperor marvels, and asks again before his ministers next day. 异 is used as “find strange”.
-- 不同 ~elsewhere
+- 不同 ~otheruse
 - 生气 ~sense
 ?1 “尔何故异昨日之言邪”的意思是什么？ | What does this sentence mean?
 ≈ 你为什么和昨天说的话不一样呢 | 尔何故异昨日之言邪 | 乃答曰：“日近。”
 % 昨天明帝说“日远”，今天却说“日近”，所以元帝问他为什么改了口。这里的“异”是“不同于”，和前面“元帝异之”的“异”意思不一样。 | Yesterday “far”, today “near”: the emperor asks why. Here 异 is “differ from”, unlike 异 in 元帝异之.
-- 你为什么对昨天的话感到奇怪 ~sense
+- 你为什么对昨天的话感到奇怪 ~otheruse
 - 你昨天为什么不说话 ~misread
 ?2 明帝两次回答不同，各自的理由是什么？ | What are the reasons for the two answers?
 ≈ 第一次说太阳远，因为没听说有人从太阳那边来；第二次说太阳近，因为抬头能看见太阳，却看不见长安 | 不闻人从日边来，居然可知 | 举目见日，不见长安
@@ -63,7 +63,7 @@ export const CLASSICAL_10 = `
 ?2 明帝说“举目见日，不见长安”，在当时的情境中还有什么深意？ | What deeper sense does the second answer carry?
 ≈ 长安已经失去，回不去了，比太阳还远，这句话说出了元帝心中失去故都的悲伤 | 举目见日，不见长安 | 元帝失色 | 潸然流涕
 % 元帝一听到长安、洛下的消息就“潸然流涕”，心里放不下失去的北方。明帝当着群臣说“不见长安”，正说中了这份痛处，所以元帝“失色”。一句孩子话，含着国破家亡的悲哀。 | News of the north brings the emperor to tears. The child's “I cannot see Chang'an”, said before the court, touches that wound, and the emperor pales: a child's words hold the grief of a lost homeland.
-- 说明长安的天气不好，看不见 ~literal
+- 说明长安的天气不好，看不见 ~face
 - 说明明帝想去长安游玩 ~unsaid
 ?2 这则故事表现了晋明帝怎样的特点？ | What does the story show of the boy?
 ≈ 年纪虽小，却聪明机敏，善于从不同角度说理 | 晋明帝数岁 | 不闻人从日边来，居然可知 | 举目见日，不见长安
@@ -76,7 +76,7 @@ export const CLASSICAL_10 = `
 ?1 “望亭宇尚在木末”的意思是什么？ | What does this sentence mean?
 ≈ 望见松风亭还在树梢那么高的地方 | 望亭宇尚在木末 | 意谓是如何得到
 % “木末”是树梢，说亭子在高处，看上去还在树林的顶上；所以下一句他才想“是如何得到”：这要怎样才走得到呢？ | 木末 is the treetops: the pavilion still stands high above the trees, so he wonders how he will ever get there.
-- 亭子是用木头做的 ~literal
+- 亭子是用木头做的 ~sense
 - 亭子在树林的尽头倒塌了 ~sense
 ?1 “思欲就床止息”中的“就”是什么意思？ | What does 就 mean here?
 ≈ 靠近、到……上 | 思欲就床止息 | 足力疲乏
@@ -86,7 +86,7 @@ export const CLASSICAL_10 = `
 ?1 “由是如挂钩之鱼，忽得解脱”的意思是什么？ | What does this sentence mean?
 ≈ 从此像挂在鱼钩上的鱼，忽然得到了解脱 | 由是如挂钩之鱼，忽得解脱 | 此间有甚么歇不得处
 % “由是”是从此、因此；“挂钩之鱼”是被钩住的鱼，比喻他一心想着非到亭子不可的紧张。想通了“这里有什么不能歇的”，就好像鱼从钩上脱了下来。 | 由是, “from this”; a hooked fish is his tense need to reach the pavilion. Seeing that he can rest right here, he is like a fish slipping off the hook.
-- 他钓到了一条鱼，很高兴 ~literal
+- 他钓到了一条鱼，很高兴 ~face
 - 他把鱼钩挂起来不钓了 ~misread
 ?2 苏轼从这次散步中悟出了什么道理？ | What does Su Shi learn on this walk?
 ≈ 人不必执着于一个目标，随处都可以停下来歇息，放下执念，心就自由了 | 此间有甚么歇不得处 | 若人悟此 | 当甚么时也不妨熟歇
@@ -100,7 +100,7 @@ export const CLASSICAL_10 = `
 ?2 联系苏轼当时被贬惠州的处境，这篇短文流露出他怎样的人生态度？ | Given his exile, what attitude does the piece show?
 ≈ 身处逆境，却能随遇而安、旷达乐观 | 余尝寓居惠州嘉祐寺 | 此间有甚么歇不得处 | 由是如挂钩之鱼，忽得解脱
 % 注释说他是被贬到惠州的，寄住在寺里。一次散步累了，他却从中悟出“此间有甚么歇不得处”：在哪里都可以安下心来。把被贬的处境也看作可以停歇的地方，表现出他的豁达。 | Exiled to Huizhou, lodging at a temple, he draws from a tired walk the thought that anywhere is a place to rest. Seeing even exile as such a place shows his open, untroubled spirit.
-- 悲观失望，觉得人生没有意义 ~opposite
+- 悲观失望，觉得人生没有意义 ~misread
 - 对被贬十分愤怒，想要报复 ~unsaid
 
 # 勉学（北齐·颜之推《颜氏家训》）
@@ -133,8 +133,8 @@ export const CLASSICAL_10 = `
 ?2 “幼而学者，如日出之光；老而学者，如秉烛夜行”运用了什么方法？有什么作用？ | What method is this, and what does it do?
 ≈ 比喻和对比，把早学比作日出的光，把晚学比作烛光，形象地说明早学最好、晚学也有用 | 幼而学者，如日出之光 | 老而学者，如秉烛夜行 | 犹贤乎瞑目而无见者也
 % 日出的光又亮又长，烛光虽弱却能照路，闭眼则什么也看不见。三样东西排在一起，早学、晚学、不学的差别一目了然，劝人学习的意思也更有力。 | Sunrise is bright and long, candlelight weak but useful, shut eyes see nothing. Set in a row, early, late and no study are plain to see, and the exhortation gains force.
-- 引用论证，引用了孔子的话 ~elsewhere
-- 夸张，说明老人看不清东西 ~literal
+- 引用论证，引用了孔子的话 ~nocite
+- 夸张，说明老人看不清东西 ~noexaggerate
 
 # 诲学说（宋·欧阳修）
 玉不琢，不成器；人不学，不知道。然玉之为物，有不变之常德，虽不琢以为器，而犹不害为玉也。人之性，因物则迁，不学，则舍君子而为小人，可不念哉？
@@ -164,7 +164,7 @@ export const CLASSICAL_10 = `
 - 只讲了玉，没有讲人 ~misread
 ?2 欧阳修写这篇短文给儿子，用意是什么？ | Why write this for his son?
 ≈ 告诫儿子要努力学习，做君子而不做小人 | 不学，则舍君子而为小人 | 可不念哉
-- 教儿子怎样雕琢玉器 ~literal
+- 教儿子怎样雕琢玉器 ~face
 - 告诉儿子玉比学问更值钱 ~misread
 
 # 循表夜涉（《吕氏春秋》）
@@ -210,7 +210,7 @@ export const CLASSICAL_10 = `
 ?1 “以此任物，亦必悖矣”中的“悖”是什么意思？ | What does 悖 mean here?
 ≈ 荒谬、违背情理 | 以此任物，亦必悖矣 | 其子岂遽善游哉
 - 悲伤 ~sense
-- 背着 ~literal
+- 背着 ~sense
 ?1 “见人方引婴儿而欲投之江中”中的“方”是什么意思？ | What does 方 mean here?
 ≈ 正在 | 见人方引婴儿而欲投之江中 | 有过于江上者
 % 路过江边的人看见的时候，那人正拉着婴儿要往江里扔，所以“方”是正在。不是今天“方形”“方向”的意思。 | When the passer-by looks, the man is just then dragging the infant to the river: 方 is “just then”, not today's square or direction.
@@ -219,7 +219,7 @@ export const CLASSICAL_10 = `
 ?2 这则寓言讽刺了什么样的人？ | Whom does the fable mock?
 ≈ 不看具体情况、用片面的根据作推断的人 | 此其父善游 | 其父虽善游，其子岂遽善游哉
 % 那人的理由是“此其父善游”：父亲会游泳，所以孩子也会。可父亲会不等于孩子会，这是拿不相干的理由办事。寓言讽刺的就是这种不顾实际、凭想当然作判断的人。 | His reason: the father swims, so the child will. But one does not follow from the other; he acts on an irrelevant reason. The fable mocks judging by assumption, not fact.
-- 不会游泳的人 ~literal
+- 不会游泳的人 ~misread
 - 不爱孩子的父亲 ~misread
 ?2 “以此任物，亦必悖矣”在文中有什么作用？ | What does the last sentence do?
 ≈ 由故事推到一般的处事，点明寓意 | 以此任物，亦必悖矣 | 其子岂遽善游哉
@@ -237,7 +237,7 @@ export const CLASSICAL_10 = `
 ≈ 进一步学新的东西 | 十日不进 | 可以益矣
 % 孔子学了十天还在练同一首曲子，没有往下学，所以师襄子说“可以益矣”，可以加学新的了。“不进”是不往前学，不是今天“不进门”的意思。 | Ten days on the same piece without moving on, so the master says he may add more. 不进 is not advancing, not today's “not enter”.
 - 不进门 ~literal
-- 没有进步 ~misread
+- 没有进步 ~modern
 ?1 “丘已习其曲矣，未得其数也”的意思是什么？ | What does this sentence mean?
 ≈ 我已经熟悉了这首曲子，还没有掌握它的弹奏技法 | 丘已习其曲矣，未得其数也 | 已习其数，可以益矣
 % “丘”是孔子自称，“习”是熟悉，“数”是技法。孔子是说，曲调我会了，可怎样弹好它的技法还没有掌握，所以不能急着学新的。 | 丘 is Confucius himself; 习, “be familiar with”; 数, technique. He knows the tune but not yet the art of playing it, so he will not move on.
@@ -272,7 +272,7 @@ export const CLASSICAL_10 = `
 ?1 “恶人闻之，可也”中的“恶”是什么意思？ | What does 恶 mean here?
 ≈ 害怕、讨厌 | 恶人闻之，可也 | 恐人闻之而夺己也
 % 这里的“恶”读wù，是动词，害怕、不愿意。前文说他“恐人闻之”，怕别人听见来抢；这里说怕别人听见，还说得过去。不是“恶人”（坏人）的意思。 | Read wù, a verb, “dislike, fear”. He feared others would hear and seize it; to fear that is reasonable. Not 恶人, “wicked man”.
-- 坏人 ~literal
+- 坏人 ~modern
 - 凶恶 ~sense
 ?1 “恶己自闻之，悖也”的意思是什么？ | What does this sentence mean?
 ≈ 害怕自己听见，就荒谬了 | 恶己自闻之，悖也 | 遽掩其耳
@@ -282,7 +282,7 @@ export const CLASSICAL_10 = `
 ?2 这则寓言讽刺了什么样的人？ | Whom does the fable mock?
 ≈ 自己欺骗自己、以为别人也不知道的人 | 遽掩其耳 | 恶己自闻之，悖也
 % 钟声是客观存在的，捂住自己的耳朵，别人照样听得见。偷钟的人以为自己听不见就安全了，这是自欺欺人。寓言讽刺的正是这种人。 | The sound is real; stopping his own ears, others still hear. He thinks himself safe because he hears nothing: self-deception, which the fable mocks.
-- 不会敲钟的人 ~literal
+- 不会敲钟的人 ~misread
 - 力气太小的人 ~detail
 ?2 作者最后用两句话作评论，这两句是什么关系？有什么作用？ | How do the two closing comments relate, and why?
 ≈ 对比：怕别人听见还可以，怕自己听见就荒谬了，突出偷钟人的可笑 | 恶人闻之，可也 | 恶己自闻之，悖也
@@ -304,16 +304,16 @@ export const CLASSICAL_10 = `
 ?1 “物固莫不有长，莫不有短”的意思是什么？ | What does this sentence mean?
 ≈ 事物本来没有不存在长处的，也没有不存在短处的 | 物固莫不有长，莫不有短 | 人亦然
 % “固”是本来；“莫不”是双重否定，没有不……，就是都有。意思是任何事物都既有长处又有短处，人也是这样。 | 固, “by nature”; 莫不, “none not”, a double negative meaning all. Everything has strengths and weaknesses, and so do people.
-- 东西本来都是长的，没有短的 ~literal
+- 东西本来都是长的，没有短的 ~sense
 - 坚固的东西没有长处 ~sense
 ?1 “丑不能，恶不知，病矣”的意思是什么？ | What does this sentence mean?
 ≈ 以自己不会为耻，讨厌自己无知，这就成了毛病 | 丑不能，恶不知，病矣 | 不丑不能，不恶不知，尚矣
 % 这里的“丑”和“恶”都是动词：以……为耻、厌恶。作者认为，把不会当丑事、怕人知道自己不懂，就不肯向人请教，这是毛病；不以此为耻，才是最好的。 | 丑 and 恶 are verbs: be ashamed of, dislike. To be ashamed of not knowing, and so never ask, is a fault; not to be so is best.
-- 长得丑，又很凶恶，就会生病 ~literal
+- 长得丑，又很凶恶，就会生病 ~modern
 - 不会做事的人都长得丑 ~misread
 ?2 本文的中心观点是什么？ | What is the central view?
 ≈ 善于学习的人，要借助别人的长处来弥补自己的短处 | 故善学者，假人之长以补其短 | 物固莫不有长，莫不有短
-- 人只要有长处就够了 ~onepart
+- 人只要有长处就够了 ~misread
 - 有短处的人不能学习 ~misread
 ?2 文章开头说“物固莫不有长，莫不有短”，有什么作用？ | What does the opening do?
 ≈ 先讲一个普遍的事理，作为论点的根据，再由物推到人 | 物固莫不有长，莫不有短，人亦然 | 故善学者
@@ -323,5 +323,5 @@ export const CLASSICAL_10 = `
 ?2 “不丑不能，不恶不知，尚矣”和前一句是什么关系？ | How does the last sentence relate to the one before?
 ≈ 正反对照，前句说以不会为耻是毛病，后句说不以此为耻才是最好的，使观点更鲜明 | 丑不能，恶不知，病矣 | 不丑不能，不恶不知，尚矣
 - 两句话意思完全相同 ~misread
-- 后一句推翻了全文的观点 ~opposite
+- 后一句推翻了全文的观点 ~misread
 `;

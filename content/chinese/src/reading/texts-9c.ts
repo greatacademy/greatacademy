@@ -151,7 +151,7 @@ export const CROSSMEDIA_9 = `
 - 表达读后的感动 ~elsewhere
 ?2 材料二说“读了三天三夜”，这句话应该怎样理解？ | How to read “three days and nights”?
 ≈ 是夸张的说法，表示读得入迷，不必当真 | 读了三天三夜 | 哭了好几次
-- 是准确的时间记录 ~literal
+- 是准确的时间记录 ~face
 - 说明这本书很难读懂 ~misread
 
 # 校园午餐
