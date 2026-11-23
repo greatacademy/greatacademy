@@ -771,8 +771,8 @@ const inverseInsideAChain: KnowledgePointDef = {
   id: "an-inverse-function-inside-the-chain-rule",
   title: t("An inverse function inside the chain rule", "链式法则中的反函数"),
   explanation: t(
-    "To differentiate $f^{-1}(u(x))$, apply the chain rule and the inverse rule together. The derivative of the outer function at $u$ is $\\frac{1}{f'(f^{-1}(u))}$, and this is multiplied by $u'(x)$. The value given for $f$ must be read backwards to find the point where $f'$ is needed.",
-    "要求 $f^{-1}(u(x))$ 的导数，要同时用链式法则和反函数法则。外层函数在 $u$ 处的导数是 $\\frac{1}{f'(f^{-1}(u))}$，再乘以 $u'(x)$。要反过来读 $f$ 的取值，才能知道需要 $f'$ 在哪一点的值。",
+    "To differentiate $f^{-1}(u(x))$, apply the chain rule and the inverse rule together. The derivative of the outer function at $u$ is one over $f'$ at the point $f^{-1}(u)$, and this is multiplied by $u'(x)$. The value given for $f$ must be read backwards to find the point where $f'$ is needed.\n\nFor example, let $f(2) = 7$, $f'(2) = 4$ and $h(x) = f^{-1}(3x + 1)$. At $x = 2$ the inside is $7$, and $f^{-1}(7) = 2$, so the outer slope is $\\frac{1}{4}$ and $h'(2) = 3 \\cdot \\frac{1}{4}$, which is $\\frac{3}{4}$.\n\nCheck: near $t = 2$, $f(t) \\approx 7 + 4(t - 2)$, so near $y = 7$ the inverse is about $2 + \\frac{y - 7}{4}$. Putting in $y = 3x + 1$ gives $h(x) \\approx 2 + \\frac{3(x - 2)}{4}$, a line of slope $\\frac{3}{4}$.\n\n> **Watch out.** $f'$ is needed at $2$, the point that $f$ sends to $7$, not at $7$ itself. And the factor $3$ from the inside must not be left out.",
+    "要求 $f^{-1}(u(x))$ 的导数，要同时用链式法则和反函数法则。外层函数在 $u$ 处的导数是 $f'$ 在 $f^{-1}(u)$ 处的值的倒数，再乘以 $u'(x)$。要反过来读 $f$ 的取值，才能知道需要 $f'$ 在哪一点的值。\n\n例如，设 $f(2) = 7$，$f'(2) = 4$，$h(x) = f^{-1}(3x + 1)$。在 $x = 2$ 处，内层是 $7$，而 $f^{-1}(7) = 2$，所以外层斜率是 $\\frac{1}{4}$，$h'(2) = 3 \\cdot \\frac{1}{4}$，即 $\\frac{3}{4}$。\n\n检验：在 $t = 2$ 附近，$f(t) \\approx 7 + 4(t - 2)$，所以在 $y = 7$ 附近，反函数约为 $2 + \\frac{y - 7}{4}$。代入 $y = 3x + 1$，得 $h(x) \\approx 2 + \\frac{3(x - 2)}{4}$，是斜率为 $\\frac{3}{4}$ 的直线。\n\n> **注意。** 需要的是 $f'$ 在 $2$ 处的值，$2$ 是 $f$ 映到 $7$ 的那个点，而不是 $7$ 本身。内层带来的因子 $3$ 也不能漏掉。",
   ),
   generate(rng) {
     const a = rng.int(2, 6);
@@ -782,16 +782,39 @@ const inverseInsideAChain: KnowledgePointDef = {
     const m = nonzero(rng, 9);
     const v = a * c + b;
     const answer = Q.of(a, m);
+    const inner = poly([a, "x"], [b, ""]);
     return numberProblem({
       prompt: t(
-        `$f$ is differentiable and one-to-one, with $f(${d}) = ${v}$ and $f'(${d}) = ${m}$. Let $h(x) = f^{-1}(${poly([a, "x"], [b, ""])})$. Find $h'(${c})$.`,
-        `$f$ 可导且是一一对应，$f(${d}) = ${v}$，$f'(${d}) = ${m}$。设 $h(x) = f^{-1}(${poly([a, "x"], [b, ""])})$。求 $h'(${c})$。`,
+        `$f$ is differentiable and one-to-one, with $f(${d}) = ${v}$ and $f'(${d}) = ${m}$. Let $h(x) = f^{-1}(${inner})$. Find $h'(${c})$.`,
+        `$f$ 可导且是一一对应，$f(${d}) = ${v}$，$f'(${d}) = ${m}$。设 $h(x) = f^{-1}(${inner})$。求 $h'(${c})$。`,
       ),
       answer,
       wrong: [Q.of(1, m), Q.of(m, a), Q.of(a * m)],
-      solution: t(
-        `At $x = ${c}$ the inner value is $${v}$, and $f^{-1}(${v}) = ${d}$. The inverse rule gives a slope of $\\frac{1}{${m}}$ there, and the chain rule multiplies it by $${a}$, so $h'(${c}) = ${answer.toLatex()}$.`,
-        `在 $x = ${c}$ 处，内层的值是 $${v}$，而 $f^{-1}(${v}) = ${d}$。反函数法则给出那里的斜率 $\\frac{1}{${m}}$，链式法则再乘以 $${a}$，所以 $h'(${c}) = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find the inner value",
+            "求内层的值",
+            `At $x = ${c}$ the inside is $${a} \\cdot ${c} + ${b}$, which is $${v}$. Since $f(${d}) = ${v}$, $f^{-1}(${v}) = ${d}$.`,
+            `在 $x = ${c}$ 处，内层是 $${a} \\cdot ${c} + ${b}$，即 $${v}$。由于 $f(${d}) = ${v}$，所以 $f^{-1}(${v}) = ${d}$。`,
+          ],
+          [
+            "Use the inverse rule",
+            "用反函数法则",
+            `The slope of $f^{-1}$ at $${v}$ is one over $f'(${d})$, which is $\\frac{1}{${m}}$.`,
+            `$f^{-1}$ 在 $${v}$ 处的斜率是 $f'(${d})$ 的倒数，即 $\\frac{1}{${m}}$。`,
+          ],
+          [
+            "Apply the chain rule",
+            "用链式法则",
+            `Multiply by the derivative $${a}$ of the inside: $h'(${c})$ is $${a} \\cdot \\frac{1}{${m}}$, which is $${answer.toLatex()}$.`,
+            `乘以内层的导数 $${a}$：$h'(${c})$ 等于 $${a} \\cdot \\frac{1}{${m}}$，即 $${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Near $t = ${d}$, $f(t) \\approx ${v} + ${inParens(m)}(t - ${d})$, so near $y = ${v}$ the inverse is about $${d} + \\frac{y - ${v}}{${m}}$. Putting in $y = ${inner}$ gives $h(x) \\approx ${d} + \\frac{${a}(x - ${c})}{${m}}$, a line of slope $${answer.toLatex()}$.`,
+          `在 $t = ${d}$ 附近，$f(t) \\approx ${v} + ${inParens(m)}(t - ${d})$，所以在 $y = ${v}$ 附近，反函数约为 $${d} + \\frac{y - ${v}}{${m}}$。代入 $y = ${inner}$，得 $h(x) \\approx ${d} + \\frac{${a}(x - ${c})}{${m}}$，是斜率为 $${answer.toLatex()}$ 的直线。`,
+        ],
       ),
     });
   },
@@ -2129,8 +2152,8 @@ const arctanOfPowerAtPoint: KnowledgePointDef = {
   id: "an-arctangent-of-a-power-at-a-point",
   title: t("An arctangent of a power at a point", "幂函数的反正切在一点的导数"),
   explanation: t(
-    "The derivative of arctangent is one over one plus the square of its argument, and the chain rule multiplies that by the derivative of the argument. When the argument is a power of $x$, the two factors pull in different directions, since the numerator grows like one power and the denominator like a much higher one, so both must be computed at the point.",
-    "反正切的导数是一除以一加自变量的平方，链式法则再乘以内层函数的导数。当内层是 $x$ 的幂时，两个因子的作用方向不同，分子按较低的幂增长，分母按高得多的幂增长，所以两者都要在该点算出来。",
+    "The derivative of arctangent is one over one plus the square of its argument, and the chain rule multiplies that by the derivative of the argument. When the argument is a power of $x$, the numerator grows like one power and the denominator like a much higher one, so compute both at the point.\n\nFor example, $f(x) = 2\\arctan\\left(x^{2}\\right)$ at $x = 1$: the inside is $1$ and its derivative is $2$, so\n\n$$f'(1) = \\frac{2 \\cdot 2}{1 + 1^{2}} = 2.$$\n\nCheck: the difference quotients of $f$ at $1$ with $h = 0.01$ and $h = -0.01$ are about $1.990$ and $2.010$, on either side of $2$.\n\n> **Watch out.** Square the inside, not $x$: at $x = 2$ the inside $x^{2}$ is $4$, so the denominator is $1 + 16$, not $1 + 4$.",
+    "反正切的导数是一除以一加自变量的平方，链式法则再乘以内层函数的导数。当内层是 $x$ 的幂时，分子按较低的幂增长，分母按高得多的幂增长，所以两者都要在该点算出来。\n\n例如 $f(x) = 2\\arctan\\left(x^{2}\\right)$ 在 $x = 1$ 处：内层是 $1$，它的导数是 $2$，所以\n\n$$f'(1) = \\frac{2 \\cdot 2}{1 + 1^{2}} = 2.$$\n\n检验：$f$ 在 $1$ 处取 $h = 0.01$ 和 $h = -0.01$ 的差商约为 $1.990$ 和 $2.010$，位于 $2$ 的两侧。\n\n> **注意。** 要平方的是内层，而不是 $x$：在 $x = 2$ 处，内层 $x^{2}$ 是 $4$，所以分母是 $1 + 16$，不是 $1 + 4$。",
   ),
   generate(rng) {
     const big = rng.int(1, 6);
@@ -2143,13 +2166,31 @@ const arctanOfPowerAtPoint: KnowledgePointDef = {
     const bottom = 1 + inner * inner;
     const answer = Q.of(top, bottom);
     const f = poly([big, `\\arctan\\left(${poly([b, `x^{${n}}`])}\\right)`]);
+    const F = (x: number) => big * Math.atan(b * x ** n);
+    const quotient = (F(c + 0.001) - F(c - 0.001)) / 0.002;
     return numberProblem({
       prompt: t(`Let $f(x) = ${f}$. Find $f'(${c})$.`, `设 $f(x) = ${f}$。求 $f'(${c})$。`),
       answer,
       wrong: [Q.of(big, bottom), Q.of(top), Q.of(top, 1 + Math.abs(inner)), Q.of(-top, bottom)],
-      solution: t(
-        `By the chain rule, $f'(x)$ is $${big}$ times the derivative of the inside, over $1$ plus the inside squared. At $x = ${c}$ the inside is $${inner}$ and its derivative is $${slope}$, so $f'(${c}) = \\frac{${big} \\cdot ${inParens(slope)}}{1 + ${inner * inner}} = ${answer.toLatex()}$.`,
-        `由链式法则，$f'(x)$ 等于 $${big}$ 乘以内层的导数，再除以 $1$ 加内层的平方。在 $x = ${c}$ 处，内层是 $${inner}$，它的导数是 $${slope}$，所以 $f'(${c}) = \\frac{${big} \\cdot ${inParens(slope)}}{1 + ${inner * inner}} = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Evaluate the inside",
+            "求内层的值",
+            `At $x = ${c}$ the inside $${poly([b, `x^{${n}}`])}$ is $${inner}$, and its derivative $${poly([b * n, n === 2 ? "x" : "x^{2}"])}$ is $${slope}$.`,
+            `在 $x = ${c}$ 处，内层 $${poly([b, `x^{${n}}`])}$ 等于 $${inner}$，它的导数 $${poly([b * n, n === 2 ? "x" : "x^{2}"])}$ 等于 $${slope}$。`,
+          ],
+          [
+            "Apply the chain rule",
+            "用链式法则",
+            `Multiply $${big}$ by the derivative of the inside, and divide by $1$ plus the inside squared:\n\n$$f'(${c}) = \\frac{${big} \\cdot ${inParens(slope)}}{1 + ${inParens(inner)}^{2}} = ${answer.toLatex()}.$$`,
+            `把 $${big}$ 乘以内层的导数，再除以 $1$ 加内层的平方：\n\n$$f'(${c}) = \\frac{${big} \\cdot ${inParens(slope)}}{1 + ${inParens(inner)}^{2}} = ${answer.toLatex()}.$$`,
+          ],
+        ],
+        [
+          `The difference quotient of $f$ from $x = ${num(c - 0.001)}$ to $x = ${num(c + 0.001)}$ is about $${num(quotient)}$, which agrees with $${answer.toLatex()}${approx(answer)}$.`,
+          `$f$ 从 $x = ${num(c - 0.001)}$ 到 $x = ${num(c + 0.001)}$ 的差商约为 $${num(quotient)}$，与 $${answer.toLatex()}${approx(answer)}$ 相符。`,
+        ],
       ),
     });
   },
@@ -2323,8 +2364,8 @@ const secondDerivativeFromDxDy: KnowledgePointDef = {
   id: "the-second-derivative-when-x-is-a-function-of-y",
   title: t("The second derivative when x is a function of y", "x 是 y 的函数时的二阶导数"),
   explanation: t(
-    "When $x$ is given in terms of $y$, the first derivative is the reciprocal $\\frac{dy}{dx} = \\frac{1}{x'(y)}$. Differentiating again with respect to $x$ needs care, because this expression is a function of $y$: the chain rule contributes one more factor of $\\frac{dy}{dx}$. It is not the reciprocal of the second derivative of $x$.",
-    "当 $x$ 用 $y$ 表示时，一阶导数是倒数 $\\frac{dy}{dx} = \\frac{1}{x'(y)}$。再对 $x$ 求导时要小心，因为这个式子是 $y$ 的函数：链式法则还要多乘一个因子 $\\frac{dy}{dx}$。它并不是 $x$ 的二阶导数的倒数。",
+    "When $x$ is given in terms of $y$, the first derivative $\\frac{dy}{dx}$ is the reciprocal of $x'(y)$. Differentiating again with respect to $x$ needs care, because this reciprocal is a function of $y$: the chain rule contributes one more factor of $\\frac{dy}{dx}$, so\n\n$$\\frac{d^{2}y}{dx^{2}} = -\\frac{x''(y)}{x'(y)^{2}} \\cdot \\frac{1}{x'(y)} = -\\frac{x''(y)}{x'(y)^{3}}.$$\n\nFor example, on $x = y^{3} + y$ at $(2, 1)$, $x' = 4$ and $x'' = 6$, so the second derivative is $-\\frac{6}{64}$, which is $-\\frac{3}{32} \\approx -0.0938$.\n\nCheck: solving $y^{3} + y = x$ for $y$ gives $y \\approx 0.997495$ at $x = 1.99$ and $y \\approx 1.002495$ at $x = 2.01$. The second difference of $y$ with step $0.01$ is about $-0.0938$.\n\n> **Watch out.** The result is not $\\frac{1}{x''(y)}$, the reciprocal of the second derivative of $x$. The power in the denominator is $3$: two from differentiating the reciprocal and one from the chain rule.",
+    "当 $x$ 用 $y$ 表示时，一阶导数 $\\frac{dy}{dx}$ 是 $x'(y)$ 的倒数。再对 $x$ 求导时要小心，因为这个倒数是 $y$ 的函数：链式法则还要多乘一个因子 $\\frac{dy}{dx}$，所以\n\n$$\\frac{d^{2}y}{dx^{2}} = -\\frac{x''(y)}{x'(y)^{2}} \\cdot \\frac{1}{x'(y)} = -\\frac{x''(y)}{x'(y)^{3}}.$$\n\n例如在曲线 $x = y^{3} + y$ 上的点 $(2, 1)$ 处，$x' = 4$，$x'' = 6$，所以二阶导数是 $-\\frac{6}{64}$，即 $-\\frac{3}{32} \\approx -0.0938$。\n\n检验：由 $y^{3} + y = x$ 解出 $y$，在 $x = 1.99$ 处 $y \\approx 0.997495$，在 $x = 2.01$ 处 $y \\approx 1.002495$。$y$ 以步长 $0.01$ 的二阶差分约为 $-0.0938$。\n\n> **注意。** 结果不是 $x$ 的二阶导数的倒数 $\\frac{1}{x''(y)}$。分母的幂是 $3$：对倒数求导贡献 $2$，链式法则再贡献 $1$。",
   ),
   generate(rng) {
     const a = rng.int(1, 2);
@@ -2336,6 +2377,14 @@ const secondDerivativeFromDxDy: KnowledgePointDef = {
     const x0 = a * c ** 3 + p * c + q;
     const answer = Q.of(-second, first ** 3);
     const curve = poly([a, "y^3"], [p, "y"], [q, ""]);
+    // x'(y) = 3ay² + p is positive, so Newton's method from y = c finds the one y for each x near x0.
+    const yAt = (x: number) => {
+      let y = c;
+      for (let i = 0; i < 30; i++) y -= (a * y ** 3 + p * y + q - x) / (3 * a * y * y + p);
+      return y;
+    };
+    const sig = (v: number) => String(Number(v.toPrecision(4)));
+    const difference = (yAt(x0 + 0.01) - 2 * yAt(x0) + yAt(x0 - 0.01)) / 0.0001;
     return numberProblem({
       prompt: t(
         `The point $(${x0}, ${c})$ lies on the curve $x = ${curve}$. Find $\\frac{d^{2}y}{dx^{2}}$ at this point.`,
@@ -2343,9 +2392,25 @@ const secondDerivativeFromDxDy: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(second, first ** 3), Q.of(-second, first * first), Q.of(1, second), Q.of(1, first)],
-      solution: t(
-        `$\\frac{dy}{dx} = \\frac{1}{x'(y)}$. Differentiating with respect to $x$ gives $\\frac{d^{2}y}{dx^{2}} = -\\frac{x''(y)}{x'(y)^{2}} \\cdot \\frac{dy}{dx} = -\\frac{x''(y)}{x'(y)^{3}}$. At $y = ${c}$, $x' = ${first}$ and $x'' = ${second}$, so the value is $${answer.toLatex()}$.`,
-        `$\\frac{dy}{dx} = \\frac{1}{x'(y)}$。对 $x$ 求导得 $\\frac{d^{2}y}{dx^{2}} = -\\frac{x''(y)}{x'(y)^{2}} \\cdot \\frac{dy}{dx} = -\\frac{x''(y)}{x'(y)^{3}}$。在 $y = ${c}$ 处，$x' = ${first}$，$x'' = ${second}$，所以值是 $${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Differentiate x twice",
+            "对 x 求两次导",
+            `$x'(y) = ${poly([3 * a, "y^2"], [p, ""])}$ and $x''(y) = ${poly([6 * a, "y"])}$. At $y = ${c}$ they are $${first}$ and $${second}$.`,
+            `$x'(y) = ${poly([3 * a, "y^2"], [p, ""])}$，$x''(y) = ${poly([6 * a, "y"])}$。在 $y = ${c}$ 处它们分别是 $${first}$ 和 $${second}$。`,
+          ],
+          [
+            "Use the second derivative formula",
+            "用二阶导数公式",
+            `Differentiating the reciprocal of $x'(y)$ with respect to $x$ gives\n\n$$\\frac{d^{2}y}{dx^{2}} = -\\frac{x''(y)}{x'(y)^{3}} = -\\frac{${second}}{${inParens(first)}^{3}} = ${answer.toLatex()}.$$`,
+            `把 $x'(y)$ 的倒数对 $x$ 求导，得\n\n$$\\frac{d^{2}y}{dx^{2}} = -\\frac{x''(y)}{x'(y)^{3}} = -\\frac{${second}}{${inParens(first)}^{3}} = ${answer.toLatex()}.$$`,
+          ],
+        ],
+        [
+          `Solving the curve's equation for $y$ at $x = ${num(x0 - 0.01)}$, $${x0}$ and $${num(x0 + 0.01)}$ by Newton's method and taking the second difference with step $0.01$ gives about $${sig(difference)}$, which agrees with $${answer.toLatex()} \\approx ${sig(answer.toNumber())}$.`,
+          `用牛顿法由曲线方程解出 $x = ${num(x0 - 0.01)}$、$${x0}$ 和 $${num(x0 + 0.01)}$ 处的 $y$，取步长 $0.01$ 的二阶差分，约为 $${sig(difference)}$，与 $${answer.toLatex()} \\approx ${sig(answer.toNumber())}$ 相符。`,
+        ],
       ),
     });
   },
@@ -3824,8 +3889,8 @@ const secondDerivativeOfInverse: KnowledgePointDef = {
   figure: calculusDrawings2["differentiating-an-inverse-function-at-a-point#the-second-derivative-of-an-inverse-function"],
   title: t("The second derivative of an inverse function", "反函数的二阶导数"),
   explanation: t(
-    "If $g$ is the inverse of $f$, then $g'(y) = \\frac{1}{f'(g(y))}$. Differentiating this once more by the chain rule gives $g''(y) = -\\frac{f''(g(y))g'(y)}{f'(g(y))^2}$, and replacing $g'$ gives $-\\frac{f''}{(f')^3}$, with $f'$ and $f''$ evaluated at $g(y)$. The cube in the denominator comes from the extra factor of $g'$. The sign shows that reflecting a graph in $y = x$ reverses its concavity when $f$ is increasing.",
-    "如果 $g$ 是 $f$ 的反函数，那么 $g'(y) = \\frac{1}{f'(g(y))}$。用链式法则再求一次导，得 $g''(y) = -\\frac{f''(g(y))g'(y)}{f'(g(y))^2}$，代入 $g'$ 得 $-\\frac{f''}{(f')^3}$，其中 $f'$ 和 $f''$ 在 $g(y)$ 处取值。分母中的立方来自多出的因子 $g'$。这个符号说明，当 $f$ 递增时，关于 $y = x$ 反射图像会使凹凸性反转。",
+    "If $g$ is the inverse of $f$, then $g'(y)$ is the reciprocal of $f'(g(y))$. Differentiating once more by the chain rule, and replacing $g'$, gives\n\n$$g''(y) = -\\frac{f''(g(y))\\,g'(y)}{f'(g(y))^{2}} = -\\frac{f''(g(y))}{f'(g(y))^{3}}.$$\n\nThe cube in the denominator comes from the extra factor of $g'$. The sign shows that reflecting a graph in $y = x$ reverses its concavity when $f$ is increasing. For example, if $f(1) = 3$, $f'(1) = 2$ and $f''(1) = 4$, then $g''(3)$ is $-\\frac{4}{8}$, which is $-\\frac{1}{2}$.\n\nCheck: near $t = 1$, $f(t) \\approx 3 + 2(t - 1) + 2(t - 1)^{2}$. Solving this for $t - 1$ gives about $0.004975$ at $y = 3.01$ and $-0.005025$ at $y = 2.99$, so the second difference of $g$ with step $0.01$ is about $-0.5$.\n\n> **Watch out.** Evaluate $f'$ and $f''$ at $g(y)$, here $1$, not at $y = 3$. And the power is $3$, not $2$.",
+    "如果 $g$ 是 $f$ 的反函数，那么 $g'(y)$ 是 $f'(g(y))$ 的倒数。用链式法则再求一次导，并代入 $g'$，得\n\n$$g''(y) = -\\frac{f''(g(y))\\,g'(y)}{f'(g(y))^{2}} = -\\frac{f''(g(y))}{f'(g(y))^{3}}.$$\n\n分母中的立方来自多出的因子 $g'$。这个符号说明，当 $f$ 递增时，关于 $y = x$ 反射图像会使凹凸性反转。例如，若 $f(1) = 3$，$f'(1) = 2$，$f''(1) = 4$，则 $g''(3)$ 等于 $-\\frac{4}{8}$，即 $-\\frac{1}{2}$。\n\n检验：在 $t = 1$ 附近，$f(t) \\approx 3 + 2(t - 1) + 2(t - 1)^{2}$。由此解出 $t - 1$，在 $y = 3.01$ 处约为 $0.004975$，在 $y = 2.99$ 处约为 $-0.005025$，所以 $g$ 以步长 $0.01$ 的二阶差分约为 $-0.5$。\n\n> **注意。** $f'$ 和 $f''$ 要在 $g(y)$ 处取值，这里是 $1$，而不是 $y = 3$。并且幂是 $3$，不是 $2$。",
   ),
   generate(rng) {
     const a = rng.int(-4, 4);
@@ -3833,6 +3898,11 @@ const secondDerivativeOfInverse: KnowledgePointDef = {
     const p = nonzero(rng, 4);
     const q = nonzero(rng, 9);
     const answer = Q.of(-q, p ** 3);
+    // Near t = a, f(t) ≈ b + p(t − a) + (q/2)(t − a)², whose inverse moves t − a by 2u/(p + sign(p)·√(p² + 2qu)) when y = b + u.
+    const shift = (u: number) => (2 * u) / (p + Math.sign(p) * Math.sqrt(p * p + 2 * q * u));
+    const difference = (shift(0.001) + shift(-0.001)) / 0.000001;
+    const sig = (v: number) => String(Number(v.toPrecision(4)));
+    const shiftT = a === 0 ? "t" : a < 0 ? `t + ${-a}` : `t - ${a}`;
     return numberProblem({
       prompt: t(
         `$f$ is invertible with inverse $g$, and $f(${a}) = ${b}$, $f'(${a}) = ${p}$, $f''(${a}) = ${q}$. Find $g''(${b})$.`,
@@ -3840,9 +3910,25 @@ const secondDerivativeOfInverse: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(q, p ** 3), Q.of(-q, p * p), Q.of(1, q), Q.of(-q, p)],
-      solution: t(
-        `Differentiating $g'(y) = \\frac{1}{f'(g(y))}$ gives $g'' = -\\frac{f''}{(f')^3}$, with $f'$ and $f''$ evaluated at $g(${b}) = ${a}$. Substituting $${p}$ and $${q}$ gives $${answer.toLatex()}$.`,
-        `对 $g'(y) = \\frac{1}{f'(g(y))}$ 求导，得 $g'' = -\\frac{f''}{(f')^3}$，其中 $f'$ 和 $f''$ 在 $g(${b}) = ${a}$ 处取值。代入 $${p}$ 和 $${q}$，得 $${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find the point for f",
+            "找出 f 的取值点",
+            `Since $f(${a}) = ${b}$, $g(${b}) = ${a}$, so $f'$ and $f''$ are needed at $${a}$: they are $${p}$ and $${q}$.`,
+            `由于 $f(${a}) = ${b}$，所以 $g(${b}) = ${a}$，因此要用 $f'$ 和 $f''$ 在 $${a}$ 处的值：$${p}$ 和 $${q}$。`,
+          ],
+          [
+            "Use the second derivative formula",
+            "用二阶导数公式",
+            `Differentiating the reciprocal of $f'(g(y))$ gives\n\n$$g''(${b}) = -\\frac{f''(${a})}{f'(${a})^{3}} = -\\frac{${q}}{${inParens(p)}^{3}} = ${answer.toLatex()}.$$`,
+            `对 $f'(g(y))$ 的倒数求导，得\n\n$$g''(${b}) = -\\frac{f''(${a})}{f'(${a})^{3}} = -\\frac{${q}}{${inParens(p)}^{3}} = ${answer.toLatex()}.$$`,
+          ],
+        ],
+        [
+          `Near $t = ${a}$, $f$ behaves like the quadratic $${b} + ${inParens(p)}(${shiftT}) + ${inParens(q)} \\cdot \\frac{(${shiftT})^{2}}{2}$. Solving it for $t$ at $y = ${num(b - 0.001)}$, $${b}$ and $${num(b + 0.001)}$ and taking the second difference with step $0.001$ gives about $${sig(difference)}$, which agrees with $${answer.toLatex()} \\approx ${sig(answer.toNumber())}$.`,
+          `在 $t = ${a}$ 附近，$f$ 近似于二次函数 $${b} + ${inParens(p)}(${shiftT}) + ${inParens(q)} \\cdot \\frac{(${shiftT})^{2}}{2}$。由它解出 $y = ${num(b - 0.001)}$、$${b}$ 和 $${num(b + 0.001)}$ 处的 $t$，取步长 $0.001$ 的二阶差分，约为 $${sig(difference)}$，与 $${answer.toLatex()} \\approx ${sig(answer.toNumber())}$ 相符。`,
+        ],
       ),
     });
   },
@@ -3852,22 +3938,40 @@ const variablePowerAtOne: KnowledgePointDef = {
   id: "a-variable-power-at-x-equals-one",
   title: t("A variable power at x equals one", "变量幂在 x 等于 1 处的导数"),
   explanation: t(
-    "A function such as $x^{g(x)}$ has its variable in both the base and the exponent, so neither the power rule nor the exponential rule applies on its own. Taking logarithms first gives $\\ln y = g(x)\\ln x$, and differentiating by the product rule gives $\\frac{y'}{y} = g'(x)\\ln x + \\frac{g(x)}{x}$. At $x = 1$, the logarithm vanishes and $y = 1$, so that $y'$ reduces to the value of $g(1)$.",
-    "像 $x^{g(x)}$ 这样的函数，变量同时在底数和指数中，所以幂法则和指数法则都不能单独使用。先取对数，得 $\\ln y = g(x)\\ln x$，再用积法则求导，得 $\\frac{y'}{y} = g'(x)\\ln x + \\frac{g(x)}{x}$。在 $x = 1$ 处，对数为零且 $y = 1$，所以 $y'$ 化为 $g(1)$ 的值。",
+    "A function such as $x^{g(x)}$ has its variable in both the base and the exponent, so neither the power rule nor the exponential rule applies on its own. Taking logarithms first gives $\\ln y = g(x)\\ln x$, and differentiating by the product rule gives\n\n$$\\frac{y'}{y} = g'(x)\\ln x + \\frac{g(x)}{x}.$$\n\nAt $x = 1$, the logarithm vanishes and $y = 1$, so $y'(1)$ is just $g(1)$. For example, $y = x^{2x^{2} + 3}$ has $y'(1) = 2 + 3 = 5$.\n\nCheck: the difference quotients of $x^{2x^{2} + 3}$ at $1$ with $h = 0.01$ and $h = -0.01$ are about $5.143$ and $4.863$, on either side of $5$.\n\n> **Watch out.** Treating the exponent as a constant gives $g(1) \\cdot 1^{g(1) - 1}$, which happens to match here only because $\\ln 1 = 0$. At any other point the term $g'(x)\\ln x$ matters.",
+    "像 $x^{g(x)}$ 这样的函数，变量同时在底数和指数中，所以幂法则和指数法则都不能单独使用。先取对数，得 $\\ln y = g(x)\\ln x$，再用积法则求导，得\n\n$$\\frac{y'}{y} = g'(x)\\ln x + \\frac{g(x)}{x}.$$\n\n在 $x = 1$ 处，对数为零且 $y = 1$，所以 $y'(1)$ 就是 $g(1)$。例如 $y = x^{2x^{2} + 3}$ 有 $y'(1) = 2 + 3 = 5$。\n\n检验：$x^{2x^{2} + 3}$ 在 $1$ 处取 $h = 0.01$ 和 $h = -0.01$ 的差商约为 $5.143$ 和 $4.863$，位于 $5$ 的两侧。\n\n> **注意。** 把指数当成常数会得到 $g(1) \\cdot 1^{g(1) - 1}$，它在这里恰好相符，只是因为 $\\ln 1 = 0$。在其他点处，$g'(x)\\ln x$ 这一项不能忽略。",
   ),
   generate(rng) {
     const k = rng.int(1, 9);
     const m = nonzero(rng, 9);
     const answer = k + m;
     const exponent = poly([k, "x^2"], [m, ""]);
+    const Y = (x: number) => x ** (k * x * x + m);
+    const quotient = (Y(1.001) - Y(0.999)) / 0.002;
     return numberProblem({
       prompt: t(`Let $y = x^{${exponent}}$ for $x > 0$. Find $y'(1)$.`, `设 $y = x^{${exponent}}$，$x > 0$。求 $y'(1)$。`),
       answer,
       form: "integer",
       wrong: [2 * k + m, k, m, 2 * k],
-      solution: t(
-        `From $\\ln y = (${exponent})\\ln x$ we get $\\frac{y'}{y} = ${poly([2 * k, "x"])}\\ln x + \\frac{${exponent}}{x}$. At $x = 1$, $y = 1$ and $\\ln 1 = 0$, so $y'(1) = ${k} + ${inParens(m)} = ${answer}$.`,
-        `由 $\\ln y = (${exponent})\\ln x$ 得 $\\frac{y'}{y} = ${poly([2 * k, "x"])}\\ln x + \\frac{${exponent}}{x}$。在 $x = 1$ 处，$y = 1$ 且 $\\ln 1 = 0$，所以 $y'(1) = ${k} + ${inParens(m)} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Take logarithms and differentiate",
+            "取对数并求导",
+            `From $\\ln y = (${exponent})\\ln x$, the product rule gives\n\n$$\\frac{y'}{y} = ${poly([2 * k, "x"])}\\ln x + \\frac{${exponent}}{x}.$$`,
+            `由 $\\ln y = (${exponent})\\ln x$，用积法则得\n\n$$\\frac{y'}{y} = ${poly([2 * k, "x"])}\\ln x + \\frac{${exponent}}{x}.$$`,
+          ],
+          [
+            "Evaluate at x = 1",
+            "在 x = 1 处取值",
+            `At $x = 1$, $y = 1$ and $\\ln 1 = 0$, so $y'(1) = ${k} + ${inParens(m)} = ${answer}$.`,
+            `在 $x = 1$ 处，$y = 1$ 且 $\\ln 1 = 0$，所以 $y'(1) = ${k} + ${inParens(m)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `The difference quotient of $y$ from $x = 0.999$ to $x = 1.001$ is about $${num(quotient)}$, close to $${answer}$.`,
+          `$y$ 从 $x = 0.999$ 到 $x = 1.001$ 的差商约为 $${num(quotient)}$，接近 $${answer}$。`,
+        ],
       ),
     });
   },

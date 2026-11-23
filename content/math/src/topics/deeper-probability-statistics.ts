@@ -1520,8 +1520,8 @@ const logDerivativeAtZero: KnowledgePointDef = {
   id: "the-relative-rate-of-a-product-of-powers",
   title: t("The relative rate of a product of powers", "幂的乘积的相对变化率"),
   explanation: t(
-    "Taking logarithms turns a product of powers into a sum, with each exponent as a multiplier and any denominator as a subtraction. Differentiating then gives $\\frac{f'}{f}$ as a sum of simple fractions. So this relative rate of change can be found without the full product rule, and without computing $f$ itself, which could be very large.",
-    "取对数把幂的乘积变成和，每个指数成为乘数，分母成为减项。然后求导，就得到 $\\frac{f'}{f}$，它是几个简单分式之和。所以这个相对变化率不用完整的乘积法则就能求出，也不用计算可能很大的 $f$ 本身。",
+    "Taking logarithms turns a product of powers into a sum, with each exponent as a multiplier and any denominator as a subtraction. Differentiating then gives the relative rate $\\frac{f'}{f}$ as a sum of simple fractions, without the full product rule and without computing $f$ itself, which could be very large.\n\nFor example, $f(x) = \\frac{(x + 1)^{2}(x + 2)^{3}}{x + 4}$ has $\\ln f = 2\\ln(x + 1) + 3\\ln(x + 2) - \\ln(x + 4)$, so at $x = 0$\n\n$$\\frac{f'(0)}{f(0)} = \\frac{2}{1} + \\frac{3}{2} - \\frac{1}{4} = \\frac{13}{4}.$$\n\nCheck: $f(0) = 2$, and the difference quotient of $f$ over $x = \\pm 0.01$ is about $6.500$. Dividing by $2$ gives about $3.250$, which is $\\frac{13}{4}$.\n\n> **Watch out.** The factor in the denominator is subtracted, not added. And the result is $\\frac{f'}{f}$, not $f'$: to get $f'(0)$ itself, multiply by $f(0)$.",
+    "取对数把幂的乘积变成和，每个指数成为乘数，分母成为减项。然后求导，就得到相对变化率 $\\frac{f'}{f}$，它是几个简单分式之和，不用完整的乘积法则，也不用计算可能很大的 $f$ 本身。\n\n例如 $f(x) = \\frac{(x + 1)^{2}(x + 2)^{3}}{x + 4}$ 有 $\\ln f = 2\\ln(x + 1) + 3\\ln(x + 2) - \\ln(x + 4)$，所以在 $x = 0$ 处\n\n$$\\frac{f'(0)}{f(0)} = \\frac{2}{1} + \\frac{3}{2} - \\frac{1}{4} = \\frac{13}{4}.$$\n\n检验：$f(0) = 2$，$f$ 在 $x = \\pm 0.01$ 之间的差商约为 $6.500$。除以 $2$ 约为 $3.250$，正是 $\\frac{13}{4}$。\n\n> **注意。** 分母中的因子是减去，不是加上。并且结果是 $\\frac{f'}{f}$，不是 $f'$：要得到 $f'(0)$ 本身，还要乘以 $f(0)$。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -1533,6 +1533,16 @@ const logDerivativeAtZero: KnowledgePointDef = {
     const left = Q.of(p, a).add(Q.of(q, b));
     const right = Q.of(r, c);
     const answer = left.sub(right);
+    const f = (x: number) => ((x + a) ** p * (x + b) ** q) / (x + c) ** r;
+    const ratio = (f(0.001) - f(-0.001)) / 0.002 / f(0);
+    const lnF = `${p}\\ln(x + ${a}) + ${q}\\ln(x + ${b}) - ${r}\\ln(x + ${c})`;
+    const first = stepLabel(1, "take logarithms", "取对数");
+    const second = stepLabel(2, "differentiate and evaluate", "求导并取值");
+    const sum = steps(
+      `\\frac{f'(x)}{f(x)} = \\frac{${p}}{x + ${a}} + \\frac{${q}}{x + ${b}} - \\frac{${r}}{x + ${c}}`,
+      `\\frac{f'(0)}{f(0)} = \\frac{${p}}{${a}} + \\frac{${q}}{${b}} - \\frac{${r}}{${c}} = ${answer.toLatex()}`,
+    );
+    const approx = answer.isInteger() ? "" : ` \\approx ${(Math.round(answer.toNumber() * 1000) / 1000).toString()}`;
     return numberProblem({
       prompt: t(
         `Let $f(x) = \\frac{(x + ${a})^{${p}}(x + ${b})^{${q}}}{(x + ${c})^{${r}}}$. Find $\\frac{f'(0)}{f(0)}$.`,
@@ -1540,10 +1550,20 @@ const logDerivativeAtZero: KnowledgePointDef = {
       ),
       answer,
       wrong: [left.add(right), left, answer.neg()],
-      solution: t(
-        `Differentiating $\\ln f$ gives $\\frac{${p}}{x + ${a}} + \\frac{${q}}{x + ${b}} - \\frac{${r}}{x + ${c}}$. At $x = 0$ this is $${answer.toLatex()}$.`,
-        `对 $\\ln f$ 求导得 $\\frac{${p}}{x + ${a}} + \\frac{${q}}{x + ${b}} - \\frac{${r}}{x + ${c}}$。在 $x = 0$ 处它是 $${answer.toLatex()}$。`,
-      ),
+      solution: joinText([
+        t(
+          `${first.en} Each exponent becomes a multiplier, and the factor in the denominator is subtracted:${steps(`\\ln f(x) = ${lnF}`)}`,
+          `${first["zh-CN"]}每个指数变成乘数，分母中的因子变成减项：${steps(`\\ln f(x) = ${lnF}`)}`,
+        ),
+        t(
+          `${second.en} The derivative of $\\ln f$ is $\\frac{f'}{f}$, and each logarithm gives one over its argument. Then put in $x = 0$:${sum}`,
+          `${second["zh-CN"]}$\\ln f$ 的导数是 $\\frac{f'}{f}$，每个对数求导后是它的真数分之一。再代入 $x = 0$：${sum}`,
+        ),
+        t(
+          `**Check.** Without logarithms: the difference quotient of $f$ over $x = \\pm 0.001$, divided by $f(0)$, is about $${(Math.round(ratio * 1000) / 1000).toString()}$, which agrees with $${answer.toLatex()}${approx}$.`,
+          `**检验。** 不用对数：$f$ 在 $x = \\pm 0.001$ 之间的差商除以 $f(0)$，约为 $${(Math.round(ratio * 1000) / 1000).toString()}$，与 $${answer.toLatex()}${approx}$ 相符。`,
+        ),
+      ]),
     });
   },
 };

@@ -1721,8 +1721,8 @@ const inverseReciprocalTrigInner = point(
   "inverse-reciprocal-trigonometric-functions-of-a-multiple-of-x",
   ["Inverse reciprocal functions of a multiple of $x$", "$x$ 的倍数的反倒数三角函数"],
   [
-    "With the chain rule, the inner $k$ multiplies the outer derivative. For $\\operatorname{arcsec}(kx)$ with $x > 0$ it cancels against the $k$ in front of the root: $\\frac{k}{kx\\sqrt{k^{2}x^{2} - 1}} = \\frac{1}{x\\sqrt{k^{2}x^{2} - 1}}$. For $\\operatorname{arccot}(kx)$ it stays: $-\\frac{k}{1 + k^{2}x^{2}}$.",
-    "用链式法则时，内层的 $k$ 要乘到外层导数上。对 $x > 0$ 时的 $\\operatorname{arcsec}(kx)$，它与根号前的 $k$ 约去：$\\frac{k}{kx\\sqrt{k^{2}x^{2} - 1}} = \\frac{1}{x\\sqrt{k^{2}x^{2} - 1}}$。对 $\\operatorname{arccot}(kx)$，它留在分子：$-\\frac{k}{1 + k^{2}x^{2}}$。",
+    "With the chain rule, the inner $k$ multiplies the outer derivative. For $\\operatorname{arcsec}(kx)$ with $x > 0$ it cancels against the $k$ in front of the root, and for $\\operatorname{arccot}(kx)$ it stays:\n\n$$\\frac{d}{dx}\\operatorname{arcsec}(kx) = \\frac{k}{kx\\sqrt{k^{2}x^{2} - 1}} = \\frac{1}{x\\sqrt{k^{2}x^{2} - 1}}, \\qquad \\frac{d}{dx}\\operatorname{arccot}(kx) = -\\frac{k}{1 + k^{2}x^{2}}.$$\n\nFor example, the slope of $\\operatorname{arcsec}(2x)$ at $x = 1$ is $\\frac{1}{\\sqrt{3}}$, about $0.577$.\n\nCheck: $\\operatorname{arcsec}(2x) = \\arccos\\frac{1}{2x}$, and its difference quotients at $1$ with $h = 0.01$ and $h = -0.01$ are about $0.571$ and $0.584$, on either side of $0.577$.\n\n> **Watch out.** In $\\operatorname{arcsec}(kx)$ the factor $k$ appears twice, once from the chain rule and once in $|kx|$, so it cancels. Multiplying by $k$ without cancelling gives an answer $k$ times too big.",
+    "用链式法则时，内层的 $k$ 要乘到外层导数上。对 $x > 0$ 时的 $\\operatorname{arcsec}(kx)$，它与根号前的 $k$ 约去；对 $\\operatorname{arccot}(kx)$，它留在分子：\n\n$$\\frac{d}{dx}\\operatorname{arcsec}(kx) = \\frac{k}{kx\\sqrt{k^{2}x^{2} - 1}} = \\frac{1}{x\\sqrt{k^{2}x^{2} - 1}}, \\qquad \\frac{d}{dx}\\operatorname{arccot}(kx) = -\\frac{k}{1 + k^{2}x^{2}}.$$\n\n例如 $\\operatorname{arcsec}(2x)$ 在 $x = 1$ 处的斜率是 $\\frac{1}{\\sqrt{3}}$，约为 $0.577$。\n\n检验：$\\operatorname{arcsec}(2x) = \\arccos\\frac{1}{2x}$，它在 $1$ 处取 $h = 0.01$ 和 $h = -0.01$ 的差商约为 $0.571$ 和 $0.584$，位于 $0.577$ 的两侧。\n\n> **注意。** 在 $\\operatorname{arcsec}(kx)$ 中，因子 $k$ 出现两次，一次来自链式法则，一次在 $|kx|$ 中，所以会约去。乘了 $k$ 却不约分，答案就大了 $k$ 倍。",
   ],
   (rng) => {
     const k = rng.int(2, 4);
@@ -1736,6 +1736,14 @@ const inverseReciprocalTrigInner = point(
       kind === "arccot"
         ? [`\\frac{${-c}}{1 + ${k * k}x^{2}}`, `\\frac{${c * k}}{1 + ${k * k}x^{2}}`, `\\frac{${-c * k}}{1 + ${k}x^{2}}`]
         : [`\\frac{${sign * k}}{x${root}}`, `\\frac{${-sign}}{x${root}}`, `\\frac{${sign}}{x\\sqrt{${k}x^{2} - 1}}`];
+    const outer = (u: number) => (kind === "arcsec" ? Math.acos(1 / u) : kind === "arccsc" ? Math.asin(1 / u) : Math.PI / 2 - Math.atan(u));
+    const F = (x: number) => c * outer(k * x);
+    const quotient = (F(1.001) - F(0.999)) / 0.002;
+    const at1 = kind === "arccot" ? (-c * k) / (1 + k * k) : sign / Math.sqrt(k * k - 1);
+    const chain =
+      kind === "arccot"
+        ? `f'(x) = ${c} \\cdot \\frac{-1}{1 + (${k}x)^{2}} \\cdot ${k} = ${answer}`
+        : `f'(x) = ${c} \\cdot \\frac{${kind === "arcsec" ? 1 : -1}}{${k}x\\sqrt{(${k}x)^{2} - 1}} \\cdot ${k} = ${answer}`;
     return functionProblem({
       prompt: t(
         `Find $f'(x)$ for $f(x) = ${f}$, with $x > ${Q.of(1, k).toLatex()}$.`,
@@ -1746,12 +1754,30 @@ const inverseReciprocalTrigInner = point(
       prefix: "f'(x) =",
       wrong,
       solution: t(
-        kind === "arccot"
-          ? `The chain rule gives $${c} \\cdot \\frac{-1}{1 + (${k}x)^{2}} \\cdot ${k} = ${answer}$.`
-          : `The chain rule gives $${c} \\cdot \\frac{${kind === "arcsec" ? 1 : -1}}{${k}x\\sqrt{(${k}x)^{2} - 1}} \\cdot ${k}$. The factor $${k}$ cancels, which leaves $${answer}$.`,
-        kind === "arccot"
-          ? `由链式法则得 $${c} \\cdot \\frac{-1}{1 + (${k}x)^{2}} \\cdot ${k} = ${answer}$。`
-          : `由链式法则得 $${c} \\cdot \\frac{${kind === "arcsec" ? 1 : -1}}{${k}x\\sqrt{(${k}x)^{2} - 1}} \\cdot ${k}$。因子 $${k}$ 约去，剩下 $${answer}$。`,
+        ...walk(
+          [
+            [
+              "Name the inner function",
+              "找出内层函数",
+              `The outer function is $\\operatorname{${kind}} u$ with $u = ${k}x$, so $u' = ${k}$${kind === "arccot" ? "" : `, and $|u| = ${k}x$ because $x > 0$`}.`,
+              `外层函数是 $\\operatorname{${kind}} u$，其中 $u = ${k}x$，所以 $u' = ${k}$${kind === "arccot" ? "" : `；由于 $x > 0$，$|u| = ${k}x$`}。`,
+            ],
+            [
+              "Apply the chain rule",
+              "用链式法则",
+              kind === "arccot"
+                ? `Multiply the outer derivative by $${k}$, which stays in the numerator:\n\n$$${chain}.$$`
+                : `Multiply the outer derivative by $${k}$; the factor $${k}$ cancels against the $${k}x$ in front of the root:\n\n$$${chain}.$$`,
+              kind === "arccot"
+                ? `把外层导数乘以 $${k}$，它留在分子：\n\n$$${chain}.$$`
+                : `把外层导数乘以 $${k}$；因子 $${k}$ 与根号前的 $${k}x$ 约去：\n\n$$${chain}.$$`,
+            ],
+          ],
+          [
+            `At $x = 1$ the answer is about $${num(at1)}$, and the difference quotient of $f$ from $x = 0.999$ to $x = 1.001$ is about $${num(quotient)}$.`,
+            `在 $x = 1$ 处，答案约为 $${num(at1)}$，而 $f$ 从 $x = 0.999$ 到 $x = 1.001$ 的差商约为 $${num(quotient)}$。`,
+          ],
+        ),
       ),
     });
   },
@@ -1761,8 +1787,8 @@ const inverseHyperbolicValues = point(
   "exact-values-of-inverse-hyperbolic-derivatives",
   ["Exact values of inverse hyperbolic derivatives", "反双曲函数导数的精确值"],
   [
-    "The three formulas look alike, so the signs inside must be kept apart: $\\operatorname{arsinh}'(x) = \\frac{1}{\\sqrt{x^{2} + 1}}$, $\\operatorname{arcosh}'(x) = \\frac{1}{\\sqrt{x^{2} - 1}}$ for $x > 1$, and $\\operatorname{artanh}'(x) = \\frac{1}{1 - x^{2}}$ for $|x| < 1$. Fractions from Pythagorean triples give exact values.",
-    "三个公式很相似，要分清其中的符号：$\\operatorname{arsinh}'(x) = \\frac{1}{\\sqrt{x^{2} + 1}}$；$x > 1$ 时 $\\operatorname{arcosh}'(x) = \\frac{1}{\\sqrt{x^{2} - 1}}$；$|x| < 1$ 时 $\\operatorname{artanh}'(x) = \\frac{1}{1 - x^{2}}$。由勾股数构成的分数能给出精确值。",
+    "The three formulas look alike, so keep the signs inside apart:\n\n$$\\operatorname{arsinh}'(x) = \\frac{1}{\\sqrt{x^{2} + 1}}, \\quad \\operatorname{arcosh}'(x) = \\frac{1}{\\sqrt{x^{2} - 1}} \\ (x > 1), \\quad \\operatorname{artanh}'(x) = \\frac{1}{1 - x^{2}} \\ (|x| < 1).$$\n\nFractions from Pythagorean triples give exact values. For example, at $x = \\frac{3}{4}$ the root $\\sqrt{\\frac{9}{16} + 1}$ is $\\frac{5}{4}$, so $\\operatorname{arsinh}'\\left(\\frac{3}{4}\\right)$ is $\\frac{4}{5}$.\n\nCheck: the difference quotients of $\\operatorname{arsinh} x$ at $0.75$ with $h = 0.01$ and $h = -0.01$ are about $0.798$ and $0.802$, on either side of $0.8$.\n\n> **Watch out.** $\\operatorname{arsinh}$ has $x^{2} + 1$ under the root and $\\operatorname{arcosh}$ has $x^{2} - 1$, while $\\operatorname{artanh}$ has $1 - x^{2}$ and no root at all.",
+    "三个公式很相似，要分清其中的符号：\n\n$$\\operatorname{arsinh}'(x) = \\frac{1}{\\sqrt{x^{2} + 1}}, \\quad \\operatorname{arcosh}'(x) = \\frac{1}{\\sqrt{x^{2} - 1}} \\ (x > 1), \\quad \\operatorname{artanh}'(x) = \\frac{1}{1 - x^{2}} \\ (|x| < 1).$$\n\n由勾股数构成的分数能给出精确值。例如在 $x = \\frac{3}{4}$ 处，根式 $\\sqrt{\\frac{9}{16} + 1}$ 等于 $\\frac{5}{4}$，所以 $\\operatorname{arsinh}'\\left(\\frac{3}{4}\\right)$ 等于 $\\frac{4}{5}$。\n\n检验：$\\operatorname{arsinh} x$ 在 $0.75$ 处取 $h = 0.01$ 和 $h = -0.01$ 的差商约为 $0.798$ 和 $0.802$，位于 $0.8$ 的两侧。\n\n> **注意。** $\\operatorname{arsinh}$ 的根号内是 $x^{2} + 1$，$\\operatorname{arcosh}$ 的是 $x^{2} - 1$，而 $\\operatorname{artanh}$ 是 $1 - x^{2}$，根本没有根号。",
   ],
   (rng) => {
     const [p, q, h] = rng.pick([
@@ -1790,6 +1816,17 @@ const inverseHyperbolicValues = point(
           ? `\\frac{1}{\\sqrt{${v}^{2} - 1}}`
           : `\\frac{1}{1 - ${v}^{2}}`;
     const display = formula.replace(`${v}^{2}`, `\\left(${v}\\right)^{2}`);
+    const general =
+      kind === "arsinh" ? "\\frac{1}{\\sqrt{x^{2} + 1}}" : kind === "arcosh" ? "\\frac{1}{\\sqrt{x^{2} - 1}}" : "\\frac{1}{1 - x^{2}}";
+    const domain: Pair =
+      kind === "arsinh"
+        ? ["defined for every $x$", "对所有 $x$ 都有定义"]
+        : kind === "arcosh"
+          ? [`defined here since $${v} > 1$`, `由于 $${v} > 1$，在这里有定义`]
+          : [`defined here since $${v} < 1$`, `由于 $${v} < 1$，在这里有定义`];
+    const F = (t: number) => c * (kind === "arsinh" ? Math.asinh(t) : kind === "arcosh" ? Math.acosh(t) : Math.atanh(t));
+    const x0 = x.toNumber();
+    const quotient = (F(x0 + 0.001) - F(x0 - 0.001)) / 0.002;
     return ask(
       [
         `Let $f(x) = ${poly([c, `\\operatorname{${kind}} x`])}$. Find $f'\\left(${v}\\right)$.`,
@@ -1797,10 +1834,26 @@ const inverseHyperbolicValues = point(
       ],
       answer,
       [other.mul(Q.of(c)), value, answer.neg(), Q.one.div(x).mul(Q.of(c))],
-      [
-        `$\\operatorname{${kind}}'\\left(${v}\\right) = ${display} = ${value.toLatex()}$, and multiplying by $${c}$ gives $${answer.toLatex()}$.`,
-        `$\\operatorname{${kind}}'\\left(${v}\\right) = ${display} = ${value.toLatex()}$，乘以 $${c}$ 得 $${answer.toLatex()}$。`,
-      ],
+      walk(
+        [
+          [
+            "Write the derivative",
+            "写出导数",
+            `The derivative of $\\operatorname{${kind}} x$ is $${general}$, ${domain[0]}, so $f'(x)$ is $${c}$ times it.`,
+            `$\\operatorname{${kind}} x$ 的导数是 $${general}$，${domain[1]}，所以 $f'(x)$ 是它的 $${c}$ 倍。`,
+          ],
+          [
+            "Substitute and simplify",
+            "代入并化简",
+            `At $x = ${v}$ the Pythagorean triple $${p}, ${q}, ${h}$ makes the value exact:\n\n$$\\operatorname{${kind}}'\\left(${v}\\right) = ${display} = ${value.toLatex()}.$$\n\nMultiplying by $${c}$ gives $${answer.toLatex()}$.`,
+            `在 $x = ${v}$ 处，勾股数 $${p}, ${q}, ${h}$ 使数值精确：\n\n$$\\operatorname{${kind}}'\\left(${v}\\right) = ${display} = ${value.toLatex()}.$$\n\n乘以 $${c}$ 得 $${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `The difference quotient of $f$ over $x = ${v} \\pm 0.001$ is about $${num(quotient)}$, which agrees with $${answer.toLatex()}${approx(answer)}$.`,
+          `$f$ 在 $x = ${v} \\pm 0.001$ 之间的差商约为 $${num(quotient)}$，与 $${answer.toLatex()}${approx(answer)}$ 相符。`,
+        ],
+      ),
     );
   },
 );
@@ -1809,8 +1862,8 @@ const reciprocalHyperbolicInner = point(
   "inverse-reciprocal-hyperbolic-functions-of-a-scaled-variable",
   ["Inverse reciprocal hyperbolic functions of a scaled variable", "缩放变量的反倒数双曲函数"],
   [
-    "With the chain rule, a scale inside changes the result. For $x > 0$: $\\frac{d}{dx}\\operatorname{arcsch}(kx) = -\\frac{1}{x\\sqrt{1 + k^{2}x^{2}}}$, since the $k$ cancels, while $\\frac{d}{dx}\\operatorname{arcoth}(kx) = \\frac{k}{1 - k^{2}x^{2}}$ keeps it. Similarly $\\frac{d}{dx}\\operatorname{arsech}\\frac{x}{k} = -\\frac{k}{x\\sqrt{k^{2} - x^{2}}}$.",
-    "用链式法则时，内部的缩放会改变结果。对 $x > 0$：$\\frac{d}{dx}\\operatorname{arcsch}(kx) = -\\frac{1}{x\\sqrt{1 + k^{2}x^{2}}}$，因为 $k$ 约去了；而 $\\frac{d}{dx}\\operatorname{arcoth}(kx) = \\frac{k}{1 - k^{2}x^{2}}$ 保留 $k$。类似地，$\\frac{d}{dx}\\operatorname{arsech}\\frac{x}{k} = -\\frac{k}{x\\sqrt{k^{2} - x^{2}}}$。",
+    "With the chain rule, a scale inside changes the result. For $x > 0$ the $k$ cancels in $\\operatorname{arcsch}(kx)$, while $\\operatorname{arcoth}(kx)$ keeps it:\n\n$$\\frac{d}{dx}\\operatorname{arcsch}(kx) = -\\frac{1}{x\\sqrt{1 + k^{2}x^{2}}}, \\qquad \\frac{d}{dx}\\operatorname{arcoth}(kx) = \\frac{k}{1 - k^{2}x^{2}}, \\qquad \\frac{d}{dx}\\operatorname{arsech}\\frac{x}{k} = -\\frac{k}{x\\sqrt{k^{2} - x^{2}}}.$$\n\nFor example, the slope of $\\operatorname{arcsch}(2x)$ at $x = 1$ is $-\\frac{1}{\\sqrt{5}}$, about $-0.447$.\n\nCheck: $\\operatorname{arcsch}(2x) = \\operatorname{arsinh}\\frac{1}{2x}$, and its difference quotients at $1$ with $h = 0.01$ and $h = -0.01$ are about $-0.443$ and $-0.451$, on either side of $-0.447$.\n\n> **Watch out.** Multiply by the inner derivative and then simplify: in $\\operatorname{arcsch}(kx)$ the $k$ from the chain rule cancels the $k$ in $|kx|$, but in $\\operatorname{arcoth}(kx)$ nothing cancels it.",
+    "用链式法则时，内部的缩放会改变结果。对 $x > 0$，$\\operatorname{arcsch}(kx)$ 中的 $k$ 约去了，而 $\\operatorname{arcoth}(kx)$ 保留 $k$：\n\n$$\\frac{d}{dx}\\operatorname{arcsch}(kx) = -\\frac{1}{x\\sqrt{1 + k^{2}x^{2}}}, \\qquad \\frac{d}{dx}\\operatorname{arcoth}(kx) = \\frac{k}{1 - k^{2}x^{2}}, \\qquad \\frac{d}{dx}\\operatorname{arsech}\\frac{x}{k} = -\\frac{k}{x\\sqrt{k^{2} - x^{2}}}.$$\n\n例如 $\\operatorname{arcsch}(2x)$ 在 $x = 1$ 处的斜率是 $-\\frac{1}{\\sqrt{5}}$，约为 $-0.447$。\n\n检验：$\\operatorname{arcsch}(2x) = \\operatorname{arsinh}\\frac{1}{2x}$，它在 $1$ 处取 $h = 0.01$ 和 $h = -0.01$ 的差商约为 $-0.443$ 和 $-0.451$，位于 $-0.447$ 的两侧。\n\n> **注意。** 先乘以内层的导数再化简：在 $\\operatorname{arcsch}(kx)$ 中，链式法则带来的 $k$ 与 $|kx|$ 中的 $k$ 约去，而在 $\\operatorname{arcoth}(kx)$ 中没有东西能约去它。",
   ],
   (rng) => {
     const kind = rng.pick(["arsech", "arcsch", "arcoth"] as const);
@@ -1831,6 +1884,23 @@ const reciprocalHyperbolicInner = point(
           ? [`\\frac{${c}}{x\\sqrt{1 + ${k * k}x^{2}}}`, `\\frac{${-c * k}}{x\\sqrt{1 + ${k * k}x^{2}}}`]
           : [`\\frac{${c}}{1 - ${k * k}x^{2}}`, `\\frac{${c * k}}{${k * k}x^{2} + 1}`];
     const range = kind === "arsech" ? `0 < x < ${k}` : kind === "arcsch" ? "x > 0" : `x > ${Q.of(1, k).toLatex()}`;
+    const du = kind === "arsech" ? `\\frac{1}{${k}}` : `${k}`;
+    const rule =
+      kind === "arsech"
+        ? "-\\frac{1}{u\\sqrt{1 - u^{2}}}"
+        : kind === "arcsch"
+          ? "-\\frac{1}{|u|\\sqrt{1 + u^{2}}}"
+          : "\\frac{1}{1 - u^{2}}";
+    const chain =
+      kind === "arsech"
+        ? `${c} \\cdot \\frac{-1}{\\frac{x}{${k}}\\sqrt{1 - \\frac{x^{2}}{${k * k}}}} \\cdot \\frac{1}{${k}} = ${answer}`
+        : kind === "arcsch"
+          ? `${c} \\cdot \\frac{-1}{${k}x\\sqrt{1 + ${k * k}x^{2}}} \\cdot ${k} = ${answer}`
+          : `${c} \\cdot \\frac{1}{1 - ${k * k}x^{2}} \\cdot ${k} = ${answer}`;
+    const outer = (u: number) => (kind === "arsech" ? Math.acosh(1 / u) : kind === "arcsch" ? Math.asinh(1 / u) : Math.atanh(1 / u));
+    const F = (x: number) => c * outer(kind === "arsech" ? x / k : k * x);
+    const quotient = (F(1.001) - F(0.999)) / 0.002;
+    const at1 = kind === "arsech" ? (-c * k) / Math.sqrt(k * k - 1) : kind === "arcsch" ? -c / Math.sqrt(1 + k * k) : (c * k) / (1 - k * k);
     return functionProblem({
       prompt: t(`Find $f'(x)$ for $f(x) = ${f}$, with $${range}$.`, `设 $f(x) = ${f}$，其中 $${range}$。求 $f'(x)$。`),
       answer,
@@ -1838,8 +1908,26 @@ const reciprocalHyperbolicInner = point(
       prefix: "f'(x) =",
       wrong,
       solution: t(
-        `Apply the formula for $\\operatorname{${kind}}$ at $u = ${inner}$ and multiply by $u' = ${kind === "arsech" ? `\\frac{1}{${k}}` : k}$. Simplifying gives $${answer}$.`,
-        `把 $\\operatorname{${kind}}$ 的公式用于 $u = ${inner}$，再乘以 $u' = ${kind === "arsech" ? `\\frac{1}{${k}}` : k}$。化简得 $${answer}$。`,
+        ...walk(
+          [
+            [
+              "Name the inner function",
+              "找出内层函数",
+              `The derivative of $\\operatorname{${kind}} u$ is $${rule}$, with $u = ${inner}$ and $u' = ${du}$.`,
+              `$\\operatorname{${kind}} u$ 的导数是 $${rule}$，其中 $u = ${inner}$，$u' = ${du}$。`,
+            ],
+            [
+              "Apply the chain rule and simplify",
+              "用链式法则并化简",
+              `Put $u$ into the formula, multiply by $u'$ and simplify:\n\n$$f'(x) = ${chain}.$$`,
+              `把 $u$ 代入公式，乘以 $u'$ 并化简：\n\n$$f'(x) = ${chain}.$$`,
+            ],
+          ],
+          [
+            `At $x = 1$ the answer is about $${num(at1)}$, and the difference quotient of $f$ from $x = 0.999$ to $x = 1.001$ is about $${num(quotient)}$.`,
+            `在 $x = 1$ 处，答案约为 $${num(at1)}$，而 $f$ 从 $x = 0.999$ 到 $x = 1.001$ 的差商约为 $${num(quotient)}$。`,
+          ],
+        ),
       ),
     });
   },
