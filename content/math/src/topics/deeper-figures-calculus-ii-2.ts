@@ -434,29 +434,98 @@ function velocityGraph(rng: Rng) {
   return { values, signed, distance, pieces, figure };
 }
 
+/** VelocityPiece is one straight piece of a drawn velocity graph, two units wide, with its signed area and its parts above and below the axis. */
+type VelocityPiece = {
+  readonly from: number;
+  readonly a: number;
+  readonly b: number;
+  readonly signed: number;
+  readonly above: Q;
+  readonly below: Q;
+};
+
+/** velocityPieces splits a drawn velocity graph into its pieces; a piece that crosses the axis is cut into two triangles at the crossing. */
+function velocityPieces(values: readonly number[]) {
+  const pieces: VelocityPiece[] = values.slice(1).map((b, i) => {
+    const a = values[i] as number;
+    const part = (h: number) => (a * b < 0 ? Q.of(h * h, Math.abs(a) + Math.abs(b)) : Q.of(Math.abs(a + b)));
+    const above = a * b < 0 ? part(Math.max(a, b)) : a + b > 0 ? part(a + b) : Q.zero;
+    const below = a * b < 0 ? part(Math.min(a, b)) : a + b < 0 ? part(a + b) : Q.zero;
+    return { from: 2 * i, a, b, signed: a + b, above, below };
+  });
+  const above = pieces.reduce((s, p) => s.add(p.above), Q.zero);
+  const below = pieces.reduce((s, p) => s.add(p.below), Q.zero);
+  return { pieces, above, below };
+}
+
+/** signedLines writes the signed area of each piece of a velocity graph, a trapezoid two units wide. */
+const signedLines = (pieces: readonly VelocityPiece[]) =>
+  pieces.map((p) => `[${p.from}, ${p.from + 2}]: \\quad \\frac{${p.a} + ${p.b < 0 ? `(${p.b})` : p.b}}{2} \\cdot 2 = ${p.signed}`);
+
+/** partsLine writes the areas above and below the axis and their difference. */
+const partsLine = (above: Q, below: Q) => `${above.toLatex()} - ${below.toLatex()} = ${above.sub(below).toLatex()}`;
+
+/** display shows each line as its own displayed formula. */
+const display = (lines: readonly string[]) => lines.map((l) => `$$${l}$$`).join("\n\n");
+
+/** motionKeep drops wrong values that equal the answer or repeat an earlier one. */
+const motionKeep = (answer: Q, all: readonly { value: Q; why: ReturnType<typeof t> }[]) =>
+  all.filter((x, i) => !x.value.eq(answer) && all.findIndex((y) => y.value.eq(x.value)) === i);
+
 const displacementDrawn = {
   ...point(
     "displacement-from-a-drawn-velocity-graph",
     ["Displacement from a drawn velocity graph", "由所画速度图求位移"],
     [
-      "Displacement is $\\int v\\,dt$, the area between the velocity graph and the $t$-axis, where area below the axis counts as negative.",
-      "位移是 $\\int v\\,dt$，即速度图与 $t$ 轴之间的面积，其中轴下方的面积记为负。",
+      "Displacement is $\\int v\\,dt$, the area between the velocity graph and the $t$-axis, where area below the axis counts as negative. For a graph made of straight pieces, each piece is a trapezoid, and its signed area is its width times the average of its end heights. For example, pieces through $(0, 2)$, $(2, -1)$, $(4, 1)$ have signed areas $2 + (-1) = 1$ and $-1 + 1 = 0$, so the displacement is $1$.\n\nCheck: split at the crossings instead: the area above the axis is $\\frac{4}{3} + \\frac{1}{3} = \\frac{5}{3}$ and below is $\\frac{1}{3} + \\frac{1}{3} = \\frac{2}{3}$, and $\\frac{5}{3} - \\frac{2}{3} = 1$.\n\n> **Watch out.** Area below the axis is subtracted, not added: adding it gives the total distance.",
+      "位移是 $\\int v\\,dt$，即速度图与 $t$ 轴之间的面积，其中轴下方的面积记为负。由直线段组成的图像中，每一段都是梯形，它的有向面积等于宽度乘两端高度的平均。例如，过 $(0, 2)$、$(2, -1)$、$(4, 1)$ 的两段有向面积分别为 $2 + (-1) = 1$ 和 $-1 + 1 = 0$，所以位移是 $1$。\n\n检验：改在穿过轴的地方分开：轴上方的面积为 $\\frac{4}{3} + \\frac{1}{3} = \\frac{5}{3}$，下方为 $\\frac{1}{3} + \\frac{1}{3} = \\frac{2}{3}$，而 $\\frac{5}{3} - \\frac{2}{3} = 1$。\n\n> **注意。** 轴下方的面积要减去，而不是加上：加上得到的是总路程。",
     ],
     (rng) => {
       const { values, signed, distance, figure } = velocityGraph(rng);
-      return ask(
-        [
-          "The graph shows the velocity of a particle. Find its displacement from $t = 0$ to $t = 6$.",
-          "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 的位移。",
-        ],
-        signed,
-        [distance, signed.neg(), Q.of(values[3] as number, 1).sub(Q.of(values[0] as number, 1)), signed.add(Q.of(2, 1))],
-        [
-          `Each piece has width $2$, so its signed area is the sum of its end heights. The total is $${signed.toLatex()}$.`,
-          `每段宽度为 $2$，所以它的有向面积等于两端高度之和。总和为 $${signed.toLatex()}$。`,
-        ],
+      const { pieces, above, below } = velocityPieces(values);
+      const mistakes = motionKeep(signed, [
+        {
+          value: distance,
+          why: t(
+            "This counts the area below the axis as positive; that is the total distance, not the displacement.",
+            "这里把轴下方的面积也记为正；那是总路程，不是位移。",
+          ),
+        },
+        {
+          value: signed.neg(),
+          why: t(
+            "This has the sign reversed: area above the axis is positive and area below is negative.",
+            "这里符号反了：轴上方的面积为正，下方为负。",
+          ),
+        },
+        {
+          value: Q.of((values[3] as number) - (values[0] as number)),
+          why: t(
+            "This is $v(6) - v(0)$, the change in velocity; the displacement is the area under the graph, not the change in its height.",
+            "这是 $v(6) - v(0)$，即速度的变化量；位移是图像下的面积，不是高度的变化。",
+          ),
+        },
+        {
+          value: signed.div(Q.of(2)),
+          why: t("This uses width $1$ for each piece; the pieces are $2$ units wide.", "这里把每段的宽度当作 $1$；每段宽 $2$ 个单位。"),
+        },
+      ]);
+      const sum = `${pieces.map((p) => (p.signed < 0 ? `(${p.signed})` : `${p.signed}`)).join(" + ")} = ${signed.toLatex()}`;
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The graph shows the velocity of a particle. Find its displacement from $t = 0$ to $t = 6$.",
+            "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 的位移。",
+          ),
+          answer: signed,
+          mistakes,
+          solution: t(
+            `**Step 1: Find each signed area.** Each piece is a trapezoid of width $2$, so its signed area is $2$ times the average of its end heights:\n\n${display(signedLines(pieces))}\n\n**Step 2: Add them.** The displacement is the total signed area:\n\n$$${sum}$$\n\n**Check.** Split the graph where it crosses the axis and find the area above and the area below separately; the displacement is the first minus the second:\n\n$$${partsLine(above, below)}$$`,
+            `**第一步：求每段的有向面积。**每段都是宽 $2$ 的梯形，它的有向面积等于 $2$ 乘两端高度的平均：\n\n${display(signedLines(pieces))}\n\n**第二步：相加。**位移是有向面积的总和：\n\n$$${sum}$$\n\n**检验。**在图像穿过轴的地方分开，分别求轴上方和下方的面积；位移等于前者减后者：\n\n$$${partsLine(above, below)}$$`,
+          ),
+        }),
         figure,
-      );
+      };
     },
   ),
   figure: calculusDrawings5["calculating-the-displacement-of-a-particle-using-integration#displacement-from-a-drawn-velocity-graph"],
@@ -467,24 +536,68 @@ const distanceDrawn = {
     "total-distance-from-a-drawn-velocity-graph",
     ["Total distance from a drawn velocity graph", "由所画速度图求总路程"],
     [
-      "Total distance is $\\int |v|\\,dt$: every area between the velocity graph and the $t$-axis counts as positive. A piece that crosses the axis splits into two triangles.",
-      "总路程是 $\\int |v|\\,dt$：速度图与 $t$ 轴之间的每块面积都记为正。穿过轴的一段要分成两个三角形。",
+      "Total distance is $\\int |v|\\,dt$: every area between the velocity graph and the $t$-axis counts as positive. A piece that crosses the axis splits into two triangles. For example, the piece from $(0, 2)$ to $(2, -1)$ crosses at $t = \\frac{4}{3}$, giving triangles of areas $\\frac{1}{2} \\cdot \\frac{4}{3} \\cdot 2 = \\frac{4}{3}$ and $\\frac{1}{2} \\cdot \\frac{2}{3} \\cdot 1 = \\frac{1}{3}$, so it adds $\\frac{5}{3}$ to the distance.\n\nCheck: the two triangles' signed areas give $\\frac{4}{3} - \\frac{1}{3} = 1$, the same as the trapezoid rule $2 + (-1) = 1$.\n\n> **Watch out.** Do not take the absolute value of a crossing piece as a whole: $|2 + (-1)| = 1$ undercounts, because the two triangles partly cancel in it.",
+      "总路程是 $\\int |v|\\,dt$：速度图与 $t$ 轴之间的每块面积都记为正。穿过轴的一段要分成两个三角形。例如从 $(0, 2)$ 到 $(2, -1)$ 的一段在 $t = \\frac{4}{3}$ 处穿过轴，两个三角形的面积为 $\\frac{1}{2} \\cdot \\frac{4}{3} \\cdot 2 = \\frac{4}{3}$ 和 $\\frac{1}{2} \\cdot \\frac{2}{3} \\cdot 1 = \\frac{1}{3}$，所以这一段为路程贡献 $\\frac{5}{3}$。\n\n检验：两个三角形的有向面积之和为 $\\frac{4}{3} - \\frac{1}{3} = 1$，与梯形算法 $2 + (-1) = 1$ 相同。\n\n> **注意。** 不要对穿过轴的一段整体取绝对值：$|2 + (-1)| = 1$ 算少了，因为两个三角形在其中部分抵消了。",
     ],
     (rng) => {
-      const { signed, distance, pieces, figure } = velocityGraph(rng);
-      return ask(
-        [
-          "The graph shows the velocity of a particle. Find the total distance it travels from $t = 0$ to $t = 6$.",
-          "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 走过的总路程。",
-        ],
-        distance,
-        [signed, signed.neg(), distance.mul(Q.of(2, 1)), distance.add(Q.of(1, 1))],
-        [
-          `The areas of the three pieces, all counted as positive, are $${pieces.join("$, $")}$. Their sum is $${distance.toLatex()}$.`,
-          `三段的面积（都记为正）为 $${pieces.join("$、$")}$。它们的和为 $${distance.toLatex()}$。`,
-        ],
-        figure,
+      const { values, signed, distance, figure } = velocityGraph(rng);
+      const { pieces, above, below } = velocityPieces(values);
+      const lumped = pieces.reduce((s, p) => s.add(Q.of(Math.abs(p.signed))), Q.zero);
+      const mistakes = motionKeep(distance, [
+        {
+          value: signed,
+          why: t(
+            "This is the displacement: area below the axis was subtracted. For distance, every area counts as positive.",
+            "这是位移：轴下方的面积被减去了。求路程时每块面积都记为正。",
+          ),
+        },
+        {
+          value: lumped,
+          why: t(
+            "This takes the absolute value of each whole piece; a piece that crosses the axis must be cut into two triangles first.",
+            "这里对每一整段取绝对值；穿过轴的一段要先分成两个三角形。",
+          ),
+        },
+        {
+          value: above,
+          why: t("This is only the area above the axis; add the area below it too.", "这只是轴上方的面积；还要加上下方的面积。"),
+        },
+        {
+          value: below,
+          why: t("This is only the area below the axis; add the area above it too.", "这只是轴下方的面积；还要加上上方的面积。"),
+        },
+      ]);
+      const crossing = pieces.filter((p) => p.a * p.b < 0);
+      const lines = pieces.map((p) =>
+        p.a * p.b < 0
+          ? `[${p.from}, ${p.from + 2}]: \\quad ${p.above.toLatex()} + ${p.below.toLatex()} = ${p.above.add(p.below).toLatex()}`
+          : `[${p.from}, ${p.from + 2}]: \\quad ${p.above.add(p.below).toLatex()}`,
       );
+      const crossEn =
+        crossing.length > 0
+          ? " A piece from height $a$ to height $b$ of opposite sign crosses the axis; its two triangles have areas $\\frac{a^2}{|a| + |b|}$ and $\\frac{b^2}{|a| + |b|}$."
+          : "";
+      const crossZh =
+        crossing.length > 0
+          ? "从高度 $a$ 到异号高度 $b$ 的一段穿过轴；它的两个三角形面积为 $\\frac{a^2}{|a| + |b|}$ 和 $\\frac{b^2}{|a| + |b|}$。"
+          : "";
+      const total = `${pieces.map((p) => p.above.add(p.below).toLatex()).join(" + ")} = ${distance.toLatex()}`;
+      const check = `${above.toLatex()} - ${below.toLatex()} = ${signed.toLatex()} = ${pieces.map((p) => (p.signed < 0 ? `(${p.signed})` : `${p.signed}`)).join(" + ")}`;
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The graph shows the velocity of a particle. Find the total distance it travels from $t = 0$ to $t = 6$.",
+            "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 走过的总路程。",
+          ),
+          answer: distance,
+          mistakes,
+          solution: t(
+            `**Step 1: Find the area of each piece.** Count every area as positive.${crossEn}\n\n${display(lines)}\n\n**Step 2: Add them.**\n\n$$${total}$$\n\n**Check.** The same areas, with those below the axis counted as negative, must give the signed area from the trapezoid rule, $2$ times the average height of each piece: above $${above.toLatex()}$, below $${below.toLatex()}$, and\n\n$$${check}$$`,
+            `**第一步：求每段的面积。**每块面积都记为正。${crossZh}\n\n${display(lines)}\n\n**第二步：相加。**\n\n$$${total}$$\n\n**检验。**把同样的面积中轴下方的记为负，结果应等于用梯形算出的有向面积（每段为 $2$ 乘两端高度的平均）：上方 $${above.toLatex()}$，下方 $${below.toLatex()}$，而\n\n$$${check}$$`,
+          ),
+        }),
+        figure,
+      };
     },
   ),
   figure: calculusDrawings5["calculating-the-total-distance-traveled-by-a-particle#total-distance-from-a-drawn-velocity-graph"],
@@ -495,29 +608,65 @@ const positionDrawn = {
     "a-later-position-from-a-drawn-velocity-graph",
     ["A later position from a drawn velocity graph", "由所画速度图求后来的位置"],
     [
-      "Position at a later time is the starting position plus the signed area under the velocity graph up to that time: $s(T) = s(0) + \\int_0^T v\\,dt$.",
-      "后来某时刻的位置等于起始位置加上到该时刻为止速度图下的有向面积：$s(T) = s(0) + \\int_0^T v\\,dt$。",
+      "Position at a later time is the starting position plus the signed area under the velocity graph up to that time: $s(T) = s(0) + \\int_0^T v\\,dt$. For example, if $s(0) = 3$ and the graph runs straight from $(0, 2)$ to $(2, -1)$, then $s(2) = 3 + \\frac{2 + (-1)}{2} \\cdot 2 = 4$.\n\nCheck: the piece crosses at $t = \\frac{4}{3}$; the particle moves $\\frac{4}{3}$ forward and $\\frac{1}{3}$ back, and $3 + \\frac{4}{3} - \\frac{1}{3} = 4$.\n\n> **Watch out.** Read areas, not heights: the height of the graph at $T$ is the velocity there, not the change in position.",
+      "后来某时刻的位置等于起始位置加上到该时刻为止速度图下的有向面积：$s(T) = s(0) + \\int_0^T v\\,dt$。例如 $s(0) = 3$，图像从 $(0, 2)$ 直线到 $(2, -1)$，则 $s(2) = 3 + \\frac{2 + (-1)}{2} \\cdot 2 = 4$。\n\n检验：这一段在 $t = \\frac{4}{3}$ 处穿过轴；质点先前进 $\\frac{4}{3}$，再后退 $\\frac{1}{3}$，而 $3 + \\frac{4}{3} - \\frac{1}{3} = 4$。\n\n> **注意。** 要读面积，而不是高度：图像在 $T$ 处的高度是那一刻的速度，不是位置的变化量。",
     ],
     (rng) => {
       const { values, figure } = velocityGraph(rng);
       const s0 = rng.int(-6, 6);
-      const pieces = rng.int(1, 3);
-      const end = 2 * pieces;
-      const area = values.slice(1, pieces + 1).reduce((n, v, i) => n + v + (values[i] as number), 0);
+      const count = rng.int(1, 3);
+      const end = 2 * count;
+      const used = velocityPieces(values.slice(0, count + 1));
+      const area = values.slice(1, count + 1).reduce((n, v, i) => n + v + (values[i] as number), 0);
       const answer = s0 + area;
-      return ask(
-        [
-          `The graph shows the velocity of a particle with $s(0) = ${s0}$. Find $s(${end})$.`,
-          `图中是质点的速度，$s(0) = ${s0}$。求 $s(${end})$。`,
-        ],
-        answer,
-        [area, s0 - area, s0 + (values[pieces] as number), answer + 2, s0 + Math.abs(area) + 1],
-        [
-          `The signed area from $0$ to $${end}$ is $${area}$, so $s(${end}) = ${s0} + ${area < 0 ? `(${area})` : area} = ${answer}$.`,
-          `从 $0$ 到 $${end}$ 的有向面积为 $${area}$，所以 $s(${end}) = ${s0} + ${area < 0 ? `(${area})` : area} = ${answer}$。`,
-        ],
+      const inP = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+      const mistakes = motionKeep(Q.of(answer), [
+        {
+          value: Q.of(area),
+          why: t(
+            `This is only the change in position; add the starting position $s(0) = ${s0}$.`,
+            `这只是位置的变化量；还要加上起始位置 $s(0) = ${s0}$。`,
+          ),
+        },
+        {
+          value: Q.of(s0 - area),
+          why: t(
+            "This subtracts the signed area; the change in position is added to $s(0)$.",
+            "这里减去了有向面积；位置的变化量应加到 $s(0)$ 上。",
+          ),
+        },
+        {
+          value: Q.of(s0 + (values[count] as number)),
+          why: t(
+            `This adds the height $v(${end}) = ${values[count]}$, the velocity at the end; the change in position is the area under the graph.`,
+            `这里加上的是高度 $v(${end}) = ${values[count]}$，即终点的速度；位置的变化量是图像下的面积。`,
+          ),
+        },
+        {
+          value: used.above.add(used.below).add(Q.of(s0)),
+          why: t(
+            "This counts the area below the axis as positive; while the velocity is negative the particle moves back.",
+            "这里把轴下方的面积也记为正；速度为负时质点在后退。",
+          ),
+        },
+      ]);
+      const positions = [s0, ...used.pieces.map((_, i) => used.pieces.slice(0, i + 1).reduce((n, p) => n + p.signed, s0))];
+      const track = used.pieces.map((p, i) => `s(${p.from + 2}) = ${positions[i]} + ${inP(p.signed)} = ${positions[i + 1]}`);
+      return {
+        ...numberProblem({
+          prompt: t(
+            `The graph shows the velocity of a particle with $s(0) = ${s0}$. Find $s(${end})$.`,
+            `图中是质点的速度，$s(0) = ${s0}$。求 $s(${end})$。`,
+          ),
+          answer,
+          mistakes,
+          solution: t(
+            `**Step 1: Find the signed area.** From $0$ to $${end}$ each piece is a trapezoid of width $2$, so the signed area is the sum of the end heights of each piece:\n\n$$\\int_0^{${end}} v\\,dt = ${used.pieces.map((p) => `(${p.a} + ${inP(p.b)})`).join(" + ")} = ${area}$$\n\n**Step 2: Add the starting position.**\n\n$$s(${end}) = ${s0} + ${inP(area)} = ${answer}$$\n\n**Check.** Track the position one piece at a time:\n\n${display(track)}`,
+            `**第一步：求有向面积。**从 $0$ 到 $${end}$，每段都是宽 $2$ 的梯形，所以有向面积等于各段两端高度之和：\n\n$$\\int_0^{${end}} v\\,dt = ${used.pieces.map((p) => `(${p.a} + ${inP(p.b)})`).join(" + ")} = ${area}$$\n\n**第二步：加上起始位置。**\n\n$$s(${end}) = ${s0} + ${inP(area)} = ${answer}$$\n\n**检验。**逐段追踪位置：\n\n${display(track)}`,
+          ),
+        }),
         figure,
-      );
+      };
     },
   ),
   figure:
@@ -529,25 +678,56 @@ const averageDrawn = {
     "average-velocity-from-a-drawn-velocity-graph",
     ["Average velocity from a drawn velocity graph", "由所画速度图求平均速度"],
     [
-      "The average value of $v$ on an interval is $\\frac{1}{b - a}\\int_a^b v\\,dt$: the signed area divided by the length of the interval. It is not the average of the end heights unless the graph is one straight piece.",
-      "$v$ 在区间上的平均值为 $\\frac{1}{b - a}\\int_a^b v\\,dt$：有向面积除以区间长度。除非图像是一条直线段，否则它不等于两端高度的平均。",
+      "The average value of $v$ on an interval is $\\frac{1}{b - a}\\int_a^b v\\,dt$: the signed area divided by the length of the interval. It is not the average of the end heights unless the graph is one straight piece. For example, pieces through $(0, 2)$, $(2, -1)$, $(4, 3)$ have signed area $1 + 2 = 3$ over a length of $4$, so the average velocity is $\\frac{3}{4}$.\n\nCheck: the pieces have equal widths, so the average is also the mean of their own averages, $\\frac{1}{2}\\left(\\frac{1}{2} + 1\\right) = \\frac{3}{4}$.\n\n> **Watch out.** Divide by the length of the interval, $4$, not by the number of pieces; and the end heights give $\\frac{2 + 3}{2} = \\frac{5}{2}$, which is not the average.",
+      "$v$ 在区间上的平均值为 $\\frac{1}{b - a}\\int_a^b v\\,dt$：有向面积除以区间长度。除非图像是一条直线段，否则它不等于两端高度的平均。例如过 $(0, 2)$、$(2, -1)$、$(4, 3)$ 的两段，有向面积为 $1 + 2 = 3$，区间长 $4$，所以平均速度为 $\\frac{3}{4}$。\n\n检验：各段宽度相同，所以平均值也等于各段平均值的平均，$\\frac{1}{2}\\left(\\frac{1}{2} + 1\\right) = \\frac{3}{4}$。\n\n> **注意。** 要除以区间长度 $4$，而不是段数；两端高度给出 $\\frac{2 + 3}{2} = \\frac{5}{2}$，那不是平均值。",
     ],
     (rng) => {
       const { values, signed, distance, figure } = velocityGraph(rng);
+      const { pieces } = velocityPieces(values);
       const answer = signed.div(Q.of(6, 1));
-      return ask(
-        [
-          "The graph shows the velocity of a particle. Find its average velocity from $t = 0$ to $t = 6$.",
-          "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 的平均速度。",
-        ],
-        answer,
-        [signed, distance.div(Q.of(6, 1)), Q.of((values[0] as number) + (values[3] as number), 2), signed.div(Q.of(3, 1))],
-        [
-          `The signed area is $${signed.toLatex()}$ and the interval has length $6$, so the average is $${answer.toLatex()}$.`,
-          `有向面积为 $${signed.toLatex()}$，区间长度为 $6$，所以平均值为 $${answer.toLatex()}$。`,
-        ],
+      const mistakes = motionKeep(answer, [
+        {
+          value: signed,
+          why: t(
+            "This is the displacement, the signed area; divide it by the length of the interval, $6$.",
+            "这是位移，即有向面积；还要除以区间长度 $6$。",
+          ),
+        },
+        {
+          value: distance.div(Q.of(6, 1)),
+          why: t("This is the average speed: the area below the axis was counted as positive.", "这是平均速率：轴下方的面积被记为正了。"),
+        },
+        {
+          value: Q.of((values[0] as number) + (values[3] as number), 2),
+          why: t(
+            "This averages the end heights $v(0)$ and $v(6)$; the graph is not one straight piece, so that is not the average value.",
+            "这是两端高度 $v(0)$ 与 $v(6)$ 的平均；图像不是一条直线段，所以这不是平均值。",
+          ),
+        },
+        {
+          value: signed.div(Q.of(3, 1)),
+          why: t(
+            "This divides by the number of pieces, $3$; divide by the length of the interval, $6$.",
+            "这里除以了段数 $3$；应除以区间长度 $6$。",
+          ),
+        },
+      ]);
+      const means = pieces.map((p) => Q.of(p.signed, 2));
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The graph shows the velocity of a particle. Find its average velocity from $t = 0$ to $t = 6$.",
+            "图中是质点的速度。求它从 $t = 0$ 到 $t = 6$ 的平均速度。",
+          ),
+          answer,
+          mistakes,
+          solution: t(
+            `**Step 1: Find the signed area.** Each piece is a trapezoid of width $2$, so its signed area is the sum of its end heights:\n\n$$${pieces.map((p) => (p.signed < 0 ? `(${p.signed})` : `${p.signed}`)).join(" + ")} = ${signed.toLatex()}$$\n\n**Step 2: Divide by the length.** The interval $[0, 6]$ has length $6$:\n\n$$\\frac{${signed.toLatex()}}{6} = ${answer.toLatex()}$$\n\n**Check.** The three pieces have equal widths, so the average is the mean of their own averages, which are $${means.map((m) => m.toLatex()).join("$, $")}$:\n\n$$\\frac{1}{3}\\left(${means.map((m) => (m.sign() < 0 ? `\\left(${m.toLatex()}\\right)` : m.toLatex())).join(" + ")}\\right) = ${answer.toLatex()}$$`,
+            `**第一步：求有向面积。**每段都是宽 $2$ 的梯形，它的有向面积等于两端高度之和：\n\n$$${pieces.map((p) => (p.signed < 0 ? `(${p.signed})` : `${p.signed}`)).join(" + ")} = ${signed.toLatex()}$$\n\n**第二步：除以长度。**区间 $[0, 6]$ 的长度为 $6$：\n\n$$\\frac{${signed.toLatex()}}{6} = ${answer.toLatex()}$$\n\n**检验。**三段宽度相同，所以平均值等于各段平均值的平均，各段平均值为 $${means.map((m) => m.toLatex()).join("$、$")}$：\n\n$$\\frac{1}{3}\\left(${means.map((m) => (m.sign() < 0 ? `\\left(${m.toLatex()}\\right)` : m.toLatex())).join(" + ")}\\right) = ${answer.toLatex()}$$`,
+          ),
+        }),
         figure,
-      );
+      };
     },
   ),
   figure: calculusDrawings5["average-position-velocity-and-acceleration#average-velocity-from-a-drawn-velocity-graph"],

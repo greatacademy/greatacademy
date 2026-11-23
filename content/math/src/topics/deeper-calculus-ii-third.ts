@@ -903,27 +903,78 @@ const totalDistance = point(
   "distance-travelled-when-the-particle-turns-back",
   ["Distance travelled when the particle turns back", "质点折返时的路程"],
   [
-    "Displacement is $\\int v \\, dt$, but distance is $\\int |v| \\, dt$. When the velocity changes sign, split the integral at that time and add the absolute values, since the two parts of a return trip would otherwise cancel.",
-    "位移是 $\\int v \\, dt$，而路程是 $\\int |v| \\, dt$。速度变号时，要在那个时刻把积分分开，并把绝对值相加，否则往返的两段会相互抵消。",
+    "Displacement is $\\int v \\, dt$, but distance is $\\int |v| \\, dt$. When the velocity changes sign, split the integral at that time and add the absolute values, since the two parts of a return trip would otherwise cancel. For example, $v(t) = t - 2$ on $[0, 5]$ turns at $t = 2$: it moves $2$ m back and then $\\frac{9}{2}$ m forward, so the distance is $\\frac{13}{2}$ m, while the displacement is only $\\frac{5}{2}$ m.\n\nCheck: the graph of $v$ makes two triangles with the axis, of areas $\\frac{1}{2} \\cdot 2 \\cdot 2 = 2$ and $\\frac{1}{2} \\cdot 3 \\cdot 3 = \\frac{9}{2}$.\n\n> **Watch out.** Take the absolute value of each piece before adding, not of the whole integral: $\\left|\\int_0^5 v \\, dt\\right| = \\frac{5}{2}$ is the size of the displacement.",
+    "位移是 $\\int v \\, dt$，而路程是 $\\int |v| \\, dt$。速度变号时，要在那个时刻把积分分开，并把绝对值相加，否则往返的两段会相互抵消。例如 $[0, 5]$ 上的 $v(t) = t - 2$ 在 $t = 2$ 时折返：先后退 $2$ 米，再前进 $\\frac{9}{2}$ 米，所以路程是 $\\frac{13}{2}$ 米，而位移只有 $\\frac{5}{2}$ 米。\n\n检验：$v$ 的图像与横轴围成两个三角形，面积分别为 $\\frac{1}{2} \\cdot 2 \\cdot 2 = 2$ 和 $\\frac{1}{2} \\cdot 3 \\cdot 3 = \\frac{9}{2}$。\n\n> **注意。** 要先对每一段取绝对值再相加，而不是对整个积分取绝对值：$\\left|\\int_0^5 v \\, dt\\right| = \\frac{5}{2}$ 只是位移的大小。",
   ],
   (rng) => {
     const k = nz(rng, 6);
     const r = rng.int(1, 8);
     const T = r + rng.int(1, 8);
-    const answer = Q.of(Math.abs(k) * (r * r + (T - r) ** 2), 2);
+    const [first, second] = [Q.of(Math.abs(k) * r * r, 2), Q.of(Math.abs(k) * (T - r) ** 2, 2)];
+    const answer = first.add(second);
     const net = Q.of(k * (T * T - 2 * r * T), 2);
-    return ask(
-      [
-        `A particle has velocity $v(t) = ${linear(k, -k * r).replace(/x/g, "t")}$ meters per second. Find the distance it travels from $t = 0$ to $t = ${T}$, in meters.`,
-        `质点的速度是 $v(t) = ${linear(k, -k * r).replace(/x/g, "t")}$ 米每秒。求它从 $t = 0$ 到 $t = ${T}$ 走过的路程，单位是米。`,
-      ],
+    const v = linear(k, -k * r).replace(/x/g, "t");
+    const S = (x: number) => Q.of(k * x * x, 2).sub(Q.of(k * r * x));
+    const pq = (q: Q) => (q.sign() < 0 ? `\\left(${q.toLatex()}\\right)` : q.toLatex());
+    const all = [
+      {
+        value: net,
+        why: t(
+          "This is the displacement, $\\int v \\, dt$; the leg walked back cancels in it.",
+          "这是位移 $\\int v \\, dt$；走回头路的那段在其中抵消了。",
+        ),
+      },
+      {
+        value: net.abs(),
+        why: t(
+          "This is the size of the displacement; take the absolute value of each piece before adding, not of the whole integral.",
+          "这是位移的大小；要先对每一段取绝对值再相加，而不是对整个积分取绝对值。",
+        ),
+      },
+      {
+        value: first,
+        why: t(`This stops at the turn at $t = ${r}$; add the motion after it.`, `这里在 $t = ${r}$ 折返时就停止了；还要加上之后的运动。`),
+      },
+      {
+        value: second,
+        why: t(
+          `This counts only the motion after the turn at $t = ${r}$; add the motion before it.`,
+          `这只算了 $t = ${r}$ 折返之后的运动；还要加上之前的运动。`,
+        ),
+      },
+    ];
+    const mistakes = all.filter((x, i) => !x.value.eq(answer) && all.findIndex((y) => y.value.eq(x.value)) === i);
+    return numberProblem({
+      prompt: t(
+        `A particle has velocity $v(t) = ${v}$ meters per second. Find the distance it travels from $t = 0$ to $t = ${T}$, in meters.`,
+        `质点的速度是 $v(t) = ${v}$ 米每秒。求它从 $t = 0$ 到 $t = ${T}$ 走过的路程，单位是米。`,
+      ),
       answer,
-      [net, net.abs(), Q.of(Math.abs(k) * T * T, 2)],
-      [
-        `$v$ changes sign at $t = ${r}$. The two triangles have areas $${Q.of(Math.abs(k) * r * r, 2).toLatex()}$ and $${Q.of(Math.abs(k) * (T - r) ** 2, 2).toLatex()}$, and their sum is $${answer.toLatex()}$.`,
-        `$v$ 在 $t = ${r}$ 处变号。两个三角形的面积是 $${Q.of(Math.abs(k) * r * r, 2).toLatex()}$ 和 $${Q.of(Math.abs(k) * (T - r) ** 2, 2).toLatex()}$，它们的和是 $${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes,
+      solution: walked(
+        [
+          [
+            ["Find the turn", "找出折返的时刻"],
+            t("The velocity changes sign where it is zero:", "速度在为零处变号："),
+            [`${v} = 0 \\implies t = ${r}`],
+          ],
+          [
+            ["Integrate each piece", "逐段积分"],
+            t(
+              `With the antiderivative $S(t) = ${poly([Q.of(k, 2), "t^{2}"], [-k * r, "t"])}$, add the sizes of the two pieces:`,
+              `用原函数 $S(t) = ${poly([Q.of(k, 2), "t^{2}"], [-k * r, "t"])}$，把两段的大小相加：`,
+            ),
+            [
+              `\\left|S(${r}) - S(0)\\right| + \\left|S(${T}) - S(${r})\\right| = \\left|${S(r).toLatex()}\\right| + \\left|${S(T).toLatex()} - ${pq(S(r))}\\right| = ${first.toLatex()} + ${second.toLatex()} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `The graph of $v$ is a line crossing the axis at $t = ${r}$, so the pieces are triangles with heights $|v(0)| = ${Math.abs(k * r)}$ and $|v(${T})| = ${Math.abs(k * (T - r))}$: $\\frac{1}{2} \\cdot ${r} \\cdot ${Math.abs(k * r)} + \\frac{1}{2} \\cdot ${T - r} \\cdot ${Math.abs(k * (T - r))} = ${answer.toLatex()}$.`,
+          `$v$ 的图像是在 $t = ${r}$ 处穿过横轴的直线，所以两段都是三角形，高分别为 $|v(0)| = ${Math.abs(k * r)}$ 和 $|v(${T})| = ${Math.abs(k * (T - r))}$：$\\frac{1}{2} \\cdot ${r} \\cdot ${Math.abs(k * r)} + \\frac{1}{2} \\cdot ${T - r} \\cdot ${Math.abs(k * (T - r))} = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -931,8 +982,8 @@ const initialVelocityFromPositions = point(
   "the-initial-velocity-from-two-positions",
   ["The initial velocity from two positions", "由两个位置求初速度"],
   [
-    "Sometimes the initial velocity is not given and two positions are. Integrate twice to get $s(t) = s(0) + v_{0}t + \\frac{1}{2}at^{2}$ for constant acceleration, then use the second position to find $v_{0}$. It is not the average velocity.",
-    "有时不给初速度，而是给两个位置。对恒定加速度积分两次得 $s(t) = s(0) + v_{0}t + \\frac{1}{2}at^{2}$，再用第二个位置求 $v_{0}$。它并不等于平均速度。",
+    "Sometimes the initial velocity is not given and two positions are. Integrate twice to get $s(t) = s(0) + v_{0}t + \\frac{1}{2}at^{2}$ for constant acceleration, then use the second position to find $v_{0}$. It is not the average velocity. For example, with $a = 2$, $s(0) = 1$ and $s(3) = 16$: $16 = 1 + 3v_{0} + 9$, so $v_{0} = 2$.\n\nCheck: with constant acceleration the average velocity is the velocity at the middle time, and indeed $\\frac{16 - 1}{3} = 5 = 2 + 2 \\cdot 1.5$.\n\n> **Watch out.** The average velocity $\\frac{s(T) - s(0)}{T}$ includes the effect of the acceleration; subtract $\\frac{1}{2}aT$ from it to get $v_{0}$.",
+    "有时不给初速度，而是给两个位置。对恒定加速度积分两次得 $s(t) = s(0) + v_{0}t + \\frac{1}{2}at^{2}$，再用第二个位置求 $v_{0}$。它并不等于平均速度。例如 $a = 2$，$s(0) = 1$，$s(3) = 16$：$16 = 1 + 3v_{0} + 9$，所以 $v_{0} = 2$。\n\n检验：加速度恒定时，平均速度等于中间时刻的速度，确实 $\\frac{16 - 1}{3} = 5 = 2 + 2 \\cdot 1.5$。\n\n> **注意。** 平均速度 $\\frac{s(T) - s(0)}{T}$ 包含了加速度的影响；要从中减去 $\\frac{1}{2}aT$ 才得到 $v_{0}$。",
   ],
   (rng) => {
     const k = nz(rng, 8);
@@ -942,18 +993,75 @@ const initialVelocityFromPositions = point(
     const sT = Q.of(s0 + v0 * T).add(Q.of(k * T * T, 2));
     const avg = sT.sub(Q.of(s0)).div(Q.of(T));
     const half = Q.of(k * T, 2);
-    return ask(
-      [
+    const push = Q.of(k * T * T, 2);
+    const answer = Q.of(v0);
+    const pq = (q: Q) => (q.sign() < 0 ? `\\left(${q.toLatex()}\\right)` : q.toLatex());
+    const all = [
+      {
+        value: avg,
+        why: t(
+          `This is the average velocity, $\\frac{s(${T}) - s(0)}{${T}}$; with acceleration $${k}$ the velocity changes, so subtract $\\frac{1}{2} \\cdot ${paren(k)} \\cdot ${T}$.`,
+          `这是平均速度 $\\frac{s(${T}) - s(0)}{${T}}$；加速度为 $${k}$ 时速度在变化，所以要减去 $\\frac{1}{2} \\cdot ${paren(k)} \\cdot ${T}$。`,
+        ),
+      },
+      {
+        value: avg.add(half),
+        why: t(
+          `This adds the acceleration term instead of subtracting it: $${T}v_{0} = s(${T}) - s(0) - \\frac{1}{2} \\cdot ${paren(k)} \\cdot ${T}^{2}$.`,
+          `这里把加速度项加上了，应当减去：$${T}v_{0} = s(${T}) - s(0) - \\frac{1}{2} \\cdot ${paren(k)} \\cdot ${T}^{2}$。`,
+        ),
+      },
+      {
+        value: Q.of(k * T),
+        why: t(
+          `This is $aT$, the change in velocity over the trip, not the velocity at the start.`,
+          `这是 $aT$，即全程速度的变化量，不是起始速度。`,
+        ),
+      },
+      {
+        value: sT.sub(push).div(Q.of(T)),
+        why: t(
+          `This leaves out the starting position $s(0) = ${s0}$; subtract it from $s(${T})$ before dividing.`,
+          `这里漏掉了初始位置 $s(0) = ${s0}$；要先从 $s(${T})$ 中减去它再相除。`,
+        ),
+      },
+    ];
+    const mistakes = all.filter((x, i) => !x.value.eq(answer) && all.findIndex((y) => y.value.eq(x.value)) === i);
+    return numberProblem({
+      prompt: t(
         `A particle has constant acceleration $${k}$ meters per second squared, with $s(0) = ${s0}$ and $s(${T}) = ${sT.toLatex()}$. Find its velocity at $t = 0$, in meters per second.`,
         `质点的加速度恒为 $${k}$ 米每二次方秒，且 $s(0) = ${s0}$，$s(${T}) = ${sT.toLatex()}$。求它在 $t = 0$ 时的速度，单位是米每秒。`,
-      ],
-      v0,
-      [avg, avg.add(half), Q.of(k * T)],
-      [
-        `$s(${T}) = ${s0} + ${T}v_{0} + \\frac{1}{2} \\cdot ${paren(k)} \\cdot ${T}^{2}$. The acceleration contributes $${Q.of(k * T * T, 2).toLatex()}$, so $${T}v_{0} = ${Q.of(v0 * T).toLatex()}$ and $v_{0} = ${v0}$.`,
-        `$s(${T}) = ${s0} + ${T}v_{0} + \\frac{1}{2} \\cdot ${paren(k)} \\cdot ${T}^{2}$。加速度贡献 $${Q.of(k * T * T, 2).toLatex()}$，所以 $${T}v_{0} = ${Q.of(v0 * T).toLatex()}$，$v_{0} = ${v0}$。`,
-      ],
-    );
+      ),
+      answer,
+      mistakes,
+      solution: walked(
+        [
+          [
+            ["Integrate twice", "积分两次"],
+            t(
+              "Integrate the acceleration, then the velocity, keeping $v_{0}$ and $s(0)$ as the constants:",
+              "先对加速度积分，再对速度积分，以 $v_{0}$ 和 $s(0)$ 作为常数：",
+            ),
+            [
+              `v(t) = v_{0} + ${k === 1 ? "" : k === -1 ? "-" : k}t`.replace("+ -", "- "),
+              `s(t) = ${s0} + v_{0}t + \\frac{1}{2} \\cdot ${paren(k)}t^{2}`,
+            ],
+          ],
+          [
+            ["Use the second position", "利用第二个位置"],
+            t(`Put in $t = ${T}$ and solve for $v_{0}$:`, `代入 $t = ${T}$，解出 $v_{0}$：`),
+            [
+              `${sT.toLatex()} = ${s0} + ${T}v_{0} + ${pq(push)}`,
+              `${T}v_{0} = ${sT.toLatex()} - ${pq(Q.of(s0))} - ${pq(push)} = ${v0 * T} \\implies v_{0} = ${v0}`,
+            ],
+          ],
+        ],
+        t(
+          `With constant acceleration the average velocity equals the velocity at the middle time $t = ${Q.of(T, 2).toLatex()}$. The average velocity is $${sT.isInteger() ? `\\frac{${sT.toLatex()} - ${pq(Q.of(s0))}}{${T}}` : `\\left(${sT.toLatex()} - ${pq(Q.of(s0))}\\right) \\div ${T}`} = ${avg.toLatex()}$, and $v(${Q.of(T, 2).toLatex()}) = ${v0} + ${paren(k)} \\cdot ${Q.of(T, 2).toLatex()} = ${avg.toLatex()}$, so $v_{0} = ${v0}$ fits.`,
+          `加速度恒定时，平均速度等于中间时刻 $t = ${Q.of(T, 2).toLatex()}$ 的速度。平均速度为 $${sT.isInteger() ? `\\frac{${sT.toLatex()} - ${pq(Q.of(s0))}}{${T}}` : `\\left(${sT.toLatex()} - ${pq(Q.of(s0))}\\right) \\div ${T}`} = ${avg.toLatex()}$，而 $v(${Q.of(T, 2).toLatex()}) = ${v0} + ${paren(k)} \\cdot ${Q.of(T, 2).toLatex()} = ${avg.toLatex()}$，所以 $v_{0} = ${v0}$ 正确。`,
+        ),
+      ),
+    });
   },
 );
 

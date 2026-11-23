@@ -530,31 +530,67 @@ const shellsAboutAnotherLine: KnowledgePointDef = {
   },
 };
 
+/** motionSlips keeps each wrong value of a motion problem once, with its first reason, and drops any that equals the answer. */
+const motionSlips = (answer: Q, list: readonly (readonly [Q, string, string])[]) =>
+  list.filter(([v], i) => !v.eq(answer) && list.findIndex(([w]) => w.eq(v)) === i).map(([value, en, zh]) => ({ value, why: t(en, zh) }));
+
 const averageSpeed: KnowledgePointDef = {
   id: "average-speed-when-the-direction-changes",
   title: t("Average speed when the direction changes", "方向改变时的平均速率"),
   explanation: t(
-    "Average velocity is displacement divided by time, while average speed is total distance divided by time. They differ when an object turns around, because backward motion cancels in displacement and adds in distance. To find the distance, integrate the absolute value of the velocity, splitting at the turning point.",
-    "平均速度是位移除以时间，平均速率是总路程除以时间。物体掉头时二者不同，因为反向运动在位移中抵消，在路程中却累加。要求路程，就对速度的绝对值积分，并在掉头的时刻分段。",
+    "Average velocity is displacement divided by time, while average speed is total distance divided by time. They differ when an object turns around, because backward motion cancels in displacement and adds in distance. To find the distance, integrate the absolute value of the velocity, splitting at the turning point. For example, $v(t) = t - 2$ on $[0, 4]$ turns at $t = 2$; it covers $2$ m each way, so the distance is $4$ m and the average speed is $\\frac{4}{4} = 1$ m/s, while the average velocity is $0$.\n\nCheck: the graph of $|v|$ is two triangles, each of area $\\frac{1}{2} \\cdot 2 \\cdot 2 = 2$.\n\n> **Watch out.** Average speed is not the size of the average velocity: here that is $0$, because the two legs cancel.",
+    "平均速度是位移除以时间，平均速率是总路程除以时间。物体掉头时二者不同，因为反向运动在位移中抵消，在路程中却累加。要求路程，就对速度的绝对值积分，并在掉头的时刻分段。例如 $[0, 4]$ 上的 $v(t) = t - 2$ 在 $t = 2$ 时掉头；往返各走 $2$ 米，路程是 $4$ 米，平均速率是 $\\frac{4}{4} = 1$ 米/秒，而平均速度是 $0$。\n\n检验：$|v|$ 的图像是两个三角形，面积都是 $\\frac{1}{2} \\cdot 2 \\cdot 2 = 2$。\n\n> **注意。** 平均速率不是平均速度的大小：这里平均速度是 $0$，因为两段相互抵消。",
   ),
   generate(rng) {
     const p = rng.int(1, 5);
     const T = p + rng.int(1, 5);
     const a = rng.int(1, 4);
-    const distance = Q.of(a * (p * p + (T - p) ** 2), 2);
+    const [before, after] = [Q.of(a * p * p, 2), Q.of(a * (T - p) ** 2, 2)];
+    const distance = before.add(after);
     const answer = distance.div(Q.of(T));
     const displacement = Q.of(a * (T * T - 2 * p * T), 2);
     const velocity = displacement.div(Q.of(T));
+    const v = poly([a, "t"], [-a * p, ""]);
     return numberProblem({
       prompt: t(
-        `A particle has velocity $v(t) = ${poly([a, "t"], [-a * p, ""])}$ m/s. Find its average speed from $t = 0$ to $t = ${T}$, in m/s.`,
-        `质点的速度是 $v(t) = ${poly([a, "t"], [-a * p, ""])}$ m/s。求它从 $t = 0$ 到 $t = ${T}$ 的平均速率（m/s）。`,
+        `A particle has velocity $v(t) = ${v}$ m/s. Find its average speed from $t = 0$ to $t = ${T}$, in m/s.`,
+        `质点的速度是 $v(t) = ${v}$ 米/秒。求它从 $t = 0$ 到 $t = ${T}$ 的平均速率（米/秒）。`,
       ),
       answer,
-      wrong: [velocity, distance, Q.of(a * (T - p))],
-      solution: t(
-        `The particle turns around at $t = ${p}$. It covers $${Q.of(a * p * p, 2).toLatex()}$ m before that and $${Q.of(a * (T - p) ** 2, 2).toLatex()}$ m after, a total of $${distance.toLatex()}$ m. Dividing by $${T}$ s gives $${answer.toLatex()}$.`,
-        `质点在 $t = ${p}$ 时掉头。之前走了 $${Q.of(a * p * p, 2).toLatex()}$ m，之后走了 $${Q.of(a * (T - p) ** 2, 2).toLatex()}$ m，共 $${distance.toLatex()}$ m。除以 $${T}$ s 得 $${answer.toLatex()}$。`,
+      mistakes: motionSlips(answer, [
+        [
+          velocity,
+          "This is the average velocity, the displacement over the time; the leg walked back cancels in it. Average speed uses the distance.",
+          "这是平均速度，即位移除以时间；走回头路的那段在其中抵消了。平均速率要用路程。",
+        ],
+        [distance, `This is the total distance; divide it by the time, $${T}$ s.`, `这是总路程；还要除以时间 $${T}$ 秒。`],
+        [
+          Q.of(a * (T - p)),
+          `This is the speed at the end, $|v(${T})|$; the average speed is the distance over the time.`,
+          `这是终点时的速率 $|v(${T})|$；平均速率是路程除以时间。`,
+        ],
+      ]),
+      solution: walkThrough(
+        [
+          [["Find the turn", "找出掉头的时刻"], ["The velocity is zero at", "速度为零的时刻是"], [`${v} = 0 \\implies t = ${p}`]],
+          [
+            ["Add the two legs", "把两段相加"],
+            [
+              `With the antiderivative $S(t) = \\frac{${a}}{2}t^2 - ${a * p}t$, integrate $|v|$ on each side of $t = ${p}$:`,
+              `用原函数 $S(t) = \\frac{${a}}{2}t^2 - ${a * p}t$，在 $t = ${p}$ 两侧分别对 $|v|$ 积分：`,
+            ],
+            [`|S(${p}) - S(0)| + |S(${T}) - S(${p})| = ${before.toLatex()} + ${after.toLatex()} = ${distance.toLatex()}`],
+          ],
+          [
+            ["Divide by the time", "除以时间"],
+            [`The trip lasts $${T}$ s:`, `全程用时 $${T}$ 秒：`],
+            [`${distance.isInteger() ? `\\frac{${distance.toLatex()}}{${T}}` : `${distance.toLatex()} \\div ${T}`} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `The graph of $|v|$ is two triangles with apex heights $|v(0)| = ${a * p}$ and $|v(${T})| = ${a * (T - p)}$: $\\frac{1}{2} \\cdot ${p} \\cdot ${a * p} + \\frac{1}{2} \\cdot ${T - p} \\cdot ${a * (T - p)} = ${distance.toLatex()}$. Dividing by $${T}$ gives $${answer.toLatex()}$.`,
+          `$|v|$ 的图像是两个三角形，高分别为 $|v(0)| = ${a * p}$ 和 $|v(${T})| = ${a * (T - p)}$：$\\frac{1}{2} \\cdot ${p} \\cdot ${a * p} + \\frac{1}{2} \\cdot ${T - p} \\cdot ${a * (T - p)} = ${distance.toLatex()}$。除以 $${T}$ 得 $${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -564,23 +600,57 @@ const returnTime: KnowledgePointDef = {
   id: "when-a-particle-returns-to-its-start",
   title: t("When a particle returns to its start", "质点何时回到起点"),
   explanation: t(
-    "A particle is back at its starting point when its displacement since the start is zero, not when its velocity is zero. Zero velocity marks only the turning point. So integrate the velocity from $0$ to $T$, set the result to zero, and solve for the positive $T$.",
-    "质点回到起点的条件是从起点算起的位移为零，而不是速度为零。速度为零只说明它在掉头。所以把速度从 $0$ 积分到 $T$，令结果为零，再解出正的 $T$。",
+    "A particle is back at its starting point when its displacement since the start is zero, not when its velocity is zero. Zero velocity marks only the turning point. So integrate the velocity from $0$ to $T$, set the result to zero, and solve for the positive $T$. For example, $v(t) = 6 - 2t$ gives displacement $6T - T^2 = T(6 - T)$, which is zero again at $T = 6$.\n\nCheck: the particle turns at $t = 3$, and the triangles between the velocity graph and the axis on $[0, 3]$ and $[3, 6]$ both have area $9$, so they cancel.\n\n> **Watch out.** $v(t) = 0$ at $t = 3$ is where the particle turns, not where it is back; it is then $9$ m from the start.",
+    "质点回到起点的条件是从起点算起的位移为零，而不是速度为零。速度为零只说明它在掉头。所以把速度从 $0$ 积分到 $T$，令结果为零，再解出正的 $T$。例如 $v(t) = 6 - 2t$ 的位移是 $6T - T^2 = T(6 - T)$，它在 $T = 6$ 时再次为零。\n\n检验：质点在 $t = 3$ 时掉头，速度图像与横轴在 $[0, 3]$ 和 $[3, 6]$ 上围成的三角形面积都是 $9$，正好抵消。\n\n> **注意。** $t = 3$ 时 $v(t) = 0$，那是质点掉头的时刻，不是回到起点的时刻；此时它离起点 $9$ 米。",
   ),
   generate(rng) {
     const a = rng.int(1, 20);
     const b = rng.int(1, 6);
     const answer = Q.of(2 * a, b);
+    const turn = Q.of(a, b);
+    const v = poly([a, ""], [-b, "t"]);
+    const peak = Q.of(a * a, 2 * b);
+    const half = coefQ(Q.of(b, 2));
     return numberProblem({
       prompt: t(
-        `A particle has velocity $v(t) = ${poly([a, ""], [-b, "t"])}$ m/s. At what time $t > 0$, in seconds, is it back at its position at $t = 0$?`,
-        `质点的速度是 $v(t) = ${poly([a, ""], [-b, "t"])}$ m/s。在什么时刻 $t > 0$（秒）它回到 $t = 0$ 时的位置？`,
+        `A particle has velocity $v(t) = ${v}$ m/s. At what time $t > 0$, in seconds, is it back at its position at $t = 0$?`,
+        `质点的速度是 $v(t) = ${v}$ 米/秒。在什么时刻 $t > 0$（秒）它回到 $t = 0$ 时的位置？`,
       ),
       answer,
-      wrong: [Q.of(a, b), Q.of(a, 2 * b), Q.of(b, a)],
-      solution: t(
-        `The displacement up to time $T$ is $${poly([a, "T"])} - \\frac{${b}}{2}T^2$. This is zero when $T = ${answer.toLatex()}$, which is twice the time of the turning point.`,
-        `到时刻 $T$ 的位移是 $${poly([a, "T"])} - \\frac{${b}}{2}T^2$。当 $T = ${answer.toLatex()}$ 时它为零，这是掉头时刻的两倍。`,
+      mistakes: motionSlips(answer, [
+        [
+          turn,
+          `This is where $v(t) = 0$, the turning point; there the particle is $${peak.toLatex()}$ m from the start.`,
+          `这是 $v(t) = 0$ 的时刻，即掉头的时刻；此时质点离起点 $${peak.toLatex()}$ 米。`,
+        ],
+        [
+          Q.of(a, 2 * b),
+          `This halves the turning time; the trip back takes as long as the trip out, so double it.`,
+          `这里把掉头时刻减半了；返程与去程用时相同，应当加倍。`,
+        ],
+        [
+          Q.of(b, a),
+          `This turns the fraction upside down; $${a}T - ${half}T^2 = 0$ gives $T = \\frac{2 \\cdot ${a}}{${b}}$.`,
+          `这里把分数颠倒了；由 $${a}T - ${half}T^2 = 0$ 得 $T = \\frac{2 \\cdot ${a}}{${b}}$。`,
+        ],
+      ]),
+      solution: walkThrough(
+        [
+          [
+            ["Find the displacement", "求位移"],
+            ["Integrate the velocity from $0$ to $T$:", "把速度从 $0$ 积分到 $T$："],
+            [`\\int_0^T (${v})\\,dt = ${poly([a, "T"])} - ${half}T^2 = T\\left(${a} - ${half}T\\right)`],
+          ],
+          [
+            ["Set it to zero", "令它为零"],
+            ["Leave out $T = 0$, the start:", "舍去起点 $T = 0$："],
+            [`${a} - ${half}T = 0 \\implies T = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `The velocity is a line through zero at $t = ${turn.toLatex()}$, so the triangle above the axis on $[0, ${turn.toLatex()}]$ and the one below it on $[${turn.toLatex()}, ${answer.toLatex()}]$ are mirror images, each of area $${peak.toLatex()}$. They cancel, and $${answer.toLatex()}$ is twice the turning time.`,
+          `速度图像是一条直线，在 $t = ${turn.toLatex()}$ 处为零，所以 $[0, ${turn.toLatex()}]$ 上横轴上方的三角形和 $[${turn.toLatex()}, ${answer.toLatex()}]$ 上横轴下方的三角形互为镜像，面积都是 $${peak.toLatex()}$。二者抵消，而 $${answer.toLatex()}$ 正是掉头时刻的两倍。`,
+        ],
       ),
     });
   },
@@ -2059,8 +2129,8 @@ const distanceGap: KnowledgePointDef = {
   figure: calculusDrawings5["calculating-the-total-distance-traveled-by-a-particle#the-gap-between-distance-and-displacement"],
   title: t("The gap between distance and displacement", "路程与位移之差"),
   explanation: t(
-    "Distance and the size of the displacement agree when a particle never turns around. When it reverses, the shorter of the two legs is walked back, and it counts for the distance but cancels in the displacement. The gap is therefore twice the shorter leg. Comparing the two areas between the velocity graph and the axis shows this.",
-    "质点不折返时，路程和位移的大小相同。折返时，较短的那一段走回头路，它计入路程，却在位移中抵消。所以差是较短那段的两倍。比较速度图像与横轴之间的两块面积就能看出这一点。",
+    "Distance and the size of the displacement agree when a particle never turns around. When it reverses, the shorter of the two legs is walked back, and it counts for the distance but cancels in the displacement. The gap is therefore twice the shorter leg. Comparing the two areas between the velocity graph and the axis shows this. For example, $v(t) = t - 1$ on $[0, 3]$ has areas $\\frac{1}{2}$ before $t = 1$ and $2$ after, so the gap is $2 \\cdot \\frac{1}{2} = 1$.\n\nCheck: the distance is $\\frac{1}{2} + 2 = \\frac{5}{2}$ and the displacement is $2 - \\frac{1}{2} = \\frac{3}{2}$, and $\\frac{5}{2} - \\frac{3}{2} = 1$.\n\n> **Watch out.** The gap is twice the shorter leg, not the shorter leg itself: that leg is counted once in the distance and taken away once in the displacement.",
+    "质点不折返时，路程和位移的大小相同。折返时，较短的那一段走回头路，它计入路程，却在位移中抵消。所以差是较短那段的两倍。比较速度图像与横轴之间的两块面积就能看出这一点。例如 $[0, 3]$ 上的 $v(t) = t - 1$，在 $t = 1$ 之前的面积是 $\\frac{1}{2}$，之后是 $2$，所以差是 $2 \\cdot \\frac{1}{2} = 1$。\n\n检验：路程是 $\\frac{1}{2} + 2 = \\frac{5}{2}$，位移是 $2 - \\frac{1}{2} = \\frac{3}{2}$，而 $\\frac{5}{2} - \\frac{3}{2} = 1$。\n\n> **注意。** 差是较短那段的两倍，不是那一段本身：它在路程中算了一次，在位移中又被抵掉一次。",
   ),
   generate(rng) {
     const k = rng.int(1, 6);
@@ -2068,19 +2138,57 @@ const distanceGap: KnowledgePointDef = {
     const b = rng.int(1, 6);
     const T = a + b;
     const shorter = Math.min(a, b);
-    const answer = k * shorter * shorter;
-    const distance = Q.of(k * (a * a + b * b), 2);
-    const displacement = Q.of(k * Math.abs(b * b - a * a), 2);
+    const answer = Q.of(k * shorter * shorter);
+    const [first, second] = [Q.of(k * a * a, 2), Q.of(k * b * b, 2)];
+    const distance = first.add(second);
+    const displacement = second.sub(first).abs();
+    const v = poly([k, "t"], [-k * a, ""]);
     return numberProblem({
       prompt: t(
-        `A particle has velocity $v(t) = ${poly([k, "t"], [-k * a, ""])}$ for $0 \\le t \\le ${T}$. By how much does its total distance exceed the size of its displacement?`,
-        `质点的速度是 $v(t) = ${poly([k, "t"], [-k * a, ""])}$，$0 \\le t \\le ${T}$。它的总路程比位移的大小多多少？`,
+        `A particle has velocity $v(t) = ${v}$ for $0 \\le t \\le ${T}$. By how much does its total distance exceed the size of its displacement?`,
+        `质点的速度是 $v(t) = ${v}$，$0 \\le t \\le ${T}$。它的总路程比位移的大小多多少？`,
       ),
       answer,
-      wrong: [distance, displacement, Q.of(2 * answer)],
-      solution: t(
-        `The two areas are $${Q.of(k * a * a, 2).toLatex()}$ and $${Q.of(k * b * b, 2).toLatex()}$. Distance is their sum $${distance.toLatex()}$, and the displacement has size $${displacement.toLatex()}$. The gap is $${answer}$.`,
-        `两块面积是 $${Q.of(k * a * a, 2).toLatex()}$ 和 $${Q.of(k * b * b, 2).toLatex()}$。路程是它们的和 $${distance.toLatex()}$，位移的大小是 $${displacement.toLatex()}$。差是 $${answer}$。`,
+      form: "integer",
+      mistakes: motionSlips(answer, [
+        [
+          distance,
+          "This is the total distance itself; subtract the size of the displacement from it.",
+          "这是总路程本身；还要减去位移的大小。",
+        ],
+        [
+          displacement,
+          "This is the size of the displacement; the question asks how much the distance exceeds it.",
+          "这是位移的大小；题目问的是路程比它多多少。",
+        ],
+        [
+          Q.of(k * shorter * shorter, 2),
+          "This is the shorter leg once; it counts in the distance and cancels in the displacement, so the gap is twice it.",
+          "这只是较短的那段；它计入路程，又在位移中抵消，所以差是它的两倍。",
+        ],
+      ]),
+      solution: walkThrough(
+        [
+          [
+            ["Split at the turn", "在掉头处分段"],
+            [
+              `The velocity is zero at $t = ${a}$. The triangles between the graph and the axis have areas`,
+              `速度在 $t = ${a}$ 时为零。图像与横轴之间的两个三角形面积为`,
+            ],
+            [
+              `\\frac{1}{2} \\cdot ${a} \\cdot ${k * a} = ${first.toLatex()}, \\quad \\frac{1}{2} \\cdot ${b} \\cdot ${k * b} = ${second.toLatex()}`,
+            ],
+          ],
+          [
+            ["Compare distance and displacement", "比较路程与位移"],
+            ["The distance adds the areas; the displacement subtracts them:", "路程把两块面积相加，位移把它们相减："],
+            [`${distance.toLatex()} - ${displacement.toLatex()} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `The gap is twice the shorter leg: $2 \\cdot \\frac{1}{2} \\cdot ${k} \\cdot ${shorter}^2 = ${answer.toLatex()}$.`,
+          `差是较短那段的两倍：$2 \\cdot \\frac{1}{2} \\cdot ${k} \\cdot ${shorter}^2 = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -2090,8 +2198,8 @@ const stoppingTime: KnowledgePointDef = {
   id: "the-time-to-stop-after-speeding-up",
   title: t("The time to stop after speeding up", "加速后到停止的时间"),
   explanation: t(
-    "When the acceleration is given in stages, integrate one stage at a time, using the final velocity of each stage as the starting velocity of the next. The constant of integration carries that information across. A vehicle that speeds up and then slows down stops at the moment its velocity function returns to zero.",
-    "加速度分阶段给出时，要逐段积分，每一段的末速度就是下一段的初速度。积分常数正是把这个信息传递下去。先加速再减速的车辆，在速度函数回到零的时刻停下来。",
+    "When the acceleration is given in stages, integrate one stage at a time, using the final velocity of each stage as the starting velocity of the next. The constant of integration carries that information across. A vehicle that speeds up and then slows down stops at the moment its velocity function returns to zero. For example, with acceleration $6$ for $2$ seconds and then $-3$, the velocity reaches $12$ and falls back to zero $\\frac{12}{3} = 4$ seconds later, at $t = 6$.\n\nCheck: the cart starts and ends at rest, so the integral of the acceleration over the whole trip is zero: $6 \\cdot 2 - 3 \\cdot 4 = 0$.\n\n> **Watch out.** The answer is measured from the start: add the time of the first stage to the time spent slowing down.",
+    "加速度分阶段给出时，要逐段积分，每一段的末速度就是下一段的初速度。积分常数正是把这个信息传递下去。先加速再减速的车辆，在速度函数回到零的时刻停下来。例如以加速度 $6$ 运动 $2$ 秒，再以 $-3$ 运动，速度先达到 $12$，再过 $\\frac{12}{3} = 4$ 秒降回零，即在 $t = 6$ 时停下。\n\n检验：小车从静止出发又停下，所以全程加速度的积分为零：$6 \\cdot 2 - 3 \\cdot 4 = 0$。\n\n> **注意。** 答案从出发时算起：要把第一阶段的时间加上减速所用的时间。",
   ),
   generate(rng) {
     const d = rng.int(1, 6);
@@ -2107,10 +2215,39 @@ const stoppingTime: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [t1 * m, peak, t1 + d],
-      solution: t(
-        `The velocity reaches $${up} \\cdot ${t1} = ${peak}$. It falls to zero in another $${peak} \\div ${d} = ${t1 * m}$ seconds, so the cart stops at $${answer}$.`,
-        `速度达到 $${up} \\cdot ${t1} = ${peak}$。再过 $${peak} \\div ${d} = ${t1 * m}$ 秒降到零，所以小车在第 $${answer}$ 秒停下。`,
+      mistakes: motionSlips(Q.of(answer), [
+        [
+          Q.of(t1 * m),
+          `This is only the time spent slowing down; add the first $${t1}$ s.`,
+          `这只是减速所用的时间；还要加上最初的 $${t1}$ 秒。`,
+        ],
+        [Q.of(peak), "This is the top velocity, not a time.", "这是最大速度，不是时间。"],
+        [
+          Q.of(t1 + m),
+          `This divides the first acceleration by the second, $${up} \\div ${d}$; the time to stop is the top velocity $${peak}$ divided by $${d}$.`,
+          `这里用第一段的加速度除以第二段的，$${up} \\div ${d}$；停下所需的时间应是最大速度 $${peak}$ 除以 $${d}$。`,
+        ],
+      ]),
+      solution: walkThrough(
+        [
+          [
+            ["Integrate the first stage", "对第一阶段积分"],
+            [`Starting from rest, $v(t) = ${up}t$ until $t = ${t1}$:`, `从静止出发，在 $t = ${t1}$ 之前 $v(t) = ${up}t$：`],
+            [`v(${t1}) = ${up} \\cdot ${t1} = ${peak}`],
+          ],
+          [
+            ["Integrate the second stage", "对第二阶段积分"],
+            [
+              `The velocity $${peak}$ becomes the starting value: $v(t) = ${peak} - ${d}(t - ${t1})$. Set it to zero:`,
+              `速度 $${peak}$ 成为新的初值：$v(t) = ${peak} - ${d}(t - ${t1})$。令它为零：`,
+            ],
+            [`t - ${t1} = \\frac{${peak}}{${d}} = ${t1 * m} \\implies t = ${answer}`],
+          ],
+        ],
+        [
+          `The cart starts and ends at rest, so the integral of the acceleration over $[0, ${answer}]$ must be zero: $${up} \\cdot ${t1} - ${d} \\cdot ${t1 * m} = ${peak} - ${peak} = 0$.`,
+          `小车从静止出发又停下，所以加速度在 $[0, ${answer}]$ 上的积分必为零：$${up} \\cdot ${t1} - ${d} \\cdot ${t1 * m} = ${peak} - ${peak} = 0$。`,
+        ],
       ),
     });
   },
