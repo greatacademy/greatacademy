@@ -12,6 +12,7 @@ import { analysisDrawings1 } from "../explanation-drawings-real-analysis-1.ts";
 
 import { stepLabel } from "../solution-kit.ts";
 import { ask, choose, observed, type Pair, point } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 import { table } from "./calculus-common.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
@@ -460,8 +461,8 @@ const extremeAttained = {
     "whether-a-drawn-maximum-is-attained",
     ["Whether a drawn maximum is attained", "图中的最大值是否取到"],
     [
-      "The extreme value theorem needs a continuous function on a closed bounded interval. If the top of a graph sits at an open circle, the function comes arbitrarily close to that height but never reaches it, so there is no maximum. If the top is on the graph itself, the maximum is attained there, whatever the hypotheses say.",
-      "极值定理要求函数在有界闭区间上连续。如果图的最高处是空心圆，函数能任意接近这个高度却永远达不到，所以没有最大值。如果最高处就在图上，最大值就在那里取到，不管定理的条件是否满足。",
+      "The extreme value theorem needs a continuous function on a closed bounded interval. If the top of a graph sits at an open circle, the function comes arbitrarily close to that height but never reaches it, so there is no maximum. If the top is on the graph itself, the maximum is attained there, whatever the hypotheses say. For example, the graph of $f(x) = x + 1$ on $[-2, 3)$ climbs toward an open circle at $(3, 4)$, so $f$ has no maximum.\n\nCheck: $f(2.9) = 3.9$, $f(2.99) = 3.99$ and $f(2.999) = 3.999$ get ever closer to $4$, and each is beaten by a point further right, so no value is the largest.\n\n> **Watch out.** Read the circles, not just the height. An open circle at the top means the height is not attained, and a filled peak inside means it is, even when the ends of the graph are open.",
+      "极值定理要求函数在有界闭区间上连续。如果图的最高处是空心圆，函数能任意接近这个高度却永远达不到，所以没有最大值。如果最高处就在图上，最大值就在那里取到，不管定理的条件是否满足。例如，$[-2, 3)$ 上 $f(x) = x + 1$ 的图像向 $(3, 4)$ 处的空心圆上升，所以 $f$ 没有最大值。\n\n检验：$f(2.9) = 3.9$，$f(2.99) = 3.99$，$f(2.999) = 3.999$ 越来越接近 $4$，而每一个都被更靠右的点超过，所以没有哪个值是最大的。\n\n> **注意。** 要看圆圈，不只看高度。最高处是空心圆，说明这个高度取不到；最高点在内部且是实心的，说明能取到，即使图像两端是空心的。",
     ],
     (rng) => {
       const a = rng.int(-5, -2);
@@ -522,19 +523,71 @@ const extremeAttained = {
       }
       const at = (v: number): Pair => [`The maximum is attained at $x = ${v}$`, `最大值在 $x = ${v}$ 处取到`];
       const none: Pair = ["There is no maximum", "没有最大值"];
-      return choose(
-        rng,
-        [
-          "Filled and open circles show which points belong to the function drawn. What can be said about its maximum on its domain?",
-          "实心圆和空心圆表示哪些点属于图中函数。关于它在定义域上的最大值，可以得出什么结论？",
-        ],
-        attained ? at(where) : none,
-        attained ? [none, at(b), at(a), at(c + 1)] : [at(where), at(a), at(where === b ? c : b)],
-        [`${reason[0]}.`, `${reason[1]}。`],
-        fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
-          `A graph from x = ${a} to x = ${b}. ${observed(reason)[0].replaceAll("$", "")}.`,
-          `从 x = ${a} 到 x = ${b} 的图。${observed(reason)[1].replaceAll("$", "")}。`,
-        ]),
+      const height = (x: number) =>
+        kind === "openEnd" ? rise(x) : kind === "jumpTop" ? (x < c ? top - (c - x) * 0.7 : top - 3 - (x - c) * 0.3) : left(x);
+      const xs = attained ? [c - 1, c, c + 1] : [where - 0.1, where - 0.01, where - 0.001].map((x) => Math.round(x * 1000) / 1000);
+      const others = attained ? [b, a, c + 1] : [a, where === b ? c : b];
+      const missing: Pair =
+        kind === "openEnd"
+          ? [`The point at $x = ${b}$ is an open circle, so it is not on the graph`, `$x = ${b}$ 处是空心圆，所以不在图上`]
+          : [
+              `The value at $x = ${c}$ is the filled dot at height $${top - 3}$, below the graph just to its left`,
+              `$x = ${c}$ 处的函数值是高度为 $${top - 3}$ 的实心点，低于它左边紧挨着的图像`,
+            ];
+      return reasoned(
+        choose(
+          rng,
+          [
+            "Filled and open circles show which points belong to the function drawn. What can be said about its maximum on its domain?",
+            "实心圆和空心圆表示哪些点属于图中函数。关于它在定义域上的最大值，可以得出什么结论？",
+          ],
+          attained ? at(where) : none,
+          attained ? [none, at(b), at(a), at(c + 1)] : [at(where), at(a), at(where === b ? c : b)],
+          walk(
+            [
+              ["Find the top of the graph", "找出图像的最高处", `${reason[0]}.`, `${reason[1]}。`],
+              [
+                "Conclude",
+                "得出结论",
+                attained
+                  ? `So the maximum is attained at $x = ${where}$, with value $${top}$.`
+                  : `So the height $${top}$ is approached but never reached, and no value of $f$ is the largest: there is no maximum.`,
+                attained
+                  ? `所以最大值在 $x = ${where}$ 处取到，值为 $${top}$。`
+                  : `所以高度 $${top}$ 只能接近，永远达不到，$f$ 没有哪个值是最大的：没有最大值。`,
+              ],
+            ],
+            [
+              `${attained ? `Heights of the graph around the peak` : `Heights of the graph approaching $x = ${where}$ from the left`}:\n\n${valueTable(xs, [["f(x)", height]])}\n\n${attained ? `The middle value is the largest, as at a maximum.` : `They keep rising toward $${top}$, and each is beaten by the next.`}`,
+              `${attained ? "最高点附近图像的高度" : `从左侧趋向 $x = ${where}$ 时图像的高度`}：\n\n${valueTable(xs, [["f(x)", height]])}\n\n${attained ? "中间的值最大，符合最大值的情形。" : `它们不断上升并趋于 $${top}$，每一个都被下一个超过。`}`,
+            ],
+          ),
+          fig({ xMin: -7, xMax: 7, yMin: -7, yMax: 7 }, marks, [
+            `A graph from x = ${a} to x = ${b}. ${observed(reason)[0].replaceAll("$", "")}.`,
+            `从 x = ${a} 到 x = ${b} 的图。${observed(reason)[1].replaceAll("$", "")}。`,
+          ]),
+        ),
+        attained
+          ? [
+              [
+                none[0],
+                `The highest point, at $x = ${where}$, is on the graph, so the maximum is attained.`,
+                `最高点在 $x = ${where}$，它在图上，所以最大值能取到。`,
+              ],
+              ...others.map((v): [string, string, string] => [
+                at(v)[0],
+                `The graph is lower at $x = ${v}$ than at $x = ${where}$.`,
+                `图像在 $x = ${v}$ 处比在 $x = ${where}$ 处低。`,
+              ]),
+            ]
+          : [
+              [at(where)[0], `${missing[0]}.`, `${missing[1]}。`],
+              ...others.map((v): [string, string, string] => [
+                at(v)[0],
+                `Points just left of $x = ${where}$ are higher than the graph at $x = ${v}$.`,
+                `$x = ${where}$ 左边紧挨着的点比图像在 $x = ${v}$ 处更高。`,
+              ]),
+            ],
       );
     },
   ),
@@ -704,8 +757,8 @@ const meanValueSlope = {
     "the-mean-value-slope-from-a-graph",
     ["The mean value slope from a graph", "由图读中值定理的斜率"],
     [
-      "The mean value theorem says that a differentiable function has a point between $a$ and $b$ where the tangent is parallel to the chord. So the derivative at that point equals the slope of the chord, which depends only on the end points. The wiggles between them decide where the point is, but not the slope.",
-      "中值定理说，可导函数在 $a$ 和 $b$ 之间有一点，切线与弦平行。所以该点的导数等于弦的斜率，它只取决于两个端点。两点之间的起伏决定这一点在哪里，但不影响斜率。",
+      "The mean value theorem says that a differentiable function has a point between $a$ and $b$ where the tangent is parallel to the chord. So the derivative at that point equals the slope of the chord, which depends only on the end points. The wiggles between them decide where the point is, but not the slope. For a curve from $A(-2, 1)$ to $B(2, 3)$, the chord rises $2$ over a run of $4$, so some $c$ has $f'(c) = \\frac{1}{2}$.\n\nCheck: starting at $A$ and moving $4$ to the right with slope $\\frac{1}{2}$ rises $2$, from height $1$ to height $3$, which is $B$.\n\n> **Watch out.** The slope is rise over run, not run over rise, and it is negative when $B$ is lower than $A$.",
+      "中值定理说，可导函数在 $a$ 和 $b$ 之间有一点，切线与弦平行。所以该点的导数等于弦的斜率，它只取决于两个端点。两点之间的起伏决定这一点在哪里，但不影响斜率。对从 $A(-2, 1)$ 到 $B(2, 3)$ 的曲线，弦在水平距离 $4$ 上升高 $2$，所以存在 $c$ 使 $f'(c) = \\frac{1}{2}$。\n\n检验：从 $A$ 出发向右移动 $4$，以斜率 $\\frac{1}{2}$ 升高 $2$，高度从 $1$ 变为 $3$，正好到达 $B$。\n\n> **注意。** 斜率是升高量除以水平距离，不是反过来；当 $B$ 比 $A$ 低时斜率为负。",
     ],
     (rng) => {
       const a = rng.int(-5, -1);
@@ -718,6 +771,7 @@ const meanValueSlope = {
       const slope = Q.of(fb - fa, b - a);
       const rise = fb - fa;
       const run = b - a;
+      const slopeTerm = slope.sign() < 0 ? `\\left(${slope.toLatex()}\\right)` : slope.toLatex();
       return ask(
         [
           "The function drawn is differentiable. By the mean value theorem, some $c$ between the marked points has what value of $f'(c)$?",
@@ -725,10 +779,26 @@ const meanValueSlope = {
         ],
         slope,
         [Q.of(run, rise), Q.of(-rise, run), Q.of(rise, 1).eq(slope) ? Q.of(rise + 1, 1) : Q.of(rise, 1)],
-        [
-          `The points are $(${a}, ${fa})$ and $(${b}, ${fb})$. The chord between them rises $${rise}$ over a run of $${run}$, so its slope is $${slope.toLatex()}$, and the theorem gives a tangent with that slope.`,
-          `两点是 $(${a}, ${fa})$ 和 $(${b}, ${fb})$。它们之间的弦在水平距离 $${run}$ 上升高 $${rise}$，所以斜率是 $${slope.toLatex()}$，定理给出具有这一斜率的切线。`,
-        ],
+        walk(
+          [
+            [
+              "Read the end points",
+              "读出端点",
+              `The marked points are $A(${a}, ${fa})$ and $B(${b}, ${fb})$, so the run is $${b} - (${a}) = ${run}$ and the rise is $${fb} - ${fa < 0 ? `(${fa})` : fa} = ${rise}$.`,
+              `所标两点是 $A(${a}, ${fa})$ 和 $B(${b}, ${fb})$，所以水平距离为 $${b} - (${a}) = ${run}$，升高量为 $${fb} - ${fa < 0 ? `(${fa})` : fa} = ${rise}$。`,
+            ],
+            [
+              "Take the slope of the chord",
+              "求弦的斜率",
+              `The chord has slope $${slope.toLatex()}$, and the theorem gives a point $c$ where the tangent has that slope, so $f'(c) = ${slope.toLatex()}$.`,
+              `弦的斜率为 $${slope.toLatex()}$，定理给出一点 $c$，那里切线的斜率与之相同，所以 $f'(c) = ${slope.toLatex()}$。`,
+            ],
+          ],
+          [
+            `Starting at $A$ and moving $${run}$ to the right with this slope changes the height by $${slopeTerm} \\cdot ${run} = ${rise}$, from $${fa}$ to $${fb}$, which is the height of $B$.`,
+            `从 $A$ 出发以这个斜率向右移动 $${run}$，高度变化 $${slopeTerm} \\cdot ${run} = ${rise}$，从 $${fa}$ 变为 $${fb}$，正是 $B$ 的高度。`,
+          ],
+        ),
         fig(
           { xMin: -7, xMax: 7, yMin: -7, yMax: 7 },
           [

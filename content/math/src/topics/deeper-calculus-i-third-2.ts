@@ -8,8 +8,11 @@ import { dec, linear, paren, poly, Q } from "@ga/subject-math";
 import { calculusDrawings2 } from "../explanation-drawings-calculus-2.ts";
 import { calculusDrawings3 } from "../explanation-drawings-calculus-3.ts";
 
-import { functionProblem } from "../problems.ts";
+import { functionProblem, numberProblem, why } from "../problems.ts";
+import { stepLabel } from "../solution-kit.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
+import { table as markTable } from "./calculus-common.ts";
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -20,18 +23,33 @@ const power = (a: number, n: number) => (a === 0 ? `x^{${n}}` : `(${minus(a)})^{
 /** same2 writes one formula as a pair for both languages. */
 const same2 = (latex: string): Pair => [`$${latex}$`, `$${latex}$`];
 
+/** walkPair writes a solution as labelled steps, each a title and what it says in both languages, followed by a check that takes a second route. */
+function walkPair(parts: readonly (readonly [en: string, zh: string, sayEn: string, sayZh: string])[], check: Pair): Pair {
+  const write = (zh: boolean) =>
+    `${parts.map(([en, z, se, sz], i) => `${stepLabel(i + 1, en, z)[zh ? "zh-CN" : "en"]} ${zh ? sz : se}`).join("\n\n")}\n\n${zh ? `**检验。** ${check[1]}` : `**Check.** ${check[0]}`}`;
+  return [write(false), write(true)];
+}
+
+/** round3 writes a value rounded to three decimal places, without trailing zeros. */
+const round3 = (v: number) => dec(Q.of(Math.round(v * 1000) || 0, 1000));
+
+/** signTable tabulates a function, named in LaTeX, at some x-values to three decimal places. */
+const signTable = (xs: readonly number[], name: string, f: (x: number) => number) =>
+  markTable(["$x$", ...xs.map((x) => `$${round3(x)}$`)], [`$${name}$`, ...xs.map((x) => `$${round3(f(x))}$`)]);
+
 const criticalNotExtreme = point(
   "critical-points-that-are-not-extrema",
   ["Critical points that are not extrema", "不是极值点的临界点"],
   [
-    "A critical point is only a candidate. There is a local extremum only where $f'$ changes sign. A squared factor in $f'$ gives a critical point where $f'$ keeps its sign, so $f$ has no extremum there.",
-    "临界点只是候选点。只有在 $f'$ 变号的地方才有局部极值。$f'$ 中的平方因式给出的临界点处 $f'$ 不变号，所以 $f$ 在那里没有极值。",
+    "A critical point is only a candidate. There is a local extremum only where $f'$ changes sign. A squared factor in $f'$ gives a critical point where $f'$ keeps its sign, so $f$ has no extremum there. For $f'(x) = (x - 1)^{2}(x + 2)$, the critical points are $1$ and $-2$, but only $-2$ is an extremum: there $f'$ goes from negative to positive, a local minimum.\n\nCheck: $f'(0.9) = 0.01 \\cdot 2.9 > 0$ and $f'(1.1) = 0.01 \\cdot 3.1 > 0$ have the same sign, while $f'(-2.1) = 9.61 \\cdot (-0.1) < 0$ and $f'(-1.9) = 8.41 \\cdot 0.1 > 0$ do not.\n\n> **Watch out.** $f'(1) = 0$ does not make $x = 1$ an extremum. Check the sign on both sides before calling a critical point a maximum or minimum.",
+    "临界点只是候选点。只有在 $f'$ 变号的地方才有局部极值。$f'$ 中的平方因式给出的临界点处 $f'$ 不变号，所以 $f$ 在那里没有极值。对 $f'(x) = (x - 1)^{2}(x + 2)$，临界点是 $1$ 和 $-2$，但只有 $-2$ 是极值点：$f'$ 在那里由负变正，是局部极小值。\n\n检验：$f'(0.9) = 0.01 \\cdot 2.9 > 0$，$f'(1.1) = 0.01 \\cdot 3.1 > 0$，符号相同；而 $f'(-2.1) = 9.61 \\cdot (-0.1) < 0$，$f'(-1.9) = 8.41 \\cdot 0.1 > 0$，符号不同。\n\n> **注意。** $f'(1) = 0$ 并不使 $x = 1$ 成为极值点。把临界点称为极大值或极小值之前，先检查两侧的符号。",
   ],
   (rng) => {
     const a = rng.int(-6, 6);
     const b = rng.pick([-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6].filter((x) => x !== a));
     const k = rng.pick([-3, -2, -1, 1, 2, 3, 4]);
     const d = poly([k, b === 0 ? `x(${minus(a)})^{2}` : `${power(a, 2)}(${minus(b)})`]);
+    const fd = (x: number) => k * (x - a) ** 2 * (x - b);
     return ask(
       [
         `$f'(x) = ${d}$, so $f$ has critical points at $x = ${Math.min(a, b)}$ and $x = ${Math.max(a, b)}$ but only one local extremum. At which $x$ is it?`,
@@ -39,10 +57,26 @@ const criticalNotExtreme = point(
       ],
       b,
       [a, a + b, -b],
-      [
-        `$${power(a, 2)}$ does not change sign at $x = ${a}$, so $f'$ keeps its sign there and there is no extremum. $f'$ changes sign only at $x = ${b}$.`,
-        `$${power(a, 2)}$ 在 $x = ${a}$ 处不变号，所以 $f'$ 在那里符号不变，没有极值。$f'$ 只在 $x = ${b}$ 处变号。`,
-      ],
+      walkPair(
+        [
+          [
+            `Look at x = ${a}`,
+            `看 x = ${a}`,
+            `$${power(a, 2)}$ is a square, positive on both sides of $x = ${a}$, so $f'$ keeps its sign there and there is no extremum.`,
+            `$${power(a, 2)}$ 是平方，在 $x = ${a}$ 两侧都为正，所以 $f'$ 在那里符号不变，没有极值。`,
+          ],
+          [
+            `Look at x = ${b}`,
+            `看 x = ${b}`,
+            `$${minus(b)}$ changes sign at $x = ${b}$, and the other factors do not, so $f'$ changes sign there: the extremum is at $x = ${b}$.`,
+            `$${minus(b)}$ 在 $x = ${b}$ 处变号，而其他因式不变号，所以 $f'$ 在那里变号：极值在 $x = ${b}$ 处。`,
+          ],
+        ],
+        [
+          `Evaluate $f'$ half a unit on each side of both points:\n\n${signTable([a - 0.5, a + 0.5, b - 0.5, b + 0.5], "f'(x)", fd)}\n\nThe sign is the same around $${a}$ and changes around $${b}$.`,
+          `计算 $f'$ 在两点各自两侧半个单位处的值：\n\n${signTable([a - 0.5, a + 0.5, b - 0.5, b + 0.5], "f'(x)", fd)}\n\n在 $${a}$ 两侧符号相同，在 $${b}$ 两侧符号改变。`,
+        ],
+      ),
     );
   },
 );
@@ -51,8 +85,8 @@ const openEndpoints = point(
   "extrema-on-an-interval-that-is-not-closed",
   ["Extrema on an interval that is not closed", "非闭区间上的最值"],
   [
-    "The extreme value theorem needs a closed interval. Without it an extremum may still exist, but must be checked: an interior minimum is still attained, while values rising toward an excluded endpoint have no maximum, since no point reaches the bound.",
-    "极值定理要求闭区间。没有这个条件时最值仍可能存在，但必须逐一检查：区间内部的最小值仍能取到；而函数值趋向被排除的端点时不断增大，就没有最大值，因为没有哪个点能达到那个上界。",
+    "The extreme value theorem needs a closed interval. Without it an extremum may still exist, but must be checked: an interior minimum is still attained, while values rising toward an excluded endpoint have no maximum, since no point reaches the bound. For $x^2$ on $[-1, 2)$, the minimum $0$ is attained at $x = 0$, but the values rise toward $4$ as $x$ approaches the excluded endpoint $2$, so there is no maximum.\n\nCheck: $f(1.9) = 3.61$, $f(1.99) = 3.9601$ and $f(1.999) = 3.996001$ keep growing toward $4$, and no point of the interval gives $4$.\n\n> **Watch out.** An interval that is not closed does not rule out extrema: the theorem no longer promises them, but each one must be checked directly.",
+    "极值定理要求闭区间。没有这个条件时最值仍可能存在，但必须逐一检查：区间内部的最小值仍能取到；而函数值趋向被排除的端点时不断增大，就没有最大值，因为没有哪个点能达到那个上界。对 $[-1, 2)$ 上的 $x^2$，最小值 $0$ 在 $x = 0$ 处取到，但当 $x$ 趋向被排除的端点 $2$ 时函数值增大并趋于 $4$，所以没有最大值。\n\n检验：$f(1.9) = 3.61$，$f(1.99) = 3.9601$，$f(1.999) = 3.996001$ 不断增大并趋于 $4$，而区间内没有哪个点使函数值等于 $4$。\n\n> **注意。** 区间不闭并不排除最值：定理不再保证它们存在，但每一个都要直接检查。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
@@ -63,22 +97,64 @@ const openEndpoints = point(
     const leftFar = a > b;
     const attained = leftFar ? closedLeft : closedRight;
     const top = Math.max(a, b) ** 2 + k;
+    const far = leftFar ? -a : b;
+    const inward = leftFar ? 1 : -1;
     const set = `${closedLeft ? "[" : "("}${-a}, ${b}${closedRight ? "]" : ")"}`;
     const f = poly([1, "x^{2}"], [k, ""]);
     const withMax: Pair = [`Minimum $${k}$ and maximum $${top}$`, `最小值 $${k}$，最大值 $${top}$`];
     const noMax: Pair = [`Minimum $${k}$ and no maximum`, `最小值 $${k}$，没有最大值`];
-    return choose(
-      rng,
-      [`Which describes the extreme values of $f(x) = ${f}$ on $${set}$?`, `$f(x) = ${f}$ 在 $${set}$ 上的最值情况是哪一项？`],
-      attained ? withMax : noMax,
+    const neither: Pair = [`No minimum and no maximum, because the interval is not closed`, `没有最小值也没有最大值，因为区间不是闭区间`];
+    const onlyMax: Pair = [`No minimum and maximum $${top}$`, `没有最小值，最大值 $${top}$`];
+    const near = [0.1, 0.01, 0.001].map((h) => far + inward * h);
+    return reasoned(
+      choose(
+        rng,
+        [`Which describes the extreme values of $f(x) = ${f}$ on $${set}$?`, `$f(x) = ${f}$ 在 $${set}$ 上的最值情况是哪一项？`],
+        attained ? withMax : noMax,
+        [attained ? noMax : withMax, neither, onlyMax],
+        walkPair(
+          [
+            [
+              "Find the minimum",
+              "找最小值",
+              `$x^{2} \\ge 0$, so $f(x) \\ge ${k}$, with equality at the interior point $x = 0$. The minimum $${k}$ is attained.`,
+              `$x^{2} \\ge 0$，所以 $f(x) \\ge ${k}$，在内部点 $x = 0$ 处取等号。最小值 $${k}$ 能取到。`,
+            ],
+            [
+              "Look at the farther endpoint",
+              "看较远的端点",
+              `The largest values are near the farther endpoint, $x = ${far}$, where they approach $${top}$. That endpoint is ${attained ? `included, so $${top}$ is the maximum` : `excluded, so $${top}$ is never reached and there is no maximum`}.`,
+              `最大的函数值出现在较远的端点 $x = ${far}$ 附近，趋于 $${top}$。这个端点${attained ? `包含在区间内，所以 $${top}$ 是最大值` : `不在区间内，所以 $${top}$ 取不到，没有最大值`}。`,
+            ],
+          ],
+          [
+            `Values approaching $x = ${far}$ from inside:\n\n${signTable(near, "f(x)", (x) => x * x + k)}\n\nThey rise toward $${top}$ without reaching it, so everything turns on whether $x = ${far}$ itself belongs to the interval.`,
+            `从区间内部趋向 $x = ${far}$ 时的值：\n\n${signTable(near, "f(x)", (x) => x * x + k)}\n\n它们增大并趋于 $${top}$ 却达不到，所以关键在于 $x = ${far}$ 本身是否属于区间。`,
+          ],
+        ),
+      ),
       [
-        attained ? noMax : withMax,
-        [`No minimum and no maximum, because the interval is not closed`, `没有最小值也没有最大值，因为区间不是闭区间`],
-        [`No minimum and maximum $${top}$`, `没有最小值，最大值 $${top}$`],
-      ],
-      [
-        `The minimum $${k}$ occurs at the interior point $x = 0$. The largest values are near the farther endpoint, $x = ${leftFar ? -a : b}$, where they approach $${top}$. That endpoint is ${attained ? `included, so $${top}$ is the maximum` : `excluded, so $${top}$ is never reached and there is no maximum`}.`,
-        `最小值 $${k}$ 在内部点 $x = 0$ 处取到。最大的函数值出现在较远的端点 $x = ${leftFar ? -a : b}$ 附近，趋于 $${top}$。这个端点${attained ? `包含在区间内，所以 $${top}$ 是最大值` : `不在区间内，所以 $${top}$ 取不到，没有最大值`}。`,
+        attained
+          ? [
+              noMax[0],
+              `$x = ${far}$ is included, so $f(${far}) = ${top}$ is attained and is the maximum.`,
+              `$x = ${far}$ 包含在区间内，所以 $f(${far}) = ${top}$ 能取到，是最大值。`,
+            ]
+          : [
+              withMax[0],
+              `$x = ${far}$ is excluded, so the value $${top}$ is approached but never reached.`,
+              `$x = ${far}$ 不在区间内，所以 $${top}$ 只能接近，永远取不到。`,
+            ],
+        [
+          neither[0],
+          `The theorem not applying does not rule extrema out: the minimum $${k}$ is attained at $x = 0$, inside the interval.`,
+          `定理不适用并不排除最值：最小值 $${k}$ 在区间内的 $x = 0$ 处取到。`,
+        ],
+        [
+          onlyMax[0],
+          `$f(0) = ${k}$ is a value of $f$ on the interval and no value is smaller, so there is a minimum.`,
+          `$f(0) = ${k}$ 是 $f$ 在区间上的值，且没有更小的值，所以有最小值。`,
+        ],
       ],
     );
   },
@@ -88,8 +164,8 @@ const coefficientFromInflection = point(
   "a-coefficient-from-the-location-of-an-inflection-point",
   ["A coefficient from the location of an inflection point", "由拐点位置求系数"],
   [
-    "The reverse of finding an inflection point: for a cubic, $f''$ is linear and changes sign at its zero, so requiring $f''(c) = 0$ gives an equation for an unknown coefficient. The linear and constant terms of $f$ do not matter.",
-    "这是求拐点的逆问题：三次函数的 $f''$ 是一次函数，在其零点处变号，所以令 $f''(c) = 0$ 就得到未知系数的方程。$f$ 的一次项和常数项不起作用。",
+    "The reverse of finding an inflection point: for a cubic, $f''$ is linear and changes sign at its zero, so requiring $f''(c) = 0$ gives an equation for an unknown coefficient. The linear and constant terms of $f$ do not matter. For $f(x) = 2x^{3} + kx^{2} + x$ with its inflection point at $x = 1$, $f''(x) = 12x + 2k$, and $f''(1) = 12 + 2k = 0$ gives $k = -6$.\n\nCheck: with $k = -6$, $f''(x) = 12x - 12$, so $f''(0) = -12 < 0$ and $f''(2) = 12 > 0$: the sign does change at $1$.\n\n> **Watch out.** Differentiating $kx^{2}$ twice gives $2k$, not $k$. Forgetting the $2$ doubles the answer.",
+    "这是求拐点的逆问题：三次函数的 $f''$ 是一次函数，在其零点处变号，所以令 $f''(c) = 0$ 就得到未知系数的方程。$f$ 的一次项和常数项不起作用。对拐点在 $x = 1$ 的 $f(x) = 2x^{3} + kx^{2} + x$，$f''(x) = 12x + 2k$，由 $f''(1) = 12 + 2k = 0$ 得 $k = -6$。\n\n检验：取 $k = -6$，$f''(x) = 12x - 12$，所以 $f''(0) = -12 < 0$，$f''(2) = 12 > 0$：符号确实在 $1$ 处改变。\n\n> **注意。** $kx^{2}$ 求两次导数得 $2k$，不是 $k$。漏掉 $2$ 会使答案变成两倍。",
   ],
   (rng) => {
     const a = nz(rng, 4);
@@ -98,6 +174,7 @@ const coefficientFromInflection = point(
     const n = rng.int(-9, 9);
     const answer = -3 * a * c;
     const f = poly([a, "x^{3}"], [1, "kx^{2}"], [m, "x"], [n, ""]);
+    const f2 = poly([6 * a, "x"], [2 * answer, ""]);
     return ask(
       [
         `The graph of $f(x) = ${f}$ has its point of inflection at $x = ${c}$. Find $k$.`,
@@ -105,10 +182,26 @@ const coefficientFromInflection = point(
       ],
       answer,
       [-answer, -6 * a * c, -a * c],
-      [
-        `$f''(x) = ${poly([6 * a, "x"])} + 2k$. Setting $f''(${c}) = 0$ gives $${6 * a * c} + 2k = 0$, so $k = ${answer}$.`,
-        `$f''(x) = ${poly([6 * a, "x"])} + 2k$。令 $f''(${c}) = 0$，得 $${6 * a * c} + 2k = 0$，所以 $k = ${answer}$。`,
-      ],
+      walkPair(
+        [
+          [
+            "Differentiate twice",
+            "求两次导数",
+            `$f''(x) = ${poly([6 * a, "x"])} + 2k$, since the linear and constant terms vanish after two derivatives.`,
+            `$f''(x) = ${poly([6 * a, "x"])} + 2k$，因为一次项和常数项求两次导数后都消失了。`,
+          ],
+          [
+            "Set f''(c) = 0",
+            "令 f''(c) = 0",
+            `$f''(${c}) = ${6 * a * c} + 2k = 0$, so $k = ${answer}$.`,
+            `$f''(${c}) = ${6 * a * c} + 2k = 0$，所以 $k = ${answer}$。`,
+          ],
+        ],
+        [
+          `With $k = ${answer}$, $f''(x) = ${f2}$. Then $f''(${c - 1}) = ${-6 * a}$ and $f''(${c + 1}) = ${6 * a}$ have opposite signs, so the concavity really changes at $x = ${c}$.`,
+          `取 $k = ${answer}$，$f''(x) = ${f2}$。于是 $f''(${c - 1}) = ${-6 * a}$ 与 $f''(${c + 1}) = ${6 * a}$ 异号，所以凹凸性确实在 $x = ${c}$ 处改变。`,
+        ],
+      ),
     );
   },
 );
@@ -1193,6 +1286,8 @@ const criticalOutsideInterval = point(
   },
 );
 
+/** toQv reads the value of a mistake as an exact number. */
+/** distinctWhys keeps the first mistake for each value, so that one wrong answer gets one reason. */
 const unknownFromLimit = point(
   "an-unknown-derivative-from-the-limit",
   ["An unknown derivative from the limit", "由极限求未知的导数"],

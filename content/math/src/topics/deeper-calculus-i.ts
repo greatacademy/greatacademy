@@ -820,6 +820,8 @@ const inverseInsideAChain: KnowledgePointDef = {
   },
 };
 
+/** toQv turns a wrong value into a rational number. */
+/** distinctWhys keeps the first reason for each wrong value. */
 const troughDepth: KnowledgePointDef = {
   id: "the-rising-depth-in-a-triangular-trough",
   figure: calculusDrawings2["calculating-related-rates-using-similar-triangles#the-rising-depth-in-a-triangular-trough"],
@@ -916,6 +918,9 @@ const boxDiagonal: KnowledgePointDef = {
   },
 };
 
+/** inParensAll writes a number in parentheses, for use as a factor: "(3)", "(-2)". */
+const inParensAll = (n: number) => `(${n})`;
+
 const zeroTimesInfinity: KnowledgePointDef = {
   id: "lhopitals-rule-for-zero-times-infinity",
   title: t("L'Hopital's rule for zero times infinity", "零乘无穷型的洛必达法则"),
@@ -950,8 +955,8 @@ const boundFromMeanValue: KnowledgePointDef = {
   id: "a-bound-on-a-function-from-the-mean-value-theorem",
   title: t("A bound on a function from the mean value theorem", "由中值定理得到函数的界"),
   explanation: t(
-    "The mean value theorem says $f(b) - f(a) = f'(c)(b - a)$ for some $c$ in the interval. So a bound on the derivative becomes a bound on the change of the function: if $f'$ never exceeds $M$, then $f(b)$ is at most $f(a) + M(b - a)$. A lower bound on $f'$ works the same way.",
-    "中值定理说，区间内存在 $c$ 使 $f(b) - f(a) = f'(c)(b - a)$。所以导数的界就变成函数变化量的界：如果 $f'$ 不超过 $M$，则 $f(b)$ 至多是 $f(a) + M(b - a)$。导数的下界同理。",
+    "The mean value theorem says $f(b) - f(a) = f'(c)(b - a)$ for some $c$ in the interval. So a bound on the derivative becomes a bound on the change of the function: if $f'$ never exceeds $M$, then $f(b)$ is at most $f(a) + M(b - a)$. A lower bound on $f'$ works the same way. For example, if $f(1) = 2$ and $f'(x) \\le 3$ on $[1, 5]$, then $f(5) \\le 2 + 3 \\cdot 4 = 14$.\n\nCheck: the line $g(x) = 3x - 1$ has $g'(x) = 3$, $g(1) = 2$ and $g(5) = 14$, so the bound $14$ is reached and cannot be improved.\n\n> **Watch out.** Multiply the bound on $f'$ by the length $b - a$ of the interval, here $4$, not by the endpoint $b = 5$.",
+    "中值定理说，区间内存在 $c$ 使 $f(b) - f(a) = f'(c)(b - a)$。所以导数的界就变成函数变化量的界：如果 $f'$ 不超过 $M$，则 $f(b)$ 至多是 $f(a) + M(b - a)$。导数的下界同理。例如，若 $f(1) = 2$，且在 $[1, 5]$ 上 $f'(x) \\le 3$，则 $f(5) \\le 2 + 3 \\cdot 4 = 14$。\n\n检验：直线 $g(x) = 3x - 1$ 满足 $g'(x) = 3$，$g(1) = 2$，$g(5) = 14$，所以界 $14$ 能够取到，不能再改进。\n\n> **注意。** 导数的界要乘以区间长度 $b - a$，这里是 $4$，而不是乘以端点 $b = 5$。",
   ),
   generate(rng) {
     const a = rng.int(0, 5);
@@ -961,6 +966,7 @@ const boundFromMeanValue: KnowledgePointDef = {
     const M = nonzero(rng, 6);
     const upper = rng.int(0, 1) === 0;
     const answer = v + M * w;
+    const shifted = a === 0 ? "x" : `(x - ${a})`;
     return numberProblem({
       prompt: t(
         `$f$ is differentiable on $[${a}, ${b}]$, with $f(${a}) = ${v}$ and $f'(x) ${upper ? "\\le" : "\\ge"} ${M}$ throughout. What is the ${upper ? "largest" : "smallest"} possible value of $f(${b})$?`,
@@ -969,9 +975,25 @@ const boundFromMeanValue: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [v + M, M * w, v + M * b],
-      solution: t(
-        `By the mean value theorem, $f(${b}) - f(${a}) = f'(c) \\cdot ${w}$, which is ${upper ? "at most" : "at least"} $${M} \\cdot ${w}$. So the ${upper ? "largest" : "smallest"} value is $${v} + ${inParens(M * w)} = ${answer}$.`,
-        `由中值定理，$f(${b}) - f(${a}) = f'(c) \\cdot ${w}$，它${upper ? "至多" : "至少"}是 $${M} \\cdot ${w}$。所以${upper ? "最大" : "最小"}值是 $${v} + ${inParens(M * w)} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Apply the mean value theorem",
+            "应用中值定理",
+            `For some $c$ in $(${a}, ${b})$, $f(${b}) - f(${a}) = f'(c) \\cdot ${w}$, and $f'(c) ${upper ? "\\le" : "\\ge"} ${M}$, so the change is ${upper ? "at most" : "at least"} $${M} \\cdot ${w} = ${M * w}$.`,
+            `存在 $(${a}, ${b})$ 内的 $c$，使 $f(${b}) - f(${a}) = f'(c) \\cdot ${w}$，而 $f'(c) ${upper ? "\\le" : "\\ge"} ${M}$，所以变化量${upper ? "至多" : "至少"}是 $${M} \\cdot ${w} = ${M * w}$。`,
+          ],
+          [
+            "Add the starting value",
+            "加上起始值",
+            `So $f(${b})$ is ${upper ? "at most" : "at least"} $${v} + ${inParens(M * w)} = ${answer}$.`,
+            `所以 $f(${b})$ ${upper ? "至多" : "至少"}是 $${v} + ${inParens(M * w)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `The line $g(x) = ${v} + ${inParens(M)}${shifted}$ has $g'(x) = ${M}$ everywhere and $g(${a}) = ${v}$, and $g(${b}) = ${v} + ${inParens(M)} \\cdot ${w} = ${answer}$. So the bound is reached, and it is the ${upper ? "largest" : "smallest"} possible value.`,
+          `直线 $g(x) = ${v} + ${inParens(M)}${shifted}$ 处处满足 $g'(x) = ${M}$，且 $g(${a}) = ${v}$，$g(${b}) = ${v} + ${inParens(M)} \\cdot ${w} = ${answer}$。所以这个界能够取到，它就是${upper ? "最大" : "最小"}可能值。`,
+        ],
       ),
     });
   },
@@ -981,17 +1003,18 @@ const cubicFromExtrema: KnowledgePointDef = {
   id: "coefficients-of-a-cubic-from-its-extrema",
   title: t("Coefficients of a cubic from its extrema", "由极值点求三次函数的系数"),
   explanation: t(
-    "The critical points of a cubic are the roots of its derivative. If $f(x) = x^3 + ax^2 + bx + c$ has them at $p$ and $q$, then $f'(x) = 3(x - p)(x - q)$. Expanding and matching with $3x^2 + 2ax + b$ gives the coefficients. The constant $c$ does not affect where the extrema are.",
-    "三次函数的临界点是导数的根。如果 $f(x) = x^3 + ax^2 + bx + c$ 的临界点是 $p$ 和 $q$，则 $f'(x) = 3(x - p)(x - q)$。展开后与 $3x^2 + 2ax + b$ 比较，就得到系数。常数 $c$ 不影响极值点的位置。",
+    "The critical points of a cubic are the roots of its derivative. If $f(x) = x^3 + ax^2 + bx + c$ has them at $p$ and $q$, then $f'(x) = 3(x - p)(x - q)$. Expanding and matching with $3x^2 + 2ax + b$ gives the coefficients. The constant $c$ does not affect where the extrema are. For extrema at $-1$ and $3$,\n\n$$f'(x) = 3(x + 1)(x - 3) = 3x^2 - 6x - 9,$$\n\nso $2a = -6$, giving $a = -3$, and $b = -9$.\n\nCheck: with these values, $f'(-1) = 3 + 6 - 9 = 0$ and $f'(3) = 27 - 18 - 9 = 0$.\n\n> **Watch out.** The coefficient of $x$ in $f'$ is $2a$, not $a$: divide it by $2$.",
+    "三次函数的临界点是导数的根。如果 $f(x) = x^3 + ax^2 + bx + c$ 的临界点是 $p$ 和 $q$，则 $f'(x) = 3(x - p)(x - q)$。展开后与 $3x^2 + 2ax + b$ 比较，就得到系数。常数 $c$ 不影响极值点的位置。若极值点是 $-1$ 和 $3$，\n\n$$f'(x) = 3(x + 1)(x - 3) = 3x^2 - 6x - 9,$$\n\n所以 $2a = -6$，得 $a = -3$，而 $b = -9$。\n\n检验：用这些值，$f'(-1) = 3 + 6 - 9 = 0$，$f'(3) = 27 - 18 - 9 = 0$。\n\n> **注意。** $f'$ 中 $x$ 的系数是 $2a$，不是 $a$：要除以 $2$。",
   ),
   generate(rng) {
     const p = nonzero(rng, 6);
-    let q = p + rng.int(1, 6);
-    while (q === 0 || p + q === 0) q += 1;
+    const q = rng.pick(range(p + 1, p + 6).filter((v) => v !== 0 && p + v !== 0));
     const askA = rng.int(0, 1) === 0;
     const a = Q.of(-3 * (p + q), 2);
     const b = 3 * p * q;
     const answer = askA ? a : Q.of(b);
+    const expanded = poly([3, "x^2"], [-3 * (p + q), "x"], [b, ""]);
+    const at = (x: number) => `3 \\cdot ${inParens(x)}^{2} + ${inParens(-3 * (p + q))} \\cdot ${inParens(x)} + ${inParens(b)} = 0`;
     return numberProblem({
       prompt: t(
         `$f(x) = x^3 + ax^2 + bx + 1$ has a local maximum at $x = ${p}$ and a local minimum at $x = ${q}$. Find $${askA ? "a" : "b"}$.`,
@@ -999,9 +1022,25 @@ const cubicFromExtrema: KnowledgePointDef = {
       ),
       answer,
       wrong: askA ? [a.neg(), Q.of(-(p + q)), Q.of(b)] : [Q.of(p * q), Q.of(-b), a],
-      solution: t(
-        `$f'(x) = 3(${poly([1, "x"], [-p, ""])})(${poly([1, "x"], [-q, ""])}) = ${poly([3, "x^2"], [-3 * (p + q), "x"], [b, ""])}$. Matching with $3x^2 + 2ax + b$ gives $${askA ? "a" : "b"} = ${answer.toLatex()}$.`,
-        `$f'(x) = 3(${poly([1, "x"], [-p, ""])})(${poly([1, "x"], [-q, ""])}) = ${poly([3, "x^2"], [-3 * (p + q), "x"], [b, ""])}$。与 $3x^2 + 2ax + b$ 比较，得 $${askA ? "a" : "b"} = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Write the derivative from its roots",
+            "由根写出导数",
+            `$f'$ has leading coefficient $3$ and roots $${p}$ and $${q}$:\n\n$$f'(x) = 3(${poly([1, "x"], [-p, ""])})(${poly([1, "x"], [-q, ""])}) = ${expanded}$$`,
+            `$f'$ 的首项系数是 $3$，根是 $${p}$ 和 $${q}$：\n\n$$f'(x) = 3(${poly([1, "x"], [-p, ""])})(${poly([1, "x"], [-q, ""])}) = ${expanded}$$`,
+          ],
+          [
+            "Match coefficients",
+            "比较系数",
+            `Comparing with $3x^2 + 2ax + b$: $2a = ${-3 * (p + q)}$ and $b = ${b}$, so $${askA ? "a" : "b"} = ${answer.toLatex()}$.`,
+            `与 $3x^2 + 2ax + b$ 比较：$2a = ${-3 * (p + q)}$，$b = ${b}$，所以 $${askA ? "a" : "b"} = ${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `Put the roots back into $f'$:\n\n$$f'(${p}) = ${at(p)}$$\n\n$$f'(${q}) = ${at(q)}$$\n\nAlso $f''(${p}) = ${3 * (p - q)} < 0$, so $x = ${p}$ is indeed the maximum.`,
+          `把根代回 $f'$：\n\n$$f'(${p}) = ${at(p)}$$\n\n$$f'(${q}) = ${at(q)}$$\n\n并且 $f''(${p}) = ${3 * (p - q)} < 0$，所以 $x = ${p}$ 确实是极大值点。`,
+        ],
       ),
     });
   },
@@ -1011,17 +1050,20 @@ const quarticFromInflections: KnowledgePointDef = {
   id: "coefficients-of-a-quartic-from-its-inflection-points",
   title: t("Coefficients of a quartic from its inflection points", "由拐点求四次函数的系数"),
   explanation: t(
-    "A point of inflection of a quartic is a place where its second derivative changes sign, so its $x$-coordinate is a simple root of $f''$. If $f(x) = x^4 + ax^3 + bx^2$ has them at $p$ and $q$, then $f''(x) = 12(x - p)(x - q)$. Matching this with $12x^2 + 6ax + 2b$ gives the coefficients.",
-    "四次函数的拐点是二阶导数变号的地方，所以它的横坐标是 $f''$ 的单根。如果 $f(x) = x^4 + ax^3 + bx^2$ 的拐点在 $p$ 和 $q$，则 $f''(x) = 12(x - p)(x - q)$。与 $12x^2 + 6ax + 2b$ 比较，就得到系数。",
+    "A point of inflection of a quartic is a place where its second derivative changes sign, so its $x$-coordinate is a simple root of $f''$. If $f(x) = x^4 + ax^3 + bx^2$ has them at $p$ and $q$, then $f''(x) = 12(x - p)(x - q)$. Matching this with $12x^2 + 6ax + 2b$ gives the coefficients. For inflection points at $1$ and $2$,\n\n$$f''(x) = 12(x - 1)(x - 2) = 12x^2 - 36x + 24,$$\n\nso $6a = -36$ and $2b = 24$, giving $a = -6$ and $b = 12$.\n\nCheck: $f''(1) = 12 - 36 + 24 = 0$ and $f''(2) = 48 - 72 + 24 = 0$, and $f''(1.5) = -3 < 0$ between them, so the sign does change.\n\n> **Watch out.** In $f''$ the coefficient of $x$ is $6a$ and the constant is $2b$: divide by $6$ and by $2$, not by $12$.",
+    "四次函数的拐点是二阶导数变号的地方，所以它的横坐标是 $f''$ 的单根。如果 $f(x) = x^4 + ax^3 + bx^2$ 的拐点在 $p$ 和 $q$，则 $f''(x) = 12(x - p)(x - q)$。与 $12x^2 + 6ax + 2b$ 比较，就得到系数。若拐点在 $1$ 和 $2$，\n\n$$f''(x) = 12(x - 1)(x - 2) = 12x^2 - 36x + 24,$$\n\n所以 $6a = -36$，$2b = 24$，得 $a = -6$，$b = 12$。\n\n检验：$f''(1) = 12 - 36 + 24 = 0$，$f''(2) = 48 - 72 + 24 = 0$，而两者之间 $f''(1.5) = -3 < 0$，所以符号确实改变。\n\n> **注意。** $f''$ 中 $x$ 的系数是 $6a$，常数项是 $2b$：分别除以 $6$ 和 $2$，不是除以 $12$。",
   ),
   generate(rng) {
     const p = nonzero(rng, 6);
-    let q = p + rng.int(1, 6);
-    while (q === 0 || p + q === 0) q += 1;
+    const q = rng.pick(range(p + 1, p + 6).filter((v) => v !== 0 && p + v !== 0));
     const askA = rng.int(0, 1) === 0;
     const a = -2 * (p + q);
     const b = 6 * p * q;
     const answer = askA ? a : b;
+    const expanded = poly([12, "x^2"], [-12 * (p + q), "x"], [12 * p * q, ""]);
+    const at = (x: number) =>
+      `12 \\cdot ${inParens(x)}^{2} + ${inParens(-12 * (p + q))} \\cdot ${inParens(x)} + ${inParens(12 * p * q)} = 0`;
+    const mid = (p + q) / 2;
     return numberProblem({
       prompt: t(
         `$f(x) = x^4 + ax^3 + bx^2$ has points of inflection at $x = ${p}$ and $x = ${q}$. Find $${askA ? "a" : "b"}$.`,
@@ -1030,9 +1072,25 @@ const quarticFromInflections: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: askA ? [-a, -(p + q), b] : [p * q, 12 * p * q, a],
-      solution: t(
-        `$f''(x) = 12(${poly([1, "x"], [-p, ""])})(${poly([1, "x"], [-q, ""])})$, so $6a = ${-12 * (p + q)}$ and $2b = ${12 * p * q}$. That gives $${askA ? "a" : "b"} = ${answer}$.`,
-        `$f''(x) = 12(${poly([1, "x"], [-p, ""])})(${poly([1, "x"], [-q, ""])})$，所以 $6a = ${-12 * (p + q)}$，$2b = ${12 * p * q}$。于是 $${askA ? "a" : "b"} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Write the second derivative from its roots",
+            "由根写出二阶导数",
+            `$f''$ has leading coefficient $12$ and changes sign at $${p}$ and $${q}$:\n\n$$f''(x) = 12(${poly([1, "x"], [-p, ""])})(${poly([1, "x"], [-q, ""])}) = ${expanded}$$`,
+            `$f''$ 的首项系数是 $12$，在 $${p}$ 和 $${q}$ 处变号：\n\n$$f''(x) = 12(${poly([1, "x"], [-p, ""])})(${poly([1, "x"], [-q, ""])}) = ${expanded}$$`,
+          ],
+          [
+            "Match coefficients",
+            "比较系数",
+            `Comparing with $12x^2 + 6ax + 2b$: $6a = ${-12 * (p + q)}$ and $2b = ${12 * p * q}$, so $${askA ? "a" : "b"} = ${answer}$.`,
+            `与 $12x^2 + 6ax + 2b$ 比较：$6a = ${-12 * (p + q)}$，$2b = ${12 * p * q}$，所以 $${askA ? "a" : "b"} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Put the roots back:\n\n$$f''(${p}) = ${at(p)}$$\n\n$$f''(${q}) = ${at(q)}$$\n\nBetween them $f''(${num(mid)}) = ${num(12 * (mid - p) * (mid - q))} < 0$, while outside it is positive, so both are true inflection points.`,
+          `把根代回：\n\n$$f''(${p}) = ${at(p)}$$\n\n$$f''(${q}) = ${at(q)}$$\n\n在两者之间 $f''(${num(mid)}) = ${num(12 * (mid - p) * (mid - q))} < 0$，而在外侧为正，所以两者都是真正的拐点。`,
+        ],
       ),
     });
   },
@@ -2495,8 +2553,8 @@ const cornerAsCandidate: KnowledgePointDef = {
   id: "a-corner-as-a-candidate-for-the-minimum",
   title: t("A corner as a candidate for the minimum", "尖角点作为最小值的候选点"),
   explanation: t(
-    "The candidates for a global extreme are not only the points where the derivative is zero and the endpoints: a point where the derivative fails to exist counts too. An absolute value creates such a corner. Treat each side of the corner as its own function, keep only stationary points that lie on their own side, and compare.",
-    "全局最值的候选点不只是导数为零的点和端点：导数不存在的点同样算数。绝对值会造成这样的尖角。把尖角两侧分别看作各自的函数，只保留落在自己一侧的驻点，然后比较。",
+    "The candidates for a global extreme are not only the points where the derivative is zero and the endpoints: a point where the derivative fails to exist counts too. An absolute value creates such a corner. Treat each side of the corner as its own function, keep only stationary points that lie on their own side, and compare. For $f(x) = x^2 + 4|x - 1|$ on $[-3, 3]$: left of $1$, $f'(x) = 2x - 4 < 0$; right of $1$, $f'(x) = 2x + 4 > 0$. The candidates are $f(-3) = 25$, $f(1) = 1$ and $f(3) = 17$, so the minimum is $1$, at the corner.\n\nCheck: $f(0.5) = 2.25$ and $f(1.5) = 4.25$ are both above $f(1) = 1$.\n\n> **Watch out.** Solving $2x - 4 = 0$ gives $x = 2$, but that formula holds only left of $1$, and $2$ lies on the right. Discard such a point.",
+    "全局最值的候选点不只是导数为零的点和端点：导数不存在的点同样算数。绝对值会造成这样的尖角。把尖角两侧分别看作各自的函数，只保留落在自己一侧的驻点，然后比较。对 $[-3, 3]$ 上的 $f(x) = x^2 + 4|x - 1|$：在 $1$ 左侧 $f'(x) = 2x - 4 < 0$；在 $1$ 右侧 $f'(x) = 2x + 4 > 0$。候选值是 $f(-3) = 25$，$f(1) = 1$，$f(3) = 17$，所以最小值是尖角处的 $1$。\n\n检验：$f(0.5) = 2.25$，$f(1.5) = 4.25$，都大于 $f(1) = 1$。\n\n> **注意。** 解 $2x - 4 = 0$ 得 $x = 2$，但这个式子只在 $1$ 左侧成立，而 $2$ 在右侧。这样的点要舍去。",
   ),
   generate(rng) {
     const m = rng.int(2, 6);
@@ -2508,16 +2566,18 @@ const cornerAsCandidate: KnowledgePointDef = {
     const cornerWins = Math.abs(c) <= m;
     const at = cornerWins ? c : c > 0 ? m : -m;
     const answer = f(at);
-    const en = cornerWins
-      ? `To the left of $x = ${c}$, $f'(x) = 2x - ${2 * m}$, which is negative because $x < ${m}$. To the right, $f'(x) = 2x + ${2 * m}$, which is positive because $x > ${-m}$. So $f$ falls until the corner and then rises, and the minimum is at the corner, $f(${c}) = ${answer}$.`
-      : c > 0
-        ? `To the left of $x = ${c}$, $f'(x) = 2x - ${2 * m}$, which is zero at $x = ${m}$. To the right, $f'(x) = 2x + ${2 * m}$ is positive. So the minimum is at $x = ${m}$, before the corner, and $f(${m}) = ${answer}$.`
-        : `To the right of $x = ${c}$, $f'(x) = 2x + ${2 * m}$, which is zero at $x = ${-m}$. To the left, $f'(x) = 2x - ${2 * m}$ is negative. So the minimum is at $x = ${-m}$, after the corner, and $f(${-m}) = ${answer}$.`;
-    const zh = cornerWins
-      ? `在 $x = ${c}$ 左侧，$f'(x) = 2x - ${2 * m}$，因为 $x < ${m}$，所以为负。在右侧，$f'(x) = 2x + ${2 * m}$，因为 $x > ${-m}$，所以为正。于是 $f$ 先降到尖角再上升，最小值在尖角处，$f(${c}) = ${answer}$。`
-      : c > 0
-        ? `在 $x = ${c}$ 左侧，$f'(x) = 2x - ${2 * m}$，它在 $x = ${m}$ 处为零。在右侧，$f'(x) = 2x + ${2 * m}$ 为正。所以最小值在尖角之前的 $x = ${m}$ 处，$f(${m}) = ${answer}$。`
-        : `在 $x = ${c}$ 右侧，$f'(x) = 2x + ${2 * m}$，它在 $x = ${-m}$ 处为零。在左侧，$f'(x) = 2x - ${2 * m}$ 为负。所以最小值在尖角之后的 $x = ${-m}$ 处，$f(${-m}) = ${answer}$。`;
+    const candidates = [...new Set([l, c, ...(m < c ? [m] : []), ...(-m > c ? [-m] : []), r])].sort((x, y) => x - y);
+    const keep = (side: "left" | "right"): readonly [string, string] => {
+      const root = side === "left" ? m : -m;
+      const ok = side === "left" ? root < c : root > c;
+      return ok
+        ? [`$x = ${root}$, which lies on that side, so it is a candidate`, `$x = ${root}$，它在这一侧，所以是候选点`]
+        : [`$x = ${root}$, which is not on that side, so it is discarded`, `$x = ${root}$，它不在这一侧，所以舍去`];
+    };
+    const [leftEn, leftZh] = keep("left");
+    const [rightEn, rightZh] = keep("right");
+    let grid = f(l);
+    for (let i = 1; i <= 4 * (r - l); i++) grid = Math.min(grid, f(l + i / 4));
     return numberProblem({
       prompt: t(
         `Find the global minimum value of $f(x) = ${name}$ on $[${l}, ${r}]$.`,
@@ -2526,7 +2586,32 @@ const cornerAsCandidate: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [c * c, f(m), f(-m), f(l), f(r)],
-      solution: t(en, zh),
+      solution: walk(
+        [
+          [
+            "Split at the corner",
+            "在尖角处分段",
+            `Left of $x = ${c}$, $f(x) = x^2 - ${2 * m}(${poly([1, "x"], [-c, ""])})$ and $f'(x) = 2x - ${2 * m}$. Right of it, $f'(x) = 2x + ${2 * m}$. At $x = ${c}$ itself the one-sided slopes differ, so $f'(${c})$ does not exist and $x = ${c}$ is a candidate.`,
+            `在 $x = ${c}$ 左侧，$f(x) = x^2 - ${2 * m}(${poly([1, "x"], [-c, ""])})$，$f'(x) = 2x - ${2 * m}$。在右侧，$f'(x) = 2x + ${2 * m}$。在 $x = ${c}$ 处两侧斜率不同，所以 $f'(${c})$ 不存在，$x = ${c}$ 是候选点。`,
+          ],
+          [
+            "Find the stationary points on each side",
+            "求两侧的驻点",
+            `On the left, $2x - ${2 * m} = 0$ gives ${leftEn}. On the right, $2x + ${2 * m} = 0$ gives ${rightEn}.`,
+            `在左侧，$2x - ${2 * m} = 0$ 给出 ${leftZh}。在右侧，$2x + ${2 * m} = 0$ 给出 ${rightZh}。`,
+          ],
+          [
+            "Compare the candidates",
+            "比较候选点",
+            `With the endpoints:\n\n${table(["$x$", ...candidates.map((x) => `$${x}$`)], ["$f(x)$", ...candidates.map((x) => `$${f(x)}$`)])}\n\nThe smallest value is $f(${at}) = ${answer}$.`,
+            `加上端点：\n\n${table(["$x$", ...candidates.map((x) => `$${x}$`)], ["$f(x)$", ...candidates.map((x) => `$${f(x)}$`)])}\n\n最小值是 $f(${at}) = ${answer}$。`,
+          ],
+        ],
+        [
+          `Evaluating $f$ at every point of $[${l}, ${r}]$ with step $0.25$ gives a smallest value of $${num(grid)}$, the same as $${answer}$.`,
+          `在 $[${l}, ${r}]$ 上以步长 $0.25$ 逐点计算 $f$，得到的最小值是 $${num(grid)}$，与 $${answer}$ 相同。`,
+        ],
+      ),
     });
   },
 };
@@ -2535,8 +2620,8 @@ const criticalPointWhereDerivativeFails: KnowledgePointDef = {
   id: "a-critical-point-where-the-derivative-does-not-exist",
   title: t("A critical point where the derivative does not exist", "导数不存在的临界点"),
   explanation: t(
-    "A critical point is a point of the domain where the derivative is zero or does not exist, and the second kind is easily missed. For a fractional power, put the derivative over a common denominator. Its numerator gives the zeros, while its denominator vanishes at the origin, where the function is defined but the derivative is not.",
-    "临界点是定义域内导数为零或导数不存在的点，第二类很容易被漏掉。对分数次幂，把导数通分。分子给出导数的零点，而分母在原点处为零，那里函数有定义，导数却不存在。",
+    "A critical point is a point of the domain where the derivative is zero or does not exist, and the second kind is easily missed. For a fractional power, put the derivative over a common denominator. Its numerator gives the zeros, while its denominator vanishes at the origin, where the function is defined but the derivative is not. For $f(x) = x^{\\frac{1}{3}}(x - 4)$,\n\n$$f'(x) = \\frac{1}{3}x^{-\\frac{2}{3}}(x - 4) + x^{\\frac{1}{3}} = \\frac{4x - 4}{3x^{\\frac{2}{3}}},$$\n\nso the critical points are $x = 1$, where the numerator is $0$, and $x = 0$, where the denominator is.\n\nCheck: at $0$ the difference quotient is $h^{-\\frac{2}{3}}(h - 4)$, about $-399.9$ for $h = 0.001$. It grows without bound as $h$ shrinks, so $f'(0)$ does not exist.\n\n> **Watch out.** $x = 0$ counts because $f(0) = 0$ is defined. A point where $f$ itself is undefined is never a critical point.",
+    "临界点是定义域内导数为零或导数不存在的点，第二类很容易被漏掉。对分数次幂，把导数通分。分子给出导数的零点，而分母在原点处为零，那里函数有定义，导数却不存在。对 $f(x) = x^{\\frac{1}{3}}(x - 4)$，\n\n$$f'(x) = \\frac{1}{3}x^{-\\frac{2}{3}}(x - 4) + x^{\\frac{1}{3}} = \\frac{4x - 4}{3x^{\\frac{2}{3}}},$$\n\n所以临界点是分子为 $0$ 的 $x = 1$，以及分母为 $0$ 的 $x = 0$。\n\n检验：在 $0$ 处差商为 $h^{-\\frac{2}{3}}(h - 4)$，$h = 0.001$ 时约为 $-399.9$。$h$ 越小它越大，没有界，所以 $f'(0)$ 不存在。\n\n> **注意。** $x = 0$ 之所以算，是因为 $f(0) = 0$ 有定义。$f$ 本身无定义的点永远不是临界点。",
   ),
   generate(rng) {
     const a = nonzero(rng, 12);
@@ -2546,6 +2631,10 @@ const criticalPointWhereDerivativeFails: KnowledgePointDef = {
     const factor = poly([1, "x"], [-a, ""]);
     const top = poly([p + 3, "x"], [-p * a, ""]);
     const below = p === 1 ? "3x^{\\frac{2}{3}}" : "3x^{\\frac{1}{3}}";
+    const lower = p === 1 ? "-\\frac{2}{3}" : "-\\frac{1}{3}";
+    const derivative = (x: number) => ((p + 3) * x - p * a) / (3 * Math.cbrt(x) ** (3 - p));
+    const x0 = answer.toNumber();
+    const xs = [x0 - 0.1, x0 + 0.1].map((x) => Math.round(x * 1000) / 1000);
     return numberProblem({
       prompt: t(
         `The function $f(x) = ${power}(${factor})$ has two critical points. Find the nonzero one.`,
@@ -2553,9 +2642,25 @@ const criticalPointWhereDerivativeFails: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(a), Q.of(p * a, 3), Q.of(a, p + 3), Q.of(-p * a, p + 3)],
-      solution: t(
-        `Over a common denominator, $f'(x) = \\frac{${top}}{${below}}$. The numerator is zero at $x = ${answer.toLatex()}$, and the derivative does not exist at $x = 0$, which is the other critical point.`,
-        `通分后 $f'(x) = \\frac{${top}}{${below}}$。分子在 $x = ${answer.toLatex()}$ 处为零，而导数在 $x = 0$ 处不存在，那就是另一个临界点。`,
+      solution: walk(
+        [
+          [
+            "Differentiate",
+            "求导",
+            `By the product rule,\n\n$$f'(x) = \\frac{${p}}{3}x^{${lower}}(${factor}) + ${power} = \\frac{${top}}{${below}}$$`,
+            `由乘积法则，\n\n$$f'(x) = \\frac{${p}}{3}x^{${lower}}(${factor}) + ${power} = \\frac{${top}}{${below}}$$`,
+          ],
+          [
+            "Read off both kinds of critical point",
+            "读出两类临界点",
+            `The numerator is zero at $x = ${answer.toLatex()}$. The denominator is zero at $x = 0$, where $f$ is defined but $f'$ is not, so $0$ is the other critical point. The nonzero one is $${answer.toLatex()}$.`,
+            `分子在 $x = ${answer.toLatex()}$ 处为零。分母在 $x = 0$ 处为零，那里 $f$ 有定义而 $f'$ 没有，所以 $0$ 是另一个临界点。不为零的那个是 $${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `$f'$ on each side of $${answer.toLatex()}$:\n\n${valueTable(xs, [["f'(x)", derivative]])}\n\nThe sign changes, so $f'$ passes through $0$ there.`,
+          `$f'$ 在 $${answer.toLatex()}$ 两侧的值：\n\n${valueTable(xs, [["f'(x)", derivative]])}\n\n符号改变，所以 $f'$ 在那里经过 $0$。`,
+        ],
       ),
     });
   },
@@ -2569,8 +2674,8 @@ const increasingEverywhere: KnowledgePointDef = {
     ],
   title: t("The least coefficient that makes a cubic increasing", "使三次函数递增的最小系数"),
   explanation: t(
-    "A cubic with positive leading coefficient rises on the whole real line exactly when its derivative is never negative. That derivative is an upward parabola, so the condition is that its discriminant is not positive. A single point where the derivative touches zero is allowed, because the function still increases through it, so the boundary value counts.",
-    "首项系数为正的三次函数在整个实数轴上递增，当且仅当它的导数从不为负。这个导数是开口向上的抛物线，所以条件是判别式不为正。导数在单独一点碰到零是允许的，因为函数经过那里时仍然递增，所以边界值也算。",
+    "A cubic with positive leading coefficient rises on the whole real line exactly when its derivative is never negative. That derivative is an upward parabola, so the condition is that its discriminant is not positive. A single point where the derivative touches zero is allowed, because the function still increases through it, so the boundary value counts. For $x^3 + 3x^2 + kx$, $f'(x) = 3x^2 + 6x + k$ has discriminant $36 - 12k$, which is not positive when $k \\ge 3$.\n\nCheck: at $k = 3$, $f'(x) = 3(x + 1)^2$, which is never negative and is $0$ only at $x = -1$; at $k = 2$, $f'(-1) = -1 < 0$.\n\n> **Watch out.** The least value is $k = 3$ itself, not \"just above $3$\": a derivative that touches $0$ at one point does not stop the function increasing.",
+    "首项系数为正的三次函数在整个实数轴上递增，当且仅当它的导数从不为负。这个导数是开口向上的抛物线，所以条件是判别式不为正。导数在单独一点碰到零是允许的，因为函数经过那里时仍然递增，所以边界值也算。对 $x^3 + 3x^2 + kx$，$f'(x) = 3x^2 + 6x + k$ 的判别式为 $36 - 12k$，当 $k \\ge 3$ 时它不为正。\n\n检验：$k = 3$ 时 $f'(x) = 3(x + 1)^2$，从不为负，只在 $x = -1$ 处为 $0$；$k = 2$ 时 $f'(-1) = -1 < 0$。\n\n> **注意。** 最小值就是 $k = 3$ 本身，而不是“比 $3$ 稍大”：导数只在一点碰到 $0$ 并不妨碍函数递增。",
   ),
   generate(rng) {
     const a = rng.int(1, 4);
@@ -2579,6 +2684,10 @@ const increasingEverywhere: KnowledgePointDef = {
     const answer = Q.of(b * b, 3 * a);
     const f = poly([a, "x^3"], [b, "x^2"], [1, "kx"], [d, ""]);
     const derivative = poly([3 * a, "x^2"], [2 * b, "x"], [1, "k"]);
+    const vertex = Q.of(-b, 3 * a);
+    const shift = vertex.neg();
+    const square = `${3 * a}\\left(x ${shift.sign() < 0 ? "-" : "+"} ${shift.sign() < 0 ? shift.neg().toLatex() : shift.toLatex()}\\right)^{2}`;
+    const below = answer.sub(Q.of(1));
     return numberProblem({
       prompt: t(
         `Find the least value of $k$ for which $f(x) = ${f}$ is increasing on the whole real line.`,
@@ -2586,9 +2695,25 @@ const increasingEverywhere: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(b * b, a), Q.of(b * b, 6 * a), Q.of(-b * b, 3 * a), Q.of(Math.abs(b), 3 * a)],
-      solution: t(
-        `$f'(x) = ${derivative}$ must never be negative, so its discriminant $${4 * b * b} - ${12 * a}k$ must not be positive. This gives $k \\ge ${answer.toLatex()}$.`,
-        `$f'(x) = ${derivative}$ 必须从不为负，所以它的判别式 $${4 * b * b} - ${12 * a}k$ 不能为正。由此得 $k \\ge ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Differentiate",
+            "求导",
+            `$f'(x) = ${derivative}$, an upward parabola, which must never be negative.`,
+            `$f'(x) = ${derivative}$ 是开口向上的抛物线，它必须从不为负。`,
+          ],
+          [
+            "Use the discriminant",
+            "用判别式",
+            `That holds when the discriminant $${4 * b * b} - ${12 * a}k$ is not positive, that is when $k \\ge ${answer.toLatex()}$. So the least value is $${answer.toLatex()}$.`,
+            `当判别式 $${4 * b * b} - ${12 * a}k$ 不为正时成立，即 $k \\ge ${answer.toLatex()}$。所以最小值是 $${answer.toLatex()}$。`,
+          ],
+        ],
+        [
+          `At $k = ${answer.toLatex()}$ the derivative is a perfect square:\n\n$$f'(x) = ${square}$$\n\nIt is never negative and is $0$ only at $x = ${vertex.toLatex()}$. With $k = ${below.toLatex()}$ instead, $f'(${vertex.toLatex()}) = -1 < 0$, so a smaller $k$ fails.`,
+          `当 $k = ${answer.toLatex()}$ 时，导数是完全平方：\n\n$$f'(x) = ${square}$$\n\n它从不为负，只在 $x = ${vertex.toLatex()}$ 处为 $0$。若改取 $k = ${below.toLatex()}$，则 $f'(${vertex.toLatex()}) = -1 < 0$，所以更小的 $k$ 不行。`,
+        ],
       ),
     });
   },
@@ -4008,8 +4133,8 @@ const concaveDownLength: KnowledgePointDef = {
   id: "the-length-of-an-interval-where-a-quartic-is-concave-down",
   title: t("The length of an interval where a quartic is concave down", "四次函数下凹区间的长度"),
   explanation: t(
-    "The sign of the second derivative decides the concavity. For a quartic with a positive leading coefficient, $y''$ is a quadratic that opens upward. If this quadratic has two real roots, then it is negative only between them, and so the curve is concave down on exactly that bounded interval. Outside the interval, the curve is concave up. Each of the two roots is an inflection point, because the sign changes there.",
-    "二阶导数的符号决定凹凸性。对首项系数为正的四次函数，$y''$ 是开口向上的二次式。如果这个二次式有两个实根，那么它只在两根之间为负，所以曲线恰好在这个有界区间上下凹。在区间之外，曲线上凹。两个根都是拐点，因为符号在那里改变。",
+    "The sign of the second derivative decides the concavity. For a quartic with a positive leading coefficient, $y''$ is a quadratic that opens upward. If this quadratic has two real roots, then it is negative only between them, and so the curve is concave down on exactly that bounded interval. Outside the interval, the curve is concave up. Each of the two roots is an inflection point, because the sign changes there. For $y = x^4 - 4x^3$, $y'' = 12x^2 - 24x = 12x(x - 2)$, so the curve is concave down on $(0, 2)$, of length $2$.\n\nCheck: $y''(1) = -12 < 0$ inside the interval, and $y''(3) = 36 > 0$ outside it.\n\n> **Watch out.** The length is the distance between the roots, $s - r$, not their sum or their product.",
+    "二阶导数的符号决定凹凸性。对首项系数为正的四次函数，$y''$ 是开口向上的二次式。如果这个二次式有两个实根，那么它只在两根之间为负，所以曲线恰好在这个有界区间上下凹。在区间之外，曲线上凹。两个根都是拐点，因为符号在那里改变。对 $y = x^4 - 4x^3$，$y'' = 12x^2 - 24x = 12x(x - 2)$，所以曲线在 $(0, 2)$ 上下凹，长度为 $2$。\n\n检验：在区间内 $y''(1) = -12 < 0$，在区间外 $y''(3) = 36 > 0$。\n\n> **注意。** 长度是两根之间的距离 $s - r$，不是它们的和或积。",
   ),
   generate(rng) {
     const r = rng.int(-6, 5);
@@ -4017,6 +4142,9 @@ const concaveDownLength: KnowledgePointDef = {
     const answer = s - r;
     const y = poly([1, "x^4"], [-2 * (r + s), "x^3"], [6 * r * s, "x^2"]);
     const second = poly([12, "x^2"], [-12 * (r + s), "x"], [12 * r * s, ""]);
+    const factor = (v: number) => (v === 0 ? "x" : `(${poly([1, "x"], [-v, ""])})`);
+    const y2 = (x: number) => 12 * (x - r) * (x - s);
+    const mid = (r + s) / 2;
     return numberProblem({
       prompt: t(
         `The curve $y = ${y}$ is concave down on one bounded interval. Find the length of this interval.`,
@@ -4025,9 +4153,25 @@ const concaveDownLength: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [2 * answer, Math.abs(r + s), Math.abs(r * s), answer + 1],
-      solution: t(
-        `Here $y'' = ${second}$, which has the roots $${r}$ and $${s}$ and is negative between them. So the length of the interval is $${answer}$.`,
-        `这里 $y'' = ${second}$，它的根是 $${r}$ 和 $${s}$，在两根之间为负。所以区间的长度是 $${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Differentiate twice and factor",
+            "求两次导数并因式分解",
+            `The second derivative is\n\n$$y'' = ${second} = 12${factor(r)}${factor(s)}$$`,
+            `二阶导数为\n\n$$y'' = ${second} = 12${factor(r)}${factor(s)}$$`,
+          ],
+          [
+            "Find where it is negative",
+            "找出它为负的区间",
+            `The quadratic opens upward, so it is negative between its roots $${r}$ and $${s}$: the curve is concave down on $(${r}, ${s})$, of length $${s} - ${inParens(r)} = ${answer}$.`,
+            `这个二次式开口向上，所以在两根 $${r}$ 与 $${s}$ 之间为负：曲线在 $(${r}, ${s})$ 上下凹，长度为 $${s} - ${inParens(r)} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Test one point inside and one on each side:\n\n${valueTable([r - 1, mid, s + 1], [["y''", y2]])}\n\nOnly the middle value is negative.`,
+          `在区间内取一点，两侧各取一点：\n\n${valueTable([r - 1, mid, s + 1], [["y''", y2]])}\n\n只有中间的值为负。`,
+        ],
       ),
     });
   },
@@ -4037,14 +4181,15 @@ const powerPlusReciprocalMinimum: KnowledgePointDef = {
   id: "the-local-minimum-of-a-power-plus-a-reciprocal",
   title: t("The local minimum of a power plus a reciprocal", "幂与倒数之和的局部极小值"),
   explanation: t(
-    "For $x > 0$, a function like $ax^2 + \\frac{b}{x}$ grows without bound both as $x \\to 0$ and as $x \\to \\infty$, with a lowest point between. The second derivative $2a + \\frac{2b}{x^3}$ is positive for all $x > 0$ when $a$ and $b$ are, so the second derivative test confirms a minimum at any critical point. This form often appears in optimization, as one term falls while the other rises.",
-    "当 $x > 0$ 时，像 $ax^2 + \\frac{b}{x}$ 这样的函数在 $x \\to 0$ 和 $x \\to \\infty$ 时都无限增大，中间有一个最低点。当 $a$ 和 $b$ 为正时，二阶导数 $2a + \\frac{2b}{x^3}$ 对所有 $x > 0$ 都是正的，所以二阶导数判别法确认任何临界点都是极小值点。这种形式常出现在最优化中，一项减小时另一项增大。",
+    "For $x > 0$, a function like $ax^2 + \\frac{b}{x}$ grows without bound both as $x \\to 0$ and as $x \\to \\infty$, with a lowest point between. The second derivative $2a + \\frac{2b}{x^3}$ is positive for all $x > 0$ when $a$ and $b$ are, so the second derivative test confirms a minimum at any critical point. This form often appears in optimization, as one term falls while the other rises. For $x^2 + \\frac{16}{x}$, $f'(x) = 2x - \\frac{16}{x^2}$ is $0$ when $x^3 = 8$, at $x = 2$, and $f''(2) = 2 + 4 = 6 > 0$. The minimum value is $f(2) = 4 + 8 = 12$.\n\nCheck: $f(1.9) \\approx 12.031$ and $f(2.1) \\approx 12.029$, both above $12$.\n\n> **Watch out.** The question asks for the value $f(2) = 12$, not the place $x = 2$ where it occurs.",
+    "当 $x > 0$ 时，像 $ax^2 + \\frac{b}{x}$ 这样的函数在 $x \\to 0$ 和 $x \\to \\infty$ 时都无限增大，中间有一个最低点。当 $a$ 和 $b$ 为正时，二阶导数 $2a + \\frac{2b}{x^3}$ 对所有 $x > 0$ 都是正的，所以二阶导数判别法确认任何临界点都是极小值点。这种形式常出现在最优化中，一项减小时另一项增大。对 $x^2 + \\frac{16}{x}$，$f'(x) = 2x - \\frac{16}{x^2}$ 在 $x^3 = 8$ 即 $x = 2$ 时为 $0$，且 $f''(2) = 2 + 4 = 6 > 0$。极小值为 $f(2) = 4 + 8 = 12$。\n\n检验：$f(1.9) \\approx 12.031$，$f(2.1) \\approx 12.029$，都大于 $12$。\n\n> **注意。** 题目问的是函数值 $f(2) = 12$，而不是取得它的位置 $x = 2$。",
   ),
   generate(rng) {
     const a = rng.int(1, 4);
     const c = rng.int(1, 12);
     const b = 2 * a * c ** 3;
     const answer = 3 * a * c * c;
+    const f = (x: number) => a * x * x + b / x;
     return numberProblem({
       prompt: t(
         `Find the local minimum value of $f(x) = ${poly([a, "x^2"])} + \\frac{${b}}{x}$ for $x > 0$.`,
@@ -4053,9 +4198,31 @@ const powerPlusReciprocalMinimum: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [a * c * c, 2 * a * c * c, c, 3 * a * c],
-      solution: t(
-        `Setting $f'(x) = ${poly([2 * a, "x"])} - \\frac{${b}}{x^2} = 0$ gives $x = ${c}$, and $f''(${c}) = ${6 * a} > 0$ makes this a minimum. Its value is $${a * c * c} + ${2 * a * c * c} = ${answer}$.`,
-        `令 $f'(x) = ${poly([2 * a, "x"])} - \\frac{${b}}{x^2} = 0$，得 $x = ${c}$，而 $f''(${c}) = ${6 * a} > 0$ 说明这是极小值点。它的值是 $${a * c * c} + ${2 * a * c * c} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Find the critical point",
+            "求临界点",
+            `$f'(x) = ${poly([2 * a, "x"])} - \\frac{${b}}{x^2}$ is $0$ when $x^3 = ${c ** 3}$, so $x = ${c}$.`,
+            `$f'(x) = ${poly([2 * a, "x"])} - \\frac{${b}}{x^2}$ 在 $x^3 = ${c ** 3}$ 时为 $0$，所以 $x = ${c}$。`,
+          ],
+          [
+            "Apply the second derivative test",
+            "用二阶导数检验",
+            `$f''(x) = ${2 * a} + \\frac{${2 * b}}{x^3}$, so $f''(${c}) = ${2 * a} + ${4 * a} = ${6 * a} > 0$: a local minimum.`,
+            `$f''(x) = ${2 * a} + \\frac{${2 * b}}{x^3}$，所以 $f''(${c}) = ${2 * a} + ${4 * a} = ${6 * a} > 0$：局部极小值。`,
+          ],
+          [
+            "Evaluate f",
+            "计算函数值",
+            `$f(${c}) = ${a * c * c} + ${2 * a * c * c} = ${answer}$.`,
+            `$f(${c}) = ${a * c * c} + ${2 * a * c * c} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Nearby values are larger: $f(${num(c - 0.1)}) \\approx ${num(f(c - 0.1))}$ and $f(${num(c + 0.1)}) \\approx ${num(f(c + 0.1))}$, both above $${answer}$.`,
+          `附近的值更大：$f(${num(c - 0.1)}) \\approx ${num(f(c - 0.1))}$，$f(${num(c + 0.1)}) \\approx ${num(f(c + 0.1))}$，都大于 $${answer}$。`,
+        ],
       ),
     });
   },
