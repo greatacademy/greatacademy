@@ -30,8 +30,8 @@ const improperFirst = point(
   "the-area-of-an-unbounded-tail-from-a-drawing",
   ["The area of an unbounded tail, from a drawing", "由图求无界尾部的面积"],
   [
-    "The area under $y = \\frac{c}{x^2}$ from $x = a$ onward is an improper integral. It is the limit of $\\int_a^b \\frac{c}{x^2}\\,dx = \\frac{c}{a} - \\frac{c}{b}$ as $b \\to \\infty$, which is $\\frac{c}{a}$.",
-    "$y = \\frac{c}{x^2}$ 在 $x = a$ 右侧的面积是反常积分。它是 $\\int_a^b \\frac{c}{x^2}\\,dx = \\frac{c}{a} - \\frac{c}{b}$ 当 $b \\to \\infty$ 时的极限，即 $\\frac{c}{a}$。",
+    "The area under $y = \\frac{c}{x^2}$ from $x = a$ onward is an improper integral, the limit of the area up to $b$:\n\n$$\\int_a^\\infty \\frac{c}{x^{2}}\\,dx = \\lim_{b \\to \\infty}\\left(\\frac{c}{a} - \\frac{c}{b}\\right) = \\frac{c}{a}$$\n\nIf the curve passes through $(1, c)$, its height at $x = 1$ gives $c$ directly. For example, a curve through $(1, 6)$ shaded from $x = 2$ onward has area $\\frac{6}{2}$, which is $3$.\n\nCheck: the area up to $b = 6$ is $3 - 1$, which is $2$, and the area up to $b = 60$ is $3 - \\frac{1}{10}$; these approach $3$ from below.\n\n> **Watch out.** An antiderivative of $\\frac{c}{x^2}$ is $-\\frac{c}{x}$, so the area is $\\frac{c}{a}$, not $\\frac{c}{a^2}$.",
+    "$y = \\frac{c}{x^2}$ 在 $x = a$ 右侧的面积是反常积分，即积到 $b$ 的面积的极限：\n\n$$\\int_a^\\infty \\frac{c}{x^{2}}\\,dx = \\lim_{b \\to \\infty}\\left(\\frac{c}{a} - \\frac{c}{b}\\right) = \\frac{c}{a}$$\n\n曲线过 $(1, c)$ 时，它在 $x = 1$ 处的高度直接给出 $c$。例如，过 $(1, 6)$ 的曲线在 $x = 2$ 右侧有阴影，面积是 $\\frac{6}{2}$，即 $3$。\n\n检验：积到 $b = 6$ 的面积是 $3 - 1$，即 $2$；积到 $b = 60$ 的面积是 $3 - \\frac{1}{10}$；它们从下方趋于 $3$。\n\n> **注意。** $\\frac{c}{x^2}$ 的原函数是 $-\\frac{c}{x}$，所以面积是 $\\frac{c}{a}$，不是 $\\frac{c}{a^2}$。",
   ],
   (rng) => {
     const c = rng.int(1, 9);
@@ -44,6 +44,10 @@ const improperFirst = point(
       [[c, String(c)]],
       (x, y) => shadeUnder(f, a, 8, x, y) + curvePath(f, 1, 8, x, y) + mark(x, y, 1, c),
     );
+    const area = Q.of(c, a).toLatex();
+    const lead = c === a ? "" : area;
+    const limit = `\\int_{${a}}^{\\infty} \\frac{${c}}{x^{2}}\\,dx = \\lim_{b \\to \\infty}\\left(${area} - \\frac{${c}}{b}\\right) = ${area}`;
+    const scaled = `\\int_{${a}}^{\\infty} \\frac{${c}}{x^{2}}\\,dx = ${lead}\\int_1^\\infty \\frac{du}{u^{2}}`;
     return ask(
       [
         "The curve has the form $y = \\frac{c}{x^2}$ and passes through the marked point. The shading continues to the right without end. Find the shaded area.",
@@ -52,8 +56,8 @@ const improperFirst = point(
       Q.of(c, a),
       [Q.of(c, a * a), c, Q.of(2 * c, a), c * a, Q.of(c, a + 1)],
       [
-        `The marked point gives $c = ${c}$, and the shading starts at $a = ${a}$. The area is $\\int_{${a}}^{\\infty} \\frac{${c}}{x^2}\\,dx = \\frac{${c}}{${a}}$.`,
-        `由标记点得 $c = ${c}$，阴影从 $a = ${a}$ 开始。面积为 $\\int_{${a}}^{\\infty} \\frac{${c}}{x^2}\\,dx = \\frac{${c}}{${a}}$。`,
+        `**Step 1: Read the drawing.** At the marked point $x = 1$ and $y = ${c}$, so $c = ${c}$. The shading starts at $x = ${a}$.\n\n**Step 2: Take the limit.** The antiderivative $-\\frac{${c}}{x}$ tends to $0$ as $x \\to \\infty$:\n\n$$${limit}$$\n\n**Check.** Substitute $x = ${a}u$, so $dx = ${a}\\,du$ and $u$ runs from $1$ to $\\infty$:\n\n$$${scaled}$$\n\nThe last integral is $1$, so the area is $${area}$.`,
+        `**第一步：读图。**标记点处 $x = 1$，$y = ${c}$，所以 $c = ${c}$。阴影从 $x = ${a}$ 开始。\n\n**第二步：取极限。**原函数 $-\\frac{${c}}{x}$ 在 $x \\to \\infty$ 时趋于 $0$：\n\n$$${limit}$$\n\n**检验。**令 $x = ${a}u$，则 $dx = ${a}\\,du$，$u$ 从 $1$ 变到 $\\infty$：\n\n$$${scaled}$$\n\n最后的积分等于 $1$，所以面积为 $${area}$。`,
       ],
       figureOf(svg, [
         `The curve through (1, ${c}), shaded below it from x = ${a} onward.`,
@@ -67,8 +71,8 @@ const improperSecond = point(
   "the-area-of-an-unbounded-spike-from-a-drawing",
   ["The area of an unbounded spike, from a drawing", "由图求无界尖峰的面积"],
   [
-    "The curve $y = \\frac{c}{\\sqrt{x}}$ rises without bound at $x = 0$, yet the area under it is finite: $\\int_0^b \\frac{c}{\\sqrt{x}}\\,dx$ is the limit of $2c\\sqrt{b} - 2c\\sqrt{s}$ as $s \\to 0^+$, which is $2c\\sqrt{b}$.",
-    "曲线 $y = \\frac{c}{\\sqrt{x}}$ 在 $x = 0$ 处无界上升，但它下方的面积有限：$\\int_0^b \\frac{c}{\\sqrt{x}}\\,dx$ 是 $2c\\sqrt{b} - 2c\\sqrt{s}$ 当 $s \\to 0^+$ 时的极限，即 $2c\\sqrt{b}$。",
+    "The curve $y = \\frac{c}{\\sqrt{x}}$ rises without bound at $x = 0$, yet the area under it is finite. Stop at $s > 0$ and let $s \\to 0^+$:\n\n$$\\int_0^b \\frac{c}{\\sqrt{x}}\\,dx = \\lim_{s \\to 0^{+}}\\left(2c\\sqrt{b} - 2c\\sqrt{s}\\right) = 2c\\sqrt{b}$$\n\nIf the curve passes through $(1, c)$, its height at $x = 1$ gives $c$ directly. For example, a curve through $(1, 3)$ shaded from $x = 0$ to $x = 4$ has area $2 \\cdot 3 \\cdot 2$, which is $12$.\n\nCheck: the derivative of $6\\sqrt{x}$ is $\\frac{3}{\\sqrt{x}}$, and $6\\sqrt{x}$ is $0$ at $x = 0$ and $12$ at $x = 4$.\n\n> **Watch out.** The integrand has no value at $x = 0$, so the integral is a limit. It converges because the antiderivative $2c\\sqrt{x}$ stays finite there, even though the curve does not.",
+    "曲线 $y = \\frac{c}{\\sqrt{x}}$ 在 $x = 0$ 处无界上升，但它下方的面积有限。从 $s > 0$ 积起，再令 $s \\to 0^+$：\n\n$$\\int_0^b \\frac{c}{\\sqrt{x}}\\,dx = \\lim_{s \\to 0^{+}}\\left(2c\\sqrt{b} - 2c\\sqrt{s}\\right) = 2c\\sqrt{b}$$\n\n曲线过 $(1, c)$ 时，它在 $x = 1$ 处的高度直接给出 $c$。例如，过 $(1, 3)$ 的曲线从 $x = 0$ 到 $x = 4$ 有阴影，面积是 $2 \\cdot 3 \\cdot 2$，即 $12$。\n\n检验：$6\\sqrt{x}$ 的导数是 $\\frac{3}{\\sqrt{x}}$，而 $6\\sqrt{x}$ 在 $x = 0$ 处为 $0$，在 $x = 4$ 处为 $12$。\n\n> **注意。** 被积函数在 $x = 0$ 处没有值，所以积分是极限。它收敛，是因为原函数 $2c\\sqrt{x}$ 在那里保持有限，尽管曲线并不有限。",
   ],
   (rng) => {
     const c = rng.int(1, 9);
@@ -84,16 +88,19 @@ const improperSecond = point(
       [[c, String(c)]],
       (x, y) => shadeUnder(f, 0, b, x, y) + curvePath(f, start, 10, x, y) + mark(x, y, 1, c),
     );
+    const answer = 2 * c * root;
+    const limit = `\\int_0^{${b}} \\frac{${c}}{\\sqrt{x}}\\,dx = \\lim_{s \\to 0^{+}}\\left(${2 * c}\\sqrt{${b}} - ${2 * c}\\sqrt{s}\\right) = ${2 * c}\\sqrt{${b}} = ${answer}`;
+    const derivative = `\\frac{d}{dx}\\left[${2 * c}\\sqrt{x}\\right] = \\frac{${c}}{\\sqrt{x}}`;
     return ask(
       [
         "The curve has the form $y = \\frac{c}{\\sqrt{x}}$ and passes through the marked point. It rises without bound at $x = 0$. Find the shaded area.",
         "曲线的形式为 $y = \\frac{c}{\\sqrt{x}}$，并过标记点。它在 $x = 0$ 处无界上升。求阴影面积。",
       ],
-      2 * c * root,
+      answer,
       [c * root, 2 * c * b, c * b, 2 * c, 2 * c + root],
       [
-        `The marked point gives $c = ${c}$, and the shading ends at $x = ${b}$. The area is $2c\\sqrt{${b}} = 2(${c})(${root}) = ${2 * c * root}$.`,
-        `由标记点得 $c = ${c}$，阴影到 $x = ${b}$ 结束。面积为 $2c\\sqrt{${b}} = 2(${c})(${root}) = ${2 * c * root}$。`,
+        `**Step 1: Read the drawing.** At the marked point $x = 1$ and $y = ${c}$, so $c = ${c}$. The shading ends at $x = ${b}$.\n\n**Step 2: Take the limit.** An antiderivative is $${2 * c}\\sqrt{x}$, which tends to $0$ as $x \\to 0^{+}$:\n\n$$${limit}$$\n\n**Check.** Differentiate the antiderivative; it gives back the curve, and it rises from $0$ at $x = 0$ to $${answer}$ at $x = ${b}$:\n\n$$${derivative}$$`,
+        `**第一步：读图。**标记点处 $x = 1$，$y = ${c}$，所以 $c = ${c}$。阴影到 $x = ${b}$ 结束。\n\n**第二步：取极限。**原函数是 $${2 * c}\\sqrt{x}$，它在 $x \\to 0^{+}$ 时趋于 $0$：\n\n$$${limit}$$\n\n**检验。**对原函数求导，得到的正是曲线的函数；原函数从 $x = 0$ 处的 $0$ 增加到 $x = ${b}$ 处的 $${answer}$：\n\n$$${derivative}$$`,
       ],
       figureOf(svg, [
         `The curve through (1, ${c}), shaded below it from x = 0 to x = ${b}.`,

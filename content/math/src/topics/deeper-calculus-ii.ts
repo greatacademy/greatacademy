@@ -158,8 +158,8 @@ const coverUp: KnowledgePointDef = {
   id: "the-cover-up-method-with-three-factors",
   title: t("The cover-up method with three factors", "三个因式的掩盖法"),
   explanation: t(
-    "To find the coefficient over a distinct linear factor $x - a$, multiply both sides by that factor and set $x = a$. All the other partial fractions vanish. In practice, this means covering the factor and substituting $x = a$ into what remains, with no system of equations to solve.",
-    "要求一次因式 $x - a$ 上的系数，两边同乘这个因式，再令 $x = a$，其他分式都变成零。实际做法就是盖住这个因式，把 $x = a$ 代入剩下的部分，不用解方程组。",
+    "To find the coefficient over a distinct linear factor $x - a$, multiply both sides by that factor and set $x = a$. Every other partial fraction is then multiplied by $x - a$, which is $0$ there, so only the coefficient is left. In practice, cover the factor and substitute $x = a$ into what remains, with no system of equations to solve. For example, the coefficient over $x - 1$ in $\\frac{6}{(x - 1)(x - 2)(x - 3)}$ is\n\n$$A = \\frac{6}{(1 - 2)(1 - 3)} = 3$$\n\nCheck: the cover-up also gives $-6$ over $x - 2$ and $3$ over $x - 3$. At $x = 0$ the three fractions are $-3$, $3$ and $-1$, which add up to $-1$, and the original fraction at $0$ is $\\frac{6}{-6}$, also $-1$.\n\n> **Watch out.** Substitute the root of the covered factor into the other factors, each written as the root minus that factor's own root. A slip in one sign flips the answer.",
+    "要求一次因式 $x - a$ 上的系数，两边同乘这个因式，再令 $x = a$。其他部分分式都乘上了 $x - a$，在这一点为 $0$，于是只剩下这个系数。实际做法就是盖住这个因式，把 $x = a$ 代入剩下的部分，不用解方程组。例如，$\\frac{6}{(x - 1)(x - 2)(x - 3)}$ 中 $x - 1$ 上的系数是\n\n$$A = \\frac{6}{(1 - 2)(1 - 3)} = 3$$\n\n检验：用掩盖法还可得 $x - 2$ 上的系数为 $-6$，$x - 3$ 上的系数为 $3$。在 $x = 0$ 处三个分式分别是 $-3$、$3$ 和 $-1$，和为 $-1$；原分式在 $0$ 处是 $\\frac{6}{-6}$，也是 $-1$。\n\n> **注意。** 要把被盖住因式的根代入其他因式，每个因式都写成这个根减去它自己的根。一个符号出错，答案就变号。",
   ),
   generate(rng) {
     const a = rng.int(-4, 4);
@@ -167,6 +167,8 @@ const coverUp: KnowledgePointDef = {
     const c = rng.pick([-4, -3, -2, -1, 0, 1, 2, 3, 4].filter((x) => x !== a && x !== b));
     const n = rng.int(1, 12);
     const answer = Q.of(n, (a - b) * (a - c));
+    const B = Q.of(n, (b - a) * (b - c));
+    const C = Q.of(n, (c - a) * (c - b));
     const fa = poly([1, "x"], [-a, ""]);
     const fb = poly([1, "x"], [-b, ""]);
     const fc = poly([1, "x"], [-c, ""]);
@@ -177,9 +179,29 @@ const coverUp: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(n), answer.neg(), Q.of(n, (a + b) * (a + c) || 1)],
-      solution: t(
-        `Cover $${fa}$ and substitute $x = ${a}$ into the rest: $A = \\frac{${n}}{(${a} - ${inParens(b)})(${a} - ${inParens(c)})} = ${answer.toLatex()}$.`,
-        `盖住 $${fa}$，把 $x = ${a}$ 代入其余部分：$A = \\frac{${n}}{(${a} - ${inParens(b)})(${a} - ${inParens(c)})} = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Cover the factor", "盖住因式"],
+            [
+              `Multiply both sides by $${fa}$. The other two fractions keep a factor $${fa}$, which is $0$ at $x = ${a}$, so at that point only $A$ is left:`,
+              `两边同乘 $${fa}$。另外两个分式仍带有因式 $${fa}$，它在 $x = ${a}$ 处为 $0$，所以在这一点只剩下 $A$：`,
+            ],
+            [`A = \\left.\\frac{${n}}{(${fb})(${fc})}\\right|_{x = ${a}}`],
+          ],
+          [
+            ["Substitute the root", "代入根"],
+            [`Put $x = ${a}$ into the two remaining factors:`, `把 $x = ${a}$ 代入剩下的两个因式：`],
+            [
+              `A = \\frac{${n}}{(${a} - ${inParens(b)})(${a} - ${inParens(c)})}`,
+              `= \\frac{${n}}{(${a - b})(${a - c})} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `The numerator has no $x^{2}$ term, and clearing denominators shows that the $x^{2}$ coefficient is $A + B + C$, so the three coefficients add up to $0$. The cover-up gives $B = ${B.toLatex()}$ over $${fb}$ and $C = ${C.toLatex()}$ over $${fc}$:${steps(`${answer.toLatex()} + ${parQ(B)} + ${parQ(C)} = 0`).trimEnd()}`,
+          `分子没有 $x^{2}$ 项，而去分母后 $x^{2}$ 的系数是 $A + B + C$，所以三个系数之和为 $0$。用掩盖法得 $${fb}$ 上的 $B = ${B.toLatex()}$，$${fc}$ 上的 $C = ${C.toLatex()}$：${steps(`${answer.toLatex()} + ${parQ(B)} + ${parQ(C)} = 0`).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -189,8 +211,8 @@ const exponentFromImproper: KnowledgePointDef = {
   id: "the-exponent-from-the-value-of-an-improper-integral",
   title: t("The exponent from the value of an improper integral", "由反常积分的值求指数"),
   explanation: t(
-    "For $p > 1$, $\\int_1^\\infty x^{-p}\\,dx = \\frac{1}{p - 1}$. So the value of the integral shrinks as $p$ grows, and each value belongs to one exponent. Given the value, solve this relation for $p$, after taking out any constant multiple of the integrand.",
-    "当 $p > 1$ 时，$\\int_1^\\infty x^{-p}\\,dx = \\frac{1}{p - 1}$。所以 $p$ 越大积分值越小，每个值只对应一个指数。已知积分值时，先提出被积函数的常数倍，再由这个关系解出 $p$。",
+    "For $p > 1$,\n\n$$\\int_1^\\infty \\frac{k}{x^{p}}\\,dx = \\frac{k}{p - 1}$$\n\nThe value shrinks as $p$ grows, so each value belongs to one exponent. Given the value, set $\\frac{k}{p - 1}$ equal to it and solve for $p$. For example, if $\\int_1^\\infty \\frac{6}{x^{p}}\\,dx$ is $2$, then $p - 1 = 3$, so $p = 4$.\n\nCheck: with $p = 4$, $\\int_1^t 6x^{-4}\\,dx$ is $2 - \\frac{2}{t^{3}}$, which tends to $2$.\n\n> **Watch out.** The value gives $p - 1$ first; $1$ still has to be added to reach $p$.",
+    "当 $p > 1$ 时，\n\n$$\\int_1^\\infty \\frac{k}{x^{p}}\\,dx = \\frac{k}{p - 1}$$\n\n$p$ 越大积分值越小，所以每个值只对应一个指数。已知积分值时，令 $\\frac{k}{p - 1}$ 等于它，解出 $p$。例如，若 $\\int_1^\\infty \\frac{6}{x^{p}}\\,dx$ 等于 $2$，则 $p - 1 = 3$，所以 $p = 4$。\n\n检验：$p = 4$ 时，$\\int_1^t 6x^{-4}\\,dx$ 等于 $2 - \\frac{2}{t^{3}}$，趋于 $2$。\n\n> **注意。** 由积分值先得到的是 $p - 1$，还要加上 $1$ 才是 $p$。",
   ),
   generate(rng) {
     const k = rng.int(1, 9);
@@ -204,9 +226,26 @@ const exponentFromImproper: KnowledgePointDef = {
       answer: p,
       solveFor: "p",
       wrong: [p - 1, p + 1, k],
-      solution: t(
-        `The integral equals $\\frac{${k}}{p - 1}$. Setting this equal to $${v.toLatex()}$ gives $p - 1 = ${p - 1}$, so $p = ${p}$.`,
-        `积分等于 $\\frac{${k}}{p - 1}$。令它等于 $${v.toLatex()}$，得 $p - 1 = ${p - 1}$，所以 $p = ${p}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Evaluate the integral in terms of p", "用 p 表示积分"],
+            [
+              "For $p > 1$, the integral up to $t$ contains $t^{1 - p}$, which tends to $0$ as $t \\to \\infty$:",
+              "当 $p > 1$ 时，积到 $t$ 的积分含有 $t^{1 - p}$，它在 $t \\to \\infty$ 时趋于 $0$：",
+            ],
+            [`\\int_1^\\infty \\frac{${k}}{x^p}\\,dx = \\frac{${k}}{p - 1}`],
+          ],
+          [
+            ["Solve for p", "解出 p"],
+            ["Set this equal to the given value:", "令它等于已知的值："],
+            [`\\frac{${k}}{p - 1} = ${v.toLatex()}`, `p - 1 = ${p - 1}`, `p = ${p}`],
+          ],
+        ],
+        [
+          `Put $p = ${p}$ back into the formula; it gives the value in the question:${steps(`\\frac{${k}}{${p} - 1} = ${v.toLatex()}`).trimEnd()}`,
+          `把 $p = ${p}$ 代回公式，得到题中的值：${steps(`\\frac{${k}}{${p} - 1} = ${v.toLatex()}`).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -1556,13 +1595,19 @@ const improperPartialFractions: KnowledgePointDef = {
   id: "an-improper-integral-by-partial-fractions",
   title: t("An improper integral by partial fractions", "用部分分式求反常积分"),
   explanation: t(
-    "Each partial fraction alone gives a logarithm that diverges at infinity, so they must be combined before taking the limit. Writing the antiderivative as one logarithm of a quotient, $\\ln\\frac{x}{x + a}$, shows that the value at infinity is $\\ln 1 = 0$. Splitting the improper integral into two separate divergent pieces would fail.",
-    "每个部分分式单独积分都得到在无穷远处发散的对数，所以必须先合并，再取极限。把原函数写成一个商的对数 $\\ln\\frac{x}{x + a}$，就能看出它在无穷远处的值是 $\\ln 1 = 0$。如果把反常积分拆成两个各自发散的部分，这样做是行不通的。",
+    "Each partial fraction alone gives a logarithm that diverges at infinity, so combine them before taking the limit. The partial fractions are\n\n$$\\frac{1}{x(x + a)} = \\frac{1}{a}\\left(\\frac{1}{x} - \\frac{1}{x + a}\\right)$$\n\nSo an antiderivative is $\\frac{1}{a}\\ln\\frac{x}{x + a}$, and $\\frac{x}{x + a} \\to 1$, so its value at infinity is $\\ln 1$, which is $0$. For example, $\\int_1^\\infty \\frac{1}{x(x + 1)}\\,dx$ is $0 - \\ln\\frac{1}{2}$, which is $\\ln 2$.\n\nCheck: $\\frac{1}{x(x + 1)} < \\frac{1}{x^{2}}$ for $x \\ge 1$, and $\\int_1^\\infty x^{-2}\\,dx$ is $1$, so the value must be below $1$; $\\ln 2$ is about $0.69$.\n\n> **Watch out.** Do not split the improper integral into $\\int_1^\\infty \\frac{1}{x}\\,dx$ minus $\\int_1^\\infty \\frac{1}{x + a}\\,dx$: both diverge, and a difference of two infinite quantities has no value.",
+    "每个部分分式单独积分都得到在无穷远处发散的对数，所以要先合并，再取极限。由\n\n$$\\frac{1}{x(x + a)} = \\frac{1}{a}\\left(\\frac{1}{x} - \\frac{1}{x + a}\\right)$$\n\n原函数为 $\\frac{1}{a}\\ln\\frac{x}{x + a}$，而 $\\frac{x}{x + a} \\to 1$，所以它在无穷远处的值是 $\\ln 1$，即 $0$。例如 $\\int_1^\\infty \\frac{1}{x(x + 1)}\\,dx$ 等于 $0 - \\ln\\frac{1}{2}$，即 $\\ln 2$。\n\n检验：当 $x \\ge 1$ 时 $\\frac{1}{x(x + 1)} < \\frac{1}{x^{2}}$，而 $\\int_1^\\infty x^{-2}\\,dx$ 等于 $1$，所以积分值应小于 $1$；$\\ln 2$ 约为 $0.69$。\n\n> **注意。** 不能把反常积分拆成 $\\int_1^\\infty \\frac{1}{x}\\,dx$ 减去 $\\int_1^\\infty \\frac{1}{x + a}\\,dx$：两者都发散，两个无穷大之差没有确定的值。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
     const k = rng.int(1, 9);
     const answer = Q.of(k, a);
+    const front = coefQ(answer);
+    const f = `\\frac{${k}}{x(x + ${a})}`;
+    const back =
+      k === a
+        ? t("which is the integrand.", "正是被积函数。")
+        : t(`and multiplying by $${answer.toLatex()}$ gives back $${f}$.`, `乘以 $${answer.toLatex()}$ 就得到 $${f}$。`);
     return numberProblem({
       prompt: t(
         `The integral $\\int_1^\\infty \\frac{${k}}{x(x + ${a})}\\,dx$ equals $c\\ln ${a + 1}$. Find $c$.`,
@@ -1570,9 +1615,34 @@ const improperPartialFractions: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(k), answer.neg(), Q.of(k, a + 1)],
-      solution: t(
-        `An antiderivative is $${fractionBefore(k, a)}\\ln\\frac{x}{x + ${a}}$. It is 0 at infinity and $-${fractionBefore(k, a)}\\ln ${a + 1}$ at 1, so $c = ${answer.toLatex()}$.`,
-        `原函数是 $${fractionBefore(k, a)}\\ln\\frac{x}{x + ${a}}$。它在无穷远处是 0，在 1 处是 $-${fractionBefore(k, a)}\\ln ${a + 1}$，所以 $c = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Split into partial fractions", "拆成部分分式"],
+            ["The cover-up gives the two coefficients:", "用掩盖法得到两个系数："],
+            [`${f} = ${front}\\left(\\frac{1}{x} - \\frac{1}{x + ${a}}\\right)`],
+          ],
+          [
+            ["Integrate up to t", "积到 t"],
+            ["Combine the two logarithms into one before going further:", "先把两个对数合并成一个："],
+            [
+              `\\int_1^t ${f}\\,dx = ${front}\\left[\\ln\\frac{x}{x + ${a}}\\right]_1^t`,
+              `= ${front}\\left(\\ln\\frac{t}{t + ${a}} - \\ln\\frac{1}{${a + 1}}\\right)`,
+            ],
+          ],
+          [
+            ["Take the limit", "取极限"],
+            [
+              `As $t \\to \\infty$, $\\frac{t}{t + ${a}} \\to 1$, so its logarithm tends to $0$, and $-\\ln\\frac{1}{${a + 1}}$ is $\\ln ${a + 1}$:`,
+              `当 $t \\to \\infty$ 时，$\\frac{t}{t + ${a}} \\to 1$，它的对数趋于 $0$，而 $-\\ln\\frac{1}{${a + 1}}$ 等于 $\\ln ${a + 1}$：`,
+            ],
+            [`\\int_1^\\infty ${f}\\,dx = ${front}\\ln ${a + 1}`, `c = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Differentiate the antiderivative. The derivative of $\\ln\\frac{x}{x + ${a}}$ is $\\frac{1}{x} - \\frac{1}{x + ${a}}$, which is $\\frac{${a}}{x(x + ${a})}$, ${back.en}`,
+          `对原函数求导。$\\ln\\frac{x}{x + ${a}}$ 的导数是 $\\frac{1}{x} - \\frac{1}{x + ${a}}$，即 $\\frac{${a}}{x(x + ${a})}$，${back["zh-CN"]}`,
+        ],
       ),
     });
   },
@@ -1582,23 +1652,58 @@ const overCubedFactor: KnowledgePointDef = {
   id: "a-numerator-over-a-cubed-linear-factor",
   title: t("A numerator over a cubed linear factor", "分母为线性因子立方的积分"),
   explanation: t(
-    "A linear factor repeated three times normally gives partial fractions up to the third power. Here the numerator is $x$, and rewriting it as $(x + a) - a$ gives the decomposition immediately, with no equations to solve. Each piece is then a negative power of $x + a$, and these integrate directly with no logarithms at all.",
-    "重复三次的线性因子，一般分解出直到三次幂的部分分式。这里分子是 $x$，把它改写成 $(x + a) - a$，就立刻得到分解，不用解方程。每一部分都是 $x + a$ 的负幂，可以直接积分，完全不出现对数。",
+    "A linear factor repeated three times normally gives partial fractions up to the third power. When the numerator is $x$, writing it as $(x + a) - a$ gives the decomposition at once:\n\n$$\\frac{x}{(x + a)^{3}} = \\frac{1}{(x + a)^{2}} - \\frac{a}{(x + a)^{3}}$$\n\nBoth pieces are negative powers of $x + a$ and integrate with no logarithms. From $0$ to $\\infty$ they give $\\frac{1}{a}$ and $\\frac{1}{2a}$, so the integral of $\\frac{x}{(x + a)^{3}}$ over $[0, \\infty)$ is $\\frac{1}{2a}$. For example, with $a = 1$ the value is $\\frac{1}{2}$.\n\nCheck: with $a = 1$, $\\int_0^\\infty (x + 1)^{-2}\\,dx$ is $1$ and $\\int_0^\\infty (x + 1)^{-3}\\,dx$ is $\\frac{1}{2}$; their difference is $\\frac{1}{2}$.\n\n> **Watch out.** The second piece keeps the factor $a$ in its numerator: $\\int_0^\\infty \\frac{a}{(x + a)^{3}}\\,dx$ is $a \\cdot \\frac{1}{2a^{2}}$, which is $\\frac{1}{2a}$, not $\\frac{1}{2a^{2}}$.",
+    "重复三次的线性因子，一般分解出直到三次幂的部分分式。分子是 $x$ 时，把它写成 $(x + a) - a$，就立刻得到分解：\n\n$$\\frac{x}{(x + a)^{3}} = \\frac{1}{(x + a)^{2}} - \\frac{a}{(x + a)^{3}}$$\n\n两部分都是 $x + a$ 的负幂，积分时完全不出现对数。从 $0$ 积到 $\\infty$，它们分别得 $\\frac{1}{a}$ 和 $\\frac{1}{2a}$，所以 $\\frac{x}{(x + a)^{3}}$ 在 $[0, \\infty)$ 上的积分是 $\\frac{1}{2a}$。例如 $a = 1$ 时积分值为 $\\frac{1}{2}$。\n\n检验：$a = 1$ 时，$\\int_0^\\infty (x + 1)^{-2}\\,dx$ 等于 $1$，$\\int_0^\\infty (x + 1)^{-3}\\,dx$ 等于 $\\frac{1}{2}$，两者之差为 $\\frac{1}{2}$。\n\n> **注意。** 第二部分的分子保留因子 $a$：$\\int_0^\\infty \\frac{a}{(x + a)^{3}}\\,dx$ 等于 $a \\cdot \\frac{1}{2a^{2}}$，即 $\\frac{1}{2a}$，而不是 $\\frac{1}{2a^{2}}$。",
   ),
   generate(rng) {
     const a = rng.int(1, 12);
     const k = rng.int(1, 9);
     const answer = Q.of(k, 2 * a);
+    const first = Q.of(1, a).toLatex();
+    const second = Q.of(1, 2 * a).toLatex();
+    const K = coefficientOf(k);
+    const split = `\\frac{1}{(x + ${a})^{2}} - \\frac{${a}}{(x + ${a})^{3}}`;
+    const byU = [
+      `\\int_{${a}}^{\\infty} \\frac{u - ${a}}{u^{3}}\\,du = \\left[-\\frac{1}{u} + \\frac{${a}}{2u^{2}}\\right]_{${a}}^{\\infty} = ${second}`,
+    ];
+    if (k !== 1) byU.push(`${k} \\cdot ${second} = ${answer.toLatex()}`);
     return numberProblem({
       prompt: t(
-        `Evaluate $\\int_0^\\infty \\frac{${coefficientOf(k)}x}{(x + ${a})^3}\\,dx$.`,
-        `计算 $\\int_0^\\infty \\frac{${coefficientOf(k)}x}{(x + ${a})^3}\\,dx$。`,
+        `Evaluate $\\int_0^\\infty \\frac{${K}x}{(x + ${a})^3}\\,dx$.`,
+        `计算 $\\int_0^\\infty \\frac{${K}x}{(x + ${a})^3}\\,dx$。`,
       ),
       answer,
       wrong: [Q.of(k, a), Q.of(k, 2 * a * a), Q.of(k, 3 * a)],
-      solution: t(
-        `Split the fraction as $\\frac{1}{(x + ${a})^2} - \\frac{${a}}{(x + ${a})^3}$. These integrate to $${Q.of(1, a).toLatex()}$ and $\\frac{1}{${2 * a}}$, whose difference is $\\frac{1}{${2 * a}}$. Multiplying by ${k} gives $${answer.toLatex()}$.`,
-        `把分式拆成 $\\frac{1}{(x + ${a})^2} - \\frac{${a}}{(x + ${a})^3}$。它们的积分分别是 $${Q.of(1, a).toLatex()}$ 和 $\\frac{1}{${2 * a}}$，差是 $\\frac{1}{${2 * a}}$。乘以 ${k}，得 $${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Split the fraction", "拆开分式"],
+            [`Write $x$ as $(x + ${a}) - ${a}$:`, `把 $x$ 写成 $(x + ${a}) - ${a}$：`],
+            [`\\frac{${K}x}{(x + ${a})^{3}} = ${k === 1 ? split : `${K}\\left(${split}\\right)`}`],
+          ],
+          [
+            ["Integrate each piece", "分别积分"],
+            [
+              `Each piece is a power of $x + ${a}$, and both antiderivatives tend to $0$ as $x \\to \\infty$:`,
+              `每一部分都是 $x + ${a}$ 的幂，两个原函数在 $x \\to \\infty$ 时都趋于 $0$：`,
+            ],
+            [
+              `\\int_0^\\infty \\frac{1}{(x + ${a})^{2}}\\,dx = \\left[-\\frac{1}{x + ${a}}\\right]_0^\\infty = ${first}`,
+              `\\int_0^\\infty \\frac{${a}}{(x + ${a})^{3}}\\,dx = \\left[-\\frac{${a}}{2(x + ${a})^{2}}\\right]_0^\\infty = ${second}`,
+            ],
+          ],
+          [
+            ["Combine", "合并"],
+            k === 1
+              ? ["Subtract the second from the first:", "用第一部分减去第二部分："]
+              : ["Subtract the second from the first and multiply by the constant in front:", "用第一部分减去第二部分，再乘以前面的常数："],
+            [k === 1 ? `${first} - ${second} = ${answer.toLatex()}` : `${K}\\left(${first} - ${second}\\right) = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Substitute $u = x + ${a}$ instead, so $x = u - ${a}$ and $u$ runs from $${a}$ to $\\infty$:${steps(...byU).trimEnd()}`,
+          `改用代换 $u = x + ${a}$，则 $x = u - ${a}$，$u$ 从 $${a}$ 变到 $\\infty$：${steps(...byU).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -1608,23 +1713,49 @@ const evenOverRealLine: KnowledgePointDef = {
   id: "doubling-an-even-integrand-over-the-real-line",
   title: t("Doubling an even integrand over the real line", "实轴上偶函数积分加倍"),
   explanation: t(
-    "An integral over the whole real line must be split at a finite point, and for an even integrand that split saves work. It equals twice the integral from zero to infinity. This also removes an absolute value, since $|x| = x$ on the positive half, and then a substitution such as $u = ax^2$ finishes the calculation.",
-    "实轴上的积分必须在某个有限点分开，而对偶函数，这样分开还能省事。它等于从零到无穷积分的两倍。这也去掉了绝对值，因为在正半轴上 $|x| = x$，然后用 $u = ax^2$ 这样的换元就能算完。",
+    "An integral over the whole real line is split at a finite point, and for an even integrand the two halves are equal:\n\n$$\\int_{-\\infty}^{\\infty} f(x)\\,dx = 2\\int_{0}^{\\infty} f(x)\\,dx$$\n\nOn the positive half $|x| = x$, so the absolute value disappears, and a substitution such as $u = ax^{2}$ finishes the calculation. For example, $\\int_{-\\infty}^{\\infty} |x|e^{-x^{2}}\\,dx$ is $2 \\cdot \\frac{1}{2}$, which is $1$.\n\nCheck: $\\int_0^t xe^{-x^{2}}\\,dx$ is $\\frac{1}{2} - \\frac{1}{2}e^{-t^{2}}$, which tends to $\\frac{1}{2}$, the value of each half.\n\n> **Watch out.** Do not drop the absolute value and integrate $xe^{-ax^{2}}$ over the whole line: that integrand is odd and gives $0$, while $|x|e^{-ax^{2}}$ is never negative.",
+    "实轴上的积分要在某个有限点分开；对偶函数，两半相等：\n\n$$\\int_{-\\infty}^{\\infty} f(x)\\,dx = 2\\int_{0}^{\\infty} f(x)\\,dx$$\n\n在正半轴上 $|x| = x$，绝对值就去掉了，再用 $u = ax^{2}$ 这样的换元就能算完。例如 $\\int_{-\\infty}^{\\infty} |x|e^{-x^{2}}\\,dx$ 等于 $2 \\cdot \\frac{1}{2}$，即 $1$。\n\n检验：$\\int_0^t xe^{-x^{2}}\\,dx$ 等于 $\\frac{1}{2} - \\frac{1}{2}e^{-t^{2}}$，趋于 $\\frac{1}{2}$，正是每一半的值。\n\n> **注意。** 不能去掉绝对值后在整条实轴上积分 $xe^{-ax^{2}}$：那个被积函数是奇函数，积分为 $0$，而 $|x|e^{-ax^{2}}$ 从不为负。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
     const k = rng.int(1, 12);
     const answer = Q.of(k, a);
+    const half = Q.of(k, 2 * a);
+    const K = coefficientOf(k);
+    const A = coefficientOf(a);
+    const derivative = `\\frac{d}{dx}\\left[${coefQ(half.neg())}e^{-${A}x^{2}}\\right] = ${K}xe^{-${A}x^{2}}`;
     return numberProblem({
       prompt: t(
-        `Evaluate $\\int_{-\\infty}^\\infty ${coefficientOf(k)}|x|e^{-${coefficientOf(a)}x^2}\\,dx$.`,
-        `计算 $\\int_{-\\infty}^\\infty ${coefficientOf(k)}|x|e^{-${coefficientOf(a)}x^2}\\,dx$。`,
+        `Evaluate $\\int_{-\\infty}^\\infty ${K}|x|e^{-${A}x^2}\\,dx$.`,
+        `计算 $\\int_{-\\infty}^\\infty ${K}|x|e^{-${A}x^2}\\,dx$。`,
       ),
       answer,
       wrong: [Q.of(2 * k, a), Q.of(k, 2 * a), Q.of(0)],
-      solution: t(
-        `The integrand is even, so this is $2\\int_0^\\infty ${coefficientOf(k)}xe^{-${coefficientOf(a)}x^2}\\,dx = 2 \\cdot \\frac{${k}}{${2 * a}} = ${answer.toLatex()}$.`,
-        `被积函数是偶函数，所以它等于 $2\\int_0^\\infty ${coefficientOf(k)}xe^{-${coefficientOf(a)}x^2}\\,dx = 2 \\cdot \\frac{${k}}{${2 * a}} = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Use the symmetry", "利用对称性"],
+            ["The integrand is even, and $|x| = x$ for $x \\ge 0$:", "被积函数是偶函数，且当 $x \\ge 0$ 时 $|x| = x$："],
+            [`\\int_{-\\infty}^\\infty ${K}|x|e^{-${A}x^2}\\,dx = 2\\int_0^\\infty ${K}xe^{-${A}x^2}\\,dx`],
+          ],
+          [
+            ["Substitute", "换元"],
+            [
+              `Let $u = ${A}x^{2}$, so $du = ${2 * a}x\\,dx$ and $u$ runs from $0$ to $\\infty$:`,
+              `令 $u = ${A}x^{2}$，则 $du = ${2 * a}x\\,dx$，$u$ 从 $0$ 变到 $\\infty$：`,
+            ],
+            [`\\int_0^\\infty ${K}xe^{-${A}x^2}\\,dx = ${coefQ(half)}\\int_0^\\infty e^{-u}\\,du = ${half.toLatex()}`],
+          ],
+          [
+            ["Double the half", "把一半加倍"],
+            ["The two halves are equal:", "两半相等："],
+            [`2 \\cdot ${half.toLatex()} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `On $[0, \\infty)$ an antiderivative is $${coefQ(half.neg())}e^{-${A}x^{2}}$, as differentiating shows; it rises from $-${half.toLatex()}$ at $0$ to $0$ at infinity, so each half is $${half.toLatex()}$:${steps(derivative).trimEnd()}`,
+          `在 $[0, \\infty)$ 上，原函数是 $${coefQ(half.neg())}e^{-${A}x^{2}}$，求导即可验证；它从 $0$ 处的 $-${half.toLatex()}$ 增加到无穷远处的 $0$，所以每一半都是 $${half.toLatex()}$：${steps(derivative).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -1634,24 +1765,53 @@ const unboundedAtTop: KnowledgePointDef = {
   id: "an-integrand-unbounded-at-the-upper-limit",
   title: t("An integrand unbounded at the upper limit", "在上限处无界的被积函数"),
   explanation: t(
-    "An integrand may blow up at the upper limit rather than the lower one, and then the limit is taken from the left. With $\\frac{x}{\\sqrt{a^2 - x^2}}$, the numerator is exactly what the substitution $u = a^2 - x^2$ needs, and the antiderivative $-\\sqrt{a^2 - x^2}$ stays finite as $x$ approaches $a$, so the integral converges.",
-    "被积函数也可能在上限而不是下限处趋于无穷，这时从左侧取极限。对 $\\frac{x}{\\sqrt{a^2 - x^2}}$，分子恰好是换元 $u = a^2 - x^2$ 所需要的，原函数 $-\\sqrt{a^2 - x^2}$ 在 $x$ 趋于 $a$ 时保持有限，所以积分收敛。",
+    "An integrand may blow up at the upper limit rather than the lower one, and then the limit is taken from the left:\n\n$$\\int_{0}^{a} f(x)\\,dx = \\lim_{t \\to a^{-}} \\int_{0}^{t} f(x)\\,dx$$\n\nFor $\\frac{x}{\\sqrt{a^{2} - x^{2}}}$ the numerator is what the substitution $u = a^{2} - x^{2}$ needs, and the antiderivative $-\\sqrt{a^{2} - x^{2}}$ stays finite as $x \\to a^{-}$, so the integral converges. For example, $\\int_0^{3} \\frac{x}{\\sqrt{9 - x^{2}}}\\,dx$ is $0 - (-3)$, which is $3$.\n\nCheck: the derivative of $-\\sqrt{9 - x^{2}}$ is $\\frac{x}{\\sqrt{9 - x^{2}}}$, the integrand.\n\n> **Watch out.** The integrand is not defined at $x = a$, so the integral is a limit from the left. Plugging $x = a$ into the antiderivative gives the right number here only because the antiderivative is continuous there.",
+    "被积函数也可能在上限而不是下限处趋于无穷，这时从左侧取极限：\n\n$$\\int_{0}^{a} f(x)\\,dx = \\lim_{t \\to a^{-}} \\int_{0}^{t} f(x)\\,dx$$\n\n对 $\\frac{x}{\\sqrt{a^{2} - x^{2}}}$，分子恰好是换元 $u = a^{2} - x^{2}$ 所需要的，原函数 $-\\sqrt{a^{2} - x^{2}}$ 在 $x \\to a^{-}$ 时保持有限，所以积分收敛。例如 $\\int_0^{3} \\frac{x}{\\sqrt{9 - x^{2}}}\\,dx$ 等于 $0 - (-3)$，即 $3$。\n\n检验：$-\\sqrt{9 - x^{2}}$ 的导数是 $\\frac{x}{\\sqrt{9 - x^{2}}}$，正是被积函数。\n\n> **注意。** 被积函数在 $x = a$ 处没有定义，所以积分是从左侧取的极限。这里把 $x = a$ 代入原函数能得到正确的数，只是因为原函数在那里连续。",
   ),
   generate(rng) {
     const a = rng.int(1, 12);
     const k = rng.int(1, 9);
     const answer = k * a;
+    const K = coefficientOf(k);
+    const f = `\\frac{${K}x}{\\sqrt{${a * a} - x^2}}`;
+    const I = `\\int_0^{${a}} ${f}\\,dx`;
+    const A = coefficientOf(a);
     return numberProblem({
-      prompt: t(
-        `Evaluate $\\int_0^{${a}} \\frac{${coefficientOf(k)}x}{\\sqrt{${a * a} - x^2}}\\,dx$.`,
-        `计算 $\\int_0^{${a}} \\frac{${coefficientOf(k)}x}{\\sqrt{${a * a} - x^2}}\\,dx$。`,
-      ),
+      prompt: t(`Evaluate $${I}$.`, `计算 $${I}$。`),
       answer,
       form: "integer",
       wrong: [k * a * a, 2 * k * a, k],
-      solution: t(
-        `An antiderivative is $-${coefficientOf(k)}\\sqrt{${a * a} - x^2}$. It tends to 0 at the upper limit and equals $-${answer}$ at 0, so the value is $${answer}$.`,
-        `原函数是 $-${coefficientOf(k)}\\sqrt{${a * a} - x^2}$。它在上限处趋于 0，在 0 处等于 $-${answer}$，所以值是 $${answer}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Write the integral as a limit", "把积分写成极限"],
+            [
+              `The integrand is unbounded as $x \\to ${a}^{-}$, so stop at $t < ${a}$ and let $t \\to ${a}^{-}$:`,
+              `被积函数在 $x \\to ${a}^{-}$ 时无界，所以积到 $t < ${a}$，再令 $t \\to ${a}^{-}$：`,
+            ],
+            [`${I} = \\lim_{t \\to ${a}^{-}} \\int_0^{t} ${f}\\,dx`],
+          ],
+          [
+            ["Find an antiderivative", "求原函数"],
+            [
+              `With $u = ${a * a} - x^{2}$, $du = -2x\\,dx$, and the integral of $u^{-1/2}$ is $2u^{1/2}$:`,
+              `令 $u = ${a * a} - x^{2}$，则 $du = -2x\\,dx$，而 $u^{-1/2}$ 的积分是 $2u^{1/2}$：`,
+            ],
+            [`\\int ${f}\\,dx = -${K}\\sqrt{${a * a} - x^{2}} + C`],
+          ],
+          [
+            ["Take the limit", "取极限"],
+            [
+              `At $x = 0$ the antiderivative is $-${answer}$, and as $t \\to ${a}^{-}$ the root tends to $0$:`,
+              `原函数在 $x = 0$ 处为 $-${answer}$；当 $t \\to ${a}^{-}$ 时，根号趋于 $0$：`,
+            ],
+            [`${I} = \\lim_{t \\to ${a}^{-}}\\left(-${K}\\sqrt{${a * a} - t^{2}} + ${answer}\\right) = ${answer}`],
+          ],
+        ],
+        [
+          `Substitute $x = ${A}\\sin\\theta$ instead. Then $\\sqrt{${a * a} - x^{2}} = ${A}\\cos\\theta$ and $dx = ${A}\\cos\\theta\\,d\\theta$, and $\\theta$ runs from $0$ to $\\frac{\\pi}{2}$:${steps(`${I} = \\int_0^{\\pi/2} ${coefficientOf(answer)}\\sin\\theta\\,d\\theta = ${answer}`).trimEnd()}`,
+          `改用代换 $x = ${A}\\sin\\theta$。则 $\\sqrt{${a * a} - x^{2}} = ${A}\\cos\\theta$，$dx = ${A}\\cos\\theta\\,d\\theta$，$\\theta$ 从 $0$ 变到 $\\frac{\\pi}{2}$：${steps(`${I} = \\int_0^{\\pi/2} ${coefficientOf(answer)}\\sin\\theta\\,d\\theta = ${answer}`).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -2930,8 +3090,8 @@ const twoRepeatedFactors: KnowledgePointDef = {
   id: "two-repeated-factors-by-differentiating",
   title: t("Two repeated factors by differentiating", "用求导处理两个重因式"),
   explanation: t(
-    "Substituting a root only gives the coefficient over the highest power of a factor. For the coefficient over the first power, multiply both sides by the squared factor, so that $B$ stands alone and $A$ is multiplied by the factor once. Differentiating then removes $B$, and setting $x$ to the root removes every other term, leaving $A$ by itself.",
-    "代入根只能得到因式最高次幂上的系数。要求一次幂上的系数，先两边同乘这个因式的平方，这时 $B$ 单独成项，而 $A$ 乘着因式的一次幂。求导消去 $B$，再把 $x$ 取为根，其余各项都变成零，只剩下 $A$。",
+    "Substituting a root only gives the coefficient over the highest power of a factor. For the coefficient $A$ over the first power of $x + a$, multiply both sides by $(x + a)^{2}$:\n\n$$\\frac{N(x)}{(x + b)^{2}} = A(x + a) + B + (x + a)^{2}(\\cdots)$$\n\nDifferentiating removes $B$, and setting $x = -a$ removes every term that still contains $x + a$, leaving $A$. For example, for $\\frac{x + 3}{(x + 1)^{2}(x + 2)^{2}}$ the left side is $\\frac{x + 3}{(x + 2)^{2}}$, with derivative $\\frac{1}{(x + 2)^{2}} - \\frac{2(x + 3)}{(x + 2)^{3}}$; at $x = -1$ this is $1 - 4$, so $A = -3$.\n\nCheck: the same steps at $x = -2$ give $C = 1 + 2$, which is $3$. The numerator has degree below $3$, so for large $x$ the fraction is much smaller than $\\frac{1}{x}$, and the coefficients over the first powers must add to $0$: $-3 + 3 = 0$.\n\n> **Watch out.** The derivative of $\\frac{N(x)}{(x + b)^{2}}$ has two terms. Dropping the second one, $-\\frac{2N(x)}{(x + b)^{3}}$, is the usual mistake.",
+    "代入根只能得到因式最高次幂上的系数。要求 $x + a$ 一次幂上的系数 $A$，先两边同乘 $(x + a)^{2}$：\n\n$$\\frac{N(x)}{(x + b)^{2}} = A(x + a) + B + (x + a)^{2}(\\cdots)$$\n\n求导消去 $B$，再令 $x = -a$，仍含 $x + a$ 的各项都变成零，只剩下 $A$。例如，对 $\\frac{x + 3}{(x + 1)^{2}(x + 2)^{2}}$，左边是 $\\frac{x + 3}{(x + 2)^{2}}$，导数为 $\\frac{1}{(x + 2)^{2}} - \\frac{2(x + 3)}{(x + 2)^{3}}$；在 $x = -1$ 处它等于 $1 - 4$，所以 $A = -3$。\n\n检验：在 $x = -2$ 处做同样的步骤，得 $C = 1 + 2$，即 $3$。分子次数低于 $3$，所以 $x$ 很大时分式远小于 $\\frac{1}{x}$，一次幂上的系数之和必须为 $0$：$-3 + 3 = 0$。\n\n> **注意。** $\\frac{N(x)}{(x + b)^{2}}$ 的导数有两项。漏掉第二项 $-\\frac{2N(x)}{(x + b)^{3}}$ 是常见的错误。",
   ),
   generate(rng) {
     const a = nonzero(rng, 4);
@@ -2944,6 +3104,8 @@ const twoRepeatedFactors: KnowledgePointDef = {
     const first = Q.of(p, d * d);
     const second = Q.of(2 * atRoot, d * d * d);
     const answer = first.sub(second);
+    const atOther = q - p * b;
+    const other = Q.of(p, d * d).sub(Q.of(2 * atOther, -d * d * d));
     const f1 = poly([1, "x"], [a, ""]);
     const f2 = poly([1, "x"], [b, ""]);
     const numerator = poly([p, "x"], [q, ""]);
@@ -2955,9 +3117,45 @@ const twoRepeatedFactors: KnowledgePointDef = {
       ),
       answer,
       wrong: [first, first.add(second), Q.of(atRoot, d * d), answer.neg(), second],
-      solution: t(
-        `Multiplying by $(${f1})^2$ gives $\\frac{${numerator}}{(${f2})^2} = A(${f1}) + B + (${f1})^2(\\cdots)$. Differentiating and setting $x = ${-a}$ leaves $A$ on the right. On the left, $${f2}$ equals $${d}$ and the numerator equals $${atRoot}$ there, so $A = \\frac{${p}}{${inParens(d)}^2} - \\frac{2 \\cdot ${inParens(atRoot)}}{${inParens(d)}^3} = ${answer.toLatex()}$.`,
-        `两边同乘 $(${f1})^2$，得 $\\frac{${numerator}}{(${f2})^2} = A(${f1}) + B + (${f1})^2(\\cdots)$。求导并令 $x = ${-a}$，右边只剩 $A$。在左边，此时 $${f2}$ 等于 $${d}$，分子等于 $${atRoot}$，所以 $A = \\frac{${p}}{${inParens(d)}^2} - \\frac{2 \\cdot ${inParens(atRoot)}}{${inParens(d)}^3} = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Multiply by the squared factor", "乘以因式的平方"],
+            [`Multiply both sides by $(${f1})^{2}$:`, `两边同乘 $(${f1})^{2}$：`],
+            [`\\frac{${numerator}}{(${f2})^{2}} = A(${f1}) + B + (${f1})^{2}(\\cdots)`],
+          ],
+          [
+            ["Differentiate", "求导"],
+            [
+              `On the right, $B$ disappears, and every other term except $A$ still contains $${f1}$. On the left, use the quotient rule:`,
+              `右边 $B$ 消失，除 $A$ 以外的各项仍含 $${f1}$。左边用商的求导法则：`,
+            ],
+            [
+              `\\frac{d}{dx}\\left[\\frac{${numerator}}{(${f2})^{2}}\\right] = \\frac{${p}}{(${f2})^{2}} - \\frac{2(${numerator})}{(${f2})^{3}}`,
+            ],
+          ],
+          [
+            ["Set x to the root", "令 x 取根"],
+            [
+              `At $x = ${-a}$, $${f2}$ equals $${d}$ and the numerator equals $${atRoot}$, and the right side is $A$:`,
+              `在 $x = ${-a}$ 处，$${f2}$ 等于 $${d}$，分子等于 $${atRoot}$，右边等于 $A$：`,
+            ],
+            [
+              `A = \\frac{${p}}{${inParens(d)}^{2}} - \\frac{2 \\cdot ${inParens(atRoot)}}{${inParens(d)}^{3}}`,
+              `= ${first.toLatex()} - ${parQ(second)} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `Do the same at $x = ${-b}$ for $C$, where $${f1}$ equals $${-d}$ and the numerator equals $${atOther}$. The numerator has degree below $3$, so the coefficients over the first powers add to $0$:${steps(
+            `C = \\frac{${p}}{${inParens(-d)}^{2}} - \\frac{2 \\cdot ${inParens(atOther)}}{${inParens(-d)}^{3}} = ${other.toLatex()}`,
+            `A + C = ${answer.toLatex()} + ${parQ(other)} = 0`,
+          ).trimEnd()}`,
+          `在 $x = ${-b}$ 处用同样的步骤求 $C$，此时 $${f1}$ 等于 $${-d}$，分子等于 $${atOther}$。分子次数低于 $3$，所以一次幂上的系数之和为 $0$：${steps(
+            `C = \\frac{${p}}{${inParens(-d)}^{2}} - \\frac{2 \\cdot ${inParens(atOther)}}{${inParens(-d)}^{3}} = ${other.toLatex()}`,
+            `A + C = ${answer.toLatex()} + ${parQ(other)} = 0`,
+          ).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -2967,8 +3165,8 @@ const xSquaredAsOneVariable: KnowledgePointDef = {
   id: "two-quadratic-factors-with-x-squared-as-one-variable",
   title: t("Two quadratic factors with x squared as one variable", "把 x 的平方看作一个变量的两个二次因式"),
   explanation: t(
-    "When a fraction contains $x$ only through $x^2$, the general numerators $Bx + C$ are more than it needs, since the linear terms must all vanish. Treat $y = x^2$ as a single variable. The fraction becomes one with two distinct linear factors in $y$, and substituting the root of a factor gives its coefficient at once, without a system of equations.",
-    "分式只通过 $x^2$ 含有 $x$ 时，不需要一般的分子 $Bx + C$，因为一次项全都为零。把 $y = x^2$ 看作一个变量，分式就变成含 $y$ 的两个不同一次因式，代入因式的根就能立刻得到系数，不用解方程组。",
+    "When a fraction contains $x$ only through $x^{2}$, the general numerators $Bx + C$ are more than it needs, since the linear terms must all vanish. Treat $y = x^{2}$ as a single variable:\n\n$$\\frac{px^{2} + q}{(x^{2} + a)(x^{2} + b)} = \\frac{py + q}{(y + a)(y + b)}$$\n\nThe right side has two distinct linear factors in $y$, so covering one and substituting its root gives its coefficient at once. For example, for $\\frac{x^{2} + 5}{(x^{2} + 1)(x^{2} + 3)}$, cover $y + 1$ and set $y = -1$: $C = \\frac{4}{2}$, which is $2$.\n\nCheck: covering $y + 3$ and setting $y = -3$ gives $D = \\frac{2}{-2}$, which is $-1$. For large $y$ the fraction is close to $\\frac{1}{y}$, so $C + D$ must be $1$, and $2 + (-1) = 1$.\n\n> **Watch out.** The root of $y + a$ is $y = -a$, a negative number. It cannot come from any real $x$, but the identity in $y$ holds for every $y$, so substituting it is allowed.",
+    "分式只通过 $x^{2}$ 含有 $x$ 时，不需要一般的分子 $Bx + C$，因为一次项全都为零。把 $y = x^{2}$ 看作一个变量：\n\n$$\\frac{px^{2} + q}{(x^{2} + a)(x^{2} + b)} = \\frac{py + q}{(y + a)(y + b)}$$\n\n右边是含 $y$ 的两个不同一次因式，盖住一个并代入它的根，就能立刻得到它的系数。例如，对 $\\frac{x^{2} + 5}{(x^{2} + 1)(x^{2} + 3)}$，盖住 $y + 1$ 并令 $y = -1$：$C = \\frac{4}{2}$，即 $2$。\n\n检验：盖住 $y + 3$ 并令 $y = -3$，得 $D = \\frac{2}{-2}$，即 $-1$。$y$ 很大时分式接近 $\\frac{1}{y}$，所以 $C + D$ 应等于 $1$，而 $2 + (-1) = 1$。\n\n> **注意。** $y + a$ 的根是 $y = -a$，是负数。它不对应任何实数 $x$，但关于 $y$ 的恒等式对所有 $y$ 都成立，所以可以代入。",
   ),
   generate(rng) {
     const a = rng.int(1, 9);
@@ -2977,7 +3175,11 @@ const xSquaredAsOneVariable: KnowledgePointDef = {
     let q = nonzero(rng, 12);
     while (q - p * a === 0 || q - p * b === 0) q += 1;
     const answer = Q.of(q - p * a, b - a);
+    const other = Q.of(q - p * b, a - b);
+    const covered = (name: string, top: number, bottom: number, value: Q) =>
+      bottom === 1 ? `${name} = ${value.toLatex()}` : `${name} = \\frac{${top}}{${bottom}} = ${value.toLatex()}`;
     const numerator = poly([p, "x^2"], [q, ""]);
+    const inY = poly([p, "y"], [q, ""]);
     const form = `\\frac{C}{x^2 + ${a}} + \\frac{D}{x^2 + ${b}}`;
     return numberProblem({
       prompt: t(
@@ -2986,9 +3188,32 @@ const xSquaredAsOneVariable: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(q + p * a, b - a), answer.neg(), Q.of(q - p * b, a - b), Q.of(q, b - a)],
-      solution: t(
-        `With $y = x^2$, the fraction is $\\frac{${poly([p, "y"], [q, ""])}}{(y + ${a})(y + ${b})}$. Covering $y + ${a}$ and setting $y = ${-a}$ makes the numerator $${q - p * a}$ and the other factor $${b - a}$, so $C = ${answer.toLatex()}$.`,
-        `令 $y = x^2$，分式变成 $\\frac{${poly([p, "y"], [q, ""])}}{(y + ${a})(y + ${b})}$。盖住 $y + ${a}$，令 $y = ${-a}$，分子变成 $${q - p * a}$，另一个因式变成 $${b - a}$，所以 $C = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Treat x squared as one variable", "把 x 的平方看作一个变量"],
+            ["The fraction contains $x$ only through $x^{2}$, so let $y = x^{2}$:", "分式只通过 $x^{2}$ 含有 $x$，令 $y = x^{2}$："],
+            [`\\frac{${numerator}}{(x^2 + ${a})(x^2 + ${b})} = \\frac{${inY}}{(y + ${a})(y + ${b})}`],
+          ],
+          [
+            ["Cover up", "掩盖"],
+            [
+              `Cover $y + ${a}$ and set $y = ${-a}$: the numerator becomes $${q - p * a}$ and the other factor $${b - a}$:`,
+              `盖住 $y + ${a}$，令 $y = ${-a}$：分子变成 $${q - p * a}$，另一个因式变成 $${b - a}$：`,
+            ],
+            [covered("C", q - p * a, b - a, answer)],
+          ],
+        ],
+        [
+          `Cover $y + ${b}$ and set $y = ${-b}$ to get $D$. For large $y$ the fraction is close to $\\frac{${p}}{y}$, so $C + D$ must be $${p}$:${steps(
+            covered("D", q - p * b, a - b, other),
+            `C + D = ${answer.toLatex()} + ${parQ(other)} = ${p}`,
+          ).trimEnd()}`,
+          `盖住 $y + ${b}$，令 $y = ${-b}$，得 $D$。$y$ 很大时分式接近 $\\frac{${p}}{y}$，所以 $C + D$ 应等于 $${p}$：${steps(
+            covered("D", q - p * b, a - b, other),
+            `C + D = ${answer.toLatex()} + ${parQ(other)} = ${p}`,
+          ).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -3000,8 +3225,8 @@ const twoQuadraticsOverHalfLine: KnowledgePointDef = {
     calculusDrawings4["integrating-rational-functions-with-irreducible-quadratic-factors#two-quadratic-factors-over-an-infinite-interval"],
   title: t("Two quadratic factors over an infinite interval", "无穷区间上的两个二次因式"),
   explanation: t(
-    "A product of two quadratics splits into a difference of two simple fractions, each with a known arctangent antiderivative. Over an infinite interval, each arctangent reaches a right angle at the far end, so each fraction contributes a multiple of $\\pi$ that depends only on the constant in its quadratic. The fraction in front then scales the difference.",
-    "两个二次式的乘积可以拆成两个简单分式之差，每个分式的原函数都是已知的反正切。在无穷区间上，每个反正切在远端都趋于直角，所以每个分式贡献 $\\pi$ 的一个倍数，这个倍数只取决于它的二次式中的常数。再用前面的分数缩放这个差。",
+    "A product of two quadratics splits into a difference of two simple fractions:\n\n$$\\frac{1}{(x^{2} + a^{2})(x^{2} + b^{2})} = \\frac{1}{b^{2} - a^{2}}\\left(\\frac{1}{x^{2} + a^{2}} - \\frac{1}{x^{2} + b^{2}}\\right)$$\n\nEach piece has an arctangent antiderivative, and over $[0, \\infty)$ the arctangent rises by a right angle, so $\\int_0^\\infty \\frac{dx}{x^{2} + s^{2}}$ is $\\frac{\\pi}{2s}$. For example, with $a = 1$ and $b = 2$ the pieces give $\\frac{\\pi}{2}$ and $\\frac{\\pi}{4}$, and $\\frac{1}{3}$ of their difference is $\\frac{\\pi}{12}$.\n\nCheck: simplifying in general gives $\\frac{\\pi}{2ab(a + b)}$, and with $a = 1$ and $b = 2$ the denominator $2ab(a + b)$ is $12$.\n\n> **Watch out.** The fraction in front is $\\frac{1}{b^{2} - a^{2}}$, with the squares, not $\\frac{1}{b - a}$.",
+    "两个二次式的乘积可以拆成两个简单分式之差：\n\n$$\\frac{1}{(x^{2} + a^{2})(x^{2} + b^{2})} = \\frac{1}{b^{2} - a^{2}}\\left(\\frac{1}{x^{2} + a^{2}} - \\frac{1}{x^{2} + b^{2}}\\right)$$\n\n每一部分的原函数都是反正切，而在 $[0, \\infty)$ 上反正切增加一个直角，所以 $\\int_0^\\infty \\frac{dx}{x^{2} + s^{2}}$ 等于 $\\frac{\\pi}{2s}$。例如 $a = 1$、$b = 2$ 时，两部分分别得 $\\frac{\\pi}{2}$ 和 $\\frac{\\pi}{4}$，它们之差的 $\\frac{1}{3}$ 是 $\\frac{\\pi}{12}$。\n\n检验：一般地化简得 $\\frac{\\pi}{2ab(a + b)}$；$a = 1$、$b = 2$ 时分母 $2ab(a + b)$ 等于 $12$。\n\n> **注意。** 前面的分数是 $\\frac{1}{b^{2} - a^{2}}$，带平方，而不是 $\\frac{1}{b - a}$。",
   ),
   generate(rng) {
     const a = rng.int(1, 5);
@@ -3009,6 +3234,8 @@ const twoQuadraticsOverHalfLine: KnowledgePointDef = {
     const n = rng.int(1, 12);
     const answer = Q.of(n, 2 * a * b * (a + b));
     const front = fractionBefore(n, b * b - a * a);
+    const scaled = (inner: string) => (front === "" ? inner : `${front}\\left(${inner}\\right)`);
+    const f = `\\frac{${n}}{(x^2 + ${a * a})(x^2 + ${b * b})}`;
     return numberProblem({
       prompt: t(
         `$\\int_0^\\infty \\frac{${n}}{(x^2 + ${a * a})(x^2 + ${b * b})}\\,dx = c\\pi$. Find $c$.`,
@@ -3016,9 +3243,34 @@ const twoQuadraticsOverHalfLine: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(n, a * b * (a + b)), Q.of(n, 2 * (b * b - a * a)), Q.of(n, 2 * a * b * (b - a)), Q.of(n, 2 * a * b), Q.of(n, a + b)],
-      solution: t(
-        `The fraction equals $${front}\\left(\\frac{1}{x^2 + ${a * a}} - \\frac{1}{x^2 + ${b * b}}\\right)$. Since $\\int_0^\\infty \\frac{dx}{x^2 + s^2} = \\frac{\\pi}{2s}$, the integral is $${front}\\left(\\frac{\\pi}{${2 * a}} - \\frac{\\pi}{${2 * b}}\\right)$, so $c = ${answer.toLatex()}$.`,
-        `分式等于 $${front}\\left(\\frac{1}{x^2 + ${a * a}} - \\frac{1}{x^2 + ${b * b}}\\right)$。因为 $\\int_0^\\infty \\frac{dx}{x^2 + s^2} = \\frac{\\pi}{2s}$，积分等于 $${front}\\left(\\frac{\\pi}{${2 * a}} - \\frac{\\pi}{${2 * b}}\\right)$，所以 $c = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Split the fraction", "拆开分式"],
+            [`The two constants differ by $${b * b - a * a}$, so:`, `两个常数相差 $${b * b - a * a}$，所以：`],
+            [`${f} = ${scaled(`\\frac{1}{x^2 + ${a * a}} - \\frac{1}{x^2 + ${b * b}}`)}`],
+          ],
+          [
+            ["Integrate each piece", "分别积分"],
+            ["Each arctangent rises from $0$ to $\\frac{\\pi}{2}$:", "每个反正切都从 $0$ 增加到 $\\frac{\\pi}{2}$："],
+            [
+              `\\int_0^\\infty \\frac{dx}{x^2 + ${a * a}} = \\frac{\\pi}{${2 * a}}`,
+              `\\int_0^\\infty \\frac{dx}{x^2 + ${b * b}} = \\frac{\\pi}{${2 * b}}`,
+            ],
+          ],
+          [
+            ["Combine", "合并"],
+            front === "" ? ["Take the difference:", "取差："] : ["Take the difference and scale it:", "取差，再乘以前面的分数："],
+            [
+              `\\int_0^\\infty ${f}\\,dx = ${scaled(`\\frac{\\pi}{${2 * a}} - \\frac{\\pi}{${2 * b}}`)} = ${piTimes(answer)}`,
+              `c = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `Simplifying in general gives $\\frac{n\\pi}{2ab(a + b)}$ for numerator $n$. Here $2ab(a + b)$ is $${2 * a * b * (a + b)}$:${steps(`\\frac{${coefficientOf(n)}\\pi}{${2 * a * b * (a + b)}} = ${piTimes(answer)}`).trimEnd()}`,
+          `一般地化简，分子为 $n$ 时积分等于 $\\frac{n\\pi}{2ab(a + b)}$。这里 $2ab(a + b)$ 等于 $${2 * a * b * (a + b)}$：${steps(`\\frac{${coefficientOf(n)}\\pi}{${2 * a * b * (a + b)}} = ${piTimes(answer)}`).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -3028,8 +3280,8 @@ const exponentialFractionImproper: KnowledgePointDef = {
   id: "an-improper-integral-of-an-exponential-fraction",
   title: t("An improper integral of an exponential fraction", "指数分式的反常积分"),
   explanation: t(
-    "An integrand need not look like a decaying exponential to converge. Here the numerator is the derivative of the expression inside the square, up to a constant, so the substitution $u = e^{mx} + c$ reduces the integral to a power of $u$. The upper limit moves to infinity with $x$, while the lower limit is the value of $u$ at the start.",
-    "被积函数不一定要像衰减的指数函数才收敛。这里分子只差一个常数就是平方内式子的导数，所以换元 $u = e^{mx} + c$ 把积分化成 $u$ 的幂。上限随 $x$ 趋于无穷，下限是 $u$ 在起点的值。",
+    "An integrand need not look like a decaying exponential to converge. When the numerator is the derivative of the expression inside the square, up to a constant, the substitution $u = e^{mx} + c$ reduces the integral to a power of $u$:\n\n$$\\int_0^\\infty \\frac{e^{mx}}{(e^{mx} + c)^{2}}\\,dx = \\frac{1}{m}\\int_{1 + c}^\\infty u^{-2}\\,du$$\n\nThe upper limit moves to infinity with $x$, and $\\int_{1 + c}^\\infty u^{-2}\\,du$ is $\\frac{1}{1 + c}$. For example, with $m = 1$ and $c = 1$ the value is $\\frac{1}{2}$.\n\nCheck: an antiderivative in $x$ is $-\\frac{1}{e^{x} + 1}$, which rises from $-\\frac{1}{2}$ at $0$ to $0$ at infinity, a change of $\\frac{1}{2}$.\n\n> **Watch out.** The lower limit for $u$ is the value at $x = 0$, and $e^{0} = 1$, so it is $1 + c$, not $c$.",
+    "被积函数不一定要像衰减的指数函数才收敛。分子只差一个常数就是平方内式子的导数时，换元 $u = e^{mx} + c$ 把积分化成 $u$ 的幂：\n\n$$\\int_0^\\infty \\frac{e^{mx}}{(e^{mx} + c)^{2}}\\,dx = \\frac{1}{m}\\int_{1 + c}^\\infty u^{-2}\\,du$$\n\n上限随 $x$ 趋于无穷，而 $\\int_{1 + c}^\\infty u^{-2}\\,du$ 等于 $\\frac{1}{1 + c}$。例如 $m = 1$、$c = 1$ 时积分值为 $\\frac{1}{2}$。\n\n检验：关于 $x$ 的原函数是 $-\\frac{1}{e^{x} + 1}$，它从 $0$ 处的 $-\\frac{1}{2}$ 增加到无穷远处的 $0$，变化量为 $\\frac{1}{2}$。\n\n> **注意。** $u$ 的下限是 $x = 0$ 时的值，而 $e^{0} = 1$，所以下限是 $1 + c$，不是 $c$。",
   ),
   generate(rng) {
     const m = rng.int(1, 4);
@@ -3038,18 +3290,42 @@ const exponentialFractionImproper: KnowledgePointDef = {
     const answer = Q.of(k, m * (1 + c));
     const power = `e^{${coefficientOf(m)}x}`;
     const lead = fractionBefore(k, m);
-    const value = `${lead === "" ? "" : `${lead} \\cdot `}\\frac{1}{${1 + c}}`;
+    const I = `\\int_0^\\infty \\frac{${coefficientOf(k)}${power}}{(${power} + ${c})^2}\\,dx`;
+    const inner = `\\int_{${1 + c}}^\\infty u^{-2}\\,du`;
+    const base = Q.of(1, 1 + c).toLatex();
+    const ratio = Q.of(k, m);
+    const below = ratio.d === 1n ? `${power} + ${c}` : `${ratio.d}(${power} + ${c})`;
+    const parts: WalkStep[] = [
+      [
+        ["Substitute", "换元"],
+        [
+          `Let $u = ${power} + ${c}$, so $du = ${coefficientOf(m)}${power}\\,dx$. At $x = 0$, $u = ${1 + c}$, and $u \\to \\infty$ as $x \\to \\infty$:`,
+          `令 $u = ${power} + ${c}$，则 $du = ${coefficientOf(m)}${power}\\,dx$。$x = 0$ 时 $u = ${1 + c}$，$x \\to \\infty$ 时 $u \\to \\infty$：`,
+        ],
+        [`${I} = ${lead}${inner}`],
+      ],
+      [
+        ["Integrate", "积分"],
+        ["The antiderivative $-\\frac{1}{u}$ tends to $0$ at infinity:", "原函数 $-\\frac{1}{u}$ 在无穷远处趋于 $0$："],
+        [`${inner} = \\left[-\\frac{1}{u}\\right]_{${1 + c}}^\\infty = ${base}`],
+      ],
+    ];
+    if (lead !== "") {
+      parts.push([
+        ["Multiply by the constant", "乘以常数"],
+        [`Multiply by $${lead}$:`, `乘以 $${lead}$：`],
+        [`${lead} \\cdot ${base} = ${answer.toLatex()}`],
+      ]);
+    }
+    const bracket = `\\left[-\\frac{${ratio.n}}{${below}}\\right]_0^\\infty = 0 - \\left(-${answer.toLatex()}\\right) = ${answer.toLatex()}`;
     return numberProblem({
-      prompt: t(
-        `Evaluate $\\int_0^\\infty \\frac{${coefficientOf(k)}${power}}{(${power} + ${c})^2}\\,dx$.`,
-        `计算 $\\int_0^\\infty \\frac{${coefficientOf(k)}${power}}{(${power} + ${c})^2}\\,dx$。`,
-      ),
+      prompt: t(`Evaluate $${I}$.`, `计算 $${I}$。`),
       answer,
       wrong: [Q.of(k, 1 + c), Q.of(k, m * c), Q.of(k, m * (1 + c) * (1 + c)), Q.of(k * m, 1 + c), Q.of(k * (1 + c), m)],
-      solution: t(
-        `Let $u = ${power} + ${c}$, so $du = ${coefficientOf(m)}${power}\\,dx$; $u$ runs from $${1 + c}$ to $\\infty$. The integral is $${lead}\\int_{${1 + c}}^\\infty u^{-2}\\,du = ${value} = ${answer.toLatex()}$, because $u^{-1} \\to 0$.`,
-        `令 $u = ${power} + ${c}$，则 $du = ${coefficientOf(m)}${power}\\,dx$，$u$ 从 $${1 + c}$ 变到 $\\infty$。因为 $u^{-1} \\to 0$，积分等于 $${lead}\\int_{${1 + c}}^\\infty u^{-2}\\,du = ${value} = ${answer.toLatex()}$。`,
-      ),
+      solution: walkThrough(parts, [
+        `Work in $x$ instead. By the chain rule, the derivative of $-\\frac{${ratio.n}}{${below}}$ is the integrand, so:${steps(bracket).trimEnd()}`,
+        `改为直接对 $x$ 计算。由链式法则，$-\\frac{${ratio.n}}{${below}}$ 的导数正是被积函数，所以：${steps(bracket).trimEnd()}`,
+      ]),
     });
   },
 };
@@ -3059,8 +3335,8 @@ const realLineCompletedSquare: KnowledgePointDef = {
   figure: calculusDrawings4["improper-integrals-involving-arctangent#the-real-line-after-completing-the-square"],
   title: t("The real line after completing the square", "配方后在整条实轴上积分"),
   explanation: t(
-    "Over the whole real line, shifting the variable does not change the limits. So after completing the square, the center of the quadratic plays no part in the value, and only the constant under the square matters. The arctangent then runs from one horizontal asymptote to the other, a total change of $\\pi$, scaled by the coefficient in front.",
-    "在整条实轴上，平移变量不改变积分限。所以配方之后，二次式的中心对积分值没有影响，只有平方外的常数起作用。此时反正切从一条水平渐近线变到另一条，总变化是 $\\pi$，再乘以前面的系数。",
+    "Over the whole real line, shifting the variable does not change the limits. So after completing the square, the center $p$ of the quadratic plays no part in the value:\n\n$$\\int_{-\\infty}^{\\infty} \\frac{k}{(x - p)^{2} + a^{2}}\\,dx = \\int_{-\\infty}^{\\infty} \\frac{k}{u^{2} + a^{2}}\\,du = \\frac{k\\pi}{a}$$\n\nThe antiderivative $\\frac{k}{a}\\arctan\\frac{u}{a}$ runs from one horizontal asymptote to the other, a total change of $\\frac{k}{a}\\pi$. For example, $x^{2} - 2x + 5$ is $(x - 1)^{2} + 4$, so $\\int_{-\\infty}^{\\infty} \\frac{1}{x^{2} - 2x + 5}\\,dx$ is $\\frac{\\pi}{2}$.\n\nCheck: there $\\frac{1}{2}\\arctan\\frac{u}{2}$ runs from $-\\frac{\\pi}{4}$ to $\\frac{\\pi}{4}$, a change of $\\frac{\\pi}{2}$.\n\n> **Watch out.** The factor in front of the arctangent is $\\frac{1}{a}$, not $\\frac{1}{a^{2}}$, where $a^{2}$ is the constant left after completing the square.",
+    "在整条实轴上，平移变量不改变积分限。所以配方之后，二次式的中心 $p$ 对积分值没有影响：\n\n$$\\int_{-\\infty}^{\\infty} \\frac{k}{(x - p)^{2} + a^{2}}\\,dx = \\int_{-\\infty}^{\\infty} \\frac{k}{u^{2} + a^{2}}\\,du = \\frac{k\\pi}{a}$$\n\n原函数 $\\frac{k}{a}\\arctan\\frac{u}{a}$ 从一条水平渐近线变到另一条，总变化是 $\\frac{k}{a}\\pi$。例如 $x^{2} - 2x + 5$ 等于 $(x - 1)^{2} + 4$，所以 $\\int_{-\\infty}^{\\infty} \\frac{1}{x^{2} - 2x + 5}\\,dx$ 等于 $\\frac{\\pi}{2}$。\n\n检验：这时 $\\frac{1}{2}\\arctan\\frac{u}{2}$ 从 $-\\frac{\\pi}{4}$ 变到 $\\frac{\\pi}{4}$，变化量为 $\\frac{\\pi}{2}$。\n\n> **注意。** 反正切前面的因子是 $\\frac{1}{a}$，不是 $\\frac{1}{a^{2}}$，其中 $a^{2}$ 是配方后剩下的常数。",
   ),
   generate(rng) {
     const k = rng.int(1, 9);
@@ -3068,7 +3344,10 @@ const realLineCompletedSquare: KnowledgePointDef = {
     const p = nonzero(rng, 6);
     const answer = Q.of(k, a);
     const denominator = poly([1, "x^2"], [-2 * p, "x"], [p * p + a * a, ""]);
+    const shift = poly([1, "x"], [-p, ""]);
     const lead = fractionBefore(k, a);
+    const scaled = (inner: string) => (lead === "" ? inner : `${lead}\\left(${inner}\\right)`);
+    const half = Q.of(k, 2 * a);
     return numberProblem({
       prompt: t(
         `$\\int_{-\\infty}^\\infty \\frac{${k}}{${denominator}}\\,dx = c\\pi$. Find $c$.`,
@@ -3076,9 +3355,37 @@ const realLineCompletedSquare: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(k, 2 * a), Q.of(k), Q.of(k, a * a), Q.of(2 * k, a), Q.of(k, 4 * a)],
-      solution: t(
-        `The denominator is $(${poly([1, "x"], [-p, ""])})^2 + ${a * a}$. With $u = ${poly([1, "x"], [-p, ""])}$, the limits stay $\\pm\\infty$, and the antiderivative $${lead}\\arctan\\frac{u}{${a}}$ changes by $${lead}\\left(\\frac{\\pi}{2} + \\frac{\\pi}{2}\\right)$, so $c = ${answer.toLatex()}$.`,
-        `分母等于 $(${poly([1, "x"], [-p, ""])})^2 + ${a * a}$。令 $u = ${poly([1, "x"], [-p, ""])}$，积分限仍是 $\\pm\\infty$，原函数 $${lead}\\arctan\\frac{u}{${a}}$ 的变化量是 $${lead}\\left(\\frac{\\pi}{2} + \\frac{\\pi}{2}\\right)$，所以 $c = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Complete the square", "配方"],
+            [`Half the coefficient of $x$ is $${-p}$:`, `$x$ 的系数的一半是 $${-p}$：`],
+            [`${denominator} = (${shift})^2 + ${a * a}`],
+          ],
+          [
+            ["Substitute", "换元"],
+            [
+              `Let $u = ${shift}$. Shifting does not move $\\pm\\infty$, so the limits stay the same:`,
+              `令 $u = ${shift}$。平移不改变 $\\pm\\infty$，所以积分限不变：`,
+            ],
+            [`\\int_{-\\infty}^\\infty \\frac{${k}}{${denominator}}\\,dx = \\int_{-\\infty}^\\infty \\frac{${k}}{u^2 + ${a * a}}\\,du`],
+          ],
+          [
+            ["Evaluate", "求值"],
+            [
+              `An antiderivative is $${lead}\\arctan\\frac{u}{${a}}$, and the arctangent runs from $-\\frac{\\pi}{2}$ to $\\frac{\\pi}{2}$:`,
+              `原函数是 $${lead}\\arctan\\frac{u}{${a}}$，反正切从 $-\\frac{\\pi}{2}$ 变到 $\\frac{\\pi}{2}$：`,
+            ],
+            [
+              `\\int_{-\\infty}^\\infty \\frac{${k}}{u^2 + ${a * a}}\\,du = ${scaled("\\frac{\\pi}{2} - \\left(-\\frac{\\pi}{2}\\right)")} = ${piTimes(answer)}`,
+              `c = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `The integrand in $u$ is even, so the integral is twice the integral over $[0, \\infty)$, where the arctangent rises from $0$ to $\\frac{\\pi}{2}$ and each half is $${piTimes(half)}$:${steps(`2 \\cdot ${piTimes(half)} = ${piTimes(answer)}`).trimEnd()}`,
+          `关于 $u$ 的被积函数是偶函数，所以积分是 $[0, \\infty)$ 上积分的两倍；在那里反正切从 $0$ 增加到 $\\frac{\\pi}{2}$，每一半等于 $${piTimes(half)}$：${steps(`2 \\cdot ${piTimes(half)} = ${piTimes(answer)}`).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -3088,8 +3395,8 @@ const absoluteValueUnderRoot: KnowledgePointDef = {
   id: "an-absolute-value-under-a-root-at-an-interior-point",
   title: t("An absolute value under a root at an interior point", "内点处根号下的绝对值"),
   explanation: t(
-    "An integrand with $|x - c|$ under a root blows up at $x = c$, so an interval containing $c$ must be split there into two improper integrals. On each side the absolute value opens differently, which is why the two pieces do not cancel: both contribute positive area. Each piece converges because the power of the distance to $c$ is greater than $-1$.",
-    "根号下含 $|x - c|$ 的被积函数在 $x = c$ 处趋于无穷，所以包含 $c$ 的区间必须在那里分成两个反常积分。两侧绝对值的去法不同，所以两部分不会抵消：它们都贡献正的面积。因为到 $c$ 的距离的幂大于 $-1$，每一部分都收敛。",
+    "An integrand with $|x - c|$ under a root blows up at $x = c$, so an interval containing $c$ must be split there into two improper integrals. On each side, $u = |x - c|$ turns the piece into an integral of $u^{-1/2}$ from $0$ to the distance $s^{2}$ between $c$ and that end:\n\n$$\\int_{0}^{s^{2}} u^{-1/2}\\,du = 2s$$\n\nEach piece converges because the power $-\\frac{1}{2}$ is greater than $-1$. For example, $\\int_{-1}^{4} \\frac{1}{\\sqrt{|x|}}\\,dx$ splits at $0$ into pieces of $2$ and $4$, so it is $6$.\n\nCheck: $2\\sqrt{x}$ for $x \\ge 0$ and $-2\\sqrt{-x}$ for $x < 0$ join into one continuous antiderivative, and its values at $4$ and $-1$ are $4$ and $-2$, whose difference is $6$.\n\n> **Watch out.** The two pieces do not cancel: the absolute value opens differently on each side, and both pieces are areas above the axis, so they add.",
+    "根号下含 $|x - c|$ 的被积函数在 $x = c$ 处趋于无穷，所以包含 $c$ 的区间必须在那里分成两个反常积分。在每一侧，令 $u = |x - c|$，这一段化为 $u^{-1/2}$ 从 $0$ 到 $s^{2}$ 的积分，其中 $s^{2}$ 是 $c$ 到这一端的距离：\n\n$$\\int_{0}^{s^{2}} u^{-1/2}\\,du = 2s$$\n\n因为幂 $-\\frac{1}{2}$ 大于 $-1$，每一段都收敛。例如 $\\int_{-1}^{4} \\frac{1}{\\sqrt{|x|}}\\,dx$ 在 $0$ 处分开，两段分别是 $2$ 和 $4$，所以积分值为 $6$。\n\n检验：$x \\ge 0$ 时的 $2\\sqrt{x}$ 与 $x < 0$ 时的 $-2\\sqrt{-x}$ 连成一个连续的原函数，它在 $4$ 和 $-1$ 处的值是 $4$ 和 $-2$，差为 $6$。\n\n> **注意。** 两段不会抵消：两侧绝对值的去法不同，但两段都是轴上方的面积，所以要相加。",
   ),
   generate(rng) {
     const c = nonzero(rng, 5);
@@ -3098,17 +3405,42 @@ const absoluteValueUnderRoot: KnowledgePointDef = {
     const k = rng.int(1, 6);
     const answer = 2 * k * (a + b);
     const inner = poly([1, "x"], [-c, ""]);
+    const lo = c - a * a;
+    const hi = c + b * b;
+    const f = `\\frac{${k}}{\\sqrt{|${inner}|}}`;
+    const K = coefficientOf(k);
     return numberProblem({
-      prompt: t(
-        `Evaluate $\\int_{${c - a * a}}^{${c + b * b}} \\frac{${k}}{\\sqrt{|${inner}|}}\\,dx$.`,
-        `计算 $\\int_{${c - a * a}}^{${c + b * b}} \\frac{${k}}{\\sqrt{|${inner}|}}\\,dx$。`,
-      ),
+      prompt: t(`Evaluate $\\int_{${lo}}^{${hi}} ${f}\\,dx$.`, `计算 $\\int_{${lo}}^{${hi}} ${f}\\,dx$。`),
       answer,
       form: "integer",
       wrong: [2 * k * Math.abs(b - a), k * (a + b), 2 * k * (a * a + b * b), 2 * k * b],
-      solution: t(
-        `The integrand is unbounded at $x = ${c}$, so split there. With $u = |${inner}|$, the left piece has $u$ from $0$ to $${a * a}$ and the right piece has $u$ from $0$ to $${b * b}$. Since $\\int_0^{s^2} u^{-1/2}\\,du = 2s$, the total is $${2 * k * a} + ${2 * k * b} = ${answer}$.`,
-        `被积函数在 $x = ${c}$ 处无界，所以在那里分开。令 $u = |${inner}|$，左边一段 $u$ 从 $0$ 到 $${a * a}$，右边一段 $u$ 从 $0$ 到 $${b * b}$。因为 $\\int_0^{s^2} u^{-1/2}\\,du = 2s$，总和是 $${2 * k * a} + ${2 * k * b} = ${answer}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Split at the bad point", "在无界点处分开"],
+            [
+              `The integrand is unbounded at $x = ${c}$, which lies inside the interval:`,
+              `被积函数在 $x = ${c}$ 处无界，而这个点在区间内部：`,
+            ],
+            [`\\int_{${lo}}^{${hi}} ${f}\\,dx = \\int_{${lo}}^{${c}} ${f}\\,dx + \\int_{${c}}^{${hi}} ${f}\\,dx`],
+          ],
+          [
+            ["Substitute in each piece", "分别换元"],
+            [
+              `Let $u = |${inner}|$. On the left $u$ runs from $${a * a}$ down to $0$, on the right from $0$ up to $${b * b}$, and $2\\sqrt{u}$ is an antiderivative of $u^{-1/2}$:`,
+              `令 $u = |${inner}|$。左边一段 $u$ 从 $${a * a}$ 减到 $0$，右边一段从 $0$ 增到 $${b * b}$，而 $2\\sqrt{u}$ 是 $u^{-1/2}$ 的原函数：`,
+            ],
+            [
+              `\\int_{${lo}}^{${c}} ${f}\\,dx = ${K}\\int_0^{${a * a}} u^{-1/2}\\,du = ${2 * k * a}`,
+              `\\int_{${c}}^{${hi}} ${f}\\,dx = ${K}\\int_0^{${b * b}} u^{-1/2}\\,du = ${2 * k * b}`,
+            ],
+          ],
+          [["Add the pieces", "两段相加"], ["Both pieces are positive:", "两段都是正的："], [`${2 * k * a} + ${2 * k * b} = ${answer}`]],
+        ],
+        [
+          `The functions $${2 * k}\\sqrt{${inner}}$ to the right of $${c}$ and $-${2 * k}\\sqrt{${poly([-1, "x"], [c, ""])}}$ to the left join into one continuous antiderivative, so take its values at the two ends:${steps(`${2 * k}\\sqrt{${b * b}} - \\left(-${2 * k}\\sqrt{${a * a}}\\right) = ${answer}`).trimEnd()}`,
+          `$${c}$ 右侧的 $${2 * k}\\sqrt{${inner}}$ 与左侧的 $-${2 * k}\\sqrt{${poly([-1, "x"], [c, ""])}}$ 连成一个连续的原函数，取它在两端的值：${steps(`${2 * k}\\sqrt{${b * b}} - \\left(-${2 * k}\\sqrt{${a * a}}\\right) = ${answer}`).trimEnd()}`,
+        ],
       ),
     });
   },
