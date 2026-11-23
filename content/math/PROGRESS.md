@@ -185,9 +185,9 @@ Stage 2: AP Calculus AB and BC, Calculus I and II. Counts are topics of these co
 | `calculus-i-antiderivatives.ts` | 10 | done | |  |
 | `calculus-i-riemann.ts` | 12 | done | |  |
 | `calculus-i-accumulation.ts` | 12 | done | |  |
-| `calculus-ii-substitution.ts` | 17 | in progress | |  |
+| `calculus-ii-substitution.ts` | 17 | done | |  |
 | `calculus-ii-identities-parts.ts` | 12 | in progress | |  |
-| `calculus-ii-fractions-improper.ts` | 12 | open | |  |
+| `calculus-ii-fractions-improper.ts` | 12 | in progress | |  |
 | `calculus-ii-areas.ts` | 11 | open | |  |
 | `calculus-ii-revolution.ts` | 9 | open | |  |
 | `calculus-ii-motion.ts` | 6 | open | |  |
