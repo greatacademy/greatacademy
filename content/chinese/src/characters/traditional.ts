@@ -373,6 +373,60 @@ const MERGED: Readonly<Record<string, readonly string[]>> = {
 
 const meaningOf = (form: string): Text => FORMS[form]!;
 
+/** ANOTHER are another word for each traditional form, in traditional and simplified characters, to check a choice by. */
+const ANOTHER: Readonly<Record<string, readonly [string, string]>> = {
+  發: ["發現", "发现"],
+  髮: ["理髮", "理发"],
+  乾: ["乾燥", "干燥"],
+  幹: ["幹部", "干部"],
+  干: ["干涉", "干涉"],
+  後: ["以後", "以后"],
+  后: ["王后", "王后"],
+  麵: ["麵粉", "面粉"],
+  面: ["面前", "面前"],
+  隻: ["一隻貓", "一只猫"],
+  只: ["只是", "只是"],
+  係: ["沒關係", "没关系"],
+  繫: ["聯繫", "联系"],
+  系: ["系統", "系统"],
+  鬥: ["奮鬥", "奋斗"],
+  斗: ["一斗米", "一斗米"],
+  鬆: ["輕鬆", "轻松"],
+  松: ["松鼠", "松鼠"],
+  雲: ["雲彩", "云彩"],
+  云: ["人云亦云", "人云亦云"],
+  錶: ["鐘錶", "钟表"],
+  表: ["表格", "表格"],
+  製: ["製作", "制作"],
+  制: ["控制", "控制"],
+  復: ["復活", "复活"],
+  複: ["重複", "重复"],
+  歷: ["經歷", "经历"],
+  曆: ["農曆", "农历"],
+  準: ["標準", "标准"],
+  准: ["准許", "准许"],
+  衝: ["衝鋒", "冲锋"],
+  沖: ["沖洗", "冲洗"],
+  範: ["範圍", "范围"],
+  范: ["范仲淹", "范仲淹"],
+  醜: ["醜八怪", "丑八怪"],
+  丑: ["丑時", "丑时"],
+  穀: ["穀物", "谷物"],
+  谷: ["峽谷", "峡谷"],
+  闆: ["老闆娘", "老板娘"],
+  板: ["黑板", "黑板"],
+  徵: ["特徵", "特征"],
+  征: ["長征", "长征"],
+  簽: ["簽字", "签字"],
+  籤: ["書籤", "书签"],
+  盡: ["盡頭", "尽头"],
+  儘: ["儘量", "尽量"],
+  遊: ["遊戲", "游戏"],
+  游: ["上游", "上游"],
+  臟: ["內臟", "内脏"],
+  髒: ["骯髒", "肮脏"],
+};
+
 /** exampleOf is a word of the shared items that writes a traditional form. */
 const exampleOf = (form: string): string | undefined => shared.find((i) => i.right === form)?.shown.split("：")[0];
 
@@ -381,9 +435,11 @@ const sharedWhy = (right: string, shown: string): Text => {
   const [word = "", char = ""] = shown.split("：");
   const m = meaningOf(right);
   const forms = MERGED[char]!;
+  const same = ANOTHER[right]!;
+  const other = forms.find((f) => f !== right)!;
   return t(
-    `In ${word}, ${char} means "${m.en}".\n\nThat meaning is written ${right} in traditional characters.\n\n**Check.** ${char} stands for ${forms.map((f) => `${f}, "${meaningOf(f).en}"`).join(", and ")}; ${word} needs ${right}.`,
-    `在“${word}”里，“${char}”表示“${m["zh-CN"]}”。\n\n表示这个意思，繁体写作“${right}”。\n\n**检验。** “${char}”对应${forms.map((f) => `“${f}”（${meaningOf(f)["zh-CN"]}）`).join("、")}；“${word}”要用“${right}”。`,
+    `In ${word}, ${char} means "${m.en}".\n\nThat meaning is written ${right} in traditional characters.\n\n**Check.** Try the meaning in another word: ${same[1]} is written ${same[0]}, with the same ${right}, while ${other} is the form of words such as ${ANOTHER[other]![0]}.`,
+    `在“${word}”里，“${char}”表示“${m["zh-CN"]}”。\n\n表示这个意思，繁体写作“${right}”。\n\n**检验。** 换一个意思相同的词试试：“${same[1]}”写作“${same[0]}”，也用“${right}”；而“${other}”用在“${ANOTHER[other]![0]}”这样的词里。`,
   );
 };
 

@@ -3,6 +3,7 @@
 
 import { type LexiconEntry, type TopicDef, t } from "@ga/content";
 
+import { idiomClues } from "./clue-data.ts";
 import { gradeFiveIdioms, gradeFourIdioms, gradeSixIdioms, gradeThreeIdioms } from "./data.ts";
 import { type Idiom, idiomTopic, parseIdioms } from "./idioms.ts";
 import { gradeEightIdioms, gradeNineIdioms, gradeSevenIdioms } from "./junior.ts";
@@ -48,6 +49,7 @@ function grade(n: number, data: string): GradeIdioms {
         title: title(n, k),
         prerequisites: k === 1 ? [] : [idiomId(n, k - 1)],
         idioms: part,
+        clues: idiomClues,
       }),
     });
   }

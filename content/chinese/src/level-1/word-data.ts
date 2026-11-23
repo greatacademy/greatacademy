@@ -31,7 +31,7 @@ export const wordBatches: readonly WordBatchData[] = [
   {
     theme: ["People and Questions", "人和问题"],
     data: `
-我们 | wǒ men | we, us | 说话人和他的同伴 | 我是好人，你也是好人，＿＿都是好人。 | 你们 他们
+我们 | wǒ men | we, us | 说话人和他的同伴 | 我是好人，你也是好人，＿＿都是好人。 | 你们 他们 人
 你们 | nǐ men | you (plural) | 称对面的几个人 | ＿＿都叫什么名字？ | 我们 他们
 他们 | tā men | they, them | 称说话双方以外的几个人 | 他是好人，她也是好人，＿＿都是好人。 | 我们 你们
 谁 | shéi | who | 问是什么人 | 请问，您是＿＿？ | 什么

@@ -3,7 +3,7 @@
 // senses are those of the general dictionaries, worded for this subject; the words are common ones of the grades.
 
 import { type Text, t } from "@ga/content";
-import { point } from "@ga/subject-chinese";
+import { point, zhQuote } from "@ga/subject-chinese";
 
 import type { GradeTopic } from "../grammar/index.ts";
 import { bilingual, type Choice, choice, choiceTopicGenerator, rows } from "./choice-kit.ts";
@@ -87,7 +87,7 @@ const byStructure: readonly Choice[] = COMPOUNDS.map(({ word, structure, how, wr
     choose: t(`That is ${structure}: ${STRUCTURES[structure].en}.`, `这是${structure}式：${STRUCTURES[structure]["zh-CN"]}。`),
     check: t(
       `Say the word as its two parts again: “${how.en}” matches ${structure} and no other structure.`,
-      `再把两个字的关系说一遍：“${how["zh-CN"]}”，正是${structure}式，不是别的结构。`,
+      `再把两个字的关系说一遍：${zhQuote(how["zh-CN"])}，正是${structure}式，不是别的结构。`,
     ),
   });
 });

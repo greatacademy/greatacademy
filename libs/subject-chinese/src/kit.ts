@@ -10,6 +10,9 @@ export const quote = (s: string): string =>
 /** quoted sets a text as a block quote in every locale. */
 const quoted = (text: Text): Text => t(quote(text.en), quote(text["zh-CN"]));
 
+/** zhQuote sets a text in Chinese quotation marks, its own double marks turned into single ones. */
+export const zhQuote = (s: string): string => `“${s.replaceAll("“", "‘").replaceAll("”", "’")}”`;
+
 /** Why builds the solution of an item from its right answer, what was shown and the wrong options shown, in every locale. */
 export type Why = (right: string, shown: string, wrong?: readonly string[]) => Text;
 

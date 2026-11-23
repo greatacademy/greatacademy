@@ -4,7 +4,7 @@
 // their meaning, the words of classical Chinese, the use of language, with sentences written and judged by a model, and the reading of modern texts, informational and literary, and of classical poems.
 
 import { type CourseDef, same, type Text, type TopicDef, t } from "@ga/content";
-import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator } from "@ga/subject-chinese";
+import { type ChoiceItem, choiceGenerator, point, type TypedItem, typed, typedGenerator, zhQuote } from "@ga/subject-chinese";
 import { classicalDrills } from "../classical/drills.ts";
 import { seniorClassicalDrills } from "../classical/senior-drills.ts";
 import type { DrillItem } from "../grammar/drill.ts";
@@ -13,10 +13,12 @@ import { type FaultyItem, type FaultyNote, parseFaultyNotes } from "../grammar/f
 import { type FaultyData, faultyData } from "../grammar/faulty-data.ts";
 import { faultyNotes } from "../grammar/faulty-notes.ts";
 import { type Ask, examChoice, examGroup } from "../hsk/exam.ts";
+import { idiomClues } from "../idioms/clue-data.ts";
 import type { Idiom } from "../idioms/idioms.ts";
 import { idiomsByGrade } from "../idioms/index.ts";
 import { recitedPoems } from "../recitation/index.ts";
 import type { Line, Poem } from "../recitation/poems.ts";
+import { clueOf } from "../words/clues.ts";
 import { gaokaoEssayTopic } from "../writing/later.ts";
 import { informationalPassages } from "./informational-data.ts";
 import { languageWritingTopic } from "./language.ts";
@@ -35,9 +37,11 @@ function interleave<T>(lists: readonly (readonly T[])[]): readonly T[] {
   return out;
 }
 
-/** others are three of the other idioms of a batch, starting after the ith. */
-const others = (batch: readonly Idiom[], i: number): readonly Idiom[] =>
-  [1, 3, 5].map((d) => batch[(i + d) % batch.length]!).filter((x) => x !== batch[i]);
+/** others are three of the other idioms of a batch, starting after the ith, leaving out those that would also fit the gap. */
+function others(batch: readonly Idiom[], i: number, fits: readonly string[]): readonly Idiom[] {
+  const rest = batch.filter((x, j) => j !== i && !fits.includes(x.text));
+  return [0, 2, 4].map((d) => rest[(i + d) % rest.length]!);
+}
 
 const idiomBatches = idiomsByGrade.filter((g) => g.grade >= FROM).flatMap((g) => g.batches.map((b) => b.idioms));
 
@@ -46,7 +50,8 @@ function idiomItems(inSentence: boolean): readonly ChoiceItem[] {
   return interleave(
     idiomBatches.map((batch) =>
       batch.map((idiom, i): ChoiceItem => {
-        const wrong = others(batch, i).map((x) => x.text);
+        const fits = inSentence ? clueOf(idiomClues, idiom.text, 2, "gaokao-idioms").fits : [];
+        const wrong = others(batch, i, fits).map((x) => x.text);
         if (new Set(wrong).size !== 3) throw new Error(`gaokao: the idioms offered against ${idiom.text}`);
         return [inSentence ? idiom.sentences[1] : idiom.meaning["zh-CN"], idiom.text, wrong];
       }),
@@ -56,14 +61,60 @@ function idiomItems(inSentence: boolean): readonly ChoiceItem[] {
 
 const idiomMeaning = new Map(idiomBatches.flat().map((i) => [i.text, i]));
 
-/** idiomWhy explains an idiom. */
+/** idiomOf is the idiom of grades 7 to 11 written `text`. */
+function idiomOf(text: string): Idiom {
+  const idiom = idiomMeaning.get(text);
+  if (!idiom) throw new Error(`gaokao: no idiom ${text}`);
+  return idiom;
+}
+
+/** put writes an idiom into the gap of a sentence. */
+const put = (sentence: string, text: string): string => sentence.replace("＿＿", text);
+
+/** idiomWhy explains the idiom of a meaning, then checks it in its second sentence. */
 const idiomWhy = (right: string): Text => {
-  const idiom = idiomMeaning.get(right);
+  const idiom = idiomOf(right);
   return t(
-    `${right} (${idiom?.pinyin ?? ""}) means ${idiom?.meaning.en ?? ""}.`,
-    `“${right}”（${idiom?.pinyin ?? ""}）的意思是：${idiom?.meaning["zh-CN"] ?? ""}。`,
+    `**${right}** (${idiom.pinyin}) means ${idiom.meaning.en}.\n\nIn use: ${put(idiom.sentences[0], right)}\n\n**Check.** Try it in another sentence: ${put(idiom.sentences[1], right)} The same meaning reads well there too.`,
+    `“**${right}**”（${idiom.pinyin}）的意思是：${idiom.meaning["zh-CN"]}。\n\n用在句子里：${put(idiom.sentences[0], right)}\n\n**检验。** 换一个句子再试：${put(idiom.sentences[1], right)}按同样的意思也读得通。`,
   );
 };
+
+/** idiomWhyNot says what a wrong idiom means instead. */
+const idiomWhyNot = (wrong: string, right: string): Text =>
+  t(
+    `${wrong} means "${idiomOf(wrong).meaning.en}", not "${idiomOf(right).meaning.en}".`,
+    `“${wrong}”的意思是${idiomOf(wrong).meaning["zh-CN"]}，不是“${idiomOf(right).meaning["zh-CN"]}”。`,
+  );
+
+/** gapClue is the clue of the second sentence of the idiom that fills `shown`. */
+const gapClue = (right: string): Text => clueOf(idiomClues, right, 2, "gaokao-idioms").why;
+
+/** gapWhy explains the idiom a sentence needs by its clue, then reads the gap as its meaning. */
+const gapWhy = (right: string, shown: string): Text => {
+  const idiom = idiomOf(right);
+  const c = gapClue(right);
+  return t(
+    `**${right}** fits: ${put(shown, right)}\n\nHere ${c.en}, and ${right} (${idiom.pinyin}) means ${idiom.meaning.en}.\n\n**Check.** Read the gap as that meaning: ${put(shown, `[${idiom.meaning.en}]`)} It still says the same.`,
+    `填“**${right}**”：${put(shown, right)}\n\n${c["zh-CN"]}，“${right}”（${idiom.pinyin}）的意思正是${idiom.meaning["zh-CN"]}。\n\n**检验。** 把横线换成成语的意思来读：${zhQuote(put(shown, `（${idiom.meaning["zh-CN"]}）`))}，意思仍然说得通。`,
+  );
+};
+
+/** gapWhyNot joins the sentence's clue to a wrong idiom's own meaning. */
+const gapWhyNot = (wrong: string, right: string): Text => {
+  const c = gapClue(right);
+  return t(
+    `Here ${c.en}, but ${wrong} means "${idiomOf(wrong).meaning.en}".`,
+    `${c["zh-CN"]}，而“${wrong}”的意思是${idiomOf(wrong).meaning["zh-CN"]}。`,
+  );
+};
+
+/** firstIdiom is the idiom the gaokao idiom topic takes as its instance, and lateIdiom one whose characters mislead. */
+const firstIdiom = idiomBatches[0]![0]!;
+const lateIdiom = idiomOf("差强人意");
+const firstMisfit = idiomBatches[0]!.find(
+  (x) => x !== firstIdiom && !clueOf(idiomClues, firstIdiom.text, 2, "gaokao-idioms").fits.includes(x.text),
+)!;
 
 const poems: readonly (readonly Poem[])[] = [...new Set(recitedPoems.filter((p) => p.grade >= FROM).map((p) => p.grade))].map((g) =>
   recitedPoems.filter((p) => p.grade === g).map((p) => p.poem),
@@ -363,6 +414,10 @@ export const gaokaoTopics: readonly TopicDef[] = [
       "The idioms of grades 7 to 11 mixed, as the paper asks them: the idiom of a meaning, then the idiom a sentence needs, each among four of its set.",
       "七至十一年级的成语混在一起，按试卷的问法：先按意思选成语，再选句子需要的成语，每次在同一组的四个成语中选。",
     ),
+    intro: t(
+      `The paper asks about idioms two ways: by meaning, and in a sentence. Take **${firstIdiom.text}** (${firstIdiom.pinyin}): it means ${firstIdiom.meaning.en}, and it fills ${firstIdiom.sentences[1]} because there ${gapClue(firstIdiom.text).en}.\n\nThe first knowledge point names the idiom of a meaning, the second the idiom a sentence needs, among four of the same set; these are the idioms of grades 7 to 11.`,
+      `试卷考成语有两种问法：按意思选，在句子里选。比如“**${firstIdiom.text}**”（${firstIdiom.pinyin}）：意思是${firstIdiom.meaning["zh-CN"]}；${zhQuote(firstIdiom.sentences[1])}要填它，因为${gapClue(firstIdiom.text)["zh-CN"]}。\n\n第一个知识点按意思选成语，第二个选句子需要的成语，都在同一组的四个成语中选；成语来自七至十一年级。`,
+    ),
     prerequisites: [lastIdioms],
     encompasses: [],
     xp: 12,
@@ -373,19 +428,19 @@ export const gaokaoTopics: readonly TopicDef[] = [
         "gaokao-idioms-meaning",
         t("By Meaning", "按意思选成语"),
         t(
-          "Many idioms the paper asks about do not mean what their characters suggest. Recall the story or the sense behind each one, not its characters alone.",
-          "试卷考的很多成语，意思并不是字面上的意思。要想起每个成语背后的出处或含义，而不只看字面。",
+          `Many idioms the paper asks about do not mean what their characters suggest. Recall the story or the sense behind each one, not its characters alone. Take ${firstIdiom.text}: it means ${firstIdiom.meaning.en}, as in ${put(firstIdiom.sentences[0], firstIdiom.text)}\n\n> **Watch out.** ${lateIdiom.text} looks as if it said "hardly satisfying", but it means ${lateIdiom.meaning.en}: ${put(lateIdiom.sentences[1], lateIdiom.text)} Go by the meaning you have learned, not by the characters.`,
+          `试卷考的很多成语，意思并不是字面上的意思。要想起每个成语背后的出处或含义，而不只看字面。比如“${firstIdiom.text}”，意思是${firstIdiom.meaning["zh-CN"]}：${put(firstIdiom.sentences[0], firstIdiom.text)}\n\n> **注意。** “${lateIdiom.text}”看上去像“很难让人满意”，意思却是${lateIdiom.meaning["zh-CN"]}：${put(lateIdiom.sentences[1], lateIdiom.text)}要按学过的意思选，不能望文生义。`,
         ),
-        choiceGenerator(t("Which idiom has this meaning?", "哪个成语是这个意思？"), idiomItems(false), idiomWhy),
+        choiceGenerator(t("Which idiom has this meaning?", "哪个成语是这个意思？"), idiomItems(false), idiomWhy, idiomWhyNot),
       ),
       point(
         "gaokao-idioms-sentence",
         t("In a Sentence", "在句子里选成语"),
         t(
-          "Check three things in turn: whether the idiom's meaning fits, whether its feeling, praise or blame, fits, and whether it fits the thing it describes.",
-          "依次检查三点：意思是否对得上，感情色彩（褒义还是贬义）是否对得上，适用的对象是否对得上。",
+          `Find the clue in the sentence, then check three things in turn: whether the idiom's meaning fits, whether its feeling, praise or blame, fits, and whether it fits the thing it describes. Take ${firstIdiom.sentences[1]} Here ${gapClue(firstIdiom.text).en}, so it needs ${firstIdiom.text}: ${put(firstIdiom.sentences[1], firstIdiom.text)}\n\n> **Watch out.** ${firstMisfit.text} may sound fine there, but it means "${firstMisfit.meaning.en}", and here ${gapClue(firstIdiom.text).en}. Match the clue, not the sound.`,
+          `先找出句子里的线索，再依次检查三点：意思是否对得上，感情色彩（褒义还是贬义）是否对得上，适用的对象是否对得上。比如${zhQuote(firstIdiom.sentences[1])}：${gapClue(firstIdiom.text)["zh-CN"]}，所以填“${firstIdiom.text}”：${put(firstIdiom.sentences[1], firstIdiom.text)}\n\n> **注意。** 填“${firstMisfit.text}”读起来也许顺口，可是${gapClue(firstIdiom.text)["zh-CN"]}，而“${firstMisfit.text}”的意思是${firstMisfit.meaning["zh-CN"]}，对不上。要对线索，不能只凭语感。`,
         ),
-        choiceGenerator(t("Which idiom fills the gap?", "横线处填哪个成语？"), idiomItems(true), idiomWhy),
+        choiceGenerator(t("Which idiom fills the gap?", "横线处填哪个成语？"), idiomItems(true), gapWhy, gapWhyNot),
       ),
     ],
   },

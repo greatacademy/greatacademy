@@ -8,7 +8,7 @@
 // characters from their pinyin of written.ts, and HSK 4 to 6 the paper's own tasks of paper.ts.
 
 import { type CourseDef, type CriterionSpec, type Generator, same, slimTopics, type Text, type TopicDef, t } from "@ga/content";
-import { criterionById, point, quote, writingGenerator } from "@ga/subject-chinese";
+import { criterionById, point, quote, toneless, writingGenerator, zhQuote } from "@ga/subject-chinese";
 import { checkApart, type LevelOneCharacter, lookalikeOf, notTheCharacter } from "../level-1/characters.ts";
 import { nearOf, spread } from "../level-1/kit.ts";
 import {
@@ -94,27 +94,39 @@ function wordMates(batch: readonly LevelOneWord[], level: number): readonly (rea
 
 const pinyin = (w: LevelOneWord): string => pinyinOf(w.syllables);
 
+/** gapWhole is a sentence of a word with the gap filled by `put`, the word itself when left out. */
+const gapWhole = (w: LevelOneWord, put: string = w.word): string => w.sentence.replace(GAP, put);
+
 /** gapItems ask for the word of each sentence among `wrong` + 1 words of its batch, or five where the batch has no more that could not also fit. */
 function gapItems(levels: readonly LevelData[], wrong: number): readonly Ask[] {
   return interleave(
     levels.flatMap((l) =>
       l.words.map((batch) => {
         const mates = wordMates(batch, l.level);
+        const byWord = new Map(batch.map((v) => [v.word, v]));
         return batch.map((w, i): Ask => {
-          const whole = w.sentence.replace(GAP, w.word);
+          const others = take(
+            `the gap of ${w.word}`,
+            wrong,
+            mates[i]!.map((v) => v.word),
+            4,
+          );
+          const reason = (x: string): Text => {
+            const v = byWord.get(x)!;
+            return t(
+              `${v.word} (${pinyin(v)}) means "${v.meaning.en}". Put in the gap it reads ${gapWhole(w, v.word)} Read the words on both sides of the gap with that meaning: they do not go with it.`,
+              `“${v.word}”（${pinyin(v)}）的意思是${zhQuote(v.meaning["zh-CN"])}。放进横线处，句子成了${zhQuote(gapWhole(w, v.word))}；连着横线前后的词按这个意思读，搭配不上。`,
+            );
+          };
           return {
             shown: same(w.sentence),
             right: same(w.word),
-            wrong: take(
-              `the gap of ${w.word}`,
-              wrong,
-              mates[i]!.map((v) => v.word),
-              4,
-            ).map(same),
+            wrong: others.map(same),
             solution: t(
-              `The sentence is ${whole} **${w.word}** (${pinyin(w)}) means "${w.meaning.en}".`,
-              `完整的句子是：${whole}“**${w.word}**”（${pinyin(w)}）的意思是：${w.meaning["zh-CN"]}。`,
+              `The sentence is ${gapWhole(w)}\n\n**${w.word}** (${pinyin(w)}) means "${w.meaning.en}", which is what the words around the gap call for.\n\n**Check.** Read the gap as that meaning: ${gapWhole(w, `[${w.meaning.en}]`)} It still says the same.`,
+              `完整的句子是：${gapWhole(w)}\n\n“**${w.word}**”（${pinyin(w)}）的意思是${zhQuote(w.meaning["zh-CN"])}，正是横线前后的词要求的意思。\n\n**检验。** 把横线换成词义来读：${gapWhole(w, `（${zhQuote(w.meaning["zh-CN"]).slice(1, -1)}）`)}意思仍然通顺。`,
             ),
+            reasons: others.map(reason),
           };
         });
       }),
@@ -131,13 +143,28 @@ function meaningItems(levels: readonly LevelData[], reverse: boolean): readonly 
         return batch.map((w, i): Ask => {
           const others = mates[i]!.slice(0, 3);
           if (others.length < 3) throw new Error(`hsk: too few wrong answers for the meaning of ${w.word}`);
+          const check = t(
+            `**Check.** Put it in its sentence: ${gapWhole(w)} The meaning fits there.`,
+            `**检验。** 把它放进句子里读：${gapWhole(w)}按这个意思读，句子通顺。`,
+          );
           const solution = t(
-            `**${w.word}** (${pinyin(w)}) means "${w.meaning.en}".`,
-            `**${w.word}**（${pinyin(w)}）的意思是：${w.meaning["zh-CN"]}。`,
+            `**${w.word}** (${pinyin(w)}) means "${w.meaning.en}".\n\n${check.en}`,
+            `**${w.word}**（${pinyin(w)}）的意思是${zhQuote(w.meaning["zh-CN"])}。\n\n${check["zh-CN"]}`,
+          );
+          const reasons = others.map((v) =>
+            reverse
+              ? t(
+                  `"${v.meaning.en}" is the meaning of ${v.word} (${pinyin(v)}), not of ${w.word}.`,
+                  `${zhQuote(v.meaning["zh-CN"])}是“${v.word}”（${pinyin(v)}）的意思，不是“${w.word}”的意思。`,
+                )
+              : t(
+                  `${v.word} (${pinyin(v)}) means "${v.meaning.en}", another meaning.`,
+                  `“${v.word}”（${pinyin(v)}）的意思是${zhQuote(v.meaning["zh-CN"])}，和题目给的意思不同。`,
+                ),
           );
           return reverse
-            ? { shown: same(w.word), right: w.meaning, wrong: others.map((v) => v.meaning), solution }
-            : { shown: w.meaning, right: same(w.word), wrong: others.map((v) => same(v.word)), solution };
+            ? { shown: same(w.word), right: w.meaning, wrong: others.map((v) => v.meaning), solution, reasons }
+            : { shown: w.meaning, right: same(w.word), wrong: others.map((v) => same(v.word)), solution, reasons };
         });
       }),
     ),
@@ -177,7 +204,7 @@ function characterItems(levels: readonly LevelData[]): readonly Ask[] {
             wrong: wrong.map(same),
             solution: t(
               `**${c.char}** is read **${c.reading}** and means "${c.meaning.en}".\n\n${checkApart(c, allCharacters, mates).en}`,
-              `**${c.char}**读 **${c.reading}**，意思是“${c.meaning["zh-CN"]}”。\n\n${checkApart(c, allCharacters, mates)["zh-CN"]}`,
+              `**${c.char}**读 **${c.reading}**，意思是${zhQuote(c.meaning["zh-CN"])}。\n\n${checkApart(c, allCharacters, mates)["zh-CN"]}`,
             ),
             reasons: wrong.map((w) => notTheCharacter(c, w, allCharacters, mates)),
           };
@@ -187,23 +214,40 @@ function characterItems(levels: readonly LevelData[]): readonly Ask[] {
   );
 }
 
+/**
+ * inWordWrong are the wrong characters offered for a gap in a word: as lookalikes gives them, but none the word already
+ * has; where too few are left, characters of the other levels that look like it, then characters of the same syllable
+ * with another tone, which cannot make a word of the same sound.
+ */
+function inWordWrong(c: LevelOneCharacter, batch: readonly LevelOneCharacter[], i: number, word: string): readonly string[] {
+  const near = new Set([...c.near, ...batch.filter((d) => d.near.includes(c.char)).map((d) => d.char)]);
+  const fine = (x: string): boolean => x !== c.char && !near.has(x) && !word.includes(x);
+  const syllable = toneless(c.reading.normalize("NFC"));
+  const tone = (r: string) => r.normalize("NFC");
+  return take(`the character ${c.char} in ${word}`, 3, [
+    ...c.looks.filter(fine),
+    ...spread(batch, i)
+      .map((d) => d.char)
+      .filter(fine),
+    ...[...allCharacters.values()].filter((d) => d.looks.includes(c.char) && fine(d.char)).map((d) => d.char),
+    ...[...allCharacters.values()]
+      .filter((d) => toneless(d.reading.normalize("NFC")) === syllable && tone(d.reading) !== tone(c.reading) && fine(d.char))
+      .map((d) => d.char),
+  ]);
+}
+
 /** notInWord says why a character is not the one missing from a word: by its own reading, else by its meaning. */
 function notInWord(c: LevelOneCharacter, char: string, w: LevelOneWord, mates: ReadonlyMap<string, LevelOneCharacter>): Text {
   const d = mates.get(char) ?? allCharacters.get(char);
-  if (d && w.word.includes(char))
-    return t(
-      `${char} is already in ${w.word}, read ${d.reading}; the gap needs ${c.reading}.`,
-      `“${char}”是“${w.word}”里已有的字，读 ${d.reading}；空着的字读 ${c.reading}。`,
-    );
   if (d && d.reading.normalize("NFC") !== c.reading.normalize("NFC"))
     return t(
       `${char} is read ${d.reading}, not ${c.reading}, and means "${d.meaning.en}": it does not write ${w.word}.`,
-      `“${char}”读 ${d.reading}，不读 ${c.reading}，意思是“${d.meaning["zh-CN"]}”，写不成“${w.word}”。`,
+      `“${char}”读 ${d.reading}，不读 ${c.reading}，意思是${zhQuote(d.meaning["zh-CN"])}，写不成“${w.word}”。`,
     );
   if (d)
     return t(
       `${char} is also read ${d.reading}, but it means "${d.meaning.en}": ${w.word} is written with ${c.char}.`,
-      `“${char}”也读 ${d.reading}，可它的意思是“${d.meaning["zh-CN"]}”；“${w.word}”要用“${c.char}”。`,
+      `“${char}”也读 ${d.reading}，可它的意思是${zhQuote(d.meaning["zh-CN"])}；“${w.word}”要用“${c.char}”。`,
     );
   return notTheCharacter(c, char, allCharacters, mates);
 }
@@ -221,7 +265,7 @@ function inWordItems(levels: readonly LevelData[]): readonly Ask[] {
           );
           if (!w) return [];
           const blank = [...w.word].map((x) => (x === c.char ? "＿" : x)).join("");
-          const wrong = lookalikes(c, batch, i);
+          const wrong = inWordWrong(c, batch, i, w.word);
           return [
             {
               shown: t(`${blank} (${pinyin(w)}): ${w.meaning.en}`, `${blank}（${pinyin(w)}）：${w.meaning["zh-CN"]}`),
@@ -229,7 +273,7 @@ function inWordItems(levels: readonly LevelData[]): readonly Ask[] {
               wrong: wrong.map(same),
               solution: t(
                 `The word is **${w.word}** (${pinyin(w)}), "${w.meaning.en}".\n\nIts missing character is **${c.char}**, read **${c.reading}**, which means "${c.meaning.en}".\n\n**Check.** Put ${c.char} back and read the word syllable by syllable: ${w.word}, ${pinyin(w)}.`,
-                `这个词是**${w.word}**（${pinyin(w)}），意思是“${w.meaning["zh-CN"]}”。\n\n缺的字是**${c.char}**，读 **${c.reading}**，意思是“${c.meaning["zh-CN"]}”。\n\n**检验。** 把“${c.char}”放回去，一个音节一个音节地读：${w.word}，${pinyin(w)}。`,
+                `这个词是**${w.word}**（${pinyin(w)}），意思是${zhQuote(w.meaning["zh-CN"])}。\n\n缺的字是**${c.char}**，读 **${c.reading}**，意思是${zhQuote(c.meaning["zh-CN"])}。\n\n**检验。** 把“${c.char}”放回去，一个音节一个音节地读：${w.word}，${pinyin(w)}。`,
               ),
               reasons: wrong.map((x) => notInWord(c, x, w, mates)),
             },
@@ -369,12 +413,16 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
   const likeText = like
     ? t(
         `${like.char} looks like it but is read ${like.reading} and means "${like.meaning.en}"`,
-        `“${like.char}”和它长得像，却读 ${like.reading}，意思是“${like.meaning["zh-CN"]}”`,
+        `“${like.char}”和它长得像，却读 ${like.reading}，意思是${zhQuote(like.meaning["zh-CN"])}`,
       )
     : t(`no character of these levels looks just like it`, `这些等级里没有和它完全一样的字`);
   const wordOf = levels
     .flatMap((l) => l.words.flat())
     .find((v) => [...v.word].length > 1 && [...v.word].filter((x) => x === seen.char).length === 1);
+  // The instances of the word topics: the first word of the levels, its sentence and a word of its set that does not fit it.
+  const firstBatch = levels[0]!.words[0]!;
+  const fw = firstBatch[0]!;
+  const fm = wordMates(firstBatch, levels[0]!.level)[0]![0]!;
   return [
     {
       ...base,
@@ -384,14 +432,18 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
         `Choosing the word that fills a sentence among five, then among six, with words from every theme of the levels HSK ${name} tests.`,
         `在五个词、再在六个词中选出填进句子的那个，词语来自 HSK ${name} 所考等级的各个话题。`,
       ),
+      intro: t(
+        `As in the reading paper of HSK ${name}, a sentence has a gap, and one of five or six words fills it, the words drawn from every theme of the levels at once. Take ${fw.sentence} The word is **${fw.word}** (${pinyin(fw)}), "${fw.meaning.en}": ${gapWhole(fw)}`,
+        `和 HSK ${name} 阅读试卷一样，句子里有一个空，要从五个或六个词中选一个填进去，词语来自这些等级的各个话题。比如${zhQuote(fw.sentence)}，要填 **${fw.word}**（${pinyin(fw)}），意思是${zhQuote(fw.meaning["zh-CN"])}：${gapWhole(fw)}`,
+      ),
       strand: "words",
       knowledgePoints: [
         point(
           id("gaps-five"),
           t("Five Words", "五选一"),
           t(
-            "Read the whole sentence before the options. Ask what kind of word the gap needs, a thing, an action or a description, then try only the words of that kind.",
-            "先读完整个句子再看选项。想一想横线处需要什么样的词，是事物、动作还是描写，再只拿这一类词去试。",
+            `Read the whole sentence before the options. Ask what kind of word the gap needs, a thing, an action or a description, then try only the words of that kind. Take ${fw.sentence} The words around the gap call for "${fw.meaning.en}", so it is **${fw.word}**: ${gapWhole(fw)}\n\n> **Watch out.** A word that is near in theme can still be wrong: ${fm.word} means "${fm.meaning.en}", and with it the sentence reads ${gapWhole(fw, fm.word)} Read the words just before and after the gap with the word in place.`,
+            `先读完整个句子再看选项。想一想横线处需要什么样的词，是事物、动作还是描写，再只拿这一类词去试。比如${zhQuote(fw.sentence)}，横线前后的词要的是${zhQuote(fw.meaning["zh-CN"])}这个意思，所以填 **${fw.word}**：${gapWhole(fw)}\n\n> **注意。** 话题相近的词也可能不对：“${fm.word}”的意思是${zhQuote(fm.meaning["zh-CN"])}，填进去句子成了${zhQuote(gapWhole(fw, fm.word))}。要把词放进去，连着横线前后的词一起读。`,
           ),
           examChoice(t("Which word fills the gap?", "横线处填哪个词语？"), gapItems(levels, 4)),
         ),
@@ -399,8 +451,8 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
           id("gaps-six"),
           t("Six Words", "六选一"),
           t(
-            "With more options, rule words out: a word that does not fit the words right before and after the gap cannot be the answer, however well it fits the theme.",
-            "选项多的时候，先排除：和横线前后的词搭配不上的词，不管和话题多相关，都不是答案。",
+            `With more options, rule words out: a word that does not fit the words right before and after the gap cannot be the answer, however well it fits the theme. Take ${fw.sentence} Try ${fm.word}, "${fm.meaning.en}", and the sentence reads ${gapWhole(fw, fm.word)} so it is ruled out; the one left that fits is **${fw.word}**.\n\n> **Watch out.** Ruling out is not enough by itself: read the sentence once more with the word you kept, ${gapWhole(fw)} and make sure it says something complete.`,
+            `选项多的时候，先排除：和横线前后的词搭配不上的词，不管和话题多相关，都不是答案。比如${zhQuote(fw.sentence)}，试“${fm.word}”（${fm.meaning["zh-CN"]}），句子成了${zhQuote(gapWhole(fw, fm.word))}，搭配不上，排除；剩下能填的是 **${fw.word}**。\n\n> **注意。** 只排除还不够：把留下的词放进去再读一遍，${zhQuote(gapWhole(fw))}，确认句子意思完整。`,
           ),
           examChoice(t("Which word fills the gap?", "横线处填哪个词语？"), gapItems(levels, 5)),
         ),
@@ -414,14 +466,18 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
         `Matching the words of the levels HSK ${name} tests with their meanings, both ways, with words of every theme mixed.`,
         `把 HSK ${name} 所考等级的词语和意思对应起来，两个方向都练，各个话题的词混在一起。`,
       ),
+      intro: t(
+        `The words of the levels HSK ${name} tests are matched with their meanings, both ways, the themes mixed as in the paper. Take **${fw.word}** (${pinyin(fw)}): it means "${fw.meaning.en}", as in ${gapWhole(fw)}`,
+        `把 HSK ${name} 所考等级的词语和意思对应起来，两个方向都练，各个话题像试卷里一样混在一起。比如 **${fw.word}**（${pinyin(fw)}），意思是${zhQuote(fw.meaning["zh-CN"])}，可以说：${gapWhole(fw)}`,
+      ),
       strand: "words",
       knowledgePoints: [
         point(
           id("meanings-word"),
           t("The Word of a Meaning", "按意思找词"),
           t(
-            "Think of the characters that carry the meaning, then look for the word written with them.",
-            "先想表达这个意思要用哪些字，再找用这些字写成的词。",
+            `Think of the characters that carry the meaning, then look for the word written with them. Take "${fw.meaning.en}": it is **${fw.word}**, read ${pinyin(fw)}.\n\n> **Watch out.** Words of one theme are easy to swap: ${fm.word} means "${fm.meaning.en}", not "${fw.meaning.en}". Match the whole meaning, not only the theme.`,
+            `先想表达这个意思要用哪些字，再找用这些字写成的词。比如${zhQuote(fw.meaning["zh-CN"])}，就是 **${fw.word}**，读 ${pinyin(fw)}。\n\n> **注意。** 同一话题的词容易混：“${fm.word}”的意思是${zhQuote(fm.meaning["zh-CN"])}，不是${zhQuote(fw.meaning["zh-CN"])}。要对上整个意思，不能只看是哪一类。`,
           ),
           examChoice(t("Which word has this meaning?", "哪个词语是这个意思？"), meaningItems(levels, false)),
         ),
@@ -429,8 +485,8 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
           id("meanings-meaning"),
           t("The Meaning of a Word", "看词选意思"),
           t(
-            "Read the word and recall the meaning of each of its characters; the meaning of the word grows from them.",
-            "读这个词，回想每个字的意思；词的意思往往由字义组合而来。",
+            `Read the word and recall the meaning of each of its characters; the meaning of the word grows from them. Take **${fw.word}** (${pinyin(fw)}): it means "${fw.meaning.en}", as in ${gapWhole(fw)}\n\n> **Watch out.** "${fm.meaning.en}" belongs to the same theme but is the meaning of ${fm.word}. Put the meaning back into a sentence with the word to be sure.`,
+            `读这个词，回想每个字的意思；词的意思往往由字义组合而来。比如 **${fw.word}**（${pinyin(fw)}），意思是${zhQuote(fw.meaning["zh-CN"])}，可以说：${gapWhole(fw)}\n\n> **注意。** ${zhQuote(fm.meaning["zh-CN"])}属于同一个话题，却是“${fm.word}”的意思。把意思放回带这个词的句子里读一读，才能确定。`,
           ),
           examChoice(t("What does this word mean?", "这个词语是什么意思？"), meaningItems(levels, true)),
         ),
@@ -446,7 +502,7 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
       ),
       intro: t(
         `The paper asks you to tell a character from those that look like it. Take **${seen.char}**: it is read ${seen.reading} and means "${seen.meaning.en}", and ${likeText.en}. This topic picks each character of the levels HSK ${name} tests, first by its reading and meaning, then in a word.`,
-        `试卷要求把一个字和形近字区分开。比如 **${seen.char}**：读 ${seen.reading}，意思是“${seen.meaning["zh-CN"]}”；${likeText["zh-CN"]}。这个专题先按读音和意思、再在词里，选出 HSK ${name} 所考等级的每个字。`,
+        `试卷要求把一个字和形近字区分开。比如 **${seen.char}**：读 ${seen.reading}，意思是${zhQuote(seen.meaning["zh-CN"])}；${likeText["zh-CN"]}。这个专题先按读音和意思、再在词里，选出 HSK ${name} 所考等级的每个字。`,
       ),
       strand: "characters",
       knowledgePoints: [
@@ -455,7 +511,7 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
           t("By Reading and Meaning", "按读音和意思选字"),
           t(
             `Characters that look alike usually differ in one component: the meaning component tells what the character is about, the sound component how it is read. Take ${seen.reading}, "${seen.meaning.en}": it is **${seen.char}**, and ${likeText.en}.\n\n> **Watch out.** Read the pinyin and the meaning together: a look-alike may share a sound component and sound close, but it means something else.`,
-            `形近字往往只差一个部件：形旁表示字和什么有关，声旁提示字的读音。比如读 ${seen.reading}、意思是“${seen.meaning["zh-CN"]}”的字是 **${seen.char}**；${likeText["zh-CN"]}。\n\n> **注意。** 读音和意思要一起看：形近字可能声旁相同、读音相近，意思却不一样。`,
+            `形近字往往只差一个部件：形旁表示字和什么有关，声旁提示字的读音。比如读 ${seen.reading}、意思是${zhQuote(seen.meaning["zh-CN"])}的字是 **${seen.char}**；${likeText["zh-CN"]}。\n\n> **注意。** 读音和意思要一起看：形近字可能声旁相同、读音相近，意思却不一样。`,
           ),
           examChoice(t("Which character is this?", "这是哪个字？"), characterItems(levels)),
         ),
@@ -464,7 +520,7 @@ function examTopics(spec: HskSpec): readonly TopicDef[] {
           t("In a Word", "在词里选字"),
           t(
             `Read the whole word in pinyin and think of its meaning; the missing character must give both.${wordOf ? ` Take ${wordOf.word} (${pinyin(wordOf)}), "${wordOf.meaning.en}": its character ${seen.char} is read ${seen.reading}.` : ""}\n\n> **Watch out.** A character of the right sound is not enough: it must also give the word its meaning, so check both before you choose.`,
-            `读出整个词的拼音，想一想词的意思；缺的那个字要同时对得上读音和意思。${wordOf ? `比如“${wordOf.word}”（${pinyin(wordOf)}），意思是“${wordOf.meaning["zh-CN"]}”，其中的“${seen.char}”读 ${seen.reading}。` : ""}\n\n> **注意。** 光读音对还不够，字还要合乎词的意思；读音和意思都对上了再选。`,
+            `读出整个词的拼音，想一想词的意思；缺的那个字要同时对得上读音和意思。${wordOf ? `比如“${wordOf.word}”（${pinyin(wordOf)}），意思是${zhQuote(wordOf.meaning["zh-CN"])}，其中的“${seen.char}”读 ${seen.reading}。` : ""}\n\n> **注意。** 光读音对还不够，字还要合乎词的意思；读音和意思都对上了再选。`,
           ),
           examChoice(t("Which character is missing?", "缺的是哪个字？"), inWordItems(levels)),
         ),

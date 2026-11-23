@@ -92,3 +92,8 @@ export function withMarks(s: string): string {
     return syllable.slice(0, at) + (vowel === vowel.toUpperCase() ? marked.toUpperCase() : marked) + syllable.slice(at + 1);
   });
 }
+
+/** joinPinyin writes the syllables of a word as one word of pinyin, with an apostrophe before a syllable that starts with a, o or e. */
+export function joinPinyin(syllables: readonly string[]): string {
+  return syllables.map((s, i) => (i > 0 && /^[aoe]/u.test(toneless(s)) ? `'${s}` : s)).join("");
+}

@@ -4,6 +4,7 @@
 import type { LexiconEntry, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
+import { wordClues } from "./clue-data.ts";
 import { wordData as laterWordData } from "./data.ts";
 import { earlyWordData } from "./early.ts";
 import { juniorWordData } from "./junior.ts";
@@ -43,6 +44,7 @@ export const wordBatches: readonly WordBatch[] = wordData.map((batch, i) => {
       title: titleOf(batch.grade, batch.theme),
       prerequisites: k === 1 ? [] : [wordId(batch.grade, k - 1)],
       words: batch.words,
+      clues: wordClues,
     }),
   };
 });
