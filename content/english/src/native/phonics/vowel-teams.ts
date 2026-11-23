@@ -97,11 +97,18 @@ const sounds: Record<Team, readonly [en: string, zh: string]> = {
   oa: ["**oa** says the name of **o**", "**oa** 读 **o** 的字母名"],
 };
 
+/** teamParts splits a word into sounds with its vowel team kept together: "b-oa-t". */
+const teamParts = (word: string, team: Team): string => {
+  const i = word.indexOf(team);
+  return [...word.slice(0, i), team, ...word.slice(i + 2)].join("-");
+};
+
 const why = (s: TeamSpellings): Text => {
   const [en, zh] = sounds[s.team];
+  const parts = teamParts(s.word, s.team);
   return t(
-    `${picture(s.word).alt.en} The word is **${s.word}**, *${letters(s.word)}*: ${en}.`,
-    `${picture(s.word).alt["zh-CN"]}这个词是 **${s.word}**，*${letters(s.word)}*：${zh}。`,
+    `${picture(s.word).alt.en} Keep **${s.team}** together as one long sound—*${parts}* → **${s.word}**: ${en}.\n\n**Check.** Dropping one letter from **${s.team}** leaves *${s.half}*, which has a short vowel; both letters of **${s.team}** are needed for the long sound in **${s.word}**.`,
+    `${picture(s.word).alt["zh-CN"]}把 **${s.team}** 合起来读成一个长音——*${parts}* → **${s.word}**：${zh}。\n\n**检验。** 去掉 **${s.team}** 里的一个字母会变成短元音 *${s.half}*；**${s.team}** 两个字母都在，才能读出 **${s.word}** 里的长音。`,
   );
 };
 
@@ -110,20 +117,19 @@ const whyNot =
   (wrong: string): Text => {
     if (wrong === s.half) {
       return t(
-        `*${wrong}* has only one letter where the picture's word has **${s.team}**. With one letter the vowel is short; the two letters together make the long sound.`,
-        `*${wrong}* 在图片的词写 **${s.team}** 的地方只有一个字母。只有一个字母时元音读短音，两个字母合在一起才读长音。`,
+        `*${wrong}* keeps only one vowel letter, which makes a short sound instead of a long vowel team.`,
+        `*${wrong}* 只留了一个元音字母，读短音而不是长元音组合。`,
       );
     }
     if (wrong === s.alike) {
       return t(
-        `*${wrong}* could sound the same, but it is not how the picture's word is spelled. That word is written with **${s.team}**: *${letters(s.word)}*.`,
-        `*${wrong}* 读起来可能一样，但图片的词不是这样拼的。那个词用 **${s.team}** 来写：*${letters(s.word)}*。`,
+        `*${wrong}* uses a different way to spell that long sound, which is not the standard spelling of this picture's word.`,
+        `*${wrong}* 换了另一种拼法来写这个长音，不是这张图片词的标准拼写。`,
       );
     }
-    const [en, zh] = sounds[s.team];
     return t(
-      `*${wrong}* has other vowel letters, which make another sound. In the picture's word ${en}.`,
-      `*${wrong}* 的元音字母不同，读的是另一个音。图片的词里 ${zh}。`,
+      `*${wrong}* uses different vowel letters that make another sound, so it does not name this picture.`,
+      `*${wrong}* 换成了读另一个音的元音字母，和这张图片对不上。`,
     );
   };
 
@@ -155,6 +161,10 @@ const readingWords = phonicsTopic({
     "Words such as *feet*, *leaf*, *rain*, *hay* and *boat*, where two letters together spell a vowel that says its name.",
     "*feet*、*leaf*、*rain*、*hay*、*boat* 这样的词：两个字母合起来拼出一个读字母名的元音。",
   ),
+  intro: t(
+    "Leo sees a toy **boat** in the tub. The **o** and **a** stand side by side and team up to say the name of **o**: *b-oa-t*.\n\nTwo letters side by side that make one long vowel sound are a **vowel team**: **ee**, **ea**, **ai**, **ay**, and **oa**. Let's read vowel-team words and match them to pictures.",
+    "利奥看到浴缸里有一只玩具小船 **boat**。**o** 和 **a** 挨在一起，合起来读 **o** 的字母名：*b-oa-t*。\n\n两个字母挨在一起发一个长元音，叫**元音组合**：**ee**、**ea**、**ai**、**ay** 和 **oa**。我们来读含元音组合的词，再给它们配图。",
+  ),
   prerequisites: ["reading-words-with-silent-e"],
   encompasses: [{ topic: "reading-words-with-silent-e", weight: 0.3 }],
   xp: 10,
@@ -163,8 +173,8 @@ const readingWords = phonicsTopic({
       "choosing-the-word-with-a-vowel-team",
       t("The Word for a Picture", "图片对应的词"),
       t(
-        "A silent **e** is one way to make a vowel say its name. Another is a **vowel team**, two letters side by side that make one long sound. **ee** and **ea** say the name of **e**, as in *feet* and *leaf*. **ai** and **ay** say the name of **a**, as in *rain* and *hay*; **ay** comes at the end of a word. **oa** says the name of **o**, as in *boat*.\n\nRead the team as one sound, then blend the word. The wrong words keep only one letter of the team, spell the sound another way, or use a team that makes another sound, so check them all.",
-        "不发音的 **e** 能让元音读字母名，**元音组合**也能：两个挨在一起的字母合起来发一个长音。**ee** 和 **ea** 读 **e** 的字母名，比如 *feet* 和 *leaf*。**ai** 和 **ay** 读 **a** 的字母名，比如 *rain* 和 *hay*；**ay** 写在词尾。**oa** 读 **o** 的字母名，比如 *boat*。\n\n把元音组合读成一个音，再连读整个词。错误的词会只留组合里的一个字母、用别的写法拼同一个音，或者换成读另一个音的组合，所以每处都要核对。",
+        "In a **vowel team**, two letters work together to make one long vowel sound: **ee** and **ea** say *e* (*feet*, *leaf*), **ai** and **ay** say *a* (*rain*, *hay*), and **oa** says *o* (*boat*).\n\nTry a picture of **feet**: read **ee** as one long *e* sound—*f-ee-t*—and blend it into **feet**.\n\n> **Watch out.** Do not pick a short-vowel spelling with only one letter (*fet* instead of *feet*) or a team that makes a different sound (*foot*).",
+        "在**元音组合**里，两个字母合起来发一个长音：**ee** 和 **ea** 读 *e*（*feet*、*leaf*），**ai** 和 **ay** 读 *a*（*rain*、*hay*），**oa** 读 *o*（*boat*）。\n\n看到双脚 **feet** 时，把 **ee** 读成一个长 *e* 音——*f-ee-t*——连成 **feet**。\n\n> **注意。** 不要错选只留一个字母的短元音拼法（如 *fet*），也不要选成读另一个音的组合（如 *foot*）。",
       ),
       pictureChoice(t("Which word names the picture?", "哪个词是这张图片的名称？"), pictureToWord),
     ),
@@ -172,8 +182,8 @@ const readingWords = phonicsTopic({
       "choosing-the-picture-for-a-vowel-team-word",
       t("The Picture for a Word", "词对应的图片"),
       t(
-        "Now the word comes first. Find its vowel team and read it as one long sound, blend the word, and think of what it means. Then find its picture. The other pictures often have words with the same team, such as *boat* and *goat*, so read every letter before you choose.",
-        "现在先给出词。找出其中的元音组合，把它读成一个长音，连读出这个词，想想它的意思，然后找出它的图片。其他图片的词常常有相同的元音组合，比如 *boat* 和 *goat*，所以要读完每个字母再选。",
+        "Now you see the word first. Take **rain**: spot **ai** in the middle, read it as the name of **a**—*r-ai-n*—blend it into *rain*, and pick the rain picture.\n\nRead the consonants around the team too before you choose.\n\n> **Watch out.** Other pictures often share the same vowel team, like *boat* and *goat*, so check every consonant as well.",
+        "现在先看到词。拿 **rain** 来说，看到中间的 **ai** 读 **a** 的字母名——*r-ai-n*——连成 *rain*，再点下雨的图片。\n\n选图前元音组合前后的辅音也要读清。\n\n> **注意。** 其他图片的词常常有相同的元音组合（比如 *boat* 和 *goat*），前后的辅音也要核对。",
       ),
       pictureOptions(t("Which picture shows this word?", "哪张图片表示这个词？"), wordToPicture),
     ),
@@ -188,14 +198,15 @@ const gapped = (s: TeamSpellings) => {
 
 const missingTeam: readonly TypedPictureItem[] = spellings.map((s) => {
   const [en, zh] = sounds[s.team];
+  const gap = gapped(s);
   return {
     word: s.word,
-    extra: `**${gapped(s)}**`,
+    extra: `**${gap}**`,
     accepted: [s.team],
     wrong: teams.filter((team) => team !== s.team),
     solution: t(
-      `${picture(s.word).alt.en} The word is **${s.word}**: ${en}.`,
-      `${picture(s.word).alt["zh-CN"]}这个词是 **${s.word}**：${zh}。`,
+      `${picture(s.word).alt.en} Listen to the long vowel in **${s.word}**: ${en}.\n\n**Check.** Put **${s.team}** into **${gap}** and read it back—*${teamParts(s.word, s.team)}* → **${s.word}**, which matches the picture.`,
+      `${picture(s.word).alt["zh-CN"]}听一听 **${s.word}** 里的长元音：${zh}。\n\n**检验。** 把 **${s.team}** 填进 **${gap}** 再读一遍——*${teamParts(s.word, s.team)}* → **${s.word}**，正好对上图片。`,
     ),
   };
 });
@@ -205,8 +216,8 @@ const wholeWord: readonly TypedPictureItem[] = spellings.map((s) => ({
   accepted: [s.word],
   wrong: [s.half, s.alike, s.other],
   solution: t(
-    `${picture(s.word).alt.en} Say the word slowly, one sound at a time, and write its long vowel with the team **${s.team}**: *${letters(s.word)}*, **${s.word}**.`,
-    `${picture(s.word).alt["zh-CN"]}慢慢地一个音一个音地说出这个词，它的长元音用组合 **${s.team}** 来写：*${letters(s.word)}*，**${s.word}**。`,
+    `${picture(s.word).alt.en} Say **${s.word}** sound by sound—*${teamParts(s.word, s.team)}*—and write its long vowel with **${s.team}**: **${s.word}**.\n\n**Check.** Read back *${letters(s.word)}*: with only one vowel letter it would read short *${s.half}*, while **${s.team}** gives the long sound in **${s.word}**.`,
+    `${picture(s.word).alt["zh-CN"]}一个音一个音地说 **${s.word}**——*${teamParts(s.word, s.team)}*——长元音用 **${s.team}** 来写，写成 **${s.word}**。\n\n**检验。** 核对 *${letters(s.word)}*：只写一个元音字母会读成短音 *${s.half}*，写上 **${s.team}** 才读出 **${s.word}** 的长音。`,
   ),
 }));
 
@@ -216,6 +227,10 @@ const spellingWords = phonicsTopic({
   summary: t(
     "Writing words with **ee**, **ea**, **ai**, **ay** and **oa**: the two letters of the team, then the whole word.",
     "写出含 **ee**、**ea**、**ai**、**ay**、**oa** 的词：先写元音组合的两个字母，再写整个词。",
+  ),
+  intro: t(
+    "Sam draws yellow **hay** in a barn. He hears the name of **a** right at the end of the word, so he writes **ay**: **hay**.\n\nOne long vowel sound can be spelled by different teams, like **ai** in the middle (*rain*) and **ay** at the end (*hay*). First we will fill in the missing team, then we will spell the whole word.",
+    "萨姆在谷仓画了一堆干草 **hay**。他听到词尾是 **a** 的字母名，于是写上 **ay**：**hay**。\n\n同一个长音可以有不同的元音组合，比如词中用 **ai**（*rain*）、词尾用 **ay**（*hay*）。我们先补上缺少的元音组合，再来拼写整个词。",
   ),
   prerequisites: ["reading-words-with-vowel-teams", "spelling-words-with-silent-e"],
   encompasses: [
@@ -228,8 +243,8 @@ const spellingWords = phonicsTopic({
       "the-missing-vowel-team",
       t("The Missing Vowel Team", "缺少的元音组合"),
       t(
-        "Say the picture's word slowly and listen for its long vowel: the name of **e**, **a** or **o**. One sound can have more than one spelling, so remember how each word is written: *feet* with **ee** and *leaf* with **ea**; *rain* with **ai** and *hay* with **ay**, which ends a word; *boat* with **oa**. Type the two letters.",
-        "慢慢说出图片的词，听一听它的长元音：是 **e**、**a** 还是 **o** 的字母名。同一个音可能有不止一种写法，所以要记住每个词怎么写：*feet* 用 **ee**，*leaf* 用 **ea**；*rain* 用 **ai**，*hay* 用写在词尾的 **ay**；*boat* 用 **oa**。键入这两个字母。",
+        "Say the picture's word slowly and listen for the long vowel in the two blanks. For a **leaf** with **l _ _ f**, you hear the name of **e** and *leaf* uses **ea**, so type **ea**.\n\nRemember **ay** comes at the end (*hay*), while **ai** sits inside (*rain*).\n\n> **Watch out.** Do not mix up teams that share a sound (**ee** vs. **ea**, or **ai** vs. **ay**) when filling the blanks.",
+        "慢慢说出图片的词，听一听两个横线里的长元音。看到树叶 **leaf** 和 **l _ _ f** 时，听到的是 **e** 的字母名，*leaf* 用 **ea**，所以键入 **ea**。\n\n记住 **ay** 用在词尾（*hay*），**ai** 用在词中（*rain*）。\n\n> **注意。** 填空时不要把同音的组合写混（比如 **ee** 和 **ea**，或者 **ai** 和 **ay**）。",
       ),
       pictureTyped(t("Type the two letters missing from the word for this picture.", "键入这张图片的词中缺少的两个字母。"), missingTeam),
     ),
@@ -237,8 +252,8 @@ const spellingWords = phonicsTopic({
       "spelling-the-whole-vowel-team-word",
       t("Spelling the Whole Word", "拼写整个词"),
       t(
-        "Now write the whole word. Say it slowly, one sound at a time, and write each sound in order. When you reach the long vowel, write its team, both letters. Then read back what you wrote and check that it looks like the word you have read.",
-        "现在写出整个词。慢慢地一个音一个音地说，按顺序写出每个音。写到长元音时，把它的元音组合两个字母都写上。写完后读一遍，看它是不是和你读过的那个词一样。",
+        "Now write the whole word yourself. For a picture of a **coat**, say *c-oa-t* and write **oa** for the long *o* sound: **coat**.\n\nRead back what you typed to make sure both letters of the team are there.\n\n> **Watch out.** Do not leave out the second letter of the vowel team (*cot* instead of *coat*) or replace it with a silent **e** (*cote*).",
+        "现在自己写出整个词。看到外套 **coat** 时，念 *c-oa-t*，长 *o* 音写 **oa**：**coat**。\n\n写完后再读一遍，确认元音组合的两个字母都在。\n\n> **注意。** 不要漏掉元音组合的第二个字母（写成 *cot*），也不要改写成不发音的 **e**（如 *cote*）。",
       ),
       pictureTyped(t("Type the word for this picture.", "键入这张图片的词。"), wholeWord),
     ),

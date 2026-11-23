@@ -93,6 +93,31 @@ export const letters = (word: string) => [...word].join("-");
 /** caps writes a word in capital letters. */
 export const caps = (word: string) => word.toUpperCase();
 
+const bareNouns = new Set([
+  "ten",
+  "six",
+  "chips",
+  "mice",
+  "dice",
+  "feet",
+  "teeth",
+  "milk",
+  "rice",
+  "rain",
+  "mail",
+  "paint",
+  "hay",
+  "soap",
+  "cloth",
+]);
+
+/** pictureNoun formats a picture word with the right English article (or none for plurals, mass nouns, and numbers). */
+export const pictureNoun = (word: string): string => {
+  if (word === "sun") return "the sun";
+  if (bareNouns.has(word)) return word;
+  return /^[aeiou]/u.test(word) ? `an ${word}` : `a ${word}`;
+};
+
 /** PictureItem is a problem about a picture: the question's own words, the options, the right one, and its feedback. */
 export interface PictureItem {
   readonly word: string;
@@ -154,7 +179,7 @@ export function pictureOptions(question: Text, bank: readonly PicturesItem[]) {
         .map((w) => ({
           response: String(options.indexOf(w)),
           feedback: t(
-            `That picture is a ${w}, spelled *${letters(w)}*. Look again at each letter of **${item.word}**.`,
+            `That picture shows ${pictureNoun(w)}, spelled *${letters(w)}*. Look again at each letter of **${item.word}**.`,
             `那张图是 ${w}，拼作 *${letters(w)}*。再看看 **${item.word}** 的每个字母。`,
           ),
         })),

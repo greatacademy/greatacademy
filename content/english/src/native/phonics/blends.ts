@@ -120,8 +120,8 @@ const both = (s: BlendSpellings): readonly [en: string, zh: string] => {
 const why = (s: BlendSpellings): Text => {
   const [en, zh] = both(s);
   return t(
-    `${picture(s.word).alt.en} The word is **${s.word}**, *${letters(s.word)}*: ${en}.`,
-    `${picture(s.word).alt["zh-CN"]}这个词是 **${s.word}**，*${letters(s.word)}*：${zh}。`,
+    `${picture(s.word).alt.en} Sound out every letter of **${s.word}**, *${letters(s.word)}*: ${en}.\n\n**Check.** Drop one letter of **${s.blend}** and you get *${s.drop}*, which is missing a sound; keeping both letters gives **${s.word}**.`,
+    `${picture(s.word).alt["zh-CN"]}逐个字母读出 **${s.word}**，*${letters(s.word)}*：${zh}。\n\n**检验。** 去掉 **${s.blend}** 里的一个字母会变成 *${s.drop}*，少了一个音；两个字母都留着才是 **${s.word}**。`,
   );
 };
 
@@ -130,21 +130,21 @@ const whyNot =
   (wrong: string): Text => {
     if (wrong === s.drop) {
       return t(
-        `*${wrong}* misses a sound. In the picture's word, **${s.blend}** stands together and both of its sounds are heard. Say the word slowly and listen for each one.`,
-        `*${wrong}* 少了一个音。图片的词里 **${s.blend}** 挨在一起，两个音都能听到。慢慢说出这个词，把每个音都听出来。`,
+        `*${wrong}* drops one consonant sound, so it sounds shorter than this picture's word. Stretch the word out and listen for both consonants.`,
+        `*${wrong}* 少了一个辅音，读起来比这张图片的词少一个音。把词拉长读，两个辅音都要听出来。`,
       );
     }
     if (wrong === s.change) {
       const [k = 0] = differences(s.word, wrong);
       return t(
-        `*${wrong}* has **${wrong[k]}** where the picture's word has **${s.word[k]}**. Listen closely to both sounds of **${s.blend}**.`,
-        `*${wrong}* 在图片的词写 **${s.word[k]}** 的地方写了 **${wrong[k]}**。仔细听 **${s.blend}** 的两个音。`,
+        `*${wrong}* has **${wrong[k]}** in the blend, which makes a different consonant sound from this picture's word.`,
+        `*${wrong}* 在连缀处写了 **${wrong[k]}**，发出的辅音和这张图片的词不一样。`,
       );
     }
     const [k = 0] = differences(s.word, wrong);
     return t(
-      `*${wrong}* has the vowel **${wrong[k]}**, but the picture's word has **${s.word[k]}**. Read the vowel again.`,
-      `*${wrong}* 的元音是 **${wrong[k]}**，而图片的词是 **${s.word[k]}**。再读一读元音。`,
+      `*${wrong}* has the vowel **${wrong[k]}**, which changes the middle sound so it does not match the picture.`,
+      `*${wrong}* 的元音是 **${wrong[k]}**，中间的音变了，和图片对不上。`,
     );
   };
 
@@ -181,6 +181,10 @@ const readingWords = phonicsTopic({
     "Words such as *frog*, *flag*, *nest* and *lamp*, where two consonants stand together and both are heard.",
     "*frog*、*flag*、*nest*、*lamp* 这样的词：两个辅音挨在一起，两个音都听得到。",
   ),
+  intro: t(
+    "Mia spots a green **crab** on the sand. She says *c-r-a-b*: **c** and **r** stand side by side, and she hears both sounds.\n\nTwo consonants together where you hear both sounds are a **blend**, like **cr** in *crab* or **nd** in *hand*. Let's read words with blends and match them to pictures.",
+    "米娅在沙滩上看到一只小螃蟹 **crab**。她慢慢读 *c-r-a-b*：**c** 和 **r** 挨在一起，两个音都听得清清楚楚。\n\n两个辅音挨在一起、两个音都读出来，叫**辅音连缀**，比如 *crab* 里的 **cr**、*hand* 里的 **nd**。我们来读含辅音连缀的词，并给它们配图。",
+  ),
   prerequisites: ["reading-short-vowel-words"],
   encompasses: [{ topic: "reading-short-vowel-words", weight: 0.3 }],
   xp: 10,
@@ -189,8 +193,8 @@ const readingWords = phonicsTopic({
       "choosing-the-word-with-a-blend",
       t("The Word for a Picture", "图片对应的词"),
       t(
-        "Sometimes two consonants stand side by side and you say both of them, quickly, one after the other. They are called a **blend**: **fr** in *frog*, **st** in *nest*. A blend is not a digraph: in *ship*, **sh** is one sound, but in *frog* you hear *f* and then *r*.\n\nTo read a word with a blend, say every sound: *f-r-o-g*, four sounds. The wrong words drop a letter of the blend, change one of its letters, or change the vowel, so check them all.",
-        "有时两个辅音挨在一起，两个都要读出来，一个紧接一个，读得很快。这叫作**辅音连缀**：*frog* 里的 **fr**，*nest* 里的 **st**。辅音连缀不是二合字母：*ship* 里的 **sh** 只发一个音，而 *frog* 里先听到 *f* 再听到 *r*。\n\n读含辅音连缀的词时，每个音都要读出来：*f-r-o-g* 是四个音。错误的词会少写连缀里的一个字母、换掉其中一个字母，或者换掉元音，所以每处都要核对。",
+        "In a **blend**, two consonants sit side by side and you say both sounds quickly, one after the other. In *ship*, **sh** is one sound, but in *frog*, **fr** is two sounds: *f* then *r*.\n\nTry a picture of a **frog**: say all four sounds—*f-r-o-g*—and blend them into **frog**.\n\n> **Watch out.** Do not skip the second consonant of a blend (*fog* instead of *frog*) or miss a changed vowel.",
+        "在**辅音连缀**里，两个辅音挨在一起，两个音一个接一个很快读出来。*ship* 里的 **sh** 只发一个音，而 *frog* 里的 **fr** 发两个音：先 *f* 再 *r*。\n\n看到青蛙 **frog** 时，把四个音都读出来——*f-r-o-g*——连成 **frog**。\n\n> **注意。** 不要漏读连缀里的第二个辅音（把 *frog* 看成 *fog*），也别漏看变了的元音。",
       ),
       pictureChoice(t("Which word names the picture?", "哪个词是这张图片的名称？"), pictureToWord),
     ),
@@ -198,8 +202,8 @@ const readingWords = phonicsTopic({
       "choosing-the-picture-for-a-blend-word",
       t("The Picture for a Word", "词对应的图片"),
       t(
-        "Now the word comes first. Say each of its sounds, both sounds of the blend too, blend them into the word, and think of what it means. Then find its picture. The other pictures often have a blend in the same place, such as *frog* and *flag*, so read the whole word before you choose.",
-        "现在先给出词。读出它的每个音，连缀的两个音也都要读，再连成这个词，想想它的意思，然后找出它的图片。其他图片的词常常在同样的位置也有辅音连缀，比如 *frog* 和 *flag*，所以要把整个词读完再选。",
+        "Now you see the word first. Take **nest**: say every sound, including both sounds at the end—*n-e-s-t*—and blend them into *nest*, then pick the nest picture.\n\nRead both letters of the blend before you choose.\n\n> **Watch out.** Other pictures often have a blend in the same spot, such as *frog* and *flag*, so read every letter.",
+        "现在先看到词。拿 **nest** 来说，把每个音都读出来，包括结尾的两个音——*n-e-s-t*——连成 *nest*，再点鸟窝的图片。\n\n选图前连缀的两个字母都要读清。\n\n> **注意。** 其他图片的词常常在同样位置也有辅音连缀（比如 *frog* 和 *flag*），每个字母都要读完。",
       ),
       pictureOptions(t("Which picture shows this word?", "哪张图片表示这个词？"), wordToPicture),
     ),
@@ -215,14 +219,15 @@ const gapped = (s: BlendSpellings) => {
 const missingBlend: readonly TypedPictureItem[] = spellings.map((s) => {
   const [en, zh] = both(s);
   const [a = "", b = ""] = s.blend;
+  const gap = gapped(s);
   return {
     word: s.word,
-    extra: `**${gapped(s)}**`,
+    extra: `**${gap}**`,
     accepted: [s.blend],
     wrong: [a, b, b + a],
     solution: t(
-      `${picture(s.word).alt.en} The word is **${s.word}**: ${en}.`,
-      `${picture(s.word).alt["zh-CN"]}这个词是 **${s.word}**：${zh}。`,
+      `${picture(s.word).alt.en} Stretch out **${s.word}** and listen to the two missing sounds: ${en}.\n\n**Check.** Put **${s.blend}** into **${gap}** and read it aloud—*${letters(s.word)}* → **${s.word}**; swapping them to *${b}${a}* would change the order of the sounds.`,
+      `${picture(s.word).alt["zh-CN"]}把 **${s.word}** 拉长读，听缺少的两个音：${zh}。\n\n**检验。** 把 **${s.blend}** 填进 **${gap}** 再读一遍——*${letters(s.word)}* → **${s.word}**；如果写反成 *${b}${a}*，两个音的顺序就不对了。`,
     ),
   };
 });
@@ -232,8 +237,8 @@ const wholeWord: readonly TypedPictureItem[] = spellings.map((s) => ({
   accepted: [s.word],
   wrong: [s.drop, s.change, s.vowel],
   solution: t(
-    `${picture(s.word).alt.en} Say the word slowly, one sound at a time, and write a letter for each sound, both letters of **${s.blend}** too: *${letters(s.word)}*, **${s.word}**.`,
-    `${picture(s.word).alt["zh-CN"]}慢慢地一个音一个音地说出这个词，每个音写一个字母，**${s.blend}** 的两个字母也都要写：*${letters(s.word)}*，**${s.word}**。`,
+    `${picture(s.word).alt.en} Say **${s.word}** slowly, one sound at a time, and write both letters of **${s.blend}**: *${letters(s.word)}* gives **${s.word}**.\n\n**Check.** Read your letters back one by one—leaving out a letter of **${s.blend}** would spell *${s.drop}*, while all ${s.word.length} letters spell **${s.word}**.`,
+    `${picture(s.word).alt["zh-CN"]}慢慢地一个音一个音说出 **${s.word}**，**${s.blend}** 两个字母都要写上：*${letters(s.word)}*，写成 **${s.word}**。\n\n**检验。** 逐个字母反过来读一遍：少了 **${s.blend}** 里的一个字母会写成 *${s.drop}*，${s.word.length} 个字母全在才是 **${s.word}**。`,
   ),
 }));
 
@@ -243,6 +248,10 @@ const spellingWords = phonicsTopic({
   summary: t(
     "Writing words with a blend at the start or the end, such as *frog* and *nest*: the two letters of the blend, then the whole word.",
     "写出开头或结尾有辅音连缀的词，比如 *frog* 和 *nest*：先写连缀的两个字母，再写整个词。",
+  ),
+  intro: t(
+    "Leo draws a **lamp** and says the sounds slowly: *l-a-m-p*. At the end, the *m* hides right before the *p*, so he writes both **m** and **p**.\n\nWhen two consonants sit together, write both letters in the order you hear them. First we will fill in the missing blend, then we will spell the whole word.",
+    "利奥画了一盏台灯 **lamp**，慢慢念出每个音：*l-a-m-p*。结尾的 *m* 紧挨在 *p* 前面，所以他把 **m** 和 **p** 两个都写上。\n\n两个辅音挨在一起时，按听到的顺序两个字母都要写。我们先补上缺少的辅音连缀，再来拼写整个词。",
   ),
   prerequisites: ["reading-words-with-blends", "spelling-short-vowel-words"],
   encompasses: [
@@ -255,8 +264,8 @@ const spellingWords = phonicsTopic({
       "the-missing-blend",
       t("The Missing Blend", "缺少的辅音连缀"),
       t(
-        "Say the picture's word slowly and listen to the two sounds that the gaps stand for. Each gap is one letter, and you hear both: in *frog*, *f* then *r*. Type the two letters in the order you hear them.",
-        "慢慢说出图片的词，听一听两个空格代表的两个音。每个空格是一个字母，两个音都听得到：*frog* 里先 *f* 后 *r*。按听到的顺序键入这两个字母。",
+        "Say the picture's word slowly and listen to the two sounds in the blanks. For a **frog** with **_ _ o g**, you hear *f* first and *r* next, so type **fr**.\n\nEach blank holds one consonant.\n\n> **Watch out.** Do not drop the quiet second consonant or type the two letters in reverse order.",
+        "慢慢说出图片的词，听清两个横线代表的音。看到青蛙 **frog** 和 **_ _ o g** 时，先听到 *f* 再听到 *r*，所以键入 **fr**。\n\n每个横线填一个辅音。\n\n> **注意。** 不要漏掉不太明显的第二个辅音，也不要把两个字母的顺序打反。",
       ),
       pictureTyped(t("Type the two letters missing from the word for this picture.", "键入这张图片的词中缺少的两个字母。"), missingBlend),
     ),
@@ -264,8 +273,8 @@ const spellingWords = phonicsTopic({
       "spelling-the-whole-blend-word",
       t("Spelling the Whole Word", "拼写整个词"),
       t(
-        "Now write the whole word. Say it slowly, one sound at a time, and write a letter for each sound. A blend is easy to shorten: in *nest* the *s* hides before the *t*, so stretch the word out and listen for both. Then read back what you wrote and check that it says the picture's word.",
-        "现在写出整个词。慢慢地一个音一个音地说，每个音写一个字母。辅音连缀很容易少写一个：*nest* 里的 *s* 藏在 *t* 前面，所以要把词拉长了说，两个音都听出来。写完后读一遍，看它是不是图片的词。",
+        "Now spell the whole word yourself. For a picture of a **nest**, stretch out the end—*n-e-s-t*—and write all four letters in order: **nest**.\n\nRead back what you typed to hear every sound.\n\n> **Watch out.** Ending blends like **st** in *nest* are easy to shorten to *net*, so stretch the word and check both consonants.",
+        "现在自己拼写整个词。看到鸟窝 **nest** 时，把结尾拉长——*n-e-s-t*——按顺序写出四个字母：**nest**。\n\n写完后再读一遍，听听每个音是否都在。\n\n> **注意。** *nest* 结尾的 **st** 很容易少写成 *net*，要把词拉长读，核对两个辅音都在。",
       ),
       pictureTyped(t("Type the word for this picture.", "键入这张图片的词。"), wholeWord),
     ),

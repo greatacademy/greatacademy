@@ -102,8 +102,8 @@ const names: Record<Vowel, readonly [en: string, zh: string]> = {
 const why = (s: SilentESpellings): Text => {
   const [en, zh] = names[s.vowel];
   return t(
-    `${picture(s.word).alt.en} The word is **${s.word}**, *${letters(s.word)}*: the **e** at the end is silent, and ${en}.`,
-    `${picture(s.word).alt["zh-CN"]}这个词是 **${s.word}**，*${letters(s.word)}*：结尾的 **e** 不发音，${zh}。`,
+    `${picture(s.word).alt.en} In **${s.word}** (*${letters(s.word)}*), the **e** at the end is silent, and ${en}.\n\n**Check.** Cover the final **e** and it becomes short-vowel *${s.short}*; uncovering the **e** makes **${s.vowel}** say its name again, giving **${s.word}**.`,
+    `${picture(s.word).alt["zh-CN"]}在 **${s.word}**（*${letters(s.word)}*）里，结尾的 **e** 不发音，${zh}。\n\n**检验。** 盖住结尾的 **e** 会变成短元音 *${s.short}*；露出来后 **${s.vowel}** 才读字母名，正是 **${s.word}**。`,
   );
 };
 
@@ -112,19 +112,19 @@ const whyNot =
   (wrong: string): Text => {
     if (wrong === s.short) {
       return t(
-        `*${wrong}* has no **e** at the end, so its **${s.vowel}** is short. In the picture's word a silent **e** at the end makes **${s.vowel}** say its name.`,
-        `*${wrong}* 结尾没有 **e**，所以 **${s.vowel}** 读短音。图片的词结尾有一个不发音的 **e**，它让 **${s.vowel}** 读字母名。`,
+        `*${wrong}* has no **e** at the end, so its vowel stays short instead of saying its letter name.`,
+        `*${wrong}* 结尾没有 **e**，所以元音只能读短音，不会读字母名。`,
       );
     }
     if (wrong === s.moved) {
       return t(
-        `*${wrong}* puts the **e** in the middle. The silent **e** comes last, after the consonant: *${letters(s.word)}*.`,
-        `*${wrong}* 把 **e** 放到了中间。不发音的 **e** 写在最后，在辅音后面：*${letters(s.word)}*。`,
+        `*${wrong}* puts **e** in the middle; a silent **e** belongs at the very end, after the last consonant.`,
+        `*${wrong}* 把 **e** 放到了中间；不发音的 **e** 应该写在最末尾、最后一个辅音后面。`,
       );
     }
     return t(
-      `*${wrong}* has the vowel **${wrong[1]}**, but the picture's word has **${s.vowel}**. Read the vowel again: the **e** at the end makes it say its name.`,
-      `*${wrong}* 的元音是 **${wrong[1]}**，而图片的词是 **${s.vowel}**。再读一读元音：结尾的 **e** 让它读字母名。`,
+      `*${wrong}* has **${wrong[1]}** as its vowel, so with the silent **e** it says the name of **${wrong[1]}**, which does not match this picture.`,
+      `*${wrong}* 的元音是 **${wrong[1]}**，加上不发音的 **e** 后读的是 **${wrong[1]}** 的字母名，和图片对不上。`,
     );
   };
 
@@ -156,6 +156,10 @@ const readingWords = phonicsTopic({
     "Words such as *cake*, *kite*, *rope* and *cube*, where an **e** at the end is silent and makes the vowel say its name.",
     "*cake*、*kite*、*rope*、*cube* 这样的词：结尾的 **e** 不发音，它让前面的元音读字母名。",
   ),
+  intro: t(
+    "Sam has a card that says **cap**. He slips an **e** onto the end and it turns into **cape**! The **e** stays quiet, and **a** now says its own letter name.\n\nA silent **e** at the end works the same way on **a**, **i**, **o**, and **u**. Let's read silent-**e** words and match them to pictures.",
+    "萨姆手里有张卡片写着 **cap**。他在末尾添上一个 **e**，就变成了 **cape**！这个 **e** 不出声，前面的 **a** 改读它自己的字母名。\n\n结尾不发音的 **e** 对 **a**、**i**、**o**、**u** 都起同样的作用。我们来读带不发音 **e** 的词，并给它们配图。",
+  ),
   prerequisites: ["reading-short-vowel-words"],
   encompasses: [{ topic: "reading-short-vowel-words", weight: 0.3 }],
   xp: 10,
@@ -164,8 +168,8 @@ const readingWords = phonicsTopic({
       "choosing-the-word-with-a-silent-e",
       t("The Word for a Picture", "图片对应的词"),
       t(
-        "Add an **e** to the end of *cap* and it becomes *cape*. The **e** makes no sound of its own, but it changes the vowel before it: the vowel now says its name, the way you say the letter in the alphabet. *kit* becomes *kite*, *not* becomes *note*, *cub* becomes *cube*.\n\nSo when a word ends with a consonant and an **e**, read the vowel as its name and keep the **e** quiet. The wrong words leave out the **e**, change the vowel, or put the **e** in the middle, so check them all.",
-        "在 *cap* 的结尾加一个 **e**，就变成了 *cape*。这个 **e** 自己不发音，却会改变前面的元音：元音改读它的字母名，就像在字母表里念这个字母一样。*kit* 变成 *kite*，*not* 变成 *note*，*cub* 变成 *cube*。\n\n所以一个词以辅音加 **e** 结尾时，元音读字母名，**e** 不出声。错误的词会漏掉 **e**、换掉元音，或者把 **e** 放到中间，所以每处都要核对。",
+        "When a word ends with a consonant and an **e**, the **e** is silent and the vowel before it says its letter name: *a* in *cake*, *i* in *kite*, *o* in *rope*, *u* in *cube*.\n\nTry a picture of a **kite**: *kit* has a short *i*, while **kite** adds a silent **e** so **i** says its name.\n\n> **Watch out.** Do not drop the final **e** (*kit* instead of *kite*) or move **e** into the middle (*kiet*).",
+        "一个词以辅音加 **e** 结尾时，**e** 不发音，前面的元音读自己的字母名：*cake* 里的 *a*、*kite* 里的 *i*、*rope* 里的 *o*、*cube* 里的 *u*。\n\n看到风筝 **kite** 时：*kit* 里的 *i* 读短音，而 **kite** 末尾加上不发音的 **e**，**i** 就读字母名。\n\n> **注意。** 不要漏掉结尾的 **e**（把 *kite* 看成 *kit*），也不要把 **e** 挪到中间（如 *kiet*）。",
       ),
       pictureChoice(t("Which word names the picture?", "哪个词是这张图片的名称？"), pictureToWord),
     ),
@@ -173,8 +177,8 @@ const readingWords = phonicsTopic({
       "choosing-the-picture-for-a-silent-e-word",
       t("The Picture for a Word", "词对应的图片"),
       t(
-        "Now the word comes first. Look at its end: if it ends with a consonant and an **e**, the vowel says its name and the **e** is silent. Blend the word, think of what it means, and find its picture. The other pictures often have words that share letters with it, such as *cake* and *rake*, so read every letter before you choose.",
-        "现在先给出词。先看词尾：如果以辅音加 **e** 结尾，元音读字母名，**e** 不发音。连读出这个词，想想它的意思，然后找出它的图片。其他图片的词常常和它有相同的字母，比如 *cake* 和 *rake*，所以要读完每个字母再选。",
+        "Now you see the word first. Take **cake**: spot the silent **e** at the end, read **a** as its letter name, blend *c-a-k* into *cake*, and pick the cake picture.\n\nAlways look at the end of the word before you read the vowel.\n\n> **Watch out.** Other pictures often share almost all the same letters, like *cake* and *rake*, so check the first and middle letters too.",
+        "现在先看到词。拿 **cake** 来说，看到结尾不发音的 **e**，把 **a** 读成字母名，连读成 *cake*，再点蛋糕的图片。\n\n读元音之前先看一眼词尾有没有 **e**。\n\n> **注意。** 其他图片的词常常只差一两个字母（比如 *cake* 和 *rake*），开头和中间的字母也要看清。",
       ),
       pictureOptions(t("Which picture shows this word?", "哪张图片表示这个词？"), wordToPicture),
     ),
@@ -183,14 +187,15 @@ const readingWords = phonicsTopic({
 
 const missingVowel: readonly TypedPictureItem[] = spellings.map((s) => {
   const [en, zh] = names[s.vowel];
+  const gap = `${s.word[0]} _ ${s.word[2]} e`;
   return {
     word: s.word,
-    extra: `**${s.word[0]} _ ${s.word[2]} e**`,
+    extra: `**${gap}**`,
     accepted: [s.vowel],
     wrong: ["a", "e", "i", "o", "u"].filter((v) => v !== s.vowel),
     solution: t(
-      `${picture(s.word).alt.en} The word is **${s.word}**: the **e** at the end is silent, and ${en}.`,
-      `${picture(s.word).alt["zh-CN"]}这个词是 **${s.word}**：结尾的 **e** 不发音，${zh}。`,
+      `${picture(s.word).alt.en} In **${s.word}**, the silent **e** at the end makes ${en.replace(" says ", " say ")}.\n\n**Check.** Put **${s.vowel}** into **${gap}** and read it aloud: the final **e** stays quiet and **${s.vowel}** says its name, giving **${s.word}**.`,
+      `${picture(s.word).alt["zh-CN"]}在 **${s.word}** 里，结尾不发音的 **e** 让${zh}。\n\n**检验。** 把 **${s.vowel}** 填进 **${gap}** 再读一遍：结尾的 **e** 不出声，**${s.vowel}** 读字母名，正好是 **${s.word}**。`,
     ),
   };
 });
@@ -200,8 +205,8 @@ const wholeWord: readonly TypedPictureItem[] = spellings.map((s) => ({
   accepted: [s.word],
   wrong: [s.short, s.other, s.moved],
   solution: t(
-    `${picture(s.word).alt.en} Say the word slowly. You hear three sounds, and the vowel says its name, so write the vowel and add a silent **e** at the end: *${letters(s.word)}*, **${s.word}**.`,
-    `${picture(s.word).alt["zh-CN"]}慢慢说出这个词。你听到三个音，元音读的是字母名，所以写上这个元音，再在结尾加一个不发音的 **e**：*${letters(s.word)}*，**${s.word}**。`,
+    `${picture(s.word).alt.en} Say **${s.word}** slowly: you hear three sounds, and **${s.vowel}** says its letter name, so write *${s.short}* and add a silent **e** at the end: **${s.word}**.\n\n**Check.** Cover the final **e** and it reads short *${s.short}*; with the **e** at the end, it reads **${s.word}**, matching the picture.`,
+    `${picture(s.word).alt["zh-CN"]}慢慢说出 **${s.word}**：你听到三个音，**${s.vowel}** 读字母名，所以写出 *${s.short}* 后再在末尾加一个不发音的 **e**：**${s.word}**。\n\n**检验。** 盖住结尾的 **e** 会读成短音 *${s.short}*；加上结尾的 **e** 才读成 **${s.word}**，和图片一致。`,
   ),
 }));
 
@@ -211,6 +216,10 @@ const spellingWords = phonicsTopic({
   summary: t(
     "Writing words such as *cake* and *kite*: the vowel that says its name, then the whole word with its silent **e**.",
     "写出 *cake*、*kite* 这样的词：先写读字母名的元音，再写带不发音 **e** 的整个词。",
+  ),
+  intro: t(
+    "Mia draws a **bike** and writes **bik** under it. When she reads it back, it says *bik* with a short *i*, so she adds a silent **e** at the end: **bike**!\n\nWhen a vowel says its letter name in these words, add a silent **e** at the very end. First we will fill in the missing vowel, then we will spell the whole word.",
+    "米娅画了一辆自行车 **bike**，在下面先写了 **bik**。她读了一遍发现 *i* 成了短音，于是赶紧在最后加上不发音的 **e**：**bike**！\n\n当这些词里的元音读字母名时，末尾要加上不发音的 **e**。我们先补上缺少的元音，再来拼写整个词。",
   ),
   prerequisites: ["reading-words-with-silent-e", "spelling-short-vowel-words"],
   encompasses: [
@@ -223,8 +232,8 @@ const spellingWords = phonicsTopic({
       "the-missing-long-vowel",
       t("The Missing Vowel", "缺少的元音"),
       t(
-        "Each word here ends with a silent **e**, so the vowel in the gap says its name. Say the picture's word slowly and listen for the vowel's name: *cake* has the name of **a**, *kite* the name of **i**, *rope* the name of **o**, *cube* the name of **u**. Type that vowel.",
-        "这里每个词都以不发音的 **e** 结尾，所以空格里的元音读字母名。慢慢说出图片的词，听一听是哪个字母的名字：*cake* 里是 **a** 的名字，*kite* 里是 **i**，*rope* 里是 **o**，*cube* 里是 **u**。键入这个元音。",
+        "Each word here ends with a silent **e**, so the vowel in the blank says its own letter name. Look at a **rope** with **r _ p e**: you hear the name of **o**, so type **o**.\n\nListen for the letter name: *a* in *cake*, *i* in *kite*, *o* in *rope*, *u* in *cube*.\n\n> **Watch out.** Listen for the vowel's letter name—do not type **e** in the middle just because the word ends in **e**.",
+        "这里每个词末尾都有不发音的 **e**，所以横线里的元音读自己的字母名。看到绳子 **rope** 和 **r _ p e** 时，听到的是 **o** 的字母名，所以键入 **o**。\n\n听清是哪个字母的名字：*cake* 里是 *a*，*kite* 里是 *i*，*rope* 里是 *o*，*cube* 里是 *u*。\n\n> **注意。** 要听出元音读的是哪个字母名，别因为结尾有 **e** 就在中间误打 **e**。",
       ),
       pictureTyped(t("Type the vowel missing from the word for this picture.", "键入这张图片的词中缺少的元音。"), missingVowel),
     ),
@@ -232,8 +241,8 @@ const spellingWords = phonicsTopic({
       "spelling-the-whole-silent-e-word",
       t("Spelling the Whole Word", "拼写整个词"),
       t(
-        "Now write the whole word. Say it slowly and write a letter for each of its three sounds. If the vowel says its name, add a silent **e** at the very end. Then read back what you wrote: without the **e**, *cape* would say *cap*.",
-        "现在写出整个词。慢慢地说，为它的三个音各写一个字母。如果元音读的是字母名，就在最后加一个不发音的 **e**。写完后读一遍：没有 **e**，*cape* 就读成了 *cap*。",
+        "Now write the whole word yourself. For a picture of a **cube**, write the three sounds—*c*, *u*, *b*—and add a silent **e** at the very end because **u** says its name: **cube**.\n\nRead back what you typed to make sure the **e** is at the end.\n\n> **Watch out.** Do not forget the final silent **e** (*cub* instead of *cube*) or put **e** before the last consonant (*cueb*).",
+        "现在自己写出整个词。看到正方体 **cube** 时，先写出三个音——*c*、*u*、*b*——因为 **u** 读字母名，再在最末尾加不发音的 **e**：**cube**。\n\n写完后再读一遍，确认 **e** 在最后。\n\n> **注意。** 不要漏掉结尾不发音的 **e**（写成 *cub*），也不要把 **e** 写到最后一个辅音前面（如 *cueb*）。",
       ),
       pictureTyped(t("Type the word for this picture.", "键入这张图片的词。"), wholeWord),
     ),
