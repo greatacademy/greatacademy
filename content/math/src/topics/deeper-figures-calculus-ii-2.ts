@@ -1369,8 +1369,8 @@ const coneAboutLine = {
     "the-disc-method-about-a-drawn-horizontal-line",
     ["The disc method about a drawn horizontal line", "绕所画水平线用圆盘法"],
     [
-      "Rotating a region about the line $y = k$ makes discs whose radius is the distance to that line, not the height above the $x$-axis: $V = \\pi\\int (f(x) - k)^2\\,dx$.",
-      "把区域绕直线 $y = k$ 旋转，得到的圆盘半径是到这条直线的距离，而不是到 $x$ 轴的高度：$V = \\pi\\int (f(x) - k)^2\\,dx$。",
+      "Rotating a region about the line $y = k$ makes discs whose radius is the distance to that line, not the height above the $x$-axis:\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x) - k\\right)^{2} dx$$\n\nFor example, the triangle with vertices $(0, 1)$, $(3, 1)$ and $(3, 3)$ rotated about $y = 1$ has radius $\\frac{2}{3}x$ at $x$, so\n\n$$V = \\pi\\int_{0}^{3} \\frac{4}{9}x^{2} \\, dx = \\pi \\cdot \\frac{4}{9} \\cdot 9 = 4\\pi$$\n\nCheck: the solid is a cone of radius $2$ and height $3$, and $\\frac{1}{3}\\pi \\cdot 2^{2} \\cdot 3 = 4\\pi$.\n\n> **Watch out.** Measuring the radius from the $x$-axis, $1 + \\frac{2}{3}x$, gives $13\\pi$, the volume of a solid about the wrong line.",
+      "把区域绕直线 $y = k$ 旋转，得到的圆盘半径是到这条直线的距离，而不是到 $x$ 轴的高度：\n\n$$V = \\pi\\int_{a}^{b} \\left(f(x) - k\\right)^{2} dx$$\n\n例如，顶点为 $(0, 1)$、$(3, 1)$、$(3, 3)$ 的三角形绕 $y = 1$ 旋转，$x$ 处的半径是 $\\frac{2}{3}x$，所以\n\n$$V = \\pi\\int_{0}^{3} \\frac{4}{9}x^{2} \\, dx = \\pi \\cdot \\frac{4}{9} \\cdot 9 = 4\\pi$$\n\n检验：这个立体是半径 $2$、高 $3$ 的圆锥，$\\frac{1}{3}\\pi \\cdot 2^{2} \\cdot 3 = 4\\pi$。\n\n> **注意。** 从 $x$ 轴量半径，即 $1 + \\frac{2}{3}x$，得到 $13\\pi$，那是绕错了直线的立体。",
     ],
     (rng) => {
       const k = rng.int(-3, 3);
@@ -1379,18 +1379,56 @@ const coneAboutLine = {
       const answer = Q.of(rise * rise * a, 3);
       const end: Point = [a, k + rise];
       const trap = Q.of(a * ((k + rise) * (k + rise) + (k + rise) * k + k * k), 3);
-      return ask(
-        [
-          "The shaded triangle is rotated about the dashed line. Find the volume of the solid divided by $\\pi$.",
-          "阴影三角形绕虚线旋转。求所得立体的体积除以 $\\pi$。",
-        ],
-        answer,
-        [rise * rise * a, trap, Q.of(rise * a, 3), Q.of(rise * rise * a, 2), Q.of(rise * a * a, 3)],
-        [
-          `The radius at $x$ is the distance to the dashed line, $\\frac{${rise}x}{${a}}$. So $\\int_0^{${a}} \\left(\\frac{${rise}x}{${a}}\\right)^2 dx = \\frac{${rise}^2 \\cdot ${a}}{3} = ${answer.toLatex()}$.`,
-          `$x$ 处的半径是到虚线的距离 $\\frac{${rise}x}{${a}}$。所以 $\\int_0^{${a}} \\left(\\frac{${rise}x}{${a}}\\right)^2 dx = \\frac{${rise}^2 \\cdot ${a}}{3} = ${answer.toLatex()}$。`,
-        ],
-        drawn(
+      const slope = Q.of(rise, a);
+      const radius = slope.eq(Q.one) ? "x" : `${slope.toLatex()}x`;
+      const squared = slope.mul(slope);
+      const third = squared.div(Q.of(3));
+      const times = (q: Q) => (q.eq(Q.one) ? "\\pi" : `${q.toLatex()}\\pi`);
+      const cone = ["\\frac{1}{3}\\pi", ...(rise === 1 ? [] : [`${rise}^{2}`]), ...(a === 1 ? [] : [`${a}`])].join(" \\cdot ");
+      const all = [
+        {
+          value: Q.of(rise * rise * a),
+          why: t(
+            "This is the cylinder around the solid. The radius grows from $0$, so the solid is a cone, one third of the cylinder.",
+            "这是外接圆柱的体积。半径从 $0$ 开始增大，所以立体是圆锥，只占圆柱的三分之一。",
+          ),
+        },
+        {
+          value: trap,
+          why: t(
+            `This measures the radius from the $x$-axis. The axis is the dashed line $y = ${k}$, so the radius is the distance $${radius}$ above it.`,
+            `这是从 $x$ 轴量的半径。旋转轴是虚线 $y = ${k}$，半径是到它的距离 $${radius}$。`,
+          ),
+        },
+        {
+          value: Q.of(rise * rise * a, 2),
+          why: t(
+            "The integral of $x^{2}$ is $\\frac{x^{3}}{3}$, so the factor is $\\frac{1}{3}$, not $\\frac{1}{2}$.",
+            "$x^{2}$ 的积分是 $\\frac{x^{3}}{3}$，因子是 $\\frac{1}{3}$，不是 $\\frac{1}{2}$。",
+          ),
+        },
+        {
+          value: Q.of(rise * a * a, 3),
+          why: t(
+            `This swaps the radius and the height. The axis runs along the side of length $${a}$, so the cone has height $${a}$ and radius $${rise}$.`,
+            `这里把半径和高弄反了。旋转轴沿着长为 $${a}$ 的边，所以圆锥的高是 $${a}$，半径是 $${rise}$。`,
+          ),
+        },
+      ];
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The shaded triangle is rotated about the dashed line. Find the volume of the solid divided by $\\pi$.",
+            "阴影三角形绕虚线旋转。求所得立体的体积除以 $\\pi$。",
+          ),
+          answer,
+          mistakes: all.filter((x, i) => !x.value.eq(answer) && all.findIndex((y) => y.value.eq(x.value)) === i),
+          solution: t(
+            `**Step 1: Find the radius.** The slanted side runs from $(0, ${k})$ to $(${a}, ${k + rise})$, so at $x$ it is $${radius}$ above the dashed line $y = ${k}$. That distance is the radius.\n\n**Step 2: Integrate the discs.**\n\n$$V = \\pi\\int_{0}^{${a}} ${squared.eq(Q.one) ? "" : squared.toLatex()}x^{2} \\, dx = \\pi\\left[${third.eq(Q.one) ? "" : third.toLatex()}x^{3}\\right]_{0}^{${a}} = ${times(answer)}$$\n\nSo the volume divided by $\\pi$ is $${answer.toLatex()}$.\n\n**Check.** The solid is a cone of radius $${rise}$ and height $${a}$, and $${cone} = ${times(answer)}$.`,
+            `**第一步：求半径。**斜边从 $(0, ${k})$ 到 $(${a}, ${k + rise})$，所以在 $x$ 处它比虚线 $y = ${k}$ 高 $${radius}$。这个距离就是半径。\n\n**第二步：对圆盘积分。**\n\n$$V = \\pi\\int_{0}^{${a}} ${squared.eq(Q.one) ? "" : squared.toLatex()}x^{2} \\, dx = \\pi\\left[${third.eq(Q.one) ? "" : third.toLatex()}x^{3}\\right]_{0}^{${a}} = ${times(answer)}$$\n\n所以体积除以 $\\pi$ 是 $${answer.toLatex()}$。\n\n**检验。**这个立体是半径 $${rise}$、高 $${a}$ 的圆锥，$${cone} = ${times(answer)}$。`,
+          ),
+        }),
+        figure: drawn(
           { xMin: -1, xMax: 7, yMin: -4, yMax: 8 },
           [
             { kind: "polygon", points: [[0, k], [a, k], end] },
@@ -1402,7 +1440,7 @@ const coneAboutLine = {
             `顶点为 (0, ${k})、(${a}, ${k}) 和 (${a}, ${k + rise}) 的三角形，虚线 y = ${k} 沿它的下边。`,
           ),
         ),
-      );
+      };
     },
   ),
   figure:

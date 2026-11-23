@@ -745,26 +745,76 @@ const washerAxisOutside = {
     "an-axis-outside-the-region-needs-washers",
     ["An axis outside the region needs washers", "轴在区域外时要用垫圈"],
     [
-      "If the axis of rotation does not touch the region, each slice has a hole, so use $\\pi(R^{2} - r^{2})$ with both radii measured from the axis. Note that this is not $\\pi(R - r)^{2}$, and that shifting the axis away makes the volume larger.",
-      "如果旋转轴不接触区域，每一片都有一个孔，所以用 $\\pi(R^{2} - r^{2})$，两个半径都从轴量起。注意这不是 $\\pi(R - r)^{2}$，而且把轴移远会使体积变大。",
+      "If the axis of rotation does not touch the region, each slice has a hole, so use both radii measured from the axis:\n\n$$V = \\pi\\int_{a}^{b} \\left(R^{2} - r^{2}\\right) dx$$\n\nFor example, the region between $y = x^{2}$ and $y = 1$ rotated about $y = -1$ has $R = 2$ and $r = x^{2} + 1$, so $R^{2} - r^{2} = 3 - 2x^{2} - x^{4}$ and\n\n$$V = \\pi\\left(6 - \\frac{4}{3} - \\frac{2}{5}\\right) = \\frac{64}{15}\\pi$$\n\nCheck: $R^{2} - r^{2}$ splits as $\\left(1 - x^{4}\\right) + 2\\left(1 - x^{2}\\right)$. The first part is the same region about the $x$-axis, $\\frac{8}{5}\\pi$, and the second is $2\\pi$ times the area $\\frac{4}{3}$ of the region, $\\frac{8}{3}\\pi$. Together they make $\\frac{64}{15}\\pi$. Shifting the axis away makes the volume larger.\n\n> **Watch out.** The area of a washer is $\\pi(R^{2} - r^{2})$, not $\\pi(R - r)^{2}$. Squaring the difference gives $\\frac{16}{15}\\pi$ here, which is too small.",
+      "如果旋转轴不接触区域，每一片都有一个孔，两个半径都从轴量起：\n\n$$V = \\pi\\int_{a}^{b} \\left(R^{2} - r^{2}\\right) dx$$\n\n例如，$y = x^{2}$ 与 $y = 1$ 之间的区域绕 $y = -1$ 旋转，$R = 2$，$r = x^{2} + 1$，所以 $R^{2} - r^{2} = 3 - 2x^{2} - x^{4}$，\n\n$$V = \\pi\\left(6 - \\frac{4}{3} - \\frac{2}{5}\\right) = \\frac{64}{15}\\pi$$\n\n检验：$R^{2} - r^{2}$ 可拆成 $\\left(1 - x^{4}\\right) + 2\\left(1 - x^{2}\\right)$。第一部分是同一区域绕 $x$ 轴旋转，得 $\\frac{8}{5}\\pi$；第二部分是 $2\\pi$ 乘以区域面积 $\\frac{4}{3}$，得 $\\frac{8}{3}\\pi$。合起来是 $\\frac{64}{15}\\pi$。把轴移远会使体积变大。\n\n> **注意。** 垫圈的面积是 $\\pi(R^{2} - r^{2})$，不是 $\\pi(R - r)^{2}$。先相减再平方，这里得 $\\frac{16}{15}\\pi$，偏小。",
     ],
     (rng) => {
       const a = rng.int(1, 5);
       const c = rng.int(1, 6);
-      const answer = Q.of(8 * a ** 5, 5).add(Q.of(8 * a ** 3 * c, 3));
+      const below = Q.of(8 * a ** 5, 5);
+      const shift = Q.of(8 * a ** 3 * c, 3);
+      const answer = below.add(shift);
+      const top = a ** 4 + 2 * a * a * c;
       const [en, zh] = kpi(
         `The region bounded by $y = x^{2}$ and $y = ${a * a}$ is rotated about the line $y = ${-c}$. Find the volume.`,
         `由 $y = x^{2}$ 和 $y = ${a * a}$ 围成的区域绕直线 $y = ${-c}$ 旋转。求体积。`,
       );
-      return ask(
-        [en, zh],
+      const all = [
+        {
+          value: Q.of(16 * a ** 5, 15),
+          why: t(
+            "This squares the difference of the radii. A washer has area $\\pi(R^{2} - r^{2})$, not $\\pi(R - r)^{2}$.",
+            "这是把两个半径的差平方了。垫圈的面积是 $\\pi(R^{2} - r^{2})$，不是 $\\pi(R - r)^{2}$。",
+          ),
+        },
+        {
+          value: below,
+          why: t(
+            `This rotates about the $x$-axis. The axis is $y = ${-c}$, so add $${c}$ to both radii.`,
+            `这是绕 $x$ 轴旋转。旋转轴是 $y = ${-c}$，两个半径都要加 $${c}$。`,
+          ),
+        },
+        {
+          value: below.add(Q.of(4 * a ** 3 * c, 3)),
+          why: t(
+            `The middle terms of the squares were halved. $(x^{2} + ${c})^{2}$ has middle term $${2 * c}x^{2}$, and $(${a * a} + ${c})^{2}$ has middle term $${2 * a * a * c}$.`,
+            `平方展开的中间项少了一半。$(x^{2} + ${c})^{2}$ 的中间项是 $${2 * c}x^{2}$，$(${a * a} + ${c})^{2}$ 的中间项是 $${2 * a * a * c}$。`,
+          ),
+        },
+      ];
+      return numberProblem({
+        prompt: t(en, zh),
         answer,
-        [Q.of(16 * a ** 5, 15), Q.of(8 * a ** 5, 5), Q.of(8 * a ** 5, 5).add(Q.of(4 * a ** 3 * c, 3))],
-        [
-          `The outer radius is $${a * a + c}$ and the inner radius is $x^{2} + ${c}$. So $V = \\pi\\int_{${-a}}^{${a}} \\left(${(a * a + c) ** 2} - (x^{2} + ${c})^{2}\\right) dx = ${answer.toLatex()}\\pi$.`,
-          `外半径是 $${a * a + c}$，内半径是 $x^{2} + ${c}$。所以 $V = \\pi\\int_{${-a}}^{${a}} \\left(${(a * a + c) ** 2} - (x^{2} + ${c})^{2}\\right) dx = ${answer.toLatex()}\\pi$。`,
-        ],
-      );
+        mistakes: all.filter((m, i) => all.findIndex((n) => n.value.eq(m.value)) === i),
+        solution: walked(
+          [
+            [
+              ["Find the radii", "求半径"],
+              t(
+                `The axis $y = ${-c}$ lies below the region. The line $y = ${a * a}$ is farther from it and the curve $y = x^{2}$ is nearer, so:`,
+                `旋转轴 $y = ${-c}$ 在区域下方。直线 $y = ${a * a}$ 离轴较远，曲线 $y = x^{2}$ 较近，所以：`,
+              ),
+              [`R = ${a * a} + ${c} = ${a * a + c}, \\quad r = x^{2} + ${c}`],
+            ],
+            [
+              ["Subtract the squares", "求平方差"],
+              t("Expand both squares:", "把两个平方展开："),
+              [`R^{2} - r^{2} = ${(a * a + c) ** 2} - \\left(x^{4} + ${2 * c}x^{2} + ${c * c}\\right) = ${top} - ${2 * c}x^{2} - x^{4}`],
+            ],
+            [
+              ["Integrate", "积分"],
+              t(`The curves meet at $x = \\pm${a}$:`, `两曲线交于 $x = \\pm${a}$：`),
+              [
+                `V = \\pi\\int_{${-a}}^{${a}} \\left(${top} - ${2 * c}x^{2} - x^{4}\\right) dx = \\pi\\left(${2 * a * top} - ${Q.of(4 * c * a ** 3, 3).toLatex()} - ${Q.of(2 * a ** 5, 5).toLatex()}\\right) = ${answer.toLatex()}\\pi`,
+              ],
+            ],
+          ],
+          t(
+            `Split $R^{2} - r^{2}$ as $\\left(${a ** 4} - x^{4}\\right) + ${2 * c}\\left(${a * a} - x^{2}\\right)$. The first part is the region rotated about the $x$-axis, $\\pi\\int_{${-a}}^{${a}} \\left(${a ** 4} - x^{4}\\right) dx = ${below.toLatex()}\\pi$. The second is $${2 * c}\\pi$ times the area of the region, $${Q.of(4 * a ** 3, 3).toLatex()}$, which is $${shift.toLatex()}\\pi$. Together they give $${answer.toLatex()}\\pi$, so $k = ${answer.toLatex()}$.`,
+            `把 $R^{2} - r^{2}$ 拆成 $\\left(${a ** 4} - x^{4}\\right) + ${2 * c}\\left(${a * a} - x^{2}\\right)$。第一部分是区域绕 $x$ 轴旋转，$\\pi\\int_{${-a}}^{${a}} \\left(${a ** 4} - x^{4}\\right) dx = ${below.toLatex()}\\pi$。第二部分是 $${2 * c}\\pi$ 乘以区域面积 $${Q.of(4 * a ** 3, 3).toLatex()}$，即 $${shift.toLatex()}\\pi$。合起来是 $${answer.toLatex()}\\pi$，所以 $k = ${answer.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure:
@@ -776,8 +826,8 @@ const shellShiftedAxis = {
     "shells-about-a-line-below-the-axis",
     ["Shells about a line below the axis", "绕轴下方直线的柱壳"],
     [
-      "The shell radius is the distance from the axis of rotation to the strip. For rotation about $y = -c$, a strip at height $y$ has radius $y + c$, not $y$. The height of the shell is the length of the strip, which does not change.",
-      "柱壳半径是旋转轴到条带的距离。绕 $y = -c$ 旋转时，高度为 $y$ 的条带半径是 $y + c$，而不是 $y$。柱壳的高是条带的长度，不会改变。",
+      "The shell radius is the distance from the axis of rotation to the strip. For rotation about $y = -c$, a strip at height $y$ has radius $y + c$, not $y$. The height of the shell is the length of the strip, which does not change:\n\n$$V = 2\\pi\\int_{a}^{b} (y + c)\\,g(y) \\, dy$$\n\nFor example, the region between the $y$-axis and $x = y^{2}$ for $0 \\le y \\le 1$, rotated about $y = -1$, has\n\n$$V = 2\\pi\\int_{0}^{1} (y + 1)y^{2} \\, dy = 2\\pi\\left(\\frac{1}{4} + \\frac{1}{3}\\right) = \\frac{7}{6}\\pi$$\n\nCheck: with washers, a slice at $x$ runs from $y = \\sqrt{x}$ to $y = 1$, so its radii are $2$ and $1 + \\sqrt{x}$, and $\\pi\\int_{0}^{1} \\left(3 - 2\\sqrt{x} - x\\right) dx = \\frac{7}{6}\\pi$.\n\n> **Watch out.** Keeping the radius $y$ rotates about the $x$-axis instead and gives $\\frac{1}{2}\\pi$ here.",
+      "柱壳半径是旋转轴到条带的距离。绕 $y = -c$ 旋转时，高度为 $y$ 的条带半径是 $y + c$，而不是 $y$。柱壳的高是条带的长度，不会改变：\n\n$$V = 2\\pi\\int_{a}^{b} (y + c)\\,g(y) \\, dy$$\n\n例如，$y$ 轴与 $x = y^{2}$ 之间、$0 \\le y \\le 1$ 的区域绕 $y = -1$ 旋转，\n\n$$V = 2\\pi\\int_{0}^{1} (y + 1)y^{2} \\, dy = 2\\pi\\left(\\frac{1}{4} + \\frac{1}{3}\\right) = \\frac{7}{6}\\pi$$\n\n检验：用垫圈法，$x$ 处的切片从 $y = \\sqrt{x}$ 到 $y = 1$，两个半径是 $2$ 和 $1 + \\sqrt{x}$，$\\pi\\int_{0}^{1} \\left(3 - 2\\sqrt{x} - x\\right) dx = \\frac{7}{6}\\pi$。\n\n> **注意。** 沿用半径 $y$ 就变成绕 $x$ 轴旋转，这里得 $\\frac{1}{2}\\pi$。",
     ],
     (rng) => {
       const b = rng.int(1, 4);
@@ -789,20 +839,69 @@ const shellShiftedAxis = {
           .add(Q.of(m * b * b, 2))
           .add(Q.of(m * shift * b));
       const answer = inner(c).mul(Q.of(2));
+      const alone = inner(0).mul(Q.of(2));
+      const extra = Q.of(2 * c).mul(Q.of(b ** 3, 3).add(Q.of(m * b)));
       const g = poly([1, "y^{2}"], [m, ""]);
       const [en, zh] = kpi(
         `The region bounded by $x = ${g}$, the $y$-axis, $y = 0$ and $y = ${b}$ is rotated about the line $y = ${-c}$. Find the volume using shells.`,
         `由 $x = ${g}$、$y$ 轴、$y = 0$ 和 $y = ${b}$ 围成的区域绕直线 $y = ${-c}$ 旋转。用柱壳法求体积。`,
       );
-      return ask(
-        [en, zh],
+      const all = [
+        {
+          value: alone,
+          why: t(
+            `This uses the radius $y$, the distance to the $x$-axis. The axis is $y = ${-c}$, so the radius is $y + ${c}$.`,
+            `这里用的半径是 $y$，那是到 $x$ 轴的距离。旋转轴是 $y = ${-c}$，半径应是 $y + ${c}$。`,
+          ),
+        },
+        {
+          value: inner(c),
+          why: t(
+            "This is half the volume: a shell has area $2\\pi rh$, so the factor is $2\\pi$, not $\\pi$.",
+            "这是体积的一半：柱壳面积是 $2\\pi rh$，因子是 $2\\pi$，不是 $\\pi$。",
+          ),
+        },
+        {
+          value: inner(-c).mul(Q.of(2)),
+          why: t(
+            `This uses the radius $y - ${c}$, as if the axis were $y = ${c}$. The region lies above $y = ${-c}$, so the radius is $y + ${c}$.`,
+            `这里用的半径是 $y - ${c}$，好像旋转轴是 $y = ${c}$。区域在 $y = ${-c}$ 上方，半径应是 $y + ${c}$。`,
+          ),
+        },
+      ];
+      return numberProblem({
+        prompt: t(en, zh),
         answer,
-        [inner(0).mul(Q.of(2)), inner(c), inner(-c).mul(Q.of(2))],
-        [
-          `A shell at height $y$ has radius $y + ${c}$ and length $${g}$. Multiply out and integrate:${steps(`V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy = 2\\pi\\left[\\frac{y^{4}}{4} + \\frac{${c}y^{3}}{3} + \\frac{${m}y^{2}}{2} + ${m * c}y\\right]_{0}^{${b}} = ${answer.toLatex()}\\pi`)}`,
-          `高度 $y$ 处的柱壳半径是 $y + ${c}$，长度是 $${g}$。展开后积分：${steps(`V = 2\\pi\\int_{0}^{${b}} (y + ${c})(${g}) \\, dy = 2\\pi\\left[\\frac{y^{4}}{4} + \\frac{${c}y^{3}}{3} + \\frac{${m}y^{2}}{2} + ${m * c}y\\right]_{0}^{${b}} = ${answer.toLatex()}\\pi`)}`,
-        ],
-      );
+        mistakes: all.filter((x, i) => !x.value.eq(answer) && all.findIndex((y) => y.value.eq(x.value)) === i),
+        solution: walked(
+          [
+            [
+              ["Find the radius and the length", "求半径和长度"],
+              t(
+                `A strip at height $y$ runs from the $y$-axis to $x = ${g}$, and it is at distance $y + ${c}$ from the line $y = ${-c}$:`,
+                `高度 $y$ 处的条带从 $y$ 轴到 $x = ${g}$，到直线 $y = ${-c}$ 的距离是 $y + ${c}$：`,
+              ),
+              [`V = 2\\pi\\int_{0}^{${b}} (y + ${c})\\left(${g}\\right) dy`],
+            ],
+            [
+              ["Multiply out", "展开"],
+              t("Expand the product:", "把乘积展开："),
+              [`(y + ${c})\\left(${g}\\right) = ${poly([1, "y^{3}"], [c, "y^{2}"], [m, "y"], [m * c, ""])}`],
+            ],
+            [
+              ["Integrate", "积分"],
+              t("Evaluate the antiderivative at the limits:", "把原函数代入上下限："),
+              [
+                `V = 2\\pi\\left[${poly([Q.of(1, 4), "y^{4}"], [Q.of(c, 3), "y^{3}"], [Q.of(m, 2), "y^{2}"], [m * c, "y"])}\\right]_{0}^{${b}} = 2\\pi\\left(${Q.of(b ** 4, 4).toLatex()} + ${Q.of(c * b ** 3, 3).toLatex()} + ${Q.of(m * b * b, 2).toLatex()} + ${m * c * b}\\right) = ${answer.toLatex()}\\pi`,
+              ],
+            ],
+          ],
+          t(
+            `Split the radius into $y$ and $${c}$. The radius $y$ alone gives the solid about the $x$-axis, $2\\pi\\int_{0}^{${b}} y\\left(${g}\\right) dy = ${alone.toLatex()}\\pi$. The extra $${c}$ adds $${2 * c}\\pi\\int_{0}^{${b}} \\left(${g}\\right) dy = ${extra.toLatex()}\\pi$. Together they give $${answer.toLatex()}\\pi$, so $k = ${answer.toLatex()}$.`,
+            `把半径拆成 $y$ 和 $${c}$。只用半径 $y$ 得到绕 $x$ 轴的立体，$2\\pi\\int_{0}^{${b}} y\\left(${g}\\right) dy = ${alone.toLatex()}\\pi$。多出的 $${c}$ 加上 $${2 * c}\\pi\\int_{0}^{${b}} \\left(${g}\\right) dy = ${extra.toLatex()}\\pi$。合起来是 $${answer.toLatex()}\\pi$，所以 $k = ${answer.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings4["the-shell-method-rotating-a-region-about-the-x-axis#shells-about-a-line-below-the-axis"],
@@ -812,8 +911,8 @@ const shellAxisAbove = point(
   "shells-between-curves-about-a-line-above",
   ["Shells between curves about a line above", "两曲线之间绕上方直线的柱壳"],
   [
-    "For an axis above the region at $y = H$, the shell radius is $H - y$, which is positive throughout. The strip length is still right curve minus left curve. Using $y$ or $y - H$ as the radius is the common mistake.",
-    "当旋转轴 $y = H$ 在区域上方时，柱壳半径是 $H - y$，处处为正。条带长度仍是右边曲线减左边曲线。把 $y$ 或 $y - H$ 当作半径是常见的错误。",
+    "For an axis above the region at $y = H$, the shell radius is $H - y$, which is positive throughout. The strip length is still right curve minus left curve:\n\n$$V = 2\\pi\\int_{c}^{d} (H - y)\\left(x_{\\text{right}} - x_{\\text{left}}\\right) dy$$\n\nFor example, the region between $x = y^{2}$ and $x = 2y$ meets at $y = 0$ and $y = 2$. About $y = 3$,\n\n$$V = 2\\pi\\int_{0}^{2} (3 - y)(2y - y^{2}) \\, dy = 2\\pi\\int_{0}^{2} \\left(y^{3} - 5y^{2} + 6y\\right) dy = 2\\pi\\left(4 - \\frac{40}{3} + 12\\right) = \\frac{16}{3}\\pi$$\n\nCheck: with washers, a slice at $x$ runs from $y = \\frac{x}{2}$ to $y = \\sqrt{x}$, so its radii are $3 - \\frac{x}{2}$ and $3 - \\sqrt{x}$. Their squares differ by $\\frac{x^{2}}{4} - 4x + 6\\sqrt{x}$, and\n\n$$\\pi\\int_{0}^{4} \\left(\\frac{x^{2}}{4} - 4x + 6\\sqrt{x}\\right) dx = \\pi\\left(\\frac{16}{3} - 32 + 32\\right) = \\frac{16}{3}\\pi$$\n\n> **Watch out.** Using $y$ or $y - H$ as the radius is the common mistake. The radius $y$ gives $\\frac{8}{3}\\pi$ here, the volume about the $x$-axis.",
+    "当旋转轴 $y = H$ 在区域上方时，柱壳半径是 $H - y$，处处为正。条带长度仍是右边曲线减左边曲线：\n\n$$V = 2\\pi\\int_{c}^{d} (H - y)\\left(x_{\\text{右}} - x_{\\text{左}}\\right) dy$$\n\n例如，$x = y^{2}$ 与 $x = 2y$ 之间的区域，两曲线交于 $y = 0$ 和 $y = 2$。绕 $y = 3$ 旋转，\n\n$$V = 2\\pi\\int_{0}^{2} (3 - y)(2y - y^{2}) \\, dy = 2\\pi\\int_{0}^{2} \\left(y^{3} - 5y^{2} + 6y\\right) dy = 2\\pi\\left(4 - \\frac{40}{3} + 12\\right) = \\frac{16}{3}\\pi$$\n\n检验：用垫圈法，$x$ 处的切片从 $y = \\frac{x}{2}$ 到 $y = \\sqrt{x}$，两个半径是 $3 - \\frac{x}{2}$ 和 $3 - \\sqrt{x}$。它们的平方差是 $\\frac{x^{2}}{4} - 4x + 6\\sqrt{x}$，\n\n$$\\pi\\int_{0}^{4} \\left(\\frac{x^{2}}{4} - 4x + 6\\sqrt{x}\\right) dx = \\pi\\left(\\frac{16}{3} - 32 + 32\\right) = \\frac{16}{3}\\pi$$\n\n> **注意。** 把 $y$ 或 $y - H$ 当作半径是常见的错误。用半径 $y$ 这里得 $\\frac{8}{3}\\pi$，那是绕 $x$ 轴的体积。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
@@ -825,15 +924,69 @@ const shellAxisAbove = point(
       `由 $x = y^{2}$ 和 $x = ${a === 1 ? "" : a}y$ 围成的区域绕直线 $y = ${H}$ 旋转。求体积。`,
     );
     const strip = `${a === 1 ? "" : a}y - y^{2}`;
-    return ask(
-      [en, zh],
+    const twoH = H === 1 ? "2\\pi" : `2\\pi \\cdot ${H}`;
+    const all = [
+      {
+        value: Q.of(a ** 4, 6),
+        why: t(
+          `This uses the radius $y$, the distance to the $x$-axis. The axis is $y = ${H}$, so the radius is $${H} - y$.`,
+          `这里用的半径是 $y$，那是到 $x$ 轴的距离。旋转轴是 $y = ${H}$，半径应是 $${H} - y$。`,
+        ),
+      },
+      {
+        value: value(1),
+        why: t(
+          `This uses the radius $${H} + y$, as if the axis were $y = ${-H}$ below the region. The axis is above, so the radius is $${H} - y$.`,
+          `这里用的半径是 $${H} + y$，好像旋转轴是区域下方的 $y = ${-H}$。旋转轴在上方，半径应是 $${H} - y$。`,
+        ),
+      },
+      {
+        value: Q.of(H * a ** 3, 3),
+        why: t(
+          `This uses the radius $${H}$ for every strip. A strip at height $y$ is only $${H} - y$ from the axis.`,
+          `这里每个条带都用半径 $${H}$。高度 $y$ 处的条带到轴的距离只有 $${H} - y$。`,
+        ),
+      },
+      {
+        value: answer.div(Q.of(2)),
+        why: t(
+          "This is half the volume: a shell has area $2\\pi rh$, so the factor is $2\\pi$, not $\\pi$.",
+          "这是体积的一半：柱壳面积是 $2\\pi rh$，因子是 $2\\pi$，不是 $\\pi$。",
+        ),
+      },
+    ];
+    return numberProblem({
+      prompt: t(en, zh),
       answer,
-      [Q.of(a ** 4, 6), value(1), Q.of(H * a ** 3, 3)],
-      [
-        `The curves meet at $y = 0$ and $y = ${a}$. So $V = 2\\pi\\int_{0}^{${a}} (${H} - y)(${strip}) \\, dy = ${answer.toLatex()}\\pi$.`,
-        `两曲线交于 $y = 0$ 和 $y = ${a}$。所以 $V = 2\\pi\\int_{0}^{${a}} (${H} - y)(${strip}) \\, dy = ${answer.toLatex()}\\pi$。`,
-      ],
-    );
+      mistakes: all.filter((x, i) => !x.value.eq(answer) && all.findIndex((y) => y.value.eq(x.value)) === i),
+      solution: walked(
+        [
+          [
+            ["Find the strip", "求条带"],
+            t(
+              `The curves meet where $y^{2} = ${a === 1 ? "" : a}y$, at $y = 0$ and $y = ${a}$. Between them $x = ${a === 1 ? "" : a}y$ is on the right, so the strip has length $${strip}$.`,
+              `两曲线交于 $y^{2} = ${a === 1 ? "" : a}y$ 处，即 $y = 0$ 和 $y = ${a}$。在两者之间 $x = ${a === 1 ? "" : a}y$ 在右边，所以条带长度是 $${strip}$。`,
+            ),
+          ],
+          [
+            ["Find the radius and multiply out", "求半径并展开"],
+            t(`The strip is at distance $${H} - y$ below the axis $y = ${H}$:`, `条带在轴 $y = ${H}$ 下方，距离是 $${H} - y$：`),
+            [`(${H} - y)\\left(${strip}\\right) = ${poly([1, "y^{3}"], [-(a + H), "y^{2}"], [a * H, "y"])}`],
+          ],
+          [
+            ["Integrate", "积分"],
+            t("Evaluate the antiderivative at the limits:", "把原函数代入上下限："),
+            [
+              `V = 2\\pi\\int_{0}^{${a}} \\left(${poly([1, "y^{3}"], [-(a + H), "y^{2}"], [a * H, "y"])}\\right) dy = 2\\pi\\left(${Q.of(a ** 4, 4).toLatex()} - ${Q.of((a + H) * a ** 3, 3).toLatex()} + ${Q.of(H * a ** 3, 2).toLatex()}\\right) = ${answer.toLatex()}\\pi`,
+            ],
+          ],
+        ],
+        t(
+          `Split the radius $${H} - y$ into $${H}$ and $-y$. The constant $${H}$ gives $${twoH}$ times the area of the region, $${Q.of(a ** 3, 6).toLatex()}$, which is $${Q.of(H * a ** 3, 3).toLatex()}\\pi$. The $-y$ part takes away the solid about the $x$-axis, and the difference is the volume:${steps(`2\\pi\\int_{0}^{${a}} y\\left(${strip}\\right) dy = ${Q.of(a ** 4, 6).toLatex()}\\pi`, `V = ${Q.of(H * a ** 3, 3).toLatex()}\\pi - ${Q.of(a ** 4, 6).toLatex()}\\pi = ${answer.toLatex()}\\pi`)}So $k = ${answer.toLatex()}$.`,
+          `把半径 $${H} - y$ 拆成 $${H}$ 和 $-y$。常数 $${H}$ 给出 $${twoH}$ 乘以区域面积 $${Q.of(a ** 3, 6).toLatex()}$，即 $${Q.of(H * a ** 3, 3).toLatex()}\\pi$。$-y$ 部分去掉绕 $x$ 轴的立体，二者之差就是体积：${steps(`2\\pi\\int_{0}^{${a}} y\\left(${strip}\\right) dy = ${Q.of(a ** 4, 6).toLatex()}\\pi`, `V = ${Q.of(H * a ** 3, 3).toLatex()}\\pi - ${Q.of(a ** 4, 6).toLatex()}\\pi = ${answer.toLatex()}\\pi`)}所以 $k = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -842,26 +995,67 @@ const coneLength = {
     "the-length-of-a-segment-from-its-surface-area",
     ["The length of a segment from its surface area", "由表面积求线段的范围"],
     [
-      "Rotating $y = \\frac{p}{q}x$ about the $x$-axis gives a cone, so $S = 2\\pi\\int y\\sqrt{1 + y'^{2}} \\, dx$ can be checked against $\\pi r \\ell$. For the reverse question, write $S$ in terms of the upper limit and solve for it.",
-      "把 $y = \\frac{p}{q}x$ 绕 $x$ 轴旋转得到圆锥，所以 $S = 2\\pi\\int y\\sqrt{1 + y'^{2}} \\, dx$ 可以用 $\\pi r \\ell$ 检验。对于逆问题，把 $S$ 用上限表示，再解出上限。",
+      "Rotating $y = \\frac{p}{q}x$ about the $x$-axis gives a cone. For the reverse question, write the surface area in terms of the upper limit $b$ and solve for it:\n\n$$S = 2\\pi\\int_{0}^{b} y\\sqrt{1 + y'^{2}} \\, dx$$\n\nFor example, for $y = \\frac{3}{4}x$ the factor $\\sqrt{1 + y'^{2}}$ is $\\frac{5}{4}$, so\n\n$$S = 2\\pi\\int_{0}^{b} \\frac{15}{16}x \\, dx = \\frac{15}{16}b^{2}\\pi$$\n\nIf $S = 15\\pi$, then $b^{2} = 16$ and $b = 4$.\n\nCheck: at $b = 4$ the cone has radius $3$ and slant height $5$, and $\\pi r\\ell = \\pi \\cdot 3 \\cdot 5 = 15\\pi$.\n\n> **Watch out.** Keep the factor $\\sqrt{1 + y'^{2}}$: the surface is measured along the slant, not along the $x$-axis. And the equation gives $b^{2}$ first, so take the square root.",
+      "把 $y = \\frac{p}{q}x$ 绕 $x$ 轴旋转得到圆锥。对于逆问题，把表面积用上限 $b$ 表示，再解出 $b$：\n\n$$S = 2\\pi\\int_{0}^{b} y\\sqrt{1 + y'^{2}} \\, dx$$\n\n例如，对 $y = \\frac{3}{4}x$，因子 $\\sqrt{1 + y'^{2}}$ 是 $\\frac{5}{4}$，所以\n\n$$S = 2\\pi\\int_{0}^{b} \\frac{15}{16}x \\, dx = \\frac{15}{16}b^{2}\\pi$$\n\n若 $S = 15\\pi$，则 $b^{2} = 16$，$b = 4$。\n\n检验：$b = 4$ 时圆锥底面半径为 $3$，母线长为 $5$，$\\pi r\\ell = \\pi \\cdot 3 \\cdot 5 = 15\\pi$。\n\n> **注意。** 不要丢掉因子 $\\sqrt{1 + y'^{2}}$：曲面面积沿斜边度量，而不是沿 $x$ 轴。方程先给出 $b^{2}$，还要开平方。",
     ],
     (rng) => {
       const [p, q, h] = rng.pick(triples);
       const s = rng.int(1, 9);
       const area = p * h * s * s;
       const slope = Q.of(p, q).toLatex();
-      return ask(
-        [
+      const factor = Q.of(p * h, q * q);
+      const all = [
+        {
+          value: Q.of((q * s) ** 2),
+          why: t("This is $b^{2}$; take its square root to find $b$.", "这是 $b^{2}$；还要开平方才得到 $b$。"),
+        },
+        {
+          value: Q.of(h * s),
+          why: t(
+            `This is the length of the segment along the slant. The question asks for $b$, how far it runs along the $x$-axis.`,
+            "这是线段沿斜边的长度。题目求的是 $b$，即它沿 $x$ 轴的范围。",
+          ),
+        },
+        {
+          value: Q.of(p * s),
+          why: t(
+            `This is the radius of the cone at the end, the value of $y$ at $x = b$, not $b$ itself.`,
+            "这是圆锥在端点处的半径，即 $x = b$ 时 $y$ 的值，不是 $b$ 本身。",
+          ),
+        },
+      ];
+      return numberProblem({
+        prompt: t(
           `The curve $y = ${slope}x$, $0 \\le x \\le b$, is rotated about the $x$-axis, and the surface has area $${area}\\pi$. Find $b$.`,
           `曲线 $y = ${slope}x$，$0 \\le x \\le b$，绕 $x$ 轴旋转，所得曲面的面积是 $${area}\\pi$。求 $b$。`,
-        ],
-        q * s,
-        [s, h * s, p * s],
-        [
-          `$\\sqrt{1 + y'^{2}} = \\frac{${h}}{${q}}$, so $S = 2\\pi\\int_{0}^{b} ${slope}x \\cdot \\frac{${h}}{${q}} \\, dx = \\frac{${p * h}\\pi b^{2}}{${q * q}}$. Setting this to $${area}\\pi$ gives $b^{2} = ${(q * s) ** 2}$, so $b = ${q * s}$.`,
-          `$\\sqrt{1 + y'^{2}} = \\frac{${h}}{${q}}$，所以 $S = 2\\pi\\int_{0}^{b} ${slope}x \\cdot \\frac{${h}}{${q}} \\, dx = \\frac{${p * h}\\pi b^{2}}{${q * q}}$。令它等于 $${area}\\pi$，得 $b^{2} = ${(q * s) ** 2}$，所以 $b = ${q * s}$。`,
-        ],
-      );
+        ),
+        answer: q * s,
+        solveFor: "b",
+        mistakes: all.filter((x, i) => !x.value.eq(Q.of(q * s)) && all.findIndex((y) => y.value.eq(x.value)) === i),
+        solution: walked(
+          [
+            [
+              ["Find the slant factor", "求斜率因子"],
+              t(`The slope is $${slope}$, so:`, `斜率是 $${slope}$，所以：`),
+              [`\\sqrt{1 + \\left(${slope}\\right)^{2}} = \\sqrt{\\frac{${h * h}}{${q * q}}} = \\frac{${h}}{${q}}`],
+            ],
+            [
+              ["Write the area in terms of b", "用 b 表示面积"],
+              t("Integrate from $0$ to $b$:", "从 $0$ 积分到 $b$："),
+              [`S = 2\\pi\\int_{0}^{b} ${slope}x \\cdot \\frac{${h}}{${q}} \\, dx = ${factor.toLatex()}b^{2}\\pi`],
+            ],
+            [
+              ["Solve for b", "解出 b"],
+              t("Set this equal to the given area and cancel $\\pi$:", "令它等于给定的面积，约去 $\\pi$："),
+              [`${factor.toLatex()}b^{2} = ${area}`, `b^{2} = ${(q * s) ** 2}`, `b = ${q * s}`],
+            ],
+          ],
+          t(
+            `At $b = ${q * s}$ the cone has radius $${p * s}$ and slant height $${h * s}$, and $\\pi r\\ell = \\pi \\cdot ${p * s} \\cdot ${h * s} = ${area}\\pi$, the given area.`,
+            `$b = ${q * s}$ 时圆锥底面半径为 $${p * s}$，母线长为 $${h * s}$，$\\pi r\\ell = \\pi \\cdot ${p * s} \\cdot ${h * s} = ${area}\\pi$，正是给定的面积。`,
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings4["surface-areas-of-revolution-rotation-about-the-x-axis#the-length-of-a-segment-from-its-surface-area"],
@@ -872,8 +1066,8 @@ const bothAxes = {
     "the-same-curve-about-the-other-axis",
     ["The same curve about the other axis", "同一曲线绕另一轴旋转"],
     [
-      "The arc length element is the same for both rotations; only the radius changes. Around the $x$-axis the radius is $y$, and around the $y$-axis it is $x$. So the same segment gives a different surface area, and it is the wrong radius that causes most errors.",
-      "两种旋转的弧长元素相同，只有半径不同。绕 $x$ 轴时半径是 $y$，绕 $y$ 轴时半径是 $x$。所以同一线段得到不同的表面积，大多数错误都出在半径用错。",
+      "The arc length element is the same for both rotations; only the radius changes. Around the $x$-axis the radius is $y$, and around the $y$-axis it is $x$:\n\n$$S_{x} = 2\\pi\\int y \\, ds, \\quad S_{y} = 2\\pi\\int x \\, ds$$\n\nFor example, $y = \\frac{3}{4}x$ for $0 \\le x \\le 4$ has $ds = \\frac{5}{4} \\, dx$. About the $x$-axis the area is $15\\pi$; about the $y$-axis it is\n\n$$2\\pi\\int_{0}^{4} \\frac{5}{4}x \\, dx = 2\\pi \\cdot \\frac{5}{4} \\cdot 8 = 20\\pi$$\n\nCheck: about the $y$-axis the cone has base radius $4$ and slant height $5$, and $\\pi r\\ell = \\pi \\cdot 4 \\cdot 5 = 20\\pi$.\n\n> **Watch out.** It is the wrong radius that causes most errors. Also keep $ds$: with $dx$ alone the area here would come out as $16\\pi$.",
+      "两种旋转的弧长元素相同，只有半径不同。绕 $x$ 轴时半径是 $y$，绕 $y$ 轴时半径是 $x$：\n\n$$S_{x} = 2\\pi\\int y \\, ds, \\quad S_{y} = 2\\pi\\int x \\, ds$$\n\n例如，$y = \\frac{3}{4}x$，$0 \\le x \\le 4$，$ds = \\frac{5}{4} \\, dx$。绕 $x$ 轴的面积是 $15\\pi$；绕 $y$ 轴的面积是\n\n$$2\\pi\\int_{0}^{4} \\frac{5}{4}x \\, dx = 2\\pi \\cdot \\frac{5}{4} \\cdot 8 = 20\\pi$$\n\n检验：绕 $y$ 轴时圆锥底面半径为 $4$，母线长为 $5$，$\\pi r\\ell = \\pi \\cdot 4 \\cdot 5 = 20\\pi$。\n\n> **注意。** 大多数错误都出在半径用错。还要保留 $ds$：只用 $dx$，这里会得到 $16\\pi$。",
     ],
     (rng) => {
       const [p, q, h] = rng.pick(triples);
@@ -885,15 +1079,61 @@ const bothAxes = {
         `Rotating $y = ${slope}x$, $0 \\le x \\le ${q * s}$, about the $x$-axis gives a surface of area $${xArea}\\pi$. Find the area when the same segment is rotated about the $y$-axis.`,
         `把 $y = ${slope}x$，$0 \\le x \\le ${q * s}$，绕 $x$ 轴旋转，得到面积为 $${xArea}\\pi$ 的曲面。求同一线段绕 $y$ 轴旋转所得的面积。`,
       );
-      return ask(
-        [en, zh],
+      const all = [
+        {
+          value: xArea,
+          why: t(
+            "This is the area about the $x$-axis, with radius $y$. About the $y$-axis the radius is $x$.",
+            "这是绕 $x$ 轴的面积，半径是 $y$。绕 $y$ 轴时半径是 $x$。",
+          ),
+        },
+        {
+          value: h * h * s * s,
+          why: t(
+            `This uses the length $${h * s}$ of the segment as the radius. The radius at the end is $x = ${q * s}$.`,
+            `这里把线段的长度 $${h * s}$ 当作半径。端点处的半径是 $x = ${q * s}$。`,
+          ),
+        },
+        {
+          value: q * q * s * s,
+          why: t(
+            `This integrates with $dx$ instead of $ds$. Each piece of the segment is $\\frac{${h}}{${q}}$ times as long as its shadow on the $x$-axis.`,
+            `这里用 $dx$ 代替了 $ds$。线段的每一小段都是它在 $x$ 轴上投影的 $\\frac{${h}}{${q}}$ 倍长。`,
+          ),
+        },
+        {
+          value: p * q * s * s,
+          why: t(
+            `This uses the slope $${slope}$ in place of $\\sqrt{1 + y'^{2}} = \\frac{${h}}{${q}}$.`,
+            `这里用斜率 $${slope}$ 代替了 $\\sqrt{1 + y'^{2}} = \\frac{${h}}{${q}}$。`,
+          ),
+        },
+      ];
+      return numberProblem({
+        prompt: t(en, zh),
         answer,
-        [xArea, h * h * s * s, p * q * s * s],
-        [
-          `The segment has length $${h * s}$. Around the $y$-axis the cone has base radius $${q * s}$, so the area is $\\pi \\cdot ${q * s} \\cdot ${h * s} = ${answer}\\pi$.`,
-          `线段长 $${h * s}$。绕 $y$ 轴旋转时，圆锥底面半径是 $${q * s}$，所以面积是 $\\pi \\cdot ${q * s} \\cdot ${h * s} = ${answer}\\pi$。`,
-        ],
-      );
+        mistakes: all.filter((x, i) => x.value !== answer && all.findIndex((y) => y.value === x.value) === i),
+        solution: walked(
+          [
+            [
+              ["Find ds", "求 ds"],
+              t(`The slope is $${slope}$, so:`, `斜率是 $${slope}$，所以：`),
+              [`ds = \\sqrt{1 + \\left(${slope}\\right)^{2}} \\, dx = \\frac{${h}}{${q}} \\, dx`],
+            ],
+            [
+              ["Use the radius x", "用半径 x"],
+              t("About the $y$-axis each piece is at distance $x$ from the axis:", "绕 $y$ 轴时每一小段到轴的距离是 $x$："),
+              [
+                `S = 2\\pi\\int_{0}^{${q * s}} x \\cdot \\frac{${h}}{${q}} \\, dx = 2\\pi \\cdot \\frac{${h}}{${q}} \\cdot ${Q.of((q * s) ** 2, 2).toLatex()} = ${answer}\\pi`,
+              ],
+            ],
+          ],
+          t(
+            `The surface is a cone with base radius $${q * s}$ and slant height $${h * s}$, so $\\pi r\\ell = \\pi \\cdot ${q * s} \\cdot ${h * s} = ${answer}\\pi$, and $k = ${answer}$.`,
+            `这个曲面是底面半径为 $${q * s}$、母线长为 $${h * s}$ 的圆锥，$\\pi r\\ell = \\pi \\cdot ${q * s} \\cdot ${h * s} = ${answer}\\pi$，所以 $k = ${answer}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings4["surface-areas-of-revolution-rotation-about-the-y-axis#the-same-curve-about-the-other-axis"],

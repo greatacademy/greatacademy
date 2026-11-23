@@ -226,8 +226,8 @@ const washerFromDrawing: KnowledgePointDef = {
   id: "the-outer-and-inner-radius-from-a-drawing",
   title: t("The outer and inner radius from a drawing", "由图读外半径和内半径"),
   explanation: t(
-    "To turn a region about the $x$-axis, picture a thin slice at a value of $x$. It sweeps out a washer, whose outer radius reaches the curve further from the axis and whose inner radius reaches the nearer one. The volume adds up $\\pi$ times outer squared minus inner squared. Squaring the difference of the radii is the classic error, since it is a different number.",
-    "把区域绕 $x$ 轴旋转时，想象在某个 $x$ 处的一条细薄切片。它扫出一个垫圈，外半径到离轴较远的曲线，内半径到较近的曲线。体积把 $\\pi$ 乘外半径平方减内半径平方累加起来。把两半径之差平方是典型的错误，那是另一个数。",
+    "To turn a region about the $x$-axis, picture a thin slice at a value of $x$. It sweeps out a washer, whose outer radius $R$ reaches the curve further from the axis and whose inner radius $r$ reaches the nearer one. The volume adds up $\\pi$ times outer squared minus inner squared:\n\n$$V = \\pi\\int_{a}^{b} \\left(R^{2} - r^{2}\\right) dx$$\n\nFor example, the region between $y = 2$ and $y = x$ from $x = 0$ to $x = 2$ has $R = 2$ and $r = x$, so\n\n$$V = \\pi\\int_{0}^{2} \\left(4 - x^{2}\\right) dx = \\pi\\left(8 - \\frac{8}{3}\\right) = \\frac{16}{3}\\pi$$\n\nCheck: the solid is a cylinder of radius $2$ and length $2$, which is $8\\pi$, with a cone of radius $2$ and height $2$ taken out:\n\n$$8\\pi - \\frac{1}{3}\\pi \\cdot 2^{2} \\cdot 2 = 8\\pi - \\frac{8}{3}\\pi = \\frac{16}{3}\\pi$$\n\n> **Watch out.** Squaring the difference of the radii is the classic error, since it is a different number: $\\pi\\int_{0}^{2} (2 - x)^{2} \\, dx = \\frac{8}{3}\\pi$ here.",
+    "把区域绕 $x$ 轴旋转时，想象在某个 $x$ 处的一条细薄切片。它扫出一个垫圈，外半径 $R$ 到离轴较远的曲线，内半径 $r$ 到较近的曲线。体积把 $\\pi$ 乘外半径平方减内半径平方累加起来：\n\n$$V = \\pi\\int_{a}^{b} \\left(R^{2} - r^{2}\\right) dx$$\n\n例如，$y = 2$ 与 $y = x$ 之间从 $x = 0$ 到 $x = 2$ 的区域，$R = 2$，$r = x$，所以\n\n$$V = \\pi\\int_{0}^{2} \\left(4 - x^{2}\\right) dx = \\pi\\left(8 - \\frac{8}{3}\\right) = \\frac{16}{3}\\pi$$\n\n检验：这个立体是半径 $2$、长 $2$ 的圆柱，体积 $8\\pi$，去掉一个半径 $2$、高 $2$ 的圆锥：\n\n$$8\\pi - \\frac{1}{3}\\pi \\cdot 2^{2} \\cdot 2 = 8\\pi - \\frac{8}{3}\\pi = \\frac{16}{3}\\pi$$\n\n> **注意。** 把两半径之差平方是典型的错误，那是另一个数：这里 $\\pi\\int_{0}^{2} (2 - x)^{2} \\, dx = \\frac{8}{3}\\pi$。",
   ),
   generate(rng) {
     const linear = (a: number) => (a === 1 ? "x" : `${a}x`);
@@ -249,8 +249,18 @@ const washerFromDrawing: KnowledgePointDef = {
         end: a / b,
         high: (x: number) => a * x,
         low: (x: number) => b * x * x,
+        highQ: (x: Q) => Q.of(a).mul(x),
+        lowQ: (x: Q) => Q.of(b).mul(x).mul(x),
       })),
-      ...[1, 2, 3, 4].map((k) => ({ outer: `${k * k}`, inner: "x^2", end: k, high: () => k * k, low: (x: number) => x * x })),
+      ...[1, 2, 3, 4].map((k) => ({
+        outer: `${k * k}`,
+        inner: "x^2",
+        end: k,
+        high: () => k * k,
+        low: (x: number) => x * x,
+        highQ: () => Q.of(k * k),
+        lowQ: (x: Q) => x.mul(x),
+      })),
       ...[
         [2, 1],
         [3, 1],
@@ -271,41 +281,72 @@ const washerFromDrawing: KnowledgePointDef = {
         end: m / a,
         high: () => m,
         low: (x: number) => a * x,
+        highQ: () => Q.of(m),
+        lowQ: (x: Q) => Q.of(a).mul(x),
       })),
     ];
-    const { outer, inner, end, high, low } = rng.pick(variants);
+    const { outer, inner, end, high, low, highQ, lowQ } = rng.pick(variants);
     const top = high(end);
-    const squared = (v: string) => (v.includes("x") ? `(${v})^2` : `${v}^2`);
+    const squared = (v: string) => (v === "x" ? "x^2" : v.includes("x") ? `(${v})^2` : `${v}^2`);
     const volume = (body: string) => `\\pi \\int_0^{${end}} ${body} \\, dx`;
-    return pickChoice(
-      rng,
-      t(
-        `The shaded region between $y = ${outer}$ and $y = ${inner}$ turns about the $x$-axis. Which integral gives the volume?`,
-        `$y = ${outer}$ 和 $y = ${inner}$ 之间的阴影区域绕 $x$ 轴旋转。哪个积分给出体积？`,
-      ),
-      math(volume(`\\left(${squared(outer)} - ${squared(inner)}\\right)`)),
-      [
-        math(volume(`\\left(${outer} - ${inner}\\right)^2`)),
-        math(volume(`\\left(${squared(inner)} - ${squared(outer)}\\right)`)),
-        math(volume(`\\left(${outer} - ${inner}\\right)`)),
-        math(volume(squared(outer))),
-      ],
-      t(
-        `The curve $y = ${outer}$ is further from the axis, so it gives the outer radius, and $y = ${inner}$ gives the inner radius. A washer has area $\\pi$ times outer squared minus inner squared.`,
-        `曲线 $y = ${outer}$ 离轴较远，所以给出外半径，$y = ${inner}$ 给出内半径。垫圈的面积是 $\\pi$ 乘外半径平方减内半径平方。`,
-      ),
-      drawn(
-        { xMin: -1, xMax: end + 1, yMin: -1, yMax: top + 1, labelEvery: top > 8 ? 2 : 1 },
-        [
-          { kind: "polygon", points: [...parametric((x) => [x, low(x)], 0, end, 40), ...parametric((x) => [x, high(x)], end, 0, 40)] },
-          { kind: "curve", f: low, accent: true },
-          { kind: "curve", f: high, accent: true },
-        ],
+    const mid = Q.of(end, 2);
+    const [R, r] = [highQ(mid), lowQ(mid)];
+    const gap = R.mul(R).sub(r.mul(r));
+    const sq = (q: Q) => (q.toLatex().includes("frac") ? `\\left(${q.toLatex()}\\right)^{2}` : `${q.toLatex()}^{2}`);
+    const options = {
+      difference: math(volume(`\\left(${outer} - ${inner}\\right)^2`)),
+      swapped: math(volume(`\\left(${squared(inner)} - ${squared(outer)}\\right)`)),
+      area: math(volume(`\\left(${outer} - ${inner}\\right)`)),
+      solid: math(volume(squared(outer))),
+    };
+    return reasoned(
+      pickChoice(
+        rng,
         t(
-          `The curve y = ${outer} above the curve y = ${inner} from x = 0 to x = ${end}, with the region between them shaded.`,
-          `从 x = 0 到 x = ${end}，曲线 y = ${outer} 在曲线 y = ${inner} 上方，它们之间的区域涂了阴影。`,
+          `The shaded region between $y = ${outer}$ and $y = ${inner}$ turns about the $x$-axis. Which integral gives the volume?`,
+          `$y = ${outer}$ 和 $y = ${inner}$ 之间的阴影区域绕 $x$ 轴旋转。哪个积分给出体积？`,
+        ),
+        math(volume(`\\left(${squared(outer)} - ${squared(inner)}\\right)`)),
+        [options.difference, options.swapped, options.area, options.solid],
+        t(
+          `${stepLabel(1, "Read the limits", "读积分限").en} The shaded region runs from $x = 0$ to $x = ${end}$, where the two curves meet.\n\n${stepLabel(2, "Pick the outer and inner radius", "分出外半径和内半径").en} The curve $y = ${outer}$ is further from the axis, so it gives the outer radius, and $y = ${inner}$ gives the inner radius. A washer has area $\\pi$ times outer squared minus inner squared.\n\n**Check.** At the middle, $x = ${mid.toLatex()}$, the outer radius is $${R.toLatex()}$ and the inner radius is $${r.toLatex()}$:\n\n$$${sq(R)} - ${sq(r)} = ${gap.toLatex()} > 0$$\n\nSo each washer has positive area, as it must.`,
+          `${stepLabel(1, "Read the limits", "读积分限")["zh-CN"]}阴影区域从 $x = 0$ 到两曲线相交的 $x = ${end}$。\n\n${stepLabel(2, "Pick the outer and inner radius", "分出外半径和内半径")["zh-CN"]}曲线 $y = ${outer}$ 离轴较远，所以给出外半径，$y = ${inner}$ 给出内半径。垫圈的面积是 $\\pi$ 乘外半径平方减内半径平方。\n\n**检验。**在中点 $x = ${mid.toLatex()}$ 处，外半径是 $${R.toLatex()}$，内半径是 $${r.toLatex()}$：\n\n$$${sq(R)} - ${sq(r)} = ${gap.toLatex()} > 0$$\n\n所以每个垫圈的面积为正，理应如此。`,
+        ),
+        drawn(
+          { xMin: -1, xMax: end + 1, yMin: -1, yMax: top + 1, labelEvery: top > 8 ? 2 : 1 },
+          [
+            { kind: "polygon", points: [...parametric((x) => [x, low(x)], 0, end, 40), ...parametric((x) => [x, high(x)], end, 0, 40)] },
+            { kind: "curve", f: low, accent: true },
+            { kind: "curve", f: high, accent: true },
+          ],
+          t(
+            `The curve y = ${outer} above the curve y = ${inner} from x = 0 to x = ${end}, with the region between them shaded.`,
+            `从 x = 0 到 x = ${end}，曲线 y = ${outer} 在曲线 y = ${inner} 上方，它们之间的区域涂了阴影。`,
+          ),
         ),
       ),
+      [
+        [
+          options.difference.en,
+          "This squares the difference of the radii. A washer has area $\\pi(R^{2} - r^{2})$, not $\\pi(R - r)^{2}$.",
+          "这是把两半径之差平方了。垫圈的面积是 $\\pi(R^{2} - r^{2})$，不是 $\\pi(R - r)^{2}$。",
+        ],
+        [
+          options.swapped.en,
+          `This takes the outer radius from the inner one, so the integrand is negative. The outer curve is $y = ${outer}$.`,
+          `这是内半径的平方减外半径的平方，被积函数是负的。外边的曲线是 $y = ${outer}$。`,
+        ],
+        [
+          options.area.en,
+          "This is $\\pi$ times the area between the curves. The radii must be squared to give the area of each washer.",
+          "这是 $\\pi$ 乘两曲线之间的面积。半径要平方才得到每个垫圈的面积。",
+        ],
+        [
+          options.solid.en,
+          `This leaves out the hole. The region does not reach down to the axis, so the disc of radius $${inner}$ must be taken away.`,
+          `这里没有去掉孔。区域没有延伸到轴上，所以要去掉半径为 $${inner}$ 的圆盘。`,
+        ],
+      ],
     );
   },
 };

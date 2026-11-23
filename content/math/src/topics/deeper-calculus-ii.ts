@@ -477,25 +477,49 @@ const limitFromVolume: KnowledgePointDef = {
   id: "an-unknown-limit-from-a-volume-of-revolution",
   title: t("An unknown limit from a volume of revolution", "由旋转体体积求未知积分限"),
   explanation: t(
-    "The disc method gives a volume as a function of a limit of integration. When the volume is known, set up the same integral with the limit as a letter, evaluate it, and solve the resulting equation. The factor of $\\pi$ appears on both sides and cancels.",
-    "圆盘法把体积表示成积分限的函数。已知体积时，用字母表示积分限，列出同样的积分并求值，再解所得的方程。两边都有因子 $\\pi$，可以约去。",
+    "The disc method gives a volume as a function of a limit of integration. When the volume is known, set up the same integral with the limit as a letter, evaluate it, and solve the resulting equation. The factor $\\pi$ appears on both sides and cancels. For the region under $y = \\sqrt{x}$ from $x = 0$ to $x = k$,\n\n$$V(k) = \\pi\\int_{0}^{k} x \\, dx = \\frac{k^{2}}{2}\\pi$$\n\nIf the volume is $8\\pi$, then $k^{2} = 16$ and $k = 4$.\n\nCheck: with $k = 4$ the solid is a paraboloid of radius $2$ and length $4$, half of the cylinder $\\pi \\cdot 2^{2} \\cdot 4 = 16\\pi$, which is $8\\pi$.\n\n> **Watch out.** The equation gives $k^{2}$ first. Take the square root, and keep the positive one, since $k > 0$.",
+    "圆盘法把体积表示成积分限的函数。已知体积时，用字母表示积分限，列出同样的积分并求值，再解所得的方程。两边都有因子 $\\pi$，可以约去。对 $y = \\sqrt{x}$ 下方从 $x = 0$ 到 $x = k$ 的区域，\n\n$$V(k) = \\pi\\int_{0}^{k} x \\, dx = \\frac{k^{2}}{2}\\pi$$\n\n若体积为 $8\\pi$，则 $k^{2} = 16$，$k = 4$。\n\n检验：$k = 4$ 时这个立体是半径为 $2$、长为 $4$ 的旋转抛物体，是圆柱 $\\pi \\cdot 2^{2} \\cdot 4 = 16\\pi$ 的一半，即 $8\\pi$。\n\n> **注意。** 方程先给出 $k^{2}$。还要开平方，并取正的那个，因为 $k > 0$。",
   ),
   generate(rng) {
     const c = rng.int(1, 4);
     const k = rng.int(1, 12);
     const V = Q.of(c * c * k * k, 2);
     const curve = `${c === 1 ? "" : c}\\sqrt{x}`;
+    const half = Q.of(c * c, 2);
+    const cylinder = Q.of(c * c * k * k);
     return numberProblem({
       prompt: t(
-        `The region under $y = ${curve}$ from $x = 0$ to $x = k$, with $k > 0$, is rotated about the $x$-axis. The volume is $${V.toLatex()}\\pi$. Find $k$.`,
-        `$y = ${curve}$ 下方从 $x = 0$ 到 $x = k$（$k > 0$）的区域绕 $x$ 轴旋转，体积是 $${V.toLatex()}\\pi$。求 $k$。`,
+        `The region under $y = ${curve}$ from $x = 0$ to $x = k$, with $k > 0$, is rotated about the $x$-axis. The volume is $${piTimes(V)}$. Find $k$.`,
+        `$y = ${curve}$ 下方从 $x = 0$ 到 $x = k$（$k > 0$）的区域绕 $x$ 轴旋转，体积是 $${piTimes(V)}$。求 $k$。`,
       ),
       answer: k,
       solveFor: "k",
-      wrong: [k * k, 2 * k, k + c],
-      solution: t(
-        `$V = \\pi\\int_0^k ${c * c}x\\,dx = \\frac{${c * c}}{2}k^2\\pi$. Setting this equal to the given volume gives $k^2 = ${k * k}$, so $k = ${k}$.`,
-        `$V = \\pi\\int_0^k ${c * c}x\\,dx = \\frac{${c * c}}{2}k^2\\pi$。令它等于给定的体积，得 $k^2 = ${k * k}$，所以 $k = ${k}$。`,
+      mistakes: [
+        {
+          value: Q.of(k * k),
+          why: t("This is $k^{2}$; take its square root to find $k$.", "这是 $k^{2}$；还要开平方才得到 $k$。"),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Write the volume in terms of k", "用 k 表示体积"],
+            [
+              `A disc at $x$ has radius $${curve}$, so its area is $\\pi\\left(${curve}\\right)^{2} = ${c * c === 1 ? "" : c * c}\\pi x$. Add up the discs from $0$ to $k$:`,
+              `$x$ 处的圆盘半径为 $${curve}$，面积是 $\\pi\\left(${curve}\\right)^{2} = ${c * c === 1 ? "" : c * c}\\pi x$。把从 $0$ 到 $k$ 的圆盘加起来：`,
+            ],
+            [`V = \\pi\\int_{0}^{k} ${c * c === 1 ? "" : c * c}x \\, dx = ${coefQ(half)}k^{2}\\pi`],
+          ],
+          [
+            ["Solve for k", "解出 k"],
+            ["Set this equal to the given volume and cancel $\\pi$:", "令它等于给定的体积，约去 $\\pi$："],
+            [`${coefQ(half)}k^{2} = ${V.toLatex()}`, `k^{2} = ${k * k}`, `k = ${k}`],
+          ],
+        ],
+        [
+          `With $k = ${k}$ the solid is a paraboloid whose radius squared at the end is $${c * c * k}$ and whose length is $${k}$. It fills half of the cylinder around it, whose volume is $${piTimes(cylinder)}$, and half of that is $${piTimes(V)}$, the given volume.`,
+          `$k = ${k}$ 时这个立体是旋转抛物体，端面半径的平方为 $${c * c * k}$，长为 $${k}$。它占外接圆柱的一半，圆柱体积为 $${piTimes(cylinder)}$，一半是 $${piTimes(V)}$，正是给定的体积。`,
+        ],
       ),
     });
   },
@@ -506,8 +530,8 @@ const shellsAboutAnotherLine: KnowledgePointDef = {
   figure: calculusDrawings4["the-shell-method-rotation-about-the-y-axis#shells-about-a-line-other-than-the-y-axis"],
   title: t("Shells about a line other than the $y$-axis", "绕 $y$ 轴以外的直线的柱壳"),
   explanation: t(
-    "The radius of a shell is the distance from the axis of rotation, which is not always $x$. For rotation about the line $x = -h$ of a region to its right, the radius is $x + h$, while the height of the shell stays the same. So the volume is $2\\pi\\int (x + h)f(x)\\,dx$.",
-    "柱壳的半径是到旋转轴的距离，不一定是 $x$。区域在直线 $x = -h$ 右侧并绕它旋转时，半径是 $x + h$，柱壳的高不变。所以体积是 $2\\pi\\int (x + h)f(x)\\,dx$。",
+    "The radius of a shell is the distance from the axis of rotation, which is not always $x$. For rotation about the line $x = -h$ of a region to its right, the radius is $x + h$, while the height of the shell stays the same:\n\n$$V = 2\\pi\\int_{a}^{b} (x + h)f(x) \\, dx$$\n\nFor example, the region under $y = x^{2}$ from $x = 0$ to $x = 1$ rotated about $x = -1$ has\n\n$$V = 2\\pi\\int_{0}^{1} (x^{3} + x^{2}) \\, dx = 2\\pi\\left(\\frac{1}{4} + \\frac{1}{3}\\right) = \\frac{7}{6}\\pi$$\n\nCheck: with washers, a slice at height $y$ runs from $x = \\sqrt{y}$ to $x = 1$, so its radii are $2$ and $1 + \\sqrt{y}$, and\n\n$$\\pi\\int_{0}^{1} \\left(3 - 2\\sqrt{y} - y\\right) dy = \\pi\\left(3 - \\frac{4}{3} - \\frac{1}{2}\\right) = \\frac{7}{6}\\pi$$\n\n> **Watch out.** Do not keep the radius $x$. That rotates about the $y$-axis and gives $\\frac{1}{2}\\pi$ here, which is too small.",
+    "柱壳的半径是到旋转轴的距离，不一定是 $x$。区域在直线 $x = -h$ 右侧并绕它旋转时，半径是 $x + h$，柱壳的高不变：\n\n$$V = 2\\pi\\int_{a}^{b} (x + h)f(x) \\, dx$$\n\n例如，$y = x^{2}$ 下方从 $x = 0$ 到 $x = 1$ 的区域绕 $x = -1$ 旋转，\n\n$$V = 2\\pi\\int_{0}^{1} (x^{3} + x^{2}) \\, dx = 2\\pi\\left(\\frac{1}{4} + \\frac{1}{3}\\right) = \\frac{7}{6}\\pi$$\n\n检验：用垫圈法，高度 $y$ 处的切片从 $x = \\sqrt{y}$ 到 $x = 1$，两个半径是 $2$ 和 $1 + \\sqrt{y}$，\n\n$$\\pi\\int_{0}^{1} \\left(3 - 2\\sqrt{y} - y\\right) dy = \\pi\\left(3 - \\frac{4}{3} - \\frac{1}{2}\\right) = \\frac{7}{6}\\pi$$\n\n> **注意。** 不要沿用半径 $x$。那是绕 $y$ 轴旋转，这里得 $\\frac{1}{2}\\pi$，偏小。",
   ),
   generate(rng) {
     const b = rng.int(1, 6);
@@ -515,16 +539,66 @@ const shellsAboutAnotherLine: KnowledgePointDef = {
     const base = Q.of(b ** 4, 2);
     const extra = Q.of(2 * h * b ** 3, 3);
     const answer = base.add(extra);
+    const hx = `${h === 1 ? "" : h}x^{2}`;
+    const twoH = h === 1 ? "2\\pi" : `2\\pi \\cdot ${h}`;
     return numberProblem({
       prompt: t(
         `The region under $y = x^2$ from $x = 0$ to $x = ${b}$ is rotated about the line $x = -${h}$. The volume is $c\\pi$. Find $c$.`,
         `$y = x^2$ 下方从 $x = 0$ 到 $x = ${b}$ 的区域绕直线 $x = -${h}$ 旋转，体积是 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [base, base.sub(extra), Q.of(h * b ** 3, 3).add(base)],
-      solution: t(
-        `$V = 2\\pi\\int_0^{${b}} (x + ${h})x^2\\,dx = 2\\pi\\left(\\frac{${b ** 4}}{4} + \\frac{${h * b ** 3}}{3}\\right)$, so $c = ${answer.toLatex()}$.`,
-        `$V = 2\\pi\\int_0^{${b}} (x + ${h})x^2\\,dx = 2\\pi\\left(\\frac{${b ** 4}}{4} + \\frac{${h * b ** 3}}{3}\\right)$，所以 $c = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: base,
+          why: t(
+            `This uses the radius $x$, which is the distance to the $y$-axis. The axis is $x = -${h}$, so the radius is $x + ${h}$.`,
+            `这里用的半径是 $x$，那是到 $y$ 轴的距离。旋转轴是 $x = -${h}$，半径应是 $x + ${h}$。`,
+          ),
+        },
+        {
+          value: base.sub(extra),
+          why: t(
+            `This uses the radius $x - ${h}$, as if the axis were $x = ${h}$. The region lies to the right of $x = -${h}$, so the radius is $x + ${h}$.`,
+            `这里用的半径是 $x - ${h}$，好像旋转轴是 $x = ${h}$。区域在 $x = -${h}$ 右侧，半径应是 $x + ${h}$。`,
+          ),
+        },
+        {
+          value: answer.div(Q.of(2)),
+          why: t(
+            "This is half the volume. A shell of radius $r$ and height $f(x)$ has area $2\\pi r f(x)$, so the factor is $2\\pi$, not $\\pi$.",
+            "这是体积的一半。半径 $r$、高 $f(x)$ 的柱壳面积是 $2\\pi r f(x)$，因子是 $2\\pi$，不是 $\\pi$。",
+          ),
+        },
+        {
+          value: base.add(Q.of(h * b ** 3, 3)),
+          why: t(
+            "Here only the first part was doubled. The factor $2\\pi$ multiplies the whole integral, the shift as well.",
+            "这里只把第一部分乘了 $2$。因子 $2\\pi$ 乘的是整个积分，平移的那部分也要乘。",
+          ),
+        },
+      ].filter((m, i, all) => all.findIndex((n) => n.value.eq(m.value)) === i),
+      solution: walkThrough(
+        [
+          [
+            ["Find the radius and the height", "求半径和高"],
+            [
+              `A shell at $x$ is at distance $x + ${h}$ from the line $x = -${h}$, and its height is $x^{2}$:`,
+              `$x$ 处的柱壳到直线 $x = -${h}$ 的距离是 $x + ${h}$，高是 $x^{2}$：`,
+            ],
+            [`V = 2\\pi\\int_{0}^{${b}} (x + ${h})x^{2} \\, dx = 2\\pi\\int_{0}^{${b}} \\left(x^{3} + ${hx}\\right) dx`],
+          ],
+          [
+            ["Integrate", "积分"],
+            ["Evaluate the antiderivative at the limits:", "把原函数代入上下限："],
+            [
+              `V = 2\\pi\\left[\\frac{x^{4}}{4} + ${h === 3 ? "" : Q.of(h, 3).toLatex()}x^{3}\\right]_{0}^{${b}} = 2\\pi\\left(${Q.of(b ** 4, 4).toLatex()} + ${Q.of(h * b ** 3, 3).toLatex()}\\right) = ${piTimes(answer)}`,
+            ],
+          ],
+        ],
+        [
+          `Split the radius into $x$ and $${h}$. The radius $x$ alone gives the solid about the $y$-axis, $2\\pi\\int_{0}^{${b}} x^{3} \\, dx = ${piTimes(base)}$. The extra $${h}$ adds $${twoH}\\int_{0}^{${b}} x^{2} \\, dx = ${piTimes(extra)}$. Together they give $${piTimes(answer)}$, so $c = ${answer.toLatex()}$.`,
+          `把半径拆成 $x$ 和 $${h}$。只用半径 $x$ 得到绕 $y$ 轴的立体，$2\\pi\\int_{0}^{${b}} x^{3} \\, dx = ${piTimes(base)}$。多出的 $${h}$ 加上 $${twoH}\\int_{0}^{${b}} x^{2} \\, dx = ${piTimes(extra)}$。合起来是 $${piTimes(answer)}$，所以 $c = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -2101,13 +2175,15 @@ const pappusVolume: KnowledgePointDef = {
     ],
   title: t("The volume of a torus from the theorem of Pappus", "用帕普斯定理求环体的体积"),
   explanation: t(
-    "The theorem of Pappus says that rotating a region about an outside axis gives a volume equal to the region's area times the distance travelled by its centroid. A disk's centroid is its centre, so a torus has volume $\\pi r^2 \\cdot 2\\pi R$. The washer integral gives the same answer, with considerably more work.",
-    "帕普斯定理说，把区域绕区域外的轴旋转，体积等于区域面积乘以形心走过的距离。圆盘的形心就是圆心，所以环体的体积是 $\\pi r^2 \\cdot 2\\pi R$。用垫圈法积分也得到同样的答案，只是要费事得多。",
+    "The theorem of Pappus says that rotating a region about an outside axis gives a volume equal to the region's area times the distance travelled by its centroid. A disk's centroid is its centre, so a disk of radius $r$ whose centre is at distance $R$ from the axis sweeps out a torus of volume\n\n$$V = \\pi r^{2} \\cdot 2\\pi R = 2Rr^{2}\\pi^{2}$$\n\nFor example, the disk $x^{2} + y^{2} \\le 1$ rotated about $x = 2$ has area $\\pi$, and its centre travels $2\\pi \\cdot 2 = 4\\pi$, so $V = 4\\pi^{2}$.\n\nCheck: with washers, the slice at height $y$ has radii $2 + \\sqrt{1 - y^{2}}$ and $2 - \\sqrt{1 - y^{2}}$, whose squares differ by $8\\sqrt{1 - y^{2}}$. The integral of $\\sqrt{1 - y^{2}}$ from $-1$ to $1$ is half the disk, $\\frac{1}{2}\\pi$, so $V = 8\\pi \\cdot \\frac{1}{2}\\pi = 4\\pi^{2}$.\n\n> **Watch out.** Multiply the area by the distance the centre travels, $2\\pi R$, not by $R$ itself or by half a turn.",
+    "帕普斯定理说，把区域绕区域外的轴旋转，体积等于区域面积乘以形心走过的距离。圆盘的形心就是圆心，所以半径为 $r$、圆心到轴的距离为 $R$ 的圆盘旋转成的环体体积是\n\n$$V = \\pi r^{2} \\cdot 2\\pi R = 2Rr^{2}\\pi^{2}$$\n\n例如，圆盘 $x^{2} + y^{2} \\le 1$ 绕 $x = 2$ 旋转，面积是 $\\pi$，圆心走过 $2\\pi \\cdot 2 = 4\\pi$，所以 $V = 4\\pi^{2}$。\n\n检验：用垫圈法，高度 $y$ 处切片的两个半径是 $2 + \\sqrt{1 - y^{2}}$ 和 $2 - \\sqrt{1 - y^{2}}$，平方差是 $8\\sqrt{1 - y^{2}}$。$\\sqrt{1 - y^{2}}$ 从 $-1$ 到 $1$ 的积分是半个圆盘的面积 $\\frac{1}{2}\\pi$，所以 $V = 8\\pi \\cdot \\frac{1}{2}\\pi = 4\\pi^{2}$。\n\n> **注意。** 面积要乘以圆心走过的距离 $2\\pi R$，不是乘以 $R$ 本身，也不是半圈。",
   ),
   generate(rng) {
     const R = rng.int(2, 12);
     const r = rng.int(1, R - 1);
     const answer = 2 * R * r * r;
+    const area = `${r === 1 ? "" : r * r}\\pi`;
+    const root = `\\sqrt{${r * r} - y^{2}}`;
     return numberProblem({
       prompt: t(
         `The disk $x^2 + y^2 \\le ${r * r}$ is rotated about the line $x = ${R}$. The volume is $c\\pi^2$. Find $c$.`,
@@ -2115,10 +2191,53 @@ const pappusVolume: KnowledgePointDef = {
       ),
       answer,
       form: "integer",
-      wrong: [R * r * r, 2 * R * R * r, 2 * R * r],
-      solution: t(
-        `The centre travels $2\\pi \\cdot ${R}$, and the area is $${r === 1 ? "" : r * r}\\pi$. Their product is $${answer}\\pi^2$.`,
-        `圆心走过 $2\\pi \\cdot ${R}$，面积是 $${r === 1 ? "" : r * r}\\pi$。它们的积是 $${answer}\\pi^2$。`,
+      mistakes: [
+        {
+          value: R * r * r,
+          why: t(
+            "This is half the volume. The centre goes once around the axis, a distance of $2\\pi R$, not $\\pi R$.",
+            "这是体积的一半。圆心绕轴转一整圈，走过的距离是 $2\\pi R$，不是 $\\pi R$。",
+          ),
+        },
+        {
+          value: 2 * R * R * r,
+          why: t(
+            `The two radii are swapped here. The disk has radius $${r}$, and its centre is at distance $${R}$ from the axis.`,
+            `这里把两个半径弄反了。圆盘半径是 $${r}$，圆心到轴的距离是 $${R}$。`,
+          ),
+        },
+        {
+          value: 2 * R * r,
+          why: t("The area of the disk is $\\pi r^{2}$; this uses $\\pi r$.", "圆盘面积是 $\\pi r^{2}$；这里用了 $\\pi r$。"),
+        },
+        {
+          value: 4 * R * r,
+          why: t(
+            "This multiplies the circumference $2\\pi r$ of the disk by $2\\pi R$, which gives the surface area of the torus. The volume uses the area $\\pi r^{2}$.",
+            "这里用圆盘的周长 $2\\pi r$ 乘以 $2\\pi R$，得到的是环面的面积。体积要用圆盘面积 $\\pi r^{2}$。",
+          ),
+        },
+      ].filter((m, i, all) => all.findIndex((n) => n.value === m.value) === i),
+      solution: walkThrough(
+        [
+          [
+            ["Find the area", "求面积"],
+            [`The disk has radius $${r}$, so its area is $${area}$.`, `圆盘半径是 $${r}$，面积是 $${area}$。`],
+          ],
+          [
+            ["Find the distance the centre travels", "求圆心走过的距离"],
+            [
+              `The centre $(0, 0)$ is at distance $${R}$ from the line $x = ${R}$, so in one turn it travels a circle of radius $${R}$:`,
+              `圆心 $(0, 0)$ 到直线 $x = ${R}$ 的距离是 $${R}$，转一圈走过半径为 $${R}$ 的圆周：`,
+            ],
+            [`2\\pi \\cdot ${R} = ${2 * R}\\pi`],
+          ],
+          [["Multiply", "相乘"], ["By the theorem of Pappus,", "由帕普斯定理，"], [`V = ${area} \\cdot ${2 * R}\\pi = ${answer}\\pi^{2}`]],
+        ],
+        [
+          `Use washers about $x = ${R}$. At height $y$ the disk runs from $x = -${root}$ to $x = ${root}$, so the radii are $${R} + ${root}$ and $${R} - ${root}$, whose squares differ by $${4 * R}${root}$. The integral of $${root}$ from $-${r}$ to $${r}$ is the area of half the disk, $${Q.of(r * r, 2).toLatex()}\\pi$, so $V = ${4 * R}\\pi \\cdot ${Q.of(r * r, 2).toLatex()}\\pi = ${answer}\\pi^{2}$ and $c = ${answer}$.`,
+          `用绕 $x = ${R}$ 的垫圈。高度 $y$ 处圆盘从 $x = -${root}$ 到 $x = ${root}$，两个半径是 $${R} + ${root}$ 和 $${R} - ${root}$，平方差是 $${4 * R}${root}$。$${root}$ 从 $-${r}$ 到 $${r}$ 的积分是半个圆盘的面积 $${Q.of(r * r, 2).toLatex()}\\pi$，所以 $V = ${4 * R}\\pi \\cdot ${Q.of(r * r, 2).toLatex()}\\pi = ${answer}\\pi^{2}$，$c = ${answer}$。`,
+        ],
       ),
     });
   },
@@ -3920,8 +4039,8 @@ const napkinRing: KnowledgePointDef = {
   figure: calculusDrawings4["volumes-of-revolution-using-the-washer-method-rotation-about-the-coordinate-axes#the-volume-of-a-napkin-ring"],
   title: t("The volume of a napkin ring", "餐巾环的体积"),
   explanation: t(
-    "Drilling a cylindrical hole through the center of a sphere leaves a ring. With the hole along an axis, each slice perpendicular to it is a washer whose outer radius comes from the sphere and whose inner radius is the hole. The slices stop where the two radii meet, and in the difference of squares the radius of the sphere drops out, leaving only that height.",
-    "沿球心钻一个圆柱形的孔，剩下的是一个环。让孔沿坐标轴放置，垂直于轴的每个截面都是垫圈，外半径来自球面，内半径就是孔的半径。截面在两个半径相等处终止；在平方差中，球的半径消去了，只留下这个高度。",
+    "Drilling a cylindrical hole through the center of a sphere leaves a ring. With the hole along an axis, each slice perpendicular to it is a washer whose outer radius comes from the sphere and whose inner radius is the hole. The slices stop where the two radii meet, at $y = \\pm B$ with $B^{2} = R^{2} - A^{2}$, and in the difference of squares the radius of the sphere drops out:\n\n$$V = \\pi\\int_{-B}^{B} \\left(R^{2} - y^{2} - A^{2}\\right) dy = \\pi\\int_{-B}^{B} \\left(B^{2} - y^{2}\\right) dy = \\frac{4}{3}B^{3}\\pi$$\n\nFor example, a hole of radius $3$ through a sphere of radius $5$ gives $B = 4$ and\n\n$$V = \\pi\\left(128 - \\frac{128}{3}\\right) = \\frac{256}{3}\\pi$$\n\nCheck: the graph of $16 - y^{2}$ is a parabola over $[-4, 4]$ with top $16$, and a parabola fills $\\frac{2}{3}$ of its rectangle, so the integral is\n\n$$\\frac{2}{3} \\cdot 8 \\cdot 16 = \\frac{256}{3}$$\n\n> **Watch out.** Do not subtract a smaller sphere or a plain cylinder from the ball. The hole is a cylinder with a cap at each end, and the washers account for both.",
+    "沿球心钻一个圆柱形的孔，剩下的是一个环。让孔沿坐标轴放置，垂直于轴的每个截面都是垫圈，外半径来自球面，内半径就是孔的半径。截面在两个半径相等处终止，即 $y = \\pm B$，其中 $B^{2} = R^{2} - A^{2}$；在平方差中，球的半径消去了：\n\n$$V = \\pi\\int_{-B}^{B} \\left(R^{2} - y^{2} - A^{2}\\right) dy = \\pi\\int_{-B}^{B} \\left(B^{2} - y^{2}\\right) dy = \\frac{4}{3}B^{3}\\pi$$\n\n例如，在半径为 $5$ 的球上钻半径为 $3$ 的孔，$B = 4$，\n\n$$V = \\pi\\left(128 - \\frac{128}{3}\\right) = \\frac{256}{3}\\pi$$\n\n检验：$16 - y^{2}$ 的图像是 $[-4, 4]$ 上顶点高 $16$ 的抛物线，抛物线占它所在矩形的 $\\frac{2}{3}$，所以积分是\n\n$$\\frac{2}{3} \\cdot 8 \\cdot 16 = \\frac{256}{3}$$\n\n> **注意。** 不要从球中减去一个小球或一个单纯的圆柱。孔是两端各带一个球冠的圆柱，垫圈法把两者都算进去了。",
   ),
   generate(rng) {
     const { a, b, h } = pythagorean(rng);
@@ -3936,10 +4055,62 @@ const napkinRing: KnowledgePointDef = {
         `沿半径为 $${R}$ 的球的球心钻一个半径为 $${A}$ 的圆柱形孔。剩下的立体的体积是 $c\\pi$。求 $c$。`,
       ),
       answer,
-      wrong: [Q.of(4 * R ** 3, 3), Q.of(4 * (R ** 3 - A ** 3), 3), Q.of(2 * B ** 3, 3), Q.of(4 * A ** 3, 3)],
-      solution: t(
-        `Take the hole along the $y$-axis. The washer at height $y$ has outer radius squared $${R * R} - y^2$ and inner radius squared $${A * A}$, so its area is $\\pi(${B * B} - y^2)$. It exists for $|y| \\le ${B}$, and integrating gives $\\frac{4}{3} \\cdot ${B ** 3}\\pi$, so $c = ${answer.toLatex()}$.`,
-        `让孔沿 $y$ 轴。高度 $y$ 处的垫圈，外半径的平方是 $${R * R} - y^2$，内半径的平方是 $${A * A}$，所以面积是 $\\pi(${B * B} - y^2)$。它存在于 $|y| \\le ${B}$，积分得 $\\frac{4}{3} \\cdot ${B ** 3}\\pi$，所以 $c = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: Q.of(4 * R ** 3, 3),
+          why: t("This is the whole sphere; the hole has not been taken out.", "这是整个球的体积，孔还没有去掉。"),
+        },
+        {
+          value: Q.of(4 * (R ** 3 - A ** 3), 3),
+          why: t(
+            `This takes a sphere of radius $${A}$ out of the ball. The hole is a cylinder with two caps, so use washers instead.`,
+            `这是从球中去掉了半径为 $${A}$ 的小球。孔是带两个球冠的圆柱，应该用垫圈法。`,
+          ),
+        },
+        {
+          value: Q.of(2 * B ** 3, 3),
+          why: t(
+            `This is only the half above $y = 0$. The washers run from $y = -${B}$ to $y = ${B}$.`,
+            `这只是 $y = 0$ 上方的一半。垫圈从 $y = -${B}$ 一直到 $y = ${B}$。`,
+          ),
+        },
+        {
+          value: Q.of(4 * A ** 3, 3),
+          why: t(
+            `This uses the radius of the hole, $${A}$, as the half-height. The slices stop at $y = \\pm${B}$, where $y^{2} = ${R * R} - ${A * A}$.`,
+            `这里把孔的半径 $${A}$ 当成了半高。截面在 $y = \\pm${B}$ 处终止，那里 $y^{2} = ${R * R} - ${A * A}$。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Write the washer", "写出垫圈"],
+            [
+              `Take the hole along the $y$-axis. At height $y$ the outer radius squared is $${R * R} - y^{2}$ and the inner radius squared is $${A * A}$:`,
+              `让孔沿 $y$ 轴。高度 $y$ 处外半径的平方是 $${R * R} - y^{2}$，内半径的平方是 $${A * A}$：`,
+            ],
+            [`\\left(${R * R} - y^{2}\\right) - ${A * A} = ${B * B} - y^{2}`],
+          ],
+          [
+            ["Find the limits", "求积分限"],
+            [
+              `The washers exist while the outer radius is larger than the hole, that is while $y^{2} \\le ${B * B}$, so $y$ runs from $-${B}$ to $${B}$.`,
+              `外半径大于孔的半径时才有垫圈，即 $y^{2} \\le ${B * B}$，所以 $y$ 从 $-${B}$ 到 $${B}$。`,
+            ],
+          ],
+          [
+            ["Integrate", "积分"],
+            ["Add up the washers:", "把垫圈加起来："],
+            [
+              `V = \\pi\\int_{-${B}}^{${B}} \\left(${B * B} - y^{2}\\right) dy = \\pi\\left(${2 * B ** 3} - ${Q.of(2 * B ** 3, 3).toLatex()}\\right) = ${piTimes(answer)}`,
+            ],
+          ],
+        ],
+        [
+          `The graph of $${B * B} - y^{2}$ is a parabola over $[-${B}, ${B}]$ with top $${B * B}$, and a parabola fills $\\frac{2}{3}$ of its rectangle: $\\frac{2}{3} \\cdot ${2 * B} \\cdot ${B * B} = ${answer.toLatex()}$. So $c = ${answer.toLatex()}$.`,
+          `$${B * B} - y^{2}$ 的图像是 $[-${B}, ${B}]$ 上顶点高 $${B * B}$ 的抛物线，抛物线占它所在矩形的 $\\frac{2}{3}$：$\\frac{2}{3} \\cdot ${2 * B} \\cdot ${B * B} = ${answer.toLatex()}$。所以 $c = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },

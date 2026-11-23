@@ -240,4 +240,13 @@ export const taughtTopics: readonly string[] = [
   "improper-integrals-over-the-real-line",
   "improper-integrals-of-the-second-kind",
   "improper-integrals-of-the-second-kind-discontinuities-at-interior-points",
+  "volumes-of-revolution-using-the-disc-method-rotation-about-the-coordinate-axes",
+  "volumes-of-revolution-using-the-disc-method-rotation-about-other-axes",
+  "volumes-of-revolution-using-the-washer-method-rotation-about-the-coordinate-axes",
+  "volumes-of-revolution-using-the-washer-method-rotation-about-other-axes",
+  "the-shell-method-rotating-a-region-about-the-x-axis",
+  "the-shell-method-rotating-a-region-between-two-curves-about-the-x-axis",
+  "the-shell-method-rotation-about-the-y-axis",
+  "surface-areas-of-revolution-rotation-about-the-x-axis",
+  "surface-areas-of-revolution-rotation-about-the-y-axis",
 ];

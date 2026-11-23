@@ -232,8 +232,8 @@ const discIntegral = {
     "the-disc-integral-of-a-drawn-region",
     ["The disc integral of a drawn region", "图中区域的圆盘积分"],
     [
-      "Rotating a region under a graph about the $x$-axis makes a solid whose slices are discs. A slice at position $x$ has radius equal to the height of the graph there, so its area is $\\pi$ times the height squared. Adding the slices between the ends of the region gives the volume.",
-      "把图象下方的区域绕 $x$ 轴旋转，得到的立体的截面是圆盘。位置 $x$ 处截面的半径等于图象在该处的高度，所以面积是 $\\pi$ 乘以高度的平方。把区域两端之间的截面加起来就得到体积。",
+      "Rotating a region under a graph about the $x$-axis makes a solid whose slices are discs. A slice at position $x$ has radius equal to the height of the graph there, so its area is $\\pi$ times the height squared. Adding the slices between the ends of the region gives the volume:\n\n$$V = \\pi\\int_{a}^{b} f(x)^{2} \\, dx$$\n\nFor example, the region under $f(x) = x$ from $x = 0$ to $x = 2$ gives $V = \\pi\\int_{0}^{2} x^{2} \\, dx = \\frac{8}{3}\\pi$.\n\nCheck: that solid is a cone of radius $2$ and height $2$, and\n\n$$\\frac{1}{3}\\pi \\cdot 2^{2} \\cdot 2 = \\frac{8}{3}\\pi$$\n\n> **Watch out.** Square the height. The integral $\\pi\\int f(x) \\, dx$ adds up radii, not the areas of discs.",
+      "把图象下方的区域绕 $x$ 轴旋转，得到的立体的截面是圆盘。位置 $x$ 处截面的半径等于图象在该处的高度，所以面积是 $\\pi$ 乘以高度的平方。把区域两端之间的截面加起来就得到体积：\n\n$$V = \\pi\\int_{a}^{b} f(x)^{2} \\, dx$$\n\n例如，$f(x) = x$ 下方从 $x = 0$ 到 $x = 2$ 的区域给出 $V = \\pi\\int_{0}^{2} x^{2} \\, dx = \\frac{8}{3}\\pi$。\n\n检验：这个立体是半径为 $2$、高为 $2$ 的圆锥，\n\n$$\\frac{1}{3}\\pi \\cdot 2^{2} \\cdot 2 = \\frac{8}{3}\\pi$$\n\n> **注意。** 高度要平方。积分 $\\pi\\int f(x) \\, dx$ 加起来的是半径，不是圆盘的面积。",
     ],
     (rng) => {
       const p = rng.int(0, 3);
@@ -246,24 +246,49 @@ const discIntegral = {
       ]);
       const samples = Array.from({ length: 33 }, (_, i) => p + ((q - p) * i) / 32);
       const limits = `\\int_{${p}}^{${q}}`;
-      return choose(
-        rng,
-        [
+      const cylinder = q - p === 1 ? "\\pi c^{2}" : `\\pi c^{2} \\cdot ${q - p}`;
+      const option = (latex: string) => t(`$${latex}$`, `$${latex}$`);
+      return explainedChoice(rng, {
+        prompt: t(
           "The shaded region under the graph of $f$ is rotated about the $x$-axis. Which integral gives the volume of the solid?",
           "$f$ 图象下方的阴影区域绕 $x$ 轴旋转。哪个积分给出立体的体积？",
+        ),
+        correct: option(`\\pi ${limits} f(x)^2\\,dx`),
+        wrong: [
+          {
+            option: option(`\\pi ${limits} f(x)\\,dx`),
+            why: t(
+              "This adds up $\\pi$ times the radius. A disc of radius $f(x)$ has area $\\pi f(x)^{2}$, so the radius must be squared.",
+              "这是把 $\\pi$ 乘半径加起来。半径为 $f(x)$ 的圆盘面积是 $\\pi f(x)^{2}$，半径要平方。",
+            ),
+          },
+          {
+            option: option(`2\\pi ${limits} x f(x)\\,dx`),
+            why: t(
+              "This is the shell integral for rotation about the $y$-axis. About the $x$-axis the slices are discs.",
+              "这是绕 $y$ 轴旋转的柱壳积分。绕 $x$ 轴旋转时截面是圆盘。",
+            ),
+          },
+          {
+            option: option(`\\pi \\int_{0}^{${q}} f(x)^2\\,dx`),
+            why: t(
+              `This starts at $x = 0$, but the shaded region starts at $x = ${p}$.`,
+              `这是从 $x = 0$ 开始，但阴影区域从 $x = ${p}$ 开始。`,
+            ),
+          },
+          {
+            option: option(`${limits} f(x)^2\\,dx`),
+            why: t(
+              "This leaves out $\\pi$. It adds up squares of side $f(x)$, but the slices are discs of radius $f(x)$.",
+              "这里少了 $\\pi$。它加起来的是边长为 $f(x)$ 的正方形，而截面是半径为 $f(x)$ 的圆盘。",
+            ),
+          },
         ],
-        same(`\\pi ${limits} f(x)^2\\,dx`),
-        [
-          same(`\\pi ${limits} f(x)\\,dx`),
-          same(`2\\pi ${limits} x f(x)\\,dx`),
-          same(`\\pi \\int_{0}^{${q}} f(x)^2\\,dx`),
-          same(`${limits} f(x)^2\\,dx`),
-        ],
-        [
-          `The region runs from $x = ${p}$ to $x = ${q}$, and a slice at $x$ is a disc of radius $f(x)$ with area $\\pi f(x)^2$. Adding these slices gives the volume.`,
-          `区域从 $x = ${p}$ 到 $x = ${q}$，$x$ 处的截面是半径为 $f(x)$ 的圆盘，面积为 $\\pi f(x)^2$。把这些截面加起来就得到体积。`,
-        ],
-        fig(
+        solution: t(
+          `**Step 1: Read the limits.** The shaded region runs from $x = ${p}$ to $x = ${q}$, so these are the limits.\n\n**Step 2: Write the disc.** A slice at $x$ is a disc of radius $f(x)$, with area $\\pi f(x)^{2}$. Adding the slices gives $\\pi ${limits} f(x)^2\\,dx$.\n\n**Check.** If $f$ were a constant $c$, the integral would give $${cylinder}$, the volume of a cylinder of radius $c$ and length $${q - p}$, as it should.`,
+          `**第一步：读积分限。**阴影区域从 $x = ${p}$ 到 $x = ${q}$，这就是积分限。\n\n**第二步：写出圆盘。**$x$ 处的截面是半径为 $f(x)$ 的圆盘，面积为 $\\pi f(x)^{2}$。把截面加起来得 $\\pi ${limits} f(x)^2\\,dx$。\n\n**检验。**若 $f$ 是常数 $c$，积分给出 $${cylinder}$，正是半径为 $c$、长为 $${q - p}$ 的圆柱的体积，理应如此。`,
+        ),
+        figure: fig(
           { xMin: -1, xMax: 8, yMin: -1, yMax: 8 },
           [
             { kind: "polygon", points: [[p, 0], ...samples.map((x): Point => [x, shape(x)]), [q, 0]] },
@@ -272,7 +297,7 @@ const discIntegral = {
           ],
           [`The region under the graph of f from x = ${p} to x = ${q}.`, `f 图象下方从 x = ${p} 到 x = ${q} 的区域。`],
         ),
-      );
+      });
     },
   ),
   figure:
@@ -284,8 +309,8 @@ const shellVolume = {
     "shells-of-a-drawn-rectangle",
     ["Shells of a drawn rectangle", "图中矩形的柱壳"],
     [
-      "Rotating about the $y$-axis turns each vertical strip of a region into a thin cylindrical shell. A strip at $x$ has radius $x$ and height equal to the strip length, so the volume is the integral of $2\\pi x$ times height over the $x$-values of the region. The radius grows across the region, so the position matters.",
-      "绕 $y$ 轴旋转时，区域的每个竖直窄条变成薄圆柱壳。$x$ 处的窄条半径为 $x$，高度等于窄条长度，所以体积是 $2\\pi x$ 乘以高度在区域的 $x$ 范围上的积分。半径随位置增大，所以位置很重要。",
+      "Rotating about the $y$-axis turns each vertical strip of a region into a thin cylindrical shell. A strip at $x$ has radius $x$ and height equal to the strip length, so the volume is the integral of $2\\pi x$ times height over the $x$-values of the region:\n\n$$V = 2\\pi\\int_{a}^{b} x\\,h(x) \\, dx$$\n\nFor example, a rectangle from $x = 1$ to $x = 2$ with height $3$ gives $V = 2\\pi\\int_{1}^{2} 3x \\, dx = 3\\pi(4 - 1) = 9\\pi$.\n\nCheck: the solid is a hollow cylinder of outer radius $2$, inner radius $1$ and height $3$, so $V = \\pi\\left(2^{2} - 1^{2}\\right) \\cdot 3 = 9\\pi$.\n\n> **Watch out.** The radius grows across the region, so the position matters. Squaring the width instead, $\\pi(2 - 1)^{2} \\cdot 3 = 3\\pi$, is wrong.",
+      "绕 $y$ 轴旋转时，区域的每个竖直窄条变成薄圆柱壳。$x$ 处的窄条半径为 $x$，高度等于窄条长度，所以体积是 $2\\pi x$ 乘以高度在区域的 $x$ 范围上的积分：\n\n$$V = 2\\pi\\int_{a}^{b} x\\,h(x) \\, dx$$\n\n例如，从 $x = 1$ 到 $x = 2$、高为 $3$ 的矩形给出 $V = 2\\pi\\int_{1}^{2} 3x \\, dx = 3\\pi(4 - 1) = 9\\pi$。\n\n检验：这个立体是外半径 $2$、内半径 $1$、高 $3$ 的空心圆柱，$V = \\pi\\left(2^{2} - 1^{2}\\right) \\cdot 3 = 9\\pi$。\n\n> **注意。** 半径随位置增大，所以位置很重要。把宽度平方，$\\pi(2 - 1)^{2} \\cdot 3 = 3\\pi$，是错的。",
     ],
     (rng) => {
       const p = rng.int(1, 3);
@@ -293,18 +318,44 @@ const shellVolume = {
       const lo = rng.int(0, 2);
       const h = rng.int(1, 4);
       const k = h * (q * q - p * p);
-      return ask(
-        [
-          "The shaded rectangle is rotated about the $y$-axis. The volume of the solid is $k\\pi$. What is $k$?",
-          "阴影矩形绕 $y$ 轴旋转。立体的体积是 $k\\pi$。$k$ 是多少？",
-        ],
-        k,
-        [h * (q - p) * (q - p), h * q * q, 2 * k, h * (q - p) * (p + q + 1)],
-        [
-          `The rectangle has height $${h}$ and runs from $x = ${p}$ to $x = ${q}$. Shells give $\\int_{${p}}^{${q}} 2\\pi x \\cdot ${h}\\,dx = ${h}(${q * q} - ${p * p})\\pi$, so $k = ${k}$.`,
-          `矩形高度为 $${h}$，从 $x = ${p}$ 到 $x = ${q}$。柱壳法给出 $\\int_{${p}}^{${q}} 2\\pi x \\cdot ${h}\\,dx = ${h}(${q * q} - ${p * p})\\pi$，所以 $k = ${k}$。`,
-        ],
-        fig(
+      const hh = h === 1 ? "" : `${h}`;
+      const all = [
+        {
+          value: h * (q - p) * (q - p),
+          why: t(
+            `This squares the width $${q - p}$. The solid is a hollow cylinder, so use $${q}^{2} - ${p}^{2}$, not $(${q} - ${p})^{2}$.`,
+            `这是把宽度 $${q - p}$ 平方了。立体是空心圆柱，要用 $${q}^{2} - ${p}^{2}$，不是 $(${q} - ${p})^{2}$。`,
+          ),
+        },
+        {
+          value: h * q * q,
+          why: t(
+            `This fills in the hole. The rectangle starts at $x = ${p}$, so the solid has a hole of radius $${p}$.`,
+            `这里把孔也填上了。矩形从 $x = ${p}$ 开始，所以立体中间有半径为 $${p}$ 的孔。`,
+          ),
+        },
+        {
+          value: 2 * k,
+          why: t(
+            "This is twice the volume. The antiderivative of $x$ is $\\frac{x^{2}}{2}$, and the $\\frac{1}{2}$ cancels the $2$ in $2\\pi$.",
+            "这是体积的两倍。$x$ 的原函数是 $\\frac{x^{2}}{2}$，其中的 $\\frac{1}{2}$ 与 $2\\pi$ 中的 $2$ 约掉。",
+          ),
+        },
+      ];
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The shaded rectangle is rotated about the $y$-axis. The volume of the solid is $k\\pi$. What is $k$?",
+            "阴影矩形绕 $y$ 轴旋转。立体的体积是 $k\\pi$。$k$ 是多少？",
+          ),
+          answer: k,
+          mistakes: all.filter((x, i) => x.value !== k && all.findIndex((y) => y.value === x.value) === i),
+          solution: t(
+            `**Step 1: Read the rectangle.** It runs from $x = ${p}$ to $x = ${q}$, and from $y = ${lo}$ to $y = ${lo + h}$, so each vertical strip has length $${h}$.\n\n**Step 2: Integrate the shells.** A strip at $x$ has radius $x$:\n\n$$V = 2\\pi\\int_{${p}}^{${q}} ${hh}x \\, dx = ${hh}\\pi\\left(${q * q} - ${p * p}\\right) = ${piTimes(k, 1)}$$\n\n**Check.** The solid is a hollow cylinder with outer radius $${q}$, inner radius $${p}$ and height $${h}$, so $V = \\pi\\left(${q}^{2} - ${p}^{2}\\right)${h === 1 ? "" : ` \\cdot ${h}`} = ${piTimes(k, 1)}$ and $k = ${k}$.`,
+            `**第一步：读出矩形。**它从 $x = ${p}$ 到 $x = ${q}$，从 $y = ${lo}$ 到 $y = ${lo + h}$，所以每个竖直窄条长 $${h}$。\n\n**第二步：对柱壳积分。**$x$ 处窄条的半径是 $x$：\n\n$$V = 2\\pi\\int_{${p}}^{${q}} ${hh}x \\, dx = ${hh}\\pi\\left(${q * q} - ${p * p}\\right) = ${piTimes(k, 1)}$$\n\n**检验。**这个立体是外半径 $${q}$、内半径 $${p}$、高 $${h}$ 的空心圆柱，$V = \\pi\\left(${q}^{2} - ${p}^{2}\\right)${h === 1 ? "" : ` \\cdot ${h}`} = ${piTimes(k, 1)}$，所以 $k = ${k}$。`,
+          ),
+        }),
+        figure: fig(
           { xMin: -1, xMax: 7, yMin: -1, yMax: 7 },
           [
             {
@@ -326,7 +377,7 @@ const shellVolume = {
             `从 x = ${p} 到 x = ${q}、从 y = ${lo} 到 y = ${lo + h} 的矩形。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: calculusDrawings4["the-shell-method-rotation-about-the-y-axis#shells-of-a-drawn-rectangle"],
@@ -337,8 +388,8 @@ const washerVolume = {
     "washers-about-a-drawn-axis",
     ["Washers about a drawn axis", "绕图中轴旋转的垫圈"],
     [
-      "When the axis of rotation is not a coordinate axis, measure both radii from the axis itself, never from the $x$-axis. The outer radius reaches the far edge of the region and the inner radius reaches the near edge. A slice then has area $\\pi$ times the outer radius squared minus the inner radius squared.",
-      "旋转轴不是坐标轴时，两个半径都要从旋转轴量起，而不是从 $x$ 轴量起。外半径到达区域的远边，内半径到达近边。截面面积就是 $\\pi$ 乘以外半径的平方减内半径的平方。",
+      "When the axis of rotation is not a coordinate axis, measure both radii from the axis itself, never from the $x$-axis. The outer radius $R$ reaches the far edge of the region and the inner radius $r$ reaches the near edge. A slice then has area $\\pi$ times the outer radius squared minus the inner radius squared:\n\n$$V = \\pi\\int_{a}^{b} \\left(R^{2} - r^{2}\\right) dx$$\n\nFor example, the rectangle $0 \\le x \\le 2$, $1 \\le y \\le 3$ rotated about $y = -1$ has $R = 4$ and $r = 2$, so $V = \\pi\\int_{0}^{2} (16 - 4) \\, dx = 24\\pi$.\n\nCheck: $R^{2} - r^{2} = (R - r)(R + r) = 2 \\cdot 6$, so $V$ is $2\\pi$ times the middle radius $3$ times the area $4$ of the rectangle, $2\\pi \\cdot 3 \\cdot 4 = 24\\pi$.\n\n> **Watch out.** Radii measured from the $x$-axis, $3$ and $1$, give $16\\pi$, which is the solid about the wrong line.",
+      "旋转轴不是坐标轴时，两个半径都要从旋转轴量起，而不是从 $x$ 轴量起。外半径 $R$ 到达区域的远边，内半径 $r$ 到达近边。截面面积就是 $\\pi$ 乘以外半径的平方减内半径的平方：\n\n$$V = \\pi\\int_{a}^{b} \\left(R^{2} - r^{2}\\right) dx$$\n\n例如，矩形 $0 \\le x \\le 2$，$1 \\le y \\le 3$ 绕 $y = -1$ 旋转，$R = 4$，$r = 2$，所以 $V = \\pi\\int_{0}^{2} (16 - 4) \\, dx = 24\\pi$。\n\n检验：$R^{2} - r^{2} = (R - r)(R + r) = 2 \\cdot 6$，所以 $V$ 是 $2\\pi$ 乘以中间半径 $3$ 再乘以矩形面积 $4$，$2\\pi \\cdot 3 \\cdot 4 = 24\\pi$。\n\n> **注意。** 从 $x$ 轴量出的半径 $3$ 和 $1$ 给出 $16\\pi$，那是绕错了直线的立体。",
     ],
     (rng) => {
       const axis = rng.int(-2, 6);
@@ -346,27 +397,62 @@ const washerVolume = {
       const lo = below ? axis + rng.int(1, 2) : axis - rng.int(1, 2) - 2;
       const h = rng.int(1, 2);
       const [near, far] = below ? [lo - axis, lo + h - axis] : [axis - lo - h, axis - lo];
+      const [nearY, farY] = below ? [lo, lo + h] : [lo + h, lo];
       const p = rng.int(0, 2);
       const length = rng.int(1, 4);
       const k = length * (far * far - near * near);
       const yMin = Math.min(axis, lo) - 2;
-      return ask(
-        [
-          "The shaded rectangle is rotated about the dashed horizontal line. The volume of the solid is $k\\pi$. What is $k$?",
-          "阴影矩形绕水平虚线旋转。立体的体积是 $k\\pi$。$k$ 是多少？",
-        ],
-        k,
-        [
-          length * (lo + h) * (lo + h) - length * lo * lo === k ? k + length : length * (lo + h) * (lo + h) - length * lo * lo,
-          length * (far - near) * (far - near),
-          length * far * far,
-          2 * k,
-        ],
-        [
-          `Measured from the line, the near edge is $${near}$ away and the far edge is $${far}$ away, and the rectangle has length $${length}$. So $k = ${length}(${far}^2 - ${near}^2) = ${k}$.`,
-          `从这条线量起，近边距离 $${near}$，远边距离 $${far}$，矩形长度为 $${length}$。所以 $k = ${length}(${far}^2 - ${near}^2) = ${k}$。`,
-        ],
-        fig(
+      const area = length * h;
+      const split = h === 1 ? `${far + near}` : `${h} \\cdot ${far + near}`;
+      const fromX = [Math.abs(lo), Math.abs(lo + h)].sort((m, n) => m - n) as [number, number];
+      const all = [
+        ...(lo >= 0 || lo + h <= 0
+          ? [
+              {
+                value: length * (fromX[1] * fromX[1] - fromX[0] * fromX[0]),
+                why: t(
+                  `This measures the radii from the $x$-axis, $${fromX[1]}$ and $${fromX[0]}$. The axis of rotation is the dashed line $y = ${axis}$.`,
+                  `这是从 $x$ 轴量的半径 $${fromX[1]}$ 和 $${fromX[0]}$。旋转轴是虚线 $y = ${axis}$。`,
+                ),
+              },
+            ]
+          : []),
+        {
+          value: length * (far - near) * (far - near),
+          why: t(
+            "This squares the difference of the radii. A washer has area $\\pi(R^{2} - r^{2})$, not $\\pi(R - r)^{2}$.",
+            "这是把两个半径的差平方了。垫圈的面积是 $\\pi(R^{2} - r^{2})$，不是 $\\pi(R - r)^{2}$。",
+          ),
+        },
+        {
+          value: length * far * far,
+          why: t(
+            `This leaves out the hole. The rectangle does not touch the line, so the inner radius $${near}$ must be taken away.`,
+            `这里没有去掉孔。矩形不接触这条线，所以要减去内半径 $${near}$ 的部分。`,
+          ),
+        },
+        {
+          value: 2 * k,
+          why: t(
+            "This is twice the volume. A washer has area $\\pi(R^{2} - r^{2})$, with no factor $2$.",
+            "这是体积的两倍。垫圈的面积是 $\\pi(R^{2} - r^{2})$，没有因子 $2$。",
+          ),
+        },
+      ];
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The shaded rectangle is rotated about the dashed horizontal line. The volume of the solid is $k\\pi$. What is $k$?",
+            "阴影矩形绕水平虚线旋转。立体的体积是 $k\\pi$。$k$ 是多少？",
+          ),
+          answer: k,
+          mistakes: all.filter((x, i) => x.value !== k && all.findIndex((y) => y.value === x.value) === i),
+          solution: t(
+            `**Step 1: Measure the radii from the line.** The dashed line is $y = ${axis}$. The far edge $y = ${farY}$ is $${far}$ away and the near edge $y = ${nearY}$ is $${near}$ away, so $R = ${far}$ and $r = ${near}$.\n\n**Step 2: Integrate the washers.** The rectangle runs from $x = ${p}$ to $x = ${p + length}$:\n\n$$V = \\pi\\int_{${p}}^{${p + length}} \\left(${far * far} - ${near * near}\\right) dx = ${piTimes(k, 1)}$$\n\n**Check.** $${far * far} - ${near * near} = ${split}$, so $V$ is $2\\pi$ times the middle radius $${Q.of(far + near, 2).toLatex()}$ times the area $${area}$ of the rectangle: $2\\pi \\cdot ${Q.of(far + near, 2).toLatex()}${area === 1 ? "" : ` \\cdot ${area}`} = ${piTimes(k, 1)}$, so $k = ${k}$.`,
+            `**第一步：从这条线量半径。**虚线是 $y = ${axis}$。远边 $y = ${farY}$ 距离 $${far}$，近边 $y = ${nearY}$ 距离 $${near}$，所以 $R = ${far}$，$r = ${near}$。\n\n**第二步：对垫圈积分。**矩形从 $x = ${p}$ 到 $x = ${p + length}$：\n\n$$V = \\pi\\int_{${p}}^{${p + length}} \\left(${far * far} - ${near * near}\\right) dx = ${piTimes(k, 1)}$$\n\n**检验。**$${far * far} - ${near * near} = ${split}$，所以 $V$ 是 $2\\pi$ 乘以中间半径 $${Q.of(far + near, 2).toLatex()}$ 再乘以矩形面积 $${area}$：$2\\pi \\cdot ${Q.of(far + near, 2).toLatex()}${area === 1 ? "" : ` \\cdot ${area}`} = ${piTimes(k, 1)}$，所以 $k = ${k}$。`,
+          ),
+        }),
+        figure: fig(
           { xMin: -1, xMax: 8, yMin, yMax: yMin + 9 },
           [
             {
@@ -385,7 +471,7 @@ const washerVolume = {
             `从 x = ${p} 到 x = ${p + length}、y = ${lo} 到 y = ${lo + h} 的矩形，虚线轴在 y = ${axis}。`,
           ],
         ),
-      );
+      };
     },
   ),
   figure: calculusDrawings4["volumes-of-revolution-using-the-washer-method-rotation-about-other-axes#washers-about-a-drawn-axis"],

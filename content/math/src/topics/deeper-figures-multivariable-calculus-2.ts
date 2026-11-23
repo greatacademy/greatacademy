@@ -14,6 +14,7 @@ import { multivariableDrawings5 } from "../explanation-drawings-multivariable-5.
 import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.ts";
 import { multivariableDrawings8 } from "../explanation-drawings-multivariable-8.ts";
 
+import { numberProblem } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn } from "./figure-reading-more.ts";
 
@@ -1476,8 +1477,8 @@ const revolutionSegment = point(
   "the-surface-from-spinning-a-drawn-segment",
   ["The surface from spinning a drawn segment", "所画线段旋转得到的曲面"],
   [
-    "Spinning a segment about the $x$-axis gives a band with area $\\int 2\\pi y\\,ds$. Since $y$ is linear along the segment, this is $2\\pi$ times the average height times the length, or $\\pi(y_1 + y_2)L$.",
-    "线段绕 $x$ 轴旋转得到一条带，面积为 $\\int 2\\pi y\\,ds$。由于 $y$ 沿线段线性变化，它等于 $2\\pi$ 乘以平均高度再乘以长度，即 $\\pi(y_1 + y_2)L$。",
+    "Spinning a segment about the $x$-axis gives a band with area $\\int 2\\pi y\\,ds$. Since $y$ is linear along the segment, this is $2\\pi$ times the average height times the length $L$:\n\n$$S = 2\\pi \\cdot \\frac{y_{1} + y_{2}}{2} \\cdot L = \\pi(y_{1} + y_{2})L$$\n\nFor example, the segment from $(0, 3)$ to $(4, 6)$ has length $5$, so $S = \\pi(3 + 6) \\cdot 5 = 45\\pi$.\n\nCheck: along the segment $y = 3 + \\frac{3}{4}x$ and $ds = \\frac{5}{4} \\, dx$, so\n\n$$S = 2\\pi\\int_{0}^{4} \\left(3 + \\frac{3}{4}x\\right) \\frac{5}{4} \\, dx = 2\\pi \\cdot \\frac{5}{4} \\cdot 18 = 45\\pi$$\n\n> **Watch out.** Use the average height, half the sum of the end heights. Using the sum itself doubles the area.",
+    "线段绕 $x$ 轴旋转得到一条带，面积为 $\\int 2\\pi y\\,ds$。由于 $y$ 沿线段线性变化，它等于 $2\\pi$ 乘以平均高度再乘以长度 $L$：\n\n$$S = 2\\pi \\cdot \\frac{y_{1} + y_{2}}{2} \\cdot L = \\pi(y_{1} + y_{2})L$$\n\n例如，从 $(0, 3)$ 到 $(4, 6)$ 的线段长 $5$，所以 $S = \\pi(3 + 6) \\cdot 5 = 45\\pi$。\n\n检验：沿线段 $y = 3 + \\frac{3}{4}x$，$ds = \\frac{5}{4} \\, dx$，所以\n\n$$S = 2\\pi\\int_{0}^{4} \\left(3 + \\frac{3}{4}x\\right) \\frac{5}{4} \\, dx = 2\\pi \\cdot \\frac{5}{4} \\cdot 18 = 45\\pi$$\n\n> **注意。** 要用平均高度，即两端高度之和的一半。直接用和会使面积加倍。",
   ],
   (rng) => {
     const [dx, dy, L] = rng.pick<[number, number, number]>([
@@ -1497,18 +1498,66 @@ const revolutionSegment = point(
     const A: Point = [x1, y1];
     const B: Point = [x1 + dx, y2];
     const k = (y1 + y2) * L;
-    return ask(
-      [
-        "The drawn segment is spun about the $x$-axis. The area of the resulting surface, without the end disks, is $k\\pi$. Find $k$.",
-        "所画线段绕 $x$ 轴旋转。所得曲面（不含两端圆盘）的面积为 $k\\pi$。求 $k$。",
-      ],
-      k,
-      [2 * k, y1 + y2, Math.abs(y2 * y2 - y1 * y1), L * y1],
-      [
-        `The ends have heights $${y1}$ and $${y2}$, and the length is $${L}$, so the area is $\\pi(${y1} + ${y2})(${L}) = ${k}\\pi$.`,
-        `两端高度为 $${y1}$ 和 $${y2}$，长度为 $${L}$，所以面积为 $\\pi(${y1} + ${y2})(${L}) = ${k}\\pi$。`,
-      ],
-      fig(
+    const all = [
+      {
+        value: 2 * k,
+        why: t(
+          "This uses the sum of the end heights as the radius. The average radius is half of that sum.",
+          "这里把两端高度之和当作半径。平均半径是这个和的一半。",
+        ),
+      },
+      {
+        value: y1 + y2,
+        why: t(`This leaves out the length $${L}$ of the segment.`, `这里漏掉了线段的长度 $${L}$。`),
+      },
+      ...(dy === 0
+        ? []
+        : [
+            {
+              value: Math.abs(y2 * y2 - y1 * y1),
+              why: t(
+                "This is the difference of the areas of the end disks divided by $\\pi$, not the area of the band between them.",
+                "这是两端圆盘面积之差除以 $\\pi$，不是它们之间那条带的面积。",
+              ),
+            },
+            {
+              value: L * y1,
+              why: t(
+                `This uses only the height $${y1}$ at one end and leaves out the factor $2$. The radius changes from $${y1}$ to $${y2}$ along the segment.`,
+                `这里只用了一端的高度 $${y1}$，还漏掉了因子 $2$。沿线段半径从 $${y1}$ 变到 $${y2}$。`,
+              ),
+            },
+          ]),
+    ];
+    const trapezoid = Q.of(dx * (y1 + y2), 2);
+    const average = Q.of(y1 + y2, 2).toLatex();
+    const twoPi = (...parts: string[]) => ["2\\pi", ...parts.filter((p) => p !== "1")].join(" \\cdot ");
+    const length = dy === 0 ? `${L}` : `\\sqrt{${dx}^{2} + ${Math.abs(dy)}^{2}} = ${L}`;
+    const factor = Q.of(L, dx).toLatex();
+    const check =
+      dy === 0
+        ? t(
+            `The segment is level, so the surface is the side of a cylinder of radius $${y1}$ and length $${L}$:\n\n$$S = ${twoPi(`${y1}`, `${L}`)} = ${k}\\pi$$\n\nSo $k = ${k}$.`,
+            `线段是水平的，所以曲面是半径 $${y1}$、长 $${L}$ 的圆柱侧面：\n\n$$S = ${twoPi(`${y1}`, `${L}`)} = ${k}\\pi$$\n\n所以 $k = ${k}$。`,
+          )
+        : t(
+            `Integrate in $x$ instead. Along the segment $ds = ${factor} \\, dx$, and $\\int y \\, dx$ over the segment is the area of a trapezoid, $${trapezoid.toLatex()}$:\n\n$$S = ${twoPi(factor, trapezoid.toLatex())} = ${k}\\pi$$\n\nSo $k = ${k}$.`,
+            `改为对 $x$ 积分。沿线段 $ds = ${factor} \\, dx$，而 $\\int y \\, dx$ 在线段上是一个梯形的面积 $${trapezoid.toLatex()}$：\n\n$$S = ${twoPi(factor, trapezoid.toLatex())} = ${k}\\pi$$\n\n所以 $k = ${k}$。`,
+          );
+    return {
+      ...numberProblem({
+        prompt: t(
+          "The drawn segment is spun about the $x$-axis. The area of the resulting surface, without the end disks, is $k\\pi$. Find $k$.",
+          "所画线段绕 $x$ 轴旋转。所得曲面（不含两端圆盘）的面积为 $k\\pi$。求 $k$。",
+        ),
+        answer: k,
+        mistakes: all.filter((x, i) => x.value !== k && all.findIndex((y) => y.value === x.value) === i),
+        solution: t(
+          `**Step 1: Read the segment.** It runs from $${at(A)}$ to $${at(B)}$, so the end heights are $${y1}$ and $${y2}$ and the length is $L = ${length}$.\n\n**Step 2: Multiply by the average height.** The radius changes evenly along the segment, so its average is $${average}$:\n\n$$S = ${twoPi(average, `${L}`)} = ${k}\\pi$$\n\n**Check.** ${check.en}`,
+          `**第一步：读出线段。**它从 $${at(A)}$ 到 $${at(B)}$，两端高度为 $${y1}$ 和 $${y2}$，长度为 $L = ${length}$。\n\n**第二步：乘以平均高度。**半径沿线段均匀变化，平均值是 $${average}$：\n\n$$S = ${twoPi(average, `${L}`)} = ${k}\\pi$$\n\n**检验。**${check["zh-CN"]}`,
+        ),
+      }),
+      figure: fig(
         { xMin: -1, xMax: 12, yMin: -1, yMax: 12 },
         [
           { kind: "segment", a: A, b: B, accent: true },
@@ -1517,7 +1566,7 @@ const revolutionSegment = point(
         ],
         [`A segment from ${at(A)} to ${at(B)} above the x-axis.`, `x 轴上方从 ${at(A)} 到 ${at(B)} 的线段。`],
       ),
-    );
+    };
   },
 );
 
