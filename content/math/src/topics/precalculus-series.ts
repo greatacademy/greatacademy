@@ -9,9 +9,6 @@ import { reasoned } from "../wrong-reasons.ts";
 /** m writes LaTeX as a text that is the same in every locale. */
 const m = (latex: string) => same(`$${latex}$`);
 
-/** both builds a text from one English and one Chinese sentence around the same LaTeX steps. */
-const both = (en: string, zh: string, ...lines: string[]) => t(`${en}${steps(...lines)}`, `${zh}${steps(...lines)}`);
-
 /** group writes an expression in parentheses when it is a sum or difference outside its own parentheses and braces. */
 function group(s: string): string {
   let top = s.replace(/\\left\(/g, "(").replace(/\\right\)/g, ")");
@@ -1509,8 +1506,23 @@ const small = (a: Q, r: Q, n: number) => [...geometric(a, r, n), geometricSum(a,
 /** integerStart draws a first term that keeps the first n terms of the sequence with ratio r integers. */
 const integerStart = (rng: Rng, r: Q, n: number, max = 5) => Q.of(rng.sign() * rng.int(1, max) * Number(r.d) ** (n - 1));
 
-/** sumSteps writes the substituted sum formula of a geometric series and its value. */
-const sumSteps = (a: Q, r: Q, n: number) => `S_{${n}} = ${formulaL(a, r, n)} = ${geometricSum(a, r, n).toLatex()}`;
+/**
+ * workedSumL writes the sum formula of a geometric series with the values substituted, then with the power and the two
+ * brackets worked out, then its value: "\\frac{-4(1 - 4^{3})}{1 - 4} = \\frac{-4(1 - 64)}{-3} = \\frac{-4 \\cdot (-63)}{-3} = -84".
+ */
+function workedSumL(a: Q, r: Q, n: number): string {
+  const power = r.pow(n);
+  const bottom = Q.one.sub(r).toLatex();
+  return [
+    formulaL(a, r, n),
+    `\\frac{${a.toLatex()}\\left(1 - ${pr(power)}\\right)}{${bottom}}`,
+    `\\frac{${a.toLatex()} \\cdot ${pr(Q.one.sub(power))}}{${bottom}}`,
+    geometricSum(a, r, n).toLatex(),
+  ].join(" = ");
+}
+
+/** sumSteps writes the worked sum formula of a geometric series of n terms, starting from S_n. */
+const sumSteps = (a: Q, r: Q, n: number) => `S_{${n}} = ${workedSumL(a, r, n)}`;
 
 /** ratioStep finds the common ratio of a geometric series by dividing its second term by its first. */
 const ratioStep = (a: Q, r: Q): Step => [
@@ -1847,7 +1859,7 @@ export const theSumOfTheFirstNTermsOfAGeometricSeries: TopicDef = {
                   "代入",
                   `Substitute $r = ${r.toLatex()}$ and $n = ${n}$ into the sum formula and work out the numbers:`,
                   `把 $r = ${r.toLatex()}$、$n = ${n}$ 代入求和公式，算出其中的数：`,
-                  `${S.toLatex()} = ${formulaL(Q.one, r, n).replace("1\\left(", "a_1\\left(")} = ${factor.toLatex()}a_1`,
+                  `${S.toLatex()} = ${formulaL(Q.one, r, n).replace("1\\left(", "a_1\\left(")} = \\frac{a_1\\left(1 - ${pr(r.pow(n))}\\right)}{${Q.one.sub(r).toLatex()}} = ${factor.toLatex()}a_1`,
                 ],
                 [
                   "Solve for $a_1$",
@@ -1898,17 +1910,22 @@ export const writingGeometricSeriesInSigmaNotation: TopicDef = {
     { topic: "nth-term-of-a-geometric-sequence", weight: 0.5 },
   ],
   xp: 14,
+  intro: t(
+    "You can write an arithmetic series in sigma notation by finding its $k$th term and its number of terms, and you can add a geometric series with the sum formula. A geometric series is written in sigma notation the same way. Only its $k$th term is a power: with first term $a_1$ and common ratio $r$, the $k$th term is $a_1r^{k-1}$.\n\nTake $5 + 15 + 45 + 135 + 405$. The first term is $5$, the ratio is $15 \\div 5 = 3$ and there are $5$ terms, so\n\n$$5 + 15 + 45 + 135 + 405 = \\sum_{k=1}^{5} 5 \\cdot 3^{k-1}$$\n\nSubstituting $k = 5$ gives back the last term: $5 \\cdot 3^{4} = 405$.",
+    "你会通过求第 $k$ 项和项数，用求和符号表示等差级数，也会用求和公式求等比级数的和。等比级数也用同样的方法写成求和符号，只是它的第 $k$ 项是一个乘方：首项为 $a_1$、公比为 $r$ 时，第 $k$ 项是 $a_1r^{k-1}$。\n\n取 $5 + 15 + 45 + 135 + 405$。首项是 $5$，公比是 $15 \\div 5 = 3$，共 $5$ 项，所以\n\n$$5 + 15 + 45 + 135 + 405 = \\sum_{k=1}^{5} 5 \\cdot 3^{k-1}$$\n\n代入 $k = 5$ 又得到末项：$5 \\cdot 3^{4} = 405$。",
+  ),
   knowledgePoints: [
     {
       id: "the-general-term",
       title: t("The general term", "通项"),
       explanation: t(
-        "A geometric series with first term $a_1$ and common ratio $r$ has $k$th term $a_1r^{k-1}$:\n\n$$3 + 6 + 12 + \\cdots + 384 = \\sum_{k=1}^{8} 3 \\cdot 2^{k-1}$$\n\nbecause $a_1 = 3$, $r = 2$ and $384 = 3 \\cdot 2^{7}$ is the $8$th term. A negative or fractional ratio goes in parentheses: $\\sum_{k=1}^{6} 5\\left(-\\frac{1}{2}\\right)^{k-1}$.",
-        "首项为 $a_1$、公比为 $r$ 的等比级数，第 $k$ 项是 $a_1r^{k-1}$：\n\n$$3 + 6 + 12 + \\cdots + 384 = \\sum_{k=1}^{8} 3 \\cdot 2^{k-1}$$\n\n因为 $a_1 = 3$，$r = 2$，而 $384 = 3 \\cdot 2^{7}$ 是第 $8$ 项。负数或分数公比要加括号：$\\sum_{k=1}^{6} 5\\left(-\\frac{1}{2}\\right)^{k-1}$。",
+        "A geometric series with first term $a_1$ and common ratio $r$ has $k$th term $a_1r^{k-1}$:\n\n$$3 + 6 + 12 + \\cdots + 384 = \\sum_{k=1}^{8} 3 \\cdot 2^{k-1}$$\n\nHere $a_1 = 3$, $r = 2$, and $384 = 3 \\cdot 2^{7}$ is the $8$th term. A negative or fractional ratio goes in parentheses, as in $5\\left(-\\frac{1}{2}\\right)^{k-1}$.\n\n> **Watch out.** When the sum starts at $k = 1$, the exponent is $k - 1$, not $k$: at $k = 1$ the term must be $a_1$ itself. Written with $2^{k}$, the sum above would start at $6$. Also keep the parentheses: $(-2)^{k-1}$ alternates in sign, while $-2^{k-1}$ is always negative.",
+        "首项为 $a_1$、公比为 $r$ 的等比级数，第 $k$ 项是 $a_1r^{k-1}$：\n\n$$3 + 6 + 12 + \\cdots + 384 = \\sum_{k=1}^{8} 3 \\cdot 2^{k-1}$$\n\n这里 $a_1 = 3$，$r = 2$，而 $384 = 3 \\cdot 2^{7}$ 是第 $8$ 项。负数或分数公比要加括号，例如 $5\\left(-\\frac{1}{2}\\right)^{k-1}$。\n\n> **注意。** 和从 $k = 1$ 开始时，指数是 $k - 1$，不是 $k$：$k = 1$ 时这一项必须就是 $a_1$。如果写成 $2^{k}$，上面的和就从 $6$ 开始了。还要保留括号：$(-2)^{k-1}$ 正负交替，而 $-2^{k-1}$ 总是负数。",
       ),
       generate(rng) {
         const { a, r, n } = someGeometricSeries(rng);
-        const series = seriesL(geometric(a, r, n));
+        const terms = geometric(a, r, n);
+        const series = seriesL(terms);
         const answer = geometricTerm(a, r, "k-1");
         return expressionProblem({
           prompt: t(
@@ -1923,10 +1940,19 @@ export const writingGeometricSeriesInSigmaNotation: TopicDef = {
             geometricTerm(Q.one, a.mul(r), "k-1"),
             geometricTerm(a, r.abs(), "k-1"),
           ],
-          solution: both(
-            `The first term is $${a.toLatex()}$ and the common ratio is $${r.toLatex()}$, so the $k$th term is $${answer}$:`,
-            `首项是 $${a.toLatex()}$，公比是 $${r.toLatex()}$，所以第 $k$ 项是 $${answer}$：`,
-            `${series} = ${sumL(1, n, answer)}`,
+          solution: worked(
+            [
+              ratioStep(a, r),
+              [
+                "Write the $k$th term",
+                "写出第 $k$ 项",
+                `The $k$th term is $a_1r^{k-1}$ with $a_1 = ${a.toLatex()}$ and $r = ${r.toLatex()}$:`,
+                `第 $k$ 项是 $a_1r^{k-1}$，其中 $a_1 = ${a.toLatex()}$，$r = ${r.toLatex()}$：`,
+                `${series} = ${sumL(1, n, answer)}`,
+              ],
+            ],
+            `Substitute the upper limit $k = ${n}$ into the $k$th term to get back the last term of the series: $${geometricTerm(a, r, String(n - 1))} = ${terms[n - 1]!.toLatex()}$.`,
+            `把上限 $k = ${n}$ 代入第 $k$ 项，又得到级数的末项：$${geometricTerm(a, r, String(n - 1))} = ${terms[n - 1]!.toLatex()}$。`,
           ),
         });
       },
@@ -1935,23 +1961,42 @@ export const writingGeometricSeriesInSigmaNotation: TopicDef = {
       id: "the-upper-limit",
       title: t("The upper limit", "上限"),
       explanation: t(
-        "The upper limit is the number of the last term. Set the general term equal to the last term and solve for $k$:\n\n$$2 + 10 + 50 + \\cdots + 31250 = \\sum_{k=1}^{N} 2 \\cdot 5^{k-1}$$\n\n$2 \\cdot 5^{k-1} = 31250$ gives $5^{k-1} = 15625 = 5^{6}$, so $k = 7$ and $N = 7$.",
-        "上限是末项的序号。令通项等于末项，解出 $k$：\n\n$$2 + 10 + 50 + \\cdots + 31250 = \\sum_{k=1}^{N} 2 \\cdot 5^{k-1}$$\n\n由 $2 \\cdot 5^{k-1} = 31250$ 得 $5^{k-1} = 15625 = 5^{6}$，所以 $k = 7$，$N = 7$。",
+        "The upper limit is the number of the last term. Set the general term equal to the last term and solve for $k$. For\n\n$$2 + 10 + 50 + \\cdots + 31250 = \\sum_{k=1}^{N} 2 \\cdot 5^{k-1}$$\n\ndivide $2 \\cdot 5^{k-1} = 31250$ by $2$:\n\n$$5^{k-1} = 15625 = 5^{6}$$\n\nSo $k - 1 = 6$, $k = 7$ and $N = 7$.\n\n> **Watch out.** The last term has exponent $N - 1$, not $N$. Here $5^{6}$ gives $N = 7$; answering $6$ leaves out the first term, $2 \\cdot 5^{0}$.",
+        "上限是末项的序号。令通项等于末项，解出 $k$。对于\n\n$$2 + 10 + 50 + \\cdots + 31250 = \\sum_{k=1}^{N} 2 \\cdot 5^{k-1}$$\n\n把 $2 \\cdot 5^{k-1} = 31250$ 两边除以 $2$：\n\n$$5^{k-1} = 15625 = 5^{6}$$\n\n所以 $k - 1 = 6$，$k = 7$，$N = 7$。\n\n> **注意。** 末项的指数是 $N - 1$，不是 $N$。这里由 $5^{6}$ 得 $N = 7$；答 $6$ 就漏掉了首项 $2 \\cdot 5^{0}$。",
       ),
       generate(rng) {
         const { a, r, n } = someGeometricSeries(rng);
         const terms = geometric(a, r, n);
+        const last = terms[n - 1]!;
         const body = geometricTerm(a, r, "k-1");
         const series = seriesL(terms);
+        const lines = [`${geometricTerm(a, r, "N-1")} = ${last.toLatex()}`, `${base(r)}^{N-1} = ${r.pow(n - 1).toLatex()}`];
         return numberProblem({
           prompt: t(`Find $N$ such that $${series} = ${sumL(1, "N", body)}$.`, `求 $N$，使 $${series} = ${sumL(1, "N", body)}$。`),
           answer: n,
           solveFor: "N",
           wrong: [n - 1, n + 1],
-          solution: both(
-            `The last term $${terms[n - 1]!.toLatex()}$ is term number $N$. Set the general term equal to it:`,
-            `末项 $${terms[n - 1]!.toLatex()}$ 是第 $N$ 项。令通项等于它：`,
-            `${body} = ${terms[n - 1]!.toLatex()} \\implies ${base(r)}^{k-1} = ${r.pow(n - 1).toLatex()} \\implies k = ${n}`,
+          solution: worked(
+            [
+              [
+                "Set the last term equal to the $N$th term",
+                "令末项等于第 $N$ 项",
+                `The last term $${last.toLatex()}$ is term number $N$, so substitute $k = N$ into the general term:`,
+                `末项 $${last.toLatex()}$ 是第 $N$ 项，所以把 $k = N$ 代入通项：`,
+                ...(a.eq(Q.one) ? lines.slice(1) : lines),
+              ],
+              [
+                "Solve for $N$",
+                "解出 $N$",
+                `Write $${r.pow(n - 1).toLatex()}$ as a power of $${r.toLatex()}$ and compare the exponents:`,
+                `把 $${r.pow(n - 1).toLatex()}$ 写成 $${r.toLatex()}$ 的乘方，比较指数：`,
+                `${base(r)}^{N-1} = ${base(r)}^{${n - 1}}`,
+                `N - 1 = ${n - 1}`,
+                `N = ${n}`,
+              ],
+            ],
+            `Start from the first term and multiply by $${r.toLatex()}$ until the last term appears. The terms are ${inlines(terms).en}. That makes $${n}$ terms.`,
+            `从首项开始不断乘以 $${r.toLatex()}$，直到出现末项。这些项是 ${inlines(terms)["zh-CN"]}。一共 $${n}$ 项。`,
           ),
         });
       },
@@ -1960,30 +2005,93 @@ export const writingGeometricSeriesInSigmaNotation: TopicDef = {
       id: "equivalent-limits",
       title: t("Choosing the limits", "选择上下限"),
       explanation: t(
-        "Starting the index at $0$ instead of $1$ lowers each exponent by one and the upper limit by one:\n\n$$3 + 6 + \\cdots + 384 = \\sum_{k=1}^{8} 3 \\cdot 2^{k-1} = \\sum_{k=0}^{7} 3 \\cdot 2^{k}$$\n\nCheck a candidate by its first term and its number of terms: $\\sum_{k=1}^{8} 3 \\cdot 2^{k}$ starts at $6$, so it is a different series.",
-        "下标从 $0$ 而不是从 $1$ 开始时，每个指数减 $1$，上限也减 $1$：\n\n$$3 + 6 + \\cdots + 384 = \\sum_{k=1}^{8} 3 \\cdot 2^{k-1} = \\sum_{k=0}^{7} 3 \\cdot 2^{k}$$\n\n检查一个写法时，看它的首项和项数：$\\sum_{k=1}^{8} 3 \\cdot 2^{k}$ 从 $6$ 开始，所以是另一个级数。",
+        "Starting the index at $0$ instead of $1$ lowers each exponent by one and the upper limit by one:\n\n$$3 + 6 + \\cdots + 384 = \\sum_{k=1}^{8} 3 \\cdot 2^{k-1} = \\sum_{k=0}^{7} 3 \\cdot 2^{k}$$\n\nCheck a candidate by its first term and its number of terms. The sum of $3 \\cdot 2^{k}$ from $k = 1$ to $8$ starts at $6$, so it is a different series.\n\n> **Watch out.** Changing one limit alone changes the series. Moving the lower limit from $1$ to $0$ adds a term at the front unless the upper limit goes down by one as well, and the exponent must change from $k - 1$ to $k$ so that the first term is still $3$.",
+        "下标从 $0$ 而不是从 $1$ 开始时，每个指数减 $1$，上限也减 $1$：\n\n$$3 + 6 + \\cdots + 384 = \\sum_{k=1}^{8} 3 \\cdot 2^{k-1} = \\sum_{k=0}^{7} 3 \\cdot 2^{k}$$\n\n检查一个写法时，看它的首项和项数。$3 \\cdot 2^{k}$ 从 $k = 1$ 加到 $8$ 的和从 $6$ 开始，所以是另一个级数。\n\n> **注意。** 只改一个上下限就会改变级数。下限从 $1$ 改为 $0$ 时，如果上限不同时减 $1$，前面就多出一项；指数也必须从 $k - 1$ 改为 $k$，首项才仍是 $3$。",
       ),
       generate(rng) {
         const { a, r, n } = someGeometricSeries(rng);
-        const series = seriesL(geometric(a, r, n));
-        const fromOne = (lo: number, hi: number): SigmaOption => ({
+        const terms = geometric(a, r, n);
+        const series = seriesL(terms);
+        const fromOne = (lo: number, hi: number, why?: Text): SigmaOption => ({
           lo,
           hi,
           body: geometricTerm(a, r, "k-1"),
           f: (k) => a.mul(r.pow(k - 1)),
+          ...(why ? { why } : {}),
         });
-        const fromZero = (lo: number, hi: number): SigmaOption => ({ lo, hi, body: geometricTerm(a, r, "k"), f: (k) => a.mul(r.pow(k)) });
+        const fromZero = (lo: number, hi: number, why?: Text): SigmaOption => ({
+          lo,
+          hi,
+          body: geometricTerm(a, r, "k"),
+          f: (k) => a.mul(r.pow(k)),
+          ...(why ? { why } : {}),
+        });
+        const ar = a.mul(r).toLatex();
         const correct = rng.bool() ? fromOne(1, n) : fromZero(0, n - 1);
-        const swapped: SigmaOption = { lo: 1, hi: n, body: geometricTerm(r, a, "k-1"), f: (k) => r.mul(a.pow(k - 1)) };
+        const swapped: SigmaOption = {
+          lo: 1,
+          hi: n,
+          body: geometricTerm(r, a, "k-1"),
+          f: (k) => r.mul(a.pow(k - 1)),
+          why: t(
+            `It swaps the first term and the ratio: it starts at $${r.toLatex()}$ and multiplies by $${a.toLatex()}$.`,
+            `它把首项和公比对调了：从 $${r.toLatex()}$ 开始，每次乘以 $${a.toLatex()}$。`,
+          ),
+        };
+        const distractors = [
+          fromZero(
+            1,
+            n,
+            t(
+              `At $k = 1$ it gives $${ar}$, not the first term $${a.toLatex()}$: each of its terms is the matching term of the series times $${r.toLatex()}$.`,
+              `$k = 1$ 时它给出 $${ar}$，而不是首项 $${a.toLatex()}$：它的每一项都是级数中对应项乘以 $${r.toLatex()}$。`,
+            ),
+          ),
+          fromZero(
+            0,
+            n,
+            t(
+              `It runs from $k = 0$ to $k = ${n}$, which is $${n + 1}$ terms, one more than the series has.`,
+              `它从 $k = 0$ 到 $k = ${n}$，共 $${n + 1}$ 项，比级数多一项。`,
+            ),
+          ),
+          fromOne(
+            1,
+            n - 1,
+            t(
+              `It has only $${n - 1}$ terms, so it leaves out the last term $${terms[n - 1]!.toLatex()}$.`,
+              `它只有 $${n - 1}$ 项，漏掉了末项 $${terms[n - 1]!.toLatex()}$。`,
+            ),
+          ),
+          fromOne(
+            2,
+            n + 1,
+            t(
+              `At its lower limit $k = 2$ it gives $${ar}$: it starts at the second term and adds a term after the last one.`,
+              `在下限 $k = 2$ 处它给出 $${ar}$：它从第二项开始，并在末项之后多加了一项。`,
+            ),
+          ),
+          swapped,
+        ];
+        const exponent = correct.lo === 1 ? "k - 1" : "k";
         return sigmaChoice(
           rng,
           t(`Which sum equals $${series}$?`, `哪个和等于 $${series}$？`),
           correct,
-          [fromZero(1, n), fromZero(0, n), fromOne(1, n - 1), fromOne(2, n + 1), swapped],
-          both(
-            `The series has first term $${a.toLatex()}$, common ratio $${r.toLatex()}$ and $${n}$ terms. The right sum gives $${a.toLatex()}$ at its lower limit and has $${n}$ terms:`,
-            `这个级数首项是 $${a.toLatex()}$，公比是 $${r.toLatex()}$，共 $${n}$ 项。正确的和在下限处给出 $${a.toLatex()}$，并且有 $${n}$ 项：`,
-            `${series} = ${sumL(correct.lo, correct.hi, correct.body)}`,
+          distractors,
+          worked(
+            [
+              ratioStep(a, r),
+              [
+                "Match the first term and the number of terms",
+                "核对首项和项数",
+                `The series has $${n}$ terms. With exponent $${exponent}$, the lower limit $k = ${correct.lo}$ gives the first term $${a.toLatex()}$, and from $${correct.lo}$ to $${correct.hi}$ there are $${correct.hi} - ${correct.lo} + 1 = ${n}$ terms:`,
+                `这个级数共 $${n}$ 项。指数为 $${exponent}$ 时，下限 $k = ${correct.lo}$ 给出首项 $${a.toLatex()}$，从 $${correct.lo}$ 到 $${correct.hi}$ 共 $${correct.hi} - ${correct.lo} + 1 = ${n}$ 项：`,
+                `${series} = ${sumL(correct.lo, correct.hi, correct.body)}`,
+              ],
+            ],
+            `Substitute the upper limit $k = ${correct.hi}$. It gives the last term of the series: $${geometricTerm(a, r, String(n - 1))} = ${terms[n - 1]!.toLatex()}$.`,
+            `代入上限 $k = ${correct.hi}$，得到级数的末项：$${geometricTerm(a, r, String(n - 1))} = ${terms[n - 1]!.toLatex()}$。`,
           ),
         );
       },
@@ -2003,25 +2111,45 @@ export const sumsOfFiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
   encompasses: [{ topic: "the-sum-of-the-first-n-terms-of-a-geometric-series", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSA.SSE.B.4"],
+  intro: t(
+    "You can write a geometric series in sigma notation, and you can add its first $n$ terms with $S_n = \\frac{a_1(1 - r^{n})}{1 - r}$. To evaluate a sum given in sigma notation, read the three numbers the formula needs from it: the first term, by substituting the lower limit; the ratio, which is the base of the power; and the number of terms.\n\nTake the sum of $5 \\cdot 2^{k-1}$ from $k = 1$ to $4$. The first term is $5 \\cdot 2^{0} = 5$, the ratio is $2$ and there are $4$ terms:\n\n$$\\sum_{k=1}^{4} 5 \\cdot 2^{k-1} = \\frac{5(1 - 2^{4})}{1 - 2} = 75$$\n\nIndeed $5 + 10 + 20 + 40 = 75$.",
+    "你会用求和符号表示等比级数，也会用 $S_n = \\frac{a_1(1 - r^{n})}{1 - r}$ 求前 $n$ 项的和。要计算用求和符号给出的和，就从中读出公式需要的三个数：首项（代入下限）、公比（乘方的底数）和项数。\n\n取 $5 \\cdot 2^{k-1}$ 从 $k = 1$ 加到 $4$ 的和。首项是 $5 \\cdot 2^{0} = 5$，公比是 $2$，共 $4$ 项：\n\n$$\\sum_{k=1}^{4} 5 \\cdot 2^{k-1} = \\frac{5(1 - 2^{4})}{1 - 2} = 75$$\n\n确实 $5 + 10 + 20 + 40 = 75$。",
+  ),
   knowledgePoints: [
     {
       id: "starting-at-one",
       title: t("Sums starting at $k = 1$", "从 $k = 1$ 开始的和"),
       explanation: t(
-        "In $\\sum_{k=1}^{n} c \\cdot r^{k-1}$, the first term is $c$ (at $k = 1$), the ratio is the base $r$ and there are $n$ terms:\n\n$$\\sum_{k=1}^{6} 4 \\cdot 3^{k-1} = \\frac{4(1 - 3^{6})}{1 - 3} = \\frac{4 \\cdot (-728)}{-2} = 1456$$",
-        "在 $\\sum_{k=1}^{n} c \\cdot r^{k-1}$ 中，首项是 $c$（$k = 1$ 时），公比是底数 $r$，共 $n$ 项：\n\n$$\\sum_{k=1}^{6} 4 \\cdot 3^{k-1} = \\frac{4(1 - 3^{6})}{1 - 3} = \\frac{4 \\cdot (-728)}{-2} = 1456$$",
+        "When the sum of $c \\cdot r^{k-1}$ runs from $k = 1$ to $n$, the first term is $c$ (at $k = 1$), the ratio is the base $r$ and there are $n$ terms:\n\n$$\\sum_{k=1}^{6} 4 \\cdot 3^{k-1} = \\frac{4(1 - 3^{6})}{1 - 3} = \\frac{4 \\cdot (-728)}{-2} = 1456$$\n\n> **Watch out.** The power in the formula is $r^{n}$, with $n$ the number of terms, even though the last term has $r^{n-1}$. Here it is $3^{6}$, not $3^{5}$.",
+        "$c \\cdot r^{k-1}$ 从 $k = 1$ 加到 $n$ 时，首项是 $c$（$k = 1$ 时），公比是底数 $r$，共 $n$ 项：\n\n$$\\sum_{k=1}^{6} 4 \\cdot 3^{k-1} = \\frac{4(1 - 3^{6})}{1 - 3} = \\frac{4 \\cdot (-728)}{-2} = 1456$$\n\n> **注意。** 公式中的乘方是 $r^{n}$，$n$ 是项数，尽管末项是 $r^{n-1}$。这里是 $3^{6}$，不是 $3^{5}$。",
       ),
       generate(rng) {
         const { a, r, n } = someGeometricSeries(rng);
         const expr = sumL(1, n, geometricTerm(a, r, "k-1"));
+        const check = lastTermCheck(a, r, n);
         return numberProblem({
           prompt: t(`Evaluate $${expr}$.`, `计算 $${expr}$。`),
           answer: geometricSum(a, r, n),
           wrong: [geometricSum(a.mul(r), r, n), geometricSum(a, r, n - 1), geometricSum(a, r, n + 1), a.mul(r.pow(n - 1))],
-          solution: both(
-            `The first term is $${a.toLatex()}$, the ratio is $${r.toLatex()}$ and there are $${n}$ terms:`,
-            `首项是 $${a.toLatex()}$，公比是 $${r.toLatex()}$，共 $${n}$ 项：`,
-            `${expr} = ${formulaL(a, r, n)} = ${geometricSum(a, r, n).toLatex()}`,
+          solution: worked(
+            [
+              [
+                "Read the first term, the ratio and the number of terms",
+                "读出首项、公比和项数",
+                `Substitute $k = 1$ for the first term. The ratio is the base $${r.toLatex()}$, and $k$ runs from $1$ to $${n}$, so there are $${n}$ terms:`,
+                `代入 $k = 1$ 得首项。公比是底数 $${r.toLatex()}$，$k$ 从 $1$ 到 $${n}$，共 $${n}$ 项：`,
+                `a_1 = ${geometricTerm(a, r, "0")} = ${a.toLatex()}`,
+              ],
+              [
+                "Use the sum formula",
+                "用求和公式",
+                "Substitute into the sum formula:",
+                "代入求和公式：",
+                `${expr} = ${workedSumL(a, r, n)}`,
+              ],
+            ],
+            check.en,
+            check["zh-CN"],
           ),
         });
       },
@@ -2030,8 +2158,8 @@ export const sumsOfFiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
       id: "exponent-k",
       title: t("Sums of $c \\cdot r^{k}$", "$c \\cdot r^{k}$ 的和"),
       explanation: t(
-        "When the exponent is $k$, find the first term by substituting the lower limit, and count the terms with $n - m + 1$:\n\n$$\\sum_{k=1}^{5} 2 \\cdot 3^{k} \\text{ has } a_1 = 6, \\ r = 3, \\ 5 \\text{ terms}: \\quad \\frac{6(1 - 3^{5})}{1 - 3} = 726$$\n\n$$\\sum_{k=0}^{5} 2 \\cdot 3^{k} \\text{ has } a_1 = 2, \\ r = 3, \\ 6 \\text{ terms}: \\quad \\frac{2(1 - 3^{6})}{1 - 3} = 728$$",
-        "指数是 $k$ 时，代入下限求出首项，用 $n - m + 1$ 数出项数：\n\n$$\\sum_{k=1}^{5} 2 \\cdot 3^{k} \\text{ 中 } a_1 = 6, \\ r = 3, \\ \\text{共 } 5 \\text{ 项}: \\quad \\frac{6(1 - 3^{5})}{1 - 3} = 726$$\n\n$$\\sum_{k=0}^{5} 2 \\cdot 3^{k} \\text{ 中 } a_1 = 2, \\ r = 3, \\ \\text{共 } 6 \\text{ 项}: \\quad \\frac{2(1 - 3^{6})}{1 - 3} = 728$$",
+        "When the exponent is $k$, find the first term by substituting the lower limit, and count the terms from $m$ to $n$ as $n - m + 1$:\n\n$$\\sum_{k=1}^{5} 2 \\cdot 3^{k} \\text{ has } a_1 = 6, \\ r = 3, \\ 5 \\text{ terms}: \\quad \\frac{6(1 - 3^{5})}{1 - 3} = 726$$\n\n$$\\sum_{k=0}^{5} 2 \\cdot 3^{k} \\text{ has } a_1 = 2, \\ r = 3, \\ 6 \\text{ terms}: \\quad \\frac{2(1 - 3^{6})}{1 - 3} = 728$$\n\n> **Watch out.** With exponent $k$, the coefficient $c$ is the first term only when the sum starts at $k = 0$. From $k = 1$ the first term is $cr$: here $2 \\cdot 3 = 6$, not $2$.",
+        "指数是 $k$ 时，代入下限求出首项，从 $m$ 到 $n$ 的项数是 $n - m + 1$：\n\n$$\\sum_{k=1}^{5} 2 \\cdot 3^{k} \\text{ 中 } a_1 = 6, \\ r = 3, \\ \\text{共 } 5 \\text{ 项}: \\quad \\frac{6(1 - 3^{5})}{1 - 3} = 726$$\n\n$$\\sum_{k=0}^{5} 2 \\cdot 3^{k} \\text{ 中 } a_1 = 2, \\ r = 3, \\ \\text{共 } 6 \\text{ 项}: \\quad \\frac{2(1 - 3^{6})}{1 - 3} = 728$$\n\n> **注意。** 指数是 $k$ 时，只有和从 $k = 0$ 开始，系数 $c$ 才是首项。从 $k = 1$ 开始时首项是 $cr$：这里是 $2 \\cdot 3 = 6$，不是 $2$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2043,14 +2171,37 @@ export const sumsOfFiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
           const a = c.mul(r.pow(lo));
           if (!small(c, r, hi + 2)) continue;
           const expr = sumL(lo, hi, geometricTerm(c, r, "k"));
+          const check = lastTermCheck(a, r, count);
           return numberProblem({
             prompt: t(`Evaluate $${expr}$.`, `计算 $${expr}$。`),
             answer: geometricSum(a, r, count),
             wrong: [geometricSum(lo === 0 ? c.mul(r) : c, r, count), geometricSum(a, r, count - 1), geometricSum(a, r, count + 1)],
-            solution: both(
-              `At $k = ${lo}$ the first term is $${a.toLatex()}$. The ratio is $${r.toLatex()}$ and there are $${hi} - ${lo} + 1 = ${count}$ terms:`,
-              `$k = ${lo}$ 时首项是 $${a.toLatex()}$。公比是 $${r.toLatex()}$，共 $${hi} - ${lo} + 1 = ${count}$ 项：`,
-              `${expr} = ${formulaL(a, r, count)} = ${geometricSum(a, r, count).toLatex()}`,
+            solution: worked(
+              [
+                [
+                  "Find the first term",
+                  "求首项",
+                  `Substitute the lower limit $k = ${lo}$:`,
+                  `代入下限 $k = ${lo}$：`,
+                  `a_1 = ${geometricTerm(c, r, String(lo))} = ${a.toLatex()}`,
+                ],
+                [
+                  "Count the terms",
+                  "数出项数",
+                  `The ratio is the base $${r.toLatex()}$, and $k$ runs from $${lo}$ to $${hi}$:`,
+                  `公比是底数 $${r.toLatex()}$，$k$ 从 $${lo}$ 到 $${hi}$：`,
+                  `${hi} - ${lo} + 1 = ${count}`,
+                ],
+                [
+                  "Use the sum formula",
+                  "用求和公式",
+                  "Substitute into the sum formula:",
+                  "代入求和公式：",
+                  `${expr} = ${workedSumL(a, r, count)}`,
+                ],
+              ],
+              check.en,
+              check["zh-CN"],
             ),
           });
         }
@@ -2060,8 +2211,8 @@ export const sumsOfFiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
       id: "later-lower-limits",
       title: t("Later lower limits", "下限较大的和"),
       explanation: t(
-        "The lower limit can be any integer, and the ratio a fraction. In\n\n$$\\sum_{k=3}^{8} 64\\left(\\frac{1}{2}\\right)^{k}$$\n\nthe first term is $64\\left(\\frac{1}{2}\\right)^{3} = 8$, the ratio is $\\frac{1}{2}$ and there are $8 - 3 + 1 = 6$ terms, so the sum is $\\frac{8\\left(1 - \\left(\\frac{1}{2}\\right)^{6}\\right)}{1 - \\frac{1}{2}} = \\frac{63}{4}$.",
-        "下限可以是任意整数，公比也可以是分数。在\n\n$$\\sum_{k=3}^{8} 64\\left(\\frac{1}{2}\\right)^{k}$$\n\n中，首项是 $64\\left(\\frac{1}{2}\\right)^{3} = 8$，公比是 $\\frac{1}{2}$，共 $8 - 3 + 1 = 6$ 项，所以和为 $\\frac{8\\left(1 - \\left(\\frac{1}{2}\\right)^{6}\\right)}{1 - \\frac{1}{2}} = \\frac{63}{4}$。",
+        "The lower limit can be any integer, and the ratio a fraction. Take the sum of $64\\left(\\frac{1}{2}\\right)^{k}$ from $k = 3$ to $8$. The first term is $64\\left(\\frac{1}{2}\\right)^{3} = 8$, the ratio is $\\frac{1}{2}$ and there are $8 - 3 + 1 = 6$ terms, so\n\n$$\\sum_{k=3}^{8} 64\\left(\\frac{1}{2}\\right)^{k} = \\frac{8\\left(1 - \\left(\\frac{1}{2}\\right)^{6}\\right)}{1 - \\frac{1}{2}} = \\frac{63}{4}$$\n\n> **Watch out.** Both limits count, so there are $8 - 3 + 1 = 6$ terms, not $8 - 3 = 5$. The power in the formula is this number of terms, not the upper limit $8$.",
+        "下限可以是任意整数，公比也可以是分数。取 $64\\left(\\frac{1}{2}\\right)^{k}$ 从 $k = 3$ 加到 $8$ 的和。首项是 $64\\left(\\frac{1}{2}\\right)^{3} = 8$，公比是 $\\frac{1}{2}$，共 $8 - 3 + 1 = 6$ 项，所以\n\n$$\\sum_{k=3}^{8} 64\\left(\\frac{1}{2}\\right)^{k} = \\frac{8\\left(1 - \\left(\\frac{1}{2}\\right)^{6}\\right)}{1 - \\frac{1}{2}} = \\frac{63}{4}$$\n\n> **注意。** 上下限都要算上，所以共 $8 - 3 + 1 = 6$ 项，不是 $8 - 3 = 5$ 项。公式中的乘方用的是这个项数，而不是上限 $8$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2073,14 +2224,37 @@ export const sumsOfFiniteGeometricSeriesGivenInSigmaNotation: TopicDef = {
           const a = c.mul(r.pow(lo));
           if (!small(a, r, count + 1) || c.abs().cmp(Q.of(1000)) > 0) continue;
           const expr = sumL(lo, hi, geometricTerm(c, r, "k"));
+          const check = lastTermCheck(a, r, count);
           return numberProblem({
             prompt: t(`Evaluate $${expr}$.`, `计算 $${expr}$。`),
             answer: geometricSum(a, r, count),
             wrong: [geometricSum(c, r, count), geometricSum(a, r, count - 1), geometricSum(a, r, hi), geometricSum(a, r, count + 1)],
-            solution: both(
-              `At $k = ${lo}$ the first term is $${a.toLatex()}$. The ratio is $${r.toLatex()}$ and there are $${hi} - ${lo} + 1 = ${count}$ terms:`,
-              `$k = ${lo}$ 时首项是 $${a.toLatex()}$。公比是 $${r.toLatex()}$，共 $${hi} - ${lo} + 1 = ${count}$ 项：`,
-              `${expr} = ${formulaL(a, r, count)} = ${geometricSum(a, r, count).toLatex()}`,
+            solution: worked(
+              [
+                [
+                  "Find the first term",
+                  "求首项",
+                  `Substitute the lower limit $k = ${lo}$:`,
+                  `代入下限 $k = ${lo}$：`,
+                  `a_1 = ${geometricTerm(c, r, String(lo))} = ${a.toLatex()}`,
+                ],
+                [
+                  "Count the terms",
+                  "数出项数",
+                  `The ratio is the base $${r.toLatex()}$, and $k$ runs from $${lo}$ to $${hi}$:`,
+                  `公比是底数 $${r.toLatex()}$，$k$ 从 $${lo}$ 到 $${hi}$：`,
+                  `${hi} - ${lo} + 1 = ${count}`,
+                ],
+                [
+                  "Use the sum formula",
+                  "用求和公式",
+                  "Substitute into the sum formula:",
+                  "代入求和公式：",
+                  `${expr} = ${workedSumL(a, r, count)}`,
+                ],
+              ],
+              check.en,
+              check["zh-CN"],
             ),
           });
         }
@@ -2117,13 +2291,17 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
   ],
   xp: 18,
   standards: ["CCSS.HSA.SSE.B.4", "CCSS.HSF.LE.A.4"],
+  intro: t(
+    "You can add the first $n$ terms of a geometric series, and you can solve an equation such as $3^{x} = 50$ with logarithms. Now the unknown is the number of terms $n$ itself. It sits in the exponent of the sum formula, so first isolate the power $r^{n}$, then solve for $n$: by writing both sides as powers of $r$, or by taking logarithms.\n\nHow many terms of $1 + 2 + 4 + \\cdots$ add to $255$? With $a_1 = 1$ and $r = 2$, the sum formula gives\n\n$$\\frac{2^{n} - 1}{2 - 1} = 255$$\n\n$$2^{n} = 256 = 2^{8}$$\n\nSo $n = 8$. Indeed $1 + 2 + 4 + \\cdots + 128 = 255$.",
+    "你会求等比级数前 $n$ 项的和，也会用对数解 $3^{x} = 50$ 这样的方程。现在未知的是项数 $n$ 本身。它在求和公式的指数上，所以先分离出乘方 $r^{n}$，再解出 $n$：把两边写成 $r$ 的乘方，或者取对数。\n\n$1 + 2 + 4 + \\cdots$ 的前多少项之和为 $255$？$a_1 = 1$，$r = 2$，由求和公式得\n\n$$\\frac{2^{n} - 1}{2 - 1} = 255$$\n\n$$2^{n} = 256 = 2^{8}$$\n\n所以 $n = 8$。确实 $1 + 2 + 4 + \\cdots + 128 = 255$。",
+  ),
   knowledgePoints: [
     {
       id: "the-number-of-terms-from-the-sum",
       title: t("The number of terms from the sum", "由和求项数"),
       explanation: t(
-        "Substitute the sum into the formula and isolate the power $r^{n}$. How many terms of $4 + 12 + 36 + \\cdots$ add to $4372$?\n\n$$\\frac{4(3^{n} - 1)}{3 - 1} = 4372 \\implies 3^{n} - 1 = 2186 \\implies 3^{n} = 2187 = 3^{7}$$\n\nso $n = 7$. (For $r > 1$ it is convenient to write the formula as $S_n = \\frac{a_1(r^{n} - 1)}{r - 1}$.)",
-        "把和代入公式，分离出乘方 $r^{n}$。$4 + 12 + 36 + \\cdots$ 的前多少项之和为 $4372$？\n\n$$\\frac{4(3^{n} - 1)}{3 - 1} = 4372 \\implies 3^{n} - 1 = 2186 \\implies 3^{n} = 2187 = 3^{7}$$\n\n所以 $n = 7$。（$r > 1$ 时，把公式写成 $S_n = \\frac{a_1(r^{n} - 1)}{r - 1}$ 更方便。）",
+        "Substitute the sum into the formula and isolate the power $r^{n}$. For $r > 1$ it is convenient to write the formula as $S_n = \\frac{a_1(r^{n} - 1)}{r - 1}$, the same fraction with its top and bottom multiplied by $-1$. How many terms of $4 + 12 + 36 + \\cdots$ add to $4372$?\n\n$$\\frac{4(3^{n} - 1)}{3 - 1} = 4372$$\n\n$$3^{n} - 1 = 2186$$\n\n$$3^{n} = 2187 = 3^{7}$$\n\nSo $n = 7$.\n\n> **Watch out.** Isolate the power completely before reading off $n$. From $3^{n} - 1 = 2186$ the power is $3^{n} = 2187$, not $2186$, and $2186$ is not a power of $3$ at all.",
+        "把和代入公式，分离出乘方 $r^{n}$。$r > 1$ 时，把公式写成 $S_n = \\frac{a_1(r^{n} - 1)}{r - 1}$ 更方便，它就是原来的分式分子分母同乘 $-1$。$4 + 12 + 36 + \\cdots$ 的前多少项之和为 $4372$？\n\n$$\\frac{4(3^{n} - 1)}{3 - 1} = 4372$$\n\n$$3^{n} - 1 = 2186$$\n\n$$3^{n} = 2187 = 3^{7}$$\n\n所以 $n = 7$。\n\n> **注意。** 先把乘方完全分离出来，再读出 $n$。由 $3^{n} - 1 = 2186$ 得 $3^{n} = 2187$，不是 $2186$；$2186$ 根本不是 $3$ 的乘方。",
       ),
       generate(rng) {
         for (;;) {
@@ -2133,6 +2311,16 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
           const S = geometricSum(a, r, n);
           if (S.cmp(Q.of(2_000_000)) > 0) continue;
           const series = openL(geometric(a, r, 3));
+          const rL = r.toLatex();
+          const gap = r.sub(Q.one);
+          const top = a.eq(Q.one) ? `${rL}^{n} - 1` : `${a.toLatex()}(${rL}^{n} - 1)`;
+          const left = gap.eq(Q.one) ? top : `\\frac{${top}}{${gap.toLatex()}}`;
+          const isolate = [
+            `${left} = ${S.toLatex()}`,
+            `${rL}^{n} - 1 = ${r.pow(n).sub(Q.one).toLatex()}`,
+            `${rL}^{n} = ${r.pow(n).toLatex()}`,
+          ];
+          const check = lastTermCheck(a, r, n);
           return numberProblem({
             prompt: t(
               `How many terms of the geometric series $${series}$ add to $${grouped(S)}$?`,
@@ -2141,10 +2329,27 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
             answer: n,
             solveFor: "n",
             wrong: [n - 1, n + 1, n + 2],
-            solution: both(
-              `Substitute $a_1 = ${a.toLatex()}$ and $r = ${r.toLatex()}$ into $S_n = \\frac{a_1(r^{n} - 1)}{r - 1}$ and isolate $${r.toLatex()}^{n}$:`,
-              `把 $a_1 = ${a.toLatex()}$、$r = ${r.toLatex()}$ 代入 $S_n = \\frac{a_1(r^{n} - 1)}{r - 1}$，分离出 $${r.toLatex()}^{n}$：`,
-              `\\frac{${a.toLatex()}(${r.toLatex()}^{n} - 1)}{${r.sub(Q.one).toLatex()}} = ${S.toLatex()} \\implies ${r.toLatex()}^{n} = ${r.pow(n).toLatex()} = ${r.toLatex()}^{${n}} \\implies n = ${n}`,
+            solution: worked(
+              [
+                ratioStep(a, r),
+                [
+                  "Isolate the power",
+                  "分离出乘方",
+                  `Substitute $a_1 = ${a.toLatex()}$ and $r = ${rL}$ into $S_n = \\frac{a_1(r^{n} - 1)}{r - 1}$ and solve for $${rL}^{n}$:`,
+                  `把 $a_1 = ${a.toLatex()}$、$r = ${rL}$ 代入 $S_n = \\frac{a_1(r^{n} - 1)}{r - 1}$，解出 $${rL}^{n}$：`,
+                  ...isolate.filter((line, i) => i === 0 || line !== isolate[i - 1]),
+                ],
+                [
+                  "Solve for $n$",
+                  "解出 $n$",
+                  `Write $${r.pow(n).toLatex()}$ as a power of $${rL}$ and compare the exponents:`,
+                  `把 $${r.pow(n).toLatex()}$ 写成 $${rL}$ 的乘方，比较指数：`,
+                  `${rL}^{n} = ${rL}^{${n}}`,
+                  `n = ${n}`,
+                ],
+              ],
+              `With $n = ${n}$ the last term is $a_{${n}} = ${a.mul(r.pow(n - 1)).toLatex()}$. ${check.en}`,
+              `$n = ${n}$ 时末项是 $a_{${n}} = ${a.mul(r.pow(n - 1)).toLatex()}$。${check["zh-CN"]}`,
             ),
           });
         }
@@ -2154,8 +2359,8 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
       id: "a-sum-exceeding-a-value",
       title: t("A sum exceeding a value", "和超过某个值"),
       explanation: t(
-        "To find the fewest terms whose sum is greater than a value, write the inequality, isolate $r^{n}$ and take logarithms. Dividing by $\\ln r > 0$ keeps the direction. For $16 + 24 + 36 + \\cdots$ ($r = \\frac{3}{2}$) and a sum greater than $1000$:\n\n$$\\frac{16(1.5^{n} - 1)}{0.5} > 1000 \\implies 1.5^{n} > 32.25 \\implies n > \\frac{\\ln 32.25}{\\ln 1.5} \\approx 8.57$$\n\nso the least number of terms is $9$.",
-        "要求和大于某个值所需的最少项数，列出不等式，分离出 $r^{n}$，再取对数。除以 $\\ln r > 0$ 时不等号方向不变。对 $16 + 24 + 36 + \\cdots$（$r = \\frac{3}{2}$），要使和大于 $1000$：\n\n$$\\frac{16(1.5^{n} - 1)}{0.5} > 1000 \\implies 1.5^{n} > 32.25 \\implies n > \\frac{\\ln 32.25}{\\ln 1.5} \\approx 8.57$$\n\n所以最少需要 $9$ 项。",
+        "To find the fewest terms whose sum is greater than a value, write the inequality, isolate $r^{n}$ and take logarithms. Dividing by $\\ln r > 0$ keeps the direction. For $16 + 24 + 36 + \\cdots$, with $r = 1.5$, and a sum greater than $1000$:\n\n$$\\frac{16(1.5^{n} - 1)}{0.5} > 1000$$\n\n$$1.5^{n} > 32.25$$\n\n$$n > \\frac{\\ln 32.25}{\\ln 1.5} \\approx 8.57$$\n\nThe least whole number above $8.57$ is $9$, so $9$ terms are needed.\n\n> **Watch out.** The number of terms is a whole number, so round **up** to the next integer, however small the decimal part is. Rounding to the nearest integer would turn $n > 8.2$ into $8$, and $8$ terms would not be enough.",
+        "要求和大于某个值所需的最少项数，列出不等式，分离出 $r^{n}$，再取对数。除以 $\\ln r > 0$ 时不等号方向不变。对 $16 + 24 + 36 + \\cdots$（$r = 1.5$），要使和大于 $1000$：\n\n$$\\frac{16(1.5^{n} - 1)}{0.5} > 1000$$\n\n$$1.5^{n} > 32.25$$\n\n$$n > \\frac{\\ln 32.25}{\\ln 1.5} \\approx 8.57$$\n\n大于 $8.57$ 的最小整数是 $9$，所以需要 $9$ 项。\n\n> **注意。** 项数是整数，所以要**向上**取到下一个整数，不管小数部分多小。四舍五入会把 $n > 8.2$ 变成 $8$，而 $8$ 项是不够的。",
       ),
       generate(rng) {
         for (;;) {
@@ -2169,6 +2374,12 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
           if (Math.abs(x - Math.round(x)) < 0.01) continue;
           const rL = r.isInteger() ? r.toLatex() : dec(r);
           const series = openL(geometric(a, r, 3));
+          const aL = a.eq(Q.one) ? "" : a.toLatex();
+          const rhsL = rhs.isInteger() || terminates(rhs) ? dec(rhs) : rhs.toLatex();
+          const lnL = rhs.isInteger() || terminates(rhs) ? rhsL : `\\left(${rhsL}\\right)`;
+          const left = r.sub(Q.one).eq(Q.one) ? `${aL}(${rL}^{n} - 1)` : `\\frac{${aL}(${rL}^{n} - 1)}{${dec(r.sub(Q.one))}}`;
+          const check = passCheck(a, r, n, T);
+          const undo = undoSteps(r.sub(Q.one), a);
           return numberProblem({
             prompt: t(
               `What is the least number of terms of the geometric series $${series}$ whose sum is greater than $${grouped(T)}$?`,
@@ -2176,11 +2387,27 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
             ),
             answer: n,
             wrong: [n - 1, n + 1, Math.floor(x)],
-            solution: both(
-              `Here $a_1 = ${a.toLatex()}$ and $r = ${rL}$. Isolate $${rL}^{n}$ and take logarithms:`,
-              `这里 $a_1 = ${a.toLatex()}$，$r = ${rL}$。分离出 $${rL}^{n}$ 再取对数：`,
-              `${r.sub(Q.one).toLatex() === "1" ? `${a.toLatex() === "1" ? "" : a.toLatex()}(${rL}^{n} - 1)` : `\\frac{${a.toLatex() === "1" ? "" : a.toLatex()}(${rL}^{n} - 1)}{${dec(r.sub(Q.one))}}`} > ${T.toLatex()} \\implies ${rL}^{n} > ${rhs.isInteger() || terminates(rhs) ? dec(rhs) : rhs.toLatex()}`,
-              `n > \\frac{\\ln ${rhs.isInteger() || terminates(rhs) ? dec(rhs) : `\\left(${rhs.toLatex()}\\right)`}}{\\ln ${rL}} \\approx ${x.toFixed(2)} \\implies n = ${n}`,
+            solution: worked(
+              [
+                [
+                  "Write the inequality",
+                  "列出不等式",
+                  `Here $a_1 = ${a.toLatex()}$ and $r = ${rL}$. The sum of $n$ terms must be greater than $${grouped(T)}$:`,
+                  `这里 $a_1 = ${a.toLatex()}$，$r = ${rL}$。$n$ 项之和必须大于 $${grouped(T)}$：`,
+                  `${left} > ${T.toLatex()}`,
+                ],
+                ["Isolate the power", "分离出乘方", `${undo.en}:`, `${undo["zh-CN"]}：`, `${rL}^{n} > ${rhsL}`],
+                [
+                  "Take logarithms",
+                  "取对数",
+                  `Since $\\ln ${rL} > 0$, dividing by it keeps the direction, and $n$ is the least whole number above the result:`,
+                  `因为 $\\ln ${rL} > 0$，除以它时不等号方向不变；$n$ 是大于结果的最小整数：`,
+                  `n > \\frac{\\ln ${lnL}}{\\ln ${rL}} \\approx ${x.toFixed(2)}`,
+                  `n = ${n}`,
+                ],
+              ],
+              check.en,
+              check["zh-CN"],
             ),
           });
         }
@@ -2190,8 +2417,8 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
       id: "sums-with-ratios-less-than-one",
       title: t("Ratios between $0$ and $1$", "公比在 $0$ 与 $1$ 之间"),
       explanation: t(
-        "When $0 < r < 1$, the sums grow towards $\\frac{a_1}{1 - r}$ but never reach it. To find when the sum passes a value close to that, isolate $r^{n}$ and take logarithms. Dividing by $\\ln r < 0$ **reverses** the inequality. For $50 + 25 + 12.5 + \\cdots$ and a sum greater than $99.9$:\n\n$$\\frac{50(1 - 0.5^{n})}{0.5} > 99.9 \\implies 0.5^{n} < 0.001 \\implies n > \\frac{\\ln 0.001}{\\ln 0.5} \\approx 9.97$$\n\nso $10$ terms are needed.",
-        "当 $0 < r < 1$ 时，和逐渐增大，趋近于 $\\frac{a_1}{1 - r}$ 但永远达不到。要求和何时超过接近它的某个值，分离出 $r^{n}$ 再取对数。除以 $\\ln r < 0$ 时不等号要**改变方向**。对 $50 + 25 + 12.5 + \\cdots$，要使和大于 $99.9$：\n\n$$\\frac{50(1 - 0.5^{n})}{0.5} > 99.9 \\implies 0.5^{n} < 0.001 \\implies n > \\frac{\\ln 0.001}{\\ln 0.5} \\approx 9.97$$\n\n所以需要 $10$ 项。",
+        "When $0 < r < 1$, the sums grow towards $\\frac{a_1}{1 - r}$ but never reach it. To find when the sum passes a value close to that, isolate $r^{n}$ and take logarithms. For $50 + 25 + 12.5 + \\cdots$ and a sum greater than $99.9$:\n\n$$\\frac{50(1 - 0.5^{n})}{0.5} > 99.9$$\n\n$$0.5^{n} < 0.001$$\n\n$$n > \\frac{\\ln 0.001}{\\ln 0.5} \\approx 9.97$$\n\nSo $10$ terms are needed.\n\n> **Watch out.** Here $\\ln r < 0$, so dividing by it **reverses** the inequality: $0.5^{n} < 0.001$ leads to $n > 9.97$. Keeping the sign as it was would give $n < 9.97$, as if fewer terms were better.",
+        "当 $0 < r < 1$ 时，和逐渐增大，趋近于 $\\frac{a_1}{1 - r}$ 但永远达不到。要求和何时超过接近它的某个值，分离出 $r^{n}$ 再取对数。对 $50 + 25 + 12.5 + \\cdots$，要使和大于 $99.9$：\n\n$$\\frac{50(1 - 0.5^{n})}{0.5} > 99.9$$\n\n$$0.5^{n} < 0.001$$\n\n$$n > \\frac{\\ln 0.001}{\\ln 0.5} \\approx 9.97$$\n\n所以需要 $10$ 项。\n\n> **注意。** 这里 $\\ln r < 0$，所以除以它时不等号要**改变方向**：由 $0.5^{n} < 0.001$ 得 $n > 9.97$。如果不改变方向，就会得到 $n < 9.97$，好像项数越少越好。",
       ),
       generate(rng) {
         for (;;) {
@@ -2208,6 +2435,7 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
           if (Math.abs(x - Math.round(x)) < 0.01) continue;
           const series = openL(geometric(a, r, 3));
           const TL = dec(T);
+          const check = passCheck(a, r, n, T);
           return numberProblem({
             prompt: t(
               `What is the least number of terms of the geometric series $${series}$ whose sum is greater than $${TL}$?`,
@@ -2215,11 +2443,34 @@ export const solvingGeometricSeriesProblemsUsingExponentialEquationsAndInequalit
             ),
             answer: n,
             wrong: [n - 1, n + 1, Math.ceil(T.div(a).toNumber())],
-            solution: both(
-              `Here $a_1 = ${a.toLatex()}$ and $r = ${r.toLatex()}$. Isolate $r^{n}$, then take logarithms; $\\ln ${r.toLatex()} < 0$ reverses the inequality:`,
-              `这里 $a_1 = ${a.toLatex()}$，$r = ${r.toLatex()}$。分离出 $r^{n}$ 再取对数；$\\ln ${r.toLatex()} < 0$，不等号改变方向：`,
-              `\\frac{${a.toLatex()}\\left(1 - ${base(r)}^{n}\\right)}{1 - ${r.toLatex()}} > ${TL} \\implies ${base(r)}^{n} < ${bound.toLatex()}`,
-              `n > \\frac{\\ln ${bound.toLatex()}}{\\ln ${r.toLatex()}} \\approx ${x.toFixed(2)} \\implies n = ${n}`,
+            solution: worked(
+              [
+                [
+                  "Write the inequality",
+                  "列出不等式",
+                  `Here $a_1 = ${a.toLatex()}$ and $r = ${r.toLatex()}$. The sum of $n$ terms must be greater than $${TL}$:`,
+                  `这里 $a_1 = ${a.toLatex()}$，$r = ${r.toLatex()}$。$n$ 项之和必须大于 $${TL}$：`,
+                  `\\frac{${a.toLatex()}\\left(1 - ${base(r)}^{n}\\right)}{1 - ${r.toLatex()}} > ${TL}`,
+                ],
+                [
+                  "Isolate the power",
+                  "分离出乘方",
+                  `Multiply by $1 - ${r.toLatex()}$ and divide by $${a.toLatex()}$. Then subtract $1$ and multiply by $-1$, which reverses the inequality:`,
+                  `乘以 $1 - ${r.toLatex()}$，除以 $${a.toLatex()}$。再减去 $1$ 并乘以 $-1$，不等号改变方向：`,
+                  `1 - ${base(r)}^{n} > ${T.div(L).toLatex()}`,
+                  `${base(r)}^{n} < ${bound.toLatex()}`,
+                ],
+                [
+                  "Take logarithms",
+                  "取对数",
+                  `Since $\\ln ${r.toLatex()} < 0$, dividing by it reverses the inequality again, and $n$ is the least whole number above the result:`,
+                  `因为 $\\ln ${r.toLatex()} < 0$，除以它时不等号再次改变方向；$n$ 是大于结果的最小整数：`,
+                  `n > \\frac{\\ln ${bound.toLatex()}}{\\ln ${r.toLatex()}} \\approx ${x.toFixed(2)}`,
+                  `n = ${n}`,
+                ],
+              ],
+              check.en,
+              check["zh-CN"],
             ),
           });
         }
@@ -2234,6 +2485,30 @@ function terminates(v: Q): boolean {
   while (d % 2n === 0n) d /= 2n;
   while (d % 5n === 0n) d /= 5n;
   return d === 1n;
+}
+
+/** approxL writes a positive value after its relation sign: exactly when it is an integer, else to two decimal places. */
+const approxL = (v: Q) => (v.isInteger() ? `= ${v.toLatex()}` : `\\approx ${dec(roundQ(v, 2))}`);
+
+/**
+ * undoSteps says how to isolate r^n - 1 from (a(r^n - 1))/gap: multiply by the gap and divide by a, leaving out a factor of
+ * 1, then add 1.
+ */
+function undoSteps(gap: Q, a: Q): Text {
+  const en = [...(gap.eq(Q.one) ? [] : [`multiply by $${dec(gap)}$`]), ...(a.eq(Q.one) ? [] : [`divide by $${a.toLatex()}$`]), "add $1$"];
+  const zh = [...(gap.eq(Q.one) ? [] : [`乘以 $${dec(gap)}$`]), ...(a.eq(Q.one) ? [] : [`除以 $${a.toLatex()}$`]), "再加 $1$"];
+  const sentence = listed(en).en;
+  return t(`${sentence.charAt(0).toUpperCase()}${sentence.slice(1)}`, zh.join("，"));
+}
+
+/** passCheck checks the least number of terms n whose sum passes T: the sum of n - 1 terms does not, and the sum of n terms does. */
+function passCheck(a: Q, r: Q, n: number, T: Q): Text {
+  const [before, after] = [geometricSum(a, r, n - 1), geometricSum(a, r, n)];
+  const target = T.isInteger() ? T.toLatex() : dec(T);
+  return t(
+    `Add $${n - 1}$ and $${n}$ terms with the sum formula. $S_{${n - 1}} ${approxL(before)}$ is not greater than $${target}$, but $S_{${n}} ${approxL(after)}$ is.`,
+    `用求和公式分别求 $${n - 1}$ 项和 $${n}$ 项之和。$S_{${n - 1}} ${approxL(before)}$ 不大于 $${target}$，而 $S_{${n}} ${approxL(after)}$ 大于它。`,
+  );
 }
 
 /** modelingWithGeometricSeries models totals of amounts that grow or shrink by a fixed percentage. */
@@ -2255,13 +2530,17 @@ export const modelingWithGeometricSeries: TopicDef = {
   ],
   xp: 18,
   standards: ["CCSS.HSA.SSE.B.4", "CCSS.HSF.LE.A.2"],
+  intro: t(
+    "You can model an amount that grows by a fixed percentage with an exponential function, and you can add a geometric series or solve for its number of terms. When a question asks for a **total** of such amounts, such as the pay over several years or the distance run over several weeks, the amounts are the terms of a geometric series and the total is its sum.\n\nA runner runs $10$ km in the first week and $10\\%$ more each week after that. The weekly distances $10, 11, 12.1, \\ldots$ have ratio $1.1$, so the total over $4$ weeks is\n\n$$S_4 = \\frac{10(1.1^{4} - 1)}{1.1 - 1} = 46.41 \\text{ km}$$\n\nIndeed $10 + 11 + 12.1 + 13.31 = 46.41$.",
+    "你会用指数函数为按固定百分比增长的量建模，也会求等比级数的和或它的项数。当问题问的是这些量的**总和**，例如几年的工资总额或几周跑的总路程时，这些量就是等比级数的项，总和就是级数的和。\n\n一位跑步者第一周跑 $10$ 千米，之后每周比前一周多跑 $10\\%$。每周的路程 $10, 11, 12.1, \\ldots$ 的公比是 $1.1$，所以 $4$ 周的总路程是\n\n$$S_4 = \\frac{10(1.1^{4} - 1)}{1.1 - 1} = 46.41 \\text{ 千米}$$\n\n确实 $10 + 11 + 12.1 + 13.31 = 46.41$。",
+  ),
   knowledgePoints: [
     {
       id: "growing-totals",
       title: t("Totals of growing amounts", "增长量的总和"),
       explanation: t(
-        "An amount that grows by $p\\%$ each period is multiplied by $1 + \\frac{p}{100}$, so the amounts form a geometric sequence. A salary of $\\$40{,}000$ with a $3\\%$ raise each year pays $40000 \\cdot 1.03^{k-1}$ in year $k$, and over $10$ years\n\n$$S_{10} = \\frac{40000(1.03^{10} - 1)}{1.03 - 1} \\approx 458{,}555.17 \\text{ dollars}$$",
-        "每期增长 $p\\%$ 的量每期乘以 $1 + \\frac{p}{100}$，所以这些量构成等比数列。年薪 $40{,}000$ 美元、每年加薪 $3\\%$，第 $k$ 年的工资是 $40000 \\cdot 1.03^{k-1}$，$10$ 年合计\n\n$$S_{10} = \\frac{40000(1.03^{10} - 1)}{1.03 - 1} \\approx 458{,}555.17 \\text{ 美元}$$",
+        "An amount that grows by $p\\%$ each period is multiplied by $1 + \\frac{p}{100}$, so the amounts form a geometric sequence. A salary of $\\$40{,}000$ with a $3\\%$ raise each year pays $40000 \\cdot 1.03^{k-1}$ in year $k$, and over $10$ years\n\n$$S_{10} = \\frac{40000(1.03^{10} - 1)}{1.03 - 1} \\approx 458{,}555.17 \\text{ dollars}$$\n\n> **Watch out.** The amount in year $k$ has been raised $k - 1$ times, so year $10$ pays $40000 \\cdot 1.03^{9}$, while the sum formula uses $1.03^{10}$. Multiplying the first amount by the number of years leaves out the raises.",
+        "每期增长 $p\\%$ 的量每期乘以 $1 + \\frac{p}{100}$，所以这些量构成等比数列。年薪 $40{,}000$ 美元、每年加薪 $3\\%$，第 $k$ 年的工资是 $40000 \\cdot 1.03^{k-1}$，$10$ 年合计\n\n$$S_{10} = \\frac{40000(1.03^{10} - 1)}{1.03 - 1} \\approx 458{,}555.17 \\text{ 美元}$$\n\n> **注意。** 第 $k$ 年的量已经增长了 $k - 1$ 次，所以第 $10$ 年的工资是 $40000 \\cdot 1.03^{9}$，而求和公式中用的是 $1.03^{10}$。用第一年的量乘以年数，就漏掉了加薪。",
       ),
       generate(rng) {
         for (;;) {
@@ -2274,6 +2553,7 @@ export const modelingWithGeometricSeries: TopicDef = {
           if (nearHalf(exact, 0)) continue;
           const answer = roundQ(exact, 0);
           const gL = dec(g);
+          const last = Q.of(S).mul(g.pow(n - 1));
           const prompt = salary
             ? t(
                 `A job pays $${grouped(S)}$ dollars in the first year, and the salary rises by $${R}\\%$ each year. Find the total pay over the first $${n}$ years, to the nearest dollar.`,
@@ -2293,10 +2573,25 @@ export const modelingWithGeometricSeries: TopicDef = {
               roundQ(geometricSum(Q.of(S), g, n - 1), 0),
               roundQ(Q.of(n * S + (S * R * n * (n - 1)) / 200), 0),
             ],
-            solution: both(
-              `The yearly amounts form a geometric sequence with $a_1 = ${S}$ and $r = ${gL}$. Add $${n}$ terms:`,
-              `每年的量构成等比数列，$a_1 = ${S}$，$r = ${gL}$。求 $${n}$ 项之和：`,
-              `S_{${n}} = \\frac{${S}(${gL}^{${n}} - 1)}{${gL} - 1} \\approx ${grouped(answer)}`,
+            solution: worked(
+              [
+                [
+                  "Find the ratio",
+                  "求公比",
+                  `A rise of $${R}\\%$ multiplies each year's amount by the same number, so the yearly amounts form a geometric sequence with $a_1 = ${grouped(S)}$ and ratio`,
+                  `增长 $${R}\\%$ 就是每年乘以同一个数，所以每年的量构成等比数列，$a_1 = ${grouped(S)}$，公比为`,
+                  `r = 1 + ${dec(Q.of(R, 100))} = ${gL}`,
+                ],
+                [
+                  "Add the terms",
+                  "求各项之和",
+                  `Add $${n}$ terms with the sum formula:`,
+                  `用求和公式求 $${n}$ 项之和：`,
+                  `S_{${n}} = \\frac{${S}(${gL}^{${n}} - 1)}{${gL} - 1} = \\frac{${S}(${gL}^{${n}} - 1)}{${dec(Q.of(R, 100))}} \\approx ${grouped(answer)}`,
+                ],
+              ],
+              `The $${n}$ amounts rise from $${grouped(S)}$ to $${grouped(S)} \\cdot ${gL}^{${n - 1}} \\approx ${grouped(roundQ(last, 0))}$. So the total must lie between $${n} \\cdot ${grouped(S)} = ${grouped(n * S)}$ and $${n} \\cdot ${grouped(roundQ(last, 0))} = ${grouped(roundQ(last, 0).mul(Q.of(n)))}$, and $${grouped(answer)}$ does.`,
+              `这 $${n}$ 个量从 $${grouped(S)}$ 增长到 $${grouped(S)} \\cdot ${gL}^{${n - 1}} \\approx ${grouped(roundQ(last, 0))}$。所以总和必须介于 $${n} \\cdot ${grouped(S)} = ${grouped(n * S)}$ 与 $${n} \\cdot ${grouped(roundQ(last, 0))} = ${grouped(roundQ(last, 0).mul(Q.of(n)))}$ 之间，$${grouped(answer)}$ 正是如此。`,
             ),
           });
         }
@@ -2306,8 +2601,8 @@ export const modelingWithGeometricSeries: TopicDef = {
       id: "bouncing-balls",
       title: t("Bouncing balls", "弹跳的小球"),
       explanation: t(
-        "A ball dropped from height $h$ rebounds to a fraction $r$ of its previous height each time. Until it hits the ground for the $n$th time it falls $h$ once, and then rises and falls again for each of the $n - 1$ bounces:\n\n$$D = h + 2\\left(hr + hr^{2} + \\cdots + hr^{n-1}\\right)$$\n\nDropped from $16$ m with $r = \\frac{1}{2}$, by the $4$th hit it has traveled $16 + 2(8 + 4 + 2) = 44$ m.",
-        "从高度 $h$ 落下的小球，每次反弹到前一次高度的 $r$ 倍。到第 $n$ 次落地为止，它先下落 $h$ 一次，之后 $n - 1$ 次反弹每次都上升再下落：\n\n$$D = h + 2\\left(hr + hr^{2} + \\cdots + hr^{n-1}\\right)$$\n\n从 $16$ 米高处落下、$r = \\frac{1}{2}$ 时，到第 $4$ 次落地共经过 $16 + 2(8 + 4 + 2) = 44$ 米。",
+        "A ball dropped from height $h$ rebounds to a fraction $r$ of its previous height each time. Until it hits the ground for the $n$th time it falls $h$ once, and then rises and falls again for each of the $n - 1$ bounces:\n\n$$D = h + 2\\left(hr + hr^{2} + \\cdots + hr^{n-1}\\right)$$\n\nDropped from $16$ m with $r = \\frac{1}{2}$, by the $4$th hit it has traveled $16 + 2(8 + 4 + 2) = 44$ m.\n\n> **Watch out.** Only the first drop is counted once. Every bounce goes up and comes down again, so its height counts twice, and by the $n$th hit there have been $n - 1$ bounces, not $n$.",
+        "从高度 $h$ 落下的小球，每次反弹到前一次高度的 $r$ 倍。到第 $n$ 次落地为止，它先下落 $h$ 一次，之后 $n - 1$ 次反弹每次都上升再下落：\n\n$$D = h + 2\\left(hr + hr^{2} + \\cdots + hr^{n-1}\\right)$$\n\n从 $16$ 米高处落下、$r = \\frac{1}{2}$ 时，到第 $4$ 次落地共经过 $16 + 2(8 + 4 + 2) = 44$ 米。\n\n> **注意。** 只有第一次下落算一次。每次反弹都是上去再下来，所以反弹高度要算两次；到第 $n$ 次落地时共反弹了 $n - 1$ 次，不是 $n$ 次。",
       ),
       generate(rng) {
         for (;;) {
@@ -2316,6 +2611,7 @@ export const modelingWithGeometricSeries: TopicDef = {
           const h = rng.int(1, 6) * Number(r.d) ** (n - 1);
           if (h > 500) continue;
           const H = Q.of(h);
+          const heights = geometric(H.mul(r), r, n - 1);
           const up = geometricSum(H.mul(r), r, n - 1);
           const D = H.add(up.mul(Q.of(2)));
           const pct = r.toLatex();
@@ -2332,10 +2628,25 @@ export const modelingWithGeometricSeries: TopicDef = {
               H.add(geometricSum(H.mul(r), r, n).mul(Q.of(2))),
               geometricSum(H, r, n),
             ],
-            solution: both(
-              `The ball falls $${h}$ m once, then rises and falls the same distance on each of the $${n - 1}$ bounces:`,
-              `小球先下落 $${h}$ 米一次，之后 $${n - 1}$ 次反弹每次都上升再下落相同的距离：`,
-              `D = ${h} + 2\\left(${seriesL(geometric(H.mul(r), r, n - 1), 6)}\\right) = ${h} + 2 \\cdot ${up.toLatex()} = ${D.toLatex()}`,
+            solution: worked(
+              [
+                [
+                  "Add the bounce heights",
+                  "求反弹高度之和",
+                  `Before the ${ordinal(n)} hit the ball bounces $${n - 1}$ times, each time to $${pct}$ of the height before. The heights are ${inlines(heights).en}:`,
+                  `第 $${n}$ 次落地前小球反弹 $${n - 1}$ 次，每次都到前一次高度的 $${pct}$。这些高度是 ${inlines(heights)["zh-CN"]}：`,
+                  `${listL(heights)} = ${up.toLatex()}`,
+                ],
+                [
+                  "Add the distances",
+                  "求总路程",
+                  `The ball falls $${h}$ m once, and goes up and down each bounce height:`,
+                  `小球先下落 $${h}$ 米一次，每个反弹高度都上去再下来：`,
+                  `D = ${h} + 2 \\cdot ${up.toLatex()} = ${D.toLatex()}`,
+                ],
+              ],
+              `Add the bounce heights with the sum formula instead, with $a_1 = ${H.mul(r).toLatex()}$, $r = ${pct}$ and $${n - 1}$ terms: $${workedSumL(H.mul(r), r, n - 1)}$. Then $${h} + 2 \\cdot ${up.toLatex()} = ${D.toLatex()}$ again.`,
+              `改用求和公式求反弹高度之和，$a_1 = ${H.mul(r).toLatex()}$，$r = ${pct}$，共 $${n - 1}$ 项：$${workedSumL(H.mul(r), r, n - 1)}$。于是又得 $${h} + 2 \\cdot ${up.toLatex()} = ${D.toLatex()}$。`,
             ),
           });
         }
@@ -2345,8 +2656,8 @@ export const modelingWithGeometricSeries: TopicDef = {
       id: "when-a-total-is-reached",
       title: t("When a total is reached", "总和何时达到目标"),
       explanation: t(
-        "To find when a growing total first passes a target, solve the inequality $S_n > $ target with logarithms. A website has $500$ visitors on its first day and $20\\%$ more each day. When does the total first pass $20{,}000$?\n\n$$\\frac{500(1.2^{n} - 1)}{0.2} > 20000 \\implies 1.2^{n} > 9 \\implies n > \\frac{\\ln 9}{\\ln 1.2} \\approx 12.05$$\n\nso on day $13$.",
-        "要求增长的总和何时首次超过目标，用对数解不等式 $S_n > $ 目标。一个网站第一天有 $500$ 位访客，之后每天比前一天多 $20\\%$。总访客数何时首次超过 $20{,}000$？\n\n$$\\frac{500(1.2^{n} - 1)}{0.2} > 20000 \\implies 1.2^{n} > 9 \\implies n > \\frac{\\ln 9}{\\ln 1.2} \\approx 12.05$$\n\n所以是第 $13$ 天。",
+        "To find when a growing total first passes a target, solve the inequality that the sum $S_n$ is greater than the target, with logarithms. A website has $500$ visitors on its first day and $20\\%$ more each day. When does the total first pass $20{,}000$?\n\n$$\\frac{500(1.2^{n} - 1)}{0.2} > 20000$$\n\n$$1.2^{n} > 9$$\n\n$$n > \\frac{\\ln 9}{\\ln 1.2} \\approx 12.05$$\n\nThe total first passes $20{,}000$ on day $13$.\n\n> **Watch out.** The question is about the **total**, so use the sum $S_n$, not one day's amount $500 \\cdot 1.2^{n-1}$. A single day passes $20{,}000$ visitors only on day $22$.",
+        "要求增长的总和何时首次超过目标，就用对数解不等式：和 $S_n$ 大于目标。一个网站第一天有 $500$ 位访客，之后每天比前一天多 $20\\%$。总访客数何时首次超过 $20{,}000$？\n\n$$\\frac{500(1.2^{n} - 1)}{0.2} > 20000$$\n\n$$1.2^{n} > 9$$\n\n$$n > \\frac{\\ln 9}{\\ln 1.2} \\approx 12.05$$\n\n总访客数在第 $13$ 天首次超过 $20{,}000$。\n\n> **注意。** 问的是**总和**，所以要用和 $S_n$，而不是某一天的人数 $500 \\cdot 1.2^{n-1}$。单日访客要到第 $22$ 天才超过 $20{,}000$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2367,6 +2678,8 @@ export const modelingWithGeometricSeries: TopicDef = {
                 .cmp(Q.of(T)) > 0,
           );
           const rhsL = terminates(rhs) ? dec(rhs) : rhs.toLatex();
+          const lnL = terminates(rhs) ? rhsL : `\\left(${rhsL}\\right)`;
+          const check = passCheck(Q.of(a), g, n, Q.of(T));
           return numberProblem({
             prompt: t(
               `A website has $${a}$ visitors on its first day, and each day it has $${R}\\%$ more visitors than the day before. On which day does the total number of visitors first exceed $${grouped(T)}$?`,
@@ -2374,11 +2687,33 @@ export const modelingWithGeometricSeries: TopicDef = {
             ),
             answer: n,
             wrong: [n - 1, n + 1, ...(daily === undefined ? [] : [daily])],
-            solution: both(
-              `The daily visitors form a geometric sequence with $a_1 = ${a}$ and $r = ${gL}$. Solve $S_n > ${T}$:`,
-              `每天的访客数构成等比数列，$a_1 = ${a}$，$r = ${gL}$。解不等式 $S_n > ${T}$：`,
-              `\\frac{${a}(${gL}^{n} - 1)}{${dec(g.sub(Q.one))}} > ${T} \\implies ${gL}^{n} > ${rhsL} \\implies n > \\frac{\\ln ${rhsL}}{\\ln ${gL}} \\approx ${x.toFixed(2)}`,
-              `n = ${n}`,
+            solution: worked(
+              [
+                [
+                  "Write the inequality",
+                  "列出不等式",
+                  `The daily visitors form a geometric sequence with $a_1 = ${a}$ and $r = ${gL}$. The total after $n$ days must be greater than $${grouped(T)}$:`,
+                  `每天的访客数构成等比数列，$a_1 = ${a}$，$r = ${gL}$。$n$ 天的总数必须大于 $${grouped(T)}$：`,
+                  `\\frac{${a}(${gL}^{n} - 1)}{${dec(g.sub(Q.one))}} > ${T}`,
+                ],
+                [
+                  "Isolate the power",
+                  "分离出乘方",
+                  `Multiply by $${dec(g.sub(Q.one))}$, divide by $${a}$ and add $1$:`,
+                  `乘以 $${dec(g.sub(Q.one))}$，除以 $${a}$，再加 $1$：`,
+                  `${gL}^{n} > ${rhsL}`,
+                ],
+                [
+                  "Take logarithms",
+                  "取对数",
+                  `Since $\\ln ${gL} > 0$, dividing by it keeps the direction, and the day is the least whole number above the result:`,
+                  `因为 $\\ln ${gL} > 0$，除以它时不等号方向不变；所求的天数是大于结果的最小整数：`,
+                  `n > \\frac{\\ln ${lnL}}{\\ln ${gL}} \\approx ${x.toFixed(2)}`,
+                  `n = ${n}`,
+                ],
+              ],
+              check.en,
+              check["zh-CN"],
             ),
           });
         }
@@ -2402,13 +2737,17 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
   ],
   xp: 18,
   standards: ["CCSS.HSA.SSE.B.4"],
+  intro: t(
+    "You can find what one amount grows to with compound interest, $P(1 + i)^{t}$, and you can add a geometric series. A savings plan makes many deposits, and each one earns interest for a different number of years. The balance is the sum of what they have each grown to, and these amounts form a geometric series with ratio $1 + i$.\n\nDeposit $\\$100$ at the end of each year at $10\\%$. Right after the $3$rd deposit, the three deposits have grown for $2$, $1$ and $0$ years:\n\n$$100 \\cdot 1.1^{2} + 100 \\cdot 1.1 + 100 = 121 + 110 + 100 = 331$$\n\nThe sum formula gives the same balance: $\\frac{100(1.1^{3} - 1)}{0.1} = 331$.",
+    "你会用复利公式 $P(1 + i)^{t}$ 求一笔钱增长到多少，也会求等比级数的和。储蓄计划要存很多笔钱，每笔计息的年数都不同。余额是各笔存款增长后的总和，这些量构成公比为 $1 + i$ 的等比级数。\n\n每年年末存入 $100$ 美元，年利率 $10\\%$。第 $3$ 次存款刚存入时，三笔存款分别计息 $2$ 年、$1$ 年和 $0$ 年：\n\n$$100 \\cdot 1.1^{2} + 100 \\cdot 1.1 + 100 = 121 + 110 + 100 = 331$$\n\n求和公式给出同样的余额：$\\frac{100(1.1^{3} - 1)}{0.1} = 331$。",
+  ),
   knowledgePoints: [
     {
       id: "deposits-at-the-end-of-each-year",
       title: t("Deposits at the end of each year", "每年年末存款"),
       explanation: t(
-        "Deposit $P$ at the end of each year into an account that pays $i$ interest a year, compounded annually. Right after the $n$th deposit, the last deposit has earned nothing, the one before it one year of interest, and the first $n - 1$ years:\n\n$$A = P + P(1 + i) + \\cdots + P(1 + i)^{n-1} = \\frac{P\\big((1 + i)^{n} - 1\\big)}{i}$$\n\nDepositing $\\$1000$ a year at $5\\%$ for $10$ years gives $\\frac{1000(1.05^{10} - 1)}{0.05} \\approx \\$12{,}577.89$.",
-        "每年年末向年利率为 $i$、按年复利计息的账户存入 $P$。第 $n$ 次存款刚存入时，最后一笔还没有利息，倒数第二笔有一年的利息，第一笔有 $n - 1$ 年的利息：\n\n$$A = P + P(1 + i) + \\cdots + P(1 + i)^{n-1} = \\frac{P\\big((1 + i)^{n} - 1\\big)}{i}$$\n\n每年存 $1000$ 美元、年利率 $5\\%$、存 $10$ 年，得到 $\\frac{1000(1.05^{10} - 1)}{0.05} \\approx 12{,}577.89$ 美元。",
+        "Deposit $P$ at the end of each year into an account that pays $i$ interest a year, compounded annually. Right after the $n$th deposit, the last deposit has earned nothing, the one before it one year of interest, and the first $n - 1$ years:\n\n$$A = P + P(1 + i) + \\cdots + P(1 + i)^{n-1} = \\frac{P\\big((1 + i)^{n} - 1\\big)}{i}$$\n\nDepositing $\\$1000$ a year at $5\\%$ for $10$ years gives $\\frac{1000(1.05^{10} - 1)}{0.05} \\approx \\$12{,}577.89$.\n\n> **Watch out.** Right after the $n$th deposit the first deposit has earned interest for $n - 1$ years, not $n$, and the newest one for none. Multiplying every deposit by $(1 + i)^{n}$ counts interest that has not been paid.",
+        "每年年末向年利率为 $i$、按年复利计息的账户存入 $P$。第 $n$ 次存款刚存入时，最后一笔还没有利息，倒数第二笔有一年的利息，第一笔有 $n - 1$ 年的利息：\n\n$$A = P + P(1 + i) + \\cdots + P(1 + i)^{n-1} = \\frac{P\\big((1 + i)^{n} - 1\\big)}{i}$$\n\n每年存 $1000$ 美元、年利率 $5\\%$、存 $10$ 年，得到 $\\frac{1000(1.05^{10} - 1)}{0.05} \\approx 12{,}577.89$ 美元。\n\n> **注意。** 第 $n$ 次存款刚存入时，第一笔存款计息 $n - 1$ 年，不是 $n$ 年，最新的一笔还没有利息。把每笔存款都乘以 $(1 + i)^{n}$，就多算了还没付的利息。",
       ),
       generate(rng) {
         for (;;) {
@@ -2420,6 +2759,8 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
           if (nearHalf(exact, 2)) continue;
           const answer = roundQ(exact, 2);
           const gL = dec(g);
+          const iL = dec(Q.of(R, 100));
+          const high = roundQ(Q.of(n * P).mul(g.pow(n - 1)), 2);
           return numberProblem({
             prompt: t(
               `At the end of each year, $${grouped(P)}$ dollars is deposited into an account that pays $${R}\\%$ interest per year, compounded annually. Find the balance right after the $${n}$th deposit, in dollars, to the nearest cent.`,
@@ -2428,10 +2769,25 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
             answer,
             form: "decimal",
             wrong: [Q.of(n * P), roundQ(exact.mul(g), 2), roundQ(Q.of(n * P).mul(g.pow(n)), 2), roundQ(geometricSum(Q.of(P), g, n - 1), 2)],
-            solution: both(
-              `The deposits have grown for $0, 1, \\ldots, ${n - 1}$ years, so the balance is a geometric series with $a_1 = ${P}$, $r = ${gL}$ and $${n}$ terms:`,
-              `各笔存款分别计息 $0, 1, \\ldots, ${n - 1}$ 年，所以余额是一个等比级数，$a_1 = ${P}$，$r = ${gL}$，共 $${n}$ 项：`,
-              `A = \\frac{${P}(${gL}^{${n}} - 1)}{${dec(Q.of(R, 100))}} \\approx ${money(answer)}`,
+            solution: worked(
+              [
+                [
+                  "Write the balance as a series",
+                  "把余额写成级数",
+                  `Right after deposit $${n}$, the deposits have grown for $0, 1, \\ldots, ${n - 1}$ years:`,
+                  `第 $${n}$ 次存款刚存入时，各笔存款分别计息 $0, 1, \\ldots, ${n - 1}$ 年：`,
+                  `A = ${P} + ${P} \\cdot ${gL} + \\cdots + ${P} \\cdot ${gL}^{${n - 1}}`,
+                ],
+                [
+                  "Add the series",
+                  "求级数的和",
+                  `It is a geometric series with $a_1 = ${P}$, $r = ${gL}$ and $${n}$ terms:`,
+                  `这是一个等比级数，$a_1 = ${P}$，$r = ${gL}$，共 $${n}$ 项：`,
+                  `A = \\frac{${P}(${gL}^{${n}} - 1)}{${gL} - 1} = \\frac{${P}(${gL}^{${n}} - 1)}{${iL}} \\approx ${money(answer)}`,
+                ],
+              ],
+              `The $${n}$ deposits add to $${n} \\cdot ${grouped(P)} = ${grouped(n * P)}$ without interest, and to less than $${n} \\cdot ${P} \\cdot ${gL}^{${n - 1}} \\approx ${money(high)}$ if every one had earned as long as the first. The balance $${money(answer)}$ lies between the two.`,
+              `$${n}$ 笔存款不计利息共 $${n} \\cdot ${grouped(P)} = ${grouped(n * P)}$；如果每笔都和第一笔计息一样久，就是 $${n} \\cdot ${P} \\cdot ${gL}^{${n - 1}} \\approx ${money(high)}$，实际余额比它少。余额 $${money(answer)}$ 介于两者之间。`,
             ),
           });
         }
@@ -2441,8 +2797,8 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
       id: "deposits-at-the-start-of-each-year",
       title: t("Deposits at the start of each year", "每年年初存款"),
       explanation: t(
-        "When each deposit is made at the start of the year, every deposit earns one more year of interest by the end of year $n$, so the balance is multiplied by $1 + i$:\n\n$$A = P(1 + i) + P(1 + i)^{2} + \\cdots + P(1 + i)^{n} = \\frac{P(1 + i)\\big((1 + i)^{n} - 1\\big)}{i}$$\n\nDepositing $\\$1000$ at the start of each year at $5\\%$ gives $\\frac{1000 \\cdot 1.05(1.05^{10} - 1)}{0.05} \\approx \\$13{,}206.79$ at the end of $10$ years.",
-        "如果每笔存款都在年初存入，到第 $n$ 年年末时每笔存款都多计一年利息，所以余额要乘以 $1 + i$：\n\n$$A = P(1 + i) + P(1 + i)^{2} + \\cdots + P(1 + i)^{n} = \\frac{P(1 + i)\\big((1 + i)^{n} - 1\\big)}{i}$$\n\n每年年初存 $1000$ 美元、年利率 $5\\%$，$10$ 年后年末的余额为 $\\frac{1000 \\cdot 1.05(1.05^{10} - 1)}{0.05} \\approx 13{,}206.79$ 美元。",
+        "When each deposit is made at the start of the year, every deposit earns one more year of interest by the end of year $n$, so the balance is multiplied by $1 + i$:\n\n$$A = P(1 + i) + P(1 + i)^{2} + \\cdots + P(1 + i)^{n} = \\frac{P(1 + i)\\big((1 + i)^{n} - 1\\big)}{i}$$\n\nDepositing $\\$1000$ at the start of each year at $5\\%$ gives $\\frac{1000 \\cdot 1.05(1.05^{10} - 1)}{0.05} \\approx \\$13{,}206.79$ at the end of $10$ years.\n\n> **Watch out.** A deposit made at the start of a year earns interest for that year too, so the first term is $P(1 + i)$, not $P$. Using the end-of-year formula leaves out one year of interest on every deposit.",
+        "如果每笔存款都在年初存入，到第 $n$ 年年末时每笔存款都多计一年利息，所以余额要乘以 $1 + i$：\n\n$$A = P(1 + i) + P(1 + i)^{2} + \\cdots + P(1 + i)^{n} = \\frac{P(1 + i)\\big((1 + i)^{n} - 1\\big)}{i}$$\n\n每年年初存 $1000$ 美元、年利率 $5\\%$，$10$ 年后年末的余额为 $\\frac{1000 \\cdot 1.05(1.05^{10} - 1)}{0.05} \\approx 13{,}206.79$ 美元。\n\n> **注意。** 年初存入的钱当年也计息，所以首项是 $P(1 + i)$，不是 $P$。用年末存款的公式，就让每笔存款都少算了一年利息。",
       ),
       generate(rng) {
         for (;;) {
@@ -2454,6 +2810,8 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
           if (nearHalf(exact, 2)) continue;
           const answer = roundQ(exact, 2);
           const gL = dec(g);
+          const iL = dec(Q.of(R, 100));
+          const end = roundQ(geometricSum(Q.of(P), g, n), 2);
           return numberProblem({
             prompt: t(
               `At the start of each year, $${grouped(P)}$ dollars is deposited into an account that pays $${R}\\%$ interest per year, compounded annually. Find the balance at the end of the $${n}$th year, in dollars, to the nearest cent.`,
@@ -2467,10 +2825,25 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
               roundQ(Q.of(n * P).mul(g.pow(n)), 2),
               roundQ(geometricSum(Q.of(P).mul(g), g, n + 1), 2),
             ],
-            solution: both(
-              `The deposits have grown for $${n}, ${n - 1}, \\ldots, 1$ years, so the balance is a geometric series with $a_1 = ${P} \\cdot ${gL}$, $r = ${gL}$ and $${n}$ terms:`,
-              `各笔存款分别计息 $${n}, ${n - 1}, \\ldots, 1$ 年，所以余额是一个等比级数，$a_1 = ${P} \\cdot ${gL}$，$r = ${gL}$，共 $${n}$ 项：`,
-              `A = \\frac{${P} \\cdot ${gL}(${gL}^{${n}} - 1)}{${dec(Q.of(R, 100))}} \\approx ${money(answer)}`,
+            solution: worked(
+              [
+                [
+                  "Write the balance as a series",
+                  "把余额写成级数",
+                  `At the end of year $${n}$, the deposits have grown for $${n}, ${n - 1}, \\ldots, 1$ years:`,
+                  `到第 $${n}$ 年年末，各笔存款分别计息 $${n}, ${n - 1}, \\ldots, 1$ 年：`,
+                  `A = ${P} \\cdot ${gL} + ${P} \\cdot ${gL}^{2} + \\cdots + ${P} \\cdot ${gL}^{${n}}`,
+                ],
+                [
+                  "Add the series",
+                  "求级数的和",
+                  `It is a geometric series with $a_1 = ${P} \\cdot ${gL}$, $r = ${gL}$ and $${n}$ terms:`,
+                  `这是一个等比级数，$a_1 = ${P} \\cdot ${gL}$，$r = ${gL}$，共 $${n}$ 项：`,
+                  `A = \\frac{${P} \\cdot ${gL}(${gL}^{${n}} - 1)}{${gL} - 1} = \\frac{${P} \\cdot ${gL}(${gL}^{${n}} - 1)}{${iL}} \\approx ${money(answer)}`,
+                ],
+              ],
+              `With deposits at the end of each year instead, the balance would be $\\frac{${P}(${gL}^{${n}} - 1)}{${iL}} \\approx ${money(end)}$. Each deposit here is a year earlier and earns one more year of interest, so multiply by $${gL}$: $${money(end)} \\cdot ${gL} \\approx ${money(answer)}$.`,
+              `如果改为每年年末存入，余额是 $\\frac{${P}(${gL}^{${n}} - 1)}{${iL}} \\approx ${money(end)}$。这里每笔存款早存一年，多计一年利息，所以乘以 $${gL}$：$${money(end)} \\cdot ${gL} \\approx ${money(answer)}$。`,
             ),
           });
         }
@@ -2480,8 +2853,8 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
       id: "the-deposit-needed",
       title: t("The deposit needed for a goal", "达到目标所需的存款"),
       explanation: t(
-        "To reach a goal $A$ with equal deposits at the end of each year, solve the balance formula for $P$:\n\n$$P = \\frac{A \\cdot i}{(1 + i)^{n} - 1}$$\n\nTo have $\\$20{,}000$ after $10$ yearly deposits at $5\\%$, deposit $\\frac{20000 \\cdot 0.05}{1.05^{10} - 1} \\approx \\$1590.09$ a year. Round only at the end.",
-        "要用每年年末等额存款达到目标 $A$，由余额公式解出 $P$：\n\n$$P = \\frac{A \\cdot i}{(1 + i)^{n} - 1}$$\n\n年利率 $5\\%$、存 $10$ 年后要有 $20{,}000$ 美元，每年应存 $\\frac{20000 \\cdot 0.05}{1.05^{10} - 1} \\approx 1590.09$ 美元。只在最后取近似值。",
+        "To reach a goal $A$ with equal deposits at the end of each year, solve the balance formula for $P$:\n\n$$P = \\frac{A \\cdot i}{(1 + i)^{n} - 1}$$\n\nTo have $\\$20{,}000$ after $10$ yearly deposits at $5\\%$, deposit $\\frac{20000 \\cdot 0.05}{1.05^{10} - 1} \\approx \\$1590.09$ a year.\n\n> **Watch out.** Do not divide the goal by the number of years: interest pays part of the goal, so the deposit is less than $\\frac{A}{n}$. Round only at the end, since rounding $1.05^{10}$ early changes the cents.",
+        "要用每年年末等额存款达到目标 $A$，由余额公式解出 $P$：\n\n$$P = \\frac{A \\cdot i}{(1 + i)^{n} - 1}$$\n\n年利率 $5\\%$、存 $10$ 年后要有 $20{,}000$ 美元，每年应存 $\\frac{20000 \\cdot 0.05}{1.05^{10} - 1} \\approx 1590.09$ 美元。\n\n> **注意。** 不要用目标除以年数：利息承担了目标的一部分，所以每期存款比 $\\frac{A}{n}$ 少。只在最后取近似值，过早把 $1.05^{10}$ 取近似会改变分位上的数。",
       ),
       generate(rng) {
         for (;;) {
@@ -2493,6 +2866,8 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
           if (nearHalf(exact, 2)) continue;
           const answer = roundQ(exact, 2);
           const gL = dec(g);
+          const iL = dec(Q.of(R, 100));
+          const back = roundQ(geometricSum(answer, g, n), 2);
           return numberProblem({
             prompt: t(
               `How much must be deposited at the end of each year into an account paying $${R}\\%$ interest per year, compounded annually, to have $${grouped(A)}$ dollars right after the $${n}$th deposit? Give the deposit in dollars, to the nearest cent.`,
@@ -2506,10 +2881,25 @@ export const modelingFinancialProblemsUsingGeometricSeries: TopicDef = {
               roundQ(Q.of(A).div(geometricSum(g, g, n)), 2),
               roundQ(Q.of(A).div(geometricSum(Q.one, g, n + 1)), 2),
             ],
-            solution: both(
-              "Solve the balance formula for the deposit:",
-              "由余额公式解出每期存款：",
-              `${A} = \\frac{P(${gL}^{${n}} - 1)}{${dec(Q.of(R, 100))}} \\implies P = \\frac{${A} \\cdot ${dec(Q.of(R, 100))}}{${gL}^{${n}} - 1} \\approx ${money(answer)}`,
+            solution: worked(
+              [
+                [
+                  "Write the balance with $P$ unknown",
+                  "写出含未知数 $P$ 的余额",
+                  `The balance right after the $${n}$th deposit must be the goal:`,
+                  `第 $${n}$ 次存款刚存入后的余额必须等于目标：`,
+                  `\\frac{P(${gL}^{${n}} - 1)}{${iL}} = ${A}`,
+                ],
+                [
+                  "Solve for $P$",
+                  "解出 $P$",
+                  `Multiply by $${iL}$ and divide by $${gL}^{${n}} - 1$:`,
+                  `乘以 $${iL}$，再除以 $${gL}^{${n}} - 1$：`,
+                  `P = \\frac{${A} \\cdot ${iL}}{${gL}^{${n}} - 1} \\approx ${money(answer)}`,
+                ],
+              ],
+              `Put the deposit back into the balance formula: $\\frac{${money(answer)}(${gL}^{${n}} - 1)}{${iL}} \\approx ${money(back)}$. This gives back the goal of $${grouped(A)}$, up to the rounding of the deposit to the nearest cent.`,
+              `把每期存款代回余额公式：$\\frac{${money(answer)}(${gL}^{${n}} - 1)}{${iL}} \\approx ${money(back)}$。除去每期存款取整到分带来的差别，这就是目标 $${grouped(A)}$。`,
             ),
           });
         }
@@ -2549,13 +2939,17 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
   encompasses: [{ topic: "combinations", weight: 0.4 }],
   xp: 14,
   standards: ["CCSS.HSA.APR.C.5"],
+  intro: t(
+    "You can count combinations with $\\binom{n}{k} = \\frac{n!}{k!\\,(n - k)!}$, and you can expand $(a + b)^{n}$ with a row of Pascal's triangle. These are the same numbers: the entries of Pascal's triangle are the binomial coefficients. So any entry can be found without building the rows above it, and facts about the triangle become facts about $\\binom{n}{k}$.\n\nRow $4$ of the triangle is $1, 4, 6, 4, 1$. Counting gives the same numbers:\n\n$$\\binom{4}{0} = 1, \\quad \\binom{4}{1} = 4, \\quad \\binom{4}{2} = 6, \\quad \\binom{4}{3} = 4, \\quad \\binom{4}{4} = 1$$\n\nFor example, there are $\\frac{4!}{2!\\,2!} = 6$ ways to choose $2$ of $4$ letters, and $6$ is the middle entry of row $4$.",
+    "你会用 $\\binom{n}{k} = \\frac{n!}{k!\\,(n - k)!}$ 计算组合数，也会用杨辉三角的一行展开 $(a + b)^{n}$。它们是同一组数：杨辉三角中的数就是二项式系数。所以不必写出上面各行就能求出任意一个数，杨辉三角的性质也就成了 $\\binom{n}{k}$ 的性质。\n\n杨辉三角的第 $4$ 行是 $1, 4, 6, 4, 1$。用组合数计算得到同样的数：\n\n$$\\binom{4}{0} = 1, \\quad \\binom{4}{1} = 4, \\quad \\binom{4}{2} = 6, \\quad \\binom{4}{3} = 4, \\quad \\binom{4}{4} = 1$$\n\n例如，从 $4$ 个字母中选 $2$ 个有 $\\frac{4!}{2!\\,2!} = 6$ 种选法，而 $6$ 正是第 $4$ 行中间的数。",
+  ),
   knowledgePoints: [
     {
       id: "entries-as-binomial-coefficients",
       title: t("Entries as binomial coefficients", "杨辉三角中的数是二项式系数"),
       explanation: t(
-        "Number the rows of Pascal's triangle from $0$, so that row $n$ starts $1, n$. The entries of row $n$ are the **binomial coefficients**\n\n$$\\binom{n}{0}, \\binom{n}{1}, \\binom{n}{2}, \\ldots, \\binom{n}{n}$$\n\nso the $j$th number in row $n$ is $\\binom{n}{j - 1}$. For example row $5$ is $1, 5, 10, 10, 5, 1$, and its $3$rd number is $\\binom{5}{2} = 10$. This lets you find any entry without writing the rows above it: the $4$th number in row $12$ is $\\binom{12}{3} = 220$.",
-        "杨辉三角的行从 $0$ 开始编号，第 $n$ 行以 $1, n$ 开头。第 $n$ 行的数就是**二项式系数**\n\n$$\\binom{n}{0}, \\binom{n}{1}, \\binom{n}{2}, \\ldots, \\binom{n}{n}$$\n\n所以第 $n$ 行的第 $j$ 个数是 $\\binom{n}{j - 1}$。例如第 $5$ 行是 $1, 5, 10, 10, 5, 1$，其中第 $3$ 个数是 $\\binom{5}{2} = 10$。这样不必写出上面各行就能求出任意一个数：第 $12$ 行的第 $4$ 个数是 $\\binom{12}{3} = 220$。",
+        "Number the rows of Pascal's triangle from $0$, so that row $n$ starts $1, n$. The entries of row $n$ are the **binomial coefficients**\n\n$$\\binom{n}{0}, \\binom{n}{1}, \\binom{n}{2}, \\ldots, \\binom{n}{n}$$\n\nSo the $j$th number in row $n$ is $\\binom{n}{j - 1}$. For example row $5$ is $1, 5, 10, 10, 5, 1$, and its $3$rd number is $\\binom{5}{2} = 10$. This lets you find any entry without writing the rows above it: the $4$th number in row $12$ is $\\binom{12}{3} = 220$.\n\n> **Watch out.** The places in a row are counted from $0$ as well, so the $j$th number is $\\binom{n}{j - 1}$, not $\\binom{n}{j}$. The $4$th number in row $12$ is $\\binom{12}{3} = 220$, while $\\binom{12}{4} = 495$ is the $5$th.",
+        "杨辉三角的行从 $0$ 开始编号，第 $n$ 行以 $1, n$ 开头。第 $n$ 行的数就是**二项式系数**\n\n$$\\binom{n}{0}, \\binom{n}{1}, \\binom{n}{2}, \\ldots, \\binom{n}{n}$$\n\n所以第 $n$ 行的第 $j$ 个数是 $\\binom{n}{j - 1}$。例如第 $5$ 行是 $1, 5, 10, 10, 5, 1$，其中第 $3$ 个数是 $\\binom{5}{2} = 10$。这样不必写出上面各行就能求出任意一个数：第 $12$ 行的第 $4$ 个数是 $\\binom{12}{3} = 220$。\n\n> **注意。** 一行中的位置也从 $0$ 开始数，所以第 $j$ 个数是 $\\binom{n}{j - 1}$，不是 $\\binom{n}{j}$。第 $12$ 行的第 $4$ 个数是 $\\binom{12}{3} = 220$，而 $\\binom{12}{4} = 495$ 是第 $5$ 个数。",
       ),
       figure: pascalFigure(
         [[5, 2]],
@@ -2567,7 +2961,13 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
       generate(rng) {
         const n = rng.int(7, 16);
         const j = rng.int(3, Math.min(6, n - 1));
-        const answer = choose(n, j - 1);
+        const k = j - 1;
+        const answer = choose(n, k);
+        const top = range(n - k + 1, n)
+          .reverse()
+          .join(" \\cdot ");
+        const bottom = range(1, k).reverse().join(" \\cdot ");
+        const [left, right] = [choose(n - 1, k - 1), choose(n - 1, k)];
         return numberProblem({
           prompt: t(
             `The rows of Pascal's triangle are numbered from $0$, so that row $${n}$ starts $1, ${n}, \\ldots$. What is the ${ordinal(j)} number in row $${n}$?`,
@@ -2575,10 +2975,24 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
           ),
           answer,
           wrong: [choose(n, j), choose(n - 1, j - 1), choose(n + 1, j - 1), choose(n, j - 2)],
-          solution: both(
-            `The ${ordinal(j)} number in row $${n}$ is $${binom(n, j - 1)}$:`,
-            `第 $${n}$ 行的第 $${j}$ 个数是 $${binom(n, j - 1)}$：`,
-            `${binom(n, j - 1)} = \\frac{${n}!}{${j - 1}!\\,${n - j + 1}!} = ${answer}`,
+          solution: worked(
+            [
+              [
+                "Match the place to $k$",
+                "把位置对应到 $k$",
+                `The places in row $${n}$ are $k = 0, 1, 2, \\ldots$, so the ${ordinal(j)} number has $k = ${j} - 1 = ${k}$. It is $${binom(n, k)}$.`,
+                `第 $${n}$ 行中的位置是 $k = 0, 1, 2, \\ldots$，所以第 $${j}$ 个数的 $k = ${j} - 1 = ${k}$。它是 $${binom(n, k)}$。`,
+              ],
+              [
+                "Work out the coefficient",
+                "计算这个系数",
+                `Cancel $${n - k}!$ from the top and bottom of the factorial formula:`,
+                `把阶乘公式分子分母中的 $${n - k}!$ 约去：`,
+                `${binom(n, k)} = \\frac{${n}!}{${k}!\\,${n - k}!} = \\frac{${top}}{${bottom}} = ${grouped(answer)}`,
+              ],
+            ],
+            `By Pascal's rule the entry is the sum of the two entries above it in row $${n - 1}$: $${binom(n - 1, k - 1)} + ${binom(n - 1, k)} = ${grouped(left)} + ${grouped(right)} = ${grouped(answer)}$.`,
+            `由帕斯卡法则，这个数等于它上方第 $${n - 1}$ 行的两个数之和：$${binom(n - 1, k - 1)} + ${binom(n - 1, k)} = ${grouped(left)} + ${grouped(right)} = ${grouped(answer)}$。`,
           ),
         });
       },
@@ -2587,8 +3001,8 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
       id: "pascals-rule",
       title: t("Pascal's rule", "帕斯卡法则"),
       explanation: t(
-        "Each entry of Pascal's triangle is the sum of the two entries above it. In binomial coefficients this is **Pascal's rule**:\n\n$$\\binom{n}{k} + \\binom{n}{k+1} = \\binom{n+1}{k+1}$$\n\nFor example $\\binom{9}{3} + \\binom{9}{4} = 84 + 126 = 210 = \\binom{10}{4}$. The rule also gives one of the two upper entries from the lower one: $\\binom{9}{4} = \\binom{10}{4} - \\binom{9}{3}$.",
-        "杨辉三角中每个数都等于它上方两个数之和。用二项式系数表示，就是**帕斯卡法则**：\n\n$$\\binom{n}{k} + \\binom{n}{k+1} = \\binom{n+1}{k+1}$$\n\n例如 $\\binom{9}{3} + \\binom{9}{4} = 84 + 126 = 210 = \\binom{10}{4}$。这个法则也可以由下面的数求出上面两个数中的一个：$\\binom{9}{4} = \\binom{10}{4} - \\binom{9}{3}$。",
+        "Each entry of Pascal's triangle is the sum of the two entries above it. In binomial coefficients this is **Pascal's rule**:\n\n$$\\binom{n}{k} + \\binom{n}{k+1} = \\binom{n+1}{k+1}$$\n\nFor example $\\binom{9}{3} + \\binom{9}{4} = 84 + 126 = 210 = \\binom{10}{4}$. The rule also gives one of the two upper entries from the lower one, by subtracting the other.\n\n> **Watch out.** The two upper entries are neighbors in row $n$, and their sum sits in row $n + 1$ below the right-hand one. So the sum of $\\binom{9}{3}$ and $\\binom{9}{4}$ is $\\binom{10}{4}$, not $\\binom{10}{3}$.",
+        "杨辉三角中每个数都等于它上方两个数之和。用二项式系数表示，就是**帕斯卡法则**：\n\n$$\\binom{n}{k} + \\binom{n}{k+1} = \\binom{n+1}{k+1}$$\n\n例如 $\\binom{9}{3} + \\binom{9}{4} = 84 + 126 = 210 = \\binom{10}{4}$。这个法则也可以由下面的数减去上面的一个数，求出上面的另一个数。\n\n> **注意。** 上面的两个数在第 $n$ 行中相邻，它们的和在第 $n + 1$ 行、位于右边那个数的下方。所以 $\\binom{9}{3}$ 与 $\\binom{9}{4}$ 之和是 $\\binom{10}{4}$，不是 $\\binom{10}{3}$。",
       ),
       figure: pascalFigure(
         [
@@ -2607,7 +3021,21 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
         const A = choose(n, k);
         const B = choose(n, k + 1);
         const X = A + B;
+        const rule: Step = [
+          "Use Pascal's rule",
+          "用帕斯卡法则",
+          `The entries $${binom(n, k)}$ and $${binom(n, k + 1)}$ are neighbors in row $${n}$, and the entry below them is $${binom(n + 1, k + 1)}$:`,
+          `$${binom(n, k)}$ 和 $${binom(n, k + 1)}$ 是第 $${n}$ 行中相邻的两个数，它们下方的数是 $${binom(n + 1, k + 1)}$：`,
+          `${binom(n + 1, k + 1)} = ${binom(n, k)} + ${binom(n, k + 1)}`,
+        ];
+        /** factorialCheck works out a coefficient from the factorial formula instead of Pascal's rule. */
+        const factorialCheck = (m: number, j: number) =>
+          t(
+            `Work out the coefficient from the factorial formula instead: $${binom(m, j)} = \\frac{${m}!}{${j}!\\,${m - j}!} = ${grouped(choose(m, j))}$.`,
+            `改用阶乘公式计算这个系数：$${binom(m, j)} = \\frac{${m}!}{${j}!\\,${m - j}!} = ${grouped(choose(m, j))}$。`,
+          );
         if (rng.bool()) {
+          const check = factorialCheck(n + 1, k + 1);
           return numberProblem({
             prompt: t(
               `Given that $${binom(n, k)} = ${grouped(A)}$ and $${binom(n, k + 1)} = ${grouped(B)}$, find $${binom(n + 1, k + 1)}$.`,
@@ -2615,13 +3043,23 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
             ),
             answer: X,
             wrong: [B - A, 2 * B, choose(n + 1, k), B],
-            solution: both(
-              "By Pascal's rule, the entry below two neighbors is their sum:",
-              "由帕斯卡法则，两个相邻数下方的数等于它们的和：",
-              `${binom(n + 1, k + 1)} = ${binom(n, k)} + ${binom(n, k + 1)} = ${A} + ${B} = ${X}`,
+            solution: worked(
+              [
+                rule,
+                [
+                  "Add",
+                  "相加",
+                  "Substitute the two given values:",
+                  "代入两个已知值：",
+                  `${binom(n + 1, k + 1)} = ${grouped(A)} + ${grouped(B)} = ${grouped(X)}`,
+                ],
+              ],
+              check.en,
+              check["zh-CN"],
             ),
           });
         }
+        const check = factorialCheck(n, k + 1);
         return numberProblem({
           prompt: t(
             `Given that $${binom(n + 1, k + 1)} = ${grouped(X)}$ and $${binom(n, k)} = ${grouped(A)}$, find $${binom(n, k + 1)}$.`,
@@ -2629,10 +3067,20 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
           ),
           answer: B,
           wrong: [X + A, A, X - choose(n, k - 1), Q.of(X, 2)],
-          solution: both(
-            "By Pascal's rule, the lower entry is the sum of the two above it, so subtract:",
-            "由帕斯卡法则，下面的数等于上方两数之和，所以相减：",
-            `${binom(n, k + 1)} = ${binom(n + 1, k + 1)} - ${binom(n, k)} = ${X} - ${A} = ${B}`,
+          solution: worked(
+            [
+              rule,
+              [
+                "Subtract",
+                "相减",
+                `Subtract $${binom(n, k)}$ from both sides and substitute the given values:`,
+                `两边减去 $${binom(n, k)}$，代入已知值：`,
+                `${binom(n, k + 1)} = ${binom(n + 1, k + 1)} - ${binom(n, k)}`,
+                `${binom(n, k + 1)} = ${grouped(X)} - ${grouped(A)} = ${grouped(B)}`,
+              ],
+            ],
+            check.en,
+            check["zh-CN"],
           ),
         });
       },
@@ -2641,8 +3089,8 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
       id: "symmetry",
       title: t("Symmetry", "对称性"),
       explanation: t(
-        "Each row of Pascal's triangle reads the same from both ends, because choosing $k$ objects from $n$ is the same as choosing the $n - k$ to leave out:\n\n$$\\binom{n}{k} = \\binom{n}{n - k}$$\n\nSo if $\\binom{n}{3} = \\binom{n}{8}$ with $3 \\ne 8$, the two lower numbers add to $n$: $n = 3 + 8 = 11$.",
-        "杨辉三角的每一行从两端读起都一样，因为从 $n$ 个物体中选出 $k$ 个，等同于选出不要的 $n - k$ 个：\n\n$$\\binom{n}{k} = \\binom{n}{n - k}$$\n\n所以若 $\\binom{n}{3} = \\binom{n}{8}$ 且 $3 \\ne 8$，则下面的两个数之和是 $n$：$n = 3 + 8 = 11$。",
+        "Each row of Pascal's triangle reads the same from both ends, because choosing $k$ objects from $n$ is the same as choosing the $n - k$ to leave out:\n\n$$\\binom{n}{k} = \\binom{n}{n - k}$$\n\nSo if $\\binom{n}{3} = \\binom{n}{8}$ with $3 \\ne 8$, the two lower numbers add to $n$: $n = 3 + 8 = 11$.\n\n> **Watch out.** Equal coefficients in different places are mirror images, the same distance from the two ends of the row. So their lower numbers **add** to $n$; their difference, here $8 - 3 = 5$, is not $n$.",
+        "杨辉三角的每一行从两端读起都一样，因为从 $n$ 个物体中选出 $k$ 个，等同于选出不要的 $n - k$ 个：\n\n$$\\binom{n}{k} = \\binom{n}{n - k}$$\n\n所以若 $\\binom{n}{3} = \\binom{n}{8}$ 且 $3 \\ne 8$，则下面的两个数之和是 $n$：$n = 3 + 8 = 11$。\n\n> **注意。** 位置不同而相等的两个系数互为镜像，到这一行两端的距离相同。所以它们下面的数**相加**等于 $n$；它们的差，这里是 $8 - 3 = 5$，并不是 $n$。",
       ),
       figure: pascalFigure(
         [
@@ -2658,20 +3106,34 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
       generate(rng) {
         const a = rng.int(1, 9);
         const b = a + rng.int(1, 9);
+        const n = a + b;
+        const value = grouped(choose(n, a));
+        const check = t(
+          `With $n = ${n}$ both coefficients have the same factorial formula, $\\frac{${n}!}{${a}!\\,${b}!} = ${value}$, because swapping $k$ and $n - k$ only swaps the two factorials below.`,
+          `$n = ${n}$ 时两个系数的阶乘公式相同，都是 $\\frac{${n}!}{${a}!\\,${b}!} = ${value}$，因为交换 $k$ 与 $n - k$ 只是交换了分母中的两个阶乘。`,
+        );
         if (rng.bool()) {
           return numberProblem({
             prompt: t(`Find $n$ such that $${binom("n", a)} = ${binom("n", b)}$.`, `求 $n$，使 $${binom("n", a)} = ${binom("n", b)}$。`),
-            answer: a + b,
+            answer: n,
             solveFor: "n",
             wrong: [b - a, a + b - 1, a + b + 1, a * b],
-            solution: both(
-              `Since $${a} \\ne ${b}$, the two coefficients are symmetric in row $n$, so $${a} = n - ${b}$:`,
-              `因为 $${a} \\ne ${b}$，这两个系数在第 $n$ 行中对称，所以 $${a} = n - ${b}$：`,
-              `n = ${a} + ${b} = ${a + b}`,
+            solution: worked(
+              [
+                [
+                  "Use the symmetry",
+                  "用对称性",
+                  `The two coefficients are equal but $${a} \\ne ${b}$, so they are mirror places in row $n$:`,
+                  `两个系数相等而 $${a} \\ne ${b}$，所以它们在第 $n$ 行中位置对称：`,
+                  `${b} = n - ${a}`,
+                ],
+                ["Solve for $n$", "解出 $n$", `Add $${a}$ to both sides:`, `两边加 $${a}$：`, `n = ${a} + ${b} = ${n}`],
+              ],
+              check.en,
+              check["zh-CN"],
             ),
           });
         }
-        const n = a + b;
         return numberProblem({
           prompt: t(
             `Find the value of $m$, other than $${a}$, for which $${binom(n, a)} = ${binom(n, "m")}$.`,
@@ -2680,10 +3142,18 @@ export const pascalsTriangleAndTheBinomialCoefficients: TopicDef = {
           answer: b,
           solveFor: "m",
           wrong: [b - 1, b + 1, n],
-          solution: both(
-            "By symmetry, $\\binom{n}{k} = \\binom{n}{n - k}$:",
-            "由对称性，$\\binom{n}{k} = \\binom{n}{n - k}$：",
-            `m = ${n} - ${a} = ${b}`,
+          solution: worked(
+            [
+              [
+                "Use the symmetry",
+                "用对称性",
+                `By symmetry $\\binom{n}{k} = \\binom{n}{n - k}$, so the other place in row $${n}$ with the same value is $${n} - ${a}$.`,
+                `由对称性，$\\binom{n}{k} = \\binom{n}{n - k}$，所以第 $${n}$ 行中另一个值相同的位置是 $${n} - ${a}$。`,
+              ],
+              ["Find $m$", "求 $m$", "Subtract:", "相减：", `m = ${n} - ${a} = ${b}`],
+            ],
+            check.en,
+            check["zh-CN"],
           ),
         });
       },
@@ -2718,13 +3188,17 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
   ],
   xp: 16,
   standards: ["CCSS.HSA.APR.C.5"],
+  intro: t(
+    "You know that row $n$ of Pascal's triangle lists the binomial coefficients $\\binom{n}{0}, \\binom{n}{1}, \\ldots, \\binom{n}{n}$, and that these rows give the coefficients when a binomial is expanded. With the binomial coefficients there is no need to write out the rows: in $(a + b)^{n}$, the term with $b^{k}$ is $\\binom{n}{k}a^{n-k}b^{k}$, for any $n$. One term can even be found on its own.\n\nFor $(x + 2)^{3}$ the coefficients are row $3$, namely $1, 3, 3, 1$:\n\n$$(x + 2)^{3} = x^{3} + 3x^{2}(2) + 3x(2)^{2} + 2^{3} = x^{3} + 6x^{2} + 12x + 8$$\n\nSubstituting $x = 1$ checks it. The left side is $3^{3} = 27$, and the right side is $1 + 6 + 12 + 8 = 27$.",
+    "你知道杨辉三角的第 $n$ 行列出二项式系数 $\\binom{n}{0}, \\binom{n}{1}, \\ldots, \\binom{n}{n}$，也知道展开二项式时这些行给出系数。有了二项式系数就不必写出这些行：在 $(a + b)^{n}$ 中，含 $b^{k}$ 的项是 $\\binom{n}{k}a^{n-k}b^{k}$，对任意 $n$ 都成立。甚至可以单独求出某一项。\n\n对 $(x + 2)^{3}$，系数是第 $3$ 行，即 $1, 3, 3, 1$：\n\n$$(x + 2)^{3} = x^{3} + 3x^{2}(2) + 3x(2)^{2} + 2^{3} = x^{3} + 6x^{2} + 12x + 8$$\n\n代入 $x = 1$ 可以检验：左边是 $3^{3} = 27$，右边是 $1 + 6 + 12 + 8 = 27$。",
+  ),
   knowledgePoints: [
     {
       id: "the-binomial-theorem",
       title: t("The binomial theorem", "二项式定理"),
       explanation: t(
-        "The **binomial theorem** gives the expansion of any power of a binomial:\n\n$$(a + b)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}a^{n-k}b^{k} = a^{n} + \\binom{n}{1}a^{n-1}b + \\binom{n}{2}a^{n-2}b^{2} + \\cdots + b^{n}$$\n\nSubstitute the two terms of the binomial, with their coefficients and signs, in parentheses:\n\n$$(2x - 3)^{4} = (2x)^{4} + 4(2x)^{3}(-3) + 6(2x)^{2}(-3)^{2} + 4(2x)(-3)^{3} + (-3)^{4}$$\n\n$$= 16x^{4} - 96x^{3} + 216x^{2} - 216x + 81$$",
-        "**二项式定理**给出二项式任意次幂的展开式：\n\n$$(a + b)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}a^{n-k}b^{k} = a^{n} + \\binom{n}{1}a^{n-1}b + \\binom{n}{2}a^{n-2}b^{2} + \\cdots + b^{n}$$\n\n把二项式的两项连同系数和符号加上括号代入：\n\n$$(2x - 3)^{4} = (2x)^{4} + 4(2x)^{3}(-3) + 6(2x)^{2}(-3)^{2} + 4(2x)(-3)^{3} + (-3)^{4}$$\n\n$$= 16x^{4} - 96x^{3} + 216x^{2} - 216x + 81$$",
+        "The **binomial theorem** gives the expansion of any power of a binomial:\n\n$$(a + b)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}a^{n-k}b^{k} = a^{n} + \\binom{n}{1}a^{n-1}b + \\binom{n}{2}a^{n-2}b^{2} + \\cdots + b^{n}$$\n\nSubstitute the two terms of the binomial, with their coefficients and signs, in parentheses:\n\n$$(2x - 3)^{4} = (2x)^{4} + 4(2x)^{3}(-3) + 6(2x)^{2}(-3)^{2} + 4(2x)(-3)^{3} + (-3)^{4}$$\n\n$$= 16x^{4} - 96x^{3} + 216x^{2} - 216x + 81$$\n\n> **Watch out.** Raise the whole term to the power, coefficient and sign included: $(2x)^{3} = 8x^{3}$, not $2x^{3}$, and $(-3)^{3} = -27$. Odd powers of a negative term are negative, so the signs alternate.",
+        "**二项式定理**给出二项式任意次幂的展开式：\n\n$$(a + b)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}a^{n-k}b^{k} = a^{n} + \\binom{n}{1}a^{n-1}b + \\binom{n}{2}a^{n-2}b^{2} + \\cdots + b^{n}$$\n\n把二项式的两项连同系数和符号加上括号代入：\n\n$$(2x - 3)^{4} = (2x)^{4} + 4(2x)^{3}(-3) + 6(2x)^{2}(-3)^{2} + 4(2x)(-3)^{3} + (-3)^{4}$$\n\n$$= 16x^{4} - 96x^{3} + 216x^{2} - 216x + 81$$\n\n> **注意。** 要把整个项连同系数和符号一起乘方：$(2x)^{3} = 8x^{3}$，不是 $2x^{3}$；$(-3)^{3} = -27$。负项的奇次幂是负数，所以各项正负交替。",
       ),
       generate(rng) {
         const n = rng.pick([3, 4, 4, 5, 5]);
@@ -2741,6 +3215,11 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
               `${k === 0 || k === n ? "" : choose(n, k)}${n - k === 0 ? "" : `${pv}${n - k === 1 ? "" : `^{${n - k}}`}`}${k === 0 ? "" : `(${q})${k === 1 ? "" : `^{${k}}`}`}`,
           )
           .join(" + ");
+        const row = range(0, n)
+          .map((k) => choose(n, k))
+          .join(", ");
+        const coefficients = range(0, n).map((i) => Q.of(choose(n, n - i) * p ** (n - i) * q ** i));
+        const at1 = (p + q) ** n;
         return expressionProblem({
           prompt: t(`Expand $${expr}$.`, `展开 $${expr}$。`),
           answer,
@@ -2750,15 +3229,25 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
             expansion(p, q, n, v, (j) => choose(n, j) * Math.sign(q) ** (n - j)),
             poly([p ** n, pw(v, n)], [q ** n, ""]),
           ],
-          solution: both(
-            `Use the binomial theorem with row $${range(0, n)
-              .map((k) => choose(n, k))
-              .join(", ")}$ of coefficients:`,
-            `用二项式定理，系数是 $${range(0, n)
-              .map((k) => choose(n, k))
-              .join(", ")}$ 这一行：`,
-            `${expr} = ${termsL}`,
-            `= ${answer}`,
+          solution: worked(
+            [
+              [
+                "Write the terms",
+                "写出各项",
+                `Use the binomial theorem with row $${row}$ of coefficients, and put both terms of the binomial in parentheses:`,
+                `用二项式定理，系数是 $${row}$ 这一行，二项式的两项都加上括号：`,
+                `${expr} = ${termsL}`,
+              ],
+              [
+                "Work out each term",
+                "算出每一项",
+                "Raise each term to its power, signs included, and multiply:",
+                "把每一项连同符号乘方，再相乘：",
+                `${expr} = ${answer}`,
+              ],
+            ],
+            `Substitute $${v} = 1$. The left side becomes $(${p} ${q < 0 ? "-" : "+"} ${Math.abs(q)})^{${n}} = ${at1}$, and the coefficients of the expansion add to the same number: $${listL(coefficients)} = ${at1}$.`,
+            `代入 $${v} = 1$。左边变为 $(${p} ${q < 0 ? "-" : "+"} ${Math.abs(q)})^{${n}} = ${at1}$，展开式的系数之和也是这个数：$${listL(coefficients)} = ${at1}$。`,
           ),
         });
       },
@@ -2767,8 +3256,8 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
       id: "a-single-coefficient",
       title: t("A single coefficient", "某一项的系数"),
       explanation: t(
-        "To find one term without the whole expansion, use the general term $\\binom{n}{k}a^{n-k}b^{k}$. For the coefficient of $x^{5}$ in $(2x - 1)^{8}$, the power of $2x$ must be $5$, so $k = 3$:\n\n$$\\binom{8}{3}(2x)^{5}(-1)^{3} = 56 \\cdot 32x^{5} \\cdot (-1) = -1792x^{5}$$\n\nThe coefficient is $-1792$.",
-        "不完全展开而求某一项时，用通项 $\\binom{n}{k}a^{n-k}b^{k}$。求 $(2x - 1)^{8}$ 中 $x^{5}$ 的系数：$2x$ 的指数必须是 $5$，所以 $k = 3$：\n\n$$\\binom{8}{3}(2x)^{5}(-1)^{3} = 56 \\cdot 32x^{5} \\cdot (-1) = -1792x^{5}$$\n\n系数是 $-1792$。",
+        "To find one term without the whole expansion, use the general term $\\binom{n}{k}a^{n-k}b^{k}$. For the coefficient of $x^{5}$ in $(2x - 1)^{8}$, the power of $2x$ must be $5$, so $k = 3$:\n\n$$\\binom{8}{3}(2x)^{5}(-1)^{3} = 56 \\cdot 32x^{5} \\cdot (-1) = -1792x^{5}$$\n\nThe coefficient is $-1792$.\n\n> **Watch out.** Raise the numbers in the binomial to their powers too: $(2x)^{5} = 32x^{5}$ and $(-1)^{3} = -1$. Leaving them out gives just $\\binom{8}{3} = 56$, and dropping the sign gives $1792$.",
+        "不完全展开而求某一项时，用通项 $\\binom{n}{k}a^{n-k}b^{k}$。求 $(2x - 1)^{8}$ 中 $x^{5}$ 的系数：$2x$ 的指数必须是 $5$，所以 $k = 3$：\n\n$$\\binom{8}{3}(2x)^{5}(-1)^{3} = 56 \\cdot 32x^{5} \\cdot (-1) = -1792x^{5}$$\n\n系数是 $-1792$。\n\n> **注意。** 二项式中的数也要乘方：$(2x)^{5} = 32x^{5}$，$(-1)^{3} = -1$。漏掉它们只会得到 $\\binom{8}{3} = 56$，丢掉符号则得到 $1792$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2781,6 +3270,8 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
           if (Math.abs(answer) > 2_000_000) continue;
           const expr = `(${linear(p, q)})^{${n}}`;
           const target = pw("x", j);
+          const px = poly([p, "x"]);
+          const product = `${choose(n, k)} \\cdot ${pr(p ** j)} \\cdot ${pr(q ** k)}`;
           return numberProblem({
             prompt: t(
               `What is the coefficient of $${target}$ in the expansion of $${expr}$?`,
@@ -2794,10 +3285,26 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
               choose(n, k - 1) * p ** j * q ** k,
               choose(n, k) * p ** k * q ** j,
             ],
-            solution: both(
-              `In the general term $${binom(n, "k")}(${poly([p, "x"])})^{${n}-k}(${q})^{k}$ the power of $x$ is $${j}$ when $k = ${k}$:`,
-              `通项 $${binom(n, "k")}(${poly([p, "x"])})^{${n}-k}(${q})^{k}$ 中，$k = ${k}$ 时 $x$ 的指数是 $${j}$：`,
-              `${binom(n, k)}(${poly([p, "x"])})^{${j}}(${q})^{${k}} = ${choose(n, k)} \\cdot ${p ** j < 0 ? `(${p ** j})` : p ** j} \\cdot ${q ** k < 0 ? `(${q ** k})` : q ** k} \\cdot ${target} = ${monomial(answer, "x", j)}`,
+            solution: worked(
+              [
+                [
+                  "Find $k$",
+                  "求 $k$",
+                  `In the general term $${binom(n, "k")}(${px})^{${n}-k}(${q})^{k}$ the power of $x$ is $${n} - k$. Set it equal to $${j}$:`,
+                  `通项 $${binom(n, "k")}(${px})^{${n}-k}(${q})^{k}$ 中 $x$ 的指数是 $${n} - k$。令它等于 $${j}$：`,
+                  `${n} - k = ${j}`,
+                  `k = ${k}`,
+                ],
+                [
+                  "Work out the term",
+                  "算出这一项",
+                  `Substitute $k = ${k}$ and raise each part to its power:`,
+                  `代入 $k = ${k}$，把每个部分乘方：`,
+                  `${binom(n, k)}(${px})^{${j}}(${q})^{${k}} = ${product} \\cdot ${target} = ${monomial(answer, "x", j)}`,
+                ],
+              ],
+              `Count from the other end of the expansion instead: the term is $${binom(n, j)}(${px})^{${j}}(${q})^{${k}}$, and $${binom(n, j)} = \\frac{${n}!}{${j}!\\,${k}!} = ${choose(n, k)}$ as well. So the coefficient is again $${product} = ${answer}$.`,
+              `改为从展开式的另一端数：这一项是 $${binom(n, j)}(${px})^{${j}}(${q})^{${k}}$，而 $${binom(n, j)} = \\frac{${n}!}{${j}!\\,${k}!} = ${choose(n, k)}$ 也一样。所以系数仍是 $${product} = ${answer}$。`,
             ),
           });
         }
@@ -2807,8 +3314,8 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
       id: "the-constant-term",
       title: t("The constant term", "常数项"),
       explanation: t(
-        "When the binomial has a negative power of $x$, some term may not contain $x$ at all. Find the $k$ that makes the power of $x$ in the general term zero. In $\\left(x^{2} + \\frac{2}{x}\\right)^{6}$ the general term is\n\n$$\\binom{6}{k}(x^{2})^{6-k}\\left(\\frac{2}{x}\\right)^{k} = \\binom{6}{k}2^{k}x^{12 - 3k}$$\n\n$12 - 3k = 0$ gives $k = 4$, so the constant term is $\\binom{6}{4}2^{4} = 15 \\cdot 16 = 240$.",
-        "当二项式中含有 $x$ 的负次幂时，可能有一项完全不含 $x$。求出使通项中 $x$ 的指数为零的 $k$。在 $\\left(x^{2} + \\frac{2}{x}\\right)^{6}$ 中，通项是\n\n$$\\binom{6}{k}(x^{2})^{6-k}\\left(\\frac{2}{x}\\right)^{k} = \\binom{6}{k}2^{k}x^{12 - 3k}$$\n\n由 $12 - 3k = 0$ 得 $k = 4$，所以常数项是 $\\binom{6}{4}2^{4} = 15 \\cdot 16 = 240$。",
+        "When the binomial has a negative power of $x$, some term may not contain $x$ at all. Find the $k$ that makes the power of $x$ in the general term zero. In $\\left(x^{2} + \\frac{2}{x}\\right)^{6}$ the general term is\n\n$$\\binom{6}{k}(x^{2})^{6-k}\\left(\\frac{2}{x}\\right)^{k} = \\binom{6}{k}2^{k}x^{12 - 3k}$$\n\nSetting $12 - 3k = 0$ gives $k = 4$, so the constant term is $\\binom{6}{4}2^{4} = 15 \\cdot 16 = 240$.\n\n> **Watch out.** Combine all the powers of $x$ before solving: $(x^{2})^{6-k}$ gives $x^{12 - 2k}$ and $\\left(\\frac{2}{x}\\right)^{k}$ gives $x^{-k}$, so the exponent is $12 - 3k$. The constant term is the whole term $\\binom{6}{4}2^{4}$, not just $\\binom{6}{4}$.",
+        "当二项式中含有 $x$ 的负次幂时，可能有一项完全不含 $x$。求出使通项中 $x$ 的指数为零的 $k$。在 $\\left(x^{2} + \\frac{2}{x}\\right)^{6}$ 中，通项是\n\n$$\\binom{6}{k}(x^{2})^{6-k}\\left(\\frac{2}{x}\\right)^{k} = \\binom{6}{k}2^{k}x^{12 - 3k}$$\n\n令 $12 - 3k = 0$ 得 $k = 4$，所以常数项是 $\\binom{6}{4}2^{4} = 15 \\cdot 16 = 240$。\n\n> **注意。** 解方程之前先合并 $x$ 的所有乘方：$(x^{2})^{6-k}$ 给出 $x^{12 - 2k}$，$\\left(\\frac{2}{x}\\right)^{k}$ 给出 $x^{-k}$，所以指数是 $12 - 3k$。常数项是整个 $\\binom{6}{4}2^{4}$，不只是 $\\binom{6}{4}$。",
       ),
       generate(rng) {
         for (;;) {
@@ -2827,6 +3334,8 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
           const second = `\\frac{${Math.abs(b)}}{${pw("x", q)}}`;
           const expr = `\\left(${first} ${b < 0 ? "-" : "+"} ${second}\\right)^{${n}}`;
           const sec = `\\frac{${b}}{${pw("x", q)}}`;
+          const power = p === 1 ? `${n} - k` : `${p}(${n} - k)`;
+          const e = q * k;
           return numberProblem({
             prompt: t(`Find the constant term in the expansion of $${expr}$.`, `求 $${expr}$ 展开式中的常数项。`),
             answer,
@@ -2836,11 +3345,34 @@ export const expandingABinomialUsingBinomialCoefficients: TopicDef = {
               choose(n, k + 1) * a ** (n - k - 1) * b ** (k + 1),
               choose(n, k) * a ** k * b ** (n - k),
             ],
-            solution: both(
-              `In the general term the power of $x$ is $${p === 1 ? `${n} - k` : `${p}(${n} - k)`} - ${poly([q, "k"])}$, which is zero when $k = ${k}$:`,
-              `通项中 $x$ 的指数是 $${p === 1 ? `${n} - k` : `${p}(${n} - k)`} - ${poly([q, "k"])}$，当 $k = ${k}$ 时为零：`,
-              `${binom(n, "k")}\\left(${first}\\right)^{${n}-k}\\left(${sec}\\right)^{k}, \\qquad ${p * n} - ${p + q}k = 0 \\implies k = ${k}`,
-              `${binom(n, k)} \\cdot ${a}^{${n - k}} \\cdot ${b < 0 ? `(${b})` : b}^{${k}} = ${choose(n, k)} \\cdot ${a ** (n - k)} \\cdot ${b ** k < 0 ? `(${b ** k})` : b ** k} = ${answer}`,
+            solution: worked(
+              [
+                [
+                  "Write the general term",
+                  "写出通项",
+                  "The general term of the expansion is",
+                  "展开式的通项是",
+                  `${binom(n, "k")}\\left(${first}\\right)^{${n}-k}\\left(${sec}\\right)^{k}`,
+                ],
+                [
+                  "Make the power of $x$ zero",
+                  "令 $x$ 的指数为零",
+                  `The first factor gives $x$ to the power $${power}$ and the second divides by $x$ to the power $${poly([q, "k"])}$. Set the total power to zero:`,
+                  `第一个因式给出 $x$ 的 $${power}$ 次幂，第二个因式除以 $x$ 的 $${poly([q, "k"])}$ 次幂。令总指数为零：`,
+                  `${power} - ${poly([q, "k"])} = 0`,
+                  `${p * n} - ${p + q}k = 0`,
+                  `k = ${k}`,
+                ],
+                [
+                  "Work out the term",
+                  "算出这一项",
+                  `Substitute $k = ${k}$; the powers of $x$ cancel:`,
+                  `代入 $k = ${k}$，$x$ 的乘方相互抵消：`,
+                  `${binom(n, k)} \\cdot ${a}^{${n - k}} \\cdot ${pr(b)}^{${k}} = ${choose(n, k)} \\cdot ${a ** (n - k)} \\cdot ${pr(b ** k)} = ${answer}`,
+                ],
+              ],
+              `At $k = ${k}$ the first factor is $\\left(${first}\\right)^{${n - k}} = ${a ** (n - k) === 1 ? "" : a ** (n - k)}${pw("x", e)}$ and the second is $\\left(${sec}\\right)^{${k}} = \\frac{${b ** k}}{${pw("x", e)}}$. The two powers of $x$ are equal and cancel, leaving $${choose(n, k)} \\cdot ${a ** (n - k)} \\cdot ${pr(b ** k)} = ${answer}$.`,
+              `$k = ${k}$ 时第一个因式是 $\\left(${first}\\right)^{${n - k}} = ${a ** (n - k) === 1 ? "" : a ** (n - k)}${pw("x", e)}$，第二个是 $\\left(${sec}\\right)^{${k}} = \\frac{${b ** k}}{${pw("x", e)}}$。两个 $x$ 的乘方相同，相互抵消，剩下 $${choose(n, k)} \\cdot ${a ** (n - k)} \\cdot ${pr(b ** k)} = ${answer}$。`,
             ),
           });
         }
@@ -2861,13 +3393,17 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
   encompasses: [{ topic: "expanding-a-binomial-using-binomial-coefficients", weight: 0.5 }],
   xp: 14,
   standards: ["CCSS.HSA.APR.C.5"],
+  intro: t(
+    "You can expand $(a + b)^{n}$ with the binomial theorem, and you can write sums in sigma notation. The most used case has $a = 1$. Every power of $1$ is $1$, so only the binomial coefficients and the powers of $x$ are left:\n\n$$(1 + x)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}x^{k}$$\n\nFor $n = 4$ the coefficients are row $4$ of Pascal's triangle:\n\n$$(1 + x)^{4} = 1 + 4x + 6x^{2} + 4x^{3} + x^{4}$$\n\nSubstituting $x = 1$ gives $2^{4} = 16$, and indeed $1 + 4 + 6 + 4 + 1 = 16$.",
+    "你会用二项式定理展开 $(a + b)^{n}$，也会用求和符号写和。最常用的情形是 $a = 1$。$1$ 的各次幂都是 $1$，所以只剩下二项式系数和 $x$ 的乘方：\n\n$$(1 + x)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}x^{k}$$\n\n当 $n = 4$ 时，系数就是杨辉三角的第 $4$ 行：\n\n$$(1 + x)^{4} = 1 + 4x + 6x^{2} + 4x^{3} + x^{4}$$\n\n代入 $x = 1$ 得 $2^{4} = 16$，确实 $1 + 4 + 6 + 4 + 1 = 16$。",
+  ),
   knowledgePoints: [
     {
       id: "expanding-one-plus-x",
       title: t("Expanding $(1 + x)^{n}$", "展开 $(1 + x)^{n}$"),
       explanation: t(
-        "With $a = 1$, every power of $a$ is $1$, and the binomial theorem becomes\n\n$$(1 + x)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}x^{k} = 1 + nx + \\frac{n(n - 1)}{2}x^{2} + \\cdots + x^{n}$$\n\nwritten in **ascending** powers of $x$. Replacing $x$ by $cx$ multiplies the $x^{k}$ term by $c^{k}$:\n\n$$(1 - 2x)^{9} = 1 + 9(-2x) + 36(-2x)^{2} + \\cdots = 1 - 18x + 144x^{2} + \\cdots$$",
-        "当 $a = 1$ 时，$a$ 的各次幂都是 $1$，二项式定理变为\n\n$$(1 + x)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}x^{k} = 1 + nx + \\frac{n(n - 1)}{2}x^{2} + \\cdots + x^{n}$$\n\n按 $x$ 的**升幂**排列。把 $x$ 换成 $cx$，$x^{k}$ 项就乘以 $c^{k}$：\n\n$$(1 - 2x)^{9} = 1 + 9(-2x) + 36(-2x)^{2} + \\cdots = 1 - 18x + 144x^{2} + \\cdots$$",
+        "With $a = 1$, every power of $a$ is $1$, and the binomial theorem becomes a sum in **ascending** powers of $x$:\n\n$$(1 + x)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}x^{k} = 1 + nx + \\frac{n(n - 1)}{2}x^{2} + \\cdots + x^{n}$$\n\nReplacing $x$ by $cx$ multiplies the $x^{k}$ term by $c^{k}$:\n\n$$(1 - 2x)^{9} = 1 + 9(-2x) + 36(-2x)^{2} + \\cdots = 1 - 18x + 144x^{2} + \\cdots$$\n\n> **Watch out.** Square the whole of $cx$: the $x^{2}$ term is $36(-2x)^{2} = 144x^{2}$, not $36 \\cdot (-2)x^{2}$. And the coefficient $\\binom{n}{2}$ is $\\frac{n(n - 1)}{2}$, not $n(n - 1)$.",
+        "当 $a = 1$ 时，$a$ 的各次幂都是 $1$，二项式定理变为按 $x$ 的**升幂**排列的和：\n\n$$(1 + x)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}x^{k} = 1 + nx + \\frac{n(n - 1)}{2}x^{2} + \\cdots + x^{n}$$\n\n把 $x$ 换成 $cx$，$x^{k}$ 项就乘以 $c^{k}$：\n\n$$(1 - 2x)^{9} = 1 + 9(-2x) + 36(-2x)^{2} + \\cdots = 1 - 18x + 144x^{2} + \\cdots$$\n\n> **注意。** 要把整个 $cx$ 平方：$x^{2}$ 项是 $36(-2x)^{2} = 144x^{2}$，不是 $36 \\cdot (-2)x^{2}$。系数 $\\binom{n}{2}$ 是 $\\frac{n(n - 1)}{2}$，不是 $n(n - 1)$。",
       ),
       generate(rng) {
         const n = rng.int(5, 15);
@@ -2889,10 +3425,25 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
             poly([1, ""], [n * c, "x"], [n * (n - 1) * c * c, "x^{2}"]),
             poly([1, ""], [n * c, "x"], [n * c * c, "x^{2}"]),
           ],
-          solution: both(
-            `Use $(1 + y)^{${n}} = 1 + ${n}y + ${binom(n, 2)}y^{2} + \\cdots$ with $y = ${cx}$:`,
-            `在 $(1 + y)^{${n}} = 1 + ${n}y + ${binom(n, 2)}y^{2} + \\cdots$ 中令 $y = ${cx}$：`,
-            `1 + ${n}(${cx}) + ${two}(${cx})^{2} + \\cdots = ${answer} + \\cdots`,
+          solution: worked(
+            [
+              [
+                `Substitute $y = ${cx}$`,
+                `代入 $y = ${cx}$`,
+                `The expansion of $(1 + y)^{${n}}$ starts $1 + ${n}y + ${binom(n, 2)}y^{2}$, where $${binom(n, 2)} = \\frac{${n} \\cdot ${n - 1}}{2} = ${two}$. Put $y = ${cx}$:`,
+                `$(1 + y)^{${n}}$ 的展开式以 $1 + ${n}y + ${binom(n, 2)}y^{2}$ 开头，其中 $${binom(n, 2)} = \\frac{${n} \\cdot ${n - 1}}{2} = ${two}$。令 $y = ${cx}$：`,
+                `(${inner})^{${n}} = 1 + ${n}(${cx}) + ${two}(${cx})^{2} + \\cdots`,
+              ],
+              [
+                "Simplify",
+                "化简",
+                `Square the whole of $${cx}$ and multiply:`,
+                `把整个 $${cx}$ 平方，再相乘：`,
+                `(${inner})^{${n}} = ${answer} + \\cdots`,
+              ],
+            ],
+            `Count the ways to multiply out the $${n}$ factors $(${inner})$. Taking $${cx}$ from one factor and $1$ from the rest can be done in $${n}$ ways, which gives $${monomial(n * c, "x", 1)}$. Taking $${cx}$ from two factors can be done in $${binom(n, 2)} = ${two}$ ways, each giving $${monomial(c * c, "x", 2)}$, which gives $${monomial(two * c * c, "x", 2)}$.`,
+            `数一数把 $${n}$ 个因式 $(${inner})$ 乘开的方法。从一个因式取 $${cx}$、其余取 $1$，有 $${n}$ 种取法，得到 $${monomial(n * c, "x", 1)}$。从两个因式取 $${cx}$，有 $${binom(n, 2)} = ${two}$ 种取法，每种得到 $${monomial(c * c, "x", 2)}$，合起来是 $${monomial(two * c * c, "x", 2)}$。`,
           ),
         });
       },
@@ -2901,8 +3452,8 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
       id: "sums-of-binomial-coefficients",
       title: t("Sums of binomial coefficients", "二项式系数之和"),
       explanation: t(
-        "Substituting a number for $x$ in $(1 + x)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}x^{k}$ adds up binomial coefficients. With $x = 1$, each row of Pascal's triangle adds to a power of $2$:\n\n$$\\sum_{k=0}^{n} \\binom{n}{k} = (1 + 1)^{n} = 2^{n}$$\n\nWith $x = 2$, $\\sum_{k=0}^{n} \\binom{n}{k}2^{k} = 3^{n}$, and with $x = -1$ the alternating sum is $(1 - 1)^{n} = 0$.",
-        "在 $(1 + x)^{n} = \\sum_{k=0}^{n} \\binom{n}{k}x^{k}$ 中给 $x$ 代入一个数，就得到二项式系数的和。令 $x = 1$，杨辉三角每一行的和都是 $2$ 的幂：\n\n$$\\sum_{k=0}^{n} \\binom{n}{k} = (1 + 1)^{n} = 2^{n}$$\n\n令 $x = 2$，$\\sum_{k=0}^{n} \\binom{n}{k}2^{k} = 3^{n}$；令 $x = -1$，正负交替的和为 $(1 - 1)^{n} = 0$。",
+        "Substituting a number for $x$ in the expansion of $(1 + x)^{n}$ adds up binomial coefficients. With $x = 1$, each row of Pascal's triangle adds to a power of $2$:\n\n$$\\sum_{k=0}^{n} \\binom{n}{k} = (1 + 1)^{n} = 2^{n}$$\n\nWith $x = 2$ the same idea gives\n\n$$\\sum_{k=0}^{n} \\binom{n}{k}2^{k} = (1 + 2)^{n} = 3^{n}$$\n\nWith $x = -1$ the signs alternate, and the sum is $(1 - 1)^{n} = 0$.\n\n> **Watch out.** The sum starts at $k = 0$, so it has $n + 1$ terms and includes $\\binom{n}{0} = 1$. Leaving out that term gives $(1 + x)^{n} - 1$ instead.",
+        "在 $(1 + x)^{n}$ 的展开式中给 $x$ 代入一个数，就得到二项式系数的和。令 $x = 1$，杨辉三角每一行的和都是 $2$ 的幂：\n\n$$\\sum_{k=0}^{n} \\binom{n}{k} = (1 + 1)^{n} = 2^{n}$$\n\n令 $x = 2$，同样得到\n\n$$\\sum_{k=0}^{n} \\binom{n}{k}2^{k} = (1 + 2)^{n} = 3^{n}$$\n\n令 $x = -1$，各项正负交替，和为 $(1 - 1)^{n} = 0$。\n\n> **注意。** 和从 $k = 0$ 开始，所以共有 $n + 1$ 项，并且包括 $\\binom{n}{0} = 1$。漏掉这一项就得到 $(1 + x)^{n} - 1$。",
       ),
       generate(rng) {
         const n = rng.int(4, 12);
@@ -2910,14 +3461,30 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
         const answer = (1 + c) ** n;
         const term = c === 1 ? binom(n, "k") : `${binom(n, "k")}${c < 0 ? `(${c})` : c}^{k}`;
         const expr = `\\sum_{k=0}^{${n}} ${term}`;
+        const terms = range(0, n).map((k) => Q.of(choose(n, k) * c ** k));
         return numberProblem({
           prompt: t(`Evaluate $${expr}$.`, `计算 $${expr}$。`),
           answer,
           wrong: [2 ** n, c ** n, (1 + c) ** n - 1, n * (1 + c), 2 ** n * c],
-          solution: both(
-            `This is the expansion of $(1 + x)^{${n}}$ with $x = ${c}$:`,
-            `这是 $(1 + x)^{${n}}$ 在 $x = ${c}$ 时的展开式：`,
-            `${expr} = (1 ${c < 0 ? "-" : "+"} ${Math.abs(c)})^{${n}} = ${answer}`,
+          solution: worked(
+            [
+              [
+                "Recognize the expansion",
+                "认出展开式",
+                `Each term is $${binom(n, "k")}x^{k}$ with $x = ${c}$, so the sum is the expansion of $(1 + x)^{${n}}$ at $x = ${c}$:`,
+                `每一项都是 $${binom(n, "k")}x^{k}$，其中 $x = ${c}$，所以这个和是 $(1 + x)^{${n}}$ 在 $x = ${c}$ 时的展开式：`,
+                `${expr} = (1 ${c < 0 ? "-" : "+"} ${Math.abs(c)})^{${n}}`,
+              ],
+              [
+                "Evaluate",
+                "计算",
+                "Work out the power:",
+                "算出这个乘方：",
+                `(1 ${c < 0 ? "-" : "+"} ${Math.abs(c)})^{${n}} = ${pr(1 + c)}^{${n}} = ${answer}`,
+              ],
+            ],
+            `Add the $${n + 1}$ terms one by one instead: $${listL(terms)} = ${answer}$.`,
+            `改为把这 $${n + 1}$ 项逐个相加：$${listL(terms)} = ${answer}$。`,
           ),
         });
       },
@@ -2926,8 +3493,8 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
       id: "finding-n-from-a-coefficient",
       title: t("Finding $n$ from a coefficient", "由系数求 $n$"),
       explanation: t(
-        "A known coefficient gives an equation for $n$. If the coefficient of $x^{2}$ in $(1 + 3x)^{n}$ is $324$, then\n\n$$\\binom{n}{2}3^{2} = 324 \\implies \\frac{n(n - 1)}{2} = 36 \\implies n^{2} - n - 72 = 0 \\implies (n - 9)(n + 8) = 0$$\n\nso $n = 9$, the positive solution.",
-        "已知某项的系数，就得到关于 $n$ 的方程。若 $(1 + 3x)^{n}$ 中 $x^{2}$ 的系数是 $324$，则\n\n$$\\binom{n}{2}3^{2} = 324 \\implies \\frac{n(n - 1)}{2} = 36 \\implies n^{2} - n - 72 = 0 \\implies (n - 9)(n + 8) = 0$$\n\n所以 $n = 9$（取正解）。",
+        "A known coefficient gives an equation for $n$. If the coefficient of $x^{2}$ in $(1 + 3x)^{n}$ is $324$, then\n\n$$\\binom{n}{2}3^{2} = 324$$\n\n$$\\frac{n(n - 1)}{2} = 36$$\n\n$$n^{2} - n - 72 = 0$$\n\n$$(n - 9)(n + 8) = 0$$\n\nSo $n = 9$, the positive solution.\n\n> **Watch out.** The power $n$ is a positive whole number, so reject the negative root $n = -8$. Remember the $2$ in $\\binom{n}{2} = \\frac{n(n - 1)}{2}$; without it the quadratic would be $n^{2} - n - 36 = 0$, which has no whole-number root.",
+        "已知某项的系数，就得到关于 $n$ 的方程。若 $(1 + 3x)^{n}$ 中 $x^{2}$ 的系数是 $324$，则\n\n$$\\binom{n}{2}3^{2} = 324$$\n\n$$\\frac{n(n - 1)}{2} = 36$$\n\n$$n^{2} - n - 72 = 0$$\n\n$$(n - 9)(n + 8) = 0$$\n\n所以 $n = 9$（取正解）。\n\n> **注意。** 指数 $n$ 是正整数，所以要舍去负根 $n = -8$。别忘了 $\\binom{n}{2} = \\frac{n(n - 1)}{2}$ 中的 $2$；少了它，方程就成了 $n^{2} - n - 36 = 0$，没有整数根。",
       ),
       generate(rng) {
         const n = rng.int(4, 16);
@@ -2935,6 +3502,7 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
         const V = choose(n, 2) * c * c;
         const inner = poly([1, ""], [c, "x"]);
         const half = choose(n, 2);
+        const cx = c === 1 ? "x" : `${c}x`;
         return numberProblem({
           prompt: t(
             `The coefficient of $x^{2}$ in the expansion of $(${inner})^{n}$ is $${V}$. Find $n$.`,
@@ -2943,11 +3511,28 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
           answer: n,
           solveFor: "n",
           wrong: [n - 1, n + 1, Q.of(V, c * c), Q.of(V, Math.abs(c))],
-          solution: both(
-            `The $x^{2}$ term is $${binom("n", 2)}(${c === 1 ? "x" : `${c}x`})^{2}$, so`,
-            `$x^{2}$ 项是 $${binom("n", 2)}(${c === 1 ? "x" : `${c}x`})^{2}$，所以`,
-            `${binom("n", 2)} \\cdot ${c * c} = ${V} \\implies \\frac{n(n - 1)}{2} = ${half} \\implies n^{2} - n - ${2 * half} = 0`,
-            `(n - ${n})(n + ${n - 1}) = 0 \\implies n = ${n}`,
+          solution: worked(
+            [
+              [
+                "Write the coefficient",
+                "写出系数",
+                `The $x^{2}$ term is $${binom("n", 2)}(${cx})^{2}$, so its coefficient is $${binom("n", 2)} \\cdot ${c * c}$. Set it equal to $${V}$ and use $${binom("n", 2)} = \\frac{n(n - 1)}{2}$:`,
+                `$x^{2}$ 项是 $${binom("n", 2)}(${cx})^{2}$，所以它的系数是 $${binom("n", 2)} \\cdot ${c * c}$。令它等于 $${V}$，并用 $${binom("n", 2)} = \\frac{n(n - 1)}{2}$：`,
+                `${binom("n", 2)} \\cdot ${c * c} = ${V}`,
+                `\\frac{n(n - 1)}{2} = ${half}`,
+              ],
+              [
+                "Solve the quadratic",
+                "解二次方程",
+                `Multiply by $2$ and factor. The power $n$ must be a positive whole number:`,
+                `乘以 $2$ 再因式分解。指数 $n$ 必须是正整数：`,
+                `n^{2} - n - ${2 * half} = 0`,
+                `(n - ${n})(n + ${n - 1}) = 0`,
+                `n = ${n}`,
+              ],
+            ],
+            `With $n = ${n}$ the $x^{2}$ coefficient is the given one: $${binom(n, 2)} \\cdot ${c * c} = ${half} \\cdot ${c * c} = ${V}$.`,
+            `$n = ${n}$ 时 $x^{2}$ 的系数正是已知的值：$${binom(n, 2)} \\cdot ${c * c} = ${half} \\cdot ${c * c} = ${V}$。`,
           ),
         });
       },
@@ -2957,6 +3542,17 @@ export const theSpecialCaseOfTheBinomialTheorem: TopicDef = {
 
 /** addDec writes a signed decimal term after another: "+ 0.16", "- 1.6". */
 const addDec = (v: Q) => (v.sign() < 0 ? `- ${dec(v.neg())}` : `+ ${dec(v)}`);
+
+/** exactCheck compares a three-term estimate of a power with its exact value, whose difference is mostly the fourth term. */
+function exactCheck(x: string, n: number, exact: Q, estimate: Q, fourth: Q, fourthL: string): Text {
+  const close = (v: Q) => dec(roundQ(v, 8));
+  const value = `${x}^{${n}} ${roundQ(exact, 8).eq(exact) ? "=" : "\\approx"} ${close(exact)}`;
+  const gap = `${close(exact.sub(estimate))}`;
+  return t(
+    `Multiplying out exactly gives $${value}$. The exact value minus the estimate is about $${gap}$, close to the first term left out, $${fourthL} = ${dec(fourth)}$.`,
+    `精确地乘开得 $${value}$。精确值减去近似值约为 $${gap}$，与舍去的第一项 $${fourthL} = ${dec(fourth)}$ 接近。`,
+  );
+}
 
 /** approximatingValuesUsingTheBinomialTheorem estimates powers of numbers close to an integer with the first terms of an expansion. */
 export const approximatingValuesUsingTheBinomialTheorem: TopicDef = {
@@ -2973,13 +3569,17 @@ export const approximatingValuesUsingTheBinomialTheorem: TopicDef = {
   ],
   xp: 12,
   standards: ["CCSS.HSA.APR.C.5"],
+  intro: t(
+    "You can write the first terms of $(1 + x)^{n}$ in ascending powers of $x$. When $x$ is a small number, each power of it is much smaller than the one before. So the first few terms already give the value of the whole power to several decimal places, without multiplying it out.\n\nTake $1.01^{5} = (1 + 0.01)^{5}$. The first three terms are\n\n$$1 + 5(0.01) + 10(0.01)^{2} = 1 + 0.05 + 0.001 = 1.051$$\n\nThe true value is $1.0510100501$. The terms left out add only about $0.00001$.",
+    "你会写出 $(1 + x)^{n}$ 按 $x$ 升幂排列的前几项。当 $x$ 是一个很小的数时，它的每一次幂都比前一次小得多。所以不必乘开，前几项就能给出整个乘方精确到好几位小数的值。\n\n取 $1.01^{5} = (1 + 0.01)^{5}$。前三项是\n\n$$1 + 5(0.01) + 10(0.01)^{2} = 1 + 0.05 + 0.001 = 1.051$$\n\n真实值是 $1.0510100501$。舍去的各项加起来只有约 $0.00001$。",
+  ),
   knowledgePoints: [
     {
       id: "powers-near-one",
       title: t("Powers of numbers near $1$", "接近 $1$ 的数的乘方"),
       explanation: t(
-        "Write a number close to $1$ as $1 + h$ with $h$ small. The powers $h^{2}, h^{3}, \\ldots$ shrink quickly, so the first few terms of\n\n$$(1 + h)^{n} = 1 + nh + \\binom{n}{2}h^{2} + \\binom{n}{3}h^{3} + \\cdots$$\n\ngive a good approximation. With three terms:\n\n$$1.02^{8} = (1 + 0.02)^{8} \\approx 1 + 8(0.02) + 28(0.02)^{2} = 1 + 0.16 + 0.0112 = 1.1712$$\n\n(The true value is $1.17166\\ldots$.)",
-        "把接近 $1$ 的数写成 $1 + h$，其中 $h$ 很小。$h^{2}, h^{3}, \\ldots$ 迅速变小，所以\n\n$$(1 + h)^{n} = 1 + nh + \\binom{n}{2}h^{2} + \\binom{n}{3}h^{3} + \\cdots$$\n\n的前几项就是很好的近似值。取前三项：\n\n$$1.02^{8} = (1 + 0.02)^{8} \\approx 1 + 8(0.02) + 28(0.02)^{2} = 1 + 0.16 + 0.0112 = 1.1712$$\n\n（真实值是 $1.17166\\ldots$。）",
+        "Write a number close to $1$ as $1 + h$ with $h$ small. The powers $h^{2}, h^{3}, \\ldots$ shrink quickly, so the first few terms of the expansion give a good approximation:\n\n$$(1 + h)^{n} = 1 + nh + \\binom{n}{2}h^{2} + \\binom{n}{3}h^{3} + \\cdots$$\n\nWith three terms:\n\n$$1.02^{8} = (1 + 0.02)^{8} \\approx 1 + 8(0.02) + 28(0.02)^{2} = 1 + 0.16 + 0.0112 = 1.1712$$\n\nThe true value is $1.17166\\ldots$.\n\n> **Watch out.** Square $h$ in the third term, sign included: $(-0.02)^{2} = 0.0004$ is positive. The coefficient of $h^{2}$ is $\\binom{n}{2} = \\frac{n(n - 1)}{2}$, not $n$.",
+        "把接近 $1$ 的数写成 $1 + h$，其中 $h$ 很小。$h^{2}, h^{3}, \\ldots$ 迅速变小，所以展开式的前几项就是很好的近似值：\n\n$$(1 + h)^{n} = 1 + nh + \\binom{n}{2}h^{2} + \\binom{n}{3}h^{3} + \\cdots$$\n\n取前三项：\n\n$$1.02^{8} = (1 + 0.02)^{8} \\approx 1 + 8(0.02) + 28(0.02)^{2} = 1 + 0.16 + 0.0112 = 1.1712$$\n\n真实值是 $1.17166\\ldots$。\n\n> **注意。** 第三项要把 $h$ 连同符号平方：$(-0.02)^{2} = 0.0004$ 是正数。$h^{2}$ 的系数是 $\\binom{n}{2} = \\frac{n(n - 1)}{2}$，不是 $n$。",
       ),
       generate(rng) {
         const n = rng.int(4, 12);
@@ -2988,6 +3588,7 @@ export const approximatingValuesUsingTheBinomialTheorem: TopicDef = {
         const answer = Q.one.add(Q.of(n).mul(h)).add(Q.of(two).mul(h.pow(2)));
         const x = dec(Q.one.add(h));
         const hL = `(${dec(h)})`;
+        const check = exactCheck(x, n, Q.one.add(h).pow(n), answer, Q.of(choose(n, 3)).mul(h.pow(3)), `${binom(n, 3)}${hL}^{3}`);
         return numberProblem({
           prompt: t(
             `Use the first three terms of a binomial expansion to approximate $${x}^{${n}}$.`,
@@ -3001,10 +3602,25 @@ export const approximatingValuesUsingTheBinomialTheorem: TopicDef = {
             Q.one.add(Q.of(n).mul(h)).add(Q.of(two).mul(h)),
             Q.one.add(Q.of(n).mul(h)).add(Q.of(n).mul(h.pow(2))),
           ],
-          solution: both(
-            `Write $${x} = 1 ${h.sign() < 0 ? "-" : "+"} ${dec(h.abs())}$ and keep the terms up to $h^{2}$:`,
-            `把 $${x}$ 写成 $1 ${h.sign() < 0 ? "-" : "+"} ${dec(h.abs())}$，保留到 $h^{2}$ 项：`,
-            `${x}^{${n}} \\approx 1 + ${n}${hL} + ${two}${hL}^{2} = 1 ${addDec(Q.of(n).mul(h))} ${addDec(Q.of(two).mul(h.pow(2)))} = ${dec(answer)}`,
+          solution: worked(
+            [
+              [
+                "Write the number as $1 + h$",
+                "把这个数写成 $1 + h$",
+                `Here $${x} = 1 ${h.sign() < 0 ? "-" : "+"} ${dec(h.abs())}$, so $h = ${dec(h)}$, and the coefficient of $h^{2}$ is $${binom(n, 2)} = ${two}$.`,
+                `这里 $${x} = 1 ${h.sign() < 0 ? "-" : "+"} ${dec(h.abs())}$，所以 $h = ${dec(h)}$，$h^{2}$ 的系数是 $${binom(n, 2)} = ${two}$。`,
+              ],
+              [
+                "Keep three terms",
+                "保留三项",
+                "Keep the terms up to $h^{2}$:",
+                "保留到 $h^{2}$ 项：",
+                `${x}^{${n}} \\approx 1 + ${n}${hL} + ${two}${hL}^{2}`,
+                `${x}^{${n}} \\approx 1 ${addDec(Q.of(n).mul(h))} ${addDec(Q.of(two).mul(h.pow(2)))} = ${dec(answer)}`,
+              ],
+            ],
+            check.en,
+            check["zh-CN"],
           ),
         });
       },
@@ -3013,8 +3629,8 @@ export const approximatingValuesUsingTheBinomialTheorem: TopicDef = {
       id: "powers-near-other-integers",
       title: t("Powers of numbers near other integers", "接近其他整数的数的乘方"),
       explanation: t(
-        "For a number close to an integer $a$, write it as $a + h$ and use the first terms of $(a + h)^{n} = a^{n} + na^{n-1}h + \\binom{n}{2}a^{n-2}h^{2} + \\cdots$:\n\n$$1.98^{5} = (2 - 0.02)^{5} \\approx 2^{5} + 5 \\cdot 2^{4}(-0.02) + 10 \\cdot 2^{3}(-0.02)^{2}$$\n\n$$= 32 - 1.6 + 0.032 = 30.432$$\n\n(The true value is $30.4316\\ldots$.)",
-        "对于接近整数 $a$ 的数，把它写成 $a + h$，用 $(a + h)^{n} = a^{n} + na^{n-1}h + \\binom{n}{2}a^{n-2}h^{2} + \\cdots$ 的前几项：\n\n$$1.98^{5} = (2 - 0.02)^{5} \\approx 2^{5} + 5 \\cdot 2^{4}(-0.02) + 10 \\cdot 2^{3}(-0.02)^{2}$$\n\n$$= 32 - 1.6 + 0.032 = 30.432$$\n\n（真实值是 $30.4316\\ldots$。）",
+        "For a number close to an integer $a$, write it as $a + h$ and use the first terms of $(a + h)^{n} = a^{n} + na^{n-1}h + \\binom{n}{2}a^{n-2}h^{2} + \\cdots$:\n\n$$1.98^{5} = (2 - 0.02)^{5} \\approx 2^{5} + 5 \\cdot 2^{4}(-0.02) + 10 \\cdot 2^{3}(-0.02)^{2}$$\n\n$$= 32 - 1.6 + 0.032 = 30.432$$\n\nThe true value is $30.4316\\ldots$.\n\n> **Watch out.** The powers of $a$ go down as the powers of $h$ go up, so the third term is $\\binom{n}{2}a^{n-2}h^{2}$. Leaving out the powers of $a$ treats the number as if it were close to $1$.",
+        "对于接近整数 $a$ 的数，把它写成 $a + h$，用 $(a + h)^{n} = a^{n} + na^{n-1}h + \\binom{n}{2}a^{n-2}h^{2} + \\cdots$ 的前几项：\n\n$$1.98^{5} = (2 - 0.02)^{5} \\approx 2^{5} + 5 \\cdot 2^{4}(-0.02) + 10 \\cdot 2^{3}(-0.02)^{2}$$\n\n$$= 32 - 1.6 + 0.032 = 30.432$$\n\n真实值是 $30.4316\\ldots$。\n\n> **注意。** $h$ 的次数升高时 $a$ 的次数降低，所以第三项是 $\\binom{n}{2}a^{n-2}h^{2}$。漏掉 $a$ 的乘方，就把这个数当成接近 $1$ 了。",
       ),
       generate(rng) {
         const a = rng.pick([2, 2, 3, 10]);
@@ -3027,6 +3643,9 @@ export const approximatingValuesUsingTheBinomialTheorem: TopicDef = {
         const answer = t0.add(t1).add(t2);
         const x = dec(Q.of(a).add(h));
         const hL = `(${dec(h)})`;
+        const fourth = Q.of(choose(n, 3) * a ** (n - 3)).mul(h.pow(3));
+        const fourthL = `${binom(n, 3)}${n === 3 ? "" : ` \\cdot ${a}${n - 3 === 1 ? "" : `^{${n - 3}}`}`}${hL}^{3}`;
+        const check = exactCheck(x, n, Q.of(a).add(h).pow(n), answer, fourth, fourthL);
         return numberProblem({
           prompt: t(
             `Use the first three terms of a binomial expansion to approximate $${x}^{${n}}$.`,
@@ -3040,11 +3659,25 @@ export const approximatingValuesUsingTheBinomialTheorem: TopicDef = {
             t0.add(t1).add(Q.of(two).mul(h.pow(2))),
             t0.add(t1).add(t2.mul(Q.of(2))),
           ],
-          solution: both(
-            `Write $${x} = ${a} ${h.sign() < 0 ? "-" : "+"} ${dec(h.abs())}$ and keep the first three terms:`,
-            `把 $${x}$ 写成 $${a} ${h.sign() < 0 ? "-" : "+"} ${dec(h.abs())}$，保留前三项：`,
-            `${x}^{${n}} \\approx ${a}^{${n}} + ${n} \\cdot ${a}^{${n - 1}}${hL} + ${two} \\cdot ${a}^{${n - 2}}${hL}^{2}`,
-            `= ${dec(t0)} ${addDec(t1)} ${addDec(t2)} = ${dec(answer)}`,
+          solution: worked(
+            [
+              [
+                "Write the number as $a + h$",
+                "把这个数写成 $a + h$",
+                `Here $${x} = ${a} ${h.sign() < 0 ? "-" : "+"} ${dec(h.abs())}$, so $a = ${a}$ and $h = ${dec(h)}$.`,
+                `这里 $${x} = ${a} ${h.sign() < 0 ? "-" : "+"} ${dec(h.abs())}$，所以 $a = ${a}$，$h = ${dec(h)}$。`,
+              ],
+              [
+                "Keep three terms",
+                "保留三项",
+                "Keep the first three terms, with the powers of $a$ going down:",
+                "保留前三项，$a$ 的次数逐项降低：",
+                `${x}^{${n}} \\approx ${a}^{${n}} + ${n} \\cdot ${a}^{${n - 1}}${hL} + ${two} \\cdot ${a}^{${n - 2}}${hL}^{2}`,
+                `${x}^{${n}} \\approx ${dec(t0)} ${addDec(t1)} ${addDec(t2)} = ${dec(answer)}`,
+              ],
+            ],
+            check.en,
+            check["zh-CN"],
           ),
         });
       },

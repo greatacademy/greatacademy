@@ -148,4 +148,12 @@ export const taughtTopics: readonly string[] = [
   "unit-vectors",
   "linear-combinations-of-vectors-and-their-properties",
   "describing-the-position-vector-of-a-point-using-known-vectors",
+  "writing-geometric-series-in-sigma-notation",
+  "sums-of-finite-geometric-series-given-in-sigma-notation",
+  "solving-geometric-series-problems-using-exponential-equations-and-inequalities",
+  "modeling-with-geometric-series",
+  "modeling-financial-problems-using-geometric-series",
+  "pascals-triangle-and-the-binomial-coefficients",
+  "expanding-a-binomial-using-binomial-coefficients",
+  "the-special-case-of-the-binomial-theorem",
 ];
