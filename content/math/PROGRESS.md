@@ -171,7 +171,7 @@ Stage 2: AP Calculus AB and BC, Calculus I and II. Counts are topics of these co
 | File | Calculus topics | Status | Owner | Notes |
 | :--- | ---: | :--- | :--- | :--- |
 | `calculus-i-limits.ts` | 18 | in progress | |  |
-| `calculus-i-limit-techniques.ts` | 13 | open | |  |
+| `calculus-i-limit-techniques.ts` | 13 | in progress | |  |
 | `calculus-i-continuity.ts` | 13 | open | |  |
 | `calculus-i-differentiation.ts` | 9 | open | |  |
 | `calculus-i-derivative-rules.ts` | 12 | open | |  |
