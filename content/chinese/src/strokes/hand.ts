@@ -7,6 +7,7 @@ import { point } from "@ga/subject-chinese";
 
 import type { CharacterWord } from "../characters/recognition.ts";
 import { mediansData } from "./medians-data.ts";
+import { type StrokeShape, shapeOf } from "./shape.ts";
 
 /** HAND_BATCH is the number of characters of a writing batch. */
 export const HAND_BATCH = 10;
@@ -84,22 +85,38 @@ function whereIs([x, y]: readonly [number, number]): Text {
   return t(`the ${r.en} ${c.en}`, `${c["zh-CN"]}${r["zh-CN"]}方`);
 }
 
-/** wayOf says which way a stroke goes, from where it starts to where it ends. */
-function wayOf(stroke: Stroke): Text {
-  const [x0, y0] = stroke[0]!;
-  const [x1, y1] = stroke.at(-1)!;
-  const [dx, dy] = [x1 - x0, y1 - y0];
-  if (Math.abs(dy) <= 0.3 * Math.abs(dx)) return dx > 0 ? t("goes from left to right", "从左向右写") : t("goes to the left", "向左写");
-  if (Math.abs(dx) <= 0.35 * Math.abs(dy)) return dy > 0 ? t("goes straight down", "从上往下写") : t("goes up", "向上写");
-  if (dy > 0) return dx < 0 ? t("goes down to the left", "向左下方写") : t("ends down to the right", "向右下方写");
-  return dx > 0 ? t("goes up to the right", "向右上方写") : t("goes up to the left", "向左上方写");
-}
+/** STRAIGHT says what each straight stroke is and how it goes, after where it starts. */
+const STRAIGHT: Readonly<Record<Exclude<StrokeShape, "turning" | "unknown">, Text>> = {
+  横: t("is a 横, written from left to right", "是横，从左向右写"),
+  竖: t("is a 竖, written straight down", "是竖，从上往下写"),
+  撇: t("is a 撇, falling down to the left", "是撇，向左下方写"),
+  捺: t("is a 捺, falling down to the right", "是捺，向右下方写"),
+  点: t("is a 点, a short stroke", "是点，是短短的一笔"),
+  提: t("is a 提, rising up to the right", "是提，向右上方写"),
+};
 
-/** firstStroke says where a character's first stroke starts and which way it goes, from its medians. */
-export function firstStroke(char: string): Text {
+/** firstShape is what the medians tell of a character's first stroke. */
+export function firstShape(char: string): StrokeShape {
   const first = medians.get(char)?.[0];
   if (!first) throw new Error(`medians: none for ${char}`);
-  const [where, way] = [whereIs(first[0]!), wayOf(first)];
+  return shapeOf(first);
+}
+
+/**
+ * firstStroke says where a character's first stroke starts and what it is: a straight stroke by name and the way it goes;
+ * a stroke that turns only as turning, since the medians do not tell 横折 from 横撇 or 横钩; any other only by where it starts.
+ */
+export function firstStroke(char: string): Text {
+  const where = whereIs(medians.get(char)![0]![0]!);
+  const shape = firstShape(char);
+  if (shape === "turning") {
+    return t(
+      `its first stroke starts at ${where.en} and turns partway, so follow it through the turn without lifting the pen`,
+      `第一笔从${where["zh-CN"]}起笔，中途转折，写到转折处不要提笔`,
+    );
+  }
+  if (shape === "unknown") return t(`its first stroke starts at ${where.en}`, `第一笔从${where["zh-CN"]}起笔`);
+  const way = STRAIGHT[shape];
   return t(`its first stroke starts at ${where.en} and ${way.en}`, `第一笔从${where["zh-CN"]}起笔，${way["zh-CN"]}`);
 }
 
@@ -176,7 +193,8 @@ function buildHandTopic(
   prerequisites: readonly string[],
 ): TopicDef {
   const joined = chars.join("、");
-  const task = tasks[0];
+  // The instance is a character whose first stroke is straight, if the batch has one: its way can be told.
+  const task = tasks.find((x) => firstShape(x.char) !== "turning" && firstShape(x.char) !== "unknown") ?? tasks[0];
   if (!task) throw new Error(`${id}: no tasks`);
   const c = task.char;
   const n = strokeCount(c);

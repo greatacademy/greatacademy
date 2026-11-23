@@ -66,7 +66,7 @@ function stage(first: number, entries: readonly CharacterEntry[], grades = 2, ru
           title: t(`Grade ${grade} Characters, Set ${i + 1}`, `${NUMERALS[grade]}年级识字 第${i + 1}组`),
           prerequisites: i === 0 ? [] : [recognitionId(grade, i)],
           entries: batch,
-          known,
+          known: knownCharacters,
         }),
       })),
   }));
@@ -115,11 +115,17 @@ export const gradesThreeAndFourEntries: readonly CharacterEntry[] = parseCharact
 /** gradesFiveAndSixEntries are the characters of grades 5 and 6 with their words and confusable characters. */
 export const gradesFiveAndSixEntries: readonly CharacterEntry[] = parseCharacters(gradesFiveAndSixData);
 
+/**
+ * WITHOUT_WORDS are characters of table two left out of the recognition batches: no word of today's standard writing has
+ * them. 斌, “having both letters and arms”, is found mostly in names; 斌斌 and 文质斌斌 are old variants of 彬彬 and 文质彬彬.
+ */
+export const WITHOUT_WORDS: readonly string[] = ["斌"];
+
 /** gradesSevenToNineEntries are the characters of grades 7 to 9 with their words and confusable characters. */
 export const gradesSevenToNineEntries: readonly CharacterEntry[] = parseCharacters(gradesSevenToNineData);
 
-/** known are the characters of every grade, by character, for the reasons of the recognition topics. */
-const known: ReadonlyMap<string, CharacterEntry> = new Map(
+/** knownCharacters are the characters of every grade, by character, for the reasons of the recognition and level topics. */
+export const knownCharacters: ReadonlyMap<string, CharacterEntry> = new Map(
   [gradesOneAndTwoEntries, gradesThreeAndFourEntries, gradesFiveAndSixEntries, gradesSevenToNineEntries].flat().map((e) => [e.char, e]),
 );
 

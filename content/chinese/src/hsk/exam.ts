@@ -13,6 +13,14 @@ export interface Ask {
   readonly right: Text;
   readonly wrong: readonly Text[];
   readonly solution: Text;
+  /** reasons say why each wrong option is wrong, in the order of wrong: told to a learner who picks it, and listed after the solution. */
+  readonly reasons?: readonly Text[];
+}
+
+/** withReasons ends a solution with why each wrong option is wrong, one line an option. */
+function withReasons(solution: Text, reasons: readonly Text[]): Text {
+  const list = (locale: "en" | "zh-CN") => reasons.map((r) => `- ${r[locale]}`).join("\n");
+  return t(`${solution.en}\n\nThe other options:\n\n${list("en")}`, `${solution["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`);
 }
 
 /** quoted sets a text as a block quote in each locale. */
@@ -27,9 +35,12 @@ export function examChoice(question: Text, items: readonly Ask[]): Generator {
     return {
       prompt: joinText([question, quoted(item.shown)]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options } },
-      solution: item.solution,
+      solution: item.reasons ? withReasons(item.solution, item.reasons) : item.solution,
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
+      ...(item.reasons && {
+        mistakes: item.wrong.map((w, k) => ({ response: String(options.indexOf(w)), feedback: item.reasons![k]! })),
+      }),
     };
   };
 }

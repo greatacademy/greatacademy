@@ -5,6 +5,7 @@
 
 import { type Text, type TopicDef, t } from "@ga/content";
 
+import { simplifying } from "../characters/traditional.ts";
 import { type DrillItem, drillItem, drillTopic, lines } from "../grammar/drill.ts";
 
 /** items reads drill items from lines of `shown | right | wrong | wrong | wrong`. */
@@ -206,6 +207,29 @@ const traditionalWords = items(`
 圖書館 | 图书馆 | 国书馆 | 图节馆 | 图书管
 `);
 
+/** traditionalTeaching explains the first traditional characters, each by how it changed. */
+const traditionalTeaching = simplifying(
+  {
+    學: t("Its top is written more simply, and 子 below stays.", "上面简化了，下面的“子”不变。"),
+    國: t("The frame 囗 stays, and 或 inside becomes 玉.", "外框“囗”不变，里面的“或”换成“玉”。"),
+    書: t("It takes a new, much shorter form, from running hand.", "换成了简短的新写法，来自草书。"),
+    東: t("It takes a shorter form, from running hand.", "换成了来自草书的简短写法。"),
+    車: t("It takes a shorter form, from running hand.", "换成了来自草书的简短写法。"),
+    馬: t("It keeps the outline in a shorter form, from running hand.", "保留轮廓，换成来自草书的简短写法。"),
+    鳥: t("It keeps the outline in a shorter form, from running hand.", "保留轮廓，换成来自草书的简短写法。"),
+    說: t("言 on the left becomes 讠, and 兌 becomes 兑.", "左边“言”作“讠”，右边“兌”作“兑”。"),
+    見: t("It keeps the outline, written more simply.", "保留轮廓，写法更简单。"),
+    長: t("It takes a shorter form, from running hand.", "换成了来自草书的简短写法。"),
+    門: t("It keeps the outline of the frame in three strokes.", "保留门框的轮廓，只写三笔。"),
+    開: t("The frame 門 is dropped, and 开 inside is kept.", "去掉外框“門”，留下里面的“开”。"),
+    電: t("雨 on top is dropped, and the part below is kept.", "去掉上面的“雨”，留下下面的部分。"),
+    愛: t("心 in the middle is dropped, and 友 is written below.", "去掉中间的“心”，下面写作“友”。"),
+    時: t("寺 on the right becomes 寸.", "右边的“寺”换成“寸”。"),
+    飛: t("Only part of its shape is kept.", "只保留了字形的一部分。"),
+  },
+  [traditional, traditionalWords],
+);
+
 /** fill is the solution of a sentence with a gap: the sentence with its answer in place. */
 const fill = (right: string, shown: string): Text => {
   const whole = shown.replace("＿", right);
@@ -391,6 +415,10 @@ export const heritageTopics: readonly TopicDef[] = [
       "Reading traditional characters, as in Hong Kong, Taiwan and many communities abroad, by their simplified forms.",
       "认识香港、台湾和许多海外华人社区使用的繁体字，说出对应的简化字。",
     ),
+    intro: t(
+      "Hong Kong, Taiwan and many communities abroad write traditional characters; each has a simplified form. Take 國: the frame 囗 stays and 或 inside becomes 玉, so 國 is 国. This topic reads traditional characters and words by their simplified forms.",
+      "香港、台湾和许多海外华人社区写繁体字，每个繁体字都有对应的简化字。比如“國”：外框“囗”不变，里面的“或”换成“玉”，所以“國”是“国”。这个专题认识繁体的字和词语，说出对应的简化字。",
+    ),
     prerequisites: ["heritage-register"],
     strand: "characters",
     points: [
@@ -398,23 +426,25 @@ export const heritageTopics: readonly TopicDef[] = [
         suffix: "characters",
         title: t("Single Characters", "单字"),
         explanation: t(
-          "Many simplified characters keep the outline of the traditional one: 門 is 门, 馬 马, 鳥 鸟. Others keep a part (開 开) or take a new one (書 书). Look for what stays.",
-          "很多简化字保留了繁体字的轮廓：“門”是“门”，“馬”是“马”，“鳥”是“鸟”；有的保留一部分（“開”是“开”），有的换了写法（“書”是“书”）。找一找没有变的部分。",
+          "Many simplified characters keep the outline of the traditional one: 門 is 门, 馬 马, 鳥 鸟. Others keep a part (開 开) or take a new one (書 书). Look for what stays: in 國 the frame stays, and 或 inside becomes 玉, giving 国.\n\n> **Watch out.** A simplified form is not always a look-alike: 書 becomes 书, which keeps little of its shape, so learn such characters one by one.",
+          "很多简化字保留了繁体字的轮廓：“門”是“门”，“馬”是“马”，“鳥”是“鸟”；有的保留一部分（“開”是“开”），有的换了写法（“書”是“书”）。找一找没有变的部分：“國”的外框不变，里面的“或”换成“玉”，就是“国”。\n\n> **注意。** 简化字不一定和繁体字长得像：“書”作“书”，字形变化很大，这样的字要一个一个记。",
         ),
         question: t("What is this character in simplified form?", "这个繁体字的简化字是哪个？"),
         items: traditional,
-        why: (right, shown) => t(`${shown} is ${right}.`, `“${shown}”的简化字是“${right}”。`),
+        why: traditionalTeaching.charWhy,
+        whyNot: traditionalTeaching.charWhyNot,
       },
       {
         suffix: "words",
         title: t("Words", "词语"),
         explanation: t(
-          "In a word, simplify each character in turn: 電話 is 电话, 圖書館 图书馆. A component simplified once, such as 言 to 讠 or 門 to 门, is simplified the same way in every character.",
-          "读词语时，把每个字分别换成简化字：“電話”是“电话”，“圖書館”是“图书馆”。一个部件怎样简化（如“言”作“讠”，“門”作“门”），在别的字里也一样。",
+          "In a word, simplify each character in turn: 電話 is 电话, 圖書館 图书馆. A component simplified once, such as 言 to 讠 or 門 to 门, is simplified the same way in every character.\n\n> **Watch out.** Not every character changes: in 朋友們 only 們 becomes 们, and 朋 and 友 stay as they are.",
+          "读词语时，把每个字分别换成简化字：“電話”是“电话”，“圖書館”是“图书馆”。一个部件怎样简化（如“言”作“讠”，“門”作“门”），在别的字里也一样。\n\n> **注意。** 不是每个字都要换：“朋友們”只有“們”作“们”，“朋”和“友”不变。",
         ),
         question: t("What is this word in simplified characters?", "这个词用简化字怎么写？"),
         items: traditionalWords,
-        why: (right, shown) => t(`${shown} is ${right}.`, `“${shown}”用简化字写作“${right}”。`),
+        why: traditionalTeaching.wordWhy,
+        whyNot: traditionalTeaching.wordWhyNot,
       },
     ],
   }),

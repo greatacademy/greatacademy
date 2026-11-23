@@ -31,7 +31,6 @@ export const gradesSevenToNineData = `
 鳖 biē 鳖甲 瓮中捉鳖 老鳖 憋弊
 瘪 biě 干瘪 瘪嘴 瘪三@biē 憋鳖
 彬 bīn 彬彬 彬彬有礼 文质彬彬 杉林
-斌 bīn 斌斌 斌斌有礼 文质斌斌 武赋
 濒 bīn 濒临 濒危 濒死 频颇
 鬓 bìn 鬓角 两鬓 鬓发 宾滨
 秉 bǐng 秉性 秉公 秉烛夜游 乘兼

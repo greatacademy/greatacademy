@@ -69,12 +69,18 @@ export function writtenCharactersTopic(level: number): TopicDef {
   }
   if (inWords.length < 30 || inSentences.length < 30) throw new Error(`hsk-${level}: too few characters from their pinyin`);
   const id = writtenCharactersId(level);
+  const firstWord = inWords[0]!;
+  const firstSentence = inSentences[0]!;
   return {
     id,
     title: t(`HSK ${level}: Characters from Pinyin`, `HSK ${level}：看拼音写汉字`),
     summary: t(
       `The writing paper's characters from their pinyin: each character level ${level} writes by hand, written stroke by stroke where its pinyin stands, in a word and then in a sentence.`,
       `写作中的看拼音写汉字：${level}级要求会写的每个字，按笔顺写在拼音所在的位置，先在词语里，再在句子里。`,
+    ),
+    intro: t(
+      `The writing paper gives a word or a sentence with one character shown only by its pinyin, and you write that character by hand. Take ${firstWord.char} ${firstWord.cue.en}: read the word, picture ${firstWord.char}, and write it stroke by stroke. This topic writes each character level ${level} asks for, first in a word, then in a sentence.`,
+      `写作试卷给出一个词或一个句子，其中一个字只写了拼音，要用手写出这个字。比如${firstWord.cue["zh-CN"]}的“${firstWord.char}”：读出这个词，想好字形，再一笔一笔写出来。这个专题写出${level}级要求会写的每个字，先在词语里，再在句子里。`,
     ),
     prerequisites: [last.topic.id],
     encompasses: [],
@@ -86,8 +92,8 @@ export function writtenCharactersTopic(level: number): TopicDef {
         `${id}-words`,
         t("In a Word", "词语中的字"),
         t(
-          "Read the word aloud with the pinyin in its place: the other characters tell which word it is, and the word tells which character of that sound it holds. Picture the character, then write it in the standard order.",
-          "把拼音放回词语里读一读：词语中其他的字告诉你这是哪个词，这个词又告诉你是哪个同音字。先在心里想好字形，再按笔顺写。",
+          `Read the word aloud with the pinyin in its place: the other characters tell which word it is, and the word tells which character of that sound it holds. Picture the character, then write it in the standard order: ${firstWord.cue.en} the character is ${firstWord.char}.\n\n> **Watch out.** A syllable stands for many characters: write the one this word needs, not another of the same sound.`,
+          `把拼音放回词语里读一读：词语中其他的字告诉你这是哪个词，这个词又告诉你是哪个同音字。先在心里想好字形，再按笔顺写：${firstWord.cue["zh-CN"]}，这个字是“${firstWord.char}”。\n\n> **注意。** 一个音节对应很多字：要写这个词需要的那个字，不要写成别的同音字。`,
         ),
         handGenerator(inWords, false),
       ),
@@ -95,8 +101,8 @@ export function writtenCharactersTopic(level: number): TopicDef {
         `${id}-sentences`,
         t("In a Sentence", "句子中的字"),
         t(
-          "Read the whole sentence first, then the words around the pinyin: the meaning of the sentence tells which word it is, and the word tells the character, not another of the same sound. Then write it in the standard order.",
-          "先读完整个句子，再看拼音前后的字：句子的意思告诉你这是哪个词，这个词告诉你是哪个字，不要写成别的同音字。再按笔顺写。",
+          `Read the whole sentence first, then the words around the pinyin: the meaning of the sentence tells which word it is, and the word tells the character, not another of the same sound. Then write it in the standard order. For example, ${firstSentence.char} is the character to write ${firstSentence.cue.en}\n\n> **Watch out.** Write only the character the pinyin stands for, not the whole word, and do not change the characters around it.`,
+          `先读完整个句子，再看拼音前后的字：句子的意思告诉你这是哪个词，这个词告诉你是哪个字，不要写成别的同音字。再按笔顺写。比如${firstSentence.cue["zh-CN"]}，要写的是“${firstSentence.char}”。\n\n> **注意。** 只写拼音所代表的那一个字，不要把整个词都写出来，也不要改动前后的字。`,
         ),
         handGenerator(inSentences, false),
       ),

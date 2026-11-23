@@ -2,12 +2,8 @@
 // explanation that walks one instance and ends with a callout, and solutions in steps that end with a check. The test
 // beside this file holds every listed topic to it.
 
-import { characterTopics } from "./characters/index.ts";
-import { levelHandwritingTopics } from "./strokes/levels.ts";
-import { handwritingTopics } from "./strokes/writing.ts";
-
 /** taughtStrands lists the strands whose every topic is written to the teaching standard. */
-export const taughtStrands: readonly string[] = ["recitation", "classical", "pinyin", "grammar"];
+export const taughtStrands: readonly string[] = ["recitation", "classical", "pinyin", "grammar", "characters"];
 
 /**
  * taughtTopics lists further topics written to the standard while their strand is still being rewritten; once the
@@ -29,8 +25,6 @@ export const taughtTopics: readonly string[] = [
   "speaking-2-asking",
   "speaking-2-messages",
   "speaking-2-discussing",
-  "dictionary-words",
-  "language-3-similar-characters",
   "reading-3-fairy-tales",
   "reading-3-fables",
   "reading-3-poems",
@@ -45,7 +39,6 @@ export const taughtTopics: readonly string[] = [
   "speaking-3-relaying",
   "speaking-3-telling",
   "speaking-3-discussing",
-  "language-4-polyphones",
   "reading-4-myths",
   "reading-4-folk-tales",
   "reading-4-narrative",
@@ -60,7 +53,6 @@ export const taughtTopics: readonly string[] = [
   "speaking-4-introducing",
   "speaking-4-occasions",
   "speaking-4-persuading",
-  "language-5-character-formation",
   "inquiry-5-sources",
   "reading-5-narrative",
   "reading-5-poems",
@@ -165,5 +157,4 @@ export const taughtTopics: readonly string[] = [
   "writing-11-academic",
   "speaking-11-seminar",
   "speaking-11-presenting-research",
-  ...[...characterTopics, ...handwritingTopics, ...levelHandwritingTopics].map((topic) => topic.id),
 ];

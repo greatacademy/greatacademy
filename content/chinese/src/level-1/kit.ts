@@ -10,14 +10,23 @@ export interface Asked {
   readonly right: Text;
   readonly wrong: readonly [Text, Text, Text];
   readonly solution: Text;
+  /** reasons say why each wrong option is wrong, in the order of wrong. */
+  readonly reasons?: readonly [Text, Text, Text];
 }
 
-/** Item is one bank item of a choice: an Asked with two of its wrong options. */
+/** Item is one bank item of a choice: an Asked with two of its wrong options and their reasons. */
 interface Item {
   readonly shown: Text;
   readonly right: Text;
   readonly wrong: readonly [Text, Text];
   readonly solution: Text;
+  readonly reasons?: readonly [Text, Text];
+}
+
+/** withReasons ends a solution with why each wrong option is wrong, one line an option. */
+function withReasons(solution: Text, reasons: readonly Text[]): Text {
+  const list = (locale: "en" | "zh-CN") => reasons.map((r) => `- ${r[locale]}`).join("\n");
+  return t(`${solution.en}\n\nThe other options:\n\n${list("en")}`, `${solution["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`);
 }
 
 /** PAIRS are the pairs of wrong options an item is asked with, one a round, so that ten items make 30 problems. */
@@ -35,7 +44,17 @@ const quoted = (s: Text): Text => t(quote(s.en), quote(s["zh-CN"]));
  * round, so that consecutive seeds never show the same item; it shuffles the options by seed.
  */
 export function askedGenerator(question: Text, asked: readonly Asked[]): Generator {
-  const bank: readonly Item[] = PAIRS.flatMap(([a, b]) => asked.map((q): Item => ({ ...q, wrong: [q.wrong[a], q.wrong[b]] })));
+  const bank: readonly Item[] = PAIRS.flatMap(([a, b]) =>
+    asked.map(
+      (q): Item => ({
+        shown: q.shown,
+        right: q.right,
+        solution: q.solution,
+        wrong: [q.wrong[a], q.wrong[b]],
+        ...(q.reasons && { reasons: [q.reasons[a], q.reasons[b]] as const }),
+      }),
+    ),
+  );
   return (rng: Rng): Problem => {
     const item = rng.cycle(bank);
     const options = rng.shuffle([item.right, ...item.wrong]);
@@ -43,9 +62,12 @@ export function askedGenerator(question: Text, asked: readonly Asked[]): Generat
     return {
       prompt: joinText([question, quoted(item.shown)]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options } },
-      solution: item.solution,
+      solution: item.reasons ? withReasons(item.solution, item.reasons) : item.solution,
       canonical: String(answer),
       wrong: options.map((_, i) => String(i)).filter((i) => i !== String(answer)),
+      ...(item.reasons && {
+        mistakes: item.wrong.map((w, k) => ({ response: String(options.indexOf(w)), feedback: item.reasons![k]! })),
+      }),
     };
   };
 }

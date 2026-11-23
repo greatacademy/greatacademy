@@ -8,6 +8,7 @@ import {
   gradesSevenToNineEntries,
   gradesThreeAndFourEntries,
   recognitionByGrade,
+  WITHOUT_WORDS,
 } from "./index.ts";
 import { otherTones, parseCharacters } from "./recognition.ts";
 
@@ -43,7 +44,7 @@ describe("recognition data", () => {
     expect(gradesThreeAndFourEntries.map((e) => e.char)).toEqual(gradesThreeAndFour);
     expect(gradesFiveAndSixEntries.map((e) => e.char)).toEqual(gradesFiveAndSix);
     const fiveAndSix = new Set(gradesFiveAndSix);
-    expect(gradesSevenToNineEntries.map((e) => e.char)).toEqual(tableTwo.filter((c) => !fiveAndSix.has(c)));
+    expect(gradesSevenToNineEntries.map((e) => e.char)).toEqual(tableTwo.filter((c) => !fiveAndSix.has(c) && !WITHOUT_WORDS.includes(c)));
     const common = new Set([...tableOne, ...tableTwo]);
     for (const e of [...gradesOneAndTwoEntries, ...gradesThreeAndFourEntries, ...gradesFiveAndSixEntries, ...gradesSevenToNineEntries]) {
       expect(
@@ -75,7 +76,7 @@ describe("recognition data", () => {
       [8, 14],
       [9, 14],
     ]);
-    expect(recognitionByGrade[8]?.batches.at(-1)?.entries).toHaveLength(10);
+    expect(recognitionByGrade[8]?.batches.at(-1)?.entries).toHaveLength(9);
     expect(recognitionByGrade[0]?.batches.at(-1)?.entries).toHaveLength(12);
     expect(recognitionByGrade[1]?.batches.at(-1)?.entries).toHaveLength(16);
     expect(recognitionByGrade[5]?.batches.at(-1)?.entries).toHaveLength(10);
