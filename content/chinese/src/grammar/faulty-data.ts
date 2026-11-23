@@ -6,7 +6,7 @@ import { t } from "@ga/content";
 import { type FaultySpec, parseFaulty } from "./faulty.ts";
 
 /** FaultyData is a faulty-sentence topic without its prerequisites, which follow the order of the list. */
-export type FaultyData = Omit<FaultySpec, "prerequisites"> & { readonly grade: number };
+export type FaultyData = Omit<FaultySpec, "prerequisites" | "notes"> & { readonly grade: number };
 
 /** faultyData are the faulty-sentence topics, in the order they are taught. */
 export const faultyData: readonly FaultyData[] = [

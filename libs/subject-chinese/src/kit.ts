@@ -7,6 +7,9 @@ export const quote = (s: string): string =>
     .map((line) => (line === "" ? ">" : `> ${line}`))
     .join("\n");
 
+/** quoted sets a text as a block quote in every locale. */
+const quoted = (text: Text): Text => t(quote(text.en), quote(text["zh-CN"]));
+
 /** Why builds the solution of an item from its right answer and what was shown, in every locale. */
 export type Why = (right: string, shown: string) => Text;
 
@@ -22,18 +25,22 @@ function withReasons(solution: Text, reasons: readonly Text[]): Text {
   return t(`${solution.en}\n\nThe other options:\n\n${list("en")}`, `${solution["zh-CN"]}\n\n其他选项：\n\n${list("zh-CN")}`);
 }
 
+/** Show writes what an item shows in each locale, where the shown string alone would mix the languages. */
+export type Show = (shown: string) => Text;
+
 /**
  * choiceGenerator picks an item of a bank by seed and shuffles its options. Each wrong option is a plausible mistake, so
- * it also serves as a listed wrong response; with whyNot, choosing it gets feedback of its own.
+ * it also serves as a listed wrong response; with whyNot, choosing it gets feedback of its own. With show, what is
+ * shown is written in each locale.
  */
-export function choiceGenerator(question: Text, bank: readonly ChoiceItem[], why: Why, whyNot?: WhyNot): Generator {
+export function choiceGenerator(question: Text, bank: readonly ChoiceItem[], why: Why, whyNot?: WhyNot, show?: Show): Generator {
   return (rng: Rng): Problem => {
     const [shown, right, wrong] = rng.cycle(bank);
     const options = rng.shuffle([right, ...wrong]);
     const answer = options.indexOf(right);
     const reasons = whyNot ? options.filter((o) => o !== right).map((w) => whyNot(w, right, shown)) : [];
     return {
-      prompt: shown === "" ? question : joinText([question, same(quote(shown))]),
+      prompt: shown === "" ? question : joinText([question, show ? quoted(show(shown)) : same(quote(shown))]),
       answer: { checker: "choice", expected: answer, input: { kind: "choice", options: options.map((o) => same(o)) } },
       solution: reasons.length === 0 ? why(right, shown) : withReasons(why(right, shown), reasons),
       canonical: String(answer),

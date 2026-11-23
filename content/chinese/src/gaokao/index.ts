@@ -9,7 +9,9 @@ import { classicalDrills } from "../classical/drills.ts";
 import { seniorClassicalDrills } from "../classical/senior-drills.ts";
 import type { DrillItem } from "../grammar/drill.ts";
 import { drillData } from "../grammar/drill-data.ts";
-import { faultyData } from "../grammar/faulty-data.ts";
+import { type FaultyItem, type FaultyNote, parseFaultyNotes } from "../grammar/faulty.ts";
+import { type FaultyData, faultyData } from "../grammar/faulty-data.ts";
+import { faultyNotes } from "../grammar/faulty-notes.ts";
 import { type Ask, examChoice, examGroup } from "../hsk/exam.ts";
 import type { Idiom } from "../idioms/idioms.ts";
 import { idiomsByGrade } from "../idioms/index.ts";
@@ -233,6 +235,29 @@ const lastDrill = lastOf(seniorClassicalDrills.map((d) => d.id));
 const junior = classicalItems(5, 9);
 const senior = classicalItems(10, 11);
 
+/** Sentence is a sentence of a faulty-sentence topic, faulty or corrected, with its item, its note and its topic. */
+interface Sentence {
+  readonly item: FaultyItem;
+  readonly note: FaultyNote;
+  readonly topic: FaultyData;
+}
+
+/** sentences finds each faulty and corrected sentence of every faulty-sentence topic. */
+const sentences: ReadonlyMap<string, Sentence> = new Map(
+  faultyData.flatMap((topic) => {
+    const notes = parseFaultyNotes(topic.id, faultyNotes[topic.id]!.notes, topic.items.length);
+    return topic.items.flatMap((item, i) => {
+      const s: Sentence = { item, note: notes[i]!, topic };
+      return [[item.faulty, s] as const, [item.corrected, s] as const];
+    });
+  }),
+);
+const sentence = (s: string): Sentence => {
+  const found = sentences.get(s);
+  if (!found) throw new Error(`gaokao: no faulty-sentence item for ${s}`);
+  return found;
+};
+
 /** soundItems are the corrected sentences of every faulty-sentence topic, each among three faulty sentences of its topic. */
 function soundItems(): readonly ChoiceItem[] {
   return interleave(
@@ -253,6 +278,14 @@ function deviceItems(): readonly ChoiceItem[] {
   );
 }
 
+/** naming is the knowledge point of each rhetoric topic that names a sentence's device, by the sentences it asks about. */
+const naming = new Map(drillData.rhetoric.flatMap((topic) => topic.points[0].items.map((item) => [item.shown, topic.points[0]] as const)));
+const namingOf = (shown: string) => {
+  const p = naming.get(shown);
+  if (!p) throw new Error(`gaokao: no rhetoric item for ${shown}`);
+  return p;
+};
+
 const lastFaulty = lastOf(faultyData.map((d) => d.id));
 const lastRhetoric = lastOf(drillData.rhetoric.map((d) => d.id));
 
@@ -264,6 +297,10 @@ const languageTopic: TopicDef = {
     "Faulty sentences and rhetorical devices of every grade mixed, as the paper asks them: the one sentence without a fault among four, then the device a sentence uses.",
     "各年级的病句和修辞手法混在一起，按试卷的问法：先在四个句子中选出没有语病的一项，再判断句子用了什么修辞手法。",
   ),
+  intro: t(
+    "The use of language on the paper asks two things here. First, among four sentences, the one without a fault: 通过这次活动，我们懂得了团结的重要。 is sound, while 通过这次活动，使我们懂得了团结的重要。 has lost its subject, since 通过 … 使 … make 我们 the object of 使. Second, the device a sentence uses: 小溪一路唱着歌 lets a stream sing as a person does, which is 拟人.\n\nThe first knowledge point finds the sentence without a fault, the second names a sentence's device.",
+    "试卷的语言文字运用在这里考两件事。一是在四个句子中选出没有语病的一项：“通过这次活动，我们懂得了团结的重要。”没有语病；“通过这次活动，使我们懂得了团结的重要。”用了“通过……使……”，“我们”成了“使”的宾语，句子缺了主语。二是判断句子用了什么修辞手法：“小溪一路唱着歌”让小溪像人一样唱歌，是拟人。\n\n第一个知识点选出没有语病的句子，第二个判断句子的修辞手法。",
+  ),
   prerequisites: [lastFaulty, lastRhetoric],
   encompasses: [],
   xp: 12,
@@ -274,22 +311,37 @@ const languageTopic: TopicDef = {
       "gaokao-language-sound",
       t("The Sentence Without a Fault", "没有语病的一项"),
       t(
-        "Check each sentence in turn for the six kinds of fault: a wrong word order, a mismatch of parts, a part missing or extra, a mixed structure, a meaning unclear, or a lapse of logic. Find the main parts first, subject, verb and object, and see whether they fit together.",
-        "逐句检查六类语病：语序不当、搭配不当、成分残缺或赘余、结构混乱、表意不明、不合逻辑。先找出主干，即主语、谓语和宾语，看它们能不能搭配。",
+        "Check each sentence in turn for the six kinds of fault: a wrong word order, a mismatch of parts, a part missing or extra, a mixed structure, a meaning unclear, or a lapse of logic. Find the main parts first, subject, verb and object, and see whether they fit together.\n\nFor example, 春天的公园是一个美丽的季节。 Its main parts are 公园是季节, and a park is not a season: the words do not go together. 春天是一个美丽的季节。 has 春天是季节, which fits, so it is the sound one.\n\n> **Watch out.** A sentence that sounds smooth can still be faulty. 为了防止今后不再发生类似的事故 reads easily, but 防止 and 不再 are two negatives and wish the accident back: count the negatives, do not trust the ear.",
+        "逐句检查六类语病：语序不当、搭配不当、成分残缺或赘余、结构混乱、表意不明、不合逻辑。先找出主干，即主语、谓语和宾语，看它们能不能搭配。\n\n例如：春天的公园是一个美丽的季节。主干是“公园是季节”，公园不是季节，搭配不当。“春天是一个美丽的季节。”主干是“春天是季节”，搭配得当，没有语病。\n\n> **注意。** 读起来顺口的句子也可能有语病。“为了防止今后不再发生类似的事故”很通顺，可“防止”和“不再”两重否定，意思成了希望事故再发生：要数清否定，不能只凭语感。",
       ),
-      choiceGenerator(t("Which sentence has no fault?", "下列句子中，没有语病的一项是"), soundItems(), (right) =>
-        t(`The sentence without a fault is: ${right}`, `没有语病的是：${right}`),
+      choiceGenerator(
+        t("Which sentence has no fault?", "下列句子中，没有语病的一项是"),
+        soundItems(),
+        (right) => {
+          const { item, note, topic } = sentence(right);
+          return t(
+            `**Step 1: test each sentence for the six kinds of fault.** Find its main parts, then ask whether the parts fit, nothing is missing or extra, the order and logic hold, and it means one thing.\n\n**Step 2: find the one that passes.** ${right} passes: ${note.sound.en}.\n\n**Check.** It is the correction of ${item.faulty} In that sentence ${note.fault.en}. The sound sentence mends just that, and adds no fault of its own.`,
+            `**第一步：逐句检查六类语病。**先找主干，再看搭配是否得当、成分是否残缺或多余、语序和逻辑是否正确、意思是否明确。\n\n**第二步：找出没有语病的句子。**“${right}”没有语病：${note.sound["zh-CN"]}。\n\n**检验。** 它是“${item.faulty}”的正确改法：原句${note.fault["zh-CN"]}，属于${topic.fault["zh-CN"]}。这个句子正好改掉了这个毛病，也没有带来新的毛病。`,
+          );
+        },
+        (wrong) => {
+          const { note, topic } = sentence(wrong);
+          return t(`${wrong} is faulty: ${note.fault.en}.`, `“${wrong}”有语病：${note.fault["zh-CN"]}，属于${topic.fault["zh-CN"]}。`);
+        },
       ),
     ),
     point(
       "gaokao-language-rhetoric",
       t("Rhetorical Devices", "修辞手法"),
       t(
-        "Name a device by what the sentence does, not by a word it contains: a 像 may compare without being a simile, and a question may be asked for its answer or for effect.",
-        "按句子实际的作用判断修辞手法，而不是只看某个词：有“像”字不一定是比喻，问句可能是设问，也可能是反问。",
+        "Name a device by what the sentence does, not by a word it contains: a 像 may compare without being a simile, and a question may be asked for its answer or for effect.\n\nFor example, 什么是幸福？幸福就是和家人在一起的每一天。 asks a question and answers it at once: that is 设问. 这么好的机会，我们怎么能错过呢？ asks and gives no answer, because it means 不能错过: that is 反问.\n\n> **Watch out.** 拟人 and 比喻 can both speak of a thing as something else. 小溪一路唱着歌 makes the stream act as a person, so it is 拟人; 荷叶圆圆的，像一把把绿色的小伞 likens the leaves to another kind of thing, so it is 比喻.",
+        "按句子实际的作用判断修辞手法，而不是只看某个词：有“像”字不一定是比喻，问句可能是设问，也可能是反问。\n\n例如：“什么是幸福？幸福就是和家人在一起的每一天。”先问后答，是设问；“这么好的机会，我们怎么能错过呢？”问而不答，意思是“不能错过”，是反问。\n\n> **注意。** 拟人和比喻都会把事物说成别的样子。“小溪一路唱着歌”让小溪像人一样做事，是拟人；“荷叶圆圆的，像一把把绿色的小伞”把荷叶比作另一种事物，是比喻。",
       ),
-      choiceGenerator(t("Which rhetorical device does this sentence use?", "这个句子用了什么修辞手法？"), deviceItems(), (right) =>
-        t(`It uses ${right}.`, `这个句子用了${right}。`),
+      choiceGenerator(
+        t("Which rhetorical device does this sentence use?", "这个句子用了什么修辞手法？"),
+        deviceItems(),
+        (right, shown) => namingOf(shown).why(right, shown),
+        (wrong, right, shown) => namingOf(shown).whyNot!(wrong, right, shown),
       ),
     ),
   ],

@@ -3,7 +3,7 @@
 // item is asked with two of its wrong answers at a time, in three different pairs.
 
 import type { Text, TopicDef } from "@ga/content";
-import { type ChoiceItem, choiceGenerator, point, type Why, type WhyNot } from "@ga/subject-chinese";
+import { type ChoiceItem, choiceGenerator, point, type Show, type Why, type WhyNot } from "@ga/subject-chinese";
 
 /** DrillItem is what an item shows (empty when the question says it all), its right answer and three wrong ones. */
 export interface DrillItem {
@@ -28,6 +28,8 @@ export interface DrillPoint {
   readonly why: Why;
   /** whyNot says why a wrong option is wrong: told to a learner who picks it, and listed after the solution. */
   readonly whyNot?: WhyNot;
+  /** show writes what an item shows in each locale, where it would otherwise mix the languages. */
+  readonly show?: Show;
 }
 
 /** DrillSpec describes a drill topic. */
@@ -71,7 +73,7 @@ export function drillTopic(spec: DrillSpec): TopicDef {
       const bank: readonly ChoiceItem[] = PAIRS.flatMap(([a, b]) =>
         p.items.map((item): ChoiceItem => [item.shown, item.right, [item.wrong[a], item.wrong[b]]]),
       );
-      return point(`${spec.id}-${p.suffix}`, p.title, p.explanation, choiceGenerator(p.question, bank, p.why, p.whyNot));
+      return point(`${spec.id}-${p.suffix}`, p.title, p.explanation, choiceGenerator(p.question, bank, p.why, p.whyNot, p.show));
     }),
   };
 }

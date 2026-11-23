@@ -7,6 +7,7 @@ import { drillTopic } from "./drill.ts";
 import { type DrillData, drillData } from "./drill-data.ts";
 import { faultyTopic } from "./faulty.ts";
 import { faultyData } from "./faulty-data.ts";
+import { faultyNotes } from "./faulty-notes.ts";
 import { punctuationTopic } from "./punctuation.ts";
 import { punctuationData } from "./punctuation-data.ts";
 
@@ -25,7 +26,7 @@ export const punctuationTopics: readonly GradeTopic[] = punctuationData.map(({ g
 /** faultyTopics are the faulty-sentence topics, in order. */
 export const faultyTopics: readonly GradeTopic[] = faultyData.map(({ grade, ...spec }, i) => ({
   grade,
-  topic: faultyTopic({ ...spec, prerequisites: i === 0 ? [] : [faultyData[i - 1]!.id] }),
+  topic: faultyTopic({ ...spec, notes: faultyNotes[spec.id]!, prerequisites: i === 0 ? [] : [faultyData[i - 1]!.id] }),
 }));
 
 /** chained builds the drill topics of a kind, each following the one before it. */

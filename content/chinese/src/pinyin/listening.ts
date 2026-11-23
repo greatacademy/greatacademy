@@ -7,22 +7,42 @@ import { type Generator, type Problem, type Rng, same, type Text, type TopicDef,
 import { point } from "@ga/subject-chinese";
 
 import { heardSyllable } from "../audio.ts";
-import { gradesFiveAndSixEntries, gradesThreeAndFourEntries } from "../characters/index.ts";
+import { gradesFiveAndSixEntries, gradesOneAndTwoEntries, gradesThreeAndFourEntries } from "../characters/index.ts";
 import { mark, parseSyllable, type Syllable } from "./syllables.ts";
 import { nasal, PITCH_EN, PITCH_ZH, SYMBOL, said, TONE_EN, TONE_ZH, toneConfusion } from "./teach.ts";
 
-/** Heard is a syllable to play: the syllable and a character with that reading that says it. */
+/**
+ * Heard is a syllable to play: the syllable, the character with that reading that carries its recording, and the
+ * commonest character with that reading, which the solution names.
+ */
 interface Heard {
   readonly syllable: Syllable;
   readonly char: string;
+  readonly common: string;
 }
+
+/**
+ * commonest maps each reading to its commonest character: the characters of the native courses in their order, grades 1
+ * and 2 first, which go by frequency. The recording's own carrier stays, since its phonemes fix the sound it says.
+ */
+const commonest: ReadonlyMap<string, string> = new Map(
+  [...gradesOneAndTwoEntries, ...gradesThreeAndFourEntries, ...gradesFiveAndSixEntries]
+    .filter((e) => [...e.char].length === 1)
+    .flatMap((e) => {
+      const s = parseSyllable(e.reading);
+      return s ? [[s.written, e.char] as const] : [];
+    })
+    .reverse(),
+);
 
 /** inventory are the distinct readings of the characters taught, each with the first character that has it. */
 const inventory: readonly Heard[] = [
   ...new Map(
     [...gradesThreeAndFourEntries, ...gradesFiveAndSixEntries].flatMap((e) => {
       const s = parseSyllable(e.reading);
-      return s && [...e.char].length === 1 ? [[s.written, { syllable: s, char: e.char }] as const] : [];
+      return s && [...e.char].length === 1
+        ? [[s.written, { syllable: s, char: e.char, common: commonest.get(s.written) ?? e.char }] as const]
+        : [];
     }),
   ).values(),
 ];
@@ -135,8 +155,8 @@ const toneWhy = ({ heard, right }: Item): Text => {
   const { plain, tone } = heard.syllable;
   const n = tone - 1;
   return t(
-    `**Step 1: follow the pitch.** The recording is ${PITCH_EN[n]}: that is the ${TONE_EN[n]} tone.\n\n**Step 2: write its mark.** The ${TONE_EN[n]} tone is marked ${SYMBOL[n]}: ${right}.\n\n**Check.** Say ${plain} in the four tones after the recording, ${fourTones(plain)}: only ${right} moves as the recording does. The recording says ${heard.char}, which is read ${right}.`,
-    `**第一步：听音高的走向。**录音里的声音${PITCH_ZH[n]}，是${TONE_ZH[n]}。\n\n**第二步：标调号。**${TONE_ZH[n]}的调号是 ${SYMBOL[n]}：${right}。\n\n**检验。** 跟着录音把 ${plain} 的四个声调读一遍：${fourTones(plain)}，只有 ${right} 和录音走向一样。录音读的是“${heard.char}”，这个字读 ${right}。`,
+    `**Step 1: follow the pitch.** The recording is ${PITCH_EN[n]}: that is the ${TONE_EN[n]} tone.\n\n**Step 2: write its mark.** The ${TONE_EN[n]} tone is marked ${SYMBOL[n]}: ${right}.\n\n**Check.** Say ${plain} in the four tones after the recording, ${fourTones(plain)}: only ${right} moves as the recording does. The recording says ${right}, as in ${heard.common}.`,
+    `**第一步：听音高的走向。**录音里的声音${PITCH_ZH[n]}，是${TONE_ZH[n]}。\n\n**第二步：标调号。**${TONE_ZH[n]}的调号是 ${SYMBOL[n]}：${right}。\n\n**检验。** 跟着录音把 ${plain} 的四个声调读一遍：${fourTones(plain)}，只有 ${right} 和录音走向一样。录音读的是 ${right}，如“${heard.common}”。`,
   );
 };
 
@@ -163,8 +183,8 @@ const soundsWhy = ({ heard, right }: Item): Text => {
     ? t(`Its final, ${final}, is ${end[0]}.`, `韵母 ${final} 是${end[1]}。`)
     : t(`Its final is ${final}.`, `韵母是 ${final}。`);
   return t(
-    `**Step 1: listen to the start.** ${start.en}\n\n**Step 2: listen to the end.** ${ending.en} So you hear ${right}.\n\n**Check.** Every option has the same tone, the ${TONE_EN[tone - 1]}, so only the sounds decide. The recording says ${heard.char}, which is read ${right}.`,
-    `**第一步：听开头。**${start["zh-CN"]}\n\n**第二步：听收尾。**${ending["zh-CN"]}所以听到的是 ${right}。\n\n**检验。** 几个选项的声调都是${TONE_ZH[tone - 1]}，只能靠声母和韵母来分辨。录音读的是“${heard.char}”，这个字读 ${right}。`,
+    `**Step 1: listen to the start.** ${start.en}\n\n**Step 2: listen to the end.** ${ending.en} So you hear ${right}.\n\n**Check.** Every option has the same tone, the ${TONE_EN[tone - 1]}, so only the sounds decide. The recording says ${right}, as in ${heard.common}.`,
+    `**第一步：听开头。**${start["zh-CN"]}\n\n**第二步：听收尾。**${ending["zh-CN"]}所以听到的是 ${right}。\n\n**检验。** 几个选项的声调都是${TONE_ZH[tone - 1]}，只能靠声母和韵母来分辨。录音读的是 ${right}，如“${heard.common}”。`,
   );
 };
 

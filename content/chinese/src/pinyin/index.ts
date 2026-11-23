@@ -727,6 +727,18 @@ const changing = (data: string, plain: string): readonly Changing[] =>
 const yiWords = changing(yi, "yi");
 const buWords = changing(bu, "bu");
 
+/** inBrackets shows a word with its pinyin in brackets, in each locale's brackets. */
+const inBrackets = (shown: string): Text => {
+  const m = /^(.*)（(.*)）$/u.exec(shown);
+  return m ? t(`${m[1]} (${m[2]})`, shown) : t(shown, shown);
+};
+
+/** saidInBrackets shows a word of two third tones with how it is said, in each locale. */
+const saidInBrackets = (shown: string): Text => {
+  const m = /^(.*)（读作 (.*)）$/u.exec(shown);
+  return m ? t(`${m[1]} (said ${m[2]})`, shown) : t(shown, shown);
+};
+
 /** shownWord is how a word of 一 or 不 is shown. */
 const shownWord = (w: Changing): string => `${w.word}（${w.pinyin}）`;
 
@@ -855,6 +867,7 @@ const pinyinYiBu: TopicDef = {
         rounds(spread(saidAs(yiWords, "yi"), 5)),
         changeWhy("一", "yi", yiWords),
         changeWhyNot("一", "yi", yiWords),
+        inBrackets,
       ),
     ),
     point(
@@ -869,6 +882,7 @@ const pinyinYiBu: TopicDef = {
         rounds(spread(saidAs(buWords, "bu"), 5)),
         changeWhy("不", "bu", buWords),
         changeWhyNot("不", "bu", buWords),
+        inBrackets,
       ),
     ),
   ],
@@ -981,6 +995,7 @@ const pinyinThirdTones: TopicDef = {
           );
         },
         (wrong, _right, shown) => thirdWhyNot(wrong, bySaidShown.get(shown)!, false),
+        inBrackets,
       ),
     ),
     point(
@@ -1008,6 +1023,7 @@ const pinyinThirdTones: TopicDef = {
           );
         },
         (wrong, _right, shown) => thirdWhyNot(wrong, byWrittenShown.get(shown)!, true),
+        saidInBrackets,
       ),
     ),
   ],

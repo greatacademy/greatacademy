@@ -98,6 +98,8 @@ The courses are in simplified characters, the national standard. Traditional cha
 - **Grammar for foreign-language learners** follows the grammar points of GF 0025-2021, 572 in all: measure words, aspect with 了, 过 and 着, complements, 把 and 被, and so on. Most are one topic each; a few small points share one.
 - **Punctuation** follows GB/T 15834-2011, including the marks English does not have, such as 顿号 and 书名号.
 
+The native grammar topics, punctuation, faulty sentences, connectives, sentence forms and rhetoric, teach each point with a sentence of their own: each topic opens with one instance worked through, and each knowledge point gives its rule, walks one sentence and names the mistake to watch for, such as a question word taken for a question, a long opening taken for a subject, or 只要 paired with 才. Each faulty sentence has its own note: what is wrong with it, why its correction is sound and why each wrong revision is not. A solution goes in steps, from the words beside a gap, the clauses, the doer of a 把 sentence or what a sentence does, to the answer, and checks it another way: by the test a mark or a device passes, by testing the correction as the faulty sentence was tested, or by changing a rewritten sentence back. Every wrong option is answered with its own reason.
+
 ## 7. Classical Texts and Recitation
 
 The compulsory standard recommends 135 classical poems and passages to recite, 75 in grades 1 to 6 and 60 in grades 7 to 9; the senior secondary standard recommends 72 more, 32 in classical prose and 40 poems, songs and lyrics. All of them are in the public domain.
