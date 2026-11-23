@@ -17,18 +17,42 @@ const inParens = (n: number) => (n < 0 ? `(${n})` : `${n}`);
 const different = (rng: Rng, lo: number, hi: number, other: number) =>
   rng.pick([...Array(hi - lo + 1).keys()].map((i) => i + lo).filter((i) => i !== other));
 
+/** WalkStep is one labelled step of a worked solution: its title and what it says in both languages, and the lines it displays. */
+type WalkStep = readonly [title: readonly [string, string], say: readonly [string, string], lines?: readonly string[]];
+
+/** walkThrough writes labelled steps, each with its displayed lines, followed by a check that takes a second route. */
+const walkThrough = (parts: readonly WalkStep[], check: readonly [string, string]) => {
+  const write = (zh: boolean) =>
+    parts
+      .map(([[en, zhTitle], say, lines = []], i) => {
+        const label = zh ? `**第${["一", "二", "三", "四", "五"][i]}步：${zhTitle}。**` : `**Step ${i + 1}: ${en}.**`;
+        return `${label} ${say[zh ? 1 : 0]}${lines.length > 0 ? steps(...lines) : "\n\n"}`;
+      })
+      .join("") + (zh ? `**检验。** ${check[1]}` : `**Check.** ${check[0]}`);
+  return t(write(false), write(true));
+};
+/** parQ writes a rational number, in parentheses when it is negative. */
+const parQ = (q: Q) => (q.sign() < 0 ? `\\left(${q.toLatex()}\\right)` : q.toLatex());
+/** coefQ writes a rational coefficient before a symbol, leaving out 1 and keeping the sign of -1. */
+const coefQ = (q: Q) => (q.eq(Q.one) ? "" : q.eq(Q.one.neg()) ? "-" : q.toLatex());
+/** piTimes writes a rational multiple of pi. */
+const piTimes = (q: Q) => `${coefQ(q)}\\pi`;
+/** dTheta writes a constant times dθ, leaving out 1. */
+const dTheta = (q: Q) => (q.eq(Q.one) ? "d\\theta" : `${q.toLatex()}\\,d\\theta`);
+
 const scaledKnownIntegral: KnowledgePointDef = {
   id: "a-known-integral-with-a-scaled-argument",
   title: t("A known integral with a scaled argument", "自变量伸缩后的已知积分"),
   explanation: t(
-    "Substitution works even when $f$ has no formula. With $u = kx$, the integral of $f(kx)$ becomes the integral of $f(u)$ divided by $k$, and the limits are multiplied by $k$. So a known integral of $f$ over the new limits gives the answer directly.",
-    "即使 $f$ 没有公式，换元也可以用。令 $u = kx$，$f(kx)$ 的积分变成 $f(u)$ 的积分除以 $k$，积分限都乘以 $k$。所以已知 $f$ 在新积分限上的积分，就能直接得到答案。",
+    "Substitution works even when $f$ has no formula. With $u = kx$, the integral of $f(kx)$ becomes the integral of $f(u)$ divided by $k$, and the limits are multiplied by $k$. So a known integral of $f$ over the new limits gives the answer directly. For example, if $\\int_0^{6} f(x)\\,dx$ is $12$, then $\\int_0^{2} f(3x)\\,dx$ is $\\frac{12}{3}$, which is $4$.\n\nCheck: if $f$ is the constant $2$, then $\\int_0^{6} 2\\,dx$ is $12$ and $\\int_0^{2} 2\\,dx$ is $4$, as predicted.\n\n> **Watch out.** Divide by $k$, do not multiply. The interval $[0, b]$ is $k$ times shorter than $[0, kb]$, so the integral shrinks by the factor $k$.",
+    "即使 $f$ 没有公式，换元也可以用。令 $u = kx$，$f(kx)$ 的积分变成 $f(u)$ 的积分除以 $k$，积分限都乘以 $k$。所以已知 $f$ 在新积分限上的积分，就能直接得到答案。例如，若 $\\int_0^{6} f(x)\\,dx$ 等于 $12$，则 $\\int_0^{2} f(3x)\\,dx$ 等于 $\\frac{12}{3}$，即 $4$。\n\n检验：若 $f$ 是常数 $2$，则 $\\int_0^{6} 2\\,dx$ 等于 $12$，$\\int_0^{2} 2\\,dx$ 等于 $4$，与预期一致。\n\n> **注意。** 要除以 $k$，而不是乘以 $k$。区间 $[0, b]$ 比 $[0, kb]$ 短 $k$ 倍，所以积分缩小为原来的 $\\frac{1}{k}$。",
   ),
   generate(rng) {
     const k = rng.int(2, 6);
     const b = rng.int(1, 5);
     const v = nonzero(rng, 12);
     const answer = Q.of(v, k);
+    const level = Q.of(v, k * b);
     return numberProblem({
       prompt: t(
         `$\\int_0^{${k * b}} f(x)\\,dx = ${v}$. Find $\\int_0^{${b}} f(${k}x)\\,dx$.`,
@@ -36,9 +60,28 @@ const scaledKnownIntegral: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(v), Q.of(k * v), Q.of(v, k * b)],
-      solution: t(
-        `Let $u = ${k}x$, so $dx = \\frac{du}{${k}}$, and the limits become $0$ and $${k * b}$. The integral is $\\frac{1}{${k}} \\cdot ${inParens(v)} = ${answer.toLatex()}$.`,
-        `令 $u = ${k}x$，则 $dx = \\frac{du}{${k}}$，积分限变成 $0$ 和 $${k * b}$。积分等于 $\\frac{1}{${k}} \\cdot ${inParens(v)} = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Substitute", "换元"],
+            [
+              `Let $u = ${k}x$. Then $du = ${k}\\,dx$, and the limits $x = 0$ and $x = ${b}$ become $u = 0$ and $u = ${k * b}$:`,
+              `令 $u = ${k}x$，则 $du = ${k}\\,dx$，积分限 $x = 0$ 和 $x = ${b}$ 变成 $u = 0$ 和 $u = ${k * b}$：`,
+            ],
+            [`dx = \\frac{1}{${k}}\\,du`],
+          ],
+          [
+            ["Use the known integral", "用已知的积分"],
+            ["The integral in $u$ is the one given:", "关于 $u$ 的积分正是已知的那个："],
+            [
+              `\\int_0^{${b}} f(${k}x)\\,dx = \\frac{1}{${k}}\\int_0^{${k * b}} f(u)\\,du = \\frac{1}{${k}} \\cdot ${inParens(v)} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `Try the constant function $f = c$ with the given integral. Then $${k * b}c = ${v}$, so $c$ is $${level.toLatex()}$, and $\\int_0^{${b}} c\\,dx$ is $${b} \\cdot ${parQ(level)}$, which is $${answer.toLatex()}$ again.`,
+          `取满足已知积分的常函数 $f = c$。则 $${k * b}c = ${v}$，所以 $c$ 等于 $${level.toLatex()}$，而 $\\int_0^{${b}} c\\,dx$ 等于 $${b} \\cdot ${parQ(level)}$，同样是 $${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -760,14 +803,15 @@ const changedLimits: KnowledgePointDef = {
   id: "a-definite-integral-with-changed-limits",
   title: t("A definite integral with changed limits", "换限的定积分"),
   explanation: t(
-    "In a definite integral, a substitution changes the limits as well as the integrand. Once the limits are written in terms of $u$, there is no need to return to $x$ at the end. For $\\int x\\sqrt{x^2 + a^2}\\,dx$, take $u = x^2 + a^2$, so that the lower limit $x = 0$ becomes $u = a^2$.",
-    "在定积分中，换元既改变被积函数，也改变积分限。积分限一旦写成 $u$ 的值，最后就不必再换回 $x$。对 $\\int x\\sqrt{x^2 + a^2}\\,dx$，取 $u = x^2 + a^2$，于是下限 $x = 0$ 变成 $u = a^2$。",
+    "In a definite integral, a substitution changes the limits as well as the integrand. Once the limits are written in terms of $u$, there is no need to return to $x$ at the end. For $\\int x\\sqrt{x^2 + a^2}\\,dx$, take $u = x^2 + a^2$, so that the lower limit $x = 0$ becomes $u = a^2$. For example, $\\int_0^{4} x\\sqrt{x^2 + 9}\\,dx$ becomes $\\frac{1}{2}\\int_9^{25} \\sqrt{u}\\,du$, which is $\\frac{1}{3}(125 - 27)$, or $\\frac{98}{3}$.\n\nCheck: in $x$, the antiderivative $\\frac{1}{3}(x^2 + 9)^{3/2}$ is $\\frac{125}{3}$ at $x = 4$ and $\\frac{27}{3}$ at $x = 0$, which gives $\\frac{98}{3}$ as well.\n\n> **Watch out.** Do not keep the old limits with the new variable. After $u = x^2 + a^2$ the integral starts at $u = a^2$, not at $0$.",
+    "在定积分中，换元既改变被积函数，也改变积分限。积分限一旦写成 $u$ 的值，最后就不必再换回 $x$。对 $\\int x\\sqrt{x^2 + a^2}\\,dx$，取 $u = x^2 + a^2$，于是下限 $x = 0$ 变成 $u = a^2$。例如，$\\int_0^{4} x\\sqrt{x^2 + 9}\\,dx$ 变成 $\\frac{1}{2}\\int_9^{25} \\sqrt{u}\\,du$，即 $\\frac{1}{3}(125 - 27)$，也就是 $\\frac{98}{3}$。\n\n检验：用 $x$ 计算，原函数 $\\frac{1}{3}(x^2 + 9)^{3/2}$ 在 $x = 4$ 处为 $\\frac{125}{3}$，在 $x = 0$ 处为 $\\frac{27}{3}$，差同样是 $\\frac{98}{3}$。\n\n> **注意。** 不要让新变量沿用旧的积分限。换元 $u = x^2 + a^2$ 后，积分从 $u = a^2$ 开始，而不是从 $0$ 开始。",
   ),
   generate(rng) {
     const { a, b, h } = pythagorean(rng);
     const k = rng.int(1, 6);
     const difference = h ** 3 - a ** 3;
     const answer = Q.of(k * difference, 3);
+    const third = Q.of(k, 3);
     return numberProblem({
       prompt: t(
         `Evaluate $\\int_0^{${b}} ${coefficientOf(k)}x\\sqrt{x^2 + ${a * a}}\\,dx$.`,
@@ -775,9 +819,29 @@ const changedLimits: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(k * h ** 3, 3), Q.of(2 * k * difference, 3), Q.of(k * (h * h - a * a), 2)],
-      solution: t(
-        `Let $u = x^2 + ${a * a}$, so $u$ runs from ${a * a} to ${h * h} and $x\\,dx = \\frac{1}{2}du$. The integral is $\\frac{${k}}{3}\\left(${h}^3 - ${a}^3\\right) = ${answer.toLatex()}$.`,
-        `令 $u = x^2 + ${a * a}$，则 $u$ 从 ${a * a} 到 ${h * h}，且 $x\\,dx = \\frac{1}{2}du$。积分是 $\\frac{${k}}{3}\\left(${h}^3 - ${a}^3\\right) = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Change the variable and the limits", "换元并换限"],
+            [
+              `Let $u = x^2 + ${a * a}$. Then $du = 2x\\,dx$, and $u$ runs from $${a * a}$ at $x = 0$ to $${h * h}$ at $x = ${b}$:`,
+              `令 $u = x^2 + ${a * a}$，则 $du = 2x\\,dx$，$u$ 从 $x = 0$ 时的 $${a * a}$ 变到 $x = ${b}$ 时的 $${h * h}$：`,
+            ],
+            [`${coefficientOf(k)}x\\,dx = \\frac{${k}}{2}\\,du`],
+          ],
+          [
+            ["Integrate in u", "对 u 积分"],
+            ["The integral is a power of $u$ between the new limits:", "积分是 $u$ 的幂在新积分限之间的积分："],
+            [
+              `\\frac{${k}}{2}\\int_{${a * a}}^{${h * h}} u^{1/2}\\,du = \\frac{${k}}{3}\\left[u^{3/2}\\right]_{${a * a}}^{${h * h}}`,
+              `\\frac{${k}}{3}\\left(${h}^3 - ${a}^3\\right) = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `Stay in $x$ instead. An antiderivative is $${third.toLatex()}(x^2 + ${a * a})^{3/2}$, which is $${third.toLatex()} \\cdot ${h ** 3}$ at $x = ${b}$ and $${third.toLatex()} \\cdot ${a ** 3}$ at $x = 0$. Their difference is $${answer.toLatex()}$ again.`,
+          `改用 $x$ 计算。一个原函数是 $${third.toLatex()}(x^2 + ${a * a})^{3/2}$，它在 $x = ${b}$ 处为 $${third.toLatex()} \\cdot ${h ** 3}$，在 $x = 0$ 处为 $${third.toLatex()} \\cdot ${a ** 3}$。两者之差同样是 $${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -787,8 +851,8 @@ const limitWithLogarithm: KnowledgePointDef = {
   id: "an-exponential-integral-with-a-logarithm-in-the-limit",
   title: t("An exponential integral with a logarithm in the limit", "积分限含对数的指数积分"),
   explanation: t(
-    "After the substitution $u = x^2$, the integral of $xe^{x^2}$ is $\\frac{1}{2}e^{x^2}$. Limits are sometimes chosen so that the exponential simplifies. Since $e^{\\ln c} = c$, an upper limit of $\\sqrt{\\ln c}$ makes the antiderivative a plain number, and an answer that looks irrational turns out to be rational.",
-    "经过换元 $u = x^2$，$xe^{x^2}$ 的积分是 $\\frac{1}{2}e^{x^2}$。积分限有时是特意选取的，以使指数化简。由于 $e^{\\ln c} = c$，上限取 $\\sqrt{\\ln c}$ 时，原函数的值就是一个普通的数，看起来超越的答案其实是有理数。",
+    "After the substitution $u = x^2$, the integral of $xe^{x^2}$ is $\\frac{1}{2}e^{x^2}$. Limits are sometimes chosen so that the exponential simplifies. Since $e^{\\ln c} = c$, an upper limit of $\\sqrt{\\ln c}$ makes the antiderivative a plain number, and an answer that looks irrational turns out to be rational. For example, $\\int_0^{\\sqrt{\\ln 5}} xe^{x^2}\\,dx$ is $\\frac{1}{2}(5 - 1)$, which is $2$.\n\nCheck: at the upper limit, $x^2$ is $\\ln 5$, so $e^{x^2}$ is $e^{\\ln 5}$, which is $5$, and at $0$ it is $1$.\n\n> **Watch out.** Square the limit before exponentiating. At $x = \\sqrt{\\ln c}$ the exponent $x^2$ is $\\ln c$, so $e^{x^2}$ is $c$, not $e^{\\sqrt{\\ln c}}$.",
+    "经过换元 $u = x^2$，$xe^{x^2}$ 的积分是 $\\frac{1}{2}e^{x^2}$。积分限有时是特意选取的，以使指数化简。由于 $e^{\\ln c} = c$，上限取 $\\sqrt{\\ln c}$ 时，原函数的值就是一个普通的数，看起来超越的答案其实是有理数。例如，$\\int_0^{\\sqrt{\\ln 5}} xe^{x^2}\\,dx$ 等于 $\\frac{1}{2}(5 - 1)$，即 $2$。\n\n检验：在上限处 $x^2$ 等于 $\\ln 5$，所以 $e^{x^2}$ 等于 $e^{\\ln 5}$，即 $5$；在 $0$ 处它等于 $1$。\n\n> **注意。** 先把积分限平方，再取指数。在 $x = \\sqrt{\\ln c}$ 处，指数 $x^2$ 是 $\\ln c$，所以 $e^{x^2}$ 等于 $c$，而不是 $e^{\\sqrt{\\ln c}}$。",
   ),
   generate(rng) {
     const c = rng.int(2, 12);
@@ -801,9 +865,26 @@ const limitWithLogarithm: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(k * (c - 1)), Q.of(k * c, 2), Q.of(k * (c - 1), 4)],
-      solution: t(
-        `An antiderivative is $\\frac{${k}}{2}e^{x^2}$. At the upper limit $e^{x^2} = ${c}$ and at 0 it is 1, so the value is $\\frac{${k}}{2}(${c} - 1) = ${answer.toLatex()}$.`,
-        `原函数是 $\\frac{${k}}{2}e^{x^2}$。在上限处 $e^{x^2} = ${c}$，在 0 处是 1，所以值是 $\\frac{${k}}{2}(${c} - 1) = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Substitute", "换元"],
+            [
+              `Let $u = x^2$. Then $du = 2x\\,dx$, and $u$ runs from $0$ to $(\\sqrt{\\ln ${c}})^2$, which is $\\ln ${c}$:`,
+              `令 $u = x^2$，则 $du = 2x\\,dx$，$u$ 从 $0$ 变到 $(\\sqrt{\\ln ${c}})^2$，即 $\\ln ${c}$：`,
+            ],
+            [`\\int_0^{\\sqrt{\\ln ${c}}} ${coefficientOf(k)}xe^{x^2}\\,dx = \\frac{${k}}{2}\\int_0^{\\ln ${c}} e^{u}\\,du`],
+          ],
+          [
+            ["Evaluate", "求值"],
+            [`Since $e^{\\ln ${c}}$ is $${c}$ and $e^{0}$ is $1$:`, `由于 $e^{\\ln ${c}}$ 等于 $${c}$，$e^{0}$ 等于 $1$：`],
+            [`\\frac{${k}}{2}\\left(e^{\\ln ${c}} - e^{0}\\right) = \\frac{${k}}{2}(${c} - 1) = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Stay in $x$ instead. The derivative of $${Q.of(k, 2).toLatex()}e^{x^2}$ is $${coefficientOf(k)}xe^{x^2}$, so it is an antiderivative. At the upper limit $x^2$ is $\\ln ${c}$, so its value is $${Q.of(k * c, 2).toLatex()}$, and at $0$ it is $${Q.of(k, 2).toLatex()}$. The difference is $${answer.toLatex()}$ again.`,
+          `改用 $x$ 计算。$${Q.of(k, 2).toLatex()}e^{x^2}$ 的导数是 $${coefficientOf(k)}xe^{x^2}$，所以它是一个原函数。在上限处 $x^2$ 等于 $\\ln ${c}$，所以它的值是 $${Q.of(k * c, 2).toLatex()}$；在 $0$ 处它的值是 $${Q.of(k, 2).toLatex()}$。差同样是 $${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -813,8 +894,8 @@ const logLimits: KnowledgePointDef = {
   id: "a-definite-integral-of-a-power-of-ln-x-over-x",
   title: t("A definite integral of a power of $\\ln x$ over $x$", "$\\ln x$ 的幂除以 $x$ 的定积分"),
   explanation: t(
-    "With $u = \\ln x$, the factor $\\frac{dx}{x}$ becomes $du$, and the limits transform as well: $x = 1$ gives $u = 0$, and $x = e^n$ gives $u = n$. What remains is the integral of a plain power of $u$. Limits that are powers of $e$ are therefore a strong signal to use this substitution.",
-    "令 $u = \\ln x$，因子 $\\frac{dx}{x}$ 变成 $du$，积分限也随之变化：$x = 1$ 对应 $u = 0$，$x = e^n$ 对应 $u = n$。剩下的就是 $u$ 的普通幂函数的积分。所以积分限是 $e$ 的幂时，就是使用这个换元的明显信号。",
+    "With $u = \\ln x$, the factor $\\frac{dx}{x}$ becomes $du$, and the limits transform as well: $x = 1$ gives $u = 0$, and $x = e^n$ gives $u = n$. What remains is the integral of a plain power of $u$. Limits that are powers of $e$ are therefore a strong signal to use this substitution. For example, $\\int_1^{e^{2}} \\frac{(\\ln x)^2}{x}\\,dx$ becomes $\\int_0^{2} u^2\\,du$, which is $\\frac{8}{3}$.\n\nCheck: the antiderivative $\\frac{(\\ln x)^3}{3}$ is $\\frac{8}{3}$ at $x = e^2$ and $0$ at $x = 1$, which gives $\\frac{8}{3}$ again.\n\n> **Watch out.** The lower limit $x = 1$ becomes $u = 0$, not $u = 1$, since $\\ln 1$ is $0$.",
+    "令 $u = \\ln x$，因子 $\\frac{dx}{x}$ 变成 $du$，积分限也随之变化：$x = 1$ 对应 $u = 0$，$x = e^n$ 对应 $u = n$。剩下的就是 $u$ 的普通幂函数的积分。所以积分限是 $e$ 的幂时，就是使用这个换元的明显信号。例如，$\\int_1^{e^{2}} \\frac{(\\ln x)^2}{x}\\,dx$ 变成 $\\int_0^{2} u^2\\,du$，即 $\\frac{8}{3}$。\n\n检验：原函数 $\\frac{(\\ln x)^3}{3}$ 在 $x = e^2$ 处为 $\\frac{8}{3}$，在 $x = 1$ 处为 $0$，差同样是 $\\frac{8}{3}$。\n\n> **注意。** 下限 $x = 1$ 变成 $u = 0$，而不是 $u = 1$，因为 $\\ln 1$ 等于 $0$。",
   ),
   generate(rng) {
     const n = rng.int(2, 5);
@@ -822,6 +903,7 @@ const logLimits: KnowledgePointDef = {
     const k = rng.int(1, 6);
     const answer = Q.of(k * n ** (m + 1), m + 1);
     const power = m === 1 ? "\\ln x" : `(\\ln x)^{${m}}`;
+    const um = m === 1 ? "u" : `u^{${m}}`;
     return numberProblem({
       prompt: t(
         `Evaluate $\\int_1^{e^{${n}}} \\frac{${coefficientOf(k)}${power}}{x}\\,dx$.`,
@@ -829,9 +911,26 @@ const logLimits: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(k * n ** m, m), Q.of(k * n ** (m + 1)), Q.of(k * n ** (m + 1), m + 2)],
-      solution: t(
-        `With $u = \\ln x$, the limits become 0 and ${n}, and the integral is $\\int_0^{${n}} ${coefficientOf(k)}${m === 1 ? "u" : `u^{${m}}`}\\,du = \\frac{${k} \\cdot ${n}^{${m + 1}}}{${m + 1}} = ${answer.toLatex()}$.`,
-        `令 $u = \\ln x$，积分限变成 0 和 ${n}，积分是 $\\int_0^{${n}} ${coefficientOf(k)}${m === 1 ? "u" : `u^{${m}}`}\\,du = \\frac{${k} \\cdot ${n}^{${m + 1}}}{${m + 1}} = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Substitute", "换元"],
+            [
+              `Let $u = \\ln x$, so $du = \\frac{dx}{x}$. The limits $x = 1$ and $x = e^{${n}}$ become $u = 0$ and $u = ${n}$:`,
+              `令 $u = \\ln x$，则 $du = \\frac{dx}{x}$。积分限 $x = 1$ 和 $x = e^{${n}}$ 变成 $u = 0$ 和 $u = ${n}$：`,
+            ],
+            [`\\int_1^{e^{${n}}} \\frac{${coefficientOf(k)}${power}}{x}\\,dx = ${coefficientOf(k)}\\int_0^{${n}} ${um}\\,du`],
+          ],
+          [
+            ["Integrate the power", "对幂积分"],
+            ["Raise the power by one and divide by the new power:", "幂次加一，再除以新的幂次："],
+            [`${coefficientOf(k)}\\int_0^{${n}} ${um}\\,du = \\frac{${k} \\cdot ${n}^{${m + 1}}}{${m + 1}} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Stay in $x$ instead. An antiderivative is $\\frac{${k}(\\ln x)^{${m + 1}}}{${m + 1}}$. At $x = e^{${n}}$, $\\ln x$ is $${n}$, and at $x = 1$ it is $0$, so the value is $${answer.toLatex()}$ again.`,
+          `改用 $x$ 计算。一个原函数是 $\\frac{${k}(\\ln x)^{${m + 1}}}{${m + 1}}$。在 $x = e^{${n}}$ 处 $\\ln x$ 等于 $${n}$，在 $x = 1$ 处等于 $0$，所以值同样是 $${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -841,24 +940,55 @@ const powerOverQuarterTurn: KnowledgePointDef = {
   id: "a-power-of-sine-or-cosine-over-a-quarter-turn",
   title: t("A power of sine or cosine over a quarter turn", "正弦或余弦的幂在四分之一周期上的积分"),
   explanation: t(
-    "When a single factor of cosine sits beside a power of sine, take $u = \\sin x$, and the cosine is absorbed into $du$. Over $[0, \\frac{\\pi}{2}]$, $u$ runs from 0 to 1 in either version of the integral, whether sine or cosine carries the power. So the answer is simply one over one more than the power.",
-    "一个余弦因子紧挨着正弦的幂时，取 $u = \\sin x$，余弦就被吸收进 $du$。在 $[0, \\frac{\\pi}{2}]$ 上，无论幂在正弦还是余弦上，$u$ 都是在 0 与 1 之间变化。所以答案就是幂次加一的倒数。",
+    "When a single factor of cosine sits beside a power of sine, take $u = \\sin x$, and the cosine is absorbed into $du$. Over $[0, \\frac{\\pi}{2}]$, $u$ runs from 0 to 1 in either version of the integral, whether sine or cosine carries the power. So the answer is simply one over one more than the power. For example, $\\int_0^{\\pi/2} \\sin^{3} x\\cos x\\,dx$ is $\\int_0^{1} u^{3}\\,du$, which is $\\frac{1}{4}$.\n\nCheck: for $\\cos^{3} x\\sin x$ take $u = \\cos x$. Then $du = -\\sin x\\,dx$ and $u$ runs from $1$ down to $0$; the two reversals cancel, and the value is $\\frac{1}{4}$ again.\n\n> **Watch out.** With $u = \\cos x$ the limits come out reversed. Dropping the minus sign of $du$ while keeping the reversed limits changes the sign of the answer.",
+    "一个余弦因子紧挨着正弦的幂时，取 $u = \\sin x$，余弦就被吸收进 $du$。在 $[0, \\frac{\\pi}{2}]$ 上，无论幂在正弦还是余弦上，$u$ 都是在 0 与 1 之间变化。所以答案就是幂次加一的倒数。例如，$\\int_0^{\\pi/2} \\sin^{3} x\\cos x\\,dx$ 等于 $\\int_0^{1} u^{3}\\,du$，即 $\\frac{1}{4}$。\n\n检验：对 $\\cos^{3} x\\sin x$ 取 $u = \\cos x$，则 $du = -\\sin x\\,dx$，$u$ 从 $1$ 减到 $0$；两次反向相互抵消，值同样是 $\\frac{1}{4}$。\n\n> **注意。** 取 $u = \\cos x$ 时积分限是反过来的。如果丢掉 $du$ 的负号却保留反向的积分限，答案的符号就错了。",
   ),
   generate(rng) {
     const n = rng.int(2, 9);
     const k = rng.int(1, 12);
     const answer = Q.of(k, n + 1);
-    const integrand = rng.pick([`\\sin^{${n}} x\\cos x`, `\\cos^{${n}} x\\sin x`]);
+    const sine = rng.pick([true, false]);
+    const integrand = sine ? `\\sin^{${n}} x\\cos x` : `\\cos^{${n}} x\\sin x`;
+    const ck = coefficientOf(k);
+    const inU = `${ck}\\int_0^{1} u^{${n}}\\,du`;
     return numberProblem({
-      prompt: t(
-        `Evaluate $\\int_0^{\\pi/2} ${coefficientOf(k)}${integrand}\\,dx$.`,
-        `计算 $\\int_0^{\\pi/2} ${coefficientOf(k)}${integrand}\\,dx$。`,
-      ),
+      prompt: t(`Evaluate $\\int_0^{\\pi/2} ${ck}${integrand}\\,dx$.`, `计算 $\\int_0^{\\pi/2} ${ck}${integrand}\\,dx$。`),
       answer,
       wrong: [Q.of(k, n), Q.of(k), answer.neg()],
-      solution: t(
-        `The substitution turns this into $${coefficientOf(k)}\\int_0^1 u^{${n}}\\,du = ${answer.toLatex()}$.`,
-        `换元后变成 $${coefficientOf(k)}\\int_0^1 u^{${n}}\\,du = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          sine
+            ? [
+                ["Substitute", "换元"],
+                [
+                  "Let $u = \\sin x$, so $du = \\cos x\\,dx$, and $u$ runs from $0$ to $1$:",
+                  "令 $u = \\sin x$，则 $du = \\cos x\\,dx$，$u$ 从 $0$ 变到 $1$：",
+                ],
+                [`\\int_0^{\\pi/2} ${ck}${integrand}\\,dx = ${inU}`],
+              ]
+            : [
+                ["Substitute", "换元"],
+                [
+                  "Let $u = \\cos x$, so $du = -\\sin x\\,dx$, and $u$ runs from $1$ down to $0$. The minus sign turns the limits back around:",
+                  "令 $u = \\cos x$，则 $du = -\\sin x\\,dx$，$u$ 从 $1$ 减到 $0$。负号把积分限再翻转回来：",
+                ],
+                [`\\int_0^{\\pi/2} ${ck}${integrand}\\,dx = -${ck}\\int_1^{0} u^{${n}}\\,du = ${inU}`],
+              ],
+          [
+            ["Integrate the power", "对幂积分"],
+            ["Raise the power by one and evaluate from $0$ to $1$:", "幂次加一，再从 $0$ 到 $1$ 求值："],
+            [`${inU} = ${ck}\\left[\\frac{u^{${n + 1}}}{${n + 1}}\\right]_0^1 = ${answer.toLatex()}`],
+          ],
+        ],
+        sine
+          ? [
+              `Stay in $x$ instead. An antiderivative is $${answer.toLatex()}\\sin^{${n + 1}} x$, which is $${answer.toLatex()}$ at $\\frac{\\pi}{2}$ and $0$ at $0$, so the value is $${answer.toLatex()}$ again.`,
+              `改用 $x$ 计算。一个原函数是 $${answer.toLatex()}\\sin^{${n + 1}} x$，它在 $\\frac{\\pi}{2}$ 处为 $${answer.toLatex()}$，在 $0$ 处为 $0$，所以值同样是 $${answer.toLatex()}$。`,
+            ]
+          : [
+              `Stay in $x$ instead. An antiderivative is $-${answer.toLatex()}\\cos^{${n + 1}} x$, which is $0$ at $\\frac{\\pi}{2}$ and $-${answer.toLatex()}$ at $0$, so the value is $${answer.toLatex()}$ again.`,
+              `改用 $x$ 计算。一个原函数是 $-${answer.toLatex()}\\cos^{${n + 1}} x$，它在 $\\frac{\\pi}{2}$ 处为 $0$，在 $0$ 处为 $-${answer.toLatex()}$，所以值同样是 $${answer.toLatex()}$。`,
+            ],
       ),
     });
   },
@@ -868,8 +998,8 @@ const sinhCoshLimit: KnowledgePointDef = {
   id: "a-hyperbolic-integral-with-a-logarithm-in-the-limit",
   title: t("A hyperbolic integral with a logarithm in the limit", "积分限含对数的双曲积分"),
   explanation: t(
-    "The substitution $u = \\sinh x$ gives $\\int \\sinh x\\cosh x\\,dx = \\frac{1}{2}\\sinh^2 x$. To evaluate at a limit such as $\\ln a$, return to the exponential definition: $\\sinh(\\ln a) = \\frac{1}{2}\\left(a - \\frac{1}{a}\\right)$. The exponentials and logarithm then cancel, so the result is a rational number whenever $a$ is rational.",
-    "换元 $u = \\sinh x$ 给出 $\\int \\sinh x\\cosh x\\,dx = \\frac{1}{2}\\sinh^2 x$。在 $\\ln a$ 这样的积分限处求值时，要回到指数定义：$\\sinh(\\ln a) = \\frac{1}{2}\\left(a - \\frac{1}{a}\\right)$。指数和对数相互抵消，所以只要 $a$ 是有理数，结果就是有理数。",
+    "The substitution $u = \\sinh x$ gives $\\int \\sinh x\\cosh x\\,dx = \\frac{1}{2}\\sinh^2 x + C$. To evaluate at a limit such as $\\ln a$, return to the exponential definition:\n\n$$\\sinh(\\ln a) = \\frac{1}{2}\\left(a - \\frac{1}{a}\\right).$$\n\nThe exponentials and logarithm then cancel, so the result is a rational number whenever $a$ is rational. For example, $\\sinh(\\ln 3)$ is $\\frac{1}{2}\\left(3 - \\frac{1}{3}\\right)$, which is $\\frac{4}{3}$.\n\nCheck: $e^{\\ln 3}$ is $3$ and $e^{-\\ln 3}$ is $\\frac{1}{3}$, so half their difference is $\\frac{4}{3}$, as found.\n\n> **Watch out.** $\\sinh(\\ln a)$ is not $a$. Only $e^{\\ln a}$ simplifies to $a$; the hyperbolic sine also contains $e^{-\\ln a}$, which is $\\frac{1}{a}$.",
+    "换元 $u = \\sinh x$ 给出 $\\int \\sinh x\\cosh x\\,dx = \\frac{1}{2}\\sinh^2 x + C$。在 $\\ln a$ 这样的积分限处求值时，要回到指数定义：\n\n$$\\sinh(\\ln a) = \\frac{1}{2}\\left(a - \\frac{1}{a}\\right)$$\n\n指数和对数相互抵消，所以只要 $a$ 是有理数，结果就是有理数。例如，$\\sinh(\\ln 3)$ 等于 $\\frac{1}{2}\\left(3 - \\frac{1}{3}\\right)$，即 $\\frac{4}{3}$。\n\n检验：$e^{\\ln 3}$ 等于 $3$，$e^{-\\ln 3}$ 等于 $\\frac{1}{3}$，二者之差的一半是 $\\frac{4}{3}$，与上面一致。\n\n> **注意。** $\\sinh(\\ln a)$ 不等于 $a$。只有 $e^{\\ln a}$ 化简为 $a$；双曲正弦里还有 $e^{-\\ln a}$，它等于 $\\frac{1}{a}$。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
@@ -877,16 +1007,37 @@ const sinhCoshLimit: KnowledgePointDef = {
     const top = a * a - 1;
     const answer = Q.of(k * top * top, 8 * a * a);
     const sinhValue = Q.of(top, 2 * a);
+    const coshValue = Q.of(a * a + 1, 2 * a);
+    const ck = coefficientOf(k);
     return numberProblem({
-      prompt: t(
-        `Evaluate $\\int_0^{\\ln ${a}} ${coefficientOf(k)}\\sinh x\\cosh x\\,dx$.`,
-        `计算 $\\int_0^{\\ln ${a}} ${coefficientOf(k)}\\sinh x\\cosh x\\,dx$。`,
-      ),
+      prompt: t(`Evaluate $\\int_0^{\\ln ${a}} ${ck}\\sinh x\\cosh x\\,dx$.`, `计算 $\\int_0^{\\ln ${a}} ${ck}\\sinh x\\cosh x\\,dx$。`),
       answer,
       wrong: [Q.of(k * top * top, 4 * a * a), Q.of(k * top, 2 * a), Q.of(k * top * top, 2 * a * a)],
-      solution: t(
-        `Here $\\sinh(\\ln ${a}) = ${sinhValue.toLatex()}$, and the integral is $\\frac{${k}}{2}\\sinh^2(\\ln ${a}) = ${answer.toLatex()}$.`,
-        `这里 $\\sinh(\\ln ${a}) = ${sinhValue.toLatex()}$，积分是 $\\frac{${k}}{2}\\sinh^2(\\ln ${a}) = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Substitute", "换元"],
+            [
+              `Let $u = \\sinh x$, so $du = \\cosh x\\,dx$. The limits become $u = 0$ and $u = \\sinh(\\ln ${a})$:`,
+              `令 $u = \\sinh x$，则 $du = \\cosh x\\,dx$。积分限变成 $u = 0$ 和 $u = \\sinh(\\ln ${a})$：`,
+            ],
+            [
+              `\\int_0^{\\ln ${a}} ${ck}\\sinh x\\cosh x\\,dx = ${ck}\\int_0^{\\sinh(\\ln ${a})} u\\,du = \\frac{${k}}{2}\\sinh^2(\\ln ${a})`,
+            ],
+          ],
+          [
+            ["Evaluate the hyperbolic sine", "求双曲正弦的值"],
+            ["From the exponential definition, with $e^{\\ln a} = a$:", "由指数定义，并用 $e^{\\ln a} = a$："],
+            [
+              `\\sinh(\\ln ${a}) = \\frac{1}{2}\\left(${a} - \\frac{1}{${a}}\\right) = ${sinhValue.toLatex()}`,
+              `\\frac{${k}}{2}\\left(${sinhValue.toLatex()}\\right)^2 = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `Use $u = \\cosh x$ instead, which gives $\\frac{${k}}{2}\\cosh^2 x$ as the antiderivative. Here $\\cosh(\\ln ${a})$ is $${coshValue.toLatex()}$ and $\\cosh 0$ is $1$:${steps(`\\frac{${k}}{2}\\left(\\left(${coshValue.toLatex()}\\right)^2 - 1\\right) = ${answer.toLatex()}`).trimEnd()}`,
+          `改用 $u = \\cosh x$，原函数是 $\\frac{${k}}{2}\\cosh^2 x$。这里 $\\cosh(\\ln ${a})$ 等于 $${coshValue.toLatex()}$，$\\cosh 0$ 等于 $1$：${steps(`\\frac{${k}}{2}\\left(\\left(${coshValue.toLatex()}\\right)^2 - 1\\right) = ${answer.toLatex()}`).trimEnd()}`,
+        ],
       ),
     });
   },
@@ -896,8 +1047,8 @@ const inverseTrigDefinite: KnowledgePointDef = {
   id: "definite-integrals-giving-a-rational-multiple-of-pi",
   title: t("Definite integrals giving a rational multiple of $\\pi$", "结果为 $\\pi$ 的有理数倍的定积分"),
   explanation: t(
-    "Inverse trigonometric antiderivatives evaluate to angles at familiar limits. Since $\\arcsin\\frac{1}{2} = \\frac{\\pi}{6}$ and $\\arctan 1 = \\frac{\\pi}{4}$, integrals with these limits come out as rational multiples of $\\pi$. Remember that the arcsine form carries no extra factor from $a$, whereas the arctangent form has a factor of $\\frac{1}{a}$ in front.",
-    "反三角原函数在常见积分限处的值是角度。由于 $\\arcsin\\frac{1}{2} = \\frac{\\pi}{6}$，$\\arctan 1 = \\frac{\\pi}{4}$，这样的定积分结果是 $\\pi$ 的有理数倍。要记住，反正弦形式没有来自 $a$ 的额外因子，而反正切形式前面有因子 $\\frac{1}{a}$。",
+    "Inverse trigonometric antiderivatives evaluate to angles at familiar limits. Since $\\arcsin\\frac{1}{2}$ is $\\frac{\\pi}{6}$ and $\\arctan 1$ is $\\frac{\\pi}{4}$, integrals with these limits come out as rational multiples of $\\pi$. Remember that the arcsine form carries no extra factor from $a$, whereas the arctangent form has a factor of $\\frac{1}{a}$ in front. For example:\n\n$$\\int_0^{2} \\frac{dx}{x^2 + 4} = \\frac{1}{2}\\arctan 1 = \\frac{\\pi}{8}.$$\n\nCheck: $\\tan\\frac{\\pi}{4}$ is $1$ and $\\sin\\frac{\\pi}{6}$ is $\\frac{1}{2}$, so the two angles are right.\n\n> **Watch out.** Forgetting the factor $\\frac{1}{a}$ of the arctangent form gives $\\frac{\\pi}{4}$ instead of $\\frac{\\pi}{8}$ in the example.",
+    "反三角原函数在常见积分限处的值是角度。由于 $\\arcsin\\frac{1}{2}$ 等于 $\\frac{\\pi}{6}$，$\\arctan 1$ 等于 $\\frac{\\pi}{4}$，这样的定积分结果是 $\\pi$ 的有理数倍。要记住，反正弦形式没有来自 $a$ 的额外因子，而反正切形式前面有因子 $\\frac{1}{a}$。例如：\n\n$$\\int_0^{2} \\frac{dx}{x^2 + 4} = \\frac{1}{2}\\arctan 1 = \\frac{\\pi}{8}$$\n\n检验：$\\tan\\frac{\\pi}{4}$ 等于 $1$，$\\sin\\frac{\\pi}{6}$ 等于 $\\frac{1}{2}$，所以这两个角是对的。\n\n> **注意。** 忘了反正切形式的因子 $\\frac{1}{a}$，上例就会得到 $\\frac{\\pi}{4}$，而不是 $\\frac{\\pi}{8}$。",
   ),
   generate(rng) {
     const k = rng.int(1, 12);
@@ -907,6 +1058,14 @@ const inverseTrigDefinite: KnowledgePointDef = {
     const integrand = sine ? `\\frac{${k}}{\\sqrt{${a * a} - x^2}}` : `\\frac{${k}}{x^2 + ${half * half}}`;
     const top = half;
     const answer = sine ? Q.of(k, 6) : Q.of(k, 4 * half);
+    const ck = coefficientOf(k);
+    const readOff: WalkStep = [
+      ["Read off c", "读出 c"],
+      [
+        `The value is $${piTimes(answer)}$, so $c = ${answer.toLatex()}$.`,
+        `积分值是 $${piTimes(answer)}$，所以 $c = ${answer.toLatex()}$。`,
+      ],
+    ];
     return numberProblem({
       prompt: t(
         `The integral $\\int_0^{${top}} ${integrand}\\,dx$ equals $c\\pi$. Find $c$.`,
@@ -915,13 +1074,56 @@ const inverseTrigDefinite: KnowledgePointDef = {
       answer,
       wrong: sine ? [Q.of(k, 3), Q.of(k, 6 * a), Q.of(k, 4)] : [Q.of(k, 4), Q.of(k, 2 * half), Q.of(k, 6 * half)],
       solution: sine
-        ? t(
-            `An antiderivative is $${coefficientOf(k)}\\arcsin\\frac{x}{${a}}$, and $\\arcsin\\frac{1}{2} = \\frac{\\pi}{6}$. So $c = ${answer.toLatex()}$.`,
-            `原函数是 $${coefficientOf(k)}\\arcsin\\frac{x}{${a}}$，且 $\\arcsin\\frac{1}{2} = \\frac{\\pi}{6}$。所以 $c = ${answer.toLatex()}$。`,
+        ? walkThrough(
+            [
+              [
+                ["Find an antiderivative", "求原函数"],
+                [
+                  `The root holds $${a * a} - x^2$, so this is the arcsine form with $a = ${a}$, which has no factor $\\frac{1}{a}$:`,
+                  `根号下是 $${a * a} - x^2$，所以这是 $a = ${a}$ 的反正弦形式，没有因子 $\\frac{1}{a}$：`,
+                ],
+                [`\\int ${integrand}\\,dx = ${ck}\\arcsin\\frac{x}{${a}} + C`],
+              ],
+              [
+                ["Evaluate", "求值"],
+                [
+                  `At $x = ${top}$ the argument is $\\frac{${top}}{${a}}$, which is $\\frac{1}{2}$, and at $x = 0$ it is $0$:`,
+                  `在 $x = ${top}$ 处，自变量是 $\\frac{${top}}{${a}}$，即 $\\frac{1}{2}$；在 $x = 0$ 处是 $0$：`,
+                ],
+                [
+                  `${ck}\\left(\\arcsin\\frac{1}{2} - \\arcsin 0\\right) = ${k === 1 ? "" : `${k} \\cdot `}\\frac{\\pi}{6} = ${piTimes(answer)}`,
+                ],
+              ],
+              readOff,
+            ],
+            [
+              `Substitute $x = ${a}\\sin\\theta$ instead. Then $\\sqrt{${a * a} - x^2}$ is $${a}\\cos\\theta$ and $dx$ is $${a}\\cos\\theta\\,d\\theta$, so the integrand becomes $${dTheta(Q.of(k))}$. As $x$ goes from $0$ to $${top}$, $\\theta$ goes from $0$ to $\\frac{\\pi}{6}$, which gives $${piTimes(answer)}$ again.`,
+              `改用代换 $x = ${a}\\sin\\theta$。则 $\\sqrt{${a * a} - x^2}$ 等于 $${a}\\cos\\theta$，$dx$ 等于 $${a}\\cos\\theta\\,d\\theta$，被积式变成 $${dTheta(Q.of(k))}$。$x$ 从 $0$ 到 $${top}$ 时，$\\theta$ 从 $0$ 到 $\\frac{\\pi}{6}$，结果同样是 $${piTimes(answer)}$。`,
+            ],
           )
-        : t(
-            `An antiderivative is $${fractionBefore(k, half)}\\arctan${half === 1 ? " x" : `\\frac{x}{${half}}`}$, and $\\arctan 1 = \\frac{\\pi}{4}$. So $c = ${answer.toLatex()}$.`,
-            `原函数是 $${fractionBefore(k, half)}\\arctan${half === 1 ? " x" : `\\frac{x}{${half}}`}$，且 $\\arctan 1 = \\frac{\\pi}{4}$。所以 $c = ${answer.toLatex()}$。`,
+        : walkThrough(
+            [
+              [
+                ["Find an antiderivative", "求原函数"],
+                [
+                  `The denominator is $x^2 + ${half * half}$, the arctangent form with $a = ${half}$, which has the factor $\\frac{1}{${half}}$:`,
+                  `分母是 $x^2 + ${half * half}$，这是 $a = ${half}$ 的反正切形式，带有因子 $\\frac{1}{${half}}$：`,
+                ],
+                [`\\int ${integrand}\\,dx = ${fractionBefore(k, half)}\\arctan${half === 1 ? " x" : `\\frac{x}{${half}}`} + C`],
+              ],
+              [
+                ["Evaluate", "求值"],
+                [`At $x = ${top}$ the argument is $1$, and at $x = 0$ it is $0$:`, `在 $x = ${top}$ 处自变量是 $1$，在 $x = 0$ 处是 $0$：`],
+                [
+                  `${fractionBefore(k, half)}\\left(\\arctan 1 - \\arctan 0\\right) = ${Q.of(k, half).toLatex() === "1" ? "" : `${Q.of(k, half).toLatex()} \\cdot `}\\frac{\\pi}{4} = ${piTimes(answer)}`,
+                ],
+              ],
+              readOff,
+            ],
+            [
+              `Substitute $x = ${coefficientOf(half)}\\tan\\theta$ instead. Then $x^2 + ${half * half}$ is $${coefficientOf(half * half)}\\sec^2\\theta$ and $dx$ is $${coefficientOf(half)}\\sec^2\\theta\\,d\\theta$, so the integrand becomes $${dTheta(Q.of(k, half))}$. As $x$ goes from $0$ to $${top}$, $\\theta$ goes from $0$ to $\\frac{\\pi}{4}$, which gives $${piTimes(answer)}$ again.`,
+              `改用代换 $x = ${coefficientOf(half)}\\tan\\theta$。则 $x^2 + ${half * half}$ 等于 $${coefficientOf(half * half)}\\sec^2\\theta$，$dx$ 等于 $${coefficientOf(half)}\\sec^2\\theta\\,d\\theta$，被积式变成 $${dTheta(Q.of(k, half))}$。$x$ 从 $0$ 到 $${top}$ 时，$\\theta$ 从 $0$ 到 $\\frac{\\pi}{4}$，结果同样是 $${piTimes(answer)}$。`,
+            ],
           ),
     });
   },
@@ -1593,8 +1795,8 @@ const upperLimitFromLogarithm: KnowledgePointDef = {
   id: "the-upper-limit-from-a-logarithmic-value",
   title: t("The upper limit from a logarithmic value", "由对数值求积分上限"),
   explanation: t(
-    "The integral of a linear function's derivative over that function is a difference of logarithms, which is the logarithm of a ratio. So when the value is $\\ln m$, the linear function must grow by the factor $m$ between the two limits. That turns the question about an integral into a linear equation for the unknown limit.",
-    "线性函数的导数除以该函数，积分是对数之差，也就是比值的对数。所以积分值为 $\\ln m$ 时，线性函数从下限到上限必须增大到 $m$ 倍。这样，积分问题就变成了关于未知积分限的一次方程。",
+    "The integral of a linear function's derivative over that function is a difference of logarithms, which is the logarithm of a ratio. So when the value is $\\ln m$, the linear function must grow by the factor $m$ between the two limits. That turns the question about an integral into a linear equation for the unknown limit. For example, $\\int_0^{b} \\frac{2}{2x + 3}\\,dx$ is $\\ln\\frac{2b + 3}{3}$. For this to be $\\ln 2$, $2b + 3$ must be $6$, so $b$ is $\\frac{3}{2}$.\n\nCheck: with $b = \\frac{3}{2}$ the integral is $\\ln 6 - \\ln 3$, which is $\\ln 2$.\n\n> **Watch out.** The value at the lower limit is $\\ln c$, not $0$. Forgetting it gives the equation $ab + c = m$ instead of $ab + c = cm$.",
+    "线性函数的导数除以该函数，积分是对数之差，也就是比值的对数。所以积分值为 $\\ln m$ 时，线性函数从下限到上限必须增大到 $m$ 倍。这样，积分问题就变成了关于未知积分限的一次方程。例如，$\\int_0^{b} \\frac{2}{2x + 3}\\,dx$ 等于 $\\ln\\frac{2b + 3}{3}$。要使它等于 $\\ln 2$，$2b + 3$ 必须是 $6$，所以 $b$ 等于 $\\frac{3}{2}$。\n\n检验：$b = \\frac{3}{2}$ 时，积分等于 $\\ln 6 - \\ln 3$，即 $\\ln 2$。\n\n> **注意。** 下限处的值是 $\\ln c$，不是 $0$。忘了它，就会得到方程 $ab + c = m$，而不是 $ab + c = cm$。",
   ),
   generate(rng) {
     const a = rng.int(2, 6);
@@ -1610,9 +1812,29 @@ const upperLimitFromLogarithm: KnowledgePointDef = {
       answer,
       solveFor: "b",
       wrong: [Q.of(c * (m - 1)), Q.of(c * m, a), Q.of(m - 1, a), Q.of(c * (m + 1), a)],
-      solution: t(
-        `With $u = ${denominator}$ and $du = ${a}\\,dx$, the integral is $\\ln\\frac{${a}b + ${c}}{${c}}$. This equals $\\ln ${m}$ exactly when $${a}b + ${c} = ${c * m}$, so $b = ${answer.toLatex()}$.`,
-        `令 $u = ${denominator}$，$du = ${a}\\,dx$，积分等于 $\\ln\\frac{${a}b + ${c}}{${c}}$。它等于 $\\ln ${m}$ 当且仅当 $${a}b + ${c} = ${c * m}$，所以 $b = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Integrate", "积分"],
+            [
+              `With $u = ${denominator}$, $du = ${a}\\,dx$, so the integral is a difference of logarithms. Both values of $u$ are positive for $b > 0$:`,
+              `令 $u = ${denominator}$，则 $du = ${a}\\,dx$，所以积分是对数之差。$b > 0$ 时 $u$ 的两个值都是正的：`,
+            ],
+            [`\\int_0^b \\frac{${a}}{${denominator}}\\,dx = \\ln(${a}b + ${c}) - \\ln ${c}`],
+          ],
+          [
+            ["Solve for b", "解出 b"],
+            [
+              `Setting this equal to $\\ln ${m}$ means $${a}b + ${c}$ is $${m}$ times $${c}$:`,
+              `令它等于 $\\ln ${m}$，就是说 $${a}b + ${c}$ 是 $${c}$ 的 $${m}$ 倍：`,
+            ],
+            [`${a}b + ${c} = ${c * m}`, `b = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Put $b = ${answer.toLatex()}$ back. Then $${a}b + ${c}$ is $${c * m}$, and $\\ln ${c * m} - \\ln ${c}$ is $\\ln ${m}$, as required.`,
+          `把 $b = ${answer.toLatex()}$ 代回。则 $${a}b + ${c}$ 等于 $${c * m}$，而 $\\ln ${c * m} - \\ln ${c}$ 等于 $\\ln ${m}$，符合要求。`,
+        ],
       ),
     });
   },
@@ -1622,25 +1844,45 @@ const xTimesFOfXSquared: KnowledgePointDef = {
   id: "an-integral-of-x-times-f-of-x-squared",
   title: t("An integral of x times f of x squared", "x 乘以 x 平方的函数的积分"),
   explanation: t(
-    "Substitution needs no formula for the outer function, only that the derivative of the inner one is present. In $\\int xf(x^2)\\,dx$, the choice $u = x^2$ gives $du = 2x\\,dx$, so the factor $x\\,dx$ becomes $\\frac{du}{2}$. The limits are squared as well, and a known integral of $f$ then finishes the work, even though $f$ itself stays unknown.",
-    "换元不需要外层函数的公式，只要内层函数的导数出现在被积式中。在 $\\int xf(x^2)\\,dx$ 中，取 $u = x^2$，则 $du = 2x\\,dx$，所以 $x\\,dx$ 变成 $\\frac{du}{2}$。积分限也要平方，再用已知的 $f$ 的积分就能得到结果，即使 $f$ 本身仍然未知。",
+    "Substitution needs no formula for the outer function, only that the derivative of the inner one is present. In $\\int xf(x^2)\\,dx$, the choice $u = x^2$ gives $du = 2x\\,dx$, so the factor $x\\,dx$ becomes $\\frac{du}{2}$. The limits are squared as well, and a known integral of $f$ then finishes the work, even though $f$ itself stays unknown. For example, if $\\int_0^{9} f(u)\\,du$ is $10$, then $\\int_0^{3} xf(x^2)\\,dx$ is half of it, $5$.\n\nCheck: take $f(u) = 1$. Then $\\int_0^{3} x\\,dx$ is $\\frac{9}{2}$, and half of $\\int_0^{9} 1\\,du$ is $\\frac{9}{2}$ too.\n\n> **Watch out.** Square the limits as well. The upper limit $x = 3$ becomes $u = 9$, not $u = 3$.",
+    "换元不需要外层函数的公式，只要内层函数的导数出现在被积式中。在 $\\int xf(x^2)\\,dx$ 中，取 $u = x^2$，则 $du = 2x\\,dx$，所以 $x\\,dx$ 变成 $\\frac{du}{2}$。积分限也要平方，再用已知的 $f$ 的积分就能得到结果，即使 $f$ 本身仍然未知。例如，若 $\\int_0^{9} f(u)\\,du$ 等于 $10$，则 $\\int_0^{3} xf(x^2)\\,dx$ 是它的一半，即 $5$。\n\n检验：取 $f(u) = 1$。则 $\\int_0^{3} x\\,dx$ 等于 $\\frac{9}{2}$，而 $\\int_0^{9} 1\\,du$ 的一半也是 $\\frac{9}{2}$。\n\n> **注意。** 积分限也要平方。上限 $x = 3$ 变成 $u = 9$，而不是 $u = 3$。",
   ),
   generate(rng) {
     const b = rng.int(2, 7);
     const k = rng.int(1, 6);
     const v = nonzero(rng, 12);
     const answer = Q.of(k * v, 2);
-    const half = k === 2 ? "" : `${Q.of(k, 2).toLatex()} \\cdot `;
+    const level = Q.of(v, b * b);
+    const ck = coefficientOf(k);
     return numberProblem({
       prompt: t(
-        `$\\int_0^{${b * b}} f(u)\\,du = ${v}$. Find $\\int_0^{${b}} ${coefficientOf(k)}xf(x^2)\\,dx$.`,
-        `$\\int_0^{${b * b}} f(u)\\,du = ${v}$。求 $\\int_0^{${b}} ${coefficientOf(k)}xf(x^2)\\,dx$。`,
+        `$\\int_0^{${b * b}} f(u)\\,du = ${v}$. Find $\\int_0^{${b}} ${ck}xf(x^2)\\,dx$.`,
+        `$\\int_0^{${b * b}} f(u)\\,du = ${v}$。求 $\\int_0^{${b}} ${ck}xf(x^2)\\,dx$。`,
       ),
       answer,
       wrong: [Q.of(k * v), Q.of(2 * k * v), Q.of(k * v, b), Q.of(k * v, b * b)],
-      solution: t(
-        `Let $u = x^2$, so $x\\,dx = \\frac{du}{2}$, and the limits become $0$ and $${b * b}$. The integral is $${half}${inParens(v)} = ${answer.toLatex()}$.`,
-        `令 $u = x^2$，则 $x\\,dx = \\frac{du}{2}$，积分限变成 $0$ 和 $${b * b}$。积分等于 $${half}${inParens(v)} = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Substitute", "换元"],
+            [
+              `Let $u = x^2$. Then $du = 2x\\,dx$, and the limits $0$ and $${b}$ become $0$ and $${b * b}$:`,
+              `令 $u = x^2$，则 $du = 2x\\,dx$，积分限 $0$ 和 $${b}$ 变成 $0$ 和 $${b * b}$：`,
+            ],
+            [`${ck}x\\,dx = \\frac{${k}}{2}\\,du`],
+          ],
+          [
+            ["Use the known integral", "用已知的积分"],
+            ["The integral in $u$ is the one given:", "关于 $u$ 的积分正是已知的那个："],
+            [
+              `\\int_0^{${b}} ${ck}xf(x^2)\\,dx = \\frac{${k}}{2}\\int_0^{${b * b}} f(u)\\,du = \\frac{${k}}{2} \\cdot ${inParens(v)} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `Try the constant function $f = c$ with the given integral. Then $${b * b}c = ${v}$, so $c$ is $${level.toLatex()}$. The integral is $c$ times $\\int_0^{${b}} ${ck}x\\,dx$, which is $${Q.of(k * b * b, 2).toLatex()} \\cdot ${parQ(level)}$, or $${answer.toLatex()}$ again.`,
+          `取满足已知积分的常函数 $f = c$。则 $${b * b}c = ${v}$，所以 $c$ 等于 $${level.toLatex()}$。积分等于 $c$ 乘以 $\\int_0^{${b}} ${ck}x\\,dx$，即 $${Q.of(k * b * b, 2).toLatex()} \\cdot ${parQ(level)}$，同样是 $${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -1650,8 +1892,8 @@ const xSquaredInTermsOfU: KnowledgePointDef = {
   id: "rewriting-x-squared-in-terms-of-u",
   title: t("Rewriting x squared in terms of u", "把 x 的平方写成 u 的式子"),
   explanation: t(
-    "When $u = x - a$, a factor of $x^2$ outside the power must also be converted. Since $x = u + a$, the square expands into three terms, each a power of $u$ with its own coefficient. Multiplying them by the power of $u$ leaves a polynomial that can be integrated term by term, with the limits changed to values of $u$.",
-    "令 $u = x - a$ 时，幂外面的因子 $x^2$ 也必须转换。因为 $x = u + a$，平方展开成三项，每项都是 $u$ 的幂，各有系数。再乘以 $u$ 的幂，就得到可以逐项积分的多项式，积分限也要换成 $u$ 的值。",
+    "When $u = x - a$, a factor of $x^2$ outside the power must also be converted. Since $x = u + a$, the square expands into three terms, each a power of $u$ with its own coefficient. Multiplying them by the power of $u$ leaves a polynomial that can be integrated term by term, with the limits changed to values of $u$. For example, with $u = x - 1$, the integral $\\int_1^{2} x^2(x - 1)^{3}\\,dx$ becomes $\\int_0^{1} (u^2 + 2u + 1)u^{3}\\,du$, which is $\\frac{1}{6} + \\frac{2}{5} + \\frac{1}{4}$.\n\nCheck: $(u + 1)^2$ expands to $u^2 + 2u + 1$, and putting back $u = x - 1$ turns $u + 1$ into $x$, so the square is $x^2$.\n\n> **Watch out.** Change the limits with the substitution. With $u = x - a$, the limits $x = a$ and $x = a + 1$ become $u = 0$ and $u = 1$; keeping the old limits gives a different number.",
+    "令 $u = x - a$ 时，幂外面的因子 $x^2$ 也必须转换。因为 $x = u + a$，平方展开成三项，每项都是 $u$ 的幂，各有系数。再乘以 $u$ 的幂，就得到可以逐项积分的多项式，积分限也要换成 $u$ 的值。例如，令 $u = x - 1$，积分 $\\int_1^{2} x^2(x - 1)^{3}\\,dx$ 变成 $\\int_0^{1} (u^2 + 2u + 1)u^{3}\\,du$，即 $\\frac{1}{6} + \\frac{2}{5} + \\frac{1}{4}$。\n\n检验：$(u + 1)^2$ 展开得 $u^2 + 2u + 1$，代回 $u = x - 1$ 后 $u + 1$ 变成 $x$，所以这个平方就是 $x^2$。\n\n> **注意。** 积分限要随换元一起改变。令 $u = x - a$，积分限 $x = a$ 和 $x = a + 1$ 变成 $u = 0$ 和 $u = 1$；沿用旧的积分限会得到不同的数。",
   ),
   generate(rng) {
     const a = nonzero(rng, 5);
@@ -1664,6 +1906,7 @@ const xSquaredInTermsOfU: KnowledgePointDef = {
     const expanded = poly([1, `u^${n + 2}`], [2 * a, `u^${n + 1}`], [a * a, `u^${n}`]);
     const square = poly([1, "u^2"], [2 * a, "u"], [a * a, ""]);
     const sum = poly([one, ""], [two, ""], [three, ""]);
+    const x = poly([1, "u"], [a, ""]);
     return numberProblem({
       prompt: t(
         `Evaluate $\\int_{${a}}^{${a + 1}} x^2(${inner})^{${n}}\\,dx$.`,
@@ -1671,9 +1914,34 @@ const xSquaredInTermsOfU: KnowledgePointDef = {
       ),
       answer,
       wrong: [one.add(three), one.add(Q.of(a, n + 2)).add(three), Q.of((a + 1) * (a + 1), n + 1), one],
-      solution: t(
-        `Let $u = ${inner}$, so $x = ${poly([1, "u"], [a, ""])}$ and the limits become $0$ and $1$. Then $x^2 = ${square}$, so the integrand is $${expanded}$. Integrating term by term and setting $u = 1$ gives $${sum} = ${answer.toLatex()}$.`,
-        `令 $u = ${inner}$，则 $x = ${poly([1, "u"], [a, ""])}$，积分限变成 $0$ 和 $1$。于是 $x^2 = ${square}$，被积函数是 $${expanded}$。逐项积分并令 $u = 1$，得 $${sum} = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Substitute", "换元"],
+            [
+              `Let $u = ${inner}$. Then $x = ${x}$, $du = dx$, and the limits $x = ${a}$ and $x = ${a + 1}$ become $u = 0$ and $u = 1$. The square becomes:`,
+              `令 $u = ${inner}$，则 $x = ${x}$，$du = dx$，积分限 $x = ${a}$ 和 $x = ${a + 1}$ 变成 $u = 0$ 和 $u = 1$。平方变成：`,
+            ],
+            [`x^2 = (${x})^2 = ${square}`],
+          ],
+          [
+            ["Expand", "展开"],
+            [`Multiply by $u^{${n}}$:`, `乘以 $u^{${n}}$：`],
+            [`\\int_{${a}}^{${a + 1}} x^2(${inner})^{${n}}\\,dx = \\int_0^1 \\left(${expanded}\\right)du`],
+          ],
+          [
+            ["Integrate term by term", "逐项积分"],
+            [
+              "Over $[0, 1]$, each power $u^{p}$ integrates to one over $p + 1$:",
+              "在 $[0, 1]$ 上，每个幂 $u^{p}$ 的积分是 $p + 1$ 的倒数：",
+            ],
+            [`${sum} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Test the expansion at $u = 1$, where $x$ is $${a + 1}$. There $x^2$ is $${(a + 1) ** 2}$, and $${square}$ is $1 + ${inParens(2 * a)} + ${a * a}$, which is $${(a + 1) ** 2}$ as well. So the integrand was rewritten correctly, and each term was integrated by the power rule.`,
+          `在 $u = 1$ 处检验展开式，这时 $x$ 等于 $${a + 1}$。$x^2$ 等于 $${(a + 1) ** 2}$，而 $${square}$ 等于 $1 + ${inParens(2 * a)} + ${a * a}$，同样是 $${(a + 1) ** 2}$。所以被积式改写正确，每一项都按幂法则积分。`,
+        ],
       ),
     });
   },
@@ -1683,8 +1951,8 @@ const arsinhAsLogarithm: KnowledgePointDef = {
   id: "an-inverse-hyperbolic-integral-as-a-logarithm",
   title: t("An inverse hyperbolic integral as a logarithm", "把反双曲积分写成对数"),
   explanation: t(
-    "An inverse hyperbolic function is a logarithm in disguise, which is how a definite integral producing one gets a closed value. From $\\operatorname{arsinh} z = \\ln\\left(z + \\sqrt{z^2 + 1}\\right)$, the value of the antiderivative at a limit becomes a single logarithm. It is cleanest when the root is rational, as it is for the sides of a right triangle with whole sides.",
-    "反双曲函数其实就是对数，所以结果含反双曲函数的定积分可以化成确定的值。由 $\\operatorname{arsinh} z = \\ln\\left(z + \\sqrt{z^2 + 1}\\right)$，原函数在积分限处的值就是一个对数。当根式是有理数时最简洁，比如边长都是整数的直角三角形的情形。",
+    "An inverse hyperbolic function is a logarithm in disguise, which is how a definite integral producing one gets a closed value. From $\\operatorname{arsinh} z = \\ln\\left(z + \\sqrt{z^2 + 1}\\right)$, the value of the antiderivative at a limit becomes a single logarithm. It is cleanest when the root is rational, as it is for the sides of a right triangle with whole sides. For example, $\\int_0^{4} \\frac{dx}{\\sqrt{x^2 + 9}}$ is $\\operatorname{arsinh}\\frac{4}{3}$; with $z = \\frac{4}{3}$ the root $\\sqrt{z^2 + 1}$ is $\\frac{5}{3}$, so the value is $\\ln 3$.\n\nCheck: $\\sinh(\\ln 3)$ is $\\frac{1}{2}\\left(3 - \\frac{1}{3}\\right)$, which is $\\frac{4}{3}$, so $\\operatorname{arsinh}\\frac{4}{3}$ is indeed $\\ln 3$.\n\n> **Watch out.** The argument is $\\frac{x}{a}$, not $x$. If you use $\\ln\\left(x + \\sqrt{x^2 + a^2}\\right)$ instead, subtract its value $\\ln a$ at the lower limit.",
+    "反双曲函数其实就是对数，所以结果含反双曲函数的定积分可以化成确定的值。由 $\\operatorname{arsinh} z = \\ln\\left(z + \\sqrt{z^2 + 1}\\right)$，原函数在积分限处的值就是一个对数。当根式是有理数时最简洁，比如边长都是整数的直角三角形的情形。例如，$\\int_0^{4} \\frac{dx}{\\sqrt{x^2 + 9}}$ 等于 $\\operatorname{arsinh}\\frac{4}{3}$；取 $z = \\frac{4}{3}$，根式 $\\sqrt{z^2 + 1}$ 等于 $\\frac{5}{3}$，所以积分值是 $\\ln 3$。\n\n检验：$\\sinh(\\ln 3)$ 等于 $\\frac{1}{2}\\left(3 - \\frac{1}{3}\\right)$，即 $\\frac{4}{3}$，所以 $\\operatorname{arsinh}\\frac{4}{3}$ 确实等于 $\\ln 3$。\n\n> **注意。** 自变量是 $\\frac{x}{a}$，不是 $x$。如果改用 $\\ln\\left(x + \\sqrt{x^2 + a^2}\\right)$，就要减去它在下限处的值 $\\ln a$。",
   ),
   generate(rng) {
     const { a, b, h } = pythagorean(rng);
@@ -1702,9 +1970,29 @@ const arsinhAsLogarithm: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(B + H), Q.of(H, A), Q.of(B, A), Q.of(A + H, B)],
-      solution: t(
-        `An antiderivative is $\\operatorname{arsinh}\\frac{x}{${A}}$, which is $0$ at $x = 0$. At the upper limit $z = ${z}$ and $\\sqrt{z^2 + 1} = ${root}$, so the value is $\\ln\\left(${z} + ${root}\\right)$ and $c = ${answer.toLatex()}$.`,
-        `一个原函数是 $\\operatorname{arsinh}\\frac{x}{${A}}$，它在 $x = 0$ 处为 $0$。在上限处 $z = ${z}$，$\\sqrt{z^2 + 1} = ${root}$，所以积分值是 $\\ln\\left(${z} + ${root}\\right)$，$c = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Find the value as an arsinh", "写成 arsinh 的值"],
+            [
+              `This is the arsinh form with $a = ${A}$. The antiderivative $\\operatorname{arsinh}\\frac{x}{${A}}$ is $0$ at $x = 0$:`,
+              `这是 $a = ${A}$ 的 arsinh 形式。原函数 $\\operatorname{arsinh}\\frac{x}{${A}}$ 在 $x = 0$ 处为 $0$：`,
+            ],
+            [`\\int_0^{${B}} \\frac{dx}{\\sqrt{x^2 + ${A * A}}} = \\operatorname{arsinh}\\left(${z}\\right)`],
+          ],
+          [
+            ["Write it as a logarithm", "写成对数"],
+            [
+              `With $z = ${z}$, the root $\\sqrt{z^2 + 1}$ is $${root}$, so the value is a single logarithm and $c$ is the sum inside it:`,
+              `取 $z = ${z}$，根式 $\\sqrt{z^2 + 1}$ 等于 $${root}$，所以积分值是一个对数，$c$ 就是对数里的和：`,
+            ],
+            [`\\ln\\left(${z} + ${root}\\right) = \\ln ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Use the antiderivative $\\ln\\left(x + \\sqrt{x^2 + ${A * A}}\\right)$ instead. At $x = ${B}$ it is $\\ln(${B} + ${H})$ and at $x = 0$ it is $\\ln ${A}$, so the value is $\\ln\\frac{${B + H}}{${A}}$, the same $c$.`,
+          `改用原函数 $\\ln\\left(x + \\sqrt{x^2 + ${A * A}}\\right)$。它在 $x = ${B}$ 处为 $\\ln(${B} + ${H})$，在 $x = 0$ 处为 $\\ln ${A}$，所以积分值是 $\\ln\\frac{${B + H}}{${A}}$，$c$ 相同。`,
+        ],
       ),
     });
   },
@@ -1714,8 +2002,8 @@ const constantRemovingLogarithm: KnowledgePointDef = {
   id: "the-constant-that-removes-the-logarithm",
   title: t("The constant that removes the logarithm", "消去对数项的常数"),
   explanation: t(
-    "Dividing a quadratic by $x - a$ leaves a polynomial quotient and a constant remainder $R$. The quotient integrates to a polynomial, and only the fraction $\\frac{R}{x - a}$ produces a logarithm. So an antiderivative free of logarithms means the remainder is zero, and the remainder theorem gives it as the value of the numerator at $x = a$.",
-    "二次式除以 $x - a$，得到多项式商和常数余数 $R$。商积分后仍是多项式，只有分式 $\\frac{R}{x - a}$ 才产生对数。所以原函数不含对数就意味着余数为零，而由余数定理，余数就是分子在 $x = a$ 处的值。",
+    "Dividing a quadratic by $x - a$ leaves a polynomial quotient and a constant remainder $R$. The quotient integrates to a polynomial, and only the fraction $\\frac{R}{x - a}$ produces a logarithm. So an antiderivative free of logarithms means the remainder is zero, and the remainder theorem gives it as the value of the numerator at $x = a$. For example, $\\frac{x^2 + x + k}{x - 2}$ has the quotient $x + 3$ and the remainder $6 + k$, so $k = -6$ removes the logarithm.\n\nCheck: with $k = -6$ the numerator $x^2 + x - 6$ factors as $(x - 2)(x + 3)$, so the fraction is just $x + 3$.\n\n> **Watch out.** The remainder is the numerator's value at $x = a$, not at $x = -a$. For the divisor $x - 2$, evaluate at $2$.",
+    "二次式除以 $x - a$，得到多项式商和常数余数 $R$。商积分后仍是多项式，只有分式 $\\frac{R}{x - a}$ 才产生对数。所以原函数不含对数就意味着余数为零，而由余数定理，余数就是分子在 $x = a$ 处的值。例如，$\\frac{x^2 + x + k}{x - 2}$ 的商是 $x + 3$，余数是 $6 + k$，所以 $k = -6$ 时对数消失。\n\n检验：$k = -6$ 时，分子 $x^2 + x - 6$ 分解为 $(x - 2)(x + 3)$，所以这个分式就是 $x + 3$。\n\n> **注意。** 余数是分子在 $x = a$ 处的值，而不是在 $x = -a$ 处的值。除式是 $x - 2$ 时，要在 $2$ 处求值。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
@@ -1723,6 +2011,8 @@ const constantRemovingLogarithm: KnowledgePointDef = {
     const answer = -a * (a + b);
     const denominator = poly([1, "x"], [-a, ""]);
     const numerator = poly([1, "x^2"], [b, "x"]);
+    const quotient = poly([1, "x"], [a + b, ""]);
+    const remainder = `${a * a} + ${inParens(a * b)} + k`;
     return numberProblem({
       prompt: t(
         `The antiderivative of $\\frac{${numerator} + k}{${denominator}}$ contains no logarithm. Find $k$.`,
@@ -1731,9 +2021,29 @@ const constantRemovingLogarithm: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [a * (a + b), a * a - a * b, a * b, -(a * a) - b],
-      solution: t(
-        `Dividing by $${denominator}$ gives the quotient $${poly([1, "x"], [a + b, ""])}$ and the remainder $${a * a} + ${inParens(a * b)} + k$. The logarithm comes only from the remainder, so it must vanish, which gives $k = ${answer}$.`,
-        `除以 $${denominator}$，商是 $${poly([1, "x"], [a + b, ""])}$，余数是 $${a * a} + ${inParens(a * b)} + k$。对数只来自余数，所以余数必须为零，得 $k = ${answer}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Divide", "做除法"],
+            [
+              `Dividing by $${denominator}$ gives the quotient $${quotient}$ and a constant remainder, which is the numerator's value at $x = ${a}$:`,
+              `除以 $${denominator}$，商是 $${quotient}$，余数是常数，等于分子在 $x = ${a}$ 处的值：`,
+            ],
+            [`R = ${remainder}`],
+          ],
+          [
+            ["Remove the logarithm", "消去对数"],
+            [
+              `Only the term $\\frac{R}{${denominator}}$ integrates to a logarithm, so the remainder must be $0$:`,
+              `只有 $\\frac{R}{${denominator}}$ 这一项积分后是对数，所以余数必须为 $0$：`,
+            ],
+            [`${remainder} = 0`, `k = ${answer}`],
+          ],
+        ],
+        [
+          `With $k = ${answer}$, the numerator is $${poly([1, "x^2"], [b, "x"], [answer, ""])}$, which factors as $(${denominator})(${quotient})$. The fraction is then just $${quotient}$, whose antiderivative has no logarithm.`,
+          `$k = ${answer}$ 时，分子是 $${poly([1, "x^2"], [b, "x"], [answer, ""])}$，可以分解为 $(${denominator})(${quotient})$。于是分式就是 $${quotient}$，它的原函数不含对数。`,
+        ],
       ),
     });
   },
@@ -1743,8 +2053,8 @@ const linearOverCompletedSquare: KnowledgePointDef = {
   id: "a-linear-numerator-over-a-completed-square",
   title: t("A linear numerator over a completed square", "配方后分子为一次式的积分"),
   explanation: t(
-    "When the numerator contains $x$, split it before completing the square. One part is a multiple of the derivative of the denominator, and it integrates to a logarithm. What remains is a constant over the completed square, and it integrates to an arctangent. The coefficient of the arctangent depends on the constant left over after the split, not on the original constant.",
-    "分子含 $x$ 时，先把它拆开，再配方。一部分是分母导数的倍数，积分得到对数。剩下的是常数除以配方后的式子，积分得到反正切。反正切的系数取决于拆分后剩下的常数，而不是原来的常数项。",
+    "When the numerator contains $x$, split it before completing the square. One part is a multiple of the derivative of the denominator, and it integrates to a logarithm. What remains is a constant over the completed square, and it integrates to an arctangent. The coefficient of the arctangent depends on the constant left over after the split, not on the original constant. For example:\n\n$$\\frac{x + 3}{x^2 - 2x + 5} = \\frac{1}{2} \\cdot \\frac{2x - 2}{x^2 - 2x + 5} + \\frac{4}{(x - 1)^2 + 4}.$$\n\nThe last term integrates to $2\\arctan\\frac{x - 1}{2}$.\n\nCheck: the two numerators add back to the original, since $\\frac{1}{2}(2x - 2) + 4$ is $x + 3$.\n\n> **Watch out.** The arctangent coefficient uses the leftover constant $4$, not the original $3$, and it is divided by $a = 2$.",
+    "分子含 $x$ 时，先把它拆开，再配方。一部分是分母导数的倍数，积分得到对数。剩下的是常数除以配方后的式子，积分得到反正切。反正切的系数取决于拆分后剩下的常数，而不是原来的常数项。例如：\n\n$$\\frac{x + 3}{x^2 - 2x + 5} = \\frac{1}{2} \\cdot \\frac{2x - 2}{x^2 - 2x + 5} + \\frac{4}{(x - 1)^2 + 4}$$\n\n最后一项积分得 $2\\arctan\\frac{x - 1}{2}$。\n\n检验：两部分的分子加起来就是原分子，因为 $\\frac{1}{2}(2x - 2) + 4$ 等于 $x + 3$。\n\n> **注意。** 反正切的系数用的是剩下的常数 $4$，而不是原来的 $3$，还要除以 $a = 2$。",
   ),
   generate(rng) {
     const m = rng.int(1, 4);
@@ -1760,6 +2070,8 @@ const linearOverCompletedSquare: KnowledgePointDef = {
     const half = fractionBefore(m, 2);
     const form = `${half}\\ln(${denominator}) + K${arc} + C`;
     const split = `${half}(${poly([2, "x"], [-2 * p, ""])}) ${rest < 0 ? "-" : "+"} ${Math.abs(rest)}`;
+    const square = `(${inner})^2 + ${a * a}`;
+    const constant = `${rest < 0 ? "-" : ""}\\frac{${Math.abs(rest)}}{${square}}`;
     return numberProblem({
       prompt: t(
         `An antiderivative of $\\frac{${numerator}}{${denominator}}$ has the form $${form}$. Find $K$.`,
@@ -1767,9 +2079,34 @@ const linearOverCompletedSquare: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(n, a), Q.of(n - m * p, a), Q.of(rest), Q.of(rest, 2 * a), answer.neg()],
-      solution: t(
-        `The numerator is $${split}$, where the bracket is the derivative of the denominator and gives the logarithm. The denominator is $(${inner})^2 + ${a * a}$, so the constant $${rest}$ gives an arctangent with coefficient $K = ${answer.toLatex()}$.`,
-        `分子等于 $${split}$，括号是分母的导数，积分得到对数。分母等于 $(${inner})^2 + ${a * a}$，所以常数 $${rest}$ 积分后得到反正切，系数 $K = ${answer.toLatex()}$。`,
+      solution: walkThrough(
+        [
+          [
+            ["Split the numerator", "拆开分子"],
+            [
+              `The derivative of the denominator is $${poly([2, "x"], [-2 * p, ""])}$. Write the numerator as a multiple of it plus a constant; that multiple gives the logarithm:`,
+              `分母的导数是 $${poly([2, "x"], [-2 * p, ""])}$。把分子写成它的倍数加一个常数，这个倍数给出对数：`,
+            ],
+            [`${numerator} = ${split}`],
+          ],
+          [
+            ["Complete the square", "配方"],
+            ["The leftover constant goes over the completed square:", "剩下的常数放在配方后的式子上："],
+            [`${denominator} = ${square}`],
+          ],
+          [
+            ["Integrate the constant term", "积分常数项"],
+            [
+              `The arctangent form has the factor $\\frac{1}{${a}}$, so the coefficient is the leftover constant divided by $${a}$:`,
+              `反正切形式带有因子 $\\frac{1}{${a}}$，所以系数是剩下的常数除以 $${a}$：`,
+            ],
+            [`\\int ${constant}\\,dx = ${coefQ(answer)}${arc} + C`, `K = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Differentiate the arctangent term. The result should be the constant term:${steps(`\\frac{d}{dx}\\left[${coefQ(answer)}${arc}\\right] = ${answer.toLatex()} \\cdot \\frac{${a}}{${square}} = ${constant}`).trimEnd()}`,
+          `对反正切项求导，结果应当等于常数项：${steps(`\\frac{d}{dx}\\left[${coefQ(answer)}${arc}\\right] = ${answer.toLatex()} \\cdot \\frac{${a}}{${square}} = ${constant}`).trimEnd()}`,
+        ],
       ),
     });
   },

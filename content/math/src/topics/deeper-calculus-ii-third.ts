@@ -10,6 +10,7 @@ import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
 import { functionProblem, steps } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
+import { reasoned } from "../wrong-reasons.ts";
 
 /** nz picks a nonzero integer from -r to r. */
 const nz = (rng: Rng, r: number) => rng.pick([...Array(2 * r + 1).keys()].map((i) => i - r).filter((i) => i !== 0));
@@ -33,17 +34,52 @@ const quarterTurns = [
 /** kpi asks for a coefficient of pi in both languages. */
 const kpi = (en: string, zh: string): Pair => [`${en} Write it as $k\\pi$ and give $k$.`, `${zh}把结果写成 $k\\pi$，求 $k$。`];
 
+/** PairStep is one labelled step of a worked solution: its title and what it says in both languages, and the lines it displays. */
+type PairStep = readonly [title: Pair, say: Pair, lines?: readonly string[]];
+
+/** walkPair writes labelled steps, each with its displayed lines, followed by a check that takes a second route. */
+const walkPair = (parts: readonly PairStep[], check: Pair): Pair => {
+  const write = (zh: boolean) =>
+    parts
+      .map(([[en, zhTitle], say, lines = []], i) => {
+        const label = zh ? `**第${["一", "二", "三", "四", "五"][i]}步：${zhTitle}。**` : `**Step ${i + 1}: ${en}.**`;
+        return `${label} ${say[zh ? 1 : 0]}${lines.length > 0 ? steps(...lines) : "\n\n"}`;
+      })
+      .join("") + (zh ? `**检验。** ${check[1]}` : `**Check.** ${check[0]}`);
+  return [write(false), write(true)];
+};
+
 const negativeExponent = point(
   "exponentials-in-the-denominator",
   ["Exponentials in the denominator", "分母中的指数函数"],
   [
-    "An exponential in the denominator is an exponential with a negative exponent: $\\frac{1}{e^{ax}} = e^{-ax}$. Rewrite it before integrating. The minus sign then enters the factor $-\\frac{1}{a}$, and losing it is the common error.",
-    "分母中的指数函数就是指数为负的指数函数：$\\frac{1}{e^{ax}} = e^{-ax}$。积分前先改写。这样负号就进入因子 $-\\frac{1}{a}$，漏掉它是常见的错误。",
+    "An exponential in the denominator is an exponential with a negative exponent: $\\frac{1}{e^{ax}} = e^{-ax}$. Rewrite it before integrating. The minus sign then enters the factor $-\\frac{1}{a}$, and losing it is the common error. For example, $\\int \\frac{6}{e^{3x}} \\, dx$ is $\\int 6e^{-3x} \\, dx$, which is $-2e^{-3x} + C$.\n\nCheck: the derivative of $-2e^{-3x}$ is $-2 \\cdot (-3)e^{-3x}$, which is $6e^{-3x}$, the integrand.\n\n> **Watch out.** Do not integrate $e^{-ax}$ as $\\frac{1}{a}e^{-ax}$. The coefficient of $x$ is $-a$, so the factor is $-\\frac{1}{a}$.",
+    "分母中的指数函数就是指数为负的指数函数：$\\frac{1}{e^{ax}} = e^{-ax}$。积分前先改写。这样负号就进入因子 $-\\frac{1}{a}$，漏掉它是常见的错误。例如，$\\int \\frac{6}{e^{3x}} \\, dx$ 就是 $\\int 6e^{-3x} \\, dx$，等于 $-2e^{-3x} + C$。\n\n检验：$-2e^{-3x}$ 的导数是 $-2 \\cdot (-3)e^{-3x}$，即被积函数 $6e^{-3x}$。\n\n> **注意。** 不要把 $e^{-ax}$ 积分成 $\\frac{1}{a}e^{-ax}$。$x$ 的系数是 $-a$，所以因子是 $-\\frac{1}{a}$。",
   ],
   (rng) => {
     const a = rng.int(2, 9);
     const c = nz(rng, 12);
     const answer = poly([Q.of(-c, a), `e^{-${a}x}`], [1, "C"]);
+    const term = poly([Q.of(-c, a), `e^{-${a}x}`]);
+    const rewritten = poly([c, `e^{-${a}x}`]);
+    const solution = walkPair(
+      [
+        [
+          ["Rewrite", "改写"],
+          ["Move the exponential to the numerator by changing the sign of its exponent:", "改变指数的符号，把指数函数移到分子："],
+          [`\\frac{${c}}{e^{${a}x}} = ${rewritten}`],
+        ],
+        [
+          ["Integrate", "积分"],
+          [`The coefficient of $x$ is $-${a}$, so divide by $-${a}$:`, `$x$ 的系数是 $-${a}$，所以除以 $-${a}$：`],
+          [`\\int ${rewritten} \\, dx = ${answer}`],
+        ],
+      ],
+      [
+        `Differentiate the answer. The result should be the integrand:${steps(`\\frac{d}{dx}\\left[${term}\\right] = ${Q.of(-c, a).toLatex()} \\cdot (-${a})e^{-${a}x} = ${rewritten}`).trimEnd()}`,
+        `对答案求导，结果应当等于被积函数：${steps(`\\frac{d}{dx}\\left[${term}\\right] = ${Q.of(-c, a).toLatex()} \\cdot (-${a})e^{-${a}x} = ${rewritten}`).trimEnd()}`,
+      ],
+    );
     return functionProblem({
       prompt: t(`Find $\\int \\frac{${c}}{e^{${a}x}} \\, dx$.`, `求 $\\int \\frac{${c}}{e^{${a}x}} \\, dx$。`),
       answer,
@@ -53,10 +89,7 @@ const negativeExponent = point(
         poly([Q.of(-c * a), `e^{-${a}x}`], [1, "C"]),
         poly([Q.of(-c, a), `e^{${a}x}`], [1, "C"]),
       ],
-      solution: t(
-        `Rewrite the integrand as $${c}e^{-${a}x}$. Dividing by the coefficient $-${a}$ of $x$ gives $${answer}$.`,
-        `把被积函数写成 $${c}e^{-${a}x}$。除以 $x$ 的系数 $-${a}$，得 $${answer}$。`,
-      ),
+      solution: t(solution[0], solution[1]),
     });
   },
 );
@@ -65,8 +98,8 @@ const arsechOfExponential = point(
   "arsech-after-substituting-an-exponential",
   ["Arsech after substituting an exponential", "代换指数函数后得到 arsech"],
   [
-    "The factor $x$ required by the arsech form can be hidden. In $\\frac{1}{\\sqrt{a^{2} - e^{2x}}}$, let $u = e^{x}$, so $dx = \\frac{du}{u}$ and the integral becomes $\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}}$, which is $-\\frac{1}{a}\\operatorname{arsech}\\frac{u}{a} + C$.",
-    "arsech 形式所需的因子 $x$ 可能是隐藏的。在 $\\frac{1}{\\sqrt{a^{2} - e^{2x}}}$ 中令 $u = e^{x}$，则 $dx = \\frac{du}{u}$，积分变成 $\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}}$，结果是 $-\\frac{1}{a}\\operatorname{arsech}\\frac{u}{a} + C$。",
+    "The factor $x$ required by the arsech form can be hidden. In $\\frac{1}{\\sqrt{a^{2} - e^{2x}}}$, let $u = e^{x}$, so $dx = \\frac{du}{u}$ and the integral becomes $\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}}$, which is $-\\frac{1}{a}\\operatorname{arsech}\\frac{u}{a} + C$. For example, with $a = 2$:\n\n$$\\int \\frac{dx}{\\sqrt{4 - e^{2x}}} = -\\frac{1}{2}\\operatorname{arsech}\\frac{e^{x}}{2} + C.$$\n\nCheck: $u = e^{x}$ gives $du = e^{x}\\,dx$, which is $u\\,dx$, so $dx$ is indeed $\\frac{du}{u}$.\n\n> **Watch out.** The answer is in terms of $e^{x}$, not $x$. After integrating, put back $u = e^{x}$.",
+    "arsech 形式所需的因子 $x$ 可能是隐藏的。在 $\\frac{1}{\\sqrt{a^{2} - e^{2x}}}$ 中令 $u = e^{x}$，则 $dx = \\frac{du}{u}$，积分变成 $\\int \\frac{du}{u\\sqrt{a^{2} - u^{2}}}$，结果是 $-\\frac{1}{a}\\operatorname{arsech}\\frac{u}{a} + C$。例如，取 $a = 2$：\n\n$$\\int \\frac{dx}{\\sqrt{4 - e^{2x}}} = -\\frac{1}{2}\\operatorname{arsech}\\frac{e^{x}}{2} + C$$\n\n检验：$u = e^{x}$ 给出 $du = e^{x}\\,dx$，即 $u\\,dx$，所以 $dx$ 确实等于 $\\frac{du}{u}$。\n\n> **注意。** 答案是用 $e^{x}$ 表示的，不是用 $x$。积分后要代回 $u = e^{x}$。",
   ],
   (rng) => {
     const a = rng.int(2, 9);
@@ -74,17 +107,60 @@ const arsechOfExponential = point(
     const fn = `\\operatorname{arsech}\\frac{e^{x}}{${a}}`;
     const form = (co: Q, f: string) => `${poly([co, f])} + C`;
     const right = form(Q.of(-c, a), fn);
-    return choose(
-      rng,
+    const inU = poly([c, `\\int \\frac{du}{u\\sqrt{${a * a} - u^{2}}}`]);
+    const flipped = form(Q.of(c, a), fn);
+    const noFactor = form(Q.of(-c), fn);
+    const notBack = form(Q.of(-c, a), `\\operatorname{arsech}\\frac{x}{${a}}`);
+    return reasoned(
+      choose(
+        rng,
+        [
+          `Find $\\int \\frac{${c}}{\\sqrt{${a * a} - e^{2x}}} \\, dx$ for $x < \\ln ${a}$.`,
+          `当 $x < \\ln ${a}$ 时，求 $\\int \\frac{${c}}{\\sqrt{${a * a} - e^{2x}}} \\, dx$。`,
+        ],
+        same2(right),
+        [same2(flipped), same2(noFactor), same2(notBack)],
+        walkPair(
+          [
+            [
+              ["Substitute", "换元"],
+              [
+                "Let $u = e^{x}$. Then $du = e^{x}\\,dx$, which is $u\\,dx$, so the missing factor $u$ appears:",
+                "令 $u = e^{x}$，则 $du = e^{x}\\,dx$，即 $u\\,dx$，于是缺少的因子 $u$ 出现了：",
+              ],
+              [`dx = \\frac{du}{u}`, `\\int \\frac{${c}}{\\sqrt{${a * a} - e^{2x}}} \\, dx = ${inU}`],
+            ],
+            [
+              ["Use the arsech form", "用 arsech 形式"],
+              [
+                `The arsech formula has the factor $-\\frac{1}{${a}}$. Then put back $u = e^{x}$:`,
+                `arsech 公式带有因子 $-\\frac{1}{${a}}$。再代回 $u = e^{x}$：`,
+              ],
+              [`${inU} = ${right}`],
+            ],
+          ],
+          [
+            `The integrand has the sign of $${c}$. Since $\\operatorname{arsech}$ decreases while $e^{x}$ increases, the coefficient in front must have the opposite sign to $${c}$, as $${Q.of(-c, a).toLatex()}$ does.`,
+            `被积函数的符号与 $${c}$ 相同。由于 $\\operatorname{arsech}$ 递减而 $e^{x}$ 递增，前面的系数必须与 $${c}$ 异号，$${Q.of(-c, a).toLatex()}$ 正是如此。`,
+          ],
+        ),
+      ),
       [
-        `Find $\\int \\frac{${c}}{\\sqrt{${a * a} - e^{2x}}} \\, dx$ for $x < \\ln ${a}$.`,
-        `当 $x < \\ln ${a}$ 时，求 $\\int \\frac{${c}}{\\sqrt{${a * a} - e^{2x}}} \\, dx$。`,
-      ],
-      same2(right),
-      [same2(form(Q.of(c, a), fn)), same2(form(Q.of(-c), fn)), same2(form(Q.of(-c, a), `\\operatorname{arsech}\\frac{x}{${a}}`))],
-      [
-        `With $u = e^{x}$, $dx = \\frac{du}{u}$, the integral is $${poly([c, `\\int \\frac{du}{u\\sqrt{${a * a} - u^{2}}}`])}$. The arsech formula has the factor $-\\frac{1}{${a}}$, which gives $${right}$.`,
-        `令 $u = e^{x}$，$dx = \\frac{du}{u}$，积分变成 $${poly([c, `\\int \\frac{du}{u\\sqrt{${a * a} - u^{2}}}`])}$。arsech 公式带有因子 $-\\frac{1}{${a}}$，结果是 $${right}$。`,
+        [
+          same2(flipped)[0],
+          `The sign is wrong. The arsech formula carries $-\\frac{1}{${a}}$, because arsech decreases.`,
+          `符号错了。arsech 公式带有 $-\\frac{1}{${a}}$，因为 arsech 是递减的。`,
+        ],
+        [
+          same2(noFactor)[0],
+          `The factor $\\frac{1}{${a}}$ of the arsech formula is missing.`,
+          `漏掉了 arsech 公式中的因子 $\\frac{1}{${a}}$。`,
+        ],
+        [
+          same2(notBack)[0],
+          "The substitution was not undone. The argument must be $u$ over $a$ with $u = e^{x}$, not $x$ over $a$.",
+          "没有代回。自变量应当是 $u$ 除以 $a$，其中 $u = e^{x}$，而不是 $x$ 除以 $a$。",
+        ],
       ],
     );
   },
@@ -94,8 +170,8 @@ const squareWithLeadingCoefficient = point(
   "completing-the-square-with-a-leading-coefficient",
   ["Completing the square with a leading coefficient", "二次项有系数时配方"],
   [
-    "When $x^{2}$ has a square coefficient, complete the square as $(kx + h)^{2} + b^{2}$. The substitution $u = kx + h$ then introduces the factor $\\frac{1}{k}$ through $dx = \\frac{du}{k}$, which is easy to leave out.",
-    "当 $x^{2}$ 的系数是平方数时，配方成 $(kx + h)^{2} + b^{2}$。代换 $u = kx + h$ 通过 $dx = \\frac{du}{k}$ 带来因子 $\\frac{1}{k}$，这个因子很容易漏掉。",
+    "When $x^{2}$ has a square coefficient, complete the square as $(kx + h)^{2} + b^{2}$. The substitution $u = kx + h$ then introduces the factor $\\frac{1}{k}$ through $dx = \\frac{du}{k}$, which is easy to leave out. For example, $4x^{2} + 4x + 10$ completes to $(2x + 1)^{2} + 3^{2}$, so:\n\n$$\\int \\frac{dx}{\\sqrt{4x^{2} + 4x + 10}} = \\frac{1}{2}\\operatorname{arsinh}\\frac{2x + 1}{3} + C.$$\n\nCheck: $(2x + 1)^{2} + 9$ expands to $4x^{2} + 4x + 1 + 9$, which is $4x^{2} + 4x + 10$.\n\n> **Watch out.** The shifted variable is $kx + h$, not $x + h$, and the factor in front is $\\frac{1}{k}$.",
+    "当 $x^{2}$ 的系数是平方数时，配方成 $(kx + h)^{2} + b^{2}$。代换 $u = kx + h$ 通过 $dx = \\frac{du}{k}$ 带来因子 $\\frac{1}{k}$，这个因子很容易漏掉。例如，$4x^{2} + 4x + 10$ 配方得 $(2x + 1)^{2} + 3^{2}$，所以：\n\n$$\\int \\frac{dx}{\\sqrt{4x^{2} + 4x + 10}} = \\frac{1}{2}\\operatorname{arsinh}\\frac{2x + 1}{3} + C$$\n\n检验：$(2x + 1)^{2} + 9$ 展开得 $4x^{2} + 4x + 1 + 9$，即 $4x^{2} + 4x + 10$。\n\n> **注意。** 平移后的变量是 $kx + h$，不是 $x + h$，前面的因子是 $\\frac{1}{k}$。",
   ],
   (rng) => {
     const k = rng.int(2, 5);
@@ -107,18 +183,59 @@ const squareWithLeadingCoefficient = point(
     const form = (co: Q, f: string) => `${poly([co, f])} + C`;
     const right = form(Q.of(c, k), fn);
     const q = poly([k * k, "x^{2}"], [2 * k * h, "x"], [h * h + b * b, ""]);
-    return choose(
-      rng,
-      [`Find $\\int \\frac{${c}}{\\sqrt{${q}}} \\, dx$.`, `求 $\\int \\frac{${c}}{\\sqrt{${q}}} \\, dx$。`],
-      same2(right),
+    const inU = poly([Q.of(c, k), `\\int \\frac{du}{\\sqrt{u^{2} + ${b * b}}}`]);
+    const noFactor = form(Q.of(c), fn);
+    const cosh = form(Q.of(c, k), `\\operatorname{arcosh}\\frac{${inner}}{${b}}`);
+    const unscaled = form(Q.of(c, k), `\\operatorname{arsinh}\\frac{${linear(1, h)}}{${b}}`);
+    return reasoned(
+      choose(
+        rng,
+        [`Find $\\int \\frac{${c}}{\\sqrt{${q}}} \\, dx$.`, `求 $\\int \\frac{${c}}{\\sqrt{${q}}} \\, dx$。`],
+        same2(right),
+        [same2(noFactor), same2(cosh), same2(unscaled)],
+        walkPair(
+          [
+            [
+              ["Complete the square", "配方"],
+              ["Rewrite the quadratic under the root:", "改写根号下的二次式："],
+              [`${q} = (${inner})^{2} + ${b}^{2}`],
+            ],
+            [
+              ["Substitute", "换元"],
+              [
+                `Let $u = ${inner}$. Then $du = ${k}\\,dx$, so $dx$ is $\\frac{du}{${k}}$:`,
+                `令 $u = ${inner}$，则 $du = ${k}\\,dx$，所以 $dx$ 等于 $\\frac{du}{${k}}$：`,
+              ],
+              [`\\int \\frac{${c}}{\\sqrt{${q}}} \\, dx = ${inU}`],
+            ],
+            [
+              ["Integrate and substitute back", "积分并代回"],
+              ["Use the arsinh form, then put back $u$:", "用 arsinh 形式，再代回 $u$："],
+              [`${inU} = ${right}`],
+            ],
+          ],
+          [
+            `Differentiate the answer. The result should be the integrand:${steps(`\\frac{d}{dx}\\left[${poly([Q.of(c, k), fn])}\\right] = ${Q.of(c, k).toLatex()} \\cdot \\frac{1}{\\sqrt{\\left(\\frac{${inner}}{${b}}\\right)^{2} + 1}} \\cdot \\frac{${k}}{${b}} = \\frac{${c}}{\\sqrt{(${inner})^{2} + ${b * b}}}`).trimEnd()}`,
+            `对答案求导，结果应当等于被积函数：${steps(`\\frac{d}{dx}\\left[${poly([Q.of(c, k), fn])}\\right] = ${Q.of(c, k).toLatex()} \\cdot \\frac{1}{\\sqrt{\\left(\\frac{${inner}}{${b}}\\right)^{2} + 1}} \\cdot \\frac{${k}}{${b}} = \\frac{${c}}{\\sqrt{(${inner})^{2} + ${b * b}}}`).trimEnd()}`,
+          ],
+        ),
+      ),
       [
-        same2(form(Q.of(c), fn)),
-        same2(form(Q.of(c, k), `\\operatorname{arcosh}\\frac{${inner}}{${b}}`)),
-        same2(form(Q.of(c, k), `\\operatorname{arsinh}\\frac{${linear(1, h)}}{${b}}`)),
-      ],
-      [
-        `$${q} = (${inner})^{2} + ${b}^{2}$. With $u = ${inner}$ and $dx = \\frac{du}{${k}}$, the integral is $${right}$.`,
-        `$${q} = (${inner})^{2} + ${b}^{2}$。令 $u = ${inner}$，$dx = \\frac{du}{${k}}$，积分是 $${right}$。`,
+        [
+          same2(noFactor)[0],
+          `The factor $\\frac{1}{${k}}$ from $dx = \\frac{du}{${k}}$ is missing.`,
+          `漏掉了由 $dx = \\frac{du}{${k}}$ 带来的因子 $\\frac{1}{${k}}$。`,
+        ],
+        [
+          same2(cosh)[0],
+          "The constant is added to the square, not subtracted, so the form is arsinh, not arcosh.",
+          "常数是加在平方上的，不是减去的，所以是 arsinh 形式，不是 arcosh。",
+        ],
+        [
+          same2(unscaled)[0],
+          `The completed square is $(${inner})^{2}$, so the argument must contain $${inner}$, not $${linear(1, h)}$.`,
+          `配方得到的是 $(${inner})^{2}$，所以自变量必须含 $${inner}$，而不是 $${linear(1, h)}$。`,
+        ],
       ],
     );
   },
@@ -128,8 +245,8 @@ const familyFromSquare = point(
   "the-sign-of-the-square-chooses-the-function",
   ["The sign of the square chooses the function", "平方项的符号决定函数"],
   [
-    "Only after completing the square can you tell which inverse function appears. Under the root, $a^{2} - (x + h)^{2}$ leads to arsech and $(x + h)^{2} + a^{2}$ leads to arcsch. In both cases the coefficient is $-\\frac{1}{a}$ for $x + h > 0$.",
-    "只有配方后才能看出出现哪个反函数。根号下是 $a^{2} - (x + h)^{2}$ 时得到 arsech，是 $(x + h)^{2} + a^{2}$ 时得到 arcsch。两种情况下，当 $x + h > 0$ 时系数都是 $-\\frac{1}{a}$。",
+    "Only after completing the square can you tell which inverse function appears. Under the root, $a^{2} - (x + h)^{2}$ leads to arsech and $(x + h)^{2} + a^{2}$ leads to arcsch. In both cases the coefficient is $-\\frac{1}{a}$ for $x + h > 0$. For example, $x^{2} + 2x + 10$ completes to $(x + 1)^{2} + 9$, a sum, so with the factor $x + 1$ outside the root the integral is $-\\frac{1}{3}\\operatorname{arcsch}\\frac{x + 1}{3} + C$ for $x > -1$.\n\nCheck: $(x + 1)^{2} + 9$ expands to $x^{2} + 2x + 1 + 9$, which is $x^{2} + 2x + 10$.\n\n> **Watch out.** Decide from the completed square, not from the constant term. $-x^{2} - 2x + 3$ completes to $4 - (x + 1)^{2}$, a difference, which gives arsech.",
+    "只有配方后才能看出出现哪个反函数。根号下是 $a^{2} - (x + h)^{2}$ 时得到 arsech，是 $(x + h)^{2} + a^{2}$ 时得到 arcsch。两种情况下，当 $x + h > 0$ 时系数都是 $-\\frac{1}{a}$。例如，$x^{2} + 2x + 10$ 配方得 $(x + 1)^{2} + 9$，是平方和，所以根号外有因子 $x + 1$ 时，当 $x > -1$，积分为 $-\\frac{1}{3}\\operatorname{arcsch}\\frac{x + 1}{3} + C$。\n\n检验：$(x + 1)^{2} + 9$ 展开得 $x^{2} + 2x + 1 + 9$，即 $x^{2} + 2x + 10$。\n\n> **注意。** 要根据配方的结果判断，而不是看常数项。$-x^{2} - 2x + 3$ 配方得 $4 - (x + 1)^{2}$，是平方差，所以得到 arsech。",
   ],
   (rng) => {
     const a = rng.int(2, 7);
@@ -143,17 +260,62 @@ const familyFromSquare = point(
     const other = plus ? "arsech" : "arcsch";
     const domain = plus ? `x > ${-h}` : `${-h} < x < ${a - h}`;
     const square = plus ? `(${u})^{2} + ${a * a}` : `${a * a} - (${u})^{2}`;
-    return choose(
-      rng,
+    const right = form(Q.of(-c, a), name);
+    const inU = poly([c, `\\int \\frac{du}{u\\sqrt{${plus ? `u^{2} + ${a * a}` : `${a * a} - u^{2}`}}}`]);
+    const swapped = form(Q.of(-c, a), other);
+    const noFactor = form(Q.of(-c), name);
+    const flipped = form(Q.of(c, a), name);
+    return reasoned(
+      choose(
+        rng,
+        [
+          `Find $\\int \\frac{${c}}{(${u})\\sqrt{${q}}} \\, dx$ for $${domain}$.`,
+          `当 $${domain}$ 时，求 $\\int \\frac{${c}}{(${u})\\sqrt{${q}}} \\, dx$。`,
+        ],
+        same2(right),
+        [same2(swapped), same2(noFactor), same2(flipped)],
+        walkPair(
+          [
+            [["Complete the square", "配方"], ["Rewrite the quadratic under the root:", "改写根号下的二次式："], [`${q} = ${square}`]],
+            [
+              ["Choose the function", "确定函数"],
+              plus
+                ? [
+                    `This is a square plus a constant, and the factor outside is the same $${u}$. With $u = ${u}$ it is the $\\operatorname{arcsch}$ form with $a = ${a}$:`,
+                    `这是平方加常数，根号外的因子也是 $${u}$。令 $u = ${u}$，这是 $a = ${a}$ 的 $\\operatorname{arcsch}$ 形式：`,
+                  ]
+                : [
+                    `This is a constant minus a square, and the factor outside is the same $${u}$. With $u = ${u}$ it is the $\\operatorname{arsech}$ form with $a = ${a}$:`,
+                    `这是常数减平方，根号外的因子也是 $${u}$。令 $u = ${u}$，这是 $a = ${a}$ 的 $\\operatorname{arsech}$ 形式：`,
+                  ],
+              [`\\int \\frac{${c}}{(${u})\\sqrt{${q}}} \\, dx = ${inU}`],
+            ],
+            [
+              ["Integrate and substitute back", "积分并代回"],
+              [`The formula has the factor $-\\frac{1}{${a}}$:`, `公式带有因子 $-\\frac{1}{${a}}$：`],
+              [`${inU} = ${right}`],
+            ],
+          ],
+          [
+            `For $${u} > 0$ the integrand has the sign of $${c}$. Since $\\operatorname{${name}}$ decreases for positive arguments, the coefficient must have the opposite sign to $${c}$, as $${Q.of(-c, a).toLatex()}$ does.`,
+            `当 $${u} > 0$ 时，被积函数的符号与 $${c}$ 相同。由于 $\\operatorname{${name}}$ 对正的自变量递减，系数必须与 $${c}$ 异号，$${Q.of(-c, a).toLatex()}$ 正是如此。`,
+          ],
+        ),
+      ),
       [
-        `Find $\\int \\frac{${c}}{(${u})\\sqrt{${q}}} \\, dx$ for $${domain}$.`,
-        `当 $${domain}$ 时，求 $\\int \\frac{${c}}{(${u})\\sqrt{${q}}} \\, dx$。`,
-      ],
-      same2(form(Q.of(-c, a), name)),
-      [same2(form(Q.of(-c, a), other)), same2(form(Q.of(-c), name)), same2(form(Q.of(c, a), name))],
-      [
-        `Completing the square gives $${square}$, which is the ${name} form with $a = ${a}$. So the result is $${form(Q.of(-c, a), name)}$.`,
-        `配方得 $${square}$，这是 $a = ${a}$ 的 ${name} 形式。所以结果是 $${form(Q.of(-c, a), name)}$。`,
+        [
+          same2(swapped)[0],
+          plus
+            ? "The completed square is a sum, which gives arcsch; arsech comes from a constant minus a square."
+            : "The completed square is a constant minus a square, which gives arsech; arcsch comes from a sum.",
+          plus ? "配方结果是平方和，得到 arcsch；arsech 来自常数减平方。" : "配方结果是常数减平方，得到 arsech；arcsch 来自平方和。",
+        ],
+        [same2(noFactor)[0], `The factor $\\frac{1}{${a}}$ of the formula is missing.`, `漏掉了公式中的因子 $\\frac{1}{${a}}$。`],
+        [
+          same2(flipped)[0],
+          `The sign is wrong. The formula's coefficient is $-\\frac{1}{${a}}$.`,
+          `符号错了。公式的系数是 $-\\frac{1}{${a}}$。`,
+        ],
       ],
     );
   },
