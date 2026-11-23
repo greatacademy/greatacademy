@@ -1331,8 +1331,8 @@ const combinationFromDrawing: KnowledgePointDef = {
   id: "a-linear-combination-from-a-drawing",
   title: t("A linear combination from a drawing", "由图求线性组合"),
   explanation: t(
-    "Two vectors that do not lie on one line reach every point of the plane through their combinations $a\\mathbf{u} + b\\mathbf{v}$. To find the weights of a drawn vector $\\mathbf{w}$, read the coordinates of all three and solve the two equations they give, or check each candidate by adding its components.",
-    "不共线的两个向量通过组合 $a\\mathbf{u} + b\\mathbf{v}$ 可以到达平面上的每一点。要求图中向量 $\\mathbf{w}$ 的权重，读出三个向量的坐标并解由此得到的两个方程，或者把每个候选的分量相加来检验。",
+    "Two vectors that do not lie on one line reach every point of the plane through their combinations $a\\mathbf{u} + b\\mathbf{v}$. To find the weights of a drawn vector $\\mathbf{w}$, read the coordinates of all three and solve the two equations they give, or check each candidate by adding its components.\n\nFor $\\mathbf{u} = \\langle 1, 0 \\rangle$, $\\mathbf{v} = \\langle 1, 2 \\rangle$ and $\\mathbf{w} = \\langle 3, 4 \\rangle$: the $y$-components give $2b = 4$, so $b = 2$, and the $x$-components give $a + 2 = 3$, so $a = 1$ and $\\mathbf{w} = \\mathbf{u} + 2\\mathbf{v}$. Check: $\\langle 1, 0 \\rangle + 2\\langle 1, 2 \\rangle = \\langle 3, 4 \\rangle$.\n\n> **Watch out.** Each weight belongs to its own vector. Here $2\\mathbf{u} + \\mathbf{v} = \\langle 3, 2 \\rangle$ is a different vector, so the weights cannot be swapped.",
+    "不共线的两个向量通过组合 $a\\mathbf{u} + b\\mathbf{v}$ 可以到达平面上的每一点。要求图中向量 $\\mathbf{w}$ 的权重，读出三个向量的坐标并解由此得到的两个方程，或者把每个候选的分量相加来检验。\n\n对 $\\mathbf{u} = \\langle 1, 0 \\rangle$，$\\mathbf{v} = \\langle 1, 2 \\rangle$，$\\mathbf{w} = \\langle 3, 4 \\rangle$：由 $y$ 分量得 $2b = 4$，所以 $b = 2$；由 $x$ 分量得 $a + 2 = 3$，所以 $a = 1$，$\\mathbf{w} = \\mathbf{u} + 2\\mathbf{v}$。检验：$\\langle 1, 0 \\rangle + 2\\langle 1, 2 \\rangle = \\langle 3, 4 \\rangle$。\n\n> **注意。** 每个权重属于它自己的向量。这里 $2\\mathbf{u} + \\mathbf{v} = \\langle 3, 2 \\rangle$ 是另一个向量，所以权重不能对调。",
   ),
   generate(rng: Rng): Problem {
     const u: Point = rng.pick<Point>([
@@ -1362,16 +1362,40 @@ const combinationFromDrawing: KnowledgePointDef = {
     while (Math.abs(a) === Math.abs(b));
     const w: Point = [a * u[0] + b * v[0], a * u[1] + b * v[1]];
     const form = (x: number, y: number) => math(`\\mathbf{w} = ${poly([x, "\\mathbf{u}"], [y, "\\mathbf{v}"])}`);
+    /** p writes a negative number in parentheses, for use inside a product. */
+    const p = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+    /** sum writes x u + y v in components. */
+    const sum = (x: number, y: number) => angled(x * u[0] + y * v[0], x * u[1] + y * v[1]);
+    const cross = u[0] * v[1] - u[1] * v[0];
     return withFigure(
-      pickChoice(
-        rng,
-        t("Which equation holds for the vectors drawn?", "对图中的向量，哪个等式成立？"),
-        form(a, b),
-        [form(b, a), form(-a, b), form(a, -b)],
-        t(
-          `Read $\\mathbf{u} = ${angled(u[0], u[1])}$, $\\mathbf{v} = ${angled(v[0], v[1])}$ and $\\mathbf{w} = ${angled(w[0], w[1])}$. Then $${a}${angled(u[0], u[1])} + (${b})${angled(v[0], v[1])} = ${angled(w[0], w[1])}$, and since $\\mathbf{u}$ and $\\mathbf{v}$ are not parallel, these weights are the only ones.`,
-          `读出 $\\mathbf{u} = ${angled(u[0], u[1])}$，$\\mathbf{v} = ${angled(v[0], v[1])}$，$\\mathbf{w} = ${angled(w[0], w[1])}$。于是 $${a}${angled(u[0], u[1])} + (${b})${angled(v[0], v[1])} = ${angled(w[0], w[1])}$；因为 $\\mathbf{u}$、$\\mathbf{v}$ 不平行，权重只有这一组。`,
+      reasoned(
+        pickChoice(
+          rng,
+          t("Which equation holds for the vectors drawn?", "对图中的向量，哪个等式成立？"),
+          form(a, b),
+          [form(b, a), form(-a, b), form(a, -b)],
+          t(
+            `**Step 1: Read the vectors.** From the drawing, $\\mathbf{u} = ${angled(u[0], u[1])}$, $\\mathbf{v} = ${angled(v[0], v[1])}$ and $\\mathbf{w} = ${angled(w[0], w[1])}$.\n\n**Step 2: Combine with the weights.** Scale each vector by its weight and add:\n\n$$${a}${angled(u[0], u[1])} + ${p(b)}${angled(v[0], v[1])} = ${angled(a * u[0], a * u[1])} + ${angled(b * v[0], b * v[1])} = ${angled(w[0], w[1])}$$\n\nThis is $\\mathbf{w}$, so $${poly([a, "\\mathbf{u}"], [b, "\\mathbf{v}"])}$ is the combination.\n\n**Check.** $\\mathbf{u}$ and $\\mathbf{v}$ are not parallel, as $${p(u[0])} \\cdot ${p(v[1])} - ${p(u[1])} \\cdot ${p(v[0])} = ${cross}$ is not $0$, so these weights are the only ones that give $\\mathbf{w}$.`,
+            `**第一步：读出向量。**由图，$\\mathbf{u} = ${angled(u[0], u[1])}$，$\\mathbf{v} = ${angled(v[0], v[1])}$，$\\mathbf{w} = ${angled(w[0], w[1])}$。\n\n**第二步：按权重组合。**每个向量乘它的权重再相加：\n\n$$${a}${angled(u[0], u[1])} + ${p(b)}${angled(v[0], v[1])} = ${angled(a * u[0], a * u[1])} + ${angled(b * v[0], b * v[1])} = ${angled(w[0], w[1])}$$\n\n这正是 $\\mathbf{w}$，所以组合是 $${poly([a, "\\mathbf{u}"], [b, "\\mathbf{v}"])}$。\n\n**检验。**$\\mathbf{u}$ 与 $\\mathbf{v}$ 不平行，因为 $${p(u[0])} \\cdot ${p(v[1])} - ${p(u[1])} \\cdot ${p(v[0])} = ${cross}$ 不为 $0$，所以只有这组权重能得到 $\\mathbf{w}$。`,
+          ),
         ),
+        [
+          [
+            form(b, a).en,
+            `The weights are swapped: this combination is $${sum(b, a)}$, not $\\mathbf{w}$.`,
+            `权重对调了：这个组合是 $${sum(b, a)}$，不是 $\\mathbf{w}$。`,
+          ],
+          [
+            form(-a, b).en,
+            `The weight of $\\mathbf{u}$ has the wrong sign: this combination is $${sum(-a, b)}$.`,
+            `$\\mathbf{u}$ 的权重符号错了：这个组合是 $${sum(-a, b)}$。`,
+          ],
+          [
+            form(a, -b).en,
+            `The weight of $\\mathbf{v}$ has the wrong sign: this combination is $${sum(a, -b)}$.`,
+            `$\\mathbf{v}$ 的权重符号错了：这个组合是 $${sum(a, -b)}$。`,
+          ],
+        ],
       ),
       drawn(
         square(reach(u, v, w)),

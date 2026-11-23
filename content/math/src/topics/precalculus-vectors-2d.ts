@@ -2288,13 +2288,25 @@ export const twoDimensionalVectorsExpressedInComponentForm: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1", "CCSS.HSN.VM.A.2"],
+  intro: t(
+    `A vector records how far to move across and up. From $A(1, 2)$ to $B(4, -3)$ the move is $\\vec{AB} = \\langle 4 - 1, -3 - 2 \\rangle = \\langle 3, -5 \\rangle$, which is also written $3\\mathbf{i} - 5\\mathbf{j}$.
+
+Check: starting at $A$ and moving $3$ right and $5$ down gives $(1 + 3, 2 - 5) = (4, -3)$, which is $B$.
+
+In this lesson we find the components of a vector from its initial and terminal points, and write a vector both as $\\langle x, y \\rangle$ and as $x\\mathbf{i} + y\\mathbf{j}$.`,
+    `向量记录横向和纵向各移动多少。从 $A(1, 2)$ 到 $B(4, -3)$，移动是 $\\vec{AB} = \\langle 4 - 1, -3 - 2 \\rangle = \\langle 3, -5 \\rangle$，也可以写成 $3\\mathbf{i} - 5\\mathbf{j}$。
+
+检验：从 $A$ 出发向右移 $3$、向下移 $5$，得 $(1 + 3, 2 - 5) = (4, -3)$，正是 $B$。
+
+这节课我们由起点和终点求向量的分量，并把向量写成 $\\langle x, y \\rangle$ 和 $x\\mathbf{i} + y\\mathbf{j}$ 两种形式。`,
+  ),
   knowledgePoints: [
     {
       id: "vector-from-two-points",
       title: t("Find component form from initial and terminal points", "由起点与终点坐标求向量的坐标分量"),
       explanation: t(
-        "For a directed line segment with initial point $A(x_1, y_1)$ and terminal point $B(x_2, y_2)$, the component form of vector $\\vec{AB}$ is obtained by subtracting initial coordinates from terminal coordinates:\n\n$$\\vec{AB} = \\langle x_2 - x_1,\\, y_2 - y_1 \\rangle$$",
-        "对于起点为 $A(x_1, y_1)$、终点为 $B(x_2, y_2)$ 的有向线段，向量 $\\vec{AB}$ 的坐标分量形式由终点坐标减去起点坐标得到：\n\n$$\\vec{AB} = \\langle x_2 - x_1,\\, y_2 - y_1 \\rangle$$",
+        "For a directed line segment with initial point $A(x_1, y_1)$ and terminal point $B(x_2, y_2)$, the component form of vector $\\vec{AB}$ is obtained by subtracting initial coordinates from terminal coordinates:\n\n$$\\vec{AB} = \\langle x_2 - x_1,\\, y_2 - y_1 \\rangle$$\n\nFor $A(-2, 5)$ and $B(3, 1)$: $\\vec{AB} = \\langle 3 - (-2), 1 - 5 \\rangle = \\langle 5, -4 \\rangle$. Check: $(-2 + 5, 5 + (-4)) = (3, 1)$, which is $B$.\n\n> **Watch out.** Subtract in the order end minus start. Start minus end gives $\\langle -5, 4 \\rangle$, which is $\\vec{BA}$ and points the opposite way.",
+        "对于起点为 $A(x_1, y_1)$、终点为 $B(x_2, y_2)$ 的有向线段，向量 $\\vec{AB}$ 的坐标分量形式由终点坐标减去起点坐标得到：\n\n$$\\vec{AB} = \\langle x_2 - x_1,\\, y_2 - y_1 \\rangle$$\n\n对 $A(-2, 5)$ 和 $B(3, 1)$：$\\vec{AB} = \\langle 3 - (-2), 1 - 5 \\rangle = \\langle 5, -4 \\rangle$。检验：$(-2 + 5, 5 + (-4)) = (3, 1)$，正是 $B$。\n\n> **注意。** 按终点减起点的顺序相减。起点减终点得 $\\langle -5, 4 \\rangle$，那是 $\\vec{BA}$，方向相反。",
       ),
       generate(rng) {
         const x1 = rng.pick([-8, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 8]);
@@ -2316,9 +2328,23 @@ export const twoDimensionalVectorsExpressedInComponentForm: TopicDef = {
             [x1 + x2, y1 + y2],
             [dy, dx],
           ],
-          solution: t(
-            `Subtract initial point coordinates from terminal point coordinates: $\\vec{AB} = \\langle ${x2} - ${paren(x1)},\\, ${y2} - ${paren(y1)} \\rangle = \\langle ${dx}, ${dy} \\rangle$.`,
-            `终点坐标减去起点坐标：$\\vec{AB} = \\langle ${x2} - ${paren(x1)},\\, ${y2} - ${paren(y1)} \\rangle = \\langle ${dx}, ${dy} \\rangle$。`,
+          solution: walked(
+            [
+              [
+                ["Subtract the x-coordinates", "x 坐标相减"],
+                t(`Take the terminal point minus the initial point:`, `用终点减去起点：`),
+                [`x_2 - x_1 = ${x2} - ${paren(x1)} = ${dx}`],
+              ],
+              [
+                ["Subtract the y-coordinates", "y 坐标相减"],
+                t(`Do the same with the $y$-coordinates:`, `$y$ 坐标同样相减：`),
+                [`y_2 - y_1 = ${y2} - ${paren(y1)} = ${dy}`, `\\vec{AB} = \\langle ${dx}, ${dy} \\rangle`],
+              ],
+            ],
+            t(
+              `Starting at $A$ and moving by the components reaches $B$:\n\n$$(${x1} + ${paren(dx)},\\ ${y1} + ${paren(dy)}) = (${x2}, ${y2})$$`,
+              `从 $A$ 出发按分量移动，到达 $B$：\n\n$$(${x1} + ${paren(dx)},\\ ${y1} + ${paren(dy)}) = (${x2}, ${y2})$$`,
+            ),
           ),
         });
       },
@@ -2327,8 +2353,8 @@ export const twoDimensionalVectorsExpressedInComponentForm: TopicDef = {
       id: "component-and-standard-basis-forms",
       title: t("Convert between component form and standard basis form", "分量形式与标准基底形式之间的转换"),
       explanation: t(
-        "A 2D vector in component form $\\mathbf{v} = \\langle x, y \\rangle$ can be written uniquely as a linear combination of the standard unit basis vectors $\\mathbf{i} = \\langle 1, 0 \\rangle$ and $\\mathbf{j} = \\langle 0, 1 \\rangle$:\n\n$$\\mathbf{v} = x\\mathbf{i} + y\\mathbf{j}$$",
-        "二维向量的坐标形式 $\\mathbf{v} = \\langle x, y \\rangle$ 可以唯一表示为标准单位基底向量 $\\mathbf{i} = \\langle 1, 0 \\rangle$ 和 $\\mathbf{j} = \\langle 0, 1 \\rangle$ 的线性组合：\n\n$$\\mathbf{v} = x\\mathbf{i} + y\\mathbf{j}$$",
+        "A 2D vector in component form $\\mathbf{v} = \\langle x, y \\rangle$ can be written uniquely as a linear combination of the standard unit basis vectors $\\mathbf{i} = \\langle 1, 0 \\rangle$ and $\\mathbf{j} = \\langle 0, 1 \\rangle$:\n\n$$\\mathbf{v} = x\\mathbf{i} + y\\mathbf{j}$$\n\nFor $\\langle -4, 7 \\rangle$: the $x$-component goes on $\\mathbf{i}$ and the $y$-component on $\\mathbf{j}$, so the vector is $-4\\mathbf{i} + 7\\mathbf{j}$. Check: $-4\\langle 1, 0 \\rangle + 7\\langle 0, 1 \\rangle = \\langle -4, 0 \\rangle + \\langle 0, 7 \\rangle = \\langle -4, 7 \\rangle$.\n\n> **Watch out.** A negative component becomes a minus sign in front of its term: $\\langle 3, -2 \\rangle = 3\\mathbf{i} - 2\\mathbf{j}$. Keep the $x$-component on $\\mathbf{i}$ even when it is negative.",
+        "二维向量的坐标形式 $\\mathbf{v} = \\langle x, y \\rangle$ 可以唯一表示为标准单位基底向量 $\\mathbf{i} = \\langle 1, 0 \\rangle$ 和 $\\mathbf{j} = \\langle 0, 1 \\rangle$ 的线性组合：\n\n$$\\mathbf{v} = x\\mathbf{i} + y\\mathbf{j}$$\n\n对 $\\langle -4, 7 \\rangle$：$x$ 分量配 $\\mathbf{i}$，$y$ 分量配 $\\mathbf{j}$，所以向量是 $-4\\mathbf{i} + 7\\mathbf{j}$。检验：$-4\\langle 1, 0 \\rangle + 7\\langle 0, 1 \\rangle = \\langle -4, 0 \\rangle + \\langle 0, 7 \\rangle = \\langle -4, 7 \\rangle$。\n\n> **注意。** 负的分量在它那一项前面变成减号：$\\langle 3, -2 \\rangle = 3\\mathbf{i} - 2\\mathbf{j}$。$x$ 分量即使是负数，也仍然配 $\\mathbf{i}$。",
       ),
       generate(rng) {
         const x = rng.pick([-9, -7, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 7, 9]);
@@ -2338,7 +2364,8 @@ export const twoDimensionalVectorsExpressedInComponentForm: TopicDef = {
 
         const ansBasis = fmtBasis(x, y);
         const wrong1 = fmtBasis(x, -y);
-        const wrong2 = fmtBasis(y, x);
+        const sameSize = Math.abs(x) === Math.abs(y);
+        const wrong2 = sameSize ? poly([x, "\\mathbf{i}"]) : fmtBasis(y, x);
         const wrong3 = fmtBasis(-x, -y);
 
         return oneOf(
@@ -2347,12 +2374,54 @@ export const twoDimensionalVectorsExpressedInComponentForm: TopicDef = {
             `Express the vector $\\mathbf{v} = \\langle ${x}, ${y} \\rangle$ in terms of the standard unit basis vectors $\\mathbf{i}$ and $\\mathbf{j}$.`,
             `用标准单位基底向量 $\\mathbf{i}$ 和 $\\mathbf{j}$ 表示向量 $\\mathbf{v} = \\langle ${x}, ${y} \\rangle$。`,
           ),
-          t(`$${ansBasis}$`, `$${ansBasis}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Since $\\mathbf{v} = \\langle x, y \\rangle = x\\mathbf{i} + y\\mathbf{j}$, substituting $x = ${x}$ and $y = ${y}$ yields $${ansBasis}$.`,
-            `因为 $\\mathbf{v} = \\langle x, y \\rangle = x\\mathbf{i} + y\\mathbf{j}$，代入 $x = ${x}$ 和 $y = ${y}$ 得 $${ansBasis}$。`,
+          same(`$${ansBasis}$`),
+          [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`)],
+          walked(
+            [
+              [
+                ["Read the components", "读出分量"],
+                t(
+                  `The $x$-component is $${x}$ and the $y$-component is $${y}$. Since $\\mathbf{i} = \\langle 1, 0 \\rangle$ and $\\mathbf{j} = \\langle 0, 1 \\rangle$, every vector splits as $\\langle x, y \\rangle = x\\mathbf{i} + y\\mathbf{j}$.`,
+                  `$x$ 分量是 $${x}$，$y$ 分量是 $${y}$。因为 $\\mathbf{i} = \\langle 1, 0 \\rangle$，$\\mathbf{j} = \\langle 0, 1 \\rangle$，每个向量都可以拆成 $\\langle x, y \\rangle = x\\mathbf{i} + y\\mathbf{j}$。`,
+                ),
+              ],
+              [
+                ["Attach i and j", "配上 i 和 j"],
+                t(
+                  `Put the $x$-component on $\\mathbf{i}$ and the $y$-component on $\\mathbf{j}$:`,
+                  `把 $x$ 分量配 $\\mathbf{i}$，$y$ 分量配 $\\mathbf{j}$：`,
+                ),
+                [`\\mathbf{v} = ${ansBasis}`],
+              ],
+            ],
+            t(
+              `Turning the basis vectors back into components gives $\\mathbf{v}$:\n\n$$${x}\\langle 1, 0 \\rangle + ${paren(y)}\\langle 0, 1 \\rangle = \\langle ${x}, 0 \\rangle + \\langle 0, ${y} \\rangle = \\langle ${x}, ${y} \\rangle$$`,
+              `把基底向量换回分量，得到 $\\mathbf{v}$：\n\n$$${x}\\langle 1, 0 \\rangle + ${paren(y)}\\langle 0, 1 \\rangle = \\langle ${x}, 0 \\rangle + \\langle 0, ${y} \\rangle = \\langle ${x}, ${y} \\rangle$$`,
+            ),
           ),
+          [
+            why(
+              same(`$${wrong1}$`),
+              `The sign of the $\\mathbf{j}$ term is wrong: the $y$-component is $${y}$.`,
+              `$\\mathbf{j}$ 项的符号错了：$y$ 分量是 $${y}$。`,
+            ),
+            sameSize
+              ? why(
+                  same(`$${wrong2}$`),
+                  `This leaves out the $\\mathbf{j}$ term: the $y$-component $${y}$ multiplies $\\mathbf{j}$.`,
+                  `这里漏了 $\\mathbf{j}$ 项：$y$ 分量 $${y}$ 要乘 $\\mathbf{j}$。`,
+                )
+              : why(
+                  same(`$${wrong2}$`),
+                  "The components are swapped: the $x$-component goes on $\\mathbf{i}$.",
+                  "两个分量对调了：$x$ 分量应配 $\\mathbf{i}$。",
+                ),
+            why(
+              same(`$${wrong3}$`),
+              "Both signs are changed, so this is $-\\mathbf{v}$, which points the opposite way.",
+              "两个符号都变了，这是 $-\\mathbf{v}$，方向相反。",
+            ),
+          ],
         );
       },
     },
@@ -2373,13 +2442,25 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn2d: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.B.4", "CCSS.HSN.VM.B.5"],
+  intro: t(
+    `In component form, vector arithmetic is done one component at a time. For $\\mathbf{u} = \\langle 3, -1 \\rangle$ and $\\mathbf{v} = \\langle -2, 4 \\rangle$: $\\mathbf{u} + \\mathbf{v} = \\langle 1, 3 \\rangle$, and $2\\mathbf{u} - \\mathbf{v} = \\langle 6 - (-2), -2 - 4 \\rangle = \\langle 8, -6 \\rangle$.
+
+Check: adding $\\mathbf{v}$ back to $2\\mathbf{u} - \\mathbf{v}$ gives $\\langle 8 + (-2), -6 + 4 \\rangle = \\langle 6, -2 \\rangle$, which is $2\\langle 3, -1 \\rangle = 2\\mathbf{u}$.
+
+In this lesson we add and subtract vectors in component form, multiply them by scalars, and evaluate linear combinations such as $a\\mathbf{u} + b\\mathbf{v}$.`,
+    `用分量表示时，向量运算逐个分量进行。对 $\\mathbf{u} = \\langle 3, -1 \\rangle$ 和 $\\mathbf{v} = \\langle -2, 4 \\rangle$：$\\mathbf{u} + \\mathbf{v} = \\langle 1, 3 \\rangle$，$2\\mathbf{u} - \\mathbf{v} = \\langle 6 - (-2), -2 - 4 \\rangle = \\langle 8, -6 \\rangle$。
+
+检验：把 $\\mathbf{v}$ 加回 $2\\mathbf{u} - \\mathbf{v}$，得 $\\langle 8 + (-2), -6 + 4 \\rangle = \\langle 6, -2 \\rangle$，正是 $2\\langle 3, -1 \\rangle = 2\\mathbf{u}$。
+
+这节课我们用分量做向量的加减和数乘，并计算 $a\\mathbf{u} + b\\mathbf{v}$ 这样的线性组合。`,
+  ),
   knowledgePoints: [
     {
       id: "add-and-subtract-cartesian-vectors",
       title: t("Add and subtract 2D Cartesian vectors", "二维直角坐标向量的加减运算"),
       explanation: t(
-        "Vectors in component form are added and subtracted one component at a time: the $x$-components together and the $y$-components together.\n\nFor vectors $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2 \\rangle$:\n\n$$\\mathbf{u} + \\mathbf{v} = \\langle u_1 + v_1,\\, u_2 + v_2 \\rangle$$\n\n$$\\mathbf{u} - \\mathbf{v} = \\langle u_1 - v_1,\\, u_2 - v_2 \\rangle$$",
-        "用分量表示的向量相加减时，逐个分量进行：$x$ 分量与 $x$ 分量运算，$y$ 分量与 $y$ 分量运算。\n\n对于向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ 和 $\\mathbf{v} = \\langle v_1, v_2 \\rangle$：\n\n$$\\mathbf{u} + \\mathbf{v} = \\langle u_1 + v_1,\\, u_2 + v_2 \\rangle$$\n\n$$\\mathbf{u} - \\mathbf{v} = \\langle u_1 - v_1,\\, u_2 - v_2 \\rangle$$",
+        "Vectors in component form are added and subtracted one component at a time: the $x$-components together and the $y$-components together.\n\nFor vectors $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ and $\\mathbf{v} = \\langle v_1, v_2 \\rangle$:\n\n$$\\mathbf{u} + \\mathbf{v} = \\langle u_1 + v_1,\\, u_2 + v_2 \\rangle$$\n\n$$\\mathbf{u} - \\mathbf{v} = \\langle u_1 - v_1,\\, u_2 - v_2 \\rangle$$\n\nFor $\\mathbf{u} = \\langle 5, -2 \\rangle$ and $\\mathbf{v} = \\langle -3, 6 \\rangle$: $\\mathbf{u} - \\mathbf{v} = \\langle 5 - (-3), -2 - 6 \\rangle = \\langle 8, -8 \\rangle$. Check: $(\\mathbf{u} - \\mathbf{v}) + \\mathbf{v} = \\langle 8 + (-3), -8 + 6 \\rangle = \\langle 5, -2 \\rangle$, which is $\\mathbf{u}$.\n\n> **Watch out.** In a subtraction, subtract each component of $\\mathbf{v}$ with its sign: $5 - (-3) = 8$, not $2$. Pair $x$ with $x$ and $y$ with $y$, never across.",
+        "用分量表示的向量相加减时，逐个分量进行：$x$ 分量与 $x$ 分量运算，$y$ 分量与 $y$ 分量运算。\n\n对于向量 $\\mathbf{u} = \\langle u_1, u_2 \\rangle$ 和 $\\mathbf{v} = \\langle v_1, v_2 \\rangle$：\n\n$$\\mathbf{u} + \\mathbf{v} = \\langle u_1 + v_1,\\, u_2 + v_2 \\rangle$$\n\n$$\\mathbf{u} - \\mathbf{v} = \\langle u_1 - v_1,\\, u_2 - v_2 \\rangle$$\n\n对 $\\mathbf{u} = \\langle 5, -2 \\rangle$ 和 $\\mathbf{v} = \\langle -3, 6 \\rangle$：$\\mathbf{u} - \\mathbf{v} = \\langle 5 - (-3), -2 - 6 \\rangle = \\langle 8, -8 \\rangle$。检验：$(\\mathbf{u} - \\mathbf{v}) + \\mathbf{v} = \\langle 8 + (-3), -8 + 6 \\rangle = \\langle 5, -2 \\rangle$，正是 $\\mathbf{u}$。\n\n> **注意。** 做减法时，$\\mathbf{v}$ 的每个分量连同符号一起减：$5 - (-3) = 8$，不是 $2$。$x$ 与 $x$ 配对，$y$ 与 $y$ 配对，不能交叉。",
       ),
       generate(rng) {
         const u1 = rng.pick([-7, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 7]);
@@ -2405,9 +2486,28 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn2d: TopicDef = {
             [rx, -ry],
             [ry, rx],
           ],
-          solution: t(
-            `Combine corresponding components: $\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u1} ${opSymbol} ${paren(v1)},\\, ${u2} ${opSymbol} ${paren(v2)} \\rangle = \\langle ${rx}, ${ry} \\rangle$.`,
-            `对应分量分别进行运算：$\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${u1} ${opSymbol} ${paren(v1)},\\, ${u2} ${opSymbol} ${paren(v2)} \\rangle = \\langle ${rx}, ${ry} \\rangle$。`,
+          solution: walked(
+            [
+              [
+                ["Combine the x-components", "合并 x 分量"],
+                isAdd ? t(`Add the $x$-components:`, `把 $x$ 分量相加：`) : t(`Subtract the $x$-components:`, `把 $x$ 分量相减：`),
+                [`${u1} ${opSymbol} ${paren(v1)} = ${rx}`],
+              ],
+              [
+                ["Combine the y-components", "合并 y 分量"],
+                isAdd ? t(`Add the $y$-components:`, `把 $y$ 分量相加：`) : t(`Subtract the $y$-components:`, `把 $y$ 分量相减：`),
+                [`${u2} ${opSymbol} ${paren(v2)} = ${ry}`, `\\mathbf{u} ${opSymbol} \\mathbf{v} = \\langle ${rx}, ${ry} \\rangle`],
+              ],
+            ],
+            isAdd
+              ? t(
+                  `Subtracting $\\mathbf{v}$ again gives back $\\mathbf{u}$:\n\n$$\\langle ${rx} - ${paren(v1)},\\ ${ry} - ${paren(v2)} \\rangle = \\langle ${u1}, ${u2} \\rangle$$`,
+                  `再减去 $\\mathbf{v}$，回到 $\\mathbf{u}$：\n\n$$\\langle ${rx} - ${paren(v1)},\\ ${ry} - ${paren(v2)} \\rangle = \\langle ${u1}, ${u2} \\rangle$$`,
+                )
+              : t(
+                  `Adding $\\mathbf{v}$ back gives $\\mathbf{u}$:\n\n$$\\langle ${rx} + ${paren(v1)},\\ ${ry} + ${paren(v2)} \\rangle = \\langle ${u1}, ${u2} \\rangle$$`,
+                  `把 $\\mathbf{v}$ 加回去，回到 $\\mathbf{u}$：\n\n$$\\langle ${rx} + ${paren(v1)},\\ ${ry} + ${paren(v2)} \\rangle = \\langle ${u1}, ${u2} \\rangle$$`,
+                ),
           ),
         });
       },
@@ -2416,8 +2516,8 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn2d: TopicDef = {
       id: "scalar-multiplication-and-linear-combination-2d",
       title: t("Scalar multiplication and linear combinations in 2D", "二维向量的数乘与线性组合"),
       explanation: t(
-        "A scalar stretches or shrinks a vector, and a negative scalar also reverses it. Each component is multiplied by the scalar.\n\nMultiplying vector $\\mathbf{v} = \\langle x, y \\rangle$ by scalar $k$ yields $k\\mathbf{v} = \\langle kx, ky \\rangle$.\n\nA linear combination is computed component-wise:\n\n$$a\\mathbf{u} + b\\mathbf{v} = \\langle a u_1 + b v_1,\\, a u_2 + b v_2 \\rangle$$",
-        "标量会把向量拉长或缩短，负的标量还会把它反向。每个分量都乘这个标量。\n\n标量 $k$ 乘以向量 $\\mathbf{v} = \\langle x, y \\rangle$ 得 $k\\mathbf{v} = \\langle kx, ky \\rangle$。\n\n线性组合按分量分别计算：\n\n$$a\\mathbf{u} + b\\mathbf{v} = \\langle a u_1 + b v_1,\\, a u_2 + b v_2 \\rangle$$",
+        "A scalar stretches or shrinks a vector, and a negative scalar also reverses it. Each component is multiplied by the scalar.\n\nMultiplying vector $\\mathbf{v} = \\langle x, y \\rangle$ by scalar $k$ yields $k\\mathbf{v} = \\langle kx, ky \\rangle$.\n\nA linear combination is computed component-wise:\n\n$$a\\mathbf{u} + b\\mathbf{v} = \\langle a u_1 + b v_1,\\, a u_2 + b v_2 \\rangle$$\n\nFor $\\mathbf{u} = \\langle 2, -1 \\rangle$ and $\\mathbf{v} = \\langle -3, 4 \\rangle$: $3\\mathbf{u} = \\langle 6, -3 \\rangle$ and $-2\\mathbf{v} = \\langle 6, -8 \\rangle$, so $3\\mathbf{u} - 2\\mathbf{v} = \\langle 12, -11 \\rangle$. Check: adding $2\\mathbf{v} = \\langle -6, 8 \\rangle$ back gives $\\langle 6, -3 \\rangle$, which is $3\\mathbf{u}$.\n\n> **Watch out.** Multiply every component by the scalar, and keep the minus sign with its scalar: $-2\\mathbf{v}$ multiplies both components of $\\mathbf{v}$ by $-2$.",
+        "标量会把向量拉长或缩短，负的标量还会把它反向。每个分量都乘这个标量。\n\n标量 $k$ 乘以向量 $\\mathbf{v} = \\langle x, y \\rangle$ 得 $k\\mathbf{v} = \\langle kx, ky \\rangle$。\n\n线性组合按分量分别计算：\n\n$$a\\mathbf{u} + b\\mathbf{v} = \\langle a u_1 + b v_1,\\, a u_2 + b v_2 \\rangle$$\n\n对 $\\mathbf{u} = \\langle 2, -1 \\rangle$ 和 $\\mathbf{v} = \\langle -3, 4 \\rangle$：$3\\mathbf{u} = \\langle 6, -3 \\rangle$，$-2\\mathbf{v} = \\langle 6, -8 \\rangle$，所以 $3\\mathbf{u} - 2\\mathbf{v} = \\langle 12, -11 \\rangle$。检验：把 $2\\mathbf{v} = \\langle -6, 8 \\rangle$ 加回去，得 $\\langle 6, -3 \\rangle$，正是 $3\\mathbf{u}$。\n\n> **注意。** 每个分量都要乘标量，减号要跟着它的标量：$-2\\mathbf{v}$ 是把 $\\mathbf{v}$ 的两个分量都乘 $-2$。",
       ),
       generate(rng) {
         const a = rng.pick([2, 3, 4, -2, -3]);
@@ -2444,9 +2544,25 @@ export const additionAndScalarMultiplicationOfCartesianVectorsIn2d: TopicDef = {
             [a * u1 - b * v1, a * u2 - b * v2],
             [ry, rx],
           ],
-          solution: t(
-            `Compute each component: $x = ${a}(${u1}) ${b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`}(${v1}) = ${rx}$, and $y = ${a}(${u2}) ${b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`}(${v2}) = ${ry}$, giving $\\langle ${rx}, ${ry} \\rangle$.`,
-            `分别计算各分量：$x = ${a}(${u1}) ${b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`}(${v1}) = ${rx}$，$y = ${a}(${u2}) ${b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`}(${v2}) = ${ry}$，得到 $\\langle ${rx}, ${ry} \\rangle$。`,
+          solution: walked(
+            [
+              [
+                ["Scale each vector", "数乘每个向量"],
+                t(`Multiply every component by its scalar:`, `每个分量都乘它的标量：`),
+                [`${a}\\mathbf{u} = \\langle ${a * u1}, ${a * u2} \\rangle`, `${b}\\mathbf{v} = \\langle ${b * v1}, ${b * v2} \\rangle`],
+              ],
+              [
+                ["Add the components", "分量相加"],
+                t(`Add the scaled vectors one component at a time:`, `把数乘后的向量逐个分量相加：`),
+                [
+                  `${a}\\mathbf{u} ${bSignStr}\\mathbf{v} = \\langle ${a * u1} + ${paren(b * v1)},\\ ${a * u2} + ${paren(b * v2)} \\rangle = \\langle ${rx}, ${ry} \\rangle`,
+                ],
+              ],
+            ],
+            t(
+              `Taking $${b}\\mathbf{v}$ away again leaves $${a}\\mathbf{u}$:\n\n$$\\langle ${rx} - ${paren(b * v1)},\\ ${ry} - ${paren(b * v2)} \\rangle = \\langle ${a * u1}, ${a * u2} \\rangle$$`,
+              `再减去 $${b}\\mathbf{v}$，剩下 $${a}\\mathbf{u}$：\n\n$$\\langle ${rx} - ${paren(b * v1)},\\ ${ry} - ${paren(b * v2)} \\rangle = \\langle ${a * u1}, ${a * u2} \\rangle$$`,
+            ),
           ),
         });
       },
@@ -2468,13 +2584,25 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn2d: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1", "CCSS.HSN.VM.A.2"],
+  intro: t(
+    `The components of a vector are the legs of a right triangle, and the vector is its hypotenuse. For $\\langle -6, 8 \\rangle$ the magnitude is $\\sqrt{(-6)^2 + 8^2} = \\sqrt{36 + 64} = \\sqrt{100} = 10$.
+
+Check: $6, 8, 10$ is twice the triple $3, 4, 5$, and $3^2 + 4^2 = 9 + 16 = 25 = 5^2$.
+
+In this lesson we find the magnitude of a vector from its components, the magnitude of a sum after working out its components, and the distance between two points as a magnitude.`,
+    `向量的两个分量是直角三角形的两条直角边，向量本身是斜边。对 $\\langle -6, 8 \\rangle$，模是 $\\sqrt{(-6)^2 + 8^2} = \\sqrt{36 + 64} = \\sqrt{100} = 10$。
+
+检验：$6, 8, 10$ 是勾股数 $3, 4, 5$ 的两倍，而 $3^2 + 4^2 = 9 + 16 = 25 = 5^2$。
+
+这节课我们由分量求向量的模，先求出和向量的分量再求它的模，并把两点间的距离当作模来求。`,
+  ),
   knowledgePoints: [
     {
       id: "magnitude-of-component-vector",
       title: t("Magnitude of a vector in component form", "坐标形式向量的模长"),
       explanation: t(
-        "By the Pythagorean theorem, the **magnitude** of vector $\\mathbf{v} = \\langle x, y \\rangle$ is the distance from the origin to $(x, y)$:\n\n$$\\|\\mathbf{v}\\| = \\sqrt{x^2 + y^2}$$",
-        "由勾股定理，向量 $\\mathbf{v} = \\langle x, y \\rangle$ 的**模长**是原点到点 $(x, y)$ 的距离：\n\n$$\\|\\mathbf{v}\\| = \\sqrt{x^2 + y^2}$$",
+        "By the Pythagorean theorem, the **magnitude** of vector $\\mathbf{v} = \\langle x, y \\rangle$ is the distance from the origin to $(x, y)$:\n\n$$\\|\\mathbf{v}\\| = \\sqrt{x^2 + y^2}$$\n\nFor $\\langle -5, 12 \\rangle$: $\\sqrt{(-5)^2 + 12^2} = \\sqrt{25 + 144} = \\sqrt{169} = 13$. Check: $13^2 = 169 = 25 + 144$.\n\n> **Watch out.** Square each component with its sign, $(-5)^2 = 25$, so the magnitude is never negative. It is not $|x| + |y| = 17$ either: the hypotenuse is shorter than the two legs together.",
+        "由勾股定理，向量 $\\mathbf{v} = \\langle x, y \\rangle$ 的**模长**是原点到点 $(x, y)$ 的距离：\n\n$$\\|\\mathbf{v}\\| = \\sqrt{x^2 + y^2}$$\n\n对 $\\langle -5, 12 \\rangle$：$\\sqrt{(-5)^2 + 12^2} = \\sqrt{25 + 144} = \\sqrt{169} = 13$。检验：$13^2 = 169 = 25 + 144$。\n\n> **注意。** 每个分量连同符号一起平方，$(-5)^2 = 25$，所以模不会是负数。模也不是 $|x| + |y| = 17$：斜边比两条直角边的和短。",
       ),
       generate(rng) {
         const triples = [
@@ -2521,9 +2649,23 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn2d: TopicDef = {
           ),
           answer: ans,
           wrong: [wrong1, wrong2, wrong3],
-          solution: t(
-            `Using the magnitude formula: $\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x + y * y}} = ${ans}$.`,
-            `由模长公式：$\\|\\mathbf{v}\\| = \\sqrt{(${x})^2 + (${y})^2} = \\sqrt{${x * x + y * y}} = ${ans}$。`,
+          solution: walked(
+            [
+              [
+                ["Square the components", "把分量平方"],
+                t(`Square each component and add:`, `把每个分量平方后相加：`),
+                [`(${x})^2 + (${y})^2 = ${x * x} + ${y * y} = ${x * x + y * y}`],
+              ],
+              [
+                ["Take the square root", "开平方"],
+                t(`The magnitude is the square root of the sum:`, `模是这个和的平方根：`),
+                [`\\|\\mathbf{v}\\| = \\sqrt{${x * x + y * y}} = ${ans}`],
+              ],
+            ],
+            t(
+              `$${ans}^2 = ${ans * ans}$, the sum of the squares, and $${ans}$ is less than $${Math.abs(x)} + ${Math.abs(y)} = ${Math.abs(x) + Math.abs(y)}$, as a hypotenuse is shorter than the two legs together.`,
+              `$${ans}^2 = ${ans * ans}$，等于平方和；而且 $${ans}$ 小于 $${Math.abs(x)} + ${Math.abs(y)} = ${Math.abs(x) + Math.abs(y)}$，因为斜边比两条直角边的和短。`,
+            ),
           ),
         });
       },
@@ -2532,8 +2674,8 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn2d: TopicDef = {
       id: "magnitude-of-linear-combination",
       title: t("Magnitude of a sum or scaled vector", "和向量或数乘向量的模长"),
       explanation: t(
-        "To find the magnitude of a linear combination such as $\\|\\mathbf{u} + \\mathbf{v}\\|$, first calculate the component coordinates of the resulting vector, then apply $\\|\\mathbf{w}\\| = \\sqrt{w_1^2 + w_2^2}$.",
-        "求和向量或线性组合的模长（如 $\\|\\mathbf{u} + \\mathbf{v}\\|$），先计算出合向量的坐标分量，再应用公式 $\\|\\mathbf{w}\\| = \\sqrt{w_1^2 + w_2^2}$。",
+        "To find the magnitude of a linear combination such as $\\|\\mathbf{u} + \\mathbf{v}\\|$, first calculate the component coordinates of the resulting vector, then apply $\\|\\mathbf{w}\\| = \\sqrt{w_1^2 + w_2^2}$.\n\nFor $\\mathbf{u} = \\langle 2, 1 \\rangle$ and $\\mathbf{v} = \\langle 1, 3 \\rangle$: $\\mathbf{u} + \\mathbf{v} = \\langle 3, 4 \\rangle$, so $\\|\\mathbf{u} + \\mathbf{v}\\| = \\sqrt{9 + 16} = 5$. Check: $\\|\\mathbf{u}\\| + \\|\\mathbf{v}\\| = \\sqrt{5} + \\sqrt{10} \\approx 5.40$, which is at least $5$, as one side of a triangle is never longer than the other two together.\n\n> **Watch out.** Add the vectors first and then take one magnitude. Adding the two magnitudes gives a different, larger number unless the vectors point the same way.",
+        "求和向量或线性组合的模长（如 $\\|\\mathbf{u} + \\mathbf{v}\\|$），先计算出合向量的坐标分量，再应用公式 $\\|\\mathbf{w}\\| = \\sqrt{w_1^2 + w_2^2}$。\n\n对 $\\mathbf{u} = \\langle 2, 1 \\rangle$ 和 $\\mathbf{v} = \\langle 1, 3 \\rangle$：$\\mathbf{u} + \\mathbf{v} = \\langle 3, 4 \\rangle$，所以 $\\|\\mathbf{u} + \\mathbf{v}\\| = \\sqrt{9 + 16} = 5$。检验：$\\|\\mathbf{u}\\| + \\|\\mathbf{v}\\| = \\sqrt{5} + \\sqrt{10} \\approx 5.40$，不小于 $5$，因为三角形的一边不会比另两边的和长。\n\n> **注意。** 先把向量相加，再求一次模。把两个模相加会得到另一个更大的数，除非两个向量同向。",
       ),
       generate(rng) {
         const pairs = [
@@ -2592,9 +2734,25 @@ export const calculatingTheMagnitudeOfCartesianVectorsIn2d: TopicDef = {
           ),
           answer: mag,
           wrong: [wrong1, wrong2, wrong3],
-          solution: t(
-            `First add the vectors: $\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${paren(v1)},\\, ${u2} + ${paren(v2)} \\rangle = \\langle ${s1}, ${s2} \\rangle$. Then compute magnitude: $\\sqrt{(${s1})^2 + (${s2})^2} = ${mag}$.`,
-            `首先计算向量之和：$\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${paren(v1)},\\, ${u2} + ${paren(v2)} \\rangle = \\langle ${s1}, ${s2} \\rangle$。然后计算模长：$\\sqrt{(${s1})^2 + (${s2})^2} = ${mag}$。`,
+          solution: walked(
+            [
+              [
+                ["Add the vectors", "向量相加"],
+                t(`Add the components:`, `把分量相加：`),
+                [
+                  `\\mathbf{u} + \\mathbf{v} = \\langle ${u1} + ${paren(v1)},\\ ${u2} + ${paren(v2)} \\rangle = \\langle ${s1}, ${s2} \\rangle`,
+                ],
+              ],
+              [
+                ["Find the magnitude", "求模"],
+                t(`Square the components of the sum, add, and take the square root:`, `把和向量的分量平方、相加，再开平方：`),
+                [`\\|\\mathbf{u} + \\mathbf{v}\\| = \\sqrt{(${s1})^2 + (${s2})^2} = \\sqrt{${s1 * s1 + s2 * s2}} = ${mag}`],
+              ],
+            ],
+            t(
+              `$${mag}^2 = ${mag * mag} = ${s1 * s1} + ${s2 * s2}$, so the length matches the components of $\\mathbf{u} + \\mathbf{v}$.`,
+              `$${mag}^2 = ${mag * mag} = ${s1 * s1} + ${s2 * s2}$，长度与 $\\mathbf{u} + \\mathbf{v}$ 的分量相符。`,
+            ),
           ),
         });
       },
@@ -2616,14 +2774,26 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1"],
+  intro: t(
+    `The direction angle of a vector is measured counterclockwise from the positive $x$-axis. The vector $\\langle -3, 3 \\rangle$ points up and to the left, into Quadrant II. Its reference angle has tangent $3 \\div 3 = 1$, so it is $45^\\circ$, and the direction angle is $180^\\circ - 45^\\circ = 135^\\circ$.
+
+Check: $\\tan 135^\\circ = -1$, which is $3 \\div (-3)$, and $135^\\circ$ lies between $90^\\circ$ and $180^\\circ$, in Quadrant II.
+
+In this lesson we find the direction angles of vectors on the axes and in all four quadrants, and turn a direction angle into a bearing.`,
+    `向量的方向角从 $x$ 轴正方向逆时针量。向量 $\\langle -3, 3 \\rangle$ 指向左上方，在第二象限。它的参考角的正切是 $3 \\div 3 = 1$，所以参考角是 $45^\\circ$，方向角是 $180^\\circ - 45^\\circ = 135^\\circ$。
+
+检验：$\\tan 135^\\circ = -1$，正是 $3 \\div (-3)$；而且 $135^\\circ$ 在 $90^\\circ$ 与 $180^\\circ$ 之间，在第二象限。
+
+这节课我们求坐标轴上和四个象限中向量的方向角，并把方向角换成方位角。`,
+  ),
   knowledgePoints: [
     {
       id: "direction-angle-quadrant-i-and-axes",
       figure: precalculusDrawings4["calculating-the-direction-of-cartesian-vectors-in-2d#direction-angle-quadrant-i-and-axes"],
       title: t("Direction angle on coordinate axes and Quadrant I", "坐标轴上及第一象限向量的方向角"),
       explanation: t(
-        "The **direction angle** $\\theta \\in [0^\\circ, 360^\\circ)$ of vector $\\mathbf{v} = \\langle x, y \\rangle$ is measured counterclockwise from the positive $x$-axis.\n\n- Along axes: $\\langle c, 0 \\rangle$ has $\\theta = 0^\\circ$ ($c > 0$) or $180^\\circ$ ($c < 0$); $\\langle 0, c \\rangle$ has $\\theta = 90^\\circ$ ($c > 0$) or $270^\\circ$ ($c < 0$).\n- In Quadrant I ($x > 0, y > 0$): $\\theta = \\arctan\\left(\\frac{y}{x}\\right)$.",
-        "向量 $\\mathbf{v} = \\langle x, y \\rangle$ 的**方向角** $\\theta \\in [0^\\circ, 360^\\circ)$ 是从正 $x$ 轴逆时针测量的角度。\n\n- 在坐标轴上：$\\langle c, 0 \\rangle$ 的方向角为 $0^\\circ$（$c > 0$）或 $180^\\circ$（$c < 0$）；$\\langle 0, c \\rangle$ 的方向角为 $90^\\circ$（$c > 0$）或 $270^\\circ$（$c < 0$）。\n- 在第一象限（$x > 0, y > 0$）：$\\theta = \\arctan\\left(\\frac{y}{x}\\right)$。",
+        "The **direction angle** $\\theta \\in [0^\\circ, 360^\\circ)$ of vector $\\mathbf{v} = \\langle x, y \\rangle$ is measured counterclockwise from the positive $x$-axis.\n\n- Along axes: $\\langle c, 0 \\rangle$ has $\\theta = 0^\\circ$ ($c > 0$) or $180^\\circ$ ($c < 0$); $\\langle 0, c \\rangle$ has $\\theta = 90^\\circ$ ($c > 0$) or $270^\\circ$ ($c < 0$).\n- In Quadrant I ($x > 0, y > 0$): $\\theta = \\arctan\\left(\\frac{y}{x}\\right)$.\n\nFor $\\langle 2, 2\\sqrt{3} \\rangle$: both components are positive, so the vector is in Quadrant I, and $\\tan\\theta = 2\\sqrt{3} \\div 2 = \\sqrt{3}$ gives $\\theta = 60^\\circ$. Check: a vector of length $4$ at $60^\\circ$ has components $4\\cos 60^\\circ = 2$ and $4\\sin 60^\\circ = 2\\sqrt{3}$.\n\n> **Watch out.** On an axis there is no tangent to work out: $\\langle 0, 5 \\rangle$ points straight up, so $\\theta = 90^\\circ$, even though $5 \\div 0$ is undefined.",
+        "向量 $\\mathbf{v} = \\langle x, y \\rangle$ 的**方向角** $\\theta \\in [0^\\circ, 360^\\circ)$ 是从正 $x$ 轴逆时针测量的角度。\n\n- 在坐标轴上：$\\langle c, 0 \\rangle$ 的方向角为 $0^\\circ$（$c > 0$）或 $180^\\circ$（$c < 0$）；$\\langle 0, c \\rangle$ 的方向角为 $90^\\circ$（$c > 0$）或 $270^\\circ$（$c < 0$）。\n- 在第一象限（$x > 0, y > 0$）：$\\theta = \\arctan\\left(\\frac{y}{x}\\right)$。\n\n对 $\\langle 2, 2\\sqrt{3} \\rangle$：两个分量都为正，向量在第一象限，$\\tan\\theta = 2\\sqrt{3} \\div 2 = \\sqrt{3}$，得 $\\theta = 60^\\circ$。检验：长为 $4$、方向角为 $60^\\circ$ 的向量，分量是 $4\\cos 60^\\circ = 2$ 和 $4\\sin 60^\\circ = 2\\sqrt{3}$。\n\n> **注意。** 在坐标轴上不用算正切：$\\langle 0, 5 \\rangle$ 竖直向上，所以 $\\theta = 90^\\circ$，尽管 $5 \\div 0$ 没有意义。",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -2639,6 +2809,37 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
         const { vec, theta } = item;
 
         const wrongAngles = [30, 45, 60, 90, 0].filter((a) => a !== theta).slice(0, 3);
+        const len = theta === 45 ? `${k === 1 ? "" : k}\\sqrt{2}` : theta === 30 || theta === 60 ? `${2 * k}` : `${k}`;
+        const xs = theta === 90 ? "0" : theta === 30 ? kSurd : `${k}`;
+        const ys = theta === 0 ? "0" : theta === 60 ? kSurd : `${k}`;
+        const tanLine =
+          theta === 45
+            ? `\\tan\\theta = \\frac{${k}}{${k}} = 1 \\implies \\theta = 45^\\circ`
+            : theta === 30
+              ? `\\tan\\theta = \\frac{${k}}{${kSurd}} = \\frac{1}{\\sqrt{3}} \\implies \\theta = 30^\\circ`
+              : `\\tan\\theta = \\frac{${kSurd}}{${k}} = \\sqrt{3} \\implies \\theta = 60^\\circ`;
+        const findAngle: Step =
+          theta === 0
+            ? [
+                ["Read the angle", "读出角度"],
+                t(
+                  "The positive $x$-axis is where direction angles start, so $\\theta = 0^\\circ$.",
+                  "方向角从 $x$ 轴正方向开始量，所以 $\\theta = 0^\\circ$。",
+                ),
+              ]
+            : theta === 90
+              ? [
+                  ["Read the angle", "读出角度"],
+                  t(
+                    "The positive $y$-axis is a quarter turn counterclockwise from the positive $x$-axis, so $\\theta = 90^\\circ$.",
+                    "$y$ 轴正方向是从 $x$ 轴正方向逆时针转四分之一圈，所以 $\\theta = 90^\\circ$。",
+                  ),
+                ]
+              : [
+                  ["Use the tangent", "用正切"],
+                  t("Divide the $y$-component by the $x$-component:", "用 $y$ 分量除以 $x$ 分量："),
+                  [tanLine],
+                ];
 
         return numberProblem({
           prompt: t(
@@ -2649,9 +2850,28 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
           unit: "°",
           form: "integer",
           wrong: wrongAngles,
-          solution: t(
-            `The vector lies ${theta % 90 === 0 ? "on a positive coordinate axis" : "in Quadrant I"}. Using $\\tan\\theta = y/x$, we obtain $\\theta = ${theta}^\\circ$.`,
-            `该向量位于${theta % 90 === 0 ? "正坐标轴上" : "第一象限"}。由 $\\tan\\theta = y/x$ 求得 $\\theta = ${theta}^\\circ$。`,
+          solution: walked(
+            [
+              [
+                ["Locate the vector", "确定向量的位置"],
+                theta === 0
+                  ? t(
+                      `The $y$-component is $0$ and the $x$-component $${k}$ is positive, so the vector lies on the positive $x$-axis.`,
+                      `$y$ 分量是 $0$，$x$ 分量 $${k}$ 为正，所以向量在 $x$ 轴正半轴上。`,
+                    )
+                  : theta === 90
+                    ? t(
+                        `The $x$-component is $0$ and the $y$-component $${k}$ is positive, so the vector lies on the positive $y$-axis.`,
+                        `$x$ 分量是 $0$，$y$ 分量 $${k}$ 为正，所以向量在 $y$ 轴正半轴上。`,
+                      )
+                    : t("Both components are positive, so the vector lies in Quadrant I.", "两个分量都为正，所以向量在第一象限。"),
+              ],
+              findAngle,
+            ],
+            t(
+              `A vector of length $${len}$ at $${theta}^\\circ$ has the components of $\\mathbf{v}$:\n\n$$${len}\\cos ${theta}^\\circ = ${xs},\\quad ${len}\\sin ${theta}^\\circ = ${ys}$$`,
+              `长为 $${len}$、方向角为 $${theta}^\\circ$ 的向量，分量正是 $\\mathbf{v}$ 的分量：\n\n$$${len}\\cos ${theta}^\\circ = ${xs},\\quad ${len}\\sin ${theta}^\\circ = ${ys}$$`,
+            ),
           ),
         });
       },
@@ -2661,8 +2881,8 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
       figure: precalculusDrawings2["calculating-the-direction-of-cartesian-vectors-in-2d#direction-angle-all-quadrants"],
       title: t("Direction angle in Quadrants II, III, and IV", "第二、三、四象限向量的方向角"),
       explanation: t(
-        "For a vector $\\mathbf{v} = \\langle x, y \\rangle$ outside Quadrant I, first find the reference angle $\\alpha = \\arctan\\left(\\left|\\frac{y}{x}\\right|\\right)$:\n\n- Quadrant II ($x < 0, y > 0$): $\\theta = 180^\\circ - \\alpha$\n- Quadrant III ($x < 0, y < 0$): $\\theta = 180^\\circ + \\alpha$\n- Quadrant IV ($x > 0, y < 0$): $\\theta = 360^\\circ - \\alpha$",
-        "对于不在第一象限的向量 $\\mathbf{v} = \\langle x, y \\rangle$，先计算参考角 $\\alpha = \\arctan\\left(\\left|\\frac{y}{x}\\right|\\right)$：\n\n- 第二象限（$x < 0, y > 0$）：$\\theta = 180^\\circ - \\alpha$\n- 第三象限（$x < 0, y < 0$）：$\\theta = 180^\\circ + \\alpha$\n- 第四象限（$x > 0, y < 0$）：$\\theta = 360^\\circ - \\alpha$",
+        "For a vector $\\mathbf{v} = \\langle x, y \\rangle$ outside Quadrant I, first find the reference angle $\\alpha = \\arctan\\left(\\left|\\frac{y}{x}\\right|\\right)$:\n\n- Quadrant II ($x < 0, y > 0$): $\\theta = 180^\\circ - \\alpha$\n- Quadrant III ($x < 0, y < 0$): $\\theta = 180^\\circ + \\alpha$\n- Quadrant IV ($x > 0, y < 0$): $\\theta = 360^\\circ - \\alpha$\n\nFor $\\langle 4, -4 \\rangle$: $x > 0$ and $y < 0$, so the vector is in Quadrant IV. The reference angle has tangent $4 \\div 4 = 1$, so $\\alpha = 45^\\circ$ and $\\theta = 360^\\circ - 45^\\circ = 315^\\circ$. Check: $\\tan 315^\\circ = -1 = -4 \\div 4$, and $315^\\circ$ lies between $270^\\circ$ and $360^\\circ$.\n\n> **Watch out.** Decide the quadrant from the signs before using the tangent. $\\langle 4, 4 \\rangle$ and $\\langle -4, -4 \\rangle$ have the same ratio $y \\div x = 1$, but their direction angles are $45^\\circ$ and $225^\\circ$.",
+        "对于不在第一象限的向量 $\\mathbf{v} = \\langle x, y \\rangle$，先计算参考角 $\\alpha = \\arctan\\left(\\left|\\frac{y}{x}\\right|\\right)$：\n\n- 第二象限（$x < 0, y > 0$）：$\\theta = 180^\\circ - \\alpha$\n- 第三象限（$x < 0, y < 0$）：$\\theta = 180^\\circ + \\alpha$\n- 第四象限（$x > 0, y < 0$）：$\\theta = 360^\\circ - \\alpha$\n\n对 $\\langle 4, -4 \\rangle$：$x > 0$，$y < 0$，向量在第四象限。参考角的正切是 $4 \\div 4 = 1$，所以 $\\alpha = 45^\\circ$，$\\theta = 360^\\circ - 45^\\circ = 315^\\circ$。检验：$\\tan 315^\\circ = -1 = -4 \\div 4$，且 $315^\\circ$ 在 $270^\\circ$ 与 $360^\\circ$ 之间。\n\n> **注意。** 先由符号确定象限，再用正切。$\\langle 4, 4 \\rangle$ 和 $\\langle -4, -4 \\rangle$ 的比值 $y \\div x$ 都是 $1$，但方向角分别是 $45^\\circ$ 和 $225^\\circ$。",
       ),
       generate(rng) {
         const k = rng.pick([1, 2, 3, 4, 5, 6, 7, 8]);
@@ -2686,6 +2906,46 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
         const pick = rng.pick(cases);
         const { vec, theta, quad, ref } = pick;
 
+        const tanAbs = ref === 45 ? "1" : ref === 30 ? "\\frac{1}{\\sqrt{3}}" : "\\sqrt{3}";
+        const lo = Math.floor(theta / 90) * 90;
+        const turn = theta < 180 ? `180^\\circ - ${ref}^\\circ` : theta < 270 ? `180^\\circ + ${ref}^\\circ` : `360^\\circ - ${ref}^\\circ`;
+        const locate: Step = [
+          ["Locate the vector", "确定向量的位置"],
+          t(`The signs of the components put $\\mathbf{v}$ ${quad.en}.`, `由分量的符号，$\\mathbf{v}$ 在${quad["zh-CN"]}。`),
+        ];
+        const steps: readonly Step[] =
+          ref === 0
+            ? [
+                locate,
+                theta === 180
+                  ? [
+                      ["Count the turn", "数出转角"],
+                      t(
+                        "The negative $x$-axis is a half turn from the positive $x$-axis, so $\\theta = 180^\\circ$.",
+                        "$x$ 轴负方向与正方向相差半圈，所以 $\\theta = 180^\\circ$。",
+                      ),
+                    ]
+                  : [
+                      ["Count the turn", "数出转角"],
+                      t(
+                        "The negative $y$-axis is three quarter turns counterclockwise from the positive $x$-axis, so $\\theta = 270^\\circ$.",
+                        "$y$ 轴负方向是从 $x$ 轴正方向逆时针转四分之三圈，所以 $\\theta = 270^\\circ$。",
+                      ),
+                    ],
+              ]
+            : [
+                locate,
+                [
+                  ["Find the reference angle", "求参考角"],
+                  t("The reference angle uses the sizes of the components:", "参考角用分量的绝对值来求："),
+                  [`\\tan\\alpha = \\left|\\frac{y}{x}\\right| = ${tanAbs} \\implies \\alpha = ${ref}^\\circ`],
+                ],
+                [
+                  ["Turn into the quadrant", "转到所在象限"],
+                  t("Measure the angle from the positive $x$-axis, counterclockwise:", "从 $x$ 轴正方向起逆时针量角："),
+                  [`\\theta = ${turn} = ${theta}^\\circ`],
+                ],
+              ];
         const wrongAngles = [(theta + 180) % 360, ref, (360 - theta + 360) % 360, (theta + 90) % 360]
           .filter((a) => a !== theta)
           .slice(0, 3);
@@ -2699,9 +2959,22 @@ export const calculatingTheDirectionOfCartesianVectorsIn2d: TopicDef = {
           unit: "°",
           form: "integer",
           wrong: wrongAngles,
-          solution: t(
-            `The vector lies ${quad.en}. With reference angle $\\alpha = ${ref}^\\circ$, the standard direction angle is $\\theta = ${theta}^\\circ$.`,
-            `该向量位于${quad["zh-CN"]}。参考角为 $\\alpha = ${ref}^\\circ$，因此标准方向角为 $\\theta = ${theta}^\\circ$。`,
+          solution: walked(
+            steps,
+            ref === 0
+              ? theta === 180
+                ? t(
+                    "$\\mathbf{v}$ is a negative multiple of $\\mathbf{i}$, which is at $0^\\circ$, so it points the opposite way: $0^\\circ + 180^\\circ = 180^\\circ$.",
+                    "$\\mathbf{v}$ 是 $\\mathbf{i}$ 的负数倍，而 $\\mathbf{i}$ 在 $0^\\circ$，所以方向相反：$0^\\circ + 180^\\circ = 180^\\circ$。",
+                  )
+                : t(
+                    "$\\mathbf{v}$ is a negative multiple of $\\mathbf{j}$, which is at $90^\\circ$, so it points the opposite way: $90^\\circ + 180^\\circ = 270^\\circ$.",
+                    "$\\mathbf{v}$ 是 $\\mathbf{j}$ 的负数倍，而 $\\mathbf{j}$ 在 $90^\\circ$，所以方向相反：$90^\\circ + 180^\\circ = 270^\\circ$。",
+                  )
+              : t(
+                  `$${theta}^\\circ$ lies between $${lo}^\\circ$ and $${lo + 90}^\\circ$, in the same quadrant as $\\mathbf{v}$, and its tangent matches the components:\n\n$$\\frac{y}{x} = ${theta < 180 || theta > 270 ? "-" : ""}${tanAbs} = \\tan ${theta}^\\circ$$`,
+                  `$${theta}^\\circ$ 在 $${lo}^\\circ$ 与 $${lo + 90}^\\circ$ 之间，与 $\\mathbf{v}$ 在同一象限，而且它的正切与分量相符：\n\n$$\\frac{y}{x} = ${theta < 180 || theta > 270 ? "-" : ""}${tanAbs} = \\tan ${theta}^\\circ$$`,
+                ),
           ),
         });
       },
@@ -2723,14 +2996,26 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.1", "CCSS.HSN.VM.A.2"],
+  intro: t(
+    `A magnitude and a direction angle fix a vector, and cosine and sine turn them into components. For magnitude $6$ at $150^\\circ$: $x = 6\\cos 150^\\circ = -3\\sqrt{3}$ and $y = 6\\sin 150^\\circ = 3$, so the vector is $\\langle -3\\sqrt{3}, 3 \\rangle$.
+
+Check: $(-3\\sqrt{3})^2 + 3^2 = 27 + 9 = 36 = 6^2$, and $x < 0$, $y > 0$ put the vector in Quadrant II, where $150^\\circ$ points.
+
+In this lesson we resolve a vector of given magnitude and direction angle into components, write it with $\\mathbf{i}$ and $\\mathbf{j}$, and let the signs of cosine and sine place it in the right quadrant.`,
+    `模和方向角确定一个向量，用余弦和正弦就能把它们化成分量。模为 $6$、方向角为 $150^\\circ$：$x = 6\\cos 150^\\circ = -3\\sqrt{3}$，$y = 6\\sin 150^\\circ = 3$，所以向量是 $\\langle -3\\sqrt{3}, 3 \\rangle$。
+
+检验：$(-3\\sqrt{3})^2 + 3^2 = 27 + 9 = 36 = 6^2$；$x < 0$、$y > 0$ 使向量在第二象限，正是 $150^\\circ$ 所指的方向。
+
+这节课我们把已知模和方向角的向量分解成分量，用 $\\mathbf{i}$ 和 $\\mathbf{j}$ 表示它，并让余弦和正弦的符号把它放进正确的象限。`,
+  ),
   knowledgePoints: [
     {
       id: "components-from-magnitude-and-angle-special",
       figure: precalculusDrawings2["calculating-the-components-of-cartesian-vectors-in-2d#components-from-magnitude-and-angle-special"],
       title: t("Compute components for special angles", "特殊方向角的向量坐标分量计算"),
       explanation: t(
-        "A vector's components are the legs of a right triangle whose hypotenuse is the magnitude, so cosine gives the horizontal part and sine the vertical part. Given magnitude $\\|\\mathbf{v}\\| = r$ and direction angle $\\theta$, the components are given by:\n\n$$x = r\\cos\\theta,\\quad y = r\\sin\\theta$$\n\nso $\\mathbf{v} = \\langle r\\cos\\theta,\\, r\\sin\\theta \\rangle$.",
-        "向量的分量是以模为斜边的直角三角形的两条直角边，所以余弦给出水平分量，正弦给出竖直分量。已知模长 $\\|\\mathbf{v}\\| = r$ 与方向角 $\\theta$，坐标分量由下列公式给出：\n\n$$x = r\\cos\\theta,\\quad y = r\\sin\\theta$$\n\n即 $\\mathbf{v} = \\langle r\\cos\\theta,\\, r\\sin\\theta \\rangle$。",
+        "A vector's components are the legs of a right triangle whose hypotenuse is the magnitude, so cosine gives the horizontal part and sine the vertical part. Given magnitude $\\|\\mathbf{v}\\| = r$ and direction angle $\\theta$, the components are given by:\n\n$$x = r\\cos\\theta,\\quad y = r\\sin\\theta$$\n\nso $\\mathbf{v} = \\langle r\\cos\\theta,\\, r\\sin\\theta \\rangle$.\n\nFor $r = 10$ and $\\theta = 240^\\circ$: $x = 10\\cos 240^\\circ = -5$ and $y = 10\\sin 240^\\circ = -5\\sqrt{3}$, so $\\mathbf{v} = \\langle -5, -5\\sqrt{3} \\rangle$. Check: $25 + 75 = 100 = 10^2$, and both components are negative, as $240^\\circ$ is in Quadrant III.\n\n> **Watch out.** Cosine goes with $x$ and sine with $y$. Swapping them gives $\\langle -5\\sqrt{3}, -5 \\rangle$, which has the right length but points at $210^\\circ$.",
+        "向量的分量是以模为斜边的直角三角形的两条直角边，所以余弦给出水平分量，正弦给出竖直分量。已知模长 $\\|\\mathbf{v}\\| = r$ 与方向角 $\\theta$，坐标分量由下列公式给出：\n\n$$x = r\\cos\\theta,\\quad y = r\\sin\\theta$$\n\n即 $\\mathbf{v} = \\langle r\\cos\\theta,\\, r\\sin\\theta \\rangle$。\n\n对 $r = 10$，$\\theta = 240^\\circ$：$x = 10\\cos 240^\\circ = -5$，$y = 10\\sin 240^\\circ = -5\\sqrt{3}$，所以 $\\mathbf{v} = \\langle -5, -5\\sqrt{3} \\rangle$。检验：$25 + 75 = 100 = 10^2$，且两个分量都为负，因为 $240^\\circ$ 在第三象限。\n\n> **注意。** 余弦配 $x$，正弦配 $y$。两者对调得 $\\langle -5\\sqrt{3}, -5 \\rangle$，长度对，但方向是 $210^\\circ$。",
       ),
       generate(rng) {
         const r = rng.pick([2, 4, 6, 8, 10, 12]);
@@ -2754,8 +3039,23 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
         const ans = `\\langle ${item.x}, ${item.y} \\rangle`;
         const wrong1 = `\\langle ${item.y}, ${item.x} \\rangle`;
         const negX = item.x.startsWith("-") ? item.x.slice(1) : item.x === "0" ? "0" : `-${item.x}`;
-        const wrong2 = `\\langle ${negX}, ${item.y} \\rangle`;
-        const wrong3 = `\\langle ${r}, ${item.deg} \\rangle`;
+        const negY = item.y.startsWith("-") ? item.y.slice(1) : `-${item.y}`;
+        const wrong2 = item.x === "0" ? `\\langle 0, ${negY} \\rangle` : `\\langle ${negX}, ${item.y} \\rangle`;
+        const wrong3 = item.deg === 0 ? `\\langle ${r}, ${r} \\rangle` : `\\langle ${r}, ${item.deg} \\rangle`;
+        const x2 = Math.round((r * Math.cos((item.deg * Math.PI) / 180)) ** 2);
+        const y2 = Math.round((r * Math.sin((item.deg * Math.PI) / 180)) ** 2);
+        const place =
+          item.deg % 90 === 0
+            ? [
+                t("on the positive $x$-axis", "$x$ 轴正半轴上"),
+                t("on the positive $y$-axis", "$y$ 轴正半轴上"),
+                t("on the negative $x$-axis", "$x$ 轴负半轴上"),
+                t("on the negative $y$-axis", "$y$ 轴负半轴上"),
+              ][item.deg / 90]!
+            : t(
+                `in Quadrant ${["I", "II", "III", "IV"][Math.floor(item.deg / 90)]}`,
+                `第${["一", "二", "三", "四"][Math.floor(item.deg / 90)]}象限`,
+              );
 
         return oneOf(
           rng,
@@ -2763,12 +3063,55 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
             `A vector $\\mathbf{v}$ has magnitude $\\|\\mathbf{v}\\| = ${r}$ and direction angle $\\theta = ${item.deg}^\\circ$. Find its component form $\\langle x, y \\rangle$.`,
             `向量 $\\mathbf{v}$ 的模长为 $\\|\\mathbf{v}\\| = ${r}$，方向角为 $\\theta = ${item.deg}^\\circ$。求其坐标分量形式 $\\langle x, y \\rangle$。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Using $x = ${r}\\cos(${item.deg}^\\circ) = ${item.x}$ and $y = ${r}\\sin(${item.deg}^\\circ) = ${item.y}$, the component form is $${ans}$.`,
-            `利用 $x = ${r}\\cos(${item.deg}^\\circ) = ${item.x}$ 和 $y = ${r}\\sin(${item.deg}^\\circ) = ${item.y}$，得坐标分量形式为 $${ans}$。`,
+          same(`$${ans}$`),
+          [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`)],
+          walked(
+            [
+              [
+                ["Find x", "求 x"],
+                t("The horizontal component uses cosine:", "水平分量用余弦："),
+                [`x = ${r}\\cos ${item.deg}^\\circ = ${item.x}`],
+              ],
+              [
+                ["Find y", "求 y"],
+                t("The vertical component uses sine:", "竖直分量用正弦："),
+                [`y = ${r}\\sin ${item.deg}^\\circ = ${item.y}`, `\\mathbf{v} = ${ans}`],
+              ],
+            ],
+            t(
+              `The length comes back as $${r}$:\n\n$$\\sqrt{${x2} + ${y2}} = \\sqrt{${r * r}} = ${r}$$\n\nand the signs of the components put the vector ${place.en}, where $${item.deg}^\\circ$ points.`,
+              `长度还原为 $${r}$：\n\n$$\\sqrt{${x2} + ${y2}} = \\sqrt{${r * r}} = ${r}$$\n\n而且分量的符号使向量在${place["zh-CN"]}，正是 $${item.deg}^\\circ$ 所指的方向。`,
+            ),
           ),
+          [
+            why(
+              same(`$${wrong1}$`),
+              "The components are swapped: cosine gives $x$ and sine gives $y$.",
+              "两个分量对调了：余弦给出 $x$，正弦给出 $y$。",
+            ),
+            item.x === "0"
+              ? why(
+                  same(`$${wrong2}$`),
+                  `The sign of $y$ is wrong: $\\sin ${item.deg}^\\circ$ is ${item.deg === 90 ? "positive" : "negative"}, so the vector points ${item.deg === 90 ? "up" : "down"}.`,
+                  `$y$ 的符号错了：$\\sin ${item.deg}^\\circ$ 为${item.deg === 90 ? "正" : "负"}，所以向量指向${item.deg === 90 ? "上方" : "下方"}。`,
+                )
+              : why(
+                  same(`$${wrong2}$`),
+                  `The sign of $x$ is wrong: $\\cos ${item.deg}^\\circ$ is ${item.x.startsWith("-") ? "negative" : "positive"}.`,
+                  `$x$ 的符号错了：$\\cos ${item.deg}^\\circ$ 为${item.x.startsWith("-") ? "负" : "正"}。`,
+                ),
+            item.deg === 0
+              ? why(
+                  same(`$${wrong3}$`),
+                  `This puts the magnitude in both components, but $\\sin 0^\\circ = 0$, and $\\langle ${r}, ${r} \\rangle$ is longer than $${r}$.`,
+                  `这把模放进了两个分量，但 $\\sin 0^\\circ = 0$，而且 $\\langle ${r}, ${r} \\rangle$ 比 $${r}$ 长。`,
+                )
+              : why(
+                  same(`$${wrong3}$`),
+                  "This lists the magnitude and the angle, not the components; the components are $r\\cos\\theta$ and $r\\sin\\theta$.",
+                  "这只是列出了模和角，不是分量；分量是 $r\\cos\\theta$ 和 $r\\sin\\theta$。",
+                ),
+          ],
         );
       },
     },
@@ -2776,8 +3119,8 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
       id: "components-from-magnitude-and-angle-general",
       title: t("Express vector in terms of standard basis given magnitude and direction", "由模长和方向角用基底向量表示向量"),
       explanation: t(
-        "A vector with magnitude $r$ and direction $\\theta$ can be expressed in terms of standard unit basis vectors $\\mathbf{i}$ and $\\mathbf{j}$:\n\n$$\\mathbf{v} = (r\\cos\\theta)\\mathbf{i} + (r\\sin\\theta)\\mathbf{j}$$",
-        "模长为 $r$、方向角为 $\\theta$ 的向量可用标准单位基底向量 $\\mathbf{i}$ 和 $\\mathbf{j}$ 表示为：\n\n$$\\mathbf{v} = (r\\cos\\theta)\\mathbf{i} + (r\\sin\\theta)\\mathbf{j}$$",
+        "A vector with magnitude $r$ and direction $\\theta$ can be expressed in terms of standard unit basis vectors $\\mathbf{i}$ and $\\mathbf{j}$:\n\n$$\\mathbf{v} = (r\\cos\\theta)\\mathbf{i} + (r\\sin\\theta)\\mathbf{j}$$\n\nFor $r = 8$ at $315^\\circ$: $(8\\cos 315^\\circ)\\mathbf{i} + (8\\sin 315^\\circ)\\mathbf{j} = 4\\sqrt{2}\\mathbf{i} - 4\\sqrt{2}\\mathbf{j}$. Check: $32 + 32 = 64 = 8^2$, and $315^\\circ$ is in Quadrant IV, where $x > 0$ and $y < 0$.\n\n> **Watch out.** The magnitude and the angle are not the coefficients: $8\\mathbf{i} + 315\\mathbf{j}$ means nothing here. The coefficient of $\\mathbf{i}$ is $r\\cos\\theta$ and that of $\\mathbf{j}$ is $r\\sin\\theta$.",
+        "模长为 $r$、方向角为 $\\theta$ 的向量可用标准单位基底向量 $\\mathbf{i}$ 和 $\\mathbf{j}$ 表示为：\n\n$$\\mathbf{v} = (r\\cos\\theta)\\mathbf{i} + (r\\sin\\theta)\\mathbf{j}$$\n\n对 $r = 8$，方向角 $315^\\circ$：$(8\\cos 315^\\circ)\\mathbf{i} + (8\\sin 315^\\circ)\\mathbf{j} = 4\\sqrt{2}\\mathbf{i} - 4\\sqrt{2}\\mathbf{j}$。检验：$32 + 32 = 64 = 8^2$，且 $315^\\circ$ 在第四象限，那里 $x > 0$，$y < 0$。\n\n> **注意。** 模和角不是系数：$8\\mathbf{i} + 315\\mathbf{j}$ 在这里没有意义。$\\mathbf{i}$ 的系数是 $r\\cos\\theta$，$\\mathbf{j}$ 的系数是 $r\\sin\\theta$。",
       ),
       generate(rng) {
         const r = rng.pick([2, 4, 6, 8, 10, 12]);
@@ -2820,8 +3163,12 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
 
         const neg = (c: string) => (c.startsWith("-") ? c.slice(1) : `-${c}`);
         const ans = formatBasis(item.x, item.y);
-        const wrong1 = formatBasis(item.y, item.x);
+        const equal = item.x === item.y;
+        const wrong1 = equal ? formatBasis(neg(item.x), item.y) : formatBasis(item.y, item.x);
         const wrong2 = formatBasis(item.x, neg(item.y));
+        const x2 = Math.round((r * Math.cos((item.deg * Math.PI) / 180)) ** 2);
+        const y2 = Math.round((r * Math.sin((item.deg * Math.PI) / 180)) ** 2);
+        const q = Math.floor(item.deg / 90);
         const wrong3 = formatBasis(String(r), String(item.deg));
 
         return oneOf(
@@ -2830,12 +3177,55 @@ export const calculatingTheComponentsOfCartesianVectorsIn2d: TopicDef = {
             `Express the vector $${vName}$ with magnitude $\\|${vName}\\| = ${r}$ and direction angle $\\theta = ${item.deg}^\\circ$ in terms of standard unit basis vectors $\\mathbf{i}$ and $\\mathbf{j}$.`,
             `已知向量 $${vName}$ 的模长为 $\\|${vName}\\| = ${r}$，方向角为 $\\theta = ${item.deg}^\\circ$，用标准单位基底向量 $\\mathbf{i}$ 和 $\\mathbf{j}$ 表示 $${vName}$。`,
           ),
-          t(`$${ans}$`, `$${ans}$`),
-          [t(`$${wrong1}$`, `$${wrong1}$`), t(`$${wrong2}$`, `$${wrong2}$`), t(`$${wrong3}$`, `$${wrong3}$`)],
-          t(
-            `Using $x = ${r}\\cos(${item.deg}^\\circ) = ${item.x}$ and $y = ${r}\\sin(${item.deg}^\\circ) = ${item.y}$, the basis form is $${vName} = ${ans}$.`,
-            `由 $x = ${r}\\cos(${item.deg}^\\circ) = ${item.x}$ 与 $y = ${r}\\sin(${item.deg}^\\circ) = ${item.y}$，得基底形式为 $${vName} = ${ans}$。`,
+          same(`$${ans}$`),
+          [same(`$${wrong1}$`), same(`$${wrong2}$`), same(`$${wrong3}$`)],
+          walked(
+            [
+              [
+                ["Find the coefficient of i", "求 i 的系数"],
+                t(
+                  "The coefficient of $\\mathbf{i}$ is the horizontal component, which uses cosine:",
+                  "$\\mathbf{i}$ 的系数是水平分量，用余弦：",
+                ),
+                [`${r}\\cos ${item.deg}^\\circ = ${item.x}`],
+              ],
+              [
+                ["Find the coefficient of j", "求 j 的系数"],
+                t(
+                  "The coefficient of $\\mathbf{j}$ is the vertical component, which uses sine:",
+                  "$\\mathbf{j}$ 的系数是竖直分量，用正弦：",
+                ),
+                [`${r}\\sin ${item.deg}^\\circ = ${item.y}`, `${vName} = ${ans}`],
+              ],
+            ],
+            t(
+              `The length comes back as $${r}$:\n\n$$\\sqrt{${x2} + ${y2}} = \\sqrt{${r * r}} = ${r}$$\n\nand the signs of the coefficients put the vector in Quadrant ${["I", "II", "III", "IV"][q]}, where $${item.deg}^\\circ$ points.`,
+              `长度还原为 $${r}$：\n\n$$\\sqrt{${x2} + ${y2}} = \\sqrt{${r * r}} = ${r}$$\n\n而且系数的符号使向量在第${["一", "二", "三", "四"][q]}象限，正是 $${item.deg}^\\circ$ 所指的方向。`,
+            ),
           ),
+          [
+            equal
+              ? why(
+                  same(`$${wrong1}$`),
+                  `The sign of the $\\mathbf{i}$ term is wrong: $\\cos ${item.deg}^\\circ$ is ${item.x.startsWith("-") ? "negative" : "positive"}.`,
+                  `$\\mathbf{i}$ 项的符号错了：$\\cos ${item.deg}^\\circ$ 为${item.x.startsWith("-") ? "负" : "正"}。`,
+                )
+              : why(
+                  same(`$${wrong1}$`),
+                  "The coefficients are swapped: cosine goes with $\\mathbf{i}$ and sine with $\\mathbf{j}$.",
+                  "两个系数对调了：余弦配 $\\mathbf{i}$，正弦配 $\\mathbf{j}$。",
+                ),
+            why(
+              same(`$${wrong2}$`),
+              `The sign of the $\\mathbf{j}$ term is wrong: $\\sin ${item.deg}^\\circ$ is ${item.y.startsWith("-") ? "negative" : "positive"}.`,
+              `$\\mathbf{j}$ 项的符号错了：$\\sin ${item.deg}^\\circ$ 为${item.y.startsWith("-") ? "负" : "正"}。`,
+            ),
+            why(
+              same(`$${wrong3}$`),
+              "The magnitude and the angle are not the coefficients; they are $r\\cos\\theta$ and $r\\sin\\theta$.",
+              "模和角不是系数；系数是 $r\\cos\\theta$ 和 $r\\sin\\theta$。",
+            ),
+          ],
         );
       },
     },
@@ -2856,13 +3246,25 @@ export const velocityAndAccelerationForPlaneMotion: TopicDef = {
   encompasses: [],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.3"],
+  intro: t(
+    `Velocity is a vector: it says how fast and in which direction. A boat moving at $\\langle 6, 8 \\rangle\\text{ m/s}$ through the water has speed $\\sqrt{36 + 64} = 10\\text{ m/s}$. If the water itself moves at $\\langle 2, -3 \\rangle\\text{ m/s}$, the boat's velocity over the shore is $\\langle 6 + 2, 8 + (-3) \\rangle = \\langle 8, 5 \\rangle\\text{ m/s}$.
+
+Check: taking the current away again gives $\\langle 8 - 2, 5 - (-3) \\rangle = \\langle 6, 8 \\rangle$, the boat's own velocity.
+
+In this lesson we find speed as the magnitude of velocity, add velocities to get a resultant, and use a constant acceleration to find a later velocity.`,
+    `速度是向量：它说明有多快、朝哪个方向。一艘船相对水面以 $\\langle 6, 8 \\rangle\\text{ m/s}$ 行驶，速率是 $\\sqrt{36 + 64} = 10\\text{ m/s}$。如果水本身以 $\\langle 2, -3 \\rangle\\text{ m/s}$ 流动，船相对岸的速度是 $\\langle 6 + 2, 8 + (-3) \\rangle = \\langle 8, 5 \\rangle\\text{ m/s}$。
+
+检验：再去掉水流，得 $\\langle 8 - 2, 5 - (-3) \\rangle = \\langle 6, 8 \\rangle$，正是船自身的速度。
+
+这节课我们把速率当作速度的模来求，把速度相加得到合速度，并用恒定加速度求后来的速度。`,
+  ),
   knowledgePoints: [
     {
       id: "speed-as-magnitude-of-velocity",
       title: t("Calculate speed from velocity vector components", "由速度向量分量计算速率"),
       explanation: t(
-        "Velocity is a vector quantity with magnitude and direction. **Speed** is the scalar magnitude of the velocity vector:\n\n$$\\text{speed} = \\|\\mathbf{v}\\| = \\sqrt{v_x^2 + v_y^2}$$",
-        "速度是既有大小又有方向的向量。**速率**是速度向量的标量模长：\n\n$$\\text{速率} = \\|\\mathbf{v}\\| = \\sqrt{v_x^2 + v_y^2}$$",
+        "Velocity is a vector quantity with magnitude and direction. **Speed** is the scalar magnitude of the velocity vector:\n\n$$\\text{speed} = \\|\\mathbf{v}\\| = \\sqrt{v_x^2 + v_y^2}$$\n\nFor $\\mathbf{v} = \\langle -9, 12 \\rangle\\text{ m/s}$: the speed is $\\sqrt{81 + 144} = \\sqrt{225} = 15\\text{ m/s}$. Check: $15^2 = 225 = 81 + 144$.\n\n> **Watch out.** Speed is never negative: a negative component only says which way the object moves. Speed is not $|v_x| + |v_y| = 21$ either; it is the length of the velocity vector.",
+        "速度是既有大小又有方向的向量。**速率**是速度向量的标量模长：\n\n$$\\text{速率} = \\|\\mathbf{v}\\| = \\sqrt{v_x^2 + v_y^2}$$\n\n对 $\\mathbf{v} = \\langle -9, 12 \\rangle\\text{ m/s}$：速率是 $\\sqrt{81 + 144} = \\sqrt{225} = 15\\text{ m/s}$。检验：$15^2 = 225 = 81 + 144$。\n\n> **注意。** 速率不会是负数：负的分量只说明物体往哪边动。速率也不是 $|v_x| + |v_y| = 21$；它是速度向量的长度。",
       ),
       generate(rng) {
         const triples = [
@@ -2934,9 +3336,23 @@ export const velocityAndAccelerationForPlaneMotion: TopicDef = {
           answer: speed,
           unit: "m/s",
           wrong: [wrong1, wrong2, wrong3],
-          solution: t(
-            `Speed is the magnitude of the velocity vector: $\\|\\mathbf{v}\\| = \\sqrt{(${vx})^2 + (${vy})^2} = \\sqrt{${vx * vx + vy * vy}} = ${speed}\\text{ m/s}$.`,
-            `速率是速度向量的模长：$\\|\\mathbf{v}\\| = \\sqrt{(${vx})^2 + (${vy})^2} = \\sqrt{${vx * vx + vy * vy}} = ${speed}\\text{ m/s}$。`,
+          solution: walked(
+            [
+              [
+                ["Square the components", "把分量平方"],
+                t("Square each component of the velocity and add:", "把速度的每个分量平方后相加："),
+                [`(${vx})^2 + (${vy})^2 = ${vx * vx} + ${vy * vy} = ${vx * vx + vy * vy}`],
+              ],
+              [
+                ["Take the square root", "开平方"],
+                t("Speed is the magnitude of the velocity:", "速率是速度的模："),
+                [`\\|\\mathbf{v}\\| = \\sqrt{${vx * vx + vy * vy}} = ${speed}\\text{ m/s}`],
+              ],
+            ],
+            t(
+              `$${speed}^2 = ${speed * speed}$, the sum of the squares, and $${speed}$ is less than $${Math.abs(vx)} + ${Math.abs(vy)} = ${Math.abs(vx) + Math.abs(vy)}$, as the straight path is shorter than going across and then up.`,
+              `$${speed}^2 = ${speed * speed}$，等于平方和；而且 $${speed}$ 小于 $${Math.abs(vx)} + ${Math.abs(vy)} = ${Math.abs(vx) + Math.abs(vy)}$，因为直线比先横后竖的路短。`,
+            ),
           ),
         });
       },
@@ -2945,8 +3361,8 @@ export const velocityAndAccelerationForPlaneMotion: TopicDef = {
       id: "resultant-velocity-plane",
       title: t("Calculate resultant velocity in two dimensions", "计算二维平面中的合速度"),
       explanation: t(
-        "When an object moves through a moving medium (such as an aircraft in a wind current or a boat across a flowing river), the **resultant velocity** is the vector sum:\n\n$$\\mathbf{v}_{\\text{resultant}} = \\mathbf{v}_{\\text{object}} + \\mathbf{v}_{\\text{medium}}$$",
-        "当物体在流动的介质中运动时（如飞机在风中飞行或小船在水流中航行），其**合速度**为各分速度的向量和：\n\n$$\\mathbf{v}_{\\text{合}} = \\mathbf{v}_{\\text{自身}} + \\mathbf{v}_{\\text{介质}}$$",
+        "When an object moves through a moving medium (such as an aircraft in a wind current or a boat across a flowing river), the **resultant velocity** is the vector sum:\n\n$$\\mathbf{v}_{\\text{resultant}} = \\mathbf{v}_{\\text{object}} + \\mathbf{v}_{\\text{medium}}$$\n\nFor a boat heading east at $\\langle 10, 0 \\rangle\\text{ km/h}$ in a current flowing north at $\\langle 0, 4 \\rangle\\text{ km/h}$: the resultant is $\\langle 10 + 0, 0 + 4 \\rangle = \\langle 10, 4 \\rangle\\text{ km/h}$. Check: taking the current away again leaves $\\langle 10, 0 \\rangle$, the boat's own velocity.\n\n> **Watch out.** Add matching components. The east part belongs in the first component and the north part in the second, so $\\langle 4, 10 \\rangle$ would point in a different direction.",
+        "当物体在流动的介质中运动时（如飞机在风中飞行或小船在水流中航行），其**合速度**为各分速度的向量和：\n\n$$\\mathbf{v}_{\\text{合}} = \\mathbf{v}_{\\text{自身}} + \\mathbf{v}_{\\text{介质}}$$\n\n小船以 $\\langle 10, 0 \\rangle\\text{ km/h}$ 向东行驶，水流以 $\\langle 0, 4 \\rangle\\text{ km/h}$ 向北流：合速度是 $\\langle 10 + 0, 0 + 4 \\rangle = \\langle 10, 4 \\rangle\\text{ km/h}$。检验：再去掉水流，剩下 $\\langle 10, 0 \\rangle$，正是船自身的速度。\n\n> **注意。** 对应分量相加。向东的部分放在第一个分量，向北的部分放在第二个分量，$\\langle 4, 10 \\rangle$ 的方向就不同了。",
       ),
       generate(rng) {
         const boatSpeed = rng.pick([12, 15, 18, 20, 24, 25, 30]);
@@ -2964,9 +3380,27 @@ export const velocityAndAccelerationForPlaneMotion: TopicDef = {
             [-currentSpeed, boatSpeed],
             [currentSpeed, -boatSpeed],
           ],
-          solution: t(
-            `Add the velocity vectors: $\\mathbf{v}_{\\text{resultant}} = \\langle 0, ${boatSpeed} \\rangle + \\langle ${currentSpeed}, 0 \\rangle = \\langle ${currentSpeed}, ${boatSpeed} \\rangle\\text{ km/h}$.`,
-            `相加各速度向量：$\\mathbf{v}_{\\text{合}} = \\langle 0, ${boatSpeed} \\rangle + \\langle ${currentSpeed}, 0 \\rangle = \\langle ${currentSpeed}, ${boatSpeed} \\rangle\\text{ km/h}$。`,
+          solution: walked(
+            [
+              [
+                ["Set up the axes", "设定坐标轴"],
+                t(
+                  `East is the positive $x$-direction and north the positive $y$-direction, so the boat's own velocity is $\\langle 0, ${boatSpeed} \\rangle$ and the current's is $\\langle ${currentSpeed}, 0 \\rangle$.`,
+                  `正东是 $x$ 轴正方向，正北是 $y$ 轴正方向，所以船自身的速度是 $\\langle 0, ${boatSpeed} \\rangle$，水流的速度是 $\\langle ${currentSpeed}, 0 \\rangle$。`,
+                ),
+              ],
+              [
+                ["Add the velocities", "速度相加"],
+                t("The resultant is the sum, one component at a time:", "合速度是两者之和，逐个分量相加："),
+                [
+                  `\\langle 0, ${boatSpeed} \\rangle + \\langle ${currentSpeed}, 0 \\rangle = \\langle ${currentSpeed}, ${boatSpeed} \\rangle\\text{ km/h}`,
+                ],
+              ],
+            ],
+            t(
+              `Taking the current away again leaves the boat's own velocity:\n\n$$\\langle ${currentSpeed} - ${currentSpeed},\\ ${boatSpeed} - 0 \\rangle = \\langle 0, ${boatSpeed} \\rangle$$`,
+              `再去掉水流，剩下船自身的速度：\n\n$$\\langle ${currentSpeed} - ${currentSpeed},\\ ${boatSpeed} - 0 \\rangle = \\langle 0, ${boatSpeed} \\rangle$$`,
+            ),
           ),
         });
       },
@@ -2988,13 +3422,25 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
   encompasses: [{ topic: "velocity-and-acceleration-for-plane-motion", weight: 0.5 }],
   xp: 16,
   standards: ["CCSS.HSN.VM.A.3"],
+  intro: t(
+    `At constant velocity, displacement is velocity times time. A drone flying at $\\langle 4, -3 \\rangle\\text{ m/s}$ for $5\\text{ s}$ is displaced by $5\\langle 4, -3 \\rangle = \\langle 20, -15 \\rangle\\text{ m}$, which puts it $\\sqrt{400 + 225} = 25\\text{ m}$ from where it started.
+
+Check: its speed is $\\sqrt{16 + 9} = 5\\text{ m/s}$, and $5\\text{ m/s} \\times 5\\text{ s} = 25\\text{ m}$.
+
+In this lesson we find displacement as velocity times time, add the displacements of a journey in stages, find the straight-line distance from the start, and work back from a displacement to the velocity.`,
+    `速度恒定时，位移等于速度乘时间。无人机以 $\\langle 4, -3 \\rangle\\text{ m/s}$ 飞行 $5\\text{ s}$，位移是 $5\\langle 4, -3 \\rangle = \\langle 20, -15 \\rangle\\text{ m}$，离出发点 $\\sqrt{400 + 225} = 25\\text{ m}$。
+
+检验：它的速率是 $\\sqrt{16 + 9} = 5\\text{ m/s}$，而 $5\\text{ m/s} \\times 5\\text{ s} = 25\\text{ m}$。
+
+这节课我们用速度乘时间求位移，把分段旅程的位移相加，求离起点的直线距离，并由位移反求速度。`,
+  ),
   knowledgePoints: [
     {
       id: "displacement-from-constant-velocity",
       title: t("Calculate displacement vector from velocity and time", "由速度与时间计算位移向量"),
       explanation: t(
-        "For an object moving with constant velocity vector $\\mathbf{v} = \\langle v_x, v_y \\rangle$, the displacement vector $\\vec{s}$ over a time interval $t$ is given by scalar multiplication:\n\n$$\\vec{s} = \\mathbf{v}t = \\langle v_x t,\\, v_y t \\rangle$$",
-        "以恒定速度向量 $\\mathbf{v} = \\langle v_x, v_y \\rangle$ 运动的物体，在时间间隔 $t$ 内的位移向量 $\\vec{s}$ 由标量乘法给出：\n\n$$\\vec{s} = \\mathbf{v}t = \\langle v_x t,\\, v_y t \\rangle$$",
+        "For an object moving with constant velocity vector $\\mathbf{v} = \\langle v_x, v_y \\rangle$, the displacement vector $\\vec{s}$ over a time interval $t$ is given by scalar multiplication:\n\n$$\\vec{s} = \\mathbf{v}t = \\langle v_x t,\\, v_y t \\rangle$$\n\nFor $\\mathbf{v} = \\langle -6, 4 \\rangle\\text{ m/s}$ over $3\\text{ s}$: $\\vec{s} = \\langle -6 \\cdot 3, 4 \\cdot 3 \\rangle = \\langle -18, 12 \\rangle\\text{ m}$. Check: dividing by $3$ gives back $\\langle -6, 4 \\rangle$.\n\n> **Watch out.** Multiply both components by the time and keep their signs. The velocity itself is the displacement of one second only, not of the whole trip.",
+        "以恒定速度向量 $\\mathbf{v} = \\langle v_x, v_y \\rangle$ 运动的物体，在时间间隔 $t$ 内的位移向量 $\\vec{s}$ 由标量乘法给出：\n\n$$\\vec{s} = \\mathbf{v}t = \\langle v_x t,\\, v_y t \\rangle$$\n\n对 $\\mathbf{v} = \\langle -6, 4 \\rangle\\text{ m/s}$，历时 $3\\text{ s}$：$\\vec{s} = \\langle -6 \\cdot 3, 4 \\cdot 3 \\rangle = \\langle -18, 12 \\rangle\\text{ m}$。检验：除以 $3$ 得回 $\\langle -6, 4 \\rangle$。\n\n> **注意。** 两个分量都要乘时间，并保留符号。速度本身只是一秒的位移，不是整段的位移。",
       ),
       generate(rng) {
         const vx = rng.pick([-15, -12, -8, -5, 6, 8, 10, 12, 15, 20]);
@@ -3017,9 +3463,25 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
             [sy, sx],
             [-sx, -sy],
           ],
-          solution: t(
-            `Multiply velocity by time: $\\vec{s} = \\mathbf{v}t = \\langle (${vx})(${tVal}),\\, (${vy})(${tVal}) \\rangle = \\langle ${sx}, ${sy} \\rangle\\text{ m}$.`,
-            `速度乘以时间：$\\vec{s} = \\mathbf{v}t = \\langle (${vx})(${tVal}),\\, (${vy})(${tVal}) \\rangle = \\langle ${sx}, ${sy} \\rangle\\text{ m}$。`,
+          solution: walked(
+            [
+              [
+                ["Use s = vt", "用 s = vt"],
+                t(
+                  `At constant velocity every second adds the same $\\langle ${vx}, ${vy} \\rangle$, so the displacement over $${tVal}\\text{ s}$ is $${tVal}\\mathbf{v}$.`,
+                  `速度恒定时，每秒都加上同样的 $\\langle ${vx}, ${vy} \\rangle$，所以 $${tVal}\\text{ s}$ 内的位移是 $${tVal}\\mathbf{v}$。`,
+                ),
+              ],
+              [
+                ["Multiply each component", "每个分量相乘"],
+                t("Multiply both components by the time:", "两个分量都乘时间："),
+                [`\\vec{s} = \\langle (${vx})(${tVal}),\\ (${vy})(${tVal}) \\rangle = \\langle ${sx}, ${sy} \\rangle\\text{ m}`],
+              ],
+            ],
+            t(
+              `Dividing by the time gives back the velocity:\n\n$$\\langle ${sx} \\div ${tVal},\\ ${sy} \\div ${tVal} \\rangle = \\langle ${vx}, ${vy} \\rangle$$`,
+              `除以时间，得回速度：\n\n$$\\langle ${sx} \\div ${tVal},\\ ${sy} \\div ${tVal} \\rangle = \\langle ${vx}, ${vy} \\rangle$$`,
+            ),
           ),
         });
       },
@@ -3029,8 +3491,8 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
       figure: precalculusDrawings2["calculating-displacement-for-plane-motion#total-displacement-and-distance"],
       title: t("Net displacement and straight-line distance for multi-leg journeys", "多段旅程的合位移与直线距离"),
       explanation: t(
-        "For an object undergoing consecutive displacements $\\vec{s}_1$ and $\\vec{s}_2$:\n\n- The **net displacement vector** is $\\vec{s}_{\\text{net}} = \\vec{s}_1 + \\vec{s}_2 = \\langle x_1 + x_2,\\, y_1 + y_2 \\rangle$\n- The **straight-line distance** from the starting point is the magnitude $\\|\\vec{s}_{\\text{net}}\\| = \\sqrt{(x_1+x_2)^2 + (y_1+y_2)^2}$",
-        "对于连续经历两段位移 $\\vec{s}_1$ 和 $\\vec{s}_2$ 的物体：\n\n- **合位移向量**为 $\\vec{s}_{\\text{合}} = \\vec{s}_1 + \\vec{s}_2 = \\langle x_1 + x_2,\\, y_1 + y_2 \\rangle$\n- 距起点的**直线距离**为其模长 $\\|\\vec{s}_{\\text{合}}\\| = \\sqrt{(x_1+x_2)^2 + (y_1+y_2)^2}$",
+        "For an object undergoing consecutive displacements $\\vec{s}_1$ and $\\vec{s}_2$:\n\n- The **net displacement vector** is $\\vec{s}_{\\text{net}} = \\vec{s}_1 + \\vec{s}_2 = \\langle x_1 + x_2,\\, y_1 + y_2 \\rangle$\n- The **straight-line distance** from the starting point is the magnitude $\\|\\vec{s}_{\\text{net}}\\| = \\sqrt{(x_1+x_2)^2 + (y_1+y_2)^2}$\n\nFor $\\vec{s}_1 = \\langle 5, 1 \\rangle\\text{ km}$ and $\\vec{s}_2 = \\langle 1, 7 \\rangle\\text{ km}$: $\\vec{s}_{\\text{net}} = \\langle 6, 8 \\rangle$, so the distance is $\\sqrt{36 + 64} = 10\\text{ km}$. Check: the legs themselves are $\\sqrt{26} + \\sqrt{50} \\approx 12.2\\text{ km}$ long, at least the $10\\text{ km}$ straight line.\n\n> **Watch out.** Add the displacements first and then take one magnitude. The distance is not $|x| + |y| = 14$, which is the way along the grid.",
+        "对于连续经历两段位移 $\\vec{s}_1$ 和 $\\vec{s}_2$ 的物体：\n\n- **合位移向量**为 $\\vec{s}_{\\text{合}} = \\vec{s}_1 + \\vec{s}_2 = \\langle x_1 + x_2,\\, y_1 + y_2 \\rangle$\n- 距起点的**直线距离**为其模长 $\\|\\vec{s}_{\\text{合}}\\| = \\sqrt{(x_1+x_2)^2 + (y_1+y_2)^2}$\n\n对 $\\vec{s}_1 = \\langle 5, 1 \\rangle\\text{ km}$ 和 $\\vec{s}_2 = \\langle 1, 7 \\rangle\\text{ km}$：$\\vec{s}_{\\text{合}} = \\langle 6, 8 \\rangle$，所以距离是 $\\sqrt{36 + 64} = 10\\text{ km}$。检验：两段路本身长 $\\sqrt{26} + \\sqrt{50} \\approx 12.2\\text{ km}$，不短于 $10\\text{ km}$ 的直线距离。\n\n> **注意。** 先把位移相加，再求一次模。距离不是 $|x| + |y| = 14$，那是沿网格走的路程。",
       ),
       generate(rng) {
         const scenarios = [
@@ -3061,7 +3523,7 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
           { x1: 10, y1: 4, x2: 5, y2: 4, tx: 15, ty: 8, dist: 17 },
           { x1: 12, y1: 10, x2: 8, y2: 5, tx: 20, ty: 15, dist: 25 },
           { x1: 11, y1: 6, x2: 9, y2: 9, tx: 20, ty: 15, dist: 25 },
-          { x1: 8, y1: 12, x2: 4, y2: 8, tx: 12, ty: 20, dist: 20 },
+          { x1: 8, y1: 12, x2: 4, y2: 4, tx: 12, ty: 16, dist: 20 },
           { x1: 3, y1: 6, x2: 7, y2: 18, tx: 10, ty: 24, dist: 26 },
           { x1: 14, y1: 8, x2: 6, y2: 13, tx: 20, ty: 21, dist: 29 },
           { x1: -3, y1: 1, x2: 7, y2: 2, tx: 4, ty: 3, dist: 5 },
@@ -3097,9 +3559,25 @@ export const calculatingDisplacementForPlaneMotion: TopicDef = {
           answer: dist,
           unit: "km",
           wrong: [wrong1, wrong2, wrong3],
-          solution: t(
-            `The total displacement vector is $\\vec{s}_{\\text{net}} = \\langle ${x1} + ${paren(x2)},\\, ${y1} + ${paren(y2)} \\rangle = \\langle ${tx}, ${ty} \\rangle\\text{ km}$. The straight-line distance is its magnitude: $\\|\\vec{s}_{\\text{net}}\\| = \\sqrt{(${tx})^2 + (${ty})^2} = ${dist}\\text{ km}$.`,
-            `总位移向量为 $\\vec{s}_{\\text{合}} = \\langle ${x1} + ${paren(x2)},\\, ${y1} + ${paren(y2)} \\rangle = \\langle ${tx}, ${ty} \\rangle\\text{ km}$。直线距离为其模长：$\\|\\vec{s}_{\\text{合}}\\| = \\sqrt{(${tx})^2 + (${ty})^2} = ${dist}\\text{ km}$。`,
+          solution: walked(
+            [
+              [
+                ["Add the displacements", "位移相加"],
+                t("The net displacement is the sum of the two legs:", "合位移是两段位移之和："),
+                [
+                  `\\vec{s}_1 + \\vec{s}_2 = \\langle ${x1} + ${paren(x2)},\\ ${y1} + ${paren(y2)} \\rangle = \\langle ${tx}, ${ty} \\rangle\\text{ km}`,
+                ],
+              ],
+              [
+                ["Take the magnitude", "求模"],
+                t("The straight-line distance is the length of the net displacement:", "直线距离是合位移的长度："),
+                [`\\|\\vec{s}_1 + \\vec{s}_2\\| = \\sqrt{${tx}^2 + ${ty}^2} = \\sqrt{${tx * tx + ty * ty}} = ${dist}\\text{ km}`],
+              ],
+            ],
+            t(
+              `$${dist}^2 = ${dist * dist}$, the sum of the squares, and $${dist}\\text{ km}$ is less than $${tx} + ${ty} = ${tx + ty}\\text{ km}$, the way along the grid.`,
+              `$${dist}^2 = ${dist * dist}$，等于平方和；而且 $${dist}\\text{ km}$ 小于沿网格走的 $${tx} + ${ty} = ${tx + ty}\\text{ km}$。`,
+            ),
           ),
         });
       },

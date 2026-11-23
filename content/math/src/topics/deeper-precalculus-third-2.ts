@@ -278,22 +278,41 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-end-point-from-the-vector",
       ["The end point from the vector", "由向量求终点"],
       [
-        "A vector gives the change from its start to its end. So the end point is the start point plus the components, which reverses the subtraction used to find the vector.",
-        "向量给出从起点到终点的变化。所以终点是起点加分量，这正好反过来求向量时的减法。",
+        "A vector gives the change from its start to its end. So the end point is the start point plus the components, which reverses the subtraction used to find the vector.\n\nFor $\\vec{AB} = \\langle -4, 6 \\rangle$ and $A = (3, -1)$: $B = (3 + (-4), -1 + 6) = (-1, 5)$. Check: $\\vec{AB} = \\langle -1 - 3, 5 - (-1) \\rangle = \\langle -4, 6 \\rangle$.\n\n> **Watch out.** Add the components to $A$. Subtracting them gives the start of a vector that ends at $A$, the point behind $A$ rather than ahead of it.",
+        "向量给出从起点到终点的变化。所以终点是起点加分量，这正好反过来求向量时的减法。\n\n对 $\\vec{AB} = \\langle -4, 6 \\rangle$ 和 $A = (3, -1)$：$B = (3 + (-4), -1 + 6) = (-1, 5)$。检验：$\\vec{AB} = \\langle -1 - 3, 5 - (-1) \\rangle = \\langle -4, 6 \\rangle$。\n\n> **注意。** 把分量加到 $A$ 上。减去分量得到的是终点为 $A$ 的向量的起点，在 $A$ 的后面而不是前面。",
       ],
       (rng) => {
         const x = rng.int(-9, 9);
         const y = rng.int(-9, 9);
         const u = nz(rng, 12);
         const v = nz(rng, 12);
-        return chooseFilled(
-          rng,
-          [`$\\vec{AB} = ${vec(u, v)}$ and $A = (${x}, ${y})$. Find $B$.`, `$\\vec{AB} = ${vec(u, v)}$，$A = (${x}, ${y})$。求 $B$。`],
-          `(${x + u}, ${y + v})`,
-          [`(${x - u}, ${y - v})`, `(${u - x}, ${v - y})`, `(${x + v}, ${y + u})`],
+        return reasoned(
+          chooseFilled(
+            rng,
+            [`$\\vec{AB} = ${vec(u, v)}$ and $A = (${x}, ${y})$. Find $B$.`, `$\\vec{AB} = ${vec(u, v)}$，$A = (${x}, ${y})$。求 $B$。`],
+            `(${x + u}, ${y + v})`,
+            [`(${x - u}, ${y - v})`, `(${u - x}, ${v - y})`, `(${x + v}, ${y + u})`],
+            [
+              `**Step 1: Move across.** The $x$-component says how far $B$ is from $A$ across:\n\n$$${x} + ${paren(u)} = ${x + u}$$\n\n**Step 2: Move up.** The $y$-component says how far up:\n\n$$${y} + ${paren(v)} = ${y + v}$$\n\nSo $B = (${x + u}, ${y + v})$.\n\n**Check.** End minus start gives back the vector:\n\n$$\\vec{AB} = \\langle ${x + u} - ${paren(x)},\\ ${y + v} - ${paren(y)} \\rangle = ${vec(u, v)}$$`,
+              `**第一步：横向移动。**$x$ 分量说明 $B$ 在 $A$ 横向多远处：\n\n$$${x} + ${paren(u)} = ${x + u}$$\n\n**第二步：纵向移动。**$y$ 分量说明纵向移动多少：\n\n$$${y} + ${paren(v)} = ${y + v}$$\n\n所以 $B = (${x + u}, ${y + v})$。\n\n**检验。**终点减起点，得回这个向量：\n\n$$\\vec{AB} = \\langle ${x + u} - ${paren(x)},\\ ${y + v} - ${paren(y)} \\rangle = ${vec(u, v)}$$`,
+            ],
+          ),
           [
-            `Add the components to $A$: $(${x} ${u < 0 ? `- ${-u}` : `+ ${u}`}, ${y} ${v < 0 ? `- ${-v}` : `+ ${v}`}) = (${x + u}, ${y + v})$.`,
-            `把分量加到 $A$ 上：$(${x} ${u < 0 ? `- ${-u}` : `+ ${u}`}, ${y} ${v < 0 ? `- ${-v}` : `+ ${v}`}) = (${x + u}, ${y + v})$。`,
+            [
+              `$(${x - u}, ${y - v})$`,
+              "This subtracts the components from $A$, which gives the start of a vector ending at $A$.",
+              "这是从 $A$ 减去分量，得到的是终点为 $A$ 的向量的起点。",
+            ],
+            [
+              `$(${u - x}, ${v - y})$`,
+              "This takes $A$ away from the vector; the end point is $A$ plus the vector.",
+              "这是用向量减去 $A$；终点应是 $A$ 加上向量。",
+            ],
+            [
+              `$(${x + v}, ${y + u})$`,
+              "The components are swapped: the first one moves $x$ and the second moves $y$.",
+              "两个分量对调了：第一个分量改变 $x$，第二个改变 $y$。",
+            ],
           ],
         );
       },
@@ -304,8 +323,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-distance-between-two-points-as-a-magnitude",
       ["The distance between points as a magnitude", "两点间距离就是模"],
       [
-        "The distance between two points is the magnitude of the vector joining them. So subtract the coordinates first, and then take the square root of the sum of the squares.",
-        "两点间的距离就是连接它们的向量的模。所以先把坐标相减，再求平方和的平方根。",
+        "The distance between two points is the magnitude of the vector joining them. So subtract the coordinates first, and then take the square root of the sum of the squares.\n\nFor $P(1, -2)$ and $Q(7, 6)$: $\\vec{PQ} = \\langle 6, 8 \\rangle$, so the distance is $\\sqrt{36 + 64} = 10$. Check: moving from $P$ by $\\langle 6, 8 \\rangle$ reaches $(7, 6)$, which is $Q$.\n\n> **Watch out.** Subtract the coordinates before squaring. The magnitudes of the two position vectors, $\\|\\vec{OP}\\|$ and $\\|\\vec{OQ}\\|$, do not give the distance between the points.",
+        "两点间的距离就是连接它们的向量的模。所以先把坐标相减，再求平方和的平方根。\n\n对 $P(1, -2)$ 和 $Q(7, 6)$：$\\vec{PQ} = \\langle 6, 8 \\rangle$，所以距离是 $\\sqrt{36 + 64} = 10$。检验：从 $P$ 按 $\\langle 6, 8 \\rangle$ 移动，到达 $(7, 6)$，正是 $Q$。\n\n> **注意。** 先把坐标相减，再平方。两个位置向量的模 $\\|\\vec{OP}\\|$ 和 $\\|\\vec{OQ}\\|$ 并不给出两点间的距离。",
       ],
       (rng) => {
         const [a, b, c] = rng.pick(triples);
@@ -320,7 +339,10 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           ],
           c,
           [a + b, c * c, Math.abs(x + sx * a) + Math.abs(y + sy * b) === c ? c + 1 : Math.abs(x + sx * a) + Math.abs(y + sy * b)],
-          [`$\\vec{PQ} = ${vec(sx * a, sy * b)}$, whose magnitude is ${c}.`, `$\\vec{PQ} = ${vec(sx * a, sy * b)}$，模是 ${c}。`],
+          [
+            `**Step 1: Find the vector.** Subtract the coordinates of $P$ from those of $Q$:\n\n$$\\vec{PQ} = \\langle ${x + sx * a} - ${paren(x)},\\ ${y + sy * b} - ${paren(y)} \\rangle = ${vec(sx * a, sy * b)}$$\n\n**Step 2: Take the magnitude.** Square the components, add, and take the square root:\n\n$$\\|\\vec{PQ}\\| = \\sqrt{(${sx * a})^{2} + (${sy * b})^{2}} = \\sqrt{${a * a + b * b}} = ${c}$$\n\n**Check.** $${c}^{2} = ${c * c} = ${a * a} + ${b * b}$, so the distance fits the components of $\\vec{PQ}$.`,
+            `**第一步：求向量。**用 $Q$ 的坐标减去 $P$ 的坐标：\n\n$$\\vec{PQ} = \\langle ${x + sx * a} - ${paren(x)},\\ ${y + sy * b} - ${paren(y)} \\rangle = ${vec(sx * a, sy * b)}$$\n\n**第二步：求模。**把分量平方、相加，再开平方：\n\n$$\\|\\vec{PQ}\\| = \\sqrt{(${sx * a})^{2} + (${sy * b})^{2}} = \\sqrt{${a * a + b * b}} = ${c}$$\n\n**检验。**$${c}^{2} = ${c * c} = ${a * a} + ${b * b}$，距离与 $\\vec{PQ}$ 的分量相符。`,
+          ],
         );
       },
     ),
@@ -331,8 +353,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         "bearings-from-the-direction-angle",
         ["Bearings from the direction angle", "由方向角求方位角"],
         [
-          "A bearing is measured clockwise from north, while a direction angle is measured counterclockwise from east. So the bearing is $90^{\\circ}$ minus the direction angle, adjusted by a full turn if negative.",
-          "方位角从正北顺时针量，方向角从正东逆时针量。所以方位角是 90 度减方向角，若为负再加一整圈。",
+          "A bearing is measured clockwise from north, while a direction angle is measured counterclockwise from east. So the bearing is $90^{\\circ}$ minus the direction angle, adjusted by a full turn if negative.\n\nFor direction angle $150^\\circ$: $90 - 150 = -60$, and $-60 + 360 = 300$, so the bearing is $300^\\circ$. Check: $150^\\circ$ points up and to the left, which is north-west, and a bearing of $300^\\circ$ lies between west at $270^\\circ$ and north at $360^\\circ$.\n\n> **Watch out.** The two angles start in different places and turn opposite ways, so the bearing is neither the direction angle itself nor $90^\\circ$ more than it.",
+          "方位角从正北顺时针量，方向角从正东逆时针量。所以方位角是 90 度减方向角，若为负再加一整圈。\n\n对方向角 $150^\\circ$：$90 - 150 = -60$，$-60 + 360 = 300$，所以方位角是 $300^\\circ$。检验：$150^\\circ$ 指向左上方，即西北；方位角 $300^\\circ$ 在正西 $270^\\circ$ 与正北 $360^\\circ$ 之间。\n\n> **注意。** 两种角的起始边不同，转向也相反，所以方位角既不是方向角本身，也不是方向角加 $90^\\circ$。",
         ],
         (rng) => {
           const angle = rng.int(1, 71) * 5;
@@ -345,8 +367,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
             bearing,
             [angle, (angle + 90) % 360, (bearing + 180) % 360],
             [
-              `Bearings run the other way from north, so $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `, and adding $360$ gives $${bearing}$` : ""}.`,
-              `方位角从正北反向量，所以 $90 - ${angle} = ${90 - angle}$${90 - angle < 0 ? `，加 360 得 ${bearing}` : ""}。`,
+              `**Step 1: Change the starting line.** North is at $90^{\\circ}$ on the direction scale, and a bearing turns the other way, clockwise, so subtract the direction angle from $90$:\n\n$$90 - ${angle} = ${90 - angle}$$\n\n**Step 2: Bring it into range.** ${90 - angle < 0 ? `The result is negative, so add a full turn:\n\n$$${90 - angle} + 360 = ${bearing}$$` : `The result is already from $0$ up to $360$, so the bearing is $${bearing}^{\\circ}$.`}\n\n**Check.** Turning the bearing back the same way gives the direction angle: $90 - ${bearing} = ${90 - bearing}$${90 - bearing < 0 ? `, and $${90 - bearing} + 360 = ${angle}$` : ""}.`,
+              `**第一步：换起始边。**在方向角的刻度上，正北是 $90^{\\circ}$，而方位角反向（顺时针）转，所以用 $90$ 减方向角：\n\n$$90 - ${angle} = ${90 - angle}$$\n\n**第二步：调到范围内。**${90 - angle < 0 ? `结果为负，加一整圈：\n\n$$${90 - angle} + 360 = ${bearing}$$` : `结果已在 $0$ 到 $360$ 之间，所以方位角是 $${bearing}^{\\circ}$。`}\n\n**检验。**把方位角按同样的方法换回，得到方向角：$90 - ${bearing} = ${90 - bearing}$${90 - bearing < 0 ? `，$${90 - bearing} + 360 = ${angle}$` : ""}。`,
             ],
           );
         },
@@ -360,8 +382,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
         "components-across-the-quadrants",
         ["Components across the quadrants", "各象限的分量"],
         [
-          "The formulas $x = r\\cos\\theta$ and $y = r\\sin\\theta$ give the signs by themselves, as cosine and sine carry them. A second quadrant angle therefore gives a negative $x$ and a positive $y$.",
-          "公式 $x = r\\cos\\theta$ 和 $y = r\\sin\\theta$ 本身就给出符号，因为余弦和正弦带符号。所以第二象限的角使 $x$ 为负、$y$ 为正。",
+          "The formulas $x = r\\cos\\theta$ and $y = r\\sin\\theta$ give the signs by themselves, as cosine and sine carry them. A second quadrant angle therefore gives a negative $x$ and a positive $y$.\n\nFor magnitude $4$ at $300^\\circ$: $x = 4\\cos 300^\\circ = 2$ and $y = 4\\sin 300^\\circ = -2\\sqrt{3}$. Check: $4 + 12 = 16 = 4^2$, and $x > 0$, $y < 0$ is Quadrant IV, where $300^\\circ$ lies.\n\n> **Watch out.** Working with the reference angle $60^\\circ$ alone gives $\\langle 2, 2\\sqrt{3} \\rangle$, which points at $60^\\circ$. Use the angle itself, or put back the signs of its quadrant.",
+          "公式 $x = r\\cos\\theta$ 和 $y = r\\sin\\theta$ 本身就给出符号，因为余弦和正弦带符号。所以第二象限的角使 $x$ 为负、$y$ 为正。\n\n对模为 $4$、方向角为 $300^\\circ$：$x = 4\\cos 300^\\circ = 2$，$y = 4\\sin 300^\\circ = -2\\sqrt{3}$。检验：$4 + 12 = 16 = 4^2$，且 $x > 0$、$y < 0$ 在第四象限，正是 $300^\\circ$ 所在。\n\n> **注意。** 只用参考角 $60^\\circ$ 计算会得到 $\\langle 2, 2\\sqrt{3} \\rangle$，它指向 $60^\\circ$。要用角本身，或补上所在象限的符号。",
         ],
         (rng) => {
           const r = 2 * rng.int(1, 15);
@@ -375,17 +397,37 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
           const xText = row[1] < 0 ? -half : half;
           const yText = `${row[2] < 0 ? "-" : ""}${half === 1 ? "" : half}\\sqrt{3}`;
           const flip = `${row[2] < 0 ? "" : "-"}${half === 1 ? "" : half}\\sqrt{3}`;
-          return chooseFilled(
-            rng,
+          const quadrant = row[0] === 120 ? ["II", "二"] : row[0] === 240 ? ["III", "三"] : row[0] === 300 ? ["IV", "四"] : ["I", "一"];
+          return reasoned(
+            chooseFilled(
+              rng,
+              [
+                `A vector has magnitude ${r} and direction angle $${row[0]}^{\\circ}$. Find its components.`,
+                `一个向量的模是 ${r}，方向角是 $${row[0]}^{\\circ}$。求它的分量。`,
+              ],
+              `\\langle ${xText}, ${yText} \\rangle`,
+              [`\\langle ${-xText}, ${yText} \\rangle`, `\\langle ${xText}, ${flip} \\rangle`, `\\langle ${yText}, ${xText} \\rangle`],
+              [
+                `**Step 1: Find x.** Cosine gives the horizontal component, sign included:\n\n$$x = ${r}\\cos ${row[0]}^{\\circ} = ${xText}$$\n\n**Step 2: Find y.** Sine gives the vertical component:\n\n$$y = ${r}\\sin ${row[0]}^{\\circ} = ${yText}$$\n\n**Check.** The length is $\\sqrt{${half * half} + ${3 * half * half}} = \\sqrt{${r * r}} = ${r}$, and the signs of the components put the vector in Quadrant ${quadrant[0]}, where $${row[0]}^{\\circ}$ lies.`,
+                `**第一步：求 x。**余弦给出水平分量，连同符号：\n\n$$x = ${r}\\cos ${row[0]}^{\\circ} = ${xText}$$\n\n**第二步：求 y。**正弦给出竖直分量：\n\n$$y = ${r}\\sin ${row[0]}^{\\circ} = ${yText}$$\n\n**检验。**长度是 $\\sqrt{${half * half} + ${3 * half * half}} = \\sqrt{${r * r}} = ${r}$，且分量的符号使向量在第${quadrant[1]}象限，正是 $${row[0]}^{\\circ}$ 所在。`,
+              ],
+            ),
             [
-              `A vector has magnitude ${r} and direction angle $${row[0]}^{\\circ}$. Find its components.`,
-              `一个向量的模是 ${r}，方向角是 $${row[0]}^{\\circ}$。求它的分量。`,
-            ],
-            `\\langle ${xText}, ${yText} \\rangle`,
-            [`\\langle ${-xText}, ${yText} \\rangle`, `\\langle ${xText}, ${flip} \\rangle`, `\\langle ${yText}, ${xText} \\rangle`],
-            [
-              `$x = ${r}\\cos ${row[0]}^{\\circ} = ${xText}$, and $y = ${r}\\sin ${row[0]}^{\\circ} = ${yText}$.`,
-              `$x = ${r}\\cos ${row[0]}^{\\circ} = ${xText}$，$y = ${r}\\sin ${row[0]}^{\\circ} = ${yText}$。`,
+              [
+                `$\\langle ${-xText}, ${yText} \\rangle$`,
+                `The sign of $x$ is wrong: $\\cos ${row[0]}^{\\circ}$ is ${xText < 0 ? "negative" : "positive"}.`,
+                `$x$ 的符号错了：$\\cos ${row[0]}^{\\circ}$ 为${xText < 0 ? "负" : "正"}。`,
+              ],
+              [
+                `$\\langle ${xText}, ${flip} \\rangle$`,
+                `The sign of $y$ is wrong: $\\sin ${row[0]}^{\\circ}$ is ${row[2] < 0 ? "negative" : "positive"}.`,
+                `$y$ 的符号错了：$\\sin ${row[0]}^{\\circ}$ 为${row[2] < 0 ? "负" : "正"}。`,
+              ],
+              [
+                `$\\langle ${yText}, ${xText} \\rangle$`,
+                "The components are swapped: cosine gives $x$ and sine gives $y$.",
+                "两个分量对调了：余弦给出 $x$，正弦给出 $y$。",
+              ],
             ],
           );
         },
@@ -398,8 +440,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "velocity-after-steady-acceleration",
       ["Velocity after steady acceleration", "匀加速后的速度"],
       [
-        "Constant acceleration adds the same vector to the velocity every second. So the new velocity is the old one plus time times the acceleration, worked out one component at a time.",
-        "恒定的加速度每秒给速度加上同一个向量。所以新速度是原速度加时间乘加速度，逐个分量计算。",
+        "Constant acceleration adds the same vector to the velocity every second. So the new velocity is the old one plus time times the acceleration, worked out one component at a time.\n\nFor $\\langle 3, -2 \\rangle$ m/s with acceleration $\\langle 1, 4 \\rangle$ m/s$^2$ for $5$ s: the change is $5\\langle 1, 4 \\rangle = \\langle 5, 20 \\rangle$, so the velocity becomes $\\langle 8, 18 \\rangle$ m/s. Check: the change $\\langle 5, 20 \\rangle$ divided by $5$ s is $\\langle 1, 4 \\rangle$, the acceleration.\n\n> **Watch out.** Multiply the acceleration by the time before adding. The starting velocity is added once and is not multiplied.",
+        "恒定的加速度每秒给速度加上同一个向量。所以新速度是原速度加时间乘加速度，逐个分量计算。\n\n对速度 $\\langle 3, -2 \\rangle$ 米/秒、加速度 $\\langle 1, 4 \\rangle$ 米/秒$^2$、历时 $5$ 秒：变化量是 $5\\langle 1, 4 \\rangle = \\langle 5, 20 \\rangle$，所以速度变为 $\\langle 8, 18 \\rangle$ 米/秒。检验：变化量 $\\langle 5, 20 \\rangle$ 除以 $5$ 秒得 $\\langle 1, 4 \\rangle$，正是加速度。\n\n> **注意。** 先用加速度乘时间，再相加。初速度只加一次，不乘时间。",
       ],
       (rng) => {
         const u = rng.int(-9, 9);
@@ -417,8 +459,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
             vec(u + t * a, v + t * b),
             [vec(u + a, v + b), vec(t * u + a, t * v + b), vec(u - t * a, v - t * b)],
             [
-              `$${vec(u, v)} + ${t}${vec(a, b)} = ${vec(u + t * a, v + t * b)}$.`,
-              `$${vec(u, v)} + ${t}${vec(a, b)} = ${vec(u + t * a, v + t * b)}$。`,
+              `**Step 1: Find the change in velocity.** The acceleration acts for ${t} s:\n\n$$${t}${vec(a, b)} = ${vec(t * a, t * b)}$$\n\n**Step 2: Add it to the starting velocity.**\n\n$$${vec(u, v)} + ${vec(t * a, t * b)} = ${vec(u + t * a, v + t * b)}$$\n\n**Check.** The new velocity minus the old one is $${vec(t * a, t * b)}$, and dividing by ${t} s gives $${vec(a, b)}$, the acceleration.`,
+              `**第一步：求速度的变化量。**加速度作用了 ${t} 秒：\n\n$$${t}${vec(a, b)} = ${vec(t * a, t * b)}$$\n\n**第二步：加到初速度上。**\n\n$$${vec(u, v)} + ${vec(t * a, t * b)} = ${vec(u + t * a, v + t * b)}$$\n\n**检验。**新速度减原速度是 $${vec(t * a, t * b)}$，除以 ${t} 秒得 $${vec(a, b)}$，正是加速度。`,
             ],
           ),
           [
@@ -447,8 +489,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
       "the-velocity-that-covers-a-displacement",
       ["The velocity that covers a displacement", "完成一段位移的速度"],
       [
-        "Displacement is velocity times time, so dividing the displacement by the time gives the constant velocity needed. The displacement itself is the end point minus the start point.",
-        "位移是速度乘时间，所以位移除以时间得到需要的恒定速度。位移本身是终点减起点。",
+        "Displacement is velocity times time, so dividing the displacement by the time gives the constant velocity needed. The displacement itself is the end point minus the start point.\n\nFrom $(1, 2)$ to $(13, -6)$ in $4$ seconds: the displacement is $\\langle 12, -8 \\rangle$, so the velocity is $\\langle 3, -2 \\rangle$ per second. Check: $4\\langle 3, -2 \\rangle = \\langle 12, -8 \\rangle$, and $(1 + 12, 2 - 8) = (13, -6)$.\n\n> **Watch out.** Subtract the start from the end before dividing. Dividing the end point alone by the time ignores where the motion began.",
+        "位移是速度乘时间，所以位移除以时间得到需要的恒定速度。位移本身是终点减起点。\n\n从 $(1, 2)$ 到 $(13, -6)$ 用了 $4$ 秒：位移是 $\\langle 12, -8 \\rangle$，所以速度是每秒 $\\langle 3, -2 \\rangle$。检验：$4\\langle 3, -2 \\rangle = \\langle 12, -8 \\rangle$，且 $(1 + 12, 2 - 8) = (13, -6)$。\n\n> **注意。** 先用终点减起点，再除以时间。只把终点除以时间，就忽略了运动的起点。",
       ],
       (rng) => {
         const t = rng.int(2, 10);
@@ -466,8 +508,8 @@ export const deeperPrecalculusThird2Points: Readonly<Record<string, readonly Kno
             vec(u, v),
             [vec(t * u, t * v), vec(-u, -v), vec(v, u) === vec(u, v) ? vec(u + 1, v) : vec(v, u)],
             [
-              `The displacement is $${vec(t * u, t * v)}$, and dividing by ${t} gives $${vec(u, v)}$.`,
-              `位移是 $${vec(t * u, t * v)}$，除以 ${t} 得 $${vec(u, v)}$。`,
+              `**Step 1: Find the displacement.** End point minus start point:\n\n$$\\langle ${x + t * u} - ${paren(x)},\\ ${y + t * v} - ${paren(y)} \\rangle = ${vec(t * u, t * v)}$$\n\n**Step 2: Divide by the time.** A constant velocity is the displacement per second:\n\n$$${vec(t * u, t * v)} \\div ${t} = ${vec(u, v)}$$\n\n**Check.** Flying at $${vec(u, v)}$ for ${t} s from $(${x}, ${y})$ reaches the end point:\n\n$$(${x} + ${paren(t * u)},\\ ${y} + ${paren(t * v)}) = (${x + t * u}, ${y + t * v})$$`,
+              `**第一步：求位移。**终点减起点：\n\n$$\\langle ${x + t * u} - ${paren(x)},\\ ${y + t * v} - ${paren(y)} \\rangle = ${vec(t * u, t * v)}$$\n\n**第二步：除以时间。**恒定速度就是每秒的位移：\n\n$$${vec(t * u, t * v)} \\div ${t} = ${vec(u, v)}$$\n\n**检验。**以 $${vec(u, v)}$ 从 $(${x}, ${y})$ 飞 ${t} 秒，到达终点：\n\n$$(${x} + ${paren(t * u)},\\ ${y} + ${paren(t * v)}) = (${x + t * u}, ${y + t * v})$$`,
             ],
           ),
           [

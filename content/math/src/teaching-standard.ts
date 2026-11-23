@@ -156,4 +156,11 @@ export const taughtTopics: readonly string[] = [
   "pascals-triangle-and-the-binomial-coefficients",
   "expanding-a-binomial-using-binomial-coefficients",
   "the-special-case-of-the-binomial-theorem",
+  "two-dimensional-vectors-expressed-in-component-form",
+  "addition-and-scalar-multiplication-of-cartesian-vectors-in-2d",
+  "calculating-the-magnitude-of-cartesian-vectors-in-2d",
+  "calculating-the-direction-of-cartesian-vectors-in-2d",
+  "calculating-the-components-of-cartesian-vectors-in-2d",
+  "velocity-and-acceleration-for-plane-motion",
+  "calculating-displacement-for-plane-motion",
 ];
