@@ -6,6 +6,7 @@ import { gradeFourLanguage } from "./grade-4.ts";
 import { gradeFiveLanguage } from "./grade-5.ts";
 import { gradeSixLanguage } from "./grade-6.ts";
 import { gradeEightLanguage } from "./grade-8.ts";
+import { gradeTenLanguage } from "./grade-10.ts";
 
 export { planningTopics } from "./planning.ts";
 export { revisingTopics } from "./revising.ts";
@@ -18,3 +19,6 @@ export const stageFiveSixLanguage: readonly GradeTopic[] = [...gradeFiveLanguage
 
 /** stageSevenNineLanguage are the inquiry topics of grades 7 to 9: primary and secondary sources, and citing them. */
 export const stageSevenNineLanguage: readonly GradeTopic[] = gradeEightLanguage;
+
+/** stageTenElevenLanguage are the language topics of senior secondary school. */
+export const stageTenElevenLanguage: readonly GradeTopic[] = gradeTenLanguage;

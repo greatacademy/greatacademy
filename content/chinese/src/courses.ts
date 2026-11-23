@@ -11,7 +11,14 @@ import { connectiveTopics, faultyTopics, type GradeTopic, punctuationTopics, rhe
 import { heritageTopics } from "./heritage/topics.ts";
 import { hskCourses } from "./hsk/courses.ts";
 import { idiomsByGrade } from "./idioms/index.ts";
-import { planningTopics, revisingTopics, stageFiveSixLanguage, stageSevenNineLanguage, stageThreeFourLanguage } from "./language/index.ts";
+import {
+  planningTopics,
+  revisingTopics,
+  stageFiveSixLanguage,
+  stageSevenNineLanguage,
+  stageTenElevenLanguage,
+  stageThreeFourLanguage,
+} from "./language/index.ts";
 import { levelOneCourse } from "./level-1/index.ts";
 import { levelTwoCourse } from "./level-2/index.ts";
 import { levelThreeCourse } from "./level-3/index.ts";
@@ -26,12 +33,14 @@ import { stageSpeakingTopics } from "./oral/speaking-1-2.ts";
 import { stageThreeFourSpeaking } from "./oral/speaking-3-4.ts";
 import { stageFiveSixSpeaking } from "./oral/speaking-5-6.ts";
 import { stageSevenNineSpeaking } from "./oral/speaking-7-9.ts";
+import { stageTenElevenSpeaking } from "./oral/speaking-10-11.ts";
 import { heritageReading } from "./reading/heritage.ts";
 import { chineseReading } from "./reading/index.ts";
 import { stageReadingTopics } from "./reading/stage-1-2.ts";
 import { stageThreeFourReading } from "./reading/stage-3-4.ts";
 import { stageFiveSixReading } from "./reading/stage-5-6.ts";
 import { stageSevenNineReading } from "./reading/stage-7-9.ts";
+import { stageTenElevenReading } from "./reading/stage-10-11.ts";
 import { recitedPoems } from "./recitation/index.ts";
 import { componentTopics, strokeOrderTopics } from "./strokes/index.ts";
 import { levelHandwritingByLevel } from "./strokes/levels.ts";
@@ -44,6 +53,7 @@ import { laterWritingTopics } from "./writing/later.ts";
 import { stageThreeFourJudged } from "./writing/stage-3-4.ts";
 import { stageFiveSixJudged } from "./writing/stage-5-6.ts";
 import { stageSevenNineJudged } from "./writing/stage-7-9.ts";
+import { stageTenElevenJudged } from "./writing/stage-10-11.ts";
 
 const NUMERALS = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
 
@@ -127,6 +137,7 @@ function writingModules(grade: number): readonly ModuleDef[] {
       ...stageThreeFourJudged,
       ...stageFiveSixJudged,
       ...stageSevenNineJudged,
+      ...stageTenElevenJudged,
       ...revisingTopics,
       ...planningTopics,
     ],
@@ -137,8 +148,14 @@ function writingModules(grade: number): readonly ModuleDef[] {
 
 /** stageUnits are a grade's units of reading and of speaking, those it has. */
 function stageUnits(grade: number): CourseDef["units"] {
-  const reading = ofGrade([...stageReadingTopics, ...stageThreeFourReading, ...stageFiveSixReading, ...stageSevenNineReading], grade);
-  const speaking = ofGrade([...stageSpeakingTopics, ...stageThreeFourSpeaking, ...stageFiveSixSpeaking, ...stageSevenNineSpeaking], grade);
+  const reading = ofGrade(
+    [...stageReadingTopics, ...stageThreeFourReading, ...stageFiveSixReading, ...stageSevenNineReading, ...stageTenElevenReading],
+    grade,
+  );
+  const speaking = ofGrade(
+    [...stageSpeakingTopics, ...stageThreeFourSpeaking, ...stageFiveSixSpeaking, ...stageSevenNineSpeaking, ...stageTenElevenSpeaking],
+    grade,
+  );
   return [
     ...(reading.length > 0 ? [{ title: t("Reading", "阅读"), modules: [{ title: t("Reading", "阅读"), topics: reading }] }] : []),
     ...(speaking.length > 0
@@ -184,7 +201,16 @@ function seniorCourse(grade: number, id: string, title: CourseDef["title"], desc
     units: [
       ...(wordModules(grade).length > 0 ? [{ title: t("Words", "词语"), modules: wordModules(grade) }] : []),
       ...(grammarModules(grade).length > 0 ? [{ title: t("Grammar and Rhetoric", "语法与修辞"), modules: grammarModules(grade) }] : []),
+      ...(ofGrade(stageTenElevenLanguage, grade).length > 0
+        ? [
+            {
+              title: t("Language Study", "语言积累与梳理"),
+              modules: [{ title: t("Language Study", "语言积累与梳理"), topics: ofGrade(stageTenElevenLanguage, grade) }],
+            },
+          ]
+        : []),
       ...(writingModules(grade).length > 0 ? [{ title: t("Writing", "写作"), modules: writingModules(grade) }] : []),
+      ...stageUnits(grade),
       ...readingAloudUnits(grade),
       {
         title: t("Recitation", "积累与背诵"),

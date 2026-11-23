@@ -922,6 +922,72 @@ export const WRITING_CRITERIA: readonly CriterionSpec[] = [
     question: "Does the commentary analyse causes or consequences and end with a reasoned suggestion or conclusion?",
     quoteWhenMet: true,
   },
+  // Grade 10: literary writing.
+  {
+    id: "zh10-literary-image",
+    version: "1",
+    question:
+      "Does the piece bring a person, scene or thing alive through concrete detail of action, speech, sight and sound, rather than summing it up in general words?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh10-literary-craft",
+    version: "1",
+    question:
+      "Does the piece use the craft of its form on purpose, such as a point of view kept, a thread or turn that shapes it, an object or detail that recurs, and language suited to its mood?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh10-literary-meaning",
+    version: "1",
+    question:
+      "Does the piece carry a meaning beyond what happens in it, shown mainly through the story or images rather than stated as a moral, and is that meaning its own rather than a stock one?",
+    quoteWhenMet: true,
+  },
+  // Grade 10: a survey report.
+  {
+    id: "zh10-report-question",
+    version: "1",
+    question:
+      "Does the report state the question it set out to answer and how the survey was made: whom it asked or observed, how many, when and by what means?",
+    quoteWhenMet: false,
+  },
+  {
+    id: "zh10-report-data",
+    version: "1",
+    question:
+      "Does the report set out its findings in order, with figures or observations that are specific and consistent with one another, kept apart from the writer's opinions?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh10-report-conclusion",
+    version: "1",
+    question:
+      "Do the conclusions and suggestions follow from the findings reported, without claiming more than the survey can show, and does the report note at least one limit of the survey?",
+    quoteWhenMet: true,
+  },
+  // Grade 10: arguing rigorously.
+  {
+    id: "zh10-rigor-concept",
+    version: "1",
+    question:
+      "Does the essay make clear what its key term means, and use it in that same sense throughout, without sliding to another sense?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh10-rigor-reasoning",
+    version: "1",
+    question:
+      "Is the reasoning valid: no generalising from one or two cases, no taking what came first for a cause, no false either-or, and each step following from the one before?",
+    quoteWhenMet: true,
+  },
+  {
+    id: "zh10-rigor-limits",
+    version: "1",
+    question:
+      "Does the essay state its claim no wider than its grounds allow, mark the conditions under which it holds, and answer at least one serious objection?",
+    quoteWhenMet: true,
+  },
   // Grade 11: weighing both sides.
   {
     id: "zh11-dialectic-sides",

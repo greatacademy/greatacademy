@@ -41,6 +41,7 @@ topic book-robinson-crusoe book-robinson-crusoe-questions
 topic book-steel-tempered book-steel-tempered-questions
 topic book-twenty-thousand-leagues book-twenty-thousand-leagues-questions
 topic book-water-margin book-water-margin-questions
+topic book-xiangtu-zhongguo book-xiangtu-zhongguo-questions
 topic classical-function-words-10-01 classical-function-words-10-01-nai classical-function-words-10-01-qie
 topic classical-function-words-10-02 classical-function-words-10-02-ruo classical-function-words-10-02-yan
 topic classical-function-words-10-03 classical-function-words-10-03-he classical-function-words-10-03-hu
@@ -203,6 +204,7 @@ topic idioms-9-03 idioms-9-03-meaning idioms-9-03-use idioms-9-03-writing
 topic idioms-9-04 idioms-9-04-meaning idioms-9-04-use idioms-9-04-writing
 topic inquiry-5-sources inquiry-5-sources-answers inquiry-5-sources-where
 topic inquiry-8-sources inquiry-8-sources-citing inquiry-8-sources-primary
+topic language-10-usage language-10-usage-sentences language-10-usage-words
 topic language-3-similar-characters language-3-similar-characters-form language-3-similar-characters-sound
 topic language-4-polyphones language-4-polyphones-meaning language-4-polyphones-word
 topic language-5-character-formation language-5-character-formation-phonetic language-5-character-formation-pictograph
@@ -2589,6 +2591,13 @@ topic punctuation-titles punctuation-titles-checking punctuation-titles-marks
 topic reading-1-rhymes reading-1-rhymes-rhyme reading-1-rhymes-says
 topic reading-1-signs reading-1-signs-signs reading-1-signs-timetables
 topic reading-1-stories reading-1-stories-happens reading-1-stories-word
+topic reading-10-argument reading-10-argument-claim reading-10-argument-logic
+topic reading-10-classical reading-10-classical-argument reading-10-classical-words
+topic reading-10-fiction reading-10-fiction-craft reading-10-fiction-people
+topic reading-10-media reading-10-media-telling reading-10-media-trust
+topic reading-10-poetry reading-10-poetry-images reading-10-poetry-language
+topic reading-10-practical reading-10-practical-facts reading-10-practical-stance
+topic reading-10-prose reading-10-prose-form reading-10-prose-meaning
 topic reading-2-fables reading-2-fables-happened reading-2-fables-teaches
 topic reading-2-fairy-tales reading-2-fairy-tales-imagined reading-2-fairy-tales-wants
 topic reading-2-science reading-2-science-facts reading-2-science-reasons
@@ -3155,6 +3164,9 @@ topic sentences-rhetorical-questions sentences-rhetorical-questions-to-question 
 topic speaking-1-listening speaking-1-listening-about speaking-1-listening-asked
 topic speaking-1-manners speaking-1-manners-greeting speaking-1-manners-turns
 topic speaking-1-telling speaking-1-telling-missing speaking-1-telling-order
+topic speaking-10-debate speaking-10-debate-fallacy speaking-10-debate-summing
+topic speaking-10-interview speaking-10-interview-follow speaking-10-interview-relay
+topic speaking-10-speech speaking-10-speech-arguing speaking-10-speech-opening
 topic speaking-2-asking speaking-2-asking-address speaking-2-asking-clear
 topic speaking-2-discussing speaking-2-discussing-answering speaking-2-discussing-suggesting
 topic speaking-2-messages speaking-2-messages-who-when speaking-2-messages-whole
@@ -3237,7 +3249,10 @@ topic words-9-03 words-9-03-meaning words-9-03-relations words-9-03-use
 topic words-9-04 words-9-04-meaning words-9-04-relations words-9-04-use
 topic writing-1-want-to-say writing-1-want-to-say-like writing-1-want-to-say-self
 topic writing-10-commentary writing-10-commentary-analysis writing-10-commentary-view
+topic writing-10-literary writing-10-literary-craft writing-10-literary-image
 topic writing-10-material writing-10-material-depth writing-10-material-view
+topic writing-10-report writing-10-report-conclusions writing-10-report-findings
+topic writing-10-rigorous writing-10-rigorous-concepts writing-10-rigorous-reasoning
 topic writing-11-dialectic writing-11-dialectic-position writing-11-dialectic-sides
 topic writing-11-proposal writing-11-proposal-actions writing-11-proposal-form
 topic writing-2-imagination writing-2-imagination-happens writing-2-imagination-like
