@@ -255,8 +255,8 @@ const peakAmount: KnowledgePointDef = {
   id: "the-largest-amount-from-a-rate",
   title: t("The largest amount from a rate", "由变化率求最大量"),
   explanation: t(
-    "An amount grows while its rate is positive and shrinks once the rate is negative, so it is largest at the moment the rate crosses zero. The size of the peak is the starting amount plus the integral of the rate up to that moment.",
-    "变化率为正时量在增加，变化率为负时量在减少，所以在变化率穿过零的时刻量最大。峰值等于初始量加上变化率到那一刻的积分。",
+    "An amount grows while its rate is positive and shrinks once the rate is negative, so it is largest at the moment the rate crosses zero. The size of the peak is the starting amount plus the integral of the rate up to that moment. For example, a tank holds $10$ L and water enters at $r(t) = 6 - 2t$ L/min. The rate is zero at $t = 3$, and $\\int_0^3 (6 - 2t)\\,dt = 18 - 9 = 9$, so the largest amount is $10 + 9 = 19$ L.\n\nCheck: the graph of $r$ from $t = 0$ to $t = 3$ cuts off a triangle of base $3$ and height $6$, of area $\\frac{1}{2} \\cdot 3 \\cdot 6 = 9$.\n\n> **Watch out.** The amount is largest where the rate is zero, not where the rate is largest. And the starting amount counts: the integral gives only what was gained.",
+    "变化率为正时量在增加，变化率为负时量在减少，所以在变化率穿过零的时刻量最大。峰值等于初始量加上变化率到那一刻的积分。例如，水箱中有 $10$ L 水，水以 $r(t) = 6 - 2t$ L/min 的速率流入。变化率在 $t = 3$ 时为零，$\\int_0^3 (6 - 2t)\\,dt = 18 - 9 = 9$，所以最大水量是 $10 + 9 = 19$ L。\n\n检验：$r$ 的图像在 $t = 0$ 到 $t = 3$ 之间围成底为 $3$、高为 $6$ 的三角形，面积为 $\\frac{1}{2} \\cdot 3 \\cdot 6 = 9$。\n\n> **注意。** 量在变化率为零处最大，而不是在变化率最大处。初始量也要算上：积分只给出增加的部分。",
   ),
   generate(rng) {
     const A = rng.int(5, 60);
@@ -265,16 +265,70 @@ const peakAmount: KnowledgePointDef = {
     const gain = Q.of(a * a, 2 * b);
     const answer = gain.add(Q.of(A));
     const peak = Q.of(a, b);
+    const rate = poly([a, ""], [-b, "t"]);
     return numberProblem({
       prompt: t(
-        `A tank holds ${A} L at time $t = 0$, and water enters at $r(t) = ${poly([a, ""], [-b, "t"])}$ L/min, where a negative rate means water is leaving. What is the largest amount of water in the tank, in litres?`,
-        `水箱在 $t = 0$ 时有 ${A} L 水，水以 $r(t) = ${poly([a, ""], [-b, "t"])}$ L/min 的速率流入，速率为负表示水在流出。水箱中水量的最大值是多少升？`,
+        `A tank holds ${A} L at time $t = 0$, and water enters at $r(t) = ${rate}$ L/min, where a negative rate means water is leaving. What is the largest amount of water in the tank, in litres?`,
+        `水箱在 $t = 0$ 时有 ${A} L 水，水以 $r(t) = ${rate}$ L/min 的速率流入，速率为负表示水在流出。水箱中水量的最大值是多少升？`,
       ),
       answer,
-      wrong: [gain, Q.of(a * a, b).add(Q.of(A)), Q.of(A).add(peak)],
-      solution: t(
-        `The rate is zero at $t = ${peak.toLatex()}$. The water gained by then is $\\int_0^{${peak.toLatex()}} r(t)\\,dt = ${gain.toLatex()}$, so the largest amount is $${A} + ${gain.toLatex()} = ${answer.toLatex()}$.`,
-        `变化率在 $t = ${peak.toLatex()}$ 时为零。到那时增加的水量是 $\\int_0^{${peak.toLatex()}} r(t)\\,dt = ${gain.toLatex()}$，所以最大水量是 $${A} + ${gain.toLatex()} = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: gain,
+          why: t(
+            `This is only the water gained; the ${A} L already in the tank must be added.`,
+            `这只是增加的水量；还要加上水箱里原有的 ${A} L。`,
+          ),
+        },
+        {
+          value: Q.of(a * a, b).add(Q.of(A)),
+          why: t(
+            `This leaves out the integral of the $-${b === 1 ? "" : b}t$ term, $-${coefQ(Q.of(b, 2))}t^2$, which takes away the water lost to the falling rate.`,
+            `这里漏掉了 $-${b === 1 ? "" : b}t$ 项的积分 $-${coefQ(Q.of(b, 2))}t^2$，它扣除了速率下降少流入的水。`,
+          ),
+        },
+        {
+          value: Q.of(A).add(peak),
+          why: t(
+            `This adds the time $t = ${peak.toLatex()}$ at which the rate is zero; add the water gained by then, the integral of the rate.`,
+            `这里加上的是变化率为零的时刻 $t = ${peak.toLatex()}$；应加上到那时增加的水量，即变化率的积分。`,
+          ),
+        },
+        {
+          value: Q.of(A + a),
+          why: t(
+            `This adds the starting rate, ${a} L/min, which is a rate, not an amount of water.`,
+            `这里加上的是初始速率 ${a} L/min，它是速率，不是水量。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Find when the rate is zero", "求变化率为零的时刻"],
+            [
+              "The amount grows while $r(t) > 0$ and shrinks afterwards, so it peaks where:",
+              "$r(t) > 0$ 时水量增加，之后减少，所以峰值出现在：",
+            ],
+            [`${rate} = 0 \\implies t = ${peak.toLatex()}`],
+          ],
+          [
+            ["Integrate up to that moment", "积分到那一刻"],
+            ["The water gained by then is:", "到那时增加的水量是："],
+            [
+              `\\int_0^{${peak.toLatex()}} (${rate})\\,dt = \\Big[${a}t - ${coefQ(Q.of(b, 2))}t^2\\Big]_0^{${peak.toLatex()}} = ${gain.toLatex()}`,
+            ],
+          ],
+          [
+            ["Add the starting amount", "加上初始量"],
+            ["So the largest amount is:", "所以最大水量是："],
+            [`${A} + ${gain.toLatex()} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `The graph of $r$ from $t = 0$ to $t = ${peak.toLatex()}$ cuts off a triangle of base $${peak.toLatex()}$ and height $${a}$, so the gain is $\\frac{1}{2} \\cdot ${peak.toLatex()} \\cdot ${a} = ${gain.toLatex()}$, and $${A} + ${gain.toLatex()} = ${answer.toLatex()}$.`,
+          `$r$ 的图像在 $t = 0$ 到 $t = ${peak.toLatex()}$ 之间围成底为 $${peak.toLatex()}$、高为 $${a}$ 的三角形，所以增加量为 $\\frac{1}{2} \\cdot ${peak.toLatex()} \\cdot ${a} = ${gain.toLatex()}$，而 $${A} + ${gain.toLatex()} = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -284,8 +338,8 @@ const averageOverAdjacentIntervals: KnowledgePointDef = {
   id: "the-average-value-over-adjacent-intervals",
   title: t("The average value over adjacent intervals", "相邻区间上的平均值"),
   explanation: t(
-    "An average value times the length of its interval is the integral over that interval. To combine two adjacent intervals, add these integrals and divide by the total length. This is a weighted average, so the plain average of the two values is correct only when the lengths are equal.",
-    "平均值乘以区间长度就是该区间上的积分。要合并两个相邻区间，把这些积分相加，再除以总长度。这是加权平均，所以只有长度相等时，两个值的简单平均才正确。",
+    "An average value times the length of its interval is the integral over that interval. To combine two adjacent intervals, add these integrals and divide by the total length. For example, if $f$ averages $2$ on $[0, 1]$ and $5$ on $[1, 4]$, the integrals are $2 \\cdot 1 = 2$ and $5 \\cdot 3 = 15$, so the average on $[0, 4]$ is $\\frac{2 + 15}{4} = \\frac{17}{4}$.\n\nCheck: weight each average by the share of the length it covers: $\\frac{1}{4} \\cdot 2 + \\frac{3}{4} \\cdot 5 = \\frac{17}{4}$, which lies between $2$ and $5$.\n\n> **Watch out.** This is a weighted average. The plain average $\\frac{2 + 5}{2} = \\frac{7}{2}$ is correct only when the two lengths are equal.",
+    "平均值乘以区间长度就是该区间上的积分。要合并两个相邻区间，把这些积分相加，再除以总长度。例如，若 $f$ 在 $[0, 1]$ 上的平均值是 $2$，在 $[1, 4]$ 上是 $5$，两段积分为 $2 \\cdot 1 = 2$ 和 $5 \\cdot 3 = 15$，所以在 $[0, 4]$ 上的平均值是 $\\frac{2 + 15}{4} = \\frac{17}{4}$。\n\n检验：按每段所占长度的比例加权：$\\frac{1}{4} \\cdot 2 + \\frac{3}{4} \\cdot 5 = \\frac{17}{4}$，它介于 $2$ 与 $5$ 之间。\n\n> **注意。** 这是加权平均。简单平均 $\\frac{2 + 5}{2} = \\frac{7}{2}$ 只有在两段长度相等时才正确。",
   ),
   generate(rng) {
     const a = rng.int(0, 4);
@@ -301,10 +355,49 @@ const averageOverAdjacentIntervals: KnowledgePointDef = {
         `$f$ 在 $[${a}, ${b}]$ 上的平均值是 $${u}$，在 $[${b}, ${c}]$ 上的平均值是 $${v}$。求它在 $[${a}, ${c}]$ 上的平均值。`,
       ),
       answer,
-      wrong: [Q.of(u + v, 2), Q.of(total), Q.of(u * (c - b) + v * (b - a), c - a)],
-      solution: t(
-        `The integrals are $${u} \\cdot ${b - a}$ and $${v} \\cdot ${c - b}$, which add up to $${total}$. Dividing by the total length $${c - a}$ gives $${answer.toLatex()}$.`,
-        `两段的积分是 $${u} \\cdot ${b - a}$ 和 $${v} \\cdot ${c - b}$，和为 $${total}$。除以总长度 $${c - a}$ 得 $${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: Q.of(u + v, 2),
+          why: t(
+            `This is the plain average of $${u}$ and $${v}$; the intervals have lengths $${b - a}$ and $${c - b}$, so each value must be weighted by its length.`,
+            `这是 $${u}$ 与 $${v}$ 的简单平均；两段长度分别为 $${b - a}$ 和 $${c - b}$，每个值要按长度加权。`,
+          ),
+        },
+        {
+          value: Q.of(total),
+          why: t(
+            `This is the integral over $[${a}, ${c}]$; divide it by the length $${c - a}$.`,
+            `这是 $[${a}, ${c}]$ 上的积分；还要除以长度 $${c - a}$。`,
+          ),
+        },
+        {
+          value: Q.of(u * (c - b) + v * (b - a), c - a),
+          why: t(
+            "This weights each average by the length of the other interval; each value goes with the length of its own interval.",
+            "这里每个平均值乘的是另一段的长度；每个值应乘以它自己那一段的长度。",
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Turn the averages into integrals", "把平均值化为积分"],
+            ["Each average times the length of its interval is the integral over it:", "每个平均值乘以其区间长度，就是该区间上的积分："],
+            [
+              `\\int_{${a}}^{${b}} f(x)\\,dx = ${u} \\cdot ${b - a} = ${u * (b - a)}`,
+              `\\int_{${b}}^{${c}} f(x)\\,dx = ${v} \\cdot ${c - b} = ${v * (c - b)}`,
+            ],
+          ],
+          [
+            ["Divide by the whole length", "除以总长度"],
+            [`Add the integrals and divide by $${c} - ${a} = ${c - a}$:`, `把积分相加，再除以 $${c} - ${a} = ${c - a}$：`],
+            [`\\frac{${u * (b - a)} + ${inParens(v * (c - b))}}{${c - a}} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Weight each average by the share of the length it covers: $${Q.of(b - a, c - a).toLatex()} \\cdot ${inParens(u)} + ${Q.of(c - b, c - a).toLatex()} \\cdot ${inParens(v)} = ${answer.toLatex()}$, which lies between $${u}$ and $${v}$.`,
+          `按每段所占长度的比例加权：$${Q.of(b - a, c - a).toLatex()} \\cdot ${inParens(u)} + ${Q.of(c - b, c - a).toLatex()} \\cdot ${inParens(v)} = ${answer.toLatex()}$，它介于 $${u}$ 与 $${v}$ 之间。`,
+        ],
       ),
     });
   },
@@ -314,8 +407,8 @@ const slopeFromEnclosedArea: KnowledgePointDef = {
   id: "the-slope-of-a-line-from-an-enclosed-area",
   title: t("The slope of a line from an enclosed area", "由围成的面积求直线斜率"),
   explanation: t(
-    "A parameter in a curve moves the points of intersection, and therefore the limits of integration. Find the limits in terms of the parameter, integrate the difference of the curves, and set the result equal to the given area. This produces an equation for the parameter.",
-    "曲线中的参数会改变交点，也就改变积分限。先用参数表示积分限，再对两条曲线之差积分，令结果等于给定的面积，就得到参数的方程。",
+    "A parameter in a curve moves the points of intersection, and therefore the limits of integration. Find the limits in terms of the parameter, integrate the difference of the curves, and set the result equal to the given area. This produces an equation for the parameter. For example, $y = mx$ and $y = x^2$ meet at $x = 0$ and $x = m$, and $\\int_0^m (mx - x^2)\\,dx = \\frac{m^3}{2} - \\frac{m^3}{3} = \\frac{m^3}{6}$. If the area is $36$, then $m^3 = 216$ and $m = 6$.\n\nCheck: with $m = 6$ the region has width $6$ and greatest gap $18 - 9 = 9$ at $x = 3$; a region between a parabola and a chord fills $\\frac{2}{3}$ of that rectangle, and $\\frac{2}{3} \\cdot 6 \\cdot 9 = 36$.\n\n> **Watch out.** The upper limit depends on $m$, so the area is a cubic in $m$: solve with a cube root, not by dividing.",
+    "曲线中的参数会改变交点，也就改变积分限。先用参数表示积分限，再对两条曲线之差积分，令结果等于给定的面积，就得到参数的方程。例如，$y = mx$ 与 $y = x^2$ 交于 $x = 0$ 和 $x = m$，$\\int_0^m (mx - x^2)\\,dx = \\frac{m^3}{2} - \\frac{m^3}{3} = \\frac{m^3}{6}$。若面积为 $36$，则 $m^3 = 216$，$m = 6$。\n\n检验：$m = 6$ 时区域宽 $6$，最大间距在 $x = 3$ 处，为 $18 - 9 = 9$；抛物线与弦之间的区域占外接矩形的 $\\frac{2}{3}$，而 $\\frac{2}{3} \\cdot 6 \\cdot 9 = 36$。\n\n> **注意。** 上限依赖于 $m$，所以面积是 $m$ 的三次式：要开立方，而不是做除法。",
   ),
   generate(rng) {
     const a = rng.int(1, 3);
@@ -323,6 +416,7 @@ const slopeFromEnclosedArea: KnowledgePointDef = {
     const area = Q.of(m * m * m, 6 * a * a);
     const curve = poly([a, "x^2"]);
     const meet = a === 1 ? "m" : `\\frac{m}{${a}}`;
+    const [width, gap] = [Q.of(m, a), Q.of(m * m, 4 * a)];
     return numberProblem({
       prompt: t(
         `The line $y = mx$, with $m > 0$, and the parabola $y = ${curve}$ enclose an area of $${area.toLatex()}$. Find $m$.`,
@@ -330,10 +424,50 @@ const slopeFromEnclosedArea: KnowledgePointDef = {
       ),
       answer: m,
       solveFor: "m",
-      wrong: [m * m, m + 1, 2 * m],
-      solution: t(
-        `The curves meet at $x = 0$ and $x = ${meet}$. Integrating $mx - ${curve}$ between them gives $\\frac{m^3}{${6 * a * a}}$. Setting this equal to the area gives $m^3 = ${m ** 3}$, so $m = ${m}$.`,
-        `两曲线交于 $x = 0$ 和 $x = ${meet}$。在二者之间对 $mx - ${curve}$ 积分，得 $\\frac{m^3}{${6 * a * a}}$。令它等于面积，得 $m^3 = ${m ** 3}$，所以 $m = ${m}$。`,
+      mistakes: [
+        {
+          value: Q.of(m ** 3),
+          why: t(`This is $m^3$; take its cube root to find $m$.`, `这是 $m^3$；还要开立方才得到 $m$。`),
+        },
+        {
+          value: Q.of(-m),
+          why: t(
+            "This integrates the parabola minus the line, which comes out negative and gives a negative $m$; the line is on top between the crossings, and $m > 0$.",
+            "这是对抛物线减直线积分，结果为负，得到负的 $m$；在两交点之间直线在上方，且 $m > 0$。",
+          ),
+        },
+        {
+          value: Q.of(m, a),
+          why: t(
+            `This is the $x$-coordinate of the second crossing, $${meet}$, not the slope $m$.`,
+            `这是第二个交点的横坐标 $${meet}$，不是斜率 $m$。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Find the crossings in terms of m", "用 m 表示交点"],
+            ["Set the line equal to the parabola:", "令直线与抛物线相等："],
+            [`mx = ${curve} \\implies x = 0 \\text{ or } x = ${meet}`],
+          ],
+          [
+            ["Integrate the difference", "对差积分"],
+            ["The line is on top between the crossings:", "在两交点之间直线在上方："],
+            [
+              `\\int_0^{${meet}} (mx - ${curve})\\,dx = \\Big[\\frac{m}{2}x^2 - ${coefQ(Q.of(a, 3))}x^3\\Big]_0^{${meet}} = \\frac{m^3}{${6 * a * a}}`,
+            ],
+          ],
+          [
+            ["Solve for m", "解出 m"],
+            ["Set this equal to the area:", "令它等于面积："],
+            [`\\frac{m^3}{${6 * a * a}} = ${area.toLatex()} \\implies m^3 = ${m ** 3} \\implies m = ${m}`],
+          ],
+        ],
+        [
+          `With $m = ${m}$ the region has width $${width.toLatex()}$ and its greatest gap, at the middle, is $${gap.toLatex()}$. A region between a parabola and a chord fills $\\frac{2}{3}$ of that rectangle: $\\frac{2}{3} \\cdot ${width.toLatex()} \\cdot ${gap.toLatex()} = ${area.toLatex()}$, the given area.`,
+          `$m = ${m}$ 时区域宽 $${width.toLatex()}$，最大间距在中点处，为 $${gap.toLatex()}$。抛物线与弦之间的区域占外接矩形的 $\\frac{2}{3}$：$\\frac{2}{3} \\cdot ${width.toLatex()} \\cdot ${gap.toLatex()} = ${area.toLatex()}$，正是给定的面积。`,
+        ],
       ),
     });
   },
@@ -1821,8 +1955,8 @@ const massShare: KnowledgePointDef = {
   id: "the-point-that-cuts-off-a-share-of-the-mass",
   title: t("The point that cuts off a share of the mass", "截取一定比例质量的位置"),
   explanation: t(
-    "On a rod with density $kx$, the mass from 0 to $m$ is $\\frac{km^2}{2}$, which grows with the square of the position. So the share of the mass up to $m$ is $\\left(\\frac{m}{L}\\right)^2$, and the constant $k$ cancels. To cut off a given share, take a square root rather than dividing the rod in proportion.",
-    "在密度为 $kx$ 的杆上，从 0 到 $m$ 的质量是 $\\frac{km^2}{2}$，随位置的平方增长。所以到 $m$ 为止的质量比例是 $\\left(\\frac{m}{L}\\right)^2$，常数 $k$ 被约去。要截取给定比例，就要开平方，而不是按比例分割杆。",
+    "On a rod with density $kx$, the mass from 0 to $m$ is $\\frac{km^2}{2}$, which grows with the square of the position. So the share of the mass up to $m$ is $\\left(\\frac{m}{L}\\right)^2$, and the constant $k$ cancels. To cut off a given share, take a square root rather than dividing the rod in proportion. For example, a rod on $[0, 10]$ with density $2x$ has mass $100$, and $[0, m]$ holds $m^2$; for a quarter of the mass, $m^2 = 25$ and $m = 5$.\n\nCheck: $\\int_0^5 2x\\,dx = 25$, which is $\\frac{1}{4}$ of $100$.\n\n> **Watch out.** Half the length does not hold half the mass: with density $kx$ the first half of the rod holds only $\\frac{1}{4}$ of it.",
+    "在密度为 $kx$ 的杆上，从 0 到 $m$ 的质量是 $\\frac{km^2}{2}$，随位置的平方增长。所以到 $m$ 为止的质量比例是 $\\left(\\frac{m}{L}\\right)^2$，常数 $k$ 被约去。要截取给定比例，就要开平方，而不是按比例分割杆。例如，$[0, 10]$ 上密度为 $2x$ 的杆质量为 $100$，$[0, m]$ 上的质量为 $m^2$；要截取四分之一的质量，$m^2 = 25$，$m = 5$。\n\n检验：$\\int_0^5 2x\\,dx = 25$，正是 $100$ 的 $\\frac{1}{4}$。\n\n> **注意。** 一半的长度并不含一半的质量：密度为 $kx$ 时，杆的前一半只含 $\\frac{1}{4}$ 的质量。",
   ),
   generate(rng) {
     const q = rng.int(2, 5);
@@ -1832,16 +1966,58 @@ const massShare: KnowledgePointDef = {
     const L = q * n;
     const answer = p * n;
     const share = Q.of(p * p, q * q);
+    const [part, whole] = [Q.of(k * answer * answer, 2), Q.of(k * L * L, 2)];
     return numberProblem({
       prompt: t(
         `A rod on $[0, ${L}]$ has density $${k}x$. At what position $m$ does $[0, m]$ hold $${share.toLatex()}$ of the rod's mass?`,
         `$[0, ${L}]$ 上的杆，密度是 $${k}x$。在什么位置 $m$，$[0, m]$ 含有杆的质量的 $${share.toLatex()}$？`,
       ),
       answer,
-      wrong: [Q.of(L * p * p, q * q), Q.of(L, 2), Q.of(L * p * p, q), Q.of(L * (q * q - p * p), q * q)],
-      solution: t(
-        `The share up to $m$ is $\\left(\\frac{m}{${L}}\\right)^2$. Setting this to $${share.toLatex()}$ gives $\\frac{m}{${L}} = ${Q.of(p, q).toLatex()}$, so $m = ${answer}$.`,
-        `到 $m$ 为止的比例是 $\\left(\\frac{m}{${L}}\\right)^2$。令它等于 $${share.toLatex()}$，得 $\\frac{m}{${L}} = ${Q.of(p, q).toLatex()}$，所以 $m = ${answer}$。`,
+      mistakes: [
+        {
+          value: Q.of(L * p * p, q * q),
+          why: t(
+            "This divides the rod in proportion to the share, as if the density were constant; the mass up to $m$ grows with $m^2$.",
+            "这是按比例分割杆，好像密度是常数；到 $m$ 为止的质量随 $m^2$ 增长。",
+          ),
+        },
+        {
+          value: Q.of(L, 2),
+          why: t(
+            `This is the midpoint; the density grows along the rod, so $[0, ${Q.of(L, 2).toLatex()}]$ holds only $\\frac{1}{4}$ of the mass.`,
+            `这是中点；密度沿杆增大，所以 $[0, ${Q.of(L, 2).toLatex()}]$ 只含 $\\frac{1}{4}$ 的质量。`,
+          ),
+        },
+        {
+          value: Q.of(L - answer),
+          why: t(
+            `This measures $${answer}$ back from the heavy end at $x = ${L}$; the share is of $[0, m]$, measured from $x = 0$.`,
+            `这是从重的一端 $x = ${L}$ 往回量 $${answer}$；所求的是 $[0, m]$ 的比例，要从 $x = 0$ 量起。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Write the masses", "写出质量"],
+            ["The mass up to $m$ and the whole mass are:", "到 $m$ 为止的质量和总质量为："],
+            [`\\int_0^m ${k}x\\,dx = ${coefQ(Q.of(k, 2))}m^2, \\quad \\int_0^{${L}} ${k}x\\,dx = ${whole.toLatex()}`],
+          ],
+          [
+            ["Set the share and take the root", "令比例相等并开方"],
+            [
+              `Their ratio is $\\left(\\frac{m}{${L}}\\right)^2$, and $${k}$ cancels:`,
+              `二者之比为 $\\left(\\frac{m}{${L}}\\right)^2$，$${k}$ 约去了：`,
+            ],
+            [
+              `\\left(\\frac{m}{${L}}\\right)^2 = ${share.toLatex()} \\implies \\frac{m}{${L}} = ${Q.of(p, q).toLatex()} \\implies m = ${answer}`,
+            ],
+          ],
+        ],
+        [
+          `The mass on $[0, ${answer}]$ is $\\int_0^{${answer}} ${k}x\\,dx = ${part.toLatex()}$ out of $${whole.toLatex()}$, and $\\frac{${part.toLatex()}}{${whole.toLatex()}} = ${share.toLatex()}$.`,
+          `$[0, ${answer}]$ 上的质量是 $\\int_0^{${answer}} ${k}x\\,dx = ${part.toLatex()}$，总质量是 $${whole.toLatex()}$，而 $\\frac{${part.toLatex()}}{${whole.toLatex()}} = ${share.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -3451,23 +3627,82 @@ const lengthOfCatenary: KnowledgePointDef = {
   figure: calculusDrawings4["the-arc-length-of-a-planar-curve#the-length-of-a-catenary"],
   title: t("The length of a catenary", "悬链线的长度"),
   explanation: t(
-    "A hanging chain follows the curve $y = a\\cosh\\frac{x}{a}$, and its arc length has a simple form. The derivative is a hyperbolic sine, and the identity $1 + \\sinh^2 z = \\cosh^2 z$ removes the root in the length formula. The integrand is then a hyperbolic cosine, and a logarithm in the limit is evaluated through the exponential definition of $\\sinh$.",
-    "悬挂的链条沿曲线 $y = a\\cosh\\frac{x}{a}$ 分布，它的弧长形式很简单。导数是双曲正弦，恒等式 $1 + \\sinh^2 z = \\cosh^2 z$ 消去弧长公式中的根号。被积函数于是成为双曲余弦，积分限中的对数则用 $\\sinh$ 的指数定义求值。",
+    "A hanging chain follows the curve $y = a\\cosh\\frac{x}{a}$, and its arc length has a simple form. The derivative is a hyperbolic sine, and the identity $1 + \\sinh^2 z = \\cosh^2 z$ removes the root in the length formula. The integrand is then a hyperbolic cosine, and a logarithm in the limit is evaluated through the exponential definition of $\\sinh$. For example, $y = \\cosh x$ from $x = 0$ to $x = \\ln 2$ has length $\\sinh(\\ln 2) = \\frac{1}{2}\\left(2 - \\frac{1}{2}\\right) = \\frac{3}{4}$.\n\nCheck: at the end the height is $\\cosh(\\ln 2) = \\frac{1}{2}\\left(2 + \\frac{1}{2}\\right) = \\frac{5}{4}$, and since $\\cosh^2 - \\sinh^2 = 1$, $\\left(\\frac{5}{4}\\right)^2 - 1 = \\frac{9}{16} = \\left(\\frac{3}{4}\\right)^2$.\n\n> **Watch out.** The antiderivative of $\\cosh\\frac{x}{a}$ is $a\\sinh\\frac{x}{a}$, with the factor $a$. And $\\sinh(\\ln m) = \\frac{1}{2}\\left(m - \\frac{1}{m}\\right)$, with the half.",
+    "悬挂的链条沿曲线 $y = a\\cosh\\frac{x}{a}$ 分布，它的弧长形式很简单。导数是双曲正弦，恒等式 $1 + \\sinh^2 z = \\cosh^2 z$ 消去弧长公式中的根号。被积函数于是成为双曲余弦，积分限中的对数则用 $\\sinh$ 的指数定义求值。例如，$y = \\cosh x$ 从 $x = 0$ 到 $x = \\ln 2$ 的长度是 $\\sinh(\\ln 2) = \\frac{1}{2}\\left(2 - \\frac{1}{2}\\right) = \\frac{3}{4}$。\n\n检验：终点处高度为 $\\cosh(\\ln 2) = \\frac{1}{2}\\left(2 + \\frac{1}{2}\\right) = \\frac{5}{4}$，由于 $\\cosh^2 - \\sinh^2 = 1$，$\\left(\\frac{5}{4}\\right)^2 - 1 = \\frac{9}{16} = \\left(\\frac{3}{4}\\right)^2$。\n\n> **注意。** $\\cosh\\frac{x}{a}$ 的原函数是 $a\\sinh\\frac{x}{a}$，带因子 $a$。而 $\\sinh(\\ln m) = \\frac{1}{2}\\left(m - \\frac{1}{m}\\right)$，有二分之一。",
   ),
   generate(rng) {
     const a = rng.int(2, 9);
     const m = rng.int(2, 6);
     const answer = Q.of(a * (m * m - 1), 2 * m);
+    const height = Q.of(a * (m * m + 1), 2 * m);
+    const end = `${a}\\ln ${m}`;
     return numberProblem({
       prompt: t(
-        `Find the arc length of the catenary $y = ${a}\\cosh\\frac{x}{${a}}$ from $x = 0$ to $x = ${a}\\ln ${m}$.`,
-        `求悬链线 $y = ${a}\\cosh\\frac{x}{${a}}$ 从 $x = 0$ 到 $x = ${a}\\ln ${m}$ 的弧长。`,
+        `Find the arc length of the catenary $y = ${a}\\cosh\\frac{x}{${a}}$ from $x = 0$ to $x = ${end}$.`,
+        `求悬链线 $y = ${a}\\cosh\\frac{x}{${a}}$ 从 $x = 0$ 到 $x = ${end}$ 的弧长。`,
       ),
       answer,
-      wrong: [Q.of(a * (m * m + 1), 2 * m), Q.of(m * m - 1, 2 * m), Q.of(a * (m * m - 1), m), Q.of(a * (m - 1))],
-      solution: t(
-        `$y' = \\sinh\\frac{x}{${a}}$, so $\\sqrt{1 + y'^2} = \\cosh\\frac{x}{${a}}$. The antiderivative $${a}\\sinh\\frac{x}{${a}}$ is $0$ at $x = 0$, so the length is its value at the upper limit, $${a}\\sinh(\\ln ${m}) = ${a} \\cdot \\frac{1}{2}\\left(${m} - \\frac{1}{${m}}\\right) = ${answer.toLatex()}$.`,
-        `$y' = \\sinh\\frac{x}{${a}}$，所以 $\\sqrt{1 + y'^2} = \\cosh\\frac{x}{${a}}$。原函数 $${a}\\sinh\\frac{x}{${a}}$ 在 $x = 0$ 处为 $0$，所以弧长是它在上限处的值，即 $${a}\\sinh(\\ln ${m}) = ${a} \\cdot \\frac{1}{2}\\left(${m} - \\frac{1}{${m}}\\right) = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: height,
+          why: t(
+            `This is $${a}\\cosh(\\ln ${m})$, the height of the chain at the end; the antiderivative of $\\cosh$ is $\\sinh$.`,
+            `这是 $${a}\\cosh(\\ln ${m})$，即链条终点的高度；$\\cosh$ 的原函数是 $\\sinh$。`,
+          ),
+        },
+        {
+          value: Q.of(m * m - 1, 2 * m),
+          why: t(
+            `The antiderivative of $\\cosh\\frac{x}{${a}}$ is $${a}\\sinh\\frac{x}{${a}}$; the factor $${a}$ is missing.`,
+            `$\\cosh\\frac{x}{${a}}$ 的原函数是 $${a}\\sinh\\frac{x}{${a}}$；漏掉了因子 $${a}$。`,
+          ),
+        },
+        {
+          value: Q.of(a * (m * m - 1), m),
+          why: t(
+            "$\\sinh z = \\frac{e^z - e^{-z}}{2}$; the division by $2$ is missing.",
+            "$\\sinh z = \\frac{e^z - e^{-z}}{2}$；漏掉了除以 $2$。",
+          ),
+        },
+        {
+          value: Q.of(a * (m - 1)),
+          why: t(
+            `This takes $\\sinh(\\ln ${m})$ as $${m} - 1$; in fact $\\sinh(\\ln ${m}) = \\frac{1}{2}\\left(${m} - \\frac{1}{${m}}\\right)$.`,
+            `这是把 $\\sinh(\\ln ${m})$ 当作 $${m} - 1$；实际上 $\\sinh(\\ln ${m}) = \\frac{1}{2}\\left(${m} - \\frac{1}{${m}}\\right)$。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Simplify the root", "化简根式"],
+            ["Differentiate and use $1 + \\sinh^2 z = \\cosh^2 z$:", "求导并用 $1 + \\sinh^2 z = \\cosh^2 z$："],
+            [`y' = \\sinh\\frac{x}{${a}}, \\quad \\sqrt{1 + \\sinh^2\\frac{x}{${a}}} = \\cosh\\frac{x}{${a}}`],
+          ],
+          [
+            ["Integrate", "积分"],
+            ["The antiderivative is $0$ at $x = 0$:", "原函数在 $x = 0$ 处为 $0$："],
+            [`L = \\int_0^{${end}} \\cosh\\frac{x}{${a}}\\,dx = \\Big[${a}\\sinh\\frac{x}{${a}}\\Big]_0^{${end}} = ${a}\\sinh(\\ln ${m})`],
+          ],
+          [
+            ["Evaluate the hyperbolic sine", "求双曲正弦的值"],
+            [
+              `Use $\\sinh z = \\frac{e^z - e^{-z}}{2}$ with $e^{\\ln ${m}} = ${m}$:`,
+              `用 $\\sinh z = \\frac{e^z - e^{-z}}{2}$，且 $e^{\\ln ${m}} = ${m}$：`,
+            ],
+            [`${a}\\sinh(\\ln ${m}) = ${a} \\cdot \\frac{1}{2}\\left(${m} - \\frac{1}{${m}}\\right) = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `At the end the chain's height is $${a}\\cosh(\\ln ${m}) = ${a} \\cdot \\frac{1}{2}\\left(${m} + \\frac{1}{${m}}\\right) = ${height.toLatex()}$. Since $\\cosh^2 - \\sinh^2 = 1$, the length satisfies $L^2 = y^2 - ${a}^2$: $\\left(${height.toLatex()}\\right)^2 - ${a * a} = ${height
+            .mul(height)
+            .sub(Q.of(a * a))
+            .toLatex()} = \\left(${answer.toLatex()}\\right)^2$.`,
+          `终点处链条的高度是 $${a}\\cosh(\\ln ${m}) = ${a} \\cdot \\frac{1}{2}\\left(${m} + \\frac{1}{${m}}\\right) = ${height.toLatex()}$。由于 $\\cosh^2 - \\sinh^2 = 1$，长度满足 $L^2 = y^2 - ${a}^2$：$\\left(${height.toLatex()}\\right)^2 - ${a * a} = ${height
+            .mul(height)
+            .sub(Q.of(a * a))
+            .toLatex()} = \\left(${answer.toLatex()}\\right)^2$。`,
+        ],
       ),
     });
   },
@@ -3478,8 +3713,8 @@ const wedgeFromCylinder: KnowledgePointDef = {
   figure: calculusDrawings4["volumes-of-solids-with-triangular-cross-sections#the-wedge-cut-from-a-cylinder"],
   title: t("The wedge cut from a cylinder", "从圆柱上切下的楔形"),
   explanation: t(
-    "A plane through a diameter of a cylinder's base cuts off a wedge. Sliced perpendicular to that diameter, the wedge shows right triangles whose legs are both proportional to the distance from the diameter to the circle. So the area of a slice is a multiple of $r^2 - x^2$, and the volume is the integral of this across the whole diameter.",
-    "过圆柱底面直径的平面切下一个楔形。垂直于这条直径切开，截面是直角三角形，它的两条直角边都与直径到圆周的距离成正比。所以截面积是 $r^2 - x^2$ 的倍数，体积就是它在整条直径上的积分。",
+    "A plane through a diameter of a cylinder's base cuts off a wedge. Sliced perpendicular to that diameter, the wedge shows right triangles whose legs are both proportional to the distance from the diameter to the circle. So the area of a slice is a multiple of $r^2 - x^2$, and the volume is the integral of this across the whole diameter. For example, with $r = 1$ and a plane at $45^\\circ$, both legs equal $y = \\sqrt{1 - x^2}$, the area is $\\frac{1}{2}(1 - x^2)$, and $V = \\frac{1}{2}\\int_{-1}^{1} (1 - x^2)\\,dx = \\frac{1}{2} \\cdot \\frac{4}{3} = \\frac{2}{3}$.\n\nCheck: slice the other way, perpendicular to the $y$-axis. At height $y$ the slice is a rectangle of width $2\\sqrt{1 - y^2}$ and height $y$, and $\\int_0^1 2y\\sqrt{1 - y^2}\\,dy = \\frac{2}{3}$.\n\n> **Watch out.** The slices run across the whole diameter, from $x = -r$ to $x = r$, and a triangle's area has the factor $\\frac{1}{2}$.",
+    "过圆柱底面直径的平面切下一个楔形。垂直于这条直径切开，截面是直角三角形，它的两条直角边都与直径到圆周的距离成正比。所以截面积是 $r^2 - x^2$ 的倍数，体积就是它在整条直径上的积分。例如，$r = 1$、平面倾角为 $45^\\circ$ 时，两条直角边都等于 $y = \\sqrt{1 - x^2}$，截面积为 $\\frac{1}{2}(1 - x^2)$，$V = \\frac{1}{2}\\int_{-1}^{1} (1 - x^2)\\,dx = \\frac{1}{2} \\cdot \\frac{4}{3} = \\frac{2}{3}$。\n\n检验：换个方向，垂直于 $y$ 轴切片。高度 $y$ 处的截面是宽 $2\\sqrt{1 - y^2}$、高 $y$ 的矩形，而 $\\int_0^1 2y\\sqrt{1 - y^2}\\,dy = \\frac{2}{3}$。\n\n> **注意。** 截面跨越整条直径，从 $x = -r$ 到 $x = r$；三角形面积有因子 $\\frac{1}{2}$。",
   ),
   generate(rng) {
     const r = rng.int(1, 9);
@@ -3492,10 +3727,52 @@ const wedgeFromCylinder: KnowledgePointDef = {
         `一个立体的底面是半圆盘 $x^2 + y^2 \\le ${r * r}$，$y \\ge 0$。垂直于 $x$ 轴的截面是直角三角形，一条直角边在底面内，另一条是它的 ${m} 倍。求体积。`,
       ),
       answer,
-      wrong: [Q.of(4 * m * r ** 3, 3), Q.of(m * r ** 3, 3), Q.of(2 * m * r * r, 3), Q.of(m * r ** 3)],
-      solution: t(
-        `The leg in the base is $y = \\sqrt{${r * r} - x^2}$, so the area of a slice is $\\frac{1}{2} \\cdot y \\cdot ${m}y = ${half}(${r * r} - x^2)$. Integrating from $x = -${r}$ to $x = ${r}$ gives $${half}\\left(\\frac{4 \\cdot ${r ** 3}}{3}\\right) = ${answer.toLatex()}$.`,
-        `底面内的直角边是 $y = \\sqrt{${r * r} - x^2}$，所以截面积是 $\\frac{1}{2} \\cdot y \\cdot ${m}y = ${half}(${r * r} - x^2)$。从 $x = -${r}$ 积到 $x = ${r}$，得 $${half}\\left(\\frac{4 \\cdot ${r ** 3}}{3}\\right) = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: Q.of(4 * m * r ** 3, 3),
+          why: t("This leaves out the $\\frac{1}{2}$ in the area of a triangle.", "这里漏掉了三角形面积中的 $\\frac{1}{2}$。"),
+        },
+        {
+          value: Q.of(m * r ** 3, 3),
+          why: t(
+            `This integrates only from $x = 0$ to $x = ${r}$; the base runs from $x = -${r}$ to $x = ${r}$.`,
+            `这里只从 $x = 0$ 积到 $x = ${r}$；底面从 $x = -${r}$ 延伸到 $x = ${r}$。`,
+          ),
+        },
+        {
+          value: Q.of(m * r ** 3),
+          why: t(
+            `$\\int_{-${r}}^{${r}} (${r * r} - x^2)\\,dx = ${2 * r ** 3} - ${Q.of(2 * r ** 3, 3).toLatex()}$; the integral of $x^2$ was left out.`,
+            `$\\int_{-${r}}^{${r}} (${r * r} - x^2)\\,dx = ${2 * r ** 3} - ${Q.of(2 * r ** 3, 3).toLatex()}$；漏掉了 $x^2$ 的积分。`,
+          ),
+        },
+        {
+          value: Q.of(2 * m * m * r ** 3, 3),
+          why: t(
+            `This takes both legs as $${m}y$; one leg is $y$, in the base, and only the other is ${m} times as long.`,
+            `这是把两条直角边都当作 $${m}y$；一条直角边是底面内的 $y$，只有另一条是它的 ${m} 倍。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Write the area of a slice", "写出截面积"],
+            ["The leg in the base reaches the circle:", "底面内的直角边延伸到圆周："],
+            [`y = \\sqrt{${r * r} - x^2}, \\quad A(x) = \\frac{1}{2} \\cdot y \\cdot ${m}y = ${half}(${r * r} - x^2)`],
+          ],
+          [
+            ["Integrate across the diameter", "沿直径积分"],
+            [`The slices run from $x = -${r}$ to $x = ${r}$:`, `截面从 $x = -${r}$ 到 $x = ${r}$：`],
+            [
+              `V = ${half}\\int_{-${r}}^{${r}} (${r * r} - x^2)\\,dx = ${half}\\left(${2 * r ** 3} - ${Q.of(2 * r ** 3, 3).toLatex()}\\right) = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `Slice the other way, perpendicular to the $y$-axis. At height $y$ the slice is a rectangle of width $2\\sqrt{${r * r} - y^2}$ and height $${m}y$, so $V = \\int_0^{${r}} ${2 * m}y\\sqrt{${r * r} - y^2}\\,dy = ${2 * m}\\Big[-\\frac{1}{3}(${r * r} - y^2)^{3/2}\\Big]_0^{${r}} = ${2 * m} \\cdot \\frac{${r ** 3}}{3} = ${answer.toLatex()}$.`,
+          `换个方向，垂直于 $y$ 轴切片。高度 $y$ 处的截面是宽 $2\\sqrt{${r * r} - y^2}$、高 $${m}y$ 的矩形，所以 $V = \\int_0^{${r}} ${2 * m}y\\sqrt{${r * r} - y^2}\\,dy = ${2 * m}\\Big[-\\frac{1}{3}(${r * r} - y^2)^{3/2}\\Big]_0^{${r}} = ${2 * m} \\cdot \\frac{${r ** 3}}{3} = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },
@@ -3536,23 +3813,71 @@ const squaresOverEllipse: KnowledgePointDef = {
   figure: calculusDrawings4["volumes-of-solids-with-square-cross-sections#squares-over-an-elliptical-base"],
   title: t("Squares over an elliptical base", "椭圆底面上的正方形截面"),
   explanation: t(
-    "On a base bounded by a closed curve, the side of a cross section is the full chord across the region, which is twice the height of the upper half when the base is symmetric. Solving the equation of the ellipse for $y^2$ gives the area of a square directly, with no root left to handle, as a quadratic in $x$ to integrate.",
-    "底面由闭曲线围成时，截面的边长是穿过区域的整条弦；底面对称时，它等于上半部分高度的两倍。从椭圆方程解出 $y^2$，就直接得到正方形的面积，不必处理根号，它是 $x$ 的二次式，可以直接积分。",
+    "On a base bounded by a closed curve, the side of a cross section is the full chord across the region, which is twice the height of the upper half when the base is symmetric. Solving the equation of the ellipse for $y^2$ gives the area of a square directly, with no root left to handle, as a quadratic in $x$ to integrate. For example, over the disc $x^2 + y^2 \\le 1$ the side is $2y$, the area is $4y^2 = 4(1 - x^2)$, and $V = 4\\int_{-1}^{1} (1 - x^2)\\,dx = 4\\left(2 - \\frac{2}{3}\\right) = \\frac{16}{3}$.\n\nCheck: $A(x) = 4(1 - x^2)$ is a parabola, largest $4$ at $x = 0$ and zero at $x = \\pm 1$, so the integral fills $\\frac{2}{3}$ of the rectangle $2 \\times 4$: $\\frac{2}{3} \\cdot 8 = \\frac{16}{3}$.\n\n> **Watch out.** The side is the whole chord $2y$, so the area is $4y^2$, not $y^2$.",
+    "底面由闭曲线围成时，截面的边长是穿过区域的整条弦；底面对称时，它等于上半部分高度的两倍。从椭圆方程解出 $y^2$，就直接得到正方形的面积，不必处理根号，它是 $x$ 的二次式，可以直接积分。例如，在圆盘 $x^2 + y^2 \\le 1$ 上，边长为 $2y$，面积为 $4y^2 = 4(1 - x^2)$，$V = 4\\int_{-1}^{1} (1 - x^2)\\,dx = 4\\left(2 - \\frac{2}{3}\\right) = \\frac{16}{3}$。\n\n检验：$A(x) = 4(1 - x^2)$ 是抛物线，在 $x = 0$ 处最大为 $4$，在 $x = \\pm 1$ 处为零，所以积分占 $2 \\times 4$ 矩形的 $\\frac{2}{3}$：$\\frac{2}{3} \\cdot 8 = \\frac{16}{3}$。\n\n> **注意。** 边长是整条弦 $2y$，所以面积是 $4y^2$，不是 $y^2$。",
   ),
   generate(rng) {
     const a = rng.int(2, 7);
     const b = rng.int(2, 7);
     const answer = Q.of(16 * a * b * b, 3);
+    const ellipse = `\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1`;
+    const area = `${4 * b * b}\\left(1 - \\frac{x^2}{${a * a}}\\right)`;
     return numberProblem({
       prompt: t(
-        `The base of a solid is the region inside the ellipse $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$. Cross sections perpendicular to the $x$-axis are squares with one side in the base. Find the volume.`,
-        `一个立体的底面是椭圆 $\\frac{x^2}{${a * a}} + \\frac{y^2}{${b * b}} = 1$ 内部的区域。垂直于 $x$ 轴的截面是正方形，一条边在底面内。求体积。`,
+        `The base of a solid is the region inside the ellipse $${ellipse}$. Cross sections perpendicular to the $x$-axis are squares with one side in the base. Find the volume.`,
+        `一个立体的底面是椭圆 $${ellipse}$ 内部的区域。垂直于 $x$ 轴的截面是正方形，一条边在底面内。求体积。`,
       ),
       answer,
-      wrong: [Q.of(16 * a * a * b, 3), Q.of(8 * a * b * b, 3), Q.of(4 * a * b * b, 3), Q.of(32 * a * b * b, 3)],
-      solution: t(
-        `The side is the chord $2y$, so the area is $4y^2 = ${4 * b * b}\\left(1 - \\frac{x^2}{${a * a}}\\right)$. Integrating from $x = -${a}$ to $x = ${a}$ gives $${4 * b * b}\\left(${2 * a} - ${Q.of(2 * a, 3).toLatex()}\\right) = ${answer.toLatex()}$.`,
-        `边长是弦长 $2y$，所以面积是 $4y^2 = ${4 * b * b}\\left(1 - \\frac{x^2}{${a * a}}\\right)$。从 $x = -${a}$ 积到 $x = ${a}$，得 $${4 * b * b}\\left(${2 * a} - ${Q.of(2 * a, 3).toLatex()}\\right) = ${answer.toLatex()}$。`,
+      mistakes: [
+        {
+          value: Q.of(16 * a * a * b, 3),
+          why: t(
+            `This swaps the semi-axes: the ellipse reaches $x = \\pm ${a}$ across and $y = \\pm ${b}$ up and down.`,
+            `这里把两个半轴弄反了：椭圆横向到 $x = \\pm ${a}$，纵向到 $y = \\pm ${b}$。`,
+          ),
+        },
+        {
+          value: Q.of(8 * a * b * b, 3),
+          why: t(
+            `This integrates only from $x = 0$ to $x = ${a}$; the base runs from $x = -${a}$ to $x = ${a}$.`,
+            `这里只从 $x = 0$ 积到 $x = ${a}$；底面从 $x = -${a}$ 延伸到 $x = ${a}$。`,
+          ),
+        },
+        {
+          value: Q.of(4 * a * b * b, 3),
+          why: t(
+            "This uses $y$ as the side; the side is the whole chord $2y$, so the area is $4y^2$.",
+            "这里把 $y$ 当作边长；边长是整条弦 $2y$，所以面积是 $4y^2$。",
+          ),
+        },
+        {
+          value: Q.of(8 * a * b * b),
+          why: t(
+            `This leaves out the integral of the $\\frac{x^2}{${a * a}}$ term; the area shrinks to zero at the ends of the ellipse.`,
+            `这里漏掉了 $\\frac{x^2}{${a * a}}$ 项的积分；面积在椭圆两端缩小到零。`,
+          ),
+        },
+      ],
+      solution: walkThrough(
+        [
+          [
+            ["Find the side of a square", "求正方形的边长"],
+            ["Solve the ellipse for $y^2$; the side is the chord from $-y$ to $y$:", "从椭圆方程解出 $y^2$；边长是从 $-y$ 到 $y$ 的弦："],
+            [`y^2 = ${b * b}\\left(1 - \\frac{x^2}{${a * a}}\\right), \\quad s = 2y`],
+          ],
+          [["Write the area", "写出面积"], ["The area of a square is $s^2$:", "正方形的面积为 $s^2$："], [`A(x) = 4y^2 = ${area}`]],
+          [
+            ["Integrate", "积分"],
+            [`The squares run from $x = -${a}$ to $x = ${a}$:`, `正方形从 $x = -${a}$ 到 $x = ${a}$：`],
+            [
+              `V = \\int_{-${a}}^{${a}} ${area}\\,dx = ${4 * b * b}\\left(${2 * a} - ${Q.of(2 * a, 3).toLatex()}\\right) = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        [
+          `$A(x)$ is a parabola in $x$, largest, $${4 * b * b}$, at $x = 0$ and zero at $x = \\pm ${a}$. Its integral fills $\\frac{2}{3}$ of the rectangle $${2 * a} \\times ${4 * b * b}$: $\\frac{2}{3} \\cdot ${2 * a} \\cdot ${4 * b * b} = ${answer.toLatex()}$.`,
+          `$A(x)$ 是 $x$ 的抛物线，在 $x = 0$ 处最大，为 $${4 * b * b}$，在 $x = \\pm ${a}$ 处为零。它的积分占 $${2 * a} \\times ${4 * b * b}$ 矩形的 $\\frac{2}{3}$：$\\frac{2}{3} \\cdot ${2 * a} \\cdot ${4 * b * b} = ${answer.toLatex()}$。`,
+        ],
       ),
     });
   },

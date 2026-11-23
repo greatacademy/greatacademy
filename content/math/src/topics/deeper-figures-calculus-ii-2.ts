@@ -9,6 +9,7 @@ import { Q } from "@ga/subject-math";
 import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
+import { numberProblem } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { bars, chart, curvePath, intTicks, type Scale, shadeUnder } from "./figure-charts.ts";
 import { drawn } from "./figure-reading-more.ts";
@@ -115,8 +116,8 @@ const arcOfLine = {
     "arc-length-of-a-drawn-segment-by-the-integral",
     ["Arc length of a drawn segment, by the integral", "用积分求所画线段的弧长"],
     [
-      "The arc length of $y = f(x)$ is $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$. For a straight segment, $f'$ is the constant slope, so the integral is $\\sqrt{1 + m^2}$ times the horizontal run.",
-      "$y = f(x)$ 的弧长为 $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$。对直线段，$f'$ 是常数斜率，所以积分等于 $\\sqrt{1 + m^2}$ 乘水平长度。",
+      "The arc length of $y = f(x)$ is $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$. For a straight segment, $f'$ is the constant slope, so the integral is $\\sqrt{1 + m^2}$ times the horizontal run. For example, the segment from $(0, 0)$ to $(3, 4)$ has slope $\\frac{4}{3}$, so $\\sqrt{1 + \\frac{16}{9}} = \\frac{5}{3}$ and the length is $\\frac{5}{3} \\cdot 3 = 5$.\n\nCheck: the distance formula gives $\\sqrt{3^2 + 4^2} = 5$.\n\n> **Watch out.** The integral is over $x$, so multiply by the run, the change in $x$, not by the rise.",
+      "$y = f(x)$ 的弧长为 $\\int_a^b \\sqrt{1 + f'(x)^2}\\,dx$。对直线段，$f'$ 是常数斜率，所以积分等于 $\\sqrt{1 + m^2}$ 乘水平长度。例如，从 $(0, 0)$ 到 $(3, 4)$ 的线段斜率为 $\\frac{4}{3}$，所以 $\\sqrt{1 + \\frac{16}{9}} = \\frac{5}{3}$，长度为 $\\frac{5}{3} \\cdot 3 = 5$。\n\n检验：由距离公式得 $\\sqrt{3^2 + 4^2} = 5$。\n\n> **注意。** 积分是对 $x$ 的，所以要乘水平长度，即 $x$ 的变化量，而不是竖直高度。",
     ],
     (rng) => {
       const k = rng.int(1, 2);
@@ -130,18 +131,61 @@ const arcOfLine = {
       const y0 = dy > 0 ? rng.int(0, 10 - dy) : rng.int(-dy, 10);
       const m = Q.of(dy, dx);
       const end: Point = [x0 + dx, y0 + dy];
-      return ask(
-        [
-          "The graph of $y = f(x)$ is the segment between the two marked points. Evaluate $\\int \\sqrt{1 + f'(x)^2}\\,dx$ over the interval it covers.",
-          "$y = f(x)$ 的图像是两个标记点之间的线段。在它覆盖的区间上计算 $\\int \\sqrt{1 + f'(x)^2}\\,dx$。",
-        ],
-        hyp * k,
-        [(run + rise) * k, dx, Math.abs(dy), hyp, hyp * k * k],
-        [
-          `The slope is $f' = ${m.toLatex()}$, so $\\sqrt{1 + f'^2} = \\frac{${hyp}}{${run}}$, and the run is $${dx}$. The integral is $\\frac{${hyp}}{${run}} \\cdot ${dx} = ${hyp * k}$.`,
-          `斜率为 $f' = ${m.toLatex()}$，所以 $\\sqrt{1 + f'^2} = \\frac{${hyp}}{${run}}$，水平长度为 $${dx}$。积分为 $\\frac{${hyp}}{${run}} \\cdot ${dx} = ${hyp * k}$。`,
-        ],
-        drawn(
+      const answer = hyp * k;
+      const all = [
+        {
+          value: Q.of((run + rise) * k),
+          why: t(
+            `This adds the run $${dx}$ and the rise $${Math.abs(dy)}$; the segment is the hypotenuse of that right triangle, which is shorter.`,
+            `这是把水平长度 $${dx}$ 和竖直高度 $${Math.abs(dy)}$ 相加；线段是这个直角三角形的斜边，比两者之和短。`,
+          ),
+        },
+        {
+          value: Q.of(dx),
+          why: t(
+            `This is the run alone, $\\int 1\\,dx$; the integrand is $\\sqrt{1 + f'(x)^2}$, not $1$.`,
+            `这只是水平长度 $\\int 1\\,dx$；被积函数是 $\\sqrt{1 + f'(x)^2}$，不是 $1$。`,
+          ),
+        },
+        {
+          value: Q.of(Math.abs(dy)),
+          why: t(
+            "This is the rise alone; a sloping segment is longer than its change in height.",
+            "这只是竖直高度；斜线段比它的高度变化长。",
+          ),
+        },
+        {
+          value: Q.of(hyp),
+          why: t(
+            `This is the hypotenuse of a ${run}-${rise}-${hyp} triangle; this segment has run $${dx}$, twice ${run}, so it is twice as long.`,
+            `这是 ${run}-${rise}-${hyp} 三角形的斜边；这条线段的水平长度是 $${dx}$，是 ${run} 的两倍，所以它也长两倍。`,
+          ),
+        },
+        {
+          value: Q.of(hyp * hyp * k, run),
+          why: t(
+            "This leaves out the square root: it is $\\int (1 + f'(x)^2)\\,dx$.",
+            "这里漏掉了根号：算的是 $\\int (1 + f'(x)^2)\\,dx$。",
+          ),
+        },
+      ];
+      const mistakes = all.filter((x, i) => !x.value.eq(Q.of(answer)) && all.findIndex((y) => y.value.eq(x.value)) === i);
+      const work = `\\int_{${x0}}^{${end[0]}} \\sqrt{1 + \\left(${m.toLatex()}\\right)^{2}}\\,dx = \\sqrt{\\frac{${hyp * hyp}}{${run * run}}} \\cdot ${dx} = \\frac{${hyp}}{${run}} \\cdot ${dx} = ${answer}`;
+      const distance = `\\sqrt{${dx}^{2} + ${Math.abs(dy)}^{2}} = \\sqrt{${dx * dx + dy * dy}} = ${answer}`;
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The graph of $y = f(x)$ is the segment between the two marked points. Evaluate $\\int \\sqrt{1 + f'(x)^2}\\,dx$ over the interval it covers.",
+            "$y = f(x)$ 的图像是两个标记点之间的线段。在它覆盖的区间上计算 $\\int \\sqrt{1 + f'(x)^2}\\,dx$。",
+          ),
+          answer,
+          mistakes,
+          solution: t(
+            `**Step 1: Read the slope.** From $(${x0}, ${y0})$ to $(${end[0]}, ${end[1]})$ the run is $${dx}$ and the rise is $${dy}$, so $f'(x) = ${m.toLatex()}$ on $[${x0}, ${end[0]}]$.\n\n**Step 2: Integrate the constant.** The integrand does not depend on $x$, so the integral is the integrand times the run:\n\n$$${work}$$\n\n**Check.** The integral is the length of the segment, so the distance formula must agree:\n\n$$${distance}$$`,
+            `**第一步：读斜率。**从 $(${x0}, ${y0})$ 到 $(${end[0]}, ${end[1]})$，水平长度为 $${dx}$，竖直变化为 $${dy}$，所以在 $[${x0}, ${end[0]}]$ 上 $f'(x) = ${m.toLatex()}$。\n\n**第二步：对常数积分。**被积函数与 $x$ 无关，所以积分等于被积函数乘水平长度：\n\n$$${work}$$\n\n**检验。**这个积分就是线段的长度，所以距离公式应给出相同的结果：\n\n$$${distance}$$`,
+          ),
+        }),
+        figure: drawn(
           { xMin: 0, xMax: 10, yMin: 0, yMax: 10 },
           [
             { kind: "segment", a: [x0, y0], b: end, accent: true },
@@ -150,7 +194,7 @@ const arcOfLine = {
           ],
           t(`A segment from (${x0}, ${y0}) to (${end[0]}, ${end[1]}).`, `从 (${x0}, ${y0}) 到 (${end[0]}, ${end[1]}) 的线段。`),
         ),
-      );
+      };
     },
   ),
   figure: calculusDrawings4["the-arc-length-of-a-planar-curve#arc-length-of-a-drawn-segment-by-the-integral"],
@@ -176,29 +220,85 @@ function solidBase(a: number, b: number) {
   );
 }
 
+/** overTriangle reads the width of the drawn triangle base and works the integral of its square. */
+function overTriangle(a: number, b: number) {
+  const xa = a === 1 ? "x" : `\\frac{x}{${a}}`;
+  const width = `${b === 1 ? "" : b}\\left(1 - ${xa}\\right)`;
+  const squared = `\\int_0^{${a}} s(x)^2\\,dx = \\int_0^{${a}} ${b * b === 1 ? "" : b * b}\\left(1 - ${xa}\\right)^{2} dx = \\left[-${Q.of(a * b * b, 3).toLatex()}\\left(1 - ${xa}\\right)^{3}\\right]_0^{${a}} = ${Q.of(a * b * b, 3).toLatex()}`;
+  const read: Pair = [
+    `**Step 1: Read the width.** The base has vertices $(0, 0)$, $(${a}, 0)$ and $(0, ${b})$. At $x$ it runs from the $x$-axis up to the slanted side, so its width is $s(x) = ${width}$, falling from $${b}$ at $x = 0$ to $0$ at $x = ${a}$.`,
+    `**第一步：读宽度。**底面的顶点是 $(0, 0)$、$(${a}, 0)$ 和 $(0, ${b})$。在 $x$ 处它从 $x$ 轴延伸到斜边，所以宽度是 $s(x) = ${width}$，从 $x = 0$ 处的 $${b}$ 减小到 $x = ${a}$ 处的 $0$。`,
+  ];
+  return { read, squared };
+}
+
+/** triangleWidthMistakes lists the slips shared by the solids over the drawn triangle: c is the fraction of s(x)^2 that a section's area is. */
+function triangleWidthMistakes(a: number, b: number, c: Q, answer: Q) {
+  const all = [
+    {
+      value: Q.of(a * b * b).mul(c),
+      why: t(
+        `This uses the largest width $${b}$ for every slice, so every slice is the same; the sections shrink to nothing at $x = ${a}$, and the solid is a third of that.`,
+        `这里每一片都用了最大宽度 $${b}$，这样每片都一样大；截面在 $x = ${a}$ 处缩为零，立体只是它的三分之一。`,
+      ),
+    },
+    {
+      value: Q.of(a * a * b, 3).mul(c),
+      why: t(
+        `This swaps the legs: the width at $x$ is measured up to $${b}$, and $x$ runs from $0$ to $${a}$.`,
+        `这里把两条直角边弄反了：$x$ 处的宽度最大为 $${b}$，而 $x$ 从 $0$ 变到 $${a}$。`,
+      ),
+    },
+    {
+      value: Q.of(a * b, 2),
+      why: t(
+        "This is the area of the base triangle; the volume integrates the area of each section.",
+        "这是底面三角形的面积；体积要对每个截面的面积积分。",
+      ),
+    },
+  ];
+  return all.filter((x) => !x.value.eq(answer));
+}
+
 const squareSections = point(
   "square-cross-sections-over-a-drawn-base",
   ["Square cross sections over a drawn base", "所画底面上的正方形截面"],
   [
-    "If the cross section at $x$ is a square whose side lies in the base, its area is $s(x)^2$, where $s(x)$ is the width of the base at $x$. The volume is $\\int s(x)^2\\,dx$.",
-    "如果 $x$ 处的截面是边在底面上的正方形，它的面积是 $s(x)^2$，其中 $s(x)$ 是底面在 $x$ 处的宽度。体积为 $\\int s(x)^2\\,dx$。",
+    "If the cross section at $x$ is a square whose side lies in the base, its area is $s(x)^2$, where $s(x)$ is the width of the base at $x$. The volume is $\\int s(x)^2\\,dx$. For example, over the triangle with vertices $(0, 0)$, $(3, 0)$ and $(0, 2)$, the width is $s(x) = 2\\left(1 - \\frac{x}{3}\\right)$, and $\\int_0^3 4\\left(1 - \\frac{x}{3}\\right)^2 dx = 4$.\n\nCheck: the squares shrink from side $2$ to a point, so the solid is a pyramid with a $2 \\times 2$ base and height $3$, and $\\frac{1}{3} \\cdot 4 \\cdot 3 = 4$.\n\n> **Watch out.** The side of each square is the width at that $x$, which shrinks; using the largest width for every slice gives a prism three times too large.",
+    "如果 $x$ 处的截面是边在底面上的正方形，它的面积是 $s(x)^2$，其中 $s(x)$ 是底面在 $x$ 处的宽度。体积为 $\\int s(x)^2\\,dx$。例如，在顶点为 $(0, 0)$、$(3, 0)$、$(0, 2)$ 的三角形上，宽度为 $s(x) = 2\\left(1 - \\frac{x}{3}\\right)$，而 $\\int_0^3 4\\left(1 - \\frac{x}{3}\\right)^2 dx = 4$。\n\n检验：正方形从边长 $2$ 缩为一点，所以立体是底面为 $2 \\times 2$、高为 $3$ 的棱锥，而 $\\frac{1}{3} \\cdot 4 \\cdot 3 = 4$。\n\n> **注意。** 每个正方形的边长是该 $x$ 处的宽度，它会变小；每片都用最大宽度会得到大三倍的棱柱。",
   ],
   (rng) => {
     const a = rng.int(1, 7);
     const b = rng.int(1, 7);
-    return ask(
-      [
-        "The triangle is the base of a solid. Each cross section perpendicular to the $x$-axis is a square with one side in the base. Find the volume.",
-        "三角形是一个立体的底面。垂直于 $x$ 轴的每个截面都是一边在底面上的正方形。求体积。",
-      ],
-      Q.of(a * b * b, 3),
-      [a * b * b, Q.of(a * b * b, 2), Q.of(a * a * b, 3), Q.of(a * b, 2), Q.of(a * b * b, 6)],
-      [
-        `The width at $x$ is $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$. Then $\\int_0^{${a}} s(x)^2\\,dx = \\frac{${a} \\cdot ${b}^2}{3} = ${Q.of(a * b * b, 3).toLatex()}$.`,
-        `$x$ 处的宽度为 $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$。于是 $\\int_0^{${a}} s(x)^2\\,dx = \\frac{${a} \\cdot ${b}^2}{3} = ${Q.of(a * b * b, 3).toLatex()}$。`,
-      ],
-      solidBase(a, b),
-    );
+    const answer = Q.of(a * b * b, 3);
+    const { read, squared } = overTriangle(a, b);
+    const all = [
+      ...triangleWidthMistakes(a, b, Q.of(1), answer),
+      {
+        value: Q.of(a * b * b, 6),
+        why: t(
+          "This takes half of each square, the area of an isosceles right triangle; a square section has area $s(x)^2$.",
+          "这里取了每个正方形的一半，即等腰直角三角形的面积；正方形截面的面积是 $s(x)^2$。",
+        ),
+      },
+    ];
+    const mistakes = all.filter((x, i) => all.findIndex((y) => y.value.eq(x.value)) === i);
+    const pyramid = `\\frac{1}{3} \\cdot ${b}^{2} \\cdot ${a} = ${answer.toLatex()}`;
+    return {
+      ...numberProblem({
+        prompt: t(
+          "The triangle is the base of a solid. Each cross section perpendicular to the $x$-axis is a square with one side in the base. Find the volume.",
+          "三角形是一个立体的底面。垂直于 $x$ 轴的每个截面都是一边在底面上的正方形。求体积。",
+        ),
+        answer,
+        mistakes,
+        solution: t(
+          `${read[0]}\n\n**Step 2: Integrate the area of a square.** A square of side $s(x)$ has area $s(x)^2$:\n\n$$${squared}$$\n\n**Check.** The squares shrink from side $${b}$ at $x = 0$ to a point at $x = ${a}$, so the solid is a pyramid with a $${b} \\times ${b}$ base and height $${a}$:\n\n$$${pyramid}$$`,
+          `${read[1]}\n\n**第二步：对正方形面积积分。**边长为 $s(x)$ 的正方形面积是 $s(x)^2$：\n\n$$${squared}$$\n\n**检验。**正方形从 $x = 0$ 处的边长 $${b}$ 缩为 $x = ${a}$ 处的一点，所以立体是底面为 $${b} \\times ${b}$、高为 $${a}$ 的棱锥：\n\n$$${pyramid}$$`,
+        ),
+      }),
+      figure: solidBase(a, b),
+    };
   },
 );
 
@@ -207,25 +307,48 @@ const triangleSections = {
     "triangular-cross-sections-over-a-drawn-base",
     ["Triangular cross sections over a drawn base", "所画底面上的三角形截面"],
     [
-      "If the cross section at $x$ is an isosceles right triangle with one leg in the base, its area is $\\frac{1}{2}s(x)^2$, where $s(x)$ is the width of the base at $x$. The volume is the integral of that area.",
-      "如果 $x$ 处的截面是一条直角边在底面上的等腰直角三角形，它的面积是 $\\frac{1}{2}s(x)^2$，其中 $s(x)$ 是底面在 $x$ 处的宽度。体积是该面积的积分。",
+      "If the cross section at $x$ is an isosceles right triangle with one leg in the base, its area is $\\frac{1}{2}s(x)^2$, where $s(x)$ is the width of the base at $x$. The volume is the integral of that area. For example, over the triangle with vertices $(0, 0)$, $(3, 0)$ and $(0, 2)$, the width is $s(x) = 2\\left(1 - \\frac{x}{3}\\right)$, and $\\int_0^3 \\frac{1}{2} \\cdot 4\\left(1 - \\frac{x}{3}\\right)^2 dx = 2$.\n\nCheck: the solid is a pyramid whose base is the largest section, a triangle of area $\\frac{1}{2} \\cdot 2^2 = 2$, with height $3$, and $\\frac{1}{3} \\cdot 2 \\cdot 3 = 2$.\n\n> **Watch out.** With a leg in the base the area is $\\frac{1}{2}s(x)^2$; with the hypotenuse in the base it would be $\\frac{1}{4}s(x)^2$, so read which side lies in the base.",
+      "如果 $x$ 处的截面是一条直角边在底面上的等腰直角三角形，它的面积是 $\\frac{1}{2}s(x)^2$，其中 $s(x)$ 是底面在 $x$ 处的宽度。体积是该面积的积分。例如，在顶点为 $(0, 0)$、$(3, 0)$、$(0, 2)$ 的三角形上，宽度为 $s(x) = 2\\left(1 - \\frac{x}{3}\\right)$，而 $\\int_0^3 \\frac{1}{2} \\cdot 4\\left(1 - \\frac{x}{3}\\right)^2 dx = 2$。\n\n检验：立体是以最大截面为底的棱锥，底是面积为 $\\frac{1}{2} \\cdot 2^2 = 2$ 的三角形，高为 $3$，而 $\\frac{1}{3} \\cdot 2 \\cdot 3 = 2$。\n\n> **注意。** 直角边在底面上时面积是 $\\frac{1}{2}s(x)^2$；斜边在底面上时是 $\\frac{1}{4}s(x)^2$，所以要看清哪条边在底面上。",
     ],
     (rng) => {
       const a = rng.int(1, 7);
       const b = rng.int(1, 7);
-      return ask(
-        [
-          "The triangle is the base of a solid. Each cross section perpendicular to the $x$-axis is an isosceles right triangle with one leg in the base. Find the volume.",
-          "三角形是一个立体的底面。垂直于 $x$ 轴的每个截面都是一条直角边在底面上的等腰直角三角形。求体积。",
-        ],
-        Q.of(a * b * b, 6),
-        [Q.of(a * b * b, 3), Q.of(a * b * b, 2), Q.of(a * a * b, 6), Q.of(a * b, 4), Q.of(a * b * b, 12)],
-        [
-          `The width at $x$ is $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$. Then $\\int_0^{${a}} \\frac{1}{2}s(x)^2\\,dx = \\frac{1}{2} \\cdot \\frac{${a} \\cdot ${b}^2}{3} = ${Q.of(a * b * b, 6).toLatex()}$.`,
-          `$x$ 处的宽度为 $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$。于是 $\\int_0^{${a}} \\frac{1}{2}s(x)^2\\,dx = \\frac{1}{2} \\cdot \\frac{${a} \\cdot ${b}^2}{3} = ${Q.of(a * b * b, 6).toLatex()}$。`,
-        ],
-        solidBase(a, b),
-      );
+      const answer = Q.of(a * b * b, 6);
+      const { read, squared } = overTriangle(a, b);
+      const all = [
+        {
+          value: Q.of(a * b * b, 3),
+          why: t(
+            "This uses the whole square $s(x)^2$; the triangle is half of it, $\\frac{1}{2}s(x)^2$.",
+            "这里用了整个正方形 $s(x)^2$；三角形只是它的一半，即 $\\frac{1}{2}s(x)^2$。",
+          ),
+        },
+        ...triangleWidthMistakes(a, b, Q.of(1, 2), answer),
+        {
+          value: Q.of(a * b * b, 12),
+          why: t(
+            "This puts the hypotenuse in the base, with area $\\frac{1}{4}s(x)^2$; here a leg lies in the base.",
+            "这是把斜边放在底面上，面积为 $\\frac{1}{4}s(x)^2$；这里是一条直角边在底面上。",
+          ),
+        },
+      ];
+      const mistakes = all.filter((x, i) => all.findIndex((y) => y.value.eq(x.value)) === i);
+      const pyramid = `\\frac{1}{3} \\cdot \\frac{${b}^{2}}{2} \\cdot ${a} = ${answer.toLatex()}`;
+      return {
+        ...numberProblem({
+          prompt: t(
+            "The triangle is the base of a solid. Each cross section perpendicular to the $x$-axis is an isosceles right triangle with one leg in the base. Find the volume.",
+            "三角形是一个立体的底面。垂直于 $x$ 轴的每个截面都是一条直角边在底面上的等腰直角三角形。求体积。",
+          ),
+          answer,
+          mistakes,
+          solution: t(
+            `${read[0]}\n\n**Step 2: Integrate the area of a triangle.** An isosceles right triangle with legs $s(x)$ has area $\\frac{1}{2}s(x)^2$, so the volume is half of\n\n$$${squared}$$\n\nthat is, $\\frac{1}{2} \\cdot ${Q.of(a * b * b, 3).toLatex()} = ${answer.toLatex()}$.\n\n**Check.** The sections shrink to a point at $x = ${a}$, so the solid is a pyramid. Its base is the section at $x = 0$, a triangle of area $\\frac{${b}^{2}}{2}$, and its height is $${a}$:\n\n$$${pyramid}$$`,
+            `${read[1]}\n\n**第二步：对三角形面积积分。**直角边为 $s(x)$ 的等腰直角三角形面积是 $\\frac{1}{2}s(x)^2$，所以体积是下式的一半：\n\n$$${squared}$$\n\n即 $\\frac{1}{2} \\cdot ${Q.of(a * b * b, 3).toLatex()} = ${answer.toLatex()}$。\n\n**检验。**截面在 $x = ${a}$ 处缩为一点，所以立体是棱锥。它的底是 $x = 0$ 处的截面，面积为 $\\frac{${b}^{2}}{2}$ 的三角形，高为 $${a}$：\n\n$$${pyramid}$$`,
+          ),
+        }),
+        figure: solidBase(a, b),
+      };
     },
   ),
   figure: calculusDrawings4["volumes-of-solids-with-triangular-cross-sections#triangular-cross-sections-over-a-drawn-base"],
@@ -235,26 +358,48 @@ const circleSections = point(
   "circular-cross-sections-over-a-drawn-base",
   ["Circular cross sections over a drawn base", "所画底面上的圆形截面"],
   [
-    "If the cross section at $x$ is a disc whose diameter is the width $s(x)$ of the base, its area is $\\pi\\left(\\frac{s(x)}{2}\\right)^2 = \\frac{\\pi}{4}s(x)^2$. The volume is the integral of that area.",
-    "如果 $x$ 处的截面是直径等于底面宽度 $s(x)$ 的圆，它的面积是 $\\pi\\left(\\frac{s(x)}{2}\\right)^2 = \\frac{\\pi}{4}s(x)^2$。体积是该面积的积分。",
+    "If the cross section at $x$ is a disc whose diameter is the width $s(x)$ of the base, its area is $\\pi\\left(\\frac{s(x)}{2}\\right)^2 = \\frac{\\pi}{4}s(x)^2$. The volume is the integral of that area. For example, over the triangle with vertices $(0, 0)$, $(3, 0)$ and $(0, 2)$, the width is $s(x) = 2\\left(1 - \\frac{x}{3}\\right)$, and $\\int_0^3 \\frac{\\pi}{4} \\cdot 4\\left(1 - \\frac{x}{3}\\right)^2 dx = \\pi$.\n\nCheck: the discs shrink from diameter $2$ to a point, so the solid is a cone of radius $1$ and height $3$, and $\\frac{1}{3}\\pi \\cdot 1^2 \\cdot 3 = \\pi$.\n\n> **Watch out.** The width is the diameter, so the radius is $\\frac{s(x)}{2}$; using $s(x)$ as the radius makes every disc four times too large.",
+    "如果 $x$ 处的截面是直径等于底面宽度 $s(x)$ 的圆，它的面积是 $\\pi\\left(\\frac{s(x)}{2}\\right)^2 = \\frac{\\pi}{4}s(x)^2$。体积是该面积的积分。例如，在顶点为 $(0, 0)$、$(3, 0)$、$(0, 2)$ 的三角形上，宽度为 $s(x) = 2\\left(1 - \\frac{x}{3}\\right)$，而 $\\int_0^3 \\frac{\\pi}{4} \\cdot 4\\left(1 - \\frac{x}{3}\\right)^2 dx = \\pi$。\n\n检验：圆从直径 $2$ 缩为一点，所以立体是半径为 $1$、高为 $3$ 的圆锥，而 $\\frac{1}{3}\\pi \\cdot 1^2 \\cdot 3 = \\pi$。\n\n> **注意。** 宽度是直径，所以半径是 $\\frac{s(x)}{2}$；把 $s(x)$ 当作半径，每个圆都会大四倍。",
   ],
   (rng) => {
     const a = rng.int(1, 7);
     const b = rng.int(1, 7);
     const answer = Q.of(a * b * b, 12);
-    return ask(
-      [
-        "The triangle is the base of a solid. Each cross section perpendicular to the $x$-axis is a disc whose diameter lies in the base. Find the volume divided by $\\pi$.",
-        "三角形是一个立体的底面。垂直于 $x$ 轴的每个截面都是直径在底面上的圆。求体积除以 $\\pi$。",
-      ],
-      answer,
-      [Q.of(a * b * b, 3), Q.of(a * b * b, 6), Q.of(a * a * b, 12), Q.of(a * b * b, 4), Q.of(a * b * b, 24)],
-      [
-        `The diameter at $x$ is $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$. Then $\\int_0^{${a}} \\frac{\\pi}{4}s(x)^2\\,dx = \\frac{\\pi}{4} \\cdot \\frac{${a} \\cdot ${b}^2}{3}$, and dividing by $\\pi$ gives $${answer.toLatex()}$.`,
-        `$x$ 处的直径为 $s(x) = ${b}\\left(1 - \\frac{x}{${a}}\\right)$。于是 $\\int_0^{${a}} \\frac{\\pi}{4}s(x)^2\\,dx = \\frac{\\pi}{4} \\cdot \\frac{${a} \\cdot ${b}^2}{3}$，除以 $\\pi$ 得 $${answer.toLatex()}$。`,
-      ],
-      solidBase(a, b),
-    );
+    const { read, squared } = overTriangle(a, b);
+    const all = [
+      {
+        value: Q.of(a * b * b, 3),
+        why: t(
+          "This uses the width $s(x)$ as the radius; it is the diameter, so the radius is $\\frac{s(x)}{2}$.",
+          "这里把宽度 $s(x)$ 当作半径；它是直径，半径是 $\\frac{s(x)}{2}$。",
+        ),
+      },
+      ...triangleWidthMistakes(a, b, Q.of(1, 4), answer),
+      {
+        value: Q.of(a * b * b, 24),
+        why: t(
+          "This uses semicircles, of area $\\frac{\\pi}{8}s(x)^2$; the sections are whole discs.",
+          "这里用了半圆，面积为 $\\frac{\\pi}{8}s(x)^2$；截面是整个圆。",
+        ),
+      },
+    ];
+    const mistakes = all.filter((x, i) => all.findIndex((y) => y.value.eq(x.value)) === i);
+    const cone = `\\frac{1}{3}\\pi \\left(\\frac{${b}}{2}\\right)^{2} \\cdot ${a} = ${answer.toLatex()}\\pi`;
+    return {
+      ...numberProblem({
+        prompt: t(
+          "The triangle is the base of a solid. Each cross section perpendicular to the $x$-axis is a disc whose diameter lies in the base. Find the volume divided by $\\pi$.",
+          "三角形是一个立体的底面。垂直于 $x$ 轴的每个截面都是直径在底面上的圆。求体积除以 $\\pi$。",
+        ),
+        answer,
+        mistakes,
+        solution: t(
+          `${read[0]}\n\n**Step 2: Integrate the area of a disc.** The diameter is $s(x)$, so the radius is $\\frac{s(x)}{2}$ and the area is $\\frac{\\pi}{4}s(x)^2$. The volume is $\\frac{\\pi}{4}$ times\n\n$$${squared}$$\n\nthat is, $\\frac{\\pi}{4} \\cdot ${Q.of(a * b * b, 3).toLatex()} = ${answer.toLatex()}\\pi$, and dividing by $\\pi$ gives $${answer.toLatex()}$.\n\n**Check.** The discs shrink from diameter $${b}$ to a point at $x = ${a}$, so the solid is a cone of radius $\\frac{${b}}{2}$ and height $${a}$:\n\n$$${cone}$$`,
+          `${read[1]}\n\n**第二步：对圆的面积积分。**直径是 $s(x)$，所以半径是 $\\frac{s(x)}{2}$，面积是 $\\frac{\\pi}{4}s(x)^2$。体积是 $\\frac{\\pi}{4}$ 乘以\n\n$$${squared}$$\n\n即 $\\frac{\\pi}{4} \\cdot ${Q.of(a * b * b, 3).toLatex()} = ${answer.toLatex()}\\pi$，除以 $\\pi$ 得 $${answer.toLatex()}$。\n\n**检验。**圆从直径 $${b}$ 缩为 $x = ${a}$ 处的一点，所以立体是半径为 $\\frac{${b}}{2}$、高为 $${a}$ 的圆锥：\n\n$$${cone}$$`,
+        ),
+      }),
+      figure: solidBase(a, b),
+    };
   },
 );
 

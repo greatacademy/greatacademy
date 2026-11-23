@@ -18,7 +18,7 @@ import { multivariableDrawings6 } from "../explanation-drawings-multivariable-6.
 import { precalculusDrawings3 } from "../explanation-drawings-precalculus-3.ts";
 import { precalculusDrawings4 } from "../explanation-drawings-precalculus-4.ts";
 import { probabilityDrawings1 } from "../explanation-drawings-probability-and-statistics-1.ts";
-import { numberProblem } from "../problems.ts";
+import { explainedChoice, numberProblem } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { pickChoice as choiceFrom } from "./grade-4-fractions.ts";
@@ -142,8 +142,8 @@ const areaSetupFromDrawing: KnowledgePointDef = {
   id: "the-area-integral-from-a-drawing",
   title: t("The area integral from a drawing", "由图写面积积分"),
   explanation: t(
-    "A drawing settles what the formula leaves open: which curve lies on top, and where the curves meet. The area between them is the integral of top minus bottom, between the two crossings. Writing bottom minus top gives a negative number, and reading the limits from the wrong axis gives the wrong region altogether, so check both against the picture.",
-    "图能确定公式留下的问题：哪条曲线在上面，两条曲线在哪里相交。它们之间的面积是上减下的积分，积分限是两个交点。写成下减上会得到负数，从错误的轴读积分限则会得到完全不同的区域，所以两者都要和图对照。",
+    "A drawing settles what the formula leaves open: which curve lies on top, and where the curves meet. The area between them is the integral of top minus bottom, between the two crossings. For example, $y = x^2$ and $y = 4$ meet where $x^2 = 4$, at $x = \\pm 2$, and the line is on top, so the area is $\\int_{-2}^{2} \\left(4 - x^2\\right) dx = \\frac{32}{3}$.\n\nCheck: the region between a parabola and a chord fills $\\frac{2}{3}$ of the rectangle around it, here $4$ wide and $4$ tall, and $\\frac{2}{3} \\cdot 16 = \\frac{32}{3}$.\n\n> **Watch out.** Writing bottom minus top gives a negative number, and reading only one crossing, starting at $x = 0$, gives half the region; check both against the picture.",
+    "图能确定公式留下的问题：哪条曲线在上面，两条曲线在哪里相交。它们之间的面积是上减下的积分，积分限是两个交点。例如，$y = x^2$ 与 $y = 4$ 在 $x^2 = 4$ 即 $x = \\pm 2$ 处相交，直线在上面，所以面积为 $\\int_{-2}^{2} \\left(4 - x^2\\right) dx = \\frac{32}{3}$。\n\n检验：抛物线与弦之间的区域占外接矩形的 $\\frac{2}{3}$，这里矩形宽 $4$、高 $4$，而 $\\frac{2}{3} \\cdot 16 = \\frac{32}{3}$。\n\n> **注意。** 写成下减上会得到负数；只读一个交点、从 $x = 0$ 开始积分，只得到一半区域。两者都要和图对照。",
   ),
   generate(rng) {
     const k = rng.int(1, 3);
@@ -160,24 +160,53 @@ const areaSetupFromDrawing: KnowledgePointDef = {
       return b.includes(" ") ? `${a} - (${b})` : `${a} - ${b}`;
     };
     const integral = (from: string, body: string) => `\\int_{${from}}^{${k}} \\left(${body}\\right) \\, dx`;
-    return pickChoice(
-      rng,
-      t(
+    const area = Q.of(4 * k ** 3, 3).toLatex();
+    const topName: [string, string] = up
+      ? [`the line $y = ${level}$`, `直线 $y = ${level}$`]
+      : [`the parabola $y = ${curve}$`, `抛物线 $y = ${curve}$`];
+    const work = `${integral(`-${k}`, diff(top, bottom))} = \\int_{-${k}}^{${k}} \\left(${k * k} - x^2\\right) dx = \\Big[${k === 1 ? "" : k * k}x - \\frac{x^3}{3}\\Big]_{-${k}}^{${k}} = ${area}`;
+    const third = `\\frac{2}{3} \\cdot ${2 * k} \\cdot ${k * k} = ${area}`;
+    return explainedChoice(rng, {
+      prompt: t(
         `The shaded region lies between $y = ${curve}$ and $y = ${level}$. Which integral gives its area?`,
         `阴影区域在 $y = ${curve}$ 和 $y = ${level}$ 之间。哪个积分给出它的面积？`,
       ),
-      math(integral(`-${k}`, diff(top, bottom))),
-      [
-        math(integral(`-${k}`, diff(bottom, top))),
-        math(integral("0", diff(top, bottom))),
-        math(integral(`-${k}`, curve)),
-        math(integral("0", diff(bottom, top))),
+      correct: math(integral(`-${k}`, diff(top, bottom))),
+      wrong: [
+        {
+          option: math(integral(`-${k}`, diff(bottom, top))),
+          why: t(
+            `This is bottom minus top; ${topName[0]} is on top here, so this integral is $-${area}$.`,
+            `这是下减上；这里${topName[1]} 在上面，所以这个积分是 $-${area}$。`,
+          ),
+        },
+        {
+          option: math(integral("0", diff(top, bottom))),
+          why: t(
+            `This starts at $x = 0$ and covers only the right half; the curves also meet at $x = -${k}$, so it gives half the area.`,
+            `这是从 $x = 0$ 开始积分，只覆盖右半部分；两曲线在 $x = -${k}$ 处也相交，所以只得到一半面积。`,
+          ),
+        },
+        {
+          option: math(integral(`-${k}`, curve)),
+          why: t(
+            `This integrates the parabola alone, which measures the area between it and the $x$-axis, not between it and the line $y = ${level}$.`,
+            `这只对抛物线积分，求的是它与 $x$ 轴之间的面积，而不是它与直线 $y = ${level}$ 之间的面积。`,
+          ),
+        },
+        {
+          option: math(integral("0", diff(bottom, top))),
+          why: t(
+            "This starts at $x = 0$ and subtracts in the wrong order: it gives half the region, with a negative sign.",
+            "这是从 $x = 0$ 开始积分，而且减反了：得到的是一半区域，还带负号。",
+          ),
+        },
       ],
-      t(
-        `${up ? "The line" : "The parabola"} is on top here, and the curves meet at $x = \\pm ${k}$. So the integrand is top minus bottom, between those limits.`,
-        `这里${up ? "直线" : "抛物线"}在上面，两条曲线相交于 $x = \\pm ${k}$。所以被积函数是上减下，积分限就是这两个值。`,
+      solution: t(
+        `**Step 1: Find the crossings.** Set the curves equal: $${curve} = ${level}$ gives $x^2 = ${k * k}$, so $x = \\pm ${k}$, the ends of the shaded region.\n\n**Step 2: Subtract bottom from top.** At $x = 0$ the parabola is at $${up ? low : high}$ and the line at $${level}$, so ${topName[0]} is on top. The area is\n\n$$${work}$$\n\n**Check.** The region between a parabola and a chord fills $\\frac{2}{3}$ of the rectangle around it, here $${2 * k}$ wide and $${k * k}$ tall:\n\n$$${third}$$\n\nThis is positive and matches the integral.`,
+        `**第一步：求交点。**令两曲线相等：$${curve} = ${level}$ 得 $x^2 = ${k * k}$，所以 $x = \\pm ${k}$，这就是阴影区域的两端。\n\n**第二步：上减下。**在 $x = 0$ 处抛物线在 $${up ? low : high}$，直线在 $${level}$，所以${topName[1]} 在上面。面积为\n\n$$${work}$$\n\n**检验。**抛物线与弦之间的区域占外接矩形的 $\\frac{2}{3}$，这里矩形宽 $${2 * k}$、高 $${k * k}$：\n\n$$${third}$$\n\n结果为正，与积分一致。`,
       ),
-      drawn(
+      figure: drawn(
         { xMin: -k - 2, xMax: k + 2, yMin: -1, yMax: high + 2, labelEvery: high > 8 ? 2 : 1 },
         [
           { kind: "polygon", points: parametric((x) => [x, f(x)], -k, k, 40) },
@@ -189,7 +218,7 @@ const areaSetupFromDrawing: KnowledgePointDef = {
           `抛物线 y = ${curve} 和直线 y = ${level}，它们之间从 x = -${k} 到 x = ${k} 的区域涂了阴影。`,
         ),
       ),
-    );
+    });
   },
 };
 

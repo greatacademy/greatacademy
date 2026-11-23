@@ -8,6 +8,7 @@ import { gcd, Q, svgDocument } from "@ga/subject-math";
 import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
+import { explainedChoice, numberProblem } from "../problems.ts";
 import { ask, choose, type Pair, point, same } from "../university-kit.ts";
 import { drawn, label } from "./figure-reading-more.ts";
 
@@ -38,8 +39,8 @@ const areaInY = point(
   "setting-up-a-drawn-area-in-y",
   ["Setting up a drawn area in y", "按 y 建立图中面积的积分"],
   [
-    "When a region is bounded on the left and right by curves, slice it into horizontal strips. Each strip has width equal to the right curve minus the left curve, at that height. The limits are the heights where the two curves meet, read on the vertical axis, and the integral is taken with respect to $y$.",
-    "当区域的左右边界是曲线时，把它切成水平窄条。每个窄条的宽度等于该高度处右边曲线减左边曲线。积分限是两条曲线相交的高度，在纵轴上读出，并对 $y$ 积分。",
+    "When a region is bounded on the left and right by curves, slice it into horizontal strips. Each strip has width equal to the right curve minus the left curve, at that height. The limits are the heights where the two curves meet, read on the vertical axis, and the integral is taken with respect to $y$. For example, $x = y^{2}$ and $x = y + 2$ meet at heights $y = -1$ and $y = 2$, and the line is on the right between them, so the area is $\\int_{-1}^{2} \\left[(y + 2) - y^{2}\\right] dy = \\frac{9}{2}$.\n\nCheck: at the middle height $y = \\frac{1}{2}$ the line gives $x = \\frac{5}{2}$ and the parabola $x = \\frac{1}{4}$, so right minus left is positive there, as a width must be.\n\n> **Watch out.** The limits are heights, read on the $y$-axis; the $x$-values of the crossing points belong to a different integral.",
+    "当区域的左右边界是曲线时，把它切成水平窄条。每个窄条的宽度等于该高度处右边曲线减左边曲线。积分限是两条曲线相交的高度，在纵轴上读出，并对 $y$ 积分。例如，$x = y^{2}$ 与 $x = y + 2$ 在高度 $y = -1$ 和 $y = 2$ 处相交，在这之间直线在右边，所以面积为 $\\int_{-1}^{2} \\left[(y + 2) - y^{2}\\right] dy = \\frac{9}{2}$。\n\n检验：在中间高度 $y = \\frac{1}{2}$ 处，直线给出 $x = \\frac{5}{2}$，抛物线给出 $x = \\frac{1}{4}$，右减左为正，正如宽度应有的那样。\n\n> **注意。** 积分限是高度，要在 $y$ 轴上读；交点的 $x$ 值属于另一个积分。",
   ],
   (rng) => {
     const [y1, y2] = rng.pick<Point>([
@@ -60,30 +61,65 @@ const areaInY = point(
     const [right, left] = flip ? [curveTex, lineTex] : [lineTex, curveTex];
     const plain = (x: string) => x.replace("y^2", "y²").replace("-", "−");
     const form = (lo: number, hi: number, a: string, b: string, d: string) =>
-      same(`\\int_{${lo}}^{${hi}} \\left[ (${a}) - (${b}) \\right] d${d}`);
+      t(...same(`\\int_{${lo}}^{${hi}} \\left[ (${a}) - (${b}) \\right] d${d}`));
     const [x1, x2] = [Math.min(curved(y1), curved(y2)), Math.max(curved(y1), curved(y2))];
     const samples = Array.from({ length: 33 }, (_, i) => y1 + ((y2 - y1) * i) / 32);
     const polygon = [...samples.map((y): Point => [curved(y), y]), ...[...samples].reverse().map((y): Point => [straight(y), y])];
     const extended = Array.from({ length: 41 }, (_, i) => -4.2 + (8.4 * i) / 40).filter((y) => Math.abs(curved(y)) < 9);
     const view: PlaneView = flip ? { xMin: -8, xMax: 4, yMin: -6, yMax: 6 } : { xMin: -4, xMax: 8, yMin: -6, yMax: 6 };
-    return choose(
-      rng,
-      [
+    const mid = Q.of(y1 + y2, 2);
+    const curvedAt = Q.of(s).mul(mid).mul(mid).add(Q.of(c));
+    const straightAt = Q.of(s)
+      .mul(
+        Q.of(y1 + y2)
+          .mul(mid)
+          .sub(Q.of(y1 * y2)),
+      )
+      .add(Q.of(c));
+    const [R, L] = flip ? [curvedAt, straightAt] : [straightAt, curvedAt];
+    const inP = (q: Q) => (q.sign() < 0 ? `(${q.toLatex()})` : q.toLatex());
+    const [xLo, xHi] = x1 === x2 ? [Math.min(x1, c), Math.max(x1, c)] : [x1, x2];
+    return explainedChoice(rng, {
+      prompt: t(
         "Which integral gives the area of the shaded region, whose bounding curves are labeled?",
         "哪个积分给出阴影区域的面积？边界曲线已在图中标出。",
+      ),
+      correct: form(y1, y2, right, left, "y"),
+      wrong: [
+        {
+          option: form(y1, y2, left, right, "y"),
+          why: t(
+            `This subtracts the right curve from the left one; between the crossings $x = ${right}$ is on the right, so this integral is negative.`,
+            `这是左边曲线减右边曲线；在两交点之间 $x = ${right}$ 在右边，所以这个积分是负的。`,
+          ),
+        },
+        {
+          option: form(xLo, xHi, right, left, "x"),
+          why: t(
+            `This takes its limits from the $x$-values of the drawing and integrates in $x$, but the strips are horizontal: the limits are the heights $${y1}$ and $${y2}$.`,
+            `这里的积分限取自图中的 $x$ 值，并对 $x$ 积分；但窄条是水平的，积分限应是高度 $${y1}$ 和 $${y2}$。`,
+          ),
+        },
+        {
+          option: form(0, y2 - y1, right, left, "y"),
+          why: t(
+            `This runs from $0$ to the height of the region, $${y2 - y1}$; the limits are the heights $${y1}$ and $${y2}$ where the curves meet.`,
+            `这是从 $0$ 积到区域的高 $${y2 - y1}$；积分限应是两曲线相交的高度 $${y1}$ 和 $${y2}$。`,
+          ),
+        },
+        {
+          option: form(y1, y2 + 1, right, left, "y"),
+          why: t(
+            `This runs past the upper crossing to $y = ${y2 + 1}$; the region ends at $y = ${y2}$, and above it the curves change sides.`,
+            `这里越过上方交点积到 $y = ${y2 + 1}$；区域在 $y = ${y2}$ 处结束，在它上方两曲线交换了左右位置。`,
+          ),
+        },
       ],
-      form(y1, y2, right, left, "y"),
-      [
-        form(y1, y2, left, right, "y"),
-        x1 === x2 ? form(Math.min(x1, c), Math.max(x1, c), right, left, "x") : form(x1, x2, right, left, "x"),
-        form(0, y2 - y1, right, left, "y"),
-        form(y1, y2 + 1, right, left, "y"),
-      ],
-      [
-        `The curves meet at heights $${y1}$ and $${y2}$, and between them $x = ${right}$ lies to the right of $x = ${left}$, so each horizontal strip has width right minus left.`,
-        `两条曲线在高度 $${y1}$ 和 $${y2}$ 相交，在这之间 $x = ${right}$ 位于 $x = ${left}$ 右边，所以每个水平窄条的宽度是右减左。`,
-      ],
-      fig(
+      solution: t(
+        `**Step 1: Read the limits.** The marked crossings are at heights $y = ${y1}$ and $y = ${y2}$, read on the vertical axis, so these are the limits and the integral is in $y$.\n\n**Step 2: Subtract left from right.** Between the crossings the strips run from $x = ${left}$ on the left to $x = ${right}$ on the right, so each width is $(${right}) - (${left})$.\n\n**Check.** Test the middle height $y = ${mid.toLatex()}$: the right curve gives $x = ${R.toLatex()}$ and the left curve gives $x = ${L.toLatex()}$, and $${R.toLatex()} - ${inP(L)} = ${R.sub(L).toLatex()} > 0$, so the width is positive, as it must be.`,
+        `**第一步：读积分限。**标出的交点在高度 $y = ${y1}$ 和 $y = ${y2}$ 处，在纵轴上读出，所以这就是积分限，并对 $y$ 积分。\n\n**第二步：右减左。**在两交点之间，窄条从左边的 $x = ${left}$ 延伸到右边的 $x = ${right}$，所以每个宽度是 $(${right}) - (${left})$。\n\n**检验。**取中间高度 $y = ${mid.toLatex()}$：右边曲线给出 $x = ${R.toLatex()}$，左边曲线给出 $x = ${L.toLatex()}$，而 $${R.toLatex()} - ${inP(L)} = ${R.sub(L).toLatex()} > 0$，宽度为正，正如应有的那样。`,
+      ),
+      figure: fig(
         view,
         [
           { kind: "polygon", points: polygon },
@@ -99,7 +135,7 @@ const areaInY = point(
           `x = ${plain(curveTex)} 与 x = ${plain(lineTex)} 之间的区域，y 从 ${y1} 到 ${y2}。`,
         ],
       ),
-    );
+    });
   },
 );
 
@@ -107,8 +143,8 @@ const splitArea = point(
   "splitting-an-area-where-curves-cross",
   ["Splitting an area where curves cross", "在曲线相交处分割面积"],
   [
-    "When two curves cross inside an interval, the upper curve changes at the crossing. A single integral of the difference would let areas above and below cancel. So split the interval at each crossing and subtract in the order that the drawing shows on each piece, keeping every piece positive.",
-    "两条曲线在区间内相交时，上方曲线在交点处改变。对差只做一个积分会让上下面积互相抵消。所以要在每个交点分割区间，在每一段上按图中所见的上下关系相减，使每一段都为正。",
+    "When two curves cross inside an interval, the upper curve changes at the crossing. A single integral of the difference would let areas above and below cancel. So split the interval at each crossing and subtract in the order that the drawing shows on each piece, keeping every piece positive. For example, $f(x) = x^{3} - x$ and $g(x) = 0$ cross at $x = -1, 0, 1$; $f$ is on top on $[-1, 0]$ and $g$ on $[0, 1]$, so the area is $\\int_{-1}^{0} (x^{3} - x) \\, dx + \\int_{0}^{1} (x - x^{3}) \\, dx = \\frac{1}{4} + \\frac{1}{4} = \\frac{1}{2}$.\n\nCheck: $f$ is odd, so the two pieces are mirror images with equal areas, and the total is $2 \\cdot \\frac{1}{4} = \\frac{1}{2}$.\n\n> **Watch out.** $\\int_{-1}^{1} (x^{3} - x) \\, dx = 0$: one integral across a crossing lets the pieces cancel, even though the region has area $\\frac{1}{2}$.",
+    "两条曲线在区间内相交时，上方曲线在交点处改变。对差只做一个积分会让上下面积互相抵消。所以要在每个交点分割区间，在每一段上按图中所见的上下关系相减，使每一段都为正。例如，$f(x) = x^{3} - x$ 与 $g(x) = 0$ 在 $x = -1, 0, 1$ 处相交；在 $[-1, 0]$ 上 $f$ 在上，在 $[0, 1]$ 上 $g$ 在上，所以面积为 $\\int_{-1}^{0} (x^{3} - x) \\, dx + \\int_{0}^{1} (x - x^{3}) \\, dx = \\frac{1}{4} + \\frac{1}{4} = \\frac{1}{2}$。\n\n检验：$f$ 是奇函数，两部分互为镜像、面积相等，总面积为 $2 \\cdot \\frac{1}{4} = \\frac{1}{2}$。\n\n> **注意。** $\\int_{-1}^{1} (x^{3} - x) \\, dx = 0$：跨过交点只做一个积分会让各部分相互抵消，尽管区域的面积是 $\\frac{1}{2}$。",
   ],
   (rng) => {
     const c = rng.int(-2, 2);
@@ -121,28 +157,54 @@ const splitArea = point(
     const piece = (lo: number, hi: number, up: string, down: string) => `\\int_{${lo}}^{${hi}} (${up} - ${down})\\,dx`;
     const [firstUp, firstDown] = flip ? ["g", "f"] : ["f", "g"];
     const form = (up: string, down: string, again: boolean) =>
-      same(
-        `${piece(c - k, c, `${up}(x)`, `${down}(x)`)} + ${again ? piece(c, c + k, `${up}(x)`, `${down}(x)`) : piece(c, c + k, `${down}(x)`, `${up}(x)`)}`,
+      t(
+        ...same(
+          `${piece(c - k, c, `${up}(x)`, `${down}(x)`)} + ${again ? piece(c, c + k, `${up}(x)`, `${down}(x)`) : piece(c, c + k, `${down}(x)`, `${up}(x)`)}`,
+        ),
       );
     const samples = Array.from({ length: 65 }, (_, i) => c - k + (2 * k * i) / 64);
-    return choose(
-      rng,
-      [
+    const left = piece(c - k, c, `${firstUp}(x)`, `${firstDown}(x)`);
+    return explainedChoice(rng, {
+      prompt: t(
         "Which expression gives the total area of the shaded regions between the labeled curves $f$ and $g$?",
         "哪个式子给出标有 $f$ 和 $g$ 的两条曲线之间阴影区域的总面积？",
+      ),
+      correct: form(firstUp, firstDown, false),
+      wrong: [
+        {
+          option: form(firstDown, firstUp, false),
+          why: t(
+            `This subtracts in the wrong order on both pieces: on $[${c - k}, ${c}]$ the curve $${firstUp}$ is on top, so both pieces come out negative.`,
+            `这在两段上都减反了：在 $[${c - k}, ${c}]$ 上 $${firstUp}$ 在上，所以两段都是负的。`,
+          ),
+        },
+        {
+          option: form(firstUp, firstDown, true),
+          why: t(
+            `This keeps the left piece's order on the right piece, but on $[${c}, ${c + k}]$ the curve $${firstDown}$ is on top, so the right piece is negative and cancels the left one.`,
+            `这在右段沿用了左段的顺序，但在 $[${c}, ${c + k}]$ 上 $${firstDown}$ 在上，所以右段是负的，与左段相互抵消。`,
+          ),
+        },
+        {
+          option: t(...same(`\\int_{${c - k}}^{${c + k}} (f(x) - g(x))\\,dx`)),
+          why: t(
+            `One integral across the crossing at $x = ${c}$ lets the piece above and the piece below cancel; here they are equal, so it gives $0$.`,
+            `跨过 $x = ${c}$ 处的交点只做一个积分，会让上方和下方的部分相互抵消；这里两部分相等，结果是 $0$。`,
+          ),
+        },
+        {
+          option: form(firstDown, firstUp, true),
+          why: t(
+            `This uses the right piece's order on both pieces; on $[${c - k}, ${c}]$ the curve $${firstUp}$ is on top, so the left piece is negative and cancels the right one.`,
+            `这在两段上都用了右段的顺序；在 $[${c - k}, ${c}]$ 上 $${firstUp}$ 在上，所以左段是负的，与右段相互抵消。`,
+          ),
+        },
       ],
-      form(firstUp, firstDown, false),
-      [
-        form(firstDown, firstUp, false),
-        form(firstUp, firstDown, true),
-        same(`\\int_{${c - k}}^{${c + k}} (f(x) - g(x))\\,dx`),
-        form(firstDown, firstUp, true),
-      ],
-      [
-        `The curves cross at $x = ${c - k}$, $x = ${c}$ and $x = ${c + k}$. On the left piece $${firstUp}$ is on top and on the right piece $${firstDown}$ is on top, so each piece subtracts the lower curve from the upper one.`,
-        `曲线在 $x = ${c - k}$、$x = ${c}$ 和 $x = ${c + k}$ 处相交。左段 $${firstUp}$ 在上，右段 $${firstDown}$ 在上，所以每段都用上方曲线减下方曲线。`,
-      ],
-      fig(
+      solution: t(
+        `**Step 1: Find the crossings.** The curves meet at $x = ${c - k}$, $x = ${c}$ and $x = ${c + k}$, so the shaded region has two pieces, $[${c - k}, ${c}]$ and $[${c}, ${c + k}]$.\n\n**Step 2: Subtract on each piece.** On the left piece $${firstUp}$ is on top and on the right piece $${firstDown}$ is on top, so each piece subtracts the lower curve from the upper one and both are positive.\n\n**Check.** The drawing is symmetric about the middle crossing: the right piece is the left piece turned half a turn about $(${c}, ${d})$. So the two pieces have equal areas, and the total is $2${left}$, which agrees with the sum.`,
+        `**第一步：找交点。**两曲线在 $x = ${c - k}$、$x = ${c}$ 和 $x = ${c + k}$ 处相交，所以阴影区域分成 $[${c - k}, ${c}]$ 和 $[${c}, ${c + k}]$ 两部分。\n\n**第二步：在每段上相减。**左段 $${firstUp}$ 在上，右段 $${firstDown}$ 在上，所以每段都用上方曲线减下方曲线，两段都为正。\n\n**检验。**图关于中间的交点对称：右段是左段绕 $(${c}, ${d})$ 转半圈得到的。所以两段面积相等，总面积为 $2${left}$，与两段之和一致。`,
+      ),
+      figure: fig(
         { xMin: -6, xMax: 6, yMin: -6, yMax: 6 },
         [
           { kind: "polygon", points: [...samples.map((x): Point => [x, f(x)]), [c + k, d], [c - k, d]] },
@@ -161,7 +223,7 @@ const splitArea = point(
           `曲线 f 与水平线 g 在 x = ${c - k}、${c} 和 ${c + k} 处相遇，左段有一个${flip ? "谷" : "峰"}，右段有一个${flip ? "峰" : "谷"}。`,
         ],
       ),
-    );
+    });
   },
 );
 
@@ -798,37 +860,78 @@ const averageValue = {
     "the-average-value-of-a-drawn-function",
     ["The average value of a drawn function", "图中函数的平均值"],
     [
-      "The average value of $f$ over an interval is its integral divided by the length of the interval. For a graph made of straight pieces, the integral is the signed area of trapezoids, with area below the axis counting as negative. The average is the height of a rectangle with the same base and area.",
-      "$f$ 在区间上的平均值等于积分除以区间长度。对于由直线段组成的图，积分是梯形的带符号面积，轴下方的面积算作负值。平均值就是底相同、面积也相同的矩形的高。",
+      "The average value of $f$ over an interval is its integral divided by the length of the interval. For a graph made of straight pieces, the integral is the signed area of trapezoids, with area below the axis counting as negative. The average is the height of a rectangle with the same base and area. For example, straight pieces through the heights $2, 4, 0$ at $x = 0, 1, 2$ enclose the trapezoids $\\frac{2 + 4}{2} = 3$ and $\\frac{4 + 0}{2} = 2$, so the integral is $5$ and the average over $[0, 2]$ is $\\frac{5}{2}$.\n\nCheck: a rectangle of base $2$ and height $\\frac{5}{2}$ has area $5$, the same as the region under the graph.\n\n> **Watch out.** Divide by the length of the interval, not by the number of marked heights, and do not simply average those heights: each end height belongs to only one trapezoid.",
+      "$f$ 在区间上的平均值等于积分除以区间长度。对于由直线段组成的图，积分是梯形的带符号面积，轴下方的面积算作负值。平均值就是底相同、面积也相同的矩形的高。例如，经过高度 $2, 4, 0$（横坐标 $x = 0, 1, 2$）的直线段围出梯形 $\\frac{2 + 4}{2} = 3$ 和 $\\frac{4 + 0}{2} = 2$，所以积分是 $5$，在 $[0, 2]$ 上的平均值是 $\\frac{5}{2}$。\n\n检验：底为 $2$、高为 $\\frac{5}{2}$ 的矩形面积是 $5$，与图像下方的区域相同。\n\n> **注意。** 要除以区间的长度，而不是标出的高度的个数；也不能直接平均这些高度：两端的高度各只属于一个梯形。",
     ],
     (rng) => {
       const n = rng.pick([3, 4, 5, 6]);
       const heights = Array.from({ length: n + 1 }, () => rng.int(-2, 5));
+      const h = (i: number) => heights[i] as number;
       let doubled = 0;
-      for (let i = 0; i < n; i++) doubled += (heights[i] as number) + (heights[i + 1] as number);
+      for (let i = 0; i < n; i++) doubled += h(i) + h(i + 1);
+      const area = Q.of(doubled, 2);
       const average = Q.of(doubled, 2 * n);
-      const marks: PlaneMark[] = [{ kind: "path", points: heights.map((h, i): Point => [i, h]), accent: true }];
-      return ask(
-        [
-          `What is the average value of the function drawn, over the whole interval it is drawn on?`,
-          `图中函数在所画的整个区间上的平均值是多少？`,
-        ],
-        average,
-        [
-          Q.of(doubled, 2),
-          Q.of(doubled, 2 * (n + 1)),
-          Q.of(heights.reduce((u, v) => u + v, 0) + 1, n + 1),
-          Q.of((heights[0] as number) + (heights[n] as number) + 1, 2),
-        ],
-        [
-          `The signed area under the pieces is $${Q.of(doubled, 2).toLatex()}$, and the interval has length $${n}$. Dividing the area by the length gives $${average.toLatex()}$.`,
-          `各段下方的带符号面积是 $${Q.of(doubled, 2).toLatex()}$，区间长度是 $${n}$。面积除以长度得到 $${average.toLatex()}$。`,
-        ],
-        fig({ xMin: -1, xMax: 7, yMin: -3, yMax: 6 }, marks, [
-          `Straight pieces through the heights ${heights.join(", ")} at x = 0, 1, 2 and so on.`,
-          `经过高度 ${heights.join("，")} 的直线段，横坐标依次为 0、1、2 等。`,
-        ]),
+      const inP = (q: Q) => (q.sign() < 0 ? `(${q.toLatex()})` : q.toLatex());
+      const pieces = Array.from({ length: n }, (_, i) => inP(Q.of(h(i) + h(i + 1), 2))).join(" + ");
+      const weighted = [`\\frac{${h(0)}}{2}`, ...heights.slice(1, n).map((v) => (v < 0 ? `(${v})` : `${v}`)), `\\frac{${h(n)}}{2}`].join(
+        " + ",
       );
+      const all = [
+        {
+          value: area,
+          why: t(
+            `This is the signed area itself; divide it by the length $${n}$ of the interval.`,
+            `这是带符号面积本身；还要除以区间长度 $${n}$。`,
+          ),
+        },
+        {
+          value: Q.of(doubled, 2 * (n + 1)),
+          why: t(
+            `This divides by $${n + 1}$, the number of marked heights; the interval from $0$ to $${n}$ has length $${n}$.`,
+            `这是除以标出高度的个数 $${n + 1}$；从 $0$ 到 $${n}$ 的区间长度是 $${n}$。`,
+          ),
+        },
+        {
+          value: Q.of(
+            heights.reduce((u, v) => u + v, 0),
+            n + 1,
+          ),
+          why: t(
+            "This averages the marked heights, counting the end heights as fully as the inner ones; each end height belongs to only one trapezoid.",
+            "这是把标出的高度直接平均，两端的高度与中间的高度算得一样多；两端的高度各只属于一个梯形。",
+          ),
+        },
+        {
+          value: Q.of(h(0) + h(n), 2),
+          why: t(
+            `This averages only the two end heights, as if the graph were one straight piece; the heights in between change the area.`,
+            `这只平均了两端的高度，好像图像只是一条直线段；中间的高度也会改变面积。`,
+          ),
+        },
+      ];
+      const mistakes = all.filter((x, i) => !x.value.eq(average) && all.findIndex((y) => y.value.eq(x.value)) === i);
+      return {
+        ...numberProblem({
+          prompt: t(
+            "What is the average value of the function drawn, over the whole interval it is drawn on?",
+            "图中函数在所画的整个区间上的平均值是多少？",
+          ),
+          answer: average,
+          mistakes,
+          solution: t(
+            `**Step 1: Add the trapezoids.** The graph runs from $x = 0$ to $x = ${n}$ through the heights $${heights.join(", ")}$. Each piece of width $1$ has signed area the mean of its two end heights:\n\n$$${pieces} = ${area.toLatex()}$$\n\n**Step 2: Divide by the length.** The interval has length $${n}$:\n\n$$${area.toLatex()} \\div ${n} = ${average.toLatex()}$$\n\n**Check.** Find the area another way: each inner height is shared by two trapezoids and each end height by one, so the area is\n\n$$${weighted} = ${area.toLatex()}$$\n\nthe same as before, and $${area.toLatex()} \\div ${n} = ${average.toLatex()}$.`,
+            `**第一步：把梯形加起来。**图像从 $x = 0$ 到 $x = ${n}$，经过高度 $${heights.join(", ")}$。每段宽为 $1$，带符号面积是两端高度的平均：\n\n$$${pieces} = ${area.toLatex()}$$\n\n**第二步：除以长度。**区间长度是 $${n}$：\n\n$$${area.toLatex()} \\div ${n} = ${average.toLatex()}$$\n\n**检验。**用另一种方法求面积：每个中间高度被两个梯形共用，两端高度各只属于一个梯形，所以面积为\n\n$$${weighted} = ${area.toLatex()}$$\n\n与前面相同，而 $${area.toLatex()} \\div ${n} = ${average.toLatex()}$。`,
+          ),
+        }),
+        figure: fig(
+          { xMin: -1, xMax: 7, yMin: -3, yMax: 6 },
+          [{ kind: "path", points: heights.map((v, i): Point => [i, v]), accent: true }],
+          [
+            `Straight pieces through the heights ${heights.join(", ")} at x = 0, 1, 2 and so on.`,
+            `经过高度 ${heights.join("，")} 的直线段，横坐标依次为 0、1、2 等。`,
+          ],
+        ),
+      };
     },
   ),
   figure: calculusDrawings4["the-average-value-of-a-function#the-average-value-of-a-drawn-function"],

@@ -8,7 +8,7 @@ import { linear, paren, poly, Q } from "@ga/subject-math";
 import { calculusDrawings4 } from "../explanation-drawings-calculus-4.ts";
 import { calculusDrawings5 } from "../explanation-drawings-calculus-5.ts";
 
-import { functionProblem, say, steps } from "../problems.ts";
+import { functionProblem, numberProblem, say, steps } from "../problems.ts";
 import { ask, choose, type Pair, point } from "../university-kit.ts";
 import { reasoned } from "../wrong-reasons.ts";
 import { functionWith, walked } from "./calculus-i-differentiation.ts";
@@ -449,23 +449,63 @@ const areaLeftOfYAxis = point(
   "a-region-to-the-left-of-the-y-axis",
   ["A region to the left of the y-axis", "位于 y 轴左侧的区域"],
   [
-    "With horizontal strips the length is always right curve minus left curve. When the region lies to the left of the $y$-axis, the right curve is $x = 0$, so the integrand is $0 - g(y)$. Integrating $g$ directly gives a negative number, which cannot be an area.",
-    "用水平条带时，长度总是右边曲线减左边曲线。当区域在 $y$ 轴左侧时，右边曲线是 $x = 0$，所以被积函数是 $0 - g(y)$。直接积分 $g$ 会得到负数，而面积不可能为负。",
+    "With horizontal strips the length is always right curve minus left curve. When the region lies to the left of the $y$-axis, the right curve is $x = 0$, so the integrand is $0 - g(y)$. Integrating $g$ directly gives a negative number, which cannot be an area. For example, $x = y^{2} - 4$ meets the $y$-axis at $y = \\pm 2$, and the area is $\\int_{-2}^{2} \\left(0 - (y^{2} - 4)\\right) dy = 16 - \\frac{16}{3} = \\frac{32}{3}$.\n\nCheck: the region between a parabola and a chord fills $\\frac{2}{3}$ of the rectangle around it. Here the rectangle is $4$ tall and $4$ wide, and $\\frac{2}{3} \\cdot 16 = \\frac{32}{3}$.\n\n> **Watch out.** Subtract the left curve from the right one, $0 - g(y)$, not $g(y) - 0$; the other order gives a negative number.",
+    "用水平条带时，长度总是右边曲线减左边曲线。当区域在 $y$ 轴左侧时，右边曲线是 $x = 0$，所以被积函数是 $0 - g(y)$。直接积分 $g$ 会得到负数，而面积不可能为负。例如，$x = y^{2} - 4$ 与 $y$ 轴交于 $y = \\pm 2$，面积为 $\\int_{-2}^{2} \\left(0 - (y^{2} - 4)\\right) dy = 16 - \\frac{16}{3} = \\frac{32}{3}$。\n\n检验：抛物线与弦之间的区域占外接矩形的 $\\frac{2}{3}$。这里矩形高 $4$、宽 $4$，而 $\\frac{2}{3} \\cdot 16 = \\frac{32}{3}$。\n\n> **注意。** 要用右边曲线减左边曲线，即 $0 - g(y)$，而不是 $g(y) - 0$；反过来会得到负数。",
   ],
   (rng) => {
     const a = rng.int(1, 9);
     const k = rng.int(1, 4);
     const g = poly([k, "y^{2}"], [-k * a * a, ""]);
     const answer = Q.of(4 * k * a ** 3, 3);
-    return ask(
-      [`Find the area of the region bounded by $x = ${g}$ and the $y$-axis.`, `求由 $x = ${g}$ 和 $y$ 轴围成的区域的面积。`],
+    const strip = poly([k * a * a, ""], [-k, "y^{2}"]);
+    const mistakes = [
+      {
+        value: answer.neg(),
+        why: t(
+          "This integrates $g(y)$ itself, left minus right; the right curve is $x = 0$, so the integrand is $0 - g(y)$.",
+          "这是直接对 $g(y)$ 积分，即左减右；右边曲线是 $x = 0$，被积函数应为 $0 - g(y)$。",
+        ),
+      },
+      {
+        value: Q.of(2 * k * a ** 3, 3),
+        why: t(
+          `This integrates only from $y = 0$ to $y = ${a}$; the region also reaches down to $y = -${a}$.`,
+          `这里只从 $y = 0$ 积到 $y = ${a}$；区域还向下延伸到 $y = -${a}$。`,
+        ),
+      },
+      {
+        value: Q.of(2 * k * a ** 3),
+        why: t(
+          `This is the whole rectangle, $${2 * a}$ tall and $${k * a * a}$ wide, around the region; the region fills only $\\frac{2}{3}$ of it.`,
+          `这是包住区域的整个矩形，高 $${2 * a}$、宽 $${k * a * a}$；区域只占它的 $\\frac{2}{3}$。`,
+        ),
+      },
+    ];
+    return numberProblem({
+      prompt: t(`Find the area of the region bounded by $x = ${g}$ and the $y$-axis.`, `求由 $x = ${g}$ 和 $y$ 轴围成的区域的面积。`),
       answer,
-      [answer.neg(), Q.of(2 * k * a ** 3, 3), Q.of(2 * k * a ** 3)],
-      [
-        `The curve meets the axis at $y = \\pm ${a}$ and lies to its left. So the area is $\\int_{${-a}}^{${a}} \\left(0 - (${g})\\right) dy = ${answer.toLatex()}$.`,
-        `曲线与 $y$ 轴交于 $y = \\pm ${a}$，并位于其左侧。所以面积是 $\\int_{${-a}}^{${a}} \\left(0 - (${g})\\right) dy = ${answer.toLatex()}$。`,
-      ],
-    );
+      mistakes,
+      solution: walked(
+        [
+          [
+            ["Find where the curve meets the axis", "求曲线与坐标轴的交点"],
+            t(`Set $x = 0$; between the crossings the curve lies to the left of the axis:`, `令 $x = 0$；在两交点之间曲线位于坐标轴左侧：`),
+            [`${g} = 0 \\implies y = \\pm ${a}`],
+          ],
+          [
+            ["Integrate right minus left", "对右减左积分"],
+            t("The right curve is $x = 0$:", "右边曲线是 $x = 0$："),
+            [
+              `\\int_{${-a}}^{${a}} \\left(0 - (${g})\\right) dy = \\int_{${-a}}^{${a}} (${strip}) \\, dy = \\Big[${k * a * a}y - ${k === 3 ? "" : Q.of(k, 3).toLatex()}y^{3}\\Big]_{${-a}}^{${a}} = ${answer.toLatex()}`,
+            ],
+          ],
+        ],
+        t(
+          `The region between a parabola and a chord fills $\\frac{2}{3}$ of the rectangle around it. That rectangle is $${2 * a}$ tall and, at $y = 0$, $${k * a * a}$ wide, so the area is $\\frac{2}{3} \\cdot ${2 * a} \\cdot ${k * a * a} = ${answer.toLatex()}$.`,
+          `抛物线与弦之间的区域占外接矩形的 $\\frac{2}{3}$。这个矩形高 $${2 * a}$，在 $y = 0$ 处宽 $${k * a * a}$，所以面积为 $\\frac{2}{3} \\cdot ${2 * a} \\cdot ${k * a * a} = ${answer.toLatex()}$。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -474,8 +514,8 @@ const netAndTotal = {
     "total-area-from-the-net-integral",
     ["Total area from the net integral", "由净积分求总面积"],
     [
-      "When a curve crosses the axis, the integral over the whole interval is the net of the lobes, not the total area. If the lobes have areas $A$ above and $B$ below, the integral is $A - B$ and the total area is $A + B$.",
-      "当曲线穿过坐标轴时，整个区间上的积分是各部分的净值，而不是总面积。如果上方部分面积为 $A$，下方部分面积为 $B$，则积分是 $A - B$，总面积是 $A + B$。",
+      "When a curve crosses the axis, the integral over the whole interval is the net of the lobes, not the total area. If the lobes have areas $A$ above and $B$ below, the integral is $A - B$ and the total area is $A + B$. For example, if the lobe above has area $10$ and the integral over the whole interval is $4$, the lobe below contributes $4 - 10 = -6$, so it has area $6$ and the total area is $10 + 6 = 16$.\n\nCheck: the total and the net differ by twice the lobe below: $16 - 4 = 12 = 2 \\cdot 6$.\n\n> **Watch out.** The absolute value of the net integral, $|4| = 4$, is not the total area: the lobes cancel inside the integral before the absolute value is taken.",
+      "当曲线穿过坐标轴时，整个区间上的积分是各部分的净值，而不是总面积。如果上方部分面积为 $A$，下方部分面积为 $B$，则积分是 $A - B$，总面积是 $A + B$。例如，上方部分面积为 $10$，整个区间上的积分为 $4$，则下方部分贡献 $4 - 10 = -6$，面积为 $6$，总面积是 $10 + 6 = 16$。\n\n检验：总面积与净积分相差下方部分面积的两倍：$16 - 4 = 12 = 2 \\cdot 6$。\n\n> **注意。** 净积分的绝对值 $|4| = 4$ 不是总面积：取绝对值之前，各部分已在积分中相互抵消。",
     ],
     (rng) => {
       const p = rng.int(-9, -1);
@@ -484,18 +524,57 @@ const netAndTotal = {
       const A = rng.int(2, 24);
       const B = rng.int(1, 24);
       const I = A - B;
-      return ask(
-        [
+      const answer = A + B;
+      const all = [
+        {
+          value: Q.of(Math.abs(I)),
+          why: t(
+            `This is the absolute value of the net integral; the lobes cancel inside $\\int_{${p}}^{${q}} f(x) \\, dx$, so add their areas instead.`,
+            `这是净积分的绝对值；在 $\\int_{${p}}^{${q}} f(x) \\, dx$ 中各部分已相互抵消，应把它们的面积相加。`,
+          ),
+        },
+        {
+          value: Q.of(A),
+          why: t(
+            `This is only the lobe above the axis, on $[${p}, ${m}]$; the lobe below on $[${m}, ${q}]$ counts too.`,
+            `这只是 $[${p}, ${m}]$ 上轴上方的部分；$[${m}, ${q}]$ 上轴下方的部分也要算。`,
+          ),
+        },
+        {
+          value: Q.of(B),
+          why: t(
+            `This is only the lobe below the axis, on $[${m}, ${q}]$; add the lobe above, of area $${A}$.`,
+            `这只是 $[${m}, ${q}]$ 上轴下方的部分；还要加上上方面积为 $${A}$ 的部分。`,
+          ),
+        },
+      ];
+      const mistakes = all.filter((x, i) => !x.value.eq(Q.of(answer)) && all.findIndex((y) => y.value.eq(x.value)) === i);
+      return numberProblem({
+        prompt: t(
           `$f > 0$ on $(${p}, ${m})$ and $f < 0$ on $(${m}, ${q})$, with $\\int_{${p}}^{${m}} f(x) \\, dx = ${A}$ and $\\int_{${p}}^{${q}} f(x) \\, dx = ${I}$. Find the total area between the graph of $f$ and the $x$-axis on $[${p}, ${q}]$.`,
           `$f$ 在 $(${p}, ${m})$ 上为正，在 $(${m}, ${q})$ 上为负，且 $\\int_{${p}}^{${m}} f(x) \\, dx = ${A}$，$\\int_{${p}}^{${q}} f(x) \\, dx = ${I}$。求 $[${p}, ${q}]$ 上 $f$ 的图像与 $x$ 轴之间的总面积。`,
-        ],
-        A + B,
-        [Math.abs(I), A, B],
-        [
-          `$\\int_{${m}}^{${q}} f = ${I} - ${A} = ${-B}$, so the lower lobe has area $${B}$. The total is $${A} + ${B} = ${A + B}$.`,
-          `$\\int_{${m}}^{${q}} f = ${I} - ${A} = ${-B}$，所以下方部分面积是 $${B}$。总面积是 $${A} + ${B} = ${A + B}$。`,
-        ],
-      );
+        ),
+        answer,
+        mistakes,
+        solution: walked(
+          [
+            [
+              ["Find the lower lobe", "求下方部分"],
+              t("Split the integral at the crossing:", "在交点处拆开积分："),
+              [`\\int_{${m}}^{${q}} f(x) \\, dx = ${I} - ${A} = ${-B}`],
+            ],
+            [
+              ["Add the areas", "把面积相加"],
+              t(`The lobe below has area $${B}$, so the total is:`, `下方部分面积为 $${B}$，所以总面积为：`),
+              [`${A} + ${B} = ${answer}`],
+            ],
+          ],
+          t(
+            `The total area and the net integral differ by twice the lobe below: $${answer} - ${I < 0 ? `(${I})` : I} = ${answer - I} = 2 \\cdot ${B}$.`,
+            `总面积与净积分相差下方部分面积的两倍：$${answer} - ${I < 0 ? `(${I})` : I} = ${answer - I} = 2 \\cdot ${B}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings4["finding-areas-between-curves-that-intersect-at-more-than-two-points#total-area-from-the-net-integral"],
@@ -505,8 +584,8 @@ const heightFromVolume = point(
   "a-constant-height-from-the-volume",
   ["A constant height from the volume", "由体积求不变的高"],
   [
-    "When rectangular cross sections all have the same height $h$, the volume is $\\int h \\cdot w(x) \\, dx$, which is $h$ times the area of the base. So a known volume gives the height once the base area is found by integrating.",
-    "当矩形截面的高都等于 $h$ 时，体积是 $\\int h \\cdot w(x) \\, dx$，也就是 $h$ 乘以底面积。所以知道体积后，先积分求出底面积，就能得到高。",
+    "When rectangular cross sections all have the same height $h$, the volume is $\\int h \\cdot w(x) \\, dx$, which is $h$ times the area of the base. So a known volume gives the height once the base area is found by integrating. For example, the base under $y = 1 - x^{2}$ has area $\\int_{-1}^{1} (1 - x^{2}) \\, dx = \\frac{4}{3}$, so a volume of $4$ needs height $4 \\div \\frac{4}{3} = 3$.\n\nCheck: $3 \\cdot \\frac{4}{3} = 4$, the given volume.\n\n> **Watch out.** Divide by the area of the base, not by its width or its greatest height.",
+    "当矩形截面的高都等于 $h$ 时，体积是 $\\int h \\cdot w(x) \\, dx$，也就是 $h$ 乘以底面积。所以知道体积后，先积分求出底面积，就能得到高。例如，$y = 1 - x^{2}$ 下方的底面积为 $\\int_{-1}^{1} (1 - x^{2}) \\, dx = \\frac{4}{3}$，所以体积为 $4$ 时高为 $4 \\div \\frac{4}{3} = 3$。\n\n检验：$3 \\cdot \\frac{4}{3} = 4$，正是给定的体积。\n\n> **注意。** 要除以底面的面积，而不是底面的宽度或最大高度。",
   ],
   (rng) => {
     const a = rng.int(1, 6);
@@ -514,18 +593,56 @@ const heightFromVolume = point(
     const base = Q.of(4 * a ** 3, 3);
     const V = base.mul(Q.of(h));
     const f = poly([-1, "x^{2}"], [a * a, ""]);
-    return ask(
-      [
+    const all = [
+      {
+        value: V.div(Q.of(2 * a)),
+        why: t(
+          `This divides by the width $${2 * a}$ of the base; the volume is the height times the area of the base.`,
+          `这是除以底面的宽度 $${2 * a}$；体积等于高乘以底面积。`,
+        ),
+      },
+      {
+        value: V.div(Q.of(a * a)),
+        why: t(
+          `This divides by the greatest height $${a * a}$ of the base; divide by its area.`,
+          `这是除以底面的最大高度 $${a * a}$；应除以底面积。`,
+        ),
+      },
+      {
+        value: V.div(Q.of(2 * a ** 3)),
+        why: t(
+          `This divides by the rectangle $${2 * a} \\times ${a * a}$ around the base; the parabolic base fills only $\\frac{2}{3}$ of it.`,
+          `这是除以包住底面的 $${2 * a} \\times ${a * a}$ 矩形；抛物线围成的底面只占它的 $\\frac{2}{3}$。`,
+        ),
+      },
+    ];
+    const mistakes = all.filter((x, i) => !x.value.eq(Q.of(h)) && all.findIndex((y) => y.value.eq(x.value)) === i);
+    return numberProblem({
+      prompt: t(
         `The base of a solid is the region bounded by $y = ${f}$ and the $x$-axis. Cross sections perpendicular to the $x$-axis are rectangles of the same height, and the volume is $${V.toLatex()}$. Find the height.`,
         `一个立体的底面是由 $y = ${f}$ 和 $x$ 轴围成的区域。垂直于 $x$ 轴的截面都是高相同的矩形，体积是 $${V.toLatex()}$。求这个高。`,
-      ],
-      h,
-      [V.div(Q.of(2 * a)), V.div(Q.of(a * a)), Q.of(h).mul(base)],
-      [
-        `The base area is $\\int_{${-a}}^{${a}} (${f}) \\, dx = ${base.toLatex()}$. The volume is the base area times the height, so the height is $${V.toLatex()} \\div ${base.toLatex()} = ${h}$.`,
-        `底面积是 $\\int_{${-a}}^{${a}} (${f}) \\, dx = ${base.toLatex()}$。体积等于底面积乘以高，所以高是 $${V.toLatex()} \\div ${base.toLatex()} = ${h}$。`,
-      ],
-    );
+      ),
+      answer: h,
+      mistakes,
+      solution: walked(
+        [
+          [
+            ["Find the area of the base", "求底面积"],
+            t(`The curve meets the axis at $x = \\pm ${a}$:`, `曲线与坐标轴交于 $x = \\pm ${a}$：`),
+            [`\\int_{${-a}}^{${a}} (${f}) \\, dx = \\Big[${a * a}x - \\frac{1}{3}x^{3}\\Big]_{${-a}}^{${a}} = ${base.toLatex()}`],
+          ],
+          [
+            ["Divide the volume by the base area", "用体积除以底面积"],
+            t("The volume is the height times the base area:", "体积等于高乘以底面积："),
+            [`h = ${V.toLatex()} \\div ${base.toLatex()} = ${h}`],
+          ],
+        ],
+        t(
+          `Find the base area another way: the region between a parabola and a chord fills $\\frac{2}{3}$ of the rectangle around it, $\\frac{2}{3} \\cdot ${2 * a} \\cdot ${a * a} = ${base.toLatex()}$. Then $${h} \\cdot ${base.toLatex()} = ${V.toLatex()}$, the given volume.`,
+          `用另一种方法求底面积：抛物线与弦之间的区域占外接矩形的 $\\frac{2}{3}$，$\\frac{2}{3} \\cdot ${2 * a} \\cdot ${a * a} = ${base.toLatex()}$。于是 $${h} \\cdot ${base.toLatex()} = ${V.toLatex()}$，正是给定的体积。`,
+        ),
+      ),
+    });
   },
 );
 
@@ -534,8 +651,8 @@ const overCircularBase = {
     "cross-sections-over-a-circular-base",
     ["Cross sections over a circular base", "圆形底面上的截面"],
     [
-      "Over a disc of radius $r$, the chord at $x$ has length $2\\sqrt{r^{2} - x^{2}}$. The radius of the cross section is half the chord when the chord is a diameter. Semicircles on chords build a hemisphere and circles on chords build a sphere, which checks the integral.",
-      "在半径为 $r$ 的圆盘上，$x$ 处的弦长是 $2\\sqrt{r^{2} - x^{2}}$。弦作为直径时，截面半径是弦长的一半。以弦为直径的半圆构成半球，以弦为直径的圆构成球，这可以检验积分的结果。",
+      "Over a disc of radius $r$, the chord at $x$ has length $2\\sqrt{r^{2} - x^{2}}$. The radius of the cross section is half the chord when the chord is a diameter. Semicircles on chords build a hemisphere and circles on chords build a sphere, which checks the integral. For example, over the disc $x^{2} + y^{2} \\le 1$ with circles, the radius at $x$ is $\\sqrt{1 - x^{2}}$, the area is $\\pi(1 - x^{2})$, and $V = \\pi\\int_{-1}^{1} (1 - x^{2}) \\, dx = \\frac{4}{3}\\pi$.\n\nCheck: the slices make a sphere of radius $1$, and $\\frac{4}{3}\\pi \\cdot 1^{3} = \\frac{4}{3}\\pi$.\n\n> **Watch out.** The chord is the diameter, so the radius is half of it; using the whole chord as the radius makes every slice four times too large.",
+      "在半径为 $r$ 的圆盘上，$x$ 处的弦长是 $2\\sqrt{r^{2} - x^{2}}$。弦作为直径时，截面半径是弦长的一半。以弦为直径的半圆构成半球，以弦为直径的圆构成球，这可以检验积分的结果。例如，在圆盘 $x^{2} + y^{2} \\le 1$ 上取圆形截面，$x$ 处的半径是 $\\sqrt{1 - x^{2}}$，面积是 $\\pi(1 - x^{2})$，$V = \\pi\\int_{-1}^{1} (1 - x^{2}) \\, dx = \\frac{4}{3}\\pi$。\n\n检验：这些截面构成半径为 $1$ 的球，而 $\\frac{4}{3}\\pi \\cdot 1^{3} = \\frac{4}{3}\\pi$。\n\n> **注意。** 弦是直径，所以半径是它的一半；把整条弦当作半径，每个截面都会大四倍。",
     ],
     (rng) => {
       const r = rng.int(1, 18);
@@ -546,15 +663,78 @@ const overCircularBase = {
         `The base of a solid is the disc $x^{2} + y^{2} \\le ${r * r}$. Cross sections perpendicular to the $x$-axis are ${shape[0]} whose diameters are chords of the disc. Find the volume.`,
         `一个立体的底面是圆盘 $x^{2} + y^{2} \\le ${r * r}$。垂直于 $x$ 轴的截面是以圆盘的弦为直径的${shape[1]}。求体积。`,
       );
-      return ask(
-        [en, zh],
+      const factor = semi ? "\\frac{\\pi}{2}" : "\\pi";
+      const chordAsRadius = {
+        value: answer.mul(Q.of(4)),
+        why: t(
+          "This uses the whole chord as the radius; the chord is the diameter, so the radius is half of it.",
+          "这里把整条弦当作半径；弦是直径，半径是它的一半。",
+        ),
+      };
+      const noSquare = {
+        value: Q.of(semi ? r ** 3 : 2 * r ** 3),
+        why: t(
+          `This keeps only the constant term, $${factor}\\int_{${-r}}^{${r}} ${r * r} \\, dx$; subtract $${factor}\\int_{${-r}}^{${r}} x^{2} \\, dx$ as well.`,
+          `这里只算了常数项 $${factor}\\int_{${-r}}^{${r}} ${r * r} \\, dx$；还要减去 $${factor}\\int_{${-r}}^{${r}} x^{2} \\, dx$。`,
+        ),
+      };
+      const mistakes = semi
+        ? [
+            chordAsRadius,
+            {
+              value: answer.mul(Q.of(2)),
+              why: t(
+                "This uses whole circles, of area $\\pi\\rho^{2}$; a semicircle has half that, $\\frac{\\pi}{2}\\rho^{2}$.",
+                "这里用了整圆，面积是 $\\pi\\rho^{2}$；半圆只有一半，即 $\\frac{\\pi}{2}\\rho^{2}$。",
+              ),
+            },
+            {
+              value: answer.div(Q.of(2)),
+              why: t(
+                `This integrates only from $x = 0$ to $x = ${r}$; the disc runs from $x = ${-r}$ to $x = ${r}$.`,
+                `这里只从 $x = 0$ 积到 $x = ${r}$；圆盘从 $x = ${-r}$ 延伸到 $x = ${r}$。`,
+              ),
+            },
+            noSquare,
+          ]
+        : [
+            chordAsRadius,
+            {
+              value: answer.div(Q.of(2)),
+              why: t(
+                "This uses semicircles, of area $\\frac{\\pi}{2}\\rho^{2}$; the sections are whole circles, of area $\\pi\\rho^{2}$.",
+                "这里用了半圆，面积是 $\\frac{\\pi}{2}\\rho^{2}$；截面是整圆，面积是 $\\pi\\rho^{2}$。",
+              ),
+            },
+            noSquare,
+          ];
+      return numberProblem({
+        prompt: t(en, zh),
         answer,
-        [answer.mul(Q.of(4)), answer.div(Q.of(2)), answer.mul(Q.of(2))],
-        [
-          `The radius of a section is $\\sqrt{${r * r} - x^{2}}$, so its area is $${semi ? "\\frac{\\pi}{2}" : "\\pi"}(${r * r} - x^{2})$. Integrating from $${-r}$ to $${r}$ gives $${answer.toLatex()}\\pi$, which is the volume of a ${semi ? "hemisphere" : "sphere"} of radius $${r}$.`,
-          `截面半径是 $\\sqrt{${r * r} - x^{2}}$，所以面积是 $${semi ? "\\frac{\\pi}{2}" : "\\pi"}(${r * r} - x^{2})$。从 $${-r}$ 到 $${r}$ 积分得 $${answer.toLatex()}\\pi$，这正是半径为 $${r}$ 的${semi ? "半球" : "球"}的体积。`,
-        ],
-      );
+        mistakes,
+        solution: walked(
+          [
+            [
+              ["Find the area of a section", "求截面面积"],
+              t(`The chord at $x$ is a diameter, so the radius is half of it:`, `$x$ 处的弦是直径，所以半径是它的一半：`),
+              [
+                `\\rho = \\frac{1}{2} \\cdot 2\\sqrt{${r * r} - x^{2}} = \\sqrt{${r * r} - x^{2}}, \\quad A(x) = ${factor}(${r * r} - x^{2})`,
+              ],
+            ],
+            [
+              ["Integrate across the disc", "沿圆盘积分"],
+              t(`The sections run from $x = ${-r}$ to $x = ${r}$:`, `截面从 $x = ${-r}$ 到 $x = ${r}$：`),
+              [
+                `V = ${factor}\\int_{${-r}}^{${r}} (${r * r} - x^{2}) \\, dx = ${factor} \\cdot ${Q.of(4 * r ** 3, 3).toLatex()} = ${answer.toLatex()}\\pi`,
+              ],
+            ],
+          ],
+          t(
+            `The ${semi ? "semicircles build a hemisphere" : "circles build a sphere"} of radius $${r}$, of volume $${semi ? "\\frac{2}{3}" : "\\frac{4}{3}"}\\pi \\cdot ${r}^{3} = ${answer.toLatex()}\\pi$. So $k = ${answer.toLatex()}$.`,
+            `这些${semi ? "半圆" : "圆"}构成半径为 $${r}$ 的${semi ? "半球" : "球"}，体积为 $${semi ? "\\frac{2}{3}" : "\\frac{4}{3}"}\\pi \\cdot ${r}^{3} = ${answer.toLatex()}\\pi$。所以 $k = ${answer.toLatex()}$。`,
+          ),
+        ),
+      });
     },
   ),
   figure: calculusDrawings4["volumes-of-solids-with-circular-cross-sections#cross-sections-over-a-circular-base"],
