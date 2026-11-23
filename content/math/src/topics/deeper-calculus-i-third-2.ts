@@ -1572,15 +1572,15 @@ const samplePoint = point(
   },
 );
 
-/** shapes are functions with a known concavity on positive x, for ordering approximations. */
-const shapes = [
-  { f: "e^{x}", up: true },
-  { f: "\\frac{1}{x + 1}", up: true },
-  { f: "x^{2} + 1", up: true },
-  { f: "\\ln(x + 1)", up: false },
-  { f: "\\sqrt{x + 1}", up: false },
-  { f: "6x - x^{2}", up: false },
-] as const;
+/** shapes are functions with a known concavity on positive x, with their values, for ordering approximations. */
+const shapes: readonly { f: string; up: boolean; at: (x: number) => number }[] = [
+  { f: "e^{x}", up: true, at: (x) => Math.exp(x) },
+  { f: "\\frac{1}{x + 1}", up: true, at: (x) => 1 / (x + 1) },
+  { f: "x^{2} + 1", up: true, at: (x) => x * x + 1 },
+  { f: "\\ln(x + 1)", up: false, at: (x) => Math.log(x + 1) },
+  { f: "\\sqrt{x + 1}", up: false, at: (x) => Math.sqrt(x + 1) },
+  { f: "6x - x^{2}", up: false, at: (x) => 6 * x - x * x },
+];
 
 const orderingEstimates = {
   ...point(
@@ -1616,17 +1616,177 @@ const orderingEstimates = {
   figure: calculusDrawings3["approximating-areas-under-graphs-of-composite-functions#ordering-the-midpoint-and-trapezoidal-estimates"],
 };
 
+/** UnitIntegral is an integrand with limits whose exact value is a whole number, with the values of its antiderivative and typical slips. */
+interface UnitIntegral {
+  readonly f: string;
+  readonly lo: string;
+  readonly hi: string;
+  readonly value: number;
+  readonly anti: string;
+  readonly atHi: string;
+  readonly atLo: string;
+  readonly g: (x: number) => number;
+  readonly from: number;
+  readonly to: number;
+  readonly slips: readonly (readonly [value: number, en: string, zh: string])[];
+}
+
 /** unitIntegrals are integrands and limits whose exact value is a whole number. */
-const unitIntegrals: readonly { f: string; lo: string; hi: string; value: number; anti: string; bad: number }[] = [
-  { f: "\\sec^{2}x", lo: "0", hi: "\\frac{\\pi}{4}", value: 1, anti: "\\tan x", bad: -1 },
-  { f: "\\csc^{2}x", lo: "\\frac{\\pi}{4}", hi: "\\frac{\\pi}{2}", value: 1, anti: "-\\cot x", bad: -1 },
-  { f: "\\sec x\\tan x", lo: "0", hi: "\\frac{\\pi}{3}", value: 1, anti: "\\sec x", bad: 2 },
-  { f: "\\csc x\\cot x", lo: "\\frac{\\pi}{6}", hi: "\\frac{\\pi}{2}", value: 1, anti: "-\\csc x", bad: -1 },
-  { f: "\\sec^{2}x", lo: "-\\frac{\\pi}{4}", hi: "\\frac{\\pi}{4}", value: 2, anti: "\\tan x", bad: 0 },
-  { f: "\\frac{1}{x}", lo: "1", hi: "e^{2}", value: 2, anti: "\\ln x", bad: 1 },
-  { f: "\\frac{1}{x}", lo: "e", hi: "e^{3}", value: 2, anti: "\\ln x", bad: 3 },
-  { f: "e^{x}", lo: "0", hi: "\\ln 4", value: 3, anti: "e^{x}", bad: 4 },
-  { f: "e^{x}", lo: "\\ln 2", hi: "\\ln 7", value: 5, anti: "e^{x}", bad: 7 },
+const unitIntegrals: readonly UnitIntegral[] = [
+  {
+    f: "\\sec^{2}x",
+    lo: "0",
+    hi: "\\frac{\\pi}{4}",
+    value: 1,
+    anti: "\\tan x",
+    atHi: "\\tan\\frac{\\pi}{4} = 1",
+    atLo: "\\tan 0 = 0",
+    g: (x) => 1 / Math.cos(x) ** 2,
+    from: 0,
+    to: Math.PI / 4,
+    slips: [
+      [
+        2,
+        "This evaluates the integrand, $\\sec^{2}\\frac{\\pi}{4} = 2$; the theorem uses an antiderivative, $\\tan x$.",
+        "这是在求被积函数的值 $\\sec^{2}\\frac{\\pi}{4} = 2$；基本定理用的是原函数 $\\tan x$。",
+      ],
+    ],
+  },
+  {
+    f: "\\csc^{2}x",
+    lo: "\\frac{\\pi}{4}",
+    hi: "\\frac{\\pi}{2}",
+    value: 1,
+    anti: "-\\cot x",
+    atHi: "-\\cot\\frac{\\pi}{2} = 0",
+    atLo: "-\\cot\\frac{\\pi}{4} = -1",
+    g: (x) => 1 / Math.sin(x) ** 2,
+    from: Math.PI / 4,
+    to: Math.PI / 2,
+    slips: [
+      [-1, "This drops the minus sign of the antiderivative $-\\cot x$.", "这里丢掉了原函数 $-\\cot x$ 的负号。"],
+      [
+        0,
+        "This is the antiderivative at the upper limit alone; its value $-1$ at the lower limit must be subtracted.",
+        "这只是原函数在上限处的值；还要减去它在下限处的值 $-1$。",
+      ],
+    ],
+  },
+  {
+    f: "\\sec x\\tan x",
+    lo: "0",
+    hi: "\\frac{\\pi}{3}",
+    value: 1,
+    anti: "\\sec x",
+    atHi: "\\sec\\frac{\\pi}{3} = 2",
+    atLo: "\\sec 0 = 1",
+    g: (x) => Math.tan(x) / Math.cos(x),
+    from: 0,
+    to: Math.PI / 3,
+    slips: [
+      [2, "This leaves out the value $\\sec 0 = 1$ at the lower limit.", "这里漏掉了下限处的值 $\\sec 0 = 1$。"],
+      [3, "This adds $\\sec 0 = 1$ instead of subtracting it.", "这里把 $\\sec 0 = 1$ 加上了，应该减去。"],
+    ],
+  },
+  {
+    f: "\\csc x\\cot x",
+    lo: "\\frac{\\pi}{6}",
+    hi: "\\frac{\\pi}{2}",
+    value: 1,
+    anti: "-\\csc x",
+    atHi: "-\\csc\\frac{\\pi}{2} = -1",
+    atLo: "-\\csc\\frac{\\pi}{6} = -2",
+    g: (x) => 1 / (Math.sin(x) * Math.tan(x)),
+    from: Math.PI / 6,
+    to: Math.PI / 2,
+    slips: [
+      [-1, "This drops the minus sign of the antiderivative $-\\csc x$.", "这里丢掉了原函数 $-\\csc x$ 的负号。"],
+      [-3, "This adds the value $-2$ at the lower limit instead of subtracting it.", "这里把下限处的值 $-2$ 加上了，应该减去。"],
+    ],
+  },
+  {
+    f: "\\sec^{2}x",
+    lo: "-\\frac{\\pi}{4}",
+    hi: "\\frac{\\pi}{4}",
+    value: 2,
+    anti: "\\tan x",
+    atHi: "\\tan\\frac{\\pi}{4} = 1",
+    atLo: "\\tan\\left(-\\frac{\\pi}{4}\\right) = -1",
+    g: (x) => 1 / Math.cos(x) ** 2,
+    from: -Math.PI / 4,
+    to: Math.PI / 4,
+    slips: [
+      [0, "This adds the value $-1$ at the lower limit instead of subtracting it.", "这里把下限处的值 $-1$ 加上了，应该减去。"],
+      [1, "This leaves out the value $-1$ at the lower limit.", "这里漏掉了下限处的值 $-1$。"],
+    ],
+  },
+  {
+    f: "\\frac{1}{x}",
+    lo: "1",
+    hi: "e^{2}",
+    value: 2,
+    anti: "\\ln x",
+    atHi: "\\ln e^{2} = 2",
+    atLo: "\\ln 1 = 0",
+    g: (x) => 1 / x,
+    from: 1,
+    to: Math.E ** 2,
+    slips: [
+      [
+        1,
+        "This takes $\\ln 1$ as $1$; $\\ln 1 = 0$, since $e^{0} = 1$.",
+        "这里把 $\\ln 1$ 当成了 $1$；因为 $e^{0} = 1$，所以 $\\ln 1 = 0$。",
+      ],
+    ],
+  },
+  {
+    f: "\\frac{1}{x}",
+    lo: "e",
+    hi: "e^{3}",
+    value: 2,
+    anti: "\\ln x",
+    atHi: "\\ln e^{3} = 3",
+    atLo: "\\ln e = 1",
+    g: (x) => 1 / x,
+    from: Math.E,
+    to: Math.E ** 3,
+    slips: [
+      [3, "This leaves out the value $\\ln e = 1$ at the lower limit.", "这里漏掉了下限处的值 $\\ln e = 1$。"],
+      [4, "This adds $\\ln e = 1$ instead of subtracting it.", "这里把 $\\ln e = 1$ 加上了，应该减去。"],
+    ],
+  },
+  {
+    f: "e^{x}",
+    lo: "0",
+    hi: "\\ln 4",
+    value: 3,
+    anti: "e^{x}",
+    atHi: "e^{\\ln 4} = 4",
+    atLo: "e^{0} = 1",
+    g: (x) => Math.exp(x),
+    from: 0,
+    to: Math.log(4),
+    slips: [
+      [4, "This leaves out the value $e^{0} = 1$ at the lower limit.", "这里漏掉了下限处的值 $e^{0} = 1$。"],
+      [5, "This adds $e^{0} = 1$ instead of subtracting it.", "这里把 $e^{0} = 1$ 加上了，应该减去。"],
+    ],
+  },
+  {
+    f: "e^{x}",
+    lo: "\\ln 2",
+    hi: "\\ln 7",
+    value: 5,
+    anti: "e^{x}",
+    atHi: "e^{\\ln 7} = 7",
+    atLo: "e^{\\ln 2} = 2",
+    g: (x) => Math.exp(x),
+    from: Math.log(2),
+    to: Math.log(7),
+    slips: [
+      [7, "This leaves out the value $e^{\\ln 2} = 2$ at the lower limit.", "这里漏掉了下限处的值 $e^{\\ln 2} = 2$。"],
+      [9, "This adds $e^{\\ln 2} = 2$ instead of subtracting it.", "这里把 $e^{\\ln 2} = 2$ 加上了，应该减去。"],
+    ],
+  },
 ];
 
 const wholeNumberIntegrals = point(
@@ -1689,8 +1849,8 @@ const whereSignedCancels = {
     "where-signed-areas-cancel",
     ["Where signed areas cancel", "有向面积相互抵消之处"],
     [
-      "A line crosses the $x$-axis at $r$, and the triangles on either side have opposite signs. The signed integral from $a$ to $c$ is zero when the two triangles are congruent, which happens when $r$ is the midpoint of $a$ and $c$. The total area is not zero there.",
-      "直线在 $r$ 处穿过 $x$ 轴，两侧的三角形符号相反。从 $a$ 到 $c$ 的有向积分为零，当且仅当两个三角形全等，也就是 $r$ 是 $a$ 和 $c$ 的中点。这时总面积并不为零。",
+      "A line crosses the $x$-axis at $r$, and the triangles on either side have opposite signs. The signed integral from $a$ to $c$ is zero when the two triangles are congruent, which happens when $r$ is the midpoint of $a$ and $c$. The total area is not zero there.\n\nFor $f(x) = x - 2$ starting at $a = 0$, the root is $2$, so $c = 2 \\cdot 2 - 0$, which is $4$.\n\nCheck: $\\int_{0}^{4} (x - 2) \\, dx$ is $\\Big[\\frac{x^{2}}{2} - 2x\\Big]_{0}^{4}$, which is $8 - 8 - 0$, or $0$.\n\n> **Watch out.** The answer is not the root itself. Stopping at $c = r$ leaves one whole triangle uncancelled.",
+      "直线在 $r$ 处穿过 $x$ 轴，两侧的三角形符号相反。从 $a$ 到 $c$ 的有向积分为零，当且仅当两个三角形全等，也就是 $r$ 是 $a$ 和 $c$ 的中点。这时总面积并不为零。\n\n对 $f(x) = x - 2$，从 $a = 0$ 开始，根是 $2$，所以 $c = 2 \\cdot 2 - 0$，即 $4$。\n\n检验：$\\int_{0}^{4} (x - 2) \\, dx$ 等于 $\\Big[\\frac{x^{2}}{2} - 2x\\Big]_{0}^{4}$，即 $8 - 8 - 0$，等于 $0$。\n\n> **注意。** 答案不是根本身。停在 $c = r$ 处，会留下一整个没有抵消的三角形。",
     ],
     (rng) => {
       const m = nz(rng, 5);
@@ -1698,6 +1858,8 @@ const whereSignedCancels = {
       const a = r - rng.int(1, 7);
       const c = 2 * r - a;
       const f = linear(m, -m * r);
+      const half = Q.of(m, 2);
+      const coef = half.eq(Q.of(1)) ? "" : half.eq(Q.of(-1)) ? "-" : half.toLatex();
       return ask(
         [
           `Find the value $c > ${a}$ for which $\\int_{${a}}^{c} (${f}) \\, dx = 0$.`,
@@ -1705,10 +1867,26 @@ const whereSignedCancels = {
         ],
         c,
         [r, 2 * r + a, r - a],
-        [
-          `The line crosses the axis at $x = ${r}$. The signed areas cancel when $${r}$ is the midpoint of $${a}$ and $c$, so $c = 2 \\cdot ${paren(r)} - ${paren(a)} = ${c}$.`,
-          `直线在 $x = ${r}$ 处穿过坐标轴。当 $${r}$ 是 $${a}$ 和 $c$ 的中点时有向面积抵消，所以 $c = 2 \\cdot ${paren(r)} - ${paren(a)} = ${c}$。`,
-        ],
+        walkPair(
+          [
+            [
+              "Find the root",
+              "求根",
+              `$${f} = 0$ at $x = ${r}$, so the line is on one side of the axis from $${a}$ to $${r}$ and on the other side after $${r}$.`,
+              `$${f} = 0$ 的解为 $x = ${r}$，所以直线从 $${a}$ 到 $${r}$ 在轴的一侧，过了 $${r}$ 之后在另一侧。`,
+            ],
+            [
+              "Make the triangles congruent",
+              "使两个三角形全等",
+              `The signed areas cancel when $${r}$ is the midpoint of $${a}$ and $c$, so $c = 2 \\cdot ${paren(r)} - ${paren(a)} = ${c}$.`,
+              `当 $${r}$ 是 $${a}$ 和 $c$ 的中点时有向面积抵消，所以 $c = 2 \\cdot ${paren(r)} - ${paren(a)} = ${c}$。`,
+            ],
+          ],
+          [
+            `Integrate directly. An antiderivative of $${f}$ is $${coef}${power(r, 2)}$, and\n\n$$\\int_{${a}}^{${c}} (${f}) \\, dx = ${coef === "" ? "" : coef === "-" ? "-" : `${coef} \\cdot `}\\left(${(c - r) ** 2} - ${(a - r) ** 2}\\right) = 0$$`,
+            `直接积分。$${f}$ 的一个原函数是 $${coef}${power(r, 2)}$，且\n\n$$\\int_{${a}}^{${c}} (${f}) \\, dx = ${coef === "" ? "" : coef === "-" ? "-" : `${coef} \\cdot `}\\left(${(c - r) ** 2} - ${(a - r) ** 2}\\right) = 0$$`,
+          ],
+        ),
       );
     },
   ),
@@ -1720,8 +1898,8 @@ const symmetryIntegrals = {
     "definite-integrals-from-symmetry",
     ["Definite integrals from symmetry", "由对称性求定积分"],
     [
-      "Symmetry of the graph gives integrals without a formula. If $f$ is even, the areas on the two sides of the $y$-axis are equal with the same sign. If $f$ is odd, they are equal with opposite signs, so the integral over $[-a, a]$ is $0$.",
-      "图像的对称性不用公式就能给出积分。若 $f$ 是偶函数，$y$ 轴两侧的面积相等，符号相同。若 $f$ 是奇函数，两侧面积相等，符号相反，所以在 $[-a, a]$ 上的积分是 $0$。",
+      "Symmetry of the graph gives integrals without a formula. If $f$ is even, the areas on the two sides of the $y$-axis are equal with the same sign. If $f$ is odd, they are equal with opposite signs, so the integral over $[-a, a]$ is $0$.\n\nIf $\\int_{0}^{3} f(x) \\, dx = 9$, then $\\int_{-3}^{3} f(x) \\, dx$ is $18$ for an even $f$ and $0$ for an odd $f$, and $\\int_{-3}^{0} f(x) \\, dx$ is $9$ or $-9$.\n\nCheck: $f(x) = x^{2}$ is even with $\\int_{0}^{3} x^{2} \\, dx = 9$, and $\\int_{-3}^{3} x^{2} \\, dx$ is $9 - (-9)$, which is $18$.\n\n> **Watch out.** For an odd $f$, the integral over $[-a, 0]$ is the negative of the one over $[0, a]$, not the same value.",
+      "图像的对称性不用公式就能给出积分。若 $f$ 是偶函数，$y$ 轴两侧的面积相等，符号相同。若 $f$ 是奇函数，两侧面积相等，符号相反，所以在 $[-a, a]$ 上的积分是 $0$。\n\n若 $\\int_{0}^{3} f(x) \\, dx = 9$，则偶函数的 $\\int_{-3}^{3} f(x) \\, dx$ 为 $18$，奇函数的为 $0$；而 $\\int_{-3}^{0} f(x) \\, dx$ 分别为 $9$ 和 $-9$。\n\n检验：$f(x) = x^{2}$ 是偶函数，$\\int_{0}^{3} x^{2} \\, dx = 9$，而 $\\int_{-3}^{3} x^{2} \\, dx$ 等于 $9 - (-9)$，即 $18$。\n\n> **注意。** 对奇函数，$[-a, 0]$ 上的积分是 $[0, a]$ 上积分的相反数，不是同一个值。",
     ],
     (rng) => {
       const a = rng.int(1, 9);
@@ -1730,6 +1908,18 @@ const symmetryIntegrals = {
       const whole = rng.bool();
       const answer = whole ? (even ? 2 * v : 0) : even ? v : -v;
       const upper = whole ? a : 0;
+      const left = even ? v : -v;
+      const height = Q.of(v, a);
+      const slope = Q.of(2 * v, a * a);
+      const check: Pair = even
+        ? [
+            `Try the constant function $f(x) = ${height.toLatex()}$, which is even and has $\\int_{0}^{${a}} f(x) \\, dx = ${v}$. Over $[${-a}, ${upper}]$ it gives a rectangle of width $${upper + a}$, with signed area $${height.toLatex()} \\cdot ${upper + a}$, which is $${answer}$.`,
+            `取常数函数 $f(x) = ${height.toLatex()}$，它是偶函数，且 $\\int_{0}^{${a}} f(x) \\, dx = ${v}$。在 $[${-a}, ${upper}]$ 上它是宽为 $${upper + a}$ 的矩形，有向面积为 $${height.toLatex()} \\cdot ${upper + a}$，即 $${answer}$。`,
+          ]
+        : [
+            `Try the line $f(x) = ${poly([slope, "x"])}$, which is odd and has $\\int_{0}^{${a}} f(x) \\, dx = ${v}$, a triangle. On $[${-a}, 0]$ it makes the same triangle on the other side of the axis, with signed area $${-v}$${whole ? `, and $${-v} + ${paren(v)}$ is $0$` : ""}.`,
+            `取直线 $f(x) = ${poly([slope, "x"])}$，它是奇函数，且 $\\int_{0}^{${a}} f(x) \\, dx = ${v}$，是一个三角形。在 $[${-a}, 0]$ 上它在轴的另一侧形成同样的三角形，有向面积为 $${-v}$${whole ? `，而 $${-v} + ${paren(v)}$ 等于 $0$` : ""}。`,
+          ];
       return ask(
         [
           `$f$ is ${even ? "even" : "odd"} and $\\int_{0}^{${a}} f(x) \\, dx = ${v}$. Find $\\int_{${-a}}^{${upper}} f(x) \\, dx$.`,
@@ -1737,10 +1927,30 @@ const symmetryIntegrals = {
         ],
         answer,
         [2 * v, 0, v, -v],
-        [
-          `The graph on $[${-a}, 0]$ is the ${even ? "mirror image" : "point reflection"} of the graph on $[0, ${a}]$, so $\\int_{${-a}}^{0} f = ${even ? v : -v}$. ${whole ? `Adding $\\int_{0}^{${a}} f = ${v}$ gives $${answer}$.` : `This is the value asked for.`}`,
-          `$[${-a}, 0]$ 上的图像是 $[0, ${a}]$ 上图像的${even ? "镜像" : "中心对称图形"}，所以 $\\int_{${-a}}^{0} f = ${even ? v : -v}$。${whole ? `加上 $\\int_{0}^{${a}} f = ${v}$ 得 $${answer}$。` : `这就是所求的值。`}`,
-        ],
+        walkPair(
+          [
+            [
+              "Use the symmetry",
+              "利用对称性",
+              `The graph on $[${-a}, 0]$ is the ${even ? "mirror image" : "point reflection"} of the graph on $[0, ${a}]$, so $\\int_{${-a}}^{0} f(x) \\, dx = ${left}$.`,
+              `$[${-a}, 0]$ 上的图像是 $[0, ${a}]$ 上图像的${even ? "镜像" : "中心对称图形"}，所以 $\\int_{${-a}}^{0} f(x) \\, dx = ${left}$。`,
+            ],
+            whole
+              ? [
+                  "Add the two halves",
+                  "把两半相加",
+                  `$\\int_{${-a}}^{${a}} f(x) \\, dx = ${left} + ${paren(v)} = ${answer}$.`,
+                  `$\\int_{${-a}}^{${a}} f(x) \\, dx = ${left} + ${paren(v)} = ${answer}$。`,
+                ]
+              : [
+                  "Read off the answer",
+                  "读出答案",
+                  `The integral asked for is this half, $${answer}$.`,
+                  `所求的积分就是这一半，即 $${answer}$。`,
+                ],
+          ],
+          check,
+        ),
       );
     },
   ),
@@ -1752,8 +1962,8 @@ const valueFromNetChange = {
     "a-value-of-the-function-from-its-net-change",
     ["A value of the function from its net change", "由净变化求函数值"],
     [
-      "The fundamental theorem says $\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)$, so knowing the integral and one value gives the other. Keep the order of the limits in mind: when the known value is at the upper limit, the unknown one is found by subtracting.",
-      "微积分基本定理给出 $\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)$，所以知道积分和一个函数值，就能求出另一个。注意上下限的顺序：已知的值在上限时，未知的值要用减法求得。",
+      "The fundamental theorem says $\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)$, so knowing the integral and one value gives the other. Keep the order of the limits in mind: when the known value is at the upper limit, the unknown one is found by subtracting.\n\nIf $\\int_{1}^{4} f'(x) \\, dx = 6$ and $f(4) = 2$, then $f(1) = 2 - 6$, which is $-4$.\n\nCheck: $f(4) - f(1)$ is $2 - (-4)$, which is $6$, the given integral.\n\n> **Watch out.** Adding the integral to the value at the upper limit gives $f(4) + 6$, which is not $f(1)$. The integral is the change from the lower limit to the upper one.",
+      "微积分基本定理给出 $\\int_{a}^{b} f'(x) \\, dx = f(b) - f(a)$，所以知道积分和一个函数值，就能求出另一个。注意上下限的顺序：已知的值在上限时，未知的值要用减法求得。\n\n若 $\\int_{1}^{4} f'(x) \\, dx = 6$，$f(4) = 2$，则 $f(1) = 2 - 6$，即 $-4$。\n\n检验：$f(4) - f(1)$ 等于 $2 - (-4)$，即 $6$，正是所给的积分。\n\n> **注意。** 把积分加到上限处的值上得 $f(4) + 6$，这不是 $f(1)$。积分是从下限到上限的变化量。",
     ],
     (rng) => {
       const a = rng.int(-6, 3);
@@ -1762,6 +1972,7 @@ const valueFromNetChange = {
       const known = rng.int(-12, 12);
       const findLower = rng.bool();
       const answer = findLower ? known - I : known + I;
+      const [fa, fb] = findLower ? [answer, known] : [known, answer];
       return ask(
         findLower
           ? [
@@ -1774,10 +1985,33 @@ const valueFromNetChange = {
             ],
         answer,
         [findLower ? known + I : known - I, I, I - known],
-        [
-          `$f(${b}) - f(${a}) = ${I}$, and $${findLower ? `f(${b})` : `f(${a})`} = ${known}$, so $${findLower ? `f(${a})` : `f(${b})`} = ${answer}$.`,
-          `$f(${b}) - f(${a}) = ${I}$，$${findLower ? `f(${b})` : `f(${a})`} = ${known}$，所以 $${findLower ? `f(${a})` : `f(${b})`} = ${answer}$。`,
-        ],
+        walkPair(
+          [
+            [
+              "Use the fundamental theorem",
+              "用基本定理",
+              `$f$ is an antiderivative of $f'$, so $f(${b}) - f(${a}) = ${I}$.`,
+              `$f$ 是 $f'$ 的一个原函数，所以 $f(${b}) - f(${a}) = ${I}$。`,
+            ],
+            findLower
+              ? [
+                  "Solve for the lower value",
+                  "解出下限处的值",
+                  `The known value is at the upper limit, so subtract: $f(${a}) = f(${b}) - ${paren(I)} = ${known} - ${paren(I)} = ${answer}$.`,
+                  `已知的值在上限处，所以用减法：$f(${a}) = f(${b}) - ${paren(I)} = ${known} - ${paren(I)} = ${answer}$。`,
+                ]
+              : [
+                  "Solve for the upper value",
+                  "解出上限处的值",
+                  `The known value is at the lower limit, so add: $f(${b}) = f(${a}) + ${paren(I)} = ${known} + ${paren(I)} = ${answer}$.`,
+                  `已知的值在下限处，所以用加法：$f(${b}) = f(${a}) + ${paren(I)} = ${known} + ${paren(I)} = ${answer}$。`,
+                ],
+          ],
+          [
+            `Put both values back: $f(${b}) - f(${a})$ is $${fb} - ${paren(fa)}$, which is $${fb - fa}$, the given integral.`,
+            `把两个值代回去：$f(${b}) - f(${a})$ 等于 $${fb} - ${paren(fa)}$，即 $${fb - fa}$，正是所给的积分。`,
+          ],
+        ),
       );
     },
   ),
@@ -1808,12 +2042,13 @@ const maximumFromAreas = {
     "the-absolute-maximum-from-areas-under-the-derivative",
     ["The absolute maximum from areas under the derivative", "由导数下的面积确定绝对最大值"],
     [
-      "The absolute maximum is at a point where $f'$ changes from positive to negative or at an endpoint. Compare these candidates by net area: the right endpoint beats the interior peak only if the area gained after the dip is more than the area lost in it.",
-      "绝对最大值出现在 $f'$ 由正变负的点或端点处。用净面积比较这些候选点：只有低谷之后增加的面积大于低谷中失去的面积时，右端点才超过内部的峰值。",
+      "The absolute maximum is at a point where $f'$ changes from positive to negative or at an endpoint. Compare these candidates by net area: the right endpoint beats the interior peak only if the area gained after the dip is more than the area lost in it.\n\nSuppose $f'$ is positive on $(-4, -1)$, negative on $(-1, 2)$ and positive on $(2, 5)$, with areas $5$, $3$ and $4$. Relative to $f(-4)$, the peak at $x = -1$ is $5$ higher and the right endpoint is $5 - 3 + 4$, which is $6$, higher. The maximum is at $x = 5$.\n\nCheck: from $x = -1$ to $x = 5$, $f$ loses $3$ and gains $4$, a net gain of $1$, so $f(5)$ is above $f(-1)$.\n\n> **Watch out.** A peak inside the interval is only a local maximum. Compare it with the right endpoint before calling it the absolute maximum.",
+      "绝对最大值出现在 $f'$ 由正变负的点或端点处。用净面积比较这些候选点：只有低谷之后增加的面积大于低谷中失去的面积时，右端点才超过内部的峰值。\n\n设 $f'$ 在 $(-4, -1)$ 上为正，在 $(-1, 2)$ 上为负，在 $(2, 5)$ 上为正，面积依次为 $5$、$3$、$4$。相对于 $f(-4)$，$x = -1$ 处的峰高出 $5$，右端点高出 $5 - 3 + 4$，即 $6$。最大值在 $x = 5$ 处。\n\n检验：从 $x = -1$ 到 $x = 5$，$f$ 先减少 $3$ 再增加 $4$，净增 $1$，所以 $f(5)$ 高于 $f(-1)$。\n\n> **注意。** 区间内部的峰只是局部最大值。称它为绝对最大值之前，先和右端点比较。",
     ],
     (rng) => {
       const s = areaStory(rng);
       const answer = s.A2 > s.A3 ? s.x1 : s.x3;
+      const net = s.A3 - s.A2;
       return ask(
         [
           `${s.prose[0]} At which $x$ does $f$ attain its absolute maximum on $[${s.x0}, ${s.x3}]$?`,
@@ -1821,10 +2056,32 @@ const maximumFromAreas = {
         ],
         answer,
         [s.A2 > s.A3 ? s.x3 : s.x1, s.x2, s.x0],
-        [
-          `Relative to $f(${s.x0})$, the value at $x = ${s.x1}$ is $+${s.A1}$ and at $x = ${s.x3}$ it is $${s.A1} - ${s.A2} + ${s.A3} = ${s.A1 - s.A2 + s.A3}$. The larger is at $x = ${answer}$.`,
-          `相对于 $f(${s.x0})$，$x = ${s.x1}$ 处的值是 $+${s.A1}$，$x = ${s.x3}$ 处的值是 $${s.A1} - ${s.A2} + ${s.A3} = ${s.A1 - s.A2 + s.A3}$。较大的在 $x = ${answer}$ 处。`,
-        ],
+        walkPair(
+          [
+            [
+              "List the candidates",
+              "列出候选点",
+              `$f'$ changes from positive to negative only at $x = ${s.x1}$, so the candidates are $x = ${s.x1}$ and the endpoints $x = ${s.x0}$ and $x = ${s.x3}$.`,
+              `$f'$ 只在 $x = ${s.x1}$ 处由正变负，所以候选点为 $x = ${s.x1}$ 以及端点 $x = ${s.x0}$、$x = ${s.x3}$。`,
+            ],
+            [
+              "Compare by net area",
+              "用净面积比较",
+              `Relative to $f(${s.x0})$:\n\n$$f(${s.x1}) - f(${s.x0}) = ${s.A1}$$\n\n$$f(${s.x3}) - f(${s.x0}) = ${s.A1} - ${s.A2} + ${s.A3} = ${s.A1 - s.A2 + s.A3}$$`,
+              `相对于 $f(${s.x0})$：\n\n$$f(${s.x1}) - f(${s.x0}) = ${s.A1}$$\n\n$$f(${s.x3}) - f(${s.x0}) = ${s.A1} - ${s.A2} + ${s.A3} = ${s.A1 - s.A2 + s.A3}$$`,
+            ],
+            [
+              "Choose the largest",
+              "选出最大的",
+              `Both are positive, so the start is not the maximum, and the larger is at $x = ${answer}$.`,
+              `两者都是正数，所以起点不是最大值点，较大的在 $x = ${answer}$ 处。`,
+            ],
+          ],
+          [
+            `Compare the two leaders directly. From $x = ${s.x1}$ to $x = ${s.x3}$, $f$ loses $${s.A2}$ and then gains $${s.A3}$, a net change of $${net}$. ${net > 0 ? `That is positive, so $f(${s.x3})$ is higher.` : `That is negative, so $f(${s.x1})$ is higher.`}`,
+            `直接比较领先的两点。从 $x = ${s.x1}$ 到 $x = ${s.x3}$，$f$ 先减少 $${s.A2}$ 再增加 $${s.A3}$，净变化为 $${net}$。${net > 0 ? `它是正的，所以 $f(${s.x3})$ 更高。` : `它是负的，所以 $f(${s.x1})$ 更高。`}`,
+          ],
+        ),
       );
     },
   ),
@@ -1835,12 +2092,13 @@ const minimumFromAreas = point(
   "the-absolute-minimum-from-areas-under-the-derivative",
   ["The absolute minimum from areas under the derivative", "由导数下的面积确定绝对最小值"],
   [
-    "The absolute minimum is at a point where $f'$ changes from negative to positive or at an endpoint. Here the left endpoint is a real candidate: the interior dip is lower than the start only if the area lost is more than the area first gained.",
-    "绝对最小值出现在 $f'$ 由负变正的点或端点处。这里左端点是真正的候选点：只有失去的面积大于最初增加的面积时，内部的低谷才低于起点。",
+    "The absolute minimum is at a point where $f'$ changes from negative to positive or at an endpoint. Here the left endpoint is a real candidate: the interior dip is lower than the start only if the area lost is more than the area first gained.\n\nSuppose $f'$ is positive on $(-4, -1)$, negative on $(-1, 2)$ and positive on $(2, 5)$, with areas $5$, $3$ and $4$. Relative to $f(-4)$, the dip at $x = 2$ is $5 - 3$, which is $2$, higher, so the minimum is at the left endpoint $x = -4$.\n\nCheck: every other point is above the start. $f$ rises by $5$ first, falls by only $3$, and then rises again.\n\n> **Watch out.** A dip inside the interval is only a local minimum. If $f'$ starts out positive, the left endpoint can be lower.",
+    "绝对最小值出现在 $f'$ 由负变正的点或端点处。这里左端点是真正的候选点：只有失去的面积大于最初增加的面积时，内部的低谷才低于起点。\n\n设 $f'$ 在 $(-4, -1)$ 上为正，在 $(-1, 2)$ 上为负，在 $(2, 5)$ 上为正，面积依次为 $5$、$3$、$4$。相对于 $f(-4)$，$x = 2$ 处的低谷高出 $5 - 3$，即 $2$，所以最小值在左端点 $x = -4$ 处。\n\n检验：其他每个点都高于起点。$f$ 先升高 $5$，只降低 $3$，然后又升高。\n\n> **注意。** 区间内部的低谷只是局部最小值。若 $f'$ 一开始为正，左端点可能更低。",
   ],
   (rng) => {
     const s = areaStory(rng);
     const answer = s.A1 > s.A2 ? s.x0 : s.x2;
+    const dip = s.A1 - s.A2;
     return ask(
       [
         `${s.prose[0]} At which $x$ does $f$ attain its absolute minimum on $[${s.x0}, ${s.x3}]$?`,
@@ -1848,10 +2106,34 @@ const minimumFromAreas = point(
       ],
       answer,
       [s.A1 > s.A2 ? s.x2 : s.x0, s.x1, s.x3],
-      [
-        `Relative to $f(${s.x0})$, the value at $x = ${s.x2}$ is $${s.A1} - ${s.A2} = ${s.A1 - s.A2}$. ${s.A1 > s.A2 ? `That is positive, so the start at $x = ${s.x0}$ stays lowest.` : `That is negative, so $x = ${s.x2}$ is lower than the start.`}`,
-        `相对于 $f(${s.x0})$，$x = ${s.x2}$ 处的值是 $${s.A1} - ${s.A2} = ${s.A1 - s.A2}$。${s.A1 > s.A2 ? `它是正的，所以起点 $x = ${s.x0}$ 仍是最低的。` : `它是负的，所以 $x = ${s.x2}$ 处比起点更低。`}`,
-      ],
+      walkPair(
+        [
+          [
+            "List the candidates",
+            "列出候选点",
+            `$f'$ changes from negative to positive only at $x = ${s.x2}$, so the candidates are $x = ${s.x2}$ and the endpoints $x = ${s.x0}$ and $x = ${s.x3}$. The right endpoint is above the dip, since $f$ gains $${s.A3}$ after it.`,
+            `$f'$ 只在 $x = ${s.x2}$ 处由负变正，所以候选点为 $x = ${s.x2}$ 以及端点 $x = ${s.x0}$、$x = ${s.x3}$。右端点高于低谷，因为过了低谷 $f$ 又增加了 $${s.A3}$。`,
+          ],
+          [
+            "Compare the dip with the start",
+            "比较低谷和起点",
+            `Relative to $f(${s.x0})$, the dip is at $f(${s.x2}) - f(${s.x0}) = ${s.A1} - ${s.A2} = ${dip}$. ${dip > 0 ? `That is positive, so the start at $x = ${s.x0}$ is lowest.` : `That is negative, so $x = ${s.x2}$ is lower than the start.`}`,
+            `相对于 $f(${s.x0})$，低谷处 $f(${s.x2}) - f(${s.x0}) = ${s.A1} - ${s.A2} = ${dip}$。${dip > 0 ? `它是正的，所以起点 $x = ${s.x0}$ 最低。` : `它是负的，所以 $x = ${s.x2}$ 比起点更低。`}`,
+          ],
+        ],
+        [
+          `Measure every point from $x = ${answer}$ instead. ${
+            dip > 0
+              ? `From the start, $f$ is $${s.A1}$ higher at $x = ${s.x1}$, $${dip}$ higher at $x = ${s.x2}$ and $${dip + s.A3}$ higher at $x = ${s.x3}$: all above.`
+              : `From the dip, $f$ is $${-dip}$ higher at $x = ${s.x0}$, $${s.A2}$ higher at $x = ${s.x1}$ and $${s.A3}$ higher at $x = ${s.x3}$: all above.`
+          }`,
+          `换一种方法，从 $x = ${answer}$ 出发衡量每个点。${
+            dip > 0
+              ? `从起点看，$f$ 在 $x = ${s.x1}$ 处高 $${s.A1}$，在 $x = ${s.x2}$ 处高 $${dip}$，在 $x = ${s.x3}$ 处高 $${dip + s.A3}$：都更高。`
+              : `从低谷看，$f$ 在 $x = ${s.x0}$ 处高 $${-dip}$，在 $x = ${s.x1}$ 处高 $${s.A2}$，在 $x = ${s.x3}$ 处高 $${s.A3}$：都更高。`
+          }`,
+        ],
+      ),
     );
   },
 );
@@ -1860,8 +2142,8 @@ const criticalOutsideInterval = point(
   "a-critical-point-outside-the-interval",
   ["A critical point outside the interval", "区间外的临界点"],
   [
-    "Solving $f'(x) = 0$ is not the whole search: the critical point may lie outside the interval, and on a closed interval the endpoints are always candidates. If $f'$ has one sign throughout, the maximum is at an endpoint.",
-    "解 $f'(x) = 0$ 并不是全部工作：临界点可能在区间之外，而闭区间的端点总是候选点。如果 $f'$ 在整个区间上符号不变，最大值就在端点处。",
+    "Solving $f'(x) = 0$ is not the whole search: the critical point may lie outside the interval, and on a closed interval the endpoints are always candidates. If $f'$ has one sign throughout, the maximum is at an endpoint.\n\nFor $f'(x) = -(x - 5)$ on $[0, 3]$, the critical point $x = 5$ is outside the interval. On $[0, 3]$, $f'$ is positive, so $f$ is increasing and its maximum is at $x = 3$.\n\nCheck: one function with this derivative is $f(x) = -\\frac{(x - 5)^{2}}{2}$. It gives $f(0) = -\\frac{25}{2}$ and $f(3) = -2$, and $-2$ is the larger.\n\n> **Watch out.** $x = 5$ cannot be the answer, though $f'(5) = 0$: it is not in the interval.",
+    "解 $f'(x) = 0$ 并不是全部工作：临界点可能在区间之外，而闭区间的端点总是候选点。如果 $f'$ 在整个区间上符号不变，最大值就在端点处。\n\n对 $[0, 3]$ 上的 $f'(x) = -(x - 5)$，临界点 $x = 5$ 在区间之外。在 $[0, 3]$ 上 $f'$ 为正，所以 $f$ 递增，最大值在 $x = 3$ 处。\n\n检验：导数为它的一个函数是 $f(x) = -\\frac{(x - 5)^{2}}{2}$。它给出 $f(0) = -\\frac{25}{2}$，$f(3) = -2$，而 $-2$ 较大。\n\n> **注意。** 虽然 $f'(5) = 0$，但 $x = 5$ 不可能是答案：它不在区间内。",
   ],
   (rng) => {
     const a = rng.int(-6, 2);
@@ -1873,17 +2155,28 @@ const criticalOutsideInterval = point(
     const answer = down ? Math.min(b, Math.max(a, r)) : Math.abs(r - a) > Math.abs(b - r) ? a : b;
     const d = poly([k, r === 0 ? "x" : `(${minus(r)})`]);
     const inside = r > a && r < b;
+    const where: Pair = inside
+      ? [`$x = ${r}$, inside $[${a}, ${b}]$`, `$x = ${r}$，在 $[${a}, ${b}]$ 内`]
+      : [`$x = ${r}$, outside $[${a}, ${b}]$`, `$x = ${r}$，在 $[${a}, ${b}]$ 外`];
     const why: Pair = down
       ? inside
-        ? [`$f'$ changes from positive to negative at $x = ${r}$, inside the interval`, `$f'$ 在区间内的 $x = ${r}$ 处由正变负`]
+        ? [
+            `$f'$ changes from positive to negative at $x = ${r}$, so $f$ rises to it and falls after it, and the maximum is there`,
+            `$f'$ 在 $x = ${r}$ 处由正变负，所以 $f$ 先升到这里再下降，最大值就在这里`,
+          ]
         : [
             `$f'$ has one sign on the interval, so $f$ is monotonic and the maximum is at the endpoint nearer to $${r}$`,
             `$f'$ 在区间上符号不变，所以 $f$ 单调，最大值在离 $${r}$ 较近的端点处`,
           ]
       : [
-          `$f$ is a parabola opening upward with vertex at $x = ${r}$, so the maximum is at the endpoint farther from $${r}$`,
-          `$f$ 是开口向上、顶点在 $x = ${r}$ 的抛物线，所以最大值在离 $${r}$ 较远的端点处`,
+          `$f'$ goes from negative to positive at $x = ${r}$, so $f$ is a parabola opening upward with its lowest point there, and the maximum is at the endpoint farther from $${r}$`,
+          `$f'$ 在 $x = ${r}$ 处由负变正，所以 $f$ 是开口向上、最低点在那里的抛物线，最大值在离 $${r}$ 较远的端点处`,
         ];
+    const half = Q.of(k, 2);
+    const F = (x: number) => half.mul(Q.of((x - r) ** 2));
+    const coef = half.eq(Q.of(1)) ? "" : half.eq(Q.of(-1)) ? "-" : half.toLatex();
+    const values = [a, ...(inside ? [r] : []), b].map((x) => `f(${x}) = ${F(x).toLatex()}`);
+    const shown = `\n\n${values.map((v) => `$$${v}$$`).join("\n\n")}\n\n`;
     return ask(
       [
         `$f'(x) = ${d}$. At which $x$ does $f$ attain its greatest value on $[${a}, ${b}]$?`,
@@ -1891,7 +2184,16 @@ const criticalOutsideInterval = point(
       ],
       answer,
       [r, a, b],
-      [`Here ${why[0]}, which gives $x = ${answer}$.`, `这里${why[1]}，所以 $x = ${answer}$。`],
+      walkPair(
+        [
+          ["Find the critical point", "求临界点", `$f'(x) = 0$ at ${where[0]}.`, `$f'(x) = 0$ 的解为 ${where[1]}。`],
+          ["Read the sign of f′", "看 f′ 的符号", `Here ${why[0]}, which gives $x = ${answer}$.`, `这里${why[1]}，所以 $x = ${answer}$。`],
+        ],
+        [
+          `Take one function with this derivative, $f(x) = ${coef}${power(r, 2)}$; adding a constant would not change the comparison. Then${shown}The greatest of these is at $x = ${answer}$.`,
+          `取导数为它的一个函数 $f(x) = ${coef}${power(r, 2)}$；加上常数不影响比较。于是${shown}其中最大的在 $x = ${answer}$ 处。`,
+        ],
+      ),
     );
   },
 );

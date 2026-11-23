@@ -1506,8 +1506,8 @@ const symmetryAboutAnotherCenter: KnowledgePointDef = {
   id: "symmetry-about-a-point-other-than-the-origin",
   title: t("Symmetry about a point other than the origin", "关于原点以外的点的对称"),
   explanation: t(
-    "Symmetry does not need the origin. If an interval is centered at $c$, then an odd power of $x - c$ has equal and opposite areas on the two sides, and its integral is zero. Only the even part remains, and a constant term contributes its value times the width of the interval.",
-    "对称不一定要关于原点。如果区间以 $c$ 为中心，$x - c$ 的奇次幂在两侧的面积大小相等、符号相反，积分为零。只剩下偶数部分，常数项贡献它的值乘以区间宽度。",
+    "Symmetry does not need the origin. If an interval is centered at $c$, then an odd power of $x - c$ has equal and opposite areas on the two sides, and its integral is zero. Only the even part remains, and a constant term contributes its value times the width of the interval.\n\nFor $\\int_{1}^{5} \\left((x - 3)^{3} + 2\\right) dx$, the interval is centered at $3$, so the cube contributes $0$ and the constant contributes $2 \\cdot 4$, which is $8$.\n\nCheck: with $u = x - 3$, the integral becomes $\\int_{-2}^{2} (u^{3} + 2) \\, du$. The antiderivative $\\frac{u^{4}}{4} + 2u$ is $4 + 4$ at $u = 2$ and $4 - 4$ at $u = -2$, and $8 - 0$ is $8$.\n\n> **Watch out.** The power must be centered at the midpoint of the interval. On $[0, 4]$, the term $(x - 3)^{3}$ does not cancel, since $3$ is not the midpoint.",
+    "对称不一定要关于原点。如果区间以 $c$ 为中心，$x - c$ 的奇次幂在两侧的面积大小相等、符号相反，积分为零。只剩下偶数部分，常数项贡献它的值乘以区间宽度。\n\n对 $\\int_{1}^{5} \\left((x - 3)^{3} + 2\\right) dx$，区间以 $3$ 为中心，所以立方项贡献 $0$，常数项贡献 $2 \\cdot 4$，即 $8$。\n\n检验：令 $u = x - 3$，积分变为 $\\int_{-2}^{2} (u^{3} + 2) \\, du$。原函数 $\\frac{u^{4}}{4} + 2u$ 在 $u = 2$ 处为 $4 + 4$，在 $u = -2$ 处为 $4 - 4$，而 $8 - 0$ 等于 $8$。\n\n> **注意。** 幂的中心必须是区间的中点。在 $[0, 4]$ 上，$(x - 3)^{3}$ 不会抵消，因为 $3$ 不是中点。",
   ),
   generate(rng) {
     const c = nonzero(rng, 6);
@@ -1516,6 +1516,8 @@ const symmetryAboutAnotherCenter: KnowledgePointDef = {
     const k = nonzero(rng, 9);
     const answer = 2 * a * k;
     const inner = poly([1, "x"], [-c, ""]);
+    const quarter = Q.of(m * a ** 4, 4);
+    const F = poly([Q.of(m, 4), "u^{4}"], [k, "u"]);
     return numberProblem({
       prompt: t(
         `Find $\\int_{${c - a}}^{${c + a}} \\left(${poly([m, `(${inner})^3`], [k, ""])}\\right)dx$.`,
@@ -1524,9 +1526,31 @@ const symmetryAboutAnotherCenter: KnowledgePointDef = {
       answer,
       form: "integer",
       wrong: [0, a * k, 2 * a * m + 2 * a * k],
-      solution: t(
-        `The interval is centered at $${c}$, so the cubed term is odd about the center and integrates to zero. The constant contributes $${inParens(k)} \\cdot ${2 * a} = ${answer}$.`,
-        `区间以 $${c}$ 为中心，所以立方项关于中心是奇函数，积分为零。常数项贡献 $${inParens(k)} \\cdot ${2 * a} = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Find the center",
+            "找中心",
+            `The midpoint of $[${c - a}, ${c + a}]$ is $${c}$, so $${inner}$ runs from $${-a}$ to $${a}$, symmetric about $0$.`,
+            `$[${c - a}, ${c + a}]$ 的中点是 $${c}$，所以 $${inner}$ 从 $${-a}$ 变到 $${a}$，关于 $0$ 对称。`,
+          ],
+          [
+            "Use the symmetry",
+            "利用对称性",
+            `The cubed term is odd about the center: its areas on the two halves are equal and opposite, so it contributes $0$.`,
+            `立方项关于中心是奇函数：它在两半上的面积大小相等、符号相反，所以贡献为 $0$。`,
+          ],
+          [
+            "Integrate the constant",
+            "对常数积分",
+            `The constant $${k}$ over a width of $${2 * a}$ gives $${inParens(k)} \\cdot ${2 * a} = ${answer}$.`,
+            `常数 $${k}$ 在宽为 $${2 * a}$ 的区间上积分，得 $${inParens(k)} \\cdot ${2 * a} = ${answer}$。`,
+          ],
+        ],
+        [
+          `Substitute $u = ${inner}$ and integrate directly. An antiderivative is $${F}$, and\n\n$$\\left(${quarter.toLatex()} + ${inParens(k * a)}\\right) - \\left(${quarter.toLatex()} - ${inParens(k * a)}\\right) = ${answer}$$\n\nThe $u^{4}$ terms cancel, leaving twice $${k * a}$.`,
+          `代换 $u = ${inner}$ 后直接积分。一个原函数是 $${F}$，且\n\n$$\\left(${quarter.toLatex()} + ${inParens(k * a)}\\right) - \\left(${quarter.toLatex()} - ${inParens(k * a)}\\right) = ${answer}$$\n\n$u^{4}$ 项相互抵消，剩下 $${k * a}$ 的两倍。`,
+        ],
       ),
     });
   },
@@ -1536,13 +1560,14 @@ const constantInAnAccumulation: KnowledgePointDef = {
   id: "a-constant-in-an-accumulation-function",
   title: t("A constant in an accumulation function", "累积函数中的常数"),
   explanation: t(
-    "An accumulation function $\\int_a^x f(t)\\,dt$ is zero at $x = a$, because the interval has no width. So if the integral is given by a formula with an unknown constant, setting $x = a$ determines the constant. There is no need to find $f$ itself.",
-    "累积函数 $\\int_a^x f(t)\\,dt$ 在 $x = a$ 处为零，因为区间没有宽度。所以如果积分由一个含未知常数的公式给出，令 $x = a$ 就能确定这个常数，不必求出 $f$ 本身。",
+    "An accumulation function $\\int_a^x f(t)\\,dt$ is zero at $x = a$, because the interval has no width. So if the integral is given by a formula with an unknown constant, setting $x = a$ determines the constant. There is no need to find $f$ itself.\n\nIf $\\int_{2}^{x} f(t) \\, dt = x^{2} + 3x + k$ for all $x$, then at $x = 2$ the left side is $0$, so $4 + 6 + k = 0$ and $k = -10$.\n\nCheck: differentiating the formula gives $f(x) = 2x + 3$, and $\\int_{2}^{x} (2t + 3) \\, dt$ is $(x^{2} + 3x) - (4 + 6)$, which has constant term $-10$.\n\n> **Watch out.** Set $x$ equal to the lower limit, not to $0$: the integral vanishes where the interval has no width.",
+    "累积函数 $\\int_a^x f(t)\\,dt$ 在 $x = a$ 处为零，因为区间没有宽度。所以如果积分由一个含未知常数的公式给出，令 $x = a$ 就能确定这个常数，不必求出 $f$ 本身。\n\n若对所有 $x$ 有 $\\int_{2}^{x} f(t) \\, dt = x^{2} + 3x + k$，则在 $x = 2$ 处左边为 $0$，所以 $4 + 6 + k = 0$，$k = -10$。\n\n检验：对公式求导得 $f(x) = 2x + 3$，而 $\\int_{2}^{x} (2t + 3) \\, dt$ 等于 $(x^{2} + 3x) - (4 + 6)$，常数项为 $-10$。\n\n> **注意。** 要令 $x$ 等于积分下限，而不是 $0$：区间没有宽度时积分才为零。",
   ),
   generate(rng) {
     const a = nonzero(rng, 6);
     const b = nonzero(rng, 9);
     const answer = -(a * a + a * b);
+    const derivative = poly([2, "t"], [b, ""]);
     return numberProblem({
       prompt: t(
         `For all $x$, $\\int_{${a}}^{x} f(t)\\,dt = ${poly([1, "x^2"], [b, "x"])} + k$. Find $k$.`,
@@ -1551,9 +1576,25 @@ const constantInAnAccumulation: KnowledgePointDef = {
       answer,
       solveFor: "k",
       wrong: [a * a + a * b, -(a * a), a * a - a * b],
-      solution: t(
-        `At $x = ${a}$ the integral is zero, so $${inParens(a)}^2 + ${inParens(b)}(${a}) + k = 0$. That gives $k = ${answer}$.`,
-        `在 $x = ${a}$ 处积分为零，所以 $${inParens(a)}^2 + ${inParens(b)}(${a}) + k = 0$，得 $k = ${answer}$。`,
+      solution: walk(
+        [
+          [
+            "Set x to the lower limit",
+            "令 x 等于积分下限",
+            `At $x = ${a}$ the interval has no width, so the integral is $0$:\n\n$$${inParens(a)}^2 + ${inParens(b)} \\cdot ${inParens(a)} + k = 0$$`,
+            `在 $x = ${a}$ 处区间没有宽度，所以积分为 $0$：\n\n$$${inParens(a)}^2 + ${inParens(b)} \\cdot ${inParens(a)} + k = 0$$`,
+          ],
+          [
+            "Solve for k",
+            "解出 k",
+            `This is $${a * a} + ${inParens(a * b)} + k = 0$, so $k = ${answer}$.`,
+            `即 $${a * a} + ${inParens(a * b)} + k = 0$，所以 $k = ${answer}$。`,
+          ],
+        ],
+        [
+          `Find $f$ after all. Differentiating the formula gives $f(x) = ${poly([2, "x"], [b, ""])}$, and integrating from $${a}$:\n\n$$\\int_{${a}}^{x} (${derivative}) \\, dt = \\Big[${poly([1, "t^2"], [b, "t"])}\\Big]_{${a}}^{x} = ${poly([1, "x^2"], [b, "x"], [answer, ""])}$$\n\nIts constant term is $${answer}$, as found.`,
+          `换一种方法，把 $f$ 求出来。对公式求导得 $f(x) = ${poly([2, "x"], [b, ""])}$，再从 $${a}$ 积分：\n\n$$\\int_{${a}}^{x} (${derivative}) \\, dt = \\Big[${poly([1, "t^2"], [b, "t"])}\\Big]_{${a}}^{x} = ${poly([1, "x^2"], [b, "x"], [answer, ""])}$$\n\n常数项为 $${answer}$，与所求一致。`,
+        ],
       ),
     });
   },
@@ -3440,8 +3481,8 @@ const absoluteValueOfQuadratic: KnowledgePointDef = {
   id: "the-integral-of-the-absolute-value-of-a-quadratic",
   title: t("The integral of the absolute value of a quadratic", "二次函数绝对值的积分"),
   explanation: t(
-    "An absolute value is a piecewise function in disguise, with its breaks where the inside changes sign. For a quadratic those are its roots. Split the interval at any root inside it, flip the sign on the part where the quadratic is negative, and integrate each piece separately. Integrating without splitting would let the negative part cancel some of the area.",
-    "绝对值其实是分段函数，分段点就在内部变号的地方。对二次函数来说，这些点就是它的根。在区间内的根处把区间分开，在二次函数为负的部分改变符号，再分别积分。不分段直接积分，负的部分就会抵消一部分面积。",
+    "An absolute value is a piecewise function in disguise, with its breaks where the inside changes sign. For a quadratic those are its roots. Split the interval at any root inside it, flip the sign on the part where the quadratic is negative, and integrate each piece separately. Integrating without splitting would let the negative part cancel some of the area.\n\nFor $\\int_{0}^{3} |x^{2} - 1| \\, dx$, the root inside is $x = 1$. The piece $\\int_{0}^{1} (1 - x^{2}) \\, dx$ is $\\frac{2}{3}$ and the piece $\\int_{1}^{3} (x^{2} - 1) \\, dx$ is $\\frac{20}{3}$, so the integral is $\\frac{22}{3}$.\n\nCheck: without the absolute value, $\\int_{0}^{3} (x^{2} - 1) \\, dx$ is $9 - 3$, which is $6$. That counts the first piece as negative, and indeed $\\frac{20}{3} - \\frac{2}{3}$ is $6$.\n\n> **Watch out.** Only roots inside the interval matter: $x = -1$ is outside $[0, 3]$. Flip the sign on the piece where the quadratic is negative, not on the other one.",
+    "绝对值其实是分段函数，分段点就在内部变号的地方。对二次函数来说，这些点就是它的根。在区间内的根处把区间分开，在二次函数为负的部分改变符号，再分别积分。不分段直接积分，负的部分就会抵消一部分面积。\n\n对 $\\int_{0}^{3} |x^{2} - 1| \\, dx$，区间内的根是 $x = 1$。$\\int_{0}^{1} (1 - x^{2}) \\, dx$ 等于 $\\frac{2}{3}$，$\\int_{1}^{3} (x^{2} - 1) \\, dx$ 等于 $\\frac{20}{3}$，所以积分为 $\\frac{22}{3}$。\n\n检验：去掉绝对值，$\\int_{0}^{3} (x^{2} - 1) \\, dx$ 等于 $9 - 3$，即 $6$。这把第一段算成了负的，而 $\\frac{20}{3} - \\frac{2}{3}$ 确实等于 $6$。\n\n> **注意。** 只有区间内的根才有用：$x = -1$ 不在 $[0, 3]$ 内。要在二次函数为负的那一段改变符号，不要弄反。",
   ),
   generate(rng) {
     const a = rng.int(1, 6);
@@ -3451,9 +3492,10 @@ const absoluteValueOfQuadratic: KnowledgePointDef = {
     const second = Q.of(b ** 3 - a ** 3, 3).sub(Q.of(a * a * (b - a)));
     const answer = first.add(second).mul(Q.of(c));
     const f = poly([c, `\\left|${poly([1, "x^2"], [-a * a, ""])}\\right|`]);
-    const scale = c === 1 ? "" : ` Multiplying by $${c}$ gives $${answer.toLatex()}$.`;
-    const scaleZh = c === 1 ? "" : `乘以 $${c}$ 得 $${answer.toLatex()}$。`;
-    const sum = first.add(second).toLatex();
+    const sum = first.add(second);
+    const Fb = Q.of(b ** 3, 3).sub(Q.of(a * a * b));
+    const Fa = Q.of(-2 * a ** 3, 3);
+    const plain = Fb;
     return numberProblem({
       prompt: t(`Evaluate $\\int_{0}^{${b}} ${f} \\, dx$.`, `计算 $\\int_{0}^{${b}} ${f} \\, dx$。`),
       answer,
@@ -3465,9 +3507,31 @@ const absoluteValueOfQuadratic: KnowledgePointDef = {
         first.mul(Q.of(c)),
         first.sub(second).mul(Q.of(c)),
       ],
-      solution: t(
-        `$x^2 - ${a * a}$ is negative on $[0, ${a}]$ and positive on $[${a}, ${b}]$. So $\\int_{0}^{${b}} |x^2 - ${a * a}| \\, dx = \\int_{0}^{${a}} (${a * a} - x^2) \\, dx + \\int_{${a}}^{${b}} (x^2 - ${a * a}) \\, dx = ${first.toLatex()} + ${second.toLatex()} = ${sum}$.${scale}`,
-        `$x^2 - ${a * a}$ 在 $[0, ${a}]$ 上为负，在 $[${a}, ${b}]$ 上为正。所以 $\\int_{0}^{${b}} |x^2 - ${a * a}| \\, dx = \\int_{0}^{${a}} (${a * a} - x^2) \\, dx + \\int_{${a}}^{${b}} (x^2 - ${a * a}) \\, dx = ${first.toLatex()} + ${second.toLatex()} = ${sum}$。${scaleZh}`,
+      solution: walk(
+        [
+          [
+            "Find the sign of the inside",
+            "判断绝对值内部的符号",
+            `$x^2 - ${a * a} = (x - ${a})(x + ${a})$. Its only root in $[0, ${b}]$ is $x = ${a}$: it is negative on $[0, ${a}]$ and positive on $[${a}, ${b}]$.`,
+            `$x^2 - ${a * a} = (x - ${a})(x + ${a})$。它在 $[0, ${b}]$ 内唯一的根是 $x = ${a}$：在 $[0, ${a}]$ 上为负，在 $[${a}, ${b}]$ 上为正。`,
+          ],
+          [
+            "Integrate each piece",
+            "分段积分",
+            `Flip the sign on the first piece:\n\n$$\\int_{0}^{${a}} (${a * a} - x^2) \\, dx = \\Big[${a * a}x - \\frac{x^{3}}{3}\\Big]_{0}^{${a}} = ${first.toLatex()}$$\n\n$$\\int_{${a}}^{${b}} (x^2 - ${a * a}) \\, dx = \\Big[\\frac{x^{3}}{3} - ${a * a}x\\Big]_{${a}}^{${b}} = ${Fb.toLatex()} - ${Fa.toLatex().startsWith("-") ? `(${Fa.toLatex()})` : Fa.toLatex()} = ${second.toLatex()}$$`,
+            `第一段改变符号：\n\n$$\\int_{0}^{${a}} (${a * a} - x^2) \\, dx = \\Big[${a * a}x - \\frac{x^{3}}{3}\\Big]_{0}^{${a}} = ${first.toLatex()}$$\n\n$$\\int_{${a}}^{${b}} (x^2 - ${a * a}) \\, dx = \\Big[\\frac{x^{3}}{3} - ${a * a}x\\Big]_{${a}}^{${b}} = ${Fb.toLatex()} - ${Fa.toLatex().startsWith("-") ? `(${Fa.toLatex()})` : Fa.toLatex()} = ${second.toLatex()}$$`,
+          ],
+          [
+            "Add the pieces",
+            "把两段相加",
+            `The two pieces give\n\n$$\\int_{0}^{${b}} ${f} \\, dx = ${c === 1 ? "" : `${c}\\left(`}${first.toLatex()} + ${second.toLatex()}${c === 1 ? "" : "\\right)"} = ${answer.toLatex()}$$`,
+            `两段合起来得\n\n$$\\int_{0}^{${b}} ${f} \\, dx = ${c === 1 ? "" : `${c}\\left(`}${first.toLatex()} + ${second.toLatex()}${c === 1 ? "" : "\\right)"} = ${answer.toLatex()}$$`,
+          ],
+        ],
+        [
+          `Integrate without the absolute value instead:\n\n$$\\int_{0}^{${b}} (x^2 - ${a * a}) \\, dx = ${Q.of(b ** 3, 3).toLatex()} - ${a * a * b} = ${plain.toLatex()}$$\n\nThis counts the first piece as negative, so it must equal the second piece minus the first, and $${second.toLatex()} - ${first.toLatex()}$ is $${second.sub(first).toLatex()}$. Adding the pieces instead gives $${sum.toLatex()}$${c === 1 ? "" : `, and $${c}$ times that is $${answer.toLatex()}$`}.`,
+          `换一种方法，去掉绝对值直接积分：\n\n$$\\int_{0}^{${b}} (x^2 - ${a * a}) \\, dx = ${Q.of(b ** 3, 3).toLatex()} - ${a * a * b} = ${plain.toLatex()}$$\n\n这把第一段算成了负的，所以它应等于第二段减第一段，而 $${second.toLatex()} - ${first.toLatex()}$ 等于 $${second.sub(first).toLatex()}$。两段相加则得 $${sum.toLatex()}$${c === 1 ? "" : `，乘以 $${c}$ 得 $${answer.toLatex()}$`}。`,
+        ],
       ),
     });
   },
@@ -3477,8 +3541,8 @@ const dropBetweenExtremes: KnowledgePointDef = {
   id: "the-drop-between-extremes-of-an-accumulation-function",
   title: t("The drop between extremes of an accumulation function", "累积函数两个极值之间的落差"),
   explanation: t(
-    "An accumulation function has its integrand as its derivative, so its local extrema lie at the integrand's sign changes. The change between two such points is simply the integral of the integrand between them. The lower limit of the accumulation function shifts every value by the same amount and therefore plays no part in that difference.",
-    "累积函数的导数就是被积函数，所以它的局部极值出现在被积函数变号的地方。这两点之间的变化量，就是被积函数在两点之间的积分。累积函数的积分下限使所有函数值平移相同的量，因此对这个差没有影响。",
+    "An accumulation function has its integrand as its derivative, so its local extrema lie at the integrand's sign changes. The change between two such points is simply the integral of the integrand between them. The lower limit of the accumulation function shifts every value by the same amount and therefore plays no part in that difference.\n\nFor $g(x) = \\int_{0}^{x} (t^{2} - 4) \\, dt$, the integrand changes from positive to negative at $-2$ and back at $2$, so $g(-2)$ is the local maximum and $g(2)$ the local minimum. Their difference is $-\\int_{-2}^{2} (t^{2} - 4) \\, dt$, which is $16 - \\frac{16}{3}$, or $\\frac{32}{3}$.\n\nCheck: here $g(x) = \\frac{x^{3}}{3} - 4x$, so $g(-2)$ is $\\frac{16}{3}$ and $g(2)$ is $-\\frac{16}{3}$, which differ by $\\frac{32}{3}$.\n\n> **Watch out.** The difference does not depend on the lower limit, so do not plug it in. The maximum comes first here, where the integrand goes from positive to negative.",
+    "累积函数的导数就是被积函数，所以它的局部极值出现在被积函数变号的地方。这两点之间的变化量，就是被积函数在两点之间的积分。累积函数的积分下限使所有函数值平移相同的量，因此对这个差没有影响。\n\n对 $g(x) = \\int_{0}^{x} (t^{2} - 4) \\, dt$，被积函数在 $-2$ 处由正变负，在 $2$ 处又由负变正，所以 $g(-2)$ 是极大值，$g(2)$ 是极小值。二者之差为 $-\\int_{-2}^{2} (t^{2} - 4) \\, dt$，即 $16 - \\frac{16}{3}$，等于 $\\frac{32}{3}$。\n\n检验：这里 $g(x) = \\frac{x^{3}}{3} - 4x$，所以 $g(-2)$ 等于 $\\frac{16}{3}$，$g(2)$ 等于 $-\\frac{16}{3}$，相差 $\\frac{32}{3}$。\n\n> **注意。** 这个差与积分下限无关，不必代入下限。这里极大值在前，在被积函数由正变负的地方。",
   ),
   generate(rng) {
     const p = rng.int(-6, 5);
@@ -3488,6 +3552,10 @@ const dropBetweenExtremes: KnowledgePointDef = {
     const gap = q - p;
     const answer = Q.of(c * gap ** 3, 6);
     const integrand = poly([c, "t^2"], [-c * (p + q), "t"], [c * p * q, ""]);
+    const factor = (v: number) => (v === 0 ? "x" : `(${poly([1, "x"], [-v, ""])})`);
+    const u = poly([1, "t"], [-p, ""]);
+    const shifted = poly([c * gap, "u"], [-c, "u^{2}"]);
+    const depth = Q.of(c * gap * gap, 4);
     return numberProblem({
       prompt: t(
         `Let $g(x) = \\int_{${k}}^{x} (${integrand}) \\, dt$. Find the local maximum value of $g$ minus its local minimum value.`,
@@ -3495,9 +3563,25 @@ const dropBetweenExtremes: KnowledgePointDef = {
       ),
       answer,
       wrong: [answer.neg(), Q.of(c * gap ** 3, 3), Q.of(c * gap * gap, 2), Q.of(gap ** 3, 6), Q.of(c * gap ** 3)],
-      solution: t(
-        `$g'(x)$ is the integrand, which is positive, then negative, then positive, with zeros at $x = ${p}$ and $x = ${q}$. So $g(${p})$ is the local maximum and $g(${q})$ the local minimum. Their difference is minus the integral of the integrand from $${p}$ to $${q}$, which is $${answer.toLatex()}$.`,
-        `$g'(x)$ 就是被积函数，它先正、后负、再正，零点是 $x = ${p}$ 和 $x = ${q}$。所以 $g(${p})$ 是极大值，$g(${q})$ 是极小值。二者之差等于被积函数从 $${p}$ 到 $${q}$ 的积分的相反数，即 $${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find the extremes",
+            "找出极值点",
+            `$g'(x)$ is the integrand at $x$, which factors as $${c === 1 ? "" : c}${factor(p)}${factor(q)}$. It is positive before $x = ${p}$, negative between, and positive after $x = ${q}$, so $g(${p})$ is the local maximum and $g(${q})$ the local minimum.`,
+            `$g'(x)$ 是被积函数在 $x$ 处的值，可分解为 $${c === 1 ? "" : c}${factor(p)}${factor(q)}$。它在 $x = ${p}$ 之前为正，两者之间为负，$x = ${q}$ 之后为正，所以 $g(${p})$ 是极大值，$g(${q})$ 是极小值。`,
+          ],
+          [
+            "Integrate between them",
+            "在两点之间积分",
+            `$g(${p}) - g(${q})$ is minus the integral from $${p}$ to $${q}$; the lower limit $${k}$ cancels. With $u = ${u}$, the negated integrand is $${shifted}$ for $0 \\le u \\le ${gap}$:\n\n$$g(${p}) - g(${q}) = \\int_{0}^{${gap}} (${shifted}) \\, du = ${Q.of(c * gap ** 3, 2).toLatex()} - ${Q.of(c * gap ** 3, 3).toLatex()} = ${answer.toLatex()}$$`,
+            `$g(${p}) - g(${q})$ 等于从 $${p}$ 到 $${q}$ 的积分的相反数，下限 $${k}$ 被抵消。令 $u = ${u}$，被积函数取相反数后为 $${shifted}$，$0 \\le u \\le ${gap}$：\n\n$$g(${p}) - g(${q}) = \\int_{0}^{${gap}} (${shifted}) \\, du = ${Q.of(c * gap ** 3, 2).toLatex()} - ${Q.of(c * gap ** 3, 3).toLatex()} = ${answer.toLatex()}$$`,
+          ],
+        ],
+        [
+          `The drop is the area of the region between the integrand and the $t$-axis on $[${p}, ${q}]$, a parabolic segment. Its depth at the midpoint is $${depth.toLatex()}$, and it is two thirds of the rectangle of width $${gap}$ and that depth:\n\n$$\\frac{2}{3} \\cdot ${gap} \\cdot ${depth.toLatex()} = ${answer.toLatex()}$$`,
+          `这个落差就是被积函数与 $t$ 轴在 $[${p}, ${q}]$ 上围成的区域的面积，即一个抛物线弓形。它在中点处的深度为 $${depth.toLatex()}$，面积是宽 $${gap}$、高为这个深度的矩形的三分之二：\n\n$$\\frac{2}{3} \\cdot ${gap} \\cdot ${depth.toLatex()} = ${answer.toLatex()}$$`,
+        ],
       ),
     });
   },
@@ -3535,8 +3619,8 @@ const enclosedByYAxis: KnowledgePointDef = {
   id: "a-region-enclosed-by-a-curve-and-the-y-axis",
   title: t("A region enclosed by a curve and the y-axis", "曲线与 y 轴围成的区域"),
   explanation: t(
-    "When no bounding lines are given, the limits of integration must come from the curve itself: they are the values of $y$ where the curve meets the $y$-axis, the roots of $x(y) = 0$. Between those roots the curve stays on one side of the axis, so the area is the integral of the absolute value of $x$ with respect to $y$.",
-    "没有给出边界直线时，积分限必须来自曲线本身：它们是曲线与 $y$ 轴相交处的 $y$ 值，即 $x(y) = 0$ 的根。在这两个根之间，曲线保持在 $y$ 轴的一侧，所以面积就是 $x$ 的绝对值对 $y$ 的积分。",
+    "When no bounding lines are given, the limits of integration must come from the curve itself: they are the values of $y$ where the curve meets the $y$-axis, the roots of $x(y) = 0$. Between those roots the curve stays on one side of the axis, so the area is the integral of the absolute value of $x$ with respect to $y$.\n\nFor $x = y^{2} - 4y = y(y - 4)$, the roots are $y = 0$ and $y = 4$. Between them $x$ is negative, so the curve is to the left of the axis, and the area is $\\int_{0}^{4} (4y - y^{2}) \\, dy$, which is $32 - \\frac{64}{3}$, or $\\frac{32}{3}$.\n\nCheck: at $y = 2$ the curve is $4$ units from the axis, and the region is two thirds of the $4$ by $4$ rectangle around it: $\\frac{2}{3} \\cdot 16$ is $\\frac{32}{3}$.\n\n> **Watch out.** Integrate with respect to $y$, between the roots in $y$. When the curve is to the left of the axis, $x$ is negative there, so integrate $-x$ rather than $x$.",
+    "没有给出边界直线时，积分限必须来自曲线本身：它们是曲线与 $y$ 轴相交处的 $y$ 值，即 $x(y) = 0$ 的根。在这两个根之间，曲线保持在 $y$ 轴的一侧，所以面积就是 $x$ 的绝对值对 $y$ 的积分。\n\n对 $x = y^{2} - 4y = y(y - 4)$，根是 $y = 0$ 和 $y = 4$。在两者之间 $x$ 为负，曲线在轴的左侧，面积为 $\\int_{0}^{4} (4y - y^{2}) \\, dy$，即 $32 - \\frac{64}{3}$，等于 $\\frac{32}{3}$。\n\n检验：在 $y = 2$ 处曲线离轴 $4$ 个单位，这个区域是外接的 $4 \\times 4$ 矩形的三分之二：$\\frac{2}{3} \\cdot 16$ 等于 $\\frac{32}{3}$。\n\n> **注意。** 要对 $y$ 积分，积分限是 $y$ 的两个根。曲线在轴左侧时 $x$ 为负，要积分 $-x$ 而不是 $x$。",
   ),
   generate(rng) {
     const p = rng.int(-5, 4);
@@ -3549,6 +3633,11 @@ const enclosedByYAxis: KnowledgePointDef = {
     const curve = poly([s * c, "y^2"], [-s * c * (p + q), "y"], [s * c * p * q, ""]);
     const side = opensLeft ? "right" : "left";
     const sideZh = opensLeft ? "右" : "左";
+    const factor = (v: number) => (v === 0 ? "y" : `(${poly([1, "y"], [-v, ""])})`);
+    const lead = s * c === 1 ? "" : s * c === -1 ? "-" : `${s * c}`;
+    const mid = Q.of(p + q, 2);
+    const width = Q.of(c * gap * gap, 4);
+    const integrand = poly([c * gap, "u"], [-c, "u^{2}"]);
     return numberProblem({
       prompt: t(
         `Find the area of the region enclosed by the curve $x = ${curve}$ and the $y$-axis.`,
@@ -3556,9 +3645,31 @@ const enclosedByYAxis: KnowledgePointDef = {
       ),
       answer,
       wrong: [answer.neg(), Q.of(c * gap ** 3, 3), Q.of(c * gap * gap, 2), Q.of(gap ** 3, 6), Q.of(c * gap ** 3)],
-      solution: t(
-        `The curve meets the $y$-axis at $y = ${p}$ and $y = ${q}$, and between them it lies to the ${side} of the axis. Integrating $|x|$ from $${p}$ to $${q}$ gives $${answer.toLatex()}$.`,
-        `曲线与 $y$ 轴相交于 $y = ${p}$ 和 $y = ${q}$，在这两点之间它位于 $y$ 轴${sideZh}侧。对 $|x|$ 从 $${p}$ 到 $${q}$ 积分，得 $${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find where the curve meets the y-axis",
+            "求曲线与 y 轴的交点",
+            `On the $y$-axis $x = 0$, so the curve meets the axis at $y = ${p}$ and $y = ${q}$, the roots of $${curve} = ${lead}${factor(p)}${factor(q)}$.`,
+            `$y$ 轴上 $x = 0$，所以曲线与轴交于 $y = ${p}$ 和 $y = ${q}$，它们是 $${curve} = ${lead}${factor(p)}${factor(q)}$ 的根。`,
+          ],
+          [
+            "Find the side",
+            "判断在哪一侧",
+            `At the middle value $y = ${mid.toLatex()}$, $x = ${width.mul(Q.of(-s)).toLatex()}$, so between the roots the curve lies to the ${side} of the axis and its distance from the axis is $${opensLeft ? "x" : "-x"}$.`,
+            `在中间值 $y = ${mid.toLatex()}$ 处，$x = ${width.mul(Q.of(-s)).toLatex()}$，所以在两根之间曲线位于轴的${sideZh}侧，它到轴的距离是 $${opensLeft ? "x" : "-x"}$。`,
+          ],
+          [
+            "Integrate with respect to y",
+            "对 y 积分",
+            `With $u = ${poly([1, "y"], [-p, ""])}$, running from $0$ to $${gap}$, the distance is $${integrand}$:\n\n$$\\int_{0}^{${gap}} (${integrand}) \\, du = ${Q.of(c * gap ** 3, 2).toLatex()} - ${Q.of(c * gap ** 3, 3).toLatex()} = ${answer.toLatex()}$$`,
+            `令 $u = ${poly([1, "y"], [-p, ""])}$，从 $0$ 变到 $${gap}$，距离为 $${integrand}$：\n\n$$\\int_{0}^{${gap}} (${integrand}) \\, du = ${Q.of(c * gap ** 3, 2).toLatex()} - ${Q.of(c * gap ** 3, 3).toLatex()} = ${answer.toLatex()}$$`,
+          ],
+        ],
+        [
+          `The region is a parabolic segment, two thirds of the rectangle around it. That rectangle is $${gap}$ tall and $${width.toLatex()}$ wide, the distance from the axis at $y = ${mid.toLatex()}$:\n\n$$\\frac{2}{3} \\cdot ${gap} \\cdot ${width.toLatex()} = ${answer.toLatex()}$$`,
+          `这个区域是抛物线弓形，面积是外接矩形的三分之二。矩形高 $${gap}$，宽 $${width.toLatex()}$，即 $y = ${mid.toLatex()}$ 处到轴的距离：\n\n$$\\frac{2}{3} \\cdot ${gap} \\cdot ${width.toLatex()} = ${answer.toLatex()}$$`,
+        ],
       ),
     });
   },
@@ -5308,8 +5419,8 @@ const areaCutOffByParabola: KnowledgePointDef = {
   figure: calculusDrawings3["the-area-bounded-by-a-curve-and-the-x-axis#the-area-cut-off-by-a-parabola"],
   title: t("The area cut off by a parabola", "抛物线截出的面积"),
   explanation: t(
-    "A downward parabola with two real roots encloses a region with the $x$-axis, and the roots are the limits of integration. They must be found first, since no limits are given. For the parabola $y = k(x - r)(s - x)$, this area comes to $\\frac{k(s - r)^3}{6}$, a formula due in essence to Archimedes. It depends only on the distance between the roots and the coefficient $k$, and not on where the parabola sits along the axis.",
-    "开口向下、有两个实根的抛物线与 $x$ 轴围成一个区域，根就是积分限。由于没有给出积分限，必须先求出它们。对抛物线 $y = k(x - r)(s - x)$，这个面积是 $\\frac{k(s - r)^3}{6}$，这个结果本质上源于阿基米德。它只取决于两根之间的距离和系数 $k$，与抛物线在轴上的位置无关。",
+    "A downward parabola with two real roots encloses a region with the $x$-axis, and the roots are the limits of integration. They must be found first, since no limits are given. For the parabola $y = k(x - r)(s - x)$, this area comes to $\\frac{k(s - r)^3}{6}$, a formula due in essence to Archimedes. It depends only on the distance between the roots and the coefficient $k$, and not on where the parabola sits along the axis.\n\nFor $y = 3x - x^{2} = x(3 - x)$, the roots are $0$ and $3$, and the area is $\\int_{0}^{3} (3x - x^{2}) \\, dx$, which is $\\frac{27}{2} - 9$, or $\\frac{9}{2}$.\n\nCheck: the formula with $k = 1$ and $s - r = 3$ gives $\\frac{27}{6}$, which is $\\frac{9}{2}$ as well.\n\n> **Watch out.** The limits are the roots, not $0$ and not the vertex. Integrating from anywhere else measures a different region, or lets area below the axis cancel.",
+    "开口向下、有两个实根的抛物线与 $x$ 轴围成一个区域，根就是积分限。由于没有给出积分限，必须先求出它们。对抛物线 $y = k(x - r)(s - x)$，这个面积是 $\\frac{k(s - r)^3}{6}$，这个结果本质上源于阿基米德。它只取决于两根之间的距离和系数 $k$，与抛物线在轴上的位置无关。\n\n对 $y = 3x - x^{2} = x(3 - x)$，两根是 $0$ 和 $3$，面积为 $\\int_{0}^{3} (3x - x^{2}) \\, dx$，即 $\\frac{27}{2} - 9$，等于 $\\frac{9}{2}$。\n\n检验：用公式，$k = 1$，$s - r = 3$，得 $\\frac{27}{6}$，同样是 $\\frac{9}{2}$。\n\n> **注意。** 积分限是两个根，不是 $0$，也不是顶点。从别处开始积分，量的是另一个区域，或者让轴下方的面积抵消掉一部分。",
   ),
   generate(rng) {
     const k = rng.int(1, 6);
@@ -5318,6 +5429,13 @@ const areaCutOffByParabola: KnowledgePointDef = {
     const s = r + d;
     const answer = Q.of(k * d ** 3, 6);
     const curve = poly([-k, "x^2"], [k * (r + s), "x"], [-k * r * s, ""]);
+    const factor = (v: number) => (v === 0 ? "x" : `(${poly([1, "x"], [-v, ""])})`);
+    const factored = `${k === 1 ? "-" : `-${k}`}${factor(r)}${factor(s)}`;
+    const u = poly([1, "x"], [-r, ""]);
+    const integrand = poly([k * d, "u"], [-k, "u^{2}"]);
+    const half = Q.of(k * d ** 3, 2);
+    const third = Q.of(k * d ** 3, 3);
+    const height = Q.of(k * d * d, 4);
     return numberProblem({
       prompt: t(
         `Find the area of the region enclosed by $y = ${curve}$ and the $x$-axis.`,
@@ -5325,9 +5443,31 @@ const areaCutOffByParabola: KnowledgePointDef = {
       ),
       answer,
       wrong: [Q.of(k * d ** 3, 3), Q.of(k * d ** 3, 2), Q.of(k * d * d, 6), Q.of(-k * d ** 3, 6)],
-      solution: t(
-        `The curve meets the axis at $x = ${r}$ and $x = ${s}$, and it is above the axis between them. With $u = ${poly([1, "x"], [-r, ""])}$, the area is $\\int_0^{${d}} ${poly([k, "u"])}(${d} - u)\\,du = ${answer.toLatex()}$.`,
-        `曲线与轴交于 $x = ${r}$ 和 $x = ${s}$，在两者之间位于轴上方。令 $u = ${poly([1, "x"], [-r, ""])}$，面积是 $\\int_0^{${d}} ${poly([k, "u"])}(${d} - u)\\,du = ${answer.toLatex()}$。`,
+      solution: walk(
+        [
+          [
+            "Find the roots",
+            "求根",
+            `Factoring, $${curve} = ${factored}$. The curve meets the axis at $x = ${r}$ and $x = ${s}$, and since it opens downward it is above the axis between them.`,
+            `因式分解得 $${curve} = ${factored}$。曲线与轴交于 $x = ${r}$ 和 $x = ${s}$，开口向下，所以在两者之间位于轴上方。`,
+          ],
+          [
+            "Shift to the first root",
+            "平移到第一个根",
+            `With $u = ${u}$, $u$ runs from $0$ to $${d}$ and the curve becomes $${k === 1 ? "" : k}u(${d} - u)$, that is $${integrand}$.`,
+            `令 $u = ${u}$，$u$ 从 $0$ 变到 $${d}$，曲线变成 $${k === 1 ? "" : k}u(${d} - u)$，即 $${integrand}$。`,
+          ],
+          [
+            "Integrate",
+            "积分",
+            `The area is\n\n$$\\int_{0}^{${d}} (${integrand}) \\, du = ${half.toLatex()} - ${third.toLatex()} = ${answer.toLatex()}$$`,
+            `面积为\n\n$$\\int_{0}^{${d}} (${integrand}) \\, du = ${half.toLatex()} - ${third.toLatex()} = ${answer.toLatex()}$$`,
+          ],
+        ],
+        [
+          `Archimedes showed that the region is two thirds of the rectangle around it. The vertex is midway between the roots, at height $${height.toLatex()}$, and the rectangle has width $${d}$:\n\n$$\\frac{2}{3} \\cdot ${d} \\cdot ${height.toLatex()} = ${answer.toLatex()}$$`,
+          `阿基米德证明了这个区域是外接矩形面积的三分之二。顶点在两根正中，高为 $${height.toLatex()}$，矩形宽为 $${d}$：\n\n$$\\frac{2}{3} \\cdot ${d} \\cdot ${height.toLatex()} = ${answer.toLatex()}$$`,
+        ],
       ),
     });
   },
