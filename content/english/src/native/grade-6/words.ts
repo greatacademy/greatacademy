@@ -2,14 +2,16 @@
 
 import type { TopicDef } from "@ga/content";
 import type { WordBatch } from "../../pack.ts";
-import { batchTopic, batchWords } from "../grade-5/batches.ts";
+import { batchTopicWithPool, wordPool } from "../batch.ts";
+import { batchWords } from "../grade-5/batches.ts";
 import { batchesA } from "./words-a.ts";
 import { batchesB } from "./words-b.ts";
 
 const batches = [...batchesA, ...batchesB];
+const pool = wordPool(batches);
 
 /** batchTopics6 are the vocabulary batches of grade 6. */
-export const batchTopics6: readonly TopicDef[] = batches.map(batchTopic);
+export const batchTopics6: readonly TopicDef[] = batches.map((b) => batchTopicWithPool(b, pool));
 
 /** vocabulary6 are the words the batches of grade 6 teach. */
 export const vocabulary6: readonly WordBatch[] = batches.map(batchWords);
