@@ -2,7 +2,6 @@ import type { Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, gcd, num, Q, q } from "@ga/subject-math";
 
-import { numberProblem, steps } from "../problems.ts";
 import { tableFigure } from "./early-grades-more-kit.ts";
 import { chosen, lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { equalTape, tapeFigure } from "./upper-grades-kit.ts";
@@ -339,76 +338,152 @@ export const unitRates: TopicDef = withIntro(
     "求一个单位的量，用它比较哪种更划算，并换算比率的单位。",
   ],
 );
-export const proportions: TopicDef = {
-  id: "proportions",
-  title: t("Proportions", "比例"),
-  summary: t("Solve proportions by cross-multiplying, and use them in word problems.", "用交叉相乘解比例，并用于应用题。"),
-  prerequisites: ["ratios", "one-step-equations-multiplication"],
-  encompasses: [{ topic: "one-step-equations-multiplication", weight: 0.4 }],
-  xp: 12,
-  standards: ["CCSS.7.RP.A.2.C"],
-  knowledgePoints: [
-    {
-      id: "solving-proportions",
-      title: t("Solving proportions", "解比例"),
-      explanation: t(
-        "A **proportion** says that two ratios are equal. In $\\frac{a}{b} = \\frac{c}{d}$, the **cross products** are equal: $a \\cdot d = b \\cdot c$. To solve for an unknown, cross-multiply and divide:\n\n$$\\frac{x}{6} = \\frac{10}{4} \\quad\\Rightarrow\\quad 4x = 60 \\quad\\Rightarrow\\quad x = 15$$",
-        "**比例**表示两个比相等。在 $\\frac{a}{b} = \\frac{c}{d}$ 中，**交叉相乘**的积相等：$a \\cdot d = b \\cdot c$。求未知数时，交叉相乘再相除：\n\n$$\\frac{x}{6} = \\frac{10}{4} \\quad\\Rightarrow\\quad 4x = 60 \\quad\\Rightarrow\\quad x = 15$$",
-      ),
-      keyPrerequisites: ["one-step-equations-multiplication"],
-      generate(rng) {
-        const b = rng.int(2, 15);
-        const c = rng.int(1, 20);
-        const d = rng.int(2, 15);
-        if (b === d) return this.generate(rng);
-        const x = q(b * c, d);
-        const top = rng.bool();
-        // x / b = c / d, or b / x = d / c: both give x = bc / d.
-        const prompt = top ? `\\frac{x}{${b}} = \\frac{${c}}{${d}}` : `\\frac{${b}}{x} = \\frac{${d}}{${c}}`;
-        return numberProblem({
-          prompt: t(`Solve for $x$: $$${prompt}$$`, `解关于 $x$ 的比例：$$${prompt}$$`),
-          answer: x,
-          solveFor: "x",
-          wrong: [q(c * d, b), q(b * d, c)],
-          solution: t(
-            `Cross-multiply:${steps(`${d}x = ${b} \\cdot ${c} = ${b * c}`, `x = \\frac{${b * c}}{${d}}${x.d === BigInt(d) ? "" : ` = ${num(x)}`}`)}`,
-            `交叉相乘：${steps(`${d}x = ${b} \\cdot ${c} = ${b * c}`, `x = \\frac{${b * c}}{${d}}${x.d === BigInt(d) ? "" : ` = ${num(x)}`}`)}`,
-          ),
-        });
+/** proportions teaches solving proportions and using them in word problems. */
+export const proportions: TopicDef = withIntro(
+  {
+    id: "proportions",
+    title: t("Proportions", "比例"),
+    summary: t("Solve proportions by cross-multiplying, and use them in word problems.", "用交叉相乘解比例，并用于应用题。"),
+    prerequisites: ["ratios", "one-step-equations-multiplication"],
+    encompasses: [{ topic: "one-step-equations-multiplication", weight: 0.4 }],
+    xp: 12,
+    standards: ["CCSS.7.RP.A.2.C"],
+    knowledgePoints: [
+      {
+        ...lesson(
+          "solving-proportions",
+          ["Solving proportions", "解比例"],
+          [
+            [
+              "A **proportion** says that two ratios are equal. In $\\frac{a}{b} = \\frac{c}{d}$ the **cross products** are equal: $a \\cdot d = b \\cdot c$. To find an unknown, cross-multiply, then divide. $\\frac{x}{6} = \\frac{10}{4}$: $4x = 6 \\cdot 10 = 60$, so $x = 15$.",
+              "**比例**表示两个比相等。在 $\\frac{a}{b} = \\frac{c}{d}$ 中，**交叉相乘**的积相等：$a \\cdot d = b \\cdot c$。求未知数时，先交叉相乘，再相除。$\\frac{x}{6} = \\frac{10}{4}$：$4x = 6 \\cdot 10 = 60$，所以 $x = 15$。",
+            ],
+            [
+              "Both ratios simplify to the same thing: $\\frac{15}{6} = \\frac{5}{2}$ and $\\frac{10}{4} = \\frac{5}{2}$.",
+              "两个比化简后相同：$\\frac{15}{6} = \\frac{5}{2}$，$\\frac{10}{4} = \\frac{5}{2}$。",
+            ],
+            [
+              "Multiply across the equals sign, top of one by bottom of the other. $6 \\cdot 4$ multiplies the two bottoms and is not a cross product.",
+              "要沿着等号交叉相乘：一个比的上面乘另一个比的下面。$6 \\cdot 4$ 是两个分母相乘，不是交叉相乘。",
+            ],
+          ],
+          (rng) => {
+            let b = 2;
+            let c = 1;
+            let d = 2;
+            for (;;) {
+              d = rng.int(2, 12);
+              c = rng.int(1, 15);
+              const m = d / gcd(c, d);
+              b = m * rng.int(1, Math.max(1, Math.floor(15 / m)));
+              if (b !== d && b >= 2 && c !== d) break;
+            }
+            const x = (b * c) / d;
+            const top = rng.bool();
+            const eq = top ? `\\frac{x}{${b}} = \\frac{${c}}{${d}}` : `\\frac{${b}}{x} = \\frac{${d}}{${c}}`;
+            const same = top ? q(c, d) : q(d, c);
+            const left = top ? `\\frac{${x}}{${b}}` : `\\frac{${b}}{${x}}`;
+            const right = top ? `\\frac{${c}}{${d}}` : `\\frac{${d}}{${c}}`;
+            const lowest = (s: string) => (s === num(same) ? s : `${s} = ${num(same)}`);
+            return valued(
+              [`Solve for $x$: $$${eq}$$`, `解关于 $x$ 的比例：$$${eq}$$`],
+              x,
+              [
+                [
+                  ["Cross-multiply", "交叉相乘"],
+                  ["The two cross products are equal:", "两个交叉相乘的积相等："],
+                  [`${d}x = ${b} \\cdot ${c} = ${b * c}`],
+                ],
+                [["Divide", "相除"], [`Divide both sides by $${d}$:`, `两边同时除以 $${d}$：`], [`x = \\frac{${b * c}}{${d}} = ${x}`]],
+              ],
+              [
+                `Simplify both ratios: $${lowest(left)}$ and $${lowest(right)}$, so they are equal.`,
+                `把两个比都化简：$${lowest(left)}$，$${lowest(right)}$，所以它们相等。`,
+              ],
+              [
+                [
+                  q(c * d, b),
+                  `That divides by $${b}$ instead of $${d}$; the cross products were mixed up.`,
+                  `这是除以 $${b}$，而不是 $${d}$；交叉相乘的两项搞混了。`,
+                ],
+                [q(b * d, c), `That multiplies $${b}$ by $${d}$, which is not a cross product.`, `这是 $${b}$ 乘 $${d}$，不是交叉相乘。`],
+                [b * c, `That is $${d}x$, not $x$; it still has to be divided by $${d}$.`, `这是 $${d}x$，不是 $x$；还要除以 $${d}$。`],
+              ],
+              { solveFor: "x" },
+            );
+          },
+          tableFigure(["4x", "6 · 10", "x"], [60, 60, 15]),
+        ),
+        keyPrerequisites: ["one-step-equations-multiplication"],
       },
-    },
-    {
-      id: "proportion-word-problems",
-      title: t("Word problems", "应用题"),
-      explanation: t(
-        "When two quantities grow at the same rate, set up a proportion with the same units in the same positions. If $3$ pounds of apples cost $\\$4.50$, then for $8$ pounds:\n\n$$\\frac{3}{4.50} = \\frac{8}{x} \\quad\\Rightarrow\\quad 3x = 36 \\quad\\Rightarrow\\quad x = 12$$\n\nso $8$ pounds cost $\\$12$.",
-        "两个量按相同的比率变化时，列比例，相同单位的量放在相同的位置。如果 $3$ 磅苹果 $4.5$ 元，那么 $8$ 磅：\n\n$$\\frac{3}{4.5} = \\frac{8}{x} \\quad\\Rightarrow\\quad 3x = 36 \\quad\\Rightarrow\\quad x = 12$$\n\n所以 $8$ 磅是 $12$ 元。",
+      lesson(
+        "proportion-word-problems",
+        ["Word problems", "应用题"],
+        [
+          [
+            "When two quantities grow at the same rate, set up a proportion with the same units in the same places. If $3$ pounds of apples cost $\\$4.50$, then for $8$ pounds: $\\frac{3}{4.50} = \\frac{8}{x}$, so $3x = 36$ and $x = 12$. Eight pounds cost $\\$12$.",
+            "两个量按相同的比率变化时，列比例，相同单位的量放在相同的位置。如果 $3$ 磅苹果 $4.5$ 元，那么 $8$ 磅：$\\frac{3}{4.5} = \\frac{8}{x}$，所以 $3x = 36$，$x = 12$。$8$ 磅是 $12$ 元。",
+          ],
+          ["One pound costs $4.50 \\div 3 = 1.50$, and $8 \\times 1.50 = 12$.", "每磅 $4.5 \\div 3 = 1.5$ 元，$8 \\times 1.5 = 12$。"],
+          [
+            "Keep pounds with pounds and dollars with dollars. $\\frac{3}{4.50} = \\frac{x}{8}$ mixes them up and gives the wrong answer.",
+            "磅对磅，元对元。$\\frac{3}{4.5} = \\frac{x}{8}$ 把它们放乱了，会得到错误答案。",
+          ],
+        ],
+        (rng) => {
+          const item = rng.pick(items);
+          const n1 = rng.int(2, 9);
+          let n2 = rng.int(2, 20);
+          while (n2 === n1) n2 = rng.int(2, 20);
+          const each = q(rng.int(2, 24) * 25, 100);
+          const c1 = each.mul(Q.of(n1));
+          const c2 = each.mul(Q.of(n2));
+          const cross = c1.mul(Q.of(n2));
+          return valued(
+            [
+              `$${n1}$ ${item.units.en} cost $\\$${money(c1)}$. At the same price, how many dollars do $${n2}$ ${item.units.en} cost?`,
+              `$${n1}$ ${item.units["zh-CN"]}共 $${money(c1)}$ 元。按同样的价格，$${n2}$ ${item.units["zh-CN"]}多少元？`,
+            ],
+            c2,
+            [
+              [
+                ["Set up the proportion", "列比例"],
+                ["Items over dollars on both sides:", "两边都是数量比钱数："],
+                [`\\frac{${n1}}{${money(c1)}} = \\frac{${n2}}{x}`],
+              ],
+              [
+                ["Cross-multiply", "交叉相乘"],
+                ["The cross products are equal:", "交叉相乘的积相等："],
+                [`${n1}x = ${money(c1)} \\cdot ${n2} = ${money(cross)}`],
+              ],
+              [["Divide", "相除"], [`Divide both sides by $${n1}$:`, `两边同时除以 $${n1}$：`], [`x = ${money(c2)}`]],
+            ],
+            [
+              `One costs $${money(c1)} \\div ${n1} = ${money(each)}$, and $${n2} \\times ${money(each)} = ${money(c2)}$.`,
+              `每${item.measure} $${money(c1)} \\div ${n1} = ${money(each)}$ 元，$${n2} \\times ${money(each)} = ${money(c2)}$。`,
+            ],
+            [
+              [cross, `That is $${n1}x$; it still has to be divided by $${n1}$.`, `这是 $${n1}x$；还要除以 $${n1}$。`],
+              [c1.mul(Q.of(n1)).div(Q.of(n2)), "That puts the dollars and the counts in the wrong places.", "这把钱数和数量的位置放反了。"],
+              [
+                c1.add(Q.of(n2 - n1)),
+                `That adds $${n2 - n1}$ dollars for the extra items instead of scaling the price.`,
+                `这是给多出的数量加了 $${n2 - n1}$ 元，而不是按比例算价格。`,
+              ],
+            ],
+            { form: "decimal" },
+          );
+        },
+        tableFigure(["3 lb", "8 lb"], [4.5, 12]),
       ),
-      generate(rng) {
-        const item = rng.pick(items);
-        const n1 = rng.int(2, 9);
-        let n2 = rng.int(2, 20);
-        while (n2 === n1) n2 = rng.int(2, 20);
-        const each = q(rng.int(2, 24) * 25, 100);
-        const c1 = each.mul(Q.of(n1));
-        const c2 = each.mul(Q.of(n2));
-        return numberProblem({
-          prompt: t(
-            `$${n1}$ ${item.units.en} cost $\\$${money(c1)}$. At the same price, how many dollars do $${n2}$ ${item.units.en} cost?`,
-            `$${n1}$ ${item.units["zh-CN"]}共 $${money(c1)}$ 元。按同样的价格，$${n2}$ ${item.units["zh-CN"]}多少元？`,
-          ),
-          answer: c2,
-          form: "decimal",
-          wrong: [c1.mul(Q.of(n2)), c1.div(Q.of(n2)).mul(Q.of(n1))],
-          solution: t(
-            `${steps(`\\frac{${n1}}{${money(c1)}} = \\frac{${n2}}{x}`, `${n1}x = ${money(c1)} \\cdot ${n2} = ${money(c1.mul(Q.of(n2)))}`, `x = ${money(c2)}`)}So $${n2}$ ${item.units.en} cost $\\$${money(c2)}$.`,
-            `${steps(`\\frac{${n1}}{${money(c1)}} = \\frac{${n2}}{x}`, `${n1}x = ${money(c1)} \\cdot ${n2} = ${money(c1.mul(Q.of(n2)))}`, `x = ${money(c2)}`)}所以 $${n2}$ ${item.units["zh-CN"]}是 $${money(c2)}$ 元。`,
-          ),
-        });
-      },
-    },
+    ],
+  },
+  [
+    "A recipe uses $2$ cups of flour for $3$ batches of cookies. For $6$ batches you double everything: $4$ cups. The ratios $\\frac{2}{3}$ and $\\frac{4}{6}$ are equal, and that equality is a **proportion**.",
+    "一个食谱做 $3$ 批饼干要用 $2$ 杯面粉。做 $6$ 批时所有材料都加倍：$4$ 杯。比 $\\frac{2}{3}$ 和 $\\frac{4}{6}$ 相等，这个等式就是一个**比例**。",
   ],
-};
-
+  ["Cross products: $2 \\cdot 6 = 12$ and $3 \\cdot 4 = 12$.", "交叉相乘：$2 \\cdot 6 = 12$，$3 \\cdot 4 = 12$。"],
+  ["solve a proportion by cross-multiplying, and set up proportions for word problems.", "学习用交叉相乘解比例，并为应用题列比例。"],
+);
 /** ratioTopics are the topics on ratios, rates and proportions. */
 export const ratioTopics: readonly TopicDef[] = [ratios, unitRates, proportions];

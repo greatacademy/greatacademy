@@ -2,16 +2,16 @@
 // points leave out: working backwards, combining a fact with another, an edge
 // condition, or a word problem built on the idea. See `deeperPrealgebraPoints`.
 
-import type { KnowledgePointDef } from "@ga/content";
+import type { Figure, KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
-import { dec, Q } from "@ga/subject-math";
+import { dec, paren, Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { numberProblem } from "../problems.ts";
 import { tableFigure } from "./early-grades-more-kit.ts";
 import { convertingSquareAndCubicUnits } from "./grade-5-measurement.ts";
-import { lesson, type Off, valued } from "./grade-6-kit.ts";
-import { equalTape, tapeFigure } from "./upper-grades-kit.ts";
+import { drawn, lesson, type Off, valued } from "./grade-6-kit.ts";
+import { equalTape, lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** gcdPre is the greatest common factor of two positive integers. */
 const gcdPre = (a: number, b: number): number => (b === 0 ? a : gcdPre(b, a % b));
@@ -559,14 +559,24 @@ const scoreNeeded = lesson(
     ["75% of 40 is 30: 14 already right and 16 more.", "40 的 75% 是 30：已答对 14 道，还需 16 道。"],
   ),
 );
-const percentOrDollars: KnowledgePointDef = {
-  id: "percent-off-or-dollars-off",
-  title: t("Percent off or dollars off", "打折还是减价"),
-  explanation: t(
-    "A percent discount depends on the price, while a fixed discount in dollars does not. That is why neither kind of coupon is always better: on an expensive item the percent discount tends to save more, and on a cheap item the fixed amount often does. To compare them, turn the percent into dollars for this particular price. Then the two savings are in the same unit, and subtracting them shows how much the better coupon adds.",
-    "百分比折扣取决于价格，而固定金额的折扣则不然。所以哪种优惠券都不是总更好：贵的商品上百分比折扣往往省得多，便宜的商品上固定金额常常更划算。要比较它们，就把百分数按这个价格换算成美元。这样两种节省的金额单位相同，相减就能看出较好的优惠券多省了多少。",
-  ),
-  generate(rng) {
+const percentOrDollars = lesson(
+  "percent-off-or-dollars-off",
+  ["Percent off or dollars off", "打折还是减价"],
+  [
+    [
+      "A percent coupon saves more on a dear item and less on a cheap one; a dollars-off coupon always saves the same. To compare them, turn the percent into dollars for this price, then subtract the two savings. On a $120$-dollar jacket, $20\\%$ off saves $24$ dollars and $15$ dollars off saves $15$, so the percent coupon saves $24 - 15 = 9$ dollars more.",
+      "百分比优惠券在贵的商品上省得多，在便宜的商品上省得少；减固定金额的优惠券总是省一样多。要比较它们，先按这个价格把百分数换成美元，再把两种节省相减。一件 $120$ 美元的夹克，打 $20\\%$ 折扣省 $24$ 美元，减 $15$ 美元就省 $15$ 美元，所以百分比优惠券多省 $24 - 15 = 9$ 美元。",
+    ],
+    [
+      "The prices to pay are $120 - 24 = 96$ and $120 - 15 = 105$, and $105 - 96 = 9$ as well.",
+      "要付的钱分别是 $120 - 24 = 96$ 和 $120 - 15 = 105$，$105 - 96 = 9$，也相差 $9$。",
+    ],
+    [
+      "The percent and the dollars are different units, so never subtract $20$ and $15$ straight away. Turn the percent into dollars first.",
+      "百分数和美元单位不同，不能直接拿 $20$ 和 $15$ 相减。要先把百分数换成美元。",
+    ],
+  ],
+  (rng) => {
     const price = 20 * rng.int(3, 20);
     const rate = rng.pick([10, 15, 20, 25, 30, 40]);
     const fromRate = (price * rate) / 100;
@@ -574,38 +584,78 @@ const percentOrDollars: KnowledgePointDef = {
     const fixed = raw === fromRate ? raw + 5 : raw;
     const answer = Math.abs(fromRate - fixed);
     const better = Math.max(fromRate, fixed);
-    return numberProblem({
-      prompt: t(
+    const percentWins = fromRate > fixed;
+    return valued(
+      [
         `A jacket costs $${price}$ dollars. One coupon takes $${rate}\\%$ off the price, and another takes $${fixed}$ dollars off. Only one coupon can be used. How many more dollars does the better coupon save than the other?`,
         `一件夹克售价 $${price}$ 美元。一张优惠券减价 $${rate}\\%$，另一张减 $${fixed}$ 美元。只能用一张。较好的优惠券比另一张多省多少美元？`,
-      ),
-      answer,
-      form: "integer",
-      wrong: [
-        better,
-        price - better,
-        fromRate + fixed,
-        Math.abs(rate - fixed),
-        Math.min(fromRate, fixed),
-        price - Math.min(fromRate, fixed),
-        Q.of(fixed * rate, 100),
       ],
-      solution: t(
-        `The percent coupon saves $${rate}\\%$ of $${price}$, which is $${fromRate}$ dollars, and the other saves $${fixed}$ dollars. The difference between the savings is $${answer}$ dollars.`,
-        `百分比优惠券省下 $${price}$ 的 $${rate}\\%$，也就是 $${fromRate}$ 美元；另一张省 $${fixed}$ 美元。两者相差 $${answer}$ 美元。`,
-      ),
-    });
+      answer,
+      [
+        [
+          ["Turn the percent into dollars", "把百分数换成美元"],
+          [`The percent coupon saves $${rate}\\%$ of $${price}$:`, `百分比优惠券省下 $${price}$ 的 $${rate}\\%$：`],
+          [`${price} \\times ${dec(Q.of(rate, 100))} = ${fromRate}`],
+        ],
+        [
+          ["Compare the savings", "比较两种节省"],
+          [
+            `The ${percentWins ? "percent" : "dollars-off"} coupon saves more. Subtract the smaller saving from the larger:`,
+            `${percentWins ? "百分比" : "减固定金额的"}优惠券省得多。用大的节省减去小的：`,
+          ],
+          [`${better} - ${Math.min(fromRate, fixed)} = ${answer}`],
+        ],
+      ],
+      [
+        `The prices to pay are $${price - fromRate}$ and $${price - fixed}$ dollars, and they differ by $${answer}$ too.`,
+        `要付的钱分别是 $${price - fromRate}$ 美元和 $${price - fixed}$ 美元，同样相差 $${answer}$。`,
+      ],
+      [
+        [better, "That is what the better coupon saves, not how much more it saves.", "这是较好的优惠券省下的钱，不是多省的钱。"],
+        [price - better, "That is the price after the better coupon.", "这是用较好的优惠券之后的价格。"],
+        [fromRate + fixed, "That adds the two savings, but only one coupon can be used.", "这把两种节省加起来了，但只能用一张优惠券。"],
+        [
+          Math.abs(rate - fixed),
+          "That subtracts a percent and dollars as if they were the same unit.",
+          "这把百分数和美元当成同一单位直接相减了。",
+        ],
+        [Math.min(fromRate, fixed), "That is what the worse coupon saves.", "这是较差的优惠券省下的钱。"],
+        [price - Math.min(fromRate, fixed), "That is the price after the worse coupon.", "这是用较差的优惠券之后的价格。"],
+      ],
+    );
   },
-};
-
-const shrinkflation: KnowledgePointDef = {
-  id: "percent-change-in-a-unit-price",
-  title: t("Percent change in a unit price", "单价的百分比变化"),
-  explanation: t(
-    "When a package shrinks but its price stays fixed, the unit price rises, and by a larger percent than the package fell. The same money now pays for less, so each unit costs more. Work out how many times as large the old amount is as the new amount: the unit price grows by exactly this factor. Then measure the change from the old unit price. The drop in size and the rise in price are different percents.",
-    "当包装变小而价格不变时，单价就上升了，而且上升的百分比比包装减少的百分比更大。同样的钱现在买到的更少，所以每单位更贵。算出旧的量是新的量的多少倍：单价正好变成原来的这么多倍。然后以旧单价为基准计算变化。量的减少和单价的上升是两个不同的百分数。",
+  tapeFigure(
+    [
+      {
+        total: "24",
+        pieces: [
+          { size: 15, text: "15" },
+          { size: 9, text: "9", lit: true },
+        ],
+      },
+    ],
+    ["20% of 120 is 24 dollars, which is 9 more than 15 dollars.", "120 的 20% 是 24 美元，比 15 美元多 9 美元。"],
   ),
-  generate(rng) {
+);
+
+const shrinkflation = lesson(
+  "percent-change-in-a-unit-price",
+  ["Percent change in a unit price", "单价的百分比变化"],
+  [
+    [
+      "When a package shrinks but its price stays the same, each gram costs more. The unit price grows by the factor old amount $\\div$ new amount, and the rise is measured from the old unit price. A bag going from $500$ g to $400$ g at the same price: $500 \\div 400 = 1.25$, so the price per gram rises by $25\\%$.",
+      "包装变小而价格不变时，每克就更贵了。单价变成原来的（旧的量 $\\div$ 新的量）倍，上升的百分比以旧单价为基准。一袋从 $500$ 克变成 $400$ 克、价格不变：$500 \\div 400 = 1.25$，所以每克的价格上升了 $25\\%$。",
+    ],
+    [
+      "With a price of $5$ dollars: $5 \\div 500 = 0.01$ and $5 \\div 400 = 0.0125$ dollars per gram, and $0.0125 \\div 0.01 = 1.25$.",
+      "设价格是 $5$ 美元：每克 $5 \\div 500 = 0.01$ 美元和 $5 \\div 400 = 0.0125$ 美元，$0.0125 \\div 0.01 = 1.25$。",
+    ],
+    [
+      "The bag got $20\\%$ smaller, but the unit price rose by $25\\%$. The two percents are not the same, because they are measured from different amounts.",
+      "袋子小了 $20\\%$，单价却上升了 $25\\%$。两个百分数不一样，因为它们的基准不同。",
+    ],
+  ],
+  (rng) => {
     const [a, b] = rng.pick([
       [5, 4],
       [4, 1],
@@ -620,96 +670,232 @@ const shrinkflation: KnowledgePointDef = {
       ["box of cereal", "grams", "gram", "一盒麦片", "克"],
     ]) as [string, string, string, string, string];
     const answer = Q.of(100 * (a - b), b);
-    return numberProblem({
-      prompt: t(
-        `A ${item} shrinks from $${a * size}$ ${unit} to $${b * size}$ ${unit}, and its price stays at $${price}$ dollars. By what percent does the price per $${single}$ rise?`,
+    const factor = dec(Q.of(a, b));
+    return valued(
+      [
+        `A ${item} shrinks from $${a * size}$ ${unit} to $${b * size}$ ${unit}, and its price stays at $${price}$ dollars. By what percent does the price per ${single} rise?`,
         `${itemZh}从 $${a * size}$ ${unitZh}减少到 $${b * size}$ ${unitZh}，价格仍是 $${price}$ 美元。每${unitZh}的价格上升了百分之几？`,
-      ),
+      ],
       answer,
-      form: "decimal",
-      percent: true,
-      wrong: [Q.of(100 * (a - b), a), Q.of(100 * a, b), Q.of(100 * b, a), Q.of((a - b) * size)],
-      solution: t(
-        `With the same price, the unit price changes by the factor $${a * size} \\div ${b * size} = ${dec(Q.of(a, b))}$. A factor of $${dec(Q.of(a, b))}$ is a rise of $${dec(answer)}\\%$, measured from the old unit price.`,
-        `价格不变，所以单价变成原来的 $${a * size} \\div ${b * size} = ${dec(Q.of(a, b))}$ 倍。这相当于比旧单价上升了 $${dec(answer)}\\%$。`,
-      ),
-    });
+      [
+        [
+          ["Find the factor", "求倍数"],
+          [
+            "The same money buys less, so the unit price grows by the old amount over the new amount:",
+            "同样的钱买到的更少，所以单价变成原来的（旧的量 ÷ 新的量）倍：",
+          ],
+          [`${a * size} \\div ${b * size} = ${factor}`],
+        ],
+        [
+          ["Turn the factor into a percent", "把倍数换成百分比"],
+          [`A factor of $${factor}$ means the old unit price plus:`, `变成 $${factor}$ 倍，就是比旧单价多了：`],
+          [`${factor} - 1 = ${dec(Q.of(a - b, b))} = ${dec(answer)}\\%`],
+        ],
+      ],
+      [
+        `Buying $${a * size}$ ${unit} in the new packages takes $${factor}$ packages, which cost $${price} \\times ${factor} = ${dec(Q.of(price * a, b))}$ dollars instead of $${price}$: a rise of $${dec(answer)}\\%$.`,
+        `用新包装买 $${a * size}$ ${unitZh}要 $${factor}$ 包，花 $${price} \\times ${factor} = ${dec(Q.of(price * a, b))}$ 美元，而不是 $${price}$ 美元：上升了 $${dec(answer)}\\%$。`,
+      ],
+      [
+        [Q.of(100 * (a - b), a), "That is how much smaller the package got, measured from the old size.", "这是包装按旧的量缩小的百分比。"],
+        [
+          Q.of(100 * a, b),
+          "That is the new unit price as a percent of the old one; take away the first 100%.",
+          "这是新单价占旧单价的百分比，还要减去原来的 100%。",
+        ],
+        [Q.of(100 * b, a), "That is the new size as a percent of the old size.", "这是新的量占旧的量的百分比。"],
+        [Q.of((a - b) * size), "That is how many units the package lost, not a percent.", "这是包装少了多少单位，不是百分比。"],
+      ],
+      { form: "decimal", percent: true },
+    );
   },
-};
-
-const raiseFromNew: KnowledgePointDef = {
-  id: "the-amount-of-an-increase-from-the-new-value",
-  title: t("The amount of an increase from the new value", "由新值求增加的量"),
-  explanation: t(
-    "When only the value after an increase is known, the percent cannot be applied to that value, because the percent was measured from the original. So first work backwards: dividing by the multiplier gives the original value. Then the increase is the new value minus the original. Taking the percent of the new value gives an amount that is too large, since the new value already includes the increase, and that is the trap in this kind of question.",
-    "当只知道增加之后的值时，不能把百分数直接用在这个值上，因为百分数是相对原值而言的。所以要先倒着算：除以乘数得到原值。然后增加的量就是新值减去原值。对新值取百分数得到的量会偏大，因为新值已经包含了增加的部分，这正是这类问题的陷阱。",
+  tapeFigure(
+    [
+      {
+        total: "500",
+        pieces: [
+          { size: 400, text: "400", lit: true },
+          { size: 100, text: "100", dashed: true },
+        ],
+      },
+    ],
+    ["500 g shrinks to 400 g; 500 divided by 400 is 1.25.", "500 克缩小到 400 克；500 除以 400 等于 1.25。"],
   ),
-  generate(rng) {
+);
+
+const raiseFromNew = lesson(
+  "the-amount-of-an-increase-from-the-new-value",
+  ["The amount of an increase from the new value", "由新值求增加的量"],
+  [
+    [
+      "If you only know the value after an increase, work backwards first. Divide by the multiplier to get the original value, then subtract. A wage that rose $25\\%$ to $1500$ dollars was $1500 \\div 1.25 = 1200$ dollars, so it went up by $1500 - 1200 = 300$ dollars.",
+      "如果只知道增加之后的值，要先倒着算。除以乘数得到原值，再相减。月薪上涨 $25\\%$ 后是 $1500$ 美元，原来是 $1500 \\div 1.25 = 1200$ 美元，所以涨了 $1500 - 1200 = 300$ 美元。",
+    ],
+    ["$25\\%$ of $1200$ is $300$, and $1200 + 300 = 1500$.", "$1200$ 的 $25\\%$ 是 $300$，$1200 + 300 = 1500$。"],
+    [
+      "Do not take the percent of the new value. The new value already holds the increase, so $25\\%$ of $1500$ is too big.",
+      "不能对新值求百分数。新值已经包含了增加的部分，所以 $1500$ 的 $25\\%$ 偏大。",
+    ],
+  ],
+  (rng) => {
     const rate = rng.pick([5, 10, 20, 25, 50]);
     const original = 200 * rng.int(1, 15);
     const increase = (original * rate) / 100;
     const final = original + increase;
     const naive = Q.of(final * rate, 100);
+    const multiplier = dec(Q.of(100 + rate, 100));
     const [en, zh] = rng.pick([
-      [`After a raise of ${rate}%, a monthly wage is ${final} dollars.`, `加薪 ${rate}% 后，月薪是 ${final} 美元。`],
-      [`After a rise of ${rate}%, a monthly rent is ${final} dollars.`, `上涨 ${rate}% 后，月租是 ${final} 美元。`],
-      [`After a price increase of ${rate}%, a bicycle costs ${final} dollars.`, `涨价 ${rate}% 后，一辆自行车售价 ${final} 美元。`],
+      [`After a raise of $${rate}\\%$, a monthly wage is $${final}$ dollars.`, `加薪 $${rate}\\%$ 后，月薪是 $${final}$ 美元。`],
+      [`After a rise of $${rate}\\%$, a monthly rent is $${final}$ dollars.`, `上涨 $${rate}\\%$ 后，月租是 $${final}$ 美元。`],
+      [
+        `After a price increase of $${rate}\\%$, a bicycle costs $${final}$ dollars.`,
+        `涨价 $${rate}\\%$ 后，一辆自行车售价 $${final}$ 美元。`,
+      ],
     ]) as [string, string];
-    return numberProblem({
-      prompt: t(`${en} By how many dollars did it go up?`, `${zh}上涨了多少美元？`),
-      answer: increase,
-      form: "decimal",
-      wrong: [naive, original, Q.of(final).sub(naive), Q.of(rate)],
-      solution: t(
-        `The multiplier is $${dec(Q.of(100 + rate, 100))}$, so the original value is $${final} \\div ${dec(Q.of(100 + rate, 100))} = ${original}$ dollars. The increase is $${final} - ${original} = ${increase}$ dollars.`,
-        `乘数是 $${dec(Q.of(100 + rate, 100))}$，所以原值是 $${final} \\div ${dec(Q.of(100 + rate, 100))} = ${original}$ 美元。增加的量是 $${final} - ${original} = ${increase}$ 美元。`,
-      ),
-    });
+    return valued(
+      [`${en} By how many dollars did it go up?`, `${zh}上涨了多少美元？`],
+      increase,
+      [
+        [
+          ["Find the original value", "求原值"],
+          [
+            `A rise of $${rate}\\%$ multiplies by $${multiplier}$, so divide to undo it:`,
+            `上涨 $${rate}\\%$ 就是乘 $${multiplier}$，所以用除法倒回去：`,
+          ],
+          [`${final} \\div ${multiplier} = ${original}`],
+        ],
+        [
+          ["Subtract", "相减"],
+          ["The increase is the new value minus the original:", "增加的量是新值减去原值："],
+          [`${final} - ${original} = ${increase}`],
+        ],
+      ],
+      [
+        `$${rate}\\%$ of $${original}$ is $${increase}$, and $${original} + ${increase} = ${final}$.`,
+        `$${original}$ 的 $${rate}\\%$ 是 $${increase}$，$${original} + ${increase} = ${final}$。`,
+      ],
+      [
+        [
+          naive,
+          "That takes the percent of the new value, which already holds the increase.",
+          "这是对新值求百分数，而新值已经包含了增加的部分。",
+        ],
+        [original, "That is the value before the increase, not the increase.", "这是增加之前的值，不是增加的量。"],
+        [
+          Q.of(final).sub(naive),
+          "That takes the percent off the new value instead of dividing by the multiplier.",
+          "这是从新值中减去百分数，而不是除以乘数。",
+        ],
+        [rate, "That is the percent, not the number of dollars.", "这是百分数，不是美元数。"],
+      ],
+      { form: "decimal" },
+    );
   },
-};
-
-const missingSubtrahend: KnowledgePointDef = {
-  id: "the-number-subtracted-from-a-negative-number",
-  figure: gradeDrawings4["subtracting-a-positive-number-from-a-negative-number#the-number-subtracted-from-a-negative-number"],
-  title: t("The number subtracted from a negative number", "从负数中减去的数"),
-  explanation: t(
-    "Subtracting a positive number moves to the left on the number line, so a result further below zero than the start shows how far the move went. The amount subtracted is the distance between the start and the result. Since both of them lie below zero, this distance is the difference of their sizes, not the sum. Putting the number found back into the subtraction is a quick way of checking that it lands on the stated result.",
-    "减去一个正数就是在数轴上向左移动，所以结果比起点离零更远，就能说明移动了多远。减去的量就是起点和结果之间的距离。因为两者都在零的下方，这个距离是它们大小之差，而不是和。把求出的数代回减法中，可以很快检验是否正好得到题目给出的结果。",
+  tapeFigure(
+    [
+      {
+        total: "1500",
+        pieces: [
+          { size: 1200, text: "1200" },
+          { size: 300, text: "300", lit: true },
+        ],
+      },
+    ],
+    ["1500 is 1200 plus a 25% increase of 300.", "1500 是 1200 加上 25% 的增加量 300。"],
   ),
-  generate(rng) {
+);
+/** signedLine draws a number line of integers from lo to hi with the marked points labeled, and jumps as arcs. */
+const signedLine = (lo: number, hi: number, marks: readonly number[], jumps: readonly (readonly [number, number])[] = []): Figure =>
+  lineFigure(
+    {
+      lo,
+      hi,
+      step: 1,
+      labels: [...new Set([lo, 0, hi, ...marks])].filter((v) => v >= lo && v <= hi),
+      label: (v) => (v < 0 ? `−${-v}` : String(v)),
+      marks: marks.map((at) => ({ at })),
+      jumps,
+    },
+    [
+      `A number line from ${lo} to ${hi} with ${marks.join(" and ")} marked.`,
+      `一条从 ${lo} 到 ${hi} 的数轴，标出了 ${marks.join(" 和 ")}。`,
+    ],
+  );
+
+const missingSubtrahend = lesson(
+  "the-number-subtracted-from-a-negative-number",
+  ["The number subtracted from a negative number", "从负数中减去的数"],
+  [
+    [
+      "Subtracting a positive number moves left, so the number subtracted is how far you moved. When the start and the result are both below zero, that distance is the difference of their sizes. In $-4 - \\square = -11$, the move is $11 - 4 = 7$.",
+      "减去一个正数就是向左移动，所以减去的数就是移动的距离。起点和结果都在零下面时，这个距离是它们大小之差。$-4 - \\square = -11$ 中，移动了 $11 - 4 = 7$。",
+    ],
+    ["$-4 - 7 = -11$.", "$-4 - 7 = -11$。"],
+    [
+      "Both numbers are on the same side of zero, so do not add the sizes. The answer is $7$, not $15$.",
+      "两个数在零的同一侧，所以不能把大小相加。答案是 $7$，不是 $15$。",
+    ],
+  ],
+  (rng) => {
     const start = rng.int(2, 25);
     const answer = rng.int(2, 25);
     const end = start + answer;
     const inContext = rng.bool();
-    return numberProblem({
-      prompt: inContext
-        ? t(
+    return valued(
+      inContext
+        ? [
             `The temperature was $-${start}^{\\circ}\\text{C}$ and it fell to $-${end}^{\\circ}\\text{C}$. How many degrees did it fall?`,
             `气温原来是 $-${start}^{\\circ}\\text{C}$，后来降到 $-${end}^{\\circ}\\text{C}$。气温下降了多少度？`,
-          )
-        : t(
+          ]
+        : [
             `What positive number goes in the box? $$-${start} - \\square = -${end}$$`,
             `方框里应填哪个正数？$$-${start} - \\square = -${end}$$`,
-          ),
+          ],
       answer,
-      form: "integer",
-      wrong: [start + end, -answer, -(start + end), end, start],
-      solution: t(
-        `Both numbers are below zero, $${start}$ and $${end}$ units away from it. The distance between them is $${end} - ${start} = ${answer}$. Check: $-${start} - ${answer} = -${end}$.`,
-        `两个数都在零的下方，离零分别是 $${start}$ 和 $${end}$ 个单位。它们之间的距离是 $${end} - ${start} = ${answer}$。检验：$-${start} - ${answer} = -${end}$。`,
-      ),
-    });
+      [
+        [
+          ["Compare the sizes", "比较大小"],
+          [
+            `Both numbers are below zero, $${start}$ and $${end}$ units away from it, and the result is further down.`,
+            `两个数都在零下面，离零分别是 $${start}$ 和 $${end}$ 个单位，结果更靠下。`,
+          ],
+        ],
+        [
+          ["Find the distance", "求距离"],
+          ["The move is the difference of the sizes:", "移动的距离是大小之差："],
+          [`${end} - ${start} = ${answer}`],
+        ],
+      ],
+      [`Put it back in: $-${start} - ${answer} = -${end}$.`, `代回去：$-${start} - ${answer} = -${end}$。`],
+      [
+        [start + end, "That adds the sizes, but both numbers are on the same side of zero.", "这把大小相加了，但两个数在零的同一侧。"],
+        [-answer, "The question asks for a positive number: how far it moved.", "题目要的是正数，也就是移动了多远。"],
+        [end, "That is how far the result is from zero, not from the start.", "这是结果离零的距离，不是离起点的距离。"],
+        [start, "That is how far the start is from zero.", "这是起点离零的距离。"],
+      ],
+    );
   },
-};
+  drawn(gradeDrawings4["subtracting-a-positive-number-from-a-negative-number#the-number-subtracted-from-a-negative-number"]),
+);
 
-const untilBelowZero: KnowledgePointDef = {
-  id: "how-many-additions-until-below-zero",
-  title: t("How many additions until below zero", "加多少次后低于零"),
-  explanation: t(
-    "Adding the same negative number again and again lowers the total by equal steps, and so division can count the steps. Dividing the starting value by the size of each step tells how many steps fit without going below zero. A total of exactly zero is not yet below zero, and so one further step is always needed after all the full steps. Trying the count and the count before it confirms that the first negative total has been found.",
-    "反复加同一个负数，总数会按相同的步长下降，所以可以用除法来数步数。用起始值除以每步的大小，就知道在不低于零的情况下能走多少步。总数恰好为零还不算低于零，所以走完所有完整的步之后，总还要再走一步。试一试这个次数和它的前一次，就能确认找到了第一个负的总数。",
-  ),
-  generate(rng) {
+const untilBelowZero = lesson(
+  "how-many-additions-until-below-zero",
+  ["How many additions until below zero", "加多少次后低于零"],
+  [
+    [
+      "Adding the same negative number again and again lowers the total in equal steps. Divide the start by the size of a step to see how many full steps fit; zero is not below zero, so one more step is needed. From $10$, adding $-3$: three steps reach $1$, and the fourth reaches $-2$.",
+      "反复加同一个负数，总数按相同的步长下降。用起始值除以每步的大小，看能走几个完整的步；零还不算低于零，所以还要再走一步。从 $10$ 开始加 $-3$：三步到 $1$，第四步到 $-2$。",
+    ],
+    [
+      "$10 + 4 \\cdot (-3) = -2$, and $10 + 3 \\cdot (-3) = 1$ is still positive.",
+      "$10 + 4 \\cdot (-3) = -2$，而 $10 + 3 \\cdot (-3) = 1$ 仍是正数。",
+    ],
+    [
+      "Landing exactly on $0$ is not below zero. If the steps divide the start exactly, you still need one more.",
+      "正好到 $0$ 不算低于零。如果步长正好整除起始值，也还要再走一步。",
+    ],
+  ],
+  (rng) => {
     const step = rng.int(3, 15);
     const full = rng.int(3, 14);
     const left = rng.int(0, step - 1);
@@ -717,35 +903,76 @@ const untilBelowZero: KnowledgePointDef = {
     const answer = full + 1;
     const after = start - step * answer;
     const inContext = rng.bool();
-    return numberProblem({
-      prompt: inContext
-        ? t(
+    return valued(
+      inContext
+        ? [
             `A player starts a game with $${start}$ points, and each wrong move adds $-${step}$ to the score. After how many wrong moves is the score first below zero?`,
             `一名玩家开始时有 $${start}$ 分，每次走错都在分数上加 $-${step}$。走错多少次后，分数第一次低于零？`,
-          )
-        : t(
+          ]
+        : [
             `Start at $${start}$ and keep adding $-${step}$. After how many additions is the total first negative?`,
             `从 $${start}$ 开始，不断加 $-${step}$。加多少次后，总数第一次变成负数？`,
-          ),
+          ],
       answer,
-      form: "integer",
-      wrong: [full, full + 2, full - 1, start - step, left + 1],
-      solution: t(
-        `After $${full}$ additions the total is $${start} - ${step * full} = ${left}$, which is not below zero. One more addition gives $${after}$, so the count is $${answer}$.`,
-        `加 $${full}$ 次后总数是 $${start} - ${step * full} = ${left}$，还没有低于零。再加一次得 $${after}$，所以是 $${answer}$ 次。`,
-      ),
-    });
+      [
+        [
+          ["Count the full steps", "数完整的步"],
+          [`$${step}$ fits into $${start}$ this many times:`, `$${start}$ 里能装下几个 $${step}$：`],
+          [`${start} = ${step} \\times ${full} + ${left}`],
+        ],
+        [
+          ["Take one more step", "再走一步"],
+          [
+            `After $${full}$ steps the total is $${left}$, which is not below zero. One more step:`,
+            `走 $${full}$ 步后总数是 $${left}$，还没有低于零。再走一步：`,
+          ],
+          [`${left} + (-${step}) = ${after}`],
+        ],
+      ],
+      [
+        `$${start} + ${answer} \\cdot (-${step}) = ${after}$ is negative, but $${start} + ${full} \\cdot (-${step}) = ${left}$ is not.`,
+        `$${start} + ${answer} \\cdot (-${step}) = ${after}$ 是负数，而 $${start} + ${full} \\cdot (-${step}) = ${left}$ 不是。`,
+      ],
+      [
+        [full, "After that many the total is not yet below zero.", "加这么多次后，总数还没有低于零。"],
+        [
+          full + 2,
+          "That is one more than needed; the total is already negative one step earlier.",
+          "这多了一次；早一步总数就已经是负数了。",
+        ],
+        [full - 1, "That stops two steps short.", "这少了两步。"],
+        [start - step, "That is the total after one step, not a count of steps.", "这是加一次后的总数，不是次数。"],
+      ],
+    );
   },
-};
-
-const startFromChanges: KnowledgePointDef = {
-  id: "the-start-from-a-sequence-of-changes",
-  title: t("The start from a sequence of changes", "由一连串变化求起始值"),
-  explanation: t(
-    "To find where a sequence of changes began, undo them from the end. A rise is undone by subtracting, and a fall is undone by adding. The order does not affect the result for additions and subtractions, but the direction of each change must be reversed. Using the changes as they are stated gives a value further along instead of an earlier one. Running the changes forward from the answer confirms that the final value is reached.",
-    "要找一连串变化的起点，就从最后往前撤销这些变化。上升通过减法撤销，下降通过加法撤销。对加减法来说顺序不影响结果，但每个变化的方向都必须反过来。照题目所说的变化直接计算，得到的是更靠后的值，而不是更早的值。从答案开始正向走一遍这些变化，可以确认能得到最终的值。",
+  signedLine(
+    -3,
+    11,
+    [10, 1, -2],
+    [
+      [10, 7],
+      [7, 4],
+      [4, 1],
+      [1, -2],
+    ],
   ),
-  generate(rng) {
+);
+
+const startFromChanges = lesson(
+  "the-start-from-a-sequence-of-changes",
+  ["The start from a sequence of changes", "由一连串变化求起始值"],
+  [
+    [
+      "To find where a run of changes began, undo them from the end: undo a rise by subtracting and a fall by adding. If it rose $3.5$ degrees, fell $6$ degrees and ended at $-1$, the start was $-1 + 6 - 3.5 = 1.5$ degrees.",
+      "要找一连串变化的起点，就从最后往前撤销：上升用减法撤销，下降用加法撤销。如果气温先升 $3.5$ 度，再降 $6$ 度，最后是 $-1$ 度，那么开始时是 $-1 + 6 - 3.5 = 1.5$ 度。",
+    ],
+    ["Run it forward: $1.5 + 3.5 - 6 = -1$.", "正着走一遍：$1.5 + 3.5 - 6 = -1$。"],
+    [
+      "Reverse every change. Using the changes as they are stated takes you further along, not back to the start.",
+      "每个变化都要反过来。照原样用这些变化，只会往后走，而不是回到起点。",
+    ],
+  ],
+  (rng) => {
     const up = Q.of(rng.int(11, 90), 10);
     const drawnDown = Q.of(rng.int(11, 90), 10);
     const down = drawnDown.eq(up) ? up.add(Q.of(1, 10)) : drawnDown;
@@ -754,102 +981,209 @@ const startFromChanges: KnowledgePointDef = {
     const raw = start.add(up).sub(down);
     const end = raw.isInteger() && raw.sign() === 0 ? up : raw;
     const answer = end.sub(up).add(down);
-    return numberProblem({
-      prompt: t(
+    const mid = end.add(down);
+    const sum = (x: Q, y: Q) => (y.sign() < 0 ? `${dec(x)} - ${dec(y.neg())}` : `${dec(x)} + ${dec(y)}`);
+    return valued(
+      [
         `During a day the temperature rose $${dec(up)}$ degrees and later fell $${dec(down)}$ degrees. It finished at $${dec(end)}^{\\circ}\\text{C}$. What was the temperature at the start, in degrees Celsius?`,
         `一天中气温先上升 $${dec(up)}$ 度，后来又下降 $${dec(down)}$ 度，最后是 $${dec(end)}^{\\circ}\\text{C}$。开始时的气温是多少摄氏度？`,
-      ),
+      ],
       answer,
-      form: "decimal",
-      wrong: [end.add(up).sub(down), end.sub(up).sub(down), end.add(up).add(down), end, answer.neg()],
-      solution: t(
-        `Undo each change: add back the fall and take away the rise. So the start is $${dec(end)} + ${dec(down)} - ${dec(up)} = ${dec(answer)}$ degrees.`,
-        `撤销每个变化：把下降的加回来，把上升的减掉。所以开始时是 $${dec(end)} + ${dec(down)} - ${dec(up)} = ${dec(answer)}$ 度。`,
-      ),
-    });
+      [
+        [
+          ["Undo the fall", "撤销下降"],
+          ["The last change was a fall, so add it back:", "最后一个变化是下降，所以把它加回来："],
+          [`${dec(end)} + ${dec(down)} = ${dec(mid)}`],
+        ],
+        [
+          ["Undo the rise", "撤销上升"],
+          ["Before that it rose, so take the rise away:", "在那之前上升了，所以把上升的减掉："],
+          [`${dec(mid)} - ${dec(up)} = ${dec(answer)}`],
+        ],
+      ],
+      [
+        `Run it forward: $${sum(answer, up)} = ${dec(answer.add(up))}$, then $${dec(answer.add(up))} - ${dec(down)} = ${dec(end)}$.`,
+        `正着走一遍：$${sum(answer, up)} = ${dec(answer.add(up))}$，再 $${dec(answer.add(up))} - ${dec(down)} = ${dec(end)}$。`,
+      ],
+      [
+        [
+          end.add(up).sub(down),
+          "That uses the changes as stated, which goes further along instead of back.",
+          "这是照原样用了这些变化，是往后走而不是倒回去。",
+        ],
+        [end.sub(up).sub(down), "That takes away the fall too; a fall is undone by adding.", "这把下降也减掉了；撤销下降要用加法。"],
+        [end.add(up).add(down), "That adds back the rise too; a rise is undone by subtracting.", "这把上升也加上了；撤销上升要用减法。"],
+        [end, "That is where it finished, not where it started.", "这是最后的气温，不是开始时的。"],
+        [answer.neg(), "That has the wrong sign.", "符号错了。"],
+      ],
+      { form: "decimal" },
+    );
   },
-};
-
-const largestProduct: KnowledgePointDef = {
-  id: "the-largest-product-of-two-from-a-list",
-  title: t("The largest product of two from a list", "从一列数中取两个数的最大积"),
-  explanation: t(
-    "The product of two negative numbers is positive, so the largest product from a list need not use the largest numbers. There are two candidates: the two greatest positive numbers, and the two negative numbers that are furthest below zero. Work out both and take the larger. A pair with one positive and one negative factor is never a candidate when another pair of the same sign exists, because its product is negative and lies below every positive product.",
-    "两个负数的积是正数，所以一列数中的最大积不一定用到最大的数。有两个候选：最大的两个正数，以及离零最远的两个负数。把两个都算出来，取较大的。一正一负的一对数不可能是答案，只要还有同号的一对，因为它们的积是负数，比任何正的积都小。",
+  tapeFigure(
+    [
+      {
+        total: "6",
+        pieces: [
+          { size: 3.5, text: "3.5", lit: true },
+          { size: 2.5, text: "2.5", dashed: true },
+        ],
+      },
+    ],
+    [
+      "A fall of 6 is a rise of 3.5 plus 2.5 more, so the start was 2.5 above the end.",
+      "下降的 6 是上升的 3.5 再加 2.5，所以开始时比最后高 2.5。",
+    ],
   ),
-  generate(rng) {
+);
+
+const largestProduct = lesson(
+  "the-largest-product-of-two-from-a-list",
+  ["The largest product of two from a list", "从一列数中取两个数的最大积"],
+  [
+    [
+      "Two negative numbers multiply to a positive, so the largest product need not use the largest numbers. Check two pairs: the two biggest positive numbers, and the two negative numbers furthest below zero. From $-7, -6, 2, 5$: $5 \\cdot 2 = 10$ but $(-7)(-6) = 42$, so the largest is $42$.",
+      "两个负数相乘得正数，所以最大的积不一定用到最大的数。要比较两对：最大的两个正数，以及离零最远的两个负数。从 $-7, -6, 2, 5$ 中：$5 \\cdot 2 = 10$，而 $(-7)(-6) = 42$，所以最大是 $42$。",
+    ],
+    [
+      "A mixed pair such as $5 \\cdot (-7) = -35$ is negative, so it can never win.",
+      "一正一负的一对，比如 $5 \\cdot (-7) = -35$，是负数，不可能最大。",
+    ],
+    [
+      "Do not just take the two biggest numbers. The two most negative numbers may give a larger product.",
+      "不能只取最大的两个数。最负的两个数可能乘出更大的积。",
+    ],
+  ],
+  (rng) => {
     const a = rng.int(5, 15);
     const b = a + rng.int(1, 5);
     const posHigh = rng.int(3, 12);
     const posMid = posHigh - rng.int(1, 2);
     const posLow = rng.int(1, posMid);
-    const values = [-a, -b, posHigh, posMid, posLow === posMid ? posMid - 1 : posLow];
-    for (let i = values.length - 1; i > 0; i--) {
-      const j = rng.int(0, i);
-      const held = values[i] as number;
-      values[i] = values[j] as number;
-      values[j] = held;
-    }
+    const values = rng.shuffle([-a, -b, posHigh, posMid, posLow === posMid ? posMid - 1 : posLow]);
     const negatives = a * b;
     const positives = posHigh * posMid;
     const answer = Math.max(negatives, positives);
-    return numberProblem({
-      prompt: t(
+    return valued(
+      [
         `Two different numbers are chosen from the list ${values.map((v) => `$${v}$`).join(", ")} and multiplied. What is the largest possible product?`,
         `从 ${values.map((v) => `$${v}$`).join("、")} 中选两个不同的数相乘。积最大是多少？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [positives, negatives, -b * posHigh, -negatives, b * b],
-      solution: t(
-        `Two positives give at most $${posHigh} \\times ${posMid} = ${positives}$. Two negatives give $(-${a}) \\times (-${b}) = ${negatives}$. The larger of these is $${answer}$.`,
-        `两个正数的积最大是 $${posHigh} \\times ${posMid} = ${positives}$。两个负数的积是 $(-${a}) \\times (-${b}) = ${negatives}$。其中较大的是 $${answer}$。`,
-      ),
-    });
+      [
+        [
+          ["Try the two biggest positives", "试最大的两个正数"],
+          ["Their product is:", "它们的积是："],
+          [`${posHigh} \\times ${posMid} = ${positives}`],
+        ],
+        [
+          ["Try the two negatives", "试两个负数"],
+          [`Two negatives give a positive product. Then take the larger:`, `两个负数的积是正数。再取较大的：`],
+          [`(-${a}) \\times (-${b}) = ${negatives}`],
+        ],
+      ],
+      [
+        `Any mixed pair is negative, for example $${posHigh} \\times (-${b}) = ${-posHigh * b}$, so $${answer}$ is the largest.`,
+        `一正一负的积都是负数，比如 $${posHigh} \\times (-${b}) = ${-posHigh * b}$，所以最大是 $${answer}$。`,
+      ],
+      [
+        [positives, "That uses only the positive numbers; the two negatives give more.", "这只用了正数；两个负数的积更大。"],
+        [negatives, "That uses only the negative numbers; the two positives give more.", "这只用了负数；两个正数的积更大。"],
+        [-b * posHigh, "That pairs a positive with a negative, which gives a negative product.", "这把一正一负相乘，积是负数。"],
+        [-negatives, "That has the wrong sign: two negatives multiply to a positive.", "符号错了：两个负数相乘得正数。"],
+        [b * b, "That uses the same number twice; the two numbers must be different.", "这把同一个数用了两次；两个数必须不同。"],
+      ],
+    );
   },
-};
+  tableFigure(["5·2", "(−7)(−6)", "5·(−7)"], [10, 42, -35]),
+);
 
-const changePerHour: KnowledgePointDef = {
-  id: "a-steady-change-per-hour",
-  title: t("A steady change per hour", "每小时的稳定变化"),
-  explanation: t(
-    "A steady change means an equal change in each hour, so the total change is shared equally by dividing. The total change is the final value minus the first value, in that order, and its sign says whether the quantity went up or down. Dividing a negative total by a positive number of hours gives a negative rate. Adding the two values, or leaving out the sign, are the usual mistakes, especially when the quantity crosses zero on the way.",
-    "稳定变化是指每小时的变化相同，所以用除法把总变化平均分开。总变化是最终值减去最初的值，顺序不能反，它的符号说明这个量是上升还是下降。负的总变化除以正的小时数，得到负的比率。把两个值相加，或者漏掉符号，是常见的错误，尤其是当这个量中途跨过零的时候。",
-  ),
-  generate(rng) {
+const changePerHour = lesson(
+  "a-steady-change-per-hour",
+  ["A steady change per hour", "每小时的稳定变化"],
+  [
+    [
+      "A steady change is the same every hour, so share the total change equally. The total change is the last value minus the first, and its sign says up or down. From $5$ degrees to $-3$ degrees in $4$ hours: $-3 - 5 = -8$, and $-8 \\div 4 = -2$ degrees per hour.",
+      "稳定变化指每小时变化相同，所以把总变化平均分。总变化是最后的值减去最初的值，它的符号说明是升还是降。$4$ 小时内从 $5$ 度变到 $-3$ 度：$-3 - 5 = -8$，$-8 \\div 4 = -2$ 度每小时。",
+    ],
+    ["$5 + 4 \\cdot (-2) = -3$.", "$5 + 4 \\cdot (-2) = -3$。"],
+    [
+      "Subtract last minus first, in that order. First minus last gives the right size but the wrong sign.",
+      "要用最后的值减去最初的值，顺序不能反。反过来减，大小对但符号错。",
+    ],
+  ],
+  (rng) => {
     const hours = rng.int(2, 8);
     const rate = rng.int(2, 5);
-    const drawn = rng.pick([rng.int(-5, -1), rng.int(1, 25)]);
-    const start = drawn === hours * rate ? drawn + 1 : drawn;
+    const drawnStart = rng.pick([rng.int(-5, -1), rng.int(1, 25)]);
+    const start = drawnStart === hours * rate ? drawnStart + 1 : drawnStart;
     const end = start - hours * rate;
     const falling = rng.bool();
     const first = falling ? start : end;
     const last = falling ? end : start;
     const answer = falling ? -rate : rate;
-    return numberProblem({
-      prompt: t(
+    const total = last - first;
+    return valued(
+      [
         `Over $${hours}$ hours the temperature changed steadily from $${first}^{\\circ}\\text{C}$ to $${last}^{\\circ}\\text{C}$. What was the change per hour, in degrees? Use a negative number for a fall.`,
         `在 $${hours}$ 小时内，气温从 $${first}^{\\circ}\\text{C}$ 稳定地变化到 $${last}^{\\circ}\\text{C}$。每小时变化多少度？下降用负数表示。`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [-answer, last - first, Q.of(first + last, hours), Q.of(last, hours)],
-      solution: t(
-        `The total change is $${differenceLatex(last, first)} = ${last - first}$ degrees. Sharing it over $${hours}$ hours gives $${last - first} \\div ${hours} = ${answer}$ degrees per hour.`,
-        `总变化是 $${differenceLatex(last, first)} = ${last - first}$ 度。平均分到 $${hours}$ 小时，得 $${last - first} \\div ${hours} = ${answer}$ 度每小时。`,
-      ),
-    });
+      [
+        [
+          ["Find the total change", "求总变化"],
+          ["Last value minus first value:", "最后的值减去最初的值："],
+          [`${differenceLatex(last, first)} = ${total}`],
+        ],
+        [
+          ["Share it out", "平均分"],
+          [`Divide by the $${hours}$ hours:`, `除以 $${hours}$ 小时：`],
+          [`${total} \\div ${hours} = ${answer}`],
+        ],
+      ],
+      [
+        `Start at $${first}$ and change by $${answer}$ each hour for $${hours}$ hours: $${first} + ${hours} \\cdot (${answer}) = ${last}$.`,
+        `从 $${first}$ 开始，每小时变化 $${answer}$，共 $${hours}$ 小时：$${first} + ${hours} \\cdot (${answer}) = ${last}$。`,
+      ],
+      [
+        [
+          -answer,
+          falling ? "The temperature fell, so the change is negative." : "The temperature rose, so the change is positive.",
+          falling ? "气温下降了，所以变化是负数。" : "气温上升了，所以变化是正数。",
+        ],
+        [total, "That is the total change, not the change per hour.", "这是总变化，不是每小时的变化。"],
+        [Q.of(first + last, hours), "That adds the two temperatures instead of subtracting.", "这把两个温度相加了，而不是相减。"],
+        [Q.of(last, hours), "That divides the last temperature, not the change.", "这是拿最后的温度去除，不是拿变化去除。"],
+      ],
+    );
   },
-};
-
-const undefinedFraction: KnowledgePointDef = {
-  id: "the-value-that-makes-a-fraction-undefined",
-  title: t("The value where a fraction is not defined", "使分数没有意义的值"),
-  explanation: t(
-    "Division by zero has no value, so a fraction with a variable fails for any value that turns its denominator into zero. Only the denominator matters here: a numerator of zero just makes the whole fraction equal to zero, which is a perfectly good value. So set the expression below the bar equal to zero and solve. Substituting the result into the denominator confirms it gives zero, and the fraction is defined for every other value.",
-    "除以零没有结果，所以含变量的分数在分母等于零的值处没有意义。这里只有分母才重要：分子为零只会让整个分数等于零，这是完全正常的值。所以让分数线下面的式子等于零，然后求解。把结果代回分母可以确认它等于零，而对其他所有值，这个分数都有意义。",
+  signedLine(
+    -4,
+    6,
+    [5, -3],
+    [
+      [5, 3],
+      [3, 1],
+      [1, -1],
+      [-1, -3],
+    ],
   ),
-  generate(rng) {
+);
+
+const undefinedFraction = lesson(
+  "the-value-that-makes-a-fraction-undefined",
+  ["The value where a fraction is not defined", "使分数没有意义的值"],
+  [
+    [
+      "You cannot divide by zero, so a fraction with $x$ in it is not defined where its bottom equals zero. Only the bottom matters: a zero on top just makes the fraction $0$. For $\\frac{x + 1}{2x - 6}$, solve $2x - 6 = 0$ to get $x = 3$.",
+      "不能除以零，所以含 $x$ 的分数在分母等于零的地方没有意义。只看分母：分子为零只会让分数等于 $0$。对 $\\frac{x + 1}{2x - 6}$，解 $2x - 6 = 0$，得 $x = 3$。",
+    ],
+    ["$2 \\cdot 3 - 6 = 0$.", "$2 \\cdot 3 - 6 = 0$。"],
+    [
+      "Do not set the top equal to zero. $x = -1$ makes $\\frac{x + 1}{2x - 6}$ equal to $0$, which is a fine value.",
+      "不要让分子等于零。$x = -1$ 使 $\\frac{x + 1}{2x - 6}$ 等于 $0$，这是正常的值。",
+    ],
+  ],
+  (rng) => {
     const k = rng.int(2, 9);
     const value = rng.pick([rng.int(-9, -2), rng.int(2, 9)]);
     const top = rng.int(2, 15);
@@ -858,30 +1192,55 @@ const undefinedFraction: KnowledgePointDef = {
     const constant = k * value;
     const bottom = constant > 0 ? `${k}x - ${constant}` : `${k}x + ${-constant}`;
     const numerator = topPlus ? `x + ${top}` : `x - ${top}`;
-    return numberProblem({
-      prompt: t(
+    return valued(
+      [
         `For what value of $x$ is $\\frac{${numerator}}{${bottom}}$ not defined?`,
         `当 $x$ 取何值时，$\\frac{${numerator}}{${bottom}}$ 没有意义？`,
-      ),
-      answer: value,
-      form: "integer",
-      wrong: [-value, topZero, 0, constant, -constant],
-      solution: t(
-        `A fraction is not defined when its denominator is zero. Solving $${bottom} = 0$ gives $x = ${value}$.`,
-        `分母为零时分数没有意义。解 $${bottom} = 0$，得 $x = ${value}$。`,
-      ),
-    });
+      ],
+      value,
+      [
+        [
+          ["Set the bottom to zero", "令分母为零"],
+          ["A fraction is not defined when its bottom is zero:", "分母为零时分数没有意义："],
+          [`${bottom} = 0`],
+        ],
+        [
+          ["Solve", "求解"],
+          ["Move the number across, then divide:", "把常数移过去，再相除："],
+          [`${k}x = ${constant}`, `x = ${constant} \\div ${k} = ${value}`],
+        ],
+      ],
+      [
+        `Put it into the bottom: $${k} \\cdot ${paren(value)} ${constant > 0 ? `- ${constant}` : `+ ${-constant}`} = ${constant} ${constant > 0 ? `- ${constant}` : `+ ${-constant}`} = 0$.`,
+        `代入分母：$${k} \\cdot ${paren(value)} ${constant > 0 ? `- ${constant}` : `+ ${-constant}`} = ${constant} ${constant > 0 ? `- ${constant}` : `+ ${-constant}`} = 0$。`,
+      ],
+      [
+        [-value, "That has the wrong sign: moving the number across changes its sign.", "符号错了：把常数移过去要变号。"],
+        [topZero, "That makes the top zero, so the fraction is $0$, which is defined.", "这使分子为零，分数等于 $0$，是有意义的。"],
+        [0, "At $x = 0$ the bottom is not zero.", "$x = 0$ 时分母不为零。"],
+        [constant, "That forgets to divide by the number in front of $x$.", "这忘了除以 $x$ 前面的系数。"],
+        [-constant, "That forgets to divide, and has the wrong sign.", "这忘了相除，符号也错了。"],
+      ],
+      { solveFor: "x" },
+    );
   },
-};
-
-const cancellingCoefficient: KnowledgePointDef = {
-  id: "the-coefficient-that-removes-a-term",
-  title: t("The coefficient that removes a term", "消去一项的系数"),
-  explanation: t(
-    "Combining like terms adds their coefficients, and a term disappears from the simplified expression when its coefficient becomes zero. So asking for a term to vanish gives a small equation: the coefficients of that variable must add up to zero. Collect the known coefficients first and then choose the opposite of their total. The constant terms play no part in this, since they are not like terms with the variable, and they stay in the expression whatever happens.",
-    "合并同类项就是把系数相加，当系数变成零时，这一项就从化简后的式子中消失了。所以要求一项消失，就得到一个小方程：这个变量的系数之和必须等于零。先合并已知的系数，再取它们总和的相反数。常数项与此无关，因为它们和含变量的项不是同类项，无论如何都留在式子中。",
-  ),
-  generate(rng) {
+  tableFigure(["x", "2x−6"], [3, 0]),
+);
+const cancellingCoefficient = lesson(
+  "the-coefficient-that-removes-a-term",
+  ["The coefficient that removes a term", "消去一项的系数"],
+  [
+    [
+      "Combining like terms adds their coefficients, and a term disappears when its coefficient becomes $0$. So first combine the known coefficients, then choose $k$ as the opposite of their total. In $5x + 2 - 3x + kx$, the known part is $2x$, so $k = -2$.",
+      "合并同类项就是把系数相加，系数变成 $0$ 时这一项就消失了。所以先合并已知的系数，再取 $k$ 为它们总和的相反数。$5x + 2 - 3x + kx$ 中，已知部分是 $2x$，所以 $k = -2$。",
+    ],
+    ["$5 - 3 + (-2) = 0$, so the $x$ terms cancel and only $2$ is left.", "$5 - 3 + (-2) = 0$，所以 $x$ 项抵消，只剩下 $2$。"],
+    [
+      "The constants play no part: they are not like terms with $x$, and they stay whatever $k$ is.",
+      "常数项与此无关：它们和 $x$ 项不是同类项，不管 $k$ 是多少都留着。",
+    ],
+  ],
+  (rng) => {
     const a = rng.int(2, 12);
     const d = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter((v) => v !== a));
     const e = rng.int(2, 20);
@@ -889,30 +1248,61 @@ const cancellingCoefficient: KnowledgePointDef = {
     const v = rng.pick(["x", "n", "y", "m"]);
     const answer = d - a;
     const known = a - d === 1 ? v : a - d === -1 ? `-${v}` : `${a - d}${v}`;
-    return numberProblem({
-      prompt: t(
+    return valued(
+      [
         `For what value of $k$ does the expression $${a}${v} + ${e} - ${d}${v} + k${v} - ${f}$ have no $${v}$ term after simplifying?`,
         `当 $k$ 取何值时，式子 $${a}${v} + ${e} - ${d}${v} + k${v} - ${f}$ 化简后没有 $${v}$ 项？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [a - d, a + d, -(a + d), a, d],
-      solution: t(
-        `The known terms combine to $${known}$. For the $${v}$ term to vanish, $k$ must be the opposite of $${a - d}$, which is ${answer < 0 ? `$${answer}$` : answer}.`,
-        `已知的项合并为 $${known}$。要让 $${v}$ 项消失，$k$ 必须是 $${a - d}$ 的相反数，也就是 ${answer < 0 ? `$${answer}$` : answer}。`,
-      ),
-    });
+      [
+        [
+          ["Combine the known terms", "合并已知的项"],
+          [`Add the coefficients of the known $${v}$ terms:`, `把已知 $${v}$ 项的系数相加：`],
+          [`${a}${v} - ${d}${v} = ${known}`],
+        ],
+        [
+          ["Cancel it", "抵消它"],
+          [
+            `For the $${v}$ term to vanish, $k$ must be the opposite of $${a - d}$:`,
+            `要让 $${v}$ 项消失，$k$ 必须是 $${a - d}$ 的相反数：`,
+          ],
+          [`${a - d} + k = 0`, `k = ${answer}`],
+        ],
+      ],
+      [
+        `$${a} - ${d} ${answer < 0 ? `- ${-answer}` : `+ ${answer}`} = 0$, and the expression simplifies to $${e - f}$, with no $${v}$.`,
+        `$${a} - ${d} ${answer < 0 ? `- ${-answer}` : `+ ${answer}`} = 0$，式子化简为 $${e - f}$，没有 $${v}$。`,
+      ],
+      [
+        [a - d, "That is the total of the known coefficients; $k$ must be its opposite.", "这是已知系数的总和；$k$ 应该是它的相反数。"],
+        [a + d, `That reads $-${d}${v}$ as $+${d}${v}$.`, `这把 $-${d}${v}$ 当成了 $+${d}${v}$。`],
+        [
+          -(a + d),
+          `That reads $-${d}${v}$ as $+${d}${v}$, then takes the opposite.`,
+          `这把 $-${d}${v}$ 当成了 $+${d}${v}$，再取了相反数。`,
+        ],
+        [a, `That cancels only $${a}${v}$ and forgets $-${d}${v}$.`, `这只抵消了 $${a}${v}$，忘了 $-${d}${v}$。`],
+        [d, `That cancels only $-${d}${v}$ and forgets $${a}${v}$.`, `这只抵消了 $-${d}${v}$，忘了 $${a}${v}$。`],
+      ],
+    );
   },
-};
-
-const coefficientFromSolution: KnowledgePointDef = {
-  id: "a-missing-coefficient-from-a-solution",
-  title: t("A missing coefficient from a solution", "由解求缺失的系数"),
-  explanation: t(
-    "An ordered pair is a solution exactly when its values make the equation true. So a known solution can be used in reverse, to pin down an unknown number in the equation. Replace the variables by the coordinates, taking the first for $x$ and the second for $y$. What is left is a one-variable equation for the missing coefficient. Swapping the coordinates, or losing a negative sign during the substitution, is what usually goes wrong here.",
-    "一个有序数对是解，当且仅当它的值使方程成立。所以已知的解可以反过来用，确定方程中未知的数。用坐标替换变量，第一个代入 $x$，第二个代入 $y$。剩下的就是关于缺失系数的一元方程。把坐标对调，或者在代入时丢掉负号，是这里常见的错误。",
-  ),
-  generate(rng) {
+  tableFigure(["5x", "−3x", "kx"], [5, -3, -2]),
+);
+const coefficientFromSolution = lesson(
+  "a-missing-coefficient-from-a-solution",
+  ["A missing coefficient from a solution", "由解求缺失的系数"],
+  [
+    [
+      "A solution makes the equation true, so a known solution can find a missing number in the equation. Put the first coordinate in for $x$ and the second for $y$; what is left is an equation in $k$. $(2, -3)$ solves $3x + ky = 18$: $6 - 3k = 18$, so $-3k = 12$ and $k = -4$.",
+      "解能使方程成立，所以已知的解可以用来求方程中缺少的数。把第一个坐标代入 $x$，第二个代入 $y$，剩下的就是关于 $k$ 的方程。$(2, -3)$ 是 $3x + ky = 18$ 的解：$6 - 3k = 18$，所以 $-3k = 12$，$k = -4$。",
+    ],
+    ["With $k = -4$: $3(2) - 4(-3) = 6 + 12 = 18$.", "$k = -4$ 时：$3(2) - 4(-3) = 6 + 12 = 18$。"],
+    [
+      "Keep the order and the signs: $x = 2$ and $y = -3$, so $ky$ becomes $-3k$, not $3k$.",
+      "注意顺序和符号：$x = 2$，$y = -3$，所以 $ky$ 变成 $-3k$，不是 $3k$。",
+    ],
+  ],
+  (rng) => {
     const a = rng.int(2, 7);
     const k = rng.pick([rng.int(-9, -2), rng.int(2, 9)]);
     const x = rng.pick([rng.int(-6, -1), rng.int(1, 6)]);
@@ -921,30 +1311,58 @@ const coefficientFromSolution: KnowledgePointDef = {
     const rest = c - a * x;
     const first = a * x;
     const yTerm = y < 0 ? `- ${-y}k` : `+ ${y}k`;
-    return numberProblem({
-      prompt: t(
+    const kTerm = k < 0 ? `- ${-k} \\cdot ${paren(y)}` : `+ ${k} \\cdot ${paren(y)}`;
+    return valued(
+      [
         `The ordered pair $(${x}, ${y})$ is a solution of $${a}x + ky = ${c}$. What is the value of $k$?`,
         `有序数对 $(${x}, ${y})$ 是 $${a}x + ky = ${c}$ 的一个解。$k$ 的值是多少？`,
-      ),
-      answer: k,
-      wrong: [rest, Q.of(c - a * y, x), Q.of(c + a * x, y), -k, Q.of(c, y)],
-      solution: t(
-        `Substituting gives $${first} ${yTerm} = ${c}$. So $${y}k = ${rest}$, and dividing by $${y}$ gives $k = ${k}$.`,
-        `代入得 $${first} ${yTerm} = ${c}$。所以 $${y}k = ${rest}$，两边除以 $${y}$，得 $k = ${k}$。`,
-      ),
-    });
+      ],
+      k,
+      [
+        [
+          ["Substitute", "代入"],
+          [`Put $x = ${x}$ and $y = ${y}$ into the equation:`, `把 $x = ${x}$，$y = ${y}$ 代入方程：`],
+          [`${first} ${yTerm} = ${c}`],
+        ],
+        [
+          ["Solve for k", "求 k"],
+          [`Take $${paren(first)}$ from both sides, then divide by $${y}$:`, `两边同时减去 $${paren(first)}$，再除以 $${y}$：`],
+          [`${y}k = ${rest}`, `k = ${k}`],
+        ],
+      ],
+      [
+        `Put $k = ${k}$ back: $${a} \\cdot ${paren(x)} ${kTerm} = ${first} ${k * y < 0 ? `- ${-k * y}` : `+ ${k * y}`} = ${c}$.`,
+        `把 $k = ${k}$ 代回去：$${a} \\cdot ${paren(x)} ${kTerm} = ${first} ${k * y < 0 ? `- ${-k * y}` : `+ ${k * y}`} = ${c}$。`,
+      ],
+      [
+        [rest, `That is $${y}k$; it still has to be divided by $${y}$.`, `这是 $${y}k$；还要除以 $${y}$。`],
+        [Q.of(c - a * y, x), "That swaps the coordinates: $x$ is the first number.", "这把坐标对调了：$x$ 是第一个数。"],
+        [Q.of(c + a * x, y), `That adds $${paren(first)}$ instead of taking it away.`, `这是加上 $${paren(first)}$，而不是减去。`],
+        [-k, "That has the wrong sign.", "符号错了。"],
+        [Q.of(c, y), `That forgets the $${a}x$ term.`, `这忘了 $${a}x$ 这一项。`],
+      ],
+    );
   },
-};
-
-const extremeInteger: KnowledgePointDef = {
-  id: "the-extreme-integer-solution-of-an-inequality",
-  figure: gradeDrawings4["solving-multi-step-inequalities#the-extreme-integer-solution-of-an-inequality"],
-  title: t("The extreme integer solution of an inequality", "不等式的最大或最小整数解"),
-  explanation: t(
-    "Solving an inequality gives a boundary, and that boundary is often not a whole number. To find the least or greatest integer solution, solve first and then look along the number line from the boundary in the allowed direction. If the boundary is itself an integer, it counts only when the sign includes equality. A negative coefficient flips the sign during the division, and this changes which direction is allowed. Testing the integer found, and its neighbor, confirms the result.",
-    "解不等式会得到一个边界，这个边界常常不是整数。要找最小或最大的整数解，先求解，再从边界开始沿着允许的方向在数轴上查看。如果边界本身是整数，只有当符号包含等号时它才算解。负系数在除法时会让不等号改变方向，这也改变了允许的方向。把找到的整数和它相邻的整数代入检验，就能确认结果。",
-  ),
-  generate(rng) {
+  tableFigure(["x", "y", "k"], [2, -3, -4]),
+);
+const extremeInteger = lesson(
+  "the-extreme-integer-solution-of-an-inequality",
+  ["The extreme integer solution of an inequality", "不等式的最大或最小整数解"],
+  [
+    [
+      "Solve first, then walk from the boundary in the allowed direction to the first integer. $3x + 2 > 13$ gives $3x > 11$, so $x > \\frac{11}{3} \\approx 3.67$; the least integer solution is $4$. A boundary that is itself an integer counts only with $\\le$ or $\\ge$.",
+      "先解不等式，再从边界出发，沿允许的方向找到第一个整数。$3x + 2 > 13$ 得 $3x > 11$，所以 $x > \\frac{11}{3} \\approx 3.67$；最小的整数解是 $4$。如果边界本身是整数，只有 $\\le$ 或 $\\ge$ 时才算。",
+    ],
+    [
+      "$x = 4$: $3(4) + 2 = 14 > 13$ works, while $x = 3$: $3(3) + 2 = 11$ does not.",
+      "$x = 4$：$3(4) + 2 = 14 > 13$ 成立；$x = 3$：$3(3) + 2 = 11$ 不成立。",
+    ],
+    [
+      "A negative coefficient reverses the symbol, and then the allowed side is the other way: you look for the greatest integer, not the least.",
+      "系数为负时不等号改变方向，允许的一侧也就反过来了：要找最大的整数，而不是最小的。",
+    ],
+  ],
+  (rng) => {
     const a = rng.int(2, 9);
     const b = rng.pick([rng.int(-20, -2), rng.int(2, 20)]);
     const c = rng.int(-30, 30);
@@ -956,26 +1374,58 @@ const extremeInteger: KnowledgePointDef = {
     const bound = negative ? -right / a : right / a;
     const boundQ = negative ? Q.of(-right, a) : Q.of(right, a);
     const answer = (negative ? (strict ? Math.ceil(bound) - 1 : Math.floor(bound)) : strict ? Math.floor(bound) + 1 : Math.ceil(bound)) + 0;
-    const sign = negative ? (strict ? ">" : "\\ge") : strict ? ">" : "\\ge";
+    const sign = strict ? ">" : "\\ge";
     const solved = negative ? (strict ? "<" : "\\le") : strict ? ">" : "\\ge";
     const wordEn = negative ? "greatest" : "least";
     const wordZh = negative ? "最大" : "最小";
-    return numberProblem({
-      prompt: t(
+    const next = negative ? answer + 1 : answer - 1;
+    const further = negative ? answer - 1 : answer + 1;
+    const value = (x: number) => (negative ? -a : a) * x + b;
+    const at = (x: number) => `${negative ? `-${a}` : a}(${x}) ${shift} = ${value(x)}`;
+    const exact = Number.isInteger(bound);
+    return valued(
+      [
         `What is the ${wordEn} integer $x$ that satisfies $${lead} ${shift} ${sign} ${c}$?`,
         `满足 $${lead} ${shift} ${sign} ${c}$ 的${wordZh}整数 $x$ 是多少？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [answer + 1, answer - 1, -answer, right, answer + 2],
-      solution: t(
-        `Moving the constant gives $${lead} ${sign} ${right}$, so $x ${solved} ${boundQ.toLatex()}$${negative ? ", with the sign flipped by the negative coefficient" : ""}. The ${wordEn} integer on that side is $${answer}$.`,
-        `移项得 $${lead} ${sign} ${right}$，所以 $x ${solved} ${boundQ.toLatex()}$${negative ? "（负系数使不等号改变方向）" : ""}。这一侧${wordZh}的整数是 $${answer}$。`,
-      ),
-    });
+      [
+        [
+          ["Solve", "解不等式"],
+          [
+            `Move the constant, then divide by $${negative ? -a : a}$${negative ? ", reversing the symbol" : ""}:`,
+            `移走常数，再除以 $${negative ? -a : a}$${negative ? "，并改变不等号方向" : ""}：`,
+          ],
+          [`${lead} ${sign} ${right}`, `x ${solved} ${boundQ.toLatex()}`],
+        ],
+        [
+          ["Find the integer", "找出整数"],
+          exact
+            ? [
+                `The boundary $${boundQ.toLatex()}$ is an integer, and it ${strict ? "does not count" : "counts"} with $${solved}$:`,
+                `边界 $${boundQ.toLatex()}$ 是整数，在 $${solved}$ 下它${strict ? "不算" : "算"}：`,
+              ]
+            : [
+                `$${boundQ.toLatex()}$ is between two integers; go ${negative ? "down" : "up"} to the first one:`,
+                `$${boundQ.toLatex()}$ 在两个整数之间；向${negative ? "小" : "大"}的方向找到第一个整数：`,
+              ],
+          [`x = ${answer}`],
+        ],
+      ],
+      [
+        `$${at(answer)}$, and $${value(answer)} ${sign} ${c}$ is true; one step back, $${at(next)}$, and $${value(next)} ${sign} ${c}$ is false.`,
+        `$${at(answer)}$，$${value(answer)} ${sign} ${c}$ 成立；退一步，$${at(next)}$，$${value(next)} ${sign} ${c}$ 不成立。`,
+      ],
+      [
+        [next, "That one fails: it is on the wrong side of the boundary.", "这个数不行：它在边界的另一侧。"],
+        [further, `That works, but it is not the ${wordEn}: $${answer}$ works too.`, `这个数可以，但不是${wordZh}的：$${answer}$ 也可以。`],
+        [-answer, "That has the wrong sign.", "符号错了。"],
+        [right, `That stops before dividing by $${negative ? -a : a}$.`, `这是除以 $${negative ? -a : a}$ 之前的值。`],
+      ],
+    );
   },
-};
-
+  drawn(gradeDrawings4["solving-multi-step-inequalities#the-extreme-integer-solution-of-an-inequality"]),
+);
 const wholeWithRootBetween: KnowledgePointDef = {
   id: "whole-numbers-with-a-root-between-two-integers",
   title: t("Whole numbers with a root between two integers", "平方根在两个整数之间的整数"),

@@ -2,9 +2,9 @@ import type { TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, num, paren, poly, Q } from "@ga/subject-math";
 
-import { numberProblem, steps, why } from "../problems.ts";
-import { type Pair, tableFigure } from "./early-grades-more-kit.ts";
+import { type Pair, tableFigure, type Walk } from "./early-grades-more-kit.ts";
 import { chosen, lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { areaGridFigure, lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** frac is the exact quotient a / b, for the values that mistakes produce. */
 const frac = (a: number, b: number) => Q.of(a, b);
@@ -12,169 +12,405 @@ const frac = (a: number, b: number) => Q.of(a, b);
 /** side writes a coefficient times x: side(-1) is "-x". */
 const side = (a: number) => poly([a, "x"]);
 
-export const oneStepEquationsAddition: TopicDef = {
-  id: "one-step-equations-addition",
-  title: t("Solving One-Step Addition and Subtraction Equations", "解一步加减法方程"),
-  summary: t("Solve $x + a = b$ by doing the same to both sides.", "通过在两边做相同的运算解 $x + a = b$。"),
-  prerequisites: ["evaluating-expressions"],
-  encompasses: [{ topic: "subtracting-integers", weight: 0.3 }],
-  xp: 10,
-  standards: ["CCSS.6.EE.B.7", "CCSS.7.EE.B.4.A"],
-  knowledgePoints: [
-    {
-      id: "undoing-addition",
-      title: t("Undoing addition and subtraction", "抵消加法与减法"),
-      explanation: t(
-        "An **equation** states that two expressions are equal. A **solution** is a value of the variable that makes it true. To **solve** an equation, get the variable alone by doing the same operation to **both sides**, which keeps them equal.\n\nAddition and subtraction undo each other:\n\n$$x + 7 = -2 \\;\\Rightarrow\\; x + 7 - 7 = -2 - 7 \\;\\Rightarrow\\; x = -9.$$\n\nCheck by substituting: $-9 + 7 = -2$. ✓",
-        "**方程**表示两个式子相等。使方程成立的变量的值叫做方程的**解**。**解方程**就是在方程**两边**做相同的运算（两边仍然相等），使变量单独留在一边。\n\n加法和减法互相抵消：\n\n$$x + 7 = -2 \\;\\Rightarrow\\; x + 7 - 7 = -2 - 7 \\;\\Rightarrow\\; x = -9.$$\n\n代入检验：$-9 + 7 = -2$。✓",
-      ),
-      keyPrerequisites: ["subtracting-integers"],
-      generate(rng) {
-        const a = rng.nonZero(-20, 20);
-        const b = rng.int(-30, 30);
-        const x = b - a;
-        const eq = `${linear(1, a)} = ${num(b)}`;
-        const op = a > 0 ? `- ${a}` : `+ ${-a}`;
-        return numberProblem({
-          prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
-          answer: x,
-          solveFor: "x",
-          wrong: [-x],
-          mistakes: [
-            why(
-              b + a,
-              "That repeats the operation instead of undoing it. Do the opposite on both sides.",
-              "这是把运算又做了一遍，而不是撤销它。两边要做相反的运算。",
-            ),
-          ],
-          solution: t(
-            `${a > 0 ? `Subtract $${a}$ from` : `Add $${-a}$ to`} both sides: ${steps(`x = ${num(b)} ${op} = ${num(x)}`)}`,
-            `两边同时${a > 0 ? `减去 $${a}$` : `加上 $${-a}$`}：${steps(`x = ${num(b)} ${op} = ${num(x)}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "variable-on-the-right",
-      title: t("The variable on either side", "变量在任意一边"),
-      explanation: t(
-        "The variable may be on either side, and the constant may come first: $5 + x = 2$ is the same as $x + 5 = 2$, and $-4 = x - 6$ is solved by adding $6$ to both sides, giving $2 = x$, that is, $x = 2$.",
-        "变量可以在等号的任意一边，常数也可以写在前面：$5 + x = 2$ 与 $x + 5 = 2$ 相同；解 $-4 = x - 6$ 时两边同时加 $6$，得 $2 = x$，即 $x = 2$。",
-      ),
-      generate(rng) {
-        const a = rng.nonZero(-20, 20);
-        const b = rng.int(-30, 30);
-        const x = b - a;
-        const left = rng.bool();
-        const expr = left ? linear(1, a) : `${num(a)} + x`;
-        const eq = rng.bool() ? `${num(b)} = ${expr}` : `${expr} = ${num(b)}`;
-        const op = a > 0 ? `- ${a}` : `+ ${-a}`;
-        return numberProblem({
-          prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
-          answer: x,
-          solveFor: "x",
-          mistakes: [
-            why(
-              b + a,
-              "That repeats the operation instead of undoing it. Do the opposite on both sides.",
-              "这是把运算又做了一遍，而不是撤销它。两边要做相反的运算。",
-            ),
-            why(
-              a - b,
-              "You subtracted in the wrong order. Start from the side without $x$ and take away the number that was added to $x$.",
-              "你减的顺序反了。应从不含 $x$ 的一边开始，减去加在 $x$ 上的数。",
-            ),
-          ],
-          solution: t(
-            `${a > 0 ? `Subtract $${a}$ from` : `Add $${-a}$ to`} both sides: ${steps(`x = ${num(b)} ${op} = ${num(x)}`)}`,
-            `两边同时${a > 0 ? `减去 $${a}$` : `加上 $${-a}$`}：${steps(`x = ${num(b)} ${op} = ${num(x)}`)}`,
-          ),
-        });
-      },
-    },
+/** undoAdd works x + a = b in two labelled steps. */
+const undoAdd = (a: number, b: number, eqLeft: string): Walk[] => [
+  [
+    ["Undo the addition", "撤销加法"],
+    [
+      a > 0 ? `$${a}$ is added to $x$, so subtract $${a}$ from both sides:` : `$${-a}$ is taken from $x$, so add $${-a}$ to both sides:`,
+      a > 0 ? `$x$ 加了 $${a}$，所以两边同时减去 $${a}$：` : `$x$ 减了 $${-a}$，所以两边同时加上 $${-a}$：`,
+    ],
+    [`${eqLeft} ${a > 0 ? `- ${a}` : `+ ${-a}`} = ${num(b)} ${a > 0 ? `- ${a}` : `+ ${-a}`}`],
   ],
-};
+  [["Simplify", "化简"], ["The left side is now just $x$:", "左边只剩 $x$："], [`x = ${num(b - a)}`]],
+];
 
-export const oneStepEquationsMultiplication: TopicDef = {
-  id: "one-step-equations-multiplication",
-  title: t("Solving One-Step Multiplication and Division Equations", "解一步乘除法方程"),
-  summary: t("Solve $ax = b$ and $\\frac{x}{a} = b$.", "解 $ax = b$ 与 $\\frac{x}{a} = b$。"),
-  prerequisites: ["one-step-equations-addition"],
-  encompasses: [{ topic: "dividing-integers", weight: 0.5 }],
-  xp: 10,
-  standards: ["CCSS.6.EE.B.7", "CCSS.7.EE.B.4.A"],
-  knowledgePoints: [
-    {
-      id: "dividing-both-sides",
-      title: t("Dividing both sides", "两边同除以一个数"),
-      explanation: t(
-        "Multiplication and division undo each other. To solve $-6x = 42$, divide both sides by the coefficient $-6$:\n\n$$\\frac{-6x}{-6} = \\frac{42}{-6} \\;\\Rightarrow\\; x = -7.$$\n\nFor $-x = 5$, the coefficient is $-1$, so $x = -5$.",
-        "乘法和除法互相抵消。解 $-6x = 42$ 时，两边同时除以系数 $-6$：\n\n$$\\frac{-6x}{-6} = \\frac{42}{-6} \\;\\Rightarrow\\; x = -7.$$\n\n对于 $-x = 5$，系数是 $-1$，所以 $x = -5$。",
-      ),
-      keyPrerequisites: ["dividing-integers"],
-      generate(rng) {
-        const a = rng.bool(0.12) ? -1 : rng.sign() * rng.int(2, 12);
-        const x = rng.nonZero(-12, 12);
-        const b = a * x;
-        const eq = `${side(a)} = ${num(b)}`;
-        return numberProblem({
-          prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
-          answer: x,
-          solveFor: "x",
-          wrong: [-x],
-          mistakes: [
-            why(
-              b - a,
-              "You subtracted the coefficient. The coefficient multiplies $x$, so divide both sides by it.",
-              "你减去了系数。系数是乘在 $x$ 上的，所以两边要除以它。",
-            ),
-            why(b * a, "You multiplied by the coefficient. To undo a multiplication, divide.", "你乘了系数。要撤销乘法，应该做除法。"),
+/** oneStepEquationsAddition teaches undoing addition and subtraction on both sides. */
+export const oneStepEquationsAddition: TopicDef = withIntro(
+  {
+    id: "one-step-equations-addition",
+    title: t("Solving One-Step Addition and Subtraction Equations", "解一步加减法方程"),
+    summary: t("Solve $x + a = b$ by doing the same to both sides.", "通过在两边做相同的运算解 $x + a = b$。"),
+    prerequisites: ["evaluating-expressions"],
+    encompasses: [{ topic: "subtracting-integers", weight: 0.3 }],
+    xp: 10,
+    standards: ["CCSS.6.EE.B.7", "CCSS.7.EE.B.4.A"],
+    knowledgePoints: [
+      {
+        ...lesson(
+          "undoing-addition",
+          ["Undoing addition and subtraction", "抵消加法与减法"],
+          [
+            [
+              "An **equation** says two expressions are equal, and a **solution** is a value that makes it true. To **solve**, get $x$ alone by doing the same thing to **both sides**. Addition and subtraction undo each other: $x + 7 = -2$, so $x = -2 - 7 = -9$.",
+              "**方程**表示两个式子相等，使它成立的值叫做**解**。**解方程**就是在**两边**做相同的运算，让 $x$ 单独留下。加法和减法互相抵消：$x + 7 = -2$，所以 $x = -2 - 7 = -9$。",
+            ],
+            ["Put it back: $-9 + 7 = -2$.", "代回去：$-9 + 7 = -2$。"],
+            [
+              "Do the opposite, not the same. To undo $+ 7$, subtract $7$; adding $7$ again gives $5$, which is wrong.",
+              "要做相反的运算。撤销 $+ 7$ 要减 $7$；再加 $7$ 得 $5$，是错的。",
+            ],
           ],
-          solution: t(
-            `Divide both sides by $${num(a)}$: ${steps(`x = \\frac{${num(b)}}{${num(a)}} = ${num(x)}`)}`,
-            `两边同时除以 $${num(a)}$：${steps(`x = \\frac{${num(b)}}{${num(a)}} = ${num(x)}`)}`,
-          ),
-        });
+          (rng) => {
+            const a = rng.nonZero(-20, 20);
+            const b = rng.int(-30, 30);
+            const x = b - a;
+            const eq = `${linear(1, a)} = ${num(b)}`;
+            return valued(
+              [`Solve $${eq}$.`, `解方程 $${eq}$。`],
+              x,
+              undoAdd(a, b, linear(1, a)),
+              [
+                `Put it back: $${num(x)} ${a > 0 ? `+ ${a}` : `- ${-a}`} = ${num(b)}$.`,
+                `代回去：$${num(x)} ${a > 0 ? `+ ${a}` : `- ${-a}`} = ${num(b)}$。`,
+              ],
+              [
+                [-x, "That has the wrong sign.", "符号错了。"],
+                [b + a, "That repeats the operation instead of undoing it.", "这是把运算又做了一遍，而不是撤销它。"],
+                [a - b, "That subtracts in the wrong order.", "这是倒过来相减了。"],
+              ],
+              { solveFor: "x" },
+            );
+          },
+          tableFigure(["x", "x+7"], [-9, -2]),
+        ),
+        keyPrerequisites: ["subtracting-integers"],
       },
-    },
-    {
-      id: "multiplying-both-sides",
-      title: t("Multiplying both sides", "两边同乘以一个数"),
-      explanation: t(
-        "When the variable is divided by a number, multiply both sides by that number:\n\n$$\\frac{x}{4} = -3 \\;\\Rightarrow\\; 4 \\cdot \\frac{x}{4} = 4 \\cdot (-3) \\;\\Rightarrow\\; x = -12.$$\n\n$-\\frac{x}{4}$ means $\\frac{x}{-4}$, so multiply both sides by $-4$.",
-        "当变量被一个数除时，两边同时乘以这个数：\n\n$$\\frac{x}{4} = -3 \\;\\Rightarrow\\; 4 \\cdot \\frac{x}{4} = 4 \\cdot (-3) \\;\\Rightarrow\\; x = -12.$$\n\n$-\\frac{x}{4}$ 表示 $\\frac{x}{-4}$，所以两边同时乘以 $-4$。",
-      ),
-      keyPrerequisites: ["multiplying-integers"],
-      generate(rng) {
-        const d = rng.int(2, 9);
-        const negative = rng.bool(0.3);
-        const a = negative ? -d : d;
-        const b = rng.nonZero(-12, 12);
-        const x = a * b;
-        const eq = `${negative ? "-" : ""}\\frac{x}{${d}} = ${num(b)}`;
-        return numberProblem({
-          prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
-          answer: x,
-          solveFor: "x",
-          wrong: [-x],
-          mistakes: [
-            why(
-              frac(b, a),
-              "You divided. The unknown is being divided, so multiply both sides to undo it.",
-              "你做了除法。未知数正在被除，要撤销就应在两边做乘法。",
-            ),
-            why(b + d, "You added the denominator. To undo a division, multiply.", "你加上了分母。要撤销除法，应该做乘法。"),
+      lesson(
+        "variable-on-the-right",
+        ["The variable on either side", "变量在任意一边"],
+        [
+          [
+            "The letter may be on either side, and the number may come first. $5 + x = 2$ is the same as $x + 5 = 2$. To solve $-4 = x - 6$, add $6$ to both sides: $2 = x$, so $x = 2$.",
+            "字母可以在等号任意一边，数也可以写在前面。$5 + x = 2$ 与 $x + 5 = 2$ 相同。解 $-4 = x - 6$ 时，两边同时加 $6$：$2 = x$，所以 $x = 2$。",
           ],
-          solution: t(
-            `Multiply both sides by $${num(a)}$: ${steps(`x = ${paren(a)} \\cdot ${paren(b)} = ${num(x)}`)}`,
-            `两边同时乘以 $${num(a)}$：${steps(`x = ${paren(a)} \\cdot ${paren(b)} = ${num(x)}`)}`,
-          ),
-        });
-      },
-    },
+          ["Put it back: $2 - 6 = -4$.", "代回去：$2 - 6 = -4$。"],
+          [
+            "$2 = x$ and $x = 2$ say the same thing. Do not change the sign when you swap the sides.",
+            "$2 = x$ 和 $x = 2$ 意思一样。左右交换时不要改变符号。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.nonZero(-20, 20);
+          const b = rng.int(-30, 30);
+          const x = b - a;
+          const left = rng.bool();
+          const expr = left ? linear(1, a) : `${num(a)} + x`;
+          const eq = rng.bool() ? `${num(b)} = ${expr}` : `${expr} = ${num(b)}`;
+          return valued(
+            [`Solve $${eq}$.`, `解方程 $${eq}$。`],
+            x,
+            [
+              [
+                ["Write x side first", "把含 x 的一边写在前面"],
+                [`The equation says the same as:`, `这个方程也可以写成：`],
+                [`${linear(1, a)} = ${num(b)}`],
+              ],
+              ...undoAdd(a, b, linear(1, a)),
+            ],
+            [
+              `Put it back into $${eq}$: $${expr.replace("x", paren(x))} = ${num(b)}$.`,
+              `代回 $${eq}$：$${expr.replace("x", paren(x))} = ${num(b)}$。`,
+            ],
+            [
+              [-x, "That has the wrong sign.", "符号错了。"],
+              [b + a, "That repeats the operation instead of undoing it.", "这是把运算又做了一遍，而不是撤销它。"],
+              [a - b, "That subtracts in the wrong order. Start from the side without $x$.", "这是倒过来相减了。应从不含 $x$ 的一边开始。"],
+            ],
+            { solveFor: "x" },
+          );
+        },
+        tableFigure(["x", "x−6"], [2, -4]),
+      ),
+    ],
+  },
+  [
+    "Sam had some stickers and got $7$ more. Now he has $12$. So $x + 7 = 12$, and $x = 12 - 7 = 5$.",
+    "萨姆有一些贴纸，又得到 $7$ 张，现在有 $12$ 张。所以 $x + 7 = 12$，$x = 12 - 7 = 5$。",
   ],
-};
+  ["$5 + 7 = 12$.", "$5 + 7 = 12$。"],
+  [
+    "solve equations like $x + a = b$ by doing the opposite to both sides, and write them from stories.",
+    "学习在两边做相反的运算解 $x + a = b$ 这样的方程，并根据故事列方程。",
+  ],
+);
 
+/** storiesWithOneStepEquations finds the start of a change from a story. */
+export const storiesWithOneStepEquations = lesson(
+  "stories-with-one-step-equations",
+  ["Stories with one-step equations", "一步方程的故事"],
+  [
+    [
+      "A story about a change gives the equation start $+$ change $=$ end. Call the unknown start $x$ and undo the change. If the temperature rose $8$ degrees to $3$ degrees: $x + 8 = 3$, so $x = 3 - 8 = -5$.",
+      "关于变化的故事可以写成“开始 $+$ 变化 $=$ 结果”。把未知的开始设为 $x$，再撤销变化。气温上升 $8$ 度后是 $3$ 度：$x + 8 = 3$，所以 $x = 3 - 8 = -5$。",
+    ],
+    ["$-5 + 8 = 3$.", "$-5 + 8 = 3$。"],
+    [
+      "The start can be negative. Do not swap the numbers to get a positive answer: $8 - 3$ is wrong.",
+      "开始值可以是负数。不要为了得正数而交换两个数：$8 - 3$ 是错的。",
+    ],
+  ],
+  (rng) => {
+    const rise = rng.int(3, 25);
+    const end = rng.int(-12, 15);
+    const start = end - rise;
+    return valued(
+      [
+        `The temperature rose by $${rise}$ degrees and is now $${end}$ degrees. What was the temperature before the rise?`,
+        `气温上升了 $${rise}$ 度，现在是 $${end}$ 度。上升前是多少度？`,
+      ],
+      start,
+      [
+        [
+          ["Write the equation", "列方程"],
+          ["Start plus the rise is the end:", "开始的气温加上升的度数等于现在的气温："],
+          [`x + ${rise} = ${num(end)}`],
+        ],
+        [
+          ["Undo the rise", "撤销上升"],
+          [`Subtract $${rise}$ from both sides:`, `两边同时减去 $${rise}$：`],
+          [`x = ${num(end)} - ${rise} = ${num(start)}`],
+        ],
+      ],
+      [`$${num(start)} + ${rise} = ${num(end)}$.`, `$${num(start)} + ${rise} = ${num(end)}$。`],
+      [
+        [end + rise, "That adds the rise again instead of undoing it.", "这又加了一次上升的度数，而不是撤销它。"],
+        [rise - end, "That subtracts in the wrong order.", "这是倒过来相减了。"],
+        [-start, "That has the wrong sign.", "符号错了。"],
+      ],
+    );
+  },
+  lineFigure(
+    {
+      lo: -6,
+      hi: 4,
+      step: 1,
+      labels: [-6, -5, 0, 3, 4],
+      label: (v) => (v < 0 ? `−${-v}` : String(v)),
+      marks: [{ at: -5 }, { at: 3 }],
+      jumps: [[-5, 3]],
+    },
+    ["A rise of 8 from −5 reaches 3.", "从 −5 上升 8 到达 3。"],
+  ),
+);
+
+/** oneStepEquationsMultiplication teaches undoing multiplication and division on both sides. */
+export const oneStepEquationsMultiplication: TopicDef = withIntro(
+  {
+    id: "one-step-equations-multiplication",
+    title: t("Solving One-Step Multiplication and Division Equations", "解一步乘除法方程"),
+    summary: t("Solve $ax = b$ and $\\frac{x}{a} = b$.", "解 $ax = b$ 与 $\\frac{x}{a} = b$。"),
+    prerequisites: ["one-step-equations-addition"],
+    encompasses: [{ topic: "dividing-integers", weight: 0.5 }],
+    xp: 10,
+    standards: ["CCSS.6.EE.B.7", "CCSS.7.EE.B.4.A"],
+    knowledgePoints: [
+      {
+        ...lesson(
+          "dividing-both-sides",
+          ["Dividing both sides", "两边同除以一个数"],
+          [
+            [
+              "Multiplication and division undo each other. To solve $-6x = 42$, divide both sides by the number in front of $x$, which is $-6$: $x = 42 \\div (-6) = -7$. For $-x = 5$, the number in front is $-1$, so $x = -5$.",
+              "乘法和除法互相抵消。解 $-6x = 42$ 时，两边同时除以 $x$ 前面的数 $-6$：$x = 42 \\div (-6) = -7$。对于 $-x = 5$，前面的数是 $-1$，所以 $x = -5$。",
+            ],
+            ["Put it back: $-6 \\cdot (-7) = 42$.", "代回去：$-6 \\cdot (-7) = 42$。"],
+            [
+              "Divide by the whole coefficient, sign and all. Dividing $42$ by $6$ gives $7$, which has the wrong sign.",
+              "要除以整个系数，连同符号。$42$ 除以 $6$ 得 $7$，符号错了。",
+            ],
+          ],
+          (rng) => {
+            const a = rng.bool(0.12) ? -1 : rng.sign() * rng.int(2, 12);
+            const x = rng.nonZero(-12, 12);
+            const b = a * x;
+            const eq = `${side(a)} = ${num(b)}`;
+            return valued(
+              [`Solve $${eq}$.`, `解方程 $${eq}$。`],
+              x,
+              [
+                [
+                  ["Divide both sides", "两边同除"],
+                  [
+                    `$x$ is multiplied by $${num(a)}$, so divide both sides by $${num(a)}$:`,
+                    `$x$ 乘了 $${num(a)}$，所以两边同时除以 $${num(a)}$：`,
+                  ],
+                  [`x = \\frac{${num(b)}}{${num(a)}}`],
+                ],
+                [
+                  ["Work out the quotient", "算出商"],
+                  [
+                    a < 0 === b < 0 ? "The signs are the same, so $x$ is positive:" : "The signs differ, so $x$ is negative:",
+                    a < 0 === b < 0 ? "同号，所以 $x$ 为正：" : "异号，所以 $x$ 为负：",
+                  ],
+                  [`x = ${num(x)}`],
+                ],
+              ],
+              [`Put it back: $${num(a)} \\cdot ${paren(x)} = ${num(b)}$.`, `代回去：$${num(a)} \\cdot ${paren(x)} = ${num(b)}$。`],
+              [
+                [-x, "That divides by the size of the coefficient but drops its sign.", "这除以了系数的大小，但丢了符号。"],
+                [
+                  b - a,
+                  "That subtracts the coefficient. It multiplies $x$, so divide by it.",
+                  "这减去了系数。系数是乘在 $x$ 上的，要除以它。",
+                ],
+                [b * a, "That multiplies by the coefficient. To undo a multiplication, divide.", "这乘了系数。要撤销乘法，应该做除法。"],
+              ],
+              { solveFor: "x" },
+            );
+          },
+          tableFigure(["x", "−6x"], [-7, 42]),
+        ),
+        keyPrerequisites: ["dividing-integers"],
+      },
+      {
+        ...lesson(
+          "multiplying-both-sides",
+          ["Multiplying both sides", "两边同乘以一个数"],
+          [
+            [
+              "When $x$ is divided by a number, multiply both sides by that number: $\\frac{x}{4} = -3$, so $x = 4 \\cdot (-3) = -12$. A minus sign in front, as in $-\\frac{x}{4}$, means dividing by $-4$, so multiply by $-4$.",
+              "当 $x$ 被一个数除时，两边同时乘这个数：$\\frac{x}{4} = -3$，所以 $x = 4 \\cdot (-3) = -12$。前面有负号时，比如 $-\\frac{x}{4}$，表示除以 $-4$，所以要乘 $-4$。",
+            ],
+            ["Put it back: $-12 \\div 4 = -3$.", "代回去：$-12 \\div 4 = -3$。"],
+            ["Multiply to undo a division. Dividing $-3$ by $4$ goes the wrong way.", "撤销除法要用乘法。用 $-3$ 除以 $4$ 是走反了。"],
+          ],
+          (rng) => {
+            const d = rng.int(2, 9);
+            const negative = rng.bool(0.3);
+            const a = negative ? -d : d;
+            const b = rng.nonZero(-12, 12);
+            const x = a * b;
+            const eq = `${negative ? "-" : ""}\\frac{x}{${d}} = ${num(b)}`;
+            return valued(
+              [`Solve $${eq}$.`, `解方程 $${eq}$。`],
+              x,
+              [
+                [
+                  ["Multiply both sides", "两边同乘"],
+                  [
+                    negative
+                      ? `$x$ is divided by $${a}$, so multiply both sides by $${a}$:`
+                      : `$x$ is divided by $${d}$, so multiply both sides by $${d}$:`,
+                    negative ? `$x$ 除以了 $${a}$，所以两边同时乘 $${a}$：` : `$x$ 除以了 $${d}$，所以两边同时乘 $${d}$：`,
+                  ],
+                  [`x = ${paren(a)} \\cdot ${paren(b)}`],
+                ],
+                [["Work out the product", "算出积"], ["Multiply, minding the signs:", "相乘，注意符号："], [`x = ${num(x)}`]],
+              ],
+              [
+                `Put it back: $${negative ? "-" : ""}\\frac{${num(x)}}{${d}} = ${num(b)}$.`,
+                `代回去：$${negative ? "-" : ""}\\frac{${num(x)}}{${d}} = ${num(b)}$。`,
+              ],
+              [
+                [
+                  -x,
+                  negative ? "That leaves out the minus sign in front." : "That has the wrong sign.",
+                  negative ? "这漏掉了前面的负号。" : "符号错了。",
+                ],
+                [frac(b, a), "That divides. $x$ is being divided, so multiply to undo it.", "这做了除法。$x$ 正在被除，要撤销就要乘。"],
+                [b + d, "That adds the denominator. To undo a division, multiply.", "这加上了分母。要撤销除法，应该做乘法。"],
+              ],
+              { solveFor: "x" },
+            );
+          },
+          tableFigure(["x", "x/4"], [-12, -3]),
+        ),
+        keyPrerequisites: ["multiplying-integers"],
+      },
+    ],
+  },
+  [
+    "Four friends share a bill equally, and each pays $9$ dollars. So $\\frac{x}{4} = 9$, and $x = 4 \\cdot 9 = 36$ dollars.",
+    "四个朋友平分账单，每人付 $9$ 美元。所以 $\\frac{x}{4} = 9$，$x = 4 \\cdot 9 = 36$ 美元。",
+  ],
+  ["$36 \\div 4 = 9$.", "$36 \\div 4 = 9$。"],
+  [
+    "solve equations like $ax = b$ and $\\frac{x}{a} = b$ by multiplying or dividing both sides.",
+    "学习在两边同乘或同除，解 $ax = b$ 和 $\\frac{x}{a} = b$ 这样的方程。",
+  ],
+);
+
+/** aFractionTimesTheUnknown solves a fraction times x equals a number with the reciprocal. */
+export const aFractionTimesTheUnknown = lesson(
+  "a-fraction-times-the-unknown",
+  ["A fraction times the unknown", "分数乘未知数"],
+  [
+    [
+      "When a fraction multiplies $x$, multiply both sides by its reciprocal, the fraction turned upside down. $\\frac{2}{3}x = 10$, so $x = \\frac{3}{2} \\cdot 10 = 15$. One step does the work of dividing by $2$ and multiplying by $3$.",
+      "分数乘 $x$ 时，两边同乘它的倒数，也就是把分数倒过来。$\\frac{2}{3}x = 10$，所以 $x = \\frac{3}{2} \\cdot 10 = 15$。一步就完成了除以 $2$ 再乘 $3$。",
+    ],
+    [
+      "$\\frac{2}{3}$ of $15$ is $10$: $15 \\div 3 = 5$ and $5 \\cdot 2 = 10$.",
+      "$15$ 的 $\\frac{2}{3}$ 是 $10$：$15 \\div 3 = 5$，$5 \\cdot 2 = 10$。",
+    ],
+    [
+      "Multiply by the reciprocal, not by the fraction itself. $\\frac{2}{3} \\cdot 10$ makes $x$ smaller, not larger.",
+      "要乘倒数，不是乘分数本身。$\\frac{2}{3} \\cdot 10$ 会让结果变小，而不是变大。",
+    ],
+  ],
+  (rng) => {
+    const [n, d] = rng.pick<[number, number]>([
+      [2, 3],
+      [3, 4],
+      [2, 5],
+      [3, 5],
+      [4, 5],
+      [5, 6],
+      [3, 7],
+      [5, 7],
+      [3, 8],
+      [7, 8],
+      [4, 9],
+      [7, 9],
+    ]);
+    const k = rng.nonZero(-12, 12);
+    const rhs = n * k;
+    return valued(
+      [`Solve $\\frac{${n}}{${d}}x = ${num(rhs)}$.`, `解方程 $\\frac{${n}}{${d}}x = ${num(rhs)}$。`],
+      d * k,
+      [
+        [
+          ["Find the reciprocal", "找倒数"],
+          [
+            `The reciprocal of $\\frac{${n}}{${d}}$ is $\\frac{${d}}{${n}}$; multiply both sides by it:`,
+            `$\\frac{${n}}{${d}}$ 的倒数是 $\\frac{${d}}{${n}}$，两边同乘它：`,
+          ],
+          [`x = \\frac{${d}}{${n}} \\cdot ${paren(rhs)}`],
+        ],
+        [
+          ["Multiply", "相乘"],
+          [`Divide by $${n}$, then multiply by $${d}$:`, `先除以 $${n}$，再乘 $${d}$：`],
+          [`${num(rhs)} \\div ${n} = ${num(k)}`, `${num(k)} \\cdot ${d} = ${num(d * k)}`],
+        ],
+      ],
+      [
+        `$${num(d * k)} \\div ${d} = ${num(k)}$ and $${num(k)} \\cdot ${n} = ${num(rhs)}$.`,
+        `$${num(d * k)} \\div ${d} = ${num(k)}$，$${num(k)} \\cdot ${n} = ${num(rhs)}$。`,
+      ],
+      [
+        [Q.of(n * rhs, d), "That multiplies by the fraction itself instead of its reciprocal.", "这乘的是分数本身，而不是它的倒数。"],
+        [k, `That divides by $${n}$ but forgets to multiply by $${d}$.`, `这除以了 $${n}$，但忘了乘 $${d}$。`],
+        [rhs - d, "That subtracts the denominator; the fraction multiplies $x$.", "这减去了分母；分数是乘在 $x$ 上的。"],
+        [-d * k, "That has the wrong sign.", "符号错了。"],
+      ],
+      { solveFor: "x" },
+    );
+  },
+  tapeFigure(
+    [
+      {
+        total: "15",
+        pieces: [
+          { size: 1, text: "5", lit: true },
+          { size: 1, text: "5", lit: true },
+          { size: 1, text: "5" },
+        ],
+      },
+    ],
+    ["Two of three equal parts make 10, so each part is 5 and the whole is 15.", "三等份中的两份是 10，所以每份 5，整体是 15。"],
+  ),
+);
 /** undo writes the step that removes a constant b from both sides. */
 const undo = (b: number): Pair => [b > 0 ? `Subtract $${b}$ from` : `Add $${-b}$ to`, b > 0 ? `减去 $${b}$` : `加上 $${-b}$`];
 
@@ -588,73 +824,215 @@ export const equationsWithVariablesOnBothSides: TopicDef = withIntro(
   ],
 );
 
-export const equationsWithParentheses: TopicDef = {
-  id: "equations-with-parentheses",
-  title: t("Solving Linear Equations Using the Distributive Property", "用分配律解一次方程"),
-  summary: t("Expand parentheses, then solve linear equations.", "先去括号，再解一元一次方程。"),
-  prerequisites: ["equations-with-variables-on-both-sides", "simplifying-expressions"],
-  encompasses: [{ topic: "simplifying-expressions", weight: 0.8 }],
-  xp: 15,
-  standards: ["CCSS.8.EE.C.7.B"],
-  knowledgePoints: [
-    {
-      id: "expand-then-solve",
-      title: t("Expanding, then solving", "先展开，再求解"),
-      explanation: t(
-        "A number multiplying a group must multiply every term inside it, including its sign. Once the parentheses are gone, the equation is an ordinary two-step equation.\n\nWhen the variable is inside parentheses, expand with the distributive property first, then solve:\n\n$$-3(x - 4) = 21 \\;\\Rightarrow\\; -3x + 12 = 21 \\;\\Rightarrow\\; -3x = 9 \\;\\Rightarrow\\; x = -3.$$",
-        "括号前的数要乘括号内的每一项，包括它的符号。去掉括号后，方程就成了普通的两步方程。\n\n变量在括号里时，先用分配律展开，再求解：\n\n$$-3(x - 4) = 21 \\;\\Rightarrow\\; -3x + 12 = 21 \\;\\Rightarrow\\; -3x = 9 \\;\\Rightarrow\\; x = -3.$$",
-      ),
-      keyPrerequisites: ["distributive-property", "two-step-equations"],
-      generate(rng) {
-        const a = rng.sign() * rng.int(2, 9);
-        const b = rng.nonZero(-9, 9);
-        const x = rng.nonZero(-10, 10);
-        const c = a * (x + b);
-        const eq = `${num(a)}(${linear(1, b)}) = ${num(c)}`;
-        return numberProblem({
-          prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
-          answer: x,
-          solveFor: "x",
-          wrong: [frac(c - b, a), frac(c, a).add(Q.of(b)), -x],
-          solution: t(
-            `Expand, then solve: ${steps(`${linear(a, a * b)} = ${num(c)}`, `${side(a)} = ${num(c - a * b)}`, `x = ${num(x)}`)}`,
-            `先展开，再求解：${steps(`${linear(a, a * b)} = ${num(c)}`, `${side(a)} = ${num(c - a * b)}`, `x = ${num(x)}`)}`,
-          ),
-        });
+/** equationsWithParentheses teaches expanding parentheses before solving. */
+export const equationsWithParentheses: TopicDef = withIntro(
+  {
+    id: "equations-with-parentheses",
+    title: t("Solving Linear Equations Using the Distributive Property", "用分配律解一次方程"),
+    summary: t("Expand parentheses, then solve linear equations.", "先去括号，再解一元一次方程。"),
+    prerequisites: ["equations-with-variables-on-both-sides", "simplifying-expressions"],
+    encompasses: [{ topic: "simplifying-expressions", weight: 0.8 }],
+    xp: 15,
+    standards: ["CCSS.8.EE.C.7.B"],
+    knowledgePoints: [
+      {
+        ...lesson(
+          "expand-then-solve",
+          ["Expanding, then solving", "先展开，再求解"],
+          [
+            [
+              "When $x$ is inside parentheses, expand first: the number outside multiplies every term inside, sign and all. Then it is an ordinary two-step equation. $-3(x - 4) = 21$: $-3x + 12 = 21$, $-3x = 9$, $x = -3$.",
+              "$x$ 在括号里时，先展开：括号外的数要乘括号里的每一项，连同符号。然后就是普通的两步方程。$-3(x - 4) = 21$：$-3x + 12 = 21$，$-3x = 9$，$x = -3$。",
+            ],
+            ["Put it back: $-3(-3 - 4) = -3 \\cdot (-7) = 21$.", "代回去：$-3(-3 - 4) = -3 \\cdot (-7) = 21$。"],
+            [
+              "Multiply the number inside too. $-3(x - 4)$ is $-3x + 12$, not $-3x - 4$.",
+              "括号里的数也要乘。$-3(x - 4)$ 是 $-3x + 12$，不是 $-3x - 4$。",
+            ],
+          ],
+          (rng) => {
+            const a = rng.sign() * rng.int(2, 9);
+            const b = rng.nonZero(-9, 9);
+            const x = rng.nonZero(-10, 10);
+            const c = a * (x + b);
+            const eq = `${num(a)}(${linear(1, b)}) = ${num(c)}`;
+            return valued(
+              [`Solve $${eq}$.`, `解方程 $${eq}$。`],
+              x,
+              [
+                [
+                  ["Expand", "展开"],
+                  [`Multiply both terms inside by $${num(a)}$:`, `用 $${num(a)}$ 乘括号里的两项：`],
+                  [`${linear(a, a * b)} = ${num(c)}`],
+                ],
+                [
+                  ["Undo the constant", "移走常数"],
+                  [`${undo(a * b)[0]} both sides:`, `两边同时${undo(a * b)[1]}：`],
+                  [`${side(a)} = ${num(c - a * b)}`],
+                ],
+                [["Divide", "相除"], [`Divide both sides by $${num(a)}$:`, `两边同时除以 $${num(a)}$：`], [`x = ${num(x)}`]],
+              ],
+              [
+                `Put it back: $${num(a)}(${num(x)}${plus(b)}) = ${num(a)} \\cdot ${paren(x + b)} = ${num(c)}$.`,
+                `代回去：$${num(a)}(${num(x)}${plus(b)}) = ${num(a)} \\cdot ${paren(x + b)} = ${num(c)}$。`,
+              ],
+              [
+                [
+                  frac(c - b, a),
+                  `That multiplies only $x$ by $${num(a)}$, not the $${num(b)}$.`,
+                  `这只用 $${num(a)}$ 乘了 $x$，没有乘 $${num(b)}$。`,
+                ],
+                [
+                  frac(c, a).add(Q.of(b)),
+                  `That divides by $${num(a)}$ correctly but then moves $${num(b)}$ with the wrong sign.`,
+                  `这正确地除以了 $${num(a)}$，但移动 $${num(b)}$ 时符号错了。`,
+                ],
+                [-x, "That has the wrong sign.", "符号错了。"],
+              ],
+              { solveFor: "x" },
+            );
+          },
+          areaGridFigure(["−3"], ["x", "−4"], [["−3x", "+12"]]),
+        ),
+        keyPrerequisites: ["distributive-property", "two-step-equations"],
       },
-    },
-    {
-      id: "parentheses-and-variables-on-both-sides",
-      title: t("Parentheses and variables on both sides", "含括号且两边都有变量"),
-      explanation: t(
-        "Expand every parenthesis, combine like terms on each side, then collect the variable on one side:\n\n$$2(3x + 1) = 4x - 8 \\;\\Rightarrow\\; 6x + 2 = 4x - 8 \\;\\Rightarrow\\; 2x = -10 \\;\\Rightarrow\\; x = -5.$$",
-        "展开所有括号，分别合并两边的同类项，再把变量移到一边：\n\n$$2(3x + 1) = 4x - 8 \\;\\Rightarrow\\; 6x + 2 = 4x - 8 \\;\\Rightarrow\\; 2x = -10 \\;\\Rightarrow\\; x = -5.$$",
+      lesson(
+        "parentheses-and-variables-on-both-sides",
+        ["Parentheses and variables on both sides", "含括号且两边都有变量"],
+        [
+          [
+            "Expand every parenthesis, then collect $x$ on one side and the numbers on the other. $2(3x + 1) = 4x - 8$: $6x + 2 = 4x - 8$, so $2x = -10$ and $x = -5$.",
+            "展开所有括号，再把 $x$ 移到一边，数移到另一边。$2(3x + 1) = 4x - 8$：$6x + 2 = 4x - 8$，所以 $2x = -10$，$x = -5$。",
+          ],
+          ["Both sides at $x = -5$: $2(-15 + 1) = -28$ and $-20 - 8 = -28$.", "$x = -5$ 时两边：$2(-15 + 1) = -28$，$-20 - 8 = -28$。"],
+          [
+            "When you move $4x$ across, subtract it; adding it gives $10x$, which is wrong.",
+            "把 $4x$ 移过去要减去它；加上它会得到 $10x$，是错的。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.sign() * rng.int(2, 6);
+          const b = rng.nonZero(-5, 5);
+          const c = rng.nonZero(-9, 9);
+          let d = rng.nonZero(-9, 9);
+          while (d === a * b) d = rng.nonZero(-9, 9);
+          const x = rng.nonZero(-8, 8);
+          const e = a * (b * x + c) - d * x;
+          const eq = `${num(a)}(${linear(b, c)}) = ${linear(d, e)}`;
+          const k = a * b - d;
+          const both = a * (b * x + c);
+          return valued(
+            [`Solve $${eq}$.`, `解方程 $${eq}$。`],
+            x,
+            [
+              [
+                ["Expand", "展开"],
+                [`Multiply both terms inside by $${num(a)}$:`, `用 $${num(a)}$ 乘括号里的两项：`],
+                [`${linear(a * b, a * c)} = ${linear(d, e)}`],
+              ],
+              [
+                ["Collect the terms", "移项"],
+                [`Take $${side(d)}$ and $${num(a * c)}$ from both sides:`, `两边同时减去 $${side(d)}$ 和 $${num(a * c)}$：`],
+                [`${side(k)} = ${num(e - a * c)}`],
+              ],
+              [["Divide", "相除"], [`Divide both sides by $${num(k)}$:`, `两边同时除以 $${num(k)}$：`], [`x = ${num(x)}`]],
+            ],
+            [
+              `At $x = ${num(x)}$ the left side is $${num(a)} \\cdot ${paren(b * x + c)} = ${num(both)}$ and the right side is $${num(d * x)}${plus(e)} = ${num(both)}$.`,
+              `$x = ${num(x)}$ 时，左边是 $${num(a)} \\cdot ${paren(b * x + c)} = ${num(both)}$，右边是 $${num(d * x)}${plus(e)} = ${num(both)}$。`,
+            ],
+            [
+              [frac(e - c, k), `That leaves $${num(c)}$ unmultiplied when expanding.`, `展开时没有用 $${num(a)}$ 乘 $${num(c)}$。`],
+              [-x, "That has the wrong sign.", "符号错了。"],
+              ...(a * b + d !== 0
+                ? [
+                    [
+                      frac(e - a * c, a * b + d),
+                      `That adds $${side(d)}$ to the left instead of subtracting it.`,
+                      `这把 $${side(d)}$ 加到了左边，而不是减去。`,
+                    ] as const,
+                  ]
+                : []),
+            ],
+            { solveFor: "x" },
+          );
+        },
+        tableFigure(["x", "2(3x+1)", "4x−8"], [-5, -28, -28]),
       ),
-      generate(rng) {
-        const a = rng.sign() * rng.int(2, 6);
-        const b = rng.nonZero(-5, 5);
-        const c = rng.nonZero(-9, 9);
-        let d = rng.nonZero(-9, 9);
-        while (d === a * b) d = rng.nonZero(-9, 9);
-        const x = rng.nonZero(-8, 8);
-        const e = a * (b * x + c) - d * x;
-        const eq = `${num(a)}(${linear(b, c)}) = ${linear(d, e)}`;
-        const k = a * b - d;
-        return numberProblem({
-          prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
-          answer: x,
-          solveFor: "x",
-          wrong: [frac(e - c, k), -x, ...(a * b + d !== 0 ? [frac(e - a * c, a * b + d)] : [])],
-          solution: t(
-            `Expand, collect $x$ on the left, then solve: ${steps(`${linear(a * b, a * c)} = ${linear(d, e)}`, `${side(k)} = ${num(e - a * c)}`, `x = ${num(x)}`)}`,
-            `先展开，把 $x$ 移到左边，再求解：${steps(`${linear(a * b, a * c)} = ${linear(d, e)}`, `${side(k)} = ${num(e - a * c)}`, `x = ${num(x)}`)}`,
-          ),
-        });
-      },
-    },
+    ],
+  },
+  [
+    "$3(x + 2) = 21$ means three equal groups of $x + 2$ make $21$. Expand: $3x + 6 = 21$, so $3x = 15$ and $x = 5$.",
+    "$3(x + 2) = 21$ 表示三组相同的 $x + 2$ 一共是 $21$。展开：$3x + 6 = 21$，所以 $3x = 15$，$x = 5$。",
   ],
-};
+  ["Each group is $21 \\div 3 = 7$, and $x = 7 - 2 = 5$.", "每组是 $21 \\div 3 = 7$，$x = 7 - 2 = 5$。"],
+  [
+    "expand parentheses in an equation first, then solve it, even with $x$ on both sides.",
+    "学习先展开方程里的括号再求解，包括两边都有 $x$ 的方程。",
+  ],
+);
 
+/** subtractingAGroup solves an equation where a group in parentheses is subtracted. */
+export const subtractingAGroup = lesson(
+  "subtracting-a-group",
+  ["Subtracting a group", "减去一个括号"],
+  [
+    [
+      "A minus sign before parentheses changes the sign of **every** term inside. $7x - (3x - 5) + 2 = 23$: $7x - 3x + 5 + 2 = 23$, so $4x + 7 = 23$, $4x = 16$ and $x = 4$.",
+      "括号前的减号要改变括号里**每一项**的符号。$7x - (3x - 5) + 2 = 23$：$7x - 3x + 5 + 2 = 23$，所以 $4x + 7 = 23$，$4x = 16$，$x = 4$。",
+    ],
+    ["Put it back: $28 - (12 - 5) + 2 = 28 - 7 + 2 = 23$.", "代回去：$28 - (12 - 5) + 2 = 28 - 7 + 2 = 23$。"],
+    [
+      "Change the sign of the last term inside too. $-(3x - 5)$ is $-3x + 5$, not $-3x - 5$.",
+      "括号里最后一项也要变号。$-(3x - 5)$ 是 $-3x + 5$，不是 $-3x - 5$。",
+    ],
+  ],
+  (rng) => {
+    const a = rng.int(2, 6);
+    const x = rng.nonZero(-9, 9);
+    const b = rng.int(1, 9);
+    const c = rng.int(1, a * 3);
+    const k = a + rng.int(1, 4);
+    const right = k * x - (a * x - c) + b;
+    const m = k - a;
+    return valued(
+      [`Solve $${k}x - (${a}x - ${c}) + ${b} = ${num(right)}$.`, `解方程 $${k}x - (${a}x - ${c}) + ${b} = ${num(right)}$。`],
+      x,
+      [
+        [
+          ["Remove the parentheses", "去括号"],
+          ["The minus sign changes both signs inside:", "减号使括号里两项都变号："],
+          [`${k}x - ${a}x + ${c} + ${b} = ${num(right)}`],
+        ],
+        [["Combine", "合并"], ["Combine like terms on the left:", "合并左边的同类项："], [`${side(m)} + ${c + b} = ${num(right)}`]],
+        [
+          ["Solve", "求解"],
+          [`Subtract $${c + b}$, then divide by $${m}$:`, `减去 $${c + b}$，再除以 $${m}$：`],
+          [`${side(m)} = ${num(right - c - b)}`, `x = ${num(x)}`],
+        ],
+      ],
+      [
+        `Put it back: $${k} \\cdot ${paren(x)} - (${a} \\cdot ${paren(x)} - ${c}) + ${b} = ${num(k * x)} - ${paren(a * x - c)} + ${b} = ${num(right)}$.`,
+        `代回去：$${k} \\cdot ${paren(x)} - (${a} \\cdot ${paren(x)} - ${c}) + ${b} = ${num(k * x)} - ${paren(a * x - c)} + ${b} = ${num(right)}$。`,
+      ],
+      [
+        [
+          frac(right + c - b, m),
+          `That changes only the sign of $${a}x$, leaving $-${c}$ as it was.`,
+          `这只改变了 $${a}x$ 的符号，$-${c}$ 没有变号。`,
+        ],
+        [-x, "That has the wrong sign.", "符号错了。"],
+        [
+          right - b,
+          "That only takes away the last number; the equation still has to be solved.",
+          "这只是减去了最后一个数；方程还没有解完。",
+        ],
+      ],
+      { solveFor: "x" },
+    );
+  },
+  areaGridFigure(["−1"], ["3x", "−5"], [["−3x", "+5"]]),
+);
 /** equationTopics are the topics of the equations unit, in teaching order. */
 export const equationTopics: readonly TopicDef[] = [
   oneStepEquationsAddition,

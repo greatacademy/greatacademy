@@ -501,44 +501,58 @@ To choose between drawings, use the signs first: they tell which side of each ax
     ),
   ],
   "graphing-linear-equations": [
-    skill(
-      "choosing-a-line-by-its-intercepts",
-      ["Choosing a line by its intercepts", "用截距选出直线"],
-      [
-        "To match an equation $ax + by = c$ with a line, find where the line meets the axes. Setting $y = 0$ gives the point on the $x$-axis, and setting $x = 0$ gives the point on the $y$-axis. Two points fix a line, so the drawing has to pass through both.",
-        "要把方程 $ax + by = c$ 和直线对应起来，先求直线与坐标轴的交点。令 $y = 0$ 得到 $x$ 轴上的点，令 $x = 0$ 得到 $y$ 轴上的点。两点确定一条直线，所以图必须经过这两点。",
-      ],
-      (rng) => {
-        const [u, v] = rng.shuffle([1, 2, 3, 4, 6]);
-        const p = rng.sign() * (u as number);
-        const q = rng.sign() * (v as number);
-        const line = (x0: number, y0: number): Figure =>
-          draw(
-            wide,
-            [{ kind: "line", a: [x0, 0], b: [0, y0], accent: true }],
-            `A line through ${at([x0, 0])} and ${at([0, y0])}.`,
-            `一条经过 ${at([x0, 0])} 和 ${at([0, y0])} 的直线。`,
-          );
-        const equation = `${poly([q, "x"], [p, "y"])} = ${num(p * q)}`;
-        return figureChoice(rng, {
-          prompt: t(`Which drawing shows the line $${equation}$?`, `哪张图画出了直线 $${equation}$？`),
-          correct: line(p, q),
-          wrong: [line(q, p), line(-p, q), line(p, -q)],
-          whys: [
-            t(
-              "This line swaps the intercepts. To find the $x$-intercept, set $y = 0$.",
-              "这条直线把两个截距对调了。求 $x$ 轴截距时令 $y = 0$。",
+    {
+      ...skill(
+        "choosing-a-line-by-its-intercepts",
+        ["Choosing a line by its intercepts", "用截距选出直线"],
+        [
+          "To match $ax + by = c$ with a drawing, find where the line meets the axes. Setting $y = 0$ gives the point on the $x$-axis, and setting $x = 0$ gives the point on the $y$-axis. For $3x + 2y = 6$: $y = 0$ gives $x = 2$, and $x = 0$ gives $y = 3$, so the line passes through $(2, 0)$ and $(0, 3)$.\n\nCheck: both points fit, $3(2) + 2(0) = 6$ and $3(0) + 2(3) = 6$.\n\n> **Watch out.** For the $x$-axis point divide by the number in front of $x$, not $y$: dividing by $2$ would give $(3, 0)$, the intercepts swapped.",
+          "要把方程 $ax + by = c$ 和图对应起来，先求直线与坐标轴的交点。令 $y = 0$ 得到 $x$ 轴上的点，令 $x = 0$ 得到 $y$ 轴上的点。对于 $3x + 2y = 6$：令 $y = 0$ 得 $x = 2$，令 $x = 0$ 得 $y = 3$，所以直线经过 $(2, 0)$ 和 $(0, 3)$。\n\n检验：两点都满足方程，$3(2) + 2(0) = 6$，$3(0) + 2(3) = 6$。\n\n> **注意。** 求 $x$ 轴上的点时要除以 $x$ 前面的数，不是 $y$ 前面的数：除以 $2$ 会得到 $(3, 0)$，把截距对调了。",
+        ],
+        (rng) => {
+          const [u, v] = rng.shuffle([1, 2, 3, 4, 6]);
+          const p = rng.sign() * (u as number);
+          const q = rng.sign() * (v as number);
+          const line = (x0: number, y0: number): Figure =>
+            draw(
+              wide,
+              [{ kind: "line", a: [x0, 0], b: [0, y0], accent: true }],
+              `A line through ${at([x0, 0])} and ${at([0, y0])}.`,
+              `一条经过 ${at([x0, 0])} 和 ${at([0, y0])} 的直线。`,
+            );
+          const equation = `${poly([q, "x"], [p, "y"])} = ${num(p * q)}`;
+          const s1 = stepLabel(1, "Set y to 0", "令 y = 0");
+          const s2 = stepLabel(2, "Set x to 0", "令 x = 0");
+          return figureChoice(rng, {
+            prompt: t(`Which drawing shows the line $${equation}$?`, `哪张图画出了直线 $${equation}$？`),
+            correct: line(p, q),
+            wrong: [line(q, p), line(-p, q), line(p, -q)],
+            whys: [
+              t(
+                "This line swaps the intercepts. To find the $x$-intercept, set $y = 0$.",
+                "这条直线把两个截距对调了。求 $x$ 轴截距时令 $y = 0$。",
+              ),
+              t("This line crosses the $x$-axis on the wrong side of the origin.", "这条直线与 $x$ 轴的交点在原点的另一侧。"),
+              t("This line crosses the $y$-axis on the wrong side of the origin.", "这条直线与 $y$ 轴的交点在原点的另一侧。"),
+            ],
+            solution: t(
+              `${s1.en} $${poly([q, "x"])} = ${num(p * q)}$, so $x = ${num(p)}$ and the line passes through $${tex([p, 0])}$.\n\n${s2.en} $${poly([p, "y"])} = ${num(p * q)}$, so $y = ${num(q)}$ and the line passes through $${tex([0, q])}$. Only one drawing goes through both.\n\n**Check.** Both points fit: $${poly([q, "x"])}$ at $x = ${num(p)}$ is $${num(p * q)}$, and $${poly([p, "y"])}$ at $y = ${num(q)}$ is $${num(p * q)}$.`,
+              `${s1["zh-CN"]}$${poly([q, "x"])} = ${num(p * q)}$，所以 $x = ${num(p)}$，直线经过 $${tex([p, 0])}$。\n\n${s2["zh-CN"]}$${poly([p, "y"])} = ${num(p * q)}$，所以 $y = ${num(q)}$，直线经过 $${tex([0, q])}$。只有一张图同时经过这两点。\n\n**检验。** 两点都满足方程：$x = ${num(p)}$ 时 $${poly([q, "x"])}$ 等于 $${num(p * q)}$，$y = ${num(q)}$ 时 $${poly([p, "y"])}$ 也等于 $${num(p * q)}$。`,
             ),
-            t("This line crosses the $x$-axis on the wrong side of the origin.", "这条直线与 $x$ 轴的交点在原点的另一侧。"),
-            t("This line crosses the $y$-axis on the wrong side of the origin.", "这条直线与 $y$ 轴的交点在原点的另一侧。"),
-          ],
-          solution: t(
-            `Setting $y = 0$ gives $x = ${num(p)}$, so the line passes through $${tex([p, 0])}$. Setting $x = 0$ gives $y = ${num(q)}$, so it passes through $${tex([0, q])}$. Only one drawing goes through both.`,
-            `令 $y = 0$，得 $x = ${num(p)}$，所以直线经过 $${tex([p, 0])}$。令 $x = 0$，得 $y = ${num(q)}$，所以它经过 $${tex([0, q])}$。只有一张图同时经过这两点。`,
-          ),
-        });
-      },
-    ),
+          });
+        },
+      ),
+      figure: draw(
+        wide,
+        [
+          { kind: "line", a: [2, 0], b: [0, 3], accent: true },
+          { kind: "point", at: [2, 0], label: "(2, 0)", dir: "se" },
+          { kind: "point", at: [0, 3], label: "(0, 3)", dir: "w" },
+        ],
+        "The line 3x + 2y = 6 through (2, 0) and (0, 3).",
+        "直线 3x + 2y = 6 经过 (2, 0) 和 (0, 3)。",
+      ),
+    },
   ],
   "slope-intercept-form": [
     skill(
@@ -1158,50 +1172,64 @@ Take $y = 2\\sin x - 1$. The middle line is $y = -1$, and the wave runs from $-3
     ),
   ],
   "representing-solutions-to-inequalities-on-number-lines": [
-    skill(
-      "choosing-the-number-line-of-an-inequality",
-      ["Choosing the number line of an inequality", "选出不等式的数轴表示"],
-      [
-        "First solve the inequality, remembering that dividing by a negative number reverses it. Then read the drawing: a filled dot means the number itself is a solution and an open circle means it is not, and the arrow points toward the other solutions.",
-        "先解不等式，记住除以负数时不等号要反向。然后看图：实心点表示这个数本身是解，空心圈表示不是，箭头指向其余的解。",
-      ],
-      (rng) => {
-        const k = rng.pick([2, 3, 4, -2, -3]);
-        const a = rng.int(-4, 4);
-        const c = rng.int(-6, 6);
-        const right = rng.bool();
-        const closed = rng.bool();
-        const greater = closed ? "\\ge" : ">";
-        const less = closed ? "\\le" : "<";
-        const sign = k > 0 === right ? greater : less;
-        const drawn = (toRight: boolean, filled: boolean) => numberLineFigure(ray(a, toRight, filled), a - 5, a + 5);
-        const left = `${linear(k, c)}`;
-        const d = k * a + c;
-        return figureChoice(rng, {
-          prompt: t(
-            `Which number line shows the solutions of $${left} ${sign} ${num(d)}$?`,
-            `哪条数轴表示 $${left} ${sign} ${num(d)}$ 的解？`,
-          ),
-          correct: drawn(right, closed),
-          wrong: [drawn(!right, closed), drawn(right, !closed), drawn(!right, !closed)],
-          whys: [
-            t(
-              "The arrow points the wrong way. Dividing by a negative number reverses the inequality.",
-              "箭头方向错了。除以负数时不等号要变向。",
+    {
+      ...skill(
+        "choosing-the-number-line-of-an-inequality",
+        ["Choosing the number line of an inequality", "选出不等式的数轴表示"],
+        [
+          "First solve the inequality, remembering that dividing by a negative number reverses it. Then read the drawing: a filled dot means the number itself is a solution and an open circle means it is not, and the arrow points toward the other solutions. $-2x + 1 > -5$ gives $-2x > -6$, so $x < 3$: an open circle at $3$ with the arrow to the left.\n\nCheck: $x = 2$ is on the arrow, and $-2(2) + 1 = -3 > -5$ is true.\n\n> **Watch out.** The arrow follows the solved inequality, not the original symbol: $>$ in $-2x + 1 > -5$ ends up pointing left.",
+          "先解不等式，记住除以负数时不等号要反向。然后看图：实心点表示这个数本身是解，空心圈表示不是，箭头指向其余的解。$-2x + 1 > -5$ 得 $-2x > -6$，所以 $x < 3$：在 $3$ 处画空心圈，箭头向左。\n\n检验：$x = 2$ 在箭头上，$-2(2) + 1 = -3 > -5$ 成立。\n\n> **注意。** 箭头方向看解出来的不等式，不看原来的符号：$-2x + 1 > -5$ 中的 $>$ 最后指向左边。",
+        ],
+        (rng) => {
+          const k = rng.pick([2, 3, 4, -2, -3]);
+          const a = rng.int(-4, 4);
+          const c = rng.int(-6, 6);
+          const right = rng.bool();
+          const closed = rng.bool();
+          const greater = closed ? "\\ge" : ">";
+          const less = closed ? "\\le" : "<";
+          const sign = k > 0 === right ? greater : less;
+          const drawn = (toRight: boolean, filled: boolean) => numberLineFigure(ray(a, toRight, filled), a - 5, a + 5);
+          const left = `${linear(k, c)}`;
+          const d = k * a + c;
+          const tv = right ? a + 1 : a - 1;
+          const s1 = stepLabel(1, "Solve", "求解");
+          const s2 = stepLabel(2, "Read the drawing", "看图");
+          const undo =
+            c === 0
+              ? ["", ""]
+              : [
+                  `${c > 0 ? `subtract $${c}$ from` : `add $${-c}$ to`} both sides, $${num(k)}x ${sign} ${num(d - c)}$, then `,
+                  `两边${c > 0 ? `减去 $${c}$` : `加上 $${-c}$`}，得 $${num(k)}x ${sign} ${num(d - c)}$，再`,
+                ];
+          const tested = `${num(k)}(${tv})${c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`}`;
+          return figureChoice(rng, {
+            prompt: t(
+              `Which number line shows the solutions of $${left} ${sign} ${num(d)}$?`,
+              `哪条数轴表示 $${left} ${sign} ${num(d)}$ 的解？`,
             ),
-            t(
-              "The dot is wrong: a filled dot means the point counts, an open one that it does not.",
-              "圆点不对：实心表示这一点算，空心表示不算。",
+            correct: drawn(right, closed),
+            wrong: [drawn(!right, closed), drawn(right, !closed), drawn(!right, !closed)],
+            whys: [
+              t(
+                "The arrow points the wrong way. Dividing by a negative number reverses the inequality.",
+                "箭头方向错了。除以负数时不等号要变向。",
+              ),
+              t(
+                "The dot is wrong: a filled dot means the point counts, an open one that it does not.",
+                "圆点不对：实心表示这一点算，空心表示不算。",
+              ),
+              t("Both the arrow and the dot are wrong.", "箭头和圆点都错了。"),
+            ],
+            solution: t(
+              `${s1.en} ${undo[0] ? undo[0].charAt(0).toUpperCase() + undo[0].slice(1) : ""}${undo[0] ? "divide" : "Divide"} by $${num(k)}$${k < 0 ? ", which reverses the inequality" : ""}: $x ${right ? greater : less} ${num(a)}$.\n\n${s2.en} The ${closed ? "dot" : "circle"} at $${num(a)}$ is ${closed ? "filled" : "open"}, and the arrow points ${right ? "right" : "left"}.\n\n**Check.** $x = ${tv}$ is on the arrow: $${tested} = ${k * tv + c}$, and $${k * tv + c} ${sign} ${num(d)}$ is true.`,
+              `${s1["zh-CN"]}${undo[1]}两边除以 $${num(k)}$${k < 0 ? "，不等号反向" : ""}：$x ${right ? greater : less} ${num(a)}$。\n\n${s2["zh-CN"]}$${num(a)}$ 处是${closed ? "实心点" : "空心圈"}，箭头指向${right ? "右" : "左"}。\n\n**检验。** $x = ${tv}$ 在箭头上：$${tested} = ${k * tv + c}$，$${k * tv + c} ${sign} ${num(d)}$ 成立。`,
             ),
-            t("Both the arrow and the dot are wrong.", "箭头和圆点都错了。"),
-          ],
-          solution: t(
-            `${c === 0 ? "" : `Subtract $${num(c)}$ from both sides: $${num(k)}x ${sign} ${num(d - c)}$. `}Divide by $${num(k)}$${k < 0 ? ", which reverses the inequality" : ""}: $x ${right ? greater : less} ${num(a)}$. So the ${closed ? "dot at" : "circle at"} $${num(a)}$ is ${closed ? "filled" : "open"}, and the arrow points ${right ? "right" : "left"}.`,
-            `${c === 0 ? "" : `两边减去 $${num(c)}$：$${num(k)}x ${sign} ${num(d - c)}$。`}两边除以 $${num(k)}$${k < 0 ? "，不等号反向" : ""}：$x ${right ? greater : less} ${num(a)}$。所以 $${num(a)}$ 处是${closed ? "实心点" : "空心圈"}，箭头指向${right ? "右" : "左"}。`,
-          ),
-        });
-      },
-    ),
+          });
+        },
+      ),
+      figure: numberLineFigure(ray(3, false, false), -2, 8),
+    },
   ],
   "fractions-on-the-number-line": [
     {

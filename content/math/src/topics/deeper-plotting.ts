@@ -251,189 +251,223 @@ The walk ends at $${tex([x, y])}$: mark it there.
     ),
   ],
   midpoints: [
-    skill(
-      "marking-a-midpoint",
-      ["Marking a midpoint", "标出中点"],
-      [
-        "The midpoint of a segment is halfway along it in both directions. Its first coordinate is the average of the two first coordinates, and its second is the average of the two second coordinates. On a grid, you can check it by counting: the steps from one end to the midpoint equal the steps from the midpoint to the other end.",
-        "线段的中点在两个方向上都位于正中间。它的第一个坐标是两个第一坐标的平均数，第二个坐标是两个第二坐标的平均数。在网格上可以数格子检验：从一端到中点的步数等于从中点到另一端的步数。",
-      ],
-      (rng) => {
-        const m: Pt = [rng.int(-2, 2), rng.int(-2, 2)];
-        const [dx, dy] = [nonzero(rng, 3), nonzero(rng, 3)];
-        const a: Pt = [m[0] - dx, m[1] - dy];
-        const b: Pt = [m[0] + dx, m[1] + dy];
-        return plotProblem({
-          prompt: t("Mark the midpoint of segment $AB$.", "标出线段 $AB$ 的中点。"),
-          view: grid,
-          marks: [{ kind: "segment", a, b, accent: true }, dot(a, "A"), dot(b, "B")],
-          alt: t(`A segment from A at ${tex(a)} to B at ${tex(b)}.`, `一条从 A ${tex(a)} 到 B ${tex(b)} 的线段。`),
-          answer: [m],
-          wrong: [
-            {
-              at: [[b[0] - a[0], b[1] - a[1]]],
-              why: t(
-                "You subtracted the coordinates and did not halve: that is how far apart the ends are.",
-                "你把坐标相减了，也没有取一半：那是两端相距多远。",
-              ),
-            },
-            {
-              at: [[a[0] + b[0], a[1] + b[1]]],
-              why: t("You added the coordinates but did not divide by $2$.", "你把坐标相加了，但没有除以 $2$。"),
-            },
-            { at: [[m[1], m[0]]], why: t("You swapped the coordinates of the midpoint.", "你把中点的坐标对调了。") },
-          ],
-          solution: t(
-            `Average each coordinate: $\\frac{${a[0]} + ${b[0]}}{2} = ${m[0]}$ and $\\frac{${a[1]} + ${b[1]}}{2} = ${m[1]}$. The midpoint is $${tex(m)}$.`.replaceAll(
-              "+ -",
-              "- ",
+    {
+      ...skill(
+        "marking-a-midpoint",
+        ["Marking a midpoint", "标出中点"],
+        [
+          "The midpoint of a segment is halfway along it in both directions. Its first coordinate is the average of the two first coordinates, and its second is the average of the two second coordinates. For $A(-2, 1)$ and $B(4, 5)$: $\\frac{-2 + 4}{2} = 1$ and $\\frac{1 + 5}{2} = 3$, so the midpoint is $(1, 3)$.\n\nCheck: from $A$ to $(1, 3)$ is $3$ right and $2$ up, and from $(1, 3)$ to $B$ is again $3$ right and $2$ up.\n\n> **Watch out.** Add, then halve. $(-2 + 4, 1 + 5) = (2, 6)$ is not the midpoint, and neither is the difference $(6, 4)$.",
+          "线段的中点在两个方向上都位于正中间。它的第一个坐标是两个第一坐标的平均数，第二个坐标是两个第二坐标的平均数。对于 $A(-2, 1)$ 和 $B(4, 5)$：$\\frac{-2 + 4}{2} = 1$，$\\frac{1 + 5}{2} = 3$，所以中点是 $(1, 3)$。\n\n检验：从 $A$ 到 $(1, 3)$ 是向右 $3$、向上 $2$，从 $(1, 3)$ 到 $B$ 也是向右 $3$、向上 $2$。\n\n> **注意。** 先相加，再取一半。$(-2 + 4, 1 + 5) = (2, 6)$ 不是中点，两者的差 $(6, 4)$ 也不是。",
+        ],
+        (rng) => {
+          const m: Pt = [rng.int(-2, 2), rng.int(-2, 2)];
+          const [dx, dy] = [nonzero(rng, 3), nonzero(rng, 3)];
+          const a: Pt = [m[0] - dx, m[1] - dy];
+          const b: Pt = [m[0] + dx, m[1] + dy];
+          const sum = (u: number, v: number) => `${u} ${v < 0 ? `- ${-v}` : `+ ${v}`}`;
+          const step = (d: number, pos: string, neg: string) => `${Math.abs(d)} ${d < 0 ? neg : pos}`;
+          const s1 = stepLabel(1, "First coordinate", "第一个坐标");
+          const s2 = stepLabel(2, "Second coordinate", "第二个坐标");
+          return plotProblem({
+            prompt: t("Mark the midpoint of segment $AB$.", "标出线段 $AB$ 的中点。"),
+            view: grid,
+            marks: [{ kind: "segment", a, b, accent: true }, dot(a, "A"), dot(b, "B")],
+            alt: t(`A segment from A at ${tex(a)} to B at ${tex(b)}.`, `一条从 A ${tex(a)} 到 B ${tex(b)} 的线段。`),
+            answer: [m],
+            wrong: [
+              {
+                at: [[b[0] - a[0], b[1] - a[1]]],
+                why: t(
+                  "You subtracted the coordinates and did not halve: that is how far apart the ends are.",
+                  "你把坐标相减了，也没有取一半：那是两端相距多远。",
+                ),
+              },
+              {
+                at: [[a[0] + b[0], a[1] + b[1]]],
+                why: t("You added the coordinates but did not divide by $2$.", "你把坐标相加了，但没有除以 $2$。"),
+              },
+              { at: [[m[1], m[0]]], why: t("You swapped the coordinates of the midpoint.", "你把中点的坐标对调了。") },
+            ],
+            solution: t(
+              `${s1.en} Average the first coordinates: $\\frac{${sum(a[0], b[0])}}{2} = ${m[0]}$.\n\n${s2.en} Average the second coordinates: $\\frac{${sum(a[1], b[1])}}{2} = ${m[1]}$. Mark $${tex(m)}$.\n\n**Check.** From $A$ to $${tex(m)}$ is ${step(dx, "right", "left")} and ${step(dy, "up", "down")}, and from $${tex(m)}$ to $B$ is the same again.`,
+              `${s1["zh-CN"]}第一个坐标取平均：$\\frac{${sum(a[0], b[0])}}{2} = ${m[0]}$。\n\n${s2["zh-CN"]}第二个坐标取平均：$\\frac{${sum(a[1], b[1])}}{2} = ${m[1]}$。标出 $${tex(m)}$。\n\n**检验。** 从 $A$ 到 $${tex(m)}$ 是向${dx < 0 ? "左" : "右"} $${Math.abs(dx)}$、向${dy < 0 ? "下" : "上"} $${Math.abs(dy)}$，从 $${tex(m)}$ 到 $B$ 也一样。`,
             ),
-            `对每个坐标取平均：$\\frac{${a[0]} + ${b[0]}}{2} = ${m[0]}$，$\\frac{${a[1]} + ${b[1]}}{2} = ${m[1]}$。中点是 $${tex(m)}$。`.replaceAll(
-              "+ -",
-              "- ",
-            ),
-          ),
-          solutionAlt: t(`The midpoint ${tex(m)} of the segment.`, `线段的中点 ${tex(m)}。`),
-        });
+            solutionAlt: t(`The midpoint ${tex(m)} of the segment.`, `线段的中点 ${tex(m)}。`),
+          });
+        },
+      ),
+      figure: {
+        svg: plane(grid, [{ kind: "segment", a: [-2, 1], b: [4, 5], accent: true }, dot([-2, 1], "A"), dot([4, 5], "B"), dot([1, 3], "M")]),
+        alt: t("Segment AB from (−2, 1) to (4, 5) with its midpoint M at (1, 3).", "线段 AB 从 (−2, 1) 到 (4, 5)，中点 M 在 (1, 3)。"),
       },
-    ),
+    },
   ],
   "graphing-linear-equations": [
-    skill(
-      "drawing-a-line-from-its-equation",
-      ["Drawing a line from its equation", "根据方程画直线"],
-      [
-        "Two points fix a line. To draw $y = mx + b$, pick two easy values of $x$, work out $y$ for each, and mark the two points. $x = 0$ is the easiest, as it gives $y = b$. If $m$ is a fraction, pick $x$ values that clear the denominator, so that both points land on the grid.",
-        "两点确定一条直线。要画 $y = mx + b$，选两个好算的 $x$ 值，分别算出 $y$，标出这两个点。$x = 0$ 最好算，它给出 $y = b$。如果 $m$ 是分数，选能消去分母的 $x$ 值，这样两个点都落在网格上。",
-      ],
-      (rng) => {
-        const q = rng.pick([1, 1, 2]);
-        const p = (q === 2 ? rng.pick([1, 3]) : rng.int(1, 3)) * rng.sign();
-        const b = rng.int(-3, 3);
-        const slope = q === 1 ? (p === 1 ? "" : p === -1 ? "-" : `${p}`) : `${p < 0 ? "-" : ""}\\frac{${Math.abs(p)}}{${q}}`;
-        const tail = b === 0 ? "" : b < 0 ? ` - ${-b}` : ` + ${b}`;
-        const equation = `y = ${slope}x${tail}`;
-        const first: Pt = [0, b];
-        const second: Pt = [q, b + p];
-        return plotProblem({
-          prompt: t(`Draw the line $${equation}$ by marking two of its points.`, `标出直线 $${equation}$ 上的两个点，画出这条直线。`),
-          view: grid,
-          alt: blank,
-          answer: [first, second],
-          line: [p, -q, -q * b],
-          wrong: [
-            {
-              at: [
-                [0, -b],
-                [q, -b + p],
-              ],
-              why: t("This line crosses the $y$-axis at the opposite of $b$.", "这条直线与 $y$ 轴的交点是 $b$ 的相反数。"),
-            },
-            {
-              at: [first, [q, b - p]],
-              why: t("This line leans the wrong way: its slope has the opposite sign.", "这条直线倾斜方向错了：斜率的符号相反。"),
-            },
-            { at: [first, [b + p, q]], why: t("The second point has its coordinates swapped.", "第二个点的坐标对调了。") },
-          ],
-          solution: t(
-            `At $x = 0$, $y = ${b}$, which gives $${tex(first)}$. At $x = ${q}$, $y = ${b + p}$, which gives $${tex(second)}$. Any two points of the line would do.`,
-            `当 $x = 0$ 时 $y = ${b}$，得到 $${tex(first)}$。当 $x = ${q}$ 时 $y = ${b + p}$，得到 $${tex(second)}$。这条直线上任意两个点都可以。`,
-          ),
-          solutionAlt: t(`The line through ${tex(first)} and ${tex(second)}.`, `经过 ${tex(first)} 和 ${tex(second)} 的直线。`),
-          solutionMarks: [{ kind: "line", a: first, b: second, accent: true }],
-        });
+    {
+      ...skill(
+        "drawing-a-line-from-its-equation",
+        ["Drawing a line from its equation", "根据方程画直线"],
+        [
+          "Two points fix a line. To draw $y = mx + b$, pick two easy values of $x$, work out $y$ for each, and mark the two points. $x = 0$ is the easiest, as it gives $y = b$. If $m$ is a fraction, pick an $x$ that clears the denominator, so both points land on the grid. For $y = 2x - 1$: $x = 0$ gives $(0, -1)$ and $x = 1$ gives $(1, 1)$.\n\nCheck: a third point should line up too: $x = 2$ gives $y = 3$, and $(2, 3)$ is on the same line.\n\n> **Watch out.** At $x = 0$ the value is $b$ itself, sign included: $y = 2x - 1$ starts at $-1$, not $1$.",
+          "两点确定一条直线。要画 $y = mx + b$，选两个好算的 $x$ 值，分别算出 $y$，标出这两个点。$x = 0$ 最好算，它给出 $y = b$。如果 $m$ 是分数，选能消去分母的 $x$，这样两个点都落在网格上。对于 $y = 2x - 1$：$x = 0$ 得 $(0, -1)$，$x = 1$ 得 $(1, 1)$。\n\n检验：第三个点也应在同一条直线上：$x = 2$ 时 $y = 3$，$(2, 3)$ 正在这条直线上。\n\n> **注意。** $x = 0$ 时的值就是 $b$，连同符号：$y = 2x - 1$ 从 $-1$ 开始，不是 $1$。",
+        ],
+        (rng) => {
+          const q = rng.pick([1, 1, 2]);
+          const p = (q === 2 ? rng.pick([1, 3]) : rng.int(1, 3)) * rng.sign();
+          const b = rng.int(-3, 3);
+          const slope = q === 1 ? (p === 1 ? "" : p === -1 ? "-" : `${p}`) : `${p < 0 ? "-" : ""}\\frac{${Math.abs(p)}}{${q}}`;
+          const tail = b === 0 ? "" : b < 0 ? ` - ${-b}` : ` + ${b}`;
+          const equation = `y = ${slope}x${tail}`;
+          const first: Pt = [0, b];
+          const second: Pt = [q, b + p];
+          const back: Pt = [-q, b - p];
+          const s1 = stepLabel(1, "Start at x = 0", "从 x = 0 开始");
+          const s2 = stepLabel(2, "Pick a second x", "再选一个 x");
+          const times = q === 1 ? `${p < 0 ? `(${p})` : p} \\cdot ${q}` : `${slope} \\cdot ${q}`;
+          return plotProblem({
+            prompt: t(`Draw the line $${equation}$ by marking two of its points.`, `标出直线 $${equation}$ 上的两个点，画出这条直线。`),
+            view: grid,
+            alt: blank,
+            answer: [first, second],
+            line: [p, -q, -q * b],
+            wrong: [
+              {
+                at: [
+                  [0, -b],
+                  [q, -b + p],
+                ],
+                why: t("This line crosses the $y$-axis at the opposite of $b$.", "这条直线与 $y$ 轴的交点是 $b$ 的相反数。"),
+              },
+              {
+                at: [first, [q, b - p]],
+                why: t("This line leans the wrong way: its slope has the opposite sign.", "这条直线倾斜方向错了：斜率的符号相反。"),
+              },
+              { at: [first, [b + p, q]], why: t("The second point has its coordinates swapped.", "第二个点的坐标对调了。") },
+            ],
+            solution: t(
+              `${s1.en} At $x = 0$, $y = ${b}$. Mark $${tex(first)}$.\n\n${s2.en} At $x = ${q}$, $y = ${times}${tail} = ${b + p}$. Mark $${tex(second)}$ and draw the line through both points.\n\n**Check.** One more point fits: at $x = ${-q}$, $y = ${b - p}$, and $${tex(back)}$ lies on the same line, as far on the other side of $${tex(first)}$.`,
+              `${s1["zh-CN"]}$x = 0$ 时 $y = ${b}$。标出 $${tex(first)}$。\n\n${s2["zh-CN"]}$x = ${q}$ 时 $y = ${times}${tail} = ${b + p}$。标出 $${tex(second)}$，过这两点画直线。\n\n**检验。** 再取一个点：$x = ${-q}$ 时 $y = ${b - p}$，$${tex(back)}$ 也在这条直线上，在 $${tex(first)}$ 的另一侧，距离相同。`,
+            ),
+            solutionAlt: t(`The line through ${tex(first)} and ${tex(second)}.`, `经过 ${tex(first)} 和 ${tex(second)} 的直线。`),
+            solutionMarks: [{ kind: "line", a: first, b: second, accent: true }],
+          });
+        },
+      ),
+      figure: {
+        svg: plane(grid, [{ kind: "line", a: [0, -1], b: [1, 1], accent: true }, dot([0, -1], "(0, -1)"), dot([1, 1], "(1, 1)")]),
+        alt: t("The line y = 2x − 1 through (0, −1) and (1, 1).", "直线 y = 2x − 1 经过 (0, −1) 和 (1, 1)。"),
       },
-    ),
-    skill(
-      "marking-the-intercepts-of-a-line",
-      ["Marking the intercepts of a line", "标出直线的截距点"],
-      [
-        "The $x$-intercept is where a line meets the $x$-axis, where $y = 0$. The $y$-intercept is where it meets the $y$-axis, where $x = 0$. For an equation such as $3x + 2y = 6$, set each variable to $0$ in turn and solve for the other. Each gives one point, and those two points draw the line.",
-        "$x$ 轴截距点是直线与 $x$ 轴的交点，此时 $y = 0$。$y$ 轴截距点是直线与 $y$ 轴的交点，此时 $x = 0$。对于 $3x + 2y = 6$ 这样的方程，依次令每个变量为 $0$，解出另一个。每次得到一个点，这两个点就画出了直线。",
-      ],
-      (rng) => {
-        const [u, v] = rng.shuffle([1, 2, 3, 4, 5, 6]);
-        const p = rng.sign() * (u as number);
-        const q = rng.sign() * (v as number);
-        const equation = `${poly([q, "x"], [p, "y"])} = ${p * q}`;
-        const onX: Pt = [p, 0];
-        const onY: Pt = [0, q];
-        return plotProblem({
-          prompt: t(`Mark the two intercepts of the line $${equation}$.`, `标出直线 $${equation}$ 的两个截距点。`),
-          view: grid,
-          alt: blank,
-          answer: [onX, onY],
-          wrong: [
-            {
-              at: [
-                [q, 0],
-                [0, p],
-              ],
-              why: t(
-                "You swapped the intercepts: to find where $y = 0$, divide by the coefficient of $x$.",
-                "你把截距对调了：求 $y = 0$ 的点时，要除以 $x$ 的系数。",
-              ),
-            },
-            {
-              at: [
-                [-p, 0],
-                [0, -q],
-              ],
-              why: t("Both intercepts have the wrong sign.", "两个截距的符号都错了。"),
-            },
-          ],
-          solution: t(
-            `Set $y = 0$: $${poly([q, "x"])} = ${p * q}$, so $x = ${p}$. Set $x = 0$: $${poly([p, "y"])} = ${p * q}$, so $y = ${q}$. The points are $${tex(onX)}$ and $${tex(onY)}$.`,
-            `令 $y = 0$：$${poly([q, "x"])} = ${p * q}$，所以 $x = ${p}$。令 $x = 0$：$${poly([p, "y"])} = ${p * q}$，所以 $y = ${q}$。两点是 $${tex(onX)}$ 和 $${tex(onY)}$。`,
-          ),
-          solutionAlt: t(`The line through ${tex(onX)} and ${tex(onY)}.`, `经过 ${tex(onX)} 和 ${tex(onY)} 的直线。`),
-          solutionMarks: [{ kind: "line", a: onX, b: onY, accent: true }],
-        });
+    },
+    {
+      ...skill(
+        "marking-the-intercepts-of-a-line",
+        ["Marking the intercepts of a line", "标出直线的截距点"],
+        [
+          "The $x$-intercept is where a line meets the $x$-axis, where $y = 0$. The $y$-intercept is where it meets the $y$-axis, where $x = 0$. Set each variable to $0$ in turn and solve for the other. For $3x + 2y = 6$: $y = 0$ gives $x = 2$, and $x = 0$ gives $y = 3$, so the intercepts are $(2, 0)$ and $(0, 3)$.\n\nCheck: $3(2) + 2(0) = 6$ and $3(0) + 2(3) = 6$.\n\n> **Watch out.** For the $x$-intercept divide by the number in front of $x$: $6 \\div 3 = 2$, not $6 \\div 2 = 3$.",
+          "$x$ 轴截距点是直线与 $x$ 轴的交点，此时 $y = 0$。$y$ 轴截距点是直线与 $y$ 轴的交点，此时 $x = 0$。依次令每个变量为 $0$，解出另一个。对于 $3x + 2y = 6$：令 $y = 0$ 得 $x = 2$，令 $x = 0$ 得 $y = 3$，所以两个截距点是 $(2, 0)$ 和 $(0, 3)$。\n\n检验：$3(2) + 2(0) = 6$，$3(0) + 2(3) = 6$。\n\n> **注意。** 求 $x$ 轴截距时要除以 $x$ 前面的数：$6 \\div 3 = 2$，不是 $6 \\div 2 = 3$。",
+        ],
+        (rng) => {
+          const [u, v] = rng.shuffle([1, 2, 3, 4, 5, 6]);
+          const p = rng.sign() * (u as number);
+          const q = rng.sign() * (v as number);
+          const equation = `${poly([q, "x"], [p, "y"])} = ${p * q}`;
+          const onX: Pt = [p, 0];
+          const onY: Pt = [0, q];
+          const s1 = stepLabel(1, "Set y to 0", "令 y = 0");
+          const s2 = stepLabel(2, "Set x to 0", "令 x = 0");
+          const pq = p * q;
+          const half: Pt = [p / 2, q / 2];
+          return plotProblem({
+            prompt: t(`Mark the two intercepts of the line $${equation}$.`, `标出直线 $${equation}$ 的两个截距点。`),
+            view: grid,
+            alt: blank,
+            answer: [onX, onY],
+            wrong: [
+              {
+                at: [
+                  [q, 0],
+                  [0, p],
+                ],
+                why: t(
+                  "You swapped the intercepts: to find where $y = 0$, divide by the coefficient of $x$.",
+                  "你把截距对调了：求 $y = 0$ 的点时，要除以 $x$ 的系数。",
+                ),
+              },
+              {
+                at: [
+                  [-p, 0],
+                  [0, -q],
+                ],
+                why: t("Both intercepts have the wrong sign.", "两个截距的符号都错了。"),
+              },
+            ],
+            solution: t(
+              `${s1.en} $${poly([q, "x"])} = ${pq}$, so $x = ${p}$. Mark $${tex(onX)}$.\n\n${s2.en} $${poly([p, "y"])} = ${pq}$, so $y = ${q}$. Mark $${tex(onY)}$.\n\n**Check.** The point halfway between them, $${tex(half)}$, fits too: $${poly([q, "x"], [p, "y"])}$ there is $${pq / 2} + ${pq / 2 < 0 ? `(${pq / 2})` : pq / 2} = ${pq}$.`,
+              `${s1["zh-CN"]}$${poly([q, "x"])} = ${pq}$，所以 $x = ${p}$。标出 $${tex(onX)}$。\n\n${s2["zh-CN"]}$${poly([p, "y"])} = ${pq}$，所以 $y = ${q}$。标出 $${tex(onY)}$。\n\n**检验。** 两点正中间的点 $${tex(half)}$ 也满足方程：在那里 $${poly([q, "x"], [p, "y"])}$ 等于 $${pq / 2} + ${pq / 2 < 0 ? `(${pq / 2})` : pq / 2} = ${pq}$。`,
+            ),
+            solutionAlt: t(`The line through ${tex(onX)} and ${tex(onY)}.`, `经过 ${tex(onX)} 和 ${tex(onY)} 的直线。`),
+            solutionMarks: [{ kind: "line", a: onX, b: onY, accent: true }],
+          });
+        },
+      ),
+      figure: {
+        svg: plane(grid, [{ kind: "line", a: [2, 0], b: [0, 3], accent: true }, dot([2, 0], "(2, 0)"), dot([0, 3], "(0, 3)")]),
+        alt: t("The line 3x + 2y = 6 with its intercepts (2, 0) and (0, 3) marked.", "直线 3x + 2y = 6，标出截距点 (2, 0) 和 (0, 3)。"),
       },
-    ),
-    skill(
-      "drawing-horizontal-and-vertical-lines",
-      ["Drawing horizontal and vertical lines", "画水平线和竖直线"],
-      [
-        "The equation $x = 3$ puts no condition on $y$: every point with first coordinate $3$ is on it, so the line is vertical. In the same way, $y = 3$ is horizontal. To draw either one, mark two points that keep the named coordinate fixed and change the other.",
-        "方程 $x = 3$ 对 $y$ 没有限制：所有第一个坐标为 $3$ 的点都在线上，所以这是竖直线。同样，$y = 3$ 是水平线。要画它们，就标出两个点：保持方程中那个坐标不变，改变另一个坐标。",
-      ],
-      (rng) => {
-        const c = nonzero(rng, 5);
-        const vertical = rng.bool();
-        const name = vertical ? "x" : "y";
-        const first: Pt = vertical ? [c, 0] : [0, c];
-        const second: Pt = vertical ? [c, 1] : [1, c];
-        const swapped: Pt = vertical ? [0, c] : [c, 0];
-        const swapped2: Pt = vertical ? [1, c] : [c, 1];
-        const doubled = rng.bool();
-        const equation = doubled ? `2${name} = ${2 * c}` : `${name} = ${c}`;
-        const reduced = doubled ? `$${equation}$ means $${name} = ${c}$. ` : "";
-        const reducedZh = doubled ? `$${equation}$ 就是 $${name} = ${c}$。` : "";
-        return plotProblem({
-          prompt: t(`Draw the line $${equation}$ by marking two of its points.`, `标出直线 $${equation}$ 上的两个点，画出这条直线。`),
-          view: grid,
-          alt: blank,
-          answer: [first, second],
-          line: vertical ? [1, 0, c] : [0, 1, c],
-          wrong: [
-            {
-              at: [swapped, swapped2],
-              why: t(
-                `That line has the other coordinate fixed. On $${name} = ${c}$, it is $${name}$ that stays at $${c}$.`,
-                `那条直线固定的是另一个坐标。在 $${name} = ${c}$ 上，保持为 $${c}$ 的是 $${name}$。`,
-              ),
-            },
-          ],
-          solution: t(
-            `${reduced}Every point of the line has $${name} = ${c}$, and the other coordinate can be anything. So $${tex(first)}$ and $${tex(second)}$ are on it, and the line is ${vertical ? "vertical" : "horizontal"}.`,
-            `${reducedZh}这条直线上每个点都有 $${name} = ${c}$，另一个坐标可以是任意值。所以 $${tex(first)}$ 和 $${tex(second)}$ 都在线上，这是一条${vertical ? "竖直线" : "水平线"}。`,
-          ),
-          solutionAlt: t(`The line ${name} = ${c}.`, `直线 ${name} = ${c}。`),
-          solutionMarks: [{ kind: "line", a: first, b: second, accent: true }],
-        });
+    },
+    {
+      ...skill(
+        "drawing-horizontal-and-vertical-lines",
+        ["Drawing horizontal and vertical lines", "画水平线和竖直线"],
+        [
+          "The equation $x = 3$ puts no condition on $y$: every point with first coordinate $3$ is on it, so the line is vertical. In the same way, $y = 3$ is horizontal. To draw either one, mark two points that keep the named coordinate fixed and change the other: $(3, 0)$ and $(3, 1)$ for $x = 3$.\n\nCheck: the two points are one above the other, so the line through them is vertical.\n\n> **Watch out.** $x = 3$ is not the point $(0, 3)$ or a horizontal line at height $3$: it is $x$ that stays $3$.",
+          "方程 $x = 3$ 对 $y$ 没有限制：所有第一个坐标为 $3$ 的点都在线上，所以这是竖直线。同样，$y = 3$ 是水平线。要画它们，就标出两个点：保持方程中那个坐标不变，改变另一个坐标。$x = 3$ 可以取 $(3, 0)$ 和 $(3, 1)$。\n\n检验：这两个点上下对齐，所以过它们的直线是竖直的。\n\n> **注意。** $x = 3$ 不是点 $(0, 3)$，也不是高度为 $3$ 的水平线：保持为 $3$ 的是 $x$。",
+        ],
+        (rng) => {
+          const c = nonzero(rng, 5);
+          const vertical = rng.bool();
+          const name = vertical ? "x" : "y";
+          const other = vertical ? "y" : "x";
+          const first: Pt = vertical ? [c, 0] : [0, c];
+          const second: Pt = vertical ? [c, 1] : [1, c];
+          const swapped: Pt = vertical ? [0, c] : [c, 0];
+          const swapped2: Pt = vertical ? [1, c] : [c, 1];
+          const doubled = rng.bool();
+          const equation = doubled ? `2${name} = ${2 * c}` : `${name} = ${c}`;
+          const s1 = stepLabel(1, `Read ${name}`, `读出 ${name}`);
+          const s2 = stepLabel(2, "Mark two points", "标出两个点");
+          const [en1, zh1] = doubled
+            ? [`Divide by $2$: $${equation}$ means $${name} = ${c}$.`, `两边除以 $2$：$${equation}$ 就是 $${name} = ${c}$。`]
+            : [`Every point of the line has $${name} = ${c}$.`, `这条直线上每个点都有 $${name} = ${c}$。`];
+          return plotProblem({
+            prompt: t(`Draw the line $${equation}$ by marking two of its points.`, `标出直线 $${equation}$ 上的两个点，画出这条直线。`),
+            view: grid,
+            alt: blank,
+            answer: [first, second],
+            line: vertical ? [1, 0, c] : [0, 1, c],
+            wrong: [
+              {
+                at: [swapped, swapped2],
+                why: t(
+                  `That line has the other coordinate fixed. On $${name} = ${c}$, it is $${name}$ that stays at $${c}$.`,
+                  `那条直线固定的是另一个坐标。在 $${name} = ${c}$ 上，保持为 $${c}$ 的是 $${name}$。`,
+                ),
+              },
+            ],
+            solution: t(
+              `${s1.en} ${en1} The value of $${other}$ can be anything.\n\n${s2.en} Keep $${name} = ${c}$ and take $${other} = 0$ and $${other} = 1$: $${tex(first)}$ and $${tex(second)}$. Draw the line through them.\n\n**Check.** The two points are ${vertical ? "one above the other" : "side by side"}, so the line is ${vertical ? "vertical" : "horizontal"}, as an equation with only $${name}$ should be.`,
+              `${s1["zh-CN"]}${zh1}$${other}$ 可以取任意值。\n\n${s2["zh-CN"]}保持 $${name} = ${c}$，取 $${other} = 0$ 和 $${other} = 1$：$${tex(first)}$ 和 $${tex(second)}$。过这两点画直线。\n\n**检验。** 这两个点${vertical ? "上下对齐" : "左右并排"}，所以直线是${vertical ? "竖直线" : "水平线"}，只含 $${name}$ 的方程正应如此。`,
+            ),
+            solutionAlt: t(`The line ${name} = ${c}.`, `直线 ${name} = ${c}。`),
+            solutionMarks: [{ kind: "line", a: first, b: second, accent: true }],
+          });
+        },
+      ),
+      figure: {
+        svg: plane(grid, [{ kind: "line", a: [3, 0], b: [3, 1], accent: true }, dot([3, 0], "(3, 0)"), dot([3, 1], "(3, 1)")]),
+        alt: t("The vertical line x = 3 through (3, 0) and (3, 1).", "竖直线 x = 3 经过 (3, 0) 和 (3, 1)。"),
       },
-    ),
+    },
   ],
   "slope-intercept-form": [
     skill(

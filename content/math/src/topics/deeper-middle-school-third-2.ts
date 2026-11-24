@@ -400,38 +400,74 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
   ],
 
   "representing-solutions-to-inequalities-on-number-lines": [
-    {
-      ...skill(
-        "the-first-whole-number-on-the-graph",
-        ["The first integer on the graph", "图像上的第一个整数"],
+    lesson(
+      "the-first-whole-number-on-the-graph",
+      ["The first integer on the graph", "图像上的第一个整数"],
+      [
         [
-          "An open circle leaves out its endpoint, so the first integer on the graph is one step past it. Dividing by a negative number reverses the arrow, which sets the direction of that step.",
-          "空心圆不含端点，所以图像上的第一个整数还要走一步。除以负数会使箭头反向，也决定了这一步的方向。",
+          "An open circle leaves out its endpoint, so the first integer on the graph is one step past it, in the direction of the shading. $2x + 1 > 7$ gives $x > 3$: the circle at $3$ is open, so the smallest integer solution is $4$.",
+          "空心圈不含端点，所以图像上的第一个整数要沿涂色方向再走一步。$2x + 1 > 7$ 得 $x > 3$：$3$ 处是空心圈，所以最小的整数解是 $4$。",
         ],
-        (rng) => {
-          const a = rng.int(2, 9);
-          const bound = rng.int(-9, 12);
-          const b = rng.int(1, 20);
-          const neg = rng.bool();
-          const c = neg ? -a * bound + b : a * bound + b;
-          const answer = neg ? bound - 1 : bound + 1;
-          return integer(
-            neg
-              ? [`What is the greatest integer that solves $-${a}x + ${b} > ${c}$?`, `满足 $-${a}x + ${b} > ${c}$ 的最大整数是多少？`]
-              : [`What is the smallest integer that solves $${a}x + ${b} > ${c}$?`, `满足 $${a}x + ${b} > ${c}$ 的最小整数是多少？`],
-            answer,
-            [bound, neg ? bound + 1 : bound - 1, -bound],
+        [
+          "$2(4) + 1 = 9 > 7$ works, but $2(3) + 1 = 7$ is not greater than $7$.",
+          "$2(4) + 1 = 9 > 7$ 成立，但 $2(3) + 1 = 7$ 不大于 $7$。",
+        ],
+        [
+          "Dividing by a negative number reverses the arrow, so then you step down to find the greatest integer instead.",
+          "除以负数会使箭头反向，这时要向小的方向走，找最大的整数。",
+        ],
+      ],
+      (rng) => {
+        const a = rng.int(2, 9);
+        const bound = rng.int(-9, 12);
+        const b = rng.int(1, 20);
+        const neg = rng.bool();
+        const c = neg ? -a * bound + b : a * bound + b;
+        const answer = neg ? bound - 1 : bound + 1;
+        const lead = neg ? `-${a}x` : `${a}x`;
+        const value = (x: number) => (neg ? -a : a) * x + b;
+        const at = (x: number) => `${neg ? `-${a}` : a}(${x}) + ${b} = ${value(x)}`;
+        return valued(
+          neg
+            ? [`What is the greatest integer that solves $-${a}x + ${b} > ${c}$?`, `满足 $-${a}x + ${b} > ${c}$ 的最大整数是多少？`]
+            : [`What is the smallest integer that solves $${a}x + ${b} > ${c}$?`, `满足 $${a}x + ${b} > ${c}$ 的最小整数是多少？`],
+          answer,
+          [
             [
+              ["Solve", "求解"],
               neg
-                ? `The solutions are $x < ${bound}$, so the greatest integer is ${answer}.`
-                : `The solutions are $x > ${bound}$, so the smallest integer is ${answer}.`,
-              neg ? `解是 $x < ${bound}$，所以最大整数是 ${answer}。` : `解是 $x > ${bound}$，所以最小整数是 ${answer}。`,
+                ? [`Subtract $${b}$, then divide by $-${a}$, reversing the symbol:`, `减去 $${b}$，再除以 $-${a}$，并改变不等号方向：`]
+                : [`Subtract $${b}$, then divide by $${a}$:`, `减去 $${b}$，再除以 $${a}$：`],
+              [`${lead} > ${c - b}`, `x ${neg ? "<" : ">"} ${bound}`],
             ],
-          );
-        },
-      ),
-      figure: gradeDrawings4["representing-solutions-to-inequalities-on-number-lines#the-first-whole-number-on-the-graph"],
-    },
+            [
+              ["Step past the circle", "越过空心圈"],
+              [
+                `The circle at $${bound}$ is open, so go one step ${neg ? "left" : "right"}:`,
+                `$${bound}$ 处是空心圈，所以向${neg ? "左" : "右"}走一步：`,
+              ],
+              [`${bound} ${neg ? "-" : "+"} 1 = ${answer}`],
+            ],
+          ],
+          [
+            `$${at(answer)}$, and $${value(answer)} > ${c}$ is true; but $${at(bound)}$, which is not greater than $${c}$.`,
+            `$${at(answer)}$，$${value(answer)} > ${c}$ 成立；而 $${at(bound)}$，不大于 $${c}$。`,
+          ],
+          [
+            [bound, `That is the open circle itself, and $${bound}$ is not a solution.`, `这是空心圈本身，$${bound}$ 不是解。`],
+            [
+              neg ? bound + 1 : bound - 1,
+              neg
+                ? "That steps the wrong way: dividing by a negative number reverses the arrow."
+                : "That steps the wrong way, away from the shading.",
+              neg ? "方向走反了：除以负数时箭头要反向。" : "方向走反了，离开了涂色的一侧。",
+            ],
+            [-bound, "That has the wrong sign.", "符号错了。"],
+          ],
+        );
+      },
+      drawn(gradeDrawings4["representing-solutions-to-inequalities-on-number-lines#the-first-whole-number-on-the-graph"]),
+    ),
   ],
   "further-solving-linear-inequalities": [
     lesson(
@@ -501,28 +537,57 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
   ],
 
   "graphing-linear-equations": [
-    skill(
+    lesson(
       "where-the-line-crosses-the-x-axis",
       ["Where the line crosses the x-axis", "直线与 x 轴的交点"],
       [
-        "Every point on the $x$-axis has a second coordinate of 0. So putting $y = 0$ into the equation of a line and solving gives the place where the line crosses that axis.",
-        "$x$ 轴上每个点的第二个坐标都是 0。所以把 $y = 0$ 代入直线方程求解，就得到直线与这条轴的交点。",
+        [
+          "Every point on the $x$-axis has $y = 0$. So put $y = 0$ into the equation and solve for $x$. For $3x + 2y = 12$: $3x + 0 = 12$, so $x = 4$, and the line crosses the $x$-axis at $(4, 0)$.",
+          "$x$ 轴上每个点都有 $y = 0$。所以把 $y = 0$ 代入方程，解出 $x$。对于 $3x + 2y = 12$：$3x + 0 = 12$，所以 $x = 4$，直线与 $x$ 轴交于 $(4, 0)$。",
+        ],
+        ["Put $(4, 0)$ back: $3(4) + 2(0) = 12$.", "把 $(4, 0)$ 代回去：$3(4) + 2(0) = 12$。"],
+        [
+          "On the $x$-axis it is $y$ that is $0$, not $x$. Setting $x = 0$ gives $2y = 12$, the crossing on the $y$-axis instead.",
+          "在 $x$ 轴上是 $y$ 等于 $0$，不是 $x$。令 $x = 0$ 得 $2y = 12$，那是与 $y$ 轴的交点。",
+        ],
       ],
       (rng) => {
         const a = rng.int(2, 9);
         const b = rng.int(2, 9);
         const k = rng.int(-9, 12) || 3;
         const c = a * k;
-        return integer(
+        return valued(
           [
             `The line $${a}x + ${b}y = ${c}$ crosses the $x$-axis at $(x, 0)$. What is $x$?`,
             `直线 $${a}x + ${b}y = ${c}$ 与 $x$ 轴交于 $(x, 0)$。$x$ 是多少？`,
           ],
           k,
-          [c, c - b, -k],
-          [`With $y = 0$: $${a}x = ${c}$, so $x = ${k}$.`, `令 $y = 0$：$${a}x = ${c}$，所以 $x = ${k}$。`],
+          [
+            [
+              ["Set y to 0", "令 y = 0"],
+              ["On the $x$-axis, $y = 0$:", "在 $x$ 轴上，$y = 0$："],
+              [`${a}x + ${b} \\cdot 0 = ${c}`, `${a}x = ${c}`],
+            ],
+            [["Divide", "相除"], [`Divide both sides by $${a}$:`, `两边同时除以 $${a}$：`], [`x = ${k}`]],
+          ],
+          [
+            `Put $(${k}, 0)$ back: $${a} \\cdot ${k < 0 ? `(${k})` : k} + ${b} \\cdot 0 = ${c}$.`,
+            `把 $(${k}, 0)$ 代回去：$${a} \\cdot ${k < 0 ? `(${k})` : k} + ${b} \\cdot 0 = ${c}$。`,
+          ],
+          [
+            [c, `That is $${a}x$; it still has to be divided by $${a}$.`, `这是 $${a}x$；还要除以 $${a}$。`],
+            [
+              Q.of(c, b),
+              `That sets $x = 0$ and finds $y$, the crossing on the $y$-axis.`,
+              `这是令 $x = 0$ 求出的 $y$，是与 $y$ 轴的交点。`,
+            ],
+            [c - b, `That subtracts $${b}$ instead of dropping the $y$ term.`, `这是减去了 $${b}$，而 $y$ 项应该变成 $0$。`],
+            [-k, "That has the wrong sign.", "符号错了。"],
+          ],
+          { solveFor: "x" },
         );
       },
+      tableFigure(["x", "y"], [4, 0]),
     ),
   ],
   "horizontal-and-vertical-lines": [

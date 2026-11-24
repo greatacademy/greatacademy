@@ -6,7 +6,18 @@ import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choose, chooseMath, tableFigure, whole } from "./early-grades-more-kit.ts";
+import { aFractionTimesTheUnknown, storiesWithOneStepEquations, subtractingAGroup } from "./equations.ts";
+import { aFormulaFromAStory, theFactorThatWasPulledOut, thePerimeterAsAnExpression } from "./expressions.ts";
 import { lesson, valued } from "./grade-6-kit.ts";
+import { countingTheIntegersThatWork } from "./inequalities.ts";
+import {
+  addingALongList,
+  aFractionBarGroups,
+  anAverageChange,
+  theDistanceBetweenTwoNumbers,
+  thePowerOfAPowerOfANegative,
+  theSignFromACountOfNegatives,
+} from "./integers.ts";
 import { frac, fraction, integer, signed, skill } from "./third-kit.ts";
 
 /** deeperAlgebraThird2Points holds these third knowledge points, by topic. */
@@ -107,93 +118,9 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       },
     ),
   ],
-  "one-step-equations-addition": [
-    skill(
-      "stories-with-one-step-equations",
-      ["Stories with one-step equations", "一步方程的故事"],
-      [
-        "A story about a change gives an equation with one unknown. Writing the start plus the change equal to the end, and undoing the change, finds a start that may be negative.",
-        "关于变化的故事给出一个含未知数的方程。写出“开始加变化等于结果”，再还原变化，得到的开始值可能是负数。",
-      ],
-      (rng) => {
-        const rise = rng.int(3, 25);
-        const end = rng.int(-12, 15);
-        const start = end - rise;
-        return integer(
-          [
-            `The temperature rose by $${rise}$ degrees and is now $${end}$ degrees. What was the temperature before the rise?`,
-            `气温上升了 $${rise}$ 度，现在是 $${end}$ 度。上升前是多少度？`,
-          ],
-          start,
-          [end + rise, rise - end, -start],
-          [
-            `$x + ${rise} = ${end}$, so $x = ${end} - ${rise} = ${start}$.`,
-            `$x + ${rise} = ${end}$，所以 $x = ${end} - ${rise} = ${start}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "one-step-equations-multiplication": [
-    skill(
-      "a-fraction-times-the-unknown",
-      ["A fraction times the unknown", "分数乘未知数"],
-      [
-        "When a fraction multiplies the unknown, multiply both sides by its reciprocal. This is one step, and it replaces the two steps of dividing by the numerator and multiplying by the denominator.",
-        "分数乘未知数时，两边同乘它的倒数。这是一步，代替了除以分子再乘分母两步。",
-      ],
-      (rng) => {
-        const [n, d] = rng.pick<[number, number]>([
-          [2, 3],
-          [3, 4],
-          [2, 5],
-          [3, 5],
-          [4, 5],
-          [5, 6],
-          [3, 7],
-          [5, 7],
-          [3, 8],
-          [7, 8],
-          [4, 9],
-          [7, 9],
-        ]);
-        const k = rng.int(-12, 12) || 5;
-        return integer(
-          [`Solve $${frac(n, d)}x = ${n * k}$.`, `解方程 $${frac(n, d)}x = ${n * k}$。`],
-          d * k,
-          [n * k * n, k, n * k - d],
-          [`Multiply both sides by $${frac(d, n)}$: $x = ${d * k}$.`, `两边同乘 $${frac(d, n)}$：$x = ${d * k}$。`],
-        );
-      },
-    ),
-  ],
-  "inequalities-and-solutions": [
-    skill(
-      "counting-whole-numbers-that-work",
-      ["Counting the integers that work", "数符合条件的整数"],
-      [
-        "A pair of inequalities keeps only the numbers between two bounds. The symbols decide whether those bounds count, so check each end before counting the integers in between.",
-        "一对不等式只留下两个界之间的数。符号决定界本身算不算，所以数中间的整数之前先检查两端。",
-      ],
-      (rng) => {
-        const low = rng.int(-12, 6);
-        const span = rng.int(3, 15);
-        const lowIn = rng.bool();
-        const highIn = rng.bool();
-        const count = span - 1 + (lowIn ? 1 : 0) + (highIn ? 1 : 0);
-        const expr = `${low} ${lowIn ? "\\le" : "<"} x ${highIn ? "\\le" : "<"} ${low + span}`;
-        return whole(
-          [`How many integers satisfy $${expr}$?`, `有多少个整数满足 $${expr}$？`],
-          count,
-          [span, span + 1, span - 1, span + 2],
-          [
-            `${lowIn ? "The lower bound counts" : "The lower bound does not count"} and ${highIn ? "the upper bound counts" : "the upper bound does not count"}, which leaves $${count}$.`,
-            `下界${lowIn ? "算" : "不算"}，上界${highIn ? "算" : "不算"}，所以有 $${count}$ 个。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "one-step-equations-addition": [storiesWithOneStepEquations],
+  "one-step-equations-multiplication": [aFractionTimesTheUnknown],
+  "inequalities-and-solutions": [countingTheIntegersThatWork],
   "systems-of-linear-equations": [
     skill(
       "the-value-that-makes-a-point-a-solution",
@@ -728,33 +655,7 @@ $$\\frac{24\\text{ L}}{3\\text{ h}} = 8\\text{ 升每小时}.$$
       },
     ),
   ],
-  "equations-with-parentheses": [
-    skill(
-      "subtracting-a-group",
-      ["Subtracting a group", "减去一个括号"],
-      [
-        "A minus sign before parentheses changes the sign of every term inside. Most errors here come from changing only the first term, so expand carefully before collecting.",
-        "括号前的减号要改变括号内每一项的符号。这里的错误多半是只改了第一项，所以合并前要仔细展开。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 6);
-        const x = rng.int(-9, 9) || 2;
-        const b = rng.int(1, 9);
-        const c = rng.int(1, a * 3);
-        const k = a + rng.int(1, 4);
-        const right = k * x - (a * x - c) + b;
-        return integer(
-          [`Solve $${k}x - (${a}x - ${c}) + ${b} = ${right}$.`, `解方程 $${k}x - (${a}x - ${c}) + ${b} = ${right}$。`],
-          x,
-          [-x, x + 1, right - b],
-          [
-            `Expanding gives $${k - a}x + ${c + b} = ${right}$, so $x = ${x}$.`,
-            `展开得 $${k - a}x + ${c + b} = ${right}$，所以 $x = ${x}$。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "equations-with-parentheses": [subtractingAGroup],
   "elimination-with-one-transformation": [
     skill(
       "the-sum-of-the-unknowns",
@@ -966,278 +867,15 @@ For the outputs $1, 4, 6, 5, 2$ at $x = 0, 1, 2, 3, 4$, the changes from one out
       },
     ),
   ],
-  "adding-integers": [
-    skill(
-      "adding-a-long-list",
-      ["Adding a long list", "一长串相加"],
-      [
-        "Addition can be done in any order. So grouping the positive numbers and the negative numbers, and combining the two totals at the end, is quicker and safer for a long list.",
-        "加法可以按任何顺序进行。所以把正数和负数分别加起来，最后合并两个总和，对长串数更快也更不容易错。",
-      ],
-      (rng) => {
-        const pos = [rng.int(5, 40), rng.int(5, 40), rng.int(5, 40)];
-        const neg = [-rng.int(5, 40), -rng.int(5, 40)];
-        const list = rng.shuffle([...pos, ...neg]);
-        const p = pos.reduce((s, x) => s + x, 0);
-        const n = neg.reduce((s, x) => s + x, 0);
-        const text = list.map((x, i) => (i === 0 ? `${x}` : x < 0 ? `+ (${x})` : `+ ${x}`)).join(" ");
-        return integer(
-          [`Evaluate $${text}$.`, `计算 $${text}$。`],
-          p + n,
-          [p - n, -(p + n), p],
-          [
-            `The positives total ${p} and the negatives total ${n}, which gives ${p + n}.`,
-            `正数总和 ${p}，负数总和 ${n}，合起来是 ${p + n}。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "subtracting-integers": [
-    skill(
-      "the-distance-between-two-numbers",
-      ["The distance between two numbers", "两个数之间的距离"],
-      [
-        "The difference of two numbers gives the distance between them on a number line, once any negative sign on the result is dropped. Across zero, the distance is the sum of their sizes.",
-        "两个数的差去掉负号，就是它们在数轴上的距离。跨过零时，距离是两个数大小之和。",
-      ],
-      (rng) => {
-        const hi = rng.int(1, 40);
-        const lo = -rng.int(1, 60);
-        return whole(
-          [
-            `An elevator at floor ${hi} goes down to floor ${lo}, with underground floors shown as negative integers. How many floors does it travel?`,
-            `电梯从 ${hi} 层降到 ${lo} 层（地下层用负整数表示）。它走了多少层？`,
-          ],
-          hi - lo,
-          [Math.abs(hi + lo), hi, -lo],
-          [
-            `The distance is the difference of the floors, $${hi} - (${lo}) = ${hi - lo}$.`,
-            `距离是两个楼层之差，$${hi} - (${lo}) = ${hi - lo}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "multiplying-integers": [
-    skill(
-      "the-sign-from-a-count-of-negatives",
-      ["The sign from a count of negatives", "由负数个数定符号"],
-      [
-        "Negative factors pair up to make positives. So an even number of negative factors gives a positive product, and an odd number gives a negative one, with no need for the size.",
-        "负因数两两配对变成正数。所以负因数个数为偶数时积为正，为奇数时积为负，不用算大小。",
-      ],
-      (rng) => {
-        const negs = rng.int(2, 7);
-        const posCount = rng.int(1, 4);
-        const factors = rng.shuffle([
-          ...Array.from({ length: negs }, () => -rng.int(1, 19)),
-          ...Array.from({ length: posCount }, () => rng.int(1, 19)),
-        ]);
-        const negative = negs % 2 === 1;
-        const options: [string, string][] = [
-          ["Negative", "负数"],
-          ["Positive", "正数"],
-          ["Zero", "零"],
-          ["It cannot be decided", "无法确定"],
-        ];
-        return choose(
-          rng,
-          [
-            `What is the sign of $${factors.map((f) => (f < 0 ? `(${f})` : `${f}`)).join(" \\cdot ")}$?`,
-            `$${factors.map((f) => (f < 0 ? `(${f})` : `${f}`)).join(" \\cdot ")}$ 的符号是什么？`,
-          ],
-          options[negative ? 0 : 1]!,
-          options.filter((_, i) => i !== (negative ? 0 : 1)),
-          [
-            `There are ${negs} negative factors, which is ${negative ? "odd" : "even"}.`,
-            `有 ${negs} 个负因数，是${negative ? "奇数" : "偶数"}个。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "dividing-integers": [
-    skill(
-      "an-average-change",
-      ["An average change", "平均变化"],
-      [
-        "A total change shared over several equal steps gives the change per step, and the sign of the total carries through. A fall shared over days is a negative change per day.",
-        "总变化平均分到若干相等的步骤，就是每步的变化，总变化的符号保留下来。几天内的下降，每天的变化是负数。",
-      ],
-      (rng) => {
-        const days = rng.int(2, 12);
-        const each = rng.int(2, 15);
-        const fall = rng.bool();
-        const total = (fall ? -each : each) * days;
-        return integer(
-          [
-            `A share price changes by $${total}$ cents in ${days} days, by the same amount each day. What is the change per day, in cents?`,
-            `股价在 ${days} 天内变化 $${total}$ 美分，每天变化相同。每天变化多少美分？`,
-          ],
-          total / days,
-          [-total / days, total + days, total],
-          [
-            `Share the total change equally among the days: $${total} \\div ${days} = ${total / days}$.`,
-            `把总变化平均分到每一天：$${total} \\div ${days} = ${total / days}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "powers-of-integers": [
-    skill(
-      "the-power-of-a-power-of-a-negative",
-      ["Comparing powers of negatives", "比较负数的幂"],
-      [
-        "With parentheses, the sign is part of what is multiplied; without them, the power applies first and the minus sign comes last. So $(-a)^{n}$ and $-a^{n}$ agree only for odd $n$.",
-        "有括号时，符号也参与相乘；没有括号时，先乘方，最后才取负。所以 $(-a)^{n}$ 和 $-a^{n}$ 只在 $n$ 为奇数时相同。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 12);
-        const n = rng.pick([2, 3, 4, 5]);
-        const first = (-a) ** n;
-        const second = -(a ** n);
-        return integer(
-          [`Evaluate $(-${a})^{${n}} - (-${a}^{${n}})$.`, `计算 $(-${a})^{${n}} - (-${a}^{${n}})$。`],
-          first - second,
-          [first + second, 2 * a ** n === first - second ? a ** n : 2 * a ** n, -2 * a ** n],
-          [
-            `$(-${a})^{${n}} = ${first}$ and $-${a}^{${n}} = ${second}$, whose difference is ${first - second}.`,
-            `$(-${a})^{${n}} = ${first}$，$-${a}^{${n}} = ${second}$，差是 ${first - second}。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "order-of-operations-with-integers": [
-    skill(
-      "a-fraction-bar-groups",
-      ["A fraction bar groups", "分数线有分组作用"],
-      [
-        "A fraction bar acts like parentheses around the top and around the bottom. So each part must be worked out fully, keeping the signs, before the division happens.",
-        "分数线相当于给分子和分母都加了括号。所以要先把每部分算完，保留符号，然后才相除。",
-      ],
-      (rng) => {
-        const q = rng.int(-9, 9) || 3;
-        const a = rng.int(2, 5);
-        const b = rng.int(-6, 6) || 2;
-        const d = a * a + b;
-        if (d === 0)
-          return integer(
-            ["Evaluate $-2 \\cdot 3^{2}$.", "计算 $-2 \\cdot 3^{2}$。"],
-            -18,
-            [18, -36, 36],
-            ["Square first: $-2 \\cdot 9 = -18$.", "先乘方：$-2 \\cdot 9 = -18$。"],
-          );
-        const c = rng.int(1, 20);
-        const top = q * d + c;
-        return integer(
-          [`Evaluate $${frac(`${top} - ${c}`, `${a}^{2}${signed(b)}`)}$.`, `计算 $${frac(`${top} - ${c}`, `${a}^{2}${signed(b)}`)}$。`],
-          q,
-          [-q, top - c, d],
-          [
-            `The top is ${top - c} and the bottom is ${d}, and $${top - c} \\div ${d} = ${q}$.`,
-            `分子是 ${top - c}，分母是 ${d}，$${top - c} \\div ${d} = ${q}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "evaluating-expressions": [
-    skill(
-      "a-formula-from-a-story",
-      ["A formula from a story", "故事中的公式"],
-      [
-        "A formula gets used by replacing each letter with its value and following the order of operations. Writing negative values in parentheses first keeps the signs right.",
-        "使用公式时，把每个字母换成它的值，再按运算顺序计算。先给负值加括号，符号才不会错。",
-      ],
-      (rng) => {
-        const f = 32 + 9 * rng.int(-16, 16);
-        const c = ((f - 32) * 5) / 9;
-        return integer(
-          [
-            `The formula $C = ${frac(5, 9)}(F - 32)$ converts Fahrenheit to Celsius. What is $C$ when $F = ${f}$?`,
-            `公式 $C = ${frac(5, 9)}(F - 32)$ 把华氏度换算成摄氏度。$F = ${f}$ 时 $C$ 是多少？`,
-          ],
-          c,
-          [-c, f - 32, ((f + 32) * 5) / 9 === c ? c + 1 : Math.round(((f + 32) * 5) / 9)],
-          [
-            `$${f} - 32 = ${f - 32}$, and $${frac(5, 9)} \\times (${f - 32}) = ${c}$.`,
-            `$${f} - 32 = ${f - 32}$，$${frac(5, 9)} \\times (${f - 32}) = ${c}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "distributive-property": [
-    skill(
-      "the-factor-that-was-pulled-out",
-      ["The factor that was pulled out", "提出的公因数"],
-      [
-        "Reading the distributive property backward pulls out a common factor. The greatest factor leaves no common factor inside the parentheses, and expanding must bring back the original.",
-        "反过来读分配律，就是提公因数。最大公因数提出后，括号内不再有公因数；展开后必须回到原式。",
-      ],
-      (rng) => {
-        const g = rng.int(2, 9);
-        const [p, q] = rng.pick<[number, number]>([
-          [2, 3],
-          [3, 4],
-          [2, 5],
-          [3, 5],
-          [4, 5],
-          [5, 6],
-          [2, 7],
-          [3, 7],
-          [5, 7],
-          [3, 8],
-          [5, 8],
-          [7, 8],
-        ]);
-        const sub = rng.bool();
-        const op = sub ? "-" : "+";
-        return chooseMath(
-          rng,
-          [`Factor out the greatest common factor: $${g * p}x ${op} ${g * q}$.`, `提出最大公因数：$${g * p}x ${op} ${g * q}$。`],
-          `${g}(${p}x ${op} ${q})`,
-          [`${g}(${p}x ${sub ? "+" : "-"} ${q})`, `${p}(${g}x ${op} ${g * q})`, `${g * p}(x ${op} ${q})`],
-          [
-            `Both terms have the factor ${g}, and $${g} \\times ${p} = ${g * p}$ and $${g} \\times ${q} = ${g * q}$.`,
-            `两项都有因数 ${g}，$${g} \\times ${p} = ${g * p}$，$${g} \\times ${q} = ${g * q}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "simplifying-expressions": [
-    skill(
-      "the-perimeter-as-an-expression",
-      ["The perimeter as an expression", "周长的表达式"],
-      [
-        "Lengths given as expressions are added like any other terms. Collecting the $x$ terms and the numbers separately gives a shorter expression that holds for every value of $x$.",
-        "用表达式给出的长度，可以像其他项一样相加。分别合并 $x$ 项和数，得到对每个 $x$ 都成立的较短表达式。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 9);
-        const b = rng.int(1, 12);
-        const c = rng.int(2, 9);
-        const d = rng.int(1, 12);
-        return chooseMath(
-          rng,
-          [
-            `A rectangle has length $${a}x + ${b}$ and width $${c}x + ${d}$. Which expression gives its perimeter?`,
-            `长方形长 $${a}x + ${b}$，宽 $${c}x + ${d}$。哪个表达式表示它的周长？`,
-          ],
-          `${2 * (a + c)}x + ${2 * (b + d)}`,
-          [`${a + c}x + ${b + d}`, `${2 * (a + c)}x + ${b + d}`, `${2 * (a + c) + 2 * (b + d)}x`],
-          [
-            `$2(${a}x + ${b}) + 2(${c}x + ${d}) = ${2 * (a + c)}x + ${2 * (b + d)}$.`,
-            `$2(${a}x + ${b}) + 2(${c}x + ${d}) = ${2 * (a + c)}x + ${2 * (b + d)}$。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "adding-integers": [addingALongList],
+  "subtracting-integers": [theDistanceBetweenTwoNumbers],
+  "multiplying-integers": [theSignFromACountOfNegatives],
+  "dividing-integers": [anAverageChange],
+  "powers-of-integers": [thePowerOfAPowerOfANegative],
+  "order-of-operations-with-integers": [aFractionBarGroups],
+  "evaluating-expressions": [aFormulaFromAStory],
+  "distributive-property": [theFactorThatWasPulledOut],
+  "simplifying-expressions": [thePerimeterAsAnExpression],
   "correlation-and-causation": [
     skill(
       "the-hidden-third-factor",

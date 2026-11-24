@@ -6,6 +6,7 @@ import {
   inequalityLatexOf,
   linear,
   num,
+  type PlaneMark,
   paren,
   plane,
   poly,
@@ -16,19 +17,9 @@ import {
 } from "@ga/subject-math";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 
-import {
-  choiceProblem,
-  type InequalityOp,
-  inequalityLatex,
-  intervalProblem,
-  numberProblem,
-  steps,
-  withMistakes,
-  yesNo,
-} from "../problems.ts";
+import { type InequalityOp, inequalityLatex, intervalProblem, withMistakes } from "../problems.ts";
 import { numberLineFigure, ray } from "./compound-inequalities.ts";
 import { type Pair, tableFigure, type Walk, walkThrough } from "./early-grades-more-kit.ts";
-import { mathText, pickChoice } from "./grade-4-fractions.ts";
 import { bounded, chosen, chosenMath, decided, drawn, expressed, lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { stripsFigure, tapeFigure } from "./upper-grades-kit.ts";
 
@@ -1018,93 +1009,199 @@ function twoVariableEquation(rng: Rng, x: number, y: number): TwoVariableEquatio
   return { a, b, c: a * x + b * y, latex: std(a, b, a * x + b * y) };
 }
 
-export const twoVariableLinearEquationsAndTheirSolutions = topic(
-  "two-variable-linear-equations-and-their-solutions",
-  t("Two-Variable Linear Equations and Their Solutions", "二元一次方程及其解"),
-  t(
-    "A linear equation in two variables, such as $2x + 3y = 12$, has ordered pairs $(x, y)$ as solutions: a pair is a solution when substituting $x$ and $y$ makes the equation true. $(3, 2)$ is a solution because $2(3) + 3(2) = 12$, but $(2, 3)$ is not, because $2(2) + 3(3) = 13$. Such an equation has infinitely many solutions.",
-    "二元一次方程（例如 $2x + 3y = 12$）的解是有序数对 $(x, y)$：代入 $x$ 和 $y$ 后方程成立的数对就是解。$(3, 2)$ 是解，因为 $2(3) + 3(2) = 12$；但 $(2, 3)$ 不是，因为 $2(2) + 3(3) = 13$。这样的方程有无穷多个解。",
+/** solutionPlane graphs a·x + b·y = c on a grid from −8 to 8 with the points given marked and labelled. */
+function solutionPlane(a: number, b: number, c: number, points: readonly [number, number][], latex: string): Figure {
+  const y = (x: number) => (c - a * x) / b;
+  return {
+    svg: plane({ xMin: -8, xMax: 8, yMin: -8, yMax: 8, step: 1, labelEvery: 2 }, [
+      { kind: "line", a: [-8, y(-8)], b: [8, y(8)], accent: true },
+      ...points.map((at): PlaneMark => ({ kind: "point", at, label: pair(at[0], at[1]).replace(/−/g, "-"), dir: "e" })),
+    ]),
+    alt: t(
+      `A coordinate grid with the line ${latex} and the points ${points.map(([p, q]) => pair(p, q)).join(" and ")} marked.`,
+      `坐标网格上画着直线 ${latex}，并标出点 ${points.map(([p, q]) => pair(p, q)).join(" 和 ")}。`,
+    ),
+  };
+}
+
+/** yFor writes the value of y that a·x + b·y = c needs at the given x, as an exact number. */
+const yFor = (a: number, b: number, c: number, x: number) => num(Q.of(c - a * x, b));
+
+/** twoVariableLinearEquationsAndTheirSolutions checks and chooses ordered pairs that solve a two-variable equation. */
+export const twoVariableLinearEquationsAndTheirSolutions = withIntro(
+  topic(
+    "two-variable-linear-equations-and-their-solutions",
+    t("Two-Variable Linear Equations and Their Solutions", "二元一次方程及其解"),
+    t(
+      "A linear equation in two variables, such as $2x + 3y = 12$, has ordered pairs $(x, y)$ as solutions: a pair is a solution when substituting $x$ and $y$ makes the equation true. $(3, 2)$ is a solution because $2(3) + 3(2) = 12$, but $(2, 3)$ is not, because $2(2) + 3(3) = 13$. Such an equation has infinitely many solutions.",
+      "二元一次方程（例如 $2x + 3y = 12$）的解是有序数对 $(x, y)$：代入 $x$ 和 $y$ 后方程成立的数对就是解。$(3, 2)$ 是解，因为 $2(3) + 3(2) = 12$；但 $(2, 3)$ 不是，因为 $2(2) + 3(3) = 13$。这样的方程有无穷多个解。",
+    ),
+    ["introduction-to-two-variable-equations", "evaluating-expressions"],
+    ["6.EE.C.9", "8.EE.C.8.A"],
+    [
+      {
+        ...lesson(
+          "checking-an-ordered-pair",
+          ["Checking an ordered pair", "检验有序数对"],
+          [
+            [
+              "In an ordered pair $(x, y)$, the first number is $x$ and the second is $y$. Substitute both and see whether the two sides are equal. For $y = 3x - 5$ and $(2, 1)$: $3(2) - 5 = 1$, which is $y$, so $(2, 1)$ is a solution.",
+              "有序数对 $(x, y)$ 中，第一个数是 $x$，第二个数是 $y$。把两个数都代入，看两边是否相等。对于 $y = 3x - 5$ 和 $(2, 1)$：$3(2) - 5 = 1$，正好是 $y$，所以 $(2, 1)$ 是解。",
+            ],
+            ["The point $(2, 1)$ lies on the graph of $y = 3x - 5$.", "点 $(2, 1)$ 在 $y = 3x - 5$ 的图像上。"],
+            [
+              "Keep the order. $(1, 2)$ is a different pair: $3(1) - 5 = -2$, not $2$, so it is not a solution.",
+              "注意顺序。$(1, 2)$ 是另一个数对：$3(1) - 5 = -2$，不是 $2$，所以它不是解。",
+            ],
+          ],
+          (rng) => {
+            const x0 = rng.int(-6, 6);
+            const y0 = rng.int(-6, 6);
+            const e = twoVariableEquation(rng, x0, y0);
+            const kind = rng.int(0, 2);
+            let [x, y] = [x0, y0];
+            const swapped = kind === 1 && x0 !== y0;
+            if (swapped) [x, y] = [y0, x0];
+            else if (kind > 0) y = y0 + rng.nonZero(-3, 3);
+            const value = e.a * x + e.b * y;
+            const yes = value === e.c;
+            const solved = e.latex.startsWith("y =");
+            const right = -e.a * x + e.c;
+            const walk: Walk[] = solved
+              ? [
+                  [
+                    ["Substitute x", "代入 x"],
+                    [`Put $x = ${num(x)}$ into the right side:`, `把 $x = ${num(x)}$ 代入右边：`],
+                    [`${substitutedLinear(-e.a, x, e.c)} = ${num(right)}`],
+                  ],
+                  [
+                    ["Compare with y", "和 y 比较"],
+                    [`The pair says $y = ${num(y)}$:`, `数对给出 $y = ${num(y)}$：`],
+                    [yes ? `${num(right)} = ${num(y)}` : `${num(right)} \\ne ${num(y)}`],
+                  ],
+                ]
+              : [
+                  [
+                    ["Substitute", "代入"],
+                    [`Put $x = ${num(x)}$ and $y = ${num(y)}$ into the left side:`, `把 $x = ${num(x)}$ 和 $y = ${num(y)}$ 代入左边：`],
+                    [check(e.a, e.b, x, y)],
+                  ],
+                  [
+                    ["Compare", "比较"],
+                    [`The right side is $${num(e.c)}$:`, `右边是 $${num(e.c)}$：`],
+                    [yes ? `${num(value)} = ${num(e.c)}` : `${num(value)} \\ne ${num(e.c)}`],
+                  ],
+                ];
+            const need = yFor(e.a, e.b, e.c, x);
+            return decided(
+              rng,
+              [`Is $${pair(x, y)}$ a solution of $${e.latex}$?`, `$${pair(x, y)}$ 是 $${e.latex}$ 的解吗？`],
+              yes,
+              walk,
+              [
+                `At $x = ${num(x)}$ the equation needs $y = ${need}$, so the solution there is $(${num(x)}, ${need})$${yes ? ", the same pair" : `, not $${pair(x, y)}$`}.`,
+                `$x = ${num(x)}$ 时，方程要求 $y = ${need}$，所以这里的解是 $(${num(x)}, ${need})$${yes ? "，正是这个数对" : `，不是 $${pair(x, y)}$`}。`,
+              ],
+              yes
+                ? ["The two sides come out equal, so the pair does make the equation true.", "两边算出来相等，所以这个数对确实使方程成立。"]
+                : swapped
+                  ? [
+                      `That reads the pair backwards: $${pair(y, x)}$ works, but in $${pair(x, y)}$ the first number is $x$.`,
+                      `这把数对读反了：$${pair(y, x)}$ 是解，但在 $${pair(x, y)}$ 中第一个数是 $x$。`,
+                    ]
+                  : ["The two sides are not equal, so the pair is not a solution.", "两边不相等，所以这个数对不是解。"],
+            );
+          },
+          solutionPlane(-3, 1, -5, [[2, 1]], "y = 3x − 5"),
+        ),
+        keyPrerequisites: ["evaluating-expressions"],
+      },
+      lesson(
+        "choosing-a-solution",
+        ["Choosing a solution", "选出方程的解"],
+        [
+          [
+            "To find which of several pairs is a solution, substitute each one. Watch the order: $(4, -1)$ means $x = 4$ and $y = -1$. For $x - 2y = 6$: $(4, -1)$ gives $4 - 2(-1) = 6$, so it is a solution.",
+            "要判断几个数对中哪个是解，就逐个代入。注意顺序：$(4, -1)$ 表示 $x = 4$，$y = -1$。对于 $x - 2y = 6$：$(4, -1)$ 代入得 $4 - 2(-1) = 6$，所以它是解。",
+          ],
+          [
+            "Solve for $y$ at $x = 4$: $4 - 2y = 6$, so $-2y = 2$ and $y = -1$.",
+            "在 $x = 4$ 时求 $y$：$4 - 2y = 6$，所以 $-2y = 2$，$y = -1$。",
+          ],
+          [
+            "Swapping the numbers gives a different pair. $(-1, 4)$ gives $-1 - 8 = -9$, not $6$.",
+            "把两个数对调就是另一个数对。$(-1, 4)$ 代入得 $-1 - 8 = -9$，不是 $6$。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const x = rng.int(-6, 6);
+            const y = rng.int(-6, 6);
+            if (x === y) continue;
+            const a = rng.nonZero(-6, 6);
+            const b = rng.nonZero(-6, 6);
+            const c = a * x + b * y;
+            const d = rng.nonZero(-2, 2);
+            const candidates: [[number, number], string, string][] = [
+              [[y, x], "That swaps $x$ and $y$.", "这把 $x$ 和 $y$ 对调了。"],
+              [[x, -y], "That has the wrong sign on $y$.", "$y$ 的符号错了。"],
+              [[-x, y], "That has the wrong sign on $x$.", "$x$ 的符号错了。"],
+              [[x, y + d], "", ""],
+              [[x + 1, y], "", ""],
+            ];
+            const seen = new Set([pair(x, y)]);
+            const wrong: [string, string, string][] = [];
+            for (const [[p, q], en, zh] of candidates) {
+              const v = a * p + b * q;
+              if (v === c || seen.has(pair(p, q))) continue;
+              seen.add(pair(p, q));
+              const sum = check(a, b, p, q);
+              wrong.push([
+                pair(p, q),
+                `${en ? `${en} ` : ""}It gives $${sum}$, not $${num(c)}$.`,
+                `${zh}代入得 $${sum}$，不是 $${num(c)}$。`,
+              ]);
+            }
+            if (wrong.length < 3) continue;
+            const eq = std(a, b, c);
+            return chosenMath(
+              rng,
+              [`Which ordered pair is a solution of $${eq}$?`, `哪个有序数对是 $${eq}$ 的解？`],
+              pair(x, y),
+              wrong.slice(0, 3),
+              [
+                [
+                  ["Substitute", "代入"],
+                  [`Try $${pair(x, y)}$: $x = ${num(x)}$ and $y = ${num(y)}$:`, `试 $${pair(x, y)}$：$x = ${num(x)}$，$y = ${num(y)}$：`],
+                  [check(a, b, x, y)],
+                ],
+                [
+                  ["Compare", "比较"],
+                  [`That is the right side, $${num(c)}$, so this pair is a solution.`, `这正是右边的 $${num(c)}$，所以这个数对是解。`],
+                ],
+              ],
+              [
+                `Solve for $y$ at $x = ${num(x)}$: $${times(a, x)} ${b < 0 ? "-" : "+"} ${poly([Math.abs(b), "y"])} = ${num(c)}$ gives $y = ${num(y)}$.`,
+                `在 $x = ${num(x)}$ 时求 $y$：由 $${times(a, x)} ${b < 0 ? "-" : "+"} ${poly([Math.abs(b), "y"])} = ${num(c)}$ 得 $y = ${num(y)}$。`,
+              ],
+              solutionPlane(a, b, c, [[x, y]], eq),
+            );
+          }
+        },
+        solutionPlane(1, -2, 6, [[4, -1]], "x − 2y = 6"),
+      ),
+    ],
   ),
-  ["introduction-to-two-variable-equations", "evaluating-expressions"],
-  ["6.EE.C.9", "8.EE.C.8.A"],
   [
-    {
-      id: "checking-an-ordered-pair",
-      title: t("Checking an ordered pair", "检验有序数对"),
-      explanation: t(
-        "In an ordered pair $(x, y)$, the first number is $x$ and the second is $y$. Substitute both and check whether the two sides are equal. For $y = 3x - 5$ and $(2, 1)$: $3(2) - 5 = 1$, so $(2, 1)$ is a solution; $(1, 2)$ is not, because $3(1) - 5 = -2$.",
-        "有序数对 $(x, y)$ 中，第一个数是 $x$，第二个数是 $y$。把两个数都代入，看两边是否相等。对于 $y = 3x - 5$ 和 $(2, 1)$：$3(2) - 5 = 1$，所以 $(2, 1)$ 是解；$(1, 2)$ 不是，因为 $3(1) - 5 = -2$。",
-      ),
-      keyPrerequisites: ["evaluating-expressions"],
-      generate(rng) {
-        const x0 = rng.int(-6, 6);
-        const y0 = rng.int(-6, 6);
-        const e = twoVariableEquation(rng, x0, y0);
-        const kind = rng.int(0, 2);
-        let [x, y] = [x0, y0];
-        if (kind === 1 && x0 !== y0) [x, y] = [y0, x0];
-        else if (kind > 0) y = y0 + rng.nonZero(-3, 3);
-        const value = e.a * x + e.b * y;
-        const yes = value === e.c;
-        const solved = e.latex.startsWith("y =");
-        const work = solved ? `${substitutedLinear(-e.a, x, e.c)} = ${num(-e.a * x + e.c)}` : check(e.a, e.b, x, y);
-        return choiceProblem({
-          prompt: t(`Is $${pair(x, y)}$ a solution of $${e.latex}$?`, `$${pair(x, y)}$ 是 $${e.latex}$ 的解吗？`),
-          options: yesNo,
-          correct: yes ? 0 : 1,
-          solution: solved
-            ? t(
-                `Substitute $x = ${num(x)}$ into the right side: $${work}$. ${yes ? `This equals $y = ${num(y)}$, so the pair is a solution.` : `This is not $y = ${num(y)}$, so the pair is not a solution.`}`,
-                `把 $x = ${num(x)}$ 代入右边：$${work}$。${yes ? `它等于 $y = ${num(y)}$，所以这个数对是解。` : `它不等于 $y = ${num(y)}$，所以这个数对不是解。`}`,
-              )
-            : t(
-                `Substitute $x = ${num(x)}$ and $y = ${num(y)}$: $${work}$. ${yes ? `This equals $${num(e.c)}$, so the pair is a solution.` : `This is not $${num(e.c)}$, so the pair is not a solution.`}`,
-                `代入 $x = ${num(x)}$，$y = ${num(y)}$：$${work}$。${yes ? `它等于 $${num(e.c)}$，所以这个数对是解。` : `它不等于 $${num(e.c)}$，所以这个数对不是解。`}`,
-              ),
-        });
-      },
-    },
-    {
-      id: "choosing-a-solution",
-      title: t("Choosing a solution", "选出方程的解"),
-      explanation: t(
-        "To find which of several pairs is a solution, substitute each one. Watch the order: $(4, -1)$ means $x = 4$ and $y = -1$. For $x - 2y = 6$: $(4, -1)$ gives $4 - 2(-1) = 6$ ✓, while $(-1, 4)$ gives $-1 - 8 = -9$.",
-        "要判断几个数对中哪个是解，就逐个代入。注意顺序：$(4, -1)$ 表示 $x = 4$，$y = -1$。对于 $x - 2y = 6$：$(4, -1)$ 得 $4 - 2(-1) = 6$ ✓，而 $(-1, 4)$ 得 $-1 - 8 = -9$。",
-      ),
-      generate(rng) {
-        for (;;) {
-          const x = rng.int(-6, 6);
-          const y = rng.int(-6, 6);
-          if (x === y) continue;
-          const a = rng.nonZero(-6, 6);
-          const b = rng.nonZero(-6, 6);
-          const c = a * x + b * y;
-          const candidates: [number, number][] = [
-            [y, x],
-            [x, -y],
-            [-x, y],
-            [x, y + rng.nonZero(-2, 2)],
-            [x + 1, y],
-          ];
-          const wrong = candidates.filter(([p, q]) => a * p + b * q !== c).map(([p, q]) => mathText(pair(p, q)));
-          if (new Set(wrong.map((w) => w.en)).size < 3) continue;
-          const eq = std(a, b, c);
-          return pickChoice(
-            rng,
-            t(`Which ordered pair is a solution of $${eq}$?`, `哪个有序数对是 $${eq}$ 的解？`),
-            mathText(pair(x, y)),
-            wrong,
-            t(
-              `Substitute $x = ${num(x)}$ and $y = ${num(y)}$: $${check(a, b, x, y)}$, so $${pair(x, y)}$ is a solution. None of the other pairs gives $${num(c)}$.`,
-              `代入 $x = ${num(x)}$，$y = ${num(y)}$：$${check(a, b, x, y)}$，所以 $${pair(x, y)}$ 是解。其他数对代入后的值都不等于 $${num(c)}$。`,
-            ),
-          );
-        }
-      },
-    },
+    "Pens cost $\\$2$ and notebooks $\\$3$, and Ava spends $\\$12$: $2x + 3y = 12$. She could buy $3$ pens and $2$ notebooks, or $6$ pens and no notebooks. Each choice is an ordered pair $(x, y)$ that makes the equation true.",
+    "笔每支 $2$ 元，笔记本每本 $3$ 元，小艾花了 $12$ 元：$2x + 3y = 12$。她可以买 $3$ 支笔和 $2$ 本笔记本，也可以买 $6$ 支笔、不买笔记本。每种选择都是一个使方程成立的有序数对 $(x, y)$。",
+  ],
+  ["$2(3) + 3(2) = 6 + 6 = 12$ and $2(6) + 3(0) = 12$.", "$2(3) + 3(2) = 6 + 6 = 12$，$2(6) + 3(0) = 12$。"],
+  [
+    "check whether an ordered pair is a solution, and pick the solution from a list.",
+    "学习检验一个有序数对是不是方程的解，并从几个数对中选出解。",
   ],
 );
-
 /** solvingTwoVariableEquations finds a missing coordinate and solves an equation for y. */
 export const solvingTwoVariableEquations = withIntro(
   topic(
@@ -1308,91 +1405,199 @@ function lineFigure(line: LatticeLine, described: readonly [number, number][]): 
   };
 }
 
-export const graphingLinearEquations = topic(
-  "graphing-linear-equations",
-  t("Graphing Linear Equations", "画一次方程的图像"),
-  t(
-    "The graph of an equation in $x$ and $y$ shows all of its solutions: every point $(x, y)$ on the graph is a solution, and every solution is a point on the graph. The graph of a linear equation is a straight line. To graph $y = 2x - 1$, make a table of a few solutions, such as $(0, -1)$, $(1, 1)$ and $(2, 3)$, plot them and draw the line through them.",
-    "关于 $x$ 和 $y$ 的方程的图像表示它的所有解：图像上的每个点 $(x, y)$ 都是解，每个解也都是图像上的点。一次方程的图像是一条直线。画 $y = 2x - 1$ 的图像时，先列表求出几个解，例如 $(0, -1)$、$(1, 1)$、$(2, 3)$，描出这些点，再过这些点画直线。",
+/** graphingLinearEquations reads solutions from the graph of a line and matches an equation to its line. */
+export const graphingLinearEquations = withIntro(
+  topic(
+    "graphing-linear-equations",
+    t("Graphing Linear Equations", "画一次方程的图像"),
+    t(
+      "The graph of an equation in $x$ and $y$ shows all of its solutions: every point $(x, y)$ on the graph is a solution, and every solution is a point on the graph. The graph of a linear equation is a straight line. To graph $y = 2x - 1$, make a table of a few solutions, such as $(0, -1)$, $(1, 1)$ and $(2, 3)$, plot them and draw the line through them.",
+      "关于 $x$ 和 $y$ 的方程的图像表示它的所有解：图像上的每个点 $(x, y)$ 都是解，每个解也都是图像上的点。一次方程的图像是一条直线。画 $y = 2x - 1$ 的图像时，先列表求出几个解，例如 $(0, -1)$、$(1, 1)$、$(2, 3)$，描出这些点，再过这些点画直线。",
+    ),
+    ["solving-two-variable-equations", "the-cartesian-coordinate-system"],
+    ["8.F.A.3", "HSA.REI.D.10"],
+    [
+      {
+        ...lesson(
+          "reading-a-solution-from-the-graph",
+          ["Reading a solution from the graph", "从图像读出解"],
+          [
+            [
+              "Each point on the line is a solution of its equation. To find $y$ for a given $x$, start at $x$ on the $x$-axis, go straight up or down to the line, then read across to the $y$-axis. On the line through $(0, 3)$ and $(2, -1)$, the point at $x = 4$ is $(4, -5)$, so $y = -5$ when $x = 4$.",
+              "直线上的每个点都是它的方程的解。要求某个 $x$ 对应的 $y$，从 $x$ 轴上的 $x$ 出发，竖直向上或向下走到直线，再水平读出 $y$ 轴上的值。在经过 $(0, 3)$ 和 $(2, -1)$ 的直线上，$x = 4$ 处的点是 $(4, -5)$，所以当 $x = 4$ 时，$y = -5$。",
+            ],
+            [
+              "The line drops $4$ for every $2$ steps right, so from $(2, -1)$ two more steps right give $-1 - 4 = -5$.",
+              "直线每向右 $2$ 步下降 $4$，所以从 $(2, -1)$ 再向右 $2$ 步，得到 $-1 - 4 = -5$。",
+            ],
+            [
+              "Start on the $x$-axis, not the $y$-axis. Finding $4$ on the $y$-axis and reading across gives the $x$ for $y = 4$ instead.",
+              "要从 $x$ 轴出发，不是 $y$ 轴。在 $y$ 轴上找 $4$ 再横着读，得到的是 $y = 4$ 时的 $x$。",
+            ],
+          ],
+          (rng) => {
+            for (;;) {
+              const line = latticeLine(rng);
+              if (line.points.length < 4) continue;
+              const [asked, ...rest] = rng.shuffle(line.points) as [[number, number], ...[number, number][]];
+              const described = rest.slice(0, 2);
+              const [x, y] = asked;
+              const inverse = line.m.isZero() ? undefined : Q.of(x - line.b).div(line.m);
+              const mx = line.m.mul(Q.of(x));
+              return valued(
+                [
+                  `The graph shows a linear equation in $x$ and $y$. What is $y$ when $x = ${num(x)}$?`,
+                  `图像表示一个关于 $x$ 和 $y$ 的一次方程。当 $x = ${num(x)}$ 时，$y$ 是多少？`,
+                ],
+                y,
+                [
+                  [
+                    ["Go to the line", "走到直线"],
+                    [
+                      `Start at $${num(x)}$ on the $x$-axis and go straight ${y >= 0 ? "up" : "down"} to the line.`,
+                      `从 $x$ 轴上的 $${num(x)}$ 出发，竖直向${y >= 0 ? "上" : "下"}走到直线。`,
+                    ],
+                  ],
+                  [
+                    ["Read across", "横着读"],
+                    ["Read the height of that point on the $y$-axis:", "在 $y$ 轴上读出这个点的高度："],
+                    [`${pair(x, y)}`, `y = ${num(y)}`],
+                  ],
+                ],
+                [
+                  `The line crosses the $y$-axis at $${num(line.b)}$ and changes by $${num(line.m)}$ for each step right: $${num(line.b)} + ${paren(line.m)} \\cdot ${paren(x)} = ${num(y)}$.`,
+                  `直线与 $y$ 轴交于 $${num(line.b)}$，每向右一步变化 $${num(line.m)}$：$${num(line.b)} + ${paren(line.m)} \\cdot ${paren(x)} = ${num(y)}$。`,
+                ],
+                [
+                  ...(inverse
+                    ? [
+                        [
+                          inverse,
+                          `That is the $x$ where $y = ${num(x)}$: it starts on the wrong axis.`,
+                          `这是 $y = ${num(x)}$ 时的 $x$：从错误的轴出发了。`,
+                        ] as const,
+                      ]
+                    : []),
+                  [
+                    -y,
+                    "That has the wrong sign: check whether the point is above or below the $x$-axis.",
+                    "符号错了：看看这个点在 $x$ 轴的上方还是下方。",
+                  ],
+                  [
+                    mx,
+                    "That counts the steps from the origin but forgets where the line crosses the $y$-axis.",
+                    "这只按每步的变化算，忘了直线与 $y$ 轴的交点。",
+                  ],
+                  [
+                    y + 1,
+                    "That is one grid line too high: read the height exactly at the point on the line.",
+                    "这高了一格：要准确读出直线上那个点的高度。",
+                  ],
+                ],
+                { solveFor: "y", figure: lineFigure(line, described) },
+              );
+            }
+          },
+          drawn(gradeDrawings3["graphing-linear-equations#reading-a-solution-from-the-graph"]),
+        ),
+        keyPrerequisites: ["the-cartesian-coordinate-system"],
+      },
+      lesson(
+        "matching-an-equation-to-its-graph",
+        ["Matching an equation to its graph", "根据图像选方程"],
+        [
+          [
+            "To check whether a line is the graph of an equation, read two points of the line and substitute them. The line through $(0, 1)$ and $(2, 5)$ is the graph of $y = 2x + 1$: $2(0) + 1 = 1$ and $2(2) + 1 = 5$.",
+            "要判断一条直线是不是某个方程的图像，读出直线上的两个点，代入检验。经过 $(0, 1)$ 和 $(2, 5)$ 的直线是 $y = 2x + 1$ 的图像：$2(0) + 1 = 1$，$2(2) + 1 = 5$。",
+          ],
+          [
+            "From $(0, 1)$ to $(2, 5)$ the line rises $4$ in $2$ steps, $2$ per step, and starts at $1$: $y = 2x + 1$.",
+            "从 $(0, 1)$ 到 $(2, 5)$，直线 $2$ 步上升 $4$，每步 $2$，起点是 $1$：$y = 2x + 1$。",
+          ],
+          [
+            "One point is not enough. $y = x + 1$ also passes through $(0, 1)$, but not through $(2, 5)$.",
+            "只看一个点不够。$y = x + 1$ 也经过 $(0, 1)$，但不经过 $(2, 5)$。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const line = latticeLine(rng);
+            if (line.points.length < 3) continue;
+            const { m, b } = line;
+            const onAxis = line.points.find(([x]) => x === 0)!;
+            const other = rng.pick(line.points.filter(([x]) => x !== 0));
+            const [x2, y2] = other;
+            const correct = `y = ${linear(m, b)}`;
+            const shift = b === 0 ? Q.one : Q.of(-b);
+            const options: [string, string, string][] = [
+              ...(m.isInteger() && b !== 0 && !m.eq(Q.of(b))
+                ? [
+                    [
+                      `y = ${linear(b, m)}`,
+                      "That swaps the slope and the number where the line crosses the $y$-axis.",
+                      "这把斜率和直线与 $y$ 轴交点的值对调了。",
+                    ] as [string, string, string],
+                  ]
+                : []),
+              [
+                `y = ${linear(m.neg(), b)}`,
+                "That line leans the other way: its slope has the wrong sign.",
+                "这条直线倾斜方向相反：斜率的符号错了。",
+              ],
+              [
+                `y = ${linear(m, shift)}`,
+                `That line crosses the $y$-axis at $${num(shift)}$, not $${num(b)}$.`,
+                `这条直线与 $y$ 轴交于 $${num(shift)}$，不是 $${num(b)}$。`,
+              ],
+              [
+                `y = ${linear(m.neg(), shift)}`,
+                "That line has both the wrong slope and the wrong crossing on the $y$-axis.",
+                "这条直线的斜率和与 $y$ 轴的交点都错了。",
+              ],
+            ];
+            const seen = new Set([correct]);
+            const wrong = options.filter(([w]) => !seen.has(w) && seen.add(w)).slice(0, 3);
+            const run = x2;
+            const rise = y2 - b;
+            return chosenMath(
+              rng,
+              ["Which equation has the line shown as its graph?", "哪个方程的图像是图中的直线？"],
+              correct,
+              wrong,
+              [
+                [
+                  ["Read two points", "读出两个点"],
+                  [`The line passes through $${pair(0, b)}$ and $${pair(x2, y2)}$.`, `直线经过 $${pair(0, b)}$ 和 $${pair(x2, y2)}$。`],
+                ],
+                [
+                  ["Substitute", "代入"],
+                  [`Both points satisfy $${correct}$:`, `两个点都满足 $${correct}$：`],
+                  [
+                    `${num(m)} \\cdot 0 ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${num(b)}`,
+                    `${num(m)} \\cdot ${paren(x2)} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${num(y2)}`,
+                  ],
+                ],
+              ],
+              [
+                `From $${pair(0, b)}$ to $${pair(x2, y2)}$ the line changes by $${num(rise)}$ over $${num(run)}$ steps, $\\frac{${rise}}{${run}} = ${num(m)}$ per step, and it starts at $${num(b)}$.`,
+                `从 $${pair(0, b)}$ 到 $${pair(x2, y2)}$，直线走 $${num(run)}$ 步变化 $${num(rise)}$，每步 $\\frac{${rise}}{${run}} = ${num(m)}$，起点是 $${num(b)}$。`,
+              ],
+              lineFigure(line, [onAxis, other]),
+            );
+          }
+        },
+        drawn(gradeDrawings3["graphing-linear-equations#matching-an-equation-to-its-graph"]),
+      ),
+    ],
   ),
-  ["solving-two-variable-equations", "the-cartesian-coordinate-system"],
-  ["8.F.A.3", "HSA.REI.D.10"],
   [
-    {
-      id: "reading-a-solution-from-the-graph",
-      figure: gradeDrawings3["graphing-linear-equations#reading-a-solution-from-the-graph"],
-      title: t("Reading a solution from the graph", "从图像读出解"),
-      explanation: t(
-        "Each point on the line is a solution of its equation. To find $y$ for a given $x$, go from $x$ on the $x$-axis straight up or down to the line, then across to the $y$-axis. On a line through $(0, 3)$ and $(2, -1)$, the point above or below $x = 4$ is $(4, -5)$, so $y = -5$ when $x = 4$.",
-        "直线上的每个点都是它的方程的解。要求某个 $x$ 对应的 $y$，从 $x$ 轴上的 $x$ 处竖直向上或向下到直线，再水平找到 $y$ 轴上的值。在经过 $(0, 3)$ 和 $(2, -1)$ 的直线上，$x = 4$ 处的点是 $(4, -5)$，所以当 $x = 4$ 时，$y = -5$。",
-      ),
-      keyPrerequisites: ["the-cartesian-coordinate-system"],
-      generate(rng) {
-        for (;;) {
-          const line = latticeLine(rng);
-          if (line.points.length < 4) continue;
-          const [asked, ...rest] = rng.shuffle(line.points) as [[number, number], ...[number, number][]];
-          const described = rest.slice(0, 2);
-          const [x, y] = asked;
-          const inverse = line.m.isZero() ? undefined : Q.of(x - line.b).div(line.m);
-          return {
-            ...numberProblem({
-              prompt: t(
-                `The graph shows a linear equation in $x$ and $y$. What is $y$ when $x = ${num(x)}$?`,
-                `图像表示一个关于 $x$ 和 $y$ 的一次方程。当 $x = ${num(x)}$ 时，$y$ 是多少？`,
-              ),
-              answer: y,
-              solveFor: "y",
-              wrong: [...(inverse ? [inverse] : []), -y, line.m.mul(Q.of(x))],
-              solution: t(
-                `The point of the line at $x = ${num(x)}$ is $${pair(x, y)}$, so $y = ${num(y)}$.`,
-                `直线在 $x = ${num(x)}$ 处的点是 $${pair(x, y)}$，所以 $y = ${num(y)}$。`,
-              ),
-            }),
-            figure: lineFigure(line, described),
-          };
-        }
-      },
-    },
-    {
-      id: "matching-an-equation-to-its-graph",
-      figure: gradeDrawings3["graphing-linear-equations#matching-an-equation-to-its-graph"],
-      title: t("Matching an equation to its graph", "根据图像选方程"),
-      explanation: t(
-        "To check whether an equation has a given line as its graph, read two points of the line and substitute them. The line through $(0, 1)$ and $(2, 5)$ is the graph of $y = 2x + 1$: $2(0) + 1 = 1$ and $2(2) + 1 = 5$. It is not the graph of $y = x + 2$, because $(0, 1)$ does not satisfy it.",
-        "要判断一个方程的图像是不是某条直线，读出直线上的两个点代入检验。经过 $(0, 1)$ 和 $(2, 5)$ 的直线是 $y = 2x + 1$ 的图像：$2(0) + 1 = 1$，$2(2) + 1 = 5$。它不是 $y = x + 2$ 的图像，因为 $(0, 1)$ 不满足这个方程。",
-      ),
-      generate(rng) {
-        for (;;) {
-          const line = latticeLine(rng);
-          if (line.points.length < 3) continue;
-          const { m, b } = line;
-          const onAxis = line.points.find(([x]) => x === 0)!;
-          const other = rng.pick(line.points.filter(([x]) => x !== 0));
-          const correct = `y = ${linear(m, b)}`;
-          // Swapping the slope and the intercept, and sign errors in either, are the usual misreadings.
-          const shifts = b === 0 ? [Q.one, Q.one.neg()] : [Q.of(-b), Q.of(-b)];
-          const wrong = [
-            ...(m.isInteger() && b !== 0 && !m.eq(Q.of(b)) ? [`y = ${linear(b, m)}`] : []),
-            `y = ${linear(m.neg(), b)}`,
-            `y = ${linear(m, shifts[0]!)}`,
-            `y = ${linear(m.neg(), shifts[1]!)}`,
-          ];
-          const [x2, y2] = other;
-          return pickChoice(
-            rng,
-            t("Which equation has the line shown as its graph?", "哪个方程的图像是图中的直线？"),
-            mathText(correct),
-            wrong.map(mathText),
-            t(
-              `The line passes through $${pair(0, onAxis[1])}$ and $${pair(x2, y2)}$. Both satisfy $${correct}$: $y = ${num(b)}$ at $x = 0$, and $${num(m)} \\cdot ${paren(x2)} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${num(y2)}$. Each of the other equations fails for at least one of these points.`,
-              `直线经过 $${pair(0, onAxis[1])}$ 和 $${pair(x2, y2)}$。两点都满足 $${correct}$：$x = 0$ 时 $y = ${num(b)}$，且 $${num(m)} \\cdot ${paren(x2)} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${num(y2)}$。其他方程至少有一个点不满足。`,
-            ),
-            lineFigure(line, [onAxis, other]),
-          );
-        }
-      },
-    },
+    "The table for $y = 2x - 1$ gives $(0, -1)$, $(1, 1)$ and $(2, 3)$. Plot them and they line up, so a ruler joins them into the graph of the equation.",
+    "$y = 2x - 1$ 的表格给出 $(0, -1)$、$(1, 1)$、$(2, 3)$。描出这些点，它们排成一条直线，用直尺连起来就是这个方程的图像。",
+  ],
+  ["Each step right adds $2$: $-1 + 2 = 1$ and $1 + 2 = 3$.", "每向右一步加 $2$：$-1 + 2 = 1$，$1 + 2 = 3$。"],
+  [
+    "read solutions from the graph of a line, match equations to lines, find where lines cross the axes, and draw lines.",
+    "学习从直线的图像读出解，把方程和直线对应起来，求直线与坐标轴的交点，并画出直线。",
   ],
 );
 
@@ -2083,11 +2288,17 @@ export const furtherSolvingLinearInequalities = withIntro(
 
 /** TwoStep is a generated inequality a·x + b op c whose solution is x solvedOp s. */
 interface TwoStep {
+  readonly a: number;
+  readonly b: number;
+  readonly c: number;
   readonly latex: (op: InequalityOp) => string;
   readonly op: InequalityOp;
   readonly solvedOp: InequalityOp;
   readonly s: number;
-  readonly work: Text;
+  /** solve is the labelled step that solves the inequality. */
+  readonly solve: Walk;
+  /** test checks a value just inside the solutions against the original inequality. */
+  readonly test: Pair;
 }
 
 /** twoStep draws a one- or two-step inequality with an integer boundary s, often with a negative coefficient. */
@@ -2099,97 +2310,184 @@ function twoStep(rng: Rng, s: number): TwoStep {
   const solvedOp = a < 0 ? flip[op] : op;
   const constantFirst = b !== 0 && a < 0 && rng.bool();
   const lhs = constantFirst ? poly([b, ""], [a, "x"]) : linear(a, b);
+  const reverse: Pair = a < 0 ? [", reversing the symbol", "，并改变不等号方向"] : ["", ""];
+  const lines = [...(b === 0 ? [] : [`${side(a)} ${relSymbol(op)} ${num(c - b)}`]), inequalityLatex("x", solvedOp, s)];
+  const tv = inside(solvedOp, s);
+  const value = a * tv + b;
+  const shown = `${times(a, tv)}${b === 0 ? "" : ` ${b < 0 ? "-" : "+"} ${Math.abs(b)}`}`;
   return {
+    a,
+    b,
+    c,
     latex: (o) => `${lhs} ${relSymbol(o)} ${num(c)}`,
     op,
     solvedOp,
     s,
-    work: (() => {
-      const lines = steps(...(b === 0 ? [] : [`${side(a)} ${relSymbol(op)} ${num(c - b)}`]), inequalityLatex("x", solvedOp, s));
-      const reverse = a < 0 ? t(", reversing the symbol", "，并改变不等号方向") : t("", "");
-      return b === 0
-        ? t(`Divide both sides by $${a}$${reverse.en}:${lines}`, `两边同时除以 $${a}$${reverse["zh-CN"]}：${lines}`)
-        : t(
-            `${moveConstant(b).en}, then divide by $${a}$${reverse.en}:${lines}`,
-            `${moveConstant(b)["zh-CN"]}，再同时除以 $${a}$${reverse["zh-CN"]}：${lines}`,
-          );
-    })(),
+    solve: [
+      ["Solve", "求解"],
+      b === 0
+        ? [`Divide both sides by $${a}$${reverse[0]}:`, `两边同时除以 $${a}$${reverse[1]}：`]
+        : [`${moveConstant(b).en}, then divide by $${a}$${reverse[0]}:`, `${moveConstant(b)["zh-CN"]}，再同时除以 $${a}$${reverse[1]}：`],
+      lines,
+    ],
+    test: [
+      `Test $x = ${num(tv)}$, on the shaded side: $${shown} = ${num(value)}$, and $${num(value)} ${relSymbol(op)} ${num(c)}$ is true.`,
+      `检验涂色一侧的 $x = ${num(tv)}$：$${shown} = ${num(value)}$，$${num(value)} ${relSymbol(op)} ${num(c)}$ 成立。`,
+    ],
   };
 }
 
 /** describe says how the graph of x op c looks on a number line. */
-const describe = (op: InequalityOp, c: number) => {
+const describe = (op: InequalityOp, c: number): Pair => {
   const closed = op === ">=" || op === "<=";
   const right = op === ">" || op === ">=";
-  return t(
+  return [
     `${closed ? "A closed dot" : "An open circle"} at $${c}$, shaded to the ${right ? "right" : "left"}`,
     `$${c}$ 处画${closed ? "实心点" : "空心圈"}，向${right ? "右" : "左"}涂色`,
-  );
+  ];
 };
 
-export const representingSolutionsToInequalitiesOnNumberLines = topic(
-  "representing-solutions-to-inequalities-on-number-lines",
-  t("Representing Solutions to Inequalities on Number Lines", "在数轴上表示不等式的解"),
-  t(
-    "To graph the solutions of an inequality such as $5 - 2x < 11$, solve it first: $-2x < 6$, so $x > -3$. Then draw an open circle at $-3$, because $-3$ is not a solution, and shade to the right. A closed dot is used for $\\le$ and $\\ge$. Graphing before solving is risky: the symbol may reverse along the way.",
-    "要画出 $5 - 2x < 11$ 这类不等式的解，先求解：$-2x < 6$，所以 $x > -3$。然后在 $-3$ 处画空心圈（因为 $-3$ 不是解），并向右涂色。$\\le$ 和 $\\ge$ 用实心点表示。不先求解就画图很容易出错：求解过程中不等号可能会改变方向。",
+/** dotReason says why the other kind of dot is wrong for x op s. */
+const dotReason = (op: InequalityOp, s: number): Pair =>
+  op === "<=" || op === ">="
+    ? [`$${s}$ itself is a solution, so the dot must be closed.`, `$${s}$ 本身是解，所以要画实心点。`]
+    : [`$${s}$ itself is not a solution, so the circle must be open.`, `$${s}$ 本身不是解，所以要画空心圈。`];
+
+/** directionReason says why shading the other way is wrong, naming a forgotten reversal when there was one. */
+const directionReason = (a: number): Pair =>
+  a < 0
+    ? [
+        `Dividing by $${a}$, a negative number, reverses the symbol; this shading forgot that.`,
+        `除以负数 $${a}$ 要改变不等号方向；这样涂色忘了这一点。`,
+      ]
+    : ["That shades the wrong way.", "涂色方向反了。"];
+
+/** representingSolutionsToInequalitiesOnNumberLines solves an inequality and matches it with its number-line graph. */
+export const representingSolutionsToInequalitiesOnNumberLines = withIntro(
+  topic(
+    "representing-solutions-to-inequalities-on-number-lines",
+    t("Representing Solutions to Inequalities on Number Lines", "在数轴上表示不等式的解"),
+    t(
+      "To graph the solutions of an inequality such as $5 - 2x < 11$, solve it first: $-2x < 6$, so $x > -3$. Then draw an open circle at $-3$, because $-3$ is not a solution, and shade to the right. A closed dot is used for $\\le$ and $\\ge$. Graphing before solving is risky: the symbol may reverse along the way.",
+      "要画出 $5 - 2x < 11$ 这类不等式的解，先求解：$-2x < 6$，所以 $x > -3$。然后在 $-3$ 处画空心圈（因为 $-3$ 不是解），并向右涂色。$\\le$ 和 $\\ge$ 用实心点表示。不先求解就画图很容易出错：求解过程中不等号可能会改变方向。",
+    ),
+    ["solving-multi-step-inequalities", "representing-inequalities-on-number-lines"],
+    ["7.EE.B.4.B"],
+    [
+      {
+        ...lesson(
+          "describing-the-graph-of-the-solutions",
+          ["Describing the graph of the solutions", "描述解的图像"],
+          [
+            [
+              "Solve first, then read the result. $-4x + 1 \\ge 9$ gives $-4x \\ge 8$, and dividing by $-4$ reverses the symbol: $x \\le -2$. The graph is a closed dot at $-2$, shaded to the left.",
+              "先求解，再看结果。由 $-4x + 1 \\ge 9$ 得 $-4x \\ge 8$，除以 $-4$ 要改变不等号方向：$x \\le -2$。图像是在 $-2$ 处画实心点，向左涂色。",
+            ],
+            [
+              "Test $x = -3$, on the shaded side: $-4(-3) + 1 = 13$, and $13 \\ge 9$ is true.",
+              "检验涂色一侧的 $x = -3$：$-4(-3) + 1 = 13$，$13 \\ge 9$ 成立。",
+            ],
+            [
+              "Do not read the direction off the original symbol: $\\ge$ in $-4x + 1 \\ge 9$ ends up shading to the left.",
+              "不能按原来的符号判断方向：$-4x + 1 \\ge 9$ 中的 $\\ge$ 最后是向左涂色。",
+            ],
+          ],
+          (rng) => {
+            const s = rng.int(-8, 8);
+            const q = twoStep(rng, s);
+            const latex = q.latex(q.op);
+            const right = describe(q.solvedOp, s);
+            const draw: Pair = [`${right[0]}.`, `${right[1]}。`];
+            return chosen(
+              rng,
+              [`Which describes the graph of the solutions of $${latex}$ on a number line?`, `$${latex}$ 的解在数轴上的图像是哪一种？`],
+              right,
+              [
+                [describe(flip[q.solvedOp], s), ...directionReason(q.a)],
+                [describe(strictness[q.solvedOp], s), ...dotReason(q.solvedOp, s)],
+                [describe(flip[strictness[q.solvedOp]], s), "That has both the wrong dot and the wrong direction.", "点和方向都错了。"],
+              ],
+              [q.solve, [["Draw it", "画出来"], draw]],
+              q.test,
+            );
+          },
+          drawn(gradeDrawings3["representing-solutions-to-inequalities-on-number-lines#describing-the-graph-of-the-solutions"]),
+        ),
+        keyPrerequisites: ["solving-multi-step-inequalities"],
+      },
+      lesson(
+        "choosing-the-inequality-for-a-graph",
+        ["Choosing the inequality for a graph", "根据图像选不等式"],
+        [
+          [
+            "To decide which inequality a graph shows, solve each candidate and compare. An open circle at $3$ shaded to the left shows $x < 3$. It matches $-2x > -6$, because dividing by $-2$ reverses the symbol and gives $x < 3$.",
+            "要判断图像表示哪个不等式，把每个选项都解出来再比较。在 $3$ 处画空心圈、向左涂色表示 $x < 3$。它与 $-2x > -6$ 对应，因为除以 $-2$ 要改变方向，得到 $x < 3$。",
+          ],
+          [
+            "Test $x = 2$, on the shaded side: $-2(2) = -4$, and $-4 > -6$ is true.",
+            "检验涂色一侧的 $x = 2$：$-2(2) = -4$，$-4 > -6$ 成立。",
+          ],
+          ["$-2x < -6$ looks like it matches $x < 3$, but it solves to $x > 3$.", "$-2x < -6$ 看起来像 $x < 3$，但解出来是 $x > 3$。"],
+        ],
+        (rng) => {
+          const s = rng.int(-6, 6);
+          const q = twoStep(rng, s);
+          const correct = q.latex(q.op);
+          const lo = Math.max(-10, s - 5);
+          const shown = describe(q.solvedOp, s);
+          return chosenMath(
+            rng,
+            ["Which inequality has the solutions shown on the number line?", "哪个不等式的解是数轴上所表示的数？"],
+            correct,
+            [
+              [
+                q.latex(flip[q.op]),
+                `That one solves to $${inequalityLatex("x", flip[q.solvedOp], s)}$, the other direction.`,
+                `它解出来是 $${inequalityLatex("x", flip[q.solvedOp], s)}$，方向相反。`,
+              ],
+              [
+                q.latex(strictness[q.op]),
+                `That one solves to $${inequalityLatex("x", strictness[q.solvedOp], s)}$: the dot at $${s}$ would be ${q.solvedOp === "<" || q.solvedOp === ">" ? "closed" : "open"}.`,
+                `它解出来是 $${inequalityLatex("x", strictness[q.solvedOp], s)}$：$${s}$ 处应是${q.solvedOp === "<" || q.solvedOp === ">" ? "实心点" : "空心圈"}。`,
+              ],
+              [
+                q.latex(flip[strictness[q.op]]),
+                `That one solves to $${inequalityLatex("x", flip[strictness[q.solvedOp]], s)}$: both the dot and the direction differ.`,
+                `它解出来是 $${inequalityLatex("x", flip[strictness[q.solvedOp]], s)}$：点和方向都不同。`,
+              ],
+            ],
+            [
+              [["Read the graph", "读图"], [`${shown[0]}: that is`, `${shown[1]}：表示`], [inequalityLatex("x", q.solvedOp, s)]],
+              [
+                q.solve[0],
+                [
+                  `For $${correct}$: ${q.solve[1][0].charAt(0).toLowerCase()}${q.solve[1][0].slice(1)}`,
+                  `对于 $${correct}$：${q.solve[1][1]}`,
+                ],
+                q.solve[2],
+              ],
+            ],
+            q.test,
+            numberLineFigure([ray(q.solvedOp, s)], lo, lo + 10),
+          );
+        },
+        drawn(gradeDrawings3["representing-solutions-to-inequalities-on-number-lines#choosing-the-inequality-for-a-graph"]),
+      ),
+    ],
   ),
-  ["solving-multi-step-inequalities", "representing-inequalities-on-number-lines"],
-  ["7.EE.B.4.B"],
   [
-    {
-      id: "describing-the-graph-of-the-solutions",
-      figure: gradeDrawings3["representing-solutions-to-inequalities-on-number-lines#describing-the-graph-of-the-solutions"],
-      title: t("Describing the graph of the solutions", "描述解的图像"),
-      explanation: t(
-        "Solve, then read the result: $-4x + 1 \\ge 9$ gives $-4x \\ge 8$, so $x \\le -2$. Its graph is a closed dot at $-2$, shaded to the left.",
-        "先求解，再看结果：由 $-4x + 1 \\ge 9$ 得 $-4x \\ge 8$，所以 $x \\le -2$。它的图像是在 $-2$ 处画实心点，向左涂色。",
-      ),
-      keyPrerequisites: ["solving-multi-step-inequalities"],
-      generate(rng) {
-        const s = rng.int(-8, 8);
-        const q = twoStep(rng, s);
-        const latex = q.latex(q.op);
-        return choiceProblem({
-          prompt: t(
-            `Which describes the graph of the solutions of $${latex}$ on a number line?`,
-            `$${latex}$ 的解在数轴上的图像是哪一种？`,
-          ),
-          options: ops.map((o) => describe(o, s)),
-          correct: ops.indexOf(q.solvedOp),
-          solution: t(`${q.work.en}${describe(q.solvedOp, s).en}.`, `${q.work["zh-CN"]}${describe(q.solvedOp, s)["zh-CN"]}。`),
-        });
-      },
-    },
-    {
-      id: "choosing-the-inequality-for-a-graph",
-      figure: gradeDrawings3["representing-solutions-to-inequalities-on-number-lines#choosing-the-inequality-for-a-graph"],
-      title: t("Choosing the inequality for a graph", "根据图像选不等式"),
-      explanation: t(
-        "To decide which inequality a graph shows, solve each candidate and compare it with the graph. A graph with an open circle at $3$ shaded to the left shows $x < 3$. It matches $-2x > -6$, because dividing by $-2$ gives $x < 3$, but not $-2x < -6$.",
-        "要判断图像表示哪个不等式，把每个选项都解出来，再与图像比较。在 $3$ 处画空心圈、向左涂色的图像表示 $x < 3$。它与 $-2x > -6$ 对应，因为两边除以 $-2$ 得 $x < 3$；而与 $-2x < -6$ 不对应。",
-      ),
-      generate(rng) {
-        const s = rng.int(-6, 6);
-        const q = twoStep(rng, s);
-        const correct = q.latex(q.op);
-        const lo = Math.max(-10, s - 5);
-        return pickChoice(
-          rng,
-          t("Which inequality has the solutions shown on the number line?", "哪个不等式的解是数轴上所表示的数？"),
-          mathText(correct),
-          [mathText(q.latex(flip[q.op])), mathText(q.latex(strictness[q.op])), mathText(q.latex(flip[strictness[q.op]]))],
-          t(
-            `The graph shows $${inequalityLatex("x", q.solvedOp, s)}$. For $${correct}$: ${q.work.en}The other inequalities have a different symbol, so their solutions differ at $${s}$ or point the other way.`,
-            `图像表示 $${inequalityLatex("x", q.solvedOp, s)}$。对于 $${correct}$：${q.work["zh-CN"]}其他不等式的符号不同，所以它们的解在 $${s}$ 处不同，或者方向相反。`,
-          ),
-          numberLineFigure([ray(q.solvedOp, s)], lo, lo + 10),
-        );
-      },
-    },
+    "Children under $5$ ride free: the ages that ride free satisfy $x < 5$. On a number line that is an open circle at $5$, since a $5$-year-old pays, with everything to the left shaded.",
+    "$5$ 岁以下的儿童免费乘车：免费的年龄满足 $x < 5$。在数轴上，就是在 $5$ 处画空心圈（$5$ 岁要付费），把左边全部涂色。",
+  ],
+  [
+    "$4 < 5$ is true, so $4$ is shaded; $5 < 5$ is false, so the circle at $5$ stays open.",
+    "$4 < 5$ 成立，所以 $4$ 被涂色；$5 < 5$ 不成立，所以 $5$ 处是空心圈。",
+  ],
+  [
+    "solve an inequality, describe its graph on a number line, and pick the inequality that a graph shows.",
+    "学习解不等式，描述它在数轴上的图像，并选出图像所表示的不等式。",
   ],
 );
-
 /** grade7EquationTopics lists the 7th grade topics on linear equations, two-variable equations and inequalities. */
 export const grade7EquationTopics: readonly TopicDef[] = [
   solvingLinearEquationsByTrialAndError,

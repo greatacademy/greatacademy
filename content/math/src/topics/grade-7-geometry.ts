@@ -680,87 +680,255 @@ function rowFigure(
   return marks;
 }
 
-export const midpoints = topic(
-  "midpoints",
-  t("Midpoints", "中点"),
-  t(
-    "The midpoint M of a segment AB is the point of the segment that divides it into two congruent halves: AM = MB = ½AB. On a number line, the coordinate of the midpoint is the average of the endpoints' coordinates: the midpoint of −4 and 10 is (−4 + 10) ÷ 2 = 3. Going the other way, an endpoint is as far beyond the midpoint as the other endpoint is before it.",
-    "线段 AB 的中点 M 是把它分成两条全等线段的点：AM = MB = ½AB。在数轴上，中点的坐标是两个端点坐标的平均数：−4 和 10 的中点是 (−4 + 10) ÷ 2 = 3。反过来，一个端点在中点另一侧，与中点的距离等于另一个端点到中点的距离。",
-  ),
-  ["congruent-segments"],
-  ["7.G.A.1"],
-  [
-    {
-      id: "midpoint-on-a-number-line",
-      figure: gradeDrawings3["midpoints#midpoint-on-a-number-line"],
-      title: t("The midpoint on a number line", "数轴上的中点"),
-      explanation: t(
-        "The midpoint of $\\overline{AB}$ with $A$ at $-7$ and $B$ at $4$ is at $\\frac{-7 + 4}{2} = \\frac{-3}{2} = -1.5$. Check: from $-7$ to $-1.5$ is $5.5$ units, and from $-1.5$ to $4$ is also $5.5$ units. Half the length, $\\frac{4 - (-7)}{2} = 5.5$, is the distance to the midpoint, not its coordinate.",
-        "$A$ 在 $-7$，$B$ 在 $4$，$\\overline{AB}$ 的中点在 $\\frac{-7 + 4}{2} = \\frac{-3}{2} = -1.5$。检验：从 $-7$ 到 $-1.5$ 是 $5.5$ 个单位，从 $-1.5$ 到 $4$ 也是 $5.5$ 个单位。长度的一半 $\\frac{4 - (-7)}{2} = 5.5$ 是到中点的距离，不是中点的坐标。",
+/** midpoints finds midpoints and endpoints on a number line and solves for them with algebra. */
+export const midpoints = withIntro(
+  topic(
+    "midpoints",
+    t("Midpoints", "中点"),
+    t(
+      "The midpoint M of a segment AB is the point of the segment that divides it into two congruent halves: AM = MB = ½AB. On a number line, the coordinate of the midpoint is the average of the endpoints' coordinates: the midpoint of −4 and 10 is (−4 + 10) ÷ 2 = 3. Going the other way, an endpoint is as far beyond the midpoint as the other endpoint is before it.",
+      "线段 AB 的中点 M 是把它分成两条全等线段的点：AM = MB = ½AB。在数轴上，中点的坐标是两个端点坐标的平均数：−4 和 10 的中点是 (−4 + 10) ÷ 2 = 3。反过来，一个端点在中点另一侧，与中点的距离等于另一个端点到中点的距离。",
+    ),
+    ["congruent-segments"],
+    ["7.G.A.1"],
+    [
+      lesson(
+        "midpoint-on-a-number-line",
+        ["The midpoint on a number line", "数轴上的中点"],
+        [
+          [
+            "The midpoint is the average of the two ends. With $A$ at $-7$ and $B$ at $4$, the midpoint of $\\overline{AB}$ is at $\\frac{-7 + 4}{2} = \\frac{-3}{2} = -1.5$.",
+            "中点是两个端点的平均数。$A$ 在 $-7$，$B$ 在 $4$，$\\overline{AB}$ 的中点在 $\\frac{-7 + 4}{2} = \\frac{-3}{2} = -1.5$。",
+          ],
+          [
+            "From $-7$ to $-1.5$ is $5.5$ units, and from $-1.5$ to $4$ is also $5.5$ units.",
+            "从 $-7$ 到 $-1.5$ 是 $5.5$ 个单位，从 $-1.5$ 到 $4$ 也是 $5.5$ 个单位。",
+          ],
+          [
+            "Half the length, $\\frac{4 - (-7)}{2} = 5.5$, is the distance to the midpoint, not where the midpoint is.",
+            "长度的一半 $\\frac{4 - (-7)}{2} = 5.5$ 是到中点的距离，不是中点的位置。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.int(-20, 14);
+          const b = rng.int(a + 3, 20);
+          const m = Q.of(a + b, 2);
+          const half = Q.of(b - a, 2);
+          const [p, q] = rng.pick(segmentNames);
+          return valued(
+            [
+              `On a number line, $${p}$ is at $${a}$ and $${q}$ is at $${b}$. What is the coordinate of the midpoint of $${over(p + q)}$?`,
+              `在数轴上，$${p}$ 在 $${a}$，$${q}$ 在 $${b}$。$${over(p + q)}$ 的中点的坐标是多少？`,
+            ],
+            m,
+            [
+              [["Add the ends", "两端相加"], ["Add the two coordinates:", "把两个坐标相加："], [`${a} + ${wrapped(b)} = ${a + b}`]],
+              [["Halve", "取一半"], ["Divide by $2$ to get the average:", "除以 $2$ 得到平均数："], [`\\frac{${a + b}}{2} = ${result(m)}`]],
+            ],
+            [
+              `Both halves are $${result(half)}$ long: $${result(m)} - ${wrapped(a)} = ${result(half)}$ and $${b} - ${result(m).startsWith("-") ? `(${result(m)})` : result(m)} = ${result(half)}$.`,
+              `两半都长 $${result(half)}$：$${result(m)} - ${wrapped(a)} = ${result(half)}$，$${b} - ${result(m).startsWith("-") ? `(${result(m)})` : result(m)} = ${result(half)}$。`,
+            ],
+            [
+              [
+                half,
+                "That is half the length, the distance to the midpoint, not its coordinate.",
+                "这是长度的一半，是到中点的距离，不是中点的坐标。",
+              ],
+              [Q.of(a + b), "That adds the ends but does not divide by $2$.", "这是两端相加，但没有除以 $2$。"],
+              [Q.of(b - a), "That is the length of the whole segment.", "这是整条线段的长度。"],
+            ],
+            { form: "decimal" },
+          );
+        },
+        drawn(gradeDrawings3["midpoints#midpoint-on-a-number-line"]),
       ),
-      generate(rng) {
-        const a = rng.int(-20, 14);
-        const b = rng.int(a + 3, 20);
-        const m = Q.of(a + b, 2);
-        const [p, q] = rng.pick(segmentNames);
-        return numberProblem({
-          prompt: t(
-            `On a number line, $${p}$ is at $${a}$ and $${q}$ is at $${b}$. What is the coordinate of the midpoint of $${over(p + q)}$?`,
-            `在数轴上，$${p}$ 在 $${a}$，$${q}$ 在 $${b}$。$${over(p + q)}$ 的中点的坐标是多少？`,
-          ),
-          answer: m,
-          wrong: [Q.of(b - a, 2), Q.of(a + b), Q.of(b - a)],
-          solution: t(
-            `The midpoint is the average of the endpoints:${steps(`\\frac{${a} + ${b < 0 ? `(${b})` : b}}{2} = \\frac{${a + b}}{2} = ${result(m)}`)}`,
-            `中点的坐标是两个端点坐标的平均数：${steps(`\\frac{${a} + ${b < 0 ? `(${b})` : b}}{2} = \\frac{${a + b}}{2} = ${result(m)}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "finding-an-endpoint",
-      title: t("Finding an endpoint", "求端点"),
-      explanation: t(
-        "$M$ is the midpoint of $\\overline{AB}$, with $A$ at $-3$ and $M$ at $2$. From $A$ to $M$ is $2 - (-3) = 5$ units, so $B$ is another $5$ units past $M$: $B$ is at $2 + 5 = 7$. In one step, $B = 2M - A = 2 \\cdot 2 - (-3) = 7$.",
-        "$M$ 是 $\\overline{AB}$ 的中点，$A$ 在 $-3$，$M$ 在 $2$。从 $A$ 到 $M$ 是 $2 - (-3) = 5$ 个单位，所以 $B$ 在 $M$ 的另一侧再过 $5$ 个单位：$B$ 在 $2 + 5 = 7$。也可以一步算出：$B = 2M - A = 2 \\cdot 2 - (-3) = 7$。",
+      lesson(
+        "finding-an-endpoint",
+        ["Finding an endpoint", "求端点"],
+        [
+          [
+            "$M$ is the midpoint of $\\overline{AB}$, with $A$ at $-3$ and $M$ at $2$. From $A$ to $M$ is $2 - (-3) = 5$ units, so $B$ is another $5$ units past $M$: $B$ is at $2 + 5 = 7$.",
+            "$M$ 是 $\\overline{AB}$ 的中点，$A$ 在 $-3$，$M$ 在 $2$。从 $A$ 到 $M$ 是 $2 - (-3) = 5$ 个单位，所以 $B$ 在 $M$ 的另一侧再过 $5$ 个单位：$B$ 在 $2 + 5 = 7$。",
+          ],
+          [
+            "The midpoint of $-3$ and $7$ is $\\frac{-3 + 7}{2} = 2$, which is $M$.",
+            "$-3$ 和 $7$ 的中点是 $\\frac{-3 + 7}{2} = 2$，正是 $M$。",
+          ],
+          [
+            "$B$ is past $M$, not between $A$ and $M$: averaging $A$ and $M$ gives the point halfway to $M$ instead.",
+            "$B$ 在 $M$ 的另一侧，不在 $A$ 和 $M$ 之间：把 $A$ 和 $M$ 取平均，得到的是到 $M$ 一半处的点。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const a = rng.int(-15, 15);
+            const d = rng.nonZero(-12, 12);
+            const m = a + d;
+            const b = m + d;
+            if (Math.abs(b) > 30) continue;
+            const line = fig(
+              numberLine(Math.min(a, b) - 2, Math.max(a, b) + 2, [
+                [a, "A"],
+                [m, "M"],
+              ]),
+              `A number line with A at ${minus(a)} and M at ${minus(m)}.`,
+              `数轴上 A 在 ${minus(a)}，M 在 ${minus(m)}。`,
+            );
+            return valued(
+              [
+                `On a number line, $M$ is the midpoint of $${over("AB")}$. $A$ is at $${a}$ and $M$ is at $${m}$. Where is $B$?`,
+                `在数轴上，$M$ 是 $${over("AB")}$ 的中点。$A$ 在 $${a}$，$M$ 在 $${m}$。$B$ 在哪里？`,
+              ],
+              b,
+              [
+                [
+                  ["Measure A to M", "量出 A 到 M"],
+                  ["The step from $A$ to $M$ is", "从 $A$ 到 $M$ 的变化是"],
+                  [`${m} - ${wrapped(a)} = ${d}`],
+                ],
+                [
+                  ["Step again", "再走一次"],
+                  ["$B$ is the same step past $M$:", "$B$ 在 $M$ 之后再走同样的一步："],
+                  [`B = ${m} + ${wrapped(d)} = ${b}`],
+                ],
+              ],
+              [
+                `The midpoint of $${a}$ and $${b}$ is $\\frac{${a} + ${wrapped(b)}}{2} = ${m}$, which is $M$.`,
+                `$${a}$ 和 $${b}$ 的中点是 $\\frac{${a} + ${wrapped(b)}}{2} = ${m}$，正是 $M$。`,
+              ],
+              [
+                [Q.of(a + m, 2), "That is halfway from $A$ to $M$; $B$ is past $M$.", "这是 $A$ 到 $M$ 的一半处；$B$ 在 $M$ 的另一侧。"],
+                [m - a, "That is the distance from $A$ to $M$, not where $B$ is.", "这是 $A$ 到 $M$ 的距离，不是 $B$ 的位置。"],
+                [
+                  a + m,
+                  "That adds $A$ and $M$; $B$ is $M$ plus the step from $A$ to $M$.",
+                  "这是 $A$ 加 $M$；$B$ 应是 $M$ 加上从 $A$ 到 $M$ 的变化。",
+                ],
+              ],
+              { form: "integer", figure: line },
+            );
+          }
+        },
+        fig(
+          numberLine(-5, 9, [
+            [-3, "A"],
+            [2, "M"],
+            [7, "B"],
+          ]),
+          "A number line with A at −3, M at 2 and B at 7.",
+          "数轴上 A 在 −3，M 在 2，B 在 7。",
+        ),
       ),
-      generate(rng) {
-        const a = rng.int(-15, 15);
-        const d = rng.nonZero(-12, 12);
-        const m = a + d;
-        const b = m + d;
-        if (Math.abs(b) > 30) return this.generate(rng);
-        const paren = (v: number) => (v < 0 ? `(${v})` : `${v}`);
-        return numberProblem({
-          prompt: t(
-            `On a number line, $M$ is the midpoint of $${over("AB")}$. $A$ is at $${a}$ and $M$ is at $${m}$. Where is $B$?`,
-            `在数轴上，$M$ 是 $${over("AB")}$ 的中点。$A$ 在 $${a}$，$M$ 在 $${m}$。$B$ 在哪里？`,
-          ),
-          answer: b,
-          form: "integer",
-          wrong: [Q.of(a + m, 2), m - a, a + m],
-          solution: t(
-            `From $A$ to $M$ is $${m} - ${paren(a)} = ${d}$, and $B$ is the same distance past $M$:${steps(`B = ${m} + ${paren(d)} = ${b}`)}`,
-            `从 $A$ 到 $M$ 是 $${m} - ${paren(a)} = ${d}$，$B$ 在 $M$ 的另一侧，距离相同：${steps(`B = ${m} + ${paren(d)} = ${b}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "midpoints-with-algebra",
-      title: t("Midpoints with algebra", "用方程求中点问题"),
-      explanation: t(
-        "$M$ is the midpoint of $\\overline{AB}$, $AM = 2x + 5$ and $MB = 4x - 3$. The halves are congruent, so $2x + 5 = 4x - 3$, giving $x = 4$. Then $AM = 13$, and the whole segment is twice as long: $AB = 2 \\cdot 13 = 26$.",
-        "$M$ 是 $\\overline{AB}$ 的中点，$AM = 2x + 5$，$MB = 4x - 3$。两半全等，所以 $2x + 5 = 4x - 3$，得 $x = 4$。于是 $AM = 13$，整条线段是它的两倍：$AB = 2 \\cdot 13 = 26$。",
-      ),
-      generate(rng) {
-        const x = rng.int(2, 12);
-        const L = rng.int(x + 6, 45);
-        const e1 = expressionFor(rng, L, x);
-        const e2 = expressionFor(rng, L, x, [e1[0]]);
-        const u = pickUnit(rng);
-        const ask = rng.int(0, 2);
-        const figure = fig(
+      lesson(
+        "midpoints-with-algebra",
+        ["Midpoints with algebra", "用方程求中点问题"],
+        [
+          [
+            "The two halves at a midpoint are equal, so set their expressions equal. $AM = 2x + 5$ and $MB = 4x - 3$: $2x + 5 = 4x - 3$, so $x = 4$. Then $AM = 13$, and the whole segment is twice as long: $AB = 26$.",
+            "中点分成的两半相等，所以让它们的式子相等。$AM = 2x + 5$，$MB = 4x - 3$：$2x + 5 = 4x - 3$，所以 $x = 4$。于是 $AM = 13$，整条线段是它的两倍：$AB = 26$。",
+          ],
+          ["$MB = 4(4) - 3 = 13$ too, so the halves match.", "$MB = 4(4) - 3 = 13$，两半相等。"],
+          ["$x$ is not a length: put it back into $AM$, and double for $AB$.", "$x$ 不是长度：要代回 $AM$，求 $AB$ 还要乘 $2$。"],
+        ],
+        (rng) => {
+          const x = rng.int(2, 12);
+          const L = rng.int(x + 6, 45);
+          const e1 = expressionFor(rng, L, x);
+          const e2 = expressionFor(rng, L, x, [e1[0]]);
+          const u = pickUnit(rng);
+          const ask = rng.int(0, 2);
+          const figure = fig(
+            rowFigure(
+              [
+                [0, "A"],
+                [8, "M"],
+                [16, "B"],
+              ],
+              [
+                [0, 8, plain(...e1)],
+                [8, 16, plain(...e2)],
+              ],
+              undefined,
+              [
+                [0, 8, 1],
+                [8, 16, 1],
+              ],
+            ),
+            `Segment AB with midpoint M; AM = ${plain(...e1)} and MB = ${plain(...e2)}.`,
+            `线段 AB，中点为 M；AM = ${plain(...e1)}，MB = ${plain(...e2)}。`,
+          );
+          const given: Pair = [
+            `$M$ is the midpoint of $${over("AB")}$, $AM = ${linear(...e1)}$ and $MB = ${linear(...e2)}$`,
+            `$M$ 是 $${over("AB")}$ 的中点，$AM = ${linear(...e1)}$，$MB = ${linear(...e2)}$`,
+          ];
+          const solveStep: Walk = [
+            ["Set the halves equal", "让两半相等"],
+            ["The halves are congruent, so solve:", "两半全等，所以解方程："],
+            equalSteps(e1, e2),
+          ];
+          const check: Pair = [
+            `At $x = ${x}$: $AM = ${subst(e1, x)} = ${L}$ and $MB = ${subst(e2, x)} = ${L}$, equal halves.`,
+            `$x = ${x}$ 时：$AM = ${subst(e1, x)} = ${L}$，$MB = ${subst(e2, x)} = ${L}$，两半相等。`,
+          ];
+          const [slip1, slip2] = equalWrong(e1, e2) as [Q, Q];
+          if (ask === 0)
+            return valued(
+              [`${given[0]}. Find $x$.`, `${given[1]}。求 $x$。`],
+              x,
+              [
+                [solveStep[0], ["The halves are congruent:", "两半全等："], equalSteps(e1, e2).slice(0, 1)],
+                [
+                  ["Solve for x", "解出 x"],
+                  ["Collect $x$ on one side, then divide:", "把 $x$ 集中到一边，再相除："],
+                  equalSteps(e1, e2).slice(1),
+                ],
+              ],
+              check,
+              [
+                [slip1, "That moves a constant with the wrong sign.", "移项时常数的符号弄错了。"],
+                [
+                  slip2,
+                  "That adds the $x$ terms instead of subtracting one from both sides.",
+                  "这是把含 $x$ 的项相加了，应在两边同时减去其中一项。",
+                ],
+                [L, "That is the length of each half, not $x$.", "这是每一半的长度，不是 $x$。"],
+              ],
+              { figure },
+            );
+          const whole = ask === 1;
+          return valued(
+            [
+              `${given[0]}, in ${unitWords[u]}. How long is $${over(whole ? "AB" : "AM")}$?`,
+              `${given[1]}（单位：${u}）。$${over(whole ? "AB" : "AM")}$ 有多长？`,
+            ],
+            whole ? 2 * L : L,
+            [
+              solveStep,
+              [
+                ["Substitute", "代入"],
+                whole
+                  ? [`Put $x = ${x}$ into $AM$, then double:`, `把 $x = ${x}$ 代入 $AM$，再乘 $2$：`]
+                  : [`Put $x = ${x}$ into $AM$:`, `把 $x = ${x}$ 代入 $AM$：`],
+                [`AM = ${subst(e1, x)} = ${L}`, ...(whole ? [`AB = 2 \\cdot ${L} = ${2 * L}`] : [])],
+              ],
+            ],
+            check,
+            whole
+              ? [
+                  [L, "That is only one half, $AM$.", "这只是一半，$AM$。"],
+                  [x, "That is $x$, not a length.", "这是 $x$，不是长度。"],
+                  [2 * x, "That doubles $x$ instead of the length $AM$.", "这是把 $x$ 乘 $2$，而不是把 $AM$ 的长度乘 $2$。"],
+                ]
+              : [
+                  [x, "That is $x$, not a length: put it into $AM$.", "这是 $x$，不是长度：要代入 $AM$。"],
+                  [2 * L, "That is the whole of $AB$, not the half $AM$.", "这是整条 $AB$，不是一半 $AM$。"],
+                  [at(e2, x + 1), "That puts the wrong value of $x$ into the expression.", "代入的 $x$ 值不对。"],
+                ],
+            { unit: u, figure },
+          );
+        },
+        fig(
           rowFigure(
             [
               [0, "A"],
@@ -768,8 +936,8 @@ export const midpoints = topic(
               [16, "B"],
             ],
             [
-              [0, 8, plain(...e1)],
-              [8, 16, plain(...e2)],
+              [0, 8, "2x + 5"],
+              [8, 16, "4x − 3"],
             ],
             undefined,
             [
@@ -777,46 +945,22 @@ export const midpoints = topic(
               [8, 16, 1],
             ],
           ),
-          `Segment AB with midpoint M; AM = ${plain(...e1)} and MB = ${plain(...e2)}.`,
-          `线段 AB，中点为 M；AM = ${plain(...e1)}，MB = ${plain(...e2)}。`,
-        );
-        const given = t(
-          `$M$ is the midpoint of $${over("AB")}$, $AM = ${linear(...e1)}$ and $MB = ${linear(...e2)}$, in ${unitWords[u]}.`,
-          `$M$ 是 $${over("AB")}$ 的中点，$AM = ${linear(...e1)}$，$MB = ${linear(...e2)}$（单位：${u}）。`,
-        );
-        const solve = steps(...equalSteps(e1, e2));
-        if (ask === 0)
-          return {
-            ...numberProblem({
-              prompt: t(`${given.en} Find $x$.`, `${given["zh-CN"]}求 $x$。`),
-              answer: x,
-              wrong: equalWrong(e1, e2),
-              solution: t(`The two halves are congruent:${solve}`, `两半全等：${solve}`),
-            }),
-            figure,
-          };
-        const whole = ask === 1;
-        return {
-          ...numberProblem({
-            prompt: t(
-              `${given.en} How long is $${over(whole ? "AB" : "AM")}$?`,
-              `${given["zh-CN"]}$${over(whole ? "AB" : "AM")}$ 有多长？`,
-            ),
-            answer: whole ? 2 * L : L,
-            unit: u,
-            wrong: whole ? [L, x, 2 * x] : [x, 2 * L, at(e2, x + 1)],
-            solution: t(
-              `The two halves are congruent:${solve}So $AM = ${subst(e1, x)} = ${L}${whole ? `$, and $AB = 2 \\cdot ${L} = ${2 * L}\\text{ ${u}}$` : `\\text{ ${u}}$`}.`,
-              `两半全等：${solve}所以 $AM = ${subst(e1, x)} = ${L}${whole ? `$，$AB = 2 \\cdot ${L} = ${2 * L}\\text{ ${u}}$` : `\\text{ ${u}}$`}。`,
-            ),
-          }),
-          figure,
-        };
-      },
-    },
+          "Segment AB with midpoint M; AM = 2x + 5 and MB = 4x − 3.",
+          "线段 AB，中点为 M；AM = 2x + 5，MB = 4x − 3。",
+        ),
+      ),
+    ],
+  ),
+  [
+    "A $10$ m rope is tied between two posts, and a lantern hangs at the midpoint. It is $5$ m from each post, half the rope.",
+    "两根柱子之间拉着一根 $10$ 米长的绳子，灯笼挂在中点。它离每根柱子都是 $5$ 米，正好是绳长的一半。",
+  ],
+  ["$5 + 5 = 10$, and both halves are the same.", "$5 + 5 = 10$，两半一样长。"],
+  [
+    "find midpoints and missing endpoints on a number line and in the plane, and solve midpoint problems with equations.",
+    "学习在数轴上和平面上求中点与缺少的端点，并用方程解中点问题。",
   ],
 );
-
 export const collinearPoints = topic(
   "collinear-points",
   t("Collinear Points", "共线的点"),

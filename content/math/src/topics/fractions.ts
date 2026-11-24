@@ -1,4 +1,4 @@
-import type { Rng, TopicDef } from "@ga/content";
+import type { Figure, Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, lcm, num, Q, q } from "@ga/subject-math";
 
@@ -6,7 +6,8 @@ import { mixedLatex, numberProblem, steps } from "../problems.ts";
 import { pickedMath, type Walk } from "./early-grades-more-kit.ts";
 import { barFigure, twoBarsFigure } from "./grade-4-fractions.ts";
 import { groupedBarsFigure, partsTape, productGrid } from "./grade-5-fractions.ts";
-import { answered, equalTape, point, tapeFigure } from "./upper-grades-kit.ts";
+import { lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { answered, equalTape, lineFigure, point, tapeFigure } from "./upper-grades-kit.ts";
 
 /** properFraction draws a fraction in lowest terms between 0 and 1 with a denominator in [2, maxDen]. */
 function properFraction(rng: Rng, maxDen = 12): Q {
@@ -757,83 +758,229 @@ export const dividingFractions: TopicDef = {
   ),
 };
 
-export const operationsWithRationalNumbers: TopicDef = {
-  id: "operations-with-rational-numbers",
-  title: t("Operations With Negative Fractions", "负分数的运算"),
-  summary: t("Add, subtract, multiply and divide fractions with signs.", "带符号分数的加、减、乘、除。"),
-  prerequisites: ["adding-and-subtracting-fractions", "dividing-fractions", "subtracting-integers", "dividing-integers"],
-  encompasses: [
-    { topic: "adding-and-subtracting-fractions", weight: 0.5 },
-    { topic: "dividing-fractions", weight: 0.4 },
-    { topic: "subtracting-integers", weight: 0.3 },
-    { topic: "dividing-integers", weight: 0.3 },
-  ],
-  xp: 14,
-  standards: ["CCSS.7.NS.A.1", "CCSS.7.NS.A.2"],
-  knowledgePoints: [
+/** signedFractionLine draws a number line in steps of one over den, with the given points written above in fraction form. */
+const signedFractionLine = (
+  lo: number,
+  hi: number,
+  den: number,
+  points: readonly (readonly [number, string])[],
+  jumps: readonly (readonly [number, number])[] = [],
+): Figure =>
+  lineFigure(
     {
-      id: "adding-and-subtracting-signed-fractions",
-      title: t("Adding and subtracting", "加法与减法"),
-      explanation: t(
-        "The sign rules for integers hold for all fractions. Subtracting a number is adding its opposite, and with a common denominator the numerators follow the integer rules:\n\n$$-\\frac{1}{2} - \\frac{1}{3} = -\\frac{3}{6} + \\left(-\\frac{2}{6}\\right) = -\\frac{5}{6}$$\n\nA negative fraction can carry its sign in front, in the numerator or in the denominator: $-\\frac{5}{6} = \\frac{-5}{6} = \\frac{5}{-6}$.",
-        "整数的符号法则对所有分数都成立。减去一个数等于加上它的相反数；通分后，分子按整数的法则计算：\n\n$$-\\frac{1}{2} - \\frac{1}{3} = -\\frac{3}{6} + \\left(-\\frac{2}{6}\\right) = -\\frac{5}{6}$$\n\n负分数的负号可以写在前面、分子上或分母上：$-\\frac{5}{6} = \\frac{-5}{6} = \\frac{5}{-6}$。",
-      ),
-      keyPrerequisites: ["adding-and-subtracting-fractions", "subtracting-integers"],
-      generate(rng) {
-        const x = properFraction(rng, 9).mul(Q.of(rng.sign()));
-        const y = properFraction(rng, 9).mul(Q.of(rng.sign()));
-        const add = rng.bool();
-        const op = add ? "+" : "-";
-        const result = add ? x.add(y) : x.sub(y);
-        if (result.isZero()) return this.generate(rng);
-        const L = lcm(Number(x.d), Number(y.d));
-        const xs = Q.of(x.n * BigInt(L / Number(x.d)));
-        const ys = Q.of(y.n * BigInt(L / Number(y.d)));
-        const raw = add ? xs.add(ys) : xs.sub(ys);
-        const yl = signedFrac(ys.n, L);
-        const rawLatex = signedFrac(raw.n, L);
-        const line = `${num(x)} ${op} ${parenFrac(y)} = ${signedFrac(xs.n, L)} ${op} ${ys.n < 0n ? `\\left(${yl}\\right)` : yl} = ${rawLatex}${rawLatex === num(result) ? "" : ` = ${num(result)}`}`;
-        return numberProblem({
-          prompt: t(`Evaluate $${num(x)} ${op} ${parenFrac(y)}$.`, `计算 $${num(x)} ${op} ${parenFrac(y)}$。`),
-          answer: result,
-          form: "fraction",
-          wrong: [result.neg(), add ? x.sub(y) : x.add(y)],
-          solution: t(`Use the common denominator $${L}$:${steps(line)}`, `通分，公分母为 $${L}$：${steps(line)}`),
-        });
-      },
+      lo,
+      hi,
+      step: 1 / den,
+      labels: [lo, 0, hi].filter((v, i, all) => all.indexOf(v) === i),
+      label: (v) => (v < 0 ? `−${-v}` : String(v)),
+      marks: points.map(([at, text]) => ({ at, text })),
+      jumps,
     },
-    {
-      id: "multiplying-and-dividing-signed-fractions",
-      title: t("Multiplying and dividing", "乘法与除法"),
-      explanation: t(
-        "Multiply or divide the absolute values as usual, then choose the sign as for integers: the result is positive when the signs are the same and negative when they differ.\n\n$$-\\frac{2}{3} \\div \\left(-\\frac{4}{9}\\right) = \\frac{2}{3} \\cdot \\frac{9}{4} = \\frac{3}{2}$$",
-        "先按通常的方法计算绝对值的积或商，再像整数那样确定符号：同号得正，异号得负。\n\n$$-\\frac{2}{3} \\div \\left(-\\frac{4}{9}\\right) = \\frac{2}{3} \\cdot \\frac{9}{4} = \\frac{3}{2}$$",
-      ),
-      keyPrerequisites: ["dividing-fractions", "dividing-integers"],
-      generate(rng) {
-        const sx = rng.sign();
-        const sy = sx > 0 ? -1 : rng.sign();
-        const x = properFraction(rng, 10).mul(Q.of(sx));
-        const y = properFraction(rng, 10).mul(Q.of(sy));
-        const mul = rng.bool();
-        const result = mul ? x.mul(y) : x.div(y);
-        const op = mul ? "\\cdot" : "\\div";
-        const same = sx === sy;
-        return numberProblem({
-          prompt: t(`Evaluate $${num(x)} ${op} ${parenFrac(y)}$.`, `计算 $${num(x)} ${op} ${parenFrac(y)}$。`),
-          answer: result,
-          form: "fraction",
-          wrong: [result.neg(), mul ? x.div(y) : x.mul(y)],
-          solution: t(
-            `The signs are ${same ? "the same, so the result is positive" : "different, so the result is negative"}.${steps(`${num(x.abs())} ${op} ${num(y.abs())} = ${num(result.abs())}`)}So $${num(x)} ${op} ${parenFrac(y)} = ${num(result)}$.`,
-            `两数${same ? "同号，结果为正" : "异号，结果为负"}。${steps(`${num(x.abs())} ${op} ${num(y.abs())} = ${num(result.abs())}`)}所以 $${num(x)} ${op} ${parenFrac(y)} = ${num(result)}$。`,
-          ),
-        });
-      },
-    },
-  ],
-};
+    [
+      `A number line from ${lo} to ${hi} with ${points.map(([, text]) => text).join(" and ")} marked.`,
+      `一条从 ${lo} 到 ${hi} 的数轴，标出了 ${points.map(([, text]) => text).join(" 和 ")}。`,
+    ],
+  );
 
+/** addSigned adds or subtracts two signed proper fractions over a common denominator. */
+function addSigned(rng: Rng): Problem {
+  for (;;) {
+    const x = properFraction(rng, 9).mul(Q.of(rng.sign()));
+    const y = properFraction(rng, 9).mul(Q.of(rng.sign()));
+    const add = rng.bool();
+    const op = add ? "+" : "-";
+    const result = add ? x.add(y) : x.sub(y);
+    if (result.isZero()) continue;
+    const L = lcm(Number(x.d), Number(y.d));
+    const xs = x.n * BigInt(L / Number(x.d));
+    const ys = y.n * BigInt(L / Number(y.d));
+    const raw = add ? xs + ys : xs - ys;
+    const yl = signedFrac(ys, L);
+    const rawLatex = signedFrac(raw, L);
+    const undo = add ? "-" : "+";
+    return valued(
+      [`Evaluate $${num(x)} ${op} ${parenFrac(y)}$.`, `计算 $${num(x)} ${op} ${parenFrac(y)}$。`],
+      result,
+      [
+        [
+          ["Use a common denominator", "通分"],
+          [`Write both fractions with the denominator $${L}$:`, `把两个分数都化成分母为 $${L}$ 的分数：`],
+          [`${num(x)} ${op} ${parenFrac(y)} = ${signedFrac(xs, L)} ${op} ${ys < 0n ? `\\left(${yl}\\right)` : yl}`],
+        ],
+        [
+          ["Combine the numerators", "分子按整数计算"],
+          [
+            `Work out $${xs} ${op} ${ys < 0n ? `(${ys})` : ys} = ${raw}$ with the integer rules${rawLatex === num(result) ? "" : ", then simplify"}:`,
+            `按整数的法则算 $${xs} ${op} ${ys < 0n ? `(${ys})` : ys} = ${raw}$${rawLatex === num(result) ? "" : "，再约分"}：`,
+          ],
+          [`${rawLatex}${rawLatex === num(result) ? "" : ` = ${num(result)}`}`],
+        ],
+      ],
+      [`Undo it: $${num(result)} ${undo} ${parenFrac(y)} = ${num(x)}$.`, `倒回去：$${num(result)} ${undo} ${parenFrac(y)} = ${num(x)}$。`],
+      [
+        [result.neg(), "That has the wrong sign.", "符号错了。"],
+        [
+          add ? x.sub(y) : x.add(y),
+          add ? "That subtracts instead of adding." : "That adds instead of subtracting; subtracting is adding the opposite.",
+          add ? "这是做了减法，而不是加法。" : "这是做了加法，而不是减法；减去一个数是加上它的相反数。",
+        ],
+        [
+          Q.of(Number(add ? x.n + y.n : x.n - y.n), Number(x.d + y.d)),
+          "That adds the denominators too. Only the numerators are combined.",
+          "这把分母也加起来了。只有分子相加减。",
+        ],
+      ],
+      { form: "fraction" },
+    );
+  }
+}
+
+/** timesSigned multiplies or divides two signed proper fractions. */
+function timesSigned(rng: Rng): Problem {
+  const sx = rng.sign();
+  const sy = sx > 0 ? -1 : rng.sign();
+  const x = properFraction(rng, 10).mul(Q.of(sx));
+  const y = properFraction(rng, 10).mul(Q.of(sy));
+  const mul = rng.bool();
+  const result = mul ? x.mul(y) : x.div(y);
+  const op = mul ? "\\cdot" : "\\div";
+  const same = sx === sy;
+  const sizes = mul
+    ? `${num(x.abs())} \\cdot ${num(y.abs())} = ${num(result.abs())}`
+    : `${num(x.abs())} \\cdot ${num(Q.one.div(y.abs()))} = ${num(result.abs())}`;
+  return valued(
+    [`Evaluate $${num(x)} ${op} ${parenFrac(y)}$.`, `计算 $${num(x)} ${op} ${parenFrac(y)}$。`],
+    result,
+    [
+      [
+        ["Choose the sign", "定符号"],
+        same
+          ? ["Both are negative, so the result is positive.", "两数都是负数，结果为正。"]
+          : ["The signs differ, so the result is negative.", "两数异号，结果为负。"],
+      ],
+      [
+        [mul ? "Multiply the sizes" : "Multiply by the reciprocal", mul ? "大小相乘" : "乘以倒数"],
+        mul
+          ? ["Multiply tops and bottoms, then simplify:", "分子乘分子，分母乘分母，再约分："]
+          : [
+              `Dividing by $${num(y.abs())}$ is multiplying by $${num(Q.one.div(y.abs()))}$:`,
+              `除以 $${num(y.abs())}$ 就是乘 $${num(Q.one.div(y.abs()))}$：`,
+            ],
+        [sizes, `${num(x)} ${op} ${parenFrac(y)} = ${num(result)}`],
+      ],
+    ],
+    mul
+      ? [
+          `Divide back: $${num(result)} \\div ${parenFrac(y)} = ${num(x)}$.`,
+          `用除法倒回去：$${num(result)} \\div ${parenFrac(y)} = ${num(x)}$。`,
+        ]
+      : [
+          `Multiply back: $${num(result)} \\cdot ${parenFrac(y)} = ${num(x)}$.`,
+          `乘回去：$${num(result)} \\cdot ${parenFrac(y)} = ${num(x)}$。`,
+        ],
+    [
+      [
+        result.neg(),
+        same ? "Two negatives give a positive result." : "A negative and a positive give a negative result.",
+        same ? "两个负数相乘除，结果为正。" : "一负一正相乘除，结果为负。",
+      ],
+      [
+        mul ? x.div(y) : x.mul(y),
+        mul ? "That divides instead of multiplying." : "That multiplies without flipping the second fraction.",
+        mul ? "这是做了除法，而不是乘法。" : "这直接相乘了，没有把第二个分数倒过来。",
+      ],
+      ...(mul ? [] : [[y.div(x), "That divides the wrong way round.", "这是倒过来除了。"] as const]),
+    ],
+    { form: "fraction" },
+  );
+}
+
+/** operationsWithRationalNumbers teaches the four operations on fractions with signs. */
+export const operationsWithRationalNumbers: TopicDef = withIntro(
+  {
+    id: "operations-with-rational-numbers",
+    title: t("Operations With Negative Fractions", "负分数的运算"),
+    summary: t("Add, subtract, multiply and divide fractions with signs.", "带符号分数的加、减、乘、除。"),
+    prerequisites: ["adding-and-subtracting-fractions", "dividing-fractions", "subtracting-integers", "dividing-integers"],
+    encompasses: [
+      { topic: "adding-and-subtracting-fractions", weight: 0.5 },
+      { topic: "dividing-fractions", weight: 0.4 },
+      { topic: "subtracting-integers", weight: 0.3 },
+      { topic: "dividing-integers", weight: 0.3 },
+    ],
+    xp: 14,
+    standards: ["CCSS.7.NS.A.1", "CCSS.7.NS.A.2"],
+    knowledgePoints: [
+      {
+        ...lesson(
+          "adding-and-subtracting-signed-fractions",
+          ["Adding and subtracting", "加法与减法"],
+          [
+            [
+              "The sign rules for integers work for fractions too. Give the fractions a common denominator, then combine the numerators with the integer rules: $-\\frac{1}{2} - \\frac{1}{3} = -\\frac{3}{6} + \\left(-\\frac{2}{6}\\right) = -\\frac{5}{6}$. The minus sign may sit in front, on top or below: $-\\frac{5}{6} = \\frac{-5}{6} = \\frac{5}{-6}$.",
+              "整数的符号法则对分数同样成立。先通分，再按整数的法则计算分子：$-\\frac{1}{2} - \\frac{1}{3} = -\\frac{3}{6} + \\left(-\\frac{2}{6}\\right) = -\\frac{5}{6}$。负号可以写在前面、分子上或分母上：$-\\frac{5}{6} = \\frac{-5}{6} = \\frac{5}{-6}$。",
+            ],
+            [
+              "Add back: $-\\frac{5}{6} + \\frac{1}{3} = -\\frac{5}{6} + \\frac{2}{6} = -\\frac{3}{6} = -\\frac{1}{2}$.",
+              "加回去：$-\\frac{5}{6} + \\frac{1}{3} = -\\frac{5}{6} + \\frac{2}{6} = -\\frac{3}{6} = -\\frac{1}{2}$。",
+            ],
+            [
+              "Only the numerators are added. The denominator stays $6$; $-\\frac{1}{2} - \\frac{1}{3}$ is not $-\\frac{2}{5}$.",
+              "只有分子相加减，分母仍是 $6$；$-\\frac{1}{2} - \\frac{1}{3}$ 不等于 $-\\frac{2}{5}$。",
+            ],
+          ],
+          addSigned,
+          signedFractionLine(
+            -1,
+            0,
+            6,
+            [
+              [-1 / 2, "−1/2"],
+              [-5 / 6, "−5/6"],
+            ],
+            [[-1 / 2, -5 / 6]],
+          ),
+        ),
+        keyPrerequisites: ["adding-and-subtracting-fractions", "subtracting-integers"],
+      },
+      {
+        ...lesson(
+          "multiplying-and-dividing-signed-fractions",
+          ["Multiplying and dividing", "乘法与除法"],
+          [
+            [
+              "Choose the sign as for integers: the same signs give a positive result and different signs a negative one. Then multiply or divide the sizes as usual. $-\\frac{2}{3} \\div \\left(-\\frac{4}{9}\\right) = \\frac{2}{3} \\cdot \\frac{9}{4} = \\frac{3}{2}$.",
+              "像整数那样定符号：同号得正，异号得负。然后照常计算大小的积或商。$-\\frac{2}{3} \\div \\left(-\\frac{4}{9}\\right) = \\frac{2}{3} \\cdot \\frac{9}{4} = \\frac{3}{2}$。",
+            ],
+            [
+              "Multiply back: $\\frac{3}{2} \\cdot \\left(-\\frac{4}{9}\\right) = -\\frac{12}{18} = -\\frac{2}{3}$.",
+              "乘回去：$\\frac{3}{2} \\cdot \\left(-\\frac{4}{9}\\right) = -\\frac{12}{18} = -\\frac{2}{3}$。",
+            ],
+            [
+              "When dividing, flip only the second fraction. Flipping the first one gives the reciprocal of the answer.",
+              "做除法时，只把第二个分数倒过来。倒错了第一个，得到的是答案的倒数。",
+            ],
+          ],
+          timesSigned,
+          signedFractionLine(-1, 1, 4, [
+            [-2 / 3, "−2/3"],
+            [-1 / 2, "−1/2"],
+          ]),
+        ),
+        keyPrerequisites: ["dividing-fractions", "dividing-integers"],
+      },
+    ],
+  },
+  [
+    "It is $-\\frac{1}{2}$ degree, and the temperature drops $\\frac{1}{4}$ degree more. Now it is $-\\frac{1}{2} - \\frac{1}{4} = -\\frac{2}{4} - \\frac{1}{4} = -\\frac{3}{4}$ degree.",
+    "气温是 $-\\frac{1}{2}$ 度，又下降了 $\\frac{1}{4}$ 度。现在是 $-\\frac{1}{2} - \\frac{1}{4} = -\\frac{2}{4} - \\frac{1}{4} = -\\frac{3}{4}$ 度。",
+  ],
+  [
+    "Add the drop back: $-\\frac{3}{4} + \\frac{1}{4} = -\\frac{2}{4} = -\\frac{1}{2}$.",
+    "把下降的加回去：$-\\frac{3}{4} + \\frac{1}{4} = -\\frac{2}{4} = -\\frac{1}{2}$。",
+  ],
+  ["add, subtract, multiply and divide fractions with signs.", "学习带符号分数的加、减、乘、除。"],
+);
 /** fractionTopics are the topics on fractions and mixed numbers, including negative fractions. */
 export const fractionTopics: readonly TopicDef[] = [
   equivalentFractions,
