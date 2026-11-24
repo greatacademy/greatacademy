@@ -562,29 +562,26 @@ const amountFrames: readonly ChoiceItem[] = [
 const sizeWhy = (right: string, shown: string): Text =>
   right.startsWith("too ")
     ? t(
-        `The sentence shows a problem, more than you want, so *too* goes before the adjective: ${fill(shown, right)}`,
-        `句子说的是一个问题，超过了需要，所以 *too* 放在形容词前面：${fill(shown, right)}`,
+        `The sentence shows a problem, more than you want, so *too* goes before the adjective: ${fill(shown, right)}\n\n**Check.** Verify both meaning and order: the sentence describes a problem (excess), and *too* sits directly in front of the adjective.`,
+        `句子说的是一个问题，超过了需要，所以 *too* 放在形容词前面：${fill(shown, right)}\n\n**检验。** 核对意思和语序：句子描述“过头了”的问题，且 *too* 紧放在形容词前面。`,
       )
     : t(
-        `The sentence is about having as much as you need, or not, so *enough* goes after the adjective: ${fill(shown, right)}`,
-        `句子说的是够不够，所以 *enough* 放在形容词后面：${fill(shown, right)}`,
+        `The sentence is about having as much as you need, or not, so *enough* goes after the adjective: ${fill(shown, right)}\n\n**Check.** Verify both meaning and order: the sentence asks or states whether it meets the need, and *enough* comes after the adjective.`,
+        `句子说的是够不够，所以 *enough* 放在形容词后面：${fill(shown, right)}\n\n**检验。** 核对意思和语序：句子说的是够不够，且 *enough* 紧放在形容词后面。`,
       );
 
 /** whyNotSize explains enough before an adjective, or too and enough mixed up. */
-const whyNotSize = (wrong: string, right: string): Text => {
+const whyNotSize = (wrong: string): Text => {
   if (wrong.startsWith("enough "))
-    return t(
-      `*enough* goes after an adjective, never before it: *${right.startsWith("too") ? wrong.replace(/^enough (\w+)/u, "$1 enough") : right}*.`,
-      `*enough* 放在形容词后面，不放在前面：*${right.startsWith("too") ? wrong.replace(/^enough (\w+)/u, "$1 enough") : right}*。`,
-    );
+    return t("*enough* goes after an adjective, never before it.", "*enough* 必须放在形容词后面，不能放在形容词前面。");
   return wrong.startsWith("too ")
     ? t(
-        `*${wrong}* means more than you want, a problem. This sentence is about having as much as you need, so it takes *${right}*.`,
-        `*${wrong}* 表示“太……”，是个问题。这句说的是够不够，所以用 *${right}*。`,
+        `*${wrong}* means “more than you want” (a problem), but this sentence is about having as much as you need.`,
+        `*${wrong}* 表示“太……”（是个问题），可这句说的是够不够。`,
       )
     : t(
-        `*${wrong}* means as much as you need. This sentence shows a problem, more than you want, so it takes *${right}*.`,
-        `*${wrong}* 表示“足够”。这句说的是一个问题，超过了需要，所以用 *${right}*。`,
+        `*${wrong}* means “as much as you need”, but this sentence describes a problem—more than you want.`,
+        `*${wrong}* 表示“足够”，可这句说的是超过了需要、成了问题。`,
       );
 };
 
@@ -598,17 +595,17 @@ const amountWhy = (right: string, shown: string): Text => {
   const done = fill(shown, right);
   if (right === "too many")
     return t(
-      `You can count *${noun}*, and there are more than you want, so it takes *too many*: ${done}`,
-      `*${noun}* 可以数，而且超过了需要，所以用 *too many*：${done}`,
+      `You can count *${noun}*, and there are more than you want, so it takes *too many*: ${done}\n\n**Check.** Test *${noun}* with *two*: it is countable plural, and the sentence describes an excess → *too many*.`,
+      `*${noun}* 可以数，而且超过了需要，所以用 *too many*：${done}\n\n**检验。** 用 *two* 测 *${noun}*：可数复数且表示“过多” → 用 *too many*。`,
     );
   if (right === "too much")
     return t(
-      `You cannot count *${noun}*, and there is more than you want, so it takes *too much*: ${done}`,
-      `*${noun}* 不能数，而且超过了需要，所以用 *too much*：${done}`,
+      `You cannot count *${noun}*, and there is more than you want, so it takes *too much*: ${done}\n\n**Check.** Test *${noun}* with *two*: it is uncountable, and the sentence describes an excess → *too much*.`,
+      `*${noun}* 不能数，而且超过了需要，所以用 *too much*：${done}\n\n**检验。** 用 *two* 测 *${noun}*：不可数且表示“过多” → 用 *too much*。`,
     );
   return t(
-    `The sentence is about having as much as you need, and *enough* goes before a noun: ${done}`,
-    `句子说的是够不够，而 *enough* 放在名词前面：${done}`,
+    `The sentence is about having as much as you need, and *enough* goes before a noun: ${done}\n\n**Check.** Look at the noun *${noun}*: with a noun, *enough* comes right in front of it.`,
+    `句子说的是够不够，而 *enough* 放在名词前面：${done}\n\n**检验。** 看名词 *${noun}*：修饰名词时，*enough* 必须放在名词前面。`,
   );
 };
 
@@ -617,15 +614,15 @@ const whyNotAmount = (wrong: string, right: string, shown: string): Text => {
   const noun = amountNoun(right, shown);
   if (wrong.startsWith("very "))
     return t(
-      `*very* only makes a word stronger. It does not say there is more than you want, which is what *too* says here.`,
-      `*very* 只是加强语气，不表示“超过了需要”；这里要用 *too* 表达这个意思。`,
+      "*very* only makes a word stronger; it does not express “more than you want” as *too* does.",
+      "*very* 只是加强语气，不表示“超过需要”的问题，不能代替 *too*。",
     );
   if (wrong.endsWith(" enough"))
-    return t(`*enough* goes before a noun, not after it: *${right}*.`, `*enough* 放在名词前面，不放在后面：*${right}*。`);
+    return t("*enough* goes before a noun, not after it.", "*enough* 修饰名词时要放在名词前面，不能放在后面。");
   if (right.startsWith("enough "))
     return t(
-      `*${wrong}* says there is more than you want, but this sentence is about having as much as you need: *${right}*.`,
-      `*${wrong}* 表示“太多”，但这句说的是够不够：*${right}*。`,
+      `*${wrong}* means “more than you want”, but this sentence is about whether you have as much as you need.`,
+      `*${wrong}* 表示“太多”，可这句说的是够不够。`,
     );
   return wrong === "too much"
     ? t(`*too much* is for things you cannot count, but you can count *${noun}*.`, `*too much* 用于不可数名词，但 *${noun}* 可以数。`)
@@ -639,6 +636,10 @@ const tooAndEnough: TopicDef = {
     "It's too big. It isn't big enough. We don't have enough money. Too goes before an adjective, enough after it and before a noun.",
     "It's too big. It isn't big enough. We don't have enough money. too 放在形容词前面，enough 放在形容词后面、名词前面。",
   ),
+  intro: t(
+    "Compare *This coat is too tight* (a problem—more than wanted) with *This coat isn't warm enough* (not meeting the need). Notice how *too* sits before an adjective, while *enough* flips position: after an adjective, but before a noun (*enough money*).",
+    "比较 *This coat is too tight*（太紧了，成了问题）和 *This coat isn't warm enough*（不够暖和）。留意语序：*too* 在形容词前，而 *enough* 在形容词后、名词前（*enough money*）。",
+  ),
   prerequisites: ["adjectives-before-nouns", "a2-words-quantities"],
   encompasses: [
     { topic: "adjectives-before-nouns", weight: 0.2 },
@@ -651,8 +652,8 @@ const tooAndEnough: TopicDef = {
       "too-or-enough",
       t("Too big or big enough", "too big 还是 big enough"),
       t(
-        "*too* means *more than you want*: it is a problem. It goes **before** the adjective: *These shoes are too small. I can't wear them.*\n\n*enough* means *as much as you need*. It goes **after** the adjective: *The room is big enough for all of us. I'm not tall enough.*\n\nNot *enough big*.",
-        "*too* 的意思是“太……”，超过了需要，是个问题。它放在形容词**前面**：*These shoes are too small. I can't wear them.*\n\n*enough* 的意思是“足够”，正好满足需要。它放在形容词**后面**：*The room is big enough for all of us. I'm not tall enough.*\n\n中文说“足够大”，英语却说 *big enough*，不说 *enough big*。另外，*too* 不是“很”：*It's very hot* 只是很热，*It's too hot* 是热得受不了。",
+        "*too* means *more than you want*: it is a problem. It goes **before** the adjective: *These shoes are too small. I can't wear them.*\n\n*enough* means *as much as you need*. It goes **after** the adjective: *The room is big enough for all of us. I'm not tall enough.*\n\n> **Watch out.** Never put *enough* before an adjective (*enough big* is wrong), and do not confuse *too* (“too much—a problem”) with *very*.",
+        "*too* 的意思是“太……”，超过了需要，是个问题。它放在形容词**前面**：*These shoes are too small. I can't wear them.*\n\n*enough* 的意思是“足够”，正好满足需要。它放在形容词**后面**：*The room is big enough for all of us. I'm not tall enough.*\n\n> **注意。** 中文说“足够大”，英语却要说 *big enough*（不能说 *enough big*）；而且 *too* 表示“过头了”，不是中性的“很（*very*）”。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), sizeChoiceBank, sizeWhy, whyNotSize),
     ),
@@ -660,18 +661,18 @@ const tooAndEnough: TopicDef = {
       "write",
       t("Writing with too and enough", "用 too 和 enough 写句子"),
       t(
-        "Write the sentence from the note. *too* goes before the adjective: *The jacket is too small.* *not ... enough* puts *not* after *is* or *are* and *enough* after the adjective: *The bag isn't big enough.*",
-        "根据笔记写句子。*too* 放在形容词前面：*The jacket is too small.* *not ... enough* 把 *not* 放在 *is / are* 后面，*enough* 放在形容词后面：*The bag isn't big enough.*",
+        "Write the sentence from the note. *too* goes before the adjective: *The jacket is too small.* *not ... enough* puts *not* after *is* or *are* and *enough* after the adjective: *The bag isn't big enough.*\n\n> **Watch out.** Check both the verb (*is* vs. *are* for plural clothes like *shoes* or *jeans*) and the placement of *enough* after the adjective.",
+        "根据笔记写句子。*too* 放在形容词前面：*The jacket is too small.* *not ... enough* 把 *not* 放在 *is / are* 后面，*enough* 放在形容词后面：*The bag isn't big enough.*\n\n> **注意。** 既要核对 *is* 与 *are*（如 *shoes*、*jeans* 用 *are*），也要确认 *enough* 放在形容词后面。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), tooTypedBank, (right) =>
         / too /u.test(right)
           ? t(
-              `The note says *too*, so it goes after *is* or *are* and before the adjective: ${right}`,
-              `笔记里是 *too*，所以放在 *is / are* 后面、形容词前面：${right}`,
+              `The note says *too*, so it goes after *is* or *are* and before the adjective: ${right}\n\n**Check.** Verify the order: subject + *is/are* + *too* + adjective.`,
+              `笔记里是 *too*，所以放在 *is / are* 后面、形容词前面：${right}\n\n**检验。** 核对语序：主语 + *is/are* + *too* + 形容词。`,
             )
           : t(
-              `The note says *not enough*, so *not* goes with *is* or *are* and *enough* goes after the adjective: ${right}`,
-              `笔记里是 *not enough*，所以 *not* 跟在 *is / are* 后面，*enough* 放在形容词后面：${right}`,
+              `The note says *not enough*, so *not* goes with *is* or *are* and *enough* goes after the adjective: ${right}\n\n**Check.** Verify the order: subject + *isn't/aren't* (or *is/are not*) + adjective + *enough*.`,
+              `笔记里是 *not enough*，所以 *not* 跟在 *is / are* 后面，*enough* 放在形容词后面：${right}\n\n**检验。** 核对语序：主语 + *isn't/aren't*（或 *is/are not*）+ 形容词 + *enough*。`,
             ),
       ),
     ),
@@ -679,8 +680,8 @@ const tooAndEnough: TopicDef = {
       "nouns",
       t("Too much, too many and enough with nouns", "too much、too many 和 enough 加名词"),
       t(
-        "With nouns, use *too many* for things you can count and *too much* for things you cannot count:\n\n- *There are too many cars.*\n- *There is too much traffic.*\n\n*enough* goes **before** a noun: *We don't have enough money*, not *money enough*.",
-        "和名词连用时，可数名词用 *too many*，不可数名词用 *too much*：\n\n- *There are too many cars.*\n- *There is too much traffic.*\n\n*enough* 放在名词**前面**：说 *We don't have enough money*，不说 *money enough*。注意：*enough* 在形容词后面，却在名词前面。",
+        "With nouns, use *too many* for things you can count and *too much* for things you cannot count:\n\n- *There are too many cars.*\n- *There is too much traffic.*\n\n*enough* goes **before** a noun: *We don't have enough money.*\n\n> **Watch out.** Unlike with adjectives, *enough* comes **before** a noun (*enough money*, never *money enough*), and do not use *very many/much* to mean “excessive”.",
+        "和名词连用时，可数名词用 *too many*，不可数名词用 *too much*：\n\n- *There are too many cars.*\n- *There is too much traffic.*\n\n*enough* 放在名词**前面**：*We don't have enough money.*\n\n> **注意。** 和修饰形容词正好相反，修饰名词时 *enough* 在**前面**（*enough money*，不说 *money enough*）；也不要用 *very many/much* 表达“过多”。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -771,21 +772,21 @@ const oneNoun = (sentence: string): readonly [noun: string, plural: boolean] => 
 const oneWhy = (word: string, noun: string, done: string): Text =>
   word === "ones"
     ? t(
-        `*${noun}* has already been said and means more than one, so *ones* stands for it: ${done}`,
-        `*${noun}* 前面已经说过，而且是复数，所以用 *ones* 代替：${done}`,
+        `*${noun}* has already been said and means more than one, so *ones* stands for it: ${done}\n\n**Check.** Match the number to the earlier noun *${noun}* (plural → *ones*) and confirm it follows the adjective directly.`,
+        `*${noun}* 前面已经说过，而且是复数，所以用 *ones* 代替：${done}\n\n**检验。** 核对前面名词 *${noun}* 的单复数（复数 → *ones*），且紧跟在形容词后面。`,
       )
     : t(
-        `*${noun}* has already been said and means one thing, so *one* stands for it: ${done}`,
-        `*${noun}* 前面已经说过，而且是单数，所以用 *one* 代替：${done}`,
+        `*${noun}* has already been said and means one thing, so *one* stands for it: ${done}\n\n**Check.** Match the number to the earlier noun *${noun}* (singular → *one*) and confirm it follows the adjective directly.`,
+        `*${noun}* 前面已经说过，而且是单数，所以用 *one* 代替：${done}\n\n**检验。** 核对前面名词 *${noun}* 的单复数（单数 → *one*），且紧跟在形容词后面。`,
       );
 
 /** whyNotOne explains the wrong number, or it or them after an adjective. */
-const whyNotOne = (wrong: string, right: string, shown: string): Text => {
+const whyNotOne = (wrong: string, _right: string, shown: string): Text => {
   const [noun] = oneNoun(shown);
   if (wrong === "it" || wrong === "them")
     return t(
-      `*${wrong}* cannot follow an adjective. After an adjective, use *${right}* to stand for *${noun}*.`,
-      `*${wrong}* 不能放在形容词后面。形容词后面要用 *${right}* 代替 *${noun}*。`,
+      `*${wrong}* cannot follow an adjective. After an adjective, English uses *one* or *ones* to stand for *${noun}*.`,
+      `*${wrong}* 不能放在形容词后面。形容词后面要用 *one* 或 *ones* 来代替 *${noun}*。`,
     );
   return wrong === "ones"
     ? t(`*ones* is for more than one, but *${noun}* means one thing.`, `*ones* 代替复数名词，但 *${noun}* 是单数。`)
@@ -799,6 +800,10 @@ const oneAndOnes: TopicDef = {
     "I like the blue one. These ones are cheaper. One stands for a noun already said, so you do not say it again.",
     "I like the blue one. These ones are cheaper. one 代替前面说过的名词，避免重复。",
   ),
+  intro: t(
+    "Instead of repeating the noun in *Which cup do you want? — The small cup*, English replaces it with *one* (*The small one*)—or *ones* for plural nouns (*the silver ones*).",
+    "不必在 *Which cup do you want? — The small cup* 里重复名词，英语用 *one* 代替单数名词（*The small one*），用 *ones* 代替复数名词（*the silver ones*）。",
+  ),
   prerequisites: ["too-and-enough"],
   encompasses: [
     { topic: "adjectives-before-nouns", weight: 0.3 },
@@ -811,8 +816,8 @@ const oneAndOnes: TopicDef = {
       "one-or-ones",
       t("One or ones", "one 还是 ones"),
       t(
-        "When you have already said a noun, you can use *one* instead of saying it again: *I don't like the black bag. I like the brown one.* (*one* = *bag*)\n\nFor more than one, use *ones*: *I don't like the black shoes. I like the brown ones.*\n\nAfter an adjective, use *one* or *ones*, not *it* or *them*: not *the brown it*.",
-        "前面已经说过的名词，可以用 *one* 代替，不再重复：*I don't like the black bag. I like the brown one.*（*one* = *bag*）\n\n复数用 *ones*：*I don't like the black shoes. I like the brown ones.*\n\n形容词后面要用 *one / ones*，不能用 *it / them*：不说 *the brown it*。中文说“我喜欢棕色的”，英语不能只说 *the brown*，要加 *one*。",
+        "When you have already said a noun, you can use *one* instead of saying it again: *I don't like the black bag. I like the brown one.* (*one* = *bag*)\n\nFor more than one, use *ones*: *I don't like the black shoes. I like the brown ones.*\n\n> **Watch out.** Never put *it* or *them* after an adjective (*the brown it* is wrong), and do not leave the adjective hanging without *one/ones* (*I like the brown* is wrong).",
+        "前面已经说过的名词，可以用 *one* 代替，不再重复：*I don't like the black bag. I like the brown one.*（*one* = *bag*）\n\n复数用 *ones*：*I don't like the black shoes. I like the brown ones.*\n\n> **注意。** 形容词后面不能用 *it/them*（*the brown it* 是错的），也不能像中文“我喜欢棕色的”那样省掉 *one/ones*。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
@@ -825,8 +830,8 @@ const oneAndOnes: TopicDef = {
       "write",
       t("Saying it with one", "用 one 来说"),
       t(
-        "Write the second sentence again without saying the noun twice: use *one* for one thing and *ones* for more than one. *I need a new bag.* → *I need a new one.*",
-        "把第二句重写一遍，不要重复名词：一个东西用 *one*，多个用 *ones*。*I need a new bag.* → *I need a new one.*",
+        "Write the second sentence again without saying the noun twice: use *one* for one thing and *ones* for more than one. *I need a new bag.* → *I need a new one.*\n\n> **Watch out.** Check whether the replaced noun is singular (*one*) or plural (*ones*), and keep the rest of the second sentence (including *a/an/the* and the end punctuation) intact.",
+        "把第二句重写一遍，不要重复名词：一个东西用 *one*，多个用 *ones*。*I need a new bag.* → *I need a new one.*\n\n> **注意。** 核对被替换的名词是单数（*one*）还是复数（*ones*），并保留第二句的其余部分（包括冠词和句末标点）。",
       ),
       typedGenerator(
         "sentence",
@@ -916,6 +921,10 @@ const writingAMessageToAShop = judgedTopic({
     "Write a short message to a shop about something you bought: what it is, what is wrong with it, and what you would like.",
     "给商店写一封短信，说说你买的东西：是什么、有什么问题、你希望怎么处理。",
   ),
+  intro: t(
+    "When an order arrives broken or in the wrong size, a clear, polite message gets it fixed fast: *Dear Sir or Madam, I bought a jacket on Tuesday, but the zip is broken. Could I exchange it for a new one, please? Thank you, Mei.*",
+    "买到的东西坏了或尺码不对时，一封礼貌清晰的短信最容易解决问题：*Dear Sir or Madam, I bought a jacket on Tuesday, but the zip is broken. Could I exchange it for a new one, please? Thank you, Mei.*",
+  ),
   prerequisites: ["writing-a-short-note", "too-and-enough"],
   encompasses: [
     { topic: "writing-a-short-note", weight: 0.3 },
@@ -926,8 +935,8 @@ const writingAMessageToAShop = judgedTopic({
     id: "message",
     title: t("What, what is wrong and what you would like", "买了什么、有什么问题、希望怎么办"),
     explanation: t(
-      "A message to a shop is polite and clear:\n\n- Begin with *Dear Sir or Madam* or *Hello*.\n- Say what you bought and when: *Last week I bought a blue sweater on your website.*\n- Say what is wrong: *It is too small. It doesn't work.*\n- Say what you would like: *I would like to change it, please. Could you send me a new one?*\n- End with *Thank you* and your name.",
-      "给商店的信要礼貌、清楚：\n\n- 开头写 *Dear Sir or Madam* 或 *Hello*。\n- 说你买了什么、什么时候买的：*Last week I bought a blue sweater on your website.*\n- 说出问题：*It is too small. It doesn't work.*\n- 说出你的要求：*I would like to change it, please. Could you send me a new one?*\n- 结尾写 *Thank you* 和你的名字。\n\n提要求时用 *I would like ...* 或 *Could you ...?*，比 *I want ...* 和 *Give me ...* 礼貌。",
+      "A message to a shop is polite and clear:\n\n- Begin with *Dear Sir or Madam* or *Hello*.\n- Say what you bought and when: *Last week I bought a blue sweater on your website.*\n- Say what is wrong: *It is too small. It doesn't work.*\n- Say what you would like: *I would like to change it, please. Could you send me a new one?*\n- End with *Thank you* and your name.\n\n> **Watch out.** Use polite requests like *I would like...* or *Could you...?* (not blunt orders like *Give me my money back!*), and include both a greeting and your name.",
+      "给商店的信要礼貌、清楚：\n\n- 开头写 *Dear Sir or Madam* 或 *Hello*。\n- 说你买了什么、什么时候买的：*Last week I bought a blue sweater on your website.*\n- 说出问题：*It is too small. It doesn't work.*\n- 说出你的要求：*I would like to change it, please. Could you send me a new one?*\n- 结尾写 *Thank you* 和你的名字。\n\n> **注意。** 提要求时用 *I would like ...* 或 *Could you ...?*（不要用生硬的 *Give me ...*），并写全开头称呼和结尾署名。",
     ),
   },
   question: t(

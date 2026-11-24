@@ -25,17 +25,21 @@ const latinRoots3 = parts({
     "Ten more Latin roots: capt, fac, mot, junct, sect, pend, cur, fid, loc and vert.",
     "另外十个拉丁词根：capt、fac、mot、junct、sect、pend、cur、fid、loc 和 vert。",
   ],
+  intro: [
+    "Knowing that *sect* means *cut* connects *dissect*, *section*, and *intersect* in one glance. Ten high-frequency Latin roots unlock dozens of academic words across science, history, and everyday reading.",
+    "知道 *sect* 意为“切”，就能一眼把 *dissect*、*section* 和 *intersect* 串起来。掌握这十个高频拉丁词根，就能成批解锁科学、历史与日常阅读中的学术词汇。",
+  ],
   after: ["latin-roots-2"],
   kind: ["Latin root", "拉丁词根"],
   list: latin,
   explanations: [
     [
-      "These Latin roots carry the meaning of many words. *Capt* means take, *fac* make or do, *mot* move, *junct* join, *sect* cut, *pend* hang, *cur* run, *fid* trust, *loc* place and *vert* turn. A root can sit at the start, middle or end of a word, with prefixes and suffixes around it: *re-loc-ate*, *pro-mot-e*.",
-      "这些拉丁词根承载着许多词的意思。*capt* 意为拿，*fac* 做，*mot* 移动，*junct* 连接，*sect* 切，*pend* 悬挂，*cur* 跑，*fid* 信任，*loc* 地方，*vert* 转。词根可以在词的开头、中间或结尾，前后带着前缀和后缀：*re-loc-ate*、*pro-mot-e*。",
+      "These Latin roots carry the meaning of many words. *Capt* means take, *fac* make or do, *mot* move, *junct* join, *sect* cut, *pend* hang, *cur* run, *fid* trust, *loc* place and *vert* turn. A root can sit at the start, middle or end of a word, with prefixes and suffixes around it: *re-loc-ate*, *pro-mot-e*.\n\n> **Watch out.** Do not confuse similar-looking roots like *cur* (run, as in *current*) and *capt* (take, as in *capture*)—always check the example word's definition right beside it.",
+      "这些拉丁词根承载着许多词的意思。*capt* 意为拿，*fac* 做，*mot* 移动，*junct* 连接，*sect* 切，*pend* 悬挂，*cur* 跑，*fid* 信任，*loc* 地方，*vert* 转。词根可以在词的开头、中间或结尾，前后带着前缀和后缀：*re-loc-ate*、*pro-mot-e*。\n\n> **注意。** 不要混淆外形相近的词根（如 *cur* 表示“跑/流”，*capt* 表示“拿/抓”）——随时结合旁边例词的定义来印证。",
     ],
     [
-      "To choose a word from its meaning, look for the root that carries the meaning you need. Something that *turns back* holds *vert*; a place where roads *join* holds *junct*; water that *runs* in one direction holds *cur*. Then check that the rest of the word fits: *-ion* makes a noun, *-ate* often a verb.",
-      "根据意思选词时，找出承载所需意思的词根。“转回去”的东西含有 *vert*；道路“连接”的地方含有 *junct*；朝一个方向“流”的水含有 *cur*。再看词的其他部分是否合适：*-ion* 构成名词，*-ate* 常构成动词。",
+      "To choose a word from its meaning, look for the root that carries the meaning you need. Something that *turns back* holds *vert*; a place where roads *join* holds *junct*; water that *runs* in one direction holds *cur*. Then check that the rest of the word fits: *-ion* makes a noun, *-ate* often a verb.\n\n> **Watch out.** Spot the key action or idea in the definition first (*cut*, *hang*, *trust*), then match it to the root inside the word.",
+      "根据意思选词时，找出承载所需意思的词根。“转回去”的东西含有 *vert*；道路“连接”的地方含有 *junct*；朝一个方向“流”的水含有 *cur*。再看词的其他部分是否合适：*-ion* 构成名词，*-ate* 常构成动词。\n\n> **注意。** 先抓出定义里的核心动作或概念（如“切”“悬挂”“信任”），再与选项词里的词根对应。",
     ],
   ],
 });
@@ -60,17 +64,21 @@ const greekRoots2 = parts({
     "Ten more Greek roots: seism, chrom, gen, path, crat, dem, poli, lith, morph and kine.",
     "另外十个希腊词根：seism、chrom、gen、path、crat、dem、poli、lith、morph 和 kine。",
   ],
+  intro: [
+    "When you meet an unfamiliar science or civics word like *seismograph* or *monolith*, its Greek roots (*seism* = shake, *lith* = stone) tell you what it is built from before you ever reach for a dictionary.",
+    "遇到 *seismograph* 或 *monolith* 这类陌生的科学或政治词汇时，希腊词根（*seism* 表示震动，*lith* 表示石头）能让你不用查词典就拆出词义。",
+  ],
   after: ["greek-roots-1"],
   kind: ["Greek root", "希腊词根"],
   list: greek,
   explanations: [
     [
-      "Greek roots build many words of science and government. *Seism* means shake, *chrom* color, *gen* birth or kind, *path* feeling or disease, *crat* rule, *dem* people, *poli* city, *lith* stone, *morph* shape and *kine* motion. Two roots often join in one word: *dem* + *cracy* is rule by the people.",
-      "希腊词根构成了许多科学和政治方面的词。*seism* 意为震动，*chrom* 颜色，*gen* 出生或种类，*path* 感情或疾病，*crat* 统治，*dem* 人民，*poli* 城市，*lith* 石头，*morph* 形状，*kine* 运动。一个词里常常有两个词根：*dem* 加 *cracy* 就是由人民统治。",
+      "Greek roots build many words of science and government. *Seism* means shake, *chrom* color, *gen* birth or kind, *path* feeling or disease, *crat* rule, *dem* people, *poli* city, *lith* stone, *morph* shape and *kine* motion. Two roots often join in one word: *dem* + *cracy* is rule by the people.\n\n> **Watch out.** Notice that *crat* (rule) and *dem* (people) often appear together in words like *democrat*—check which root is italicized in the prompt.",
+      "希腊词根构成了许多科学和政治方面的词。*seism* 意为震动，*chrom* 颜色，*gen* 出生或种类，*path* 感情或疾病，*crat* 统治，*dem* 人民，*poli* 城市，*lith* 石头，*morph* 形状，*kine* 运动。一个词里常常有两个词根：*dem* 加 *cracy* 就是由人民统治。\n\n> **注意。** *crat*（统治）和 *dem*（人民）常在 *democrat* 这类词里同时出现——看清题目用斜体标出的是哪一个词根。",
     ],
     [
-      "When you need a word for a meaning, think of the Greek root that carries it, then look for that root in the choices. A tool that records *shaking* holds *seism*; a single huge *stone* holds *lith*; a complete change of *shape* holds *morph*. The other parts of the word tell you whether it names a person, a tool or a study.",
-      "需要表达某个意思时，先想想承载它的希腊词根，再在选项里找这个词根。记录“震动”的仪器含有 *seism*；一整块巨大的“石头”含有 *lith*；“形状”的彻底改变含有 *morph*。词的其他部分会告诉你它指的是人、工具还是学科。",
+      "When you need a word for a meaning, think of the Greek root that carries it, then look for that root in the choices. A tool that records *shaking* holds *seism*; a single huge *stone* holds *lith*; a complete change of *shape* holds *morph*. The other parts of the word tell you whether it names a person, a tool or a study.\n\n> **Watch out.** Watch for spelling shifts like *kine* appearing in *cinema*—anchor your choice on the core meaning in the definition.",
+      "需要表达某个意思时，先想想承载它的希腊词根，再在选项里找这个词根。记录“震动”的仪器含有 *seism*；一整块巨大的“石头”含有 *lith*；“形状”的彻底改变含有 *morph*。词的其他部分会告诉你它指的是人、工具还是学科。\n\n> **注意。** 留意拼写微调（例如 *kine* 在 *cinema* 里写作 *cin-*）——以定义中的核心含义为准。",
     ],
   ],
 });
@@ -95,17 +103,21 @@ const numberPrefixes = parts({
     "Mono- one, quad- four, pent- five, oct- eight, deca- ten, cent- hundred, kilo- thousand, milli- thousandth, poly- many and hemi- half.",
     "mono- 一，quad- 四，pent- 五，oct- 八，deca- 十，cent- 百，kilo- 千，milli- 千分之一，poly- 多，hemi- 半。",
   ],
+  intro: [
+    "Spot the prefix in *octagon*, *hemisphere*, or *milligram* and you immediately hear the number inside it—eight, half, one thousandth. These ten number prefixes appear everywhere in math, science, and measurement.",
+    "看到 *octagon*、*hemisphere* 或 *milligram*，认出前缀就能立刻读出里面的数字——八、半、千分之一。这十个表示数目的前缀广泛出现在数学、科学和度量词汇中。",
+  ],
   after: ["prefixes-of-number-and-position"],
   kind: ["prefix", "前缀"],
   list: number,
   explanations: [
     [
-      "You know *uni-*, *bi-* and *tri-*. Greek and Latin gave English more prefixes that tell **how many**: *mono-* one, *quad-* four, *pent-* five, *oct-* eight, *deca-* ten, *cent-* a hundred, *kilo-* a thousand, *milli-* a thousandth, *poly-* many and *hemi-* half. They fill the language of math and measurement: a *pentagon*, a *decade*, a *kilometer*, a *millimeter*.",
-      "你已经认识 *uni-*、*bi-* 和 *tri-*。希腊语和拉丁语还给了英语更多表示**数目**的前缀：*mono-* 一，*quad-* 四，*pent-* 五，*oct-* 八，*deca-* 十，*cent-* 百，*kilo-* 千，*milli-* 千分之一，*poly-* 多，*hemi-* 半。数学和度量的词里到处是它们：*pentagon*、*decade*、*kilometer*、*millimeter*。",
+      "You know *uni-*, *bi-* and *tri-*. Greek and Latin gave English more prefixes that tell **how many**: *mono-* one, *quad-* four, *pent-* five, *oct-* eight, *deca-* ten, *cent-* a hundred, *kilo-* a thousand, *milli-* a thousandth, *poly-* many and *hemi-* half. They fill the language of math and measurement: a *pentagon*, a *decade*, a *kilometer*, a *millimeter*.\n\n> **Watch out.** Do not swap *kilo-* (one thousand) and *milli-* (one thousandth)—a *kilometer* is huge, while a *millimeter* is tiny.",
+      "你已经认识 *uni-*、*bi-* 和 *tri-*。希腊语和拉丁语还给了英语更多表示**数目**的前缀：*mono-* 一，*quad-* 四，*pent-* 五，*oct-* 八，*deca-* 十，*cent-* 百，*kilo-* 千，*milli-* 千分之一，*poly-* 多，*hemi-* 半。数学和度量的词里到处是它们：*pentagon*、*decade*、*kilometer*、*millimeter*。\n\n> **注意。** 不要把 *kilo-*（一千）和 *milli-*（千分之一）弄反——*kilometer* 是千米，而 *millimeter* 是毫米。",
     ],
     [
-      "To choose a word for a definition, find the number in the definition and match it to the prefix: *eight arms* points to *oct-*, *half of a sphere* to *hemi-*, *ten years* to *deca-*. *Kilo-* makes a unit a thousand times bigger and *milli-* a thousand times smaller, so do not mix them up.",
-      "根据定义选词时，找出定义中的数目，再与前缀对应：*eight arms* 指向 *oct-*，*half of a sphere* 指向 *hemi-*，*ten years* 指向 *deca-*。*kilo-* 让单位大一千倍，*milli-* 让单位小一千倍，不要混淆。",
+      "To choose a word for a definition, find the number in the definition and match it to the prefix: *eight arms* points to *oct-*, *half of a sphere* to *hemi-*, *ten years* to *deca-*. *Kilo-* makes a unit a thousand times bigger and *milli-* a thousand times smaller, so do not mix them up.\n\n> **Watch out.** Check whether the definition asks for a whole multiple (*thousand*, *hundred*) or a fraction (*half*, *thousandth*) before picking.",
+      "根据定义选词时，找出定义中的数目，再与前缀对应：*eight arms* 指向 *oct-*，*half of a sphere* 指向 *hemi-*，*ten years* 指向 *deca-*。*kilo-* 让单位大一千倍，*milli-* 让单位小一千倍，不要混淆。\n\n> **注意。** 选词前先看清定义给的是整数倍（千、百）还是分数（半、千分之一）。",
     ],
   ],
 });
@@ -130,17 +142,21 @@ const placePrefixes = parts({
     "Ex- out, intra- within, circum- around, peri- around the edge, pro- forward, retro- back, extra- beyond, contra- against, ante- before, intro- inward.",
     "ex- 向外，intra- 在内，circum- 环绕，peri- 周边，pro- 向前，retro- 向后，extra- 在外，contra- 相反，ante- 在前，intro- 向内。",
   ],
+  intro: [
+    "Direction prefixes act like arrows built right into English words: *pro-* pushes forward (*propel*), *retro-* points back (*retrospect*), and *circum-* loops around (*circumference*). Picturing the arrow makes each word easy to decode.",
+    "方位前缀就像镶嵌在单词里的方向箭头：*pro-* 指向前（*propel*），*retro-* 指向后（*retrospect*），*circum-* 表示绕一圈（*circumference*）。在脑中画出方向，词义立刻清晰。",
+  ],
   after: ["prefixes-of-number-and-position"],
   kind: ["prefix", "前缀"],
   list: place,
   explanations: [
     [
-      "You know *sub-*, *super-*, *inter-* and *trans-*. Ten more prefixes tell **where** or **which way**: *ex-* out of, *intra-* within, *circum-* around, *peri-* around the edge, *pro-* forward, *retro-* backward, *extra-* outside or beyond, *contra-* against, *ante-* before and *intro-* inward. Picture the direction and the word often explains itself: to *circumnavigate* is to sail around.",
-      "你已经认识 *sub-*、*super-*、*inter-* 和 *trans-*。另外十个前缀表示**位置**或**方向**：*ex-* 向外，*intra-* 在内，*circum-* 环绕，*peri-* 周边，*pro-* 向前，*retro-* 向后，*extra-* 在外或超出，*contra-* 相反，*ante-* 在前，*intro-* 向内。想象这个方向，词义常常不言自明：*circumnavigate* 就是环绕航行。",
+      "You know *sub-*, *super-*, *inter-* and *trans-*. Ten more prefixes tell **where** or **which way**: *ex-* out of, *intra-* within, *circum-* around, *peri-* around the edge, *pro-* forward, *retro-* backward, *extra-* outside or beyond, *contra-* against, *ante-* before and *intro-* inward. Picture the direction and the word often explains itself: to *circumnavigate* is to sail around.\n\n> **Watch out.** Keep *ante-* (before, as in *anteroom*) separate from *anti-* (against)—in this set, *against* is carried by *contra-*.",
+      "你已经认识 *sub-*、*super-*、*inter-* 和 *trans-*。另外十个前缀表示**位置**或**方向**：*ex-* 向外，*intra-* 在内，*circum-* 环绕，*peri-* 周边，*pro-* 向前，*retro-* 向后，*extra-* 在外或超出，*contra-* 相反，*ante-* 在前，*intro-* 向内。想象这个方向，词义常常不言自明：*circumnavigate* 就是环绕航行。\n\n> **注意。** 把 *ante-*（在前，如 *anteroom*）和 *anti-*（反对）分开——本课表示“反对/相反”的前缀是 *contra-*。",
     ],
     [
-      "Pairs of opposites help: *ex-* goes out and *intro-* goes in; *pro-* moves forward and *retro-* back; *intra-* is inside and *extra-* is outside. *Ante-* (before) is not *anti-* (against), which *contra-* matches. To choose a word, find the direction in the definition and the prefix that names it.",
-      "成对的反义前缀很有帮助：*ex-* 向外，*intro-* 向内；*pro-* 向前，*retro-* 向后；*intra-* 在内，*extra-* 在外。*ante-*（在前）不是 *anti-*（反对），与 *anti-* 意思相同的是 *contra-*。选词时，先找出定义中的方向，再找表示这个方向的前缀。",
+      "Pairs of opposites help: *ex-* goes out and *intro-* goes in; *pro-* moves forward and *retro-* back; *intra-* is inside and *extra-* is outside. *Ante-* (before) is not *anti-* (against), which *contra-* matches. To choose a word, find the direction in the definition and the prefix that names it.\n\n> **Watch out.** Notice the subtle split between *intra-* (within one group, like *intrastate*) and *intro-* (turning inward, like *introvert*).",
+      "成对的反义前缀很有帮助：*ex-* 向外，*intro-* 向内；*pro-* 向前，*retro-* 向后；*intra-* 在内，*extra-* 在外。*ante-*（在前）不是 *anti-*（反对），与 *anti-* 意思相同的是 *contra-*。选词时，先找出定义中的方向，再找表示这个方向的前缀。\n\n> **注意。** 区分 *intra-*（在某一范围内部，如 *intrastate*）和 *intro-*（朝向内部，如 *introvert*）。",
     ],
   ],
 });
@@ -191,20 +207,24 @@ const adages = topic("vocabulary", {
     "Fifteen more old sayings, such as A stitch in time saves nine and Necessity is the mother of invention.",
     "另外十五句老话，如 A stitch in time saves nine 和 Necessity is the mother of invention。",
   ],
+  intro: [
+    "When someone says *Rome wasn't built in a day*, they are rarely talking about ancient builders—they are reminding you that big work takes patience. Reading the hidden lesson behind the vivid image unlocks these fifteen classic proverbs.",
+    "有人说 *Rome wasn't built in a day* 时，通常不是在聊古罗马建筑，而是提醒你大事急不得。透过生动画面读出背后的道理，就能掌握这十五句经典谚语。",
+  ],
   after: ["adages-and-proverbs"],
   points: [
     choose(
       "what-a-proverb-means",
       ["What a Proverb Means", "谚语的意思"],
       [
-        "An **adage** or **proverb** is an old, short saying that gives advice or states a truth most people accept. Its words often paint a picture that is not meant literally: *A stitch in time saves nine* is not about sewing but about fixing a small problem before it grows. Ask what lesson the picture teaches.",
-        "**格言**或**谚语**是简短的老话，给出建议或说出大多数人认同的道理。它的字面常常是一幅不按字面理解的画面：*A stitch in time saves nine* 说的不是缝衣服，而是趁小问题还没变大就解决它。要问这幅画面讲的是什么道理。",
+        "An **adage** or **proverb** is an old, short saying that gives advice or states a truth most people accept. Its words often paint a picture that is not meant literally: *A stitch in time saves nine* is not about sewing but about fixing a small problem before it grows. Ask what lesson the picture teaches.\n\n> **Watch out.** Use the rest of the sentence as a clue—the speaker's situation right beside the proverb always illustrates its true lesson.",
+        "**格言**或**谚语**是简短的老话，给出建议或说出大多数人认同的道理。它的字面常常是一幅不按字面理解的画面：*A stitch in time saves nine* 说的不是缝衣服，而是趁小问题还没变大就解决它。要问这幅画面讲的是什么道理。\n\n> **注意。** 结合句子的另一半来判断——紧挨着谚语的具体情境总在印证它的真正道理。",
       ],
       ["What does the proverb in this sentence mean?", "句子里的谚语是什么意思？"],
       proverbMeaning,
       (right) => [
-        `The proverb *${proverbByMeaning(right)}* means **${right}**; its picture stands for that lesson, not for its literal words.`,
-        `谚语 *${proverbByMeaning(right)}* 的意思是 **${right}**；它的画面代表这个道理，而不是字面意思。`,
+        `The proverb *${proverbByMeaning(right)}* means **${right}**; its picture stands for that lesson, not for its literal words.\n\n**Check.** Substitute “${right}” into the sentence in place of the proverb—the sentence makes complete sense.`,
+        `谚语 *${proverbByMeaning(right)}* 的意思是 **${right}**；它的画面代表这个道理，而不是字面意思。\n\n**检验。** 把“${right}”代回原句替换这句谚语——整句话的意思完全通顺。`,
       ],
       [
         [
@@ -221,14 +241,14 @@ const adages = topic("vocabulary", {
       "proverb-for-a-situation",
       ["The Proverb for a Situation", "适合情境的谚语"],
       [
-        "People use a proverb to sum up a situation in a few words. To choose one, first say in plain words what the situation shows: fixing a problem early saves work; too many helpers make a mess. Then pick the proverb whose lesson is the same, not one that merely shares a word or a picture.",
-        "人们用谚语简短地概括一个情境。选择谚语时，先用平常的话说出这个情境说明了什么：早点解决问题能省事；帮忙的人太多反而搞砸。再选出道理相同的谚语，而不是只有某个词或画面相同的谚语。",
+        "People use a proverb to sum up a situation in a few words. To choose one, first say in plain words what the situation shows: fixing a problem early saves work; too many helpers make a mess. Then pick the proverb whose lesson is the same, not one that merely shares a word or a picture.\n\n> **Watch out.** Match the *moral* of the scene, not surface words—a story about cooking or water may not match a proverb that merely mentions cooks or water.",
+        "人们用谚语简短地概括一个情境。选择谚语时，先用平常的话说出这个情境说明了什么：早点解决问题能省事；帮忙的人太多反而搞砸。再选出道理相同的谚语，而不是只有某个词或画面相同的谚语。\n\n> **注意。** 要对上情境背后的*道理*，不要被表面字眼迷惑——哪怕故事里提到了水或做饭，也不一定对应字面含水或厨师的谚语。",
       ],
       ["Which proverb fits this situation?", "哪句谚语适合这个情境？"],
       proverbFit,
       (right) => [
-        `**${right}** fits: it means ${proverbMeans(right)}, which is just what the situation shows.`,
-        `**${right}** 合适：它的意思是 ${proverbMeans(right)}，这正是情境所说明的。`,
+        `**${right}** fits: it means ${proverbMeans(right)}, which is just what the situation shows.\n\n**Check.** State the lesson of the situation in plain English—it says “${proverbMeans(right)}”, matching **${right}**`,
+        `**${right}** 合适：它的意思是 ${proverbMeans(right)}，这正是情境所说明的。\n\n**检验。** 用大白话概括这个情境的道理——正是“${proverbMeans(right)}”，与 **${right}** 一致。`,
       ],
       [
         ["*{wrong}* teaches a different lesson; this situation is not about that.", "*{wrong}* 讲的是另一个道理，这个情境说的不是那件事。"],
@@ -293,45 +313,58 @@ const otherLanguages = topic("vocabulary", {
     "English borrows words from many languages: kindergarten from German, ballet from French, piano from Italian, tsunami from Japanese, tea from Chinese.",
     "英语从许多语言借词：kindergarten 来自德语，ballet 来自法语，piano 来自意大利语，tsunami 来自日语，tea 来自汉语。",
   ],
+  intro: [
+    "Everyday English is full of travelers: *kindergarten* came from German, *piano* from Italian, *tsunami* from Japanese, and *tea* from southern China. Clues about a word's birthplace, spelling, or original meaning trace it back to its home language.",
+    "日常英语里满是“外来旅人”：*kindergarten* 来自德语，*piano* 来自意大利语，*tsunami* 来自日语，*tea* 来自中国福建。留心词的发源地、拼写特征或原义，就能追溯它的来源语言。",
+  ],
   after: ["latin-roots-3"],
   points: [
     choose(
       "where-a-word-came-from",
       ["Where a Borrowed Word Came From", "借词来自哪里"],
       [
-        "English has **borrowed** words from almost every language it met through trade, travel and conquest: *ballet* and *café* from French, *piano* from Italian, *canyon* from Spanish, *tsunami* from Japanese, *tea* from Chinese, *algebra* from Arabic, *shampoo* from Hindi. A dictionary gives a word's origin; a clue about who first used it, where, or what it first meant points to the language.",
-        "英语通过贸易、旅行和征服，几乎从它接触过的每种语言**借**了词：*ballet* 和 *café* 来自法语，*piano* 来自意大利语，*canyon* 来自西班牙语，*tsunami* 来自日语，*tea* 来自汉语，*algebra* 来自阿拉伯语，*shampoo* 来自印地语。词典会给出词源；关于谁最先使用、在哪里使用或最初是什么意思的线索，能指向它来自的语言。",
+        "English has **borrowed** words from almost every language it met through trade, travel and conquest: *ballet* and *café* from French, *piano* from Italian, *canyon* from Spanish, *tsunami* from Japanese, *tea* from Chinese, *algebra* from Arabic, *shampoo* from Hindi. A dictionary gives a word's origin; a clue about who first used it, where, or what it first meant points to the language.\n\n> **Watch out.** Use the geographic or spelling clue in the prompt (such as *Berlin*, *Florence*, *Baghdad*, or a silent *-t*)—it directly narrows down the source language.",
+        "英语通过贸易、旅行和征服，几乎从它接触过的每种语言**借**了词：*ballet* 和 *café* 来自法语，*piano* 来自意大利语，*canyon* 来自西班牙语，*tsunami* 来自日语，*tea* 来自汉语，*algebra* 来自阿拉伯语，*shampoo* 来自印地语。词典会给出词源；关于谁最先使用、在哪里使用或最初是什么意思的线索，能指向它来自的语言。\n\n> **注意。** 抓住题干中的地名或拼写线索（如 *Berlin*、*Florence*、*Baghdad* 或不发音的 *-t*）——它们直接锁定源语言。",
       ],
       ["From which language did English borrow this word?", "英语从哪种语言借来了这个词？"],
       languageItems,
       (right, shown) => [
-        `The clue points to ${right}: ${shown.replace(/^\*\*[^*]+\*\*: /, "")} So the word was borrowed from **${right}**.`,
-        `线索指向${right}：${shown.replace(/^\*\*[^*]+\*\*: /, "")} 所以这个词借自 **${right}**。`,
+        `The clue points to ${right}: ${shown.replace(/^\*\*[^*]+\*\*: /, "")} So the word was borrowed from **${right}**.\n\n**Check.** Match the place, people, or spelling detail in the clue directly to **${right}**—the other two languages belong to different regions.`,
+        `线索指向 ${right}：${shown.replace(/^\*\*[^*]+\*\*: /, "")} 所以这个词借自 **${right}**。\n\n**检验。** 把线索里的地名、人物或拼写特征与 **${right}** 对应——另外两种语言属于不同地区。`,
       ],
       [
-        ["*{wrong}* gave English other words, but the clue points to **{right}**.", "*{wrong}* 也给了英语别的词，但线索指向 **{right}**。"],
-        ["Nothing in the clue points to *{wrong}*; it points to **{right}**.", "线索中没有任何地方指向 *{wrong}*，它指向 **{right}**。"],
+        [
+          "*{wrong}* gave English other words, but the clue here points to a different region and language.",
+          "*{wrong}* 也给了英语别的词，但这里的线索指向别的地区和语言。",
+        ],
+        [
+          "Nothing in the clue matches *{wrong}*—re-read the place or origin detail in the prompt.",
+          "线索里没有任何地方指向 *{wrong}*——重读题干中的地名或起源提示。",
+        ],
       ],
     ),
     choose(
       "using-a-borrowed-word",
       ["Using a Borrowed Word", "使用借词"],
       [
-        "A borrowed word is an ordinary English word once it is borrowed, so the sentence around it decides whether it fits. Many keep a sign of where they came from, such as the silent *t* of *ballet* or the accent of *café*, so spell them as English spells them now.",
-        "借词一旦被借进来，就是普通的英语单词，所以要看周围的句子决定它是否合适。许多借词还保留着来源的痕迹，比如 *ballet* 中不发音的 *t*，*café* 上的重音符号，所以要按英语现在的拼法来写。",
+        "A borrowed word is an ordinary English word once it is borrowed, so the sentence around it decides whether it fits. Many keep a sign of where they came from, such as the silent *t* of *ballet* or the accent of *café*, so spell them as English spells them now.\n\n> **Watch out.** Test the *meaning* of each word in the whole sentence—all three choices are real borrowed words, so only context tells which one belongs.",
+        "借词一旦被借进来，就是普通的英语单词，所以要看周围的句子决定它是否合适。许多借词还保留着来源的痕迹，比如 *ballet* 中不发音的 *t*，*café* 上的重音符号，所以要按英语现在的拼法来写。\n\n> **注意。** 把每个词放回整句里检验*句意*——三个选项都是真正的借词，只有上下文能决定该填哪一个。",
       ],
       ["Which borrowed word completes the sentence?", "哪个借词能补全句子？"],
       borrowedFit,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`)} *${right}*, borrowed from ${languageOf(right)}, is the only choice that makes sense here.`,
-        `${shown.replace("___", `**${right}**`)} 借自${languageOf(right)}的 *${right}* 是唯一说得通的选项。`,
+        `${shown.replace("___", `**${right}**`)} *${right}*, borrowed from ${languageOf(right)}, is the only choice that makes sense here.\n\n**Check.** Re-read the completed sentence with **${right}**—the surrounding clues in the sentence match what a *${right}* actually is.`,
+        `${shown.replace("___", `**${right}**`)} 借自 ${languageOf(right)} 的 *${right}* 是唯一说得通的选项。\n\n**检验。** 把 **${right}** 填回原句再读一遍——句中上下文正好符合 *${right}* 的含义。`,
       ],
       [
         [
           "*{wrong}* is a borrowed word too, but it names something that does not fit this sentence.",
           "*{wrong}* 也是借词，但它指的东西放不进这个句子。",
         ],
-        ["*{wrong}* makes no sense in this gap; the sentence needs **{right}**.", "*{wrong}* 放在这个空里说不通，句子需要 **{right}**。"],
+        [
+          "*{wrong}* makes no sense in this gap; look at the context clues around the blank.",
+          "*{wrong}* 放在这个空里说不通，看看空白前后的上下文线索。",
+        ],
       ],
     ),
   ],

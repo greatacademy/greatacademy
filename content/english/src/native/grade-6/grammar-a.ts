@@ -486,22 +486,25 @@ const whoLabels: Readonly<Record<string, Label>> = {
   who: {
     zh: "who",
     why: [
-      "*Who* is the subject: it does the action of its verb, as *he* or *she* would.",
-      "*who* 是主语：它是动词动作的执行者，就像 *he* 或 *she* 一样。",
+      "*Who* is the subject: it does the action of its verb, as *he* or *she* would.\n\n**Check.** Substitute *he* or *she* into the clause or answer—it fits as the subject doing the verb.",
+      "*who* 是主语：它是动词动作的执行者，就像 *he* 或 *she* 一样。\n\n**检验。** 把 *he* 或 *she* 代入从句或答句——正好充当执行动作的主语。",
     ],
     not: ["*Who* is for a subject; here the pronoun is not the one doing the action.", "*who* 用作主语；这里的代词并不是动作的执行者。"],
   },
   whom: {
     zh: "whom",
     why: [
-      "*Whom* is the object: it receives the action or follows a preposition, as *him* or *her* would.",
-      "*whom* 是宾语：它承受动作或跟在介词后面，就像 *him* 或 *her* 一样。",
+      "*Whom* is the object: it receives the action or follows a preposition, as *him* or *her* would.\n\n**Check.** Substitute *him* or *her* into the clause or answer—it fits as the object receiving the verb or following the preposition.",
+      "*whom* 是宾语：它承受动作或跟在介词后面，就像 *him* 或 *her* 一样。\n\n**检验。** 把 *him* 或 *her* 代入从句或答句——正好作动词宾语或介词宾语。",
     ],
     not: ["*Whom* is for an object; here the pronoun is the subject of its verb.", "*whom* 用作宾语；这里的代词是动词的主语。"],
   },
   whose: {
     zh: "whose",
-    why: ["*Whose* shows belonging: it comes before the thing that someone owns.", "*whose* 表示所属：它放在某人拥有的东西前面。"],
+    why: [
+      "*Whose* shows belonging: it comes before the thing that someone owns.\n\n**Check.** Substitute *his* or *her* before the noun right after the blank—it shows ownership cleanly.",
+      "*whose* 表示所属：它放在某人拥有的东西前面。\n\n**检验。** 在空格后面的名词前代入 *his* 或 *her*——正好表示所属关系。",
+    ],
     not: ["*Whose* shows belonging, and no noun of belonging follows it here.", "*whose* 表示所属，而这里后面没有表示所属物的名词。"],
   },
 };
@@ -510,14 +513,18 @@ const whoAndWhom = topic("grammar", {
   id: "who-and-whom",
   title: ["Who and Whom", "who 与 whom"],
   summary: ["Who is a subject, like he; whom is an object, like him.", "who 是主语，像 he；whom 是宾语，像 him。"],
+  intro: [
+    "Whenever *who* and *whom* feel tricky, swap in *he* or *him*: *He* won the race → *who*; I called *him* → *whom*; *his* jacket → *whose*. That one-word swap settles both questions and relative clauses.",
+    "拿不准用 *who* 还是 *whom* 时，换入 *he* 或 *him* 就能立刻见分晓：*He* won → *who*，I called *him* → *whom*，*his* jacket → *whose*。这一招对疑问句和从句都管用。",
+  ],
   after: ["pronoun-case"],
   points: [
     label(
       "who-or-whom-in-questions",
       ["Who or Whom in a Question", "疑问句中的 who 与 whom"],
       [
-        "*Who* and *whom* follow the same rule as *he* and *him*. Use **who** for the subject, the one doing the action: *Who called?* Use **whom** for the object, the one the action is done to, and after a preposition: *Whom did you call? To whom did you write?* To test, answer the question with *he* or *him*: *You called him*, so *whom*.",
-        "*who* 和 *whom* 的规则与 *he* 和 *him* 相同。主语、即动作的执行者用 **who**：*Who called?* 宾语、即动作的承受者，以及介词后面，用 **whom**：*Whom did you call? To whom did you write?* 检验方法：用 *he* 或 *him* 回答这个问题：*You called him*，所以用 *whom*。",
+        "*Who* and *whom* follow the same rule as *he* and *him*. Use **who** for the subject, the one doing the action: *Who called?* Use **whom** for the object, the one the action is done to, and after a preposition: *Whom did you call? To whom did you write?* To test, answer the question with *he* or *him*: *You called him*, so *whom*.\n\n> **Watch out.** If a noun immediately follows the blank (*___ bike*, *___ turn*), the question asks about ownership—use *whose*, not *who* or *whom*.",
+        "*who* 和 *whom* 的规则与 *he* 和 *him* 相同。主语、即动作的执行者用 **who**：*Who called?* 宾语、即动作的承受者，以及介词后面，用 **whom**：*Whom did you call? To whom did you write?* 检验方法：用 *he* 或 *him* 回答这个问题：*You called him*，所以用 *whom*。\n\n> **注意。** 如果空格后紧跟名词（如 *___ bike*、*___ turn*），问的是归属，要用 *whose*。",
       ],
       ["Which word completes the question?", "哪个词能补全这个问题？"],
       `
@@ -559,8 +566,8 @@ ${whoQuestions}
       "who-or-whom-in-clauses",
       ["Who or Whom in a Clause", "从句中的 who 与 whom"],
       [
-        "Inside a clause, decide by the clause alone. Cover the rest of the sentence and turn the clause into its own sentence with *he* or *him*: in *the girl ___ I met*, *I met her*, so *whom*; in *the girl ___ met me*, *she met me*, so *who*. Words such as *I think* inside the clause do not change the answer: *the man who I think stole it* (*he* stole it).",
-        "在从句中，只看从句本身来判断。遮住句子的其余部分，用 *he* 或 *him* 把从句变成独立的句子：在 *the girl ___ I met* 中，*I met her*，所以用 *whom*；在 *the girl ___ met me* 中，*she met me*，所以用 *who*。从句中插入的 *I think* 之类的词不影响答案：*the man who I think stole it*（*he* stole it）。",
+        "Inside a clause, decide by the clause alone. Cover the rest of the sentence and turn the clause into its own sentence with *he* or *him*: in *the girl ___ I met*, *I met her*, so *whom*; in *the girl ___ met me*, *she met me*, so *who*. Words such as *I think* inside the clause do not change the answer: *the man who I think stole it* (*he* stole it).\n\n> **Watch out.** Mentally cross out side remarks like *I think* or *I believe*—then check whether the blank is the subject (*who*) or object (*whom*) of the remaining verb.",
+        "在从句中，只看从句本身来判断。遮住句子的其余部分，用 *he* 或 *him* 把从句变成独立的句子：在 *the girl ___ I met* 中，*I met her*，所以用 *whom*；在 *the girl ___ met me* 中，*she met me*，所以用 *who*。从句中插入的 *I think* 之类的词不影响答案：*the man who I think stole it*（*he* stole it）。\n\n> **注意。** 先在心里划掉 *I think*、*I believe* 这类插入语，再看空格在剩下的动词前作主语（*who*）还是作宾语（*whom*）。",
       ],
       ["Which word completes the clause?", "哪个词能补全这个从句？"],
       `
@@ -604,20 +611,26 @@ ${whoClauses}
 const relativeLabels: Readonly<Record<string, Label>> = {
   who: {
     zh: "who",
-    why: ["*Who* begins a clause about a person.", "*who* 引导关于人的从句。"],
+    why: [
+      "*Who* begins a clause about a person.\n\n**Check.** Look at the noun before the blank—it names a person, and *who* acts as the subject of the clause.",
+      "*who* 引导关于人的从句。\n\n**检验。** 看空格前面的名词——它指的是人，且 *who* 在从句中作主语。",
+    ],
     not: ["*Who* is for people, and this clause is about a thing or an animal.", "*who* 用于人，而这个从句说的是事物或动物。"],
   },
   which: {
     zh: "which",
     why: [
-      "*Which* begins a clause of extra information about a thing, set off by commas.",
-      "*which* 引导关于事物的补充信息从句，用逗号隔开。",
+      "*Which* begins a clause of extra information about a thing, set off by commas.\n\n**Check.** Spot both clues: the noun before the comma is a thing or place, and the comma calls for *which*, never *that*.",
+      "*which* 引导关于事物的补充信息从句，用逗号隔开。\n\n**检验。** 核对两条线索：逗号前的名词是事物或地点，且逗号后必须用 *which*，不能用 *that*。",
     ],
     not: ["*Which* is for things, and this clause is about a person.", "*which* 用于事物，而这个从句说的是人。"],
   },
   that: {
     zh: "that",
-    why: ["*That* begins a clause that tells which one is meant, with no commas.", "*that* 引导说明所指对象的从句，不用逗号。"],
+    why: [
+      "*That* begins a clause that tells which one is meant, with no commas.\n\n**Check.** Notice there is no comma before the blank, and the clause identifies a specific thing.",
+      "*that* 引导说明所指对象的从句，不用逗号。\n\n**检验。** 注意空格前没有逗号，从句用来限定具体是哪一个事物。",
+    ],
     not: [
       "*That* never begins a clause set off by commas; a clause of extra information needs *who* or *which*.",
       "*that* 从不引导用逗号隔开的从句；补充信息从句要用 *who* 或 *which*。",
@@ -625,14 +638,17 @@ const relativeLabels: Readonly<Record<string, Label>> = {
   },
   whose: {
     zh: "whose",
-    why: ["*Whose* shows that the noun after it belongs to someone or something.", "*whose* 表示它后面的名词属于某人或某物。"],
+    why: [
+      "*Whose* shows that the noun after it belongs to someone or something.\n\n**Check.** Try reading the blank as *who is* or *who has*—it fails, confirming you need possessive *whose* before the noun.",
+      "*whose* 表示它后面的名词属于某人或某物。\n\n**检验。** 试着把空格读成 *who is* 或 *who has*——根本不通顺，证实这里需要表示所属的 *whose*。",
+    ],
     not: ["*Whose* shows belonging; it is not a short form of *who is*.", "*whose* 表示所属，它不是 *who is* 的缩写。"],
   },
   "who's": {
     zh: "who's",
     why: [
-      "*Who's* is short for *who is* or *who has*; say the two words and the sentence still works.",
-      "*who's* 是 *who is* 或 *who has* 的缩写；换成这两个词，句子依然通顺。",
+      "*Who's* is short for *who is* or *who has*; say the two words and the sentence still works.\n\n**Check.** Expand *who's* to *who is* or *who has* in the sentence—the expanded version reads completely naturally.",
+      "*who's* 是 *who is* 或 *who has* 的缩写；换成这两个词，句子依然通顺。\n\n**检验。** 把 *who's* 展开成 *who is* 或 *who has* 代回句子——读起来完全自然。",
     ],
     not: ["*Who's* means *who is* or *who has*, which makes no sense here.", "*who's* 的意思是 *who is* 或 *who has*，放在这里说不通。"],
   },
@@ -645,14 +661,18 @@ const whoWhichThat = topic("grammar", {
     "Who is for people, which for things in a clause set off by commas, that for a clause that tells which one; whose shows belonging.",
     "who 用于人，which 用于逗号隔开的从句中的事物，that 用于说明所指对象的从句；whose 表示所属。",
   ],
+  intro: [
+    "Choosing among *who*, *which*, *that*, *whose*, and *who's* comes down to three quick checks: person vs. thing, comma vs. no comma, and ownership (*whose*) vs. contraction (*who is/who has*).",
+    "在 *who*、*which*、*that*、*whose* 和 *who's* 中做选择，只需三步速查：指人还是指物、有没有逗号、以及表示所属（*whose*）还是缩写（*who is/who has*）。",
+  ],
   after: ["relative-clauses"],
   points: [
     label(
       "who-which-or-that",
       ["Who, Which or That", "who、which 还是 that"],
       [
-        "Use **who** for people and **which** for things in a clause of extra information set off by commas: *My aunt, who lives in Lima, is a pilot. The bridge, which is old, is closed.* Use **that** in a clause with no commas that tells *which one*: *The bridge that we crossed is new.* After a comma, *that* is always wrong.",
-        "在用逗号隔开的补充信息从句中，人用 **who**，事物用 **which**：*My aunt, who lives in Lima, is a pilot. The bridge, which is old, is closed.* 在不用逗号、说明“哪一个”的从句中用 **that**：*The bridge that we crossed is new.* 逗号后面用 *that* 一定是错的。",
+        "Use **who** for people and **which** for things in a clause of extra information set off by commas: *My aunt, who lives in Lima, is a pilot. The bridge, which is old, is closed.* Use **that** in a clause with no commas that tells *which one*: *The bridge that we crossed is new.* After a comma, *that* is always wrong.\n\n> **Watch out.** Spot the comma before the blank right away—a comma rules out *that* immediately, leaving only *who* (person) or *which* (thing).",
+        "在用逗号隔开的补充信息从句中，人用 **who**，事物用 **which**：*My aunt, who lives in Lima, is a pilot. The bridge, which is old, is closed.* 在不用逗号、说明“哪一个”的从句中用 **that**：*The bridge that we crossed is new.* 逗号后面用 *that* 一定是错的。\n\n> **注意。** 先看空格前有没有逗号——有逗号就立刻排除 *that*，只需在 *who*（人）和 *which*（物）之间选。",
       ],
       ["Which word begins the clause?", "哪个词引导这个从句？"],
       `
@@ -694,8 +714,8 @@ ${relativeLines}
       "whose-or-whos",
       ["Whose or Who's", "whose 还是 who's"],
       [
-        "**Whose** shows belonging and comes before a noun: *the girl whose bag is red*. **Who's** is a contraction of *who is* or *who has*: *Who's coming? Who's seen my keys?* To test, read the sentence with *who is* or *who has*. If it still makes sense, write *who's*; if not, write *whose*. Plain **who** has no noun after it and no *is* inside it.",
-        "**whose** 表示所属，放在名词前：*the girl whose bag is red*。**who's** 是 *who is* 或 *who has* 的缩写：*Who's coming? Who's seen my keys?* 检验方法：把它读成 *who is* 或 *who has*。如果句子仍然通顺，就写 *who's*；否则写 *whose*。单独的 **who** 后面没有名词，也不包含 *is*。",
+        "**Whose** shows belonging and comes before a noun: *the girl whose bag is red*. **Who's** is a contraction of *who is* or *who has*: *Who's coming? Who's seen my keys?* To test, read the sentence with *who is* or *who has*. If it still makes sense, write *who's*; if not, write *whose*. Plain **who** has no noun after it and no *is* inside it.\n\n> **Watch out.** Remember that apostrophes in pronouns (*who's*, *it's*) mark a *contraction*, never ownership—possessive *whose* has no apostrophe.",
+        "**whose** 表示所属，放在名词前：*the girl whose bag is red*。**who's** 是 *who is* 或 *who has* 的缩写：*Who's coming? Who's seen my keys?* 检验方法：把它读成 *who is* 或 *who has*。如果句子仍然通顺，就写 *who's*；否则写 *whose*。单独的 **who** 后面没有名词，也不包含 *is*。\n\n> **注意。** 记住代词里的撇号（*who's*、*it's*）永远表示*缩写*，不表示所有格——表示“谁的”的 *whose* 没有撇号。",
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
@@ -740,8 +760,8 @@ const commaLabels: Readonly<Record<string, Label>> = {
   "no commas": {
     zh: "不用逗号",
     why: [
-      "The words tell which one is meant, so they are essential and take no commas.",
-      "这些词说明指的是哪一个，所以是必要成分，不用逗号。",
+      "The words tell which one is meant, so they are essential and take no commas.\n\n**Check.** Cover the italicized phrase—without it, the reader no longer knows which person or thing is meant, proving it is essential.",
+      "这些词说明指的是哪一个，所以是必要成分，不用逗号。\n\n**检验。** 遮住斜体部分——没了它就不知道具体指谁或哪一个，证实它是必要成分。",
     ],
     not: [
       "Without these words we would not know which one is meant, so they need no commas.",
@@ -751,8 +771,8 @@ const commaLabels: Readonly<Record<string, Label>> = {
   "a pair of commas": {
     zh: "一对逗号",
     why: [
-      "The words add extra information in the middle of the sentence, so a comma goes on each side.",
-      "这些词在句子中间补充额外信息，所以两边各用一个逗号。",
+      "The words add extra information in the middle of the sentence, so a comma goes on each side.\n\n**Check.** Lift out the italicized words in the middle of the sentence—the main clause stays clear and complete, so it needs a comma before and after.",
+      "这些词在句子中间补充额外信息，所以两边各用一个逗号。\n\n**检验。** 把句中的斜体部分拿掉——主句依然清楚完整，而且它位于句中，所以前后各加一个逗号。",
     ],
     not: [
       "A pair of commas is for extra information in the middle of a sentence, which is not the case here.",
@@ -762,8 +782,8 @@ const commaLabels: Readonly<Record<string, Label>> = {
   "one comma before it": {
     zh: "前面用一个逗号",
     why: [
-      "The extra information ends the sentence, so one comma before it is enough; the period closes it.",
-      "补充信息在句末，所以前面用一个逗号就够了，句号把它结束。",
+      "The extra information ends the sentence, so one comma before it is enough; the period closes it.\n\n**Check.** Notice two things: the italicized words are extra (the noun is already clear) and they sit at the very end of the sentence, where the period closes them.",
+      "补充信息在句末，所以前面用一个逗号就够了，句号把它结束。\n\n**检验。** 注意两点：斜体部分是补充信息（前面的名词已明确），且位于句末，由句号收尾，只需前面一个逗号。",
     ],
     not: [
       "One comma before it is for extra information at the end of a sentence, which is not the case here.",
@@ -779,14 +799,18 @@ const nonessentialCommas = topic("grammar", {
     "Commas set off words that add extra information, such as appositives and clauses with who or which; words that tell which one take none.",
     "逗号把补充额外信息的词隔开，例如同位语和 who 或 which 引导的从句；说明“哪一个”的词不用逗号。",
   ],
+  intro: [
+    "Compare *My sister, who plays cello, is touring* (extra detail about your one sister—needs two commas) with *Students who finish early may read* (identifies which students—no commas). Testing whether you can lift a phrase out tells you where commas belong.",
+    "比较 *My sister, who plays cello, is touring*（补充细节，需要一对逗号）与 *Students who finish early may read*（限定哪批学生，不用逗号）。试试把短语拿掉句子是否还明确，就能决定该不该加逗号。",
+  ],
   after: ["appositives", "who-which-and-that"],
   points: [
     choose(
       "where-the-commas-go",
       ["Where the Commas Go", "逗号放在哪里"],
       [
-        "A **nonessential** element adds extra information about a noun that is already clear: *My brother, a chef, cooked dinner.* You could take it out and the sentence would still name the same person. Put a comma before it and another after it, unless it ends the sentence. An **essential** element tells which one, so it takes no commas: *The chef who cooked dinner is my brother.*",
-        "**非必要**成分为一个已经明确的名词补充额外信息：*My brother, a chef, cooked dinner.* 把它去掉，句子指的仍是同一个人。在它前后各加一个逗号，除非它在句末。**必要**成分说明是哪一个，所以不用逗号：*The chef who cooked dinner is my brother.*",
+        "A **nonessential** element adds extra information about a noun that is already clear: *My brother, a chef, cooked dinner.* You could take it out and the sentence would still name the same person. Put a comma before it and another after it, unless it ends the sentence. An **essential** element tells which one, so it takes no commas: *The chef who cooked dinner is my brother.*\n\n> **Watch out.** Check the *prompt label* first (*extra facts* vs. *tells which*), then verify both edges of the phrase so no stray comma cuts through the middle.",
+        "**非必要**成分为一个已经明确的名词补充额外信息：*My brother, a chef, cooked dinner.* 把它去掉，句子指的仍是同一个人。在它前后各加一个逗号，除非它在句末。**必要**成分说明是哪一个，所以不用逗号：*The chef who cooked dinner is my brother.*\n\n> **注意。** 先看题干提示（是补充信息还是限定“哪一个”），再核对短语前后两端，别漏掉一边或把逗号插进短语中间。",
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
@@ -823,8 +847,8 @@ ${commaPlaces}
         a clause that tells which plants|Plants that get no light will die.|Plants, that get no light, will die.|Plants that get no light, will die.
       `,
       (right) => [
-        `**${right}** The commas, or their absence, show whether the words add extra information or tell which one is meant.`,
-        `**${right}** 用不用逗号，表明这些词是在补充额外信息，还是在说明指的是哪一个。`,
+        `**${right}** The commas, or their absence, show whether the words add extra information or tell which one is meant.\n\n**Check.** Lift out the modifier in **${right}**—if it is extra, commas cleanly frame it; if it is essential, no commas interrupt the noun and its clause.`,
+        `**${right}** 用不用逗号，表明这些词是在补充额外信息，还是在说明指的是哪一个。\n\n**检验。** 试着把 **${right}** 里的修饰成分抽出来——如果是补充信息，逗号恰好成对框住它；如果是必要成分，句中不加逗号。`,
       ],
       [
         [
@@ -841,8 +865,8 @@ ${commaPlaces}
       "essential-or-nonessential",
       ["Essential or Nonessential", "必要还是非必要"],
       [
-        "Ask: if I take these words out, do I still know which one is meant? If not, the words are **essential**: no commas. If yes, they are **nonessential**: a pair of commas in the middle of a sentence, or one comma before them at the end. A name after a general word such as *my friend* is essential if you have more than one friend; *my mother, Ana,* is nonessential, since you have only one mother.",
-        "问自己：把这些词去掉，还知道指的是哪一个吗？如果不知道，这些词就是**必要**的：不用逗号。如果知道，它们就是**非必要**的：在句子中间用一对逗号，在句末则在前面用一个逗号。*my friend* 这样的泛称后面的名字，如果你有不止一个朋友，就是必要的；*my mother, Ana,* 是非必要的，因为你只有一个母亲。",
+        "Ask: if I take these words out, do I still know which one is meant? If not, the words are **essential**: no commas. If yes, they are **nonessential**: a pair of commas in the middle of a sentence, or one comma before them at the end. A name after a general word such as *my friend* is essential if you have more than one friend; *my mother, Ana,* is nonessential, since you have only one mother.\n\n> **Watch out.** Once you decide a phrase is nonessential, check its *position*: mid-sentence takes a pair of commas, while sentence-end takes only one comma before it.",
+        "问自己：把这些词去掉，还知道指的是哪一个吗？如果不知道，这些词就是**必要**的：不用逗号。如果知道，它们就是**非必要**的：在句子中间用一对逗号，在句末则在前面用一个逗号。*my friend* 这样的泛称后面的名字，如果你有不止一个朋友，就是必要的；*my mother, Ana,* 是非必要的，因为你只有一个母亲。\n\n> **注意。** 判为非必要成分后，再看它的*位置*：在句中用一对逗号，在句末只在前面用一个逗号。",
       ],
       ["How should the words in italics be punctuated?", "斜体部分应该怎样加标点？"],
       `
@@ -887,8 +911,8 @@ const intensiveLabels: Readonly<Record<string, Label>> = {
   intensive: {
     zh: "强调代词",
     why: [
-      "It only stresses the noun or pronoun before it; take it out and the sentence still makes sense.",
-      "它只是强调前面的名词或代词；去掉它，句子依然成立。",
+      "It only stresses the noun or pronoun before it; take it out and the sentence still makes sense.\n\n**Check.** Delete the italicized *-self* word and re-read the sentence—the meaning and grammar stay completely intact.",
+      "它只是强调前面的名词或代词；去掉它，句子依然成立。\n\n**检验。** 删掉斜体的 *-self* 代词再读全句——意思和语法完全完整。",
     ],
     not: [
       "This *-self* word cannot be removed without breaking the sentence, so it is not intensive.",
@@ -898,8 +922,8 @@ const intensiveLabels: Readonly<Record<string, Label>> = {
   reflexive: {
     zh: "反身代词",
     why: [
-      "The action turns back on the subject; the *-self* word is needed, so the sentence breaks without it.",
-      "动作返回到主语自身；这个 *-self* 词是必需的，去掉句子就不成立。",
+      "The action turns back on the subject; the *-self* word is needed, so the sentence breaks without it.\n\n**Check.** Try deleting the italicized *-self* word—the verb loses its object and the sentence feels incomplete.",
+      "动作返回到主语自身；这个 *-self* 词是必需的，去掉句子就不成立。\n\n**检验。** 试着删掉斜体的 *-self* 代词——动词失去了宾语，句子变得残缺不全。",
     ],
     not: [
       "The *-self* word here could be taken out, so it only adds stress and is not reflexive.",
@@ -909,8 +933,8 @@ const intensiveLabels: Readonly<Record<string, Label>> = {
   "a mistake": {
     zh: "用错了",
     why: [
-      "A *-self* word needs a noun or pronoun in the same sentence to point back to; here it has none, so it should be *I* or *me*.",
-      "*-self* 词需要句中有一个它回指的名词或代词；这里没有，所以应该用 *I* 或 *me*。",
+      "A *-self* word needs a noun or pronoun in the same sentence to point back to; here it has none, so it should be *I* or *me*.\n\n**Check.** Scan earlier in the sentence for *I* or *we*—none appears, so *-self* has no antecedent to point back to.",
+      "*-self* 词需要句中有一个它回指的名词或代词；这里没有，所以应该用 *I* 或 *me*。\n\n**检验。** 往前找句中有没有 *I* 或 *we*——根本没有，所以 *-self* 缺少回指对象。",
     ],
     not: [
       "The *-self* word here points back to a noun or pronoun in the sentence, so it is used correctly.",
@@ -926,14 +950,18 @@ const intensivePronouns = topic("grammar", {
     "A -self pronoun that only adds stress, as in I did it myself; it can be taken out, unlike a reflexive pronoun.",
     "只起强调作用的 -self 代词，如 I did it myself；它与反身代词不同，可以去掉。",
   ],
+  intro: [
+    "In *The director herself greeted the cast*, you can drop *herself* and the sentence still works—that makes it an **intensive** pronoun. In *She reminded herself*, dropping it breaks the sentence—that makes it **reflexive**.",
+    "在 *The director herself greeted the cast* 中，去掉 *herself* 句子依然完整，这就是**强调代词**；而在 *She reminded herself* 中去掉它句子就残缺，那就是**反身代词**。",
+  ],
   after: ["reflexive-pronouns"],
   points: [
     label(
       "intensive-or-reflexive",
       ["Intensive or Reflexive", "强调代词还是反身代词"],
       [
-        "The *-self* pronouns have two jobs. A **reflexive** pronoun is needed, because the action turns back on the subject: *She hurt herself.* An **intensive** pronoun only adds stress, and the sentence works without it: *The queen herself opened the gate.* A *-self* word with nothing to point back to is **a mistake**: *Ana and myself went* should be *Ana and I went*.",
-        "*-self* 代词有两种用法。**反身代词**是必需的，因为动作返回到主语自身：*She hurt herself.* **强调代词**只起强调作用，没有它句子也成立：*The queen herself opened the gate.* 没有回指对象的 *-self* 词是**用错了**：*Ana and myself went* 应该是 *Ana and I went*。",
+        "The *-self* pronouns have two jobs. A **reflexive** pronoun is needed, because the action turns back on the subject: *She hurt herself.* An **intensive** pronoun only adds stress, and the sentence works without it: *The queen herself opened the gate.* A *-self* word with nothing to point back to is **a mistake**: *Ana and myself went* should be *Ana and I went*.\n\n> **Watch out.** First check whether the *-self* word has a matching antecedent in the sentence; if not, it is *a mistake* (not intensive or reflexive).",
+        "*-self* 代词有两种用法。**反身代词**是必需的，因为动作返回到主语自身：*She hurt herself.* **强调代词**只起强调作用，没有它句子也成立：*The queen herself opened the gate.* 没有回指对象的 *-self* 词是**用错了**：*Ana and myself went* 应该是 *Ana and I went*。\n\n> **注意。** 先检查句中有没有它能回指的先行词；如果没有，那就是*用错了*（既不是强调代词也不是反身代词）。",
       ],
       ["How is the word in italics used?", "斜体词的用法是什么？"],
       `
@@ -975,8 +1003,8 @@ ${selfKinds}
       "forms-of-self-pronouns",
       ["The Forms of -self Pronouns", "-self 代词的形式"],
       [
-        "Each *-self* pronoun matches the noun it points back to: *myself*, *yourself*, *himself*, *herself*, *itself*, *ourselves*, *yourselves*, *themselves*. Plural ones end in *-selves*. *Hisself*, *theirselves* and *themself* are not standard English; use **himself** and **themselves**.",
-        "每个 *-self* 代词都与它回指的名词一致：*myself*、*yourself*、*himself*、*herself*、*itself*、*ourselves*、*yourselves*、*themselves*。复数形式以 *-selves* 结尾。*hisself*、*theirselves* 和 *themself* 不是标准英语，要用 **himself** 和 **themselves**。",
+        "Each *-self* pronoun matches the noun it points back to: *myself*, *yourself*, *himself*, *herself*, *itself*, *ourselves*, *yourselves*, *themselves*. Plural ones end in *-selves*. *Hisself*, *theirselves* and *themself* are not standard English; use **himself** and **themselves**.\n\n> **Watch out.** Check both standard spelling (never *hisself*, *theirselves*, *ourself*, or *itsself*) and whether the subject is singular (*-self*) or plural (*-selves*).",
+        "每个 *-self* 代词都与它回指的名词一致：*myself*、*yourself*、*himself*、*herself*、*itself*、*ourselves*、*yourselves*、*themselves*。复数形式以 *-selves* 结尾。*hisself*、*theirselves* 和 *themself* 不是标准英语，要用 **himself** 和 **themselves**。\n\n> **注意。** 同时检查拼写是否标准（绝不用 *hisself*、*theirselves*、*ourself*、*itsself*），以及主语是单数（*-self*）还是复数（*-selves*）。",
       ],
       ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
       `
@@ -1013,11 +1041,14 @@ ${selfForms}
         I promised ___ I would finish the book.|myself|meself|ourselves
       `,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`)} *${right}* matches the noun it points back to and is the standard form.`,
-        `${shown.replace("___", `**${right}**`)} *${right}* 与它回指的名词一致，而且是标准形式。`,
+        `${shown.replace("___", `**${right}**`)} *${right}* matches the noun it points back to and is the standard form.\n\n**Check.** Match the subject's person and number (singular *-self* vs. plural *-selves*) to **${right}** and confirm it is a standard English spelling.`,
+        `${shown.replace("___", `**${right}**`)} *${right}* 与它回指的名词一致，而且是标准形式。\n\n**检验。** 对照主语的人称与单复数（单数 *-self*，复数 *-selves*），并确认 **${right}** 是标准英语拼写。`,
       ],
       [
-        ["*{wrong}* is not standard English; the standard form is **{right}**.", "*{wrong}* 不是标准英语，标准形式是 **{right}**。"],
+        [
+          "*{wrong}* is not standard English—avoid nonstandard spellings such as *hisself*, *theirselves*, or *ourself*.",
+          "*{wrong}* 不是标准英语——不要使用 *hisself*、*theirselves*、*ourself* 这类非标准拼写。",
+        ],
         ["*{wrong}* does not match the noun it points back to in person or number.", "*{wrong}* 在人称或数上与它回指的名词不一致。"],
       ],
     ),
@@ -1027,22 +1058,25 @@ ${selfForms}
 const vagueLabels: Readonly<Record<string, Label>> = {
   clear: {
     zh: "清楚",
-    why: ["The pronoun has one clear noun to point back to.", "这个代词只有一个明确的名词可以回指。"],
+    why: [
+      "The pronoun has one clear noun to point back to.\n\n**Check.** Point to the single noun before the pronoun that matches it in person and number—no rival noun competes for it.",
+      "这个代词只有一个明确的名词可以回指。\n\n**检验。** 找出代词前面唯一一个在人称和数上都匹配的名词——没有第二个竞争对象。",
+    ],
     not: ["This pronoun has exactly one noun it can mean, so it is clear.", "这个代词只可能指一个名词，所以是清楚的。"],
   },
   "two possible nouns": {
     zh: "可能指两个名词",
     why: [
-      "Two nouns before the pronoun could fit, so the reader cannot tell which is meant.",
-      "代词前面有两个名词都说得通，读者分不清指的是哪一个。",
+      "Two nouns before the pronoun could fit, so the reader cannot tell which is meant.\n\n**Check.** Try substituting *each* of the two earlier nouns for the italicized pronoun—both readings are grammatically possible, creating ambiguity.",
+      "代词前面有两个名词都说得通，读者分不清指的是哪一个。\n\n**检验。** 把前面两个名词分别代入斜体代词——两种读法在语法上都讲得通，造成歧义。",
     ],
     not: ["The pronoun does not have two nouns it could mean.", "这个代词并没有两个可能指代的名词。"],
   },
   "no noun at all": {
     zh: "没有可指的名词",
     why: [
-      "The pronoun points back to no noun in the sentence; *they* or *it* stands for nobody named.",
-      "这个代词在句中没有可以回指的名词；*they* 或 *it* 并不指任何提到的人或物。",
+      "The pronoun points back to no noun in the sentence; *they* or *it* stands for nobody named.\n\n**Check.** Scan the whole sentence for a noun that *it* or *they* replaces—none exists (the prepositional object like *in the book* or *at the zoo* is not the subject).",
+      "这个代词在句中没有可以回指的名词；*they* 或 *it* 并不指任何提到的人或物。\n\n**检验。** 通读全句找 *it* 或 *they* 指代的名词——根本没有（*in the book*、*at the zoo* 只是地点状语，不是主语）。",
     ],
     not: ["The pronoun does have a noun in the sentence to point back to.", "这个代词在句中确实有可回指的名词。"],
   },
@@ -1055,14 +1089,18 @@ const vaguePronouns = topic("grammar", {
     "A pronoun is vague when it could mean two nouns or no noun at all; fix it by naming the noun.",
     "当代词可能指两个名词，或者根本没有可指的名词时，它就指代不清；把名词说出来就能改正。",
   ],
+  intro: [
+    "In *Marco told Devon that his bike had a flat*, whose bike is flat? And in *On the radio they said it would rain*, who are *they*? Naming the exact person or thing removes both kinds of vague pronoun.",
+    "在 *Marco told Devon that his bike had a flat* 中，到底是谁的车胎瘪了？在 *On the radio they said it would rain* 中，*they* 又是谁？把具体名词说出来，就能消除这两类指代不清。",
+  ],
   after: ["pronoun-antecedent-agreement"],
   points: [
     label(
       "spotting-a-vague-pronoun",
       ["Spotting a Vague Pronoun", "找出指代不清的代词"],
       [
-        "A pronoun must point back to one clear noun, its **antecedent**. A pronoun is **vague** in two ways. It may have **two possible nouns**: *Ana told Mia that she won* (who won?). Or it may have **no noun at all**: *At the station, they said the train was late* (who said?). Read the pronoun and ask, who or what exactly?",
-        "代词必须回指一个明确的名词，即它的**先行词**。代词指代不清有两种情况。可能有**两个可能的名词**：*Ana told Mia that she won*（谁赢了？）。也可能**根本没有可指的名词**：*At the station, they said the train was late*（谁说的？）。读到代词时问一问：到底是谁或什么？",
+        "A pronoun must point back to one clear noun, its **antecedent**. A pronoun is **vague** in two ways. It may have **two possible nouns**: *Ana told Mia that she won* (who won?). Or it may have **no noun at all**: *At the station, they said the train was late* (who said?). Read the pronoun and ask, who or what exactly?\n\n> **Watch out.** Count the candidate nouns before the pronoun: 0 = *no noun at all*, 1 = *clear*, 2 = *two possible nouns*.",
+        "代词必须回指一个明确的名词，即它的**先行词**。代词指代不清有两种情况。可能有**两个可能的名词**：*Ana told Mia that she won*（谁赢了？）。也可能**根本没有可指的名词**：*At the station, they said the train was late*（谁说的？）。读到代词时问一问：到底是谁或什么？\n\n> **注意。** 数一数代词前面能对得上的候选名词：0 个 = 没有可指的名词，1 个 = 清楚，2 个 = 可能指两个名词。",
       ],
       ["Is the pronoun in italics clear or vague?", "斜体代词指代清楚还是不清？"],
       `
@@ -1104,8 +1142,8 @@ ${vagueSpot}
       "fixing-a-vague-pronoun",
       ["Fixing a Vague Pronoun", "改正指代不清的代词"],
       [
-        "To fix a vague pronoun, replace it with the noun it should mean, or rewrite the sentence so only one noun fits. *Leo called Sam after he got home* becomes *After Sam got home, Leo called him.* *In the paper it says* becomes *The paper says*. Do not swap one vague pronoun for another.",
-        "改正指代不清的代词，要用它应指的名词替换它，或者改写句子，让只有一个名词说得通。*Leo called Sam after he got home* 改为 *After Sam got home, Leo called him.* *In the paper it says* 改为 *The paper says*。不要用另一个指代不清的代词去替换。",
+        "To fix a vague pronoun, replace it with the noun it should mean, or rewrite the sentence so only one noun fits. *Leo called Sam after he got home* becomes *After Sam got home, Leo called him.* *In the paper it says* becomes *The paper says*. Do not swap one vague pronoun for another.\n\n> **Watch out.** Check every remaining pronoun in your chosen sentence—if *it*, *they*, *he*, or *she* is still ambiguous or missing a noun, reject that option.",
+        "改正指代不清的代词，要用它应指的名词替换它，或者改写句子，让只有一个名词说得通。*Leo called Sam after he got home* 改为 *After Sam got home, Leo called him.* *In the paper it says* 改为 *The paper says*。不要用另一个指代不清的代词去替换。\n\n> **注意。** 检查你选的句子里剩下的每一个代词——如果 *it*、*they*、*he* 或 *she* 依然指代不明，就排除该项。",
       ],
       ["Which sentence fixes the vague pronoun?", "哪个句子改正了指代不清的代词？"],
       `
@@ -1142,8 +1180,8 @@ ${vagueFix}
         Jin's father told Ravi that he could stay for dinner.|Jin's father told Ravi, "You can stay for dinner."|Jin's father told him that he could stay for dinner.|Jin's father told Ravi that they could stay for dinner.
       `,
       (right) => [
-        `**${right}** names the noun that was meant, so the reader knows exactly who or what it is.`,
-        `**${right}** 说出了原本所指的名词，读者就确切知道指的是谁或什么。`,
+        `**${right}** names the noun that was meant, so the reader knows exactly who or what it is.\n\n**Check.** Test every pronoun still left in **${right}**—none is ambiguous or missing an antecedent.`,
+        `**${right}** 说出了原本所指的名词，读者就确切知道指的是谁或什么。\n\n**检验。** 检查 **${right}** 里剩下的每个代词——没有任何指代模糊或悬空的词。`,
       ],
       [
         [
@@ -1163,14 +1201,18 @@ const agreementBetween = topic("grammar", {
     "The verb agrees with its subject, not with a noun in a phrase that comes between them: The box of apples is heavy.",
     "动词与主语一致，而不是与主谓之间短语里的名词一致：The box of apples is heavy。",
   ],
+  intro: [
+    "In *A crate of glass bottles sits by the door*, the plural word *bottles* sits right next to the verb—but the true subject is singular *crate*. Covering any prepositional phrase between subject and verb keeps agreement effortless.",
+    "在 *A crate of glass bottles sits by the door* 中，紧挨动词的 *bottles* 是复数，但真正的主语是单数 *crate*。遮住主语和动词之间的介词短语，主谓一致立刻一目了然。",
+  ],
   after: ["subject-verb-agreement", "prepositional-phrases"],
   points: [
     choose(
       "verb-after-a-phrase",
       ["The Verb After a Phrase", "短语之后的动词"],
       [
-        "A phrase between a subject and its verb does not change the subject. In *The box of apples is heavy*, the subject is *box*, not *apples*, so the verb is singular. Cover the phrase that begins with *of*, *in*, *with*, *near* or *along with*, and match the verb to the noun that is left: *The players on the team ~~are~~ → The players are*.",
-        "主语和动词之间的短语不会改变主语。在 *The box of apples is heavy* 中，主语是 *box* 而不是 *apples*，所以动词用单数。遮住以 *of*、*in*、*with*、*near* 或 *along with* 开头的短语，让动词与剩下的名词一致：*The players on the team are*。",
+        "A phrase between a subject and its verb does not change the subject. In *The box of apples is heavy*, the subject is *box*, not *apples*, so the verb is singular. Cover the phrase that begins with *of*, *in*, *with*, *near* or *along with*, and match the verb to the noun that is left: *The players on the team ~~are~~ → The players are*.\n\n> **Watch out.** Do not let *along with*, *as well as*, or *of [plural noun]* trick you into using a plural verb when the main noun before the phrase is singular.",
+        "主语和动词之间的短语不会改变主语。在 *The box of apples is heavy* 中，主语是 *box* 而不是 *apples*，所以动词用单数。遮住以 *of*、*in*、*with*、*near* 或 *along with* 开头的短语，让动词与剩下的名词一致：*The players on the team are*。\n\n> **注意。** 不要被 *along with*、*as well as* 或 *of + 复数名词* 迷惑——只要前面的核心主语是单数，动词仍用单数。",
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
@@ -1207,8 +1249,8 @@ ${agreeVerbs}
         The leader of the hikers ___ the map.|carries|carry|carrying
       `,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`)} Cover the phrase between the subject and the verb; the verb agrees with the subject that is left.`,
-        `${shown.replace("___", `**${right}**`)} 遮住主语和动词之间的短语，动词与剩下的主语一致。`,
+        `${shown.replace("___", `**${right}**`)} Cover the phrase between the subject and the verb; the verb agrees with the subject that is left.\n\n**Check.** Drop the intervening phrase and read only the core subject + **${right}** aloud—they agree cleanly in number.`,
+        `${shown.replace("___", `**${right}**`)} 遮住主语和动词之间的短语，动词与剩下的主语一致。\n\n**检验。** 去掉中间的短语，只读核心主语和 **${right}**——单复数完全一致。`,
       ],
       [
         [
@@ -1222,8 +1264,8 @@ ${agreeVerbs}
       "finding-the-true-subject",
       ["Finding the True Subject", "找出真正的主语"],
       [
-        "Before you choose the verb, find the true subject: the noun the sentence is about, before any phrase that begins with a preposition. In *The keys to the car are lost*, the phrase *to the car* describes *keys*, so *keys* is the subject. *Along with*, *as well as* and *together with* also start phrases that do not join the subject.",
-        "选动词之前，先找出真正的主语：句子所说的那个名词，在任何以介词开头的短语之前。在 *The keys to the car are lost* 中，短语 *to the car* 修饰 *keys*，所以 *keys* 是主语。*along with*、*as well as* 和 *together with* 开头的短语也不会并入主语。",
+        "Before you choose the verb, find the true subject: the noun the sentence is about, before any phrase that begins with a preposition. In *The keys to the car are lost*, the phrase *to the car* describes *keys*, so *keys* is the subject. *Along with*, *as well as* and *together with* also start phrases that do not join the subject.\n\n> **Watch out.** Cross out everything from the first preposition (*of*, *to*, *in*, *on*, *with*, *along with*) up to the verb—the noun left standing in front is the true subject.",
+        "选动词之前，先找出真正的主语：句子所说的那个名词，在任何以介词开头的短语之前。在 *The keys to the car are lost* 中，短语 *to the car* 修饰 *keys*，所以 *keys* 是主语。*along with*、*as well as* 和 *together with* 开头的短语也不会并入主语。\n\n> **注意。** 把从第一个介词（*of*、*to*、*in*、*on*、*with*、*along with*）直到动词前的内容全部划掉——前面剩下的那个词就是真正的主语。",
       ],
       ["Which word is the subject of the verb?", "哪个词是动词的主语？"],
       `
@@ -1260,8 +1302,8 @@ ${agreeSubjects}
         The coats in the closet belong to my brothers.|coats|closet|brothers
       `,
       (right, shown) => [
-        `The subject is **${right}**: it is what the sentence is about, and the phrase after it only describes it. ${shown}`,
-        `主语是 **${right}**：句子说的是它，后面的短语只是在修饰它。${shown}`,
+        `The subject is **${right}**: it is what the sentence is about, and the phrase after it only describes it. ${shown}\n\n**Check.** Remove the prepositional phrase right after **${right}**—**${right}** pairs directly with the sentence's verb.`,
+        `主语是 **${right}**：句子说的是它，后面的短语只是在修饰它。${shown}\n\n**检验。** 去掉 **${right}** 后面的介词短语——**${right}** 直接与句子的动词搭配。`,
       ],
       [
         [
@@ -1284,14 +1326,18 @@ const numbers = topic("grammar", {
     "Spell out numbers under one hundred and any number that begins a sentence; use figures for dates, times, measurements, money and large numbers.",
     "一百以下的数和句首的数用文字写；日期、时间、度量、金额和大数用阿拉伯数字写。",
   ],
+  intro: [
+    "In standard prose, you write *twenty-four chairs* in words, *240 chairs* in figures, and *May 4* or *7:30 p.m.* in figures even though the numbers are small. Knowing when to spell a number out keeps reports clean and consistent.",
+    "在规范英文写作中，写 *twenty-four chairs* 用文字，写 *240 chairs* 用阿拉伯数字，而日期 *May 4* 或时间 *7:30 p.m.* 即使数字很小也用阿拉伯数字。掌握这套规则，文章中的数字就会整洁统一。",
+  ],
   after: ["hyphens"],
   points: [
     choose(
       "spelling-out-numbers",
       ["Spelling Out Numbers", "用文字写数字"],
       [
-        "In most writing, **spell out** numbers from one to ninety-nine, with a hyphen in the compound ones from twenty-one to ninety-nine: *forty-two students*. Always spell out a number that **begins a sentence**: *Twelve people came*, not *12 people came*. Larger numbers, such as *350*, are written in figures in the middle of a sentence.",
-        "在大多数文章中，一到九十九的数要**用文字写**，二十一到九十九之间的复合数要加连字符：*forty-two students*。**句首的数**一律用文字写：*Twelve people came*，而不是 *12 people came*。较大的数，如 *350*，在句中用阿拉伯数字写。",
+        "In most writing, **spell out** numbers from one to ninety-nine, with a hyphen in the compound ones from twenty-one to ninety-nine: *forty-two students*. Always spell out a number that **begins a sentence**: *Twelve people came*, not *12 people came*. Larger numbers, such as *350*, are written in figures in the middle of a sentence.\n\n> **Watch out.** Check three details: sentence-start numbers must be capitalized words, compound numbers 21–99 need a hyphen, and mid-sentence numbers 100+ use figures.",
+        "在大多数文章中，一到九十九的数要**用文字写**，二十一到九十九之间的复合数要加连字符：*forty-two students*。**句首的数**一律用文字写：*Twelve people came*，而不是 *12 people came*。较大的数，如 *350*，在句中用阿拉伯数字写。\n\n> **注意。** 核对三处细节：句首数字必须用首字母大写的英文词，21–99 的复合数要加连字符，句中 100 以上的数用阿拉伯数字。",
       ],
       ["Which way of writing the number is correct?", "哪种写法正确？"],
       `
@@ -1328,8 +1374,8 @@ ${numberSpell}
         There are ___ days in a week.|seven|7|seventh
       `,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`)} Spell out numbers under one hundred and at the start of a sentence; write larger numbers in figures.`,
-        `${shown.replace("___", `**${right}**`)} 一百以下的数和句首的数用文字写，较大的数用阿拉伯数字写。`,
+        `${shown.replace("___", `**${right}**`)} Spell out numbers under one hundred and at the start of a sentence; write larger numbers in figures.\n\n**Check.** Check size (under 100 vs. 100+), position (start of sentence or middle), and hyphenation/capitalization—**${right}** passes all three.`,
+        `${shown.replace("___", `**${right}**`)} 一百以下的数和句首的数用文字写，较大的数用阿拉伯数字写。\n\n**检验。** 依次核对数值大小（100 以下还是以上）、位置（句首还是句中）以及连字符和大小写——**${right}** 三项全合乎规范。`,
       ],
       [
         [
@@ -1346,8 +1392,8 @@ ${numberSpell}
       "when-to-use-figures",
       ["When to Use Figures", "什么时候用阿拉伯数字"],
       [
-        "Some numbers are always written in **figures**, even when they are small: **dates** (*May 4*), **times** with a.m. or p.m. (*7:30 p.m.*), **measurements** with units (*3 kilometers*, *5 kg*), **money** (*$8*), **percentages** (*6 percent*) and numbers that are **large** (*1,500*). Small counts of ordinary things are **spelled out**.",
-        "有些数即使很小，也总是用**阿拉伯数字**写：**日期**（*May 4*）、带 a.m. 或 p.m. 的**时间**（*7:30 p.m.*）、带单位的**度量**（*3 kilometers*、*5 kg*）、**金额**（*$8*）、**百分比**（*6 percent*），以及**大数**（*1,500*）。普通事物的小数目则**用文字写**。",
+        "Some numbers are always written in **figures**, even when they are small: **dates** (*May 4*), **times** with a.m. or p.m. (*7:30 p.m.*), **measurements** with units (*3 kilometers*, *5 kg*), **money** (*$8*), **percentages** (*6 percent*) and numbers that are **large** (*1,500*). Small counts of ordinary things are **spelled out**.\n\n> **Watch out.** Look at the word *right beside* the number: a unit (*kilometers*, *kilograms*, *dollars*, *percent*), a month, or *a.m./p.m.* signals figures even for a small number.",
+        "有些数即使很小，也总是用**阿拉伯数字**写：**日期**（*May 4*）、带 a.m. 或 p.m. 的**时间**（*7:30 p.m.*）、带单位的**度量**（*3 kilometers*、*5 kg*）、**金额**（*$8*）、**百分比**（*6 percent*），以及**大数**（*1,500*）。普通事物的小数目则**用文字写**。\n\n> **注意。** 盯紧数字*旁边*的词：如果紧挨着度量单位、月份、金额、百分比或 *a.m./p.m.*，即使数字很小也用阿拉伯数字。",
       ],
       ["How should the number in italics be written?", "斜体的数应该怎么写？"],
       `
@@ -1387,8 +1433,8 @@ ${numberForm}
         "in figures": {
           zh: "用阿拉伯数字",
           why: [
-            "Dates, times, measurements, money and percentages are written in figures, whatever their size.",
-            "日期、时间、度量、金额和百分比不论大小都用阿拉伯数字写。",
+            "Dates, times, measurements, money and percentages are written in figures, whatever their size.\n\n**Check.** Spot the date, time (*a.m./p.m.*), measurement unit, dollar amount, or percentage in italics—all of these use figures.",
+            "日期、时间、度量、金额和百分比不论大小都用阿拉伯数字写。\n\n**检验。** 看斜体里的日期、时间（*a.m./p.m.*）、度量单位、金额或百分比——这类表达一律用阿拉伯数字。",
           ],
           not: [
             "This is a small count of ordinary things, which is spelled out, not written in figures.",
@@ -1397,7 +1443,10 @@ ${numberForm}
         },
         "spelled out": {
           zh: "用文字写",
-          why: ["A small count of ordinary things is spelled out.", "普通事物的小数目用文字写。"],
+          why: [
+            "A small count of ordinary things is spelled out.\n\n**Check.** Notice the italicized number counts ordinary items (tickets, sisters, minutes, books) under 100 with no date, clock time, money, or metric unit.",
+            "普通事物的小数目用文字写。\n\n**检验。** 注意斜体只是 100 以下普通事物的计数，不涉及日期、钟点、金额或度量单位。",
+          ],
           not: [
             "Dates, times, measurements, money and percentages are written in figures, so this one should not be spelled out.",
             "日期、时间、度量、金额和百分比用阿拉伯数字写，所以这里不该用文字。",
@@ -1406,8 +1455,8 @@ ${numberForm}
         "with a hyphen": {
           zh: "用连字符",
           why: [
-            "Compound numbers from twenty-one to ninety-nine take a hyphen when spelled out.",
-            "二十一到九十九之间的复合数用文字写时要加连字符。",
+            "Compound numbers from twenty-one to ninety-nine take a hyphen when spelled out.\n\n**Check.** Verify the number is a spelled-out compound between 21 and 99.",
+            "二十一到九十九之间的复合数用文字写时要加连字符。\n\n**检验。** 确认它是 21 到 99 之间用英文拼写的复合数。",
           ],
           not: [
             "A hyphen joins the parts of a spelled-out number from twenty-one to ninety-nine; it does not decide whether to use figures.",
@@ -1426,14 +1475,18 @@ const pronounNumber = topic("grammar", {
     "A pronoun keeps the number of its noun: a singular noun takes it or its, a plural noun takes they or their.",
     "代词与它所指的名词保持数的一致：单数名词用 it 或 its，复数名词用 they 或 their。",
   ],
+  intro: [
+    "Writing *The museum opened their doors* starts with one singular *museum* and suddenly jumps to plural *their*. Keeping singular nouns paired with *it/its* and plural nouns with *they/their* keeps sentences steady.",
+    "写 *The museum opened their doors* 开头是单数 *museum*，后面却突然跳到复数 *their*。单数名词配 *it/its*，复数名词配 *they/their*，句子的数才前后一致。",
+  ],
   after: ["shifts-in-pronoun-person", "indefinite-pronouns-and-agreement"],
   points: [
     label(
       "its-or-their",
       ["Its or Their", "its 还是 their"],
       [
-        "A pronoun must match the **number** of its noun. A singular thing, animal or group acting as one unit takes **its**: *The team lost its first game. The tree dropped its leaves.* Plural nouns take **their**: *The trees dropped their leaves.* Do not confuse *its* (belonging to it) with **it's** (it is).",
-        "代词必须与它所指名词的**数**一致。单数的事物、动物或作为一个整体行动的群体用 **its**：*The team lost its first game. The tree dropped its leaves.* 复数名词用 **their**：*The trees dropped their leaves.* 不要把 *its*（它的）和 **it's**（it is）弄混。",
+        "A pronoun must match the **number** of its noun. A singular thing, animal or group acting as one unit takes **its**: *The team lost its first game. The tree dropped its leaves.* Plural nouns take **their**: *The trees dropped their leaves.* Do not confuse *its* (belonging to it) with **it's** (it is).\n\n> **Watch out.** Test *it is / it has* first—if that works, choose *it's*; otherwise check whether the owner noun is singular (*its*) or plural (*their*).",
+        "代词必须与它所指名词的**数**一致。单数的事物、动物或作为一个整体行动的群体用 **its**：*The team lost its first game. The tree dropped its leaves.* 复数名词用 **their**：*The trees dropped their leaves.* 不要把 *its*（它的）和 **it's**（it is）弄混。\n\n> **注意。** 先试着把空格读成 *it is / it has*——通顺就选 *it's*；不通顺再看所属名词是单数（*its*）还是复数（*their*）。",
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
@@ -1472,12 +1525,18 @@ ${itsLines}
       {
         its: {
           zh: "its",
-          why: ["The noun is singular, so the pronoun of belonging is *its*.", "名词是单数，所以表示所属的代词用 *its*。"],
+          why: [
+            "The noun is singular, so the pronoun of belonging is *its*.\n\n**Check.** Point to the singular subject (*company*, *school*, *dog*, *committee*)—it takes singular possessive *its* with no apostrophe.",
+            "名词是单数，所以表示所属的代词用 *its*。\n\n**检验。** 找出句中的单数主语——单数所有格用不带撇号的 *its*。",
+          ],
           not: ["*Its* is singular, and the noun here is plural.", "*its* 是单数，而这里的名词是复数。"],
         },
         their: {
           zh: "their",
-          why: ["The noun is plural, so the pronoun of belonging is *their*.", "名词是复数，所以表示所属的代词用 *their*。"],
+          why: [
+            "The noun is plural, so the pronoun of belonging is *their*.\n\n**Check.** Point to the plural subject (ending in *-s* or plural like *hikers*, *flowers*)—it requires plural possessive *their*.",
+            "名词是复数，所以表示所属的代词用 *their*。\n\n**检验。** 找出句中的复数主语——复数所有格用 *their*。",
+          ],
           not: [
             "*Their* is plural, and the noun here is singular or the gap needs *it is*.",
             "*their* 是复数，而这里的名词是单数，或者空格处需要 *it is*。",
@@ -1486,8 +1545,8 @@ ${itsLines}
         "it's": {
           zh: "it's",
           why: [
-            "The gap means *it is* or *it has*, so the contraction *it's* fits.",
-            "空格处的意思是 *it is* 或 *it has*，所以用缩写 *it's*。",
+            "The gap means *it is* or *it has*, so the contraction *it's* fits.\n\n**Check.** Expand *it's* to *it is* or *it has* in the sentence—the full words read completely naturally.",
+            "空格处的意思是 *it is* 或 *it has*，所以用缩写 *it's*。\n\n**检验。** 把 *it's* 展开成 *it is* 或 *it has* 代回原句——整句话读起来完全通顺。",
           ],
           not: ["*It's* means *it is*, and the gap needs a word of belonging.", "*it's* 的意思是 *it is*，而空格处需要一个表示所属的词。"],
         },
@@ -1497,8 +1556,8 @@ ${itsLines}
       "keeping-pronoun-number",
       ["Keeping the Number Steady", "保持数的一致"],
       [
-        "When you write about one thing, keep the pronouns singular all the way through; when you write about many, keep them plural. *A volcano can erupt when their pressure builds* shifts from singular to plural. Fix it by matching the pronoun to its noun: *when its pressure builds*, or make both plural: *Volcanoes can erupt when their pressure builds*.",
-        "写一件事物时，代词要始终用单数；写许多事物时，要始终用复数。*A volcano can erupt when their pressure builds* 由单数转成了复数。改正方法是让代词与名词一致：*when its pressure builds*，或者两者都用复数：*Volcanoes can erupt when their pressure builds*。",
+        "When you write about one thing, keep the pronouns singular all the way through; when you write about many, keep them plural. *A volcano can erupt when their pressure builds* shifts from singular to plural. Fix it by matching the pronoun to its noun: *when its pressure builds*, or make both plural: *Volcanoes can erupt when their pressure builds*.\n\n> **Watch out.** Check the subject, the verb, *and* the pronoun together—all three must stay singular together or plural together.",
+        "写一件事物时，代词要始终用单数；写许多事物时，要始终用复数。*A volcano can erupt when their pressure builds* 由单数转成了复数。改正方法是让代词与名词一致：*when its pressure builds*，或者两者都用复数：*Volcanoes can erupt when their pressure builds*。\n\n> **注意。** 把主语、动词和代词放在一起核对——三者必须同为单数或同为复数。",
       ],
       ["Which sentence keeps the pronoun number steady?", "哪个句子的代词保持了数的一致？"],
       `
@@ -1535,8 +1594,8 @@ ${steadyLines}
         stars and their light|Stars give off their own light.|Stars give off its own light.|A star gives off their own light.
       `,
       (right) => [
-        `**${right}** The pronoun has the same number as its noun all the way through.`,
-        `**${right}** 代词始终与它所指的名词数一致。`,
+        `**${right}** The pronoun has the same number as its noun all the way through.\n\n**Check.** Match the subject, verb, and possessive pronoun in **${right}**—all three agree in singular or plural without shifting mid-sentence.`,
+        `**${right}** 代词始终与它所指的名词数一致。\n\n**检验。** 核对 **${right}** 中的主语、动词和所有格代词——三者单复数完全统一，没有中途转换。`,
       ],
       [
         ["*{wrong}* shifts the pronoun to the other number from its noun.", "*{wrong}* 把代词转成了与名词不同的数。"],

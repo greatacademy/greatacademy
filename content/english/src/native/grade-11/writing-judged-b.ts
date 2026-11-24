@@ -3,7 +3,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after, covers } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 import { limits } from "./writing-judged-a.ts";
 
 /** letterBank gives a cause and an addressee for an open letter. */
@@ -143,6 +143,10 @@ export const judgedTopics11b: readonly TopicDef[] = [
       "Write an open letter addressed to a person or a group in power but meant for the public, making a respectful case and ending with a view of why it matters.",
       "写一封写给某个掌权者或群体、却面向公众的公开信，以尊重的态度陈述理由，并以说明此事为何重要的视野作结。",
     ),
+    intro: t(
+      "When a student publishes a letter to the school principal in the newsletter asking for a quiet lunchtime study room, every sentence speaks to two audiences at once—the decision-maker and the whole community reading over their shoulder. In this topic, you write a respectful open letter that makes a grounded case and closes by widening the stakes.",
+      "当学生在校报上发表致校长的公开信、呼吁开放午休静音自习室时，字里行间同时面对两类读者——手握决定权的校长，以及在旁阅读的全校师生。本主题带你写一封礼貌而有力的公开信，摆清事实、提出可行请求，并以更宽广的公共意义作结。",
+    ),
     prerequisites: after("conclusions-that-widen-the-view", "writing-a-letter-to-a-leader"),
     encompasses: covers(0.2, "conclusions-that-widen-the-view"),
     xp: 24,
@@ -153,8 +157,8 @@ export const judgedTopics11b: readonly TopicDef[] = [
         "two-audiences",
         t("Two Audiences", "两类读者"),
         t(
-          "An open letter has **two audiences**: the person it names and the public who will read it. Address the first directly and respectfully, say why you are writing in public, and acknowledge their position fairly: *I understand that the budget is tight, and I do not doubt that you weighed the choice carefully.*",
-          "公开信有**两类读者**：信中称呼的人，以及将会读到它的公众。要直接而尊重地称呼前者，说明你为什么公开写信，并公正地承认对方的立场：*I understand that the budget is tight, and I do not doubt that you weighed the choice carefully.*",
+          "An open letter has **two audiences**: the person it names and the public who will read it. Address the first directly and respectfully, say why you are writing in public, and acknowledge their position fairly: *I understand that the budget is tight, and I do not doubt that you weighed the choice carefully.*\n\n> **Watch out.** Do not let the public audience push your tone into mockery or outrage—treating the named recipient fairly makes both the official and outside readers take your case seriously.",
+          "公开信有**两类读者**：信中称呼的人，以及将会读到它的公众。要直接而尊重地称呼前者，说明你为什么公开写信，并公正地承认对方的立场：*I understand that the budget is tight, and I do not doubt that you weighed the choice carefully.*\n\n> **注意。** 不要因为面向公众就把语气写得尖刻或煽情——公正、克制地回应收信人的难处，才能同时赢得决策者和公众的尊重。",
         ),
         writingGenerator(
           t(
@@ -164,15 +168,18 @@ export const judgedTopics11b: readonly TopicDef[] = [
           letterBank,
           ["g11-open-letter-audience", "g11-open-letter-case", "g11-open-letter-ending"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your opening paragraphs: did you address the named decision-maker respectfully, explain why the issue belongs in public view, and acknowledge their real constraints before making your case?",
+            "检查开头几段：是否礼貌称呼了具体收信人、说明了为何公开致信，并在陈述己方理由前公正体谅了对方的现实考量？",
+          ),
         ),
       ),
       point(
         "the-case-and-the-close",
         t("The Case and the Close", "理由与结尾"),
         t(
-          "Then make the **case** with specific facts and a clear, practical request: *I ask you to build a protected bike lane on Station Road.* Close by widening the view to what is at stake for everyone: *A town shows what it values by what it keeps.*",
-          "然后用具体的事实和明确、可行的请求来陈述**理由**：*I ask you to build a protected bike lane on Station Road.* 结尾要把视野拓宽到此事对所有人的意义：*A town shows what it values by what it keeps.*",
+          "Then make the **case** with specific facts and a clear, practical request: *I ask you to build a protected bike lane on Station Road.* Close by widening the view to what is at stake for everyone: *A town shows what it values by what it keeps.*\n\n> **Watch out.** Pair your facts with a *concrete, doable request*—vague anger without a specific action leaves the decision-maker nothing to say yes to.",
+          "然后用具体的事实和明确、可行的请求来陈述**理由**：*I ask you to build a protected bike lane on Station Road.* 结尾要把视野拓宽到此事对所有人的意义：*A town shows what it values by what it keeps.*\n\n> **注意。** 摆完事实后务必提出*具体、可落地的请求*——只抒发不满却不给明确方案，对方根本无从回应。",
         ),
         writingGenerator(
           t(
@@ -182,7 +189,10 @@ export const judgedTopics11b: readonly TopicDef[] = [
           letterBank,
           ["g11-open-letter-case", "g11-open-letter-ending", "g11-open-letter-audience"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check the body and closing of your letter: is your request specific and practical, backed by concrete facts, and does the final paragraph widen the view to what is at stake for the wider community?",
+            "检查正文与结尾：请求是否具体可行、是否有扎实事实支撑，结尾段是否把视野拓宽到了更广泛的公共价值？",
+          ),
         ),
       ),
     ],
@@ -194,6 +204,10 @@ export const judgedTopics11b: readonly TopicDef[] = [
       "Write a third-person narrative about a character caught between two worlds, using free indirect discourse to let the reader hear the character's thoughts and showing a change by the end.",
       "写一篇第三人称叙事，讲述一个夹在两个世界之间的人物，用自由间接引语让读者听到人物的想法，并在结尾呈现一个变化。",
     ),
+    intro: t(
+      "When a teenager who grew up in a deaf family sits at a hearing friend's loud holiday table, two worlds collide—not through a speech, but through moving mouths, delayed laughter, and a child's clumsy first sign. In this topic, you write a third-person narrative that contrasts two worlds in concrete detail and uses free indirect discourse.",
+      "在聋人家庭长大的少年第一次坐进听人朋友家热闹的节日餐桌时，两个世界瞬间碰撞——不是靠说教，而是靠飞快张合的嘴唇、慢半拍的笑声，以及小女孩笨拙比出的第一个手语词。本主题带你写一篇第三人称叙事，用具体细节并置两个世界，并用自由间接引语呈现人物内心。",
+    ),
     prerequisites: after("free-indirect-discourse", "writing-a-coming-of-age-narrative"),
     encompasses: covers(0.2, "free-indirect-discourse"),
     xp: 24,
@@ -204,8 +218,8 @@ export const judgedTopics11b: readonly TopicDef[] = [
         "the-two-worlds",
         t("The Two Worlds", "两个世界"),
         t(
-          "Set the **two worlds** side by side in concrete details: the new place the character faces now, and the old one they remember. *At home, the morning would be starting now. His father would be walking to the barn. Here the sky was a narrow strip between buildings.*",
-          "用具体细节把**两个世界**并列：人物现在面对的新地方，以及他们记忆中的旧地方。*At home, the morning would be starting now. His father would be walking to the barn. Here the sky was a narrow strip between buildings.*",
+          "Set the **two worlds** side by side in concrete details: the new place the character faces now, and the old one they remember. *At home, the morning would be starting now. His father would be walking to the barn. Here the sky was a narrow strip between buildings.*\n\n> **Watch out.** Do not just state *The two places were very different*—show the contrast through concrete sights, sounds, habits, or objects from *both* worlds.",
+          "用具体细节把**两个世界**并列：人物现在面对的新地方，以及他们记忆中的旧地方。*At home, the morning would be starting now. His father would be walking to the barn. Here the sky was a narrow strip between buildings.*\n\n> **注意。** 不要只写“这两个地方很不一样”——务必通过*两个*世界各自具体的画面、声音、习惯或物件把反差呈现出来。",
         ),
         writingGenerator(
           t(
@@ -215,15 +229,18 @@ export const judgedTopics11b: readonly TopicDef[] = [
           worldsBank,
           ["g11-worlds-contrast", "g11-worlds-inner-voice", "g11-worlds-change"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your scenes: did you stay in third person throughout and place concrete sensory details from both the new setting and the remembered world side by side?",
+            "核对场景描写：是否通篇保持第三人称，并用具体的感官细节将眼下的新世界与记忆中的旧世界并置对照？",
+          ),
         ),
       ),
       point(
         "the-voice-within",
         t("The Voice Within", "内心的声音"),
         t(
-          "Let the reader hear the character's thoughts through **free indirect discourse**, in the third person and the past tense, with no quotation marks or *he thought*: *Had the joke been about her? Surely not. Probably not.* By the end, show a **small change** in how the character sees one of the two worlds.",
-          "通过**自由间接引语**让读者听到人物的想法：用第三人称和过去时，不加引号，也不用 *he thought*：*Had the joke been about her? Surely not. Probably not.* 到结尾，要呈现人物看待其中一个世界的方式发生了一个**小小的变化**。",
+          "Let the reader hear the character's thoughts through **free indirect discourse**, in the third person and the past tense, with no quotation marks or *he thought*: *Had the joke been about her? Surely not. Probably not.* By the end, show a **small change** in how the character sees one of the two worlds.\n\n> **Watch out.** Strip out quotation marks and tags like *she thought* or *he wondered* when entering the character's mind—keep third-person past tense while letting the character's own questions, rhythm, and feelings come through.",
+          "通过**自由间接引语**让读者听到人物的想法：用第三人称和过去时，不加引号，也不用 *he thought*：*Had the joke been about her? Surely not. Probably not.* 到结尾，要呈现人物看待其中一个世界的方式发生了一个**小小的变化**。\n\n> **注意。** 进入人物内心时去掉引号以及 *she thought*、*he wondered* 等标记——保持第三人称过去时，直接让人物自己的疑问、节奏与情绪流露出来。",
         ),
         writingGenerator(
           t(
@@ -233,7 +250,10 @@ export const judgedTopics11b: readonly TopicDef[] = [
           worldsBank,
           ["g11-worlds-inner-voice", "g11-worlds-change", "g11-worlds-contrast"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check two craft details in your draft: can the reader hear the character's thoughts in third-person past tense without quotation marks or *he/she thought*, and does the ending show a quiet shift in how the character sees either world?",
+            "核对草稿中的两处技巧：是否在不加引号也不用 *he/she thought* 的第三人称过去时里呈现出人物心声，以及结尾是否体现出人物看法的细微转变？",
+          ),
         ),
       ),
     ],

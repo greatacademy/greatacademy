@@ -19,6 +19,10 @@ const whoAndWhere = topic("reading", {
   id: "who-and-where-in-a-story",
   title: ["Who and Where in a Story", "故事里的人物和地点"],
   summary: ["Find who a story is about and where it happens.", "找出故事讲的是谁，发生在哪里。"],
+  intro: [
+    "Before you tell a friend about a cartoon, they always ask two things: *Who is in it?* and *Where are they?* Stories work the same way! Let's spot the characters and the place in short stories.",
+    "你给朋友讲动画片时，朋友总会问两个问题：*里面有谁？* 和 *在哪里发生？* 读故事也是一样！这节课我们来找出短故事里的人物和地点。",
+  ],
   after: ["starting-a-sentence-with-a-capital"],
   xp: 10,
   points: [
@@ -26,8 +30,8 @@ const whoAndWhere = topic("reading", {
       "who-is-in-the-story",
       ["Who Is in the Story", "故事里有谁"],
       [
-        "The people or animals a story is about are its **characters**. To find them, ask *who does something?* In *Pam ran to the bus. She had a red bag.*, the character is **Pam**.",
-        "故事讲到的人或动物叫作**人物**。要找到他们，就问*谁做了事情？*。在 *Pam ran to the bus. She had a red bag.* 中，人物是 **Pam**。",
+        "The people or animals a story is about are its **characters**. Ask *who does something?* In *Pam ran to the bus. She had a red bag.*, **Pam** runs and carries the bag, so **Pam** is the character.\n\n> **Watch out.** Places like *the bus* and things like *a red bag* are in the story, but they are not characters.",
+        "故事讲到的人或动物叫作**人物**。问一问*谁做了事情？* 在 *Pam ran to the bus. She had a red bag.* 里，是 **Pam** 在跑、拎着包，所以 **Pam** 是人物。\n\n> **注意。** 像 *the bus* 这样的地点或 *a red bag* 这样的物品虽在故事里出现，但不是人物。",
       ],
       ["Who is this story about?", "这个故事讲的是谁？"],
       `
@@ -62,18 +66,24 @@ const whoAndWhere = topic("reading", {
       The cow stood in the field. She ate grass.|the cow|the field|the grass
       Leo played a drum in his room. He played all day.|Leo|his room|a drum
       `,
-      (right) => [`The story tells what ${right} did, so it is about ${right}.`, `故事讲了 ${right} 做的事，所以讲的是 ${right}。`],
+      (right) => [
+        `The story is about **${right}**—the person or animal who does the actions.\n\n**Check.** Find the action words in the story and ask *who did that?* The answer is **${right}**.`,
+        `这个故事讲的是 **${right}**——故事里做动作的人或动物。\n\n**检验。** 找出故事里的动作词，问*是谁做的？* 答案正是 **${right}**。`,
+      ],
       [
-        ["*{wrong}* is a place in the story, not who it is about.", "*{wrong}* 是故事里的地点，不是故事讲的人物。"],
-        ["*{wrong}* is a thing in the story; things do not act in it.", "*{wrong}* 是故事里的一样东西，它在故事里没有做事。"],
+        ["*{wrong}* is a place or thing here, not the character the story is about.", "*{wrong}* 在这里是地点或东西，不是故事的主角人物。"],
+        [
+          "*{wrong}* does not act in the story, so it is not who the story is about.",
+          "*{wrong}* 在故事里没有做动作，所以不是故事讲的人物。",
+        ],
       ],
     ),
     choose(
       "where-it-happens",
       ["Where It Happens", "在哪里发生"],
       [
-        "Where a story happens is its **setting**. Look for words such as *in*, *at* or *on* and a place: *at the park*, *in the snow*, *on a ship*.",
-        "故事发生的地方叫作**背景**。找一找 *in*、*at*、*on* 这样的词和地点：*at the park*、*in the snow*、*on a ship*。",
+        "Where a story happens is its **setting**. Look for small place words like *in*, *at*, or *on* followed by a place: *at the park*, *in the snow*, *on a ship*.\n\n> **Watch out.** Check the exact place named in the story—do not guess a place that is not mentioned.",
+        "故事发生的地方叫作**背景**。找一找 *in*、*at*、*on* 后面跟着的地点：*at the park*、*in the snow*、*on a ship*。\n\n> **注意。** 要看故事里实际写出的地点，不要猜文中没提的地方。",
       ],
       ["Where does this story happen?", "这个故事发生在哪里？"],
       `
@@ -108,10 +118,13 @@ const whoAndWhere = topic("reading", {
       Pam finds shells at the beach. She puts them in a pail.|at the beach|in the snow|at the shop
       We sing in the music room. Ms. Lee plays the drum.|in the music room|on a farm|in the sea
       `,
-      (right) => [`The story says it happens ${right}.`, `故事说它发生在 ${right}。`],
+      (right) => [
+        `The story takes place **${right}**.\n\n**Check.** Point to the place word in the story (*in*, *at*, or *on*): it points right to **${right}**, while the other two places are never in the story.`,
+        `故事发生在 **${right}**。\n\n**检验。** 找到故事里表示方位的词（*in*、*at* 或 *on*），后面指的正是 **${right}**，而另外两个地方文里根本没出现。`,
+      ],
       [
-        ["*{wrong}* is a place, but not the one in this story.", "*{wrong}* 是一个地点，但不是这个故事里的地点。"],
-        ["Read again: the story never goes *{wrong}*.", "再读一遍：故事里没有去过 *{wrong}*。"],
+        ["*{wrong}* is a real place, but this story does not happen there.", "*{wrong}* 虽然是个地点，但这个故事不是在那里发生的。"],
+        ["Read the sentences again: the characters are never *{wrong}*.", "再读一遍句子：故事里的人物没有去过 *{wrong}*。"],
       ],
     ),
   ],
@@ -121,6 +134,10 @@ const order = topic("reading", {
   id: "what-happens-first-next-and-last",
   title: ["What Happens First, Next and Last", "先发生什么、再发生什么、最后发生什么"],
   summary: ["Tell the order of what happens in a story.", "说出故事里事情发生的顺序。"],
+  intro: [
+    "Think about getting dressed for rain: you put on your boots before you splash in a puddle! Stories follow an order too—first, next, and last. Let's track what happens in order.",
+    "想想下雨天出门：你总是先穿上雨靴，再去踩水坑！故事也讲究先后顺序——先发生什么、再发生什么、最后发生什么。这节课我们来理清故事的顺序。",
+  ],
   after: ["who-and-where-in-a-story"],
   xp: 10,
   points: [
@@ -128,8 +145,8 @@ const order = topic("reading", {
       "what-happens-first",
       ["What Happens First", "最先发生什么"],
       [
-        "A story tells things in the order they happen. What is told **first** happens first. Words like *first*, *then*, *next* and *last* help you keep track.",
-        "故事按事情发生的顺序来讲。**先**讲到的事先发生。*first*、*then*、*next*、*last* 这样的词能帮你理清顺序。",
+        "A story tells events in the order they happen. Look at the very beginning to find what happens **first**. Words like *First*, *Then*, *Next*, and *Last* are clues.\n\n> **Watch out.** Do not pick the most exciting part at the end—check which event comes at step 1.",
+        "故事按事情发生的先后顺序来讲。看故事最开头就能找到**最先**发生的事，*First*、*Then*、*Next*、*Last* 这些词都是线索。\n\n> **注意。** 不要选结尾最热闹的那件事，要看排在第 1 步的是什么。",
       ],
       ["What happens first?", "最先发生的是什么？"],
       `
@@ -164,18 +181,21 @@ const order = topic("reading", {
       First, Mia put on her coat. Then she went out. Last, she played in the snow.|Mia put on her coat.|Mia went out.|Mia played in the snow.
       The car got dirty. Dad washed it. Then it was clean.|The car got dirty.|Dad washed it.|The car was clean.
       `,
-      (right) => [`It is told first: *${right}*`, `它最先被讲到：*${right}*`],
+      (right) => [
+        `*${right}* happens first—it is the opening event of the story.\n\n**Check.** Number the three sentences 1, 2, 3 in order: *${right}* is number 1, before the other two happen.`,
+        `*${right}* 最先发生，是故事开头的第一件事。\n\n**检验。** 给故事里的三句话标上 1、2、3：*${right}* 排在第 1 位，发生在另外两件事之前。`,
+      ],
       [
-        ["*{wrong}* happens later, after the first thing.", "*{wrong}* 发生得晚一些，在第一件事之后。"],
-        ["*{wrong}* is the last thing, not the first.", "*{wrong}* 是最后一件事，不是第一件。"],
+        ["*{wrong}* happens in the middle, after the first step.", "*{wrong}* 发生在中间，不是最先发生的。"],
+        ["*{wrong}* happens at the end, not at the start.", "*{wrong}* 发生在最后，不是最开始。"],
       ],
     ),
     choose(
       "what-happens-next",
       ["What Happens Next", "接下来发生什么"],
       [
-        "Some things always come in an order: you plant a seed **before** it grows; you get wet **after** you jump in. Think about what must come next.",
-        "有些事总是按顺序发生：先种下种子，它**才**会长大；跳进水里**之后**才会湿。想一想接下来一定会发生什么。",
+        "One event leads to the next: you plant a seed **before** it grows; you get wet **after** you jump in water. Think about what must come right after what just happened.\n\n> **Watch out.** Do not pick something that already happened *before* the sentence you read.",
+        "一件事会引出下一件事：先种下种子，它**才**会长大；跳进水里**之后**才会变湿。想一想刚才那件事之后顺理成章会发生什么。\n\n> **注意。** 不要选在这句话*之前*就已经做过的事。",
       ],
       ["What happens next?", "接下来会发生什么？"],
       `
@@ -210,10 +230,13 @@ const order = topic("reading", {
       The bird finds a worm.|The bird eats the worm.|The worm eats the bird.|The bird looks for a worm.
       Mom says it is time for bed.|I put on my pajamas.|I get up.|I eat dinner.
       `,
-      (right) => [`*${right}* comes next.`, `接下来是：*${right}*`],
+      (right, shown) => [
+        `*${right}* follows right after *${shown}*\n\n**Check.** Connect the two with *so*: *${shown.replace(/\.$/u, "")}, so ${right[0]?.toLowerCase() ?? ""}${right.slice(1)}* That makes real-life sense.`,
+        `在 *${shown}* 之后，接下来顺理成章会发生：*${right}*\n\n**检验。** 用“所以”把两句连起来读：因为前面发生了那件事，所以 *${right}*，符合生活常理。`,
+      ],
       [
-        ["*{wrong}* does not follow from what happened.", "*{wrong}* 和前面发生的事接不上。"],
-        ["*{wrong}* happened before, not next.", "*{wrong}* 是之前发生的，不是接下来。"],
+        ["*{wrong}* does not make sense as the result of what just happened.", "*{wrong}* 不是前面那件事会带来的合理结果。"],
+        ["*{wrong}* happened earlier (or repeats the start), not next.", "*{wrong}* 是之前发生过的事（或重复了开头），不是接下来发生的。"],
       ],
     ),
   ],
@@ -226,6 +249,10 @@ const facts = topic("reading", {
     "Answer what, where and how many from a short text about the real world.",
     "根据一篇讲真实世界的短文回答什么、哪里和多少的问题。",
   ],
+  intro: [
+    "Open a book about frogs and you might read: *Frogs have long sticky tongues.* That is a **fact**—something true about the real world. Let's practice finding facts right inside the text and telling facts apart from made-up stories.",
+    "翻开一本讲青蛙的书，你会读到：*Frogs have long sticky tongues.*（青蛙有又长又黏的舌头。）这是一条**事实**——真实世界里真的如此。这节课我们来在短文里找事实，并分辨故事和事实。",
+  ],
   after: ["reading-sight-words"],
   xp: 10,
   points: [
@@ -233,8 +260,8 @@ const facts = topic("reading", {
       "answers-in-the-text",
       ["Answers in the Text", "答案就在文中"],
       [
-        "A text that tells **facts** is about the real world. The answer to a question is in the words: find the sentence that tells it.",
-        "讲**事实**的文章写的是真实的世界。问题的答案就在文字里：找到说出答案的那一句。",
+        "A text that tells **facts** shares true information about the real world. Find the sentence that matches the question—the answer is right in the words.\n\n> **Watch out.** Do not guess from memory; point to the exact words in the text that answer the question.",
+        "讲**事实**的短文介绍真实世界里的真事。找到和问题对应的那一句，答案就在文字里。\n\n> **注意。** 不要凭印象猜，要在短文里指着原话找出答案。",
       ],
       ["Read the short text, then answer the question after *Q*.", "读这段短文，然后回答 *Q* 后面的问题。"],
       `
@@ -269,18 +296,21 @@ const facts = topic("reading", {
       A crab has ten legs. It walks to the side. Q: How does a crab walk?|to the side|up and down|in circles
       Hens lay eggs in a nest. The farmer collects them. Q: Where do hens lay eggs?|in a nest|in a pond|in a tree
       `,
-      (right) => [`The text says it: *${right}*.`, `文中说了：*${right}*。`],
+      (right) => [
+        `The text states the answer right in its words: **${right}**.\n\n**Check.** Put **${right}** back next to the question and match it against the text: the exact words **${right}** appear there as the answer.`,
+        `短文里直接写出了答案：**${right}**。\n\n**检验。** 把 **${right}** 对照问题放回短文核对：原句里明明白白写着 **${right}**。`,
+      ],
       [
-        ["*{wrong}* is not what the text says.", "*{wrong}* 不是短文说的。"],
-        ["Find the sentence again: it does not say *{wrong}*.", "再找一找那一句：它没有说 *{wrong}*。"],
+        ["*{wrong}* does not match what the text says for this question.", "*{wrong}* 和短文针对这个问题说的内容对不上。"],
+        ["Check the sentences again: they never give *{wrong}* as the answer.", "再看一遍短文：原文没有把 *{wrong}* 当作答案。"],
       ],
     ),
     label(
       "story-or-facts",
       ["A Story or Facts", "故事还是事实"],
       [
-        "A **story** is made up: animals may talk and things may happen that cannot really happen. A text of **facts** tells what is true about the real world.",
-        "**故事**是编出来的：动物会说话，会发生现实中不可能发生的事。讲**事实**的文字说的是真实世界中真实的事。",
+        "A **story** is made up—animals may talk or wear clothes, and silly things can happen. A text of **facts** tells what is really true in our world.\n\n> **Watch out.** Even if a sentence has a real animal like a pig or a bear, it is a *story* if the animal talks or bakes a pie.",
+        "**故事**是编出来的——动物会说话、穿衣服，还会发生现实里不可能的事。讲**事实**的文字说的是真实世界里真的如此的事。\n\n> **注意。** 就算句子里写的是真的动物（比如猪或熊），只要它会说话或烤派，那就是故事而不是事实。",
       ],
       ["Is this from a story or a text of facts?", "这段话来自故事，还是讲事实的短文？"],
       `
@@ -318,19 +348,23 @@ const facts = topic("reading", {
       {
         story: L(
           "故事",
-          "It tells something that is made up and could not really happen.",
-          "它讲的是编出来的、不可能真正发生的事。",
-          "Nothing in it is made up: it could be true.",
-          "它没有编造的内容：它可能是真的。",
+          "It tells something made up that cannot happen in real life.",
+          "它讲的是编出来的、现实生活中不可能发生的事。",
+          "*{shown}* is something really true—nothing in it is made up.",
+          "*{shown}* 是真实世界里真的事，里面没有编造的成分。",
         ),
         facts: L(
           "事实",
           "It tells something true about the real world.",
           "它讲的是真实世界里的真事。",
-          "It tells something that could not really happen.",
-          "它讲的是不可能真正发生的事。",
+          "*{shown}* cannot really happen—it is made up for a story.",
+          "*{shown}* 在现实里不可能发生，是编出来的故事。",
         ),
       },
+      (right, _shown, entry) => [
+        `This is from **${right === "story" ? "a story" : "a text of facts"}**. ${entry.why[0]}\n\n**Check.** Ask yourself: *Could I really see this happen outside or in nature?* ${right === "facts" ? "Yes—so it is a fact." : "No—so it is a made-up story."}`,
+        `这段话来自**${entry.zh}**。${entry.why[1]}\n\n**检验。** 问自己：*在现实世界里真的能看到这件事吗？* ${right === "facts" ? "能——所以这是事实。" : "不能——所以这是编出来的故事。"}`,
+      ],
     ),
   ],
 });
@@ -339,6 +373,10 @@ const rhymes = topic("reading", {
   id: "rhyming-words",
   title: ["Rhyming Words", "押韵的词"],
   summary: ["Words rhyme when they end with the same sound, like *cat* and *hat*.", "结尾发音相同的词押韵，比如 *cat* 和 *hat*。"],
+  intro: [
+    "Sing a playground chant: *One, two, buckle my shoe!* Notice how *two* and *shoe* sound the same at the end? That match is a **rhyme**. Let's spot rhyming words and finish short rhymes.",
+    "念一句童谣：*One, two, buckle my shoe!* 注意到了吗，*two* 和 *shoe* 结尾的发音一样？这就是**押韵**。这节课我们来找押韵词，并把小诗的韵脚补全。",
+  ],
   after: ["reading-short-vowel-words"],
   xp: 10,
   points: [
@@ -346,8 +384,8 @@ const rhymes = topic("reading", {
       "which-word-rhymes",
       ["Which Word Rhymes", "哪个词押韵"],
       [
-        "Words **rhyme** when they sound the same at the end: *c**at***, *h**at***, *m**at***. Only the first sound changes. Often the end is spelled the same too.",
-        "结尾发音相同的词就**押韵**：*c**at***、*h**at***、*m**at***。只有开头的音不同。它们的结尾常常拼写也一样。",
+        "Words **rhyme** when they end with the same sound: *c**at***, *h**at***, *m**at***. Only the opening sound changes.\n\n> **Watch out.** Two words that start with the same sound (*cat* and *cup*) do not rhyme—listen to the *end*.",
+        "结尾发音相同的词就**押韵**：*c**at***、*h**at***、*m**at***。只有开头的音不同。\n\n> **注意。** 开头相同的词（如 *cat* 和 *cup*）不押韵——要听*结尾*的音。",
       ],
       ["Which word rhymes with the word shown?", "哪个词和给出的词押韵？"],
       `
@@ -382,18 +420,21 @@ const rhymes = topic("reading", {
       coat|boat|cot|cut
       bell|well|bed|ball
       `,
-      (right, shown) => [`*${shown}* and *${right}* end with the same sound.`, `*${shown}* 和 *${right}* 结尾的发音相同。`],
+      (right, shown) => [
+        `**${shown}** and **${right}** end with the same sound, so they rhyme.\n\n**Check.** Say *${shown}, ${right}* aloud and drop the first sound of each: the endings match completely.`,
+        `**${shown}** 和 **${right}** 结尾的发音相同，所以押韵。\n\n**检验。** 把 *${shown}、${right}* 连起来大声读，去掉各自开头的第一个音，剩下的韵尾完全一样。`,
+      ],
       [
-        ["*{wrong}* starts the same, but a rhyme ends the same.", "*{wrong}* 开头相同，但押韵要结尾相同。"],
-        ["*{wrong}* has a different ending sound.", "*{wrong}* 结尾的发音不同。"],
+        ["*{wrong}* starts with the same sound, but rhyming words match at the end.", "*{wrong}* 只是开头音相同，但押韵要看结尾音相同。"],
+        ["Say *{wrong}* aloud: its ending sound does not match.", "把 *{wrong}* 大声读出来：它的结尾音对不上。"],
       ],
     ),
     choose(
       "finishing-the-rhyme",
       ["Finishing the Rhyme", "补全押韵"],
       [
-        "In a poem, the last words of two lines often rhyme. Pick the word that rhymes **and** makes sense.",
-        "诗里两行的最后一个词常常押韵。选一个既押韵**又**说得通的词。",
+        "In a short poem, two lines work together with a rhyme: *I see a **bee** / Up in a **tree**.* Pick the word that both rhymes **and** makes sense.\n\n> **Watch out.** Do not pick a word just because it makes sense—say the two lines aloud to hear the rhyme.",
+        "小诗里两行常常押韵呼应：*I see a **bee** / Up in a **tree**.* 要选一个既押韵**又**说得通的词。\n\n> **注意。** 不要只因为意思通顺就选它——把两行大声读出来，听一听押不押韵。",
       ],
       ["Which word finishes the rhyme?", "哪个词能补全押韵？"],
       `
@@ -428,13 +469,16 @@ const rhymes = topic("reading", {
       A snake by the ___ / Ate a cake.|lake|pond|tree
       The hen and the ___ / Ran to the den.|men|kids|cats
       `,
-      (right, shown) => [
-        `*${right}* rhymes and makes sense: ${shown.replace("___", right)}`,
-        `*${right}* 既押韵又说得通：${shown.replace("___", right)}`,
-      ],
+      (right, shown) => {
+        const line = shown.replace("___", right);
+        return [
+          `**${right}** completes both the rhyme and the meaning: *${line}*\n\n**Check.** Read *${line}* aloud: listen for the matching ending sound and check that the picture makes sense.`,
+          `**${right}** 既押韵又通顺：*${line}*\n\n**检验。** 大声读一遍 *${line}*：听听两个押韵词的结尾音是不是一致，再看看画面说不说得通。`,
+        ];
+      },
       [
-        ["*{wrong}* makes sense, but it does not rhyme.", "*{wrong}* 说得通，但不押韵。"],
-        ["*{wrong}* does not rhyme with the word it should.", "*{wrong}* 和应该押韵的词不押韵。"],
+        ["*{wrong}* makes sense in the picture, but it does not rhyme.", "*{wrong}* 意思说得通，但不押韵。"],
+        ["Say the two lines with *{wrong}*: its ending sound breaks the rhyme.", "把 *{wrong}* 代进去读两行：结尾音对不上，破了韵。"],
       ],
     ),
   ],
@@ -444,6 +488,10 @@ const syllables = topic("reading", {
   id: "clapping-syllables",
   title: ["Clapping Syllables", "拍音节"],
   summary: ["Clap the parts of a word to count its syllables.", "拍出一个词的各个部分，数一数它有几个音节。"],
+  intro: [
+    "Say your own name slowly and clap on each beat—*Li-ly* gets two claps, *Sam* gets one! Every word has beats called **syllables**. Clapping them helps you read longer words one piece at a time.",
+    "慢慢念自己的名字，每读一拍就拍一下手——*Li-ly* 拍两下，*Sam* 拍一下！每个词都有节奏，叫做**音节**。拍出音节，就能把长词拆成小块来读。",
+  ],
   after: ["reading-words-with-blends"],
   xp: 10,
   points: [
@@ -451,8 +499,8 @@ const syllables = topic("reading", {
       "how-many-claps",
       ["How Many Claps", "拍几下"],
       [
-        "A **syllable** is a part of a word you can clap. Say the word slowly and clap each part: *cat* (one clap), *rab-bit* (two claps), *but-ter-fly* (three claps). Each part has a vowel sound.",
-        "**音节**是一个词里可以拍出来的部分。慢慢说出这个词，每个部分拍一下：*cat*（拍一下）、*rab-bit*（拍两下）、*but-ter-fly*（拍三下）。每个部分都有一个元音。",
+        "A **syllable** is one beat of a word: *cat* (one clap), *rab-bit* (two claps), *but-ter-fly* (three claps). Every syllable has one vowel sound.\n\n> **Watch out.** Do not count every letter—count the beats your voice makes when you say the word.",
+        "**音节**是一个词里可以拍出来的一拍：*cat*（拍一下）、*rab-bit*（拍两下）、*but-ter-fly*（拍三下）。每个音节都带一个元音。\n\n> **注意。** 不要数有几个字母，要数读出这个词时嘴里发出几拍。",
       ],
       ["How many syllables does the word have?", "这个词有几个音节？"],
       `
@@ -487,21 +535,30 @@ const syllables = topic("reading", {
       pajamas|three|two|one
       bus|one|two|three
       `,
-      (right, shown) => [
-        `Clap *${shown}*: ${right} clap${right === "one" ? "" : "s"}.`,
-        `拍一拍 *${shown}*：拍 ${right === "one" ? "一" : right === "two" ? "两" : "三"}下。`,
-      ],
+      (right, shown) => {
+        const zhCount = right === "one" ? "一" : right === "two" ? "两" : "三";
+        return [
+          `Say **${shown}** slowly and clap each beat: it has **${right}** syllable${right === "one" ? "" : "s"}.\n\n**Check.** Rest your hand lightly under your chin and say **${shown}**: your chin drops **${right}** time${right === "one" ? "" : "s"} (once for each vowel sound).`,
+          `慢慢读出 **${shown}** 并拍手：一共拍 **${zhCount}** 下，有 **${zhCount}** 个音节。\n\n**检验。** 把手轻轻放在下巴下面再读一遍 **${shown}**：下巴向下动了 **${zhCount}** 次（每发一个元音动一次）。`,
+        ];
+      },
       [
-        ["*{wrong}* is too many or too few: say the word slowly and clap again.", "*{wrong}* 多了或少了：慢慢说这个词，再拍一次。"],
-        ["Count the vowel sounds: there are not *{wrong}*.", "数一数元音：不是 *{wrong}* 个。"],
+        [
+          "Clap *{shown}* again slowly—*{wrong}* does not match the number of beats you hear.",
+          "慢慢再拍一遍 *{shown}*——*{wrong}* 和听到的拍数对不上。",
+        ],
+        [
+          "Hold your hand under your chin as you say *{shown}*: count each drop—it is not *{wrong}*.",
+          "把手放在下巴下面读 *{shown}*：数一数下巴动了几次——不是 *{wrong}*。",
+        ],
       ],
     ),
     choose(
       "putting-parts-together",
       ["Putting Parts Together", "把部分拼起来"],
       [
-        "A long word is easier to read part by part. Read each syllable, then put them together: *sun* + *set* = *sunset*; *pic* + *nic* = *picnic*.",
-        "长词一部分一部分地读更容易。先读每个音节，再把它们拼起来：*sun* + *set* = *sunset*；*pic* + *nic* = *picnic*。",
+        "A long word is easy when you read it beat by beat and blend the parts: *sun* + *set* = **sunset**; *pic* + *nic* = **picnic**.\n\n> **Watch out.** Check both parts—do not pick a word that only matches the first part.",
+        "长词一拍一拍地读，再拼在一起就简单了：*sun* + *set* = **sunset**；*pic* + *nic* = **picnic**。\n\n> **注意。** 前后两部分都要核对，不要只看开头像就选它。",
       ],
       ["Which word do the parts make?", "这几个部分组成哪个词？"],
       `
@@ -536,10 +593,13 @@ const syllables = topic("reading", {
       pump + kin|pumpkin|pumping|napkin
       tum + ble|tumble|tummy|humble
       `,
-      (right, shown) => [`*${shown}* makes *${right}*.`, `*${shown}* 拼成 *${right}*。`],
+      (right, shown) => [
+        `Putting *${shown}* together makes **${right}**.\n\n**Check.** Split **${right}** back into its two beats: the first part and the second part match *${shown}* letter for letter.`,
+        `把 *${shown}* 拼在一起就是 **${right}**。\n\n**检验。** 把 **${right}** 按两拍拆回去，前半部分和后半部分和 *${shown}* 逐字吻合。`,
+      ],
       [
-        ["*{wrong}* starts like it, but the parts do not match.", "*{wrong}* 开头相似，但各部分对不上。"],
-        ["*{wrong}* has a different part in it.", "*{wrong}* 里有一个不同的部分。"],
+        ["*{wrong}* starts like the first part, but its second part does not match.", "*{wrong}* 开头和第一部分像，但第二部分对不上。"],
+        ["*{wrong}* changes one of the parts, so it is a different word.", "*{wrong}* 改掉了其中一个部分，变成了别的词。"],
       ],
     ),
   ],
@@ -552,6 +612,10 @@ const whole = topic("writing", {
     "A sentence tells who and what they do; a few words alone are not a sentence.",
     "句子要说出谁和做什么；只有几个词不能构成句子。",
   ],
+  intro: [
+    "Imagine a friend runs up and says only, *The brown puppy.* You blink and ask, *What did the puppy do?* To share a whole idea, a sentence needs both **who** and **what they do**.",
+    "想象朋友跑过来只说了一句：*The brown puppy.* 你一定会眨眨眼问：*小狗怎么了？* 要把意思说完整，一个句子必须既有**谁**，又有**做什么**。",
+  ],
   after: ["action-words"],
   xp: 10,
   points: [
@@ -559,8 +623,8 @@ const whole = topic("writing", {
       "is-it-a-whole-sentence",
       ["Is It a Whole Sentence?", "这是完整的句子吗？"],
       [
-        "A **whole sentence** tells **who** and **what they do** (or what they are): *The dog runs.* Some words alone, like *The big dog.* or *Runs fast.*, leave you asking *what about it?* They are not whole sentences.",
-        "**完整的句子**要说出**谁**和**做什么**（或是什么）：*The dog runs.*。只有一些词，比如 *The big dog.* 或 *Runs fast.*，会让人想问*它怎么了？*。它们不是完整的句子。",
+        "A **whole sentence** tells **who** and **what they do** (or what they are): *The dog runs.* Half a thought like *The big dog.* or *Runs fast.* leaves you asking *what about it?*\n\n> **Watch out.** A capital letter and a period alone do not make a whole sentence—it must have both parts.",
+        "**完整的句子**要说出**谁**和**做什么**（或是什么）：*The dog runs.* 像 *The big dog.* 或 *Runs fast.* 这样的半截话会让人追问*怎么了？*\n\n> **注意。** 光有句首大写和句末句号还不够，必须把“谁”和“做什么”都说全。",
       ],
       ["Which is a whole sentence?", "哪个是完整的句子？"],
       `
@@ -595,18 +659,27 @@ const whole = topic("writing", {
       they, run|They run to the park.|The kids and the park.|Run to the park.
       moon, shines|The moon shines at night.|The big moon.|Shines at night.
       `,
-      (right) => [`*${right}* tells who and what they do.`, `*${right}* 说出了谁和做什么。`],
+      (right) => [
+        `*${right}* is a whole sentence because it tells both who (or what) and what happens.\n\n**Check.** Ask two questions about *${right}*: *Who or what?* and *What do they do?* You can answer both right from the sentence.`,
+        `*${right}* 是完整的句子，因为它既说了谁（或什么），又说了做什么。\n\n**检验。** 对着 *${right}* 问两个问题：*是谁或什么？* 和 *做什么/怎么样？* 两个问题都能直接从句子里答出来。`,
+      ],
       [
-        ["*{wrong}* tells who, but not what they do.", "*{wrong}* 说了谁，但没说做什么。"],
-        ["*{wrong}* does not say who.", "*{wrong}* 没有说是谁。"],
+        [
+          "*{wrong}* is missing one of the two parts, so it leaves you asking *what about it?*",
+          "*{wrong}* 缺了必要的一部分，读完会让人想问“然后呢？”。",
+        ],
+        [
+          "*{wrong}* does not give a whole idea—either *who* or *what happens* is missing.",
+          "*{wrong}* 没有把意思说完整——缺了“谁”或者缺了“做什么”。",
+        ],
       ],
     ),
     choose(
       "finishing-a-sentence",
       ["Finishing a Sentence", "把句子补完整"],
       [
-        "To finish a sentence that has only *who*, add **what they do**. To finish one that has only *what they do*, add **who**.",
-        "如果句子只有*谁*，就补上**做什么**；如果只有*做什么*，就补上**谁**。",
+        "If a sentence gives only *who* (*The little pup ___*), add **what it does** (*wags its tail*). If it gives only *what happens* (*___ hops on a log.*), add **who** (*The frog*).\n\n> **Watch out.** Adding a place like *in the pond* does not tell what someone *does*—look for the missing action or missing subject.",
+        "如果句子只说了*谁*（*The little pup ___*），就补上**做什么**（*wags its tail*）；如果只说了*做什么*（*___ hops on a log.*），就补上**谁**（*The frog*）。\n\n> **注意。** 补上 *in the pond* 这样的地点并不能说明“做什么”，要找真正缺少的动作或主语。",
       ],
       ["Which words finish the sentence?", "哪些词能把句子补完整？"],
       `
@@ -641,10 +714,16 @@ const whole = topic("writing", {
       The duck ___.|quacks at the pond|at the pond|and the pond
       ___ digs a hole.|The dog|A hole|The brown
       `,
-      (right, shown) => [`*${filled(shown, right)}* is a whole sentence.`, `*${filled(shown, right)}* 是完整的句子。`],
+      (right, shown) => [
+        `*${filled(shown, right)}* now tells both who and what happens.\n\n**Check.** Read *${filled(shown, right)}* aloud as if telling a friend: it sounds complete all by itself, with nothing left hanging.`,
+        `*${filled(shown, right)}* 既有“谁”又有“做什么”，成了一句完整的话。\n\n**检验。** 像讲给朋友听一样大声读出 *${filled(shown, right)}*：听起来完整顺畅，不会让人觉得话只说了一半。`,
+      ],
       [
-        ["*{wrong}* still leaves out what they do or who.", "*{wrong}* 还是缺了做什么或是谁。"],
-        ["*{wrong}* does not finish the idea.", "*{wrong}* 没有把意思说完整。"],
+        ["Adding *{wrong}* still leaves out who does it or what they do.", "补上 *{wrong}* 还是缺了“谁”或“做什么”。"],
+        [
+          "*{wrong}* adds a detail or place, but the sentence still does not tell a whole idea.",
+          "*{wrong}* 只加了细节或地点，句子还是没有把意思说完整。",
+        ],
       ],
     ),
   ],
@@ -654,6 +733,10 @@ const more = topic("writing", {
   id: "adding-a-describing-word",
   title: ["Adding a Describing Word", "加上一个描述词"],
   summary: ["Make a sentence tell more by adding a describing word.", "加上一个描述词，让句子说得更多。"],
+  intro: [
+    "Compare two sentences: *I saw a bug.* vs. *I saw a **shiny** bug.* Adding one describing word turns a plain sentence into a vivid picture! Let's put describing words in the right spot and pick ones that fit.",
+    "比一比这两句话：*I saw a bug.* 和 *I saw a **shiny** bug.* 加上一个描述词，平淡的句子立刻有了画面感！这节课我们来把描述词放到对的位置，并选出贴切的词。",
+  ],
   after: ["a-sentence-tells-a-whole-idea", "describing-words"],
   xp: 10,
   points: [
@@ -661,8 +744,8 @@ const more = topic("writing", {
       "the-sentence-that-tells-more",
       ["The Sentence That Tells More", "说得更多的句子"],
       [
-        "A describing word helps the reader see the picture: *I have a hat.* tells less than *I have a **red** hat.* Put it just before the naming word.",
-        "描述词帮读者看到画面：*I have a hat.* 不如 *I have a **red** hat.* 说得多。把它放在名称词的前面。",
+        "A describing word helps the reader picture the thing: *I have a hat.* → *I have a **red** hat.* In English, put the describing word **right before** the naming word.\n\n> **Watch out.** Put the describing word *before* the naming word (*a red hat*), not after it (*a hat red*).",
+        "描述词能让读者看到画面：*I have a hat.* → *I have a **red** hat.* 在英语里，描述词要放在名称词**前面**。\n\n> **注意。** 描述词要放在名称词*前面*（*a red hat*），不能放在后面（*a hat red*）。",
       ],
       ["Which sentence adds a describing word in the right place?", "哪个句子在正确的位置加上了描述词？"],
       `
@@ -697,18 +780,27 @@ const more = topic("writing", {
       She has a doll.|She has a little doll.|She has a doll little.|She little has a doll.
       We saw a ship.|We saw a long ship.|We saw a ship long.|We long saw a ship.
       `,
-      (right) => [`*${right}* puts the describing word just before the naming word.`, `*${right}* 把描述词放在了名称词的前面。`],
+      (right, shown) => [
+        `*${right}* puts the describing word right before the naming word.\n\n**Check.** Take out the new describing word from *${right}*: you get back the original sentence *${shown}*, and the extra word sits right in front of the thing it describes.`,
+        `*${right}* 把描述词放在了名称词的正前面。\n\n**检验。** 从 *${right}* 里拿掉新加的描述词，正好还原成原句 *${shown}*，且这个词紧挨在它描述的名称词前面。`,
+      ],
       [
-        ["*{wrong}* puts the describing word after the naming word.", "*{wrong}* 把描述词放在了名称词的后面。"],
-        ["*{wrong}* puts the describing word where it does not fit.", "*{wrong}* 把描述词放在了不合适的地方。"],
+        [
+          "*{wrong}* puts the describing word *after* the naming word instead of before it.",
+          "*{wrong}* 把描述词放到了名称词*后面*，应该放在前面。",
+        ],
+        [
+          "*{wrong}* places the describing word in a spot where English sentences do not put it.",
+          "*{wrong}* 把描述词放错了位置，不符合英语句子的语序。",
+        ],
       ],
     ),
     choose(
       "a-word-that-fits-the-sense",
       ["A Word That Fits", "合适的描述词"],
       [
-        "Choose a describing word that fits: snow is **cold**, not *hot*; a mouse is **small**, not *tall*. Think about what you see, hear or feel.",
-        "选一个合适的描述词：雪是 **cold**（冷的），不是 *hot*；老鼠是 **small**（小的），不是 *tall*。想一想你看到、听到或摸到的是什么。",
+        "Choose a describing word that matches real life: snow is **cold**, not *hot*; a mouse is **small**, not *tall*. Think about what you see, taste, hear, or feel.\n\n> **Watch out.** All three choices are describing words, so picture the real thing before you pick.",
+        "选一个符合现实的描述词：雪是 **cold**（冷的），不是 *hot*；老鼠是 **small**（小的），不是 *tall*。想一想你看到、尝到、听到或摸到的感觉。\n\n> **注意。** 三个选项都是描述词，选之前先在脑海里想一想真实的样子。",
       ],
       ["Which describing word fits?", "哪个描述词合适？"],
       `
@@ -743,10 +835,13 @@ const more = topic("writing", {
       The feather is ___.|light|heavy|hard
       The sky at noon is ___.|bright|dark|black
       `,
-      (right, shown) => [`*${filled(shown, right)}* fits what it describes.`, `*${filled(shown, right)}* 和它描述的东西相符。`],
+      (right, shown) => [
+        `*${filled(shown, right)}* matches what it really looks, sounds, or feels like.\n\n**Check.** Imagine touching, seeing, tasting, or hearing it in real life: **${right}** fits, while the other two words do not.`,
+        `*${filled(shown, right)}* 符合它真实的样子、声音或触感。\n\n**检验。** 想象在现实中摸一摸、看一看、尝一尝或听一听：**${right}** 贴切自然，另外两个词都不符合实际。`,
+      ],
       [
-        ["*{wrong}* says the opposite of what it is like.", "*{wrong}* 说的正好相反。"],
-        ["*{wrong}* does not fit this thing.", "*{wrong}* 不适合这个东西。"],
+        ["*{wrong}* means the opposite of what this thing is really like.", "*{wrong}* 的意思和这个东西真实的样子正好相反。"],
+        ["*{wrong}* does not fit the sense of this sentence.", "*{wrong}* 和这个东西的特点搭不上。"],
       ],
     ),
   ],
@@ -759,6 +854,10 @@ const steps = topic("writing", {
     "Tell how to do something in order, with *first*, *next*, *then* and *last*.",
     "用 *first*、*next*、*then* 和 *last* 按顺序说明怎样做一件事。",
   ],
+  intro: [
+    "Want to teach a friend how to make a paper plane? You have to tell the steps in order—fold this, then fold that! Words like **First**, **Next**, **Then**, and **Last** act like signposts from start to finish.",
+    "想教朋友折纸飞机吗？你得把步骤按顺序讲清楚——先折这一步，再折那一步！**First**、**Next**、**Then**、**Last** 就像路标，带着读者从头做到尾。",
+  ],
   after: ["what-happens-first-next-and-last", "a-sentence-tells-a-whole-idea"],
   xp: 10,
   points: [
@@ -766,8 +865,8 @@ const steps = topic("writing", {
       "the-order-word",
       ["The Order Word", "顺序词"],
       [
-        "When you tell how to do something, start with **First**, go on with **Next** or **Then**, and end with **Last**. The words show the reader the order.",
-        "讲怎样做一件事时，用 **First** 开头，用 **Next** 或 **Then** 接着讲，用 **Last** 结尾。这些词向读者表明顺序。",
+        "When you write how-to steps, start with **First**, keep going with **Next** or **Then**, and finish with **Last**: ***First**, get a cup. **Next**, pour the water. **Last**, drink it.*\n\n> **Watch out.** Check where the blank sits—step 1 takes *First*, a middle step takes *Next* or *Then*, and the final step takes *Last*.",
+        "写做事步骤时，第一步用 **First**，中间用 **Next** 或 **Then**，最后一步用 **Last**：***First**, get a cup. **Next**, pour the water. **Last**, drink it.*\n\n> **注意。** 先看空格在第几步——第一步用 *First*，中间步用 *Next* 或 *Then*，最后一步用 *Last*。",
       ],
       ["Which word fits the step?", "哪个词适合这个步骤？"],
       `
@@ -803,20 +902,20 @@ const steps = topic("writing", {
       First, put on your helmet. ___, ride your bike.|Then|First|Last
       `,
       (right, shown) => [
-        `*${filled(shown, right)}*: *${right}* fits this step's place in the order.`,
-        `*${filled(shown, right)}*：*${right}* 符合这一步在顺序中的位置。`,
+        `*${filled(shown, right)}* — **${right}** matches this step's spot in the sequence.\n\n**Check.** Count the steps in *${filled(shown, right)}* from 1 to the end: **${right}** sits at the ${right === "First" ? "very start (step 1)" : right === "Last" ? "very end (final step)" : "next step in the middle"}.`,
+        `*${filled(shown, right)}* —— **${right}** 正好对上这一步在顺序里的位置。\n\n**检验。** 从第 1 步往后数 *${filled(shown, right)}*：**${right}** 放在${right === "First" ? "最开头（第 1 步）" : right === "Last" ? "最末尾（最后一步）" : "中间承接的这一步"}，顺序完全顺畅。`,
       ],
       [
-        ["*{wrong}* is for a different place in the order.", "*{wrong}* 用在顺序中的另一个位置。"],
-        ["*{wrong}* does not fit here.", "*{wrong}* 在这里不合适。"],
+        ["*{wrong}* belongs at a different spot in the order (start vs. end).", "*{wrong}* 用在顺序里的另一个位置（开头或结尾）。"],
+        ["*{wrong}* does not match where this step comes in the sequence.", "*{wrong}* 和这一步在顺序中的位置不匹配。"],
       ],
     ),
     choose(
       "the-missing-step",
       ["The Missing Step", "缺少的步骤"],
       [
-        "Steps must be complete and in order. If one is missing, the reader cannot do the job. Find the step that goes in the gap.",
-        "步骤要完整，而且要按顺序。缺了一步，读者就做不成这件事。找出填在空缺处的那一步。",
+        "A good how-to leaves no gap in the middle. Read step 1 and the last step, then find the middle step that bridges them.\n\n> **Watch out.** Check that the middle step actually leads into the *Last* step instead of undoing the job.",
+        "好的步骤说明中间不能跳步。先看第一步和最后一步，再找出把它们连起来的中间一步。\n\n> **注意。** 核对一下中间这一步是不是真能接上最后一步，而不是把事情搞砸或提前收摊。",
       ],
       ["Which step is missing?", "缺少哪一步？"],
       `
@@ -851,10 +950,13 @@ const steps = topic("writing", {
       First, pick some apples. ___ Last, eat the pie.|Next, bake an apple pie.|Next, plant an apple seed.|Next, wash the pie dish.
       First, take out the puzzle. ___ Last, the picture is whole.|Next, fit the pieces together.|Next, put the puzzle away.|Next, lose a piece.
       `,
-      (right) => [`*${right}* fills the gap so that every step leads to the next.`, `*${right}* 填补了空缺，每一步都能接上下一步。`],
+      (right, shown) => [
+        `*${right}* bridges the first step and the last step.\n\n**Check.** Act out all three steps in order—*${filled(shown, right)}*—each step makes the next step possible.`,
+        `*${right}* 把第一步和最后一步顺畅地连了起来。\n\n**检验。** 按顺序在脑海里做一遍这三步——*${filled(shown, right)}*——每一步都正好为下一步做好准备。`,
+      ],
       [
-        ["*{wrong}* does not lead to the last step.", "*{wrong}* 接不上最后一步。"],
-        ["*{wrong}* would stop the job from getting done.", "*{wrong}* 会让这件事做不成。"],
+        ["*{wrong}* does not lead into the last step—the job would stay unfinished.", "*{wrong}* 接不上最后一步，事情会卡在半路。"],
+        ["*{wrong}* goes the wrong way and stops the last step from happening.", "*{wrong}* 走反了方向，会让最后一步没法发生。"],
       ],
     ),
   ],

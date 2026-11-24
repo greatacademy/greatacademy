@@ -569,10 +569,11 @@ const regularRule = (verb: string, past: string): Text => {
 
 /** regularWhy explains the past form in the gap of shown. */
 const regularWhy = (right: string, shown: string): Text => {
-  const rule = regularRule(bracketVerb(shown), right);
+  const verb = bracketVerb(shown);
+  const rule = regularRule(verb, right);
   return t(
-    `*${timeOf(shown)}* is in the past, and ${rule.en}: ${fill(shown, right)}`,
-    `*${timeOf(shown)}* 表示过去，${rule["zh-CN"]}：${fill(shown, right)}`,
+    `*${timeOf(shown)}* is in the past, and ${rule.en}: ${fill(shown, right)}\n\n**Check.** Verify the ending of *${verb}* → *${right}*: it fits the spelling rule and matches the past time phrase *${timeOf(shown)}*.`,
+    `*${timeOf(shown)}* 表示过去，${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 核对 *${verb}* → *${right}* 的词尾变化：既符合拼写规则，也与句首的过去时间 *${timeOf(shown)}* 一致。`,
   );
 };
 
@@ -580,17 +581,21 @@ const regularWhy = (right: string, shown: string): Text => {
 const whyNotRegular = (wrong: string, right: string, shown: string, position: number): Text => {
   if (position === 0)
     return t(
-      `*${wrong}* is the present form. *${timeOf(shown)}* is in the past, so the verb needs its past form, *${right}*.`,
-      `*${wrong}* 是现在时的形式。*${timeOf(shown)}* 表示过去，动词要用过去式 *${right}*。`,
+      `*${wrong}* is the present form, but *${timeOf(shown)}* places the action in the past.`,
+      `*${wrong}* 是现在时的形式，可 *${timeOf(shown)}* 说明动作发生在过去。`,
     );
   const rule = regularRule(bracketVerb(shown), right);
-  return t(`*${wrong}* is spelt wrong: ${rule.en}, so it is *${right}*.`, `*${wrong}* 拼错了：${rule["zh-CN"]}，所以是 *${right}*。`);
+  return t(`*${wrong}* is spelt wrong: ${rule.en}.`, `*${wrong}* 拼错了：${rule["zh-CN"]}。`);
 };
 
 const pastSimpleRegular: TopicDef = {
   id: "past-simple-regular",
   title: t("The Past Simple: Regular Verbs", "一般过去时：规则动词"),
   summary: t("We played. She visited. Regular verbs add -ed for every person.", "We played. She visited. 规则动词无论主语是谁，都加 -ed。"),
+  intro: t(
+    "Compare *We walk to school every day* with *Yesterday, we walked to the park*. For a finished past event, regular verbs add *-ed*—and the same past form works for every subject.",
+    "比较 *We walk to school every day* 和 *Yesterday, we walked to the park*。表达过去完成的事，规则动词加 *-ed*，而且不管主语是谁，形式都一样。",
+  ),
   prerequisites: ["was-and-were", "present-simple"],
   encompasses: [
     { topic: "was-and-were", weight: 0.2 },
@@ -603,8 +608,8 @@ const pastSimpleRegular: TopicDef = {
       "choose",
       t("Adding -ed", "加 -ed"),
       t(
-        "For something finished in the past, a regular verb adds *-ed*: *play* → *played*, *visit* → *visited*. It is the same for *I*, *she*, *they* and everyone.\n\nSpelling:\n\n- a verb ending in *e* adds only *-d*: *dance* → *danced*\n- a consonant and *y* becomes *-ied*: *study* → *studied*; but *play* → *played*\n- one short vowel and one consonant: double it: *stop* → *stopped*, *plan* → *planned*",
-        "表示过去已经完成的事，规则动词加 *-ed*：*play* → *played*，*visit* → *visited*。无论主语是 *I*、*she* 还是 *they*，形式都一样。\n\n中文用“了”或“昨天”这样的时间词表示过去，动词本身不变；英语的动词本身必须变成过去式，句子里有 *yesterday* 也一样。\n\n拼写：\n\n- 以 *e* 结尾的只加 *-d*：*dance* → *danced*\n- 辅音字母加 *y* 结尾的，变 *y* 为 *i* 再加 *-ed*：*study* → *studied*；但 *play* → *played*\n- 重读闭音节、末尾只有一个辅音字母的，双写再加 *-ed*：*stop* → *stopped*，*plan* → *planned*",
+        "For something finished in the past, a regular verb adds *-ed*: *play* → *played*, *visit* → *visited*. It is the same for *I*, *she*, *they* and everyone.\n\nSpelling:\n\n- a verb ending in *e* adds only *-d*: *dance* → *danced*\n- a consonant and *y* becomes *-ied*: *study* → *studied*; but *play* → *played*\n- one short vowel and one consonant: double it: *stop* → *stopped*, *plan* → *planned*\n\n> **Watch out.** Do not leave the verb in the present just because the sentence already has a past time word like *yesterday* or *last week*.",
+        "表示过去已经完成的事，规则动词加 *-ed*：*play* → *played*，*visit* → *visited*。无论主语是 *I*、*she* 还是 *they*，形式都一样。\n\n拼写：\n\n- 以 *e* 结尾的只加 *-d*：*dance* → *danced*\n- 辅音字母加 *y* 结尾的，变 *y* 为 *i* 再加 *-ed*：*study* → *studied*；但 *play* → *played*\n- 重读闭音节、末尾只有一个辅音字母的，双写再加 *-ed*：*stop* → *stopped*，*plan* → *planned*\n\n> **注意。** 中文用“昨天”“了”表示过去、动词不变，但英语即使句中有 *yesterday* 或 *last week*，动词本身也必须变成过去式。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), regularChoiceBank, regularWhy, whyNotRegular),
     ),
@@ -612,8 +617,8 @@ const pastSimpleRegular: TopicDef = {
       "spell",
       t("Spelling the past form", "拼写过去式"),
       t(
-        "Type the past form of the verb in brackets. Watch the spelling: an *e* at the end adds only *-d* (*danced*), a consonant and *y* becomes *-ied* (*studied*), one short vowel and one consonant doubles (*stopped*), and a vowel and *y* just adds *-ed* (*played*).",
-        "写出括号里动词的过去式，注意拼写：以 *e* 结尾只加 *-d*（*danced*），辅音字母加 *y* 变成 *-ied*（*studied*），一个短元音加一个辅音字母要双写（*stopped*），元音字母加 *y* 直接加 *-ed*（*played*）。",
+        "Type the past form of the verb in brackets. Check the ending before adding *-ed*: an *e* at the end adds only *-d* (*danced*), a consonant and *y* becomes *-ied* (*studied*), one short vowel and one consonant doubles (*stopped*), and a vowel and *y* just adds *-ed* (*played*).\n\n> **Watch out.** Do not double the final letter after a vowel + *y* (*played*, never *playyed*), and do not write *-eed* after silent *-e* (*danced*, never *danceed*).",
+        "写出括号里动词的过去式，动笔前先看词尾：以 *e* 结尾只加 *-d*（*danced*），辅音字母加 *y* 变成 *-ied*（*studied*），一个短元音加一个辅音字母要双写（*stopped*），元音字母加 *y* 直接加 *-ed*（*played*）。\n\n> **注意。** 元音加 *y* 结尾不要双写（*played*，不要写成 *playyed*），以不发音 *e* 结尾也不要多加一个 *e*（*danced*，不要写成 *danceed*）。",
       ),
       typedGenerator("word-form", t("Type the verb in the past.", "输入动词的过去式。"), regularTypedBank, regularWhy),
     ),
@@ -621,15 +626,15 @@ const pastSimpleRegular: TopicDef = {
       "fix",
       t("Putting the verb in the past", "把动词改成过去式"),
       t(
-        "Each sentence starts with a time in the past, but its verb is in the present. Write it again with the past form.",
-        "每个句子开头都是过去的时间，但动词用了现在时。用过去式重写句子。",
+        "Each sentence starts with a time in the past, but its verb is still in the present: *Yesterday, she visits her aunt.* → *Yesterday, she visited her aunt.* Rewrite the whole sentence with the past form.\n\n> **Watch out.** Drop any present *-s*/*-es* before adding *-ed* (*watches* → *watched*, *studies* → *studied*), and keep the rest of the sentence unchanged.",
+        "每个句子开头都是过去的时间，但动词还留在现在时：*Yesterday, she visits her aunt.* → *Yesterday, she visited her aunt.* 用过去式重写整个句子。\n\n> **注意。** 先去掉现在时的 *-s*/*-es* 再变过去式（*watches* → *watched*，*studies* → *studied*），句子的其余部分保持不变。",
       ),
       typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), regularFixBank, (right) => {
         const [verb = "", past = ""] = regulars.find(([, p]) => new RegExp(`\\b${p}\\b`, "u").test(right)) ?? [];
         const rule = regularRule(verb, past);
         return t(
-          `*${timeOf(right)}* is in the past, so the verb is in the past too, whoever the subject is, and ${rule.en}: ${right}`,
-          `*${timeOf(right)}* 表示过去，所以无论主语是谁，动词都用过去式；${rule["zh-CN"]}：${right}`,
+          `*${timeOf(right)}* is in the past, so the verb is in the past too, whoever the subject is, and ${rule.en}: ${right}\n\n**Check.** Read the time phrase at the start and the verb (*${past}*): both now point to the past, with no present *-s* left behind.`,
+          `*${timeOf(right)}* 表示过去，所以无论主语是谁，动词都用过去式；${rule["zh-CN"]}：${right}\n\n**检验。** 对照句首的时间词和动词 *${past}*：两者现在都指向过去，且没有残留现在时的 *-s*。`,
         );
       }),
     ),
@@ -686,22 +691,22 @@ const irregularTable = irregulars.map(([verb, past]) => `*${verb}* → *${past}*
 const irregularWhy = (right: string, shown: string): Text => {
   const verb = bracketVerb(shown);
   return t(
-    `*${timeOf(shown)}* is in the past, and *${verb}* is irregular: its past form is *${right}*, not one made with *-ed*: ${fill(shown, right)}`,
-    `*${timeOf(shown)}* 表示过去，而 *${verb}* 是不规则动词，过去式是 *${right}*，不是加 *-ed*：${fill(shown, right)}`,
+    `*${timeOf(shown)}* is in the past, and *${verb}* is irregular: its past form is *${right}*, not one made with *-ed*: ${fill(shown, right)}\n\n**Check.** Verify that *${right}* is the irregular past form of *${verb}* (no *-ed* tacked on) and matches *${timeOf(shown)}*.`,
+    `*${timeOf(shown)}* 表示过去，而 *${verb}* 是不规则动词，过去式是 *${right}*，不是加 *-ed*：${fill(shown, right)}\n\n**检验。** 确认 *${right}* 是 *${verb}* 的不规则过去式（没有生硬加 *-ed*），并且与 *${timeOf(shown)}* 时态一致。`,
   );
 };
 
 /** whyNotIrregular explains a past made with -ed or the present form of an irregular verb. */
-const whyNotIrregular = (wrong: string, right: string, shown: string, position: number): Text => {
+const whyNotIrregular = (wrong: string, _right: string, shown: string, position: number): Text => {
   const verb = bracketVerb(shown);
   return position === 0
     ? t(
-        `*${wrong}* adds *-ed*, but *${verb}* is irregular and has a past form of its own: *${right}*.`,
-        `*${wrong}* 加了 *-ed*，但 *${verb}* 是不规则动词，有自己的过去式：*${right}*。`,
+        `*${wrong}* adds *-ed*, but *${verb}* is irregular and has a past form of its own.`,
+        `*${wrong}* 加了 *-ed*，但 *${verb}* 是不规则动词，有自己专门的过去式。`,
       )
     : t(
-        `*${wrong}* is the present form. *${timeOf(shown)}* is in the past, so the verb needs its past form, *${right}*.`,
-        `*${wrong}* 是现在时的形式。*${timeOf(shown)}* 表示过去，动词要用过去式 *${right}*。`,
+        `*${wrong}* is the present form, but *${timeOf(shown)}* places the action in the past.`,
+        `*${wrong}* 是现在时的形式，可 *${timeOf(shown)}* 说明动作发生在过去。`,
       );
 };
 
@@ -712,6 +717,10 @@ const pastSimpleIrregular: TopicDef = {
     "go, went; see, saw; buy, bought. The commonest verbs have past forms of their own.",
     "go → went，see → saw，buy → bought。最常用的动词有自己的过去式。",
   ),
+  intro: t(
+    "You cannot say *I goed to the beach* or *We eated lunch*. Many of English's most frequent verbs—like *go → went* and *eat → ate*—have their own irregular past forms.",
+    "英语不能说 *I goed to the beach* 或 *We eated lunch*。许多最高频的动词（如 *go → went*、*eat → ate*）都有各自的不规则过去式。",
+  ),
   prerequisites: ["past-simple-regular"],
   encompasses: [{ topic: "past-simple-regular", weight: 0.3 }],
   xp: 20,
@@ -721,8 +730,8 @@ const pastSimpleIrregular: TopicDef = {
       "choose",
       t("Past forms of their own", "不规则的过去式"),
       t(
-        `Many common verbs do not add *-ed*. Their past forms must be learned one by one: ${irregularTable}.\n\nNot *goed* or *buyed*.`,
-        `许多常用动词不加 *-ed*，它们的过去式要一个一个地记：${irregularTable}。\n\n不要写成 *goed* 或 *buyed*。`,
+        `Many common verbs do not add *-ed*. Their past forms must be learned one by one: ${irregularTable}.\n\n> **Watch out.** Never add *-ed* to an irregular verb (*goed*, *buyed*, *catched* are all wrong), and do not leave the base form in a past sentence.`,
+        `许多常用动词不加 *-ed*，它们的过去式要一个一个地记：${irregularTable}。\n\n> **注意。** 切勿给不规则动词强加 *-ed*（*goed*、*buyed*、*catched* 都是错的），也不要在过去时间句里留着动词原形。`,
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), irregularChoiceBank, irregularWhy, whyNotIrregular),
     ),
@@ -730,8 +739,8 @@ const pastSimpleIrregular: TopicDef = {
       "spell",
       t("Writing the past form", "写出过去式"),
       t(
-        "Type the past form of the verb in brackets. Each one is irregular, so do not add *-ed*: write the past form you learned for it, like *go* → *went* or *buy* → *bought*.",
-        "写出括号里动词的过去式。它们都是不规则动词，不要加 *-ed*，要写出记住的过去式，比如 *go* → *went*、*buy* → *bought*。",
+        "Type the past form of the verb in brackets. Each one is irregular, so recall its exact spelling—for example, *go* → *went*, *buy* → *bought*, *catch* → *caught*, *write* → *wrote*.\n\n> **Watch out.** Pay close attention to tricky vowel changes and silent letters (*bought*, *caught*, *slept*, *left*) instead of guessing by sound alone.",
+        "写出括号里动词的过去式。它们都是不规则动词，需要准确拼写——例如 *go* → *went*、*buy* → *bought*、*catch* → *caught*、*write* → *wrote*。\n\n> **注意。** 留意元音变化和不发音字母（如 *bought*、*caught*、*slept*、*left*），不要只凭读音猜测拼写。",
       ),
       typedGenerator("word-form", t("Type the verb in the past.", "输入动词的过去式。"), irregularTypedBank, irregularWhy),
     ),
@@ -797,22 +806,22 @@ const didVerb = (sentence: string): readonly [verb: string, past: string] => {
 const negativeWhy = (right: string): Text => {
   const [verb, past] = didVerb(right);
   return t(
-    `To say no about the past, put *didn't* before the verb. *Didn't* already shows the past, so *${past}* goes back to *${verb}*: ${right}`,
-    `否定过去的事，在动词前加 *didn't*。*didn't* 已经表示过去，所以 *${past}* 变回原形 *${verb}*：${right}`,
+    `To say no about the past, put *didn't* before the verb. *Didn't* already shows the past, so *${past}* goes back to *${verb}*: ${right}\n\n**Check.** Verify that *didn't* carries the past tense and the verb right after it (*${verb}*) is in its plain base form.`,
+    `否定过去的事，在动词前加 *didn't*。*didn't* 已经表示过去，所以 *${past}* 变回原形 *${verb}*：${right}\n\n**检验。** 确认过去时由 *didn't* 承担，紧跟在后面的动词 *${verb}* 已恢复原形。`,
   );
 };
 
 /** whyNotNegative explains a past form after didn't, or not without did. */
 const whyNotNegative = (wrong: string, right: string, _shown: string, position: number): Text => {
-  const [verb, past] = didVerb(right);
+  const [, past] = didVerb(right);
   return position === 0
     ? t(
-        `*${wrong}* keeps *${past}* after *didn't*. The past is shown once, by *didn't*, so the verb is plain: *${verb}*.`,
-        `*${wrong}* 在 *didn't* 后面还用 *${past}*。过去只用 *didn't* 表示一次，所以动词用原形 *${verb}*。`,
+        `*${wrong}* keeps *${past}* after *didn't*. The past is shown once, by *didn't*, so the main verb must return to its plain form.`,
+        `*${wrong}* 在 *didn't* 后面还保留了过去式 *${past}*。过去只由 *didn't* 表示一次，实义动词要恢复原形。`,
       )
     : t(
-        `*${wrong}* uses *not* alone. English needs *didn't* before the verb, and then the plain verb *${verb}*.`,
-        `*${wrong}* 只用了 *not*。英语要在动词前用 *didn't*，后面接动词原形 *${verb}*。`,
+        `*${wrong}* uses *not* alone. English needs *didn't* before the verb, followed by the plain verb.`,
+        `*${wrong}* 只用了 *not*。英语否定过去要在动词前加 *didn't*，后面接动词原形。`,
       );
 };
 
@@ -820,22 +829,22 @@ const whyNotNegative = (wrong: string, right: string, _shown: string, position: 
 const questionWhy = (right: string): Text => {
   const [verb, past] = didVerb(right);
   return t(
-    `A question about the past starts with *Did*, then the subject and the plain verb; *Did* shows the past, so *${past}* goes back to *${verb}*: ${right}`,
-    `询问过去的事，用 *Did* 开头，再接主语和动词原形；*Did* 已经表示过去，所以 *${past}* 变回 *${verb}*：${right}`,
+    `A question about the past starts with *Did*, then the subject and the plain verb; *Did* shows the past, so *${past}* goes back to *${verb}*: ${right}\n\n**Check.** Check the three parts in order: *Did* at the front, the subject next, then the plain base verb *${verb}* and a question mark.`,
+    `询问过去的事，用 *Did* 开头，再接主语和动词原形；*Did* 已经表示过去，所以 *${past}* 变回 *${verb}*：${right}\n\n**检验。** 按顺序核对三处：句首 *Did*、接着主语、然后动词原形 *${verb}* 和句末问号。`,
   );
 };
 
 /** whyNotQuestion explains a past form after did, or a question with do. */
 const whyNotQuestion = (wrong: string, right: string, _shown: string, position: number): Text => {
-  const [verb, past] = didVerb(right);
+  const [, past] = didVerb(right);
   return position === 0
     ? t(
-        `*${wrong}* keeps *${past}* after *Did*. The past is shown once, by *Did*, so the verb is plain: *${verb}*.`,
-        `*${wrong}* 在 *Did* 后面还用 *${past}*。过去只用 *Did* 表示一次，所以动词用原形 *${verb}*。`,
+        `*${wrong}* keeps *${past}* after *Did*. The past is shown once, by *Did*, so the main verb must return to its plain form.`,
+        `*${wrong}* 在 *Did* 后面还保留了过去式 *${past}*。过去只由 *Did* 表示一次，实义动词要恢复原形。`,
       )
     : t(
-        `*${wrong}* starts with *Do*, which asks about the present. A question about the past starts with *Did*, and the verb is plain.`,
-        `*${wrong}* 用 *Do* 开头，问的是现在。询问过去要用 *Did* 开头，动词用原形。`,
+        `*${wrong}* starts with *Do*, which asks about the present. A question about the past starts with *Did*, and the verb stays plain.`,
+        `*${wrong}* 用 *Do* 开头，问的是现在。询问过去要用 *Did* 开头，后面的动词用原形。`,
       );
 };
 
@@ -845,6 +854,10 @@ const pastQuestionsAndNegatives: TopicDef = {
   summary: t(
     "Did you go? I didn't see it. After did and didn't, the verb goes back to its plain form.",
     "Did you go? I didn't see it. 在 did 和 didn't 后面，动词用原形。",
+  ),
+  intro: t(
+    "In *She bought a map*, the past tense sits on *bought*. When you turn it negative (*She didn't buy a map*) or ask (*Did she buy a map?*), *did* takes over the past tense and *buy* returns to its plain form.",
+    "在 *She bought a map* 里，过去时落在 *bought* 上；变成否定（*She didn't buy a map*）或疑问（*Did she buy a map?*）时，由 *did* 承担过去时，实义动词变回原形 *buy*。",
   ),
   prerequisites: ["past-simple-irregular", "present-simple-questions"],
   encompasses: [
@@ -858,8 +871,8 @@ const pastQuestionsAndNegatives: TopicDef = {
       "negative",
       t("Didn't and the plain verb", "didn't 加动词原形"),
       t(
-        "To say no about the past, put *didn't* (*did not*) before the verb. *Didn't* already shows the past, so the verb goes back to its plain form:\n\n*I went.* → *I didn't go.* Not *I didn't went* or *I not went*.",
-        "否定过去的事，在动词前加 *didn't*（*did not*）。*didn't* 已经表示过去，所以后面的动词要用原形：\n\n*I went.* → *I didn't go.* 不能说 *I didn't went*，也不能像中文“我没去”那样直接说 *I not went*。",
+        "To say no about the past, put *didn't* (*did not*) before the verb. *Didn't* already shows the past, so the verb goes back to its plain form:\n\n*I went.* → *I didn't go.*\n\n> **Watch out.** Never mark the past twice (*I didn't went* is wrong), and never use *not* without *did* (*I not went* is wrong).",
+        "否定过去的事，在动词前加 *didn't*（*did not*）。*didn't* 已经表示过去，所以后面的动词要用原形：\n\n*I went.* → *I didn't go.*\n\n> **注意。** 不要把过去标记两次（*I didn't went* 是错的），也不要像中文“我没去”那样省掉 *did* 只写 *I not went*。",
       ),
       choiceGenerator(t("Which sentence matches the notes?", "哪个句子符合笔记？"), negativeChoiceBank, negativeWhy, whyNotNegative),
     ),
@@ -867,8 +880,8 @@ const pastQuestionsAndNegatives: TopicDef = {
       "write-negative",
       t("Writing the negative", "写出否定句"),
       t(
-        "Write the sentence again with *didn't* before the verb, and change the verb back to its plain form: *I went to the zoo.* → *I didn't go to the zoo.* Keep the rest of the sentence as it is.",
-        "在动词前加 *didn't* 把句子改成否定句，并把动词变回原形：*I went to the zoo.* → *I didn't go to the zoo.* 句子的其他部分不变。",
+        "Write the sentence again with *didn't* before the verb, and change the verb back to its plain form: *I went to the zoo.* → *I didn't go to the zoo.* Keep the rest of the sentence as it is.\n\n> **Watch out.** Remember to change irregular past forms all the way back to their base form (*saw* → *see*, *bought* → *buy*, *ate* → *eat*) after *didn't*.",
+        "在动词前加 *didn't* 把句子改成否定句，并把动词变回原形：*I went to the zoo.* → *I didn't go to the zoo.* 句子的其他部分不变。\n\n> **注意。** 在 *didn't* 后面，要把不规则过去式完整还原成原形（*saw* → *see*、*bought* → *buy*、*ate* → *eat*）。",
       ),
       typedGenerator("sentence-pattern", t("Make the sentence negative.", "把句子改成否定句。"), negativeTypedBank, negativeWhy),
     ),
@@ -876,8 +889,8 @@ const pastQuestionsAndNegatives: TopicDef = {
       "question",
       t("Questions with did", "用 did 提问"),
       t(
-        "To ask about the past, start with *Did*, then the subject and the plain verb: *Did you see the fox? Did Tom win?*\n\nNot *Did you saw?*: *did* shows the past once, and that is enough.",
-        "询问过去的事，用 *Did* 开头，后面接主语和动词原形：*Did you see the fox? Did Tom win?*\n\n不能说 *Did you saw?*：过去只需要用 *did* 表示一次。",
+        "To ask about the past, start with *Did*, then the subject and the plain verb: *Did you see the fox? Did Tom win?*\n\n> **Watch out.** Do not use *Do* for a past time (*Do you saw...?* is wrong) and do not keep the past form after *Did* (*Did you saw...?* is wrong).",
+        "询问过去的事，用 *Did* 开头，后面接主语和动词原形：*Did you see the fox? Did Tom win?*\n\n> **注意。** 问过去的事不能用 *Do* 开头，也不要在 *Did* 后面留着过去式（*Did you saw...?* 是错的）。",
       ),
       choiceGenerator(t("Which question is right?", "哪个问句是对的？"), questionChoiceBank, questionWhy, whyNotQuestion),
     ),
@@ -885,8 +898,8 @@ const pastQuestionsAndNegatives: TopicDef = {
       "write-question",
       t("Writing the question", "写出问句"),
       t(
-        "Turn the sentence into a question with *Did*. Ask about the same person: *I* and *we* become *you*.",
-        "用 *Did* 把句子改成问句。问的是同一个人：*I* 和 *we* 变成 *you*。",
+        "Turn the sentence into a question with *Did* and the plain verb: *I saw a fox yesterday.* → *Did you see a fox yesterday?* Ask about the same person: *I* and *we* become *you*, and *my* becomes *your*.\n\n> **Watch out.** Do not forget to change the verb back to its plain form, switch *I/we* to *you*, and end with a question mark.",
+        "用 *Did* 加动词原形把句子改成问句：*I saw a fox yesterday.* → *Did you see a fox yesterday?* 问同一个人时，*I* 和 *we* 变成 *you*，*my* 变成 *your*。\n\n> **注意。** 别忘了把动词变回原形、把 *I/we* 换成 *you*，并在句末加上问号。",
       ),
       typedGenerator("sentence", t("Make a question.", "把句子改成疑问句。"), questionTypedBank, questionWhy),
     ),
@@ -938,8 +951,8 @@ const noteWhy = (right: string): Text => {
   const verb = plain.split(" ")[0] ?? "";
   const done = past.split(" ")[0] ?? "";
   return t(
-    `The note is about the past, so its verb goes into the past (*${verb}* → *${done}*), and the day goes at the end with *on*: ${right}`,
-    `笔记说的是过去的事，所以动词改成过去式（*${verb}* → *${done}*），星期放在句末，前面加 *on*：${right}`,
+    `The note is about the past, so its verb goes into the past (*${verb}* → *${done}*), and the day goes at the end with *on*: ${right}\n\n**Check.** Verify two things: the verb is in the past tense (*${done}*), and the day phrase sits at the end (or very start), never between the subject and the verb.`,
+    `笔记说的是过去的事，所以动词改成过去式（*${verb}* → *${done}*），星期放在句末，前面加 *on*：${right}\n\n**检验。** 核对两处：动词已改为过去式 *${done}*，且星期短语放在句末（或句首），没有插在主语和动词之间。`,
   );
 };
 
@@ -962,6 +975,10 @@ const writingSentencesInThePast: TopicDef = {
     "Turn notes about last weekend into sentences: Sam / go to the zoo / Saturday becomes Sam went to the zoo on Saturday.",
     "把关于上周末的笔记写成句子：Sam / go to the zoo / Saturday 写成 Sam went to the zoo on Saturday.",
   ),
+  intro: t(
+    "Short notes like *Ben / visit the gallery / Sunday* give the raw facts. Turning them into a clean English sentence takes two moves: put the verb in the past (*visited*) and place *on Sunday* at the end (or front).",
+    "简短笔记如 *Ben / visit the gallery / Sunday* 只给了素材。要写成地道的英语句子需要两步：把动词改成过去式（*visited*），并把 *on Sunday* 放到句末（或句首）。",
+  ),
   prerequisites: ["past-simple-irregular", "writing-sentences-about-routines"],
   encompasses: [
     { topic: "past-simple-irregular", weight: 0.4 },
@@ -974,8 +991,8 @@ const writingSentencesInThePast: TopicDef = {
       "choose",
       t("The sentence for a note", "选出符合笔记的句子"),
       t(
-        "A note gives who, what and when. In the sentence, the verb goes into the past, and the day comes at the end with *on*:\n\n*Sam / go to the zoo / Saturday* → *Sam went to the zoo on Saturday.*",
-        "笔记给出“谁、做什么、什么时候”。写成句子时，动词改成过去式，星期放在句末，前面加 *on*：\n\n*Sam / go to the zoo / Saturday* → *Sam went to the zoo on Saturday.*\n\n不要像中文“萨姆星期六去了动物园”那样把时间放在动词前。",
+        "A note gives who, what and when. In the sentence, the verb goes into the past, and the day comes at the end with *on*:\n\n*Sam / go to the zoo / Saturday* → *Sam went to the zoo on Saturday.*\n\n> **Watch out.** Never put the day between the subject and the verb (*Sam on Saturday went...* is wrong), and do not leave the verb in its plain form.",
+        "笔记给出“谁、做什么、什么时候”。写成句子时，动词改成过去式，星期放在句末，前面加 *on*：\n\n*Sam / go to the zoo / Saturday* → *Sam went to the zoo on Saturday.*\n\n> **注意。** 不要像中文“萨姆星期六去了动物园”那样把时间插在主语和动词中间，也不要把动词留在原形。",
       ),
       choiceGenerator(t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"), noteChoiceBank, noteWhy, whyNotNote),
     ),
@@ -983,8 +1000,8 @@ const writingSentencesInThePast: TopicDef = {
       "write",
       t("Writing the sentence", "写出句子"),
       t(
-        "Write a whole sentence for the note, in the past. The day can also come first: *On Saturday, Sam went to the zoo.*",
-        "根据笔记用过去时写一个完整的句子。时间也可以放在句首：*On Saturday, Sam went to the zoo.*",
+        "Write a whole sentence for the note, in the past. You can put the day at the end (*Sam went to the zoo on Saturday.*) or at the start (*On Saturday, Sam went to the zoo.*).\n\n> **Watch out.** Remember *on* (or *last*) before the day of the week, capitalize the day, and end the sentence with a period.",
+        "根据笔记用过去时写一个完整的句子。时间可以放在句末（*Sam went to the zoo on Saturday.*），也可以放在句首（*On Saturday, Sam went to the zoo.*）。\n\n> **注意。** 星期前别漏掉 *on*（或 *last*），星期首字母要大写，句末加句号。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), noteTypedBank, noteWhy),
     ),
@@ -1063,6 +1080,10 @@ const writingAboutYourWeekend = judgedTopic({
     "Write five to seven sentences about what you did last weekend, in the past simple, in the order it happened.",
     "用五到七句话写你上周末做了什么，用一般过去时，按事情发生的顺序写。",
   ),
+  intro: t(
+    "A short weekend story links past actions in time order: *On Saturday morning I rode my bike to the river. After lunch we played chess, and in the evening we cooked noodles.* Clear time words and consistent past verbs make the story easy to follow.",
+    "写周末短文要把过去发生的事按时间连起来：*On Saturday morning I rode my bike to the river. After lunch we played chess, and in the evening we cooked noodles.* 清晰的时间词加上前后一致的过去式，读起来才顺畅。",
+  ),
   prerequisites: ["writing-sentences-in-the-past", "writing-a-short-note"],
   encompasses: [{ topic: "writing-sentences-in-the-past", weight: 0.4 }],
   criteria: ["a2-past-simple", "a2-events-in-order", "a1-sentences"],
@@ -1070,8 +1091,8 @@ const writingAboutYourWeekend = judgedTopic({
     id: "weekend",
     title: t("What you did, in order", "按顺序写你做了什么"),
     explanation: t(
-      "Tell your weekend like a short story. Use the past simple for every thing you did: *I got up late. We made dumplings.*\n\nTell the events in the order they happened, and show the order with time words: *in the morning*, *after lunch*, *then*, *in the evening*, *on Sunday*. End with how the day was: *It was a good day.*",
-      "像讲一个小故事一样写你的周末。你做的每件事都用一般过去时：*I got up late. We made dumplings.*\n\n按事情发生的先后顺序写，并用时间词表示顺序：*in the morning*、*after lunch*、*then*、*in the evening*、*on Sunday*。最后说一说这一天怎么样：*It was a good day.*\n\n中文里“昨天我去公园”，动词不变；英语每个动词都要变成过去式。",
+      "Tell your weekend like a short story. Use the past simple for every thing you did: *I got up late. We made dumplings.*\n\nTell the events in the order they happened, and show the order with time words: *in the morning*, *after lunch*, *then*, *in the evening*, *on Sunday*. End with how the day was: *It was a good day.*\n\n> **Watch out.** Check every single verb in your story—do not slip back into the present tense halfway through (*then we go home* → *then we went home*).",
+      "像讲一个小故事一样写你的周末。你做的每件事都用一般过去时：*I got up late. We made dumplings.*\n\n按事情发生的先后顺序写，并用时间词表示顺序：*in the morning*、*after lunch*、*then*、*in the evening*、*on Sunday*。最后说一说这一天怎么样：*It was a good day.*\n\n> **注意。** 中文说“昨天我去公园”动词不变，但英语写故事时每个动词都要用过去式，别写到一半滑回现在时（*then we go home* → *then we went home*）。",
     ),
   },
   question: t(

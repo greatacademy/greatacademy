@@ -697,26 +697,32 @@ function formRule(right: string, shown: string): Text {
 
 /** gerundWhy explains -ing or to in the gap of shown. */
 const gerundWhy = (right: string, shown: string): Text => {
+  const [word, preposition] = formTrigger(shown);
   const rule = formRule(right, shown);
-  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  const check = preposition
+    ? t(
+        `**Check.** Look right before the gap: *${word}* ends in a preposition, and every verb after a preposition takes *-ing* (*${right}*).`,
+        `**检验。** 看空白前面：*${word}* 是（或以）介词结尾，介词后的动词一律用 *-ing*（*${right}*）。`,
+      )
+    : t(
+        `**Check.** Look at the trigger verb *${word}*: it belongs to the ${right.startsWith("to ") ? "*to* + base form" : "*-ing*"} group, confirming *${right}*.`,
+        `**检验。** 看前面的支配动词 *${word}*：它属于后接${right.startsWith("to ") ? "*to* + 动词原形" : "动词 *-ing*"} 的一类，因此选 *${right}*。`,
+      );
+  return t(`${rule.en}: ${fill(shown, right)}\n\n${check.en}`, `${rule["zh-CN"]}：${fill(shown, right)}\n\n${check["zh-CN"]}`);
 };
 
 /** whyNotGerund explains a wrong form: to where -ing belongs, -ing where to belongs, or the base form. */
-const whyNotGerund = (wrong: string, right: string, shown: string): Text => {
-  const rule = formRule(right, shown);
+const whyNotGerund = (wrong: string, _right: string, shown: string): Text => {
   const [word, preposition] = formTrigger(shown);
-  let first: Text;
   if (wrong.startsWith("to "))
-    first = preposition
-      ? t(`*to* and the base form never follow a preposition.`, "介词后面不能接 *to* 加动词原形。")
-      : t(`*${word}* does not take *to*.`, `*${word}* 后面不接 *to*。`);
-  else if (wrong.endsWith("ing")) first = t(`*${word}* does not take the *-ing* form.`, `*${word}* 后面不接 *-ing* 形式。`);
-  else
-    first = t(
-      `*${wrong}* is the base form alone, which cannot follow *${word}*.`,
-      `*${wrong}* 只是动词原形，不能直接跟在 *${word}* 后面。`,
-    );
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+    return preposition
+      ? t("*to* + base form cannot follow a preposition.", "介词后面不能接 *to* 加动词原形。")
+      : t(`*${word}* does not take *to* + base form after it.`, `*${word}* 后面不接 *to* 加动词原形。`);
+  if (wrong.endsWith("ing")) return t(`*${word}* does not take the *-ing* form after it.`, `*${word}* 后面不接 *-ing* 形式。`);
+  return t(
+    `*${wrong}* is a bare base verb, which cannot directly follow *${word}*.`,
+    `*${wrong}* 只是光杆动词原形，不能直接跟在 *${word}* 后面。`,
+  );
 };
 
 const gerundsAndInfinitives: TopicDef = {
@@ -725,6 +731,10 @@ const gerundsAndInfinitives: TopicDef = {
   summary: t(
     "I enjoy shopping, but I can't afford to buy much. Some verbs take -ing (enjoy, avoid, finish), others to (afford, decide, hope); after a preposition, use -ing.",
     "I enjoy shopping, but I can't afford to buy much. 有些动词后接 -ing（enjoy、avoid、finish），有些接 to（afford、decide、hope）；介词后用 -ing。",
+  ),
+  intro: t(
+    "Compare *We finished packing* with *We promised to call*. When a second verb follows a verb or a preposition (*good at saving*), English requires either the *-ing* form (gerund) or *to* + base form (infinitive)—never a bare verb.",
+    "比较 *We finished packing* 和 *We promised to call*。一个动词跟在另一个动词或介词（*good at saving*）后面时，英语要求用 *-ing*（动名词）或 *to* + 原形（不定式），不能直接放光杆原形。",
   ),
   prerequisites: ["verbs-followed-by-to", "like-and-love-with-ing"],
   encompasses: [
@@ -738,8 +748,8 @@ const gerundsAndInfinitives: TopicDef = {
       "choose",
       t("-ing or to after a verb", "动词后接 -ing 还是 to"),
       t(
-        "When one verb follows another, the first verb decides the form of the second:\n\n- **-ing** after *enjoy, avoid, finish, mind, suggest, keep, practice, imagine, consider, miss, give up*: *I enjoy **shopping**. Do you mind **closing** the window?*\n- **to** + base form after *afford, decide, hope, plan, agree, refuse, promise, manage, offer, learn, expect, pretend, want, need, would like*: *I can't afford **to buy** it. We decided **to stay**.*\n\nThere is no rule that tells you which: learn each verb with its form. A useful hint: many *to* verbs look forward to a future action (*hope, plan, decide, promise*).",
-        "一个动词后面接另一个动词时，由第一个动词决定第二个的形式：\n\n- *enjoy, avoid, finish, mind, suggest, keep, practice, imagine, consider, miss, give up* 后接 **-ing**：*I enjoy **shopping**. Do you mind **closing** the window?*\n- *afford, decide, hope, plan, agree, refuse, promise, manage, offer, learn, expect, pretend, want, need, would like* 后接 **to** + 原形：*I can't afford **to buy** it. We decided **to stay**.*\n\n没有规则能告诉你用哪一种，要把每个动词和它的形式一起记。一个有用的提示：许多接 *to* 的动词指向将来的动作（*hope, plan, decide, promise*）。中文“喜欢买东西”“决定留下”里动词不变形，英语的第二个动词要变成 -ing 或 to + 原形。",
+        "When one verb follows another, the first verb decides the form of the second:\n\n- **-ing** after *enjoy, avoid, finish, mind, suggest, keep, practice, imagine, consider, miss, give up*: *I enjoy **shopping**. Do you mind **closing** the window?*\n- **to** + base form after *afford, decide, hope, plan, agree, refuse, promise, manage, offer, learn, expect, pretend, want, need, would like*: *I can't afford **to buy** it. We decided **to stay**.*\n\n> **Watch out.** Do not put a bare base verb right after the first verb (*enjoy shop* or *afford buy* is wrong), and note that *suggest*, *avoid* and *mind* always take *-ing*, never *to*.",
+        "一个动词后面接另一个动词时，由第一个动词决定第二个的形式：\n\n- *enjoy, avoid, finish, mind, suggest, keep, practice, imagine, consider, miss, give up* 后接 **-ing**：*I enjoy **shopping**. Do you mind **closing** the window?*\n- *afford, decide, hope, plan, agree, refuse, promise, manage, offer, learn, expect, pretend, want, need, would like* 后接 **to** + 原形：*I can't afford **to buy** it. We decided **to stay**.*\n\n> **注意。** 不要直接跟光杆动词原形（*enjoy shop*、*afford buy* 都是错的）；特别留意 *suggest*、*avoid*、*mind* 后面只接 *-ing*，不接 *to*。",
       ),
       choiceGenerator(
         t("Choose the right form of the verb in brackets.", "选出括号中动词的正确形式。"),
@@ -752,8 +762,8 @@ const gerundsAndInfinitives: TopicDef = {
       "preposition",
       t("-ing after a preposition", "介词后用 -ing"),
       t(
-        "After a preposition (*at, of, in, about, for, by, without, before, after, instead of*), a verb is always in the **-ing** form:\n\n- *She is good **at saving** money.*\n- *Thank you **for helping** me.*\n- *He left **without saying** goodbye.*\n\nThis is also true for *to* when it is a preposition, as in *look forward to* and *be used to*: *I'm looking forward to **meeting** you*, not *to meet*.",
-        "介词（*at, of, in, about, for, by, without, before, after, instead of*）后面的动词总是用 **-ing** 形式：\n\n- *She is good **at saving** money.*\n- *Thank you **for helping** me.*\n- *He left **without saying** goodbye.*\n\n*to* 作介词时也一样，比如 *look forward to* 和 *be used to*：*I'm looking forward to **meeting** you*，不说 *to meet*。",
+        "After a preposition (*at, of, in, about, for, by, without, before, after, instead of*), a verb is always in the **-ing** form:\n\n- *She is good **at saving** money.*\n- *Thank you **for helping** me.*\n- *He left **without saying** goodbye.*\n\nThis is also true for *to* when it is a preposition, as in *look forward to* and *be used to*: *I'm looking forward to **meeting** you.*\n\n> **Watch out.** Do not be tricked by the word *to* in *look forward to* or *be used to*—here *to* is a preposition, so the verb after it takes *-ing* (*meeting*), never the base form (*meet*).",
+        "介词（*at, of, in, about, for, by, without, before, after, instead of*）后面的动词总是用 **-ing** 形式：\n\n- *She is good **at saving** money.*\n- *Thank you **for helping** me.*\n- *He left **without saying** goodbye.*\n\n*to* 作介词时也一样，比如 *look forward to* 和 *be used to*：*I'm looking forward to **meeting** you.*\n\n> **注意。** 别被 *look forward to* 和 *be used to* 里的 *to* 迷惑——这里的 *to* 是介词，后面必须接 *-ing*（*meeting*），不能接原形（*meet*）。",
       ),
       choiceGenerator(
         t("Choose the right form of the verb in brackets.", "选出括号中动词的正确形式。"),
@@ -766,8 +776,8 @@ const gerundsAndInfinitives: TopicDef = {
       "write",
       t("Writing -ing or to", "写出 -ing 或 to"),
       t(
-        "Type the right form of the verb in brackets: the **-ing** form (*shopping, making, splitting*) or ***to*** + the base form (*to buy, to stay*).\n\nRemember the spelling of -ing: drop a final *-e* (*make → making*), and double a final consonant after one short vowel (*split → splitting, get → getting*).",
-        "输入括号中动词的正确形式：**-ing** 形式（*shopping, making, splitting*）或 ***to*** + 原形（*to buy, to stay*）。\n\n注意 -ing 的拼写：去掉词尾的 *-e*（*make → making*），单个短元音后的词尾辅音要双写（*split → splitting, get → getting*）。",
+        "Type the right form of the verb in brackets: the **-ing** form (*shopping, making, splitting*) or ***to*** + the base form (*to buy, to stay*).\n\nRemember the spelling of *-ing*: drop a final *-e* (*make → making*), and double a final consonant after one short vowel (*split → splitting, get → getting*).\n\n> **Watch out.** Check the word right before the gap first (preposition or *-ing* verb vs. *to*-verb), and verify *-ing* spelling before submitting.",
+        "输入括号中动词的正确形式：**-ing** 形式（*shopping, making, splitting*）或 ***to*** + 原形（*to buy, to stay*）。\n\n注意 *-ing* 的拼写：去掉词尾的 *-e*（*make → making*），单个短元音后的词尾辅音要双写（*split → splitting, get → getting*）。\n\n> **注意。** 先看空白前面是什么词（介词/接 *-ing* 的动词，还是接 *to* 的动词），再核对 *-ing* 的拼写变化。",
       ),
       typedGenerator("word-form", t("Type the right form of the verb in brackets.", "输入括号中动词的正确形式。"), gerundTyped, gerundWhy),
     ),
@@ -846,6 +856,10 @@ const complaintLetter = judgedTopic({
     "Write a formal letter of 120 to 180 words about a product or a service: what happened, why it is a problem, and what you want done, firmly but politely.",
     "写一封 120 到 180 词的正式信，投诉一件商品或一项服务：发生了什么，为什么是个问题，你希望怎么解决，态度坚定而有礼貌。",
   ),
+  intro: t(
+    "An effective complaint letter stays calm and factual: state the order or stay upfront, lay out the exact problem and its impact, and close with a clear, polite request (*I would therefore like a full refund*). Facts persuade far better than anger.",
+    "有效的投诉信冷静而重事实：开篇交代订单或消费记录，条理清楚地说明问题和影响，最后提出明确而礼貌的诉求（*I would therefore like a full refund*）。事实远比情绪更有说服力。",
+  ),
   prerequisites: ["writing-a-formal-email"],
   encompasses: [{ topic: "writing-a-formal-email", weight: 0.3 }],
   criteria: ["b1-complaint-what-happened", "b1-complaint-why-a-problem", "b1-complaint-what-you-want", "b1-formal-register"],
@@ -853,8 +867,8 @@ const complaintLetter = judgedTopic({
     id: "complaint",
     title: t("What happened, why it matters, what you want", "发生了什么，为什么重要，你想要什么"),
     explanation: t(
-      "A letter of complaint is formal. Plan it in four short paragraphs:\n\n1. **Why you are writing**: *I am writing to complain about the laptop that I ordered on 3 March (order number 48213).*\n2. **What happened**, with facts: dates, places, prices and what you have already done: *When the parcel arrived, the screen was cracked. I telephoned your customer service twice, but...*\n3. **Why it is a problem** for you: *I cannot use it for my university work.*\n4. **What you want** them to do, clearly: *I would like you to send me a new one within a week. If this is not possible, I would like a full refund.*\n\nBe **firm but polite**: no rude words, no contractions (*I am*, not *I'm*), and formal phrases such as *I would be grateful if you could...*, *I look forward to hearing from you*. Begin with *Dear Sir or Madam* and end with *Yours faithfully*, or begin with a name and end with *Yours sincerely*.",
-      "投诉信是正式的信。分四个短段落来写：\n\n1. **写信的原因**：*I am writing to complain about the laptop that I ordered on 3 March (order number 48213).*\n2. **发生了什么**，写事实：日期、地点、价格，以及你已经做了什么：*When the parcel arrived, the screen was cracked. I telephoned your customer service twice, but...*\n3. **为什么对你是个问题**：*I cannot use it for my university work.*\n4. **你希望对方怎么做**，说清楚：*I would like you to send me a new one within a week. If this is not possible, I would like a full refund.*\n\n要**坚定而有礼貌**：不用粗鲁的话，不用缩写（写 *I am*，不写 *I'm*），用正式的说法，比如 *I would be grateful if you could...*、*I look forward to hearing from you*。以 *Dear Sir or Madam* 开头就以 *Yours faithfully* 结尾，以对方的名字开头就以 *Yours sincerely* 结尾。中文投诉常先讲情绪，英语的投诉信先讲事实，再明确提出要求。",
+      "A letter of complaint is formal. Plan it in four short paragraphs:\n\n1. **Why you are writing**: *I am writing to complain about the laptop that I ordered on 3 March (order number 48213).*\n2. **What happened**, with facts: dates, places, prices and what you have already done.\n3. **Why it is a problem** for you: *I cannot use it for my university work.*\n4. **What you want** them to do, clearly: *I would like you to send me a new one within a week. If this is not possible, I would like a full refund.*\n\n> **Watch out.** Stay firm but polite—avoid angry insults and contractions (*I am*, not *I'm*), and match the closing to the opening (*Dear Sir or Madam* → *Yours faithfully*; named recipient → *Yours sincerely*).",
+      "投诉信是正式的信。分四个短段落来写：\n\n1. **写信的原因**：*I am writing to complain about the laptop that I ordered on 3 March (order number 48213).*\n2. **发生了什么**，写事实：日期、地点、价格，以及你已经做了什么。\n3. **为什么对你是个问题**：*I cannot use it for my university work.*\n4. **你希望对方怎么做**，说清楚：*I would like you to send me a new one within a week. If this is not possible, I would like a full refund.*\n\n> **注意。** 态度坚定但保持礼貌——不用粗鲁发泄或缩写（写 *I am* 不写 *I'm*），并让落款与称呼配对（*Dear Sir or Madam* 配 *Yours faithfully*；写了人名配 *Yours sincerely*）。",
     ),
   },
   question: t(

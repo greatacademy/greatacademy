@@ -1468,6 +1468,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "adjectives-and-adverbs",
     title: t("Adjectives and Adverbs", "形容词和副词"),
     summary: t("Adjectives describe nouns; adverbs describe verbs and more.", "形容词修饰名词；副词修饰动词等。"),
+    intro: t(
+      "Compare *a quiet room* with *She closed the door quietly*: *quiet* describes the noun *room*, whereas *quietly* describes the action *closed*. Choosing between an adjective and an adverb depends on what the word describes.",
+      "对比 *a quiet room* 和 *She closed the door quietly*：*quiet* 修饰名词 *room*，而 *quietly* 修饰动作 *closed*。该用形容词还是副词，取决于它修饰的对象。",
+    ),
     prerequisites: ["nouns-and-pronouns"],
     encompasses: [],
     xp: 10,
@@ -1476,16 +1480,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "adjectives",
         t("Adjectives", "形容词"),
         t(
-          "An **adjective** describes a noun. It answers *what kind?*, *which one?* or *how many?*: a *tall* tree, *that* house, *three* bikes. It usually sits right before the noun, or after a verb such as *is*: *The tree is tall.*",
-          "**形容词**（adjective）修饰名词，回答“什么样的”“哪一个”“多少个”：a *tall* tree、*that* house、*three* bikes。它通常紧靠名词之前，或在 *is* 这类动词之后：*The tree is tall.*",
+          "An **adjective** describes a noun. It answers *what kind?*, *which one?* or *how many?*: a *tall* tree, *that* house, *three* bikes. It usually sits right before the noun, or after a verb such as *is*: *The tree is tall.*\n\n> **Watch out.** Do not pick the noun itself or a word that tells *when* or *where* an action happened—an adjective describes a noun.",
+          "**形容词**（adjective）修饰名词，回答“什么样的”“哪一个”“多少个”：a *tall* tree、*that* house、*three* bikes。它通常紧靠名词之前，或在 *is* 这类动词之后：*The tree is tall.*\n\n> **注意。**不要错选名词本身，也不要选说明动作何时何地的词——形容词是用来修饰名词的。",
         ),
         choiceGenerator(
           t("Which word is an adjective?", "哪个词是形容词？"),
           [...modifierKindBank, ...modifierKindMore, ...modifierKindCross],
           (right) =>
             t(
-              `**${right}** describes a noun, so it is an adjective. An adverb would describe a verb, an adjective or another adverb instead.`,
-              `**${right}** 修饰名词，所以是形容词。副词修饰的则是动词、形容词或其他副词。`,
+              `**${right}** describes a noun, so it is an adjective.\n\n**Check.** Find the noun next to **${right}**—**${right}** tells *what kind* of noun it is.`,
+              `**${right}** 修饰名词，所以是形容词。\n\n**检验。**找到 **${right}** 旁边的名词——**${right}** 正是在说明它是“什么样的”。`,
             ),
           notThisClass([
             "An adjective describes a noun, such as *tall* in *the tall tree*.",
@@ -1497,16 +1501,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "adverbs",
         t("Adverbs", "副词"),
         t(
-          "An **adverb** usually describes a verb. It answers *how?*, *when?*, *where?* or *how often?*: she spoke *softly*, they left *early*, we *often* walk. Many adverbs end in *-ly*, though not all: *fast*, *hard* and *soon* are adverbs too.",
-          "**副词**（adverb）通常修饰动词，回答“怎样”“何时”“何地”“多频繁”：she spoke *softly*、they left *early*、we *often* walk。许多副词以 *-ly* 结尾，但并非全部：*fast*、*hard*、*soon* 也是副词。",
+          "An **adverb** usually describes a verb. It answers *how?*, *when?*, *where?* or *how often?*: she spoke *softly*, they left *early*, we *often* walk. Many adverbs end in *-ly*, though not all: *fast*, *hard* and *soon* are adverbs too.\n\n> **Watch out.** Not every adverb ends in *-ly*—words like *early*, *often*, and *hard* are adverbs too because they tell when, how often, or how the verb happens.",
+          "**副词**（adverb）通常修饰动词，回答“怎样”“何时”“何地”“多频繁”：she spoke *softly*、they left *early*、we *often* walk。许多副词以 *-ly* 结尾，但并非全部：*fast*、*hard*、*soon* 也是副词。\n\n> **注意。**不是所有副词都以 *-ly* 结尾——*early*、*often*、*hard* 也是副词，因为它们说明动词发生的时间、频率或方式。",
         ),
         choiceGenerator(
           t("Which word is an adverb?", "哪个词是副词？"),
           [...adverbBank, ...adverbMore, ...adverbCross],
           (right) =>
             t(
-              `**${right}** tells how, when or how often the action happens, so it is an adverb.`,
-              `**${right}** 说明动作的方式、时间或频率，所以是副词。`,
+              `**${right}** tells how, when or how often the action happens, so it is an adverb.\n\n**Check.** Pair **${right}** with the verb in the sentence—it answers *how*, *when*, or *how often* that action happens.`,
+              `**${right}** 说明动作的方式、时间或频率，所以是副词。\n\n**检验。**把 **${right}** 和句中的动词配在一起——它回答的正是这个动作“怎样”“何时”或“多频繁”发生。`,
             ),
           notThisClass([
             "An adverb tells how, when or how often an action happens, such as *softly* or *often*.",
@@ -1518,16 +1522,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "choosing-the-form",
         t("Choosing Between Them", "在两者之间选择"),
         t(
-          "Ask what the word describes. If it describes a noun, use the adjective: *a slow turtle*. If it describes an action, use the adverb: *it moved slowly*. After verbs of being or sensing, such as *is*, *feels* and *smells*, use an adjective, since it describes the subject: *The soup smells good.*\n\n*Good* is an adjective, and its adverb is *well*: *a good singer sings well*.",
-          "问一问这个词修饰什么。修饰名词时用形容词：*a slow turtle*。修饰动作时用副词：*it moved slowly*。在 *is*、*feels*、*smells* 这类表示状态或感觉的动词后用形容词，因为它描述的是主语：*The soup smells good.*\n\n*Good* 是形容词，对应的副词是 *well*：*a good singer sings well*。",
+          "Ask what the word describes. If it describes a noun, use the adjective: *a slow turtle*. If it describes an action, use the adverb: *it moved slowly*. After verbs of being or sensing, such as *is*, *feels* and *smells*, use an adjective, since it describes the subject: *The soup smells good.*\n\n*Good* is an adjective, and its adverb is *well*: *a good singer sings well*.\n\n> **Watch out.** Watch linking verbs like *is*, *was*, *feels*, *looks*, and *smells*—they take an adjective describing the subject (*The soup smells delicious*), not an *-ly* adverb.",
+          "问一问这个词修饰什么。修饰名词时用形容词：*a slow turtle*。修饰动作时用副词：*it moved slowly*。在 *is*、*feels*、*smells* 这类表示状态或感觉的动词后用形容词，因为它描述的是主语：*The soup smells good.*\n\n*Good* 是形容词，对应的副词是 *well*：*a good singer sings well*。\n\n> **注意。**留意 *is*、*was*、*feels*、*looks*、*smells* 这类连系动词——它们后面接修饰主语的形容词（*The soup smells delicious*），而不是 *-ly* 副词。",
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
           [...adjOrAdvBank, ...adjOrAdvMore, ...adjOrAdvCross],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} Decide whether the word describes a noun or an action.`,
-              `${shown.replace("___", `**${right}**`)} 判断这个词修饰的是名词还是动作。`,
+              `${shown.replace("___", `**${right}**`)} Decide whether the word describes a noun or an action.\n\n**Check.** Ask what **${right}** modifies here—${right.endsWith("ly") || right === "well" ? "it tells *how* the verb's action is done, so the adverb form fits." : "it describes the person or thing itself (not an action), so the adjective form fits."}`,
+              `${shown.replace("___", `**${right}**`)} 判断这个词修饰的是名词还是动作。\n\n**检验。**问一问 **${right}** 修饰的是什么——${right.endsWith("ly") || right === "well" ? "它说明动作是“怎样”做的，所以用副词。" : "它描述的是人或事物本身，所以用形容词。"}`,
             ),
           adjOrAdv,
         ),
@@ -1538,6 +1542,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "prepositional-phrases",
     title: t("Prepositional Phrases", "介词短语"),
     summary: t("A preposition and its noun add where, when or which one.", "介词和名词一起补充地点、时间或“哪一个”。"),
+    intro: t(
+      "In *The kite above the trees dipped toward the lake*, both *above the trees* and *toward the lake* are prepositional phrases. Each begins with a preposition and ends with a noun, telling which one or where.",
+      "在 *The kite above the trees dipped toward the lake* 中，*above the trees* 和 *toward the lake* 都是介词短语。它们都以介词开头、以名词结尾，分别说明“哪一个”或“在哪里”。",
+    ),
     prerequisites: ["adjectives-and-adverbs"],
     encompasses: [],
     xp: 10,
@@ -1546,13 +1554,17 @@ export const clauseTopics: readonly TopicDef[] = [
         "finding-phrases",
         t("Finding the Phrase", "找出短语"),
         t(
-          "A **prepositional phrase** starts with a preposition, such as *in, on, under, from, with, to, after, across*, and ends with a noun or pronoun: *under the warm blanket*, *from my aunt*.\n\nThe subject of a sentence is never inside one of these phrases, which helps with finding it.",
-          "**介词短语**（prepositional phrase）以介词开头，如 *in, on, under, from, with, to, after, across*，以名词或代词结尾：*under the warm blanket*、*from my aunt*。\n\n句子的主语绝不会在这种短语之内，这有助于找主语。",
+          "A **prepositional phrase** starts with a preposition, such as *in, on, under, from, with, to, after, across*, and ends with a noun or pronoun: *under the warm blanket*, *from my aunt*.\n\nThe subject of a sentence is never inside one of these phrases, which helps with finding it.\n\n> **Watch out.** Do not stop early after a preposition or pull in the main verb—a prepositional phrase runs from the preposition to its noun or pronoun and stops there.",
+          "**介词短语**（prepositional phrase）以介词开头，如 *in, on, under, from, with, to, after, across*，以名词或代词结尾：*under the warm blanket*、*from my aunt*。\n\n句子的主语绝不会在这种短语之内，这有助于找主语。\n\n> **注意。**不要在介词后面截断，也不要把主句动词卷进来——介词短语从介词开始，到它所带的名词或代词为止。",
         ),
         choiceGenerator(
           t("Which words form a prepositional phrase?", "哪些词构成介词短语？"),
           [...phraseBank, ...phraseMore, ...phraseCross],
-          (right) => t(`**${right}** starts with a preposition and ends with a noun.`, `**${right}** 以介词开头，以名词结尾。`),
+          (right) =>
+            t(
+              `**${right}** starts with a preposition and ends with a noun.\n\n**Check.** Check both ends of **${right}**: the first word is a preposition, the last word is its object noun or pronoun, and there is no main verb inside.`,
+              `**${right}** 以介词开头，以名词结尾。\n\n**检验。**检查 **${right}** 的头尾：开头是介词，结尾是它所带的名词或代词，中间不包含主句动词。`,
+            ),
           notPhrase,
         ),
       ),
@@ -1560,16 +1572,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "what-the-phrase-describes",
         t("What the Phrase Describes", "短语修饰什么"),
         t(
-          "A prepositional phrase works like an adjective or an adverb. In *The dog in the yard barked*, the phrase tells which dog, so it describes the noun *dog*. In *We waited at the corner*, it tells where we waited, so it describes the verb *waited*.",
-          "介词短语的作用类似形容词或副词。在 *The dog in the yard barked* 中，短语说明是哪只狗，所以修饰名词 *dog*。在 *We waited at the corner* 中，它说明在哪里等，所以修饰动词 *waited*。",
+          "A prepositional phrase works like an adjective or an adverb. In *The dog in the yard barked*, the phrase tells which dog, so it describes the noun *dog*. In *We waited at the corner*, it tells where we waited, so it describes the verb *waited*.\n\n> **Watch out.** Do not pick a noun *inside* the phrase itself—ask which word *outside* the phrase it tells more about.",
+          "介词短语的作用类似形容词或副词。在 *The dog in the yard barked* 中，短语说明是哪只狗，所以修饰名词 *dog*。在 *We waited at the corner* 中，它说明在哪里等，所以修饰动词 *waited*。\n\n> **注意。**不要选短语*内部*的名词——要问它进一步说明的是短语*外面*的哪个词。",
         ),
         choiceGenerator(
           t("Which word does the phrase in bold describe?", "粗体短语修饰哪个词？"),
           [...phraseJobBank, ...phraseJobMore, ...phraseJobCross],
           (right) =>
             t(
-              `The phrase tells more about **${right}**. Ask which word the phrase answers a question about, such as which one, where or when.`,
-              `这个短语进一步说明 **${right}**。问问这个短语回答的是关于哪个词的问题，比如哪一个、在哪里或什么时候。`,
+              `The phrase tells more about **${right}**.\n\n**Check.** Pair **${right}** directly with the bold phrase—together they answer *which one*, *where*, *when*, or *how*.`,
+              `这个短语进一步说明 **${right}**。\n\n**检验。**把 **${right}** 和粗体短语直接连起来读——它们合在一起正好回答“哪一个”“在哪里”“什么时候”或“怎样”。`,
             ),
           notPhraseTarget,
         ),
@@ -1580,6 +1592,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "coordinating-conjunctions",
     title: t("Coordinating Conjunctions", "并列连词"),
     summary: t("And, but, or and so join equal ideas, each with its own meaning.", "and、but、or、so 连接地位相等的内容，各有含义。"),
+    intro: t(
+      "*The road was icy, so we drove slowly* shows a result, while *You can walk, or you can take the bus* offers a choice. Coordinating conjunctions join equal parts and signal how they connect.",
+      "*The road was icy, so we drove slowly* 表示结果，而 *You can walk, or you can take the bus* 表示选择。并列连词把地位相等的两部分连起来，并标明它们之间的关系。",
+    ),
     prerequisites: ["complete-sentences-and-fragments"],
     encompasses: [],
     xp: 10,
@@ -1588,16 +1604,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "choosing-the-conjunction",
         t("Choosing the Right Conjunction", "选择合适的连词"),
         t(
-          "**Coordinating conjunctions** join words or sentences of equal weight. Each one shows a different relationship: *and* adds, *but* contrasts, *or* offers a choice, and *so* gives a result.\n\n*It rained, so we stayed in* is a result. *It rained, but we went out* is a surprise. The word you choose changes what you say.",
-          "**并列连词**（coordinating conjunction）连接分量相等的词或句子。它们表示不同的关系：*and* 表示递进，*but* 表示转折，*or* 表示选择，*so* 表示结果。\n\n*It rained, so we stayed in* 是结果。*It rained, but we went out* 出乎意料。选择的词决定了你表达的意思。",
+          "**Coordinating conjunctions** join words or sentences of equal weight. Each one shows a different relationship: *and* adds, *but* contrasts, *or* offers a choice, and *so* gives a result.\n\n*It rained, so we stayed in* is a result. *It rained, but we went out* is a surprise. The word you choose changes what you say.\n\n> **Watch out.** Do not mix up *but* and *so*—*but* introduces a surprise or contrast, while *so* introduces an expected result.",
+          "**并列连词**（coordinating conjunction）连接分量相等的词或句子。它们表示不同的关系：*and* 表示递进，*but* 表示转折，*or* 表示选择，*so* 表示结果。\n\n*It rained, so we stayed in* 是结果。*It rained, but we went out* 出乎意料。选择的词决定了你表达的意思。\n\n> **注意。**不要混淆 *but* 和 *so*——*but* 引出意外或转折，而 *so* 引出顺理成章的结果。",
         ),
         choiceGenerator(
           t("Which word best completes the sentence?", "哪个词最适合补全句子？"),
           [...fanboysBank, ...fanboysMore, ...fanboysFrames],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} The two parts of the sentence relate in the way this word shows.`,
-              `${shown.replace("___", `**${right}**`)} 句子两部分的关系正是这个词所表示的。`,
+              `${shown.replace("___", `**${right}**`)} The two parts of the sentence relate in the way **${right}** shows.\n\n**Check.** Read the two halves without the gap—ask whether the second half adds (*and*), contrasts (*but*), offers a choice (*or*), or gives a result (*so*).`,
+              `${shown.replace("___", `**${right}**`)} 句子两部分的关系正是 **${right}** 所表示的。\n\n**检验。**把前后两半分别读一遍——看后半句是补充（*and*）、转折（*but*）、选择（*or*）还是结果（*so*）。`,
             ),
           notThisConjunction,
         ),
@@ -1606,16 +1622,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "comma-with-conjunction",
         t("The Comma Before a Conjunction", "连词前的逗号"),
         t(
-          "When a conjunction joins two complete sentences, put a comma before it: *The bell rang, and the students left.*\n\nWhen it joins only words or phrases, no comma is needed: *He washed and dried the dishes.* To test it, check whether each side could stand alone as a sentence.",
-          "连词连接两个完整句子时，在它前面加逗号：*The bell rang, and the students left.*\n\n只连接词或短语时，不需要逗号：*He washed and dried the dishes.* 检查时看两边能否各自独立成句。",
+          "When a conjunction joins two complete sentences, put a comma before it: *The bell rang, and the students left.*\n\nWhen it joins only words or phrases, no comma is needed: *He washed and dried the dishes.* To test it, check whether each side could stand alone as a sentence.\n\n> **Watch out.** Put the comma *before* the conjunction, never after it—and skip the comma altogether if the second half cannot stand alone as a sentence.",
+          "连词连接两个完整句子时，在它前面加逗号：*The bell rang, and the students left.*\n\n只连接词或短语时，不需要逗号：*He washed and dried the dishes.* 检查时看两边能否各自独立成句。\n\n> **注意。**逗号要放在连词*前面*，不能放在后面——如果后半部分不能独立成句，则不要加逗号。",
         ),
         choiceGenerator(
           t("Choose the correct sentence.", "选出正确的句子。"),
           [...conjunctionCommaBank, ...conjunctionCommaMore, ...conjunctionCommaFrames],
           (right) =>
             t(
-              `**${right}** The comma goes before the conjunction only when both sides could stand alone.`,
-              `**${right}** 只有两边都能独立成句时，才在连词前加逗号。`,
+              `**${right}** The comma goes before the conjunction only when both sides could stand alone.\n\n**Check.** Cover the conjunction and test both sides: ${right.includes(",") ? "each side has its own subject and verb, so one comma sits right before the conjunction." : "the two parts are not two full sentences, so no comma is needed."}`,
+              `**${right}** 只有两边都能独立成句时，才在连词前加逗号。\n\n**检验。**遮住连词看两边：${right.includes(",") ? "两边各有主语和动词，所以连词前加一个逗号。" : "两边不是两个完整句子，所以不加逗号。"}`,
             ),
           conjunctionComma,
         ),
@@ -1626,6 +1642,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "run-ons-and-comma-splices",
     title: t("Run-ons and Comma Splices", "连写句和逗号拼接"),
     summary: t("Recognize two sentences joined with too little between them.", "识别两个句子之间连接不当的错误。"),
+    intro: t(
+      "*The bell rang we lined up* jams two full sentences together with nothing between them, and *The bell rang, we lined up* tries to hold them with only a comma. Spotting the boundary between two complete thoughts is the first step to fixing both errors.",
+      "*The bell rang we lined up* 把两个完整句子硬挤在一起，中间什么都没有；*The bell rang, we lined up* 只用了一个逗号去撑住两句话。找出两个完整意思之间的分界点，是改正这两类错误的第一步。",
+    ),
     prerequisites: ["coordinating-conjunctions"],
     encompasses: [{ topic: "coordinating-conjunctions", weight: 0.3 }],
     xp: 8,
@@ -1634,16 +1654,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "recognizing",
         t("Recognizing the Errors", "识别错误"),
         t(
-          "Two complete sentences cannot simply run together. A **run-on** has nothing between them: *The sun set we drove home.* A **comma splice** has only a comma: *The sun set, we drove home.*\n\nBoth are correct with a period, with a semicolon, or with a comma and a conjunction: *The sun set, and we drove home.*",
-          "两个完整句子不能直接连在一起。**连写句**（run-on）中间什么都没有：*The sun set we drove home.* **逗号拼接**（comma splice）中间只有逗号：*The sun set, we drove home.*\n\n用句号、分号，或者逗号加连词都是正确的：*The sun set, and we drove home.*",
+          "Two complete sentences cannot simply run together. A **run-on** has nothing between them: *The sun set we drove home.* A **comma splice** has only a comma: *The sun set, we drove home.*\n\nBoth are correct with a period, with a semicolon, or with a comma and a conjunction: *The sun set, and we drove home.*\n\n> **Watch out.** A comma alone cannot join two complete sentences—if each side can stand on its own and there is only a comma between them, it is a comma splice.",
+          "两个完整句子不能直接连在一起。**连写句**（run-on）中间什么都没有：*The sun set we drove home.* **逗号拼接**（comma splice）中间只有逗号：*The sun set, we drove home.*\n\n用句号、分号，或者逗号加连词都是正确的：*The sun set, and we drove home.*\n\n> **注意。**单靠一个逗号不能连接两个完整句子——如果两边都能独立成句、中间却只有逗号，那就是逗号拼接。",
         ),
         choiceGenerator(
           t("What is this?", "这属于哪一种？"),
           [...runonKindBank, ...runonKindMore, ...runonKindFrames],
           (right, shown) =>
             t(
-              `**${right}**. Find where the first complete sentence ends, then look at what comes between it and the next: ${shown}`,
-              `答案是 **${right}**。找到第一个完整句子结束的地方，再看它与下一句之间有什么：${shown}`,
+              `**${right}**. Find where the first complete sentence ends, then look at what comes between it and the next: ${shown}\n\n**Check.** ${right === "Run-on" ? "Read until the first full thought ends—the next subject starts right away with no punctuation or joining word." : right === "Comma splice" ? "Check both sides of the comma—each side can stand alone as a sentence, with no conjunction after the comma." : "Check the join between the ideas—it uses proper punctuation or a comma plus a conjunction, so the sentence is correct."}`,
+              `答案是 **${right}**。找到第一个完整句子结束的地方，再看它与下一句之间有什么：${shown}\n\n**检验。**${right === "Run-on" ? "读到第一个完整意思结束处——紧接着就是新主语，中间既没有标点也没有连词。" : right === "Comma splice" ? "检查逗号两边——两边都能各自独立成句，而逗号后没有并列连词。" : "检查两部分之间的连接——用了正确的标点或“逗号加连词”，所以句子正确。"}`,
             ),
           fromTable(runonKindFeedback),
         ),
@@ -1652,16 +1672,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "finding-the-break",
         t("Finding the Break", "找到断开的地方"),
         t(
-          "To find where a run-on breaks, read from the start until you have a subject and a verb that could stand alone. The next subject begins a new sentence: in *The sun set we drove home*, *The sun set* is complete, and *we* starts the next sentence.",
-          "要找到连写句断开的地方，就从头读，直到出现一个能独立成句的主语和动词。下一个主语开始新的句子：在 *The sun set we drove home* 中，*The sun set* 已经完整，*we* 开始下一句。",
+          "To find where a run-on breaks, read from the start until you have a subject and a verb that could stand alone. The next subject begins a new sentence: in *The sun set we drove home*, *The sun set* is complete, and *we* starts the next sentence.\n\n> **Watch out.** Do not stop in the middle of the first thought, and do not include the *new* subject at the end of the first sentence.",
+          "要找到连写句断开的地方，就从头读，直到出现一个能独立成句的主语和动词。下一个主语开始新的句子：在 *The sun set we drove home* 中，*The sun set* 已经完整，*we* 开始下一句。\n\n> **注意。**不要在第一句话还没说完时断开，也不要把下一句的新主语算进第一句里。",
         ),
         choiceGenerator(
           t("This is a run-on. Which word ends the first complete sentence?", "这是一个连写句。哪个词结束了第一个完整句子？"),
           [...firstSentenceBank, ...firstSentenceMore, ...firstSentenceFrames],
           (right, shown) =>
             t(
-              `The first sentence ends at **${right}**, and a new subject follows it: ${shown}`,
-              `第一句在 **${right}** 处结束，后面跟着新的主语：${shown}`,
+              `The first sentence ends at **${right}**, and a new subject follows it: ${shown}\n\n**Check.** Place a period right after **${right}** and read both halves—each half now stands on its own as a complete sentence.`,
+              `第一句在 **${right}** 处结束，后面跟着新的主语：${shown}\n\n**检验。**在 **${right}** 后面加上句号，把前后两半分别读一遍——两半现在都能各自独立成句。`,
             ),
           notTheBreak,
         ),
@@ -1672,6 +1692,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "subordinating-conjunctions",
     title: t("Subordinating Conjunctions", "从属连词"),
     summary: t("Because, although, when and if make one idea depend on another.", "because、although、when、if 让一个意思依赖另一个。"),
+    intro: t(
+      "*Although the hill was steep, she kept running* links two clauses by showing contrast, and puts a comma right after the opening dependent clause. Subordinating conjunctions tell how one idea depends on another.",
+      "*Although the hill was steep, she kept running* 用从属连词标出转折，并在句首从句后面加上逗号。从属连词用来表明一个意思如何依赖另一个意思。",
+    ),
     prerequisites: ["coordinating-conjunctions"],
     encompasses: [],
     xp: 12,
@@ -1680,16 +1704,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "finding-subordinators",
         t("Finding the Conjunction", "找出连词"),
         t(
-          "A **subordinating conjunction** begins a clause that cannot stand alone. Common ones are *because, although, when, while, if, unless, since, before, after, until*.\n\nIn *We left because it rained*, *because it rained* depends on the main sentence, *We left*.",
-          "**从属连词**（subordinating conjunction）引导不能独立成句的从句。常见的有 *because, although, when, while, if, unless, since, before, after, until*。\n\n在 *We left because it rained* 中，*because it rained* 依赖主句 *We left*。",
+          "A **subordinating conjunction** begins a clause that cannot stand alone. Common ones are *because, although, when, while, if, unless, since, before, after, until*.\n\nIn *We left because it rained*, *because it rained* depends on the main sentence, *We left*.\n\n> **Watch out.** Do not pick a verb or noun inside the dependent clause—the subordinating conjunction is the joining word right at the start of that clause.",
+          "**从属连词**（subordinating conjunction）引导不能独立成句的从句。常见的有 *because, although, when, while, if, unless, since, before, after, until*。\n\n在 *We left because it rained* 中，*because it rained* 依赖主句 *We left*。\n\n> **注意。**不要错选从句里的动词或名词——从属连词是位于从句最开头的那个连接词。",
         ),
         choiceGenerator(
           t("Which word is the subordinating conjunction?", "哪个词是从属连词？"),
           [...subordinatorBank, ...subordinatorMore, ...subordinatorFrames],
           (right) =>
             t(
-              `**${right}** begins the clause that cannot stand alone. Cover the clause it starts, and the rest of the sentence still makes sense on its own.`,
-              `**${right}** 引导不能独立成句的从句。遮住它引导的从句，句子其余部分仍然能独立成立。`,
+              `**${right}** begins the clause that cannot stand alone.\n\n**Check.** Cover the clause starting with **${right}**—the remaining part of the sentence still makes complete sense on its own.`,
+              `**${right}** 引导不能独立成句的从句。\n\n**检验。**遮住以 **${right}** 开头的从句——句子剩下的部分依然能独立成句。`,
             ),
           notThisClass([
             "A subordinating conjunction, such as *because* or *when*, begins a clause and makes it depend on the rest.",
@@ -1701,16 +1725,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "meaning-of-subordinators",
         t("What Each One Means", "各自的含义"),
         t(
-          "Each conjunction states a relationship. *Because* and *since* give a reason. *Although* marks a surprise or a contrast. *When, while, before, after* and *until* show time. *If* and *unless* set a condition: *unless* means *if not*.",
-          "每个连词都表示一种关系。*because* 和 *since* 说明原因。*although* 表示出乎意料或对比。*when, while, before, after, until* 表示时间。*if* 和 *unless* 表示条件：*unless* 的意思是 *if not*。",
+          "Each conjunction states a relationship. *Because* and *since* give a reason. *Although* marks a surprise or a contrast. *When, while, before, after* and *until* show time. *If* and *unless* set a condition: *unless* means *if not*.\n\n> **Watch out.** Remember that *unless* means *if not*—test your choice by reading both clauses together to see whether the logic holds.",
+          "每个连词都表示一种关系。*because* 和 *since* 说明原因。*although* 表示出乎意料或对比。*when, while, before, after, until* 表示时间。*if* 和 *unless* 表示条件：*unless* 的意思是 *if not*。\n\n> **注意。**记住 *unless* 的意思是“如果不”（*if not*）——把前后两句连起来读一遍，确认逻辑通顺。",
         ),
         choiceGenerator(
           t("Which word best completes the sentence?", "哪个词最适合补全句子？"),
           [...subordinatorMeaningBank, ...subordinatorMeaningMore, ...subordinatorMeaningFrames],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} This word shows how the two ideas relate.`,
-              `${shown.replace("___", `**${right}**`)} 这个词表明两个意思之间的关系。`,
+              `${shown.replace("___", `**${right}**`)} This word shows how the two ideas relate.\n\n**Check.** Read the completed sentence aloud—**${right}** matches the exact link (reason, contrast, time, or condition) between the two clauses.`,
+              `${shown.replace("___", `**${right}**`)} 这个词表明两个意思之间的关系。\n\n**检验。**把补全后的句子读一遍——**${right}** 正好符合前后两个分句之间的逻辑关系（原因、对比、时间或条件）。`,
             ),
           notThisSubordinator,
         ),
@@ -1719,14 +1743,17 @@ export const clauseTopics: readonly TopicDef[] = [
         "comma-with-clauses",
         t("Where the Comma Goes", "逗号的位置"),
         t(
-          "When the dependent clause comes first, put a comma after it: *Because it rained, we stayed inside.* When the main sentence comes first, you usually need no comma: *We stayed inside because it rained.*",
-          "从句在前时，在它后面加逗号：*Because it rained, we stayed inside.* 主句在前时，通常不需要逗号：*We stayed inside because it rained.*",
+          "When the dependent clause comes first, put a comma after it: *Because it rained, we stayed inside.* When the main sentence comes first, you usually need no comma: *We stayed inside because it rained.*\n\n> **Watch out.** Never put a comma right after the subordinating word itself (*Because, it rained*), and leave out the comma when the main clause comes first.",
+          "从句在前时，在它后面加逗号：*Because it rained, we stayed inside.* 主句在前时，通常不需要逗号：*We stayed inside because it rained.*\n\n> **注意。**千万不要把逗号放在从属连词紧后面（*Because, it rained*），主句在前时也通常不加逗号。",
         ),
         choiceGenerator(
           t("Choose the correct sentence.", "选出正确的句子。"),
           [...clauseCommaBank, ...clauseCommaMore, ...clauseCommaFrames],
           (right) =>
-            t(`**${right}** A comma follows a dependent clause that opens the sentence.`, `**${right}** 从句放在句首时，后面要加逗号。`),
+            t(
+              `**${right}** ${right.includes(",") ? "A comma follows a dependent clause that opens the sentence." : "When the main clause comes first, no comma is needed before the dependent clause."}\n\n**Check.** Look at which clause comes first: ${right.includes(",") ? "the dependent clause opens the sentence, so one comma sits right where it ends." : "the main clause opens the sentence, so the two clauses join cleanly with no comma."}`,
+              `**${right}** ${right.includes(",") ? "从句放在句首时，后面要加逗号。" : "主句在前时，从句前面不需要加逗号。"}\n\n**检验。**看哪个分句在前：${right.includes(",") ? "从句在句首，所以紧跟从句末尾加一个逗号。" : "主句在句首，所以两个分句直接相连，不加逗号。"}`,
+            ),
           clauseComma,
         ),
       ),
@@ -1736,6 +1763,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "relative-clauses",
     title: t("Relative Clauses", "关系从句"),
     summary: t("Who, which, that and whose add information about a noun.", "who、which、that、whose 为名词补充信息。"),
+    intro: t(
+      "In *The trail that winds past the falls is steep*, the clause *that winds past the falls* zooms in on which trail we mean. Relative clauses begin with *who*, *which*, *that*, or *whose* and sit right beside the noun they describe.",
+      "在 *The trail that winds past the falls is steep* 中，*that winds past the falls* 锁定了我们说的是哪条小路。关系从句以 *who*、*which*、*that* 或 *whose* 开头，紧跟所修饰的名词。",
+    ),
     prerequisites: ["subordinating-conjunctions", "pronoun-antecedent-agreement"],
     encompasses: [{ topic: "subordinating-conjunctions", weight: 0.2 }],
     xp: 12,
@@ -1744,16 +1775,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "finding-relative-clauses",
         t("Finding the Clause", "找出从句"),
         t(
-          "A **relative clause** describes a noun and begins with a word like *who, which, that* or *whose*. In *The boy who lives next door plays drums*, the clause *who lives next door* tells which boy.\n\nThe clause sits right after the noun it describes, and the sentence still has its own main verb, here *plays*.",
-          "**关系从句**（relative clause）修饰名词，以 *who, which, that, whose* 等词开头。在 *The boy who lives next door plays drums* 中，从句 *who lives next door* 说明是哪个男孩。\n\n从句紧跟它所修饰的名词，句子仍有自己的主要动词，这里是 *plays*。",
+          "A **relative clause** describes a noun and begins with a word like *who, which, that* or *whose*. In *The boy who lives next door plays drums*, the clause *who lives next door* tells which boy.\n\nThe clause sits right after the noun it describes, and the sentence still has its own main verb, here *plays*.\n\n> **Watch out.** Stop the clause *before* the main verb of the sentence—do not pull the main verb into the relative clause.",
+          "**关系从句**（relative clause）修饰名词，以 *who, which, that, whose* 等词开头。在 *The boy who lives next door plays drums* 中，从句 *who lives next door* 说明是哪个男孩。\n\n从句紧跟它所修饰的名词，句子仍有自己的主要动词，这里是 *plays*。\n\n> **注意。** 关系从句到主句谓语动词*之前*就结束了——不要把主句的主要动词也划进关系从句里。",
         ),
         choiceGenerator(
           t("Which words form the relative clause?", "哪些词构成关系从句？"),
           [...relativeFindBank, ...moreRelativeFinds, ...relativeFindFrames],
           (right) =>
             t(
-              `**${right}** begins with a relative word and describes the noun before it.`,
-              `**${right}** 以关系词开头，修饰它前面的名词。`,
+              `**${right}** begins with a relative word and describes the noun before it.\n\n**Check.** Remove **${right}** from the sentence—the remaining words still have a complete subject and main verb.`,
+              `**${right}** 以关系词开头，修饰它前面的名词。\n\n**检验。** 把 **${right}** 从原句抽掉——剩下的部分仍有完整的主语和主要动词。`,
             ),
           notRelativeClause,
         ),
@@ -1762,16 +1793,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "choosing-relative-words",
         t("Who, Which, That or Whose", "选择 who、which、that 或 whose"),
         t(
-          "Use *who* for people and *which* or *that* for things. Use *whose* to show that something belongs to the noun: *the man whose dog ran away*.\n\nWhen the clause merely adds extra information and has commas around it, use *which* for things, not *that*: *The lake, which freezes every winter, is deep.*",
-          "人用 *who*，物用 *which* 或 *that*。表示所属用 *whose*：*the man whose dog ran away*。\n\n当从句只是补充信息、两边有逗号时，指物要用 *which*，不用 *that*：*The lake, which freezes every winter, is deep.*",
+          "Use *who* for people and *which* or *that* for things. Use *whose* to show that something belongs to the noun: *the man whose dog ran away*.\n\nWhen the clause merely adds extra information and has commas around it, use *which* for things, not *that*: *The lake, which freezes every winter, is deep.*\n\n> **Watch out.** Check two things in order: does the blank show *ownership* (*whose*), and if not, is it a person (*who*) or a thing (*which/that*, with *which* after a comma)?",
+          "人用 *who*，物用 *which* 或 *that*。表示所属用 *whose*：*the man whose dog ran away*。\n\n当从句只是补充信息、两边有逗号时，指物要用 *which*，不用 *that*：*The lake, which freezes every winter, is deep.*\n\n> **注意。** 按顺序查两项：空格后是否紧跟名词表示*所属*（用 *whose*）；如果不是，再看指人（*who*）还是指物（逗号后用 *which*）。",
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
           [...relativeWordBank, ...moreRelativeWords, ...relativeWordFrames],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} Look at what the word refers to, and whether it shows ownership.`,
-              `${shown.replace("___", `**${right}**`)} 看这个词指代什么，以及是否表示所属。`,
+              `${shown.replace("___", `**${right}**`)} Look at what the word refers to, and whether it shows ownership.\n\n**Check.** Check the noun right before **${right}** and the word right after it—**${right}** matches the referent (person, thing, or owner) and any comma rule.`,
+              `${shown.replace("___", `**${right}**`)} 看这个词指代什么，以及是否表示所属。\n\n**检验。** 看 **${right}** 前面的名词和后面的词——**${right}** 正好符合指代对象（人、物或所属）及逗号规则。`,
             ),
           notThisRelative,
         ),
@@ -1782,6 +1813,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "appositives",
     title: t("Appositives", "同位语"),
     summary: t("A noun phrase beside a noun renames it and is set off by commas.", "紧挨名词的名词短语为其换个说法，并用逗号隔开。"),
+    intro: t(
+      "In *Ada Lovelace, an early mathematician, wrote notes on computing*, the phrase *an early mathematician* sits right beside *Ada Lovelace* and renames her without needing *who was*.",
+      "在 *Ada Lovelace, an early mathematician, wrote notes on computing* 中，*an early mathematician* 紧挨人名，不用 *who was* 就直接为她换了个说法，这就是同位语。",
+    ),
     prerequisites: ["relative-clauses"],
     encompasses: [],
     xp: 8,
@@ -1790,16 +1825,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "finding-appositives",
         t("Finding the Appositive", "找出同位语"),
         t(
-          "An **appositive** is a noun phrase placed beside a noun to rename it: *Mars, the red planet, has two moons.* Here *the red planet* is another name for Mars.\n\nIt works like a relative clause with *who is* or *which is* removed, so it adds detail in fewer words.",
-          "**同位语**（appositive）是紧挨名词、为它换个说法的名词短语：*Mars, the red planet, has two moons.* 这里 *the red planet* 是火星的另一种说法。\n\n它就像去掉 *who is* 或 *which is* 的关系从句，用更少的词补充细节。",
+          "An **appositive** is a noun phrase placed beside a noun to rename it: *Mars, the red planet, has two moons.* Here *the red planet* is another name for Mars.\n\nIt works like a relative clause with *who is* or *which is* removed, so it adds detail in fewer words.\n\n> **Watch out.** An appositive is a *noun phrase* (not a verb phrase or prepositional phrase alone)—you should be able to put it in place of the noun it renames.",
+          "**同位语**（appositive）是紧挨名词、为它换个说法的名词短语：*Mars, the red planet, has two moons.* 这里 *the red planet* 是火星的另一种说法。\n\n它就像去掉 *who is* 或 *which is* 的关系从句，用更少的词补充细节。\n\n> **注意。** 同位语必须是*名词短语*（不是动词短语或单独的介词短语）——它能直接替换前面被说明的名词。",
         ),
         choiceGenerator(
           t("Which words form the appositive?", "哪些词构成同位语？"),
           [...appositiveBank, ...moreAppositiveFinds],
           (right) =>
             t(
-              `**${right}** renames the noun beside it. You could put it in place of that noun, and the sentence would still be about the same thing.`,
-              `**${right}** 为它旁边的名词换了个说法。用它替换那个名词，句子说的仍是同一样东西。`,
+              `**${right}** renames the noun beside it. You could put it in place of that noun, and the sentence would still be about the same thing.\n\n**Check.** Delete **${right}** and its commas—the main sentence stays grammatically complete, proving **${right}** is the renaming phrase.`,
+              `**${right}** 为它旁边的名词换了个说法。用它替换那个名词，句子说的仍是同一样东西。\n\n**检验。** 删去 **${right}** 及其逗号——主句依然语法完整，证实 **${right}** 正是同位语。`,
             ),
           notAppositive,
         ),
@@ -1808,8 +1843,8 @@ export const clauseTopics: readonly TopicDef[] = [
         "appositive-commas",
         t("Commas Around an Appositive", "同位语两边的逗号"),
         t(
-          "An appositive that adds extra information is set off with commas. If it falls in the middle of a sentence, it needs **two** commas, one on each side: *My aunt, a pilot, flew home.* If it ends the sentence, one comma is enough: *We thanked Ana, the bus driver.*",
-          "补充信息的同位语要用逗号隔开。如果它在句子中间，就需要**两个**逗号，两边各一个：*My aunt, a pilot, flew home.* 如果它在句末，一个逗号就够了：*We thanked Ana, the bus driver.*",
+          "An appositive that adds extra information is set off with commas. If it falls in the middle of a sentence, it needs **two** commas, one on each side: *My aunt, a pilot, flew home.* If it ends the sentence, one comma is enough: *We thanked Ana, the bus driver.*\n\n> **Watch out.** Check *both* ends of a mid-sentence appositive—a single comma on only one side breaks the sentence in half.",
+          "补充信息的同位语要用逗号隔开。如果它在句子中间，就需要**两个**逗号，两边各一个：*My aunt, a pilot, flew home.* 如果它在句末，一个逗号就够了：*We thanked Ana, the bus driver.*\n\n> **注意。** 位于句中的同位语要检查*两端*——只在一边加逗号会把主语和谓语硬生生拆开。",
         ),
         choiceGenerator(
           t("Choose the correct sentence.", "选出正确的句子。"),
@@ -1822,8 +1857,8 @@ export const clauseTopics: readonly TopicDef[] = [
           ],
           (right) =>
             t(
-              `**${right}** The commas mark off the appositive from the rest of the sentence.`,
-              `**${right}** 逗号把同位语与句子其他部分隔开。`,
+              `**${right}** The commas mark off the appositive from the rest of the sentence.\n\n**Check.** Lift out the comma-bounded phrase in **${right}**—what remains reads smoothly with no stray comma left behind.`,
+              `**${right}** 逗号把同位语与句子其他部分隔开。\n\n**检验。** 把 **${right}** 中逗号隔开的短语拿掉——剩下的句子通顺完整，没有多余的孤立逗号。`,
             ),
           appositiveComma,
         ),
@@ -1834,6 +1869,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "participial-phrases",
     title: t("Participial Phrases", "分词短语"),
     summary: t("Verb forms ending in -ing or -ed can describe a noun.", "以 -ing 或 -ed 结尾的动词形式可以修饰名词。"),
+    intro: t(
+      "In *Waving from the pier, Marco spotted the ferry*, *Waving from the pier* is a **participial phrase**: it starts with a verb form (*Waving*), acts like an adjective describing *Marco*, and leaves *spotted* as the main verb.",
+      "在 *Waving from the pier, Marco spotted the ferry* 中，*Waving from the pier* 是**分词短语**：它以动词形式（*Waving*）开头，像形容词一样修饰 *Marco*，而句子的主要动词仍是 *spotted*。",
+    ),
     prerequisites: ["relative-clauses", "simple-verb-tenses"],
     encompasses: [],
     xp: 10,
@@ -1842,16 +1881,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "finding-participles",
         t("Finding the Phrase", "找出短语"),
         t(
-          "A **participial phrase** starts with a verb form, usually ending in *-ing* or *-ed*, and describes a noun: *Laughing at the joke, Sara dropped her fork.* The phrase tells more about Sara.\n\nIt is not the main verb. The sentence still needs one, here *dropped*.",
-          "**分词短语**（participial phrase）以动词形式开头，通常以 *-ing* 或 *-ed* 结尾，用来修饰名词：*Laughing at the joke, Sara dropped her fork.* 这个短语进一步说明 Sara。\n\n它不是主要动词。句子仍然需要主要动词，这里是 *dropped*。",
+          "A **participial phrase** starts with a verb form, usually ending in *-ing* or *-ed*, and describes a noun: *Laughing at the joke, Sara dropped her fork.* The phrase tells more about Sara.\n\nIt is not the main verb. The sentence still needs one, here *dropped*.\n\n> **Watch out.** Do not pick the sentence's *main verb*—a participial phrase can be removed and the main clause still stands on its own.",
+          "**分词短语**（participial phrase）以动词形式开头，通常以 *-ing* 或 *-ed* 结尾，用来修饰名词：*Laughing at the joke, Sara dropped her fork.* 这个短语进一步说明 Sara。\n\n它不是主要动词。句子仍然需要主要动词，这里是 *dropped*。\n\n> **注意。** 不要把句子的*主要动词*当成分词短语——去掉分词短语后，主句依然能独立成立。",
         ),
         choiceGenerator(
           t("Which words form the participial phrase?", "哪些词构成分词短语？"),
           [...participleFindBank, ...moreParticipleFinds],
           (right) =>
             t(
-              `**${right}** begins with a verb form and describes a noun in the sentence.`,
-              `**${right}** 以动词形式开头，修饰句中的名词。`,
+              `**${right}** begins with a verb form and describes a noun in the sentence.\n\n**Check.** Remove **${right}** from the sentence—a complete main clause remains, and **${right}** clearly modifies its noun.`,
+              `**${right}** 以动词形式开头，修饰句中的名词。\n\n**检验。** 把 **${right}** 从句中去掉——剩下的主句依然完整，且 **${right}** 清楚地修饰了主句中的名词。`,
             ),
           notParticipialPhrase,
         ),
@@ -1860,16 +1899,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "choosing-participles",
         t("-ing or -ed", "用 -ing 还是 -ed"),
         t(
-          "Use the *-ing* form when the noun is doing the action: *Reading the map, Jo found the trail*, since Jo reads. Use the *-ed* form (or an irregular form such as *built*) when something is done to the noun: *Built in 1900, the bridge still stands*, since someone built the bridge.",
-          "名词是动作的发出者时用 *-ing* 形式：*Reading the map, Jo found the trail*，因为 Jo 在看地图。名词是动作的承受者时用 *-ed* 形式（或 *built* 这类不规则形式）：*Built in 1900, the bridge still stands*，因为桥是被人建造的。",
+          "Use the *-ing* form when the noun is doing the action: *Reading the map, Jo found the trail*, since Jo reads. Use the *-ed* form (or an irregular form such as *built*) when something is done to the noun: *Built in 1900, the bridge still stands*, since someone built the bridge.\n\n> **Watch out.** Always check the *noun right after the comma* (or right beside the phrase) and ask: is it *doing* the action (*-ing*) or *receiving* it (*-ed* / past participle)?",
+          "名词是动作的发出者时用 *-ing* 形式：*Reading the map, Jo found the trail*，因为 Jo 在看地图。名词是动作的承受者时用 *-ed* 形式（或 *built* 这类不规则形式）：*Built in 1900, the bridge still stands*，因为桥是被人建造的。\n\n> **注意。** 盯紧逗号后（或紧挨短语）的*名词*，问一句：它是*发出*动作（用 *-ing*），还是*承受*动作（用 *-ed* 或过去分词）？",
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
           [...participleFormBank, ...moreParticipleForms],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} Ask whether the noun does the action or receives it.`,
-              `${shown.replace("___", `**${right}**`)} 问一问名词是发出动作还是承受动作。`,
+              `${shown.replace("___", `**${right}**`)} Ask whether the noun does the action or receives it.\n\n**Check.** Turn the phrase into a short test clause with that noun as subject—it confirms **${right}** matches active (*-ing*) vs. passive (*-ed*/past participle) meaning.`,
+              `${shown.replace("___", `**${right}**`)} 问一问名词是发出动作还是承受动作。\n\n**检验。** 用这个名词作主语把短语还原成一个小句子——正好验证 **${right}** 符合主动（*-ing*）或被动（*-ed*/过去分词）关系。`,
             ),
           participleForm,
         ),
@@ -1880,6 +1919,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "misplaced-modifiers",
     title: t("Misplaced Modifiers", "错位修饰语"),
     summary: t("A modifier belongs right next to what it describes.", "修饰语要紧挨它所修饰的内容。"),
+    intro: t(
+      "*Covered in melted cheese, Leo ate the pizza* accidentally says Leo was covered in cheese. Keeping every descriptive phrase right beside the noun it actually modifies prevents unintended comedy and keeps sentences crystal clear.",
+      "*Covered in melted cheese, Leo ate the pizza* 无意间把句意写成了“浑身沾满奶酪的 Leo 吃了披萨”。让每个修饰短语紧挨它真正修饰的名词，就能避免歧义，让句子清晰准确。",
+    ),
     prerequisites: ["participial-phrases"],
     encompasses: [{ topic: "participial-phrases", weight: 0.3 }],
     xp: 10,
@@ -1888,16 +1931,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "spotting-problems",
         t("Spotting the Problem", "发现问题"),
         t(
-          "An opening phrase describes whatever comes right after its comma. So *Walking to school, the rain soaked my shoes* says that the rain was walking. That is a **dangling modifier**: the person actually walking is not in the sentence as the subject.\n\nCheck by asking who does the action in the opening phrase, then see whether that word follows the comma.",
-          "开头的短语修饰紧跟逗号之后的内容。所以 *Walking to school, the rain soaked my shoes* 说的是雨在走路。这就是**悬垂修饰语**（dangling modifier）：真正走路的人没有作为主语出现。\n\n检查时问一问开头短语的动作是谁做的，再看这个词是否紧跟逗号。",
+          "An opening phrase describes whatever comes right after its comma. So *Walking to school, the rain soaked my shoes* says that the rain was walking. That is a **dangling modifier**: the person actually walking is not in the sentence as the subject.\n\nCheck by asking who does the action in the opening phrase, then see whether that word follows the comma.\n\n> **Watch out.** Do not let your brain auto-correct what the writer *meant*—read literally what noun sits right next to the modifier.",
+          "开头的短语修饰紧跟逗号之后的内容。所以 *Walking to school, the rain soaked my shoes* 说的是雨在走路。这就是**悬垂修饰语**（dangling modifier）：真正走路的人没有作为主语出现。\n\n检查时问一问开头短语的动作是谁做的，再看这个词是否紧跟逗号。\n\n> **注意。** 不要靠脑补替作者“圆场”——按字面检查紧挨修饰语的名词到底能不能做那个动作。",
         ),
         choiceGenerator(
           t("Which sentence has a modifier problem?", "哪个句子的修饰语有问题？"),
           [...misplacedFindBank, ...moreMisplacedFinds],
           (right) =>
             t(
-              `**${right}** The word right after the comma cannot do the action in the opening phrase.`,
-              `**${right}** 紧跟逗号的词不可能做开头短语中的动作。`,
+              `**${right}** The word right after the comma cannot do the action in the opening phrase.\n\n**Check.** Pair the opening phrase in **${right}** directly with the subject after the comma—it creates an impossible or unintended image.`,
+              `**${right}** 紧跟逗号的词不可能做开头短语中的动作。\n\n**检验。** 把 **${right}** 的开头短语直接配给逗号后的主语——读起来会变成荒谬或偏离原意的画面。`,
             ),
           clearModifier,
         ),
@@ -1906,13 +1949,17 @@ export const clauseTopics: readonly TopicDef[] = [
         "placing-modifiers",
         t("Placing a Modifier", "放置修饰语"),
         t(
-          "Keep a modifier beside the word it describes. *She found a wallet on the sidewalk full of cash* puts the cash on the sidewalk; *She found a wallet full of cash on the sidewalk* says what was meant.\n\nFor an opening phrase, make the doer of its action the subject of the sentence.",
-          "让修饰语紧挨它所修饰的词。*She found a wallet on the sidewalk full of cash* 听起来像人行道上满是现金；*She found a wallet full of cash on the sidewalk* 才是本意。\n\n对开头的短语，要让其动作的发出者成为句子的主语。",
+          "Keep a modifier beside the word it describes. *She found a wallet on the sidewalk full of cash* puts the cash on the sidewalk; *She found a wallet full of cash on the sidewalk* says what was meant.\n\nFor an opening phrase, make the doer of its action the subject of the sentence.\n\n> **Watch out.** Check *every* descriptive phrase in the sentence, not just the beginning—a trailing phrase like *with a red hat* or *full of cash* can also attach to the wrong noun.",
+          "让修饰语紧挨它所修饰的词。*She found a wallet on the sidewalk full of cash* 听起来像人行道上满是现金；*She found a wallet full of cash on the sidewalk* 才是本意。\n\n对开头的短语，要让其动作的发出者成为句子的主语。\n\n> **注意。** 检查句中的*每一处*修饰短语，而不只看句首——放在句尾的短语如果离得太远，同样会挂错名词。",
         ),
         choiceGenerator(
           t("Which sentence is clear?", "哪个句子意思清楚？"),
           [...misplacedBank, ...moreMisplacedFixes],
-          (right) => t(`**${right}** Each modifier sits beside the word it describes.`, `**${right}** 每个修饰语都紧挨它所修饰的词。`),
+          (right) =>
+            t(
+              `**${right}** Each modifier sits beside the word it describes.\n\n**Check.** Draw an imaginary arrow from the modifier in **${right}** to the nearest noun—it points straight to the intended target with no silly mismatch.`,
+              `**${right}** 每个修饰语都紧挨它所修饰的词。\n\n**检验。** 从 **${right}** 的修饰语画一条箭头指向离它最近的名词——正好对准想要修饰的对象，没有歧义。`,
+            ),
           misplacedModifier,
         ),
       ),
@@ -1922,6 +1969,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "active-and-passive-voice",
     title: t("Active and Passive Voice", "主动语态和被动语态"),
     summary: t("Whether the subject acts or is acted on, and when each one fits.", "主语是发出动作还是承受动作，以及何时使用。"),
+    intro: t(
+      "*The pitcher threw the curveball* puts the doer in charge; *The curveball was thrown by the pitcher* puts the receiver up front. Telling **active** from **passive** voice—and knowing how to flip between them—makes your sentences sharper.",
+      "*The pitcher threw the curveball* 让动作发出者打头阵，而 *The curveball was thrown by the pitcher* 把承受者放在前面。分清**主动语态**和**被动语态**并能自如转换，能让句子更有力。",
+    ),
     prerequisites: ["subject-verb-agreement"],
     encompasses: [],
     xp: 10,
@@ -1930,8 +1981,8 @@ export const clauseTopics: readonly TopicDef[] = [
         "telling-voice",
         t("Telling Them Apart", "区分两者"),
         t(
-          "In the **active voice**, the subject does the action: *The chef cooked the meal.* In the **passive voice**, the subject receives it: *The meal was cooked by the chef.*\n\nA passive verb has a form of *be* with a past participle (*was cooked*, *will be given*), and the doer may not be named at all: *The window was broken.*",
-          "在**主动语态**（active voice）中，主语发出动作：*The chef cooked the meal.* 在**被动语态**（passive voice）中，主语承受动作：*The meal was cooked by the chef.*\n\n被动动词由 *be* 的某种形式加过去分词构成（*was cooked*、*will be given*），动作发出者甚至可以不出现：*The window was broken.*",
+          "In the **active voice**, the subject performs the action: *The chef cooked the meal.* In the **passive voice**, the subject receives the action: *The meal was cooked by the chef.*\n\nA passive verb always pairs a form of *be* (*is*, *was*, *were*, *will be*, *has been*) with a past participle (*was cooked*, *will be given*), and the doer can even be omitted: *The window was broken.*\n\n> **Watch out.** Do not call every past-tense sentence passive—*The chef cooked the meal* has no form of *be*, so it is active.",
+          "在**主动语态**中，主语发出动作：*The chef cooked the meal.* 在**被动语态**中，主语承受动作：*The meal was cooked by the chef.*\n\n被动动词总由 *be* 动词（*is*、*was*、*were*、*will be*、*has been*）加过去分词构成（*was cooked*、*will be given*），动作发出者甚至可以省略：*The window was broken.*\n\n> **注意。** 别把一般过去时当成被动语态——*The chef cooked the meal* 里没有 *be* 动词，它是主动语态。",
         ),
         choiceGenerator(
           t(
@@ -1941,8 +1992,20 @@ export const clauseTopics: readonly TopicDef[] = [
           [...voiceKindBank, ...voiceSentences.map(([sentence, active]) => voice(sentence, active)), ...voiceKindFrames],
           (right) =>
             t(
-              `**${right}**. Ask whether the subject does the action or receives it.`,
-              `答案是 **${right}**。问一问主语是发出动作还是承受动作。`,
+              `The voice is **${right}**.\n\n**Check.** Find the subject and main verb: ${
+                right === "active"
+                  ? "the subject itself performs the action, with no passive *be* + past participle"
+                  : right.includes("without")
+                    ? "the verb uses *be* + past participle so the subject receives the action, and no *by*-phrase names who did it"
+                    : "the verb uses *be* + past participle so the subject receives the action, and a *by*-phrase names the doer"
+              }.`,
+              `答案是 **${right}**。\n\n**检验。** 找到主语和谓语动词：${
+                right === "active"
+                  ? "主语亲自发出动作，没有 *be* + 过去分词的被动结构"
+                  : right.includes("without")
+                    ? "谓语是 *be* + 过去分词，主语承受动作，且句中没有 *by* 短语交代动作发出者"
+                    : "谓语是 *be* + 过去分词，主语承受动作，并由 *by* 短语点出了动作发出者"
+              }。`,
             ),
           fromTable(voiceFeedback),
         ),
@@ -1951,14 +2014,17 @@ export const clauseTopics: readonly TopicDef[] = [
         "making-active",
         t("Changing to Active", "改为主动"),
         t(
-          "To make a sentence active, move the doer, named after *by*, to the front as the subject, then use the plain form of the verb in the same tense. *The ball was kicked by Sam* becomes *Sam kicked the ball.*\n\nActive sentences are usually shorter and more direct. The passive is useful when the doer is unknown or does not matter.",
-          "改为主动时，把 *by* 后面的动作发出者移到句首作主语，再用同一时态的普通动词形式。*The ball was kicked by Sam* 变成 *Sam kicked the ball.*\n\n主动句通常更短、更直接。动作发出者未知或不重要时，被动语态很有用。",
+          "To convert a passive sentence to **active voice**, move the doer (after *by*) to the front as the subject, drop the passive *be*, and keep the **same tense**: *The ball was kicked by Sam* → *Sam kicked the ball.*\n\nActive sentences are shorter and more direct, though passive voice still fits when the doer is unknown or unimportant.\n\n> **Watch out.** Check two things after flipping: keep the original tense (*was kicked* → *kicked*, not *kicks*), and make sure the true doer—not the receiver—is now the subject.",
+          "把被动句改为**主动语态**时，把 *by* 后面的动作发出者移到句首作主语，去掉被动的 *be*，同时**保持原时态**：*The ball was kicked by Sam* → *Sam kicked the ball.*\n\n主动句更简短直接；只有在动作发出者未知或不重要时，被动语态才更合适。\n\n> **注意。** 改完后核对两点：保持原时态不变（*was kicked* → *kicked*，不能变成 *kicks*），并且确认现在作主语的是真正的动作发出者。",
         ),
         choiceGenerator(
           t("Which sentence is the active version?", "哪句是主动形式？"),
           [...toActiveBank, ...moreToActive, ...toActiveFrames],
           (right) =>
-            t(`**${right}** The doer is now the subject, and the meaning is unchanged.`, `**${right}** 动作发出者现在是主语，意思不变。`),
+            t(
+              `The active version is: **${right}** The doer now leads the sentence as subject while keeping the original tense and meaning.\n\n**Check.** Ask *Who did the action?* and *When did it happen?* In **${right}**, that exact doer is the subject and the verb tense matches the original sentence.`,
+              `主动形式是：**${right}** 动作发出者移到句首作主语，同时保留了原时态和原意。\n\n**检验。** 问两个问题：*谁发出的动作？**什么时候发生的？*在 **${right}** 中，正是动作发出者作主语，动词时态也与原句一致。`,
+            ),
           notActiveVersion,
         ),
       ),
@@ -1968,6 +2034,10 @@ export const clauseTopics: readonly TopicDef[] = [
     id: "parallel-structure",
     title: t("Parallel Structure", "平行结构"),
     summary: t("Items in a list or pair take the same grammatical form.", "并列的各项要用相同的语法形式。"),
+    intro: t(
+      "*The fox leaped the fence, crossed the road, and vanished into the pines* flows smoothly because all three verbs match in form—whereas *and vanishing into the pines* trips the reader. Matching grammatical forms across a list or pair is called **parallel structure**.",
+      "*The fox leaped the fence, crossed the road, and vanished into the pines* 读起来一气呵成，因为三个动词形式完全一致；若写成 *and vanishing into the pines* 就会绊住读者。让并列各项保持相同语法形式，就是**平行结构**。",
+    ),
     prerequisites: ["coordinating-conjunctions"],
     encompasses: [{ topic: "coordinating-conjunctions", weight: 0.2 }],
     xp: 10,
@@ -1976,13 +2046,17 @@ export const clauseTopics: readonly TopicDef[] = [
         "recognizing-parallel",
         t("Recognizing Parallel Structure", "识别平行结构"),
         t(
-          "Items joined in a list or pair should have the same form. *I like hiking, swimming and biking* is **parallel**, since all three end in *-ing*. *I like hiking, swimming and to bike* is not. Readers expect the pattern to continue, and a break makes them stumble.",
-          "列表或成对的并列项应该形式相同。*I like hiking, swimming and biking* 是**平行**（parallel）的，因为三项都以 *-ing* 结尾。*I like hiking, swimming and to bike* 则不是。读者期待模式延续，一旦打破就会读不顺。",
+          "Items joined in a list or pair should share the **same grammatical form**. *I like hiking, swimming, and biking* is **parallel** (three *-ing* forms); *I like hiking, swimming, and to bike* breaks the pattern on the last item.\n\n> **Watch out.** Check the *last* item after *and* or *or*—that is where most parallel-structure breaks hide.",
+          "并列列举或成对连接的各项应保持**相同的语法形式**。*I like hiking, swimming, and biking* 是**平行结构**（三个 *-ing* 形式）；*I like hiking, swimming, and to bike* 在最后一项打破了整齐模式。\n\n> **注意。** 重点盯住 *and* 或 *or* 后面的*最后一项*——平行结构最常在那里突然变调。",
         ),
         choiceGenerator(
           t("Which sentence is parallel?", "哪个句子是平行结构？"),
           [...parallelFindBank, ...moreParallelFinds],
-          (right) => t(`**${right}** Every item has the same grammatical form.`, `**${right}** 每一项的语法形式都相同。`),
+          (right) =>
+            t(
+              `The parallel sentence is: **${right}** Every item in the list or pair uses the exact same grammatical pattern.\n\n**Check.** Stack the joined items vertically in your head—each begins with the same form (all *-ing*, all *to* + verb, all adjectives, or all nouns), with no odd item out.`,
+              `符合平行结构的句子是：**${right}** 并列各项采用了完全一致的语法形式。\n\n**检验。** 在脑中把并列各项竖排对齐——每一项都用同一结构（全 *-ing*、全 *to* + 动词、全形容词或全名词），没有突兀的一项。`,
+            ),
           notParallel,
         ),
       ),
@@ -1990,16 +2064,16 @@ export const clauseTopics: readonly TopicDef[] = [
         "fixing-parallel",
         t("Fixing a Break in the Pattern", "修复被打破的模式"),
         t(
-          "To fix a sentence, find the form most of the items share, then rewrite the one that differs to match. In *The room was clean, bright and had space*, the first two items are adjectives, so the last must be one too: *spacious*.",
-          "修改句子时，找出多数并列项共有的形式，再改写不同的那一项。在 *The room was clean, bright and had space* 中，前两项是形容词，所以最后一项也要是形容词：*spacious*。",
+          "To fix a broken list, identify the pattern shared by the first items and rewrite the odd item to match. In *The room was clean, bright, and had space*, the first two items are adjectives (*clean*, *bright*), so the third becomes an adjective too: **spacious**.\n\n> **Watch out.** Do not pick a replacement that merely sounds smooth on its own—make sure its part of speech or verb form matches the earlier items in the list.",
+          "修复打破平行的列举时，先认出前面几项共有的语法形式，再把格格不入的那一项改写一致。在 *The room was clean, bright, and had space* 中，前两项是形容词（*clean*、*bright*），所以第三项也改成形容词 **spacious**。\n\n> **注意。** 别只看替换词单独读起来顺不顺——必须确保它的词性或动词形式与前面各项完全对齐。",
         ),
         choiceGenerator(
           t("Which words should replace the last item in the list?", "应该用哪些词替换列表中的最后一项？"),
           [...parallelFixBank, ...moreParallelFixes],
           (right) =>
             t(
-              `**${right}** matches the form of the other items. Items joined in a list or by *and* should all be the same kind of word or phrase.`,
-              `**${right}** 与其他项的形式一致。列举的或用 *and* 连接的各项，应该是同一类词或短语。`,
+              `**${right}** restores the parallel pattern by matching the grammatical form of the earlier items.\n\n**Check.** Read the first item and **${right}** side by side after the opening words of the sentence: both fit the exact same grammatical slot.`,
+              `**${right}** 与前面各项的语法形式一致，恢复了平行结构。\n\n**检验。** 把句首词分别直接连到第一项和 **${right}** 上读一遍：两项占据完全相同的语法位置。`,
             ),
           stillNotParallel,
         ),

@@ -390,8 +390,8 @@ const verbalLabels: Readonly<Record<string, Label>> = {
   gerund: {
     zh: "动名词",
     why: [
-      "It ends in *-ing* and works as a noun: it names an activity and could be replaced by *it* or *that*.",
-      "它以 *-ing* 结尾，起名词的作用：它指一种活动，可以用 *it* 或 *that* 替换。",
+      "It ends in *-ing* and works as a noun: it names an activity and could be replaced by *it* or *that*.\n\n**Check.** Swap the bold word (and its phrase) for *it*: the sentence still makes grammatical sense, proving it fills a noun slot.",
+      "它以 *-ing* 结尾，起名词的作用：它指一种活动，可以用 *it* 或 *that* 替换。\n\n**检验。** 把粗体词（及其短语）替换成 *it*：句子语法依然通顺，说明它占的是名词位置。",
     ],
     not: [
       "A gerund is an *-ing* word used as a noun, and this verbal does not name an activity in that way.",
@@ -401,8 +401,8 @@ const verbalLabels: Readonly<Record<string, Label>> = {
   participle: {
     zh: "分词",
     why: [
-      "It is an *-ing* or *-ed* form (or an irregular one such as *broken*) that describes a noun, as an adjective would.",
-      "它是 *-ing* 或 *-ed* 形式（或 *broken* 这样的不规则形式），像形容词一样描述一个名词。",
+      "It is an *-ing* or *-ed* form (or an irregular one such as *broken*) that describes a noun, as an adjective would.\n\n**Check.** Ask *which noun does it describe?* You can point directly to the noun it modifies, and replacing it with *it* would break the sentence.",
+      "它是 *-ing* 或 *-ed* 形式（或 *broken* 这样的不规则形式），像形容词一样描述一个名词。\n\n**检验。** 问一句“它在修饰哪个名词？”：你能直接指出被修饰的名词，而且把它换成 *it* 会让句子不通。",
     ],
     not: [
       "A participle describes a noun, as an adjective does, and this verbal does not describe one.",
@@ -412,8 +412,8 @@ const verbalLabels: Readonly<Record<string, Label>> = {
   infinitive: {
     zh: "不定式",
     why: [
-      "It is *to* followed by the base form of a verb, as in *to save* or *to reach*.",
-      "它是 *to* 加动词原形，如 *to save* 或 *to reach*。",
+      "It is *to* followed by the base form of a verb, as in *to save* or *to reach*.\n\n**Check.** Confirm the two-word form: *to* + base verb (never *to* + a noun), doing the job of a noun, adjective, or adverb.",
+      "它是 *to* 加动词原形，如 *to save* 或 *to reach*。\n\n**检验。** 核对结构：它是 *to* + 动词原形（不是 *to* + 名词），在句中充当名词、形容词或副词成分。",
     ],
     not: [
       "An infinitive is *to* with the base form of a verb, and this verbal is not.",
@@ -426,8 +426,8 @@ const ingLabels: Readonly<Record<string, Label>> = {
   "main verb": {
     zh: "谓语动词的一部分",
     why: [
-      "The *-ing* word follows a helping verb such as *is* or *was* and is part of the sentence's main verb, telling what the subject is doing.",
-      "这个 *-ing* 词跟在 *is* 或 *was* 这样的助动词后面，是句子谓语的一部分，说明主语正在做什么。",
+      "The *-ing* word follows a helping verb such as *is* or *was* and is part of the sentence's main verb, telling what the subject is doing.\n\n**Check.** Look right before the bold word: a form of *be* (*is*, *are*, *was*, *were*) teams up with it to form the progressive predicate.",
+      "这个 *-ing* 词跟在 *is* 或 *was* 这样的助动词后面，是句子谓语的一部分，说明主语正在做什么。\n\n**检验。** 看粗体词紧前面：有 *is*、*are*、*was* 或 *were* 与它一起构成进行时谓语。",
     ],
     not: [
       "No helping verb such as *is* or *was* comes before it, so it is not part of the main verb.",
@@ -437,16 +437,16 @@ const ingLabels: Readonly<Record<string, Label>> = {
   gerund: {
     zh: "动名词",
     why: [
-      "The *-ing* word names an activity and does a noun's job, such as the subject or the object of the sentence.",
-      "这个 *-ing* 词指一种活动，起名词的作用，例如作句子的主语或宾语。",
+      "The *-ing* word names an activity and does a noun's job, such as the subject or the object of the sentence.\n\n**Check.** Replace the *-ing* phrase with *it* or *that*: there is no helping verb before it, and the noun slot stays grammatical.",
+      "这个 *-ing* 词指一种活动，起名词的作用，例如作句子的主语或宾语。\n\n**检验。** 把这个 *-ing* 短语换成 *it* 或 *that*：前面没有助动词，且名词位置依然通顺。",
     ],
     not: ["The *-ing* word does not name an activity as a noun would here.", "这里的 *-ing* 词没有像名词那样指一种活动。"],
   },
   participle: {
     zh: "分词",
     why: [
-      "The *-ing* word describes a noun, telling which one or what it is like, as an adjective would.",
-      "这个 *-ing* 词描述一个名词，说明是哪一个或是什么样的，就像形容词一样。",
+      "The *-ing* word describes a noun, telling which one or what it is like, as an adjective would.\n\n**Check.** Drop the *-ing* word or swap it for an ordinary adjective like *loud* or *tired*: the sentence still has its own main verb, showing this *-ing* word only modifies a noun.",
+      "这个 *-ing* 词描述一个名词，说明是哪一个或是什么样的，就像形容词一样。\n\n**检验。** 去掉这个 *-ing* 词或换成普通形容词（如 *loud*）：句子仍有独立谓语，说明它只是修饰名词的分词。",
     ],
     not: ["The *-ing* word does not describe a noun here.", "这里的 *-ing* 词没有描述名词。"],
   },
@@ -459,14 +459,18 @@ const verbals = topic("grammar", {
     "Gerunds, participles and infinitives are verb forms that do the work of nouns, adjectives and adverbs.",
     "动名词、分词和不定式是起名词、形容词和副词作用的动词形式。",
   ],
+  intro: [
+    "The same word *running* can act as a main verb (*Water was running*), a noun (*Running builds stamina*), or an adjective (*running water*). Identifying **verbals** means checking the exact job a verb form is doing in its sentence.",
+    "同一个词 *running* 既能作谓语（*Water was running*），也能作名词（*Running builds stamina*），还能作形容词（*running water*）。辨认**非谓语动词**的关键，是看这个动词形式在句中到底承担什么功能。",
+  ],
   after: ["gerund-and-infinitive-phrases"],
   points: [
     label(
       "naming-the-verbal",
       ["Naming the Verbal", "辨认非谓语形式"],
       [
-        "A **verbal** is made from a verb but does not act as the sentence's verb. A **gerund** ends in *-ing* and works as a noun: ***Sailing** was her dream.* A **participle** ends in *-ing*, *-ed* or an irregular ending and works as an adjective: *the **sinking** ship*, *the **frozen** river*. An **infinitive** is *to* with a verb: *She hoped **to reach** the island.*\n\nAsk what job the word does: naming an activity (gerund), describing a noun (participle) or *to* plus a verb (infinitive).",
-        "**非谓语动词**由动词变来，但不充当句子的谓语。**动名词**以 *-ing* 结尾，起名词作用：***Sailing** was her dream.* **分词**以 *-ing*、*-ed* 或不规则形式结尾，起形容词作用：*the **sinking** ship*、*the **frozen** river*。**不定式**是 *to* 加动词：*She hoped **to reach** the island.*\n\n问问这个词起什么作用：指一种活动（动名词），描述名词（分词），还是 *to* 加动词（不定式）。",
+        "A **verbal** is made from a verb but does not act as the sentence's verb. A **gerund** ends in *-ing* and works as a noun: ***Sailing** was her dream.* A **participle** ends in *-ing*, *-ed* or an irregular ending and works as an adjective: *the **sinking** ship*, *the **frozen** river*. An **infinitive** is *to* with a verb: *She hoped **to reach** the island.*\n\nAsk what job the word does: naming an activity (gerund), describing a noun (participle) or *to* plus a verb (infinitive).\n\n> **Watch out.** Do not label every *-ing* word a gerund—if it sits before a noun or opens a phrase describing the subject (*Shaking with fear, the boy...*), it is a **participle**, not a gerund.",
+        "**非谓语动词**由动词变来，但不充当句子的谓语。**动名词**以 *-ing* 结尾，起名词作用：***Sailing** was her dream.* **分词**以 *-ing*、*-ed* 或不规则形式结尾，起形容词作用：*the **sinking** ship*、*the **frozen** river*。**不定式**是 *to* 加动词：*She hoped **to reach** the island.*\n\n问问这个词起什么作用：指一种活动（动名词），描述名词（分词），还是 *to* 加动词（不定式）。\n\n> **注意。** 不要把所有 *-ing* 词都当成动名词——如果它放在名词前，或引导短语修饰主语（如 *Shaking with fear, the boy...*），它就是**分词**而不是动名词。",
       ],
       ["What kind of verbal is the word in bold?", "粗体的词是哪种非谓语形式？"],
       `
@@ -508,8 +512,8 @@ ${namingLines}
       "verb-or-verbal",
       ["Verb or Verbal?", "谓语还是非谓语？"],
       [
-        "Not every *-ing* word is a verbal. After a helping verb such as *is*, *was* or *were*, it is part of the main verb: *The crew **was rowing** toward shore.* Without a helping verb, it is a verbal: a gerund if it names the activity (***Rowing** took all night*), a participle if it describes a noun (*the **rowing** sailors*).",
-        "并不是每个 *-ing* 词都是非谓语形式。在 *is*、*was*、*were* 这样的助动词后面，它是谓语的一部分：*The crew **was rowing** toward shore.* 没有助动词时，它是非谓语形式：指活动时是动名词（***Rowing** took all night*），描述名词时是分词（*the **rowing** sailors*）。",
+        "Not every *-ing* word is a verbal. After a helping verb such as *is*, *was* or *were*, it is part of the main verb: *The crew **was rowing** toward shore.* Without a helping verb, it is a verbal: a gerund if it names the activity (***Rowing** took all night*), a participle if it describes a noun (*the **rowing** sailors*).\n\n> **Watch out.** Check for a helping verb (*is*, *are*, *was*, *were*) immediately before the *-ing* word first—without one, an *-ing* word alone can never be the main verb of a clause.",
+        "并不是每个 *-ing* 词都是非谓语形式。在 *is*、*was*、*were* 这样的助动词后面，它是谓语的一部分：*The crew **was rowing** toward shore.* 没有助动词时，它是非谓语形式：指活动时是动名词（***Rowing** took all night*），描述名词时是分词（*the **rowing** sailors*）。\n\n> **注意。** 先看 *-ing* 词紧前面有没有助动词（*is*、*are*、*was*、*were*）——没有助动词时，单个 *-ing* 词绝不能充当句子的谓语动词。",
       ],
       ["What is the *-ing* word in bold doing?", "粗体的 *-ing* 词在句中起什么作用？"],
       `
@@ -596,8 +600,8 @@ const commaLabels: Readonly<Record<string, Label>> = {
   "comma after the opening clause": {
     zh: "开头的从句后加逗号",
     why: [
-      "The sentence opens with a dependent clause, so a comma marks where it ends and the main clause begins.",
-      "句子以从属从句开头，所以用逗号标出它在哪里结束、主句从哪里开始。",
+      "The sentence opens with a dependent clause, so a comma marks where it ends and the main clause begins.\n\n**Check.** Spot the subordinating conjunction at the very start of the sentence: a comma must separate that opening clause from the main subject.",
+      "句子以从属从句开头，所以用逗号标出它在哪里结束、主句从哪里开始。\n\n**检验。** 看句首的从属连词：逗号必须把开头的从句和后面的主句主语隔开。",
     ],
     not: [
       "This sentence does not open with a dependent clause, so there is no opening clause to set off.",
@@ -607,8 +611,8 @@ const commaLabels: Readonly<Record<string, Label>> = {
   "no comma: the clause comes last": {
     zh: "不加逗号：从句在句末",
     why: [
-      "The dependent clause comes after the main clause and simply finishes it, so no comma is needed.",
-      "从属从句在主句后面，只是把主句补充完整，所以不需要逗号。",
+      "The dependent clause comes after the main clause and simply finishes it, so no comma is needed.\n\n**Check.** Verify both conditions: the subordinating conjunction sits in the middle (not the start), and it is not a contrast word like *although* or *whereas*.",
+      "从属从句在主句后面，只是把主句补充完整，所以不需要逗号。\n\n**检验。** 核对两条：从属连词出现在句中而非句首，且它不是 *although*、*whereas* 这类对比连词。",
     ],
     not: [
       "Here the clause either opens the sentence or sets up a contrast, so it does need a comma.",
@@ -618,8 +622,8 @@ const commaLabels: Readonly<Record<string, Label>> = {
   "comma before a contrast": {
     zh: "对比前加逗号",
     why: [
-      "The clause at the end begins with *although*, *though*, *even though* or *whereas* and turns against the main clause, so a comma comes before it.",
-      "句末的从句以 *although*、*though*、*even though* 或 *whereas* 开头，与主句形成对比，所以前面要加逗号。",
+      "The clause at the end begins with *although*, *though*, *even though* or *whereas* and turns against the main clause, so a comma comes before it.\n\n**Check.** Spot the contrast conjunction (*although*, *though*, *even though*, or *whereas*) introducing the second half: even at the end of a sentence, a contrast clause takes a comma.",
+      "句末的从句以 *although*、*though*、*even though* 或 *whereas* 开头，与主句形成对比，所以前面要加逗号。\n\n**检验。** 认出引出后半句的对比连词（*although*、*though*、*even though* 或 *whereas*）：即使位于句末，对比从句前也应加逗号。",
     ],
     not: [
       "The clause at the end does not set up a contrast with *although*, *though* or *whereas*.",
@@ -635,20 +639,24 @@ const complexCommas = topic("grammar", {
     "A dependent clause that opens a sentence takes a comma; one that ends it usually does not, unless it sets up a contrast.",
     "位于句首的从属从句后面要加逗号；位于句末的通常不加，除非它引出对比。",
   ],
+  intro: [
+    "Compare *Before the bell rang, the hall was quiet* with *The hall was quiet before the bell rang.* Flipping the dependent clause from front to back removes the comma—unless the closing clause introduces a sharp contrast with *although* or *whereas*.",
+    "对比 *Before the bell rang, the hall was quiet* 和 *The hall was quiet before the bell rang.* 从属从句从句首移到句末，逗号就跟着消失——除非句末从句用 *although* 或 *whereas* 引出对比。",
+  ],
   after: ["simple-compound-and-complex-sentences", "commas-after-introductions"],
   points: [
     choose(
       "where-the-comma-goes",
       ["Where the Comma Goes", "逗号的位置"],
       [
-        "A **complex sentence** joins a main clause and a dependent clause that begins with a word such as *when*, *because*, *if* or *until*. When the dependent clause comes first, put a comma after it: *When the engine started, the room shook.* When it comes last, leave the comma out: *The room shook when the engine started.* Never put the comma right after the joining word: it belongs to its own clause.",
-        "**复合句**由一个主句和一个以 *when*、*because*、*if* 或 *until* 等词开头的从属从句组成。从属从句在前时，在它后面加逗号：*When the engine started, the room shook.* 从属从句在后时，不加逗号：*The room shook when the engine started.* 不要把逗号紧放在连接词后面，连接词属于它自己的从句。",
+        "A **complex sentence** joins a main clause and a dependent clause that begins with a word such as *when*, *because*, *if* or *until*. When the dependent clause comes first, put a comma after it: *When the engine started, the room shook.* When it comes last, leave the comma out: *The room shook when the engine started.* Never put the comma right after the joining word: it belongs to its own clause.\n\n> **Watch out.** Never trap the subordinating conjunction behind a comma (*When, the engine started...*)—if a comma is needed, it goes at the *end* of the entire opening clause.",
+        "**复合句**由一个主句和一个以 *when*、*because*、*if* 或 *until* 等词开头的从属从句组成。从属从句在前时，在它后面加逗号：*When the engine started, the room shook.* 从属从句在后时，不加逗号：*The room shook when the engine started.* 不要把逗号紧放在连接词后面，连接词属于它自己的从句。\n\n> **注意。** 绝不要把逗号紧贴在从属连词后面（如 *When, the engine started...*）——需要逗号时，它一定落在整个开头从句的*末尾*。",
       ],
       ["Choose the correctly punctuated sentence.", "选出标点正确的句子。"],
       complexItems,
       (right) => [
-        `**${right}** puts the comma where the clauses meet only when the dependent clause comes first.`,
-        `**${right}** 只在从属从句在前时，才在两个从句交界处加逗号。`,
+        `**${right}** puts the comma where the clauses meet only when the dependent clause comes first.\n\n**Check.** Locate the subordinating conjunction: when it opens the sentence, a single comma sits right before the main clause; when it comes second, no comma splits the sentence.`,
+        `**${right}** 只在从属从句在前时，才在两个从句交界处加逗号。\n\n**检验。** 定位从属连词：在句首时，逗号落在主句开始之前；在句中时，中间不加逗号。`,
       ],
       [
         [
@@ -665,8 +673,8 @@ const complexCommas = topic("grammar", {
       "does-it-need-a-comma",
       ["Does It Need a Comma?", "需要逗号吗？"],
       [
-        "Three cases cover most complex sentences. A dependent clause that **opens** the sentence takes a comma after it. One that **ends** the sentence takes no comma: *The machine stopped because the belt snapped.* The exception is a clause of **contrast** with *although*, *though*, *even though* or *whereas*, which takes a comma even at the end: *The machine was slow, although it never broke down.*",
-        "大多数复合句可以分三种情况。**在句首**的从属从句后面加逗号。**在句末**的不加逗号：*The machine stopped because the belt snapped.* 例外是用 *although*、*though*、*even though* 或 *whereas* 引出的**对比**从句，即使在句末也要加逗号：*The machine was slow, although it never broke down.*",
+        "Three cases cover most complex sentences. A dependent clause that **opens** the sentence takes a comma after it. One that **ends** the sentence takes no comma: *The machine stopped because the belt snapped.* The exception is a clause of **contrast** with *although*, *though*, *even though* or *whereas*, which takes a comma even at the end: *The machine was slow, although it never broke down.*\n\n> **Watch out.** Do not blindly say 'no comma' for every closing clause—check first whether it starts with a contrast word (*although*, *though*, *even though*, *whereas*).",
+        "大多数复合句可以分三种情况。**在句首**的从属从句后面加逗号。**在句末**的不加逗号：*The machine stopped because the belt snapped.* 例外是用 *although*、*though*、*even though* 或 *whereas* 引出的**对比**从句，即使在句末也要加逗号：*The machine was slow, although it never broke down.*\n\n> **注意。** 不要一见从句在句末就一律不加逗号——先看它是不是以对比连词（*although*、*though*、*even though*、*whereas*）开头。",
       ],
       ["The commas have been taken out. Which rule applies to this sentence?", "句子里的逗号已被去掉。哪条规则适用于这个句子？"],
       `
@@ -711,40 +719,40 @@ const relationLabels: Readonly<Record<string, Label>> = {
   cause: {
     zh: "原因",
     why: [
-      "The joining word gives the reason the main clause happens, as *because* and *since* do.",
-      "连接词给出主句发生的原因，就像 *because* 和 *since* 那样。",
+      "The joining word gives the reason the main clause happens, as *because* and *since* do.\n\n**Check.** Try replacing the bold word with *for the reason that*: the sentence keeps its exact meaning, confirming a cause relationship.",
+      "连接词给出主句发生的原因，就像 *because* 和 *since* 那样。\n\n**检验。** 把粗体词换成“因为”再读一遍：句子意思不变，证实它表示原因。",
     ],
     not: ["The joining word does not give a reason here.", "这里的连接词没有给出原因。"],
   },
   contrast: {
     zh: "对比",
     why: [
-      "The joining word sets two ideas against each other, as *although*, *even though* and *whereas* do.",
-      "连接词把两个意思对立起来，就像 *although*、*even though* 和 *whereas* 那样。",
+      "The joining word sets two ideas against each other, as *although*, *even though* and *whereas* do.\n\n**Check.** Notice that the two clauses pull in opposite directions or surprise each other—a contrast, not a cause or condition.",
+      "连接词把两个意思对立起来，就像 *although*、*even though* 和 *whereas* 那样。\n\n**检验。** 两个分句一正一反、出人意料，呈现的是对比关系，而不是原因或条件。",
     ],
     not: ["The joining word does not set the two ideas against each other.", "连接词没有把两个意思对立起来。"],
   },
   condition: {
     zh: "条件",
     why: [
-      "The joining word says what must be true for the main clause to happen, as *if*, *unless* and *provided that* do.",
-      "连接词说明主句发生必须满足的条件，就像 *if*、*unless* 和 *provided that* 那样。",
+      "The joining word says what must be true for the main clause to happen, as *if*, *unless* and *provided that* do.\n\n**Check.** Ask *does the main clause depend on this requirement holding true?* Yes—it sets a condition.",
+      "连接词说明主句发生必须满足的条件，就像 *if*、*unless* 和 *provided that* 那样。\n\n**检验。** 问一句“主句成立是不是取决于这个前提？”：正是如此，它设定了条件。",
     ],
     not: ["The joining word does not set a condition.", "连接词没有设定条件。"],
   },
   time: {
     zh: "时间",
     why: [
-      "The joining word says when the main clause happens, as *when*, *until* and *after* do.",
-      "连接词说明主句何时发生，就像 *when*、*until* 和 *after* 那样。",
+      "The joining word says when the main clause happens, as *when*, *until* and *after* do.\n\n**Check.** Ask *when does the main event happen?* The dependent clause places it on a timeline rather than giving a reason or goal.",
+      "连接词说明主句何时发生，就像 *when*、*until* 和 *after* 那样。\n\n**检验。** 问一句“主句的事情在什么时候发生？”：从句给出的是时间节点，而非原因或目的。",
     ],
     not: ["The joining word does not say when something happens.", "连接词没有说明事情何时发生。"],
   },
   purpose: {
     zh: "目的",
     why: [
-      "The joining word says what the main clause is for, as *so that* and *in order that* do.",
-      "连接词说明主句的目的，就像 *so that* 和 *in order that* 那样。",
+      "The joining word says what the main clause is for, as *so that* and *in order that* do.\n\n**Check.** Ask *for what goal was the action done?* The dependent clause states the intended aim (often with *could* or *would*).",
+      "连接词说明主句的目的，就像 *so that* 和 *in order that* 那样。\n\n**检验。** 问一句“做这件事是为了什么目标？”：从句说明的是预期目的（常带 *could* 或 *would*）。",
     ],
     not: ["The joining word does not say what something is for.", "连接词没有说明目的。"],
   },
@@ -757,14 +765,18 @@ const conjunctions = topic("grammar", {
     "The word that joins a dependent clause tells how the two ideas relate: by cause, contrast, condition, time or purpose.",
     "引出从属从句的词说明两个意思之间的关系：原因、对比、条件、时间或目的。",
   ],
+  intro: [
+    "Swap one word in *We hiked on although the trail was muddy* to *because*, and suddenly mud sounds like the reason you kept going. Choosing the right **subordinating conjunction** tells the reader whether two clauses show cause, contrast, condition, time, or purpose.",
+    "把 *We hiked on although the trail was muddy* 里的一个词换成 *because*，泥泞就突然成了继续徒步的理由。选对**从属连词**才能准确告诉读者两个分句是因果、对比、条件、时间还是目的关系。",
+  ],
   after: ["simple-compound-and-complex-sentences"],
   points: [
     label(
       "what-the-conjunction-shows",
       ["What the Conjunction Shows", "连词表示的关系"],
       [
-        "A **subordinating conjunction** joins a dependent clause to a main clause and tells how they relate. **Cause**: *because*, *since*, *as*. **Contrast**: *although*, *even though*, *whereas*. **Condition**: *if*, *unless*, *provided that*. **Time**: *when*, *until*, *after*, *once*. **Purpose**: *so that*, *in order that*. Some words have two jobs: *since* can mean *because* or *from the time that*, so read the whole sentence.",
-        "**从属连词**把从属从句连接到主句上，并说明两者的关系。**原因**：*because*、*since*、*as*。**对比**：*although*、*even though*、*whereas*。**条件**：*if*、*unless*、*provided that*。**时间**：*when*、*until*、*after*、*once*。**目的**：*so that*、*in order that*。有些词身兼两职：*since* 可以表示 *because*，也可以表示“自从”，所以要读完整个句子。",
+        "A **subordinating conjunction** joins a dependent clause to a main clause and tells how they relate. **Cause**: *because*, *since*, *as*. **Contrast**: *although*, *even though*, *whereas*. **Condition**: *if*, *unless*, *provided that*. **Time**: *when*, *until*, *after*, *once*. **Purpose**: *so that*, *in order that*. Some words have two jobs: *since* can mean *because* or *from the time that*, so read the whole sentence.\n\n> **Watch out.** Watch double-duty words like *since* and *as*—test whether *since* can be replaced by *because* (cause) or *ever since the time when* (time) before choosing.",
+        "**从属连词**把从属从句连接到主句上，并说明两者的关系。**原因**：*because*、*since*、*as*。**对比**：*although*、*even though*、*whereas*。**条件**：*if*、*unless*、*provided that*。**时间**：*when*、*until*、*after*、*once*。**目的**：*so that*、*in order that*。有些词身兼两职：*since* 可以表示 *because*，也可以表示“自从”，所以要读完整个句子。\n\n> **注意。** 留心一词多用的 *since* 和 *as*——先试着把 *since* 换成 *because*（原因）或“自从……以来”（时间），再决定它表示哪种关系。",
       ],
       ["What relation does the conjunction in bold show?", "粗体的连词表示什么关系？"],
       `
@@ -806,8 +818,8 @@ ${showsLines}
       "the-conjunction-that-fits",
       ["The Conjunction That Fits", "合适的连词"],
       [
-        "To choose a conjunction, first decide how the two ideas relate. Does one cause the other? Then *because*. Does one go against what you would expect from the other? Then *although*. Must one be true for the other to happen? Then *if* or *unless*. A wrong conjunction makes the sentence say something false: *Because the work was dangerous, children were hired* claims the danger was the reason.",
-        "选连词时，先判断两个意思之间是什么关系。一个导致另一个吗？那就用 *because*。一个与从另一个推出的预期相反吗？那就用 *although*。一个必须成立另一个才会发生吗？那就用 *if* 或 *unless*。用错连词会让句子说出不真实的话：*Because the work was dangerous, children were hired* 等于说危险是雇用童工的原因。",
+        "To choose a conjunction, first decide how the two ideas relate. Does one cause the other? Then *because*. Does one go against what you would expect from the other? Then *although*. Must one be true for the other to happen? Then *if* or *unless*. A wrong conjunction makes the sentence say something false: *Because the work was dangerous, children were hired* claims the danger was the reason.\n\n> **Watch out.** Do not pick a conjunction just because it sounds smooth—read both clauses together and check whether the logic is cause, contrast, condition, time, or purpose.",
+        "选连词时，先判断两个意思之间是什么关系。一个导致另一个吗？那就用 *because*。一个与从另一个推出的预期相反吗？那就用 *although*。一个必须成立另一个才会发生吗？那就用 *if* 或 *unless*。用错连词会让句子说出不真实的话：*Because the work was dangerous, children were hired* 等于说危险是雇用童工的原因。\n\n> **注意。** 不要只凭顺口选连词——把两个分句合起来读，先判断它们之间到底是原因、对比、条件、时间还是目的。",
       ],
       ["Which conjunction makes the sentence say what is meant?", "哪个连词能让句子表达出应有的意思？"],
       `
@@ -844,8 +856,8 @@ ${fitLines}
         The engine will not start ___ the crank is turned.|unless|whereas|so that
       `,
       (right) => [
-        `**${right}** gives the relation the two ideas really have, so the sentence says what is meant.`,
-        `**${right}** 表达了两个意思之间真正的关系，所以句子说出了应有的意思。`,
+        `**${right}** gives the relation the two ideas really have, so the sentence says what is meant.\n\n**Check.** Plug **${right}** into the blank and test the logic between the two clauses: cause, contrast, condition, time, or purpose aligns with real-world sense, whereas the other conjunctions twist the logic.`,
+        `**${right}** 表达了两个意思之间真正的关系，所以句子说出了应有的意思。\n\n**检验。** 把 **${right}** 填进空格检验两句之间的逻辑：因果、对比、条件、时间或目的完全合乎事理，而其他选项都会把逻辑说反。`,
       ],
       [
         [
@@ -865,24 +877,24 @@ const ellipsisLabels: Readonly<Record<string, Label>> = {
   fair: {
     zh: "公正：意思没有改变",
     why: [
-      "An ellipsis marks where words were left out, and the shortened quotation still says what the original meant.",
-      "省略号标出了删去词语的地方，缩短的引文仍然表达原文的意思。",
+      "An ellipsis marks where words were left out, and the shortened quotation still says what the original meant.\n\n**Check.** Verify both rules: the `…` sits right where the aside was cut, and removing those words does not flip or weaken the author's claim.",
+      "省略号标出了删去词语的地方，缩短的引文仍然表达原文的意思。\n\n**检验。** 核对两条规则：`…` 准确标在删去插入语的位置，且删去后原作者的本意丝毫未变。",
     ],
     not: ["This quotation is not a fair shortening of the original.", "这段引文不是对原文的公正缩写。"],
   },
   "unfair: the meaning changed": {
     zh: "不公正：意思被改变了",
     why: [
-      "The cut removes words such as *not*, *only* or *but* that the meaning depends on, so the quotation says something the writer did not say.",
-      "删去的部分包括 *not*、*only* 或 *but* 这样决定意思的词，所以引文说出了作者没说过的话。",
+      "The cut removes words such as *not*, *only* or *but* that the meaning depends on, so the quotation says something the writer did not say.\n\n**Check.** Compare the shortened quote's claim with the original sentence: even though `…` is present, deleting a key qualifier or negative flips what the author actually meant.",
+      "删去的部分包括 *not*、*only* 或 *but* 这样决定意思的词，所以引文说出了作者没说过的话。\n\n**检验。** 对比缩略引文和原句的主张：虽然加了 `…`，但删掉否定词或限定词已经把作者原意改反了。",
     ],
     not: ["The cut here does not change what the writer meant.", "这里的删减没有改变作者的意思。"],
   },
   "unmarked: no ellipsis": {
     zh: "未标出：缺少省略号",
     why: [
-      "Words are missing from the middle of the quotation, but no ellipsis shows the reader where they were cut.",
-      "引文中间缺了词，却没有用省略号告诉读者删在哪里。",
+      "Words are missing from the middle of the quotation, but no ellipsis shows the reader where they were cut.\n\n**Check.** Read the quote beside the original: words were removed from the middle, yet no `…` warns the reader that anything is missing.",
+      "引文中间缺了词，却没有用省略号告诉读者删在哪里。\n\n**检验。** 把引文和原句并排对照：中间确实删了词，却没有放 `…` 提醒读者。",
     ],
     not: ["The quotation does not leave words out without marking them.", "这段引文没有不加标记地删去词语。"],
   },
@@ -895,14 +907,18 @@ const ellipses = topic("grammar", {
     "An ellipsis (…) shows where words were left out of a quotation, and a fair cut never changes what the writer meant.",
     "省略号（…）标出引文中删去词语的地方，公正的删减从不改变作者的原意。",
   ],
+  intro: [
+    'Cutting *"not"* out of *"The plan was not a success"* with an ellipsis turns a failure into a triumph: *"The plan was … a success."* An ellipsis marks omitted words transparently, and a fair cut never alters the writer\'s real meaning.',
+    '如果用省略号把 *"The plan was not a success"* 里的 *"not"* 删掉，失败就变成了成功：*"The plan was … a success."* 省略号既要诚实标出删节位置，更不能改变原作者的本意。',
+  ],
   after: ["dashes-parentheses-and-ellipses", "quoting-accurately"],
   points: [
     choose(
       "shortening-a-quotation",
       ["Shortening a Quotation", "缩短引文"],
       [
-        "When you quote only part of a sentence, put an **ellipsis** (three dots: …) where you left words out. The reader then knows the quotation has been shortened. The cut must be fair: leave out only words the meaning does not depend on, never a *not*, an *only* or the second half of a contrast.",
-        "只引用句子的一部分时，要在删去词语的地方加**省略号**（三个点：…）。这样读者就知道引文被缩短了。删减必须公正：只删去不影响意思的词，绝不能删掉 *not*、*only* 或对比的后一半。",
+        "When you quote only part of a sentence, put an **ellipsis** (three dots: …) where you left words out. The reader then knows the quotation has been shortened. The cut must be fair: leave out only words the meaning does not depend on, never a *not*, an *only* or the second half of a contrast.\n\n> **Watch out.** Before cutting, test whether the requested cut removes a *not*, *only*, *but*, or qualifier like *mistakenly*—if it does, you cannot cut it fairly and must quote the sentence whole.",
+        "只引用句子的一部分时，要在删去词语的地方加**省略号**（三个点：…）。这样读者就知道引文被缩短了。删减必须公正：只删去不影响意思的词，绝不能删掉 *not*、*only* 或对比的后一半。\n\n> **注意。** 下刀前先看要删的部分是否包含 *not*、*only*、*but* 或 *mistakenly* 这类关键限定词——一旦包含，就不能删减，必须整句引用。",
       ],
       ["Which shortened quotation is correct and fair?", "哪个缩短的引文正确而公正？"],
       `
@@ -939,8 +955,8 @@ ${shortenLines}
         Original: "The route, though long, avoided the pirates of the coast." Leave out "though long".|"The route … avoided the pirates of the coast."|"The route avoided the pirates of the coast."|"The route … finally avoided the pirates of the coast."
       `,
       (right) => [
-        `${right.startsWith("Quote it whole") ? "Any cut here would change the meaning, so" : "The ellipsis marks the cut, and"} the quotation stays true to the original: ${right}`,
-        `${right.startsWith("Quote it whole") ? "这里任何删减都会改变意思，所以" : "省略号标出了删减之处，"}引文忠实于原文：${right}`,
+        `${right.startsWith("Quote it whole") ? "Any cut here would change the meaning, so" : "The ellipsis marks the cut, and"} the quotation stays true to the original: ${right}\n\n**Check.** Compare the result word by word with the original: no unquoted word was slipped in, every omitted aside is marked with \`…\`, and the author's original meaning is intact.`,
+        `${right.startsWith("Quote it whole") ? "这里任何删减都会改变意思，所以" : "省略号标出了删减之处，"}引文忠实于原文：${right}\n\n**检验。** 把结果与原句逐词对照：没有塞进原文没有的词，删去的插入语都用 \`…\` 标出，且作者原意丝毫未变。`,
       ],
       [
         [
@@ -957,8 +973,8 @@ ${shortenLines}
       "is-the-cut-fair",
       ["Is the Cut Fair?", "删减公正吗？"],
       [
-        "Check a shortened quotation two ways. First, is every cut marked with an ellipsis? A quotation that drops words silently is **unmarked**. Second, does it still mean what the original meant? A cut that removes *not*, *only*, *rarely* or the second half of a contrast is **unfair**, even with an ellipsis. A cut that only drops a description or an aside, and marks it, is **fair**.",
-        "从两方面检查缩短的引文。第一，每处删减都用省略号标出了吗？悄悄删词的引文属于**未标出**。第二，它的意思仍与原文相同吗？删掉 *not*、*only*、*rarely* 或对比后一半的删减是**不公正**的，即使加了省略号也一样。只删去描述或插入语并加以标出的删减是**公正**的。",
+        "Check a shortened quotation two ways. First, is every cut marked with an ellipsis? A quotation that drops words silently is **unmarked**. Second, does it still mean what the original meant? A cut that removes *not*, *only*, *rarely* or the second half of a contrast is **unfair**, even with an ellipsis. A cut that only drops a description or an aside, and marks it, is **fair**.\n\n> **Watch out.** Do not stop checking once you see `…`—an ellipsis marks *that* words were cut, but it never excuses cutting *not*, *only*, or a contrast that reverses the sentence's meaning.",
+        "从两方面检查缩短的引文。第一，每处删减都用省略号标出了吗？悄悄删词的引文属于**未标出**。第二，它的意思仍与原文相同吗？删掉 *not*、*only*、*rarely* 或对比后一半的删减是**不公正**的，即使加了省略号也一样。只删去描述或插入语并加以标出的删减是**公正**的。\n\n> **注意。** 看到 `…` 别就停下检查——省略号只说明“删了词”，但绝不能为删掉 *not*、*only* 或颠倒原意的对比开脱。",
       ],
       ["Compare the quotation with the original. What is true of it?", "把引文与原文比较。哪个说法正确？"],
       `
@@ -1003,16 +1019,16 @@ const wishLabels: Readonly<Record<string, Label>> = {
   "a wish": {
     zh: "愿望",
     why: [
-      "After *wish* or *if only*, the speaker wants something that is not true now, so the verb is *were*.",
-      "在 *wish* 或 *if only* 后面，说话人想要的是现在并不真实的事，所以动词用 *were*。",
+      "After *wish* or *if only*, the speaker wants something that is not true now, so the verb is *were*.\n\n**Check.** Spot the trigger phrase *wish* or *if only*: there is no *if ... would* consequence clause—the sentence simply expresses a longing contrary to fact.",
+      "在 *wish* 或 *if only* 后面，说话人想要的是现在并不真实的事，所以动词用 *were*。\n\n**检验。** 认出标志词 *wish* 或 *if only*：后面没有 *if ... would* 结果主句，整句话只是表达与现实相反的愿望。",
     ],
     not: ["The sentence does not wish for something with *wish* or *if only*.", "这个句子没有用 *wish* 或 *if only* 表达愿望。"],
   },
   "an unreal condition": {
     zh: "与事实相反的条件",
     why: [
-      "The *if* or *as if* clause imagines something that is not true, so the verb is *were* and the main clause has *would*.",
-      "*if* 或 *as if* 从句设想的是不真实的事，所以动词用 *were*，主句用 *would*。",
+      "The *if* or *as if* clause imagines something that is not true, so the verb is *were* and the main clause has *would*.\n\n**Check.** Look for the pairing of *if / suppose / as if + were* (or a *would* consequence): it sets up an imagined scenario that is false right now.",
+      "*if* 或 *as if* 从句设想的是不真实的事，所以动词用 *were*，主句用 *would*。\n\n**检验。** 看 *if / suppose / as if* 配 *were*（以及主句的 *would*）：它设想的是当下并不成立的假设情境。",
     ],
     not: [
       "The sentence does not imagine an unreal situation after *if* or *as if*.",
@@ -1022,8 +1038,8 @@ const wishLabels: Readonly<Record<string, Label>> = {
   "a real possibility": {
     zh: "真实的可能",
     why: [
-      "The *if* clause speaks of something that may really be or have been true, so the ordinary *is* or *was* is right.",
-      "*if* 从句说的是可能真实存在或发生过的事，所以用普通的 *is* 或 *was* 是正确的。",
+      "The *if* clause speaks of something that may really be or have been true, so the ordinary *is* or *was* is right.\n\n**Check.** Check the verb in the *if* clause and the result (*will* / present tense): it describes something that genuinely could happen or really happened.",
+      "*if* 从句说的是可能真实存在或发生过的事，所以用普通的 *is* 或 *was* 是正确的。\n\n**检验。** 看 *if* 从句的动词和主句结果（*will* 或一般现在时）：它谈的是真有可能发生或确实发生过的情况。",
     ],
     not: ["The situation here is unreal or wished for, not a real possibility.", "这里的情况是不真实的或是愿望，不是真实的可能。"],
   },
@@ -1036,14 +1052,18 @@ const wishes = topic("grammar", {
     "In formal English, wishes and unreal conditions use were for every subject: I wish it were, if he were king.",
     "在正式英语中，愿望和与事实相反的条件对所有主语都用 were：I wish it were、if he were king。",
   ],
+  intro: [
+    "In *If I were the coach, I would call a timeout*, using *were* instead of *was* signals immediately that I am not the coach. Formal English uses the **subjunctive** *were* for every subject in wishes and contrary-to-fact conditions.",
+    "在 *If I were the coach, I would call a timeout* 中，用 *were* 而不是 *was* 立刻表明“我并不是教练”。正式英语在愿望和与事实相反的条件中，对所有主语一律使用虚拟语气 *were*。",
+  ],
   after: ["the-subjunctive-in-demands-and-proposals"],
   points: [
     choose(
       "were-for-the-unreal",
       ["Were for the Unreal", "用 were 表示不真实"],
       [
-        "The **subjunctive** *were* marks something that is not true: a wish (*I wish the voyage **were** shorter*) or an unreal condition (*If he **were** king, he would free the prisoners*; *She acts as if she **were** the queen*). In formal writing, use *were* for every subject, even *I*, *he*, *she* and *it*. Everyday speech often uses *was*, but writing that is careful keeps *were*. A plain *is* would state a fact, not a wish.",
-        "**虚拟语气**的 *were* 表示不真实的事：愿望（*I wish the voyage **were** shorter*）或与事实相反的条件（*If he **were** king, he would free the prisoners*；*She acts as if she **were** the queen*）。在正式写作中，所有主语都用 *were*，即使是 *I*、*he*、*she* 和 *it*。日常口语常用 *was*，但严谨的书面语保留 *were*。用平常的 *is* 就是在陈述事实，而不是愿望。",
+        "The **subjunctive** *were* marks something that is not true: a wish (*I wish the voyage **were** shorter*) or an unreal condition (*If he **were** king, he would free the prisoners*; *She acts as if she **were** the queen*). In formal writing, use *were* for every subject, even *I*, *he*, *she* and *it*. Everyday speech often uses *was*, but writing that is careful keeps *were*. A plain *is* would state a fact, not a wish.\n\n> **Watch out.** Do not let a singular subject like *I*, *he*, *she*, or *the king* pull you into *was*, and never put *would be* inside the *if* or *wish* clause itself.",
+        "**虚拟语气**的 *were* 表示不真实的事：愿望（*I wish the voyage **were** shorter*）或与事实相反的条件（*If he **were** king, he would free the prisoners*；*She acts as if she **were** the queen*）。在正式写作中，所有主语都用 *were*，即使是 *I*、*he*、*she* 和 *it*。日常口语常用 *was*，但严谨的书面语保留 *were*。用平常的 *is* 就是在陈述事实，而不是愿望。\n\n> **注意。** 不要被 *I*、*he*、*she* 或 *the king* 这些单数主语带偏去选 *was*，也绝不要在 *if* 或 *wish* 从句里放 *would be*。",
       ],
       ["Which verb is right in careful, formal writing?", "在严谨的正式写作中，哪个动词是正确的？"],
       `
@@ -1080,8 +1100,8 @@ ${wereLines}
         If the rebellion ___ to fail, its leaders would hang.|were|was|would be
       `,
       (right) => [
-        `**${right}** is the subjunctive: the sentence speaks of something that is not true, so careful writing uses *were* for every subject.`,
-        `**${right}** 是虚拟语气：句子说的是不真实的事，所以严谨的书面语对所有主语都用 *were*。`,
+        `**${right}** is the subjunctive: the sentence speaks of something that is not true, so careful writing uses *were* for every subject.\n\n**Check.** Ask whether the situation is actually true right now: it is not—it is wished or imagined after *wish*, *if*, *if only*, *suppose*, or *as if*, which takes **were** in formal English.`,
+        `**${right}** 是虚拟语气：句子说的是不真实的事，所以严谨的书面语对所有主语都用 *were*。\n\n**检验。** 问问这种情况现在是真的吗？不是——它在 *wish*、*if*、*if only*、*suppose* 或 *as if* 后表示愿望或虚拟设想，正式英语一律用 **were**。`,
       ],
       [
         [
@@ -1098,8 +1118,8 @@ ${wereLines}
       "real-or-unreal",
       ["Real or Unreal?", "真实还是不真实？"],
       [
-        "Not every *if* needs *were*. If the clause speaks of something that may really be or have been true, use the ordinary verb: *If the letter **was** sent yesterday, it will arrive today.* Use *were* only when the situation is imagined or wished for: *If the letter **were** in French, I could not read it* (it is not in French).",
-        "并不是每个 *if* 都要用 *were*。如果从句说的是可能真实存在或发生过的事，就用普通动词：*If the letter **was** sent yesterday, it will arrive today.* 只有在情况是设想的或是愿望时才用 *were*：*If the letter **were** in French, I could not read it*（信并不是法语写的）。",
+        "Not every *if* needs *were*. If the clause speaks of something that may really be or have been true, use the ordinary verb: *If the letter **was** sent yesterday, it will arrive today.* Use *were* only when the situation is imagined or wished for: *If the letter **were** in French, I could not read it* (it is not in French).\n\n> **Watch out.** Check the verb in both clauses: *if ... is/was ... will* signals a **real possibility**, *wish / if only + were* signals **a wish**, and *if / suppose / as if + were* signals **an unreal condition**.",
+        "并不是每个 *if* 都要用 *were*。如果从句说的是可能真实存在或发生过的事，就用普通动词：*If the letter **was** sent yesterday, it will arrive today.* 只有在情况是设想的或是愿望时才用 *were*：*If the letter **were** in French, I could not read it*（信并不是法语写的）。\n\n> **注意。** 同时看两个分句的动词：*if ... is/was ... will* 表示**真实的可能**，*wish / if only + were* 表示**愿望**，而 *if / suppose / as if + were* 表示**与事实相反的条件**。",
       ],
       ["What does the sentence describe?", "这个句子描述的是什么？"],
       `
@@ -1143,22 +1163,25 @@ ${realLines}
 const voiceLabels: Readonly<Record<string, Label>> = {
   "no shift": {
     zh: "没有转换",
-    why: ["Both parts of the sentence keep the same voice, so it reads smoothly.", "句子的两部分保持同一种语态，读起来很流畅。"],
+    why: [
+      "Both parts of the sentence keep the same voice, so it reads smoothly.\n\n**Check.** Test the subject of both verbs: both clauses keep the doer acting in the active voice, with no sudden switch to *was/were + participle*.",
+      "句子的两部分保持同一种语态，读起来很流畅。\n\n**检验。** 检查两个动词的主语：前后两半都由动作执行者作主语、用主动语态，没有突然切到 *was/were + 分词*。",
+    ],
     not: ["This sentence does switch from one voice to the other.", "这个句子确实从一种语态转换成了另一种。"],
   },
   "active to passive": {
     zh: "从主动转为被动",
     why: [
-      "The first part has the doer as its subject, and the second suddenly makes the thing done to the subject, with *was* or *were* and a participle.",
-      "前半部分以动作的执行者为主语，后半部分却突然以承受动作的事物为主语，用 *was* 或 *were* 加分词。",
+      "The first part has the doer as its subject, and the second suddenly makes the thing done to the subject, with *was* or *were* and a participle.\n\n**Check.** Compare the two verbs in order: verb 1 is active (doer acts), while verb 2 flips to *was/were + past participle* (receiver becomes subject).",
+      "前半部分以动作的执行者为主语，后半部分却突然以承受动作的事物为主语，用 *was* 或 *were* 加分词。\n\n**检验。** 按顺序对照两个动词：前一个主动（执行者做动作），后一个突然变成 *was/were + 过去分词*（承受者当了主语）。",
     ],
     not: ["The sentence does not move from an active verb to a passive one.", "这个句子没有从主动动词转为被动动词。"],
   },
   "passive to active": {
     zh: "从被动转为主动",
     why: [
-      "The first part is passive, with *was* or *were* and a participle, and the second switches to the doer as subject.",
-      "前半部分是被动的，用 *was* 或 *were* 加分词，后半部分转为以执行者为主语。",
+      "The first part is passive, with *was* or *were* and a participle, and the second switches to the doer as subject.\n\n**Check.** Compare the two verbs in order: verb 1 uses *was/were + past participle* (passive), and verb 2 switches to a doer performing an active verb.",
+      "前半部分是被动的，用 *was* 或 *were* 加分词，后半部分转为以执行者为主语。\n\n**检验。** 按顺序对照两个动词：前一个用 *was/were + 过去分词*（被动），后一个切换为执行者发出主动动作。",
     ],
     not: ["The sentence does not move from a passive verb to an active one.", "这个句子没有从被动动词转为主动动词。"],
   },
@@ -1171,14 +1194,18 @@ const voiceShifts = topic("grammar", {
     "A sentence that starts in the active voice should not slide into the passive without a reason, or the reader loses track of who acts.",
     "一个句子以主动语态开头，就不应该无故滑向被动语态，否则读者会弄不清是谁在行动。",
   ],
+  intro: [
+    "In *Maya sketched the blueprint, and the wooden frame was built*, the reader suddenly loses track of who built the frame. Keeping one consistent voice across joined clauses keeps the doer clear and the sentence crisp.",
+    "在 *Maya sketched the blueprint, and the wooden frame was built* 中，读者突然不知道木框是谁搭的了。在并列分句中保持语态一致，才能让执行者清晰、句子紧凑有力。",
+  ],
   after: ["active-and-passive-voice", "shifts-in-verb-mood"],
   points: [
     label(
       "spotting-the-shift",
       ["Spotting the Shift", "发现语态的转换"],
       [
-        "In the **active** voice the subject does the action: *The colonists signed the petition.* In the **passive**, the subject receives it: *The petition was signed.* A sentence that joins two actions by the same doer should keep one voice. *The colonists wrote a petition, and it was sent to the king* shifts from active to passive and hides who sent it.",
-        "在**主动语态**中，主语执行动作：*The colonists signed the petition.* 在**被动语态**中，主语承受动作：*The petition was signed.* 连接同一执行者两个动作的句子应保持一种语态。*The colonists wrote a petition, and it was sent to the king* 从主动转为被动，掩盖了是谁寄出的。",
+        "In the **active** voice the subject does the action: *The colonists signed the petition.* In the **passive**, the subject receives it: *The petition was signed.* A sentence that joins two actions by the same doer should keep one voice. *The colonists wrote a petition, and it was sent to the king* shifts from active to passive and hides who sent it.\n\n> **Watch out.** Check each clause's verb separately for *be + past participle*—if both clauses are active, there is **no shift**; if only one is passive, note the direction (**active to passive** or **passive to active**).",
+        "在**主动语态**中，主语执行动作：*The colonists signed the petition.* 在**被动语态**中，主语承受动作：*The petition was signed.* 连接同一执行者两个动作的句子应保持一种语态。*The colonists wrote a petition, and it was sent to the king* 从主动转为被动，掩盖了是谁寄出的。\n\n> **注意。** 分别检查两个分句里有没有 *be + 过去分词*——两个都主动就是**没有转换**；只有一个被动时，看清方向是**从主动转为被动**还是**从被动转为主动**。",
       ],
       ["Does the sentence shift voice?", "这个句子转换了语态吗？"],
       `
@@ -1220,8 +1247,8 @@ ${voiceSpot}
       "keeping-one-voice",
       ["Keeping One Voice", "保持一种语态"],
       [
-        "To fix a shift, keep the doer as the subject of both parts and make both verbs active: *The colonists wrote a petition and **sent** it to the king.* Do not fix one shift by making a new one, and do not drop the doer: the reader should still know who did each thing.",
-        "要改正语态的转换，就让执行者在两部分中都作主语，两个动词都用主动语态：*The colonists wrote a petition and **sent** it to the king.* 不要用一个新的转换来改正旧的，也不要丢掉执行者：读者应该仍然知道每件事是谁做的。",
+        "To fix a shift, keep the doer as the subject of both parts and make both verbs active: *The colonists wrote a petition and **sent** it to the king.* Do not fix one shift by making a new one, and do not drop the doer: the reader should still know who did each thing.\n\n> **Watch out.** Check the subject right after *and*—it should be the person or group doing the action (like *they*, *he*, *she*, or *it* for the collective), followed by an active verb rather than *was/were + past participle*.",
+        "要改正语态的转换，就让执行者在两部分中都作主语，两个动词都用主动语态：*The colonists wrote a petition and **sent** it to the king.* 不要用一个新的转换来改正旧的，也不要丢掉执行者：读者应该仍然知道每件事是谁做的。\n\n> **注意。** 检查 *and* 紧后面的主语——它应仍是执行动作的人或集体（如 *they*、*he*、*she*），后面接主动动词，而不是 *was/were + 过去分词*。",
       ],
       ["Which version keeps one voice and keeps the doer clear?", "哪个版本保持了一种语态，并且执行者清楚？"],
       `
@@ -1258,8 +1285,8 @@ ${voiceKeep}
         The leaders met in secret, and ___|they planned the uprising.|the uprising was planned.|in secret the uprising was planned.
       `,
       (right) => [
-        `*…${right}* keeps the doer as the subject and the verb active, so the sentence does not shift voice.`,
-        `*…${right}* 让执行者继续作主语，动词保持主动，句子就没有转换语态。`,
+        `*…${right}* keeps the doer as the subject and the verb active, so the sentence does not shift voice.\n\n**Check.** Read both halves together and verify the verb after *and* has no *was/were + past participle*: the same doer stays in charge of both actions.`,
+        `*…${right}* 让执行者继续作主语，动词保持主动，句子就没有转换语态。\n\n**检验。** 把前后两半连起来读，确认 *and* 后面没有出现 *was/were + 过去分词*：同一执行者始终主导两个动作。`,
       ],
       [
         [

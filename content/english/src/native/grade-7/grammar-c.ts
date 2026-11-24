@@ -16,8 +16,8 @@ const doer = choose(
   "who-did-it-in-a-passive",
   ["Who Did It in a Passive", "被动句中的施动者"],
   [
-    "In a passive sentence the subject receives the action, and the one who did it comes after *by*, if at all: *The ball was kicked **by Sam***. Often there is no *by* phrase: *The window was broken* does not say who broke it. Reading a passive closely means asking who acted, and noticing when the sentence does not say.",
-    "在被动句中，主语是动作的承受者，施动者如果出现，放在 *by* 后面：*The ball was kicked **by Sam***。很多时候没有 *by* 短语：*The window was broken* 并没有说是谁打破的。仔细读被动句，就要问是谁做的，并注意句子什么时候没有说。",
+    "In a passive sentence the subject receives the action, and the one who did it comes after *by*, if at all: *The ball was kicked **by Sam***. Often there is no *by* phrase: *The window was broken* does not say who broke it. Reading a passive closely means asking who acted, and noticing when the sentence does not say.\n\n> **Watch out.** Do not mistake a time or place phrase (*in 1890*, *during the game*, *after the storm*) for the doer: only a *by* phrase names who performed the action.",
+    "在被动句中，主语是动作的承受者，施动者如果出现，放在 *by* 后面：*The ball was kicked **by Sam***。很多时候没有 *by* 短语：*The window was broken* 并没有说是谁打破的。仔细读被动句，就要问是谁做的，并注意句子什么时候没有说。\n\n> **注意。** 不要把时间或地点短语（如 *in 1890*、*during the game*、*after the storm*）当成施动者：只有 *by* 短语才点明动作是谁做的。",
   ],
   ["Who did the action?", "动作是谁做的？"],
   `
@@ -54,11 +54,11 @@ const doer = choose(
   `,
   (right) => [
     right === "the sentence does not say"
-      ? "There is no *by* phrase, so the sentence does not say who acted."
-      : `*${right}* follows *by*, so ${right} did the action.`,
+      ? "There is no *by* phrase naming an actor, so the sentence does not say who performed the action.\n\n**Check.** Try rewriting the sentence in the active voice: you have to supply a blank subject like *someone*, proving the doer is left out."
+      : `*${right}* follows *by*, so *${right}* performed the action while the sentence's subject received it.\n\n**Check.** Flip the sentence into the active voice with *${right}* as the subject: the meaning stays identical.`,
     right === "the sentence does not say"
-      ? "句中没有 *by* 短语，所以没有说是谁做的。"
-      : `*${right}* 在 *by* 后面，所以动作是 ${right} 做的。`,
+      ? "句中没有点出施动者的 *by* 短语，所以句子并没有说是谁做的。\n\n**检验。** 试着把句子改写成主动语态：你只能补一个“某人”当主语，说明原句确实没提施动者。"
+      : `*${right}* 跟在 *by* 后面，因此是 *${right}* 发出了动作，而句子的主语是承受者。\n\n**检验。** 把 *${right}* 改作主动句的主语读一遍，句意完全不变。`,
   ],
   [
     ["*{wrong}* is the subject, which receives the action in a passive.", "*{wrong}* 是主语，在被动句中是动作的承受者。"],
@@ -70,8 +70,8 @@ const would = choose(
   "would-in-the-result",
   ["Would in the Result", "结果中的 would"],
   [
-    "An unreal condition, something that is not true now, uses the past form in the *if* clause and **would** (or *could*, *might*) in the result: *If I had wings, I **would** fly*. *Will* belongs to real conditions, ones that may well happen: *If it rains, we will stay in*.",
-    "不真实的条件，即现在并不成立的事，在 *if* 从句中用过去式，在结果中用 **would**（或 *could*、*might*）：*If I had wings, I **would** fly*。*will* 用于很可能发生的真实条件：*If it rains, we will stay in*。",
+    "An unreal condition, something that is not true now, uses the past form in the *if* clause and **would** (or *could*, *might*) in the result: *If I had wings, I **would** fly*. *Will* belongs to real conditions, ones that may well happen: *If it rains, we will stay in*.\n\n> **Watch out.** Match the two halves of the conditional: a present-tense *if* clause (*If it rains*) pairs with *will*, while a past-tense or *were* *if* clause (*If I had wings*, *If she were taller*) pairs with *would*, *could*, or *might*.",
+    "不真实的条件，即现在并不成立的事，在 *if* 从句中用过去式，在结果中用 **would**（或 *could*、*might*）：*If I had wings, I **would** fly*。*will* 用于很可能发生的真实条件：*If it rains, we will stay in*。\n\n> **注意。** 条件句前后两半要配对：现在时的 *if* 从句（*If it rains*）配 *will*，过去式或 *were* 的 *if* 从句（*If I had wings*、*If she were taller*）配 *would*、*could* 或 *might*。",
   ],
   ["Which word completes the sentence?", "哪个词能补全句子？"],
   `
@@ -107,8 +107,8 @@ const would = choose(
   If you water the plant, it ___ grow.|will|would|were
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": the condition is ${right === "will" ? "real, so the result takes *will*" : "unreal, so the result takes a past modal"}.`,
-    `“${shown.replace("___", right)}”：这个条件${right === "will" ? "是真实的，所以结果用 *will*" : "是不真实的，所以结果用过去式情态动词"}。`,
+    `The completed sentence reads *${shown.replace("___", right)}* — the condition is ${right === "will" ? "real and likely, so the result takes *will*" : "imaginary or contrary to fact, so the result takes a past modal (*would*, *could*, or *might*)"}.\n\n**Check.** Look back at the verb in the *if* clause: ${right === "will" ? "it is in the present tense, matching *will*" : `it is a past form or *were*, matching *${right}*`}.`,
+    `补全后是 *${shown.replace("___", right)}*：这个条件${right === "will" ? "是可能发生的真实条件，结果用 *will*" : "是假设或不真实的条件，结果用过去式情态动词（*would*、*could* 或 *might*）"}。\n\n**检验。** 回看 *if* 从句里的动词：${right === "will" ? "它是现在时，正好与 *will* 搭配" : `它是过去式或 *were*，正好与 *${right}* 搭配`}。`,
   ],
   [
     ["*{wrong}* belongs to the other kind of condition, real or unreal.", "*{wrong}* 属于另一种条件，真实或不真实。"],
@@ -120,8 +120,8 @@ const correlative = choose(
   "parallel-after-not-only-and-either",
   ["Parallel After Not Only and Either", "not only 和 either 后的平行结构"],
   [
-    "Pairs such as *not only … but also*, *either … or*, *neither … nor* and *both … and* need the **same kind of words** after each half: *She is not only smart but also **kind*** (two adjectives); *We can either **walk** or **take** the bus* (two verbs).",
-    "*not only … but also*、*either … or*、*neither … nor* 和 *both … and* 这样的成对连词，两半后面要跟**同类的词**：*She is not only smart but also **kind***（两个形容词）；*We can either **walk** or **take** the bus*（两个动词）。",
+    "Pairs such as *not only … but also*, *either … or*, *neither … nor* and *both … and* need the **same kind of words** after each half: *She is not only smart but also **kind*** (two adjectives); *We can either **walk** or **take** the bus* (two verbs).\n\n> **Watch out.** Check the exact word right after the first partner (*not only*, *either*, *neither*, *both*): if it is a preposition (*by card*), a gerund (*swimming*), or a verb (*walk*), the second partner must open with the same grammatical form.",
+    "*not only … but also*、*either … or*、*neither … nor* 和 *both … and* 这样的成对连词，两半后面要跟**同类的词**：*She is not only smart but also **kind***（两个形容词）；*We can either **walk** or **take** the bus*（两个动词）。\n\n> **注意。** 盯紧前半个连词（*not only*、*either*、*neither*、*both*）紧后面的成分：如果是介词短语（*by card*）、动名词（*swimming*）或动词原形（*walk*），后半个连词后面也必须用同样的语法形式。",
   ],
   ["Which words complete the sentence in parallel?", "哪组词能用平行结构补全句子？"],
   `
@@ -156,7 +156,10 @@ const correlative = choose(
   The trip was not only cheap but also ___.|fun|we had fun|funny times
   You may either stay or ___.|leave|your leaving|leaving now
   `,
-  (right) => [`*${right}* matches the words after the first half of the pair.`, `*${right}* 与成对连词前半部分后面的词结构一致。`],
+  (right) => [
+    `**${right}** matches the grammatical form that follows the first half of the correlative pair.\n\n**Check.** Read the opening of the sentence with only the second item (*${right}*), dropping the first half of the pair: it plugs into the sentence just as cleanly as the first item did.`,
+    `**${right}** 与成对连词前半部分后面的语法结构完全一致。\n\n**检验。** 去掉前半个并列项，只把句子开头和 *${right}* 连起来读一遍：它和前半项一样顺畅地接在主干后面。`,
+  ],
   [
     [
       "*{wrong}* is a different kind of word or a whole clause, so the halves are not parallel.",
@@ -170,8 +173,8 @@ const latinVerb = choose(
   "the-verb-with-a-latin-plural",
   ["The Verb with a Latin Plural", "拉丁语复数后的动词"],
   [
-    "A plural from Latin or Greek takes a **plural** verb, even without an *-s*: *The criteria **are** clear*; *These phenomena **are** rare*; *The bacteria **multiply***. Its singular takes a singular verb: *The crisis **is** over*; *This analysis **shows***. In formal writing *data* is plural: *The data **show***.",
-    "来自拉丁语或希腊语的复数名词即使没有 *-s* 也要用**复数**动词：*The criteria **are** clear*；*These phenomena **are** rare*；*The bacteria **multiply***。它的单数形式用单数动词：*The crisis **is** over*；*This analysis **shows***。在正式写作中，*data* 是复数：*The data **show***。",
+    "A plural from Latin or Greek takes a **plural** verb, even without an *-s*: *The criteria **are** clear*; *These phenomena **are** rare*; *The bacteria **multiply***. Its singular takes a singular verb: *The crisis **is** over*; *This analysis **shows***. In formal writing *data* is plural: *The data **show***.\n\n> **Watch out.** Do not let *-is* fool you into thinking a noun is plural: *crisis*, *analysis*, and *diagnosis* are **singular**, while *crises*, *analyses*, and *diagnoses* are plural.",
+    "来自拉丁语或希腊语的复数名词即使没有 *-s* 也要用**复数**动词：*The criteria **are** clear*；*These phenomena **are** rare*；*The bacteria **multiply***。它的单数形式用单数动词：*The crisis **is** over*；*This analysis **shows***。在正式写作中，*data* 是复数：*The data **show***。\n\n> **注意。** 别被词尾的 *-is* 误导成复数：*crisis*、*analysis*、*diagnosis* 都是**单数**，它们的复数分别是 *crises*、*analyses*、*diagnoses*。",
   ],
   ["Which verb agrees with the subject?", "哪个动词与主语一致？"],
   `
@@ -207,8 +210,8 @@ const latinVerb = choose(
   The appendices ___ extra charts.|contain|contains|containing
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": the verb agrees with whether the Latin or Greek noun is singular or plural.`,
-    `“${shown.replace("___", right)}”：动词与这个拉丁语或希腊语名词的单复数一致。`,
+    `The completed sentence reads *${shown.replace("___", right)}* — **${right}** is a finite verb that agrees in number with the Latin or Greek subject.\n\n**Check.** Replace the subject with *it* (if singular, ending in *-on*, *-um*, *-us*, or *-is*) or *they* (if plural, ending in *-a*, *-i*, *-ae*, *-es*, or *-ices*): *${right}* matches that pronoun.`,
+    `补全后是 *${shown.replace("___", right)}*：**${right}** 是限定动词，在单复数上与这个拉丁语或希腊语主语一致。\n\n**检验。** 把主语换成 *it*（单数，如 *-on*、*-um*、*-us*、*-is*）或 *they*（复数，如 *-a*、*-i*、*-ae*、*-es*、*-ices*），*${right}* 正好与之搭配。`,
   ],
   [
     ["*{wrong}* treats the noun as the wrong number: these plurals have no *-s*.", "*{wrong}* 把名词的单复数弄错了：这些复数没有 *-s*。"],
@@ -220,8 +223,8 @@ const fragment = choose(
   "fixing-a-fragment",
   ["Fixing a Fragment", "修正句子片段"],
   [
-    "A phrase or a dependent clause punctuated as a sentence is a **fragment**: *After the long game.* *Because the bus was late.* Fix it by joining it to a nearby independent clause: *After the long game, we rested.* Adding a period or a capital does not help; it needs a subject and verb that can stand alone.",
-    "被当作句子加了句号的短语或从句是**句子片段**：*After the long game.* *Because the bus was late.* 修正的方法是把它与附近的独立分句连在一起：*After the long game, we rested.* 加句号或大写字母都没用；它需要一个能独立存在的主语和谓语。",
+    "A phrase or a dependent clause punctuated as a sentence is a **fragment**: *After the long game.* *Because the bus was late.* Fix it by joining it to a nearby independent clause: *After the long game, we rested.* Adding a period or a capital does not help; it needs a subject and verb that can stand alone.\n\n> **Watch out.** Making a fragment longer (*After the long game ended.*) or moving it to the front (*Because the bus was late. I missed class.*) still leaves a fragment behind a period.",
+    "被当作句子加了句号的短语或从句是**句子片段**：*After the long game.* *Because the bus was late.* 修正的方法是把它与附近的独立分句连在一起：*After the long game, we rested.* 加句号或大写字母都没用；它需要一个能独立存在的主语和谓语。\n\n> **注意。** 给片段加长（*After the long game ended.*）或者把它挪到前面（*Because the bus was late. I missed class.*），只要还用句号单独隔着，它依然是句子片段。",
   ],
   ["Which revision fixes the fragment?", "哪个修改纠正了句子片段？"],
   `
@@ -256,7 +259,10 @@ const fragment = choose(
   The bus stopped. At the corner of Main Street.|The bus stopped at the corner of Main Street.|The bus stopped. At the busy corner of Main Street.|At the corner of Main Street. The bus stopped.
   The baby laughed. Whenever the dog barked.|The baby laughed whenever the dog barked.|The baby laughed. Whenever the big dog barked.|Whenever the dog barked. The baby laughed.
   `,
-  (right) => [`"${right}" joins the fragment to an independent clause.`, `“${right}”把片段与一个独立分句连在了一起。`],
+  (right) => [
+    `*${right}* attaches the dependent piece to the independent clause so nothing is stranded behind a period.\n\n**Check.** Count the sentences: there is now one complete sentence with a main subject and verb, and no period cutting off a phrase or dependent clause.`,
+    `*${right}* 把从属部分和独立分句连成一句，不再让片段孤零零地落在句号后面。\n\n**检验。** 数一数句子个数：现在只有一句带完整主谓的句子，没有句号把短语或从句截断。`,
+  ],
   [
     ['"{wrong}" adds words to the fragment but leaves it standing alone.', "“{wrong}”给片段加了词，但它仍然独立成句。"],
     ['"{wrong}" moves the fragment but still punctuates it as a sentence.', "“{wrong}”移动了片段，但仍把它当作句子加标点。"],
@@ -267,8 +273,8 @@ const adverbComma = choose(
   "the-comma-with-an-adverb-clause",
   ["The Comma with an Adverb Clause", "状语从句与逗号"],
   [
-    "An adverb clause that **opens** a sentence is followed by a comma: *Because it rained, we stayed in*. When the clause comes **last**, it usually needs no comma: *We stayed in because it rained*. A comma between a main clause and a closing *because* clause, or no comma after an opening one, is an error.",
-    "**放在句首**的状语从句后面要加逗号：*Because it rained, we stayed in*。从句**放在句末**时，通常不需要逗号：*We stayed in because it rained*。在主句和句末的 *because* 从句之间加逗号，或在句首的从句后面不加逗号，都是错误的。",
+    "An adverb clause that **opens** a sentence is followed by a comma: *Because it rained, we stayed in*. When the clause comes **last**, it usually needs no comma: *We stayed in because it rained*. A comma between a main clause and a closing *because* clause, or no comma after an opening one, is an error.\n\n> **Watch out.** Never use a semicolon between an adverb clause and a main clause: a semicolon needs a full independent sentence on *both* sides.",
+    "**放在句首**的状语从句后面要加逗号：*Because it rained, we stayed in*。从句**放在句末**时，通常不需要逗号：*We stayed in because it rained*。在主句和句末的 *because* 从句之间加逗号，或在句首的从句后面不加逗号，都是错误的。\n\n> **注意。** 状语从句和主句之间绝不能用分号：分号要求**两侧**都是能独立成句的完整分句。",
   ],
   ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
   join(
@@ -312,8 +318,8 @@ const adverbComma = choose(
     }),
   ),
   (right) => [
-    `"${right}" puts a comma after an opening adverb clause and none before a closing one.`,
-    `“${right}”在句首的状语从句后加逗号，在句末的状语从句前不加。`,
+    `*${right}* follows the order rule: a comma after an opening adverb clause, and no comma before a closing one.\n\n**Check.** Spot the subordinating word (*because*, *when*, *if*, *after*, *before*, *until*): if it opens the sentence, a comma separates the two clauses; if it sits in the middle, no comma is needed.`,
+    `*${right}* 遵循位置规则：状语从句在句首时后面加逗号，在句末时前面不加逗号。\n\n**检验。** 找到从属连词（*because*、*when*、*if*、*after*、*before*、*until* 等）：它在句首就用逗号隔开两半，在句中就直接连读不加逗号。`,
   ],
   [
     ['"{wrong}" gets the comma wrong for where the adverb clause stands.', "“{wrong}”没有根据状语从句的位置正确使用逗号。"],
@@ -325,8 +331,8 @@ const tag = choose(
   "commas-before-a-tag-question",
   ["Commas Before a Tag Question", "反意疑问句前的逗号"],
   [
-    "A **tag question** at the end of a sentence, such as *isn't it?* or *did you?*, is set off by a comma, and the sentence ends with a question mark: *It's cold, **isn't it?*** The tag usually reverses the statement: a positive statement takes a negative tag, and a negative statement a positive one.",
-    "句末的**反意疑问部分**，如 *isn't it?* 或 *did you?*，要用逗号隔开，整个句子以问号结尾：*It's cold, **isn't it?*** 反意疑问部分通常与陈述部分相反：肯定陈述用否定疑问，否定陈述用肯定疑问。",
+    "A **tag question** at the end of a sentence, such as *isn't it?* or *did you?*, is set off by a comma, and the sentence ends with a question mark: *It's cold, **isn't it?*** The tag usually reverses the statement: a positive statement takes a negative tag, and a negative statement a positive one.\n\n> **Watch out.** Check two things at once: the comma *before* the tag, and the polarity flip (positive statement → negative tag; negative statement → positive tag).",
+    "句末的**反意疑问部分**，如 *isn't it?* 或 *did you?*，要用逗号隔开，整个句子以问号结尾：*It's cold, **isn't it?*** 反意疑问部分通常与陈述部分相反：肯定陈述用否定疑问，否定陈述用肯定疑问。\n\n> **注意。** 要同时核对两点：反意疑问前必须有逗号，且肯否定要翻转（前肯后否、前否后肯）。",
   ],
   ["Which sentence is correct?", "哪个句子正确？"],
   `
@@ -362,8 +368,8 @@ const tag = choose(
   They have finished / haven't they|They have finished, haven't they?|They have finished haven't they?|They have finished, have they?
   `,
   (right) => [
-    `"${right}" sets off the tag with a comma and reverses the statement.`,
-    `“${right}”用逗号隔开了反意疑问部分，并与陈述部分相反。`,
+    `*${right}* sets off the tag question with a comma and flips the statement's positive/negative sign.\n\n**Check.** Verify both parts: a comma sits right before the tag, and one half has *n't* while the other does not.`,
+    `*${right}* 用逗号隔开了反意疑问部分，并让前后肯否定相反。\n\n**检验。** 核对两点：反意疑问前有逗号，且前后两半恰好只有一半带否定缩略 *n't*。`,
   ],
   [
     ['"{wrong}" leaves out the comma before the tag.', "“{wrong}”在反意疑问部分前漏掉了逗号。"],
@@ -375,8 +381,8 @@ const hadForm = choose(
   "forming-the-past-perfect",
   ["Forming the Past Perfect", "过去完成时的构成"],
   [
-    "The past perfect is **had** plus the **past participle**, for every subject: *By the time we arrived, the train **had left***. With an irregular verb, take care to use the participle, not the simple past: *had gone*, *had written*, *had eaten*. *Has* belongs to the present perfect.",
-    "过去完成时由 **had** 加**过去分词**构成，所有主语都一样：*By the time we arrived, the train **had left***。遇到不规则动词时，要注意用过去分词而不是一般过去式：*had gone*、*had written*、*had eaten*。*has* 属于现在完成时。",
+    "The past perfect is **had** plus the **past participle**, for every subject: *By the time we arrived, the train **had left***. With an irregular verb, take care to use the participle, not the simple past: *had gone*, *had written*, *had eaten*. *Has* belongs to the present perfect.\n\n> **Watch out.** Simple past forms like *ate*, *went*, *wrote*, *saw*, and *broke* never follow *had*. Test the participle in *It has already ___* (*gone*, *written*, *eaten*, *seen*, *broken*).",
+    "过去完成时由 **had** 加**过去分词**构成，所有主语都一样：*By the time we arrived, the train **had left***。遇到不规则动词时，要注意用过去分词而不是一般过去式：*had gone*、*had written*、*had eaten*。*has* 属于现在完成时。\n\n> **注意。** *ate*、*went*、*wrote*、*saw*、*broke* 这类一般过去式绝不能跟在 *had* 后面。可以用 *already* 搭配过去分词检验（*gone*、*written*、*eaten*、*seen*、*broken*）。",
   ],
   ["Which form completes the sentence?", "哪个形式能补全句子？"],
   `
@@ -411,7 +417,10 @@ const hadForm = choose(
   She ___ the answer, so she raised her hand.|had known|had knew|has known
   The bus ___ by the time I ran outside.|had gone|had went|has gone
   `,
-  (right) => [`*${right}*: *had* plus the past participle.`, `*${right}*：*had* 加过去分词。`],
+  (right) => [
+    `**${right}** pairs *had* with the true past participle, forming the past perfect.\n\n**Check.** Check both pieces: *had* (not *has* or *have*) anchors the tense in the past, and the verb after *had* is the third principal part (the past participle).`,
+    `**${right}** 用 *had* 搭配真正的过去分词，构成过去完成时。\n\n**检验。** 核对两部分：助动词用 *had*（而不是 *has* 或 *have*）锁定在过去，后面的动词是过去分词形式。`,
+  ],
   [
     ["*{wrong}* puts the wrong form of the verb after *had*.", "*{wrong}* 在 *had* 后面用了错误的动词形式。"],
     ["*{wrong}* is the present perfect, not the past perfect.", "*{wrong}* 是现在完成时，不是过去完成时。"],
@@ -422,8 +431,8 @@ const splice = choose(
   "fixing-a-comma-splice",
   ["Fixing a Comma Splice", "修正逗号粘连"],
   [
-    "Two independent clauses joined by a comma alone make a **comma splice**: *The rain stopped, we went outside.* Fix it with a **semicolon**, with a **period**, or with a comma plus a conjunction such as *and* or *so*. Just removing the comma makes a run-on sentence.",
-    "两个独立分句只用逗号连接，就是**逗号粘连**：*The rain stopped, we went outside.* 修正的方法是用**分号**、用**句号**，或者用逗号加上 *and*、*so* 等连词。只删掉逗号会造成连写句。",
+    "Two independent clauses joined by a comma alone make a **comma splice**: *The rain stopped, we went outside.* Fix it with a **semicolon**, with a **period**, or with a comma plus a conjunction such as *and* or *so*. Just removing the comma makes a run-on sentence.\n\n> **Watch out.** Adding an adverb like *however*, *therefore*, or *then* after a comma (*The test was hard, however I passed*) does **not** fix a comma splice — only *and, but, or, nor, for, so, yet* can pair with a comma to join two full sentences.",
+    "两个独立分句只用逗号连接，就是**逗号粘连**：*The rain stopped, we went outside.* 修正的方法是用**分号**、用**句号**，或者用逗号加上 *and*、*so* 等连词。只删掉逗号会造成连写句。\n\n> **注意。** 在逗号后面加 *however*、*therefore* 或 *then* 这类副词（*The test was hard, however I passed*）并不能修好逗号粘连——只有 *and、but、or、nor、for、so、yet* 这类并列连词才能和逗号一起连接两个完整句子。",
   ],
   ["Which revision fixes the comma splice?", "哪个修改纠正了逗号粘连？"],
   `
@@ -458,7 +467,10 @@ const splice = choose(
   Leo likes math, his twin likes art.|Leo likes math, and his twin likes art.|Leo likes math his twin likes art.|Leo likes math, besides his twin likes art.
   The trail was steep, we kept climbing.|The trail was steep, but we kept climbing.|The trail was steep we kept climbing.|The trail was steep, still we kept climbing.
   `,
-  (right) => [`"${right}" joins the two clauses correctly.`, `“${right}”正确地连接了两个分句。`],
+  (right) => [
+    `*${right}* repairs the boundary between the two independent clauses with a semicolon, a period, or a comma plus a coordinating conjunction (*and*, *but*, *so*).\n\n**Check.** Inspect the seam between the two full clauses: it is neither bare (run-on) nor held by just a comma and an adverb.`,
+    `*${right}* 用分号、句号，或逗号加并列连词（*and*、*but*、*so*）修好了两个独立分句之间的连接。\n\n**检验。** 检查两个完整分句的交界处：既没有无标点硬连（连写句），也没有只靠逗号加副词勉强粘在一起。`,
+  ],
   [
     ['"{wrong}" removes the comma and makes a run-on sentence.', "“{wrong}”删掉了逗号，造成了连写句。"],
     [
@@ -472,8 +484,8 @@ const method = choose(
   "the-passive-in-a-method",
   ["The Passive in a Method", "实验方法中的被动语态"],
   [
-    "The method of a lab report tells what was done, in the **past passive**: *The samples **were heated** for ten minutes*. *Was* goes with a singular subject and *were* with a plural one. The active *We heated* is acceptable in some reports, but a bare past form with the thing as subject, *The samples heated*, says the samples did the heating.",
-    "实验报告的方法部分用**一般过去时的被动语态**说明做了什么：*The samples **were heated** for ten minutes*。单数主语用 *was*，复数主语用 *were*。有些报告也可以用主动的 *We heated*，但把物当主语、只用过去式，如 *The samples heated*，就成了样本自己在加热。",
+    "The method of a lab report tells what was done, in the **past passive**: *The samples **were heated** for ten minutes*. *Was* goes with a singular subject and *were* with a plural one. The active *We heated* is acceptable in some reports, but a bare past form with the thing as subject, *The samples heated*, says the samples did the heating.\n\n> **Watch out.** Check both parts of the verb: a lab subject like *The solution* or *The samples* cannot act on itself (so it needs *was/were + participle*), and *was* vs. *were* must match the subject's number.",
+    "实验报告的方法部分用**一般过去时的被动语态**说明做了什么：*The samples **were heated** for ten minutes*。单数主语用 *was*，复数主语用 *were*。有些报告也可以用主动的 *We heated*，但把物当主语、只用过去式，如 *The samples heated*，就成了样本自己在加热。\n\n> **注意。** 要同时核对两点：实验对象（如 *The solution* 或 *The samples*）不会自己操作自己，所以要用 *was/were + 过去分词*；并且 *was* 和 *were* 要与主语的单复数一致。",
   ],
   ["Which words complete the method?", "哪组词能补全方法部分？"],
   `
@@ -509,8 +521,8 @@ const method = choose(
   The thermometer ___ in the water.|was placed|were placed|placed
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": the past passive, agreeing with the subject.`,
-    `“${shown.replace("___", right)}”：一般过去时的被动语态，与主语一致。`,
+    `The completed method step reads *${shown.replace("___", right)}* — **${right}** is the past passive agreeing with the subject.\n\n**Check.** Substitute *it* (singular → *was*) or *they* (plural → *were*) for the subject and confirm that something was done *to* it.`,
+    `补全后的步骤是 *${shown.replace("___", right)}*：**${right}** 是与主语单复数一致的一般过去时被动语态。\n\n**检验。** 把主语换成 *it*（单数配 *was*）或 *they*（复数配 *were*），并确认动作是施加在它身上的。`,
   ],
   [
     ["*{wrong}* does not agree with the subject in number.", "*{wrong}* 与主语的单复数不一致。"],
@@ -522,8 +534,8 @@ const every = choose(
   "each-and-every-with-and",
   ["Each and Every with And", "each 和 every 与 and"],
   [
-    "Two subjects joined by *and* usually take a plural verb, but when *each* or *every* comes before them, each is taken **one at a time**, so the verb is singular: ***Every** boy and girl **has** a ticket*; ***Each** chair and table **was** cleaned*. Without *each* or *every*, the plural returns: *The boy and the girl have tickets*.",
-    "用 *and* 连接的两个主语通常用复数动词，但如果前面有 *each* 或 *every*，就是**逐个**来看，所以动词用单数：***Every** boy and girl **has** a ticket*；***Each** chair and table **was** cleaned*。没有 *each* 或 *every* 时，又要用复数：*The boy and the girl have tickets*。",
+    "Two subjects joined by *and* usually take a plural verb, but when *each* or *every* comes before them, each is taken **one at a time**, so the verb is singular: ***Every** boy and girl **has** a ticket*; ***Each** chair and table **was** cleaned*. Without *each* or *every*, the plural returns: *The boy and the girl have tickets*.\n\n> **Watch out.** Do not let *and* automatically trigger a plural verb: scan the very start of the subject for *each* or *every* first.",
+    "用 *and* 连接的两个主语通常用复数动词，但如果前面有 *each* 或 *every*，就是**逐个**来看，所以动词用单数：***Every** boy and girl **has** a ticket*；***Each** chair and table **was** cleaned*。没有 *each* 或 *every* 时，又要用复数：*The boy and the girl have tickets*。\n\n> **注意。** 不要一看到 *and* 就直接选复数动词：先扫一眼主语最前面有没有 *each* 或 *every*。",
   ],
   ["Which verb agrees with the subject?", "哪个动词与主语一致？"],
   `
@@ -559,8 +571,8 @@ const every = choose(
   The song and the poem ___ titles.|need|needs|needing
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": ${shown.startsWith("Each") || shown.startsWith("Every") ? "*each* or *every* takes the subjects one at a time" : "two subjects joined by *and* are plural"}.`,
-    `“${shown.replace("___", right)}”：${shown.startsWith("Each") || shown.startsWith("Every") ? "*each* 或 *every* 表示逐个来看" : "用 *and* 连接的两个主语是复数"}。`,
+    `The completed sentence reads *${shown.replace("___", right)}* — ${shown.startsWith("Each") || shown.startsWith("Every") ? "*each* or *every* takes the subjects one at a time, so the verb is singular" : "two subjects joined by *and* without *each* or *every* take a plural verb"}.\n\n**Check.** Substitute ${shown.startsWith("Each") || shown.startsWith("Every") ? "*every single one*" : "*they*"} for the subject: **${right}** matches it cleanly.`,
+    `补全后是 *${shown.replace("___", right)}*：${shown.startsWith("Each") || shown.startsWith("Every") ? "*each* 或 *every* 表示逐个来看，动词用单数" : "没有 *each* 或 *every* 时，*and* 连接的两个主语用复数动词"}。\n\n**检验。** 把主语换成${shown.startsWith("Each") || shown.startsWith("Every") ? "“每一个”（单数）" : " *they*（复数）"}，**${right}** 正好与之搭配。`,
   ],
   [
     [
@@ -575,8 +587,8 @@ const directions = choose(
   "revising-directions",
   ["Revising Directions", "修改说明文字"],
   [
-    "Directions are clearest in the **imperative** throughout: *Mix the flour. Add the eggs. Stir well.* A step that slips into another mood, *You should add the eggs* or *The eggs are added*, breaks the pattern. Revise every step to begin with its verb.",
-    "说明文字从头到尾都用**祈使语气**最清楚：*Mix the flour. Add the eggs. Stir well.* 某一步换成别的语气，如 *You should add the eggs* 或 *The eggs are added*，就打破了统一的格式。把每一步都改成以动词开头。",
+    "Directions are clearest in the **imperative** throughout: *Mix the flour. Add the eggs. Stir well.* A step that slips into another mood, *You should add the eggs* or *The eggs are added*, breaks the pattern. Revise every step to begin with its verb.\n\n> **Watch out.** Even polite advice (*You should …*, *You could …*) breaks the imperative rhythm in a set of instructions. Cut the subject and modal so the verb leads.",
+    "说明文字从头到尾都用**祈使语气**最清楚：*Mix the flour. Add the eggs. Stir well.* 某一步换成别的语气，如 *You should add the eggs* 或 *The eggs are added*，就打破了统一的格式。把每一步都改成以动词开头。\n\n> **注意。** 哪怕是委婉的建议（*You should …*、*You could …*），也会打断操作说明的祈使句节奏。删掉主语和情态动词，直接让动词打头。",
   ],
   ["Which step keeps the directions in one mood?", "哪一步让说明文字保持了统一的语气？"],
   `
@@ -611,7 +623,10 @@ const directions = choose(
   Choose a book. ___ Write a short summary.|Read the first chapter.|You might read the first chapter.|The first chapter is read.
   Line up at the door. ___ Walk to the bus.|Wait for your name.|You should wait for your name.|Your name is waited for.
   `,
-  (right) => [`"${right}" begins with its verb, like the other steps.`, `“${right}”像其他步骤一样以动词开头。`],
+  (right) => [
+    `*${right}* opens with a bare command verb, keeping all three steps in the imperative mood.\n\n**Check.** Read the first word of all three steps in a row: every one is an action verb giving a direct command.`,
+    `*${right}* 以动词原形开头发出指令，让三个步骤保持统一的祈使语气。\n\n**检验。** 依次读三个步骤的第一个词：每一个都是直接发出指令的动词。`,
+  ],
   [
     ['"{wrong}" slips into advice with a modal, not a command.', "“{wrong}”变成了带情态动词的建议，而不是指令。"],
     ['"{wrong}" slips into the passive, which hides who does the step.', "“{wrong}”变成了被动语态，看不出是谁做这一步。"],
@@ -622,8 +637,8 @@ const opener = choose(
   "the-doer-after-the-opener",
   ["The Doer After the Opener", "开头短语后的施动者"],
   [
-    "An opening phrase with a verb in it describes whoever comes right after the comma, so the **doer** of that action must be the subject: *Running for the bus, **I** dropped my bag*. If the subject is something else, *my bag fell*, the bag was running.",
-    "含有动词的开头短语描述的是紧跟在逗号后面的那个人或物，所以这个动作的**施动者**必须做主语：*Running for the bus, **I** dropped my bag*。如果主语是别的东西，如 *my bag fell*，那就成了包在跑。",
+    "An opening phrase with a verb in it describes whoever comes right after the comma, so the **doer** of that action must be the subject: *Running for the bus, **I** dropped my bag*. If the subject is something else, *my bag fell*, the bag was running.\n\n> **Watch out.** Even a possessive like *Grandma's face* or *Dad's hand* makes *face* or *hand* the subject instead of the person. Put the person themselves right after the comma.",
+    "含有动词的开头短语描述的是紧跟在逗号后面的那个人或物，所以这个动作的**施动者**必须做主语：*Running for the bus, **I** dropped my bag*。如果主语是别的东西，如 *my bag fell*，那就成了包在跑。\n\n> **注意。** 哪怕写成 *Grandma's face* 或 *Dad's hand* 这样的所有格，主语也会变成 *face* 或 *hand* 而不是人本身。必须把人直接放在逗号后面作主语。",
   ],
   ["Which words complete the sentence correctly?", "哪组词能正确地补全句子？"],
   `
@@ -658,7 +673,10 @@ const opener = choose(
   Excited by the news, ___|the fans danced in the street.|the street filled with music.|dancing was done in the street.
   Watching the movie, ___|we ate popcorn.|the popcorn ran out.|popcorn was eaten.
   `,
-  (right) => [`"${right}" makes the doer of the opening action the subject.`, `“${right}”让开头动作的施动者做了主语。`],
+  (right) => [
+    `*${right}* puts the person who did the opening action right after the comma as the main subject.\n\n**Check.** Ask *Who is doing or feeling the opening phrase?* — the subject immediately after the comma answers that question.`,
+    `*${right}* 把发出开头动作或处于开头状态的人直接放在逗号后面作主语。\n\n**检验。** 问一句“是谁在做开头的动作或处于那种状态？”，紧跟逗号后的主语正好给出回答。`,
+  ],
   [
     ['"{wrong}" makes something else the subject, so the opener dangles.', "“{wrong}”让别的东西做了主语，开头短语成了悬垂修饰语。"],
     ['"{wrong}" is passive, so the doer never becomes the subject.', "“{wrong}”是被动语态，施动者没有做主语。"],
@@ -669,8 +687,8 @@ const essential = choose(
   "it-is-essential-that",
   ["It Is Essential That", "It is essential that 句型"],
   [
-    "After *it is essential that*, *it is important that*, *it is necessary that* and *it is vital that*, formal English uses the subjunctive, the **base form** of the verb for every subject: *It is essential that he **be** on time*; *It is important that she **arrive** early*. The base form has no *-s* and no past tense.",
-    "在 *it is essential that*、*it is important that*、*it is necessary that* 和 *it is vital that* 之后，正式英语用虚拟语气，即所有主语都用动词**原形**：*It is essential that he **be** on time*；*It is important that she **arrive** early*。原形不加 *-s*，也不用过去式。",
+    "After *it is essential that*, *it is important that*, *it is necessary that* and *it is vital that*, formal English uses the subjunctive, the **base form** of the verb for every subject: *It is essential that he **be** on time*; *It is important that she **arrive** early*. The base form has no *-s* and no past tense.\n\n> **Watch out.** Even when the opener is in the past (*It was necessary that …*), the verb in the *that* clause stays in its plain base form (*know*, *sign*, *come*), never past tense.",
+    "在 *it is essential that*、*it is important that*、*it is necessary that* 和 *it is vital that* 之后，正式英语用虚拟语气，即所有主语都用动词**原形**：*It is essential that he **be** on time*；*It is important that she **arrive** early*。原形不加 *-s*，也不用过去式。\n\n> **注意。** 即使开头是过去时（*It was necessary that …*），*that* 从句里的动词也依然保持原形（*know*、*sign*、*come*），绝不改成过去式。",
   ],
   ["Which verb completes the sentence in formal English?", "在正式英语中，哪个动词能补全句子？"],
   `
@@ -706,8 +724,8 @@ const essential = choose(
   It is necessary that the door ___ shut.|stay|stays|stayed
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": the subjunctive uses the base form for every subject.`,
-    `“${shown.replace("___", right)}”：虚拟语气对所有主语都用动词原形。`,
+    `The completed sentence reads *${shown.replace("___", right)}* — the subjunctive takes the bare base form **${right}** regardless of subject or main-clause tense.\n\n**Check.** Put *to* in front of *${right}* (*to ${right}*): it is the untouched dictionary base form with no *-s* and no past ending.`,
+    `补全后是 *${shown.replace("___", right)}*：虚拟语气不随主语人称或主句时态变化，一律用动词原形 **${right}**。\n\n**检验。** 在 *${right}* 前面加上 *to*（*to ${right}*）：它就是不加 *-s*、不带过去式的词典原形。`,
   ],
   [
     [
@@ -722,8 +740,8 @@ const weUs = choose(
   "we-or-us-before-a-noun",
   ["We or Us Before a Noun", "名词前用 we 还是 us"],
   [
-    "When *we* or *us* comes right before a noun, as in *we students*, drop the noun to choose: *(We) students want a longer lunch* → ***We** want*, so *We students*. *The coach praised (us) players* → *praised **us***, so *us players*.",
-    "当 *we* 或 *us* 紧挨在名词前面时，如 *we students*，先把名词去掉再选：*(We) students want a longer lunch* → ***We** want*，所以是 *We students*。*The coach praised (us) players* → *praised **us***，所以是 *us players*。",
+    "When *we* or *us* comes right before a noun, as in *we students*, drop the noun to choose: *(We) students want a longer lunch* → ***We** want*, so *We students*. *The coach praised (us) players* → *praised **us***, so *us players*.\n\n> **Watch out.** *Our* is possessive and means the group belongs to someone else (*our students* = the students we teach), whereas *we students* and *us students* mean we *are* the students.",
+    "当 *we* 或 *us* 紧挨在名词前面时，如 *we students*，先把名词去掉再选：*(We) students want a longer lunch* → ***We** want*，所以是 *We students*。*The coach praised (us) players* → *praised **us***，所以是 *us players*。\n\n> **注意。** *our* 是所有格，表示“我们的（学生）”，意思就变了；而 *we students* 和 *us students* 表示“我们这些学生”。",
   ],
   ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
   `
@@ -759,8 +777,8 @@ const weUs = choose(
   ___ artists painted the mural in a week.|We|Us|Our
   `,
   (right) => [
-    `Drop the noun and *${right}* still fits: it is the ${right === "We" ? "subject" : "object"}.`,
-    `去掉名词后 *${right}* 仍然通顺：它是${right === "We" ? "主语" : "宾语"}。`,
+    `**${right}** is the right case because it serves as the ${right === "We" ? "subject" : "object"} of the sentence.\n\n**Check.** Cover the noun right after the blank and read the sentence with just *${right}*: it stays grammatical without the noun.`,
+    `**${right}** 的格正确，因为它在句中作${right === "We" ? "主语" : "宾语"}。\n\n**检验。** 遮住空格后面的名词，只留 *${right}* 读一遍句子，语法依然完全通顺。`,
   ],
   [
     ["*{wrong}* is the wrong case: drop the noun and read the sentence.", "*{wrong}* 的格不对：去掉名词再读一读句子。"],
@@ -772,8 +790,8 @@ const keepE = choose(
   "keeping-e-after-c-and-g",
   ["Keeping E After C and G", "c 和 g 之后保留 e"],
   [
-    "A silent *e* is usually dropped before a suffix that starts with a vowel: *hope*, *hoping*. But after a **soft c or g**, the *e* stays before *-able* and *-ous*, to keep the sound soft: *notice*, *noticeable*; *courage*, *courageous*; *change*, *changeable*. Before a suffix starting with a consonant, the *e* stays: *hopeful*, *careless*.",
-    "不发音的 *e* 在以元音开头的后缀前通常要去掉：*hope*、*hoping*。但在**软音 c 或 g** 后面，*e* 在 *-able* 和 *-ous* 前要保留，以保持软音：*notice*、*noticeable*；*courage*、*courageous*；*change*、*changeable*。在以辅音开头的后缀前，*e* 保留：*hopeful*、*careless*。",
+    "A silent *e* is usually dropped before a suffix that starts with a vowel: *hope*, *hoping*. But after a **soft c or g**, the *e* stays before *-able* and *-ous*, to keep the sound soft: *notice*, *noticeable*; *courage*, *courageous*; *change*, *changeable*. Before a suffix starting with a consonant, the *e* stays: *hopeful*, *careless*.\n\n> **Watch out.** Do not double the *l* in *-ful* (*hopeful*, not *hopefull*), and do not change *-able* to *-ible* after keeping the *e* (*noticeable*, not *noticeible*).",
+    "不发音的 *e* 在以元音开头的后缀前通常要去掉：*hope*、*hoping*。但在**软音 c 或 g** 后面，*e* 在 *-able* 和 *-ous* 前要保留，以保持软音：*notice*、*noticeable*；*courage*、*courageous*；*change*、*changeable*。在以辅音开头的后缀前，*e* 保留：*hopeful*、*careless*。\n\n> **注意。** 后缀 *-ful* 只有一个 *l*（*hopeful*，不是 *hopefull*）；保留 *e* 后也不要把 *-able* 误拼成 *-ible*（*noticeable*，不是 *noticeible*）。",
   ],
   ["Which spelling is correct?", "哪个拼写正确？"],
   `
@@ -808,7 +826,10 @@ const keepE = choose(
   peace + ful|peaceful|peacful|peacefull
   taste + less|tasteless|tastless|tastelless
   `,
-  (right) => [`*${right}* keeps the *e* where the rule needs it.`, `*${right}* 在规则需要的地方保留了 *e*。`],
+  (right) => [
+    `**${right}** keeps the silent *e* — either to keep soft *c*/*g* before *-able*/*-ous* or because the suffix begins with a consonant — and spells the suffix accurately.\n\n**Check.** Split **${right}** back into base word + suffix: both the full base word (ending in *e*) and the exact suffix from the prompt remain intact.`,
+    `**${right}** 按规则保留了不发音的 *e*（在 *-able*/*-ous* 前保持软音 *c*/*g*，或在辅音开头的后缀前保留词根），且后缀拼写正确。\n\n**检验。** 把 **${right}** 拆回词根加后缀：带 *e* 的完整词根和题面给出的后缀都完好无损。`,
+  ],
   [
     ["*{wrong}* drops the *e* that keeps the sound or the base word.", "*{wrong}* 去掉了用来保持读音或词根的 *e*。"],
     ["*{wrong}* misspells the suffix.", "*{wrong}* 拼错了后缀。"],
@@ -856,23 +877,23 @@ const confused = label(
   "proofreading-for-confused-words",
   ["Proofreading for Confused Words", "校对易混淆词"],
   [
-    "A spell checker will not catch a confused word, because the wrong word is spelled correctly. Proofread by stopping at each word of a confused pair and asking which meaning the sentence needs: a person who runs a school is a **principal**, a rule is a **principle**; praise is a **compliment**, completing is a **complement**.",
-    "拼写检查发现不了易混淆词，因为错用的词本身拼写正确。校对时，遇到易混淆词组中的每个词都停下来，问一问句子需要哪个意思：管理学校的人是 **principal**，原则是 **principle**；称赞是 **compliment**，补充使完整是 **complement**。",
+    "A spell checker will not catch a confused word, because the wrong word is spelled correctly. Proofread by stopping at each word of a confused pair and asking which meaning the sentence needs: a person who runs a school is a **principal**, a rule is a **principle**; praise is a **compliment**, completing is a **complement**.\n\n> **Watch out.** Do not read by sound alone when proofreading: *stationary* and *stationery* sound identical, so check the telling letter (*a* for *at rest*, *e* for *envelope*; *pal* in *principal*, *le* in *rule*/*principle*).",
+    "拼写检查发现不了易混淆词，因为错用的词本身拼写正确。校对时，遇到易混淆词组中的每个词都停下来，问一问句子需要哪个意思：管理学校的人是 **principal**，原则是 **principle**；称赞是 **compliment**，补充使完整是 **complement**。\n\n> **注意。** 校对时不能只靠读音判断：*stationary* 和 *stationery* 读音完全一样，必须盯住关键字母（*a* 对应 *at rest*、*e* 对应 *envelope*；*principal* 含 *pal*，*principle* 与 *rule* 同以 *-le* 结尾）。",
   ],
   ["Is the confused word used correctly?", "这个易混淆词用对了吗？"],
   confusedLines,
   {
     correct: L(
       "正确",
-      "The word has the meaning the sentence needs.",
-      "这个词的意思正是句子所需要的。",
+      "The word's spelling matches the meaning the sentence calls for.\n\n**Check.** Substitute the plain definition of that exact spelling into the sentence: it fits without changing the intended sense.",
+      "这个词的拼写正好对应句子需要的意思。\n\n**检验。** 把这个拼写对应的释义代进原句读一遍，句意完全贴合。",
       "The word is its pair's partner, with a different meaning.",
       "这个词是与它成对的那个词，意思不同。",
     ),
     "wrong word": L(
       "用错了词",
-      "The word is spelled correctly, but the sentence needs its pair's meaning.",
-      "这个词拼写正确，但句子需要的是与它成对的那个词的意思。",
+      "The word is spelled correctly, but it is the other half of the pair and carries the wrong meaning for this sentence.\n\n**Check.** Swap in the definition of the spelling shown: it produces a nonsensical image (such as a rule welcoming students or writing on a still bus), confirming the partner word belongs here.",
+      "这个词本身没有拼错，但它是易混词对里的另一个词，意思和句子不符。\n\n**检验。** 按当前拼写的字面意思去理解句子，会得出不合常理的画面，说明这里该换成它的配对词。",
       "The word has the meaning the sentence needs.",
       "这个词的意思正是句子所需要的。",
     ),

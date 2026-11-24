@@ -902,26 +902,28 @@ function usedRule(sentence: string): Text {
 /** usedWhy puts the rule of used to before a sentence. */
 const usedWhy = (sentence: string, shown: string): Text => {
   const rule = usedRule(shown);
-  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+  const hasDid = shown.includes("didn't") || shown.includes("did not") || shown.startsWith("Did ");
+  return t(
+    `${rule.en}: ${sentence}\n\n**Check.** ${hasDid ? "Spot *did/didn't* earlier in the sentence: because *did* already carries the past, drop the *-d* (*use to*)." : "There is no *did* in this statement, so the past *-d* stays on *used to* before the plain verb."}`,
+    `${rule["zh-CN"]}：${sentence}\n\n**检验。** ${hasDid ? "看句中已经出现的 *did/didn't*：过去时已由 *did* 承担，所以去掉 *-d* 用 *use to*。" : "这个陈述句里没有 *did*，所以保留过去式 *-d*，用 *used to* 加动词原形。"}`,
+  );
 };
 
 /** whyNotUsed explains a wrong form of used to. */
-const whyNotUsed = (wrong: string, _right: string, shown: string): Text => {
-  const rule = usedRule(shown);
-  let first: Text;
+const whyNotUsed = (wrong: string): Text => {
   if (wrong === "was used to")
-    first = t(
-      "*was used to* means being accustomed to something, and it is followed by *-ing*, not the base form.",
-      "*was used to* 表示“习惯于”，后面接 *-ing*，不接动词原形。",
+    return t(
+      "*was used to* means being accustomed to something and is followed by *-ing* or a noun, not a base verb.",
+      "*was used to* 表示“习惯于”，后面接 *-ing* 或名词，不接动词原形。",
     );
-  else if (wrong === "use to") first = t("*use to* without *did* has no past.", "没有 *did* 时，*use to* 没有表示过去。");
-  else if (wrong === "used to")
-    first = t(
-      "*used to* would show the past twice, once in *did* and once in *-d*.",
-      "*used to* 会把过去表示两次：*did* 一次，*-d* 一次。",
+  if (wrong === "use to")
+    return t("*use to* without *did* has no past tense marking in a positive statement.", "肯定句里没有 *did*，*use to* 缺少过去时标记。");
+  if (wrong === "used to")
+    return t(
+      "*used to* after *did* or *didn't* marks the past twice—once in *did* and again in *-d*.",
+      "在 *did* 或 *didn't* 后面用 *used to* 会把过去标记两次（*did* 一次，*-d* 一次）。",
     );
-  else first = t(`*${wrong}* is not a form of *used to* that goes after *did*.`, `*${wrong}* 不能放在 *did* 后面。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  return t(`*${wrong}* is not a valid form after *did*.`, `*${wrong}* 不是 *did* 后面的正确形式。`);
 };
 
 const usedTo: TopicDef = {
@@ -930,6 +932,10 @@ const usedTo: TopicDef = {
   summary: t(
     "I used to live in a village, but now I live in a city. Used to tells of a past habit or state that has ended; after did, it is use to.",
     "I used to live in a village, but now I live in a city。used to 表示过去的习惯或状态，现在已经不这样了；did 后面用 use to。",
+  ),
+  intro: t(
+    "Compare *He used to work in a factory* (a past routine that has ended) with *He didn't use to drive to work*. Notice how the *-d* disappears the moment *did* or *didn't* enters the sentence.",
+    "比较 *He used to work in a factory*（过去常做、如今不再）和 *He didn't use to drive to work*。注意一旦句中出现 *did* 或 *didn't*，*-d* 就会消失。",
   ),
   prerequisites: ["past-simple-questions-and-negatives"],
   encompasses: [
@@ -943,8 +949,8 @@ const usedTo: TopicDef = {
       "forms",
       t("Used to or use to?", "used to 还是 use to？"),
       t(
-        "*Used to* + the base form of a verb tells of something that was true or happened often in the past, but is not true now.\n\n- *I **used to** live in a village.* (Now I live in a city.)\n- *There **used to** be a cinema here.*\n\nIn negatives and questions, *did* carries the past, so the verb is *use to*, with no *d*:\n\n- *I **didn't use to** like coffee.*\n- ***Did** you **use to** play the piano?*\n\nDo not add *was*: not *I was used to live*.",
-        "*used to* 加动词原形，表示过去常常发生或过去是这样、但现在已经不这样的事情，相当于中文的“以前常常……”“过去曾经……”。\n\n- *I **used to** live in a village.*（现在住在城市。）\n- *There **used to** be a cinema here.*\n\n否定句和疑问句中，过去时已经由 *did* 表示，所以动词用 *use to*，不加 *d*：\n\n- *I **didn't use to** like coffee.*\n- ***Did** you **use to** play the piano?*\n\n不要加 *was*：不能说 *I was used to live*。（*be used to doing* 是“习惯于做……”，是另一个意思。）",
+        "*Used to* + the base form of a verb tells of something that was true or happened often in the past, but is not true now.\n\n- *I **used to** live in a village.* (Now I live in a city.)\n- *There **used to** be a cinema here.*\n\nIn negatives and questions, *did* carries the past, so the verb is *use to*, with no *d*:\n\n- *I **didn't use to** like coffee.*\n- ***Did** you **use to** play the piano?*\n\n> **Watch out.** Never add *was* before *used to* + base verb (*I was used to live* is wrong), and drop the *-d* after *did/didn't* (*didn't use to*, not *didn't used to*).",
+        "*used to* 加动词原形，表示过去常常发生或过去是这样、但现在已经不这样的事情，相当于中文的“以前常常……”“过去曾经……”。\n\n- *I **used to** live in a village.*（现在住在城市。）\n- *There **used to** be a cinema here.*\n\n否定句和疑问句中，过去时已经由 *did* 表示，所以动词用 *use to*，不加 *d*：\n\n- *I **didn't use to** like coffee.*\n- ***Did** you **use to** play the piano?*\n\n> **注意。** 不要在 *used to* + 动词原形前加 *was*（*I was used to live* 是错的），且在 *did/didn't* 后面去掉 *-d*（用 *didn't use to*，不用 *didn't used to*）。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -957,8 +963,8 @@ const usedTo: TopicDef = {
       "write",
       t("Writing with used to", "用 used to 写句子"),
       t(
-        "Write the sentence from the note. For a past habit: *I used to live in a small village.* For one that was not true: *I didn't use to live in a small village.*",
-        "根据笔记写句子。过去的习惯：*I used to live in a small village.* 过去不是这样：*I didn't use to live in a small village.*",
+        "Write the sentence from the note. For a past habit: *I used to live in a small village.* For one that was not true: *I didn't use to live in a small village.*\n\n> **Watch out.** Keep the verb after *to* in its plain base form (*used to live*, not *used to lived*), and remember *didn't use to* has no *-d*.",
+        "根据笔记写句子。过去的习惯：*I used to live in a small village.* 过去不是这样：*I didn't use to live in a small village.*\n\n> **注意。** *to* 后面的动词保持原形（*used to live*，不要写成 *used to lived*），否定句里的 *didn't use to* 不带 *-d*。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1076,31 +1082,34 @@ function ppcRule(sentence: string): Text {
 /** ppcWhy puts the rule of the present perfect continuous before a sentence. */
 const ppcWhy = (sentence: string, shown: string): Text => {
   const rule = ppcRule(shown);
-  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+  return t(
+    `${rule.en}: ${sentence}\n\n**Check.** Verify all three pieces of the verb phrase: *have/has* (matching the subject) + *been* + *-ing*.`,
+    `${rule["zh-CN"]}：${sentence}\n\n**检验。** 核对动词短语的三个部分：与主语一致的 *have/has* + *been* + 动词 *-ing*。`,
+  );
 };
 
 /** whyNotPpc explains the present continuous, a missing have, or a missing been. */
-const whyNotPpc = (wrong: string, right: string, shown: string): Text => {
-  const rule = ppcRule(shown);
+const whyNotPpc = (wrong: string): Text => {
   const [first0 = ""] = wrong.split(" ");
-  let first: Text;
   if (wrong.includes(" being "))
-    first = t(
-      `*${wrong}* has *being*, the *-ing* form of *be*; after *${first0}* the form is *been*.`,
-      `*${wrong}* 用了 *being*，即 *be* 的 *-ing* 形式；*${first0}* 后面要用 *been*。`,
+    return t(
+      `*${wrong}* uses *being* (the *-ing* form of *be*), not the past participle *been* required after *${first0}*.`,
+      `*${wrong}* 用了 *be* 的 *-ing* 形式 *being*，而不是 *${first0}* 后面要求的过去分词 *been*。`,
     );
-  else if (/^(am|is|are)$/u.test(first0) && wrong.includes(" been "))
-    first = t(
-      `*${first0}* cannot go with *been*; the present perfect takes *${right.split(" ")[0]}*.`,
-      `*${first0}* 不能和 *been* 连用，完成时要用 *${right.split(" ")[0]}*。`,
+  if (/^(am|is|are)$/u.test(first0) && wrong.includes(" been "))
+    return t(
+      `*${first0}* cannot pair with *been*; the present perfect continuous needs *have* or *has* before *been*.`,
+      `*${first0}* 不能和 *been* 连用；现在完成进行时在 *been* 前面要用 *have* 或 *has*。`,
     );
-  else if (/^(am|is|are)$/u.test(first0))
-    first = t(
-      `*${wrong}* is the present continuous, which does not go with *since* or *for*.`,
-      `*${wrong}* 是现在进行时，不能和 *since* 或 *for* 连用。`,
+  if (/^(am|is|are)$/u.test(first0))
+    return t(
+      `*${wrong}* is the present continuous, which cannot be paired with *since* or *for* to show how long an action has lasted.`,
+      `*${wrong}* 是现在进行时，不能和 *since* 或 *for* 连用来表示动作持续了多久。`,
     );
-  else first = t(`*${wrong}* leaves out *been*.`, `*${wrong}* 漏掉了 *been*。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  return t(
+    `*${wrong}* leaves out *been* between *${first0}* and the *-ing* verb.`,
+    `*${wrong}* 在 *${first0}* 和 *-ing* 动词之间漏掉了 *been*。`,
+  );
 };
 
 /** forSinceRule names why a time takes since or for. */
@@ -1112,16 +1121,24 @@ const forSinceRule = (right: string, shown: string): Text => {
 };
 
 /** whyNotForSince explains for, since, from or during in the wrong place. */
-const whyNotForSince = (wrong: string, right: string, shown: string): Text => {
-  const rule = forSinceRule(right, shown);
+const whyNotForSince = (wrong: string, _right: string, shown: string): Text => {
+  const time = (shown.split("___ ")[1] ?? "").replace(/\.$/u, "");
   const use: Record<string, Text> = {
-    for: t("*for* goes before a length of time.", "*for* 用在一段时间前。"),
-    since: t("*since* goes before the point when something began.", "*since* 用在开始的时间点前。"),
-    from: t("*from* needs *to* after it and does not go with this tense.", "*from* 需要和 *to* 搭配，不能和这个时态连用。"),
-    during: t("*during* says when something happened, not how long it has lasted.", "*during* 表示在某段时间里，不表示持续了多久。"),
+    for: t(`*for* goes before a length of time, but *${time}* is a starting point.`, `*for* 用在一段时间前，而 *${time}* 是开始的时间点。`),
+    since: t(
+      `*since* goes before a starting point, but *${time}* is a length of time.`,
+      `*since* 用在开始的时间点前，而 *${time}* 是一段时间。`,
+    ),
+    from: t(
+      "*from* needs *to* after it and does not replace *since* in this tense.",
+      "*from* 需要和 *to* 搭配，不能在这个时态里表示“自从”。",
+    ),
+    during: t(
+      "*during* says when something happened, not how long an action has continued.",
+      "*during* 表示在某段时间里，不表示动作持续了多久。",
+    ),
   };
-  const first = use[wrong] ?? t(`*${wrong}* is wrong here.`, `这里不能用 *${wrong}*。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  return use[wrong] ?? t(`*${wrong}* does not fit here.`, `这里不能用 *${wrong}*。`);
 };
 
 const presentPerfectContinuous: TopicDef = {
@@ -1130,6 +1147,10 @@ const presentPerfectContinuous: TopicDef = {
   summary: t(
     "She has been working here since May. I have been waiting for twenty minutes. Have or has, been and -ing, for something that began in the past and is still going on.",
     "She has been working here since May. I have been waiting for twenty minutes. 用 have/has been 加 -ing，表示从过去开始、现在仍在进行的动作。",
+  ),
+  intro: t(
+    "When an activity started earlier and is still underway—*It has been raining since noon* or *They have been practicing for two hours*—English uses *have/has + been + -ing* to link the duration directly to now.",
+    "当一个动作从过去开始、此刻仍在进行（*It has been raining since noon* 或 *They have been practicing for two hours*），英语用 *have/has + been + -ing* 把持续的过程一路连到现在。",
   ),
   prerequisites: ["present-perfect-or-past-simple", "present-continuous", "b1-words-little-words-5"],
   encompasses: [
@@ -1143,8 +1164,8 @@ const presentPerfectContinuous: TopicDef = {
       "form",
       t("Have been doing", "have been doing 的形式"),
       t(
-        "For an action that began in the past and is still going on now, use *have* or *has* + *been* + the *-ing* form.\n\n- *She **has been working** here since May.* (She started in May and still works here.)\n- *I **have been waiting** for twenty minutes.*\n\nDo not use the present continuous with *since* or *for*: not *She is working here since May*. And do not leave out *have*: not *She been working*.",
-        "从过去开始、一直持续到现在（可能还会继续）的动作，用 *have / has* + *been* + 动词 *-ing*。\n\n- *She **has been working** here since May.*（她从五月开始在这里工作，现在还在。）\n- *I **have been waiting** for twenty minutes.*\n\n中文说“她从五月起就一直在这里工作”“我已经等了二十分钟了”，动词没有变化，靠“一直”“已经……了”表达；英语却必须用 *has been working*。有 *since* 或 *for* 时不要用现在进行时：不能说 *She is working here since May*。也不要漏掉 *have*：不能说 *She been working*。",
+        "For an action that began in the past and is still going on now, use *have* or *has* + *been* + the *-ing* form.\n\n- *She **has been working** here since May.* (She started in May and still works here.)\n- *I **have been waiting** for twenty minutes.*\n\n> **Watch out.** Do not use the present continuous with *since* or *for* (*She is working here since May* is wrong), and never drop *have/has* or *been* (*She has working* and *She is been working* are both wrong).",
+        "从过去开始、一直持续到现在（可能还会继续）的动作，用 *have / has* + *been* + 动词 *-ing*。\n\n- *She **has been working** here since May.*（她从五月开始在这里工作，现在还在。）\n- *I **have been waiting** for twenty minutes.*\n\n> **注意。** 有 *since* 或 *for* 时不能用现在进行时（*She is working here since May* 是错的），也不要漏掉 *have/has* 或 *been*（*She has working*、*She is been working* 都是错的）。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -1157,15 +1178,18 @@ const presentPerfectContinuous: TopicDef = {
       "for-or-since",
       t("For or since?", "for 还是 since？"),
       t(
-        "*Since* gives the point when something began: *since May, since 2020, since eight o'clock, since she was six*.\n\n*For* gives how long it has lasted: *for six months, for five years, for twenty minutes*.\n\nDo not use *from* or *during* here: not *I have been waiting from eight o'clock*.",
-        "*since* 后面是开始的时间点：*since May, since 2020, since eight o'clock, since she was six*。\n\n*for* 后面是持续了多长时间：*for six months, for five years, for twenty minutes*。\n\n这里不要用 *from* 或 *during*：不能说 *I have been waiting from eight o'clock*。中文“从八点起”容易让人写成 *from*。",
+        "*Since* gives the point when something began: *since May, since 2020, since eight o'clock, since she was six*.\n\n*For* gives how long it has lasted: *for six months, for five years, for twenty minutes*.\n\n> **Watch out.** Do not use *from* for a starting point or *during* for a duration here (*I have been waiting from eight o'clock* is wrong).",
+        "*since* 后面是开始的时间点：*since May, since 2020, since eight o'clock, since she was six*。\n\n*for* 后面是持续了多长时间：*for six months, for five years, for twenty minutes*。\n\n> **注意。** 不要受中文“从八点起”影响写成 *from*，也不要用 *during* 代替 *for*（*I have been waiting from eight o'clock* 是错的）。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         forSinceChoice,
         (right, shown) => {
           const rule = forSinceRule(right, shown);
-          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+          return t(
+            `${rule.en}: ${fill(shown, right)}\n\n**Check.** Ask whether the phrase answers “since what point?” (*since*) or “for how long?” (*for*).`,
+            `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 判断后面的短语回答的是“从哪个时间点开始”（*since*）还是“持续了多久”（*for*）。`,
+          );
         },
         whyNotForSince,
       ),
@@ -1174,8 +1198,8 @@ const presentPerfectContinuous: TopicDef = {
       "write",
       t("Writing in the present perfect continuous", "用现在完成进行时写句子"),
       t(
-        "Write the sentence from the note in the present perfect continuous: *She / work / here / since May* → *She has been working here since May.* You may use short forms such as *I've* and *she's*.",
-        "根据笔记用现在完成进行时写句子：*She / work / here / since May* → *She has been working here since May.* 可以用 *I've*、*she's* 这样的缩写。",
+        "Write the sentence from the note in the present perfect continuous: *She / work / here / since May* → *She has been working here since May.* You may use short forms such as *I've* and *she's*.\n\n> **Watch out.** Check all three parts (*have/has* + *been* + *-ing*) and watch *-ing* spelling changes like *run* → *running* and *practice* → *practicing*.",
+        "根据笔记用现在完成进行时写句子：*She / work / here / since May* → *She has been working here since May.* 可以用 *I've*、*she's* 这样的缩写。\n\n> **注意。** 核对三部分是否齐全（*have/has* + *been* + *-ing*），并留意 *-ing* 拼写变化（如 *run* → *running*、*practice* → *practicing*）。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1281,6 +1305,10 @@ const writingAFormalEmail = judgedTopic({
     "Write an email of 120 to 180 words to someone you do not know, such as an employer, with a formal opening and closing, a clear purpose and polite requests.",
     "给不认识的人（比如雇主）写一封 120 到 180 词的电子邮件：正式的开头和结尾，目的清楚，请求礼貌。",
   ),
+  intro: t(
+    "Writing to a manager or university office calls for a crisp, polite register: *Dear Ms. Hall, I am writing to apply for the summer position... I would be grateful if you could confirm the interview dates. Yours sincerely, Alex Chen.*",
+    "给经理或学校招生办写信需要简洁、礼貌的正式语体：*Dear Ms. Hall, I am writing to apply for the summer position... I would be grateful if you could confirm the interview dates. Yours sincerely, Alex Chen.*",
+  ),
   prerequisites: ["writing-an-informal-email"],
   encompasses: [{ topic: "writing-an-informal-email", weight: 0.3 }],
   criteria: ["b1-formal-email-purpose", "b1-formal-register", "b1-polite-requests", "b1-email-paragraphs"],
@@ -1288,8 +1316,8 @@ const writingAFormalEmail = judgedTopic({
     id: "email",
     title: t("Purpose, register and requests", "目的、语体和请求"),
     explanation: t(
-      "A formal email to someone you do not know has its own shape and words:\n\n- **Opening:** *Dear Ms. Hall,* or, if you do not know the name, *Dear Sir or Madam,*\n- **Purpose first:** *I am writing to apply for…* / *I am writing to ask about…*\n- **One paragraph for each point** the task names: your experience, your dates, your questions.\n- **Polite requests:** *Could you tell me…?* *I would be grateful if you could…* *I would like to know…*, not *Tell me…*\n- **Closing:** *I look forward to hearing from you.* Then *Yours sincerely,* (after a name) or *Yours faithfully,* (after *Sir or Madam*), and your full name.\n\nWrite *I am*, *do not* and *I would* in full, and leave out words such as *hi*, *great* and *really*.",
-      "给不认识的人写的正式邮件，有自己的结构和用词：\n\n- **开头：** *Dear Ms. Hall,*；不知道名字时写 *Dear Sir or Madam,*\n- **先说目的：** *I am writing to apply for…* / *I am writing to ask about…*\n- 任务要求的**每一点写一段**：你的经验、你的时间、你的问题。\n- **礼貌地请求：** *Could you tell me…?* *I would be grateful if you could…* *I would like to know…*，不要说 *Tell me…*\n- **结尾：** *I look forward to hearing from you.* 然后写 *Yours sincerely,*（开头写了名字时）或 *Yours faithfully,*（开头是 *Sir or Madam* 时），再写全名。\n\n*I am*、*do not*、*I would* 要写完整，不用缩写，也不用 *hi*、*great*、*really* 这类口语词。中文正式信函常以客套话开头，英语正式邮件则第一句就说明来意。",
+      "A formal email to someone you do not know has its own shape and words:\n\n- **Opening:** *Dear Ms. Hall,* or, if you do not know the name, *Dear Sir or Madam,*\n- **Purpose first:** *I am writing to apply for…* / *I am writing to ask about…*\n- **One paragraph for each point** the task names: your experience, your dates, your questions.\n- **Polite requests:** *Could you tell me…?* *I would be grateful if you could…* *I would like to know…*, not *Tell me…*\n- **Closing:** *I look forward to hearing from you.* Then *Yours sincerely,* (after a name) or *Yours faithfully,* (after *Sir or Madam*), and your full name.\n\n> **Watch out.** Avoid contractions (*I'm*, *don't*) and chatty words (*hi*, *great*, *really*), and match the sign-off to the greeting (*Dear Ms. Hall* → *Yours sincerely*; *Dear Sir or Madam* → *Yours faithfully*).",
+      "给不认识的人写的正式邮件，有自己的结构和用词：\n\n- **开头：** *Dear Ms. Hall,*；不知道名字时写 *Dear Sir or Madam,*\n- **先说目的：** *I am writing to apply for…* / *I am writing to ask about…*\n- 任务要求的**每一点写一段**：你的经验、你的时间、你的问题。\n- **礼貌地请求：** *Could you tell me…?* *I would be grateful if you could…* *I would like to know…*，不要说 *Tell me…*\n- **结尾：** *I look forward to hearing from you.* 然后写 *Yours sincerely,*（开头写了名字时）或 *Yours faithfully,*（开头是 *Sir or Madam* 时），再写全名。\n\n> **注意。** 正式邮件中写完整形式（*I am*、*do not*、*I would*）而不用缩写或口语词，并且开头和落款要配对（*Dear Ms. Hall* 配 *Yours sincerely*；*Dear Sir or Madam* 配 *Yours faithfully*）。",
     ),
   },
   question: t(

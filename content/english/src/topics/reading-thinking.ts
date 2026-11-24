@@ -459,15 +459,27 @@ const meaning =
     return said;
   };
 
-const inferenceNot: Say = (wrong) => [
-  `*${wrong}* does not fit the clues: some of them point another way. An inference has to agree with every clue the text gives.`,
-  `*${wrong}* 与线索不符：有些线索指向别处。推断必须与文中给出的每一条线索都相符。`,
-];
+const inferenceNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `“${wrong}” clashes with the clues in the text—check what the details actually show.`,
+        `“${wrong}”和文中的线索矛盾——核对一下细节真正说明了什么。`,
+      ]
+    : [
+        `Nothing in the passage points to “${wrong}”—a good inference must rest on every clue given.`,
+        `文中没有任何线索指向“${wrong}”——好的推断必须建立在给出的每条线索之上。`,
+      ];
 
-const evidenceNot: Say = (wrong) => [
-  `*${wrong}* is a detail of the scene, but it would be just as true if the inference were wrong, so it proves nothing.`,
-  `*${wrong}* 是场景中的一个细节，但即使推断是错的它也照样成立，所以证明不了什么。`,
-];
+const evidenceNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `“${wrong}” is just a background detail—it could be true even if the inference were false.`,
+        `“${wrong}”只是背景细节——就算推断是错的，这句话也照样成立。`,
+      ]
+    : [
+        `“${wrong}” does not make the inference any more likely; look for a clue that points directly to it.`,
+        `“${wrong}”并不能让推断更可信；要找直接指向这个推断的线索。`,
+      ];
 
 const opinionNot: Say = (wrong) => [
   `*${wrong}* is an opinion: it tells what someone thinks or wants, with words such as *best*, *should* or *more*, and it cannot be proved.`,
@@ -520,32 +532,55 @@ const narratorNot: Say = (wrong) =>
         `If ${wrong.replace(/, telling it as "I"$/, "")} told the story, the text would say *I* and *my*. Look at the pronouns the narrator uses.`,
         `如果由 ${wrong.replace(/, telling it as "I"$/, "")} 来讲，文中会用 *I* 和 *my*。看看叙述者用的代词。`,
       ]
-    : wrong.startsWith("someone outside the story")
+    : wrong === allKnowing
       ? [
-          "A narrator outside the story would call everyone by name or *he*, *she* and *they*. Here the narrator says *I*.",
-          "故事外的叙述者会用名字或 *he*、*she*、*they* 称呼每个人。而这里的叙述者说的是 *I*。",
+          "An outside narrator who knows more than the characters would use third-person pronouns (*he*, *she*, *they*) and reveal hidden thoughts—here the narrator speaks as *I*.",
+          "知晓一切的故事外叙述者会用第三人称（*he*、*she*、*they*）并揭示角色不知情的事——而这里叙述者用的是 *I*。",
         ]
-      : [`*${wrong}* is something the story tells about, not the one telling it.`, `*${wrong}* 是故事讲到的对象，而不是讲故事的人。`];
+      : wrong.startsWith("someone outside the story")
+        ? [
+            "A narrator outside the story would call everyone by name or *he*, *she* and *they*. Here the narrator says *I*.",
+            "故事外的叙述者会用名字或 *he*、*she*、*they* 称呼每个人。而这里的叙述者说的是 *I*。",
+          ]
+        : [`*${wrong}* is something the story tells about, not the one telling it.`, `*${wrong}* 是故事讲到的对象，而不是讲故事的人。`];
 
-const traitNot: Say = (wrong) => [
-  `Nothing the character does here shows someone **${wrong}**. A trait is proved by what a character does, again and again.`,
-  `这里人物的所作所为并不能表现出 **${wrong}**。性格特点要由人物的行为来证明。`,
-];
+const traitNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `Nothing the character does here fits someone **${wrong}**—a trait must match the character's actions.`,
+        `人物在这里的举动并不符合 **${wrong}**——性格特点必须由行为来体现。`,
+      ]
+    : [`A **${wrong}** character would act differently from what the passage describes.`, `**${wrong}** 的人物不会像文中这样行事。`];
 
-const feelingNot: Say = (wrong) => [
-  `The character's actions and face here do not show someone feeling **${wrong}**. Picture a person doing these things, and name the feeling.`,
-  `这里人物的动作和表情并不能表现出 **${wrong}** 的感受。想象一个人做这些事，说出那种感受。`,
-];
+const feelingNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `The character's face and actions do not show someone feeling **${wrong}**—picture the scene again.`,
+        `人物的表情和举动并不像感到 **${wrong}**——再在脑中想象一下这个画面。`,
+      ]
+    : [
+        `Someone feeling **${wrong}** would look and act very differently from the details here.`,
+        `感到 **${wrong}** 的人，神情和动作会和这里的细节大不相同。`,
+      ];
 
-const lessonNot: Say = (wrong) => [
-  `*${wrong}* is a fact from the story, not a lesson about how to live. A lesson is something a reader could use in their own life.`,
-  `*${wrong}* 是故事里的事实，而不是关于怎样生活的道理。道理是读者在自己生活中也能用上的。`,
-];
+const lessonNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `“${wrong}” is only a fact about the story, not a lesson people can apply in their own lives.`,
+        `“${wrong}”只是关于故事的事实，而不是人们在生活中能用上的道理。`,
+      ]
+    : [
+        `“${wrong}” summarizes a detail rather than stating the lesson the story teaches about how to act.`,
+        `“${wrong}”只是复述了某个细节，没有说出故事教人怎样做事的道理。`,
+      ];
 
-const storyNot: Say = (wrong) => [
-  `*${wrong}* does not teach the lesson: nothing in it shows that following the lesson leads somewhere good, or that ignoring it goes wrong.`,
-  `*${wrong}* 没有体现这个道理：其中没有表现出遵循它会带来好结果，或者忽视它会出问题。`,
-];
+const storyNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `“${wrong}” does not prove this lesson—its events point to a different idea or none at all.`,
+        `“${wrong}”并没有证明这个道理——里面的情节指向别的想法，或者没有体现这个教训。`,
+      ]
+    : [`In “${wrong}”, no choice and outcome show that this lesson is true.`, `在“${wrong}”中，没有哪个选择和结果能证明这个道理。`];
 
 const figureNot: Say = (wrong) => [
   `*${wrong}* takes the comparison literally, or picks a quality the two things do not share. Ask what the two things have in common.`,
@@ -585,6 +620,10 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
       "Working out what a text does not say from clues it gives, and finding the clues.",
       "根据文中给出的线索推断它没有直接说的内容，并找出这些线索。",
     ),
+    intro: t(
+      "When smoke rises from the kitchen, the alarm beeps, and Dad rushes to open the window, the text never says *something is burning*—yet the clues make it unmistakable. Making inferences means combining text clues with what you know, and backing every inference with evidence.",
+      "厨房冒烟、警报器嘀嘀作响、爸爸冲去开窗，文里虽没明说“锅烧糊了”，线索却一清二楚。做推断就是把文中的线索和生活常识结合起来，并用原文依据支撑每个推断。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 12,
@@ -593,14 +632,15 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "inferring-from-clues",
         t("Inferring from Clues", "根据线索推断"),
         t(
-          "Writers do not tell you everything. An **inference** puts the clues in the text together with what you already know: wet umbrellas and muddy boots, plus what you know about weather, tell you that it rained. A good inference fits every clue; a guess that ignores the clues, or goes against them, is not an inference.",
-          "作者不会把一切都告诉你。**推断**是把文中的线索和你已有的知识结合起来：湿雨伞和沾满泥的靴子，加上你对天气的了解，告诉你下过雨。好的推断与每条线索都相符；忽视线索或与之矛盾的猜测不是推断。",
+          "Writers do not tell you everything. An **inference** puts the clues in the text together with what you already know: wet umbrellas and muddy boots, plus what you know about weather, tell you that it rained. A good inference fits every clue; a guess that ignores the clues, or goes against them, is not an inference.\n\n> **Watch out.** Do not invent a wild guess that ignores one of the clues—every single clue in the text should fit your inference.",
+          "作者不会把一切都告诉你。**推断**是把文中的线索和你已有的知识结合起来：湿雨伞和沾满泥的靴子，加上你对天气的了解，告诉你下过雨。好的推断与每条线索都相符；忽视线索或与之矛盾的猜测不是推断。\n\n> **注意。**不要凭空猜测或忽略任何一条线索——文里的每一条线索都应该和你的推断吻合。",
         ),
         pick(
           ["What can you infer from this text?", "从这段文字中你能推断出什么？"],
           [...inferenceBank, ...sceneInference],
-          (right) => `*${right}* fits every clue in the text. The other choices ignore the clues or go against them.`,
-          (right) => `*${right}* 与文中的每条线索都相符。其他选项忽视了线索或与之矛盾。`,
+          (right) =>
+            `“${right}” fits every clue in the text.\n\n**Check.** Reread each detail in the passage and ask whether it points to “${right}”—all of them line up with it.`,
+          (right) => `“${right}”与文中的每条线索都相符。\n\n**检验。**重读文中的每个细节，看看是不是都指向“${right}”——全部吻合。`,
           inferenceNot,
         ),
       ),
@@ -608,14 +648,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "finding-evidence",
         t("Finding the Evidence", "找出依据"),
         t(
-          "An inference needs **evidence**: a detail in the text that points to it. When you choose evidence, ask whether the detail would make the inference more likely. A true detail that has nothing to do with the inference is not evidence for it.",
-          "推断需要**依据**：文中指向这个推断的细节。选择依据时，问一问这个细节是否让推断更可信。一个真实却与推断无关的细节不能作为依据。",
+          "An inference needs **evidence**: a detail in the text that points to it. When you choose evidence, ask whether the detail would make the inference more likely. A true detail that has nothing to do with the inference is not evidence for it.\n\n> **Watch out.** A background detail (like the color of a car or where a garden sits) may be true, yet it proves nothing about the inference.",
+          "推断需要**依据**：文中指向这个推断的细节。选择依据时，问一问这个细节是否让推断更可信。一个真实却与推断无关的细节不能作为依据。\n\n> **注意。**像汽车的颜色、花园的位置这类背景细节也许是真的，却不能证明这个推断。",
         ),
         pick(
           ["Which detail is the best evidence for the inference?", "哪个细节是这个推断最好的依据？"],
           [...evidenceBank, ...sceneEvidence],
-          (right) => `*${right}* points to the inference. The other details may be true, but they say nothing about it.`,
-          (right) => `*${right}* 指向这个推断。其他细节也许是真的，却与推断无关。`,
+          (right) =>
+            `“${right}” directly supports the inference.\n\n**Check.** Ask: if you read only “${right}”, would you already suspect this inference? Yes—while the other details say nothing about it.`,
+          (right) =>
+            `“${right}”直接支持这个推断。\n\n**检验。**问问自己：如果只读到“${right}”，你是不是就已经能联想到这个推断？是的，而其他细节与此无关。`,
           evidenceNot,
         ),
       ),
@@ -628,6 +670,10 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
       "Telling statements that can be checked from statements of what someone thinks.",
       "区分可以核实的陈述和表达个人想法的陈述。",
     ),
+    intro: t(
+      "*The bridge is 420 meters long* can be verified with a tape or record, while *The bridge is the prettiest one in the state* is a personal judgment. Separating facts from opinions helps you read articles and ads critically.",
+      "*The bridge is 420 meters long* 可以靠测量或查记录核实，而 *The bridge is the prettiest one in the state* 只是个人评价。分清事实和观点，能帮你更清醒地读文章和广告。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 10,
@@ -636,15 +682,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "spotting-facts",
         t("Spotting Facts", "找出事实"),
         t(
-          "A **fact** can be checked and shown to be true, by measuring, counting or looking it up. An **opinion** tells what someone thinks or feels, and people can disagree with it. Words such as *best, worst, beautiful, should* and *more fun* usually signal an opinion.",
-          "**事实**可以通过测量、计数或查证来核实。**观点**表达某人的想法或感受，别人可以不同意。*best, worst, beautiful, should, more fun* 这样的词通常表示观点。",
+          "A **fact** can be checked and shown to be true, by measuring, counting or looking it up. An **opinion** tells what someone thinks or feels, and people can disagree with it. Words such as *best, worst, beautiful, should* and *more fun* usually signal an opinion.\n\n> **Watch out.** Even an opinion many people agree with (like *Summer is the best season*) is still an opinion—a fact must be checkable by evidence.",
+          "**事实**可以通过测量、计数或查证来核实。**观点**表达某人的想法或感受，别人可以不同意。*best, worst, beautiful, should, more fun* 这样的词通常表示观点。\n\n> **注意。**就算很多人都同意的说法（如 *Summer is the best season*）也依然是观点——事实必须能用证据核实。",
         ),
         pick(
           ["Which sentence states a fact?", "哪个句子陈述的是事实？"],
           [...factBank, ...claimFacts],
           (right) =>
-            `*${right}* can be checked by measuring, counting or looking it up, so it is a fact. The other sentences tell what someone thinks.`,
-          (right) => `*${right}* 可以通过测量、计数或查证来核实，所以是事实。其他句子表达的是个人想法。`,
+            `*${right}* can be checked by measuring, counting or looking it up, so it is a fact.\n\n**Check.** Ask: could two fair people disagree about *${right}* after checking the evidence? No—it is verifiable, while the other choices express judgments.`,
+          (right) =>
+            `*${right}* 可以通过测量、计数或查证来核实，所以是事实。\n\n**检验。**问一句：查过证据后，两个理性的人还会对 *${right}* 有分歧吗？不会——它可以核实，而其他选项都在表达评价。`,
           opinionNot,
         ),
       ),
@@ -652,15 +699,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "spotting-opinions",
         t("Spotting Opinions", "找出观点"),
         t(
-          "To test a sentence, ask: could someone prove this, or could someone reasonably disagree? *The movie lasted two hours* can be checked with a clock. *The movie was much too long* is a judgment, and another viewer might think it was just right.",
-          "检验一个句子时，问一问：有人能证明它吗？还是有人可以合理地不同意？*The movie lasted two hours* 可以用钟表核实。*The movie was much too long* 是一种评判，另一位观众也许觉得刚刚好。",
+          "To test a sentence, ask: could someone prove this, or could someone reasonably disagree? *The movie lasted two hours* can be checked with a clock. *The movie was much too long* is a judgment, and another viewer might think it was just right.\n\n> **Watch out.** Watch for judgment words like *better, boring, too hard,* or *should*—even when paired with a real topic, they turn a sentence into an opinion.",
+          "检验一个句子时，问一问：有人能证明它吗？还是有人可以合理地不同意？*The movie lasted two hours* 可以用钟表核实。*The movie was much too long* 是一种评判，另一位观众也许觉得刚刚好。\n\n> **注意。**留意 *better、boring、too hard、should* 这类评价词——哪怕句子谈的是真实事物，加上它们就成了观点。",
         ),
         pick(
           ["Which sentence states an opinion?", "哪个句子表达的是观点？"],
           [...opinionBank, ...claimOpinions],
           (right) =>
-            `*${right}* tells what someone thinks, and others could disagree, so it is an opinion. The other sentences can be checked.`,
-          (right) => `*${right}* 表达的是个人想法，别人可能不同意，所以是观点。其他句子可以核实。`,
+            `*${right}* tells what someone thinks, and others could disagree, so it is an opinion.\n\n**Check.** Imagine someone saying the opposite of *${right}*—that disagreement would be a matter of taste or judgment, not a mistake of fact.`,
+          (right) =>
+            `*${right}* 表达的是个人想法，别人可能不同意，所以是观点。\n\n**检验。**设想有人说出和 *${right}* 相反的看法——这种分歧属于喜好或评判，而不是事实对错。`,
           factNot,
         ),
       ),
@@ -670,6 +718,10 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
     id: "authors-purpose",
     title: t("Author's Purpose", "作者的目的"),
     summary: t("Whether a text is written to inform, to persuade or to entertain.", "文本是为了告知、说服还是娱乐。"),
+    intro: t(
+      "A field guide explains how owls hunt, a poster urges you to recycle, and a comic strip makes you laugh. Spotting whether a writer aims to inform, persuade, or entertain helps you judge what you read.",
+      "野外图鉴讲解猫头鹰如何捕猎，海报呼吁大家回收垃圾，漫画让你发笑。判断作者旨在告知、说服还是娱乐，能帮你更准确地看待所读内容。",
+    ),
     prerequisites: ["fact-and-opinion"],
     encompasses: [{ topic: "fact-and-opinion", weight: 0.2 }],
     xp: 10,
@@ -678,15 +730,18 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "inform-persuade-entertain",
         t("Inform, Persuade or Entertain", "告知、说服还是娱乐"),
         t(
-          "Authors write for a reason. To **inform** is to give facts or explain, as a science book does. To **persuade** is to try to get the reader to think or do something, as an advertisement does, often with opinions. To **entertain** is to give the reader enjoyment, as a story, poem or joke does.",
-          "作者写作总有原因。**告知**是提供事实或进行解释，像科学书那样。**说服**是设法让读者相信或去做某事，像广告那样，常常带有观点。**娱乐**是让读者获得乐趣，像故事、诗歌或笑话那样。",
+          "Authors write for a reason. To **inform** is to give facts or explain, as a science book does. To **persuade** is to try to get the reader to think or do something, as an advertisement does, often with opinions. To **entertain** is to give the reader enjoyment, as a story, poem or joke does.\n\n> **Watch out.** Do not confuse *inform* with *persuade*—an informative text can be interesting without ever telling the reader what to buy, think, or do.",
+          "作者写作总有原因。**告知**是提供事实或进行解释，像科学书那样。**说服**是设法让读者相信或去做某事，像广告那样，常常带有观点。**娱乐**是让读者获得乐趣，像故事、诗歌或笑话那样。\n\n> **注意。** 不要把“告知”和“说服”混为一谈——说明性文章可以很有趣，但不会要求读者去买、去相信或去做某事。",
         ),
         choiceGenerator(
           t("What is the author's main purpose?", "作者的主要目的是什么？"),
           [...purposeBank, ...morePurposeBank],
           (right) => {
             const [en, zh] = purposeWhy.get(right) ?? ["", ""];
-            return t(`The purpose is **${right}**. ${en}`, `目的是 **${right}**。${zh}`);
+            return t(
+              `The purpose is **${right}**. ${en}\n\n**Check.** Ask what the writer wants the reader to walk away with—new facts (*to inform*), a changed mind or action (*to persuade*), or enjoyment (*to entertain*).`,
+              `目的是 **${right}**。${zh}\n\n**检验。** 问问作者希望读者读完后获得什么——新知识（告知）、改变想法或采取行动（说服），还是享受乐趣（娱乐）。`,
+            );
           },
           (wrong, right, shown, position) => t(...purposeNot(wrong, right, shown, position)),
         ),
@@ -695,14 +750,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "spotting-persuasion",
         t("Spotting Persuasion", "识别说服"),
         t(
-          "A writer who wants to persuade tells the reader what to think or do, often with words such as *should, must, best, don't miss* and *you will love*. A sentence that only gives information, however useful, is not trying to persuade.",
-          "想要说服的作者会告诉读者该怎么想或怎么做，常用 *should, must, best, don't miss, you will love* 这样的词。只提供信息的句子，不论多有用，都不是在说服。",
+          "A writer who wants to persuade tells the reader what to think or do, often with words such as *should, must, best, don't miss* and *you will love*. A sentence that only gives information, however useful, is not trying to persuade.\n\n> **Watch out.** Useful facts (*The library opens at nine*) only inform—persuasion pushes the reader toward a choice or opinion.",
+          "想要说服的作者会告诉读者该怎么想或怎么做，常用 *should, must, best, don't miss, you will love* 这样的词。只提供信息的句子，不论多有用，都不是在说服。\n\n> **注意。** 有用的事实（如 *The library opens at nine*）只是告知——说服句子会推动读者做出某种选择或接受某种看法。",
         ),
         pick(
           ["Which sentence is trying to persuade the reader?", "哪个句子在试图说服读者？"],
           [...persuadeBank, ...claimPersuade],
-          (right) => `*${right}* tells the reader what to think or do. The other sentences only give information.`,
-          (right) => `*${right}* 告诉读者该怎么想或怎么做。其他句子只是提供信息。`,
+          (right) =>
+            `*${right}* tells the reader what to think or do.\n\n**Check.** Look for the push in *${right}* (an urging verb, command, or value judgment)—the other choices state neutral facts without urging action.`,
+          (right) =>
+            `*${right}* 告诉读者该怎么想或怎么做。\n\n**检验。** 找出 *${right}* 里推动读者的词（如建议、祈使或评价词）——其他选项都在平静陈述事实，没有催促读者。`,
           persuadeNot,
         ),
       ),
@@ -712,6 +769,10 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
     id: "point-of-view",
     title: t("Point of View", "叙述视角"),
     summary: t("First- and third-person narrators, and who is telling a story.", "第一人称和第三人称叙述者，以及是谁在讲故事。"),
+    intro: t(
+      "Compare *I grabbed my backpack and ran* with *Jada grabbed her backpack and ran*. The pronouns outside quotation marks tell you right away whether a character inside the story or an outside narrator is telling it.",
+      "对比 *I grabbed my backpack and ran* 和 *Jada grabbed her backpack and ran*。引号外面的代词能立刻告诉你，讲故事的是故事里的角色还是局外的叙述者。",
+    ),
     prerequisites: ["nouns-and-pronouns"],
     encompasses: [],
     xp: 10,
@@ -720,20 +781,20 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "first-or-third-person",
         t("First or Third Person", "第一人称还是第三人称"),
         t(
-          "In **first person**, the narrator is in the story and uses *I, me, my, we* and *our*. In **third person**, the narrator is outside the story and uses names and *he, she* and *they*. Look at the pronouns outside of what characters say aloud.",
-          "**第一人称**叙述者在故事之中，使用 *I, me, my, we, our*。**第三人称**叙述者在故事之外，使用人名以及 *he, she, they*。看人物说话以外的代词。",
+          "In **first person**, the narrator is in the story and uses *I, me, my, we* and *our*. In **third person**, the narrator is outside the story and uses names and *he, she* and *they*. Look at the pronouns outside of what characters say aloud.\n\n> **Watch out.** Check the narrator's pronouns (*I/we* vs. *he/she/they* and names), and ignore *I* or *you* if it only appears inside dialogue.",
+          "**第一人称**叙述者在故事之中，使用 *I, me, my, we, our*。**第三人称**叙述者在故事之外，使用人名以及 *he, she, they*。看人物说话以外的代词。\n\n> **注意。**看叙述者自己用的代词（*I/we* 还是 *he/she/they* 与人名），如果 *I* 或 *you* 只出现在人物对话的引号里，不要算作叙述视角。",
         ),
         pick(
           ["What point of view is this sentence told in?", "这句话是用哪种视角叙述的？"],
           [...pointOfViewBank, ...tellingPerson],
           (right) =>
             right === "first person"
-              ? "It is **first person**: the narrator uses *I, me, my, we* or *our* and is part of the story."
-              : "It is **third person**: the narrator uses names and *he, she* or *they* and stands outside the story.",
+              ? "It is **first person**: the narrator uses *I, me, my, we* or *our* and is part of the story.\n\n**Check.** Spot the first-person pronoun (*I, me, my, we, our*) in the narration—it confirms the storyteller is inside the story."
+              : "It is **third person**: the narrator uses names and *he, she* or *they* and stands outside the story.\n\n**Check.** Scan the narration for *I* or *we*—none appears, only names or *he/she/they*, confirming third person.",
           (right) =>
             right === "first person"
-              ? "这是**第一人称**：叙述者使用 *I, me, my, we* 或 *our*，是故事中的一员。"
-              : "这是**第三人称**：叙述者使用人名以及 *he, she* 或 *they*，置身故事之外。",
+              ? "这是**第一人称**：叙述者使用 *I, me, my, we* 或 *our*，是故事中的一员。\n\n**检验。**找出叙述里的第一人称代词（*I, me, my, we, our*）——这证实讲故事的人就在故事之中。"
+              : "这是**第三人称**：叙述者使用人名以及 *he, she* 或 *they*，置身故事之外。\n\n**检验。**检查叙述里有没有 *I* 或 *we*——一个也没有，只有人名或 *he/she/they*，证实是第三人称。",
           pointOfViewNot,
         ),
       ),
@@ -741,14 +802,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "who-tells-the-story",
         t("Who Tells the Story", "谁在讲故事"),
         t(
-          "A first-person narrator can tell only what that one character sees, thinks and feels. A third-person narrator may know more than any character, even what each one is thinking. The narrator does not have to be a person: an animal or even a thing can tell its own story as *I*.",
-          "第一人称叙述者只能讲述这个人物看到、想到和感受到的。第三人称叙述者可能比任何人物知道得都多，甚至知道每个人物在想什么。叙述者不一定是人：动物甚至物体也可以用 *I* 讲自己的故事。",
+          "A first-person narrator can tell only what that one character sees, thinks and feels. A third-person narrator may know more than any character, even what each one is thinking. The narrator does not have to be a person: an animal or even a thing can tell its own story as *I*.\n\n> **Watch out.** Do not pick a character just because the story is about them—if the narrator calls them *he* or *she*, someone outside the story is telling it.",
+          "第一人称叙述者只能讲述这个人物看到、想到和感受到的。第三人称叙述者可能比任何人物知道得都多，甚至知道每个人物在想什么。叙述者不一定是人：动物甚至物体也可以用 *I* 讲自己的故事。\n\n> **注意。**不要因为故事写的是某个角色就选他当叙述者——如果叙述者称呼他 *he* 或 *she*，讲故事的就是故事之外的人。",
         ),
         pick(
           ["Who is telling this story?", "是谁在讲这个故事？"],
           [...narratorBank, ...tellingNarrator],
-          (right) => `The story is told by **${right}**. The pronouns and what the narrator knows show this.`,
-          (right) => `讲故事的是 **${right}**。代词和叙述者所知道的内容说明了这一点。`,
+          (right) =>
+            `The story is told by **${right}**.\n\n**Check.** Check two clues: the pronouns (*I* vs. names/*he/she*) and whether the narrator knows something a character does not—both point to **${right}**.`,
+          (right) =>
+            `讲故事的是 **${right}**。\n\n**检验。**核对两条线索：代词（*I* 还是人名/*he/she*）以及叙述者是否知道角色不知道的事——两条都指向 **${right}**。`,
           narratorNot,
         ),
       ),
@@ -758,6 +821,10 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
     id: "characters",
     title: t("Characters", "人物"),
     summary: t("Inferring what characters are like and how they feel from what they do.", "从人物的言行推断他们的性格和感受。"),
+    intro: t(
+      "Rosa walks six blocks to return a lost wallet; Hana slams the door and crosses her arms. Stories rarely label a character *honest* or *angry* outright—they show traits and feelings through actions and expressions.",
+      "Rosa 走过六个街区归还捡到的钱包；Hana 摔上门、抱起双臂。故事很少直接贴标签说某人“诚实”或“生气”，而是通过举动和表情把性格和感受展现出来。",
+    ),
     prerequisites: ["making-inferences"],
     encompasses: [{ topic: "making-inferences", weight: 0.3 }],
     xp: 12,
@@ -766,14 +833,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "character-traits",
         t("Character Traits", "性格特点"),
         t(
-          "A **trait** is what a character is like most of the time: honest, brave, selfish, curious. Writers often show traits through actions instead of naming them, so ask what kind of person would do what the character does.",
-          "**性格特点**是人物通常的样子：诚实、勇敢、自私、好奇。作者常常通过行动而不是直接点明来表现性格，所以要问：什么样的人会做出这个人物所做的事？",
+          "A **trait** is what a character is like most of the time: honest, brave, selfish, curious. Writers often show traits through actions instead of naming them, so ask what kind of person would do what the character does.\n\n> **Watch out.** Match the trait to what the character *actually does* in the scene, not to a mood or an unrelated guess.",
+          "**性格特点**是人物通常的样子：诚实、勇敢、自私、好奇。作者常常通过行动而不是直接点明来表现性格，所以要问：什么样的人会做出这个人物所做的事？\n\n> **注意。**性格特点必须对应人物在文中*实际做出的举动*，而不是随口猜测。",
         ),
         pick(
           ["Which word best describes the character?", "哪个词最能描述这个人物？"],
           [...traitBank, ...moreTraitBank],
-          (right) => `**${right}** fits what the character does. The other words describe a person who would act differently.`,
-          (right) => `**${right}** 与人物的行为相符。其他词描述的是会有不同行为的人。`,
+          (right) =>
+            `**${right}** fits what the character does.\n\n**Check.** Ask: would a **${right}** person act this exact way? Yes—the character's action directly demonstrates **${right}**.`,
+          (right) =>
+            `**${right}** 与人物的行为相符。\n\n**检验。**问一句：**${right}** 的人会正好这样做吗？会的——人物的举动直接体现了 **${right}**。`,
           traitNot,
         ),
       ),
@@ -781,14 +850,15 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "character-feelings",
         t("Character Feelings", "人物的感受"),
         t(
-          "A **feeling** is how a character is at one moment: angry, nervous, proud. Writers show feelings through faces, bodies and actions: tears, a grin, shaking hands, a slammed door. Picture the character, and name the feeling those details show.",
-          "**感受**是人物在某一刻的状态：生气、紧张、自豪。作者通过表情、身体和动作来表现感受：眼泪、咧嘴笑、发抖的手、摔门。想象人物的样子，说出这些细节所表现的感受。",
+          "A **feeling** is how a character is at one moment: angry, nervous, proud. Writers show feelings through faces, bodies and actions: tears, a grin, shaking hands, a slammed door. Picture the character, and name the feeling those details show.\n\n> **Watch out.** Watch body-language clues closely—red cheeks after tripping point to *embarrassed*, while biting nails before a dark window points to *nervous*.",
+          "**感受**是人物在某一刻的状态：生气、紧张、自豪。作者通过表情、身体和动作来表现感受：眼泪、咧嘴笑、发抖的手、摔门。想象人物的样子，说出这些细节所表现的感受。\n\n> **注意。**细看肢体和表情线索——绊倒后脸红是 *embarrassed*，咬指甲盯黑窗则是 *nervous*。",
         ),
         pick(
           ["How does the character most likely feel?", "这个人物最可能有什么感受？"],
           [...feelingBank, ...moreFeelingBank],
-          (right) => `The details show that the character feels **${right}**. The other feelings would show in different ways.`,
-          (right) => `这些细节表明人物感到 **${right}**。其他感受会以不同的方式表现出来。`,
+          (right) =>
+            `The details show that the character feels **${right}**.\n\n**Check.** Act out the character's face and body in the sentence—every clue matches feeling **${right}**.`,
+          (right) => `这些细节表明人物感到 **${right}**。\n\n**检验。**在脑中比划一下句中人物的表情和动作——每个线索都指向 **${right}**。`,
           feelingNot,
         ),
       ),
@@ -798,6 +868,10 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
     id: "lesson-of-a-story",
     title: t("The Lesson of a Story", "故事的寓意"),
     summary: t("The lesson or message a story teaches, beyond what happens in it.", "故事所传达的道理，而不只是故事中发生了什么。"),
+    intro: t(
+      "Two friends argue over a melon until a crow flies off with it—the story is about a melon, yet the lesson is that fighting over something can make everyone lose it. A story's lesson reaches beyond the characters to life itself.",
+      "两个朋友为抢一个瓜吵个不停，结果乌鸦把瓜叼走了——故事讲的是抢瓜，道理却是争抢可能让双方两手空空。故事的寓意超越具体情节，指向每个人都能用上的生活道理。",
+    ),
     prerequisites: ["characters"],
     encompasses: [{ topic: "characters", weight: 0.2 }],
     xp: 12,
@@ -806,15 +880,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "finding-the-lesson",
         t("Finding the Lesson", "找出寓意"),
         t(
-          "Many stories, especially fables, teach a **lesson** about life. The lesson is not what happens in the story but what it teaches about how to act, and it applies to people outside the story too. Look at what a character learns or how a mistake turns out.",
-          "许多故事，尤其是寓言，会讲一个人生**道理**。道理不是故事里发生了什么，而是它教人怎样做事，并且对故事以外的人也适用。看看人物学到了什么，或者一个错误带来了什么结果。",
+          "Many stories, especially fables, teach a **lesson** about life. The lesson is not what happens in the story but what it teaches about how to act, and it applies to people outside the story too. Look at what a character learns or how a mistake turns out.\n\n> **Watch out.** Do not pick a sentence that just retells a plot fact (*The lion was caught in a net*)—a true lesson is a general piece of wisdom anyone could use.",
+          "许多故事，尤其是寓言，会讲一个人生**道理**。道理不是故事里发生了什么，而是它教人怎样做事，并且对故事以外的人也适用。看看人物学到了什么，或者一个错误带来了什么结果。\n\n> **注意。**不要选只复述情节事实的句子（如 *The lion was caught in a net*）——真正的寓意是人人都能用上的人生道理。",
         ),
         pick(
           ["What lesson does this story teach?", "这个故事讲了什么道理？"],
           [...lessonBank, ...fableLessons],
           (right) =>
-            `*${right}* That is what the story teaches about how to act. The other choices are facts from or about the story, not lessons for the reader.`,
-          (right) => `*${right}* 这是故事教人如何做事的道理。其他选项只是关于故事的事实，而不是给读者的道理。`,
+            `“${right}” is the lesson the story teaches about how to act.\n\n**Check.** Ask two questions: could someone apply “${right}” in their own life, and did the ending of the story prove it? Yes to both.`,
+          (right) =>
+            `“${right}”是这个故事教人如何做事的道理。\n\n**检验。**问两个问题：这句话在读者自己的生活中用得上吗？故事的结局证明了它吗？两个都是。`,
           lessonNot,
         ),
       ),
@@ -822,15 +897,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "story-for-a-lesson",
         t("A Story for a Lesson", "符合寓意的故事"),
         t(
-          "A lesson comes from what happens because of a character's choice. To match a story to a lesson, look for a choice and its result that show the lesson is true. A story where nothing turns on a choice, or where the result goes against the lesson, does not teach it.",
-          "道理来自人物的选择所带来的结果。要把故事和道理对应起来，就找能证明这个道理的选择及其结果。一个没有关键选择的故事，或者结果与道理相反的故事，都不能传达这个道理。",
+          "A lesson comes from what happens because of a character's choice. To match a story to a lesson, look for a choice and its result that show the lesson is true. A story where nothing turns on a choice, or where the result goes against the lesson, does not teach it.\n\n> **Watch out.** Check the *ending* of each story—a story with the right topic (like honesty or sharing) still fails if the character never learns or faces the result.",
+          "道理来自人物的选择所带来的结果。要把故事和道理对应起来，就找能证明这个道理的选择及其结果。一个没有关键选择的故事，或者结果与道理相反的故事，都不能传达这个道理。\n\n> **注意。**一定要看每个故事的*结局*——就算提到了诚实或分享，如果人物没有做出相应选择并迎来结果，就没有传达这个道理。",
         ),
         pick(
           ["Which story teaches this lesson?", "哪个故事传达了这个道理？"],
           [...storyForLessonBank, ...fableStories],
           (right) =>
-            `*${right}* The character's choice and its result show the lesson. The other stories have no such choice, or their result points the other way.`,
-          (right) => `*${right}* 人物的选择及其结果体现了这个道理。其他故事没有这样的选择，或者结果恰恰相反。`,
+            `“${right}” proves the lesson through a character's choice and its outcome.\n\n**Check.** Trace the cause and effect in “${right}”—the character's choice directly leads to the result the lesson warns about or praises.`,
+          (right) =>
+            `“${right}”通过人物的选择和结果证明了这个道理。\n\n**检验。**梳理“${right}”里的因果——人物的选择直接带来了这个道理所赞扬或告诫的结果。`,
           storyNot,
         ),
       ),
@@ -840,6 +916,10 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
     id: "similes-and-metaphors",
     title: t("Similes and Metaphors", "明喻和暗喻"),
     summary: t("Comparisons with and without *like* or *as*, and what they mean.", "带或不带 *like*、*as* 的比喻，以及它们的意思。"),
+    intro: t(
+      "Saying *The runner shot off like an arrow* uses a simile, while saying *The lake was a mirror* uses a metaphor. Both paint a vivid picture by borrowing one key quality from another thing.",
+      "说 *The runner shot off like an arrow* 是明喻，说 *The lake was a mirror* 是暗喻。两者都是借用另一种事物的鲜明特点来描绘画面。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 12,
@@ -848,15 +928,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "similes",
         t("Similes", "明喻"),
         t(
-          "A **simile** compares two different things using *like* or *as*: *as hungry as a bear*. It is not meant literally. Ask what the two things have in common: a bear is known for eating a lot, so the person is very hungry, not big or furry.",
-          "**明喻**用 *like* 或 *as* 比较两种不同的事物：*as hungry as a bear*。它不是字面意思。问一问两者有什么共同点：熊以食量大著称，所以这个人非常饿，而不是又大又毛茸茸。",
+          "A **simile** compares two different things using *like* or *as*: *as hungry as a bear*. It is not meant literally. Ask what the two things have in common: a bear is known for eating a lot, so the person is very hungry, not big or furry.\n\n> **Watch out.** Do not take the comparison word for word—focus on the *one shared quality* that fits the rest of the sentence.",
+          "**明喻**用 *like* 或 *as* 比较两种不同的事物：*as hungry as a bear*。它不是字面意思。问一问两者有什么共同点：熊以食量大著称，所以这个人非常饿，而不是又大又毛茸茸。\n\n> **注意。**不要按字面照搬比喻——抓住能融入句意的那个*共同特点*。",
         ),
         pick(
           ["What does the simile mean?", "这个明喻是什么意思？"],
           [...simileBank, ...moreSimileBank],
           (right) =>
-            `It means **${right}**, the quality the two things share. The other choices take the words literally or pick a quality the comparison is not about.`,
-          (right) => `意思是 **${right}**，即两者的共同特点。其他选项是按字面理解，或者选了比喻并不针对的特点。`,
+            `It means **${right}**, the quality the two things share.\n\n**Check.** Substitute **${right}** for the simile in the sentence—the plain meaning stays accurate without taking the comparison literally.`,
+          (right) =>
+            `意思是 **${right}**，即两者的共同特点。\n\n**检验。**把句中的明喻换成 **${right}**——句意依然准确自然，不会落入字面理解。`,
           figureNot,
         ),
       ),
@@ -864,14 +945,15 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "metaphors",
         t("Metaphors", "暗喻"),
         t(
-          "A **metaphor** says that one thing **is** another, without *like* or *as*: *The classroom was a zoo*. The classroom has no animals; it was wild and noisy, as a zoo is. Find the quality the writer wants you to carry over from one thing to the other.",
-          "**暗喻**直接说一样东西**是**另一样东西，不用 *like* 或 *as*：*The classroom was a zoo*。教室里没有动物，而是像动物园一样乱哄哄的。找出作者想让你从一样东西转移到另一样东西上的特点。",
+          "A **metaphor** says that one thing **is** another, without *like* or *as*: *The classroom was a zoo*. The classroom has no animals; it was wild and noisy, as a zoo is. Find the quality the writer wants you to carry over from one thing to the other.\n\n> **Watch out.** A metaphor uses *is* or *was* directly, so do not get tricked into thinking the first thing literally turned into the second.",
+          "**暗喻**直接说一样东西**是**另一样东西，不用 *like* 或 *as*：*The classroom was a zoo*。教室里没有动物，而是像动物园一样乱哄哄的。找出作者想让你从一样东西转移到另一样东西上的特点。\n\n> **注意。**暗喻直接用 *is* 或 *was*，别因此以为第一样东西真的变成了第二样。",
         ),
         pick(
           ["What does the metaphor mean?", "这个暗喻是什么意思？"],
           [...metaphorBank, ...moreMetaphorBank],
-          (right) => `It means **${right}**. The other choices take the metaphor literally or miss the quality it carries over.`,
-          (right) => `意思是 **${right}**。其他选项按字面理解了暗喻，或者没抓住它所转移的特点。`,
+          (right) =>
+            `It means **${right}**.\n\n**Check.** Replace the metaphor with **${right}** in the sentence—it captures the exact trait being carried over without reading the image literally.`,
+          (right) => `意思是 **${right}**。\n\n**检验。**把句中的暗喻换成 **${right}**——准确传达了被借用的特点，而不是照字面去读。`,
           figureNot,
         ),
       ),
@@ -881,6 +963,10 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
     id: "idioms",
     title: t("Idioms", "习语"),
     summary: t("Common phrases whose meaning is not the meaning of their words.", "意思不等于字面意思的常用短语。"),
+    intro: t(
+      "If a friend tells you to *break a leg* before a play, they are wishing you good luck—not hoping you get hurt. Idioms carry a special whole-phrase meaning that you read from context.",
+      "如果朋友在演出前对你说 *break a leg*，那是在祝你好运，而不是希望你摔伤。习语的整体意思不能按字面拼凑，要结合语境来读。",
+    ),
     prerequisites: ["similes-and-metaphors"],
     encompasses: [],
     xp: 10,
@@ -889,14 +975,15 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "what-idioms-mean",
         t("What Idioms Mean", "习语的意思"),
         t(
-          "An **idiom** is a phrase that means something different from its words: *a piece of cake* means something easy, not dessert. Idioms must be learned one by one, but the rest of the sentence often helps: if a test was *a piece of cake*, the writer is talking about the test, not food.",
-          "**习语**是意思与字面不同的短语：*a piece of cake* 表示很容易，而不是甜点。习语需要一个一个地学，但句子的其余部分常常有帮助：如果考试是 *a piece of cake*，作者说的是考试，而不是食物。",
+          "An **idiom** is a phrase that means something different from its words: *a piece of cake* means something easy, not dessert. Idioms must be learned one by one, but the rest of the sentence often helps: if a test was *a piece of cake*, the writer is talking about the test, not food.\n\n> **Watch out.** Reject any option that simply restates the literal words of the idiom—an idiom always means something beyond its individual words.",
+          "**习语**是意思与字面不同的短语：*a piece of cake* 表示很容易，而不是甜点。习语需要一个一个地学，但句子的其余部分常常有帮助：如果考试是 *a piece of cake*，作者说的是考试，而不是食物。\n\n> **注意。**凡是直接照搬习语字面意思的选项都可以排除——习语的真正意思总是超越单个词本身。",
         ),
         pick(
           ["What does the idiom in this sentence mean?", "这句话中的习语是什么意思？"],
           [...idiomBank, ...idiomMeanings],
-          (right) => `It means **${right}**. Taken word by word, the idiom would not make sense in the sentence.`,
-          (right) => `意思是 **${right}**。逐字理解的话，这个习语在句中讲不通。`,
+          (right) =>
+            `It means **${right}**.\n\n**Check.** Swap the idiom out for **${right}** and reread the sentence—the whole situation now makes clear, realistic sense.`,
+          (right) => `意思是 **${right}**。\n\n**检验。**把习语换成 **${right}** 再通读句子——整句话的情境立刻变得清晰合理。`,
           idiomNot,
         ),
       ),
@@ -904,14 +991,16 @@ export const thinkingReadingTopics: readonly TopicDef[] = [
         "choosing-an-idiom",
         t("Choosing an Idiom", "选择习语"),
         t(
-          "Using an idiom means knowing what it means as a whole. Match the meaning you need to the idiom, then check that the sentence still makes sense: *Grandma is under the weather* says she is sick, while *Grandma is on cloud nine* says she is very happy.",
-          "使用习语要知道它的整体意思。把需要的意思和习语对应起来，再检查句子是否通顺：*Grandma is under the weather* 是说她病了，而 *Grandma is on cloud nine* 是说她非常高兴。",
+          "Using an idiom means knowing what it means as a whole. Match the meaning you need to the idiom, then check that the sentence still makes sense: *Grandma is under the weather* says she is sick, while *Grandma is on cloud nine* says she is very happy.\n\n> **Watch out.** Do not pick an idiom just because one word in it matches the topic of the sentence—match the *whole idiom's* meaning to the goal.",
+          "使用习语要知道它的整体意思。把需要的意思和习语对应起来，再检查句子是否通顺：*Grandma is under the weather* 是说她病了，而 *Grandma is on cloud nine* 是说她非常高兴。\n\n> **注意。**不要因为习语里恰好有个词和句子主题相关就选它——要把*整个习语*的意思和目标含义对上。",
         ),
         pick(
           ["Which idiom completes the sentence with this meaning?", "哪个习语能以这个意思补全句子？"],
           [...chooseIdiomBank, ...idiomChoices],
-          (right) => `**${right}** has this meaning. The other idioms mean something else, so the sentence would say the wrong thing.`,
-          (right) => `**${right}** 就是这个意思。其他习语意思不同，句子就会表达错误的意思。`,
+          (right) =>
+            `**${right}** has this meaning.\n\n**Check.** Recall the whole-phrase meaning of **${right}** and plug it into the blank—it delivers the exact message asked for, whereas the other idioms express different ideas.`,
+          (right) =>
+            `**${right}** 就是这个意思。\n\n**检验。**回想 **${right}** 的整体含义并代入空格——它正好表达出题目要求的意思，而其他习语表达的是别的意思。`,
           chooseIdiomNot,
         ),
       ),

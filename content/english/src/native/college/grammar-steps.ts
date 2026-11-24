@@ -109,10 +109,18 @@ export const claimFixStep = point(
   "fixing-the-claim",
   t("Fixing the Claim", "修正主张"),
   t(
-    "When you revise a draft, check each claim against its evidence. Claims usually go wrong in three ways.\n\n- **A link turned into a cause.** A survey or observation shows only that two things go together; *Breakfast raises grades* needs an experiment. Fix it with *is linked to* or *is associated with*.\n- **A claim beyond the sample.** A study of mice, of one hospital or of teenagers in one city does not cover everyone. Fix it by naming the group studied.\n- **A claim hedged too much.** Piling *may*, *possibly* and *some* onto strong, repeated evidence makes the writer sound unsure of what is well established. Fix it by stating the finding plainly.\n\nA claim that matches the kind, amount and reach of its evidence needs no change.",
-    "修改草稿时，要用证据逐一检查每个主张。主张通常在三个方面出错。\n\n- **把关联说成因果。**调查或观察只能说明两件事同时出现；*Breakfast raises grades* 需要实验才能证明。改用 *is linked to* 或 *is associated with*。\n- **超出样本的主张。**对老鼠、对一家医院或对一个城市青少年的研究，并不能涵盖所有人。改正方法是说明被研究的群体。\n- **限制过多的主张。**在有力且反复得到证实的证据上堆砌 *may*、*possibly*、*some*，会让作者对已经确立的事实显得没有把握。改正方法是直接陈述发现。\n\n与证据的类型、数量和范围相符的主张不需要修改。",
+    "When you revise a draft, check each claim against its evidence. Claims usually go wrong in three ways.\n\n- **A link turned into a cause.** A survey or observation shows only that two things go together; *Breakfast raises grades* needs an experiment. Fix it with *is linked to* or *is associated with*.\n- **A claim beyond the sample.** A study of mice, of one hospital or of teenagers in one city does not cover everyone. Fix it by naming the group studied.\n- **A claim hedged too much.** Piling *may*, *possibly* and *some* onto strong, repeated evidence makes the writer sound unsure of what is well established. Fix it by stating the finding plainly.\n\nA claim that matches the kind, amount and reach of its evidence needs no change.\n\n> **Watch out.** Check whether the evidence is a *randomized/controlled trial* or merely a *survey/observation* before judging causation—only a controlled experiment supports causal verbs like *raises* or *reduces*.",
+    "修改草稿时，要用证据逐一检查每个主张。主张通常在三个方面出错。\n\n- **把关联说成因果。**调查或观察只能说明两件事同时出现；*Breakfast raises grades* 需要实验才能证明。改用 *is linked to* 或 *is associated with*。\n- **超出样本的主张。**对老鼠、对一家医院或对一个城市青少年的研究，并不能涵盖所有人。改正方法是说明被研究的群体。\n- **限制过多的主张。**在有力且反复得到证实的证据上堆砌 *may*、*possibly*、*some*，会让作者对已经确立的事实显得没有把握。改正方法是直接陈述发现。\n\n与证据的类型、数量和范围相符的主张不需要修改。\n\n> **注意。** 判断因果前先看清证据是*随机对照试验*还是仅仅是*调查/观察*——只有对照实验才撑得起 *raises*、*reduces* 这类因果动词。",
   ),
-  labelChoice(["What is wrong with this claim, given the evidence?", "根据证据，这个主张有什么问题？"], claimLines, claimLabels),
+  labelChoice(
+    ["What is wrong with this claim, given the evidence?", "根据证据，这个主张有什么问题？"],
+    claimLines,
+    claimLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Compare the study method, sample size, and group studied in the evidence directly against the verb and scope in the claim to confirm **${right}**.`,
+      `这是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 把证据中的研究方法、样本规模和研究对象，与主张里的动词力度和适用范围逐一比对，即可确认**${entry.zh}**。`,
+    ],
+  ),
 );
 
 // The writer's stance in a reporting verb.
@@ -196,13 +204,17 @@ export const stanceStep = point(
   "the-writers-stance",
   t("The Writer's Stance", "作者的立场"),
   t(
-    "A reporting verb tells the reader not only what a source does, but also what **you**, the writer, think of it.\n\n- **Neutral** verbs report without judging: *says*, *writes*, *states*, *reports*, *notes*, *observes*.\n- **Accepting** verbs present the claim as true: *shows*, *demonstrates*, *establishes*, *proves*, *confirms*, *points out*.\n- **Doubting** verbs suggest the claim may be false: *claims*, *alleges*, *insists*, *purports*, *asserts* (especially *without evidence*).\n\nThe same sentence changes meaning with the verb: *Okafor **shows** that the policy worked* means you agree; *Okafor **claims** that the policy worked* means you are not convinced. Choose the verb that matches your real view, and be ready to support it.",
-    "转述动词告诉读者的不只是资料做了什么，还有**你**这位作者对它的看法。\n\n- **中立**的动词只转述不评判：*says、writes、states、reports、notes、observes*。\n- **接受**的动词把说法当作真的：*shows、demonstrates、establishes、proves、confirms、points out*。\n- **怀疑**的动词暗示说法可能是假的：*claims、alleges、insists、purports、asserts*（尤其是 *without evidence*）。\n\n换一个动词，同一个句子的意思就变了：*Okafor **shows** that the policy worked* 表示你赞同；*Okafor **claims** that the policy worked* 表示你并不信服。选择与你真实看法相符的动词，并准备好为它提供依据。",
+    "A reporting verb tells the reader not only what a source does, but also what **you**, the writer, think of it.\n\n- **Neutral** verbs report without judging: *says*, *writes*, *states*, *reports*, *notes*, *observes*.\n- **Accepting** verbs present the claim as true: *shows*, *demonstrates*, *establishes*, *proves*, *confirms*, *points out*.\n- **Doubting** verbs suggest the claim may be false: *claims*, *alleges*, *insists*, *purports*, *asserts* (especially *without evidence*).\n\nThe same sentence changes meaning with the verb: *Okafor **shows** that the policy worked* means you agree; *Okafor **claims** that the policy worked* means you are not convinced. Choose the verb that matches your real view, and be ready to support it.\n\n> **Watch out.** Do not treat *claims* or *alleges* as neutral—in academic prose, *writes* or *reports* is neutral, whereas *claims*, *alleges*, and *purports* signal skepticism.",
+    "转述动词告诉读者的不只是资料做了什么，还有**你**这位作者对它的看法。\n\n- **中立**的动词只转述不评判：*says、writes、states、reports、notes、observes*。\n- **接受**的动词把说法当作真的：*shows、demonstrates、establishes、proves、confirms、points out*。\n- **怀疑**的动词暗示说法可能是假的：*claims、alleges、insists、purports、asserts*（尤其是 *without evidence*）。\n\n换一个动词，同一个句子的意思就变了：*Okafor **shows** that the policy worked* 表示你赞同；*Okafor **claims** that the policy worked* 表示你并不信服。选择与你真实看法相符的动词，并准备好为它提供依据。\n\n> **注意。** 不要把 *claims* 或 *alleges* 当作中立词——在学术写作中，*writes*、*reports* 才表示中立，而 *claims*、*alleges*、*purports* 都在传递怀疑。",
   ),
   labelChoice(
     ["What does the reporting verb in bold show about the writer's view?", "加粗的转述动词表明了作者怎样的看法？"],
     stanceLines,
     stanceLabels,
+    (right, _shown, entry) => [
+      `It shows **${right}**. ${entry.why[0]}\n\n**Check.** Ask whether the bold verb vouches for the claim as proven, leaves it unjudged, or distances the writer from it: that test confirms **${right}**.`,
+      `它表明**${entry.zh}**。${entry.why[1]}\n\n**检验。** 问问加粗动词是在为该说法背书、不置可否，还是刻意拉开距离：由此直接确认**${entry.zh}**。`,
+    ],
   ),
 );
 
@@ -250,15 +262,15 @@ export const paraphraseStep = point(
   "choosing-a-paraphrase",
   t("Choosing a Paraphrase", "选择转述"),
   t(
-    "An acceptable paraphrase passes three tests at once.\n\n1. **Own words and own structure.** Read the source, look away, and write the idea as you would explain it. If your sentence follows the source clause by clause with a few synonyms swapped in, it is **patchwriting**, which counts as plagiarism even with a citation.\n2. **The same meaning.** A paraphrase must not make the idea stronger, weaker or different: *may improve* is not *proves*, and *a link* is not *a cause*.\n3. **Credit.** Name the author and year, because the idea is still theirs.\n\nA good check is to compare the shape: if you could lay your sentence over the source and see the same skeleton, rewrite it.",
-    "可以接受的转述要同时通过三项检验。\n\n1. **自己的词语和自己的结构。**读完原文，移开视线，按你自己解释的方式写出这个观点。如果你的句子逐个分句地跟着原文走，只换了几个同义词，那就是**拼凑式改写**（patchwriting），即使注明出处也算抄袭。\n2. **意思不变。**转述不能让观点变强、变弱或变样：*may improve* 不等于 *proves*，*关联* 也不等于 *因果*。\n3. **注明出处。**写出作者和年份，因为观点仍然是他们的。\n\n一个好的检验方法是比较句子的形状：如果把你的句子叠在原文上能看到同样的骨架，就要重写。",
+    "An acceptable paraphrase passes three tests at once.\n\n1. **Own words and own structure.** Read the source, look away, and write the idea as you would explain it. If your sentence follows the source clause by clause with a few synonyms swapped in, it is **patchwriting**, which counts as plagiarism even with a citation.\n2. **The same meaning.** A paraphrase must not make the idea stronger, weaker or different: *may improve* is not *proves*, and *a link* is not *a cause*.\n3. **Credit.** Name the author and year, because the idea is still theirs.\n\nA good check is to compare the shape: if you could lay your sentence over the source and see the same skeleton, rewrite it.\n\n> **Watch out.** Check *both* traps—one wrong option keeps the source's sentence skeleton with a few synonyms swapped (patchwriting), while the other uses fresh wording but reverses or exaggerates the source's claim.",
+    "可以接受的转述要同时通过三项检验。\n\n1. **自己的词语和自己的结构。**读完原文，移开视线，按你自己解释的方式写出这个观点。如果你的句子逐个分句地跟着原文走，只换了几个同义词，那就是**拼凑式改写**（patchwriting），即使注明出处也算抄袭。\n2. **意思不变。**转述不能让观点变强、变弱或变样：*may improve* 不等于 *proves*，*关联* 也不等于 *因果*。\n3. **注明出处。**写出作者和年份，因为观点仍然是他们的。\n\n一个好的检验方法是比较句子的形状：如果把你的句子叠在原文上能看到同样的骨架，就要重写。\n\n> **注意。** 同时防备两个陷阱——一个干扰项沿用原句骨架只换几个同义词（拼凑式改写），另一个干扰项虽换了新词，却扭曲、夸大或颠倒了原意。",
   ),
   kindedChoice(
     ["Which is an acceptable paraphrase of the source?", "哪一项是对原文可以接受的转述？"],
     paraphraseBank,
     (right) => [
-      `*${right}* It restates the idea in new words and a new structure, keeps its meaning exactly, and credits the author and year.`,
-      `*${right}* 它用新的词语和新的结构重述观点，准确保留了原意，并注明了作者和年份。`,
+      `*${right}* It restates the idea in new words and a new structure, keeps its meaning exactly, and credits the author and year.\n\n**Check.** Lay this sentence beside the source: its clause order and vocabulary are genuinely rebuilt, its claim matches the source's exact strength and direction, and the author and year are cited.`,
+      `*${right}* 它用新的词语和新的结构重述观点，准确保留了原意，并注明了作者和年份。\n\n**检验。** 把这句和原文并排比对：分句顺序和用词都真正重构了，主张的力度与方向和原文完全一致，且标明了作者和年份。`,
     ],
     [
       [
@@ -324,8 +336,8 @@ export const cohesionBreakStep = point(
   "finding-the-break",
   t("Finding the Break", "找出断裂之处"),
   t(
-    "To check a paragraph for cohesion, read only the **beginning** of each sentence after the first and ask: has the reader met this already? In a cohesive paragraph each sentence opens with something named in the sentence before, such as *the bridge*, *these crops* or *that battery*, and ends with something new.\n\nThe sentence that breaks the chain opens with a new person, thing or idea, often after *A* or *An*, and pushes the familiar part to its end: *A national prize was later given to the engineer.* The reader must hold the new idea in mind before learning how it connects. The usual fix is to turn the sentence around, often into the active or the passive voice: *The engineer was later given a national prize.*",
-    "检查段落是否衔接时，只读第一句之后每个句子的**开头**，并问：读者已经见过这个了吗？在衔接良好的段落里，每个句子都以上一句提到的东西开头，比如 *the bridge*、*these crops*、*that battery*，以新的内容结尾。\n\n打断链条的句子以新的人、事物或想法开头，常常跟在 *A* 或 *An* 后面，并把熟悉的部分推到句末：*A national prize was later given to the engineer.* 读者必须先记住这个新内容，然后才知道它与前文有什么联系。通常的改法是把句子倒过来，常常是在主动语态和被动语态之间转换：*The engineer was later given a national prize.*",
+    "To check a paragraph for cohesion, read only the **beginning** of each sentence after the first and ask: has the reader met this already? In a cohesive paragraph each sentence opens with something named in the sentence before, such as *the bridge*, *these crops* or *that battery*, and ends with something new.\n\nThe sentence that breaks the chain opens with a new person, thing or idea, often after *A* or *An*, and pushes the familiar part to its end: *A national prize was later given to the engineer.* The reader must hold the new idea in mind before learning how it connects. The usual fix is to turn the sentence around, often into the active or the passive voice: *The engineer was later given a national prize.*\n\n> **Watch out.** Check the *subject at the start* of each sentence, not whether the topic still belongs to the same story—even a relevant sentence breaks cohesion if it opens with an unintroduced noun (*A…* / *An…*) instead of linking back to the sentence before.",
+    "检查段落是否衔接时，只读第一句之后每个句子的**开头**，并问：读者已经见过这个了吗？在衔接良好的段落里，每个句子都以上一句提到的东西开头，比如 *the bridge*、*these crops*、*that battery*，以新的内容结尾。\n\n打断链条的句子以新的人、事物或想法开头，常常跟在 *A* 或 *An* 后面，并把熟悉的部分推到句末：*A national prize was later given to the engineer.* 读者必须先记住这个新内容，然后才知道它与前文有什么联系。通常的改法是把句子倒过来，常常是在主动语态和被动语态之间转换：*The engineer was later given a national prize.*\n\n> **注意。** 核对每句*开头的起首主语*，不要只看意思是否相关——哪怕内容紧扣主题，只要句首突然抛出前文未出现的新名词，也会打断衔接。",
   ),
   choiceGenerator(
     t("Which sentence breaks the flow by starting with something new?", "哪个句子以新内容开头，打断了行文的连贯？"),
@@ -333,8 +345,8 @@ export const cohesionBreakStep = point(
     (right, shown) => {
       const first = shown.replace(/^\(1\) /u, "").split(" (2) ")[0] ?? "";
       return t(
-        `**${right}** breaks the flow: it opens with ${breakWhy.get(first) ?? "something new"}. Turn it around so that it starts with what the reader knows.`,
-        `**${right}** 打断了行文：它的开头是读者没见过的新内容，而不是上一句刚提到的东西。应该把句子倒过来，让它以读者已知的内容开头。`,
+        `**${right}** breaks the flow: it opens with ${breakWhy.get(first) ?? "something new"}. Turn it around so that it starts with what the reader knows.\n\n**Check.** Scan the opening phrase of Sentences 2, 3, and 4 in order: the other two echo a noun from the sentence just before them, while **${right}** introduces a brand-new subject upfront.`,
+        `**${right}** 打断了行文：它的开头是读者没见过的新内容，而不是上一句刚提到的东西。应该把句子倒过来，让它以读者已知的内容开头。\n\n**检验。** 依次核对第 2、3、4 句的句首：另外两句都承接了前一句已经出现的名词，唯独 **${right}** 一开头就抛出了全新主语。`,
       );
     },
     (wrong) =>
@@ -390,15 +402,15 @@ export const actorStep = point(
   "finding-character-and-action",
   t("Finding the Character and the Action", "找出人物和动作"),
   t(
-    "Before you can revise a cloudy sentence, you must find what it is really about. Ask two questions.\n\n- **Who is doing something?** That is the **character**, even if it hides in a phrase with *of* or *by*, or behind a possessive: *the committee's decision*, *a failure **by the engineers***.\n- **What are they doing?** That is the **action**, usually hidden in an abstract noun ending in *-tion*, *-ment*, *-ure*, *-al* or *-sis*: *decision* hides *decide*, *failure* hides *fail*, *analysis* hides *analyze*.\n\nTwo traps wait. The abstract noun at the front of the sentence is not the character, because a *decision* does nothing by itself. And the weak verb that holds the sentence together, such as *was*, *occurred*, *took place* or *there was*, is not the action.",
-    "要修改一个含混的句子，首先必须找出它真正讲的是什么。问两个问题。\n\n- **谁在做事？**那就是**人物**，即使它藏在 *of*、*by* 引导的短语里，或者藏在所有格后面：*the committee's decision*、*a failure **by the engineers***。\n- **他们在做什么？**那就是**动作**，通常藏在以 *-tion、-ment、-ure、-al、-sis* 结尾的抽象名词里：*decision* 藏着 *decide*，*failure* 藏着 *fail*，*analysis* 藏着 *analyze*。\n\n有两个陷阱。句首的抽象名词不是人物，因为 *decision* 自己什么也做不了。撑起句子的弱动词，比如 *was、occurred、took place、there was*，也不是动作。",
+    "Before you can revise a cloudy sentence, you must find what it is really about. Ask two questions.\n\n- **Who is doing something?** That is the **character**, even if it hides in a phrase with *of* or *by*, or behind a possessive: *the committee's decision*, *a failure **by the engineers***.\n- **What are they doing?** That is the **action**, usually hidden in an abstract noun ending in *-tion*, *-ment*, *-ure*, *-al* or *-sis*: *decision* hides *decide*, *failure* hides *fail*, *analysis* hides *analyze*.\n\nTwo traps wait. The abstract noun at the front of the sentence is not the character, because a *decision* does nothing by itself. And the weak verb that holds the sentence together, such as *was*, *occurred*, *took place* or *there was*, is not the action.\n\n> **Watch out.** Test your pair by building a plain subject + verb clause from it: if the subject is an abstract noun or the verb is just *was*/*occurred*, you have not yet uncovered the real character and action.",
+    "要修改一个含混的句子，首先必须找出它真正讲的是什么。问两个问题。\n\n- **谁在做事？**那就是**人物**，即使它藏在 *of*、*by* 引导的短语里，或者藏在所有格后面：*the committee's decision*、*a failure **by the engineers***。\n- **他们在做什么？**那就是**动作**，通常藏在以 *-tion、-ment、-ure、-al、-sis* 结尾的抽象名词里：*decision* 藏着 *decide*，*failure* 藏着 *fail*，*analysis* 藏着 *analyze*。\n\n有两个陷阱。句首的抽象名词不是人物，因为 *decision* 自己什么也做不了。撑起句子的弱动词，比如 *was、occurred、took place、there was*，也不是动作。\n\n> **注意。** 把你找出的“人物 + 动作”直接拼成主谓短句检验：如果主语还是抽象名词，或动词仍是 *was*/*occurred*，说明还没挖出真正的人物和动作。",
   ),
   kindedChoice(
     ["Who is the real character in this sentence, and what is the real action?", "这个句子真正的人物是谁，真正的动作是什么？"],
     actorBank,
     (right) => [
-      `${right} The character is the one doing something, and the action is the verb hidden inside the abstract noun.`,
-      `${right} 人物是做事的那一方，动作是藏在抽象名词里的动词。`,
+      `${right} The character is the one doing something, and the action is the verb hidden inside the abstract noun.\n\n**Check.** Put that character directly in front of that action verb: the resulting plain clause states the core event of the original sentence without any filler verb.`,
+      `${right} 人物是做事的那一方，动作是藏在抽象名词里的动词。\n\n**检验。** 把这个人物直接放在这个动词前面组成主谓句：它不靠任何虚弱的连接动词，就说清了原句的核心事件。`,
     ],
     [
       [
@@ -541,10 +553,18 @@ export const numberRuleStep = point(
   "spotting-the-number-rule",
   t("Spotting the Number Rule", "找出违反的数字规则"),
   t(
-    "When you proofread, check every number against the rules in order.\n\n1. **Does it start the sentence?** Then it must be words, or the sentence must be rewritten: *Forty-eight students took part*, or *In all, 48 students took part*.\n2. **Is it a percentage or a measurement?** Then it is a numeral, with *%* or a unit: *6%*, *5 kg*.\n3. **Is it part of a range?** Then use *from ... to ...* or *between ... and ...* in full, or a dash alone: *from 12 to 18* or *12–18*, never *from 12–18*.\n4. **Otherwise, how big is it?** Below 10, words (*seven families*); 10 and above, numerals (*24 teachers*).\n\nIf the number passes every check, it is correct as it stands.",
-    "校对时，要按顺序用规则检查每一个数。\n\n1. **它在句首吗？**如果是，就必须写成单词，或者改写句子：*Forty-eight students took part*，或者 *In all, 48 students took part*。\n2. **它是百分数或计量数吗？**如果是，就用阿拉伯数字，加 *%* 或单位：*6%*、*5 kg*。\n3. **它是范围的一部分吗？**如果是，就完整地使用 *from ... to ...* 或 *between ... and ...*，或者只用连接号：*from 12 to 18* 或 *12–18*，绝不能写成 *from 12–18*。\n4. **否则，它有多大？**十以下用单词（*seven families*）；十及以上用阿拉伯数字（*24 teachers*）。\n\n如果这个数通过了每一项检查，它就是正确的。",
+    "When you proofread, check every number against the rules in order.\n\n1. **Does it start the sentence?** Then it must be words, or the sentence must be rewritten: *Forty-eight students took part*, or *In all, 48 students took part*.\n2. **Is it a percentage or a measurement?** Then it is a numeral, with *%* or a unit: *6%*, *5 kg*.\n3. **Is it part of a range?** Then use *from ... to ...* or *between ... and ...* in full, or a dash alone: *from 12 to 18* or *12–18*, never *from 12–18*.\n4. **Otherwise, how big is it?** Below 10, words (*seven families*); 10 and above, numerals (*24 teachers*).\n\nIf the number passes every check, it is correct as it stands.\n\n> **Watch out.** Do not stop after checking the size of the number—a sentence-opening numeral like *12* or a range mixing *from* with a dash (*from 12–18*) breaks a rule even if the numeral itself looks normal.",
+    "校对时，要按顺序用规则检查每一个数。\n\n1. **它在句首吗？**如果是，就必须写成单词，或者改写句子：*Forty-eight students took part*，或者 *In all, 48 students took part*。\n2. **它是百分数或计量数吗？**如果是，就用阿拉伯数字，加 *%* 或单位：*6%*、*5 kg*。\n3. **它是范围的一部分吗？**如果是，就完整地使用 *from ... to ...* 或 *between ... and ...*，或者只用连接号：*from 12 to 18* 或 *12–18*，绝不能写成 *from 12–18*。\n4. **否则，它有多大？**十以下用单词（*seven families*）；十及以上用阿拉伯数字（*24 teachers*）。\n\n如果这个数通过了每一项检查，它就是正确的。\n\n> **注意。** 不要只看数字大小就停手——句首的阿拉伯数字（如 *12*）或把 *from* 和连接号混用的范围（*from 12–18*），即便数字本身看着正常，也违反了规则。",
   ),
-  labelChoice(["Which rule does the number in bold break?", "加粗的数违反了哪条规则？"], numberRuleLines, numberLabels),
+  labelChoice(
+    ["Which rule does the number in bold break?", "加粗的数违反了哪条规则？"],
+    numberRuleLines,
+    numberLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Walk through the four checks in order (sentence start, % or unit, range, then under/at-least 10) on the bold text: it trips the **${right}** rule (or passes all four if none is broken).`,
+      `这是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 对加粗部分按顺序过一遍四条检查（句首、百分号或单位、范围、十以下/十及以上）：它触发的正是**${entry.zh}**这条（若全部通过则无误）。`,
+    ],
+  ),
 );
 
 // Naming the problem of tone.
@@ -640,10 +660,13 @@ export const toneProblemStep = point(
   "naming-the-tone-problem",
   t("Naming the Tone Problem", "说出语气的问题"),
   t(
-    "When you reread a message before sending it, ask how it will sound to **this** reader. Messages at work usually fail in one of three ways.\n\n- **Too casual**: slang, *hey*, *lol*, *u*, missing capitals or a pile of exclamation marks. It suits a friend, not a manager, a client or a stranger.\n- **Too blunt**: orders, blame, or a bare *no* with no thanks and no reason. Even when the news is bad, the reader deserves courtesy.\n- **Too stiff**: old legal phrases such as *pursuant to*, *herewith*, *the undersigned* or *it is requested that*. They make the writer sound distant and hide a simple point.\n\nA message that suits the reader is polite and plain at once: it says what is needed, gives a reason, and offers help where it can.",
-    "发送之前重读信息时，要问一问它在**这位**读者听来会怎样。工作中的信息通常在三个方面出问题。\n\n- **过于随便**：俚语、*hey*、*lol*、*u*、不用大写，或者一连串感叹号。这适合对朋友，不适合对经理、客户或陌生人。\n- **过于生硬**：命令、指责，或者光秃秃的一个 *no*，既不道谢也不说明理由。即使消息不好，读者也应该得到礼貌的对待。\n- **过于刻板**：*pursuant to*、*herewith*、*the undersigned*、*it is requested that* 这样的老式法律用语。它们让作者显得疏远，并掩盖了简单的要点。\n\n适合读者的信息既礼貌又平实：它说明需要什么，给出理由，并在可能的时候提供帮助。",
+    "When you reread a message before sending it, ask how it will sound to **this** reader. Messages at work usually fail in one of three ways.\n\n- **Too casual**: slang, *hey*, *lol*, *u*, missing capitals or a pile of exclamation marks. It suits a friend, not a manager, a client or a stranger.\n- **Too blunt**: orders, blame, or a bare *no* with no thanks and no reason. Even when the news is bad, the reader deserves courtesy.\n- **Too stiff**: old legal phrases such as *pursuant to*, *herewith*, *the undersigned* or *it is requested that*. They make the writer sound distant and hide a simple point.\n\nA message that suits the reader is polite and plain at once: it says what is needed, gives a reason, and offers help where it can.\n\n> **Watch out.** Check the exact signal word: texting abbreviations/lowercase = **too casual**, bare commands or blame = **too blunt**, archaic legalese (*herewith*, *pursuant to*, *undersigned*) = **too stiff**.",
+    "发送之前重读信息时，要问一问它在**这位**读者听来会怎样。工作中的信息通常在三个方面出问题。\n\n- **过于随便**：俚语、*hey*、*lol*、*u*、不用大写，或者一连串感叹号。这适合对朋友，不适合对经理、客户或陌生人。\n- **过于生硬**：命令、指责，或者光秃秃的一个 *no*，既不道谢也不说明理由。即使消息不好，读者也应该得到礼貌的对待。\n- **过于刻板**：*pursuant to*、*herewith*、*the undersigned*、*it is requested that* 这样的老式法律用语。它们让作者显得疏远，并掩盖了简单的要点。\n\n适合读者的信息既礼貌又平实：它说明需要什么，给出理由，并在可能的时候提供帮助。\n\n> **注意。** 对准具体信号词：短信缩写或小写开头是**过于随便**，赤裸命令或指责是**过于生硬**，老式法律公文词（*herewith*、*pursuant to*、*undersigned*）则是**过于刻板**。",
   ),
-  labelChoice(["How does this message suit its reader?", "这条信息是否适合它的读者？"], toneLines, toneLabels),
+  labelChoice(["How does this message suit its reader?", "这条信息是否适合它的读者？"], toneLines, toneLabels, (right, _shown, entry) => [
+    `Verdict: **${right}**. ${entry.why[0]}\n\n**Check.** Scan the message's diction and courtesy markers against the named recipient: those cues confirm **${right}**.`,
+    `判断：**${entry.zh}**。${entry.why[1]}\n\n**检验。** 对照收件人身份核查信息的措辞与礼貌程度：这些语言线索直接印证**${entry.zh}**。`,
+  ]),
 );
 
 // The item that breaks a list.
@@ -699,8 +722,8 @@ export const listBreakStep = point(
   "the-item-that-breaks",
   t("The Item That Breaks the List", "破坏列表的那一项"),
   t(
-    "To check a list in a draft, first name the form most of its items share: the **-ing form** (*Choosing a site*), the **command form** (*Choose a site.*), the **to-form** (*To choose a site*), a **plain verb** after a lead-in such as *how to*, or a **noun phrase** (*low prices*). Then look for the item that does not share it.\n\nThe odd item is often a full sentence in a list of commands (*Your passport must be renewed*), a noun built from a verb in a list of verbs (*the hiring of staff*), or a *to*-form among *-ing* forms. Reading each item straight after the lead-in helps: *The app lets users track their spending* works, but *The app lets users the sharing of receipts* does not. Rewrite the odd item in the shared form.",
-    "检查草稿中的列表时，先说出大多数项共同采用的形式：**-ing 形式**（*Choosing a site*）、**祈使形式**（*Choose a site.*）、**to 不定式形式**（*To choose a site*）、*how to* 这类引导语之后的**动词原形**，或者**名词短语**（*low prices*）。然后找出不采用这种形式的那一项。\n\n不一致的那一项常常是祈使句列表中的完整句子（*Your passport must be renewed*）、动词列表中由动词变来的名词（*the hiring of staff*），或者一串 *-ing* 形式中的 *to* 不定式。把每一项直接接在引导语后面读一读会有帮助：*The app lets users track their spending* 讲得通，*The app lets users the sharing of receipts* 却讲不通。应该把这一项改写成共同的形式。",
+    "To check a list in a draft, first name the form most of its items share: the **-ing form** (*Choosing a site*), the **command form** (*Choose a site.*), the **to-form** (*To choose a site*), a **plain verb** after a lead-in such as *how to*, or a **noun phrase** (*low prices*). Then look for the item that does not share it.\n\nThe odd item is often a full sentence in a list of commands (*Your passport must be renewed*), a noun built from a verb in a list of verbs (*the hiring of staff*), or a *to*-form among *-ing* forms. Reading each item straight after the lead-in helps: *The app lets users track their spending* works, but *The app lets users the sharing of receipts* does not. Rewrite the odd item in the shared form.\n\n> **Watch out.** Compare the grammatical pattern of all four items before choosing—three items will always share one exact opening structure, leaving the fourth as the odd one out.",
+    "检查草稿中的列表时，先说出大多数项共同采用的形式：**-ing 形式**（*Choosing a site*）、**祈使形式**（*Choose a site.*）、**to 不定式形式**（*To choose a site*）、*how to* 这类引导语之后的**动词原形**，或者**名词短语**（*low prices*）。然后找出不采用这种形式的那一项。\n\n不一致的那一项常常是祈使句列表中的完整句子（*Your passport must be renewed*）、动词列表中由动词变来的名词（*the hiring of staff*），或者一串 *-ing* 形式中的 *to* 不定式。把每一项直接接在引导语后面读一读会有帮助：*The app lets users track their spending* 讲得通，*The app lets users the sharing of receipts* 却讲不通。应该把这一项改写成共同的形式。\n\n> **注意。** 下判断前把四项的开头词形排在一起对照——其中三项一定共享同一种语法结构，剩下的那一项就是格格不入的异类。",
   ),
   choiceGenerator(
     t("Which item breaks the form the rest of the list shares?", "哪一项破坏了列表其余各项共同的形式？"),
@@ -708,8 +731,8 @@ export const listBreakStep = point(
     (right) => {
       const [form, oddForm] = listForm.get(right) ?? ["", ""];
       return t(
-        `**${right}** breaks the list: the other items use ${form}, but this one is ${oddForm}. Rewrite it in ${form}.`,
-        `**${right}** 破坏了列表：其他各项都用 ${form}，而这一项是 ${oddForm}。应该把它改写成 ${form}。`,
+        `**${right}** breaks the list: the other items use ${form}, but this one is ${oddForm}. Rewrite it in ${form}.\n\n**Check.** Line up the first word of all four bullets: three match ${form}, while only this item shifts to ${oddForm}.`,
+        `**${right}** 破坏了列表：其他各项都用 ${form}，而这一项是 ${oddForm}。应该把它改写成 ${form}。\n\n**检验。** 把四项的开头词形排成一列对照：三项都符合 ${form}，唯独这一项换成了 ${oddForm}。`,
       );
     },
     (wrong) =>

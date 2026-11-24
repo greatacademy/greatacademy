@@ -101,8 +101,8 @@ const showingBank: readonly Item[] = shows.map((s, i) => {
     right: s.show,
     wrong: [s.tell, other.show],
     why: t(
-      `This sentence **shows**: it gives actions the reader can picture, and the reader works out the feeling. ${feelings[s.feeling]?.is[0]}`,
-      `这个句子是在**表现**：它写出读者能想象的动作，让读者自己体会出感受。${feelings[s.feeling]?.is[1]}`,
+      `This sentence **shows**: it gives actions the reader can picture, and the reader works out the feeling. ${feelings[s.feeling]?.is[0]}\n\n**Check.** Scan the sentence for the word *${s.feeling}*—it is never named, yet the physical clues make you picture a ${s.feeling} character right away.`,
+      `这个句子是在**表现**：它写出读者能想象的动作，让读者自己体会出感受。${feelings[s.feeling]?.is[1]}\n\n**检验。** 看看句中有没有直接写“${feelings[s.feeling]?.zh}”——完全没有点名，但具体的动作画面立刻让你体会出这种情绪。`,
     ),
     whyNot: [
       t(
@@ -172,8 +172,8 @@ const combineBank: readonly Item[] = phraseRows.map((r) => {
     right: joined(r.first, r.phrase),
     wrong: [splice, swapped],
     why: t(
-      `The second sentence only tells where, when or how, so its phrase, “${r.phrase}”, can join the first sentence. One smooth sentence replaces two short ones.`,
-      `第二句只说明地点、时间或方式，所以可以把其中的短语“${r.phrase}”接到第一句上。一个流畅的句子代替了两个短句。`,
+      `The second sentence only tells where, when or how, so its phrase, “${r.phrase}”, can join the first sentence. One smooth sentence replaces two short ones.\n\n**Check.** Read the combined sentence aloud—it keeps every fact from both original sentences, drops repeated words, and avoids a comma splice.`,
+      `第二句只说明地点、时间或方式，所以可以把其中的短语“${r.phrase}”接到第一句上。一个流畅的句子代替了两个短句。\n\n**检验。** 读一遍合并后的句子——完整保留了原句事实、去掉了重复词语，也没有逗号粘连。`,
     ),
     whyNot: [
       t(
@@ -200,8 +200,8 @@ const phraseBank: readonly Item[] = phraseRows.map((r, i) => {
     right: r.phrase,
     wrong: [r.swapped, foreign],
     why: t(
-      `“${r.phrase}” is the prepositional phrase of the second sentence. Moving it into the first sentence keeps the fact and drops the repeated words.`,
-      `“${r.phrase}”是第二句中的介词短语。把它移到第一句里，既保留了事实，又去掉了重复的词。`,
+      `“${r.phrase}” is the prepositional phrase of the second sentence. Moving it into the first sentence keeps the fact and drops the repeated words.\n\n**Check.** Compare the preposition in “${r.phrase}” against the second sentence—they match word for word without altering the meaning.`,
+      `“${r.phrase}”是第二句中的介词短语。把它移到第一句里，既保留了事实，又去掉了重复的词。\n\n**检验。** 把“${r.phrase}”里的介词与原第二句逐字核对——意思丝毫没有改变。`,
     ),
     whyNot: [
       t(
@@ -320,8 +320,8 @@ const moodBank: readonly Item[] = moodRows.map((r) => ({
   right: r.right,
   wrong: r.others.map(([, d]) => d),
   why: t(
-    `This detail makes the place feel ${r.mood}. Writers choose sensory details that all point to the same mood.`,
-    `这个细节让这个地方显得${moods[r.mood]?.[1]}。作者会选择都指向同一种氛围的感官细节。`,
+    `This detail makes the place feel ${r.mood}. Writers choose sensory details that all point to the same mood.\n\n**Check.** Picture the sights and sounds in this sentence—they all reinforce a **${r.mood}** atmosphere in ${r.place}.`,
+    `这个细节让这个地方显得${moods[r.mood]?.[1]}。作者会选择都指向同一种氛围的感官细节。\n\n**检验。** 想象这句话里的景象和声音——它们共同烘托出**${moods[r.mood]?.[1]}**的氛围。`,
   ),
   whyNot: r.others.map(([m]) =>
     t(
@@ -419,8 +419,8 @@ const scriptLineBank: readonly Item[] = scriptRows.map((r, i) => {
     right: right(r),
     wrong: used.map((f) => f.line(r)),
     why: t(
-      "In a script, the speaker's name comes first in capitals with a colon, the stage direction goes in brackets, and the words follow with no quotation marks.",
-      "在剧本中，说话人的名字大写写在最前面并加冒号，舞台说明放在括号里，台词跟在后面，不用引号。",
+      "In a script, the speaker's name comes first in capitals with a colon, the stage direction goes in brackets, and the words follow with no quotation marks.\n\n**Check.** Inspect all three script checkpoints on this line: colon after the name, brackets around the direction, and zero quotation marks.",
+      "在剧本中，说话人的名字大写写在最前面并加冒号，舞台说明放在括号里，台词跟在后面，不用引号。\n\n**检验。** 逐一核对三处剧本格式：名字后有冒号、舞台说明在括号里、台词没有引号。",
     ),
     whyNot: used.map((f) => t(`${f.en} ${f.because[0]}`, `${f.zh}${f.because[1]}`)),
   };
@@ -435,7 +435,10 @@ const scriptFaultBank: readonly Item[] = scriptRows.flatMap((r) =>
       shown: f.line(r),
       right: f.en,
       wrong: others.map((o) => o.en),
-      why: t(`${f.en} ${f.because[0]} Correct: ${right(r)}`, `${f.zh}${f.because[1]} 正确写法：${right(r)}`),
+      why: t(
+        `${f.en} ${f.because[0]} Correct: ${right(r)}\n\n**Check.** Compare the faulty line with ${right(r)}—fixing that one error puts the whole line into clean script format.`,
+        `${f.zh}${f.because[1]} 正确写法：${right(r)}\n\n**检验。** 把原句与 ${right(r)} 对照——改掉这一处后，整行台词就符合剧本格式了。`,
+      ),
       whyNot: others.map((o) =>
         t(`Not so: the line does not have this fault. ${o.because[0]}`, `不是这样：这行台词没有这个错误。${o.because[1]}`),
       ),
@@ -452,6 +455,10 @@ export const craftWritingTopics4: readonly TopicDef[] = [
       "Writers show a character's feelings through actions instead of naming them.",
       "作者通过动作表现人物的感受，而不是直接说出来。",
     ),
+    intro: t(
+      "“Omar was scared” tells you a fact in three flat words; “Omar gripped the bar until his knuckles turned white” puts you right on the roller coaster beside him. Showing feelings through actions lets readers feel the scene for themselves.",
+      "“Omar 很害怕”只是平淡地报出事实；“Omar 死死攥住护栏，指节发白”却让你立刻身临过山车现场。用动作去表现情绪，读者自己就能体会到人物的感受。",
+    ),
     prerequisites: after("strong-verbs", "characters"),
     encompasses: [],
     xp: 14,
@@ -461,8 +468,8 @@ export const craftWritingTopics4: readonly TopicDef[] = [
         "the-sentence-that-shows",
         t("The Sentence That Shows", "表现感受的句子"),
         t(
-          "**Telling** names a feeling: *Mia was nervous.* **Showing** gives actions the reader can picture: *Mia's hands shook so hard that the paper rattled.* The reader works out the feeling, which makes the story come alive.",
-          "**直说**是说出感受：*Mia was nervous.* **表现**是写出读者能想象的动作：*Mia's hands shook so hard that the paper rattled.* 读者自己体会出感受，故事就生动起来了。",
+          "**Telling** names a feeling: *Mia was nervous.* **Showing** gives actions the reader can picture: *Mia's hands shook so hard that the paper rattled.* The reader works out the feeling, which makes the story come alive.\n\n> **Watch out.** Reject any choice that uses the feeling word itself (*was nervous*, *felt angry*), and check that the actions show the *asked-for* feeling rather than a different one.",
+          "**直说**是说出感受：*Mia was nervous.* **表现**是写出读者能想象的动作：*Mia's hands shook so hard that the paper rattled.* 读者自己体会出感受，故事就生动起来了。\n\n> **注意。** 排除直接点出情绪词的句子（如 *was nervous*、*felt angry*），还要核对动作表现的是不是题目要求的那种情绪。",
         ),
         itemGenerator(showingBank),
       ),
@@ -470,8 +477,8 @@ export const craftWritingTopics4: readonly TopicDef[] = [
         "the-feeling-an-action-shows",
         t("The Feeling an Action Shows", "动作表现的感受"),
         t(
-          "To read a showing sentence, ask what a person who acts like this would feel. Slammed doors show anger; slow steps and yawns show tiredness; bouncing and fast talk show excitement.",
-          "读表现感受的句子时，要问：这样做的人会有什么感受？摔门表现生气；脚步慢、打哈欠表现疲倦；蹦跳、说话飞快表现兴奋。",
+          "To read a showing sentence, ask what a person who acts like this would feel. Slammed doors show anger; slow steps and yawns show tiredness; bouncing and fast talk show excitement.\n\n> **Watch out.** Look closely at similar reactions—tears and a quiet voice show *sadness*, whereas freezing and hiding show *fear*.",
+          "读表现感受的句子时，要问：这样做的人会有什么感受？摔门表现生气；脚步慢、打哈欠表现疲倦；蹦跳、说话飞快表现兴奋。\n\n> **注意。** 细辨相近的反应——流泪低语多表示*难过*，僵住不动、屏息躲藏则表示*害怕*。",
         ),
         nameKind({
           lines: shows.map((s) => `${s.show}|${s.feeling}`).join("\n"),
@@ -489,6 +496,10 @@ export const craftWritingTopics4: readonly TopicDef[] = [
       "Two short sentences can become one when the second only adds a phrase of where, when or how.",
       "如果第二句只补充了地点、时间或方式的短语，两个短句就可以合成一句。",
     ),
+    intro: t(
+      "“A frog jumped. It jumped into the pond.” sounds choppy because it repeats *jumped*. Tucking the prepositional phrase right into the first sentence—*A frog jumped into the pond.*—makes the writing flow smoothly without losing a single fact.",
+      "“A frog jumped. It jumped into the pond.”读起来断断续续，因为重复了 *jumped*。把介词短语直接放进第一句——*A frog jumped into the pond.*——既不丢信息，又流畅自然。",
+    ),
     prerequisites: ["prepositional-phrases", "combining-with-conjunctions"],
     encompasses: [{ topic: "prepositional-phrases", weight: 0.3 }],
     xp: 14,
@@ -498,8 +509,8 @@ export const craftWritingTopics4: readonly TopicDef[] = [
         "combining-two-sentences-with-a-phrase",
         t("Combining Two Sentences with a Phrase", "用一个短语合并两个句子"),
         t(
-          "*The cat slept. It was on the warm windowsill.* The second sentence only says where, so move its **prepositional phrase** into the first: *The cat slept on the warm windowsill.* Do not join the two with just a comma, and do not change the phrase.",
-          "*The cat slept. It was on the warm windowsill.* 第二句只说明地点，所以把它的**介词短语**移到第一句里：*The cat slept on the warm windowsill.* 不要只用逗号把两句连起来，也不要改动短语。",
+          "*The cat slept. It was on the warm windowsill.* The second sentence only says where, so move its **prepositional phrase** into the first: *The cat slept on the warm windowsill.* Do not join the two with just a comma, and do not change the phrase.\n\n> **Watch out.** Joining two full sentences with only a comma (*The cat slept, it was on the warm windowsill.*) creates a comma splice—drop the repeated subject and verb instead.",
+          "*The cat slept. It was on the warm windowsill.* 第二句只说明地点，所以把它的**介词短语**移到第一句里：*The cat slept on the warm windowsill.* 不要只用逗号把两句连起来，也不要改动短语。\n\n> **注意。** 只用逗号连接两个完整句子（*The cat slept, it was on the warm windowsill.*）是逗号粘连——要删去重复的主语和动词。",
         ),
         itemGenerator(combineBank),
       ),
@@ -507,8 +518,8 @@ export const craftWritingTopics4: readonly TopicDef[] = [
         "the-phrase-that-keeps-the-fact",
         t("The Phrase That Keeps the Fact", "保留事实的短语"),
         t(
-          "The phrase you move must carry the same fact. A different preposition changes the meaning: *under the windowsill* is not *on the windowsill*. And a phrase from nowhere adds a fact the sentences never gave.",
-          "移过去的短语必须表达同样的事实。换了介词意思就变了：*under the windowsill* 不等于 *on the windowsill*。凭空加上的短语则加了句子里没有的事实。",
+          "The phrase you move must carry the same fact. A different preposition changes the meaning: *under the windowsill* is not *on the windowsill*. And a phrase from nowhere adds a fact the sentences never gave.\n\n> **Watch out.** Check the exact preposition (*in*, *on*, *before*, *after*, *through*)—swapping even one tiny word reverses the time or place.",
+          "移过去的短语必须表达同样的事实。换了介词意思就变了：*under the windowsill* 不等于 *on the windowsill*。凭空加上的短语则加了句子里没有的事实。\n\n> **注意。** 核对每一个介词（*in*、*on*、*before*、*after*、*through*）——换掉一个小小介词，时间或位置就全变了。",
         ),
         itemGenerator(phraseBank),
       ),
@@ -521,6 +532,10 @@ export const craftWritingTopics4: readonly TopicDef[] = [
       "Details of sight, sound, smell, taste and touch help the reader live a scene, and together they build a mood.",
       "视觉、听觉、嗅觉、味觉和触觉的细节让读者身临其境，合在一起营造出一种氛围。",
     ),
+    intro: t(
+      "Step into a bakery and you do not just *see* loaves—you *smell* warm cinnamon, *hear* trays clatter, and *feel* the oven's heat. Choosing sensory details across all five senses makes a setting vivid and sets the exact mood you want.",
+      "走进面包店，你不只是*看到*面包——还能*闻到*肉桂香、*听到*烤盘碰撞声、*感到*烤炉的热气。调动五种感官挑选细节，既能让场景鲜活，也能精准营造氛围。",
+    ),
     prerequisites: after("sensory-words", "adjectives-and-adverbs"),
     encompasses: [{ topic: "adjectives-and-adverbs", weight: 0.2 }],
     xp: 14,
@@ -530,8 +545,8 @@ export const craftWritingTopics4: readonly TopicDef[] = [
         "the-sense-a-detail-uses",
         t("The Sense a Detail Uses", "细节运用的感官"),
         t(
-          "A **sensory detail** tells what something is like to one of the five senses: what you **see**, **hear**, **smell**, **taste** or **touch**. *Rain drummed on the roof* is sound; *the sand burned my feet* is touch. Good writers use more than sight.",
-          "**感官细节**写出事物给五种感官之一的感受：**看到**、**听到**、**闻到**、**尝到**或**摸到**的。*Rain drummed on the roof* 是听觉；*the sand burned my feet* 是触觉。好的作者不只写视觉。",
+          "A **sensory detail** tells what something is like to one of the five senses: what you **see**, **hear**, **smell**, **taste** or **touch**. *Rain drummed on the roof* is sound; *the sand burned my feet* is touch. Good writers use more than sight.\n\n> **Watch out.** Do not confuse *smell* and *taste*, or *sight* and *touch*—ask which body part actually notices the detail (*nose*, *tongue*, *skin*, *ears*, or *eyes*).",
+          "**感官细节**写出事物给五种感官之一的感受：**看到**、**听到**、**闻到**、**尝到**或**摸到**的。*Rain drummed on the roof* 是听觉；*the sand burned my feet* 是触觉。好的作者不只写视觉。\n\n> **注意。** 别把嗅觉和味觉、视觉和触觉弄混——问自己主要是哪个感官感受到这个细节（眼睛、耳朵、鼻子、舌头还是皮肤）。",
         ),
         nameKind({
           lines: senseLines,
@@ -544,8 +559,8 @@ export const craftWritingTopics4: readonly TopicDef[] = [
         "details-that-build-a-mood",
         t("Details That Build a Mood", "营造氛围的细节"),
         t(
-          "The same place can feel cheerful, gloomy or frightening, depending on the details. Sunlight and humming make a kitchen cheerful; a cold sink and a flickering bulb make it gloomy. Choose the details that all point to the mood you want.",
-          "同一个地方可以显得欢快、阴郁或可怕，取决于细节。阳光和哼歌让厨房显得欢快；冰冷的水槽和闪烁的灯泡让它显得阴郁。要选择都指向你想要的氛围的细节。",
+          "The same place can feel cheerful, gloomy or frightening, depending on the details. Sunlight and humming make a kitchen cheerful; a cold sink and a flickering bulb make it gloomy. Choose the details that all point to the mood you want.\n\n> **Watch out.** Tell *gloomy* and *frightening* apart: dusty silence and rain feel gloomy, while sudden creaks, shadows, or unexplained movement feel frightening.",
+          "同一个地方可以显得欢快、阴郁或可怕，取决于细节。阳光和哼歌让厨房显得欢快；冰冷的水槽和闪烁的灯泡让它显得阴郁。要选择都指向你想要的氛围的细节。\n\n> **注意。** 区分“阴郁”和“可怕”：积灰、冷雨和冷清营造阴郁，而黑暗中突如其来的声响或动静才营造可怕。",
         ),
         itemGenerator(moodBank),
       ),
@@ -558,6 +573,10 @@ export const craftWritingTopics4: readonly TopicDef[] = [
       "A script writes each line as the speaker's name, a colon, a stage direction in brackets and the words, with no quotation marks.",
       "剧本把每句台词写成：说话人的名字、冒号、括号中的舞台说明和台词，不用引号。",
     ),
+    intro: t(
+      "Actors reading a script need to spot three things in a split second: who speaks (`THE CAPTAIN:`), how to act (`(pointing at the sky)`), and what to say aloud (`A storm is coming!`). Clean script format keeps all three unmistakable.",
+      "演员看剧本时要在一瞬间看清三件事：谁来说（`THE CAPTAIN:`）、怎么演（`(pointing at the sky)`）、念什么词（`A storm is coming!`）。规范的剧本格式让这三样清清楚楚。",
+    ),
     prerequisites: ["parts-of-a-play", "punctuating-dialogue"],
     encompasses: [{ topic: "parts-of-a-play", weight: 0.2 }],
     xp: 14,
@@ -567,8 +586,8 @@ export const craftWritingTopics4: readonly TopicDef[] = [
         "writing-a-line-of-a-script",
         t("Writing a Line of a Script", "写一行剧本台词"),
         t(
-          "To turn a story into a script, write the speaker's name in capitals and a colon, then any stage direction in brackets, then the words: *GRANDPA: (looking up from his book) Who left the front door open?* There are no quotation marks and no *said*.",
-          "把故事改写成剧本时，先大写写出说话人的名字并加冒号，再把舞台说明放在括号里，然后写台词：*GRANDPA: (looking up from his book) Who left the front door open?* 不用引号，也不用 *said*。",
+          "To turn a story into a script, write the speaker's name in capitals and a colon, then any stage direction in brackets, then the words: *GRANDPA: (looking up from his book) Who left the front door open?* There are no quotation marks and no *said*.\n\n> **Watch out.** Check every detail before choosing—missing the colon, leaving off the brackets, or adding quotation marks breaks script format.",
+          "把故事改写成剧本时，先大写写出说话人的名字并加冒号，再把舞台说明放在括号里，然后写台词：*GRANDPA: (looking up from his book) Who left the front door open?* 不用引号，也不用 *said*。\n\n> **注意。** 选答案前逐项核对——少冒号、漏括号或加引号，都会破坏剧本格式。",
         ),
         itemGenerator(scriptLineBank),
       ),
@@ -576,8 +595,8 @@ export const craftWritingTopics4: readonly TopicDef[] = [
         "finding-the-fault-in-a-script-line",
         t("Finding the Fault in a Script Line", "找出剧本台词的错误"),
         t(
-          "Check a line of a script three ways. Is there a **colon** after the name? Is the stage direction in **brackets**? Are the words free of **quotation marks**? A line that fails one check is not in script format.",
-          "从三方面检查剧本台词：名字后面有没有**冒号**？舞台说明有没有放在**括号**里？台词有没有多余的**引号**？只要有一项不符合，就不是剧本格式。",
+          "Check a line of a script three ways. Is there a **colon** after the name? Is the stage direction in **brackets**? Are the words free of **quotation marks**? For example, `MIA (whispering) I think the play is about to start.` fails the first check because the colon after `MIA` is missing.\n\n> **Watch out.** Inspect the exact line shown—do not pick a rule that the line already follows.",
+          "从三方面检查剧本台词：名字后面有没有**冒号**？舞台说明有没有放在**括号**里？台词有没有多余的**引号**？例如 `MIA (whispering) I think the play is about to start.` 就漏掉了 `MIA` 后面的冒号。\n\n> **注意。** 紧盯给出的这一行——不要选这行已经做对了的那条规则。",
         ),
         itemGenerator(scriptFaultBank),
       ),

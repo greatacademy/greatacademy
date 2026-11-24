@@ -11,7 +11,8 @@ const criterion = (id: string): CriterionSpec => {
 
 const limits = { minWords: 6, maxChars: 300 };
 
-const shown = (model: string) => t(`One good sentence:\n\n> ${model}`, `一个好的句子：\n\n> ${model}`);
+const checkedShown = (checkEn: string, checkZh: string) => (model: string) =>
+  t(`One good sentence:\n\n> ${model}\n\n**Check.** ${checkEn}`, `一个好的句子：\n\n> ${model}\n\n**检验。**${checkZh}`);
 
 /** becauseBank asks for a reason that explains a short sentence. */
 const becauseBank: readonly WritingItem[] = [
@@ -372,6 +373,10 @@ export const judgedSentenceTopics: readonly TopicDef[] = [
       "Finish sentences with a reason, a contrast or a result of your own, after because, but or so.",
       "在 because、but 或 so 之后，自己写出原因、转折或结果。",
     ),
+    intro: t(
+      "Take a plain sentence like *The store closed early.* With *because*, you explain why; with *but*, you add a surprise; with *so*, you show what happened next. Writing your own ending tests whether the logic really connects.",
+      "拿 *The store closed early.* 这句短话来说：用 *because* 说明原因，用 *but* 写出意外，用 *so* 写出结果。亲自动笔补完后半句，能检验前后逻辑是否真的连得上。",
+    ),
     prerequisites: ["expanding-with-because-but-so"],
     encompasses: [{ topic: "expanding-with-because-but-so", weight: 0.5 }],
     xp: 12,
@@ -381,28 +386,55 @@ export const judgedSentenceTopics: readonly TopicDef[] = [
         "a-reason-after-because",
         t("A Reason after Because", "because 之后给出原因"),
         t(
-          "After *because*, write something that really explains the first part. Ask yourself: *why* did it happen? *The dog barked because it heard a knock at the door* explains the barking. *The dog barked because it is brown* does not: being brown is no reason to bark.",
-          "在 *because* 之后，写出真正能解释前半句的内容。问问自己：它*为什么*会发生？*The dog barked because it heard a knock at the door* 解释了狗为什么叫。*The dog barked because it is brown* 则不能：毛是棕色的并不是狗叫的理由。",
+          "After *because*, write something that really explains the first part. Ask yourself: *why* did it happen? *The dog barked because it heard a knock at the door* explains the barking. *The dog barked because it is brown* does not: being brown is no reason to bark.\n\n> **Watch out.** Do not write a random fact or a result after *because*—your ending must truly answer *why* the first part happened.",
+          "在 *because* 之后，写出真正能解释前半句的内容。问问自己：它*为什么*会发生？*The dog barked because it heard a knock at the door* 解释了狗为什么叫。*The dog barked because it is brown* 则不能：毛是棕色的并不是狗叫的理由。\n\n> **注意。**不要在 *because* 后面写无关事实或结果——后半句必须真正回答前半句“为什么”发生。",
         ),
-        writingGenerator(t("Write one sentence in English.", "用英语写一个句子。"), becauseBank, ["w2-because-reason"], limits, shown),
+        writingGenerator(
+          t("Write one sentence in English.", "用英语写一个句子。"),
+          becauseBank,
+          ["w2-because-reason"],
+          limits,
+          checkedShown(
+            "Ask *why?* after the opening sentence—your *because* clause should give a real cause that makes sense.",
+            "对着前半句问一句“为什么？”——你写的 *because* 从句应该给出说得通的真正原因。",
+          ),
+        ),
       ),
       point(
         "a-contrast-after-but",
         t("A Contrast after But", "but 之后给出转折"),
         t(
-          "After *but*, write something that goes against what the first part leads the reader to expect, or that limits it. *The hill was steep, but we reached the top* surprises the reader. *The hill was steep, but it was tall* does not contrast: both parts point the same way.\n\nPut a comma before *but* when it joins two complete sentences.",
-          "在 *but* 之后，写出与前半句让读者预期的相反、或对它加以限制的内容。*The hill was steep, but we reached the top* 出乎读者意料。*The hill was steep, but it was tall* 没有转折：两部分指向同一个方向。\n\n*but* 连接两个完整句子时，前面加逗号。",
+          "After *but*, write something that goes against what the first part leads the reader to expect, or that limits it. *The hill was steep, but we reached the top* surprises the reader. *The hill was steep, but it was tall* does not contrast: both parts point the same way.\n\nPut a comma before *but* when it joins two complete sentences.\n\n> **Watch out.** Both halves cannot point in the same direction—after *, but*, the second half must push back against or surprise the first.",
+          "在 *but* 之后，写出与前半句让读者预期的相反、或对它加以限制的内容。*The hill was steep, but we reached the top* 出乎读者意料。*The hill was steep, but it was tall* 没有转折：两部分指向同一个方向。\n\n*but* 连接两个完整句子时，前面加逗号。\n\n> **注意。**前后两半不能朝同一个方向说——*, but* 后面的内容必须与前半句形成反差或限制。",
         ),
-        writingGenerator(t("Write one sentence in English.", "用英语写一个句子。"), butBank, ["w2-but-contrast"], limits, shown),
+        writingGenerator(
+          t("Write one sentence in English.", "用英语写一个句子。"),
+          butBank,
+          ["w2-but-contrast"],
+          limits,
+          checkedShown(
+            "Check two things: is there a comma before *but*, and does the second half genuinely contrast with or limit the first half?",
+            "检查两件事：*but* 前面有没有逗号？后半句是不是真的与前半句形成了转折或限制？",
+          ),
+        ),
       ),
       point(
         "a-result-after-so",
         t("A Result after So", "so 之后给出结果"),
         t(
-          "After *so*, write what happened *because of* the first part. *The milk was sour, so we poured it out* gives a result. *The milk was sour, so it was old* gives a reason instead, and a reason belongs after *because*.\n\nPut a comma before *so* when it joins two complete sentences.",
-          "在 *so* 之后，写出*因为*前半句而发生的事。*The milk was sour, so we poured it out* 给出了结果。*The milk was sour, so it was old* 给出的却是原因，而原因应该放在 *because* 之后。\n\n*so* 连接两个完整句子时，前面加逗号。",
+          "After *so*, write what happened *because of* the first part. *The milk was sour, so we poured it out* gives a result. *The milk was sour, so it was old* gives a reason instead, and a reason belongs after *because*.\n\nPut a comma before *so* when it joins two complete sentences.\n\n> **Watch out.** Do not mix up *so* and *because*—the event after *, so* must happen *after* and *as a result of* the first part.",
+          "在 *so* 之后，写出*因为*前半句而发生的事。*The milk was sour, so we poured it out* 给出了结果。*The milk was sour, so it was old* 给出的却是原因，而原因应该放在 *because* 之后。\n\n*so* 连接两个完整句子时，前面加逗号。\n\n> **注意。**不要把 *so* 和 *because* 弄混——*, so* 后面的事必须是由前半句引发的结果。",
         ),
-        writingGenerator(t("Write one sentence in English.", "用英语写一个句子。"), soBank, ["w2-so-result"], limits, shown),
+        writingGenerator(
+          t("Write one sentence in English.", "用英语写一个句子。"),
+          soBank,
+          ["w2-so-result"],
+          limits,
+          checkedShown(
+            "Check the comma before *so* and test the order of events: first the opening fact happens, and *as a result*, your ending happens.",
+            "检查 *so* 前面的逗号，再核对因果顺序：先发生前半句的事，*因此*才发生你写的后半句。",
+          ),
+        ),
       ),
     ],
   },
@@ -412,6 +444,10 @@ export const judgedSentenceTopics: readonly TopicDef[] = [
     summary: t(
       "Choose a way to join short sentences into one, and keep everything they mean.",
       "自己选择方法把几个短句合成一句，并保留它们的全部意思。",
+    ),
+    intro: t(
+      "Two choppy sentences — *The train arrived late. We missed the opening song* — hide how they connect. Choosing the right link turns them into one smooth sentence: *Because the train arrived late, we missed the opening song.*",
+      "两个零碎的短句——*The train arrived late. We missed the opening song*——掩盖了它们之间的联系。选对连接方式就能把它们合成一句流畅的话：*Because the train arrived late, we missed the opening song.*",
     ),
     prerequisites: ["combining-with-appositives"],
     encompasses: [
@@ -426,13 +462,17 @@ export const judgedSentenceTopics: readonly TopicDef[] = [
         "choosing-a-way-to-combine",
         t("Choosing a Way to Combine", "选择合并的方法"),
         t(
-          "You know several ways to join two sentences: a conjunction such as *so*, *because* or *although*; a clause with *who*, *which* or *that*; or an appositive. Choose the one that shows how the ideas relate.\n\n*The wind was strong. The kite rose high* shows a cause, so *because* fits: *Because the wind was strong, the kite rose high.* *Mr. Diaz teaches science. He grows tomatoes* adds information about a person, so a clause fits: *Mr. Diaz, who teaches science, grows tomatoes.*\n\nCheck your sentence: nothing important is lost, and nothing new is added.",
-          "你已经会几种连接两个句子的方法：用 *so*、*because*、*although* 这样的连词；用 *who*、*which*、*that* 引导的从句；或者用同位语。选择最能表明两个意思之间关系的那一种。\n\n*The wind was strong. The kite rose high* 表示因果，所以用 *because*：*Because the wind was strong, the kite rose high.* *Mr. Diaz teaches science. He grows tomatoes* 是补充关于一个人的信息，所以用从句：*Mr. Diaz, who teaches science, grows tomatoes.*\n\n检查你的句子：没有丢掉重要的内容，也没有加入新的内容。",
+          "You know several ways to join two sentences: a conjunction such as *so*, *because* or *although*; a clause with *who*, *which* or *that*; or an appositive. Choose the one that shows how the ideas relate.\n\n*The wind was strong. The kite rose high* shows a cause, so *because* fits: *Because the wind was strong, the kite rose high.* *Mr. Diaz teaches science. He grows tomatoes* adds information about a person, so a clause fits: *Mr. Diaz, who teaches science, grows tomatoes.*\n\nCheck your sentence: nothing important is lost, and nothing new is added.\n\n> **Watch out.** Do not just glue two full sentences together with a comma — that creates a comma splice. Pick a conjunction, a relative clause, or an appositive that actually links the ideas.",
+          "你已经会几种连接两个句子的方法：用 *so*、*because*、*although* 这样的连词；用 *who*、*which*、*that* 引导的从句；或者用同位语。选择最能表明两个意思之间关系的那一种。\n\n*The wind was strong. The kite rose high* 表示因果，所以用 *because*：*Because the wind was strong, the kite rose high.* *Mr. Diaz teaches science. He grows tomatoes* 是补充关于一个人的信息，所以用从句：*Mr. Diaz, who teaches science, grows tomatoes.*\n\n检查你的句子：没有丢掉重要的内容，也没有加入新的内容。\n\n> **注意。**不要只用一个逗号把两个完整句子硬粘在一起，那样会造成逗号拼接错句；要选用真正能表达逻辑关系的连词、定语从句或同位语。",
         ),
-        writingGenerator(t("Write one sentence in English.", "用英语写一个句子。"), pairBank, combineCriteria, limits, (model) =>
-          t(
-            `One good sentence:\n\n> ${model}\n\nOther ways can be just as good, as long as the meaning stays the same.`,
-            `一个好的句子：\n\n> ${model}\n\n只要意思不变，其他写法也同样可以。`,
+        writingGenerator(
+          t("Write one sentence in English.", "用英语写一个句子。"),
+          pairBank,
+          combineCriteria,
+          limits,
+          checkedShown(
+            "Break the combined sentence back into its pieces: every fact from both original sentences should still be there, joined by a link that matches their relationship (cause, contrast, or extra detail).",
+            "把合并后的句子拆回原来的信息点：两个原句里的事实都应完整保留，而且连接方式要与它们的逻辑关系（因果、转折或补充说明）一致。",
           ),
         ),
       ),
@@ -440,13 +480,17 @@ export const judgedSentenceTopics: readonly TopicDef[] = [
         "folding-several-sentences",
         t("Folding Several Sentences into One", "把几个句子压缩成一句"),
         t(
-          "When three short sentences talk about the same thing, the repeated words can go. Keep the main sentence, and fold the others into it as a describing word, a phrase or a clause.\n\n*The cat slept. The cat was gray. It slept on the porch* becomes *The gray cat slept on the porch.* Every fact is still there: the cat, its color, and where it slept.",
-          "三个短句说的是同一件事时，重复的词可以去掉。保留主要的句子，把其他句子压缩成一个修饰词、一个短语或一个从句放进去。\n\n*The cat slept. The cat was gray. It slept on the porch* 变成 *The gray cat slept on the porch.* 每个事实都还在：猫、它的颜色，以及它睡在哪里。",
+          "When three short sentences talk about the same thing, the repeated words can go. Keep the main sentence, and fold the others into it as a describing word, a phrase or a clause.\n\n*The cat slept. The cat was gray. It slept on the porch* becomes *The gray cat slept on the porch.* Every fact is still there: the cat, its color, and where it slept.\n\n> **Watch out.** Do not drop a detail just to make the sentence shorter, and check that every modifier sits next to the word it actually describes.",
+          "三个短句说的是同一件事时，重复的词可以去掉。保留主要的句子，把其他句子压缩成一个修饰词、一个短语或一个从句放进去。\n\n*The cat slept. The cat was gray. It slept on the porch* 变成 *The gray cat slept on the porch.* 每个事实都还在：猫、它的颜色，以及它睡在哪里。\n\n> **注意。**不要为了句子简短而漏掉任何一个细节，并确认每个修饰成分都紧挨着它真正修饰的词。",
         ),
-        writingGenerator(t("Write one sentence in English.", "用英语写一个句子。"), setBank, combineCriteria, limits, (model) =>
-          t(
-            `One good sentence:\n\n> ${model}\n\nOther ways can be just as good, as long as every fact is kept.`,
-            `一个好的句子：\n\n> ${model}\n\n只要保留了每个事实，其他写法也同样可以。`,
+        writingGenerator(
+          t("Write one sentence in English.", "用英语写一个句子。"),
+          setBank,
+          combineCriteria,
+          limits,
+          checkedShown(
+            "Count the facts from the short source sentences and tick off each one in the combined sentence; every detail should appear once without repeating the same noun over and over.",
+            "逐条核对原短句里的每个事实，在合并后的句子里一一勾选；每个细节都应保留一次，而不再反复重复同一个名词。",
           ),
         ),
       ),

@@ -18,14 +18,18 @@ const motives = topic("reading", {
     "How a complex character acts from mixed or hidden motives, and how a reader infers a motive from what the character does, says and hides.",
     "复杂人物如何出于混杂或隐藏的动机行事，读者又如何从人物的所作所为、所言所隐中推断其动机。",
   ],
+  intro: [
+    "A general who weeps at a soldier's grave and then orders a fresh assault is neither pure villain nor simple hero—two competing drives move him at once. In this topic, you infer what drives a character from concrete actions and trace mixed motives that pull against each other.",
+    "一位在阵亡士兵墓前落泪、随即又下令增兵进攻的将军，既非单纯的恶人也非扁平的英雄——两股动机同时推动着他。本主题带你从具体言行推断人物动机，并读出彼此拉扯的混杂动机。",
+  ],
   after: ["tragic-heroes-and-flaws", "dynamic-and-static-characters"],
   points: [
     label(
       "what-drives-the-character",
       ["What Drives the Character", "是什么驱使着人物"],
       [
-        "A **motive** is the reason behind an action. Complex characters rarely act from one simple motive, and they seldom announce it. Read what they do, especially when no one is watching, and what they choose not to say. Common motives in literature include **ambition**, the hunger for power or rank; **fear**, of loss, shame or danger; **love or loyalty** to a person or a group; and **revenge** for a past wrong.",
-        "**动机**是行为背后的原因。复杂人物很少只出于一个简单的动机，也很少把动机说出来。要读他们做了什么，尤其是在没人看见的时候，以及他们选择不说什么。文学作品中常见的动机有：**野心**，即对权力或地位的渴望；**恐惧**，害怕失去、羞辱或危险；**爱或忠诚**，对某个人或群体；以及**复仇**，为过去的伤害。",
+        "A **motive** is the reason behind an action. Complex characters rarely act from one simple motive, and they seldom announce it. Read what they do, especially when no one is watching, and what they choose not to say. Common motives in literature include **ambition**, the hunger for power or rank; **fear**, of loss, shame or danger; **love or loyalty** to a person or a group; and **revenge** for a past wrong.\n\n> **Watch out.** Look at *what the character gains or avoids* through the action: paying back an old injury is **revenge**, whereas angling for rank, credit, or power is **ambition**.",
+        "**动机**是行为背后的原因。复杂人物很少只出于一个简单的动机，也很少把动机说出来。要读他们做了什么，尤其是在没人看见的时候，以及他们选择不说什么。文学作品中常见的动机有：**野心**，即对权力或地位的渴望；**恐惧**，害怕失去、羞辱或危险；**爱或忠诚**，对某个人或群体；以及**复仇**，为过去的伤害。\n\n> **注意。** 看人物通过这一举动*想得到什么或想躲开什么*：为了清算旧账是**复仇**，为了谋取地位、功劳或权力才是**野心**。",
       ],
       ["What motive best explains the character's action?", "哪种动机最能解释人物的行为？"],
       `
@@ -63,29 +67,29 @@ const motives = topic("reading", {
       {
         ambition: L(
           "野心",
-          "The action aims at power, rank or success, and the character pursues it carefully or at others' expense.",
-          "这个行为的目标是权力、地位或成功，人物小心谋取或不惜损害他人。",
+          "The action aims at power, rank or success, and the character pursues it carefully or at others' expense.\n\n**Check.** Ask what prize the character is angling for: higher status, credit, or power—not escaping danger, protecting a loved one, or settling an old score.",
+          "这个行为的目标是权力、地位或成功，人物小心谋取或不惜损害他人。\n\n**检验。** 问问人物瞄准的是什么回报：更高的地位、功劳或权力——而不是躲避危险、保护亲人或清算旧怨。",
           "Nothing in the action aims at gaining power, rank or success.",
           "这个行为中没有任何谋取权力、地位或成功的成分。",
         ),
         fear: L(
           "恐惧",
-          "The character acts to avoid a danger, a loss or a shame that frightens them.",
-          "人物的行为是为了躲避令其恐惧的危险、损失或羞辱。",
+          "The character acts to avoid a danger, a loss or a shame that frightens them.\n\n**Check.** Ask what the character is trying to keep from happening: punishment, exposure, or harm—showing that dread drives the choice.",
+          "人物的行为是为了躲避令其恐惧的危险、损失或羞辱。\n\n**检验。** 问问人物在竭力避免什么发生：惩罚、败露或伤害——可见是害怕驱动了这一选择。",
           "The action is not a way of escaping something the character dreads.",
           "这个行为并不是为了逃避人物所害怕的东西。",
         ),
         "love or loyalty": L(
           "爱或忠诚",
-          "The character accepts a cost for the sake of a person or a group they care about.",
-          "人物为了所关心的人或群体而甘愿付出代价。",
+          "The character accepts a cost for the sake of a person or a group they care about.\n\n**Check.** Look at who pays the price and who benefits: the character risks safety, reward, or personal plans to stand by someone else.",
+          "人物为了所关心的人或群体而甘愿付出代价。\n\n**检验。** 看看谁在付出、谁在受益：人物甘冒风险或舍弃自身利益，只为护住所珍视的人或集体。",
           "The character is not paying a price for someone they care about.",
           "人物并不是在为所关心的人付出代价。",
         ),
         revenge: L(
           "复仇",
-          "The action pays back a past wrong done to the character or to someone close to them.",
-          "这个行为是在报复过去对人物本人或其亲近之人造成的伤害。",
+          "The action pays back a past wrong done to the character or to someone close to them.\n\n**Check.** Trace the timeline backward: an earlier injury or betrayal sets up this deliberate payback.",
+          "这个行为是在报复过去对人物本人或其亲近之人造成的伤害。\n\n**检验。** 把时间线往回推：先有一桩旧恨或背叛，才引出眼前这场蓄意报复。",
           "The action does not answer an old wrong.",
           "这个行为并不是在回应过去的伤害。",
         ),
@@ -95,8 +99,8 @@ const motives = topic("reading", {
       "mixed-motives",
       ["Mixed Motives", "混杂的动机"],
       [
-        "The most interesting characters act from **more than one motive at once**, and the motives may pull against each other. A king may spare a rebel out of mercy and also to look merciful to his people. A daughter may care for her father out of love and also out of guilt. When you analyze a character, name the motive the text supports with evidence, and look for a second motive that complicates it.",
-        "最有意思的人物往往**同时出于不止一个动机**行事，而且这些动机可能相互拉扯。国王饶恕叛乱者，可能出于仁慈，也可能是为了在百姓面前显得仁慈。女儿照顾父亲，可能出于爱，也可能出于愧疚。分析人物时，要说出文本有证据支持的动机，再寻找使之复杂化的第二个动机。",
+        "The most interesting characters act from **more than one motive at once**, and the motives may pull against each other. A king may spare a rebel out of mercy and also to look merciful to his people. A daughter may care for her father out of love and also out of guilt. When you analyze a character, name the motive the text supports with evidence, and look for a second motive that complicates it.\n\n> **Watch out.** Reject any reading that uses *only* to flatten the character into one simple motive, as well as any reading that invents a motive unsupported by the passage.",
+        "最有意思的人物往往**同时出于不止一个动机**行事，而且这些动机可能相互拉扯。国王饶恕叛乱者，可能出于仁慈，也可能是为了在百姓面前显得仁慈。女儿照顾父亲，可能出于爱，也可能出于愧疚。分析人物时，要说出文本有证据支持的动机，再寻找使之复杂化的第二个动机。\n\n> **注意。** 既要排除用“只是、纯粹”把人物压扁成单一动机的解读，也要排除凭空编造、原文毫无依据的动机。",
       ],
       ["Which reading of the character's motives does the passage best support?", "这段文字最支持对人物动机的哪种解读？"],
       `
@@ -132,8 +136,8 @@ const motives = topic("reading", {
         The poet praised the emperor in a famous ode, and was given a house in the capital.|He admires the emperor and also seeks reward.|He writes the ode only to mock the emperor.|He writes the ode in secret and never shares it.
       `,
       (right) => [
-        `"${right}" names one motive the passage supports and a second one that complicates it, as the details show.`,
-        `“${right}” 说出了文段支持的一个动机，以及使之复杂化的第二个动机，正如细节所示。`,
+        `"${right}" names one motive the passage supports and a second one that complicates it, as the details show.\n\n**Check.** Match both halves of the answer back to two separate details in the sentence: every part of the reading is grounded in the text, with nothing ignored or invented.`,
+        `“${right}” 说出了文段支持的一个动机，以及使之复杂化的第二个动机，正如细节所示。\n\n**检验。** 把答案的两半分别对应回文段里的两处具体细节：两部分都有原文依据，既不遗漏也不编造。`,
       ],
       [
         [
@@ -153,14 +157,18 @@ const toneShifts = topic("reading", {
     "Where and why the tone of a poem, story or speech turns, and the signal words and contrasts that mark the turn.",
     "诗歌、故事或演讲的语气在何处、为何转变，以及标志这一转变的信号词和对比。",
   ],
+  intro: [
+    "A story that opens with jokes on a sunny dock and pivots on *Then we saw the empty boat* drops the temperature in a single word. In this topic, you name how a passage's tone shifts from start to finish and pinpoint the exact word or phrase that turns it.",
+    "一段在阳光码头上的嬉笑中开场、却在 *Then we saw the empty boat* 处骤然转冷的文字，只用一个词就改变了整篇气氛。本主题带你判断语气如何从头到尾转变，并找出触发转折的信号词或短语。",
+  ],
   after: ["the-cumulative-impact-of-word-choice", "poetic-forms-and-meter"],
   points: [
     label(
       "from-what-to-what",
       ["From What to What", "从什么到什么"],
       [
-        "Tone is the writer's attitude, and it can change within a text. A turn is often marked by a **signal word** such as *but*, *yet*, *now* or *then*, by a change of time or by a stanza break. To describe a shift, name the tone **before** and **after**: *from playful to grave*, *from bitter to hopeful*.",
-        "语气是作者的态度，它可以在文本中发生变化。转变常由 *but*、*yet*、*now* 或 *then* 这样的**信号词**、时间的变化或诗节之间的空行来标志。描述转变时，要说出转变**前**和转变**后**的语气：*由戏谑到庄重*、*由苦涩到充满希望*。",
+        "Tone is the writer's attitude, and it can change within a text. A turn is often marked by a **signal word** such as *but*, *yet*, *now* or *then*, by a change of time or by a stanza break. To describe a shift, name the tone **before** and **after**: *from playful to grave*, *from bitter to hopeful*.\n\n> **Watch out.** Check *both* ends of the shift—compare **playful to grave** (teasing or light humor turning serious) against **joyful to mournful** (warm happiness turning to grief over loss).",
+        "语气是作者的态度，它可以在文本中发生变化。转变常由 *but*、*yet*、*now* 或 *then* 这样的**信号词**、时间的变化或诗节之间的空行来标志。描述转变时，要说出转变**前**和转变**后**的语气：*由戏谑到庄重*、*由苦涩到充满希望*。\n\n> **注意。** 转变*前后两头*都要核对——分清**由戏谑到庄重**（玩笑、调侃转为严肃危急）与**由欢乐到哀伤**（温馨喜悦转为悼念失落）。",
       ],
       ["How does the tone shift in this passage?", "这段文字的语气如何转变？"],
       `
@@ -198,22 +206,22 @@ const toneShifts = topic("reading", {
       {
         "from playful to grave": L(
           "由戏谑到庄重",
-          "The passage begins lightly, with fun or jokes, and turns serious when something important or dangerous appears.",
-          "这段文字以轻松、玩笑开头，在出现某件重要或危险的事情时转为严肃。",
+          "The passage begins lightly, with fun or jokes, and turns serious when something important or dangerous appears.\n\n**Check.** Compare the opening mood (teasing, laughter, or comedy) with the closing beat (a sudden sobering reality or threat): the arc moves from light playfulness to seriousness.",
+          "这段文字以轻松、玩笑开头，在出现某件重要或危险的事情时转为严肃。\n\n**检验。** 对照开头（调侃、嬉笑或喜剧）与结尾（突如其来的严峻现实或危机）：气氛从轻松戏谑转为庄重严肃。",
           "The passage does not move from fun or jokes to seriousness.",
           "这段文字并不是由玩笑转为严肃。",
         ),
         "from bitter to hopeful": L(
           "由苦涩到充满希望",
-          "The passage begins with anger, resentment or despair and turns toward hope or new life.",
-          "这段文字以愤怒、怨恨或绝望开头，转向希望或新生。",
+          "The passage begins with anger, resentment or despair and turns toward hope or new life.\n\n**Check.** Notice the direction of the turn: the first sentence dwells in hardship or resentment, and the second opens a door to renewal or encouragement.",
+          "这段文字以愤怒、怨恨或绝望开头，转向希望或新生。\n\n**检验。** 看转折的方向：前一句沉浸在困苦或怨恨中，后一句却打开了新生与希望的窗口。",
           "The passage does not move from bitterness toward hope.",
           "这段文字并不是由苦涩转向希望。",
         ),
         "from joyful to mournful": L(
           "由欢乐到哀伤",
-          "The passage remembers a happy time and turns to grief for what has been lost.",
-          "这段文字回忆一段快乐时光，然后转为对逝去之物的悲伤。",
+          "The passage remembers a happy time and turns to grief for what has been lost.\n\n**Check.** Look at the contrast across time: warm celebration or happy memory in the first half gives way to emptiness or loss in the second.",
+          "这段文字回忆一段快乐时光，然后转为对逝去之物的悲伤。\n\n**检验。** 看时间前后的反差：前半段是温馨欢乐的回忆，后半段化为对失去之物的空落与哀伤。",
           "The passage does not move from happiness to grief for a loss.",
           "这段文字并不是由欢乐转为对失去之物的悲伤。",
         ),
@@ -223,8 +231,8 @@ const toneShifts = topic("reading", {
       "the-signal-of-the-turn",
       ["The Signal of the Turn", "转折的信号"],
       [
-        "Writers mark a shift of tone in several ways. A **signal word** announces it: *but*, *yet*, *still*, *now*, *then*. A **change of time** moves from past to present, or from one season to another. A **break** in the form, such as a new stanza or a one-line paragraph, sets the turn apart. In a sonnet, the turn often comes at the start of the ninth line or the final couplet. Finding the signal tells you exactly where the tone turns.",
-        "作者用几种方式标志语气的转变。**信号词**会宣告转变：*but*、*yet*、*still*、*now*、*then*。**时间的变化**会从过去转到现在，或从一个季节转到另一个季节。形式上的**间断**，如新的诗节或只有一行的段落，会把转折单独突出出来。在十四行诗中，转折常出现在第九行开头或最后的对句。找到信号，就能准确知道语气在哪里转变。",
+        "Writers mark a shift of tone in several ways. A **signal word** announces it: *but*, *yet*, *still*, *now*, *then*. A **change of time** moves from past to present, or from one season to another. A **break** in the form, such as a new stanza or a one-line paragraph, sets the turn apart. In a sonnet, the turn often comes at the start of the ninth line or the final couplet. Finding the signal tells you exactly where the tone turns.\n\n> **Watch out.** Do not pick a mood word from the first half or the second half—pick the *hinge* word or time/place marker standing right at the boundary where the second half begins.",
+        "作者用几种方式标志语气的转变。**信号词**会宣告转变：*but*、*yet*、*still*、*now*、*then*。**时间的变化**会从过去转到现在，或从一个季节转到另一个季节。形式上的**间断**，如新的诗节或只有一行的段落，会把转折单独突出出来。在十四行诗中，转折常出现在第九行开头或最后的对句。找到信号，就能准确知道语气在哪里转变。\n\n> **注意。** 不要选前半段或后半段里的情绪词——要选正好卡在两半交界处、开启后半段转变的*枢纽词*或时间/位置标志。",
       ],
       ["Which word or phrase marks the turn of tone?", "哪个词或短语标志了语气的转折？"],
       `
@@ -260,8 +268,8 @@ const toneShifts = topic("reading", {
         The crowd cheered as the rocket rose into the sky. Seventy-three seconds later, the cheering stopped.|Seventy-three seconds later|cheered|stopped
       `,
       (right) => [
-        `"${right}" marks the turn: it is the point where the passage moves from one attitude to another.`,
-        `“${right}” 标志着转折：文段在这里从一种态度转向另一种态度。`,
+        `"${right}" marks the turn: it is the point where the passage moves from one attitude to another.\n\n**Check.** Locate "${right}" in the passage: everything before it belongs to the first tone, and right at "${right}" the new tone begins.`,
+        `“${right}” 标志着转折：文段在这里从一种态度转向另一种态度。\n\n**检验。** 在文段中定位“${right}”：它前面全是第一种语气，正是在它这里语气骤然转向。`,
       ],
       [
         [
@@ -284,14 +292,18 @@ const extended = topic("reading", {
     "A metaphor carried through several lines or a whole text, with each detail of one thing matched to a detail of the other.",
     "贯穿数行乃至全文的隐喻，一个事物的每个细节都与另一个事物的细节相对应。",
   ],
+  intro: [
+    "When a speaker calls life a voyage, then mentions *sails*, *hidden rocks*, and a *quiet harbor*, each concrete image maps onto a stage of human experience. In this topic, you recognize the governing comparison of an extended metaphor and decode what each bold detail stands for.",
+    "当说话者把人生比作航行，又接连提到*帆*、*暗礁*和*宁静的港口*时，每个具体意象都对应着人生的一段经历。本主题带你认出扩展隐喻的核心比喻，并解读每个细节的喻义。",
+  ],
   after: ["similes-and-metaphors", "symbolism"],
   points: [
     label(
       "what-is-compared",
       ["What Is Compared", "比较的是什么"],
       [
-        "An **extended metaphor** keeps one comparison going for several lines, so that every detail of one thing stands for a detail of another. In *All the world's a stage, / And all the men and women merely players*, the world is a theater, people are actors, and the stages of life are their parts. To read one, ask what the main comparison is and what each detail stands for.",
-        "**扩展隐喻**把一个比较延续好几行，使一个事物的每个细节都代表另一个事物的细节。在 *All the world's a stage, / And all the men and women merely players* 中，世界是剧场，人是演员，人生的各个阶段是他们扮演的角色。读扩展隐喻时，要问主要的比较是什么，每个细节又代表什么。",
+        "An **extended metaphor** keeps one comparison going for several lines, so that every detail of one thing stands for a detail of another. In *All the world's a stage, / And all the men and women merely players*, the world is a theater, people are actors, and the stages of life are their parts. To read one, ask what the main comparison is and what each detail stands for.\n\n> **Watch out.** Tell **a voyage** (sea, sails, harbor, tide, anchor) apart from **a journey on foot** (boots, trails, crossroads, hills)—group the concrete nouns together to identify the exact domain.",
+        "**扩展隐喻**把一个比较延续好几行，使一个事物的每个细节都代表另一个事物的细节。在 *All the world's a stage, / And all the men and women merely players* 中，世界是剧场，人是演员，人生的各个阶段是他们扮演的角色。读扩展隐喻时，要问主要的比较是什么，每个细节又代表什么。\n\n> **注意。** 分清**航行**（大海、帆、港口、潮汐、锚）与**徒步旅程**（靴子、小径、岔路口、山丘）——把文中所有具体意象归类，就能锁定准确的喻体。",
       ],
       ["What is life compared to in this extended metaphor?", "在这个扩展隐喻中，人生被比作什么？"],
       `
@@ -329,29 +341,29 @@ const extended = topic("reading", {
       {
         "a voyage": L(
           "航行",
-          "The details are those of sailing: ships, sails, storms, tides, harbors and the shore.",
-          "这些细节都与航行有关：船、帆、风暴、潮汐、港口和海岸。",
+          "The details are those of sailing: ships, sails, storms, tides, harbors and the shore.\n\n**Check.** Gather the concrete nouns and verbs in the passage: every image belongs to sea travel rather than a stage, a road, or a farm.",
+          "这些细节都与航行有关：船、帆、风暴、潮汐、港口和海岸。\n\n**检验。** 把文中的具体名词和动词归拢起来看：所有意象都属于海上航行，而不是舞台、步行道路或农事。",
           "The passage does not use the language of ships and the sea.",
           "这段文字并没有使用船和大海的语言。",
         ),
         "a play": L(
           "戏剧",
-          "The details are those of the theater: scripts, roles, lines, costumes, the stage and the curtain.",
-          "这些细节都与剧场有关：剧本、角色、台词、戏服、舞台和幕布。",
+          "The details are those of the theater: scripts, roles, lines, costumes, the stage and the curtain.\n\n**Check.** Notice that the recurring images come from live performance on a stage, linking life's choices and stages to theatrical craft.",
+          "这些细节都与剧场有关：剧本、角色、台词、戏服、舞台和幕布。\n\n**检验。** 留意反复出现的意象全部出自舞台演出，把人生经历映射到戏剧表演上。",
           "The passage does not use the language of the theater.",
           "这段文字并没有使用剧场的语言。",
         ),
         "a journey on foot": L(
           "徒步旅程",
-          "The details are those of walking: roads, paths, crossroads, hills and fellow travelers.",
-          "这些细节都与步行有关：道路、小径、岔路口、山丘和同路人。",
+          "The details are those of walking: roads, paths, crossroads, hills and fellow travelers.\n\n**Check.** Notice that the passage uses land-travel images—trails, climbs, crossroads, or walking—rather than waterborne sailing.",
+          "这些细节都与步行有关：道路、小径、岔路口、山丘和同路人。\n\n**检验。** 注意文段用的是陆路行进的意象（道路、攀登、岔路或步行），而不是海上行船。",
           "The passage does not use the language of roads and walking.",
           "这段文字并没有使用道路和行走的语言。",
         ),
         "the seasons of a farm": L(
           "农场的四季",
-          "The details are those of farming through the year: planting, growing, harvest and frost.",
-          "这些细节都与一年中的农事有关：播种、生长、收获和霜冻。",
+          "The details are those of farming through the year: planting, growing, harvest and frost.\n\n**Check.** Notice the agricultural cycle running through the passage—planting, tending, growing, and reaping across the seasons.",
+          "这些细节都与一年中的农事有关：播种、生长、收获和霜冻。\n\n**检验。** 留意贯穿文段的农时循环——顺着四季播种、照料、生长与收获。",
           "The passage does not use the language of planting and harvest.",
           "这段文字并没有使用播种和收获的语言。",
         ),
@@ -361,8 +373,8 @@ const extended = topic("reading", {
       "what-the-detail-stands-for",
       ["What the Detail Stands For", "细节代表什么"],
       [
-        "Once you know the main comparison, match each detail to its meaning. If life is a voyage, a **storm** is a time of trouble, the **harbor** is rest or death, and the **compass** is whatever guides a person. A good reading explains several details, not just the first one, and shows how they fit together.",
-        "知道了主要的比较以后，就把每个细节与它的含义对应起来。如果人生是一次航行，**风暴**就是困难时期，**港口**是安息或死亡，**指南针**是指引一个人的东西。好的解读要解释好几个细节，而不只是第一个，并说明它们如何组合在一起。",
+        "Once you know the main comparison, match each detail to its meaning. If life is a voyage, a **storm** is a time of trouble, the **harbor** is rest or death, and the **compass** is whatever guides a person. A good reading explains several details, not just the first one, and shows how they fit together.\n\n> **Watch out.** Reject any option that defines the bold word *literally*—inside an extended metaphor, the word must be translated into the real-life idea named in the first clause.",
+        "知道了主要的比较以后，就把每个细节与它的含义对应起来。如果人生是一次航行，**风暴**就是困难时期，**港口**是安息或死亡，**指南针**是指引一个人的东西。好的解读要解释好几个细节，而不只是第一个，并说明它们如何组合在一起。\n\n> **注意。** 排除按*字面意思*解释加粗词的选项——在扩展隐喻里，必须把它翻译成前半句所指的现实含义。",
       ],
       ["In this extended metaphor, what does the word in bold stand for?", "在这个扩展隐喻中，加粗的词代表什么？"],
       `
@@ -398,8 +410,8 @@ const extended = topic("reading", {
         Knowledge is a lamp, and every teacher **passes the flame** to the next.|hands knowledge to students|lights a candle|starts a fire
       `,
       (right) => [
-        `In this metaphor, the bold word stands for ${right}; it fits the main comparison and the other details.`,
-        `在这个隐喻中，加粗的词代表“${right}”；它符合主要的比较和其他细节。`,
+        `In this metaphor, the bold word stands for ${right}; it fits the main comparison and the other details.\n\n**Check.** Substitute **${right}** directly in place of the bold word and reread the sentence: the figurative meaning clicks seamlessly with the opening comparison.`,
+        `在这个隐喻中，加粗的词代表“${right}”；它符合主要的比较和其他细节。\n\n**检验。** 用“${right}”替换加粗词通读全句：比喻义与开头的本体完美契合，不再停留在字面。`,
       ],
       [
         [
@@ -422,14 +434,18 @@ const ambiguity = topic("reading", {
     "When a text deliberately supports more than one reading, and how to judge which interpretations the evidence allows.",
     "当文本有意支持不止一种解读时，如何判断哪些解读有证据支持。",
   ],
+  intro: [
+    "When a story ends with a spinning top still turning as the screen cuts to black, claiming *The hero is certainly dreaming* goes too far, while claiming *He invented a magic toy* ignores the scene altogether. In this topic, you judge whether an interpretation is supported, unsupported, or over-certain, and pinpoint the exact detail that opens the question.",
+    "当电影在陀螺仍在旋转时突然黑屏，断言“主角一定在做梦”过于武断，而说“他发明了魔法玩具”又毫无依据。本主题带你判断解读是有依据、没有依据还是过于肯定，并找出制造悬念的具体细节。",
+  ],
   after: ["how-a-theme-develops", "unreliable-narrators"],
   points: [
     label(
       "a-reading-the-text-allows",
       ["A Reading the Text Allows", "文本允许的解读"],
       [
-        "Some texts are **ambiguous** on purpose: an ending that is not explained, a word with two meanings, a character whose motive is hidden. Ambiguity does not mean anything goes. An interpretation is **supported** when details in the text point to it. It is **unsupported** when it ignores or contradicts the details. And it is **over-certain** when it treats one possible reading as the only one, though the text leaves the question open.",
-        "有些文本有意**含混**：没有解释的结尾，有两个意思的词，动机被隐藏的人物。含混并不意味着怎么解读都行。如果文本中的细节指向某种解读，这种解读就**有依据**。如果它忽视或违背细节，就**没有依据**。如果文本让问题悬而未决，它却把一种可能的解读当作唯一的解读，就是**过于肯定**。",
+        "Some texts are **ambiguous** on purpose: an ending that is not explained, a word with two meanings, a character whose motive is hidden. Ambiguity does not mean anything goes. An interpretation is **supported** when details in the text point to it. It is **unsupported** when it ignores or contradicts the details. And it is **over-certain** when it treats one possible reading as the only one, though the text leaves the question open.\n\n> **Watch out.** Spot absolute words inside the interpretation (*proves*, *certainly*, *only*, *plainly*, *nothing else*): if the reading fits one possible angle yet slams the door on other possibilities, it is **over-certain**, not supported.",
+        "有些文本有意**含混**：没有解释的结尾，有两个意思的词，动机被隐藏的人物。含混并不意味着怎么解读都行。如果文本中的细节指向某种解读，这种解读就**有依据**。如果它忽视或违背细节，就**没有依据**。如果文本让问题悬而未决，它却把一种可能的解读当作唯一的解读，就是**过于肯定**。\n\n> **注意。** 留心解读里的绝对化字眼（*proves*、*certainly*、*only*、*plainly*、*nothing else*）：哪怕它说中了其中一种可能，只要把其他可能一棍子打死，就属于**过于肯定**。",
       ],
       ["How well does the interpretation fit the passage?", "这种解读与文段的契合程度如何？"],
       `
@@ -467,22 +483,22 @@ const ambiguity = topic("reading", {
       {
         supported: L(
           "有依据",
-          "The interpretation rests on details in the passage and respects that the text may allow more than one reading.",
-          "这种解读以文段中的细节为依据，并尊重文本可能允许不止一种解读这一事实。",
+          "The interpretation rests on details in the passage and respects that the text may allow more than one reading.\n\n**Check.** Notice the careful phrasing (*may*, *can*, *leaves open*) paired directly with the passage's actual details: it stays faithful to the evidence without shutting down ambiguity.",
+          "这种解读以文段中的细节为依据，并尊重文本可能允许不止一种解读这一事实。\n\n**检验。** 注意措辞既紧贴原文细节，又留有余地（如“可能”“悬而未决”），忠实于文本而不强行定论。",
           "The interpretation either lacks support in the details or closes a question the text leaves open.",
           "这种解读要么在细节中缺乏依据，要么把文本悬而未决的问题定死了。",
         ),
         unsupported: L(
           "没有依据",
-          "Nothing in the passage points to this reading; it ignores the details or invents new ones.",
-          "文段中没有任何内容指向这种解读；它忽视了细节，或编造了新的细节。",
+          "Nothing in the passage points to this reading; it ignores the details or invents new ones.\n\n**Check.** Look back at the passage for any hint of the claim: none exists—the interpretation brings in an outside explanation the text never suggests.",
+          "文段中没有任何内容指向这种解读；它忽视了细节，或编造了新的细节。\n\n**检验。** 回到原文找线索：文段里完全没有相关暗示，这个解读是脱离文本凭空添出来的。",
           "The details of the passage do point toward this reading.",
           "文段的细节确实指向这种解读。",
         ),
         "over-certain": L(
           "过于肯定",
-          "The reading is possible, but it claims to be the only one, though the text deliberately leaves the question open.",
-          "这种解读是可能的，但它声称是唯一的解读，而文本有意让问题悬而未决。",
+          "The reading is possible, but it claims to be the only one, though the text deliberately leaves the question open.\n\n**Check.** Spot the absolute claim (*proves*, *certainly*, *only*, *plainly*, *clearly*): it locks onto one possible reading and rules out the other possibilities the passage keeps open.",
+          "这种解读是可能的，但它声称是唯一的解读，而文本有意让问题悬而未决。\n\n**检验。** 找出句中的绝对字眼（如 *proves*、*certainly*、*only*、*plainly*）：它把一种可能当成了唯一答案，关掉了文本刻意敞开的空间。",
           "The reading does not turn one possibility into a certainty.",
           "这种解读并没有把一种可能性当成确定无疑的结论。",
         ),
@@ -492,8 +508,8 @@ const ambiguity = topic("reading", {
       "the-detail-that-opens-the-question",
       ["The Detail That Opens the Question", "使问题悬而未决的细节"],
       [
-        "Ambiguity usually lives in a particular detail: a word with **two meanings**, an **action without an explanation**, a **missing piece** of the story, or a **narrator who may not be reliable**. To discuss an ambiguous text well, point to the exact detail that makes more than one reading possible.",
-        "含混通常存在于某个具体的细节中：一个有**两种意思**的词，一个**没有解释的行为**，故事中**缺失的一块**，或一个**可能不可靠的叙述者**。要好好讨论一个含混的文本，就要指出使多种解读成为可能的那个具体细节。",
+        "Ambiguity usually lives in a particular detail: a word with **two meanings**, an **action without an explanation**, a **missing piece** of the story, or a **narrator who may not be reliable**. To discuss an ambiguous text well, point to the exact detail that makes more than one reading possible.\n\n> **Watch out.** All three options may be true statements about the passage—pick the one that actually *creates uncertainty* (a double meaning, unexplained motive, missing fact, or unreliable cue), not a plain background fact.",
+        "含混通常存在于某个具体的细节中：一个有**两种意思**的词，一个**没有解释的行为**，故事中**缺失的一块**，或一个**可能不可靠的叙述者**。要好好讨论一个含混的文本，就要指出使多种解读成为可能的那个具体细节。\n\n> **注意。** 三个选项可能都符合原文事实——要选真正*制造不确定性*的那一项（双关词、未解释的动机、缺失的情节或不可靠信号），而不是平淡的背景事实。",
       ],
       ["Which detail makes the passage open to more than one reading?", "哪个细节使这段文字可以有不止一种解读？"],
       `
@@ -529,8 +545,8 @@ const ambiguity = topic("reading", {
         The heroine's final words are, "I have done what I had to do."|We are not told whether she feels pride or regret.|She speaks at the end.|She has done something.
       `,
       (right) => [
-        `"${right}" names the exact detail that leaves room for more than one reading.`,
-        `“${right}” 指出了为多种解读留下空间的具体细节。`,
+        `"${right}" names the exact detail that leaves room for more than one reading.\n\n**Check.** Ask "If this detail were resolved, would the ambiguity disappear?" Yes—whereas the other options are plain facts that would not settle the open question.`,
+        `“${right}” 指出了为多种解读留下空间的具体细节。\n\n**检验。** 反问一句：“如果把这个细节说破，悬念就会消失吗？”是的——而其余选项只是平白的事实，改与不改都不影响含混。`,
       ],
       [
         [

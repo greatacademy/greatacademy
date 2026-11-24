@@ -32,20 +32,20 @@ function headingItems(text: Lettered): readonly SolvedChoice[] {
           .filter((j) => j !== i)
           .map((j) =>
             t(
-              `That heading sums up paragraph ${letters[j]}, not paragraph ${letter}, which is about "${right}".`,
-              `这个标题概括的是段落 ${letters[j]}，而不是段落 ${letter}；段落 ${letter} 讲的是“${right}”。`,
+              `That heading sums up paragraph ${letters[j]}, not paragraph ${letter}.`,
+              `这个标题概括的是段落 ${letters[j]}，而不是段落 ${letter}。`,
             ),
           ),
-        ...text.extra.map(() =>
+        ...text.extra.map((extraHeading) =>
           t(
-            `No paragraph is about this. It sounds close to the subject of the text, but paragraph ${letter} is about "${right}".`,
-            `没有哪个段落讲这个内容。它听起来和文章主题相近，但段落 ${letter} 讲的是“${right}”。`,
+            `"${extraHeading}" fits no paragraph in the text—it sounds close to the topic, but paragraph ${letter} focuses on a different main idea.`,
+            `“${extraHeading}”哪一段都不适合——它听起来和文章主题相近，但段落 ${letter} 的主旨并非如此。`,
           ),
         ),
       ],
       solution: t(
-        `"${right}" sums up the whole of paragraph ${letter}. A heading that matches only one detail, or a word you can see in the paragraph, is a trap: the heading must cover what every sentence is there to say.`,
-        `“${right}”概括了段落 ${letter} 的全部内容。只对应某个细节或只是含有段落中某个词的标题是陷阱：标题必须涵盖段落中每个句子共同要表达的意思。`,
+        `"${right}" sums up the whole of paragraph ${letter}. A heading that matches only one detail, or a word you can see in the paragraph, is a trap: the heading must cover what every sentence is there to say.\n\n**Check.** Re-read the first and last sentences of paragraph ${letter}: every sentence supports "${right}".`,
+        `“${right}”概括了段落 ${letter} 的全部内容。只对应某个细节或只是含有段落中某个词的标题是陷阱：标题必须涵盖段落中每个句子共同要表达的意思。\n\n**检验。** 重读段落 ${letter} 的首句和尾句：整段都在围绕“${right}”展开。`,
       ),
     };
   });
@@ -57,12 +57,12 @@ function detailItems(text: Lettered): readonly LabelledItem[] {
     right: i,
     whyNot: (label: number) =>
       t(
-        `Paragraph ${letters[label]} is about "${text.headings[label]}" and does not give this detail. It is in paragraph ${letters[i]}.`,
-        `段落 ${letters[label]} 讲的是“${text.headings[label]}”，没有提到这个细节。它在段落 ${letters[i]}。`,
+        `Paragraph ${letters[label]} is about "${text.headings[label]}" and does not contain this specific detail.`,
+        `段落 ${letters[label]} 讲的是“${text.headings[label]}”，没有包含这个具体细节。`,
       ),
     solution: t(
-      `Paragraph ${letters[i]}: "${evidence}" The information is a detail in other words, not the main idea of the paragraph.`,
-      `段落 ${letters[i]}："${evidence}" 这条信息是换了说法的细节，而不是该段的主旨。`,
+      `Paragraph ${letters[i]}: "${evidence}" The information is a detail in other words, not the main idea of the paragraph.\n\n**Check.** Confirm that paragraph ${letters[i]} states the exact detail in paraphrase rather than merely sharing a surface keyword.`,
+      `段落 ${letters[i]}："${evidence}" 这条信息是换了说法的细节，而不是该段的主旨。\n\n**检验。** 确认段落 ${letters[i]} 真正用换说法表达了这个细节，而不只是碰巧出现某个相同词汇。`,
     ),
   }));
 }
@@ -241,6 +241,10 @@ export const matchingHeadings: TopicDef = examTopic({
     "IELTS-style matching: choose the heading that sums up a paragraph, and find the paragraph that contains a piece of information.",
     "雅思风格的匹配题：选出概括段落的标题，找出包含某条信息的段落。",
   ),
+  intro: t(
+    "Matching Headings asks for the big umbrella covering a whole paragraph, whereas Matching Information hunts for one paraphrased detail tucked inside a single sentence. Switching cleanly between those two lenses saves both time and marks.",
+    "段落标题匹配找的是罩住整段话的“大伞”（主旨），而信息匹配找的是藏在某一句话里的换说法细节。在两种视角之间切换自如，既省时间又稳拿分。",
+  ),
   strand: "reading",
   prerequisites: ["supporting-details"],
   encompasses: [
@@ -253,8 +257,8 @@ export const matchingHeadings: TopicDef = examTopic({
       "matching-headings",
       t("Matching Headings", "段落标题匹配"),
       t(
-        "A heading sums up the **main idea** of a whole paragraph. Read the first and last sentences, ask what all the sentences have in common, and then look for the heading that says it in other words.\n\nWrong headings are usually traps of three kinds: one that matches a single detail of the paragraph, one that repeats a word you can see in it, and one that fits another paragraph. There are more headings than paragraphs, so some headings fit nowhere.",
-        "标题概括的是整段的**主旨**。先读首句和尾句，想一想所有句子的共同点，再找用别的说法表达这一点的标题。\n\n错误的标题通常是三类陷阱：只对应段落中某一个细节的；重复了段落里看得见的某个词的；适合另一段的。标题比段落多，有些标题哪段都不适合。",
+        "A heading sums up the **main idea** of a whole paragraph. Read the first and last sentences, ask what all the sentences have in common, and then look for the heading that says it in other words.\n\nWrong headings are usually traps of three kinds: one that matches a single detail of the paragraph, one that repeats a word you can see in it, and one that fits another paragraph. There are more headings than paragraphs, so some headings fit nowhere.\n\n> **Watch out.** Never pick a heading just because it repeats a vivid word from one sentence—if it leaves out half the paragraph, it is a detail trap, not the main heading.",
+        "标题概括的是整段的**主旨**。先读首句和尾句，想一想所有句子的共同点，再找用别的说法表达这一点的标题。\n\n错误的标题通常是三类陷阱：只对应段落中某一个细节的；重复了段落里看得见的某个词的；适合另一段的。标题比段落多，有些标题哪段都不适合。\n\n> **注意。** 不要因为某个标题重复了段中一句里的显眼词语就选它——如果它覆盖不了整段，那就是细节陷阱而不是段落标题。",
       ),
       solvedChoiceGenerator(headingQuestion, interleave(sorted.map(headingItems))),
     ),
@@ -262,8 +266,8 @@ export const matchingHeadings: TopicDef = examTopic({
       "matching-information",
       t("Matching Information", "信息匹配"),
       t(
-        "Here the information is a **detail**, not a main idea, and it is written in other words: a reason, an example, a number, a comparison or a definition. Decide what kind of detail you are looking for, then scan each paragraph for it. Do not choose a paragraph just because it shares a word with the information; check that it really says the same thing.",
-        "这类题的信息是**细节**而不是主旨，并且换了说法：一个原因、一个例子、一个数字、一个比较或一个定义。先判断要找哪一类细节，再逐段查找。不要因为某段和信息有一个相同的词就选它，要确认它真的表达了同样的意思。",
+        "Here the information is a **detail**, not a main idea, and it is written in other words: a reason, an example, a number, a comparison or a definition. Decide what kind of detail you are looking for, then scan each paragraph for it.\n\n> **Watch out.** Do not pick a paragraph merely because it shares a keyword with the prompt—verify that the paragraph actually expresses the exact detail (reason, example, or comparison) asked for.",
+        "这类题的信息是**细节**而不是主旨，并且换了说法：一个原因、一个例子、一个数字、一个比较或一个定义。先判断要找哪一类细节，再逐段查找。\n\n> **注意。** 不要只因为某段和题目共享一个关键词就选它——务必核实该段确实表达了题目所问的具体细节（原因、例子或比较）。",
       ),
       labelGenerator(detailQuestion, ["A", "B", "C", "D"], interleave(sorted.map(detailItems))),
     ),

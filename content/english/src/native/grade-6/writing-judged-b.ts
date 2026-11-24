@@ -3,7 +3,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 
 /** letterBank gives a change about food or farming to ask a leader for. */
 const letterBank: readonly WritingItem[] = [
@@ -206,6 +206,10 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
       "Write a letter to a principal, mayor or council that asks for one change about food or farming, with at least two relevant reasons backed by facts and a respectful tone throughout.",
       "给校长、市长或议会写一封信，就食物或农业提出一项改变的请求，至少给出两个有事实支持的相关理由，并自始至终保持尊重的语气。",
     ),
+    intro: t(
+      "A persuasive letter to a mayor or principal works best when it opens with one clear request, backs up each reason with concrete evidence (such as kilograms of wasted food or saved travel time), and keeps a courteous tone from greeting to signature.",
+      "写给市长或校长的倡议信最有说服力的写法，是开篇直截了当提出一项具体请求，用真实数据或事实支撑每条理由，并从称呼到落款都保持礼貌尊重。",
+    ),
     prerequisites: after("writing-an-opinion-piece", "choosing-relevant-reasons"),
     encompasses: [{ topic: "writing-an-opinion-piece", weight: 0.2 }],
     xp: 22,
@@ -216,8 +220,8 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
         "the-request-and-the-reasons",
         t("The Request and the Reasons", "请求与理由"),
         t(
-          "A letter to a leader states its **request** early and clearly, in one sentence: *I am writing to ask you to let our students start a vegetable garden behind the gym.* Then it gives at least two **relevant reasons**, each in its own paragraph, and backs each one with a fact or an example: a number you counted, something that happened or what an expert said. Leave out reasons that are only feelings or about something else.",
-          "给领导人的信要尽早、清楚地用一句话说出**请求**：*I am writing to ask you to let our students start a vegetable garden behind the gym.* 然后至少给出两个**相关的理由**，每个理由一段，并用事实或例子支持：你统计的数字、发生过的事或专家说的话。不要写只是感觉或与请求无关的理由。",
+          "A letter to a leader states its **request** early and clearly, in one sentence: *I am writing to ask you to let our students start a vegetable garden behind the gym.* Then it gives at least two **relevant reasons**, each in its own paragraph, and backs each one with a fact or an example: a number you counted, something that happened or what an expert said. Leave out reasons that are only feelings or about something else.\n\n> **Watch out.** Check that every reason is backed by a concrete fact or example—saying *“it would be nice”* is not evidence.",
+          "给领导人的信要尽早、清楚地用一句话说出**请求**：*I am writing to ask you to let our students start a vegetable garden behind the gym.* 然后至少给出两个**相关的理由**，每个理由一段，并用事实或例子支持：你统计的数字、发生过的事或专家说的话。不要写只是感觉或与请求无关的理由。\n\n> **注意。** 确保每条理由背后都有具体事实或例子——只说“这样会很好”不算证据。",
         ),
         writingGenerator(
           t(
@@ -227,15 +231,18 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
           letterBank,
           ["g6-states-request", "g6-relevant-reasons", "w4-concludes"],
           { minWords: 120, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Check that your opening paragraph states the exact request, that at least two body paragraphs give relevant reasons backed by facts from the notes, and that the letter closes cleanly.",
+            "检查首段是否明确提出请求、至少两个主体段给出了有笔记事实支撑的相关理由，且信末收尾得体。",
+          ),
         ),
       ),
       point(
         "a-respectful-tone",
         t("A Respectful Tone", "尊重的语气"),
         t(
-          "A leader is more likely to listen to a letter that is **polite**. Open with a greeting (*Dear Mayor Okafor,*) and close with a sign-off (*Sincerely,* or *Respectfully,*) and your name. Ask rather than demand, never insult, and show that you understand the leader's side: *I know the school day is already full.* End by thanking the reader and, if you can, offering to help.",
-          "**礼貌**的信更容易让领导人听进去。用称呼开头（*Dear Mayor Okafor,*），用结束语（*Sincerely,* 或 *Respectfully,*）和你的名字结尾。要请求而不是要求，绝不侮辱，并表明你理解领导人的立场：*I know the school day is already full.* 最后感谢读者，如果可以的话，表示愿意帮忙。",
+          "A leader is more likely to listen to a letter that is **polite**. Open with a greeting (*Dear Mayor Okafor,*) and close with a sign-off (*Sincerely,* or *Respectfully,*) and your name. Ask rather than demand, never insult, and show that you understand the leader's side: *I know the school day is already full.* End by thanking the reader and, if you can, offering to help.\n\n> **Watch out.** Read your sentences aloud for pushy words like *must*, *stupid*, or *you never*—replace them with polite requests and practical offers to help.",
+          "**礼貌**的信更容易让领导人听进去。用称呼开头（*Dear Mayor Okafor,*），用结束语（*Sincerely,* 或 *Respectfully,*）和你的名字结尾。要请求而不是要求，绝不侮辱，并表明你理解领导人的立场：*I know the school day is already full.* 最后感谢读者，如果可以的话，表示愿意帮忙。\n\n> **注意。** 大声读一遍草稿，排查 *must*、*you never* 等生硬或指责性措辞，换成礼貌的请求和切实的协助意愿。",
         ),
         writingGenerator(
           t(
@@ -245,7 +252,10 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
           letterBank,
           ["g6-respectful-tone", "g6-states-request", "w4-concludes"],
           { minWords: 120, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Verify the formal greeting, courteous wording throughout, acknowledgment of any constraint, thank-you closing, and sign-off with your name.",
+            "核对是否包含规范称呼、全程礼貌措辞、对现实难处的体谅、致谢结尾以及落款署名。",
+          ),
         ),
       ),
     ],
@@ -257,6 +267,10 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
       "Write a column that takes a clear position on a question about sport, supports it with specific examples from games, teams or rules, and answers the other side fairly.",
       "写一篇专栏文章，对一个体育问题表明清楚的立场，用比赛、球队或规则中的具体例子来支持，并公正地回应对方的观点。",
     ),
+    intro: t(
+      "A great sports column takes a clear stand right away—say, on whether video replay improves a match—backs it up with vivid examples from real games, and answers the strongest counterargument fairly before landing a punchy final line.",
+      "一篇精彩的体育专栏开篇就鲜明表态——例如视频回放是否该用于判罚——用真实赛场事例支撑观点，公正回应反对声音，最后用一句有力的话收尾。",
+    ),
     prerequisites: after("writing-a-letter-to-a-leader"),
     encompasses: [{ topic: "writing-a-letter-to-a-leader", weight: 0.2 }],
     xp: 22,
@@ -267,8 +281,8 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
         "a-position-and-examples",
         t("A Position and Examples", "立场与例子"),
         t(
-          "A column takes a **position** and says it where no reader can miss it, often in the first two sentences: *In youth sports, every player should get equal playing time.* A title can help: *Should Every Player Play?* Then it supports the position with **specific examples** from sport: a game you saw, a team you played on, a rule, a famous match. One real example convinces more than three general claims.",
-          "专栏文章要表明**立场**，并把它放在读者不会错过的地方，通常在前两句：*In youth sports, every player should get equal playing time.* 标题也有帮助：*Should Every Player Play?* 然后用体育中的**具体例子**来支持立场：你看过的一场比赛、你参加过的球队、一条规则、一场著名的比赛。一个真实的例子比三个笼统的说法更有说服力。",
+          "A column takes a **position** and says it where no reader can miss it, often in the first two sentences: *In youth sports, every player should get equal playing time.* A title can help: *Should Every Player Play?* Then it supports the position with **specific examples** from sport: a game you saw, a team you played on, a rule, a famous match. One real example convinces more than three general claims.\n\n> **Watch out.** Do not sit on the fence (*“Both sides are good”*)—pick one clear side and prove it with concrete sports examples.",
+          "专栏文章要表明**立场**，并把它放在读者不会错过的地方，通常在前两句：*In youth sports, every player should get equal playing time.* 标题也有帮助：*Should Every Player Play?* 然后用体育中的**具体例子**来支持立场：你看过的一场比赛、你参加过的球队、一条规则、一场著名的比赛。一个真实的例子比三个笼统的说法更有说服力。\n\n> **注意。** 不要模棱两可地说“两边都有道理”——明确站定一方，并用具体的赛场或规则实例加以证明。",
         ),
         writingGenerator(
           t(
@@ -278,15 +292,18 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
           columnBank,
           ["g6-takes-a-position", "g6-supports-with-examples", "g6-answers-other-side"],
           { minWords: 140, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Check that your opening states one clear position, each body paragraph uses a specific sports example rather than vague generalities, and you address the opposing view.",
+            "检查开头是否亮明唯一清晰的立场、主体段是否用具体体育实例而非空泛议论，并回应了反方观点。",
+          ),
         ),
       ),
       point(
         "answering-the-other-side",
         t("Answering the Other Side", "回应对方的观点"),
         t(
-          "A strong column admits that some people disagree. State their view **fairly**, the way they would say it (*Some people argue that the best players should play most, because winning teaches young people to compete.*), grant what is true in it, and then explain why your position is still stronger: *However, at this age, the purpose of sport is to learn.* End by returning to your position in a short, memorable line.",
-          "有力的专栏文章会承认有人不同意。**公正地**说出他们的观点，就像他们自己会说的那样（*Some people argue that the best players should play most, because winning teaches young people to compete.*），承认其中正确的部分，然后解释为什么你的立场仍然更有力：*However, at this age, the purpose of sport is to learn.* 最后用一句简短、令人难忘的话回到你的立场。",
+          "A strong column admits that some people disagree. State their view **fairly**, the way they would say it (*Some people argue that the best players should play most, because winning teaches young people to compete.*), grant what is true in it, and then explain why your position is still stronger: *However, at this age, the purpose of sport is to learn.* End by returning to your position in a short, memorable line.\n\n> **Watch out.** Do not caricature the other side as foolish—state their best reason honestly, then show why your argument outweighs it.",
+          "有力的专栏文章会承认有人不同意。**公正地**说出他们的观点，就像他们自己会说的那样（*Some people argue that the best players should play most, because winning teaches young people to compete.*），承认其中正确的部分，然后解释为什么你的立场仍然更有力：*However, at this age, the purpose of sport is to learn.* 最后用一句简短、令人难忘的话回到你的立场。\n\n> **注意。** 不要把反方观点丑化成荒唐的说法——如实陈述对方最有力的理由，再说明为什么你的立场更占上风。",
         ),
         writingGenerator(
           t(
@@ -296,7 +313,10 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
           columnBank,
           ["g6-answers-other-side", "g6-takes-a-position", "g6-supports-with-examples"],
           { minWords: 140, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Verify that your counterargument paragraph states the opposing view fairly, pivots with *however* or *yet* to explain why your side still wins, and closes with a memorable final line.",
+            "核对反方回应段是否公正陈述了对方理由、用 *however* 或 *yet* 转折说明己方更强，并以有力的结尾句收束。",
+          ),
         ),
       ),
     ],
@@ -308,6 +328,10 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
       "Write a paragraph from notes on where a word came from, how its meaning or form changed over time and why, ending with what it means now.",
       "根据笔记写一段话，说明一个词的来源、它的意思或形式随时间发生了怎样的变化以及原因，最后说出它现在的意思。",
     ),
+    intro: t(
+      "Every word carries a mini-story: *clue* began as a ball of thread in Old English before a Greek maze myth turned it into a hint for solving mysteries. A word history traces that journey from origin to shift to modern meaning.",
+      "每个词背后都藏着一段小历史：*clue* 最初在古英语里指一团线球，后来借由希腊迷宫神话演变成了“破案线索”。写词语历史，就是按时间串起它的起源、演变与今义。",
+    ),
     prerequisites: after("writing-a-history-explanation", "words-from-other-languages"),
     encompasses: [{ topic: "words-from-other-languages", weight: 0.2 }],
     xp: 22,
@@ -318,8 +342,8 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
         "where-the-word-began",
         t("Where the Word Began", "这个词从哪里来"),
         t(
-          "A word history begins at the **origin**: the language, person or place the word came from and what it first meant. *The word salary comes from the Latin salarium, which is related to sal, the Latin word for salt.* Use the facts in the notes exactly, and set the word you are writing about in italics or quotation marks so the reader knows you are talking about the word itself.",
-          "词语的历史从**来源**写起：这个词来自哪种语言、哪个人或哪个地方，最初是什么意思。*The word salary comes from the Latin salarium, which is related to sal, the Latin word for salt.* 准确使用笔记中的事实，并把你要写的词用斜体或引号标出，让读者知道你说的是这个词本身。",
+          "A word history begins at the **origin**: the language, person or place the word came from and what it first meant. *The word salary comes from the Latin salarium, which is related to sal, the Latin word for salt.* Use the facts in the notes exactly, and set the word you are writing about in italics or quotation marks so the reader knows you are talking about the word itself.\n\n> **Watch out.** Include *both* where the word came from (source language, place, or person) and its earliest meaning before moving on to how it changed.",
+          "词语的历史从**来源**写起：这个词来自哪种语言、哪个人或哪个地方，最初是什么意思。*The word salary comes from the Latin salarium, which is related to sal, the Latin word for salt.* 准确使用笔记中的事实，并把你要写的词用斜体或引号标出，让读者知道你说的是这个词本身。\n\n> **注意。** 在写词义演变之前，务必把“来自哪里（源语言、人物或地名）”和“最初的意思”两项都交代清楚。",
         ),
         writingGenerator(
           t(
@@ -329,15 +353,18 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
           wordHistoryBank,
           ["g6-word-origin", "g6-explains-change", "w4-concludes"],
           { minWords: 90, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Check that your opening names the exact source and original meaning from the notes, marks the target word clearly, and traces the shift up to its modern meaning.",
+            "检查开头是否准确写出笔记中的来源与原义、清晰标出目标词，并一直交代到它的现代含义。",
+          ),
         ),
       ),
       point(
         "how-the-meaning-changed",
         t("How the Meaning Changed", "意思是怎样变化的"),
         t(
-          "The heart of a word history is the **change**. Take the reader through it in order, with time words (*in the 1300s*, *over the next centuries*, *by the 1700s*), and give the **reason** for each change: a story, a belief, a new invention, a word that traveled with traders. End with what the word means **now**, and, if you can, how far that is from where it began.",
-          "词语历史的核心是**变化**。用时间词（*in the 1300s*、*over the next centuries*、*by the 1700s*）按顺序带读者了解这个变化，并说出每次变化的**原因**：一个故事、一种信仰、一项新发明、一个随商人传播的词。最后说出这个词**现在**的意思，如果可以的话，再说说它与最初的意思相差多远。",
+          "The heart of a word history is the **change**. Take the reader through it in order, with time words (*in the 1300s*, *over the next centuries*, *by the 1700s*), and give the **reason** for each change: a story, a belief, a new invention, a word that traveled with traders. End with what the word means **now**, and, if you can, how far that is from where it began.\n\n> **Watch out.** Do not jump straight from the ancient root to today's meaning—explain *what caused* the shift in between.",
+          "词语历史的核心是**变化**。用时间词（*in the 1300s*、*over the next centuries*、*by the 1700s*）按顺序带读者了解这个变化，并说出每次变化的**原因**：一个故事、一种信仰、一项新发明、一个随商人传播的词。最后说出这个词**现在**的意思，如果可以的话，再说说它与最初的意思相差多远。\n\n> **注意。** 不要从古老起源直接跳到现代意思——必须交代中间*是什么原因*推动了词义转变。",
         ),
         writingGenerator(
           t(
@@ -347,7 +374,10 @@ export const writingJudgedTopics6b: readonly TopicDef[] = [
           wordHistoryBank,
           ["g6-explains-change", "g6-word-origin", "w4-concludes"],
           { minWords: 90, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Trace the timeline in your paragraph: origin, cause of each shift in chronological order, and a clear closing sentence stating what the word means today.",
+            "顺着段落检查时间线：来源、按时间顺序交代每次演变的原因，以及点明现代含义的结尾句。",
+          ),
         ),
       ),
     ],

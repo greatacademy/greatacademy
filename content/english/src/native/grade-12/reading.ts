@@ -18,14 +18,18 @@ const investigative = topic("reading", {
     "How investigative reporters build a case from documents, named witnesses and unnamed sources, and how a reader weighs each kind of evidence.",
     "调查记者如何用文件、具名证人和匿名消息来源构建论证，以及读者如何衡量每一类证据。",
   ],
+  intro: [
+    "When a newspaper reports that a city bridge inspection was skipped, one sentence may cite a *dated maintenance log*, another may quote *retired inspector Carl Vega*, and a third may rely on *an employee who asked not to be named*. Each carries a different level of verifiability. Learning to sort documents, named witnesses, and unnamed sources—and to spot what independently confirms a tip—helps you read investigative journalism critically.",
+    "当报纸报道某座城市大桥跳过了安全检查时，一句可能援引*带日期的维修日志*，一句可能引用*退休检查员 Carl Vega* 的话，另一句则来自*要求匿名的内部员工*。三类证据的可核查程度截然不同。学会区分文件记录、具名证人与匿名来源，并判断什么能独立印证线索，能让你更有判断力地阅读调查报道。",
+  ],
   after: ["tracing-claims-to-sources"],
   points: [
     label(
       "what-kind-of-evidence",
       ["What Kind of Evidence", "哪一类证据"],
       [
-        "An investigative report exposes something that powerful people want hidden, so every claim needs evidence. **Documents and records** are the strongest kind: contracts, emails, budgets, court files, photographs and data that anyone can check. **Named witnesses** speak on the record, so readers know who they are and can judge their position. **Unnamed sources** speak only if their names are kept secret; they may know the truth, but readers cannot check them, so a careful report confirms them with a second source or a document.",
-        "调查报道揭露有权势的人想隐瞒的事情，所以每个说法都需要证据。**文件和记录**最有力：合同、电子邮件、预算、法庭文件、照片和任何人都能核查的数据。**具名证人**公开发言，读者知道他们是谁，能判断他们的立场。**匿名消息来源**只在名字被保密时才肯开口；他们也许知道真相，但读者无法核查，所以严谨的报道会用第二个消息来源或一份文件来证实他们的话。",
+        "An investigative report exposes something that powerful people want hidden, so every claim needs evidence. **Documents and records** are the strongest kind: contracts, emails, budgets, court files, photographs and data that anyone can check. **Named witnesses** speak on the record, so readers know who they are and can judge their position. **Unnamed sources** speak only if their names are kept secret; they may know the truth, but readers cannot check them, so a careful report confirms them with a second source or a document.\n\n> **Watch out.** Do not mistake a job title (*a former guard*, *two officials*, *a senior officer*) for a **named witness**—if the person's actual name is withheld, the evidence is still an **unnamed source**.",
+        "调查报道揭露有权势的人想隐瞒的事情，所以每个说法都需要证据。**文件和记录**最有力：合同、电子邮件、预算、法庭文件、照片和任何人都能核查的数据。**具名证人**公开发言，读者知道他们是谁，能判断他们的立场。**匿名消息来源**只在名字被保密时才肯开口；他们也许知道真相，但读者无法核查，所以严谨的报道会用第二个消息来源或一份文件来证实他们的话。\n\n> **注意。** 不要把职务或身份（如 *a former guard*、*two officials*、*a senior officer*）当成**具名证人**——只要没有写出本人的真实姓名，它仍然属于**匿名消息来源**。",
       ],
       ["What kind of evidence is this?", "这是哪一类证据？"],
       `
@@ -64,22 +68,22 @@ const investigative = topic("reading", {
       {
         "a document or record": L(
           "文件或记录",
-          "The evidence is a paper, file, image or set of data that exists apart from anyone's memory and that others can check.",
-          "这个证据是独立于任何人记忆而存在、别人可以核查的文件、档案、图像或数据。",
+          "The evidence is a paper, file, image or set of data that exists apart from anyone's memory and that others can check.\n\n**Check.** Ask whether the source is a physical or digital artifact (a file, log, image, or database) rather than a person's spoken statement—if yes, it is a document or record.",
+          "这个证据是独立于任何人记忆而存在、别人可以核查的文件、档案、图像或数据。\n\n**检验。** 看看证据来源是不是一份可独立查验的纸质或电子材料（档案、日志、图像或数据库），而非某人的口头陈述——如果是，就属于文件或记录。",
           "The evidence is something a person says, not a document or record.",
           "这个证据是某个人说的话，不是文件或记录。",
         ),
         "a named witness": L(
           "具名证人",
-          "A person speaks on the record and is named, so readers know who is making the claim.",
-          "某个人公开发言并被点名，读者知道是谁在提出这个说法。",
+          "A person speaks on the record and is named, so readers know who is making the claim.\n\n**Check.** Look for both a spoken claim and an actual proper name attached to the speaker—because the speaker is identified by name, readers can verify their role and standing.",
+          "某个人公开发言并被点名，读者知道是谁在提出这个说法。\n\n**检验。** 确认句中既有人的陈述，又给出了说话者的真实姓名——读者可以据此核查其身份与立场。",
           "No named person is speaking on the record.",
           "没有具名的人公开发言。",
         ),
         "an unnamed source": L(
           "匿名消息来源",
-          "The claim comes from someone whose name is kept secret, so readers cannot check who said it.",
-          "这个说法来自一个名字被保密的人，读者无法核查是谁说的。",
+          "The claim comes from someone whose name is kept secret, so readers cannot check who said it.\n\n**Check.** Notice that a human speaker is described only by role or proximity, with no proper name given—so the claim rests on an unnamed source.",
+          "这个说法来自一个名字被保密的人，读者无法核查是谁说的。\n\n**检验。** 注意这里只交代了说话人的职务或知情身份，没有写出姓名——因此属于匿名消息来源。",
           "The source is not a person whose name is kept secret.",
           "这个来源不是一个名字被保密的人。",
         ),
@@ -89,8 +93,8 @@ const investigative = topic("reading", {
       "what-would-confirm-the-claim",
       ["What Would Confirm the Claim", "什么能证实这个说法"],
       [
-        "A finding is only as strong as its evidence. When a report rests on one unnamed source, ask what would confirm it: a **document** that shows the same thing, or a **second independent source** who was in a position to know. More of the same rumor, the feelings of people who were not there, or the denial of the accused do not confirm a claim. A careful reader also asks whether the accused was given a chance to respond.",
-        "一个发现的说服力取决于它的证据。当报道只依靠一个匿名消息来源时，要问什么能证实它：一份显示同样情况的**文件**，或另一个了解内情的**独立消息来源**。更多同样的传闻、不在场的人的感受或被指控者的否认，都不能证实一个说法。严谨的读者还会问，被指控者是否得到了回应的机会。",
+        "A finding is only as strong as its evidence. When a report rests on one unnamed source, ask what would confirm it: a **document** that shows the same thing, or a **second independent source** who was in a position to know. More of the same rumor, the feelings of people who were not there, or the denial of the accused do not confirm a claim. A careful reader also asks whether the accused was given a chance to respond.\n\n> **Watch out.** Repeating the same accusation louder—or quoting an outsider's general distrust—is not confirmation; real confirmation must come from an independent record, measurement, or firsthand trace of the specific event.",
+        "一个发现的说服力取决于它的证据。当报道只依靠一个匿名消息来源时，要问什么能证实它：一份显示同样情况的**文件**，或另一个了解内情的**独立消息来源**。更多同样的传闻、不在场的人的感受或被指控者的否认，都不能证实一个说法。严谨的读者还会问，被指控者是否得到了回应的机会。\n\n> **注意。** 把同一个指控重复得更响亮，或引用局外人泛泛的不信任，都不算证实；真正的证实必须来自独立于该消息源的记录、检测结果或与具体事件直接相关的物证。",
       ],
       ["Which piece of evidence would best confirm this claim?", "哪一项证据最能证实这个说法？"],
       `
@@ -126,8 +130,8 @@ const investigative = topic("reading", {
         A witness says the ship sailed overloaded.|The port's cargo records showing weight above the limit|A sailor saying the sea was rough that night|The owner saying his ships are safe
       `,
       (right) => [
-        `${right} would confirm the claim independently: it is evidence that exists apart from the source and can be checked.`,
-        `${right}能独立地证实这个说法：它是独立于消息来源存在、可以核查的证据。`,
+        `${right} would confirm the claim independently: it is evidence that exists apart from the source and can be checked.\n\n**Check.** Verify that the chosen evidence tests the *exact* allegation using an independent record, measurement, or document—not an outsider's opinion, a circular repeat, or a bare denial.`,
+        `${right}能独立地证实这个说法：它是独立于消息来源存在、可以核查的证据。\n\n**检验。** 确认所选证据是用独立记录、检测或文件去核查*具体指控本身*，而不是局外人的看法、同源重复或空口否认。`,
       ],
       [
         [
@@ -150,14 +154,18 @@ const thought = topic("reading", {
     "How philosophers and scientists imagine a case that could not or need not happen, draw out an intuition about it, and reason from that intuition to a conclusion.",
     "哲学家和科学家如何设想一个不可能或不必真正发生的情形，引出人们对它的直觉，再从这种直觉推出结论。",
   ],
+  intro: [
+    "Suppose two identical paintings hang side by side—one by Rembrandt, the other a molecule-for-molecule replica—and you still feel the original is worth more; from that reaction, a philosopher argues that authenticity matters beyond visual appearance. Every thought experiment follows this three-part arc—imagined case, intuition, conclusion—and isolates one principle by stripping away ordinary distractions.",
+    "假设两幅肉眼完全无法区分的画并排挂着——一幅是伦勃朗真迹，另一幅是逐分子复制品——你直觉上仍觉得真迹更珍贵，哲学家便由此推论：真伪价值并不只取决于视觉外观。每个思想实验都遵循“设想情形—引出直觉—推出结论”的三步结构，并借由剥离日常干扰来聚焦单一核心问题。",
+  ],
   after: ["reasoning", "explaining-with-an-analogy"],
   points: [
     label(
       "which-step-is-this",
       ["Which Step Is This", "这是哪一步"],
       [
-        "A **thought experiment** tests an idea in the imagination. It has three steps. First comes the **imagined case**: *Suppose you found a ring that made you invisible*. Then comes the **intuition** the case draws out, the answer most readers give at once: *Most people would be tempted to steal*. Last comes the **conclusion** the writer draws from that intuition about the real world: *So people are just only because they fear being caught*. To evaluate a thought experiment, ask whether the case is fair, whether the intuition is shared, and whether the conclusion follows.",
-        "**思想实验**在想象中检验一个想法。它有三步。首先是**设想的情形**：*假设你找到一枚能让你隐身的戒指*。然后是这个情形引出的**直觉**，即多数读者立刻给出的回答：*大多数人会忍不住去偷*。最后是作者从这种直觉对现实世界得出的**结论**：*所以人们守正义只是因为害怕被抓*。评价思想实验时，要问情形是否公平、直觉是否普遍、结论是否成立。",
+        "A **thought experiment** tests an idea in the imagination. It has three steps. First comes the **imagined case**: *Suppose you found a ring that made you invisible*. Then comes the **intuition** the case draws out, the answer most readers give at once: *Most people would be tempted to steal*. Last comes the **conclusion** the writer draws from that intuition about the real world: *So people are just only because they fear being caught*. To evaluate a thought experiment, ask whether the case is fair, whether the intuition is shared, and whether the conclusion follows.\n\n> **Watch out.** Tell the **intuition** apart from the **conclusion**: an intuition reports people's immediate gut reaction to the *scenario itself* (*Most people feel…*), whereas a conclusion generalizes to a principle about the *real world* (often signaled by *So* or *Therefore*).",
+        "**思想实验**在想象中检验一个想法。它有三步。首先是**设想的情形**：*假设你找到一枚能让你隐身的戒指*。然后是这个情形引出的**直觉**，即多数读者立刻给出的回答：*大多数人会忍不住去偷*。最后是作者从这种直觉对现实世界得出的**结论**：*所以人们守正义只是因为害怕被抓*。评价思想实验时，要问情形是否公平、直觉是否普遍、结论是否成立。\n\n> **注意。** 分清**直觉**与**结论**：直觉汇报人们对*设想场景本身*的即时感受（如 *Most people feel…*），而结论则上升为关于*现实世界*的一般原理（常由 *So* 或 *Therefore* 引出）。",
       ],
       ["Which step of the thought experiment is this sentence?", "这个句子是思想实验的哪一步？"],
       `
@@ -196,22 +204,22 @@ const thought = topic("reading", {
       {
         "the imagined case": L(
           "设想的情形",
-          "The sentence asks the reader to suppose or imagine a situation, often one that could not happen.",
-          "句子要求读者假设或想象一个情形，这个情形往往不可能真正发生。",
+          "The sentence asks the reader to suppose or imagine a situation, often one that could not happen.\n\n**Check.** Look for framing cues like *Suppose*, *Imagine*, or *Picture*—the sentence sets up the hypothetical scene without yet judging it or stating a general rule.",
+          "句子要求读者假设或想象一个情形，这个情形往往不可能真正发生。\n\n**检验。** 寻找 *Suppose*、*Imagine* 或 *Picture* 这类引出假设的信号——句子只是在搭建虚构场景，还没有给出直觉判断或普遍结论。",
           "The sentence does not set up an imagined situation.",
           "句子没有设定一个想象的情形。",
         ),
         "the intuition": L(
           "直觉",
-          "The sentence reports what most people feel or would say at once about the imagined case.",
-          "句子说出多数人对设想的情形立刻会有的感受或回答。",
+          "The sentence reports what most people feel or would say at once about the imagined case.\n\n**Check.** Notice that the sentence stays inside the scenario and describes people's immediate gut reaction (*Most people feel…*, *Few would choose…*), rather than stating a universal *therefore* principle.",
+          "句子说出多数人对设想的情形立刻会有的感受或回答。\n\n**检验。** 注意句子仍停留在设想场景内部，描述人们当下的直觉反应（如 *Most people feel…*、*Few would choose…*），尚未用 *therefore* 上升为普遍原理。",
           "The sentence does not report people's immediate response to the case.",
           "句子没有说出人们对这个情形的即时反应。",
         ),
         "the conclusion": L(
           "结论",
-          "The sentence draws a general lesson about the real world, often with so or therefore.",
-          "句子得出关于现实世界的一般结论，常用 so 或 therefore。",
+          "The sentence draws a general lesson about the real world, often with *so* or *therefore*.\n\n**Check.** See that the claim steps out of the story—marked by *So* or *Therefore*—to state a broad philosophical or scientific principle.",
+          "句子得出关于现实世界的一般结论，常用 *so* 或 *therefore*。\n\n**检验。** 句子借由 *So* 或 *Therefore* 跳出了虚构故事，提出了一条适用于现实世界的普遍哲学或科学论断。",
           "The sentence does not draw a general lesson from the case.",
           "句子没有从这个情形得出一般结论。",
         ),
@@ -221,8 +229,8 @@ const thought = topic("reading", {
       "what-the-case-is-meant-to-show",
       ["What the Case Is Meant to Show", "这个情形想要说明什么"],
       [
-        "Every thought experiment removes the details that do not matter so that one question stands alone. The invisibility ring removes the fear of being caught, so it asks whether we are just for justice's sake. The machine of pleasant experiences removes everything but pleasure, so it asks whether pleasure is all we want. To find what a case is meant to show, ask what it **takes away** from ordinary life and what question is left.",
-        "每个思想实验都去掉无关的细节，让一个问题单独凸显出来。隐身戒指去掉了对被抓的恐惧，所以它问我们是否为了正义本身而守正义。提供愉快体验的机器去掉了快乐以外的一切，所以它问快乐是否就是我们想要的全部。要找出一个情形想说明什么，就问它从日常生活中**去掉**了什么、剩下什么问题。",
+        "Every thought experiment removes the details that do not matter so that one question stands alone. The invisibility ring removes the fear of being caught, so it asks whether we are just for justice's sake. The machine of pleasant experiences removes everything but pleasure, so it asks whether pleasure is all we want. To find what a case is meant to show, ask what it **takes away** from ordinary life and what question is left.\n\n> **Watch out.** Ignore literal, practical questions about the props (like how deep a pond is or whether Mars travel is feasible): a thought experiment uses fantasy props solely to test an abstract principle.",
+        "每个思想实验都去掉无关的细节，让一个问题单独凸显出来。隐身戒指去掉了对被抓的恐惧，所以它问我们是否为了正义本身而守正义。提供愉快体验的机器去掉了快乐以外的一切，所以它问快乐是否就是我们想要的全部。要找出一个情形想说明什么，就问它从日常生活中**去掉**了什么、剩下什么问题。\n\n> **注意。** 忽略关于道具本身的字面实用问题（如池塘多深、能否去火星）：思想实验借用虚构道具，唯一目的是检验背后的抽象原则。",
       ],
       ["What question is this thought experiment built to test?", "这个思想实验是为检验什么问题而设计的？"],
       `
@@ -258,8 +266,8 @@ const thought = topic("reading", {
         A stone falls in a world with no air, beside a feather.|whether heavy things fall faster than light things by nature|how stones are formed|whether feathers are soft
       `,
       (right) => [
-        `The case is built to test ${right}: it takes away everything else from ordinary life so that this question stands alone.`,
-        `这个情形是为检验“${right}”而设计的：它去掉了日常生活中的其他一切，让这个问题单独凸显。`,
+        `The case is built to test ${right}: it takes away everything else from ordinary life so that this question stands alone.\n\n**Check.** Ask what ordinary factor the scenario strips away—only this option captures the underlying principle left exposed once the surface props are ignored.`,
+        `这个情形是为检验“${right}”而设计的：它去掉了日常生活中的其他一切，让这个问题单独凸显。\n\n**检验。** 想想这个设想剥离了日常生活中的哪个常见因素——抛开表面道具后，只有这个选项抓住了被单独凸显出来的核心原则。`,
       ],
       [
         [
@@ -282,14 +290,18 @@ const review = topic("reading", {
     "How critics describe a work, judge it and give reasons, and how a reader tells a well-supported judgment from a mere opinion.",
     "评论家如何描述作品、评判作品并给出理由，以及读者如何区分有充分依据的评判和单纯的个人意见。",
   ],
+  intro: [
+    "Compare *The documentary lasts ninety minutes* with *It is an unforgettable triumph* and *Leaving the interviews uncut lets viewers hear each speaker's hesitation*. The first describes, the second merely judges, and the third gives a verifiable reason tied to a concrete choice. Separating these three moves tells you which reviews earn your trust.",
+    "比较这三句话：*The documentary lasts ninety minutes*、*It is an unforgettable triumph* 和 *Leaving the interviews uncut lets viewers hear each speaker's hesitation*。第一句在描述，第二句只是空泛评判，第三句则把效果系在可核查的具体手法上。分清这三种笔法，就能看出哪篇评论真正值得信赖。",
+  ],
   after: ["supported-and-unsupported-claims", "connotation-and-precise-words"],
   points: [
     label(
       "what-the-sentence-does",
       ["What the Sentence Does", "这个句子做了什么"],
       [
-        "A review of a book, film, exhibition or concert does three things. It **describes** the work, so the reader knows what it is: its subject, its length, what happens, what is shown. It **judges** the work: good or bad, moving or dull, worth seeing or not. And it gives **reasons** that tie the judgment to specific features of the work: a scene, a line, a use of color, a choice the artist made. A judgment without reasons is only taste; a reason points to something the reader can check.",
-        "对书、电影、展览或音乐会的评论做三件事。它**描述**作品，让读者知道作品是什么：主题、篇幅、情节、展出的内容。它**评判**作品：好或坏，动人或乏味，值不值得看。它还给出**理由**，把评判和作品的具体特点联系起来：某个场景、某句台词、某种用色、艺术家的某个选择。没有理由的评判只是个人口味；理由指向读者可以核查的东西。",
+        "A review of a book, film, exhibition or concert does three things. It **describes** the work, so the reader knows what it is: its subject, its length, what happens, what is shown. It **judges** the work: good or bad, moving or dull, worth seeing or not. And it gives **reasons** that tie the judgment to specific features of the work: a scene, a line, a use of color, a choice the artist made. A judgment without reasons is only taste; a reason points to something the reader can check.\n\n> **Watch out.** Do not confuse a **bare judgment** (*This is a minor masterpiece*) with **giving a reason**—only a sentence that links a specific observable detail of the work to its effect counts as a reason.",
+        "对书、电影、展览或音乐会的评论做三件事。它**描述**作品，让读者知道作品是什么：主题、篇幅、情节、展出的内容。它**评判**作品：好或坏，动人或乏味，值不值得看。它还给出**理由**，把评判和作品的具体特点联系起来：某个场景、某句台词、某种用色、艺术家的某个选择。没有理由的评判只是个人口味；理由指向读者可以核查的东西。\n\n> **注意。** 不要把**单纯评判**（如 *This is a minor masterpiece*）当成**给出理由**——只有把作品中可核查的具体特点与其产生的效果联系起来，才算给出了理由。",
       ],
       ["What does this sentence from a review do?", "评论中的这个句子做了什么？"],
       `
@@ -327,22 +339,22 @@ const review = topic("reading", {
       {
         "describes the work": L(
           "描述作品",
-          "The sentence states facts about the work, such as its subject, length or content, without saying whether it is good.",
-          "句子陈述作品的事实，如主题、篇幅或内容，不评价它好不好。",
+          "The sentence states facts about the work, such as its subject, length or content, without saying whether it is good.\n\n**Check.** Ask whether two critics who completely disagree about the work's quality would still agree on this sentence—if yes, it is neutral description.",
+          "句子陈述作品的事实，如主题、篇幅或内容，不评价它好不好。\n\n**检验。** 想想两位对作品好坏完全持相反意见的评论家是否都会认同这句话——如果都会认同，它就是中性的描述。",
           "The sentence does more than state facts about the work.",
           "这个句子不只是陈述作品的事实。",
         ),
         "judges the work": L(
           "评判作品",
-          "The sentence says how good or bad the work is but does not point to a feature that shows it.",
-          "句子说出作品好或坏，但没有指出能说明这一点的具体特点。",
+          "The sentence says how good or bad the work is but does not point to a feature that shows it.\n\n**Check.** Look for an evaluative verdict (*triumph*, *dull*, *disappointment*) with no concrete artistic choice or effect cited to back it up.",
+          "句子说出作品好或坏，但没有指出能说明这一点的具体特点。\n\n**检验。** 看句子是不是只给出了好坏评价（如 *triumph*、*dull*、*disappointment*），却没有点出支撑它的具体艺术手法或效果。",
           "The sentence does not give an overall judgment of the work.",
           "这个句子没有给出对作品的整体评判。",
         ),
         "gives a reason": L(
           "给出理由",
-          "The sentence ties an effect or a judgment to a specific feature of the work that a reader could check.",
-          "句子把一种效果或评判与作品中读者可以核查的具体特点联系起来。",
+          "The sentence ties an effect or a judgment to a specific feature of the work that a reader could check.\n\n**Check.** Spot both halves inside the sentence: a concrete, observable choice in the work *plus* the effect that choice has on the audience.",
+          "句子把一种效果或评判与作品中读者可以核查的具体特点联系起来。\n\n**检验。** 在句中找出相扣的两半：作品里可核查的具体手法，加上这一手法对观众或读者产生的效果。",
           "The sentence does not tie a judgment to a specific feature of the work.",
           "这个句子没有把评判和作品的具体特点联系起来。",
         ),
@@ -352,8 +364,8 @@ const review = topic("reading", {
       "the-best-supported-judgment",
       ["The Best-Supported Judgment", "依据最充分的评判"],
       [
-        "Readers trust a review when its judgments are supported. The best-supported judgment names a **specific feature** of the work and explains its **effect**: *The camera never leaves the boy's face, so we feel his fear before we see its cause.* Weaker judgments rely on the critic's taste (*I just loved it*), on popularity (*Everyone is talking about it*), on the artist's fame or on loaded words with no reason behind them.",
-        "当评论中的评判有依据时，读者才会信任它。依据最充分的评判会指出作品的**具体特点**并说明其**效果**：*镜头始终没离开男孩的脸，所以我们在看到原因之前就感到了他的恐惧。* 较弱的评判依靠评论家的个人口味（*我就是喜欢*）、受欢迎程度（*人人都在谈论它*）、艺术家的名气，或背后没有理由的情绪化词语。",
+        "Readers trust a review when its judgments are supported. The best-supported judgment names a **specific feature** of the work and explains its **effect**: *The camera never leaves the boy's face, so we feel his fear before we see its cause.* Weaker judgments rely on the critic's taste (*I just loved it*), on popularity (*Everyone is talking about it*), on the artist's fame or on loaded words with no reason behind them.\n\n> **Watch out.** Sales figures, awards, and the artist's past reputation sound factual, yet they are external popularity cues—not evidence drawn from how *this* work actually operates.",
+        "当评论中的评判有依据时，读者才会信任它。依据最充分的评判会指出作品的**具体特点**并说明其**效果**：*镜头始终没离开男孩的脸，所以我们在看到原因之前就感到了他的恐惧。* 较弱的评判依靠评论家的个人口味（*我就是喜欢*）、受欢迎程度（*人人都在谈论它*）、艺术家的名气，或背后没有理由的情绪化词语。\n\n> **注意。** 销量、奖项和作者以往的名气听起来像事实，但它们只是外部热度线索，并不能证明*这部*作品本身哪里做得好。",
       ],
       ["Which judgment is best supported?", "哪个评判依据最充分？"],
       `
@@ -389,8 +401,8 @@ const review = topic("reading", {
         a review of an animated film|The colors drain away as the girl loses hope and return as she fights back.|The animation is gorgeous and the story is sweet.|The studio has made many hit films before this one.
       `,
       (right) => [
-        `"${right}" names a specific feature of the work and explains its effect, so a reader can check the judgment.`,
-        `“${right}”指出了作品的具体特点并说明了效果，读者可以核查这个评判。`,
+        `"${right}" names a specific feature of the work and explains its effect, so a reader can check the judgment.\n\n**Check.** Verify that the sentence points directly inside the work (a concrete choice of technique, structure, or detail) and connects it to how the audience experiences it, rather than appealing to hype or bare enthusiasm.`,
+        `“${right}”指出了作品的具体特点并说明了效果，读者可以核查这个评判。\n\n**检验。** 确认这句话直接指向作品内部的做法（技巧、结构或细节），并说明它对受众产生了什么效果，而不是依赖热度、名气或空泛夸赞。`,
       ],
       [
         [
@@ -413,14 +425,18 @@ const translations = topic("reading", {
     "How two translations of the same line differ in word choice, in sentence shape and rhythm, or in meaning added or lost, and what each difference does to the reader.",
     "同一句话的两种译文如何在用词、句式和节奏，或意义的增减上不同，以及每种差异对读者产生什么影响。",
   ],
+  intro: [
+    "Compare two English renderings of the same line: *The lantern went out. She sat in the dark.* versus *When the lantern flickered out, she sat alone in the dark.* One preserves the stark pause between two short sentences; the other merges them and adds *alone*, nudging the reader's emotion. Comparing translations teaches you to spot shifts in word choice, sentence shape, and added or dropped meaning.",
+    "比较同一句原文的两种译法：*The lantern went out. She sat in the dark.* 与 *When the lantern flickered out, she sat alone in the dark.* 前者保留了两个短句之间冷峻的停顿，后者合并了句式并加上了 *alone*，直接点明了情绪。比较译本能训练你敏锐辨认用词、句式和意义增减的差别。",
+  ],
   after: ["connotation-and-precise-words", "tone-and-mood"],
   points: [
     label(
       "what-differs",
       ["What Differs", "哪里不同"],
       [
-        "No translation is the original; every translator chooses. When two translations of one line differ, the difference is usually of one of three kinds. **Word choice** differs when the same meaning is given different words with different connotations: *the old man* or *the elder*. **Sentence shape** differs when the words are ordered, joined or broken differently, changing the rhythm: one long sentence or three short ones. **Meaning** differs when one translation adds something that is not in the other or leaves something out.",
-        "没有一种译文就是原文；每个译者都在选择。当同一句话的两种译文不同时，差异通常属于三类之一。**用词**不同：同一个意思用了带有不同联想意义的词，如 *the old man* 或 *the elder*。**句式**不同：词语的顺序、连接或断句不同，改变了节奏，如一个长句或三个短句。**意义**不同：一种译文加入了另一种没有的内容，或省去了某些内容。",
+        "No translation is the original; every translator chooses. When two translations of one line differ, the difference is usually of one of three kinds. **Word choice** differs when the same meaning is given different words with different connotations: *the old man* or *the elder*. **Sentence shape** differs when the words are ordered, joined or broken differently, changing the rhythm: one long sentence or three short ones. **Meaning** differs when one translation adds something that is not in the other or leaves something out.\n\n> **Watch out.** Do not call an added or deleted detail (*lonely*, *without a word*, *at dawn*) mere **word choice**—if one version gives information the other omits completely, the difference is **meaning added or lost**.",
+        "没有一种译文就是原文；每个译者都在选择。当同一句话的两种译文不同时，差异通常属于三类之一。**用词**不同：同一个意思用了带有不同联想意义的词，如 *the old man* 或 *the elder*。**句式**不同：词语的顺序、连接或断句不同，改变了节奏，如一个长句或三个短句。**意义**不同：一种译文加入了另一种没有的内容，或省去了某些内容。\n\n> **注意。** 不要把多出来或删掉的事实细节（如 *lonely*、*without a word*、*at dawn*）仅仅归为**用词**不同——只要一版提供了另一版完全缺失的信息，就属于**意义增减**。",
       ],
       ["How do these two translations differ?", "这两种译文有什么不同？"],
       `
@@ -458,22 +474,22 @@ const translations = topic("reading", {
       {
         "word choice": L(
           "用词",
-          "The two say the same thing in the same order but use different words, with different connotations.",
-          "两种译文用同样的顺序说同样的事，但用了带有不同联想意义的不同词语。",
+          "The two say the same thing in the same order but use different words, with different connotations.\n\n**Check.** Line the two sentences up slot by slot—the grammar and facts stay identical, while one or two words swap for synonyms with a different tone or intensity.",
+          "两种译文用同样的顺序说同样的事，但用了带有不同联想意义的不同词语。\n\n**检验。** 把两句逐槽对照——句法结构和事实内容都相同，只是一两个词换成了感情色彩或程度不同的近义词。",
           "The difference is not only in the choice of words.",
           "差异不只是在用词上。",
         ),
         "sentence shape": L(
           "句式",
-          "The two keep the same meaning and similar words but order, join or break the sentence differently, changing its rhythm.",
-          "两种译文意思相同、用词相近，但句子的顺序、连接或断句不同，改变了节奏。",
+          "The two keep the same meaning and similar words but order, join or break the sentence differently, changing its rhythm.\n\n**Check.** Confirm that the facts and core vocabulary stay virtually the same, while punctuation, clause order, or sentence breaks shift the pacing.",
+          "两种译文意思相同、用词相近，但句子的顺序、连接或断句不同，改变了节奏。\n\n**检验。** 确认事实与核心词汇基本未变，变化集中在语序、连接方式或断句节奏上。",
           "The difference is not in how the sentence is ordered or joined.",
           "差异不在于句子的顺序或连接方式。",
         ),
         "meaning added or lost": L(
           "意义增减",
-          "One translation includes a detail or idea that the other leaves out.",
-          "一种译文包含了另一种省去的细节或意思。",
+          "One translation includes a detail or idea that the other leaves out.\n\n**Check.** Compare the concrete facts in both versions—one mentions a trait, time, place, or reason that is completely absent from the other.",
+          "一种译文包含了另一种省去的细节或意思。\n\n**检验。** 对照两版中的具体信息——其中一版多出了另一版里完全没有的特征、时间、地点或原因。",
           "Neither translation adds or drops a detail.",
           "两种译文都没有增加或省去细节。",
         ),
@@ -483,8 +499,8 @@ const translations = topic("reading", {
       "what-the-difference-does",
       ["What the Difference Does", "这个差异有什么作用"],
       [
-        "Comparing translations is useful because each choice has an **effect**. A plain word keeps a scene ordinary; a grand word raises it. Short sentences make a moment abrupt or tense; one long sentence makes it flow. A word added can tell readers what to feel; a word dropped can leave them to decide. To describe the difference well, name the change and then say what it does to the reader.",
-        "比较译本很有用，因为每个选择都有**效果**。平实的词让场景保持平常，宏大的词使它升华。短句让某个时刻显得突然或紧张，一个长句则使它流畅。增加一个词可以告诉读者该有什么感受，省去一个词则可以让读者自己判断。要把差异描述好，就要说出变化是什么，再说它对读者有什么作用。",
+        "Comparing translations is useful because each choice has an **effect**. A plain word keeps a scene ordinary; a grand word raises it. Short sentences make a moment abrupt or tense; one long sentence makes it flow. A word added can tell readers what to feel; a word dropped can leave them to decide. To describe the difference well, name the change and then say what it does to the reader.\n\n> **Watch out.** Check that the comment describes a change that *actually happens* between the two lines—a distractor often invents a new character or claims a word swap was a sentence-order change.",
+        "比较译本很有用，因为每个选择都有**效果**。平实的词让场景保持平常，宏大的词使它升华。短句让某个时刻显得突然或紧张，一个长句则使它流畅。增加一个词可以告诉读者该有什么感受，省去一个词则可以让读者自己判断。要把差异描述好，就要说出变化是什么，再说它对读者有什么作用。\n\n> **注意。** 先核对评论指出的变化在两句之间是不是*真实存在*——干扰项常常凭空捏造一个新人物，或把用词替换说成语序调整。",
       ],
       ["Which comment best describes what the difference does?", "哪个评论最能说明这个差异的作用？"],
       `
@@ -519,7 +535,10 @@ const translations = topic("reading", {
         "The lonely old man sat by the sea." / "The old man sat by the sea."|The second leaves his loneliness for readers to sense rather than telling them.|The second uses a grander word for the sea.|The second breaks the sentence into fragments.
         "She was poor." / "She was penniless."|Penniless makes her poverty sharper and more complete.|The second adds a new person to the line who was not mentioned before.|The second reorders the words for rhythm.
       `,
-      (right) => [`${right} It names the change and says what it does to the reader.`, `“${right}”说出了变化是什么，以及它对读者的作用。`],
+      (right) => [
+        `${right} It names the change and says what it does to the reader.\n\n**Check.** Verify both parts against the two lines: the specific shift named (word, structure, or detail) is really there, and the described tone or pacing matches how the lines actually read.`,
+        `“${right}”说出了变化是什么，以及它对读者的作用。\n\n**检验。** 把评论对照两句译文核实两点：所指的变化（用词、句式或细节）真实存在，且所描述的语气或节奏效果与读起来的感受一致。`,
+      ],
       [
         ["{wrong} That misreads the kind of change between the two translations.", "“{wrong}”误判了两种译文之间变化的类型。"],
         ["{wrong} That describes a change that is not there.", "“{wrong}”描述的变化并不存在。"],
@@ -535,14 +554,18 @@ const risk = topic("reading", {
     "How reports state risks as absolute numbers, as relative changes or as single stories, and how to work out what a risk really means for a person.",
     "报道如何以绝对数字、相对变化或单个故事来陈述风险，以及如何算出风险对一个人究竟意味着什么。",
   ],
+  intro: [
+    "A headline reading *New commute route triples your chance of a flat tire!* sounds alarming—until you learn the baseline was 1 in 5,000 rides, making the new rate 3 in 5,000. News reports frame danger as absolute risks, relative changes, or single anecdotes; translating relative claims back onto their baseline reveals what a number actually means for your life.",
+    "一条标题写着 *New commute route triples your chance of a flat tire!*，听起来吓人——直到你查清基线原本是每 5,000 次骑行 1 次，翻三倍后也只是每 5,000 次 3 次。报道常以绝对风险、相对变化或单个故事呈现危险；把相对数字放回基线上换算，才能看清它究竟意味着什么。",
+  ],
   after: ["how-numbers-can-mislead", "reading-charts-and-statistics"],
   points: [
     label(
       "how-the-risk-is-stated",
       ["How the Risk Is Stated", "风险是如何陈述的"],
       [
-        "A risk can be stated three ways. An **absolute risk** gives the chance for a person or a group: *2 in 1,000 people*, *a 1% chance*. A **relative risk** compares two chances and gives only the change: *doubles the risk*, *50% lower*, *three times as likely*. A relative risk sounds alarming or hopeful, but without the absolute risk you cannot tell whether it matters: doubling 1 in a million is still tiny. A **single story** describes one case, which may be vivid but tells nothing about how often something happens.",
-        "风险有三种陈述方式。**绝对风险**给出一个人或一个群体的概率：*每 1,000 人中 2 人*，*1% 的可能*。**相对风险**比较两个概率，只给出变化：*风险翻倍*、*降低 50%*、*可能性是三倍*。相对风险听起来令人担忧或充满希望，但没有绝对风险，你就无法判断它是否重要：百万分之一翻一倍仍然很小。**单个故事**描述一个案例，也许很生动，但完全说明不了某事多常发生。",
+        "A risk can be stated three ways. An **absolute risk** gives the chance for a person or a group: *2 in 1,000 people*, *a 1% chance*. A **relative risk** compares two chances and gives only the change: *doubles the risk*, *50% lower*, *three times as likely*. A relative risk sounds alarming or hopeful, but without the absolute risk you cannot tell whether it matters: doubling 1 in a million is still tiny. A **single story** describes one case, which may be vivid but tells nothing about how often something happens.\n\n> **Watch out.** Not every percentage is an **absolute risk**: *a 1% chance* states an absolute rate, whereas *raises the risk by 18%* or *30% lower* only states a **relative** change without giving the starting rate.",
+        "风险有三种陈述方式。**绝对风险**给出一个人或一个群体的概率：*每 1,000 人中 2 人*，*1% 的可能*。**相对风险**比较两个概率，只给出变化：*风险翻倍*、*降低 50%*、*可能性是三倍*。相对风险听起来令人担忧或充满希望，但没有绝对风险，你就无法判断它是否重要：百万分之一翻一倍仍然很小。**单个故事**描述一个案例，也许很生动，但完全说明不了某事多常发生。\n\n> **注意。** 不是所有百分数都是**绝对风险**：*1% 的概率*给出的是绝对比率，而*风险提高 18%* 或*降低 30%* 只给出了**相对**变化，没有交代原本的基线。",
       ],
       ["How is the risk stated here?", "这里的风险是如何陈述的？"],
       `
@@ -580,22 +603,22 @@ const risk = topic("reading", {
       {
         "an absolute risk": L(
           "绝对风险",
-          "It gives the actual chance for a person or group, such as 2 in 1,000 or 1%.",
-          "它给出一个人或一个群体的实际概率，如每 1,000 人中 2 人或 1%。",
+          "It gives the actual chance for a person or group, such as 2 in 1,000 or 1%.\n\n**Check.** Ask whether you can tell directly how many people out of a stated group are affected—if the sentence supplies that baseline rate itself, it is an absolute risk.",
+          "它给出一个人或一个群体的实际概率，如每 1,000 人中 2 人或 1%。\n\n**检验。** 看看能不能直接从这句话里读出某个群体中有多少人受影响——如果句子本身就给出了具体比率，就是绝对风险。",
           "It does not give the actual chance for a person or group.",
           "它没有给出一个人或一个群体的实际概率。",
         ),
         "a relative risk": L(
           "相对风险",
-          "It gives only a change between two chances, such as doubles, halves or 30% lower, without the starting chance.",
-          "它只给出两个概率之间的变化，如翻倍、减半或降低 30%，没有给出原本的概率。",
+          "It gives only a change between two chances, such as doubles, halves or 30% lower, without the starting chance.\n\n**Check.** Try to calculate how many people out of 1,000 are affected—because only a multiplier or percent change is given without a baseline, it is a relative risk.",
+          "它只给出两个概率之间的变化，如翻倍、减半或降低 30%，没有给出原本的概率。\n\n**检验。** 试着算一下每 1,000 人里有多少人受影响——因为句中只给了倍数或增减百分比而没给基线，算不出具体人数，所以是相对风险。",
           "It does not compare one chance with another.",
           "它没有把一个概率与另一个概率比较。",
         ),
         "a single story": L(
           "单个故事",
-          "It describes one person or one event, which says nothing about how often such things happen.",
-          "它描述一个人或一件事，完全说明不了这类事情多常发生。",
+          "It describes one person or one event, which says nothing about how often such things happen.\n\n**Check.** Notice that no population denominator or rate appears at all—only one named or unnamed individual's experience.",
+          "它描述一个人或一件事，完全说明不了这类事情多常发生。\n\n**检验。** 注意句中完全没有总体分母或发生比率，只讲了某一个人或某一次事件的经历。",
           "It is not about a single case.",
           "它不是关于单个案例的。",
         ),
@@ -605,8 +628,8 @@ const risk = topic("reading", {
       "what-the-number-really-means",
       ["What the Number Really Means", "这个数字的真正含义"],
       [
-        "To understand a relative risk, put it back on its **baseline**, the absolute chance before the change. If a risk of 2 in 10,000 doubles, it becomes 4 in 10,000: twice as large, but still rare. If a drug cuts a risk of 10 in 100 by half, 5 people in 100 are spared. A single story cannot be turned into a rate at all. The right reading states the absolute numbers; wrong readings confuse a relative change with a certainty or turn one case into a rule.",
-        "要理解相对风险，就要把它放回**基线**上，即变化之前的绝对概率。如果万分之二的风险翻倍，就变成万分之四：大了一倍，但仍然罕见。如果一种药把百分之十的风险减半，每 100 人中有 5 人免于此病。单个故事根本无法换算成比率。正确的解读说出绝对数字；错误的解读把相对变化误当作确定无疑，或把一个案例当成规律。",
+        "To understand a relative risk, put it back on its **baseline**, the absolute chance before the change. If a risk of 2 in 10,000 doubles, it becomes 4 in 10,000: twice as large, but still rare. If a drug cuts a risk of 10 in 100 by half, 5 people in 100 are spared. A single story cannot be turned into a rate at all. The right reading states the absolute numbers; wrong readings confuse a relative change with a certainty or turn one case into a rule.\n\n> **Watch out.** Apply a percentage increase or reduction *multiplicatively* to the baseline, not by adding or subtracting percentage points—raising 5 in 100 by 20% adds 20% of 5 (giving 6 in 100), not 20 percentage points (25 in 100).",
+        "要理解相对风险，就要把它放回**基线**上，即变化之前的绝对概率。如果万分之二的风险翻倍，就变成万分之四：大了一倍，但仍然罕见。如果一种药把百分之十的风险减半，每 100 人中有 5 人免于此病。单个故事根本无法换算成比率。正确的解读说出绝对数字；错误的解读把相对变化误当作确定无疑，或把一个案例当成规律。\n\n> **注意。** 百分比增减要按*乘法*作用在基线上，而不是直接加减百分点——把 5% 提高 20% 是增加 5 的 20%（变成 6%），而不是直接加 20 个百分点变成 25%。",
       ],
       ["What does this statement really mean?", "这个说法的真正含义是什么？"],
       `
@@ -642,8 +665,8 @@ const risk = topic("reading", {
         One family's house was struck by lightning twice.|A single family's luck says nothing about the risk to others.|Lightning strikes that town twice a year.|Lightning never strikes the same house twice.
       `,
       (right) => [
-        `${right} The relative change is applied to the starting chance, or the single case is not treated as a rate.`,
-        `“${right}”把相对变化应用到原本的概率上，或者没有把单个案例当成比率。`,
+        `${right} The relative change is applied to the starting chance, or the single case is not treated as a rate.\n\n**Check.** Recompute directly from the baseline (or note that a single anecdote has no denominator)—the result neither turns a small risk into a certainty nor adds percentage points by mistake.`,
+        `“${right}”把相对变化应用到原本的概率上，或者没有把单个案例当成比率。\n\n**检验。** 直接用基线重新算一遍（或确认单个案例没有分母）——结果既没有把小概率夸大成必然，也没有把相对百分比误当成百分点直接相加减。`,
       ],
       [
         [

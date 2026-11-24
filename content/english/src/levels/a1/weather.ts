@@ -463,8 +463,8 @@ const itTalksAbout = (sentence: string): Text =>
 const itWhy = (right: string): Text => {
   const about = itTalksAbout(right);
   return t(
-    `This sentence is about ${about.en}. An English sentence needs a subject, and for ${about.en} the subject is *it*, with *is* or *'s* after it: ${right}`,
-    `这句说的是${about["zh-CN"]}。英语句子必须有主语，谈${about["zh-CN"]}时主语用 *it*，后面接 *is* 或 *'s*：${right}`,
+    `This sentence is about ${about.en}. An English sentence needs a subject, and for ${about.en} the subject is *it*, with *is* or *'s* after it: ${right}\n\n**Check.** Find both parts at the start of the sentence: the subject (*It*) and the verb (*is* / *'s*). Both are present, so the sentence is complete.`,
+    `这句说的是${about["zh-CN"]}。英语句子必须有主语，谈${about["zh-CN"]}时主语用 *it*，后面接 *is* 或 *'s*：${right}\n\n**检验。** 看句首的两个部分：主语（*It*）和动词（*is* / *'s*）都在，句子才完整。`,
   );
 };
 
@@ -472,17 +472,17 @@ const itWhy = (right: string): Text => {
 const whyNotIt = (wrong: string, right: string, _shown: string, position: number): Text =>
   position === 0
     ? t(
-        `*${wrong}* has a verb but no subject. English cannot leave out *it*: *${right}*`,
-        `*${wrong}* 有动词却没有主语。英语不能省略 *it*：*${right}*`,
+        `*${wrong}* has a verb but no subject. English cannot leave out *it* at the start.`,
+        `*${wrong}* 有动词却没有主语。英语句首不能省略 *it*。`,
       )
     : position === 1
       ? t(
-          `*${wrong}* has a subject but no verb. *It* needs *is* or *'s* after it: *${right}*`,
-          `*${wrong}* 有主语却没有动词。*It* 后面要有 *is* 或 *'s*：*${right}*`,
+          `*${wrong}* has a subject but no verb. *It* needs *is* or *'s* after it.`,
+          `*${wrong}* 有主语却没有动词。*It* 后面要有 *is* 或 *'s*。`,
         )
       : t(
-          `*${wrong}* uses *there is*, which says that something exists. For ${itTalksAbout(right).en}, the subject is *it*: *${right}*`,
-          `*${wrong}* 用了 *there is*，它表示某物存在。谈${itTalksAbout(right)["zh-CN"]}时主语用 *it*：*${right}*`,
+          `*${wrong}* uses *there is*, which says that something exists. For ${itTalksAbout(right).en}, the subject is *it*.`,
+          `*${wrong}* 用了 *there is*，它表示某物存在。谈${itTalksAbout(right)["zh-CN"]}时主语要用 *it*。`,
         );
 
 const itForWeather: TopicDef = {
@@ -491,6 +491,10 @@ const itForWeather: TopicDef = {
   summary: t(
     "It is cold. It's raining. English needs it for the weather and the time.",
     "It is cold. It's raining. 英语谈天气和时间时需要 it。",
+  ),
+  intro: t(
+    "In *It's windy outside* and *It's three o'clock*, the word *it* does not point to any object—it holds the subject slot that every English sentence requires.",
+    "在 *It's windy outside* 和 *It's three o'clock* 里，*it* 并不指代某个具体物体，它只是占住英语句子必须有的主语位置。",
   ),
   prerequisites: ["present-continuous", "a1-words-weather"],
   encompasses: [
@@ -504,8 +508,8 @@ const itForWeather: TopicDef = {
       "choose",
       t("It for the weather", "用 it 谈天气"),
       t(
-        "An English sentence needs a subject. For the weather, the time and the day, the subject is *it*: *It's sunny. It's raining. It's seven o'clock. It's Monday today.*\n\n*It* means nothing here, but you can't leave it out: not *Is cold* or *Raining now*.",
-        "英语句子必须有主语。谈天气、时间和日期时，主语用 *it*：*It's sunny. It's raining. It's seven o'clock. It's Monday today.*\n\n这里的 *it* 没有实际意思，但不能省略。中文说“下雨了”“很冷”“七点了”，都不需要主语，所以学习者常写 *Is cold* 或 *Raining now*。",
+        "An English sentence needs a subject. For the weather, the time and the day, the subject is *it*: *It's sunny. It's raining. It's seven o'clock. It's Monday today.*\n\n> **Watch out.** Do not drop *it* (*Is cold*) or drop *is* (*It cold*), and do not use *there is* for weather adjectives (*There is sunny* is wrong).",
+        "英语句子必须有主语。谈天气、时间和日期时，主语用 *it*：*It's sunny. It's raining. It's seven o'clock. It's Monday today.*\n\n> **注意。** 中文说“下雨了”“很冷”“七点了”不需要主语，但英语既不能省掉 *it*（*Is cold*），也不能省掉 *is*（*It cold*），更不能用 *there is* 配天气形容词（*There is sunny* 是错的）。",
       ),
       choiceGenerator(t("Which sentence is right?", "哪个句子是对的？"), itChoiceBank, itWhy, whyNotIt),
     ),
@@ -513,8 +517,8 @@ const itForWeather: TopicDef = {
       "fix",
       t("Putting in it", "补上 it"),
       t(
-        "Each sentence leaves out the subject, as Chinese can. Write it again with *It is* or *It's* at the start: *Is cold today.* → *It's cold today.* *Raining now.* → *It's raining now.*",
-        "每个句子都像中文一样省略了主语。在句首加上 *It is* 或 *It's* 重写句子：*Is cold today.* → *It's cold today.* *Raining now.* → *It's raining now.*",
+        "Each sentence leaves out the subject (or both subject and verb). Write it again with *It is* or *It's* at the start: *Is cold today.* → *It's cold today.* *Raining now.* → *It's raining now.*\n\n> **Watch out.** When you add *It's*, change the old first word to lowercase (unless it is a day or month like *Monday* or *June*) and keep the period at the end.",
+        "每个句子都漏掉了主语（甚至连动词一起漏掉了）。在句首补上 *It is* 或 *It's* 重写句子：*Is cold today.* → *It's cold today.* *Raining now.* → *It's raining now.*\n\n> **注意。** 补上 *It's* 后，原来句首的词要改成小写（除非是 *Monday*、*June* 这样的专有名词），句末保留句号。",
       ),
       typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), itFixBank, itWhy),
     ),
@@ -602,6 +606,10 @@ const writingAPostcard: TopicDef = {
     "Write a postcard of three to five sentences: where you are, what the weather is like and what you are doing.",
     "写一张三到五句话的明信片：你在哪里、天气怎么样、你正在做什么。",
   ),
+  intro: t(
+    "A postcard shares a snapshot of a trip in a few lines: *Hi Maya, I'm in Kyoto with my aunt. It's cool and cloudy today. We are walking past old temples. Love, Noah.* Three details—place, weather and activity—bring the trip to life.",
+    "明信片用短短几行分享旅途片段：*Hi Maya, I'm in Kyoto with my aunt. It's cool and cloudy today. We are walking past old temples. Love, Noah.* 地点、天气、正在做的事三个细节一写，画面就活起来了。",
+  ),
   prerequisites: ["it-for-weather", "writing-a-short-note"],
   encompasses: [
     { topic: "it-for-weather", weight: 0.3 },
@@ -615,8 +623,8 @@ const writingAPostcard: TopicDef = {
       "postcard",
       t("Where, the weather and what you are doing", "在哪里、天气、在做什么"),
       t(
-        "A postcard is a short note from a trip. Start with the reader's name (*Dear Grandma,*) and end with yours. In between, say three things:\n\n- where you are: *I'm at the beach with Mom and Dad.*\n- the weather: *It's sunny and hot.*\n- what you are doing: *We are swimming in the sea.*",
-        "明信片是旅途中写的短信。开头写收信人的称呼（*Dear Grandma,*），结尾写自己的名字。中间写三件事：\n\n- 你在哪里：*I'm at the beach with Mom and Dad.*\n- 天气怎么样：*It's sunny and hot.*（别忘了 *it*）\n- 你正在做什么：*We are swimming in the sea.*（用现在进行时）",
+        "A postcard is a short note from a trip. Start with the reader's name (*Dear Grandma,*) and end with yours. In between, say three things:\n\n- where you are: *I'm at the beach with Mom and Dad.*\n- the weather: *It's sunny and hot.*\n- what you are doing: *We are swimming in the sea.*\n\n> **Watch out.** Use *It's* for the weather (*It's sunny*, not *Is sunny*) and *be + -ing* for what you are doing (*We are swimming*, not *We swimming*).",
+        "明信片是旅途中写的短信。开头写收信人的称呼（*Dear Grandma,*），结尾写自己的名字。中间写三件事：\n\n- 你在哪里：*I'm at the beach with Mom and Dad.*\n- 天气怎么样：*It's sunny and hot.*\n- 你正在做什么：*We are swimming in the sea.*\n\n> **注意。** 写天气别漏掉 *It's*（要写 *It's sunny*，不要写 *Is sunny*），写正在做的事别漏掉 *be*（要写 *We are swimming*，不要写 *We swimming*）。",
       ),
       writingGenerator(
         t(
@@ -626,7 +634,11 @@ const writingAPostcard: TopicDef = {
         postcardBank,
         postcardCriteria,
         { minWords: 20, maxChars: 600 },
-        (model) => t(`One good postcard:\n\n> ${model.replace(/\n/gu, "\n> ")}`, `一张好的明信片：\n\n> ${model.replace(/\n/gu, "\n> ")}`),
+        (model) =>
+          t(
+            `One good postcard:\n\n> ${model.replace(/\n/gu, "\n> ")}\n\n**Check.** Verify all five parts in your postcard: a greeting, your location, the weather with *It's*, what you are doing, and your name at the end.`,
+            `一张好的明信片：\n\n> ${model.replace(/\n/gu, "\n> ")}\n\n**检验。** 对照检查明信片的五个要素：开头称呼、所在地点、带 *It's* 的天气描述、正在做的事，以及结尾署名。`,
+          ),
       ),
     ),
   ],

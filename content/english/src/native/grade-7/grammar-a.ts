@@ -610,8 +610,8 @@ const shiftLabels: Readonly<Record<string, Label>> = {
   "no shift": {
     zh: "没有转换",
     why: [
-      "Every verb in the sentence stays in one mood, so the sentence reads smoothly and needs no change.",
-      "句中每个动词都保持同一种语气，所以句子读起来流畅，不需要修改。",
+      "Every verb in the sentence stays in the same mood from start to finish, so there is **no shift**.\n\n**Check.** Compare the first verb and the second verb side by side: both are commands, both are statements, or both stay in the unreal *would* mood.",
+      "句中每个动词从头到尾都保持同一种语气，因此**没有转换**。\n\n**检验。** 把前后两个动词并排对照：要么都是命令，要么都是陈述，要么都保持非真实的 *would* 语气。",
     ],
     not: [
       "This sentence does keep one mood throughout, so there is no shift to name.",
@@ -621,24 +621,24 @@ const shiftLabels: Readonly<Record<string, Label>> = {
   "imperative to indicative": {
     zh: "从祈使语气转为陈述语气",
     why: [
-      "It begins with a command to *you* and then turns into a statement about what you should or will do.",
-      "它以对 *you* 的命令开头，接着变成了关于你应该或将要做什么的陈述。",
+      "The first clause issues a direct command (imperative), and the second slides into a statement with *you should*, *you will*, or *you can* (indicative); that is **imperative to indicative**.\n\n**Check.** Notice how the subject suddenly appears in the second half (*you should/will/can*) after an unspoken *you* command in the first half.",
+      "前半句发出直接命令（祈使语气），后半句滑成了带 *you should*、*you will* 或 *you can* 的陈述（陈述语气），因此是**从祈使语气转为陈述语气**。\n\n**检验。** 注意前半句省略主语直接用动词原形下命令，后半句却突然冒出 *you should/will/can* 变成了陈述。",
     ],
     not: ["This sentence does not start with a command and then turn into a statement.", "这个句子并不是先发出命令再转为陈述。"],
   },
   "indicative to imperative": {
     zh: "从陈述语气转为祈使语气",
     why: [
-      "It begins with a statement of fact and then suddenly gives the reader a command.",
-      "它以陈述事实开头，然后突然给读者下了一个命令。",
+      "The first clause states a plain fact (indicative), and the second abruptly switches to a direct order (imperative); that is **indicative to imperative**.\n\n**Check.** Look right after *so*: the sentence drops its subject and begins an order with a bare verb.",
+      "前半句陈述事实（陈述语气），后半句突然切换成直接命令（祈使语气），因此是**从陈述语气转为祈使语气**。\n\n**检验。** 看 *so* 后面的部分：句子突然省去主语，改用动词原形直接发号施令。",
     ],
     not: ["This sentence does not start with a statement and then turn into a command.", "这个句子并不是先陈述再转为命令。"],
   },
   "subjunctive to indicative": {
     zh: "从虚拟语气转为陈述语气",
     why: [
-      "It begins with an unreal or wished-for situation, as with *if I were*, and then states something as a plain fact.",
-      "它以不真实或希望的情况开头，如 *if I were*，接着却把某事当作平常的事实来陈述。",
+      "The sentence opens in an unreal *if … were* scenario (subjunctive/conditional) and then abruptly switches to an ordinary present-tense fact (indicative); that is **subjunctive to indicative**.\n\n**Check.** Compare the first outcome (*would …*) with the second verb: the second verb drops *would* and states the unreal event as if it were actually happening now.",
+      "句子以非真实的 *if … were* 假设开头，后半句却突然换成了普通现在时陈述，因此是**从虚拟语气转为陈述语气**。\n\n**检验。** 对比第一个结果（*would …*）和第二个动词：第二个动词丢掉了 *would*，把假设说成了正在发生的现实。",
     ],
     not: [
       "This sentence does not start with an unreal wish or condition and then switch to a plain fact.",
@@ -654,14 +654,18 @@ const moodShifts = topic("grammar", {
     "A sentence keeps one mood: a command stays a command, a fact a fact, and an unreal wish stays unreal.",
     "一个句子保持同一种语气：命令一直是命令，事实一直是事实，不真实的愿望一直是不真实的。",
   ],
+  intro: [
+    "*Wash the berries, and then you should slice them* starts as a brisk command and drifts into a statement halfway through. Avoiding **shifts in verb mood** keeps every clause pulling in the same grammatical gear.",
+    "*Wash the berries, and then you should slice them* 开头是利落的命令，写到一半却滑成了陈述。避免**动词语气的转换**，才能让前后分句始终保持一致的语气。",
+  ],
   after: ["verb-moods"],
   points: [
     label(
       "naming-the-shift",
       ["Naming the Shift", "辨认语气的转换"],
       [
-        "Verbs have **moods**: the **indicative** states a fact (*You open the box*), the **imperative** gives a command (*Open the box*), and the **subjunctive** speaks of something unreal or wished for (*If I were you*). A sentence that starts in one mood should not slide into another: *Open the box, and then you should take out the cable* starts as a command and turns into a statement.",
-        "动词有**语气**：**陈述语气**陈述事实（*You open the box*），**祈使语气**发出命令（*Open the box*），**虚拟语气**说不真实或希望的事（*If I were you*）。一个句子用一种语气开头，就不应该滑向另一种：*Open the box, and then you should take out the cable* 以命令开头，后来却变成了陈述。",
+        "A sentence should stay in one **mood** unless meaning clearly demands a change. In *Open the box, and then you should take out the cable*, the verb shifts from **imperative** (*Open*) to **indicative** (*you should take*). Watch also for **indicative to imperative** (*The floor is wet, so walk slowly*) and **subjunctive to indicative** (*If I were mayor, I would build a park, and it wins*).\n\n> **Watch out.** Check *both* verbs carefully before labeling a sentence **no shift**—a single dropped *would* or inserted *you should* creates a mood shift.",
+        "除非语义明确需要，否则一个句子应保持同一种**语气**。在 *Open the box, and then you should take out the cable* 中，语气从**祈使**（*Open*）滑向了**陈述**（*you should take*）。同样要留意**陈述转祈使**（*The floor is wet, so walk slowly*）和**虚拟转陈述**（*If I were mayor, I would build a park, and it wins*）。\n\n> **注意。** 判为**没有转换**前务必核对前后*两个*动词——少写一个 *would* 或多插一个 *you should* 都会造成语气转换。",
       ],
       ["Does the sentence shift mood, and how?", "这个句子是否转换了语气？怎样转换的？"],
       `
@@ -703,8 +707,8 @@ ${moodNames}
       "keeping-one-mood",
       ["Keeping One Mood", "保持同一种语气"],
       [
-        "To fix a shift, make the second verb match the first. After a command, give another command: *Open the box and **take out** the cable.* After a statement, make another statement. After an unreal *if I were* or *I wish*, keep the *would* of the unreal: *If I were captain, I **would** practice more and **would** listen to everyone.*",
-        "要改正语气的转换，就让第二个动词与第一个一致。命令之后接另一个命令：*Open the box and **take out** the cable.* 陈述之后接另一个陈述。在不真实的 *if I were* 或 *I wish* 之后，继续用表示不真实的 *would*：*If I were captain, I **would** practice more and **would** listen to everyone.*",
+        "To keep a sentence steady, match the second verb to the mood of the first. Follow a command with a bare command verb (*Open the box, and **take out** the cable*), and follow an unreal *If … were* clause with **would** in both actions (*If I were captain, I **would** practice more and **would** listen to everyone*).\n\n> **Watch out.** Do not let *you should*, *you will*, or a plain present verb sneak into the second half—keep the exact same verb pattern as the opening clause.",
+        "要保持语气一致，就让后半句的动词顺着前半句的语气走：命令后面接动词原形命令（*Open the box, and **take out** the cable*）；非真实的 *If … were* 后面两个动作都用 **would**（*If I were captain, I **would** practice more and **would** listen to everyone*）。\n\n> **注意。** 别让 *you should*、*you will* 或普通现在时混进后半句——保持与开头分句完全一致的动词形式。",
       ],
       ["Which words keep the sentence in one mood?", "哪个选项能让句子保持同一种语气？"],
       `
@@ -741,8 +745,8 @@ ${moodKeeps}
         Find a partner, and ___ your arguments.|compare|you should compare|you compared
       `,
       (right) => [
-        `**${right}** keeps the second part in the same mood as the first, so the sentence does not shift.`,
-        `**${right}** 让后半句与前半句保持同一种语气，句子就不会转换语气。`,
+        `**${right}** keeps the second clause in the exact same mood as the first.\n\n**Check.** Compare the opening verb with **${right}**: both are bare commands or both stay in the unreal *would* mood, with no sudden switch to *you should*, *will*, or a past/present statement.`,
+        `**${right}** 让后半句与前半句保持完全一致的语气。\n\n**检验。** 把句首动词和 **${right}** 对照：要么同为动词原形命令，要么同为非真实的 *would*，没有突兀切换成 *you should*、*will* 或普通陈述。`,
       ],
       [
         [
@@ -762,24 +766,24 @@ const phraseLabels: Readonly<Record<string, Label>> = {
   phrase: {
     zh: "短语",
     why: [
-      "The group of words has no subject doing a verb, so it is a phrase, not a clause.",
-      "这组词里没有主语和它的动词，所以是短语，不是从句。",
+      "This group of words lacks a subject paired with a finite verb, so it is a **phrase**, not a clause.\n\n**Check.** Try finding both a subject and its own conjugated verb inside the italics—one or both are missing, confirming it is a phrase.",
+      "这组词缺少主语和限定动词的搭配，因此是**短语**而非从句。\n\n**检验。** 试着在斜体部分里同时找出主语和谓语动词——至少缺了一个，证明它只是短语。",
     ],
     not: ["A phrase has no subject and verb of its own, and this group of words has both.", "短语没有自己的主语和动词，而这组词两者都有。"],
   },
   "independent clause": {
     zh: "独立从句",
     why: [
-      "It has a subject and a verb and could stand alone as a complete sentence, so it is an independent clause.",
-      "它有主语和动词，能单独成为一个完整的句子，所以是独立从句。",
+      "This group has a subject and a finite verb and expresses a complete thought on its own; it is an **independent clause**.\n\n**Check.** Read only the italicized words with a capital letter and period: it stands cleanly as a full sentence.",
+      "这组词有主语和谓语动词，且能独立表达完整意思，因此是**独立从句**。\n\n**检验。** 只读斜体部分并在末尾加上句号：它能稳稳当当地独立成句。",
     ],
     not: ["An independent clause could stand alone as a sentence; this group of words could not.", "独立从句可以单独成句，而这组词不能。"],
   },
   "dependent clause": {
     zh: "从属从句",
     why: [
-      "It has a subject and a verb, but it begins with a word such as *because*, *when* or *who*, so it cannot stand alone.",
-      "它有主语和动词，但以 *because*、*when* 或 *who* 这样的词开头，所以不能单独成句。",
+      "This group has a subject and a finite verb yet starts with a subordinating or relative word (*when*, *because*, *although*, *that*, *who*) that leaves it incomplete; it is a **dependent clause**.\n\n**Check.** Confirm both halves: it *does* contain a subject + verb, yet stopping after it leaves the listener waiting for the main clause.",
+      "这组词既有主语又有谓语动词，但开头带从属连词或关系词（*when*、*because*、*although*、*that*、*who*），意思未完，因此是**从属从句**。\n\n**检验。** 核对两点：它*确实*包含主谓结构，但单读它时话没说完，必须依附主句。",
     ],
     not: [
       "A dependent clause has a subject and a verb but needs the rest of the sentence; this group does not fit that.",
@@ -792,16 +796,16 @@ const phraseKinds: Readonly<Record<string, Label>> = {
   "prepositional phrase": {
     zh: "介词短语",
     why: [
-      "It begins with a preposition such as *in*, *under* or *across* and ends with a noun.",
-      "它以 *in*、*under* 或 *across* 这样的介词开头，以名词结尾。",
+      "It starts with a preposition (*in*, *under*, *across*, *beneath*, *against*) and ends with its noun object; that is a **prepositional phrase**.\n\n**Check.** Spot the first word in italics: it shows place, direction, or time before a noun—never a verb form.",
+      "它以介词（*in*、*under*、*across*、*beneath*、*against*）开头、以名词宾语收尾，这是**介词短语**。\n\n**检验。** 看斜体部分的第一个词：它是放在名词前表示方位、方向或时间的介词，而不是动词形式。",
     ],
     not: ["A prepositional phrase begins with a preposition, and this one does not.", "介词短语以介词开头，而这个短语不是。"],
   },
   "participial phrase": {
     zh: "分词短语",
     why: [
-      "It begins with a verb form ending in *-ing* or *-ed* and describes a noun, as an adjective would.",
-      "它以 *-ing* 或 *-ed* 结尾的动词形式开头，像形容词一样描述一个名词。",
+      "It opens with an *-ing* or *-ed* participle (*gliding*, *covered*, *tired*, *carrying*) and describes a nearby noun; that is a **participial phrase**.\n\n**Check.** Look at the first italicized word: it comes from a verb ending in *-ing* or *-ed* (or irregular participle like *left*) and acts like an adjective describing a noun.",
+      "它以 *-ing* 或 *-ed* 分词（*gliding*、*covered*、*tired*、*carrying*）开头并修饰附近名词，这是**分词短语**。\n\n**检验。** 看斜体首词：它是由动词变来的分词形式，像形容词一样描述旁边的名词。",
     ],
     not: [
       "A participial phrase starts with an *-ing* or *-ed* verb form that describes a noun, and this one does not.",
@@ -811,8 +815,8 @@ const phraseKinds: Readonly<Record<string, Label>> = {
   "appositive phrase": {
     zh: "同位语短语",
     why: [
-      "It is a noun phrase set beside another noun to rename it, telling who or what that noun is.",
-      "它是放在另一个名词旁边、给它换个说法的名词短语，说明那个名词是谁或是什么。",
+      "It is a noun phrase placed right beside another noun to rename or identify it; that is an **appositive phrase**.\n\n**Check.** Put an equals sign between the preceding noun and the italicized phrase (*the blue whale = the largest animal on Earth*): they refer to the exact same person or thing.",
+      "它是一个紧挨在另一名词旁、用来重命名或补充说明该名词的名词短语，这是**同位语短语**。\n\n**检验。** 在前面的名词和斜体短语之间画一个等号（*the blue whale = the largest animal on Earth*）：两者指的正是同一个人或事物。",
     ],
     not: [
       "An appositive renames the noun beside it, and this phrase does not rename a noun.",
@@ -822,8 +826,8 @@ const phraseKinds: Readonly<Record<string, Label>> = {
   "infinitive phrase": {
     zh: "不定式短语",
     why: [
-      "It begins with *to* followed by the base form of a verb, as in *to save the reef*.",
-      "它以 *to* 加动词原形开头，如 *to save the reef*。",
+      "It begins with *to* plus the base form of a verb (*to find*, *to escape*, *to clean*); that is an **infinitive phrase**.\n\n**Check.** Check the word right after *to*: because it is a **verb** (not a noun like *to the bottom*), the phrase is an infinitive phrase rather than a prepositional phrase.",
+      "它以 *to* 加动词原形（*to find*、*to escape*、*to clean*）开头，这是**不定式短语**。\n\n**检验。** 看 *to* 紧后面的词：它是**动词**（而不是像 *to the bottom* 里的名词），因此是不定式短语而不是介词短语。",
     ],
     not: ["An infinitive phrase begins with *to* and a verb, and this phrase does not.", "不定式短语以 *to* 加动词开头，而这个短语不是。"],
   },
@@ -836,14 +840,18 @@ const phrasesAndClauses = topic("grammar", {
     "A clause has a subject and a verb; a phrase does not. Some clauses stand alone, and phrases do different jobs.",
     "从句有主语和动词，短语没有。有些从句能单独成句，而短语各有不同的作用。",
   ],
+  intro: [
+    "*After the storm* and *After the storm ended* differ by a single verb—yet that one verb turns a **phrase** into a **clause**. Knowing phrases from clauses lets you punctuate and build complex sentences with precision.",
+    "*After the storm* 和 *After the storm ended* 只差一个动词，却把**短语**变成了**从句**。分清短语和从句以及各类短语的作用，才能精准断句、写出漂亮的长句。",
+  ],
   after: ["prepositional-phrases", "subordinating-conjunctions"],
   points: [
     label(
       "phrase-or-clause",
       ["Phrase or Clause", "短语还是从句"],
       [
-        "A **clause** has a subject and a verb that goes with it: *the octopus hid*. An **independent clause** can stand alone as a sentence. A **dependent clause** begins with a word such as *because*, *when*, *although*, *who* or *that* and cannot stand alone. A **phrase** is a group of words with no subject-and-verb pair: *under the rock*, *hiding from the shark*.",
-        "**从句**有主语和与之相配的动词：*the octopus hid*。**独立从句**能单独成句。**从属从句**以 *because*、*when*、*although*、*who* 或 *that* 这样的词开头，不能单独成句。**短语**是一组没有主谓搭配的词：*under the rock*、*hiding from the shark*。",
+        "A **clause** contains both a subject and its finite verb (*the octopus hid*). An **independent clause** can stand alone as a complete sentence; a **dependent clause** starts with a marker like *when*, *because*, *although*, *who*, or *that* and needs a main clause. A **phrase** has no subject-verb pair (*under a rock*, *swimming near the reef*).\n\n> **Watch out.** An *-ing* or *to* + verb form (*swimming close to the bottom*, *to protect the turtles*) is *not* a finite verb with a subject—those groups are **phrases**, not clauses.",
+        "**从句**同时包含主语和限定动词（*the octopus hid*）。**独立从句**能单独成句；**从属从句**带 *when*、*because*、*although*、*who* 或 *that* 等引导词，必须依附主句。**短语**没有主谓搭配（*under a rock*、*swimming near the reef*）。\n\n> **注意。** *-ing* 或 *to* + 动词形式（*swimming close to the bottom*、*to protect the turtles*）不是带主语的谓语动词——它们属于**短语**，不是从句。",
       ],
       ["What is the group of words in italics?", "斜体部分是什么？"],
       `
@@ -885,8 +893,8 @@ ${phraseClause}
       "kinds-of-phrases",
       ["Kinds of Phrases", "短语的种类"],
       [
-        "Phrases do different jobs. A **prepositional phrase** starts with a preposition (*beneath the waves*). A **participial phrase** starts with an *-ing* or *-ed* verb form and describes a noun (*covered in barnacles*). An **appositive phrase** renames a noun beside it (*the blue whale, the largest animal on Earth*). An **infinitive phrase** starts with *to* and a verb (*to find food*).",
-        "短语有不同的作用。**介词短语**以介词开头（*beneath the waves*）。**分词短语**以 *-ing* 或 *-ed* 动词形式开头，描述一个名词（*covered in barnacles*）。**同位语短语**给旁边的名词换个说法（*the blue whale, the largest animal on Earth*）。**不定式短语**以 *to* 加动词开头（*to find food*）。",
+        "Four common phrases each start in a recognizable way: a **prepositional phrase** opens with a preposition (*beneath the waves*); a **participial phrase** opens with an *-ing* or *-ed* participle describing a noun (*covered in barnacles*); an **appositive phrase** renames a neighboring noun (*the blue whale, the largest animal on Earth*); and an **infinitive phrase** opens with *to* + base verb (*to find food*).\n\n> **Watch out.** *To* can start two different phrases—check the next word: *to the sandy bottom* (*to* + noun) is a **prepositional phrase**, while *to find food* (*to* + verb) is an **infinitive phrase**.",
+        "四种常见短语各有清晰开头：**介词短语**以介词领起（*beneath the waves*）；**分词短语**以 *-ing* 或 *-ed* 分词领起并修饰名词（*covered in barnacles*）；**同位语短语**重命名旁边的名词（*the blue whale, the largest animal on Earth*）；**不定式短语**以 *to* + 动词原形领起（*to find food*）。\n\n> **注意。** *to* 可以引出两种不同短语，关键看紧跟的词：*to the sandy bottom*（*to* + 名词）是**介词短语**，而 *to find food*（*to* + 动词）才是**不定式短语**。",
       ],
       ["What kind of phrase is in italics?", "斜体部分是哪种短语？"],
       `
@@ -931,8 +939,8 @@ const danglingLabels: Readonly<Record<string, Label>> = {
   dangling: {
     zh: "垂悬修饰语",
     why: [
-      "The opening phrase describes someone, but the subject after the comma is not that person, so the modifier dangles.",
-      "开头的短语描述某个人，但逗号后的主语不是那个人，所以修饰语是垂悬的。",
+      "The opening phrase implies a doer who never appears as the subject after the comma, leaving the modifier **dangling**.\n\n**Check.** Ask *Who performed the opening phrase?* Then look right after the comma: that subject (*the paintings*, *the tickets*, *the wall*) could not do that action.",
+      "句首短语隐含的动作发出者并没有作为主语出现在逗号后面，导致修饰语成为**垂悬修饰语**。\n\n**检验。** 问一句*谁做的开头那个动作？*再看逗号后的主语：那个主语（*the paintings*、*the tickets*、*the wall*）根本做不了这个动作。",
     ],
     not: [
       "A dangling modifier has no right noun to describe, and here the opening phrase fits the subject after it.",
@@ -942,8 +950,8 @@ const danglingLabels: Readonly<Record<string, Label>> = {
   misplaced: {
     zh: "错位修饰语",
     why: [
-      "The noun the modifier describes is in the sentence, but the modifier sits next to the wrong word.",
-      "修饰语所描述的名词在句子中，但修饰语放在了错误的词旁边。",
+      "The right person *is* already in the sentence, yet the modifier sits next to the wrong noun, making it **misplaced**.\n\n**Check.** Notice that the doer is the subject at the start of the sentence, while the modifier drifted to the end beside another noun.",
+      "动作发出者本来就在句中，只是修饰语放到了错误的名词旁边，因此是**错位修饰语**。\n\n**检验。** 注意动作发出者就在句首当主语，而修饰语跑到了句尾、紧挨着另一个名词。",
     ],
     not: [
       "A misplaced modifier sits beside the wrong word of the sentence; that is not the problem here.",
@@ -953,8 +961,8 @@ const danglingLabels: Readonly<Record<string, Label>> = {
   clear: {
     zh: "清楚",
     why: [
-      "The modifier sits right beside the noun it describes, so the sentence is clear.",
-      "修饰语紧挨着它所描述的名词，所以句子很清楚。",
+      "The subject immediately after the comma is the exact person or thing performing or described by the opening phrase, so the sentence is **clear**.\n\n**Check.** Link the opening phrase straight to the subject after the comma: the pairing makes complete literal sense.",
+      "逗号后紧跟着的主语正好就是句首短语所描述的人或物，因此句子**清楚**。\n\n**检验。** 把句首短语和逗号后的主语直接连起来读：字面意思完全合理。",
     ],
     not: [
       "The modifier in this sentence does not attach to the right word, so the sentence is not clear.",
@@ -970,14 +978,18 @@ const dangling = topic("grammar", {
     "An opening phrase must describe the subject right after it; when the right noun is missing, the modifier dangles.",
     "句首的短语必须描述紧跟其后的主语；如果缺了正确的名词，修饰语就是垂悬的。",
   ],
+  intro: [
+    "*Sprinting to the pier, the ferry pulled away* makes it sound as if the ferry were sprinting—because the runner never appears as the subject after the comma. Spotting and fixing **dangling modifiers** removes those accidental comedies.",
+    "*Sprinting to the pier, the ferry pulled away* 听起来像渡轮在狂奔——因为真正狂奔的人没出现在逗号后的主语位置上。识别并改正**垂悬修饰语**，就能消除这类让人发笑的病句。",
+  ],
   after: ["misplaced-modifiers"],
   points: [
     label(
       "spotting-a-dangling-modifier",
       ["Spotting a Dangling Modifier", "找出垂悬修饰语"],
       [
-        "A phrase at the start of a sentence describes the **subject** that comes right after the comma. *Walking into the chapel, the paintings amazed us* says the paintings were walking: the person who walked is missing, so the modifier **dangles**. A **misplaced** modifier is different: the right noun is in the sentence, but the modifier stands next to the wrong word (*She saw a statue walking to school*).",
-        "句首的短语描述紧跟在逗号后面的**主语**。*Walking into the chapel, the paintings amazed us* 说的是画在走路：走路的人不见了，所以修饰语是**垂悬的**。**错位**修饰语不同：正确的名词在句中，但修饰语放在了错误的词旁边（*She saw a statue walking to school*）。",
+        "An opening modifier must describe the **subject** directly after the comma. In *Walking into the chapel, the paintings amazed us*, the person walking is not the subject (*the paintings*), so the modifier is **dangling**. In a **misplaced** modifier, the right subject *is* present, yet the phrase sits beside the wrong noun (*She saw a statue walking to school*).\n\n> **Watch out.** Do not confuse **dangling** with **misplaced**: if the phrase sits at the *start* before a comma and the wrong subject follows, it is **dangling**; if it sits at the *end* beside the wrong object, it is **misplaced**.",
+        "句首修饰短语必须修饰紧跟逗号后的**主语**。在 *Walking into the chapel, the paintings amazed us* 中，主语是 *the paintings* 而不是走进教堂的人，因此是**垂悬修饰语**。**错位修饰语**则是正确主语已经在句中，但短语放到了错误名词旁边（*She saw a statue walking to school*）。\n\n> **注意。** 区分**垂悬**与**错位**：短语在*句首*逗号前且后面主语不对，是**垂悬**；短语落在*句末*紧挨着错误宾语，是**错位**。",
       ],
       ["Is the modifier in this sentence dangling, misplaced or clear?", "这个句子中的修饰语是垂悬的、错位的，还是清楚的？"],
       `
@@ -1019,8 +1031,8 @@ ${danglerSpot}
       "fixing-a-dangling-modifier",
       ["Fixing a Dangling Modifier", "改正垂悬修饰语"],
       [
-        "Fix a dangling modifier by putting the person or thing it describes right after the comma: *Walking into the chapel, **we** were amazed by the paintings.* Or turn the phrase into a clause with its own subject: ***As we walked** into the chapel, the paintings amazed us.* Moving the phrase to the end of the same sentence does not fix it, because the right noun is still missing.",
-        "改正垂悬修饰语的方法是把它所描述的人或物放在逗号后面：*Walking into the chapel, **we** were amazed by the paintings.* 或者把短语变成有自己主语的从句：***As we walked** into the chapel, the paintings amazed us.* 把短语移到同一句子的末尾并不能改正它，因为正确的名词仍然不在句中。",
+        "Fix a dangling modifier in one of two ways: name the true doer as the subject directly after the comma (*Walking into the chapel, **we** were amazed by the paintings*), or expand the phrase into a full clause with its own subject (***As we walked** into the chapel, the paintings amazed us*).\n\n> **Watch out.** Merely moving the phrase to the end of the sentence (*The paintings amazed us, walking into the chapel*) does *not* fix a dangler—the subject of the main clause is still the paintings.",
+        "改正垂悬修饰语有两种办法：把真正的动作发出者直接放进逗号后的主语位置（*Walking into the chapel, **we** were amazed by the paintings*），或把短语展开成带主语的完整从句（***As we walked** into the chapel, the paintings amazed us*）。\n\n> **注意。** 光把短语挪到句尾（*The paintings amazed us, walking into the chapel*）治标不治本——主句主语依然是画而不是人。",
       ],
       ["Which sentence fixes the dangling modifier?", "哪个句子改正了垂悬修饰语？"],
       `
@@ -1057,8 +1069,8 @@ ${danglerFix}
         Lost in thought, the paintbrush slipped from her hand.|Lost in thought, she let the paintbrush slip from her hand.|The paintbrush slipped from her hand, lost in thought.|Lost in thought, the wet paintbrush slipped from her hand.
       `,
       (right) => [
-        `*${right}* puts the person who does the action right after the opening phrase, so the modifier no longer dangles.`,
-        `*${right}* 把做动作的人紧放在句首短语之后，修饰语就不再垂悬。`,
+        `The corrected sentence is: **${right}** The person doing the action is now named clearly in the right subject slot.\n\n**Check.** Ask *Who performs the opening action?* Look right after the comma (or inside the opening *When/While/After* clause): that exact doer is now clearly stated.`,
+        `改正后的句子是：**${right}** 动作发出者现在清楚地落在正确的主语位置上。\n\n**检验。** 问一句*谁发出的开头动作？*看逗号后面（或开头的 *When/While/After* 从句内部）：真正的动作发出者已经明确写出。`,
       ],
       [
         [
@@ -1081,14 +1093,18 @@ const suffixSpelling = topic("grammar", {
     "A final silent e drops before a suffix that starts with a vowel, and a final y after a consonant becomes i.",
     "词尾不发音的 e 在以元音开头的后缀前去掉，辅音后的词尾 y 变成 i。",
   ],
+  intro: [
+    "Why does *hope + ing* drop the *e* (*hoping*) while *hope + ful* keeps it (*hopeful*), and why does *carry + ed* change *y* to *i* (*carried*) while *carry + ing* keeps *y* (*carrying*)? Two clean suffix rules handle almost every case.",
+    "为什么 *hope + ing* 去掉 *e*（*hoping*），*hope + ful* 却保留 *e*（*hopeful*）？为什么 *carry + ed* 把 *y* 变成 *i*（*carried*），*carry + ing* 却保留 *y*（*carrying*）？两条清晰的后缀拼写规则就能搞定绝大多数情况。",
+  ],
   after: ["spelling-doubling-final-consonants"],
   points: [
     choose(
       "dropping-or-keeping-e",
       ["Dropping or Keeping a Final E", "去掉还是保留词尾的 e"],
       [
-        "When a word ends in a **silent e**, drop the *e* before a suffix that begins with a vowel (*-ing*, *-able*, *-ous*, *-ion*): *hope*, *hoping*; *fame*, *famous*. Keep the *e* before a suffix that begins with a consonant (*-ment*, *-ful*, *-ly*, *-ness*): *hope*, *hopeful*; *safe*, *safely*. A few words break the rule to keep a soft *c* or *g*: *noticeable*, *courageous*.",
-        "单词以**不发音的 e** 结尾时，在以元音开头的后缀（*-ing*、*-able*、*-ous*、*-ion*）前去掉 *e*：*hope*、*hoping*；*fame*、*famous*。在以辅音开头的后缀（*-ment*、*-ful*、*-ly*、*-ness*）前保留 *e*：*hope*、*hopeful*；*safe*、*safely*。少数词为了保留软音 *c* 或 *g* 而不遵守规则：*noticeable*、*courageous*。",
+        "When a base word ends in a **silent e**, drop the *e* before a **vowel suffix** (*-ing*, *-able*, *-ous*, *-ion*, *-y*): *ride* + *-ing* → **riding**, *fame* + *-ous* → **famous**. Keep the *e* before a **consonant suffix** (*-ment*, *-ful*, *-ly*, *-ness*): *safe* + *-ly* → **safely**. Keep *e* after soft *c* or *g* before *-able/-ous* (*noticeable*, *courageous*, *changeable*).\n\n> **Watch out.** Check two traps: a few everyday exceptions drop *e* before a consonant (*truly*, *argument*, *ninth*, *wholly*, *awful*), and never double a consonant when dropping *e* (*writing*, not *writting*).",
+        "词尾是**不发音的 e** 时，遇到**元音开头的后缀**（*-ing*、*-able*、*-ous*、*-ion*、*-y*）要去掉 *e*：*ride* + *-ing* → **riding**，*fame* + *-ous* → **famous**。遇到**辅音开头的后缀**（*-ment*、*-ful*、*-ly*、*-ness*）则保留 *e*：*safe* + *-ly* → **safely**。为保持软音 *c/g*，在 *-able/-ous* 前仍保留 *e*（*noticeable*、*courageous*、*changeable*）。\n\n> **注意。** 留心两个陷阱：少数高频例外在辅音后缀前也去 *e*（*truly*、*argument*、*ninth*、*wholly*、*awful*）；此外去 *e* 时绝不要顺手双写辅音（是 *writing*，不是 *writting*）。",
       ],
       ["How is the word with its suffix spelled?", "这个词加上后缀后怎样拼写？"],
       `
@@ -1125,8 +1141,8 @@ ${silentELines}
         close + ness|closeness|closness|closenes
       `,
       (right, shown) => [
-        `**${right}**: ${shown.split(" + ")[1]?.match(/^[aeiou]/) ? "the suffix begins with a vowel, so the silent e drops" : "the suffix begins with a consonant, so the silent e stays"}${["noticeable", "courageous"].includes(right) ? ", except that this word keeps its e for the soft sound" : ""}.`,
-        `**${right}**：${shown.split(" + ")[1]?.match(/^[aeiou]/) ? "后缀以元音开头，所以不发音的 e 去掉" : "后缀以辅音开头，所以不发音的 e 保留"}${["noticeable", "courageous"].includes(right) ? "，但这个词为了保留软音而保留 e" : ""}。`,
+        `**${right}** is the standard spelling: ${shown.split(" + ")[1]?.match(/^[aeiouy]/) ? "the suffix starts with a vowel sound, so silent *e* normally drops" : "the suffix starts with a consonant, so silent *e* normally stays"}${["noticeable", "courageous", "changeable", "manageable", "outrageous", "peaceable", "traceable"].includes(right) ? "—except here *e* stays to preserve the soft *c* or *g*" : ["truly", "argument", "ninth", "wholly", "awful"].includes(right) ? "—except this common word is one of the few that drops *e* before a consonant" : ""}.\n\n**Check.** Compare the join point of *${shown}* against **${right}**: no extra consonant was doubled, and the silent *e* follows the suffix rule (or its soft-*c/g* / common-word exception).`,
+        `**${right}** 是标准拼写：${shown.split(" + ")[1]?.match(/^[aeiouy]/) ? "后缀以元音音素开头，通常去掉不发音的 *e*" : "后缀以辅音开头，通常保留不发音的 *e*"}${["noticeable", "courageous", "changeable", "manageable", "outrageous", "peaceable", "traceable"].includes(right) ? "——但本词为保留软音 *c* 或 *g* 而保留 *e*" : ["truly", "argument", "ninth", "wholly", "awful"].includes(right) ? "——但本词属于少数在辅音后缀前也去 *e* 的常见例外" : ""}。\n\n**检验。** 核对 *${shown}* 的拼接处和 **${right}**：没有误双写辅音，且词尾 *e* 的去留符合后缀规则（或对应的软音/常见例外）。`,
       ],
       [
         [
@@ -1140,8 +1156,8 @@ ${silentELines}
       "changing-y-to-i",
       ["Changing Y to I", "把 y 变成 i"],
       [
-        "When a word ends in a **consonant + y**, change the *y* to *i* before most suffixes: *happy*, *happiness*; *carry*, *carried*; *beauty*, *beautiful*. Keep the *y* before *-ing*, so that two i's do not meet: *carrying*, *studying*. When a **vowel + y** ends the word, keep the *y*: *play*, *played*; *enjoy*, *enjoyment*.",
-        "单词以**辅音 + y** 结尾时，在大多数后缀前把 *y* 变成 *i*：*happy*、*happiness*；*carry*、*carried*；*beauty*、*beautiful*。在 *-ing* 前保留 *y*，以免两个 i 连在一起：*carrying*、*studying*。单词以**元音 + y** 结尾时，保留 *y*：*play*、*played*；*enjoy*、*enjoyment*。",
+        "When a word ends in **consonant + y**, change *y* to *i* before most suffixes: *happy* + *-ness* → **happiness**, *beauty* + *-ful* → **beautiful**. Keep *y* before **-ing** so two *i*'s do not collide (*carrying*, *studying*), and keep *y* after a **vowel** (*play* + *-ed* → **played**, *enjoy* + *-ment* → **enjoyment**).\n\n> **Watch out.** Watch for a handful of short exceptions—*paid*, *laid*, *said*, *daily* change *y* to *i* even after a vowel, while *shyly* and *dryness* keep *y*.",
+        "单词以**辅音 + y** 结尾时，接大多数后缀都要把 *y* 改成 *i*：*happy* + *-ness* → **happiness**，*beauty* + *-ful* → **beautiful**。在 **-ing** 前保留 *y* 以免出现双 *i*（*carrying*、*studying*）；**元音 + y** 结尾也保留 *y*（*play* + *-ed* → **played**，*enjoy* + *-ment* → **enjoyment**）。\n\n> **注意。** 记住几个短词例外：*paid*、*laid*、*said*、*daily* 虽然是元音加 *y* 仍变 *i*，而 *shyly* 和 *dryness* 保留 *y*。",
       ],
       ["How is the word with its suffix spelled?", "这个词加上后缀后怎样拼写？"],
       `
@@ -1178,8 +1194,8 @@ ${finalYLines}
         apply + cation|application|applycation|aplication
       `,
       (right, shown) => [
-        `**${right}**: ${/[aeiou]y \+/.test(shown) ? "a vowel comes before the y, so the y stays" : shown.endsWith("+ ing") ? "the y stays before -ing, so that two i's do not meet" : "a consonant comes before the y, so the y becomes i before the suffix"}.`,
-        `**${right}**：${/[aeiou]y \+/.test(shown) ? "y 前面是元音，所以 y 保留" : shown.endsWith("+ ing") ? "在 -ing 前 y 保留，以免两个 i 连在一起" : "y 前面是辅音，所以加后缀时 y 变成 i"}。`,
+        `**${right}** is spelled correctly: ${["paid", "laid", "said", "daily"].includes(right) ? "this common word is an irregular exception that changes *y* to *i*" : ["shyly", "dryness"].includes(right) ? "this short word keeps its *y* before the suffix" : /[aeiou]y \+/.test(shown) ? "a vowel comes before *y*, so *y* stays" : shown.endsWith("+ ing") ? "*y* stays before *-ing* so two *i*'s do not meet" : "a consonant comes before *y*, so *y* changes to *i*"}.\n\n**Check.** Inspect the letter right before *y* and the first letter of the suffix in *${shown}*: **${right}** handles the *y* cleanly without dropping or doubling other letters.`,
+        `**${right}** 拼写正确：${["paid", "laid", "said", "daily"].includes(right) ? "这个常见词属于把 *y* 变 *i* 的不规则例外" : ["shyly", "dryness"].includes(right) ? "这个短词接后缀时保留 *y*" : /[aeiou]y \+/.test(shown) ? "*y* 前面是元音，所以保留 *y*" : shown.endsWith("+ ing") ? "在 *-ing* 前保留 *y* 以免出现双 *i*" : "*y* 前面是辅音，所以加后缀时把 *y* 改成 *i*"}。\n\n**检验。** 看 *${shown}* 中 *y* 前面的字母以及后缀首字母：**${right}** 既正确处理了 *y*，也没有误删或误双写其他字母。`,
       ],
       [
         [
@@ -1199,14 +1215,18 @@ const pairs = topic("grammar", {
     "In a pair such as Amara and I or Amara and me, the pronoun takes the case it would take alone.",
     "在 Amara and I 或 Amara and me 这样的并列结构中，代词用它单独使用时的格。",
   ],
+  intro: [
+    "Pairing a pronoun with a name often tricks writers into switching cases: *Lina and me walked home* or *Mom drove Lina and I*. Cover the name and test the pronoun alone: *I walked home* and *Mom drove me*, so **Lina and I** and **Lina and me**. In this topic you choose the right pronoun in compound subjects, compound objects, and pairs after prepositions.",
+    "把代词和人名并列时，很容易选错格，比如写成 *Lina and me walked home* 或 *Mom drove Lina and I*。遮住人名单独试一下：*I walked home* 和 *Mom drove me*，所以应该是 **Lina and I** 与 **Lina and me**。本节练习在并列主语、并列宾语以及介词后的并列结构中选用正确的代词。",
+  ],
   after: ["pronoun-case"],
   points: [
     choose(
       "pronouns-as-subjects-and-objects",
       ["Pronouns Paired with a Noun", "与名词并列的代词"],
       [
-        "When a pronoun is joined to a noun with *and* or *or*, cover the noun and try the pronoun alone. *Amara and ___ visited Timbuktu*: *I visited*, so **Amara and I**. *The guide showed Amara and ___ the library*: *showed me*, so **Amara and me**. Use *myself* only when *I* is already the subject: *I taught myself*.",
-        "当代词与名词用 *and* 或 *or* 连在一起时，遮住名词，单独试一试代词。*Amara and ___ visited Timbuktu*：*I visited*，所以用 **Amara and I**。*The guide showed Amara and ___ the library*：*showed me*，所以用 **Amara and me**。只有当 *I* 已经是主语时才用 *myself*：*I taught myself*。",
+        "When a pronoun is joined to a noun with *and* or *or*, cover the noun and try the pronoun alone. *Amara and ___ visited Timbuktu*: *I visited*, so **Amara and I**. *The guide showed Amara and ___ the library*: *showed me*, so **Amara and me**. Use *myself* only when *I* is already the subject: *I taught myself*.\n\n> **Watch out.** Do not use *I* as an object just because it sounds polite, and do not use *myself* as a substitute for *I* or *me*.",
+        "当代词与名词用 *and* 或 *or* 连在一起时，遮住名词，单独试一试代词。*Amara and ___ visited Timbuktu*：*I visited*，所以用 **Amara and I**。*The guide showed Amara and ___ the library*：*showed me*，所以用 **Amara and me**。只有当 *I* 已经是主语时才用 *myself*：*I taught myself*。\n\n> **注意。** 不要因为觉得 *I* 听起来更礼貌就在宾语位置用 *I*，也不要拿 *myself* 代替 *I* 或 *me*。",
       ],
       ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
       `
@@ -1243,8 +1263,8 @@ ${pairLines}
         The driver waited for our class and ___.|them|they|themselves
       `,
       (right) => [
-        `**${right}** is the form the pronoun takes alone in this place, so it is the right form in the pair as well.`,
-        `**${right}** 是这个代词单独用在这个位置时的形式，所以在并列结构中也用它。`,
+        `**${right}** is the form the pronoun takes alone in this slot, so it stays in the same case when paired with a noun.\n\n**Check.** Drop the other noun and read the sentence with just *${right}*; the verb or preposition matches it cleanly.`,
+        `**${right}** 是这个代词单独用在该位置时的形式，与名词并列时格保持不变。\n\n**检验。** 去掉并列的另一个名词，只留 *${right}* 读一遍，动词或介词都能顺畅衔接。`,
       ],
       [
         [
@@ -1261,8 +1281,8 @@ ${pairLines}
       "pronouns-after-prepositions",
       ["Pronouns after Prepositions", "介词后的代词"],
       [
-        "A pronoun after a preposition such as *between*, *for*, *with*, *to* or *except* is an **object**, so it takes the object form, even in a pair: *between you and **me***, *for her and **him***, *with Ama and **us***. *Between you and I* is a common mistake; try the pronoun alone: *between me*.",
-        "*between*、*for*、*with*、*to* 或 *except* 这样的介词后面的代词是**宾语**，所以要用宾格形式，即使在并列结构中也是如此：*between you and **me***、*for her and **him***、*with Ama and **us***。*between you and I* 是常见的错误；单独试一试代词：*between me*。",
+        "A pronoun after a preposition such as *between*, *for*, *with*, *to* or *except* is an **object**, so it takes the object form, even in a pair: *between you and **me***, *for her and **him***, *with Ama and **us***. *Between you and I* is a common mistake; try the pronoun alone: *between me*.\n\n> **Watch out.** *Between* always needs two things, so *between me* sounds incomplete — test with *between us* instead, which uses the same object case.",
+        "*between*、*for*、*with*、*to* 或 *except* 这样的介词后面的代词是**宾语**，所以要用宾格形式，即使在并列结构中也是如此：*between you and **me***、*for her and **him***、*with Ama and **us***。*between you and I* 是常见的错误；单独试一试代词：*between me*。\n\n> **注意。** *between* 后面通常跟两个对象，单说 *between me* 听起来不完整；可以换成 *between us* 来测，两者同属宾格。",
       ],
       ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
       `
@@ -1299,8 +1319,8 @@ ${prepLines}
         The story is about the king and ___.|her|she|herself
       `,
       (right) => [
-        `**${right}** is the object form, which a pronoun takes after a preposition, even when it is one of a pair.`,
-        `**${right}** 是宾格形式，介词后面的代词要用宾格，即使它在并列结构中。`,
+        `**${right}** is the object form, which a pronoun takes after a preposition even when it is paired with another person.\n\n**Check.** Replace the whole pair after the preposition with *us* or *them*: both are object forms, confirming that *${right}* belongs in the slot.`,
+        `**${right}** 是宾格形式，介词后面的代词即便在并列结构里也要用宾格。\n\n**检验。** 把介词后面的整个并列结构换成 *us* 或 *them*，它们都是宾格，印证这里该用 *${right}*。`,
       ],
       [
         [
@@ -1320,16 +1340,16 @@ const clauseLabels: Readonly<Record<string, Label>> = {
   "adjective clause": {
     zh: "形容词从句",
     why: [
-      "It describes a noun and tells which one or what kind, usually beginning with *who*, *which*, *that* or *whose*.",
-      "它描述一个名词，说明是哪一个或哪一种，通常以 *who*、*which*、*that* 或 *whose* 开头。",
+      "It describes a noun and tells which one or what kind, usually beginning with *who*, *which*, *that*, *whose* or *where*.\n\n**Check.** Look right before the clause: it sits next to a noun and narrows which one the sentence means.",
+      "它修饰一个名词，说明是哪一个或哪一种，通常以 *who*、*which*、*that*、*whose* 或 *where* 开头。\n\n**检验。** 看从句紧前面：它紧挨着一个名词，并且限定了句子指的具体是哪一个。",
     ],
     not: ["An adjective clause describes a noun, and this clause does not describe one.", "形容词从句描述名词，而这个从句并不描述名词。"],
   },
   "adverb clause": {
     zh: "副词从句",
     why: [
-      "It tells when, why, where or under what condition the main action happens, beginning with a word such as *when*, *because* or *if*.",
-      "它说明主要动作在何时、为何、何地或在什么条件下发生，以 *when*、*because* 或 *if* 这样的词开头。",
+      "It tells when, why, where or under what condition the main action happens, beginning with a subordinator such as *when*, *because*, *if* or *although*.\n\n**Check.** Drop the clause from the sentence: the main clause still stands on its own, and the dropped clause answered *when?*, *why?* or *under what condition?*.",
+      "它说明主要动作在何时、为何、何地或在什么条件下发生，以 *when*、*because*、*if* 或 *although* 等从属连词开头。\n\n**检验。** 去掉这个从句后主句依然完整，而去掉的部分回答的正是“什么时候”“为什么”或“在什么条件下”。",
     ],
     not: [
       "An adverb clause tells when, why or under what condition, and this clause does not do that.",
@@ -1339,8 +1359,8 @@ const clauseLabels: Readonly<Record<string, Label>> = {
   "noun clause": {
     zh: "名词从句",
     why: [
-      "It does the job of a noun, as the subject or object of the sentence, often beginning with *what*, *that* or *how*.",
-      "它起名词的作用，作句子的主语或宾语，常以 *what*、*that* 或 *how* 开头。",
+      "It does the job of a noun, acting as the subject or object of the sentence, often beginning with *what*, *that*, *how*, *why* or *whoever*.\n\n**Check.** Replace the entire italicized clause with the single pronoun *it* or *something*: the sentence still reads grammatically.",
+      "它起名词的作用，作句子的主语或宾语，常以 *what*、*that*、*how*、*why* 或 *whoever* 开头。\n\n**检验。** 把整段斜体从句替换成单个代词 *it* 或 *something*，句子在语法上依然成立。",
     ],
     not: ["A noun clause works as a subject or object, and this clause does not.", "名词从句作主语或宾语，而这个从句不是。"],
   },
@@ -1350,32 +1370,32 @@ const adverbJobs: Readonly<Record<string, Label>> = {
   time: {
     zh: "时间",
     why: [
-      "The clause tells **when** the main action happens, with a word such as *when*, *after*, *before* or *until*.",
-      "这个从句说明主要动作**何时**发生，用 *when*、*after*、*before* 或 *until* 这样的词。",
+      "The clause tells **when** the main action happens, introduced by a time subordinator such as *when*, *after*, *before*, *while* or *until*.\n\n**Check.** Ask *When did the main action happen?* — the italicized clause answers directly.",
+      "这个从句说明主要动作**何时**发生，由 *when*、*after*、*before*、*while* 或 *until* 等时间连词引导。\n\n**检验。** 问一句“主要动作在什么时候发生？”，斜体从句正好给出回答。",
     ],
     not: ["This clause does not tell when the action happens.", "这个从句并不说明动作何时发生。"],
   },
   reason: {
     zh: "原因",
     why: [
-      "The clause tells **why** the main action happens, with a word such as *because*, *since* or *as*.",
-      "这个从句说明主要动作**为什么**发生，用 *because*、*since* 或 *as* 这样的词。",
+      "The clause tells **why** the main action happens, introduced by *because*, *since* or *as*.\n\n**Check.** Swap the opener for *because* if it is *since* or *as* — the cause-and-effect link stays the same.",
+      "这个从句说明主要动作**为什么**发生，由 *because*、*since* 或 *as* 引导。\n\n**检验。** 如果开头是 *since* 或 *as*，换成 *because* 读一遍，因果关系完全一致。",
     ],
     not: ["This clause does not give a reason for the action.", "这个从句并不给出动作的原因。"],
   },
   condition: {
     zh: "条件",
     why: [
-      "The clause tells **under what condition** the main action happens, with *if*, *unless* or *as long as*.",
-      "这个从句说明主要动作**在什么条件下**发生，用 *if*、*unless* 或 *as long as*。",
+      "The clause tells **under what condition** the main action happens, introduced by *if*, *unless* or *as long as*.\n\n**Check.** Ask whether the main action depends on this clause being true first — it does.",
+      "这个从句说明主要动作**在什么条件下**发生，由 *if*、*unless* 或 *as long as* 引导。\n\n**检验。** 看主要动作是否以这个从句先成立为前提——确实如此。",
     ],
     not: ["This clause does not set a condition for the action.", "这个从句并不为动作设定条件。"],
   },
   contrast: {
     zh: "对比",
     why: [
-      "The clause sets up something **in contrast** to the main idea, with *although*, *though* or *even though*.",
-      "这个从句提出与主要意思**相对比**的内容，用 *although*、*though* 或 *even though*。",
+      "The clause sets up something **in contrast** to the main idea, introduced by *although*, *though* or *even though*.\n\n**Check.** Notice that the main clause happens *in spite of* the italicized clause, not because of it.",
+      "这个从句提出与主要意思**相对比**的内容，由 *although*、*though* 或 *even though* 引导。\n\n**检验。** 主句发生的事情是“尽管如此”依然成立，而不是由斜体从句引起的。",
     ],
     not: ["This clause does not set up a contrast with the main idea.", "这个从句并不提出与主要意思相对比的内容。"],
   },
@@ -1388,14 +1408,18 @@ const clauses = topic("grammar", {
     "A dependent clause can describe a noun, as an adjective does, or tell when, why or under what condition, as an adverb does.",
     "从属从句可以像形容词一样描述名词，也可以像副词一样说明时间、原因或条件。",
   ],
+  intro: [
+    "Dependent clauses do different jobs in a sentence. In *the bridge that crosses the river*, the clause describes the noun *bridge*; in *before the rain started, we packed up*, the clause tells when the action happened. In this topic you identify adjective, adverb, and noun clauses and tell what job an adverb clause performs.",
+    "从属从句在句中承担不同的角色。在 *the bridge that crosses the river* 里，从句修饰名词 *bridge*；在 *before the rain started, we packed up* 里，从句说明动作发生的时间。本节练习区分形容词从句、副词从句和名词从句，并判断副词从句表达的逻辑关系。",
+  ],
   after: ["relative-clauses"],
   points: [
     label(
       "naming-the-clause",
       ["Naming the Clause", "辨认从句"],
       [
-        "A dependent clause does one of three jobs. An **adjective clause** describes a noun: *the scholar **who copied the book***. An **adverb clause** tells when, why, where or under what condition: ***when the caravan arrived***, *the market filled*. A **noun clause** works as a noun, as the subject or the object: *No one knew **what the letter said***.",
-        "从属从句起三种作用之一。**形容词从句**描述名词：*the scholar **who copied the book***。**副词从句**说明时间、原因、地点或条件：***when the caravan arrived***, *the market filled*。**名词从句**起名词的作用，作主语或宾语：*No one knew **what the letter said***。",
+        "A dependent clause does one of three jobs. An **adjective clause** describes a noun: *the scholar **who copied the book***. An **adverb clause** tells when, why, where or under what condition: ***when the caravan arrived***, *the market filled*. A **noun clause** works as a noun, as the subject or the object: *No one knew **what the letter said***.\n\n> **Watch out.** The word *that* can start either an adjective clause (*the book **that I read***) or a noun clause (*I know **that it rained***). Test whether the clause describes a noun or can be replaced by *it*.",
+        "从属从句起三种作用之一。**形容词从句**描述名词：*the scholar **who copied the book***。**副词从句**说明时间、原因、地点或条件：***when the caravan arrived***, *the market filled*。**名词从句**起名词的作用，作主语或宾语：*No one knew **what the letter said***。\n\n> **注意。** *that* 既可以引导形容词从句（*the book **that I read***），也可以引导名词从句（*I know **that it rained***）。要检验它是修饰名词，还是能整体替换成 *it*。",
       ],
       ["What kind of clause is in italics?", "斜体部分是哪种从句？"],
       `
@@ -1437,8 +1461,8 @@ ${clauseNames}
       "what-an-adverb-clause-tells",
       ["What an Adverb Clause Tells", "副词从句说明什么"],
       [
-        "The first word of an **adverb clause** tells you its job. *When*, *after*, *before*, *while* and *until* tell **time**. *Because*, *since* and *as* (meaning because) give a **reason**. *If*, *unless* and *as long as* set a **condition**. *Although*, *though* and *even though* set up a **contrast**.",
-        "**副词从句**的第一个词说明它的作用。*when*、*after*、*before*、*while* 和 *until* 说明**时间**。*because*、*since* 和 *as*（意为因为）给出**原因**。*if*、*unless* 和 *as long as* 设定**条件**。*although*、*though* 和 *even though* 提出**对比**。",
+        "The first word of an **adverb clause** tells you its job. *When*, *after*, *before*, *while* and *until* tell **time**. *Because*, *since* and *as* (meaning because) give a **reason**. *If*, *unless* and *as long as* set a **condition**. *Although*, *though* and *even though* set up a **contrast**.\n\n> **Watch out.** *Since* and *as* can show either time or reason. Read the meaning of the whole sentence: if *because* can replace the word without changing the sense, the clause gives a reason.",
+        "**副词从句**的第一个词说明它的作用。*when*、*after*、*before*、*while* 和 *until* 说明**时间**。*because*、*since* 和 *as*（意为因为）给出**原因**。*if*、*unless* 和 *as long as* 设定**条件**。*although*、*though* 和 *even though* 提出**对比**。\n\n> **注意。** *since* 和 *as* 既可能表时间也可能表原因。要读懂整句意思：如果换成 *because* 意思不变，就表示原因。",
       ],
       ["What does the clause in italics tell?", "斜体的从句说明什么？"],
       `
@@ -1486,14 +1510,18 @@ const interrupters = topic("grammar", {
     "Words that interrupt a sentence, such as however, of course, names of people spoken to and yes or no, are set off by commas.",
     "打断句子的词，如 however、of course、直接称呼的人名以及 yes 或 no，要用逗号隔开。",
   ],
+  intro: [
+    "Side comments and direct names step briefly out of a sentence's main grammar, so commas fence them off: *The train, indeed, left on time* and *Wait, Leo, you forgot your scarf.* Drop the fenced-off words and the sentence still flows cleanly. In this topic you place commas around interrupters, direct address, and opening *yes*, *no*, or *well*.",
+    "插入的评论和直接称呼的人名暂时跳出了句子的主干结构，需要用逗号隔开，例如 *The train, indeed, left on time* 和 *Wait, Leo, you forgot your scarf.* 去掉逗号隔开的部分，句子依然通顺完整。本节练习给插入语、称呼语以及句首的 *yes*、*no*、*well* 正确加逗号。",
+  ],
   after: ["commas-with-nonessential-elements"],
   points: [
     choose(
       "commas-around-interrupters",
       ["Commas around Interrupters", "插入语两边的逗号"],
       [
-        "An **interrupter** is a word or phrase that breaks into a sentence to comment on it: *however*, *of course*, *for example*, *in fact*, *I think*, *by the way*. Set it off with commas: a comma **before and after** it in the middle of a sentence, one comma after it at the start, one before it at the end. *The storm, however, missed the city.*",
-        "**插入语**是插进句子里对句子加以评论的词或短语：*however*、*of course*、*for example*、*in fact*、*I think*、*by the way*。用逗号把它隔开：在句子中间时**前后**各一个逗号，在句首时后面一个逗号，在句末时前面一个逗号。*The storm, however, missed the city.*",
+        "An **interrupter** is a word or phrase that breaks into a sentence to comment on it: *however*, *of course*, *for example*, *in fact*, *I think*, *by the way*. Set it off with commas: a comma **before and after** it in the middle of a sentence, one comma after it at the start, one before it at the end. *The storm, however, missed the city.*\n\n> **Watch out.** When an interrupter sits in the middle of a sentence, writers often drop the second comma (*The storm, however missed the city*). Always pair both commas.",
+        "**插入语**是插进句子里对句子加以评论的词或短语：*however*、*of course*、*for example*、*in fact*、*I think*、*by the way*。用逗号把它隔开：在句子中间时**前后**各一个逗号，在句首时后面一个逗号，在句末时前面一个逗号。*The storm, however, missed the city.*\n\n> **注意。** 插入语位于句中时，最容易漏掉后面那个逗号（*The storm, however missed the city*）。句中插入语前后两个逗号必须成对出现。",
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
@@ -1530,8 +1558,8 @@ ${interrupterLines}
         indeed the plan worked|Indeed, the plan worked.|Indeed the plan, worked.|Indeed the, plan worked.|Indeed, the plan, worked.
       `,
       (right) => [
-        `*${right}* sets the interrupter off with commas wherever it breaks into the sentence, before and after it in the middle.`,
-        `*${right}* 在插入语打断句子的地方用逗号把它隔开，在句子中间时前后都有逗号。`,
+        `*${right}* sets the interrupter off cleanly with commas wherever it breaks into the sentence, before and after it in the middle.\n\n**Check.** Lift out the words set off by commas: what remains is a complete sentence with no stray comma breaking the subject from its verb.`,
+        `*${right}* 在插入语打断句子的地方用逗号把它隔开，句中前后成对加逗号。\n\n**检验。** 拿掉逗号隔开的插入语后，剩下的部分是一句完整的句子，主语和谓语之间没有多余的逗号。`,
       ],
       [
         [
@@ -1552,8 +1580,8 @@ ${interrupterLines}
       "commas-with-names-and-yes-or-no",
       ["Commas with Names and Yes or No", "称呼语和 yes、no 的逗号"],
       [
-        "Commas also set off the **name of the person spoken to** (*Doctor, is it serious?* *Thank you, Maria.* *I think, Sam, that you are right.*) and words such as **yes**, **no** and **well** at the start of an answer (*Yes, I had the shot.* *Well, it hurt a little.*). Without the comma, *Let's eat, Grandma* turns into *Let's eat Grandma*.",
-        "逗号还用来隔开**直接称呼的人名**（*Doctor, is it serious?* *Thank you, Maria.* *I think, Sam, that you are right.*）以及回答开头的 **yes**、**no** 和 **well** 等词（*Yes, I had the shot.* *Well, it hurt a little.*）。没有逗号的话，*Let's eat, Grandma* 就成了 *Let's eat Grandma*。",
+        "Commas also set off the **name of the person spoken to** (*Doctor, is it serious?* *Thank you, Maria.* *I think, Sam, that you are right.*) and words such as **yes**, **no** and **well** at the start of an answer (*Yes, I had the shot.* *Well, it hurt a little.*). Without the comma, *Let's eat, Grandma* turns into *Let's eat Grandma*.\n\n> **Watch out.** Put commas around a name only when you are speaking *to* that person, not *about* them: *Thank you, Maria* needs a comma, while *I thanked Maria* does not.",
+        "逗号还用来隔开**直接称呼的人名**（*Doctor, is it serious?* *Thank you, Maria.* *I think, Sam, that you are right.*）以及回答开头的 **yes**、**no** 和 **well** 等词（*Yes, I had the shot.* *Well, it hurt a little.*）。没有逗号的话，*Let's eat, Grandma* 就成了 *Let's eat Grandma*。\n\n> **注意。** 只有**对着**某人说话时的称呼才加逗号，提到某人时不加：*Thank you, Maria* 要加逗号，而 *I thanked Maria* 不加。",
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
@@ -1590,8 +1618,8 @@ ${nameLines}
         let's eat Grandma|Let's eat, Grandma.|Let's, eat Grandma.|Let's eat Grandma.
       `,
       (right) => [
-        `*${right}* sets off the name of the person spoken to, or the opening yes, no or well, with commas.`,
-        `*${right}* 用逗号隔开了直接称呼的人名或开头的 yes、no、well。`,
+        `*${right}* sets off the person spoken to — or the opening *yes*, *no* or *well* — with commas in every spot where it touches the rest of the sentence.\n\n**Check.** Drop the direct name or opening word: the remaining sentence still reads smoothly with no broken phrase.`,
+        `*${right}* 用逗号把直接称呼的人名或开头的 *yes*、*no*、*well* 与句子其余部分准确隔开。\n\n**检验。** 去掉称呼语或句首的应答词后，剩下的句子依然顺畅完整，没有被逗号劈开的短语。`,
       ],
       [
         ["*{wrong}* misses a comma or puts one where nothing should be set off.", "*{wrong}* 漏了逗号，或在不该隔开的地方放了逗号。"],
@@ -1611,14 +1639,18 @@ const tricky = topic("grammar", {
     "Some subjects look plural but take a singular verb, such as news and mathematics; others, such as scissors, are always plural; a group or an amount is usually singular.",
     "有些主语看起来是复数却用单数动词，如 news 和 mathematics；有些如 scissors 总是复数；集体或数量通常是单数。",
   ],
+  intro: [
+    "Not every noun ending in *-s* is plural, and not every group noun is plural either: *Checkers is easy to learn*, *Two miles is a quick jog*, yet *My tweezers are missing.* Matching the verb to what the subject actually counts — one unit or a plural pair — keeps agreement steady. In this topic you match verbs to tricky *-s* nouns, collective nouns, and amounts.",
+    "并不是所有以 *-s* 结尾的名词都是复数，也不是所有集体名词都是复数：*Checkers is easy to learn* 和 *Two miles is a quick jog* 用单数，而 *My tweezers are missing* 用复数。按主语实际指代的是一个整体还是成对复数来配动词，主谓一致才不会出错。本节练习处理形复实单名词、成对复数名词以及集体与数量名词的主谓一致。",
+  ],
   after: ["subject-verb-agreement-with-phrases-between"],
   points: [
     choose(
       "subjects-that-look-plural",
       ["Subjects That Look Plural", "看起来是复数的主语"],
       [
-        "Some nouns end in *-s* but name **one** thing or subject, so they take a singular verb: *news*, *mathematics*, *physics*, *measles*, *economics*, *the United States*. Others name one object but are **always plural**, because the object has two parts: *scissors*, *jeans*, *glasses*, *pants*. Ask whether the word names one thing or a pair.",
-        "有些名词以 *-s* 结尾，却指**一个**事物或学科，所以用单数动词：*news*、*mathematics*、*physics*、*measles*、*economics*、*the United States*。另一些名词指一件东西，却**总是复数**，因为这件东西由两部分组成：*scissors*、*jeans*、*glasses*、*pants*。要问这个词指的是一个事物还是一对东西。",
+        "Some nouns end in *-s* but name **one** thing or subject, so they take a singular verb: *news*, *mathematics*, *physics*, *measles*, *economics*, *the United States*. Others name one object but are **always plural**, because the object has two parts: *scissors*, *jeans*, *glasses*, *pants*. Ask whether the word names one thing or a pair.\n\n> **Watch out.** Do not judge a subject by its final *-s* alone: *the news* is singular (*it is*), while *my glasses* is plural (*they are*).",
+        "有些名词以 *-s* 结尾，却指**一个**事物或学科，所以用单数动词：*news*、*mathematics*、*physics*、*measles*、*economics*、*the United States*。另一些名词指一件东西，却**总是复数**，因为这件东西由两部分组成：*scissors*、*jeans*、*glasses*、*pants*。要问这个词指的是一个事物还是一对东西。\n\n> **注意。** 不要单凭词尾的 *-s* 决定单复数：*the news* 是单数（可用 *it* 替代），而 *my glasses* 是复数（可用 *they* 替代）。",
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
@@ -1655,23 +1687,23 @@ ${lookPlural}
         These trousers ___ too tight now.|are|is|was
       `,
       (right) => [
-        `**${right}** agrees with the subject: ask whether it names one thing or a pair, and use the verb that matches.`,
-        `**${right}** 与主语一致：问一问它指的是一个事物还是一对东西，再用相配的动词。`,
+        `**${right}** agrees with the subject in number and matches the present tense of the sentence.\n\n**Check.** Substitute *it* if the subject names one field, country, illness, or broadcast, or *they* if it names a two-part tool or garment — *${right}* matches that pronoun.`,
+        `**${right}** 在单复数上与主语一致，也符合句子的现在时。\n\n**检验。** 主语指一门学科、国家、疾病或新闻时换成 *it*，指成对工具或衣物时换成 *they*，*${right}* 正好与之搭配。`,
       ],
       [
         [
-          "*{wrong}* does not agree: the subject looks one way but names the other, so it takes **{right}**.",
-          "*{wrong}* 不一致：这个主语看起来是一种情况，实际指的却是另一种，所以用 **{right}**。",
+          "*{wrong}* has the wrong number: check whether this *-s* noun names one single thing or a two-part pair.",
+          "*{wrong}* 的单复数不对：要看这个以 *-s* 结尾的名词指的是一件单一事物，还是由两部分组成的成对物品。",
         ],
-        ["*{wrong}* is in the past, but the sentence speaks of now.", "*{wrong}* 是过去时，而句子说的是现在。"],
+        ["*{wrong}* is in the past tense, but the sentence speaks of now.", "*{wrong}* 是过去时，而句子说的是现在。"],
       ],
     ),
     choose(
       "groups-and-amounts",
       ["Groups and Amounts", "集体与数量"],
       [
-        "A **collective noun** such as *team*, *class*, *family*, *jury* or *committee* names one group, so in American English it usually takes a **singular** verb: *The team is ready.* An **amount** of money, time or distance treated as one sum is singular too: *Ten dollars is too much. Three hours is a long wait.* But *a number of* means many and is plural: *A number of students are sick.*",
-        "**集体名词**如 *team*、*class*、*family*、*jury* 或 *committee* 指一个群体，所以在美国英语中通常用**单数**动词：*The team is ready.* 被当作一个总数的钱、时间或距离也是单数：*Ten dollars is too much. Three hours is a long wait.* 但 *a number of* 表示许多，是复数：*A number of students are sick.*",
+        "A **collective noun** such as *team*, *class*, *family*, *jury* or *committee* names one group, so in American English it usually takes a **singular** verb: *The team is ready.* An **amount** of money, time or distance treated as one sum is singular too: *Ten dollars is too much. Three hours is a long wait.* But *a number of* means many and is plural: *A number of students are sick.*\n\n> **Watch out.** *The number of* is singular (it refers to one figure: *The number of cases is falling*), whereas *a number of* means *many* and is plural (*A number of students are sick*).",
+        "**集体名词**如 *team*、*class*、*family*、*jury* 或 *committee* 指一个群体，所以在美国英语中通常用**单数**动词：*The team is ready.* 被当作一个总数的钱、时间或距离也是单数：*Ten dollars is too much. Three hours is a long wait.* 但 *a number of* 表示许多，是复数：*A number of students are sick.*\n\n> **注意。** *the number of* 指一个具体的数量，用单数（*The number of cases is falling*）；而 *a number of* 意为“许多”，用复数（*A number of students are sick*）。",
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
@@ -1708,15 +1740,18 @@ ${groupLines}
         A number of shops ___ closed today.|are|is|was
       `,
       (right) => [
-        `**${right}** agrees with the subject: a group or an amount counts as one, but *a number of* means many.`,
-        `**${right}** 与主语一致：集体或数量算作一个，而 *a number of* 表示许多。`,
+        `**${right}** agrees with the subject in number and matches the present tense of the sentence.\n\n**Check.** Replace a single group, total amount, or *the number of …* with *it*, and replace *a number of …* with *many of them* — *${right}* fits the replacement.`,
+        `**${right}** 在单复数上与主语一致，也符合句子的现在时。\n\n**检验。** 把单一集体、总数或 *the number of …* 换成 *it*，把 *a number of …* 换成 *many of them*，*${right}* 正好与之搭配。`,
       ],
       [
         [
-          "*{wrong}* does not agree with this subject, which takes **{right}**: a group or an amount counts as one, *a number of* as many.",
-          "*{wrong}* 与这个主语不一致，应该用 **{right}**：集体或数量算作一个，*a number of* 算作许多。",
+          "*{wrong}* has the wrong number: a group, a total amount, or *the number of* counts as singular, while *a number of* counts as plural.",
+          "*{wrong}* 的单复数不对：集体、总数或 *the number of* 算作单数，而 *a number of* 算作复数。",
         ],
-        ["*{wrong}* is in the past, but the sentence speaks of now or of every time.", "*{wrong}* 是过去时，而句子说的是现在或每一次。"],
+        [
+          "*{wrong}* is in the past tense, but the sentence speaks of now or of a regular schedule.",
+          "*{wrong}* 是过去时，而句子说的是现在或常规安排。",
+        ],
       ],
     ),
   ],

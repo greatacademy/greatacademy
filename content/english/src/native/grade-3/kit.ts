@@ -96,9 +96,12 @@ export function arrangeGenerator(items: readonly Arrange[]): Generator {
   };
 }
 
-/** fill replaces {wrong} and {right} in a pair of feedback with the options. */
-export const fill = (p: Pair, wrong: string, right: string): Text =>
-  t(p[0].replaceAll("{wrong}", wrong).replaceAll("{right}", right), p[1].replaceAll("{wrong}", wrong).replaceAll("{right}", right));
+/** fill replaces {wrong}, {right} and {shown} in a pair of feedback with the options and prompt text. */
+export const fill = (p: Pair, wrong: string, right: string, shown = ""): Text =>
+  t(
+    p[0].replaceAll("{wrong}", wrong).replaceAll("{right}", right).replaceAll("{shown}", shown),
+    p[1].replaceAll("{wrong}", wrong).replaceAll("{right}", right).replaceAll("{shown}", shown),
+  );
 
 /** kinded builds an Ask whose wrong options are of fixed kinds, each with its feedback, from a row of shown, right and wrong options. */
 export const kinded = (question: Pair, why: (right: string, shown: string) => Pair, kinds: readonly Pair[]) => {
@@ -113,7 +116,7 @@ export const kinded = (question: Pair, why: (right: string, shown: string) => Pa
       right,
       wrong,
       why: pair(why(right, s)),
-      whyNot: wrong.map((w, i) => fill(kinds[i] ?? ["", ""], w, right)),
+      whyNot: wrong.map((w, i) => fill(kinds[i] ?? ["", ""], w, right, s)),
     };
   };
 };
@@ -126,7 +129,17 @@ export const topic = (
   prerequisites: readonly string[],
   knowledgePoints: readonly KnowledgePointDef[],
   xp = 14,
-): TopicDef => ({ id, title, summary, prerequisites: [...prerequisites], encompasses: [], xp, knowledgePoints: [...knowledgePoints] });
+  intro?: Text,
+): TopicDef => ({
+  id,
+  title,
+  summary,
+  ...(intro ? { intro } : {}),
+  prerequisites: [...prerequisites],
+  encompasses: [],
+  xp,
+  knowledgePoints: [...knowledgePoints],
+});
 
 /** bold puts the first whole-word match of a word in bold. */
 export const bold = (sentence: string, word: string): string =>

@@ -492,7 +492,7 @@ const jayReason = (word: string, sentence: string): Text => {
 };
 
 /** whyNotJay explains a wrong word among just, already, yet, ever and never. */
-const whyNotJay = (wrong: string, right: string, shown: string): Text => {
+const whyNotJay = (wrong: string): Text => {
   if (wrong === "yet")
     return t(
       "*yet* goes in questions and in sentences with *not*, but this sentence says the thing is done.",
@@ -505,13 +505,12 @@ const whyNotJay = (wrong: string, right: string, shown: string): Text => {
     );
   if (wrong === "never")
     return t(
-      "*never* goes before the past participle and makes a statement. A question about up to now ends with *yet*.",
-      "*never* 放在过去分词前面，用于陈述句。询问到现在为止的情况，句末用 *yet*。",
+      "*never* goes before the past participle in a statement, not at the end of a question.",
+      "*never* 放在陈述句的过去分词前面，不能放在疑问句末尾。",
     );
-  const reason = jayReason(right, shown);
   return t(
-    `*${wrong}* goes between *have* and the past participle, not at the end. ${reason.en}.`,
-    `*${wrong}* 放在 *have* 和过去分词之间，不放在句末。${reason["zh-CN"]}。`,
+    `*${wrong}* goes between *have* and the past participle in a statement, not at the end of a question or negative sentence.`,
+    `*${wrong}* 用在陈述句的 *have* 和过去分词之间，不能放在疑问句或否定句末尾。`,
   );
 };
 
@@ -521,6 +520,10 @@ const presentPerfectJustAlreadyYet: TopicDef = {
   summary: t(
     "I have just sent it. Have you charged it yet? She has already left. The present perfect for things done, or not done, up to now.",
     "I have just sent it. Have you charged it yet? She has already left. 用现在完成时说到现在为止做了或还没做的事。",
+  ),
+  intro: t(
+    "When you give a quick status update—*I've just emailed the file*, *She has already replied*, *I haven't checked it yet*—each little word (*just, already, yet*) has its own meaning and its own slot in the sentence.",
+    "同步进展时（*I've just emailed the file*、*She has already replied*、*I haven't checked it yet*），*just*、*already*、*yet* 不仅意思不同，在句子里的位置也各有固定规则。",
   ),
   prerequisites: ["present-perfect-with-ever-and-never", "a2-words-machines"],
   encompasses: [
@@ -534,15 +537,18 @@ const presentPerfectJustAlreadyYet: TopicDef = {
       "which-word",
       t("Just, already or yet", "just、already 还是 yet"),
       t(
-        "These three words go with the present perfect:\n\n- *just* means *a very short time ago*. It goes between *have* and the verb: *I've just sent it.*\n- *already* means *before now*, often sooner than you expected. It goes between *have* and the verb: *Don't worry. I've already paid.*\n- *yet* means *up to now*. It goes in questions and in sentences with *not*, at the end: *Have you finished yet? I haven't finished yet.*",
-        "这三个词常和现在完成时一起用：\n\n- *just* 意思是“刚刚”，放在 *have* 和动词之间：*I've just sent it.*\n- *already* 意思是“已经”，常常比预想的早，放在 *have* 和动词之间：*Don't worry. I've already paid.*\n- *yet* 意思是“到现在为止”，用在疑问句和否定句的末尾：*Have you finished yet? I haven't finished yet.*\n\n中文“还没……”对应 *haven't ... yet*，“已经……了”对应 *have already ...*。",
+        "These three words go with the present perfect:\n\n- *just* means *a very short time ago*. It goes between *have* and the verb: *I've just sent it.*\n- *already* means *before now*, often sooner than you expected. It goes between *have* and the verb: *Don't worry. I've already paid.*\n- *yet* means *up to now*. It goes in questions and in sentences with *not*, at the end: *Have you finished yet? I haven't finished yet.*\n\n> **Watch out.** Check both position and sentence type: a blank at the very end of a question or *haven't/hasn't* sentence takes *yet*, never *already* or *just*.",
+        "这三个词常和现在完成时一起用：\n\n- *just* 意思是“刚刚”，放在 *have* 和动词之间：*I've just sent it.*\n- *already* 意思是“已经”，常常比预想的早，放在 *have* 和动词之间：*Don't worry. I've already paid.*\n- *yet* 意思是“到现在为止”，用在疑问句和否定句的末尾：*Have you finished yet? I haven't finished yet.*\n\n> **注意。** 同时看位置和句型：疑问句或 *haven't/hasn't* 否定句的末尾用 *yet*，不要把 *already* 或 *just* 放到那里。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         justBank,
         (right, shown) => {
           const reason = jayReason(right, shown);
-          return t(`${reason.en}: ${fill(shown, right)}`, `${reason["zh-CN"]}：${fill(shown, right)}`);
+          return t(
+            `${reason.en}: ${fill(shown, right)}\n\n**Check.** Verify both slot and meaning: ${right === "yet" ? "*yet* sits at the end of a question or negative" : `*${right}* sits between *have/has* and the past participle in a statement`}.`,
+            `${reason["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 核对位置和意思：${right === "yet" ? "*yet* 位于疑问句或否定句末尾" : `*${right}* 位于陈述句的 *have/has* 与过去分词之间`}。`,
+          );
         },
         whyNotJay,
       ),
@@ -551,15 +557,15 @@ const presentPerfectJustAlreadyYet: TopicDef = {
       "write",
       t("Writing with just, already and yet", "用 just、already 和 yet 写句子"),
       t(
-        "Write the sentence from the note with *have* or *has* and the past participle. *just* and *already* go before the participle: *She has just sent the email.* *yet* goes at the end of a question or a sentence with *not*: *Have you paid the bill yet? Tom hasn't read the instructions yet.* Do not use *did* with the past participle.",
-        "根据笔记写句子，用 *have / has* 加过去分词。*just* 和 *already* 放在过去分词前面：*She has just sent the email.* *yet* 放在疑问句或否定句的末尾：*Have you paid the bill yet? Tom hasn't read the instructions yet.* 不要用 *did* 加过去分词。",
+        "Write the sentence from the note with *have* or *has* and the past participle. *just* and *already* go before the participle: *She has just sent the email.* *yet* goes at the end of a question or a sentence with *not*: *Have you paid the bill yet? Tom hasn't read the instructions yet.*\n\n> **Watch out.** Never use *did* with a past participle (*Did you paid...?* is wrong), and match *have* vs. *has* to the subject.",
+        "根据笔记写句子，用 *have / has* 加过去分词。*just* 和 *already* 放在过去分词前面：*She has just sent the email.* *yet* 放在疑问句或否定句的末尾：*Have you paid the bill yet? Tom hasn't read the instructions yet.*\n\n> **注意。** 不要把 *did* 和过去分词混用（*Did you paid...?* 是错的），并核对主语该配 *have* 还是 *has*。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), jayTypedBank, (right) => {
         const word = right.includes(" just ") ? "just" : right.includes(" already ") ? "already" : "yet";
         const reason = jayReason(word, right);
         return t(
-          `${reason.en}, and the verb is *have* or *has* with the past participle: ${right}`,
-          `${reason["zh-CN"]}，动词用 *have / has* 加过去分词：${right}`,
+          `${reason.en}, and the verb is *have* or *has* with the past participle: ${right}\n\n**Check.** Verify three things: *have/has* agrees with the subject, the verb is a past participle, and *${word}* sits in its proper slot.`,
+          `${reason["zh-CN"]}，动词用 *have / has* 加过去分词：${right}\n\n**检验。** 核对三处：*have/has* 与主语一致、动词用过去分词、*${word}* 放对了位置。`,
         );
       }),
     ),
@@ -662,6 +668,10 @@ const writingAnEmailToAFriend = judgedTopic({
     "Write an email of six to eight sentences to a friend: answer their news, tell yours, and ask a question.",
     "给朋友写一封六到八句话的电子邮件：回应对方的消息，讲讲你的近况，再问一个问题。",
   ),
+  intro: t(
+    "A warm reply keeps a conversation going: *Hi Leo, Thanks for your email! Congrats on winning the race. I've just joined the chess club at school. How is your new bike? See you, Mia.* Reacting to your friend's news first makes the email feel personal.",
+    "热络的回信能让对话继续下去：*Hi Leo, Thanks for your email! Congrats on winning the race. I've just joined the chess club at school. How is your new bike? See you, Mia.* 先回应对方的近况，信就显得真诚自然。",
+  ),
   prerequisites: ["writing-a-short-note", "past-simple-irregular"],
   encompasses: [
     { topic: "writing-a-short-note", weight: 0.3 },
@@ -672,8 +682,8 @@ const writingAnEmailToAFriend = judgedTopic({
     id: "email",
     title: t("Answer, news and a question", "回应、近况和提问"),
     explanation: t(
-      "An email to a friend is friendly and short:\n\n- Begin with *Hi* or *Dear* and the name.\n- Answer their email first: *A new puppy, how lovely!* Answer their questions too.\n- Then give your news: *I've just finished my exams.*\n- Ask a question: *Can you send me a photo?*\n- End with *Love*, *See you* or *Best wishes* and your name.",
-      "给朋友的电子邮件要友好、简短：\n\n- 开头写 *Hi* 或 *Dear* 加对方的名字。\n- 先回应对方的邮件：*A new puppy, how lovely!* 也要回答对方的问题。\n- 然后讲你的近况：*I've just finished my exams.*\n- 问一个问题：*Can you send me a photo?*\n- 结尾写 *Love*、*See you* 或 *Best wishes* 和你的名字。",
+      "An email to a friend is friendly and short:\n\n- Begin with *Hi* or *Dear* and the name.\n- Answer their email first: *A new puppy, how lovely!* Answer their questions too.\n- Then give your news: *I've just finished my exams.*\n- Ask a question: *Can you send me a photo?*\n- End with *Love*, *See you* or *Best wishes* and your name.\n\n> **Watch out.** Read your friend's email carefully so you answer every question they asked—do not only talk about yourself.",
+      "给朋友的电子邮件要友好、简短：\n\n- 开头写 *Hi* 或 *Dear* 加对方的名字。\n- 先回应对方的邮件：*A new puppy, how lovely!* 也要回答对方的问题。\n- 然后讲你的近况：*I've just finished my exams.*\n- 问一个问题：*Can you send me a photo?*\n- 结尾写 *Love*、*See you* 或 *Best wishes* 和你的名字。\n\n> **注意。** 仔细读完朋友的来信，确保回应了对方提的每一个问题——不要只顾着说自己的事。",
     ),
   },
   question: t(

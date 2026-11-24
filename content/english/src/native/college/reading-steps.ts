@@ -60,8 +60,8 @@ export const abstractMoveStep = point(
   "finding-the-move",
   t("Finding the Move", "找出论证步骤"),
   t(
-    "When you read an abstract or an introduction, you often need one move in particular: what the authors claim, what their evidence is, or what they admit they cannot show. Look for the signals of each.\n\n- **The claim** often follows *we argue*, *we find*, *we contend* or *we claim*, and gives an answer, not a number.\n- **The evidence** gives what was measured or found: numbers, counts, records, results of tests.\n- **A limitation** often contains *may not*, *cannot tell*, *only*, *remains unknown* or *may differ*.\n\nDo not confuse the claim with the question: *This study asks whether...* sets up the inquiry, while *We find that...* answers it.",
-    "读摘要或引言时，你常常需要特定的某个步骤：作者主张什么、他们的证据是什么，或者他们承认自己无法说明什么。要找出每一种步骤的信号。\n\n- **主张**常常跟在 *we argue*、*we find*、*we contend*、*we claim* 后面，给出的是一个回答，而不是一个数字。\n- **证据**给出测量或发现的东西：数字、统计、记录、测试结果。\n- **局限**常常含有 *may not*、*cannot tell*、*only*、*remains unknown*、*may differ*。\n\n不要把主张和问题混淆：*This study asks whether...* 提出探究的问题，而 *We find that...* 回答这个问题。",
+    "When you read an abstract or an introduction, you often need one move in particular: what the authors claim, what their evidence is, or what they admit they cannot show. Look for the signals of each.\n\n- **The claim** often follows *we argue*, *we find*, *we contend* or *we claim*, and gives an answer, not a number.\n- **The evidence** gives what was measured or found: numbers, counts, records, results of tests.\n- **A limitation** often contains *may not*, *cannot tell*, *only*, *remains unknown* or *may differ*.\n\n> **Watch out.** Do not confuse the **claim** with the **question**: *This study asks whether...* sets up the inquiry, while *We argue/find that...* states the answer.",
+    "读摘要或引言时，你常常需要特定的某个步骤：作者主张什么、他们的证据是什么，或者他们承认自己无法说明什么。要找出每一种步骤的信号。\n\n- **主张**常常跟在 *we argue*、*we find*、*we contend*、*we claim* 后面，给出的是一个回答，而不是一个数字。\n- **证据**给出测量或发现的东西：数字、统计、记录、测试结果。\n- **局限**常常含有 *may not*、*cannot tell*、*only*、*remains unknown*、*may differ*。\n\n> **注意。** 不要把**主张**和**问题**混淆：*This study asks whether...* 是提出探究的问题，而 *We argue/find that...* 才是给出的答案。",
   ),
   choiceGenerator(
     t("Which sentence of the abstract makes the move named?", "摘要中的哪个句子完成了所指定的论证步骤？"),
@@ -69,7 +69,10 @@ export const abstractMoveStep = point(
     (right) => {
       const move = abstractMove.get(right) ?? "";
       const [en, zh] = moveUse[move] ?? ["", ""];
-      return t(`*${right}* It states ${move}: ${en}.`, `*${right}* 它陈述的是${moveZh[move] ?? move}：${zh}。`);
+      return t(
+        `*${right}* It states ${move}: ${en}.\n\n**Check.** Look for the cue words of ${move} (*we argue/find* for a claim, counts/measurements for evidence, *only/may not/unknown* for a limitation).`,
+        `*${right}* 它陈述的是${moveZh[move] ?? move}：${zh}。\n\n**检验。** 对照${moveZh[move] ?? move}的信号词（主张常含 *we argue/find*，证据常含数据/测量，局限常含 *only/may not/unknown*）。`,
+      );
     },
     (wrong) => {
       const move = abstractMove.get(wrong) ?? "";
@@ -123,15 +126,15 @@ export const sourceForNeedStep = point(
   "the-source-for-the-need",
   t("The Source for the Need", "满足需要的资料"),
   t(
-    "Knowing what a scholarly source is does not finish the job: you must find one that serves **your** question. A source fits a research need when three things line up.\n\n- **It is scholarly**: peer-reviewed, written by researchers, with methods and references, when your paper needs evidence. A magazine article, a blog, an advertisement or a novel may be interesting, but it cannot carry an academic claim.\n- **It is on your exact topic**: the same population, place and question. A study of adults does not answer a question about teenagers.\n- **It is current enough**: recent work for a question about the present, while an old source can be the right one for a question about the past.\n\nThe tempting wrong choices are popular sources on the right topic, and scholarly sources on the wrong one.",
-    "知道什么是学术资料还不够：你必须找到能服务于**你的**问题的那一份。当三点都吻合时，资料才符合研究需要。\n\n- **它是学术性的**：经过同行评审，由研究者撰写，有方法和参考文献，适合论文需要证据的时候。杂志文章、博客、广告或小说也许有趣，但不能支撑学术主张。\n- **它恰好针对你的主题**：同样的人群、地点和问题。对成年人的研究回答不了关于青少年的问题。\n- **它足够新**：关于现在的问题需要近期的研究，而对于关于过去的问题，旧资料可能恰恰是合适的。\n\n容易误选的是主题对路的大众资料，以及主题不对的学术资料。",
+    "Knowing what a scholarly source is does not finish the job: you must find one that serves **your** question. A source fits a research need when three things line up.\n\n- **It is scholarly**: peer-reviewed, written by researchers, with methods and references, when your paper needs evidence. A magazine article, a blog, an advertisement or a novel may be interesting, but it cannot carry an academic claim.\n- **It is on your exact topic**: the same population, place and question. A study of adults does not answer a question about teenagers.\n- **It is current enough**: recent work for a question about the present, while an old source can be the right one for a question about the past.\n\n> **Watch out.** Watch for two traps: a **popular** source on the exact topic (no peer review or methods), and a **scholarly** source on the wrong group, place, or era.",
+    "知道什么是学术资料还不够：你必须找到能服务于**你的**问题的那一份。当三点都吻合时，资料才符合研究需要。\n\n- **它是学术性的**：经过同行评审，由研究者撰写，有方法和参考文献，适合论文需要证据的时候。杂志文章、博客、广告或小说也许有趣，但不能支撑学术主张。\n- **它恰好针对你的主题**：同样的人群、地点和问题。对成年人的研究回答不了关于青少年的问题。\n- **它足够新**：关于现在的问题需要近期的研究，而对于关于过去的问题，旧资料可能恰恰是合适的。\n\n> **注意。** 避开两个常见陷阱：主题对路却没有同行评审的**大众资料**，以及虽然是同行评审却研究错人群、地点或时期的**学术资料**。",
   ),
   kindedChoice(
     ["Which source best serves this research need?", "哪份资料最能满足这一研究需要？"],
     needBank,
     (right) => [
-      `*${right}* It is scholarly, it addresses the exact population and question of the paper, and it is from a fitting time.`,
-      `*${right}* 它是学术资料，针对的正是论文的人群和问题，而且时间也合适。`,
+      `*${right}* It is scholarly, it addresses the exact population and question of the paper, and it is from a fitting time.\n\n**Check.** Verify all three criteria together: peer-reviewed/scholarly, exact population/topic, and appropriate time period.`,
+      `*${right}* 它是学术资料，针对的正是论文的人群和问题，而且时间也合适。\n\n**检验。** 同时核对三条标准：经同行评审的学术来源、完全对应的人群与问题，以及合适的时间范围。`,
     ],
     [
       [
@@ -192,15 +195,15 @@ export const faithfulReportStep = (earlier: readonly Core[]): KnowledgePointDef 
     "choosing-the-faithful-report",
     t("Choosing the Faithful Report", "选出忠实的转述"),
     t(
-      "When you report a study in your own writing, you are the next link in the chain, so check your sentence against the original in three ways.\n\n- **Strength**: keep the size of the effect. *Slightly lower* must not become *dramatically lower*, and *about a fifth* must not become *stopped*.\n- **Scope**: keep the group studied. *300 adults in one city* must not become *coffee drinkers everywhere*, and mice are not humans.\n- **Kind of finding**: a survey or a set of records shows a **link**. Unless the study was a controlled experiment, do not write that one thing *lowers*, *raises*, *makes* or *prevents* another.\n\nThe faithful report may sound less exciting than the others. That is usually the sign that it is right.",
-      "在自己的文章中转述研究时，你就是链条上的下一环，所以要从三个方面拿原文检查你的句子。\n\n- **强度**：保持效果的大小。*slightly lower* 不能变成 *dramatically lower*，*about a fifth* 不能变成 *stopped*。\n- **范围**：保持被研究的群体。*一个城市的 300 名成年人* 不能变成 *各地喝咖啡的人*，老鼠也不是人。\n- **发现的类型**：调查或记录显示的是**关联**。除非研究是对照实验，否则不要写一件事 *lowers*、*raises*、*makes* 或 *prevents* 另一件事。\n\n忠实的转述听起来可能不如其他转述激动人心。这通常恰恰说明它是对的。",
+      "When you report a study in your own writing, you are the next link in the chain, so check your sentence against the original in three ways.\n\n- **Strength**: keep the size of the effect. *Slightly lower* must not become *dramatically lower*, and *about a fifth* must not become *stopped*.\n- **Scope**: keep the group studied. *300 adults in one city* must not become *coffee drinkers everywhere*, and mice are not humans.\n- **Kind of finding**: a survey or a set of records shows a **link**. Unless the study was a controlled experiment, do not write that one thing *lowers*, *raises*, *makes* or *prevents* another.\n\nThe faithful report may sound less exciting than the others. That is usually the sign that it is right.\n\n> **Watch out.** Eliminate any option that sneaks in a causal verb (*makes*, *raises*, *prevents*), stretches the sample (*everywhere*, *all ages*), or inflates the size (*vastly*, *almost always*).",
+      "在自己的文章中转述研究时，你就是链条上的下一环，所以要从三个方面拿原文检查你的句子。\n\n- **强度**：保持效果的大小。*slightly lower* 不能变成 *dramatically lower*，*about a fifth* 不能变成 *stopped*。\n- **范围**：保持被研究的群体。*一个城市的 300 名成年人* 不能变成 *各地喝咖啡的人*，老鼠也不是人。\n- **发现的类型**：调查或记录显示的是**关联**。除非研究是对照实验，否则不要写一件事 *lowers*、*raises*、*makes* 或 *prevents* 另一件事。\n\n忠实的转述听起来可能不如其他转述激动人心。这通常恰恰说明它是对的。\n\n> **注意。** 排除偷偷换成因果动词（*makes*、*raises*、*prevents*）、放大样本范围（*everywhere*、*all ages*）或夸大程度（*vastly*、*almost always*）的选项。",
     ),
     kindedChoice(
       ["Which later report stays faithful to the original study?", "哪一条后来的转述忠实于原来的研究？"],
       bank,
       (right) => [
-        `*${right}* It keeps the strength of the finding, the group that was studied, and the fact that the study shows only what it shows.`,
-        `*${right}* 它保持了发现的强度和被研究的群体，并且只说出了研究实际表明的东西。`,
+        `*${right}* It keeps the strength of the finding, the group that was studied, and the fact that the study shows only what it shows.\n\n**Check.** Verify all three anchors against the original study: same effect size, same sample scope, and no causal leap.`,
+        `*${right}* 它保持了发现的强度和被研究的群体，并且只说出了研究实际表明的东西。\n\n**检验。** 对照原始研究核查三点：效果大小一致、适用样本一致，且没有擅自滑向因果断言。`,
       ],
       [
         [
@@ -318,10 +321,18 @@ export const sectionStep = point(
   "where-to-look",
   t("Where to Look", "到哪里去找"),
   t(
-    "Researchers rarely read a paper from start to finish. They go straight to the part that answers their question.\n\n- To decide whether a paper is relevant, or to get its gist: **the abstract**.\n- For background, earlier work and the gap the study fills: **the introduction**.\n- For who was studied, how many, and how the data were gathered: **the methods**.\n- For the findings themselves, numbers, tables and graphs: **the results**.\n- For what the findings mean, how they compare with earlier work, their limits and next steps: **the discussion**.\n\nA common mistake is to look for numbers in the discussion: the discussion may mention them, but the results report them in full.",
-    "研究者很少从头到尾读一篇论文。他们会直接去看能回答自己问题的那一部分。\n\n- 要判断论文是否相关，或者了解大意：**摘要**。\n- 要了解背景、已有研究和本研究要填补的空白：**引言**。\n- 要了解研究了谁、多少人、数据怎样收集：**方法**。\n- 要了解发现本身、数字、表格和图：**结果**。\n- 要了解发现意味着什么、与已有研究相比如何、有什么局限和下一步：**讨论**。\n\n常见的错误是到讨论部分去找数字：讨论部分可能会提到它们，但完整报告它们的是结果部分。",
+    "Researchers rarely read a paper from start to finish. They go straight to the part that answers their question.\n\n- To decide whether a paper is relevant, or to get its gist: **the abstract**.\n- For background, earlier work and the gap the study fills: **the introduction**.\n- For who was studied, how many, and how the data were gathered: **the methods**.\n- For the findings themselves, numbers, tables and graphs: **the results**.\n- For what the findings mean, how they compare with earlier work, their limits and next steps: **the discussion**.\n\n> **Watch out.** Do not look for full numbers and tables in **the discussion**—the discussion interprets findings, while **the results** report them in full.",
+    "研究者很少从头到尾读一篇论文。他们会直接去看能回答自己问题的那一部分。\n\n- 要判断论文是否相关，或者了解大意：**摘要**。\n- 要了解背景、已有研究和本研究要填补的空白：**引言**。\n- 要了解研究了谁、多少人、数据怎样收集：**方法**。\n- 要了解发现本身、数字、表格和图：**结果**。\n- 要了解发现意味着什么、与已有研究相比如何、有什么局限和下一步：**讨论**。\n\n> **注意。** 不要到**讨论**里去找完整数据和表格——讨论部分负责解读意义，完整呈现数据的是**结果**部分。",
   ),
-  labelChoice(["Which part of the paper should you read first?", "你应该先读论文的哪一部分？"], sectionLines, sectionLabels),
+  labelChoice(
+    ["Which part of the paper should you read first?", "你应该先读论文的哪一部分？"],
+    sectionLines,
+    sectionLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Match your specific question to the section whose job is to answer it: **${right}**.`,
+      `这是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 把具体需求与论文各部分的职责对应起来，应先查阅**${entry.zh}**。`,
+    ],
+  ),
 );
 
 // Choosing a style for a purpose.
@@ -419,10 +430,18 @@ export const styleChoiceStep = point(
   "choosing-a-style",
   t("Choosing a Style", "选择风格"),
   t(
-    "Style is a set of tools, and a skilled writer picks the one that suits the purpose and the reader.\n\n- **Short sentences for emphasis** stop the reader cold: use them for shock, for a firm point, or after a long build.\n- **A long sentence that builds** carries the reader forward through a journey, a process or a pile of detail.\n- **Formal, technical diction** gives experts the precision they need, in reports, contracts and specifications.\n- **Plain, informal diction** welcomes general readers: children, the public, customers.\n- **Repetition for rhythm** makes words memorable when they are heard, as in speeches and calls to action.\n\nAsk two questions: who will read or hear this, and what should they feel or do?",
-    "风格是一套工具，熟练的作者会挑选适合目的和读者的那一种。\n\n- **用短句强调**让读者猛然停住：用于表现震惊、坚定的观点，或者在长长的铺垫之后。\n- **层层推进的长句**带着读者经历一段旅程、一个过程或大量细节。\n- **正式的专业用词**为专家提供所需的精确性，用于报告、合同和规范。\n- **平实的口语用词**让普通读者感到亲切：孩子、公众、顾客。\n- **用重复营造节奏**让听到的话令人难忘，比如演讲和号召。\n\n问两个问题：谁会读到或听到这些话？他们应该感受到什么或做什么？",
+    "Style is a set of tools, and a skilled writer picks the one that suits the purpose and the reader.\n\n- **Short sentences for emphasis** stop the reader cold: use them for shock, for a firm point, or after a long build.\n- **A long sentence that builds** carries the reader forward through a journey, a process or a pile of detail.\n- **Formal, technical diction** gives experts the precision they need, in reports, contracts and specifications.\n- **Plain, informal diction** welcomes general readers: children, the public, customers.\n- **Repetition for rhythm** makes words memorable when they are heard, as in speeches and calls to action.\n\n> **Watch out.** Match the tool to **both** audience and effect: formal jargon alienates general readers, while choppy short sentences break the flow of a journey or gradual buildup.",
+    "风格是一套工具，熟练的作者会挑选适合目的和读者的那一种。\n\n- **用短句强调**让读者猛然停住：用于表现震惊、坚定的观点，或者在长长的铺垫之后。\n- **层层推进的长句**带着读者经历一段旅程、一个过程或大量细节。\n- **正式的专业用词**为专家提供所需的精确性，用于报告、合同和规范。\n- **平实的口语用词**让普通读者感到亲切：孩子、公众、顾客。\n- **用重复营造节奏**让听到的话令人难忘，比如演讲和号召。\n\n> **注意。** 风格要同时契合**读者**与**效果**：专业术语会吓退普通读者，而接连不断的短句会打断旅程或层层铺垫的连贯感。",
   ),
-  labelChoice(["Which choice of style suits this purpose best?", "哪种风格最适合这个目的？"], styleLines, styleLabels),
+  labelChoice(
+    ["Which choice of style suits this purpose best?", "哪种风格最适合这个目的？"],
+    styleLines,
+    styleLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Confirm who the audience is and what effect the writer wants—**${right}** matches both.`,
+      `这是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 核对目标读者与作者想达到的效果，**${entry.zh}**与两者都契合。`,
+    ],
+  ),
 );
 
 // The conclusion the data support.
@@ -469,15 +488,15 @@ export const dataConclusionStep = point(
   "what-the-data-support",
   t("What the Data Support", "数据支持什么结论"),
   t(
-    "Before you write a sentence about a chart or a table, test it against what was actually measured.\n\n- **Link or cause?** Most charts and surveys show that two things go together. Unless a randomized trial changed one of them on purpose, write *tended to*, *was linked to* or *rose together*, not *caused*, *made* or *raised*. Look for a third factor, such as hot weather, that could drive both.\n- **How far?** Stay with the group, place and size of effect measured. Twenty towns do not speak for every town in the world, and *slightly* is not *cures*.\n\nThe supported conclusion usually sounds modest, and it often names the very limits that the overreaching ones ignore.",
-    "在写一句关于图表的话之前，要拿实际测量的内容来检验它。\n\n- **关联还是因果？**大多数图表和调查显示的是两件事同时出现。除非随机试验有意改变了其中一个，否则要写 *tended to*、*was linked to* 或 *rose together*，而不是 *caused*、*made* 或 *raised*。要找一找可能同时推动两者的第三个因素，比如炎热的天气。\n- **能推多远？**不要超出所测量的群体、地点和效果大小。二十个城镇代表不了世界上所有的城镇，*slightly* 也不等于 *cures*。\n\n有依据的结论听起来往往很谨慎，它常常正好说出了那些过度推论所忽视的局限。",
+    "Before you write a sentence about a chart or a table, test it against what was actually measured.\n\n- **Link or cause?** Most charts and surveys show that two things go together. Unless a randomized trial changed one of them on purpose, write *tended to*, *was linked to* or *rose together*, not *caused*, *made* or *raised*. Look for a third factor, such as hot weather, that could drive both.\n- **How far?** Stay with the group, place and size of effect measured. Twenty towns do not speak for every town in the world, and *slightly* is not *cures*.\n\nThe supported conclusion usually sounds modest, and it often names the very limits that the overreaching ones ignore.\n\n> **Watch out.** Watch for hidden overreach in both wrong options: one turns a correlation into a cause, while the other generalizes to *every* town, school, or person beyond the measured group.",
+    "在写一句关于图表的话之前，要拿实际测量的内容来检验它。\n\n- **关联还是因果？**大多数图表和调查显示的是两件事同时出现。除非随机试验有意改变了其中一个，否则要写 *tended to*、*was linked to* 或 *rose together*，而不是 *caused*、*made* 或 *raised*。要找一找可能同时推动两者的第三个因素，比如炎热的天气。\n- **能推多远？**不要超出所测量的群体、地点和效果大小。二十个城镇代表不了世界上所有的城镇，*slightly* 也不等于 *cures*。\n\n有依据的结论听起来往往很谨慎，它常常正好说出了那些过度推论所忽视的局限。\n\n> **注意。** 留心两个干扰项里的越界：一个把相关硬说成因果，另一个把结论无限推广到*所有*城镇、学校或人群。",
   ),
   kindedChoice(
     ["Which conclusion do these data support?", "这些数据支持哪个结论？"],
     dataBank,
     (right) => [
-      `*${right}* It stays with what was measured: it reports the link without claiming a cause, and it does not reach beyond the data.`,
-      `*${right}* 它没有超出测量的内容：它报告了关联而没有断言因果，也没有超出数据的范围。`,
+      `*${right}* It stays with what was measured: it reports the link without claiming a cause, and it does not reach beyond the data.\n\n**Check.** Match the chosen conclusion back to the prompt's study type and sample: it neither leaps to causation nor stretches past the group measured.`,
+      `*${right}* 它没有超出测量的内容：它报告了关联而没有断言因果，也没有超出数据的范围。\n\n**检验。** 把所选结论与题干中的研究类型和样本核对：既没有擅自推断因果，也没有超出测量群体。`,
     ],
     [
       [
@@ -536,15 +555,15 @@ export const actionStep = point(
   "what-you-must-do",
   t("What You Must Do", "你必须做什么"),
   t(
-    "Workplace messages often mix three things in a few lines: what you **must** do, what you **may** do, and what you only need to **know**. Read for the required action first.\n\n- **Required**: *must*, *need to*, *are required to*, *shall*, a deadline, or a consequence such as *or your account will be locked*.\n- **Optional**: *may*, *can*, *if you wish*, *feel free to*, *you are welcome to*, *you could*.\n- **Information only**: facts with no action at all, such as when something opened or where a team now sits.\n\nMissing the required action is costly; treating an optional one as required wastes time. When a message holds several, find the one with *must* and a deadline.",
-    "工作中的信息常常在短短几行里混杂三种内容：你**必须**做的、你**可以**做的，以及你只需要**知道**的。先找出必须做的事。\n\n- **必须做的**：*must*、*need to*、*are required to*、*shall*、截止日期，或者 *or your account will be locked* 这样的后果。\n- **可选的**：*may*、*can*、*if you wish*、*feel free to*、*you are welcome to*、*you could*。\n- **仅供了解**：不要求任何行动的事实，比如某样东西什么时候开放，或者某个团队现在在哪里办公。\n\n漏掉必须做的事代价很大；把可选的事当作必须做的则浪费时间。当一条信息包含好几项时，要找出带有 *must* 和截止日期的那一项。",
+    "Workplace messages often mix three things in a few lines: what you **must** do, what you **may** do, and what you only need to **know**. Read for the required action first.\n\n- **Required**: *must*, *need to*, *are required to*, *shall*, a deadline, or a consequence such as *or your account will be locked*.\n- **Optional**: *may*, *can*, *if you wish*, *feel free to*, *you are welcome to*, *you could*.\n- **Information only**: facts with no action at all, such as when something opened or where a team now sits.\n\n> **Watch out.** Do not pick an option introduced by *may*, *can*, or *welcome to*—even when it mentions a date, it is optional rather than required.",
+    "工作中的信息常常在短短几行里混杂三种内容：你**必须**做的、你**可以**做的，以及你只需要**知道**的。先找出必须做的事。\n\n- **必须做的**：*must*、*need to*、*are required to*、*shall*、截止日期，或者 *or your account will be locked* 这样的后果。\n- **可选的**：*may*、*can*、*if you wish*、*feel free to*、*you are welcome to*、*you could*。\n- **仅供了解**：不要求任何行动的事实，比如某样东西什么时候开放，或者某个团队现在在哪里办公。\n\n> **注意。** 不要误选由 *may*、*can* 或 *welcome to* 引出的事项——哪怕它带了日期，也只是可选而非必须。",
   ),
   kindedChoice(
     ["What does this message require you to do?", "这条信息要求你做什么？"],
     actionBank,
     (right) => [
-      `*${right}* The message uses *must*, *need to* or *required*, often with a deadline, so this is the action you cannot skip.`,
-      `*${right}* 信息中用了 *must*、*need to* 或 *required*，常常还带有截止日期，所以这是你不能不做的事。`,
+      `*${right}* The message uses *must*, *need to* or *required*, often with a deadline, so this is the action you cannot skip.\n\n**Check.** Spot the obligation signal (*must*, *need to*, *required*, or a firm deadline/consequence) tied directly to this action.`,
+      `*${right}* 信息中用了 *must*、*need to* 或 *required*，常常还带有截止日期，所以这是你不能不做的事。\n\n**检验。** 定位与该行动直接相连的强制信号（*must*、*need to*、*required* 或硬性截止时间/后果）。`,
     ],
     [
       [
@@ -648,12 +667,16 @@ export const planCheckStep = point(
   "checking-the-plan",
   t("Checking the Plan", "核对计划"),
   t(
-    "Before you write a proposal, check your plan against the request, one test at a time. A proposal that fails any of them is usually rejected without being read.\n\n1. **Who may apply?** Size, age, location, type of organization. If you are outside the limit, nothing else matters.\n2. **What does the money cover?** Many funds pay for some costs and exclude others, such as buildings, travel, equipment or salaries. Ask only for what is covered.\n3. **What must you submit, and when?** The deadline, the page limit, the format, and required documents such as a budget, photos or references.\n\nIf the plan passes all three, it meets the request, and you can turn to how proposals will be judged.",
-    "在写提案之前，要拿计划逐项对照要求进行检验。没有通过其中任何一项的提案，通常连读都不会被读就被拒绝了。\n\n1. **谁可以申请？**规模、年龄、地点、组织类型。如果你不在限定范围内，其他一切都无关紧要。\n2. **资金涵盖什么？**很多资助只支付某些费用，排除其他费用，比如建筑、差旅、设备或薪水。只申请涵盖范围内的费用。\n3. **必须提交什么，何时提交？**截止日期、页数限制、格式，以及预算、照片或推荐信等必须附上的文件。\n\n如果计划通过了全部三项检验，它就符合要求，你就可以转而考虑提案将怎样被评审了。",
+    "Before you write a proposal, check your plan against the request, one test at a time. A proposal that fails any of them is usually rejected without being read.\n\n1. **Who may apply?** Size, age, location, type of organization. If you are outside the limit, nothing else matters.\n2. **What does the money cover?** Many funds pay for some costs and exclude others, such as buildings, travel, equipment or salaries. Ask only for what is covered.\n3. **What must you submit, and when?** The deadline, the page limit, the format, and required documents such as a budget, photos or references.\n\n> **Watch out.** Check all three tests in order—even an eligible applicant with an allowed cost is disqualified if they miss the deadline, exceed the page limit, or omit a required attachment.",
+    "在写提案之前，要拿计划逐项对照要求进行检验。没有通过其中任何一项的提案，通常连读都不会被读就被拒绝了。\n\n1. **谁可以申请？**规模、年龄、地点、组织类型。如果你不在限定范围内，其他一切都无关紧要。\n2. **资金涵盖什么？**很多资助只支付某些费用，排除其他费用，比如建筑、差旅、设备或薪水。只申请涵盖范围内的费用。\n3. **必须提交什么，何时提交？**截止日期、页数限制、格式，以及预算、照片或推荐信等必须附上的文件。\n\n> **注意。** 按顺序逐项核对三条标准——即使申请资格和费用用途都合规，只要错过截止日、超页或漏交附件，依然会被淘汰。",
   ),
   labelChoice(
     ["Does this plan meet the request for proposals? If not, why not?", "这个计划符合征集提案的要求吗？如果不符合，原因是什么？"],
     planLines,
     planLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Run the plan through all three RFP gates (eligibility → covered costs → submission rules) to confirm **${right}**.`,
+      `结论是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 用征集书的三道门槛（申请资格 → 资助范围 → 提交规定）逐一排查计划，确认为**${entry.zh}**。`,
+    ],
   ),
 );

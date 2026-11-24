@@ -83,24 +83,31 @@ const fewerOrLess = topic("grammar", {
     "Fewer, many and number go with things you can count; less, much and amount go with things you cannot.",
     "fewer、many 和 number 用于可数的东西；less、much 和 amount 用于不可数的东西。",
   ],
+  intro: [
+    "We say *fewer puddles* and *many buckets*, but *less rain* and *much sand*. Checking whether a noun can be counted one by one decides which quantifier belongs in front of it.",
+    "我们说 *fewer puddles* 和 *many buckets*，却说 *less rain* 和 *much sand*。先判断名词能不能一个一个数，就能选对前面的限定词。",
+  ],
   after: ["plural-nouns"],
   points: [
     point(
       "count-or-mass-noun",
       t("Count Nouns and Mass Nouns", "可数名词与不可数名词"),
       t(
-        "A **count noun** names things you can count one by one, so it has a plural: *one droplet, three droplets*. A **mass noun** names a substance or an amount that you cannot count one by one: *water, sand, information*. You say *some water* or *three glasses of water*, never *three waters* when you mean the substance.",
-        "**可数名词**表示能一个一个数的东西，所以有复数：*one droplet, three droplets*。**不可数名词**表示不能一个一个数的物质或数量：*water, sand, information*。表示物质时说 *some water* 或 *three glasses of water*，不说 *three waters*。",
+        "A **count noun** names things you can count one by one, so it has a plural: *one droplet, three droplets*. A **mass noun** names a substance or an amount that you cannot count one by one: *water, sand, information*. You say *some water* or *three glasses of water*, never *three waters* when you mean the substance.\n\n> **Watch out.** Test a noun by putting *two* in front of it—*two bottles* works (count), while *two furnitures* or *two informations* does not (mass).",
+        "**可数名词**表示能一个一个数的东西，所以有复数：*one droplet, three droplets*。**不可数名词**表示不能一个一个数的物质或数量：*water, sand, information*。表示物质时说 *some water* 或 *three glasses of water*，不说 *three waters*。\n\n> **注意。** 试着在名词前加数字 *two*——*two bottles* 通顺（可数），而 *two furnitures*、*two informations* 不通（不可数）。",
       ),
       choiceGenerator(
         t("Read the instruction and choose the noun.", "读要求，选出名词。"),
         nounItems,
         (right) =>
           isCount(right)
-            ? t(`*${right}* can be counted (one, two, three), so it is a count noun.`, `*${right}* 可以一个一个数，所以是可数名词。`)
+            ? t(
+                `*${right}* can be counted (one, two, three), so it is a count noun.\n\n**Check.** Try putting a number directly before *${right}*—counting them one by one makes sense, confirming a count noun.`,
+                `*${right}* 可以一个一个数，所以是可数名词。\n\n**检验。** 试着在 *${right}* 前直接加数字——一个一个数说得通，确认为可数名词。`,
+              )
             : t(
-                `*${right}* cannot be counted one by one; it is a mass noun, so we measure it instead.`,
-                `*${right}* 不能一个一个数，是不可数名词，只能计量。`,
+                `*${right}* cannot be counted one by one; it is a mass noun, so we measure it instead.\n\n**Check.** Try putting *two* directly before *${right}*—you would need a container or unit (like a cup or piece) instead, confirming a mass noun.`,
+                `*${right}* 不能一个一个数，是不可数名词，只能计量。\n\n**检验。** 试着在 *${right}* 前直接加 *two*——必须借助容器或单位才行，确认为不可数名词。`,
               ),
         (wrong) =>
           isCount(wrong)
@@ -112,8 +119,8 @@ const fewerOrLess = topic("grammar", {
       "choosing-fewer-or-less",
       t("Choosing Fewer or Less", "选择 fewer 或 less"),
       t(
-        "Use **fewer**, **many** and **number** with count nouns: *fewer droplets, many glaciers, the number of days*. Use **less**, **much** and **amount** with mass nouns: *less water, much ice, the amount of rain*. First decide whether the noun can be counted, then choose the word that goes with it.",
-        "可数名词用 **fewer**、**many** 和 **number**：*fewer droplets, many glaciers, the number of days*。不可数名词用 **less**、**much** 和 **amount**：*less water, much ice, the amount of rain*。先判断名词是否可数，再选择与之搭配的词。",
+        "Use **fewer**, **many** and **number** with count nouns: *fewer droplets, many glaciers, the number of days*. Use **less**, **much** and **amount** with mass nouns: *less water, much ice, the amount of rain*. First decide whether the noun can be counted, then choose the word that goes with it.\n\n> **Watch out.** Do not let everyday speech fool you into writing *less* before a plural count noun—use *fewer* with *puddles*, *coins*, or *students*.",
+        "可数名词用 **fewer**、**many** 和 **number**：*fewer droplets, many glaciers, the number of days*。不可数名词用 **less**、**much** 和 **amount**：*less water, much ice, the amount of rain*。先判断名词是否可数，再选择与之搭配的词。\n\n> **注意。** 别受口语习惯影响在复数可数名词前用 *less*——面对 *puddles*、*coins*、*students* 这类可数名词要用 *fewer*。",
       ),
       choiceGenerator(
         t("Which word fits the gap?", "哪个词适合填空？"),
@@ -122,24 +129,29 @@ const fewerOrLess = topic("grammar", {
           const noun = fewerNoun(shown);
           return forCount(right)
             ? t(
-                `*${noun}* can be counted, so the sentence needs **${right}**, a word for count nouns.`,
-                `*${noun}* 可数，所以要用用于可数名词的 **${right}**。`,
+                `*${noun}* can be counted, so the sentence needs **${right}**, a word for count nouns.\n\n**Check.** Check the noun *${noun}* right after the blank—it is plural and countable, so it pairs with **${right}** (*fewer/many/number*).`,
+                `*${noun}* 可数，所以要用用于可数名词的 **${right}**。\n\n**检验。** 看空格后面的名词 *${noun}*——它是可数复数名词，正好搭配 **${right}**（*fewer/many/number* 一组）。`,
               )
             : t(
-                `*${noun}* cannot be counted one by one, so the sentence needs **${right}**, a word for amounts.`,
-                `*${noun}* 不可数，所以要用表示数量的 **${right}**。`,
+                `*${noun}* cannot be counted one by one, so the sentence needs **${right}**, a word for amounts.\n\n**Check.** Check the noun *${noun}* right after the blank—it is a mass noun measured as an amount, so it pairs with **${right}** (*less/much/amount*).`,
+                `*${noun}* 不可数，所以要用表示数量的 **${right}**。\n\n**检验。** 看空格后面的名词 *${noun}*——它是按量计算的不可数名词，正好搭配 **${right}**（*less/much/amount* 一组）。`,
               );
         },
-        (wrong, _right, shown) => {
+        (wrong, _right, shown, position) => {
           const noun = fewerNoun(shown);
-          return forCount(wrong)
-            ? t(
-                `*${wrong}* goes with things you count, but *${noun}* is an amount here.`,
-                `*${wrong}* 用于可数的东西，但这里的 *${noun}* 是一个量。`,
-              )
+          return position === 0
+            ? forCount(wrong)
+              ? t(
+                  `*${wrong}* goes with things you count, but *${noun}* is an amount here.`,
+                  `*${wrong}* 用于可数的东西，但这里的 *${noun}* 是一个量。`,
+                )
+              : t(
+                  `*${wrong}* goes with amounts, but *${noun}* are things you count.`,
+                  `*${wrong}* 用于不可数的量，但 *${noun}* 是可数的东西。`,
+                )
             : t(
-                `*${wrong}* goes with amounts, but *${noun}* are things you count.`,
-                `*${wrong}* 用于不可数的量，但 *${noun}* 是可数的东西。`,
+                `*${wrong}* does not match both the count/mass type of *${noun}* and the grammar of the sentence.`,
+                `*${wrong}* 与 *${noun}* 的可数性或句子结构不搭配。`,
               );
         },
       ),
@@ -208,17 +220,17 @@ const ableWhy = (right: string): Pair => {
   const kind = ableKind(right);
   if (kind === "part")
     return [
-      `**${right}** ends in *-ible*: what comes before the ending is not a whole English word on its own.`,
-      `**${right}** 以 *-ible* 结尾：词尾前面的部分本身不是一个完整的英语单词。`,
+      `**${right}** ends in *-ible*: what comes before the ending is not a whole English word on its own.\n\n**Check.** Cover *-ible* in **${right}**—the remaining root cannot stand alone as a word, which points to *-ible*.`,
+      `**${right}** 以 *-ible* 结尾：词尾前面的部分本身不是一个完整的英语单词。\n\n**检验。** 遮住 **${right}** 的 *-ible*——剩下的词根不能单独成词，因此用 *-ible*。`,
     ];
   if (kind === "drop")
     return [
-      `**${right}** is a whole word plus *-able*, and the silent *e* at its end drops before the ending.`,
-      `**${right}** 是完整的单词加 *-able*，词末不发音的 *e* 在加词尾前去掉。`,
+      `**${right}** is a whole word plus *-able*, and the silent *e* at its end drops before the ending.\n\n**Check.** Cover *-able* in **${right}** and restore the silent *e*—you get the whole base word, confirming *-able* with the *e* dropped.`,
+      `**${right}** 是完整的单词加 *-able*，词末不发音的 *e* 在加词尾前去掉。\n\n**检验。** 遮住 **${right}** 的 *-able* 并补回不发音的 *e*——正好得到完整的原词，确认是去 *e* 加 *-able*。`,
     ];
   return [
-    `**${right}** is a whole word plus *-able*: a whole word usually takes *-able*.`,
-    `**${right}** 是完整的单词加 *-able*：完整的单词通常加 *-able*。`,
+    `**${right}** is a whole word plus *-able*: a whole word usually takes *-able*.\n\n**Check.** Cover *-able* in **${right}**—a complete English word remains intact, confirming *-able*.`,
+    `**${right}** 是完整的单词加 *-able*：完整的单词通常加 *-able*。\n\n**检验。** 遮住 **${right}** 的 *-able*——前面保留着完整的英语单词，确认用 *-able*。`,
   ];
 };
 
@@ -229,14 +241,18 @@ const ableOrIble = topic("grammar", {
     "-able usually follows a whole word (breakable), -ible a part that is not a word on its own (visible); a final silent e drops before -able.",
     "-able 通常接在完整的单词后（breakable），-ible 接在本身不成词的部分后（visible）；词末不发音的 e 在 -able 前去掉。",
   ],
+  intro: [
+    "*Breakable* and *visible* sound almost identical at the end, yet one takes *-able* and the other takes *-ible*. Checking whether the part before the suffix can stand alone as a whole word unlocks most spellings.",
+    "*breakable* 和 *visible* 的词尾读音几乎一样，却一个用 *-able*，一个用 *-ible*。看看后缀前面的部分能否独立成词，就能判断大多数拼写。",
+  ],
   after: ["common-suffixes"],
   points: [
     choose(
       "choosing-able-or-ible",
       ["Choosing -able or -ible", "选择 -able 或 -ible"],
       [
-        "The endings **-able** and **-ible** sound alike, so look at what comes before them. If it is a whole word, the ending is usually *-able*: *break, breakable*; *wash, washable*. If it is not a word on its own, the ending is usually *-ible*: *vis-ible*, *flex-ible*. A silent *e* at the end of the word drops: *value, valuable*.",
-        "词尾 **-able** 和 **-ible** 读音相近，所以要看前面的部分。如果是完整的单词，通常用 *-able*：*break, breakable*；*wash, washable*。如果本身不成词，通常用 *-ible*：*vis-ible*、*flex-ible*。词末不发音的 *e* 要去掉：*value, valuable*。",
+        "The endings **-able** and **-ible** sound alike, so look at what comes before them. If it is a whole word, the ending is usually *-able*: *break, breakable*; *wash, washable*. If it is not a word on its own, the ending is usually *-ible*: *vis-ible*, *flex-ible*. A silent *e* at the end of the word drops: *value, valuable*.\n\n> **Watch out.** Do not keep a silent final *e* before *-able* (*valueable* is wrong)—drop the *e* when the suffix starts with a vowel.",
+        "词尾 **-able** 和 **-ible** 读音相近，所以要看前面的部分。如果是完整的单词，通常用 *-able*：*break, breakable*；*wash, washable*。如果本身不成词，通常用 *-ible*：*vis-ible*、*flex-ible*。词末不发音的 *e* 要去掉：*value, valuable*。\n\n> **注意。** 在 *-able* 前不要保留词末不发音的 *e*（*valueable* 是错的）——遇到元音开头的后缀时要去 *e*。",
       ],
       ["Which word is spelled correctly for this meaning?", "表示这个意思的哪个词拼写正确？"],
       ableLines.flatMap((r): ChoiceItem[] => [
@@ -245,19 +261,19 @@ const ableOrIble = topic("grammar", {
       ]),
       (right) => ableWhy(right),
       [
-        ["*{wrong}* uses the other ending; **{right}** is the spelling.", "*{wrong}* 用错了词尾；正确拼写是 **{right}**。"],
         [
-          "*{wrong}* changes the letters around the ending; the spelling is **{right}**.",
-          "*{wrong}* 改动了词尾附近的字母；正确拼写是 **{right}**。",
+          "*{wrong}* uses the wrong suffix or keeps an extra silent *e*—check whether the part before the suffix is a whole word.",
+          "*{wrong}* 用错了词尾或多留了不发音的 *e*——检查词尾前面的部分是不是完整单词。",
         ],
+        ["*{wrong}* misspells the letters where the base meets the suffix.", "*{wrong}* 在词干与后缀衔接处的字母拼写有误。"],
       ],
     ),
     type(
       "typing-able-and-ible-words",
       ["Typing -able and -ible Words", "拼写 -able 和 -ible 词"],
       [
-        "When you spell a word with one of these endings, check the part before it. A whole word keeps its letters and takes *-able*, except that a silent final *e* drops (*recycle, recyclable*). A part that cannot stand alone takes *-ible*, as in *legible* and *audible*. Say the word, then check it this way.",
-        "拼写带这类词尾的词时，检查词尾前的部分。完整的单词保持原有字母并加 *-able*，但词末不发音的 *e* 要去掉（*recycle, recyclable*）。本身不能单独成词的部分加 *-ible*，如 *legible* 和 *audible*。先读出这个词，再这样检查。",
+        "When you spell a word with one of these endings, check the part before it. A whole word keeps its letters and takes *-able*, except that a silent final *e* drops (*recycle, recyclable*). A part that cannot stand alone takes *-ible*, as in *legible* and *audible*. Say the word, then check it this way.\n\n> **Watch out.** Watch the final two letters too—write *-ble*, never *-bel* (*comfortabel* is wrong).",
+        "拼写带这类词尾的词时，检查词尾前的部分。完整的单词保持原有字母并加 *-able*，但词末不发音的 *e* 要去掉（*recycle, recyclable*）。本身不能单独成词的部分加 *-ible*，如 *legible* 和 *audible*。先读出这个词，再这样检查。\n\n> **注意。** 还要盯住最后两个字母——一律写 *-ble*，不能倒写成 *-bel*（如 *comfortabel*）。",
       ],
       ["Type the missing word, which ends in -able or -ible.", "输入缺少的词，它以 -able 或 -ible 结尾。"],
       ableLines.flatMap((r) => [
@@ -333,17 +349,17 @@ const greekWhy = (right: string): Pair => {
   const sound = greekSound(right);
   if (sound === "f")
     return [
-      `**${right}** comes from Greek, where the sound /f/ is spelled *ph*.`,
-      `**${right}** 来自希腊语，希腊语来源的词中 /f/ 音拼作 *ph*。`,
+      `**${right}** comes from Greek, where the sound /f/ is spelled *ph*.\n\n**Check.** Say **${right}** aloud and spot the *ph* where you hear /f/—that Greek pattern confirms the spelling.`,
+      `**${right}** 来自希腊语，希腊语来源的词中 /f/ 音拼作 *ph*。\n\n**检验。** 读一遍 **${right}**，在听到 /f/ 音的位置找到 *ph*——这一希腊拼写规律证实拼法正确。`,
     ];
   if (sound === "k")
     return [
-      `**${right}** comes from Greek, where the sound /k/ is often spelled *ch*.`,
-      `**${right}** 来自希腊语，希腊语来源的词中 /k/ 音常拼作 *ch*。`,
+      `**${right}** comes from Greek, where the sound /k/ is often spelled *ch*.\n\n**Check.** Say **${right}** aloud and spot the *ch* making the hard /k/ sound—not /ch/—which marks its Greek origin.`,
+      `**${right}** 来自希腊语，希腊语来源的词中 /k/ 音常拼作 *ch*。\n\n**检验。** 读一遍 **${right}**，在发硬音 /k/ 的位置找到 *ch*（不读 /ch/）——这正是它的希腊来源标志。`,
     ];
   return [
-    `**${right}** comes from Greek, where a short /i/ sound is often spelled *y*.`,
-    `**${right}** 来自希腊语，希腊语来源的词中短音 /i/ 常拼作 *y*。`,
+    `**${right}** comes from Greek, where a short /i/ sound is often spelled *y*.\n\n**Check.** Say **${right}** aloud and spot the *y* spelling the short /i/ sound inside the word.`,
+    `**${right}** 来自希腊语，希腊语来源的词中短音 /i/ 常拼作 *y*。\n\n**检验。** 读一遍 **${right}**，在词中发短音 /i/ 的位置找到字母 *y*。`,
   ];
 };
 const soundName: Record<string, Pair> = {
@@ -359,14 +375,18 @@ const greekSpellings = topic("grammar", {
     "Words from Greek spell /f/ as ph (photo), /k/ as ch (chorus, chemist) and short /i/ as y (symbol).",
     "希腊来源的词把 /f/ 拼作 ph（photo），/k/ 拼作 ch（chorus、chemist），短音 /i/ 拼作 y（symbol）。",
   ],
+  intro: [
+    "In *photo*, *chemist*, and *symbol*, three familiar sounds—/f/, /k/, and short /i/—are spelled *ph*, *ch*, and *y*. Recognizing these Greek spelling patterns helps you read and write science and academic words accurately.",
+    "在 *photo*、*chemist*、*symbol* 里，三个熟悉的音 /f/、/k/ 和短音 /i/ 分别拼作 *ph*、*ch* 和 *y*。认出这些希腊式拼写规律，就能准确读写科学和学术词汇。",
+  ],
   after: ["greek-roots-1"],
   points: [
     choose(
       "choosing-the-greek-spelling",
       ["Choosing the Greek Spelling", "选择希腊式拼写"],
       [
-        "Many English words of science, music and learning come from Greek, and they keep Greek spellings of some sounds. The sound /f/ is spelled **ph** (*photo, alphabet*), the sound /k/ is often spelled **ch** (*chorus, chemist*), and a short /i/ is often spelled **y** (*symbol, mystery*).",
-        "英语中许多科学、音乐和学术词汇来自希腊语，某些音保留了希腊式拼写。/f/ 音拼作 **ph**（*photo, alphabet*），/k/ 音常拼作 **ch**（*chorus, chemist*），短音 /i/ 常拼作 **y**（*symbol, mystery*）。",
+        "Many English words of science, music and learning come from Greek, and they keep Greek spellings of some sounds. The sound /f/ is spelled **ph** (*photo, alphabet*), the sound /k/ is often spelled **ch** (*chorus, chemist*), and a short /i/ is often spelled **y** (*symbol, mystery*).\n\n> **Watch out.** Even after spotting *ph*, *ch*, or *y*, check the *rest* of the word's vowels and consonants so a second typo does not slip past you.",
+        "英语中许多科学、音乐和学术词汇来自希腊语，某些音保留了希腊式拼写。/f/ 音拼作 **ph**（*photo, alphabet*），/k/ 音常拼作 **ch**（*chorus, chemist*），短音 /i/ 常拼作 **y**（*symbol, mystery*）。\n\n> **注意。** 认出 *ph*、*ch* 或 *y* 之后，还要检查词里*其余*的元音和辅音，别让另一处拼写错误漏过去。",
       ],
       ["Which spelling is right for this word?", "这个词的哪种拼写是正确的？"],
       greekLines.flatMap((r): ChoiceItem[] => [
@@ -376,12 +396,12 @@ const greekSpellings = topic("grammar", {
       (right) => greekWhy(right),
       [
         [
-          "*{wrong}* spells the sound the plain English way; the Greek spelling is **{right}**.",
-          "*{wrong}* 用了普通的英语拼法；希腊式拼写是 **{right}**。",
+          "*{wrong}* spells the target sound the plain English way (*f*, *k/c*, or *i*) instead of using the Greek spelling.",
+          "*{wrong}* 用了普通的英语拼法（*f*、*k/c* 或 *i*），没有用希腊式拼写。",
         ],
         [
-          "*{wrong}* has the Greek letters but gets another part wrong; the word is **{right}**.",
-          "*{wrong}* 用了希腊式字母，但其他部分拼错了；正确的是 **{right}**。",
+          "*{wrong}* includes the Greek letters, but misspells another part of the word.",
+          "*{wrong}* 用上了希腊式字母，但词里的另一部分拼错了。",
         ],
       ],
     ),
@@ -389,8 +409,8 @@ const greekSpellings = topic("grammar", {
       "typing-greek-spellings",
       ["Typing Words with Greek Spellings", "拼写希腊来源的词"],
       [
-        "To spell a word from Greek, listen for the sounds that Greek spells its own way. When you hear /f/ in a word of science or learning, try *ph*; when you hear /k/ in *chorus* or *chemist*, try *ch*; when you hear a short /i/ in the middle of the word, try *y*. Then check that the rest of the word looks right.",
-        "拼写希腊来源的词时，注意希腊语有特殊拼法的音。在科学或学术词汇中听到 /f/，试试 *ph*；在 *chorus*、*chemist* 这样的词里听到 /k/，试试 *ch*；在词中间听到短音 /i/，试试 *y*。然后检查词的其余部分是否正确。",
+        "To spell a word from Greek, listen for the sounds that Greek spells its own way. When you hear /f/ in a word of science or learning, try *ph*; when you hear /k/ in *chorus* or *chemist*, try *ch*; when you hear a short /i/ in the middle of the word, try *y*. Then check that the rest of the word looks right.\n\n> **Watch out.** Do not let *ch* fool you into pronouncing /ch/—in Greek words like *echo*, *chorus*, and *stomach*, *ch* spells the hard /k/ sound.",
+        "拼写希腊来源的词时，注意希腊语有特殊拼法的音。在科学或学术词汇中听到 /f/，试试 *ph*；在 *chorus*、*chemist* 这样的词里听到 /k/，试试 *ch*；在词中间听到短音 /i/，试试 *y*。然后检查词的其余部分是否正确。\n\n> **注意。** 别被 *ch* 误导读成 /ch/——在 *echo*、*chorus*、*stomach* 这类希腊来源词里，*ch* 发硬音 /k/。",
       ],
       ["Type the word that has this meaning.", "输入表示这个意思的词。"],
       greekLines.flatMap((r) => {
@@ -526,6 +546,10 @@ const becauseOrBecauseOf = topic("grammar", {
     "Because and although begin a clause with a subject and a verb; because of and despite come before a noun phrase.",
     "because 和 although 引出含主语和动词的从句；because of 和 despite 放在名词短语前。",
   ],
+  intro: [
+    "*We drove slowly **because** the road was icy* uses a full clause (subject + verb), whereas *We drove slowly **because of** the icy road* uses a noun phrase. Spotting whether a verb follows decides between *because/although* and *because of/despite*.",
+    "*We drove slowly **because** the road was icy* 后面是带主语和动词的从句，而 *We drove slowly **because of** the icy road* 后面是名词短语。看后面有没有谓语动词，就能分清 *because/although* 与 *because of/despite*。",
+  ],
   after: ["subordinating-conjunctions", "prepositional-phrases"],
   points: [
     choiceGenerator(
@@ -534,23 +558,33 @@ const becauseOrBecauseOf = topic("grammar", {
       (right) =>
         isClause(right)
           ? t(
-              `*${right}* has a subject and a verb, so it is a clause, and a clause follows **because**.`,
-              `*${right}* 有主语和动词，是从句，从句跟在 **because** 后面。`,
+              `*${right}* has a subject and a verb, so it is a clause, and a clause follows **because**.\n\n**Check.** Find the subject and verb inside *${right}*—because it contains a full predicate, it is a clause rather than a bare noun phrase.`,
+              `*${right}* 有主语和动词，是从句，从句跟在 **because** 后面。\n\n**检验。** 找出 *${right}* 里的主语和动词——它包含完整谓语，所以是从句而不是名词短语。`,
             )
           : t(
-              `*${right}* is a noun phrase with no verb of its own, and a noun phrase follows **because of**.`,
-              `*${right}* 是没有谓语动词的名词短语，名词短语跟在 **because of** 后面。`,
+              `*${right}* is a noun phrase with no verb of its own, and a noun phrase follows **because of**.\n\n**Check.** Scan *${right}* for a verb—there is none, only a noun and its modifiers, confirming a noun phrase.`,
+              `*${right}* 是没有谓语动词的名词短语，名词短语跟在 **because of** 后面。\n\n**检验。** 检查 *${right}* 里有没有动词——没有，只有名词和修饰语，确认为名词短语。`,
             ),
-      (wrong) =>
-        isClause(wrong)
-          ? t(
-              `*${wrong}* has a subject and a verb; a clause follows **because**, not **because of**.`,
-              `*${wrong}* 有主语和动词；从句跟在 **because** 后，不跟在 **because of** 后。`,
-            )
-          : t(
-              `*${wrong}* has no verb; a noun phrase needs **because of**, not **because**.`,
-              `*${wrong}* 没有动词；名词短语要用 **because of**，不用 **because**。`,
-            ),
+      (wrong, _right, _shown, position) =>
+        position === 0
+          ? isClause(wrong)
+            ? t(
+                `*${wrong}* has a subject and a verb; a clause follows **because**, not **because of**.`,
+                `*${wrong}* 有主语和动词；从句跟在 **because** 后，不跟在 **because of** 后。`,
+              )
+            : t(
+                `*${wrong}* has no verb; a noun phrase needs **because of**, not **because**.`,
+                `*${wrong}* 没有动词；名词短语要用 **because of**，不用 **because**。`,
+              )
+          : isClause(wrong)
+            ? t(
+                `*${wrong}* is a complete clause with its own verb, so it cannot follow *because of*.`,
+                `*${wrong}* 是自带谓语动词的完整从句，不能跟在 *because of* 后面。`,
+              )
+            : t(
+                `*${wrong}* is only a noun phrase without a verb, so it cannot follow *because*.`,
+                `*${wrong}* 只是没有动词的名词短语，不能跟在 *because* 后面。`,
+              ),
     ),
     choiceGenerator(
       t("Which word or words fit the gap?", "哪个词或词组适合填空？"),
@@ -560,12 +594,12 @@ const becauseOrBecauseOf = topic("grammar", {
         const meaning: Pair = pairOf(right) === "reason" ? ["gives a reason", "表示原因"] : ["shows a contrast", "表示转折"];
         return clause
           ? t(
-              `A clause with a subject and a verb follows, and the sentence ${meaning[0]}, so **${right}** fits.`,
-              `后面是有主语和动词的从句，句子${meaning[1]}，所以用 **${right}**。`,
+              `A clause with a subject and a verb follows, and the sentence ${meaning[0]}, so **${right}** fits.\n\n**Check.** Check two things after the gap: there is a subject + verb (a clause), and the link ${meaning[0]}—both confirm **${right}**.`,
+              `后面是有主语和动词的从句，句子${meaning[1]}，所以用 **${right}**。\n\n**检验。** 核对空格后的两点：后面有“主语+动词”（从句），且前后关系${meaning[1]}——两点都指向 **${right}**。`,
             )
           : t(
-              `A noun phrase with no verb follows, and the sentence ${meaning[0]}, so **${right}** fits.`,
-              `后面是没有动词的名词短语，句子${meaning[1]}，所以用 **${right}**。`,
+              `A noun phrase with no verb follows, and the sentence ${meaning[0]}, so **${right}** fits.\n\n**Check.** Check two things after the gap: there is no verb (a noun phrase), and the link ${meaning[0]}—both confirm **${right}**.`,
+              `后面是没有动词的名词短语，句子${meaning[1]}，所以用 **${right}**。\n\n**检验。** 核对空格后的两点：后面没有动词（名词短语），且前后关系${meaning[1]}——两点都指向 **${right}**。`,
             );
       },
       (wrong, right) =>
@@ -585,8 +619,8 @@ const becauseOrBecauseOf = topic("grammar", {
           "clause-or-noun-phrase",
           t("Clause or Noun Phrase", "从句还是名词短语"),
           t(
-            "A **clause** has a subject and a verb: *the milk was warm*. A **noun phrase** is a noun with the words around it and no verb of its own: *the warm milk*. **Because** and **although** begin a clause; **because of** and **despite** come before a noun phrase.",
-            "**从句**有主语和动词：*the milk was warm*。**名词短语**是名词加上修饰它的词，没有自己的谓语动词：*the warm milk*。**because** 和 **although** 引出从句；**because of** 和 **despite** 放在名词短语前。",
+            "A **clause** has a subject and a verb: *the milk was warm*. A **noun phrase** is a noun with the words around it and no verb of its own: *the warm milk*. **Because** and **although** begin a clause; **because of** and **despite** come before a noun phrase.\n\n> **Watch out.** Do not mistake an adjective (*icy*, *broken*) for a verb—*the icy road* has no verb, so it is a noun phrase.",
+            "**从句**有主语和动词：*the milk was warm*。**名词短语**是名词加上修饰它的词，没有自己的谓语动词：*the warm milk*。**because** 和 **although** 引出从句；**because of** 和 **despite** 放在名词短语前。\n\n> **注意。** 不要把形容词（如 *icy*、*broken*）当成谓语动词——*the icy road* 没有动词，所以是名词短语。",
           ),
           g,
         )
@@ -594,8 +628,8 @@ const becauseOrBecauseOf = topic("grammar", {
           "choosing-because-or-because-of",
           t("Choosing the Word That Fits", "选择合适的词"),
           t(
-            "Two questions decide the word. Does the sentence give a reason (*because, because of*) or a contrast (*although, despite*)? And does a clause or a noun phrase follow? *The bread rose because the yeast was alive* has a clause; *The bread rose because of the yeast* has a noun phrase.",
-            "两个问题决定用哪个词。句子是表示原因（*because, because of*）还是转折（*although, despite*）？后面接的是从句还是名词短语？*The bread rose because the yeast was alive* 后面是从句；*The bread rose because of the yeast* 后面是名词短语。",
+            "Two questions decide the word. Does the sentence give a reason (*because, because of*) or a contrast (*although, despite*)? And does a clause or a noun phrase follow? *The bread rose because the yeast was alive* has a clause; *The bread rose because of the yeast* has a noun phrase.\n\n> **Watch out.** Never write *despite of* or put *despite* before a full clause—use *despite* only before a noun phrase, and *although* before a clause.",
+            "两个问题决定用哪个词。句子是表示原因（*because, because of*）还是转折（*although, despite*）？后面接的是从句还是名词短语？*The bread rose because the yeast was alive* 后面是从句；*The bread rose because of the yeast* 后面是名词短语。\n\n> **注意。** 绝不要写 *despite of*，也不要在完整从句前用 *despite*——名词短语前用 *despite*，从句前用 *although*。",
           ),
           g,
         ),
@@ -715,20 +749,24 @@ const futurePerfect = topic("grammar", {
     "Will have with a past participle tells what will be finished before a time in the future: by 2030 the probe will have reached Jupiter.",
     "will have 加过去分词表示在将来某个时间之前会完成的事：by 2030 the probe will have reached Jupiter。",
   ],
+  intro: [
+    "*By Friday, the crew will have paved the whole bridge* looks ahead to a future deadline and tells what will already be finished by then. Pairing *will have* with a past participle pins down that before-a-future-time order.",
+    "*By Friday, the crew will have paved the whole bridge* 望向将来的一个截止点，说明届时已经完成的事。用 *will have* 加过去分词就能准确表达“在将来某时之前已完成”。",
+  ],
   after: ["perfect-verb-tenses"],
   points: [
     choose(
       "choosing-the-future-perfect",
       ["When to Use the Future Perfect", "何时用将来完成时"],
       [
-        "The **future perfect** tells about an action that will be finished before a certain time in the future. It is formed with *will have* and the past participle: *By 2030, the probe **will have reached** Jupiter.* Phrases such as *by next year*, *by the time* and *before the sun sets* point to it.",
-        "**将来完成时**表示在将来某个时间之前会完成的动作，由 *will have* 加过去分词构成：*By 2030, the probe **will have reached** Jupiter.* *by next year*、*by the time*、*before the sun sets* 这样的短语提示要用它。",
+        "The **future perfect** tells about an action that will be finished before a certain time in the future. It is formed with *will have* and the past participle: *By 2030, the probe **will have reached** Jupiter.* Phrases such as *by next year*, *by the time* and *before the sun sets* point to it.\n\n> **Watch out.** Do not pick *has/have* (present perfect) or *would have* (conditional) when the sentence names a real future deadline with *by*.",
+        "**将来完成时**表示在将来某个时间之前会完成的动作，由 *will have* 加过去分词构成：*By 2030, the probe **will have reached** Jupiter.* *by next year*、*by the time*、*before the sun sets* 这样的短语提示要用它。\n\n> **注意。** 句子用 *by* 给出真实的将来截止时间时，不要选现在完成时（*has/have*）或假设语气（*would have*）。",
       ],
       ["Which verb fits the gap?", "哪个动词形式适合填空？"],
       futureLines.map((r): ChoiceItem => [field(r, 0), field(r, 1), [field(r, 2), field(r, 3)]]),
       (right) => [
-        `The sentence names a future time by which the action is done, so it needs the future perfect: **${right}**.`,
-        `句子指出了一个将来的时间，动作在此之前完成，所以要用将来完成时：**${right}**。`,
+        `The sentence names a future time by which the action is done, so it needs the future perfect: **${right}**.\n\n**Check.** Spot the future deadline (*by …* or *before …*) in the sentence and verify that **${right}** uses *will have* + past participle.`,
+        `句子指出了一个将来的时间，动作在此之前完成，所以要用将来完成时：**${right}**。\n\n**检验。** 找出句中的将来截止时间（*by …* 或 *before …*），并确认 **${right}** 由 *will have* 加过去分词构成。`,
       ],
       [
         [
@@ -745,16 +783,16 @@ const futurePerfect = topic("grammar", {
       "forming-the-future-perfect",
       ["Forming the Future Perfect", "构成将来完成时"],
       [
-        "To form the future perfect, write *will have* and then the **past participle** of the verb. Regular verbs add *-ed*: *will have landed*. Irregular verbs have their own participles: *will have flown*, *will have begun*, *will have written*. The words *will have* stay the same for every subject.",
-        "构成将来完成时，写 *will have*，再加动词的**过去分词**。规则动词加 *-ed*：*will have landed*。不规则动词有自己的过去分词：*will have flown*、*will have begun*、*will have written*。无论主语是什么，*will have* 都不变。",
+        "To form the future perfect, write *will have* and then the **past participle** of the verb. Regular verbs add *-ed*: *will have landed*. Irregular verbs have their own participles: *will have flown*, *will have begun*, *will have written*. The words *will have* stay the same for every subject.\n\n> **Watch out.** Never write *will has* after *he/she/it* (it is always *will have*), and use the *past participle* rather than the simple past (*will have gone*, not *will have went*).",
+        "构成将来完成时，写 *will have*，再加动词的**过去分词**。规则动词加 *-ed*：*will have landed*。不规则动词有自己的过去分词：*will have flown*、*will have begun*、*will have written*。无论主语是什么，*will have* 都不变。\n\n> **注意。** 无论主语是单数还是复数都一律用 *will have*（绝不写 *will has*），后面接过去分词而不是一般过去式（写 *will have gone*，不写 *will have went*）。",
       ],
       ["Type the future perfect of the verb in brackets.", "输入括号中动词的将来完成时。"],
       futureForm.map((r) =>
         typed(field(r, 0), field(r, 2), field(r, 3).split(","), undefined, t(`The verb is *${field(r, 1)}*.`, `动词是 *${field(r, 1)}*。`)),
       ),
       (right) => [
-        `The future perfect is *will have* with the past participle: **${right}**.`,
-        `将来完成时是 *will have* 加过去分词：**${right}**。`,
+        `The future perfect is *will have* with the past participle: **${right}**.\n\n**Check.** Verify all three words of **${right}**: *will* + *have* (never *has*) + the verb's past participle.`,
+        `将来完成时是 *will have* 加过去分词：**${right}**。\n\n**检验。** 逐词核对 **${right}**：*will* + *have*（绝不用 *has*）+ 该动词的过去分词。`,
       ],
     ),
   ],
@@ -765,26 +803,32 @@ const comparisonLabels: Record<string, Label> = {
   "unlike things": {
     zh: "比较对象不对等",
     why: [
-      "It compares a thing of one with the whole of the other, so it needs a word such as *those of* or a possessive.",
-      "它把一方的某样东西和另一方整体相比，需要加 *those of* 或所有格。",
+      "It compares a thing of one with the whole of the other, so it needs a word such as *those of* or a possessive.\n\n**Check.** List the two exact things on each side of *than*—one side is a part or feature, while the other is the whole person or object.",
+      "它把一方的某样东西和另一方整体相比，需要加 *those of* 或所有格。\n\n**检验。** 分别列出 *than* 两边比较的对象——一边是某项特征或物品，另一边却是整个人或整体。",
     ],
     not: ["The two things it compares are of the same kind, so that is not the problem.", "它比较的两样东西是同类的，所以问题不在这里。"],
   },
   "one side missing": {
     zh: "缺少比较的另一方",
-    why: ["It says *more* or *bigger* but never names what it is compared with.", "它说了 *more* 或 *bigger*，却没有说出和什么比。"],
+    why: [
+      "It says *more* or *bigger* but never names what it is compared with.\n\n**Check.** Look after the comparative word—there is no *than* and no second thing to complete the comparison.",
+      "它说了 *more* 或 *bigger*，却没有说出和什么比。\n\n**检验。** 看比较级后面——既没有 *than*，也没有说出用来比较的另一方。",
+    ],
     not: ["Both sides of the comparison are named, so nothing is missing.", "比较的双方都说出来了，没有缺少。"],
   },
   "then for than": {
     zh: "把 than 写成了 then",
-    why: ["A comparison needs *than*; *then* is a word of time.", "比较要用 *than*；*then* 是表示时间的词。"],
+    why: [
+      "A comparison needs *than*; *then* is a word of time.\n\n**Check.** Spot *then* right after the comparative word—replacing it with *than* fixes the comparison.",
+      "比较要用 *than*；*then* 是表示时间的词。\n\n**检验。** 找出紧跟在比较级后面的 *then*——把它换成 *than* 才符合比较结构。",
+    ],
     not: ["The word after the comparative is already *than*.", "比较级后面已经是 *than* 了。"],
   },
   complete: {
     zh: "完整的比较",
     why: [
-      "Both things are named and alike in kind, and *than* follows the comparative.",
-      "双方都说出来了，而且是同类，比较级后面也用了 *than*。",
+      "Both things are named and alike in kind, and *than* follows the comparative.\n\n**Check.** Check all three rules: both sides are named, both sides are the same kind of thing, and *than* (not *then*) links them.",
+      "双方都说出来了，而且是同类，比较级后面也用了 *than*。\n\n**检验。** 对照三条标准：比较双方齐全、两方属于同类事物，且中间用的是 *than*（不是 *then*）。",
     ],
     not: ["Something in it is wrong, so it is not complete.", "其中有错误，所以不完整。"],
   },
@@ -912,14 +956,18 @@ const completeComparisons = topic("grammar", {
     "A comparison names both things compared, compares like with like (Jupiter's moons outnumber Earth's) and puts than after the comparative.",
     "比较要说出比较的双方，同类相比（Jupiter's moons outnumber Earth's），比较级后用 than。",
   ],
+  intro: [
+    "*Jupiter's moons outnumber Earth's* compares moons with moons, whereas *Jupiter's moons outnumber Earth* accidentally compares moons with a whole planet. A complete comparison names both sides, matches like with like, and uses *than*.",
+    "*Jupiter's moons outnumber Earth's* 把卫星和卫星相比，而 *Jupiter's moons outnumber Earth* 却把卫星和整颗行星相比。完整的比较要说出双方、同类相比，并用 *than* 连接。",
+  ],
   after: ["adverbs-that-compare"],
   points: [
     label(
       "what-is-wrong-with-a-comparison",
       ["What Is Wrong with a Comparison", "比较句错在哪里"],
       [
-        "A complete comparison does three things. It names **both** things compared: *more powerful than the old one*, not just *more powerful*. It compares **like with like**: the moons of Jupiter with the moons of Earth (*Earth's*), not with Earth itself. And it uses **than**, not the time word *then*, after the comparative.",
-        "完整的比较做到三点：说出比较的**双方**：*more powerful than the old one*，而不只是 *more powerful*；**同类相比**：木星的卫星和地球的卫星（*Earth's*）比，而不是和地球本身比；比较级后用 **than**，不用表示时间的 *then*。",
+        "A complete comparison does three things. It names **both** things compared: *more powerful than the old one*, not just *more powerful*. It compares **like with like**: the moons of Jupiter with the moons of Earth (*Earth's*), not with Earth itself. And it uses **than**, not the time word *then*, after the comparative.\n\n> **Watch out.** Check the apostrophe-s (*Earth's*, *Leo's*) or *that of / those of* on the second side—dropping it turns a fair comparison into comparing unlike things.",
+        "完整的比较做到三点：说出比较的**双方**：*more powerful than the old one*，而不只是 *more powerful*；**同类相比**：木星的卫星和地球的卫星（*Earth's*）比，而不是和地球本身比；比较级后用 **than**，不用表示时间的 *then*。\n\n> **注意。** 留意第二方的所有格（*Earth's*、*Leo's*）或 *that of / those of*——漏掉它就会把不同类的东西拿来比。",
       ],
       ["What is wrong with this comparison, if anything?", "这个比较句有什么问题（如果有的话）？"],
       comparisonLines,
@@ -929,16 +977,16 @@ const completeComparisons = topic("grammar", {
       "choosing-the-complete-comparison",
       t("Choosing the Complete Version", "选择完整的版本"),
       t(
-        "To fix a comparison, check each side. If one side is missing, add *than* and the second thing. If the sides are unlike, make the second one match the first with a possessive (*Earth's*) or with *that of* or *those of*. Then make sure the word before the second thing is *than*.",
-        "修改比较句时，逐一检查双方。缺少一方，就加上 *than* 和另一方。双方不对等，就用所有格（*Earth's*）或 *that of*、*those of* 让第二方与第一方对应。最后确认第二方前面的词是 *than*。",
+        "To fix a comparison, check each side. If one side is missing, add *than* and the second thing. If the sides are unlike, make the second one match the first with a possessive (*Earth's*) or with *that of* or *those of*. Then make sure the word before the second thing is *than*.\n\n> **Watch out.** Also reject double comparatives like *more smaller* or *more better*—use either *-er* or *more*, never both.",
+        "修改比较句时，逐一检查双方。缺少一方，就加上 *than* 和另一方。双方不对等，就用所有格（*Earth's*）或 *that of*、*those of* 让第二方与第一方对应。最后确认第二方前面的词是 *than*。\n\n> **注意。** 也要排除双重比较级（如 *more smaller*、*more better*）——*-er* 和 *more* 不能同时用。",
       ),
       choiceGenerator(
         t("Which sentence makes a complete comparison?", "哪个句子是完整的比较？"),
         completeLines.map((r): ChoiceItem => ["Check both sides of each version.", field(r, 0), [field(r, 1), field(r, 2)]]),
         (right) =>
           t(
-            `**${right}** names both things, compares things of the same kind and uses *than*.`,
-            `**${right}** 说出了比较的双方，同类相比，并用了 *than*。`,
+            `**${right}** names both things, compares things of the same kind and uses *than*.\n\n**Check.** Verify all three checkpoints in **${right}**: both sides are present, both sides match in kind, and *than* links them without a double comparative.`,
+            `**${right}** 说出了比较的双方，同类相比，并用了 *than*。\n\n**检验。** 逐项核对 **${right}** 的三点：比较双方都在、两方同类对等，且用 *than* 连接、没有双重比较级。`,
           ),
         (wrong) => {
           const [en, zh] = mistakeOf(wrong);
@@ -1057,20 +1105,24 @@ const capitalsOfHistory = topic("grammar", {
     "Names of historical events, eras, peoples, languages and buildings take capitals (the Olympic Games, the Bronze Age, the Greeks), but common words do not.",
     "历史事件、时代、民族、语言和建筑的名称要大写（the Olympic Games、the Bronze Age、the Greeks），普通名词不大写。",
   ],
+  intro: [
+    "We write *the Bronze Age* and *the Parthenon* with capitals because they name a particular era and building, while *a long age* and *a stone temple* stay lowercase. Telling specific historical names from common nouns keeps capitalization clean.",
+    "写 *the Bronze Age* 和 *the Parthenon* 要大写，因为它们指特定的时代和建筑；而 *a long age* 和 *a stone temple* 用小写。分清特定历史名称与普通名词，大小写就不会出错。",
+  ],
   after: ["capitalizing-names-and-titles"],
   points: [
     choose(
       "which-words-need-capitals",
       ["Which Words Need Capitals", "哪些词要大写"],
       [
-        "Each important word of a name takes a capital: historical **events** (*the Persian Wars*), **eras** (*the Bronze Age*), **peoples** (*the Greeks*), **languages** (*Greek*) and named **buildings** (*the Parthenon*). Common words stay small: *an age*, *a temple*, *a war*, *soldiers*. Small words inside a name, such as *of* and *the*, stay small too.",
-        "名称中每个重要的词都要大写：历史**事件**（*the Persian Wars*）、**时代**（*the Bronze Age*）、**民族**（*the Greeks*）、**语言**（*Greek*）和有名称的**建筑**（*the Parthenon*）。普通名词小写：*an age*、*a temple*、*a war*、*soldiers*。名称中的 *of*、*the* 等小词也小写。",
+        "Each important word of a name takes a capital: historical **events** (*the Persian Wars*), **eras** (*the Bronze Age*), **peoples** (*the Greeks*), **languages** (*Greek*) and named **buildings** (*the Parthenon*). Common words stay small: *an age*, *a temple*, *a war*, *soldiers*. Small words inside a name, such as *of* and *the*, stay small too.\n\n> **Watch out.** Do not capitalize common nouns like *city*, *war*, *temple*, or *soldiers* unless they belong to one specific official name.",
+        "名称中每个重要的词都要大写：历史**事件**（*the Persian Wars*）、**时代**（*the Bronze Age*）、**民族**（*the Greeks*）、**语言**（*Greek*）和有名称的**建筑**（*the Parthenon*）。普通名词小写：*an age*、*a temple*、*a war*、*soldiers*。名称中的 *of*、*the* 等小词也小写。\n\n> **注意。** *city*、*war*、*temple*、*soldiers* 这类普通名词不要大写，除非它们是某个特定正式名称的一部分。",
       ],
       ["Which sentence uses capitals correctly?", "哪个句子的大写正确？"],
       capitalLines.map((r): ChoiceItem => ["Check each name in the three versions.", field(r, 0), [field(r, 1), field(r, 2)]]),
       (right) => [
-        `In **${right}** every name of an event, era, people, language or building has a capital, and the common words do not.`,
-        `在 **${right}** 中，事件、时代、民族、语言或建筑的名称都大写了，普通名词没有大写。`,
+        `In **${right}** every name of an event, era, people, language or building has a capital, and the common words do not.\n\n**Check.** Scan every capitalized word after the first word in **${right}**—each belongs to a specific event, era, people, language, or named building, while common nouns remain lowercase.`,
+        `在 **${right}** 中，事件、时代、民族、语言或建筑的名称都大写了，普通名词没有大写。\n\n**检验。** 逐一检查 **${right}** 句首之后的每个大写词——都属于特定的事件、时代、民族、语言或建筑名，普通名词全部保持小写。`,
       ],
       [
         ["*{wrong}* leaves a name of history without its capital.", "*{wrong}* 有一个历史名称没有大写。"],
@@ -1081,23 +1133,23 @@ const capitalsOfHistory = topic("grammar", {
       "fixing-a-capital",
       ["Fixing a Missing Capital", "改正漏掉的大写"],
       [
-        "To fix a sentence, find the word that is part of a name but has a small letter. Ask whether it names one particular event, era, people, language or building. *The bronze Age* is one particular era, so *Bronze* needs a capital; in *a long age*, *age* is a common word and stays small.",
-        "改句子时，找出属于名称却没有大写的词。问问它是否指某一个特定的事件、时代、民族、语言或建筑。*The bronze Age* 指一个特定的时代，所以 *Bronze* 要大写；*a long age* 里的 *age* 是普通名词，保持小写。",
+        "To fix a sentence, find the word that is part of a name but has a small letter. Ask whether it names one particular event, era, people, language or building. *The bronze Age* is one particular era, so *Bronze* needs a capital; in *a long age*, *age* is a common word and stays small.\n\n> **Watch out.** Check every word inside a multi-word historical name (like *the Ice Age* or *the Olympic Games*)—missing a capital on even one key word makes the name wrong.",
+        "改句子时，找出属于名称却没有大写的词。问问它是否指某一个特定的事件、时代、民族、语言或建筑。*The bronze Age* 指一个特定的时代，所以 *Bronze* 要大写；*a long age* 里的 *age* 是普通名词，保持小写。\n\n> **注意。** 多词组成的历史名称（如 *the Ice Age*、*the Olympic Games*）要逐词检查——只要漏掉一个关键词的大写，整个名称就不规范。",
       ],
       ["Which word of this sentence needs a capital?", "这个句子中哪个词需要大写？"],
       fixLines.map((r): ChoiceItem => [field(r, 0), field(r, 1), [field(r, 2), field(r, 3)]]),
       (right) => [
-        `*${right}* is part of the name of a particular event, era, people, language, place or building, so it needs a capital.`,
-        `*${right}* 是某个特定事件、时代、民族、语言、地点或建筑名称的一部分，所以要大写。`,
+        `*${right}* is part of the name of a particular event, era, people, language, place or building, so it needs a capital.\n\n**Check.** Read the whole historical name containing *${right}*—capitalizing *${right}* completes the proper name while leaving common words lowercase.`,
+        `*${right}* 是某个特定事件、时代、民族、语言、地点或建筑名称的一部分，所以要大写。\n\n**检验。** 通读包含 *${right}* 的完整历史专名——把 *${right}* 大写后，专名完整规范，其余普通词仍为小写。`,
       ],
       [
         [
-          "*{wrong}* is a common word here, so it stays small; the word that needs a capital is *{right}*.",
-          "*{wrong}* 在这里是普通词，保持小写；需要大写的是 *{right}*。",
+          "*{wrong}* is a common word here, not part of a specific historical name, so it stays lowercase.",
+          "*{wrong}* 在这里是普通词，不属于特定的历史专名，应保持小写。",
         ],
         [
-          "*{wrong}* is either a common word or already right; look for *{right}*.",
-          "*{wrong}* 要么是普通词，要么已经正确；需要大写的是 *{right}*。",
+          "*{wrong}* is either a common word or already capitalized—look for the lowercase word inside the specific historical name.",
+          "*{wrong}* 要么是普通词，要么已经大写了——找找特定历史专名里漏掉大写的词。",
         ],
       ],
     ),
@@ -1109,24 +1161,24 @@ const pronounLabels: Record<string, Label> = {
   singular: {
     zh: "单数",
     why: [
-      "It means one at a time, so it takes a singular verb such as *has* or *is*.",
-      "它指一个一个的人或物，所以用单数动词，如 *has* 或 *is*。",
+      "It means one at a time, so it takes a singular verb such as *has* or *is*.\n\n**Check.** Test the subject with *is* vs. *are*—even if an *of …* phrase follows, the pronoun itself is singular and takes *is*.",
+      "它指一个一个的人或物，所以用单数动词，如 *has* 或 *is*。\n\n**检验。** 用 *is* 和 *are* 试搭这个主语——就算后面有 *of …* 短语，不定代词本身仍是单数，搭配 *is*。",
     ],
     not: ["It does not mean one at a time.", "它并不指单个的人或物。"],
   },
   plural: {
     zh: "复数",
     why: [
-      "It always means more than one, so it takes a plural verb such as *have* or *are*.",
-      "它总是指多于一个，所以用复数动词，如 *have* 或 *are*。",
+      "It always means more than one, so it takes a plural verb such as *have* or *are*.\n\n**Check.** Test the subject with *are* vs. *is*—because it always points to two or more, it always takes plural *are*.",
+      "它总是指多于一个，所以用复数动词，如 *have* 或 *are*。\n\n**检验。** 用 *are* 和 *is* 试搭这个主语——因为它总表示多于一个，永远搭配复数 *are*。",
     ],
     not: ["It does not always mean more than one.", "它并不总是指多于一个。"],
   },
   "either one": {
     zh: "两者皆可",
     why: [
-      "It can be singular or plural: the noun after *of* decides (*some of the bread is*, *some of the loaves are*).",
-      "它可以是单数也可以是复数，由 *of* 后的名词决定（*some of the bread is*，*some of the loaves are*）。",
+      "It can be singular or plural: the noun after *of* decides (*some of the bread is*, *some of the loaves are*).\n\n**Check.** Pair the pronoun with both a mass noun (*of the water is*) and a plural noun (*of the cups are*)—both work, proving it can be either.",
+      "它可以是单数也可以是复数，由 *of* 后的名词决定（*some of the bread is*，*some of the loaves are*）。\n\n**检验。** 分别用不可数名词（*of the water is*）和复数名词（*of the cups are*）来试——两种都通顺，说明它单复数皆可。",
     ],
     not: ["It is always one number, not decided by the noun after it.", "它的单复数是固定的，不由后面的名词决定。"],
   },
@@ -1236,14 +1288,18 @@ const indefinitePronouns = topic("grammar", {
     "Everyone, each, nobody and someone are singular; both, few, many and several are plural; some, all, most and none depend on the noun after them.",
     "everyone、each、nobody、someone 是单数；both、few、many、several 是复数；some、all、most、none 取决于后面的名词。",
   ],
+  intro: [
+    "*Each of the citizens **has** a vote* takes a singular verb even though *citizens* is plural, while *Most of the land **is** rocky* and *Most of the farmers **grow** olives* follow the noun after *of*. Knowing which group an indefinite pronoun belongs to makes agreement automatic.",
+    "*Each of the citizens **has** a vote* 虽然有复数 *citizens*，动词却用单数 *has*；而 *Most of the land **is** rocky* 和 *Most of the farmers **grow** olives* 则看 *of* 后面的名词。记住不定代词所属的类别，主谓一致就能一眼判准。",
+  ],
   after: ["subject-verb-agreement", "pronoun-antecedent-agreement"],
   points: [
     label(
       "singular-or-plural-pronoun",
       ["Singular or Plural", "单数还是复数"],
       [
-        "An **indefinite pronoun** names people or things without saying exactly which. Pronouns that mean one at a time are **singular**: *everyone, each, nobody, someone, either, neither*. Pronouns that mean more than one are **plural**: *both, few, many, several*. *Some, all, most, none* and *any* can be **either**: the noun after *of* decides.",
-        "**不定代词**泛指人或事物，不确指是哪一个。表示一个一个的是**单数**：*everyone, each, nobody, someone, either, neither*。表示多于一个的是**复数**：*both, few, many, several*。*some, all, most, none* 和 *any* **两者皆可**：由 *of* 后的名词决定。",
+        "An **indefinite pronoun** names people or things without saying exactly which. Pronouns that mean one at a time are **singular**: *everyone, each, nobody, someone, either, neither*. Pronouns that mean more than one are **plural**: *both, few, many, several*. *Some, all, most, none* and *any* can be **either**: the noun after *of* decides.\n\n> **Watch out.** *Everyone* and *everybody* sound like a crowd, yet grammatically they are always **singular** (*everyone has*, never *everyone have*).",
+        "**不定代词**泛指人或事物，不确指是哪一个。表示一个一个的是**单数**：*everyone, each, nobody, someone, either, neither*。表示多于一个的是**复数**：*both, few, many, several*。*some, all, most, none* 和 *any* **两者皆可**：由 *of* 后的名词决定。\n\n> **注意。** *everyone* 和 *everybody* 听起来像很多人，但语法上一律作**单数**（用 *everyone has*，不用 *everyone have*）。",
       ],
       ["Is this subject singular, plural or either one?", "这个主语是单数、复数，还是两者皆可？"],
       pronounLines,
@@ -1253,8 +1309,8 @@ const indefinitePronouns = topic("grammar", {
       "verbs-and-pronouns-that-agree",
       ["Verbs and Pronouns That Agree", "一致的动词和代词"],
       [
-        "The verb and any later pronoun agree with the indefinite pronoun, not with the noun after *of*: *Each of the citizens **has** a vote*, because *each* is singular. *Both of the cities **have** walls*. With *some, all, most* and *none*, look at the noun: *Most of the land **is** rocky*, but *Most of the farmers **grow** olives*.",
-        "动词和后面的代词要与不定代词一致，而不是与 *of* 后的名词一致：*Each of the citizens **has** a vote*，因为 *each* 是单数。*Both of the cities **have** walls*。遇到 *some, all, most, none* 时看后面的名词：*Most of the land **is** rocky*，但 *Most of the farmers **grow** olives*。",
+        "The verb and any later pronoun agree with the indefinite pronoun, not with the noun after *of*: *Each of the citizens **has** a vote*, because *each* is singular. *Both of the cities **have** walls*. With *some, all, most* and *none*, look at the noun: *Most of the land **is** rocky*, but *Most of the farmers **grow** olives*.\n\n> **Watch out.** Cross out the *of …* phrase in your head when the subject is *each*, *neither*, or *one*—*Each [of the citizens] has* keeps the plural noun from pulling your verb off track.",
+        "动词和后面的代词要与不定代词一致，而不是与 *of* 后的名词一致：*Each of the citizens **has** a vote*，因为 *each* 是单数。*Both of the cities **have** walls*。遇到 *some, all, most, none* 时看后面的名词：*Most of the land **is** rocky*，但 *Most of the farmers **grow** olives*。\n\n> **注意。** 当主语是 *each*、*neither* 或 *one* 时，在心里先划掉 *of …* 短语——*Each [of the citizens] has*，才不会被后面的复数名词带偏。",
       ],
       ["Which word agrees with the subject?", "哪个词与主语一致？"],
       agreeLines.map((r): ChoiceItem => [field(r, 0), field(r, 1), [field(r, 2), field(r, 3)]]),
@@ -1262,16 +1318,19 @@ const indefinitePronouns = topic("grammar", {
         const kind = agreeKind(shown);
         return kind === "either one"
           ? [
-              `The pronoun takes the number of the noun after *of*, so the sentence needs **${right}**.`,
-              `这个代词的单复数取决于 *of* 后的名词，所以要用 **${right}**。`,
+              `The pronoun takes the number of the noun after *of*, so the sentence needs **${right}**.\n\n**Check.** Look at the noun right after *of*—its singular/plural number matches **${right}**.`,
+              `这个代词的单复数取决于 *of* 后的名词，所以要用 **${right}**。\n\n**检验。** 看紧跟在 *of* 后面的名词——它的单复数正与 **${right}** 一致。`,
             ]
           : [
-              `The subject is ${kind}, so the word that agrees with it is **${right}**.`,
-              `主语是${kind === "singular" ? "单数" : "复数"}，所以与之一致的是 **${right}**。`,
+              `The subject is ${kind}, so the word that agrees with it is **${right}**.\n\n**Check.** Read the indefinite pronoun directly next to **${right}** (skipping any *of …* phrase)—a ${kind} subject pairs cleanly with **${right}**.`,
+              `主语是${kind === "singular" ? "单数" : "复数"}，所以与之一致的是 **${right}**。\n\n**检验。** 跳过 *of …* 短语，把不定代词直接和 **${right}** 连起来读——${kind === "singular" ? "单数" : "复数"}主语正与 **${right}** 搭配。`,
             ];
       },
       [
-        ["*{wrong}* agrees with the wrong number; the subject needs **{right}**.", "*{wrong}* 的单复数不对；主语需要 **{right}**。"],
+        [
+          "*{wrong}* has the wrong number for this subject—check whether the indefinite pronoun is singular, plural, or decided by the noun after *of*.",
+          "*{wrong}* 的单复数与主语不匹配——先判断不定代词是单数、复数，还是由 *of* 后的名词决定。",
+        ],
         ["*{wrong}* is not a form that can complete the sentence here.", "*{wrong}* 这个形式在这里不能使句子完整。"],
       ],
     ),

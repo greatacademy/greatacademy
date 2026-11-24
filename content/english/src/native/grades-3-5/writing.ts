@@ -10,7 +10,11 @@ const criterion = (id: string): CriterionSpec => {
   return found;
 };
 
-const onePiece = (model: string) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`);
+const checkedParagraph = (checkEn: string, checkZh: string) => (model: string) =>
+  t(`One good paragraph:\n\n> ${model}\n\n**Check.** ${checkEn}`, `一个好的段落：\n\n> ${model}\n\n**检验。** ${checkZh}`);
+
+const checkedSummary = (checkEn: string, checkZh: string) => (model: string) =>
+  t(`One good summary:\n\n> ${model}\n\n**Check.** ${checkEn}`, `一个好的摘要：\n\n> ${model}\n\n**检验。** ${checkZh}`);
 
 /** storyBank asks for a short story in one paragraph, on the themes of fables and stories of school and home. */
 const storyBank: readonly WritingItem[] = [
@@ -474,6 +478,10 @@ export const writingTopics35: readonly TopicDef[] = [
       "Tell a short story: introduce a character and a situation, tell the events in order, show what happens, and bring it to an end.",
       "讲一个小故事：介绍人物和情境，按顺序讲述事件，展现发生了什么，并给故事一个结尾。",
     ),
+    intro: t(
+      "Even a single paragraph can tell a complete story: Leo loses his lucky cap ten minutes before the class trip, hunts everywhere, and spots the family dog curled up asleep right on top of it. A clear beginning, middle, and end—plus vivid details or dialogue—bring the moment to life.",
+      "哪怕只有一个段落也能讲完一个精彩的小故事：出发去研学前十分钟，Leo 找不到幸运帽，找遍家里后发现小狗正趴在帽子上打盹。清晰的开头、经过、结尾，再加上细节或对话，故事立刻鲜活起来。",
+    ),
     prerequisites: ["writing-a-paragraph", "punctuating-dialogue", "verb-tense-consistency"],
     encompasses: [
       { topic: "punctuating-dialogue", weight: 0.2 },
@@ -488,8 +496,8 @@ export const writingTopics35: readonly TopicDef[] = [
         "beginning-middle-end",
         t("Beginning, Middle and End", "开头、经过和结尾"),
         t(
-          "A story, even a short one, has three parts. The **beginning** introduces a character and a situation: *On the morning of the class trip, Leo could not find his lucky cap.* The **middle** tells what happens, in order, often as the character tries to solve a problem. The **end** shows how things turn out or what the character learned.\n\nWords such as *then, at last, a few minutes later* and *that evening* help the reader follow the events, and a story told in the past tense stays in the past tense.",
-          "故事哪怕很短，也有三个部分。**开头**介绍人物和情境：*On the morning of the class trip, Leo could not find his lucky cap.* **经过**按顺序讲述发生的事，常常是人物想办法解决一个问题。**结尾**说明事情的结果或人物学到了什么。\n\n*then, at last, a few minutes later, that evening* 这样的词帮助读者跟上事件；用过去时讲的故事要一直用过去时。",
+          "A story, even a short one, has three parts. The **beginning** introduces a character and a situation: *On the morning of the class trip, Leo could not find his lucky cap.* The **middle** tells what happens, in order, often as the character tries to solve a problem. The **end** shows how things turn out or what the character learned.\n\nWords such as *then, at last, a few minutes later* and *that evening* help the reader follow the events, and a story told in the past tense stays in the past tense.\n\n> **Watch out.** Do not leave the problem hanging—bring the events to a clear ending and keep your verb tense steady throughout.",
+          "故事哪怕很短，也有三个部分。**开头**介绍人物和情境：*On the morning of the class trip, Leo could not find his lucky cap.* **经过**按顺序讲述发生的事，常常是人物想办法解决一个问题。**结尾**说明事情的结果或人物学到了什么。\n\n*then, at last, a few minutes later, that evening* 这样的词帮助读者跟上事件；用过去时讲的故事要一直用过去时。\n\n> **注意。** 别把问题悬在半空——要交代清楚结局，并保持全文时态一致。",
         ),
         writingGenerator(
           t(
@@ -499,15 +507,18 @@ export const writingTopics35: readonly TopicDef[] = [
           storyBank,
           ["g35-narrative-situation", "g35-narrative-sequence", "g35-narrative-ending"],
           { minWords: 50, maxChars: 1800 },
-          onePiece,
+          checkedParagraph(
+            "Check that your paragraph introduces a character and problem at the start, moves through events in clear order, ends with a resolution, and stays in one verb tense.",
+            "检查你的段落开头交代了人物和难题、中间按顺序推进、结尾给出结果，且全文时态一致。",
+          ),
         ),
       ),
       point(
         "showing-what-happens",
         t("Showing What Happens", "展现发生了什么"),
         t(
-          'A story comes alive when it **shows** instead of only telling. *Mei was nervous* tells. *Mei\'s hands shook as she waited behind the curtain* shows, and the reader feels it too.\n\nTwo tools do most of the showing: **details** of what a character does, sees, thinks or feels, and **dialogue**, the words a character says, in quotation marks: *"We leave in ten minutes!" his mom called.*',
-          '故事要生动，就要**展现**，而不只是叙述。*Mei was nervous* 是叙述；*Mei\'s hands shook as she waited behind the curtain* 是展现，读者也能感受到。\n\n展现主要靠两样工具：人物所做、所见、所想、所感的**细节**，以及放在引号里的人物说的话，即**对话**：*"We leave in ten minutes!" his mom called.*',
+          'A story comes alive when it **shows** instead of only telling. *Mei was nervous* tells. *Mei\'s hands shook as she waited behind the curtain* shows, and the reader feels it too.\n\nTwo tools do most of the showing: **details** of what a character does, sees, thinks or feels, and **dialogue**, the words a character says, in quotation marks: *"We leave in ten minutes!" his mom called.*\n\n> **Watch out.** Do not just list events like a schedule (*First he did A, then B, then C*)—add sensory details or a line of dialogue so readers picture the scene.',
+          '故事要生动，就要**展现**，而不只是叙述。*Mei was nervous* 是叙述；*Mei\'s hands shook as she waited behind the curtain* 是展现，读者也能感受到。\n\n展现主要靠两样工具：人物所做、所见、所想、所感的**细节**，以及放在引号里的人物说的话，即**对话**：*"We leave in ten minutes!" his mom called.*\n\n> **注意。** 不要像记流水账一样罗列事件——加入感官细节或一句对话，让读者在脑中看到画面。',
         ),
         writingGenerator(
           t(
@@ -517,7 +528,10 @@ export const writingTopics35: readonly TopicDef[] = [
           sceneBank,
           ["g35-narrative-shows", "g35-narrative-sequence"],
           { minWords: 50, maxChars: 1800 },
-          onePiece,
+          checkedParagraph(
+            "Point to at least one vivid action detail or correctly punctuated line of dialogue in your draft that shows how the character feels without merely naming it.",
+            "在草稿里标出至少一处生动的动作细节或标点规范的对话，确认它展现出了人物的感受，而不是干巴巴地直说。",
+          ),
         ),
       ),
     ],
@@ -528,6 +542,10 @@ export const writingTopics35: readonly TopicDef[] = [
     summary: t(
       "Retell the main idea and the most important points of a text, briefly and in your own words, without adding your opinion.",
       "用自己的话简要复述文本的主旨和最重要的要点，不加入自己的观点。",
+    ),
+    intro: t(
+      "A five-sentence passage about Earth's fresh water can be boiled down to two crisp sentences: very little water is fresh and accessible, so living things on land must protect it. A good summary captures the main idea and key points in your own words.",
+      "一段关于地球淡水的五句话短文，可以浓缩成简洁的两句：可供陆地生物使用的淡水极少，因此必须珍惜保护。好摘要用自己的话抓住主旨和核心要点。",
     ),
     prerequisites: ["supporting-details", "writing-a-paragraph"],
     encompasses: [
@@ -542,30 +560,36 @@ export const writingTopics35: readonly TopicDef[] = [
         "main-idea-and-key-points",
         t("The Main Idea and the Key Points", "主旨和要点"),
         t(
-          "A **summary** is a short retelling of a text. It begins with the **main idea**, what the whole text is about, and adds only the **most important points** that support it. Small details, examples and numbers are usually left out.\n\nA summary reports what the text says, not what you think of it: *I think this is interesting* does not belong in a summary.",
-          "**摘要**是对文本的简短复述。它以**主旨**开头，即整篇文本讲的是什么，再只补充支持主旨的**最重要的要点**。细小的细节、例子和数字通常省略。\n\n摘要转述的是文本说了什么，而不是你怎么看它：*I think this is interesting* 不应出现在摘要里。",
+          "A **summary** is a short retelling of a text. It begins with the **main idea**, what the whole text is about, and adds only the **most important points** that support it. Small details, examples and numbers are usually left out.\n\nA summary reports what the text says, not what you think of it: *I think this is interesting* does not belong in a summary.\n\n> **Watch out.** Keep your summary shorter than the source and strip out personal opinions (*I think*, *amazing*) as well as minor examples.",
+          "**摘要**是对文本的简短复述。它以**主旨**开头，即整篇文本讲的是什么，再只补充支持主旨的**最重要的要点**。细小的细节、例子和数字通常省略。\n\n摘要转述的是文本说了什么，而不是你怎么看它：*I think this is interesting* 不应出现在摘要里。\n\n> **注意。** 摘要必须比原文短，去掉个人评价（*I think*、*amazing*）和细枝末节的例子。",
         ),
         writingGenerator(
           t("Read the passage and write a summary of it in English.", "阅读这段文字，用英语为它写一个摘要。"),
           summaryBank,
           ["g35-summary-main-idea", "g35-summary-key-points", "g35-summary-no-opinion"],
           { minWords: 25, maxChars: 900 },
-          (model) => t(`One good summary:\n\n> ${model}`, `一个好的摘要：\n\n> ${model}`),
+          checkedSummary(
+            "Verify that your summary states the main idea and key points in two or three sentences, stays shorter than the passage, and includes no personal opinion.",
+            "核对你的摘要用两三句话概括了主旨和核心要点、比原文更短，且没有夹带个人看法。",
+          ),
         ),
       ),
       point(
         "in-your-own-words",
         t("In Your Own Words", "用自己的话"),
         t(
-          "Copying sentences from a text is not summarizing. To put a text in your own words, read it, look away, and say what it is about as you would to a friend. Then write that down and check it against the text.\n\nYou may keep the special words of the subject, such as *evaporation* or *pharaoh*, but the sentences should be yours, and shorter than the original.",
-          "从文本中抄句子不是写摘要。要用自己的话表达，先读文本，然后不看它，像对朋友讲那样说出它讲了什么，再写下来，并和原文核对。\n\n可以保留学科的专门用词，如 *evaporation* 或 *pharaoh*，但句子要是你自己的，而且比原文短。",
+          "Copying sentences from a text is not summarizing. To put a text in your own words, read it, look away, and say what it is about as you would to a friend. Then write that down and check it against the text.\n\nYou may keep the special words of the subject, such as *evaporation* or *pharaoh*, but the sentences should be yours, and shorter than the original.\n\n> **Watch out.** Swapping only one or two words out of an original sentence is still copying—rebuild the sentence in your own structure while keeping the facts accurate.",
+          "从文本中抄句子不是写摘要。要用自己的话表达，先读文本，然后不看它，像对朋友讲那样说出它讲了什么，再写下来，并和原文核对。\n\n可以保留学科的专门用词，如 *evaporation* 或 *pharaoh*，但句子要是你自己的，而且比原文短。\n\n> **注意。** 只换掉原句里一两个词仍然算照抄——要在准确保留事实的前提下，用自己的句式重新组织。",
         ),
         writingGenerator(
           t("Read the passage and write a summary of it in English, in your own words.", "阅读这段文字，用你自己的英语为它写一个摘要。"),
           summaryBank,
           ["g35-summary-own-words", "g35-summary-main-idea"],
           { minWords: 25, maxChars: 900 },
-          (model) => t(`One good summary:\n\n> ${model}`, `一个好的摘要：\n\n> ${model}`),
+          checkedSummary(
+            "Compare your summary line by line against the source: the sentences should be freshly worded in your own phrasing while keeping every main fact accurate.",
+            "把你的摘要与原文逐句对照：既用自己的新句式表达，又准确保留了所有主要事实。",
+          ),
         ),
       ),
     ],
@@ -576,6 +600,10 @@ export const writingTopics35: readonly TopicDef[] = [
     summary: t(
       "Name two things, show how they are alike and how they differ, and connect the points with words of comparison.",
       "点明两个事物，说明它们的相同点和不同点，并用表示比较的词把各点连接起来。",
+    ),
+    intro: t(
+      "Sharks and dolphins both swim swiftly through the ocean, yet sharks breathe through gills while dolphins surface for air. A compare-and-contrast paragraph sets two subjects side by side using signal words for likenesses and differences.",
+      "鲨鱼和海豚都能在海里快速游动，但鲨鱼用鳃呼吸，而海豚要浮出水面换气。比较对照段落用信号词把两个事物的相同点与不同点并排讲清楚。",
     ),
     prerequisites: ["compare-and-contrast-in-texts", "writing-a-paragraph"],
     encompasses: [
@@ -590,8 +618,8 @@ export const writingTopics35: readonly TopicDef[] = [
         "alike-and-different",
         t("Alike and Different", "相同与不同"),
         t(
-          "A compare-and-contrast paragraph opens by naming the two things: *Frogs and toads look alike, but they are not the same.* Then it gives at least one way they are **alike** and at least one way they are **different**.\n\nSignal words show the reader which is which. For likenesses: *both, also, like, too, similarly*. For differences: *but, however, while, unlike, on the other hand, whereas*. Each difference compares the same feature of both: *A frog has smooth skin, while a toad's skin is bumpy.*",
-          "比较对照段落开头先点明两个事物：*Frogs and toads look alike, but they are not the same.* 然后至少写出一个**相同点**和一个**不同点**。\n\n信号词告诉读者哪是相同、哪是不同。表示相同：*both, also, like, too, similarly*。表示不同：*but, however, while, unlike, on the other hand, whereas*。每个不同点都比较两者的同一个方面：*A frog has smooth skin, while a toad's skin is bumpy.*",
+          "A compare-and-contrast paragraph opens by naming the two things: *Frogs and toads look alike, but they are not the same.* Then it gives at least one way they are **alike** and at least one way they are **different**.\n\nSignal words show the reader which is which. For likenesses: *both, also, like, too, similarly*. For differences: *but, however, while, unlike, on the other hand, whereas*. Each difference compares the same feature of both: *A frog has smooth skin, while a toad's skin is bumpy.*\n\n> **Watch out.** Do not write only about how the two things are different—include at least one shared trait, and compare the *same* feature on each side when stating a difference.",
+          "比较对照段落开头先点明两个事物：*Frogs and toads look alike, but they are not the same.* 然后至少写出一个**相同点**和一个**不同点**。\n\n信号词告诉读者哪是相同、哪是不同。表示相同：*both, also, like, too, similarly*。表示不同：*but, however, while, unlike, on the other hand, whereas*。每个不同点都比较两者的同一个方面：*A frog has smooth skin, while a toad's skin is bumpy.*\n\n> **注意。** 不要只写不同点——至少写出一个共同点，而且写不同点时要拿两者的*同一个方面*来对比。",
         ),
         writingGenerator(
           t(
@@ -601,7 +629,10 @@ export const writingTopics35: readonly TopicDef[] = [
           compareBank,
           ["g35-compare-names-both", "g35-compare-likeness", "g35-compare-difference", "g35-compare-signals"],
           { minWords: 45, maxChars: 1600 },
-          onePiece,
+          checkedParagraph(
+            "Check that your opening names both subjects, your paragraph includes at least one likeness and one matched difference, and you used signal words such as *both*, *while*, or *unlike*.",
+            "检查首句点明了两个对象、段落同时包含至少一个相同点和一个对应维度的不同点，并使用了 *both*、*while* 或 *unlike* 等比较信号词。",
+          ),
         ),
       ),
     ],
@@ -612,6 +643,10 @@ export const writingTopics35: readonly TopicDef[] = [
     summary: t(
       "Explain what makes something happen and what happens as a result, linking each cause to its effect.",
       "说明是什么使某事发生、结果又发生了什么，把每个原因和它的结果联系起来。",
+    ),
+    intro: t(
+      "When months pass with no rain, rivers shrink, crops wilt, and wild animals trek farther to drink. A cause-and-effect paragraph explains *how* each step triggers the next using clear signal words like *because*, *so*, and *as a result*.",
+      "连续数月无雨，河流干涸、庄稼枯萎、野生动物被迫远行找水。因果段落用 *because*、*so*、*as a result* 等信号词，把一步如何引发下一步讲清楚。",
     ),
     prerequisites: ["cause-and-effect-in-texts", "writing-a-paragraph"],
     encompasses: [
@@ -626,8 +661,8 @@ export const writingTopics35: readonly TopicDef[] = [
         "cause-to-effect",
         t("From Cause to Effect", "从原因到结果"),
         t(
-          "A **cause** is what makes something happen; an **effect** is what happens as a result. A cause-and-effect paragraph names the cause, names the effects, and explains **how** one leads to the other. *The drought dried up the rivers* only names them; *Because no rain fell for months, the rivers shrank, so there was not enough water for the crops* explains the chain.\n\nSignal words link the steps: *because, since, so, as a result, therefore, this causes, which means*.",
-          "**原因**是使某事发生的事；**结果**是因此发生的事。因果段落要点明原因、点明结果，并解释一个**怎样**导致另一个。*The drought dried up the rivers* 只是点明了二者；*Because no rain fell for months, the rivers shrank, so there was not enough water for the crops* 才解释了这条链条。\n\n信号词把各步连接起来：*because, since, so, as a result, therefore, this causes, which means*。",
+          "A **cause** is what makes something happen; an **effect** is what happens as a result. A cause-and-effect paragraph names the cause, names the effects, and explains **how** one leads to the other. *The drought dried up the rivers* only names them; *Because no rain fell for months, the rivers shrank, so there was not enough water for the crops* explains the chain.\n\nSignal words link the steps: *because, since, so, as a result, therefore, this causes, which means*.\n\n> **Watch out.** Do not just list the notes as separate facts—use cause-and-effect signal words to show *how* each cause produces its effect.",
+          "**原因**是使某事发生的事；**结果**是因此发生的事。因果段落要点明原因、点明结果，并解释一个**怎样**导致另一个。*The drought dried up the rivers* 只是点明了二者；*Because no rain fell for months, the rivers shrank, so there was not enough water for the crops* 才解释了这条链条。\n\n信号词把各步连接起来：*because, since, so, as a result, therefore, this causes, which means*。\n\n> **注意。** 不要把笔记拆成互不相连的零散事实——要用因果信号词把每个原因怎样导致结果串联起来。",
         ),
         writingGenerator(
           t(
@@ -637,7 +672,10 @@ export const writingTopics35: readonly TopicDef[] = [
           causeBank,
           ["g35-cause-names-cause", "g35-cause-names-effect", "g35-cause-explains-link", "g35-cause-signals"],
           { minWords: 45, maxChars: 1600 },
-          onePiece,
+          checkedParagraph(
+            "Check that your paragraph names the cause and effects from the notes, explains how each step leads to the next, and uses at least two cause-and-effect signal words.",
+            "检查你的段落写出了笔记中的原因和结果、讲清了每一步如何引发下一步，并使用了至少两个因果信号词。",
+          ),
         ),
       ),
     ],
@@ -648,6 +686,10 @@ export const writingTopics35: readonly TopicDef[] = [
     summary: t(
       "Paint a picture in words: name the subject, use details of several senses, and choose precise words and comparisons.",
       "用文字描绘画面：点明描写对象，运用多种感官的细节，选择准确的词语和比喻。",
+    ),
+    intro: t(
+      "Instead of saying *The autumn forest was nice*, picture dry leaves crunching underfoot, crisp wood smoke in the air, and maples glowing red and gold. A descriptive paragraph blends multiple senses and precise words to paint a vivid scene.",
+      "与其说“秋天的森林很好看”，不如写出脚下咔嚓作响的落叶、空气中淡淡的柴烟味和红金相间的枫树。描写段落结合多种感官和精准用词，把画面立在读者眼前。",
     ),
     prerequisites: ["similes-and-metaphors", "order-of-adjectives", "writing-a-paragraph"],
     encompasses: [
@@ -663,8 +705,8 @@ export const writingTopics35: readonly TopicDef[] = [
         "senses-and-precise-words",
         t("The Senses and Precise Words", "感官和准确的词语"),
         t(
-          "A description helps the reader see, hear, touch, smell and taste a place or a thing. Open by naming it: *In autumn, the forest glows with red, orange and gold.* Then add details of at least two **senses**: *dry leaves crunch under my boots; the air smells of wood smoke.*\n\nChoose **precise** words over vague ones: *crunch* instead of *make a noise*, *glitter* instead of *shine*. A **simile** compares with *like* or *as*: *stars glitter like spilled sugar.* Keep every sentence on the subject you are describing.",
-          "描写帮助读者看到、听到、摸到、闻到、尝到一个地方或一件事物。开头先点明描写对象：*In autumn, the forest glows with red, orange and gold.* 然后加入至少两种**感官**的细节：*dry leaves crunch under my boots; the air smells of wood smoke.*\n\n选择**准确**的词，而不是笼统的词：用 *crunch* 而不是 *make a noise*，用 *glitter* 而不是 *shine*。**明喻**用 *like* 或 *as* 作比较：*stars glitter like spilled sugar.* 每个句子都要围绕所描写的对象。",
+          "A description helps the reader see, hear, touch, smell and taste a place or a thing. Open by naming it: *In autumn, the forest glows with red, orange and gold.* Then add details of at least two **senses**: *dry leaves crunch under my boots; the air smells of wood smoke.*\n\nChoose **precise** words over vague ones: *crunch* instead of *make a noise*, *glitter* instead of *shine*. A **simile** compares with *like* or *as*: *stars glitter like spilled sugar.* Keep every sentence on the subject you are describing.\n\n> **Watch out.** Do not rely on sight alone or vague words like *nice* and *good*—include at least two different senses and concrete, specific verbs or adjectives.",
+          "描写帮助读者看到、听到、摸到、闻到、尝到一个地方或一件事物。开头先点明描写对象：*In autumn, the forest glows with red, orange and gold.* 然后加入至少两种**感官**的细节：*dry leaves crunch under my boots; the air smells of wood smoke.*\n\n选择**准确**的词，而不是笼统的词：用 *crunch* 而不是 *make a noise*，用 *glitter* 而不是 *shine*。**明喻**用 *like* 或 *as* 作比较：*stars glitter like spilled sugar.* 每个句子都要围绕所描写的对象。\n\n> **注意。** 不要只写视觉或滥用 *nice*、*good* 这类空泛词——至少调用两种感官，并用具体精准的动词和形容词。",
         ),
         writingGenerator(
           t(
@@ -674,7 +716,10 @@ export const writingTopics35: readonly TopicDef[] = [
           describeBank,
           ["g35-describe-subject", "g35-describe-senses", "g35-describe-precise", "g35-describe-stays"],
           { minWords: 45, maxChars: 1600 },
-          onePiece,
+          checkedParagraph(
+            "Verify your opening names the subject, spot details appealing to at least two different senses, replace any vague words (*nice*, *big*) with precise ones, and check that every sentence stays on topic.",
+            "核对首句点明了描写对象、至少包含两种感官细节、把 *nice*/*big* 等笼统词换成精准用词，并确认每句都紧扣主题。",
+          ),
         ),
       ),
     ],

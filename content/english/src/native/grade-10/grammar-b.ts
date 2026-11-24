@@ -351,14 +351,18 @@ const voice = topic("grammar", {
     "Choosing the voice by what matters most: the active when the doer matters, the passive when the action or the receiver matters, or when the doer is unknown.",
     "根据最重要的内容选择语态：施动者重要时用主动语态，动作或承受者重要、或施动者未知时用被动语态。",
   ],
+  intro: [
+    "Writing *The bridge was damaged by the flood* keeps the spotlight on the bridge, whereas *Mistakes were made* quietly hides who was to blame. In this topic, you read why a writer chose active or passive voice and pick the voice that keeps a paragraph's focus steady.",
+    "写 *The bridge was damaged by the flood* 把聚光灯留在桥上，而写 *Mistakes were made* 则悄悄隐去了责任人。本主题带你读出作者选用主动或被动语态的用意，并选出能稳住段落焦点的语态。",
+  ],
   after: ["shifts-in-voice"],
   points: [
     label(
       "why-this-voice",
       ["Why This Voice", "为什么用这个语态"],
       [
-        "The active voice is usually clearer, but the passive has honest uses. Use the **active to stress the doer** when who acted is the point: *Marie Curie discovered radium.* Use the **passive to stress the receiver** when what was acted on is the topic: *The Mona Lisa was stolen in 1911.* Use the **passive when the doer is unknown or unimportant**: *My bike was stolen last night.* Watch for a passive that **hides the doer** on purpose, as in *Mistakes were made*: it avoids saying who is responsible.",
-        "主动语态通常更清楚，但被动语态也有正当的用途。当谁做的才是重点时，**用主动语态强调施动者**：*Marie Curie discovered radium.* 当被作用的对象才是话题时，**用被动语态强调承受者**：*The Mona Lisa was stolen in 1911.* 当**施动者未知或不重要**时用被动语态：*My bike was stolen last night.* 还要留意故意**隐藏施动者**的被动句，比如 *Mistakes were made*：它回避了说明谁该负责。",
+        "The active voice is usually clearer, but the passive has honest uses. Use the **active to stress the doer** when who acted is the point: *Marie Curie discovered radium.* Use the **passive to stress the receiver** when what was acted on is the topic: *The Mona Lisa was stolen in 1911.* Use the **passive when the doer is unknown or unimportant**: *My bike was stolen last night.* Watch for a passive that **hides the doer** on purpose, as in *Mistakes were made*: it avoids saying who is responsible.\n\n> **Watch out.** Tell *the doer is unknown* apart from *to hide the doer*: a break-in or an ancient artifact genuinely has no known maker, whereas a passive about official blunders, broken promises, or missing funds dodges blame on purpose.",
+        "主动语态通常更清楚，但被动语态也有正当的用途。当谁做的才是重点时，**用主动语态强调施动者**：*Marie Curie discovered radium.* 当被作用的对象才是话题时，**用被动语态强调承受者**：*The Mona Lisa was stolen in 1911.* 当**施动者未知或不重要**时用被动语态：*My bike was stolen last night.* 还要留意故意**隐藏施动者**的被动句，比如 *Mistakes were made*：它回避了说明谁该负责。\n\n> **注意。** 分清**施动者未知**与**隐藏施动者**：半夜失窃或远古遗物确实查不到是谁做的，而涉及失误、违约或挪用公款的被动句往往是在刻意回避责任人。",
       ],
       ["Why did the writer choose this voice?", "作者为什么选择这个语态？"],
       `
@@ -397,29 +401,29 @@ ${voiceLines}
       {
         "to stress the doer": L(
           "强调施动者",
-          "The sentence is active and puts the doer first, because who acted is the point.",
-          "这个句子是主动语态，把施动者放在前面，因为谁做的才是重点。",
+          "The sentence is active and puts the doer first, because who acted is the point.\n\n**Check.** Look at the subject and verb: the person or group performing the action stands right at the front in active voice.",
+          "这个句子是主动语态，把施动者放在前面，因为谁做的才是重点。\n\n**检验。** 看主语和谓语：真正采取行动的人或群体就站在句首，用主动语态突出“是谁做的”。",
           "The sentence does not put a doer first to stress who acted.",
           "这个句子并没有把施动者放在前面来强调是谁做的。",
         ),
         "to stress the receiver": L(
           "强调承受者",
-          "The sentence is passive because its topic is the thing acted on; the doer, if named, matters less.",
-          "这个句子用被动语态，因为话题是被作用的对象；即使提到施动者，它也没那么重要。",
+          "The sentence is passive because its topic is the thing acted on; the doer, if named, matters less.\n\n**Check.** Ask what the sentence is really about—a landmark, work, or event placed upfront as the subject—rather than hiding blame or reporting a mystery.",
+          "这个句子用被动语态，因为话题是被作用的对象；即使提到施动者，它也没那么重要。\n\n**检验。** 问问句子真正的话题是什么——放在句首的著名事物、作品或事件本身才是焦点，并非在隐瞒责任或说明施动者不详。",
           "The thing acted on is not what the sentence is mainly about.",
           "被作用的对象并不是这个句子主要讲的内容。",
         ),
         "the doer is unknown": L(
           "施动者未知",
-          "The sentence is passive because no one knows who did it.",
-          "这个句子用被动语态，因为没人知道是谁做的。",
+          "The sentence is passive because no one knows who did it.\n\n**Check.** Notice that the sentence describes an anonymous act, theft, or ancient origin where the maker or culprit is genuinely unknown.",
+          "这个句子用被动语态，因为没人知道是谁做的。\n\n**检验。** 注意句子说的是匿名行为、失窃或远古遗存，施动者确实无从得知。",
           "The doer is known or named, or the sentence is active.",
           "施动者是已知的或被点明了，或者这个句子是主动语态。",
         ),
         "to hide the doer": L(
           "隐藏施动者",
-          "The passive lets the writer avoid saying who was responsible for something wrong; a reader should ask who did it.",
-          "被动语态让作者回避说明谁该为错事负责；读者应当追问是谁做的。",
+          "The passive lets the writer avoid saying who was responsible for something wrong; a reader should ask who did it.\n\n**Check.** Notice that a mistake, unfair decision, or cover-up is reported with no person named—somebody clearly decided or acted, yet the passive omits who.",
+          "被动语态让作者回避说明谁该为错事负责；读者应当追问是谁做的。\n\n**检验。** 注意这里报告的是一件失误、不当决定或隐瞒行为，明明有人经手却不点名，被动语态恰好替责任人打了掩护。",
           "Nothing wrong is being covered up by leaving out who did it.",
           "这里并没有通过省略施动者来掩盖什么错误。",
         ),
@@ -429,8 +433,8 @@ ${voiceLines}
       "the-voice-that-keeps-the-focus",
       ["The Voice That Keeps the Focus", "保持焦点的语态"],
       [
-        "In a paragraph, readers follow the topic most easily when it stays at the front of each sentence. If the paragraph is about a thing, the passive can keep that thing in the subject position: *The bridge opened in 1937. **It was designed by Joseph Strauss.*** If the paragraph is about a person, keep the person as the subject with the active: *Strauss loved poetry. **He wrote verses about the bridge.***",
-        "在一个段落中，话题保持在每句的开头时，读者最容易跟上。如果段落讲的是某个物，被动语态可以让这个物留在主语位置：*The bridge opened in 1937. **It was designed by Joseph Strauss.*** 如果段落讲的是某个人，就用主动语态让这个人做主语：*Strauss loved poetry. **He wrote verses about the bridge.***",
+        "In a paragraph, readers follow the topic most easily when it stays at the front of each sentence. If the paragraph is about a thing, the passive can keep that thing in the subject position: *The bridge opened in 1937. **It was designed by Joseph Strauss.*** If the paragraph is about a person, keep the person as the subject with the active: *Strauss loved poetry. **He wrote verses about the bridge.***\n\n> **Watch out.** Check the *subject of the first sentence* before choosing active or passive—pick the option whose opening pronoun (*It*, *He*, *She*, *They*, *We*) keeps that exact same subject in front.",
+        "在一个段落中，话题保持在每句的开头时，读者最容易跟上。如果段落讲的是某个物，被动语态可以让这个物留在主语位置：*The bridge opened in 1937. **It was designed by Joseph Strauss.*** 如果段落讲的是某个人，就用主动语态让这个人做主语：*Strauss loved poetry. **He wrote verses about the bridge.***\n\n> **注意。** 先看*第一句的主语*是谁，再决定选主动还是被动——选句首代词（*It*、*He*、*She*、*They*、*We*）与第一句主语保持一致的那一项。",
       ],
       ["Which second sentence keeps the focus of the first?", "哪个第二句保持了第一句的焦点？"],
       `
@@ -467,8 +471,8 @@ ${focusLines}
         The volunteers cleaned the beach. ___|They collected two tons of plastic.|Two tons of plastic were collected by them.|By the volunteers, two tons of plastic were collected.
       `,
       (right) => [
-        `"${right}" keeps the topic of the first sentence as its subject, so the paragraph stays focused.`,
-        `“${right}” 让第一句的话题继续做主语，段落因此保持焦点。`,
+        `"${right}" keeps the topic of the first sentence as its subject, so the paragraph stays focused.\n\n**Check.** Match the opening subject of both sentences: the pronoun starting the second sentence refers directly back to the subject of the first sentence.`,
+        `“${right}” 让第一句的话题继续做主语，段落因此保持焦点。\n\n**检验。** 对照两句话开头的主语：第二句开头的代词直接回指第一句的主语，焦点没有跳开。`,
       ],
       [
         [
@@ -491,14 +495,18 @@ const subordination = topic("grammar", {
     "Putting the main idea in the main clause and the lesser idea in a dependent clause, so that the sentence stresses what the writer means to stress.",
     "把主要的意思放进主句、次要的意思放进从句，使句子强调作者想强调的内容。",
   ],
+  intro: [
+    "Compare *Although the ship sank, the storm was fierce* with *Although the storm was fierce, the ship survived*—whichever idea sits outside the *although/when/because* clause gets the spotlight. In this topic, you place the target idea in the main clause and classify coordination, subordination, and excessive coordination.",
+    "对比 *Although the ship sank, the storm was fierce* 与 *Although the storm was fierce, the ship survived*——哪个意思放在 *although/when/because* 从句之外，哪个就是全句焦点。本主题带你把重点放进主句，并区分并列、主从与过度并列。",
+  ],
   after: ["choosing-the-subordinating-conjunction", "noun-adjective-and-adverb-clauses"],
   points: [
     choose(
       "the-main-idea-in-the-main-clause",
       ["The Main Idea in the Main Clause", "主要意思放在主句"],
       [
-        "When two ideas share a sentence, readers take the **main clause** as the point and the **dependent clause** as background. Compare *Although the team lost, it played its best game* (the point is the fine play) with *Although the team played its best game, it lost* (the point is the loss). Decide what you want to stress, and put that idea in the main clause.\n\nPutting the main idea in a dependent clause is called **upside-down subordination**: *I was crossing the street when a car hit me* buries the most important event.",
-        "两个意思同在一句时，读者会把**主句**当作重点，把**从句**当作背景。比较 *Although the team lost, it played its best game*（重点是表现出色）和 *Although the team played its best game, it lost*（重点是输了）。先决定要强调什么，再把它放进主句。\n\n把主要意思放进从句叫作**主次颠倒**：*I was crossing the street when a car hit me* 把最重要的事件埋没了。",
+        "When two ideas share a sentence, readers take the **main clause** as the point and the **dependent clause** as background. Compare *Although the team lost, it played its best game* (the point is the fine play) with *Although the team played its best game, it lost* (the point is the loss). Decide what you want to stress, and put that idea in the main clause.\n\nPutting the main idea in a dependent clause is called **upside-down subordination**: *I was crossing the street when a car hit me* buries the most important event.\n\n> **Watch out.** Cover the subordinating clause (starting with *although*, *when*, *while*, *because*, or *after*) and read what is left—the remaining independent clause *must* state the exact idea requested in brackets.",
+        "两个意思同在一句时，读者会把**主句**当作重点，把**从句**当作背景。比较 *Although the team lost, it played its best game*（重点是表现出色）和 *Although the team played its best game, it lost*（重点是输了）。先决定要强调什么，再把它放进主句。\n\n把主要意思放进从句叫作**主次颠倒**：*I was crossing the street when a car hit me* 把最重要的事件埋没了。\n\n> **注意。** 遮住由 *although*、*when*、*while*、*because*、*after* 引导的从句或短语，只读剩下的主句——留下的主句*必须*正好是括号里要求强调的内容。",
       ],
       ["Which sentence stresses the idea given in brackets?", "哪个句子强调了括号中给出的意思？"],
       `
@@ -535,8 +543,8 @@ ${mainLines}
         [Stress that the girl won the race.]|Though she fell at the start, the girl won the race.|Though the girl won the race, she fell at the start.|The girl fell at the start, and she won the race.
       `,
       (right) => [
-        `"${right}" puts the idea to be stressed in the main clause and the background in the dependent clause.`,
-        `“${right}” 把要强调的意思放进主句，把背景放进从句。`,
+        `"${right}" puts the idea to be stressed in the main clause and the background in the dependent clause.\n\n**Check.** Remove the introductory dependent clause or phrase and read the remaining main clause aloud: it stands alone and states the exact idea requested in brackets.`,
+        `“${right}” 把要强调的意思放进主句，把背景放进从句。\n\n**检验。** 去掉句首的从句或状语短语，单读留下的主句：它能独立成句，而且正好就是括号里要求强调的内容。`,
       ],
       [
         [
@@ -553,8 +561,8 @@ ${mainLines}
       "coordinate-or-subordinate",
       ["Equal or Unequal", "并列还是主从"],
       [
-        "Use **coordination** (*and*, *but*, *or*, *so*, or a semicolon) when two ideas are equally important: *The sun set, and the stars came out.* Use **subordination** (*because*, *although*, *when*, *which*) when one idea is background to the other: *When the sun set, we lit the fire.* A string of *and* clauses, called **excessive coordination**, makes every idea equal and leaves the reader to work out how they relate: *We got up and it was cold and we lit a fire and we ate breakfast.*",
-        "当两个意思同样重要时，用**并列**（*and*、*but*、*or*、*so* 或分号）：*The sun set, and the stars came out.* 当一个意思是另一个的背景时，用**主从**（*because*、*although*、*when*、*which*）：*When the sun set, we lit the fire.* 一连串的 *and* 分句叫作**过度并列**，它让每个意思都同等重要，读者只能自己去推测它们之间的关系：*We got up and it was cold and we lit a fire and we ate breakfast.*",
+        "Use **coordination** (*and*, *but*, *or*, *so*, or a semicolon) when two ideas are equally important: *The sun set, and the stars came out.* Use **subordination** (*because*, *although*, *when*, *which*) when one idea is background to the other: *When the sun set, we lit the fire.* A string of *and* clauses, called **excessive coordination**, makes every idea equal and leaves the reader to work out how they relate: *We got up and it was cold and we lit a fire and we ate breakfast.*\n\n> **Watch out.** Count how many clauses are chained with *and*: two balanced clauses joined by *and/but/or/so* or `;` are **coordination of equal ideas**, whereas three or more clauses strung together with repeated *and*s are **excessive coordination**.",
+        "当两个意思同样重要时，用**并列**（*and*、*but*、*or*、*so* 或分号）：*The sun set, and the stars came out.* 当一个意思是另一个的背景时，用**主从**（*because*、*although*、*when*、*which*）：*When the sun set, we lit the fire.* 一连串的 *and* 分句叫作**过度并列**，它让每个意思都同等重要，读者只能自己去推测它们之间的关系：*We got up and it was cold and we lit a fire and we ate breakfast.*\n\n> **注意。** 数一数被 *and* 串起的分句数：两个分量相当的分句用 *and/but/or/so* 或分号相连是**并列同等的意思**；连续用多个 *and* 拖出三四个分句才是**过度并列**。",
       ],
       ["How does this sentence join its ideas?", "这个句子如何连接其中的意思？"],
       `
@@ -593,22 +601,22 @@ ${coordLines}
       {
         "coordination of equal ideas": L(
           "并列同等的意思",
-          "The sentence joins two ideas of equal weight with *and*, *but*, *or*, *so* or a semicolon.",
-          "这个句子用 *and*、*but*、*or*、*so* 或分号连接两个分量相同的意思。",
+          "The sentence joins two ideas of equal weight with *and*, *but*, *or*, *so* or a semicolon.\n\n**Check.** Split the sentence at the conjunction or semicolon: both halves are complete independent clauses of equal weight, with no long chain of *and*s.",
+          "这个句子用 *and*、*but*、*or*、*so* 或分号连接两个分量相同的意思。\n\n**检验。** 从连词或分号处拆开：前后两半都是分量相等的独立分句，也没有拖成一长串 *and*。",
           "The sentence does not join just two equal ideas with a coordinating word or a semicolon.",
           "这个句子并不是用并列词或分号连接两个同等的意思。",
         ),
         "subordination of background": L(
           "从属的背景",
-          "One idea is placed in a dependent clause, with a word such as *because*, *although*, *when* or *which*, as background to the main idea.",
-          "一个意思用 *because*、*although*、*when* 或 *which* 这样的词放进从句，作为主要意思的背景。",
+          "One idea is placed in a dependent clause, with a word such as *because*, *although*, *when* or *which*, as background to the main idea.\n\n**Check.** Spot the subordinating word (*because*, *although*, *when*, *since*, *if*, *unless*, *while*, *after*, *who*, or *which*): the clause it opens cannot stand alone and frames the main clause.",
+          "一个意思用 *because*、*although*、*when* 或 *which* 这样的词放进从句，作为主要意思的背景。\n\n**检验。** 找出从属引导词：它引出的分句不能独立成句，只用来衬托主句。",
           "No idea is placed in a dependent clause as background.",
           "没有哪个意思被放进从句作为背景。",
         ),
         "excessive coordination": L(
           "过度并列",
-          "The sentence strings many clauses together with *and*, so every idea seems equal and their relationship is unclear.",
-          "这个句子用 *and* 串起了许多分句，每个意思显得同样重要，相互关系也不清楚。",
+          "The sentence strings many clauses together with *and*, so every idea seems equal and their relationship is unclear.\n\n**Check.** Count the repeated *and*s in this single sentence: three or more clauses are strung end to end without subordinating cause, time, or contrast.",
+          "这个句子用 *and* 串起了许多分句，每个意思显得同样重要，相互关系也不清楚。\n\n**检验。** 数一数这一句话里反复出现的 *and*：三四个分句首尾相接，看不出主次与逻辑关系。",
           "The sentence does not string many clauses together with *and*.",
           "这个句子并没有用 *and* 串起许多分句。",
         ),
@@ -624,14 +632,18 @@ const confused6 = topic("grammar", {
     "Pairs such as continual and continuous, hoard and horde, or perpetrate and perpetuate look or sound alike but mean different things.",
     "continual 和 continuous、hoard 和 horde、perpetrate 和 perpetuate 这样的词形或读音相近，意思却不同。",
   ],
+  intro: [
+    "Writing *a continuous interruption every five minutes* contradicts itself (*continuous* means unbroken; *continual* means recurring), and *a horde of gold* turns treasure into a crowd. In this topic, you master ten high-level confusable pairs in sentences and definitions.",
+    "写 *a continuous interruption every five minutes* 自相矛盾（*continuous* 是连续不断，*continual* 才是反复发生），把 *hoard* 写成 *horde* 则会把宝藏变成人群。本主题带你通过例句和释义掌握十组高阶易混淆词。",
+  ],
   after: ["commonly-confused-words-5"],
   points: [
     choose(
       "the-word-that-fits",
       ["The Word That Fits", "合适的词"],
       [
-        "Ten more pairs that careful writers keep apart. **Continual** means happening again and again; **continuous** means without a break. To **prescribe** is to order or recommend; to **proscribe** is to forbid. To **exalt** is to raise up or praise; to **exult** is to rejoice. To **founder** is to sink or fail completely; to **flounder** is to struggle clumsily. A **hoard** is a hidden store; a **horde** is a large crowd. To **militate** against something is to work against it; to **mitigate** is to make less severe. To **perpetrate** is to commit a crime; to **perpetuate** is to make something last. **Regretful** describes a person who feels regret; **regrettable** describes something that deserves regret. To **wreak** is to cause damage; to **wreck** is to destroy. **Biannual** means twice a year; **biennial** means every two years.",
-        "又有十对需要认真区分的词。**continual** 意为反复发生的，**continuous** 意为连续不断的。**prescribe** 是规定或开药方，**proscribe** 是禁止。**exalt** 是提升、赞扬，**exult** 是欢欣鼓舞。**founder** 是沉没或彻底失败，**flounder** 是笨拙地挣扎。**hoard** 是秘藏的存货，**horde** 是一大群人。**militate** against 是起反作用、妨碍，**mitigate** 是减轻。**perpetrate** 是犯（罪），**perpetuate** 是使延续。**regretful** 形容感到后悔的人，**regrettable** 形容令人遗憾的事。**wreak** 是造成（破坏），**wreck** 是毁坏。**biannual** 意为一年两次的，**biennial** 意为两年一次的。",
+        "Ten more pairs that careful writers keep apart. **Continual** means happening again and again; **continuous** means without a break. To **prescribe** is to order or recommend; to **proscribe** is to forbid. To **exalt** is to raise up or praise; to **exult** is to rejoice. To **founder** is to sink or fail completely; to **flounder** is to struggle clumsily. A **hoard** is a hidden store; a **horde** is a large crowd. To **militate** against something is to work against it; to **mitigate** is to make less severe. To **perpetrate** is to commit a crime; to **perpetuate** is to make something last. **Regretful** describes a person who feels regret; **regrettable** describes something that deserves regret. To **wreak** is to cause damage; to **wreck** is to destroy. **Biannual** means twice a year; **biennial** means every two years.\n\n> **Watch out.** Check the exact clue inside the sentence—*never stops* points to **continuous** while *every few minutes* points to **continual**; *havoc* pairs with **wreak**, while a physical object destroyed (*cars*, *stadium*) takes **wreck**.",
+        "又有十对需要认真区分的词。**continual** 意为反复发生的，**continuous** 意为连续不断的。**prescribe** 是规定或开药方，**proscribe** 是禁止。**exalt** 是提升、赞扬，**exult** 是欢欣鼓舞。**founder** 是沉没或彻底失败，**flounder** 是笨拙地挣扎。**hoard** 是秘藏的存货，**horde** 是一大群人。**militate** against 是起反作用、妨碍，**mitigate** 是减轻。**perpetrate** 是犯（罪），**perpetuate** 是使延续。**regretful** 形容感到后悔的人，**regrettable** 形容令人遗憾的事。**wreak** 是造成（破坏），**wreck** 是毁坏。**biannual** 意为一年两次的，**biennial** 意为两年一次的。\n\n> **注意。** 紧扣句中线索——*never stops* 对应 **continuous**，*every few minutes* 对应 **continual**；*havoc* 搭配 **wreak**，而实体被毁坏（车辆、球场）用 **wreck**。",
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
       `
@@ -669,13 +681,13 @@ ${fitLines6}
         The nurses checked on the patient at ___ intervals through the night.|continual|continuous|contentious
       `,
       (right) => [
-        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.`,
-        `**${right}** 有这个意思；其他选项是形似的词，意思不同。`,
+        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.\n\n**Check.** Replace the blank with **${right}**'s plain-English gloss and reread the sentence: the meaning fits the surrounding clue exactly, whereas the look-alike partner shifts the sense.`,
+        `**${right}** 有这个意思；其他选项是形似的词，意思不同。\n\n**检验。** 把 **${right}** 的平白释义代回空格通读全句：意思与上下文线索严丝合缝，而形近词会改变句意。`,
       ],
       [
         [
-          "*{wrong}* looks or sounds like **{right}**, but it has a different meaning.",
-          "*{wrong}* 看起来或听起来像 **{right}**，但意思不同。",
+          "*{wrong}* is the look-alike partner from this pair, and its meaning does not fit the sentence.",
+          "*{wrong}* 是这组形近词里的另一个，意思不符合这个句子。",
         ],
         ["*{wrong}* is another word or form; it does not have this meaning.", "*{wrong}* 是另一个词或词形，没有这个意思。"],
       ],
@@ -684,8 +696,8 @@ ${fitLines6}
       "the-word-for-the-meaning",
       ["The Word for the Meaning", "符合释义的词"],
       [
-        "Learn each pair by a clue. *Continuous* ends in *-ous*, like a river that flows on; *continual* comes back again and again. *Proscribe* has the *pro-* of *prohibit*. *Exult* has the *u* of *jump*, a leap of joy. A ship *founders* when it goes to the bottom, the *foundation*; a fish out of water *flounders*. A *hoard* is stored away like a *board* of savings; a *horde* rides on *horses*. *Mitigate* means to make *milder*. A *perpetrator* commits the crime. *Biennial* has the *enn* of *ennium*, years, as in *millennium*.",
-        "用线索记住每一对词。*continuous* 以 *-ous* 结尾，像一条不断流淌的河；*continual* 是一次次反复。*proscribe* 的 *pro-* 和 *prohibit*（禁止）一样。*exult* 是欢喜得跳起来。船 *founder* 是沉到底部；离水的鱼在 *flounder*（挣扎）。*hoard* 是藏起来的储备；*horde* 是骑马而来的一大群人。*mitigate* 意为使 *milder*（更温和）。*perpetrator* 是犯罪的人。*biennial* 里的 *enn* 表示年，和 *millennium* 一样。",
+        "Learn each pair by a clue. *Continuous* ends in *-ous*, like a river that flows on; *continual* comes back again and again. *Proscribe* has the *pro-* of *prohibit*. *Exult* has the *u* of *jump*, a leap of joy. A ship *founders* when it goes to the bottom, the *foundation*; a fish out of water *flounders*. A *hoard* is stored away like a *board* of savings; a *horde* rides on *horses*. *Mitigate* means to make *milder*. A *perpetrator* commits the crime. *Biennial* has the *enn* of *ennium*, years, as in *millennium*.\n\n> **Watch out.** Check the spelling anchor before locking in your answer—one letter (*a* vs. *u* in *exalt/exult*, *a* vs. *e* in *hoard/horde*, *ann* vs. *enn* in *biannual/biennial*) separates completely different meanings.",
+        "用线索记住每一对词。*continuous* 以 *-ous* 结尾，像一条不断流淌的河；*continual* 是一次次反复。*proscribe* 的 *pro-* 和 *prohibit*（禁止）一样。*exult* 是欢喜得跳起来。船 *founder* 是沉到底部；离水的鱼在 *flounder*（挣扎）。*hoard* 是藏起来的储备；*horde* 是骑马而来的一大群人。*mitigate* 意为使 *milder*（更温和）。*perpetrator* 是犯罪的人。*biennial* 里的 *enn* 表示年，和 *millennium* 一样。\n\n> **注意。** 选定前核对关键字母——往往只差一个字母（*exalt/exult*、*hoard/horde*、*biannual/biennial*），词义就完全不同。",
       ],
       ["Which word has this meaning?", "哪个词有这个意思？"],
       `
@@ -722,13 +734,13 @@ ${meaningLines6}
         an exhibition held every second year is this|biennial|biannual|biblical
       `,
       (right) => [
-        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.`,
-        `**${right}** 有这个意思；其他选项是形似的词，意思不同。`,
+        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.\n\n**Check.** Test the spelling clue on **${right}** (its prefix, root, or distinguishing letter): it locks directly onto the definition given, ruling out its near-twin.`,
+        `**${right}** 有这个意思；其他选项是形似的词，意思不同。\n\n**检验。** 用 **${right}** 的拼写线索（前缀、词根或关键字母）反推释义：它与题干完全吻合，排除了形近词。`,
       ],
       [
         [
-          "*{wrong}* looks or sounds like **{right}**, but it has a different meaning.",
-          "*{wrong}* 看起来或听起来像 **{right}**，但意思不同。",
+          "*{wrong}* is the look-alike partner from this pair, and it carries a different meaning.",
+          "*{wrong}* 是这组形近词里的另一个，意思不同。",
         ],
         ["*{wrong}* is another word or form; it does not have this meaning.", "*{wrong}* 是另一个词或词形，没有这个意思。"],
       ],

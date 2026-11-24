@@ -1353,40 +1353,40 @@ const wishNowWhy = (right: string, shown: string): Text => {
   const present = wishPresentOf.get(shown) ?? "";
   const were = wereNote(right);
   return t(
-    `A wish about now steps the verb one tense back into the past, so *${present}* becomes *${right}*${were.en}: ${fill(shown, right)}`,
-    `对现在的愿望要把动词往后退一个时态，用过去式，所以 *${present}* 变成 *${right}*${were["zh-CN"]}：${fill(shown, right)}`,
+    `A wish about now steps the verb one tense back into the past, so *${present}* becomes *${right}*${were.en}: ${fill(shown, right)}\n\n**Check.** The reality is in the present, so the verb after *wish* / *if only* steps back one tense into the past simple (*${right}*).`,
+    `对现在的愿望要把动词往后退一个时态，用过去式，所以 *${present}* 变成 *${right}*${were["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 现实情况在现在，所以 *wish* / *if only* 后面的动词往后退一步，用一般过去式（*${right}*）。`,
   );
 };
 
 /** whyNotWishNow explains the present or the past perfect in a wish about the present. */
-const whyNotWishNow = (wrong: string, right: string, _shown: string, position: number): Text =>
+const whyNotWishNow = (wrong: string, _right: string, _shown: string, position: number): Text =>
   position === 0
     ? t(
-        `*${wrong}* is the present tense, which states the fact itself. A wish about now steps back to *${right}*.`,
-        `*${wrong}* 是现在时，说的就是事实本身。对现在的愿望要往后退一步，用 *${right}*。`,
+        `*${wrong}* is the present tense, which states a fact rather than an unreal wish about now.`,
+        `*${wrong}* 是现在时，说的是事实本身，不能用来表达与现在相反的愿望。`,
       )
     : t(
-        `*${wrong}* uses *have*, which looks back at the past, as a regret does. This fact is about now, so the wish takes *${right}*.`,
-        `*${wrong}* 用了 *have*，是回看过去，像后悔一样。这个事实是关于现在的，所以愿望用 *${right}*。`,
+        `*${wrong}* uses *have/had*, which points back to a past regret instead of a wish about now.`,
+        `*${wrong}* 用了完成时结构，指向的是过去的遗憾，而不是对现在的愿望。`,
       );
 
 /** wishPastWhy explains the past perfect in a regret about the past. */
 const wishPastWhy = (right: string, shown: string): Text =>
   t(
-    `A regret about the past steps the verb back past the past simple, into the past perfect, *had* and the past participle: ${fill(shown, right)}`,
-    `后悔过去时，动词要比一般过去时再往后退一步，用过去完成时，即 *had* 加过去分词：${fill(shown, right)}`,
+    `A regret about the past steps the verb back past the past simple, into the past perfect, *had* and the past participle: ${fill(shown, right)}\n\n**Check.** Because the missed event already happened in the past, *wish* / *if only* requires *had/hadn't* + past participle (*${right}*).`,
+    `后悔过去时，动词要比一般过去时再往后退一步，用过去完成时，即 *had* 加过去分词：${fill(shown, right)}\n\n**检验。** 既然事件已发生在过去，*wish* / *if only* 后面就必须用 *had/hadn't* + 过去分词（*${right}*）。`,
   );
 
 /** whyNotWishPast explains the past simple or the present perfect in a regret about the past. */
-const whyNotWishPast = (wrong: string, right: string, _shown: string, position: number): Text =>
+const whyNotWishPast = (wrong: string, _right: string, _shown: string, position: number): Text =>
   position === 0
     ? t(
-        `*${wrong}* is the past simple, which a wish uses for the present. A regret about the past steps back further, to *${right}*.`,
-        `*${wrong}* 是一般过去时，*wish* 用它表达对现在的愿望。后悔过去要再往后退一步，用 *${right}*。`,
+        `*${wrong}* is the past simple, which *wish* uses for a present wish rather than a past regret.`,
+        `*${wrong}* 是一般过去时，*wish* 用它表达对现在的愿望，不能表达对过去的遗憾。`,
       )
     : t(
-        `*${wrong}* is the present perfect. After *wish* the verb steps back, so *have* becomes *had*: *${right}*.`,
-        `*${wrong}* 是现在完成时。*wish* 后面的动词要往后退一步，所以 *have* 变成 *had*：*${right}*。`,
+        `*${wrong}* is the present perfect, which never follows *wish* or *if only* for a past regret.`,
+        `*${wrong}* 是现在完成时，*wish* 或 *if only* 后面不能用现在完成时来后悔过去。`,
       );
 
 /** wishFactOf maps the canonical answer of a written wish to its fact, its verb form and whether it is about the past. */
@@ -1398,16 +1398,20 @@ const wishFactOf = new Map<string, { readonly fact: string; readonly right: stri
 /** wishWriteWhy explains which tense a written wish takes from its fact, and that it reverses the fact. */
 const wishWriteWhy = (canonical: string): Text => {
   const item = wishFactOf.get(canonical);
-  if (item === undefined) return t(canonical, canonical);
+  if (item === undefined)
+    return t(
+      `${canonical}\n\n**Check.** Verify the verb steps back one tense and reverses the polarity of the fact.`,
+      `${canonical}\n\n**检验。** 核对动词已向后退一个时态，且正负与事实相反。`,
+    );
   const fact = item.fact.replace(/[.!]$/u, "");
   return item.past
     ? t(
-        `The fact is about the past (*${fact}*), so the regret takes the past perfect, *${item.right}*, and says the opposite of the fact: ${canonical}`,
-        `这个事实是关于过去的（*${fact}*），所以遗憾用过去完成时 *${item.right}*，并说出与事实相反的情况：${canonical}`,
+        `The fact is about the past (*${fact}*), so the regret takes the past perfect, *${item.right}*, and says the opposite of the fact: ${canonical}\n\n**Check.** Confirm the polarity flips from the past fact and the verb uses *had/hadn't* + past participle (*${item.right}*).`,
+        `这个事实是关于过去的（*${fact}*），所以遗憾用过去完成时 *${item.right}*，并说出与事实相反的情况：${canonical}\n\n**检验。** 确认正负与过去事实相反，且动词用了 *had/hadn't* + 过去分词（*${item.right}*）。`,
       )
     : t(
-        `The fact is about now (*${fact}*), so the wish steps the verb back into the past, *${item.right}*, and says the opposite of the fact: ${canonical}`,
-        `这个事实是关于现在的（*${fact}*），所以愿望把动词往后退一步，用过去式 *${item.right}*，并说出与事实相反的情况：${canonical}`,
+        `The fact is about now (*${fact}*), so the wish steps the verb back into the past, *${item.right}*, and says the opposite of the fact: ${canonical}\n\n**Check.** Confirm the polarity flips from the present fact and the verb steps back into the past simple (*${item.right}*).`,
+        `这个事实是关于现在的（*${fact}*），所以愿望把动词往后退一步，用过去式 *${item.right}*，并说出与事实相反的情况：${canonical}\n\n**检验。** 确认正负与现在事实相反，且动词已往后退一步用一般过去式（*${item.right}*）。`,
       );
 };
 
@@ -1417,6 +1421,10 @@ const wishAndIfOnly: TopicDef = {
   summary: t(
     "I wish I knew how it worked. If only we had backed it up! A wish about the present takes the past simple; a regret about the past takes the past perfect.",
     "I wish I knew how it worked. If only we had backed it up! 对现在的愿望用一般过去时，对过去的遗憾用过去完成时。",
+  ),
+  intro: t(
+    "When your phone dies mid-call, you sigh *I wish I had a spare charger* (about now) or *If only I had charged it last night!* (about the past). English signals unreal wishes by stepping the verb one tense back.",
+    "通话中途手机没电，你会叹气说 *I wish I had a spare charger*（希望现在不同）或 *If only I had charged it last night!*（后悔过去）。英语通过把动词往后退一个时态来标出与事实相反的愿望。",
   ),
   prerequisites: ["third-conditional"],
   encompasses: [
@@ -1430,8 +1438,8 @@ const wishAndIfOnly: TopicDef = {
       "present",
       t("Wishing the present were different", "希望现在不同"),
       t(
-        "To wish that something **now** were different, put the verb after *wish* or *if only* one step back into the **past**, as in a second conditional:\n\n- *I don't know the answer.* → *I **wish** I **knew** the answer.*\n- *I can't swim.* → *If only I **could** swim.*\n- *It's raining.* → *I wish it **weren't** raining.* (*wasn't* is also common after *I*, *he*, *she* and *it*.)\n\nThe past form does not mean past time here: it shows that the wish is not true. *If only* is stronger than *I wish*. Do not confuse *wish* with *hope*: we *hope* for things that may happen (*I hope it stops raining*), but we *wish* for things that are not true.",
-        "希望**现在**的情况不同时，把 *wish* 或 *if only* 后面的动词往后退一步，用**过去式**，和第二条件句一样：\n\n- *I don't know the answer.* → *I **wish** I **knew** the answer.*\n- *I can't swim.* → *If only I **could** swim.*\n- *It's raining.* → *I wish it **weren't** raining.*（在 *I*、*he*、*she*、*it* 后面也常用 *wasn't*。）\n\n这里的过去式不表示过去的时间，而是表示愿望与事实相反。*If only* 的语气比 *I wish* 更强。中文说“我希望我知道答案”“要是我会游泳就好了”，动词不变形，所以中国学生常写成 *I wish I know*。还要分清 *wish* 和 *hope*：可能发生的事用 *hope*（*I hope it stops raining*），与事实相反的事才用 *wish*。",
+        "To wish that something **now** were different, put the verb after *wish* or *if only* one step back into the **past**, as in a second conditional:\n\n- *I don't know the answer.* → *I **wish** I **knew** the answer.*\n- *I can't swim.* → *If only I **could** swim.*\n- *It's raining.* → *I wish it **weren't** raining.* (*wasn't* is also common after *I*, *he*, *she* and *it*.)\n\nThe past form does not mean past time here: it shows that the wish is not true. *If only* is stronger than *I wish*.\n\n> **Watch out.** Never use the present tense after *wish* (*I wish I know* is wrong), and do not confuse *wish* (unreal) with *hope* (possible: *I hope it stops raining*).",
+        "希望**现在**的情况不同时，把 *wish* 或 *if only* 后面的动词往后退一步，用**过去式**，和第二条件句一样：\n\n- *I don't know the answer.* → *I **wish** I **knew** the answer.*\n- *I can't swim.* → *If only I **could** swim.*\n- *It's raining.* → *I wish it **weren't** raining.*（在 *I*、*he*、*she*、*it* 后面也常用 *wasn't*。）\n\n这里的过去式不表示过去的时间，而是表示愿望与事实相反。*If only* 的语气比 *I wish* 更强。\n\n> **注意。** *wish* 后面不能用现在时（*I wish I know* 是错的），也不要把 *wish*（与事实相反）和 *hope*（可能实现：*I hope it stops raining*）混用。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wishNowChoice, wishNowWhy, whyNotWishNow),
     ),
@@ -1439,8 +1447,8 @@ const wishAndIfOnly: TopicDef = {
       "past",
       t("Regretting the past", "后悔过去"),
       t(
-        "To regret something that **happened** (or didn't happen) in the past, use *wish* or *if only* with the **past perfect**, *had* + past participle, as in a third conditional:\n\n- *I didn't back up my files.* → *If only I **had backed up** my files!*\n- *I said something rude.* → *I wish I **hadn't said** that.*\n\nThe past simple is wrong here: *I wish I studied* is a wish about the present (that you were a person who studies), not a regret about last week. The present perfect (*I wish I have studied*) is never right after *wish*.",
-        "后悔过去**发生**（或没有发生）的事时，*wish* 或 *if only* 后面用**过去完成时**，即 *had* 加过去分词，和第三条件句一样：\n\n- *I didn't back up my files.* → *If only I **had backed up** my files!*\n- *I said something rude.* → *I wish I **hadn't said** that.*\n\n这里不能用一般过去时：*I wish I studied* 是对现在的愿望（希望自己是个爱学习的人），不是后悔上周没复习。*wish* 后面也从不用现在完成时（*I wish I have studied* 是错的）。中文“我真后悔没复习”“要是当时没说那句话就好了”靠“当时”“后悔”表达时间，英语则要靠 *had* 加过去分词。",
+        "To regret something that **happened** (or didn't happen) in the past, use *wish* or *if only* with the **past perfect**, *had* + past participle, as in a third conditional:\n\n- *I didn't back up my files.* → *If only I **had backed up** my files!*\n- *I said something rude.* → *I wish I **hadn't said** that.*\n\n> **Watch out.** Neither the past simple (*I wish I studied*) nor the present perfect (*I wish I have studied*) expresses a past regret—always step all the way back to *had/hadn't* + past participle.",
+        "后悔过去**发生**（或没有发生）的事时，*wish* 或 *if only* 后面用**过去完成时**，即 *had* 加过去分词，和第三条件句一样：\n\n- *I didn't back up my files.* → *If only I **had backed up** my files!*\n- *I said something rude.* → *I wish I **hadn't said** that.*\n\n中文“我真后悔没复习”“要是当时没说那句话就好了”靠“当时”“后悔”表达时间，英语则要靠 *had* 加过去分词。\n\n> **注意。** 一般过去时（*I wish I studied*）和现在完成时（*I wish I have studied*）都不能用来后悔过去——必须一路退到 *had/hadn't* + 过去分词。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wishPastChoice, wishPastWhy, whyNotWishPast),
     ),
@@ -1448,8 +1456,8 @@ const wishAndIfOnly: TopicDef = {
       "write",
       t("Writing wishes and regrets", "写愿望和遗憾"),
       t(
-        "Turn the fact into a wish with the words given. A fact about **now** takes the past simple; a fact about the **past** takes the past perfect. A wish reverses the fact, so a negative fact becomes positive and a positive fact becomes negative:\n\n- *I can't drive. → If only …* becomes *If only I could drive.*\n- *We missed the train. → I wish …* becomes *I wish we hadn't missed the train.*\n\nYou may write *I'd* for *I had*, *had not* for *hadn't*, and *was* for *were* after *I*, *he*, *she* and *it*.",
-        "用给出的开头把事实改写成愿望。关于**现在**的事实用一般过去时，关于**过去**的事实用过去完成时。愿望与事实相反，所以否定的事实变成肯定，肯定的事实变成否定：\n\n- *I can't drive. → If only …* 写成 *If only I could drive.*\n- *We missed the train. → I wish …* 写成 *I wish we hadn't missed the train.*\n\n可以把 *I had* 写成 *I'd*，把 *hadn't* 写成 *had not*，*I*、*he*、*she*、*it* 后面的 *were* 也可以写成 *was*。",
+        "Turn the fact into a wish with the words given. A fact about **now** takes the past simple; a fact about the **past** takes the past perfect. A wish reverses the fact, so a negative fact becomes positive and a positive fact becomes negative:\n\n- *I can't drive. → If only …* becomes *If only I could drive.*\n- *We missed the train. → I wish …* becomes *I wish we hadn't missed the train.*\n\nYou may write *I'd* for *I had*, *had not* for *hadn't*, and *was* for *were* after *I*, *he*, *she* and *it*.\n\n> **Watch out.** Remember both changes at once: flip positive/negative from the original fact, **and** step the tense back (now → past simple; past → *had* + past participle).",
+        "用给出的开头把事实改写成愿望。关于**现在**的事实用一般过去时，关于**过去**的事实用过去完成时。愿望与事实相反，所以否定的事实变成肯定，肯定的事实变成否定：\n\n- *I can't drive. → If only …* 写成 *If only I could drive.*\n- *We missed the train. → I wish …* 写成 *I wish we hadn't missed the train.*\n\n可以把 *I had* 写成 *I'd*，把 *hadn't* 写成 *had not*，*I*、*he*、*she*、*it* 后面的 *were* 也可以写成 *was*。\n\n> **注意。** 两步变化别漏掉任何一步：既要把原事实的正负反过来，又要让时态往后退一步（现在 → 一般过去时；过去 → *had* + 过去分词）。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1533,6 +1541,10 @@ const problemSolutionEssay = judgedTopic({
     "Write an essay of 250 to 300 words that explains a problem the task names, proposes two solutions, and judges which would work better.",
     "写一篇 250 到 300 词的议论文：解释题目给出的问题，提出两种解决办法，并判断哪一种效果更好。",
   ),
+  intro: t(
+    "When tackling urban food waste, a strong problem-solution essay diagnoses the root cause first, tests two concrete remedies along with their real limits, and ends with a reasoned judgment on which one works better.",
+    "探讨城市食物浪费这类议题时，好的问题解决类议论文先剖析问题成因，再分别提出两种具体方案并如实点出局限，最后在结尾权衡判断哪一种更有效。",
+  ),
   prerequisites: ["writing-an-opinion-essay"],
   encompasses: [{ topic: "writing-an-opinion-essay", weight: 0.4 }],
   criteria: [
@@ -1547,8 +1559,8 @@ const problemSolutionEssay = judgedTopic({
     id: "problem-solution-essay",
     title: t("A problem, two solutions, a judgment", "一个问题，两种办法，一个判断"),
     explanation: t(
-      "A problem-solution essay explains a problem and argues for the best way to deal with it. Plan four paragraphs:\n\n1. **The problem**: say what it is, what causes it and who it affects, with a fact or an example: *As a result, teachers report students who arrive tired.*\n2. **The first solution**: say how it would work and what it would change, then name a limit: *One solution would be to ... However, ...*\n3. **The second solution**: the same, just as fully: *A second solution would be to ... The difficulty is that ...*\n4. **Your judgment**: say which solution would work better, or how the two should be combined, and why: *On balance, I believe the second would work better, because ...*\n\nUse *would* for solutions that do not exist yet: *Students would hand in their phones in the morning.* Be honest about each solution's weaknesses; a judgment is convincing only when both options have been weighed fairly. Keep a neutral, formal tone, with no contractions.",
-      "问题解决类议论文解释一个问题，并论证解决它的最好办法。安排四段：\n\n1. **问题**：说明问题是什么、由什么引起、影响了谁，并给出事实或例子：*As a result, teachers report students who arrive tired.*\n2. **第一种办法**：说明它怎样实施、会带来什么改变，再指出它的局限：*One solution would be to ... However, ...*\n3. **第二种办法**：同样充分地展开：*A second solution would be to ... The difficulty is that ...*\n4. **你的判断**：说明哪种办法效果更好，或者两者应该怎样结合，并说明理由：*On balance, I believe the second would work better, because ...*\n\n描述尚未实施的办法时用 *would*：*Students would hand in their phones in the morning.* 中文写作常常只列出办法的好处，英语议论文则要如实写出每种办法的不足；只有公平地权衡过两种办法，判断才有说服力。语气中立、正式，不用缩写。",
+      "A problem-solution essay explains a problem and argues for the best way to deal with it. Plan four paragraphs:\n\n1. **The problem**: say what it is, what causes it and who it affects, with a fact or an example: *As a result, teachers report students who arrive tired.*\n2. **The first solution**: say how it would work and what it would change, then name a limit: *One solution would be to ... However, ...*\n3. **The second solution**: the same, just as fully: *A second solution would be to ... The difficulty is that ...*\n4. **Your judgment**: say which solution would work better, or how the two should be combined, and why: *On balance, I believe the second would work better, because ...*\n\nUse *would* for solutions that do not exist yet: *Students would hand in their phones in the morning.* Keep a neutral, formal tone, with no contractions.\n\n> **Watch out.** Do not list only the benefits of each solution—acknowledge a real drawback for **both** options so your final judgment sounds fair and persuasive.",
+      "问题解决类议论文解释一个问题，并论证解决它的最好办法。安排四段：\n\n1. **问题**：说明问题是什么、由什么引起、影响了谁，并给出事实或例子：*As a result, teachers report students who arrive tired.*\n2. **第一种办法**：说明它怎样实施、会带来什么改变，再指出它的局限：*One solution would be to ... However, ...*\n3. **第二种办法**：同样充分地展开：*A second solution would be to ... The difficulty is that ...*\n4. **你的判断**：说明哪种办法效果更好，或者两者应该怎样结合，并说明理由：*On balance, I believe the second would work better, because ...*\n\n描述尚未实施的办法时用 *would*：*Students would hand in their phones in the morning.* 语气中立、正式，不用缩写。\n\n> **注意。** 不要只写办法的好处——**两种**方案都要如实交代现实局限，这样最后的判断才显得客观有说服力。",
     ),
   },
   question: t(

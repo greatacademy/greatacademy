@@ -18,14 +18,18 @@ const topicSentences = topic("writing", {
     "In an analytical essay, each body paragraph opens with a topic sentence that makes a claim supporting the thesis, not with a fact or a quotation.",
     "在分析性文章中，每个主体段落都以一个支持论点的主张作为主题句开头，而不是以事实或引文开头。",
   ],
+  intro: [
+    "Opening a body paragraph with *'In chapter four, the bridge collapses'* only tells the reader what happened; opening with *'The bridge's collapse makes the siblings' estrangement physical'* gives the paragraph a claim to prove. Strong topic sentences advance the thesis step by step.",
+    "主体段如果以“第四章里桥塌了”开头，只是在复述情节；以“桥梁的坍塌将姐弟俩的隔阂具象化”开头，才给本段立起了一个值得证明的主张。有力的主题句能一步步推进中心论点。",
+  ],
   after: ["how-a-paragraph-is-built", "an-analytical-thesis"],
   points: [
     label(
       "what-opens-the-paragraph",
       ["What Opens the Paragraph", "段落以什么开头"],
       [
-        "In an analytical essay, each body paragraph should open with a **claim**: a point that supports the thesis and that the paragraph will prove. Weak paragraphs often open instead with **a fact from the plot**, which leaves nothing to prove, or with **a quotation**, which gives evidence before the reader knows what it is evidence for. A fourth weak opening **announces the topic** (*In this paragraph I will discuss...*) without saying anything about it.",
-        "在分析性文章中，每个主体段落都应以**主张**开头：一个支持论点、并由本段加以证明的观点。较弱的段落常常以**情节中的事实**开头，没有什么可证明的；或者以**引文**开头，读者还不知道它要证明什么就先看到了证据。第四种较弱的开头是**宣布话题**（*In this paragraph I will discuss...*），却对话题什么也没说。",
+        "In an analytical essay, each body paragraph should open with a **claim**: a point that supports the thesis and that the paragraph will prove. Weak paragraphs often open instead with **a fact from the plot**, which leaves nothing to prove, or with **a quotation**, which gives evidence before the reader knows what it is evidence for. A fourth weak opening **announces the topic** (*In this paragraph I will discuss...*) without saying anything about it.\n\n> **Watch out.** Do not confuse announcing a topic (*'This paragraph will be about...'*) with making a claim—an announcement names the subject but takes no arguable position on it.",
+        "在分析性文章中，每个主体段落都应以**主张**开头：一个支持论点、并由本段加以证明的观点。较弱的段落常常以**情节中的事实**开头，没有什么可证明的；或者以**引文**开头，读者还不知道它要证明什么就先看到了证据。第四种较弱的开头是**宣布话题**（*In this paragraph I will discuss...*），却对话题什么也没说。\n\n> **注意。** 不要把宣布话题（如 *This paragraph will be about...*）当成主张——宣布话题只是报幕，没有提出任何可论证的观点。",
       ],
       [
         "The thesis is: *In* The Odyssey, *Odysseus's cleverness saves him more often than his strength.* What does this opening sentence of a body paragraph give?",
@@ -66,29 +70,29 @@ const topicSentences = topic("writing", {
       {
         "a claim": L(
           "主张",
-          "The sentence makes a point that supports the thesis and that the paragraph can prove with evidence.",
-          "这个句子提出一个支持论点、本段可以用证据证明的观点。",
+          "The sentence makes a point that supports the thesis and that the paragraph can prove with evidence.\n\n**Check.** Ask whether this sentence interprets an episode to support the thesis (arguable) rather than merely reporting plot, quoting a line, or announcing a topic.",
+          "这个句子提出一个支持论点、本段可以用证据证明的观点。\n\n**检验。** 核对这句话是否在阐释某一情节以支撑中心论点，而不是只报情节、丢引文或报幕式宣布话题。",
           "The sentence does not make a point that the paragraph will prove.",
           "这个句子没有提出一个本段要证明的观点。",
         ),
         "a fact from the plot": L(
           "情节中的事实",
-          "The sentence only states something that happens in the text, so there is nothing for the paragraph to prove.",
-          "这个句子只陈述了作品中发生的事，本段没有什么可证明的。",
+          "The sentence only states something that happens in the text, so there is nothing for the paragraph to prove.\n\n**Check.** Ask whether any reader of the story could dispute this sentence: no, it merely states a plain plot event.",
+          "这个句子只陈述了作品中发生的事，本段没有什么可证明的。\n\n**检验。** 问问读过故事的人会不会对此有异议：不会，它只是平铺直叙地汇报了情节。",
           "The sentence is not only a fact from the plot.",
           "这个句子不只是情节中的事实。",
         ),
         "a quotation": L(
           "引文",
-          "The sentence opens with a quotation, giving evidence before the reader knows what it is evidence for.",
-          "这个句子以引文开头，读者还不知道证据要证明什么就先看到了证据。",
+          "The sentence opens with a quotation, giving evidence before the reader knows what it is evidence for.\n\n**Check.** Look at the quotation marks right at the start: the paragraph drops raw textual words before stating what point they support.",
+          "这个句子以引文开头，读者还不知道证据要证明什么就先看到了证据。\n\n**检验。** 看句首的引号：段落还没亮明观点，就直接把原文台词抛了出来。",
           "The sentence does not open with a quotation.",
           "这个句子不是以引文开头的。",
         ),
         "an announcement of the topic": L(
           "宣布话题",
-          "The sentence only announces what the paragraph will be about, without saying anything about it.",
-          "这个句子只宣布本段要谈什么，却对它什么也没说。",
+          "The sentence only announces what the paragraph will be about, without saying anything about it.\n\n**Check.** Spot the meta-announcement phrasing (*In this paragraph*, *will discuss*, *is the subject*): it names a subject without stating a claim.",
+          "这个句子只宣布本段要谈什么，却对它什么也没说。\n\n**检验。** 认出报幕式套话（如 *In this paragraph*、*will discuss*、*is the subject*）：它只点了题目，没提主张。",
           "The sentence does more than announce the topic.",
           "这个句子不只是宣布话题。",
         ),
@@ -98,8 +102,8 @@ const topicSentences = topic("writing", {
       "the-topic-sentence-that-fits",
       ["The Topic Sentence That Fits", "合适的主题句"],
       [
-        "A topic sentence must also **fit the thesis**: it should support the thesis's claim, not wander from it. If the thesis says that *the setting mirrors the family's decline*, a good topic sentence names one part of that mirroring. Two weak choices are common: a sentence that makes a claim **about something else**, and a sentence that only **repeats the thesis** word for word, adding no new step.",
-        "主题句还必须**与论点相符**：它应该支持论点的主张，而不是偏离它。如果论点说*场景映照着家族的衰落*，好的主题句就说出这种映照的某一方面。常见的弱选择有两种：一种对**别的事情**提出主张，另一种只是逐字**重复论点**，没有增加新的一步。",
+        "A topic sentence must also **fit the thesis**: it should support the thesis's claim, not wander from it. If the thesis says that *the setting mirrors the family's decline*, a good topic sentence names one part of that mirroring. Two weak choices are common: a sentence that makes a claim **about something else**, and a sentence that only **repeats the thesis** word for word, adding no new step.\n\n> **Watch out.** Reject a candidate that sounds impressive simply because it copies the thesis verbatim—a real topic sentence narrows the thesis down to *one concrete piece* the paragraph will prove.",
+        "主题句还必须**与论点相符**：它应该支持论点的主张，而不是偏离它。如果论点说*场景映照着家族的衰落*，好的主题句就说出这种映照的某一方面。常见的弱选择有两种：一种对**别的事情**提出主张，另一种只是逐字**重复论点**，没有增加新的一步。\n\n> **注意。** 不要因为某句话和中心论点长得一模一样就选它——合格的主题句必须把中心论点拆解成*一个具体方面*，供本段展开论证。",
       ],
       ["Which topic sentence best supports the thesis?", "哪个主题句最能支持这个论点？"],
       `
@@ -135,8 +139,8 @@ const topicSentences = topic("writing", {
         Thesis: The captain's choice to stay with the ship shows duty above life.|The captain refuses the last seat in the lifeboat and gives it to a young sailor.|Shipwrecks are a common subject in adventure stories.|The captain's choice to stay with the ship shows duty above life.
       `,
       (right) => [
-        `*${right}* names one part of the thesis's claim that the paragraph can prove, so it supports the thesis.`,
-        `*${right}* 说出了论点主张中本段可以证明的一部分，所以它支持论点。`,
+        `*${right}* names one part of the thesis's claim that the paragraph can prove, so it supports the thesis.\n\n**Check.** Compare the topic sentence against the thesis: it stays directly on the thesis's claim while zooming in on one specific piece of textual evidence rather than repeating the thesis verbatim.`,
+        `*${right}* 说出了论点主张中本段可以证明的一部分，所以它支持论点。\n\n**检验。** 把主题句和中心论点对照：它紧扣中心论点的主张，同时聚焦到一个具体的文本切入点，而非原样复读论点。`,
       ],
       [
         [
@@ -159,14 +163,18 @@ const evidence = topic("writing", {
     "A quotation in an essay needs a sentence that introduces it and a sentence that explains how it proves the claim.",
     "文章中的引文需要一个引出它的句子，以及一个解释它如何证明主张的句子。",
   ],
+  intro: [
+    "Dropping *“The gate never opened again”* into a paragraph without context leaves readers guessing who spoke and why it matters. Effective evidence follows a three-step frame: introduce the speaker and moment, weave in the quote, and explain how its exact wording proves your claim.",
+    "把“大门再也没有打开”孤零零丢进段落里，读者根本不知道谁说的、有什么用。有效的证据使用讲究三步：先引出说话人与情境，再融入引文，最后解释具体措辞如何支撑你的主张。",
+  ],
   after: ["quoting-a-primary-source", "analysis-not-summary"],
   points: [
     label(
       "introduced-dropped-or-explained",
       ["Introduced, Dropped or Explained", "引出、突兀还是解释"],
       [
-        "A quotation should never stand alone in an essay. It needs an **introduction**, which tells the reader who is speaking and when: *As the storm rises, the captain shouts,* “...” A **dropped quotation** appears with no introduction, as a sentence by itself. And after the quotation comes the **explanation**, which shows how the words prove the claim: *His order reveals that he fears the crew more than the sea.* A paragraph that ends with the quotation leaves the reader to do the essay's work.",
-        "引文在文章中绝不能孤零零地出现。它需要**引出**，告诉读者是谁在什么时候说的：*As the storm rises, the captain shouts,* “...” **突兀的引文**没有任何引出，自成一句。引文之后是**解释**，说明这些话如何证明主张：*His order reveals that he fears the crew more than the sea.* 以引文结尾的段落把文章该做的事留给了读者。",
+        "A quotation should never stand alone in an essay. It needs an **introduction**, which tells the reader who is speaking and when: *As the storm rises, the captain shouts,* “...” A **dropped quotation** appears with no introduction, as a sentence by itself. And after the quotation comes the **explanation**, which shows how the words prove the claim: *His order reveals that he fears the crew more than the sea.* A paragraph that ends with the quotation leaves the reader to do the essay's work.\n\n> **Watch out.** Notice the difference between *introducing* a quote (setting up who speaks and embedding the quoted line) and *explaining* it (unpacking what the quoted words prove *after* the quote has been given).",
+        "引文在文章中绝不能孤零零地出现。它需要**引出**，告诉读者是谁在什么时候说的：*As the storm rises, the captain shouts,* “...” **突兀的引文**没有任何引出，自成一句。引文之后是**解释**，说明这些话如何证明主张：*His order reveals that he fears the crew more than the sea.* 以引文结尾的段落把文章该做的事留给了读者。\n\n> **注意。** 分清**引出引文**（交代谁在何时说并嵌入原话）和**解释引文**（在引文之后剖析其中的词句如何证明观点）。",
       ],
       ["What does this sentence from an essay do with the quotation?", "文章中的这个句子如何处理引文？"],
       `
@@ -204,22 +212,22 @@ const evidence = topic("writing", {
       {
         "introduces it": L(
           "引出引文",
-          "The sentence tells who is speaking and when, then gives the quotation inside the writer's own sentence.",
-          "这个句子说明谁在什么时候说话，然后把引文放进作者自己的句子里。",
+          "The sentence tells who is speaking and when, then gives the quotation inside the writer's own sentence.\n\n**Check.** Spot the lead-in phrase naming speaker and context right before the opening quotation mark: the quote is anchored inside the writer's own grammar.",
+          "这个句子说明谁在什么时候说话，然后把引文放进作者自己的句子里。\n\n**检验。** 看前引号之前的引导语：它交代了说话人和情境，把引文稳稳嵌进了作者自己的句子。",
           "The sentence does not lead into the quotation by telling who speaks and when.",
           "这个句子没有说明谁在什么时候说话来引出引文。",
         ),
         "drops it": L(
           "突兀的引文",
-          "The quotation stands alone as a sentence, with no words to introduce it.",
-          "引文自成一句，没有任何引出的话。",
+          "The quotation stands alone as a sentence, with no words to introduce it.\n\n**Check.** Look before the opening quotation mark: there are zero words of the writer's own—the quote is dropped in by itself.",
+          "引文自成一句，没有任何引出的话。\n\n**检验。** 看前引号前面：没有任何作者自己的引导词，引文孤零零地自成一句。",
           "The quotation does not stand alone without an introduction.",
           "引文并不是没有引出、孤零零地出现。",
         ),
         "explains it": L(
           "解释引文",
-          "The sentence shows what the quoted words mean and how they prove the claim.",
-          "这个句子说明引用的话意味着什么，以及它们如何证明主张。",
+          "The sentence shows what the quoted words mean and how they prove the claim.\n\n**Check.** Notice that this sentence does not introduce a raw quote; instead, it unpacks *why* the speaker's words or image support an analytical point.",
+          "这个句子说明引用的话意味着什么，以及它们如何证明主张。\n\n**检验。** 注意这句话不是在引出原话，而是在剖析说话人的措辞或意象*如何*证明分析观点。",
           "The sentence does not explain what the quotation means or proves.",
           "这个句子没有解释引文的含义或它证明了什么。",
         ),
@@ -229,8 +237,8 @@ const evidence = topic("writing", {
       "the-explanation-that-proves",
       ["The Explanation That Proves", "能证明主张的解释"],
       [
-        "The explanation after a quotation should **connect the words to the claim**, often by looking closely at a single word or image. Two weak explanations are common: one only **restates the quotation** in other words, and one makes **a claim the quotation does not support**.",
-        "引文之后的解释应该**把这些话与主张联系起来**，常常是仔细分析某一个词或意象。常见的弱解释有两种：一种只是用别的话**重述引文**，另一种提出了**引文并不支持的主张**。",
+        "The explanation after a quotation should **connect the words to the claim**, often by looking closely at a single word or image. Two weak explanations are common: one only **restates the quotation** in other words, and one makes **a claim the quotation does not support**.\n\n> **Watch out.** Do not pick a sentence that merely paraphrases the quote (*'The speaker says that...'*) or jumps to an unsupported extreme (*'proves without any doubt'*)—good explanation zooms into a word or image to link it to the claim.",
+        "引文之后的解释应该**把这些话与主张联系起来**，常常是仔细分析某一个词或意象。常见的弱解释有两种：一种只是用别的话**重述引文**，另一种提出了**引文并不支持的主张**。\n\n> **注意。** 不要选只是换词复述引文的句子，也不要选夸大到引文无法支撑的极端推论——好的解释会抓住引文里的关键词或意象，把它们与主张扣在一起。",
       ],
       ["Which sentence best explains how the quotation proves the claim?", "哪个句子最能解释引文如何证明主张？"],
       `
@@ -266,8 +274,8 @@ const evidence = topic("writing", {
         Claim: The orphan finds a new family. Quotation: “They set a place for her without asking.”|Setting her place without asking shows that the family already counts her as one of them.|The quotation says that they set a place for her without asking.|This quotation proves that the family is rude to the orphan.
       `,
       (right) => [
-        `*${right}* connects the quoted words to the claim, often through one word or image, which proves the point.`,
-        `*${right}* 把引用的话与主张联系起来，常常借助一个词或意象，从而证明了观点。`,
+        `*${right}* connects the quoted words to the claim, often through one word or image, which proves the point.\n\n**Check.** Verify that the sentence bridges *both* sides of the prompt: it points to a concrete word or detail in the quotation and explains how it establishes the stated claim without overreaching.`,
+        `*${right}* 把引用的话与主张联系起来，常常借助一个词或意象，从而证明了观点。\n\n**检验。** 核对这句话是否搭起了题干两端的桥梁：既抓住引文里的具体词句或意象，又恰如其分地说明它如何印证所给主张。`,
       ],
       [
         [
@@ -287,14 +295,18 @@ const verbs = topic("writing", {
     "Precise verbs such as *reveals*, *suggests*, *emphasizes* and *contrasts* say exactly what a detail does, where *says* and *shows* say little.",
     "*reveals*、*suggests*、*emphasizes*、*contrasts* 这样精确的动词准确地说出细节起什么作用，而 *says* 和 *shows* 说明不了多少。",
   ],
+  intro: [
+    "Writing *'The cracked bell talks about the ending'* blurs the craft; writing *'The cracked bell foreshadows the broken treaty'* tells the reader the exact literary move. Choosing precise analytical verbs sharpens every claim you make about a text.",
+    "写“裂开的钟谈到了结局”含糊不清；写“裂开的钟预示了条约的破裂”才准确点出文学手法。选准分析性动词，能让每一句文本分析都锋利精准。",
+  ],
   after: ["word-choice-and-meaning"],
   points: [
     choose(
       "the-precise-verb",
       ["The Precise Verb", "精确的动词"],
       [
-        "Analysis needs **precise verbs**. *Reveals* means a detail uncovers something hidden. *Suggests* means it hints without stating. *Emphasizes* means it gives something special weight. *Contrasts* means it sets two things against each other. *Foreshadows* means it hints at what will happen later. Vague verbs such as *says* or *talks about* tell the reader little.",
-        "分析需要**精确的动词**。*reveals* 表示细节揭示了隐藏的东西。*suggests* 表示暗示而不直说。*emphasizes* 表示特别强调某样东西。*contrasts* 表示把两样东西对照起来。*foreshadows* 表示暗示后来会发生的事。*says* 或 *talks about* 这样含糊的动词告诉读者的东西很少。",
+        "Analysis needs **precise verbs**. *Reveals* means a detail uncovers something hidden. *Suggests* means it hints without stating. *Emphasizes* means it gives something special weight. *Contrasts* means it sets two things against each other. *Foreshadows* means it hints at what will happen later. Vague verbs such as *says* or *talks about* tell the reader little.\n\n> **Watch out.** Do not confuse **reveals** (uncovers a hidden truth clearly) with **suggests** (hints indirectly without stating it outright) or **foreshadows** (points ahead to a *future* event).",
+        "分析需要**精确的动词**。*reveals* 表示细节揭示了隐藏的东西。*suggests* 表示暗示而不直说。*emphasizes* 表示特别强调某样东西。*contrasts* 表示把两样东西对照起来。*foreshadows* 表示暗示后来会发生的事。*says* 或 *talks about* 这样含糊的动词告诉读者的东西很少。\n\n> **注意。** 分清 **reveals**（清楚揭开隐藏的真相）、**suggests**（间接暗示而不明说）与 **foreshadows**（指向*后文*将发生的事件）。",
       ],
       ["Which verb fits the analysis best?", "哪个动词最适合这句分析？"],
       `
@@ -329,7 +341,10 @@ const verbs = topic("writing", {
         The noisy city ___ the silent village where the story ends.|contrasts with|says|suggests
         The way the dog hides when the master comes home ___ that the master is cruel.|suggests|talks about|foreshadows
       `,
-      (right) => [`*${right}* says exactly what the detail does in the text.`, `*${right}* 准确说出了这个细节在作品中起什么作用。`],
+      (right) => [
+        `*${right}* says exactly what the detail does in the text.\n\n**Check.** Substitute **${right}** into the sentence and check the logical link: it names the exact move (uncovering, hinting, weighting, opposing, or pointing ahead) described by the rest of the sentence.`,
+        `*${right}* 准确说出了这个细节在作品中起什么作用。\n\n**检验。** 把 **${right}** 代回原句核对逻辑关系：它精准对应后文描述的动作（揭开、暗示、强调、对照或预示）。`,
+      ],
       [
         [
           "*{wrong}* is too vague: it tells the reader little about what the detail does.",
@@ -345,8 +360,8 @@ const verbs = topic("writing", {
       "what-the-verb-claims",
       ["What the Verb Claims", "动词提出了什么主张"],
       [
-        "Each analytical verb makes a different claim. **Reveals** claims that something hidden is uncovered. **Suggests** claims that something is hinted at but not stated. **Emphasizes** claims that something is given extra weight. **Contrasts** claims that two things are set against each other. **Foreshadows** claims that a detail hints at a later event. Choose the verb whose claim you can prove.",
-        "每个分析性动词都提出不同的主张。**reveals** 主张隐藏的东西被揭开了。**suggests** 主张某事被暗示而没有明说。**emphasizes** 主张某事被特别强调。**contrasts** 主张两样东西被相互对照。**foreshadows** 主张某个细节暗示了后来的事件。选择你能证明其主张的动词。",
+        "Each analytical verb makes a different claim. **Reveals** claims that something hidden is uncovered. **Suggests** claims that something is hinted at but not stated. **Emphasizes** claims that something is given extra weight. **Contrasts** claims that two things are set against each other. **Foreshadows** claims that a detail hints at a later event. Choose the verb whose claim you can prove.\n\n> **Watch out.** Check the *time* and *directness* in the description: pointing to a later event is **foreshadows**, uncovering a secret directly is **reveals**, and hinting subtly without stating is **suggests**.",
+        "每个分析性动词都提出不同的主张。**reveals** 主张隐藏的东西被揭开了。**suggests** 主张某事被暗示而没有明说。**emphasizes** 主张某事被特别强调。**contrasts** 主张两样东西被相互对照。**foreshadows** 主张某个细节暗示了后来的事件。选择你能证明其主张的动词。\n\n> **注意。** 检查描述里的*时间指向*和*直接程度*：指向后文事件选 **foreshadows**，直接揭开秘密选 **reveals**，含蓄暗示选 **suggests**。",
       ],
       ["Which verb's claim does this description match?", "这个描述与哪个动词的主张相符？"],
       `
@@ -384,36 +399,36 @@ const verbs = topic("writing", {
       {
         foreshadows: L(
           "预示",
-          "The detail hints at an event that will come later in the text.",
-          "这个细节暗示了作品中后来会发生的事。",
+          "The detail hints at an event that will come later in the text.\n\n**Check.** Look for the forward time arrow (an early sign pointing to a later event): that temporal link defines **foreshadows**.",
+          "这个细节暗示了作品中后来会发生的事。\n\n**检验。** 找向后指的时间线索（前文征兆指向后文事件）：这正是 **foreshadows** 的核心。",
           "The detail is not about an event that comes later.",
           "这个细节与后来发生的事无关。",
         ),
         reveals: L(
           "揭示",
-          "The detail uncovers something that was hidden.",
-          "这个细节揭开了隐藏的东西。",
+          "The detail uncovers something that was hidden.\n\n**Check.** Notice that something previously concealed (a secret, identity, or plot) is brought straight into the open—that is **reveals**.",
+          "这个细节揭开了隐藏的东西。\n\n**检验。** 注意原本隐瞒的事物（秘密、身份或阴谋）被直接揭开——这正是 **reveals**。",
           "Nothing hidden is uncovered here.",
           "这里并没有揭开什么隐藏的东西。",
         ),
         suggests: L(
           "暗示",
-          "The detail hints at a meaning without stating it outright.",
-          "这个细节暗示了某种含义，但没有明说。",
+          "The detail hints at a meaning without stating it outright.\n\n**Check.** Notice the indirectness: the text never states the feeling or truth directly, leaving the reader to infer it—that is **suggests**.",
+          "这个细节暗示了某种含义，但没有明说。\n\n**检验。** 注意表达的含蓄性：文本没有明说，而是让读者自行领会——这正是 **suggests**。",
           "The detail is not a hint at an unstated meaning.",
           "这个细节并不是对未明说含义的暗示。",
         ),
         emphasizes: L(
           "强调",
-          "The detail gives something extra weight, often through repetition or placement.",
-          "这个细节特别强调了某样东西，常常借助重复或位置安排。",
+          "The detail gives something extra weight, often through repetition or placement.\n\n**Check.** Spot the spotlighting technique (repetition, isolation, capitalization, or pause): giving extra prominence defines **emphasizes**.",
+          "这个细节特别强调了某样东西，常常借助重复或位置安排。\n\n**检验。** 认出突出重心的手法（重复、独段、大写或停顿）：加大分量正是 **emphasizes**。",
           "The detail does not give something extra weight.",
           "这个细节并没有特别强调某样东西。",
         ),
         contrasts: L(
           "对照",
-          "The detail sets two things against each other so their differences stand out.",
-          "这个细节把两样东西相互对照，使它们的差异突出。",
+          "The detail sets two things against each other so their differences stand out.\n\n**Check.** Count the sides: two opposite scenes, characters, or settings are placed side by side to sharpen their difference—that is **contrasts**.",
+          "这个细节把两样东西相互对照，使它们的差异突出。\n\n**检验。** 看是否有对立的两面并置在一起以凸显差异——这正是 **contrasts**。",
           "The detail does not set two things against each other.",
           "这个细节并没有把两样东西相互对照。",
         ),

@@ -85,8 +85,8 @@ const meaning = (bank: readonly ChoiceItem[], sentences: AcademicSentences) =>
     [...bank.map(([word, right, wrong]): ChoiceItem => [`**${word}**`, right, wrong]), ...academicSentenceBanks(bank, sentences).meaning],
     (right, shown) =>
       t(
-        `${shown} The word in bold means **${right}**. The other options describe something else, so they do not fit the word.`,
-        `${shown} 加粗的词的意思是 **${right}**。其他选项描述的是别的东西，与这个词不符。`,
+        `${shown} The word in bold means **${right}**.\n\n**Check.** Replace *${bold(shown)}* with **${right}** in a schoolwork sentence—the meaning stays natural and exact.`,
+        `${shown} 加粗的词的意思是 **${right}**。\n\n**检验。**把作业题里的 *${bold(shown)}* 换成 **${right}**——句意依然自然准确。`,
       ),
     notTheMeaning,
   );
@@ -97,8 +97,8 @@ const use = (bank: readonly ChoiceItem[], meanings: readonly ChoiceItem[], sente
     [...bank, ...academicSentenceBanks(meanings, sentences).use],
     (right, shown) =>
       t(
-        `${shown.replace("___", `**${right}**`)} Its meaning completes the thought of the sentence.`,
-        `${shown.replace("___", `**${right}**`)} 这个词的意思最符合句子。`,
+        `${shown.replace("___", `**${right}**`)} Its meaning completes the thought of the sentence.\n\n**Check.** Substitute the definition of **${right}** (${glossary.get(right) ?? right}) into the blank—the whole sentence makes clear sense.`,
+        `${shown.replace("___", `**${right}**`)} 这个词的意思最符合句子。\n\n**检验。**把 **${right}** 的释义（*${glossary.get(right) ?? right}*）代入空格——整句话逻辑通顺。`,
       ),
     wrongWord,
   );
@@ -112,6 +112,10 @@ export const academicWordTopics: readonly TopicDef[] = [
       "Words for what schoolwork asks you to do: identify, summarize, explain, support and more.",
       "作业中常见的要求用词：identify、summarize、explain、support 等。",
     ),
+    intro: t(
+      "A science question might ask you to **explain** a **process** or **support** your answer with facts. Knowing these schoolwork words lets you understand exactly what a task is asking.",
+      "科学题可能会让你 **explain** 一个 **process**，或用事实 **support** 你的答案。掌握这些学科常用词，就能准确看懂题目要求。",
+    ),
     prerequisites: ["academic-words-1"],
     encompasses: [{ topic: "academic-words-1", weight: 0.2 }],
     xp: 12,
@@ -120,8 +124,8 @@ export const academicWordTopics: readonly TopicDef[] = [
         "academic-2-meanings",
         t("What They Mean", "它们的含义"),
         t(
-          "Many questions in school are built on a few words. To **identify** is to find and name, to **summarize** is to give the main points briefly, to **explain** is to make clear with reasons, and to **support** is to back up an idea with facts. The others here are **cause, effect, structure, process, region** and **purpose**.",
-          "学校里的许多题目都建立在几个词上。**identify** 是找出并说出名称，**summarize** 是简要说出要点，**explain** 是用理由讲清楚，**support** 是用事实支持观点。这里还有 **cause, effect, structure, process, region, purpose**。",
+          "Many questions in school are built on a few words. To **identify** is to find and name, to **summarize** is to give the main points briefly, to **explain** is to make clear with reasons, and to **support** is to back up an idea with facts. The others here are **cause, effect, structure, process, region** and **purpose**.\n\n> **Watch out.** Do not confuse **cause** and **effect**—the *cause* happens first and makes the *effect* happen.",
+          "学校里的许多题目都建立在几个词上。**identify** 是找出并说出名称，**summarize** 是简要说出要点，**explain** 是用理由讲清楚，**support** 是用事实支持观点。这里还有 **cause, effect, structure, process, region, purpose**。\n\n> **注意。**不要混淆 **cause** 和 **effect**——*cause*（原因）先发生，导致了 *effect*（结果）。",
         ),
         meaning(academic2MeaningBank, academicSentences2),
       ),
@@ -129,8 +133,8 @@ export const academicWordTopics: readonly TopicDef[] = [
         "academic-2-use",
         t("Using Them", "使用它们"),
         t(
-          "A cause comes before its effect: rain is the cause, and the flood is the effect. Read the whole sentence, decide what kind of word fits the blank, and then choose the word whose meaning completes the thought.",
-          "原因（cause）在结果（effect）之前：雨是原因，洪水是结果。读完整个句子，判断空格需要什么样的词，再选择意思能使句子完整的词。",
+          "A cause comes before its effect: rain is the cause, and the flood is the effect. Read the whole sentence, decide what kind of word fits the blank, and then choose the word whose meaning completes the thought.\n\n> **Watch out.** Check whether the blank needs an action verb (like *identify* or *summarize*) or a noun (like *region* or *process*) before picking.",
+          "原因（cause）在结果（effect）之前：雨是原因，洪水是结果。读完整个句子，判断空格需要什么样的词，再选择意思能使句子完整的词。\n\n> **注意。**选词前先看空格需要动词（如 *identify*、*summarize*）还是名词（如 *region*、*process*）。",
         ),
         use(academic2UseBank, academic2MeaningBank, academicSentences2),
       ),
@@ -143,6 +147,10 @@ export const academicWordTopics: readonly TopicDef[] = [
       "Words for working with information: infer, interpret, data, survey and more.",
       "处理信息时的用词：infer、interpret、data、survey 等。",
     ),
+    intro: t(
+      "When a class collects **data** from a **survey** and tries to **interpret** the numbers, these words name each step of working with information.",
+      "当班级通过 **survey** 收集 **data** 并试图 **interpret** 这些数字时，这些词正好说明了处理信息的每一步。",
+    ),
     prerequisites: ["academic-words-2"],
     encompasses: [{ topic: "academic-words-2", weight: 0.2 }],
     xp: 12,
@@ -151,8 +159,8 @@ export const academicWordTopics: readonly TopicDef[] = [
         "academic-3-meanings",
         t("What They Mean", "它们的含义"),
         t(
-          "To **infer** is to work out something the text does not say from clues it does give. To **interpret** is to explain what something means. **Data** are facts and numbers collected to study, often gathered by a **survey**. The others here are **illustrate, method, factor, contrast, occur** and **require**.",
-          "**infer** 是根据文本给出的线索推断它没有直接说的内容。**interpret** 是解释某事物的意义。**data** 是为了研究而收集的事实和数字，常常通过 **survey**（调查）获得。这里还有 **illustrate, method, factor, contrast, occur, require**。",
+          "To **infer** is to work out something the text does not say from clues it does give. To **interpret** is to explain what something means. **Data** are facts and numbers collected to study, often gathered by a **survey**. The others here are **illustrate, method, factor, contrast, occur** and **require**.\n\n> **Watch out.** A **factor** is one thing that helps cause a result—it is not the final result itself.",
+          "**infer** 是根据文本给出的线索推断它没有直接说的内容。**interpret** 是解释某事物的意义。**data** 是为了研究而收集的事实和数字，常常通过 **survey**（调查）获得。这里还有 **illustrate, method, factor, contrast, occur, require**。\n\n> **注意。****factor** 是促成结果的因素之一，而不是最终结果本身。",
         ),
         meaning(academic3MeaningBank, academicSentences3),
       ),
@@ -160,8 +168,8 @@ export const academicWordTopics: readonly TopicDef[] = [
         "academic-3-use",
         t("Using Them", "使用它们"),
         t(
-          "*Contrast* points to differences, while *compare* looks at both likenesses and differences. *Occur* and *require* are formal words for *happen* and *need*. Read the whole sentence and choose the word whose meaning completes the thought.",
-          "*contrast* 着眼于差异，而 *compare* 既看相同点也看不同点。*occur* 和 *require* 是 *happen* 和 *need* 的正式说法。读完整个句子，选择意思能使句子完整的词。",
+          "*Contrast* points to differences, while *compare* looks at both likenesses and differences. *Occur* and *require* are formal words for *happen* and *need*. Read the whole sentence and choose the word whose meaning completes the thought.\n\n> **Watch out.** Test *occur* by substituting *happen* and *require* by substituting *need*—if the simpler word does not fit, pick another option.",
+          "*contrast* 着眼于差异，而 *compare* 既看相同点也看不同点。*occur* 和 *require* 是 *happen* 和 *need* 的正式说法。读完整个句子，选择意思能使句子完整的词。\n\n> **注意。**检验 *occur* 时可代换成 *happen*，检验 *require* 时可代换成 *need*——如果简单词放进去不通，就换一个选项。",
         ),
         use(academic3UseBank, academic3MeaningBank, academicSentences3),
       ),

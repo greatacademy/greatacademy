@@ -622,14 +622,18 @@ const participles = topic("grammar", {
     "Irregular verbs have a past participle of their own after has, have and had: has gone, had written, have swum.",
     "不规则动词在 has、have 和 had 后面有自己的过去分词形式：has gone、had written、have swum。",
   ],
+  intro: [
+    "You say *Yesterday we drove*, but *We have driven*—never *have drove*. Irregular verbs keep a separate third form (the past participle) whenever a helping verb like *has*, *have*, *had*, or *was* stands in front.",
+    "单独用过去式时说 *Yesterday we drove*，但前面有助动词时要说 *We have driven*，绝不说 *have drove*。不规则动词在 *has*、*have*、*had* 或 *was* 后面要切换到专门的过去分词形式。",
+  ],
   after: ["perfect-verb-tenses"],
   points: [
     choose(
       "participle-after-have",
       ["The Participle After Have", "have 之后的过去分词"],
       [
-        "The perfect tenses join *has*, *have* or *had* to the **past participle**. Regular verbs use the *-ed* form for both the past and the participle, but many common verbs are irregular and have a separate participle: *go, went, gone*; *write, wrote, written*; *swim, swam, swum*. After *has*, *have* or *had*, use the third form, never the simple past.",
-        "完成时由 *has*、*have* 或 *had* 加**过去分词**构成。规则动词的过去式和过去分词都用 *-ed* 形式，但许多常用动词是不规则的，有单独的过去分词：*go, went, gone*；*write, wrote, written*；*swim, swam, swum*。在 *has*、*have* 或 *had* 后面要用第三种形式，绝不用一般过去式。",
+        "The perfect tenses join *has*, *have* or *had* to the **past participle**. Regular verbs use the *-ed* form for both the past and the participle, but many common verbs are irregular and have a separate participle: *go, went, gone*; *write, wrote, written*; *swim, swam, swum*. After *has*, *have* or *had*, use the third form, never the simple past.\n\n> **Watch out.** Do not invent a regular *-ed* form (*goed*, *writed*, *swimmed*) and do not slip the simple past (*went*, *wrote*, *swam*) after *has/have/had*.",
+        "完成时由 *has*、*have* 或 *had* 加**过去分词**构成。规则动词的过去式和过去分词都用 *-ed* 形式，但许多常用动词是不规则的，有单独的过去分词：*go, went, gone*；*write, wrote, written*；*swim, swam, swum*。在 *has*、*have* 或 *had* 后面要用第三种形式，绝不用一般过去式。\n\n> **注意。** 不要硬造规则 *-ed* 形式（如 *goed*、*writed*、*swimmed*），也不要在 *has/have/had* 后误用一般过去式（*went*、*wrote*、*swam*）。",
       ],
       ["Which form completes the sentence?", "哪种形式能补全句子？"],
       `
@@ -666,8 +670,8 @@ ${participleLines}
         I have ___ my bike to school. (ride)|ridden|rode|ridded
       `,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`).replace(/ \([a-z]+\)$/, "")} After *has*, *have* or *had*, an irregular verb takes its past participle, **${right}**.`,
-        `${shown.replace("___", `**${right}**`).replace(/ \([a-z]+\)$/, "")} 在 *has*、*have* 或 *had* 后面，不规则动词用过去分词 **${right}**。`,
+        `${shown.replace("___", `**${right}**`).replace(/ \([a-z]+\)$/, "")} After *has*, *have* or *had*, an irregular verb takes its past participle, **${right}**.\n\n**Check.** Recite the verb's three principal parts (base, past, past participle)—**${right}** is the third form that pairs with *has/have/had*.`,
+        `${shown.replace("___", `**${right}**`).replace(/ \([a-z]+\)$/, "")} 在 *has*、*have* 或 *had* 后面，不规则动词用过去分词 **${right}**。\n\n**检验。** 默念这个动词的三态（原形—过去式—过去分词）——**${right}** 正是配 *has/have/had* 的第三态。`,
       ],
       [
         [
@@ -681,8 +685,8 @@ ${participleLines}
       "past-or-participle",
       ["Simple Past or Participle", "一般过去式还是过去分词"],
       [
-        "The **simple past** stands alone: *Yesterday I swam.* The **past participle** needs a helping verb: *I have swum*, *it was broken*. So when there is no *has*, *have*, *had*, *is*, *was* or *were* before the gap, use the simple past; when there is, use the participle. Saying *I seen it* or *she has went* mixes the two.",
-        "**一般过去式**单独使用：*Yesterday I swam.* **过去分词**需要助动词：*I have swum*、*it was broken*。所以空格前没有 *has*、*have*、*had*、*is*、*was* 或 *were* 时，用一般过去式；有的话，用过去分词。说 *I seen it* 或 *she has went* 就是把两者混淆了。",
+        "The **simple past** stands alone: *Yesterday I swam.* The **past participle** needs a helping verb: *I have swum*, *it was broken*. So when there is no *has*, *have*, *had*, *is*, *was* or *were* before the gap, use the simple past; when there is, use the participle. Saying *I seen it* or *she has went* mixes the two.\n\n> **Watch out.** Look directly *in front of the blank*: a helping verb (*was*, *were*, *has*, *have*, *had*) requires the past participle; no helping verb requires the simple past.",
+        "**一般过去式**单独使用：*Yesterday I swam.* **过去分词**需要助动词：*I have swum*、*it was broken*。所以空格前没有 *has*、*have*、*had*、*is*、*was* 或 *were* 时，用一般过去式；有的话，用过去分词。说 *I seen it* 或 *she has went* 就是把两者混淆了。\n\n> **注意。** 盯紧空格*正前方*：有助动词（*was*、*were*、*has*、*have*、*had*）就用过去分词，没有助动词就用一般过去式。",
       ],
       ["Which form completes the sentence?", "哪种形式能补全句子？"],
       `
@@ -719,13 +723,13 @@ ${pastLines}
         The work was ___ by noon. (do)|done|did|doed
       `,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`).replace(/ \([a-z]+\)$/, "")} Check for a helping verb before the gap: with one, use the participle; without one, the simple past.`,
-        `${shown.replace("___", `**${right}**`).replace(/ \([a-z]+\)$/, "")} 看空格前有没有助动词：有就用过去分词，没有就用一般过去式。`,
+        `${shown.replace("___", `**${right}**`).replace(/ \([a-z]+\)$/, "")} Check for a helping verb before the gap: with one, use the participle; without one, the simple past.\n\n**Check.** Look right before **${right}**—the presence or absence of *was/were/has/have/had* confirms this exact verb form.`,
+        `${shown.replace("___", `**${right}**`).replace(/ \([a-z]+\)$/, "")} 看空格前有没有助动词：有就用过去分词，没有就用一般过去式。\n\n**检验。** 看 **${right}** 正前方有没有 *was/were/has/have/had*——正好印证这里该用这种形态。`,
       ],
       [
         [
-          "*{wrong}* is the other form of the verb: the helping verb, or its absence, calls for **{right}**.",
-          "*{wrong}* 是这个动词的另一种形式：有没有助动词决定了要用 **{right}**。",
+          "*{wrong}* is the wrong principal part here: check whether a helping verb stands right before the blank.",
+          "*{wrong}* 用错了动词形态：看看空格前面有没有助动词。",
         ],
         ["*{wrong}* is not a real form of this irregular verb.", "*{wrong}* 不是这个不规则动词的真实形式。"],
       ],
@@ -740,14 +744,18 @@ const possessives = topic("grammar", {
     "A plural ending in s takes only an apostrophe (the girls' room); other plurals take 's (the children's toys); a compound adds 's at its end.",
     "以 s 结尾的复数只加撇号（the girls' room）；其他复数加 's（the children's toys）；复合名词在末尾加 's。",
   ],
+  intro: [
+    "Why is it *the runners' shoes* (apostrophe after *s*), *the children's shoes* (*'s* after *n*), and *my mother-in-law's shoes* (*'s* at the very end)? Form the base plural or compound first, then apply one clean apostrophe rule.",
+    "为什么是 *the runners' shoes*（撇号在 *s* 后）、*the children's shoes*（在 *n* 后加 *'s*），又是 *my mother-in-law's shoes*（*'s* 加在末尾）？先把复数或复合词写完整，再按一条清晰的撇号规则收尾。",
+  ],
   after: ["plural-nouns"],
   points: [
     choose(
       "plural-possessives",
       ["Possessives of Plurals", "复数名词的所有格"],
       [
-        "First write the plural, then show belonging. If the plural ends in **s**, add only an apostrophe: *the dogs' bowls*, *the Smiths' car*. If the plural does not end in *s*, add **'s**: *the children's games*, *the women's team*, *the mice's nest*. Never add *'s* to a plural that already ends in *s*.",
-        "先写出复数，再表示所属。如果复数以 **s** 结尾，只加撇号：*the dogs' bowls*、*the Smiths' car*。如果复数不以 *s* 结尾，加 **'s**：*the children's games*、*the women's team*、*the mice's nest*。已经以 *s* 结尾的复数绝不再加 *'s*。",
+        "First write the plural, then show belonging. If the plural ends in **s**, add only an apostrophe: *the dogs' bowls*, *the Smiths' car*. If the plural does not end in *s*, add **'s**: *the children's games*, *the women's team*, *the mice's nest*. Never add *'s* to a plural that already ends in *s*.\n\n> **Watch out.** Check the plural in parentheses first: irregular plurals like *children*, *women*, *men*, *mice*, *geese*, *sheep*, and *deer* do *not* end in *s*, so they take *'s*—never *childrens'* or *mices'*.",
+        "先写出复数，再表示所属。如果复数以 **s** 结尾，只加撇号：*the dogs' bowls*、*the Smiths' car*。如果复数不以 *s* 结尾，加 **'s**：*the children's games*、*the women's team*、*the mice's nest*。已经以 *s* 结尾的复数绝不再加 *'s*。\n\n> **注意。** 先看括号里的复数形式：*children*、*women*、*men*、*mice*、*geese*、*sheep*、*deer* 等不规则复数不以 *s* 结尾，要加 *'s*，绝不是 *childrens'* 或 *mices'*。",
       ],
       ["Which possessive completes the sentence?", "哪个所有格能补全句子？"],
       `
@@ -784,8 +792,8 @@ ${pluralOwnLines}
         The ___ lunches were in the fridge. (twins)|twins'|twin's|twins's
       `,
       (right) => [
-        `**${right}** Form the plural first, then add an apostrophe after an *s*, or *'s* when the plural has no final *s*.`,
-        `**${right}** 先构成复数，再在 *s* 后加撇号；复数不以 *s* 结尾时加 *'s*。`,
+        `**${right}** Form the plural first, then add an apostrophe after an *s*, or *'s* when the plural has no final *s*.\n\n**Check.** Cover the apostrophe and any trailing *s* in **${right}**—what sits to the left of the apostrophe is the exact plural noun in parentheses.`,
+        `**${right}** 先构成复数，再在 *s* 后加撇号；复数不以 *s* 结尾时加 *'s*。\n\n**检验。** 遮住 **${right}** 的撇号及其后的字母——撇号左边正好是括号里给出的复数名词。`,
       ],
       [
         [
@@ -802,8 +810,8 @@ ${pluralOwnLines}
       "compound-and-joint-possessives",
       ["Compound and Joint Possessives", "复合名词与共同所有"],
       [
-        "A **compound noun** shows belonging at its end: *my sister-in-law's car*, *the editor in chief's desk*. When two people own **one thing together**, only the last name takes *'s*: *Ana and Ben's house* (one house). When each owns **a separate thing**, both take *'s*: *Ana's and Ben's bikes* (two bikes).",
-        "**复合名词**在末尾表示所属：*my sister-in-law's car*、*the editor in chief's desk*。两个人**共同拥有一件东西**时，只有后一个名字加 *'s*：*Ana and Ben's house*（一所房子）。各自拥有**不同的东西**时，两个名字都加 *'s*：*Ana's and Ben's bikes*（两辆自行车）。",
+        "A **compound noun** shows belonging at its end: *my sister-in-law's car*, *the editor in chief's desk*. When two people own **one thing together**, only the last name takes *'s*: *Ana and Ben's house* (one house). When each owns **a separate thing**, both take *'s*: *Ana's and Ben's bikes* (two bikes).\n\n> **Watch out.** Count the owned objects in the prompt: *one shared thing* = one *'s* on the second name; *two separate things* = *'s* on both names; a compound noun = *'s* at the very end.",
+        "**复合名词**在末尾表示所属：*my sister-in-law's car*、*the editor in chief's desk*。两个人**共同拥有一件东西**时，只有后一个名字加 *'s*：*Ana and Ben's house*（一所房子）。各自拥有**不同的东西**时，两个名字都加 *'s*：*Ana's and Ben's bikes*（两辆自行车）。\n\n> **注意。** 数清题干里的物品数量：*共同拥有一件*只在后一个名字加 *'s*；*各自拥有不同物品*两个名字都加 *'s*；复合名词只在最后加 *'s*。",
       ],
       ["Which possessive is correct?", "哪个所有格正确？"],
       `
@@ -840,8 +848,8 @@ ${jointLines}
         two separate jackets, Noah's and Finn's|Noah's and Finn's jackets|Noah and Finn's jackets|Noahs' and Finns' jackets
       `,
       (right, shown) => [
-        `**${right}** names ${shown}: a compound adds *'s* at its end, joint owners share one *'s*, and separate owners each take one.`,
-        `**${right}** 表示 ${shown}：复合名词在末尾加 *'s*，共同所有者共用一个 *'s*，各自所有者各加一个。`,
+        `**${right}** names ${shown}: a compound adds *'s* at its end, joint owners share one *'s*, and separate owners each take one.\n\n**Check.** Count where *'s* sits in **${right}**—it matches whether the owner is a compound noun, a joint pair, or two separate owners.`,
+        `**${right}** 表示 ${shown}：复合名词在末尾加 *'s*，共同所有者共用一个 *'s*，各自所有者各加一个。\n\n**检验。** 核对 **${right}** 中 *'s* 的数量和位置——正好对应复合名词、共同所有或各自所有。`,
       ],
       [
         [
@@ -861,14 +869,18 @@ const doubling = topic("grammar", {
     "Double the last consonant before -ed, -ing, -er or -est when a short vowel comes before it in a stressed syllable: hop, hopping; begin, beginning.",
     "当重读音节中末尾辅音字母前是短元音时，加 -ed、-ing、-er 或 -est 前要双写该辅音：hop, hopping；begin, beginning。",
   ],
+  intro: [
+    "Why does *plan + ed* become *planned* while *rain + ed* stays *rained*, and *admit + ed* becomes *admitted* while *visit + ed* stays *visited*? Checking the vowel-consonant pattern and which syllable takes the stress answers both every time.",
+    "为什么 *plan + ed* 要双写成 *planned* 而 *rain + ed* 仍是 *rained*？为什么 *admit + ed* 写成 *admitted* 而 *visit + ed* 仍是 *visited*？检查元辅音结构和重音落在哪个音节，每次都能拼对。",
+  ],
   after: ["common-suffixes"],
   points: [
     choose(
       "doubling-in-short-words",
       ["Doubling in Short Words", "短词中的双写"],
       [
-        "In a one-syllable word that ends in **one vowel and one consonant**, double the consonant before a suffix that starts with a vowel: *hop, hopping, hopped*; *big, bigger*; *run, runner*. Do not double when the word ends in two consonants (*jump, jumping*), has two vowels (*rain, rained*), or ends in *w*, *x* or *y* (*snow, snowing*; *fix, fixed*).",
-        "一个音节的词如果以**一个元音字母加一个辅音字母**结尾，在加以元音开头的后缀前要双写这个辅音：*hop, hopping, hopped*；*big, bigger*；*run, runner*。如果词以两个辅音结尾（*jump, jumping*）、有两个元音（*rain, rained*），或以 *w*、*x*、*y* 结尾（*snow, snowing*；*fix, fixed*），就不双写。",
+        "In a one-syllable word that ends in **one vowel and one consonant**, double the consonant before a suffix that starts with a vowel: *hop, hopping, hopped*; *big, bigger*; *run, runner*. Do not double when the word ends in two consonants (*jump, jumping*), has two vowels (*rain, rained*), or ends in *w*, *x* or *y* (*snow, snowing*; *fix, fixed*).\n\n> **Watch out.** Also check the *suffix*—if the suffix starts with a consonant (*-ly*, *-ness* in *sadly*, *fitness*), never double the final consonant.",
+        "一个音节的词如果以**一个元音字母加一个辅音字母**结尾，在加以元音开头的后缀前要双写这个辅音：*hop, hopping, hopped*；*big, bigger*；*run, runner*。如果词以两个辅音结尾（*jump, jumping*）、有两个元音（*rain, rained*），或以 *w*、*x*、*y* 结尾（*snow, snowing*；*fix, fixed*），就不双写。\n\n> **注意。** 还要看*后缀*的首字母——如果后缀以辅音开头（如 *sadly*、*fitness* 的 *-ly*、*-ness*），绝不双写。",
       ],
       ["Which spelling is correct?", "哪个拼写正确？"],
       `
@@ -905,8 +917,8 @@ ${shortDoubleLines}
         mad + est|maddest|madest|maddist
       `,
       (right, shown) => [
-        `${shown} makes **${right}**: double the last consonant only after one short vowel, and only before a suffix that starts with a vowel.`,
-        `${shown} 构成 **${right}**：只有在一个短元音之后、并且后缀以元音开头时，才双写末尾辅音。`,
+        `${shown} makes **${right}**: double the last consonant only after one short vowel, and only before a suffix that starts with a vowel.\n\n**Check.** Check the base word's ending (one vowel + one consonant, not *w/x/y*) and the suffix's first letter—**${right}** follows both rules.`,
+        `${shown} 构成 **${right}**：只有在一个短元音之后、并且后缀以元音开头时，才双写末尾辅音。\n\n**检验。** 检查基础词结尾（单元音加单辅音且非 *w/x/y*）以及后缀首字母——**${right}** 完全符合规则。`,
       ],
       [
         [
@@ -920,8 +932,8 @@ ${shortDoubleLines}
       "doubling-in-longer-words",
       ["Doubling in Longer Words", "多音节词中的双写"],
       [
-        "In a word of two or more syllables that ends in one vowel and one consonant, double the consonant only if the **last syllable is stressed**: *be-GIN, beginning*; *pre-FER, preferred*; *for-GET, forgetting*. If the stress falls earlier, do not double: *O-pen, opened*; *VIS-it, visiting*; *LIS-ten, listener*.",
-        "在两个或更多音节、以一个元音加一个辅音结尾的词中，只有**最后一个音节重读**时才双写辅音：*be-GIN, beginning*；*pre-FER, preferred*；*for-GET, forgetting*。如果重音在前面，就不双写：*O-pen, opened*；*VIS-it, visiting*；*LIS-ten, listener*。",
+        "In a word of two or more syllables that ends in one vowel and one consonant, double the consonant only if the **last syllable is stressed**: *be-GIN, beginning*; *pre-FER, preferred*; *for-GET, forgetting*. If the stress falls earlier, do not double: *O-pen, opened*; *VIS-it, visiting*; *LIS-ten, listener*.\n\n> **Watch out.** Say the base word aloud and tap on the louder syllable—if the beat lands on the *last* syllable, double; if it lands earlier, do not.",
+        "在两个或更多音节、以一个元音加一个辅音结尾的词中，只有**最后一个音节重读**时才双写辅音：*be-GIN, beginning*；*pre-FER, preferred*；*for-GET, forgetting*。如果重音在前面，就不双写：*O-pen, opened*；*VIS-it, visiting*；*LIS-ten, listener*。\n\n> **注意。** 大声读出基础词并拍出重音——重音落在*最后一个*音节就双写，落在前面就不双写。",
       ],
       ["Which spelling is correct?", "哪个拼写正确？"],
       `
@@ -958,8 +970,8 @@ ${longDoubleLines}
         gallop + ing|galloping|gallopping|gallopin
       `,
       (right, shown) => [
-        `${shown} makes **${right}**: double only when the stress falls on the last syllable of the base word.`,
-        `${shown} 构成 **${right}**：只有重音落在基础词最后一个音节上时才双写。`,
+        `${shown} makes **${right}**: double only when the stress falls on the last syllable of the base word.\n\n**Check.** Say the base word in *${shown}* aloud to hear which syllable is louder—that stress placement directly confirms **${right}**.`,
+        `${shown} 构成 **${right}**：只有重音落在基础词最后一个音节上时才双写。\n\n**检验。** 读出 *${shown}* 里的基础词，听出重音落在哪个音节——正好印证 **${right}** 的拼法。`,
       ],
       [
         ["*{wrong}* gets the doubling wrong for where the stress falls in this word.", "*{wrong}* 没有按照这个词的重音位置正确处理双写。"],
@@ -972,22 +984,25 @@ ${longDoubleLines}
 const colonLabels: Readonly<Record<string, Label>> = {
   "a list": {
     zh: "引出列举",
-    why: ["A complete sentence comes before the colon, and a list follows it.", "冒号前是完整的句子，冒号后是列举。"],
+    why: [
+      "A complete sentence comes before the colon, and a list follows it.\n\n**Check.** Read the words before the colon (a complete sentence) and count the listed items after it.",
+      "冒号前是完整的句子，冒号后是列举。\n\n**检验。** 读冒号前的部分（能独立成句），再数一数冒号后面列举的各项。",
+    ],
     not: ["What follows the colon is not a list of items.", "冒号后面的内容不是一组列举项。"],
   },
   "an explanation": {
     zh: "引出解释",
     why: [
-      "A complete sentence comes before the colon, and what follows explains or sums it up.",
-      "冒号前是完整的句子，冒号后的内容对它进行解释或概括。",
+      "A complete sentence comes before the colon, and what follows explains or sums it up.\n\n**Check.** Verify the part before the colon stands alone as a sentence, and notice the part after explains *why* or *what* it means.",
+      "冒号前是完整的句子，冒号后的内容对它进行解释或概括。\n\n**检验。** 确认冒号前能独立成句，且冒号后的部分解释了原因或具体内容。",
     ],
     not: ["What follows the colon is not an explanation of the sentence before it.", "冒号后面的内容不是对前面句子的解释。"],
   },
   "no colon": {
     zh: "不该用冒号",
     why: [
-      "The words before the colon are not a complete sentence: a colon never comes right after a verb or a preposition.",
-      "冒号前的词不是完整的句子：冒号绝不能紧跟在动词或介词后面。",
+      "The words before the colon are not a complete sentence: a colon never comes right after a verb or a preposition.\n\n**Check.** Stop reading at the colon—what comes before it ends abruptly on a verb or preposition (*are*, *to*, *include*, *such as*) and cannot stand alone.",
+      "冒号前的词不是完整的句子：冒号绝不能紧跟在动词或介词后面。\n\n**检验。** 在冒号处停住——前面停在动词或介词（如 *are*、*to*、*include*、*such as*）上，不能独立成句。",
     ],
     not: ["A complete sentence comes before this colon, so the colon is correct.", "这个冒号前是一个完整的句子，所以冒号用得对。"],
   },
@@ -1000,14 +1015,18 @@ const colons = topic("grammar", {
     "A colon follows a complete sentence and introduces a list or an explanation; it never comes right after a verb or a preposition.",
     "冒号跟在完整的句子后面，引出列举或解释；它绝不能紧跟在动词或介词后面。",
   ],
+  intro: [
+    "Think of a colon as a drumroll that only works after a complete sentence: *Pack three essentials: water, matches, and a map* is right, while *Pack: water, matches, and a map* cuts the sentence in half.",
+    "把冒号当成“下面揭晓”的提示，前提是冒号前必须已经是完整句子：*Pack three essentials: water, matches, and a map* 正确，而 *Pack: water, matches, and a map* 把句子生生截断了。",
+  ],
   after: ["commas-in-a-series"],
   points: [
     label(
       "what-the-colon-does",
       ["What the Colon Does", "冒号的作用"],
       [
-        "A **colon** (:) says *here it comes*. It follows a **complete sentence** and introduces either **a list** (*Bring three things: a hat, water and a map.*) or **an explanation** (*We stayed inside for one reason: it was pouring.*). Use **no colon** after a verb or a preposition, where the sentence is not yet complete: *We need ~~:~~ eggs and milk.*",
-        "**冒号**（:）的意思是“下面就来了”。它跟在**完整的句子**后面，引出**列举**（*Bring three things: a hat, water and a map.*）或**解释**（*We stayed inside for one reason: it was pouring.*）。在动词或介词后面，句子还不完整，**不该用冒号**：*We need eggs and milk.*",
+        "A **colon** (:) says *here it comes*. It follows a **complete sentence** and introduces either **a list** (*Bring three things: a hat, water and a map.*) or **an explanation** (*We stayed inside for one reason: it was pouring.*). Use **no colon** after a verb or a preposition, where the sentence is not yet complete: *We need ~~:~~ eggs and milk.*\n\n> **Watch out.** Always test the left side of the colon *first*: if it cannot stand alone as a sentence, choose *no colon* right away.",
+        "**冒号**（:）的意思是“下面就来了”。它跟在**完整的句子**后面，引出**列举**（*Bring three things: a hat, water and a map.*）或**解释**（*We stayed inside for one reason: it was pouring.*）。在动词或介词后面，句子还不完整，**不该用冒号**：*We need eggs and milk.*\n\n> **注意。** 先检验冒号*左边*：如果左边不能独立成句，直接选“不该用冒号”。",
       ],
       ["What does the colon do in this sentence?", "这个句子中的冒号起什么作用？"],
       `
@@ -1049,8 +1068,8 @@ ${colonJobs}
       "placing-a-colon",
       ["Placing a Colon", "冒号的位置"],
       [
-        "To place a colon correctly, make sure the words before it could stand alone as a sentence. *The kit holds: a map and a compass* is wrong, because *The kit holds* is not complete. Either drop the colon (*The kit holds a map and a compass*) or add words such as *the following* or *two things* before it (*The kit holds two things: a map and a compass*).",
-        "要正确使用冒号，先确认冒号前的词能独立成句。*The kit holds: a map and a compass* 是错的，因为 *The kit holds* 不完整。要么去掉冒号（*The kit holds a map and a compass*），要么在冒号前加上 *the following* 或 *two things* 之类的词（*The kit holds two things: a map and a compass*）。",
+        "To place a colon correctly, make sure the words before it could stand alone as a sentence. *The kit holds: a map and a compass* is wrong, because *The kit holds* is not complete. Either drop the colon (*The kit holds a map and a compass*) or add words such as *the following* or *two things* before it (*The kit holds two things: a map and a compass*).\n\n> **Watch out.** Put a finger over everything from the colon to the period—only the option whose left half makes a full sentence is correct.",
+        "要正确使用冒号，先确认冒号前的词能独立成句。*The kit holds: a map and a compass* 是错的，因为 *The kit holds* 不完整。要么去掉冒号（*The kit holds a map and a compass*），要么在冒号前加上 *the following* 或 *two things* 之类的词（*The kit holds two things: a map and a compass*）。\n\n> **注意。** 遮住冒号及其后面的全部内容——只有左边能独立成句的选项才是对的。",
       ],
       ["Which sentence uses the colon correctly?", "哪个句子的冒号用得正确？"],
       `
@@ -1087,8 +1106,8 @@ ${colonPlaces}
         an explanation of a plan|Our plan was clear: leave early and avoid traffic.|Our plan was: clear leave early and avoid traffic.|Our plan: was clear leave early and avoid traffic.
       `,
       (right) => [
-        `**${right}** The words before the colon form a complete sentence, and what follows is a list or an explanation.`,
-        `**${right}** 冒号前的词是一个完整的句子，冒号后是列举或解释。`,
+        `**${right}** The words before the colon form a complete sentence, and what follows is a list or an explanation.\n\n**Check.** Read only the words to the left of the colon in **${right}**—they stand alone as a complete sentence.`,
+        `**${right}** 冒号前的词是一个完整的句子，冒号后是列举或解释。\n\n**检验。** 只读 **${right}** 冒号左边的部分——它本身就是一个完整句子。`,
       ],
       [
         [
@@ -1108,14 +1127,18 @@ const eitherNeither = topic("grammar", {
     "With either … or and neither … nor, the verb and the pronoun agree with the nearer subject: Neither the coach nor the players are ready.",
     "使用 either … or 和 neither … nor 时，动词和代词与较近的主语一致：Neither the coach nor the players are ready。",
   ],
+  intro: [
+    "*Either the buses or the train leaves at noon*, whereas *Either the train or the buses leave at noon.* With *or* and *nor*, both the verb and any later pronoun follow the subject sitting closest to them.",
+    "*Either the buses or the train leaves at noon*，但 *Either the train or the buses leave at noon.* 用 *or* 和 *nor* 连接两个主语时，动词和后面的代词都与离得最近的那个主语保持一致。",
+  ],
   after: ["correlative-conjunctions"],
   points: [
     choose(
       "verb-with-the-nearer-subject",
       ["The Verb Agrees with the Nearer Subject", "动词与较近的主语一致"],
       [
-        "When two subjects are joined by *or*, *either … or* or *neither … nor*, the verb agrees with the subject **nearer to it**: *Neither the coach nor the players **are** ready. Neither the players nor the coach **is** ready.* Unlike *and*, these words do not add the subjects together. Putting the plural subject second usually sounds more natural.",
-        "两个主语由 *or*、*either … or* 或 *neither … nor* 连接时，动词与**离它较近的**主语一致：*Neither the coach nor the players **are** ready. Neither the players nor the coach **is** ready.* 与 *and* 不同，这些词不会把主语加在一起。把复数主语放在后面通常更自然。",
+        "When two subjects are joined by *or*, *either … or* or *neither … nor*, the verb agrees with the subject **nearer to it**: *Neither the coach nor the players **are** ready. Neither the players nor the coach **is** ready.* Unlike *and*, these words do not add the subjects together. Putting the plural subject second usually sounds more natural.\n\n> **Watch out.** Cover everything up through *or* / *nor*—match the verb strictly to the noun left right in front of the blank.",
+        "两个主语由 *or*、*either … or* 或 *neither … nor* 连接时，动词与**离它较近的**主语一致：*Neither the coach nor the players **are** ready. Neither the players nor the coach **is** ready.* 与 *and* 不同，这些词不会把主语加在一起。把复数主语放在后面通常更自然。\n\n> **注意。** 遮住 *or* / *nor* 及其前面的所有词——让动词只和空格紧前面的名词保持单复数一致。",
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
@@ -1152,8 +1175,8 @@ ${nearVerbLines}
         Either the chairs or the table ___ to be moved.|needs|need|needing
       `,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`)} The verb agrees with the subject nearer to it, the one just before the verb.`,
-        `${shown.replace("___", `**${right}**`)} 动词与离它较近的主语，即紧挨在动词前面的那个主语一致。`,
+        `${shown.replace("___", `**${right}**`)} The verb agrees with the subject nearer to it, the one just before the verb.\n\n**Check.** Read only the noun right after *or/nor* together with **${right}**—they match cleanly in singular or plural.`,
+        `${shown.replace("___", `**${right}**`)} 动词与离它较近的主语，即紧挨在动词前面的那个主语一致。\n\n**检验。** 只把 *or/nor* 后面的名词和 **${right}** 连起来读——单复数完全一致。`,
       ],
       [
         [
@@ -1167,8 +1190,8 @@ ${nearVerbLines}
       "pronoun-with-the-nearer-noun",
       ["The Pronoun Agrees with the Nearer Noun", "代词与较近的名词一致"],
       [
-        "A pronoun that points back to subjects joined by *or* or *nor* follows the same rule: it agrees with the **nearer** one. *Either Sam or Leo will bring **his** guitar* (one boy). *Neither the girls nor their mother forgot **her** umbrella* sounds awkward, so put the plural last: *Neither the mother nor the girls forgot **their** umbrellas.*",
-        "回指由 *or* 或 *nor* 连接的主语的代词遵循同样的规则：与**较近的**那个一致。*Either Sam or Leo will bring **his** guitar*（一个男孩）。*Neither the girls nor their mother forgot **her** umbrella* 听起来别扭，所以把复数放在后面：*Neither the mother nor the girls forgot **their** umbrellas.*",
+        "A pronoun that points back to subjects joined by *or* or *nor* follows the same rule: it agrees with the **nearer** one. *Either Sam or Leo will bring **his** guitar* (one boy). *Neither the girls nor their mother forgot **her** umbrella* sounds awkward, so put the plural last: *Neither the mother nor the girls forgot **their** umbrellas.*\n\n> **Watch out.** Do not let *either … or* trick you into treating two singular people as plural (*their*)—look strictly at the *second* noun right after *or/nor*.",
+        "回指由 *or* 或 *nor* 连接的主语的代词遵循同样的规则：与**较近的**那个一致。*Either Sam or Leo will bring **his** guitar*（一个男孩）。*Neither the girls nor their mother forgot **her** umbrella* 听起来别扭，所以把复数放在后面：*Neither the mother nor the girls forgot **their** umbrellas.*\n\n> **注意。** 不要看到两个单数人名用 *or/nor* 连起来就选复数 *their*——只看 *or/nor* 后面的那个名词。",
       ],
       ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
       `
@@ -1205,8 +1228,8 @@ ${nearPronounLines}
         Neither the actors nor the director liked ___ costumes.|his|their|its
       `,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`)} The pronoun agrees with the nearer of the two nouns joined by *or* or *nor*.`,
-        `${shown.replace("___", `**${right}**`)} 代词与由 *or* 或 *nor* 连接的两个名词中较近的那个一致。`,
+        `${shown.replace("___", `**${right}**`)} The pronoun agrees with the nearer of the two nouns joined by *or* or *nor*.\n\n**Check.** Look solely at the noun after *or/nor*—its number and kind match **${right}** directly.`,
+        `${shown.replace("___", `**${right}**`)} 代词与由 *or* 或 *nor* 连接的两个名词中较近的那个一致。\n\n**检验。** 只看 *or/nor* 后面的那个名词——它的单复数与类别正好对应 **${right}**。`,
       ],
       [
         ["*{wrong}* agrees with the farther noun instead of the nearer one.", "*{wrong}* 与较远的名词一致了，而不是较近的那个。"],
@@ -1226,14 +1249,18 @@ const goodWell = topic("grammar", {
     "Good and bad are adjectives that describe nouns; well and badly are adverbs that describe actions; better, best, worse and worst compare.",
     "good 和 bad 是形容词，修饰名词；well 和 badly 是副词，修饰动作；better、best、worse 和 worst 用于比较。",
   ],
+  intro: [
+    "A chef makes *good* soup (adjective describing *soup*), cooks *well* (adverb describing *cooks*), and says the soup smells *good* (adjective after a linking verb). Sorting noun vs. action—and two vs. three for comparisons—keeps *good/well* and *bad/badly* straight.",
+    "厨师做 *good* soup（形容词修饰名词），做菜 *well*（副词修饰动作），汤闻起来 *good*（系动词后用形容词）。分清修饰名词还是动作、比较两项还是三项，就不会混淆 *good/well* 与 *bad/badly*。",
+  ],
   after: ["adjectives-and-adverbs"],
   points: [
     choose(
       "good-or-well",
       ["Good or Well", "good 还是 well"],
       [
-        "**Good** is an adjective: it describes a noun (*a good book*) or follows a linking verb such as *is*, *looks*, *tastes* or *smells* (*The soup tastes good*). **Well** is an adverb: it tells *how* someone does something (*She sings well*). *Well* is also an adjective meaning *healthy*: *I feel well today.* To compare, use **better** for two and **best** for three or more.",
-        "**good** 是形容词：修饰名词（*a good book*），或跟在 *is*、*looks*、*tastes*、*smells* 等系动词后面（*The soup tastes good*）。**well** 是副词：说明某人*怎样*做某事（*She sings well*）。*well* 也是形容词，意为“健康的”：*I feel well today.* 比较时，两者用 **better**，三者或更多用 **best**。",
+        "**Good** is an adjective: it describes a noun (*a good book*) or follows a linking verb such as *is*, *looks*, *tastes* or *smells* (*The soup tastes good*). **Well** is an adverb: it tells *how* someone does something (*She sings well*). *Well* is also an adjective meaning *healthy*: *I feel well today.* To compare, use **better** for two and **best** for three or more.\n\n> **Watch out.** Watch for *than* (use *better*) and *of the three / ever* (use *best*), and never pick nonstandard *gooder*.",
+        "**good** 是形容词：修饰名词（*a good book*），或跟在 *is*、*looks*、*tastes*、*smells* 等系动词后面（*The soup tastes good*）。**well** 是副词：说明某人*怎样*做某事（*She sings well*）。*well* 也是形容词，意为“健康的”：*I feel well today.* 比较时，两者用 **better**，三者或更多用 **best**。\n\n> **注意。** 看到 *than* 用 *better*，看到三者以上或 *ever* 用 *best*，且绝不选非标准的 *gooder*。",
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
@@ -1270,8 +1297,8 @@ ${goodLines}
         She has a ___ memory for names.|good|well|gooder
       `,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`)} *Good* describes a noun, *well* describes an action, and *better* and *best* compare two or more.`,
-        `${shown.replace("___", `**${right}**`)} *good* 修饰名词，*well* 修饰动作，*better* 和 *best* 用于比较两者或更多。`,
+        `${shown.replace("___", `**${right}**`)} *Good* describes a noun, *well* describes an action, and *better* and *best* compare two or more.\n\n**Check.** Check whether the sentence compares (2 → *better*, 3+ → *best*) or describes a noun/linking verb (*good*) vs. an action (*well*)—**${right}** matches that exact slot.`,
+        `${shown.replace("___", `**${right}**`)} *good* 修饰名词，*well* 修饰动作，*better* 和 *best* 用于比较两者或更多。\n\n**检验。** 先看是否在比较（两者用 *better*，三者及以上用 *best*），再看修饰名词/系动词（*good*）还是动作（*well*）——**${right}** 正合此位。`,
       ],
       [
         [
@@ -1288,8 +1315,8 @@ ${goodLines}
       "bad-or-badly",
       ["Bad or Badly", "bad 还是 badly"],
       [
-        "**Bad** is an adjective: *a bad storm*, and after a linking verb, *I feel bad about the mistake* or *The milk smells bad*. **Badly** is an adverb: it tells how something is done, *The team played badly*. To compare, use **worse** for two and **worst** for three or more. *I feel badly* says something about how well you can touch things, not how sorry you are.",
-        "**bad** 是形容词：*a bad storm*，用在系动词后：*I feel bad about the mistake*、*The milk smells bad*。**badly** 是副词：说明事情做得怎样，*The team played badly*。比较时，两者用 **worse**，三者或更多用 **worst**。*I feel badly* 说的是你的触觉不灵，而不是你很抱歉。",
+        "**Bad** is an adjective: *a bad storm*, and after a linking verb, *I feel bad about the mistake* or *The milk smells bad*. **Badly** is an adverb: it tells how something is done, *The team played badly*. To compare, use **worse** for two and **worst** for three or more. *I feel badly* says something about how well you can touch things, not how sorry you are.\n\n> **Watch out.** After sense/linking verbs (*smells*, *looks*, *tastes*, *sounds*, *feel*), use adjective **bad**—never *badly* or nonstandard *badder*.",
+        "**bad** 是形容词：*a bad storm*，用在系动词后：*I feel bad about the mistake*、*The milk smells bad*。**badly** 是副词：说明事情做得怎样，*The team played badly*。比较时，两者用 **worse**，三者或更多用 **worst**。*I feel badly* 说的是你的触觉不灵，而不是你很抱歉。\n\n> **注意。** 在感官系动词（*smells*、*looks*、*tastes*、*sounds*、*feel*）后面用形容词 **bad**——不要用 *badly*，也绝不用非标准的 *badder*。",
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
@@ -1326,8 +1353,8 @@ ${badLines}
         The second storm was ___ than the first.|worse|worst|bad
       `,
       (right, shown) => [
-        `${shown.replace("___", `**${right}**`)} *Bad* describes a noun or follows a linking verb, *badly* describes an action, and *worse* and *worst* compare.`,
-        `${shown.replace("___", `**${right}**`)} *bad* 修饰名词或跟在系动词后，*badly* 修饰动作，*worse* 和 *worst* 用于比较。`,
+        `${shown.replace("___", `**${right}**`)} *Bad* describes a noun or follows a linking verb, *badly* describes an action, and *worse* and *worst* compare.\n\n**Check.** Identify the word **${right}** modifies (a noun/linking verb vs. an action) or count the items compared (2 → *worse*, 3+ → *worst*)—it matches exactly.`,
+        `${shown.replace("___", `**${right}**`)} *bad* 修饰名词或跟在系动词后，*badly* 修饰动作，*worse* 和 *worst* 用于比较。\n\n**检验。** 确认 **${right}** 修饰的是名词/系动词还是动作，或在比较时核对数量（两者用 *worse*，三者及以上用 *worst*）——完全吻合。`,
       ],
       [
         [
@@ -1350,14 +1377,18 @@ const titleCapitals = topic("grammar", {
     "Capitalize the first and last words of a title and every important word; keep short articles, conjunctions and prepositions lowercase.",
     "标题的第一个词、最后一个词和每个重要的词首字母大写；短的冠词、连词和介词小写。",
   ],
+  intro: [
+    "In *The Bridge Over the River*, *The* and *River* are capitalized as first and last words, *Over* is a longer word, and only the small mid-title *the* stays lowercase. Title case follows one clean rule about word role and position.",
+    "在标题 *The Bridge Over the River* 中，首尾词 *The* 和 *River* 大写，较长的词大写，只有夹在中间的小词 *the* 保持小写。标题大小写遵循一套清晰的词性与位置规则。",
+  ],
   after: ["titles-in-italics-and-quotation-marks"],
   points: [
     choose(
       "capitalizing-a-title",
       ["Capitalizing a Title", "标题的大写"],
       [
-        "In a title, capitalize the **first and last words** and every **important word**: nouns, pronouns, verbs, adjectives and adverbs, even short ones such as *Is*, *It* and *Be*. Keep **lowercase** the small words *a*, *an*, *the*, *and*, *but*, *or*, *for*, *nor* and short prepositions such as *of*, *in*, *on*, *to*, *at* and *by*, unless one comes first or last.",
-        "在标题中，**第一个词和最后一个词**以及每个**重要的词**首字母大写：名词、代词、动词、形容词和副词，即使是 *Is*、*It*、*Be* 这样的短词也要大写。小词 *a*、*an*、*the*、*and*、*but*、*or*、*for*、*nor* 以及 *of*、*in*、*on*、*to*、*at*、*by* 等短介词**小写**，除非它们在开头或结尾。",
+        "In a title, capitalize the **first and last words** and every **important word**: nouns, pronouns, verbs, adjectives and adverbs, even short ones such as *Is*, *It* and *Be*. Keep **lowercase** the small words *a*, *an*, *the*, *and*, *but*, *or*, *for*, *nor* and short prepositions such as *of*, *in*, *on*, *to*, *at* and *by*, unless one comes first or last.\n\n> **Watch out.** Do not lowercase short *verbs* or *pronouns* (*Is*, *Are*, *It*, *His*, *Its*, *Who*)—they are important words and must be capitalized.",
+        "在标题中，**第一个词和最后一个词**以及每个**重要的词**首字母大写：名词、代词、动词、形容词和副词，即使是 *Is*、*It*、*Be* 这样的短词也要大写。小词 *a*、*an*、*the*、*and*、*but*、*or*、*for*、*nor* 以及 *of*、*in*、*on*、*to*、*at*、*by* 等短介词**小写**，除非它们在开头或结尾。\n\n> **注意。** 不要把短*动词*或*代词*（如 *Is*、*Are*、*It*、*His*、*Its*、*Who*）误写成小写——它们是实词，必须大写。",
       ],
       ["Which title is capitalized correctly?", "哪个标题的大写正确？"],
       `
@@ -1394,8 +1425,8 @@ ${titleCapLines}
         a book about trees|The Life of a Tree|The Life Of A Tree|The life of a Tree
       `,
       (right, shown) => [
-        `**${right}** is the title of ${shown}: its first and last words and its important words are capitalized, and its small words are not.`,
-        `**${right}** 是${shown}的标题：第一个词、最后一个词和重要的词大写，小词不大写。`,
+        `**${right}** is the title of ${shown}: its first and last words and its important words are capitalized, and its small words are not.\n\n**Check.** Scan every word in **${right}**: the first word, last word, and every verb/noun/pronoun/adjective are capitalized, while only mid-title short articles, conjunctions, and prepositions stay lowercase.`,
+        `**${right}** 是 ${shown} 的标题：第一个词、最后一个词和重要的词大写，小词不大写。\n\n**检验。** 逐词检查 **${right}**：首尾词以及所有实词（动词、名词、代词、形容词）均大写，只有夹在中间的短冠词、连词和介词小写。`,
       ],
       [
         [
@@ -1409,8 +1440,8 @@ ${titleCapLines}
       "the-word-that-stays-small",
       ["The Word That Stays Lowercase", "保持小写的词"],
       [
-        "Short verbs and pronouns are important words: *Is*, *Are*, *Be*, *It*, *He* and *Its* are always capitalized in a title. Only the short **articles**, **conjunctions** and **prepositions** stay lowercase in the middle. The word after a colon in a title is capitalized, because it begins a new part.",
-        "短的动词和代词是重要的词：*Is*、*Are*、*Be*、*It*、*He* 和 *Its* 在标题中总是大写。只有短的**冠词**、**连词**和**介词**在中间保持小写。标题中冒号后的词要大写，因为它开始了新的部分。",
+        "Short verbs and pronouns are important words: *Is*, *Are*, *Be*, *It*, *He* and *Its* are always capitalized in a title. Only the short **articles**, **conjunctions** and **prepositions** stay lowercase in the middle. The word after a colon in a title is capitalized, because it begins a new part.\n\n> **Watch out.** Check two traps: a short word right after a colon (*: A Guide*) is capitalized, and some titles contain *only* important words so none stays lowercase.",
+        "短的动词和代词是重要的词：*Is*、*Are*、*Be*、*It*、*He* 和 *Its* 在标题中总是大写。只有短的**冠词**、**连词**和**介词**在中间保持小写。标题中冒号后的词要大写，因为它开始了新的部分。\n\n> **注意。** 留心两个陷阱：冒号后面的词（如 *: A Guide*）要大写；有些标题全由实词构成，没有一个词保持小写。",
       ],
       ["In this title, which word should stay lowercase?", "这个标题中哪个词应该保持小写？"],
       `
@@ -1448,11 +1479,11 @@ ${smallWordLines}
       `,
       (right, shown) => [
         right.startsWith("nobody")
-          ? `In *${shown}*, every word is a verb, pronoun, adverb or other important word, so ${right}.`
-          : `In *${shown}*, **${right}** is a small article, conjunction or preposition in the middle of the title, so it stays lowercase.`,
+          ? `In *${shown}*, every word is a verb, pronoun, adverb or other important word, so ${right}.\n\n**Check.** Check each word's part of speech in *${shown}*—no mid-title article, short conjunction, or short preposition appears.`
+          : `In *${shown}*, **${right}** is a small article, conjunction or preposition in the middle of the title, so it stays lowercase.\n\n**Check.** Confirm **${right}** is neither the first word, the last word, nor right after a colon—and that it is a short article, conjunction, or preposition.`,
         right.startsWith("nobody")
-          ? `在 *${shown}* 中，每个词都是动词、代词、副词或其他重要的词，所以每个词都要大写。`
-          : `在 *${shown}* 中，**${right}** 是标题中间的短冠词、连词或介词，所以保持小写。`,
+          ? `在 *${shown}* 中，每个词都是动词、代词、副词或其他重要的词，所以每个词都要大写。\n\n**检验。** 逐一检查 *${shown}* 中每个词的词性——中间没有短冠词、短连词或短介词。`
+          : `在 *${shown}* 中，**${right}** 是标题中间的短冠词、连词或介词，所以保持小写。\n\n**检验。** 确认 **${right}** 不在句首、句尾或冒号之后，且属于短冠词、连词或介词。`,
       ],
       [
         [
@@ -1472,14 +1503,18 @@ const prefixSpelling = topic("grammar", {
     "A prefix never changes the spelling of the base word, so mis + spell has two s's and dis + appear has one.",
     "前缀从不改变基础词的拼写，所以 mis + spell 有两个 s，dis + appear 只有一个。",
   ],
+  intro: [
+    "Why does *misspell* have two *s*'s while *disappear* has only one? Because adding a prefix never drops or invents a letter—you simply glue the complete prefix onto the complete base word.",
+    "为什么 *misspell* 有两个 *s*，而 *disappear* 只有一个？因为加前缀既不会删字母也不会凭空添字母——只需把完整的前缀和完整的基础词直接拼在一起。",
+  ],
   after: ["prefixes-in-im-il-and-ir"],
   points: [
     choose(
       "double-letters-at-the-seam",
       ["Double Letters at the Seam", "接缝处的双写字母"],
       [
-        "A prefix is simply added to the front of a word, and neither part loses a letter. When the prefix ends with the same letter that the base begins with, the word has a **double letter**: *mis + spell = misspell*, *un + necessary = unnecessary*, *dis + satisfied = dissatisfied*, *over + run = overrun*. Split the word at the seam to check.",
-        "前缀只是加在词的前面，两部分都不会丢掉字母。如果前缀的最后一个字母和基础词的第一个字母相同，这个词就会出现**双写字母**：*mis + spell = misspell*，*un + necessary = unnecessary*，*dis + satisfied = dissatisfied*，*over + run = overrun*。在接缝处把词拆开来检查。",
+        "A prefix is simply added to the front of a word, and neither part loses a letter. When the prefix ends with the same letter that the base begins with, the word has a **double letter**: *mis + spell = misspell*, *un + necessary = unnecessary*, *dis + satisfied = dissatisfied*, *over + run = overrun*. Split the word at the seam to check.\n\n> **Watch out.** Keep *both* letters at the seam (never drop one), and do not accidentally double another letter later in the base word.",
+        "前缀只是加在词的前面，两部分都不会丢掉字母。如果前缀的最后一个字母和基础词的第一个字母相同，这个词就会出现**双写字母**：*mis + spell = misspell*，*un + necessary = unnecessary*，*dis + satisfied = dissatisfied*，*over + run = overrun*。在接缝处把词拆开来检查。\n\n> **注意。** 接缝处相遇的两个相同字母必须*全留着*（不要漏掉一个），同时也别把基础词里别的字母拼错。",
       ],
       ["Which spelling is correct?", "哪个拼写正确？"],
       `
@@ -1516,8 +1551,8 @@ ${seamLines}
         mis + sent|missent|misent|misssent
       `,
       (right, shown) => [
-        `${shown} gives **${right}**: the prefix keeps all its letters and so does the base word.`,
-        `${shown} 构成 **${right}**：前缀保留全部字母，基础词也是如此。`,
+        `${shown} gives **${right}**: the prefix keeps all its letters and so does the base word.\n\n**Check.** Draw a slash between the prefix and the base word inside **${right}**—both parts match *${shown}* letter for letter.`,
+        `${shown} 构成 **${right}**：前缀保留全部字母，基础词也是如此。\n\n**检验。** 在 **${right}** 的前缀和基础词之间画一道竖线——左右两边与 *${shown}* 逐字母完全一致。`,
       ],
       [
         ["*{wrong}* drops one of the two letters that meet at the seam.", "*{wrong}* 丢掉了接缝处相遇的两个字母之一。"],
@@ -1528,8 +1563,8 @@ ${seamLines}
       "keeping-the-base-word",
       ["Keeping the Base Word", "保持基础词不变"],
       [
-        "When the prefix and the base word do **not** share a letter at the seam, there is no double letter: *dis + appear = disappear*, *dis + agree = disagree*, *mis + behave = misbehave*, *un + able = unable*. Spelling mistakes come from adding a letter that is in neither part. Ask: what is the prefix, what is the base, and does each keep its own spelling?",
-        "如果前缀和基础词在接缝处**没有**相同的字母，就不会有双写字母：*dis + appear = disappear*，*dis + agree = disagree*，*mis + behave = misbehave*，*un + able = unable*。拼写错误往往来自多加了一个两部分都没有的字母。问一问：前缀是什么，基础词是什么，它们各自的拼写保持不变了吗？",
+        "When the prefix and the base word do **not** share a letter at the seam, there is no double letter: *dis + appear = disappear*, *dis + agree = disagree*, *mis + behave = misbehave*, *un + able = unable*. Spelling mistakes come from adding a letter that is in neither part. Ask: what is the prefix, what is the base, and does each keep its own spelling?\n\n> **Watch out.** Check the seam *and* the base word separately—do not double the last letter of *dis-*, *mis-*, or *un-* unless the base word starts with that same letter.",
+        "如果前缀和基础词在接缝处**没有**相同的字母，就不会有双写字母：*dis + appear = disappear*，*dis + agree = disagree*，*mis + behave = misbehave*，*un + able = unable*。拼写错误往往来自多加了一个两部分都没有的字母。问一问：前缀是什么，基础词是什么，它们各自的拼写保持不变了吗？\n\n> **注意。** 把接缝处和基础词分开检查——除非基础词以同一字母开头，否则绝不双写 *dis-*、*mis-* 或 *un-* 的末字母。",
       ],
       ["Which spelling is correct?", "哪个拼写正确？"],
       `
@@ -1566,8 +1601,8 @@ ${baseLines}
         re + open|reopen|reopenn|ropen
       `,
       (right, shown) => [
-        `${shown} gives **${right}**: the parts share no letter at the seam, so there is no double letter.`,
-        `${shown} 构成 **${right}**：两部分在接缝处没有相同字母，所以没有双写字母。`,
+        `${shown} gives **${right}**: the parts share no letter at the seam, so there is no double letter.\n\n**Check.** Split **${right}** back into prefix + base word—every letter matches *${shown}* with nothing added or dropped.`,
+        `${shown} 构成 **${right}**：两部分在接缝处没有相同字母，所以没有双写字母。\n\n**检验。** 把 **${right}** 拆回“前缀 + 基础词”——每个字母都与 *${shown}* 一一对应，不多也不少。`,
       ],
       [
         [

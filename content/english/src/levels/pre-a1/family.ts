@@ -352,6 +352,10 @@ const heSheAndIt: TopicDef = {
     "He for a man or boy, she for a woman or girl, it for a thing or an animal.",
     "he 指男人或男孩，she 指女人或女孩，it 指东西或动物。",
   ),
+  intro: t(
+    "Look at *My grandpa is at home. He is reading.* and *My bag is red. It is on the chair.* Instead of repeating a name or noun, English switches to *he* (man or boy), *she* (woman or girl), or *it* (thing or animal). In this topic, you pick and write the right pronoun for each subject.",
+    "看看 *My grandpa is at home. He is reading.* 和 *My bag is red. It is on the chair.* 英语不重复同一个名字或名词，而是换成 *he*（男人或男孩）、*she*（女人或女孩）或 *it*（东西或动物）。本主题带你为不同主语准确选择并写出这三个代词。",
+  ),
   prerequisites: ["pre-a1-words-family", "the-verb-be"],
   encompasses: [{ topic: "the-verb-be", weight: 0.2 }],
   xp: 15,
@@ -361,16 +365,16 @@ const heSheAndIt: TopicDef = {
       "choose",
       t("He, she or it?", "用 he、she 还是 it？"),
       t(
-        "Use *he* for a man or a boy: *Tom is here. He is nice.* Use *she* for a woman or a girl: *Anna is here. She is nice.* Use *it* for a thing or an animal: *The cat is here. It is nice.*",
-        "中文口语里“他”“她”“它”都读“tā”，所以说中文的人常把 *he* 和 *she* 用混。英语中，*he* 指男人或男孩：*Tom is here. He is nice.* *she* 指女人或女孩：*Anna is here. She is nice.* *it* 指东西或动物：*The cat is here. It is nice.*",
+        "Use *he* for a man or a boy: *Tom is here. He is nice.* Use *she* for a woman or a girl: *Anna is here. She is nice.* Use *it* for a thing or an animal: *The cat is here. It is nice.*\n\n> **Watch out.** Do not mix up *he* and *she*—check whether the noun names a male person (*Mr. Li*, *dad*, *brother*), a female person (*Ms. Wang*, *mom*, *sister*), or a thing/animal (*bag*, *dog*).",
+        "中文口语里“他”“她”“它”都读“tā”，所以说中文的人常把 *he* 和 *she* 用混。英语中，*he* 指男人或男孩：*Tom is here. He is nice.* *she* 指女人或女孩：*Anna is here. She is nice.* *it* 指东西或动物：*The cat is here. It is nice.*\n\n> **注意。** 别把 *he* 和 *she* 用混——先看前面的词指的是男性（*Mr. Li*、*dad*、*brother*）、女性（*Ms. Wang*、*mom*、*sister*），还是物品或动物（*bag*、*dog*）。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         pronounChoiceBank,
         (right, shown) =>
           t(
-            `*${referentIn(shown)}* is ${pronounFor[right]?.en}, so the word for it is *${right.toLowerCase()}*: ${shown.replace("___", `*${right}*`)}`,
-            `*${referentIn(shown)}* 是${pronounFor[right]?.["zh-CN"]}，所以用 *${right.toLowerCase()}*：${shown.replace("___", `*${right}*`)}`,
+            `*${referentIn(shown)}* is ${pronounFor[right]?.en}, so the word for it is *${right.toLowerCase()}*: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Point back to *${referentIn(shown)}* in the first sentence—because it names ${pronounFor[right]?.en}, *${right}* is the only matching pronoun.`,
+            `*${referentIn(shown)}* 是${pronounFor[right]?.["zh-CN"]}，所以用 *${right.toLowerCase()}*：${shown.replace("___", `*${right}*`)}\n\n**检验。** 回看前一句里的 *${referentIn(shown)}*——它指${pronounFor[right]?.["zh-CN"]}，因此只有 *${right}* 与之对应。`,
           ),
         (wrong, _right, shown) =>
           t(
@@ -383,8 +387,8 @@ const heSheAndIt: TopicDef = {
       "replace",
       t("Saying he, she or it instead", "用 he、she 或 it 代替"),
       t(
-        "Once we know who or what we mean, we say *he*, *she* or *it* instead of the name: *My mom is kind.* → *She is kind.*",
-        "知道说的是谁或什么之后，就用 *he*、*she* 或 *it* 代替名字：*My mom is kind.* → *She is kind.*",
+        "Once we know who or what we mean, we say *he*, *she* or *it* instead of the name: *My mom is kind.* → *She is kind.*\n\n> **Watch out.** Replace the *entire* subject before *is* (for example, *My brother* -> *He*, not *My he*), and keep the rest of the sentence unchanged.",
+        "知道说的是谁或什么之后，就用 *he*、*she* 或 *it* 代替名字：*My mom is kind.* → *She is kind.*\n\n> **注意。** 要把 *is* 前面的*整个*主语都替换掉（如 *My brother* -> *He*，不要写成 *My he*），句子的其余部分保持不变。",
       ),
       typedGenerator(
         "sentence",
@@ -393,8 +397,8 @@ const heSheAndIt: TopicDef = {
         (right, shown) => {
           const pronoun = right.split(" ")[0] ?? "";
           return t(
-            `*${referentIn(shown)}* is ${pronounFor[pronoun]?.en}, so *${pronoun.toLowerCase()}* takes its place: ${shown} → ${right}`,
-            `*${referentIn(shown)}* 是${pronounFor[pronoun]?.["zh-CN"]}，所以用 *${pronoun.toLowerCase()}* 代替：${shown} → ${right}`,
+            `*${referentIn(shown)}* is ${pronounFor[pronoun]?.en}, so *${pronoun.toLowerCase()}* takes its place: ${shown} → ${right}\n\n**Check.** Confirm that the whole subject before *is* is replaced by *${pronoun}* (with a capital letter) and the words from *is* onward stay the same.`,
+            `*${referentIn(shown)}* 是${pronounFor[pronoun]?.["zh-CN"]}，所以用 *${pronoun.toLowerCase()}* 代替：${shown} → ${right}\n\n**检验。** 确认 *is* 前面的整个主语都换成了大写的 *${pronoun}*，且 *is* 及后面的内容保持原样。`,
           );
         },
       ),
@@ -503,6 +507,10 @@ const myYourHisHer: TopicDef = {
     "My mom, his sister, their dog: the word for whose comes before the noun.",
     "my mom、his sister、their dog：表示“谁的”的词放在名词前。",
   ),
+  intro: t(
+    "Look at *We have a green bag. Our bag is on the desk.* Every owner has its own possessive word that sits directly before the noun—*my*, *your*, *his*, *her*, *its*, *our*, or *their*. In this topic, you match each owner to the right possessive word without mixing up look-alikes like *its* and *it's*.",
+    "看看 *We have a green bag. Our bag is on the desk.* 每个“主人”都有对应的物主词，直接放在名词前面——*my*、*your*、*his*、*her*、*its*、*our* 或 *their*。本主题带你把主人与正确的物主词配对，同时区分 *its* 和 *it's* 等易混词。",
+  ),
   prerequisites: ["pre-a1-words-my-and-your", "he-she-and-it"],
   encompasses: [
     { topic: "pre-a1-words-my-and-your", weight: 0.4 },
@@ -515,16 +523,16 @@ const myYourHisHer: TopicDef = {
       "choose",
       t("Choosing the word for whose", "选择表示“谁的”的词"),
       t(
-        "*I* → *my*, *you* → *your*, *he* → *his*, *she* → *her*, *it* → *its*, *we* → *our*, *they* → *their*.\n\n*Tom has a bike. His bike is blue.* (*his* for a man or boy)\n*Anna has a bike. Her bike is red.* (*her* for a woman or girl)\n\nDo not mix *its* with *it's* (= *it is*), or *their* with *there*.",
-        "*I* → *my*，*you* → *your*，*he* → *his*，*she* → *her*，*it* → *its*，*we* → *our*，*they* → *their*。\n\n中文说“我的妈妈”“他的书”，英语没有“的”，直接把 *my*、*his* 放在名词前：*my mom*、*his book*。*his* 指男的，*her* 指女的——中文“他的”“她的”读音一样，英语却要分清。\n\n不要把 *its* 和 *it's*（= *it is*）、*their* 和 *there* 弄混。",
+        "*I* → *my*, *you* → *your*, *he* → *his*, *she* → *her*, *it* → *its*, *we* → *our*, *they* → *their*.\n\n*Tom has a bike. His bike is blue.* (*his* for a man or boy)\n*Anna has a bike. Her bike is red.* (*her* for a woman or girl)\n\nDo not mix *its* with *it's* (= *it is*), or *their* with *there*.\n\n> **Watch out.** Never put a subject or object pronoun (*he*, *she*, *us*, *they*) before a noun to show ownership, and never put an apostrophe in *its* when it means “belonging to it”.",
+        "*I* → *my*，*you* → *your*，*he* → *his*，*she* → *her*，*it* → *its*，*we* → *our*，*they* → *their*。\n\n中文说“我的妈妈”“他的书”，英语没有“的”，直接把 *my*、*his* 放在名词前：*my mom*、*his book*。*his* 指男的，*her* 指女的——中文“他的”“她的”读音一样，英语却要分清。\n\n不要把 *its* 和 *it's*（= *it is*）、*their* 和 *there* 弄混。\n\n> **注意。** 不要把主格或宾格代词（*he*、*she*、*us*、*they*）放在名词前表示“谁的”，也不要在表示“它的”的 *its* 里加撇号。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         whoseChoiceBank,
         (right, shown) =>
           t(
-            `The owner in the sentence is *${ownerIn(shown)}*, and ${whoseOf[right]?.en}: ${shown.replace("___", `*${right}*`)}`,
-            `东西是 *${ownerIn(shown)}* 的，${whoseOf[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+            `The owner in the sentence is *${ownerIn(shown)}*, and ${whoseOf[right]?.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Trace *${right}* back to *${ownerIn(shown)}* in the first sentence—it matches the owner and sits cleanly before the noun without an apostrophe.`,
+            `东西是 *${ownerIn(shown)}* 的，${whoseOf[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 把 *${right}* 对照第一句里的主人 *${ownerIn(shown)}*——人称与性别一致，且直接放在名词前、不带撇号。`,
           ),
         whyNotWhose,
       ),
@@ -533,13 +541,13 @@ const myYourHisHer: TopicDef = {
       "type",
       t("Writing the word for whose", "写出表示“谁的”的词"),
       t(
-        "Look at who has the thing, then write *my*, *your*, *his*, *her*, *its*, *our* or *their*.",
-        "看看东西是谁的，再写出 *my*、*your*、*his*、*her*、*its*、*our* 或 *their*。",
+        "Look at who has the thing, then write *my*, *your*, *his*, *her*, *its*, *our* or *their*: *Ben and Sam have a kite.* → *Their kite is pink.*\n\n> **Watch out.** Check spelling on the tricky pairs: *Your* (not *You're*), *Its* (not *It's*), and *Their* (not *There*), and capitalize the word when it begins the sentence.",
+        "看看东西是谁的，再写出 *my*、*your*、*his*、*her*、*its*、*our* 或 *their*：*Ben and Sam have a kite.* → *Their kite is pink.*\n\n> **注意。** 留心三组易混拼写：*Your*（不是 *You're*）、*Its*（不是 *It's*）、*Their*（不是 *There*）；位于句首时首字母大写。",
       ),
       typedGenerator("word-form", t("Type the missing word.", "输入缺少的词。"), whoseTypedBank, (right, shown) =>
         t(
-          `The owner in the sentence is *${ownerIn(shown)}*, and ${whoseOf[right]?.en}: ${shown.replace("___", `*${right}*`)}`,
-          `东西是 *${ownerIn(shown)}* 的，${whoseOf[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+          `The owner in the sentence is *${ownerIn(shown)}*, and ${whoseOf[right]?.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Match the owner *${ownerIn(shown)}* to its possessive word and double-check the spelling of *${right}* (no apostrophe, capital first letter).`,
+          `东西是 *${ownerIn(shown)}* 的，${whoseOf[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 对照主人 *${ownerIn(shown)}* 核实对应的物主词，并检查 *${right}* 的拼写（不带撇号、句首大写）。`,
         ),
       ),
     ),
@@ -615,6 +623,10 @@ const haveAndHas: TopicDef = {
   id: "have-and-has",
   title: t("Have and Has", "have 和 has"),
   summary: t("I have, you have, but she has, he has, it has.", "I have、you have，但 she has、he has、it has。"),
+  intro: t(
+    "Compare *We have two books* with *Tom has two books*: both talk about owning something, yet a single third-person subject (*he*, *she*, *it*, or one name) switches *have* to *has*. In this topic, you choose between *have* and *has* and fix sentences that use the wrong one.",
+    "比较 *We have two books* 与 *Tom has two books*：两句都在说“有”，但第三人称单数主语（*he*、*she*、*it* 或单个名字）会把 *have* 变成 *has*。本主题带你正确选择 *have* 与 *has*，并改正用错的句子。",
+  ),
   prerequisites: ["pre-a1-words-people", "he-she-and-it"],
   encompasses: [{ topic: "pre-a1-words-people", weight: 0.3 }],
   xp: 15,
@@ -624,16 +636,16 @@ const haveAndHas: TopicDef = {
       "choose",
       t("Have or has?", "用 have 还是 has？"),
       t(
-        "*I have*, *you have*, *we have*, *they have*, and more than one person *have*. But *he has*, *she has*, *it has*, and one person or thing *has*.\n\n*I have a cat. My sister has a dog.*",
-        "*I*、*you*、*we*、*they* 和多个人后面用 *have*；*he*、*she*、*it* 和单个的人或东西后面用 *has*。中文“有”从不变化，英语却要跟着主语变。\n\n*I have a cat. My sister has a dog.*",
+        "*I have*, *you have*, *we have*, *they have*, and more than one person *have*. But *he has*, *she has*, *it has*, and one person or thing *has*.\n\n*I have a cat. My sister has a dog.*\n\n> **Watch out.** Do not use *is* or *are* to mean “owns”, and remember that *I* and *you* take *have* even though they refer to one person.",
+        "*I*、*you*、*we*、*they* 和多个人后面用 *have*；*he*、*she*、*it* 和单个的人或东西后面用 *has*。中文“有”从不变化，英语却要跟着主语变。\n\n*I have a cat. My sister has a dog.*\n\n> **注意。** 不要用 *is* 或 *are* 来表示“拥有”，同时记住 *I* 和 *you* 虽然指一个人，后面依然用 *have*。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         haveChoiceBank,
         (right, shown) =>
           t(
-            `The subject is *${shown.split(" ___")[0]}*, and ${haveRule[right]?.en}: ${shown.replace("___", `*${right}*`)}`,
-            `主语是 *${shown.split(" ___")[0]}*，${haveRule[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+            `The subject is *${shown.split(" ___")[0]}*, and ${haveRule[right]?.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Test the subject as a pronoun: if it equals *he*, *she*, or *it*, use *has*; otherwise (*I*, *you*, *we*, *they*), use *have*.`,
+            `主语是 *${shown.split(" ___")[0]}*，${haveRule[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 把主语换算成代词：相当于 *he*、*she*、*it* 就用 *has*，相当于 *I*、*you*、*we*、*they* 就用 *have*。`,
           ),
         (wrong, _right, shown, position) =>
           position === 0
@@ -651,14 +663,14 @@ const haveAndHas: TopicDef = {
       "fix",
       t("Fixing have and has", "改正 have 和 has"),
       t(
-        "Each sentence has the wrong one of *have* and *has*. Look at the words before it and fix it.",
-        "每个句子里的 *have* 或 *has* 用错了。看看它前面的词，把它改正。",
+        "Each sentence has the wrong one of *have* and *has*. Look at the words before it and fix it: *My mom have long hair.* → *My mom has long hair.*\n\n> **Watch out.** Check compound subjects like *Anna and Ben* carefully—two people together equal *they*, so they take *have*, not *has*.",
+        "每个句子里的 *have* 或 *has* 用错了。看看它前面的词，把它改正：*My mom have long hair.* → *My mom has long hair.*\n\n> **注意。** 留心像 *Anna and Ben* 这样的并列主语——两个人合在一起相当于 *they*，后面要用 *have*，不能用 *has*。",
       ),
       typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), haveTypedBank, (right) => {
         const [subject, verb] = right.split(/ (have|has) /u);
         return t(
-          `The subject is *${subject}*, and ${haveRule[verb ?? ""]?.en}: ${right}`,
-          `主语是 *${subject}*，${haveRule[verb ?? ""]?.["zh-CN"]}：${right}`,
+          `The subject is *${subject}*, and ${haveRule[verb ?? ""]?.en}: ${right}\n\n**Check.** Replace *${subject}* mentally with a pronoun—*he/she/it* pairs with *has*, while *I/you/we/they* pairs with *have*.`,
+          `主语是 *${subject}*，${haveRule[verb ?? ""]?.["zh-CN"]}：${right}\n\n**检验。** 在心里把 *${subject}* 换成代词——*he/she/it* 配 *has*，*I/you/we/they* 配 *have*。`,
         );
       }),
     ),

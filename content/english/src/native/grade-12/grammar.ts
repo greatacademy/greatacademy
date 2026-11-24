@@ -361,14 +361,18 @@ const inverted = topic("grammar", {
     "Conditions without if, made by putting had, were or should before the subject, as in Had I known, Were it true and Should you need help.",
     "不用 if 的条件句：把 had、were 或 should 放到主语前面，如 Had I known、Were it true 和 Should you need help。",
   ],
+  intro: [
+    "Compare *If the ferry had arrived on time, we would have made the connection* with *Had the ferry arrived on time, we would have made the connection*. Both express the same unreal past condition, but the second drops *if* and moves *had* in front of the subject for a crisper, more formal cadence. Formal prose uses three such inversions—with *had*, *were*, and *should*—and each pairs with a specific time frame and verb form.",
+    "比较 *If the ferry had arrived on time, we would have made the connection* 与 *Had the ferry arrived on time, we would have made the connection*。两句表达的都是同一个与过去事实相反的条件，但第二句省去 *if*，把 *had* 移到主语前，语气更干练正式。正式书面语中有三种这类倒装——用 *had*、*were* 和 *should*——每种都对应特定的时间范围和动词形式。",
+  ],
   after: ["conditional-sentences", "the-subjunctive-in-wishes-and-conditions"],
   points: [
     label(
       "which-condition-is-this",
       ["Which Condition Is This", "这是哪种条件"],
       [
-        "Formal English can drop *if* and put the auxiliary before the subject. **Had** + subject + past participle is an **unreal past** condition: *Had I known, I would have come* means *If I had known*. **Were** + subject is an **unreal present** condition: *Were she here, she would help* means *If she were here*. **Should** + subject is an **unlikely future** condition: *Should you need help, call me* means *If you happen to need help*. The rest of the sentence follows the usual pattern for each kind.",
-        "正式英语可以省去 *if*，把助动词放到主语前面。**Had** + 主语 + 过去分词表示**与过去事实相反**的条件：*Had I known, I would have come* 等于 *If I had known*。**Were** + 主语表示**与现在事实相反**的条件：*Were she here, she would help* 等于 *If she were here*。**Should** + 主语表示**未来不大可能**的条件：*Should you need help, call me* 等于 *If you happen to need help*。句子其余部分按各类条件句的通常形式。",
+        "Formal English can drop *if* and put the auxiliary before the subject. **Had** + subject + past participle is an **unreal past** condition: *Had I known, I would have come* means *If I had known*. **Were** + subject is an **unreal present** condition: *Were she here, she would help* means *If she were here*. **Should** + subject is an **unlikely future** condition: *Should you need help, call me* means *If you happen to need help*. The rest of the sentence follows the usual pattern for each kind.\n\n> **Watch out.** Do not mistake an inverted condition for a yes/no question: a question ends with a question mark, whereas an inverted condition is followed by a comma and a result clause.",
+        "正式英语可以省去 *if*，把助动词放到主语前面。**Had** + 主语 + 过去分词表示**与过去事实相反**的条件：*Had I known, I would have come* 等于 *If I had known*。**Were** + 主语表示**与现在事实相反**的条件：*Were she here, she would help* 等于 *If she were here*。**Should** + 主语表示**未来不大可能**的条件：*Should you need help, call me* 等于 *If you happen to need help*。句子其余部分按各类条件句的通常形式。\n\n> **注意。** 不要把倒装条件句当成一般疑问句：疑问句以问号结尾，而倒装条件句后面紧跟逗号和结果主句。",
       ],
       ["What kind of condition does this sentence state?", "这个句子表达的是哪种条件？"],
       `
@@ -408,22 +412,22 @@ ${conditionLines}
       {
         "an unreal past condition": L(
           "与过去事实相反的条件",
-          "It begins with had and a past participle: the condition did not happen in the past, as in If I had known.",
-          "句子以 had 加过去分词开头：这个条件在过去并未发生，相当于 If I had known。",
+          "It begins with *had* and a past participle: the condition did not happen in the past, as in *If I had known*.\n\n**Check.** Restore *if* before the subject and move *had* back after it—together with the *would/could/might have* result clause, the sentence refers to a past that never occurred.",
+          "句子以 *had* 加过去分词开头：这个条件在过去并未发生，相当于 *If I had known*。\n\n**检验。** 在主语前补回 *if* 并把 *had* 放回主语后，再看主句中的 *would/could/might have*，可以确认全句谈的是未曾发生的过去。",
           "It does not begin with had and a past participle, so it is not about a past that did not happen.",
           "句子不是以 had 加过去分词开头，所以不是在说一个没有发生的过去。",
         ),
         "an unreal present condition": L(
           "与现在事实相反的条件",
-          "It begins with were before the subject: the condition is not true now, or is imagined, as in If I were.",
-          "句子以放在主语前的 were 开头：这个条件现在并不成立，或只是设想，相当于 If I were。",
+          "It begins with *were* before the subject: the condition is not true now, or is imagined, as in *If I were*.\n\n**Check.** Restore *if* before the subject and move *were* after it—paired with *would* or *could* in the main clause, it describes an imagined present situation.",
+          "句子以放在主语前的 *were* 开头：这个条件现在并不成立，或只是设想，相当于 *If I were*。\n\n**检验。** 在主语前补回 *if* 并把 *were* 放回主语后，配合主句的 *would* 或 *could*，可以确认它描绘的是设想中的现在。",
           "It does not begin with were before the subject, so it is not an imagined present.",
           "句子不是以放在主语前的 were 开头，所以不是设想的现在。",
         ),
         "an unlikely future condition": L(
           "未来不大可能的条件",
-          "It begins with should before the subject: the condition could happen but is not expected, as in If you happen to.",
-          "句子以放在主语前的 should 开头：这个条件可能发生，但并不被预期，相当于 If you happen to。",
+          "It begins with *should* before the subject: the condition could happen but is not expected, as in *If you happen to*.\n\n**Check.** Restore *if* before the subject and move *should* after it—paired with a future verb or imperative in the main clause, it covers a tentative future possibility.",
+          "句子以放在主语前的 *should* 开头：这个条件可能发生，但并不被预期，相当于 *If you happen to*。\n\n**检验。** 在主语前补回 *if* 并把 *should* 放回主语后，配合主句的将来时或祈使语气，可以确认它指向未来不大可能发生的情况。",
           "It does not begin with should before the subject, so it is not an unlikely future.",
           "句子不是以放在主语前的 should 开头，所以不是不大可能的未来。",
         ),
@@ -433,8 +437,8 @@ ${conditionLines}
       "the-inversion-that-fits",
       ["The Inversion That Fits", "合适的倒装"],
       [
-        "To invert a condition, drop *if* and move the auxiliary in front of the subject; keep the rest of the clause as it was. *If I had known* becomes *Had I known* (not *Had I knew*). *If she were here* becomes *Were she here* (not *Was she here*, which is a question). *If you should need help* becomes *Should you need help*. A negative keeps *not* after the subject: *Had I not seen it*, never *Hadn't I seen it*.",
-        "要把条件句倒装，就去掉 *if*，把助动词移到主语前，从句其余部分保持不变。*If I had known* 变成 *Had I known*（不是 *Had I knew*）。*If she were here* 变成 *Were she here*（不是 *Was she here*，那是疑问句）。*If you should need help* 变成 *Should you need help*。否定时 *not* 放在主语之后：*Had I not seen it*，绝不能说 *Hadn't I seen it*。",
+        "To invert a condition, drop *if* and move the auxiliary in front of the subject; keep the rest of the clause as it was. *If I had known* becomes *Had I known* (not *Had I knew*). *If she were here* becomes *Were she here* (not *Was she here*, which is a question). *If you should need help* becomes *Should you need help*. A negative keeps *not* after the subject: *Had I not seen it*, never *Hadn't I seen it*.\n\n> **Watch out.** Never keep *if* after inverting (*If had I known*) and never contract *not* onto the fronted auxiliary (*Hadn't I known*); both break the formal inverted pattern.",
+        "要把条件句倒装，就去掉 *if*，把助动词移到主语前，从句其余部分保持不变。*If I had known* 变成 *Had I known*（不是 *Had I knew*）。*If she were here* 变成 *Were she here*（不是 *Was she here*，那是疑问句）。*If you should need help* 变成 *Should you need help*。否定时 *not* 放在主语之后：*Had I not seen it*，绝不能说 *Hadn't I seen it*。\n\n> **注意。** 倒装后切勿再保留 *if*（如 *If had I known*），也切勿把 *not* 缩略到提前的助动词上（如 *Hadn't I known*）；这两种写法都会破坏正式倒装结构。",
       ],
       ["Which inverted condition says the same as the if-clause?", "哪个倒装条件与 if 从句意思相同？"],
       `
@@ -472,8 +476,8 @@ ${inversionLines}
         If the storm should reach the coast|Should the storm reach the coast|Should the storm reaches the coast|Does the storm reach the coast
       `,
       (right) => [
-        `"${right}" drops if and puts the auxiliary before the subject, keeping the rest of the clause unchanged.`,
-        `“${right}”去掉了 if，把助动词放到主语前面，从句其余部分保持不变。`,
+        `"${right}" drops *if* and puts the auxiliary before the subject, keeping the rest of the clause unchanged.\n\n**Check.** Put *if* back at the start and slide the first word back after the subject—you should recover the original *if*-clause word for word, with any *not* still after the subject.`,
+        `“${right}”去掉了 *if*，把助动词放到主语前面，从句其余部分保持不变。\n\n**检验。** 在句首补回 *if* 并把第一个词移回主语后面，应能一字不差地还原原来的 *if* 从句，若有 *not* 也依然紧跟在主语之后。`,
       ],
       [
         [
@@ -496,14 +500,18 @@ const ambiguous = topic("grammar", {
     "Pronouns that could point to two nouns, or to none at all, and how to revise them so the reader knows who or what is meant.",
     "可能指向两个名词或根本没有所指的代词，以及如何修改它们，让读者知道指的是谁或什么。",
   ],
+  intro: [
+    "Read *When the curator thanked the donor, she smiled*. Because both nouns can take *she*, the reader cannot tell who smiled—and in *They raised the train fare again*, *they* points to no noun at all. Clear prose makes every pronoun point cleanly to one specific noun, or replaces the pronoun when two candidates compete.",
+    "读一读 *When the curator thanked the donor, she smiled*。两个名词都可以用 *she* 指代，读者分不清是谁笑了；而在 *They raised the train fare again* 中，*they* 根本没有指向任何名词。清晰的写作会让每个代词都明确指向唯一一个名词，若有两个候选对象就直接换回名词或改写句式。",
+  ],
   after: ["pronoun-antecedent-agreement"],
   points: [
     label(
       "is-the-reference-clear",
       ["Is the Reference Clear", "指代是否清楚"],
       [
-        "A pronoun should point to one noun the reader can find. The reference is **ambiguous** when two nouns could be meant: *When Maria met her sister, she was nervous* (which one?). It is **vague** when the pronoun points to no noun at all, only to an idea, a whole sentence or an unnamed group: *They say the bridge is unsafe* (who?), *He missed the meeting, which upset the boss* (which noun?), *It says in the paper…*. The reference is **clear** when only one noun can be meant.",
-        "代词应指向读者能找到的唯一一个名词。当可能指两个名词时，指代就是**有歧义的**：*When Maria met her sister, she was nervous*（指哪一个？）。当代词根本不指向名词，只指一个想法、一整句话或一个没有点明的群体时，指代就是**含糊的**：*They say the bridge is unsafe*（谁？），*He missed the meeting, which upset the boss*（哪个名词？），*It says in the paper…*。只可能指一个名词时，指代就是**清楚的**。",
+        "A pronoun should point to one noun the reader can find. The reference is **ambiguous** when two nouns could be meant: *When Maria met her sister, she was nervous* (which one?). It is **vague** when the pronoun points to no noun at all, only to an idea, a whole sentence or an unnamed group: *They say the bridge is unsafe* (who?), *He missed the meeting, which upset the boss* (which noun?), *It says in the paper…*. The reference is **clear** when only one noun can be meant.\n\n> **Watch out.** Do not confuse **ambiguous** with **vague**: an ambiguous pronoun has *too many* matching nouns before it (two or more), whereas a vague pronoun has *none*.",
+        "代词应指向读者能找到的唯一一个名词。当可能指两个名词时，指代就是**有歧义的**：*When Maria met her sister, she was nervous*（指哪一个？）。当代词根本不指向名词，只指一个想法、一整句话或一个没有点明的群体时，指代就是**含糊的**：*They say the bridge is unsafe*（谁？），*He missed the meeting, which upset the boss*（哪个名词？），*It says in the paper…*。只可能指一个名词时，指代就是**清楚的**。\n\n> **注意。** 不要混淆**有歧义**和**含糊**：有歧义是前面有*不止一个*匹配的先行词，而含糊是句中*一个*具体的先行词都没有。",
       ],
       ["Is the pronoun's reference in this sentence clear?", "这个句子中代词的指代清楚吗？"],
       `
@@ -544,22 +552,22 @@ ${referenceLines}
       {
         "ambiguous: two nouns could be meant": L(
           "有歧义：可能指两个名词",
-          "Two nouns before the pronoun could both be what it means, so the reader cannot tell which.",
-          "代词前面有两个名词都可能是它的所指，读者分不清是哪一个。",
+          "Two nouns before the pronoun could both be what it means, so the reader cannot tell which.\n\n**Check.** Substitute each earlier noun in place of the pronoun—if both substitutions produce a grammatical, sensible sentence, the reference is genuinely ambiguous.",
+          "代词前面有两个名词都可能是它的所指，读者分不清是哪一个。\n\n**检验。** 把前面两个名词分别代回代词的位置——如果两种替换都能得到语法通顺、意思合理的句子，就说明指代确实存在歧义。",
           "The pronoun does not have two possible nouns to point to.",
           "这个代词没有两个可能的所指名词。",
         ),
         "vague: no noun is meant": L(
           "含糊：没有所指名词",
-          "The pronoun points to no noun in the sentence, only to an idea, a whole clause or an unnamed group of people.",
-          "代词在句中没有所指的名词，只指向一个想法、一整个分句或一个没有点明的群体。",
+          "The pronoun points to no noun in the sentence, only to an idea, a whole clause or an unnamed group of people.\n\n**Check.** Try to underline a single noun earlier in the sentence that the pronoun stands for—when no concrete noun can be underlined, the pronoun is vague.",
+          "代词在句中没有所指的名词，只指向一个想法、一整个分句或一个没有点明的群体。\n\n**检验。** 试着在句中找出这个代词所替代的某一个具体名词——如果根本找不到可划线的名词，就说明指代含糊。",
           "The pronoun is not left without a noun to point to.",
           "这个代词并非没有可指的名词。",
         ),
         clear: L(
           "清楚",
-          "Every pronoun can point to only one noun, or the noun itself is repeated, so the reader knows what is meant.",
-          "每个代词只能指向一个名词，或者直接重复了名词，读者知道指的是什么。",
+          "Every pronoun can point to only one noun, or the noun itself is repeated, so the reader knows what is meant.\n\n**Check.** Trace each pronoun back to its antecedent—only one noun matches in number, gender, and sense, leaving no second reading.",
+          "每个代词只能指向一个名词，或者直接重复了名词，读者知道指的是什么。\n\n**检验。** 把句中每个代词往回追踪到先行词——在单复数、性别和语义上只有一个名词匹配，不存在第二种读法。",
           "A pronoun could point to two nouns, or to none.",
           "有代词可能指向两个名词，或者不指向任何名词。",
         ),
@@ -569,8 +577,8 @@ ${referenceLines}
       "the-revision-that-is-clear",
       ["The Revision That Is Clear", "清楚的修改"],
       [
-        "To fix an unclear pronoun, replace it with the noun, rewrite the sentence so only one noun can be meant, or turn a report into a direct quotation. For a vague *this* or *which*, add the noun it sums up: *This forced us to move* becomes *These rising costs forced us to move*. For a vague *they* or *it*, name who or what: *They say* becomes *The engineers say*. A revision that keeps the same pronoun, or changes the meaning, does not help.",
-        "修改指代不清的代词，可以把代词换成名词，改写句子使只可能指一个名词，或把转述改为直接引语。对于含糊的 *this* 或 *which*，加上它所概括的名词：*This forced us to move* 改为 *These rising costs forced us to move*。对于含糊的 *they* 或 *it*，说出是谁或什么：*They say* 改为 *The engineers say*。保留同一个代词或改变了原意的修改都无济于事。",
+        "To fix an unclear pronoun, replace it with the noun, rewrite the sentence so only one noun can be meant, or turn a report into a direct quotation. For a vague *this* or *which*, add the noun it sums up: *This forced us to move* becomes *These rising costs forced us to move*. For a vague *they* or *it*, name who or what: *They say* becomes *The engineers say*. A revision that keeps the same pronoun, or changes the meaning, does not help.\n\n> **Watch out.** Adding an intensifier like *very* or *really* leaves the unclear pronoun untouched; a real fix either names the noun explicitly or restructures the clause so only one antecedent is possible.",
+        "修改指代不清的代词，可以把代词换成名词，改写句子使只可能指一个名词，或把转述改为直接引语。对于含糊的 *this* 或 *which*，加上它所概括的名词：*This forced us to move* 改为 *These rising costs forced us to move*。对于含糊的 *they* 或 *it*，说出是谁或什么：*They say* 改为 *The engineers say*。保留同一个代词或改变了原意的修改都无济于事。\n\n> **注意。** 仅仅加上 *very*、*really* 之类加强语气的词并不能消除指代不清；真正的修改必须直接点出名词，或调整句式使先行词唯一。",
       ],
       ["Which revision makes the reference clear?", "哪个修改使指代变清楚了？"],
       `
@@ -608,8 +616,8 @@ ${revisionLines}
         The company raised prices and cut wages, and this angered workers.|The company raised prices and cut wages, and these two decisions angered workers.|The company raised prices and cut wages, and this greatly angered workers.|The company lowered prices and raised wages, and this pleased workers.
       `,
       (right) => [
-        `"${right}" names the noun or rewrites the sentence so that only one thing can be meant, without changing the meaning.`,
-        `“${right}”点出了名词或改写了句子，使所指只有一个，且没有改变原意。`,
+        `"${right}" names the noun or rewrites the sentence so that only one thing can be meant, without changing the meaning.\n\n**Check.** Check every remaining pronoun against the sentence—none can refer to two nouns or to an unstated group, and the core event stays faithful to the original.`,
+        `“${right}”点出了名词或改写了句子，使所指只有一个，且没有改变原意。\n\n**检验。** 逐一核对句中保留的代词——没有任何代词会指向两个名词或未交代的群体，同时原句的核心事实保持不变。`,
       ],
       [
         [
@@ -632,14 +640,18 @@ const jargon = topic("grammar", {
     "Specialist terms used where readers will not know them, inflated words that make simple things sound grand, and the plain words that say the same thing clearly.",
     "在读者不懂的地方使用的专业术语、把简单事情说得很宏大的浮夸词语，以及把同样的意思说清楚的平实词语。",
   ],
+  intro: [
+    "Compare *Kindly refrain from utilizing the south exit prior to the cessation of the alarm* with *Please do not use the south exit until the alarm stops*. Both convey the exact same safety rule, yet the first buries an urgent instruction under stiff, inflated wording. Recognizing field jargon and padded phrasing lets you translate them into plain, direct English without losing a single fact.",
+    "比较 *Kindly refrain from utilizing the south exit prior to the cessation of the alarm* 与 *Please do not use the south exit until the alarm stops*。两句传达的安全规定完全相同，第一句却用生硬浮夸的措辞把紧急提示埋了起来。识别行业行话和浮夸表达，就能在不丢失任何事实的前提下，把它们改写成平实直白的英语。",
+  ],
   after: ["reducing-nominalizations", "euphemisms"],
   points: [
     label(
       "what-gets-in-the-way",
       ["What Gets in the Way", "是什么造成了阻碍"],
       [
-        "**Jargon** is the special vocabulary of a field, such as business, law, medicine or computing: *leverage our synergies*, *going forward*, *bandwidth*, *myocardial infarction*. Among experts it can be precise, but for general readers it hides the meaning. **Inflated language** dresses ordinary words in grand ones: *utilize* for *use*, *commence* for *begin*, *in the event that* for *if*, *at this point in time* for *now*. **Plain language** says the same thing in words the reader already knows.",
-        "**行话**是某个领域的专门词汇，如商业、法律、医学或计算机：*leverage our synergies*、*going forward*、*bandwidth*、*myocardial infarction*。在专家之间它可能很精确，但对一般读者，它遮蔽了意思。**浮夸语言**用宏大的词包装普通的词：用 *utilize* 代替 *use*，用 *commence* 代替 *begin*，用 *in the event that* 代替 *if*，用 *at this point in time* 代替 *now*。**平实语言**用读者已经认识的词说出同样的意思。",
+        "**Jargon** is the special vocabulary of a field, such as business, law, medicine or computing: *leverage our synergies*, *going forward*, *bandwidth*, *myocardial infarction*. Among experts it can be precise, but for general readers it hides the meaning. **Inflated language** dresses ordinary words in grand ones: *utilize* for *use*, *commence* for *begin*, *in the event that* for *if*, *at this point in time* for *now*. **Plain language** says the same thing in words the reader already knows.\n\n> **Watch out.** Do not confuse **jargon** with **inflated language**: jargon belongs to a specific profession or trade (like *fiduciary* or *API*), whereas inflated language uses needlessly heavy everyday-dictionary words (*utilize*, *commence*, *subsequent to*) to sound formal.",
+        "**行话**是某个领域的专门词汇，如商业、法律、医学或计算机：*leverage our synergies*、*going forward*、*bandwidth*、*myocardial infarction*。在专家之间它可能很精确，但对一般读者，它遮蔽了意思。**浮夸语言**用宏大的词包装普通的词：用 *utilize* 代替 *use*，用 *commence* 代替 *begin*，用 *in the event that* 代替 *if*，用 *at this point in time* 代替 *now*。**平实语言**用读者已经认识的词说出同样的意思。\n\n> **注意。** 不要把**行话**和**浮夸语言**混为一谈：行话属于特定专业或行业（如 *fiduciary*、*API*），而浮夸语言是用刻意显得正式的冗长词（如 *utilize*、*commence*、*subsequent to*）去替代简短常用词。",
       ],
       ["What, if anything, gets in the way of this sentence for a general reader?", "对一般读者来说，如果有的话，是什么妨碍了这个句子？"],
       `
@@ -679,22 +691,22 @@ ${getsInLines}
       {
         jargon: L(
           "行话",
-          "It uses the special terms of a field, such as business, law, medicine or computing, that a general reader may not know.",
-          "句子用了商业、法律、医学或计算机等领域的专门术语，一般读者可能不懂。",
+          "It uses the special terms of a field, such as business, law, medicine or computing, that a general reader may not know.\n\n**Check.** Ask whether the blocking words belong to a specialist trade or office buzzword lexicon rather than just being pompous synonyms for everyday verbs.",
+          "句子用了商业、法律、医学或计算机等领域的专门术语，一般读者可能不懂。\n\n**检验。** 看看造成理解障碍的词语是不是来自特定行业术语或职场黑话，而不只是把日常动词说得更浮夸。",
           "It does not depend on the special terms of a field.",
           "句子并不依赖某个领域的专门术语。",
         ),
         "inflated language": L(
           "浮夸语言",
-          "It uses grand words or long phrases, such as utilize, commence or due to the fact that, where short common words would do.",
-          "句子用了 utilize、commence、due to the fact that 之类宏大的词或长短语，而简短常用的词就足够了。",
+          "It uses grand words or long phrases, such as *utilize*, *commence* or *due to the fact that*, where short common words would do.\n\n**Check.** Try replacing the bulky verbs and time phrases with one- or two-word everyday equivalents—the sentence shrinks noticeably without losing any technical precision.",
+          "句子用了 *utilize*、*commence*、*due to the fact that* 之类宏大的词或长短语，而简短常用的词就足够了。\n\n**检验。** 试着把冗长的动词和时间短语换成一两个常用词——句子明显变短，却没有损失任何专业精确度。",
           "It does not dress ordinary words in grand ones.",
           "句子没有用宏大的词包装普通的词。",
         ),
         "plain and clear": L(
           "平实清楚",
-          "Every word is one a general reader knows, and nothing is longer or grander than it needs to be.",
-          "每个词都是一般读者认识的，没有任何地方比需要的更长或更浮夸。",
+          "Every word is one a general reader knows, and nothing is longer or grander than it needs to be.\n\n**Check.** Read the sentence aloud to a general reader—no term needs a specialist glossary, and no phrase can be cut down to a simpler everyday word.",
+          "每个词都是一般读者认识的，没有任何地方比需要的更长或更浮夸。\n\n**检验。** 把句子念给普通读者听——既没有需要专业词典解释的术语，也没有可以再压缩成更简单常用词的累赘短语。",
           "It uses jargon or inflated words that get in the reader's way.",
           "句子用了妨碍读者的行话或浮夸词语。",
         ),
@@ -704,8 +716,8 @@ ${getsInLines}
       "the-plain-version",
       ["The Plain Version", "平实的说法"],
       [
-        "To revise jargon and inflated language, ask what the sentence actually says and who will read it, then say that in common words. *We will leverage our assets* becomes *We will use what we have*. *In the event that* becomes *if*; *prior to* becomes *before*; *a large number of* becomes *many*. A good revision keeps every fact; it does not drop information or add a new claim, and it does not swap one piece of jargon for another.",
-        "修改行话和浮夸语言，要问句子实际在说什么、谁会读它，然后用常用词说出来。*We will leverage our assets* 改为 *We will use what we have*。*In the event that* 改为 *if*，*prior to* 改为 *before*，*a large number of* 改为 *many*。好的修改保留每一个事实：它不删去信息，也不添加新的说法，也不用一个行话替换另一个行话。",
+        "To revise jargon and inflated language, ask what the sentence actually says and who will read it, then say that in common words. *We will leverage our assets* becomes *We will use what we have*. *In the event that* becomes *if*; *prior to* becomes *before*; *a large number of* becomes *many*. A good revision keeps every fact; it does not drop information or add a new claim, and it does not swap one piece of jargon for another.\n\n> **Watch out.** Plainness never excuses inaccuracy: a short, simple rewrite that reverses the time, actor, or outcome is wrong even if it sounds smoother.",
+        "修改行话和浮夸语言，要问句子实际在说什么、谁会读它，然后用常用词说出来。*We will leverage our assets* 改为 *We will use what we have*。*In the event that* 改为 *if*，*prior to* 改为 *before*，*a large number of* 改为 *many*。好的修改保留每一个事实：它不删去信息，也不添加新的说法，也不用一个行话替换另一个行话。\n\n> **注意。** 平实绝不意味着可以牺牲准确：一个简短顺口却把时间、对象或结果说反了的改写依然是错的。",
       ],
       ["Which version says the same thing in plain language?", "哪个说法用平实的语言表达了同样的意思？"],
       `
@@ -743,8 +755,8 @@ ${plainLines}
         Kindly be advised that the office will be closed on Monday.|Please note that the office will be closed on Monday.|Kindly note the office will be in a non-operational state Monday.|Please note that the office will be open on Monday.
       `,
       (right) => [
-        `"${right}" keeps every fact of the original but says it in short, common words a general reader knows.`,
-        `“${right}”保留了原句的每一个事实，但用一般读者认识的简短常用词说出来。`,
+        `"${right}" keeps every fact of the original but says it in short, common words a general reader knows.\n\n**Check.** Match each piece of information—who acts, what happens, and when—against the original sentence to confirm nothing was altered, while every buzzword or padded phrase is gone.`,
+        `“${right}”保留了原句的每一个事实，但用一般读者认识的简短常用词说出来。\n\n**检验。** 把谁在行动、发生了什么、时间条件等逐项对照原句，确认事实毫无改动，同时所有行话和冗长套话都已去掉。`,
       ],
       [
         [
@@ -764,14 +776,18 @@ const confused8 = topic("grammar", {
     "Pairs such as ascent and assent, defuse and diffuse, or forbear and forebear look or sound alike but mean different things.",
     "ascent 和 assent、defuse 和 diffuse、forbear 和 forebear 这样的词形或读音相近，意思却不同。",
   ],
+  intro: [
+    "Writing *The council gave its ascent to the zoning plan* accidentally turns formal approval (*assent*) into an uphill climb (*ascent*), and a spellchecker will not flag either word. These ten high-level pairs differ by just one or two letters, so anchoring each spelling to a quick meaning cue prevents costly slips.",
+    "把 *The council gave its assent to the zoning plan* 误写成 *ascent*，就会把正式同意变成向上攀登，而且拼写检查器根本不会报错。这十组高阶易混词彼此只差一两个字母，把拼写细节和简短的词义线索绑定，就能避免这类失误。",
+  ],
   after: ["commonly-confused-words-7"],
   points: [
     choose(
       "the-word-that-fits",
       ["The Word That Fits", "合适的词"],
       [
-        "Ten more pairs for careful writers. An **ascent** is a climb; **assent** is agreement. **Canvas** is heavy cloth; to **canvass** is to ask people for votes or opinions. **Climactic** describes a climax; **climatic** describes climate. To **defuse** is to make less dangerous; to **diffuse** is to spread out. To **deprecate** is to disapprove of; to **depreciate** is to lose value. To **exercise** is to train or use; to **exorcise** is to drive out an evil spirit. To **forbear** is to hold back; a **forebear** is an ancestor. An **ordinance** is a local law; **ordnance** is military weapons. **Venal** means open to bribes; **venial** means easily forgiven. A **tenant** rents a home; a **tenet** is a principle of a belief.",
-        "又有十对需要认真区分的词。**ascent** 是攀登，**assent** 是同意。**canvas** 是帆布，**canvass** 是拉票或征求意见。**climactic** 形容高潮，**climatic** 形容气候。**defuse** 是缓和、拆除引信，**diffuse** 是扩散。**deprecate** 是不赞成，**depreciate** 是贬值。**exercise** 是锻炼或运用，**exorcise** 是驱魔。**forbear** 是克制，**forebear** 是祖先。**ordinance** 是地方法规，**ordnance** 是军械。**venal** 意为贪赃的，**venial** 意为可原谅的。**tenant** 是租户，**tenet** 是信条。",
+        "Ten more pairs for careful writers. An **ascent** is a climb; **assent** is agreement. **Canvas** is heavy cloth; to **canvass** is to ask people for votes or opinions. **Climactic** describes a climax; **climatic** describes climate. To **defuse** is to make less dangerous; to **diffuse** is to spread out. To **deprecate** is to disapprove of; to **depreciate** is to lose value. To **exercise** is to train or use; to **exorcise** is to drive out an evil spirit. To **forbear** is to hold back; a **forebear** is an ancestor. An **ordinance** is a local law; **ordnance** is military weapons. **Venal** means open to bribes; **venial** means easily forgiven. A **tenant** rents a home; a **tenet** is a principle of a belief.\n\n> **Watch out.** Because both words in every pair are real English words, spellcheckers stay silent—check the exact letters (*c* in *climactic*, *i* in *ordinance*, *e* in *forebear*) against the meaning the sentence calls for.",
+        "又有十对需要认真区分的词。**ascent** 是攀登，**assent** 是同意。**canvas** 是帆布，**canvass** 是拉票或征求意见。**climactic** 形容高潮，**climatic** 形容气候。**defuse** 是缓和、拆除引信，**diffuse** 是扩散。**deprecate** 是不赞成，**depreciate** 是贬值。**exercise** 是锻炼或运用，**exorcise** 是驱魔。**forbear** 是克制，**forebear** 是祖先。**ordinance** 是地方法规，**ordnance** 是军械。**venal** 意为贪赃的，**venial** 意为可原谅的。**tenant** 是租户，**tenet** 是信条。\n\n> **注意。** 每组两个词都是拼写合法的英语单词，拼写检查不会提示错误——一定要对照句意核对关键字母（如 *climactic* 中的 *c*、*ordinance* 中的 *i*、*forebear* 中的 *e*）。",
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
       `
@@ -809,13 +825,13 @@ ${fitLines8}
         The pollster will ___ voters about the new tax.|canvass|canvas|cancel
       `,
       (right) => [
-        `**${right}** has the meaning this sentence needs; the other choices are look-alike words whose meanings differ.`,
-        `**${right}** 具有这个句子需要的意思；其他选项是形似的词，意思不同。`,
+        `**${right}** has the meaning this sentence needs; the other choices are look-alike words whose meanings differ.\n\n**Check.** Substitute the definition of **${right}** directly into the blank—it matches both the grammar of the slot and the sense of the surrounding clues.`,
+        `**${right}** 具有这个句子需要的意思；其他选项是形似的词，意思不同。\n\n**检验。** 把 **${right}** 的释义直接代回空格——它既符合空格处的语法成分，也与上下文的语义线索完全契合。`,
       ],
       [
         [
-          "*{wrong}* looks or sounds like **{right}**, but it has a different meaning.",
-          "*{wrong}* 看起来或听起来像 **{right}**，但意思不同。",
+          "*{wrong}* looks or sounds similar, but it has a different meaning that does not fit this sentence.",
+          "*{wrong}* 词形或读音相近，但意思不同，不适合这个句子。",
         ],
         ["*{wrong}* is another word or form; it does not have this meaning.", "*{wrong}* 是另一个词或词形，没有这个意思。"],
       ],
@@ -824,8 +840,8 @@ ${fitLines8}
       "the-word-for-the-meaning",
       ["The Word for the Meaning", "符合释义的词"],
       [
-        "Learn each pair by a clue. An *ascent* goes up like a *scent* rising; *assent* is to *ass*ert yes. *Canvass* has an extra *s* for *s*urvey. *Climactic* has the *c* of *c*limax. To *de*fuse is to *de*-fuse a bomb. *Depreciate* is about *price*. To *exorcise* drives *out*, like *ex*it. To *fore*bear is not to bear; a *fore*bear came be*fore*. *Ordnance* is ordinance with the *i* blown out. A *venal* official sells favors for money, like a *vend*ing machine. A *tenet* is held, a *tenant* pays *ant*-sized rent.",
-        "用线索记住每一对词。*ascent* 像升起的 *scent*（香气）一样向上；*assent* 是 *ass*ert（肯定）说是。*canvass* 多了一个 *s*，代表 *s*urvey（调查）。*climactic* 有 *c*limax（高潮）的 *c*。*de*fuse 是给炸弹 *de*-fuse（拆引信）。*depreciate* 与 *price*（价格）有关。*exorcise* 是赶 *out*（出去），像 *ex*it。*forebear* 有 *fore*，表示在 be*fore*（之前）的祖先。*ordnance* 是 ordinance 炸掉了 *i*。*venal* 的官员像 *vend*ing machine（自动售货机）一样出售好处。*tenet* 是持守的信条，*tenant* 是付房租的人。",
+        "Learn each pair by a clue. An *ascent* goes up like a *scent* rising; *assent* is to *ass*ert yes. *Canvass* has an extra *s* for *s*urvey. *Climactic* has the *c* of *c*limax. To *de*fuse is to *de*-fuse a bomb. *Depreciate* is about *price*. To *exorcise* drives *out*, like *ex*it. To *fore*bear is not to bear; a *fore*bear came be*fore*. *Ordnance* is ordinance with the *i* blown out. A *venal* official sells favors for money, like a *vend*ing machine. A *tenet* is held, a *tenant* pays *ant*-sized rent.\n\n> **Watch out.** Check the part of speech alongside the spelling cue: for example, *canvas* is a noun or adjective for cloth while *canvass* is a verb for surveying, and *forbear* is a verb while *forebear* is a noun.",
+        "用线索记住每一对词。*ascent* 像升起的 *scent*（香气）一样向上；*assent* 是 *ass*ert（肯定）说是。*canvass* 多了一个 *s*，代表 *s*urvey（调查）。*climactic* 有 *c*limax（高潮）的 *c*。*de*fuse 是给炸弹 *de*-fuse（拆引信）。*depreciate* 与 *price*（价格）有关。*exorcise* 是赶 *out*（出去），像 *ex*it。*forebear* 有 *fore*，表示在 be*fore*（之前）的祖先。*ordnance* 是 ordinance 炸掉了 *i*。*venal* 的官员像 *vend*ing machine（自动售货机）一样出售好处。*tenet* 是持守的信条，*tenant* 是付房租的人。\n\n> **注意。** 核对拼写线索时也要同时核对词性：例如 *canvas* 作名词或形容词指帆布，而 *canvass* 作动词指拉票调查；*forbear* 是动词，而 *forebear* 是名词。",
       ],
       ["Which word has this meaning?", "哪个词有这个意思？"],
       `
@@ -863,14 +879,11 @@ ${meaningLines8}
         someone who lives in a flat and pays its owner each month|tenant|tenet|tenor
       `,
       (right) => [
-        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.`,
-        `**${right}** 有这个意思；其他选项是形似的词，意思不同。`,
+        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.\n\n**Check.** Match the distinguishing letter pattern in **${right}** to its meaning cue and verify that its part of speech fits the definition.`,
+        `**${right}** 有这个意思；其他选项是形似的词，意思不同。\n\n**检验。** 把 **${right}** 中起区分作用的字母特征对照它的词义线索，并确认其词性与题干释义一致。`,
       ],
       [
-        [
-          "*{wrong}* looks or sounds like **{right}**, but it has a different meaning.",
-          "*{wrong}* 看起来或听起来像 **{right}**，但意思不同。",
-        ],
+        ["*{wrong}* looks or sounds similar, but it has a different meaning.", "*{wrong}* 词形或读音相近，但意思不同。"],
         ["*{wrong}* is another word or form; it does not have this meaning.", "*{wrong}* 是另一个词或词形，没有这个意思。"],
       ],
     ),

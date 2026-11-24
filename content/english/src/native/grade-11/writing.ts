@@ -18,14 +18,18 @@ const opposing = topic("writing", {
     "Stating the other side's position in its strongest form, in words its supporters would accept, before answering it.",
     "在回应之前，以反方最有力的形式、用其支持者也会认可的措辞陈述对方的立场。",
   ],
+  intro: [
+    "Writing *Critics just hate progress* convinces no one who disagrees with you; writing *Critics worry the project will raise local rents* shows you understand their best case before answering it. In this topic, you tell fair summaries from straw men and loaded language, then choose the strongest fair statement of an opposing view.",
+    "写“反对者纯粹憎恨进步”说服不了任何持不同意见的人；写“反对者担心该项目会推高当地房租”，则说明你先读懂了对方最有力的理由再作回应。本主题带你区分公正概述、稻草人与带偏见的表述，并选出最有力、最公正的反方陈述。",
+  ],
   after: ["counterclaims-and-rebuttals", "supported-and-unsupported-claims"],
   points: [
     label(
       "fair-or-unfair",
       ["Fair or Unfair", "公正还是不公正"],
       [
-        "A strong argument answers the **best** version of the other side, not a weak one. A **fair summary** states the opposing view accurately, with its main reason, in neutral words its supporters would accept. A **straw man** distorts the view into something weaker or sillier than it is, so that it is easy to knock down. A **loaded summary** may report the view accurately but colors it with sneering or emotional words (*the so-called experts*, *their tired excuse*).",
-        "有力的论证回应的是对方**最好的**版本，而不是一个弱的版本。**公正的概述**准确地陈述反方观点及其主要理由，用的是其支持者也会认可的中性措辞。**稻草人**把对方观点歪曲得比实际更弱或更荒唐，以便轻易推倒。**带偏见的概述**可能如实报告了观点，却用讥讽或情绪化的词语给它染色（*the so-called experts*、*their tired excuse*）。",
+        "A strong argument answers the **best** version of the other side, not a weak one. A **fair summary** states the opposing view accurately, with its main reason, in neutral words its supporters would accept. A **straw man** distorts the view into something weaker or sillier than it is, so that it is easy to knock down. A **loaded summary** may report the view accurately but colors it with sneering or emotional words (*the so-called experts*, *their tired excuse*).\n\n> **Watch out.** Separate **a straw man** from **a loaded summary**: a straw man *invents an absurd extreme* the other side never claimed (*want children chained to desks*), whereas a loaded summary keeps the real reason but sneers at it with mocking verbs or labels (*whine*, *so-called*, *sob story*).",
+        "有力的论证回应的是对方**最好的**版本，而不是一个弱的版本。**公正的概述**准确地陈述反方观点及其主要理由，用的是其支持者也会认可的中性措辞。**稻草人**把对方观点歪曲得比实际更弱或更荒唐，以便轻易推倒。**带偏见的概述**可能如实报告了观点，却用讥讽或情绪化的词语给它染色（*the so-called experts*、*their tired excuse*）。\n\n> **注意。** 区分**稻草人**与**带偏见的概述**：稻草人是*凭空捏造对方从未说过的荒唐极端*；带偏见的概述保留了真实理由，却用 *whine*、*so-called*、*sob story* 这类讥讽词给对方贴标签。",
       ],
       ["How does this sentence summarize the opposing view?", "这个句子是怎样概述反方观点的？"],
       `
@@ -63,22 +67,22 @@ const opposing = topic("writing", {
       {
         "a fair summary": L(
           "公正的概述",
-          "It states the view and its real reason in neutral words that its supporters would accept.",
-          "它用支持者也会认可的中性措辞，陈述了观点及其真实理由。",
+          "It states the view and its real reason in neutral words that its supporters would accept.\n\n**Check.** Ask whether a supporter of that position would nod and say *Yes, that is our reason*: neutral verbs (*argue*, *note*, *point out*) and no distortion confirm it is fair.",
+          "它用支持者也会认可的中性措辞，陈述了观点及其真实理由。\n\n**检验。** 问问持该立场的人会不会点头说“没错，这就是我们的理由”：动词中性、没有歪曲，确认为公正概述。",
           "It distorts the view or colors it with sneering words.",
           "它歪曲了观点，或用讥讽的词语给它染了色。",
         ),
         "a straw man": L(
           "稻草人",
-          "It twists the view into an extreme or silly claim its supporters do not make.",
-          "它把观点扭曲成支持者并没有提出的极端或荒唐的说法。",
+          "It twists the view into an extreme or silly claim its supporters do not make.\n\n**Check.** Ask whether real advocates actually hold the extreme position stated here: no—the sentence replaces their real reason with an absurd caricature.",
+          "它把观点扭曲成支持者并没有提出的极端或荒唐的说法。\n\n**检验。** 问问真正的支持者会不会提出如此极端的说法：不会，这句话把对方真实理由换成了荒唐的漫画式靶子。",
           "It does not change what the other side actually claims.",
           "它没有改变对方实际的主张。",
         ),
         "a loaded summary": L(
           "带偏见的概述",
-          "It reports the real reason but mocks it with words such as so-called, whine or tired.",
-          "它报告了真实的理由，却用 so-called、whine、tired 之类的词语嘲弄它。",
+          "It reports the real reason but mocks it with words such as so-called, whine or tired.\n\n**Check.** Separate the core reason from the framing words: the underlying reason is real, but sneering labels or mocking verbs color the reader against it.",
+          "它报告了真实的理由，却用 so-called、whine、tired 之类的词语嘲弄它。\n\n**检验。** 把核心理由和包装词剥开看：理由本身是真实的，但讥讽性的修饰语和动词提前给它涂上了贬义色彩。",
           "It does not sneer at the view with loaded words while reporting it.",
           "它在报告观点时没有用带偏见的词语讥讽。",
         ),
@@ -88,8 +92,8 @@ const opposing = topic("writing", {
       "the-strongest-version",
       ["The Strongest Version", "最有力的版本"],
       [
-        "Before you rebut a view, state it as its best defenders would: choose its **strongest reason**, not its weakest; give it its **real scope**, not an extreme one; and use **neutral verbs** such as *argue*, *point out* and *note*. Answering the strongest version makes your own argument more convincing, because readers who hold the other view will feel heard.",
-        "反驳一个观点之前，要像它最好的辩护者那样陈述它：选它**最有力的理由**，而不是最弱的；给它**真实的范围**，而不是极端化；用 *argue*、*point out*、*note* 之类的**中性动词**。回应最有力的版本会让你自己的论证更有说服力，因为持另一种观点的读者会觉得自己的声音被听到了。",
+        "Before you rebut a view, state it as its best defenders would: choose its **strongest reason**, not its weakest; give it its **real scope**, not an extreme one; and use **neutral verbs** such as *argue*, *point out* and *note*. Answering the strongest version makes your own argument more convincing, because readers who hold the other view will feel heard.\n\n> **Watch out.** Check the reporting verb and scope together: neutral verbs (*argue*, *note*, *point out*) paired with a serious, realistic reason pass the test, while mocking verbs (*whine*, *gripe*, *babble*) or wild extremes (*forever*, *every single*) fail.",
+        "反驳一个观点之前，要像它最好的辩护者那样陈述它：选它**最有力的理由**，而不是最弱的；给它**真实的范围**，而不是极端化；用 *argue*、*point out*、*note* 之类的**中性动词**。回应最有力的版本会让你自己的论证更有说服力，因为持另一种观点的读者会觉得自己的声音被听到了。\n\n> **注意。** 同时核对引述动词和论述范围：中性动词（*argue*、*note*、*point out*）配扎实的现实理由才合格；带讥讽的动词（*whine*、*gripe*、*babble*）或荒诞的极端化措辞都不公正。",
       ],
       ["Which sentence states the opposing view in its strongest fair form?", "哪个句子以最有力且公正的形式陈述了反方观点？"],
       `
@@ -125,8 +129,8 @@ const opposing = topic("writing", {
         An essay arguing against building a new stadium|Supporters argue that the stadium would bring jobs, visitors and income to the town.|Supporters would happily bulldoze every home in town for a single football game on a Sunday afternoon.|Supporters cheer about jobs with no real plan.
       `,
       (right) => [
-        `"${right}" gives the other side its real and strongest reason in neutral words, so the rebuttal that follows will be convincing.`,
-        `“${right}” 用中性的措辞给出了对方真实而最有力的理由，因此随后的反驳才有说服力。`,
+        `"${right}" gives the other side its real and strongest reason in neutral words, so the rebuttal that follows will be convincing.\n\n**Check.** Verify two tests on "${right}": its reporting verb is neutral and its reason is one that thoughtful defenders of the other side would actually endorse.`,
+        `“${right}”用中性的措辞给出了对方真实而最有力的理由，因此随后的反驳才有说服力。\n\n**检验。** 用两项标准复核“${right}”：引述动词中性克制，所陈述的理由也是反方理性支持者本人会认可的核心论据。`,
       ],
       [
         [
@@ -149,14 +153,18 @@ const concrete = topic("writing", {
     "Pairing abstract ideas such as courage or injustice with concrete details that make them visible, and drawing ideas out of details.",
     "把勇气、不公之类的抽象观念与使其可见的具体细节配对，并从细节中提炼出观念。",
   ],
+  intro: [
+    "Writing *The village suffered neglect* states an idea; showing *a cracked school bell silent for twelve winters* makes the reader see it. In this topic, you tell concrete, abstract, and combined sentences apart and choose the concrete detail that proves an abstract claim.",
+    "写“村子遭到了忽视”只是给出概念；写出“校舍里那口裂开的铜钟十二个冬天没有响过”才让读者亲眼看见。本主题带你区分具体句、抽象句与兼有两者的句子，并为抽象观点选出最能证明它的具体细节。",
+  ],
   after: ["introducing-and-explaining-evidence", "abstract-nouns"],
   points: [
     label(
       "concrete-or-abstract",
       ["Concrete or Abstract", "具体还是抽象"],
       [
-        "A **concrete** sentence shows something a reader can see, hear, touch or count: *Her hands were cracked from twelve years of washing other people's dishes.* An **abstract** sentence names an idea, a quality or a judgment: *She had endured great hardship.* Good writing moves between the two. A sentence that does **both** names an idea and anchors it in a specific detail in the same breath: *Her patience showed in the way she refolded each napkin the guests had thrown down.*",
-        "**具体**的句子呈现读者能看到、听到、摸到或数得出的东西：*Her hands were cracked from twelve years of washing other people's dishes.* **抽象**的句子说出一个观念、一种品质或一个判断：*She had endured great hardship.* 好的写作在两者之间移动。**兼有两者**的句子在说出观念的同时，又用具体细节把它固定下来：*Her patience showed in the way she refolded each napkin the guests had thrown down.*",
+        "A **concrete** sentence shows something a reader can see, hear, touch or count: *Her hands were cracked from twelve years of washing other people's dishes.* An **abstract** sentence names an idea, a quality or a judgment: *She had endured great hardship.* Good writing moves between the two. A sentence that does **both** names an idea and anchors it in a specific detail in the same breath: *Her patience showed in the way she refolded each napkin the guests had thrown down.*\n\n> **Watch out.** Check for *both* ingredients before choosing **concrete** or **abstract**: if an abstract noun like *grief*, *loyalty*, or *neglect* stands in the same sentence as a visible object or action (*a coat by the door*, *dust on every shelf*), the answer is **both**.",
+        "**具体**的句子呈现读者能看到、听到、摸到或数得出的东西：*Her hands were cracked from twelve years of washing other people's dishes.* **抽象**的句子说出一个观念、一种品质或一个判断：*She had endured great hardship.* 好的写作在两者之间移动。**兼有两者**的句子在说出观念的同时，又用具体细节把它固定下来：*Her patience showed in the way she refolded each napkin the guests had thrown down.*\n\n> **注意。** 选**具体**或**抽象**之前先检查两样元素是否同时出现：只要 *grief*、*loyalty*、*neglect* 这类抽象概念与看得见的物件或动作同处一句，就选**兼而有之**。",
       ],
       ["Is this sentence concrete, abstract or both?", "这个句子是具体的、抽象的，还是兼而有之？"],
       `
@@ -194,22 +202,22 @@ const concrete = topic("writing", {
       {
         concrete: L(
           "具体",
-          "It shows things a reader can see, hear, touch or count, without naming an idea.",
-          "它呈现读者能看到、听到、摸到或数得出的东西，没有说出观念。",
+          "It shows things a reader can see, hear, touch or count, without naming an idea.\n\n**Check.** Scan the sentence for abstract labels like *courage*, *poverty*, or *grief*: none appear—every detail appeals directly to the senses or counts.",
+          "它呈现读者能看到、听到、摸到或数得出的东西，没有说出观念。\n\n**检验。** 通读全句找抽象概念词：句中没有任何抽象标签，全是感官可见或可数细节。",
           "It names an idea or a quality rather than only showing particular things.",
           "它说出了一个观念或品质，而不只是呈现具体事物。",
         ),
         abstract: L(
           "抽象",
-          "It names an idea, a quality or a judgment with no particular detail to show it.",
-          "它说出一个观念、品质或判断，却没有具体细节来呈现它。",
+          "It names an idea, a quality or a judgment with no particular detail to show it.\n\n**Check.** Try to photograph the sentence: because it names only broad ideas or judgments without concrete objects or actions, nothing physical appears for a camera.",
+          "它说出一个观念、品质或判断，却没有具体细节来呈现它。\n\n**检验。** 试着用相机拍下这句话：句中只有抽象概念和判断，没有可拍摄的具体物件或动作。",
           "It contains particular things a reader could see or count.",
           "它包含了读者能看到或数得出的具体事物。",
         ),
         both: L(
           "兼而有之",
-          "It names an idea and anchors it in a specific detail in the same sentence.",
-          "它在同一个句子里说出观念，又用具体细节把它固定下来。",
+          "It names an idea and anchors it in a specific detail in the same sentence.\n\n**Check.** Spot both halves inside the same sentence: an explicit abstract concept paired directly with a concrete object, number, or visible action.",
+          "它在同一个句子里说出观念，又用具体细节把它固定下来。\n\n**检验。** 在同一句中能同时圈出两半：一边是明确的抽象概念，另一边是具体的物件、数字或可见动作。",
           "It does not join an idea and a specific detail in one sentence.",
           "它没有在一个句子里把观念和具体细节结合起来。",
         ),
@@ -219,8 +227,8 @@ const concrete = topic("writing", {
       "the-detail-for-the-idea",
       ["The Detail for the Idea", "为观念找细节"],
       [
-        "When you state an abstract idea, follow it with a concrete detail that **proves** it: a detail that could belong only to this idea, not a vague restatement and not a detail that points somewhere else. *The town had given up on its young people.* What proves it? *The school's only computer lab had been locked since 2015.* A good detail is **specific** (a number, a name, an object) and **fitting** (it shows exactly the idea stated).",
-        "说出一个抽象观念后，要接着给出能**证明**它的具体细节：只属于这个观念的细节，而不是含糊的重述，也不是指向别处的细节。*The town had given up on its young people.* 什么能证明这一点？*The school's only computer lab had been locked since 2015.* 好的细节**具体**（一个数字、一个名字、一个物件）且**贴切**（恰好呈现所说的观念）。",
+        "When you state an abstract idea, follow it with a concrete detail that **proves** it: a detail that could belong only to this idea, not a vague restatement and not a detail that points somewhere else. *The town had given up on its young people.* What proves it? *The school's only computer lab had been locked since 2015.* A good detail is **specific** (a number, a name, an object) and **fitting** (it shows exactly the idea stated).\n\n> **Watch out.** Test every option on *both* requirements: a vague paraphrase (*felt very lonely*) fails specificity, while a random factual detail (*lived on a quiet street*) fails relevance to the idea.",
+        "说出一个抽象观念后，要接着给出能**证明**它的具体细节：只属于这个观念的细节，而不是含糊的重述，也不是指向别处的细节。*The town had given up on its young people.* 什么能证明这一点？*The school's only computer lab had been locked since 2015.* 好的细节**具体**（一个数字、一个名字、一个物件）且**贴切**（恰好呈现所说的观念）。\n\n> **注意。** 用*两把尺子*筛选项：空洞重述（如“感到很孤独”）不够具体，而与主题无关的事实细节（如“住在安静的街上”）则证明不了原观点。",
       ],
       ["Which detail best makes the idea concrete?", "哪个细节最能把这个观念具体化？"],
       `
@@ -256,8 +264,8 @@ const concrete = topic("writing", {
         The island was isolated.|The mail boat came once a month, when the sea allowed it.|The island was far away from everything and very cut off.|The island had a small school for the children of fishermen.
       `,
       (right) => [
-        `"${right}" is specific and shows exactly the idea, so a reader can see it instead of being told.`,
-        `“${right}” 具体而且恰好呈现了这个观念，让读者看到它，而不是被告知。`,
+        `"${right}" is specific and shows exactly the idea, so a reader can see it instead of being told.\n\n**Check.** Verify both tests on "${right}": you can picture a concrete scene, and that scene points straight back to the opening claim without needing to repeat it.`,
+        `“${right}”具体而且恰好呈现了这个观念，让读者看到它，而不是被告知。\n\n**检验。** 用两项标准核对“${right}”：它有清晰可感的画面，而且画面直接印证开头的抽象观点，无需重复空话。`,
       ],
       [
         [
@@ -277,14 +285,18 @@ const conclusions = topic("writing", {
     "Ending an essay by showing why its claim matters beyond the essay, instead of only repeating the thesis or bringing in a new topic.",
     "在文章结尾说明论点为何在文章之外也重要，而不只是重复论点，或引入一个新话题。",
   ],
+  intro: [
+    "Closing an essay on bike lanes with *In conclusion, bike lanes are good* stops flat; closing with *Every protected lane is a vote for a city built for people, not just cars* sends the reader out thinking. In this topic, you classify concluding sentences and choose the ending that widens a thesis's reach.",
+    "写自行车道的文章如果以“总之，自行车道很好”收尾会显得平淡乏味；若收在“每一条受保护的自行车道，都是在为以人为本而非以车为本的城市投票”，就能让读者掩卷深思。本主题带你分辨不同结尾句的作用，并选出真正拓宽视野的收尾。",
+  ],
   after: ["an-analytical-thesis", "introducing-and-explaining-evidence"],
   points: [
     label(
       "what-the-ending-does",
       ["What the Ending Does", "结尾做了什么"],
       [
-        "A conclusion should not simply **repeat** the thesis in the same words, and it should not **start a new topic** that the essay never discussed. A strong conclusion **widens the view**: it shows why the claim matters, to whom, or what it means for the future, while staying connected to what the essay proved. It may link to a larger issue, return to an opening image with new meaning, or point to a consequence.",
-        "结尾不应只是用同样的话**重复**论点，也不应**开启一个**文章从未讨论过的**新话题**。有力的结尾**拓宽视野**：它说明论点为何重要、对谁重要，或对未来意味着什么，同时与文章已经证明的内容保持联系。它可以连到更大的议题，以新的意义回到开头的意象，或指出一个后果。",
+        "A conclusion should not simply **repeat** the thesis in the same words, and it should not **start a new topic** that the essay never discussed. A strong conclusion **widens the view**: it shows why the claim matters, to whom, or what it means for the future, while staying connected to what the essay proved. It may link to a larger issue, return to an opening image with new meaning, or point to a consequence.\n\n> **Watch out.** Spot the two dead giveaways: phrases like *In conclusion* or *To sum up* followed by the bare claim signal **repeats the thesis**, while *also*, *by the way*, or an unrelated biography fact signals **starts a new topic**.",
+        "结尾不应只是用同样的话**重复**论点，也不应**开启一个**文章从未讨论过的**新话题**。有力的结尾**拓宽视野**：它说明论点为何重要、对谁重要，或对未来意味着什么，同时与文章已经证明的内容保持联系。它可以连到更大的议题，以新的意义回到开头的意象，或指出一个后果。\n\n> **注意。** 抓准两个明显信号：*In conclusion*、*To sum up* 后面只把论点换汤不换药复述一遍，是**重复论点**；出现 *also*、*by the way* 或无关的作者生平琐事，则是**开启新话题**。",
       ],
       ["What does this concluding sentence do?", "这个结尾句做了什么？"],
       `
@@ -322,22 +334,22 @@ const conclusions = topic("writing", {
       {
         "repeats the thesis": L(
           "重复论点",
-          "It restates the thesis in nearly the same words and adds nothing.",
-          "它几乎用同样的话重述了论点，没有增加任何东西。",
+          "It restates the thesis in nearly the same words and adds nothing.\n\n**Check.** Ask what *new* stake or broader consequence the sentence adds beyond the claim itself: nothing—it only echoes the thesis.",
+          "它几乎用同样的话重述了论点，没有增加任何东西。\n\n**检验。** 问问这句话在原论点之外增加了什么更广的意义或后果：什么都没有，只是原地复述。",
           "It does more than restate the thesis in the same words.",
           "它不只是用同样的话重述论点。",
         ),
         "starts a new topic": L(
           "开启新话题",
-          "It brings in an issue the essay never discussed, which weakens the ending.",
-          "它引入了文章从未讨论过的议题，这削弱了结尾。",
+          "It brings in an issue the essay never discussed, which weakens the ending.\n\n**Check.** Look at the second half of the sentence: it veers off onto an unrelated policy or biographical detail outside the essay's scope.",
+          "它引入了文章从未讨论过的议题，这削弱了结尾。\n\n**检验。** 看句子的后半截：它突然拐向了文章范围之外的新政策或无关琐事。",
           "It does not bring in a topic the essay never discussed.",
           "它没有引入文章从未讨论过的话题。",
         ),
         "widens the view": L(
           "拓宽视野",
-          "It stays with the essay's claim but shows why it matters more widely: a consequence, a larger issue or a changed image.",
-          "它紧扣文章的论点，又说明它为何有更广的意义：一个后果、一个更大的议题，或一个被赋予新意的意象。",
+          "It stays with the essay's claim but shows why it matters more widely: a consequence, a larger issue or a changed image.\n\n**Check.** Verify both halves: the sentence remains anchored to the essay's exact subject while lifting it to a larger stake or takeaway for the reader.",
+          "它紧扣文章的论点，又说明它为何有更广的意义：一个后果、一个更大的议题，或一个被赋予新意的意象。\n\n**检验。** 核对两点：句子既紧扣文章主题没有跑偏，又把格局抬升到了更深远的影响或启示。",
           "It does not show why the essay's claim matters beyond the essay.",
           "它没有说明文章的论点在文章之外为何重要。",
         ),
@@ -347,8 +359,8 @@ const conclusions = topic("writing", {
       "the-ending-that-matters",
       ["The Ending That Matters", "有分量的结尾"],
       [
-        "To write a conclusion that widens the view, ask **so what?** of your own thesis. Who is affected? What happens if no one acts? What does the text teach about people in general? Then answer in one or two sentences that stay connected to your claim. Avoid tired openings such as *In conclusion* and *To sum up*; let the idea itself signal the end.",
-        "要写出拓宽视野的结尾，就对自己的论点问一句**那又怎样？**谁会受影响？如果没有人行动会怎样？这篇文本对人普遍有什么启示？然后用一两句与论点紧密相关的话回答。避免 *In conclusion*、*To sum up* 这类陈旧的开头，让观点本身表明文章已到结尾。",
+        "To write a conclusion that widens the view, ask **so what?** of your own thesis. Who is affected? What happens if no one acts? What does the text teach about people in general? Then answer in one or two sentences that stay connected to your claim. Avoid tired openings such as *In conclusion* and *To sum up*; let the idea itself signal the end.\n\n> **Watch out.** Eliminate any option that merely repeats the thesis behind *In conclusion* / *To sum up*, and eliminate any option that wanders off to *also* propose an unrelated project or biography trivia.",
+        "要写出拓宽视野的结尾，就对自己的论点问一句**那又怎样？**谁会受影响？如果没有人行动会怎样？这篇文本对人普遍有什么启示？然后用一两句与论点紧密相关的话回答。避免 *In conclusion*、*To sum up* 这类陈旧的开头，让观点本身表明文章已到结尾。\n\n> **注意。** 排除套在 *In conclusion* / *To sum up* 后面原地重复论点的选项，也排除借 *also* 扯到无关项目或作者琐事的选项。",
       ],
       ["Which conclusion best widens the view of the essay's thesis?", "哪个结尾最能拓宽这篇文章论点的视野？"],
       `
@@ -384,8 +396,8 @@ const conclusions = topic("writing", {
         Thesis: The memoir shows that the author forgave her father too late.|The book is her forgiveness, written for a reader who can no longer receive it.|In conclusion, the memoir shows that the author forgave her father, but too late.|The memoir was translated into eleven languages within two years.
       `,
       (right) => [
-        `"${right}" answers "so what?": it stays with the thesis but shows why it matters beyond the essay.`,
-        `“${right}” 回答了“那又怎样？”：它紧扣论点，又说明论点为何在文章之外也重要。`,
+        `"${right}" answers "so what?": it stays with the thesis but shows why it matters beyond the essay.\n\n**Check.** Check "${right}" against both pitfalls: it neither echoes the thesis verbatim nor drifts onto a brand-new subject, instead showing the wider consequence or human meaning.`,
+        `“${right}”回答了“那又怎样？”：它紧扣论点，又说明论点为何在文章之外也重要。\n\n**检验。** 对照两类常见问题核对“${right}”：它既没有机械复述论点，也没有跑题去谈新话题，而是点出了更深远的后果或意义。`,
       ],
       [
         [

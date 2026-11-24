@@ -165,8 +165,8 @@ const findHelperBank: readonly Item[] = helperRows.map(({ frame, right, shown })
   right,
   wrong: [frame.main, frame.word[0]],
   why: t(
-    `**${right}** is the helping verb. It comes before the main verb *${frame.main}* and tells the time of the action or makes the sentence negative.`,
-    `**${right}** 是助动词。它放在主要动词 *${frame.main}* 前面，表示动作的时间，或者帮助构成否定。`,
+    `**${right}** is the helping verb. It comes before the main verb *${frame.main}* and tells the time of the action or makes the sentence negative.\n\n**Check.** Read the verb phrase without *${frame.main}*—*${right}* alone does not name the action, which confirms it is the helper.`,
+    `**${right}** 是助动词。它放在主要动词 *${frame.main}* 前面，表示动作的时间，或者帮助构成否定。\n\n**检验。** 去掉 *${frame.main}* 只看 *${right}*——它本身并不说出具体动作，说明它是助动词。`,
   ),
   whyNot: [
     t(
@@ -186,19 +186,24 @@ const chooseHelperBank: readonly Item[] = helperRows.map(({ frame, s, right, sho
     right,
     wrong,
     why: t(
-      `${fill(shown, right)} Here ${frame.why[0]}${frame.one === frame.many ? "" : `, and *${s.words}* ${s.plural ? "names more than one, so it takes" : "names one, so it takes"} *${right}*`}.`,
-      `${fill(shown, right)} 这里${frame.why[1]}${frame.one === frame.many ? "" : `；*${s.words}*（${s.zh}）是${s.plural ? "复数" : "单数"}，所以用 *${right}*`}。`,
+      `${fill(shown, right)} Here ${frame.why[0]}${frame.one === frame.many ? "" : `, and *${s.words}* ${s.plural ? "names more than one, so it takes" : "names one, so it takes"} *${right}*`}.\n\n**Check.** Pair the subject *${s.words}* directly with **${right} ${frame.main}** and check the time clue—both agreement and tense match.`,
+      `${fill(shown, right)} 这里${frame.why[1]}${frame.one === frame.many ? "" : `；*${s.words}*（${s.zh}）是${s.plural ? "复数" : "单数"}，所以用 *${right}*`}。\n\n**检验。** 把主语 *${s.words}* 直接和 **${right} ${frame.main}** 连起来读，再核对时间线索——单复数和时态都吻合。`,
     ),
-    whyNot: wrong.map((w) =>
+    whyNot: wrong.map((w, idx) =>
       w === agreeing
         ? t(
             `*${w}* is the right time but the wrong number: *${s.words}* ${s.plural ? "is plural" : "is singular"}, and *${w}* goes with a ${s.plural ? "singular" : "plural"} subject.`,
             `*${w}* 时间对了，但单复数不对：*${s.words}* 是${s.plural ? "复数" : "单数"}，而 *${w}* 要配${s.plural ? "单数" : "复数"}主语。`,
           )
-        : t(
-            `*${w}* does not fit the time or the verb after it. Look at the clues of time and at the form of the main verb.`,
-            `*${w}* 与时间或后面的动词形式不符。看看表示时间的线索和主要动词的形式。`,
-          ),
+        : idx === 0
+          ? t(
+              `*${w}* does not fit the time or the main verb *${frame.main}*—check the time clue and the verb form after the blank.`,
+              `*${w}* 与时间或后面的主要动词 *${frame.main}* 不符——先看时间线索和空后的动词形式。`,
+            )
+          : t(
+              `*${w}* neither matches the tense nor agrees with *${s.words}* here.`,
+              `*${w}* 在这里既不符合时态，也和主语 *${s.words}* 不一致。`,
+            ),
     ),
   };
 });
@@ -268,8 +273,8 @@ const thereSubjectBank: readonly Item[] = thereRows.map(({ frame, noun, right, s
   right: noun.words,
   wrong: [frame.opener, frame.place],
   why: t(
-    `The subject is **${noun.words}**. In a sentence that begins with *there* or *here*, the subject comes after the verb: ask what *${right}* there, and the answer is ${noun.words}.`,
-    `主语是 **${noun.words}**。以 *there* 或 *here* 开头的句子，主语在动词后面：问一问“什么 *${right}* 在那里”，答案就是 ${noun.words}。`,
+    `The subject is **${noun.words}**. In a sentence that begins with *there* or *here*, the subject comes after the verb.\n\n**Check.** Flip the sentence into normal order—*${capital(noun.words)} ${right} there*—and **${noun.words}** sits right in front of the verb as the subject.`,
+    `主语是 **${noun.words}**。以 *there* 或 *here* 开头的句子，主语在动词后面。\n\n**检验。** 把句子调回正常语序——*${capital(noun.words)} ${right} there*——**${noun.words}** 正好站在动词前面作主语。`,
   ),
   whyNot: [
     t(
@@ -290,8 +295,8 @@ const thereVerbBank: readonly Item[] = thereRows.map(({ frame, noun, right, numb
   right,
   wrong: [number, time],
   why: t(
-    `${fill(shown, right)} The subject comes after the verb: *${noun.words}* is ${noun.plural ? "plural" : "singular"}, and the sentence is about the ${frame.past ? "past" : "present"}, so the verb is *${right}*.`,
-    `${fill(shown, right)} 主语在动词后面：*${noun.words}* 是${noun.plural ? "复数" : "单数"}，句子说的是${frame.past ? "过去" : "现在"}，所以动词用 *${right}*。`,
+    `${fill(shown, right)} The subject comes after the verb: *${noun.words}* is ${noun.plural ? "plural" : "singular"}, and the sentence is about the ${frame.past ? "past" : "present"}, so the verb is *${right}*.\n\n**Check.** Flip the order to *${capital(noun.words)} **${right}** there*—you can hear immediately that *${noun.words}* agrees with **${right}**.`,
+    `${fill(shown, right)} 主语在动词后面：*${noun.words}* 是${noun.plural ? "复数" : "单数"}，句子说的是${frame.past ? "过去" : "现在"}，所以动词用 *${right}*。\n\n**检验。** 调换语序读 *${capital(noun.words)} **${right}** there*——立刻能听出 *${noun.words}* 与 **${right}** 一致。`,
   ),
   whyNot: [
     t(
@@ -461,17 +466,17 @@ const combineBank = fields(`${combineLines}\n${combineCross}`).map(([shown, righ
     wrong: [agree, garble],
     why: joined
       ? t(
-          `**${right}** The two sentences have different subjects and different verbs, so they stay two complete sentences, joined by a comma and *and*.`,
-          `**${right}** 这两个句子的主语和动词都不同，所以仍是两个完整的句子，用逗号加 *and* 连接。`,
+          `**${right}** The two sentences have different subjects and different verbs, so they stay two complete sentences, joined by a comma and *and*.\n\n**Check.** Cover the comma and *and*—each half still stands as a complete sentence with its own subject and verb.`,
+          `**${right}** 这两个句子的主语和动词都不同，所以仍是两个完整的句子，用逗号加 *and* 连接。\n\n**检验。** 盖住逗号和 *and*——前后两半各自都有主语和动词，能独立成句。`,
         )
       : subject
         ? t(
-            `**${right}** The two sentences say the same thing about two subjects, so the subjects join with *and* and share one verb. Two subjects joined by *and* make a plural subject, which takes a plural verb.`,
-            `**${right}** 两个句子对两个主语说了同样的事，所以把主语用 *and* 连起来，共用一个谓语。用 *and* 连接的两个主语是复数，要用复数动词。`,
+            `**${right}** The two sentences say the same thing about two subjects, so the subjects join with *and* and share one plural verb.\n\n**Check.** Replace the joined subjects with *They*—the verb agrees with *They*, and both original facts are still stated.`,
+            `**${right}** 两个句子对两个主语说了同样的事，所以把主语用 *and* 连起来，共用一个复数谓语。\n\n**检验。** 把合并后的主语换成 *They*——动词与 *They* 一致，而且原句的两个事实都保留了下来。`,
           )
         : t(
-            `**${right}** The two sentences have the same subject, so it is written once, and its two predicates join with *and*. Both verbs keep the same form and tense.`,
-            `**${right}** 两个句子主语相同，所以主语只写一次，两个谓语用 *and* 连接。两个动词保持相同的形式和时态。`,
+            `**${right}** The two sentences have the same subject, so it is written once, and its two predicates join with *and*. Both verbs keep the same form and tense.\n\n**Check.** Read the subject separately with each verb after *and*—both halves form natural sentences in the same tense.`,
+            `**${right}** 两个句子主语相同，所以主语只写一次，两个谓语用 *and* 连接。两个动词保持相同的形式和时态。\n\n**检验。** 把主语分别和 *and* 前后的两个动词连起来读——两部分时态一致，都通顺完整。`,
           ),
     whyNot: [
       joined
@@ -617,8 +622,8 @@ const adverbChoiceBank: readonly Item[] = adverbRows.map(({ a, frame, many }) =>
     right,
     wrong: [wrongNumber, wrongForm],
     why: t(
-      `${fill(frame, right)} The sentence compares ${many ? "more than two, so it needs the *-est* or *most* form" : "two things, with *than*, so it needs the *-er* or *more* form"}; for *${a.plain}*, ${a.rule[0]}.`,
-      `${fill(frame, right)} 句子比较的是${many ? "两个以上的事物，所以要用 *-est* 或 *most* 形式" : "两个事物，有 *than*，所以要用 *-er* 或 *more* 形式"}；*${a.plain}* ${a.rule[1]}。`,
+      `${fill(frame, right)} The sentence compares ${many ? "more than two, so it needs the *-est* or *most* form" : "two things, with *than*, so it needs the *-er* or *more* form"}; for *${a.plain}*, ${a.rule[0]}.\n\n**Check.** Spot the comparison clue (${many ? "*of all* / *of the*" : "*than*"}) and confirm the adverb follows the ${a.plain} pattern without doubling (*more* + *-er*).`,
+      `${fill(frame, right)} 句子比较的是${many ? "两个以上的事物，所以要用 *-est* 或 *most* 形式" : "两个事物，有 *than*，所以要用 *-er* 或 *more* 形式"}；*${a.plain}* ${a.rule[1]}。\n\n**检验。** 找到比较线索（${many ? "*of all* / *of the*" : "*than*"}），并确认没有叠加比较形式（如 *more* 加 *-er*）。`,
     ),
     whyNot: [
       t(
@@ -806,8 +811,8 @@ const pairBank = (lines: string, past: boolean): Item[] =>
       right,
       wrong: [partner, form],
       why: t(
-        `${fill(shown, right)} The verb is *${verb}*, ${meaning?.replace(", past", "; its past form is")}. ${hasObject ? "Here something is being put or lifted, so the verb needs an object." : "Here nothing is being put or lifted: the subject does the action itself."}`,
-        `${fill(shown, right)} 这里用 *${verb}*（${meaning?.replace(", past", "，过去式是")}）。${hasObject ? "这里有东西被放或被举起，所以动词需要宾语。" : "这里没有东西被放或被举起：主语自己完成动作。"}`,
+        `${fill(shown, right)} The verb is *${verb}*, ${meaning?.replace(", past", "; its past form is")}. ${hasObject ? "Here something is being put or lifted, so the verb needs an object." : "Here nothing is being put or lifted: the subject does the action itself."}\n\n**Check.** Ask “*${right}* what?” right after the verb: ${hasObject ? "a direct object answers the question, confirming the action-on-an-object verb" : "no object answers the question, confirming the self-action verb"}.`,
+        `${fill(shown, right)} 这里用 *${verb}*（${meaning?.replace(", past", "，过去式是")}）。${hasObject ? "这里有东西被放或被举起，所以动词需要宾语。" : "这里没有东西被放或被举起：主语自己完成动作。"}\n\n**检验。** 在动词后面问“*${right}* 什么？”：${hasObject ? "后面有明确的宾语作答，说明要用带宾语的那个动词" : "后面没有宾语作答，说明要用主语自己完成的那个动词"}。`,
       ),
       whyNot: [
         t(
@@ -831,6 +836,10 @@ export const verbTopics4: readonly TopicDef[] = [
       "A helping verb such as is, was, has, had, do or did comes before a main verb and adds time or a question.",
       "is、was、has、had、do、did 这样的助动词放在主要动词前面，表示时间或帮助构成疑问。",
     ),
+    intro: t(
+      "Compare *She climbs* with *She has climbed* and *She was climbing*. One small word right before the main verb shifts the time and feel of the whole action—that word is a helping verb.",
+      "比较 *She climbs*、*She has climbed* 和 *She was climbing*。主要动词前面小小的一个词，就改变了整个动作的时间和状态——这个词就是助动词。",
+    ),
     prerequisites: after("action-and-linking-verbs", "simple-verb-tenses"),
     encompasses: [{ topic: "simple-verb-tenses", weight: 0.2 }],
     xp: 14,
@@ -840,8 +849,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "finding-helping-verbs",
         t("Finding the Helping Verb", "找出助动词"),
         t(
-          "A **helping verb** comes before the **main verb** and helps it. The main verb names the action: *watching, measured, like*. The helping verb tells when it happens or helps make a question or a negative: *is watching, has measured, does not like*.\n\nThe common helping verbs are forms of *be* (*am, is, are, was, were*), of *have* (*has, have, had*) and of *do* (*do, does, did*). Words such as *not, already* and *never* can stand between the two verbs, but they are not verbs.",
-          "**助动词**放在**主要动词**前面帮助它。主要动词表示动作：*watching、measured、like*。助动词表示动作发生的时间，或者帮助构成疑问句和否定句：*is watching、has measured、does not like*。\n\n常见的助动词有 *be* 的各种形式（*am、is、are、was、were*）、*have* 的各种形式（*has、have、had*）和 *do* 的各种形式（*do、does、did*）。*not、already、never* 这样的词可以出现在两个动词中间，但它们不是动词。",
+          "A **helping verb** comes before the **main verb** and helps it. The main verb names the action: *watching, measured, like*. The helping verb tells when it happens or helps make a question or a negative: *is watching, has measured, does not like*.\n\nThe common helping verbs are forms of *be* (*am, is, are, was, were*), of *have* (*has, have, had*) and of *do* (*do, does, did*).\n\n> **Watch out.** Words such as *not*, *already*, and *never* can stand between the helping verb and the main verb (*has already measured*), but they are adverbs, not verbs.",
+          "**助动词**放在**主要动词**前面帮助它。主要动词表示动作：*watching、measured、like*。助动词表示动作发生的时间，或者帮助构成疑问句和否定句：*is watching、has measured、does not like*。\n\n常见的助动词有 *be* 的各种形式（*am、is、are、was、were*）、*have* 的各种形式（*has、have、had*）和 *do* 的各种形式（*do、does、did*）。\n\n> **注意。** *not*、*already*、*never* 这样的词可以夹在助动词和主要动词中间（如 *has already measured*），但它们是副词，不是动词。",
         ),
         itemGenerator(findHelperBank),
       ),
@@ -849,8 +858,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "choosing-helping-verbs",
         t("Choosing the Helping Verb", "选择助动词"),
         t(
-          "Choose a helping verb in two steps. First, the **time**: *is, are* for now, *was, were* for the past with an *-ing* verb; *has, have* before a participle such as *measured* when the action reaches up to now; *had* for a time before another past time; *do, does, did* with *not* or in questions.\n\nThen the **subject**: one person or thing takes *is, was, has, does*; more than one takes *are, were, have, do*. *Had* and *did* are the same for every subject.",
-          "选择助动词分两步。第一看**时间**：现在用 *is、are*，过去带 *-ing* 动词用 *was、were*；动作延续到现在时，在 *measured* 这样的分词前用 *has、have*；比另一个过去时间更早用 *had*；在含 *not* 的句子或疑问句中用 *do、does、did*。\n\n第二看**主语**：一个人或物用 *is、was、has、does*；多个用 *are、were、have、do*。*had* 和 *did* 对任何主语都一样。",
+          "Choose a helping verb in two steps. First, the **time**: *is, are* for now, *was, were* for the past with an *-ing* verb; *has, have* before a participle such as *measured* when the action reaches up to now; *had* for a time before another past time; *do, does, did* with *not* or in questions.\n\nThen the **subject**: one person or thing takes *is, was, has, does*; more than one takes *are, were, have, do*. *Had* and *did* are the same for every subject.\n\n> **Watch out.** Match both the time clue and the main verb form—do not pair *is* with a plain verb like *like* or *does* with *-ing*.",
+          "选择助动词分两步。第一看**时间**：现在用 *is、are*，过去带 *-ing* 动词用 *was、were*；动作延续到现在时，在 *measured* 这样的分词前用 *has、have*；比另一个过去时间更早用 *had*；在含 *not* 的句子或疑问句中用 *do、does、did*。\n\n第二看**主语**：一个人或物用 *is、was、has、does*；多个用 *are、were、have、do*。*had* 和 *did* 对任何主语都一样。\n\n> **注意。** 时间线索和主要动词形式都要对上——不要把 *is* 配动词原形 *like*，也不要把 *does* 配 *-ing*。",
         ),
         itemGenerator(chooseHelperBank),
       ),
@@ -863,6 +872,10 @@ export const verbTopics4: readonly TopicDef[] = [
       "In a sentence that begins with there or here, the subject comes after the verb, and the verb agrees with it.",
       "以 there 或 here 开头的句子，主语在动词之后，动词要与它保持一致。",
     ),
+    intro: t(
+      "In *Here come the parade floats*, the verb *come* is plural even though *Here* comes first. Sentences starting with *there* or *here* flip the usual order, so you have to look past the verb to find the real subject.",
+      "在 *Here come the parade floats* 里，虽然 *Here* 排在最前面，动词 *come* 却是复数。以 *there* 或 *here* 开头的句子颠倒了常见语序，必须往动词后面看，才能找到真正的主语。",
+    ),
     prerequisites: ["subject-verb-agreement"],
     encompasses: [{ topic: "subject-verb-agreement", weight: 0.3 }],
     xp: 14,
@@ -872,8 +885,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "finding-the-subject-after-there",
         t("Finding the Real Subject", "找到真正的主语"),
         t(
-          "Most sentences put the subject first. A sentence that begins with *there* or *here* turns this around: *There is a camel near the oasis.* *There* only points; the subject, *a camel*, comes after the verb.\n\nTo find it, ask what *is* or *are* there. The answer is the subject. A noun inside a phrase such as *near the oasis* or *in the picture* is never the subject.",
-          "大多数句子把主语放在前面。以 *there* 或 *here* 开头的句子把顺序颠倒了：*There is a camel near the oasis.* *There* 只起指示作用，主语 *a camel* 在动词后面。\n\n要找到主语，就问“什么 *is* 或 *are* 在那里”，答案就是主语。*near the oasis*、*in the picture* 这类短语里的名词从来不是主语。",
+          "Most sentences put the subject first. A sentence that begins with *there* or *here* turns this around: *There is a camel near the oasis.* *There* only points; the subject, *a camel*, comes after the verb.\n\nTo find it, ask what *is* or *are* there. The answer is the subject.\n\n> **Watch out.** *There* and *here* are never the subject, and a noun inside a prepositional phrase like *near the oasis* or *in the picture* is never the subject either.",
+          "大多数句子把主语放在前面。以 *there* 或 *here* 开头的句子把顺序颠倒了：*There is a camel near the oasis.* *There* 只起指示作用，主语 *a camel* 在动词后面。\n\n要找到主语，就问“什么 *is* 或 *are* 在那里”，答案就是主语。\n\n> **注意。** *there* 和 *here* 从来不是主语，*near the oasis*、*in the picture* 这类介词短语里的名词也不是主语。",
         ),
         itemGenerator(thereSubjectBank),
       ),
@@ -881,8 +894,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "choosing-is-or-are-after-there",
         t("Choosing Is or Are", "选择 Is 还是 Are"),
         t(
-          "After *there* or *here*, look ahead to the subject before you choose the verb. One thing takes *is* or *was*: *There is an old well.* More than one takes *are* or *were*: *There are two sleeping lizards.*\n\nThen check the time: *long ago* and *yesterday* need *was* or *were*.",
-          "在 *there* 或 *here* 之后，先往后看主语，再选择动词。一个事物用 *is* 或 *was*：*There is an old well.* 多个事物用 *are* 或 *were*：*There are two sleeping lizards.*\n\n然后看时间：*long ago* 和 *yesterday* 要用 *was* 或 *were*。",
+          "After *there* or *here*, look ahead to the subject before you choose the verb. One thing takes *is* or *was*: *There is an old well.* More than one takes *are* or *were*: *There are two sleeping lizards.*\n\nThen check the time: *long ago* and *yesterday* need *was* or *were*.\n\n> **Watch out.** Do not automatically write *There is* before a plural noun—*There's two lizards* is common in casual speech, but standard writing requires *There are*.",
+          "在 *there* 或 *here* 之后，先往后看主语，再选择动词。一个事物用 *is* 或 *was*：*There is an old well.* 多个事物用 *are* 或 *were*：*There are two sleeping lizards.*\n\n然后看时间：*long ago* 和 *yesterday* 要用 *was* 或 *were*。\n\n> **注意。** 不要在复数名词前习惯性写 *There is*——口语里常听见 *There's two lizards*，但标准书面语必须用 *There are*。",
         ),
         itemGenerator(thereVerbBank),
       ),
@@ -894,6 +907,10 @@ export const verbTopics4: readonly TopicDef[] = [
     summary: t(
       "Two subjects joined by and share one predicate and take a plural verb; two predicates can share one subject.",
       "用 and 连接的两个主语共用一个谓语，并用复数动词；两个谓语也可以共用一个主语。",
+    ),
+    intro: t(
+      "Instead of repeating yourself—*Lions hunt at dusk. Hyenas hunt at dusk.*—you can join the two subjects into *Lions and hyenas hunt at dusk*. Knowing how to spot and build compound subjects and predicates makes your writing tighter and clearer.",
+      "与其重复说 *Lions hunt at dusk. Hyenas hunt at dusk.*，不如把两个主语合并成 *Lions and hyenas hunt at dusk*。学会识别和运用复合主语、复合谓语，句子会更紧凑利落。",
     ),
     prerequisites: ["subject-verb-agreement"],
     encompasses: [
@@ -907,8 +924,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "finding-compound-parts",
         t("Finding Compound Parts", "找出复合成分"),
         t(
-          "A **compound subject** is two or more subjects that share one predicate: *The heart and the lungs work together.* A **compound predicate** is two or more verbs that share one subject: *Blood carries oxygen and removes waste.*\n\nDo not mix these up with two complete sentences joined by a comma and *and*, *but* or *so*: *The heart pumps, and the lungs breathe.* There, each half has a subject and a verb of its own.",
-          "**复合主语**是共用一个谓语的两个或更多主语：*The heart and the lungs work together.* **复合谓语**是共用一个主语的两个或更多动词：*Blood carries oxygen and removes waste.*\n\n不要把它们和用逗号加 *and、but* 或 *so* 连接的两个完整句子混为一谈：*The heart pumps, and the lungs breathe.* 那里每一半都有自己的主语和动词。",
+          "A **compound subject** is two or more subjects that share one predicate: *The heart and the lungs work together.* A **compound predicate** is two or more verbs that share one subject: *Blood carries oxygen and removes waste.*\n\nDo not mix these up with two complete sentences joined by a comma and *and*, *but* or *so*: *The heart pumps, and the lungs breathe.* There, each half has a subject and a verb of its own.\n\n> **Watch out.** Check whether a new subject appears after *and*—no new subject means a compound predicate, not two joined sentences.",
+          "**复合主语**是共用一个谓语的两个或更多主语：*The heart and the lungs work together.* **复合谓语**是共用一个主语的两个或更多动词：*Blood carries oxygen and removes waste.*\n\n不要把它们和用逗号加 *and、but* 或 *so* 连接的两个完整句子混为一谈：*The heart pumps, and the lungs breathe.* 那里每一半都有自己的主语和动词。\n\n> **注意。** 看 *and* 后面有没有出现新的主语——没有新主语就是复合谓语，而不是两个相连的完整句子。",
         ),
         nameKind({
           lines: compoundLines,
@@ -921,8 +938,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "combining-with-compound-parts",
         t("Combining with Compound Parts", "用复合成分合并句子"),
         t(
-          "When two sentences say the same thing about two subjects, join the subjects with *and* and write the predicate once: *The heart works. The lungs work.* → *The heart and the lungs work.* Two subjects joined by *and* are plural, so the verb is plural too.\n\nWhen two sentences have the same subject, write it once and join the predicates: *Blood carries oxygen and removes waste.* Keep both verbs in the same form.",
-          "两个句子对两个主语说同样的事时，把主语用 *and* 连起来，谓语只写一次：*The heart works. The lungs work.* → *The heart and the lungs work.* 用 *and* 连接的两个主语是复数，所以动词也用复数。\n\n两个句子主语相同时，主语只写一次，把谓语连起来：*Blood carries oxygen and removes waste.* 两个动词保持相同的形式。",
+          "When two sentences say the same thing about two subjects, join the subjects with *and* and write the predicate once: *The heart works. The lungs work.* → *The heart and the lungs work.* Two subjects joined by *and* are plural, so the verb is plural too.\n\nWhen two sentences have the same subject, write it once and join the predicates: *Blood carries oxygen and removes waste.* Keep both verbs in the same form.\n\n> **Watch out.** Joining two singular subjects with *and* makes the subject plural—change *works* to *work* and *was* to *were*.",
+          "两个句子对两个主语说同样的事时，把主语用 *and* 连起来，谓语只写一次：*The heart works. The lungs work.* → *The heart and the lungs work.* 用 *and* 连接的两个主语是复数，所以动词也用复数。\n\n两个句子主语相同时，主语只写一次，把谓语连起来：*Blood carries oxygen and removes waste.* 两个动词保持相同的形式。\n\n> **注意。** 两个单数主语用 *and* 连接后变成复数——要把 *works* 改成 *work*，把 *was* 改成 *were*。",
         ),
         itemGenerator(combineBank),
       ),
@@ -934,6 +951,10 @@ export const verbTopics4: readonly TopicDef[] = [
     summary: t(
       "Short adverbs compare with -er and -est, adverbs ending in -ly with more and most, and well and badly change completely.",
       "短副词用 -er 和 -est 比较，以 -ly 结尾的副词用 more 和 most，well 和 badly 则完全变形。",
+    ),
+    intro: t(
+      "A cheetah runs *faster* than a zebra, while an owl glides *more silently* than a hawk. Adverbs compare actions just as adjectives compare nouns—and the shape of the adverb tells you whether to add *-er*/*-est* or use *more*/*most*.",
+      "猎豹跑得比斑马 *faster*，猫头鹰滑翔得比老鹰 *more silently*。副词像形容词比较名词一样用来比较动作——看副词的词形，就能决定是加 *-er*/*-est* 还是用 *more*/*most*。",
     ),
     prerequisites: ["comparatives-and-superlatives"],
     encompasses: [
@@ -947,8 +968,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "choosing-the-form-that-compares",
         t("Comparing Two or More", "比较两个或更多"),
         t(
-          "An adverb tells how something is done, and it can compare. To compare **two**, often with *than*, use the *-er* form or *more*: *The new fan spins faster than the old one.* To compare **more than two**, use the *-est* form or *most*: *Of all the lamps, this one shone most brightly.*\n\nShort adverbs add *-er* and *-est*: *fast, faster, fastest*. Adverbs ending in *-ly* take *more* and *most*: *quietly, more quietly, most quietly*. *Well* becomes *better, best*, and *badly* becomes *worse, worst*.",
-          "副词说明动作是怎样完成的，也可以用来比较。比较**两个**（常带 *than*）用 *-er* 形式或 *more*：*The new fan spins faster than the old one.* 比较**两个以上**用 *-est* 形式或 *most*：*Of all the lamps, this one shone most brightly.*\n\n短副词加 *-er* 和 *-est*：*fast、faster、fastest*。以 *-ly* 结尾的副词用 *more* 和 *most*：*quietly、more quietly、most quietly*。*well* 变成 *better、best*，*badly* 变成 *worse、worst*。",
+          "An adverb tells how something is done, and it can compare. To compare **two**, often with *than*, use the *-er* form or *more*: *The new fan spins faster than the old one.* To compare **more than two**, use the *-est* form or *most*: *Of all the lamps, this one shone most brightly.*\n\nShort adverbs add *-er* and *-est*: *fast, faster, fastest*. Adverbs ending in *-ly* take *more* and *most*: *quietly, more quietly, most quietly*. *Well* becomes *better, best*, and *badly* becomes *worse, worst*.\n\n> **Watch out.** *Early* is not an *-ly* adverb made from an adjective—it compares as *earlier, earliest*, not *more early*.",
+          "副词说明动作是怎样完成的，也可以用来比较。比较**两个**（常带 *than*）用 *-er* 形式或 *more*：*The new fan spins faster than the old one.* 比较**两个以上**用 *-est* 形式或 *most*：*Of all the lamps, this one shone most brightly.*\n\n短副词加 *-er* 和 *-est*：*fast、faster、fastest*。以 *-ly* 结尾的副词用 *more* 和 *most*：*quietly、more quietly、most quietly*。*well* 变成 *better、best*，*badly* 变成 *worse、worst*。\n\n> **注意。** *early* 不是形容词加 *-ly* 变来的副词——它的比较形式是 *earlier、earliest*，不是 *more early*。",
         ),
         itemGenerator(adverbChoiceBank),
       ),
@@ -956,8 +977,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "writing-the-form-that-compares",
         t("Writing the Form", "写出比较形式"),
         t(
-          "To write the form yourself, ask two questions. Does the sentence compare two things (*than*) or a whole group (*of all*)? Is the adverb short, does it end in *-ly*, or is it *well* or *badly*?\n\nNever add *-er* to an *-ly* adverb (*quietlier* is not a word), and never use *more* with *-er* together (*more faster*).",
-          "要自己写出比较形式，先问两个问题。句子比较的是两个事物（*than*）还是一整组（*of all*）？这个副词是短词、以 *-ly* 结尾，还是 *well* 或 *badly*？\n\n不要给 *-ly* 副词加 *-er*（没有 *quietlier* 这个词），也不要把 *more* 和 *-er* 同时使用（*more faster*）。",
+          "To write the form yourself, ask two questions. Does the sentence compare two things (*than*) or a whole group (*of all*)? Is the adverb short, does it end in *-ly*, or is it *well* or *badly*? For example, *Grandpa drives ___ than my aunt* with *slowly* compares two and ends in *-ly*, so write *more slowly*.\n\n> **Watch out.** Never add *-er* to an *-ly* adverb (*quietlier* is not a word), and never double up *more* with *-er* (*more faster* is wrong).",
+          "要自己写出比较形式，先问两个问题。句子比较的是两个事物（*than*）还是一整组（*of all*）？这个副词是短词、以 *-ly* 结尾，还是 *well* 或 *badly*？例如 *Grandpa drives ___ than my aunt* 配 *slowly*，比较两者且以 *-ly* 结尾，所以写 *more slowly*。\n\n> **注意。** 不要给 *-ly* 副词加 *-er*（没有 *quietlier* 这个词），也不要把 *more* 和 *-er* 叠着用（*more faster* 是错的）。",
         ),
         typedGenerator(
           "word-form",
@@ -967,8 +988,8 @@ export const verbTopics4: readonly TopicDef[] = [
             const a = adverbOf(right);
             const many = a?.most === right;
             return t(
-              `${fill(shown, right)} The sentence compares ${many ? "a whole group, so it needs the *-est* or *most* form" : "two, with *than*, so it needs the *-er* or *more* form"}; ${a ? `for *${a.plain}*, ${a.rule[0]}` : ""}.`,
-              `${fill(shown, right)} 句子比较的是${many ? "一整组，所以用 *-est* 或 *most* 形式" : "两个事物，有 *than*，所以用 *-er* 或 *more* 形式"}；${a ? `*${a.plain}* ${a.rule[1]}` : ""}。`,
+              `${fill(shown, right)} The sentence compares ${many ? "a whole group, so it needs the *-est* or *most* form" : "two, with *than*, so it needs the *-er* or *more* form"}; ${a ? `for *${a.plain}*, ${a.rule[0]}` : ""}.\n\n**Check.** Match the sentence clue (${many ? "*of all* / *of the*" : "*than*"}) with the adverb type—neither *more* + *-er* nor *-lier* appears.`,
+              `${fill(shown, right)} 句子比较的是${many ? "一整组，所以用 *-est* 或 *most* 形式" : "两个事物，有 *than*，所以用 *-er* 或 *more* 形式"}；${a ? `*${a.plain}* ${a.rule[1]}` : ""}。\n\n**检验。** 把句中的比较线索（${many ? "*of all* / *of the*" : "*than*"}）和副词类型核对一遍——没有出现 *more* 加 *-er* 或 *-lier*。`,
             );
           },
         ),
@@ -982,6 +1003,10 @@ export const verbTopics4: readonly TopicDef[] = [
       "Lie and lay, sit and set, rise and raise: the second verb of each pair acts on an object, and each has its own past form.",
       "lie 和 lay、sit 和 set、rise 和 raise：每对中的第二个动词作用于宾语，每个动词都有自己的过去式。",
     ),
+    intro: t(
+      "You *set* a teacup on the saucer, and then you *sit* in the chair. Three pairs—*lie/lay*, *sit/set*, and *rise/raise*—look and sound similar, yet one always acts on an object while its partner does not.",
+      "你把茶杯 *set*（放）在茶碟上，然后自己 *sit*（坐）在椅子里。*lie/lay*、*sit/set*、*rise/raise* 这三对动词形近音近，但每对里总有一个要带宾语，另一个不带。",
+    ),
     prerequisites: ["simple-verb-tenses"],
     encompasses: [{ topic: "simple-verb-tenses", weight: 0.2 }],
     xp: 14,
@@ -991,8 +1016,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "choosing-the-verb-of-a-pair",
         t("Choosing the Verb", "选择动词"),
         t(
-          "Each pair has a verb for something the subject does by itself and a verb for doing it to something else.\n\n- *lie* means to rest flat: *The dog likes to lie in the sun.* *lay* means to put something down: *Lay the books on the table.*\n- *sit* means to rest in a seat: *Sit next to me.* *set* means to put something somewhere: *Set the plates on the table.*\n- *rise* means to go up by itself: *The sun will rise.* *raise* means to lift something: *Raise your hand.*\n\nIf you can ask *what?* after the verb, use *lay, set* or *raise*.",
-          "每对动词中，一个表示主语自己的动作，另一个表示对别的东西做这个动作。\n\n- *lie* 意思是躺：*The dog likes to lie in the sun.* *lay* 意思是放下某物：*Lay the books on the table.*\n- *sit* 意思是坐：*Sit next to me.* *set* 意思是把某物放在某处：*Set the plates on the table.*\n- *rise* 意思是自己升起：*The sun will rise.* *raise* 意思是举起某物：*Raise your hand.*\n\n如果动词后面能问“什么？”，就用 *lay、set* 或 *raise*。",
+          "Each pair has a verb for something the subject does by itself and a verb for doing it to something else.\n\n- *lie* means to rest flat: *The dog likes to lie in the sun.* *lay* means to put something down: *Lay the books on the table.*\n- *sit* means to rest in a seat: *Sit next to me.* *set* means to put something somewhere: *Set the plates on the table.*\n- *rise* means to go up by itself: *The sun will rise.* *raise* means to lift something: *Raise your hand.*\n\n> **Watch out.** Ask *what?* right after the verb—if an object answers (*books*, *plates*, *your hand*), you must use *lay*, *set*, or *raise*, not *lie*, *sit*, or *rise*.",
+          "每对动词中，一个表示主语自己的动作，另一个表示对别的东西做这个动作。\n\n- *lie* 意思是躺：*The dog likes to lie in the sun.* *lay* 意思是放下某物：*Lay the books on the table.*\n- *sit* 意思是坐：*Sit next to me.* *set* 意思是把某物放在某处：*Set the plates on the table.*\n- *rise* 意思是自己升起：*The sun will rise.* *raise* 意思是举起某物：*Raise your hand.*\n\n> **注意。** 在动词后面问“什么？”——如果有宾语回答（*books*、*plates*、*your hand*），就必须用 *lay*、*set* 或 *raise*，不能用 *lie*、*sit* 或 *rise*。",
         ),
         itemGenerator(pairBank(`${pairLines}\n${pairNowLines}`, false)),
       ),
@@ -1000,8 +1025,8 @@ export const verbTopics4: readonly TopicDef[] = [
         "choosing-the-past-form",
         t("Choosing the Past Form", "选择过去式"),
         t(
-          "The past forms are the hardest part, because one of them looks like the other verb: the past of *lie* (rest) is *lay*, and the past of *lay* (put) is *laid*.\n\n- *lie, lay*: *Yesterday I lay down.* — *lay, laid*: *She laid the books on the shelf.*\n- *sit, sat*: *We sat in the front row.* — *set, set*: *She set the table.*\n- *rise, rose*: *The sun rose at six.* — *raise, raised*: *They raised the flag.*",
-          "过去式最难，因为其中一个看起来像另一个动词：*lie*（躺）的过去式是 *lay*，*lay*（放）的过去式是 *laid*。\n\n- *lie, lay*：*Yesterday I lay down.* —— *lay, laid*：*She laid the books on the shelf.*\n- *sit, sat*：*We sat in the front row.* —— *set, set*：*She set the table.*\n- *rise, rose*：*The sun rose at six.* —— *raise, raised*：*They raised the flag.*",
+          "The past forms are the hardest part, because one of them looks like the other verb: the past of *lie* (rest) is *lay*, and the past of *lay* (put) is *laid*.\n\n- *lie, lay*: *Yesterday I lay down.* — *lay, laid*: *She laid the books on the shelf.*\n- *sit, sat*: *We sat in the front row.* — *set, set*: *She set the table.*\n- *rise, rose*: *The sun rose at six.* — *raise, raised*: *They raised the flag.*\n\n> **Watch out.** *Layed*, *sitted*, *setted*, and *rised* are not standard words, and *lied* means told a fib—never resting.",
+          "过去式最难，因为其中一个看起来像另一个动词：*lie*（躺）的过去式是 *lay*，*lay*（放）的过去式是 *laid*。\n\n- *lie, lay*：*Yesterday I lay down.* —— *lay, laid*：*She laid the books on the shelf.*\n- *sit, sat*：*We sat in the front row.* —— *set, set*：*She set the table.*\n- *rise, rose*：*The sun rose at six.* —— *raise, raised*：*They raised the flag.*\n\n> **注意。** *layed*、*sitted*、*setted*、*rised* 都不是标准英语词汇；而 *lied* 表示“撒谎”，不是“躺”。",
         ),
         itemGenerator(pairBank(`${pastLines}\n${pairPastLines}`, true)),
       ),

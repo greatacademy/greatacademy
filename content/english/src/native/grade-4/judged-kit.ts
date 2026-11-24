@@ -19,3 +19,7 @@ const quoted = (model: string) =>
 
 /** onePiece shows the model of a task after a verdict. */
 export const onePiece = (model: string) => t(`One good answer:\n\n${quoted(model)}`, `一个好的答案：\n\n${quoted(model)}`);
+
+/** checkedPiece shows a model answer followed by a concrete self-check rubric. */
+export const checkedPiece = (checkEn: string, checkZh: string) => (model: string) =>
+  t(`One good answer:\n\n${quoted(model)}\n\n**Check.** ${checkEn}`, `一个好的答案：\n\n${quoted(model)}\n\n**检验。** ${checkZh}`);

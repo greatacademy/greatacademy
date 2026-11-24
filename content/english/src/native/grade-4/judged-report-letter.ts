@@ -2,7 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
-import { criterion, onePiece } from "./judged-kit.ts";
+import { checkedPiece, criterion } from "./judged-kit.ts";
 import { after } from "./prior.ts";
 
 /** reportBank asks for a report of two paragraphs under headings, each paragraph on one part of a biome. */
@@ -270,6 +270,10 @@ export const reportLetterTopics4: readonly TopicDef[] = [
       "Write a report of two paragraphs on a biome, each under a heading, with facts grouped by paragraph, a definition or an example, and a closing sentence.",
       "写一篇关于某种生物群落的两段式报告：每段有小标题，事实按段落分组，包含一个定义或例子，并有结尾句。",
     ),
+    intro: t(
+      "A two-paragraph report on deserts splits its facts cleanly: *Desert Plants* holds cactuses and roots, while *Desert Animals* holds nocturnal hunters like the fennec fox. Clear headings and concrete facts or definitions help readers learn fast.",
+      "一篇关于沙漠的两段式报告会把事实清楚地分成两块：*Desert Plants* 写仙人掌与根系，*Desert Animals* 写耳廓狐等夜行动物。清晰的小标题加上具体事实或定义，能让读者一目了然。",
+    ),
     prerequisites: after("writing-a-fact-paragraph", "choosing-headings", "ordering-paragraphs"),
     encompasses: [
       { topic: "choosing-headings", weight: 0.2 },
@@ -283,23 +287,26 @@ export const reportLetterTopics4: readonly TopicDef[] = [
         "two-paragraphs-under-headings",
         t("Two Paragraphs Under Headings", "小标题下的两个段落"),
         t(
-          "A report of two paragraphs splits its topic into two parts. Each paragraph gets a **heading** that names its part, *Desert Plants* and *Desert Animals*, and keeps to it: a fact about animals does not belong in the paragraph about plants. The report opens by naming its topic and ends with a sentence that closes it.",
-          "两段式报告把话题分成两部分。每一段都有一个说明这一部分内容的**小标题**，比如 *Desert Plants* 和 *Desert Animals*，并且只讲这一部分：关于动物的事实不应该放在讲植物的那一段。报告开头点明话题，结尾用一个句子收束。",
+          "A report of two paragraphs splits its topic into two parts. Each paragraph gets a **heading** that names its part, *Desert Plants* and *Desert Animals*, and keeps to it: a fact about animals does not belong in the paragraph about plants. The report opens by naming its topic and ends with a sentence that closes it.\n\n> **Watch out.** Do not let facts wander across headings—re-read each sentence and confirm it belongs under the heading above it.",
+          "两段式报告把话题分成两部分。每一段都有一个说明这一部分内容的**小标题**，比如 *Desert Plants* 和 *Desert Animals*，并且只讲这一部分：关于动物的事实不应该放在讲植物的那一段。报告开头点明话题，结尾用一个句子收束。\n\n> **注意。** 不要让事实跑串到另一段——逐句重读，确认每句话都属于它上面的那个小标题。",
         ),
         writingGenerator(
           t("Write a report of two paragraphs in English, each under its heading.", "用英语写一篇两段式报告，每段都写在小标题下面。"),
           reportBank,
           ["g4-report-topic", "g4-report-grouped", "g4-report-close"],
           { minWords: 80, maxChars: 2400 },
-          onePiece,
+          checkedPiece(
+            "Verify that your report has two separate headings, that every fact sits under its matching heading, and that the final sentence closes the whole topic.",
+            "核对你的报告有两个独立小标题、每条事实都放在对应小标题下，并且最后一句收束了整篇话题。",
+          ),
         ),
       ),
       point(
         "facts-definitions-and-examples-in-a-report",
         t("Facts, Definitions and Examples in a Report", "报告中的事实、定义和例子"),
         t(
-          "A report teaches. It gives **specific facts**, such as names and numbers, instead of only general statements. When it uses a word the reader may not know, it gives a **definition**: *Permafrost is ground that stays frozen all year.* When a point needs to be clear, it gives an **example**: *The arctic tern, for example, flies seventy thousand kilometers a year.*",
-          "报告是用来传授知识的。它给出**具体的事实**，比如名称和数字，而不只是笼统的说法。用到读者可能不认识的词时，要给出**定义**：*Permafrost is ground that stays frozen all year.* 需要把观点说清楚时，要举**例子**：*The arctic tern, for example, flies seventy thousand kilometers a year.*",
+          "A report teaches. It gives **specific facts**, such as names and numbers, instead of only general statements. When it uses a word the reader may not know, it gives a **definition**: *Permafrost is ground that stays frozen all year.* When a point needs to be clear, it gives an **example**: *The arctic tern, for example, flies seventy thousand kilometers a year.*\n\n> **Watch out.** Do not drop a technical term like *blubber* or *bioluminescence* without explaining it—pair it with a short definition or concrete example.",
+          "报告是用来传授知识的。它给出**具体的事实**，比如名称和数字，而不只是笼统的说法。用到读者可能不认识的词时，要给出**定义**：*Permafrost is ground that stays frozen all year.* 需要把观点说清楚时，要举**例子**：*The arctic tern, for example, flies seventy thousand kilometers a year.*\n\n> **注意。** 不要甩出 *blubber*、*bioluminescence* 这类专业词却不解释——给它配上一句简短定义或具体例子。",
         ),
         writingGenerator(
           t(
@@ -309,7 +316,10 @@ export const reportLetterTopics4: readonly TopicDef[] = [
           reportFactsBank,
           ["g4-report-facts", "g4-report-grouped", "g4-report-close"],
           { minWords: 80, maxChars: 2400 },
-          onePiece,
+          checkedPiece(
+            "Underline at least one specific fact and at least one definition or example in your draft, and confirm both paragraphs stay under their own headings.",
+            "在草稿中标出至少一条具体事实和至少一个定义或例子，并确认两段各自紧扣自己的小标题。",
+          ),
         ),
       ),
     ],
@@ -320,6 +330,10 @@ export const reportLetterTopics4: readonly TopicDef[] = [
     summary: t(
       "Write a letter to a principal or a town council asking for one change that saves energy, with the request stated clearly, reasons backed by facts and a tone that suits the reader.",
       "给校长或镇议会写一封信，请求做出一项节约能源的改变：清楚地提出请求，用事实支持理由，语气适合读信的人。",
+    ),
+    intro: t(
+      "Writing to a town council about switching to LED streetlights is very different from texting a friend: you open with a respectful greeting, state your request right away, and back it with real facts that make your case hard to ignore.",
+      "给镇议会写信建议改用 LED 路灯，和给朋友发消息大不相同：开头用礼貌的称呼，开门见山提出请求，再用实打实的事实支撑理由，让对方难以忽视。",
     ),
     prerequisites: after("writing-a-friendly-letter", "writing-an-opinion-paragraph", "supporting-reasons-with-facts"),
     encompasses: [
@@ -334,8 +348,8 @@ export const reportLetterTopics4: readonly TopicDef[] = [
         "asking-for-one-change",
         t("Asking for One Change", "请求一项改变"),
         t(
-          "A persuasive letter asks its reader to **do one thing**. Say it near the start, plainly: *I am writing to ask that our school turn off its computers every night.* Then give at least two reasons. Write as a letter, with a greeting (*Dear Principal Lee,*) and a closing (*Yours sincerely,*), and keep a polite tone: you are asking, not ordering.",
-          "说服信请求读信的人**做一件事**。在开头附近直截了当地说出来：*I am writing to ask that our school turn off its computers every night.* 然后给出至少两个理由。要写成信的样子，有称呼（*Dear Principal Lee,*）和结尾敬语（*Yours sincerely,*），语气要礼貌：你是在请求，不是在命令。",
+          "A persuasive letter asks its reader to **do one thing**. Say it near the start, plainly: *I am writing to ask that our school turn off its computers every night.* Then give at least two reasons. Write as a letter, with a greeting (*Dear Principal Lee,*) and a closing (*Yours sincerely,*), and keep a polite tone: you are asking, not ordering.\n\n> **Watch out.** Do not use slang or bossy commands (*You have to do this right now!*)—a polite, formal letter is far more likely to persuade a principal or council.",
+          "说服信请求读信的人**做一件事**。在开头附近直截了当地说出来：*I am writing to ask that our school turn off its computers every night.* 然后给出至少两个理由。要写成信的样子，有称呼（*Dear Principal Lee,*）和结尾敬语（*Yours sincerely,*），语气要礼貌：你是在请求，不是在命令。\n\n> **注意。** 不要用俚语或命令口吻（如 *You have to do this right now!*）——礼貌而正式的信件更能打动校长或议会。",
         ),
         writingGenerator(
           t(
@@ -345,22 +359,28 @@ export const reportLetterTopics4: readonly TopicDef[] = [
           letterBank,
           ["g4-letter-request", "w4-gives-reasons", "g4-letter-audience"],
           { minWords: 70, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Check that your letter includes a formal greeting and closing, states one clear request near the start, gives at least two reasons, and keeps a polite tone throughout.",
+            "检查你的信包含正式称呼和结尾敬语，开头附近清楚提出一项请求，给出至少两个理由，且全文语气礼貌得体。",
+          ),
         ),
       ),
       point(
         "reasons-backed-by-facts",
         t("Reasons Backed by Facts", "用事实支持的理由"),
         t(
-          "A principal or a council is persuaded by **facts**, not by how strongly you feel. Back a reason with a number, a fact or an example: *One school in our town saved four hundred dollars a year by switching off its computers.* Even a fact you found yourself, such as a count your class made, makes a reason stronger.",
-          "校长或议会是被**事实**说服的，而不是被你的感受有多强烈说服的。用数字、事实或例子支持理由：*One school in our town saved four hundred dollars a year by switching off its computers.* 哪怕是你自己找到的事实，比如全班做的一次统计，也能让理由更有力。",
+          "A principal or a council is persuaded by **facts**, not by how strongly you feel. Back a reason with a number, a fact or an example: *One school in our town saved four hundred dollars a year by switching off its computers.* Even a fact you found yourself, such as a count your class made, makes a reason stronger.\n\n> **Watch out.** Do not mistake another opinion (*It would be awesome*) for a fact—include a concrete number, observation, or real-world result.",
+          "校长或议会是被**事实**说服的，而不是被你的感受有多强烈说服的。用数字、事实或例子支持理由：*One school in our town saved four hundred dollars a year by switching off its computers.* 哪怕是你自己找到的事实，比如全班做的一次统计，也能让理由更有力。\n\n> **注意。** 不要把另一句看法（如 *It would be awesome*）当成事实——要写出具体的数字、观察结果或真实案例。",
         ),
         writingGenerator(
           t("Write a persuasive letter in English that backs its reasons with facts.", "用英语写一封说服信，用事实支持你的理由。"),
           letterFactsBank,
           ["g4-letter-facts", "g4-letter-request", "g4-letter-audience"],
           { minWords: 70, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Point to at least one checkable fact, number, or example in your letter that proves your reason, and confirm the greeting, request, and closing suit your reader.",
+            "在信中标出至少一条可核实的事实、数字或例证来支撑理由，并确认称呼、请求和结尾都符合收信人身份。",
+          ),
         ),
       ),
     ],

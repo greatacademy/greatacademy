@@ -49,8 +49,8 @@ const predictBank: readonly Ask[] = predictionRows.map((row) => {
     right,
     wrong: [w1, w2],
     why: t(
-      `The clues in the text point to this: ${right} A good prediction follows from what the characters do and what the text shows.`,
-      `文中的线索指向这个预测：${right} 好的预测来自角色的行为和文中写出的情况。`,
+      `The clues in the text point to this: ${right}\n\n**Check.** Reread the last sentence of the passage—the character's action sets up that exact next step, while the other choices go against the clues.`,
+      `文中的线索指向这个预测：${right}\n\n**检验。**再读一遍短文的最后一句——角色的举动正是在为这一步做铺垫，而其他选项和线索不符。`,
     ),
     whyNot: [
       t("That goes against the clues: the text points the other way.", "这和线索相反：文中的内容指向另一个方向。"),
@@ -70,8 +70,8 @@ const changeBank: readonly Ask[] = predictionRows.map((row) => {
     right: change,
     wrong: [keep, idle],
     why: t(
-      `This new fact goes against the clues, so the prediction should change: ${change} A reader keeps checking a guess against each new fact.`,
-      `这个新事实和原来的线索相反，所以预测应该改变：${change} 读者会用每个新事实来检验自己的猜测。`,
+      `This new fact goes against the earlier clues, so the prediction should change: ${change}\n\n**Check.** Ask whether “${pred}” still makes sense after this new fact—it does not, because the new fact blocks or reverses it.`,
+      `这个新事实和原来的线索相反，所以预测应该改变：${change}\n\n**检验。**问问自己：加上这个新事实后，“${pred}”还说得通吗？说不通了，因为新事实挡住或扭转了它。`,
     ),
     whyNot: [
       t(
@@ -418,8 +418,8 @@ const sharedBank: readonly Ask[] = talePairs.flatMap((p) =>
       right: shared,
       wrong: [i === 0 ? p.onlyA : p.onlyB, p.neither],
       why: t(
-        `Both tales have this: ${shared} Something in common must be true of each tale, not only of one.`,
-        `两个故事都有这一点：${shared} 共同点必须对两个故事都成立，而不只是其中一个。`,
+        `Both tales have this: ${shared}\n\n**Check.** Test the statement on Tale 1 (*${p.a[0]}*) and then on Tale 2 (*${p.b[0]}*)—it holds true in both.`,
+        `两个故事都有这一点：${shared}\n\n**检验。**先用故事一（*${p.a[0]}*）检验这句话，再用故事二（*${p.b[0]}*）检验——在两个故事里都成立。`,
       ),
       whyNot: [
         t(
@@ -443,8 +443,8 @@ const diffBank: readonly Ask[] = talePairs.flatMap((p) =>
       right: `In Tale 1 ${a}; in Tale 2 ${b}.`,
       wrong: [`In Tale 1 ${b}; in Tale 2 ${a}.`, p.falseDiff],
       why: t(
-        `In Tale 1 ${a}, but in Tale 2 ${b}. A difference names what each tale has in place of the other's.`,
-        `故事一里 ${a}，而故事二里 ${b}。说不同之处时，要说出每个故事各自有什么。`,
+        `In Tale 1 ${a}, whereas in Tale 2 ${b}.\n\n**Check.** Check each half against its tale: Tale 1 (*${p.a[0]}*) has the first part, and Tale 2 (*${p.b[0]}*) has the second, without swapping them.`,
+        `故事一里 ${a}，而故事二里 ${b}。\n\n**检验。**把两半分别核对回对应的故事：前半句符合故事一（*${p.a[0]}*），后半句符合故事二（*${p.b[0]}*），没有弄混。`,
       ),
       whyNot: [
         t(
@@ -475,8 +475,8 @@ export const taleTopics: readonly TopicDef[] = [
         "choosing-the-best-prediction",
         t("Choosing the Best Prediction", "选择最好的预测"),
         t(
-          "A **prediction** is a guess about what will happen next, made from **clues** in the text. If a dog runs to the door with its leash, the clues say it is time for a walk.\n\nA good prediction fits all the clues. A guess that goes against them, or that nothing in the text points to, is not a good prediction, even if it could happen.",
-          "**预测**是根据文中的**线索**对接下来会发生什么的猜测。如果一只狗叼着牵绳跑到门口，线索就告诉我们该去散步了。\n\n好的预测符合所有线索。和线索相反的猜测，或者文中没有任何内容指向的猜测，即使可能发生，也不是好的预测。",
+          "A **prediction** is a guess about what will happen next, made from **clues** in the text. If a dog runs to the door with its leash, the clues say it is time for a walk.\n\nA good prediction fits all the clues. A guess that goes against them, or that nothing in the text points to, is not a good prediction, even if it could happen.\n\n> **Watch out.** Do not pick a guess just because it sounds exciting—every good prediction must point back to clues actually written in the passage.",
+          "**预测**是根据文中的**线索**对接下来会发生什么的猜测。如果一只狗叼着牵绳跑到门口，线索就告诉我们该去散步了。\n\n好的预测符合所有线索。和线索相反的猜测，或者文中没有任何内容指向的猜测，即使可能发生，也不是好的预测。\n\n> **注意。**不要只因为一个猜测听起来有趣就选它——好的预测必须能指回文中实际写出的线索。",
         ),
         askGenerator(predictBank),
       ),
@@ -484,12 +484,17 @@ export const taleTopics: readonly TopicDef[] = [
         "changing-a-prediction",
         t("Changing a Prediction", "修改预测"),
         t(
-          "Good readers **check** their predictions as they read. A new fact can support a prediction, change it, or make no difference.\n\nIf the dog runs to the door but then it starts to pour with rain, the walk may not happen: that fact changes the prediction. A fact that fits the guess, or has nothing to do with it, does not.",
-          "好的读者在阅读时会不断**检验**自己的预测。一个新事实可能支持预测、改变预测，或者毫无影响。\n\n如果狗跑到门口，但随后下起了大雨，散步可能就去不成了：这个事实改变了预测。符合猜测的事实，或者和猜测无关的事实，都不会改变它。",
+          "Good readers **check** their predictions as they read. A new fact can support a prediction, change it, or make no difference.\n\nIf the dog runs to the door but then it starts to pour with rain, the walk may not happen: that fact changes the prediction. A fact that fits the guess, or has nothing to do with it, does not.\n\n> **Watch out.** An extra detail about color or size (like a blue pencil case) rarely changes what will happen next—look for a detail that blocks or reverses the plan.",
+          "好的读者在阅读时会不断**检验**自己的预测。一个新事实可能支持预测、改变预测，或者毫无影响。\n\n如果狗跑到门口，但随后下起了大雨，散步可能就去不成了：这个事实改变了预测。符合猜测的事实，或者和猜测无关的事实，都不会改变它。\n\n> **注意。**关于颜色或大小的无关细节（比如蓝色的铅笔盒）通常不会改变接下来的事——要找挡住或扭转原计划的事实。",
         ),
         askGenerator(changeBank),
       ),
     ],
+    undefined,
+    t(
+      "Dark clouds pile up over the park and Mom reaches for her umbrella—you can already predict rain. Readers use clues like these to guess what comes next, and they revise their guess whenever a new fact changes the picture.",
+      "公园上空乌云密布，妈妈伸手去拿雨伞——你马上就能预测快下雨了。读者用这样的线索猜测接下来会发生什么，并在新事实改变局势时及时修改猜测。",
+    ),
   ),
   topic(
     "comparing-two-stories",
@@ -504,8 +509,8 @@ export const taleTopics: readonly TopicDef[] = [
         "what-two-tales-share",
         t("What Two Tales Share", "两个故事的共同点"),
         t(
-          "Folk tales from different places often tell the same kind of story: a small creature saves a big one, or a fast animal loses a race. To **compare** two tales, look for what is true of **both**: the kind of characters, the problem, or the lesson.\n\nCheck each choice against both tales. If it is true of only one, it is not something they share.",
-          "来自不同地方的民间故事常常讲同一类故事：小动物救了大动物，或者跑得快的动物输了比赛。**比较**两个故事时，要找对**两个**都成立的东西：角色的类型、问题或者道理。\n\n用两个故事分别检验每个选项。如果只对其中一个成立，它就不是共同点。",
+          "Folk tales from different places often tell the same kind of story: a small creature saves a big one, or a fast animal loses a race. To **compare** two tales, look for what is true of **both**: the kind of characters, the problem, or the lesson.\n\nCheck each choice against both tales. If it is true of only one, it is not something they share.\n\n> **Watch out.** A detail that is clearly true in Tale 1 is still wrong if Tale 2 does not have it.",
+          "来自不同地方的民间故事常常讲同一类故事：小动物救了大动物，或者跑得快的动物输了比赛。**比较**两个故事时，要找对**两个**都成立的东西：角色的类型、问题或者道理。\n\n用两个故事分别检验每个选项。如果只对其中一个成立，它就不是共同点。\n\n> **注意。**哪怕某个细节在故事一里清清楚楚，只要故事二里没有，它就不是共同点。",
         ),
         askGenerator(sharedBank),
       ),
@@ -513,11 +518,16 @@ export const taleTopics: readonly TopicDef[] = [
         "how-two-tales-differ",
         t("How Two Tales Differ", "两个故事的不同点"),
         t(
-          "Two tales with the same lesson still tell it in their own way: the characters are different animals, the danger is different, or the ending is different.\n\nA **difference** says what each tale has: *in Tale 1 the helper chews through ropes; in Tale 2 the helper bites a foot*. Make sure each part belongs to the right tale.",
-          "道理相同的两个故事，讲法仍然各不相同：角色是不同的动物，危险不同，或者结局不同。\n\n说**不同点**时，要说出每个故事各有什么：*故事一里帮忙的动物咬断了绳子；故事二里帮忙的动物咬了猎人的脚*。确保每一部分都对应正确的故事。",
+          "Two tales with the same lesson still tell it in their own way: the characters are different animals, the danger is different, or the ending is different.\n\nA **difference** says what each tale has: *in Tale 1 the helper chews through ropes; in Tale 2 the helper bites a foot*. Make sure each part belongs to the right tale.\n\n> **Watch out.** Watch for choices that swap Tale 1 and Tale 2—always check which story each detail came from.",
+          "道理相同的两个故事，讲法仍然各不相同：角色是不同的动物，危险不同，或者结局不同。\n\n说**不同点**时，要说出每个故事各有什么：*故事一里帮忙的动物咬断了绳子；故事二里帮忙的动物咬了猎人的脚*。确保每一部分都对应正确的故事。\n\n> **注意。**小心把故事一和故事二弄反的选项——一定要核对每个细节出自哪一个故事。",
         ),
         askGenerator(diffBank),
       ),
     ],
+    undefined,
+    t(
+      "*The Tortoise and the Hare* and *The Snail and the Deer* come from different traditions, yet both tell of a slow animal beating a boastful fast one. Comparing two stories shows what they share and where each takes its own path.",
+      "《龟兔赛跑》和《蜗牛与鹿》来自不同的传统，却都讲了慢动物赢过骄傲快动物的故事。比较两个故事，能看出它们有哪些共同点，又在哪些地方各有讲法。",
+    ),
   ),
 ];

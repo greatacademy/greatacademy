@@ -470,9 +470,20 @@ const positions: readonly SolvedChoice[] = interleave(
         shown: shown(d, `**What is ${s.name}'s position?**`),
         right: s.claim,
         wrong: [other.claim, s.distort, other.distort],
+        whyNot: [
+          t(`That summarizes ${other.name}'s position, not ${s.name}'s.`, `这概括的是 ${other.name} 的观点，而不是 ${s.name} 的。`),
+          t(
+            `That goes much further than what ${s.name} actually argues in the post.`,
+            `这把 ${s.name} 的观点说得过于绝对，超出了帖子原文。`,
+          ),
+          t(
+            `That exaggerates ${other.name}'s view rather than stating ${s.name}'s position.`,
+            `这不仅指向了 ${other.name} 那一边，还夸大了原话的程度。`,
+          ),
+        ],
         solution: t(
-          `**${s.claim}** ${s.name} writes: "${s.key}${end(s.key)}" One option gives ${other.name}'s view instead, and the others go much further than either student does.`,
-          `**${s.claim}** ${s.name} 写道："${s.key}${end(s.key)}" 有一个选项说的是 ${other.name} 的观点，其他选项则远远超出了两位同学所说的话。`,
+          `**${s.claim}** ${s.name} writes: "${s.key}${end(s.key)}" One option gives ${other.name}'s view instead, and the others go much further than either student does.\n\n**Check.** Verify both the speaker (${s.name}) and the exact scope of their claim against the quoted line.`,
+          `**${s.claim}** ${s.name} 写道："${s.key}${end(s.key)}" 有一个选项说的是 ${other.name} 的观点，其他选项则远远超出了两位同学所说的话。\n\n**检验。** 对照所引原话，同时核对发言人（${s.name}）以及其主张的准确范围。`,
         ),
       };
     }),
@@ -488,8 +499,8 @@ const replies: readonly SolvedChoice[] = interleave(
         right: s.good,
         wrong: [s.repeat, d.offTopic, bare(s.name, i + side)],
         solution: t(
-          `**This reply agrees with ${s.name} and adds a reason that neither student gave, with an example to support it.** A strong post takes a side and moves the discussion forward.`,
-          `**这条回复赞同 ${s.name}，并补充了两位同学都没有提到的理由，还举例加以支持。** 好的帖子既表明立场，又推动讨论向前。`,
+          `**This reply agrees with ${s.name} and adds a reason that neither student gave, with an example to support it.** A strong post takes a side and moves the discussion forward.\n\n**Check.** Confirm the chosen reply stays on the professor's exact question and introduces a **new** reason plus concrete support.`,
+          `**这条回复赞同 ${s.name}，并补充了两位同学都没有提到的理由，还举例加以支持。** 好的帖子既表明立场，又推动讨论向前。\n\n**检验。** 确认所选回复紧扣教授的问题，并且给出了**新**理由和具体例证。`,
         ),
         whyNot: [
           t(
@@ -514,6 +525,10 @@ export const discussionReplies: TopicDef = examTopic({
     "Before writing for an Academic Discussion: stating each student's position, and telling a reply that adds a new reason from one that repeats, wanders or only agrees.",
     "在写学术讨论之前：说出每位同学的立场，并分辨哪条回复补充了新理由，哪条只是重复、跑题或单纯表示赞同。",
   ),
+  intro: t(
+    "A top TOEFL Academic Discussion post never just echoes a classmate's argument in new words. First pin down exactly what each student claims, then recognize what makes a reply genuinely move the class conversation forward.",
+    "托福学术讨论高分帖绝不会只是把同学的理由换句话再说一遍。先准确读懂两位同学各自的立场，再辨别怎样的回复才能真正把讨论向前推进。",
+  ),
   strand: "writing",
   prerequisites: ["counterclaims-and-rebuttals"],
   encompasses: [{ topic: "counterclaims-and-rebuttals", weight: 0.2 }],
@@ -523,8 +538,8 @@ export const discussionReplies: TopicDef = examTopic({
       "toefl-stating-a-position",
       t("Stating Each Student's Position", "说出每位同学的立场"),
       t(
-        "In the Academic Discussion task, a professor asks a question and two students reply before you do. Your post must take part in that discussion, so first be clear what each student actually claims. Find the sentence that gives the student's answer and the reason given for it. Do not confuse the two students, and do not make a student's view stronger than it is: *a fee is reasonable* is not *museums are not worth visiting*.",
-        "在学术讨论题中，教授先提出问题，两位同学在你之前作答。你的帖子要加入这场讨论，所以先要弄清每位同学究竟主张什么。找到给出该同学答案的那句话，以及他给出的理由。不要把两位同学弄混，也不要把同学的观点说得比原文更绝对：*a fee is reasonable* 并不等于 *museums are not worth visiting*。",
+        "In the Academic Discussion task, a professor asks a question and two students reply before you do. Your post must take part in that discussion, so first be clear what each student actually claims. Find the sentence that gives the student's answer and the reason given for it.\n\n> **Watch out.** Do not mix up the two classmates, and reject extreme distortions (*a fee is reasonable* does **not** mean *museums are not worth visiting*).",
+        "在学术讨论题中，教授先提出问题，两位同学在你之前作答。你的帖子要加入这场讨论，所以先要弄清每位同学究竟主张什么。找到给出该同学答案的那句话，以及他给出的理由。\n\n> **注意。** 不要把两位同学的立场张冠李戴，也要排除过度绝对化的扭曲（*a fee is reasonable* 绝不等于 *museums are not worth visiting*）。",
       ),
       solvedChoiceGenerator(question, positions),
     ),
@@ -532,8 +547,8 @@ export const discussionReplies: TopicDef = examTopic({
       "toefl-adding-to-the-discussion",
       t("Adding to the Discussion", "推进讨论"),
       t(
-        "A strong reply takes a side and **adds something new**: a reason neither student gave, supported by an example. Three kinds of reply fall short:\n\n- one that **repeats** a classmate's reasons in other words\n- one that **wanders** to a different question\n- one that **only agrees**, with no reason or example of its own\n\nIf you agree with a classmate, say so briefly, then spend your words on the new point.",
-        "好的回复要表明立场，并**补充新内容**：两位同学都没有提到的理由，再用一个例子来支持。有三种回复不合格：\n\n- 换个说法**重复**同学的理由\n- **跑题**去回答另一个问题\n- **只是赞同**，没有自己的理由或例子\n\n如果你赞同某位同学，简短说一句即可，把篇幅留给新的观点。",
+        "A strong reply takes a side and **adds something new**: a reason neither student gave, supported by an example. Three kinds of reply fall short:\n\n- one that **repeats** a classmate's reasons in other words\n- one that **wanders** to a different question\n- one that **only agrees**, with no reason or example of its own\n\n> **Watch out.** A polished paraphrase of a classmate's post still scores poorly—if a reply adds no **new** reason or example of its own, it is not advancing the discussion.",
+        "好的回复要表明立场，并**补充新内容**：两位同学都没有提到的理由，再用一个例子来支持。有三种回复不合格：\n\n- 换个说法**重复**同学的理由\n- **跑题**去回答另一个问题\n- **只是赞同**，没有自己的理由或例子\n\n> **注意。** 哪怕把同学的观点换说法写得很漂亮，也拿不到高分——只要没有给出自己的**新**理由或实例，就没有推进讨论。",
       ),
       solvedChoiceGenerator(question, replies),
     ),

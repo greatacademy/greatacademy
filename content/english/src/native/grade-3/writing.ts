@@ -76,7 +76,10 @@ const nameDetailBank: readonly Ask[] = details.flatMap((d) =>
       shown: `${d.kernel} **${d.parts[wh]}**.`,
       right: wh,
       wrong: others,
-      why: t(`It answers **${wh}**. ${whWhy[wh][0]}`, `它回答 **${wh}**（${whZh[wh]}）。${whWhy[wh][1]}`),
+      why: t(
+        `It answers **${wh}**. ${whWhy[wh][0]}\n\n**Check.** Ask “${wh}?” about *${d.kernel}*—*${d.parts[wh]}* answers that question directly.`,
+        `它回答 **${wh}**（${whZh[wh]}）。${whWhy[wh][1]}\n\n**检验。**对着 *${d.kernel}* 问一句“${whZh[wh]}？”——*${d.parts[wh]}* 正好直接回答了这个问题。`,
+      ),
       whyNot: others.map((o) => t(...whNot[o])),
     };
   }),
@@ -90,7 +93,10 @@ const chooseDetailBank: readonly Ask[] = details.flatMap((d) =>
       shown: `${d.kernel}.`,
       right: `${d.kernel} ${d.parts[wh]}.`,
       wrong: others.map((o) => `${d.kernel} ${d.parts[o]}.`),
-      why: t(`The detail *${d.parts[wh]}* answers **${wh}**. ${whWhy[wh][0]}`, `细节 *${d.parts[wh]}* 回答了 **${wh}**。${whWhy[wh][1]}`),
+      why: t(
+        `The detail *${d.parts[wh]}* answers **${wh}**. ${whWhy[wh][0]}\n\n**Check.** Read the added part on its own and ask whether it answers *${wh}*—it does.`,
+        `细节 *${d.parts[wh]}* 回答了 **${wh}**。${whWhy[wh][1]}\n\n**检验。**单独读一遍新加的部分，看它是不是回答了“${whZh[wh]}”——正是。`,
+      ),
       whyNot: others.map((o) =>
         t(
           `That detail answers *${o}*, not *${wh}*. ${whWhy[o][0]}`,
@@ -142,13 +148,13 @@ const notBelongBank: readonly Ask[] = groups.flatMap((g, i) => {
       right: odd,
       wrong: kept,
       why: t(
-        `The other facts are all about one thing, *${g.name}*, but this one is about *${p.name}*: ${odd}`,
-        `其他事实都属于同一个主题 *${g.name}*，而这一条属于 *${p.name}*：${odd}`,
+        `The other three facts are all about *${g.name}*, while this one is about *${p.name}*: ${odd}\n\n**Check.** Group the three matching facts under *${g.name}*—only this choice is left outside.`,
+        `另外三条事实讲的都是 *${g.name}*，只有这一条属于 *${p.name}*：${odd}\n\n**检验。**把相配的三条事实归到 *${g.name}* 下面——只有这一条落单。`,
       ),
-      whyNot: kept.map(() =>
+      whyNot: kept.map((fact) =>
         t(
-          `That fact belongs to the group: like most of the others, it is about *${g.name}*.`,
-          `这个事实属于这一组：和其他大多数事实一样，它讲的是 *${g.name}*。`,
+          `“${fact.replace(/\.$/, "")}” fits right in: along with two other choices, it is about *${g.name}*.`,
+          `“${fact.replace(/\.$/, "")}”正好属于这一组：它和另外两个选项一样，讲的都是 *${g.name}*。`,
         ),
       ),
     };
@@ -167,8 +173,8 @@ const groupNameBank: readonly Ask[] = groups.flatMap((g, i) => {
       right: g.name,
       wrong: [narrow, p.name],
       why: t(
-        `*${g.name}* covers every fact in the group. A group's name is wide enough for all of its facts, and no wider.`,
-        `*${g.name}* 涵盖了这一组里的每个事实。一组的名称要能涵盖所有事实，又不能太宽泛。`,
+        `*${g.name}* covers every fact in the group, without being wider than the group needs.\n\n**Check.** Test *${g.name}* on each of the three bullet points one by one—all three fit under it.`,
+        `*${g.name}* 涵盖了这一组里的每个事实，而且范围恰到好处。\n\n**检验。**把 *${g.name}* 逐一对照三条事实——三条全都能放进这个标题下面。`,
       ),
       whyNot: [
         t(
@@ -230,8 +236,8 @@ const findClosingBank: readonly Ask[] = paragraphs.map((p) => ({
   right: p.closing,
   wrong: [p.topic, p.details[1] ?? ""],
   why: t(
-    `The closing sentence comes last and sums up the point in new words: “${p.closing}”`,
-    `结尾句在最后，用新的说法总结段落的要点：“${p.closing}”`,
+    `The closing sentence comes last and sums up the point in new words: “${p.closing}”\n\n**Check.** Compare it with the first sentence (“${p.topic}”)—both carry the same main point, but the closing puts it in fresh words at the end.`,
+    `结尾句在最后，用新的说法总结段落的要点：“${p.closing}”\n\n**检验。**把它和第一句（“${p.topic}”）对照——两句表达同一个中心意思，但结尾句放在最后、换了说法。`,
   ),
   whyNot: [
     t("That is the topic sentence: it opens the paragraph and names its point.", "这是主题句：它是段落的开头，说出段落的要点。"),
@@ -248,8 +254,8 @@ const chooseClosingBank: readonly Ask[] = paragraphs.map((p) => ({
   right: p.closing,
   wrong: [p.topic, p.off],
   why: t(
-    `“${p.closing}” sums up the point of the paragraph in new words and adds nothing new.`,
-    `“${p.closing}” 用新的说法总结了段落的要点，而且没有增加新内容。`,
+    `“${p.closing}” sums up the paragraph's point in new words and adds no new topic.\n\n**Check.** Read the whole paragraph aloud with this sentence at the end—it echoes “${p.topic}” without repeating it word for word.`,
+    `“${p.closing}”用新的说法总结了段落的要点，也没有另起新话题。\n\n**检验。**把这句话放到段尾朗读整段——它呼应了“${p.topic}”，又没有一字不差地照抄。`,
   ),
   whyNot: [
     t(
@@ -317,18 +323,31 @@ const partNot: readonly (readonly [string, string])[] = [
   ["The signature is the writer's name at the very end.", "签名是写在最后的写信人名字。"],
 ];
 
+const partCheck: readonly (readonly [string, string])[] = [
+  ["Look at its position: it sits on the very first line before *Dear*.", "看它的位置：它在最前面第一行，排在 *Dear* 之前。"],
+  ["Spot the word *Dear* and the comma after the name—that marks the greeting.", "找到 *Dear* 和名字后面的逗号——这就是称呼的标志。"],
+  ["Count the sentences: the body is the paragraph between the greeting and the closing.", "看句子：正文是夹在称呼和结束语之间的段落。"],
+  [
+    "Notice the short phrase with a comma right above the writer's name—that is the closing.",
+    "看写信人名字正上方那个带逗号的短语——这就是结束语。",
+  ],
+  ["Look at the very bottom line below the closing—it is just the writer's name.", "看结束语下面最底部的那一行——只有写信人的名字。"],
+];
+
 const letterLines = (l: (typeof allLetters)[number]) => [l.date, `Dear ${l.reader},`, l.body, `${l.closing},`, l.writer];
 
 const namePartBank: readonly Ask[] = allLetters.flatMap((l) =>
   letterParts.map((part, k): Ask => {
     const others = [(k + 1) % 5, (k + 2) % 5];
     const lines = letterLines(l);
+    const [whyEn, whyZh] = partWhy[k] ?? ["", ""];
+    const [chkEn, chkZh] = partCheck[k] ?? ["", ""];
     return {
       question: t("Which part of the letter is in bold?", "粗体的是信的哪一部分？"),
       shown: lines.map((line, i) => (i === k ? `**${line}**` : line)).join("\n\n"),
       right: part,
       wrong: others.map((o) => letterParts[o] ?? ""),
-      why: t(...(partWhy[k] ?? ["", ""])),
+      why: t(`${whyEn}\n\n**Check.** ${chkEn}`, `${whyZh}\n\n**检验。**${chkZh}`),
       whyNot: others.map((o) => t(...(partNot[o] ?? ["", ""]))),
     };
   }),
@@ -339,8 +358,8 @@ const orderLetterBank: readonly Arrange[] = allLetters.map((l) => ({
   shown: "",
   steps: letterLines(l),
   why: t(
-    "A friendly letter goes in this order: the date, the greeting, the body, the closing and the signature.",
-    "书信的顺序是：日期、称呼、正文、结束语、签名。",
+    "A friendly letter goes in this order: the date, the greeting, the body, the closing and the signature.\n\n**Check.** Read your letter from top to bottom—it opens with the date and *Dear*, gives the news in the middle, and signs off with the closing and name.",
+    "书信的顺序是：日期、称呼、正文、结束语、签名。\n\n**检验。**从上到下读一遍排好的信——开头是日期和 *Dear*，中间是正文，最后以结束语和签名收尾。",
   ),
 }));
 
@@ -391,8 +410,8 @@ const chooseNoteBank: readonly Ask[] = notes.map((n) => ({
   right: n.note,
   wrong: [n.sentence, n.missing],
   why: t(
-    `The note “${n.note}” keeps the key fact of the sentence in a few words of the writer's own.`,
-    `笔记“${n.note}”用自己的几个词保留了这句话的关键事实。`,
+    `The note “${n.note}” keeps the key fact of the sentence in a few words.\n\n**Check.** Cover the original sentence and read only “${n.note}”—you can still tell the main fact without copying the whole sentence.`,
+    `笔记“${n.note}”用几个词保留了这句话的关键事实。\n\n**检验。**盖住原句，只看“${n.note}”——既没有照抄整句，也能立刻想起关键事实。`,
   ),
   whyNot: [
     t(
@@ -409,8 +428,8 @@ const shortestNoteBank: readonly Ask[] = notes.map((n) => ({
   right: n.note,
   wrong: [n.wordy, n.tooShort],
   why: t(
-    `“${n.note}” is short, and the key fact is still all there, so it will help when you read it later.`,
-    `“${n.note}” 很短，而且关键事实一点不少，所以以后读的时候能帮上忙。`,
+    `“${n.note}” drops extra filler words while keeping the whole key fact.\n\n**Check.** Compare it with the other two choices: the longer one repeats unneeded words, and the shorter one loses what the sentence actually says.`,
+    `“${n.note}”去掉了多余的词，同时完整保留了关键事实。\n\n**检验。**对比另外两个选项：较长的那条多用了不必要的词，较短的那条则丢掉了句子真正要说的事实。`,
   ),
   whyNot: [
     t("That keeps the fact, but it uses many words that a note does not need.", "这条保留了事实，但用了很多笔记不需要的词。"),
@@ -433,8 +452,8 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "the-question-a-detail-answers",
         t("The Question a Detail Answers", "细节回答的问题"),
         t(
-          "A **kernel sentence** has just a subject and a verb: *The cat slept.* Details make it richer, and each detail answers a question. *On the windowsill* answers **where**; *all afternoon* answers **when**; *because it was tired* answers **why**; *peacefully* answers **how**.\n\nTo name the question, ask which one the detail would answer on its own.",
-          "**基本句**只有主语和动词：*The cat slept.* 细节让句子更丰富，每个细节都回答一个问题。*On the windowsill* 回答 **where**；*all afternoon* 回答 **when**；*because it was tired* 回答 **why**；*peacefully* 回答 **how**。\n\n要说出是哪个问题，就问问这个细节单独能回答哪一个。",
+          "A **kernel sentence** has just a subject and a verb: *The cat slept.* Details make it richer, and each detail answers a question. *On the windowsill* answers **where**; *all afternoon* answers **when**; *because it was tired* answers **why**; *peacefully* answers **how**.\n\nTo name the question, ask which one the detail would answer on its own.\n\n> **Watch out.** Do not mix up *where* and *when*—*in the gym* names a place (*where*), while *at the end of the game* names a time (*when*).",
+          "**基本句**只有主语和动词：*The cat slept.* 细节让句子更丰富，每个细节都回答一个问题。*On the windowsill* 回答 **where**；*all afternoon* 回答 **when**；*because it was tired* 回答 **why**；*peacefully* 回答 **how**。\n\n要说出是哪个问题，就问问这个细节单独能回答哪一个。\n\n> **注意。**不要把 *where* 和 *when* 弄混——*in the gym* 是地点（*where*），而 *at the end of the game* 是时间（*when*）。",
         ),
         askGenerator(nameDetailBank),
       ),
@@ -442,12 +461,17 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "adding-the-detail-asked-for",
         t("Adding the Detail Asked For", "添加所要求的细节"),
         t(
-          "A writer adds the details a reader needs. If the reader wants to know **where**, add a place; **when**, a time; **why**, a reason with *because* or *so that*; **how**, the way it was done.\n\nA detail of the wrong kind can be a fine detail and still not answer the question that was asked.",
-          "作者会添加读者需要的细节。读者想知道**在哪里**，就加地点；**什么时候**，就加时间；**为什么**，就用 *because* 或 *so that* 加原因；**怎样**，就加做事的方式。\n\n种类不对的细节本身也许不错，但仍然没有回答所问的问题。",
+          "A writer adds the details a reader needs. If the reader wants to know **where**, add a place; **when**, a time; **why**, a reason with *because* or *so that*; **how**, the way it was done.\n\nA detail of the wrong kind can be a fine detail and still not answer the question that was asked.\n\n> **Watch out.** Read the question word carefully—every choice may sound like a good sentence, but only one answers the question asked.",
+          "作者会添加读者需要的细节。读者想知道**在哪里**，就加地点；**什么时候**，就加时间；**为什么**，就用 *because* 或 *so that* 加原因；**怎样**，就加做事的方式。\n\n种类不对的细节本身也许不错，但仍然没有回答所问的问题。\n\n> **注意。**看清题目要的是哪个疑问词——每个选项读起来都像好句子，但只有一个回答了题目所问。",
         ),
         askGenerator(chooseDetailBank),
       ),
     ],
+    undefined,
+    t(
+      "*The bird sang* is a complete sentence, yet *The bird sang in the apple tree at sunrise* gives the reader a clear scene. Adding details that answer *where*, *when*, *why*, or *how* turns a bare kernel into a vivid sentence.",
+      "*The bird sang* 是个完整的句子，而 *The bird sang in the apple tree at sunrise* 才把画面展现出来。加上回答 *where*、*when*、*why* 或 *how* 的细节，能让简单的基本句变得生动。",
+    ),
   ),
   topic(
     "grouping-related-facts",
@@ -459,8 +483,8 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "the-fact-that-does-not-belong",
         t("The Fact That Does Not Belong", "不属于这一组的事实"),
         t(
-          "Before writing about a topic, a writer sorts facts into **groups**. Facts in a group are all about the same thing: how desert animals live, or the parts of a plant.\n\nTo find a fact that does not belong, ask what most of the facts are about, then look for the one about something else.",
-          "写一个话题之前，作者会把事实分成**几组**。同一组的事实讲的都是同一件事：沙漠动物怎样生活，或者植物的各个部分。\n\n要找出不属于这一组的事实，先问问大多数事实讲的是什么，再找讲别的事情的那一条。",
+          "Before writing about a topic, a writer sorts facts into **groups**. Facts in a group are all about the same thing: how desert animals live, or the parts of a plant.\n\nTo find a fact that does not belong, ask what most of the facts are about, then look for the one about something else.\n\n> **Watch out.** All four sentences are true facts—do not look for a false statement; look for the one that belongs to a different group.",
+          "写一个话题之前，作者会把事实分成**几组**。同一组的事实讲的都是同一件事：沙漠动物怎样生活，或者植物的各个部分。\n\n要找出不属于这一组的事实，先问问大多数事实讲的是什么，再找讲别的事情的那一条。\n\n> **注意。**四句话都是真的事实——不要找假话，而要找属于另一个主题的那一条。",
         ),
         askGenerator(notBelongBank),
       ),
@@ -468,12 +492,17 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "naming-a-group",
         t("Naming a Group of Facts", "给一组事实命名"),
         t(
-          "A group of facts gets a **name** that fits all of them. Roots, stems, leaves and flowers make the group *Parts of a Plant*.\n\nA good name is not too narrow, fitting only one fact, and it is not the name of a different group. Test it on each fact.",
-          "一组事实要有一个适合所有事实的**名称**。根、茎、叶、花组成了 *Parts of a Plant* 这一组。\n\n好的名称不能太窄，只适合其中一个事实；也不能是另一组的名称。用每个事实检验一下。",
+          "A group of facts gets a **name** that fits all of them. Roots, stems, leaves and flowers make the group *Parts of a Plant*.\n\nA good name is not too narrow, fitting only one fact, and it is not the name of a different group. Test it on each fact.\n\n> **Watch out.** A title that fits the very first fact (like *What Roots Do*) is too narrow if the other facts talk about stems and leaves.",
+          "一组事实要有一个适合所有事实的**名称**。根、茎、叶、花组成了 *Parts of a Plant* 这一组。\n\n好的名称不能太窄，只适合其中一个事实；也不能是另一组的名称。用每个事实检验一下。\n\n> **注意。**如果标题只适合第一条事实（比如 *What Roots Do*），而后面还讲了茎和叶，这个标题就太窄了。",
         ),
         askGenerator(groupNameBank),
       ),
     ],
+    undefined,
+    t(
+      "Suppose your notes list *rain*, *snow*, *hail*, and *a ruler measures length*. Three of those facts belong under *Kinds of Weather*, while the ruler fact belongs somewhere else. Sorting facts into named groups helps you plan clear paragraphs.",
+      "假如你的笔记里写着*雨*、*雪*、*冰雹*和*尺子用来量长度*，前三条属于 *Kinds of Weather*，而尺子那一条属于别处。把事实分好组并起好名称，能让段落更有条理。",
+    ),
   ),
   topic(
     "choosing-a-closing-sentence",
@@ -488,8 +517,8 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "finding-the-closing-sentence",
         t("Finding the Closing Sentence", "找出结尾句"),
         t(
-          "A paragraph often has three kinds of sentences. The **topic sentence** comes first and names the point. The **details** in the middle support it. The **closing sentence** comes last and sums up the point again.\n\nThe closing sentence often sounds like the topic sentence, but in new words.",
-          "一个段落通常有三种句子。**主题句**在最前面，说出要点。中间的**细节**支持要点。**结尾句**在最后，再次总结要点。\n\n结尾句常常听起来像主题句，但用的是新的说法。",
+          "A paragraph often has three kinds of sentences. The **topic sentence** comes first and names the point. The **details** in the middle support it. The **closing sentence** comes last and sums up the point again.\n\nThe closing sentence often sounds like the topic sentence, but in new words.\n\n> **Watch out.** Do not confuse the topic sentence with the closing sentence—both state the big idea, so check which one opens the paragraph and which one wraps it up at the end.",
+          "一个段落通常有三种句子。**主题句**在最前面，说出要点。中间的**细节**支持要点。**结尾句**在最后，再次总结要点。\n\n结尾句常常听起来像主题句，但用的是新的说法。\n\n> **注意。**不要把主题句和结尾句混为一谈——两句都说出中心意思，要看哪一句在段首引出，哪一句在段尾收束。",
         ),
         askGenerator(findClosingBank),
       ),
@@ -497,12 +526,17 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "choosing-a-closing-that-fits",
         t("Choosing a Closing That Fits", "选择合适的结尾句"),
         t(
-          "A good closing sentence **sums up** the paragraph's point in **new words**. It does not repeat the topic sentence word for word, and it does not start a new topic.\n\nAfter *Dogs make wonderful pets* and three details, *A dog is a great friend to have* closes well; *Cats sleep all day* starts something new.",
-          "好的结尾句用**新的说法****总结**段落的要点。它不会一字不差地重复主题句，也不会开始一个新话题。\n\n在 *Dogs make wonderful pets* 和三个细节之后，*A dog is a great friend to have* 是好的结尾；*Cats sleep all day* 则开始了新的内容。",
+          "A good closing sentence **sums up** the paragraph's point in **new words**. It does not repeat the topic sentence word for word, and it does not start a new topic.\n\nAfter *Dogs make wonderful pets* and three details, *A dog is a great friend to have* closes well; *Cats sleep all day* starts something new.\n\n> **Watch out.** Copying the topic sentence word for word is not a good closing, and introducing a new subject at the end leaves the paragraph unfinished.",
+          "好的结尾句用**新的说法****总结**段落的要点。它不会一字不差地重复主题句，也不会开始一个新话题。\n\n在 *Dogs make wonderful pets* 和三个细节之后，*A dog is a great friend to have* 是好的结尾；*Cats sleep all day* 则开始了新的内容。\n\n> **注意。**一字不差地照抄主题句不是好结尾，在段尾另起新话题则会让段落没收住。",
         ),
         askGenerator(chooseClosingBank),
       ),
     ],
+    undefined,
+    t(
+      "After a paragraph explains how exercise strengthens your heart, builds muscles, and helps you sleep, *Moving every day keeps you healthy* wraps up the whole idea in fresh words. A strong closing sentence gives a paragraph a clean finish.",
+      "一段话先讲运动能强壮心脏、锻炼肌肉、帮助睡眠，最后用 *Moving every day keeps you healthy* 换种说法收束全段。好的结尾句能让段落收得干脆利落。",
+    ),
   ),
   topic(
     "parts-of-a-friendly-letter",
@@ -517,8 +551,8 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "naming-the-part-of-a-letter",
         t("Naming the Part of a Letter", "说出信的组成部分"),
         t(
-          "A friendly letter has five parts. The **date** is at the top. The **greeting**, such as *Dear Grandma,*, names the reader. The **body** gives the news. The **closing**, such as *Love,*, ends it. The **signature** is the writer's name.\n\nThe greeting and the closing each end with a comma.",
-          "书信有五个部分。**日期**在最上面。**称呼**（比如 *Dear Grandma,*）说出收信人。**正文**写出消息。**结束语**（比如 *Love,*）结束全信。**签名**是写信人的名字。\n\n称呼和结束语后面都要加逗号。",
+          "A friendly letter has five parts. The **date** is at the top. The **greeting**, such as *Dear Grandma,*, names the reader. The **body** gives the news. The **closing**, such as *Love,*, ends it. The **signature** is the writer's name.\n\nThe greeting and the closing each end with a comma.\n\n> **Watch out.** Do not mix up the closing (*Love,*) and the signature (*Mia*)—the closing says goodbye, and the signature is the writer's name underneath it.",
+          "书信有五个部分。**日期**在最上面。**称呼**（比如 *Dear Grandma,*）说出收信人。**正文**写出消息。**结束语**（比如 *Love,*）结束全信。**签名**是写信人的名字。\n\n称呼和结束语后面都要加逗号。\n\n> **注意。**不要把结束语（*Love,*）和签名（*Mia*）弄混——结束语用来道别，签名是下面写信人的名字。",
         ),
         askGenerator(namePartBank),
       ),
@@ -526,12 +560,17 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "putting-a-letter-in-order",
         t("Putting a Letter in Order", "给信排序"),
         t(
-          "The parts of a friendly letter always come in the same order: **date**, **greeting**, **body**, **closing**, **signature**.\n\nTo order a scrambled letter, find the date first, then the line with *Dear*. The longest part with the news is the body, and the short phrase with a comma before the name is the closing.",
-          "书信的各部分总是按同样的顺序排列：**日期**、**称呼**、**正文**、**结束语**、**签名**。\n\n给打乱的信排序时，先找日期，再找有 *Dear* 的那一行。写着消息的最长部分是正文，名字前面带逗号的短语是结束语。",
+          "The parts of a friendly letter always come in the same order: **date**, **greeting**, **body**, **closing**, **signature**.\n\nTo order a scrambled letter, find the date first, then the line with *Dear*. The longest part with the news is the body, and the short phrase with a comma before the name is the closing.\n\n> **Watch out.** Put the date above *Dear …*, not at the bottom after the signature.",
+          "书信的各部分总是按同样的顺序排列：**日期**、**称呼**、**正文**、**结束语**、**签名**。\n\n给打乱的信排序时，先找日期，再找有 *Dear* 的那一行。写着消息的最长部分是正文，名字前面带逗号的短语是结束语。\n\n> **注意。**日期要放在 *Dear …* 上面，不要放在签名下面。",
         ),
         arrangeGenerator(orderLetterBank),
       ),
     ],
+    undefined,
+    t(
+      "When Mia writes a note to Grandpa—*March 8, 2026*, *Dear Grandpa,*, her news about a train book, *Love,*, and *Mia*—each piece has its own job and its own spot on the page. Knowing the five parts helps you read and write any friendly letter.",
+      "Mia 给爷爷写信时，依次写上 *March 8, 2026*、*Dear Grandpa,*、讲火车书的正文、*Love,* 和 *Mia*——每一部分都有自己的位置和作用。认识这五个部分，就能读懂并写好任何一封书信。",
+    ),
   ),
   topic(
     "taking-notes-from-a-text",
@@ -543,8 +582,8 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "choosing-the-note",
         t("Choosing the Note", "选择笔记"),
         t(
-          "A **note** keeps the **key fact** of a sentence in a few words. From *Camels can walk for many days without drinking any water*, a good note is *camels: many days without water*.\n\nA note is not the whole sentence copied, and it must not leave out the key fact. Ask: what would I need to remember?",
-          "**笔记**用几个词保留一句话的**关键事实**。对于 *Camels can walk for many days without drinking any water*，好的笔记是 *camels: many days without water*。\n\n笔记不是把整句话抄下来，也不能漏掉关键事实。问问自己：我需要记住的是什么？",
+          "A **note** keeps the **key fact** of a sentence in a few words. From *Camels can walk for many days without drinking any water*, a good note is *camels: many days without water*.\n\nA note is not the whole sentence copied, and it must not leave out the key fact. Ask: what would I need to remember?\n\n> **Watch out.** Copying the entire sentence word for word is not note-taking, and writing a short phrase that skips the main fact will not help you later.",
+          "**笔记**用几个词保留一句话的**关键事实**。对于 *Camels can walk for many days without drinking any water*，好的笔记是 *camels: many days without water*。\n\n笔记不是把整句话抄下来，也不能漏掉关键事实。问问自己：我需要记住的是什么？\n\n> **注意。**把整句话一字不差地抄下来不算做笔记，而只写几个无关紧要的词、漏掉关键事实，以后也帮不上忙。",
         ),
         askGenerator(chooseNoteBank),
       ),
@@ -552,11 +591,16 @@ export const writingRuleTopics: readonly TopicDef[] = [
         "the-shortest-note",
         t("The Shortest Note That Keeps the Fact", "保留事实的最短笔记"),
         t(
-          "A good note is **as short as it can be** while keeping the key fact. Drop words like *the*, *is able to* and *a kind of*, and keep the words that carry the fact.\n\nBut cut too much, as in *camels: water*, and the fact is lost: later you will not know what it meant.",
-          "好的笔记在保留关键事实的前提下**越短越好**。去掉 *the*、*is able to*、*a kind of* 这样的词，留下承载事实的词。\n\n但删得太多，比如 *camels: water*，事实就丢了：以后你就不知道它是什么意思了。",
+          "A good note is **as short as it can be** while keeping the key fact. Drop words like *the*, *is able to* and *a kind of*, and keep the words that carry the fact.\n\nBut cut too much, as in *camels: water*, and the fact is lost: later you will not know what it meant.\n\n> **Watch out.** Shortest does not always mean best—if a two-word note no longer tells you the fact, it has cut too much.",
+          "好的笔记在保留关键事实的前提下**越短越好**。去掉 *the*、*is able to*、*a kind of* 这样的词，留下承载事实的词。\n\n但删得太多，比如 *camels: water*，事实就丢了：以后你就不知道它是什么意思了。\n\n> **注意。**最短的不一定最好——如果两个词的笔记已经说不清事实，那就删得太多了。",
         ),
         askGenerator(shortestNoteBank),
       ),
     ],
+    undefined,
+    t(
+      "From *Butterflies taste their food with their feet*, a sharp note keeps just *butterflies taste with feet*. Good notes strip away extra words while holding onto the fact you need to remember.",
+      "从 *Butterflies taste their food with their feet* 里记笔记，只要留下 *butterflies taste with feet* 就够了。好的笔记去掉多余的词，同时牢牢留住你需要记住的事实。",
+    ),
   ),
 ];

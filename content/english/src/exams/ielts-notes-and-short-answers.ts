@@ -417,6 +417,10 @@ export const notesAndShortAnswers: TopicDef = examTopic({
     "IELTS-style questions answered by typing words from a short text: gaps in notes, one word only, and short answers of no more than two words and/or a number.",
     "雅思风格的题目，从短文中找词并键入作答：笔记填空只填一个词，简答题不超过两个词和/或一个数字。",
   ),
+  intro: t(
+    "In IELTS typed reading tasks, knowing the right fact is only half the score—writing a synonym not in the passage, dropping a plural *-s*, or exceeding the word limit by a single article (*the*) turns a right idea into zero marks.",
+    "在雅思拼写类阅读题中，找对信息只算完成一半——换用原文没有的同义词、漏掉复数 *-s*，或多写一个冠词超出字数上限，都会让原本找对的答案丢分。",
+  ),
   strand: "reading",
   prerequisites: ["ielts-sentence-and-summary-completion"],
   encompasses: [{ topic: "ielts-sentence-and-summary-completion", weight: 0.3 }],
@@ -426,8 +430,8 @@ export const notesAndShortAnswers: TopicDef = examTopic({
       "ielts-note-completion",
       t("Note Completion", "笔记填空"),
       t(
-        "Notes, tables and flow charts sum up part of a text in short lines, and each gap must be filled with a word **copied from the text**. Read the line and decide what kind of word it needs: a noun after *the*, a verb after *they*, a number after *age*. Then find the part of the text the line is about: its words usually differ, but the order of the notes follows the text. Copy the word exactly, with its spelling and its plural *-s*. A word that means the same but is not in the text, such as *burns* for *chars*, is marked wrong.",
-        "笔记、表格和流程图用简短的句子概括原文的一部分，每个空都必须用**从原文中照抄的词**来填。先读这一行，判断空格需要哪一类词：*the* 后面要名词，*they* 后面要动词，*age* 后面要数字。再找到这一行对应的原文：用词通常不同，但笔记的顺序与原文一致。照原样抄写这个词，包括拼写和复数 *-s*。意思相同但原文中没有的词，比如用 *burns* 代替 *chars*，会被判错。",
+        "Notes, tables and flow charts sum up part of a text in short lines, and each gap must be filled with a word **copied from the text**. Read the line and decide what kind of word it needs: a noun after *the*, a verb after *they*, a number after *age*. Then find the part of the text the line is about: its words usually differ, but the order of the notes follows the text.\n\n> **Watch out.** Copy the word **verbatim** from the passage (keeping exact spelling and any plural *-s*)—a synonym not printed in the text (*burns* instead of *chars*) is marked wrong.",
+        "笔记、表格和流程图用简短的句子概括原文的一部分，每个空都必须用**从原文中照抄的词**来填。先读这一行，判断空格需要哪一类词：*the* 后面要名词，*they* 后面要动词，*age* 后面要数字。再找到这一行对应的原文：用词通常不同，但笔记的顺序与原文一致。\n\n> **注意。** 必须**原样照抄**原文里的词（包括拼写和复数 *-s*）——意思相同但原文没出现的词（如用 *burns* 代替 *chars*）会被判错。",
       ),
       typedGenerator(
         "word-form",
@@ -436,8 +440,8 @@ export const notesAndShortAnswers: TopicDef = examTopic({
         (right, shown) => {
           const evidence = evidenceOf.get(shown) ?? "";
           return t(
-            `**${right}**. The text says: "${evidence}${end(evidence)}" The note says the same thing in fewer words, and the gap takes the word exactly as the text spells it.`,
-            `**${right}**。原文是："${evidence}${end(evidence)}" 笔记用更少的词说了同一件事，空格里要填原文中拼写完全一样的那个词。`,
+            `**${right}**. The text says: "${evidence}${end(evidence)}" The note says the same thing in fewer words, and the gap takes the word exactly as the text spells it.\n\n**Check.** Confirm *${right}* is one word copied verbatim from "${evidence}${end(evidence)}" and fits the grammar of the note.`,
+            `**${right}**。原文是："${evidence}${end(evidence)}" 笔记用更少的词说了同一件事，空格里要填原文中拼写完全一样的那个词。\n\n**检验。** 确认 *${right}* 是从原文“${evidence}${end(evidence)}”原样抄下的单个词，且符合笔记的语法。`,
           );
         },
       ),
@@ -446,8 +450,8 @@ export const notesAndShortAnswers: TopicDef = examTopic({
       "ielts-short-answers",
       t("Short-Answer Questions", "简答题"),
       t(
-        "Short-answer questions ask for a fact from the text and set a limit, such as **NO MORE THAN TWO WORDS AND/OR A NUMBER**. Every word counts, including *a*, *the*, *about* and *up to*: if the text says *about two thirds*, the answer is *two thirds*, because three words break the limit. Find the part of the text that answers the question, then copy the fewest words that still answer it. Numbers may be written as figures. The questions follow the order of the text.",
-        "简答题要求从原文中找出一个事实，并限定字数，例如**不超过两个词和/或一个数字**（NO MORE THAN TWO WORDS AND/OR A NUMBER）。每个词都算数，包括 *a*、*the*、*about* 和 *up to*：如果原文是 *about two thirds*，答案就是 *two thirds*，因为三个词超出了限制。找到回答问题的那部分原文，再照抄仍能回答问题的最少的词。数字可以写成阿拉伯数字。题目的顺序与原文一致。",
+        "Short-answer questions ask for a fact from the text and set a limit, such as **NO MORE THAN TWO WORDS AND/OR A NUMBER**. Find the part of the text that answers the question, then copy the fewest words that still answer it. Numbers may be written as figures. The questions follow the order of the text.\n\n> **Watch out.** Every tiny word (*a*, *the*, *about*, *up to*) counts toward the word limit—trim *about two thirds* to *two thirds* so you never exceed two words.",
+        "简答题要求从原文中找出一个事实，并限定字数，例如**不超过两个词和/或一个数字**（NO MORE THAN TWO WORDS AND/OR A NUMBER）。找到回答问题的那部分原文，再照抄仍能回答问题的最少的词。数字可以写成阿拉伯数字。题目的顺序与原文一致。\n\n> **注意。** 每个小词（*a*、*the*、*about*、*up to*）都算字数——例如把 *about two thirds* 精简为 *two thirds*，绝不超过两词上限。",
       ),
       typedGenerator(
         "word-form",
@@ -459,8 +463,8 @@ export const notesAndShortAnswers: TopicDef = examTopic({
         (right, shown) => {
           const evidence = evidenceOf.get(shown) ?? "";
           return t(
-            `**${right}**. The text says: "${evidence}${end(evidence)}" Copy only the words that answer the question, and no more than the limit allows.`,
-            `**${right}**。原文是："${evidence}${end(evidence)}" 只抄写回答问题的词，不要超过字数限制。`,
+            `**${right}**. The text says: "${evidence}${end(evidence)}" Copy only the words that answer the question, and no more than the limit allows.\n\n**Check.** Count the words in *${right}* (within the two-word-and/or-number limit) and verify each word matches the passage spelling.`,
+            `**${right}**。原文是："${evidence}${end(evidence)}" 只抄写回答问题的词，不要超过字数限制。\n\n**检验。** 数一下 *${right}* 的词数（不超过两个词和/或一个数字），并核对拼写与原文一致。`,
           );
         },
       ),

@@ -532,31 +532,31 @@ const ownerOf = (word: string) => owners.find(([, alone, before]) => alone === w
 const possessiveWhy = (right: string, shown: string): Text => {
   const who = /\((\w+)\)$/u.exec(shown)?.[1] ?? "";
   return t(
-    `No noun follows the gap, so it needs the word that stands alone; for *${who}* that is *${right}*: ${fill(shown, right)}`,
-    `空白后面没有名词，所以要用单独使用的词；*${who}* 对应的是 *${right}*：${fill(shown, right)}`,
+    `No noun follows the gap, so it needs the word that stands alone; for *${who}* that is *${right}*: ${fill(shown, right)}\n\n**Check.** Look directly after the gap: there is no noun, so the standalone possessive pronoun *${right}* fits.`,
+    `空白后面没有名词，所以要用单独使用的词；*${who}* 对应的是 *${right}*：${fill(shown, right)}\n\n**检验。** 看空白后面：没有名词，所以用独立使用的名词性物主代词 *${right}*。`,
   );
 };
 
 /** whyNotPossessive explains a word before a noun, or a word that does not show an owner. */
-const whyNotPossessive = (wrong: string, right: string): Text => {
+const whyNotPossessive = (wrong: string): Text => {
   if (/^(me|us|them|him)$/u.test(wrong))
     return t(
-      `*${wrong}* is the word for someone an action is done to, not a word that shows who owns something. Here it is *${right}*.`,
-      `*${wrong}* 是宾格，表示动作的对象，不表示东西属于谁。这里要用 *${right}*。`,
+      `*${wrong}* is an object pronoun for someone an action is done to, not a word that shows who owns something.`,
+      `*${wrong}* 是宾格，表示动作的对象，不表示东西属于谁。`,
     );
   if (wrong.endsWith("self"))
     return t(
-      `*${wrong}* is for doing something to yourself, as in *She hurt herself*. To show who owns something, use *${right}*.`,
-      `*${wrong}* 是反身代词，如 *She hurt herself*。表示东西属于谁要用 *${right}*。`,
+      `*${wrong}* is a reflexive pronoun (as in *She hurt herself*), not a word that shows who owns something.`,
+      `*${wrong}* 是反身代词（如 *She hurt herself*），不表示东西属于谁。`,
     );
   if (wrong === "he")
     return t(
-      `*he* is the word for the one who does something. To show that something belongs to him, use *${right}*.`,
-      `*he* 是主格，表示动作的发出者。表示东西属于他要用 *${right}*。`,
+      "*he* is a subject pronoun for the one who does something, not a word that shows ownership.",
+      "*he* 是主格，表示动作的发出者，不表示所属关系。",
     );
   return t(
-    `*${wrong}* must come before a noun, as in *${wrong} bag*. No noun follows here, so use *${right}*.`,
-    `*${wrong}* 必须放在名词前，如 *${wrong} bag*。这里后面没有名词，要用 *${right}*。`,
+    `*${wrong}* must come before a noun, as in *${wrong} bag*. No noun follows here, so it cannot stand alone.`,
+    `*${wrong}* 必须放在名词前，如 *${wrong} bag*。这里后面没有名词，不能单独使用。`,
   );
 };
 
@@ -566,6 +566,10 @@ const possessivePronouns: TopicDef = {
   summary: t(
     "This bag is mine. Is that yours? A word like mine stands alone, without a noun after it.",
     "This bag is mine. Is that yours? mine 这样的词单独使用，后面不接名词。",
+  ),
+  intro: t(
+    "Compare *That is our house* with *That house is ours*. When the noun comes right after the possessive word, use *my, your, her, our, their*; when no noun follows, switch to *mine, yours, hers, ours, theirs*.",
+    "比较 *That is our house* 和 *That house is ours*。后面紧跟名词时用 *my、your、her、our、their*；后面没有名词时，换用独立形式 *mine、yours、hers、ours、theirs*。",
   ),
   prerequisites: ["my-your-his-her", "a2-words-pronouns"],
   encompasses: [
@@ -579,8 +583,8 @@ const possessivePronouns: TopicDef = {
       "choose",
       t("Mine or my", "mine 还是 my"),
       t(
-        "*My*, *your*, *her*, *our* and *their* come before a noun: *my bag*. *Mine*, *yours*, *hers*, *ours* and *theirs* stand alone, with no noun after them: *This bag is mine.*\n\n| before a noun | alone |\n| :--- | :--- |\n| my | mine |\n| your | yours |\n| his | his |\n| her | hers |\n| our | ours |\n| their | theirs |",
-        "*my*、*your*、*her*、*our*、*their* 放在名词前：*my bag*。*mine*、*yours*、*hers*、*ours*、*theirs* 单独使用，后面不接名词：*This bag is mine.*\n\n中文“我的”既能说“我的包”，也能说“这包是我的”；英语要分成两个词：*my bag*，*This bag is mine.*\n\n| 名词前 | 单独使用 |\n| :--- | :--- |\n| my | mine |\n| your | yours |\n| his | his |\n| her | hers |\n| our | ours |\n| their | theirs |",
+        "*My*, *your*, *her*, *our* and *their* come before a noun: *my bag*. *Mine*, *yours*, *hers*, *ours* and *theirs* stand alone, with no noun after them: *This bag is mine.*\n\n| before a noun | alone |\n| :--- | :--- |\n| my | mine |\n| your | yours |\n| his | his |\n| her | hers |\n| our | ours |\n| their | theirs |\n\n> **Watch out.** Never add an apostrophe to *yours*, *hers*, *ours* or *theirs* (*your's* is wrong), and do not use *my/our/their* with no noun after it.",
+        "*my*、*your*、*her*、*our*、*their* 放在名词前：*my bag*。*mine*、*yours*、*hers*、*ours*、*theirs* 单独使用，后面不接名词：*This bag is mine.*\n\n| 名词前 | 单独使用 |\n| :--- | :--- |\n| my | mine |\n| your | yours |\n| his | his |\n| her | hers |\n| our | ours |\n| their | theirs |\n\n> **注意。** 中文“我的”既能说“我的包”也能说“这包是我的”，英语要分清两套词；另外 *yours、hers、ours、theirs* 都不加撇号。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), possessiveChoiceBank, possessiveWhy, whyNotPossessive),
     ),
@@ -588,22 +592,22 @@ const possessivePronouns: TopicDef = {
       "fix",
       t("Fixing mine and my", "改正 mine 和 my"),
       t(
-        "Each sentence uses the wrong word: *my* where nothing follows, or *mine* before a noun. Write it again.",
-        "每个句子都用错了词：后面没有名词却用了 *my*，或在名词前用了 *mine*。改正句子。",
+        "Each sentence uses the wrong form: *This bag is my.* → *This bag is mine.* *Is this mine bag?* → *Is this my bag?* Check whether a noun follows the possessive word.\n\n> **Watch out.** For *he*, *his* works in both places (*his bag* and *This bag is his*), never *him*.",
+        "每个句子都用错了词：*This bag is my.* → *This bag is mine.* *Is this mine bag?* → *Is this my bag?* 看物主词后面有没有名词来判断。\n\n> **注意。** *he* 对应的物主词在两个位置都是 *his*（*his bag* 和 *This bag is his*），不要写成 *him*。",
       ),
       typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), possessiveFixBank, (right) => {
         if (right.startsWith("Is this")) {
           const word = right.split(" ")[2] ?? "";
           const alone = ownerOf(word)?.[1] ?? word;
           return t(
-            `A noun follows, so it needs the word that goes before a noun: *${word}*, not *${alone}*: ${right}`,
-            `后面有名词，所以要用放在名词前的词：*${word}*，不用 *${alone}*：${right}`,
+            `A noun follows, so it needs the word that goes before a noun: *${word}*, not *${alone}*: ${right}\n\n**Check.** Spot the noun right after *${word}*—because a noun follows, the before-noun form is required.`,
+            `后面有名词，所以要用放在名词前的词：*${word}*，不用 *${alone}*：${right}\n\n**检验。** 看 *${word}* 后面紧跟着一个名词——有名词时必须用名词前的形式。`,
           );
         }
         const word = /(\w+)\.$/u.exec(right)?.[1] ?? "";
         return t(
-          `No noun follows, so it needs the word that stands alone: *${word}*: ${right}`,
-          `后面没有名词，所以要用单独使用的词 *${word}*：${right}`,
+          `No noun follows, so it needs the word that stands alone: *${word}*: ${right}\n\n**Check.** Look after *${word}*: the sentence ends right there with no noun, so the standalone possessive form fits.`,
+          `后面没有名词，所以要用单独使用的词 *${word}*：${right}\n\n**检验。** 看 *${word}* 后面：句子直接结束、没有名词，所以要用独立使用的物主代词。`,
         );
       }),
     ),
@@ -721,8 +725,8 @@ const comparisonWhy = (right: string, shown: string): Text => {
   const form = adjectives.find(([a]) => a === adjective)?.[1] ?? "";
   const rule = compareRule(adjective, form, false);
   return t(
-    `The first place comes first, then *is*, the comparative and *than*; ${rule.en}: ${right}`,
-    `先写第一个地方，再写 *is*、比较级和 *than*；${rule["zh-CN"]}：${right}`,
+    `The first place comes first, then *is*, the comparative and *than*; ${rule.en}: ${right}\n\n**Check.** Verify the pattern: Place 1 + *is* + comparative (*${form}*) + *than* + Place 2, with never both *more* and *-er*.`,
+    `先写第一个地方，再写 *is*、比较级和 *than*；${rule["zh-CN"]}：${right}\n\n**检验。** 核对句型：地点一 + *is* + 比较级（*${form}*）+ *than* + 地点二，且没有同时用 *more* 和 *-er*。`,
   );
 };
 
@@ -732,18 +736,15 @@ const whyNotComparison = (wrong: string, _right: string, shown: string, position
   const form = adjectives.find(([a]) => a === adjective)?.[1] ?? "";
   const rule = compareRule(adjective, form, false);
   if (position === 0)
-    return t(
-      `*${wrong}* gets the comparative wrong: ${rule.en}, so it is *${form}*.`,
-      `*${wrong}* 的比较级错了：${rule["zh-CN"]}，所以是 *${form}*。`,
-    );
+    return t(`*${wrong}* gets the comparative form wrong: ${rule.en}.`, `*${wrong}* 的比较级形式不对：${rule["zh-CN"]}。`);
   return form.startsWith("more ")
     ? t(
-        `*${wrong}* leaves the adjective as it is. ${rule.en}, so it is *${form}*.`,
-        `*${wrong}* 没有把形容词变成比较级。${rule["zh-CN"]}，所以是 *${form}*。`,
+        `*${wrong}* leaves the adjective unchanged, without turning it into a comparative.`,
+        `*${wrong}* 没有把形容词变成比较级，还是原形。`,
       )
     : t(
-        `*${wrong}* uses both *more* and *-er*. A comparative takes one or the other, never both: *${form}*.`,
-        `*${wrong}* 同时用了 *more* 和 *-er*。比较级只能用其中一种：*${form}*。`,
+        `*${wrong}* uses both *more* and *-er*. A comparative takes one or the other, never both.`,
+        `*${wrong}* 同时用了 *more* 和 *-er*。比较级只能用其中一种，不能叠加。`,
       );
 };
 
@@ -753,6 +754,10 @@ const writingComparisons: TopicDef = {
   summary: t(
     "Turn notes into comparisons: the park / the square / noisy becomes The park is noisier than the square.",
     "把笔记写成比较句：the park / the square / noisy 写成 The park is noisier than the square.",
+  ),
+  intro: t(
+    "When you compare two places (*The bakery is smaller than the market*) or single out the top one (*The library is the quietest in our town*), the adjective changes form and links to *than* or *the*.",
+    "比较两个地方（*The bakery is smaller than the market*）或指出“最……”（*The library is the quietest in our town*）时，形容词要变形，并分别搭配 *than* 或 *the*。",
   ),
   prerequisites: ["comparatives-and-superlatives", "writing-capitals-and-periods"],
   encompasses: [
@@ -766,8 +771,8 @@ const writingComparisons: TopicDef = {
       "choose",
       t("The comparison for the notes", "选出符合笔记的比较句"),
       t(
-        "The notes give two places and an adjective. The sentence puts the first place first, then *is*, the comparative and *than*:\n\n*the park / the square / noisy* → *The park is noisier than the square.*\n\nShort words add *-er* (*bigger*, *busier*); long words take *more* (*more crowded*); *good* and *bad* become *better* and *worse*. Never both: not *more bigger*.",
-        "笔记给出两个地方和一个形容词。句子先写第一个地方，再写 *is*、比较级和 *than*：\n\n*the park / the square / noisy* → *The park is noisier than the square.*\n\n短词加 *-er*（*bigger*、*busier*）；长词前加 *more*（*more crowded*）；*good* 和 *bad* 变成 *better* 和 *worse*。不能两样都用：不说 *more bigger*。中文说“公园比广场吵”，形容词不变；英语的形容词要变成比较级。",
+        "The notes give two places and an adjective. The sentence puts the first place first, then *is*, the comparative and *than*:\n\n*the park / the square / noisy* → *The park is noisier than the square.*\n\nShort words add *-er* (*bigger*, *busier*); long words take *more* (*more crowded*); *good* and *bad* become *better* and *worse*.\n\n> **Watch out.** Never combine *more* and *-er* (*more bigger* is wrong), and never leave a long adjective unchanged before *than* (*crowded than* is wrong).",
+        "笔记给出两个地方和一个形容词。句子先写第一个地方，再写 *is*、比较级和 *than*：\n\n*the park / the square / noisy* → *The park is noisier than the square.*\n\n短词加 *-er*（*bigger*、*busier*）；长词前加 *more*（*more crowded*）；*good* 和 *bad* 变成 *better* 和 *worse*。\n\n> **注意。** 中文说“公园比广场吵”形容词不变，英语不能留原形，也不能把 *more* 和 *-er* 叠着用（*more bigger* 是错的）。",
       ),
       choiceGenerator(
         t("Choose the sentence that matches the notes.", "选出与笔记相符的句子。"),
@@ -780,8 +785,8 @@ const writingComparisons: TopicDef = {
       "write",
       t("Writing the comparison", "写出比较句"),
       t(
-        "Write the sentence for the notes: the first place, *is*, the comparative of the adjective and *than*, then the second place. Start with a capital letter and end with a period.",
-        "根据笔记写出比较句：第一个地方、*is*、形容词的比较级和 *than*，再写第二个地方。句首大写，句末加句号。",
+        "Write the sentence for the notes: the first place, *is*, the comparative of the adjective and *than*, then the second place. For example: *the market / the mall / crowded* → *The market is more crowded than the mall.*\n\n> **Watch out.** Do not forget *than* between the comparative and the second place, and watch spelling changes like *big* → *bigger* and *busy* → *busier*.",
+        "根据笔记写出比较句：第一个地方、*is*、形容词的比较级和 *than*，再写第二个地方。例如：*the market / the mall / crowded* → *The market is more crowded than the mall.*\n\n> **注意。** 比较级和第二个地方之间别漏掉 *than*，并留意拼写变化（*big* → *bigger*、*busy* → *busier*）。",
       ),
       typedGenerator("sentence", t("Write a sentence from the notes.", "根据笔记写一个句子。"), comparisonTypedBank, comparisonWhy),
     ),
@@ -789,8 +794,8 @@ const writingComparisons: TopicDef = {
       "most",
       t("Writing the superlative", "写出最高级"),
       t(
-        "To say a place is more than all the others, use *the* and the superlative, then where: *The market is the busiest in our town.* Short words add *-est*; long words take *most*; *good* and *bad* become *best* and *worst*.",
-        "说一个地方在所有地方中“最……”，用 *the* 加最高级，再说范围：*The market is the busiest in our town.* 短词加 *-est*；长词前加 *most*；*good* 和 *bad* 变成 *best* 和 *worst*。别忘了 *the*。",
+        "To say a place is more than all the others, use *the* and the superlative, then where: *The market is the busiest in our town.* Short words add *-est*; long words take *most*; *good* and *bad* become *best* and *worst*.\n\n> **Watch out.** Always put *the* before a superlative (*the busiest*, not *busiest*), and never mix *most* with *-est* (*the most busiest* is wrong).",
+        "说一个地方在所有地方中“最……”，用 *the* 加最高级，再说范围：*The market is the busiest in our town.* 短词加 *-est*；长词前加 *most*；*good* 和 *bad* 变成 *best* 和 *worst*。\n\n> **注意。** 最高级前面不能漏掉 *the*（要写 *the busiest*，不要只写 *busiest*），也不要把 *most* 和 *-est* 叠着用。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -801,8 +806,8 @@ const writingComparisons: TopicDef = {
           const form = adjectives.find(([a]) => a === adjective)?.[2] ?? "";
           const rule = compareRule(adjective, form, true);
           return t(
-            `The place goes beyond all the others in its area, so it takes *the* and the superlative, then where; ${rule.en}: ${right}`,
-            `这个地方在所有地方中“最……”，所以用 *the* 加最高级，再说范围；${rule["zh-CN"]}：${right}`,
+            `The place goes beyond all the others in its area, so it takes *the* and the superlative, then where; ${rule.en}: ${right}\n\n**Check.** Verify all three marks: *the* before *${form}*, the right superlative spelling, and the area phrase at the end.`,
+            `这个地方在所有地方中“最……”，所以用 *the* 加最高级，再说范围；${rule["zh-CN"]}：${right}\n\n**检验。** 核对三处：*${form}* 前有 *the*、最高级拼写正确、句末写明了范围。`,
           );
         },
       ),
@@ -882,6 +887,10 @@ const describingAPlace = judgedTopic({
     "Write six to eight sentences about your neighborhood or a place the task names: where it is, what is there and what it is like.",
     "用六到八句话描述你的街区或题目给出的地方：它在哪里、那里有什么、它是什么样的。",
   ),
+  intro: t(
+    "A vivid description places the reader on the map, lists what stands there, and gives the feel of the area: *My town sits by a quiet bay. There is a small harbor and a busy fish market. It is cooler than the big city.*",
+    "生动的地点描写会先交代位置，再写出那里有什么，最后点出氛围：*My town sits by a quiet bay. There is a small harbor and a busy fish market. It is cooler than the big city.*",
+  ),
   prerequisites: ["writing-comparisons", "writing-about-a-room"],
   encompasses: [
     { topic: "writing-comparisons", weight: 0.3 },
@@ -892,8 +901,8 @@ const describingAPlace = judgedTopic({
     id: "place",
     title: t("Where, what is there and what it is like", "在哪里、有什么、什么样"),
     explanation: t(
-      "A description of a place answers three questions:\n\n- Where is it? *It is in the north of the city, near the river.*\n- What is there? Use *there is* and *there are*: *There is a bakery. There are two cafes.*\n- What is it like? Use adjectives and a comparison: *It is peaceful. It is quieter than the city center.*\n\nYou can end with what you think of it: *I like living here.*",
-      "描述一个地方要回答三个问题：\n\n- 它在哪里？*It is in the north of the city, near the river.*\n- 那里有什么？用 *there is* 和 *there are*：*There is a bakery. There are two cafes.*（不要说 *It has a bakery* 来代替所有的“有”）\n- 它是什么样的？用形容词和比较句：*It is peaceful. It is quieter than the city center.*\n\n最后可以说说你的看法：*I like living here.*",
+      "A description of a place answers three questions:\n\n- Where is it? *It is in the north of the city, near the river.*\n- What is there? Use *there is* and *there are*: *There is a bakery. There are two cafes.*\n- What is it like? Use adjectives and a comparison: *It is peaceful. It is quieter than the city center.*\n\nYou can end with what you think of it: *I like living here.*\n\n> **Watch out.** Use *There is / There are* (not *Have* or repeated *It has*) to introduce what is in a place, and make sure you cover all three questions.",
+      "描述一个地方要回答三个问题：\n\n- 它在哪里？*It is in the north of the city, near the river.*\n- 那里有什么？用 *there is* 和 *there are*：*There is a bakery. There are two cafes.*\n- 它是什么样的？用形容词和比较句：*It is peaceful. It is quieter than the city center.*\n\n最后可以说说你的看法：*I like living here.*\n\n> **注意。** 介绍某地有什么时用 *There is / There are*（不要总用 *It has* 代替“有”），并确保三个问题都写到。",
     ),
   },
   question: t(

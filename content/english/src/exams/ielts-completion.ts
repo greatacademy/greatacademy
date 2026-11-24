@@ -399,14 +399,25 @@ function items(gaps: (c: Completed) => readonly Gap[], boxed: boolean): readonly
         shown: `${c.text}\n\n**${boxed ? "Summary" : "Sentence"}:** ${sentence}`,
         right,
         wrong,
+        whyNot: wrong.map((w) =>
+          boxed
+            ? t(
+                `*${w}* does not match the meaning of the text here—check the paraphrase in the passage.`,
+                `*${w}* 与原文此处的意思不符，请核对原文中的同义转述。`,
+              )
+            : t(
+                `*${w}* appears elsewhere or has the wrong meaning for this gap; check the exact phrase in the text.`,
+                `*${w}* 出现在别处或意思与空格不符，请核对原文对应的短语。`,
+              ),
+        ),
         solution: boxed
           ? t(
-              `**${right}**. The text says it in other words: "${evidence}${end(evidence)}" In a summary the words usually differ from the text's, so match the meaning, then check that the word fits the grammar of the gap.`,
-              `**${right}**。原文换了说法："${evidence}${end(evidence)}" 摘要用词通常与原文不同，要按意思匹配，再检查这个词是否符合空格处的语法。`,
+              `**${right}**. The text says it in other words: "${evidence}${end(evidence)}" In a summary the words usually differ from the text's, so match the meaning, then check that the word fits the grammar of the gap.\n\n**Check.** Read the completed summary sentence aloud with *${right}* to confirm both meaning and part of speech fit naturally.`,
+              `**${right}**。原文换了说法："${evidence}${end(evidence)}" 摘要用词通常与原文不同，要按意思匹配，再检查这个词是否符合空格处的语法。\n\n**检验。** 把 *${right}* 放回摘要句通读一遍，确认意思和词性都自然贴合。`,
             )
           : t(
-              `**${right}**. The text says: "${evidence}${end(evidence)}" Copy the word exactly as the text spells it; a word that is in the text but means something else does not fit.`,
-              `**${right}**。原文是："${evidence}${end(evidence)}" 要按原文拼写照抄；出现在原文中但意思不对的词不能填。`,
+              `**${right}**. The text says: "${evidence}${end(evidence)}" Copy the word exactly as the text spells it; a word that is in the text but means something else does not fit.\n\n**Check.** Verify *${right}* appears verbatim in the matching phrase and fits the grammar of the sentence.`,
+              `**${right}**。原文是："${evidence}${end(evidence)}" 要按原文拼写照抄；出现在原文中但意思不对的词不能填。\n\n**检验。** 确认 *${right}* 原样出现在对应的原文短语中，并且符合句子的语法要求。`,
             ),
       })),
     ),
@@ -421,6 +432,10 @@ export const sentenceAndSummaryCompletion: TopicDef = examTopic({
     "IELTS-style gaps after short texts: completing sentences with words of the text, and summaries with words from a box.",
     "雅思风格的短文填空：用原文的词完成句子，用方框里的词完成摘要。",
   ),
+  intro: t(
+    "IELTS completion tasks test two closely related skills: pulling an exact word straight out of the passage for a sentence gap, and matching a paraphrased synonym from a word box for a summary gap.",
+    "雅思填空题考查两项紧密相连的能力：句子填空要求从原文原样提取一个词，而带词框的摘要填空则要求按同义转述从方框里选出词性和意思都对的词。",
+  ),
   strand: "reading",
   prerequisites: ["supporting-details"],
   encompasses: [{ topic: "supporting-details", weight: 0.3 }],
@@ -430,8 +445,8 @@ export const sentenceAndSummaryCompletion: TopicDef = examTopic({
       "ielts-sentence-completion",
       t("Completing Sentences from the Text", "用原文的词完成句子"),
       t(
-        "Read the sentence first and decide what kind of word the gap needs: a noun, a verb, an adjective. Then find the part of the text it comes from: its words are usually close to the sentence's, but in a different order. Choose the word the text uses there, spelled exactly as in the text. Words that appear nearby but say something else are the traps.",
-        "先读句子，判断空格需要什么词：名词、动词还是形容词。再找到它对应的原文：用词通常和句子相近，只是顺序不同。选原文在那里用的词，拼写与原文完全一致。附近出现但意思不对的词就是陷阱。",
+        "Read the sentence first and decide what kind of word the gap needs: a noun, a verb, an adjective. Then find the part of the text it comes from: its words are usually close to the sentence's, but in a different order. Choose the word the text uses there, spelled exactly as in the text.\n\n> **Watch out.** Nearby words from the same sentence are classic distractors—check the grammar of the gap and the exact meaning before locking in your word.",
+        "先读句子，判断空格需要什么词：名词、动词还是形容词。再找到它对应的原文：用词通常和句子相近，只是顺序不同。选原文在那里用的词，拼写与原文完全一致。\n\n> **注意。** 同一句附近出现的其他词是最常见的干扰项——定案前先核对空格所需的词性和准确意思。",
       ),
       solvedChoiceGenerator(
         t("Complete the sentence with ONE WORD from the text.", "用原文中的**一个词**完成句子。"),
@@ -442,8 +457,8 @@ export const sentenceAndSummaryCompletion: TopicDef = examTopic({
       "ielts-summary-completion",
       t("Completing a Summary from a Box", "用方框中的词完成摘要"),
       t(
-        "A summary restates the text in other words, so the right word is often not in the text at all: *fell* becomes *decreased*, *alone* becomes *unaccompanied*. Find the part of the text the summary sentence retells, decide what it means, and choose the word from the box with that meaning and the right grammar. Wrong choices are often the opposite meaning or a word of the text that means something else.",
-        "摘要是用别的话复述原文，所以正确的词常常根本不在原文里：*fell* 变成 *decreased*，*alone* 变成 *unaccompanied*。找到摘要句复述的原文，弄清它的意思，再从方框中选出意思相同、语法也合适的词。错误选项常常是相反的意思，或者是原文中意思不对的词。",
+        "A summary restates the text in other words, so the right word is often not in the text at all: *fell* becomes *decreased*, *alone* becomes *unaccompanied*. Find the part of the text the summary sentence retells, decide what it means, and choose the word from the box with that meaning and the right grammar.\n\n> **Watch out.** Do not hunt for an exact word from the passage inside the box—the box usually paraphrases the text, and opposite-meaning distractors are placed there on purpose.",
+        "摘要是用别的话复述原文，所以正确的词常常根本不在原文里：*fell* 变成 *decreased*，*alone* 变成 *unaccompanied*。找到摘要句复述的原文，弄清它的意思，再从方框中选出意思相同、语法也合适的词。\n\n> **注意。** 不要指望在方框里找到原文原词——方框选项通常是同义转述，而且常常故意放入反义干扰词。",
       ),
       solvedChoiceGenerator(
         t("Complete the summary with a word from the box.", "从方框中选词完成摘要。"),

@@ -617,20 +617,38 @@ const mainIdeaNot: Say = (wrong, _right, _shown, position) =>
         `*${wrong}* 是段落并没有展开说明的泛泛事实。段落的细节合起来讲的是更具体的内容。`,
       ];
 
-const titleNot: Say = (wrong) => [
-  `*${wrong}* fits a word or two of the text at most, not what the whole text is about.`,
-  `*${wrong}* 最多只和文中的一两个词有关，而不是整段文字讲的内容。`,
-];
+const titleNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `“${wrong}” matches only one small part of the text, not what the whole paragraph is about.`,
+        `“${wrong}”只对应文中的一小部分，不能概括整段文字。`,
+      ]
+    : [
+        `“${wrong}” points to a related or outside subject instead of the main idea of this text.`,
+        `“${wrong}”指向的是相关或题外的话题，而不是这段文字的主旨。`,
+      ];
 
-const supportNot: Say = (wrong) => [
-  `*${wrong}* may be true, but it gives no reason to believe the main idea. A supporting detail shows that the main idea is right.`,
-  `*${wrong}* 也许是真的，但它不能让人相信主旨。支持性细节要能说明主旨是对的。`,
-];
+const supportNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `“${wrong}” is a general fact about the topic, but it does not prove the main idea.`,
+        `“${wrong}”只是关于这个话题的一般事实，并不能证明主旨。`,
+      ]
+    : [
+        `“${wrong}” may be true on its own, yet it drifts away from the main idea instead of backing it up.`,
+        `“${wrong}”本身也许是真的，但它偏离了主旨，没有起到支持作用。`,
+      ];
 
-const summaryNot: Say = (wrong) => [
-  `*${wrong}* leaves out the main points of the text, or adds what the text does not say. A summary gives the main points briefly, without opinions.`,
-  `*${wrong}* 漏掉了文本的要点，或者加了文中没有的内容。摘要要简短地讲出要点，不加个人看法。`,
-];
+const summaryNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `“${wrong}” gives only one small detail and leaves out the rest of the text.`,
+        `“${wrong}”只说了其中一个小细节，漏掉了全文的其他要点。`,
+      ]
+    : [
+        `“${wrong}” adds an opinion or outside idea that the text does not state—a summary sticks to the text's key points.`,
+        `“${wrong}”加入了原文没有的个人看法或题外内容——概括只能忠实保留原文要点。`,
+      ];
 
 const featureNot = meaning({
   "the table of contents": [
@@ -655,20 +673,38 @@ const featureNot = meaning({
 /** featureName names the feature an item asks about, whether it is shown alone or with the book it belongs to. */
 const featureName = (shown: string) => (shown.includes(",") ? shown.slice(0, shown.indexOf(",")) : `the ${shown}`);
 
-const featureJobNot: Say = (wrong, _right, shown) => [
-  `*${wrong}* is the job of a different text feature, not of ${featureName(shown)}.`,
-  `*${wrong}* 是另一种文本特征的作用，不是 ${featureName(shown)} 的作用。`,
-];
+const featureJobNot: Say = (wrong, _right, shown, position) =>
+  position === 0
+    ? [
+        `“${wrong}” describes a different text feature's job, not what ${featureName(shown)} is for.`,
+        `“${wrong}”描述的是另一种文本特征的作用，而不是 ${featureName(shown)} 的用途。`,
+      ]
+    : [
+        `That is not what ${featureName(shown)} does—“${wrong}” belongs to another part of a book.`,
+        `这不是 ${featureName(shown)} 的功能——“${wrong}”属于书里的另一部分。`,
+      ];
 
-const signalNot: Say = (wrong) => [
-  `*${wrong}* does not tell when something happens: it links ideas in another way, such as a reason, a contrast or a likeness. The blank needs a word of time order.`,
-  `*${wrong}* 不表示时间：它用别的方式连接意思，比如原因、对比或相似。空格处需要一个表示时间顺序的词。`,
-];
+const signalNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `*${wrong}* does not show time order—it links ideas in a different way (such as a reason or contrast).`,
+        `*${wrong}* 不表示时间顺序——它表示的是其他关系（如原因或对比）。`,
+      ]
+    : [
+        `Putting *${wrong}* in the blank breaks the sequence; look for a word that tells *when* the next step happens.`,
+        `把 *${wrong}* 填进空格会打断顺序；要找说明下一步“何时”发生的词。`,
+      ];
 
-const firstNot: Say = (wrong) => [
-  `*${wrong}* happened later. Words such as *before*, *earlier* and *had* show what came first, even when the text tells it later.`,
-  `*${wrong}* 发生得更晚。*before*、*earlier*、*had* 这样的词表明哪件事先发生，即使文中后面才讲到它。`,
-];
+const firstNot: Say = (wrong, _right, _shown, position) =>
+  position === 0
+    ? [
+        `“${wrong}” happened later in time—check words like *before*, *earlier*, and *had* to see what came first.`,
+        `“${wrong}”在时间上发生得更晚——留意 *before*、*earlier* 和 *had*，找出最先发生的事。`,
+      ]
+    : [
+        `“${wrong}” was not the first event; trace the timeline backward from the earliest clue in the passage.`,
+        `“${wrong}”不是最先发生的事件；根据文中最早的时间线索往回推一遍。`,
+      ];
 
 const causeNot: Say = (wrong, _right, _shown, position) =>
   position === 0
@@ -732,6 +768,10 @@ export const informationalReadingTopics: readonly TopicDef[] = [
     id: "main-idea",
     title: t("Main Idea", "主旨"),
     summary: t("What a paragraph is mostly about, and the title that fits it.", "段落主要讲什么，以及适合它的标题。"),
+    intro: t(
+      "A paragraph about sea otters describes how they sleep, eat, and carry babies—all while floating on their backs. Finding the main idea means seeing the one big point that ties every sentence together, and choosing a title that names it.",
+      "一段写海獭的文字讲到它们漂在背上睡觉、吃东西、抱着幼崽。找主旨就是要看出把每一句话串联起来的那个中心意思，并选出一个能概括全文的标题。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 10,
@@ -740,15 +780,16 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "main-idea-of-a-paragraph",
         t("The Main Idea of a Paragraph", "段落的主旨"),
         t(
-          "The **main idea** is what a paragraph is mostly about. Every sentence should connect to it. To find it, ask what all the sentences have in common. A single detail is too narrow to be the main idea, and a general fact about the subject is too broad, because it could fit many other paragraphs.",
-          "**主旨**是段落主要讲的内容，每个句子都应与它相关。要找主旨，就问所有句子有什么共同点。单个细节太窄，不能作为主旨；关于这个话题的一般事实又太宽，因为它也适用于许多别的段落。",
+          "The **main idea** is what a paragraph is mostly about. Every sentence should connect to it. To find it, ask what all the sentences have in common. A single detail is too narrow to be the main idea, and a general fact about the subject is too broad, because it could fit many other paragraphs.\n\n> **Watch out.** Do not pick a sentence just because it appears in the paragraph—one detail is too narrow, and a broad fact about the topic is too wide.",
+          "**主旨**是段落主要讲的内容，每个句子都应与它相关。要找主旨，就问所有句子有什么共同点。单个细节太窄，不能作为主旨；关于这个话题的一般事实又太宽，因为它也适用于许多别的段落。\n\n> **注意。**不要只因为某句话在段中出现过就选它——单个细节太窄，泛泛的事实又太宽。",
         ),
         pick(
           ["What is the main idea of this paragraph?", "这段话的主旨是什么？"],
           [...mainIdeaBank, ...recordMainIdea],
           (right) =>
-            `**${right}** Every sentence connects to this idea. The other choices are a single detail, which is too narrow, or a general fact, which is too broad.`,
-          (right) => `**${right}** 每个句子都与这个意思相关。其他选项要么只是一个细节，太窄；要么是一般事实，太宽。`,
+            `**${right}** Every sentence in the paragraph connects to this big idea.\n\n**Check.** Test each sentence of the paragraph against **${right}**—every detail fits under it, not just one sentence.`,
+          (right) =>
+            `**${right}** 段落里的每个句子都指向这个中心意思。\n\n**检验。**把段落里的每一句逐一对照 **${right}**——每个细节都归属于它，而不只是其中一句。`,
           mainIdeaNot,
         ),
       ),
@@ -756,15 +797,16 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "choosing-a-title",
         t("Choosing a Title", "选择标题"),
         t(
-          "A good title names the main idea in a few words. Choose the one that covers the whole text. A title about only one detail leaves the rest out, and a title about a related subject points the reader somewhere else.",
-          "好标题用几个词点出主旨。选择能概括全文的那一个。只关于一个细节的标题漏掉了其余内容；关于相关话题的标题会把读者引向别处。",
+          "A good title names the main idea in a few words. Choose the one that covers the whole text. A title about only one detail leaves the rest out, and a title about a related subject points the reader somewhere else.\n\n> **Watch out.** A word from the passage can show up in a wrong title—make sure the title fits the *whole* paragraph, not just one word in it.",
+          "好标题用几个词点出主旨。选择能概括全文的那一个。只关于一个细节的标题漏掉了其余内容；关于相关话题的标题会把读者引向别处。\n\n> **注意。**错误标题里也可能出现文中的词——要确认标题概括的是*整段话*，而不只是里面的某一个词。",
         ),
         pick(
           ["Which title fits this text best?", "哪个标题最适合这段文字？"],
           [...titleBank, ...recordTitle],
           (right) =>
-            `**${right}** names what the whole text is about. The other titles are about something the text only touches on, or not at all.`,
-          (right) => `**${right}** 点出了全文讲的内容。其他标题说的是文中只稍稍提到或根本没提的东西。`,
+            `**${right}** names what the whole text is about.\n\n**Check.** Imagine seeing **${right}** at the top of a page—every sentence in the passage belongs right under that heading.`,
+          (right) =>
+            `**${right}** 点出了全文讲的内容。\n\n**检验。**想象 **${right}** 印在文章最上方——段里的每一句话都正好属于这个标题下面。`,
           titleNot,
         ),
       ),
@@ -777,6 +819,10 @@ export const informationalReadingTopics: readonly TopicDef[] = [
       "Details that back up a main idea, and a summary that keeps only the important points.",
       "支持主旨的细节，以及只保留要点的概括。",
     ),
+    intro: t(
+      "If the main idea is *Owls are skilled night hunters*, the detail *Their large eyes let in a great deal of light* backs it up—while *Owls are a kind of bird* does not. Good readers separate strong supporting details from side facts and sum up a text in a single clean sentence.",
+      "如果主旨是 *Owls are skilled night hunters*，那么 *Their large eyes let in a great deal of light* 就能证明它，而 *Owls are a kind of bird* 不能。好读者既能挑出真正支持主旨的细节，也能用简练的话概括全文。",
+    ),
     prerequisites: ["main-idea"],
     encompasses: [{ topic: "main-idea", weight: 0.3 }],
     xp: 12,
@@ -785,15 +831,15 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "finding-support",
         t("Finding Support", "找出支持的细节"),
         t(
-          "A **supporting detail** gives a fact, reason or example that shows the main idea is true. A sentence can be true and about the same subject and still not support the idea: *Owls are a kind of bird* is true, but it does not show that owls are skilled hunters.",
-          "**支持细节**提供能证明主旨的事实、理由或例子。一个句子可能是真的、也和同一话题有关，却不支持主旨：*Owls are a kind of bird* 是真的，但它并不能说明猫头鹰是熟练的猎手。",
+          "A **supporting detail** gives a fact, reason or example that shows the main idea is true. A sentence can be true and about the same subject and still not support the idea: *Owls are a kind of bird* is true, but it does not show that owls are skilled hunters.\n\n> **Watch out.** Do not pick a sentence just because it is true or mentions the same animal or place—ask whether it *proves* the main idea.",
+          "**支持细节**提供能证明主旨的事实、理由或例子。一个句子可能是真的、也和同一话题有关，却不支持主旨：*Owls are a kind of bird* 是真的，但它并不能说明猫头鹰是熟练的猎手。\n\n> **注意。**不要只因为一句话是真的或提到了同一个话题就选它——要问它能不能*证明*主旨。",
         ),
         pick(
           ["Which detail supports the main idea?", "哪个细节支持这个主旨？"],
           [...supportBank, ...recordSupport],
           (right) =>
-            `*${right}* shows that the main idea is true. The other sentences are about the same subject but do not back up the idea.`,
-          (right) => `*${right}* 证明了主旨。其他句子虽然和同一话题有关，却不支持这个观点。`,
+            `“${right}” gives concrete evidence that the main idea is true.\n\n**Check.** Read the main idea and then add *because* + “${right}”—it directly explains or proves the point.`,
+          (right) => `“${right}”给出了证明主旨的具体依据。\n\n**检验。**把主旨和“${right}”用“因为”连起来读——它直接解释或证明了这个观点。`,
           supportNot,
         ),
       ),
@@ -801,15 +847,16 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "best-summary",
         t("The Best Summary", "最好的概括"),
         t(
-          "A **summary** tells the most important points of a text in a few words of your own. It covers the whole text, not just one part, and it leaves out small details and your opinions.",
-          "**概括**用自己的话简短说出文本最重要的内容。它涵盖全文而不只是一部分，并省去小细节和个人看法。",
+          "A **summary** tells the most important points of a text in a few words of your own. It covers the whole text, not just one part, and it leaves out small details and your opinions.\n\n> **Watch out.** Reject any summary that sneaks in opinion words (*most beautiful*, *best of all*) or mentions only one sentence from the passage.",
+          "**概括**用自己的话简短说出文本最重要的内容。它涵盖全文而不只是一部分，并省去小细节和个人看法。\n\n> **注意。**排除夹带个人看法（如 *most beautiful*、*best of all*）或只挑出文中一句话的选项。",
         ),
         pick(
           ["Which is the best summary of this text?", "哪一项是对这段文字最好的概括？"],
           [...summaryBank, ...recordSummary],
           (right) =>
-            `*${right}* covers the whole text in a few words. One other choice tells only one detail, and the other adds something the text does not say or leaves out its point.`,
-          (right) => `*${right}* 用简短的话涵盖了全文。另一个选项只说了一个细节，还有一个添加了原文没有的内容或漏掉了要点。`,
+            `“${right}” captures the key points of the whole text briefly and without opinions.\n\n**Check.** Check two things: does it cover the beginning, middle, and end of the passage, and is it free of personal opinions? Yes to both.`,
+          (right) =>
+            `“${right}”简短概括了全文的要点，而且不带个人看法。\n\n**检验。**检查两件事：它是不是涵盖了一头一尾的主要内容？里面是不是没有个人评价？两项都符合。`,
           summaryNot,
         ),
       ),
@@ -822,6 +869,10 @@ export const informationalReadingTopics: readonly TopicDef[] = [
       "Glossaries, indexes, captions, headings, maps and charts, and what each is for.",
       "词汇表、索引、图注、标题、地图和图表，以及它们各自的用途。",
     ),
+    intro: t(
+      "Need to look up the word *larva* in a science book? Flip to the glossary. Need the exact page about frogs? Check the index. Nonfiction text features are built-in shortcuts that help you find information fast.",
+      "在科学书里想查 *larva* 的意思？翻到词汇表。想找讲青蛙的页码？查索引。说明文里的各种文本特征就像内置的快捷工具，能帮你迅速找到信息。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 10,
@@ -830,14 +881,16 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "where-to-look",
         t("Where to Look", "到哪里找"),
         t(
-          "Books and articles have parts that help you find information. The **table of contents** lists chapters in order at the front; the **index** lists topics alphabetically at the back; the **glossary** gives the meanings of special words. A **caption** explains a picture, and a **heading** names a section. Maps, charts, diagrams and timelines show information as pictures.",
-          "书和文章有帮助你查找信息的部分。**目录**在书前按顺序列出章节；**索引**在书后按字母顺序列出话题；**词汇表**解释专门词语的意思。**图注**说明图片，**小标题**点明一节的内容。地图、图表、示意图和时间线用图来展示信息。",
+          "Books and articles have parts that help you find information. The **table of contents** lists chapters in order at the front; the **index** lists topics alphabetically at the back; the **glossary** gives the meanings of special words. A **caption** explains a picture, and a **heading** names a section. Maps, charts, diagrams and timelines show information as pictures.\n\n> **Watch out.** Do not mix up the **table of contents** (chapters in order at the front), the **index** (alphabetical topics with page numbers at the back), and the **glossary** (word meanings).",
+          "书和文章有帮助你查找信息的部分。**目录**在书前按顺序列出章节；**索引**在书后按字母顺序列出话题；**词汇表**解释专门词语的意思。**图注**说明图片，**小标题**点明一节的内容。地图、图表、示意图和时间线用图来展示信息。\n\n> **注意。**不要混淆**目录**（书前按顺序列章节）、**索引**（书后按字母列话题和页码）和**词汇表**（查词义）。",
         ),
         pick(
           ["Which text feature should you use?", "你应该使用哪种文本特征？"],
           [...featureBank, ...moreFeatureBank],
-          (right) => `Use **${right}**. It is the part made for exactly this kind of question.`,
-          (right) => `用 **${right}**。它正是为这类问题而设的部分。`,
+          (right) =>
+            `Use **${right}**. It is built for exactly this kind of search.\n\n**Check.** Match what you need (a word meaning, a page number, chapter order, a picture note, or visual data) directly to **${right}**.`,
+          (right) =>
+            `用 **${right}**。它正是为这类查找而设的。\n\n**检验。**把你要找的信息（词义、页码、章节顺序、图片说明或图示数据）直接对照 **${right}** 的用途。`,
           featureNot,
         ),
       ),
@@ -845,14 +898,15 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "what-a-feature-does",
         t("What Each Feature Does", "每种特征的作用"),
         t(
-          "Each feature has one job. Telling them apart saves time: to learn a word, go to the glossary; to find a page, go to the index; to see what a section covers, read its heading.",
-          "每种特征都有自己的作用。分清它们能节省时间：查词义去词汇表，找页码去索引，想知道一节讲什么就看它的小标题。",
+          "Each feature has one job. Telling them apart saves time: to learn a word, go to the glossary; to find a page, go to the index; to see what a section covers, read its heading.\n\n> **Watch out.** Match the feature's exact job—a **caption** explains a photo, whereas a **heading** names a section of text.",
+          "每种特征都有自己的作用。分清它们能节省时间：查词义去词汇表，找页码去索引，想知道一节讲什么就看它的小标题。\n\n> **注意。**分清每种特征的准确作用——**图注**说明照片或插图，**小标题**点明一节文字的主题。",
         ),
         pick(
           ["What does this text feature do?", "这种文本特征有什么作用？"],
           [...featureJobBank, ...moreFeatureJobBank],
-          (right) => `${right} The other choices describe the jobs of other features.`,
-          (right) => `${right} 其他选项描述的是别的特征的作用。`,
+          (right) =>
+            `${right}\n\n**Check.** Picture opening a nonfiction book to this feature—its layout does exactly this job and not the jobs of the other two choices.`,
+          (right) => `${right}\n\n**检验。**想象在科普书里翻到这个部分——它的样子正好完成这项工作，而不是另外两个选项说的事。`,
           featureJobNot,
         ),
       ),
@@ -862,6 +916,10 @@ export const informationalReadingTopics: readonly TopicDef[] = [
     id: "sequence-in-texts",
     title: t("Sequence", "顺序"),
     summary: t("Words that show time order, and working out what happened first.", "表示时间顺序的词，以及判断先发生了什么。"),
+    intro: t(
+      "*Maya mailed the letter on Friday. She had written it on Wednesday and bought a stamp on Thursday.* Even when a writer tells events out of order, time words like *before*, *earlier*, and *had* let you put them back in true time order.",
+      "*Maya mailed the letter on Friday. She had written it on Wednesday and bought a stamp on Thursday.* 即使作者没有按先后顺序讲述，*before*、*earlier*、*had* 这样的时间词也能帮你还原真正的先后顺序。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 10,
@@ -870,14 +928,16 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "time-order-words",
         t("Time-Order Words", "表示时间顺序的词"),
         t(
-          "Writers show the order of steps and events with words such as *first, next, then, after that, before, once, as soon as* and *finally*. Words such as *because* show a reason and *however* shows a contrast, so they do not fit where an order of time is meant.",
-          "作者用 *first, next, then, after that, before, once, as soon as, finally* 这样的词表示步骤和事件的顺序。*because* 表示原因，*however* 表示转折，所以在需要表示时间顺序的地方不合适。",
+          "Writers show the order of steps and events with words such as *first, next, then, after that, before, once, as soon as* and *finally*. Words such as *because* show a reason and *however* shows a contrast, so they do not fit where an order of time is meant.\n\n> **Watch out.** Check what the blank connects—do not pick a reason word (*because*) or a contrast word (*however*, *although*) when the sentence is moving from one step in time to the next.",
+          "作者用 *first, next, then, after that, before, once, as soon as, finally* 这样的词表示步骤和事件的顺序。*because* 表示原因，*however* 表示转折，所以在需要表示时间顺序的地方不合适。\n\n> **注意。**看清空格前后是什么关系——句子在按时间推进时，不要选表示原因（*because*）或转折（*however*、*although*）的词。",
         ),
         pick(
           ["Which word or words complete the sequence?", "哪个词能补全这个顺序？"],
           [...signalBank, ...moreSignalBank],
-          (right) => `**${right}** shows the order of time. The other choices show a reason, a contrast or an example instead.`,
-          (right) => `**${right}** 表示时间顺序。其他选项表示的是原因、转折或举例。`,
+          (right) =>
+            `**${right}** shows the order of time between the two steps.\n\n**Check.** Read both sentences with **${right}** in the blank—it tells *when* the next event happens, not why or in contrast.`,
+          (right) =>
+            `**${right}** 表示两步之间的时间顺序。\n\n**检验。**把 **${right}** 填进空格把两句连起来读——它说明下一步“何时”发生，而不是原因或转折。`,
           signalNot,
         ),
       ),
@@ -885,15 +945,15 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "what-happened-first",
         t("What Happened First", "先发生了什么"),
         t(
-          "Events are not always told in the order they happened. Words such as *before, earlier, had* and *ago* can point back to something that came first: in *We ate lunch. Earlier, we had gone swimming*, the swimming came first even though it is told second.",
-          "事件并不总按发生的顺序讲述。*before, earlier, had, ago* 这样的词可以指回先发生的事：在 *We ate lunch. Earlier, we had gone swimming* 中，游泳先发生，尽管它在后面才讲。",
+          "Events are not always told in the order they happened. Words such as *before, earlier, had* and *ago* can point back to something that came first: in *We ate lunch. Earlier, we had gone swimming*, the swimming came first even though it is told second.\n\n> **Watch out.** Do not automatically pick the first event mentioned in the first sentence—always look for flashbacks signaled by *earlier*, *before that*, or *had*.",
+          "事件并不总按发生的顺序讲述。*before, earlier, had, ago* 这样的词可以指回先发生的事：在 *We ate lunch. Earlier, we had gone swimming* 中，游泳先发生，尽管它在后面才讲。\n\n> **注意。**不要想当然地选第一句最先提到的事——一定要留意 *earlier*、*before that* 或 *had* 引出的倒叙。",
         ),
         pick(
           ["Which of these happened first?", "下面哪件事最先发生？"],
           [...firstBank, ...moreFirstBank],
           (right) =>
-            `*${right}* came first. Words such as *before, earlier* and *had* show that it happened before the events told around it.`,
-          (right) => `*${right}* 最先发生。*before, earlier, had* 这样的词表明它发生在周围所讲的事件之前。`,
+            `“${right}” came first in time.\n\n**Check.** Put all three events on a mental timeline using time words like *before*, *earlier*, and *had*—this event sits at the very start.`,
+          (right) => `“${right}”在时间上最先发生。\n\n**检验。**用 *before*、*earlier*、*had* 等线索在脑中画一条时间线——这件事排在最前面。`,
           firstNot,
         ),
       ),
@@ -903,6 +963,10 @@ export const informationalReadingTopics: readonly TopicDef[] = [
     id: "cause-and-effect-in-texts",
     title: t("Cause and Effect", "因果"),
     summary: t("Finding why something happened and what happened because of it.", "找出事情发生的原因和由此产生的结果。"),
+    intro: t(
+      "When a storm knocks down power lines, homes lose electricity for two days: the storm is the **cause**, and losing electricity is the **effect**. Spotting what made something happen—and what followed—helps you follow any explanation.",
+      "暴风雨刮倒电线，山谷里的房子停电两天：暴风雨是**原因**，停电是**结果**。分清是什么引起事情、又带来了什么后果，就能读懂各种说明文字。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 10,
@@ -911,15 +975,16 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "finding-the-cause",
         t("Finding the Cause", "找出原因"),
         t(
-          "A **cause** is why something happens; an **effect** is what happens. Words such as *because, since, due to* and *as a result of* come right before a cause, while *so* comes right before an effect. The cause is not always told first: in *The milk went sour because it was left out*, the cause comes second.",
-          "**原因**是事情为什么发生，**结果**是发生了什么。*because, since, due to, as a result of* 这样的词后面紧跟原因，而 *so* 后面紧跟结果。原因不一定先讲：在 *The milk went sour because it was left out* 中，原因在后。",
+          "A **cause** is why something happens; an **effect** is what happens. Words such as *because, since, due to* and *as a result of* come right before a cause, while *so* comes right before an effect. The cause is not always told first: in *The milk went sour because it was left out*, the cause comes second.\n\n> **Watch out.** Do not swap cause and effect—ask *why did it happen?* to find the cause, even if it appears at the end of the sentence.",
+          "**原因**是事情为什么发生，**结果**是发生了什么。*because, since, due to, as a result of* 这样的词后面紧跟原因，而 *so* 后面紧跟结果。原因不一定先讲：在 *The milk went sour because it was left out* 中，原因在后。\n\n> **注意。**不要把原因和结果颠倒——问一句“它为什么会发生？”找到的就是原因，哪怕它写在句末。",
         ),
         pick(
           ["What is the cause?", "原因是什么？"],
           [...causeBank, ...recordCause],
           (right) =>
-            `*${right}* That is why the other event happened. One other choice is the effect, and the other is a detail that caused nothing.`,
-          (right) => `*${right}* 这就是另一件事发生的原因。另一个选项是结果，还有一个是并未导致任何事的细节。`,
+            `“${right}” is the cause—it is what made the other event happen.\n\n**Check.** Test it with *Because “${right.replace(/\.$/, "")}” …*—the rest of the sentence follows naturally as the result.`,
+          (right) =>
+            `“${right}”是原因——正是它导致了另一件事的发生。\n\n**检验。**用“因为${right.replace(/\.$/, "")}，所以……”套进原句——另一件事正好顺理成章地作为结果接在后面。`,
           causeNot,
         ),
       ),
@@ -927,15 +992,16 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "finding-the-effect",
         t("Finding the Effect", "找出结果"),
         t(
-          "To find an effect, ask *what happened because of this?* One cause can lead to an effect, and that effect can be the cause of another, like a row of falling dominoes. The effect must follow from the cause in the text, not just come after it.",
-          "要找结果，就问 *因为这件事，发生了什么？* 一个原因导致一个结果，这个结果又可能是另一件事的原因，就像一排倒下的多米诺骨牌。结果必须是文中由原因引起的，而不只是在它之后发生。",
+          "To find an effect, ask *what happened because of this?* One cause can lead to an effect, and that effect can be the cause of another, like a row of falling dominoes. The effect must follow from the cause in the text, not just come after it.\n\n> **Watch out.** Do not pick the starting cause itself—look for what changed *as a result* of it.",
+          "要找结果，就问 *因为这件事，发生了什么？* 一个原因导致一个结果，这个结果又可能是另一件事的原因，就像一排倒下的多米诺骨牌。结果必须是文中由原因引起的，而不只是在它之后发生。\n\n> **注意。**不要选成了开头的原因本身——要找*因此*发生的变化。",
         ),
         pick(
           ["What is the effect?", "结果是什么？"],
           [...effectBank, ...recordEffect],
           (right) =>
-            `*${right}* That happened because of what the text describes first. One other choice is the cause, and the other is the opposite of what happened.`,
-          (right) => `*${right}* 这是由文中先讲的事情导致的。另一个选项是原因，还有一个与实际发生的相反。`,
+            `“${right}” is the effect—it happened as a result of what came first.\n\n**Check.** Ask *what happened because of the first event?* The passage directly answers: “${right}”`,
+          (right) =>
+            `“${right}”是结果——它是由前面那件事引发的。\n\n**检验。**问一句“因为第一件事，后来发生了什么？”原文直接回答：“${right}”`,
           effectNot,
         ),
       ),
@@ -948,6 +1014,10 @@ export const informationalReadingTopics: readonly TopicDef[] = [
       "Words that show likeness and difference, and finding how two things differ.",
       "表示相同和不同的词，以及找出两样东西的差异。",
     ),
+    intro: t(
+      "*Both* frogs and toads lay eggs in water, *whereas* frogs usually have smooth skin and toads have bumpy skin. Signal words point straight to likenesses and differences as you read.",
+      "*Both* frogs and toads lay eggs in water, *whereas* frogs usually have smooth skin and toads have bumpy skin。信号词能帮你一眼分辨文中是在写相同点还是不同点。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 10,
@@ -956,20 +1026,20 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "alike-and-different-words",
         t("Words for Alike and Different", "表示相同和不同的词"),
         t(
-          "Words such as *both, like, likewise, similarly* and *too* show that things are alike. Words such as *unlike, but, however, while, in contrast* and *on the other hand* show that they differ. Read both sides of the blank to see which is meant.",
-          "*both, like, likewise, similarly, too* 这样的词表示相同。*unlike, but, however, while, in contrast, on the other hand* 这样的词表示不同。读空格两边的内容，看看要表达的是哪一种。",
+          "Words such as *both, like, likewise, similarly* and *too* show that things are alike. Words such as *unlike, but, however, while, in contrast* and *on the other hand* show that they differ. Read both sides of the blank to see which is meant.\n\n> **Watch out.** Do not pick a time or cause word (like *next* or *because*)—first decide whether the two sides match or contrast.",
+          "*both, like, likewise, similarly, too* 这样的词表示相同。*unlike, but, however, while, in contrast, on the other hand* 这样的词表示不同。读空格两边的内容，看看要表达的是哪一种。\n\n> **注意。**不要误选表示时间或原因的词（如 *next*、*because*）——先判断空格两边是相同还是相反。",
         ),
         pick(
           ["Which word or words complete the sentence?", "哪个词能补全句子？"],
           [...compareWordBank, ...moreCompareWords.map(([item]) => item)],
           (right) =>
             alikeWords.has(right)
-              ? `**${right}** fits, because the two parts of the sentence tell how things are alike. The other choices show a difference or an order of time.`
-              : `**${right}** fits, because the two parts of the sentence tell how things differ. The other choices show likeness, a reason or an order of time.`,
+              ? `**${right}** fits, because the two parts of the sentence tell how things are alike.\n\n**Check.** Compare both sides of the blank—they share the same trait, which matches a likeness word like **${right}**.`
+              : `**${right}** fits, because the two parts of the sentence tell how things differ.\n\n**Check.** Compare both sides of the blank—they point in opposite directions, which matches a contrast word like **${right}**.`,
           (right) =>
             alikeWords.has(right)
-              ? `**${right}** 合适，因为句子两部分说的是相同之处。其他选项表示不同或时间顺序。`
-              : `**${right}** 合适，因为句子两部分说的是不同之处。其他选项表示相同、原因或时间顺序。`,
+              ? `**${right}** 合适，因为句子两部分说的是相同之处。\n\n**检验。**对照空格两边——两者拥有相同的特点，正符合表示相同的词 **${right}**。`
+              : `**${right}** 合适，因为句子两部分说的是不同之处。\n\n**检验。**对照空格两边——两者指向相反的特点，正符合表示对比的词 **${right}**。`,
           compareWordNot,
         ),
       ),
@@ -977,14 +1047,16 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "finding-a-difference",
         t("Finding a Difference", "找出不同之处"),
         t(
-          "A comparison often tells how two things are alike first and then how they differ. Keep the two lists apart: a way in which both things are the same cannot be a difference.",
-          "比较时往往先讲两样东西的相同之处，再讲不同之处。把两类内容分开：两者相同的方面不可能是差异。",
+          "A comparison often tells how two things are alike first and then how they differ. Keep the two lists apart: a way in which both things are the same cannot be a difference.\n\n> **Watch out.** Do not pick a true fact from the text if it applies to *both* subjects—the answer must be a point where the two do *not* match.",
+          "比较时往往先讲两样东西的相同之处，再讲不同之处。把两类内容分开：两者相同的方面不可能是差异。\n\n> **注意。**就算某个选项符合原文，只要它对*两者*都成立，就不是不同之处——答案必须是两者不一致的地方。",
         ),
         pick(
           ["According to the text, how are the two things different?", "根据文中所说，这两样东西有什么不同？"],
           [...differenceBank, ...moreDifferenceBank],
-          (right) => `They differ in **${right}**. The other choices name ways in which the text says the two are alike.`,
-          (right) => `它们的不同在于 **${right}**。其他选项是文中说两者相同的方面。`,
+          (right) =>
+            `They differ in **${right}**.\n\n**Check.** Test **${right}** against both subjects in the text—it splits them apart, whereas the other options hold true for both.`,
+          (right) =>
+            `它们的不同在于 **${right}**。\n\n**检验。**把 **${right}** 对照文中的两个对象——它把两者区分开了，而其他选项对两者都同样成立。`,
           differenceNot,
         ),
       ),
@@ -996,6 +1068,10 @@ export const informationalReadingTopics: readonly TopicDef[] = [
     summary: t(
       "Sequence, cause and effect, compare and contrast, problem and solution, and description.",
       "顺序、因果、比较与对比、问题与解决、描述。",
+    ),
+    intro: t(
+      "An article about volcanoes might list eruption steps in order (sequence), explain why magma rises (cause and effect), or compare shield and cinder-cone volcanoes (compare and contrast). Recognizing a text's structure helps you predict and organize what you read.",
+      "同样写火山的文章，可能按喷发步骤展开（顺序）、解释岩浆为何上升（因果），或对比不同火山（比较与对比）。认出文本结构，能帮你更快梳理文章脉络。",
     ),
     prerequisites: ["sequence-in-texts", "cause-and-effect-in-texts", "compare-and-contrast-in-texts"],
     encompasses: [
@@ -1009,13 +1085,17 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "naming-the-structure",
         t("Naming the Structure", "判断结构"),
         t(
-          "Informational texts are built in a few common ways. **Sequence** tells events or steps in order. **Cause and effect** tells why things happen. **Compare and contrast** tells how things are alike and different. **Problem and solution** names a problem and how it was solved. **Description** tells what something is like, one detail after another. The signal words you already know point to the structure.",
-          "说明性文本有几种常见的结构。**顺序**按次序讲事件或步骤。**因果**讲事情为什么发生。**比较与对比**讲事物的异同。**问题与解决**提出问题并说明如何解决。**描述**一个细节接一个细节地说明事物的样子。你已经学过的信号词能指明结构。",
+          "Informational texts are built in a few common ways. **Sequence** tells events or steps in order. **Cause and effect** tells why things happen. **Compare and contrast** tells how things are alike and different. **Problem and solution** names a problem and how it was solved. **Description** tells what something is like, one detail after another. The signal words you already know point to the structure.\n\n> **Watch out.** Do not pick *sequence* just because a text has two events—look at the *main job* of the whole passage (explaining *why*, comparing two things, solving a trouble, or listing traits).",
+          "说明性文本有几种常见的结构。**顺序**按次序讲事件或步骤。**因果**讲事情为什么发生。**比较与对比**讲事物的异同。**问题与解决**提出问题并说明如何解决。**描述**一个细节接一个细节地说明事物的样子。你已经学过的信号词能指明结构。\n\n> **注意。** 不要只因文中有先后两件事就选“顺序”——要看整段文字的*主要组织方式*（是讲原因、做对比、解决问题，还是列举特征）。",
         ),
         choiceGenerator(
           t("Which structure does this text use?", "这段文字用的是哪种结构？"),
           [...structureBank, ...recordStructure],
-          (right) => t(`**${right}**. ${structureWhy.get(right) ?? ""}`, `**${right}**。${structureWhyZh.get(right) ?? ""}`),
+          (right) =>
+            t(
+              `**${right}**. ${structureWhy.get(right) ?? ""}\n\n**Check.** Scan the passage for its signal words and ask what the whole paragraph mainly does—both point to **${right}**.`,
+              `**${right}**。${structureWhyZh.get(right) ?? ""}\n\n**检验。** 找出文中的信号词，再问整段话主要在干什么——两方面都指向 **${right}**。`,
+            ),
           (wrong) =>
             t(
               `A **${wrong}** text would do this: ${structureWhy.get(wrong) ?? ""} Check whether this text really does.`,
@@ -1027,15 +1107,16 @@ export const informationalReadingTopics: readonly TopicDef[] = [
         "problem-and-solution",
         t("Problem and Solution", "问题与解决"),
         t(
-          "In a problem-and-solution text, first find the problem: what was wrong or hard? Then find what someone **did** about it. The solution is an action that makes the problem go away, not a part of the problem itself.",
-          "在问题与解决结构的文本中，先找出问题：什么不对劲或有困难？再找出有人**做了**什么。解决办法是让问题消失的行动，而不是问题本身的一部分。",
+          "In a problem-and-solution text, first find the problem: what was wrong or hard? Then find what someone **did** about it. The solution is an action that makes the problem go away, not a part of the problem itself.\n\n> **Watch out.** Do not pick a sentence that only repeats the trouble or states a wish—the solution must be the concrete *action* taken to fix the problem.",
+          "在问题与解决结构的文本中，先找出问题：什么不对劲或有困难？再找出有人**做了**什么。解决办法是让问题消失的行动，而不是问题本身的一部分。\n\n> **注意。** 不要选只是重复困难或表达愿望的选项——解决办法必须是为消除问题而采取的具体*行动*。",
         ),
         pick(
           ["What was the solution to the problem?", "问题是怎样解决的？"],
           [...solutionBank, ...moreSolutionBank],
           (right) =>
-            `**${right}** is what was done, and it made the problem go away. The other choices are not in the text or would not solve it.`,
-          (right) => `**${right}** 是采取的行动，它解决了问题。其他选项文中没有提到，或者解决不了问题。`,
+            `**${right}** is what was done, and it made the problem go away.\n\n**Check.** Ask: after **${right}** happened, did the original trouble get fixed? Yes—that confirms it is the solution.`,
+          (right) =>
+            `**${right}** 是采取的行动，它解决了问题。\n\n**检验。** 问一句：采取 **${right}** 之后，原来的麻烦解决了吗？解决了——这证实它就是解决办法。`,
           solutionNot,
         ),
       ),

@@ -464,18 +464,26 @@ const countReason = (noun: string): Text =>
 
 /** quantWhy explains the quantifier in the gap of shown. */
 const quantWhy = (right: string, shown: string): Text => {
-  const reason = countReason(quantNoun(shown));
-  return t(`${reason.en}: ${fill(shown, right)}`, `${reason["zh-CN"]}：${fill(shown, right)}`);
+  const noun = quantNoun(shown);
+  const reason = countReason(noun);
+  const countable = counted.includes(noun);
+  return t(
+    `${reason.en}: ${fill(shown, right)}\n\n**Check.** Test *${noun}* with *two*: ${countable ? `*two ${noun}* works (countable)` : `*two ${noun}s* does not work (uncountable)`}, which confirms *${right}*.`,
+    `${reason["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 用 *two* 测试 *${noun}*：${countable ? `可以说 *two ${noun}*（可数）` : `不能说 *two ${noun}s*（不可数）`}，因此选 *${right}*。`,
+  );
 };
 
 /** whyNotQuant explains a quantifier that does not fit the noun after the gap. */
 const whyNotQuant = (wrong: string, _right: string, shown: string): Text => {
   const noun = quantNoun(shown);
-  const reason = countReason(noun);
+  const countable = counted.includes(noun);
+  const kind = countable
+    ? t(`*${noun}* is a countable plural noun`, `*${noun}* 是可数名词复数`)
+    : t(`*${noun}* is an uncountable noun`, `*${noun}* 是不可数名词`);
   if (wrong === "a bit")
     return t(
-      `*a bit* cannot stand straight before a noun; it needs *of*, as in *a bit of salt*. ${reason.en}.`,
-      `*a bit* 不能直接放在名词前，要说 *a bit of*，如 *a bit of salt*。${reason["zh-CN"]}。`,
+      `*a bit* cannot stand straight before a noun; it needs *of*, as in *a bit of salt*.`,
+      `*a bit* 不能直接放在名词前，要说 *a bit of*，如 *a bit of salt*。`,
     );
   const use: Record<string, Text> = {
     "a few": t("*a few* is for nouns you count", "*a few* 用于可数名词"),
@@ -486,8 +494,8 @@ const whyNotQuant = (wrong: string, _right: string, shown: string): Text => {
   const of = use[wrong] ?? t(`*${wrong}*`, `*${wrong}*`);
   const after = /^(a few|a little)$/u.test(wrong) && /How ___|n't ___/u.test(shown);
   return t(
-    `${of.en}${after ? ", and after *How* or *not* English uses *many* or *much*" : ""}. ${reason.en}.`,
-    `${of["zh-CN"]}${after ? "，而且在 *How* 或 *not* 后面要用 *many* 或 *much*" : ""}。${reason["zh-CN"]}。`,
+    `${of.en}${after ? ", and after *How* or *not* English uses *many* or *much*" : ""}, while ${kind.en}.`,
+    `${of["zh-CN"]}${after ? "，而且在 *How* 或 *not* 后面要用 *many* 或 *much*" : ""}，而${kind["zh-CN"]}。`,
   );
 };
 
@@ -497,6 +505,10 @@ const quantifiers: TopicDef = {
   summary: t(
     "A few onions, a little oil: few with nouns you count, little with nouns you do not.",
     "a few onions，a little oil：few 用于可数名词，little 用于不可数名词。",
+  ),
+  intro: t(
+    "In the kitchen, you add *a few carrots* (you can count them one by one) and *a little honey* (you pour it rather than count it). Choosing between *a few/many* and *a little/much* always starts with the noun.",
+    "在厨房里，你会加 *a few carrots*（可以一根一根数）和 *a little honey*（只能倒，不能数）。选 *a few/many* 还是 *a little/much*，关键先看后面的名词能不能数。",
   ),
   prerequisites: ["some-and-any", "a2-words-quantities"],
   encompasses: [
@@ -510,8 +522,8 @@ const quantifiers: TopicDef = {
       "choose",
       t("A few or a little", "a few 还是 a little"),
       t(
-        "Both mean *some, but not many* or *not much*.\n\n- *a few* goes with nouns you count, in the plural: *a few onions*, *a few eggs*.\n- *a little* goes with nouns you do not count: *a little oil*, *a little salt*, *a little milk*.\n\nAsk: can I say *two* before it? *Two eggs*: yes, so *a few eggs*. *Two milks*: no, so *a little milk*.",
-        "两者都表示“一些、不多”。\n\n- *a few* 用于可数名词复数：*a few onions*、*a few eggs*。\n- *a little* 用于不可数名词：*a little oil*、*a little salt*、*a little milk*。\n\n中文“一点”“几个”都可以说“一些”，英语要先判断名词能不能数：能说 *two eggs*，所以用 *a few eggs*；不能说 *two milks*，所以用 *a little milk*。",
+        "Both mean *some, but not many* or *not much*.\n\n- *a few* goes with nouns you count, in the plural: *a few onions*, *a few eggs*.\n- *a little* goes with nouns you do not count: *a little oil*, *a little salt*, *a little milk*.\n\nAsk: can I say *two* before it? *Two eggs*: yes, so *a few eggs*. *Two milks*: no, so *a little milk*.\n\n> **Watch out.** Do not put *a bit* directly before a noun (*a bit salt* is wrong; it needs *of*: *a bit of salt*), and check whether the noun is plural before picking *a few*.",
+        "两者都表示“一些、不多”。\n\n- *a few* 用于可数名词复数：*a few onions*、*a few eggs*。\n- *a little* 用于不可数名词：*a little oil*、*a little salt*、*a little milk*。\n\n先用 *two* 测一下：能说 *two eggs*，所以用 *a few eggs*；不能说 *two milks*，所以用 *a little milk*。\n\n> **注意。** 不要把 *a bit* 直接放在名词前（*a bit salt* 是错的，要说 *a bit of salt*），选 *a few* 前先确认名词是不是可数复数。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), quantChoiceBank, quantWhy, whyNotQuant),
     ),
@@ -519,8 +531,8 @@ const quantifiers: TopicDef = {
       "many-much",
       t("How many or how much", "how many 还是 how much"),
       t(
-        "The same rule holds for *many* and *much*: *many* with nouns you count (*How many eggs?*), *much* with nouns you do not (*How much milk?*).",
-        "*many* 和 *much* 也一样：可数名词用 *many*（*How many eggs?*），不可数名词用 *much*（*How much milk?*）。",
+        "The same countability rule holds for *many* and *much* in questions and negatives: *many* with plural countable nouns (*How many eggs?*, *not many carrots*), *much* with uncountable nouns (*How much milk?*, *not much salt*).\n\n> **Watch out.** Do not use *a few* or *a little* right after *How* (*How a few eggs?* is wrong)—use *How many* or *How much*.",
+        "同样的可数/不可数规则也适用于疑问句和否定句中的 *many* 和 *much*：可数复数名词用 *many*（*How many eggs?*、*not many carrots*），不可数名词用 *much*（*How much milk?*、*not much salt*）。\n\n> **注意。** *How* 后面不能接 *a few* 或 *a little*（*How a few eggs?* 是错的），必须用 *How many* 或 *How much*。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), manyMuchBank, quantWhy, whyNotQuant),
     ),
@@ -528,12 +540,17 @@ const quantifiers: TopicDef = {
       "fix",
       t("Fixing a few and a little", "改正 a few 和 a little"),
       t(
-        "Each sentence uses *a few* with a noun you do not count, or *a little* with one you count. Write it again.",
-        "每个句子都把 *a few* 用在了不可数名词前，或把 *a little* 用在了可数名词前。改正句子。",
+        "Each sentence pairs the wrong quantifier with its noun: *Add a few oil.* → *Add a little oil.* *We need a little onions.* → *We need a few onions.* Rewrite the sentence with the matching quantifier.\n\n> **Watch out.** Change only *a few* ↔ *a little* (do not drop *a*, and do not change the noun itself).",
+        "每个句子都把量词配错了：*Add a few oil.* → *Add a little oil.* *We need a little onions.* → *We need a few onions.* 用正确的量词重写句子。\n\n> **注意。** 只替换 *a few* ↔ *a little*（别漏掉 *a*，也不要改动后面的名词）。",
       ),
       typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), quantFixBank, (right) => {
-        const reason = countReason(quantNoun(right));
-        return t(`${reason.en}: ${right}`, `${reason["zh-CN"]}：${right}`);
+        const noun = quantNoun(right);
+        const reason = countReason(noun);
+        const countable = counted.includes(noun);
+        return t(
+          `${reason.en}: ${right}\n\n**Check.** Test *${noun}* with *two*: ${countable ? `countable → *a few*` : `uncountable → *a little*`}, and the rest of the sentence stays unchanged.`,
+          `${reason["zh-CN"]}：${right}\n\n**检验。** 用 *two* 测试 *${noun}*：${countable ? `可数 → *a few*` : `不可数 → *a little*`}，句子的其余部分保持不变。`,
+        );
       }),
     ),
   ],
@@ -614,13 +631,16 @@ const stepUse: Readonly<Record<string, Text>> = {
   ),
   Finally: t("*Finally* means *last*, so it is only for the last step", "*Finally* 意思是“最后”，只用于最后一步"),
   Next: t("*Next* follows another step, but nothing comes before the first one", "*Next* 要跟在另一步后面，但第一步前面没有步骤"),
-  Second: t("*Second* gives a step its number, but the last step takes *Finally*", "*Second* 表示第二步，而最后一步要用 *Finally*"),
+  Second: t("*Second* marks step two, but this is the very last step", "*Second* 表示第二步，而这是最后一步"),
 };
 
 /** stepWhy explains the order word of a step. */
 const stepWhy = (word: string, step: string): Text => {
   const place = stepPlace[word] ?? t(`*${word}*`, `*${word}*`);
-  return t(`${place.en}: ${step}`, `${place["zh-CN"]}：${step}`);
+  return t(
+    `${place.en}: ${step}\n\n**Check.** Check where the gap sits in the four-step sequence: *First* opens step 1, *Then/Next* link steps 2–3, and *Finally* closes step 4.`,
+    `${place["zh-CN"]}：${step}\n\n**检验。** 看空白在四步流程里的位置：*First* 用于第 1 步，*Then/Next* 连接第 2–3 步，*Finally* 用于第 4 步。`,
+  );
 };
 
 const writingStepsInOrder: TopicDef = {
@@ -629,6 +649,10 @@ const writingStepsInOrder: TopicDef = {
   summary: t(
     "Put the steps of a recipe in order and join them with first, then, next and finally.",
     "按顺序写出食谱的步骤，用 first、then、next 和 finally 连接。",
+  ),
+  intro: t(
+    "Instructions are easiest to follow when each step carries a clear signpost: *First, wash the rice. Then add water. Next, boil it. Finally, serve it hot.* Order words show the reader where each action belongs.",
+    "步骤前面加上顺序路标，读起来一目了然：*First, wash the rice. Then add water. Next, boil it. Finally, serve it hot.* 顺序词让读者一眼看清每一步的位置。",
   ),
   prerequisites: ["imperatives", "joining-with-and-but-or"],
   encompasses: [{ topic: "imperatives", weight: 0.3 }],
@@ -639,8 +663,8 @@ const writingStepsInOrder: TopicDef = {
       "choose",
       t("First, then, next, finally", "first、then、next、finally"),
       t(
-        "Steps are instructions: they start with the verb, like *Boil the water.* Words before them show the order:\n\n- *First,* for the first step\n- *Then* or *Next,* for the steps in the middle\n- *Finally,* for the last step\n\n*First, boil some water. Then add the noodles. Next, cook them for five minutes. Finally, put them in a bowl.*",
-        "步骤是指令，以动词开头，比如 *Boil the water.* 步骤前面的词表示顺序：\n\n- *First,* 用于第一步\n- *Then* 或 *Next,* 用于中间的步骤\n- *Finally,* 用于最后一步\n\n*First, boil some water. Then add the noodles. Next, cook them for five minutes. Finally, put them in a bowl.*\n\n*Finally* 意思是“最后”，不要把它用在中间的步骤上。",
+        "Steps are instructions: they start with the verb, like *Boil the water.* Words before them show the order:\n\n- *First,* for the first step\n- *Then* or *Next,* for the steps in the middle\n- *Finally,* for the last step\n\n*First, boil some water. Then add the noodles. Next, cook them for five minutes. Finally, put them in a bowl.*\n\n> **Watch out.** *Finally* means “last”—never use it for a middle step, and never use *Next* for step 1.",
+        "步骤是指令，以动词开头，比如 *Boil the water.* 步骤前面的词表示顺序：\n\n- *First,* 用于第一步\n- *Then* 或 *Next,* 用于中间的步骤\n- *Finally,* 用于最后一步\n\n*First, boil some water. Then add the noodles. Next, cook them for five minutes. Finally, put them in a bowl.*\n\n> **注意。** *Finally* 只用于最后一步，不要用在中间步骤；第一步前面没有其他步骤，不能用 *Next*。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
@@ -656,15 +680,15 @@ const writingStepsInOrder: TopicDef = {
       "write",
       t("Writing a step", "写出一个步骤"),
       t(
-        "Write the step as an instruction with the word for its place: *First,* for step 1, *Then* or *Next,* in the middle, *Finally,* for the last one. Start with a capital letter and end with a period.",
-        "把这一步写成指令，并加上表示顺序的词：第一步用 *First,*，中间的步骤用 *Then* 或 *Next,*，最后一步用 *Finally,*。句首大写，句末加句号。",
+        "Write the step as an instruction with the word for its place: *First,* for step 1 (*First, wash the fruit.*), *Then* or *Next,* in the middle (*Next, cut it into small pieces.*), and *Finally,* for the last step (*Finally, mix well.*).\n\n> **Watch out.** Start the sentence with the order word (capitalized), keep the action verb in its plain imperative form, and end with a period.",
+        "把这一步写成指令，并加上表示顺序的词：第 1 步用 *First,*（*First, wash the fruit.*），中间步骤用 *Then* 或 *Next,*（*Next, cut it into small pieces.*），最后一步用 *Finally,*（*Finally, mix well.*）。\n\n> **注意。** 顺序词放句首且首字母大写，后面的动作保持动词原形祈使句，句末加句号。",
       ),
       typedGenerator("sentence-pattern", t("Write the step.", "写出这个步骤。"), stepTypedBank, (right) => {
         const word = right.split(/[ ,]/u)[0] ?? "";
         const place = stepPlace[word] ?? t(`*${word}*`, `*${word}*`);
         return t(
-          `${place.en}, and the step itself is an instruction that starts with the verb: ${right}`,
-          `${place["zh-CN"]}，步骤本身是以动词开头的指令：${right}`,
+          `${place.en}, and the step itself is an instruction that starts with the verb: ${right}\n\n**Check.** Verify three things: the order word (*${word}*) matches the step number, the action starts with a plain verb, and the sentence ends with a period.`,
+          `${place["zh-CN"]}，步骤本身是以动词开头的指令：${right}\n\n**检验。** 核对三处：顺序词 *${word}* 与步骤序号匹配、动作以动词原形开头、句末有句号。`,
         );
       }),
     ),
@@ -743,6 +767,10 @@ const writingARecipe = judgedTopic({
     "Write a recipe for a simple dish: what you need, then five or six steps in order.",
     "为一道简单的菜写食谱：需要什么，然后按顺序写五六个步骤。",
   ),
+  intro: t(
+    "A clear recipe tells the cook two things in order: the ingredients with amounts (*two tomatoes, a little oil*) and step-by-step instructions (*First, cut the tomatoes. Then fry them...*). Anyone reading it should be able to cook the dish.",
+    "一份清晰的食谱按顺序交代两件事：带用量的材料清单（*two tomatoes, a little oil*），以及按顺序排列的操作步骤（*First, cut the tomatoes. Then fry them...*），让读者照着就能做出来。",
+  ),
   prerequisites: ["writing-steps-in-order", "quantifiers-a-few-and-a-little"],
   encompasses: [
     { topic: "writing-steps-in-order", weight: 0.4 },
@@ -753,8 +781,8 @@ const writingARecipe = judgedTopic({
     id: "recipe",
     title: t("What you need and the steps", "所需材料和步骤"),
     explanation: t(
-      "A recipe has two parts:\n\n- What you need, with amounts: *two eggs*, *a little oil*, *a few onions*, *200 grams of flour*.\n- The steps, in order, as instructions that start with a verb: *First, heat the oil in a pan. Then add the eggs. Finally, put the rice on a plate.*",
-      "食谱有两部分：\n\n- 需要的材料和用量：*two eggs*、*a little oil*、*a few onions*、*200 grams of flour*。\n- 步骤：按顺序写，每一步都以动词开头：*First, heat the oil in a pan. Then add the eggs. Finally, put the rice on a plate.*\n\n指令句不需要主语，但要用动词原形开头，不要写成 *You heat* 或 *Heating*。",
+      "A recipe has two parts:\n\n- What you need, with amounts: *two eggs*, *a little oil*, *a few onions*, *200 grams of flour*.\n- The steps, in order, as instructions that start with a verb: *First, heat the oil in a pan. Then add the eggs. Finally, put the rice on a plate.*\n\n> **Watch out.** Write each step as an imperative starting with the plain verb (*Heat the oil*, not *You heat* or *Heating*), and match *a few* / *a little* to countable and uncountable ingredients.",
+      "食谱有两部分：\n\n- 需要的材料和用量：*two eggs*、*a little oil*、*a few onions*、*200 grams of flour*。\n- 步骤：按顺序写，每一步都以动词开头：*First, heat the oil in a pan. Then add the eggs. Finally, put the rice on a plate.*\n\n> **注意。** 每一步用动词原形开头的祈使句（*Heat the oil*，不要写 *You heat* 或 *Heating*），并注意可数食材用 *a few*、不可数食材用 *a little*。",
     ),
   },
   question: t(

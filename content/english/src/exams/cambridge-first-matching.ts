@@ -234,14 +234,24 @@ function items(matched: (s: MatchingSet) => readonly Matched[], attitude: boolea
       matched(s).map(([statement, person, evidence]) => ({
         shown: `${shownSet(s)}\n\n**${statement}**`,
         right: person,
+        whyNot: (label) =>
+          attitude
+            ? t(
+                `Person **${letters[label]}** does not express this feeling or view—check their paragraph for what they actually think.`,
+                `人物 **${letters[label]}** 并没有表达这种感受或看法——请回看该段落确认其真实态度。`,
+              )
+            : t(
+                `Person **${letters[label]}** does not match every part of this statement—check what **${letters[label]}** actually did.`,
+                `人物 **${letters[label]}** 并不符合陈述的全部内容——请核对 **${letters[label]}** 实际做了什么。`,
+              ),
         solution: attitude
           ? t(
-              `**${letters[person]}**: "${evidence}${end(evidence)}" The statement names a feeling or a view in other words. Others may mention the same subject, so check that the person's attitude, not only the topic, matches.`,
-              `**${letters[person]}**："${evidence}${end(evidence)}" 陈述用别的话说出一种感受或看法。其他人可能也提到同一件事，所以要核对此人的态度，而不只是话题。`,
+              `**${letters[person]}**: "${evidence}${end(evidence)}" The statement names a feeling or a view in other words. Others may mention the same subject, so check that the person's attitude, not only the topic, matches.\n\n**Check.** Verify that **${letters[person]}**'s quoted words express the exact attitude asked for, not merely the same topic.`,
+              `**${letters[person]}**："${evidence}${end(evidence)}" 陈述用别的话说出一种感受或看法。其他人可能也提到同一件事，所以要核对此人的态度，而不只是话题。\n\n**检验。** 确认 **${letters[person]}** 的原话准确表达了题干要求的态度，而不只是提到了相同的话题。`,
             )
           : t(
-              `**${letters[person]}**: "${evidence}${end(evidence)}" The statement says it in other words. Find the person whose words mean the same, and check that every part of the statement fits them.`,
-              `**${letters[person]}**："${evidence}${end(evidence)}" 陈述换了说法。找到话的意思与之相同的人，并核对陈述的每一部分都符合此人。`,
+              `**${letters[person]}**: "${evidence}${end(evidence)}" The statement says it in other words. Find the person whose words mean the same, and check that every part of the statement fits them.\n\n**Check.** Re-read the statement phrase by phrase against **${letters[person]}**'s paragraph to confirm every detail matches.`,
+              `**${letters[person]}**："${evidence}${end(evidence)}" 陈述换了说法。找到话的意思与之相同的人，并核对陈述的每一部分都符合此人。\n\n**检验。** 将题干逐短语对照 **${letters[person]}** 的段落，确认每一处细节都完全吻合。`,
             ),
       })),
     ),
@@ -256,6 +266,10 @@ export const multipleMatching: TopicDef = examTopic({
     "Cambridge First Reading Part 7 style: four people write on one subject, and each statement matches one of them.",
     "剑桥 First 阅读第 7 部分风格：四个人就同一话题各写一段，每个陈述对应其中一人。",
   ),
+  intro: t(
+    "When four speakers all talk about moving cities or learning a skill, two of them may mention cost—yet only one says *it was worth every penny*. B2 First Part 7 rewards matching the exact paraphrase, never just a shared keyword.",
+    "当四个人都在谈搬到新城市或学新技能时，可能有两个人都提到了花钱——但只有一个人觉得*物有所值*。B2 First 第 7 部分考的是精准同义改写，而不是找相同关键词。",
+  ),
   strand: "reading",
   prerequisites: ["making-inferences"],
   encompasses: [{ topic: "making-inferences", weight: 0.3 }],
@@ -265,8 +279,8 @@ export const multipleMatching: TopicDef = examTopic({
       "fce-matching-facts",
       t("Matching What People Did", "匹配人们做了什么"),
       t(
-        "Read the statement and pick out its key idea: *taught by a relative*, *left after a short time*. The texts will not use the same words, so look for the same meaning: *my grandmother taught me*, *I left after three months*. Several people may mention a similar subject; only one says exactly what the statement says.",
-        "读陈述，抓住关键意思：*taught by a relative*、*left after a short time*。文章不会用相同的词，要找相同的意思：*my grandmother taught me*、*I left after three months*。几个人可能提到相似的话题，只有一个人说的和陈述完全一致。",
+        "Read the statement and pick out its key idea: *taught by a relative*, *left after a short time*. The texts will not use the same words, so look for the same meaning: *my grandmother taught me*, *I left after three months*. Several people may mention a similar subject; only one says exactly what the statement says.\n\n> **Watch out.** A single matching noun (such as *money*, *friends*, or *course*) is often a trap—check that **every** part of the statement fits that person.",
+        "读陈述，抓住关键意思：*taught by a relative*、*left after a short time*。文章不会用相同的词，要找相同的意思：*my grandmother taught me*、*I left after three months*。几个人可能提到相似的话题，只有一个人说的和陈述完全一致。\n\n> **注意。** 单个重合的名词（如 *money*、*friends*、*course*）往往是陷阱——务必核对陈述的**每一部分**都符合该人物。",
       ),
       labelGenerator(
         t("Choose the person, A, B, C or D.", "选择对应的人：A、B、C 或 D。"),
@@ -278,8 +292,8 @@ export const multipleMatching: TopicDef = examTopic({
       "fce-matching-attitudes",
       t("Matching Feelings and Views", "匹配感受和看法"),
       t(
-        "Statements about attitude use words such as *regrets*, *was surprised*, *feels anxious*, *thinks it was justified*. The person may never use that word: *I regret that now* is direct, but *I still get nervous* means *anxious*, and *worth every penny* means *justified*. Watch for words like *but*, *still* and *looking back*, which often mark the attitude.",
-        "关于态度的陈述用 *regrets*、*was surprised*、*feels anxious*、*thinks it was justified* 这样的词。那个人可能从不用这个词：*I regret that now* 很直接，但 *I still get nervous* 表示 *anxious*，*worth every penny* 表示 *justified*。留意 *but*、*still*、*looking back* 这类词，它们常常标出态度。",
+        "Statements about attitude use words such as *regrets*, *was surprised*, *feels anxious*, *thinks it was justified*. The person may never use that word: *I regret that now* is direct, but *I still get nervous* means *anxious*, and *worth every penny* means *justified*. Watch for words like *but*, *still* and *looking back*, which often mark the attitude.\n\n> **Watch out.** Distinguish how the person felt **at first** from how they feel **now**—Part 7 often contrasts a past reaction with a changed present view.",
+        "关于态度的陈述用 *regrets*、*was surprised*、*feels anxious*、*thinks it was justified* 这样的词。那个人可能从不用这个词：*I regret that now* 很直接，但 *I still get nervous* 表示 *anxious*，*worth every penny* 表示 *justified*。留意 *but*、*still*、*looking back* 这类词，它们常常标出态度。\n\n> **注意。** 分清人物**起初**的感受与**现在**的看法——第 7 部分常把过去的反应与后来改变的态度作对比。",
       ),
       labelGenerator(
         t("Choose the person, A, B, C or D.", "选择对应的人：A、B、C 或 D。"),

@@ -455,6 +455,10 @@ export const paragraphTopics: readonly TopicDef[] = [
     id: "identifying-topic-sentences",
     title: t("Identifying Topic Sentences", "识别主题句"),
     summary: t("The topic sentence states what the rest of the paragraph supports.", "主题句说明段落其余部分所支持的内容。"),
+    intro: t(
+      "Three details—*They fit through heavy traffic*, *They are easy to park*, *They cost little to repair*—all support one umbrella claim: *Bicycles are a practical way to get around a city.* That umbrella sentence is the topic sentence.",
+      "三条细节——穿过拥堵车流、方便停放、维修便宜——共同支撑一个总括句：*Bicycles are a practical way to get around a city.* 这句能把所有细节都罩住的话就是主题句。",
+    ),
     prerequisites: ["combining-with-conjunctions"],
     encompasses: [],
     xp: 10,
@@ -463,17 +467,21 @@ export const paragraphTopics: readonly TopicDef[] = [
         "finding-the-topic-sentence",
         t("Finding It", "找到主题句"),
         t(
-          "A **topic sentence** states the main point of a paragraph. The other sentences give details that support it. To find it, ask which sentence the others could all serve as examples or reasons for.\n\nDetails are narrow; the topic sentence is broad enough to cover them all.",
-          "**主题句**（topic sentence）说明段落的要点。其他句子给出支持它的细节。寻找时问一问：其他句子都可以作为哪一句的例子或理由？\n\n细节范围窄；主题句范围宽，足以涵盖全部细节。",
+          "A **topic sentence** states the main point of a paragraph. The other sentences give details that support it. To find it, ask which sentence the others could all serve as examples or reasons for.\n\nDetails are narrow; the topic sentence is broad enough to cover them all.\n\n> **Watch out.** Do not pick a sentence just because it sounds specific and vivid—the topic sentence is the broader claim that every detail backs up.",
+          "**主题句**（topic sentence）说明段落的要点。其他句子给出支持它的细节。寻找时问一问：其他句子都可以作为哪一句的例子或理由？\n\n细节范围窄；主题句范围宽，足以涵盖全部细节。\n\n> **注意。**不要因为某句话写得具体生动就选它——主题句是更宽泛的总括句，其他每句都为它提供支撑。",
         ),
         choiceGenerator(
           t("These sentences form a paragraph. Which is the topic sentence?", "这些句子构成一个段落。哪一句是主题句？"),
           [...findTopicBank, ...recordFindTopic],
-          (right) => t(`**${right}** The other sentences are details that support it.`, `**${right}** 其他句子都是支持它的细节。`),
+          (right) =>
+            t(
+              `**${right}** The other three sentences are specific details that support this main point.\n\n**Check.** Put **${right}** first and read the other sentences right after it—every single one backs it up as an example or reason.`,
+              `**${right}** 另外三句都是支持这个要点的具体细节。\n\n**检验。**把 **${right}** 放在最前面，紧接着读其余句子——每一句都能当作它的例子或理由。`,
+            ),
           (wrong) =>
             t(
-              `*${wrong}* is a detail: it could serve as an example for another sentence, but the others are not examples of it.`,
-              `*${wrong}* 是一个细节：它可以作为另一句的例子，但其他句子不是它的例子。`,
+              `“${wrong}” is one narrow detail: it supports the big idea, but the other sentences are not examples of it.`,
+              `“${wrong}”只是一个具体的细节：它支持中心意思，但其他句子并不是它的例子。`,
             ),
         ),
       ),
@@ -481,23 +489,26 @@ export const paragraphTopics: readonly TopicDef[] = [
         "choosing-a-topic-sentence",
         t("Choosing One for the Details", "为细节选择主题句"),
         t(
-          "A good topic sentence covers all the details, and no more. One that merely repeats a detail is too narrow. One that mentions the subject without making a point about it is off target, even if it is true.",
-          "好的主题句涵盖全部细节，不多也不少。只重复一个细节就太窄了。提到了主题却没有表明观点，即使内容属实也偏离了目标。",
+          "A good topic sentence covers all the details, and no more. One that merely repeats a detail is too narrow. One that mentions the subject without making a point about it is off target, even if it is true.\n\n> **Watch out.** Reject any choice that simply copies one of the details or states a true side fact that none of the details prove.",
+          "好的主题句涵盖全部细节，不多也不少。只重复一个细节就太窄了。提到了主题却没有表明观点，即使内容属实也偏离了目标。\n\n> **注意。**排除只是重复某一条细节，或者说了个无关真话却与细节对不上的选项。",
         ),
         choiceGenerator(
           t("Which sentence would best open a paragraph with these details?", "哪个句子最适合作为包含这些细节的段落的开头？"),
           [...chooseTopicBank, ...recordChooseTopic],
           (right) =>
-            t(`**${right}** It covers every detail and makes a point about them.`, `**${right}** 它涵盖了所有细节，并表明了观点。`),
+            t(
+              `**${right}** It covers every detail and makes a clear point about them.\n\n**Check.** Read **${right}** followed by all three details—each detail directly backs up this exact claim.`,
+              `**${right}** 它涵盖了所有细节，并表明了清晰的观点。\n\n**检验。**把 **${right}** 和三条细节连起来读——每一条细节都直接证明这个观点。`,
+            ),
           (wrong, _right, shown) =>
             shown.includes(wrong)
               ? t(
-                  `*${wrong}* only repeats one detail, so it is too narrow to cover the others.`,
-                  `*${wrong}* 只是重复了一个细节，范围太窄，涵盖不了其他细节。`,
+                  `“${wrong}” only repeats one detail, so it is too narrow to cover the others.`,
+                  `“${wrong}”只是重复了一个细节，范围太窄，涵盖不了其他细节。`,
                 )
               : t(
-                  `*${wrong}* mentions the subject but makes no point that these details support.`,
-                  `*${wrong}* 提到了主题，却没有表明这些细节所支持的观点。`,
+                  `“${wrong}” mentions the subject but makes no point that these details support.`,
+                  `“${wrong}”提到了主题，却没有表明这些细节所支持的观点。`,
                 ),
         ),
       ),
@@ -507,6 +518,10 @@ export const paragraphTopics: readonly TopicDef[] = [
     id: "ordering-sentences-in-a-paragraph",
     title: t("Ordering Sentences in a Paragraph", "排列段落中的句子"),
     summary: t("Use time words and references to put sentences in order.", "利用时间词和指代关系排列句子。"),
+    intro: t(
+      "A sentence starting with *Next* cannot come before *First*, and a sentence saying *That fat lets them go for days* cannot come before *Their humps store fat*. Time signals and reference words tell you the one order that makes a paragraph flow.",
+      "以 *Next* 开头的句子不能排在 *First* 前面，说 *That fat lets them go for days* 的句子也不能排在 *Their humps store fat* 前面。时间词和指代词指明了段落最顺畅的顺序。",
+    ),
     prerequisites: ["identifying-topic-sentences"],
     encompasses: [{ topic: "identifying-topic-sentences", weight: 0.3 }],
     xp: 12,
@@ -515,26 +530,34 @@ export const paragraphTopics: readonly TopicDef[] = [
         "ordering-by-time",
         t("Ordering by Time", "按时间排序"),
         t(
-          "Stories and instructions run in the order things happen. Look for words such as *first, then, next, after, by noon* and *finally*. Each one tells you where its sentence belongs.",
-          "故事和操作说明按事情发生的顺序展开。留意 *first, then, next, after, by noon, finally* 这样的词，它们告诉你句子的位置。",
+          "Stories and instructions run in the order things happen. Look for words such as *first, then, next, after, by noon* and *finally*. Each one tells you where its sentence belongs.\n\n> **Watch out.** Check the time markers from start to finish—even if a sentence has no *first*, ask which step must happen before the next one is possible.",
+          "故事和操作说明按事情发生的顺序展开。留意 *first, then, next, after, by noon, finally* 这样的词，它们告诉你句子的位置。\n\n> **注意。**从头到尾核对时间标志——就算句子里没有 *first*，也要问哪一步必须先做，下一步才能进行。",
         ),
         orderGenerator(
           t("Put the sentences in the right order.", "把句子排成正确的顺序。"),
           [...timeOrderBank, ...moreTimeOrder],
-          (right) => t(`The order is: ${right}`, `正确的顺序是：${right}`),
+          (right) =>
+            t(
+              `The right order is: ${right}\n\n**Check.** Read the four sentences from first to last—every time marker and step follows the one before it naturally.`,
+              `正确的顺序是：${right}\n\n**检验。**从头到尾顺读一遍——每个时间词和步骤都自然承接上一句。`,
+            ),
         ),
       ),
       point(
         "ordering-by-logic",
         t("Ordering by Logic", "按逻辑排序"),
         t(
-          "Other paragraphs start with the topic sentence and build from there. Look for what each sentence refers back to: *they* and *this* point to something already mentioned, and *however* needs an earlier idea to contrast with. A sentence cannot come before what it refers to.",
-          "另一些段落以主题句开始，再逐步展开。留意每个句子指向什么：*they* 和 *this* 指向已提到的内容，*however* 需要前面有可对比的意思。句子不能出现在它所指代的内容之前。",
+          "Other paragraphs start with the topic sentence and build from there. Look for what each sentence refers back to: *they* and *this* point to something already mentioned, and *however* needs an earlier idea to contrast with. A sentence cannot come before what it refers to.\n\n> **Watch out.** Never put a sentence starting with *This*, *They*, *These*, or *However* first—it needs an earlier sentence to point back to.",
+          "另一些段落以主题句开始，再逐步展开。留意每个句子指向什么：*they* 和 *this* 指向已提到的内容，*however* 需要前面有可对比的意思。句子不能出现在它所指代的内容之前。\n\n> **注意。**绝不要把 *This*、*They*、*These* 或 *However* 开头的句子排在第一句——它们需要前面有句子供它们指代或转折。",
         ),
         orderGenerator(
           t("Put the sentences in the right order.", "把句子排成正确的顺序。"),
           [...logicOrderBank, ...moreLogicOrder],
-          (right) => t(`The order is: ${right}`, `正确的顺序是：${right}`),
+          (right) =>
+            t(
+              `The right order is: ${right}\n\n**Check.** Check every pronoun and link word (*they, this, these, however*)—each one now points cleanly back to the sentence before it.`,
+              `正确的顺序是：${right}\n\n**检验。**检查每个代词和连接词（*they、this、these、however*）——现在每个词都能清楚指回前一句。`,
+            ),
         ),
       ),
     ],
@@ -543,6 +566,10 @@ export const paragraphTopics: readonly TopicDef[] = [
     id: "choosing-transitions",
     title: t("Choosing Transitions", "选择过渡词"),
     summary: t("Transitions tell the reader how one sentence relates to the next.", "过渡词告诉读者前后句的关系。"),
+    intro: t(
+      "*The hike was exhausting. However, the view made it worthwhile.* vs. *Rain fell for a week. As a result, the river rose.* A single transition word tells the reader whether the next sentence contrasts, results from, illustrates, or follows in time.",
+      "*The hike was exhausting. However, the view made it worthwhile.* 对比 *Rain fell for a week. As a result, the river rose.* 一个过渡词就能告诉读者，下一句是转折、结果、举例还是下一步。",
+    ),
     prerequisites: ["ordering-sentences-in-a-paragraph"],
     encompasses: [{ topic: "ordering-sentences-in-a-paragraph", weight: 0.2 }],
     xp: 10,
@@ -551,16 +578,16 @@ export const paragraphTopics: readonly TopicDef[] = [
         "transitions-of-meaning",
         t("Contrast, Result, Example and Addition", "对比、结果、举例和递进"),
         t(
-          "A transition names the relationship between two sentences. *However* signals a contrast. *As a result* signals a consequence. *For example* introduces a case of what was just said. *In addition* adds a further point of the same kind.\n\nRead both sentences, decide how they relate, and only then choose.",
-          "过渡词说明两个句子的关系。*however* 表示对比。*as a result* 表示结果。*for example* 引出刚才所说内容的实例。*in addition* 补充同类的另一点。\n\n先读两个句子，判断关系，再作选择。",
+          "A transition names the relationship between two sentences. *However* signals a contrast. *As a result* signals a consequence. *For example* introduces a case of what was just said. *In addition* adds a further point of the same kind.\n\nRead both sentences, decide how they relate, and only then choose.\n\n> **Watch out.** Do not pick *In addition* when the second sentence is a specific instance (*For example*) or a consequence (*As a result*) of the first.",
+          "过渡词说明两个句子的关系。*however* 表示对比。*as a result* 表示结果。*for example* 引出刚才所说内容的实例。*in addition* 补充同类的另一点。\n\n先读两个句子，判断关系，再作选择。\n\n> **注意。**当第二句是具体例子（*For example*）或后果（*As a result*）时，不要错选 *In addition*。",
         ),
         choiceGenerator(
           t("Which transition fits?", "哪个过渡词合适？"),
           [...contrastBank, ...moreMeaningTransitions],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} This word names how the two sentences relate.`,
-              `${shown.replace("___", `**${right}**`)} 这个词说明了两个句子的关系。`,
+              `${shown.replace("___", `**${right}**`)} This transition names the exact relationship between the two sentences.\n\n**Check.** Read the two sentences without the blank first, name their link (contrast, result, example, or addition), and confirm **${right}** matches it.`,
+              `${shown.replace("___", `**${right}**`)} 这个过渡词准确点出了两句之间的关系。\n\n**检验。**先去掉空格读一遍两句话，说出它们的关系（对比、结果、举例或递进），确认 **${right}** 正好对应。`,
             ),
           meaningNot,
         ),
@@ -569,16 +596,16 @@ export const paragraphTopics: readonly TopicDef[] = [
         "transitions-of-time",
         t("Time and Sequence", "时间和顺序"),
         t(
-          "*First, next, then* and *finally* mark steps in a sequence. *Meanwhile* means at the same time. *Earlier* looks back to before, and *soon after* looks ahead a little.",
-          "*first, next, then, finally* 表示步骤的先后。*meanwhile* 表示同时。*earlier* 回顾之前，*soon after* 表示稍后。",
+          "*First, next, then* and *finally* mark steps in a sequence. *Meanwhile* means at the same time. *Earlier* looks back to before, and *soon after* looks ahead a little.\n\n> **Watch out.** Check whether the two events happen one after another (*Next*, *Then*), at the very same time (*Meanwhile*), or out of order looking back (*Earlier*).",
+          "*first, next, then, finally* 表示步骤的先后。*meanwhile* 表示同时。*earlier* 回顾之前，*soon after* 表示稍后。\n\n> **注意。**分清两件事是先后发生（*Next*、*Then*）、同时发生（*Meanwhile*），还是回头说起更早的事（*Earlier*）。",
         ),
         choiceGenerator(
           t("Which transition fits?", "哪个过渡词合适？"),
           [...sequenceBank, ...moreTimeTransitions],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} This word places the event in time.`,
-              `${shown.replace("___", `**${right}**`)} 这个词确定了事件的时间位置。`,
+              `${shown.replace("___", `**${right}**`)} This transition places the second event at the right point in time.\n\n**Check.** Picture both events on a clock or step list—**${right}** puts them in the exact time relationship the sentences describe.`,
+              `${shown.replace("___", `**${right}**`)} 这个过渡词把第二件事放到了正确的时间位置。\n\n**检验。**把两件事放到时间轴或步骤表上对照——**${right}** 准确对应它们的时间关系。`,
             ),
           timeNot,
         ),
@@ -589,6 +616,10 @@ export const paragraphTopics: readonly TopicDef[] = [
     id: "removing-off-topic-sentences",
     title: t("Removing Off-Topic Sentences", "删除离题句"),
     summary: t("Every sentence of a paragraph must support its main point.", "段落中的每个句子都要支持它的要点。"),
+    intro: t(
+      "In a paragraph about how solar panels lower a family's bills, *The first solar panels were built long ago* mentions solar panels—yet it has nothing to do with saving money. Cutting off-topic sentences keeps a paragraph tight and focused.",
+      "一段讲太阳能板如何省电费的文字里，*The first solar panels were built long ago* 虽然也提到了太阳能板，却和省钱毫不相干。删掉离题句，段落才会紧凑聚焦。",
+    ),
     prerequisites: ["identifying-topic-sentences"],
     encompasses: [{ topic: "identifying-topic-sentences", weight: 0.4 }],
     xp: 10,
@@ -597,8 +628,8 @@ export const paragraphTopics: readonly TopicDef[] = [
         "plainly-off-topic",
         t("Plainly Off Topic", "明显离题"),
         t(
-          "Read the topic sentence first, then check each of the others against it. A sentence on another subject breaks the paragraph, however interesting it may be, and it should go.",
-          "先读主题句，再逐句对照。谈论其他话题的句子会破坏段落，无论它多有趣，都应该删去。",
+          "Read the topic sentence first, then check each of the others against it. A sentence on another subject breaks the paragraph, however interesting it may be, and it should go.\n\n> **Watch out.** Test every sentence against the *first* sentence—do not cut a detail that clearly backs it up.",
+          "先读主题句，再逐句对照。谈论其他话题的句子会破坏段落，无论它多有趣，都应该删去。\n\n> **注意。**用*第一句*主题句逐一检验后面的句子——不要误删真正支持主题句的细节。",
         ),
         choiceGenerator(
           t(
@@ -606,16 +637,24 @@ export const paragraphTopics: readonly TopicDef[] = [
             "第一句是主题句。其他句子中哪一句不属于这个段落？",
           ),
           [...obviousBank, ...recordObvious],
-          (right) => t(`**${right}** It does not support the main point.`, `**${right}** 它不支持段落的要点。`),
-          (wrong) => t(`*${wrong}* supports the topic sentence, so it belongs.`, `*${wrong}* 支持主题句，所以它属于这个段落。`),
+          (right) =>
+            t(
+              `**${right}** jumps to a different subject and breaks the paragraph.\n\n**Check.** Read the paragraph again without **${right}**—every remaining sentence now supports the topic sentence smoothly.`,
+              `**${right}** 跳到了完全不同的话题，打断了段落。\n\n**检验。**删掉 **${right}** 再通读一遍段落——剩下的每一句都顺畅地支持主题句。`,
+            ),
+          (wrong) =>
+            t(
+              `“${wrong}” backs up the topic sentence, so it belongs right in this paragraph.`,
+              `“${wrong}”支持主题句，所以它正好属于这个段落。`,
+            ),
         ),
       ),
       point(
         "on-the-subject-but-off-the-point",
         t("On the Subject but Off the Point", "话题相关却偏离要点"),
         t(
-          "Some sentences mention the same subject and still do not belong. In a paragraph about how solar panels lower bills, a sentence about when they were invented is about solar panels, but it does not support the point. Test each sentence against the point, not just the subject.",
-          "有些句子话题相同，却仍然不该出现。在一段讲太阳能板如何降低电费的文字中，说明它何时发明的句子虽然也谈太阳能板，却不支持要点。要用要点而不只是话题来检验每个句子。",
+          "Some sentences mention the same subject and still do not belong. In a paragraph about how solar panels lower bills, a sentence about when they were invented is about solar panels, but it does not support the point. Test each sentence against the point, not just the subject.\n\n> **Watch out.** Sharing a keyword (like *chess*, *cats*, or *winter*) is not enough—ask whether the sentence supports the *point* the topic sentence makes.",
+          "有些句子话题相同，却仍然不该出现。在一段讲太阳能板如何降低电费的文字中，说明它何时发明的句子虽然也谈太阳能板，却不支持要点。要用要点而不只是话题来检验每个句子。\n\n> **注意。**光有相同的关键词（如 *chess*、*cats*、*winter*）还不够——要问这句话是不是支持主题句的*核心要点*。",
         ),
         choiceGenerator(
           t(
@@ -624,11 +663,14 @@ export const paragraphTopics: readonly TopicDef[] = [
           ),
           [...subtleBank, ...recordSubtle],
           (right) =>
-            t(`**${right}** It mentions the subject but does not support the point.`, `**${right}** 它提到了这个话题，却不支持要点。`),
+            t(
+              `**${right}** touches the same subject but does not support the topic sentence's point.\n\n**Check.** Compare **${right}** with the topic sentence—it shares a topic word, yet removing it leaves the paragraph focused on one clear point.`,
+              `**${right}** 虽然和同一个话题沾边，却不支持主题句的要点。\n\n**检验。**把 **${right}** 和主题句对照——它只是借用了话题词，删掉它之后全段才紧扣一个明确的要点。`,
+            ),
           (wrong) =>
             t(
-              `*${wrong}* supports the point of the topic sentence, not just its subject, so it belongs.`,
-              `*${wrong}* 支持的是主题句的要点，而不只是话题，所以它属于这个段落。`,
+              `“${wrong}” supports the point of the topic sentence, not just its subject, so it belongs.`,
+              `“${wrong}”支持的是主题句的要点，而不只是话题，所以它属于这个段落。`,
             ),
         ),
       ),

@@ -482,6 +482,10 @@ export const mechanicsTopics: readonly TopicDef[] = [
       "Set off an opening word or phrase, and the name of someone spoken to, with commas.",
       "用逗号隔开句首的引导词或短语，以及称呼对方的名字。",
     ),
+    intro: t(
+      "Compare *After the sudden storm, we cleared the branches* and *Maya, please pass the lantern*. A comma marks the boundary between an opening word, phrase, or direct-address name and the main clause.",
+      "对比 *After the sudden storm, we cleared the branches* 和 *Maya, please pass the lantern*。逗号标出句首引导词、引导短语或直接称呼的人名与主句之间的分界。",
+    ),
     prerequisites: ["capitals-and-end-punctuation", "prepositional-phrases"],
     encompasses: [
       { topic: "capitals-and-end-punctuation", weight: 0.2 },
@@ -493,27 +497,35 @@ export const mechanicsTopics: readonly TopicDef[] = [
         "introductory-words",
         t("Opening Words", "句首的引导词"),
         t(
-          "A word such as *yes, no, well, oh, however, finally* or *luckily* that opens a sentence is followed by a comma: *Yes, I finished my homework.* The comma marks the pause before the main part of the sentence begins.",
-          "*yes, no, well, oh, however, finally* 或 *luckily* 这类词放在句首时，后面要加逗号：*Yes, I finished my homework.* 逗号标出句子主体开始前的停顿。",
+          "A word such as *yes, no, well, oh, however, finally* or *luckily* that opens a sentence is followed by a comma: *Yes, I finished my homework.* The comma marks the pause before the main part of the sentence begins.\n\n> **Watch out.** Place the comma right after the single opening word—never wait until after the subject.",
+          "*yes, no, well, oh, however, finally* 或 *luckily* 这类词放在句首时，后面要加逗号：*Yes, I finished my homework.* 逗号标出句子主体开始前的停顿。\n\n> **注意。** 逗号紧跟在句首这个引导词后面，不要拖到主语后面再加。",
         ),
         typedGenerator(
           "sentence",
           t("Rewrite the sentence with the comma it needs.", "改写句子，加上需要的逗号。"),
           [...introWordBank, ...introWordMore],
-          (right) => t(`**${right}** The comma follows the opening word.`, `**${right}** 逗号放在句首引导词之后。`),
+          (right) =>
+            t(
+              `**${right}** The comma follows the opening word.\n\n**Check.** Cover the first word and comma in **${right}**—what remains is a complete sentence on its own.`,
+              `**${right}** 逗号放在句首引导词之后。\n\n**检验。** 遮住 **${right}** 句首的引导词和逗号——剩下的部分依然是一个完整的句子。`,
+            ),
         ),
       ),
       point(
         "introductory-phrases",
         t("Opening Phrases", "句首的短语"),
         t(
-          "A longer phrase that opens a sentence, such as *After a long day at the beach* or *Running as fast as she could*, is followed by one comma where the phrase ends and the main sentence begins. Do not put the comma inside the phrase or after the subject.",
-          "句首较长的短语，例如 *After a long day at the beach* 或 *Running as fast as she could*，要在短语结束、主句开始的地方加一个逗号。不要把逗号放在短语中间，也不要放在主语后面。",
+          "A longer phrase that opens a sentence, such as *After a long day at the beach* or *Running as fast as she could*, is followed by one comma where the phrase ends and the main sentence begins. Do not put the comma inside the phrase or after the subject.\n\n> **Watch out.** Find the subject of the main sentence first—the single comma belongs directly *before* that subject.",
+          "句首较长的短语，例如 *After a long day at the beach* 或 *Running as fast as she could*，要在短语结束、主句开始的地方加一个逗号。不要把逗号放在短语中间，也不要放在主语后面。\n\n> **注意。** 先找出主句的主语——唯一的逗号就放在这个主语*正前方*。",
         ),
         choiceGenerator(
           t("Choose the sentence.", "选择句子。"),
           [...introPhraseBank, ...introPhraseMore],
-          (right) => t(`**${right}** The comma comes where the opening phrase ends.`, `**${right}** 逗号放在句首短语结束的地方。`),
+          (right) =>
+            t(
+              `**${right}** The comma comes where the opening phrase ends.\n\n**Check.** Read only the words after the comma in **${right}**—they start right on the main subject and form a complete sentence.`,
+              `**${right}** 逗号放在句首短语结束的地方。\n\n**检验。** 只读 **${right}** 逗号后面的部分——正好从主句主语开始，并且本身能独立成句。`,
+            ),
           (wrong, _right, _shown, position) =>
             position === 0
               ? t(
@@ -530,15 +542,18 @@ export const mechanicsTopics: readonly TopicDef[] = [
         "direct-address",
         t("Speaking to Someone", "称呼对方"),
         t(
-          "When a sentence speaks to someone by name, the name is set off with commas: *Sam, please close the door.* *Thank you, Mom.* In the middle of a sentence, the name takes a comma on each side: *I think, Ben, that you are right.*",
-          "句子直接称呼某人时，名字要用逗号隔开：*Sam, please close the door.* *Thank you, Mom.* 名字在句子中间时，两边都要加逗号：*I think, Ben, that you are right.*",
+          "When a sentence speaks to someone by name, the name is set off with commas: *Sam, please close the door.* *Thank you, Mom.* In the middle of a sentence, the name takes a comma on each side: *I think, Ben, that you are right.*\n\n> **Watch out.** If the name appears in the middle of the sentence, do not forget the *second* comma after the name.",
+          "句子直接称呼某人时，名字要用逗号隔开：*Sam, please close the door.* *Thank you, Mom.* 名字在句子中间时，两边都要加逗号：*I think, Ben, that you are right.*\n\n> **注意。** 如果称呼的名字出现在句中，别漏掉名字后面的*第二个*逗号。",
         ),
         typedGenerator(
           "sentence",
           t("Rewrite the sentence with the commas it needs.", "改写句子，加上需要的逗号。"),
           [...addressBank, ...addressMore],
           (right) =>
-            t(`**${right}** The name of the person spoken to is set off with commas.`, `**${right}** 被称呼者的名字要用逗号隔开。`),
+            t(
+              `**${right}** The name of the person spoken to is set off with commas.\n\n**Check.** Temporarily remove the name and its comma(s) from **${right}**—the remaining sentence still reads smoothly.`,
+              `**${right}** 被称呼者的名字要用逗号隔开。\n\n**检验。** 把 **${right}** 里的称呼和逗号暂时拿掉——剩下的句子依然通顺完整。`,
+            ),
         ),
       ),
     ],
@@ -550,6 +565,10 @@ export const mechanicsTopics: readonly TopicDef[] = [
       "Put a speaker's exact words in quotation marks, with the comma and end mark in the right place.",
       "把说话人的原话放进引号，并把逗号和句末标点放在正确位置。",
     ),
+    intro: t(
+      'Compare *"The bus is late," said Mr. Diaz* with *Mr. Diaz said, "The bus is late."* In dialogue, quotation marks wrap the exact words spoken, and commas, periods, question marks, and exclamation marks sit inside the closing quotation mark.',
+      '对比 *"The bus is late," said Mr. Diaz* 和 *Mr. Diaz said, "The bus is late."* 在对话中，引号括住说话人的原话，逗号、句号、问号和感叹号都要放在后引号里面。',
+    ),
     prerequisites: ["capitals-and-end-punctuation"],
     encompasses: [{ topic: "capitals-and-end-punctuation", weight: 0.3 }],
     xp: 10,
@@ -558,22 +577,26 @@ export const mechanicsTopics: readonly TopicDef[] = [
         "speaker-after",
         t("When the Speaker Comes After", "说话人在后"),
         t(
-          'Quotation marks go around a speaker\'s exact words. When the words that name the speaker come after the quotation, a statement ends with a comma **inside** the closing quotation mark, not a period: *"I am hungry," said Leo.*',
-          '引号要括住说话人的原话。当说明说话人的词放在引语之后时，陈述句末尾用逗号而不是句号，并且逗号要放在后引号的**里面**：*"I am hungry," said Leo.*',
+          'Quotation marks go around a speaker\'s exact words. When the words that name the speaker come after the quotation, a statement ends with a comma **inside** the closing quotation mark, not a period: *"I am hungry," said Leo.*\n\n> **Watch out.** Do not put a period before *said Leo* and do not place the comma outside the quotation marks—write *,"* not *".* or *",*.',
+          '引号要括住说话人的原话。当说明说话人的词放在引语之后时，陈述句末尾用逗号而不是句号，并且逗号要放在后引号的**里面**：*"I am hungry," said Leo.*\n\n> **注意。**不要在 *said Leo* 前面用句号，也不要把逗号放在引号外面——写成 *,"*，而不是 *".* 或 *",*。',
         ),
         typedGenerator(
           "sentence",
           t("Rewrite the sentence with quotation marks and the comma.", "改写句子，加上引号和逗号。"),
           [...tagAfterBank, ...tagAfterMore],
-          (right) => t(`**${right}** The comma goes inside the closing quotation mark.`, `**${right}** 逗号放在后引号里面。`),
+          (right) =>
+            t(
+              `**${right}** The speaker's exact words go inside quotation marks, and the comma sits inside the closing quotation mark.\n\n**Check.** Check three spots: opening quote before the first spoken word, comma right before the closing quote, and a period at the very end after the speaker.`,
+              `**${right}** 说话人的原话放进引号里，逗号紧贴在后引号里面。\n\n**检验。**检查三个位置：第一句原话前有前引号，后引号里面是逗号，最后说话人后面是句号。`,
+            ),
         ),
       ),
       point(
         "speaker-before",
         t("When the Speaker Comes First", "说话人在前"),
         t(
-          'When the speaker comes first, a comma follows the words that introduce the quotation. The quotation begins with a capital letter, and its end mark goes **inside** the closing quotation mark: *Leo said, "I am hungry."*',
-          '说话人在前时，引出引语的词后面加逗号。引语以大写字母开头，句末标点放在后引号的**里面**：*Leo said, "I am hungry."*',
+          'When the speaker comes first, a comma follows the words that introduce the quotation. The quotation begins with a capital letter, and its end mark goes **inside** the closing quotation mark: *Leo said, "I am hungry."*\n\n> **Watch out.** Remember both the comma after *said* and the capital letter on the first spoken word, and keep the period inside the closing quotation mark.',
+          '说话人在前时，引出引语的词后面加逗号。引语以大写字母开头，句末标点放在后引号的**里面**：*Leo said, "I am hungry."*\n\n> **注意。**别忘了 *said* 后面的逗号和原话第一个词的大写字母，句号也要留在后引号里面。',
         ),
         typedGenerator(
           "sentence",
@@ -581,8 +604,8 @@ export const mechanicsTopics: readonly TopicDef[] = [
           [...tagBeforeBank, ...tagBeforeMore],
           (right) =>
             t(
-              `**${right}** A comma introduces the quotation, which starts with a capital and ends inside the quotation marks.`,
-              `**${right}** 用逗号引出引语，引语首字母大写，句末标点放在引号里面。`,
+              `**${right}** A comma introduces the quotation, which starts with a capital and ends inside the quotation marks.\n\n**Check.** Trace from left to right: comma after the speaking verb, opening quote + capital letter, and period inside the closing quote.`,
+              `**${right}** 用逗号引出引语，引语首字母大写，句末标点放在引号里面。\n\n**检验。**从左往右核对：说话动词后有逗号，前引号后首字母大写，句号留在后引号里面。`,
             ),
         ),
       ),
@@ -590,16 +613,16 @@ export const mechanicsTopics: readonly TopicDef[] = [
         "questions-and-exclamations",
         t("Questions and Exclamations", "疑问句和感叹句"),
         t(
-          'A quoted question or exclamation keeps its own question mark or exclamation mark, inside the quotation marks, and takes no comma: *"Where are my shoes?" asked Ben.* *"Watch out!" yelled the coach.*',
-          '被引用的疑问句或感叹句保留自己的问号或感叹号，放在引号里面，并且不再加逗号：*"Where are my shoes?" asked Ben.* *"Watch out!" yelled the coach.*',
+          'A quoted question or exclamation keeps its own question mark or exclamation mark, inside the quotation marks, and takes no comma: *"Where are my shoes?" asked Ben.* *"Watch out!" yelled the coach.*\n\n> **Watch out.** Never replace a quoted question mark or exclamation mark with a comma, and never push it outside the closing quotation mark.',
+          '被引用的疑问句或感叹句保留自己的问号或感叹号，放在引号里面，并且不再加逗号：*"Where are my shoes?" asked Ben.* *"Watch out!" yelled the coach.*\n\n> **注意。**不要把引语里的问号或感叹号换成逗号，也不要把它推到后引号外面。',
         ),
         choiceGenerator(
           t("Choose the sentence.", "选择句子。"),
           [...questionQuoteBank, ...questionQuoteMore],
           (right) =>
             t(
-              `**${right}** The question mark or exclamation mark stays inside the quotation marks.`,
-              `**${right}** 问号或感叹号留在引号里面。`,
+              `**${right}** The question mark or exclamation mark stays inside the quotation marks because it belongs to the speaker's exact words.\n\n**Check.** Read only the words inside the quotation marks—they keep their own *?* or *!* right before the closing quote.`,
+              `**${right}** 问号或感叹号属于说话人的原话，所以留在引号里面。\n\n**检验。**只读引号里面的原话——它保留着自己的 *?* 或 *!*，而且紧挨在后引号里面。`,
             ),
           (wrong) =>
             wrong.includes('"?') || wrong.includes('"!')

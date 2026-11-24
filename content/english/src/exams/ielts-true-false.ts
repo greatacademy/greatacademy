@@ -24,12 +24,18 @@ function solution(kind: Kind, evidence: string, views: boolean): Text {
   const claim = views ? "the writer's view" : "the information";
   const claimZh = views ? "作者的观点" : "文中的信息";
   if (kind === "agrees")
-    return t(`${yes}. The text says the same in other words: "${evidence}"`, `${yes}。原文换了一种说法表达同样的意思："${evidence}"`);
+    return t(
+      `${yes}. The text says the same in other words: "${evidence}"\n\n**Check.** Match the statement's meaning directly to the quoted sentence—it restates the same idea without changing scope or certainty.`,
+      `${yes}。原文换了一种说法表达同样的意思："${evidence}"\n\n**检验。** 把题干与所引原文直接对照：两者表达的意思一致，没有改变范围或肯定程度。`,
+    );
   if (kind === "contradicts")
-    return t(`${no}. The statement contradicts ${claim}: "${evidence}"`, `${no}。题目与${claimZh}相矛盾："${evidence}"`);
+    return t(
+      `${no}. The statement contradicts ${claim}: "${evidence}"\n\n**Check.** Confirm the statement and the quoted text cannot both be true at the same time—that direct conflict makes it ${no}, not Not given.`,
+      `${no}。题目与${claimZh}相矛盾："${evidence}"\n\n**检验。** 确认题干与原文不能同时成立——这种直接冲突对应 ${no}，而不是 Not given。`,
+    );
   return t(
-    `Not given. The text only says: "${evidence}" It neither confirms nor contradicts the statement, so do not add what you know or guess.`,
-    `Not given。原文只说："${evidence}" 它既没有证实也没有否定题目的说法，不要加入自己的知识或猜测。`,
+    `Not given. The text only says: "${evidence}" It neither confirms nor contradicts the statement, so do not add what you know or guess.\n\n**Check.** Test whether the opposite of the statement is forced by the text—it is not, which proves the answer is Not given rather than ${no}.`,
+    `Not given。原文只说："${evidence}" 它既没有证实也没有否定题目的说法，不要加入自己的知识或猜测。\n\n**检验。** 检验原文是否强行推出题干的反面——并没有，因此答案是 Not given 而不是 ${no}。`,
   );
 }
 
@@ -441,6 +447,10 @@ export const trueFalseNotGiven: TopicDef = examTopic({
     "IELTS-style statements about short texts: whether each agrees with the information or the writer's views, contradicts them, or is not given.",
     "雅思风格的判断题：短文后的陈述与信息或作者观点一致、矛盾，还是没有提到。",
   ),
+  intro: t(
+    "If a passage says *The bridge opened in 1924*, then *It opened in 1930* is **False** (a direct clash), whereas *It cost more than expected* is **Not given** (silence on cost). Telling contradiction from silence is the heart of IELTS Reading.",
+    "如果原文说 *The bridge opened in 1924*，那么 *It opened in 1930* 是 **False**（直接冲突），而 *It cost more than expected* 是 **Not given**（原文未提造价）。分清“矛盾”与“未提及”正是雅思阅读判断题的核心。",
+  ),
   strand: "reading",
   prerequisites: ["fact-and-opinion", "making-inferences"],
   encompasses: [
@@ -453,8 +463,8 @@ export const trueFalseNotGiven: TopicDef = examTopic({
       "true-false-not-given",
       t("True, False or Not Given", "True、False 还是 Not Given"),
       t(
-        "Find the sentence of the text that the statement is about, then compare the two carefully.\n\n- **True**: the text says the same thing, usually in other words.\n- **False**: the text says something that cannot be true at the same time as the statement: a different number, the opposite fact, a different person.\n- **Not given**: the text says nothing either way. Often the text mentions the same subject but not the detail the statement adds, such as a reason, a comparison or *most*.\n\nJudge only by the text, never by what you know about the world. Watch words that change the meaning: *all, some, only, never, more than, first*.",
-        "先找到陈述所涉及的原文句子，再仔细比较两者。\n\n- **True**：原文表达了同样的意思，通常换了说法。\n- **False**：原文的说法与陈述不可能同时成立：数字不同、事实相反、人物不同。\n- **Not given**：原文对此既没肯定也没否定。常见情况是原文提到了同一话题，却没有陈述所加的细节，如原因、比较或 *most*。\n\n只依据原文判断，不要用自己对世界的了解。注意改变意思的词：*all, some, only, never, more than, first*。很多中国考生把“原文没提”当成 False，这是最常见的失分点。",
+        "Find the sentence of the text that the statement is about, then compare the two carefully.\n\n- **True**: the text says the same thing, usually in other words.\n- **False**: the text says something that cannot be true at the same time as the statement: a different number, the opposite fact, a different person.\n- **Not given**: the text says nothing either way. Often the text mentions the same subject but not the detail the statement adds, such as a reason, a comparison or *most*.\n\nJudge only by the text, never by what you know about the world.\n\n> **Watch out.** Do not mark **False** just because you cannot find a detail in the text—if the text never denies the statement, the answer is **Not given**; also check qualifiers like *all*, *only*, *never*, and *more than*.",
+        "先找到陈述所涉及的原文句子，再仔细比较两者。\n\n- **True**：原文表达了同样的意思，通常换了说法。\n- **False**：原文的说法与陈述不可能同时成立：数字不同、事实相反、人物不同。\n- **Not given**：原文对此既没肯定也没否定。常见情况是原文提到了同一话题，却没有陈述所加的细节，如原因、比较或 *most*。\n\n只依据原文判断，不要用自己对世界的了解。\n\n> **注意。** 不要因为原文没提到某个细节就选 **False**——只要原文没有直接否定，就选 **Not given**；同时盯紧 *all*、*only*、*never*、*more than* 等限定词。",
       ),
       labelGenerator(factQuestion, ["True", "False", "Not given"], items(facts, false)),
     ),
@@ -462,8 +472,8 @@ export const trueFalseNotGiven: TopicDef = examTopic({
       "yes-no-not-given",
       t("Yes, No or Not Given", "Yes、No 还是 Not Given"),
       t(
-        "These questions are about what the **writer thinks**, not about facts. First find the writer's own position: it often comes after words such as *In my view, I would argue, I disagree, but*. Views the writer reports from others (*Many people believe ..., It is often said ...*) are not the writer's own.\n\n- **Yes**: the writer holds this view.\n- **No**: the writer holds the opposite view.\n- **Not given**: the writer does not say what they think about this point.",
-        "这类题问的是**作者怎么想**，而不是事实。先找到作者自己的立场：它常出现在 *In my view, I would argue, I disagree, but* 等词之后。作者转述的别人的看法（*Many people believe ..., It is often said ...*）不是作者自己的观点。\n\n- **Yes**：作者持这个观点。\n- **No**：作者持相反的观点。\n- **Not given**：作者没有说他对这一点怎么看。",
+        "These questions are about what the **writer thinks**, not about facts. First find the writer's own position: it often comes after words such as *In my view, I would argue, I disagree, but*. Views the writer reports from others (*Many people believe ..., It is often said ...*) are not the writer's own.\n\n- **Yes**: the writer holds this view.\n- **No**: the writer holds the opposite view.\n- **Not given**: the writer does not say what they think about this point.\n\n> **Watch out.** Never treat a view the writer merely quotes (*Critics claim…*, *Many people believe…*) as the writer's own opinion—check whether the next sentence agrees or pushes back with *but* / *however*.",
+        "这类题问的是**作者怎么想**，而不是事实。先找到作者自己的立场：它常出现在 *In my view, I would argue, I disagree, but* 等词之后。作者转述的别人的看法（*Many people believe ..., It is often said ...*）不是作者自己的观点。\n\n- **Yes**：作者持这个观点。\n- **No**：作者持相反的观点。\n- **Not given**：作者没有说他对这一点怎么看。\n\n> **注意。** 不要把作者只是转述的他人观点（*Critics claim…*、*Many people believe…*）当成作者自己的立场——看紧接着的一句是否用 *but* 或 *however* 表示反对。",
       ),
       labelGenerator(viewQuestion, ["Yes", "No", "Not given"], items(views, true)),
     ),

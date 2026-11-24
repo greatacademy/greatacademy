@@ -18,14 +18,18 @@ const thesis = topic("writing", {
     "A thesis for a literary analysis makes an arguable claim about how or why a text works, not a summary, a bare opinion or an idea too broad to prove.",
     "文学分析的论点要就作品如何或为何产生效果提出可以论证的主张，而不是概括情节、空泛的个人喜好或大到无法证明的观点。",
   ],
+  intro: [
+    "Writing *'The novel is about a shipwreck'* states a plot fact; writing *'The novel's tightening storm imagery mirrors the crew's collapsing trust'* gives an essay something arguable to prove. An analytical thesis turns an observation into a claim about *how* or *why* a text works.",
+    "写“小说讲了一场海难”只是陈述情节事实；写“小说不断逼近的风暴意象映照出船员信任的瓦解”才给了文章一个值得论证的目标。分析性论点把观察转化为关于作品*如何*或*为何*起作用的主张。",
+  ],
   after: ["qualifying-a-claim"],
   points: [
     label(
       "is-it-an-analytical-thesis",
       ["Is It an Analytical Thesis", "这是分析性论点吗"],
       [
-        "An **analytical thesis** makes a claim about *how* or *why* a text works, a claim that a reader could disagree with and that the essay will prove: *In* The Odyssey, *Odysseus's cleverness saves him more often than his strength.* Three kinds of sentence look like a thesis but are not. A **plot summary** only says what happens. A **bare opinion** says the writer likes or dislikes the text. A thesis that is **too broad** makes a claim about life or literature in general that no single essay could prove.",
-        "**分析性论点**就作品*如何*或*为何*产生效果提出主张，读者可能不同意，而文章要证明它：*In* The Odyssey, *Odysseus's cleverness saves him more often than his strength.* 有三种句子看起来像论点，其实不是。**情节概括**只说发生了什么。**空泛的个人喜好**只说作者喜欢或不喜欢这部作品。**过于宽泛**的论点对人生或文学泛泛而谈，任何一篇文章都无法证明。",
+        "An **analytical thesis** makes a claim about *how* or *why* a text works, a claim that a reader could disagree with and that the essay will prove: *In* The Odyssey, *Odysseus's cleverness saves him more often than his strength.* Three kinds of sentence look like a thesis but are not. A **plot summary** only says what happens. A **bare opinion** says the writer likes or dislikes the text. A thesis that is **too broad** makes a claim about life or literature in general that no single essay could prove.\n\n> **Watch out.** Do not mistake a sweeping truth about life (*'Love conquers all'*, *'Brothers are always rivals'*) for an analytical thesis—a true literary thesis stays anchored to *one specific text* and how it works.",
+        "**分析性论点**就作品*如何*或*为何*产生效果提出主张，读者可能不同意，而文章要证明它：*In* The Odyssey, *Odysseus's cleverness saves him more often than his strength.* 有三种句子看起来像论点，其实不是。**情节概括**只说发生了什么。**空泛的个人喜好**只说作者喜欢或不喜欢这部作品。**过于宽泛**的论点对人生或文学泛泛而谈，任何一篇文章都无法证明。\n\n> **注意。** 不要把关于人生的宏大论断（如“兄弟总是对手”）当成分析性论点——真正的文学分析论点必须锚定在*具体作品*及其写法上。",
       ],
       [
         "Is this sentence an analytical thesis, a plot summary, a bare opinion or too broad?",
@@ -68,29 +72,29 @@ const thesis = topic("writing", {
       {
         "an analytical thesis": L(
           "分析性论点",
-          "It claims how or why the text works, a point a reader could dispute and the essay can prove from the text.",
-          "它就作品如何或为何产生效果提出主张，读者可能有异议，而文章可以用作品来证明。",
+          "It claims how or why the text works, a point a reader could dispute and the essay can prove from the text.\n\n**Check.** Ask two tests: could a thoughtful reader argue the opposite, and does it stay tied to a specific text's craft? Yes to both.",
+          "它就作品如何或为何产生效果提出主张，读者可能有异议，而文章可以用作品来证明。\n\n**检验。** 做两项测试：读者能否提出反方观点？它是否紧扣具体作品的写法？两项都成立。",
           "It does not make an arguable claim about how or why the text works.",
           "它没有就作品如何或为何产生效果提出可以论证的主张。",
         ),
         "a plot summary": L(
           "情节概括",
-          "It only says what happens in the text; there is nothing to argue or prove.",
-          "它只说作品中发生了什么，没有什么可以争论或证明的。",
+          "It only says what happens in the text; there is nothing to argue or prove.\n\n**Check.** Ask whether anyone who read the text could disagree with this sentence: no, because it merely reports plot events.",
+          "它只说作品中发生了什么，没有什么可以争论或证明的。\n\n**检验。** 问问读过作品的人会不会对此有异议：不会，因为它只是客观陈述了情节。",
           "It does more than say what happens.",
           "它不只是说发生了什么。",
         ),
         "a bare opinion": L(
           "个人喜好",
-          "It only says the writer likes or dislikes the text, which cannot be proved from the text.",
-          "它只说作者喜欢或不喜欢这部作品，这是无法用作品证明的。",
+          "It only says the writer likes or dislikes the text, which cannot be proved from the text.\n\n**Check.** Look for taste words (*boring*, *lovely*, *annoying*, *I liked*): they describe the reader's taste rather than an arguable claim about the text.",
+          "它只说作者喜欢或不喜欢这部作品，这是无法用作品证明的。\n\n**检验。** 看句中的主观好恶词（如 *boring*、*lovely*、*I liked*）：它们只表达读者口味，不是可论证的文本主张。",
           "It is not only a statement of liking or disliking the text.",
           "它不只是表达对作品的喜欢或不喜欢。",
         ),
         "too broad": L(
           "过于宽泛",
-          "It makes a claim about life or all literature in general, far too large for one essay to prove.",
-          "它对人生或所有文学泛泛而谈，大到一篇文章无法证明。",
+          "It makes a claim about life or all literature in general, far too large for one essay to prove.\n\n**Check.** Look for words like *all*, *every*, *always*, or *nobody* applied to life in general without naming a specific text's technique.",
+          "它对人生或所有文学泛泛而谈，大到一篇文章无法证明。\n\n**检验。** 看句中是否用 *all*、*every*、*always* 对人生或所有文学下全称判断，而没有落到具体作品上。",
           "It is not a claim about life or literature in general.",
           "它不是对人生或文学的泛泛之论。",
         ),
@@ -100,8 +104,8 @@ const thesis = topic("writing", {
       "the-sharper-thesis",
       ["The Sharper Thesis", "更有力的论点"],
       [
-        "A strong thesis is **specific**: it names the text, the device or element, and what that element does. Compare *The poem uses imagery* with *In* Dulce et Decorum Est, *the images of drowning turn the glory of war into horror.* Two weak revisions are common: one stays **vague**, naming a device without saying what it does, and one **states a fact** that no one would dispute.",
-        "有力的论点是**具体的**：它说出作品、手法或要素，以及这个要素起什么作用。比较 *The poem uses imagery* 和 *In* Dulce et Decorum Est, *the images of drowning turn the glory of war into horror.* 常见的弱修改有两种：一种依然**含糊**，只说出手法而不说它的作用；一种**陈述事实**，没有人会对它有异议。",
+        "A strong thesis is **specific**: it names the text, the device or element, and what that element does. Compare *The poem uses imagery* with *In* Dulce et Decorum Est, *the images of drowning turn the glory of war into horror.* Two weak revisions are common: one stays **vague**, naming a device without saying what it does, and one **states a fact** that no one would dispute.\n\n> **Watch out.** Reject sentences padded with empty praise like *'very important'* or *'matters a great deal to the work as a whole'*—a sharp thesis names the exact *effect* the element produces.",
+        "有力的论点是**具体的**：它说出作品、手法或要素，以及这个要素起什么作用。比较 *The poem uses imagery* 和 *In* Dulce et Decorum Est, *the images of drowning turn the glory of war into horror.* 常见的弱修改有两种：一种依然**含糊**，只说出手法而不说它的作用；一种**陈述事实**，没有人会对它有异议。\n\n> **注意。** 排除用 *very important*、*matters a great deal* 这类空话凑字数的句子——有力的论点必须点明该要素产生的具体*效果*。",
       ],
       ["Which is the strongest thesis for an essay on this subject?", "就这个题目而言，哪个是最有力的论点？"],
       `
@@ -137,8 +141,8 @@ const thesis = topic("writing", {
         Foreshadowing in a tragedy|The early talk of stars and fate makes the lovers' death feel certain from the first scene.|The play uses foreshadowing to hint at the ending.|The chorus says in the first scene that the lovers will die.
       `,
       (right) => [
-        `*${right}* names the element and makes an arguable claim about what it does, which an essay can prove.`,
-        `*${right}* 说出了要素，并就它的作用提出可以论证的主张，一篇文章可以证明它。`,
+        `*${right}* names the element and makes an arguable claim about what it does, which an essay can prove.\n\n**Check.** Verify that the sentence names *both* a concrete element and a specific, debatable effect—unlike a vague praise statement or a plain plot fact.`,
+        `*${right}* 说出了要素，并就它的作用提出可以论证的主张，一篇文章可以证明它。\n\n**检验。** 核对这句话是否*同时*点明了具体要素和可论证的具体效果，既非空泛夸赞，也非平白事实。`,
       ],
       [
         [
@@ -161,14 +165,18 @@ const analysis = topic("writing", {
     "In a literary essay, sentences that explain how and why the text works do the essay's work; retelling the plot does not.",
     "在文学评论文章中，解释作品如何以及为何产生效果的句子才是文章的主体；复述情节则不是。",
   ],
+  intro: [
+    "Writing *'The watchman drops his lantern'* retells a beat of plot; writing *'The dropped lantern leaves the corridor in darkness just as the watchman abandons his oath'* explains what the moment means. Separating analysis from summary and personal reaction keeps an essay focused on the text.",
+    "写“守夜人摔掉了提灯”只是复述情节；写“摔落的提灯让走廊陷入黑暗，恰与守夜人背弃誓言同步”才是解释这一刻的含义。把分析与复述、个人感受区分开，文章才能紧扣文本展开。",
+  ],
   after: ["keeping-a-summary-objective"],
   points: [
     label(
       "summary-or-analysis",
       ["Summary or Analysis", "复述还是分析"],
       [
-        "In a literary essay, a sentence of **summary** retells what happens: *Then Juliet drinks the potion.* A sentence of **analysis** explains what a detail means or how it works: *Juliet's hesitation before drinking shows that her courage is a choice, not a lack of fear.* A third kind of sentence gives **a personal reaction**, such as *This part made me sad*, which is about the reader, not the text. A good essay uses only as much summary as the reader needs, and spends most of its sentences on analysis.",
-        "在文学评论文章中，**复述**的句子讲发生了什么：*Then Juliet drinks the potion.* **分析**的句子解释一个细节意味着什么、如何起作用：*Juliet's hesitation before drinking shows that her courage is a choice, not a lack of fear.* 第三种句子表达**个人感受**，比如 *This part made me sad*，说的是读者而不是作品。好的文章只用读者需要的那一点复述，把大部分句子用于分析。",
+        "In a literary essay, a sentence of **summary** retells what happens: *Then Juliet drinks the potion.* A sentence of **analysis** explains what a detail means or how it works: *Juliet's hesitation before drinking shows that her courage is a choice, not a lack of fear.* A third kind of sentence gives **a personal reaction**, such as *This part made me sad*, which is about the reader, not the text. A good essay uses only as much summary as the reader needs, and spends most of its sentences on analysis.\n\n> **Watch out.** Mentioning a literary device (*'the speaker repeats the phrase five times'*) is still **summary** if it stops at counting or reporting without explaining *what effect* it creates.",
+        "在文学评论文章中，**复述**的句子讲发生了什么：*Then Juliet drinks the potion.* **分析**的句子解释一个细节意味着什么、如何起作用：*Juliet's hesitation before drinking shows that her courage is a choice, not a lack of fear.* 第三种句子表达**个人感受**，比如 *This part made me sad*，说的是读者而不是作品。好的文章只用读者需要的那一点复述，把大部分句子用于分析。\n\n> **注意。** 哪怕提到了修辞手法（如“演讲者把这句话重复了五遍”），如果只停留在汇报次数而不解释它产生的*效果*，依然属于**复述**。",
       ],
       [
         "Is this sentence from a literary essay summary, analysis or a personal reaction?",
@@ -209,22 +217,22 @@ const analysis = topic("writing", {
       {
         summary: L(
           "复述",
-          "The sentence only retells what happens in the text.",
-          "这个句子只是复述作品中发生了什么。",
+          "The sentence only retells what happens in the text.\n\n**Check.** Ask whether the sentence interprets *why* the event matters or only reports *what* happened: it stops at reporting events.",
+          "这个句子只是复述作品中发生了什么。\n\n**检验。** 问问句子是在阐释事件*为何*重要，还是只汇报*发生了什么*：它只停留在汇报事件。",
           "The sentence does more than retell what happens.",
           "这个句子不只是复述发生了什么。",
         ),
         analysis: L(
           "分析",
-          "The sentence explains what a detail means or how it works, which is the real work of a literary essay.",
-          "这个句子解释了一个细节意味着什么或如何起作用，这才是文学评论文章真正要做的事。",
+          "The sentence explains what a detail means or how it works, which is the real work of a literary essay.\n\n**Check.** Look for an interpretive link (*shows*, *reveals*, *suggests*, *turns*, *points to*) connecting a textual detail to a meaning about the work.",
+          "这个句子解释了一个细节意味着什么或如何起作用，这才是文学评论文章真正要做的事。\n\n**检验。** 找句中把文本细节引向作品深层含义的阐释动词（如 *shows*、*reveals*、*suggests*）：这正是分析的标志。",
           "The sentence does not explain what a detail means or how it works.",
           "这个句子没有解释细节的含义或作用。",
         ),
         "a personal reaction": L(
           "个人感受",
-          "The sentence is about the reader's own feelings, not about the text.",
-          "这个句子说的是读者自己的感受，而不是作品。",
+          "The sentence is about the reader's own feelings, not about the text.\n\n**Check.** Notice the focus on *I/me* or personal taste (*made me sad*, *I love*, *I wish*): it reports the reader's emotional response rather than how the text works.",
+          "这个句子说的是读者自己的感受，而不是作品。\n\n**检验。** 注意句中指向读者本人的词（如 *I*、*me*、*made me*）：它说的是读者的情绪反应，而非文本本身的运作。",
           "The sentence is about the text, not only the reader's feelings.",
           "这个句子说的是作品，而不只是读者的感受。",
         ),
@@ -234,8 +242,8 @@ const analysis = topic("writing", {
       "turning-summary-into-analysis",
       ["Turning Summary into Analysis", "把复述变成分析"],
       [
-        "A sentence of summary can become analysis by adding **what the detail shows** and **why it matters**. *The boy breaks the window* becomes *The boy breaks the window on purpose, which shows that his anger has finally found a target.* Two weak revisions are common: one only **adds more plot**, and one adds **a reaction** of the writer instead of a claim about the text.",
-        "复述的句子加上**这个细节表明了什么**和**它为什么重要**，就能变成分析。*The boy breaks the window* 变成 *The boy breaks the window on purpose, which shows that his anger has finally found a target.* 常见的弱修改有两种：一种只是**补充更多情节**，另一种加上的是作者的**感受**，而不是对作品的主张。",
+        "A sentence of summary can become analysis by adding **what the detail shows** and **why it matters**. *The boy breaks the window* becomes *The boy breaks the window on purpose, which shows that his anger has finally found a target.* Two weak revisions are common: one only **adds more plot**, and one adds **a reaction** of the writer instead of a claim about the text.\n\n> **Watch out.** Adding a judgment word like *rude*, *creepy*, *spooky*, or *sad* at the end of a plot sentence turns summary into personal reaction, not analysis—ask what the detail reveals about character, theme, or craft.",
+        "复述的句子加上**这个细节表明了什么**和**它为什么重要**，就能变成分析。*The boy breaks the window* 变成 *The boy breaks the window on purpose, which shows that his anger has finally found a target.* 常见的弱修改有两种：一种只是**补充更多情节**，另一种加上的是作者的**感受**，而不是对作品的主张。\n\n> **注意。** 在情节句后面加上 *rude*、*creepy*、*sad* 这类感受词，只是把复述变成了个人评价而非分析——要追问细节揭示了人物、主题或写法的什么。",
       ],
       ["Which revision turns the sentence of summary into analysis?", "哪个修改把复述的句子变成了分析？"],
       `
@@ -271,8 +279,8 @@ const analysis = topic("writing", {
         The house's lights are left on all night.|The lights left on all night show that the family is still waiting for someone who will not return.|The house's lights are left on all night, every night of the winter.|The house's lights are left on all night, which wastes electricity.
       `,
       (right) => [
-        `*${right}* adds what the detail shows and why it matters, which turns the summary into analysis.`,
-        `*${right}* 补充了这个细节表明什么、为什么重要，把复述变成了分析。`,
+        `*${right}* adds what the detail shows and why it matters, which turns the summary into analysis.\n\n**Check.** Compare the added second half against the original plot sentence: it interprets the detail's meaning inside the text rather than adding another plot beat or a reader reaction.`,
+        `*${right}* 补充了这个细节表明什么、为什么重要，把复述变成了分析。\n\n**检验。** 对照原情节句与补充的后半句：后半句阐释的是细节在作品中的意义，既不是续写情节，也不是抒发个人感想。`,
       ],
       [
         [
@@ -295,14 +303,18 @@ const epicSimile = topic("writing", {
     "How to build an epic simile: open with *as when* or *like*, unfold a small scene from everyday life, then return with *so* to the action.",
     "如何构造史诗式明喻：以 *as when* 或 *like* 开头，展开一幅日常生活的小场景，再用 *so* 回到情节。",
   ],
+  intro: [
+    "Homer rarely stops at *'the crowd surged like the sea'*—he zooms out to describe a winter gale driving waves against a headland before snapping back with *'so the warriors pressed forward'*. Building an **epic simile** means unfolding a full everyday scene and returning cleanly with *so*.",
+    "荷马很少只写“人群如潮水般涌来”——他会先展开狂风巨浪拍击岬角的完整画面，再用 *so* 猛然拉回战场上的战士。写**史诗式明喻**，就是要铺展一幅日常小景，再用 *so* 严丝合缝地回到主线情节。",
+  ],
   after: ["epic-conventions"],
   points: [
     label(
       "epic-simile-or-not",
       ["Epic Simile or Not", "是不是史诗式明喻"],
       [
-        "An **epic simile** has three parts: it opens with *as when* or *like*, unfolds into a **small scene of its own** over several clauses, and returns with *so* to the main action. A **short simile** compares in a few words (*brave as a lion*). A **metaphor** says one thing *is* another without *like* or *as*. A simile that **never returns** unfolds a scene but forgets to come back with *so*, which leaves the reader lost.",
-        "**史诗式明喻**有三个部分：以 *as when* 或 *like* 开头，用几个分句展开**一幅自成一体的小场景**，再用 *so* 回到主要情节。**简短的明喻**只用几个词作比较（*brave as a lion*）。**隐喻**不用 *like* 或 *as*，直接说一样东西*是*另一样东西。**没有回到情节**的明喻展开了场景，却忘了用 *so* 回来，让读者无所适从。",
+        "An **epic simile** has three parts: it opens with *as when* or *like*, unfolds into a **small scene of its own** over several clauses, and returns with *so* to the main action. A **short simile** compares in a few words (*brave as a lion*). A **metaphor** says one thing *is* another without *like* or *as*. A simile that **never returns** unfolds a scene but forgets to come back with *so*, which leaves the reader lost.\n\n> **Watch out.** Do not pick **an epic simile** just because a comparison is long—read to the very end to check whether a *so* clause actually brings the reader back to the main story.",
+        "**史诗式明喻**有三个部分：以 *as when* 或 *like* 开头，用几个分句展开**一幅自成一体的小场景**，再用 *so* 回到主要情节。**简短的明喻**只用几个词作比较（*brave as a lion*）。**隐喻**不用 *like* 或 *as*，直接说一样东西*是*另一样东西。**没有回到情节**的明喻展开了场景，却忘了用 *so* 回来，让读者无所适从。\n\n> **注意。** 不要看到比喻很长就选**史诗式明喻**——一定要读到句尾，确认有没有用 *so* 分句真正拉回主线情节。",
       ],
       ["What kind of comparison is this?", "这是哪种比较？"],
       `
@@ -340,29 +352,29 @@ const epicSimile = topic("writing", {
       {
         "an epic simile": L(
           "史诗式明喻",
-          "It opens with *as when* or *like*, unfolds a small scene of its own and returns with *so* to the action.",
-          "它以 *as when* 或 *like* 开头，展开一幅自成一体的小场景，再用 *so* 回到情节。",
+          "It opens with *as when* or *like*, unfolds a small scene of its own and returns with *so* to the action.\n\n**Check.** Verify all three parts in the sentence: an opening *as when/like*, an expanded multi-clause scene, and a closing *so* clause returning to the story.",
+          "它以 *as when* 或 *like* 开头，展开一幅自成一体的小场景，再用 *so* 回到情节。\n\n**检验。** 核对句中是否齐备三部分：*as when/like* 开头、多子句展开的小场景、以及用 *so* 回到故事主线的收束。",
           "It is not a long comparison that unfolds a scene and returns to the action with *so*.",
           "它不是展开场景、再用 *so* 回到情节的长比喻。",
         ),
         "a short simile": L(
           "简短的明喻",
-          "It compares with *like* or *as* in only a few words, without unfolding a scene.",
-          "它用 *like* 或 *as* 作比较，只用了几个词，没有展开场景。",
+          "It compares with *like* or *as* in only a few words, without unfolding a scene.\n\n**Check.** Count the clauses: it uses *like/as* in a single brief clause with no expanded scene.",
+          "它用 *like* 或 *as* 作比较，只用了几个词，没有展开场景。\n\n**检验。** 看句式长度：只在简短的单句里用 *like/as* 作比，没有铺展独立场景。",
           "It is not a brief comparison with *like* or *as*.",
           "它不是用 *like* 或 *as* 的简短比较。",
         ),
         "a metaphor": L(
           "隐喻",
-          "It says that one thing *is* another, without *like* or *as*.",
-          "它不用 *like* 或 *as*，直接说一样东西*是*另一样东西。",
+          "It says that one thing *is* another, without *like* or *as*.\n\n**Check.** Scan for *like* or *as*: neither appears; the sentence equates the two things directly with *was/were*.",
+          "它不用 *like* 或 *as*，直接说一样东西*是*另一样东西。\n\n**检验。** 检查句中有没有 *like* 或 *as*：没有，而是直接用 *was/were* 把两者等同起来。",
           "It does not say that one thing simply *is* another.",
           "它并没有直接说一样东西*是*另一样东西。",
         ),
         "a simile that never returns": L(
           "没有回到情节的明喻",
-          "It unfolds a scene but never comes back with *so* to the action it was meant to describe.",
-          "它展开了场景，却始终没有用 *so* 回到它要描写的情节。",
+          "It unfolds a scene but never comes back with *so* to the action it was meant to describe.\n\n**Check.** Read the final clause: it is still describing the nature/everyday image and never pivots back with *so* to the main story.",
+          "它展开了场景，却始终没有用 *so* 回到它要描写的情节。\n\n**检验。** 读最后一个分句：它仍停留在比喻场景里，始终没有用 *so* 拉回主线情节。",
           "It does not leave its scene without returning to the action.",
           "它并没有展开场景后不回到情节。",
         ),
@@ -372,8 +384,8 @@ const epicSimile = topic("writing", {
       "completing-the-epic-simile",
       ["Completing the Epic Simile", "补全史诗式明喻"],
       [
-        "The *so* clause of an epic simile must **match the scene point for point**. If the scene is of a wave that rises, gathers and crashes, the action must also rise, gather and strike. A good *so* clause picks out the same movement or feeling. Two mistakes are common: a return that **does not match** the scene, and a return that **repeats the scene** instead of coming back to the action.",
-        "史诗式明喻的 *so* 分句必须与场景**逐点对应**。如果场景是一个浪头涌起、积聚、拍碎，那么情节也必须涌起、积聚、出击。好的 *so* 分句会选出相同的动作或感受。常见的错误有两种：回到情节时**与场景不对应**，以及没有回到情节而是**重复场景**。",
+        "The *so* clause of an epic simile must **match the scene point for point**. If the scene is of a wave that rises, gathers and crashes, the action must also rise, gather and strike. A good *so* clause picks out the same movement or feeling. Two mistakes are common: a return that **does not match** the scene, and a return that **repeats the scene** instead of coming back to the action.\n\n> **Watch out.** Check two things in the *so* clause: first, that it switches *out* of the comparison image back to human/story action; second, that its energy and direction match the image rather than contradicting it.",
+        "史诗式明喻的 *so* 分句必须与场景**逐点对应**。如果场景是一个浪头涌起、积聚、拍碎，那么情节也必须涌起、积聚、出击。好的 *so* 分句会选出相同的动作或感受。常见的错误有两种：回到情节时**与场景不对应**，以及没有回到情节而是**重复场景**。\n\n> **注意。** 检查 *so* 分句的两点：第一，是否真正从比喻场景切回故事人物与情节；第二，动作力度和情绪方向是否与前半句一致，而非南辕北辙。",
       ],
       ["Which *so* clause best completes the epic simile?", "哪个 *so* 分句最能补全这个史诗式明喻？"],
       `
@@ -408,7 +420,10 @@ const epicSimile = topic("writing", {
         As when a cloud of locusts darkens the sky and strips the fields bare, ___|so the invading army darkened the land and left nothing behind.|so the invading army planted fields wherever it went.|so the locusts ate every green leaf, just as it had done many times before.
         As when a mountain spring, small at first, grows into a mighty river, ___|so the small rebellion grew into a war that changed the world.|so the small rebellion faded away and was forgotten.|so the spring became a river that ran to the sea.
       `,
-      (right) => [`*${right}* returns to the action and matches the scene point for point.`, `*${right}* 回到了情节，而且与场景逐点对应。`],
+      (right) => [
+        `*${right}* returns to the action and matches the scene point for point.\n\n**Check.** Trace the image's trajectory (rising, spreading, waiting, breaking) alongside the *so* clause: it leaves the nature image behind and mirrors that exact motion in the story's action.`,
+        `*${right}* 回到了情节，而且与场景逐点对应。\n\n**检验。** 把前半句自然画面的走势与 *so* 分句并排核对：它跳出了比喻场景，并把同样的动态精准落到故事人物的行动上。`,
+      ],
       [
         [
           "*{wrong}* returns to the action, but its movement or feeling does not match the scene of the simile.",
@@ -430,14 +445,18 @@ const citing = topic("writing", {
     "How to quote verse: a slash between lines, line numbers in parentheses for poems, and act, scene and line for plays.",
     "如何引用诗行：行与行之间用斜线，诗歌在括号中注明行号，剧本注明幕、场和行。",
   ],
+  intro: [
+    "In an essay on *Macbeth* or Frost, writing `(page 42)` sends readers with another edition on a wild goose chase. Citing verse with slashes (` / `) for line breaks and exact `(lines 1–2)` or `(3.1.56)` numbers works in every edition.",
+    "写《麦克白》或弗罗斯特的论文时，只标 `(page 42)` 会让手头版本不同的读者无从查找。用前后留空的斜线（` / `）标示分行，并在括号中注明 `(lines 1–2)` 或 `(3.1.56)`，任何版本都能精确定位。",
+  ],
   after: ["quoting-a-primary-source"],
   points: [
     choose(
       "the-correct-citation",
       ["The Correct Citation", "正确的引用格式"],
       [
-        "When you quote **two or three lines of verse** in your own sentence, keep them in quotation marks and show each line break with a **slash** with a space on each side: “Shall I compare thee to a summer's day? / Thou art more lovely and more temperate” (lines 1–2). For a **poem**, give the line numbers in parentheses after the closing quotation mark. For a **play in verse**, give the **act, scene and line** as numbers separated by periods: (3.1.56). The period of your sentence goes after the parentheses.",
-        "在自己的句子中引用**两到三行诗**时，要放在引号里，并用前后各有一个空格的**斜线**表示换行：“Shall I compare thee to a summer's day? / Thou art more lovely and more temperate” (lines 1–2)。引用**诗歌**时，在后引号之后的括号中注明行号。引用**诗体剧本**时，用句点隔开的数字注明**幕、场和行**：(3.1.56)。句子的句号放在括号之后。",
+        'When you quote **two or three lines of verse** in your own sentence, keep them in quotation marks and show each line break with a **slash** with a space on each side: “Shall I compare thee to a summer\'s day? / Thou art more lovely and more temperate” (lines 1–2). For a **poem**, give the line numbers in parentheses after the closing quotation mark. For a **play in verse**, give the **act, scene and line** as numbers separated by periods: (3.1.56). The period of your sentence goes after the parentheses.\n\n> **Watch out.** Put the sentence\'s closing period *after* the parentheses—`"..." (3.1.56).` is right, whereas `"...." (3.1.56)` leaves the citation dangling outside the sentence. (Keep a `?` or `!` inside the quotation marks if it belongs to the line, then still close with a period after the parentheses.)',
+        '在自己的句子中引用**两到三行诗**时，要放在引号里，并用前后各有一个空格的**斜线**表示换行：“Shall I compare thee to a summer\'s day? / Thou art more lovely and more temperate” (lines 1–2)。引用**诗歌**时，在后引号之后的括号中注明行号。引用**诗体剧本**时，用句点隔开的数字注明**幕、场和行**：(3.1.56)。句子的句号放在括号之后。\n\n> **注意。** 句末的句号要放在括号*之后*——`"..." (3.1.56).` 才对，把句号留在引号内会让引注孤零零地落在句外。（原诗句自带的 `?` 或 `!` 保留在引号内，括号后仍加句号。）',
       ],
       ["Which citation is written correctly?", "哪种引用格式是正确的？"],
       `
@@ -473,8 +492,8 @@ const citing = topic("writing", {
         Act 2, scene 2, line 185 of a play|Juliet sighs, “Parting is such sweet sorrow” (2.2.185).|Juliet sighs, “Parting is such sweet sorrow” (at the end of the balcony scene).|Juliet sighs, “Parting is such sweet sorrow.” (2.2.185)
       `,
       (right) => [
-        `*${right}* marks line breaks with a slash, gives the numbers in parentheses and puts the period after them.`,
-        `*${right}* 用斜线表示换行，在括号中注明数字，并把句号放在括号之后。`,
+        `*${right}* marks line breaks with a slash, gives the numbers in parentheses and puts the period after them.\n\n**Check.** Run the three-point verse-citation check: slashes ( / ) separate any multi-line quote, exact numbers sit in parentheses, and the sentence's period sits *after* the closing parenthesis.`,
+        `*${right}* 用斜线表示换行，在括号中注明数字，并把句号放在括号之后。\n\n**检验。** 做三点核查：多行诗句间有斜线（ / ）隔开、括号内是精确数字、句子末尾的句号放在右括号*之后*。`,
       ],
       [
         [
@@ -491,8 +510,8 @@ const citing = topic("writing", {
       "what-the-citation-tells",
       ["What the Citation Tells", "引用标注说明了什么"],
       [
-        "A citation tells the reader where to find the quotation. In **(3.1.56)**, the numbers are the **act**, the **scene** and the **line**: act 3, scene 1, line 56. In **(lines 5–8)**, the numbers are **line numbers** of a poem. A **slash** inside a quotation shows **where one line of verse ends** and the next begins. And a **page number** alone, as in (45), is used for prose, which has no line numbers.",
-        "引用标注告诉读者在哪里能找到引文。在 **(3.1.56)** 中，数字依次是**幕**、**场**和**行**：第 3 幕第 1 场第 56 行。在 **(lines 5–8)** 中，数字是诗歌的**行号**。引文中的**斜线**表示**一行诗在哪里结束**、下一行从哪里开始。只有**页码**的标注，如 (45)，用于没有行号的散文。",
+        "A citation tells the reader where to find the quotation. In **(3.1.56)**, the numbers are the **act**, the **scene** and the **line**: act 3, scene 1, line 56. In **(lines 5–8)**, the numbers are **line numbers** of a poem. A **slash** inside a quotation shows **where one line of verse ends** and the next begins. And a **page number** alone, as in (45), is used for prose, which has no line numbers.\n\n> **Watch out.** Always read a three-number play citation from largest unit to smallest—**act.scene.line**—never reversing scene and act.",
+        "引用标注告诉读者在哪里能找到引文。在 **(3.1.56)** 中，数字依次是**幕**、**场**和**行**：第 3 幕第 1 场第 56 行。在 **(lines 5–8)** 中，数字是诗歌的**行号**。引文中的**斜线**表示**一行诗在哪里结束**、下一行从哪里开始。只有**页码**的标注，如 (45)，用于没有行号的散文。\n\n> **注意。** 读剧本的三位数字引注时，始终按从大到小的顺序：**幕.场.行**，切勿把幕和场颠倒。",
       ],
       ["In this citation, what does the marked part tell the reader?", "在这个引用中，标出的部分告诉读者什么？"],
       `
@@ -530,22 +549,22 @@ const citing = topic("writing", {
       {
         "the act": L(
           "幕",
-          "The first number of a play citation is the act, the largest division of the play.",
-          "剧本引用标注的第一个数字是幕，即剧本最大的划分单位。",
+          "The first number of a play citation is the act, the largest division of the play.\n\n**Check.** Match the position against **act.scene.line**: the first slot always names the act.",
+          "剧本引用标注的第一个数字是幕，即剧本最大的划分单位。\n\n**检验。** 对照 **幕.场.行** 的顺序：第一位始终表示幕。",
           "This number is not the first one, so it is not the act.",
           "这个数字不是第一个，所以不是幕。",
         ),
         "the scene": L(
           "场",
-          "The middle number of a play citation is the scene within the act.",
-          "剧本引用标注中间的数字是该幕中的场。",
+          "The middle number of a play citation is the scene within the act.\n\n**Check.** Match the position against **act.scene.line**: the middle slot always names the scene.",
+          "剧本引用标注中间的数字是该幕中的场。\n\n**检验。** 对照 **幕.场.行** 的顺序：中间一位始终表示场。",
           "This number is not the middle one, so it is not the scene.",
           "这个数字不是中间那个，所以不是场。",
         ),
         "the line": L(
           "行",
-          "The last number of a play citation is the line within the scene.",
-          "剧本引用标注的最后一个数字是该场中的行。",
+          "The last number of a play citation is the line within the scene.\n\n**Check.** Match the position against **act.scene.line**: the third slot always names the line.",
+          "剧本引用标注的最后一个数字是该场中的行。\n\n**检验。** 对照 **幕.场.行** 的顺序：最后一位始终表示行。",
           "This number is not the last one, so it is not the line.",
           "这个数字不是最后一个，所以不是行。",
         ),

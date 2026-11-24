@@ -360,6 +360,10 @@ const thisThatTheseThose: TopicDef = {
     "This and these are near, that and those are far; these and those are for more than one.",
     "this 和 these 指近处，that 和 those 指远处；these 和 those 用于多个。",
   ),
+  intro: t(
+    "Point to one ruler in your hand and say *This is my ruler*; point to two rulers across the room and say *Those are my rulers*. English uses four pointing words to show both distance (near vs. far) and number (one vs. more than one)—and the verb and noun must match. In this topic, you choose the right pointer and switch sentences between singular and plural.",
+    "指着手里的尺子说 *This is my ruler*，指着远处桌子上的两把尺子说 *Those are my rulers*。英语用四个指示词同时表达远近（近/远）和数量（一个/多个），后面的动词和名词也必须跟着一致。本主题带你选对指示词，并在单复数句子之间自由转换。",
+  ),
   prerequisites: ["pre-a1-words-this-and-that", "plural-nouns-with-s"],
   encompasses: [
     { topic: "pre-a1-words-this-and-that", weight: 0.4 },
@@ -372,8 +376,8 @@ const thisThatTheseThose: TopicDef = {
       "choose",
       t("Near or far, one or more", "近还是远，一个还是多个"),
       t(
-        "| | one | more than one |\n|---|---|---|\n| near (here) | *this* | *these* |\n| far (over there) | *that* | *those* |\n\n*This is my pen. These are my pens. That is my bag. Those are my bags.*",
-        "| | 一个 | 多个 |\n|---|---|---|\n| 近处（here） | *this* | *these* |\n| 远处（over there） | *that* | *those* |\n\n中文“这些”“那些”后面的名词不变，英语却要全部变成复数：*these pens*，后面的动词也用 *are*。\n\n*This is my pen. These are my pens. That is my bag. Those are my bags.*",
+        "| | one | more than one |\n|---|---|---|\n| near (here) | *this* | *these* |\n| far (over there) | *that* | *those* |\n\n*This is my pen. These are my pens. That is my bag. Those are my bags.*\n\n> **Watch out.** Check *both* clues in the sentence: *here* vs. *over there* tells you near or far, while *is* vs. *are* tells you one or more than one.",
+        "| | 一个 | 多个 |\n|---|---|---|\n| 近处（here） | *this* | *these* |\n| 远处（over there） | *that* | *those* |\n\n中文“这些”“那些”后面的名词不变，英语却要全部变成复数：*these pens*，后面的动词也用 *are*。\n\n*This is my pen. These are my pens. That is my bag. Those are my bags.*\n\n> **注意。** 同时核对句中的*两个*线索：*here* / *over there* 决定远近，*is* / *are* 决定一个还是多个。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
@@ -381,8 +385,8 @@ const thisThatTheseThose: TopicDef = {
         (right, shown) => {
           const sense = pointerSense(!shown.includes("over there"), shown.includes(" are "));
           return t(
-            `The thing is ${sense.en}, so the word is *${right}*: ${shown.replace("___", `*${right}*`)}`,
-            `东西在${sense["zh-CN"]}，所以用 *${right}*：${shown.replace("___", `*${right}*`)}`,
+            `The thing is ${sense.en}, so the word is *${right}*: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Match both clues—distance (*here* -> *this/these*, *over there* -> *that/those*) and verb (*is* -> singular, *are* -> plural)—to confirm *${right}*.`,
+            `东西在${sense["zh-CN"]}，所以用 *${right}*：${shown.replace("___", `*${right}*`)}\n\n**检验。** 同时核对远近线索（*here* 配 *this/these*，*over there* 配 *that/those*）与动词（*is* 配单数，*are* 配复数），确认是 *${right}*。`,
           );
         },
         whyNotPointer,
@@ -392,8 +396,8 @@ const thisThatTheseThose: TopicDef = {
       "change",
       t("Changing one to more than one", "把一个变成多个"),
       t(
-        "When *this* becomes *these* and *that* becomes *those*, three words change: *is* becomes *are*, and the noun takes *-s*.\n\n*This is my pen.* → *These are my pens.*",
-        "*this* 变成 *these*、*that* 变成 *those* 时，有三处要变：*is* 变成 *are*，名词加 *-s*。\n\n*This is my pen.* → *These are my pens.*",
+        "When *this* becomes *these* and *that* becomes *those*, three words change: *is* becomes *are*, and the noun takes *-s*.\n\n*This is my pen.* → *These are my pens.*\n\n> **Watch out.** Do not stop after changing the first word—always update all *three* spots together: pointer (*this/these* or *that/those*), verb (*is/are*), and noun (*pen/pens*, *box/boxes*).",
+        "*this* 变成 *these*、*that* 变成 *those* 时，有三处要变：*is* 变成 *are*，名词加 *-s*。\n\n*This is my pen.* → *These are my pens.*\n\n> **注意。** 不要只改句首第一个词就停手——务必把*三处*一起改过来：指示词（*this/these* 或 *that/those*）、动词（*is/are*）和名词（*pen/pens*、*box/boxes*）。",
       ),
       typedGenerator(
         "sentence",
@@ -401,8 +405,8 @@ const thisThatTheseThose: TopicDef = {
         [...pointerTypedBank, ...pointerTypedBank2],
         (right, shown) =>
           t(
-            `Between one and more than one, three words change together, ${changedWords(shown, right)}: ${shown} → ${right}`,
-            `一个和多个之间转换时，三处要一起变，${changedWords(shown, right)}：${shown} → ${right}`,
+            `Between one and more than one, three words change together, ${changedWords(shown, right)}: ${shown} → ${right}\n\n**Check.** Count the three changes in your sentence—pointer, verb (*is/are*), and noun ending—and confirm the distance (near vs. far) stayed the same.`,
+            `一个和多个之间转换时，三处要一起变，${changedWords(shown, right)}：${shown} → ${right}\n\n**检验。** 逐一核对句子里的三处变化——指示词、动词（*is/are*）和名词单复数——同时确认远近关系没有改错。`,
           ),
       ),
     ),
@@ -441,6 +445,10 @@ const inOnAndUnder: TopicDef = {
   id: "in-on-and-under",
   title: t("In, On and Under", "in、on 和 under"),
   summary: t("The pen is in the bag: the place word comes before the thing.", "The pen is in the bag：表示位置的词放在东西前面。"),
+  intro: t(
+    "Say where a ball is: *The ball is in the box* (inside), *on the table* (on top), or *under the bed* (below). Unlike Chinese, English puts the place word *before* the noun and always keeps *is* in the middle. In this topic, you pick the right preposition and build full location sentences in English word order.",
+    "说明一个球在哪里：*The ball is in the box*（在里面）、*on the table*（在上面）或 *under the bed*（在下面）。和中文相反，英语把方位词放在名词*前面*，且中间必须保留 *is*。本主题带你选对介词，并按英语语序写出完整的方位句。",
+  ),
   prerequisites: ["pre-a1-words-this-and-that", "pre-a1-words-classroom"],
   encompasses: [{ topic: "pre-a1-words-this-and-that", weight: 0.3 }],
   xp: 15,
@@ -450,16 +458,16 @@ const inOnAndUnder: TopicDef = {
       "choose",
       t("In, on or under?", "用 in、on 还是 under？"),
       t(
-        "*in* = inside: *The pen is in the bag.*\n*on* = on top: *The book is on the desk.*\n*under* = below: *The cat is under the chair.*",
-        "*in* = 在里面：*The pen is in the bag.*\n*on* = 在上面：*The book is on the desk.*\n*under* = 在下面：*The cat is under the chair.*",
+        "*in* = inside: *The pen is in the bag.*\n*on* = on top: *The book is on the desk.*\n*under* = below: *The cat is under the chair.*\n\n> **Watch out.** Picture the spatial cue carefully: *in* means enclosed inside, *on* means resting on top of a surface, and *under* means directly below.",
+        "*in* = 在里面：*The pen is in the bag.*\n*on* = 在上面：*The book is on the desk.*\n*under* = 在下面：*The cat is under the chair.*\n\n> **注意。** 在脑中画出位置关系：*in* 表示在内部，*on* 表示在表面上，*under* 表示在正下方。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         placeChoiceBank,
         (right, shown) =>
           t(
-            `The note says *${cue[right as Place]}*, and *${right}* means ${cue[right as Place]}: ${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
-            `提示是 *${cue[right as Place]}*（${cueZh[right as Place]}），所以用 *${right}*：${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
+            `The note says *${cue[right as Place]}*, and *${right}* means ${cue[right as Place]}: ${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}\n\n**Check.** Match the spatial meaning back to the bracketed cue (*inside* -> *in*, *on top* -> *on*, *below* -> *under*) to verify *${right}*.`,
+            `提示是 *${cue[right as Place]}*（${cueZh[right as Place]}），所以用 *${right}*：${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}\n\n**检验。** 把空间意思对照括号提示（*inside* -> *in*，*on top* -> *on*，*below* -> *under*），确认是 *${right}*。`,
           ),
         (wrong, right) =>
           t(
@@ -472,14 +480,14 @@ const inOnAndUnder: TopicDef = {
       "order",
       t("Putting the place word first", "把表示位置的词放在前面"),
       t(
-        "English says the place word first and then the thing: *in the bag*, *on the desk*, *under the chair*. Do not forget *is*.\n\n*The pen is in the bag.*",
-        "中文说“在包里”“在桌子上”，表示位置的“里”“上”放在后面；英语正好相反，*in*、*on*、*under* 放在前面：*in the bag*、*on the desk*、*under the chair*。别忘了 *is*。\n\n*The pen is in the bag.*",
+        "English says the place word first and then the thing: *in the bag*, *on the desk*, *under the chair*. Do not forget *is*.\n\n*The pen is in the bag.*\n\n> **Watch out.** Check two common slips: never put *in/on/under* after the place (*the bag in*), and never drop *is* between the subject and the place word.",
+        "中文说“在包里”“在桌子上”，表示位置的“里”“上”放在后面；英语正好相反，*in*、*on*、*under* 放在前面：*in the bag*、*on the desk*、*under the chair*。别忘了 *is*。\n\n*The pen is in the bag.*\n\n> **注意。** 避开两个常见失误：不要把 *in/on/under* 放到地点后面（如 *the bag in*），也不要在主语和方位词之间漏掉 *is*。",
       ),
       typedGenerator("sentence", t("Write a sentence with these words.", "用这些词写一个句子。"), placeTypedBank, (right) => {
         const place = right.split(" is ")[1]?.replace(/\.$/u, "") ?? "";
         return t(
-          `English says the thing, then *is*, then the place word before the place, not after it: *${place}*. ${right}`,
-          `英语先说东西，再说 *is*，位置词放在地点前面而不是后面：*${place}*。${right}`,
+          `English says the thing, then *is*, then the place word before the place, not after it: *${place}*. ${right}\n\n**Check.** Verify the order *The [thing] + is + [in/on/under] + the [place].*—with *is* present and the preposition right before the place.`,
+          `英语先说东西，再说 *is*，位置词放在地点前面而不是后面：*${place}*。${right}\n\n**检验。** 核对语序 *The [物品] + is + [in/on/under] + the [地点].*——*is* 不能漏，方位词紧贴在地点前面。`,
         );
       }),
     ),
@@ -548,6 +556,10 @@ const imperatives: TopicDef = {
   id: "imperatives",
   title: t("Commands", "祈使句"),
   summary: t("Open your book. Don't stand up. A command starts with the verb.", "Open your book. Don't stand up. 祈使句以动词开头。"),
+  intro: t(
+    "When a teacher says *Close the window, please.* or *Don't write on the desk.*, there is no *you* at the front and no *-s* on the verb. English commands begin straight with the base verb—or with *Don't* + base verb to tell someone not to act. In this topic, you recognize and write both positive and negative classroom commands.",
+    "老师说 *Close the window, please.* 或 *Don't write on the desk.* 时，句首没有 *you*，动词也不加 *-s*。英语祈使句直接以动词原形开头，否定指令则用 *Don't* 加动词原形。本主题带你辨认并写出肯定与否定两类课堂祈使句。",
+  ),
   prerequisites: ["pre-a1-words-classroom-actions"],
   encompasses: [{ topic: "pre-a1-words-classroom-actions", weight: 0.4 }],
   xp: 15,
@@ -557,16 +569,16 @@ const imperatives: TopicDef = {
       "choose",
       t("Spotting a command", "认出祈使句"),
       t(
-        "A command tells someone what to do. It starts with the verb, with no *you* and no *-s*: *Open your book. Sit down, please.*",
-        "祈使句告诉别人做什么。它以动词原形开头，不用 *you*，动词也不加 *-s*：*Open your book. Sit down, please.*",
+        "A command tells someone what to do. It starts with the verb, with no *you* and no *-s*: *Open your book. Sit down, please.*\n\n> **Watch out.** A sentence starting with *You* (*You open your book.*) is a statement, not a command, and a command verb never takes *-s* (*Opens*).",
+        "祈使句告诉别人做什么。它以动词原形开头，不用 *you*，动词也不加 *-s*：*Open your book. Sit down, please.*\n\n> **注意。** 以 *You* 开头的句子（如 *You open your book.*）是陈述句，不是祈使句；祈使句的动词也绝不加 *-s*（如 *Opens*）。",
       ),
       choiceGenerator(
         t("Which one is a classroom command?", "哪一句是课堂指令？"),
         commandChoiceBank,
         (right) =>
           t(
-            `${right} A command starts with the plain verb, *${right.split(" ")[0]}*, with no *you* before it and no *-s* on it.`,
-            `${right} 祈使句以动词原形 *${right.split(" ")[0]}* 开头，前面没有 *you*，动词也不加 *-s*。`,
+            `${right} A command starts with the plain verb, *${right.split(" ")[0]}*, with no *you* before it and no *-s* on it.\n\n**Check.** Look at the very first word—it is a plain base verb (not *You* and not a verb ending in *-s*), directing someone to act.`,
+            `${right} 祈使句以动词原形 *${right.split(" ")[0]}* 开头，前面没有 *you*，动词也不加 *-s*。\n\n**检验。** 看句首第一个词——它是不带 *-s* 的动词原形，前面没有 *You*，直接发出指令。`,
           ),
         (_wrong, _right, _shown, position) =>
           position === 0
@@ -581,18 +593,18 @@ const imperatives: TopicDef = {
       "write",
       t("Writing commands, and don't", "写祈使句和 don't"),
       t(
-        "To tell someone not to do something, put *Don't* before the verb: *Don't run. Don't stand up.* Do not use *No* or *Not*.",
-        "叫别人不要做某事，在动词前加 *Don't*：*Don't run. Don't stand up.* 不能像中文“不要”那样直接用 *No* 或 *Not*。",
+        "To tell someone not to do something, put *Don't* before the verb: *Don't run. Don't stand up.* Do not use *No* or *Not*.\n\n> **Watch out.** When the prompt starts with `not /`, always begin with *Don't* (or *Do not*) followed by the plain verb—never write *No run.* or *Not run.*",
+        "叫别人不要做某事，在动词前加 *Don't*：*Don't run. Don't stand up.* 不能像中文“不要”那样直接用 *No* 或 *Not*。\n\n> **注意。** 提示以 `not /` 开头时，必须用 *Don't*（或 *Do not*）加动词原形——不要写成 *No run.* 或 *Not run.*",
       ),
       typedGenerator("sentence-pattern", t("Write a command with these words.", "用这些词写一句祈使句。"), dontTypedBank, (right) =>
         right.startsWith("Don't")
           ? t(
-              `To tell someone not to do something, put *Don't* before the plain verb, not *No* or *Not*: ${right}`,
-              `叫别人不要做某事，在动词原形前加 *Don't*，不用 *No* 或 *Not*：${right}`,
+              `To tell someone not to do something, put *Don't* before the plain verb, not *No* or *Not*: ${right}\n\n**Check.** Confirm the sentence starts with *Don't* (or *Do not*), keeps the verb plain with no *-s*, and ends with a period.`,
+              `叫别人不要做某事，在动词原形前加 *Don't*，不用 *No* 或 *Not*：${right}\n\n**检验。** 确认句子以 *Don't*（或 *Do not*）开头，后面的动词保持原形不加 *-s*，并以句号结尾。`,
             )
           : t(
-              `A command starts with the plain verb, with no *you* before it and no *-s* on it: ${right}`,
-              `祈使句以动词原形开头，前面没有 *you*，动词也不加 *-s*：${right}`,
+              `A command starts with the plain verb, with no *you* before it and no *-s* on it: ${right}\n\n**Check.** Confirm the sentence starts straight with the capitalized base verb (no *You*, no *-s*) and ends with a period.`,
+              `祈使句以动词原形开头，前面没有 *you*，动词也不加 *-s*：${right}\n\n**检验。** 确认句子直接以大写的动词原形开头（无 *You*、无 *-s*），并以句号结尾。`,
             ),
       ),
     ),
@@ -693,19 +705,22 @@ const partsOf = (s: string) => {
 const orderWhy = (right: string): Text => {
   const { who, verb, rest } = partsOf(right);
   return t(
-    `An English sentence starts with who or what (*${who}*), then the verb (*${verb}*), then the rest (*${rest}*): ${right}`,
-    `英语句子先说谁或什么（*${who}*），再说动词（*${verb}*），最后是其余部分（*${rest}*）：${right}`,
+    `An English sentence starts with who or what (*${who}*), then the verb (*${verb}*), then the rest (*${rest}*): ${right}\n\n**Check.** Read the three blocks in order—*${who}* + *${verb}* + *${rest}*—with a capital letter at the start and a period at the end.`,
+    `英语句子先说谁或什么（*${who}*），再说动词（*${verb}*），最后是其余部分（*${rest}*）：${right}\n\n**检验。** 按“主语（*${who}*）+ 动词（*${verb}*）+ 其余部分（*${rest}*）”三段顺读一遍，并确认句首大写、句末有句号。`,
   );
 };
 
 /** whyNotOrder explains a wrong order by where the verb must stand. */
-const whyNotOrder = (_wrong: string, right: string): Text => {
-  const { who, verb } = partsOf(right);
-  return t(
-    `This order breaks the pattern. In English the verb *${verb}* comes right after *${who}*, and the rest follows.`,
-    `这个语序不对。英语里动词 *${verb}* 要紧跟在 *${who}* 后面，其余部分放在最后。`,
-  );
-};
+const whyNotOrder = (_wrong: string, _right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        "This puts the verb at the end of the sentence; in English the verb comes right after who or what the sentence is about.",
+        "这句把动词放到了句末；英语里动词要紧跟在主语（谁或什么）后面。",
+      )
+    : t(
+        "This swaps the first two words, breaking the subject-then-verb order of an English statement.",
+        "这句把前两个词颠倒了，破坏了英语陈述句“先主语、后动词”的语序。",
+      );
 
 const wordsInOrder: TopicDef = {
   id: "writing-words-in-order",
@@ -713,6 +728,10 @@ const wordsInOrder: TopicDef = {
   summary: t(
     "Put words in the order of an English sentence: who, then the verb, then the rest.",
     "按英语句子的顺序排列词：先说谁，再说动词，最后是其余部分。",
+  ),
+  intro: t(
+    "Take the jumbled words *is / bag / red / her* and arrange them: *Her bag is red.* Every English statement follows one dependable track—who or what first, then the verb, then the rest. In this topic, you pick and write sentences in natural English word order.",
+    "把打乱的词 *is / bag / red / her* 排成句子：*Her bag is red.* 英语陈述句遵循一条稳定的主线——先说谁或什么，再接动词，最后接其余部分。本主题带你选出并写出语序自然的英语句子。",
   ),
   prerequisites: ["writing-capitals-and-periods"],
   encompasses: [{ topic: "writing-capitals-and-periods", weight: 0.3 }],
@@ -723,8 +742,8 @@ const wordsInOrder: TopicDef = {
       "choose",
       t("Choosing the right order", "选出正确的语序"),
       t(
-        "An English sentence goes: who or what, then the verb, then the rest.\n\n*My sister* (who) *has* (verb) *a cat* (the rest).\n*The book* (what) *is* (verb) *on the desk* (the rest).",
-        "英语句子的顺序是：先说谁或什么，再说动词，最后是其余部分。\n\n*My sister*（谁）*has*（动词）*a cat*（其余）。\n*The book*（什么）*is*（动词）*on the desk*（其余）。\n\n不要把动词放在最后，也不要漏掉 *is*。",
+        "An English sentence goes: who or what, then the verb, then the rest.\n\n*My sister* (who) *has* (verb) *a cat* (the rest).\n*The book* (what) *is* (verb) *on the desk* (the rest).\n\n> **Watch out.** Find the verb (*am*, *is*, *are*, *have*, *has*) first—it sits right after the subject, never at the very end of the sentence.",
+        "英语句子的顺序是：先说谁或什么，再说动词，最后是其余部分。\n\n*My sister*（谁）*has*（动词）*a cat*（其余）。\n*The book*（什么）*is*（动词）*on the desk*（其余）。\n\n不要把动词放在最后，也不要漏掉 *is*。\n\n> **注意。** 先找出动词（*am*、*is*、*are*、*have*、*has*）——它必须紧跟在主语后面，绝不能放到句末。",
       ),
       choiceGenerator(
         t("Which sentence puts these words in the right order?", "哪个句子把这些词排对了？"),
@@ -737,8 +756,8 @@ const wordsInOrder: TopicDef = {
       "write",
       t("Writing the sentence", "写出句子"),
       t(
-        "Put the words in order and write the sentence. Start with a capital letter and end with a period.",
-        "把词排好顺序，写出句子。句首大写，句末加句号。",
+        "Put the words in order and write the sentence: *is / Ben / name / his* → *His name is Ben.* Start with a capital letter and end with a period.\n\n> **Watch out.** Count that you used every given word exactly once, put the verb right after the subject, and add a capital letter at the start and a period at the end.",
+        "把词排好顺序，写出句子：*is / Ben / name / his* → *His name is Ben.* 句首大写，句末加句号。\n\n> **注意。** 数一数给出的每个词是否都恰好用了一次，动词是否紧跟主语，并记得句首大写、句末加句号。",
       ),
       typedGenerator("sentence", t("Put the words in order and write the sentence.", "把词排好顺序，写出句子。"), orderTypedBank, orderWhy),
     ),

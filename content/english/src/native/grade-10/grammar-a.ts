@@ -215,14 +215,18 @@ const antithesis = topic("grammar", {
     "How balanced sentences set ideas side by side in the same grammatical form, and how antithesis sets opposites against each other for force.",
     "平衡的句子如何把观点用相同的语法形式并列，对照又如何让相反的意思彼此对立以增强力量。",
   ],
+  intro: [
+    "Compare *We came to build, not for the destruction of things* with *We came to build, not to destroy*: matching infinitive to infinitive snaps the contrast into focus. In this topic, you keep antitheses balanced and distinguish parallel series, antithesis, and faulty parallelism.",
+    "对比 *We came to build, not for the destruction of things* 与 *We came to build, not to destroy*：不定式对不定式，立刻让对立鲜明有力。本主题带你写出对称平衡的对照句，并区分平行排比、对照与平行结构错误。",
+  ],
   after: ["periodic-and-cumulative-sentences"],
   points: [
     choose(
       "the-balanced-contrast",
       ["The Balanced Contrast", "平衡的对照"],
       [
-        "**Antithesis** sets two opposite ideas in the same grammatical form, so that the balance makes the contrast sharp: *It was the best of times, it was the worst of times.* *We must learn to live together as brothers or perish together as fools.* If one half is a clause and the other a phrase, or one half has a verb the other lacks, the balance breaks and the contrast goes soft. Match the halves word for word: noun with noun, verb with verb, clause with clause.",
-        "**对照**把两个相反的意思放进相同的语法形式，平衡使对比更鲜明：*It was the best of times, it was the worst of times.* *We must learn to live together as brothers or perish together as fools.* 如果一半是分句、另一半是短语，或一半有动词而另一半没有，平衡就被打破，对比也变弱了。让两半逐词对应：名词对名词，动词对动词，分句对分句。",
+        "**Antithesis** sets two opposite ideas in the same grammatical form, so that the balance makes the contrast sharp: *It was the best of times, it was the worst of times.* *We must learn to live together as brothers or perish together as fools.* If one half is a clause and the other a phrase, or one half has a verb the other lacks, the balance breaks and the contrast goes soft. Match the halves word for word: noun with noun, verb with verb, clause with clause.\n\n> **Watch out.** Check whether the second half shifts into the passive voice or turns a verb into an *-ing* noun—even a grammatical second half ruins the antithesis if its structure no longer mirrors the first half.",
+        "**对照**把两个相反的意思放进相同的语法形式，平衡使对比更鲜明：*It was the best of times, it was the worst of times.* *We must learn to live together as brothers or perish together as fools.* 如果一半是分句、另一半是短语，或一半有动词而另一半没有，平衡就被打破，对比也变弱了。让两半逐词对应：名词对名词，动词对动词，分句对分句。\n\n> **注意。** 检查后半句有没有滑向被动语态或把动词变成名词短语——即便语法本身没错，结构不再与前半句镜像对称，对照就会失去力量。",
       ],
       ["Which version keeps the contrast balanced?", "哪一个版本让对照保持平衡？"],
       `
@@ -259,8 +263,8 @@ ${balancedLines}
         Contrast talent and teamwork.|Talent wins games, but teamwork wins championships.|Talent wins games, but championships are won by teamwork.|Talent wins games; teamwork, the winning of championships.
       `,
       (right) => [
-        `"${right}" sets the two opposites in the same grammatical form, so the balance sharpens the contrast.`,
-        `“${right}” 让两个相反的意思处于相同的语法形式，平衡使对比更鲜明。`,
+        `"${right}" sets the two opposites in the same grammatical form, so the balance sharpens the contrast.\n\n**Check.** Stack the two halves directly one above the other: each grammatical slot (verb form, voice, and phrase pattern) lines up cleanly across the pair.`,
+        `“${right}” 让两个相反的意思处于相同的语法形式，平衡使对比更鲜明。\n\n**检验。** 把前后两半上下对齐：动词形式、语态和短语结构一一对应，没有中途变形。`,
       ],
       [
         [
@@ -277,8 +281,8 @@ ${balancedLines}
       "naming-the-balance",
       ["Naming the Balance", "辨认平衡的类型"],
       [
-        "Balanced sentences come in kinds. A **parallel series** lists three or more items in the same form: *I came, I saw, I conquered.* An **antithesis** sets two opposites against each other in the same form: *Not as a call to battle, but as a call to bear the burden.* A sentence with **faulty parallelism** tries to balance its items but puts them in different forms: *She likes hiking, to swim and a bike ride.*",
-        "平衡的句子有不同的类型。**平行排比**用相同的形式列出三个或更多项：*I came, I saw, I conquered.* **对照**让两个相反的意思以相同形式彼此对立：*Not as a call to battle, but as a call to bear the burden.* **平行结构错误**的句子想要平衡各项，却用了不同的形式：*She likes hiking, to swim and a bike ride.*",
+        "Balanced sentences come in kinds. A **parallel series** lists three or more items in the same form: *I came, I saw, I conquered.* An **antithesis** sets two opposites against each other in the same form: *Not as a call to battle, but as a call to bear the burden.* A sentence with **faulty parallelism** tries to balance its items but puts them in different forms: *She likes hiking, to swim and a bike ride.*\n\n> **Watch out.** Check the grammatical form of *every* item in a three-item list before calling it a **parallel series**—if the last item switches to a clause or different phrase type, it is **faulty parallelism**.",
+        "平衡的句子有不同的类型。**平行排比**用相同的形式列出三个或更多项：*I came, I saw, I conquered.* **对照**让两个相反的意思以相同形式彼此对立：*Not as a call to battle, but as a call to bear the burden.* **平行结构错误**的句子想要平衡各项，却用了不同的形式：*She likes hiking, to swim and a bike ride.*\n\n> **注意。** 看到三项并列先别急着选**平行排比**——务必核对最后一项的词形，只要它换成了从句或另一种短语，就属于**平行结构错误**。",
       ],
       ["What kind of balance does this sentence have?", "这个句子属于哪种平衡？"],
       `
@@ -317,22 +321,22 @@ ${balanceLines}
       {
         "a parallel series": L(
           "平行排比",
-          "The sentence lists three or more items in the same grammatical form, building rhythm and weight.",
-          "这个句子用相同的语法形式列出三个或更多项，营造节奏和分量。",
+          "The sentence lists three or more items in the same grammatical form, building rhythm and weight.\n\n**Check.** Count the listed parts (three or more) and check their grammatical shape: every single item matches the same pattern.",
+          "这个句子用相同的语法形式列出三个或更多项，营造节奏和分量。\n\n**检验。** 数一数并列项（三项或以上）并核对词形：每一项都保持完全一致的语法模式。",
           "The sentence does not list three or more items in the same form.",
           "这个句子并没有用相同的形式列出三个或更多项。",
         ),
         "an antithesis": L(
           "对照",
-          "The sentence sets two opposite ideas against each other in matching form, so the contrast stands out.",
-          "这个句子用相互对应的形式让两个相反的意思彼此对立，使对比突出。",
+          "The sentence sets two opposite ideas against each other in matching form, so the contrast stands out.\n\n**Check.** Spot the opposing pair held in balance: two contrasting ideas face each other rather than a three-item list or a mismatched series.",
+          "这个句子用相互对应的形式让两个相反的意思彼此对立，使对比突出。\n\n**检验。** 找出对称并置的一对反义概念：两半彼此对立，既不是三项排比，也没有词形失衡。",
           "The sentence does not set two opposites against each other.",
           "这个句子并没有让两个相反的意思彼此对立。",
         ),
         "faulty parallelism": L(
           "平行结构错误",
-          "The sentence lines up items as if they were parallel, but puts them in different forms, such as a gerund, an infinitive and a noun.",
-          "这个句子把各项排列得好像是平行的，却用了不同的形式，比如动名词、不定式和名词。",
+          "The sentence lines up items as if they were parallel, but puts them in different forms, such as a gerund, an infinitive and a noun.\n\n**Check.** Line up the items joined by *and* or commas: at least one item breaks the grammatical form of the others.",
+          "这个句子把各项排列得好像是平行的，却用了不同的形式，比如动名词、不定式和名词。\n\n**检验。** 把用逗号或 *and* 连接的各项排在一起看：至少有一项打破了其余各项的语法形式。",
           "Every item of the sentence is in the same form, so its parallelism is not faulty.",
           "这个句子的各项形式一致，所以平行结构没有错误。",
         ),
@@ -348,14 +352,18 @@ const forEffect = topic("grammar", {
     "When a skilled writer breaks the rules on purpose: a deliberate fragment for emphasis, and questions that are not asked for an answer.",
     "熟练的作者何时有意打破规则：为强调而写的片段句，以及并不期待回答的问句。",
   ],
+  intro: [
+    "After a sentence like *We searched the shore until dawn*, the one-word line *Nothing.* is a deliberate fragment built for punch—very different from accidentally snapping off *Because the bus was late.* In this topic, you separate intentional fragments from accidental ones and distinguish rhetorical questions, hypophora, and genuine questions.",
+    "跟在 *We searched the shore until dawn* 后面的一个词 *Nothing.*，是为了冲击力有意写下的片段句——与不小心断开的 *Because the bus was late.* 截然不同。本主题带你区分有意与无意片段句，并辨认反问、设问和真正的问句。",
+  ],
   after: ["rhetorical-devices"],
   points: [
     label(
       "deliberate-or-accidental",
       ["Deliberate or Accidental", "有意还是无意"],
       [
-        "A **fragment** lacks a subject, a verb or a complete thought. An **accidental fragment** is a piece broken off a sentence by mistake, often a dependent clause or a phrase that belongs to the sentence before: *She left early. Because the bus was late.* A **deliberate fragment** is short, follows a complete sentence and stands alone on purpose, to stress a word or a feeling: *He promised to call. Never.* A **complete sentence** has a subject and a verb and needs nothing more.\n\nIn formal academic writing, avoid even deliberate fragments; in narrative, speeches and essays of opinion, use them sparingly.",
-        "**片段句**缺少主语、谓语或完整的意思。**无意的片段句**是不小心从句子上断开的一截，常常是本属于前一句的从句或短语：*She left early. Because the bus was late.* **有意的片段句**简短，跟在一个完整的句子后面，有意单独成句，以强调一个词或一种感受：*He promised to call. Never.* **完整的句子**有主语和谓语，不缺任何成分。\n\n在正式的学术写作中，连有意的片段句也要避免；在记叙、演讲和议论随笔中，要节制地使用。",
+        "A **fragment** lacks a subject, a verb or a complete thought. An **accidental fragment** is a piece broken off a sentence by mistake, often a dependent clause or a phrase that belongs to the sentence before: *She left early. Because the bus was late.* A **deliberate fragment** is short, follows a complete sentence and stands alone on purpose, to stress a word or a feeling: *He promised to call. Never.* A **complete sentence** has a subject and a verb and needs nothing more.\n\nIn formal academic writing, avoid even deliberate fragments; in narrative, speeches and essays of opinion, use them sparingly.\n\n> **Watch out.** Test whether the bold part has a subject and main verb first: even a very short line like *Nobody moved.* is a **complete sentence**, not a deliberate fragment.",
+        "**片段句**缺少主语、谓语或完整的意思。**无意的片段句**是不小心从句子上断开的一截，常常是本属于前一句的从句或短语：*She left early. Because the bus was late.* **有意的片段句**简短，跟在一个完整的句子后面，有意单独成句，以强调一个词或一种感受：*He promised to call. Never.* **完整的句子**有主语和谓语，不缺任何成分。\n\n在正式的学术写作中，连有意的片段句也要避免；在记叙、演讲和议论随笔中，要节制地使用。\n\n> **注意。** 先检查加粗部分有没有完整的主语和谓语：哪怕很短（如 *Nobody moved.*），只要主谓齐全，它就是**完整的句子**，不是片段句。",
       ],
       ["What is the part in bold?", "加粗的部分是什么？"],
       `
@@ -394,22 +402,22 @@ ${fragmentLines}
       {
         "a deliberate fragment": L(
           "有意的片段句",
-          "It is short, it follows a complete sentence, and it stands alone on purpose to stress a word or a feeling.",
-          "它很简短，跟在完整的句子后面，有意单独成句来强调一个词或一种感受。",
+          "It is short, it follows a complete sentence, and it stands alone on purpose to stress a word or a feeling.\n\n**Check.** Notice that it lacks a full clause yet cannot be smoothly glued onto the previous sentence with a comma—it is crafted to stand alone for punch.",
+          "它很简短，跟在完整的句子后面，有意单独成句来强调一个词或一种感受。\n\n**检验。** 它不是完整分句，却无法靠简单删去句号并入前一句——它是刻意独立出来制造重音的。",
           "It is not a short piece set apart on purpose for emphasis.",
           "它不是为了强调而有意单独列出的简短片段。",
         ),
         "an accidental fragment": L(
           "无意的片段句",
-          "It is a dependent clause or a phrase that belongs to the sentence before it and was cut off by mistake; it should be joined back.",
-          "它是本属于前一句的从句或短语，被错误地断开了；应当把它接回去。",
+          "It is a dependent clause or a phrase that belongs to the sentence before it and was cut off by mistake; it should be joined back.\n\n**Check.** Try replacing the period before the bold part with a comma (or no punctuation): it snaps straight back onto the previous sentence as a normal modifier or dependent clause.",
+          "它是本属于前一句的从句或短语，被错误地断开了；应当把它接回去。\n\n**检验。** 试着把加粗部分前面的句号换成逗号（或去掉）：它立刻顺畅地接回前一句，原来是被误切的从句或修饰短语。",
           "It is not a clause or phrase broken off the sentence before by mistake.",
           "它不是从前一句错误断开的从句或短语。",
         ),
         "a complete sentence": L(
           "完整的句子",
-          "It has its own subject and verb and expresses a complete thought, so it is not a fragment at all.",
-          "它有自己的主语和谓语，表达完整的意思，所以根本不是片段句。",
+          "It has its own subject and verb and expresses a complete thought, so it is not a fragment at all.\n\n**Check.** Cover the first sentence and read only the bold words: they have a subject and finite verb and stand completely on their own.",
+          "它有自己的主语和谓语，表达完整的意思，所以根本不是片段句。\n\n**检验。** 遮住前一句只读加粗部分：主语和谓语动词齐全，完全可以独立成句。",
           "It lacks a subject, a verb or a complete thought, so it is not a complete sentence.",
           "它缺少主语、谓语或完整的意思，所以不是完整的句子。",
         ),
@@ -419,8 +427,8 @@ ${fragmentLines}
       "questions-that-do-not-ask",
       ["Questions That Do Not Ask", "并不发问的问句"],
       [
-        "Not every question asks for information. A **rhetorical question** expects no answer because the answer is obvious, and it makes a point: *Who would choose to be poor?* In **hypophora**, the writer asks a question and answers it at once, to steer the reader to the next idea: *Why does this matter? Because the river is our only water.* A **genuine question** asks for information the speaker does not have: *What time does the library close?*",
-        "并不是每个问句都在询问信息。**反问**不期待回答，因为答案显而易见，它用来表达观点：*Who would choose to be poor?* 在**设问**中，作者提出问题后立刻作答，引导读者进入下一个观点：*Why does this matter? Because the river is our only water.* **真正的问句**询问说话人不知道的信息：*What time does the library close?*",
+        "Not every question asks for information. A **rhetorical question** expects no answer because the answer is obvious, and it makes a point: *Who would choose to be poor?* In **hypophora**, the writer asks a question and answers it at once, to steer the reader to the next idea: *Why does this matter? Because the river is our only water.* A **genuine question** asks for information the speaker does not have: *What time does the library close?*\n\n> **Watch out.** Look right after the question mark first: if the writer immediately supplies the answer, it is **hypophora**; if no answer follows, ask whether the speaker is seeking unknown information (**genuine**) or making an obvious point (**rhetorical**).",
+        "并不是每个问句都在询问信息。**反问**不期待回答，因为答案显而易见，它用来表达观点：*Who would choose to be poor?* 在**设问**中，作者提出问题后立刻作答，引导读者进入下一个观点：*Why does this matter? Because the river is our only water.* **真正的问句**询问说话人不知道的信息：*What time does the library close?*\n\n> **注意。** 先看问号后面：如果作者紧接着自己给出回答，那就是**设问**；如果没有跟回答，再判断说话者是在打听未知信息（**真正的问句**）还是在表达不言自明的立场（**反问**）。",
       ],
       ["What kind of question is this?", "这是哪种问句？"],
       `
@@ -459,22 +467,22 @@ ${questionLines}
       {
         "a rhetorical question": L(
           "反问",
-          "It expects no answer, because the answer is obvious; it is a way of making a point.",
-          "它不期待回答，因为答案显而易见；这是一种表达观点的方式。",
+          "It expects no answer, because the answer is obvious; it is a way of making a point.\n\n**Check.** Try turning the question into a statement: the implied answer (*nobody*, *no*, or *yes*) is already baked in, and no written reply follows.",
+          "它不期待回答，因为答案显而易见；这是一种表达观点的方式。\n\n**检验。** 试着把问句改写成陈述句：隐含的答案（“没有人”“不”或“当然”）早已不言自明，后面也没有紧跟作者作答。",
           "It is not a question whose answer is too obvious to give.",
           "它不是答案显而易见、无需回答的问句。",
         ),
         hypophora: L(
           "设问",
-          "The writer asks a question and answers it right away, to lead the reader to the next point.",
-          "作者提出问题后马上作答，引导读者进入下一个要点。",
+          "The writer asks a question and answers it right away, to lead the reader to the next point.\n\n**Check.** Look right after the question mark: the writer's own answer follows immediately to introduce the next idea.",
+          "作者提出问题后马上作答，引导读者进入下一个要点。\n\n**检验。** 看问号后面：作者紧跟着自问自答，直接把读者带入下一个观点。",
           "The writer does not answer the question right after asking it.",
           "作者并没有在提问之后马上作答。",
         ),
         "a genuine question": L(
           "真正的问句",
-          "The speaker really wants information that they do not have.",
-          "说话人确实想要获得自己不知道的信息。",
+          "The speaker really wants information that they do not have.\n\n**Check.** Ask whether the listener actually has to reply with a fact or preference the speaker does not know: yes, so it is a real request for information.",
+          "说话人确实想要获得自己不知道的信息。\n\n**检验。** 问问听者是不是必须给出说话人不知道的事实或选择：是的，这是真正在打听信息。",
           "The speaker is not asking for information they lack.",
           "说话人并不是在询问自己不知道的信息。",
         ),
@@ -490,14 +498,18 @@ const quantified = topic("grammar", {
     "Relative clauses that begin with a word of quantity, such as *most of which*, and the possessive *whose*, used for things as well as people.",
     "以 *most of which* 这类数量词开头的关系从句，以及既可用于人也可用于物的所有格 *whose*。",
   ],
+  intro: [
+    "Writing *The council reviewed twelve bids, most of them were over budget* creates a comma splice, whereas *most of which* links the second clause cleanly. In this topic, you pair quantity words with *whom* or *which* and use possessive *whose* and *of which* for both people and things.",
+    "写 *The council reviewed twelve bids, most of them were over budget* 会造成逗号粘连，而改用 *most of which* 就能把从句顺畅连起来。本主题带你掌握数量词加 *whom/which* 的结构，以及既指人也指物的 *whose* 和 *of which*。",
+  ],
   after: ["prepositions-before-relative-pronouns"],
   points: [
     choose(
       "a-quantity-and-a-relative-pronoun",
       ["A Quantity and a Relative Pronoun", "数量词加关系代词"],
       [
-        "To say how many of a group a clause is about, put a word of quantity and *of* before the relative pronoun: *forty students, **some of whom** were from abroad*; *three proposals, **none of which** was approved*. After *of*, use *whom* for people and *which* for things, never *who* or *that*. Do not use *them* or *it*: *forty students, some of them were from abroad* joins two sentences with only a comma.",
-        "要说明从句涉及一个群体中的多少，就把数量词和 *of* 放在关系代词前：*forty students, **some of whom** were from abroad*；*three proposals, **none of which** was approved*。在 *of* 后面，指人用 *whom*，指物用 *which*，不能用 *who* 或 *that*。也不要用 *them* 或 *it*：*forty students, some of them were from abroad* 只用逗号连接了两个句子。",
+        "To say how many of a group a clause is about, put a word of quantity and *of* before the relative pronoun: *forty students, **some of whom** were from abroad*; *three proposals, **none of which** was approved*. After *of*, use *whom* for people and *which* for things, never *who* or *that*. Do not use *them* or *it*: *forty students, some of them were from abroad* joins two sentences with only a comma.\n\n> **Watch out.** Check two things after the comma: first, you need a *relative* pronoun (*whom*/*which*), not *them* (which causes a comma splice); second, *of* takes **whom** for people and **which** for things—never *who* or *that*.",
+        "要说明从句涉及一个群体中的多少，就把数量词和 *of* 放在关系代词前：*forty students, **some of whom** were from abroad*；*three proposals, **none of which** was approved*。在 *of* 后面，指人用 *whom*，指物用 *which*，不能用 *who* 或 *that*。也不要用 *them* 或 *it*：*forty students, some of them were from abroad* 只用逗号连接了两个句子。\n\n> **注意。** 逗号后面检查两件事：第一，必须用关系代词（*whom*/*which*），不能用 *them*（否则会造成逗号粘连）；第二，*of* 后面指人用 **whom**、指物用 **which**，绝不用 *who* 或 *that*。",
       ],
       ["Which words complete the sentence correctly?", "哪一组词能正确地完成句子？"],
       `
@@ -534,8 +546,8 @@ ${quantityLines}
         Our school has three counselors, ___ speaks Spanish.|one of whom|one of who|one of them
       `,
       (right) => [
-        `**${right}** puts the quantity before *of* and then the relative pronoun, *whom* for people or *which* for things, so the clause stays joined to the sentence.`,
-        `**${right}** 把数量词放在 *of* 前面，后接关系代词：指人用 *whom*，指物用 *which*，从句因此与句子连在一起。`,
+        `**${right}** puts the quantity before *of* and then the relative pronoun, *whom* for people or *which* for things, so the clause stays joined to the sentence.\n\n**Check.** Verify both rules: the noun before the comma is ${right.includes("whom") ? "people (taking *whom*)" : "things (taking *which*)"}, and the relative pronoun avoids a comma splice after the comma.`,
+        `**${right}** 把数量词放在 *of* 前面，后接关系代词：指人用 *whom*，指物用 *which*，从句因此与句子连在一起。\n\n**检验。** 核对两条规则：逗号前的先行词是${right.includes("whom") ? "人（用 *whom*）" : "物（用 *which*）"}，且用关系代词避免了逗号粘连。`,
       ],
       [
         [
@@ -552,8 +564,8 @@ ${quantityLines}
       "whose-for-people-and-things",
       ["Whose for People and Things", "whose 指人也指物"],
       [
-        "*Whose* is the possessive relative pronoun. It works for people and for things alike: *the writer **whose** book won*, *the house **whose** roof leaks*. Do not confuse it with *who's*, which means *who is* or *who has*. In formal writing, *of which* can replace *whose* for things: *the house, the roof **of which** leaks*. *That's* and *which's* are never possessive.",
-        "*Whose* 是表示所属的关系代词，既可用于人，也可用于物：*the writer **whose** book won*、*the house **whose** roof leaks*。不要把它和 *who's* 混淆，后者意为 *who is* 或 *who has*。在正式写作中，指物时可以用 *of which* 代替 *whose*：*the house, the roof **of which** leaks*。*That's* 和 *which's* 永远不表示所属。",
+        "*Whose* is the possessive relative pronoun. It works for people and for things alike: *the writer **whose** book won*, *the house **whose** roof leaks*. Do not confuse it with *who's*, which means *who is* or *who has*. In formal writing, *of which* can replace *whose* for things: *the house, the roof **of which** leaks*. *That's* and *which's* are never possessive.\n\n> **Watch out.** Expand *who's* into *who is* or *who has* in your head: if the expanded words make sense in the blank, use **who's**; if the blank shows ownership before a noun (for a person *or* a thing), use **whose**.",
+        "*Whose* 是表示所属的关系代词，既可用于人，也可用于物：*the writer **whose** book won*、*the house **whose** roof leaks*。不要把它和 *who's* 混淆，后者意为 *who is* 或 *who has*。在正式写作中，指物时可以用 *of which* 代替 *whose*：*the house, the roof **of which** leaks*。*That's* 和 *which's* 永远不表示所属。\n\n> **注意。** 在心里把 *who's* 还原成 *who is* 或 *who has*：还原后读得通就选 **who's**；如果空格后是名词、表示“……的”（无论指人还是指物），就选 **whose**。",
       ],
       ["Which words complete the sentence correctly?", "哪一组词能正确地完成句子？"],
       `
@@ -590,8 +602,8 @@ ${whoseLines}
         The ship, the crew ___ had fled, drifted toward the rocks.|of which|of whose|whose which
       `,
       (right) => [
-        `**${right}** is the form the sentence needs: *whose* shows possession for people and things, *who's* means *who is* or *who has*, and *of which* follows the noun it belongs to.`,
-        `**${right}** 是句子需要的形式：*whose* 表示人或物的所属，*who's* 意为 *who is* 或 *who has*，*of which* 跟在所属的名词后面。`,
+        `**${right}** is the form the sentence needs: *whose* shows possession for people and things, *who's* means *who is* or *who has*, and *of which* follows the noun it belongs to.\n\n**Check.** ${right === "who's" ? "Expand **who's** into *who is* or *who has* inside the sentence: it reads smoothly, confirming the contraction rather than possession." : right === "whose" ? "Try expanding *who is/who has* in the blank—it breaks the sentence, because a possessive (*whose*) is needed before the following noun." : "Notice the noun already sitting before the blank (*the windows / the cost / the parts ...*): following that noun with **of which** expresses possession formally for a thing."}`,
+        `**${right}** 是句子需要的形式：*whose* 表示人或物的所属，*who's* 意为 *who is* 或 *who has*，*of which* 跟在所属的名词后面。\n\n**检验。** ${right === "who's" ? "把 **who's** 还原成 *who is* 或 *who has* 代入句中：通顺无误，确认这里需要缩约式而非所有格。" : right === "whose" ? "试着把 *who is / who has* 代入空格：句子立刻不通，因为后面的名词需要表示所属的 **whose**。" : "注意空格前已经给出了所属名词，后面用 **of which** 正式表达事物的所属关系。"}`,
       ],
       [
         [

@@ -950,51 +950,50 @@ const ifPartWhy = (right: string, shown: string): Text => {
     `The *if*-part is about the future but takes the present simple${s ? ", with *-s* after a subject like *he*, *she* or *it*" : ""}`,
     `*if* 部分虽然说的是将来，却用一般现在时${s ? "，主语是 he、she、it 一类时动词加 -s" : ""}`,
   );
-
-  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  return t(
+    `${rule.en}: ${fill(shown, right)}\n\n**Check.** Look inside the *if*-clause: there is no *will*, and *${right}* agrees with its subject in the present simple.`,
+    `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 检查 *if* 从句内部：没有 *will*，且 *${right}* 是与主语一致的一般现在时。`,
+  );
 };
 
 /** whyNotIfPart explains will or the past simple in the if-part. */
-const whyNotIfPart = (wrong: string, right: string, _shown: string, position: number): Text =>
+const whyNotIfPart = (wrong: string, _right: string, _shown: string, position: number): Text =>
   position === 0
-    ? t(
-        `*will* never goes in the *if*-part, even about the future. Use the present simple, *${right}*.`,
-        `*if* 部分即使说将来，也不能用 *will*。要用一般现在时 *${right}*。`,
-      )
+    ? t("*will* never goes inside the *if*-clause, even when talking about the future.", "*if* 从句即使说将来，也不能放 *will*。")
     : t(
-        `*${wrong}* is the past simple, but this is about the future. Use the present simple, *${right}*.`,
-        `*${wrong}* 是一般过去时，但这里说的是将来。要用一般现在时 *${right}*。`,
+        `*${wrong}* is the past simple, but a first conditional about a real future possibility uses the present simple after *if*.`,
+        `*${wrong}* 是一般过去时，可谈将来真实可能性的第一条件句在 *if* 后要用一般现在时。`,
       );
 
 /** resultWhy explains will and the base form in the result of a first conditional. */
 const resultWhy = (right: string, shown: string): Text =>
   t(
-    `The result of a real possibility in the future takes *will* and the base form: ${fill(shown, right)}`,
-    `将来真实可能情况的结果用 *will* 加动词原形：${fill(shown, right)}`,
+    `The result of a real possibility in the future takes *will* and the base form: ${fill(shown, right)}\n\n**Check.** Verify the main result clause: *will* + plain verb (no *to*, and not *would*), matching the present simple in the *if*-clause.`,
+    `将来真实可能情况的结果用 *will* 加动词原形：${fill(shown, right)}\n\n**检验。** 核对结果主句：*will* + 动词原形（不加 *to*，也不用 *would*），与 *if* 从句的一般现在时呼应。`,
   );
 
 /** whyNotResult explains would or to in the result of a first conditional. */
-const whyNotResult = (wrong: string, right: string, _shown: string, position: number): Text =>
+const whyNotResult = (wrong: string, _right: string, _shown: string, position: number): Text =>
   position === 0
     ? t(
-        `*would* is for a situation you only imagine, but this is a real possibility, so use *${right}*.`,
-        `*would* 用于想象的情况，但这里是真实可能发生的事，所以用 *${right}*。`,
+        "*would* is for an imaginary situation, not a real future possibility with *if* + present simple.",
+        "*would* 用于假设想象的情况，不用于 *if* + 一般现在时表达的真实将来可能。",
       )
     : t(
-        `*${wrong}* has no *will*, and there is never *to* after *will*. The result takes *${right}*.`,
-        `*${wrong}* 没有 *will*，而且 *will* 后面也不加 *to*。结果部分要用 *${right}*。`,
+        `*${wrong}* is missing *will* or puts *to* after *will*—the result clause needs *will* directly before the base verb.`,
+        `*${wrong}* 少了 *will* 或在 *will* 后多加了 *to*——结果主句需要 *will* 直接接动词原形。`,
       );
 
 /** condWriteWhy explains how a first conditional is put together, with the comma when the if-part comes first. */
 const condWriteWhy = (right: string): Text =>
   right.startsWith("If ")
     ? t(
-        `The *if*-part takes the present simple, then a comma, and the result takes *will* and the base form: ${right}`,
-        `*if* 部分用一般现在时，后面加逗号，结果部分用 *will* 加动词原形：${right}`,
+        `The *if*-part takes the present simple, then a comma, and the result takes *will* and the base form: ${right}\n\n**Check.** Verify all three marks: present simple after *If* (no *will*), a comma between the clauses, and *will/'ll* + base verb in the result.`,
+        `*if* 部分用一般现在时，后面加逗号，结果部分用 *will* 加动词原形：${right}\n\n**检验。** 核对三处：*If* 从句用一般现在时（不加 *will*）、两句之间有逗号、结果主句用 *will/'ll* + 动词原形。`,
       )
     : t(
-        `The result takes *will* and the base form, and the *if*-part after it takes the present simple, with no comma: ${right}`,
-        `结果部分用 *will* 加动词原形，后面的 *if* 部分用一般现在时，不加逗号：${right}`,
+        `The result takes *will* and the base form, and the *if*-part after it takes the present simple, with no comma: ${right}\n\n**Check.** Verify all three marks: *will/'ll* + base verb first, no comma before *if*, and present simple after *if*.`,
+        `结果部分用 *will* 加动词原形，后面的 *if* 部分用一般现在时，不加逗号：${right}\n\n**检验。** 核对三处：先写 *will/'ll* + 动词原形、*if* 前不加逗号、*if* 后用一般现在时。`,
       );
 
 const firstConditional: TopicDef = {
@@ -1003,6 +1002,10 @@ const firstConditional: TopicDef = {
   summary: t(
     "If you exercise, you will feel better. The if-part takes the present, the result takes will: not If you will exercise.",
     "If you exercise, you will feel better。if 部分用一般现在时，结果部分用 will：不能说 If you will exercise。",
+  ),
+  intro: t(
+    "To link a real future condition to its result—*If you sleep eight hours, you will feel sharper tomorrow*—English uses the present simple after *if* and *will* in the result clause.",
+    "连接将来真实可能发生的条件和结果时（*If you sleep eight hours, you will feel sharper tomorrow*），英语在 *if* 从句里用一般现在时，在结果主句里用 *will*。",
   ),
   prerequisites: ["will-for-the-future", "subordinating-conjunctions"],
   encompasses: [
@@ -1016,8 +1019,8 @@ const firstConditional: TopicDef = {
       "if-part",
       t("The present after if", "if 后面用一般现在时"),
       t(
-        "To talk about a real possibility in the future, use *if* + the **present simple**, and *will* in the result:\n\n- *If it **rains** tomorrow, we will stay at home.*\n- *We will stay at home if it **rains** tomorrow.*\n\nThe *if*-part is about the future, but it never takes *will*: not *If it will rain tomorrow*. Remember the *-s* after *he*, *she* and *it*: *If she **studies** hard…*",
-        "说将来可能发生的事情时，用 *if* 加**一般现在时**，结果部分用 *will*：\n\n- *If it **rains** tomorrow, we will stay at home.*\n- *We will stay at home if it **rains** tomorrow.*\n\n*if* 部分虽然说的是将来，却不能用 *will*：不能说 *If it will rain tomorrow*。中文“如果明天会下雨”里可以有“会”，英语的 *if* 从句里却不行。主语是 *he*、*she*、*it* 时别忘了加 *-s*：*If she **studies** hard…*",
+        "To talk about a real possibility in the future, use *if* + the **present simple**, and *will* in the result:\n\n- *If it **rains** tomorrow, we will stay at home.*\n- *We will stay at home if it **rains** tomorrow.*\n\nRemember the *-s* after *he*, *she* and *it*: *If she **studies** hard…*\n\n> **Watch out.** Never put *will* inside the *if*-clause (*If it will rain tomorrow* is wrong), even though the sentence talks about the future.",
+        "说将来可能发生的事情时，用 *if* 加**一般现在时**，结果部分用 *will*：\n\n- *If it **rains** tomorrow, we will stay at home.*\n- *We will stay at home if it **rains** tomorrow.*\n\n主语是 *he*、*she*、*it* 时别忘了加 *-s*：*If she **studies** hard…*\n\n> **注意。** 中文“如果明天会下雨”里可以有“会”，但英语 *if* 从句里绝不能用 *will*（*If it will rain tomorrow* 是错的）。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), ifVerbChoice, ifPartWhy, whyNotIfPart),
     ),
@@ -1025,8 +1028,8 @@ const firstConditional: TopicDef = {
       "result",
       t("Will in the result", "结果部分用 will"),
       t(
-        "The result of a real possibility takes *will* + the base form: *If you exercise, you **will feel** better.* Do not use *would* here, which is for situations you only imagine, and do not add *to*: not *you will to feel*.\n\nWhen the *if*-part comes first, put a comma after it. When the result comes first, there is no comma.",
-        "真实可能情况的结果用 *will* 加动词原形：*If you exercise, you **will feel** better.* 这里不要用 *would*（*would* 用于想象的情况），也不要加 *to*：不能说 *you will to feel*。\n\n*if* 部分在前时，后面加逗号；结果在前时，不加逗号。",
+        "The result of a real possibility takes *will* + the base form: *If you exercise, you **will feel** better.* When the *if*-part comes first, put a comma after it; when the result comes first, there is no comma.\n\n> **Watch out.** Do not use *would* for a real future possibility, and never put *to* after *will* (*you will to feel* is wrong).",
+        "真实可能情况的结果用 *will* 加动词原形：*If you exercise, you **will feel** better.* *if* 部分在前时，后面加逗号；结果在前时，不加逗号。\n\n> **注意。** 真实将来可能性不要用 *would*，也不要在 *will* 后面加 *to*（*you will to feel* 是错的）。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), resultChoice, resultWhy, whyNotResult),
     ),
@@ -1034,8 +1037,8 @@ const firstConditional: TopicDef = {
       "write",
       t("Writing first conditionals", "写第一条件句"),
       t(
-        "Write the sentence from the note. The arrow → means the *if*-part comes first: *if it rain tomorrow → we stay at home* becomes *If it rains tomorrow, we will stay at home.* The arrow ← means the result comes first: *We will stay at home if it rains tomorrow.* You may write *we'll* for *we will*.",
-        "根据笔记写句子。箭头 → 表示 *if* 部分在前：*if it rain tomorrow → we stay at home* 写成 *If it rains tomorrow, we will stay at home.* 箭头 ← 表示结果在前：*We will stay at home if it rains tomorrow.* 可以把 *we will* 写成 *we'll*。",
+        "Write the sentence from the note. The arrow → means the *if*-part comes first: *if it rain tomorrow → we stay at home* becomes *If it rains tomorrow, we will stay at home.* The arrow ← means the result comes first: *We will stay at home if it rains tomorrow.* You may write *we'll* for *we will*.\n\n> **Watch out.** Check the comma rule (comma only when *If* starts the sentence) and add *-s* to third-person singular verbs inside the *if*-clause.",
+        "根据笔记写句子。箭头 → 表示 *if* 部分在前：*if it rain tomorrow → we stay at home* 写成 *If it rains tomorrow, we will stay at home.* 箭头 ← 表示结果在前：*We will stay at home if it rains tomorrow.* 可以把 *we will* 写成 *we'll*。\n\n> **注意。** 留意逗号规则（只有 *If* 在句首时才加逗号），并给 *if* 从句里的第三人称单数动词加上 *-s*。",
       ),
       typedGenerator(
         "sentence-pattern",

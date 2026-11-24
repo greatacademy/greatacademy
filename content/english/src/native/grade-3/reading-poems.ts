@@ -105,16 +105,16 @@ const partQuestion = t("What is the part in bold called?", "粗体的部分叫�
 
 const partWhy: Record<string, readonly [string, string]> = {
   "a line": [
-    "A line of a poem is one row of words; a poem is written in lines, not in sentences that run on across the page.",
-    "诗的一行就是一排文字；诗是一行一行写的，而不是像文章那样连着写满整页。",
+    "The bold part is **a line**—one single row of words in a poem.\n\n**Check.** Count the bold rows: there is just one row of a poem (not a whole block of rows, and not a numbered book chapter).",
+    "粗体部分是**一行诗**——诗里单独的一排文字。\n\n**检验。** 数一数加粗的行数：只有诗里的单单一排（既不是一整节多行，也不是长故事里有编号的章节）。",
   ],
   "a stanza": [
-    "A stanza is a group of lines in a poem, set apart from the next group by a space, like a paragraph of a story.",
-    "诗节是诗里的一组诗行，和下一组之间空一行隔开，就像故事里的段落。",
+    "The bold part is **a stanza**—a group of poem lines set off by a blank line.\n\n**Check.** Look at how the lines are grouped: several poem lines sit together between blank spaces, forming one stanza rather than a single line or a story chapter.",
+    "粗体部分是**一节诗**——由空行隔开的一组诗行。\n\n**检验。** 看版面结构：几行诗紧挨在一起、上下有空行隔开，组成一个诗节，而不是单行或故事章节。",
   ],
   "a chapter": [
-    "A chapter is one of the main parts of a longer story; each has its own number and often its own title.",
-    "章节是较长故事的主要部分之一；每一章都有编号，通常还有自己的标题。",
+    "The bold part is **a chapter**—one numbered section of a longer story.\n\n**Check.** Look at its heading: it carries a chapter number and title inside a book of stories, not lines of a poem.",
+    "粗体部分是**一章**——较长故事里有编号的一个部分。\n\n**检验。** 看标题格式：它带有章号和章题，属于故事书，而不是诗行或诗节。",
   ],
 };
 
@@ -153,14 +153,17 @@ const roles = [
 
 const roleWhy: readonly (readonly [string, string])[] = [
   [
-    "The first chapter tells who the characters are and where they live, before anything goes wrong.",
-    "第一章介绍角色是谁、住在哪里，那时还没有出什么问题。",
+    "The bold chapter **introduces the characters and the setting**.\n\n**Check.** Check where it sits and what happens in it: it opens the book before any trouble begins, telling who is in the story and where they are.",
+    "粗体这一章**介绍角色和背景**。\n\n**检验。** 看它在全书的位置和内容：它开篇交代人物和地点，此时麻烦还没出现。",
   ],
   [
-    "This chapter is where the trouble starts: it gives the characters a problem to deal with.",
-    "这一章是麻烦开始的地方：它给角色带来了要应对的问题。",
+    "The bold chapter **brings the problem of the story**.\n\n**Check.** Compare it with the chapter before and after: the characters are already introduced, and now trouble strikes without being solved yet.",
+    "粗体这一章**引出故事的问题**。\n\n**检验。** 对比前后章节：人物前面已交代完毕，这里突然出现麻烦且尚未解决。",
   ],
-  ["This chapter settles the trouble that came before, so the story can end.", "这一章解决了前面出现的麻烦，故事因此可以结束。"],
+  [
+    "The bold chapter **solves the problem of the story**.\n\n**Check.** Look at the ending of the summary: the earlier trouble is settled so the story can wrap up.",
+    "粗体这一章**解决了故事的问题**。\n\n**检验。** 看这一章的结尾：前面的麻烦终于化解，故事可以圆满收尾。",
+  ],
 ];
 
 const roleNot: readonly (readonly [string, string])[] = [
@@ -191,14 +194,19 @@ const subjectBank: readonly Ask[] = poems.map((poem) => ({
   right: poem.subject,
   wrong: [...poem.wrongSubjects],
   why: t(
-    `The poem is about ${poem.subject}. Its title and the pictures in its lines all point to this subject.`,
-    `这首诗写的是：${poem.subject}。诗的标题和诗行里的画面都指向这个主题。`,
+    `The poem is about **${poem.subject}**.\n\n**Check.** Check both the title and every stanza: the images across all lines connect to **${poem.subject}**, not to the other two ideas.`,
+    `这首诗写的是 **${poem.subject}**。\n\n**检验。** 对照标题和每一节诗：全诗的画面都围绕着 **${poem.subject}**，而不是另外两个说法。`,
   ),
-  whyNot: poem.wrongSubjects.map(() =>
-    t(
-      "The poem's lines do not show that; a subject must fit the title and the pictures of every stanza.",
-      "诗行里没有写到这一点；主题必须符合标题和每一节诗里的画面。",
-    ),
+  whyNot: poem.wrongSubjects.map((w, idx) =>
+    idx === 0
+      ? t(
+          `The poem's lines do not support "${w}"—check the title and images in both stanzas.`,
+          `诗行里并没有写到“${w}”——再对照标题和两节诗里的画面。`,
+        )
+      : t(
+          `"${w}" misses what the whole poem describes; every stanza points elsewhere.`,
+          `“${w}”和整首诗描绘的主题对不上，各节诗指向的是别的内容。`,
+        ),
   ),
 }));
 
@@ -213,14 +221,19 @@ const feelingBank: readonly Ask[] = poems.map((poem) => {
     right,
     wrong: poem.flatLines.map((i) => unquote(poem.lines[i] ?? "")),
     why: t(
-      `This line shows how the speaker feels: “${right}” It tells what the speaker does or feels, not only what is there.`,
-      `这一行表现了说话人的感受：“${right}” 它写出了说话人做了什么或感到什么，而不只是写有什么东西。`,
+      `The line *${right}* shows that the speaker feels **${poem.feeling[0]}**.\n\n**Check.** Ask *what does the speaker do or feel in this line?* Unlike the other lines that only describe scenery, *${right}* reveals the speaker's reaction.`,
+      `*${right}* 这一行表现了说话人感到**${poem.feeling[1]}**。\n\n**检验。** 问自己：*这一行里说话人做了什么或感受到了什么？* 另两行只写景物，只有 *${right}* 透出了说话人的情绪反应。`,
     ),
-    whyNot: poem.flatLines.map(() =>
-      t(
-        "That line paints a picture of what is there, but it does not show how the speaker feels.",
-        "这一行描绘了眼前的景象，但没有表现出说话人的感受。",
-      ),
+    whyNot: poem.flatLines.map((_, idx) =>
+      idx === 0
+        ? t(
+            "That line describes the scene outside, but it does not show how the speaker feels inside.",
+            "这一行只描写了眼前的景物，没有表现出说话人内心的感受。",
+          )
+        : t(
+            "That line names what is happening around the speaker without showing the speaker's own reaction.",
+            "这一行只说出周围发生了什么，没有写出说话人自己的情绪反应。",
+          ),
     ),
   };
 });
@@ -240,8 +253,8 @@ export const poemTopics: readonly TopicDef[] = [
         "naming-the-part",
         t("Naming the Part of a Text", "说出文本的组成部分"),
         t(
-          "A long story is divided into **chapters**, each with a number and often a title. A poem is written in **lines**, rows of words that end where the poet chooses. Lines are grouped into **stanzas**, with a space between one stanza and the next.\n\nSo a line is one row, a stanza is a group of rows, and a chapter is a part of a story, not of a poem.",
-          "较长的故事分成若干**章节**，每一章有编号，通常还有标题。诗是一行一行写的，**诗行**是在诗人选择的地方结束的一排文字。诗行组成**诗节**，诗节之间空一行。\n\n所以，诗行是一行，诗节是一组诗行，而章节是故事的部分，不是诗的部分。",
+          "A long story is divided into **chapters**, each numbered and often titled. A poem is written in **lines** (single rows of words), grouped into **stanzas** separated by blank lines.\n\n> **Watch out.** Do not mix up one *line* with a whole *stanza*, and remember that poems never have *chapters*.",
+          "长故事分成若干**章节**，每章有编号，常带标题。诗由一行行**诗行**组成，几行诗按空行分组成为**诗节**。\n\n> **注意。** 不要把单行*诗行*和整组*诗节*混淆，而且诗是没有*章节*的。",
         ),
         askGenerator(partBank),
       ),
@@ -249,12 +262,17 @@ export const poemTopics: readonly TopicDef[] = [
         "what-a-part-adds",
         t("What a Part Adds", "每部分增加了什么"),
         t(
-          "Each chapter of a story **builds on** the one before. The first usually introduces the characters and the setting. A middle chapter brings the problem. The last one solves it.\n\nTo see what a chapter adds, ask what is new in it: new people and places, a new trouble, or the end of the trouble.",
-          "故事的每一章都**建立在**前一章的基础上。第一章通常介绍角色和背景，中间的章节带来问题，最后一章解决问题。\n\n要看出一章增加了什么，就问问这一章有什么新内容：新的人物和地点，新的麻烦，还是麻烦的结束。",
+          "Each chapter of a story **builds on** the one before: Chapter 1 usually introduces characters and setting, a middle chapter brings the problem, and the final chapter solves it.\n\n> **Watch out.** Read what actually changes in the bold chapter—do not guess from the chapter number alone.",
+          "故事的每一章都在前一章基础上推进：第一章常交代人物和背景，中间章引出麻烦，末尾章解决问题。\n\n> **注意。** 要看粗体那一章实际推进了什么，不要只看章号瞎猜。",
         ),
         askGenerator(roleBank),
       ),
     ],
+    14,
+    t(
+      "Open a chapter book and open a book of poems: they even *look* different on the page! Knowing how chapters, lines, and stanzas are built helps you see how each piece moves a story or poem forward.",
+      "翻开一本章节故事书和一本诗集，它们连版面都长得不一样！分清章节、诗行和诗节，就能看懂每一部分是如何推进全篇的。",
+    ),
   ),
   topic(
     "what-a-poem-is-about",
@@ -266,8 +284,8 @@ export const poemTopics: readonly TopicDef[] = [
         "the-subject-of-a-poem",
         t("The Subject of a Poem", "诗的主题"),
         t(
-          "The **subject** of a poem is what it is about. The title is the first clue, and the pictures in the lines are the others: boxes in every hall and pictures off the wall show that a poem is about moving out of a home.\n\nA good answer fits the whole poem, every stanza of it, and not just one word.",
-          "诗的**主题**就是它写的内容。标题是第一个线索，诗行里的画面是其他线索：每个走廊里都是箱子、墙上的画都取下来了，说明这首诗写的是搬家。\n\n好的答案要符合整首诗、每一节诗，而不只是其中一个词。",
+          "The **subject** of a poem is what the whole poem is about. Combine the title with the word pictures across every stanza—for instance, boxes in the hall and bare walls point to moving house.\n\n> **Watch out.** A good subject fits *every* stanza, not just one stray word.",
+          "诗的**主题**是整首诗写的内容。把标题和每一节诗里的画面合起来看——比如走廊里的箱子和空空的墙，合起来说明写的是搬家。\n\n> **注意。** 正确的主题要能覆盖*每一节*诗，而不能只抓个别字眼。",
         ),
         askGenerator(subjectBank),
       ),
@@ -275,11 +293,16 @@ export const poemTopics: readonly TopicDef[] = [
         "lines-that-show-the-feeling",
         t("Lines That Show the Feeling", "表现感受的诗行"),
         t(
-          "A poem also has a **feeling**. Some lines only paint a picture of what is there: *The thunder crashes overhead*. Other lines show how the speaker feels about it, often by what the speaker does: *I pull the blanket to my chin* shows fear.\n\nTo find the feeling, look for the line where the speaker acts, wishes or says how they feel.",
-          "诗还有**感受**。有些诗行只描绘眼前有什么：*The thunder crashes overhead*。另一些诗行表现说话人对它的感受，常常通过说话人的动作来表现：*I pull the blanket to my chin* 表现了害怕。\n\n要找出感受，就找说话人做了什么、希望什么或者说出自己感受的那一行。",
+          "Poems pair scenery lines (*The thunder crashes overhead*) with feeling lines where the speaker reacts (*I pull the blanket to my chin* shows fear). Look for what the speaker does, wishes, or feels.\n\n> **Watch out.** A vivid weather or scenery line may set the mood, but look for the line that shows the *speaker's* own feeling.",
+          "诗里既有写景的诗行（*The thunder crashes overhead*），也有通过说话人反应表现感受的诗行（*I pull the blanket to my chin* 表现害怕）。重点找说话人做了什么、希望什么或感受到了什么。\n\n> **注意。** 写景的句子虽然生动，但要选出直接流露*说话人*感受的那一行。",
         ),
         askGenerator(feelingBank),
       ),
     ],
+    14,
+    t(
+      "A short poem can paint a whole season in just eight lines—and let you feel whether the speaker is thrilled, cozy, or scared. Let's read poems for both their subject and the lines that carry their feeling.",
+      "一首短短八行的小诗，就能画出一个完整的季节，还能让你体会到说话人是兴奋、惬意还是害怕。这节课我们来读懂诗的主题和藏着感受的诗行。",
+    ),
   ),
 ];

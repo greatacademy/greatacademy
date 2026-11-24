@@ -1279,6 +1279,10 @@ const multipleMeanings: TopicDef = {
     "Many words have more than one meaning; the rest of the sentence tells you which one is meant.",
     "许多词有不止一个意思；句子的其余部分会告诉你是哪一个。",
   ),
+  intro: t(
+    "An elephant lifts a log with its **trunk**, a family packs bags into a car's **trunk**, and a woodpecker drums on an oak's **trunk**—same spelling, three different things. The other words in a sentence always tell you which meaning fits.",
+    "大象用 **trunk**（象鼻）举起木头，一家人把行李装进汽车的 **trunk**（后备箱），啄木鸟敲打橡树的 **trunk**（树干）——同一个拼写，三种不同意思。句中的其他词总会告诉你用的是哪一个。",
+  ),
   prerequisites: ["context-clues"],
   encompasses: [{ topic: "context-clues", weight: 0.3 }],
   xp: 10,
@@ -1288,44 +1292,54 @@ const multipleMeanings: TopicDef = {
       "meaning-in-the-sentence",
       t("The Meaning in a Sentence", "句中的意思"),
       t(
-        "Many words are spelled and said the same but mean different things: a dog's **bark** and a tree's **bark**. The dictionary lists each meaning separately. To know which one a writer means, look at the other words in the sentence: *Moss grew on the bark of the old oak* is about a tree, so *bark* is its rough outside.",
-        "许多词拼写和读音相同，意思却不同：狗的 **bark**（叫声）和树的 **bark**（树皮）。词典会把每个意思分开列出。要知道作者用的是哪个意思，就看句中的其他词：*Moss grew on the bark of the old oak* 说的是树，所以 *bark* 指树皮。",
+        "Many words are spelled and said the same but mean different things: a dog's **bark** and a tree's **bark**. The dictionary lists each meaning separately. To know which one a writer means, look at the other words in the sentence: *Moss grew on the bark of the old oak* is about a tree, so *bark* is its rough outside.\n\n> **Watch out.** Every choice may be a real dictionary meaning of the word—do not pick the most familiar meaning; pick the one that fits this sentence.",
+        "许多词拼写和读音相同，意思却不同：狗的 **bark**（叫声）和树的 **bark**（树皮）。词典会把每个意思分开列出。要知道作者用的是哪个意思，就看句中的其他词：*Moss grew on the bark of the old oak* 说的是树，所以 *bark* 指树皮。\n\n> **注意。**每个选项都可能是这个词在词典里的真实意思——不要选最眼熟的，而要选符合当前句意的那个。",
       ),
       choiceGenerator(
         t("What does the word in bold mean in this sentence?", "加粗的词在这个句子里是什么意思？"),
         meaningInSentenceBank,
         (right, shown) =>
           t(
-            `Here it means **${right}**. The other words of the sentence point to this meaning: ${shown}`,
-            `这里的意思是 **${right}**。句中的其他词指向这个意思：${shown}`,
+            `Here it means **${right}**. The other words of the sentence point to this meaning: ${shown}\n\n**Check.** Swap the bold word for *${right}* and reread the sentence—it still makes complete sense.`,
+            `这里的意思是 **${right}**。句中的其他词指向这个意思：${shown}\n\n**检验。**把加粗的词换成“${right}”再读一遍句子——整句话依然完全说得通。`,
           ),
-        (wrong) =>
-          t(
-            `“${wrong}” is another meaning of the word, or no meaning of it at all; nothing else in this sentence points to it.`,
-            `“${wrong}” 是这个词的另一个意思，或者根本不是它的意思；句中没有别的词指向它。`,
-          ),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `“${wrong}” is a real meaning of the word in other sentences, but nothing in this sentence points to it.`,
+                `“${wrong}”是这个词在别的句子里的意思，但这句话里没有任何线索指向它。`,
+              )
+            : t(
+                `“${wrong}” is another meaning of the same word—plug it into this sentence and it clashes with the other words.`,
+                `“${wrong}”是同一个词的另一个意思——代进这句话里就会和周围的词矛盾。`,
+              ),
       ),
     ),
     point(
       "same-word-different-sentences",
       t("One Word, Several Sentences", "一个词，几个句子"),
       t(
-        "When the same word appears in several sentences, test the meaning you are looking for in each one. Put the meaning in place of the word and read the sentence again: *It is only just, treating everyone the same, that everyone gets a turn* makes sense, so that sentence uses **fair** in that meaning.",
-        "同一个词出现在几个句子里时，把你要找的意思逐一代入。用这个意思替换这个词，再读一遍：*It is only just, treating everyone the same, that everyone gets a turn* 说得通，所以这个句子用的是 **fair** 的这个意思。",
+        "When the same word appears in several sentences, test the meaning you are looking for in each one. Put the meaning in place of the word and read the sentence again: *It is only just, treating everyone the same, that everyone gets a turn* makes sense, so that sentence uses **fair** in that meaning.\n\n> **Watch out.** All three sentences use the target word correctly—you must match the exact meaning asked for, not just find a natural sentence.",
+        "同一个词出现在几个句子里时，把你要找的意思逐一代入。用这个意思替换这个词，再读一遍：*It is only just, treating everyone the same, that everyone gets a turn* 说得通，所以这个句子用的是 **fair** 的这个意思。\n\n> **注意。**三个句子里这个词用得都对——你要找的是符合题目所给意思的那一句，而不是随便找一句通顺的话。",
       ),
       choiceGenerator(
         t("Choose the sentence.", "选择句子。"),
         sameWordBank,
         (right) =>
           t(
-            `**${right}** Put the meaning in place of the word, and only this sentence still makes sense.`,
-            `**${right}** 用这个意思替换这个词，只有这个句子仍然说得通。`,
+            `**${right}** Only this sentence uses the word with the meaning asked for.\n\n**Check.** Replace the target word in this sentence with the meaning from the prompt and read it aloud—the sentence still makes full sense.`,
+            `**${right}** 只有这句话用了题目要求的那个意思。\n\n**检验。**把这句话里的目标词换成题目给的释义读一遍——整句话依然完全通顺。`,
           ),
-        (wrong) =>
-          t(
-            `In “${wrong}”, the word has a different meaning. Put the meaning you are looking for in its place and read it again.`,
-            `在“${wrong}”中，这个词是另一个意思。把你要找的意思代入它的位置再读一遍。`,
-          ),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `In “${wrong}”, the word carries a different meaning—try replacing it with the meaning from the prompt and it no longer fits.`,
+                `在“${wrong}”中，这个词表达的是另一个意思——把题目给的释义代进去就会发现说不通。`,
+              )
+            : t(
+                `“${wrong}” uses another sense of the same word, not the one described in the question.`,
+                `“${wrong}”用的是这个词的另一种含义，不是题目描述的那一种。`,
+              ),
       ),
     ),
   ],

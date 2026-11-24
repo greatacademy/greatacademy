@@ -22,6 +22,10 @@ const parts = topic("reading", {
     "A story has a beginning, a middle with a problem, and an end where the problem is solved.",
     "故事有开头、遇到问题的中间部分和解决问题的结尾。",
   ],
+  intro: [
+    "Think of a good bedtime story: first you meet the character, then something goes wrong, and finally things get fixed! Every story has a **beginning**, a **middle**, and an **end**. Let's spot each part and see how problems get solved.",
+    "想想一个好听的睡前故事：先认识主角，接着出了点麻烦，最后麻烦解决了！每个故事都有**开头**、**中间**和**结尾**。这节课我们来分辨故事的三个部分，并找出问题是怎么解决的。",
+  ],
   after: ["what-happens-first-next-and-last"],
   xp: 10,
   points: [
@@ -29,8 +33,8 @@ const parts = topic("reading", {
       "which-part-is-it",
       ["Which Part Is It", "这是哪一部分"],
       [
-        "The **beginning** of a story tells who is in it and where. In the **middle**, a problem comes up and the characters try to fix it. At the **end**, the problem is solved.",
-        "故事的**开头**交代人物和地点。在**中间**部分，出现了一个问题，人物们设法解决它。到了**结尾**，问题解决了。",
+        "The **beginning** introduces who is in the story and where. The **middle** brings a problem that is not solved yet. The **end** solves the problem and wraps up the story.\n\n> **Watch out.** Look for clue words like *Once upon a time* (beginning) and *At last* or *In the end* (end).",
+        "故事的**开头**交代人物和地点；**中间**出现尚未解决的问题；**结尾**把问题解决，故事收尾。\n\n> **注意。** 留意线索词：*Once upon a time* 常在开头，*At last* 或 *In the end* 常在结尾。",
       ],
       ["Which part of a story is this from?", "这句话来自故事的哪一部分？"],
       `
@@ -68,33 +72,37 @@ const parts = topic("reading", {
       {
         beginning: L(
           "开头",
-          "It tells who is in the story and where, before anything goes wrong.",
-          "它交代了故事中的人物和地点，问题还没有出现。",
-          "It does not just tell who and where; something is already happening.",
-          "它不只是交代人物和地点，事情已经在发生了。",
+          "It introduces who is in the story and where, before any trouble starts.",
+          "它交代了故事里的人物和地点，麻烦还没出现。",
+          "This line does not just set the scene—a problem is happening or being solved.",
+          "这句话不只是交代背景，而是正在发生问题或解决问题。",
         ),
         middle: L(
           "中间",
-          "A problem comes up, and it is not solved yet.",
-          "出现了一个问题，还没有解决。",
-          "There is no problem here that still needs to be solved.",
-          "这里没有一个尚待解决的问题。",
+          "A problem pops up, and it is not fixed yet.",
+          "出现了一个麻烦，而且还没有解决。",
+          "There is no unsolved problem in this line.",
+          "这句话里没有尚未解决的问题。",
         ),
         end: L(
           "结尾",
-          "The problem is solved and the story finishes.",
-          "问题解决了，故事结束了。",
-          "The problem is not solved yet, so it is not the end.",
-          "问题还没有解决，所以不是结尾。",
+          "The problem is solved and the story wraps up.",
+          "问题解决了，故事收尾了。",
+          "Nothing is solved or wrapped up yet, so this is not the end.",
+          "问题还没有解决收尾，所以不是结尾。",
         ),
       },
+      (right, _shown, entry) => [
+        `This line comes from the **${right}** of the story. ${entry.why[0]}\n\n**Check.** Ask: *Is there a problem here, and is it fixed?* ${right === "beginning" ? "No problem has started yet → **beginning**." : right === "middle" ? "A problem just happened and is still unfixed → **middle**." : "The problem is now fixed → **end**."}`,
+        `这句话来自故事的**${entry.zh}**。${entry.why[1]}\n\n**检验。** 问自己：*这里有问题吗？解决了吗？* ${right === "beginning" ? "麻烦还没开始 → **开头**。" : right === "middle" ? "麻烦刚出现还没解决 → **中间**。" : "麻烦已经解决收尾 → **结尾**。"}`,
+      ],
     ),
     choose(
       "how-the-problem-is-solved",
       ["How the Problem Is Solved", "问题是怎样解决的"],
       [
-        "To understand a story, find the **problem** in the middle and how it is **solved** at the end. Ask: *What went wrong? What fixed it?*",
-        "要读懂一个故事，就要找到中间部分的**问题**，以及结尾时它是怎样**解决**的。问一问：*出了什么问题？是什么解决了它？*",
+        "Every story has a **problem** in the middle and a **solution** at the end. Read the first sentence for what went wrong, then the second sentence for what fixed it.\n\n> **Watch out.** Pick the fix that the story *actually* gives—not another idea you could imagine.",
+        "每个故事中间都有一个**问题**，结尾有一个**解决办法**。先看第一句出了什么麻烦，再看第二句是怎么解决的。\n\n> **注意。** 要选故事里*真正写出*的办法，不要选自己猜想的其他办法。",
       ],
       ["How is the problem solved?", "问题是怎样解决的？"],
       `
@@ -129,10 +137,13 @@ const parts = topic("reading", {
       The fish tank was dirty. Sara and her dad cleaned it and put in fresh water.|They cleaned the tank.|They got a new fish.|The fish cleaned it.
       The ducks could not find the pond in the fog. They followed the sound of the frogs.|They followed the frogs' sound.|They flew south.|They waited for the sun.
       `,
-      (right) => [`The end of the story tells it: ${right}`, `故事的结尾说明了这一点：${right}`],
+      (right) => [
+        `The story solves the problem this way: *${right}*\n\n**Check.** Look back at the first sentence (the problem) and the second sentence (the fix): *${right}* directly fixes the problem and matches what the text says.`,
+        `故事是这样解决问题的：*${right}*\n\n**检验。** 回看第一句（遇到的问题）和第二句（解决办法）：*${right}* 正好解决了开头的问题，而且和原文一致。`,
+      ],
       [
-        ["*{wrong}* is not what the story says.", "故事里没有这样说：*{wrong}*。"],
-        ["*{wrong}* would not solve the problem.", "*{wrong}* 并不能解决这个问题。"],
+        ["*{wrong}* is never mentioned in this story.", "这个故事里根本没提到 *{wrong}*。"],
+        ["*{wrong}* does not match what the characters actually did to fix the problem.", "*{wrong}* 不是故事里人物真正采取的解决办法。"],
       ],
     ),
   ],
@@ -142,6 +153,10 @@ const mainTopic = topic("reading", {
   id: "the-main-topic-of-a-text",
   title: ["The Main Topic of a Text", "短文的主题"],
   summary: ["Tell what a whole text of facts is mostly about.", "说出一篇讲事实的短文主要讲了什么。"],
+  intro: [
+    "Suppose a friend asks, *What is your book about?* You do not read every single page—you name the big idea in a few words, like *sharks* or *how rain falls*. That big idea is the **main topic**.",
+    "假如朋友问你：*你这本书讲什么？* 你不会把每一页都背出来，而是用几个词说出大意，比如“鲨鱼”或“雨是怎么下的”。这个大意就是**主题**。",
+  ],
   after: ["finding-facts-in-a-text"],
   xp: 10,
   points: [
@@ -149,8 +164,8 @@ const mainTopic = topic("reading", {
       "what-is-it-mostly-about",
       ["What Is It Mostly About", "主要讲什么"],
       [
-        "The **main topic** is what the whole text is about, not just one fact in it. Ask: *What do all the sentences tell about?* The title often helps.",
-        "**主题**是整篇短文讲的内容，而不只是其中一个事实。问一问：*所有的句子都在讲什么？*。标题常常能帮上忙。",
+        "The **main topic** is what *every* sentence in the paragraph connects to, not just one detail. Ask: *What do all three sentences talk about?*\n\n> **Watch out.** A word that appears in only one sentence is a detail, not the main topic.",
+        "**主题**是段落里*每一句话*都围绕的核心内容，而不只是一个细节。问一问：*这三句话都在讲什么？*\n\n> **注意。** 只在其中一句里出现过的词只是细节，不是整段话的主题。",
       ],
       ["What is the text mostly about?", "这篇短文主要讲什么？"],
       `
@@ -185,18 +200,21 @@ const mainTopic = topic("reading", {
       Leaves change color in the fall. They turn red, orange and yellow. Then they fall off the trees.|leaves in the fall|the color red|trees
       Camels live in the desert. They can go a long time without water. Their humps store fat.|camels|water|humps
       `,
-      (right) => [`Every sentence tells about ${right}, so that is the main topic.`, `每个句子都在讲 ${right}，所以这就是主题。`],
+      (right) => [
+        `The whole text is mostly about **${right}**—all three sentences add facts about it.\n\n**Check.** Test **${right}** against sentence 1, sentence 2, and sentence 3: each sentence connects to **${right}**, while the other choices fit only one sentence.`,
+        `整篇短文主要讲的是 **${right}**——三句话都在补充关于它的事实。\n\n**检验。** 用 **${right}** 逐一核对第 1、2、3 句：每一句都和 **${right}** 有关，而另外两个选项只沾到其中一句的边。`,
+      ],
       [
-        ["*{wrong}* is only in one sentence, so it is a detail.", "*{wrong}* 只出现在一个句子里，所以只是一个细节。"],
-        ["*{wrong}* is mentioned, but the text is not mostly about it.", "短文提到了 *{wrong}*，但主要不是讲它。"],
+        ["*{wrong}* shows up in just one sentence, so it is a small detail.", "*{wrong}* 只在一句话里出现过，只是一个小细节。"],
+        ["*{wrong}* is mentioned once, but the other sentences are not about it.", "短文只顺带提了 *{wrong}*，其余句子并不是讲它。"],
       ],
     ),
     choose(
       "the-best-title",
       ["The Best Title", "最好的标题"],
       [
-        "A good **title** names the main topic. It covers the whole text, not just one fact.",
-        "好的**标题**要说出主题。它要概括整篇短文，而不只是其中一个事实。",
+        "A good **title** acts like an umbrella: it covers *all* the sentences under it, not just one fact.\n\n> **Watch out.** Skip titles that name only a single tiny detail from one sentence.",
+        "好的**标题**就像一把雨伞，能把下面*所有*句子都罩住，而不只是其中一个小事实。\n\n> **注意。** 只说到其中一句话里某个小细节的标题范围太窄，不能选。",
       ],
       ["Which is the best title?", "哪个标题最好？"],
       `
@@ -231,10 +249,13 @@ const mainTopic = topic("reading", {
       Sharks have many teeth. Their teeth fall out and grow back. Some sharks are bigger than a bus.|Facts About Sharks|Teeth|Buses
       Kids can help at home. They can make their beds. They can set the table.|Ways Kids Help at Home|Beds|Tables
       `,
-      (right) => [`*${right}* names what the whole text is about.`, `*${right}* 说出了整篇短文讲的内容。`],
+      (right) => [
+        `**${right}** is the best title because it covers every sentence in the text.\n\n**Check.** Put **${right}** at the top of the page and reread all the sentences: every single fact fits neatly under that title.`,
+        `**${right}** 是最好的标题，因为它能概括短文里的每一句话。\n\n**检验。** 把 **${right}** 放在短文最上方再通读一遍：每个事实都能稳稳地归在这个标题下面。`,
+      ],
       [
-        ["*{wrong}* names only one detail.", "*{wrong}* 只说出了一个细节。"],
-        ["*{wrong}* is too small to cover the whole text.", "*{wrong}* 范围太小，概括不了整篇短文。"],
+        ["*{wrong}* names only one detail from a single sentence.", "*{wrong}* 只提到了其中一句里的一个细节。"],
+        ["*{wrong}* is too narrow to cover the whole paragraph.", "*{wrong}* 范围太窄，盖不住整段话。"],
       ],
     ),
   ],
@@ -244,6 +265,10 @@ const feelings = topic("reading", {
   id: "how-characters-feel",
   title: ["How Characters Feel", "人物的感受"],
   summary: ["Tell how a character feels from what they say and do.", "从人物说的话和做的事判断他们的感受。"],
+  intro: [
+    "When your friend grins and bounces on their toes, you know they are excited—even before they say a word! Writers show how characters feel through their faces, actions, and words. Let's read those clues.",
+    "朋友咧嘴笑、踮着脚蹦来蹦去，不用开口你也知道他很兴奋！作家也是通过表情、动作和说话来表现人物感受的。这节课我们来读懂这些线索。",
+  ],
   after: ["who-and-where-in-a-story"],
   xp: 10,
   points: [
@@ -251,8 +276,8 @@ const feelings = topic("reading", {
       "feelings-from-actions",
       ["Feelings from Actions", "从行为看感受"],
       [
-        "A story does not always say how a character feels. Look at what they **do** and **say**: someone who jumps and claps is happy; someone who hides their face may be shy or scared.",
-        "故事不总是直接说出人物的感受。看看他们**做了什么**、**说了什么**：又蹦又拍手的人很开心；把脸藏起来的人可能是害羞或害怕。",
+        "A story often *shows* a feeling instead of naming it. Look at what the character **does** and **says**: jumping and clapping shows *happy*; hiding behind Mom shows *scared*.\n\n> **Watch out.** Picture the action in your own body—how would *you* feel if you did that?",
+        "故事常常通过画面*表现*感受，而不直接说出来。看人物**做了什么**、**说了什么**：又蹦又拍手表示开心，躲到妈妈身后表示害怕。\n\n> **注意。** 想象自己做出同样的动作——如果你这样做，心里是什么感觉？",
       ],
       ["How does the character feel?", "这个人物有什么感受？"],
       `
@@ -287,18 +312,24 @@ const feelings = topic("reading", {
       Lucy's voice was very quiet, and she held her mom's hand tight on the first day of school.|nervous|angry|bored
       Eli's cheeks turned pink when he tripped on stage.|embarrassed|proud|happy
       `,
-      (right) => [`What the character does shows that they feel ${right}.`, `人物的行为表明他们感到 ${right}。`],
+      (right) => [
+        `The character's actions and words show that they feel **${right}**.\n\n**Check.** Picture yourself doing what the character just did: that body language matches feeling **${right}**, not the other two feelings.`,
+        `人物的动作和话语表现出他们感到 **${right}**。\n\n**检验。** 想象自己做出同样的举动和表情：这种反应对应的正是 **${right}**，而不是另外两种情绪。`,
+      ],
       [
-        ["*{wrong}* does not fit what the character does.", "*{wrong}* 和人物的行为不相符。"],
-        ["Look again at what the character does: it does not show *{wrong}*.", "再看看人物做了什么：并没有表现出 *{wrong}*。"],
+        ["*{wrong}* does not match the body language or words shown here.", "*{wrong}* 和这里描写的人物动作或话语不符。"],
+        [
+          "Picture someone feeling *{wrong}*—they would not act the way this character does.",
+          "想想感到 *{wrong}* 的人会怎样表现——和这里人物的做法对不上。",
+        ],
       ],
     ),
     choose(
       "why-they-feel-that-way",
       ["Why They Feel That Way", "为什么会有这种感受"],
       [
-        "Feelings have **reasons**. A character is sad because something went wrong, or glad because something good happened. Find what happened just before.",
-        "感受都有**原因**。人物难过是因为出了问题，高兴是因为发生了好事。找一找就在这之前发生了什么。",
+        "Feelings always have a **cause**. Read the sentence right after the feeling to see *what happened* to make the character feel that way.\n\n> **Watch out.** Pick the reason written in the story—even if another choice could also cause a feeling.",
+        "感受都有**原因**。看紧跟在感受后面的那句话，找出*发生了什么事*让人物产生这种感受。\n\n> **注意。** 要选故事里写出来的那个原因，即使另一个选项听起来也可能让人有情绪。",
       ],
       ["Why does the character feel this way?", "这个人物为什么会有这种感受？"],
       `
@@ -333,10 +364,13 @@ const feelings = topic("reading", {
       Pam was calm. She had practiced her speech many times.|She had practiced a lot.|She forgot her speech.|She was late.
       Owen was jealous. His brother got a new bike, and he did not.|His brother got a new bike.|He got a new bike too.|His bike was fixed.
       `,
-      (right) => [`The story gives the reason: ${right}`, `故事给出了原因：${right}`],
+      (right) => [
+        `The second sentence gives the reason: *${right}*\n\n**Check.** Join the two sentences with *because*: the feeling happens *because* *${right[0]?.toLowerCase() ?? ""}${right.slice(1)}* That matches both the text and real life.`,
+        `第二句话给出了原因：*${right}*\n\n**检验。** 用“因为”把感受和 *${right}* 连起来读：顺理成章，而且原文里明明白白写着这件事。`,
+      ],
       [
-        ["*{wrong}* would cause a different feeling.", "*{wrong}* 会引起另一种感受。"],
-        ["*{wrong}* is not in the story.", "故事里没有提到：*{wrong}*。"],
+        ["*{wrong}* would bring a different feeling, and it did not happen here.", "*{wrong}* 会带来另一种感受，而且故事里没发生这件事。"],
+        ["Read the story again: *{wrong}* is not in the text.", "再读一遍故事：原文里没有提到 *{wrong}*。"],
       ],
     ),
   ],
@@ -346,6 +380,10 @@ const prefixes = topic("vocabulary", {
   id: "prefixes-un-and-re",
   title: ["The Prefixes Un- and Re-", "前缀 un- 和 re-"],
   summary: ["*Un-* means *not* or undoes an action; *re-* means *again*.", "*un-* 表示*不*或撤销一个动作；*re-* 表示*再一次*。"],
+  intro: [
+    "Snap a small word part onto the front of *pack* and watch what happens: **un**pack means take things out, and **re**pack means pack again! Those front parts are called **prefixes**.",
+    "在 *pack* 前面扣上一个小词头，意思立刻就变了：**un**pack 是把东西拿出来，**re**pack 是重新打包！这些加在词前面的小部件叫做**前缀**。",
+  ],
   after: ["reading-words-with-silent-e"],
   xp: 10,
   points: [
@@ -353,8 +391,8 @@ const prefixes = topic("vocabulary", {
       "what-the-new-word-means",
       ["What the New Word Means", "新词的意思"],
       [
-        "A **prefix** goes at the front of a word and changes its meaning. **Un-** means *not*: *unhappy* is *not happy*; or it undoes something: *unlock*. **Re-** means *again*: *redo* is *do again*.",
-        "**前缀**放在词的前面，会改变词的意思。**un-** 表示*不*：*unhappy* 就是*不开心*；也可以表示撤销：*unlock*（开锁）。**re-** 表示*再一次*：*redo* 就是*再做一次*。",
+        "A **prefix** sits at the front of a base word and changes its meaning. **Un-** means *not* (*unhappy* = not happy) or *undo* (*unlock* = open the lock). **Re-** means *again* (*redo* = do again).\n\n> **Watch out.** Do not mix up *un-* (not / undo) and *re-* (again).",
+        "**前缀**加在词根前面，改变词的意思。**un-** 表示“不”（*unhappy* = 不开心）或“撤销”（*unlock* = 开锁）；**re-** 表示“再一次”（*redo* = 重做）。\n\n> **注意。** 不要把 *un-*（不/撤销）和 *re-*（再一次）弄混。",
       ],
       ["What does the word mean?", "这个词是什么意思？"],
       `
@@ -389,18 +427,31 @@ const prefixes = topic("vocabulary", {
       unable|not able|able again|very able
       retry|try again|not try|try hard
       `,
-      (right, shown) => [`*${shown}* means *${right}*.`, `*${shown}* 的意思是 *${right}*。`],
+      (right, shown) => {
+        const pre = shown.startsWith("un") ? "un-" : "re-";
+        const base = shown.slice(2);
+        return [
+          `**${shown}** means **${right}**.\n\n**Check.** Split **${shown}** into **${pre}** + **${base}**: *${pre}* means *${pre === "un-" ? "not / undo" : "again"}*, which combines with *${base}* to give **${right}**.`,
+          `**${shown}** 的意思是 **${right}**。\n\n**检验。** 把 **${shown}** 拆成 **${pre}** + **${base}**：*${pre}* 表示${pre === "un-" ? "“不”或“撤销”" : "“再一次”"}，合上 *${base}* 正好是 **${right}**。`,
+        ];
+      },
       [
-        ["*{wrong}* gives the meaning of the other prefix.", "*{wrong}* 是另一个前缀的意思。"],
-        ["*{wrong}* is not what the prefix means.", "*{wrong}* 不是这个前缀的意思。"],
+        [
+          "*{wrong}* uses the meaning of the other prefix (*un-* vs. *re-*).",
+          "*{wrong}* 用成了另一个前缀的意思（把 *un-* 和 *re-* 弄反了）。",
+        ],
+        [
+          "*{wrong}* adds a meaning (*very*, *fast*, *tight*) that neither *un-* nor *re-* gives.",
+          "*{wrong}* 加上了 *un-* 和 *re-* 都没有的程度意思。",
+        ],
       ],
     ),
     choose(
       "the-word-that-fits",
       ["The Word That Fits", "合适的词"],
       [
-        "Read the sentence and think about the meaning you need: *not* or *undo* calls for **un-**; *again* calls for **re-**.",
-        "读一读句子，想一想需要的意思：表示*不*或*撤销*用 **un-**；表示*再一次*用 **re-**。",
+        "Read the whole sentence to see which prefix fits: if the sentence needs *not* or *undo*, choose **un-**; if it needs *again*, choose **re-**.\n\n> **Watch out.** Do not pick the plain base word when the sentence needs the opposite or a repeat.",
+        "读完整句话判断需要哪个前缀：表示“不”或“撤销”选 **un-**；表示“再一次”选 **re-**。\n\n> **注意。** 句子需要反义或“再来一次”时，不要选没加前缀的原词。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -435,10 +486,22 @@ const prefixes = topic("vocabulary", {
       The baby was ___ to reach the toy.|unable|reable|able
       I need to ___ my shirt to take it off.|unbutton|rebutton|button
       `,
-      (right, shown) => [`*${filled(shown, right)}* has the meaning the sentence needs.`, `*${filled(shown, right)}* 符合句子需要的意思。`],
+      (right, shown) => {
+        const isUn = right.startsWith("un");
+        return [
+          `*${filled(shown, right)}* — **${right}** adds *${isUn ? "un- (not / undo)" : "re- (again)"}* to match the sentence.\n\n**Check.** Swap **${right}** for its meaning (*${isUn ? "not / undo" : "do again"}*) inside *${shown}*: the sentence makes complete sense.`,
+          `*${filled(shown, right)}* —— **${right}** 加上了 *${isUn ? "un-（不/撤销）" : "re-（再一次）"}*，正好符合句意。\n\n**检验。** 把 **${right}** 换成“${isUn ? "不/解开" : "重新……一次"}”代入原句读一遍，意思完全通顺。`,
+        ];
+      },
       [
-        ["*{wrong}* uses the wrong prefix for this meaning.", "*{wrong}* 用的前缀不符合这个意思。"],
-        ["*{wrong}* does not make sense here.", "*{wrong}* 在这里说不通。"],
+        [
+          "*{wrong}* puts the wrong prefix (*un-* vs. *re-*) on the word—some of those are not even real words.",
+          "*{wrong}* 用错了前缀（把 *un-* 和 *re-* 弄反了），有的甚至根本不是真词。",
+        ],
+        [
+          "*{wrong}* leaves off the prefix needed here, which changes or flips the meaning.",
+          "*{wrong}* 少了需要的前缀，句子的意思变味甚至说反了。",
+        ],
       ],
     ),
   ],
@@ -451,6 +514,10 @@ const shades = topic("vocabulary", {
     "Words close in meaning can be stronger or weaker: *warm*, *hot*, *boiling*.",
     "意思相近的词有强有弱：*warm*、*hot*、*boiling*。",
   ],
+  intro: [
+    "Touch bathwater: it feels *warm*. Touch a soup pot on the stove: it is *boiling*! Words in the same family can climb a ladder from mild to strong. Let's pick the exact rung on the ladder.",
+    "摸一摸洗澡水，是 *warm*（温热的）；摸一摸炉子上的汤锅，是 *boiling*（滚烫的）！意思相近的词就像梯子，从轻到重一级一级往上爬。这节课我们来选准程度最合适的那一级。",
+  ],
   after: ["describing-words"],
   xp: 10,
   points: [
@@ -458,8 +525,8 @@ const shades = topic("vocabulary", {
       "the-strongest-word",
       ["The Strongest Word", "最强烈的词"],
       [
-        "Some words mean almost the same, but one is **stronger**: *big* → *huge* → *giant*; *walk* → *run* → *dash*. Choosing the right one tells the reader exactly how much.",
-        "有些词意思差不多，但其中一个**更强烈**：*big* → *huge* → *giant*；*walk* → *run* → *dash*。选对词，读者就能确切知道程度有多深。",
+        "Words with close meanings climb from mild to strong: *big* → *huge* → **giant**; *walk* → *jog* → **sprint**. The strongest word sits at the top of the ladder.\n\n> **Watch out.** Do not stop at the middle rung—compare all three words to find the very strongest one.",
+        "意思相近的词从弱到强排成梯子：*big* → *huge* → **giant**；*walk* → *jog* → **sprint**。最强烈的词在梯子最顶上。\n\n> **注意。** 不要停在中间那一级，三个词都比一比，找出最顶上最强的那个。",
       ],
       ["Which word is the strongest?", "哪个词最强烈？"],
       `
@@ -488,27 +555,27 @@ const shades = topic("vocabulary", {
       smart, clever|brilliant|smart|clever
       funny, silly|hilarious|funny|silly
       full, stuffed|bursting|full|stuffed
-      old, ancient|ancient|old|aged
+      old, aged|ancient|old|aged
       bright, shiny|dazzling|bright|shiny
       cry, sob|wail|cry|sob
       talk, shout|scream|talk|shout
       surprised, shocked|stunned|surprised|shocked
       `,
       (right, shown) => [
-        `*${right}* is the strongest of *${shown}* and *${right}*.`,
-        `在 *${shown}* 和 *${right}* 中，*${right}* 最强烈。`,
+        `**${right}** is the strongest word among *${shown}* and **${right}**.\n\n**Check.** Line the three words up on a ladder from weakest to strongest: *${shown.replace(", ", " → ")} → **${right}*** — **${right}** sits at the very top.`,
+        `在 *${shown}* 和 **${right}** 中，**${right}** 的程度最强烈。\n\n**检验。** 把三个词从弱到强排成梯子：*${shown.replace(", ", " → ")} → **${right}*** —— **${right}** 排在最顶上。`,
       ],
       [
-        ["*{wrong}* is the weakest of the three.", "*{wrong}* 是三个词中最弱的。"],
-        ["*{wrong}* is in the middle, not the strongest.", "*{wrong}* 居中，不是最强烈的。"],
+        ["*{wrong}* is the mildest rung of the three.", "*{wrong}* 是三个词里程度最轻的一个。"],
+        ["*{wrong}* sits in the middle of the ladder—there is a stronger word above it.", "*{wrong}* 排在中间，上面还有一个程度更强的词。"],
       ],
     ),
     choose(
       "the-word-that-fits-best",
       ["The Word That Fits Best", "最合适的词"],
       [
-        "Pick the word whose strength fits the sentence: a cup of tea is *hot*, but an oven at full heat is *boiling hot*. A small sip is not a *gulp*.",
-        "选一个强弱程度适合句子的词：一杯茶是 *hot*（热的），但开到最大火的烤箱是 *boiling hot*（滚烫的）。小口抿不是 *gulp*（大口吞）。",
+        "Match the strength of the word to the clues in the sentence: a cup of tea is *hot*, while a pond turned to ice is **frozen**; someone very thirsty **gulps** water instead of sipping it.\n\n> **Watch out.** Look for clue words like *so*, *quiet*, or *all at once*—they tell you whether you need a gentle word or a strong one.",
+        "根据句子里的线索选强弱合适的词：一杯茶是 *hot*，结冰的池塘是 **frozen**；渴极了的人会 **gulp**（大口灌）而不是小口抿。\n\n> **注意。** 留意 *so*、*quiet*、*all at once* 这些线索词，它们告诉你该选轻的词还是重的词。",
       ],
       ["Which word fits best?", "哪个词最合适？"],
       `
@@ -544,12 +611,18 @@ const shades = topic("vocabulary", {
       The fireworks were ___ in the dark sky.|dazzling|dull|dim
       `,
       (right, shown) => [
-        `*${filled(shown, right)}*: the strength of *${right}* fits.`,
-        `*${filled(shown, right)}*：*${right}* 的强弱程度合适。`,
+        `*${filled(shown, right)}* — **${right}** matches the exact strength the clues call for.\n\n**Check.** Picture the scene in *${filled(shown, right)}*: the clues in the sentence match the strength of **${right}**, while the other choices are too mild, too strong, or go the opposite way.`,
+        `*${filled(shown, right)}* —— **${right}** 的强弱程度正好吻合句子里的线索。\n\n**检验。** 想象 *${filled(shown, right)}* 的画面：**${right}** 力度贴切，另外两个词要么太轻太重，要么意思反了。`,
       ],
       [
-        ["*{wrong}* is too weak or too strong for this sentence.", "*{wrong}* 对这个句子来说太弱或太强了。"],
-        ["*{wrong}* means the opposite here.", "*{wrong}* 在这里意思正好相反。"],
+        [
+          "*{wrong}* has the wrong strength (or goes the opposite way) for the clues in this sentence.",
+          "*{wrong}* 的程度太轻或太重（甚至意思相反），和句子线索不符。",
+        ],
+        [
+          "Put *{wrong}* in the sentence and picture it—its strength does not fit the scene.",
+          "把 *{wrong}* 放进句子里想一想画面，它的强弱和场景不搭。",
+        ],
       ],
     ),
   ],
@@ -562,6 +635,10 @@ const storyOrder = topic("writing", {
     "Write the events of a story in order, with time words such as *one day*, *then* and *in the end*.",
     "用 *one day*、*then*、*in the end* 等时间词按顺序写出故事。",
   ],
+  intro: [
+    "Imagine telling a friend about your weekend starting with going to bed and ending with waking up—they would be totally lost! Time words like **One day**, **Then**, **After that**, and **In the end** keep a story moving forward.",
+    "想象你给朋友讲周末的事，却先讲晚上睡觉、最后才讲早上起床——朋友肯定听懵了！**One day**、**Then**、**After that**、**In the end** 这些时间词能让故事稳稳往前走。",
+  ],
   after: ["writing-steps-with-first-and-next", "past-tense-with-ed"],
   xp: 10,
   points: [
@@ -569,8 +646,8 @@ const storyOrder = topic("writing", {
       "the-time-word",
       ["The Time Word", "时间词"],
       [
-        "Time words help a reader follow a story: ***One day*** starts it, ***Then*** and ***After that*** move it along, and ***In the end*** finishes it.",
-        "时间词帮助读者理解故事：***One day*** 开始故事，***Then*** 和 ***After that*** 推动故事，***In the end*** 结束故事。",
+        "Time words tell the reader where they are in a story: **One day** or **Once upon a time** opens it, **Then** and **After that** carry the middle, and **In the end** wraps it up.\n\n> **Watch out.** Check whether the blank opens a brand-new story, continues a sentence before it, or finishes the story.",
+        "时间词告诉读者故事讲到了哪里：**One day** 或 **Once upon a time** 开头，**Then** 和 **After that** 推进中间，**In the end** 收尾。\n\n> **注意。** 先看空格是在开启新故事、承接上一句，还是在给故事收尾。",
       ],
       ["Which time word fits?", "哪个时间词合适？"],
       `
@@ -605,21 +682,35 @@ const storyOrder = topic("writing", {
       The sun shone. ___, a green sprout came up.|After that|One day|Once upon a time
       ___, the seed became a tall sunflower.|In the end|One day|Then
       `,
-      (right, shown) => [
-        `*${filled(shown, right)}*: *${right}* fits this part of the story.`,
-        `*${filled(shown, right)}*：*${right}* 适合故事的这一部分。`,
-      ],
+      (right, shown) => {
+        const part =
+          right === "One day" || right === "Once upon a time"
+            ? ["opening", "开头"]
+            : right === "In the end"
+              ? ["ending", "结尾"]
+              : ["next step in the middle", "中间承接"];
+        return [
+          `*${filled(shown, right)}* — **${right}** fits the **${part[0]}** of the story.\n\n**Check.** Read *${filled(shown, right)}* aloud: **${right}** matches where this sentence sits (beginning, middle, or end).`,
+          `*${filled(shown, right)}* —— **${right}** 适合故事的**${part[1]}**部分。\n\n**检验。** 大声读一遍 *${filled(shown, right)}*：**${right}** 和这句话在故事里的位置（开头、中间或结尾）完全吻合。`,
+        ];
+      },
       [
-        ["*{wrong}* belongs at another part of the story.", "*{wrong}* 应该用在故事的另一部分。"],
-        ["*{wrong}* starts or ends a story, but this part is in the middle.", "*{wrong}* 用来开始或结束故事，但这一部分在中间。"],
+        [
+          "*{wrong}* belongs at a different part of a story (beginning, middle, or end).",
+          "*{wrong}* 应该用在故事的另一部分（开头、中间或结尾）。",
+        ],
+        [
+          "Put *{wrong}* in the blank—it does not fit whether this sentence opens, continues, or finishes the story.",
+          "把 *{wrong}* 填进空格读一读，它和这句话是在开头、承接还是收尾对不上。",
+        ],
       ],
     ),
     choose(
       "the-sentence-out-of-order",
       ["The Sentence Out of Order", "顺序错了的句子"],
       [
-        "Check that each event comes after what causes it. A sentence about eating the cake cannot come before the cake is baked.",
-        "检查每件事是否都在导致它的事之后发生。吃蛋糕的句子不能出现在烤蛋糕之前。",
+        "Every event in a story must come *after* what makes it happen: you have to bake a cake before you can eat it!\n\n> **Watch out.** Check the first sentence and the last sentence—if the ending shows up first, the order is backwards.",
+        "故事里的每件事都必须发生在导致它的事*之后*：总得先烤好蛋糕，才能吃蛋糕！\n\n> **注意。** 重点看第一句和最后一句——如果结果跑到了最前面，顺序就反了。",
       ],
       ["Which story is in the right order?", "哪个故事的顺序是对的？"],
       `
@@ -654,10 +745,16 @@ const storyOrder = topic("writing", {
       a library visit|We walked to the library. Then I picked a book. In the end, I checked it out.|I checked it out. Then I picked a book. In the end, we walked to the library.|I picked a book. I checked it out. In the end, we walked to the library.
       a play|We practiced our lines. Then we put on our costumes. In the end, we did the show.|We did the show. Then we put on our costumes. In the end, we practiced our lines.|We put on our costumes. We did the show. In the end, we practiced our lines.
       `,
-      (right) => [`In *${right}*, each event comes after what causes it.`, `在 *${right}* 中，每件事都在导致它的事之后。`],
+      (right) => [
+        `*${right}* puts all three events in cause-and-effect order.\n\n**Check.** Ask between each pair of sentences: *Can the second thing happen without the first?* No—so step 1, step 2, and step 3 are in the right order.`,
+        `*${right}* 按先因后果的顺序排好了三件事。\n\n**检验。** 逐一检查相邻两句：*没有前面那一步，后面那一步能发生吗？* 不能——所以第 1、2、3 步顺序完全正确。`,
+      ],
       [
-        ["*{wrong}* puts the end first.", "*{wrong}* 把结尾放在了最前面。"],
-        ["*{wrong}* puts the first event last.", "*{wrong}* 把第一件事放在了最后。"],
+        [
+          "*{wrong}* puts the ending at the very start, before the cause even happens.",
+          "*{wrong}* 把结尾放到了最开头，结果跑在了原因前面。",
+        ],
+        ["*{wrong}* puts the starting step at the very end, which is backwards.", "*{wrong}* 把最先做的那一步放到了最后，顺序颠倒了。"],
       ],
     ),
   ],
@@ -667,6 +764,10 @@ const belong = topic("writing", {
   id: "facts-that-belong-together",
   title: ["Facts That Belong Together", "属于同一主题的事实"],
   summary: ["Keep a short report on its topic: every fact should be about it.", "让短小的报告紧扣主题：每个事实都要和主题有关。"],
+  intro: [
+    "Suppose you are writing a mini-report on penguins, and you suddenly add, *My bike is blue!* Even if your bike really is blue, it does not belong in a penguin report. Let's keep every fact on topic and wrap up with a strong closing sentence.",
+    "假如你在写一篇关于企鹅的小报告，却突然加了一句：*My bike is blue!* 就算你的自行车真的是蓝色的，它也不属于企鹅报告。这节课我们来筛掉跑题的句子，并选出好的结尾句。",
+  ],
   after: ["the-main-topic-of-a-text", "a-sentence-tells-a-whole-idea"],
   xp: 10,
   points: [
@@ -674,8 +775,8 @@ const belong = topic("writing", {
       "the-fact-that-does-not-belong",
       ["The Fact That Does Not Belong", "不属于这里的事实"],
       [
-        "A short report is about **one topic**. Every fact in it should tell about that topic. A fact about something else does not belong, even if it is true.",
-        "短小的报告只讲**一个主题**。其中的每个事实都要说明这个主题。讲别的东西的事实不属于这里，即使它是真的。",
+        "A report stays focused on **one topic**. Every fact must teach about that topic—even a true fact gets cut if it is about something else.\n\n> **Watch out.** Do not keep a sentence just because it is true; check whether it is about the report's topic.",
+        "一篇报告只围绕**一个主题**。每个事实都要说明这个主题——就算一句话本身是真的，只要讲的是别的东西，也得删掉。\n\n> **注意。** 不要因为一句话说的是真事就留着它，要看它和报告主题有没有关系。",
       ],
       ["Which fact does not belong in a report on this topic?", "哪个事实不属于这个主题的报告？"],
       `
@@ -710,21 +811,27 @@ const belong = topic("writing", {
       Report: Volcanoes|Dogs wag their tails.|Volcanoes are mountains.|Hot rock comes out of volcanoes.
       Report: Beavers|Snow is white.|Beavers build dams.|Beavers cut trees with their teeth.
       `,
-      (right, shown) => [
-        `*${right}* is not about the topic of the report (${shown.replace("Report: ", "")}).`,
-        `*${right}* 和报告的主题（${shown.replace("Report: ", "")}）无关。`,
-      ],
+      (right, shown) => {
+        const subject = shown.replace("Report: ", "");
+        return [
+          `*${right}* does not belong because it is not about **${subject}**.\n\n**Check.** Put **${subject}** next to *${right}*: it teaches nothing about **${subject}**, whereas the other two sentences both give facts about **${subject}**.`,
+          `*${right}* 不属于这里，因为它和主题 **${subject}** 无关。\n\n**检验。** 把 **${subject}** 和 *${right}* 放在一起看：这句话完全没讲 **${subject}**，而另外两句都在介绍 **${subject}**。`,
+        ];
+      },
       [
-        ["*{wrong}* is about the topic, so it belongs.", "*{wrong}* 和主题有关，所以属于这里。"],
-        ["*{wrong}* tells about the topic, so keep it.", "*{wrong}* 说明了主题，所以应该保留。"],
+        ["*{wrong}* teaches a real fact about this report's topic, so it belongs.", "*{wrong}* 讲的正是本报告主题的事实，应该保留。"],
+        [
+          "*{wrong}* stays right on topic—we are looking for the sentence that drifts off topic.",
+          "*{wrong}* 紧扣主题——我们要找的是跑题的那一句。",
+        ],
       ],
     ),
     choose(
       "a-closing-sentence",
       ["A Closing Sentence", "结尾句"],
       [
-        "End a short report with a **closing sentence** that sums up the topic: *Bees are small, but they do a big job!* It should not bring in a new topic.",
-        "用一个总结主题的**结尾句**来结束短小的报告：*Bees are small, but they do a big job!*。它不应该引入新的主题。",
+        "End a short report with a **closing sentence** that wraps up the big idea: *Bees make honey. They help flowers grow. **Bees are small, but they do a big job!***\n\n> **Watch out.** A closing sentence should wrap up the same topic—never jump to a brand-new subject.",
+        "用一句总结大意的**结尾句**收尾：*Bees make honey. They help flowers grow. **Bees are small, but they do a big job!***\n\n> **注意。** 结尾句要收束同一个主题，不要突然跳到毫不相干的新话题。",
       ],
       ["Which is the best closing sentence for this report?", "哪个是这篇报告最好的结尾句？"],
       `
@@ -759,10 +866,13 @@ const belong = topic("writing", {
       Snakes have no legs. They slide on the ground.|Snakes move in their own way.|Worms are long.|I saw a frog.
       Our hearts pump blood. Exercise makes them strong.|Keep your heart healthy by moving!|Lungs take in air.|I have a dog.
       `,
-      (right) => [`*${right}* sums up the topic.`, `*${right}* 总结了主题。`],
+      (right, shown) => [
+        `*${right}* wraps up the whole report cleanly.\n\n**Check.** Read the report aloud with *${right}* at the end: *${shown} ${right}* — it stays on the same topic and ties both facts together.`,
+        `*${right}* 稳稳地收束了整篇报告。\n\n**检验。** 把 *${right}* 接在末尾通读一遍：*${shown} ${right}* —— 紧扣同一主题，把前面两个事实串成了一个总结。`,
+      ],
       [
-        ["*{wrong}* brings in something new.", "*{wrong}* 引入了新的内容。"],
-        ["*{wrong}* does not sum up the report.", "*{wrong}* 没有总结报告的内容。"],
+        ["*{wrong}* switches to a different topic instead of closing this report.", "*{wrong}* 跳到了别的话题，没有收束这篇报告。"],
+        ["*{wrong}* adds a side thought instead of summing up the report's main idea.", "*{wrong}* 只是旁枝末节，没有总结报告的主旨。"],
       ],
     ),
   ],
@@ -775,6 +885,10 @@ const thanks = topic("writing", {
     "A thank-you note greets the person, says what you are thankful for and why, and closes with your name.",
     "感谢便条要先问候对方，说明感谢什么和为什么，最后署上自己的名字。",
   ],
+  intro: [
+    "Your aunt sends you a warm scarf for winter. Writing a **thank-you note** shows you noticed and care! A great note has three parts—a greeting, a body that says *why*, and a closing with your name.",
+    "阿姨冬天寄给你一条暖和的围巾。写一张**感谢便条**，能让她知道你很喜欢也很感激！一张好的感谢便条有三个部分：称呼、说明原因的正文，以及带署名的结束语。",
+  ],
   after: ["commas-in-letters"],
   xp: 10,
   points: [
@@ -782,8 +896,8 @@ const thanks = topic("writing", {
       "parts-of-a-note",
       ["Parts of a Note", "便条的组成部分"],
       [
-        "A thank-you note has a **greeting** (*Dear Gran,*), a **body** that says what you are thankful for and why, and a **closing** with your name (*Love, Sam*).",
-        "感谢便条包括**称呼**（*Dear Gran,*）、说明感谢什么和为什么的**正文**，以及带有你名字的**结束语**（*Love, Sam*）。",
+        "A thank-you note has three parts: a **greeting** (*Dear Gran,*), a **body** (what you are thankful for and why), and a **closing** with your name (*Love, Sam*).\n\n> **Watch out.** Do not confuse the greeting (who the note is *to*) with the closing (who the note is *from*).",
+        "感谢便条有三个部分：**称呼**（*Dear Gran,*）、**正文**（感谢什么和为什么），以及带署名的**结束语**（*Love, Sam*）。\n\n> **注意。** 别把称呼（写给*谁*）和结束语（*谁*写的）弄混。",
       ],
       ["Which part of a thank-you note is this?", "这是感谢便条的哪一部分？"],
       `
@@ -821,33 +935,37 @@ const thanks = topic("writing", {
       {
         greeting: L(
           "称呼",
-          "It greets the person the note is for.",
-          "它问候收便条的人。",
-          "It does not greet the person.",
-          "它不是问候对方的话。",
+          "It greets the person the note is written to.",
+          "它向收便条的人打招呼。",
+          "*{shown}* does not start with *Dear* to greet the reader.",
+          "*{shown}* 不是以 *Dear* 开头向收信人问候。",
         ),
         body: L(
           "正文",
-          "It says what you are thankful for and why.",
-          "它说明你感谢什么和为什么。",
-          "It does not say what you are thankful for.",
-          "它没有说明你感谢什么。",
+          "It tells what you are thankful for and why.",
+          "它写出了你感谢什么以及为什么感谢。",
+          "*{shown}* is too short to be the main message—it does not explain the thanks.",
+          "*{shown}* 并不是正文内容，没有写出具体感谢的事。",
         ),
         closing: L(
           "结束语",
-          "It ends the note with your name.",
-          "它用你的名字结束便条。",
-          "It does not end the note with a name.",
-          "它没有用名字结束便条。",
+          "It signs off the note with the writer's name.",
+          "它用告别语和写信人的名字来收尾。",
+          "*{shown}* does not sign off at the bottom with the writer's name.",
+          "*{shown}* 不是便条末尾的结束语和署名。",
         ),
       },
+      (right, shown, entry) => [
+        `*${shown}* is the **${right}** of the note. ${entry.why[0]}\n\n**Check.** Picture where *${shown}* sits on the page: ${right === "greeting" ? "at the very top, starting with *Dear* → **greeting**." : right === "body" ? "in the middle, giving the full thank-you sentences → **body**." : "at the very bottom, with a sign-off and name → **closing**."}`,
+        `*${shown}* 是便条的**${entry.zh}**。${entry.why[1]}\n\n**检验。** 想象 *${shown}* 在信纸上的位置：${right === "greeting" ? "在最开头，以 *Dear* 打招呼 → **称呼**。" : right === "body" ? "在中间，写出完整的感谢句子 → **正文**。" : "在最末尾，带着告别语和署名 → **结束语**。"}`,
+      ],
     ),
     choose(
       "saying-why",
       ["Saying Why", "说明原因"],
       [
-        "A good thank-you note says **why** the gift or help matters to you. *Thank you for the ball.* is fine, but *Thank you for the ball. **I play with it every day at recess.*** is better.",
-        "好的感谢便条会说明礼物或帮助对你**为什么**重要。*Thank you for the ball.* 可以，但 *Thank you for the ball. **I play with it every day at recess.*** 更好。",
+        "A thoughtful thank-you note tells **why** the gift or help matters to you: *Thank you for the ball. **I play with it every day at recess.***\n\n> **Watch out.** A random fact about the gift (*Balls are round.*) does not show why *you* are thankful.",
+        "真诚的感谢便条会说出礼物或帮助对你**为什么**重要：*Thank you for the ball. **I play with it every day at recess.***\n\n> **注意。** 只说一句关于礼物的泛泛事实（如 *Balls are round.*），并没有说出*你*为什么感谢。",
       ],
       ["Which sentence best says why?", "哪个句子最好地说明了原因？"],
       `
@@ -882,10 +1000,16 @@ const thanks = topic("writing", {
       Thank you for the plant.|It grew a new leaf this week.|Plants are green.|I ate a snack.
       Thank you for visiting.|We had so much fun playing together.|Visits are short.|My room is big.
       `,
-      (right) => [`*${right}* tells why it matters to you.`, `*${right}* 说明了它为什么对你重要。`],
+      (right, shown) => [
+        `*${right}* tells why the gift or help mattered to you.\n\n**Check.** Read the two sentences together—*${shown} ${right}*—and imagine getting this note: you can tell right away how the gift or help was used and enjoyed.`,
+        `*${right}* 说出了这份礼物或帮助为什么对你很重要。\n\n**检验。** 把两句连起来读——*${shown} ${right}*——想象收到这张便条的人，一眼就能感受到这份心意派上了用场。`,
+      ],
       [
-        ["*{wrong}* is true, but it does not say why you are thankful.", "*{wrong}* 也许是真的，但没有说明你为什么感谢。"],
-        ["*{wrong}* has nothing to do with the thanks.", "*{wrong}* 和感谢无关。"],
+        [
+          "*{wrong}* may be a true fact, but it does not say how the gift or help mattered to you.",
+          "*{wrong}* 也许是真的，但没有说明礼物或帮助对你有什么意义。",
+        ],
+        ["*{wrong}* is off topic and has nothing to do with the thank-you.", "*{wrong}* 跑题了，和感谢的事情无关。"],
       ],
     ),
   ],

@@ -57,15 +57,19 @@ const punWordBank: readonly Item[] = puns.map((p) => ({
   right: p.word,
   wrong: [...p.others],
   why: t(
-    `The joke turns on **${p.word}**, which can mean ${p.a} and also ${p.b}. A pun is funny because one word carries two meanings, or sounds like another word, at the same time.`,
-    `笑点在 **${p.word}** 上：它既可以表示“${p.a}”，也可以表示“${p.b}”。双关语之所以好笑，是因为一个词同时带有两种意思，或者听起来像另一个词。`,
+    `The joke turns on **${p.word}**, which can mean ${p.a} and also ${p.b}. A pun is funny because one word carries two meanings, or sounds like another word, at the same time.\n\n**Check.** Try replacing **${p.word}** with a plain synonym—the joke vanishes immediately, proving **${p.word}** carries the double meaning.`,
+    `笑点在 **${p.word}** 上：它既可以表示“${p.a}”，也可以表示“${p.b}”。双关语之所以好笑，是因为一个词同时带有两种意思，或者听起来像另一个词。\n\n**检验。** 把 **${p.word}** 换成一个普通同义词——笑点立刻消失，说明正是 **${p.word}** 承载了双关。`,
   ),
-  whyNot: p.others.map((o) =>
+  whyNot: [
     t(
-      `“${o}” means only one thing in the joke. Look for the word that makes you think of two meanings at once.`,
-      `“${o}”在笑话中只有一个意思。要找让你同时想到两种意思的那个词。`,
+      `“${p.others[0]}” is used in only one plain sense here, not as a play on words.`,
+      `“${p.others[0]}”在这里只有一种普通意思，没有双关。`,
     ),
-  ),
+    t(
+      `“${p.others[1]}” sets up the joke's scene, but it does not carry two meanings at once.`,
+      `“${p.others[1]}”只是交代笑话的情境，并没有同时承载两种意思。`,
+    ),
+  ],
 }));
 
 /** punMeaningBank asks for the two meanings that make a joke funny. */
@@ -78,8 +82,8 @@ const punMeaningBank: readonly Item[] = puns.map((p) => {
     right,
     wrong,
     why: t(
-      `The joke needs both meanings: ${p.a}, and ${p.b}. The first fits what is going on, and the second gives the surprise.`,
-      `这个笑话两种意思都需要：“${p.a}”和“${p.b}”。一种符合正在发生的事，另一种带来意外。`,
+      `The joke needs both meanings: ${p.a}, and ${p.b}. The first fits what is going on, and the second gives the surprise.\n\n**Check.** Connect each meaning to a part of the joke—both “${p.a}” and “${p.b}” lock into the setup and punchline.`,
+      `这个笑话两种意思都需要：“${p.a}”和“${p.b}”。一种符合正在发生的事，另一种带来意外。\n\n**检验。** 把两种意思分别对应到笑话的前半句和笑点——两者缺一不可。`,
     ),
     whyNot: [
       t(
@@ -163,14 +167,19 @@ const sharedPatternBank: readonly Item[] = talePairs.map(([a, b], i) => {
     right: right[0],
     wrong: wrong.map((w) => w[0]),
     why: t(
-      `Both tales follow the pattern: **${right[0]}**. The heroes and places differ, but the shape of what happens is the same.`,
-      `两个故事都遵循这个模式：**${right[1]}**。主人公和地点不同，但事情的经过是同一种样子。`,
+      `Both tales follow the pattern: **${right[0]}**. The heroes and places differ, but the shape of what happens is the same.\n\n**Check.** Test “${right[0]}” against both the ${a.culture} tale and the ${b.culture} tale—it describes the plot shape of each one.`,
+      `两个故事都遵循这个模式：**${right[1]}**。主人公和地点不同，但事情的经过是同一种样子。\n\n**检验。** 用“${right[1]}”分别对照这两个故事——两篇的情节走向都完全吻合。`,
     ),
-    whyNot: wrong.map((w) =>
-      t(
-        `Neither tale follows the pattern “${w[0]}”. Ask what happens in both tales, not in one.`,
-        `两个故事都不是“${w[1]}”。要问两个故事中都发生了什么，而不是只看一个。`,
-      ),
+    whyNot: wrong.map((w, idx) =>
+      idx === 0
+        ? t(
+            `Neither tale matches “${w[0]}”—look at what actually happens to the main characters in both summaries.`,
+            `两个故事都不是“${w[1]}”——看看两段摘要里主人公真正经历了什么。`,
+          )
+        : t(
+            `“${w[0]}” belongs to a different group of folktales and does not fit these two stories.`,
+            `“${w[1]}”属于另一类民间故事模式，不符合这两个故事。`,
+          ),
     ),
   };
 });
@@ -192,8 +201,8 @@ const differenceBank: readonly Item[] = talePairs.map(([a, b], i) => {
     right,
     wrong,
     why: t(
-      `Each culture fills the pattern with its own hero and its own events: ${a.hero} ${a.how}, and ${b.hero} ${b.how}.`,
-      `每种文化都用自己的主人公和情节来填充这个模式。比较时，要把每个情节和讲它的那个故事对应起来。`,
+      `Each culture fills the pattern with its own hero and its own events: ${a.hero} ${a.how}, and ${b.hero} ${b.how}.\n\n**Check.** Match each culture's hero (${a.hero} and ${b.hero}) directly to their own summary above—neither detail is swapped or borrowed from outside.`,
+      `每种文化都用自己的主人公和情节来填充这个模式。比较时，要把每个情节和讲它的那个故事对应起来。\n\n**检验。** 把两个故事的主人公分别与上面的原文核对——没有对调，也没有混入第三个故事的情节。`,
     ),
     whyNot: [
       t(
@@ -261,15 +270,16 @@ const motiveBank: readonly Item[] = motives.map((m) => ({
   right: m.motive,
   wrong: [...m.wrong],
   why: t(
-    `${m.motive} The story does not say so in those words; the reader infers it from a detail: “${m.sentences[m.detail]}”`,
-    `${m.motive} 故事没有直接这样说；读者从一个细节推断出来：“${m.sentences[m.detail]}”`,
+    `${m.motive} The story does not say so in those words; the reader infers it from a detail: “${m.sentences[m.detail]}”\n\n**Check.** Link that clue directly to the final action—it explains why the character made that exact choice.`,
+    `${m.motive} 故事没有直接这样说；读者从一个细节推断出来：“${m.sentences[m.detail]}”\n\n**检验。** 把这条线索和最后的行为连起来看——它正好解释了角色为什么做出这个决定。`,
   ),
-  whyNot: m.wrong.map((w) =>
+  whyNot: [
+    t(`“${m.wrong[0]}” is not supported by any clue in these three sentences.`, `“${m.wrong[0]}”在这三句话里找不到任何线索支持。`),
     t(
-      `“${w}” does not fit the details. Nothing in the story points to it, and one detail points somewhere else.`,
-      `“${w}”和细节不符。故事中没有任何内容指向它，而且有一个细节指向别处。`,
+      `“${m.wrong[1]}” clashes with the key clue “${m.sentences[m.detail]}” in the passage.`,
+      `“${m.wrong[1]}”与文中的关键线索“${m.sentences[m.detail]}”不符。`,
     ),
-  ),
+  ],
 }));
 
 /** motiveDetailBank asks which sentence shows the motive. */
@@ -285,14 +295,19 @@ const motiveDetailBank: readonly Item[] = motives.map((m) => {
     right,
     wrong,
     why: t(
-      `“${right}” is the detail that explains the action. A motive is shown by what the character knows, wants or feels before acting.`,
-      `“${right}”是解释这个行为的细节。动机通过角色行动之前知道、想要或感受的东西表现出来。`,
+      `“${right}” is the detail that explains the action. A motive is shown by what the character knows, wants or feels before acting.\n\n**Check.** Imagine removing “${right}” from the story—without it, the character's reason for acting would no longer be clear.`,
+      `“${right}”是解释这个行为的细节。动机通过角色行动之前知道、想要或感受的东西表现出来。\n\n**检验。** 试着把“${right}”从故事里删掉——少了它，角色为什么这样做就说不通了。`,
     ),
-    whyNot: wrong.map((w) =>
-      t(
-        `“${w}” is part of the story, but it does not tell why the character acts.`,
-        `“${w}”是故事的一部分，但它没有说明角色为什么这样做。`,
-      ),
+    whyNot: wrong.map((w, idx) =>
+      idx === 0
+        ? t(
+            `“${w}” sets up the scene or names the action itself rather than the reason behind it.`,
+            `“${w}”只是交代背景或写出动作本身，并没有说明背后的原因。`,
+          )
+        : t(
+            `“${w}” does not reveal what drives the character—look for the sentence that shows what the character wants, knows, or feels.`,
+            `“${w}”没有揭示角色的驱动力——找找哪一句写出了角色想要、知道或感受到什么。`,
+          ),
     ),
   };
 });
@@ -363,8 +378,8 @@ const bestSummaryBank: readonly Item[] = stories.flatMap((s) =>
       right: s.best,
       wrong: kinds.map((k) => s[k]),
       why: t(
-        "The best summary names the main character, the problem, the key events and the ending in a few sentences, in its own words.",
-        "最好的摘要用几句话、用自己的语言，说出主要人物、问题、关键情节和结局。",
+        "The best summary names the main character, the problem, the key events and the ending in a few sentences, in its own words.\n\n**Check.** Verify all three summary rules: it covers the beginning, problem, and ending; skips tiny details like colors; and stays free of personal opinions.",
+        "最好的摘要用几句话、用自己的语言，说出主要人物、问题、关键情节和结局。\n\n**检验。** 核对摘要的三条标准：涵盖开头、问题和结局；省略颜色之类的小细节；不夹带个人评价。",
       ),
       whyNot: kinds.map((k) => t(faultWhy[k][0], faultWhy[k][1])),
     };
@@ -380,7 +395,10 @@ const faultBank: readonly Item[] = stories.flatMap((s) =>
       shown: `${s.text}\n\nSummary: ${s[kind]}`,
       right: en,
       wrong: others.map(([, w]) => w),
-      why: t(`The problem is ${en}. ${faultWhy[kind][0]}`, `问题在于${zh}。${faultWhy[kind][1]}`),
+      why: t(
+        `The problem is ${en}. ${faultWhy[kind][0]}\n\n**Check.** Compare the summary directly against the ending and wording of the story—this exact fault (${en}) stands out immediately.`,
+        `问题在于${zh}。${faultWhy[kind][1]}\n\n**检验。** 把摘要与原文的结局和措辞对照——“${zh}”这个问题一眼就能看出来。`,
+      ),
       whyNot: others.map(([k, w, wz]) =>
         t(`It is not ${w}. ${faultWhy[k][0]} This summary does not do that.`, `不是${wz}。${faultWhy[k][1]} 这个摘要并没有这样。`),
       ),
@@ -437,15 +455,19 @@ const imageBank: readonly Item[] = images.map((im) => ({
   right: im.right,
   wrong: [...im.wrong],
   why: t(
-    `It creates the image of ${im.right}. Imagery uses words of the senses, and often a comparison, to make a picture in the reader's mind.`,
-    `它营造出这样的画面：${im.right}。意象用感官词语，常常还用比较，在读者脑中形成画面。`,
+    `It creates the image of ${im.right}. Imagery uses words of the senses, and often a comparison, to make a picture in the reader's mind.\n\n**Check.** Picture the scene in “${im.phrase}” using your senses—it matches “${im.right}” rather than a literal or opposite reading.`,
+    `它营造出这样的画面：${im.right}。意象用感官词语，常常还用比较，在读者脑中形成画面。\n\n**检验。** 用感官想象“${im.phrase}”的画面——它对应的是“${im.right}”，而不是死板字面或相反的意思。`,
   ),
-  whyNot: im.wrong.map((w) =>
+  whyNot: [
     t(
-      `“${w}” takes the words too literally or gets the picture wrong. Think about what the words make you sense, not what they say word by word.`,
-      `“${w}”把字面意思理解得太死，或把画面弄错了。想想这些词让你感受到什么，而不是逐字的意思。`,
+      `“${im.wrong[0]}” reads the figurative comparison too literally instead of picturing the real sensory impression.`,
+      `“${im.wrong[0]}”把比喻按字面理解得太死，没有想出真正的感官画面。`,
     ),
-  ),
+    t(
+      `“${im.wrong[1]}” does not match the sights, sounds, or feelings suggested by the words in the phrase.`,
+      `“${im.wrong[1]}”与短语中词语唤起的视觉、听觉或触觉感受不符。`,
+    ),
+  ],
 }));
 
 const moodLines = `
@@ -495,15 +517,16 @@ const moodBank: readonly Item[] = moods.map((m) => ({
   right: m.right,
   wrong: [...m.wrong],
   why: t(
-    `The images give a feeling of **${m.right}**. Look at what the passage makes you see, hear, smell and feel: together these details set the mood.`,
-    `这些意象给人**${m.right}**的感觉。看看这段文字让你看到、听到、闻到和感受到什么：这些细节合在一起营造出气氛。`,
+    `The images give a feeling of **${m.right}**. Look at what the passage makes you see, hear, smell and feel: together these details set the mood.\n\n**Check.** List two or three sensory details from the passage—each one reinforces **${m.right}** rather than ${m.wrong[0]} or ${m.wrong[1]}.`,
+    `这些意象给人**${m.right}**的感觉。看看这段文字让你看到、听到、闻到和感受到什么：这些细节合在一起营造出气氛。\n\n**检验。** 挑出文中的两三个感官细节——它们都在强化**${m.right}**，而不是“${m.wrong[0]}”或“${m.wrong[1]}”。`,
   ),
-  whyNot: m.wrong.map((w) =>
+  whyNot: [
+    t(`The sensory details in the passage do not create a feeling of ${m.wrong[0]}.`, `文中的感官细节并没有营造出“${m.wrong[0]}”的气氛。`),
     t(
-      `None of the images point to ${w}. Name the sounds, sights and feelings in the passage, then ask what they add up to.`,
-      `没有一个意象指向“${w}”。说出文中的声音、景象和感受，再问问它们合起来是什么。`,
+      `Nothing in the sights or sounds here suggests ${m.wrong[1]}—combine all the clues to find the shared mood.`,
+      `这里的景象和声音都没有指向“${m.wrong[1]}”——把所有感官线索合起来看整体气氛。`,
     ),
-  ),
+  ],
 }));
 
 // Adages and proverbs.
@@ -546,15 +569,19 @@ const proverbMeaningBank: readonly Item[] = proverbs.flatMap((p) =>
     right: p.meaning,
     wrong: [...p.wrong],
     why: t(
-      `“${p.proverb}” means: ${p.meaning} A proverb is a short, old saying that gives advice; its meaning is a lesson about life, not about the things it names.`,
-      `“${p.proverb}”的意思是：${p.meaning} 谚语是给人忠告的简短古老的说法；它的意思是关于生活的道理，而不是关于它字面上提到的东西。`,
+      `“${p.proverb}” means: ${p.meaning} A proverb is a short, old saying that gives advice; its meaning is a lesson about life, not about the things it names.\n\n**Check.** Apply “${p.meaning}” to a real-life situation—it gives useful everyday advice, unlike the literal readings.`,
+      `“${p.proverb}”的意思是：${p.meaning} 谚语是给人忠告的简短古老的说法；它的意思是关于生活的道理，而不是关于它字面上提到的东西。\n\n**检验。** 把这个道理放回日常生活情境里——它给出了实用的忠告，而不是字面上的事。`,
     ),
-    whyNot: p.wrong.map((w) =>
+    whyNot: [
       t(
-        `“${w}” reads the proverb word by word, or twists its advice. A proverb's meaning is a lesson about life.`,
-        `“${w}”是逐字理解谚语，或者歪曲了它的忠告。谚语的意思是关于生活的道理。`,
+        `“${p.wrong[0]}” reads the proverb too literally, treating the image as a plain fact.`,
+        `“${p.wrong[0]}”按字面意思理解得太死，把比喻当成了字面事实。`,
       ),
-    ),
+      t(
+        `“${p.wrong[1]}” twists the proverb's advice instead of stating the life lesson it teaches.`,
+        `“${p.wrong[1]}”歪曲了这句谚语的忠告，不是它要传达的生活道理。`,
+      ),
+    ],
   })),
 );
 
@@ -609,8 +636,8 @@ const proverbFitBank: readonly Item[] = situations.map((s, i) => {
     right: p?.proverb ?? "",
     wrong: wrong.map((w) => w?.proverb ?? ""),
     why: t(
-      `“${p?.proverb}” fits: ${p?.meaning} The events of the story show this lesson.`,
-      `“${p?.proverb}”适合：${p?.meaning} 故事中的事情正说明了这个道理。`,
+      `“${p?.proverb}” fits: ${p?.meaning} The events of the story show this lesson.\n\n**Check.** Summarize the story's lesson in one sentence and compare it with “${p?.proverb}”—they state the same piece of wisdom.`,
+      `“${p?.proverb}”适合：${p?.meaning} 故事中的事情正说明了这个道理。\n\n**检验。** 用一句话概括这段故事的道理，再与“${p?.proverb}”对照——两者说的正是同一条智慧。`,
     ),
     whyNot: wrong.map((w) =>
       t(
@@ -630,6 +657,10 @@ export const taleTopics4: readonly TopicDef[] = [
       "A pun is funny because a word has two meanings or sounds like another word.",
       "双关语之所以好笑，是因为一个词有两种意思，或者听起来像另一个词。",
     ),
+    intro: t(
+      "“Why did the bicycle fall over? Because it was two-tired!” One phrase pulls your mind in two directions at once—having two tires and being too tired. Spotting the word that carries both meanings is how you unlock a pun.",
+      "“为什么自行车会倒？因为它 two-tired（有两个轮胎 / 太累了）！”一个短语同时把思路拉向两个方向。找出承载双层意思的关键词，就能看懂双关语的妙处。",
+    ),
     prerequisites: after("multiple-meaning-words", "homophones"),
     encompasses: [{ topic: "multiple-meaning-words", weight: 0.2 }],
     xp: 14,
@@ -639,8 +670,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "the-word-a-joke-turns-on",
         t("The Word a Joke Turns On", "笑话的关键词"),
         t(
-          "A **pun** is a joke that plays with a word. Most jokes of this kind turn on a single word or phrase: *Why are fish so smart? They live in schools.* To find it, ask which word makes you think of two things at once: here, *schools* of fish and the schools children go to.",
-          "**双关语**是玩弄词语的笑话。这类笑话大多靠一个词或短语制造笑点：*Why are fish so smart? They live in schools.* 要找到它，就问哪个词让你同时想到两样东西：这里是成群的鱼（schools of fish）和孩子们上的学校。",
+          "A **pun** is a joke that plays with a word. Most jokes of this kind turn on a single word or phrase: *Why are fish so smart? They live in schools.* To find it, ask which word makes you think of two things at once: here, *schools* of fish and the schools children go to.\n\n> **Watch out.** Do not pick a setup word like *fish* or *smart*—the pun word is the one that clicks into two different meanings or sounds.",
+          "**双关语**是玩弄词语的笑话。这类笑话大多靠一个词或短语制造笑点：*Why are fish so smart? They live in schools.* 要找到它，就问哪个词让你同时想到两样东西：这里是成群的鱼（schools of fish）和孩子们上的学校。\n\n> **注意。** 不要选 *fish*、*smart* 这类铺垫词——双关词一定是那个同时触发两种意思或谐音的词。",
         ),
         itemGenerator(punWordBank),
       ),
@@ -648,8 +679,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "the-two-meanings-of-a-pun",
         t("The Two Meanings of a Pun", "双关语的两种意思"),
         t(
-          "A pun needs **two meanings** at once. One fits the situation of the joke; the other is the surprise. Some puns use one word with two meanings (*bark*); others use two words that sound alike (*hoarse* and *horse*). Name both meanings to explain why the joke is funny.",
-          "双关语需要同时有**两种意思**。一种符合笑话的情境，另一种带来意外。有的双关语用一个有两种意思的词（*bark*），有的用两个发音相同的词（*hoarse* 和 *horse*）。说出两种意思，才能解释笑话为什么好笑。",
+          "A pun needs **two meanings** at once. One fits the situation of the joke; the other is the surprise. Some puns use one word with two meanings (*bark*); others use two words that sound alike (*hoarse* and *horse*). Name both meanings to explain why the joke is funny.\n\n> **Watch out.** Check *both* halves of the answer choice—a distractor often keeps one true meaning and slips a made-up or unrelated meaning into the other half.",
+          "双关语需要同时有**两种意思**。一种符合笑话的情境，另一种带来意外。有的双关语用一个有两种意思的词（*bark*），有的用两个发音相同的词（*hoarse* 和 *horse*）。说出两种意思，才能解释笑话为什么好笑。\n\n> **注意。** 选项的前后两半都要核对——干扰项常保留一个对的意思，另一半却塞进无关的解释。",
         ),
         itemGenerator(punMeaningBank),
       ),
@@ -662,6 +693,10 @@ export const taleTopics4: readonly TopicDef[] = [
       "Tales from many cultures share patterns, such as the clever small animal who outwits a strong one, or the quest in three tries.",
       "许多文化的故事都有共同的模式，比如聪明的小动物智胜强大的动物，或者三次尝试的探险。",
     ),
+    intro: t(
+      "In China, Ye Xian loses a golden slipper; in France, Cinderella leaves a glass slipper; in Egypt, an eagle drops Rhodopis's rose-red sandal. Across continents and centuries, cultures tell stories with the same underlying pattern in their own local colors.",
+      "在中国，叶限丢了金鞋；在法国，灰姑娘落下水晶鞋；在埃及，老鹰叼走了罗多皮斯的玫瑰红凉鞋。跨越山海与年代，不同文化常常用各自的色彩讲述同一个故事模式。",
+    ),
     prerequisites: after("comparing-two-stories"),
     encompasses: [],
     xp: 14,
@@ -671,8 +706,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "the-pattern-two-tales-share",
         t("The Pattern Two Tales Share", "两个故事共有的模式"),
         t(
-          "Folktales travel. People in many lands tell tales with the same **pattern**: a small, clever animal outwits a big, strong one; the youngest of three succeeds; kindness is rewarded and greed punished. To find the pattern, look past the names and places and ask what shape the events take in both tales.",
-          "民间故事会流传。许多地方的人讲着**模式**相同的故事：聪明的小动物智胜强大的动物；三个之中最小的成功了；善良得到奖赏，贪心受到惩罚。要找出模式，就要越过名字和地点，问两个故事的情节是什么样子。",
+          "Folktales travel. People in many lands tell tales with the same **pattern**: a small, clever animal outwits a big, strong one; the youngest of three succeeds; kindness is rewarded and greed punished. To find the pattern, look past the names and places and ask what shape the events take in both tales.\n\n> **Watch out.** Make sure the pattern fits *both* tales, not just one detail from the first story.",
+          "民间故事会流传。许多地方的人讲着**模式**相同的故事：聪明的小动物智胜强大的动物；三个之中最小的成功了；善良得到奖赏，贪心受到惩罚。要找出模式，就要越过名字和地点，问两个故事的情节是什么样子。\n\n> **注意。** 选出的模式必须同时符合*两个*故事，不能只套得上其中一个。",
         ),
         itemGenerator(sharedPatternBank),
       ),
@@ -680,8 +715,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "how-each-culture-tells-it",
         t("How Each Culture Tells It", "每种文化怎样讲述"),
         t(
-          "Each culture fills a shared pattern with its own heroes, animals and events: a spider in West Africa, a mouse deer in Malaysia, a rabbit in the American South. When you compare two tales, keep each detail with the tale it comes from.",
-          "每种文化都用自己的主人公、动物和情节来填充共同的模式：西非是蜘蛛，马来西亚是鼠鹿，美国南方是兔子。比较两个故事时，要让每个细节对应它所来自的故事。",
+          "Each culture fills a shared pattern with its own heroes, animals and events: a spider in West Africa, a mouse deer in Malaysia, a rabbit in the American South. When you compare two tales, keep each detail with the tale it comes from.\n\n> **Watch out.** Read carefully to catch swapped heroes or an event borrowed from a third tale not shown above.",
+          "每种文化都用自己的主人公、动物和情节来填充共同的模式：西非是蜘蛛，马来西亚是鼠鹿，美国南方是兔子。比较两个故事时，要让每个细节对应它所来自的故事。\n\n> **注意。** 仔细核对每个文化对应的主人公和情节，谨防选项把两个故事对调，或混入第三个故事的情节。",
         ),
         itemGenerator(differenceBank),
       ),
@@ -694,6 +729,10 @@ export const taleTopics4: readonly TopicDef[] = [
       "A character's actions come from what they want, feel or believe, which a reader infers from details.",
       "角色的行为来自他们想要的、感受到的或相信的东西，读者从细节中推断出来。",
     ),
+    intro: t(
+      "When Ben—who is terrified of heights—grabs the lowest tree branch to rescue his crying little sister's kite, the story never writes “he loved his sister.” You infer his motive from the clues around his action.",
+      "恐高的 Ben 看到妹妹因为风筝挂在树梢而哭泣，深吸一口气抓住最低的树枝往上爬——故事没直说“他很疼爱妹妹”，但你能从行动前后的细节推断出他的动机。",
+    ),
     prerequisites: ["characters"],
     encompasses: [{ topic: "making-inferences", weight: 0.2 }],
     xp: 14,
@@ -703,8 +742,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "the-motive-behind-an-action",
         t("The Motive Behind an Action", "行为背后的动机"),
         t(
-          "A **motive** is the reason a character acts: what they want, what they feel, or what they believe. Stories seldom name it. The reader infers it from details: *Leo's sister's birthday was on Saturday. When she walked in, he slid the drawing under his pillow.* Leo wants the drawing to be a surprise.",
-          "**动机**是角色行动的原因：他们想要什么、感受到什么或相信什么。故事很少直接说出来，读者要从细节中推断：*Leo's sister's birthday was on Saturday. When she walked in, he slid the drawing under his pillow.* Leo 想给姐姐一个惊喜。",
+          "A **motive** is the reason a character acts: what they want, what they feel, or what they believe. Stories seldom name it. The reader infers it from details: *Leo's sister's birthday was on Saturday. When she walked in, he slid the drawing under his pillow.* Leo wants the drawing to be a surprise.\n\n> **Watch out.** Base your inference on the clues actually in the passage—do not invent a reason the text never hints at.",
+          "**动机**是角色行动的原因：他们想要什么、感受到什么或相信什么。故事很少直接说出来，读者要从细节中推断：*Leo's sister's birthday was on Saturday. When she walked in, he slid the drawing under his pillow.* Leo 想给姐姐一个惊喜。\n\n> **注意。** 推断必须紧扣文中的线索——不要凭空脑补文章毫无暗示的原因。",
         ),
         itemGenerator(motiveBank),
       ),
@@ -712,8 +751,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "the-detail-that-shows-a-motive",
         t("The Detail That Shows a Motive", "显示动机的细节"),
         t(
-          "An inference must rest on the text. The sentence that shows a motive tells what the character knows, wants or feels before acting. The sentence that only tells what the character does is the action itself, not its reason.",
-          "推断必须以文本为依据。显示动机的句子告诉我们角色在行动前知道、想要或感受到什么。只讲角色做了什么的句子是行为本身，而不是原因。",
+          "An inference must rest on the text. The sentence that shows a motive tells what the character knows, wants or feels before acting (for example, *Last year Mei had missed the final word by one letter* explains why she practices every night). The sentence that only tells what the character does is the action itself, not its reason.\n\n> **Watch out.** Do not pick the sentence that merely repeats the character's action—pick the clue that explains *why* they did it.",
+          "推断必须以文本为依据。显示动机的句子告诉我们角色在行动前知道、想要或感受到什么（例如“去年小梅差一个字母错失最后一词”解释了她为什么每晚练习）。只讲角色做了什么的句子是行为本身，而不是原因。\n\n> **注意。** 不要选只重复动作本身的句子——要选解释“为什么这么做”的线索句。",
         ),
         itemGenerator(motiveDetailBank),
       ),
@@ -726,6 +765,10 @@ export const taleTopics4: readonly TopicDef[] = [
       "A summary of a story names the main character, the problem, the key events and the ending in a few sentences, without small details or opinions.",
       "故事的摘要用几句话说出主要人物、问题、关键情节和结局，不写小细节，也不写个人看法。",
     ),
+    intro: t(
+      "If a friend asks what *The Crow and the Pitcher* is about, you do not describe the color of every pebble or say “crows are the coolest birds”—you state the problem, the key action, and how it ends in one or two crisp sentences.",
+      "如果朋友问《乌鸦喝水》讲了什么，你不会细数每颗石子的颜色，也不会说“乌鸦是最棒的鸟”——你会用一两句简洁的话说出难题、关键做法和结局。",
+    ),
     prerequisites: after("retelling-key-events"),
     encompasses: [{ topic: "sequence-in-texts", weight: 0.2 }],
     xp: 14,
@@ -735,8 +778,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "the-best-summary-of-a-story",
         t("The Best Summary of a Story", "故事最好的摘要"),
         t(
-          "A **summary** tells a story in a few sentences. It names the main character, the problem, the key events and how it ends, in the reader's own words. It is much shorter than the story, so small details are left out, and it gives no opinion of the story.",
-          "**摘要**用几句话讲述一个故事。它用读者自己的话说出主要人物、问题、关键情节和结局。它比原文短得多，所以省略小细节，也不评价故事。",
+          "A **summary** tells a story in a few sentences. It names the main character, the problem, the key events and how it ends, in the reader's own words. For example, for Kai's kite contest: *Kai's kite kept crashing until his grandmother helped him add a longer tail. On the windy day of the contest, his kite flew highest and won first prize.*\n\n> **Watch out.** Reject any summary that stops before the ending, piles on tiny details (shirt colors, times), or adds “I think this is the best story.”",
+          "**摘要**用几句话讲述一个故事。它用读者自己的话说出主要人物、问题、关键情节和结局。例如小凯放风筝的故事：“小凯的风筝老是坠落，直到奶奶帮他加长了尾巴。比赛那天风很大，他的风筝飞得最高，拿了第一名。”\n\n> **注意。** 排除任何没写结局、堆砌小细节（衣服颜色、具体钟点）或夹带“我觉得这故事太棒了”的选项。",
         ),
         itemGenerator(bestSummaryBank),
       ),
@@ -744,8 +787,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "why-a-summary-falls-short",
         t("Why a Summary Falls Short", "摘要哪里不足"),
         t(
-          "A summary can fail in three ways. It can be crowded with **small details**, such as colors and times. It can give the reader's **opinion** instead of the story. Or it can **stop before the ending**, so the problem is never solved. Name the fault to fix it.",
-          "摘要可能有三种问题：塞满了颜色、时间之类的**小细节**；写的是读者的**看法**而不是故事；或者**在结局之前就停了**，问题始终没有解决。说出问题所在，才能改正它。",
+          "A summary can fail in three ways. It can be crowded with **small details**, such as colors and times. It can give the reader's **opinion** instead of the story (*I think*, *the cutest*). Or it can **stop before the ending**, so the problem is never solved. Name the fault to fix it.\n\n> **Watch out.** Read the summary all the way to its last word—a smooth beginning can still hide a missing ending.",
+          "摘要可能有三种问题：塞满了颜色、时间之类的**小细节**；写的是读者的**看法**而不是故事（如 *I think*、*the cutest*）；或者**在结局之前就停了**，问题始终没有解决。说出问题所在，才能改正它。\n\n> **注意。** 一定把摘要读到最后一个词——开头写得再通顺，也可能漏掉了结局。",
         ),
         itemGenerator(faultBank),
       ),
@@ -758,6 +801,10 @@ export const taleTopics4: readonly TopicDef[] = [
       "Imagery is language that makes a picture, a sound or a feeling in the reader's mind.",
       "意象是在读者脑中形成画面、声音或感觉的语言。",
     ),
+    intro: t(
+      "“The fog crept over the hills on soft gray feet.” You never see actual feet, yet your mind instantly pictures quiet, slow-moving mist. Writers use sensory language—imagery—to let readers see, hear, smell, and feel a scene.",
+      "“雾迈着轻柔的灰脚丫悄悄爬过山丘。”画面里并没有真正的脚，但脑海立刻浮现出悄无声息蔓延的浓雾。作者用意象调动感官，让读者看见、听见、闻到并感受到场景。",
+    ),
     prerequisites: after("sensory-words", "what-a-poem-is-about"),
     encompasses: [{ topic: "sensory-words", weight: 0.2 }],
     xp: 14,
@@ -767,8 +814,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "the-image-a-phrase-creates",
         t("The Image a Phrase Creates", "短语营造的意象"),
         t(
-          "**Imagery** is language that appeals to the senses: sight, sound, smell, taste and touch. *The kettle shrieked on the stove* makes you hear a loud, high whistle. Writers often use comparisons, so do not read the words literally: a kettle cannot scream, but the image tells you how it sounds.",
-          "**意象**是诉诸感官的语言：视觉、听觉、嗅觉、味觉和触觉。*The kettle shrieked on the stove* 让你听到尖锐的哨声。作者常用比较，所以不要只按字面理解：水壶不会尖叫，但这个意象告诉你它的声音是什么样的。",
+          "**Imagery** is language that appeals to the senses: sight, sound, smell, taste and touch. *The kettle shrieked on the stove* makes you hear a loud, high whistle. Writers often use comparisons, so do not read the words literally: a kettle cannot scream, but the image tells you how it sounds.\n\n> **Watch out.** Avoid literal traps—*silver feathers of frost on the window* means icy patterns on glass, not a real silver bird outside.",
+          "**意象**是诉诸感官的语言：视觉、听觉、嗅觉、味觉和触觉。*The kettle shrieked on the stove* 让你听到尖锐的哨声。作者常用比较，所以不要只按字面理解：水壶不会尖叫，但这个意象告诉你它的声音是什么样的。\n\n> **注意。** 避开字面陷阱——“窗上的银色霜羽”指的是玻璃上羽毛状的冰花，而不是窗外停着一只银鸟。",
         ),
         itemGenerator(imageBank),
       ),
@@ -776,8 +823,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "the-feeling-imagery-gives",
         t("The Feeling Imagery Gives", "意象带来的感觉"),
         t(
-          "Images together create a **mood**, the feeling a passage gives the reader. Howling wind, scraping branches and a banging door make you afraid; warm bread and humming make you feel cozy. To name the mood, list the images, then ask what feeling they share.",
-          "意象合在一起营造出**气氛**，也就是一段文字给读者的感觉。呼啸的风、刮擦的树枝和砰砰作响的门让人害怕；温暖的面包和哼歌声让人感到温馨。要说出气氛，先列出意象，再问它们有什么共同的感觉。",
+          "Images together create a **mood**, the feeling a passage gives the reader. Howling wind, scraping branches and a banging door make you afraid; warm bread and humming make you feel cozy. To name the mood, list the images, then ask what feeling they share.\n\n> **Watch out.** Look at *all* the images together—one word like *light* can feel cozy in a kitchen, yet eerie when it is a lone bobbing light on a dark lake.",
+          "意象合在一起营造出**气氛**，也就是一段文字给读者的感觉。呼啸的风、刮擦的树枝和砰砰作响的门让人害怕；温暖的面包和哼歌声让人感到温馨。要说出气氛，先列出意象，再问它们有什么共同的感觉。\n\n> **注意。** 要把*所有*意象合起来看——同样是“灯光”，厨房里的灯光温馨，漆黑湖面远处摇曳的孤灯却营造出神秘感。",
         ),
         itemGenerator(moodBank),
       ),
@@ -790,6 +837,10 @@ export const taleTopics4: readonly TopicDef[] = [
       "A proverb is a short old saying that gives advice, such as Practice makes perfect.",
       "谚语是给人忠告的简短古老的说法，比如 Practice makes perfect（熟能生巧）。",
     ),
+    intro: t(
+      "When someone warns *Don't count your chickens before they hatch*, they are rarely talking about a barn full of eggs—they are advising you not to celebrate a win before it actually happens. Proverbs pack timeless life advice into vivid, memorable sayings.",
+      "有人提醒你 *Don't count your chickens before they hatch*（蛋还没孵出别先数小鸡）时，说的多半不是鸡窝，而是劝你事情没成别过早高兴。谚语把代代相传的人生忠告装进了生动好记的短句里。",
+    ),
     prerequisites: ["idioms"],
     encompasses: [{ topic: "idioms", weight: 0.2 }],
     xp: 14,
@@ -799,8 +850,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "what-a-proverb-means",
         t("What a Proverb Means", "谚语的意思"),
         t(
-          "A **proverb**, or adage, is a short old saying that gives advice about life: *Look before you leap* means think before you act. Its words name everyday things, chickens, eggs, birds, but its meaning is a lesson. Ask what advice the saying would give a person.",
-          "**谚语**或格言是关于生活的简短古老的忠告：*Look before you leap* 的意思是三思而后行。它的字面说的是鸡、蛋、鸟之类的日常事物，但意思是一个道理。问问这句话会给人什么忠告。",
+          "A **proverb**, or adage, is a short old saying that gives advice about life: *Look before you leap* means think before you act. Its words name everyday things, chickens, eggs, birds, but its meaning is a lesson. Ask what advice the saying would give a person.\n\n> **Watch out.** Reject any choice that reads the proverb literally (about real birds, clouds, or book covers)—a proverb always teaches a broader lesson about life.",
+          "**谚语**或格言是关于生活的简短古老的忠告：*Look before you leap* 的意思是三思而后行。它的字面说的是鸡、蛋、鸟之类的日常事物，但意思是一个道理。问问这句话会给人什么忠告。\n\n> **注意。** 排除按字面意思理解的选项（真的谈鸟、云或书皮）——谚语讲的总是更广的人生道理。",
         ),
         itemGenerator(proverbMeaningBank),
       ),
@@ -808,8 +859,8 @@ export const taleTopics4: readonly TopicDef[] = [
         "the-proverb-that-fits",
         t("The Proverb That Fits", "适合的谚语"),
         t(
-          "Writers of life stories use proverbs to sum up a lesson. To choose the one that fits, first say what the events teach in your own words, *she kept trying until it worked*, then find the proverb with that meaning: *Practice makes perfect*.",
-          "写人生故事的作者用谚语来总结道理。要选出合适的谚语，先用自己的话说出这些事情说明了什么，*she kept trying until it worked*，再找出意思相同的谚语：*Practice makes perfect*。",
+          "Writers of life stories use proverbs to sum up a lesson. To choose the one that fits, first say what the events teach in your own words, *she kept trying until it worked*, then find the proverb with that meaning: *Practice makes perfect*.\n\n> **Watch out.** Match the *lesson* of the whole story, not a surface word—a story about a farmer planting three crops fits *Don't put all your eggs in one basket*, even though no eggs appear.",
+          "写人生故事的作者用谚语来总结道理。要选出合适的谚语，先用自己的话说出这些事情说明了什么，*she kept trying until it worked*，再找出意思相同的谚语：*Practice makes perfect*。\n\n> **注意。** 要匹配整个故事的*道理*，而不是表面字眼——农夫种三种庄稼防旱灾，虽然没提鸡蛋，却正合“别把所有鸡蛋放在一个篮子里”。",
         ),
         itemGenerator(proverbFitBank),
       ),

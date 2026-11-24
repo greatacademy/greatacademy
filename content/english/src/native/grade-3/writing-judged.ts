@@ -19,7 +19,10 @@ const quoted = (model: string) =>
     .map((line) => (line ? `> ${line}` : ">"))
     .join("\n");
 
-const onePiece = (model: string): Text => t(`One good answer:\n\n${quoted(model)}`, `一个好的答案：\n\n${quoted(model)}`);
+const checkedPiece =
+  (checkEn: string, checkZh: string) =>
+  (model: string): Text =>
+    t(`One good answer:\n\n${quoted(model)}\n\n**Check.** ${checkEn}`, `一个好的答案：\n\n${quoted(model)}\n\n**检验。**${checkZh}`);
 
 const letterBank: readonly WritingItem[] = [
   {
@@ -392,6 +395,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
       "Write a letter to a friend or relative about a place you know, with all its parts, a clear reason and details that help the reader picture the place.",
       "给朋友或亲戚写一封信，介绍你熟悉的一个地方，要有书信的各个部分、明确的写信目的，以及帮助读者想象这个地方的细节。",
     ),
+    intro: t(
+      "Imagine telling a cousin far away about Willow Park—not just saying *it is nice*, but describing the wooden bridge, the ducks on the pond, and the cherry petals floating on the water. A friendly letter combines five clear parts with vivid details so your reader can picture the place.",
+      "想象一下给远方的表姐介绍 Willow Park——不只是说 *it is nice*，而是写出木桥、池塘里的鸭子和水面上漂浮的樱花瓣。一封好书信把齐全的五个部分和生动的细节结合在一起，让收信人眼前浮现出那个地方。",
+    ),
     prerequisites: ["parts-of-a-friendly-letter", "writing-a-paragraph"],
     encompasses: [{ topic: "parts-of-a-friendly-letter", weight: 0.3 }],
     xp: 22,
@@ -402,8 +409,8 @@ export const writingJudgedTopics: readonly TopicDef[] = [
         "a-letter-with-all-its-parts",
         t("A Letter with All Its Parts", "各部分齐全的书信"),
         t(
-          "A friendly letter has five parts, always in the same order. The **date** goes at the top. The **greeting**, such as *Dear Sofia,*, names the reader. The **body** says what you want to tell. The **closing**, such as *Love,* or *Your friend,*, says goodbye, and your **signature**, your name, goes last.\n\nA letter also has a **reason**: here, to tell the reader about a place you know. Keep the body on that reason from start to finish.",
-          "书信有五个部分，顺序总是一样的。**日期**写在最上面。**称呼**（比如 *Dear Sofia,*）说出收信人。**正文**写你想告诉对方的事。**结束语**（比如 *Love,* 或 *Your friend,*）用来告别，最后是你的**签名**，也就是你的名字。\n\n书信还有一个**目的**：这里是向收信人介绍你熟悉的一个地方。正文从头到尾都要围绕这个目的。",
+          "A friendly letter has five parts, always in the same order. The **date** goes at the top. The **greeting**, such as *Dear Sofia,*, names the reader. The **body** says what you want to tell. The **closing**, such as *Love,* or *Your friend,*, says goodbye, and your **signature**, your name, goes last.\n\nA letter also has a **reason**: here, to tell the reader about a place you know. Keep the body on that reason from start to finish.\n\n> **Watch out.** Do not forget the commas after the greeting (*Dear Sofia,*) and after the closing (*Love,*), and do not leave off the date at the top.",
+          "书信有五个部分，顺序总是一样的。**日期**写在最上面。**称呼**（比如 *Dear Sofia,*）说出收信人。**正文**写你想告诉对方的事。**结束语**（比如 *Love,* 或 *Your friend,*）用来告别，最后是你的**签名**，也就是你的名字。\n\n书信还有一个**目的**：这里是向收信人介绍你熟悉的一个地方。正文从头到尾都要围绕这个目的。\n\n> **注意。**别忘了称呼（*Dear Sofia,*）和结束语（*Love,*）后面的逗号，也别漏掉最上面的日期。",
         ),
         writingGenerator(
           t(
@@ -413,15 +420,18 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           letterBank,
           ["g3-letter-parts", "g3-letter-purpose"],
           { minWords: 50, maxChars: 1800 },
-          onePiece,
+          checkedPiece(
+            "Count all five parts in order from top to bottom—date, greeting with a comma, body, closing with a comma, and signature—and check that every sentence in the body stays on that one place.",
+            "从上到下数一遍五个部分——日期、带逗号的称呼、正文、带逗号的结束语和签名——再检查正文里的每一句是否都围绕这个地方。",
+          ),
         ),
       ),
       point(
         "helping-the-reader-picture-it",
         t("Helping the Reader Picture It", "帮助读者想象"),
         t(
-          "Your reader has never seen the place, so **details** must show it. Say what is there and what it looks, sounds or smells like: *a round pond with ducks*, *cherry trees that turn pink in spring*. Then tell what you do there.\n\nA letter that only says *the park is nice* gives the reader nothing to picture. Choose two or three details that make the place different from every other place.",
-          "收信人从来没见过这个地方，所以要用**细节**把它展现出来。说出那里有什么，它看起来、听起来或闻起来是什么样的：*a round pond with ducks*、*cherry trees that turn pink in spring*。再说说你在那里做什么。\n\n只写 *the park is nice* 的信，什么画面也没有给读者。挑选两三个细节，让这个地方和别的地方都不一样。",
+          "Your reader has never seen the place, so **details** must show it. Say what is there and what it looks, sounds or smells like: *a round pond with ducks*, *cherry trees that turn pink in spring*. Then tell what you do there.\n\nA letter that only says *the park is nice* gives the reader nothing to picture. Choose two or three details that make the place different from every other place.\n\n> **Watch out.** Replace vague words like *nice*, *fun*, or *cool* with concrete details a reader can see, hear, or smell.",
+          "收信人从来没见过这个地方，所以要用**细节**把它展现出来。说出那里有什么，它看起来、听起来或闻起来是什么样的：*a round pond with ducks*、*cherry trees that turn pink in spring*。再说说你在那里做什么。\n\n只写 *the park is nice* 的信，什么画面也没有给读者。挑选两三个细节，让这个地方和别的地方都不一样。\n\n> **注意。**把 *nice*、*fun*、*cool* 这样笼统的词换成具体细节，让读者能看到、听到或闻到。",
         ),
         writingGenerator(
           t(
@@ -431,7 +441,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           letterBank,
           ["w4-gives-detail", "g3-letter-purpose"],
           { minWords: 50, maxChars: 1800 },
-          onePiece,
+          checkedPiece(
+            "Underline two or three concrete details in your body that tell what the place looks, sounds, or smells like—someone who has never been there should be able to draw a picture from your words.",
+            "在正文里画出两三个具体的细节，看看它们有没有写出这个地方看起来、听起来或闻起来的样子——没去过的人读完应该能画出画面。",
+          ),
         ),
       ),
     ],
@@ -443,6 +456,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
       "Write a paragraph that teaches facts from a set of notes: a topic sentence, the facts in your own words, and a closing.",
       "根据一组笔记写一段介绍事实的段落：一个主题句，用自己的话写出的事实，以及一个结尾句。",
     ),
+    intro: t(
+      "Five bullet notes about honeybees—hives, queen, nectar, honey, pollen—can grow into a clear paragraph that teaches a reader how bees live and work. Turning notes into sentences in your own words is how writers share facts.",
+      "关于蜜蜂的五条简短笔记——蜂巢、蜂王、花蜜、蜂蜜、花粉——可以变成一段清楚的文字，向读者介绍蜜蜂怎样生活和工作。把笔记变成自己的完整句子，就是作者分享事实的方法。",
+    ),
     prerequisites: ["writing-a-paragraph", "taking-notes-from-a-text", "grouping-related-facts"],
     encompasses: [{ topic: "taking-notes-from-a-text", weight: 0.3 }],
     xp: 22,
@@ -453,8 +470,8 @@ export const writingJudgedTopics: readonly TopicDef[] = [
         "from-notes-to-sentences",
         t("From Notes to Sentences", "从笔记到句子"),
         t(
-          "Notes keep facts in a few words: *hump stores fat, not water*. A paragraph turns each note into a **whole sentence** of your own: *A camel's hump is full of fat, not water.*\n\nStart with a **topic sentence** that tells what the whole paragraph is about, such as *Camels are built for life in hot deserts.* Then use the notes, and only facts that the notes give.",
-          "笔记用几个词记下事实：*hump stores fat, not water*。段落要把每条笔记变成你自己的**完整句子**：*A camel's hump is full of fat, not water.*\n\n先写一个**主题句**，说明整段写的是什么，比如 *Camels are built for life in hot deserts.* 然后使用笔记里的内容，只写笔记给出的事实。",
+          "Notes keep facts in a few words: *hump stores fat, not water*. A paragraph turns each note into a **whole sentence** of your own: *A camel's hump is full of fat, not water.*\n\nStart with a **topic sentence** that tells what the whole paragraph is about, such as *Camels are built for life in hot deserts.* Then use the notes, and only facts that the notes give.\n\n> **Watch out.** Do not leave bullet phrases as fragments, and do not invent extra facts that are not in the notes.",
+          "笔记用几个词记下事实：*hump stores fat, not water*。段落要把每条笔记变成你自己的**完整句子**：*A camel's hump is full of fat, not water.*\n\n先写一个**主题句**，说明整段写的是什么，比如 *Camels are built for life in hot deserts.* 然后使用笔记里的内容，只写笔记给出的事实。\n\n> **注意。**不要把笔记短语直接当成句子，也不要编造笔记里没有的事实。",
         ),
         writingGenerator(
           t(
@@ -464,15 +481,18 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           notesBank,
           ["w4-topic-sentence", "g3-facts-from-notes"],
           { minWords: 45, maxChars: 1500 },
-          onePiece,
+          checkedPiece(
+            "Check each bullet point in the notes against your paragraph—every fact should appear as a complete sentence, opening with a clear topic sentence.",
+            "把笔记里的每一条逐一对照你的段落——每个事实都应写成完整的句子，并以清晰的主题句开头。",
+          ),
         ),
       ),
       point(
         "facts-that-support-and-a-closing",
         t("Facts That Support, and a Closing", "支持要点的事实和结尾"),
         t(
-          "Every fact in the paragraph should **support** the topic sentence. Group facts that go together, such as the parts of a camel that keep out sand, and put them next to each other.\n\nEnd with a **closing sentence** that sums up the point in new words: *All of these parts help camels survive where few other animals can.*",
-          "段落里的每个事实都要**支持**主题句。把相关的事实放在一起，比如骆驼身上防沙的部位，要一个挨着一个写。\n\n最后用一个**结尾句**，换个说法总结要点：*All of these parts help camels survive where few other animals can.*",
+          "Every fact in the paragraph should **support** the topic sentence. Group facts that go together, such as the parts of a camel that keep out sand, and put them next to each other.\n\nEnd with a **closing sentence** that sums up the point in new words: *All of these parts help camels survive where few other animals can.*\n\n> **Watch out.** Do not stop right after the last bullet fact—add a closing sentence that wraps up the whole paragraph in new words.",
+          "段落里的每个事实都要**支持**主题句。把相关的事实放在一起，比如骆驼身上防沙的部位，要一个挨着一个写。\n\n最后用一个**结尾句**，换个说法总结要点：*All of these parts help camels survive where few other animals can.*\n\n> **注意。**不要写完最后一条笔记就戛然而止——补上一句换种说法总结全段的结尾句。",
         ),
         writingGenerator(
           t(
@@ -482,7 +502,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           notesBank,
           ["w4-supports-point", "w4-concludes", "g3-facts-from-notes"],
           { minWords: 45, maxChars: 1500 },
-          onePiece,
+          checkedPiece(
+            "Read your first and last sentences side by side—the last sentence should sum up the main idea in fresh words, with every middle sentence supporting it.",
+            "把第一句和最后一句并排读一遍——最后一句应换种说法总结中心意思，中间每一句都为它服务。",
+          ),
         ),
       ),
     ],
@@ -494,6 +517,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
       "Write a short fable with animal characters: an opening, a problem, a choice that shows each character's nature, an ending and a moral in one sentence.",
       "写一则以动物为角色的短寓言：要有开头、问题、能表现每个角色性格的选择、结尾，以及一句话的寓意。",
     ),
+    intro: t(
+      "A goat and a sheep butt heads on a narrow bridge until one suggests stepping over the other—and both reach the sweet grass safely. A fable uses animal characters, one sharp problem, and a one-sentence moral to teach a lasting lesson.",
+      "山羊和绵羊在窄桥上互相顶撞，直到一方提议趴下让对方跨过去——两只动物都安全吃到了鲜草。寓言用动物角色、一个鲜明的问题和一句话的寓意，讲出一个耐人寻味的道理。",
+    ),
     prerequisites: ["writing-a-paragraph", "lesson-of-a-story", "choosing-a-story-opening"],
     encompasses: [{ topic: "choosing-a-story-opening", weight: 0.2 }],
     xp: 22,
@@ -504,8 +531,8 @@ export const writingJudgedTopics: readonly TopicDef[] = [
         "characters-and-a-problem",
         t("Characters and a Problem", "角色和问题"),
         t(
-          "A **fable** is a short story with **animal characters** who act like people. Each main character has one strong quality that shows in what it does: a proud rabbit boasts, a greedy squirrel takes everything.\n\nThe opening tells who and where, and soon a **problem** comes: a danger, a quarrel or a choice. The character's quality decides what it does about the problem.",
-          "**寓言**是一种短故事，里面的**动物角色**像人一样行事。每个主要角色都有一个鲜明的特点，从它的行为中表现出来：骄傲的兔子爱吹牛，贪心的松鼠什么都想要。\n\n开头说出是谁、在哪里，很快就出现一个**问题**：一个危险、一场争吵或者一个选择。角色的特点决定了它怎样应对这个问题。",
+          "A **fable** is a short story with **animal characters** who act like people. Each main character has one strong quality that shows in what it does: a proud rabbit boasts, a greedy squirrel takes everything.\n\nThe opening tells who and where, and soon a **problem** comes: a danger, a quarrel or a choice. The character's quality decides what it does about the problem.\n\n> **Watch out.** Show the animal's trait through its words and actions instead of only telling the reader *he was proud*.",
+          "**寓言**是一种短故事，里面的**动物角色**像人一样行事。每个主要角色都有一个鲜明的特点，从它的行为中表现出来：骄傲的兔子爱吹牛，贪心的松鼠什么都想要。\n\n开头说出是谁、在哪里，很快就出现一个**问题**：一个危险、一场争吵或者一个选择。角色的特点决定了它怎样应对这个问题。\n\n> **注意。**用动物的言行表现它的性格，不要只空洞地写一句 *he was proud*。",
         ),
         writingGenerator(
           t(
@@ -515,15 +542,18 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           fableBank,
           ["g3-fable-characters", "g3-fable-problem"],
           { minWords: 60, maxChars: 1800 },
-          onePiece,
+          checkedPiece(
+            "Point to one action that shows your animal's trait and one sentence where the problem begins—a reader should see both clearly.",
+            "在你的寓言里找出一个体现动物性格的举动，以及问题出现的那一句——读者应该能一眼看出这两点。",
+          ),
         ),
       ),
       point(
         "an-ending-and-a-moral",
         t("An Ending and a Moral", "结尾和寓意"),
         t(
-          "A fable ends when the problem is settled, and the ending usually shows a character learning something: the proud rabbit is saved by the mice he laughed at.\n\nThen comes the **moral**, the lesson, in one sentence: *Moral: Even the proudest need help from others.* The moral must fit what happened. If the story shows that sharing pays, the moral cannot be about being brave.",
-          "问题解决时寓言就结束了，结尾通常会表现某个角色学到了什么：骄傲的兔子被他嘲笑过的老鼠救了。\n\n接着是**寓意**，也就是一句话的道理：*Moral: Even the proudest need help from others.* 寓意必须符合故事里发生的事。如果故事说明分享有好处，寓意就不能是关于勇敢的。",
+          "A fable ends when the problem is settled, and the ending usually shows a character learning something: the proud rabbit is saved by the mice he laughed at.\n\nThen comes the **moral**, the lesson, in one sentence: *Moral: Even the proudest need help from others.* The moral must fit what happened. If the story shows that sharing pays, the moral cannot be about being brave.\n\n> **Watch out.** Test your moral against the ending—if the story did not actually prove that lesson, rewrite either the ending or the moral so they match.",
+          "问题解决时寓言就结束了，结尾通常会表现某个角色学到了什么：骄傲的兔子被他嘲笑过的老鼠救了。\n\n接着是**寓意**，也就是一句话的道理：*Moral: Even the proudest need help from others.* 寓意必须符合故事里发生的事。如果故事说明分享有好处，寓意就不能是关于勇敢的。\n\n> **注意。**用结尾检验你的寓意——如果故事本身并没有证明这个道理，就要修改结尾或寓意，让两者完全一致。",
         ),
         writingGenerator(
           t(
@@ -533,7 +563,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           fableBank,
           ["g35-narrative-ending", "g3-fable-moral"],
           { minWords: 60, maxChars: 1800 },
-          onePiece,
+          checkedPiece(
+            "Check that the problem is settled before the final line, and read your one-sentence moral aloud to make sure it matches what the character learned.",
+            "检查问题是否在最后一行前已经解决，再朗读一遍你的一句话寓意，确认它正好对应角色学到的道理。",
+          ),
         ),
       ),
     ],
@@ -545,6 +578,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
       "Answer a question about a passage in two or three complete sentences: turn the question into the start of the answer, answer it correctly and give a detail from the passage.",
       "用两三个完整的句子回答关于一段文字的问题：把问题变成答案的开头，正确地回答，并给出文中的一个细节。",
     ),
+    intro: t(
+      "When asked *Why do bears sleep through the winter?*, writing just *no food* leaves the reader guessing without the question. Turning the question into *Bears sleep through the winter because there is very little food* and adding a detail from the text makes a complete, clear answer.",
+      "面对问题 *Why do bears sleep through the winter?*，如果只写 *no food*，不看问题的人会一头雾水。把问题变成 *Bears sleep through the winter because there is very little food*，再补上文中的一个细节，才是完整清楚的回答。",
+    ),
     prerequisites: ["answering-questions-from-the-text", "complete-sentences-and-fragments"],
     encompasses: [{ topic: "answering-questions-from-the-text", weight: 0.3 }],
     xp: 22,
@@ -555,8 +592,8 @@ export const writingJudgedTopics: readonly TopicDef[] = [
         "turning-the-question-around",
         t("Turning the Question Around", "把问题变成答案"),
         t(
-          "A good written answer starts by **turning the question into a sentence**. For *Why do camels have long eyelashes?* begin: *Camels have long eyelashes to …* A reader then knows what the answer is about without seeing the question.\n\nThen answer what was asked, using the passage. A sentence that is true but answers a different question does not count.",
-          "好的书面回答一开头就**把问题变成句子**。对于 *Why do camels have long eyelashes?*，可以这样开头：*Camels have long eyelashes to …* 这样，读者不看问题也知道答案在讲什么。\n\n然后根据文章回答所问的问题。一句话即使是真的，如果回答的是别的问题，也不算数。",
+          "A good written answer starts by **turning the question into a sentence**. For *Why do camels have long eyelashes?* begin: *Camels have long eyelashes to …* A reader then knows what the answer is about without seeing the question.\n\nThen answer what was asked, using the passage. A sentence that is true but answers a different question does not count.\n\n> **Watch out.** Do not start your first sentence with *Because …*—restate the subject from the question first so it is a complete sentence.",
+          "好的书面回答一开头就**把问题变成句子**。对于 *Why do camels have long eyelashes?*，可以这样开头：*Camels have long eyelashes to …* 这样，读者不看问题也知道答案在讲什么。\n\n然后根据文章回答所问的问题。一句话即使是真的，如果回答的是别的问题，也不算数。\n\n> **注意。**第一句不要直接用 *Because …* 开头——先把问题里的主语写出来，组成完整的句子。",
         ),
         writingGenerator(
           t(
@@ -566,15 +603,18 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           answerBank,
           ["g3-answer-restates", "g3-answer-correct"],
           { minWords: 20, maxChars: 900 },
-          onePiece,
+          checkedPiece(
+            "Cover the question and read only your answer—a reader should still know what was asked and see the direct answer in complete sentences.",
+            "盖住题目，只读你的回答——读者应该依然能明白问的是什么，并看到完整句子写出的直接回答。",
+          ),
         ),
       ),
       point(
         "backing-the-answer-with-a-detail",
         t("Backing the Answer with a Detail", "用细节支持答案"),
         t(
-          "After the answer, give **a detail from the passage** that shows it is right. If the answer is that camels' lashes keep out sand, the detail might be that *strong winds blow sand through the air*.\n\nThe detail must come from the passage, not from what you guess, and it must support the answer you gave.",
-          "回答之后，给出**文中的一个细节**来说明答案是对的。如果答案是骆驼的睫毛能挡住沙子，细节可以是 *strong winds blow sand through the air*。\n\n细节必须来自文章，而不是你的猜测，而且必须支持你给出的答案。",
+          "After the answer, give **a detail from the passage** that shows it is right. If the answer is that camels' lashes keep out sand, the detail might be that *strong winds blow sand through the air*.\n\nThe detail must come from the passage, not from what you guess, and it must support the answer you gave.\n\n> **Watch out.** Do not add a random fact from the passage—check that your detail actually backs up your answer to this question.",
+          "回答之后，给出**文中的一个细节**来说明答案是对的。如果答案是骆驼的睫毛能挡住沙子，细节可以是 *strong winds blow sand through the air*。\n\n细节必须来自文章，而不是你的猜测，而且必须支持你给出的答案。\n\n> **注意。**不要随便抄一句文中的事实——要确认这个细节真的能证明你的回答。",
         ),
         writingGenerator(
           t(
@@ -584,7 +624,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           answerBank,
           ["g3-answer-correct", "g3-answer-detail"],
           { minWords: 20, maxChars: 900 },
-          onePiece,
+          checkedPiece(
+            "Find the exact sentence in the passage that backs up your detail—it should come straight from the text and explain why your answer is right.",
+            "在原文里找到支持你所写细节的那一句——它应直接来自短文，并说明为什么你的回答是对的。",
+          ),
         ),
       ),
     ],
@@ -596,6 +639,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
       "Write a poem of six to ten lines about a season, with pictures for at least two senses and a pattern of repetition or rhyme.",
       "写一首六到十行的诗，描写一个季节，至少写出两种感官的画面，并用重复或押韵形成规律。",
     ),
+    intro: t(
+      "Red and gold leaves crunching underfoot, crisp air smelling of apples, and a line that comes back like a beat—that is how a short poem brings autumn to life. Using sensory details and a clear pattern of lines turns ordinary observations into poetry.",
+      "脚下咔嚓作响的红叶与金叶、带着苹果香气的清冽空气，再加上像节拍一样重复出现的诗句——短短几行诗就能把秋天写活。把感官画面和诗行规律结合起来，平常的观察就变成了诗。",
+    ),
     prerequisites: ["what-a-poem-is-about", "strong-verbs"],
     encompasses: [{ topic: "strong-verbs", weight: 0.2 }],
     xp: 22,
@@ -606,8 +653,8 @@ export const writingJudgedTopics: readonly TopicDef[] = [
         "pictures-for-the-senses",
         t("Pictures for the Senses", "感官的画面"),
         t(
-          "A poem about a season paints **pictures in words**. Choose things that belong to that season only: snow and cocoa for winter, hot sand and ice cream for summer.\n\nUse at least **two senses**. Besides what you see, tell what you hear (*the wind whistles*), feel (*hot sand burns my feet*), smell or taste. Strong verbs such as *crackle* and *drip* make the pictures sharper.",
-          "写季节的诗是用**文字描绘画面**。选择只属于那个季节的事物：冬天的雪和热可可，夏天的热沙和冰淇淋。\n\n至少用上**两种感官**。除了看到的，还要写听到的（*the wind whistles*）、感觉到的（*hot sand burns my feet*）、闻到的或尝到的。像 *crackle* 和 *drip* 这样生动的动词能让画面更鲜明。",
+          "A poem about a season paints **pictures in words**. Choose things that belong to that season only: snow and cocoa for winter, hot sand and ice cream for summer.\n\nUse at least **two senses**. Besides what you see, tell what you hear (*the wind whistles*), feel (*hot sand burns my feet*), smell or taste. Strong verbs such as *crackle* and *drip* make the pictures sharper.\n\n> **Watch out.** Do not stop at sight alone—add at least one other sense, such as sound, touch, smell, or taste.",
+          "写季节的诗是用**文字描绘画面**。选择只属于那个季节的事物：冬天的雪和热可可，夏天的热沙和冰淇淋。\n\n至少用上**两种感官**。除了看到的，还要写听到的（*the wind whistles*）、感觉到的（*hot sand burns my feet*）、闻到的或尝到的。像 *crackle* 和 *drip* 这样生动的动词能让画面更鲜明。\n\n> **注意。**不要只写看到的——至少再加入一种别的感官，比如声音、触觉、气味或味道。",
         ),
         writingGenerator(
           t(
@@ -617,15 +664,18 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           poemBank,
           ["g3-poem-subject", "g35-describe-senses"],
           { minWords: 30, maxChars: 1000 },
-          onePiece,
+          checkedPiece(
+            "Name the two senses you used in your poem (for example, sight and sound) and point to the exact line for each one.",
+            "说出你在诗里用到的两种感官（比如视觉和听觉），并指出各自对应的那一行。",
+          ),
         ),
       ),
       point(
         "a-pattern-of-lines",
         t("A Pattern of Lines", "诗行的规律"),
         t(
-          "A poem is written in **lines**, not in a paragraph; start a new line where you want the reader to pause. Six to ten short lines are enough.\n\nGive the lines a **pattern**. You can repeat a word or a line, as in *Winter is a white blanket … Winter is a sharp wind*, or make the ends of lines rhyme, as in *hill* and *sill*.",
-          "诗是一行一行写的，而不是写成一段；在想让读者停顿的地方另起一行。六到十个短行就够了。\n\n让诗行有**规律**。你可以重复一个词或一行，比如 *Winter is a white blanket … Winter is a sharp wind*；也可以让行尾押韵，比如 *hill* 和 *sill*。",
+          "A poem is written in **lines**, not in a paragraph; start a new line where you want the reader to pause. Six to ten short lines are enough.\n\nGive the lines a **pattern**. You can repeat a word or a line, as in *Winter is a white blanket … Winter is a sharp wind*, or make the ends of lines rhyme, as in *hill* and *sill*.\n\n> **Watch out.** Do not write one long block of prose—break your poem into six to ten clear lines so the repetition or rhyme can be heard.",
+          "诗是一行一行写的，而不是写成一段；在想让读者停顿的地方另起一行。六到十个短行就够了。\n\n让诗行有**规律**。你可以重复一个词或一行，比如 *Winter is a white blanket … Winter is a sharp wind*；也可以让行尾押韵，比如 *hill* 和 *sill*。\n\n> **注意。**不要写成一大段连在一起的散文——分成六到十个清晰的诗行，重复或押韵的节奏才听得出来。",
         ),
         writingGenerator(
           t(
@@ -635,7 +685,10 @@ export const writingJudgedTopics: readonly TopicDef[] = [
           poemBank,
           ["g3-poem-pattern", "g3-poem-subject"],
           { minWords: 30, maxChars: 1000 },
-          onePiece,
+          checkedPiece(
+            "Count your lines (6 to 10) and read the poem aloud—you should hear either the repeated phrase or the rhyming line endings clearly.",
+            "数一数行数（6 到 10 行），然后大声朗读——你应该能清楚地听出重复的词句或押韵的行尾。",
+          ),
         ),
       ),
     ],

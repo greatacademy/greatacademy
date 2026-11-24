@@ -63,20 +63,24 @@ const consistentStyle = topic("writing", {
     "A piece written in a formal style keeps it throughout: no slang, no sudden you guys or totally, no shift from careful prose to chat.",
     "用正式文体写的文章要自始至终保持这种文体：不用俚语，不突然冒出 you guys 或 totally，不从严谨的文字转向聊天。",
   ],
+  intro: [
+    "Two polished report sentences followed by *“Seriously, you would freak out at how straight they were”* jolt the reader out of formal prose. Keeping a consistent style means holding one steady, careful voice from first line to last.",
+    "两句严谨的报告正文后面突然冒出一句 *“Seriously, you would freak out at how straight they were”*，会让读者瞬间出戏。保持文体一致，就是从头到尾稳住同一种规范、克制的表达。",
+  ],
   after: ["formal-style"],
   points: [
     choose(
       "the-sentence-that-breaks-the-style",
       ["The Sentence That Breaks the Style", "破坏文体的句子"],
       [
-        "In a report or an explanation, every sentence should sound the same: complete, careful and impersonal. One sentence of chat breaks the style: slang (*those guys*, *awesome*), talking to the reader (*you guys*, *trust me*), filler words (*like*, *basically*, *kind of*), or texting (*lol*). Find the sentence that does not match the rest.",
-        "在报告或说明文中，每个句子都应该听起来一样：完整、严谨、客观。一句聊天式的话就会破坏文体：俚语（*those guys*、*awesome*）、对读者说话（*you guys*、*trust me*）、填充词（*like*、*basically*、*kind of*）或网络用语（*lol*）。找出与其他句子不一致的那句。",
+        "In a report or an explanation, every sentence should sound the same: complete, careful and impersonal. One sentence of chat breaks the style: slang (*those guys*, *awesome*), talking to the reader (*you guys*, *trust me*), filler words (*like*, *basically*, *kind of*), or texting (*lol*). Find the sentence that does not match the rest.\n\n> **Watch out.** Scan for even one casual slip—a filler word (*basically*, *like*, *kinda*), a direct address (*folks*, *you guys*), or a slang exclamation (*lol*, *ugh*, *awesome*).",
+        "在报告或说明文中，每个句子都应该听起来一样：完整、严谨、客观。一句聊天式的话就会破坏文体：俚语（*those guys*、*awesome*）、对读者说话（*you guys*、*trust me*）、填充词（*like*、*basically*、*kind of*）或网络用语（*lol*）。找出与其他句子不一致的那句。\n\n> **注意。** 只要出现一处口语痕迹——如填充词（*basically*、*like*、*kinda*）、招呼读者（*folks*、*you guys*）或俚语感叹（*lol*、*ugh*、*awesome*）——就破坏了正式文体。",
       ],
       ["Which sentence breaks the formal style?", "哪个句子破坏了正式文体？"],
       breaksStyle,
       (right) => [
-        `*${right}* breaks the style: it uses slang, filler or chat that the other formal sentences avoid.`,
-        `*${right}* 破坏了文体：它用了其他正式句子都避免的俚语、填充词或聊天用语。`,
+        `*${right}* breaks the style: it uses slang, filler or chat that the other formal sentences avoid.\n\n**Check.** Read all three sentences aloud as a textbook paragraph—only this one suddenly drops into casual chat or slang.`,
+        `*${right}* 破坏了文体：它用了其他正式句子都避免的俚语、填充词或聊天用语。\n\n**检验。** 把三句话当成课本段落连起来读——只有这一句突然滑进了口语或俚语。`,
       ],
       [
         [
@@ -90,14 +94,14 @@ const consistentStyle = topic("writing", {
       "the-revision-that-keeps-it",
       ["The Revision That Keeps It", "保持文体的修改"],
       [
-        "To fix a sentence that breaks the style, keep its **idea** and change its **voice**: take out slang, filler and words to the reader, and say the same thing in careful, exact words. *Honestly, those guys were geniuses* becomes *Their skill at planning was remarkable.* A revision that only swaps one slang word for another is still informal.",
-        "要修改破坏文体的句子，就保留它的**意思**、改变它的**语气**：去掉俚语、填充词和对读者说的话，用严谨准确的词语表达同样的意思。*Honestly, those guys were geniuses* 改成 *Their skill at planning was remarkable.* 只是把一个俚语换成另一个俚语的修改仍然是非正式的。",
+        "To fix a sentence that breaks the style, keep its **idea** and change its **voice**: take out slang, filler and words to the reader, and say the same thing in careful, exact words. *Honestly, those guys were geniuses* becomes *Their skill at planning was remarkable.* A revision that only swaps one slang word for another is still informal.\n\n> **Watch out.** Check the very beginning and end of each option—one distractor hides a casual tag like *Basically, …*, *…, you know?*, or *…, which is pretty cool.*",
+        "要修改破坏文体的句子，就保留它的**意思**、改变它的**语气**：去掉俚语、填充词和对读者说的话，用严谨准确的词语表达同样的意思。*Honestly, those guys were geniuses* 改成 *Their skill at planning was remarkable.* 只是把一个俚语换成另一个俚语的修改仍然是非正式的。\n\n> **注意。** 检查每个选项的句首和句尾——干扰项常在开头或结尾藏着 *Basically, …*、*…, you know?* 或 *…, which is pretty cool.* 等口语尾巴。",
       ],
       ["Which revision of the sentence in bold keeps the formal style?", "加粗句子的哪个修改保持了正式文体？"],
       keepsStyle,
       (right) => [
-        `**${right}** It keeps the idea of the sentence and says it in the same formal voice as the rest.`,
-        `**${right}** 它保留了句子的意思，并用与其他部分相同的正式语气来表达。`,
+        `**${right}** It keeps the idea of the sentence and says it in the same formal voice as the rest.\n\n**Check.** Read the first two sentences followed by **${right}**—the tone stays completely even with zero slang or chatty tags.`,
+        `**${right}** 它保留了句子的意思，并用与其他部分相同的正式语气来表达。\n\n**检验。** 把前两句和 **${right}** 连起来通读——整段语气平稳统一，没有任何俚语或口语垫词。`,
       ],
       [
         [
@@ -114,24 +118,24 @@ const showTell: Readonly<Record<string, Label>> = {
   "shows by action": {
     zh: "用行动展示",
     why: [
-      "The sentence lets the reader see the trait in what the character does, without naming it.",
-      "这个句子通过人物的所作所为让读者看到性格特点，而不直接说出来。",
+      "The sentence lets the reader see the trait in what the character does, without naming it.\n\n**Check.** Look for physical verbs and observable gestures (and no quotation marks)—the reader infers the trait from behavior.",
+      "这个句子通过人物的所作所为让读者看到性格特点，而不直接说出来。\n\n**检验。** 找出具体的动作动词和可见举动（且没有对话引号）——读者是从行为中推断出性格的。",
     ],
     not: ["The sentence does not show the trait through what the character does.", "这个句子没有通过人物的所作所为来展示性格特点。"],
   },
   "shows by speech": {
     zh: "用话语展示",
     why: [
-      "The sentence lets the reader hear the trait in the character's own words, without naming it.",
-      "这个句子通过人物自己说的话让读者感受到性格特点，而不直接说出来。",
+      "The sentence lets the reader hear the trait in the character's own words, without naming it.\n\n**Check.** Spot the quotation marks around the character's exact spoken words—the trait comes straight through how they talk.",
+      "这个句子通过人物自己说的话让读者感受到性格特点，而不直接说出来。\n\n**检验。** 找出引号里人物亲口说出的话——性格正是透过说话方式流露出来的。",
     ],
     not: ["The sentence does not show the trait through the character's own words.", "这个句子没有通过人物自己说的话来展示性格特点。"],
   },
   tells: {
     zh: "告诉",
     why: [
-      "The sentence names the trait directly (*was kind*, *felt nervous*) instead of showing it.",
-      "这个句子直接说出了性格特点（*was kind*、*felt nervous*），而不是展示它。",
+      "The sentence names the trait directly (*was kind*, *felt nervous*) instead of showing it.\n\n**Check.** Spot the direct trait adjective (*nervous*, *generous*, *lazy*, *brave*) handed straight to the reader with no action or speech.",
+      "这个句子直接说出了性格特点（*was kind*、*felt nervous*），而不是展示它。\n\n**检验。** 找出直接贴给人物的性格形容词（如 *nervous*、*generous*、*lazy*、*brave*），句中没有具体动作或对话。",
     ],
     not: ["The sentence shows the trait without naming it.", "这个句子展示了性格特点，没有直接说出来。"],
   },
@@ -223,14 +227,18 @@ const showingCharacter = topic("writing", {
     "A narrative shows what a character is like through what they do, say and notice, instead of naming the trait.",
     "叙事文通过人物的所作所为、所说的话和所注意到的东西来展现人物的性格，而不是直接说出性格特点。",
   ],
+  intro: [
+    "Saying *Nora was impatient* tells the reader a label; writing *Nora tapped her pencil against the desk and checked the wall clock every ten seconds* lets the reader see impatience for themselves.",
+    "写 *Nora was impatient* 只是贴了个标签；写 *Nora tapped her pencil against the desk and checked the wall clock every ten seconds* 才让读者亲眼看见她的不耐烦。",
+  ],
   after: ["pacing-a-story"],
   points: [
     label(
       "shows-or-tells",
       ["Shows or Tells", "展示还是告诉"],
       [
-        "A sentence that **tells** names a trait: *Lena was nervous.* A sentence can **show by action**, letting the reader see it: *Lena wiped her damp palms on her skirt for the third time.* Or it can **show by speech**, letting the reader hear it in the character's words: *\"I can't do this,\" Lena whispered.* Showing gives the reader evidence and lets them reach the conclusion themselves, which makes a character feel real.",
-        '**告诉**的句子直接说出性格特点：*Lena was nervous.* 句子可以**用行动展示**，让读者看到：*Lena wiped her damp palms on her skirt for the third time.* 也可以**用话语展示**，让读者从人物的话里听出来：*"I can\'t do this," Lena whispered.* 展示给读者提供证据，让他们自己得出结论，这会让人物显得真实。',
+        "A sentence that **tells** names a trait: *Lena was nervous.* A sentence can **show by action**, letting the reader see it: *Lena wiped her damp palms on her skirt for the third time.* Or it can **show by speech**, letting the reader hear it in the character's words: *\"I can't do this,\" Lena whispered.* Showing gives the reader evidence and lets them reach the conclusion themselves, which makes a character feel real.\n\n> **Watch out.** Check first for quotation marks (*shows by speech*), then check whether the sentence simply hands you a trait adjective (*tells*) or depicts concrete behavior (*shows by action*).",
+        '**告诉**的句子直接说出性格特点：*Lena was nervous.* 句子可以**用行动展示**，让读者看到：*Lena wiped her damp palms on her skirt for the third time.* 也可以**用话语展示**，让读者从人物的话里听出来：*"I can\'t do this," Lena whispered.* 展示给读者提供证据，让他们自己得出结论，这会让人物显得真实。\n\n> **注意。** 先看有没有对话引号（用话语展示），再看句子是直接给出性格形容词（告诉）还是刻画具体举动（用行动展示）。',
       ],
       ["Does this sentence tell, show by action or show by speech?", "这个句子是告诉、用行动展示，还是用话语展示？"],
       showLines,
@@ -240,14 +248,14 @@ const showingCharacter = topic("writing", {
       "the-action-that-shows-the-trait",
       ["The Action That Shows the Trait", "展现性格的行动"],
       [
-        "To show a trait, choose an action a person with that trait would do, specific enough to picture. *Patient* is shown by waiting calmly for something slow; *greedy* by grabbing more than one's share. An action that shows the opposite trait, or no trait at all, does not do the job.",
-        "要展示一种性格特点，就选择具有这种性格的人会做的、具体到能想象出画面的行动。*Patient* 可以通过平静地等待慢吞吞的事来展示；*greedy* 可以通过抢走超过自己那一份的东西来展示。展示相反性格或根本没有展示性格的行动都不行。",
+        "To show a trait, choose an action a person with that trait would do, specific enough to picture. *Patient* is shown by waiting calmly for something slow; *greedy* by grabbing more than one's share. An action that shows the opposite trait, or no trait at all, does not do the job.\n\n> **Watch out.** Picture each action as a movie clip without sound—only one clip clearly proves the exact trait named in the prompt.",
+        "要展示一种性格特点，就选择具有这种性格的人会做的、具体到能想象出画面的行动。*Patient* 可以通过平静地等待慢吞吞的事来展示；*greedy* 可以通过抢走超过自己那一份的东西来展示。展示相反性格或根本没有展示性格的行动都不行。\n\n> **注意。** 把每个选项想象成一段无声电影画面——只有一个画面能清楚证明题干指定的性格。",
       ],
       ["Which action best shows this trait?", "哪个行动最能展示这个性格特点？"],
       actionForTrait,
       (right, shown) => [
-        `**${right}** A reader who sees this action can tell the character is ${shown.replace("The trait: ", "")} without being told.`,
-        `**${right}** 读者看到这个行动，不用别人告诉就能知道人物是 ${shown.replace("The trait: ", "")} 的。`,
+        `**${right}** A reader who sees this action can tell the character is ${shown.replace("The trait: ", "")} without being told.\n\n**Check.** Imagine someone watching only this behavior—they would immediately describe the person as ${shown.replace("The trait: ", "")}.`,
+        `**${right}** 读者看到这个行动，不用别人告诉就能知道人物是 ${shown.replace("The trait: ", "")} 的。\n\n**检验。** 想象旁观者只看到这一举动——他们会立刻用 ${shown.replace("The trait: ", "")} 来形容这个人。`,
       ],
       [
         ["*{wrong}* shows the opposite of the trait.", "*{wrong}* 展示的是相反的性格。"],
@@ -317,20 +325,24 @@ const endingNarrative = topic("writing", {
     "A good ending follows from the events, settles the conflict and may reflect on what was learned, without a sudden rescue or it was all a dream.",
     '好的结尾顺着事件发展而来，解决冲突，还可以反思学到了什么，而不是突然的营救或"原来是一场梦"。',
   ],
+  intro: [
+    "If a hiker gets lost in a storm, ending with *“Suddenly a magic eagle flew him home”* breaks the story's spell. A satisfying ending resolves the conflict through the character's own action and often looks back on what the experience meant.",
+    "如果徒步者在暴风雪中迷了路，结尾却写“突然飞来一只神鹰把他送回家”，整个故事就垮了。令人信服的结尾靠人物自己的行动化解冲突，并常常在结尾回望这件事的意义。",
+  ],
   after: ["planning-a-story-arc"],
   points: [
     choose(
       "the-ending-that-follows",
       ["The Ending That Follows", "顺理成章的结尾"],
       [
-        "A good ending **follows from the events**: the main character solves the problem by their own choice or effort, and the conflict is settled. Avoid endings that cheat: a sudden rescue by someone or something new, magic that was never part of the story, *it was all a dream*, or an ending that simply stops.",
-        "好的结尾**顺着事件发展而来**：主人公凭自己的选择或努力解决问题，冲突得到解决。要避免作弊式的结尾：突然出现的人或物来营救、故事中从未出现过的魔法、*it was all a dream*，或者干脆戛然而止。",
+        "A good ending **follows from the events**: the main character solves the problem by their own choice or effort, and the conflict is settled. Avoid endings that cheat: a sudden rescue by someone or something new, magic that was never part of the story, *it was all a dream*, or an ending that simply stops.\n\n> **Watch out.** Ask *who solved the problem?* If magic, a dream, or an unintroduced rescuer fixed it, it is a cheat ending.",
+        "好的结尾**顺着事件发展而来**：主人公凭自己的选择或努力解决问题，冲突得到解决。要避免作弊式的结尾：突然出现的人或物来营救、故事中从未出现过的魔法、*it was all a dream*，或者干脆戛然而止。\n\n> **注意。** 问一句：*是谁解决了问题？* 如果靠魔法、梦境或凭空冒出来的救兵，就属于作弊式结尾。",
       ],
       ["Which ending follows best from the events?", "哪个结尾最顺着事件发展而来？"],
       endingFollows,
       (right) => [
-        `**${right}** The character settles the conflict by their own choice, so the ending follows from the story.`,
-        `**${right}** 人物凭自己的选择解决了冲突，所以这个结尾是顺着故事发展而来的。`,
+        `**${right}** The character settles the conflict by their own choice, so the ending follows from the story.\n\n**Check.** Verify that the main character takes a realistic step to resolve the conflict—no sudden rescue, magic, dream, or abrupt cutoff.`,
+        `**${right}** 人物凭自己的选择解决了冲突，所以这个结尾是顺着故事发展而来的。\n\n**检验。** 确认主角用合乎情理的行动化解了冲突——没有天降救兵、魔法、梦境或戛然而止。`,
       ],
       [
         [
@@ -344,14 +356,14 @@ const endingNarrative = topic("writing", {
       "the-ending-that-looks-back",
       ["The Ending That Looks Back", "带有回顾的结尾"],
       [
-        "The strongest endings do two things: they settle the conflict and they **look back**, showing what the character learned or how they changed (*She learns that...*, *He sees now that...*). Of two endings that both follow from the events, choose the one that also tells what the events meant.",
-        "最有力的结尾做到两件事：解决冲突，并且**回顾**，表现人物学到了什么或发生了怎样的变化（*She learns that...*、*He sees now that...*）。在两个都顺着事件发展的结尾中，要选出同时说明了事件意义的那个。",
+        "The strongest endings do two things: they settle the conflict and they **look back**, showing what the character learned or how they changed (*She learns that...*, *He sees now that...*). Of two endings that both follow from the events, choose the one that also tells what the events meant.\n\n> **Watch out.** Check *both* sentences of the ending: the first must resolve the conflict honestly (no cheat), and the second must reflect on what the character learned.",
+        "最有力的结尾做到两件事：解决冲突，并且**回顾**，表现人物学到了什么或发生了怎样的变化（*She learns that...*、*He sees now that...*）。在两个都顺着事件发展的结尾中，要选出同时说明了事件意义的那个。\n\n> **注意。** 结尾的*两部分*都要查：前半必须合情合理地解决冲突（不能作弊），后半必须点出人物的反思或收获。",
       ],
       ["Which ending settles the conflict and also looks back on it?", "哪个结尾既解决了冲突又回顾了它的意义？"],
       endingReflects,
       (right) => [
-        `**${right}** It settles the conflict and then shows what the character learned from it.`,
-        `**${right}** 它解决了冲突，又表现了人物从中学到了什么。`,
+        `**${right}** It settles the conflict and then shows what the character learned from it.\n\n**Check.** Spot both halves in this ending: an earned resolution by the character *and* a closing reflection on what the moment taught them.`,
+        `**${right}** 它解决了冲突，又表现了人物从中学到了什么。\n\n**检验。** 核对结尾的两半：既有人物自己赢得的合理结局，又有结尾处对所悟道理的回顾。`,
       ],
       [
         ["*{wrong}* settles the conflict but does not say what the character learned.", "*{wrong}* 解决了冲突，却没有说出人物学到了什么。"],
@@ -367,22 +379,25 @@ const endingNarrative = topic("writing", {
 const reasonLabels: Readonly<Record<string, Label>> = {
   relevant: {
     zh: "相关",
-    why: ["The reason shows why the claim is true, so it supports the argument.", "这个理由说明了主张为什么成立，所以能支持论证。"],
+    why: [
+      "The reason shows why the claim is true, so it supports the argument.\n\n**Check.** Put *because* between the claim and this reason—it gives a concrete, checkable benefit or harm that backs the claim.",
+      "这个理由说明了主张为什么成立，所以能支持论证。\n\n**检验。** 在主张和这条理由中间加上“因为”——它给出了具体可核实的利弊，直接支撑主张。",
+    ],
     not: ["The reason does not show why this claim is true.", "这个理由没有说明这个主张为什么成立。"],
   },
   "off the point": {
     zh: "离题",
     why: [
-      "The reason may be true, but it is about something else; it does not show why the claim is true.",
-      "这个理由也许是真的，但说的是别的事，不能说明主张为什么成立。",
+      "The reason may be true, but it is about something else; it does not show why the claim is true.\n\n**Check.** Ask whether this fact would change anyone's mind about the claim—it talks about an unrelated detail (like paint color or a clock tower).",
+      "这个理由也许是真的，但说的是别的事，不能说明主张为什么成立。\n\n**检验。** 问问这条事实能不能说服别人同意主张——它说的是无关细节（如墙壁颜色或钟楼）。",
     ],
     not: ["The reason is on the point of the claim.", "这个理由切合主张的要点。"],
   },
   "only a feeling": {
     zh: "只是感觉",
     why: [
-      "The reason is only the writer's feeling; it gives the reader nothing to check.",
-      "这个理由只是作者的感觉，没有给读者任何可以核实的东西。",
+      "The reason is only the writer's feeling; it gives the reader nothing to check.\n\n**Check.** Spot the personal-taste wording (*I love*, *feels nice*, *ugly*, *makes me happy*)—it states a preference, not verifiable evidence.",
+      "这个理由只是作者的感觉，没有给读者任何可以核实的东西。\n\n**检验。** 找出纯个人好恶的措辞（如 *I love*、*feels nice*、*ugly*、*makes me happy*）——这只是喜好，不是可核查的证据。",
     ],
     not: ["The reason is more than a feeling; it gives something a reader can weigh.", "这个理由不只是感觉，它给出了读者可以衡量的东西。"],
   },
@@ -467,14 +482,18 @@ const relevantReasons = topic("writing", {
     "A reason is relevant when it shows why the claim is true; one that is true but about something else, or only a feeling, weakens the piece.",
     "能说明主张为什么成立的理由才是相关的；虽然真实却说的是别的事，或者只是感觉的理由，会削弱文章。",
   ],
+  intro: [
+    "If you argue that the library should stay open longer, saying *“The building has red bricks”* is off the point and *“I just love books”* is only a feeling. A persuasive piece relies on relevant reasons backed by real benefits or facts.",
+    "主张图书馆延长开放时间时，说“大楼是红砖砌的”是离题，说“我就是喜欢书”只是感觉。有说服力的文章依靠切中要害、能摆出实打实好处或事实的相关理由。",
+  ],
   after: ["ordering-reasons-logically"],
   points: [
     label(
       "relevant-or-not",
       ["Relevant or Not", "相关还是不相关"],
       [
-        "A **relevant** reason answers the question *why should the reader agree?* A reason is **off the point** when it may be true but has nothing to do with the claim (*the cafeteria was painted last summer*). A reason is **only a feeling** when it tells what the writer likes or feels (*I just love apples*) and gives the reader nothing to weigh.",
-        '**相关**的理由回答"读者为什么应该同意？"。如果理由也许是真的却和主张毫无关系（*the cafeteria was painted last summer*），它就是**离题**的。如果理由只说出作者喜欢什么或感觉如何（*I just love apples*），没有给读者任何可以衡量的东西，它就**只是感觉**。',
+        "A **relevant** reason answers the question *why should the reader agree?* A reason is **off the point** when it may be true but has nothing to do with the claim (*the cafeteria was painted last summer*). A reason is **only a feeling** when it tells what the writer likes or feels (*I just love apples*) and gives the reader nothing to weigh.\n\n> **Watch out.** Even a completely true fact can be *off the point* if it does not actually prove why the claim should be accepted.",
+        "**相关**的理由回答“读者为什么应该同意？”。如果理由也许是真的却和主张毫无关系（*the cafeteria was painted last summer*），它就是**离题**的。如果理由只说出作者喜欢什么或感觉如何（*I just love apples*），没有给读者任何可以衡量的东西，它就**只是感觉**。\n\n> **注意。** 哪怕一句完全属实的事实，只要无法证明为什么该采纳该主张，就属于*离题*。",
       ],
       ["What kind of reason is this?", "这是哪种理由？"],
       reasonLines,
@@ -484,14 +503,14 @@ const relevantReasons = topic("writing", {
       "the-strongest-reason",
       ["The Strongest Reason", "最有力的理由"],
       [
-        "Of several reasons, the strongest shows **why the claim is true** in a way most readers would accept: it points to a benefit, a harm or a fact. Feelings are weak, and reasons about something else are no help at all. Choose the reason a careful reader would find most convincing.",
-        "在几个理由中，最有力的是能以大多数读者都接受的方式说明**主张为什么成立**的那个：它指出好处、害处或事实。感觉是薄弱的，而说别的事情的理由毫无帮助。要选出细心的读者认为最有说服力的理由。",
+        "Of several reasons, the strongest shows **why the claim is true** in a way most readers would accept: it points to a benefit, a harm or a fact. Feelings are weak, and reasons about something else are no help at all. Choose the reason a careful reader would find most convincing.\n\n> **Watch out.** Test each option with a skeptical reader in mind: ask *“So what? Does that actually prove the claim?”*",
+        "在几个理由中，最有力的是能以大多数读者都接受的方式说明**主张为什么成立**的那个：它指出好处、害处或事实。感觉是薄弱的，而说别的事情的理由毫无帮助。要选出细心的读者认为最有说服力的理由。\n\n> **注意。** 站在持怀疑态度的读者角度追问一句：“那又怎样？这条理由真的能支撑主张吗？”",
       ],
       ["Which reason best supports the claim?", "哪个理由最能支持这个主张？"],
       strongestReason,
       (right) => [
-        `**${right}** It shows why the claim is true by pointing to a real benefit, harm or fact.`,
-        `**${right}** 它指出了真实的好处、害处或事实，说明了主张为什么成立。`,
+        `**${right}** It shows why the claim is true by pointing to a real benefit, harm or fact.\n\n**Check.** Connect the claim and **${right}** with *because*—it gives concrete, checkable evidence rather than a personal feeling or an unrelated point.`,
+        `**${right}** 它指出了真实的好处、害处或事实，说明了主张为什么成立。\n\n**检验。** 用“因为”把主张和 **${right}** 连起来——它提供了具体可核实的依据，而不是个人好恶或离题的理由。`,
       ],
       [
         [
@@ -511,30 +530,33 @@ const hookLabels: Readonly<Record<string, Label>> = {
   "a question": {
     zh: "提问",
     why: [
-      "The opening asks the reader a question that makes them want to find the answer.",
-      "开头向读者提出一个问题，让他们想去寻找答案。",
+      "The opening asks the reader a question that makes them want to find the answer.\n\n**Check.** Spot the question mark at the end—it invites the reader directly to wonder or guess.",
+      "开头向读者提出一个问题，让他们想去寻找答案。\n\n**检验。** 看到句末的问号——它直接向读者发问，勾起好奇心。",
     ],
     not: ["The opening does not ask the reader a question.", "开头没有向读者提问。"],
   },
   "a surprising fact": {
     zh: "惊人的事实",
     why: [
-      "The opening states a fact or number that is surprising enough to make the reader read on.",
-      "开头说出一个令人惊讶的事实或数字，让读者想继续读下去。",
+      "The opening states a fact or number that is surprising enough to make the reader read on.\n\n**Check.** Notice it gives a concrete, eye-opening fact or statistic without telling a story or quoting someone.",
+      "开头说出一个令人惊讶的事实或数字，让读者想继续读下去。\n\n**检验。** 注意它抛出了一个具体且出人意料的事实或数字，既没讲故事也没引用名言。",
     ],
     not: ["The opening does not begin with a surprising fact or number.", "开头没有以惊人的事实或数字开始。"],
   },
   "a short story": {
     zh: "小故事",
     why: [
-      "The opening tells a brief moment, an anecdote, that puts the reader inside the topic.",
-      "开头讲了一个简短的片段，即轶事，把读者带入主题。",
+      "The opening tells a brief moment, an anecdote, that puts the reader inside the topic.\n\n**Check.** Notice a specific person, time, or moment unfolds like a mini-scene (*Last spring…*, *When Marco opened…*).",
+      "开头讲了一个简短的片段，即轶事，把读者带入主题。\n\n**检验。** 注意这里有具体的人物、时间或瞬间，像一个小场景在眼前展开。",
     ],
     not: ["The opening does not tell a brief moment about a person.", "开头没有讲述关于某个人的简短片段。"],
   },
   "a quotation": {
     zh: "引语",
-    why: ["The opening quotes someone's words that fit the topic.", "开头引用了与主题相符的某人的话。"],
+    why: [
+      "The opening quotes someone's words that fit the topic.\n\n**Check.** Spot the quotation marks and the attribution (*wrote…*, *said…*, *as the saying goes*) crediting the speaker.",
+      "开头引用了与主题相符的某人的话。\n\n**检验。** 找出引号和出处说明（如 *wrote…*、*said…*、*as the saying goes*），它直接引用了别人的话。",
+    ],
     not: ["The opening does not quote anyone's words.", "开头没有引用任何人的话。"],
   },
 };
@@ -618,14 +640,18 @@ const hooks = topic("writing", {
     "An opening catches the reader with a question, a surprising fact, a short story or a quotation that fits the topic.",
     "开头用一个与主题相符的问题、惊人的事实、小故事或引语来吸引读者。",
   ],
+  intro: [
+    "Starting an essay with *“This essay is about bees”* makes readers yawn; starting with *“One out of every three bites of food you eat depends on bees”* pulls them right in. A strong hook grabs attention and leads straight into the topic.",
+    "用“这篇文章写的是蜜蜂”开头很难让人提起兴趣，而用“你每吃三口食物，就有一口离不开蜜蜂”开头却能立刻抓住读者。好的开头既吸引人，又自然引出主题。",
+  ],
   after: ["previewing-the-topic"],
   points: [
     label(
       "the-kind-of-hook",
       ["The Kind of Hook", "吸引手法的类型"],
       [
-        "A **hook** is an opening sentence that makes the reader want to go on. Four kinds are common: **a question** the reader wants answered, **a surprising fact** or number, **a short story**, a brief moment that puts the reader in a scene, and **a quotation**, someone's words that fit the topic. Name the kind of hook each opening uses.",
-        "**吸引手法**是让读者想继续读下去的开头句。常见的有四种：读者想知道答案的**问题**、**惊人的事实**或数字、**小故事**（把读者带入场景的简短片段），以及**引语**（与主题相符的某人的话）。说出每个开头用的是哪种手法。",
+        "A **hook** is an opening sentence that makes the reader want to go on. Four kinds are common: **a question** the reader wants answered, **a surprising fact** or number, **a short story**, a brief moment that puts the reader in a scene, and **a quotation**, someone's words that fit the topic. Name the kind of hook each opening uses.\n\n> **Watch out.** Do not confuse a *short story* that happens to include a line of dialogue with a *quotation* hook—a quotation hook opens directly with a famous saying or cited quote.",
+        "**吸引手法**是让读者想继续读下去的开头句。常见的有四种：读者想知道答案的**问题**、**惊人的事实**或数字、**小故事**（把读者带入场景的简短片段），以及**引语**（与主题相符的某人的话）。说出每个开头用的是哪种手法。\n\n> **注意。** 不要把夹带一句对话的*小故事*和*引语*开头混为一谈——引语开头会直接以名言或引用语起笔。",
       ],
       ["What kind of hook does this opening use?", "这个开头用了哪种吸引手法？"],
       hookLines,
@@ -635,14 +661,14 @@ const hooks = topic("writing", {
       "the-hook-that-fits",
       ["The Hook That Fits", "合适的开头"],
       [
-        "A hook must do two jobs: catch the reader **and lead into the topic**. A clever question about roller coasters is no help in an essay on food waste. An opening that only announces the topic (*This essay is about...*) fits but catches no one. Choose the hook that is interesting and points straight at the piece.",
-        "开头必须做到两件事：吸引读者，**并且引入主题**。在一篇关于食物浪费的文章中，一个关于过山车的巧妙问题毫无帮助。只是宣布主题的开头（*This essay is about...*）虽然切题，却吸引不了任何人。要选出既有趣又直指文章主题的开头。",
+        "A hook must do two jobs: catch the reader **and lead into the topic**. A clever question about roller coasters is no help in an essay on food waste. An opening that only announces the topic (*This essay is about...*) fits but catches no one. Choose the hook that is interesting and points straight at the piece.\n\n> **Watch out.** Check *both* jobs: reject an engaging hook that belongs to a completely different topic, and reject a dull announcement like *“This report will explain…”*",
+        "开头必须做到两件事：吸引读者，**并且引入主题**。在一篇关于食物浪费的文章中，一个关于过山车的巧妙问题毫无帮助。只是宣布主题的开头（*This essay is about...*）虽然切题，却吸引不了任何人。要选出既有趣又直指文章主题的开头。\n\n> **注意。** *吸引人*和*切题*两项都要满足——排除虽有趣却离题的开头，也排除“本报告将介绍……”这类平淡的报幕句。",
       ],
       ["Which opening is the best hook for this piece?", "哪个开头最适合这篇文章？"],
       fittingHook,
       (right) => [
-        `**${right}** It catches the reader's interest and leads straight into the topic of the piece.`,
-        `**${right}** 它既吸引了读者，又直接引入了文章的主题。`,
+        `**${right}** It catches the reader's interest and leads straight into the topic of the piece.\n\n**Check.** Verify both criteria on this line: it hooks curiosity with a vivid detail, question, fact, or quote, *and* its subject matches the essay named in the prompt.`,
+        `**${right}** 它既吸引了读者，又直接引入了文章的主题。\n\n**检验。** 核对这两项标准：这句话用生动细节、提问、事实或引语勾起兴趣，而且内容紧扣题干指定的文章主题。`,
       ],
       [
         [

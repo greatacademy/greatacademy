@@ -918,30 +918,39 @@ function articleRule(right: string, shown: string): Text {
 const articleWhy = (right: string, shown: string): Text => {
   const rule = articleRule(right, shown);
   const sentence = fill(shown.replace(/ \(in general\)$/u, ""), right);
-  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+  const takesThe = /^the /iu.test(right);
+  return t(
+    `${rule.en}: ${sentence}\n\n**Check.** Ask whether the noun is a specific/the-taking place or general: here it ${takesThe ? "takes *the*" : "takes no article"}.`,
+    `${rule["zh-CN"]}：${sentence}\n\n**检验。** 判断这里是特指/需加 *the* 的地名，还是泛指/不加冠词的地名：此处${takesThe ? "加 *the*" : "不加冠词"}。`,
+  );
 };
 
 /** whyNotArticle explains a wrong option with the, a or no article. */
 const whyNotArticle = (wrong: string, right: string, shown: string): Text => {
-  const rule = articleRule(right, shown);
   const noun = nounIn(right, shown);
-  let first: Text;
   if (/^an? /iu.test(wrong))
-    first = placeItems.some(([s]) => s === shown)
+    return placeItems.some(([s]) => s === shown)
       ? t("*a* and *an* never go before the name of a place.", "地名前不能用 *a* 或 *an*。")
       : t(
-          `*a* and *an* mean just one of something, not ${shown.endsWith("(in general)") ? `${noun} in general` : `the particular ${noun} the sentence tells you about`}.`,
-          `*a* 和 *an* 只表示“某一个”，不是${shown.endsWith("(in general)") ? "泛指这一类事物" : "句子说明的那些特定事物"}。`,
+          `*a* and *an* mean just one single item, not ${shown.endsWith("(in general)") ? `${noun} in general` : `the particular ${noun} the sentence specifies`}.`,
+          `*a* 和 *an* 只表示“某一个”，不是${shown.endsWith("(in general)") ? "泛指这一类事物" : "句子特指的那些事物"}。`,
         );
-  else if (/^the /iu.test(wrong))
-    first = shown.endsWith("(in general)")
-      ? t(`*${wrong}* would mean particular ${noun}, not ${noun} in general.`, `*${wrong}* 表示特指某些 ${noun}，不是泛指。`)
-      : t(`*${noun}* does not take *the*.`, `*${noun}* 前面不加 *the*。`);
-  else
-    first = placeItems.some(([s]) => s === shown)
-      ? t(`*${noun}* cannot go without *the*.`, `*${noun}* 前面不能不加 *the*。`)
-      : t(`With no article, *${wrong}* would mean ${noun} in general.`, `不加冠词，*${wrong}* 就成了泛指。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  if (/^the /iu.test(wrong))
+    return shown.endsWith("(in general)")
+      ? t(
+          `*${wrong}* points to particular ${noun}, but this sentence talks about ${noun} in general.`,
+          `*${wrong}* 表示特指某些 ${noun}，而这句是泛指。`,
+        )
+      : t(`This place name (*${noun}*) belongs to the group that takes no article.`, `地名 *${noun}* 属于不加冠词的类别。`);
+  return placeItems.some(([s]) => s === shown)
+    ? t(
+        `This place name (*${noun}*) belongs to the group (rivers, oceans, ranges, plural countries) that requires an article.`,
+        `地名 *${noun}* 属于河流、海洋、山脉或复数国名等必须加冠词的类别。`,
+      )
+    : t(
+        `Without an article, *${wrong}* means ${noun} in general, but the sentence specifies which ${noun} are meant.`,
+        `不加冠词的 *${wrong}* 是泛指，可句子已经限定了具体是哪些 ${noun}。`,
+      );
 };
 
 /** articleFixWhy explains the corrected article in a sentence to write again. */
@@ -952,9 +961,16 @@ const articleFixWhy = (right: string, shown: string): Text => {
       bare === s.replace(/ \(in general\)$/u, "").replace("___", w[0] ?? "") &&
       right === s.replace(/ \(in general\)$/u, "").replace("___", r),
   );
-  if (!item) return t(right, right);
+  if (!item)
+    return t(
+      `${right}\n\n**Check.** Verify whether the noun is general or specific, and check capitalization at the start of the sentence.`,
+      `${right}\n\n**检验。** 核对名词是泛指还是特指，并检查句首大写。`,
+    );
   const rule = articleRule(item[1], item[0]);
-  return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+  return t(
+    `${rule.en}: ${right}\n\n**Check.** Re-read the corrected sentence: the article now matches the meaning/place-name rule, and the rest of the sentence is unchanged.`,
+    `${rule["zh-CN"]}：${right}\n\n**检验。** 重读改正后的句子：冠词已符合泛指/特指或地名规则，句子其余部分保持不变。`,
+  );
 };
 
 const articles: TopicDef = {
@@ -963,6 +979,10 @@ const articles: TopicDef = {
   summary: t(
     "Tea is popular in China, but the tea in this cup is cold. Things in general take no article; particular things take the; most countries and cities take none.",
     "Tea is popular in China，但 the tea in this cup is cold。泛指事物不用冠词，特指用 the；大多数国名和城市名前不用冠词。",
+  ),
+  intro: t(
+    "Compare *Music helps people relax* (music in general—no article) with *The music at that festival was unforgettable* (specific music—*the*). Place names follow their own clear split too: *Japan* and *Mount Fuji*, but *the Pacific* and *the Alps*.",
+    "比较 *Music helps people relax*（泛指音乐，不加冠词）和 *The music at that festival was unforgettable*（特指那场音乐节的音乐，加 *the*）。地名也有清晰分界：*Japan*、*Mount Fuji* 不加，而 *the Pacific*、*the Alps* 要加 *the*。",
   ),
   prerequisites: ["the-article-the", "countable-and-uncountable-nouns"],
   encompasses: [
@@ -976,8 +996,8 @@ const articles: TopicDef = {
       "general",
       t("Things in general and particular things", "泛指和特指"),
       t(
-        "When you talk about a kind of thing **in general**, use a plural noun or an uncountable noun with **no article**:\n\n- *Cats sleep a lot.* (all cats)\n- *Tea is popular in China.* (tea in general)\n\nWhen you mean **particular** things, the ones you can point to or that the sentence tells you about, use *the*:\n\n- *The cats next door are noisy.* (those cats)\n- *The tea in this cup is cold.* (this tea)\n\nWords such as *in this cup*, *next door* or *we bought* often show that you mean particular things. Do not use *a* with an uncountable noun or a plural noun.",
-        "泛指**一类事物**时，用复数名词或不可数名词，**不加冠词**：\n\n- *Cats sleep a lot.*（所有的猫）\n- *Tea is popular in China.*（泛指茶）\n\n指**特定的**事物，也就是能指出来的、或者句子里说明了是哪些的事物，用 *the*：\n\n- *The cats next door are noisy.*（隔壁那几只猫）\n- *The tea in this cup is cold.*（这杯茶）\n\n*in this cup*、*next door*、*we bought* 这样的词常常表明是特指。中文没有冠词，“茶很受欢迎”和“这杯茶凉了”都只说“茶”；英语泛指时不能加 the，说成 *The tea is popular in China* 就变成了某一种茶。*a* 不能用在不可数名词或复数名词前。",
+        "When you talk about a kind of thing **in general**, use a plural noun or an uncountable noun with **no article**:\n\n- *Cats sleep a lot.* (all cats)\n- *Tea is popular in China.* (tea in general)\n\nWhen you mean **particular** things, the ones you can point to or that the sentence tells you about, use *the*:\n\n- *The cats next door are noisy.* (those cats)\n- *The tea in this cup is cold.* (this tea)\n\n> **Watch out.** Do not add *the* before a general plural or uncountable noun (*The tea is popular in China* narrows it to one specific tea), and never put *a/an* before a plural or uncountable noun.",
+        "泛指**一类事物**时，用复数名词或不可数名词，**不加冠词**：\n\n- *Cats sleep a lot.*（所有的猫）\n- *Tea is popular in China.*（泛指茶）\n\n指**特定的**事物，也就是能指出来的、或者句子里说明了是哪些的事物，用 *the*：\n\n- *The cats next door are noisy.*（隔壁那几只猫）\n- *The tea in this cup is cold.*（这杯茶）\n\n> **注意。** 泛指一类事物时不要多加 *the*（*The tea is popular in China* 会变成特指某一种茶），也不要在复数或不可数名词前用 *a/an*。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), generalChoice, articleWhy, whyNotArticle),
     ),
@@ -985,8 +1005,8 @@ const articles: TopicDef = {
       "places",
       t("The with names of places", "地名前的 the"),
       t(
-        "Most names of places take **no article**: countries (*China, Japan*), cities (*Paris*), continents (*Asia*), streets (*Oxford Street*) and single mountains (*Mount Fuji*).\n\nThese take ***the***:\n\n- rivers, seas and oceans: *the Yangtze, the Mediterranean, the Pacific*\n- mountain ranges and deserts: *the Alps, the Himalayas, the Sahara*\n- countries with *United* or a plural name: *the United States, the United Kingdom, the Netherlands, the Philippines*\n- some famous places: *the Great Wall, the Amazon*",
-        "大多数地名前**不加冠词**：国家（*China, Japan*）、城市（*Paris*）、大洲（*Asia*）、街道（*Oxford Street*）和单座山峰（*Mount Fuji*）。\n\n下面这些要加 ***the***：\n\n- 河流、海和大洋：*the Yangtze, the Mediterranean, the Pacific*\n- 山脉和沙漠：*the Alps, the Himalayas, the Sahara*\n- 名字里有 *United* 或是复数形式的国家：*the United States, the United Kingdom, the Netherlands, the Philippines*\n- 一些著名的地方：*the Great Wall, the Amazon*\n\n中文说“长江”“美国”都不需要冠词，英语却要分清哪些地名带 the。",
+        "Most names of places take **no article**: countries (*China, Japan*), cities (*Paris*), continents (*Asia*), streets (*Oxford Street*) and single mountains (*Mount Fuji*).\n\nThese take ***the***:\n\n- rivers, seas and oceans: *the Yangtze, the Mediterranean, the Pacific*\n- mountain ranges and deserts: *the Alps, the Himalayas, the Sahara*\n- countries with *United* or a plural name: *the United States, the United Kingdom, the Netherlands, the Philippines*\n- some famous places: *the Great Wall, the Amazon*\n\n> **Watch out.** Separate single mountains (*Mount Fuji*—no *the*) from mountain ranges (*the Alps*—with *the*), and plain country names (*Japan*) from plural/union names (*the United States*).",
+        "大多数地名前**不加冠词**：国家（*China, Japan*）、城市（*Paris*）、大洲（*Asia*）、街道（*Oxford Street*）和单座山峰（*Mount Fuji*）。\n\n下面这些要加 ***the***：\n\n- 河流、海和大洋：*the Yangtze, the Mediterranean, the Pacific*\n- 山脉和沙漠：*the Alps, the Himalayas, the Sahara*\n- 名字里有 *United* 或是复数形式的国家：*the United States, the United Kingdom, the Netherlands, the Philippines*\n- 一些著名的地方：*the Great Wall, the Amazon*\n\n> **注意。** 分清单座山峰（*Mount Fuji* 不加 *the*）和山脉（*the Alps* 加 *the*），分清普通国名（*Japan*）和复数或带 *United* 的国名（*the United States*）。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), placeChoice, articleWhy, whyNotArticle),
     ),
@@ -994,8 +1014,8 @@ const articles: TopicDef = {
       "correct",
       t("Correcting the article", "改正冠词"),
       t(
-        "Each sentence has one mistake with *the*: it is there when the sentence is about things in general or a country or city, or it is missing before particular things or a river, a sea or a mountain range. Write the sentence correctly. *(in general)* tells you that the sentence is about things in general; do not copy it.",
-        "每个句子都有一处 *the* 用错了：要么泛指事物、国名或城市名前多了 the，要么特指的事物或河流、海洋、山脉前少了 the。把句子改正写出来。*(in general)* 表示句子是泛指，不要抄写它。",
+        "Each sentence has one mistake with *the*: it is there when the sentence is about things in general or a country or city (*The China is huge.* → *China is huge.*), or it is missing before particular things or a river, sea or mountain range (*Yangtze is long.* → *The Yangtze is long.*). *(in general)* is only a cue—do not copy it.\n\n> **Watch out.** When you add or remove *The* at the start of a sentence, adjust capitalization on the first word (*The music* ↔ *Music*, *the Alps* ↔ *The Alps*).",
+        "每个句子都有一处 *the* 用错了：泛指事物、普通国名或城市名前多了 *the*（*The China is huge.* → *China is huge.*），或特指事物、河流、海洋、山脉前少了 *the*（*Yangtze is long.* → *The Yangtze is long.*）。*(in general)* 只是提示，不要抄进答案。\n\n> **注意。** 在句首增删 *The* 时，记得同步调整句首字母的大小写（*The music* ↔ *Music*）。",
       ),
       typedGenerator(
         "sentence",
@@ -1079,6 +1099,10 @@ const writingAStory = judgedTopic({
     "Write a story of 150 to 200 words from a first line the task gives, with a beginning, a problem and an ending, in the past tenses.",
     "根据任务给出的第一句写一个 150 到 200 词的故事：有开头、有问题、有结尾，用过去的时态。",
   ),
+  intro: t(
+    "A memorable short story picks up from the opening line, builds a turning point, and lands a satisfying ending—blending past simple events (*The lights went out*), past continuous atmosphere (*Snow was falling*), and a line of speech.",
+    "好故事会顺着开头第一句展开，在中间制造转折或难题，最后给出有力结局——把一般过去时事件（*The lights went out*）、过去进行时氛围（*Snow was falling*）和一两句对话自然融合。",
+  ),
   prerequisites: ["writing-about-a-past-event", "past-continuous"],
   encompasses: [
     { topic: "writing-about-a-past-event", weight: 0.3 },
@@ -1089,8 +1113,8 @@ const writingAStory = judgedTopic({
     id: "story",
     title: t("Beginning, problem and ending", "开头、问题和结尾"),
     explanation: t(
-      "A good short story has a shape:\n\n- **A beginning** that starts from the first line you are given and tells the reader who, where and when.\n- **A problem** or a surprise in the middle: something goes wrong or something unexpected happens.\n- **An ending** that tells how the problem was solved or what the people learned.\n\nTell the story in the **past**: the past simple for the main events (*I opened the door*), the past continuous for the background (*It was raining*), and the past perfect for something earlier (*I had left my key at home*). Make it come alive with details: what people saw and felt, and a line or two of what they said, in quotation marks.",
-      "一个好的短故事要有结构：\n\n- **开头**：从给出的第一句接着写，交代人物、地点和时间。\n- **中间有问题**或意外：出了差错，或者发生了没想到的事。\n- **结尾**：说明问题怎样解决了，或者人物明白了什么。\n\n故事用**过去的时态**讲：主要事件用一般过去时（*I opened the door*），背景用过去进行时（*It was raining*），更早发生的事用过去完成时（*I had left my key at home*）。中文讲故事常用“了”“过”或者不变动词，英语却每个动词都要选对时态，并且不要中途跳到现在时。加上细节让故事生动：人物看到什么、有什么感受，再加一两句用引号写出的对话。",
+      "A good short story has a shape:\n\n- **A beginning** that starts from the first line you are given and tells the reader who, where and when.\n- **A problem** or a surprise in the middle: something goes wrong or something unexpected happens.\n- **An ending** that tells how the problem was solved or what the people learned.\n\nTell the story in the **past**: the past simple for the main events (*I opened the door*), the past continuous for the background (*It was raining*), and the past perfect for something earlier (*I had left my key at home*). Make it come alive with details and a line or two of dialogue.\n\n> **Watch out.** Do not slip into the present tense mid-story, and make sure your story genuinely continues the given first sentence rather than ignoring it.",
+      "一个好的短故事要有结构：\n\n- **开头**：从给出的第一句接着写，交代人物、地点和时间。\n- **中间有问题**或意外：出了差错，或者发生了没想到的事。\n- **结尾**：说明问题怎样解决了，或者人物明白了什么。\n\n故事用**过去的时态**讲：主要事件用一般过去时（*I opened the door*），背景用过去进行时（*It was raining*），更早发生的事用过去完成时（*I had left my key at home*）。加上细节和一两句带引号的对话让故事更生动。\n\n> **注意。** 不要写到一半滑回现在时，并确保情节自然承接题目给出的第一句，而不是另起炉灶。",
     ),
   },
   question: t(

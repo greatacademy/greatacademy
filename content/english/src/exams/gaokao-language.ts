@@ -539,6 +539,10 @@ function sevenItems(kinds: readonly GapKind[]): readonly SolvedChoice[] {
           sevenWhy[kind],
           t(`Here the clue is *${clue}*.`, `这里的线索是 *${clue}*。`),
           same(quote(filled(paragraph, right))),
+          t(
+            `**Check.** Read the completed paragraph from start to finish and confirm the sentence connects cleanly to *${clue}*.`,
+            `**检验。** 把填好的段落从头到尾通读一遍，确认该句与线索 *${clue}* 严丝合缝。`,
+          ),
         ]),
       });
     });
@@ -556,6 +560,10 @@ export const sevenFromFive: TopicDef = examTopic({
     "Choose the sentence that fits a gap in a short text, as in the seven-from-five part of the Gaokao: first gaps that open or close a paragraph, then gaps in the middle.",
     "按照高考七选五的形式，选出适合短文空格的句子：先是段首和段尾的空格，再是段中的空格。",
   ),
+  intro: t(
+    "In Gaokao Seven-from-Five, every candidate sentence sounds like it belongs to the article—only structural clues such as *Small actions like these* or *In this way* reveal which sentence locks into a specific opening, middle, or closing slot.",
+    "高考七选五里，每个备选句听起来都与文章话题相关——只有借助 *Small actions like these* 或 *In this way* 这样的衔接线索，才能判断哪一句真正契合段首、段中或段尾的位置。",
+  ),
   strand: "reading",
   prerequisites: ["choosing-transitions"],
   encompasses: [
@@ -568,8 +576,8 @@ export const sevenFromFive: TopicDef = examTopic({
       "opening-and-closing-gaps",
       t("Gaps that open or close a paragraph", "段首和段尾的空格"),
       t(
-        "A gap at the start of a paragraph usually needs its topic sentence: a short, general sentence that the rest of the paragraph explains. Read the sentences after the gap and ask what they are all about. A gap at the end needs a sentence that sums up the paragraph or draws a lesson from it, often beginning with *So*, *In this way* or *This*. Every option may be about the topic of the text; the right one fits this paragraph.",
-        "段首的空格通常需要主题句：一个简短、概括的句子，由段落的其余部分加以说明。读空格后面的句子，想一想它们共同讲的是什么。段尾的空格需要一个总结本段或从中得出结论的句子，常以 *So*、*In this way* 或 *This* 开头。每个选项都可能与全文话题有关，正确的那个适合这一段。",
+        "A gap at the start of a paragraph usually needs its topic sentence: a short, general sentence that the rest of the paragraph explains. Read the sentences after the gap and ask what they are all about. A gap at the end needs a sentence that sums up the paragraph or draws a lesson from it, often beginning with *So*, *In this way* or *This*. Every option may be about the topic of the text; the right one fits this paragraph.\n\n> **Watch out.** Do not pick a sentence just because it repeats a word from the title—an opening sentence must cover **every** example that follows, not just one detail.",
+        "段首的空格通常需要主题句：一个简短、概括的句子，由段落的其余部分加以说明。读空格后面的句子，想一想它们共同讲的是什么。段尾的空格需要一个总结本段或从中得出结论的句子，常以 *So*、*In this way* 或 *This* 开头。每个选项都可能与全文话题有关，正确的那个适合这一段。\n\n> **注意。** 不要只因为某句重复了标题里的词就选它——段首句必须概括后面的**所有**例证，而不能只沾边一个细节。",
       ),
       solvedChoiceGenerator(sevenQuestion, sevenItems(["opening", "closing"])),
     ),
@@ -577,8 +585,8 @@ export const sevenFromFive: TopicDef = examTopic({
       "middle-gaps",
       t("Gaps in the middle of a paragraph", "段中的空格"),
       t(
-        "A gap in the middle is decided by the sentences on both sides. Look for words that point back or forward: *this*, *these*, *they*, *it*, *instead*, *too*, *If not*, *As a result*. The sentence after the gap often refers to something the missing sentence said, and the missing sentence must follow from the one before. Try the option in the gap and read all three sentences together.",
-        "段中的空格由前后两句共同决定。要注意指向前文或后文的词：*this*、*these*、*they*、*it*、*instead*、*too*、*If not*、*As a result*。空格后的句子常常指代所缺句子中的内容，而所缺的句子又必须承接前一句。把选项放进空格，把三句话连起来读一遍。",
+        "A gap in the middle is decided by the sentences on both sides. Look for words that point back or forward: *this*, *these*, *they*, *it*, *instead*, *too*, *If not*, *As a result*. The sentence after the gap often refers to something the missing sentence said, and the missing sentence must follow from the one before. Try the option in the gap and read all three sentences together.\n\n> **Watch out.** Always check the sentence **after** the gap as well as the one before it—a pronoun like *these* or *it* in the next line will expose a wrong choice immediately.",
+        "段中的空格由前后两句共同决定。要注意指向前文或后文的词：*this*、*these*、*they*、*it*、*instead*、*too*、*If not*、*As a result*。空格后的句子常常指代所缺句子中的内容，而所缺的句子又必须承接前一句。把选项放进空格，把三句话连起来读一遍。\n\n> **注意。** 既要看空格**前一句**，更要看空格**后一句**——后一句里的 *these*、*it* 等指代词会立刻暴露不衔接的干扰项。",
       ),
       solvedChoiceGenerator(sevenQuestion, sevenItems(["middle"])),
     ),
@@ -843,8 +851,8 @@ const solvedCloze = ([shown, right, wrong, clue]: ClozeItem): SolvedChoice => ({
   wrong,
   whyNot: wrong.map((w) =>
     t(
-      `*${w}* is good English, but read it with *${clue}*: the meaning no longer fits, so the gap takes **${right}**.`,
-      `*${w}* 本身没有错，但和 *${clue}* 一起读，意思就说不通了，所以空格填 **${right}**。`,
+      `*${w}* is good English on its own, but read it alongside *${clue}*: the meaning no longer fits this context.`,
+      `*${w}* 本身语法没错，但结合 *${clue}* 来读，意思在当前语境下说不通。`,
     ),
   ),
 
@@ -854,6 +862,10 @@ const solvedCloze = ([shown, right, wrong, clue]: ClozeItem): SolvedChoice => ({
       `*${clue}* 决定了空格的词：只有 **${right}** 与之相符。其他几个词本身没有错，但放在这里意思不通。`,
     ),
     same(quote(filled(shown, right))),
+    t(
+      `**Check.** Re-read the whole passage with **${right}** in place and verify it agrees with *${clue}* in logic and tone.`,
+      `**检验。** 把 **${right}** 代回整段通读一遍，确认它在逻辑和情感色彩上都与 *${clue}* 一致。`,
+    ),
   ]),
 });
 
@@ -867,6 +879,10 @@ export const cloze: TopicDef = examTopic({
     "Choose the word of four that fits a gap in a story, as in the cloze of the Gaokao: first words the sentence decides, then words only the story around them decides.",
     "按照高考完形填空的形式，从四个词中选出适合故事空格的一个：先是句子本身决定的词，再是只有上下文才能决定的词。",
   ),
+  intro: t(
+    "In Gaokao Cloze, all four options are usually grammatical—*missed* and *caught* both fit *He ___ the bus*, until *and had to walk* locks in *missed*. Reading past the blank for the deciding clue is the whole game.",
+    "高考完形填空的四个选项往往都符合语法——*missed* 和 *caught* 放进 *He ___ the bus* 都没毛病，直到后半句的 *and had to walk* 才锁定答案是 *missed*。跨过空格向后找决定性线索，才是解题关键。",
+  ),
   strand: "vocabulary",
   prerequisites: ["phrasal-verbs"],
   encompasses: [{ topic: "phrasal-verbs", weight: 0.1 }],
@@ -876,8 +892,8 @@ export const cloze: TopicDef = examTopic({
       "words-the-sentence-decides",
       t("Words the sentence decides", "句子决定的词"),
       t(
-        "The four options are usually the same kind of word, so grammar alone does not decide. Find the words in the sentence that the gap must agree with: a reason after *so* or *because*, a result after *so ... that*, or a fixed partner such as *pay attention* or *make a decision*. Then choose the word that makes the whole sentence true and natural.",
-        "四个选项通常词性相同，单靠语法无法判断。要找出句子中与空格相呼应的词：*so* 或 *because* 后的原因，*so ... that* 后的结果，或 *pay attention*、*make a decision* 这类固定搭配。然后选出使整句话合理、自然的词。",
+        "The four options are usually the same kind of word, so grammar alone does not decide. Find the words in the sentence that the gap must agree with: a reason after *so* or *because*, a result after *so ... that*, or a fixed partner such as *pay attention* or *make a decision*. Then choose the word that makes the whole sentence true and natural.\n\n> **Watch out.** Do not stop reading at the gap—the deciding cause, result, or collocation often appears in the **second half** of the sentence.",
+        "四个选项通常词性相同，单靠语法无法判断。要找出句子中与空格相呼应的词：*so* 或 *because* 后的原因，*so ... that* 后的结果，或 *pay attention*、*make a decision* 这类固定搭配。然后选出使整句话合理、自然的词。\n\n> **注意。** 读到空格处不要立刻下结论——决定答案的因果线索或固定搭配往往藏在句子的**后半部分**。",
       ),
       solvedChoiceGenerator(clozeQuestion, sentenceCloze.map(solvedCloze)),
     ),
@@ -885,8 +901,8 @@ export const cloze: TopicDef = examTopic({
       "words-the-story-decides",
       t("Words the story decides", "上下文决定的词"),
       t(
-        "In a story, several options may fit the sentence with the gap, and only the sentences around it decide. Read on past the gap: what happens next, how the person feels and words such as *but*, *instead* and *although* show which way the story goes. A word that seems right in its own sentence is wrong if the next sentence says the opposite.",
-        "在故事中，几个选项可能都能放进空格所在的句子，只有前后的句子才能决定。要接着往下读：接下来发生了什么、人物有什么感受，以及 *but*、*instead*、*although* 这类词，都表明故事的走向。在本句中看似正确的词，如果下一句说的是相反的意思，就是错的。",
+        "In a story, several options may fit the sentence with the gap, and only the sentences around it decide. Read on past the gap: what happens next, how the person feels and words such as *but*, *instead* and *although* show which way the story goes. A word that seems right in its own sentence is wrong if the next sentence says the opposite.\n\n> **Watch out.** Watch turning-point signals like *but*, *instead*, and *at the time ... now*—ignoring a shift in the next sentence leads straight to the opposite answer.",
+        "在故事中，几个选项可能都能放进空格所在的句子，只有前后的句子才能决定。要接着往下读：接下来发生了什么、人物有什么感受，以及 *but*、*instead*、*although* 这类词，都表明故事的走向。在本句中看似正确的词，如果下一句说的是相反的意思，就是错的。\n\n> **注意。** 留意 *but*、*instead*、*at the time ... now* 等转折信号——忽略下一句的态度或情节转向，极易选成反义干扰项。",
       ),
       solvedChoiceGenerator(clozeQuestion, storyCloze.map(solvedCloze)),
     ),
@@ -1058,6 +1074,10 @@ function fillItem<K extends string>(why: Record<K, Text>) {
         why[kind],
         t(`The answer is **${canonical}**.`, `答案是 **${canonical}**。`),
         same(quote(filled(shown, canonical))),
+        t(
+          `**Check.** Read the completed sentence with **${canonical}** and verify agreement, tense or voice, word class, and spelling.`,
+          `**检验。** 把 **${canonical}** 放回整句通读一遍，核对主谓一致、时态语态、词性以及拼写。`,
+        ),
       ]),
     };
   };
@@ -1070,6 +1090,10 @@ export const grammarFilling: TopicDef = examTopic({
   summary: t(
     "Type the word a gap needs, as in the grammar filling of the Gaokao: first the right form of a given word, then a word of your own where none is given.",
     "按照高考语法填空的形式，填入空格需要的词：先是所给词的正确形式，再是没有给出提示词的空格。",
+  ),
+  intro: t(
+    "Gaokao Grammar Filling splits into two clear habits: when a bracketed word appears, check whether the sentence still needs a main verb or a non-finite/word-class form; when no word is given, look for the missing article, preposition, pronoun, conjunction, or relative word.",
+    "高考语法填空分为两类清晰思路：有括号提示词时，先判断句中是否缺谓语动词，还是需要非谓语或词性转换；无提示词时，则锁定冠词、介词、代词、连词或关系词。",
   ),
   strand: "grammar",
   prerequisites: ["relative-clauses", "active-and-passive-voice", "past-perfect"],
@@ -1084,8 +1108,8 @@ export const grammarFilling: TopicDef = examTopic({
       "given-words",
       t("The right form of a given word", "所给词的正确形式"),
       t(
-        "When a word is given in brackets, decide first what the gap is in the sentence. If the sentence has no main verb yet, the gap is one: choose its tense, and make it passive if the subject receives the action. If the sentence already has its main verb, the given verb is non-finite: *-ing*, the past participle or *to* with the verb. If the gap needs a noun, an adjective or an adverb, change the word class, and check for a plural or a comparison.",
-        "括号中给出词时，先判断空格在句中的成分。如果句子还没有谓语动词，空格就是谓语：确定时态，主语是动作的承受者时用被动语态。如果句子已有谓语，所给动词就用非谓语形式：-ing、过去分词或 to 加动词原形。如果空格需要名词、形容词或副词，就转换词性，并注意复数或比较级。",
+        "When a word is given in brackets, decide first what the gap is in the sentence. If the sentence has no main verb yet, the gap is one: choose its tense, and make it passive if the subject receives the action. If the sentence already has its main verb, the given verb is non-finite: *-ing*, the past participle or *to* with the verb. If the gap needs a noun, an adjective or an adverb, change the word class, and check for a plural or a comparison.\n\n> **Watch out.** Before adding a tense to a bracketed verb, check if the clause **already has** a main verb—if it does, you need a non-finite form (*-ing*, past participle, or *to* + verb), not a second finite verb.",
+        "括号中给出词时，先判断空格在句中的成分。如果句子还没有谓语动词，空格就是谓语：确定时态，主语是动作的承受者时用被动语态。如果句子已有谓语，所给动词就用非谓语形式：-ing、过去分词或 to 加动词原形。如果空格需要名词、形容词或副词，就转换词性，并注意复数或比较级。\n\n> **注意。** 给括号里的动词加时态前，务必先看该分句**是否已有谓语动词**——如果已有谓语，就需要用非谓语（*-ing*、过去分词或 *to* + 动词原形），切忌双谓语。",
       ),
       gapGenerator(
         "word-form",
@@ -1097,8 +1121,8 @@ export const grammarFilling: TopicDef = examTopic({
       "no-word-given",
       t("A gap with no word given", "无提示词的空格"),
       t(
-        "When no word is given, the gap needs a small word that the grammar of the sentence is missing. Before a noun, think of an article or a preposition; between two clauses, a conjunction or a relative word; in the place of a noun, a pronoun. Read the words on both sides: a noun after the gap and a clause after it need different words.",
-        "没有给出提示词时，空格需要的是句子语法上缺少的一个虚词。名词前，考虑冠词或介词；两个分句之间，考虑连词或关系词；代替名词时，考虑代词。要看空格两边的词：空格后是名词还是从句，需要的词并不相同。",
+        "When no word is given, the gap needs a small word that the grammar of the sentence is missing. Before a noun, think of an article or a preposition; between two clauses, a conjunction or a relative word; in the place of a noun, a pronoun. Read the words on both sides: a noun after the gap and a clause after it need different words.\n\n> **Watch out.** Check whether the clause after the gap is missing a subject/object (*which* / *who*) or is already complete (*where* / *when* / *why*), and never use *that* after a comma in a non-defining relative clause.",
+        "没有给出提示词时，空格需要的是句子语法上缺少的一个虚词。名词前，考虑冠词或介词；两个分句之间，考虑连词或关系词；代替名词时，考虑代词。要看空格两边的词：空格后是名词还是从句，需要的词并不相同。\n\n> **注意。** 先判断空格后的定语从句是缺主语/宾语（用 *which* / *who*）还是成分已完整（用 *where* / *when* / *why*），并且非限制性定语从句逗号后绝不能用 *that*。",
       ),
       gapGenerator(
         "word-form",

@@ -276,7 +276,7 @@ const nearWhy = t(
   "This ending reuses words from the text, but the text does not say it about this beginning.",
   "这个结尾借用了原文的词，但原文并没有就这个开头这样说。",
 );
-const extraWhy = t("The text does not say this at all.", "原文根本没有这样说。");
+const extraWhy = (chosen: string) => t(`"${chosen}" is not supported by the text at all.`, `“${chosen}”在原文中根本没有依据。`);
 
 const single: readonly SolvedChoice[] = interleave(
   texts.map((e) =>
@@ -286,10 +286,10 @@ const single: readonly SolvedChoice[] = interleave(
         right: ending,
         wrong: [nearMiss, ...e.extras],
         solution: t(
-          `**${joined(beginning, ending)}** The text says: "${evidence}${end(evidence)}"`,
-          `**${joined(beginning, ending)}** 原文是："${evidence}${end(evidence)}"`,
+          `**${joined(beginning, ending)}** The text says: "${evidence}${end(evidence)}"\n\n**Check.** Read the joined sentence as a whole and verify it matches "${evidence}${end(evidence)}" in both grammar and meaning.`,
+          `**${joined(beginning, ending)}** 原文是："${evidence}${end(evidence)}"\n\n**检验。** 把拼接后的整句通读一遍，确认语法连贯且与原文“${evidence}${end(evidence)}”意思一致。`,
         ),
-        whyNot: [nearWhy, extraWhy, extraWhy],
+        whyNot: [nearWhy, ...e.extras.map(extraWhy)],
       }),
     ),
   ),
@@ -316,8 +316,8 @@ const full: readonly LabelledItem[] = interleave(
         shown: `${e.text}\n\n${sentences}\n\n${printed}\n\n**Which ending completes sentence ${i + 1}?**`,
         right,
         solution: t(
-          `**${labels[right]}**: ${joined(beginning, ending)} The text says: "${evidence}${end(evidence)}"`,
-          `**${labels[right]}**：${joined(beginning, ending)} 原文是："${evidence}${end(evidence)}"`,
+          `**${labels[right]}**: ${joined(beginning, ending)} The text says: "${evidence}${end(evidence)}"\n\n**Check.** Confirm ending **${labels[right]}** continues sentence ${i + 1} grammatically and paraphrases the quoted evidence.`,
+          `**${labels[right]}**：${joined(beginning, ending)} 原文是："${evidence}${end(evidence)}"\n\n**检验。** 确认结尾 **${labels[right]}** 在语法上能自然接续第 ${i + 1} 句，并且准确转述了所引原文。`,
         ),
         whyNot: (label) => {
           const chosen = list[label] ?? "";
@@ -328,7 +328,7 @@ const full: readonly LabelledItem[] = interleave(
                 `这个结尾属于第 ${other + 1} 句，而不是第 ${i + 1} 句。`,
               )
             : e.extras.includes(chosen)
-              ? extraWhy
+              ? extraWhy(chosen)
               : nearWhy;
         },
       };
@@ -344,6 +344,10 @@ export const sentenceEndings: TopicDef = examTopic({
     "IELTS-style sentence beginnings after short texts, each to be completed with the ending the text supports: first one at a time, then from a list of six endings.",
     "雅思风格的题目：短文后给出句子的开头，要选出原文支持的结尾。先一次完成一句，再从六个结尾的列表中选择。",
   ),
+  intro: t(
+    "Matching Sentence Endings tests both reading accuracy and grammar at once: a valid ending must continue the sentence's syntax cleanly **and** agree with the passage—without falling for a near miss that swaps the subject.",
+    "句子结尾匹配同时考查阅读准确度与语法衔接：正确的结尾既要能自然接续前半句的语法，又要与原文意思一致，不能落入偷换主语的近似陷阱。",
+  ),
   strand: "reading",
   prerequisites: ["ielts-true-false-not-given"],
   encompasses: [{ topic: "ielts-true-false-not-given", weight: 0.2 }],
@@ -353,8 +357,8 @@ export const sentenceEndings: TopicDef = examTopic({
       "ielts-choosing-an-ending",
       t("Choosing an Ending", "选择结尾"),
       t(
-        "Each beginning names something the text talks about. Find the part of the text about it: the beginning often uses the text's own words, or close ones. Then read what the text says about it and choose the ending that says the same thing.\n\nThe hardest wrong ending is a **near miss**: it uses real words from the text, but joins them to the wrong subject or turns the meaning around. *Rural foxes approached the new objects* uses words of the text, but the text says that the city foxes did.",
-        "每个开头都指向原文谈到的某个事物。找到原文中谈它的部分：开头常用原文的词，或相近的词。再读原文对它说了什么，选出意思相同的结尾。\n\n最难排除的错误结尾是**近似陷阱**：它用的是原文中真实出现的词，却把它们接到了错误的主语上，或把意思说反了。*Rural foxes approached the new objects* 用的是原文的词，但原文说那是城市狐狸做的事。",
+        "Each beginning names something the text talks about. Find the part of the text about it: the beginning often uses the text's own words, or close ones. Then read what the text says about it and choose the ending that says the same thing.\n\n> **Watch out.** Beware the **near miss**: it borrows real words from the text but attaches them to the wrong subject or flips the meaning (*Rural foxes approached the new objects* when the text says city foxes did).",
+        "每个开头都指向原文谈到的某个事物。找到原文中谈它的部分：开头常用原文的词，或相近的词。再读原文对它说了什么，选出意思相同的结尾。\n\n> **注意。** 警惕**近似陷阱**：它照搬原文里真实出现的词，却把它们接到了错误的主语上或把意思说反（原文说的是城市狐狸，选项却写成 *Rural foxes*）。",
       ),
       solvedChoiceGenerator(t("Read the text and choose the right ending.", "阅读短文，选出正确的结尾。"), single),
     ),
@@ -362,8 +366,8 @@ export const sentenceEndings: TopicDef = examTopic({
       "ielts-endings-from-a-list",
       t("Matching from a List of Endings", "从结尾列表中匹配"),
       t(
-        "In the test, a list of endings serves several beginnings, and there are more endings than beginnings. Work through the beginnings in order, since they follow the order of the text. For each, find its part of the text, then look for its ending in the list. Grammar can help: an ending must continue the beginning as a correct sentence. Each ending is used only once, so an ending that clearly belongs to another sentence cannot be the answer here.",
-        "考试中，一个结尾列表供几个开头共用，而且结尾比开头多。按顺序逐句作答，因为开头的顺序与原文一致。每一句都先找到原文中对应的部分，再在列表中找它的结尾。语法也能帮忙：结尾必须能和开头连成正确的句子。每个结尾只用一次，所以明显属于另一句的结尾不会是这一句的答案。",
+        "In the test, a list of endings serves several beginnings, and there are more endings than beginnings. Work through the beginnings in order, since they follow the order of the text. For each, find its part of the text, then look for its ending in the list. Grammar can help: an ending must continue the beginning as a correct sentence.\n\n> **Watch out.** Because there are extra unused endings in the list, never pick an ending just by eliminating two others—always verify it against the passage itself.",
+        "考试中，一个结尾列表供几个开头共用，而且结尾比开头多。按顺序逐句作答，因为开头的顺序与原文一致。每一句都先找到原文中对应的部分，再在列表中找它的结尾。语法也能帮忙：结尾必须能和开头连成正确的句子。\n\n> **注意。** 列表里有多余的干扰结尾，切忌只靠排除法盲选——每个配对都必须回到原文核对。",
       ),
       labelGenerator(
         t("Read the text and the sentences below it, then answer the question.", "阅读短文和下面的句子，然后回答问题。"),

@@ -171,10 +171,10 @@ const patterns: readonly Pattern[] = [
 ];
 
 /** whyNotCollocation explains a word that does not belong to the fixed phrase of a gap. */
-const whyNotCollocation = (w: string, right: string, phrase: string): Text =>
+const whyNotCollocation = (w: string): Text =>
   t(
-    `*${w}* may mean something similar, but English does not use it in *${phrase}*. The fixed phrase takes **${right}**.`,
-    `*${w}* 的意思也许相近，但英语的 *${phrase}* 这个固定搭配不用它，要用 **${right}**。`,
+    `*${w}* may have a similar meaning on its own, but English does not collocate *${w}* with the words around this gap.`,
+    `*${w}* 单独看意思也许相近，但英语习惯上不把 *${w}* 和这个空格前后的词搭配使用。`,
   );
 
 /** linkerNotes explain the wrong options of the linking-word gaps, keyed by the right word and the wrong one. */
@@ -197,7 +197,7 @@ const linkerNotes: Readonly<Record<string, Text>> = {
     "*Unless* means *if not*, which makes no sense between these two facts.",
     "*unless* 的意思是“如果不”，放在这两个事实之间说不通。",
   ),
-  "long|much": t("*As much as* is about amount; a condition is *as long as*.", "*as much as* 说的是数量；表示条件要用 *as long as*。"),
+  "long|much": t("*As much as* is about amount or extent, not a condition.", "*as much as* 说的是数量或程度，不表示条件。"),
   "long|far": t("*As far as* is about distance or extent, not a condition.", "*as far as* 说的是距离或程度，不表示条件。"),
   "long|well": t("*As well as* means *and also*, not *on condition that*.", "*as well as* 的意思是“也”，不是“只要”。"),
   "case|order": t("*In order* needs *to* or *that* and gives a purpose.", "*in order* 要接 *to* 或 *that*，表示目的。"),
@@ -205,7 +205,10 @@ const linkerNotes: Readonly<Record<string, Text>> = {
   "case|fact": t("*In fact* means *really*; it does not join a clause.", "*in fact* 的意思是“事实上”，不能引导从句。"),
   "that|as": t("*So as* is followed by *to* and a verb, not by a clause.", "*so as* 后面接 *to* 和动词，不接从句。"),
   "that|for": t("*So for* is not a linking phrase.", "*so for* 不是连接词。"),
-  "that|to": t("*So to* is not a linking phrase; a purpose clause takes *so that*.", "*so to* 不是连接词；表示目的的从句用 *so that*。"),
+  "that|to": t(
+    "*So to* is not a valid linking phrase before a clause with a subject and verb.",
+    "*so to* 不能连接带主语和动词的目的从句。",
+  ),
   "Because|Due": t("*Due* takes *to*, not *of*: *due to the fog*.", "*Due* 后面接 *to*，不接 *of*：*due to the fog*。"),
   "Because|Since": t("*Since* starts a clause; it does not take *of*.", "*Since* 引导从句，不接 *of*。"),
   "Because|Although": t("*Although* gives a contrast and does not take *of*.", "*Although* 表示让步，也不接 *of*。"),
@@ -233,25 +236,32 @@ const linkerNotes: Readonly<Record<string, Text>> = {
 };
 
 /** whyNotPattern explains a wrong word of a phrasal verb, a linking phrase or a word with its preposition. */
-const whyNotPattern = (w: string, right: string, phrase: string, en: string, zh: string): Text => {
+const whyNotPattern = (w: string, right: string, en: string, zh: string): Text => {
   const note = linkerNotes[`${right}|${w}`];
-  const rest = t(`The phrase is *${phrase}*, meaning "${en}".`, `应该是 *${phrase}*，意思是“${zh}”。`);
-  return note === undefined
-    ? t(`*${w}* does not make the pattern here. ${rest.en}`, `*${w}* 构不成这里的搭配。${rest["zh-CN"]}`)
-    : t(`${note.en} ${rest.en}`, `${note["zh-CN"]}${rest["zh-CN"]}`);
+  return (
+    note ??
+    t(
+      `*${w}* does not form the idiomatic pattern needed here (meaning "${en}").`,
+      `*${w}* 无法与空格前后的词构成此处所需的固定搭配（意为“${zh}”）。`,
+    )
+  );
 };
 
 const solvedCollocation = ([shown, right, wrong, phrase]: Collocation): SolvedChoice => ({
   shown: shownGap(shown),
   right,
   wrong,
-  whyNot: wrong.map((w) => whyNotCollocation(w, right, phrase)),
+  whyNot: wrong.map((w) => whyNotCollocation(w)),
   solution: joinText([
     t(
       `We say *${phrase}*, so the answer is **${right}**. The other words do not go with it in this meaning.`,
       `英语说 *${phrase}*，所以答案是 **${right}**。其他几个词在这个意思上不能这样搭配。`,
     ),
     same(quote(filled(shown, right))),
+    t(
+      `**Check.** Read the completed sentence aloud and verify that *${phrase}* sounds natural as a fixed English collocation.`,
+      `**检验。** 把填好的整句通读一遍，确认 *${phrase}* 是地道的英语固定搭配。`,
+    ),
   ]),
 });
 
@@ -259,11 +269,15 @@ const solvedPattern = ([shown, right, wrong, phrase, en, zh]: Pattern): SolvedCh
   shown: shownGap(shown),
   right,
   wrong,
-  whyNot: wrong.map((w) => whyNotPattern(w, right, phrase, en, zh)),
+  whyNot: wrong.map((w) => whyNotPattern(w, right, en, zh)),
 
   solution: joinText([
     t(`*${phrase}* means "${en}", so the answer is **${right}**.`, `*${phrase}* 的意思是“${zh}”，所以答案是 **${right}**。`),
     same(quote(filled(shown, right))),
+    t(
+      `**Check.** Check that the words around the gap fit the pattern *${phrase}* both in meaning ("${en}") and in grammar.`,
+      `**检验。** 核对空格前后的词与 *${phrase}* 这一搭配在词义（“${zh}”）和语法结构上都完全吻合。`,
+    ),
   ]),
 });
 
@@ -277,6 +291,10 @@ export const multipleChoiceCloze: TopicDef = examTopic({
     "Choose the one word of four that fits a gap, as in Part 1 of B2 First Reading and Use of English: collocations, then phrasal verbs, linking words and words with their prepositions.",
     "按照 B2 First 阅读与英语运用第 1 部分的形式，从四个词中选出适合空格的一个：先是固定搭配，再是短语动词、连接词和词语与介词的搭配。",
   ),
+  intro: t(
+    "In B2 First Part 1, four near-synonyms compete for one blank: you *break* a record rather than *hit* one, and you *put off* a trip rather than *put out* one. Checking the words right before and after the gap separates natural English from look-alikes.",
+    "在 B2 First 第 1 部分中，四个近义词会争夺同一个空格：打破纪录要说 *break a record* 而非 *hit*，推迟行程要说 *put off* 而非 *put out*。紧盯空格前后的搭配词，才能把地道表达和似是而非的选项区分开。",
+  ),
   strand: "vocabulary",
   prerequisites: ["phrasal-verbs"],
   encompasses: [{ topic: "phrasal-verbs", weight: 0.2 }],
@@ -286,8 +304,8 @@ export const multipleChoiceCloze: TopicDef = examTopic({
       "collocations",
       t("Collocations and fixed phrases", "固定搭配"),
       t(
-        "In Part 1 the four words usually have similar meanings, so meaning alone does not decide. Read the words on both sides of the gap: a noun often chooses its verb (*make progress*, *pay attention*, *take place*) and an adjective (*heavy traffic*, *strong coffee*). Learn such pairs whole, and when two options seem right, ask which one English speakers actually say with the next word.",
-        "第 1 部分的四个选项意思往往相近，单靠意思无法判断。要看空格两边的词：名词常常决定与它搭配的动词（*make progress*、*pay attention*、*take place*）和形容词（*heavy traffic*、*strong coffee*）。这类搭配要整体记忆；两个选项似乎都对时，想一想英语中实际上和后面那个词连用的是哪一个。",
+        "In Part 1 the four words usually have similar meanings, so meaning alone does not decide. Read the words on both sides of the gap: a noun often chooses its verb (*make progress*, *pay attention*, *take place*) and an adjective (*heavy traffic*, *strong coffee*). Learn such pairs whole, and when two options seem right, ask which one English speakers actually say with the next word.\n\n> **Watch out.** Do not translate a phrase word for word from another language—*do progress* or *big traffic* sounds logical, but English accepts only the fixed collocation.",
+        "第 1 部分的四个选项意思往往相近，单靠意思无法判断。要看空格两边的词：名词常常决定与它搭配的动词（*make progress*、*pay attention*、*take place*）和形容词（*heavy traffic*、*strong coffee*）。这类搭配要整体记忆；两个选项似乎都对时，想一想英语中实际上和后面那个词连用的是哪一个。\n\n> **注意。** 不要把中文搭配逐字直译成英语——*do progress* 或 *big traffic* 看似合理，但英语只接受固定的地道搭配。",
       ),
       solvedChoiceGenerator(clozeQuestion, collocations.map(solvedCollocation)),
     ),
@@ -295,8 +313,8 @@ export const multipleChoiceCloze: TopicDef = examTopic({
       "phrasal-verbs-and-linkers",
       t("Phrasal verbs, linking words and prepositions", "短语动词、连接词和介词搭配"),
       t(
-        "Some gaps test a word that only fits one pattern. In a phrasal verb, the particle after the gap (*off*, *up*, *with*) decides the verb: *call off*, *put up with*. A linking word must fit the grammar after it: *despite* and *because of* take a noun, *although* and *unless* a clause, and *however* joins two sentences. Many adjectives and verbs take one preposition (*good at*, *depend on*, *insist on*), and *to* in *be used to* and *look forward to* is followed by *-ing*.",
-        "有些空格考的是只符合一种结构的词。在短语动词中，空格后的小品词（*off*、*up*、*with*）决定用哪个动词：*call off*、*put up with*。连接词必须符合后面的语法：*despite* 和 *because of* 后接名词，*although* 和 *unless* 后接从句，*however* 连接两个句子。许多形容词和动词只与一个介词搭配（*good at*、*depend on*、*insist on*），*be used to* 和 *look forward to* 中的 *to* 后接 -ing 形式。",
+        "Some gaps test a word that only fits one pattern. In a phrasal verb, the particle after the gap (*off*, *up*, *with*) decides the verb: *call off*, *put up with*. A linking word must fit the grammar after it: *despite* and *because of* take a noun, *although* and *unless* a clause, and *however* joins two sentences. Many adjectives and verbs take one preposition (*good at*, *depend on*, *insist on*), and *to* in *be used to* and *look forward to* is followed by *-ing*.\n\n> **Watch out.** Always check the **grammar right after the gap** (a noun phrase, a full clause, or a particle like *of* / *to* / *off*) before choosing a linker or verb.",
+        "有些空格考的是只符合一种结构的词。在短语动词中，空格后的小品词（*off*、*up*、*with*）决定用哪个动词：*call off*、*put up with*。连接词必须符合后面的语法：*despite* 和 *because of* 后接名词，*although* 和 *unless* 后接从句，*however* 连接两个句子。许多形容词和动词只与一个介词搭配（*good at*、*depend on*、*insist on*），*be used to* 和 *look forward to* 中的 *to* 后接 -ing 形式。\n\n> **注意。** 选连接词或动词之前，务必先看**空格紧跟的语法成分**（是名词短语、完整从句，还是 *of*、*to*、*off* 等小品词）。",
       ),
       solvedChoiceGenerator(clozeQuestion, patterns.map(solvedPattern)),
     ),
@@ -426,6 +444,10 @@ const openGap = ([shown, accepted, wrong, kind]: OpenGap): GapItem => {
       clozeWhy[kind],
       ...(others.length > 0 ? [t(`*${others.join("*, *")}* is also right.`, `*${others.join("*、*")}* 也正确。`)] : []),
       same(quote(filled(shown, shownWord))),
+      t(
+        `**Check.** Re-read the full sentence with **${shownWord}**: confirm it is a single word, spelled accurately, and makes the sentence grammatically complete.`,
+        `**检验。** 把 **${shownWord}** 放回整句通读一遍：确认只填了一个词、拼写无误，且整句语法完整通顺。`,
+      ),
     ]),
   };
 };
@@ -440,6 +462,10 @@ export const openCloze: TopicDef = examTopic({
     "Type the one word that a gap needs, with no options, as in Part 2 of B2 First Reading and Use of English: first grammar words, then linking words, relative words, quantifiers and parts of fixed phrases.",
     "按照 B2 First 阅读与英语运用第 2 部分的形式，在没有选项的空格中填入一个词：先是语法功能词，再是连接词、关系词、数量词和固定短语的一部分。",
   ),
+  intro: t(
+    "With no word bank in B2 First Part 2, the missing word is almost always structural glue: the *on* in *depend on the weather* or the *which* after a comma in *she passed, which surprised everyone*. Spotting what grammatical slot is empty leads straight to the single word.",
+    "B2 First 第 2 部分没有备选词，缺少的几乎总是起衔接作用的语法词：例如 *depend on the weather* 中的 *on*，或逗号后的 *she passed, which surprised everyone* 中的 *which*。看清句子缺什么语法成分，就能锁定唯一的词。",
+  ),
   strand: "grammar",
   prerequisites: ["relative-clauses", "articles-in-general-and-specific"],
   encompasses: [
@@ -452,8 +478,8 @@ export const openCloze: TopicDef = examTopic({
       "grammar-words",
       t("Articles, prepositions, auxiliaries and pronouns", "冠词、介词、助动词和代词"),
       t(
-        "The words of Part 2 are short and grammatical: they carry little meaning of their own, so the sentence around the gap decides them. Ask what is missing. Before a noun, is it an article or a preposition? Next to a verb, is a helping verb needed for the tense or the passive (*had started*, *is being built*)? Does the gap stand for a noun, or is it *there* or *it* at the start of a sentence? Write one word only, and spell it exactly.",
-        "第 2 部分要填的词很短，是语法功能词：它们本身意思不多，由空格周围的句子决定。先问缺的是什么。在名词前，是冠词还是介词？在动词旁，是否需要助动词构成时态或被动语态（*had started*、*is being built*）？空格是代替一个名词，还是句首的 *there* 或 *it*？只写一个词，并且拼写准确。",
+        "The words of Part 2 are short and grammatical: they carry little meaning of their own, so the sentence around the gap decides them. Ask what is missing. Before a noun, is it an article or a preposition? Next to a verb, is a helping verb needed for the tense or the passive (*had started*, *is being built*)? Does the gap stand for a noun, or is it *there* or *it* at the start of a sentence? Write one word only, and spell it exactly.\n\n> **Watch out.** Never type two words or a contraction like *don't*—Part 2 always expects **one** single grammar word.",
+        "第 2 部分要填的词很短，是语法功能词：它们本身意思不多，由空格周围的句子决定。先问缺的是什么。在名词前，是冠词还是介词？在动词旁，是否需要助动词构成时态或被动语态（*had started*、*is being built*）？空格是代替一个名词，还是句首的 *there* 或 *it*？只写一个词，并且拼写准确。\n\n> **注意。** 切勿填入两个词或 *don't* 这样的缩写——第 2 部分永远只填**一个**语法功能词。",
       ),
       gapGenerator("word-form", openQuestion, [...grammarWords, ...moreGrammarWords].map(openGap)),
     ),
@@ -461,8 +487,8 @@ export const openCloze: TopicDef = examTopic({
       "linkers-and-phrases",
       t("Linking words, relative words, quantifiers and fixed phrases", "连接词、关系词、数量词和固定短语"),
       t(
-        "Other gaps link ideas or complete a phrase. Find the relation between the two parts (contrast, reason, result, condition) and the grammar that follows: *although* takes a clause, *despite* a noun. After a noun, a relative word may begin a clause: *who*, *which*, *whose*, *where*, *when*. Before a noun, a quantifier must match it: *few* with plurals, *little* and *much* with uncountable nouns. Many gaps are one word of a fixed phrase, such as *as soon as*, *in order to*, *so ... that* or *such a ... that*.",
-        "另一些空格用来连接意思或补全短语。找出两部分之间的关系（转折、原因、结果、条件）以及后面的语法：*although* 后接从句，*despite* 后接名词。名词之后可能是关系词引导的从句：*who*、*which*、*whose*、*where*、*when*。名词之前的数量词必须与名词一致：*few* 与复数名词连用，*little* 和 *much* 与不可数名词连用。许多空格是固定短语中的一个词，例如 *as soon as*、*in order to*、*so ... that* 或 *such a ... that*。",
+        "Other gaps link ideas or complete a phrase. Find the relation between the two parts (contrast, reason, result, condition) and the grammar that follows: *although* takes a clause, *despite* a noun. After a noun, a relative word may begin a clause: *who*, *which*, *whose*, *where*, *when*. Before a noun, a quantifier must match it: *few* with plurals, *little* and *much* with uncountable nouns. Many gaps are one word of a fixed phrase, such as *as soon as*, *in order to*, *so ... that* or *such a ... that*.\n\n> **Watch out.** After a comma in a non-defining relative clause, use *which* or *who*—never *that*; and watch *so* (+ adjective) vs. *such* (+ *a/an* + adjective + noun).",
+        "另一些空格用来连接意思或补全短语。找出两部分之间的关系（转折、原因、结果、条件）以及后面的语法：*although* 后接从句，*despite* 后接名词。名词之后可能是关系词引导的从句：*who*、*which*、*whose*、*where*、*when*。名词之前的数量词必须与名词一致：*few* 与复数名词连用，*little* 和 *much* 与不可数名词连用。许多空格是固定短语中的一个词，例如 *as soon as*、*in order to*、*so ... that* 或 *such a ... that*。\n\n> **注意。** 非限制性定语从句逗号后只能用 *which* 或 *who*，不能用 *that*；同时留意 *so*（后接形容词）与 *such*（后接 *a/an* + 形容词 + 名词）的区别。",
       ),
       gapGenerator("word-form", openQuestion, [...linkingWords, ...moreLinkingWords].map(openGap)),
     ),
@@ -614,6 +640,10 @@ const formGap = ([shown, stem, accepted, wrong, kind]: FormGap): GapItem => {
       formWhy[kind],
       ...(others.length > 0 ? [t(`*${others.join("*, *")}* is also right.`, `*${others.join("*、*")}* 也正确。`)] : []),
       same(quote(filled(shown, shownWord))),
+      t(
+        `**Check.** Verify three things for **${shownWord}**: the word class fits the gap, any needed prefix or plural ending is included, and the spelling is exact.`,
+        `**检验。** 对 **${shownWord}** 核对三点：词性符合空格位置、没有漏掉否定前缀或复数词尾，且拼写完全准确。`,
+      ),
     ]),
   };
 };
@@ -631,6 +661,10 @@ export const wordFormation: TopicDef = examTopic({
     "Change a given word so that it fits a gap, as in Part 3 of B2 First Reading and Use of English: first nouns, adjectives and verbs made from a stem, then negative prefixes, adverbs and plurals.",
     "按照 B2 First 阅读与英语运用第 3 部分的形式，改变所给词的形式使之适合空格：先是由词根构成的名词、形容词和动词，再是否定前缀、副词和复数。",
   ),
+  intro: t(
+    "A single stem like *DECIDE* can become a noun (*decision*), an adjective (*decisive*), or its negative (*indecisive*). In B2 First Part 3, grammar determines the word class while the whole sentence tells you whether a negative prefix or plural ending is also required.",
+    "同一个词根如 *DECIDE* 可以变成名词（*decision*）、形容词（*decisive*）或反义词（*indecisive*）。在 B2 First 第 3 部分中，语法位置决定词性，而整句语义决定是否还要加否定前缀或复数词尾。",
+  ),
   strand: "vocabulary",
   prerequisites: ["b2-words-linking-1", "suffixes-that-change-word-class", "common-prefixes"],
   encompasses: [
@@ -643,8 +677,8 @@ export const wordFormation: TopicDef = examTopic({
       "word-classes",
       t("Nouns, adjectives and verbs from a stem", "由词根构成名词、形容词和动词"),
       t(
-        "First decide what kind of word the gap needs: after *the*, *a*, *his* or an adjective, a noun; before a noun or after *be*, an adjective; after *to* or a modal, a verb. Then choose the ending: nouns in *-tion*, *-ness*, *-ity*, *-ment*, *-th*, *-ance*, *-er* for a person; adjectives in *-ive*, *-ful*, *-able*, *-ous*, *-y*, *-ly*; verbs in *-en* and *-ify*, or with *en-* and *re-*. Some words change inside: *long*, *length*; *wide*, *width*; *know*, *knowledge*. Finally check the spelling and the form, such as a past participle.",
-        "先判断空格需要什么词：在 *the*、*a*、*his* 或形容词之后用名词；在名词之前或 *be* 之后用形容词；在 *to* 或情态动词之后用动词。再选择词尾：名词常用 *-tion*、*-ness*、*-ity*、*-ment*、*-th*、*-ance*，表示人用 *-er*；形容词常用 *-ive*、*-ful*、*-able*、*-ous*、*-y*、*-ly*；动词常用 *-en*、*-ify*，或者加 *en-*、*re-*。有些词内部也会变化：*long*、*length*；*wide*、*width*；*know*、*knowledge*。最后检查拼写和形式，例如是否要用过去分词。",
+        "First decide what kind of word the gap needs: after *the*, *a*, *his* or an adjective, a noun; before a noun or after *be*, an adjective; after *to* or a modal, a verb. Then choose the ending: nouns in *-tion*, *-ness*, *-ity*, *-ment*, *-th*, *-ance*, *-er* for a person; adjectives in *-ive*, *-ful*, *-able*, *-ous*, *-y*, *-ly*; verbs in *-en* and *-ify*, or with *en-* and *re-*. Some words change inside: *long*, *length*; *wide*, *width*; *know*, *knowledge*. Finally check the spelling and the form, such as a past participle.\n\n> **Watch out.** Do not stop as soon as you change the word class—check spelling changes inside the stem (*high* → *height*, *curiosity* → *curious*) and verb tense (*softened*, not *soften*).",
+        "先判断空格需要什么词：在 *the*、*a*、*his* 或形容词之后用名词；在名词之前或 *be* 之后用形容词；在 *to* 或情态动词之后用动词。再选择词尾：名词常用 *-tion*、*-ness*、*-ity*、*-ment*、*-th*、*-ance*，表示人用 *-er*；形容词常用 *-ive*、*-ful*、*-able*、*-ous*、*-y*、*-ly*；动词常用 *-en*、*-ify*，或者加 *en-*、*re-*。有些词内部也会变化：*long*、*length*；*wide*、*width*；*know*、*knowledge*。最后检查拼写和形式，例如是否要用过去分词。\n\n> **注意。** 变完词性不要立刻停笔——务必检查词干内部拼写变化（*high* → *height*、*curiosity* → *curious*）以及动词时态（如 *softened* 而非 *soften*）。",
       ),
       gapGenerator("word-form", formQuestion, stems.map(formGap)),
     ),
@@ -652,8 +686,8 @@ export const wordFormation: TopicDef = examTopic({
       "prefixes-adverbs-plurals",
       t("Negative prefixes, adverbs and plurals", "否定前缀、副词和复数"),
       t(
-        "Many gaps need two changes. Read for meaning: if the sentence means the opposite, add a negative prefix: *un-* is the most common, *im-* comes before *p* and *m*, *il-* before *l*, *ir-* before *r*, *in-* before many others, and *dis-* and *mis-* go with verbs (*disagree*, *misunderstand*). If the gap describes a verb, an adjective or the whole sentence, form an adverb (*luckily*, *dramatically*, *truly*). If a noun is countable and more than one is meant, add the plural (*scientists*, *solutions*). Most wrong answers in Part 3 have the right word but miss one of these changes.",
-        "很多空格需要两处变化。先看意思：如果句子表示相反的意思，就加否定前缀：最常见的是 *un-*，*p* 和 *m* 前用 *im-*，*l* 前用 *il-*，*r* 前用 *ir-*，许多其他词前用 *in-*，*dis-* 和 *mis-* 常用于动词（*disagree*、*misunderstand*）。如果空格修饰动词、形容词或整个句子，就构成副词（*luckily*、*dramatically*、*truly*）。如果是可数名词并且指不止一个，就加复数词尾（*scientists*、*solutions*）。第 3 部分的大多数错误答案都选对了词，却少了其中一处变化。",
+        "Many gaps need two changes. Read for meaning: if the sentence means the opposite, add a negative prefix: *un-* is the most common, *im-* comes before *p* and *m*, *il-* before *l*, *ir-* before *r*, *in-* before many others, and *dis-* and *mis-* go with verbs (*disagree*, *misunderstand*). If the gap describes a verb, an adjective or the whole sentence, form an adverb (*luckily*, *dramatically*, *truly*). If a noun is countable and more than one is meant, add the plural (*scientists*, *solutions*). Most wrong answers in Part 3 have the right word but miss one of these changes.\n\n> **Watch out.** Always read the **whole sentence** for sense—a missing negative prefix (*impossible*, not *possible*) or plural *-s* (*visitors*, not *visitor*) costs the entire mark.",
+        "很多空格需要两处变化。先看意思：如果句子表示相反的意思，就加否定前缀：最常见的是 *un-*，*p* 和 *m* 前用 *im-*，*l* 前用 *il-*，*r* 前用 *ir-*，许多其他词前用 *in-*，*dis-* 和 *mis-* 常用于动词（*disagree*、*misunderstand*）。如果空格修饰动词、形容词或整个句子，就构成副词（*luckily*、*dramatically*、*truly*）。如果是可数名词并且指不止一个，就加复数词尾（*scientists*、*solutions*）。第 3 部分的大多数错误答案都选对了词，却少了其中一处变化。\n\n> **注意。** 务必通读**整句语义**——漏掉否定前缀（如写成 *possible* 而非 *impossible*）或复数 *-s*（如写成 *visitor* 而非 *visitors*）会直接丢掉整题分数。",
       ),
       gapGenerator("word-form", formQuestion, changes.map(formGap)),
     ),
@@ -1241,6 +1275,10 @@ const transformation = ([first, key, second, accepted, wrong, kind]: Transformat
       t(`The gap is **${canonical}**.`, `空格处是 **${canonical}**。`),
       transformWhy[kind],
       same(quote(filled(second, canonical))),
+      t(
+        `**Check.** Check that **${canonical}** keeps **${key}** unchanged, uses two to five words (counting contractions as two), and preserves the original tense and meaning.`,
+        `**检验。** 核对 **${canonical}** 保留了原形关键词 **${key}**、字数在二至五个词之间（缩写算两词），并且与原句时态和意思完全一致。`,
+      ),
     ]),
   };
 };
@@ -1258,6 +1296,10 @@ export const keyWordTransformations: TopicDef = examTopic({
     "Rewrite a sentence in two to five words around a given word, as in Part 4 of B2 First Reading and Use of English: first passives, comparisons and verb patterns, then conditionals, reported speech, past modals and phrasal verbs.",
     "按照 B2 First 阅读与英语运用第 4 部分的形式，用包含所给词在内的二至五个词改写句子：先是被动语态、比较和动词结构，再是条件句、间接引语、过去情态和短语动词。",
   ),
+  intro: t(
+    "Turning *The water was too cold to swim* into *The water wasn't warm enough to swim* using **WARM** takes both a grammar shift and exact word-counting. B2 First Part 4 rewards spotting the exact structure triggered by the key word without altering it.",
+    "用关键词 **WARM** 把 *The water was too cold to swim* 改写成 *The water wasn't warm enough to swim*，既要转换句型，又要严守词数限制。B2 First 第 4 部分的核心在于识别关键词触发的固定结构，并且绝不改动关键词本身。",
+  ),
   strand: "grammar",
   prerequisites: ["third-conditional", "reported-speech", "passive-with-modals-and-perfect-forms"],
   encompasses: [
@@ -1271,8 +1313,8 @@ export const keyWordTransformations: TopicDef = examTopic({
       "passives-comparisons-patterns",
       t("Passives, comparisons and verb patterns", "被动语态、比较和动词结构"),
       t(
-        "Each item tests two things at once, usually a structure and a word or phrase. Start from the key word: what pattern does it bring? *BY* or *BEEN* signals a passive; *AS*, *THAN* or *ENOUGH* a comparison turned around; a verb such as *SUCCEEDED*, *MIND* or *SPENT* its own pattern (*succeeded in finishing*, *spent two hours writing*). Then compare the two sentences word by word, keep the tense and every piece of meaning, and count: two to five words, with a contraction such as *wasn't* counted as two. Never change the key word.",
-        "每道题通常同时考两点：一个结构和一个词或短语。先看关键词：它带来什么结构？*BY* 或 *BEEN* 提示被动语态；*AS*、*THAN* 或 *ENOUGH* 提示换个方向的比较；*SUCCEEDED*、*MIND*、*SPENT* 等动词有自己的结构（*succeeded in finishing*、*spent two hours writing*）。然后逐词比较两个句子，保持时态和每一点意思，再数词数：二至五个词，*wasn't* 这样的缩写算两个词。绝不能改变关键词。",
+        "Each item tests two things at once, usually a structure and a word or phrase. Start from the key word: what pattern does it bring? *BY* or *BEEN* signals a passive; *AS*, *THAN* or *ENOUGH* a comparison turned around; a verb such as *SUCCEEDED*, *MIND* or *SPENT* its own pattern (*succeeded in finishing*, *spent two hours writing*). Then compare the two sentences word by word, keep the tense and every piece of meaning, and count: two to five words, with a contraction such as *wasn't* counted as two. Never change the key word.\n\n> **Watch out.** Do not change the form of the key word or exceed five words—and remember that contractions like *didn't* count as **two** words.",
+        "每道题通常同时考两点：一个结构和一个词或短语。先看关键词：它带来什么结构？*BY* 或 *BEEN* 提示被动语态；*AS*、*THAN* 或 *ENOUGH* 提示换个方向的比较；*SUCCEEDED*、*MIND*、*SPENT* 等动词有自己的结构（*succeeded in finishing*、*spent two hours writing*）。然后逐词比较两个句子，保持时态和每一点意思，再数词数：二至五个词，*wasn't* 这样的缩写算两个词。绝不能改变关键词。\n\n> **注意。** 绝不能改变关键词的词形，也不要超过五个词——记住 *didn't* 这样的缩写按**两个**词计算。",
       ),
       gapGenerator("sentence-pattern", transformQuestion, [...passivesAndPatterns, ...morePassivesAndComparisons].map(transformation)),
     ),
@@ -1280,8 +1322,8 @@ export const keyWordTransformations: TopicDef = examTopic({
       "conditionals-reporting-modals",
       t("Conditionals, reported speech, past modals and phrasal verbs", "条件句、间接引语、过去情态和短语动词"),
       t(
-        "These items change how a sentence relates to reality or to a speaker. If the first sentence states a fact, the second often imagines the opposite: *I didn't know* becomes *If I had known*, and *I'm sorry I didn't* becomes *I wish I had*. A quotation becomes reported speech with its tense moved back, or a reporting verb with its pattern: *suggested going*, *denied taking*, *advised me to see*. *I'm sure* and *it's impossible* become *must have* and *can't have*; *it was a mistake* becomes *should have*. A phrasal verb often replaces a single verb: *postpone*, *put off*; *tolerate*, *put up with*.",
-        "这些题改变的是句子与事实或与说话人的关系。第一句陈述事实时，第二句常常设想相反的情况：*I didn't know* 变成 *If I had known*，*I'm sorry I didn't* 变成 *I wish I had*。直接引语变成时态后移的间接引语，或者变成带固定结构的转述动词：*suggested going*、*denied taking*、*advised me to see*。*I'm sure* 和 *it's impossible* 变成 *must have* 和 *can't have*；*it was a mistake* 变成 *should have*。短语动词常常替换单个动词：*postpone* 换成 *put off*，*tolerate* 换成 *put up with*。",
+        "These items change how a sentence relates to reality or to a speaker. If the first sentence states a fact, the second often imagines the opposite: *I didn't know* becomes *If I had known*, and *I'm sorry I didn't* becomes *I wish I had*. A quotation becomes reported speech with its tense moved back, or a reporting verb with its pattern: *suggested going*, *denied taking*, *advised me to see*. *I'm sure* and *it's impossible* become *must have* and *can't have*; *it was a mistake* becomes *should have*. A phrasal verb often replaces a single verb: *postpone*, *put off*; *tolerate*, *put up with*.\n\n> **Watch out.** Check the **time frame** carefully: past speculation uses *must/can't/might have + past participle* (never *mustn't have*), and third conditionals shift the past fact to *had + past participle*.",
+        "这些题改变的是句子与事实或与说话人的关系。第一句陈述事实时，第二句常常设想相反的情况：*I didn't know* 变成 *If I had known*，*I'm sorry I didn't* 变成 *I wish I had*。直接引语变成时态后移的间接引语，或者变成带固定结构的转述动词：*suggested going*、*denied taking*、*advised me to see*。*I'm sure* 和 *it's impossible* 变成 *must have* 和 *can't have*；*it was a mistake* 变成 *should have*。短语动词常常替换单个动词：*postpone* 换成 *put off*，*tolerate* 换成 *put up with*。\n\n> **注意。** 仔细核对**时间参照**：对过去的推测要用 *must/can't/might have + 过去分词*（绝不用 *mustn't have*），第三条件句要把过去的事实后移为 *had + 过去分词*。",
       ),
       gapGenerator("sentence-pattern", transformQuestion, [...conditionalsAndModals, ...moreConditionalsAndModals].map(transformation)),
     ),

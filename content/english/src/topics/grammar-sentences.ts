@@ -1179,6 +1179,10 @@ export const sentenceTopics: readonly TopicDef[] = [
     id: "subjects-and-predicates",
     title: t("Subjects and Predicates", "主语和谓语"),
     summary: t("Every sentence names someone or something and says something about it.", "每个句子都点出某人或某物，并对其作出陈述。"),
+    intro: t(
+      "In *The tired farmer fed the horses*, *The tired farmer* names who the sentence is about and *fed the horses* tells what happened. Every complete sentence splits into a subject and a predicate—even when a time or place phrase comes first.",
+      "在 *The tired farmer fed the horses* 中，*The tired farmer* 说出句子写的是谁，*fed the horses* 说出发生了什么。每个完整的句子都分成主语和谓语——哪怕句首放了时间或地点短语也一样。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 10,
@@ -1187,16 +1191,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "complete-subject",
         t("Finding the Subject", "找出主语"),
         t(
-          "A sentence has two main parts. The **subject** tells who or what the sentence is about. It includes all the words that belong with that person or thing.\n\nIn *The old bridge shook*, the sentence is about the old bridge, so the subject is **The old bridge**. To find it, ask: who or what is doing this, or being described?",
-          "句子有两个主要部分。**主语**（subject）说明句子谈的是谁或什么，包括与该人或物相关的所有词。\n\n在 *The old bridge shook* 中，句子谈的是那座旧桥，所以主语是 **The old bridge**。找主语时问自己：是谁或什么在做这件事，或被描述？",
+          "A sentence has two main parts. The **subject** tells who or what the sentence is about. It includes all the words that belong with that person or thing.\n\nIn *The old bridge shook*, the sentence is about the old bridge, so the subject is **The old bridge**. To find it, ask: who or what is doing this, or being described?\n\n> **Watch out.** Do not pick a noun at the end of the sentence just because it is a person or thing—ask who or what *does* the action.",
+          "句子有两个主要部分。**主语**（subject）说明句子谈的是谁或什么，包括与该人或物相关的所有词。\n\n在 *The old bridge shook* 中，句子谈的是那座旧桥，所以主语是 **The old bridge**。找主语时问自己：是谁或什么在做这件事，或被描述？\n\n> **注意。**不要因为句尾的某个词是人或物就选它——要问是谁或什么*发出*了动作。",
         ),
         choiceGenerator(
           t("What is the subject of this sentence?", "这句话的主语是什么？"),
           [...subjectBank, ...subjectMore],
-          (right) =>
+          (right, shown) =>
             t(
-              `The sentence is about **${right}**, so that is the subject. The rest tells what happens.`,
-              `句子谈的是 **${right}**，所以它是主语。其余部分说明发生了什么。`,
+              `The sentence is about **${right}**, so that is the subject. The rest tells what happens.\n\n**Check.** Find the verb in “${shown}” and ask *who or what* does it—the answer is **${right}**.`,
+              `句子谈的是 **${right}**，所以它是主语。其余部分说明发生了什么。\n\n**检验。**找到“${shown}”中的动词，问“是谁或什么做这件事”——答案正是 **${right}**。`,
             ),
           (wrong, _right, _shown, position) =>
             position === 0
@@ -1214,14 +1218,17 @@ export const sentenceTopics: readonly TopicDef[] = [
         "complete-predicate",
         t("Finding the Predicate", "找出谓语"),
         t(
-          "The **predicate** tells what the subject does or is. It contains the verb and the words that go with it.\n\nIn *The old bridge shook in the wind*, the predicate is **shook in the wind**. Once you have found the subject, the predicate is usually everything else.",
-          "**谓语**（predicate）说明主语做什么或是什么，包含动词及与之相关的词。\n\n在 *The old bridge shook in the wind* 中，谓语是 **shook in the wind**。找到主语后，其余部分通常就是谓语。",
+          "The **predicate** tells what the subject does or is. It contains the verb and the words that go with it.\n\nIn *The old bridge shook in the wind*, the predicate is **shook in the wind**. Once you have found the subject, the predicate is usually everything else.\n\n> **Watch out.** Do not leave out the verb—a noun like *the pond* or *my shoe* alone is only one piece inside the predicate, not the whole predicate.",
+          "**谓语**（predicate）说明主语做什么或是什么，包含动词及与之相关的词。\n\n在 *The old bridge shook in the wind* 中，谓语是 **shook in the wind**。找到主语后，其余部分通常就是谓语。\n\n> **注意。**不要漏掉动词——像 *the pond* 或 *my shoe* 这样单独的名词只是谓语里的一小块，不是完整的谓语。",
         ),
         choiceGenerator(
           t("What is the predicate of this sentence?", "这句话的谓语是什么？"),
           [...predicateBank, ...predicateMore],
           (right) =>
-            t(`**${right}** tells what the subject does, so it is the predicate.`, `**${right}** 说明主语做了什么，所以它是谓语。`),
+            t(
+              `**${right}** tells what the subject does, so it is the predicate.\n\n**Check.** Spot the verb at the start of **${right}**—together with the words after it, it tells the whole action of the subject.`,
+              `**${right}** 说明主语做了什么，所以它是谓语。\n\n**检验。**找到 **${right}** 开头的动词——它和后面的词合在一起，完整说明了主语的动作。`,
+            ),
           (wrong, _right, _shown, position) =>
             position === 0
               ? t(
@@ -1238,16 +1245,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "subject-after-opening",
         t("When the Sentence Opens with Something Else", "句子以其他内容开头时"),
         t(
-          "The subject is not always first. A sentence can open with a phrase that tells when or where, usually followed by a comma. The subject comes after it.\n\nIn *After the game, the players rested*, ask who rested. The players did, so the subject is **the players**, not *the game*.",
-          "主语不一定在最前面。句子可以用说明时间或地点的短语开头，后面通常有逗号，主语在它后面。\n\n在 *After the game, the players rested* 中，问一问是谁休息了。是球员，所以主语是 **the players**，而不是 *the game*。",
+          "The subject is not always first. A sentence can open with a phrase that tells when or where, usually followed by a comma. The subject comes after it.\n\nIn *After the game, the players rested*, ask who rested. The players did, so the subject is **the players**, not *the game*.\n\n> **Watch out.** Never pick a noun from the opening phrase before the comma—that phrase only sets the time or place.",
+          "主语不一定在最前面。句子可以用说明时间或地点的短语开头，后面通常有逗号，主语在它后面。\n\n在 *After the game, the players rested* 中，问一问是谁休息了。是球员，所以主语是 **the players**，而不是 *the game*。\n\n> **注意。**不要从逗号前面的开头短语里找主语——那部分只用来交代时间或地点。",
         ),
         choiceGenerator(
           t("What is the subject of this sentence?", "这句话的主语是什么？"),
           [...movedSubjectBank, ...movedSubjectMore],
-          (right) =>
+          (right, shown) =>
             t(
-              `Ask who or what does the action: **${right}**. The opening phrase only tells when or where.`,
-              `问一问是谁或什么在做这个动作：**${right}**。开头的短语只说明时间或地点。`,
+              `Ask who or what does the action: **${right}**. The opening phrase only tells when or where.\n\n**Check.** Cover the opening phrase before the comma in “${shown}”—the main clause begins right with **${right}**.`,
+              `问一问是谁或什么在做这个动作：**${right}**。开头的短语只说明时间或地点。\n\n**检验。**遮住“${shown}”中逗号前面的短语——主句正好从 **${right}** 开始。`,
             ),
           (wrong, _right, shown) =>
             shown.split(",")[0]!.includes(wrong)
@@ -1267,6 +1274,10 @@ export const sentenceTopics: readonly TopicDef[] = [
     id: "nouns-and-pronouns",
     title: t("Nouns and Pronouns", "名词和代词"),
     summary: t("Nouns name things; pronouns stand in for them, in the right form.", "名词为事物命名；代词代替名词，并要用对形式。"),
+    intro: t(
+      "In *Sam lost the keys, but he found them later*, *Sam* and *keys* are nouns, while *he* and *them* are pronouns standing in for them. Recognizing nouns and choosing the right pronoun form keeps every sentence clear.",
+      "在 *Sam lost the keys, but he found them later* 中，*Sam* 和 *keys* 是名词，*he* 和 *them* 是代替它们的代词。认清名词并选对代词形式，句子才会清楚自然。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 10,
@@ -1275,16 +1286,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "nouns",
         t("Nouns", "名词"),
         t(
-          "A **noun** names a person, place, thing or idea: *teacher*, *Paris*, *pencil*, *courage*. You can usually put *the* or *a* in front of it, or make it plural.\n\nWords that describe (*tall*) or show action (*jump*) are not nouns, even when they sit next to one.",
-          "**名词**（noun）为人、地点、事物或概念命名：*teacher*、*Paris*、*pencil*、*courage*。名词前通常可以加 *the* 或 *a*，也可以变成复数。\n\n描述性的词（*tall*）或表示动作的词（*jump*）不是名词，即使它们紧挨着名词。",
+          "A **noun** names a person, place, thing or idea: *teacher*, *Paris*, *pencil*, *courage*. You can usually put *the* or *a* in front of it, or make it plural.\n\nWords that describe (*tall*) or show action (*jump*) are not nouns, even when they sit next to one.\n\n> **Watch out.** Ideas and feelings like *honesty* and *joy* are nouns too, while pronouns like *she* or *they* stand in for nouns rather than being nouns themselves.",
+          "**名词**（noun）为人、地点、事物或概念命名：*teacher*、*Paris*、*pencil*、*courage*。名词前通常可以加 *the* 或 *a*，也可以变成复数。\n\n描述性的词（*tall*）或表示动作的词（*jump*）不是名词，即使它们紧挨着名词。\n\n> **注意。**像 *honesty*、*joy* 这样的抽象概念也是名词，而 *she*、*they* 是代替名词的代词，不是名词本身。",
         ),
         choiceGenerator(
           t("Which word in this sentence is a noun?", "这句话中哪个词是名词？"),
           [...nounBank, ...nounMore, ...nounCross],
           (right) =>
             t(
-              `**${right}** names a person, place, thing or idea, so it is a noun.`,
-              `**${right}** 为人、地点、事物或概念命名，所以是名词。`,
+              `**${right}** names a person, place, thing or idea, so it is a noun.\n\n**Check.** Test putting *the* or *my* in front of **${right}**—it names a thing or idea you can talk about.`,
+              `**${right}** 为人、地点、事物或概念命名，所以是名词。\n\n**检验。**试着在 **${right}** 前面加上 *the* 或 *my*——它指的是一个可以谈论的事物或概念。`,
             ),
           notNoun,
         ),
@@ -1293,16 +1304,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "pronouns",
         t("Pronouns", "代词"),
         t(
-          "A **pronoun** takes the place of a noun so that we need not repeat it. Common pronouns are *I, you, he, she, it, we, they, me, him, her, us, them, his, its, their*.\n\nIn *Ana lost her hat, but she found it*, the words *her* and *she* stand for Ana, and *it* stands for the hat.",
-          "**代词**（pronoun）代替名词，免得重复。常见代词有 *I, you, he, she, it, we, they, me, him, her, us, them, his, its, their*。\n\n在 *Ana lost her hat, but she found it* 中，*her* 和 *she* 指 Ana，*it* 指帽子。",
+          "A **pronoun** takes the place of a noun so that we need not repeat it. Common pronouns are *I, you, he, she, it, we, they, me, him, her, us, them, his, its, their*.\n\nIn *Ana lost her hat, but she found it*, the words *her* and *she* stand for Ana, and *it* stands for the hat.\n\n> **Watch out.** Do not pick a noun like *girls* or *cat*—a pronoun replaces the noun instead of naming it directly.",
+          "**代词**（pronoun）代替名词，免得重复。常见代词有 *I, you, he, she, it, we, they, me, him, her, us, them, his, its, their*。\n\n在 *Ana lost her hat, but she found it* 中，*her* 和 *she* 指 Ana，*it* 指帽子。\n\n> **注意。**不要错选 *girls*、*cat* 这样的名词——代词是用来代替名词的，而不是直接命名。",
         ),
         choiceGenerator(
           t("Which word in this sentence is a pronoun?", "这句话中哪个词是代词？"),
           [...pronounBank, ...pronounMore, ...pronounCross],
           (right) =>
             t(
-              `**${right}** stands in for a noun, so it is a pronoun. The other words name, describe or show action, but none of them takes the place of a noun.`,
-              `**${right}** 代替名词，所以是代词。其他词或命名、或描述、或表示动作，但都不能代替名词。`,
+              `**${right}** stands in for a noun, so it is a pronoun.\n\n**Check.** Ask which person or thing **${right}** replaces in the sentence—you can point straight back to a noun or speaker.`,
+              `**${right}** 代替名词，所以是代词。\n\n**检验。**问一问 **${right}** 在句中代替哪个人或物——它可以直接对应回某个名词或说话人。`,
             ),
           notPronoun,
         ),
@@ -1311,16 +1322,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "pronoun-forms",
         t("Choosing the Form of a Pronoun", "选择代词的形式"),
         t(
-          "A pronoun changes form with its job. Before a verb, as the one acting, use *I, he, she, we, they*. After a verb or a word like *to*, use *me, him, her, us, them*. To show ownership, use *my, his, her, our, their, its*.\n\nWhen two people are named, try the pronoun alone: *Mia and I left*, because you would say *I left*, not *me left*.",
-          "代词的形式随它的作用而变。在动词前作为动作发出者时，用 *I, he, she, we, they*。在动词或 *to* 之类的词后面，用 *me, him, her, us, them*。表示所属时，用 *my, his, her, our, their, its*。\n\n提到两个人时，单独试一下代词：*Mia and I left*，因为你会说 *I left*，而不是 *me left*。",
+          "A pronoun changes form with its job. Before a verb, as the one acting, use *I, he, she, we, they*. After a verb or a word like *to*, use *me, him, her, us, them*. To show ownership, use *my, his, her, our, their, its*.\n\nWhen two people are named, try the pronoun alone: *Mia and I left*, because you would say *I left*, not *me left*.\n\n> **Watch out.** In pairs like *My friends and ___* or *praised Theo and ___*, always cover the other person's name and read the pronoun by itself.",
+          "代词的形式随它的作用而变。在动词前作为动作发出者时，用 *I, he, she, we, they*。在动词或 *to* 之类的词后面，用 *me, him, her, us, them*。表示所属时，用 *my, his, her, our, their, its*。\n\n提到两个人时，单独试一下代词：*Mia and I left*，因为你会说 *I left*，而不是 *me left*。\n\n> **注意。**遇到 *My friends and ___* 或 *praised Theo and ___* 这样并列两个人时，遮住另一个人的名字，单独读代词就能听出对错。",
         ),
         choiceGenerator(
           t("Which pronoun completes the sentence?", "哪个代词能补全句子？"),
           [...pronounFormBank, ...pronounFormMore, ...pronounFormCross],
           (right, shown) =>
             t(
-              `The right form is **${right}**: ${shown.replace("___", right)} Try the pronoun alone to hear which form fits its job.`,
-              `正确的形式是 **${right}**：${shown.replace("___", right)} 单独试读代词，判断哪种形式符合它的作用。`,
+              `The right form is **${right}**: ${shown.replace("___", right)}\n\n**Check.** Try **${right}** alone in its slot (ignoring any paired name)—it matches its job as subject, object, or owner.`,
+              `正确的形式是 **${right}**：${shown.replace("___", right)}\n\n**检验。**把 **${right}** 单独放进这个位置读一遍（忽略并列的另一人）——它正好符合主语、宾语或所属的作用。`,
             ),
           notThisForm,
         ),
@@ -1331,6 +1342,10 @@ export const sentenceTopics: readonly TopicDef[] = [
     id: "complete-sentences-and-fragments",
     title: t("Complete Sentences and Fragments", "完整句和句子片段"),
     summary: t("A sentence needs a subject and a predicate and must stand alone.", "句子需要主语和谓语，并且能独立成句。"),
+    intro: t(
+      "*Ran all the way to school.* has a period at the end, yet it never says who ran; *Because the road was closed.* leaves you waiting to hear what happened next. Spotting fragments—and fixing what is missing—makes every sentence complete.",
+      "*Ran all the way to school.* 虽然有句号，却没说出是谁跑；*Because the road was closed.* 让人还在等下文。学会识别句子片段并补全缺少的部分，写出来的每句话才站得住。",
+    ),
     prerequisites: ["subjects-and-predicates"],
     encompasses: [{ topic: "subjects-and-predicates", weight: 0.4 }],
     xp: 12,
@@ -1339,16 +1354,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "missing-part",
         t("Fragments Missing a Part", "缺少成分的片段"),
         t(
-          "A **complete sentence** has a subject and a predicate. A group of words missing one of them is a **fragment**, even if it starts with a capital and ends with a period.\n\n*The boat near the shore* has no predicate: what about the boat? *Rocked near the shore* has no subject: what rocked?",
-          "**完整句**（complete sentence）有主语和谓语。缺少其中之一的一组词是**片段**（fragment），即使它以大写字母开头、以句号结尾。\n\n*The boat near the shore* 没有谓语：船怎么了？*Rocked near the shore* 没有主语：什么在摇晃？",
+          "A **complete sentence** has a subject and a predicate. A group of words missing one of them is a **fragment**, even if it starts with a capital and ends with a period.\n\n*The boat near the shore* has no predicate: what about the boat? *Rocked near the shore* has no subject: what rocked?\n\n> **Watch out.** Do not be fooled by a capital letter and a period—always check for *both* a who/what (subject) and an action/state (predicate).",
+          "**完整句**（complete sentence）有主语和谓语。缺少其中之一的一组词是**片段**（fragment），即使它以大写字母开头、以句号结尾。\n\n*The boat near the shore* 没有谓语：船怎么了？*Rocked near the shore* 没有主语：什么在摇晃？\n\n> **注意。**不要被首字母大写和句号骗了——一定要同时检查有没有“谁/什么”（主语）和“做什么/是什么”（谓语）。",
         ),
         choiceGenerator(
           t("Is this a complete sentence? If not, what is missing?", "这是完整句吗？如果不是，缺少什么？"),
           [...missingPartBank, ...missingPartMore],
           (right) =>
             t(
-              `**${right}**. Look for a subject and a predicate: a complete sentence needs both.`,
-              `答案是 **${right}**。找一找主语和谓语：完整句两者都需要。`,
+              `**${right}**. A complete sentence needs both a subject and a predicate.\n\n**Check.** Ask two questions: *who or what?* and *what does it do?* ${right === "Complete sentence" ? "Both have clear answers here." : right === "Fragment with no subject" ? "The action is there, but nobody is named to do it." : "Something is named, but no verb tells what it does or is."}`,
+              `答案是 **${right}**。完整句必须同时具备主语和谓语。\n\n**检验。**问两个问题：“是谁或什么？”和“做了什么？”${right === "Complete sentence" ? "这里两个问题都有明确答案。" : right === "Fragment with no subject" ? "动作有了，但没有说出是谁做的。" : "人或物有了，但没有动词说明它做什么或是什么。"}`,
             ),
           fromTable(fragmentLabelFeedback),
         ),
@@ -1357,16 +1372,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "clause-fragment",
         t("Fragments That Cannot Stand Alone", "不能独立成句的片段"),
         t(
-          "Words such as *because, when, although, if* and *since* make a group of words depend on something else. *Because the road was closed* has a subject and a verb, yet it leaves the reader waiting: what happened because of that?\n\nIt is still a fragment unless it joins a complete thought: *We turned back because the road was closed.*",
-          "*because, when, although, if* 和 *since* 这类词会让一组词依赖其他内容。*Because the road was closed* 有主语和动词，但读者仍在等待：因此发生了什么？\n\n它仍然是片段，除非接上完整的意思：*We turned back because the road was closed.*",
+          "Words such as *because, when, although, if* and *since* make a group of words depend on something else. *Because the road was closed* has a subject and a verb, yet it leaves the reader waiting: what happened because of that?\n\nIt is still a fragment unless it joins a complete thought: *We turned back because the road was closed.*\n\n> **Watch out.** A subject and verb after *because*, *when*, *although*, or *if* still cannot stand alone—check whether a main clause completes the thought.",
+          "*because, when, although, if* 和 *since* 这类词会让一组词依赖其他内容。*Because the road was closed* 有主语和动词，但读者仍在等待：因此发生了什么？\n\n它仍然是片段，除非接上完整的意思：*We turned back because the road was closed.*\n\n> **注意。***because*、*when*、*although*、*if* 后面就算有主语和动词，也不能独立成句——一定要看有没有主句把意思说完。",
         ),
         choiceGenerator(
           t("Is this a complete sentence? If not, what is wrong with it?", "这是完整句吗？如果不是，问题在哪里？"),
           [...clauseFragmentBank, ...clauseFragmentMore],
           (right) =>
             t(
-              `**${right}**. A group of words that begins with a word like *because* needs another complete thought.`,
-              `答案是 **${right}**。以 *because* 这类词开头的一组词，需要另一个完整的意思。`,
+              `**${right}**. A clause beginning with a word like *because* or *when* needs a main clause to finish the thought.\n\n**Check.** Read it aloud and pause at the period—${right === "Complete sentence" ? "the thought feels finished." : "it leaves you waiting to ask *and then what?*"}`,
+              `答案是 **${right}**。以 *because* 或 *when* 这类词开头的从句，需要主句把意思说完。\n\n**检验。**大声读到句号处停下——${right === "Complete sentence" ? "意思已经完整说完了。" : "听起来话没说完，让人忍不住问“然后呢？”"}`,
             ),
           fromTable(clauseLabelFeedback),
         ),
@@ -1375,16 +1390,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "fixing-fragments",
         t("Fixing a Fragment", "修改片段"),
         t(
-          "To fix a fragment, add what is missing: a predicate, a subject, or the complete thought that a word like *because* is waiting for. Adding more description does not help.\n\n*The tall man in the green coat* stays a fragment however long it gets, until the man does something: *The tall man in the green coat waved.*",
-          "修改片段时，补上缺少的部分：谓语、主语，或者 *because* 这类词等待的完整意思。增加描述没有用。\n\n*The tall man in the green coat* 不论多长都仍是片段，直到这个人做了什么：*The tall man in the green coat waved.*",
+          "To fix a fragment, add what is missing: a predicate, a subject, or the complete thought that a word like *because* is waiting for. Adding more description does not help.\n\n*The tall man in the green coat* stays a fragment however long it gets, until the man does something: *The tall man in the green coat waved.*\n\n> **Watch out.** A longer sentence is not automatically complete—adding extra details or *-ing* words without a real subject and main verb still leaves a fragment.",
+          "修改片段时，补上缺少的部分：谓语、主语，或者 *because* 这类词等待的完整意思。增加描述没有用。\n\n*The tall man in the green coat* 不论多长都仍是片段，直到这个人做了什么：*The tall man in the green coat waved.*\n\n> **注意。**句子写长不等于完整——如果只加修饰语或 *-ing* 词，却没有补上真正的主语和谓语动词，它依然是片段。",
         ),
         choiceGenerator(
           t("Which one fixes this fragment?", "哪一项修改了这个片段？"),
           [...fixFragmentBank, ...fixFragmentMore],
           (right) =>
             t(
-              `**${right}** has a subject and a predicate and stands alone. The other choices are still fragments.`,
-              `**${right}** 有主语和谓语，并且能独立成句。其他选项仍是片段。`,
+              `**${right}** supplies the missing piece so the sentence stands alone.\n\n**Check.** Read **${right}** aloud by itself—it has a subject, a main verb, and leaves no thought hanging.`,
+              `**${right}** 补上了缺少的成分，使句子能够独立成立。\n\n**检验。**单独朗读 **${right}**——它有主语、有主要动词，意思也完全说完了。`,
             ),
           stillFragment,
         ),
@@ -1395,6 +1410,10 @@ export const sentenceTopics: readonly TopicDef[] = [
     id: "simple-verb-tenses",
     title: t("Simple Verb Tenses", "一般时态"),
     summary: t("Past, present and future, including common irregular verbs.", "过去、现在和将来，包括常见的不规则动词。"),
+    intro: t(
+      "*Yesterday, we watched a movie*, *Every morning, my dad makes coffee*, and *Tomorrow, the class will visit the museum* each put the verb in the time the sentence names. Matching the verb—regular or irregular—to the time word keeps timelines clear.",
+      "*Yesterday, we watched a movie*、*Every morning, my dad makes coffee*、*Tomorrow, the class will visit the museum*，三句话的动词都与各自的时间一致。让规则和不规则动词对上时间词，时间才不会乱。",
+    ),
     prerequisites: ["subjects-and-predicates"],
     encompasses: [],
     xp: 12,
@@ -1403,16 +1422,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "choosing-tense",
         t("Past, Present and Future", "过去、现在和将来"),
         t(
-          "A verb's **tense** tells when something happens. The past usually adds *-ed* (*walked*). The present describes what is true or happens regularly (*walks*). The future uses *will* (*will walk*).\n\nTime words such as *yesterday*, *every day* and *tomorrow* show which tense a sentence needs.",
-          "动词的**时态**（tense）说明事情发生的时间。过去时通常加 *-ed*（*walked*）。现在时描述事实或经常发生的事（*walks*）。将来时用 *will*（*will walk*）。\n\n*yesterday*、*every day*、*tomorrow* 这样的时间词说明句子需要哪种时态。",
+          "A verb's **tense** tells when something happens. The past usually adds *-ed* (*walked*). The present describes what is true or happens regularly (*walks*). The future uses *will* (*will walk*).\n\nTime words such as *yesterday*, *every day* and *tomorrow* show which tense a sentence needs.\n\n> **Watch out.** Check the time clue at the start of the sentence first—*every day* or *each spring* calls for present tense, not past or future.",
+          "动词的**时态**（tense）说明事情发生的时间。过去时通常加 *-ed*（*walked*）。现在时描述事实或经常发生的事（*walks*）。将来时用 *will*（*will walk*）。\n\n*yesterday*、*every day*、*tomorrow* 这样的时间词说明句子需要哪种时态。\n\n> **注意。**先看句首的时间词——*every day*、*each spring* 表示习惯，要用现在时，而不是过去时或将来时。",
         ),
         choiceGenerator(
           t("Which verb completes the sentence?", "哪个动词能补全句子？"),
           [...tenseBank, ...tenseMore],
           (right, shown) =>
             t(
-              `The time words call for **${right}**: ${shown.replace("___", right)}`,
-              `时间词要求使用 **${right}**：${shown.replace("___", right)}`,
+              `The time words call for **${right}**: ${shown.replace("___", right)}\n\n**Check.** Match the opening time phrase with **${right}**—both point to the same time (past, present, or future).`,
+              `时间词要求使用 **${right}**：${shown.replace("___", right)}\n\n**检验。**把句首的时间短语和 **${right}** 对照——两者指向同一个时间（过去、现在或将来）。`,
             ),
           tenseFeedback,
         ),
@@ -1421,14 +1440,18 @@ export const sentenceTopics: readonly TopicDef[] = [
         "irregular-past",
         t("Irregular Past Forms", "不规则过去式"),
         t(
-          "Many common verbs do not add *-ed* in the past. They change in their own way: *go* becomes *went*, *see* becomes *saw*, *teach* becomes *taught*. These forms have to be learned one by one, and using them often is what makes them stick.",
-          "许多常用动词的过去式不加 *-ed*，而是有自己的变化：*go* 变成 *went*，*see* 变成 *saw*，*teach* 变成 *taught*。这些形式要逐个学习，多用才能记住。",
+          "Many common verbs do not add *-ed* in the past. They change in their own way: *go* becomes *went*, *see* becomes *saw*, *teach* becomes *taught*. These forms have to be learned one by one, and using them often is what makes them stick.\n\n> **Watch out.** Never add *-ed* to an irregular verb (*goed*, *catched*), and do not use the *have* form (*gone*, *seen*, *written*) by itself after *Yesterday*.",
+          "许多常用动词的过去式不加 *-ed*，而是有自己的变化：*go* 变成 *went*，*see* 变成 *saw*，*teach* 变成 *taught*。这些形式要逐个学习，多用才能记住。\n\n> **注意。**不要给不规则动词强加 *-ed*（如 *goed*、*catched*），也不要在 *Yesterday* 后单独用过去分词（如 *gone*、*seen*、*written*）。",
         ),
         typedGenerator(
           "word-form",
           t("Type the past form of the verb.", "输入动词的过去式。"),
           [...irregularBank, ...irregularMore, ...irregularCross],
-          (right) => t(`The past form is **${right}**. This verb does not add *-ed*.`, `过去式是 **${right}**。这个动词不加 *-ed*。`),
+          (right, shown) =>
+            t(
+              `The past form is **${right}**. This verb is irregular and does not add *-ed*.\n\n**Check.** Read the second sentence aloud: “${shown.split(". ")[1]?.replace("___", right) ?? right}” It sounds natural without *have* or *had* in front of it.`,
+              `过去式是 **${right}**。这个动词不规则，不加 *-ed*。\n\n**检验。**朗读第二句：“${shown.split(". ")[1]?.replace("___", right) ?? right}” 前面不加 *have* 或 *had* 也完全通顺。`,
+            ),
         ),
       ),
     ],
@@ -1437,6 +1460,10 @@ export const sentenceTopics: readonly TopicDef[] = [
     id: "subject-verb-agreement",
     title: t("Subject-Verb Agreement", "主谓一致"),
     summary: t("A verb matches its subject, even when other words come between them.", "动词要与主语一致，即使中间隔着其他词。"),
+    intro: t(
+      "We say *The dog barks* but *The dogs bark*, and *The box of crayons is on the desk* even though *crayons* sits right before the verb. Finding the true subject—and matching singular with singular, plural with plural—keeps verbs accurate.",
+      "我们说 *The dog barks*，也说 *The dogs bark*；即使 *crayons* 紧挨在动词前面，也要说 *The box of crayons is on the desk*。找出真正的主语并保持单复数一致，动词才不会写错。",
+    ),
     prerequisites: ["simple-verb-tenses"],
     encompasses: [{ topic: "simple-verb-tenses", weight: 0.2 }],
     xp: 12,
@@ -1445,16 +1472,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "basic-agreement",
         t("Singular and Plural Subjects", "单数和复数主语"),
         t(
-          "In the present tense, a verb must **agree** with its subject. A singular subject (*he, she, it, the dog*) takes a verb ending in *-s*: *The dog barks*. A plural subject (*they, we, the dogs*) takes the verb without it: *The dogs bark*.\n\nThe *-s* moves: nouns add it to become plural, and verbs drop it.",
-          "在现在时中，动词必须与主语**一致**（agree）。单数主语（*he, she, it, the dog*）的动词以 *-s* 结尾：*The dog barks*。复数主语（*they, we, the dogs*）的动词不加 *-s*：*The dogs bark*。\n\n*-s* 会移动：名词加上它变成复数，动词则去掉它。",
+          "In the present tense, a verb must **agree** with its subject. A singular subject (*he, she, it, the dog*) takes a verb ending in *-s*: *The dog barks*. A plural subject (*they, we, the dogs*) takes the verb without it: *The dogs bark*.\n\nThe *-s* moves: nouns add it to become plural, and verbs drop it.\n\n> **Watch out.** An *-ing* word (*barking*, *playing*) cannot be the main verb on its own without *is* or *are* in front of it.",
+          "在现在时中，动词必须与主语**一致**（agree）。单数主语（*he, she, it, the dog*）的动词以 *-s* 结尾：*The dog barks*。复数主语（*they, we, the dogs*）的动词不加 *-s*：*The dogs bark*。\n\n*-s* 会移动：名词加上它变成复数，动词则去掉它。\n\n> **注意。***-ing* 形式（如 *barking*、*playing*）前面没有 *is* 或 *are* 时，不能单独作句子的谓语动词。",
         ),
         choiceGenerator(
           t("Which verb agrees with the subject?", "哪个动词与主语一致？"),
           [...agreementBank, ...agreementMore, ...agreementCross],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} The verb matches its subject in number.`,
-              `${shown.replace("___", `**${right}**`)} 动词与主语的单复数一致。`,
+              `${shown.replace("___", `**${right}**`)} The verb matches its subject in number.\n\n**Check.** Replace the subject with *it/he/she* (singular → *-s*) or *they/we* (plural → no *-s*)—**${right}** matches.`,
+              `${shown.replace("___", `**${right}**`)} 动词与主语的单复数一致。\n\n**检验。**把主语换成 *it/he/she*（单数加 *-s*）或 *they/we*（复数不加 *-s*）——**${right}** 正好匹配。`,
             ),
           agreementFeedback,
         ),
@@ -1463,16 +1490,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "words-between",
         t("Words Between the Subject and the Verb", "主语和动词之间的词"),
         t(
-          "Words that come between a subject and its verb do not change the agreement. In *The box of crayons is on the desk*, the subject is *box*, not *crayons*, so the verb is singular. To check, cover the phrase: *The box is on the desk.*\n\nTwo subjects joined by *and* are plural: *Tom and Ana ride the bus.*",
-          "主语和动词之间的词不影响一致关系。在 *The box of crayons is on the desk* 中，主语是 *box*，不是 *crayons*，所以动词用单数。检查时可以遮住短语：*The box is on the desk.*\n\n用 *and* 连接的两个主语是复数：*Tom and Ana ride the bus.*",
+          "Words that come between a subject and its verb do not change the agreement. In *The box of crayons is on the desk*, the subject is *box*, not *crayons*, so the verb is singular. To check, cover the phrase: *The box is on the desk.*\n\nTwo subjects joined by *and* are plural: *Tom and Ana ride the bus.*\n\n> **Watch out.** Do not match the verb to the nearest noun inside an *of* or *in* phrase—cover that middle phrase first, then pick the verb.",
+          "主语和动词之间的词不影响一致关系。在 *The box of crayons is on the desk* 中，主语是 *box*，不是 *crayons*，所以动词用单数。检查时可以遮住短语：*The box is on the desk.*\n\n用 *and* 连接的两个主语是复数：*Tom and Ana ride the bus.*\n\n> **注意。**不要把动词和 *of* 或 *in* 短语里离它最近的名词搭配——先遮住中间短语，再选动词。",
         ),
         choiceGenerator(
           t("Which verb agrees with the subject?", "哪个动词与主语一致？"),
           [...hardAgreementBank, ...hardAgreementMore, ...hardAgreementCross],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} Find the real subject, ignoring any phrase between it and the verb.`,
-              `${shown.replace("___", `**${right}**`)} 找到真正的主语，忽略它和动词之间的短语。`,
+              `${shown.replace("___", `**${right}**`)} Find the real subject, ignoring any phrase between it and the verb.\n\n**Check.** Mentally cross out the phrase between the subject and the blank (or count the subjects joined by *and*)—the true subject takes **${right}**.`,
+              `${shown.replace("___", `**${right}**`)} 找到真正的主语，忽略它和动词之间的短语。\n\n**检验。**在心里划掉主语和空格之间的短语（或数一数 *and* 连接的几个主语）——真正的主语搭配 **${right}**。`,
             ),
           hardAgreementFeedback,
         ),
@@ -1483,6 +1510,10 @@ export const sentenceTopics: readonly TopicDef[] = [
     id: "pronoun-antecedent-agreement",
     title: t("Pronoun-Antecedent Agreement", "代词与先行词一致"),
     summary: t("A pronoun matches the noun it stands for and points to it clearly.", "代词要与所指的名词一致，并且指代清楚。"),
+    intro: t(
+      "*The bird fed its chicks* matches singular *bird* with *its*, while *The vase broke when I set it on the table* leaves no doubt about what broke. Good writers match every pronoun to its noun and make sure it points to only one.",
+      "*The bird fed its chicks* 用 *its* 呼应单数 *bird*，而 *The vase broke when I set it on the table* 让人一眼看清摔碎的是花瓶。写好句子，既要让代词和先行词一致，也要让指代毫不含糊。",
+    ),
     prerequisites: ["nouns-and-pronouns"],
     encompasses: [{ topic: "nouns-and-pronouns", weight: 0.3 }],
     xp: 10,
@@ -1491,16 +1522,16 @@ export const sentenceTopics: readonly TopicDef[] = [
         "matching-antecedent",
         t("Matching the Antecedent", "与先行词一致"),
         t(
-          "The noun a pronoun stands for is its **antecedent**. The two must match: *The students opened their books*, with *their* for the plural *students*. *The company lowered its prices*, since a company is treated as one thing, and so is a team.",
-          "代词所指的名词是它的**先行词**（antecedent），两者必须一致：*The students opened their books*，*their* 对应复数 *students*。*The company lowered its prices*，因为公司被视为一个整体，球队也一样。",
+          "The noun a pronoun stands for is its **antecedent**. The two must match: *The students opened their books*, with *their* for the plural *students*. *The company lowered its prices*, since a company is treated as one thing, and so is a team.\n\n> **Watch out.** Group nouns like *the team*, *the school*, and *the company* act as one unit, so they take singular *its* rather than *their*.",
+          "代词所指的名词是它的**先行词**（antecedent），两者必须一致：*The students opened their books*，*their* 对应复数 *students*。*The company lowered its prices*，因为公司被视为一个整体，球队也一样。\n\n> **注意。***the team*、*the school*、*the company* 这类集体名词被当作一个整体，要用单数 *its* 而不是 *their*。",
         ),
         choiceGenerator(
           t("Which pronoun completes the sentence?", "哪个代词能补全句子？"),
           [...antecedentBank, ...antecedentMore, ...antecedentCross],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} The pronoun matches the noun it stands for.`,
-              `${shown.replace("___", `**${right}**`)} 代词与它所指的名词一致。`,
+              `${shown.replace("___", `**${right}**`)} The pronoun matches the noun it stands for.\n\n**Check.** Draw an arrow from **${right}** back to its antecedent—they match in number (one vs. more than one) and kind.`,
+              `${shown.replace("___", `**${right}**`)} 代词与它所指的名词一致。\n\n**检验。**从 **${right}** 画一个箭头指回它的先行词——两者在单复数和人/物上完全一致。`,
             ),
           notAntecedent,
         ),
@@ -1509,22 +1540,27 @@ export const sentenceTopics: readonly TopicDef[] = [
         "clear-reference",
         t("Making the Reference Clear", "让指代清楚"),
         t(
-          'A pronoun confuses the reader when it could point to two nouns. In *Jon told Eli that he was late*, who was late? Rewrite so that only one reading is possible: *Jon told Eli, "I am late."*\n\nThe usual cures are to repeat the noun or to reorder the sentence, so that the pronoun has one possible antecedent.',
-          '当代词可能指向两个名词时，读者就会困惑。在 *Jon told Eli that he was late* 中，到底是谁迟到了？改写后应该只有一种理解：*Jon told Eli, "I am late."*\n\n常用的办法是重复名词或调整语序，让代词只有一个可能的先行词。',
+          'A pronoun confuses the reader when it could point to two nouns. In *Jon told Eli that he was late*, who was late? Rewrite so that only one reading is possible: *Jon told Eli, "I am late."*\n\nThe usual cures are to repeat the noun or to reorder the sentence, so that the pronoun has one possible antecedent.\n\n> **Watch out.** Whenever two people of the same pronoun (*he/he*, *she/she*) or two things (*it/it*) appear before a pronoun, test whether a reader could confuse them.',
+          '当代词可能指向两个名词时，读者就会困惑。在 *Jon told Eli that he was late* 中，到底是谁迟到了？改写后应该只有一种理解：*Jon told Eli, "I am late."*\n\n常用的办法是重复名词或调整语序，让代词只有一个可能的先行词。\n\n> **注意。**只要一个代词前面出现两个可用同一代词指代的人（两个 *he* 或两个 *she*）或两个物（两个 *it*），就要检查读者会不会混淆。',
         ),
         choiceGenerator(
           t("Choose the clearest sentence.", "选出最清楚的句子。"),
           [...clearReferenceBank, ...clearReferenceMore, ...clearReferenceCross],
           (right) =>
             t(
-              `**${right}** can be read only one way. In the others, the pronoun could point to either noun.`,
-              `**${right}** 只有一种理解。在其他句子中，代词可能指向任一名词。`,
+              `**${right}** can be read only one way. In the other choices, the pronoun could point to either noun.\n\n**Check.** Ask the prompt's question again after reading **${right}**—there is only one possible answer, with no guessing.`,
+              `**${right}** 只有一种理解。在其他选项中，代词可能指向任一名词。\n\n**检验。**读完 **${right}** 后再问一遍题目里的问题——答案唯一，不需要猜测。`,
             ),
-          (wrong) =>
-            t(
-              `In “${wrong}”, a pronoun could point to more than one noun, so the reader cannot be sure which one is meant.`,
-              `在“${wrong}”中，代词可能指向不止一个名词，读者无法确定指的是哪一个。`,
-            ),
+          (wrong, _right, _shown, position) =>
+            position === 0
+              ? t(
+                  `In “${wrong}”, the pronoun sits after two matching nouns, so a reader cannot tell which one it points to.`,
+                  `在“${wrong}”中，代词跟在两个同类名词后面，读者分不清它到底指哪一个。`,
+                )
+              : t(
+                  `“${wrong}” leaves the pronoun ambiguous—both nouns could fit it, so the sentence can be read two ways.`,
+                  `“${wrong}”里的代词指代含糊——前面两个名词都说得通，句子产生了歧义。`,
+                ),
         ),
       ),
     ],

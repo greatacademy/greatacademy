@@ -446,7 +446,11 @@ const modalReason = (sentence: string): Text =>
 /** modalWhy explains a sentence with should or must. */
 const modalWhy = (right: string): Text => {
   const reason = modalReason(right);
-  return t(`${reason.en}: ${right}`, `${reason["zh-CN"]}：${right}`);
+  const modal = /\bmust\b/u.test(right) ? "must" : "should";
+  return t(
+    `${reason.en}: ${right}\n\n**Check.** Look right after *${modal}*: there is no *to* and no *-s* on the verb, so the modal pattern is right.`,
+    `${reason["zh-CN"]}：${right}\n\n**检验。** 看 *${modal}* 后面紧跟的部分：既没有 *to*，动词也没有加 *-s*，符合情态动词的用法。`,
+  );
 };
 
 /** whyNotModal explains to or -s after should or must. */
@@ -470,6 +474,10 @@ const shouldAndMust: TopicDef = {
     "You should rest. You must take this medicine. Should gives advice, must a rule; neither takes to after it.",
     "You should rest. You must take this medicine. should 表示建议，must 表示规定；后面都不加 to。",
   ),
+  intro: t(
+    "Compare *You should drink warm water* (helpful advice) and *You must wear a helmet* (a rule). Both *should* and *must* stay the same for every subject and go straight into the plain verb.",
+    "比较 *You should drink warm water*（善意建议）和 *You must wear a helmet*（必须遵守的规定）。*should* 和 *must* 对任何主语都不变形，后面直接接动词原形。",
+  ),
   prerequisites: ["can-for-ability", "a2-words-staying-well"],
   encompasses: [
     { topic: "can-for-ability", weight: 0.2 },
@@ -482,8 +490,8 @@ const shouldAndMust: TopicDef = {
       "choose",
       t("Should, must and the plain verb", "should、must 加动词原形"),
       t(
-        "*Should* gives advice: *You should rest.* (It's a good idea.) *Must* gives a rule or something very important: *You must take this medicine.*\n\nLike *can*, they never change, and the plain verb comes right after them, with no *to* and no *-s*:\n\n- *She should rest.* Not *She should to rest* or *She should rests*.\n- *He must stay at home.* Not *He musts stay*.",
-        "*should* 表示建议：*You should rest.*（这样做比较好。）*must* 表示规定或非常重要的事：*You must take this medicine.*\n\n它们和 *can* 一样，形式从不变化，后面直接接动词原形，不加 *to*，也不加 *-s*：\n\n- *She should rest.* 不能说 *She should to rest* 或 *She should rests*。\n- *He must stay at home.* 不能说 *He musts stay*。\n\n中文“应该去”“必须吃”中间什么都不加，英语也一样，不要多加 *to*。",
+        "*Should* gives advice: *You should rest.* (It's a good idea.) *Must* gives a rule or something very important: *You must take this medicine.*\n\nLike *can*, they never change, and the plain verb comes right after them, with no *to* and no *-s*: *She should rest.* *He must stay at home.*\n\n> **Watch out.** Never write *to* after *should* or *must* (*She should to rest* is wrong) and never add *-s* to either the modal or the verb (*She should rests* is wrong).",
+        "*should* 表示建议：*You should rest.*（这样做比较好。）*must* 表示规定或非常重要的事：*You must take this medicine.*\n\n它们和 *can* 一样，形式从不变化，后面直接接动词原形，不加 *to*，也不加 *-s*：*She should rest.* *He must stay at home.*\n\n> **注意。** 不要在 *should* 或 *must* 后面加 *to*（*She should to rest* 是错的），也不要给情态动词或后面的动词加 *-s*（*She should rests* 是错的）。",
       ),
       choiceGenerator(t("Which sentence is right?", "哪个句子是对的？"), modalChoiceBank, modalWhy, whyNotModal),
     ),
@@ -491,8 +499,8 @@ const shouldAndMust: TopicDef = {
       "fix",
       t("Fixing the verb after should and must", "改正 should 和 must 后的动词"),
       t(
-        "Each sentence has *to* or an *-s* after *should* or *must*. Write it again with the plain verb.",
-        "每个句子在 *should* 或 *must* 后面多了 *to* 或 *-s*。用动词原形重写句子。",
+        "Each sentence has *to* or an *-s* after *should* or *must*: *He should to drink water.* → *He should drink water.* *She must rests.* → *She must rest.* Rewrite it cleanly with the plain verb.\n\n> **Watch out.** Remove the extra *to* or *-s* only, and keep the subject, the modal (*should* or *must*), and the rest of the sentence intact.",
+        "每个句子在 *should* 或 *must* 后面多了 *to* 或 *-s*：*He should to drink water.* → *He should drink water.* *She must rests.* → *She must rest.* 用动词原形重写句子。\n\n> **注意。** 只去掉多余的 *to* 或 *-s*，保留主语、情态动词（*should* 或 *must*）以及句子的其余部分。",
       ),
       typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), modalFixBank, modalWhy),
     ),
@@ -642,15 +650,15 @@ const meaningWhy = (right: string, shown: string): Text => {
   const done = shown.replace("___", `*${right}*`);
   if (right === "mustn't")
     return t(
-      `The reason shows that it is not allowed, so it takes *mustn't*: ${done}`,
-      `前面的原因说明这件事不许做，所以用 *mustn't*：${done}`,
+      `The reason shows that it is not allowed, so it takes *mustn't*: ${done}\n\n**Check.** Ask whether doing the action is forbidden (yes → *mustn't*) or merely optional (no → *don't/doesn't have to*).`,
+      `前面的原因说明这件事不许做，所以用 *mustn't*：${done}\n\n**检验。** 问自己：做这件事是不是被禁止（是 → *mustn't*），还是只是没必要（不是 → *don't/doesn't have to*）？`,
     );
   const who = right.startsWith("doesn't")
     ? t("*doesn't* goes with one person", "单个的人用 *doesn't*")
     : t("*don't* goes with *I*, *you*, *we* and *they*", "*I*、*you*、*we*、*they* 用 *don't*");
   return t(
-    `The reason shows that it is not needed, though it is allowed, so it takes *${right}*; ${who.en}: ${done}`,
-    `前面的原因说明这件事不必做，但可以做，所以用 *${right}*；${who["zh-CN"]}：${done}`,
+    `The reason shows that it is not needed, though it is allowed, so it takes *${right}*; ${who.en}: ${done}\n\n**Check.** Verify both meaning and subject: doing it is optional (not forbidden), and the subject matches *${right.split(" ")[0]}*.`,
+    `前面的原因说明这件事不必做，但可以做，所以用 *${right}*；${who["zh-CN"]}：${done}\n\n**检验。** 核对意思和主语：这件事只是不必做（不是禁止），且主语与 *${right.split(" ")[0]}* 一致。`,
   );
 };
 
@@ -658,22 +666,22 @@ const meaningWhy = (right: string, shown: string): Text => {
 const whyNotMeaning = (wrong: string, right: string): Text => {
   if (wrong === "mustn't")
     return t(
-      `*mustn't* means it is not allowed, but here it is only not needed, so it takes *${right}*.`,
-      `*mustn't* 表示不许，但这里只是不必，所以用 *${right}*。`,
+      "*mustn't* means it is not allowed, but the reason here only says it is not needed.",
+      "*mustn't* 表示不许做，可这里的原因只是说不必做。",
     );
   if (right === "mustn't")
     return t(
-      `*${wrong}* means it is not needed, but the reason shows it is not allowed, so it takes *mustn't*.`,
-      `*${wrong}* 表示不必，但前面的原因说明这件事不许做，所以用 *mustn't*。`,
+      `*${wrong}* means it is not needed, but the reason here shows it is forbidden.`,
+      `*${wrong}* 表示不必做，可这里的原因说明这件事绝对不许做。`,
     );
   return right.startsWith("doesn't")
     ? t(
-        "*don't have to* is for *I*, *you*, *we* and *they*. This subject is one person, so it takes *doesn't have to*.",
-        "*don't have to* 用于 *I*、*you*、*we*、*they*。这个主语是单个的人，要用 *doesn't have to*。",
+        "*don't have to* is for *I*, *you*, *we* and *they*, not for one person (*he/she*).",
+        "*don't have to* 用于 *I*、*you*、*we*、*they*，不用于第三人称单数（*he/she*）。",
       )
     : t(
-        "*doesn't have to* is for one person. This subject is *you*, *we* or *they*, so it takes *don't have to*.",
-        "*doesn't have to* 用于单个的人。这个主语是 *you*、*we* 或 *they*，要用 *don't have to*。",
+        "*doesn't have to* is for one person (*he/she*), not for *you*, *we* or *they*.",
+        "*doesn't have to* 用于第三人称单数（*he/she*），不用于 *you*、*we* 或 *they*。",
       );
 };
 
@@ -683,6 +691,10 @@ const haveTo: TopicDef = {
   summary: t(
     "She has to stay in bed. You don't have to come. Don't have to means it is not needed, not that it is not allowed.",
     "She has to stay in bed. You don't have to come. don't have to 表示“不必”，不是“不许”。",
+  ),
+  intro: t(
+    "*You don't have to pay* means entry is free; *You mustn't touch* means touching is forbidden. Although *have to* and *must* mean almost the same thing, their negatives mean two very different things.",
+    "*You don't have to pay* 是免费（不必付钱），*You mustn't touch* 是禁止触摸（不许碰）。虽然 *have to* 和 *must* 意思相近，但它们的否定形式意思截然不同。",
   ),
   prerequisites: ["should-and-must", "third-person-s"],
   encompasses: [
@@ -696,8 +708,8 @@ const haveTo: TopicDef = {
       "meaning",
       t("Don't have to or mustn't", "don't have to 还是 mustn't"),
       t(
-        "*Have to* is like *must*: it is needed. But the negatives mean different things:\n\n- *don't have to*: it is **not needed**, but you can if you like. *It's Saturday, so you don't have to get up early.*\n- *mustn't*: it is **not allowed**. *The baby is sleeping, so you mustn't shout.*\n\nAfter *he*, *she* or one person: *doesn't have to*.",
-        "*have to* 和 *must* 一样，表示“必须”。但它们的否定意思不同：\n\n- *don't have to*：**不必**，想做也可以。*It's Saturday, so you don't have to get up early.*\n- *mustn't*：**不许、禁止**。*The baby is sleeping, so you mustn't shout.*\n\n主语是 *he*、*she* 或单个的人时，用 *doesn't have to*。中文“不用”和“不准”很容易分清，英语里要注意别把 *don't have to* 当成“不准”。",
+        "*Have to* is like *must*: it is needed. But the negatives mean different things:\n\n- *don't have to*: it is **not needed**, but you can if you like. *It's Saturday, so you don't have to get up early.*\n- *mustn't*: it is **not allowed**. *The baby is sleeping, so you mustn't shout.*\n\nAfter *he*, *she* or one person, use *doesn't have to*.\n\n> **Watch out.** Do not mix up “not needed” (*don't have to*) with “forbidden” (*mustn't*), and remember to match *don't* vs. *doesn't* to the subject.",
+        "*have to* 和 *must* 一样，表示“必须”。但它们的否定意思不同：\n\n- *don't have to*：**不必**，想做也可以。*It's Saturday, so you don't have to get up early.*\n- *mustn't*：**不许、禁止**。*The baby is sleeping, so you mustn't shout.*\n\n主语是 *he*、*she* 或单个的人时，用 *doesn't have to*。\n\n> **注意。** 别把“不必”（*don't have to*）和“不许”（*mustn't*）混用，同时核对主语该配 *don't* 还是 *doesn't*。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), meaningBank, meaningWhy, whyNotMeaning),
     ),
@@ -705,23 +717,23 @@ const haveTo: TopicDef = {
       "write",
       t("Has to, doesn't have to, does she have to?", "has to、doesn't have to、does she have to?"),
       t(
-        "*Have to* changes like any verb: *she has to*, *she doesn't have to*, *does she have to?* Not *she doesn't has to* or *has she to?*",
-        "*have to* 像普通动词一样变化：*she has to*、*she doesn't have to*、*does she have to?* 不能说 *she doesn't has to*，也不能说 *has she to?*",
+        "*Have to* changes like an ordinary verb: *she has to stay in bed*, *she doesn't have to stay in bed*, *does she have to stay in bed?*\n\n> **Watch out.** Never write *she doesn't has to* or *has she to?*—after *doesn't* or *Does*, *have* always returns to its plain form.",
+        "*have to* 像普通动词一样变化：*she has to stay in bed*、*she doesn't have to stay in bed*、*does she have to stay in bed?*\n\n> **注意。** 不要写 *she doesn't has to* 或 *has she to?*——在 *doesn't* 或 *Does* 后面，*have* 必须还原为原形。",
       ),
       typedGenerator("sentence-pattern", t("Write the sentence again.", "改写句子。"), haveToTypedBank, (right) =>
         right.endsWith("?")
           ? t(
-              `*Have to* makes a question like any verb: *Do* or *Does* first, then the subject and *have to* with a plain *have*: ${right}`,
-              `*have to* 像普通动词一样构成疑问句：先写 *Do* 或 *Does*，再写主语和 *have to*，*have* 用原形：${right}`,
+              `*Have to* makes a question like any verb: *Do* or *Does* first, then the subject and *have to* with a plain *have*: ${right}\n\n**Check.** Verify the front (*Do/Does* + subject + *have to*) and make sure *have* is plain, never *has*.`,
+              `*have to* 像普通动词一样构成疑问句：先写 *Do* 或 *Does*，再写主语和 *have to*，*have* 用原形：${right}\n\n**检验。** 核对句首结构（*Do/Does* + 主语 + *have to*），确认 *have* 用原形而不是 *has*。`,
             )
           : /n't have to/u.test(right)
             ? t(
-                `*Have to* makes its negative like any verb, with *don't* or *doesn't*, and *have* stays plain after it: ${right}`,
-                `*have to* 像普通动词一样用 *don't* 或 *doesn't* 构成否定，后面的 *have* 用原形：${right}`,
+                `*Have to* makes its negative like any verb, with *don't* or *doesn't*, and *have* stays plain after it: ${right}\n\n**Check.** Verify that *don't/doesn't* agrees with the subject and is followed by plain *have to*.`,
+                `*have to* 像普通动词一样用 *don't* 或 *doesn't* 构成否定，后面的 *have* 用原形：${right}\n\n**检验。** 确认 *don't/doesn't* 与主语一致，后面紧接原形 *have to*。`,
               )
             : t(
-                `*Must* becomes *have to*, and *have* takes *-s* as *has* after one person: ${right}`,
-                `*must* 改为 *have to*；单个的人作主语时，*have* 变成 *has*：${right}`,
+                `*Must* becomes *have to*, and *have* takes *-s* as *has* after one person: ${right}\n\n**Check.** Match the subject to *has to* (singular third person) or *have to* (all others), with the plain verb right after *to*.`,
+                `*must* 改为 *have to*；单个的人作主语时，*have* 变成 *has*：${right}\n\n**检验。** 核对主语对应 *has to*（三单）还是 *have to*（其余主语），*to* 后面接动词原形。`,
               ),
       ),
     ),
@@ -796,6 +808,10 @@ const writingAdvice: TopicDef = {
     "Turn a problem and a note into advice: Tom has a headache. (drink some water) becomes He should drink some water.",
     "把问题和提示写成建议：Tom has a headache. (drink some water) 写成 He should drink some water.",
   ),
+  intro: t(
+    "When a friend has a problem—*Anna has a cough*—good English advice uses a matching pronoun, *should* or *shouldn't*, and a plain verb: *She should drink something warm and shouldn't eat ice cream.*",
+    "朋友身体不舒服时（如 *Anna has a cough*），地道建议用对应的代词加上 *should* 或 *shouldn't* 和动词原形：*She should drink something warm and shouldn't eat ice cream.*",
+  ),
   prerequisites: ["should-and-must", "joining-with-and-but-or"],
   encompasses: [
     { topic: "should-and-must", weight: 0.5 },
@@ -808,13 +824,13 @@ const writingAdvice: TopicDef = {
       "advice",
       t("Writing advice", "写出建议"),
       t(
-        "Start with a pronoun for the person: *Tom* → *He*, *Anna* → *She*, *my parents* → *They*. Then *should* and the plain verb from the note:\n\n*Tom has a headache. (drink some water)* → *He should drink some water.*",
-        "先用代词指这个人：*Tom* → *He*，*Anna* → *She*，*my parents* → *They*。然后写 *should* 和提示里的动词原形：\n\n*Tom has a headache. (drink some water)* → *He should drink some water.*\n\n英语句子要有主语，不能像中文“应该多喝水”那样省略。",
+        "Start with a pronoun for the person: *Tom* → *He*, *Anna* → *She*, *my parents* → *They*. Then *should* and the plain verb from the note:\n\n*Tom has a headache. (drink some water)* → *He should drink some water.*\n\n> **Watch out.** Do not drop the subject (*Should drink water* is wrong) and do not insert *to* after *should*.",
+        "先用代词指这个人：*Tom* → *He*，*Anna* → *She*，*my parents* → *They*。然后写 *should* 和提示里的动词原形：\n\n*Tom has a headache. (drink some water)* → *He should drink some water.*\n\n> **注意。** 英语句子不能像中文“应该多喝水”那样省主语，也不要在 *should* 后面多加 *to*。",
       ),
       typedGenerator("sentence", t("Write a sentence of advice.", "写一句建议。"), adviceBank, (right, shown) =>
         t(
-          `Advice starts with a pronoun for the person (${adviceWho(shown, right)}), then *should* and the plain verb from the note, with no *to*: ${right}`,
-          `建议以指这个人的代词开头（${adviceWho(shown, right)}），再写 *should* 和提示里的动词原形，不加 *to*：${right}`,
+          `Advice starts with a pronoun for the person (${adviceWho(shown, right)}), then *should* and the plain verb from the note, with no *to*: ${right}\n\n**Check.** Verify all three parts: the matching pronoun at the start, *should* + plain verb (no *to*), and a period at the end.`,
+          `建议以指这个人的代词开头（${adviceWho(shown, right)}），再写 *should* 和提示里的动词原形，不加 *to*：${right}\n\n**检验。** 核对三处：句首代词与人物对应、*should* 后接不带 *to* 的动词原形、句末有句号。`,
         ),
       ),
     ),
@@ -822,13 +838,13 @@ const writingAdvice: TopicDef = {
       "not",
       t("What not to do", "不该做的事"),
       t(
-        "For something that is a bad idea, write *shouldn't* (*should not*) and the plain verb: *He shouldn't watch TV.* Not *He don't should*.",
-        "表示不该做的事，用 *shouldn't*（*should not*）加动词原形：*He shouldn't watch TV.* 不能说 *He don't should*。",
+        "For something that is a bad idea, write *shouldn't* (*should not*) and the plain verb: *He shouldn't watch TV.*\n\n> **Watch out.** Never put *don't* or *doesn't* in front of *should* (*He don't should* is wrong), and never add *to* after *shouldn't*.",
+        "表示不该做的事，用 *shouldn't*（*should not*）加动词原形：*He shouldn't watch TV.*\n\n> **注意。** 不要在 *should* 前面加 *don't* 或 *doesn't*（*He don't should* 是错的），也不要在 *shouldn't* 后面加 *to*。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence of advice.", "写一句建议。"), notBank, (right, shown) =>
         t(
-          `The note says *not*, so after the pronoun (${adviceWho(shown, right)}) write *shouldn't* and the plain verb; *should* never takes *don't*: ${right}`,
-          `提示里有 *not*，所以在代词（${adviceWho(shown, right)}）后面写 *shouldn't* 和动词原形；*should* 从不与 *don't* 连用：${right}`,
+          `The note says *not*, so after the pronoun (${adviceWho(shown, right)}) write *shouldn't* and the plain verb; *should* never takes *don't*: ${right}\n\n**Check.** Confirm the order: pronoun + *shouldn't* (or *should not*) + plain verb, with no *don't* and no *to*.`,
+          `提示里有 *not*，所以在代词（${adviceWho(shown, right)}）后面写 *shouldn't* 和动词原形；*should* 从不与 *don't* 连用：${right}\n\n**检验。** 确认语序：代词 + *shouldn't*（或 *should not*）+ 动词原形，没有 *don't* 也没有 *to*。`,
         ),
       ),
     ),
@@ -836,8 +852,8 @@ const writingAdvice: TopicDef = {
       "two",
       t("Two pieces of advice", "两条建议"),
       t(
-        "Join two pieces of advice with *and*. *Should* is written once, and both verbs are plain: *She should stay in bed and take some medicine.*",
-        "用 *and* 连接两条建议。*should* 只写一次，两个动词都用原形：*She should stay in bed and take some medicine.*",
+        "Join two pieces of advice with *and*. *Should* is written once, and both verbs are plain: *She should stay in bed and take some medicine.*\n\n> **Watch out.** Join the two actions with *and* (not a bare comma) and keep the second verb plain without *to*.",
+        "用 *and* 连接两条建议。*should* 只写一次，两个动词都用原形：*She should stay in bed and take some medicine.*\n\n> **注意。** 两条建议之间用 *and* 连接（不要只用逗号），第二个动词同样用原形，前面不加 *to*。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -845,8 +861,8 @@ const writingAdvice: TopicDef = {
         twoBank,
         (right) =>
           t(
-            `*Should* is written once, and *and* joins the two plain verbs after it, with no *to* before the second: ${right}`,
-            `*should* 只写一次，用 *and* 连接后面两个动词原形，第二个动词前不加 *to*：${right}`,
+            `*Should* is written once, and *and* joins the two plain verbs after it, with no *to* before the second: ${right}\n\n**Check.** Read both actions after *should*: they are linked by *and*, and neither verb has *to* or *-s*.`,
+            `*should* 只写一次，用 *and* 连接后面两个动词原形，第二个动词前不加 *to*：${right}\n\n**检验。** 读一遍 *should* 后面的两个动作：中间用 *and* 连接，两个动词都没有 *to* 或 *-s*。`,
           ),
       ),
     ),

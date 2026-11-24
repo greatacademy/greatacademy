@@ -1003,43 +1003,58 @@ function ppRule(sentence: string): Text {
 
 /** ppWhy puts the rule of the tense before a sentence. */
 const ppWhy = (sentence: string, shown: string): Text => {
+  const [kind, words] = ppKind(shown);
   const rule = ppRule(shown);
-  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+  const check =
+    kind === "finished"
+      ? t(
+          `**Check.** Spot the finished time phrase (*${words}*): because the time is completely over, the past simple—never *have/has*—is required.`,
+          `**检验。** 找到表示过去已结束的时间词（*${words}*）：时间已经彻底过去，必须用一般过去时，不能用 *have/has*。`,
+        )
+      : t(
+          `**Check.** Spot the signal (*${words}*): it links the past up to the present, which calls for *have/has* + past participle.`,
+          `**检验。** 找到关键信号（*${words}*）：它把过去一直连接到现在，因此要用 *have/has* + 过去分词。`,
+        );
+  return t(`${rule.en}: ${sentence}\n\n${check.en}`, `${rule["zh-CN"]}：${sentence}\n\n${check["zh-CN"]}`);
 };
 
 /** whyNotPp explains a wrong tense, from the position of the wrong form in its item. */
 const whyNotPp = (wrong: string, right: string, shown: string, position: number): Text => {
   const [kind, words] = ppKind(shown);
-  const rule = ppRule(shown);
-  let first: Text;
   if (kind === "since")
-    first =
-      position === 0
-        ? t(`*${wrong}* is the present simple, which never goes with *since*.`, `*${wrong}* 是一般现在时，不能和 *since* 连用。`)
-        : t(
-            `*${wrong}* is the past simple, which says it is over, but it is still true now.`,
-            `*${wrong}* 是一般过去时，表示已经结束，但这件事现在仍然如此。`,
-          );
-  else if (kind === "first")
-    first =
-      position === 0
-        ? t(
-            `*${wrong}* is the past simple, which does not go after *This is the first time*.`,
-            `*${wrong}* 是一般过去时，不能用在 *This is the first time* 后面。`,
-          )
-        : t(
-            `*${wrong}* is the base form, which does not show the tense. Use *${right}*.`,
-            `*${wrong}* 是动词原形，没有体现时态。要用 *${right}*。`,
-          );
-  else if (/^ha(s|ve) /u.test(wrong))
-    first = t(
-      `*${wrong}* is the present perfect, which never goes with a finished time such as *${words}*.`,
+    return position === 0
+      ? t(
+          `*${wrong}* is the present simple, which cannot be used with *since* for a state continuing from the past to now.`,
+          `*${wrong}* 是一般现在时，不能和 *since* 连用来表示从过去持续到现在的状态。`,
+        )
+      : t(
+          `*${wrong}* is the past simple, which says the state is over, but *${words}* shows it is still true now.`,
+          `*${wrong}* 是一般过去时，表示已经结束，但 *${words}* 说明这件事现在仍然如此。`,
+        );
+  if (kind === "first")
+    return position === 0
+      ? t(
+          `*${wrong}* is the past simple, which does not follow *This is the first time*.`,
+          `*${wrong}* 是一般过去时，不能用在 *This is the first time* 后面。`,
+        )
+      : t(
+          `*${wrong}* is the plain base form and lacks the tense form needed after *This is the first time*.`,
+          `*${wrong}* 是动词原形，缺少 *This is the first time* 后面要求的时态形式。`,
+        );
+  if (/^ha(s|ve) /u.test(wrong))
+    return t(
+      `*${wrong}* is the present perfect, which cannot be paired with a finished past time such as *${words}*.`,
       `*${wrong}* 是现在完成时，不能和 *${words}* 这样的过去具体时间连用。`,
     );
-  else if (position === 1 && !shown.includes("last week") && wrong !== right)
-    first = t(`*${wrong}* is the present simple, but *${words}* is in the past.`, `*${wrong}* 是一般现在时，但 *${words}* 是过去的时间。`);
-  else first = t(`*${wrong}* is the base form, which does not show the past.`, `*${wrong}* 是动词原形，没有体现过去。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  if (position === 1 && !shown.includes("last week") && wrong !== right)
+    return t(
+      `*${wrong}* is the present simple, but *${words}* places the event in the finished past.`,
+      `*${wrong}* 是一般现在时，但 *${words}* 说明事情发生在已经结束的过去。`,
+    );
+  return t(
+    `*${wrong}* is the base form and does not mark the past time *${words}*.`,
+    `*${wrong}* 是动词原形，没有体现过去时间 *${words}*。`,
+  );
 };
 
 const presentPerfectOrPastSimple: TopicDef = {
@@ -1048,6 +1063,10 @@ const presentPerfectOrPastSimple: TopicDef = {
   summary: t(
     "I have lived here since 2019, but I lived in Paris in 2015. Since and the first time take the present perfect; a finished time takes the past simple.",
     "I have lived here since 2019，但 I lived in Paris in 2015。since 和 the first time 用现在完成时；过去的具体时间用一般过去时。",
+  ),
+  intro: t(
+    "Compare *She has worked here since 2021* (still true now) with *She worked in Rome in 2018* (finished past). The time expression in the sentence tells you immediately whether to use the present perfect or the past simple.",
+    "比较 *She has worked here since 2021*（至今仍在）和 *She worked in Rome in 2018*（已经结束的过去）。句中的时间表达直接决定了该用现在完成时还是一般过去时。",
   ),
   prerequisites: ["present-perfect-with-just-already-and-yet", "past-simple-questions-and-negatives"],
   encompasses: [
@@ -1061,8 +1080,8 @@ const presentPerfectOrPastSimple: TopicDef = {
       "which-tense",
       t("Which tense?", "用哪个时态？"),
       t(
-        "Look at the time words.\n\n- A finished time in the past takes the **past simple**: *yesterday, last week, in 2015, two years ago, when I was little*. *I lived in Paris in 2015.* Never *I have lived in Paris in 2015.*\n- A time that runs up to now takes the **present perfect**. *since* gives the point where it began: *I have lived here since 2019* (and I still live here). Do not use the present simple: not *I live here since 2019*.\n- *This is the first time* takes the present perfect: *This is the first time I have eaten sushi.* But with a finished time: *I ate sushi for the first time last week.*",
-        "看句子里的时间词。\n\n- 过去某个已经结束的时间，用**一般过去时**：*yesterday, last week, in 2015, two years ago, when I was little*。*I lived in Paris in 2015.* 不能说 *I have lived in Paris in 2015.*\n- 一直延续到现在的时间，用**现在完成时**。*since* 说明从什么时候开始：*I have lived here since 2019*（现在还住在这里）。不要用一般现在时，不能说 *I live here since 2019*。\n- *This is the first time* 后面用现在完成时：*This is the first time I have eaten sushi.* 但有过去的具体时间时：*I ate sushi for the first time last week.*\n\n中文“我从 2019 年起就住在这里”里动词没有变化，英语却要用 *have lived*，这是中国学生最常出错的地方。",
+        "Look at the time words.\n\n- A finished time in the past takes the **past simple**: *yesterday, last week, in 2015, two years ago, when I was little*. *I lived in Paris in 2015.*\n- A time that runs up to now takes the **present perfect**. *since* gives the point where it began: *I have lived here since 2019* (and I still live here).\n- *This is the first time* takes the present perfect: *This is the first time I have eaten sushi.* But with a finished time: *I ate sushi for the first time last week.*\n\n> **Watch out.** Never pair the present perfect with a finished time (*I have lived in Paris in 2015* is wrong), and never use the present simple with *since* (*I live here since 2019* is wrong).",
+        "看句子里的时间词。\n\n- 过去某个已经结束的时间，用**一般过去时**：*yesterday, last week, in 2015, two years ago, when I was little*。*I lived in Paris in 2015.*\n- 一直延续到现在的时间，用**现在完成时**。*since* 说明从什么时候开始：*I have lived here since 2019*（现在还住在这里）。\n- *This is the first time* 后面用现在完成时：*This is the first time I have eaten sushi.* 但有过去的具体时间时：*I ate sushi for the first time last week.*\n\n> **注意。** 不要把现在完成时和过去具体时间混用（*I have lived in Paris in 2015* 是错的），也不要在 *since* 句里用一般现在时（*I live here since 2019* 是错的）。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -1075,8 +1094,8 @@ const presentPerfectOrPastSimple: TopicDef = {
       "write",
       t("Writing in the right tense", "用正确的时态写句子"),
       t(
-        "Write the sentence from the note. With *since* or after *This is the first time*, use *have* or *has* and the past participle: *Tom has worked at the hospital since March.* With a finished time, use the past simple: *Tom worked at the hospital two years ago.*",
-        "根据笔记写句子。有 *since* 或在 *This is the first time* 后面，用 *have / has* 加过去分词：*Tom has worked at the hospital since March.* 有过去的具体时间，用一般过去时：*Tom worked at the hospital two years ago.*",
+        "Write the sentence from the note. With *since* or after *This is the first time*, use *have* or *has* and the past participle: *Tom has worked at the hospital since March.* With a finished time, use the past simple: *Tom worked at the hospital two years ago.*\n\n> **Watch out.** Match *have* vs. *has* to the subject in present-perfect sentences, and use the irregular past participle (not the past simple) after *have/has*.",
+        "根据笔记写句子。有 *since* 或在 *This is the first time* 后面，用 *have / has* 加过去分词：*Tom has worked at the hospital since March.* 有过去的具体时间，用一般过去时：*Tom worked at the hospital two years ago.*\n\n> **注意。** 现在完成时里要核对主语配 *have* 还是 *has*，并且 *have/has* 后面用过去分词而不是一般过去式。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), ppTypedBank, (right) =>
         ppWhy(right, right),
@@ -1181,6 +1200,10 @@ const writingAnInformalEmail = judgedTopic({
     "Write an email of 100 to 150 words to a friend that answers their questions, gives your news and suggests a plan, in a friendly tone.",
     "给朋友写一封 100 到 150 词的电子邮件：回答对方的问题，讲讲你的近况，提出一个计划，语气友好。",
   ),
+  intro: t(
+    "A natural email to a close friend opens warmly, replies to every point they raised, shares an update, and ends with a concrete plan: *Hi Sam, Congrats on the race! I've just started guitar lessons—why don't we meet at the café on Sunday?*",
+    "给好友写的自然回信会先热情回应，逐条回答对方的问题，分享近况，再用具体邀约收尾：*Hi Sam, Congrats on the race! I've just started guitar lessons—why don't we meet at the café on Sunday?*",
+  ),
   prerequisites: ["writing-an-email-to-a-friend", "present-perfect-or-past-simple"],
   encompasses: [
     { topic: "writing-an-email-to-a-friend", weight: 0.4 },
@@ -1191,8 +1214,8 @@ const writingAnInformalEmail = judgedTopic({
     id: "email",
     title: t("Answers, news and a plan", "回答、近况和计划"),
     explanation: t(
-      "An informal email to a friend has a clear shape:\n\n- Begin with *Hi* or *Hey* and the name, then react to their news: *Congratulations! That's amazing news.*\n- Answer **every** question they asked, one paragraph for each main idea.\n- Give some news of your own: *I've joined the drama club.*\n- Suggest a plan with a time and a place: *Why don't we meet at the park on Saturday?* *Shall we…?* *We could…*\n- End with *Love*, *See you* or *Best wishes* and your name.\n\nKeep the tone friendly: short forms such as *I'm* and *don't*, and words such as *great*, *really* and *so*.",
-      "给朋友的非正式邮件有清楚的结构：\n\n- 用 *Hi* 或 *Hey* 加名字开头，然后回应对方的消息：*Congratulations! That's amazing news.*\n- 回答对方提出的**每一个**问题，每个主要意思一段。\n- 讲讲你自己的近况：*I've joined the drama club.*\n- 提出一个有时间和地点的计划：*Why don't we meet at the park on Saturday?* *Shall we…?* *We could…*\n- 结尾写 *Love*、*See you* 或 *Best wishes* 和你的名字。\n\n语气要友好：用 *I'm*、*don't* 这样的缩写，以及 *great*、*really*、*so* 这样的词。",
+      "An informal email to a friend has a clear shape:\n\n- Begin with *Hi* or *Hey* and the name, then react to their news: *Congratulations! That's amazing news.*\n- Answer **every** question they asked, one paragraph for each main idea.\n- Give some news of your own: *I've joined the drama club.*\n- Suggest a plan with a time and a place: *Why don't we meet at the park on Saturday?* *Shall we…?* *We could…*\n- End with *Love*, *See you* or *Best wishes* and your name.\n\nKeep the tone friendly: short forms such as *I'm* and *don't*, and words such as *great*, *really* and *so*.\n\n> **Watch out.** Do not write one solid wall of text or sound overly formal (*Yours sincerely* belongs in formal emails)—break your reply into clear paragraphs and answer every question in your friend's email.",
+      "给朋友的非正式邮件有清楚的结构：\n\n- 用 *Hi* 或 *Hey* 加名字开头，然后回应对方的消息：*Congratulations! That's amazing news.*\n- 回答对方提出的**每一个**问题，每个主要意思一段。\n- 讲讲你自己的近况：*I've joined the drama club.*\n- 提出一个有时间和地点的计划：*Why don't we meet at the park on Saturday?* *Shall we…?* *We could…*\n- 结尾写 *Love*、*See you* 或 *Best wishes* 和你的名字。\n\n语气要友好：用 *I'm*、*don't* 这样的缩写，以及 *great*、*really*、*so* 这样的词。\n\n> **注意。** 不要把整封信挤成一大段，也不要用过于正式的套话（*Yours sincerely* 属于正式邮件）——分段作答并确保回应朋友提出的每一个问题。",
     ),
   },
   question: t(

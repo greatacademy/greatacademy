@@ -14,6 +14,7 @@ export interface TopicSpec {
   readonly id: string;
   readonly title: Pair;
   readonly summary: Pair;
+  readonly intro?: Pair;
   readonly after: readonly string[];
   /** covers are the prerequisites (or their ancestors) it encompasses with weight 0.2; the first prerequisite unless given. */
   readonly covers?: readonly string[];
@@ -28,6 +29,7 @@ export const topic = (strand: Strand, spec: TopicSpec): TopicDef => {
     id: spec.id,
     title: t(...spec.title),
     summary: t(...spec.summary),
+    ...(spec.intro ? { intro: t(...spec.intro) } : {}),
     prerequisites,
     encompasses: covers(0.2, ...(spec.covers ?? prerequisites.slice(0, 1))),
     xp: spec.xp ?? 14,
@@ -62,7 +64,8 @@ export const label = (
   question: Pair,
   lines: string,
   labels: Readonly<Record<string, Label>>,
-): KnowledgePointDef => point(id, t(...title), t(...explanation), labelChoice(question, lines, labels));
+  why?: (right: string, shown: string, entry: Label) => Pair,
+): KnowledgePointDef => point(id, t(...title), t(...explanation), labelChoice(question, lines, labels, why));
 
 /** type builds a knowledge point of typed words, checked by their form. */
 export const type = (id: string, title: Pair, explanation: Pair, question: Pair, bank: readonly TypedItem[], why: Why): KnowledgePointDef =>

@@ -2,7 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
-import { criterion, onePiece } from "./judged-kit.ts";
+import { checkedPiece, criterion } from "./judged-kit.ts";
 
 /** taleBank asks for a tall tale about a hero with one extraordinary power. */
 const taleBank: readonly WritingItem[] = [
@@ -317,6 +317,10 @@ export const taleArtTopics4: readonly TopicDef[] = [
       "Write a tall tale about a hero with one extraordinary power, with exaggeration that grows from event to event, events in order and an ending that explains something in nature or the world.",
       "写一个荒诞故事：主人公有一种非凡的本领，夸张一件比一件大，事件按顺序发展，结尾解释自然或世界中某样东西的由来。",
     ),
+    intro: t(
+      "In a tall tale, a girl born running does not merely win a race—she outruns the morning train, catches up with yesterday, and drags a rain cloud home so fast it shreds into summer showers. Bigger and bigger feats plus a playful “that is why...” ending make a tall tale sparkle.",
+      "在荒诞故事里，天生善跑的女孩不只是赢得赛跑——她跑赢早班火车、追上昨天，还把雨云拉回家拉成零星阵雨。层层升级的夸张加上风趣的“这就是为什么……”结尾，才写出地道的荒诞故事。",
+    ),
     prerequisites: ["writing-a-narrative-paragraph", "showing-not-telling"],
     encompasses: [{ topic: "showing-not-telling", weight: 0.2 }],
     xp: 22,
@@ -327,8 +331,8 @@ export const taleArtTopics4: readonly TopicDef[] = [
         "a-hero-and-an-ending-that-explains",
         t("A Hero and an Ending That Explains", "主人公和解释由来的结尾"),
         t(
-          "A **tall tale** begins with a hero who has one amazing power: *Swift Sally was born running.* It ends by explaining, playfully, how something in the world came to be: *That is why summer storms come in quick, patchy showers.* The power of the hero is what makes the ending happen.",
-          "**荒诞故事**以一个拥有一种惊人本领的主人公开头：*Swift Sally was born running.* 结尾用风趣的方式解释世界上某样东西的由来：*That is why summer storms come in quick, patchy showers.* 正是主人公的本领带来了这个结尾。",
+          "A **tall tale** begins with a hero who has one amazing power: *Swift Sally was born running.* It ends by explaining, playfully, how something in the world came to be: *That is why summer storms come in quick, patchy showers.* The power of the hero is what makes the ending happen.\n\n> **Watch out.** Do not just stop after one funny feat—connect your hero's power directly to a playful ending that explains something in nature or the world.",
+          "**荒诞故事**以一个拥有一种惊人本领的主人公开头：*Swift Sally was born running.* 结尾用风趣的方式解释世界上某样东西的由来：*That is why summer storms come in quick, patchy showers.* 正是主人公的本领带来了这个结尾。\n\n> **注意。** 不要写完一件趣事就草草收尾——要把主人公的非凡本领直接连到一个风趣解释自然或世界由来的结尾上。",
         ),
         writingGenerator(
           t(
@@ -338,15 +342,18 @@ export const taleArtTopics4: readonly TopicDef[] = [
           taleBank,
           ["g4-talltale-hero", "g4-talltale-ending", "g35-narrative-sequence"],
           { minWords: 70, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Check that your tale introduces one extraordinary hero, keeps events in clear order, and ends by playfully explaining how something in the world came to be.",
+            "检查你的故事写出了主人公的一项非凡本领、事件顺序清楚，并且结尾风趣地解释了自然或世界中某样东西的由来。",
+          ),
         ),
       ),
       point(
         "exaggeration-that-grows",
         t("Exaggeration That Grows", "越来越大的夸张"),
         t(
-          "In a tall tale the exaggeration **grows**. Each feat is bigger than the one before: first the hero carries the groceries, then the whole market, then a ship over a mountain. Words such as *first*, *then*, *next* and *finally* keep the events in order as they climb toward the biggest feat of all.",
-          "荒诞故事中的夸张是**越来越大**的。每件壮举都比前一件更大：主人公先是提起买的东西，然后扛起整个市场，接着把一艘船搬过山去。*first*、*then*、*next*、*finally* 这样的词让事件按顺序推进，一直推向最大的壮举。",
+          "In a tall tale the exaggeration **grows**. Each feat is bigger than the one before: first the hero carries the groceries, then the whole market, then a ship over a mountain. Words such as *first*, *then*, *next* and *finally* keep the events in order as they climb toward the biggest feat of all.\n\n> **Watch out.** Do not put the biggest feat first—build from a small start to an impossible climax so the humor keeps climbing.",
+          "荒诞故事中的夸张是**越来越大**的。每件壮举都比前一件更大：主人公先是提起买的东西，然后扛起整个市场，接着把一艘船搬过山去。*first*、*then*、*next*、*finally* 这样的词让事件按顺序推进，一直推向最大的壮举。\n\n> **注意。** 不要一开头就把最夸张的事写出来——要从小处起笔、一步步升级到最惊人的高潮。",
         ),
         writingGenerator(
           t(
@@ -356,7 +363,10 @@ export const taleArtTopics4: readonly TopicDef[] = [
           taleGrowsBank,
           ["g4-talltale-exaggeration", "g35-narrative-sequence", "g4-talltale-hero"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "List your hero's feats in order from first to last and verify that each one is bigger and more outrageous than the one before.",
+            "按先后顺序列出主人公的几件壮举，确认每一件都比前一件更大、更夸张。",
+          ),
         ),
       ),
     ],
@@ -367,6 +377,10 @@ export const taleArtTopics4: readonly TopicDef[] = [
     summary: t(
       "Write a paragraph about a painting or sculpture described in words: what it shows, in precise words, what you think of it, details of the work that support your opinion, and a closing.",
       "就一件用文字描述的绘画或雕塑写一个段落：用准确的词语写出它表现了什么，说出你的看法，用作品的细节支持你的观点，并写一个结尾。",
+    ),
+    intro: t(
+      "A great response to a painting does more than say *I like it*: it paints the scene in precise words (*towering dark-green waves*, *a single yellow lantern*) and points straight to those details to explain what the artwork makes you think or feel.",
+      "好的艺术赏析不只是说 *I like it*：它用精准的词描绘画面（如 *towering dark-green waves*、*a single yellow lantern*），并紧扣这些细节说明作品带给你的感受与看法。",
     ),
     prerequisites: ["writing-a-descriptive-paragraph", "writing-an-opinion-paragraph"],
     encompasses: [
@@ -381,23 +395,26 @@ export const taleArtTopics4: readonly TopicDef[] = [
         "describing-a-work-and-your-view",
         t("Describing a Work and Your View", "描述作品和你的看法"),
         t(
-          "A response to art does two things. It **describes** the work in precise words, *towering dark-green waves*, not just *big waves*. And it gives the writer's **opinion**: *I think it is a painting about courage.* It ends with a sentence that sums up what the work means to the writer.",
-          "艺术作品赏析要做两件事：用准确的词语**描述**作品，写 *towering dark-green waves*，而不只是 *big waves*；并且说出写作者的**看法**：*I think it is a painting about courage.* 最后用一个句子总结这件作品对写作者的意义。",
+          "A response to art does two things. It **describes** the work in precise words, *towering dark-green waves*, not just *big waves*. And it gives the writer's **opinion**: *I think it is a painting about courage.* It ends with a sentence that sums up what the work means to the writer.\n\n> **Watch out.** Do not only summarize what is in the picture without sharing your own view—and do not give a view without describing the work first.",
+          "艺术作品赏析要做两件事：用准确的词语**描述**作品，写 *towering dark-green waves*，而不只是 *big waves*；并且说出写作者的**看法**：*I think it is a painting about courage.* 最后用一个句子总结这件作品对写作者的意义。\n\n> **注意。** 不要只描述画面却不写自己的看法，也不要只写看法却不先描绘作品。",
         ),
         writingGenerator(
           t("Write a paragraph in English that responds to the work of art described below.", "用英语写一个段落，赏析下面描述的艺术作品。"),
           artBank,
           ["g35-describe-precise", "w4-states-opinion", "w4-concludes"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Check that your paragraph describes the work with precise words, clearly states your opinion, explains why, and closes with a summing-up sentence.",
+            "检查你的段落用精准词语描述了作品、清楚表达了个人看法并说明原因，最后以总结句收尾。",
+          ),
         ),
       ),
       point(
         "details-that-support-your-view",
         t("Details That Support Your View", "支持看法的细节"),
         t(
-          "An opinion about art is convincing when it points to the **work itself**. Do not only say *I like it*: say what in the work makes you think so. *The umbrella is tipped toward the smaller child, so the bigger child's shoulder is wet* explains why the sculpture is about kindness.",
-          "对艺术作品的看法要有说服力，就要指向**作品本身**。不要只说 *I like it*，要说出作品中是什么让你这样想。*The umbrella is tipped toward the smaller child, so the bigger child's shoulder is wet* 说明了为什么这件雕塑表现的是善良。",
+          "An opinion about art is convincing when it points to the **work itself**. Do not only say *I like it*: say what in the work makes you think so. *The umbrella is tipped toward the smaller child, so the bigger child's shoulder is wet* explains why the sculpture is about kindness.\n\n> **Watch out.** Stick to details actually present in the description—do not invent colors or objects that the source never mentions.",
+          "对艺术作品的看法要有说服力，就要指向**作品本身**。不要只说 *I like it*，要说出作品中是什么让你这样想。*The umbrella is tipped toward the smaller child, so the bigger child's shoulder is wet* 说明了为什么这件雕塑表现的是善良。\n\n> **注意。** 紧扣材料中真实给出的细节——不要凭空编造原文没提到的颜色或物体。",
         ),
         writingGenerator(
           t(
@@ -407,7 +424,10 @@ export const taleArtTopics4: readonly TopicDef[] = [
           artDetailsBank,
           ["g4-art-details-support", "w4-states-opinion", "w4-concludes"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Count at least two specific details from the artwork description that back up your opinion, and verify your closing sentence ties them together.",
+            "数一数你在段落里至少引用了作品描述中的两个具体细节来支持看法，并确认结尾句收束了全段。",
+          ),
         ),
       ),
     ],

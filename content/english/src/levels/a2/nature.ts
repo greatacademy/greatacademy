@@ -610,26 +610,26 @@ const formsOf = (verb: string): string => {
 const participleWhy = (right: string, shown: string): Text => {
   const verb = /\((\w+)\)$/u.exec(shown)?.[1] ?? "";
   return t(
-    `*have* or *has* takes the past participle, and the past participle of *${verb}* is *${right}* (*${formsOf(verb)}*): ${fill(shown, right)}`,
-    `*have* 或 *has* 后面用过去分词，*${verb}* 的过去分词是 *${right}*（*${formsOf(verb)}*）：${fill(shown, right)}`,
+    `*have* or *has* takes the past participle, and the past participle of *${verb}* is *${right}* (*${formsOf(verb)}*): ${fill(shown, right)}\n\n**Check.** Trace the three forms (*${formsOf(verb)}*): after *have/has*, always pick the third form (*${right}*).`,
+    `*have* 或 *has* 后面用过去分词，*${verb}* 的过去分词是 *${right}*（*${formsOf(verb)}*）：${fill(shown, right)}\n\n**检验。** 默念三态（*${formsOf(verb)}*）：在 *have/has* 后面一律选第三个形式（*${right}*）。`,
   );
 };
 
 /** whyNotParticiple explains the past simple or the plain verb after have or has. */
-const whyNotParticiple = (wrong: string, right: string, _shown: string, position: number): Text =>
+const whyNotParticiple = (wrong: string, _right: string, _shown: string, position: number): Text =>
   position === 0
     ? t(
-        `*${wrong}* is the past simple. After *have* or *has*, use the past participle, *${right}*.`,
-        `*${wrong}* 是一般过去式。在 *have* 或 *has* 后面要用过去分词 *${right}*。`,
+        `*${wrong}* is the past simple (second form), not the past participle needed after *have* or *has*.`,
+        `*${wrong}* 是一般过去式（第二态），不是 *have* 或 *has* 后面需要的过去分词。`,
       )
     : position === 1
       ? t(
-          `*${wrong}* is the plain form. After *have* or *has*, use the past participle, *${right}*.`,
-          `*${wrong}* 是动词原形。在 *have* 或 *has* 后面要用过去分词 *${right}*。`,
+          `*${wrong}* is the plain base form, not the past participle needed after *have* or *has*.`,
+          `*${wrong}* 是动词原形，不是 *have* 或 *has* 后面需要的过去分词。`,
         )
       : t(
-          `*${wrong}* adds *-ed* as a regular verb would, but this verb is irregular: its past participle is *${right}*.`,
-          `*${wrong}* 像规则动词那样加了 *-ed*，可这个动词是不规则的：它的过去分词是 *${right}*。`,
+          `*${wrong}* adds *-ed* like a regular verb, but this verb is irregular and has its own past participle.`,
+          `*${wrong}* 像规则动词那样加了 *-ed*，可这个动词是不规则动词，有专门的过去分词。`,
         );
 
 /** haveSubject is the subject of a gapped sentence with have or has. */
@@ -646,19 +646,22 @@ const haveRule = (have: string, subject: string): Text =>
       );
 
 /** whyNotHave explains the wrong form of have, a form of be, or did. */
-const whyNotHave = (wrong: string, right: string, shown: string): Text => {
+const whyNotHave = (wrong: string, _right: string, shown: string): Text => {
   if (wrong === "Did")
     return t(
-      `*Did* asks in the past simple and takes a plain verb. With *ever* and a past participle, the question starts with *${right}*.`,
-      `*Did* 用于一般过去时的疑问句，后接动词原形。有 *ever* 和过去分词时，疑问句以 *${right}* 开头。`,
+      "*Did* asks in the past simple and takes a plain verb, not *ever* with a past participle.",
+      "*Did* 用于一般过去时疑问句，后面接动词原形，不能搭配 *ever* 和过去分词。",
     );
   if (/^(am|is|are)$/u.test(wrong))
     return t(
-      `*${wrong}* is a form of *be*. The present perfect is made with *have* or *has* and the past participle.`,
+      `*${wrong}* is a form of *be*. The present perfect is made with *have* or *has* plus the past participle.`,
       `*${wrong}* 是 *be* 动词的形式。现在完成时由 *have* 或 *has* 加过去分词构成。`,
     );
-  const rule = haveRule(right, haveSubject(shown));
-  return t(`${rule.en}, not *${wrong}*.`, `${rule["zh-CN"]}，不用 *${wrong}*。`);
+  const subject = haveSubject(shown);
+  return t(
+    `*${wrong}* does not agree with the subject *${subject}* in the present perfect.`,
+    `*${wrong}* 与现在完成时的主语 *${subject}* 单复数不一致。`,
+  );
 };
 
 const presentPerfectEverNever: TopicDef = {
@@ -667,6 +670,10 @@ const presentPerfectEverNever: TopicDef = {
   summary: t(
     "Have you ever seen a waterfall? I have never climbed a mountain. Have with a past participle, for experiences at any time up to now.",
     "Have you ever seen a waterfall? I have never climbed a mountain. have 加过去分词，表示到现在为止的经历。",
+  ),
+  intro: t(
+    "To ask about life experience without naming a specific time, English pairs *have / has* with the third form of the verb: *Have you ever slept in a tent?* *She has never flown on a plane.*",
+    "不提具体时间、只问“有没有过某种经历”时，英语用 *have / has* 加动词第三态（过去分词）：*Have you ever slept in a tent?* *She has never flown on a plane.*",
   ),
   prerequisites: ["past-simple-irregular", "have-and-has"],
   encompasses: [
@@ -680,8 +687,8 @@ const presentPerfectEverNever: TopicDef = {
       "participle",
       t("The past participle", "过去分词"),
       t(
-        "The present perfect is *have* or *has* with the past participle. For regular verbs the past participle is the same as the past simple: *climbed*, *visited*. Many common verbs have their own:\n\n- *see – saw – seen*\n- *eat – ate – eaten*\n- *swim – swam – swum*\n- *fly – flew – flown*\n- *ride – rode – ridden*\n- *be – was – been*\n\n*Have you ever seen a whale?* not *Have you ever saw a whale?*",
-        "现在完成时由 *have / has* 加过去分词构成。规则动词的过去分词和过去式一样：*climbed*、*visited*。很多常用动词有自己的形式：\n\n- *see – saw – seen*\n- *eat – ate – eaten*\n- *swim – swam – swum*\n- *fly – flew – flown*\n- *ride – rode – ridden*\n- *be – was – been*\n\n说 *Have you ever seen a whale?*，不说 *Have you ever saw a whale?*",
+        "The present perfect is *have* or *has* with the past participle. For regular verbs the past participle is the same as the past simple: *climbed*, *visited*. Many common verbs have their own third form:\n\n- *see – saw – seen*\n- *eat – ate – eaten*\n- *swim – swam – swum*\n- *fly – flew – flown*\n- *ride – rode – ridden*\n- *be – was – been*\n\n> **Watch out.** Do not use the past simple (second form) after *have/has* (*Have you ever saw a whale?* is wrong—use the third form, *seen*).",
+        "现在完成时由 *have / has* 加过去分词构成。规则动词的过去分词和过去式一样：*climbed*、*visited*。很多常用动词有自己的第三态：\n\n- *see – saw – seen*\n- *eat – ate – eaten*\n- *swim – swam – swum*\n- *fly – flew – flown*\n- *ride – rode – ridden*\n- *be – was – been*\n\n> **注意。** 不要在 *have/has* 后面用一般过去式（第二态）：*Have you ever saw a whale?* 是错的，要用第三态 *seen*。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), participleBank, participleWhy, whyNotParticiple),
     ),
@@ -689,15 +696,19 @@ const presentPerfectEverNever: TopicDef = {
       "have-has",
       t("Have or has", "have 还是 has"),
       t(
-        "Use *has* with *he*, *she*, *it* and one person, and *have* with *I*, *you*, *we*, *they* and more than one: *My brother has never flown. My parents have never flown.*\n\nIn questions, *have* or *has* comes first: *Has Tom ever ridden a horse?* Do not use *did* with *ever* and a past participle.\n\n*ever* means *at any time*, and goes in questions; *never* means *not at any time*, and goes in statements.",
-        "*he*、*she*、*it* 和单个人用 *has*；*I*、*you*、*we*、*they* 和多个人用 *have*：*My brother has never flown. My parents have never flown.*\n\n疑问句把 *have / has* 放在最前面：*Has Tom ever ridden a horse?* 不要用 *did* 和过去分词一起问。\n\n*ever* 意思是“曾经”，用在疑问句；*never* 意思是“从来没有”，用在陈述句。中文“去过”“吃过”里的“过”常常对应现在完成时。",
+        "Use *has* with *he*, *she*, *it* and one person, and *have* with *I*, *you*, *we*, *they* and more than one: *My brother has never flown. My parents have never flown.*\n\nIn questions, *have* or *has* comes first: *Has Tom ever ridden a horse?* *ever* goes in questions (*at any time*); *never* goes in statements (*not at any time*).\n\n> **Watch out.** Never use *Did* or *am/is/are* to build a present-perfect sentence with a past participle (*Did you ever seen...?* is wrong).",
+        "*he*、*she*、*it* 和单个人用 *has*；*I*、*you*、*we*、*they* 和多个人用 *have*：*My brother has never flown. My parents have never flown.*\n\n疑问句把 *have / has* 放在最前面：*Has Tom ever ridden a horse?* *ever*（曾经）用于疑问句，*never*（从未）用于陈述句。\n\n> **注意。** 不要用 *Did* 或 *am/is/are* 搭配过去分词（*Did you ever seen...?* 是错的），并核对主语该配 *have* 还是 *has*。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         haveBank,
         (right, shown) => {
-          const rule = haveRule(right, haveSubject(shown));
-          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+          const subject = haveSubject(shown);
+          const rule = haveRule(right, subject);
+          return t(
+            `${rule.en}: ${fill(shown, right)}\n\n**Check.** Verify two clues: the past participle later in the sentence requires *have/has* (not *did* or *be*), and the subject *${subject}* pairs with *${right}*.`,
+            `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 核对两条线索：句中的过去分词要求用 *have/has*（不用 *did* 或 *be*），且主语 *${subject}* 搭配 *${right}*。`,
+          );
         },
         whyNotHave,
       ),
@@ -706,20 +717,20 @@ const presentPerfectEverNever: TopicDef = {
       "write",
       t("Writing about experiences", "写经历"),
       t(
-        "Write the sentence from the note. *never* makes a statement: *My brother has never ridden a horse.* *ever* makes a question: *Have you ever ridden a horse?* Use the past participle of the verb.",
-        "根据笔记写句子。有 *never* 就写陈述句：*My brother has never ridden a horse.* 有 *ever* 就写疑问句：*Have you ever ridden a horse?* 动词用过去分词。",
+        "Write the sentence from the note. *never* makes a statement: *My brother has never ridden a horse.* *ever* makes a question: *Have you ever ridden a horse?* Use the past participle of the verb.\n\n> **Watch out.** Put *ever* or *never* right before the past participle (not at the end of the sentence), and match *have/has* to the subject.",
+        "根据笔记写句子。有 *never* 就写陈述句：*My brother has never ridden a horse.* 有 *ever* 就写疑问句：*Have you ever ridden a horse?* 动词用过去分词。\n\n> **注意。** *ever* 或 *never* 放在过去分词前面（不要放到句末），同时核对 *have/has* 与主语一致。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), ppTypedBank, (right) => {
         const found = experiences.find(([, , participle, rest]) => right.includes(` ${participle} ${rest}`));
         const forms = found ? formsOf(found[0]) : "";
         return right.endsWith("?")
           ? t(
-              `The note has *ever*, so it is a question: *Have* or *Has* first, then the subject, *ever* and the past participle (*${forms}*): ${right}`,
-              `笔记里有 *ever*，所以写疑问句：先写 *Have* 或 *Has*，再写主语、*ever* 和过去分词（*${forms}*）：${right}`,
+              `The note has *ever*, so it is a question: *Have* or *Has* first, then the subject, *ever* and the past participle (*${forms}*): ${right}\n\n**Check.** Confirm the order (*Have/Has* + subject + *ever* + past participle) and the closing question mark.`,
+              `笔记里有 *ever*，所以写疑问句：先写 *Have* 或 *Has*，再写主语、*ever* 和过去分词（*${forms}*）：${right}\n\n**检验。** 核对语序（*Have/Has* + 主语 + *ever* + 过去分词）和句末问号。`,
             )
           : t(
-              `The note has *never*, so it is a statement: the subject, *have* or *has*, *never* and the past participle (*${forms}*): ${right}`,
-              `笔记里有 *never*，所以写陈述句：主语、*have* 或 *has*、*never* 和过去分词（*${forms}*）：${right}`,
+              `The note has *never*, so it is a statement: the subject, *have* or *has*, *never* and the past participle (*${forms}*): ${right}\n\n**Check.** Confirm the order (subject + *have/has* + *never* + past participle) with no extra *not*.`,
+              `笔记里有 *never*，所以写陈述句：主语、*have* 或 *has*、*never* 和过去分词（*${forms}*）：${right}\n\n**检验。** 核对语序（主语 + *have/has* + *never* + 过去分词），且没有多余的 *not*。`,
             );
       }),
     ),
@@ -804,6 +815,10 @@ const writingAboutAnExperience = judgedTopic({
     "Write six to eight sentences about something you have done in nature: say that you have done it, then tell when and what happened.",
     "写六到八句话，讲你在大自然中做过的一件事：先说你做过，再讲是什么时候、发生了什么。",
   ),
+  intro: t(
+    "When you share a memorable experience, you open in the present perfect (*I have camped in the desert once*) and then zoom into the past simple for the story (*Two years ago we put up our tent...*). That tense shift tells the reader the story has begun.",
+    "分享难忘经历时，先用现在完成时点题（*I have camped in the desert once*），再切到一般过去时讲细节（*Two years ago we put up our tent...*）。这种时态切换让读者立刻进入故事。",
+  ),
   prerequisites: ["present-perfect-with-ever-and-never", "writing-about-your-weekend"],
   encompasses: [
     { topic: "present-perfect-with-ever-and-never", weight: 0.3 },
@@ -814,8 +829,8 @@ const writingAboutAnExperience = judgedTopic({
     id: "experience",
     title: t("Have done, then what happened", "做过什么，然后发生了什么"),
     explanation: t(
-      "Start with the present perfect to say that you have had the experience, at some time up to now: *I have seen a big waterfall once.*\n\nThen change to the past simple to tell when it was and what happened: *It was two years ago. We walked along a path. Suddenly we saw the waterfall.*\n\nDo not put a finished time like *two years ago* with the present perfect: *I saw it two years ago*, not *I have seen it two years ago*.",
-      "先用现在完成时说你有过这样的经历：*I have seen a big waterfall once.*\n\n然后改用一般过去时讲是什么时候、发生了什么：*It was two years ago. We walked along a path. Suddenly we saw the waterfall.*\n\n现在完成时不能和 *two years ago* 这样明确的过去时间一起用：说 *I saw it two years ago*，不说 *I have seen it two years ago*。",
+      "Start with the present perfect to say that you have had the experience, at some time up to now: *I have seen a big waterfall once.*\n\nThen change to the past simple to tell when it was and what happened: *It was two years ago. We walked along a path. Suddenly we saw the waterfall.*\n\n> **Watch out.** Never pair a finished past time like *two years ago* or *last summer* with the present perfect (*I have seen it two years ago* is wrong—say *I saw it two years ago*).",
+      "先用现在完成时说你有过这样的经历：*I have seen a big waterfall once.*\n\n然后改用一般过去时讲是什么时候、发生了什么：*It was two years ago. We walked along a path. Suddenly we saw the waterfall.*\n\n> **注意。** 现在完成时不能和 *two years ago*、*last summer* 这类明确的过去时间连用（*I have seen it two years ago* 是错的，要说 *I saw it two years ago*）。",
     ),
   },
   question: t(

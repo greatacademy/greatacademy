@@ -184,6 +184,33 @@ const narrowItems: readonly ChoiceItem[] = subjects.flatMap((s) =>
   s.focused.map((f): ChoiceItem => [`**Broad question:** ${s.broad}`, f, [s.alsoBroad, s.fact, s.opinion]]),
 );
 
+/** whyNotKind explains why a wrong category does not match the question. */
+const whyNotKind = (wrong: string) => {
+  const kind = wrong as Kind;
+  const [en, zh] = kindWhy[kind];
+  return t(
+    `Not **${wrong}**: a question of that kind fits when ${en}.`,
+    `不是 **${wrong}**（${kindZh[kind]}）：这类问题的特点是${zh}，与本题不符。`,
+  );
+};
+
+/** whyNotNarrow explains why each distractor fails to narrow the broad question into a researchable one. */
+const whyNotNarrow = (_wrong: string, _right: string, _shown: string, position: number) =>
+  position === 0
+    ? t(
+        "That option is still **too broad**: it names a huge subject with no specific group, place, or measure.",
+        "这个选项仍然**范围太大**：没有限定具体的研究对象、地点或衡量指标。",
+      )
+    : position === 1
+      ? t(
+          "That option can be **answered by looking up one fact**—a quick search settles it, so no study is needed.",
+          "这个选项**查一个事实就能回答**，搜索一次就有定论，不需要开展研究。",
+        )
+      : t(
+          "That option asks for a **judgment of taste or belief**, which no empirical evidence can settle.",
+          "这个选项属于**品味或价值判断**，无法用实证数据得出定论。",
+        );
+
 /** judgingResearchQuestions is the college topic of telling a good research question from a weak one. */
 export const judgingResearchQuestions: TopicDef = {
   id: "judging-research-questions",
@@ -191,6 +218,10 @@ export const judgingResearchQuestions: TopicDef = {
   summary: t(
     "What makes a research question one a study can answer: not too broad, not a single fact, not a matter of taste, but focused on who, where and what is measured.",
     "一个研究问题怎样才能由一项研究来回答：不能太宽泛，不能只是一个事实，也不能是品味问题，而要聚焦于研究谁、在哪里、衡量什么。",
+  ),
+  intro: t(
+    "Compare *How does music affect people?* (a whole library of books) with *Did background instrumental music change reading-comprehension scores among 60 seventh-graders?* A good research question pins down who, where or when, and what evidence will answer it.",
+    "比较 *How does music affect people?*（写一整书架都写不完）和 *Did background instrumental music change reading-comprehension scores among 60 seventh-graders?* 好的研究问题会锁定研究对象、时间或地点，以及可收集的证据。",
   ),
   prerequisites: ["words-of-research"],
   encompasses: [{ topic: "words-of-research", weight: 0.1 }],
@@ -201,30 +232,39 @@ export const judgingResearchQuestions: TopicDef = {
       "naming-the-kind-of-question",
       t("Naming the Kind of Question", "判断问题的类型"),
       t(
-        "A research question must be one that evidence from a single study can answer. Three kinds fail. A question that is **too broad**, such as *How does food affect health?*, names a whole field. A question **answered by one fact**, such as *How many calories are in a slice of bread?*, needs a search, not research. A question of **taste or belief**, such as *Is Italian food the best?*, cannot be settled by any data.\n\nA **focused** question names who or what is studied, where or when, and what is measured or asked: *Does printing calorie counts on the menu change what students order in one university canteen?*",
-        "研究问题必须能用一项研究得到的证据来回答。有三类问题不合格。**范围太大**的问题，如 *How does food affect health?*，说的是整个领域。**查一个事实就能回答**的问题，如 *How many calories are in a slice of bread?*，只需搜索，不需研究。**品味或信念**的问题，如 *Is Italian food the best?*，任何数据都无法定论。\n\n**聚焦**的问题说清楚研究谁或什么、在何时何地、衡量或询问什么：*Does printing calorie counts on the menu change what students order in one university canteen?*",
+        "A research question must be one that evidence from a single study can answer. Three kinds fail. A question that is **too broad**, such as *How does food affect health?*, names a whole field. A question **answered by one fact**, such as *How many calories are in a slice of bread?*, needs a search, not research. A question of **taste or belief**, such as *Is Italian food the best?*, cannot be settled by any data.\n\nA **focused** question names who or what is studied, where or when, and what is measured or asked: *Does printing calorie counts on the menu change what students order in one university canteen?*\n\n> **Watch out.** A short question is not automatically a **focused** one—*Is social media a bad thing?* is short, yet it asks for a value judgment, not evidence.",
+        "研究问题必须能用一项研究得到的证据来回答。有三类问题不合格。**范围太大**的问题，如 *How does food affect health?*，说的是整个领域。**查一个事实就能回答**的问题，如 *How many calories are in a slice of bread?*，只需搜索，不需研究。**品味或信念**的问题，如 *Is Italian food the best?*，任何数据都无法定论。\n\n**聚焦**的问题说清楚研究谁或什么、在何时何地、衡量或询问什么：*Does printing calorie counts on the menu change what students order in one university canteen?*\n\n> **注意。** 句子短不等于**聚焦**——*Is social media a bad thing?* 很短，但它问的是价值判断，而不是能用证据回答的问题。",
       ),
-      choiceGenerator(t("What kind of question is this?", "这是哪一类问题？"), kindItems, (right) => {
-        const kind = right as Kind;
-        const [en, zh] = kindWhy[kind];
-        return t(`**${right}**: ${en}.`, `**${right}**（${kindZh[kind]}）：${zh}。`);
-      }),
+      choiceGenerator(
+        t("What kind of question is this?", "这是哪一类问题？"),
+        kindItems,
+        (right) => {
+          const kind = right as Kind;
+          const [en, zh] = kindWhy[kind];
+          return t(
+            `**${right}**: ${en}.\n\n**Check.** Test the question for three signals—a specific group/place, a measurable outcome, and an open evidence-based answer—to confirm it belongs to **${right}**.`,
+            `**${right}**（${kindZh[kind]}）：${zh}。\n\n**检验。** 用三条标准检验题干——是否限定了具体人群/地点、是否可测量、是否需要证据而非单一事实或主观品味——即可确认它属于**${kindZh[kind]}**。`,
+          );
+        },
+        whyNotKind,
+      ),
     ),
     point(
       "narrowing-a-broad-question",
       t("Narrowing a Broad Question", "把宽泛的问题收窄"),
       t(
-        "To turn a broad question into a research question, narrow it on three sides: **who** (first-year students, owners of small dairy farms), **where or when** (one city, the year after the bike lanes opened) and **what is measured or asked** (hours of sleep, the reasons people give). A narrower question is not a smaller idea: it is one you can actually answer.\n\nDo not narrow it into a single fact to look up, or into a question of taste; and a different broad question is no better than the first.",
-        "要把宽泛的问题变成研究问题，就要从三方面收窄：**研究谁**（大一学生、小型奶牛场的场主）、**在何时何地**（某一个城市、自行车道开通后的一年）和**衡量或询问什么**（睡眠时长、人们给出的理由）。更窄的问题并不是更小的想法，而是真正能回答的问题。\n\n不要把它收窄成只需查找的事实，或者品味问题；换成另一个宽泛的问题也并没有更好。",
+        "To turn a broad question into a research question, narrow it on three sides: **who** (first-year students, owners of small dairy farms), **where or when** (one city, the year after the bike lanes opened) and **what is measured or asked** (hours of sleep, the reasons people give). A narrower question is not a smaller idea: it is one you can actually answer.\n\n> **Watch out.** Narrowing does **not** mean turning a topic into a trivia lookup or a yes/no opinion—make sure the narrowed question still requires collecting and analyzing evidence.",
+        "要把宽泛的问题变成研究问题，就要从三方面收窄：**研究谁**（大一学生、小型奶牛场的场主）、**在何时何地**（某一个城市、自行车道开通后的一年）和**衡量或询问什么**（睡眠时长、人们给出的理由）。更窄的问题并不是更小的想法，而是真正能回答的问题。\n\n> **注意。** 收窄**不是**把问题变成查一下就知道的单一事实或主观表态——要确保收窄后的问题依然需要收集并分析证据。",
       ),
       choiceGenerator(
         t("Which question narrows the broad question into a good research question?", "哪个问题把宽泛的问题收窄成了好的研究问题？"),
         narrowItems,
         (right) =>
           t(
-            `**${right}** It names who is studied, where or when, and what is measured or asked, so one study could answer it. The others are still too broad, need only one fact, or ask for a judgment of taste.`,
-            `**${right}** 它说清了研究谁、在何时何地、衡量或询问什么，因此一项研究就能回答。其他选项要么仍然太宽泛，要么只需查一个事实，要么要求的是品味判断。`,
+            `**${right}** It names who is studied, where or when, and what is measured or asked, so one study could answer it.\n\n**Check.** Verify all three anchors in the chosen question—who/what, where/when, and what is measured—while the other options remain too broad, single-fact, or opinion-based.`,
+            `**${right}** 它说清了研究谁、在何时何地、衡量或询问什么，因此一项研究就能回答。\n\n**检验。** 核对所选问题中的三个锚点——研究对象、时间/地点与衡量指标——而其余选项要么仍太宽泛，要么是单一事实，要么是主观品味。`,
           ),
+        whyNotNarrow,
       ),
     ),
   ],

@@ -17,16 +17,16 @@ const shiftLabels: Record<string, Label> = {
   "a needed shift": {
     zh: "必要的时态变化",
     why: [
-      "The time really changes: the writer tells what is still true now or what happened earlier.",
-      "时间确实变了：作者讲的是至今仍然成立的事，或更早发生的事。",
+      "The time really changes: the writer tells what is still true now or what happened earlier.\n\n**Check.** Compare the time of each verb—one action belongs to the past while the other is still true now or happened even earlier, so the shift is needed.",
+      "时间确实变了：作者讲的是至今仍然成立的事，或更早发生的事。\n\n**检验。** 对比两个动词对应的时间——一个发生在过去，另一个至今仍成立或发生得更早，所以必须转换时态。",
     ],
     not: ["The tense does change, and the change matches no change of time.", "时态确实变了，但没有对应时间的变化。"],
   },
   "a wrong shift": {
     zh: "错误的时态变化",
     why: [
-      "The events happen at one time, but the tense slides from past to present or back.",
-      "事件发生在同一时间，时态却在过去和现在之间来回变。",
+      "The events happen at one time, but the tense slides from past to present or back.\n\n**Check.** Put both actions on a timeline—they happen together in the same time frame, so switching tenses is an error.",
+      "事件发生在同一时间，时态却在过去和现在之间来回变。\n\n**检验。** 把两个动作放到时间线上——它们发生在同一时间段里，中途换时态是错误的。",
     ],
     not: [
       "The change of tense matches a real change of time, or there is no change.",
@@ -35,7 +35,10 @@ const shiftLabels: Record<string, Label> = {
   },
   "no shift": {
     zh: "没有时态变化",
-    why: ["Every verb stays in one tense, because everything happens at one time.", "所有动词都保持同一时态，因为所有事情发生在同一时间。"],
+    why: [
+      "Every verb stays in one tense, because everything happens at one time.\n\n**Check.** Underline every verb in the sentence—all of them stay in the exact same tense from start to finish.",
+      "所有动词都保持同一时态，因为所有事情发生在同一时间。\n\n**检验。** 标出句中每个动词——从头到尾都保持完全相同的时态。",
+    ],
     not: ["The tense of the verbs does change in this sentence.", "这个句子里动词的时态确实变了。"],
   },
 };
@@ -161,14 +164,18 @@ const whenToShift = topic("grammar", {
     "Tense stays the same unless the time changes: a writer shifts to tell what is still true or what happened earlier.",
     "时间不变，时态就不变：作者改变时态，是为了讲述至今仍成立的事或更早发生的事。",
   ],
+  intro: [
+    "*The Inca built roads that still cross the Andes* shifts from past (*built*) to present (*cross*) on purpose because the roads still exist today. Knowing when a tense shift marks a real time change—and when it is just a slip—keeps your writing clear.",
+    "*The Inca built roads that still cross the Andes* 刻意从过去时（*built*）切到现在时（*cross*），因为这些路今天依然存在。分清哪些时态转换反映了真实时间变化、哪些只是笔误，句子才准确自然。",
+  ],
   after: ["verb-tense-consistency", "perfect-verb-tenses"],
   points: [
     label(
       "needed-or-wrong-shift",
       ["A Needed Shift or a Wrong One", "必要的还是错误的时态变化"],
       [
-        "Verbs stay in one tense while the events happen at one time: *The Maya watched the sky and recorded the moon*. A writer **shifts** tense only when the time changes: to tell what is **still true** (*The Inca built roads that still **cross** the Andes*) or what happened **earlier** (*where the forest **had stood***). A shift with no change of time is a mistake.",
-        "事件发生在同一时间时，动词保持同一时态：*The Maya watched the sky and recorded the moon*。只有时间变化时才**改变**时态：讲述**至今仍成立**的事（*The Inca built roads that still **cross** the Andes*），或**更早**发生的事（*where the forest **had stood***）。时间没变却改变时态就是错误。",
+        "Verbs stay in one tense while the events happen at one time: *The Maya watched the sky and recorded the moon*. A writer **shifts** tense only when the time changes: to tell what is **still true** (*The Inca built roads that still **cross** the Andes*) or what happened **earlier** (*where the forest **had stood***). A shift with no change of time is a mistake.\n\n> **Watch out.** Do not label every tense change as wrong—check for clues like *still*, *today*, or *had + participle* that show a real jump in time.",
+        "事件发生在同一时间时，动词保持同一时态：*The Maya watched the sky and recorded the moon*。只有时间变化时才**改变**时态：讲述**至今仍成立**的事（*The Inca built roads that still **cross** the Andes*），或**更早**发生的事（*where the forest **had stood***）。时间没变却改变时态就是错误。\n\n> **注意。** 不要一看到时态变化就判错——留意 *still*、*today* 或 *had + 过去分词* 这类标示真实时间跳跃的线索。",
       ],
       ["Does this sentence shift tense, and is the shift needed?", "这个句子改变时态了吗？这种变化是必要的吗？"],
       shiftLines,
@@ -178,14 +185,14 @@ const whenToShift = topic("grammar", {
       "fixing-a-wrong-shift",
       ["Fixing a Wrong Shift", "改正错误的时态变化"],
       [
-        "To fix a wrong shift, find the time of the main events and put every verb of those events in that tense. Keep a shift that is needed: a fact that is still true stays in the present, and an earlier action stays in the past perfect. Changing a needed shift is a mistake too.",
-        "改正错误的时态变化时，先找出主要事件发生的时间，把这些事件的动词都改成那个时态。保留必要的变化：至今仍成立的事实保持现在时，更早的动作保持过去完成时。把必要的变化改掉同样是错误。",
+        "To fix a wrong shift, find the time of the main events and put every verb of those events in that tense. Keep a shift that is needed: a fact that is still true stays in the present, and an earlier action stays in the past perfect. Changing a needed shift is a mistake too.\n\n> **Watch out.** Check *every* verb in the sentence before picking—changing the first verb instead of the second can put the whole sentence in the wrong time.",
+        "改正错误的时态变化时，先找出主要事件发生的时间，把这些事件的动词都改成那个时态。保留必要的变化：至今仍成立的事实保持现在时，更早的动作保持过去完成时。把必要的变化改掉同样是错误。\n\n> **注意。** 选定前检查句中的*每一个*动词——改错动词位置会让整句话落到错误的时间里。",
       ],
       ["Which version keeps the tenses right?", "哪个版本的时态正确？"],
       fixShift,
       (right) => [
-        `**${right}** keeps the events at one time in one tense and shifts only where the time really changes.`,
-        `**${right}** 让同一时间的事件保持同一时态，只在时间确实变化时才改变时态。`,
+        `**${right}** keeps the events at one time in one tense and shifts only where the time really changes.\n\n**Check.** Compare all verbs in **${right}** against the timeline of the sentence—same-time actions share one tense, and any shift matches a genuine change in time.`,
+        `**${right}** 让同一时间的事件保持同一时态，只在时间确实变化时才改变时态。\n\n**检验。** 把 **${right}** 里的每个动词放回时间线对照——同时发生的动作时态一致，任何时态切换都对应真实的时间变化。`,
       ],
       [
         ["*{wrong}* shifts tense, or keeps a shift, where the time does not change.", "*{wrong}* 在时间没有变化的地方改变了时态。"],
@@ -252,12 +259,12 @@ const isAnt = (w: string) => w.endsWith("ant");
 const antWhy = (right: string, related: string): Pair =>
   isAnt(right)
     ? [
-        `The related word is *${related}*, with an *a*, so the ending is *-ant*: **${right}**.`,
-        `相关的词是带 *a* 的 *${related}*，所以词尾是 *-ant*：**${right}**。`,
+        `The related word is *${related}*, with an *a*, so the ending is *-ant*: **${right}**.\n\n**Check.** Match the vowel in *${related}* (*a*) directly to the ending of **${right}** (*-ant*)—both share the same vowel.`,
+        `相关的词是带 *a* 的 *${related}*，所以词尾是 *-ant*：**${right}**。\n\n**检验。** 把 *${related}* 里的元音 *a* 和 **${right}** 的词尾 *-ant* 对照——两者元音一致。`,
       ]
     : [
-        `The related word is *${related}*, with an *e*, so the ending is *-ent*: **${right}**.`,
-        `相关的词是带 *e* 的 *${related}*，所以词尾是 *-ent*：**${right}**。`,
+        `The related word is *${related}*, with an *e*, so the ending is *-ent*: **${right}**.\n\n**Check.** Match the vowel in *${related}* (*e*) directly to the ending of **${right}** (*-ent*)—both share the same vowel.`,
+        `相关的词是带 *e* 的 *${related}*，所以词尾是 *-ent*：**${right}**。\n\n**检验。** 把 *${related}* 里的元音 *e* 和 **${right}** 的词尾 *-ent* 对照——两者元音一致。`,
       ];
 const relatedOf = (w: string) => antLines.find((r) => r[0] === w)?.[1] ?? "";
 
@@ -268,14 +275,18 @@ const antAndEnt = topic("grammar", {
     "Endings that sound alike are told apart by related words: -ant goes with -ance and -ation (important, importance), -ent with -ence (different, difference).",
     "读音相近的词尾可以借助相关的词区分：-ant 对应 -ance 和 -ation（important、importance），-ent 对应 -ence（different、difference）。",
   ],
+  intro: [
+    "Because *important* and *different* sound almost identical at the end, listening alone will not tell you *-ant* from *-ent*. Linking each adjective to its noun (*importance*, *difference*) reveals the hidden vowel right away.",
+    "*important* 和 *different* 的词尾读音几乎相同，光靠听很难分清 *-ant* 和 *-ent*。把形容词和对应的名词（*importance*、*difference*）联在一起，就能一眼看出该写哪个元音。",
+  ],
   after: ["spelling-tion-and-sion"],
   points: [
     choose(
       "ending-from-a-related-word",
       ["The Ending from a Related Word", "根据相关的词选词尾"],
       [
-        "The endings **-ant** and **-ent** sound the same, so a related word helps. If the noun ends in **-ance**, **-ancy** or **-ation**, the adjective ends in **-ant**: *importance, important*; *hesitation, hesitant*. If the noun ends in **-ence**, the adjective ends in **-ent**: *difference, different*. The vowel stays the same in both words.",
-        "词尾 **-ant** 和 **-ent** 读音相同，所以要借助相关的词。名词以 **-ance**、**-ancy** 或 **-ation** 结尾，形容词就以 **-ant** 结尾：*importance, important*；*hesitation, hesitant*。名词以 **-ence** 结尾，形容词就以 **-ent** 结尾：*difference, different*。两个词中的元音保持一致。",
+        "The endings **-ant** and **-ent** sound the same, so a related word helps. If the noun ends in **-ance**, **-ancy** or **-ation**, the adjective ends in **-ant**: *importance, important*; *hesitation, hesitant*. If the noun ends in **-ence**, the adjective ends in **-ent**: *difference, different*. The vowel stays the same in both words.\n\n> **Watch out.** Do not drop the noun form into an adjective slot—check both the vowel (*a* vs. *e*) and the part of speech.",
+        "词尾 **-ant** 和 **-ent** 读音相同，所以要借助相关的词。名词以 **-ance**、**-ancy** 或 **-ation** 结尾，形容词就以 **-ant** 结尾：*importance, important*；*hesitation, hesitant*。名词以 **-ence** 结尾，形容词就以 **-ent** 结尾：*difference, different*。两个词中的元音保持一致。\n\n> **注意。** 不要把名词形式错填进形容词的位置——同时核对元音（*a* 还是 *e*）和词性。",
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
       antLines.flatMap((r): ChoiceItem[] => [
@@ -285,18 +296,21 @@ const antAndEnt = topic("grammar", {
       (right) => antWhy(right, relatedOf(right)),
       [
         [
-          "*{wrong}* has the wrong vowel in its ending; the related word shows it is **{right}**.",
-          "*{wrong}* 词尾的元音错了；相关的词表明应是 **{right}**。",
+          "*{wrong}* uses the wrong vowel in its ending—check the vowel in the related noun.",
+          "*{wrong}* 词尾的元音写错了——对照相关名词里的元音再看一遍。",
         ],
-        ["*{wrong}* is the noun; the sentence needs the adjective, **{right}**.", "*{wrong}* 是名词；句子需要形容词 **{right}**。"],
+        [
+          "*{wrong}* is either the noun form or uses a non-standard *-int* ending instead of the adjective.",
+          "*{wrong}* 要么是名词形式，要么用了不存在的 *-int* 词尾，不是正确的形容词。",
+        ],
       ],
     ),
     type(
       "typing-ant-and-ent-words",
       ["Typing -ant and -ent Words", "拼写 -ant 和 -ent 词"],
       [
-        "Before you write a word that ends in *-ant* or *-ent*, think of its noun. *Silence* has an *e*, so you write *silent*; *distance* has an *a*, so you write *distant*. If you cannot think of a related word, check a dictionary, because the sound alone does not tell you.",
-        "写以 *-ant* 或 *-ent* 结尾的词之前，先想想它的名词。*silence* 有 *e*，所以写 *silent*；*distance* 有 *a*，所以写 *distant*。如果想不出相关的词，就查词典，因为光靠读音无法判断。",
+        "Before you write a word that ends in *-ant* or *-ent*, think of its noun. *Silence* has an *e*, so you write *silent*; *distance* has an *a*, so you write *distant*. If you cannot think of a related word, check a dictionary, because the sound alone does not tell you.\n\n> **Watch out.** Remember that *-ancy* (*vacancy*) pairs with *-ant*, while *-ency* (*urgency*) pairs with *-ent*.",
+        "写以 *-ant* 或 *-ent* 结尾的词之前，先想想它的名词。*silence* 有 *e*，所以写 *silent*；*distance* 有 *a*，所以写 *distant*。如果想不出相关的词，就查词典，因为光靠读音无法判断。\n\n> **注意。** 记住 *-ancy*（如 *vacancy*）对应 *-ant*，*-ency*（如 *urgency*）对应 *-ent*。",
       ],
       ["Type the missing word, which ends in -ant or -ent.", "输入缺少的词，它以 -ant 或 -ent 结尾。"],
       antLines.flatMap((r) => [
@@ -406,20 +420,24 @@ const hyphens = topic("grammar", {
     "A hyphen joins words that act as one adjective before a noun (a well-built bridge), compound numbers (twenty-one) and some prefixes (self-, ex-).",
     "连字符用来连接在名词前共同充当一个形容词的几个词（a well-built bridge）、复合数字（twenty-one）和某些前缀（self-、ex-）。",
   ],
+  intro: [
+    "Compare *a well-built bridge* with *The bridge was well built*. Hyphens glue words that work together as a single modifier right before a noun, join compound numbers like *twenty-one*, and attach prefixes such as *self-* and *ex-*.",
+    "对比 *a well-built bridge* 和 *The bridge was well built*。连字符把放在名词前共同修饰名词的词连成一体，也用来连接 *twenty-one* 这类复合数字以及 *self-*、*ex-* 等前缀。",
+  ],
   after: ["compound-words"],
   points: [
     choose(
       "where-a-hyphen-goes",
       ["Where a Hyphen Goes", "连字符的位置"],
       [
-        "A **hyphen** (-) joins words that work together as one describing word **before a noun**: *a well-built bridge*, *a ten-story tower*, *a two-hour tour*. It also joins the parts of the numbers from *twenty-one* to *ninety-nine*, and it follows the prefixes *self-* and *ex-*: *self-confident*, *ex-teacher*. The noun itself is never joined on.",
-        "**连字符**（-）用来连接在**名词前**共同充当一个修饰词的几个词：*a well-built bridge*、*a ten-story tower*、*a two-hour tour*。从 *twenty-one* 到 *ninety-nine* 的数字也用连字符连接，前缀 *self-* 和 *ex-* 后也加连字符：*self-confident*、*ex-teacher*。名词本身不连上去。",
+        "A **hyphen** (-) joins words that work together as one describing word **before a noun**: *a well-built bridge*, *a ten-story tower*, *a two-hour tour*. It also joins the parts of the numbers from *twenty-one* to *ninety-nine*, and it follows the prefixes *self-* and *ex-*: *self-confident*, *ex-teacher*. The noun itself is never joined on.\n\n> **Watch out.** Never attach the hyphen to the noun being described (*a well-built-bridge* is wrong)—the hyphen links only the describing words.",
+        "**连字符**（-）用来连接在**名词前**共同充当一个修饰词的几个词：*a well-built bridge*、*a ten-story tower*、*a two-hour tour*。从 *twenty-one* 到 *ninety-nine* 的数字也用连字符连接，前缀 *self-* 和 *ex-* 后也加连字符：*self-confident*、*ex-teacher*。名词本身不连上去。\n\n> **注意。** 绝不要把连字符连到后面的名词上（*a well-built-bridge* 是错的）——连字符只连接修饰词本身。",
       ],
       ["Which sentence uses hyphens correctly?", "哪个句子的连字符用得正确？"],
       hyphenWhere,
       (right) => [
-        `**${right}** joins only the words that act as one, a number from twenty-one to ninety-nine, or *self-* or *ex-* to its word.`,
-        `**${right}** 只连接了共同起作用的词、二十一到九十九的数字，或 *self-*、*ex-* 与其后的词。`,
+        `**${right}** joins only the words that act as one, a number from twenty-one to ninety-nine, or *self-* or *ex-* to its word.\n\n**Check.** Inspect each hyphen in **${right}**—it links a compound modifier before a noun, a number from 21 to 99, or *self-/ex-*, and leaves the noun separate.`,
+        `**${right}** 只连接了共同起作用的词、二十一到九十九的数字，或 *self-*、*ex-* 与其后的词。\n\n**检验。** 逐一检查 **${right}** 里的连字符——只连接名词前的复合修饰语、21 到 99 的数字或 *self-/ex-*，后面的名词保持独立。`,
       ],
       [
         ["*{wrong}* leaves out a hyphen that the joined words need.", "*{wrong}* 漏掉了需要的连字符。"],
@@ -433,18 +451,21 @@ const hyphens = topic("grammar", {
       "before-a-noun-or-after-a-verb",
       ["Before a Noun or After a Verb", "在名词前还是在动词后"],
       [
-        "The same words may need a hyphen in one place and not in another. Before a noun they act as one adjective, so they are joined: *a **well-built** bridge*. After a verb such as *is* or *was*, they are usually written apart: *The bridge was **well built***. Numbers that measure also change: *a ten-story tower*, but *ten stories tall*.",
-        "同样的词在一个位置需要连字符，在另一个位置可能不需要。在名词前它们共同充当一个形容词，所以要连起来：*a **well-built** bridge*。在 *is*、*was* 等动词后，通常分开写：*The bridge was **well built***。表示度量的数字也会变：*a ten-story tower*，但 *ten stories tall*。",
+        "The same words may need a hyphen in one place and not in another. Before a noun they act as one adjective, so they are joined: *a **well-built** bridge*. After a verb such as *is* or *was*, they are usually written apart: *The bridge was **well built***. Numbers that measure also change: *a ten-story tower*, but *ten stories tall*.\n\n> **Watch out.** Check whether a noun follows the modifier directly—if the modifier comes *after* the verb (*was well built*), drop the hyphen.",
+        "同样的词在一个位置需要连字符，在另一个位置可能不需要。在名词前它们共同充当一个形容词，所以要连起来：*a **well-built** bridge*。在 *is*、*was* 等动词后，通常分开写：*The bridge was **well built***。表示度量的数字也会变：*a ten-story tower*，但 *ten stories tall*。\n\n> **注意。** 看修饰语后面是否紧跟名词——如果修饰语在动词*后面*（如 *was well built*），就不加连字符。",
       ],
       ["Read where the words come, then choose the sentence that is right.", "看这些词所在的位置，再选出正确的句子。"],
       beforeOrAfter,
       (right, shown) =>
         shown.includes("before")
           ? [
-              `Before a noun, the words act as one adjective and are joined: **${right}**`,
-              `在名词前，这些词共同充当一个形容词，要连起来：**${right}**`,
+              `Before a noun, the words act as one adjective and are joined: **${right}**\n\n**Check.** Spot the noun right after the hyphenated modifier in **${right}**—because the words team up before a noun, they take a hyphen.`,
+              `在名词前，这些词共同充当一个形容词，要连起来：**${right}**\n\n**检验。** 找出 **${right}** 中紧跟在连字符修饰语后面的名词——因为它们合起来放在名词前，所以用连字符连接。`,
             ]
-          : [`After the verb, the words are written apart: **${right}**`, `在动词后，这些词分开写：**${right}**`],
+          : [
+              `After the verb, the words are written apart: **${right}**\n\n**Check.** Spot the linking verb before the modifier in **${right}**—because no noun follows it directly, the words stay unhyphenated.`,
+              `在动词后，这些词分开写：**${right}**\n\n**检验。** 找出 **${right}** 中修饰语前面的动词——后面没有紧跟被修饰的名词，所以分开写不加连字符。`,
+            ],
       [
         ["*{wrong}* treats the words the wrong way for where they stand.", "*{wrong}* 没有按照这些词所在的位置处理。"],
         ["*{wrong}* joins a word with a hyphen that should stand alone.", "*{wrong}* 用连字符连上了一个应该独立的词。"],
@@ -564,20 +585,24 @@ const tagCommas = topic("grammar", {
     "A comma sets off yes and no, a tag question (you were there, weren't you?) and the name of the person spoken to.",
     "逗号用来隔开 yes 和 no、附加疑问（you were there, weren't you?）以及被称呼的人名。",
   ],
+  intro: [
+    "In *Yes, Inspector, you locked the gate, didn't you?*, commas separate *Yes*, the name *Inspector*, and the tag question *didn't you?* from the main statement so every part reads clearly.",
+    "在 *Yes, Inspector, you locked the gate, didn't you?* 中，逗号把 *Yes*、称呼 *Inspector* 以及附加疑问 *didn't you?* 与主句隔开，读起来层次分明。",
+  ],
   after: ["commas-after-introductions"],
   points: [
     choose(
       "where-the-commas-go",
       ["Where the Commas Go", "逗号的位置"],
       [
-        "Three things are set off by commas because they stand apart from the rest of the sentence. **Yes** and **no** at the start: *Yes, I saw him*. A **tag question** at the end: *You were there, weren't you?* And the **name of the person spoken to**, wherever it comes: *Look, Inspector, the window is open*. A name in the middle needs a comma on each side.",
-        "有三样东西要用逗号隔开，因为它们独立于句子的其余部分：句首的 **yes** 和 **no**：*Yes, I saw him*；句末的**附加疑问**：*You were there, weren't you?*；以及**被称呼的人名**，无论出现在哪里：*Look, Inspector, the window is open*。人名在句子中间时，两边都要加逗号。",
+        "Three things are set off by commas because they stand apart from the rest of the sentence. **Yes** and **no** at the start: *Yes, I saw him*. A **tag question** at the end: *You were there, weren't you?* And the **name of the person spoken to**, wherever it comes: *Look, Inspector, the window is open*. A name in the middle needs a comma on each side.\n\n> **Watch out.** Do not drop a comma inside the main clause between subject and verb—commas belong only around *yes/no*, direct-address names, and tag questions.",
+        "有三样东西要用逗号隔开，因为它们独立于句子的其余部分：句首的 **yes** 和 **no**：*Yes, I saw him*；句末的**附加疑问**：*You were there, weren't you?*；以及**被称呼的人名**，无论出现在哪里：*Look, Inspector, the window is open*。人名在句子中间时，两边都要加逗号。\n\n> **注意。** 不要把逗号插进主句的主语和动词之间——逗号只加在 *yes/no*、称呼的人名和附加疑问旁边。",
       ],
       ["Which sentence has its commas in the right places?", "哪个句子的逗号位置正确？"],
       tagLines.map((r): ChoiceItem => ["Check each comma of the three versions.", field(r, 0), [field(r, 1), field(r, 2)]]),
       (right) => [
-        `**${right}** puts commas only around *yes* or *no*, a tag question or the name of the person spoken to.`,
-        `**${right}** 只在 *yes*、*no*、附加疑问或被称呼的人名周围加了逗号。`,
+        `**${right}** puts commas only around *yes* or *no*, a tag question or the name of the person spoken to.\n\n**Check.** Temporarily remove the words set off by commas in **${right}**—the main clause left behind is unbroken and complete.`,
+        `**${right}** 只在 *yes*、*no*、附加疑问或被称呼的人名周围加了逗号。\n\n**检验。** 把 **${right}** 中被逗号隔开的部分暂时拿掉——剩下的主句完整连贯、没有被截断。`,
       ],
       [
         ["*{wrong}* puts a comma inside the main part of the sentence, where none belongs.", "*{wrong}* 在句子主干中间加了不该有的逗号。"],
@@ -591,22 +616,27 @@ const tagCommas = topic("grammar", {
       "fixing-a-line-of-dialogue",
       t("Fixing a Line of Dialogue", "改正一句对话"),
       t(
-        "Characters in mysteries often answer *yes* or *no*, check a fact with a tag question or call someone by name, so their lines need these commas. Read the words inside the quotation marks on their own, find the *yes*, *no*, tag or name, and set it off. The comma that ends the spoken words still goes inside the closing quotation mark.",
-        "推理故事里的人物常常回答 *yes* 或 *no*，用附加疑问核对事实，或称呼某人的名字，所以他们的话需要这些逗号。单独读引号里的话，找出 *yes*、*no*、附加疑问或人名，把它隔开。结束引语的逗号仍放在后引号之内。",
+        "Characters in mysteries often answer *yes* or *no*, check a fact with a tag question or call someone by name, so their lines need these commas. Read the words inside the quotation marks on their own, find the *yes*, *no*, tag or name, and set it off. The comma that ends the spoken words still goes inside the closing quotation mark.\n\n> **Watch out.** When a line has *both* an opening word and a name (*Yes, Officer, …*), both need commas—do not stop after the first comma.",
+        "推理故事里的人物常常回答 *yes* 或 *no*，用附加疑问核对事实，或称呼某人的名字，所以他们的话需要这些逗号。单独读引号里的话，找出 *yes*、*no*、附加疑问或人名，把它隔开。结束引语的逗号仍放在后引号之内。\n\n> **注意。** 如果一句话里*同时*有开头词和称呼（如 *Yes, Officer, …*），两处都要加逗号——别只加了第一个就停下。",
       ),
       choiceGenerator(
         t("This line of dialogue is missing commas. Which version fixes it?", "这句对话缺少逗号。哪个版本改正了？"),
         fixTagLines.map((r): ChoiceItem => [field(r, 0), field(r, 1), [field(r, 2), field(r, 3)]]),
         (right) =>
           t(
-            `**${right}** sets off the *yes* or *no*, the tag question or the name with commas, and keeps the rest of the line together.`,
-            `**${right}** 用逗号隔开了 *yes*、*no*、附加疑问或人名，句子的其余部分保持完整。`,
+            `**${right}** sets off the *yes* or *no*, the tag question or the name with commas, and keeps the rest of the line together.\n\n**Check.** Read the words inside quotation marks in **${right}**—every *yes/no*, direct-address name, and tag question is cleanly separated by commas without splitting the main clause.`,
+            `**${right}** 用逗号隔开了 *yes*、*no*、附加疑问或人名，句子的其余部分保持完整。\n\n**检验。** 单独读 **${right}** 引号里的对话——每个 *yes/no*、称呼和附加疑问都用逗号利落隔开，主句本身没有被打断。`,
           ),
-        (wrong) =>
-          t(
-            `*${wrong}* puts a comma where none belongs and misses one that sets something apart.`,
-            `*${wrong}* 在不该加逗号的地方加了逗号，却漏掉了起隔开作用的逗号。`,
-          ),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `*${wrong}* splits the main clause with an extra comma while missing a comma around *yes/no*, the name, or the tag.`,
+                `*${wrong}* 在主句中间多加了逗号，却漏掉了 *yes/no*、称呼或附加疑问旁的逗号。`,
+              )
+            : t(
+                `*${wrong}* places a comma in the wrong spot instead of setting off the *yes/no*, name, or tag question.`,
+                `*${wrong}* 把逗号放错了位置，没有正确隔开 *yes/no*、称呼或附加疑问。`,
+              ),
       ),
     ),
   ],
@@ -779,20 +809,24 @@ const paragraphsForSpeakers = topic("grammar", {
     "In written dialogue each new speaker starts a new paragraph, so the reader knows who is speaking without a tag on every line.",
     "书面对话中，每换一个说话人就另起一段，这样读者不用每句都看引述语也知道是谁在说话。",
   ],
+  intro: [
+    "When two characters trade rapid lines in a mystery, starting a new paragraph every time the speaker changes lets the reader follow who is talking—even when the author drops *she said* and *he replied*.",
+    "推理故事里两个人物你一言我一语时，每换一个说话人就另起一段，哪怕作者省去 *she said* 和 *he replied*，读者也能一眼分清谁在说话。",
+  ],
   after: ["punctuating-dialogue"],
   points: [
     choose(
       "where-a-new-paragraph-begins",
       ["Where a New Paragraph Begins", "从哪里另起一段"],
       [
-        "In a story, every time a **different character speaks**, a new paragraph begins. What a speaker does just before or after the words stays in that speaker's paragraph: *\"Look at the flour,\" Ava whispered. She knelt beside the bench.* Breaking in the middle of one speaker's turn, or running two speakers together, confuses the reader.",
-        '在故事中，每当**换一个人物说话**，就另起一段。说话人在说话前后的动作留在这个说话人的段落里：*"Look at the flour," Ava whispered. She knelt beside the bench.* 在同一个说话人的话中间断开，或把两个说话人的话连在一起，都会让读者困惑。',
+        "In a story, every time a **different character speaks**, a new paragraph begins. What a speaker does just before or after the words stays in that speaker's paragraph: *\"Look at the flour,\" Ava whispered. She knelt beside the bench.* Breaking in the middle of one speaker's turn, or running two speakers together, confuses the reader.\n\n> **Watch out.** Keep a speaker's action beat (like *She knelt beside the bench*) in the *same* paragraph as that speaker's dialogue—do not break for a new paragraph until the *other* character speaks.",
+        '在故事中，每当**换一个人物说话**，就另起一段。说话人在说话前后的动作留在这个说话人的段落里：*"Look at the flour," Ava whispered. She knelt beside the bench.* 在同一个说话人的话中间断开，或把两个说话人的话连在一起，都会让读者困惑。\n\n> **注意。** 说话人自己的动作描写（如 *She knelt beside the bench*）要留在他*同一段*里——只有换另一个人开口时才另起一段。',
       ],
       ["Which layout of this dialogue is right?", "这段对话的哪种分段是正确的？"],
       layoutItems,
       () => [
-        "Each speaker's words, with what that speaker does, form one paragraph, and a new paragraph begins when the speaker changes.",
-        "每个说话人的话连同他的动作组成一段，换说话人时另起一段。",
+        "Each speaker's words, with what that speaker does, form one paragraph, and a new paragraph begins when the speaker changes.\n\n**Check.** Scan each paragraph in the chosen layout—every paragraph belongs to exactly one speaker, and no speaker's turn is split across two paragraphs.",
+        "每个说话人的话连同他的动作组成一段，换说话人时另起一段。\n\n**检验。** 逐段核对所选分段——每一段只属于一位说话人，没有任何人的发言被拆成两段。",
       ],
       [
         [
@@ -809,22 +843,27 @@ const paragraphsForSpeakers = topic("grammar", {
       "who-speaks-a-line-with-no-tag",
       t("Who Speaks a Line with No Tag", "没有引述语的话是谁说的"),
       t(
-        "Once a writer has shown who is talking, the new paragraphs let the tags drop away. When two people talk, the turns alternate: if paragraph 1 is Mia and paragraph 2 is Leo, paragraph 3 is Mia again. Count back to the last paragraph that names its speaker, then count forward by turns.",
-        "作者一旦说明了谁在说话，新的段落就能让引述语省去。两个人对话时，轮流交替：如果第 1 段是 Mia，第 2 段是 Leo，那么第 3 段又是 Mia。往回找到最后一个说出说话人的段落，再按轮次往后数。",
+        "Once a writer has shown who is talking, the new paragraphs let the tags drop away. When two people talk, the turns alternate: if paragraph 1 is Mia and paragraph 2 is Leo, paragraph 3 is Mia again. Count back to the last paragraph that names its speaker, then count forward by turns.\n\n> **Watch out.** Do not guess from the name mentioned *inside* the quotation marks—when Leo says *“Mia, look!”*, Leo is still the speaker.",
+        "作者一旦说明了谁在说话，新的段落就能让引述语省去。两个人对话时，轮流交替：如果第 1 段是 Mia，第 2 段是 Leo，那么第 3 段又是 Mia。往回找到最后一个说出说话人的段落，再按轮次往后数。\n\n> **注意。** 不要把引号里被称呼的名字当成说话人——当 Leo 说 *“Mia, look!”* 时，说话的仍然是 Leo。",
       ),
       choiceGenerator(
         t("Read the dialogue and answer the question.", "读这段对话，回答问题。"),
         speakerItems,
         (right) =>
           t(
-            `The speakers take turns, one paragraph each, so counting the paragraphs from the last tag shows that **${right}** is speaking.`,
-            `说话人轮流说话，每人一段，所以从最后一个引述语往后数段落，就知道是 **${right}** 在说话。`,
+            `The speakers take turns, one paragraph each, so counting the paragraphs from the last tag shows that **${right}** is speaking.\n\n**Check.** Label each paragraph from paragraph 1 onward with the alternating speakers—the target paragraph lands right on **${right}**.`,
+            `说话人轮流说话，每人一段，所以从最后一个引述语往后数段落，就知道是 **${right}** 在说话。\n\n**检验。** 从第 1 段起依次标出交替发言的说话人——目标段落正好落在 **${right}** 身上。`,
           ),
-        (wrong, right) =>
-          t(
-            `Count the paragraphs from the last tag: the turns alternate, and this one belongs to ${right}, not ${wrong}.`,
-            `从最后一个引述语往后数段落：说话人轮流交替，这一段是 ${right} 说的，不是 ${wrong}。`,
-          ),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `Count the paragraphs from the last named speaker: the two characters alternate turns, so this paragraph does not belong to *${wrong}*.`,
+                `从最后一个标明说话人的段落往下数：两人轮流交替，这一段并不是 *${wrong}* 说的。`,
+              )
+            : t(
+                `*${wrong}* is not one of the two characters taking turns in this exchange.`,
+                `*${wrong}* 并不是这段对话中轮流发言的两位角色之一。`,
+              ),
       ),
     ),
   ],
@@ -958,20 +997,24 @@ const interjections = topic("grammar", {
     "An interjection shows feeling and stands apart from the sentence, with an exclamation mark when strong (Help!) and a comma when mild (Oh, the fire is out).",
     "感叹词表达情感，独立于句子之外：情感强烈时用感叹号（Help!），情感温和时用逗号（Oh, the fire is out）。",
   ],
+  intro: [
+    "*Phew, we made it to shore* and *Help! The canoe is sinking!* both begin with an interjection—a quick burst of feeling that sits outside the main sentence grammar and takes a comma when mild or an exclamation mark when strong.",
+    "*Phew, we made it to shore* 和 *Help! The canoe is sinking!* 都以感叹词开头——它独立于句子主干语法之外，用来抒发情感，温和时用逗号，强烈时用感叹号。",
+  ],
   after: ["choosing-punctuation-for-effect"],
   points: [
     choose(
       "finding-the-interjection",
       ["Finding the Interjection", "找出感叹词"],
       [
-        "An **interjection** is a word or two that shows a feeling, such as surprise, pain, joy or fear: *oh, wow, ouch, hooray, help, phew, oops*. It is not part of the grammar of the sentence: take it away and the sentence still works. *Phew, we made it to the shore* still makes sense as *We made it to the shore*.",
-        "**感叹词**是表达惊讶、疼痛、高兴或害怕等情感的一两个词：*oh, wow, ouch, hooray, help, phew, oops*。它不属于句子的语法结构：把它去掉，句子依然成立。*Phew, we made it to the shore* 去掉感叹词后 *We made it to the shore* 仍然通顺。",
+        "An **interjection** is a word or two that shows a feeling, such as surprise, pain, joy or fear: *oh, wow, ouch, hooray, help, phew, oops*. It is not part of the grammar of the sentence: take it away and the sentence still works. *Phew, we made it to the shore* still makes sense as *We made it to the shore*.\n\n> **Watch out.** Test your choice by crossing it out—if removing the word breaks the sentence, it is part of the grammar, not an interjection.",
+        "**感叹词**是表达惊讶、疼痛、高兴或害怕等情感的一两个词：*oh, wow, ouch, hooray, help, phew, oops*。它不属于句子的语法结构：把它去掉，句子依然成立。*Phew, we made it to the shore* 去掉感叹词后 *We made it to the shore* 仍然通顺。\n\n> **注意。** 把选中的词划掉检验——如果去掉它句子就残缺不通，说明它是句子成分，不是感叹词。",
       ],
       ["Which word is the interjection?", "哪个词是感叹词？"],
       interjectionLines,
       (right) => [
-        `**${right}** shows a feeling and stands apart: take it away and the rest is still a whole sentence.`,
-        `**${right}** 表达情感，独立于句子之外：去掉它，剩下的仍是完整的句子。`,
+        `**${right}** shows a feeling and stands apart: take it away and the rest is still a whole sentence.\n\n**Check.** Drop **${right}** and its punctuation from the sentence—the remaining words still form a complete sentence.`,
+        `**${right}** 表达情感，独立于句子之外：去掉它，剩下的仍是完整的句子。\n\n**检验。** 把 **${right}** 和紧随其后的标点去掉——剩下的词依然是一个完整的句子。`,
       ],
       [
         [
@@ -988,18 +1031,21 @@ const interjections = topic("grammar", {
       "punctuating-an-interjection",
       ["Punctuating an Interjection", "感叹词的标点"],
       [
-        "A **strong** interjection, shouted or cried out, takes an **exclamation mark**, and the next sentence begins with a capital: *Help! The canoe is sinking.* A **mild** one, said quietly, takes a **comma** and runs on into the sentence: *Oh, the fire has gone out.* An interjection always needs one of the two marks.",
-        "**强烈的**感叹词（喊出或叫出的）用**感叹号**，后面的句子以大写字母开头：*Help! The canoe is sinking.* **温和的**感叹词（轻声说的）用**逗号**，接着说下去：*Oh, the fire has gone out.* 感叹词后总要用其中一种标点。",
+        "A **strong** interjection, shouted or cried out, takes an **exclamation mark**, and the next sentence begins with a capital: *Help! The canoe is sinking.* A **mild** one, said quietly, takes a **comma** and runs on into the sentence: *Oh, the fire has gone out.* An interjection always needs one of the two marks.\n\n> **Watch out.** Never leave an interjection bare with no punctuation after it—always match the speaker's tone to either `!` (plus a capital letter) or `,`.",
+        "**强烈的**感叹词（喊出或叫出的）用**感叹号**，后面的句子以大写字母开头：*Help! The canoe is sinking.* **温和的**感叹词（轻声说的）用**逗号**，接着说下去：*Oh, the fire has gone out.* 感叹词后总要用其中一种标点。\n\n> **注意。** 感叹词后面绝不能光秃秃不加标点——根据说话语气选 `!`（后接大写字母）或 `,`。",
       ],
       ["The words are said this way. Which punctuation fits?", "这些话是这样说的。哪种标点合适？"],
       interjectionPunct.map((r): ChoiceItem => [`The speaker ${field(r, 0)}.`, field(r, 1), [field(r, 2), field(r, 3)]]),
       (right, shown) =>
         strong(shown)
           ? [
-              `The feeling is strong, so the interjection takes an exclamation mark: **${right}**`,
-              `情感强烈，所以感叹词后用感叹号：**${right}**`,
+              `The feeling is strong, so the interjection takes an exclamation mark: **${right}**\n\n**Check.** Check both the speaker clue (strong/loud) and the punctuation in **${right}**—the exclamation mark and capital letter after it match the strong emotion.`,
+              `情感强烈，所以感叹词后用感叹号：**${right}**\n\n**检验。** 对照说话方式（强烈/大声）和 **${right}** 中的标点——感叹号以及后面的大写字母正符合强烈语气。`,
             ]
-          : [`The feeling is mild, so the interjection takes a comma: **${right}**`, `情感温和，所以感叹词后用逗号：**${right}**`],
+          : [
+              `The feeling is mild, so the interjection takes a comma: **${right}**\n\n**Check.** Check both the speaker clue (quiet/mild) and the punctuation in **${right}**—a comma smoothly links the mild interjection to the sentence.`,
+              `情感温和，所以感叹词后用逗号：**${right}**\n\n**检验。** 对照说话方式（轻声/温和）和 **${right}** 中的标点——逗号把温和的感叹词自然地连接到主句。`,
+            ],
       [
         ["*{wrong}* uses the mark for the other strength of feeling.", "*{wrong}* 用了另一种情感强度的标点。"],
         ["*{wrong}* has no mark after the interjection, but it must stand apart.", "*{wrong}* 感叹词后没有标点，但它必须独立出来。"],
@@ -1012,22 +1058,25 @@ const interjections = topic("grammar", {
 const howeverLabels: Record<string, Label> = {
   correct: {
     zh: "正确",
-    why: ["The word starts a new sentence or follows a semicolon, with a comma after it.", "这个词放在新句子开头或分号之后，后面加逗号。"],
+    why: [
+      "The word starts a new sentence or follows a semicolon, with a comma after it.\n\n**Check.** Look on both sides of the linking word—a period or semicolon stands before it, and a comma stands right after it.",
+      "这个词放在新句子开头或分号之后，后面加逗号。\n\n**检验。** 看连接词两边——前面是句号或分号，紧后面有逗号。",
+    ],
     not: ["The sentence has a mistake with the linking word.", "句子中连接词的用法有错误。"],
   },
   "a comma splice": {
     zh: "逗号粘连",
     why: [
-      "Two sentences are joined by a comma alone; the linking word cannot join them.",
-      "两个句子只用逗号连接；这个连接词不能把它们连起来。",
+      "Two sentences are joined by a comma alone; the linking word cannot join them.\n\n**Check.** Cover the linking word—two complete sentences remain separated by only a comma, confirming a comma splice.",
+      "两个句子只用逗号连接；这个连接词不能把它们连起来。\n\n**检验。** 遮住这个连接词——剩下两个完整句子之间只有一个逗号，确认为逗号粘连。",
     ],
     not: ["The two sentences are not joined by a comma alone.", "这两个句子并不是只用逗号连接的。"],
   },
   "a comma missing after it": {
     zh: "其后缺逗号",
     why: [
-      "The linking word begins its sentence or follows a semicolon, but no comma follows it.",
-      "连接词位于句首或分号之后，但后面没有逗号。",
+      "The linking word begins its sentence or follows a semicolon, but no comma follows it.\n\n**Check.** Look right after *however/therefore/meanwhile*—the sentence boundary before it is fine, yet the comma right after it is missing.",
+      "连接词位于句首或分号之后，但后面没有逗号。\n\n**检验。** 看 *however/therefore/meanwhile* 紧后面的位置——前面的分句标点没问题，但后面漏了逗号。",
     ],
     not: ["A comma already follows the linking word.", "连接词后面已经有逗号了。"],
   },
@@ -1107,14 +1156,18 @@ const howeverAndTherefore = topic("grammar", {
     "Words such as however, therefore and meanwhile do not join two sentences with a comma alone: they start a new sentence or follow a semicolon, with a comma after them.",
     "however、therefore、meanwhile 等词不能只用逗号连接两个句子：它们要放在新句子开头或分号之后，后面加逗号。",
   ],
+  intro: [
+    "*The river rose; however, the raft stayed afloat* uses a semicolon before *however* and a comma after it. Words like *however*, *therefore*, and *meanwhile* cannot glue two complete sentences with just a comma.",
+    "*The river rose; however, the raft stayed afloat* 在 *however* 前用分号、后用逗号。*however*、*therefore*、*meanwhile* 这类过渡副词不能只靠逗号把两个完整句子粘在一起。",
+  ],
   after: ["choosing-transitions", "run-ons-and-comma-splices"],
   points: [
     label(
       "correct-or-comma-splice",
       ["A Correct Sentence or a Comma Splice", "正确的句子还是逗号粘连"],
       [
-        "*However*, *therefore* and *meanwhile* link the ideas of two sentences, but they are not joining words like *and* or *but*. So two sentences joined by a comma and *however* make a **comma splice**: *The river rose, however, the raft stayed afloat.* Either start a new sentence or use a **semicolon**, and put a comma after the linking word.",
-        "*however*、*therefore* 和 *meanwhile* 能连接两个句子的意思，但它们不是 *and*、*but* 那样的连词。所以用逗号加 *however* 连接两个句子会造成**逗号粘连**：*The river rose, however, the raft stayed afloat.* 要么另起一句，要么用**分号**，并在连接词后加逗号。",
+        "*However*, *therefore* and *meanwhile* link the ideas of two sentences, but they are not joining words like *and* or *but*. So two sentences joined by a comma and *however* make a **comma splice**: *The river rose, however, the raft stayed afloat.* Either start a new sentence or use a **semicolon**, and put a comma after the linking word.\n\n> **Watch out.** Check *both* sides of *however* or *therefore*—you need a period or semicolon *before* it AND a comma *after* it.",
+        "*however*、*therefore* 和 *meanwhile* 能连接两个句子的意思，但它们不是 *and*、*but* 那样的连词。所以用逗号加 *however* 连接两个句子会造成**逗号粘连**：*The river rose, however, the raft stayed afloat.* 要么另起一句，要么用**分号**，并在连接词后加逗号。\n\n> **注意。** 检查 *however* 或 *therefore* 的*前后两边*——前面要句号或分号，后面还要有逗号。",
       ],
       ["Is this sentence correct, and if not, what is wrong?", "这个句子正确吗？如果不正确，错在哪里？"],
       howeverLines,
@@ -1124,14 +1177,14 @@ const howeverAndTherefore = topic("grammar", {
       "fixing-the-splice",
       ["Fixing the Splice", "改正逗号粘连"],
       [
-        "To fix a comma splice with *however* or *therefore*, change the comma before the word to a **semicolon** or to a **full stop** with a capital, and keep a **comma after** the word: *The river rose; however, the raft stayed afloat.* or *The river rose. However, the raft stayed afloat.* Both ways are right.",
-        "改正带 *however* 或 *therefore* 的逗号粘连时，把这个词前面的逗号改成**分号**，或改成**句号**并大写，词**后面保留逗号**：*The river rose; however, the raft stayed afloat.* 或 *The river rose. However, the raft stayed afloat.* 两种都对。",
+        "To fix a comma splice with *however* or *therefore*, change the comma before the word to a **semicolon** or to a **full stop** with a capital, and keep a **comma after** the word: *The river rose; however, the raft stayed afloat.* or *The river rose. However, the raft stayed afloat.* Both ways are right.\n\n> **Watch out.** Never put the semicolon *after* the linking word (*The river rose, however; the raft…* is wrong)—the strong stop belongs *before* the linking word.",
+        "改正带 *however* 或 *therefore* 的逗号粘连时，把这个词前面的逗号改成**分号**，或改成**句号**并大写，词**后面保留逗号**：*The river rose; however, the raft stayed afloat.* 或 *The river rose. However, the raft stayed afloat.* 两种都对。\n\n> **注意。** 绝不要把分号放在连接词*后面*（*The river rose, however; the raft…* 是错的）——分号或句号必须在连接词*前面*。",
       ],
       ["This sentence is a comma splice. Which version fixes it?", "这个句子是逗号粘连。哪个版本改正了？"],
       fixItems,
       (right) => [
-        `**${right}** ends the first sentence with a semicolon or a full stop and puts a comma after the linking word.`,
-        `**${right}** 用分号或句号结束第一个句子，并在连接词后加了逗号。`,
+        `**${right}** ends the first sentence with a semicolon or a full stop and puts a comma after the linking word.\n\n**Check.** Look directly before and after the linking word in **${right}**—a semicolon or period ends the first clause, and a comma follows the transition word.`,
+        `**${right}** 用分号或句号结束第一个句子，并在连接词后加了逗号。\n\n**检验。** 核对 **${right}** 中连接词的前后——前面用分号或句号结束第一句，紧后面有一个逗号。`,
       ],
       [
         ["*{wrong}* leaves the splice as it was: two sentences joined by a comma alone.", "*{wrong}* 保持原样，仍然只用逗号连接两个句子。"],
@@ -1149,8 +1202,8 @@ const posLabels: Record<string, Label> = {
   "a preposition": {
     zh: "介词",
     why: [
-      "It has an object, a noun or pronoun after it: the word and its object make a phrase.",
-      "它后面有宾语（名词或代词）：这个词和宾语构成一个短语。",
+      "It has an object, a noun or pronoun after it: the word and its object make a phrase.\n\n**Check.** Ask “*word* what?”—a noun or pronoun right after it answers, confirming it is a preposition.",
+      "它后面有宾语（名词或代词）：这个词和宾语构成一个短语。\n\n**检验。** 追问“在什么……？”——后面紧跟的名词或代词给出了答案，确认为介词。",
     ],
     not: [
       "A preposition needs an object after it, and this word has none, or what follows is a clause.",
@@ -1159,7 +1212,10 @@ const posLabels: Record<string, Label> = {
   },
   "an adverb": {
     zh: "副词",
-    why: ["It stands alone with no object and tells where or how the action goes.", "它单独使用，没有宾语，说明动作的方向或方式。"],
+    why: [
+      "It stands alone with no object and tells where or how the action goes.\n\n**Check.** Look right after the bold word—there is no noun object attached to it, so it modifies the verb alone as an adverb.",
+      "它单独使用，没有宾语，说明动作的方向或方式。\n\n**检验。** 看加粗词后面——没有紧跟作宾语的名词，它单独修饰动词，确认为副词。",
+    ],
     not: [
       "An adverb stands alone, but this word is followed by its own object or clause.",
       "副词单独使用，但这个词后面跟着自己的宾语或从句。",
@@ -1167,7 +1223,10 @@ const posLabels: Record<string, Label> = {
   },
   "a conjunction": {
     zh: "连词",
-    why: ["It begins a clause with its own subject and verb.", "它引出一个有自己主语和动词的从句。"],
+    why: [
+      "It begins a clause with its own subject and verb.\n\n**Check.** Find the subject and verb directly after the bold word—because a full clause follows, the word acts as a conjunction.",
+      "它引出一个有自己主语和动词的从句。\n\n**检验。** 找出加粗词后面的主语和动词——后面是完整从句，所以它是连词。",
+    ],
     not: [
       "A conjunction begins a clause with a subject and a verb, and nothing like that follows it here.",
       "连词引出含主语和动词的从句，这里后面没有这样的从句。",
@@ -1272,14 +1331,18 @@ const prepositionOrAdverb = topic("grammar", {
     "A word such as up, down, inside or across is a preposition when it has an object (across the river) and an adverb when it stands alone (she swam across).",
     "up、down、inside、across 这样的词有宾语时是介词（across the river），单独使用时是副词（she swam across）。",
   ],
+  intro: [
+    "In *She swam **across** the river*, *across* takes the object *river* and works as a preposition; in *She swam **across** and waved*, *across* stands alone as an adverb. Looking right after the word tells you its job every time.",
+    "在 *She swam **across** the river* 中，*across* 带宾语 *river*，是介词；在 *She swam **across** and waved* 中，*across* 单独使用，是副词。看紧跟在它后面的成分，就能准确判断词性。",
+  ],
   after: ["prepositional-phrases"],
   points: [
     label(
       "preposition-adverb-or-conjunction",
       ["Preposition, Adverb or Conjunction", "介词、副词还是连词"],
       [
-        "Many small words can do more than one job. *Across* is a **preposition** when a noun follows it as its object (*across the river*) and an **adverb** when it stands alone (*She swam across*). *Before*, *after*, *until* and *since* can also be **conjunctions** when a clause with a subject and a verb follows them (*before we climbed*).",
-        "许多小词可以有不止一种用法。*across* 后面跟名词作宾语时是**介词**（*across the river*），单独使用时是**副词**（*She swam across*）。*before*、*after*、*until* 和 *since* 后面跟着含主语和动词的从句时，也可以是**连词**（*before we climbed*）。",
+        "Many small words can do more than one job. *Across* is a **preposition** when a noun follows it as its object (*across the river*) and an **adverb** when it stands alone (*She swam across*). *Before*, *after*, *until* and *since* can also be **conjunctions** when a clause with a subject and a verb follows them (*before we climbed*).\n\n> **Watch out.** Do not guess from the word alone—check what follows it: a noun phrase (preposition), nothing or another phrase (adverb), or a subject + verb clause (conjunction).",
+        "许多小词可以有不止一种用法。*across* 后面跟名词作宾语时是**介词**（*across the river*），单独使用时是**副词**（*She swam across*）。*before*、*after*、*until* 和 *since* 后面跟着含主语和动词的从句时，也可以是**连词**（*before we climbed*）。\n\n> **注意。** 不要只看这个词本身就下判断——看它后面跟着什么：名词短语（介词）、没有宾语（副词），还是主语+动词构成的从句（连词）。",
       ],
       ["What is the word in bold in this sentence?", "这个句子中加粗的词是什么词性？"],
       posLines,
@@ -1289,14 +1352,14 @@ const prepositionOrAdverb = topic("grammar", {
       "the-object-of-a-preposition",
       ["The Object of a Preposition", "介词的宾语"],
       [
-        "The **object of a preposition** is the noun or pronoun the preposition points to. Ask *across what?*, *under what?*, *into what?*: in *She swam across the wide river*, the answer is *river*. Words such as *the* and *wide* describe the object but are not the object itself.",
-        "**介词的宾语**是介词所指向的名词或代词。问一问 *across what?*、*under what?*、*into what?*：在 *She swam across the wide river* 中，答案是 *river*。*the*、*wide* 这样的词修饰宾语，但不是宾语本身。",
+        "The **object of a preposition** is the noun or pronoun the preposition points to. Ask *across what?*, *under what?*, *into what?*: in *She swam across the wide river*, the answer is *river*. Words such as *the* and *wide* describe the object but are not the object itself.\n\n> **Watch out.** Do not pick an adjective like *wide* or *steep* that sits between the preposition and its noun—the object of a preposition is always the *noun* (or pronoun) itself.",
+        "**介词的宾语**是介词所指向的名词或代词。问一问 *across what?*、*under what?*、*into what?*：在 *She swam across the wide river* 中，答案是 *river*。*the*、*wide* 这样的词修饰宾语，但不是宾语本身。\n\n> **注意。** 不要错选夹在介词和名词之间的形容词（如 *wide*、*steep*）——介词的宾语一定是后面的那个*名词*（或代词）本身。",
       ],
       ["What is the object of the preposition in bold?", "加粗介词的宾语是什么？"],
       objectLines,
       (right) => [
-        `Ask what the preposition points to: **${right}** is the noun that answers, so it is the object.`,
-        `问一问介词指向什么：回答这个问题的名词是 **${right}**，所以它是宾语。`,
+        `Ask what the preposition points to: **${right}** is the noun that answers, so it is the object.\n\n**Check.** Drop any adjectives between the preposition and **${right}**—the preposition plus **${right}** alone still forms a complete prepositional phrase.`,
+        `问一问介词指向什么：回答这个问题的名词是 **${right}**，所以它是宾语。\n\n**检验。** 去掉介词和 **${right}** 之间的修饰词——介词直接连上 **${right}** 依然构成完整的介词短语。`,
       ],
       [
         [
@@ -1391,14 +1454,18 @@ const titlesInItalics = topic("grammar", {
     "Titles of whole works (books, newspapers, films) are in italics or underlined; titles of parts (poems, chapters, articles, songs) are in quotation marks.",
     "完整作品（书、报纸、电影）的标题用斜体或下划线；作品中某一部分（诗、章节、文章、歌曲）的标题用引号。",
   ],
+  intro: [
+    "We write a book title like *Dear Mama* in italics, yet a single poem inside it like “The Old Lantern” goes in quotation marks. Deciding whether a title names a whole work or a shorter part tells you how to mark it.",
+    "整本书的书名（如 *Dear Mama*）用斜体，而书里的一首诗（如“The Old Lantern”）用引号。先判断标题指完整作品还是其中的一部分，就能选对标记方式。",
+  ],
   after: ["capitalizing-names-and-titles", "quotation-marks-for-quotations"],
   points: [
     point(
       "whole-work-or-part",
       t("A Whole Work or a Part", "完整作品还是其中一部分"),
       t(
-        "Before you mark a title, decide what it names. A **whole work** stands on its own: a book, a newspaper, a magazine, a film, a play, an album, a television series. A **part** sits inside one of these: a poem, a chapter, an article, a song, an episode or a short story in a collection.",
-        "标记标题之前，先判断它指的是什么。**完整作品**是独立的：书、报纸、杂志、电影、剧本、专辑、电视剧。**一部分**则包含在这些作品之中：诗、章节、文章、歌曲、一集节目或文集中的短篇故事。",
+        "Before you mark a title, decide what it names. A **whole work** stands on its own: a book, a newspaper, a magazine, a film, a play, an album, a television series. A **part** sits inside one of these: a poem, a chapter, an article, a song, an episode or a short story in a collection.\n\n> **Watch out.** Do not confuse a *book or album* (whole work) with a *chapter, article, or song* inside it (part)—ask whether it can stand on a shelf by itself or sits inside something bigger.",
+        "标记标题之前，先判断它指的是什么。**完整作品**是独立的：书、报纸、杂志、电影、剧本、专辑、电视剧。**一部分**则包含在这些作品之中：诗、章节、文章、歌曲、一集节目或文集中的短篇故事。\n\n> **注意。** 不要把整本*书或专辑*（完整作品）和里面的*章节、文章或歌曲*（一部分）弄混——问问它能否独立成册，还是被收在更大的作品里。",
       ),
       choiceGenerator(
         t("Read the question and choose.", "读问题，然后选择。"),
@@ -1406,34 +1473,47 @@ const titlesInItalics = topic("grammar", {
         (right, shown) =>
           shown.includes("whole")
             ? t(
-                `*${right}* stands on its own as a complete work, so it is a whole work.`,
-                `*${right}* 是一部独立完整的作品，所以是完整作品。`,
+                `*${right}* stands on its own as a complete work, so it is a whole work.\n\n**Check.** Picture *${right}*—it is a standalone container (book, film, newspaper, or series) that can hold smaller parts inside it.`,
+                `*${right}* 是一部独立完整的作品，所以是完整作品。\n\n**检验。** 设想 *${right}*——它本身是独立完整的作品（书、电影、报纸或剧集），里面可以包含更小的部分。`,
               )
             : t(
-                `*${right}* is one piece inside something larger, so it is a part of a work.`,
-                `*${right}* 是更大作品中的一部分，所以是作品的一部分。`,
+                `*${right}* is one piece inside something larger, so it is a part of a work.\n\n**Check.** Ask what *${right}* lives inside (a book, magazine, album, or series)—because it sits inside a larger container, it is a part.`,
+                `*${right}* 是更大作品中的一部分，所以是作品的一部分。\n\n**检验。** 想想 *${right}* 被收在什么里面（书、杂志、专辑或剧集）——它属于更大作品的一部分。`,
               ),
-        (wrong) =>
-          wholes.some((w) => describe(w) === wrong)
-            ? t(`*${wrong}* stands on its own, so it is a whole work.`, `*${wrong}* 独立成篇，是完整作品。`)
-            : t(`*${wrong}* is one piece inside something larger, so it is a part.`, `*${wrong}* 是更大作品中的一部分。`),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? wholes.some((w) => describe(w) === wrong)
+              ? t(`*${wrong}* stands on its own, so it is a whole work.`, `*${wrong}* 独立成篇，是完整作品。`)
+              : t(`*${wrong}* is one piece inside something larger, so it is a part.`, `*${wrong}* 是更大作品中的一部分。`)
+            : wholes.some((w) => describe(w) === wrong)
+              ? t(
+                  `*${wrong}* is a complete standalone work, not a smaller piece inside one.`,
+                  `*${wrong}* 是独立完整的作品，不是其中一小部分。`,
+                )
+              : t(
+                  `*${wrong}* sits inside a larger publication or collection rather than standing alone.`,
+                  `*${wrong}* 收录在更大的出版物或合集里，不能算完整作品。`,
+                ),
       ),
     ),
     choose(
       "marking-a-title",
       ["How a Title Is Marked", "标题的标记方法"],
       [
-        'The title of a **whole** work is written in *italics* (or underlined by hand): *Dear Mama*, *The Valley Herald*. The title of a **part** of a work goes in "quotation marks": "The Old Lantern" (a poem), "Flood Waters Rise" (an article). Either way, the important words of a title take capitals.',
-        '**完整**作品的标题用*斜体*（手写时加下划线）：*Dear Mama*、*The Valley Herald*。作品中**一部分**的标题用"引号"："The Old Lantern"（一首诗）、"Flood Waters Rise"（一篇文章）。无论哪种，标题中的重要单词都要大写。',
+        'The title of a **whole** work is written in *italics* (or underlined by hand): *Dear Mama*, *The Valley Herald*. The title of a **part** of a work goes in "quotation marks": "The Old Lantern" (a poem), "Flood Waters Rise" (an article). Either way, the important words of a title take capitals.\n\n> **Watch out.** Never leave a title completely unmarked—big standalone works take *italics*, and shorter parts inside them take "quotation marks".',
+        '**完整**作品的标题用*斜体*（手写时加下划线）：*Dear Mama*、*The Valley Herald*。作品中**一部分**的标题用"引号"："The Old Lantern"（一首诗）、"Flood Waters Rise"（一篇文章）。无论哪种，标题中的重要单词都要大写。\n\n> **注意。** 标题绝不能光秃秃不加任何标记——独立的大作品用*斜体*，其中的短篇部分用"引号"。',
       ],
       ["How should this title be written?", "这个标题应该怎么写？"],
       titleMark,
       (right, shown) =>
         right.startsWith("*")
-          ? [`${kindOf(shown)} is a whole work, so its title is in italics: ${right}`, `这是一部完整作品，所以标题用斜体：${right}`]
+          ? [
+              `${kindOf(shown)} is a whole work, so its title is in italics: ${right}\n\n**Check.** Confirm the work type (${kindOf(shown).toLowerCase()}) stands on its own—standalone works always take italics.`,
+              `这是一部完整作品，所以标题用斜体：${right}\n\n**检验。** 确认作品类型属于独立完整的作品——完整作品一律用斜体。`,
+            ]
           : [
-              `${kindOf(shown)} is a part of a larger work, so its title is in quotation marks: ${right}`,
-              `这是更大作品的一部分，所以标题用引号：${right}`,
+              `${kindOf(shown)} is a part of a larger work, so its title is in quotation marks: ${right}\n\n**Check.** Confirm the work type (${kindOf(shown).toLowerCase()}) sits inside a larger work—parts always take quotation marks.`,
+              `这是更大作品的一部分，所以标题用引号：${right}\n\n**检验。** 确认作品类型属于更大作品中的一部分——作品的一部分一律用引号。`,
             ],
       [
         ["That marking belongs to the other kind of title.", "那种标记属于另一类标题。"],
@@ -1549,29 +1629,33 @@ const pronounPerson = topic("grammar", {
     "A piece keeps one person: it does not slide from we or one to you without a reason.",
     "一篇文字要保持同一人称：不能无故从 we 或 one 转成 you。",
   ],
+  intro: [
+    "In *When **we** reached the top, **you** could see the whole valley*, the sentence starts in first person (*we*) and suddenly jumps to second person (*you*). Keeping one steady pronoun person prevents confusing shifts.",
+    "在 *When **we** reached the top, **you** could see the whole valley* 中，句子以第一人称（*we*）开头，却突然跳到了第二人称（*you*）。保持代词人称前后一致，表达才清晰自然。",
+  ],
   after: ["pronoun-antecedent-agreement"],
   points: [
     choose(
       "finding-the-shift",
       ["Finding the Shift", "找出人称转换"],
       [
-        "Pronouns have a **person**: the first person speaks (*I, we*), the second is spoken to (*you*), and the third is spoken about (*he, she, it, they, one, people*). A sentence that begins in one person should stay there. *When we reached the top, you could see the valley* slides from *we* to *you*, though the writer still means *we*.",
-        "代词有**人称**：第一人称是说话的人（*I, we*），第二人称是听话的人（*you*），第三人称是被谈论的人或物（*he, she, it, they, one, people*）。句子用哪个人称开头，就应保持下去。*When we reached the top, you could see the valley* 从 *we* 滑到了 *you*，而作者指的仍然是 *we*。",
+        "Pronouns have a **person**: the first person speaks (*I, we*), the second is spoken to (*you*), and the third is spoken about (*he, she, it, they, one, people*). A sentence that begins in one person should stay there. *When we reached the top, you could see the valley* slides from *we* to *you*, though the writer still means *we*.\n\n> **Watch out.** Do not pick the opening subject—the opening subject *sets* the person; look for the later pronoun (*you* or *your*) that jumps away from it.",
+        "代词有**人称**：第一人称是说话的人（*I, we*），第二人称是听话的人（*you*），第三人称是被谈论的人或物（*he, she, it, they, one, people*）。句子用哪个人称开头，就应保持下去。*When we reached the top, you could see the valley* 从 *we* 滑到了 *you*，而作者指的仍然是 *we*。\n\n> **注意。** 不要错选开头的主语——开头主语是用来*定下*人称的；要找后面突然跳到另一个人称的代词（如 *you* 或 *your*）。",
       ],
       ["Which word shifts the person of the sentence?", "哪个词改变了句子的人称？"],
       shiftPerson,
       (right) => [
-        `**${right}** slides into the second person, though the sentence is about the person or people named at its start.`,
-        `**${right}** 转成了第二人称，而句子讲的是开头提到的人。`,
+        `**${right}** slides into the second person, though the sentence is about the person or people named at its start.\n\n**Check.** Compare the opening subject with **${right}**—the opening subject is first or third person, while **${right}** abruptly shifts to second person.`,
+        `**${right}** 转成了第二人称，而句子讲的是开头提到的人。\n\n**检验。** 对比句首主语和 **${right}**——句首是第一或第三人称，而 **${right}** 突然跳到了第二人称。`,
       ],
       [
         [
-          "*{wrong}* sets the person of the sentence; the word that slides away from it is **{right}**.",
-          "*{wrong}* 确定了句子的人称；偏离它的是 **{right}**。",
+          "*{wrong}* is the opening subject that sets the person of the sentence, not the word that shifts away from it.",
+          "*{wrong}* 是定下句子人称的开头主语，而不是后面偏离人称的词。",
         ],
         [
-          "*{wrong}* is not a pronoun of person; look for the pronoun that changes, **{right}**.",
-          "*{wrong}* 不是人称代词；要找改变了人称的代词 **{right}**。",
+          "*{wrong}* is not a pronoun of person—look for the pronoun that jumps to a different person.",
+          "*{wrong}* 不是人称代词——找找句中突然跳到另一个人称的代词。",
         ],
       ],
     ),
@@ -1579,14 +1663,14 @@ const pronounPerson = topic("grammar", {
       "keeping-the-person-steady",
       ["Keeping the Person Steady", "保持人称一致"],
       [
-        "To keep the person steady, look at who the sentence is about at its start and use the pronoun of that person all the way through. After *we*, use *we* or *our*; after *people* or *settlers*, use *they* or *their*; after *one*, use *one*. Use *you* only when you really speak to the reader.",
-        "要保持人称一致，看句子开头讲的是谁，从头到尾都用那个人称的代词。前面是 *we*，就用 *we* 或 *our*；前面是 *people* 或 *settlers*，就用 *they* 或 *their*；前面是 *one*，就用 *one*。只有真正对读者说话时才用 *you*。",
+        "To keep the person steady, look at who the sentence is about at its start and use the pronoun of that person all the way through. After *we*, use *we* or *our*; after *people* or *settlers*, use *they* or *their*; after *one*, use *one*. Use *you* only when you really speak to the reader.\n\n> **Watch out.** Watch out for *one*—a sentence starting with *When one …* stays with *one*, not *you* or *they*.",
+        "要保持人称一致，看句子开头讲的是谁，从头到尾都用那个人称的代词。前面是 *we*，就用 *we* 或 *our*；前面是 *people* 或 *settlers*，就用 *they* 或 *their*；前面是 *one*，就用 *one*。只有真正对读者说话时才用 *you*。\n\n> **注意。** 特别留意 *one*——以 *When one …* 开头的句子后面要继续用 *one*，不要跳成 *you* 或 *they*。",
       ],
       ["Which pronoun keeps the person steady?", "哪个代词能保持人称一致？"],
       keepPerson,
       (right) => [
-        `**${right}** stays in the person the sentence begins with, so the reader knows it means the same people.`,
-        `**${right}** 保持了句子开头的人称，读者就知道指的是同一些人。`,
+        `**${right}** stays in the person the sentence begins with, so the reader knows it means the same people.\n\n**Check.** Trace **${right}** back to the opening subject—both share the exact same person (first or third) and number.`,
+        `**${right}** 保持了句子开头的人称，读者就知道指的是同一些人。\n\n**检验。** 把 **${right}** 回溯到句首主语——二者的人称（第一或第三人称）和单复数完全一致。`,
       ],
       [
         ["*{wrong}* slides into the second person without a reason.", "*{wrong}* 无故转成了第二人称。"],
@@ -1738,29 +1822,36 @@ const confusedWords2 = topic("grammar", {
     "Whose and who's, lose and loose, accept and except, quiet and quite, desert and dessert, affect and effect.",
     "whose 与 who's、lose 与 loose、accept 与 except、quiet 与 quite、desert 与 dessert、affect 与 effect。",
   ],
+  intro: [
+    "A spell-checker will never flag *loose* when you meant *lose* or *desert* when you meant *dessert*, because both are real English words. A quick meaning or expansion test catches every one of these six tricky pairs.",
+    "把 *lose* 写成 *loose* 或把 *dessert* 写成 *desert*，拼写检查不会报错，因为两个都是真单词。用简短的词义或展开检验，就能准确拿捏这六组易混词。",
+  ],
   after: ["commonly-confused-words", "contractions"],
   points: [
     choose(
       "choosing-the-word-that-fits",
       ["Choosing the Word That Fits", "选择合适的词"],
       [
-        "Some pairs of words look or sound so alike that writers mix them up. *Whose* asks who owns something; *who's* means *who is*. You *lose* a key, but a *loose* board wobbles. You *accept* a gift; everyone came *except* one. A *quiet* room is *quite* peaceful. A *desert* is dry; a *dessert* is sweet. To *affect* is to change; an *effect* is a result.",
-        "有些成对的词外形或读音太相似，写的时候容易混淆。*whose* 问某物属于谁；*who's* 意为 *who is*。你会 *lose*（丢失）钥匙，而 *loose*（松动的）木板会晃。你 *accept*（接受）礼物；everyone came *except*（除了）one。*quiet*（安静的）房间 *quite*（相当）宁静。*desert* 是干旱的沙漠；*dessert* 是甜点。*affect* 是影响；*effect* 是结果。",
+        "Some pairs of words look or sound so alike that writers mix them up. *Whose* asks who owns something; *who's* means *who is*. You *lose* a key, but a *loose* board wobbles. You *accept* a gift; everyone came *except* one. A *quiet* room is *quite* peaceful. A *desert* is dry; a *dessert* is sweet. To *affect* is to change; an *effect* is a result.\n\n> **Watch out.** Test *who's* by expanding it to *who is*, remember *dessert* has two *s*’s (for “second serving”), and check whether the blank needs a verb (*affect*, *accept*, *lose*) or another part of speech.",
+        "有些成对的词外形或读音太相似，写的时候容易混淆。*whose* 问某物属于谁；*who's* 意为 *who is*。你会 *lose*（丢失）钥匙，而 *loose*（松动的）木板会晃。你 *accept*（接受）礼物；everyone came *except*（除了）one。*quiet*（安静的）房间 *quite*（相当）宁静。*desert* 是干旱的沙漠；*dessert* 是甜点。*affect* 是影响；*effect* 是结果。\n\n> **注意。** 检验 *who's* 可展开为 *who is*；记住 *dessert* 有两个 *s*（甜点想再来一份）；同时看空格需要动词（*affect*、*accept*、*lose*）还是其他词性。",
       ],
       ["Which word fits the gap?", "哪个词适合填空？"],
       confusedLines,
       (right) => {
         const [en, zh] = noteOf(right);
-        return [`The sentence needs **${right}**: ${en}.`, `句子需要 **${right}**：${zh}。`];
+        return [
+          `The sentence needs **${right}**: ${en}.\n\n**Check.** Substitute the meaning of **${right}** directly into the blank—both the sense and the part of speech match the sentence.`,
+          `句子需要 **${right}**：${zh}。\n\n**检验。** 把 **${right}** 的含义代入空格——词义和词性都与句子完全吻合。`,
+        ];
       },
       [
         [
-          "*{wrong}* is the word it is often confused with; this sentence needs **{right}**.",
-          "*{wrong}* 是常与之混淆的词；这个句子需要 **{right}**。",
+          "*{wrong}* is the other half of this confused pair and carries a different meaning or part of speech.",
+          "*{wrong}* 是这对易混词里的另一个词，意思或词性不同。",
         ],
         [
-          "*{wrong}* looks similar but has another meaning or form; the word is **{right}**.",
-          "*{wrong}* 外形相似，但意思或形式不同；正确的是 **{right}**。",
+          "*{wrong}* looks similar, yet it does not match the meaning or grammar needed in this sentence.",
+          "*{wrong}* 外形相似，但不符合这个句子需要的意思或语法。",
         ],
       ],
     ),
@@ -1768,8 +1859,8 @@ const confusedWords2 = topic("grammar", {
       "finding-and-fixing-the-wrong-word",
       t("Finding and Fixing the Wrong Word", "找出并改正用错的词"),
       t(
-        "When you proofread, read slowly and stop at each word of a confused pair. Test it: say *who is* in place of *who's*, think *a result* for *effect*, picture something sweet for *dessert*. If the test fails, the other word of the pair belongs there. Spell checkers miss these mistakes, because both words are real.",
-        '校对时要慢慢读，遇到易混淆词就停下来检验：用 *who is* 替换 *who\'s*，用"结果"理解 *effect*，想到甜的东西就是 *dessert*。检验不通过，就该用这对词中的另一个。拼写检查发现不了这类错误，因为两个词都是真实的单词。',
+        "When you proofread, read slowly and stop at each word of a confused pair. Test it: say *who is* in place of *who's*, think *a result* for *effect*, picture something sweet for *dessert*. If the test fails, the other word of the pair belongs there. Spell checkers miss these mistakes, because both words are real.\n\n> **Watch out.** Do not pick a word just because it sounds unusual—find the specific word from one of the six pairs whose meaning fails the sentence test.",
+        "校对时要慢慢读，遇到易混淆词就停下来检验：用 *who is* 替换 *who's*，用“结果”理解 *effect*，想到甜的东西就是 *dessert*。检验不通过，就该用这对词中的另一个。拼写检查发现不了这类错误，因为两个词都是真实的单词。\n\n> **注意。** 不要随便选一个看起来特别的词——找出六组易混词里在句中含义说不通的那一个。",
       ),
       choiceGenerator(
         t(
@@ -1781,12 +1872,20 @@ const confusedWords2 = topic("grammar", {
           const fixed = fixedWord[right.toLowerCase()] ?? "";
           const [en, zh] = noteOf(fixed);
           return t(
-            `**${right}** is wrong here; the sentence needs *${fixed}*: ${en}.`,
-            `这里 **${right}** 用错了，句子需要 *${fixed}*：${zh}。`,
+            `**${right}** is wrong here; the sentence needs *${fixed}*: ${en}.\n\n**Check.** Replace **${right}** with *${fixed}* and reread the sentence—now the meaning and grammar both click into place.`,
+            `这里 **${right}** 用错了，句子需要 *${fixed}*：${zh}。\n\n**检验。** 把 **${right}** 换成 *${fixed}* 再通读一遍——意思和语法立刻都顺了。`,
           );
         },
-        (wrong, right) =>
-          t(`*${wrong}* is used correctly; the confused word is **${right}**.`, `*${wrong}* 用得正确；用错的是 **${right}**。`),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `*${wrong}* is spelled and used correctly in this sentence—check the other words for one of the six confused pairs.`,
+                `*${wrong}* 在句中拼写和用法都正确——检查句中其他词里属于六组易混词的那个。`,
+              )
+            : t(
+                `*${wrong}* fits the sentence accurately and is not the misused word from a confused pair.`,
+                `*${wrong}* 在句中意思准确，并不是用错的易混词。`,
+              ),
       ),
     ),
   ],

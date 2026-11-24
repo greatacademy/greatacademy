@@ -26,24 +26,24 @@ const placeLabels: Record<string, Label> = {
   "first, as the most important news": {
     zh: "放在开头，作为最重要的新闻",
     why: [
-      "It tells who did what, when, where and why: the facts a reader most needs.",
-      "它讲出谁在何时何地做了什么、为什么：这是读者最需要的事实。",
+      "It tells who did what, when, where and why: the facts a reader most needs.\n\n**Check.** Spot the five Ws packed into this single sentence—that makes it the opening lead of the news story.",
+      "它讲出谁在何时何地做了什么、为什么：这是读者最需要的事实。\n\n**检验。** 找出浓缩在这句话里的五个 W——这正是新闻报道的开头导语。",
     ],
     not: ["The lead gives the main news itself; this sentence only adds to it.", "导语给出新闻本身；这个句子只是补充。"],
   },
   "in the middle, as a detail or a quotation": {
     zh: "放在中间，作为细节或引语",
     why: [
-      "It adds a detail or the words of someone involved, which back up the news of the lead.",
-      "它补充细节或当事人的话，支持导语中的新闻。",
+      "It adds a detail or the words of someone involved, which back up the news of the lead.\n\n**Check.** Notice that it either quotes a speaker or gives a concrete supporting detail about the current event, not old history.",
+      "它补充细节或当事人的话，支持导语中的新闻。\n\n**检验。** 注意它要么引用了当事人的话，要么补充了本次事件的具体细节，而不是陈年背景。",
     ],
     not: ["Details and quotations add to the lead; this sentence is not one of them.", "细节和引语是对导语的补充；这个句子不属于这一类。"],
   },
   "at the end, as background a reader can skip": {
     zh: "放在结尾，作为读者可以略过的背景",
     why: [
-      "It tells older or less important background, so readers who stop early lose little.",
-      "它讲的是较早或不太重要的背景，所以提前停止阅读的读者损失不大。",
+      "It tells older or less important background, so readers who stop early lose little.\n\n**Check.** Notice the older date or general history—if a busy reader stopped before this sentence, they would still know today's main news.",
+      "它讲的是较早或不太重要的背景，所以提前停止阅读的读者损失不大。\n\n**检验。** 注意句中较早的年份或一般背景——即使读者提前停下，依然掌握了今天的主要新闻。",
     ],
     not: [
       "Background goes last because it matters least; this sentence matters more than that.",
@@ -86,20 +86,24 @@ const readingNews = topic("reading", {
     "A news article answers who, what, when, where and why, with the most important facts first and quotations from people involved.",
     "新闻报道回答谁、什么、何时、何地、为什么，把最重要的事实放在前面，并引用当事人的话。",
   ],
+  intro: [
+    "A newspaper article flips a normal story upside down: its opening lead packs *who, what, when, where,* and *why* into one sentence, details and quotes follow in the middle, and older background sits at the end.",
+    "新闻报道把普通故事的结构倒过来：开头的导语用一句话交代“谁、什么事、何时、何地、为什么”，中间放细节和引语，较早的背景留在末尾。",
+  ],
   after: ["main-idea", "text-features"],
   points: [
     choose(
       "the-five-ws-in-a-lead",
       ["The Five Ws in a Lead", "导语中的五个 W"],
       [
-        "The first sentence of a news article is its **lead**. A good lead answers five questions at once: **who** the news is about, **what** happened, **when**, **where** and **why**. Look for the words that answer each one: a time such as *on Monday* tells when, a place such as *in Riverton* tells where, and words such as *because* or *to* often begin why.",
-        "新闻报道的第一句话叫**导语**。好的导语一下子回答五个问题：新闻关于**谁**、发生了**什么**、**何时**、**何地**以及**为什么**。找出回答每个问题的词语：*on Monday* 这样的时间说明何时，*in Riverton* 这样的地点说明何地，而 *because* 或 *to* 等词常常引出为什么。",
+        "The first sentence of a news article is its **lead**. A good lead answers five questions at once: **who** the news is about, **what** happened, **when**, **where** and **why**. Look for the words that answer each one: a time such as *on Monday* tells when, a place such as *in Riverton* tells where, and words such as *because* or *to* often begin why.\n\n> **Watch out.** Do not mix up *when* (a day or time) with *where* (a place), or *what* (the action) with *why* (the reason starting with *to*, *because*, or *after*).",
+        "新闻报道的第一句话叫**导语**。好的导语一下子回答五个问题：新闻关于**谁**、发生了**什么**、**何时**、**何地**以及**为什么**。找出回答每个问题的词语：*on Monday* 这样的时间说明何时，*in Riverton* 这样的地点说明何地，而 *because* 或 *to* 等词常常引出为什么。\n\n> **注意。** 不要把“何时”（日期或时间）和“何地”（地点）弄混，也不要把“做了什么”（动作）和“为什么”（常以 *to*、*because*、*after* 开头的原因）弄混。",
       ],
       ["Which words of the lead answer the question?", "导语中的哪些词语回答了这个问题？"],
       wItems,
       (right, shown) => [
-        `${shown.split("\n\n").at(-1) ?? ""} The lead answers it with **${right}**.`,
-        `导语用 **${right}** 回答了这个问题。`,
+        `${shown.split("\n\n").at(-1) ?? ""} The lead answers it with **${right}**.\n\n**Check.** Ask the exact W-question at the end of the prompt and reply with **${right}** alone—it gives a direct, exact answer.`,
+        `导语用 **${right}** 回答了这个问题。\n\n**检验。** 单独念一遍题干最后的问题，直接用 **${right}** 作答——正好严丝合缝地回答了这一项。`,
       ],
       [
         ["*{wrong}* answers a different one of the five Ws.", "*{wrong}* 回答的是五个 W 中的另一个。"],
@@ -110,8 +114,8 @@ const readingNews = topic("reading", {
       "why-the-facts-come-in-that-order",
       ["Why the Facts Come in That Order", "事实为什么按这个顺序排列"],
       [
-        "A news article puts its facts in order of **importance**. The most important news comes **first**, in the lead, so a reader who reads one sentence still learns what happened. **Details** and **quotations** from people involved come in the middle. **Background**, such as what happened years ago, comes last, where a busy reader can skip it.",
-        "新闻报道按**重要性**排列事实。最重要的新闻放在**最前面**的导语里，这样只读一句话的读者也能知道发生了什么。**细节**和当事人的**引语**放在中间。**背景**，例如多年前发生的事，放在最后，忙碌的读者可以略过。",
+        "A news article puts its facts in order of **importance**. The most important news comes **first**, in the lead, so a reader who reads one sentence still learns what happened. **Details** and **quotations** from people involved come in the middle. **Background**, such as what happened years ago, comes last, where a busy reader can skip it.\n\n> **Watch out.** Check the time and scope of the sentence—today's full headline event goes *first*, a quote or cost detail goes *in the middle*, and a past date from years ago goes *at the end*.",
+        "新闻报道按**重要性**排列事实。最重要的新闻放在**最前面**的导语里，这样只读一句话的读者也能知道发生了什么。**细节**和当事人的**引语**放在中间。**背景**，例如多年前发生的事，放在最后，忙碌的读者可以略过。\n\n> **注意。** 看清句子的时间和分量——涵盖五个 W 的核心新闻放*开头*，具体细节或引语放*中间*，多年前的历史背景放*结尾*。",
       ],
       ["Where in a news article does this sentence belong?", "这个句子应该放在新闻报道的什么位置？"],
       placeLines,
@@ -163,20 +167,24 @@ const cluesAndHerrings = topic("reading", {
   id: "clues-and-red-herrings",
   title: ["Clues and Red Herrings", "线索与误导"],
   summary: ["A mystery hides real clues among false ones that point the wrong way.", "侦探故事把真正的线索藏在指向错误方向的假线索之中。"],
+  intro: [
+    "In a mystery, purple paw prints leading to the dog bed point straight to the pie thief, while a neighbor saying he likes cherry pie is a *red herring* meant to throw you off. Telling real clues from red herrings lets you solve the puzzle fairly.",
+    "侦探故事里，通向狗窝的紫色爪印直指偷派的“真凶”，而邻居随口说喜欢樱桃派则是故意分散注意力的*误导线索*。分清真线索和误导线索，才能公平破案。",
+  ],
   after: ["making-predictions"],
   points: [
     choose(
       "a-real-clue",
       ["A Real Clue", "真正的线索"],
       [
-        "A mystery writer hides **real clues** among the details: facts that, put together, lead to the culprit. A real clue still fits once the answer is known; it helps explain how the deed was done. To test a detail, ask whether it connects to the culprit and to the deed itself, not only to someone who seems suspicious.",
-        "侦探故事的作者把**真正的线索**藏在各种细节之中：这些事实合在一起就能指向真正的犯人。知道答案以后，真正的线索仍然说得通，它帮助解释事情是怎么发生的。要检验一个细节，就问它是否与犯人和事情本身有关，而不只是与某个看起来可疑的人有关。",
+        "A mystery writer hides **real clues** among the details: facts that, put together, lead to the culprit. A real clue still fits once the answer is known; it helps explain how the deed was done. To test a detail, ask whether it connects to the culprit and to the deed itself, not only to someone who seems suspicious.\n\n> **Watch out.** Do not pick a detail just because it sounds dramatic or suspicious—check whether it directly links the *actual culprit* named at the end to what happened.",
+        "侦探故事的作者把**真正的线索**藏在各种细节之中：这些事实合在一起就能指向真正的犯人。知道答案以后，真正的线索仍然说得通，它帮助解释事情是怎么发生的。要检验一个细节，就问它是否与犯人和事情本身有关，而不只是与某个看起来可疑的人有关。\n\n> **注意。** 不要只因某个细节听起来很可疑就选它——检查它是否直接把结尾揭晓的*真正犯人*与事件本身连在一起。",
       ],
       ["Which detail was a real clue?", "哪个细节是真正的线索？"],
       clueItems,
       (right) => [
-        `**${right}** connects the culprit to the deed itself, so it is a real clue.`,
-        `**${right}** 把犯人和事情本身联系起来，所以是真正的线索。`,
+        `**${right}** connects the culprit to the deed itself, so it is a real clue.\n\n**Check.** Trace **${right}** directly to the culprit named in the last sentence—it explains how the culprit did it, whereas the other two details point elsewhere.`,
+        `**${right}** 把犯人和事情本身联系起来，所以是真正的线索。\n\n**检验。** 把 **${right}** 直接对照最后一句揭晓的犯人——它正好解释了作案经过，而另外两个细节指向别处。`,
       ],
       [
         ["*{wrong}* points at someone or something else; it is a red herring.", "*{wrong}* 指向了别的人或事；它是误导线索。"],
@@ -190,12 +198,15 @@ const cluesAndHerrings = topic("reading", {
       "why-a-detail-misleads",
       ["Why a Detail Misleads", "细节为什么会误导人"],
       [
-        "A **red herring** is a detail that points the reader the wrong way. It may make an innocent person look guilty, or suggest a way the deed was done that turns out to be false. Writers use red herrings to keep readers guessing. Once you know the answer, ask why the detail seemed to matter and what it really shows.",
-        "**误导线索**是把读者引向错误方向的细节。它可能让无辜的人看起来有罪，或者暗示一种后来证明是错误的作案方式。作者用误导线索让读者一直猜下去。知道答案以后，问问这个细节为什么看起来重要，而它真正说明了什么。",
+        "A **red herring** is a detail that points the reader the wrong way. It may make an innocent person look guilty, or suggest a way the deed was done that turns out to be false. Writers use red herrings to keep readers guessing. Once you know the answer, ask why the detail seemed to matter and what it really shows.\n\n> **Watch out.** Remember that a red herring is *intentional*—it is never the proof of the real culprit, and it is not just filler with no effect.",
+        "**误导线索**是把读者引向错误方向的细节。它可能让无辜的人看起来有罪，或者暗示一种后来证明是错误的作案方式。作者用误导线索让读者一直猜下去。知道答案以后，问问这个细节为什么看起来重要，而它真正说明了什么。\n\n> **注意。** 记住误导线索是作者*有意设置*的——它绝不是指向真凶的铁证，也不是毫无作用的凑字数。",
       ],
       ["Why does this detail mislead the reader?", "这个细节为什么会误导读者？"],
       herringItems,
-      (right) => [`The detail is a red herring: ${right}`, `这个细节是误导线索：${right}`],
+      (right) => [
+        `The detail is a red herring: ${right}\n\n**Check.** Compare the detail against the real culprit at the end—it tempts the reader down a false path, exactly as “${right}” explains.`,
+        `这个细节是误导线索：${right}\n\n**检验。** 把这个细节和结尾的真凶对照——它故意把读者引向错误方向，正符合这条解释。`,
+      ],
       [
         ["*{wrong}* is not so: this detail points away from the real culprit.", "*{wrong}* 并非如此：这个细节把读者引离了真正的犯人。"],
         [
@@ -249,18 +260,25 @@ const drawingConclusions = topic("reading", {
     "A conclusion puts several clues together into one judgment that none of them states alone.",
     "结论是把几条线索合在一起得出的判断，而这个判断单靠其中任何一条都说不出来。",
   ],
+  intro: [
+    "Wet grass, a bright blue sky, and a hose on the lawn add up to one conclusion: someone watered the yard—not that it rained. Drawing a solid conclusion means checking that it fits *every* clue and ruling out rival guesses.",
+    "湿漉漉的草地、湛蓝的天空加上草坪上的水管，合在一起指向同一个结论：有人浇了草坪，而不是下了雨。得出可靠结论，要确认它符合*每一条*线索，并排除站不住脚的猜测。",
+  ],
   after: ["making-inferences", "supporting-details"],
   points: [
     choose(
       "the-conclusion-every-clue-supports",
       ["The Conclusion Every Clue Supports", "每条线索都支持的结论"],
       [
-        "To **draw a conclusion**, put the clues together. No single clue says the answer: wet ground alone could mean rain or a sprinkler. A good conclusion fits **every** clue at once. A conclusion that fits one clue but clashes with another is a guess the evidence does not allow.",
-        "要**得出结论**，就要把线索合在一起。没有哪条线索单独说出了答案：只看地面湿了，可能是下过雨，也可能是洒水器。好的结论要同时符合**每一条**线索。只符合一条线索、却与另一条矛盾的结论，是证据不允许的猜测。",
+        "To **draw a conclusion**, put the clues together. No single clue says the answer: wet ground alone could mean rain or a sprinkler. A good conclusion fits **every** clue at once. A conclusion that fits one clue but clashes with another is a guess the evidence does not allow.\n\n> **Watch out.** Test your choice against *all three* clues, not just the first one—a single clashing clue rules an option out.",
+        "要**得出结论**，就要把线索合在一起。没有哪条线索单独说出了答案：只看地面湿了，可能是下过雨，也可能是洒水器。好的结论要同时符合**每一条**线索。只符合一条线索、却与另一条矛盾的结论，是证据不允许的猜测。\n\n> **注意。** 用*全部三条*线索逐一检验选项，不能只看第一条——只要和其中一条矛盾，就必须排除。",
       ],
       ["Which conclusion do all the clues support?", "所有线索都支持哪个结论？"],
       supportedItems,
-      (right) => [`Every clue fits **${right}**, and no clue clashes with it.`, `每条线索都符合 **${right}**，没有一条与它矛盾。`],
+      (right) => [
+        `Every clue fits **${right}**, and no clue clashes with it.\n\n**Check.** Check each of the three clues one by one against **${right}**—all three stay true at the same time.`,
+        `每条线索都符合 **${right}**，没有一条与它矛盾。\n\n**检验。** 用三条线索逐一核对 **${right}**——三条线索都能同时成立。`,
+      ],
       [
         ["*{wrong}* fits some clues, but one clue rules it out.", "*{wrong}* 符合部分线索，但有一条线索排除了它。"],
         ["*{wrong}* clashes with at least one of the clues.", "*{wrong}* 至少与一条线索相矛盾。"],
@@ -270,14 +288,14 @@ const drawingConclusions = topic("reading", {
       "the-clue-that-rules-it-out",
       ["The Clue That Rules It Out", "排除结论的线索"],
       [
-        "Careful readers test other possible conclusions too. For each one, they look for a clue that **rules it out**: a clear sky rules out rain this morning; a missing bike rules out walking. Ruling out the other possibilities is what makes a conclusion strong.",
-        "细心的读者还会检验其他可能的结论。对每一个结论，他们都寻找一条能**排除它**的线索：晴朗的天空排除了早上下过雨；自行车不见了排除了步行。排除其他可能，结论才站得住。",
+        "Careful readers test other possible conclusions too. For each one, they look for a clue that **rules it out**: a clear sky rules out rain this morning; a missing bike rules out walking. Ruling out the other possibilities is what makes a conclusion strong.\n\n> **Watch out.** Do not pick a clue that merely *allows* the wrong conclusion—pick the exact clue that directly *contradicts* it.",
+        "细心的读者还会检验其他可能的结论。对每一个结论，他们都寻找一条能**排除它**的线索：晴朗的天空排除了早上下过雨；自行车不见了排除了步行。排除其他可能，结论才站得住。\n\n> **注意。** 不要选与错误结论不冲突的线索——必须选出与它*直接矛盾*的那一条。",
       ],
       ["Which clue rules out this conclusion?", "哪条线索排除了这个结论？"],
       ruleItems,
       (right) => [
-        `**${right}** cannot be true if that conclusion were right, so it rules it out.`,
-        `如果那个结论正确，**${right}** 就不可能成立，所以它排除了那个结论。`,
+        `**${right}** cannot be true if that conclusion were right, so it rules it out.\n\n**Check.** Suppose the given conclusion were true—then **${right}** would directly contradict it, proving it is the disqualifying clue.`,
+        `如果那个结论正确，**${right}** 就不可能成立，所以它排除了那个结论。\n\n**检验。** 假设题目给出的结论成立——那么 **${right}** 会与它直接冲突，证实正是这条线索排除了它。`,
       ],
       [
         ["*{wrong}* could fit that conclusion, so it does not rule it out.", "*{wrong}* 可能与那个结论相符，所以不能排除它。"],
@@ -324,29 +342,32 @@ const techniqueLabels: Record<string, Label> = {
   "a dark or closed setting": {
     zh: "黑暗或封闭的环境",
     why: [
-      "It traps the character somewhere dark, narrow or cut off, where danger is hard to see or escape.",
-      "它把人物困在黑暗、狭窄或与外界隔绝的地方，危险难以看清或逃脱。",
+      "It traps the character somewhere dark, narrow or cut off, where danger is hard to see or escape.\n\n**Check.** Spot the details of blackness, fog, or locked/narrow spaces—the setting itself creates the feeling of being trapped.",
+      "它把人物困在黑暗、狭窄或与外界隔绝的地方，危险难以看清或逃脱。\n\n**检验。** 找出黑暗、大雾或封闭狭窄的描写——正是环境本身制造了被困住的紧张感。",
     ],
     not: ["The passage does not rely on a dark or closed place.", "这段文字并不依靠黑暗或封闭的地方。"],
   },
   "short, tense sentences": {
     zh: "短促、紧张的句子",
-    why: ["Its sentences are short and sharp, so the reader's pulse speeds up with them.", "它的句子短促有力，让读者的心跳也随之加快。"],
+    why: [
+      "Its sentences are short and sharp, so the reader's pulse speeds up with them.\n\n**Check.** Count the words per sentence—rapid bursts of two to five words create urgency.",
+      "它的句子短促有力，让读者的心跳也随之加快。\n\n**检验。** 看每句话的长度——一连串两到五个词的短句把节奏瞬间拉紧。",
+    ],
     not: ["The passage's sentences are not short and choppy.", "这段文字的句子并不短促。"],
   },
   "a question left open": {
     zh: "留下悬而未决的问题",
     why: [
-      "It raises a question it does not answer, so the reader must read on to find out.",
-      "它提出一个没有回答的问题，读者必须读下去才能知道。",
+      "It raises a question it does not answer, so the reader must read on to find out.\n\n**Check.** Spot the unanswered question or mystery hanging at the end—curiosity pulls the reader forward.",
+      "它提出一个没有回答的问题，读者必须读下去才能知道。\n\n**检验。** 找出悬而未答的疑问——正是未知的好奇心推着读者往下看。",
     ],
     not: ["The passage does not leave a question hanging.", "这段文字没有留下悬而未决的问题。"],
   },
   "a chapter ending in danger": {
     zh: "章节结束在危险时刻",
     why: [
-      "The chapter stops at the moment of danger, before the reader learns what happens.",
-      "章节在危险的一刻戛然而止，读者还不知道接下来会发生什么。",
+      "The chapter stops at the moment of danger, before the reader learns what happens.\n\n**Check.** Notice the chapter break right in the middle of immediate danger—a classic cliffhanger.",
+      "章节在危险的一刻戛然而止，读者还不知道接下来会发生什么。\n\n**检验。** 注意章节正好在危机爆发的一瞬间结束——典型的悬念断章。",
     ],
     not: ["The passage does not end a chapter at a moment of danger.", "这段文字并没有让章节结束在危险时刻。"],
   },
@@ -393,20 +414,24 @@ const buildingSuspense = topic("reading", {
     "Writers build suspense with dark or closed settings, short sentences, open questions and chapters that end in danger.",
     "作者用黑暗或封闭的环境、短句、未解的问题和在危险时刻结束的章节来制造悬念。",
   ],
+  intro: [
+    "*Footsteps stopped right outside her tent* makes your heart beat faster because it hints at danger while withholding what comes next. Writers build suspense with dark settings, short clipped sentences, unanswered questions, and chapter cliffhangers.",
+    "*Footsteps stopped right outside her tent* 让人心跳加速，因为它暗示了危险却藏住了下文。作者常用黑暗封闭的环境、短促的句子、未解的问题和危险断章来制造悬念。",
+  ],
   after: ["how-setting-shapes-a-story"],
   points: [
     choose(
       "the-sentence-that-builds-suspense",
       ["The Sentence That Builds Suspense", "制造悬念的句子"],
       [
-        "**Suspense** is the feeling of worry and curiosity that keeps a reader turning pages. A sentence builds suspense when it hints at danger or mystery and holds back what happens next: a creaking door, footsteps that stop, a key that is gone. A sentence that is calm, safe or simply describes something does not.",
-        "**悬念**是让读者一页页读下去的担心和好奇。一个句子暗示危险或谜团、又不说出接下来会发生什么时，就制造了悬念：吱呀作响的门、突然停下的脚步、不见了的钥匙。平静、安全或只是描述事物的句子则不会。",
+        "**Suspense** is the feeling of worry and curiosity that keeps a reader turning pages. A sentence builds suspense when it hints at danger or mystery and holds back what happens next: a creaking door, footsteps that stop, a key that is gone. A sentence that is calm, safe or simply describes something does not.\n\n> **Watch out.** Skip cheerful or plain descriptive sentences—look for the sentence that leaves an uneasy question about what will happen next.",
+        "**悬念**是让读者一页页读下去的担心和好奇。一个句子暗示危险或谜团、又不说出接下来会发生什么时，就制造了悬念：吱呀作响的门、突然停下的脚步、不见了的钥匙。平静、安全或只是描述事物的句子则不会。\n\n> **注意。** 排除平静或普通描写的句子——找出那个让人心头一紧、忍不住追问“接下来会发生什么”的句子。",
       ],
       ["Which sentence builds suspense?", "哪个句子制造了悬念？"],
       suspenseLines,
       (right) => [
-        `**${right}** hints at danger and holds back what happens next, so the reader worries and reads on.`,
-        `**${right}** 暗示了危险，又不说出接下来会发生什么，所以读者会担心并读下去。`,
+        `**${right}** hints at danger and holds back what happens next, so the reader worries and reads on.\n\n**Check.** Ask what question **${right}** plants in your mind—it makes you wonder *who* or *what* is coming next, unlike the two calm sentences.`,
+        `**${right}** 暗示了危险，又不说出接下来会发生什么，所以读者会担心并读下去。\n\n**检验。** 想想 **${right}** 在你心里种下了什么疑问——它让你迫不及待想知道接下来会发生什么，而另外两句完全平静。`,
       ],
       [
         ["*{wrong}* is calm and safe, so it gives the reader nothing to worry about.", "*{wrong}* 平静而安全，读者没有什么可担心的。"],
@@ -417,8 +442,8 @@ const buildingSuspense = topic("reading", {
       "how-the-writer-builds-it",
       ["How the Writer Builds It", "作者怎样制造悬念"],
       [
-        "Writers have several ways to build suspense. A **dark or closed setting** traps the character where danger is hard to see. **Short, tense sentences** speed up the reader. A **question left open** makes the reader need the answer. A **chapter ending in danger** stops at the worst moment, so the reader must turn the page.",
-        "作者有好几种制造悬念的方法。**黑暗或封闭的环境**把人物困在危险难以看清的地方。**短促、紧张的句子**加快读者的节奏。**悬而未决的问题**让读者急于知道答案。**在危险时刻结束的章节**停在最紧要的关头，读者只好翻到下一页。",
+        "Writers have several ways to build suspense. A **dark or closed setting** traps the character where danger is hard to see. **Short, tense sentences** speed up the reader. A **question left open** makes the reader need the answer. A **chapter ending in danger** stops at the worst moment, so the reader must turn the page.\n\n> **Watch out.** Look at the *main device* standing out in the excerpt—a literal chapter break marker signals *a chapter ending in danger*, while rapid two-to-five-word sentences signal *short, tense sentences*.",
+        "作者有好几种制造悬念的方法。**黑暗或封闭的环境**把人物困在危险难以看清的地方。**短促、紧张的句子**加快读者的节奏。**悬而未决的问题**让读者急于知道答案。**在危险时刻结束的章节**停在最紧要的关头，读者只好翻到下一页。\n\n> **注意。** 抓住选段里最突出的*手法*——标明章节结束的是“章节结束在危险时刻”，一连串三五个词的短句则是“短促、紧张的句子”。",
       ],
       ["How does the writer build suspense here?", "作者在这里是怎样制造悬念的？"],
       techniqueLines,
@@ -432,24 +457,33 @@ const featureLabels: Record<string, Label> = {
   "the puzzle": {
     zh: "谜题",
     why: [
-      "It sets up what has gone wrong or is unknown, the question the story must answer.",
-      "它提出出了什么问题或什么未知，也就是故事必须回答的问题。",
+      "It sets up what has gone wrong or is unknown, the question the story must answer.\n\n**Check.** Notice it introduces the missing item or unexplained mystery that launches the investigation.",
+      "它提出出了什么问题或什么未知，也就是故事必须回答的问题。\n\n**检验。** 注意它抛出了失窃物品或无法解释的怪事，引出整场调查。",
     ],
     not: ["The puzzle is what must be solved; this detail is not that.", "谜题是需要解开的问题；这个细节不是。"],
   },
   "the detective": {
     zh: "侦探",
-    why: ["It tells about the person who looks into the puzzle and how they work.", "它讲述调查谜题的人以及他们的做法。"],
+    why: [
+      "It tells about the person who looks into the puzzle and how they work.\n\n**Check.** Notice it describes the investigator's habits, tools, or method of solving the case.",
+      "它讲述调查谜题的人以及他们的做法。\n\n**检验。** 注意它描写的是调查者的习惯、工具或查案方式。",
+    ],
     not: ["The detective is the one who investigates; this detail is not about them.", "侦探是调查的人；这个细节不是讲他们的。"],
   },
   "the suspects": {
     zh: "嫌疑人",
-    why: ["It names people who might be guilty and gives a reason to suspect them.", "它说出可能有罪的人，并给出怀疑他们的理由。"],
+    why: [
+      "It names people who might be guilty and gives a reason to suspect them.\n\n**Check.** Notice it points to someone with motive, opportunity, or a suspicious clue rather than solving the case.",
+      "它说出可能有罪的人，并给出怀疑他们的理由。\n\n**检验。** 注意它指出有动机、有机会或有可疑迹象的人，但尚未破案。",
+    ],
     not: ["Suspects are the people who might be guilty; this detail is not about them.", "嫌疑人是可能有罪的人；这个细节不是讲他们的。"],
   },
   "the solution": {
     zh: "答案",
-    why: ["It reveals who did it, or how, and explains the clues.", "它揭示是谁做的或怎样做的，并解释线索。"],
+    why: [
+      "It reveals who did it, or how, and explains the clues.\n\n**Check.** Notice it wraps up the mystery by proving what actually happened.",
+      "它揭示是谁做的或怎样做的，并解释线索。\n\n**检验。** 注意它揭晓了真相并解释了线索，为谜题画上句号。",
+    ],
     not: ["The solution reveals the answer; this detail does not.", "答案揭示真相；这个细节没有。"],
   },
 };
@@ -531,14 +565,18 @@ const storiesOfOneGenre = topic("reading", {
     "Stories of one genre share features (a mystery has a puzzle, a detective, suspects and a solution) but treat them differently.",
     "同一体裁的故事有共同的要素（侦探故事有谜题、侦探、嫌疑人和答案），但处理方式各不相同。",
   ],
+  intro: [
+    "Every mystery shares the same core building blocks—a puzzle, a detective, suspects, and a solution—yet two mysteries can feel completely different by changing the setting, the investigator, or how the puzzle is cracked.",
+    "每部侦探故事都有共同的核心要素——谜题、侦探、嫌疑人和答案——但只要改变场景、侦探身份或破案方式，两部同体裁故事就会呈现出截然不同的风貌。",
+  ],
   after: ["same-pattern-different-cultures"],
   points: [
     label(
       "the-features-of-a-mystery",
       ["The Features of a Mystery", "侦探故事的要素"],
       [
-        "A **genre** is a kind of story with features its readers expect. A mystery has a **puzzle** (something has gone wrong or is unknown), a **detective** who looks into it, **suspects** who might be guilty, and a **solution** that explains the clues. Knowing the features helps you see what a detail is doing in the story.",
-        "**体裁**是读者对其要素有所期待的一类故事。侦探故事有一个**谜题**（出了问题或有未知的事）、调查它的**侦探**、可能有罪的**嫌疑人**，以及解释线索的**答案**。了解这些要素，能帮助你看出一个细节在故事中起什么作用。",
+        "A **genre** is a kind of story with features its readers expect. A mystery has a **puzzle** (something has gone wrong or is unknown), a **detective** who looks into it, **suspects** who might be guilty, and a **solution** that explains the clues. Knowing the features helps you see what a detail is doing in the story.\n\n> **Watch out.** Do not mix up *the puzzle* (what went wrong at the start) with *the solution* (what actually happened revealed at the end).",
+        "**体裁**是读者对其要素有所期待的一类故事。侦探故事有一个**谜题**（出了问题或有未知的事）、调查它的**侦探**、可能有罪的**嫌疑人**，以及解释线索的**答案**。了解这些要素，能帮助你看出一个细节在故事中起什么作用。\n\n> **注意。** 不要混淆“谜题”（开头出了什么怪事）和“答案”（结尾揭晓的真相）。",
       ],
       ["Which feature of a mystery does this detail show?", "这个细节体现了侦探故事的哪个要素？"],
       featureLines,
@@ -548,14 +586,14 @@ const storiesOfOneGenre = topic("reading", {
       "how-two-mysteries-differ",
       ["How Two Mysteries Differ", "两个侦探故事有何不同"],
       [
-        "Two stories of one genre share its features but **treat them differently**. Two mysteries may have the same puzzle but a different detective, different suspects, a different setting or a different way of solving it. To compare them, go through the features one at a time and find the one that changes.",
-        "同一体裁的两个故事有共同的要素，但**处理方式不同**。两个侦探故事可能谜题相同，但侦探、嫌疑人、发生地点或破案方式不同。要比较它们，就逐一检查各个要素，找出有变化的那一个。",
+        "Two stories of one genre share its features but **treat them differently**. Two mysteries may have the same puzzle but a different detective, different suspects, a different setting or a different way of solving it. To compare them, go through the features one at a time and find the one that changes.\n\n> **Watch out.** Read Story 1 and Story 2 side by side word for word—only *one* of the four features changes between the two summaries.",
+        "同一体裁的两个故事有共同的要素，但**处理方式不同**。两个侦探故事可能谜题相同，但侦探、嫌疑人、发生地点或破案方式不同。要比较它们，就逐一检查各个要素，找出有变化的那一个。\n\n> **注意。** 把故事 1 和故事 2 逐词对照——两个概要之间只有*一个*要素发生了变化。",
       ],
       ["In what way do the two stories differ?", "这两个故事在哪方面不同？"],
       differItems,
       (right) => [
-        `The two stories share everything else, but they differ in **${right}**.`,
-        `两个故事其他方面都相同，不同的是 **${right}**。`,
+        `The two stories share everything else, but they differ in **${right}**.\n\n**Check.** Compare Story 1 and Story 2 phrase by phrase—the only part that changes between them is **${right}**.`,
+        `两个故事其他方面都相同，不同的是 **${right}**。\n\n**检验。** 逐短语对比故事 1 和故事 2——两句之间唯一发生变化的部分正是 **${right}**。`,
       ],
       [
         ["*{wrong}* is the same in both stories.", "*{wrong}* 在两个故事里是一样的。"],
@@ -619,18 +657,25 @@ const comparingCharacters = topic("reading", {
     "Two characters in one story can face the same problem in different ways.",
     "同一个故事里的两个人物可以用不同的方式面对同一个问题。",
   ],
+  intro: [
+    "When a canoe tips over, Maya calmly counts their supplies while Leo kicks at the boat in anger—both are stranded together, yet their reactions contrast sharply. Comparing characters means checking what is true of both and which detail proves how they differ.",
+    "独木舟翻船后，Maya 冷静地清点物资，Leo 却气得踢船——两人同处险境，反应截然不同。比较人物要看清哪些事对两人都成立，以及哪个细节能证明他们的不同。",
+  ],
   after: ["what-characters-say-and-think", "compare-and-contrast-in-texts"],
   points: [
     choose(
       "how-two-characters-are-alike",
       ["How Two Characters Are Alike", "两个人物的相同之处"],
       [
-        "When two characters face the same problem, start by finding what is true of **both**: where they are, what has happened to them, what they want. Check each statement against the story for each character. A statement that is true of only one of them is a difference, not a likeness.",
-        "两个人物面对同一个问题时，先找出对**两个人**都成立的事：他们在哪里、遇到了什么事、想要什么。要用故事逐一检验每个说法对每个人物是否成立。只对其中一人成立的说法是不同之处，而不是相同之处。",
+        "When two characters face the same problem, start by finding what is true of **both**: where they are, what has happened to them, what they want. Check each statement against the story for each character. A statement that is true of only one of them is a difference, not a likeness.\n\n> **Watch out.** Test the option on *Character A* and then on *Character B*—if it fails for even one of them, it is not a likeness.",
+        "两个人物面对同一个问题时，先找出对**两个人**都成立的事：他们在哪里、遇到了什么事、想要什么。要用故事逐一检验每个说法对每个人物是否成立。只对其中一人成立的说法是不同之处，而不是相同之处。\n\n> **注意。** 把选项先对照*人物 A*、再对照*人物 B*——只要其中一人不符合，就不是相同之处。",
       ],
       ["How are the two characters alike?", "这两个人物有什么相同之处？"],
       alikeItems,
-      (right) => [`The story shows this of both characters: **${right}**`, `故事表明这一点对两个人物都成立：**${right}**`],
+      (right) => [
+        `The story shows this of both characters: **${right}**\n\n**Check.** Verify **${right}** for the first character and then for the second—the passage confirms it for both.`,
+        `故事表明这一点对两个人物都成立：**${right}**\n\n**检验。** 先对第一个人物核对 **${right}**，再对第二个人物核对——文中对两人都予以证实。`,
+      ],
       [
         ["*{wrong}* is true of only one of them.", "*{wrong}* 只对其中一人成立。"],
         ["*{wrong}* fits only one character; check the story for each.", "*{wrong}* 只符合一个人物；要逐一对照故事检查。"],
@@ -640,12 +685,15 @@ const comparingCharacters = topic("reading", {
       "how-they-differ-and-the-detail-that-shows-it",
       ["How They Differ, and the Detail That Shows It", "他们的不同之处，以及表明它的细节"],
       [
-        "Two characters often meet one problem in **different ways**, and the story shows the difference through a detail: what each one does or says. To support a difference, choose the detail that shows the two characters acting differently. A detail that both share shows a likeness; a detail about the place shows neither of them.",
-        "两个人物常常用**不同的方式**面对同一个问题，故事通过细节表现这种不同：每个人做了什么或说了什么。要支持一个不同之处，就选出表明两个人物做法不同的细节。两人共有的细节表明的是相同之处；描写环境的细节则与两人都无关。",
+        "Two characters often meet one problem in **different ways**, and the story shows the difference through a detail: what each one does or says. To support a difference, choose the detail that shows the two characters acting differently. A detail that both share shows a likeness; a detail about the place shows neither of them.\n\n> **Watch out.** Skip atmospheric setting details (like a roaring river or falling snow)—they describe the place, not how the two characters differ.",
+        "两个人物常常用**不同的方式**面对同一个问题，故事通过细节表现这种不同：每个人做了什么或说了什么。要支持一个不同之处，就选出表明两个人物做法不同的细节。两人共有的细节表明的是相同之处；描写环境的细节则与两人都无关。\n\n> **注意。** 排除描写环境的句子（如咆哮的河水或大雪）——它们写的是场景，不是两个人物的差异。",
       ],
       ["Which detail shows this difference?", "哪个细节表明了这个不同之处？"],
       showsDifferenceItems,
-      (right) => [`The detail **${right}** shows the two characters acting differently.`, `细节 **${right}** 表明两个人物的做法不同。`],
+      (right) => [
+        `The detail **${right}** shows the two characters acting differently.\n\n**Check.** Match **${right}** to the stated difference—it points directly to what sets one character's action apart from the other's.`,
+        `细节 **${right}** 表明两个人物的做法不同。\n\n**检验。** 把 **${right}** 和题干中的不同之处对照——它直接展现了两人做法上的区别。`,
+      ],
       [
         ["*{wrong}* is something both characters share, so it shows a likeness.", "*{wrong}* 是两个人物共有的，所以表明的是相同之处。"],
         ["*{wrong}* describes the setting, not either character.", "*{wrong}* 描写的是环境，而不是哪个人物。"],
@@ -661,18 +709,25 @@ const facingChallenges = topic("reading", {
     "How a character responds to a challenge shows who they are and often changes them.",
     "人物如何应对挑战，表现出他们是什么样的人，也常常改变他们。",
   ],
+  intro: [
+    "When power goes out in a blizzard or a trail vanishes in fog, what a character *does* under pressure reveals their true character—resourceful, impatient, brave, or easily frightened.",
+    "暴风雪断电或大雾迷路时，人物在压力下的*实际行动*最能显露本色——是沉着机智、急躁冲动、勇敢担当，还是容易惊慌。",
+  ],
   after: ["why-characters-act"],
   points: [
     choose(
       "how-a-character-responds",
       ["How a Character Responds", "人物如何应对"],
       [
-        "A **challenge** is a problem a character must face: a storm, a fall, being lost. A character's **response** is what they do and say about it. Read for the actions: who makes a plan, who gives up, who helps someone else. Two characters facing one challenge can respond in very different ways.",
-        "**挑战**是人物必须面对的问题：风暴、跌倒、迷路。人物的**应对**就是他们对此所做所说的。要读出人物的行动：谁制订了计划、谁放弃了、谁帮助了别人。面对同一个挑战的两个人物，应对方式可以很不相同。",
+        "A **challenge** is a problem a character must face: a storm, a fall, being lost. A character's **response** is what they do and say about it. Read for the actions: who makes a plan, who gives up, who helps someone else. Two characters facing one challenge can respond in very different ways.\n\n> **Watch out.** Check *which* character's name is in the question—do not accidentally pick what the *other* character did.",
+        "**挑战**是人物必须面对的问题：风暴、跌倒、迷路。人物的**应对**就是他们对此所做所说的。要读出人物的行动：谁制订了计划、谁放弃了、谁帮助了别人。面对同一个挑战的两个人物，应对方式可以很不相同。\n\n> **注意。** 看清问题问的是*哪位*人物——别把*另一个*人物的举动张冠李戴了。",
       ],
       ["How does the character respond to the challenge?", "这个人物是怎样应对挑战的？"],
       responseItems,
-      (right) => [`The story shows this response: **${right}**`, `故事表现了这样的应对：**${right}**`],
+      (right) => [
+        `The story shows this response: **${right}**\n\n**Check.** Find the named character in the passage and verify that **${right}** matches their exact action, not the other character's.`,
+        `故事表现了这样的应对：**${right}**\n\n**检验。** 在文中找到题干点名的人物，核对 **${right}** 正是此人（而不是另一人）做出的行动。`,
+      ],
       [
         ["*{wrong}* is what the other character does.", "*{wrong}* 是另一个人物的做法。"],
         ["*{wrong}* never happens in the story.", "*{wrong}* 在故事中根本没有发生。"],
@@ -682,12 +737,15 @@ const facingChallenges = topic("reading", {
       "what-the-response-shows",
       ["What the Response Shows", "应对表现了什么"],
       [
-        "A response shows **character**. A girl who counts the supplies while her hands shake is brave even when afraid; a boy who sits down and refuses to move has lost hope, at least for a while. Ask what kind of person would act this way, and check that the story gives a reason to think so.",
-        "应对方式表现**性格**。双手发抖却仍然清点物资的女孩，即使害怕也很勇敢；坐下来拒绝移动的男孩，至少一时失去了希望。问问什么样的人会这样做，并检查故事是否给出了这样想的理由。",
+        "A response shows **character**. A girl who counts the supplies while her hands shake is brave even when afraid; a boy who sits down and refuses to move has lost hope, at least for a while. Ask what kind of person would act this way, and check that the story gives a reason to think so.\n\n> **Watch out.** Match the trait directly to the *named* character's actions—reject any trait that fits the other character or contradicts the passage.",
+        "应对方式表现**性格**。双手发抖却仍然清点物资的女孩，即使害怕也很勇敢；坐下来拒绝移动的男孩，至少一时失去了希望。问问什么样的人会这样做，并检查故事是否给出了这样想的理由。\n\n> **注意。** 把性格判断直接和*指定人物*的行为挂钩——排除属于另一人或与原文相悖的说法。",
       ],
       ["What does the character's response show about them?", "人物的应对表现了他们的什么特点？"],
       revealsItems,
-      (right) => [`The character's actions show this: **${right}**`, `人物的行动表现了这一点：**${right}**`],
+      (right) => [
+        `The character's actions show this: **${right}**\n\n**Check.** Point to the exact action or line spoken by that character—it directly supports this conclusion: **${right}**`,
+        `人物的行动表现了这一点：**${right}**\n\n**检验。** 找出该人物的具体言行——它们直接支撑了 **${right}** 这一判断。`,
+      ],
       [
         ["*{wrong}* describes the other character, not this one.", "*{wrong}* 描述的是另一个人物，不是这个。"],
         ["*{wrong}* is not supported by anything the character does.", "*{wrong}* 在人物的行为中找不到依据。"],
@@ -711,19 +769,25 @@ const jobs = ["introduces the story", "complicates the problem", "turns the stor
 const jobLabels: Record<string, Label> = {
   "introduces the story": {
     zh: "引出故事",
-    why: ["It sets up the characters and their world before the trouble begins.", "它在麻烦开始之前介绍人物和他们的世界。"],
+    why: [
+      "It sets up the characters and their world before the trouble begins.\n\n**Check.** Notice that no crisis has struck yet—this chapter establishes who the characters are and where they start.",
+      "它在麻烦开始之前介绍人物和他们的世界。\n\n**检验。** 注意此时危机尚未爆发——这一章只交代人物和初始环境。",
+    ],
     not: ["An opening chapter sets up the characters; this chapter does more than that.", "开篇章节介绍人物；这一章做的不只是这些。"],
   },
   "complicates the problem": {
     zh: "使问题复杂化",
-    why: ["It brings in trouble or makes the trouble worse.", "它引入麻烦或让麻烦变得更糟。"],
+    why: [
+      "It brings in trouble or makes the trouble worse.\n\n**Check.** Spot the setback or rising difficulty—things grow harder here rather than getting solved.",
+      "它引入麻烦或让麻烦变得更糟。\n\n**检验。** 找出出现的挫折或升级的困难——这里形势变得更棘手，问题还未解决。",
+    ],
     not: ["This chapter does not bring in or worsen the trouble.", "这一章并没有引入或加重麻烦。"],
   },
   "turns the story": {
     zh: "扭转故事",
     why: [
-      "It is the turning point, where a character acts and the problem starts to be solved.",
-      "这是转折点，人物采取行动，问题开始得到解决。",
+      "It is the turning point, where a character acts and the problem starts to be solved.\n\n**Check.** Spot the decisive choice or action—this is the exact moment the character tackles the trouble head-on.",
+      "这是转折点，人物采取行动，问题开始得到解决。\n\n**检验。** 找出人物的关键抉择或行动——正是这一刻开始扭转局势。",
     ],
     not: [
       "The turning point is where a character acts to solve the problem; this is not it.",
@@ -732,7 +796,10 @@ const jobLabels: Record<string, Label> = {
   },
   "resolves the story": {
     zh: "解决故事",
-    why: ["It shows how things end up once the problem is solved.", "它表明问题解决后事情的结局。"],
+    why: [
+      "It shows how things end up once the problem is solved.\n\n**Check.** Notice the aftermath and outcome—the crisis is over and we see the new normal.",
+      "它表明问题解决后事情的结局。\n\n**检验。** 注意事情平息后的结果——危机已经过去，展现了最终结局。",
+    ],
     not: ["The last chapter shows how things end; this chapter comes before that.", "最后一章表明事情的结局；这一章在它之前。"],
   },
 };
@@ -762,14 +829,18 @@ const chaptersBuildAStory = topic("reading", {
     "Each chapter of a longer story does a job: it introduces, complicates, turns or resolves.",
     "较长故事的每一章都有自己的作用：引出、使复杂、扭转或解决。",
   ],
+  intro: [
+    "In a chapter book, chapters do not pile up at random: one introduces the world, the next complicates the trouble, a third turns the story with a bold action, and the final chapter resolves everything.",
+    "在章节书里，各章并非随意堆砌：前面引出人物与背景，中间让问题升级，关键一章靠人物行动扭转局势，最后一章交代结局。",
+  ],
   after: ["parts-of-stories-and-poems", "summarizing-a-story"],
   points: [
     label(
       "the-job-of-a-chapter",
       ["The Job of a Chapter", "一章的作用"],
       [
-        "In a longer story, each chapter does a **job**. An early chapter **introduces** the characters and their world. Middle chapters **complicate** the problem, bringing in trouble or making it worse. One chapter **turns** the story: a character acts, and the problem starts to be solved. The last chapter **resolves** it, showing how things end.",
-        "在较长的故事里，每一章都有自己的**作用**。前面的章节**引出**人物和他们的世界。中间的章节**使问题复杂化**，引入麻烦或让麻烦更糟。有一章**扭转**故事：人物采取行动，问题开始得到解决。最后一章**解决**问题，表明事情的结局。",
+        "In a longer story, each chapter does a **job**. An early chapter **introduces** the characters and their world. Middle chapters **complicate** the problem, bringing in trouble or making it worse. One chapter **turns** the story: a character acts, and the problem starts to be solved. The last chapter **resolves** it, showing how things end.\n\n> **Watch out.** Do not confuse *turns the story* (the action that fixes the crisis) with *resolves the story* (the happy or settled aftermath that comes *after* the fix).",
+        "在较长的故事里，每一章都有自己的**作用**。前面的章节**引出**人物和他们的世界。中间的章节**使问题复杂化**，引入麻烦或让麻烦更糟。有一章**扭转**故事：人物采取行动，问题开始得到解决。最后一章**解决**问题，表明事情的结局。\n\n> **注意。** 不要混淆“扭转故事”（动手化解危机的行动）和“解决故事”（危机解除*之后*呈现的最终结果）。",
       ],
       ["What job does this chapter do in its story?", "这一章在故事中起什么作用？"],
       jobLines,
@@ -779,14 +850,14 @@ const chaptersBuildAStory = topic("reading", {
       "putting-chapters-in-order",
       ["Putting Chapters in Order", "给章节排序"],
       [
-        "To put chapter summaries in order, find each one's **job**. The chapter that sets up the characters comes first. The one that brings in trouble comes next. The turning point, where someone acts, follows the trouble it answers. The ending, which shows how things turned out, comes last.",
-        "要给章节概要排序，就先找出每一章的**作用**。介绍人物的那一章排在最前。引入麻烦的那一章接着出现。转折点，也就是有人采取行动的地方，紧跟在它所回应的麻烦之后。表明结果的结局排在最后。",
+        "To put chapter summaries in order, find each one's **job**. The chapter that sets up the characters comes first. The one that brings in trouble comes next. The turning point, where someone acts, follows the trouble it answers. The ending, which shows how things turned out, comes last.\n\n> **Watch out.** Check the middle two chapters carefully—the *trouble* must arrive before the *turning-point action* that answers it.",
+        "要给章节概要排序，就先找出每一章的**作用**。介绍人物的那一章排在最前。引入麻烦的那一章接着出现。转折点，也就是有人采取行动的地方，紧跟在它所回应的麻烦之后。表明结果的结局排在最后。\n\n> **注意。** 仔细核对中间两章——*麻烦*必须出现在回应它的*转折行动*之前。",
       ],
       ["In what order do these chapters come?", "这些章节的顺序是怎样的？"],
       orderItems,
       (right) => [
-        `The order **${right}** goes from the chapter that introduces, to the one that complicates, to the turn, to the ending.`,
-        `顺序 **${right}** 依次是引出、使复杂、扭转和结局。`,
+        `The order **${right}** goes from the chapter that introduces, to the one that complicates, to the turn, to the ending.\n\n**Check.** Read the four letters in **${right}** in order—they follow the arc: introduce → complicate → turn → resolve.`,
+        `顺序 **${right}** 依次是引出、使复杂、扭转和结局。\n\n**检验。** 按 **${right}** 的顺序通读四章——正好遵循“引出 → 复杂化 → 转折 → 结局”的故事弧线。`,
       ],
       [
         ["*{wrong}* puts a chapter before the one it depends on.", "*{wrong}* 把一章放在了它所依赖的那一章之前。"],
@@ -869,18 +940,25 @@ const diariesAndLetters = topic("reading", {
     "A diary or a letter from the past shows what one person saw and felt, and its details tell how life was then.",
     "过去的日记或书信展现一个人的所见所感，其中的细节讲述了当时的生活。",
   ],
+  intro: [
+    "A single line in an 1820 diary—*“We read our lessons by the light of a tallow candle”*—reveals both daily life before electricity and the writer's personal voice. Reading primary letters and diaries means spotting both historical clues and human feelings.",
+    "1820 年日记里一句“我们借着牛油蜡烛的光读书”，既折射出没有电灯时的日常生活，又流露出作者的真情实感。阅读历史日记和书信，要同时读出时代线索与人物心境。",
+  ],
   after: ["reading-a-letter", "firsthand-and-secondhand-accounts"],
   points: [
     choose(
       "what-a-detail-tells-about-life-then",
       ["What a Detail Tells About Life Then", "细节讲述了当时的生活"],
       [
-        "A diary or letter from the past is a **primary record**: it was written by someone who lived then. Its small details tell how life was: a candle to read by means there was no electric light; a letter that took three months means mail went by ship. Ask what the detail shows that is different from life today.",
-        "过去的日记或书信是**原始记录**：它是由当时生活的人写的。其中的小细节讲述了当时的生活：靠蜡烛读书说明没有电灯；一封信走了三个月说明邮件是靠船运送的。问问这个细节表明了哪些与今天不同的生活。",
+        "A diary or letter from the past is a **primary record**: it was written by someone who lived then. Its small details tell how life was: a candle to read by means there was no electric light; a letter that took three months means mail went by ship. Ask what the detail shows that is different from life today.\n\n> **Watch out.** Reject any option that slips modern technology (like electric machines, phones, or buses) into a historical diary—stick strictly to what the quote shows.",
+        "过去的日记或书信是**原始记录**：它是由当时生活的人写的。其中的小细节讲述了当时的生活：靠蜡烛读书说明没有电灯；一封信走了三个月说明邮件是靠船运送的。问问这个细节表明了哪些与今天不同的生活。\n\n> **注意。** 排除把现代科技（如洗衣机、手机、公交车）硬塞进历史日记的选项——严格紧扣引文里出现的细节。",
       ],
       ["What does this detail tell about life at the time?", "这个细节讲述了当时怎样的生活？"],
       lifeLines,
-      (right) => [`The detail shows how life was then: **${right}**`, `这个细节表明了当时的生活：**${right}**`],
+      (right) => [
+        `The detail shows how life was then: **${right}**\n\n**Check.** Trace **${right}** directly back to the objects or actions named in the diary quote—every part follows from the text without adding modern guesses.`,
+        `这个细节表明了当时的生活：**${right}**\n\n**检验。** 把 **${right}** 直接对照日记引文里的器物或做法——每一点都由原文推出，没有掺入现代想象。`,
+      ],
       [
         ["*{wrong}* describes life today, not life at the time of the writing.", "*{wrong}* 描述的是今天的生活，而不是写作时的生活。"],
         [
@@ -893,12 +971,15 @@ const diariesAndLetters = topic("reading", {
       "what-the-writer-felt-and-how-we-know",
       ["What the Writer Felt, and How We Know", "作者的感受，以及我们如何知道"],
       [
-        "A diary is private, so its writer often shows feelings openly, but not always by naming them. Look for **what the writer does** (rereads a letter, cannot eat, walks through every field) and **how they describe things**. A good answer names the feeling and points to the words that show it.",
-        "日记是私人的，所以作者常常坦率地表露感受，但并不总是直接说出来。要留意**作者做了什么**（反复读信、吃不下饭、走遍每一块田）以及**他们怎样描写事物**。好的回答既说出感受，又指出表现这种感受的词句。",
+        "A diary is private, so its writer often shows feelings openly, but not always by naming them. Look for **what the writer does** (rereads a letter, cannot eat, walks through every field) and **how they describe things**. A good answer names the feeling and points to the words that show it.\n\n> **Watch out.** Notice that all three options quote the same evidence—check whether the *named feeling* before the colon truly matches that evidence.",
+        "日记是私人的，所以作者常常坦率地表露感受，但并不总是直接说出来。要留意**作者做了什么**（反复读信、吃不下饭、走遍每一块田）以及**他们怎样描写事物**。好的回答既说出感受，又指出表现这种感受的词句。\n\n> **注意。** 三个选项往往引用了同样的证据——重点核对冒号前面*点出的感受*是否真与证据相符。",
       ],
       ["What does the writer feel, and how do we know?", "作者有什么感受？我们怎么知道？"],
       feelingLines,
-      (right) => [`The writer's words show it: ${right}`, `作者的话表明了这一点：${right}`],
+      (right) => [
+        `The writer's words show it: ${right}\n\n**Check.** Read the emotion named before the colon in “${right}” alongside the writer's action—they point in the exact same emotional direction.`,
+        `作者的话表明了这一点：${right}\n\n**检验。** 把冒号前说出的感受和作者的具体举动对照——两者的情绪方向完全一致。`,
+      ],
       [
         ["*{wrong}* names a feeling the writer's words do not show.", "*{wrong}* 说出的感受在作者的话中找不到。"],
         ["*{wrong}* says the opposite of what the writer shows.", "*{wrong}* 与作者表现的正好相反。"],
@@ -951,20 +1032,24 @@ const speakerOfAPoem = topic("reading", {
     "The voice of a poem is its speaker, who may not be the poet: a child, an old sailor, a tree.",
     "诗中的声音是它的说话者，说话者不一定是诗人本人：可以是孩子、老水手或一棵树。",
   ],
+  intro: [
+    "In a poem, the voice saying *I* is the **speaker**—not automatically the poet. Imagine a poem that begins *“I sit in the harbor and watch the ferries come and go, my paint flaking in the salt wind.”* The speaker is an old harbor buoy, and that vantage point turns ordinary boats into passing visitors.",
+    "在诗歌中，说“我”的那个声音是**说话者**——不一定就是诗人本人。想象一首诗开头写道：“我浮在港湾里，看渡轮来来往往，海风吹落了我的油漆。”说话者是一只旧浮标，正因如此，寻常的船只在诗里成了匆匆过客。",
+  ],
   after: ["what-a-poem-is-about", "point-of-view"],
   points: [
     choose(
       "who-the-speaker-is",
       ["Who the Speaker Is", "说话者是谁"],
       [
-        "The **speaker** of a poem is the voice that says *I*. The speaker is not always the poet: a poet can write as a tree, a dog, an old sailor or a book. Look for clues in what the speaker says about their body, their age, their place and what they do: *my roots in rock* tells you the speaker is a tree.",
-        "诗歌的**说话者**是诗中说“我”的那个声音。说话者不一定是诗人：诗人可以以一棵树、一只狗、一位老水手或一本书的身份来写。要从说话者讲到的身体、年龄、所在的地方和所做的事中寻找线索：*my roots in rock* 告诉你说话者是一棵树。",
+        "The **speaker** of a poem is the voice that says *I*. The speaker is not always the poet: a poet can write as a tree, a dog, an old sailor or a book. Look for clues in what the speaker says about their body, their age, their place and what they do: *my roots in rock* tells you the speaker is a tree.\n\n> **Watch out.** Do not confuse the speaker with another person or object merely *mentioned* in the poem—ask who owns the word *I* or *my*.",
+        "诗歌的**说话者**是诗中说“我”的那个声音。说话者不一定是诗人：诗人可以以一棵树、一只狗、一位老水手或一本书的身份来写。要从说话者讲到的身体、年龄、所在的地方和所做的事中寻找线索：*my roots in rock* 告诉你说话者是一棵树。\n\n> **注意。** 不要把诗里仅仅*提到*的人或事物当成说话者——先问是谁在说 *I* 或 *my*。",
       ],
       ["Who is the speaker of this poem?", "这首诗的说话者是谁？"],
       speakerItems,
       (right) => [
-        `The speaker's words about themselves show that the speaker is **${right}**.`,
-        `说话者讲述自己的话表明，说话者是 **${right}**。`,
+        `The speaker's words about themselves show that the speaker is **${right}**.\n\n**Check.** Substitute **${right}** for *I* and *my* in the first two lines—every physical detail and action fits that voice.`,
+        `说话者讲述自己的话表明，说话者是 **${right}**。\n\n**检验。** 把前两行里的 *I* 和 *my* 换成 **${right}**——每个外貌细节和动作都与这个声音吻合。`,
       ],
       [
         [
@@ -978,12 +1063,15 @@ const speakerOfAPoem = topic("reading", {
       "how-the-speakers-view-shapes-the-poem",
       ["How the Speaker's View Shapes the Poem", "说话者的视角如何塑造诗歌"],
       [
-        "Who the speaker is changes **what the poem notices and how it feels**. To a tiny insect, people in boots are thundering giants; to an old sailor at home, the sea is a memory to long for. Ask what this speaker would care about, and how that makes the poem describe things.",
-        "说话者是谁，决定了**诗歌注意到什么、带着什么感情**。在一只小虫看来，穿靴子的人是轰隆作响的巨人；对待在家里的老水手来说，大海是令人怀念的回忆。问问这个说话者会在意什么，以及这如何影响诗歌对事物的描写。",
+        "Who the speaker is changes **what the poem notices and how it feels**. To a tiny insect, people in boots are thundering giants; to an old sailor at home, the sea is a memory to long for. Ask what this speaker would care about, and how that makes the poem describe things.\n\n> **Watch out.** First confirm *who* the speaker is in the poem—a wrong option often swaps in a different character's point of view or flips the speaker's true situation.",
+        "说话者是谁，决定了**诗歌注意到什么、带着什么感情**。在一只小虫看来，穿靴子的人是轰隆作响的巨人；对待在家里的老水手来说，大海是令人怀念的回忆。问问这个说话者会在意什么，以及这如何影响诗歌对事物的描写。\n\n> **注意。** 先确认诗中的说话者*是谁*——干扰项常常偷换成另一个角色的视角，或把说话者的真实处境说反。",
       ],
       ["How does the speaker's view shape what the poem describes?", "说话者的视角如何影响诗歌的描写？"],
       viewItems,
-      (right) => [`The speaker's view explains it: ${right}`, `说话者的视角解释了这一点：${right}`],
+      (right) => [
+        `The speaker's view explains it: ${right}\n\n**Check.** Re-read the last two lines of the poem—the speaker's identity and feeling named here match the exact image and tone of those lines.`,
+        `说话者的视角解释了这一点：${right}\n\n**检验。** 重读诗歌的最后两行——这里点出的说话者身份和感受与诗句的意象和语气完全吻合。`,
+      ],
       [
         ["*{wrong}* gets the speaker's situation wrong.", "*{wrong}* 弄错了说话者的处境。"],
         ["*{wrong}* treats someone else as the speaker.", "*{wrong}* 把别的人当成了说话者。"],

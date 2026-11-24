@@ -12,6 +12,10 @@ const latin6 = parts({
     "Ten more Latin roots: ben, mal, dom, greg, carn, corp, sanct, prim, ver and cred.",
     "另外十个拉丁词根：ben、mal、dom、greg、carn、corp、sanct、prim、ver 和 cred。",
   ],
+  intro: [
+    "Once you know *cred* means *believe*, *credible*, *incredulous*, and *credentials* immediately fall into one family. Ten high-utility Latin roots unlock academic vocabulary across history, law, and literature.",
+    "一旦知道 *cred* 意为“相信”，*credible*、*incredulous* 和 *credentials* 立刻串成一家。掌握这十个高频拉丁词根，就能批量读懂历史、法律和文学中的学术词汇。",
+  ],
   after: ["latin-roots-5"],
   kind: ["Latin root", "拉丁词根"],
   list: partLines(`
@@ -28,12 +32,12 @@ const latin6 = parts({
   `),
   explanations: [
     [
-      "Ten more Latin **roots**. *Ben* means good or well, *mal* bad, *dom* home or master, *greg* flock, *carn* flesh, *corp* body, *sanct* holy, *prim* first, *ver* true and *cred* believe. *Ben* and *mal* often come in pairs: a *benevolent* person wishes good, a *malevolent* one wishes harm.",
-      "另外十个拉丁**词根**。*ben* 意为好，*mal* 坏，*dom* 家或主人，*greg* 群，*carn* 肉，*corp* 身体，*sanct* 神圣，*prim* 第一，*ver* 真，*cred* 相信。*ben* 和 *mal* 常成对出现：*benevolent* 的人心怀善意，*malevolent* 的人心怀恶意。",
+      "Ten more Latin **roots**. *Ben* means good or well, *mal* bad, *dom* home or master, *greg* flock, *carn* flesh, *corp* body, *sanct* holy, *prim* first, *ver* true and *cred* believe. *Ben* and *mal* often come in pairs: a *benevolent* person wishes good, a *malevolent* one wishes harm.\n\n> **Watch out.** Do not mix up *carn* (flesh) and *corp* (body) or *ben* (good) and *mal* (bad)—check the example word beside the root to confirm the exact core sense.",
+      "另外十个拉丁**词根**。*ben* 意为好，*mal* 坏，*dom* 家或主人，*greg* 群，*carn* 肉，*corp* 身体，*sanct* 神圣，*prim* 第一，*ver* 真，*cred* 相信。*ben* 和 *mal* 常成对出现：*benevolent* 的人心怀善意，*malevolent* 的人心怀恶意。\n\n> **注意。** 别把 *carn*（肉）和 *corp*（身体）或 *ben*（好）和 *mal*（坏）搞混——对照旁边的例词确认准确的核心含义。",
     ],
     [
-      "Find the root that carries the core of the meaning. *Unwilling to believe* needs *cred* (believe) with *in-* (not): **incredulous**. *To check that something is true* needs *ver* (true): **verify**. When two words share a prefix, the root decides.",
-      "找出承载意思核心的词根。*unwilling to believe* 需要 *cred*（相信）加 *in-*（不）：**incredulous**。*to check that something is true* 需要 *ver*（真）：**verify**。两个词前缀相同时，由词根决定。",
+      "Find the root that carries the core of the meaning. *Unwilling to believe* needs *cred* (believe) with *in-* (not): **incredulous**. *To check that something is true* needs *ver* (true): **verify**. When two words share a prefix, the root decides.\n\n> **Watch out.** Several words share the same root (*congregate* vs. *segregate*)—always read the prefix together with the root so you do not pick the opposite meaning.",
+      "找出承载意思核心的词根。*unwilling to believe* 需要 *cred*（相信）加 *in-*（不）：**incredulous**。*to check that something is true* 需要 *ver*（真）：**verify**。两个词前缀相同时，由词根决定。\n\n> **注意。** 同一个词根能派出意思相反的词（如 *congregate* 与 *segregate*）——一定要把前缀和词根合起来看，避免选反。",
     ],
   ],
 });
@@ -44,6 +48,10 @@ const greek5 = parts({
   summary: [
     "Ten more Greek roots: paleo, neo, pseud, theo, hetero, andr, eu, hem, phon and tele.",
     "另外十个希腊词根：paleo、neo、pseud、theo、hetero、andr、eu、hem、phon 和 tele。",
+  ],
+  intro: [
+    "If you recognize *paleo* (*old*) and *neo* (*new*), unfamiliar terms like *Paleolithic* and *neologism* stop looking like jargon and start reading like plain definitions. Ten Greek roots unlock words across science, medicine, and history.",
+    "只要认出 *paleo*（古老）和 *neo*（新），像 *Paleolithic* 和 *neologism* 这样的生僻术语就不再像天书，而像直白的释义。这十个希腊词根能帮你读懂科学、医学和历史里的大量词汇。",
   ],
   after: ["greek-roots-4"],
   kind: ["Greek root", "希腊词根"],
@@ -61,12 +69,12 @@ const greek5 = parts({
   `),
   explanations: [
     [
-      "Ten more Greek **roots**. *Paleo* means old, *neo* new, *pseud* false, *theo* god, *hetero* other or different, *andr* man, *eu* good or well, *hem* blood, *phon* sound and *tele* far. *Paleo* and *neo* make a pair, like *hetero* and *homo* (same).",
-      "另外十个希腊**词根**。*paleo* 意为古老，*neo* 新，*pseud* 假，*theo* 神，*hetero* 其他或不同，*andr* 男人，*eu* 好，*hem* 血，*phon* 声音，*tele* 远。*paleo* 和 *neo* 是一对，就像 *hetero* 和 *homo*（相同）。",
+      "Ten more Greek **roots**. *Paleo* means old, *neo* new, *pseud* false, *theo* god, *hetero* other or different, *andr* man, *eu* good or well, *hem* blood, *phon* sound and *tele* far. *Paleo* and *neo* make a pair, like *hetero* and *homo* (same).\n\n> **Watch out.** Notice how Greek roots can change slightly when combined (*atheist* drops the *o* of *theo*, *cacophony* shifts *phon* inside the word)—match the core letters to the meaning.",
+      "另外十个希腊**词根**。*paleo* 意为古老，*neo* 新，*pseud* 假，*theo* 神，*hetero* 其他或不同，*andr* 男人，*eu* 好，*hem* 血，*phon* 声音，*tele* 远。*paleo* 和 *neo* 是一对，就像 *hetero* 和 *homo*（相同）。\n\n> **注意。** 希腊词根组合时拼写可能微调（如 *atheist* 省掉了 *theo* 的 *o*，*cacophony* 把 *phon* 夹在词中）——抓住核心字母对应含义。",
     ],
     [
-      "Many Greek words are built of two roots. *A word spelled like another but with a different sound* joins *hetero* (different) and *nym* (name): **heteronym**. *An instrument for seeing far* joins *tele* (far) and *scope* (look): **telescope**. Read each root in turn and put the meanings together.",
-      "许多希腊词由两个词根组成。*a word spelled like another but with a different sound* 由 *hetero*（不同）和 *nym*（名字）组成：**heteronym**。*an instrument for seeing far* 由 *tele*（远）和 *scope*（看）组成：**telescope**。依次读出每个词根，把意思合起来。",
+      "Many Greek words are built of two roots. *A word spelled like another but with a different sound* joins *hetero* (different) and *nym* (name): **heteronym**. *An instrument for seeing far* joins *tele* (far) and *scope* (look): **telescope**. Read each root in turn and put the meanings together.\n\n> **Watch out.** Do not stop at the first root when two choices share it (*telescope* vs. *telepathy*)—translate the second root as well to lock in the right word.",
+      "许多希腊词由两个词根组成。*a word spelled like another but with a different sound* 由 *hetero*（不同）和 *nym*（名字）组成：**heteronym**。*an instrument for seeing far* 由 *tele*（远）和 *scope*（看）组成：**telescope**。依次读出每个词根，把意思合起来。\n\n> **注意。** 两个选项共享第一个词根时（如 *telescope* 与 *telepathy*），别只看前半段——把第二个词根也翻出来才能锁定正确答案。",
     ],
   ],
 });
@@ -77,6 +85,10 @@ const nounSuffixes = parts({
   summary: [
     "Ten suffixes that turn words into nouns: -ism, -ity, -ance, -dom, -hood, -ship, -ee, -let, -ery and -age.",
     "十个把词变成名词的后缀：-ism、-ity、-ance、-dom、-hood、-ship、-ee、-let、-ery 和 -age。",
+  ],
+  intro: [
+    "Add *-let* to *book* and you get a small book (*booklet*); add *-ee* to *train* and you get the person being trained (*trainee*). Noun-forming suffixes not only change a word's part of speech—they pinpoint what kind of thing or person it names.",
+    "在 *book* 后加 *-let* 变成小册子（*booklet*），在 *train* 后加 *-ee* 变成受训者（*trainee*）。名词后缀不仅改变词性，还精确点明它指代的是哪类人、物、状态或场所。",
   ],
   after: ["suffixes-that-form-adjectives"],
   kind: ["suffix", "后缀"],
@@ -94,12 +106,12 @@ const nounSuffixes = parts({
   `),
   explanations: [
     [
-      "A **suffix** at the end of a word can turn it into a noun and tell what kind of noun it is. *-ism* names a belief or practice, *-ity* a quality, *-ance* an act or state, *-dom* a realm or condition, *-hood* a time or state of life, *-ship* a position, skill or bond, *-ee* a person to whom something is done, *-let* a small one, *-ery* a place where something is made or kept, and *-age* a collection or amount.",
-      "词尾的**后缀**可以把词变成名词，并说明它是哪一类名词。*-ism* 指信仰或做法，*-ity* 性质，*-ance* 行为或状态，*-dom* 领域或状态，*-hood* 人生的某个时期或身份，*-ship* 身份、技能或关系，*-ee* 受动者，*-let* 小的东西，*-ery* 制作或存放某物的场所，*-age* 集合或数量。",
+      "A **suffix** at the end of a word can turn it into a noun and tell what kind of noun it is. *-ism* names a belief or practice, *-ity* a quality, *-ance* an act or state, *-dom* a realm or condition, *-hood* a time or state of life, *-ship* a position, skill or bond, *-ee* a person to whom something is done, *-let* a small one, *-ery* a place where something is made or kept, and *-age* a collection or amount.\n\n> **Watch out.** Several suffixes name abstract states (*-ity*, *-ance*, *-dom*, *-hood*, *-ship*)—distinguish a *quality* (*-ity*), an *act/state* (*-ance*), a *stage of life* (*-hood*), and a *bond or role* (*-ship*).",
+      "词尾的**后缀**可以把词变成名词，并说明它是哪一类名词。*-ism* 指信仰或做法，*-ity* 性质，*-ance* 行为或状态，*-dom* 领域或状态，*-hood* 人生的某个时期或身份，*-ship* 身份、技能或关系，*-ee* 受动者，*-let* 小的东西，*-ery* 制作或存放某物的场所，*-age* 集合或数量。\n\n> **注意。** 好几个后缀都表示抽象状态（*-ity*、*-ance*、*-dom*、*-hood*、*-ship*）——要分清*性质*（*-ity*）、*行为或状态*（*-ance*）、*人生阶段*（*-hood*）以及*关系或职位*（*-ship*）。",
     ],
     [
-      "Compare words with the same base: an *employer* employs, an *employee* is employed; a *friend* is a person, *friendship* is the bond. To choose a noun for a definition, find the base word, then the suffix that names the right kind of thing.",
-      "比较词根相同的词：*employer* 是雇用别人的人，*employee* 是被雇用的人；*friend* 是人，*friendship* 是关系。根据定义选名词时，先找出基础词，再找出表示正确类别的后缀。",
+      "Compare words with the same base: an *employer* employs, an *employee* is employed; a *friend* is a person, *friendship* is the bond. To choose a noun for a definition, find the base word, then the suffix that names the right kind of thing.\n\n> **Watch out.** Do not confuse *-er* (the person doing the action) with *-ee* (the person receiving it), or pick a suffix that names a place when the definition asks for a person or quality.",
+      "比较词根相同的词：*employer* 是雇用别人的人，*employee* 是被雇用的人；*friend* 是人，*friendship* 是关系。根据定义选名词时，先找出基础词，再找出表示正确类别的后缀。\n\n> **注意。** 别把 *-er*（施动者）和 *-ee*（受动者）混在一起，也不要在释义问“人或性质”时选了表示场所的后缀。",
     ],
   ],
 });
@@ -161,20 +173,24 @@ const earlyModern = topic("vocabulary", {
     "Fifteen older words that readers meet in Shakespeare and the King James Bible, such as thou, thee, wherefore and ere.",
     "读者在莎士比亚和钦定版《圣经》中会遇到的十五个旧词，如 thou、thee、wherefore 和 ere。",
   ],
+  intro: [
+    "In *Speak now, ere it is too late*, one three-letter word — *ere* (*before*) — unlocks the whole line. Learning fifteen high-frequency words from Early Modern English turns Shakespeare's dialogue from a puzzle into clear speech.",
+    "在 *Speak now, ere it is too late* 里，只要认识 *ere*（在……之前）这个三个字母的词，整行台词就豁然开朗。掌握十五个早期现代英语高频词，就能把莎士比亚的台词读成明白畅达的话。",
+  ],
   after: ["parts-of-a-play", "context-clues"],
   points: [
     choose(
       "what-the-older-word-means",
       ["What the Older Word Means", "旧词的意思"],
       [
-        "English four hundred years ago used words that have since dropped out of speech. *Thou* was *you* as the subject, *thee* was *you* after a verb or a word like *with*, and *thy* was *your*; verbs after *thou* end in *-st* (*thou hast*, *thou art*). *Wherefore* means *why*, not *where*: Juliet asks why Romeo must be a Montague, not where he is.",
-        "四百年前的英语用着一些后来不再说的词。*thou* 是作主语的 *you*，*thee* 是动词或 *with* 之类的词后面的 *you*，*thy* 是 *your*；*thou* 后面的动词以 *-st* 结尾（*thou hast*、*thou art*）。*wherefore* 的意思是 *why*，不是 *where*：朱丽叶问的是罗密欧为什么偏偏是蒙太古家的人，不是问他在哪里。",
+        "English four hundred years ago used words that have since dropped out of speech. *Thou* was *you* as the subject, *thee* was *you* after a verb or a word like *with*, and *thy* was *your*; verbs after *thou* end in *-st* (*thou hast*, *thou art*). *Wherefore* means *why*, not *where*: Juliet asks why Romeo must be a Montague, not where he is.\n\n> **Watch out.** Do not guess from modern look-alikes—*wherefore* means *why* (not *where*), *anon* means *soon* (not *anonymous*), and *hither*/*thither* mean *here*/*there*.",
+        "四百年前的英语用着一些后来不再说的词。*thou* 是作主语的 *you*，*thee* 是动词或 *with* 之类的词后面的 *you*，*thy* 是 *your*；*thou* 后面的动词以 *-st* 结尾（*thou hast*、*thou art*）。*wherefore* 的意思是 *why*，不是 *where*：朱丽叶问的是罗密欧为什么偏偏是蒙太古家的人，不是问他在哪里。\n\n> **注意。** 不要按现代拼写望文生义——*wherefore* 是“为什么”（不是“在哪里”），*anon* 是“很快”，*hither* 和 *thither* 分别是“到这里”和“到那里”。",
       ],
       ["What does the older word in italics mean?", "斜体的旧词是什么意思？"],
       olderMeaning,
       (right) => [
-        `*${olderByMeaning(right)}* means **${right}**; put that in its place and the line reads as modern English.`,
-        `*${olderByMeaning(right)}* 的意思是 **${right}**；用它替换后，这一行就成了现代英语。`,
+        `*${olderByMeaning(right)}* means **${right}**; put that in its place and the line reads as modern English.\n\n**Check.** Substitute **${right}** directly into the line and reread the grammar: the sentence stays complete and makes clear sense in context.`,
+        `*${olderByMeaning(right)}* 的意思是 **${right}**；用它替换后，这一行就成了现代英语。\n\n**检验。** 把 **${right}** 直接代回原句重读：句子语法完整，上下文意思也完全通顺。`,
       ],
       [
         ["*{wrong}* is what a different older word means, not this one.", "*{wrong}* 是另一个旧词的意思，不是这一个的。"],
@@ -188,8 +204,8 @@ const earlyModern = topic("vocabulary", {
       "the-older-word-for-a-modern-one",
       ["The Older Word for a Modern One", "现代词对应的旧词"],
       [
-        "To hear how a line would sound in Shakespeare's time, find the older word for the modern word in italics. Watch the position of *you*: before the verb it was *thou* (*thou art*), after a verb or *with* it was *thee* (*with thee*), and before a noun *your* was *thy* (*thy sword*).",
-        "要听出一行话在莎士比亚时代怎么说，先找出与斜体现代词对应的旧词。注意 *you* 的位置：在动词前是 *thou*（*thou art*），在动词或 *with* 后面是 *thee*（*with thee*），在名词前的 *your* 是 *thy*（*thy sword*）。",
+        "To hear how a line would sound in Shakespeare's time, find the older word for the modern word in italics. Watch the position of *you*: before the verb it was *thou* (*thou art*), after a verb or *with* it was *thee* (*with thee*), and before a noun *your* was *thy* (*thy sword*).\n\n> **Watch out.** Check the grammatical slot in the sentence—*thou* is a subject, *thee* is an object, *thy* comes before a noun, and *art*/*hast* match *thou* while *doth* matches *he*/*she*/*it*.",
+        "要听出一行话在莎士比亚时代怎么说，先找出与斜体现代词对应的旧词。注意 *you* 的位置：在动词前是 *thou*（*thou art*），在动词或 *with* 后面是 *thee*（*with thee*），在名词前的 *your* 是 *thy*（*thy sword*）。\n\n> **注意。** 核对这个词在句中的语法位置——*thou* 作主语，*thee* 作宾语，*thy* 放在名词前，*art* 和 *hast* 配 *thou*，而 *doth* 配第三人称单数。",
       ],
       [
         "Which older word would a writer of Shakespeare's time use for the words in italics?",
@@ -197,8 +213,8 @@ const earlyModern = topic("vocabulary", {
       ],
       olderFor,
       (right) => [
-        `**${right}** meant ${olderMeans(right)}, which is what the words in italics say.`,
-        `**${right}** 的意思是 ${olderMeans(right)}，正是斜体的词所表达的。`,
+        `**${right}** meant ${olderMeans(right)}, which is what the words in italics say.\n\n**Check.** Drop **${right}** into the sentence in place of the italicized words and check its role (subject, object, verb, or adverb): both meaning and grammar match.`,
+        `**${right}** 的意思是 ${olderMeans(right)}，正是斜体的词所表达的。\n\n**检验。** 把 **${right}** 放回斜体词的位置，核对它在句中的成分（主语、宾语、动词或副词）：意思和语法都完全吻合。`,
       ],
       [
         ["*{wrong}* meant something else; it cannot stand for these words.", "*{wrong}* 的意思是别的，不能代替这些词。"],
@@ -255,22 +271,26 @@ const wordsThatChanged = topic("vocabulary", {
     "Fifteen words whose meanings have shifted over the centuries, such as nice, awful, silly and clue.",
     "十五个词义在几百年间发生了变化的词，如 nice、awful、silly 和 clue。",
   ],
+  intro: [
+    "When an old myth says Theseus unwound a *clue* inside the labyrinth, he was not holding a detective's hint — he was holding a ball of thread. Knowing how common English words shifted meaning prevents misreading historical and literary texts.",
+    "当古老神话写到忒修斯在迷宫里解开一团 *clue* 时，他手里拿的不是侦探线索，而是一团线球。了解常见英语词的词义演变，就能避免把历史和文学旧文本读错。",
+  ],
   after: ["connotation-and-precise-words"],
   points: [
     choose(
       "the-old-meaning",
       ["The Old Meaning", "旧时的意思"],
       [
-        "Words change their meanings over time. *Nice* once meant foolish, *awful* full of awe, *silly* blessed and *meat* any food. When you read an old text, the modern meaning can mislead you: ask what the rest of the sentence says the word must mean. A *silly* child in an old prayer is innocent, not foolish.",
-        "词的意思会随时间变化。*nice* 曾经的意思是愚蠢，*awful* 是充满敬畏，*silly* 是有福的，*meat* 是任何食物。读古老的文本时，现代意思可能会误导你：要看句子的其余部分说明这个词必须是什么意思。旧祷文里 *silly* 的孩子是天真的，不是愚蠢的。",
+        "Words change their meanings over time. *Nice* once meant foolish, *awful* full of awe, *silly* blessed and *meat* any food. When you read an old text, the modern meaning can mislead you: ask what the rest of the sentence says the word must mean. A *silly* child in an old prayer is innocent, not foolish.\n\n> **Watch out.** Do not pick the modern meaning out of habit—test it against the context clues in the sentence, where the modern sense will clash with the rest of the line.",
+        "词的意思会随时间变化。*nice* 曾经的意思是愚蠢，*awful* 是充满敬畏，*silly* 是有福的，*meat* 是任何食物。读古老的文本时，现代意思可能会误导你：要看句子的其余部分说明这个词必须是什么意思。旧祷文里 *silly* 的孩子是天真的，不是愚蠢的。\n\n> **注意。** 不要凭习惯选现代词义——把它放进句子上下文里验证，现代意思会与后文线索直接冲突。",
       ],
       ["What does the word in italics mean in this old text?", "在这段旧文本中，斜体的词是什么意思？"],
       oldMeaning,
       (right) => {
         const c = changedByOld(right);
         return [
-          `In this old text, *${c?.word}* means **${right}**; the rest of the sentence shows it, though today it means ${c?.modern}.`,
-          `在这段旧文本中，*${c?.word}* 的意思是 **${right}**；句子的其余部分说明了这一点，虽然它今天的意思是 ${c?.modern}。`,
+          `In this old text, *${c?.word}* means **${right}**; the rest of the sentence shows it, though today it means ${c?.modern}.\n\n**Check.** Read the surrounding clues in the sentence: the modern sense (*${c?.modern}*) would contradict the scene, while **${right}** fits the context cleanly.`,
+          `在这段旧文本中，*${c?.word}* 的意思是 **${right}**；句子的其余部分说明了这一点，虽然它今天的意思是 ${c?.modern}。\n\n**检验。** 对照句中的上下文线索：现代词义（*${c?.modern}*）与语境矛盾，只有 **${right}** 与整句话严丝合缝。`,
         ];
       },
       [
@@ -285,16 +305,16 @@ const wordsThatChanged = topic("vocabulary", {
       "the-word-that-changed",
       ["The Word That Changed", "发生变化的词"],
       [
-        "Many words that changed carry their history in them. *Naughty* comes from *naught* (nothing), so it first meant having nothing. *Decimate* comes from the Latin for a tenth. *Manufacture* joins the Latin for hand and make. Knowing the story of a word helps you read it in an old text and remember it in a new one.",
-        "许多词义变了的词身上带着自己的历史。*naughty* 来自 *naught*（无），所以最初的意思是一无所有。*decimate* 来自拉丁语的“十分之一”。*manufacture* 由拉丁语的“手”和“做”组成。了解一个词的来历，能帮你读懂旧文本中的它，也能帮你记住它在新文本中的意思。",
+        "Many words that changed carry their history in them. *Naughty* comes from *naught* (nothing), so it first meant having nothing. *Decimate* comes from the Latin for a tenth. *Manufacture* joins the Latin for hand and make. Knowing the story of a word helps you read it in an old text and remember it in a new one.\n\n> **Watch out.** Look for the root or historical clue built into the sentence—such as *naught*, *tenth*, *awe*, or *hand*—to link the old definition to the exact modern word.",
+        "许多词义变了的词身上带着自己的历史。*naughty* 来自 *naught*（无），所以最初的意思是一无所有。*decimate* 来自拉丁语的“十分之一”。*manufacture* 由拉丁语的“手”和“做”组成。了解一个词的来历，能帮你读懂旧文本中的它，也能帮你记住它在新文本中的意思。\n\n> **注意。** 留意句中给出的词源或历史线索（如 *naught*、*tenth*、*awe*、*hand*），把旧释义准确连回对应的现代词。",
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       wordThatChanged,
       (right) => {
         const c = changedByWord(right);
         return [
-          `**${right}** once meant ${c?.old}; today it means ${c?.modern}.`,
-          `**${right}** 曾经的意思是 ${c?.old}；今天它的意思是 ${c?.modern}。`,
+          `**${right}** once meant ${c?.old}; today it means ${c?.modern}.\n\n**Check.** Trace the shift from *${c?.old}* to *${c?.modern}*: **${right}** is the only option whose earlier history matches the clue in the sentence.`,
+          `**${right}** 曾经的意思是 ${c?.old}；今天它的意思是 ${c?.modern}。\n\n**检验。** 回溯从 *${c?.old}* 到 *${c?.modern}* 的词义演变：只有 **${right}** 的历史含义与句中线索相符。`,
         ];
       },
       [

@@ -9,24 +9,24 @@ const claimLabels: Readonly<Record<string, Label>> = {
   "backed by facts": {
     zh: "有事实依据",
     why: [
-      "The claim comes with a number, a count, a record or a study that a reader could check.",
-      "这个说法附有读者可以核实的数字、统计、记录或研究。",
+      "The claim rests on a count, measurement, official record, or study that a reader can verify; it is **backed by facts**.\n\n**Check.** Ask whether you could look up the number or record yourself: yes—it is checkable evidence rather than someone's gut feeling.",
+      "这个说法建立在读者可以核查的统计、测量、官方记录或研究之上，因此**有事实依据**。\n\n**检验。** 问问自己能不能亲自去查证这个数字或记录：可以，它是可核验的证据，而不是凭感觉说的话。",
     ],
     not: ["The claim is not backed by a number, a record or a study.", "这个说法没有数字、记录或研究作为依据。"],
   },
   "backed by an expert": {
     zh: "有专家依据",
     why: [
-      "The claim is backed by the words of someone who studies or works in the field, named with what makes them an expert.",
-      "这个说法有该领域研究者或从业者的话作支持，并说明了此人为什么是专家。",
+      "The claim is backed by a named specialist or qualified group whose training and work directly fit the topic; it is **backed by an expert**.\n\n**Check.** Look for both *who* speaks and *why they know*: a marine biologist on sea turtles or a chief engineer on bridges brings real expertise.",
+      "这个说法引用了该领域具名专家或专业人士的判断，并说明了他们的专业背景，因此**有专家依据**。\n\n**检验。** 看看*谁*在说话以及*为什么可信*：海洋生物学家谈海龟、总工程师谈桥梁，都属于对口的专业权威。",
     ],
     not: ["The claim is not backed by the words of a named expert.", "这个说法没有具名专家的话作支持。"],
   },
   unsupported: {
     zh: "无依据",
     why: [
-      'The claim is only stated, or backed by a feeling or by what "everyone knows"; no fact or example supports it.',
-      '这个说法只是被说出来，或者只靠感觉或"大家都知道"来支持，没有事实或例子。',
+      'The claim relies only on personal feelings, insults, or empty phrases like "everyone knows" and "trust me"; it is **unsupported**.\n\n**Check.** Strip away the confident tone and ask *What proof is actually here?* Nothing checkable—no number, no record, and no qualified expert.',
+      '这个说法只靠个人感受、嘲讽或"大家都知道""相信我"这类空话撑场面，因此**无依据**。\n\n**检验。** 去掉斩钉截铁的语气，问一句*这里到底拿出了什么证据？*什么可核实的东西都没有——既无数字记录，也无对口专家。',
     ],
     not: ["The claim does come with facts or an expert that support it.", "这个说法确实有事实或专家意见支持。"],
   },
@@ -39,14 +39,18 @@ const supportedClaims = topic("reading", {
     "A claim is supported when the writer backs it with facts, numbers, examples or experts; a claim backed by nothing, or only by feelings, is unsupported.",
     "作者用事实、数字、例子或专家意见来支持的说法是有依据的；没有任何支持、或只靠感觉支持的说法是无依据的。",
   ],
+  intro: [
+    "*Our town needs a night bus—last month 120 hospital workers missed the final train* gives you something you can check; *Our town needs a night bus because everybody wants one* does not. Strong readers sort **supported** claims from **unsupported** ones.",
+    "*Our town needs a night bus—last month 120 hospital workers missed the final train* 拿出了可核实的数字；而 *Our town needs a night bus because everybody wants one* 只是空口白话。会读文章的人总能分清**有依据**和**无依据**的说法。",
+  ],
   after: ["fact-and-opinion", "matching-points-and-evidence"],
   points: [
     label(
       "is-the-claim-supported",
       ["Is the Claim Supported?", "这个说法有依据吗？"],
       [
-        "A **claim** is something a writer wants you to believe. It is **supported** when the writer gives a reason you can check. Some claims are **backed by facts**: a number, a count, a record or a study. Others are **backed by an expert**: the words of someone who studies or works in the field. It is **unsupported** when it is only stated, repeated more loudly, or backed by feelings (*I just know*), by *everyone says so*, or by insults. A careful reader asks: how does the writer know?",
-        "**说法**是作者希望你相信的东西。如果作者给出了可以核实的理由，它就是**有依据的**。有的说法**有事实依据**：数字、统计、记录或研究；有的**有专家依据**：该领域研究者或从业者的话。如果它只是被说出来、被更大声地重复，或者只靠感觉（*I just know*）、*everyone says so* 或侮辱来支持，它就是**无依据的**。细心的读者会问：作者是怎么知道的？",
+        "A **claim** is something a writer wants you to accept. Compare *The roof leaks—maintenance logged twelve repair calls this winter* (**backed by facts**: a checkable count or study) with *The roof is awful, as any sensible person knows* (**unsupported**: only feelings, insults, or *everyone says so*). A claim can also be **backed by an expert** whose profession directly fits the topic.\n\n> **Watch out.** Phrases like *That is just a fact* or *Trust me* sound forceful, yet they add zero real evidence—always check whether a verifiable fact or a qualified expert is actually present.",
+        "**说法**是作者希望你接受的观点。对比 *The roof leaks—maintenance logged twelve repair calls this winter*（**有事实依据**：可核查的数字或研究）和 *The roof is awful, as any sensible person knows*（**无依据**：只有感觉、挖苦或*大家都这么说*）。说法也可以**有专家依据**，即引用对口专业人士的意见。\n\n> **注意。** *That is just a fact* 或 *Trust me* 听起来很笃定，其实一点证据也没给——务必检查到底有没有可核查的事实或对口专家。",
       ],
       ["How is the claim supported, if at all?", "这个说法有什么依据，还是没有依据？"],
       `
@@ -87,8 +91,8 @@ const supportedClaims = topic("reading", {
       "the-best-support",
       ["The Best Support", "最有力的依据"],
       [
-        "Some support is stronger than others. A **fact you can check**, a **number from a study** or an **expert in the field** is strong support. A feeling, a rumor, one friend's opinion or a person famous for something else is weak support. Choose the support that would make a careful reader believe the claim.",
-        "有些依据比另一些更有力。**可以核实的事实**、**研究中的数字**或**该领域的专家**是有力的依据。感觉、传言、某个朋友的看法，或在别的领域出名的人，都是薄弱的依据。要选出能让细心的读者相信这个说法的依据。",
+        "Not all support carries equal weight. For *Our gym roof needs repair*, *Maintenance records showing six leaks this year* beats *My friend says the roof looks old* or *A famous actor dislikes leaks*. Strong support comes from **checkable data**, **studies**, or **relevant experts**.\n\n> **Watch out.** A celebrity or an advertisement is not an expert—check whether the source actually studied or measured the thing the claim is about.",
+        "不同依据的分量不一样。要支持 *Our gym roof needs repair*，*Maintenance records showing six leaks this year* 远胜过 *My friend says the roof looks old* 或 *A famous actor dislikes leaks*。有力的依据来自**可核查的数据**、**研究**或**对口专家**。\n\n> **注意。** 名人或广告不算专家——要看信息来源是否真的研究或测量过这个说法涉及的问题。",
       ],
       ["Which gives the strongest support for the claim?", "哪一项最有力地支持这个说法？"],
       rival(
@@ -127,8 +131,8 @@ const supportedClaims = topic("reading", {
         1,
       ),
       (right) => [
-        `**${right}** It can be checked, and it comes from counting, measuring or study, so it gives strong support.`,
-        `**${right}** 它可以核实，来自统计、测量或研究，所以是有力的依据。`,
+        `The strongest support is: **${right}** It relies on verifiable counts, measurements, or research rather than feelings or hearsay.\n\n**Check.** Ask two questions: could an independent reader verify this evidence, and does it directly prove the claim in the prompt? Yes to both.`,
+        `最有力的依据是：**${right}** 它基于可核查的统计、测量或研究，而不是个人感受或道听途说。\n\n**检验。** 问两个问题：旁人能否独立核实这条证据？它是否直接证明题干中的说法？两个答案都是肯定的。`,
       ],
       [
         [
@@ -145,24 +149,24 @@ const memoirLabels: Readonly<Record<string, Label>> = {
   memoir: {
     zh: "回忆录",
     why: [
-      "The writer tells true events from their own life, with real places, dates and reflection on what it meant.",
-      "作者讲述自己生活中的真实事件，有真实的地点、时间，并反思其意义。",
+      "The writer recounts real events from their own life using *I*, grounded in actual places or years and reflecting on what they meant; that is **memoir**.\n\n**Check.** Test two clues together: first-person *I* plus realistic life events and personal reflection—no magic, talking animals, or third-person *he*/*she*.",
+      "作者用 *I* 讲述自己生活中的真实经历，有真实的地点或年代，并回味其意义，这就是**回忆录**。\n\n**检验。** 同时检查两个线索：第一人称 *I*，加上贴近现实的人生经历与回顾反思——既无奇幻虚构，也不是第三人称 *he*/*she*。",
     ],
     not: ["This is not the writer telling true events of their own life.", "这不是作者在讲述自己生活中的真实事件。"],
   },
   fiction: {
     zh: "小说",
     why: [
-      "The people or events are invented; even when an *I* tells it, the story is made up.",
-      "人物或事件是虚构的；即使由 *I* 来讲述，故事也是编出来的。",
+      "The characters, world, or events are invented—such as dragons, time travel, talking animals, or a labeled novel—so this is **fiction**.\n\n**Check.** Even if the narrator says *I*, ask whether the speaker or event could belong to a real human's autobiography: no, it is imagined.",
+      "人物、世界或事件都是虚构的——例如龙、穿越时空、会说话的动物，或直接标明是小说——因此这是**小说**。\n\n**检验。** 即使叙述者自称 *I*，也要问问这个说话者或事件能不能出现在真实人物的自传里：不能，它是虚构的。",
     ],
     not: ["The events are real, not made up, so this is not fiction.", "这些事件是真实的，不是编造的，所以不是小说。"],
   },
   biography: {
     zh: "传记",
     why: [
-      "The events are true, but they happened to someone else; the writer tells another person's life as *he* or *she*.",
-      "事件是真实的，但发生在别人身上；作者用 *he* 或 *she* 讲述另一个人的一生。",
+      "The passage reports real events from another person's life using third-person *he* or *she*; that is **biography**.\n\n**Check.** Look at the pronouns and subject: real historical facts are told about *someone else*, not by the person saying *I*.",
+      "这段文字用第三人称 *he* 或 *she* 讲述另一个人的真实生平，这就是**传记**。\n\n**检验。** 看代词和叙述对象：写的是真实历史人物，而且是旁人来写*他*或*她*，不是本人用 *I* 自述。",
     ],
     not: ["This is not one writer telling the true life of another person.", "这不是一位作者讲述另一个人的真实生平。"],
   },
@@ -216,14 +220,18 @@ const memoirOrFiction = topic("reading", {
     "A memoir tells true events from the writer's own life and reflects on what they meant; fiction invents its people and events, even when an I tells them.",
     '回忆录讲述作者自己生活中的真实事件，并反思其意义；小说虚构人物和事件，即使由"我"来讲述。',
   ],
+  intro: [
+    "Two books both open with *I*—one recalls a real summer learning to bake beside a grandmother in 1994, while the other opens with a talking cat solving a jewel theft. Telling **memoir**, **biography**, and **fiction** apart starts with who is speaking and whether the events are real.",
+    "两本书都用 *I* 开头——一本回忆 1994 年夏天跟着外婆学烤面包的真实经历，另一本讲一只会说话的猫侦破珠宝失窃案。区分**回忆录**、**传记**和**小说**，要看谁在讲述，以及事件是否真实。",
+  ],
   after: ["legend-or-history"],
   points: [
     label(
       "telling-memoir-from-fiction",
       ["Memoir, Biography or Fiction", "回忆录、传记还是小说"],
       [
-        "Both a memoir and a story can be told by *I*. A **memoir** is true: the writer tells events from their own life, names real places and times, and often looks back to say what the events meant (*Now I understand that...*). **Fiction** is invented: its events may be impossible, its narrator may be a made-up person or even an animal, and it may be labeled *a novel* or *a story*. A **biography** is true too, but it tells someone else's life, as *he* or *she*: *Marie Curie was born in Warsaw in 1867.*",
-        "回忆录和故事都可以用 *I* 来讲述。**回忆录**是真实的：作者讲述自己生活中的事件，提到真实的地点和时间，并常常回顾这些事件的意义（*Now I understand that...*）。**小说**是虚构的：事件可能不可能发生，叙述者可能是虚构的人甚至是动物，而且可能被标为 *a novel* 或 *a story*。**传记**也是真实的，但讲的是别人的一生，用 *he* 或 *she*：*Marie Curie was born in Warsaw in 1867.*",
+        "A **memoir** is true and told by *I*: the writer recalls real places, dates, and moments from their own life (*In 2001 I crossed the border with one suitcase; now I see how brave my mother was*). **Fiction** invents its characters or events—even with an *I* narrator (a dragon, a robot, a time traveler). A **biography** is also true, but another writer tells the person's life in the third person (*he* or *she*): *Marie Curie was born in Warsaw in 1867.*\n\n> **Watch out.** Do not label every *I* passage a memoir—novels and fantasy stories frequently use first-person *I* too.",
+        "**回忆录**真实且由 *I* 讲述：作者回忆自己生活中的真实地点、年代和经历（*In 2001 I crossed the border with one suitcase; now I see how brave my mother was*）。**小说**虚构人物或事件——即使叙述者也用 *I*（例如龙、机器人或时间旅行者）。**传记**同样真实，但由他人用第三人称（*he* 或 *she*）讲述：*Marie Curie was born in Warsaw in 1867.*\n\n> **注意。** 别一看到 *I* 就当成回忆录——小说和奇幻故事也常常使用第一人称 *I*。",
       ],
       ["Is this passage from a memoir, a biography or fiction?", "这段文字出自回忆录、传记还是小说？"],
       `
@@ -274,14 +282,14 @@ const memoirOrFiction = topic("reading", {
       "where-the-memoirist-looks-back",
       ["Where the Memoirist Looks Back", "回忆录作者在哪里回顾"],
       [
-        "A memoir does more than tell what happened; the writer **looks back** from today to say what the event meant or how it changed them. Such sentences often use words such as *now I know*, *looking back*, *I learned*, *I realize* or *ever since*. A sentence that only tells an event, or only describes a place, does not look back.",
-        "回忆录不只讲述发生了什么；作者还会**反思**，从现在回头看，说出这件事的意义或它如何改变了自己。反思常用 *now I know*、*looking back*、*I learned*、*I realize* 或 *ever since* 之类的词。只讲述事件或只描写地点的句子不是反思。",
+        "A memoir does two jobs: it recounts a past event and **looks back** from today to explain what that event taught the writer. Compare *We carried water from the well in heavy buckets* (event) with *Ever since that summer, I have never taken clean water for granted* (reflection). Signal phrases like *looking back*, *now I know*, *I realize*, and *that night taught me* mark the reflection.\n\n> **Watch out.** The reflection sentence is not always the last sentence—a memoirist sometimes opens with what they learned before describing the scene.",
+        "回忆录要做两件事：叙述过去发生的事，以及站在今天**回头反思**这件事带来的意义。对比 *We carried water from the well in heavy buckets*（事件）和 *Ever since that summer, I have never taken clean water for granted*（反思）。*looking back*、*now I know*、*I realize*、*that night taught me* 等短语往往标出反思句。\n\n> **注意。** 反思句不一定在段尾——作者有时会先说出现在的感悟，再展开当年的场景。",
       ],
       ["Which sentence of this passage looks back on what the event meant?", "这段文字中哪个句子回顾了事件的意义？"],
       lookingBack,
       (right) => [
-        `**${right}** The writer looks back from the present and says what the event meant; that is reflection.`,
-        `**${right}** 作者从现在回头看，说出这件事的意义，这就是反思。`,
+        `The reflection sentence is: **${right}** Here the writer steps back into the present to state what the experience taught them.\n\n**Check.** Notice the shift in time and perspective: the other two sentences stay inside the past scene, while this sentence speaks from today with hindsight.`,
+        `反思句是：**${right}** 作者在这里站回现在，说出那段经历教会了自己的道理。\n\n**检验。** 注意时间和视角的切换：另外两句都停留在过去的场景里，只有这句带着事后的领悟从今天回头看。`,
       ],
       [
         [
@@ -298,8 +306,8 @@ const changeLabels: Readonly<Record<string, Label>> = {
   dynamic: {
     zh: "动态人物",
     why: [
-      "By the end, the character has changed inside: a belief, a feeling or a way of acting is different.",
-      "到结尾时，人物的内心发生了变化：信念、感受或行为方式变得不同了。",
+      "The character changes on the inside—shifting a belief, attitude, or habit by the end of the story; that makes them **dynamic**.\n\n**Check.** Compare the character's inner values on the first page and the last page: they now act from a new understanding they did not have at the start.",
+      "人物到结尾时内心发生了转变——信念、态度或行事方式不同了，因此是**动态人物**。\n\n**检验。** 对比人物在开头和结尾时的内心观念：他们现在按一种全新的认识行事，而开头时并非如此。",
     ],
     not: [
       "The character is the same inside at the end as at the start, so they are not dynamic.",
@@ -309,16 +317,16 @@ const changeLabels: Readonly<Record<string, Label>> = {
   static: {
     zh: "静态人物",
     why: [
-      "The character stays the same from beginning to end, inside and out, even though things happen around them.",
-      "人物从头到尾内外都没有变化，尽管周围发生了很多事情。",
+      "The character stays the same person from beginning to end, with no inner shift and no major outward change; that makes them **static**.\n\n**Check.** Look at how the character behaves at the end: the exact same trait (kindness, greed, cruelty, calm) runs unbroken through the whole story.",
+      "人物从头到尾都没有变化，既无内心转变也无明显外在变化，因此是**静态人物**。\n\n**检验。** 看人物在结尾时的表现：同一种特质（善良、贪婪、残忍或沉着）自始至终毫无改变。",
     ],
     not: ["Something about the character changes by the end, so they are not simply static.", "人物到结尾时有所变化，所以不只是静态人物。"],
   },
   "changes only outside": {
     zh: "只有外在变化",
     why: [
-      "The character's place, looks or age changes, but who they are inside stays the same; that is not a dynamic change.",
-      "人物的地点、外表或年龄变了，但内心没有变，这不是动态的变化。",
+      "The character's age, clothes, wealth, or address changes, yet their inner character stays untouched; they **change only outside**.\n\n**Check.** Ask whether the character learned a lesson or softened a flaw: no—only surface circumstances shifted while the person inside stayed the same.",
+      "人物的年龄、衣着、财富或住处变了，但内心品性纹丝未动，因此**只有外在变化**。\n\n**检验。** 问问人物有没有吸取教训或改变缺点：没有，变化的只是外在处境，内心还是老样子。",
     ],
     not: ["The change here is not only in place, looks or age.", "这里的变化不只是地点、外表或年龄的变化。"],
   },
@@ -331,14 +339,18 @@ const dynamicStatic = topic("reading", {
     "A dynamic character changes inside over a story, in a belief, a feeling or a way of acting; a static character stays the same from start to end.",
     "动态人物在故事中内心发生变化，包括信念、感受或行为方式；静态人物从头到尾保持不变。",
   ],
+  intro: [
+    "A miser who wins a bigger castle and stays just as stingy has not truly changed, whereas a shy apprentice who finds the courage to speak up has. Readers call that inner transformation the difference between **dynamic** and **static** characters.",
+    "一个守财奴搬进更大的城堡却依然吝啬，这不算真正改变；而一个胆小的学徒鼓起勇气站出来说话，才是内心的成长。阅读故事时，这就是**动态人物**和**静态人物**的区别。",
+  ],
   after: ["how-characters-face-challenges"],
   points: [
     label(
       "dynamic-or-static",
       ["Dynamic or Static", "动态还是静态"],
       [
-        "A **dynamic** character changes inside over the story: a selfish boy learns to share, a fearful girl finds courage. A **static** character stays the same: a kind grandmother is kind on every page, a bully is still a bully at the end. A character who **changes only outside** moves to a new place, gets new clothes or grows older, but is the same person inside. Compare who the character is at the start with who they are at the end.",
-        "**动态**人物在故事中内心发生变化：自私的男孩学会分享，胆小的女孩找到勇气。**静态**人物保持不变：善良的祖母每一页都很善良，恶霸到结尾还是恶霸。**只有外在变化**的人物搬到新的地方、换了新衣服或长大了，内心却还是同一个人。比较人物开头和结尾时是怎样的人。",
+        "A **dynamic** character undergoes an inner change in belief, feeling, or behavior: *A jealous brother learns to celebrate his sister's success*. A **static** character stays the same from start to finish. A character who **changes only outside** moves towns, grows older, or gets rich while remaining the exact same person inside.\n\n> **Watch out.** Growing older, changing clothes, or moving to a new country is *not* dynamic change—always check whether the character's heart or mindset changed.",
+        "**动态**人物在信念、感受或行为上发生内心转变：*嫉妒的哥哥学会为妹妹的成功喝彩*。**静态**人物自始至终保持不变。**只有外在变化**的人物搬了家、长大了或发了财，但内心仍是同一个人。\n\n> **注意。** 年龄增长、换装或搬到新地方都不算动态变化——务必看人物的内心或观念有没有真正改变。",
       ],
       ["Is the character dynamic, static, or changed only outside?", "这个人物是动态的、静态的，还是只有外在变化？"],
       `
@@ -389,8 +401,8 @@ const dynamicStatic = topic("reading", {
       "what-changed-the-character",
       ["What Changed the Character", "是什么改变了人物"],
       [
-        "A dynamic character usually changes because of an important **event** in the plot: a loss, a mistake, a test, a meeting with someone new. To explain the change, name who the character was before, what happened, and who they are after. The cause is something that happens in the story, not just the passing of time.",
-        "动态人物通常因为情节中的一个重要**事件**而改变：失去、犯错、考验、遇见新的人。要解释这种变化，就要说出人物之前是怎样的、发生了什么、之后是怎样的。原因是故事中发生的事情，而不只是时间的流逝。",
+        "Dynamic characters rarely change for no reason—a turning-point **event** pushes them to see differently. In *Tariq mocked poetry until his grandfather's war poem moved him to tears; afterward he began writing poems*, the turning point is *reading his grandfather's poem*. Look right around *until* to spot the event that triggered the shift.\n\n> **Watch out.** Do not pick a background detail or an outside change (a new outfit, a holiday) that is never mentioned as the turning point in the passage.",
+        "动态人物很少无缘无故改变——往往是情节里的一个转折**事件**促使他们换了眼光。在 *Tariq mocked poetry until his grandfather's war poem moved him to tears; afterward he began writing poems* 中，转折点是*读到祖父的战争诗*。留意 *until* 附近，就能找到触发转变的事件。\n\n> **注意。** 别选文中根本没提到的背景细节或外在变化（比如新衣服、放假）来当作转折原因。",
       ],
       ["What most likely caused the change in the character?", "最可能是什么导致了人物的变化？"],
       rival(
@@ -429,8 +441,8 @@ const dynamicStatic = topic("reading", {
         0,
       ),
       (right) => [
-        `The change came from an event in the story: **${right}**. Before it the character was one way; after it, another.`,
-        `变化来自故事中的一个事件：**${right}**。在此之前人物是一个样子，之后变成了另一个样子。`,
+        `The turning point in the passage is **${right}**. Before it, the character held one attitude; right afterward, they acted differently.\n\n**Check.** Re-read the clause right after *until* in the passage: it states **${right}** directly as the trigger for the character's new behavior.`,
+        `文中的转折事件是 **${right}**。在此之前人物是一种态度，紧接着行为就改变了。\n\n**检验。** 重读文中 *until* 后面的部分：它直接把 **${right}** 写成促使人物转变的契机。`,
       ],
       [
         [
@@ -450,8 +462,8 @@ const argumentLabels: Readonly<Record<string, Label>> = {
   "the claim": {
     zh: "主张",
     why: [
-      "The sentence states the writer's position, what the whole argument wants you to believe.",
-      "这个句子说出了作者的立场，即整个论证希望你相信的内容。",
+      "The sentence states the main position or action the writer wants the audience to adopt; that is **the claim**.\n\n**Check.** Notice the *should* or *needs* stance: it is the central proposal that the rest of the essay has to defend.",
+      "这个句子亮明作者希望读者接受的核心立场或行动建议，这就是**主张**。\n\n**检验。** 注意句中 *should* 或 *needs* 表达的立场：它是整篇文章要捍卫的中心提议。",
     ],
     not: [
       "This sentence is not the writer's main position; it supports or answers it.",
@@ -460,22 +472,25 @@ const argumentLabels: Readonly<Record<string, Label>> = {
   },
   "a reason": {
     zh: "理由",
-    why: ["The sentence gives one general reason why the claim is true.", "这个句子给出了说法成立的一个总的理由。"],
+    why: [
+      "The sentence gives a broad *why* supporting the claim, without yet citing a specific study or number; that is **a reason**.\n\n**Check.** Ask *Why should we adopt the claim?* This sentence answers in general terms, ready to be backed up by concrete evidence.",
+      "这个句子从大方向说明主张为什么成立，但还没有拿出具体研究或数字，这就是**理由**。\n\n**检验。** 问一句*为什么该采纳这个主张？*这句话给出概括性的回答，等着下面用具体证据来证实。",
+    ],
     not: ["This sentence does not give a general reason for the claim.", "这个句子没有给出支持主张的总理由。"],
   },
   evidence: {
     zh: "证据",
     why: [
-      "The sentence gives a fact, a number, an example or an expert's words that back up a reason.",
-      "这个句子给出支持理由的事实、数字、例子或专家的话。",
+      "The sentence supplies a specific fact, survey number, study result, or real-world example that proves a reason; that is **evidence**.\n\n**Check.** Spot the concrete detail you could check—a percentage, a count, a named town, or an expert's recommendation.",
+      "这个句子提供了具体事实、调查数字、研究结果或现实事例来证实理由，这就是**证据**。\n\n**检验。** 找一找可核查的具体信息——百分比、数字、地名或专家建议。",
     ],
     not: ["This sentence gives no specific fact, number or example.", "这个句子没有给出具体的事实、数字或例子。"],
   },
   "a counterclaim": {
     zh: "反方观点",
     why: [
-      "The sentence tells what people on the other side think, often after *some people say* or *critics argue*.",
-      "这个句子说出对方的想法，常跟在 *some people say* 或 *critics argue* 之后。",
+      "The sentence voices what opponents or critics worry about on the other side of the issue; that is **a counterclaim**.\n\n**Check.** Look at the opening attribution (*Some people argue*, *Critics say*, *Opponents say*): the writer is reporting the opposing side's objection.",
+      "这个句子说出了反对者或批评者的顾虑，这就是**反方观点**。\n\n**检验。** 看开头的引述词（*Some people argue*、*Critics say*、*Opponents say*）：作者正在呈现另一方的反对意见。",
     ],
     not: ["This sentence does not tell what the other side thinks.", "这个句子没有说出对方的想法。"],
   },
@@ -488,14 +503,18 @@ const tracingArgument = topic("reading", {
     "An argument has a claim, reasons that back it, evidence for each reason and often a counterclaim; tracing it means finding each part and seeing how they connect.",
     "论证包括主张、支持主张的理由、每个理由的证据，常常还有反方观点；梳理论证就是找出每个部分并看清它们的联系。",
   ],
+  intro: [
+    "A persuasive essay is like a bridge: the **claim** is the roadway, **reasons** are the pillars, **evidence** is the steel inside each pillar, and a **counterclaim** acknowledges the wind pushing back. Tracing an argument lets you test whether every part holds weight.",
+    "一篇议论文就像一座桥：**主张**是桥面，**理由**是桥墩，**证据**是桥墩里的钢筋，**反方观点**则是对逆风的回应。梳理论证，能帮你检验每一部分到底撑不撑得住。",
+  ],
   after: ["authors-purpose", "matching-points-and-evidence"],
   points: [
     label(
       "the-part-of-the-argument",
       ["The Part of the Argument", "论证的组成部分"],
       [
-        "An argument is built in layers. **The claim** is the writer's position (*Our school should plant a garden*). **A reason** says why in general (*A garden teaches science*). **Evidence** backs a reason with a fact, number, example or expert (*At Oak School, test scores rose after the garden opened*). **A counterclaim** tells the other side (*Some people say a garden costs too much*). Name the job of each sentence to trace the argument.",
-        "论证是分层构建的。**主张**是作者的立场（*Our school should plant a garden*）。**理由**概括地说明为什么（*A garden teaches science*）。**证据**用事实、数字、例子或专家意见支持理由（*At Oak School, test scores rose after the garden opened*）。**反方观点**说出对方的看法（*Some people say a garden costs too much*）。说出每个句子的作用，就能梳理论证。",
+        "Arguments work in four distinct parts. **The claim** states the writer's stance (*Our school should plant a garden*). **A reason** gives a broad *why* (*A garden teaches science*). **Evidence** backs a reason with a concrete fact, study, or number (*At Oak School, science scores rose ten points*). **A counterclaim** states the opposing view (*Critics say a garden costs too much*).\n\n> **Watch out.** Do not confuse **a reason** with **evidence**—a reason is a general idea (*Trees cool streets*), while evidence brings the proof (*A study found tree-lined streets were five degrees cooler*).",
+        "论证由四个清晰的部分组成。**主张**表明立场（*Our school should plant a garden*）；**理由**给出概括性的原因（*A garden teaches science*）；**证据**用具体事实、研究或数字证实理由（*At Oak School, science scores rose ten points*）；**反方观点**呈现对方看法（*Critics say a garden costs too much*）。\n\n> **注意。** 别把**理由**和**证据**混为一谈——理由是概括说法（*Trees cool streets*），证据则拿出实打实的证明（*A study found tree-lined streets were five degrees cooler*）。",
       ],
       ["What part of the argument is this sentence?", "这个句子是论证的哪个部分？"],
       `
@@ -536,8 +555,8 @@ const tracingArgument = topic("reading", {
       "the-reason-this-evidence-supports",
       ["The Reason This Evidence Supports", "这条证据支持哪个理由"],
       [
-        "In a strong argument, each piece of evidence backs one particular reason. To trace the argument, match the evidence to the reason it proves. Ask: if this fact is true, which reason does it make more believable? Evidence about money supports a reason about cost; evidence about health supports a reason about health.",
-        "在有力的论证中，每条证据都支持一个特定的理由。要梳理论证，就把证据和它所证明的理由对应起来。问一问：如果这个事实是真的，它会让哪个理由更可信？关于钱的证据支持关于花费的理由；关于健康的证据支持关于健康的理由。",
+        "In a solid argument, every piece of evidence fits one specific reason like a key in a lock. If a writer argues for a longer school library hour and cites *60 percent of students lack a quiet desk at home*, that fact backs *Students need a quiet study space*—not *The library has comfy chairs*. Match the exact subject of the evidence to the reason it proves.\n\n> **Watch out.** All three options may sound like plausible reasons for the claim—choose the *only* reason that this specific piece of evidence actually proves.",
+        "在扎实的论证里，每条证据都像钥匙配锁一样对应一个特定理由。如果作者主张延长图书馆开放时间，并引用*60% 的学生家里没有安静的书桌*，这条事实支持的是*学生需要安静的学习空间*，而不是*图书馆椅子舒服*。把证据涉及的具体内容与理由精准配对。\n\n> **注意。** 三个选项听起来可能都像是支持主张的好理由——只选*这条具体证据*真正能证明的那一个。",
       ],
       ["Which reason does this evidence support?", "这条证据支持哪个理由？"],
       `
@@ -573,8 +592,8 @@ const tracingArgument = topic("reading", {
         Claim: Students should learn to cook. Evidence: Teens who can cook eat more fruit and vegetables, a study showed.|Cooking helps students eat more healthily.|Cooking is a fun hobby.|Cooking saves time.
       `,
       (right) => [
-        `The evidence backs this reason: **${right}** If the fact is true, it makes this reason more believable than the others.`,
-        `这条证据支持这个理由：**${right}** 如果事实属实，它会让这个理由比其他理由更可信。`,
+        `The evidence backs this reason: **${right}** It supplies the exact kind of fact needed to make that reason convincing.\n\n**Check.** Compare the topic of the evidence (safety, cost, health, learning) against each option: only this reason matches the exact topic the evidence measures.`,
+        `这条证据支持这个理由：**${right}** 它正好提供了让该理由站得住脚的那类事实。\n\n**检验。** 把证据涉及的维度（安全、花费、健康或学习）逐一对照各选项：只有这个理由与证据衡量的方向一致。`,
       ],
       [
         [
@@ -594,14 +613,18 @@ const pointOfView = topic("reading", {
     "An author's point of view, the way they think and feel about a subject, shows in the facts they choose, the words they use and how they describe other views.",
     "作者的观点，即他们对一个题材的想法和感受，体现在他们选择的事实、使用的词语以及他们如何描述其他观点上。",
   ],
+  intro: [
+    "One reporter writes *The tower brought 400 new jobs*; another writes *The tower cast a cold shadow over the old square*. Neither writer says *I think*, yet both reveal their **point of view** through the facts and words they choose.",
+    "一位记者写 *The tower brought 400 new jobs*，另一位写 *The tower cast a cold shadow over the old square*。两人都没说 *I think*，却通过挑选的事实和措辞亮出了各自的**观点**。",
+  ],
   after: ["authors-purpose"],
   points: [
     choose(
       "the-authors-point-of-view",
       ["The Author's Point of View", "作者的观点"],
       [
-        "An author does not always say *I think*. You can infer their **point of view** from their choices: the facts they include and leave out, words with a strong feeling (*brave*, *reckless*, *wasteful*), and how they describe people who disagree. Read the whole passage, then choose the view that all these choices point to.",
-        "作者并不总是说 *I think*。你可以从他们的选择中推断出他们的**观点**：他们写进了哪些事实、省略了哪些，带有强烈感情的词（*brave*、*reckless*、*wasteful*），以及他们如何描述持不同意见的人。读完整段文字，然后选出所有这些选择共同指向的观点。",
+        "Authors rarely announce *My opinion is…* directly. Instead, their **point of view** leaks through loaded words (*swallowed*, *treasure*, *reckless*), one-sided facts, and dismissive labels for opponents (*a few critics*). In *The new road sliced through our quiet woods*, *sliced* and *quiet woods* show the author opposes the road.\n\n> **Watch out.** Do not confuse your own opinion with the author's—base your answer strictly on the clues in the passage.",
+        "作者很少直说 *My opinion is...*，而是通过带感情色彩的词（*swallowed*、*treasure*、*reckless*）、偏向一方的事实，以及贬低对方的称呼（*a few critics*）流露**观点**。在 *The new road sliced through our quiet woods* 中，*sliced* 和 *quiet woods* 表明作者反对修路。\n\n> **注意。** 别把自己的看法当成作者的观点——务必只根据文中的词语和事实线索作判断。",
       ],
       ["What is the author's point of view?", "作者的观点是什么？"],
       `
@@ -637,8 +660,8 @@ const pointOfView = topic("reading", {
         Volunteers, not the government, saved the old theater, and the town should thank them.|The author praises the volunteers.|The author praises the government.|The author thinks the theater should close.
       `,
       (right) => [
-        `**${right}** The words with strong feeling and the facts the author chose all point to this view.`,
-        `**${right}** 带有强烈感情的词和作者选择的事实都指向这个观点。`,
+        `The clues point to this view: **${right}** The author's word choices and selected facts lean clearly in this direction.\n\n**Check.** Imagine rewriting the passage from the opposite side: you would have to replace the strong feeling words and swap out the facts the author highlighted.`,
+        `文中的线索共同指向这个观点：**${right}** 作者的用词和挑选的事实明显偏向这一边。\n\n**检验。** 试想如果从相反立场重写这段话：你必须换掉作者那些带感情色彩的词，并把文里突出的事实换成另一边的内容。`,
       ],
       [
         ["*{wrong}* is the opposite of what the author's word choices show.", "*{wrong}* 与作者的用词所表现的正好相反。"],
@@ -649,8 +672,8 @@ const pointOfView = topic("reading", {
       "the-clue-to-the-view",
       ["The Clue to the View", "体现观点的线索"],
       [
-        "Three kinds of clue reveal an author's view. **Loaded words** carry a feeling (*wasteful*, *heroic*). **Chosen facts** include only what supports one side. **How others are described** shows it too: an author may call those who disagree *a few critics* or say they *cling to old ideas*. Name the clue in the words in italics.",
-        "有三种线索可以揭示作者的观点。**带感情色彩的词**带有感受（*wasteful*、*heroic*）。**挑选的事实**只包括支持一方的内容。**对他人的描述**也能体现观点：作者可能称持不同意见的人为 *a few critics*，或者说他们 *cling to old ideas*。说出斜体部分属于哪种线索。",
+        "Three clues betray an author's stance. **Loaded words** inject strong judgment (*wasted*, *heroic*, *stealing*). **Chosen facts** report verifiable numbers or events that favor one side (*cut travel times in half*). **How others are described** paints opponents as small, outdated, or foolish (*a handful of grumblers*, *cling to old ideas*).\n\n> **Watch out.** When a phrase describes *opponents* using a loaded word (like *gloomy critics* or *confused parents*), look at who it targets: because it portrays people who disagree, the clue is **how others are described**.",
+        "三种线索会透露作者的立场。**带感情色彩的词**注入强烈评价（*wasted*、*heroic*、*stealing*）；**挑选的事实**报告偏向一方的可核查数据或事件（*cut travel times in half*）；**对他人的描述**把反对者刻画得狭隘、守旧或可笑（*a handful of grumblers*、*cling to old ideas*）。\n\n> **注意。** 如果短语用带感情的词去评价*持反对意见的人*（如 *gloomy critics* 或 *confused parents*），要看它的指向对象：它在贬低反对者，所以属于**对他人的描述**。",
       ],
       ["What kind of clue is the part in italics?", "斜体部分是哪种线索？"],
       `
@@ -689,8 +712,8 @@ const pointOfView = topic("reading", {
         "loaded words": {
           zh: "带感情色彩的词",
           why: [
-            "The words carry a strong feeling, positive or negative, that shows how the author sees the subject.",
-            "这些词带有强烈的正面或负面感情，显示了作者如何看待这个题材。",
+            "The italicized words carry an unmistakably positive or negative charge rather than a neutral description; these are **loaded words**.\n\n**Check.** Replace the italicized word with a neutral synonym (like *spent* instead of *wasted*): the emotional punch disappears at once.",
+            "斜体词语带有鲜明的褒义或贬义色彩，而不是中性描述，这属于**带感情色彩的词**。\n\n**检验。** 把斜体词换成中性同义词（比如把 *wasted* 换成 *spent*）：句子的情绪冲击力立刻消失了。",
           ],
           not: [
             "These words state a fact or describe people; they are not words chosen mainly for their feeling.",
@@ -699,7 +722,10 @@ const pointOfView = topic("reading", {
         },
         "chosen facts": {
           zh: "挑选的事实",
-          why: ["The author chose to include this fact because it supports one side.", "作者选择写进这个事实，因为它支持某一方。"],
+          why: [
+            "The author highlights a specific, checkable figure or event that tilts the case toward one side; this is **chosen facts**.\n\n**Check.** Ask whether the italicized part reports something countable or observable rather than an insult or pure judgment: yes.",
+            "作者特意挑出一条可核查的具体数字或事件，把天平推向一方，这属于**挑选的事实**。\n\n**检验。** 问问斜体部分报告的是不是可统计、可观察的事实，而不是情绪标签或对反对者的评语：是的。",
+          ],
           not: [
             "This is not a fact the author chose to report; it is a feeling or a description of people.",
             "这不是作者选择报告的事实，而是一种感情或对人的描述。",
@@ -708,8 +734,8 @@ const pointOfView = topic("reading", {
         "how others are described": {
           zh: "对他人的描述",
           why: [
-            "The author describes people who disagree in a way that makes their view seem weaker.",
-            "作者描述持不同意见的人的方式使他们的观点显得更弱。",
+            "The italicized phrase characterizes people who hold the opposing view so that their side looks weak or out of touch; this is **how others are described**.\n\n**Check.** Notice who is being named—critics, opponents, or people who disagree—and how the label dismisses them before answering their argument.",
+            "斜体短语把持相反意见的人刻画得软弱、落伍或武断，从而削弱对方立场，这属于**对他人的描述**。\n\n**检验。** 注意斜体部分指向的是谁——批评者、反对者或持异议的人——并且还没反驳论点就先给他们贴了标签。",
           ],
           not: ["This does not describe the people who hold the other view.", "这里没有描述持相反观点的人。"],
         },
@@ -722,24 +748,24 @@ const ruleLabels: Readonly<Record<string, Label>> = {
   required: {
     zh: "必须做",
     why: [
-      "The rule says this must be done, with words such as *must*, *shall*, *is required* or *have to*.",
-      "规则说这件事必须做，用的是 *must*、*shall*、*is required* 或 *have to* 等词。",
+      "The rule uses binding words (*must*, *shall*, *are required to*) that leave no choice; the action is **required**.\n\n**Check.** Ask what happens if someone skips this action: they break the rule, because it is mandatory, not optional.",
+      "规则使用了 *must*、*shall* 或 *are required to* 等强制词，没有商量余地，因此这个行为**必须做**。\n\n**检验。** 问问不做这件事会怎样：就会违规，因为它是强制要求，而不是可选项。",
     ],
     not: ["The rule does not say this must be done.", "规则并没有说这件事必须做。"],
   },
   allowed: {
     zh: "可以做",
     why: [
-      "The rule says this may be done but does not have to be, with words such as *may*, *can* or *is allowed*.",
-      "规则说这件事可以做但不是必须做，用的是 *may*、*can* 或 *is allowed* 等词。",
+      "The rule uses permission words (*may*, *can*, *are allowed to*) that give a choice without forcing it; the action is **allowed**.\n\n**Check.** Ask whether you break the rule if you do it—no—or if you skip it—also no; that means it is permitted, not required.",
+      "规则使用了 *may*、*can* 或 *are allowed to* 等许可词，允许做但不强迫，因此这个行为**可以做**。\n\n**检验。** 问问做了会不会违规（不会），不做会不会违规（也不会）：这说明它是允许项，不是必须项。",
     ],
     not: ["The rule does not simply allow this; it either requires or forbids it.", "规则并不是简单地允许这件事，而是要求或禁止它。"],
   },
   "not allowed": {
     zh: "不允许",
     why: [
-      "The rule forbids this, with words such as *must not*, *may not*, *no* or *is not permitted*.",
-      "规则禁止这件事，用的是 *must not*、*may not*、*no* 或 *is not permitted* 等词。",
+      "The rule uses forbidding words (*must not*, *may not*, *no ... permitted*) that ban the action; it is **not allowed**.\n\n**Check.** Look for the negative word (*not* or *no*) attached directly to the action: doing it violates the rule.",
+      "规则使用了 *must not*、*may not* 或 *no ... permitted* 等禁止词，明令禁止，因此这个行为**不允许**。\n\n**检验。** 找到紧跟在行为上的否定词（*not* 或 *no*）：只要做了就违反规则。",
     ],
     not: ["The rule does not forbid this.", "规则并没有禁止这件事。"],
   },
@@ -752,14 +778,18 @@ const rulesInstructions = topic("reading", {
     "Rules say what must, may and must not be done, often with conditions and exceptions; reading them carefully means applying each part to the case.",
     "规则说明什么必须做、可以做、不可以做，常常附有条件和例外；仔细阅读就是把每一部分应用到具体情况中。",
   ],
+  intro: [
+    "One tiny word in a rule changes everything: *Bicycles may use the park path* opens the gate, while *Bicycles must not use the park path* closes it—and adding *except before 8 a.m.* flips the answer again. Reading **rules and instructions** means checking every modal verb and condition.",
+    "规则里一个不起眼的小词就能彻底改变结果：*Bicycles may use the park path* 是放行，*Bicycles must not use the park path* 是禁止，再加上 *except before 8 a.m.* 结论又会翻转。读懂**规则和说明**，关键在于抓准每个情态词和条件。",
+  ],
   after: ["sequence-in-texts"],
   points: [
     label(
       "must-may-or-must-not",
       ["Must, May or Must Not", "必须、可以还是不可以"],
       [
-        "Rules use small words with big meanings. *Must*, *shall* and *is required* mean something is **required**. *May*, *can* and *is allowed* mean it is **allowed** but not required. *Must not*, *may not*, *no* and *is not permitted* mean it is **not allowed**. Read the rule, then decide what it says about the action given.",
-        "规则用简短的词表达重要的意思。*Must*、*shall* 和 *is required* 表示**必须做**。*May*、*can* 和 *is allowed* 表示**可以做**但不是必须。*Must not*、*may not*、*no* 和 *is not permitted* 表示**不允许**。读规则，然后判断它对给出的行为是怎么规定的。",
+        "Rules sort actions into three buckets using small helper words. *All passengers must fasten their belts* is **required** (*must*, *shall*, *is required*). *Passengers may bring one small bag* is **allowed** (*may*, *can*, *is allowed*). *Passengers may not stand in the aisle* is **not allowed** (*must not*, *may not*, *no ... permitted*).\n\n> **Watch out.** Do not confuse **allowed** (*may*/*can*) with **required** (*must*/*shall*)—being allowed to bring a water bottle does not mean you have to bring one.",
+        "规则用简短的助动词把行为分成三类。*All passengers must fasten their belts* 是**必须做**（*must*、*shall*、*is required*）；*Passengers may bring one small bag* 是**可以做**（*may*、*can*、*is allowed*）；*Passengers may not stand in the aisle* 是**不允许**（*must not*、*may not*、*no ... permitted*）。\n\n> **注意。** 别把**可以做**（*may*/*can*）和**必须做**（*must*/*shall*）弄混——允许带水壶并不等于必须带水壶。",
       ],
       ["According to the rule, the action is:", "根据规则，这个行为是："],
       `
@@ -800,8 +830,8 @@ const rulesInstructions = topic("reading", {
       "applying-a-rule-and-its-exception",
       ["Applying a Rule and Its Exception", "应用规则及其例外"],
       [
-        "Many rules have **conditions** (*if*, *when*, *only*) and **exceptions** (*unless*, *except*, *but*). To apply a rule to a case, first read the main rule, then check whether the condition is met or the exception applies. A case that fits the exception gets a different answer from the main rule.",
-        "许多规则有**条件**（*if*、*when*、*only*）和**例外**（*unless*、*except*、*but*）。要把规则应用到具体情况，先读主要规则，再检查条件是否满足、例外是否适用。符合例外的情况，答案与主要规则不同。",
+        "Real rules almost always carry **conditions** (*if*, *only when*, *as long as*) or **exceptions** (*unless*, *except*, *but not*). In *No pets in the café, except service dogs*, the main rule bans pets, yet a service dog triggers the exception and is allowed. Check the main rule first, then test the case against the condition or exception word by word.\n\n> **Watch out.** Do not stop reading at the comma—the second half of the sentence (*unless...*, *except...*, *only if...*) often flips the outcome completely.",
+        "现实中的规则几乎都附带**条件**（*if*、*only when*、*as long as*）或**例外**（*unless*、*except*、*but not*）。在 *No pets in the café, except service dogs* 中，主规则禁止宠物，但导盲犬触发了例外，因此被允许。先看主规则，再把具体情况逐字对照条件或例外。\n\n> **注意。** 别读到逗号就停下来——后半句（*unless...*、*except...*、*only if...*）常常会把结论彻底反转。",
       ],
       ["What does the rule say about this case?", "规则对这种情况是怎么规定的？"],
       `
@@ -837,8 +867,8 @@ const rulesInstructions = topic("reading", {
         Rule: The skate park is open until 8 p.m., except in winter, when it closes at 5 p.m. Case: It is winter, and it is 6 p.m.|The skate park is closed.|The skate park is open.|The skate park opens at 6 p.m.
       `,
       (right) => [
-        `**${right}** Check the main rule first, then whether its condition is met or its exception applies to this case.`,
-        `**${right}** 先看主要规则，再看这种情况是否满足条件，或是否适用例外。`,
+        `Applying both the main rule and its condition or exception gives: **${right}**\n\n**Check.** Re-read the exact trigger word (*except*, *unless*, *only if*, *when*) and verify whether the case meets it: that confirms this outcome without adding anything the rule does not state.`,
+        `同时套用主规则和条件或例外，结果是：**${right}**\n\n**检验。** 重读关键限定词（*except*、*unless*、*only if*、*when*），核对眼前的情况是否满足它：这能直接确认结论，同时没有额外添油加醋。`,
       ],
       [
         [
@@ -858,14 +888,18 @@ const wordChoice = topic("reading", {
     "An author's choice of one word over another shapes meaning and tone: crept or strode, stubborn or determined, old or ancient.",
     "作者选择这个词而不是那个词，会影响意义和语气：crept 还是 strode，stubborn 还是 determined，old 还是 ancient。",
   ],
+  intro: [
+    "*The fox slipped through the fence* feels quiet and sneaky, while *The fox charged through the fence* feels loud and fierce—all from swapping a single verb. Paying attention to **word choice** reveals the hidden attitude and picture behind a sentence.",
+    "*The fox slipped through the fence* 显得悄无声息、鬼鬼祟祟，而 *The fox charged through the fence* 显得凶猛响亮——区别只在于换了一个动词。留心**用词**，就能读出句子背后隐藏的态度和画面。",
+  ],
   after: ["connotation-and-precise-words"],
   points: [
     choose(
       "what-the-word-suggests",
       ["What the Word Suggests", "这个词暗示了什么"],
       [
-        "Words with nearly the same meaning can suggest very different things. *She strode into the room* suggests confidence; *she crept into the room* suggests fear or secrecy. When an author picks one word, ask what feeling or picture it adds beyond its dictionary meaning.",
-        "意思相近的词可以暗示截然不同的东西。*She strode into the room* 暗示自信；*she crept into the room* 暗示害怕或偷偷摸摸。作者选用一个词时，要问它在词典意义之外增加了什么感受或画面。",
+        "Near-synonyms carry different feelings and pictures. Compare *He munched his sandwich* (relaxed) with *He devoured his sandwich* (ravenous and hurried). When a writer chooses a vivid verb or adjective, ask what emotion, speed, or attitude it adds beyond the plain dictionary sense.\n\n> **Watch out.** Two words can share the same basic meaning yet carry opposite attitudes—*stubborn* sounds critical, whereas *determined* sounds admiring.",
+        "近义词自带不同的情感和画面。对比 *He munched his sandwich*（悠闲）和 *He devoured his sandwich*（狼吞虎咽）。作者选用生动的动词或形容词时，要问它在基本词义之外添上了怎样的情绪、速度或态度。\n\n> **注意。** 两个词基本意思相同，态度却可能相反——*stubborn* 带批评意味，而 *determined* 带赞赏意味。",
       ],
       ["What does the word in italics suggest?", "斜体的词暗示了什么？"],
       rival(
@@ -904,8 +938,8 @@ const wordChoice = topic("reading", {
         1,
       ),
       (right, shown) => [
-        `In *${shown.replace(/\*/g, "")}*, the word chosen suggests this: **${right}**`,
-        `在 *${shown.replace(/\*/g, "")}* 中，作者选用的这个词暗示：**${right}**`,
+        `In *${shown.replace(/\*/g, "")}*, the chosen word suggests: **${right}**\n\n**Check.** Swap the italicized word for a plain word like *walked*, *said*, or *small*: the extra feeling disappears, proving that this specific word is what signals the attitude.`,
+        `在 *${shown.replace(/\*/g, "")}* 中，作者选用的这个词暗示：**${right}**\n\n**检验。** 把斜体词换成 *walked*、*said* 或 *small* 这类平淡词：那层额外的情绪立刻消失了，说明正是这个特定词传达了这种感受。`,
       ],
       [
         ["*{wrong}* is the opposite of the feeling the word carries.", "*{wrong}* 与这个词带有的感受正好相反。"],
@@ -919,8 +953,8 @@ const wordChoice = topic("reading", {
       "the-word-for-the-tone",
       ["The Word for the Tone", "符合语气的词"],
       [
-        "A writer chooses words to give a passage its **tone**, the attitude it shows. For a warm tone, choose words like *cozy*, *gentle* and *glowed*; for a tense tone, *crept*, *shadow* and *trembled*; for an admiring tone, *brave* and *determined*; for a critical one, *reckless* and *stubborn*. Choose the word that keeps the tone the passage aims for.",
-        "作者选词来给文段定下**语气**，即它表现出的态度。要营造温暖的语气，就选 *cozy*、*gentle*、*glowed* 之类的词；紧张的语气，选 *crept*、*shadow*、*trembled*；赞赏的语气，选 *brave*、*determined*；批评的语气，选 *reckless*、*stubborn*。要选出能保持文段所追求的语气的词。",
+        "A writer selects words to build a consistent **tone**—the attitude a passage conveys. To create a **warm** tone, *The hearth glowed* fits far better than *The hearth blazed dangerously*. Match the word's emotional shade (admiring vs. critical, peaceful vs. tense) to the tone named in parentheses.\n\n> **Watch out.** Several choices may fit the grammar and even the rough action—only the word whose *connotation* matches the target tone belongs in the blank.",
+        "作者通过选词来维持一致的**语气**，也就是文段流露的态度。要营造**温暖**的语气，*The hearth glowed* 远比 *The hearth blazed dangerously* 贴切。把词语的情感色彩（赞赏对批评、宁静对紧张）与括号里的目标语气对齐。\n\n> **注意。** 几个选项在语法甚至大致动作上可能都讲得通——只有*感情色彩*与目标语气一致的词才适合填入空格。",
       ],
       ["Which word best fits the tone of the passage?", "哪个词最符合文段的语气？"],
       `
@@ -956,8 +990,8 @@ const wordChoice = topic("reading", {
         (warm) Grandpa gave me a ___ hug at the station.|tender|stiff|quick
       `,
       (right, shown) => [
-        `**${right}** keeps the tone named in the brackets: *${shown.replace("___", right)}*`,
-        `**${right}** 保持了括号中所说的语气：*${shown.replace("___", right)}*`,
+        `**${right}** matches the tone named in parentheses: *${shown.replace("___", right)}*\n\n**Check.** Read the completed sentence aloud and test its mood against the tone label: **${right}** reinforces that exact attitude, whereas the other choices clash with it.`,
+        `**${right}** 契合括号里指定的语气：*${shown.replace("___", right)}*\n\n**检验。** 把填好词的句子默读一遍，对照括号里的语气标签：**${right}** 强化了这种态度，而另外两个词会破坏氛围。`,
       ],
       [
         ["*{wrong}* gives the passage a different feeling from the tone it aims for.", "*{wrong}* 给文段带来的感受与它所追求的语气不同。"],

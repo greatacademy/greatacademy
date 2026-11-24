@@ -97,21 +97,21 @@ const reflexiveRows = fields(`${reflexiveLines}\n${reflexiveCross}`)
   })
   .filter((row) => reflexiveOf[row.right] && (reflexiveOf[row.person] || row.person.endsWith("selves")));
 
-const badWhy = (bad: string, right: string) =>
+const badWhy = (bad: string) =>
   nonstandard.has(bad)
     ? t(
-        `*${bad}* is not a word of standard English. The standard form is *${right}*.`,
-        `*${bad}* 不是标准英语中的词。标准形式是 *${right}*。`,
+        `*${bad}* is not a word of standard English—check the standard reflexive forms (*himself*, *themselves*, *ourselves*, *itself*).`,
+        `*${bad}* 不是标准英语中的词——检查标准的反身代词形式（*himself*、*themselves*、*ourselves*、*itself*）。`,
       )
     : t(
-        `*${bad}* is an object pronoun: it would point to someone else, not back to the subject. To refer back, use *${right}*.`,
-        `*${bad}* 是宾格代词：它指的是别人，而不是回指主语。要回指主语，用 *${right}*。`,
+        `*${bad}* is an object pronoun: it points to someone else, not back to the subject. Use a *-self* or *-selves* form to refer back.`,
+        `*${bad}* 是宾格代词，指的是别人而不是回指主语。回指主语要用以 *-self* 或 *-selves* 结尾的形式。`,
       );
 
-const personWhy = (person: string, right: string) =>
+const personWhy = (person: string) =>
   t(
-    `*${person}* does not match the subject. ${reflexiveOf[person] ? `It refers to ${reflexiveOf[person]?.[0]}, ` : `*${person}* is not a word, `}but the subject needs *${right}*.`,
-    `*${person}* 和主语不一致。${reflexiveOf[person] ? `它指的是${reflexiveOf[person]?.[1]}，` : `*${person}* 不是一个词，`}而主语需要 *${right}*。`,
+    `*${person}* does not match the subject. ${reflexiveOf[person] ? `It refers to ${reflexiveOf[person]?.[0]}, ` : `*${person}* is not a standard form, `}which does not agree with this subject.`,
+    `*${person}* 和主语不一致。${reflexiveOf[person] ? `它指的是${reflexiveOf[person]?.[1]}，` : `*${person}* 不是标准形式，`}与这个主语不匹配。`,
   );
 
 /** reflexiveGapBank asks for the reflexive pronoun that matches the subject. */
@@ -121,10 +121,10 @@ const reflexiveGapBank: readonly Item[] = reflexiveRows.map((row) => ({
   right: row.right,
   wrong: [row.person, row.bad],
   why: t(
-    `${fill(row.shown, row.right)} A reflexive pronoun refers back to the subject; here it refers to ${reflexiveOf[row.right]?.[0]}, so it is *${row.right}*.`,
-    `${fill(row.shown, row.right)} 反身代词回指主语；这里指的是${reflexiveOf[row.right]?.[1]}，所以用 *${row.right}*。`,
+    `${fill(row.shown, row.right)} A reflexive pronoun refers back to the subject; here it refers to ${reflexiveOf[row.right]?.[0]}, so it is *${row.right}*.\n\n**Check.** Match the subject with **${row.right}**—both have the same person and number, and the action reflects back onto the subject.`,
+    `${fill(row.shown, row.right)} 反身代词回指主语；这里指的是${reflexiveOf[row.right]?.[1]}，所以用 *${row.right}*。\n\n**检验。** 把主语和 **${row.right}** 核对一遍——两者人称和单复数一致，动作正好回到主语自身。`,
   ),
-  whyNot: [personWhy(row.person, row.right), badWhy(row.bad, row.right)],
+  whyNot: [personWhy(row.person), badWhy(row.bad)],
 }));
 
 /** reflexiveSentenceBank asks for the sentence whose reflexive pronoun is correct. */
@@ -138,10 +138,10 @@ const reflexiveSentenceBank: readonly Item[] = reflexiveRows.map((row) => {
     right,
     wrong: [bad, person],
     why: t(
-      `“${right}” is correct. *${row.right}* refers back to ${reflexiveOf[row.right]?.[0]}, the subject of the sentence.`,
-      `“${right}” 是正确的。*${row.right}* 回指句子的主语${reflexiveOf[row.right]?.[1]}。`,
+      `“${right}” is correct. *${row.right}* refers back to ${reflexiveOf[row.right]?.[0]}, the subject of the sentence.\n\n**Check.** Verify that *${row.right}* is a standard English form and matches the subject in person and number.`,
+      `“${right}” 是正确的。*${row.right}* 回指句子的主语${reflexiveOf[row.right]?.[1]}。\n\n**检验。** 确认 *${row.right}* 是标准英语形式，且与主语的人称、单复数一致。`,
     ),
-    whyNot: [badWhy(row.bad, row.right), personWhy(row.person, row.right)],
+    whyNot: [badWhy(row.bad), personWhy(row.person)],
   };
 });
 
@@ -233,8 +233,8 @@ const negativeFindBank: readonly Item[] = negativeRows.map((row) => ({
   right: `${row.n1} and ${row.n2}`,
   wrong: [`${row.n1} and ${row.x1}`, `${row.x2} and ${row.n2}`],
   why: t(
-    `*${row.n1}* and *${row.n2}* are both negative words. Standard English uses one negative in a clause, so one of them must change: *${row.good}*`,
-    `*${row.n1}* 和 *${row.n2}* 都是否定词。标准英语在一个分句中只用一个否定词，所以其中一个必须改：*${row.good}*`,
+    `*${row.n1}* and *${row.n2}* are both negative words. Standard English uses one negative in a clause, so one of them must change: *${row.good}*\n\n**Check.** Count the negative words in the original sentence: both **${row.n1}** and **${row.n2}** say “no,” creating a double negative.`,
+    `*${row.n1}* 和 *${row.n2}* 都是否定词。标准英语在一个分句中只用一个否定词，所以其中一个必须改：*${row.good}*\n\n**检验。** 数一数原句里的否定词：**${row.n1}** 和 **${row.n2}** 都表示“不”，构成了双重否定。`,
   ),
   whyNot: [
     t(
@@ -255,8 +255,8 @@ const negativeFixBank: readonly Item[] = negativeRows.map((row) => ({
   right: row.good,
   wrong: [row.bad, row.wrong],
   why: t(
-    `“${row.good}” keeps one negative word. The second negative becomes a word such as *any*, *anything*, *anybody*, *anywhere* or *ever*, or it is dropped.`,
-    `“${row.good}” 只保留一个否定词。第二个否定词换成 *any*、*anything*、*anybody*、*anywhere* 或 *ever* 这样的词，或者干脆去掉。`,
+    `“${row.good}” keeps one negative word. The second negative becomes a word such as *any*, *anything*, *anybody*, *anywhere* or *ever*, or it is dropped.\n\n**Check.** Count the negative words in “${row.good}”—there is only one, while the original negative meaning stays intact.`,
+    `“${row.good}” 只保留一个否定词。第二个否定词换成 *any*、*anything*、*anybody*、*anywhere* 或 *ever* 这样的词，或者干脆去掉。\n\n**检验。** 数一数“${row.good}”里的否定词——只有一个，同时完整保留了原句的否定意思。`,
   ),
   whyNot: [
     t(
@@ -393,8 +393,8 @@ const betweenBank: readonly Item[] = fields(`${betweenLines}\n${betweenCross}`).
     right,
     wrong: [other, third],
     why: t(
-      `${fill(shown, right)} Count the people or things: ${betweenWhy(right)[0]}.`,
-      `${fill(shown, right)} 数一数人或物：${betweenWhy(right)[1]}。`,
+      `${fill(shown, right)} Count the people or things: ${betweenWhy(right)[0]}.\n\n**Check.** Look at the noun phrase right after the blank—it names ${right === "between" ? "two distinct items or sides, so **between** fits" : "a group of more than two, so **among** fits"}.`,
+      `${fill(shown, right)} 数一数人或物：${betweenWhy(right)[1]}。\n\n**检验。** 看空后的名词短语——它指${right === "between" ? "两个明确的对象或方面，所以用 **between**" : "两个以上或一个群体，所以用 **among**"}。`,
     ),
     whyNot: [
       t(`*${other}* does not fit the number here: ${betweenWhy(right)[0]}.`, `*${other}* 和这里的数量不符：${betweenWhy(right)[1]}。`),
@@ -439,8 +439,8 @@ const inBank: readonly Item[] = fields(`${inLines}\n${inCross}`).map(([shown, ri
     right,
     wrong: [other, split],
     why: t(
-      `${fill(shown, right)} ${moving ? "Something moves from outside to inside, so the word is *into*." : "Nothing moves inside here; the sentence tells where something is, so the word is *in*."}`,
-      `${fill(shown, right)} ${moving ? "有东西从外面进到里面，所以用 *into*。" : "这里没有向里的移动；句子说的是某物在哪里，所以用 *in*。"}`,
+      `${fill(shown, right)} ${moving ? "Something moves from outside to inside, so the word is *into*." : "Nothing moves inside here; the sentence tells where something is, so the word is *in*."}\n\n**Check.** Look at the verb before the blank: it shows ${moving ? "motion across a boundary from outside to inside" : "a steady location rather than movement inside"}.`,
+      `${fill(shown, right)} ${moving ? "有东西从外面进到里面，所以用 *into*。" : "这里没有向里的移动；句子说的是某物在哪里，所以用 *in*。"}\n\n**检验。** 看空前的动词：它表示${moving ? "从外向里跨越边界的动作" : "静止的位置，而不是向里移动"}。`,
     ),
     whyNot: [
       t(
@@ -567,7 +567,10 @@ const markChooseBank: readonly Item[] = markRows.map((row, i) => {
     shown,
     right,
     wrong: wrongKinds.map((k) => markOf[k]),
-    why: t(`${fill(shown, right)} ${info.is[0]}`, `${fill(shown, right)} ${info.is[1]}`),
+    why: t(
+      `${fill(shown, right)} ${info.is[0]}\n\n**Check.** Read the line aloud with **${right}**—the voice matches ${row.kind}, whereas the other two marks create a different tone.`,
+      `${fill(shown, right)} ${info.is[1]}\n\n**检验。** 带上 **${right}** 把台词读出声——语气正好符合${info.zh}，而另外两个标点会改变语气。`,
+    ),
     whyNot: wrongKinds.map((k) =>
       t(
         `*${markOf[k]}* gives ${k}, not ${row.kind}. ${markKinds[k].is[0]}`,
@@ -654,8 +657,8 @@ const formalFindBank: readonly Item[] = formalRows.map((row) => ({
   right: row.formal,
   wrong: [row.informal, row.slang],
   why: t(
-    `“${row.formal}” is formal: it uses full words and complete sentences, with no slang, and its request or statement is polite.`,
-    `“${row.formal}” 是正式的：它用完整的词和完整的句子，没有俚语，请求或陈述也很礼貌。`,
+    `“${row.formal}” is formal: it uses full words and complete sentences, with no slang, and its request or statement is polite.\n\n**Check.** Scan the sentence for contractions, slang, or casual fillers—there are none, which confirms its formal register.`,
+    `“${row.formal}” 是正式的：它用完整的词和完整的句子，没有俚语，请求或陈述也很礼貌。\n\n**检验。** 检查句中有没有缩略词、俚语或口语填充词——一个也没有，说明属于正式语体。`,
   ),
   whyNot: [
     t(
@@ -692,12 +695,12 @@ const formalFitBank: readonly Item[] = formalRows.map((row, i) => {
     wrong,
     why: formal
       ? t(
-          `“${right}” fits, because ${en} needs formal English: full forms, no slang and polite words for a reader you do not know well.`,
-          `“${right}” 合适，因为${zh}需要正式英语：用完整形式，不用俚语，对不太熟悉的读者用礼貌的词。`,
+          `“${right}” fits, because ${en} needs formal English: full forms, no slang and polite words for a reader you do not know well.\n\n**Check.** Ask who the audience is (${en}): a public or unfamiliar reader expects full words and a respectful tone.`,
+          `“${right}” 合适，因为${zh}需要正式英语：用完整形式，不用俚语，对不太熟悉的读者用礼貌的词。\n\n**检验。** 看读者是谁（${zh}）：面对公众或不熟悉的人，需要完整用词和礼貌语气。`,
         )
       : t(
-          `“${right}” fits, because ${en} is between people who know each other well, where friendly, everyday English is right. It is still clear and kind.`,
-          `“${right}” 合适，因为${zh}是熟人之间的交流，适合用友好的日常英语。它依然清楚而友善。`,
+          `“${right}” fits, because ${en} is between people who know each other well, where friendly, everyday English is right. It is still clear and kind.\n\n**Check.** Imagine saying “${right}” in ${en}: it sounds natural and friendly without becoming sloppy slang.`,
+          `“${right}” 合适，因为${zh}是熟人之间的交流，适合用友好的日常英语。它依然清楚而友善。\n\n**检验。** 想象在${zh}里说“${right}”：既自然亲切，又没有流于含糊粗鲁的俚语。`,
         ),
     whyNot: wrong.map((w) =>
       w === row.formal
@@ -830,8 +833,8 @@ const quoteMarkBank: readonly Item[] = quoteRows.map((row, i) => {
     right: row.right,
     wrong: faults.map(([key]) => row[key]),
     why: t(
-      `${row.right} The exact words go inside quotation marks, a comma follows the signal phrase *${row.signal}*, the quotation starts with a capital, and its period stays inside the marks.`,
-      `${row.right} 原话放在引号里，说明部分 *${row.signal}* 后面加逗号，引语以大写字母开头，句号留在引号里面。`,
+      `${row.right} The exact words go inside quotation marks, a comma follows the signal phrase *${row.signal}*, the quotation starts with a capital, and its period stays inside the marks.\n\n**Check.** Inspect all three punctuation checkpoints: comma after *${row.signal}*, capital first letter inside the quotes, and period before the closing quotation mark.`,
+      `${row.right} 原话放在引号里，说明部分 *${row.signal}* 后面加逗号，引语以大写字母开头，句号留在引号里面。\n\n**检验。** 逐一核对三处标点：*${row.signal}* 后有逗号、引号内首字母大写、句号在后引号里面。`,
     ),
     whyNot: faults.map(([, en, zh]) => t(en, zh)),
   };
@@ -989,15 +992,19 @@ const abbreviationBank: readonly Item[] = abbreviationUses.map((row) => ({
   right: row.abbreviation,
   wrong: row.wrong,
   why: t(
-    `*${row.word}* is written **${row.abbreviation}**. ${row.rule[0]}`,
-    `*${row.word}* 缩写为 **${row.abbreviation}**。${row.rule[1]}`,
+    `*${row.word}* is written **${row.abbreviation}**. ${row.rule[0]}\n\n**Check.** Match the letters of **${row.abbreviation}** against *${row.word}* and check its capitalization and period.`,
+    `*${row.word}* 缩写为 **${row.abbreviation}**。${row.rule[1]}\n\n**检验。** 把 **${row.abbreviation}** 的字母与 *${row.word}* 对照，并核对大小写和句号。`,
   ),
-  whyNot: row.wrong.map((w) =>
+  whyNot: [
     t(
-      `“${w}” is not the standard short form. ${row.rule[0]} The form to learn is *${row.abbreviation}*.`,
-      `“${w}” 不是标准缩写。${row.rule[1]} 要记住的形式是 *${row.abbreviation}*。`,
+      `“${row.wrong[0]}” uses the wrong letters or missing punctuation for this kind of abbreviation. ${row.rule[0]}`,
+      `“${row.wrong[0]}” 对这类缩写用了错误的字母或漏了标点。${row.rule[1]}`,
     ),
-  ),
+    t(
+      `“${row.wrong[1]}” has the wrong capitalization or period for a standard abbreviation of *${row.word}*.`,
+      `“${row.wrong[1]}” 在大小写或句号上不符合 *${row.word}* 的标准缩写规范。`,
+    ),
+  ],
 }));
 
 /** expansionBank asks for the word an abbreviation stands for. */
@@ -1009,13 +1016,20 @@ const expansionBank: readonly Item[] = abbreviationUses.map((row) => ({
   shown: "",
   right: row.word,
   wrong: row.words,
-  why: t(`*${row.abbreviation}* stands for **${row.word}**. ${row.rule[0]}`, `*${row.abbreviation}* 代表 **${row.word}**。${row.rule[1]}`),
-  whyNot: row.words.map((w) =>
-    t(
-      `*${w}* is not shortened to *${row.abbreviation}*. Each abbreviation keeps letters of its own word, and these letters come from *${row.word}*.`,
-      `*${w}* 的缩写不是 *${row.abbreviation}*。每个缩写都保留它自己那个词的字母，这些字母来自 *${row.word}*。`,
-    ),
+  why: t(
+    `*${row.abbreviation}* stands for **${row.word}**. ${row.rule[0]}\n\n**Check.** Trace the letters of *${row.abbreviation}* in order inside **${row.word}** and confirm it fits the context${row.where}.`,
+    `*${row.abbreviation}* 代表 **${row.word}**。${row.rule[1]}\n\n**检验。** 在 **${row.word}** 里按顺序核对 *${row.abbreviation}* 的字母，并确认它符合使用场合。`,
   ),
+  whyNot: [
+    t(
+      `The abbreviation *${row.abbreviation}* does not stand for *${row.words[0]}*.`,
+      `缩写 *${row.abbreviation}* 并不代表 *${row.words[0]}*。`,
+    ),
+    t(
+      `*${row.abbreviation}* does not match both the letters and the category of *${row.words[1]}*${row.where}.`,
+      `*${row.abbreviation}* 在字母或所属类别上与 *${row.words[1]}* 不符。`,
+    ),
+  ],
 }));
 
 /** usageTopics4 are the topics of usage and mechanics of grade 4. */
@@ -1027,6 +1041,10 @@ export const usageTopics4: readonly TopicDef[] = [
       "A reflexive pronoun such as myself, himself or themselves refers back to the subject: the body heals itself.",
       "myself、himself、themselves 这样的反身代词回指主语：the body heals itself。",
     ),
+    intro: t(
+      "Notice the difference between *She poured her a cup of tea* (for someone else) and *She poured herself a cup of tea* (for her own cup). When the action bounces back to the subject, English uses a *-self* or *-selves* pronoun.",
+      "比较 *She poured her a cup of tea*（给别人倒茶）和 *She poured herself a cup of tea*（给自己倒茶）。当动作落回主语自身时，英语要用以 *-self* 或 *-selves* 结尾的反身代词。",
+    ),
     prerequisites: ["pronoun-antecedent-agreement"],
     encompasses: [{ topic: "pronoun-antecedent-agreement", weight: 0.2 }],
     xp: 14,
@@ -1036,8 +1054,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "choosing-reflexive-pronouns",
         t("Choosing the Reflexive Pronoun", "选择反身代词"),
         t(
-          "A **reflexive pronoun** ends in *-self* or *-selves* and refers back to the subject of the sentence: *The body heals itself.* *We made ourselves a lunch.*\n\nMatch it to the subject: *I*, *myself*; *you*, *yourself* or *yourselves*; *he*, *himself*; *she*, *herself*; *it*, *itself*; *we*, *ourselves*; *they*, *themselves*. A noun such as *my brother* takes the pronoun that would replace it: *himself*.",
-          "**反身代词**以 *-self* 或 *-selves* 结尾，回指句子的主语：*The body heals itself.* *We made ourselves a lunch.*\n\n要与主语一致：*I* 对 *myself*；*you* 对 *yourself* 或 *yourselves*；*he* 对 *himself*；*she* 对 *herself*；*it* 对 *itself*；*we* 对 *ourselves*；*they* 对 *themselves*。*my brother* 这样的名词用能替代它的代词所对应的形式：*himself*。",
+          "A **reflexive pronoun** ends in *-self* or *-selves* and refers back to the subject of the sentence: *The body heals itself.* *We made ourselves a lunch.*\n\nMatch it to the subject: *I*, *myself*; *you*, *yourself* or *yourselves*; *he*, *himself*; *she*, *herself*; *it*, *itself*; *we*, *ourselves*; *they*, *themselves*. A noun such as *my brother* takes the pronoun that would replace it: *himself*.\n\n> **Watch out.** Check whether *you* speaks to one person (*yourself*) or a group (*yourselves*, as in *Children, please help yourselves*).",
+          "**反身代词**以 *-self* 或 *-selves* 结尾，回指句子的主语：*The body heals itself.* *We made ourselves a lunch.*\n\n要与主语一致：*I* 对 *myself*；*you* 对 *yourself* 或 *yourselves*；*he* 对 *himself*；*she* 对 *herself*；*it* 对 *itself*；*we* 对 *ourselves*；*they* 对 *themselves*。*my brother* 这样的名词用能替代它的代词所对应的形式：*himself*。\n\n> **注意。** 注意 *you* 指的是一人（*yourself*）还是多人（*yourselves*，如 *Children, please help yourselves*）。",
         ),
         itemGenerator(reflexiveGapBank),
       ),
@@ -1045,8 +1063,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "telling-correct-reflexive-forms",
         t("Correct and Incorrect Forms", "正确与错误的形式"),
         t(
-          "Some forms that people say are not standard English: *hisself*, *theirselves*, *ourself* and *itsself*. The standard forms are *himself*, *themselves*, *ourselves* and *itself*.\n\nAnd when the action goes back to the subject, an object pronoun is wrong: *Grandma reminded her* would mean another woman; *Grandma reminded herself* means Grandma.",
-          "有些人们常说的形式不是标准英语：*hisself*、*theirselves*、*ourself* 和 *itsself*。标准形式是 *himself*、*themselves*、*ourselves* 和 *itself*。\n\n当动作回到主语身上时，用宾格代词是错的：*Grandma reminded her* 指的是另一个女人；*Grandma reminded herself* 指的才是奶奶自己。",
+          "Some forms that people say are not standard English: *hisself*, *theirselves*, *ourself* and *itsself*. The standard forms are *himself*, *themselves*, *ourselves* and *itself*.\n\nAnd when the action goes back to the subject, an object pronoun is wrong: *Grandma reminded her* would mean another woman; *Grandma reminded herself* means Grandma.\n\n> **Watch out.** *Hisself* and *theirselves* sound tempting because of *myself*, but standard English always uses *himself* and *themselves*.",
+          "有些人们常说的形式不是标准英语：*hisself*、*theirselves*、*ourself* 和 *itsself*。标准形式是 *himself*、*themselves*、*ourselves* 和 *itself*。\n\n当动作回到主语身上时，用宾格代词是错的：*Grandma reminded her* 指的是另一个女人；*Grandma reminded herself* 指的才是奶奶自己。\n\n> **注意。** *hisself* 和 *theirselves* 容易受 *myself* 影响而写错，标准英语一律用 *himself* 和 *themselves*。",
         ),
         itemGenerator(reflexiveSentenceBank),
       ),
@@ -1059,6 +1077,10 @@ export const usageTopics4: readonly TopicDef[] = [
       "Standard written English uses one negative word in a clause: I don't have any, not I don't have none.",
       "标准书面英语在一个分句中只用一个否定词：说 I don't have any，而不是 I don't have none。",
     ),
+    intro: t(
+      "In a tall tale you might hear *He didn't see nothing*, which piles two “no” words into one clause. In standard writing, one negative word does the whole job: *He didn't see anything*.",
+      "在荒诞故事里你可能听过 *He didn't see nothing*，把两个否定词堆在一个分句里。在标准书面英语中，一个否定词就够了：*He didn't see anything*。",
+    ),
     prerequisites: after("contractions"),
     encompasses: [],
     xp: 14,
@@ -1068,8 +1090,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "finding-double-negatives",
         t("Finding the Two Negatives", "找出两个否定词"),
         t(
-          "A **negative word** says *no*: *not* and its short form *n't* (*don't, can't, wasn't*), *no*, *never*, *nothing*, *nobody*, *no one*, *nowhere*, *none*, and also *hardly*.\n\nA **double negative** puts two of them in one clause: *The fox can't find nothing.* Many people speak this way, and tall tales often do, but standard written English uses only one.",
-          "**否定词**表示“不”：*not* 及其缩写 *n't*（*don't、can't、wasn't*）、*no*、*never*、*nothing*、*nobody*、*no one*、*nowhere*、*none*，还有 *hardly*。\n\n**双重否定**是在一个分句中用两个否定词：*The fox can't find nothing.* 很多人这样说，荒诞故事里也常这样说，但标准书面英语只用一个。",
+          "A **negative word** says *no*: *not* and its short form *n't* (*don't, can't, wasn't*), *no*, *never*, *nothing*, *nobody*, *no one*, *nowhere*, *none*, and also *hardly*.\n\nA **double negative** puts two of them in one clause: *The fox can't find nothing.* Many people speak this way, and tall tales often do, but standard written English uses only one.\n\n> **Watch out.** Do not overlook *n't* tucked inside a contraction (*didn't*, *won't*, *can't*) or *hardly*—they count as negative words too.",
+          "**否定词**表示“不”：*not* 及其缩写 *n't*（*don't、can't、wasn't*）、*no*、*never*、*nothing*、*nobody*、*no one*、*nowhere*、*none*，还有 *hardly*。\n\n**双重否定**是在一个分句中用两个否定词：*The fox can't find nothing.* 很多人这样说，荒诞故事里也常这样说，但标准书面英语只用一个。\n\n> **注意。** 别漏掉藏在缩略词里的 *n't*（如 *didn't*、*won't*、*can't*）以及 *hardly*——它们都算否定词。",
         ),
         itemGenerator(negativeFindBank),
       ),
@@ -1077,8 +1099,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "fixing-double-negatives",
         t("Writing It in Standard English", "改成标准英语"),
         t(
-          "To fix a double negative, keep one negative and change the other:\n\n- *nothing* → *anything*; *nobody* → *anybody*; *no one* → *anyone*; *nowhere* → *anywhere*; *never* → *ever*; *no* or *none* → *any*.\n- Or drop the *n't*: *I haven't never seen* → *I have never seen*.\n\nWith *hardly*, drop the *n't*: *I can hardly lift it.*",
-          "改正双重否定时，保留一个否定词，改掉另一个：\n\n- *nothing* → *anything*；*nobody* → *anybody*；*no one* → *anyone*；*nowhere* → *anywhere*；*never* → *ever*；*no* 或 *none* → *any*。\n- 或者去掉 *n't*：*I haven't never seen* → *I have never seen*。\n\n和 *hardly* 一起用时去掉 *n't*：*I can hardly lift it.*",
+          "To fix a double negative, keep one negative and change the other:\n\n- *nothing* → *anything*; *nobody* → *anybody*; *no one* → *anyone*; *nowhere* → *anywhere*; *never* → *ever*; *no* or *none* → *any*.\n- Or drop the *n't*: *I haven't never seen* → *I have never seen*.\n\nWith *hardly*, drop the *n't*: *I can hardly lift it.*\n\n> **Watch out.** Adding *at all* or *ever* without removing one of the negatives (*can't find nothing at all*) still leaves a double negative.",
+          "改正双重否定时，保留一个否定词，改掉另一个：\n\n- *nothing* → *anything*；*nobody* → *anybody*；*no one* → *anyone*；*nowhere* → *anywhere*；*never* → *ever*；*no* 或 *none* → *any*。\n- 或者去掉 *n't*：*I haven't never seen* → *I have never seen*。\n\n和 *hardly* 一起用时去掉 *n't*：*I can hardly lift it.*\n\n> **注意。** 只加 *at all* 或 *ever* 却不去掉其中一个否定词（如 *can't find nothing at all*），仍然是双重否定。",
         ),
         itemGenerator(negativeFixBank),
       ),
@@ -1091,6 +1113,10 @@ export const usageTopics4: readonly TopicDef[] = [
       "Between is for two, among for more than two; in tells where something is, into tells movement toward the inside.",
       "between 用于两者，among 用于两者以上；in 表示在哪里，into 表示向里移动。",
     ),
+    intro: t(
+      "A hiker rests *in* a tent, then steps *into* the rain; a stream runs *between* two cliffs, then winds *among* tall pines. Counting how many things are involved—and noticing whether anything moves inside—makes these four prepositions clear.",
+      "徒步者在帐篷里（*in*）休息，然后走进（*into*）雨中；小溪在两座峭壁之间（*between*）流淌，再穿过（*among*）高大的松林。分清数量与动静，这四个介词就不会用混。",
+    ),
     prerequisites: ["prepositional-phrases"],
     encompasses: [{ topic: "prepositional-phrases", weight: 0.2 }],
     xp: 14,
@@ -1100,8 +1126,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "choosing-between-or-among",
         t("Choosing Between or Among", "选择 Between 还是 Among"),
         t(
-          "Count before you choose. *Between* is for **two** people or things, or two clear sides: *a wall between the two cities*, *trade between China and Persia*. *Among* is for **more than two**, or for a group that is not counted one by one: *shared among all the families*, *at home among the traders*.",
-          "选择之前先数一数。*between* 用于**两个**人或物，或两个明确的方面：*a wall between the two cities*、*trade between China and Persia*。*among* 用于**两个以上**，或用于不逐个计算的群体：*shared among all the families*、*at home among the traders*。",
+          "Count before you choose. *Between* is for **two** people or things, or two clear sides: *a wall between the two cities*, *trade between China and Persia*. *Among* is for **more than two**, or for a group that is not counted one by one: *shared among all the families*, *at home among the traders*.\n\n> **Watch out.** Collective words like *the crowd*, *the trees*, or *all the students* name more than two, so they take *among*, not *between*.",
+          "选择之前先数一数。*between* 用于**两个**人或物，或两个明确的方面：*a wall between the two cities*、*trade between China and Persia*。*among* 用于**两个以上**，或用于不逐个计算的群体：*shared among all the families*、*at home among the traders*。\n\n> **注意。** *the crowd*、*the trees*、*all the students* 这类表示一群的词指两个以上，要用 *among*，不要用 *between*。",
         ),
         itemGenerator(betweenBank),
       ),
@@ -1109,8 +1135,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "choosing-in-or-into",
         t("Choosing In or Into", "选择 In 还是 Into"),
         t(
-          "*In* tells **where** something is: *The silk stayed safe in the chest.* *Into* tells **movement** from outside to inside: *The trader put the silk into a chest.*\n\nAsk whether something is moving inside. If it is, use *into*. Write *in to* as two words only when *in* belongs to the verb: *hand your work in to the teacher*.",
-          "*in* 表示某物在**哪里**：*The silk stayed safe in the chest.* *into* 表示从外向里的**移动**：*The trader put the silk into a chest.*\n\n问问有没有东西在向里移动。如果有，就用 *into*。只有当 *in* 属于动词时才分开写成 *in to*：*hand your work in to the teacher*。",
+          "*In* tells **where** something is: *The silk stayed safe in the chest.* *Into* tells **movement** from outside to inside: *The trader put the silk into a chest.*\n\nAsk whether something is moving inside. If it is, use *into*. Write *in to* as two words only when *in* belongs to the verb: *hand your work in to the teacher*.\n\n> **Watch out.** Do not write *in to* as two words when you mean entering a place—*walked into the room*, not *walked in to the room*.",
+          "*in* 表示某物在**哪里**：*The silk stayed safe in the chest.* *into* 表示从外向里的**移动**：*The trader put the silk into a chest.*\n\n问问有没有东西在向里移动。如果有，就用 *into*。只有当 *in* 属于动词时才分开写成 *in to*：*hand your work in to the teacher*。\n\n> **注意。** 表示进入某处时不要把 *into* 拆成 *in to*——要写 *walked into the room*，而不是 *walked in to the room*。",
         ),
         itemGenerator(inBank),
       ),
@@ -1123,6 +1149,10 @@ export const usageTopics4: readonly TopicDef[] = [
       "A writer chooses an exclamation mark for strong feeling, a question mark for doubt, and a dash or an ellipsis for a pause.",
       "作者用感叹号表达强烈感情，用问号表达怀疑，用破折号或省略号表示停顿。",
     ),
+    intro: t(
+      "Read *Wait!* versus *Wait?* versus *Wait...*—the word never changes, yet the punctuation turns a shout into a question or a fading hesitation. Choosing the right mark lets readers hear the exact voice on the page.",
+      "读一读 *Wait!*、*Wait?* 和 *Wait...*——单词完全一样，标点却把呼喊变成了疑问或欲言又止的犹豫。选对标点，读者就能在纸面上听见准确的声音。",
+    ),
     prerequisites: after("four-kinds-of-sentences"),
     encompasses: [],
     xp: 14,
@@ -1132,8 +1162,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "choosing-the-mark-for-an-effect",
         t("Choosing the Mark", "选择标点"),
         t(
-          "In a play or a story, punctuation tells the reader how a line sounds.\n\n- An **exclamation mark** (!) gives strong feeling: *The curtain is on fire!*\n- A **question mark** (?) gives a question or doubt: *Is anyone there?*\n- An **ellipsis** (...) lets a voice trail off: *If only I had practiced more...*\n- A **dash** (—) makes a sudden break: *The winner is — wait, the card is blank.*",
-          "在剧本或故事里，标点告诉读者一句话听起来是什么样的。\n\n- **感叹号**（!）表达强烈的感情：*The curtain is on fire!*\n- **问号**（?）表达疑问或怀疑：*Is anyone there?*\n- **省略号**（...）让声音渐渐弱下去：*If only I had practiced more...*\n- **破折号**（—）表示突然的中断：*The winner is — wait, the card is blank.*",
+          "In a play or a story, punctuation tells the reader how a line sounds.\n\n- An **exclamation mark** (!) gives strong feeling: *The curtain is on fire!*\n- A **question mark** (?) gives a question or doubt: *Is anyone there?*\n- An **ellipsis** (...) lets a voice trail off: *If only I had practiced more...*\n- A **dash** (—) makes a sudden break: *The winner is — wait, the card is blank.*\n\n> **Watch out.** Do not mix up an ellipsis (...) and a dash (—): an ellipsis trails off gently, while a dash cuts off sharply.",
+          "在剧本或故事里，标点告诉读者一句话听起来是什么样的。\n\n- **感叹号**（!）表达强烈的感情：*The curtain is on fire!*\n- **问号**（?）表达疑问或怀疑：*Is anyone there?*\n- **省略号**（...）让声音渐渐弱下去：*If only I had practiced more...*\n- **破折号**（—）表示突然的中断：*The winner is — wait, the card is blank.*\n\n> **注意。** 不要混淆省略号（...）和破折号（—）：省略号是声音渐弱，破折号是突然打断。",
         ),
         itemGenerator(markChooseBank),
       ),
@@ -1141,8 +1171,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "naming-the-effect-of-a-mark",
         t("Naming the Effect", "说出标点的效果"),
         t(
-          "Now read a line and say what its mark does. Look at where the mark is: an exclamation or question mark usually ends a line, an ellipsis can end it or stop it in the middle, and a dash breaks into the middle, often to change direction or add a surprise.",
-          "现在读一句台词，说出标点的作用。看看标点在哪里：感叹号或问号通常在句末，省略号可以在句末，也可以在句中停下，破折号则在句中打断，常常用来转折或制造意外。",
+          "Now read a line and say what its mark does. For example, *I opened the box and — it was empty* uses a dash for a sudden break, while *Maybe the noise was just the wind...* uses an ellipsis for an unfinished thought.\n\n> **Watch out.** Look at the whole line, not just the final word—a dash in the middle can signal a sudden break even when the line ends with a period or question mark.",
+          "现在读一句台词，说出标点的作用。例如 *I opened the box and — it was empty* 用破折号制造突然中断，而 *Maybe the noise was just the wind...* 用省略号表示未说完的想法。\n\n> **注意。** 要看整句台词，不只看最后一个词——句中的破折号即使配合句末句号或问号，也依然表示突然的中断。",
         ),
         nameKind({
           lines: markLines,
@@ -1160,6 +1190,10 @@ export const usageTopics4: readonly TopicDef[] = [
       "People speak informally with friends and formally in a report, a speech or a letter to a stranger.",
       "人们和朋友说话时用非正式英语，在报告、演讲或写给陌生人的信中用正式英语。",
     ),
+    intro: t(
+      "You might text a friend *Can't wait for Friday!*, yet write to a museum curator *We look forward to visiting on Friday.* Matching your wording to your reader is what makes English formal or informal.",
+      "给朋友发短信可以说 *Can't wait for Friday!*，但给博物馆馆长写信就要说 *We look forward to visiting on Friday.* 根据对象调整措辞，正是正式与非正式英语的区别。",
+    ),
     prerequisites: after("contractions"),
     encompasses: [],
     xp: 14,
@@ -1169,8 +1203,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "telling-formal-from-informal",
         t("Telling Formal from Informal", "区分正式与非正式"),
         t(
-          "**Formal** English uses full forms (*I would like*, *do not*), complete sentences, no slang, and polite words such as *please* and *thank you*. **Informal** English uses short forms (*wanna*, *gonna*, *can't*), casual words (*kinda*, *stuff*, *awesome*) and sometimes half sentences.\n\nNeither is bad: each fits its own listener.",
-          "**正式**英语用完整形式（*I would like*、*do not*）、完整的句子，不用俚语，用 *please*、*thank you* 这样的礼貌用语。**非正式**英语用缩写形式（*wanna*、*gonna*、*can't*）、随意的词（*kinda*、*stuff*、*awesome*），有时用半句话。\n\n两者都不是坏的：各有适合的听众。",
+          "**Formal** English uses full forms (*I would like*, *do not*), complete sentences, no slang, and polite words such as *please* and *thank you*. **Informal** English uses short forms (*wanna*, *gonna*, *can't*), casual words (*kinda*, *stuff*, *awesome*) and sometimes half sentences.\n\nNeither is bad: each fits its own listener.\n\n> **Watch out.** Even a single slang word or contraction like *totally*, *gonna*, or *info* shifts a sentence out of formal English.",
+          "**正式**英语用完整形式（*I would like*、*do not*）、完整的句子，不用俚语，用 *please*、*thank you* 这样的礼貌用语。**非正式**英语用缩写形式（*wanna*、*gonna*、*can't*）、随意的词（*kinda*、*stuff*、*awesome*），有时用半句话。\n\n两者都不是坏的：各有适合的听众。\n\n> **注意。** 哪怕只出现一个像 *totally*、*gonna*、*info* 这样的俚语或口语缩略词，句子就不再属于正式英语。",
         ),
         itemGenerator(formalFindBank),
       ),
@@ -1178,8 +1212,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "choosing-the-right-register",
         t("Choosing for the Situation", "根据场合选择"),
         t(
-          "Before you write or speak, think about who will read or hear you. A letter to the mayor, a speech, a report or an email to a stranger needs formal English. A note to your brother or a chat with a friend can be informal, though very rude or unclear slang never helps.",
-          "写或说之前，想一想谁会读到或听到。写给市长的信、演讲、报告或写给陌生人的电子邮件需要正式英语。给弟弟的便条或和朋友聊天可以不正式，但非常粗鲁或含糊的俚语从来都没有帮助。",
+          "Before you write or speak, think about who will read or hear you. A letter to the mayor, a speech, a report or an email to a stranger needs formal English (*Could you please tell me...*). A note to your brother or a chat with a friend can be informal (*Thanks for helping out!*).\n\n> **Watch out.** Informal does not mean sloppy or rude—friendly everyday English fits a close friend, whereas unclear slang rarely helps.",
+          "写或说之前，想一想谁会读到或听到。写给市长的信、演讲、报告或写给陌生人的电子邮件需要正式英语（如 *Could you please tell me...*）。给弟弟的便条或和朋友聊天可以非正式（如 *Thanks for helping out!*）。\n\n> **注意。** 非正式不等于粗鲁或含糊——对熟人用友好自然的日常英语合适，而含糊或失礼的俚语很少有帮助。",
         ),
         itemGenerator(formalFitBank),
       ),
@@ -1192,6 +1226,10 @@ export const usageTopics4: readonly TopicDef[] = [
       "Words copied exactly from a person or a text go in quotation marks, with a comma after the signal phrase.",
       "原样引用某人或某篇文章的话时要加引号，说明部分后面加逗号。",
     ),
+    intro: t(
+      "When a science report borrows an expert's exact sentence—*Dr. Lin explained, \"Coral reefs shelter a quarter of ocean life.\"*—quotation marks show where your words stop and the source's exact words begin.",
+      '当科学报告直接引用专家的原话——*Dr. Lin explained, "Coral reefs shelter a quarter of ocean life."*——引号标出了哪里是你自己的话，哪里是出处的原话。',
+    ),
     prerequisites: ["punctuating-dialogue"],
     encompasses: [{ topic: "punctuating-dialogue", weight: 0.2 }],
     xp: 14,
@@ -1201,8 +1239,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "marking-a-quotation",
         t("Marking a Quotation", "标出引语"),
         t(
-          'When a report uses someone\'s **exact words**, they go in quotation marks. The signal phrase that names the speaker or the source comes first and ends with a comma: *The ranger wrote, "Every tree in this forest is older than the town."*\n\nThe quotation starts with a capital letter, and its period goes inside the closing quotation mark.',
-          '报告引用某人的**原话**时，原话要放在引号里。说明说话人或出处的部分放在前面，以逗号结尾：*The ranger wrote, "Every tree in this forest is older than the town."*\n\n引语以大写字母开头，句号放在后引号里面。',
+          'When a report uses someone\'s **exact words**, they go in quotation marks. The signal phrase that names the speaker or the source comes first and ends with a comma: *The ranger wrote, "Every tree in this forest is older than the town."*\n\nThe quotation starts with a capital letter, and its period goes inside the closing quotation mark.\n\n> **Watch out.** Do not drop the comma after the signal phrase or put the period outside the closing quotation mark (*"...town.".* or *"...town".* is wrong).',
+          '报告引用某人的**原话**时，原话要放在引号里。说明说话人或出处的部分放在前面，以逗号结尾：*The ranger wrote, "Every tree in this forest is older than the town."*\n\n引语以大写字母开头，句号放在后引号里面。\n\n> **注意。** 不要漏掉说明部分后面的逗号，也不要把句号放到后引号外面（*"...town".* 是错的）。',
         ),
         itemGenerator(quoteMarkBank),
       ),
@@ -1210,8 +1248,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "quotation-or-paraphrase",
         t("Quotation or Paraphrase", "引语还是转述"),
         t(
-          "A **paraphrase** tells what someone said in other words, often after *that* or *to*: *The ranger wrote that every tree in the forest was older than the town.* A paraphrase is not the exact words, so it takes **no** quotation marks.\n\nAsk: are these the very words that were said or written? Only then use quotation marks.",
-          "**转述**用别的话说出某人说过的内容，常放在 *that* 或 *to* 后面：*The ranger wrote that every tree in the forest was older than the town.* 转述不是原话，所以**不用**引号。\n\n问一问：这是当时说的或写的原话吗？只有是原话才加引号。",
+          'A **paraphrase** tells what someone said in other words, often after *that* or *to*: *The ranger wrote that every tree in the forest was older than the town.* A paraphrase is not the exact words, so it takes **no** quotation marks.\n\nAsk: are these the very words that were said or written? Only then use quotation marks.\n\n> **Watch out.** Never put quotation marks after *that* in an indirect report (*said that "the bus left"* is wrong).',
+          '**转述**用别的话说出某人说过的内容，常放在 *that* 或 *to* 后面：*The ranger wrote that every tree in the forest was older than the town.* 转述不是原话，所以**不用**引号。\n\n问一问：这是当时说的或写的原话吗？只有是原话才加引号。\n\n> **注意。** 间接转述中 *that* 后面不要加引号（*said that "the bus left"* 是错的）。',
         ),
         nameKind({
           lines: quoteKindLines,
@@ -1229,6 +1267,10 @@ export const usageTopics4: readonly TopicDef[] = [
       "Titles, days, months and places have short forms with a capital and a period, and some names are written in capitals.",
       "称谓、星期、月份和地名有缩写形式，首字母大写并加句号；有些名称用大写字母缩写。",
     ),
+    intro: t(
+      "Look at an envelope addressed to *Dr. Patel, 14 Oak Ave., Oct. 12*—three everyday words are trimmed to short forms so they fit neatly in tight spaces. Each kind of abbreviation follows its own rules for capitals and periods.",
+      "看看信封上的写法 *Dr. Patel, 14 Oak Ave., Oct. 12*——三个常见词被缩短，好让版面简洁紧凑。不同类别的缩写各有大小写和句号规则。",
+    ),
     prerequisites: ["capitalizing-names-and-titles"],
     encompasses: [{ topic: "capitalizing-names-and-titles", weight: 0.2 }],
     xp: 14,
@@ -1238,8 +1280,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "choosing-abbreviations",
         t("Choosing the Abbreviation", "选择缩写"),
         t(
-          "An **abbreviation** is a short form of a word.\n\n- Titles: *Dr.*, *Mr.*, *Capt.*, *Prof.*, *Jr.*\n- Days and months: *Mon.*, *Wed.*, *Jan.*, *Feb.*, *Sept.*\n- Addresses: *St.*, *Ave.*, *Rd.*, *Mt.*\n- Measures, in small letters: *in.*, *ft.*, *yd.*, *min.*\n- Names made of first letters, in capitals with no periods: *USA*, *NASA*, *UN*.\n\nUse abbreviations in addresses, lists and charts; in a sentence of a report, write the full word.",
-          "**缩写**是一个词的简短形式。\n\n- 称谓：*Dr.*、*Mr.*、*Capt.*、*Prof.*、*Jr.*\n- 星期和月份：*Mon.*、*Wed.*、*Jan.*、*Feb.*、*Sept.*\n- 地址：*St.*、*Ave.*、*Rd.*、*Mt.*\n- 计量单位，用小写：*in.*、*ft.*、*yd.*、*min.*\n- 由首字母组成的名称，全部大写，不加句号：*USA*、*NASA*、*UN*。\n\n缩写用在地址、清单和表格里；在报告的句子中，要写出完整的词。",
+          "An **abbreviation** is a short form of a word.\n\n- Titles: *Dr.*, *Mr.*, *Capt.*, *Prof.*, *Jr.*\n- Days and months: *Mon.*, *Wed.*, *Jan.*, *Feb.*, *Sept.*\n- Addresses: *St.*, *Ave.*, *Rd.*, *Mt.*\n- Measures, in small letters: *in.*, *ft.*, *yd.*, *min.*\n- Names made of first letters, in capitals with no periods: *USA*, *NASA*, *UN*.\n\n> **Watch out.** Check both capitalization and periods—units like *ft.* stay lowercase, while initialisms like *NASA* and *USA* use all capitals with no periods.",
+          "**缩写**是一个词的简短形式。\n\n- 称谓：*Dr.*、*Mr.*、*Capt.*、*Prof.*、*Jr.*\n- 星期和月份：*Mon.*、*Wed.*、*Jan.*、*Feb.*、*Sept.*\n- 地址：*St.*、*Ave.*、*Rd.*、*Mt.*\n- 计量单位，用小写：*in.*、*ft.*、*yd.*、*min.*\n- 由首字母组成的名称，全部大写，不加句号：*USA*、*NASA*、*UN*。\n\n> **注意。** 大小写和句号都要核对——*ft.* 这类计量单位用小写，而 *NASA*、*USA* 这类首字母缩写全大写且不加句号。",
         ),
         itemGenerator(abbreviationBank),
       ),
@@ -1247,8 +1289,8 @@ export const usageTopics4: readonly TopicDef[] = [
         "reading-abbreviations",
         t("Reading Abbreviations", "读懂缩写"),
         t(
-          "To read an abbreviation, find the word whose letters it keeps, in the same order: *Feb.* keeps the *F, e, b* of *February*. Some short forms look alike, so think about where you see it: *St.* on an address is *Street*, and *Sat.* on a calendar is *Saturday*.",
-          "读缩写时，找出它按顺序保留了哪个词的字母：*Feb.* 保留了 *February* 的 *F、e、b*。有些缩写长得很像，所以要想想它出现在哪里：地址上的 *St.* 是 *Street*，日历上的 *Sat.* 是 *Saturday*。",
+          "To read an abbreviation, find the word whose letters it keeps, in the same order: *Feb.* keeps the *F, e, b* of *February*. Some short forms look alike, so think about where you see it: *St.* on an address is *Street*, and *Sat.* on a calendar is *Saturday*.\n\n> **Watch out.** Do not guess from the first letter alone—check every letter kept in the abbreviation and where it appears (*Mt.* on a map is *Mount*, not *Meter*).",
+          "读缩写时，找出它按顺序保留了哪个词的字母：*Feb.* 保留了 *February* 的 *F、e、b*。有些缩写长得很像，所以要想想它出现在哪里：地址上的 *St.* 是 *Street*，日历上的 *Sat.* 是 *Saturday*。\n\n> **注意。** 不要只看首字母猜——核对缩写保留的所有字母以及出现场合（地图上的 *Mt.* 是 *Mount*，不是 *Meter*）。",
         ),
         itemGenerator(expansionBank),
       ),

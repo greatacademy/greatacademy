@@ -457,33 +457,29 @@ const beRule = (words: string): Text =>
     : t("*we*, *you*, *they* and more than one take *were*", "*we*、*you*、*they* 和多个人或物用 *were*");
 
 /** whyNotForm explains a wrong past continuous in a gap. */
-const whyNotForm = (wrong: string, right: string, _shown: string, position: number): Text => {
-  if (position === 0) {
-    const rule = beRule(right);
+const whyNotForm = (wrong: string, _right: string, _shown: string, position: number): Text => {
+  if (position === 0)
     return t(
-      `*${wrong}* has the wrong form of *be* for this subject: ${rule.en}, so it is *${right}*.`,
-      `*${wrong}* 用错了 *be* 的形式：${rule["zh-CN"]}，所以是 *${right}*。`,
+      `*${wrong}* uses the wrong form of *be* for this subject—check whether the subject is singular (*was*) or plural (*were*).`,
+      `*${wrong}* 里的 *be* 动词与主语单复数不匹配——请核对主语该用 *was* 还是 *were*。`,
     );
-  }
   return t(
-    `*${wrong}* has no *-ing*. An action that was going on needs *was* or *were* with the *-ing* form: *${right}*.`,
-    `*${wrong}* 少了 *-ing*。当时正在进行的动作要用 *was* 或 *were* 加 *-ing* 形式：*${right}*。`,
+    `*${wrong}* has no *-ing*. An action that was in progress needs *was* or *were* plus the *-ing* form.`,
+    `*${wrong}* 少了 *-ing*。过去正在进行的动作需要用 *was / were* 加动词的 *-ing* 形式。`,
   );
 };
 
 /** whyNotWhich explains a wrong pair of verbs for the long and the short action. */
-const whyNotWhich = (wrong: string, right: string, _shown: string, position: number): Text => {
-  const [long, short] = right.split(" … ");
-  return position === 0
+const whyNotWhich = (wrong: string, _right: string, _shown: string, position: number): Text =>
+  position === 0
     ? t(
-        `*${wrong}* swaps the tenses. The action already going on takes the past continuous (*${long}*), and the short one after *when* takes the past simple (*${short}*).`,
-        `*${wrong}* 把两个时态弄反了。已经在进行的动作用过去进行时（*${long}*），*when* 后面的短动作用一般过去时（*${short}*）。`,
+        `*${wrong}* swaps the tenses. The longer action already in progress takes the past continuous, and the short interrupting action after *when* takes the past simple.`,
+        `*${wrong}* 把两个时态弄反了。已经在进行的较长动作用过去进行时，*when* 后面的短动作用一般过去时。`,
       )
     : t(
-        `*${wrong}* puts both actions in the past continuous. The short one after *when* happened at one moment, so it takes the past simple: *${short}*.`,
-        `*${wrong}* 把两个动作都用了过去进行时。*when* 后面的短动作发生在一瞬间，要用一般过去时：*${short}*。`,
+        `*${wrong}* puts both actions in the past continuous. The short action after *when* happened at one moment, so it takes the past simple.`,
+        `*${wrong}* 把两个动作都用了过去进行时。*when* 后面的短动作发生在一瞬间，要用一般过去时。`,
       );
-};
 
 const pastContinuous: TopicDef = {
   id: "past-continuous",
@@ -491,6 +487,10 @@ const pastContinuous: TopicDef = {
   summary: t(
     "I was walking home when I saw the fox. Was or were with -ing for something in progress when something else happened.",
     "I was walking home when I saw the fox. was / were 加 -ing 表示另一件事发生时正在进行的动作。",
+  ),
+  intro: t(
+    "Picture *We were feeding the ducks when it started to rain*. One longer action was already underway (*were feeding*), and a shorter event interrupted it (*started*). The past continuous (*was/were + -ing*) sets that background scene.",
+    "想象这个画面：*We were feeding the ducks when it started to rain.* 一个较长的动作已经在进行（*were feeding*），另一个短动作突然打断了它（*started*）。过去进行时（*was/were + -ing*）专门用来铺设这个背景场景。",
   ),
   prerequisites: ["past-simple-irregular", "present-continuous"],
   encompasses: [
@@ -504,8 +504,8 @@ const pastContinuous: TopicDef = {
       "form",
       t("Was or were with -ing", "was 或 were 加 -ing"),
       t(
-        "The past continuous is *was* or *were* with the *-ing* form of a verb:\n\n- *I*, *he*, *she*, *it* and one person: *was* — *I was reading. Tom was cooking.*\n- *we*, *you*, *they* and more than one: *were* — *We were walking. My parents were watching TV.*\n\nIt is for something that was going on at a time in the past: *When the phone rang, I was having dinner.*",
-        "过去进行时由 *was* 或 *were* 加动词的 *-ing* 形式构成：\n\n- *I*、*he*、*she*、*it* 和单个人用 *was*：*I was reading. Tom was cooking.*\n- *we*、*you*、*they* 和多个人用 *were*：*We were walking. My parents were watching TV.*\n\n它表示过去某个时候正在进行的事：*When the phone rang, I was having dinner.*\n\n中文用“正在……的时候”表达，英语要用 *was / were* 加 *-ing*，不能只写 *was walk*。",
+        "The past continuous is *was* or *were* with the *-ing* form of a verb:\n\n- *I*, *he*, *she*, *it* and one person: *was* — *I was reading. Tom was cooking.*\n- *we*, *you*, *they* and more than one: *were* — *We were walking. My parents were watching TV.*\n\nIt is for something that was going on at a time in the past: *When the phone rang, I was having dinner.*\n\n> **Watch out.** Never drop *-ing* after *was/were* (*I was walk* is wrong), and match *was* vs. *were* to the subject.",
+        "过去进行时由 *was* 或 *were* 加动词的 *-ing* 形式构成：\n\n- *I*、*he*、*she*、*it* 和单个人用 *was*：*I was reading. Tom was cooking.*\n- *we*、*you*、*they* 和多个人用 *were*：*We were walking. My parents were watching TV.*\n\n它表示过去某个时候正在进行的事：*When the phone rang, I was having dinner.*\n\n> **注意。** 不要在 *was / were* 后面漏掉 *-ing*（*I was walk* 是错的），同时核对主语该配 *was* 还是 *were*。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -513,8 +513,8 @@ const pastContinuous: TopicDef = {
         (right, shown) => {
           const rule = beRule(right);
           return t(
-            `The action was going on when something else happened, so it takes *was* or *were* with *-ing*, and ${rule.en}: ${fill(shown, right)}`,
-            `这个动作在另一件事发生时正在进行，所以用 *was* 或 *were* 加 *-ing*；${rule["zh-CN"]}：${fill(shown, right)}`,
+            `The action was going on when something else happened, so it takes *was* or *were* with *-ing*, and ${rule.en}: ${fill(shown, right)}\n\n**Check.** Verify both parts of *${right}*: the *be* form agrees with the subject, and the main verb ends in *-ing*.`,
+            `这个动作在另一件事发生时正在进行，所以用 *was* 或 *were* 加 *-ing*；${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 核对 *${right}* 的两部分：*be* 动词与主语一致，且实义动词带 *-ing*。`,
           );
         },
         whyNotForm,
@@ -524,8 +524,8 @@ const pastContinuous: TopicDef = {
       "which",
       t("The long action and the short one", "长动作和短动作"),
       t(
-        "When two things happen in the past, the longer one that was already going on takes the past continuous, and the short one that happened in the middle of it takes the past simple:\n\n*I was walking home* (long) *when I saw the fox* (short).\n\nThe short one usually comes after *when*.",
-        "过去的两件事同时出现时，已经在进行的、较长的动作用过去进行时，中途突然发生的、较短的动作用一般过去时：\n\n*I was walking home*（长）*when I saw the fox*（短）。\n\n短动作通常放在 *when* 后面。",
+        "When two things happen in the past, the longer one that was already going on takes the past continuous, and the short one that happened in the middle of it takes the past simple:\n\n*I was walking home* (long) *when I saw the fox* (short).\n\nThe short one usually comes after *when*.\n\n> **Watch out.** Do not put both verbs in the past continuous when one action interrupts the other—the interrupting verb after *when* stays in the past simple.",
+        "过去的两件事同时出现时，已经在进行的、较长的动作用过去进行时，中途突然发生的、较短的动作用一般过去时：\n\n*I was walking home*（长）*when I saw the fox*（短）。\n\n短动作通常放在 *when* 后面。\n\n> **注意。** 一个动作打断另一个动作时，不要把两个动词都写成过去进行时——*when* 后面的瞬间动作用一般过去时。",
       ),
       choiceGenerator(
         t("Choose the verbs for the two gaps.", "选出填入两个空白处的动词。"),
@@ -534,8 +534,8 @@ const pastContinuous: TopicDef = {
           const [first, second] = right.split(" … ");
           const done = shown.replace(/___ \([^)]*\)/u, `*${first}*`).replace(/___ \([^)]*\)/u, `*${second}*`);
           return t(
-            `The longer action was already going on, so it takes the past continuous (*${first}*); the short one after *when* happened in the middle of it, so it takes the past simple (*${second}*): ${done}`,
-            `较长的动作当时已在进行，用过去进行时（*${first}*）；*when* 后面的短动作在中途发生，用一般过去时（*${second}*）：${done}`,
+            `The longer action was already going on, so it takes the past continuous (*${first}*); the short one after *when* happened in the middle of it, so it takes the past simple (*${second}*): ${done}\n\n**Check.** Confirm the roles: background action → *was/were + -ing* (*${first}*), interrupting event after *when* → past simple (*${second}*).`,
+            `较长的动作当时已在进行，用过去进行时（*${first}*）；*when* 后面的短动作在中途发生，用一般过去时（*${second}*）：${done}\n\n**检验。** 核对分工：背景长动作 → 过去进行时（*${first}*），*when* 后的打断事件 → 一般过去时（*${second}*）。`,
           );
         },
         whyNotWhich,
@@ -545,14 +545,14 @@ const pastContinuous: TopicDef = {
       "write",
       t("Writing a sentence with when", "用 when 写句子"),
       t(
-        "Write one sentence from the note. The first action was going on, so it takes *was* or *were* with *-ing*; the action after *when* takes the past simple. You may also start with *When*: *When the phone rang, I was reading a book.*",
-        "根据笔记写一个句子。第一个动作当时正在进行，用 *was / were* 加 *-ing*；*when* 后面的动作用一般过去时。也可以用 *When* 开头：*When the phone rang, I was reading a book.*",
+        "Write one sentence from the note. The first action was going on, so it takes *was* or *were* with *-ing*; the action after *when* takes the past simple. You may also start with *When*: *When the phone rang, I was reading a book.*\n\n> **Watch out.** Double-check the *-ing* spelling (*run* → *running*, *make* → *making*) and use the past simple (not *was/were + -ing*) after *when*.",
+        "根据笔记写一个句子。第一个动作当时正在进行，用 *was / were* 加 *-ing*；*when* 后面的动作用一般过去时。也可以用 *When* 开头：*When the phone rang, I was reading a book.*\n\n> **注意。** 核对 *-ing* 拼写（如 *run* → *running*、*make* → *making*），并且 *when* 后面用一般过去时，不要也写成过去进行时。",
       ),
       typedGenerator("sentence", t("Write a sentence from the note.", "根据笔记写一个句子。"), pcTypedBank, (right) => {
         const rule = beRule(right.replace(/^\S+ (\S+ )?(?=was|were)/u, ""));
         return t(
-          `The first action was going on, so it takes *was* or *were* with *-ing* (${rule.en}); the short action after *when* takes the past simple: ${right}`,
-          `第一个动作当时正在进行，用 *was* 或 *were* 加 *-ing*（${rule["zh-CN"]}）；*when* 后面的短动作用一般过去时：${right}`,
+          `The first action was going on, so it takes *was* or *were* with *-ing* (${rule.en}); the short action after *when* takes the past simple: ${right}\n\n**Check.** Check both clauses: the ongoing clause has *was/were + -ing*, and the *when* clause has a past-simple verb.`,
+          `第一个动作当时正在进行，用 *was* 或 *were* 加 *-ing*（${rule["zh-CN"]}）；*when* 后面的短动作用一般过去时：${right}\n\n**检验。** 检查两个分句：背景句是 *was/were + -ing*，*when* 从句是一般过去时。`,
         );
       }),
     ),

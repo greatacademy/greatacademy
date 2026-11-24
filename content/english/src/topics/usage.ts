@@ -1091,6 +1091,10 @@ export const usageTopics: readonly TopicDef[] = [
       "Compare two things with -er or more, and three or more with -est or most.",
       "用 -er 或 more 比较两者，用 -est 或 most 比较三者及以上。",
     ),
+    intro: t(
+      "Comparing two trees gives *taller*, comparing all the trees in the park gives *tallest*, and comparing two puzzles gives *more difficult*. How you form a comparison depends on how many things you compare and how long the adjective is.",
+      "比较两棵树用 *taller*，比较公园里所有的树用 *tallest*，比较两道难题用 *more difficult*。比较级和最高级的形式，取决于比较对象的数量和形容词的长短。",
+    ),
     prerequisites: ["adjectives-and-adverbs"],
     encompasses: [{ topic: "adjectives-and-adverbs", weight: 0.2 }],
     xp: 10,
@@ -1099,8 +1103,8 @@ export const usageTopics: readonly TopicDef[] = [
         "er-and-est",
         t("Adding -er and -est", "加 -er 和 -est"),
         t(
-          "To compare **two** things, add *-er* to a short adjective: *tall, taller*. To compare **three or more**, add *-est*: *tallest*.\n\nSpelling changes: a final *e* is dropped (*large, larger*); a final *y* after a consonant becomes *i* (*happy, happier*); a short word ending in one vowel and one consonant doubles the consonant (*big, bigger*; *hot, hottest*).",
-          "比较**两个**事物时，在短形容词后加 *-er*：*tall, taller*。比较**三个或更多**时，加 *-est*：*tallest*。\n\n拼写变化：词尾的 *e* 去掉（*large, larger*）；辅音后的 *y* 变成 *i*（*happy, happier*）；以“一个元音加一个辅音”结尾的短词要双写辅音（*big, bigger*；*hot, hottest*）。",
+          "To compare **two** things, add *-er* to a short adjective: *tall, taller*. To compare **three or more**, add *-est*: *tallest*.\n\nSpelling changes: a final *e* is dropped (*large, larger*); a final *y* after a consonant becomes *i* (*happy, happier*); a short word ending in one vowel and one consonant doubles the consonant (*big, bigger*; *hot, hottest*).\n\n> **Watch out.** Check the spelling change before adding *-er* or *-est*—*big* doubles the *g* (*bigger*), *happy* changes *y* to *i* (*happier*), and *large* drops its silent *e* (*larger*).",
+          "比较**两个**事物时，在短形容词后加 *-er*：*tall, taller*。比较**三个或更多**时，加 *-est*：*tallest*。\n\n拼写变化：词尾的 *e* 去掉（*large, larger*）；辅音后的 *y* 变成 *i*（*happy, happier*）；以“一个元音加一个辅音”结尾的短词要双写辅音（*big, bigger*；*hot, hottest*）。\n\n> **注意。**加 *-er* 或 *-est* 前先看拼写变化——*big* 要双写 *g*（*bigger*），*happy* 把 *y* 变成 *i*（*happier*），*large* 去掉不发音的 *e*（*larger*）。",
         ),
         typedGenerator(
           "word-form",
@@ -1108,8 +1112,8 @@ export const usageTopics: readonly TopicDef[] = [
           [...erEstBank, ...erEstMore],
           (right, shown) =>
             t(
-              `**${right}**. ${shown.includes("comparing two") ? "Two things are compared, so the word takes the -er form, with any spelling change." : "One stands out from a whole group, so the word takes the -est form, with any spelling change."}`,
-              `**${right}**。${shown.includes("comparing two") ? "比较的是两个事物，所以用 -er 形式，并注意拼写变化。" : "从一组中突出一个，所以用 -est 形式，并注意拼写变化。"}`,
+              `**${right}**. ${shown.includes("comparing two") ? "Two things are compared, so the word takes the *-er* form." : "One stands out from a whole group, so the word takes the *-est* form."}\n\n**Check.** Check two things: count how many are compared (${shown.includes("comparing two") ? "two → *-er*" : "three or more → *-est*"}), and confirm any spelling change at the end of the base word.`,
+              `**${right}**。${shown.includes("comparing two") ? "比较的是两个事物，所以用 *-er* 形式。" : "从一组中突出一个，所以用 *-est* 形式。"}\n\n**检验。**核对两件事：先数比较对象的数量（${shown.includes("comparing two") ? "两个 → *-er*" : "三个或更多 → *-est*"}），再检查原词词尾的拼写变化。`,
             ),
         ),
       ),
@@ -1117,8 +1121,8 @@ export const usageTopics: readonly TopicDef[] = [
         "more-and-most",
         t("More and Most", "more 和 most"),
         t(
-          "Most adjectives of three or more syllables, and many of two, do not take *-er* or *-est*. Use *more* for two things and *most* for three or more: *more difficult*, *the most careful*.\n\nNever use both: *more heavier* and *most kindest* are wrong.",
-          "大多数三个或更多音节的形容词，以及许多两个音节的形容词，不加 *-er* 或 *-est*。比较两者用 *more*，三者及以上用 *most*：*more difficult*、*the most careful*。\n\n两者不能同时使用：*more heavier* 和 *most kindest* 都是错的。",
+          "Most adjectives of three or more syllables, and many of two, do not take *-er* or *-est*. Use *more* for two things and *most* for three or more: *more difficult*, *the most careful*.\n\nNever use both: *more heavier* and *most kindest* are wrong.\n\n> **Watch out.** Do not tack *-er* or *-est* onto long adjectives like *difficult* or *careful*, and check whether *than* (two things) or *the … of all* (a group) signals *more* or *most*.",
+          "大多数三个或更多音节的形容词，以及许多两个音节的形容词，不加 *-er* 或 *-est*。比较两者用 *more*，三者及以上用 *most*：*more difficult*、*the most careful*。\n\n两者不能同时使用：*more heavier* 和 *most kindest* 都是错的。\n\n> **注意。**不要给 *difficult*、*careful* 这类长形容词加 *-er* 或 *-est*，并看清是 *than*（两者用 *more*）还是 *the … of all*（一组用 *most*）。",
         ),
         choiceGenerator(
           t("Which words complete the sentence?", "哪个选项能补全句子？"),
@@ -1126,12 +1130,12 @@ export const usageTopics: readonly TopicDef[] = [
           (right, shown) =>
             right.startsWith("more ")
               ? t(
-                  `${shown.replace("___", `**${right}**`)} A long adjective takes *more*, not *-er*, and *more* is right because only two things are compared.`,
-                  `${shown.replace("___", `**${right}**`)} 长形容词用 *more*，不加 *-er*；这里只比较两个事物，所以用 *more*。`,
+                  `${shown.replace("___", `**${right}**`)} A long adjective takes *more*, not *-er*, when two things are compared.\n\n**Check.** Count the things being compared—there are two, and the adjective is too long for *-er*, so **${right}** fits.`,
+                  `${shown.replace("___", `**${right}**`)} 长形容词比较两者时用 *more*，不加 *-er*。\n\n**检验。**数一下比较的对象——只有两个，而且形容词较长不能加 *-er*，所以用 **${right}**。`,
                 )
               : t(
-                  `${shown.replace("___", `**${right}**`)} A long adjective takes *most*, not *-est*, and *most* is right because one stands out from a group of three or more.`,
-                  `${shown.replace("___", `**${right}**`)} 长形容词用 *most*，不加 *-est*；这里是从三个或更多之中突出一个，所以用 *most*。`,
+                  `${shown.replace("___", `**${right}**`)} A long adjective takes *most*, not *-est*, when one stands out from a group.\n\n**Check.** Look for the group signal (*the … in/of/ever*)—one stands out from three or more, so **${right}** fits.`,
+                  `${shown.replace("___", `**${right}**`)} 长形容词从一组中突出一个时用 *most*，不加 *-est*。\n\n**检验。**看句子里的范围标志（*the … in/of/ever*）——这是从三个或更多中挑出一个，所以用 **${right}**。`,
                 ),
           moreMostFeedback,
         ),
@@ -1140,8 +1144,8 @@ export const usageTopics: readonly TopicDef[] = [
         "irregular-and-double",
         t("Irregular Forms and Doubled Comparisons", "不规则形式和重复比较"),
         t(
-          "A few common words change completely: *good, better, best*; *bad, worse, worst*; *far, farther, farthest*; *little, less, least*; *much* or *many, more, most*. The adverb *well* also becomes *better* and *best*.\n\nUse one way of comparing, not two: *heavier*, not *more heavier*.",
-          "少数常用词的形式完全改变：*good, better, best*；*bad, worse, worst*；*far, farther, farthest*；*little, less, least*；*much* 或 *many, more, most*。副词 *well* 也变成 *better* 和 *best*。\n\n只用一种比较方式，不能重复：*heavier*，而不是 *more heavier*。",
+          "A few common words change completely: *good, better, best*; *bad, worse, worst*; *far, farther, farthest*; *little, less, least*; *much* or *many, more, most*. The adverb *well* also becomes *better* and *best*.\n\nUse one way of comparing, not two: *heavier*, not *more heavier*.\n\n> **Watch out.** Never write *more heavier*, *most kindest*, *gooder*, or *badder*—each comparison uses only one method, and irregular words use their own forms.",
+          "少数常用词的形式完全改变：*good, better, best*；*bad, worse, worst*；*far, farther, farthest*；*little, less, least*；*much* 或 *many, more, most*。副词 *well* 也变成 *better* 和 *best*。\n\n只用一种比较方式，不能重复：*heavier*，而不是 *more heavier*。\n\n> **注意。**绝不要写 *more heavier*、*most kindest*、*gooder* 或 *badder*——每次只用一种比较方式，不规则词要用各自固定的形式。",
         ),
         choiceGenerator(
           t("Choose the correct form.", "选择正确的形式。"),
@@ -1149,12 +1153,12 @@ export const usageTopics: readonly TopicDef[] = [
           (right, shown) =>
             shown.includes("___")
               ? t(
-                  `${shown.replace("___", `**${right}**`)} This word has an irregular form.`,
-                  `${shown.replace("___", `**${right}**`)} 这个词的比较形式是不规则的。`,
+                  `${shown.replace("___", `**${right}**`)} This word has an irregular comparative or superlative form.\n\n**Check.** Check how many things are compared and recall the word's irregular series (*good/better/best*, *bad/worse/worst*, etc.)—**${right}** matches both.`,
+                  `${shown.replace("___", `**${right}**`)} 这个词的比较形式是不规则的。\n\n**检验。**先看比较对象的数量，再核对不规则变化表（*good/better/best*、*bad/worse/worst* 等）——**${right}** 两边都吻合。`,
                 )
               : t(
-                  `**${right}** It compares in one way only, with the right form for the number of things.`,
-                  `**${right}** 只用一种比较方式，并且形式符合比较对象的数量。`,
+                  `**${right}** It compares in one way only, with the right form for the number of things.\n\n**Check.** Scan the adjective in **${right}**—it never combines *more/most* with *-er/-est*, and its degree matches two vs. a group.`,
+                  `**${right}** 只用一种比较方式，并且形式符合比较对象的数量。\n\n**检验。**检查 **${right}** 里的形容词——没有把 *more/most* 和 *-er/-est* 叠用，而且比较级/最高级与对象数量一致。`,
                 ),
           irregularOrDoubled,
         ),
@@ -1165,6 +1169,10 @@ export const usageTopics: readonly TopicDef[] = [
     id: "apostrophes-and-possessives",
     title: t("Apostrophes and Possessives", "撇号和所有格"),
     summary: t("Show who owns something with an apostrophe, and tell its from it's.", "用撇号表示所属，并区分 its 和 it's。"),
+    intro: t(
+      "Compare *the girl's coat* (one girl) with *the girls' coats* (several girls), and *the dog wagged its tail* with *It's raining*. One small mark—an apostrophe—tells whether there is one owner, several owners, or a contraction.",
+      "对比 *the girl's coat*（一个女孩）和 *the girls' coats*（几个女孩），再对比 *the dog wagged its tail* 和 *It's raining*。小小一个撇号，就能区分单数所有、复数所有还是缩写。",
+    ),
     prerequisites: ["nouns-and-pronouns"],
     encompasses: [{ topic: "nouns-and-pronouns", weight: 0.2 }],
     xp: 10,
@@ -1173,8 +1181,8 @@ export const usageTopics: readonly TopicDef[] = [
         "singular-possessive",
         t("One Owner", "一个所有者"),
         t(
-          "To show that something belongs to one person or thing, add **'s**: *the dog's bone*, *Maria's book*. Add *'s* even when the name ends in *s*: *James's hat*.\n\nA plain *s* with no apostrophe makes a plural, not a possessive: *two dogs*.",
-          "表示某物属于一个人或一个事物时，加 **'s**：*the dog's bone*、*Maria's book*。即使名字以 *s* 结尾，也加 *'s*：*James's hat*。\n\n只加 *s* 不加撇号是复数，不是所有格：*two dogs*。",
+          "To show that something belongs to one person or thing, add **'s**: *the dog's bone*, *Maria's book*. Add *'s* even when the name ends in *s*: *James's hat*.\n\nA plain *s* with no apostrophe makes a plural, not a possessive: *two dogs*.\n\n> **Watch out.** Do not drop the final *s* of a singular name like *James* or *Chris* before adding *'s*—write *James's*, not *Jame's*.",
+          "表示某物属于一个人或一个事物时，加 **'s**：*the dog's bone*、*Maria's book*。即使名字以 *s* 结尾，也加 *'s*：*James's hat*。\n\n只加 *s* 不加撇号是复数，不是所有格：*two dogs*。\n\n> **注意。**单数名字本身以 *s* 结尾（如 *James*、*Chris*）时，不要删掉原来的 *s*——要写 *James's*，而不是 *Jame's*。",
         ),
         typedGenerator(
           "word-form",
@@ -1182,8 +1190,8 @@ export const usageTopics: readonly TopicDef[] = [
           [...singularPossessiveBank, ...singularPossessiveMore],
           (right) =>
             t(
-              `**${right}**. There is one owner, so the word takes an apostrophe and then *s*, even after a final *s*.`,
-              `**${right}**。所有者只有一个，所以加撇号再加 *s*，即使词尾已经是 *s* 也一样。`,
+              `**${right}**. There is one owner, so the word takes an apostrophe and then *s*, even after a final *s*.\n\n**Check.** Cover the *'s* at the end of **${right}**—what stays visible is the exact singular owner.`,
+              `**${right}**。所有者只有一个，所以加撇号再加 *s*，即使词尾已经是 *s* 也一样。\n\n**检验。**遮住 **${right}** 末尾的 *'s*——露出来的正好是那个单数所有者。`,
             ),
         ),
       ),
@@ -1191,8 +1199,8 @@ export const usageTopics: readonly TopicDef[] = [
         "plural-possessive",
         t("Several Owners", "多个所有者"),
         t(
-          "When the owners are a plural that ends in *s*, add only an apostrophe after it: *the girls' coats*, *the foxes' den*.\n\nWhen the plural does not end in *s*, add **'s** as for one owner: *the children's toys*, *the women's shoes*.",
-          "所有者是以 *s* 结尾的复数时，只在后面加撇号：*the girls' coats*、*the foxes' den*。\n\n复数不以 *s* 结尾时，像单个所有者一样加 **'s**：*the children's toys*、*the women's shoes*。",
+          "When the owners are a plural that ends in *s*, add only an apostrophe after it: *the girls' coats*, *the foxes' den*.\n\nWhen the plural does not end in *s*, add **'s** as for one owner: *the children's toys*, *the women's shoes*.\n\n> **Watch out.** First form the plural, then add the apostrophe: *girls → girls'*, *children → children's* (never *childrens'* or *girls's*).",
+          "所有者是以 *s* 结尾的复数时，只在后面加撇号：*the girls' coats*、*the foxes' den*。\n\n复数不以 *s* 结尾时，像单个所有者一样加 **'s**：*the children's toys*、*the women's shoes*。\n\n> **注意。**先写出复数形式，再加撇号：*girls → girls'*，*children → children's*（绝不是 *childrens'* 或 *girls's*）。",
         ),
         typedGenerator(
           "word-form",
@@ -1201,9 +1209,11 @@ export const usageTopics: readonly TopicDef[] = [
           (right) =>
             t(
               right.endsWith("s'")
-                ? `**${right}**. The plural already ends in *s*, so only an apostrophe follows.`
-                : `**${right}**. The plural does not end in *s*, so it takes *'s*.`,
-              right.endsWith("s'") ? `**${right}**。复数已经以 *s* 结尾，所以只加撇号。` : `**${right}**。复数不以 *s* 结尾，所以加 *'s*。`,
+                ? `**${right}**. The plural already ends in *s*, so only an apostrophe follows.\n\n**Check.** Look to the left of the apostrophe in **${right}**—you see the complete plural noun ending in *s*.`
+                : `**${right}**. The plural does not end in *s*, so it takes *'s*.\n\n**Check.** Look to the left of the apostrophe in **${right}**—you see the irregular plural noun, followed by *'s*.`,
+              right.endsWith("s'")
+                ? `**${right}**。复数已经以 *s* 结尾，所以只加撇号。\n\n**检验。**看 **${right}** 撇号左边的部分——正是以 *s* 结尾的完整复数名词。`
+                : `**${right}**。复数不以 *s* 结尾，所以加 *'s*。\n\n**检验。**看 **${right}** 撇号左边的部分——正是不规则复数名词，后面加上 *'s*。`,
             ),
         ),
       ),
@@ -1211,16 +1221,16 @@ export const usageTopics: readonly TopicDef[] = [
         "its-and-its",
         t("Its and It's", "its 和 it's"),
         t(
-          "*It's* is short for *it is* or *it has*: *It's raining.* *Its* shows ownership, like *his* and *her*, and has no apostrophe: *The dog wagged its tail.*\n\nTest it: if *it is* or *it has* fits, write *it's*.",
-          "*It's* 是 *it is* 或 *it has* 的缩写：*It's raining.* *Its* 表示所属，就像 *his* 和 *her* 一样，没有撇号：*The dog wagged its tail.*\n\n检验方法：如果换成 *it is* 或 *it has* 讲得通，就写 *it's*。",
+          "*It's* is short for *it is* or *it has*: *It's raining.* *Its* shows ownership, like *his* and *her*, and has no apostrophe: *The dog wagged its tail.*\n\nTest it: if *it is* or *it has* fits, write *it's*.\n\n> **Watch out.** *Its'* with an apostrophe at the end is never a word, and possessive *its* takes no apostrophe at all.",
+          "*It's* 是 *it is* 或 *it has* 的缩写：*It's raining.* *Its* 表示所属，就像 *his* 和 *her* 一样，没有撇号：*The dog wagged its tail.*\n\n检验方法：如果换成 *it is* 或 *it has* 讲得通，就写 *it's*。\n\n> **注意。**词尾带撇号的 *its'* 从来不是英语单词，表示所属的 *its* 也没有任何撇号。",
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
           [...itsBank, ...itsMore],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "*It is* or *it has* fits here." : "The word shows ownership, so it has no apostrophe."}`,
-              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "这里可以换成 *it is* 或 *it has*。" : "这个词表示所属，所以没有撇号。"}`,
+              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "*It is* or *it has* fits here." : "The word shows ownership, so it has no apostrophe."}\n\n**Check.** ${right.toLowerCase() === "it's" ? "Expand it: *it is* or *it has* makes the sentence read smoothly, confirming the apostrophe." : "Try substituting *it is*—it breaks the sentence, confirming possessive *its* without an apostrophe."}`,
+              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "it's" ? "这里可以换成 *it is* 或 *it has*。" : "这个词表示所属，所以没有撇号。"}\n\n**检验。**${right.toLowerCase() === "it's" ? "把缩写展开成 *it is* 或 *it has*，句子通顺，说明要加撇号。" : "试试换成 *it is*——句子不通，说明这里是用无撇号的所属代词 *its*。"}`,
             ),
           confusedWord,
         ),
@@ -1234,6 +1244,10 @@ export const usageTopics: readonly TopicDef[] = [
       "Words that sound alike: there, their and they're; your and you're; to, too and two; then and than.",
       "发音相近的词：there、their 和 they're；your 和 you're；to、too 和 two；then 和 than。",
     ),
+    intro: t(
+      "*They're* parking *their* bikes over *there* uses three words that sound alike yet do three completely different jobs. Testing each word's role keeps your spelling accurate.",
+      "*They're* parking *their* bikes over *there* 用了三个读音相同、作用却完全不同的词。检验每个词在句中的作用，就不会写错。",
+    ),
     prerequisites: ["nouns-and-pronouns"],
     encompasses: [],
     xp: 10,
@@ -1242,16 +1256,16 @@ export const usageTopics: readonly TopicDef[] = [
         "there-their-theyre",
         t("There, Their and They're", "there、their 和 they're"),
         t(
-          "*Their* shows ownership: *their bags*. *There* names a place or begins a sentence such as *There are three apples*. *They're* is short for *they are*.\n\nTest it: if *they are* fits, write *they're*; if the word owns a noun after it, write *their*.",
-          "*Their* 表示所属：*their bags*。*There* 表示地点，或用于 *There are three apples* 这样的句子开头。*They're* 是 *they are* 的缩写。\n\n检验方法：如果换成 *they are* 讲得通，就写 *they're*；如果这个词后面跟着它所拥有的名词，就写 *their*。",
+          "*Their* shows ownership: *their bags*. *There* names a place or begins a sentence such as *There are three apples*. *They're* is short for *they are*.\n\nTest it: if *they are* fits, write *they're*; if the word owns a noun after it, write *their*.\n\n> **Watch out.** Never write *their* when you can expand the blank to *they are*, and never write *they're* right before a noun they own.",
+          "*Their* 表示所属：*their bags*。*There* 表示地点，或用于 *There are three apples* 这样的句子开头。*They're* 是 *they are* 的缩写。\n\n检验方法：如果换成 *they are* 讲得通，就写 *they're*；如果这个词后面跟着它所拥有的名词，就写 *their*。\n\n> **注意。**能展开成 *they are* 时绝不写 *their*，表示“他们的某物”时也绝不写 *they're*。",
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
           [...theirBank, ...theirMore, ...theirCross],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "It shows ownership." : right.toLowerCase() === "there" ? "It names a place or begins the sentence." : "It means *they are*."}`,
-              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "它表示所属。" : right.toLowerCase() === "there" ? "它表示地点或用于句首。" : "它的意思是 *they are*。"}`,
+              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "It shows ownership." : right.toLowerCase() === "there" ? "It names a place or begins the sentence." : "It means *they are*."}\n\n**Check.** ${right.toLowerCase() === "their" ? "Try expanding to *they are*—it fails, while *their* owns the noun right after it." : right.toLowerCase() === "there" ? "Try *they are* (fails) and check for an owned noun (none)—it points to a place or introduces the sentence, so *there* is right." : "Expand the blank to *they are*—the sentence reads smoothly, confirming *they're*."}`,
+              `${shown.replace("___", `**${right}**`)} ${right.toLowerCase() === "their" ? "它表示所属。" : right.toLowerCase() === "there" ? "它表示地点或用于句首。" : "它的意思是 *they are*。"}\n\n**检验。**${right.toLowerCase() === "their" ? "试着展开成 *they are*——说不通，而 *their* 正好修饰后面的名词表示所属。" : right.toLowerCase() === "there" ? "试着换成 *they are* 说不通，后面也没有所属名词——这里指地点或引导句子，所以用 *there*。" : "把空格展开成 *they are*——句子完全通顺，确认为 *they're*。"}`,
             ),
           confusedWord,
         ),
@@ -1260,16 +1274,16 @@ export const usageTopics: readonly TopicDef[] = [
         "your-to-too-two",
         t("Your, You're, To, Too and Two", "your、you're、to、too 和 two"),
         t(
-          "*Your* shows ownership: *your jacket*. *You're* is short for *you are*.\n\n*Two* is the number 2. *Too* means *also* or *more than enough*: *too hot*. *To* is used everywhere else: *to the store*, *to eat*.",
-          "*Your* 表示所属：*your jacket*。*You're* 是 *you are* 的缩写。\n\n*Two* 是数字 2。*Too* 的意思是“也”或“太”：*too hot*。其他情况都用 *to*：*to the store*、*to eat*。",
+          "*Your* shows ownership: *your jacket*. *You're* is short for *you are*.\n\n*Two* is the number 2. *Too* means *also* or *more than enough*: *too hot*. *To* is used everywhere else: *to the store*, *to eat*.\n\n> **Watch out.** Remember that *too* has an *extra o*, just as it means *also* or *more than enough*.",
+          "*Your* 表示所属：*your jacket*。*You're* 是 *you are* 的缩写。\n\n*Two* 是数字 2。*Too* 的意思是“也”或“太”：*too hot*。其他情况都用 *to*：*to the store*、*to eat*。\n\n> **注意。**记住 *too* 多了一个 *o*，正好对应“也”或“太（过头）”的意思。",
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
           [...yourToBank, ...yourToMore, ...yourToCross],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} ${{ your: "It shows ownership.", "you're": "It means *you are*.", two: "It is the number 2.", too: "It means *also* or *more than enough*.", to: "It is neither the number nor *also*." }[right.toLowerCase()] ?? ""}`,
-              `${shown.replace("___", `**${right}**`)} ${{ your: "它表示所属。", "you're": "它的意思是 *you are*。", two: "它是数字 2。", too: "它的意思是“也”或“太”。", to: "它既不是数字，也不表示“也”。" }[right.toLowerCase()] ?? ""}`,
+              `${shown.replace("___", `**${right}**`)} ${{ your: "It shows ownership.", "you're": "It means *you are*.", two: "It is the number 2.", too: "It means *also* or *more than enough*.", to: "It is neither the number nor *also*." }[right.toLowerCase()] ?? ""}\n\n**Check.** ${{ your: "Try substituting *you are*—it breaks the sentence, confirming possessive *your*.", "you're": "Expand the blank to *you are*—it fits cleanly, confirming *you're*.", two: "Replace the blank with the numeral *2*—it fits, confirming *two*.", too: "Replace the blank with *also* or *very*—it fits, confirming *too*.", to: "Neither *2* nor *also/very* fits the blank, confirming *to*." }[right.toLowerCase()] ?? ""}`,
+              `${shown.replace("___", `**${right}**`)} ${{ your: "它表示所属。", "you're": "它的意思是 *you are*。", two: "它是数字 2。", too: "它的意思是“也”或“太”。", to: "它既不是数字，也不表示“也”。" }[right.toLowerCase()] ?? ""}\n\n**检验。**${{ your: "试着代换成 *you are*——句子不通，确认为表示所属的 *your*。", "you're": "把空格展开成 *you are*——句子通顺，确认为 *you're*。", two: "把空格换成数字 *2*——意思完全相符，确认为 *two*。", too: "把空格换成“也”或“太”——意思完全相符，确认为 *too*。", to: "换成数字 *2* 和“也/太”都讲不通，确认为 *to*。" }[right.toLowerCase()] ?? ""}`,
             ),
           confusedWord,
         ),
@@ -1278,17 +1292,48 @@ export const usageTopics: readonly TopicDef[] = [
         "then-than-affect-effect",
         t("Then and Than, Affect and Effect", "then 和 than，affect 和 effect"),
         t(
-          "*Than* compares: *older than me*. *Then* tells when: *and then we left*.\n\n*Affect* is usually a verb, to change something: *Does the weather affect you?* *Effect* is usually a noun, the result: *The medicine had an effect.* If *a*, *an* or *the* can come before it, it is the noun *effect*.",
-          "*Than* 用于比较：*older than me*。*Then* 表示时间：*and then we left*。\n\n*Affect* 通常是动词，意思是影响某事物：*Does the weather affect you?* *Effect* 通常是名词，意思是结果：*The medicine had an effect.* 如果前面能加 *a*、*an* 或 *the*，就是名词 *effect*。",
+          "*Than* compares: *older than me*. *Then* tells when: *and then we left*.\n\n*Affect* is usually a verb, to change something: *Does the weather affect you?* *Effect* is usually a noun, the result: *The medicine had an effect.* If *a*, *an* or *the* can come before it, it is the noun *effect*.\n\n> **Watch out.** Match the letters: *th**a**n* comp**a**res, *th**e**n* tells wh**e**n; ***a**ffect* is the **a**ction, ***e**ffect* is the **e**nd result.",
+          "*Than* 用于比较：*older than me*。*Then* 表示时间：*and then we left*。\n\n*Affect* 通常是动词，意思是影响某事物：*Does the weather affect you?* *Effect* 通常是名词，意思是结果：*The medicine had an effect.* 如果前面能加 *a*、*an* 或 *the*，就是名词 *effect*。\n\n> **注意。**用字母巧记：*th**a**n* 用于比较，*th**e**n* 表示时间（wh**e**n）；***a**ffect* 是动词（动作），***e**ffect* 是名词（结果）。",
         ),
         choiceGenerator(
           t("Which word completes the sentence?", "哪个词能补全句子？"),
           [...thenThanBank, ...thenThanMore, ...thenThanCross],
-          (right, shown) =>
-            t(
-              `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.en ?? ""}`,
-              `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.["zh-CN"] ?? ""}`,
-            ),
+          (right, shown) => {
+            const check = new Map<string, readonly [string, string]>([
+              [
+                "than",
+                [
+                  "Look for a comparison word (*more, taller, faster*) right before it—comparing takes *than*.",
+                  "看前面有没有比较级词（如 *more, taller, faster*）——表比较用 *than*。",
+                ],
+              ],
+              [
+                "then",
+                [
+                  "Replace the blank with *next* or *at that time*—it fits, confirming *then*.",
+                  "把空格换成“然后”或“那时”——意思通顺，确认为 *then*。",
+                ],
+              ],
+              [
+                "affect",
+                [
+                  "Replace the blank with *change*—it works as a verb, confirming *affect*.",
+                  "把空格换成动词“改变/影响”（*change*）——语法通顺，确认为 *affect*。",
+                ],
+              ],
+              [
+                "effect",
+                [
+                  "Replace the blank with *result*—it works as a noun, confirming *effect*.",
+                  "把空格换成名词“结果”（*result*）——语法通顺，确认为 *effect*。",
+                ],
+              ],
+            ]).get(right.toLowerCase());
+            return t(
+              `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.en ?? ""}\n\n**Check.** ${check?.[0] ?? ""}`,
+              `${shown.replace("___", `**${right}**`)} ${thenThanWhy.get(right)?.["zh-CN"] ?? ""}\n\n**检验。**${check?.[1] ?? ""}`,
+            );
+          },
           confusedWord,
         ),
       ),
@@ -1301,6 +1346,10 @@ export const usageTopics: readonly TopicDef[] = [
       "Keep the verbs of a sentence in the same time unless the time really changes.",
       "除非时间真的改变，句子中的动词要保持同一时态。",
     ),
+    intro: t(
+      "In *Eli packed his lunch and ran for the bus*, both verbs stay in the past tense because both actions happened together. Switching tenses mid-sentence without a real shift in time confuses the reader.",
+      "在 *Eli packed his lunch and ran for the bus* 中，两个动词都用过去时，因为两件事发生在同一时间。时间没变却半途切换时态，会让读者摸不着头脑。",
+    ),
     prerequisites: ["simple-verb-tenses"],
     encompasses: [{ topic: "simple-verb-tenses", weight: 0.3 }],
     xp: 10,
@@ -1309,16 +1358,16 @@ export const usageTopics: readonly TopicDef[] = [
         "spotting-shifts",
         t("Spotting a Shift", "找出时态的转换"),
         t(
-          "When the actions of a sentence happen at the same time, their verbs stay in the same tense. *She opened the door and sees a cat* jumps from past to present for no reason.\n\nA change is right only when the time really changes: *I lived here before, but now I live in town.*",
-          "句子中的动作发生在同一时间时，动词要保持同一时态。*She opened the door and sees a cat* 无缘无故地从过去时跳到了现在时。\n\n只有时间真的改变时，时态才可以改变：*I lived here before, but now I live in town.*",
+          "When the actions of a sentence happen at the same time, their verbs stay in the same tense. *She opened the door and sees a cat* jumps from past to present for no reason.\n\nA change is right only when the time really changes: *I lived here before, but now I live in town.*\n\n> **Watch out.** Check *every* verb in the sentence—especially the second verb after *and*, *when*, or *but*.",
+          "句子中的动作发生在同一时间时，动词要保持同一时态。*She opened the door and sees a cat* 无缘无故地从过去时跳到了现在时。\n\n只有时间真的改变时，时态才可以改变：*I lived here before, but now I live in town.*\n\n> **注意。**逐个检查句中的*每一个*动词——尤其是 *and*、*when* 或 *but* 后面的第二个动词。",
         ),
         choiceGenerator(
           t("Choose the sentence.", "选择句子。"),
           [...shiftBank, ...shiftMore],
           (right) =>
             t(
-              `**${right}** Both actions happen at the same time, so their verbs share a tense.`,
-              `**${right}** 两个动作发生在同一时间，所以动词时态相同。`,
+              `**${right}** Both actions happen at the same time, so their verbs share a tense.\n\n**Check.** Underline the verbs in **${right}**—none of them jumps unexpectedly between past and present.`,
+              `**${right}** 两个动作发生在同一时间，所以动词时态相同。\n\n**检验。**标出 **${right}** 里的所有动词——它们没有在过去时和现在时之间无故跳转。`,
             ),
           tenseShift,
         ),
@@ -1327,15 +1376,18 @@ export const usageTopics: readonly TopicDef[] = [
         "fixing-shifts",
         t("Fixing a Shift", "改正时态的转换"),
         t(
-          "Find the words that tell the time, such as *yesterday* or *last week*. Then change the verb that does not match so that every verb agrees with that time. Many common verbs have irregular past forms: *see, saw*; *catch, caught*; *give, gave*.",
-          "找出表示时间的词，例如 *yesterday* 或 *last week*。然后改动不一致的动词，使每个动词都符合那个时间。许多常用动词的过去式是不规则的：*see, saw*；*catch, caught*；*give, gave*。",
+          "Find the words that tell the time, such as *yesterday* or *last week*. Then change the verb that does not match so that every verb agrees with that time. Many common verbs have irregular past forms: *see, saw*; *catch, caught*; *give, gave*.\n\n> **Watch out.** Do not add *-ed* to irregular verbs (*catched*, *gived*)—use the true irregular past form.",
+          "找出表示时间的词，例如 *yesterday* 或 *last week*。然后改动不一致的动词，使每个动词都符合那个时间。许多常用动词的过去式是不规则的：*see, saw*；*catch, caught*；*give, gave*。\n\n> **注意。**不要给不规则动词强加 *-ed*（如 *catched*、*gived*）——要使用正确的不规则过去式。",
         ),
         typedGenerator(
           "sentence",
           t("Rewrite the sentence so its verbs agree in tense.", "改写句子，使动词时态一致。"),
           [...shiftFixBank, ...shiftFixMore],
           (right) =>
-            t(`**${right}** The time is past, so the second verb is past as well.`, `**${right}** 时间是过去，所以第二个动词也用过去时。`),
+            t(
+              `**${right}** The time is past, so the second verb is past as well.\n\n**Check.** Read **${right}** and compare the two verbs—both now match the past time of the sentence.`,
+              `**${right}** 时间是过去，所以第二个动词也用过去时。\n\n**检验。**通读 **${right}** 并对比两个动词——现在两个动词都与句子的过去时间一致。`,
+            ),
         ),
       ),
     ],

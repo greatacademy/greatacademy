@@ -1317,23 +1317,23 @@ function auxiliaryRule(text: string): Text {
 }
 
 /** whyNotOrder explains the normal order, or a missing auxiliary, after a negative opening. */
-const whyNotOrder = (wrong: string, _right: string, shown: string, position: number): Text => {
-  const rule = orderRule(shown);
-  const first =
-    position === 0
-      ? t(`*${wrong}* keeps the normal order of a statement.`, `*${wrong}* 还是陈述句的正常语序。`)
-      : t(`*${wrong}* alone leaves out the auxiliary.`, `只有 *${wrong}*，漏掉了助动词。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
-};
+const whyNotOrder = (wrong: string, _right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        `*${wrong}* keeps statement order, but a negative opening requires inverted question order (auxiliary before subject).`,
+        `*${wrong}* 保留了陈述句语序，而否定词放在句首时必须用疑问句倒装语序（助动词在主语前）。`,
+      )
+    : t(
+        `*${wrong}* leaves out the auxiliary; inverted order puts the auxiliary in front of the subject.`,
+        `*${wrong}* 漏掉了助动词；倒装结构需要把助动词放在主语前面。`,
+      );
 
 /** whyNotAuxiliary explains an auxiliary that does not match the normal sentence. */
-const whyNotAuxiliary = (wrong: string, _right: string, shown: string): Text => {
-  const rule = auxiliaryRule(shown);
-  return t(
-    `*${wrong}* does not match the verb of the normal sentence. ${rule.en}.`,
-    `*${wrong}* 和原来句子的动词不相配。${rule["zh-CN"]}。`,
+const whyNotAuxiliary = (wrong: string): Text =>
+  t(
+    `*${wrong}* does not match the tense, subject, or main-verb form of this inverted clause.`,
+    `*${wrong}* 与这个倒装句的时态、主语或主要动词形式不匹配。`,
   );
-};
 
 const inversion: TopicDef = {
   id: "inversion-after-negative-adverbs",
@@ -1341,6 +1341,10 @@ const inversion: TopicDef = {
   summary: t(
     "Never have I felt so tired. Rarely do people admit it. After a negative word at the start of a formal sentence, the order is that of a question.",
     "Never have I felt so tired. Rarely do people admit it. 正式的句子以否定词开头时，语序和疑问句一样。",
+  ),
+  intro: t(
+    "Move *never* or *rarely* to the front of a formal sentence for dramatic weight—*Never had the audience heard such silence*—and the auxiliary jumps ahead of the subject, just as in a question.",
+    "正式书面语把 *never* 或 *rarely* 提到句首加强语气时（*Never had the audience heard such silence*），助动词就会像疑问句一样跳到主语前面。",
   ),
   prerequisites: ["present-perfect-or-past-simple"],
   encompasses: [{ topic: "present-simple-questions", weight: 0.2 }],
@@ -1351,15 +1355,18 @@ const inversion: TopicDef = {
       "order",
       t("Question order after a negative word", "否定词后用疑问句语序"),
       t(
-        "In formal and written English, a sentence can begin with a negative or limiting word for emphasis: *never*, *rarely*, *seldom*, *little*, *not once*, *under no circumstances*, *no sooner*, *only then*. The subject and the auxiliary then change places, as in a question:\n\n- *I have never felt so tired.* → *Never **have I** felt so tired.*\n- *We had no sooner arrived than it started to rain.* → *No sooner **had we** arrived than it started to rain.*\n\n*Never I have felt* and *Never I felt* are wrong.",
-        "在正式的书面英语中，为了强调，句子可以用否定词或表示限制的词开头：*never*、*rarely*、*seldom*、*little*、*not once*、*under no circumstances*、*no sooner*、*only then*。这时主语和助动词要交换位置，和疑问句一样：\n\n- *I have never felt so tired.* → *Never **have I** felt so tired.*\n- *We had no sooner arrived than it started to rain.* → *No sooner **had we** arrived than it started to rain.*\n\n*Never I have felt* 和 *Never I felt* 都是错的。中文“我从来没有这么累过”语序不变，所以中国学生常常忘记倒装。",
+        "In formal and written English, a sentence can begin with a negative or limiting word for emphasis: *never*, *rarely*, *seldom*, *little*, *not once*, *under no circumstances*, *no sooner*, *only then*. The subject and the auxiliary then change places, as in a question:\n\n- *I have never felt so tired.* → *Never **have I** felt so tired.*\n- *We had no sooner arrived than it started to rain.* → *No sooner **had we** arrived than it started to rain.*\n\n> **Watch out.** Never keep statement order after a fronted negative (*Never I have felt* and *Never I felt* are both wrong)—always invert auxiliary + subject.",
+        "在正式的书面英语中，为了强调，句子可以用否定词或表示限制的词开头：*never*、*rarely*、*seldom*、*little*、*not once*、*under no circumstances*、*no sooner*、*only then*。这时主语和助动词要交换位置，和疑问句一样：\n\n- *I have never felt so tired.* → *Never **have I** felt so tired.*\n- *We had no sooner arrived than it started to rain.* → *No sooner **had we** arrived than it started to rain.*\n\n中文“我从来没有这么累过”语序不变，所以中国学生常常忘记倒装。\n\n> **注意。** 否定词提前后绝不能保留陈述语序（*Never I have felt* 和 *Never I felt* 都是错的），必须把助动词放在主语前。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
         orderChoice,
         (right, shown) => {
           const rule = orderRule(shown);
-          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+          return t(
+            `${rule.en}: ${fill(shown, right)}\n\n**Check.** Confirm the fronted negative is followed immediately by auxiliary + subject (*${right}*).`,
+            `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 确认句首否定词后面紧跟“助动词 + 主语”（*${right}*）。`,
+          );
         },
         whyNotOrder,
       ),
@@ -1368,15 +1375,18 @@ const inversion: TopicDef = {
       "auxiliary",
       t("Choosing the auxiliary", "选择助动词"),
       t(
-        "Use the auxiliary that the question would use. If the sentence already has *have*, *had*, *will*, *should* or *be*, that word moves before the subject. If it has none, add *do*, *does* or *did*, and the main verb goes back to its base form:\n\n- *People rarely admit it.* → *Rarely **do** people admit it.*\n- *She seldom eats meat.* → *Seldom **does** she **eat** meat.*\n- *He didn't say thank you once.* → *Not once **did** he **say** thank you.*\n- *The museum is seldom so quiet.* → *Seldom **is** the museum so quiet.*",
-        "用疑问句会用的助动词。如果句子里已经有 *have*、*had*、*will*、*should* 或 *be*，就把它移到主语前面；如果没有，就加 *do*、*does* 或 *did*，主要动词变回原形：\n\n- *People rarely admit it.* → *Rarely **do** people admit it.*\n- *She seldom eats meat.* → *Seldom **does** she **eat** meat.*\n- *He didn't say thank you once.* → *Not once **did** he **say** thank you.*\n- *The museum is seldom so quiet.* → *Seldom **is** the museum so quiet.*\n\n这和构成一般疑问句的方法完全相同：*Does she eat meat?*",
+        "Use the auxiliary that the question would use. If the sentence already has *have*, *had*, *will*, *should* or *be*, that word moves before the subject. If it has none, add *do*, *does* or *did*, and the main verb goes back to its base form:\n\n- *People rarely admit it.* → *Rarely **do** people admit it.*\n- *She seldom eats meat.* → *Seldom **does** she **eat** meat.*\n- *He didn't say thank you once.* → *Not once **did** he **say** thank you.*\n- *The museum is seldom so quiet.* → *Seldom **is** the museum so quiet.*\n\n> **Watch out.** Match the auxiliary to the verb that follows it: *do/does/did* takes a **base verb**, *has/have/had* takes a **past participle**, and *is/are/was/were* takes an adjective or *-ing*.",
+        "用疑问句会用的助动词。如果句子里已经有 *have*、*had*、*will*、*should* 或 *be*，就把它移到主语前面；如果没有，就加 *do*、*does* 或 *did*，主要动词变回原形：\n\n- *People rarely admit it.* → *Rarely **do** people admit it.*\n- *She seldom eats meat.* → *Seldom **does** she **eat** meat.*\n- *He didn't say thank you once.* → *Not once **did** he **say** thank you.*\n- *The museum is seldom so quiet.* → *Seldom **is** the museum so quiet.*\n\n这和构成一般疑问句的方法完全相同：*Does she eat meat?*\n\n> **注意。** 根据后面的动词形态核对助动词：*do/does/did* 配**动词原形**，*has/have/had* 配**过去分词**，*is/are/was/were* 配形容词或 *-ing*。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         auxiliaryChoice,
         (right, shown) => {
           const rule = auxiliaryRule(shown);
-          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+          return t(
+            `${rule.en}: ${fill(shown, right)}\n\n**Check.** Form the matching yes-no question in your head—the auxiliary that opens it (*${right}*) is the exact word needed here.`,
+            `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 在脑中把原句改成一般疑问句，开头用的那个助动词（*${right}*）就是这里该填的词。`,
+          );
         },
         whyNotAuxiliary,
       ),
@@ -1385,8 +1395,8 @@ const inversion: TopicDef = {
       "write",
       t("Writing inverted sentences", "写倒装句"),
       t(
-        "Rewrite the sentence so that it begins with the words given. Put the auxiliary before the subject, add *do*, *does* or *did* if there is no auxiliary, and keep the rest of the sentence:\n\n- *She seldom eats meat. (Seldom …)* becomes *Seldom does she eat meat.*\n- *I will never forget that day. (Never …)* becomes *Never will I forget that day.*\n\nThe negative word replaces *not* or *never* in the original sentence, so do not repeat it.",
-        "用给出的词开头改写句子。把助动词放在主语前面；没有助动词时加 *do*、*does* 或 *did*；句子的其余部分不变：\n\n- *She seldom eats meat. (Seldom …)* 写成 *Seldom does she eat meat.*\n- *I will never forget that day. (Never …)* 写成 *Never will I forget that day.*\n\n句首的否定词代替了原句的 *not* 或 *never*，不要重复。",
+        "Rewrite the sentence so that it begins with the words given. Put the auxiliary before the subject, add *do*, *does* or *did* if there is no auxiliary, and keep the rest of the sentence:\n\n- *She seldom eats meat. (Seldom …)* becomes *Seldom does she eat meat.*\n- *I will never forget that day. (Never …)* becomes *Never will I forget that day.*\n\n> **Watch out.** Drop *not* or *never* from the middle of the original sentence once the fronted negative replaces it, and return the main verb to its base form after *do/does/did*.",
+        "用给出的词开头改写句子。把助动词放在主语前面；没有助动词时加 *do*、*does* 或 *did*；句子的其余部分不变：\n\n- *She seldom eats meat. (Seldom …)* 写成 *Seldom does she eat meat.*\n- *I will never forget that day. (Never …)* 写成 *Never will I forget that day.*\n\n> **注意。** 句首否定词已经代替了原句中的 *not* 或 *never*，不要在句中重复；加了 *do/does/did* 后，主要动词记得还原成原形。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1395,7 +1405,10 @@ const inversion: TopicDef = {
         (right) => {
           const order = orderRule(right);
           const aux = auxiliaryRule(right);
-          return t(`${order.en}. ${aux.en}: ${right}`, `${order["zh-CN"]}。${aux["zh-CN"]}：${right}`);
+          return t(
+            `${order.en}. ${aux.en}: ${right}\n\n**Check.** Confirm auxiliary + subject order, no repeated *not/never*, and the right verb form after the auxiliary.`,
+            `${order["zh-CN"]}。${aux["zh-CN"]}：${right}\n\n**检验。** 核对“助动词 + 主语”倒装语序、没有重复 *not/never*，且助动词后的动词形式正确。`,
+          );
         },
       ),
     ),

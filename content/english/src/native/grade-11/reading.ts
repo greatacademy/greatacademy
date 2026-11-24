@@ -18,14 +18,18 @@ const motifs = topic("reading", {
     "How an image, an object, a phrase or an action that returns again and again through a work gathers meaning and points toward its theme.",
     "在作品中反复出现的意象、物件、语句或动作如何积累意义，并指向作品的主题。",
   ],
+  intro: [
+    "A rusted key left on a windowsill in chapter one is just a detail; when that same key reappears in the attic, in a courtroom, and finally at the bottom of a river, it becomes a **motif**. In this topic, you classify recurring motifs and trace how their shifts point toward a story's theme.",
+    "第一章窗台上一把生锈的钥匙只是细节；当这把钥匙在阁楼、法庭和沉入河底时一再出现，它就成了**母题**。本主题带你分辨不同种类的母题，并追踪它的变化如何一步步指向作品主题。",
+  ],
   after: ["how-a-theme-develops", "extended-metaphor"],
   points: [
     label(
       "what-kind-of-motif",
       ["What Kind of Motif", "哪一类母题"],
       [
-        "A **motif** is an element that **recurs** through a work. A symbol may appear once; a motif returns, and each return adds meaning. Motifs come in several kinds: an **image or object**, such as a green light, a clock or a locked door; a **repeated phrase**, such as a line a character keeps saying; and a **repeated action or situation**, such as a character always leaving at night or every meal ending in a quarrel. To read a motif, list where it appears and ask what changes between the first time and the last.",
-        "**母题**是在作品中**反复出现**的元素。象征可能只出现一次；母题会一再回来，每次回来都增添意义。母题有几种：**意象或物件**，如一盏绿灯、一只钟或一扇锁着的门；**重复的话语**，如某个人物反复说的一句话；**重复的行动或情境**，如某个人物总是在夜里离开，或每顿饭都以争吵收场。解读母题时，要列出它出现的地方，并问从第一次到最后一次有什么变化。",
+        "A **motif** is an element that **recurs** through a work. A symbol may appear once; a motif returns, and each return adds meaning. Motifs come in several kinds: an **image or object**, such as a green light, a clock or a locked door; a **repeated phrase**, such as a line a character keeps saying; and a **repeated action or situation**, such as a character always leaving at night or every meal ending in a quarrel. To read a motif, list where it appears and ask what changes between the first time and the last.\n\n> **Watch out.** Ask *what* actually repeats: a visible thing (clock, mirror, rain) is **an image or object**, exact spoken or written words in quotes are **a repeated phrase**, and a recurring habit or event is **a repeated action or situation**.",
+        "**母题**是在作品中**反复出现**的元素。象征可能只出现一次；母题会一再回来，每次回来都增添意义。母题有几种：**意象或物件**，如一盏绿灯、一只钟或一扇锁着的门；**重复的话语**，如某个人物反复说的一句话；**重复的行动或情境**，如某个人物总是在夜里离开，或每顿饭都以争吵收场。解读母题时，要列出它出现的地方，并问从第一次到最后一次有什么变化。\n\n> **注意。** 盯紧*真正重复的是什么*：看得见摸得着的事物（钟、镜子、雨）是**意象或物件**，引号里反复出现的话语是**重复的话语**，反复发生的举动或场景则是**重复的行动或情境**。",
       ],
       ["What kind of motif does this description show?", "这段描述显示的是哪一类母题？"],
       `
@@ -63,22 +67,22 @@ const motifs = topic("reading", {
       {
         "an image or object": L(
           "意象或物件",
-          "A thing that can be seen or held returns at several points in the work.",
-          "一个看得见或拿得着的东西在作品的多处反复出现。",
+          "A thing that can be seen or held returns at several points in the work.\n\n**Check.** Point to the recurring noun itself: it is a physical object or visual image, not a quoted line or a repeated deed.",
+          "一个看得见或拿得着的东西在作品的多处反复出现。\n\n**检验。** 圈出反复出现的核心事物：它是具体的物件或可见意象，而不是引用的话语或重复动作。",
           "What returns is not a thing that can be seen or held.",
           "反复出现的不是一个看得见或拿得着的东西。",
         ),
         "a repeated phrase": L(
           "重复的话语",
-          "The same words are spoken or written again and again, gaining weight each time.",
-          "同样的话被一再说出或写下，每次都更有分量。",
+          "The same words are spoken or written again and again, gaining weight each time.\n\n**Check.** Look for the exact quoted words that return across scenes: the motif lives in that recurring line itself.",
+          "同样的话被一再说出或写下，每次都更有分量。\n\n**检验。** 找一找在多个场景里原样复现的引号语句：母题正是这句话本身。",
           "What returns is not a set of words.",
           "反复出现的不是一句话。",
         ),
         "a repeated action or situation": L(
           "重复的行动或情境",
-          "Characters do the same thing or meet the same kind of moment again and again.",
-          "人物一再做同样的事，或一再遇到同一类时刻。",
+          "Characters do the same thing or meet the same kind of moment again and again.\n\n**Check.** Look at the recurring verb or recurring scene pattern: what repeats is a behavior or situation rather than a single object or line.",
+          "人物一再做同样的事，或一再遇到同一类时刻。\n\n**检验。** 看反复出现的动词或场景模式：重演的是一种举动或处境，而不是某件物品或某句台词。",
           "What returns is not something the characters do or a situation they meet.",
           "反复出现的不是人物的行动或所遇到的情境。",
         ),
@@ -88,8 +92,8 @@ const motifs = topic("reading", {
       "what-the-motif-builds",
       ["What the Motif Builds", "母题构建了什么"],
       [
-        "A motif matters because of how it **builds**. Track each appearance and notice the change: a door that is locked, then opened, then torn off suggests growing freedom; a phrase repeated more and more emptily suggests a hope that is dying. The best reading of a motif connects **all** its appearances to a theme, not just the first one, and does not invent a meaning that the text does not support.",
-        "母题之所以重要，在于它如何**积累**。追踪它每一次出现，注意其中的变化：一扇门先是锁着，然后打开，最后被拆掉，暗示自由在增长；一句话被重复得越来越空洞，暗示希望正在消亡。对母题最好的解读，要把它**所有**的出现都与主题联系起来，而不只是第一次，也不能编造文本不支持的意义。",
+        "A motif matters because of how it **builds**. Track each appearance and notice the change: a door that is locked, then opened, then torn off suggests growing freedom; a phrase repeated more and more emptily suggests a hope that is dying. The best reading of a motif connects **all** its appearances to a theme, not just the first one, and does not invent a meaning that the text does not support.\n\n> **Watch out.** Reject readings that stay purely literal (such as weather, hobbies, or prices) and readings that contradict the final turn—the right reading accounts for the full arc from first appearance to last.",
+        "母题之所以重要，在于它如何**积累**。追踪它每一次出现，注意其中的变化：一扇门先是锁着，然后打开，最后被拆掉，暗示自由在增长；一句话被重复得越来越空洞，暗示希望正在消亡。对母题最好的解读，要把它**所有**的出现都与主题联系起来，而不只是第一次，也不能编造文本不支持的意义。\n\n> **注意。** 排除停留在字面琐事（如天气、爱好、物价）的选项，也排除与结尾转折相反的选项——正确解读必须串起母题从开头到结尾的完整变化轨迹。",
       ],
       ["What does the motif most likely build toward?", "这个母题最可能指向什么？"],
       `
@@ -125,8 +129,8 @@ const motifs = topic("reading", {
         The poet's notebook is blank in the first scene, full by the middle and burned at the end.|a voice that is found and then silenced|the poet's habit of buying a new notebook at the start of each year from the same small stationer's shop|the poet's love of fires in winter
       `,
       (right) => [
-        `The appearances of the motif change in a way that points to ${right}.`,
-        `母题的每次出现都在变化，指向这一点：${right}。`,
+        `The appearances of the motif change in a way that points to ${right}.\n\n**Check.** Compare the motif's *opening state* with its *closing state*: only this interpretation explains the full arc across every appearance rather than treating the detail literally.`,
+        `母题的每次出现都在变化，指向这一点：${right}。\n\n**检验。** 对比母题*最初*与*最后*的状态：只有这一解读完整解释了它的演变轨迹，没有停留在字面细节上。`,
       ],
       [
         [
@@ -146,14 +150,18 @@ const indirect = topic("reading", {
     "How a third-person narrator slips into a character's own thoughts and words without quotation marks, and how to tell the character's voice from the narrator's.",
     "第三人称叙述者如何不加引号地滑入人物自己的思想和话语，以及如何分辨人物的声音和叙述者的声音。",
   ],
+  intro: [
+    "Read *The train was late again. Of course it was!*: the pronoun and tense belong to a third-person narrator, yet the exasperation belongs unmistakably to the character. In this topic, you distinguish free indirect discourse from direct and reported thought and tell whose judgment a passage reveals.",
+    "读一读 *The train was late again. Of course it was!*：人称和时态属于第三人称叙述者，但那股不耐烦显然来自人物本人。本主题带你区分直接思想、转述思想与自由间接引语，并辨明字里行间究竟是谁的判断。",
+  ],
   after: ["unreliable-narrators"],
   points: [
     label(
       "whose-voice",
       ["Whose Voice", "谁的声音"],
       [
-        "A third-person story can present a character's thoughts in three ways. **Direct thought** quotes the thought in the first person, often in italics or quotation marks: *She thought, \"I can't stay here.\"* **Reported thought** tells us what the character thought, in the narrator's words, with a verb such as *thought* or *wondered*: *She thought that she could not stay.* **Free indirect discourse** blends the two: it stays in the third person and the past tense, but uses the character's own words, feelings and exclamations, with no verb of thinking: *She couldn't stay here. Not another night!*",
-        "第三人称故事可以用三种方式呈现人物的想法。**直接思想**用第一人称引出想法，常用斜体或引号：*She thought, \"I can't stay here.\"* **转述思想**用叙述者的话告诉我们人物想了什么，带有 *thought*、*wondered* 之类的动词：*She thought that she could not stay.* **自由间接引语**融合了二者：它保持第三人称和过去时，但用人物自己的措辞、情感和感叹，且没有表示思考的动词：*She couldn't stay here. Not another night!*",
+        "A third-person story can present a character's thoughts in three ways. **Direct thought** quotes the thought in the first person, often in italics or quotation marks: *She thought, \"I can't stay here.\"* **Reported thought** tells us what the character thought, in the narrator's words, with a verb such as *thought* or *wondered*: *She thought that she could not stay.* **Free indirect discourse** blends the two: it stays in the third person and the past tense, but uses the character's own words, feelings and exclamations, with no verb of thinking: *She couldn't stay here. Not another night!*\n\n> **Watch out.** Check two quick markers: quotation marks with *I* signal **direct thought**, a thinking verb (*thought that*, *wondered whether*, *realized that*) signals **reported thought**, and third-person past tense carrying live questions or exclamations with *no* thinking verb signals **free indirect discourse**.",
+        "第三人称故事可以用三种方式呈现人物的想法。**直接思想**用第一人称引出想法，常用斜体或引号：*She thought, \"I can't stay here.\"* **转述思想**用叙述者的话告诉我们人物想了什么，带有 *thought*、*wondered* 之类的动词：*She thought that she could not stay.* **自由间接引语**融合了二者：它保持第三人称和过去时，但用人物自己的措辞、情感和感叹，且没有表示思考的动词：*She couldn't stay here. Not another night!*\n\n> **注意。** 抓两个快速标记：引号配第一人称 *I* 是**直接思想**，带思考动词（*thought that*、*wondered whether*、*realized that*）是**转述思想**，第三人称过去时却直接冒出人物的感叹或反问且*没有*思考动词，则是**自由间接引语**。",
       ],
       ["How is the character's thought presented?", "人物的想法是以什么方式呈现的？"],
       `
@@ -191,22 +199,22 @@ const indirect = topic("reading", {
       {
         "direct thought": L(
           "直接思想",
-          "The thought is given in the character's own first-person words, set off by quotation marks or a tag such as he thought.",
-          "想法用人物自己的第一人称话语给出，用引号或 he thought 之类的标记隔开。",
+          "The thought is given in the character's own first-person words, set off by quotation marks or a tag such as he thought.\n\n**Check.** Spot the quotation marks and first-person pronoun (*I* / *my*): the character's exact inner speech is quoted verbatim.",
+          "想法用人物自己的第一人称话语给出，用引号或 he thought 之类的标记隔开。\n\n**检验。** 句中既有引号又有第一人称代词（*I* / *my*），说明这是原样引出人物的内心独白。",
           "The thought is not quoted in the character's first-person words.",
           "想法没有用人物的第一人称话语引出来。",
         ),
         "reported thought": L(
           "转述思想",
-          "A verb such as thought, wondered or realized reports the thought in the narrator's own words.",
-          "用 thought、wondered、realized 之类的动词，以叙述者自己的话转述想法。",
+          "A verb such as thought, wondered or realized reports the thought in the narrator's own words.\n\n**Check.** Find the reporting verb (*thought*, *wondered*, *believed*, *realized*) followed by a *that/whether/why* clause: the narrator is summarizing the thought from the outside.",
+          "用 thought、wondered、realized 之类的动词，以叙述者自己的话转述想法。\n\n**检验。** 句中带有表示思考的动词（如 *thought*、*wondered*、*realized*）加从句，说明是叙述者在外部转述。",
           "No verb of thinking reports the thought in the narrator's words.",
           "没有用表示思考的动词以叙述者的话转述想法。",
         ),
         "free indirect discourse": L(
           "自由间接引语",
-          "The sentence stays in the third person and past tense but carries the character's own feelings, questions and exclamations, with no verb of thinking.",
-          "句子保持第三人称和过去时，却带着人物自己的情感、疑问和感叹，没有表示思考的动词。",
+          "The sentence stays in the third person and past tense but carries the character's own feelings, questions and exclamations, with no verb of thinking.\n\n**Check.** Notice what is missing and what is present: no quotation marks and no thinking verb, yet the sentence keeps third-person past tense while echoing the character's raw voice.",
+          "句子保持第三人称和过去时，却带着人物自己的情感、疑问和感叹，没有表示思考的动词。\n\n**检验。** 核对“缺什么、有什么”：既无引号也无思考动词，却在第三人称过去时里直接流露人物的语气与感叹。",
           "The thought is either quoted directly or reported with a verb of thinking.",
           "想法要么被直接引出，要么用表示思考的动词转述。",
         ),
@@ -216,8 +224,8 @@ const indirect = topic("reading", {
       "the-narrator-or-the-character",
       ["The Narrator or the Character", "叙述者还是人物"],
       [
-        "Free indirect discourse lets a writer show a character's view while seeming to report facts, so a reader must decide **whose** judgment a sentence carries. Look for signs of the character: emotional words, exclamations, questions, slang, or a judgment the narrator would not make. *The new governess was, of course, entirely beneath notice* may sound like the narrator, but the snobbery belongs to the character. Writers use this to create **irony**: we see the character's view and its limits at the same time.",
-        "自由间接引语让作者在看似陈述事实的同时呈现人物的看法，所以读者必须判断一句话承载的是**谁**的判断。要寻找人物的痕迹：带情感的词、感叹、疑问、俚语，或叙述者不会下的判断。*The new governess was, of course, entirely beneath notice* 听起来像叙述者的话，但其中的势利属于人物。作者用这种手法制造**反讽**：我们同时看到人物的看法和它的局限。",
+        "Free indirect discourse lets a writer show a character's view while seeming to report facts, so a reader must decide **whose** judgment a sentence carries. Look for signs of the character: emotional words, exclamations, questions, slang, or a judgment the narrator would not make. *The new governess was, of course, entirely beneath notice* may sound like the narrator, but the snobbery belongs to the character. Writers use this to create **irony**: we see the character's view and its limits at the same time.\n\n> **Watch out.** Do not mistake biased free indirect discourse for *the narrator's reliable report*—exclamations, *of course*, rhetorical questions, and defensive excuses expose the **character's** inner attitude, not objective fact.",
+        "自由间接引语让作者在看似陈述事实的同时呈现人物的看法，所以读者必须判断一句话承载的是**谁**的判断。要寻找人物的痕迹：带情感的词、感叹、疑问、俚语，或叙述者不会下的判断。*The new governess was, of course, entirely beneath notice* 听起来像叙述者的话，但其中的势利属于人物。作者用这种手法制造**反讽**：我们同时看到人物的看法和它的局限。\n\n> **注意。** 不要把带偏见的自由间接引语误当成“叙述者可靠的事实报道”——感叹号、*of course*、反问和自我辩解暴露的都是**人物**的内心态度，而不是客观事实。",
       ],
       ["What does the passage most likely reveal?", "这段话最可能揭示了什么？"],
       `
@@ -253,8 +261,8 @@ const indirect = topic("reading", {
         Victor counted the votes once more. He had won. He had really won! They could laugh now, all of them.|Victor's triumph and his old hurt at being mocked|the narrator's neutral report on the result of the vote and the number of ballots counted|the opponents' gracious acceptance of the result
       `,
       (right) => [
-        `The emotional words, exclamations or judgments belong to the character, so the passage reveals ${right}.`,
-        `带感情的词、感叹或判断属于人物，所以这段话揭示的是：${right}。`,
+        `The emotional words, exclamations or judgments belong to the character, so the passage reveals ${right}.\n\n**Check.** Trace the charged words or punctuation after the opening sentence: they mirror the character's own mindset rather than an impartial narrator's statement of fact.`,
+        `带感情的词、感叹或判断属于人物，所以这段话揭示的是：${right}。\n\n**检验。** 追查首句之后带情绪的措辞和标点：它们映照的是人物自身的心态，而不是客观叙述者的事实陈述。`,
       ],
       [
         [
@@ -277,14 +285,18 @@ const assumptions = topic("reading", {
     "Finding the belief an argument takes for granted without saying it, and judging whether the argument still stands if that belief is false.",
     "找出论证中未明说却被视为理所当然的信念，并判断如果这个信念是错的，论证是否还站得住。",
   ],
+  intro: [
+    "Saying *This café must serve great food—there's always a line outside* skips a silent bridge: that a long line proves quality rather than hype or location. In this topic, you uncover the hidden assumption linking reason to claim and test how well it holds up.",
+    "说“这家咖啡馆的菜肯定好吃，门口总排长队”，中间跳过了隐含的一环：排长队就等于品质好（而不是网红跟风或地段使然）。本主题带你挖出连接理由与主张的未言明假设，并检验它是否站得住脚。",
+  ],
   after: ["evaluating-an-argument-as-a-whole", "supported-and-unsupported-claims"],
   points: [
     choose(
       "the-missing-link",
       ["The Missing Link", "缺失的一环"],
       [
-        "An **assumption** is a belief that an argument needs but does not state. It is the missing link between the evidence and the claim. *The school should ban phones, because students who use phones in class get lower grades* assumes that the phones **cause** the lower grades, and that a ban would stop the use. To find an assumption, ask: what must be true for this reason to support this claim?",
-        "**假设**是论证需要却没有说出来的信念，是证据和主张之间缺失的一环。*The school should ban phones, because students who use phones in class get lower grades* 假定手机**导致**了成绩下降，而且禁令能阻止使用。要找出假设，就问：要让这个理由支持这个主张，什么必须为真？",
+        "An **assumption** is a belief that an argument needs but does not state. It is the missing link between the evidence and the claim. *The school should ban phones, because students who use phones in class get lower grades* assumes that the phones **cause** the lower grades, and that a ban would stop the use. To find an assumption, ask: what must be true for this reason to support this claim?\n\n> **Watch out.** Test your candidate by imagining it is **false**: if negating it breaks the bridge between the reason and the claim, you have found the unstated assumption; side details leave the argument untouched.",
+        "**假设**是论证需要却没有说出来的信念，是证据和主张之间缺失的一环。*The school should ban phones, because students who use phones in class get lower grades* 假定手机**导致**了成绩下降，而且禁令能阻止使用。要找出假设，就问：要让这个理由支持这个主张，什么必须为真？\n\n> **注意。** 把候选选项反向假设为“不成立”来检验：一旦推翻它，理由到主张的桥梁就立刻断裂，那就是未言明的假设；无关细节推翻与否都不会影响论证。",
       ],
       ["What does the argument assume without saying?", "这个论证没有明说却假定了什么？"],
       `
@@ -320,8 +332,8 @@ const assumptions = topic("reading", {
         The museum should stop charging for entry, because more people would visit.|that more visitors is worth the money the museum would lose|that the museum's collection is large|that most of the visitors to the museum come on weekends and during the long summer holidays
       `,
       (right) => [
-        `The reason supports the claim only if it is true ${right.replace(/^that /, "that ")}; the argument never says so.`,
-        `只有在这一点成立时，理由才能支持主张：${right}；论证从未明说。`,
+        `The reason supports the claim only if it is true ${right.replace(/^that /, "that ")}; the argument never says so.\n\n**Check.** Negate "${right}" and re-read the argument: if that link fails, the stated reason no longer leads to the conclusion.`,
+        `只有在这一点成立时，理由才能支持主张：${right}；论证从未明说。\n\n**检验。** 假设“${right}”不成立再重读论证：原理由立刻无法推出结论，证明它正是缺失的一环。`,
       ],
       [
         [
@@ -338,8 +350,8 @@ const assumptions = topic("reading", {
       "is-the-assumption-sound",
       ["Is the Assumption Sound", "这个假设可靠吗"],
       [
-        "Once an assumption is found, judge it. A **reasonable** assumption is one most informed readers would accept: *Doctors know more about medicine than most patients.* A **questionable** assumption is one a careful reader could reasonably doubt and the argument should defend: *Anything natural is safe.* Some assumptions are **contradicted by common knowledge**, such as *Price always shows quality* or *Correlation proves cause*; an argument resting on one of these is weak until it gives more support.",
-        "找出假设后，要评判它。**合理的**假设是大多数有见识的读者都会接受的：*Doctors know more about medicine than most patients.* **可疑的**假设是认真的读者可以合理怀疑、论证应当为之辩护的：*Anything natural is safe.* 有些假设**与常识相矛盾**，如 *Price always shows quality* 或 *Correlation proves cause*；建立在这类假设上的论证在提供更多支持之前都是薄弱的。",
+        "Once an assumption is found, judge it. A **reasonable** assumption is one most informed readers would accept: *Doctors know more about medicine than most patients.* A **questionable** assumption is one a careful reader could reasonably doubt and the argument should defend: *Anything natural is safe.* Some assumptions are **contradicted by common knowledge**, such as *Price always shows quality* or *Correlation proves cause*; an argument resting on one of these is weak until it gives more support.\n\n> **Watch out.** Separate **questionable** from **contradicted by common knowledge**: a claim that holds sometimes but needs defense (*A popular teacher is effective*) is **questionable**, whereas a sweeping absolute that everyday life readily disproves (*Anything natural is safe*, *Everything printed in a book is accurate*) is **contradicted by common knowledge**.",
+        "找出假设后，要评判它。**合理的**假设是大多数有见识的读者都会接受的：*Doctors know more about medicine than most patients.* **可疑的**假设是认真的读者可以合理怀疑、论证应当为之辩护的：*Anything natural is safe.* 有些假设**与常识相矛盾**，如 *Price always shows quality* 或 *Correlation proves cause*；建立在这类假设上的论证在提供更多支持之前都是薄弱的。\n\n> **注意。** 分清**可疑**与**与常识相矛盾**：有时成立但需要论证支撑的说法（如“受欢迎的老师教学一定有效”）属于**可疑**；一棍子打死、日常经验就能直接证伪的绝对断言（如“天然的一定安全”“印在书上的都准确”）则属于**与常识相矛盾**。",
       ],
       ["How sound is this assumption?", "这个假设有多可靠？"],
       `
@@ -377,22 +389,22 @@ const assumptions = topic("reading", {
       {
         reasonable: L(
           "合理",
-          "Most informed readers would accept this, so the argument may rely on it without further support.",
-          "大多数有见识的读者都会接受这一点，所以论证可以不加支持地依靠它。",
+          "Most informed readers would accept this, so the argument may rely on it without further support.\n\n**Check.** Ask whether the statement uses sensible qualification (*more likely*, *tends to*, *generally*) and aligns with well-established experience: yes, so it is reasonable.",
+          "大多数有见识的读者都会接受这一点，所以论证可以不加支持地依靠它。\n\n**检验。** 看这句话是否措辞稳妥、符合公认的日常与专业经验：没有极端绝对化，因此是合理的。",
           "An informed reader could fairly doubt this, so it is not simply reasonable.",
           "有见识的读者可以合理地怀疑这一点，所以它不能简单地算作合理。",
         ),
         questionable: L(
           "可疑",
-          "It might be true in some cases, but a careful reader could doubt it, so the argument should defend it.",
-          "它在某些情况下可能成立，但认真的读者可以怀疑它，所以论证应当为之辩护。",
+          "It might be true in some cases, but a careful reader could doubt it, so the argument should defend it.\n\n**Check.** Test whether you can picture realistic exceptions without the statement being universally absurd: because it works only sometimes, it needs evidence.",
+          "它在某些情况下可能成立，但认真的读者可以怀疑它，所以论证应当为之辩护。\n\n**检验。** 想想它是否“有时成立、有时不成立”：它并非一眼荒谬，却很容易举出反例，因此必须补充论证。",
           "It is either widely accepted or plainly false, not open to reasonable doubt.",
           "它要么被广泛接受，要么显然错误，并不属于可以合理怀疑的情况。",
         ),
         "contradicted by common knowledge": L(
           "与常识相矛盾",
-          "Common experience shows many cases where this is false, so an argument resting on it is weak.",
-          "日常经验表明这在许多情况下是错的，所以建立在它上面的论证是薄弱的。",
+          "Common experience shows many cases where this is false, so an argument resting on it is weak.\n\n**Check.** Look for sweeping absolutes (*anything*, *always*, *never*, *everything*, *must*) that everyday counterexamples refute immediately.",
+          "日常经验表明这在许多情况下是错的，所以建立在它上面的论证是薄弱的。\n\n**检验。** 留意句中极端的绝对词（如 *anything*、*always*、*never*、*everything*、*must*），日常常识立刻就能找到反例推翻它。",
           "Common knowledge does not plainly contradict this.",
           "常识并没有明显地否定这一点。",
         ),
@@ -408,14 +420,18 @@ const comparing = topic("reading", {
     "Setting two arguments on the same issue side by side to see where they truly disagree: on the facts, on values, or on what to do.",
     "把同一议题的两个论证并列，看它们真正的分歧在哪里：在事实上，在价值观上，还是在该怎么做上。",
   ],
+  intro: [
+    "Two editorial writers can agree completely that a downtown toll cuts traffic, yet still clash—one ranks shorter commutes first, the other ranks free public streets first. In this topic, you pinpoint whether two arguments divide over facts, values, or action, and judge which side builds the stronger case.",
+    "两位评论员可能完全认同市中心收费能减少拥堵，却依然针锋相对——一方把通勤效率排在第一，另一方把道路免费通行排在第一。本主题带你判断两篇论证的分歧究竟在事实、价值观还是行动方案上，并公正评判哪一方论证更有力。",
+  ],
   after: ["evaluating-an-argument-as-a-whole", "how-a-speaker-builds-an-argument"],
   points: [
     label(
       "where-they-disagree",
       ["Where They Disagree", "分歧在哪里"],
       [
-        "Two writers on the same issue may disagree in different ways. They may disagree about **the facts**: what is true or what will happen (*the new dam will or will not harm the fish*). They may agree on the facts but disagree about **values**: what matters more (*jobs matter more than the river* against *the river matters more than jobs*). Or they may agree on facts and values but disagree about **the best action**: how to reach a shared goal (*both want clean air; one wants a tax, the other a ban*). Naming the kind of disagreement shows what evidence could settle it.",
-        "就同一议题写作的两位作者，分歧可能有不同的类型。他们可能在**事实**上有分歧：什么是真的，或将会发生什么（*新水坝会不会伤害鱼类*）。他们也可能在事实上一致，却在**价值观**上有分歧：什么更重要（*就业比河流重要*对*河流比就业重要*）。或者他们在事实和价值观上都一致，却在**最佳行动**上有分歧：怎样达到共同的目标（*双方都想要清洁的空气；一方主张征税，另一方主张禁止*）。说出分歧的类型，就能看出什么证据可以解决它。",
+        "Two writers on the same issue may disagree in different ways. They may disagree about **the facts**: what is true or what will happen (*the new dam will or will not harm the fish*). They may agree on the facts but disagree about **values**: what matters more (*jobs matter more than the river* against *the river matters more than jobs*). Or they may agree on facts and values but disagree about **the best action**: how to reach a shared goal (*both want clean air; one wants a tax, the other a ban*). Naming the kind of disagreement shows what evidence could settle it.\n\n> **Watch out.** Check what the two writers *agree on* first: if they dispute what is true or will happen, it is **the facts**; if they agree on the facts but rank competing priorities differently, it is **values**; if they share the exact same goal and propose different policies, it is **the best action**.",
+        "就同一议题写作的两位作者，分歧可能有不同的类型。他们可能在**事实**上有分歧：什么是真的，或将会发生什么（*新水坝会不会伤害鱼类*）。他们也可能在事实上一致，却在**价值观**上有分歧：什么更重要（*就业比河流重要*对*河流比就业重要*）。或者他们在事实和价值观上都一致，却在**最佳行动**上有分歧：怎样达到共同的目标（*双方都想要清洁的空气；一方主张征税，另一方主张禁止*）。说出分歧的类型，就能看出什么证据可以解决它。\n\n> **注意。** 先看双方在什么上达成了一致：争论真假或结果的是**事实**分歧；认同事实但看重不同价值排序的是**价值观**分歧；目标完全一致而具体做法不同的是**最佳行动**分歧。",
       ],
       ["What kind of disagreement do the two writers have?", "两位作者的分歧属于哪一类？"],
       `
@@ -453,22 +469,22 @@ const comparing = topic("reading", {
       {
         "the facts": L(
           "事实",
-          "The writers disagree about what is true or what will happen, which evidence could settle.",
-          "两位作者对什么是真的或将会发生什么有分歧，这可以用证据来解决。",
+          "The writers disagree about what is true or what will happen, which evidence could settle.\n\n**Check.** Ask whether measurement, data, or a future study could resolve the clash: yes, because the two sides assert conflicting factual claims.",
+          "两位作者对什么是真的或将会发生什么有分歧，这可以用证据来解决。\n\n**检验。** 问问数据、检验或调查能否解决争论：可以，因为双方在客观事实上各执一词。",
           "The writers do not dispute what is true; their disagreement lies elsewhere.",
           "两位作者对事实没有争议，他们的分歧在别处。",
         ),
         values: L(
           "价值观",
-          "The writers accept the same facts but weigh different goods, such as jobs against health.",
-          "两位作者接受同样的事实，却看重不同的东西，比如就业对健康。",
+          "The writers accept the same facts but weigh different goods, such as jobs against health.\n\n**Check.** Notice the shared starting point (*Both agree…*) followed by competing priorities: no extra data alone can settle which value comes first.",
+          "两位作者接受同样的事实，却看重不同的东西，比如就业对健康。\n\n**检验。** 开头已说明双方认同同一事实，分歧在于把哪一种价值排在前面，单靠补充数据无法解决。",
           "The writers do not rank what matters differently.",
           "两位作者对什么更重要的排序并无不同。",
         ),
         "the best action": L(
           "最佳行动",
-          "The writers share a goal and agree on the facts, but propose different ways to reach it.",
-          "两位作者目标相同、事实一致，却提出了不同的实现途径。",
+          "The writers share a goal and agree on the facts, but propose different ways to reach it.\n\n**Check.** Spot the shared objective (*Both want…*) followed by two rival policy tools: they agree on the end and debate the means.",
+          "两位作者目标相同、事实一致，却提出了不同的实现途径。\n\n**检验。** 双方共享同一个目标，争论的只是实现该目标的具体办法或政策工具。",
           "The writers do not share a goal and simply differ on how to reach it.",
           "两位作者并不是目标相同、只在途径上有分歧。",
         ),
@@ -478,8 +494,8 @@ const comparing = topic("reading", {
       "which-argument-is-stronger",
       ["Which Argument Is Stronger", "哪个论证更有力"],
       [
-        "To judge two arguments on one issue, compare them on the same tests: **evidence** (relevant, sufficient, from credible sources), **reasoning** (no fallacies, sound assumptions), and **counterclaims** (does each answer the other's best point?). The stronger argument is not the one you agree with or the louder one; it is the one whose evidence and reasoning hold up better. Sometimes each is stronger on a different point.",
-        "评判同一议题的两个论证，要用同样的标准比较：**证据**（相关、充分、来源可信）、**推理**（没有谬误、假设可靠）、**反驳**（各自是否回应了对方最有力的观点）。更有力的论证不是你赞同的那个，也不是声音更大的那个，而是证据和推理更站得住的那个。有时二者在不同方面各有长处。",
+        "To judge two arguments on one issue, compare them on the same tests: **evidence** (relevant, sufficient, from credible sources), **reasoning** (no fallacies, sound assumptions), and **counterclaims** (does each answer the other's best point?). The stronger argument is not the one you agree with or the louder one; it is the one whose evidence and reasoning hold up better. Sometimes each is stronger on a different point.\n\n> **Watch out.** Do not automatically declare *the two are equal* just because both sides offer something, and do not pick the louder or more passionate side—weigh sample size, source independence, causal logic, and fairness to objections.",
+        "评判同一议题的两个论证，要用同样的标准比较：**证据**（相关、充分、来源可信）、**推理**（没有谬误、假设可靠）、**反驳**（各自是否回应了对方最有力的观点）。更有力的论证不是你赞同的那个，也不是声音更大的那个，而是证据和推理更站得住的那个。有时二者在不同方面各有长处。\n\n> **注意。** 不要因为双方都给了材料就轻易选“两者相当”，也不要偏向情绪更激烈的一方——要从样本大小、来源独立性、因果逻辑和回应反方的公正程度来权衡。",
       ],
       ["Which judgment of the two arguments is fair?", "对这两个论证，哪个评判是公正的？"],
       `
@@ -515,8 +531,8 @@ const comparing = topic("reading", {
         A and B both cite strong studies, but they measure different things, cost and safety.|each is strong on its own measure, and the reader must weigh the two|A wins, because it happens to be printed first|B wins, because safety studies are always the only ones that count
       `,
       (right) => [
-        `The fair judgment is that ${right}: it applies the same tests of evidence and reasoning to both.`,
-        `公正的评判是：${right}。它对两个论证使用了同样的证据和推理标准。`,
+        `The fair judgment is that ${right}: it applies the same tests of evidence and reasoning to both.\n\n**Check.** Score A and B on the same three criteria—evidence quality, logical soundness, and engagement with objections—to verify why "${right}" is the fair verdict.`,
+        `公正的评判是：${right}。它对两个论证使用了同样的证据和推理标准。\n\n**检验。** 用同一套三项标尺（证据质量、推理严密性、回应反方的态度）给 A 和 B 打分，即可确认为何“${right}”最公允。`,
       ],
       [
         [

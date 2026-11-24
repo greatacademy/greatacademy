@@ -464,9 +464,13 @@ const prepKind = (prep: string, phrase: string): Text =>
 
 /** prepWhy explains the word for the gap of shown. */
 const prepWhy = (right: string, shown: string): Text => {
-  const kind = prepKind(right, phraseIn(shown));
+  const phrase = phraseIn(shown);
+  const kind = prepKind(right, phrase);
   const sentence = shown.replace("___", `*${right}*`);
-  return t(`${kind.en}: ${sentence}`, `${kind["zh-CN"]}：${sentence}`);
+  return t(
+    `${kind.en}: ${sentence}\n\n**Check.** Classify *${phrase}* by scale—exact clock point or *night* (*at*), single day or date (*on*), or month/season/part of the day (*in*)—and confirm *${right}* matches.`,
+    `${kind["zh-CN"]}：${sentence}\n\n**检验。** 按时间尺度归类 *${phrase}*——具体钟点或 *night*（*at*）、某一天或日期（*on*）、月份/季节/时段（*in*）——确认 *${right}* 对应正确。`,
+  );
 };
 
 /** prepUse says what each of at, on and in is for. */
@@ -476,17 +480,21 @@ const prepUse: Readonly<Record<string, Text>> = {
   in: t("*in* is for months, seasons and parts of the day", "*in* 用于月份、季节和一天中的时段"),
 };
 
-/** whyNotPrep explains a wrong word for the gap of shown. */
-const whyNotPrep = (wrong: string, right: string, shown: string): Text => {
+/** whyNotPrep explains a wrong word for the gap of shown without revealing the answer. */
+const whyNotPrep = (wrong: string, _right: string, shown: string): Text => {
   const use = prepUse[wrong] ?? t(`*${wrong}*`, `*${wrong}*`);
-  const kind = prepKind(right, phraseIn(shown));
-  return t(`${use.en}. ${kind.en}.`, `${use["zh-CN"]}。${kind["zh-CN"]}。`);
+  const phrase = phraseIn(shown);
+  return t(`${use.en}, which does not fit *${phrase}*.`, `${use["zh-CN"]}，与 *${phrase}* 不搭配。`);
 };
 
 const prepositionsOfTime: TopicDef = {
   id: "prepositions-of-time",
   title: t("At, On and In for Time", "表示时间的 at、on 和 in"),
   summary: t("At seven o'clock, on Monday, in May.", "at seven o'clock、on Monday、in May。"),
+  intro: t(
+    "Think of time prepositions from smallest to largest: *at 6:30* (an exact clock point), *on Friday* (one specific day), and *in December* (a whole month)—while phrases starting with *next*, *this*, or *every* need no preposition at all. In this topic, you choose, type, and fix time prepositions.",
+    "按时间跨度从小到大记时间介词：*at 6:30*（具体钟点）、*on Friday*（具体某一天）、*in December*（整月或更长时段）；而以 *next*、*this*、*every* 开头的时间短语前面不加任何介词。本主题带你选择、拼写并改正时间介词。",
+  ),
   prerequisites: ["a1-words-days", "a1-words-time"],
   encompasses: [
     { topic: "a1-words-days", weight: 0.3 },
@@ -499,8 +507,8 @@ const prepositionsOfTime: TopicDef = {
       "choose",
       t("At, on or in", "at、on 还是 in"),
       t(
-        "*at* a time on the clock: *at seven o'clock*, *at half past four*, and *at night*.\n\n*on* a day: *on Monday*, *on May 5th*, *on my birthday*, *on Saturday morning*.\n\n*in* a longer time: *in May*, *in summer*, *in the morning*.",
-        "*at* 用于钟点：*at seven o'clock*、*at half past four*，还有 *at night*。\n\n*on* 用于某一天：*on Monday*、*on May 5th*、*on my birthday*、*on Saturday morning*。\n\n*in* 用于较长的时间：*in May*、*in summer*、*in the morning*。\n\n中文说“七点”“星期一”“五月”时前面不加词，英语却必须加，而且三个词不能混用。",
+        "*at* a time on the clock: *at seven o'clock*, *at half past four*, and *at night*.\n\n*on* a day: *on Monday*, *on May 5th*, *on my birthday*, *on Saturday morning*.\n\n*in* a longer time: *in May*, *in summer*, *in the morning*.\n\n> **Watch out.** Notice two tricky pairs: *in the morning* takes *in*, but *on Saturday morning* (with a specific day) takes *on*; and *at night* takes *at*, unlike *in the evening*.",
+        "*at* 用于钟点：*at seven o'clock*、*at half past four*，还有 *at night*。\n\n*on* 用于某一天：*on Monday*、*on May 5th*、*on my birthday*、*on Saturday morning*。\n\n*in* 用于较长的时间：*in May*、*in summer*、*in the morning*。\n\n中文说“七点”“星期一”“五月”时前面不加词，英语却必须加，而且三个词不能混用。\n\n> **注意。** 留心两组易混搭配：泛指上午用 *in the morning*，带具体星期几时用 *on Saturday morning*；晚上用 *in the evening*，而夜间用 *at night*。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), prepChoiceBank, prepWhy, whyNotPrep),
     ),
@@ -508,8 +516,8 @@ const prepositionsOfTime: TopicDef = {
       "type",
       t("Writing at, on or in", "写出 at、on 或 in"),
       t(
-        "Type the word: *at* for the clock, *on* for a day, *in* for a month, a season or a part of the day.",
-        "输入这个词：钟点用 *at*，某一天用 *on*，月份、季节和一天中的时段用 *in*。",
+        "Type the word: *at* for the clock (*at noon*), *on* for a day (*on June 1st*), *in* for a month, a season or a part of the day (*in spring*).\n\n> **Watch out.** Check whether the phrase names a specific day/date (*on*) versus just a month or part of the day (*in*): *on May 5th*, but *in May*.",
+        "输入这个词：钟点用 *at*（*at noon*），某一天用 *on*（*on June 1st*），月份、季节和一天中的时段用 *in*（*in spring*）。\n\n> **注意。** 区分“具体某一天/日期”（*on*）和“整个月份/时段”（*in*）：*on May 5th* 用 *on*，单说 *in May* 用 *in*。",
       ),
       typedGenerator("word-form", t("Type the word for the gap.", "输入填入空白处的词。"), prepTypedBank, prepWhy),
     ),
@@ -517,15 +525,15 @@ const prepositionsOfTime: TopicDef = {
       "no-word",
       t("Next week, this morning, every day", "next week、this morning、every day"),
       t(
-        "Before *next*, *last*, *this* and *every*, there is no *at*, *on* or *in*: *We have a test next Monday.* *I visit my grandma every Sunday.*",
-        "在 *next*、*last*、*this*、*every* 前面不用 *at*、*on*、*in*：*We have a test next Monday.* *I visit my grandma every Sunday.* 不要说 *on next Monday*。",
+        "Before *next*, *last*, *this* and *every*, there is no *at*, *on* or *in*: *We have a test next Monday.* *I visit my grandma every Sunday.*\n\n> **Watch out.** Do not replace the wrong preposition with another preposition (like changing *in next week* to *at next week*)—delete the preposition completely.",
+        "在 *next*、*last*、*this*、*every* 前面不用 *at*、*on*、*in*：*We have a test next Monday.* *I visit my grandma every Sunday.* 不要说 *on next Monday*。\n\n> **注意。** 不要把错误的介词换成另一个介词（如把 *in next week* 改成 *at next week*）——直接彻底删掉介词。",
       ),
       typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), noPrepBank, (right) => {
         const phrase = /(next|this|every) \w+/u.exec(right)?.[0] ?? "next week";
         const first = phrase.split(" ")[0] ?? "next";
         return t(
-          `*${phrase}* starts with *${first}*, and a time that starts with *next*, *last*, *this* or *every* takes no *at*, *on* or *in*: ${right}`,
-          `*${phrase}* 以 *${first}* 开头；以 *next*、*last*、*this*、*every* 开头的时间前不加 *at*、*on*、*in*：${right}`,
+          `*${phrase}* starts with *${first}*, and a time that starts with *next*, *last*, *this* or *every* takes no *at*, *on* or *in*: ${right}\n\n**Check.** Look right before *${first}* in your fixed sentence—confirm that *at*, *on*, and *in* are completely gone.`,
+          `*${phrase}* 以 *${first}* 开头；以 *next*、*last*、*this*、*every* 开头的时间前不加 *at*、*on*、*in*：${right}\n\n**检验。** 检查改后句子里 *${first}* 前面的位置——确认 *at*、*on*、*in* 都已彻底去掉。`,
         );
       }),
     ),
@@ -591,8 +599,8 @@ const namesWhy = (right: string): Text => {
     .map((name) => `*${name}*`)
     .join(", ");
   return t(
-    `Names of people, places, languages, days and months begin with a capital letter, here ${names}, and other words do not: ${right}`,
-    `人名、地名、语言、星期和月份以大写字母开头，这里是 ${names}，其他词不大写：${right}`,
+    `Names of people, places, languages, days and months begin with a capital letter, here ${names}, and other words do not: ${right}\n\n**Check.** Scan every word after the first: only proper names (${names}) are capitalized, while ordinary nouns like *friend*, *birthday*, and *party* stay lowercase.`,
+    `人名、地名、语言、星期和月份以大写字母开头，这里是 ${names}，其他词不大写：${right}\n\n**检验。** 逐词检查句首之后的每个词：只有专有名词（${names}）首字母大写，而 *friend*、*birthday*、*party* 等普通词全部小写。`,
   );
 };
 
@@ -619,6 +627,10 @@ const capitalLettersForNames: TopicDef = {
     "Names of people, places, languages, days and months begin with a capital letter: On Monday, Anna speaks English.",
     "人名、地名、语言、星期和月份以大写字母开头：On Monday, Anna speaks English.",
   ),
+  intro: t(
+    "Look at *My friend Sara visits Tokyo in October.* Every proper name—people, cities, countries, languages, days of the week, and months—takes a capital letter, while everyday nouns like *friend* stay lowercase. In this topic, you spot and write sentences with exact proper-noun capitalization.",
+    "看看 *My friend Sara visits Tokyo in October.* 所有专有名词——人名、城市、国家、语言、星期和月份——都要大写首字母，而 *friend* 这类普通名词保持小写。本主题带你辨认并写出专有名词大小写完全规范的句子。",
+  ),
   prerequisites: ["writing-capitals-and-periods", "a1-words-months"],
   encompasses: [
     { topic: "writing-capitals-and-periods", weight: 0.3 },
@@ -631,8 +643,8 @@ const capitalLettersForNames: TopicDef = {
       "choose",
       t("Which words need a capital", "哪些词要大写"),
       t(
-        "A name begins with a capital letter: people (*Anna*), cities (*London*), countries (*China*), languages (*English*), days (*Monday*) and months (*May*). Other words do not: *birthday*, *party*, *friend*.",
-        "名字以大写字母开头：人名（*Anna*）、城市（*London*）、国家（*China*）、语言（*English*）、星期（*Monday*）和月份（*May*）。其他词不大写：*birthday*、*party*、*friend*。\n\n中文没有大小写，所以要特别留意：星期和月份在英语里也算名字，必须大写。",
+        "A name begins with a capital letter: people (*Anna*), cities (*London*), countries (*China*), languages (*English*), days (*Monday*) and months (*May*). Other words do not: *birthday*, *party*, *friend*.\n\n> **Watch out.** Do not leave days (*Tuesday*), months (*March*), or languages (*French*) lowercase—and do not capitalize ordinary words in the middle of the sentence.",
+        "名字以大写字母开头：人名（*Anna*）、城市（*London*）、国家（*China*）、语言（*English*）、星期（*Monday*）和月份（*May*）。其他词不大写：*birthday*、*party*、*friend*。\n\n中文没有大小写，所以要特别留意：星期和月份在英语里也算名字，必须大写。\n\n> **注意。** 不要漏大写星期（*Tuesday*）、月份（*March*）或语言（*French*），也不要把句中的普通名词全部大写。",
       ),
       choiceGenerator(t("Which sentence is written right?", "哪个句子写对了？"), namesChoiceBank, namesWhy, whyNotNames),
     ),
@@ -640,8 +652,8 @@ const capitalLettersForNames: TopicDef = {
       "write",
       t("Writing names with capitals", "名字大写"),
       t(
-        "Copy the sentence and give every name a capital letter: people, cities, countries, languages, days and months. Keep the first word capital, and write every other word with a small letter.",
-        "抄写句子，给每个名字加上大写字母：人名、城市、国家、语言、星期和月份。句首的词保持大写，其他词都用小写。",
+        "Copy the sentence and give every name a capital letter: people, cities, countries, languages, days and months—for example, *We go to Paris every July.* Keep the first word capital, and write every other word with a small letter.\n\n> **Watch out.** Watch two-word names like *Li Wei* (capitalize *both* parts) and plural days like *Tuesdays* (still capitalized).",
+        "抄写句子，给每个名字加上大写字母：人名、城市、国家、语言、星期和月份，例如 *We go to Paris every July.* 句首的词保持大写，其他词都用小写。\n\n> **注意。** 留心由两个词组成的人名（如 *Li Wei* 两部分都要大写）以及复数星期（如 *Tuesdays* 依然首字母大写）。",
       ),
       typedGenerator(
         "sentence",

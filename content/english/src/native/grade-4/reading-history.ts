@@ -183,8 +183,8 @@ const checkBank: readonly Item[] = checkGroups.flatMap((group) =>
       right: `It ${verdict === "does not say" ? "does not mention it" : `${verdict} it`}`,
       wrong: wrong.map((w) => `It ${w === "does not say" ? "does not mention it" : `${w} it`}`),
       why: t(
-        `The text **${verdict === "does not say" ? "does not mention it" : `${verdict} it`}**. ${verdictWhy[verdict][0]}`,
-        `文章**${verdictZh[verdict]}**。${verdictWhy[verdict][1]}`,
+        `The text **${verdict === "does not say" ? "does not mention it" : `${verdict} it`}**. ${verdictWhy[verdict][0]}\n\n**Check.** Compare the story detail directly against every sentence of the informational passage—${verdict === "confirms" ? "you can point to the matching fact in the text" : verdict === "contradicts" ? "a sentence in the text states the opposite" : "neither confirmation nor contradiction appears anywhere in the passage"}.`,
+        `文章**${verdictZh[verdict]}**。${verdictWhy[verdict][1]}\n\n**检验。** 把故事细节和信息类文章的每一句逐一对照——${verdict === "confirms" ? "文中能直接找到相吻合的事实" : verdict === "contradicts" ? "文中有句子明确说了相反的事实" : "全文既没有证实也没有反驳这一点"}。`,
       ),
       whyNot: wrong.map((w) =>
         t(`${verdictNot[w][0]} Read the text again and look for this detail.`, `${verdictNot[w][1]} 再读一遍文章，找找这个细节。`),
@@ -278,15 +278,19 @@ const settingProblemBank: readonly Item[] = settingProblems.map((s) => ({
   right: s.right,
   wrong: [...s.wrong],
   why: t(
-    `${s.right} The time and place decide what the characters have and do not have, and so what can go wrong.`,
-    `${s.right} 时间和地点决定了角色拥有什么、缺少什么，也就决定了会出什么问题。`,
+    `${s.right} The time and place decide what the characters have and do not have, and so what can go wrong.\n\n**Check.** Re-read the time and place clues in the prompt—those exact conditions create the danger “${s.right}”`,
+    `${s.right} 时间和地点决定了角色拥有什么、缺少什么，也就决定了会出什么问题。\n\n**检验。** 重读题干里的时间和地点线索——正是这些条件直接导致了这一问题。`,
   ),
-  whyNot: s.wrong.map((w) =>
+  whyNot: [
     t(
-      `“${w}” does not fit this time and place: it belongs to a different setting, or has nothing to do with this one.`,
-      `“${w}”不符合这个时间和地点：它属于另一种背景，或者与这个背景毫无关系。`,
+      `“${s.wrong[0]}” belongs to a different time, place, or modern technology that does not exist in this setting.`,
+      `“${s.wrong[0]}”属于别的时代、地点或现代科技，不符合这个故事的背景。`,
     ),
-  ),
+    t(
+      `“${s.wrong[1]}” does not grow out of the time, weather, or place described in this story.`,
+      `“${s.wrong[1]}”并不是由这个故事所写的时间、天气或地点引起的。`,
+    ),
+  ],
 }));
 
 /** settingChangeBank asks how a story would change in another setting. */
@@ -299,15 +303,19 @@ const settingChangeBank: readonly Item[] = settingChanges.map((s) => ({
   right: s.right,
   wrong: [...s.wrong],
   why: t(
-    `${s.right} A new setting changes what the characters can do, so the problem changes too.`,
-    `${s.right} 新的背景改变了角色能做的事，所以问题也随之改变。`,
+    `${s.right} A new setting changes what the characters can do, so the problem changes too.\n\n**Check.** Picture the character in ${s.setting}: the new resources or conditions directly reshape the original problem.`,
+    `${s.right} 新的背景改变了角色能做的事，所以问题也随之改变。\n\n**检验。** 想象角色身处“${s.setting}”：新环境提供的条件直接改变了原来的难题。`,
   ),
-  whyNot: s.wrong.map((w) =>
+  whyNot: [
     t(
-      `“${w}” ignores the new setting. Ask what the characters could do in ${s.setting} that they could not do before.`,
-      `“${w}”忽略了新的背景。问问角色在新的背景里能做什么以前做不到的事。`,
+      `“${s.wrong[0]}” treats the setting as if it had no effect at all, even though ${s.setting} changes what is possible.`,
+      `“${s.wrong[0]}”假定背景毫无影响，但换成“${s.setting}”后，角色能做的事明显不同了。`,
     ),
-  ),
+    t(
+      `“${s.wrong[1]}” does not follow logically from moving the story to ${s.setting}.`,
+      `“${s.wrong[1]}”并不能从把故事搬到“${s.setting}”合理推出来。`,
+    ),
+  ],
 }));
 
 // Firsthand and secondhand accounts.
@@ -409,8 +417,8 @@ const accountShowsBank: readonly Item[] = accountPairs.flatMap((a) => [
     right: a.feeling,
     wrong: [a.wider, a.both],
     why: t(
-      `A firsthand account shows ${a.feeling}: only someone who was there can tell how it felt, sounded and looked to them.`,
-      `第一手记述表现出了亲身感受：只有在场的人才能讲出那一刻对自己来说是什么感觉、什么声音、什么样子。`,
+      `A firsthand account shows ${a.feeling}: only someone who was there can tell how it felt, sounded and looked to them.\n\n**Check.** Compare Account 1 and Account 2—Account 1 uses *I*/*we* to share that personal sensation, while Account 2 never describes it.`,
+      `第一手记述表现出了亲身感受：只有在场的人才能讲出那一刻对自己来说是什么感觉、什么声音、什么样子。\n\n**检验。** 对照记述 1 和记述 2——记述 1 用 *I*/*we* 写出这份切身体验，记述 2 则完全没写。`,
     ),
     whyNot: [
       t(
@@ -432,8 +440,8 @@ const accountShowsBank: readonly Item[] = accountPairs.flatMap((a) => [
     right: a.wider,
     wrong: [a.feeling, a.both],
     why: t(
-      `A secondhand account shows ${a.wider}: written later from many sources, it can give the wider view that one person on the spot could not see.`,
-      `第二手记述提供了更广的视角：它是后来根据许多资料写的，能看到现场一个人看不到的全貌。`,
+      `A secondhand account shows ${a.wider}: written later from many sources, it can give the wider view that one person on the spot could not see.\n\n**Check.** Look back at Account 2—those numbers, totals, or later outcomes appear only in the secondhand account.`,
+      `第二手记述提供了更广的视角：它是后来根据许多资料写的，能看到现场一个人看不到的全貌。\n\n**检验。** 回看记述 2——这些统计数字、全局范围或后续结果只出现在第二手记述中。`,
     ),
     whyNot: [
       t(
@@ -539,8 +547,8 @@ const lifeTellsBank: readonly Item[] = lifePairs.flatMap((p) => [
     right: p.inner,
     wrong: [p.later, p.both],
     why: t(
-      `An autobiography could tell ${p.inner}. Only the person can tell their own thoughts and feelings from the inside.`,
-      `自传能讲出人物内心的想法和感受。只有本人才能从内心讲出自己的思想和感觉。`,
+      `An autobiography could tell ${p.inner}. Only the person can tell their own thoughts and feelings from the inside.\n\n**Check.** Ask “Who was inside ${p.person}'s head at that moment?”—only ${p.person}, writing in the first person, can report it directly.`,
+      `自传能讲出人物内心的想法和感受。只有本人才能从内心讲出自己的思想和感觉。\n\n**检验。** 问自己“那一刻谁在 ${p.person} 心里？”——只有用第一人称写作的本人才能直接说出。`,
     ),
     whyNot: [
       t(
@@ -562,8 +570,8 @@ const lifeTellsBank: readonly Item[] = lifePairs.flatMap((p) => [
     right: p.later,
     wrong: [p.inner, p.both],
     why: t(
-      `A biography could tell ${p.later}. Written by someone else, often years later, it can show how others saw the person and what happened after their life.`,
-      `传记能讲出别人怎样看待这个人，以及他们去世后发生的事。它由别人写，常常在多年以后。`,
+      `A biography could tell ${p.later}. Written by someone else, often years later, it can show how others saw the person and what happened after their life.\n\n**Check.** Ask whether ${p.person} could have witnessed or written this—since it involves outside judgment or events after their lifetime, only a biography can include it.`,
+      `传记能讲出别人怎样看待这个人，以及他们去世后发生的事。它由别人写，常常在多年以后。\n\n**检验。** 想想 ${p.person} 本人能否亲历或写下这件事——它涉及他人评价或身后的影响，所以只有传记能写到。`,
     ),
     whyNot: [
       t(
@@ -584,6 +592,10 @@ export const historyTopics4: readonly TopicDef[] = [
     id: "historical-fiction-facts-and-inventions",
     title: t("Facts and Inventions in Historical Fiction", "历史小说中的事实与虚构"),
     summary: t("A historical story puts invented characters in a real time and place.", "历史故事把虚构的人物放在真实的时代和地点中。"),
+    intro: t(
+      "A story set in ancient China might mention the real Great Wall alongside an invented young mason dreaming of plum blossoms—yet it would never give him a radio. Reading historical fiction means telling real history, plausible invention, and time-period mistakes apart.",
+      "一篇以古代中国为背景的故事里，可能既有真实的长城，也有虚构的年轻石匠思念家乡的梅花——但绝不会让他听收音机。读历史小说，要学会分辨历史事实、合理虚构和时代错位。",
+    ),
     prerequisites: after("fiction-and-nonfiction"),
     encompasses: [],
     xp: 14,
@@ -593,8 +605,8 @@ export const historyTopics4: readonly TopicDef[] = [
         "facts-and-invented-details",
         t("Facts and Invented Details", "事实和虚构的细节"),
         t(
-          "**Historical fiction** is a story set in a real time and place. Some details are **facts** that history records: Marco Polo set out for China in 1271. Others are **invented** to make the story live: a friend named Tito who sang to the sailors. A careful author never puts in a thing that did not exist yet, such as a wristwatch in the 1200s.",
-          "**历史小说**是以真实时代和地点为背景的故事。有些细节是历史记载的**事实**：马可·波罗 1271 年出发去中国。有些是为了让故事生动而**虚构**的：一个叫 Tito、给水手唱歌的朋友。细心的作者绝不会写进当时还不存在的东西，比如 13 世纪的手表。",
+          "**Historical fiction** is a story set in a real time and place. Some details are **facts** that history records: Marco Polo set out for China in 1271. Others are **invented** to make the story live: a friend named Tito who sang to the sailors. A careful author never puts in a thing that did not exist yet, such as a wristwatch in the 1200s.\n\n> **Watch out.** An invented detail fits the time period (a monk painting gold letters); a detail from the wrong time introduces an object that did not exist yet (a laser printer or GPS).",
+          "**历史小说**是以真实时代和地点为背景的故事。有些细节是历史记载的**事实**：马可·波罗 1271 年出发去中国。有些是为了让故事生动而**虚构**的：一个叫 Tito、给水手唱歌的朋友。细心的作者绝不会写进当时还不存在的东西，比如 13 世纪的手表。\n\n> **注意。** 合理虚构的细节符合当时的生活（如修士用金粉描字）；时代错误的细节则会混入当时尚不存在的物品（如激光打印机或 GPS）。",
         ),
         nameKind({
           lines: historyLines,
@@ -607,8 +619,8 @@ export const historyTopics4: readonly TopicDef[] = [
         "checking-a-detail-against-a-text",
         t("Checking a Detail Against a Text", "用文章核对细节"),
         t(
-          "To check a detail of a historical story, read an informational text about the same time. If the text says the same thing, it **confirms** the detail. If it says something different, it **contradicts** it. If it says nothing about it, the detail may be the author's invention, and the text **does not mention** it.",
-          "要核对历史故事中的一个细节，就读一篇关于同一时代的信息类文章。如果文章说的一样，就**证实**了这个细节；如果说的不一样，就**与它矛盾**；如果完全没提到，这个细节可能是作者虚构的，文章**没有提到**它。",
+          "To check a detail of a historical story, read an informational text about the same time. If the text says the same thing, it **confirms** the detail (e.g., *raised the drawbridge*). If it says something different, it **contradicts** it (*built of wood and straw* when the text says *stone*). If it says nothing about it, the text **does not mention** it.\n\n> **Watch out.** Do not call an unmentioned detail a contradiction—if the informational text simply never discusses the lord's onion soup, it *does not mention it*.",
+          "要核对历史故事中的一个细节，就读一篇关于同一时代的信息类文章。如果文章说的一样，就**证实**了这个细节（如“拉起吊桥”）；如果说的不一样，就**与它矛盾**（文中说石造，故事却说木草造）；如果完全没提到，文章就**没有提到**它。\n\n> **注意。** 不要把文章没提过的细节判成“矛盾”——只要信息类文章根本没写到领主的洋葱汤，就应选“没有提到”。",
         ),
         itemGenerator(checkBank),
       ),
@@ -621,6 +633,10 @@ export const historyTopics4: readonly TopicDef[] = [
       "The time and place of a story decide what its characters can do and what problems they face.",
       "故事的时间和地点决定了角色能做什么、会遇到什么问题。",
     ),
+    intro: t(
+      "A broken arm on a city street means a ten-minute ride to the hospital; the same fall on a remote island with a weekly ferry turns into a days-long crisis. The setting does not just decorate a story—it drives what can go wrong.",
+      "在城市街头摔断胳膊，十分钟就能到医院；可在每周只有一班渡船的小岛上，同样的摔伤就会演变成漫长的危机。背景不只是故事的布景，更决定了难题会怎样发生。",
+    ),
     prerequisites: after("setting-problem-and-solution"),
     encompasses: [],
     xp: 14,
@@ -630,8 +646,8 @@ export const historyTopics4: readonly TopicDef[] = [
         "how-a-setting-causes-a-problem",
         t("How a Setting Causes a Problem", "背景怎样引起问题"),
         t(
-          "The **setting** is when and where a story happens, and it is more than a background. A blizzard on the prairie in 1880, with no phones and no neighbors near, gives a girl a problem she could not have in a city today. Ask what the time and place give the characters, and what they take away.",
-          "**背景**是故事发生的时间和地点，它不只是陪衬。1880 年草原上的暴风雪，没有电话，附近也没有邻居，给女孩带来的问题在今天的城市里不会有。问问时间和地点给了角色什么，又让他们缺少什么。",
+          "The **setting** is when and where a story happens, and it is more than a background. A blizzard on the prairie in 1880, with no phones and no neighbors near, gives a girl a problem she could not have in a city today. Ask what the time and place give the characters, and what they take away.\n\n> **Watch out.** Watch for anachronisms or misplaced details—a storm in a desert causes blowing sand, not icy sidewalks, and a castle in the Middle Ages has no phones or taxis.",
+          "**背景**是故事发生的时间和地点，它不只是陪衬。1880 年草原上的暴风雪，没有电话，附近也没有邻居，给女孩带来的问题在今天的城市里不会有。问问时间和地点给了角色什么，又让他们缺少什么。\n\n> **注意。** 留意违背时代或地点的干扰项——沙漠风暴带来的是沙尘而不是结冰路面，中世纪城堡里也没有手机或出租车。",
         ),
         itemGenerator(settingProblemBank),
       ),
@@ -639,8 +655,8 @@ export const historyTopics4: readonly TopicDef[] = [
         "the-story-in-another-setting",
         t("The Story in Another Setting", "换一个背景的故事"),
         t(
-          "To see how much a setting matters, imagine the story somewhere else or at another time. If the island boy lived next to a hospital, his long wait for the ferry would vanish. When the setting changes, the problem and the events change with it.",
-          "要看出背景有多重要，就想象故事发生在别的地方或别的时代。如果岛上的男孩住在医院旁边，他漫长地等渡船的事就不会发生。背景一变，问题和情节也跟着变。",
+          "To see how much a setting matters, imagine the story somewhere else or at another time. If the island boy lived next to a hospital, his long wait for the ferry would vanish. When the setting changes, the problem and the events change with it.\n\n> **Watch out.** Reject any choice claiming “the setting would not matter”—changing the time or place changes the tools, weather, and dangers available to the characters.",
+          "要看出背景有多重要，就想象故事发生在别的地方或别的时代。如果岛上的男孩住在医院旁边，他漫长地等渡船的事就不会发生。背景一变，问题和情节也跟着变。\n\n> **注意。** 排除任何说“背景没有影响”的选项——时间和地点一换，角色可用的条件、面临的天气与危险都会跟着改变。",
         ),
         itemGenerator(settingChangeBank),
       ),
@@ -653,6 +669,10 @@ export const historyTopics4: readonly TopicDef[] = [
       "A firsthand account is written by someone who was there; a secondhand account is written later by someone who learned about it.",
       "第一手记述由在场的人写；第二手记述由后来了解此事的人写。",
     ),
+    intro: t(
+      "A girl's diary describes her shaking hands as the ground rumbled; a history book written years later counts how many buildings fell across the region. Both describe the same real earthquake, yet one is a firsthand account and the other is secondhand.",
+      "女孩的日记写下地震来临时自己发抖的双手；多年后的历史书则统计了全城倒塌的房屋数量。两段文字写的是同一场真实地震，但一篇是第一手记述，另一篇是第二手记述。",
+    ),
     prerequisites: ["point-of-view"],
     encompasses: [{ topic: "point-of-view", weight: 0.2 }],
     xp: 14,
@@ -662,8 +682,8 @@ export const historyTopics4: readonly TopicDef[] = [
         "which-kind-of-account",
         t("Which Kind of Account", "哪一种记述"),
         t(
-          "A **firsthand account** of a real event is written by someone who was there, so it uses *I* and *we*: *We felt the ground shake.* A **secondhand account** is written later by someone who learned about it from others, using *he*, *she* and *they*. Careful: a made-up story can use *I* too, but its events are invented.",
-          "真实事件的**第一手记述**由在场的人写，所以用 *I* 和 *we*：*We felt the ground shake.* **第二手记述**由后来从别人那里了解此事的人写，用 *he*、*she* 和 *they*。注意：虚构故事也可以用 *I*，但它的事件是编造的。",
+          "A **firsthand account** of a real event is written by someone who was there, so it uses *I* and *we*: *We felt the ground shake.* A **secondhand account** is written later by someone who learned about it from others, using *he*, *she* and *they*.\n\n> **Watch out.** Seeing *I* alone does not guarantee a firsthand account—a fantasy narrator (*I am a dragon*) is a made-up story, not a real-world witness.",
+          "真实事件的**第一手记述**由在场的人写，所以用 *I* 和 *we*：*We felt the ground shake.* **第二手记述**由后来从别人那里了解此事的人写，用 *he*、*she* 和 *they*。\n\n> **注意。** 只看到 *I* 还不能断定是第一手记述——像“我是一条龙”这样的虚构叙述是编造的故事，不是真实亲历。",
         ),
         nameKind({
           lines: accountLines,
@@ -676,8 +696,8 @@ export const historyTopics4: readonly TopicDef[] = [
         "what-each-account-shows",
         t("What Each Account Shows", "每种记述表现的内容"),
         t(
-          "Each kind of account shows what the other cannot. A firsthand account gives the **feelings** and the sights and sounds of one person on the spot. A secondhand account gives the **wider view**: numbers, causes and what happened afterward, gathered from many sources.",
-          "每种记述都能表现另一种表现不了的内容。第一手记述给出在场者的**感受**和所见所闻。第二手记述给出**更广的视角**：从许多资料中收集到的数字、原因和后来发生的事。",
+          "Each kind of account shows what the other cannot. A firsthand account gives the **feelings** and the sights and sounds of one person on the spot (*I hid behind my mother's skirt*). A secondhand account gives the **wider view**: numbers, causes and what happened afterward (*doubled its trade within ten years*).\n\n> **Watch out.** Do not pick a basic fact that appears in *both* accounts (such as “that there was a flood”) when asked what only one account shows.",
+          "每种记述都能表现另一种表现不了的内容。第一手记述给出在场者的**感受**和所见所闻（如“我躲在妈妈裙子后面”）。第二手记述给出**更广的视角**：从许多资料中收集到的数字、原因和后续影响（如“十年内贸易翻了一番”）。\n\n> **注意。** 问只有其中一篇表现出的内容时，不要选两篇都提过的基本事实（比如“发生了洪水”）。",
         ),
         itemGenerator(accountShowsBank),
       ),
@@ -690,6 +710,10 @@ export const historyTopics4: readonly TopicDef[] = [
       "A biography tells a person's life in the third person; an autobiography is told by the person in the first person.",
       "传记用第三人称讲述一个人的一生；自传由本人用第一人称讲述。",
     ),
+    intro: t(
+      "Compare *Marie Curie studied in secret* with *As a girl I studied in secret*. Both tell the true life of a real scientist, yet the pronouns—and what each writer can know—tell you whether you are reading a biography or an autobiography.",
+      "比较 *Marie Curie studied in secret* 和 *As a girl I studied in secret*。两句讲的都是真实科学家的生平，但人称以及作者所能知道的内容，立刻区分出了传记和自传。",
+    ),
     prerequisites: after("point-of-view", "fiction-and-nonfiction"),
     encompasses: [],
     xp: 14,
@@ -699,8 +723,8 @@ export const historyTopics4: readonly TopicDef[] = [
         "telling-which-life-story-it-is",
         t("Telling Which Life Story It Is", "分辨是哪一种人生故事"),
         t(
-          "A **biography** is the true story of a person's life written by someone else, in the third person: *Louis Braille lost his sight when he was three.* An **autobiography** is written by the person themselves, in the first person: *I lost my sight when I was three.* A made-up story may look like either, but its character never lived.",
-          "**传记**是由别人写的一个人真实的生平，用第三人称：*Louis Braille lost his sight when he was three.* **自传**由本人自己写，用第一人称：*I lost my sight when I was three.* 虚构故事可能看起来像这两种之一，但其中的人物从未存在过。",
+          "A **biography** is the true story of a person's life written by someone else, in the third person: *Louis Braille lost his sight when he was three.* An **autobiography** is written by the person themselves, in the first person: *I lost my sight when I was three.* A made-up story may look like either, but its character never lived.\n\n> **Watch out.** Check *both* the pronouns (*I* vs. *he/she*) and whether the person actually lived—a story about a talking tortoise or a cloud princess is fiction, not a biography.",
+          "**传记**是由别人写的一个人真实的生平，用第三人称：*Louis Braille lost his sight when he was three.* **自传**由本人自己写，用第一人称：*I lost my sight when I was three.* 虚构故事可能看起来像这两种之一，但其中的人物从未存在过。\n\n> **注意。** 既要看人称（*I* 还是 *he/she*），也要看人物是否真实存在——会说话的乌龟或云朵公主属于虚构故事，不是传记。",
         ),
         nameKind({
           lines: lifeLines,
@@ -713,8 +737,8 @@ export const historyTopics4: readonly TopicDef[] = [
         "what-each-life-story-can-tell",
         t("What Each Life Story Can Tell", "每种人生故事能讲什么"),
         t(
-          "An autobiography can tell what only the person knows: their own thoughts, feelings and memories. A biography, written by someone else and often later, can tell what the person could not: how others saw them, and what happened after they died. Both can tell the main facts of the life.",
-          "自传能讲出只有本人知道的东西：自己的想法、感受和回忆。传记由别人写，常常在后来才写，能讲出本人讲不了的东西：别人怎样看待他们，以及他们去世后发生的事。两者都能讲出生平的主要事实。",
+          "An autobiography can tell what only the person knows: their own thoughts, feelings and memories (*how lonely he felt*). A biography, written by someone else and often later, can tell what the person could not: how others saw them, and what happened after they died (*how many countries use his alphabet today*).\n\n> **Watch out.** Major life events (such as inventing Braille or discovering fossils) belong in *both* kinds—look for inner thoughts (autobiography only) or later legacy (biography only).",
+          "自传能讲出只有本人知道的东西：自己的想法、感受和回忆（如“他有多孤单”）。传记由别人写，常常在后来才写，能讲出本人讲不了的东西：别人怎样看待他们，以及他们去世后发生的事（如“如今有多少国家使用盲文”）。\n\n> **注意。** 主要生平事实（如发明盲文、发现化石）在两种文体里都会写——区分时要找内心感受（仅自传）或身后影响（仅传记）。",
         ),
         itemGenerator(lifeTellsBank),
       ),

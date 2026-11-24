@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after, covers } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 
 /** limits are the length limits of a grade 9 essay. */
 export const limits = { minWords: 150, maxChars: 4800 };
@@ -210,6 +210,10 @@ export const judgedTopics9a: readonly TopicDef[] = [
       "Write a short story in which a young hero faces a hard trial with real stakes, meets it through a choice of his or her own and is changed by it.",
       "写一个短篇故事：一位年轻的主人公面对代价真实的艰难考验，靠自己的选择去应对，并因此而改变。",
     ),
+    intro: t(
+      "A trial only tests a hero when turning back feels safer and moving forward could cost everything. Writing a hero's trial means setting clear stakes, putting the decisive choice in the hero's hands, and showing the aftermath in one quiet image.",
+      "只有退缩更安全、前行代价高昂时，考验才真正成立。写英雄的考验，就是要尽早亮出代价，把决定性选择交到主人公手里，并用结尾一个静默的画面展现成长。",
+    ),
     prerequisites: after("the-heros-journey", "writing-an-epic-simile"),
     encompasses: covers(0.2, "the-heros-journey"),
     xp: 24,
@@ -220,8 +224,8 @@ export const judgedTopics9a: readonly TopicDef[] = [
         "stakes-and-a-choice",
         t("Stakes and a Choice", "代价与选择"),
         t(
-          "A hero's trial matters only if the reader knows **what could be lost**. Make the stakes clear early: *If she stayed, the girl might die before morning. If she went and the rope snapped, Nadia would die instead.* Then let the hero meet the trial through **a choice of his or her own**, shown in a scene. A hero who is rescued by luck or by someone else has not faced the trial.",
-          "只有读者知道**可能失去什么**，英雄的考验才有分量。尽早交代代价：*If she stayed, the girl might die before morning. If she went and the rope snapped, Nadia would die instead.* 然后让主人公**靠自己的选择**应对考验，并用场景表现出来。被运气或别人救下的主人公并没有真正经受考验。",
+          "A hero's trial matters only if the reader knows **what could be lost**. Make the stakes clear early: *If she stayed, the girl might die before morning. If she went and the rope snapped, Nadia would die instead.* Then let the hero meet the trial through **a choice of his or her own**, shown in a scene. A hero who is rescued by luck or by someone else has not faced the trial.\n\n> **Watch out.** Do not let coincidence or a sudden rescuer solve the crisis—the turning point must come from a deliberate, costly decision made by the protagonist.",
+          "只有读者知道**可能失去什么**，英雄的考验才有分量。尽早交代代价：*If she stayed, the girl might die before morning. If she went and the rope snapped, Nadia would die instead.* 然后让主人公**靠自己的选择**应对考验，并用场景表现出来。被运气或别人救下的主人公并没有真正经受考验。\n\n> **注意。** 不要靠巧合或天降救星化解危机——转折点必须来自主人公自己深思熟虑、付出代价的选择。",
         ),
         writingGenerator(
           t(
@@ -231,15 +235,18 @@ export const judgedTopics9a: readonly TopicDef[] = [
           trialBank,
           ["g9-trial-stakes", "g9-trial-choice", "g9-trial-change"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Confirm that the story states what stands to be lost on both sides, puts the decisive action in the hero's own hands in a live scene, and shows the change at the end.",
+            "核对故事是否交代清楚两难双方的代价，是否在具体场景中让主人公自己做出决定性行动，并在结尾展现改变。",
+          ),
         ),
       ),
       point(
         "showing-the-change",
         t("Showing the Change", "表现改变"),
         t(
-          "End by showing how the trial has **changed the hero**, through a detail or an action rather than a stated moral. *She sat at the head of the table, and no one told her to move* shows a new place in the family; *She learned to be brave* only tells. Choose one image that the reader can see.",
-          "结尾要表现考验如何**改变了主人公**，用一个细节或动作，而不是直接说出道理。*She sat at the head of the table, and no one told her to move* 表现了她在家中新的地位；*She learned to be brave* 只是在陈述。选一个读者能看见的画面。",
+          "End by showing how the trial has **changed the hero**, through a detail or an action rather than a stated moral. *She sat at the head of the table, and no one told her to move* shows a new place in the family; *She learned to be brave* only tells. Choose one image that the reader can see.\n\n> **Watch out.** Cut closing summary lines like *'He realized he had grown stronger'*—replace them with a concrete gesture, object, or habit that proves the change visually.",
+          "结尾要表现考验如何**改变了主人公**，用一个细节或动作，而不是直接说出道理。*She sat at the head of the table, and no one told her to move* 表现了她在家中新的地位；*She learned to be brave* 只是在陈述。选一个读者能看见的画面。\n\n> **注意。** 删掉“他意识到自己变勇敢了”这类总结句——换成读者能看见的具体举动、物件或新习惯来证明改变。",
         ),
         writingGenerator(
           t(
@@ -249,7 +256,10 @@ export const judgedTopics9a: readonly TopicDef[] = [
           trialBank,
           ["g9-trial-change", "g9-trial-choice", "g9-trial-stakes"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check the final paragraph: can a camera film the hero's changed action or detail without needing a narrator to explain the lesson?",
+            "检查最后一段：不靠旁白总结道理，镜头能否直接拍出主人公改变后的举动或细节？",
+          ),
         ),
       ),
     ],
@@ -261,6 +271,10 @@ export const judgedTopics9a: readonly TopicDef[] = [
       "Write a short essay that claims what a soliloquy reveals about its speaker, quotes and explains its words and analyzes its choices of language.",
       "写一篇短文：提出一段独白揭示了说话人的什么，引用并解释其中的话语，分析其语言选择。",
     ),
+    intro: t(
+      "Alone on stage, a character drops every public mask—revealing doubt in a sudden question or resolve in a single clipped word. Analyzing a soliloquy means naming that inner truth and tracing how specific images and shifts in tone expose it.",
+      "独自留在舞台上时，人物卸下一切伪装——一个突然的反问可能暴露动摇，一个短促的词可能显露决断。分析独白就是要点破这份内心真相，并追踪具体意象与语气转折如何揭示它。",
+    ),
     prerequisites: after("soliloquy-and-aside", "introducing-and-explaining-evidence", "citing-lines-of-plays-and-poems"),
     encompasses: covers(0.2, "soliloquy-and-aside", "introducing-and-explaining-evidence"),
     xp: 24,
@@ -271,8 +285,8 @@ export const judgedTopics9a: readonly TopicDef[] = [
         "what-the-speech-reveals",
         t("What the Speech Reveals", "独白揭示了什么"),
         t(
-          "Open with a **claim** about what the soliloquy reveals: a hidden feeling, a conflict, a plan. *This soliloquy reveals that the young queen is less afraid of her enemies than of what ruling will make her become.* Then support it with **short quotations**, each introduced in your own sentence and followed by an explanation.",
-          "以一个**主张**开头，说出独白揭示了什么：隐藏的感情、内心冲突或计划。*This soliloquy reveals that the young queen is less afraid of her enemies than of what ruling will make her become.* 然后用**简短的引文**支持它，每条引文都用自己的句子引出，并在后面加以解释。",
+          "Open with a **claim** about what the soliloquy reveals: a hidden feeling, a conflict, a plan. *This soliloquy reveals that the young queen is less afraid of her enemies than of what ruling will make her become.* Then support it with **short quotations**, each introduced in your own sentence and followed by an explanation.\n\n> **Watch out.** Do not paraphrase the soliloquy line by line—open with one unifying claim about the speaker's inner state and quote only the brief phrases that prove it.",
+          "以一个**主张**开头，说出独白揭示了什么：隐藏的感情、内心冲突或计划。*This soliloquy reveals that the young queen is less afraid of her enemies than of what ruling will make her become.* 然后用**简短的引文**支持它，每条引文都用自己的句子引出，并在后面加以解释。\n\n> **注意。** 不要逐行翻译复述独白——开头就点明说话人内心的核心冲突，只引用最能证明这一点的短语。",
         ),
         writingGenerator(
           t(
@@ -282,15 +296,18 @@ export const judgedTopics9a: readonly TopicDef[] = [
           soliloquyBank,
           ["g9-soliloquy-claim", "g9-soliloquy-quotes", "g9-soliloquy-language"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that your opening names what the speech reveals about the speaker's mind, every quotation is woven into your own sentence, and each quote is followed by your analysis.",
+            "核对开头是否点明独白揭示了说话人怎样的内心，每条引文是否融入自己的句子，且引文后都有紧扣论点的解释。",
+          ),
         ),
       ),
       point(
         "reading-the-language",
         t("Reading the Language", "解读语言"),
         t(
-          "A soliloquy shows a mind at work, so look closely at its **language**: a repeated word, a striking image, a question, a sudden shift in tone. *The single word “Good” marks a sudden shift: hurt becomes resolve.* Say what each choice shows about the speaker.",
-          "独白展现的是思维的活动，所以要仔细分析它的**语言**：重复的词、醒目的意象、提问、语气的突然转变。*The single word “Good” marks a sudden shift: hurt becomes resolve.* 说出每个选择表现了说话人的什么。",
+          "A soliloquy shows a mind at work, so look closely at its **language**: a repeated word, a striking image, a question, a sudden shift in tone. *The single word “Good” marks a sudden shift: hurt becomes resolve.* Say what each choice shows about the speaker.\n\n> **Watch out.** Naming a device (*'she uses a metaphor'*) is only half the job—always spell out *what* that metaphor, repetition, or turn reveals about the speaker's feelings.",
+          "独白展现的是思维的活动，所以要仔细分析它的**语言**：重复的词、醒目的意象、提问、语气的突然转变。*The single word “Good” marks a sudden shift: hurt becomes resolve.* 说出每个选择表现了说话人的什么。\n\n> **注意。** 只说出手法名称（如“她用了比喻”）只完成了一半——必须说明这个比喻、重复或转折究竟揭示了说话人怎样的心理。",
         ),
         writingGenerator(
           t(
@@ -300,7 +317,10 @@ export const judgedTopics9a: readonly TopicDef[] = [
           soliloquyBank,
           ["g9-soliloquy-language", "g9-soliloquy-quotes", "g9-soliloquy-claim"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check that you zoom in on at least one concrete language choice (image, repetition, question, or tonal shift) and connect it directly to the speaker's inner conflict.",
+            "核对是否聚焦了至少一处具体的语言选择（意象、重复、提问或语气转折），并直接阐明它与说话人内心冲突的联系。",
+          ),
         ),
       ),
     ],
@@ -312,6 +332,10 @@ export const judgedTopics9a: readonly TopicDef[] = [
       "Write a short essay that claims a trait or a change in a character, supports it with details from the passage and explains how the writer reveals it.",
       "写一篇短文：提出人物的某个特点或变化，用文段中的细节支持，并解释作者如何表现它。",
     ),
+    intro: t(
+      "A character who boasts of bravery at breakfast yet hides behind a wall at the first shot reveals himself through the gap between words and deeds. Character analysis moves from naming *who* a character is to explaining *how* the writer constructs that portrait.",
+      "早餐时夸耀勇猛、枪响时却躲在墙后的人物，正是借由言行反差暴露本性。人物分析不仅要指出人物“是什么样”，更要说明作者“如何”塑造出这一形象。",
+    ),
     prerequisites: after("character-foils", "claims-in-topic-sentences", "how-dialogue-reveals-character"),
     encompasses: covers(0.2, "character-foils", "claims-in-topic-sentences"),
     xp: 24,
@@ -322,8 +346,8 @@ export const judgedTopics9a: readonly TopicDef[] = [
         "a-claim-about-the-character",
         t("A Claim About the Character", "关于人物的主张"),
         t(
-          "Begin with a **claim** that names a trait or a change: *Captain Rourke is revealed as a vain and cowardly man who cares more about his reputation than about his soldiers.* Then support it with **details** from the passage, what the character does, says or how others react, and explain what each detail shows.",
-          "以一个说出人物特点或变化的**主张**开头：*Captain Rourke is revealed as a vain and cowardly man who cares more about his reputation than about his soldiers.* 然后用文段中的**细节**支持它，即人物做了什么、说了什么或别人如何反应，并解释每个细节表现了什么。",
+          "Begin with a **claim** that names a trait or a change: *Captain Rourke is revealed as a vain and cowardly man who cares more about his reputation than about his soldiers.* Then support it with **details** from the passage, what the character does, says or how others react, and explain what each detail shows.\n\n> **Watch out.** Do not just list three plot events from the passage—anchor every quoted detail to the specific trait or shift claimed in your opening sentence.",
+          "以一个说出人物特点或变化的**主张**开头：*Captain Rourke is revealed as a vain and cowardly man who cares more about his reputation than about his soldiers.* 然后用文段中的**细节**支持它，即人物做了什么、说了什么或别人如何反应，并解释每个细节表现了什么。\n\n> **注意。** 不要只按顺序罗列文段里的几件事——每条引用的细节都要扣回到开头提出的人物特点或变化上。",
         ),
         writingGenerator(
           t(
@@ -333,15 +357,18 @@ export const judgedTopics9a: readonly TopicDef[] = [
           characterBank,
           ["g9-character-claim", "g9-character-evidence", "g9-character-method"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that your opening makes a clear claim about the character's trait or growth, and that every cited detail from the passage is explained rather than merely retold.",
+            "核对开头是否对人物性格或变化提出明确主张，文段中的每条细节是否都经过解释，而不只是复述。",
+          ),
         ),
       ),
       point(
         "how-the-writer-reveals-it",
         t("How the Writer Reveals It", "作者如何表现人物"),
         t(
-          "Go beyond the trait to the **method**: how does the writer reveal it? Through a **contrast** with another character (a foil), through a **change** from beginning to end, or through a gap between what a character **says** and what he or she **does**. *By letting Rourke's actions contradict his self-image, the writer shows a man whose medals hide a hollow character.*",
-          "不只说出特点，还要说出**方法**：作者是如何表现它的？通过与另一个人物的**对比**（衬托），通过从开头到结尾的**变化**，或者通过人物**说的**与**做的**之间的差距。*By letting Rourke's actions contradict his self-image, the writer shows a man whose medals hide a hollow character.*",
+          "Go beyond the trait to the **method**: how does the writer reveal it? Through a **contrast** with another character (a foil), through a **change** from beginning to end, or through a gap between what a character **says** and what he or she **does**. *By letting Rourke's actions contradict his self-image, the writer shows a man whose medals hide a hollow character.*\n\n> **Watch out.** Keep the *writer* visible in your analysis—talk about the deliberate craft (foil, contrast, shift, symbol), not just the character as if they were a real neighbor.",
+          "不只说出特点，还要说出**方法**：作者是如何表现它的？通过与另一个人物的**对比**（衬托），通过从开头到结尾的**变化**，或者通过人物**说的**与**做的**之间的差距。*By letting Rourke's actions contradict his self-image, the writer shows a man whose medals hide a hollow character.*\n\n> **注意。** 让“作者的写法”在分析中清晰可见——要讨论作者有意运用的对比、衬托、变化或象征，而不是像议论真实邻居一样只评价人物。",
         ),
         writingGenerator(
           t(
@@ -351,7 +378,10 @@ export const judgedTopics9a: readonly TopicDef[] = [
           characterBank,
           ["g9-character-method", "g9-character-evidence", "g9-character-claim"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check that your essay explicitly names the writer's method (foil, change over time, or words-versus-actions contrast) and shows how specific details make it work.",
+            "核对文章是否明确点出作者的塑造方法（衬托、前后变化或言行反差），并结合具体细节说明其效果。",
+          ),
         ),
       ),
     ],

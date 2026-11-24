@@ -87,6 +87,7 @@ export interface VocabularySpec {
   readonly id: string;
   readonly title: Text;
   readonly summary: Text;
+  readonly intro?: Text;
   readonly prerequisites: readonly string[];
   readonly encompasses?: readonly EncompassingDef[];
   readonly words: readonly WordDef[];
@@ -103,10 +104,24 @@ const minItems = 25;
 
 const quote = (s: string) => same(`> ${s}`);
 
-const explained = (w: WordDef, sentence: string): Text =>
+const cleanMeaning = (s: string) => s.replace(/[.。]+$/u, "");
+
+const explainedComplete = (w: WordDef, s: WordSentence): Text =>
   t(
-    `*${w.head}* means “${w.meaning.en}”, and that meaning is the one this sentence needs:\n\n${sentence}`,
-    `*${w.head}* 的意思是“${w.meaning["zh-CN"]}”，这正是这个句子需要的意思：\n\n${sentence}`,
+    `*${w.head}* means “${cleanMeaning(w.meaning.en)}”, and that meaning fits this sentence:\n\n${s.full}\n\n**Check.** Read the completed sentence aloud—the words around *${s.answer}* match both its meaning and its form.`,
+    `*${w.head}* 的意思是“${cleanMeaning(w.meaning["zh-CN"])}”，放进这句刚好通顺：\n\n${s.full}\n\n**检验。** 把填好的句子完整读一遍——*${s.answer}* 既符合前后语境的意思，形式也与句子搭配。`,
+  );
+
+const explainedMeaning = (w: WordDef, sentence: string): Text =>
+  t(
+    `**${w.head}** means “${cleanMeaning(w.meaning.en)}”, as in:\n\n${sentence}\n\n**Check.** Picture **${w.head}** in that example sentence and match it back to the given meaning—only **${w.head}** carries that exact sense.`,
+    `**${w.head}** 的意思是“${cleanMeaning(w.meaning["zh-CN"])}”，例如：\n\n${sentence}\n\n**检验。** 结合例句回看题干给出的释义——只有 **${w.head}** 准确对应这个意思。`,
+  );
+
+const explainedSpell = (w: WordDef, s: WordSentence): Text =>
+  t(
+    `*${w.head}* means “${cleanMeaning(w.meaning.en)}”, so the completed sentence is:\n\n${s.full}\n\n**Check.** Check every letter of **${s.answer}** and confirm that its form—such as plural, tense, or capitalization—fits the gap.`,
+    `*${w.head}* 的意思是“${cleanMeaning(w.meaning["zh-CN"])}”，完整句子是：\n\n${s.full}\n\n**检验。** 逐字母核对 **${s.answer}** 的拼写，并确认它的形式（如单复数、时态或大小写）符合空格要求。`,
   );
 
 /**
@@ -181,28 +196,37 @@ function choiceFrom(items: readonly ChoiceItem[]): Generator {
 }
 
 /** meansOther says what a wrong option means, if a vocabulary topic teaches it. */
-function meansOther(wrong: string): Text | undefined {
+function meansOther(wrong: string): Text {
   const other = gloss(wrong);
-  if (!other) return undefined;
-  return t(`*${wrong}* means “${other.meaning.en}”.`, `*${wrong}* 的意思是“${other.meaning["zh-CN"]}”。`);
+  if (!other)
+    return t(
+      `*${wrong}* has a different meaning and does not match the definition given here.`,
+      `*${wrong}* 是另一个意思，与这里给出的释义不符。`,
+    );
+  return t(`*${wrong}* means “${cleanMeaning(other.meaning.en)}”.`, `*${wrong}* 的意思是“${cleanMeaning(other.meaning["zh-CN"])}”。`);
 }
 
 /**
  * fitsNot says why a wrong filler does not complete the sentence: another form of the word, which a filler that is not a
  * taught word but starts like the answer is taken to be, or a word of another meaning.
  */
-function fitsNot(w: WordDef, wrong: string, answer: string): Text | undefined {
+function fitsNot(w: WordDef, wrong: string, answer: string): Text {
   const lower = wrong.toLowerCase();
-  if (w.spellings.some((s) => s.toLowerCase() === lower) || (!gloss(wrong) && lower.slice(0, 4) === answer.toLowerCase().slice(0, 4)))
+  const bare = (s: string) => s.toLowerCase().replace(/'/gu, "");
+  if (
+    w.spellings.some((s) => s.toLowerCase() === lower) ||
+    (!gloss(wrong) && (lower.slice(0, 4) === answer.toLowerCase().slice(0, 4) || bare(wrong) === bare(answer)))
+  )
     return t(
-      `*${wrong}* is not the form of *${w.head}* this sentence needs: look at the words just before and after the gap.`,
-      `这个句子需要的不是 *${wrong}* 这种形式的 *${w.head}*：看看空白前后紧挨着的词。`,
+      `*${wrong}* is not the form or spelling of *${w.head}* this sentence needs: look at the words just before and after the gap.`,
+      `这个句子需要的不是 *${wrong}* 这种形式或拼写的 *${w.head}*：看看空白前后紧挨着的词。`,
     );
   const other = gloss(wrong);
-  if (!other || other === w) return undefined;
+  if (!other || other === w)
+    return t(`*${wrong}* does not fit the meaning or form this sentence needs.`, `*${wrong}* 与这个句子需要的意思或形式不符。`);
   return t(
-    `*${wrong}* means “${other.meaning.en}”, which does not make sense in this sentence.`,
-    `*${wrong}* 的意思是“${other.meaning["zh-CN"]}”，放进这个句子意思说不通。`,
+    `*${wrong}* means “${cleanMeaning(other.meaning.en)}”, which does not make sense in this sentence.`,
+    `*${wrong}* 的意思是“${cleanMeaning(other.meaning["zh-CN"])}”，放进这个句子意思说不通。`,
   );
 }
 
@@ -265,7 +289,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
             prompt: joinText([t("Choose the word that completes the sentence.", "选出能填入句子空白处的词。"), quote(s.gapped)]),
             right: s.answer,
             wrong: s.wrong,
-            solution: explained(w, s.full),
+            solution: explainedComplete(w, s),
             whyNot: (wrong) => fitsNot(w, wrong, s.answer),
             sounds: sentenceSounds(w, s.full),
           }),
@@ -294,7 +318,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
             ]),
             right: w.head,
             wrong: wrong.filter((x): x is string => x !== undefined),
-            solution: explained(w, w.sentences[0]?.full ?? ""),
+            solution: explainedMeaning(w, w.sentences[0]?.full ?? ""),
             whyNot: meansOther,
             sounds: sentenceSounds(w, w.sentences[0]?.full ?? ""),
           }),
@@ -314,7 +338,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
         ]),
         answer: s.answer,
         wrong: s.wrong,
-        solution: explained(w, s.full),
+        solution: explainedSpell(w, s),
         sounds: sentenceSounds(w, s.full),
       })),
     ),
@@ -342,10 +366,19 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
   };
 
   const list = heads.map((h) => `*${h}*`).join(", ");
+  const w0 = words[0]!;
+  const w1 = words[1] ?? w0;
+  const w2 = words[2] ?? w0;
+  const w3 = words[3] ?? w0;
+  const defaultIntro = t(
+    `Take *${w0.head}* (“${cleanMeaning(w0.meaning.en)}”): *${w0.sentences[0]?.full ?? ""}* In this topic, you learn ${words.length} core words in context, match each to its meaning, and spell the right form in a sentence.`,
+    `看 *${w0.head}*（“${cleanMeaning(w0.meaning["zh-CN"])}”）：*${w0.sentences[0]?.full ?? ""}* 本主题带你结合语境掌握 ${words.length} 个核心词，将词与释义对应，并在句子中准确拼写出所需词形。`,
+  );
   const topic: TopicDef = {
     id,
     title: spec.title,
     summary: spec.summary,
+    intro: spec.intro ?? defaultIntro,
     prerequisites: spec.prerequisites,
     encompasses: spec.encompasses ?? [],
     xp: Math.max(10, Math.round(words.length * 1.5)),
@@ -355,8 +388,8 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
         "complete",
         t("Words in sentences", "句子中的词"),
         t(
-          `The words of this topic: ${list}. Read the whole sentence before you choose: the words around the gap tell you which word fits.`,
-          `本主题的词：${list}。先读完整个句子再选择：空白前后的词会告诉你哪个词合适。`,
+          `The words of this topic: ${list}. Read the whole sentence before you choose: the words around the gap tell you which word fits, as in *${w1.sentences[0]?.full ?? ""}* (*${w1.head}*, “${cleanMeaning(w1.meaning.en)}”).\n\n> **Watch out.** Do not pick a word just because it looks familiar—check both the meaning of the whole sentence and the exact form the gap needs.`,
+          `本主题的词：${list}。先读完整个句子再选择：空白前后的词会告诉你哪个词合适，例如 *${w1.sentences[0]?.full ?? ""}*（*${w1.head}*，“${cleanMeaning(w1.meaning["zh-CN"])}”）。\n\n> **注意。** 不要只凭眼熟选词——既要看整句话的意思是否通顺，也要核对空格需要的具体词形。`,
         ),
         choiceFrom(complete),
       ),
@@ -364,8 +397,8 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
         "meaning",
         t("Words and meanings", "词和词义"),
         t(
-          "Each word has its own meaning. Read the meaning, then choose the word that has it.",
-          "每个词都有自己的意思。读一读词义，再选出意思相符的词。",
+          `Each word has its own meaning: for example, *${w2.head}* means “${cleanMeaning(w2.meaning.en)}”. Read the meaning carefully, then choose the word that matches it.\n\n> **Watch out.** Watch out for close pairs from the same topic—read the whole meaning before choosing so you do not swap opposites or near-neighbors.`,
+          `每个词都有自己的意思：例如 *${w2.head}* 的意思是“${cleanMeaning(w2.meaning["zh-CN"])}”。仔细读一读词义，再选出意思相符的词。\n\n> **注意。** 同主题里常有反义词或容易混的成对词——把释义读完整再选，别把相近的词张冠李戴。`,
         ),
         choiceFrom(forMeaning),
       ),
@@ -373,8 +406,8 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
         "spell",
         t("Spelling the words", "拼写单词"),
         t(
-          "Type the word that fills the gap. Spell it exactly, and use the form the sentence needs, such as *cats* after *two*.",
-          "输入填空的词。拼写要准确，并用句子需要的形式，比如 *two* 后面用 *cats*。",
+          `Type the word that fills the gap—for example, *${w3.sentences[0]?.answer ?? w3.head}* in: *${w3.sentences[0]?.full ?? ""}* Spell it exactly, and use the form the sentence needs, such as *cats* after *two*.\n\n> **Watch out.** Check every letter and check whether the sentence calls for a changed form—such as a plural, a verb ending, or a capital letter at the start of a sentence.`,
+          `输入填空的词，例如 *${w3.sentences[0]?.full ?? ""}* 中的 *${w3.sentences[0]?.answer ?? w3.head}*。拼写要准确，并用句子需要的形式，比如 *two* 后面用 *cats*。\n\n> **注意。** 逐字母核对拼写，并检查句子是否需要变化形式——比如复数、动词变形或句首大写。`,
         ),
         typed,
       ),

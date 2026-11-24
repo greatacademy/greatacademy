@@ -16,8 +16,8 @@ const relative = choose(
   "the-noun-the-clause-describes",
   ["The Noun the Clause Describes", "从句修饰的名词"],
   [
-    "A relative clause describes the noun right before its relative word: in *The girl who won the race lives next door*, *who won the race* tells which **girl**. The other nouns of the sentence, such as *race* or *door*, are not what the clause describes.",
-    "关系从句修饰紧挨在关系词前面的名词：在 *The girl who won the race lives next door* 中，*who won the race* 说明的是哪个 **girl**。句子里的其他名词，如 *race* 或 *door*，不是从句修饰的对象。",
+    "A relative clause describes the noun directly before its relative word (*who*, *which*, *that*, *whose*, *where*). In *The girl who won the race lives next door*, *who won the race* identifies which **girl**—not *race* or *door*.\n\n> **Watch out.** Nouns sitting *inside* the relative clause (like *race*) or at the end of the main clause (like *door*) are not what the clause modifies.",
+    "关系从句修饰紧挨在关系词（*who*、*which*、*that*、*whose*、*where*）前面的名词。在 *The girl who won the race lives next door* 中，*who won the race* 限定的是哪个 **girl**，而不是 *race* 或 *door*。\n\n> **注意。** 出现在从句*里面*的名词（如 *race*）或主句末尾的名词（如 *door*）都不是从句修饰的对象。",
   ],
   ["Which noun does the relative clause describe?", "关系从句修饰的是哪个名词？"],
   `
@@ -52,7 +52,10 @@ const relative = choose(
   The pilot who flew the plane spoke to the passengers.|pilot|plane|passengers
   The map that the explorer drew showed a hidden lake.|map|explorer|lake
   `,
-  (right) => [`The clause comes right after *${right}* and tells which one is meant.`, `从句紧跟在 *${right}* 后面，说明指的是哪一个。`],
+  (right) => [
+    `The relative clause sits right after **${right}** and tells which one is meant.\n\n**Check.** Find the relative word (*who*, *that*, *whose*, *where*) and look one word to its left: it points directly back to **${right}**.`,
+    `关系从句紧跟在 **${right}** 后面，说明指的是哪一个。\n\n**检验。** 找到关系词（*who*、*that*、*whose*、*where*）并往左看紧挨着的名词：它直接指回 **${right}**。`,
+  ],
   [
     ["*{wrong}* is a noun inside the clause, not the one it describes.", "*{wrong}* 是从句里面的名词，不是从句修饰的名词。"],
     [
@@ -66,8 +69,8 @@ const pronounCase = choose(
   "pronouns-after-than-and-as",
   ["Pronouns After Than and As", "than 和 as 后面的代词"],
   [
-    "After *than* or *as* in a comparison, a verb is often left out: *She is taller than **I** (am)*. Finish the comparison in your head to choose the case. *Than I am* needs the subject form *I*; *She likes you more than (she likes) **me*** needs the object form. In formal writing, the subject form is right when the pronoun would be the subject of the missing verb.",
-    "在 *than* 或 *as* 引导的比较中，动词常被省略：*She is taller than **I** (am)*。在心里把比较补完整，再选择代词的格。*than I am* 需要主格 *I*；*She likes you more than (she likes) **me*** 需要宾格。在正式写作中，如果代词是省略动词的主语，就用主格。",
+    "In comparisons after *than* or *as*, the second verb is often left unspoken: *She is taller than **I** (am)*. Silently finish the clause to test the pronoun's job: *than **I** am* needs subject case, while *She likes you more than (she likes) **me*** needs object case.\n\n> **Watch out.** Do not pick a *self*-pronoun (*myself*, *himself*) after *than* or *as* just to dodge the choice—complete the hidden verb instead.",
+    "在 *than* 或 *as* 引导的比较中，后面的动词常被省略：*She is taller than **I** (am)*。在心里把省略的词补完整来判断代词成分：*than **I** am* 作主语用主格，而 *She likes you more than (she likes) **me*** 作宾语用宾格。\n\n> **注意。** 别为了回避主宾格选择而在 *than* 或 *as* 后面乱用反身代词（*myself*、*himself*）——补出省略的动词就能一眼看清。",
   ],
   ["Which pronoun is right in formal writing?", "在正式写作中，哪个代词正确？"],
   `
@@ -103,8 +106,8 @@ const pronounCase = choose(
   Grandma likes you as much as ___ (as she likes us).|us|we|ourselves
   `,
   (right, shown) => [
-    `Finish the comparison: "${shown.replace("___", right)}" The missing words show the case.`,
-    `把比较补完整：“${shown.replace("___", right)}” 省略的词决定了代词的格。`,
+    `Complete the comparison: *${shown.replace("___", `**${right}**`)}*\n\n**Check.** Supply the implied verb (such as *am*, *is*, *do*, *did*, or *praised*): only **${right}** fits the subject or object slot once the full clause is spoken aloud.`,
+    `把比较补完整：*${shown.replace("___", `**${right}**`)}*\n\n**检验。** 补出省略的动词（如 *am*、*is*、*do*、*did* 或 *praised*）再读一遍：只有 **${right}** 符合这个主语或宾语位置。`,
   ],
   [
     ["*{wrong}* is the wrong case once the missing words are put back.", "把省略的词补回去后，*{wrong}* 的格就不对了。"],
@@ -116,8 +119,8 @@ const whom = choose(
   "whom-after-a-preposition",
   ["Whom After a Preposition", "介词后面的 whom"],
   [
-    "When a preposition comes right before the pronoun, use **whom**: *To **whom** should I send the letter?*, *the friend with **whom** I traveled*. A preposition always takes the object form, and *whom* is the object form of *who*. *Whose* shows ownership and needs a noun after it.",
-    "当介词紧挨在代词前面时，用 **whom**：*To **whom** should I send the letter?*，*the friend with **whom** I traveled*。介词后面总是用宾格，而 *whom* 是 *who* 的宾格。*whose* 表示所属，后面要跟名词。",
+    "When a preposition (*to*, *for*, *with*, *from*, *about*, *by*) sits directly before the pronoun, use the object form **whom**: *To **whom** should I send the letter?* or *the friend with **whom** I traveled*.\n\n> **Watch out.** *Whose* shows possession and must be followed by a noun (*whose bag*), never used as the object of a preposition on its own.",
+    "当介词（*to*、*for*、*with*、*from*、*about*、*by*）紧挨在代词前面时，用宾格 **whom**：*To **whom** should I send the letter?* 或 *the friend with **whom** I traveled*。\n\n> **注意。** *whose* 表示所属，后面必须跟名词（*whose bag*），不能单独作介词宾语。",
   ],
   ["Which word completes the sentence?", "哪个词能补全句子？"],
   `
@@ -153,8 +156,8 @@ const whom = choose(
   Among ___ did you divide the cake?|whom|who|whose
   `,
   (_right, shown) => [
-    `"${shown.replace("___", "whom")}": a preposition comes right before the pronoun, so it takes the object form.`,
-    `“${shown.replace("___", "whom")}”：介词紧挨在代词前，所以用宾格。`,
+    `Because a preposition comes immediately before the blank, the object form **whom** is required: *${shown.replace("___", "**whom**")}*\n\n**Check.** Substitute *him* or *her* after the preposition (*to him*, *with her*, *from him*): since object *him* works instead of *he*, **whom** is right.`,
+    `空格前面紧挨着介词，因此必须用宾格 **whom**：*${shown.replace("___", "**whom**")}*\n\n**检验。** 把空格换成 *him* 或 *her* 试试（*to him*、*with her*、*from him*）：能用宾格 *him* 而不是 *he*，就证明该用 **whom**。`,
   ],
   [
     ["*{wrong}* is the subject form, but a preposition takes the object form.", "*{wrong}* 是主格，但介词后面要用宾格。"],
@@ -203,23 +206,23 @@ const appositive = label(
   "commas-or-none-with-an-appositive",
   ["Commas or None with an Appositive", "同位语用不用逗号"],
   [
-    "An appositive that **tells which one** is essential and takes no commas: *The poet Langston Hughes wrote about Harlem*, since there are many poets. An appositive that only **adds information** about a noun already clear is nonessential and takes commas: *Langston Hughes, a poet, wrote about Harlem*.",
-    "**说明是哪一个**的同位语是必要的，不加逗号：*The poet Langston Hughes wrote about Harlem*，因为诗人有很多。只是给已经明确的名词**补充信息**的同位语是非必要的，要加逗号：*Langston Hughes, a poet, wrote about Harlem*。",
+    "An appositive that **identifies which one** is essential and takes **no commas**: *The poet Langston Hughes wrote about Harlem* (there are many poets, so the name is needed). An appositive that only **adds bonus information** about an already named person or place takes **commas**: *Langston Hughes, a poet, wrote about Harlem*.\n\n> **Watch out.** Test by crossing out the appositive—if the sentence suddenly loses who or what you mean (*The poet wrote about Harlem*), leave out the commas.",
+    "**用来指明是哪一个**的同位语是必要成分，**不加逗号**：*The poet Langston Hughes wrote about Harlem*（诗人有很多，必须靠名字确定）。只是给已经明确的人或地名**补充信息**的同位语则要**加逗号**：*Langston Hughes, a poet, wrote about Harlem*。\n\n> **注意。** 试着划掉同位语——如果句子一下子说不清指的是谁（*The poet wrote about Harlem*），就不要加逗号。",
   ],
   ["Why is the appositive punctuated this way?", "这个同位语为什么这样加标点？"],
   appositiveLines,
   {
     "no commas: the name tells which one": L(
       "不加逗号：名字说明是哪一个",
-      "Without the name, the reader would not know which one is meant, so the appositive is essential.",
-      "去掉名字，读者就不知道指的是哪一个，所以这个同位语是必要的。",
+      "Without the name, the reader would not know which one is meant, so the appositive is essential and takes **no commas**.\n\n**Check.** Drop the name from the sentence: the general noun before it (*the poet*, *my friend*, *the novel*) is no longer specific enough on its own.",
+      "去掉名字，读者就不知道指的是哪一个，所以这个同位语是必要成分，**不加逗号**。\n\n**检验。** 试着把名字删掉：前面的普通名词（*the poet*、*my friend*、*the novel*）单独留下来指代就不够明确。",
       "The noun is already clear, so the appositive only adds information.",
       "这个名词已经很明确，同位语只是补充信息。",
     ),
     "commas: the appositive adds information": L(
       "加逗号：同位语补充信息",
-      "The noun is already clear, so the appositive only adds information and is set off by commas.",
-      "这个名词已经很明确，同位语只是补充信息，所以用逗号隔开。",
+      "The noun before the comma is already specific, so the appositive merely adds extra information and is set off with **commas**.\n\n**Check.** Lift the phrase between the commas out of the sentence: you still know the exact person, place, or work being discussed.",
+      "逗号前面的名词已经足够明确，同位语只是补充信息，所以用**逗号**隔开。\n\n**检验。** 把两个逗号之间的短语拿掉：句子依然清楚地指着同一个人、地点或作品。",
       "The appositive is needed to tell which one is meant.",
       "需要这个同位语来说明是哪一个。",
     ),
@@ -230,8 +233,8 @@ const participle = choose(
   "ing-or-ed-participles",
   ["-ing or -ed Participles", "-ing 还是 -ed 分词"],
   [
-    "A participle ending in **-ing** describes what causes a feeling: *an exciting game*, *a boring speech*. A participle ending in **-ed** describes the one who has the feeling: *the excited fans*, *a bored audience*. Ask whether the noun causes the feeling or feels it.",
-    "以 **-ing** 结尾的分词描述引起某种感受的事物：*an exciting game*、*a boring speech*。以 **-ed** 结尾的分词描述有这种感受的人：*the excited fans*、*a bored audience*。要问名词是引起感受的，还是感受到的。",
+    "An **-ing** participle describes what *causes* a feeling (*an exciting game*, *a tiring climb*). An **-ed** participle describes the person or creature who *experiences* the feeling (*the excited fans*, *the tired hikers*).\n\n> **Watch out.** Ask whether the noun gives off the feeling (-ing) or feels it inside (-ed)—a *boring* student makes others yawn, while a *bored* student is the one yawning.",
+    "以 **-ing** 结尾的分词描述*引起*某种感受的事物（*an exciting game*、*a tiring climb*）；以 **-ed** 结尾的分词描述*体验到*这种感受的人或动物（*the excited fans*、*the tired hikers*）。\n\n> **注意。** 分清名词是在制造感受（-ing）还是在感受情绪（-ed）——*boring* student 是让别人犯困的学生，而 *bored* student 才是自己觉得无聊的学生。",
   ],
   ["Which participle completes the sentence?", "哪个分词能补全句子？"],
   `
@@ -267,8 +270,8 @@ const participle = choose(
   Tripping on stage was an ___ moment.|embarrassing|embarrassed|embarrass
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": the participle shows whether the noun causes the feeling or feels it.`,
-    `“${shown.replace("___", right)}”：分词表明名词是引起感受的，还是感受到的。`,
+    `The matching participle is **${right}**: *${shown.replace("___", `**${right}**`)}*\n\n**Check.** Ask whether the noun experiences the feeling (**-ed**) or causes it (**-ing**): **${right}** matches that direction.`,
+    `正确的分词是 **${right}**：*${shown.replace("___", `**${right}**`)}*\n\n**检验。** 问问这个名词是在体验感受（**-ed**）还是在引发感受（**-ing**）：**${right}** 正好符合这个方向。`,
   ],
   [
     ["*{wrong}* mixes up the one who feels with what causes the feeling.", "*{wrong}* 把感受者和引起感受的事物弄混了。"],
@@ -280,8 +283,8 @@ const misplaced = choose(
   "what-the-sentence-really-says",
   ["What the Sentence Really Says", "句子实际上说了什么"],
   [
-    "A misplaced modifier attaches to the wrong word, so the sentence says something the writer did not mean, often something absurd. Read it literally: in *I saw a dog running down the street in my pajamas*, the dog is wearing the pajamas. Seeing the literal meaning is how you catch the error.",
-    "错位修饰语依附在了错误的词上，所以句子说出了作者本不想表达的意思，而且常常很荒谬。按字面读：在 *I saw a dog running down the street in my pajamas* 中，穿着睡衣的是狗。看出字面意思，才能发现错误。",
+    "A misplaced modifier hooks onto the nearest noun—even if that creates a comical picture. Read literally: in *I saw a dog running down the street in my pajamas*, *in my pajamas* sits beside *dog*, so the sentence claims **the dog was wearing my pajamas**. Spotting the literal absurdity is how you catch misplaced modifiers in your own drafts.\n\n> **Watch out.** Do not pick what the writer *meant* to say—read the words in their actual order to see which noun the modifier accidentally grabs.",
+    "错位修饰语会黏在离它最近的名词上，即使画面非常荒唐。按字面读：在 *I saw a dog running down the street in my pajamas* 中，*in my pajamas* 紧挨着狗，所以句子字面上说的是**狗穿着我的睡衣**。看出这种字面笑话，就能在自己的草稿里揪出错位修饰语。\n\n> **注意。** 别选作者*本来想说*的意思——按句子实际词序去读，看修饰语错抓住了哪个名词。",
   ],
   ["Read literally, what does the sentence say?", "按字面理解，这个句子说的是什么？"],
   `
@@ -316,7 +319,10 @@ const misplaced = choose(
   Chewing on a bone, we found the puppy under the table.|We were chewing on a bone.|The puppy was chewing on a bone.|The table was chewing.
   The teacher read a story to the class about dragons.|The class was about dragons.|The story was about dragons.|The teacher was about dragons.
   `,
-  (right) => [`Read literally, the modifier attaches to the wrong word: ${right}`, `按字面理解，修饰语依附在了错误的词上：${right}`],
+  (right) => [
+    `Read literally, the modifier attaches to the nearest noun, claiming: **${right}**\n\n**Check.** Trace a line from the modifying phrase to the noun right beside it (or right after the opening comma): that unintended pairing produces this exact comical claim.`,
+    `按字面理解，修饰语依附在了紧挨着的名词上，变成了：**${right}**\n\n**检验。** 把修饰短语和紧挨着它的名词（或开头逗号后的主语）连起来看：正是这个错配造出了这句荒唐的字面意思。`,
+  ],
   [
     ["That is what the writer meant, not what the sentence says as written.", "这是作者想表达的意思，而不是句子按原样写出来的意思。"],
     ["The modifier does not attach to that word either.", "修饰语也没有依附在那个词上。"],
@@ -327,8 +333,8 @@ const thatWhich = choose(
   "which-after-a-comma",
   ["Which After a Comma", "逗号后面用 which"],
   [
-    "*That* begins only essential clauses, so it never follows a comma. A clause set off by commas, which adds information, begins with **which** for things and **who** for people: *The book, **which** I borrowed, was long*; *My aunt, **who** lives in Ohio, is visiting*.",
-    "*that* 只引导必要从句，所以从不跟在逗号后面。用逗号隔开、补充信息的从句，指物时用 **which** 开头，指人时用 **who** 开头：*The book, **which** I borrowed, was long*；*My aunt, **who** lives in Ohio, is visiting*。",
+    "*That* introduces only essential clauses, so it never follows a comma. When a clause is set off by commas to add extra information, begin with **which** for things (*The book, **which** I borrowed, was long*) and **who** for people (*My aunt, **who** lives in Ohio, is visiting*).\n\n> **Watch out.** Check two things after a comma: first rule out *that*, then check whether the noun before the comma is a person (**who**) or a thing (**which**).",
+    "*that* 只引导必要从句，所以绝不能跟在逗号后面。用逗号隔开、补充信息的非必要从句，指物用 **which**（*The book, **which** I borrowed, was long*），指人用 **who**（*My aunt, **who** lives in Ohio, is visiting*）。\n\n> **注意。** 看到逗号后先检查两件事：先排除 *that*，再看逗号前的名词是人（**who**）还是物（**which**）。",
   ],
   ["Which word completes the sentence?", "哪个词能补全句子？"],
   `
@@ -364,8 +370,8 @@ const thatWhich = choose(
   The old clock, ___ belonged to my grandmother, still works.|which|that|who
   `,
   (right) => [
-    `After a comma the clause adds information, so it begins with *${right}*.`,
-    `逗号后面的从句补充信息，所以用 *${right}* 开头。`,
+    `After a comma, the nonessential clause cannot use *that*, so it takes **${right}**.\n\n**Check.** Look at the noun before the comma: because it is a ${right === "who" ? "person" : "thing or animal"} and the clause sits inside commas, **${right}** is the only valid relative pronoun.`,
+    `逗号后面的非必要从句不能用 *that*，因此这里填 **${right}**。\n\n**检验。** 看逗号前的名词：它指${right === "who" ? "人" : "物或动物"}，且从句由逗号隔开，只有 **${right}** 符合规则。`,
   ],
   [
     ["*{wrong}* begins only essential clauses, so it cannot follow a comma.", "*{wrong}* 只引导必要从句，不能跟在逗号后面。"],
@@ -380,8 +386,8 @@ const secondComma = choose(
   "the-second-comma",
   ["The Second Comma", "第二个逗号"],
   [
-    "A nonessential element in the middle of a sentence needs **two** commas, one before and one after, like a pair of brackets: *My aunt, who lives in Ohio, is visiting*. Leaving out the second comma, or the first, joins the element to the rest of the sentence and confuses the reader.",
-    "句子中间的非必要成分需要**两个**逗号，前后各一个，就像一对括号：*My aunt, who lives in Ohio, is visiting*。漏掉第二个或第一个逗号，都会把这个成分和句子的其他部分连在一起，让读者困惑。",
+    "A nonessential phrase or clause in the middle of a sentence needs **paired commas**—one to open it and one to close it: *My aunt, who lives in Ohio, is visiting*. Dropping either comma leaves the side comment glued to the subject or verb.\n\n> **Watch out.** Test your commas by lifting out everything between them: if the leftover sentence still reads cleanly (*My aunt is visiting*), both commas are in the right spots.",
+    "插在句子中间的非必要短语或从句需要**成对的逗号**——一开一合：*My aunt, who lives in Ohio, is visiting*。漏掉任意一个逗号，都会把补充说明和主语或动词粘在一起。\n\n> **注意。** 检验方法很简单：把两个逗号之间的内容整段抽走，如果剩下的部分仍是一句通顺完整的话（*My aunt is visiting*），两个逗号就都放对了。",
   ],
   ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
   join(
@@ -418,7 +424,10 @@ const secondComma = choose(
       ["The book", "written by my aunt", "won a prize"],
     ].map(([a, middle, b]) => `${a} ___ ${middle} ___ ${b}.|${a}, ${middle}, ${b}.|${a}, ${middle} ${b}.|${a} ${middle}, ${b}.`),
   ),
-  (right) => [`"${right}" puts a comma on each side of the nonessential element.`, `“${right}”在非必要成分的两边各加了一个逗号。`],
+  (right) => [
+    `The correctly punctuated sentence is: **${right}** It sets off the nonessential middle element with both an opening and a closing comma.\n\n**Check.** Lift out the words between the two commas: the subject and verb on either side still link up into a complete, grammatical sentence.`,
+    `标点正确的句子是：**${right}** 它用一前一后两个逗号把中间的非必要成分完整隔开。\n\n**检验。** 把两个逗号之间的内容抽掉：前后的主语和谓语依然能直接拼成一个通顺完整的句子。`,
+  ],
   [
     ['"{wrong}" leaves out the comma after the element.', "“{wrong}”漏掉了成分后面的逗号。"],
     ['"{wrong}" leaves out the comma before the element.', "“{wrong}”漏掉了成分前面的逗号。"],
@@ -429,8 +438,8 @@ const myself = choose(
   "self-pronoun-or-object-pronoun",
   ["Self-Pronoun or Object Pronoun", "反身代词还是宾格代词"],
   [
-    "A self-pronoun needs a word in the same sentence that it refers back to: *I hurt **myself***, *I **myself** saw it*. With no such word, use the ordinary pronoun: *Please give the tickets to Maria or **me***, not *or myself*. Using *myself* to sound polite is a common error.",
-    "反身代词需要同一个句子里有一个它所回指的词：*I hurt **myself***，*I **myself** saw it*。如果没有这样的词，就用普通代词：*Please give the tickets to Maria or **me***，而不是 *or myself*。为了显得礼貌而用 *myself* 是常见的错误。",
+    "A *self*-pronoun (*myself*) is valid only when *I* already appears as the subject in the same clause: *I taught **myself** guitar* or *I fixed it **myself***. When there is no *I* to point back to, use the ordinary object pronoun **me**: *Please give the tickets to Maria or **me***.\n\n> **Watch out.** Do not slip *myself* into a compound object (*to Maria or myself*) to sound polite—drop *Maria or* and test: you would never say *give the tickets to myself*.",
+    "反身代词（*myself*）只有在同一个从句里已经出现主语 *I* 时才能使用：*I taught **myself** guitar* 或 *I fixed it **myself***。句中没有 *I* 可以回指时，用普通宾格 **me**：*Please give the tickets to Maria or **me***。\n\n> **注意。** 别为了听起来客气就在并列宾语里用 *myself*（*to Maria or myself*）——把 *Maria or* 去掉试试：没人会说 *give the tickets to myself*。",
   ],
   ["Which pronoun completes the sentence?", "哪个代词能补全句子？"],
   `
@@ -466,8 +475,8 @@ const myself = choose(
   I promised ___ I would finish the book.|myself|me|I
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": a self-pronoun only when the sentence has a word it refers back to.`,
-    `“${shown.replace("___", right)}”：只有句中有它所回指的词时才用反身代词。`,
+    `The right pronoun is **${right}**: *${shown.replace("___", `**${right}**`)}*\n\n**Check.** Look at the subject of the sentence: ${right === "myself" ? "the subject is *I*, so **myself** refers directly back to it" : "the subject is not *I*, so there is no antecedent for *myself*—and dropping the other name leaves **me** alone after the verb or preposition"}.`,
+    `这里该用 **${right}**：*${shown.replace("___", `**${right}**`)}*\n\n**检验。** 看句子的主语：${right === "myself" ? "主语正是 *I*，所以 **myself** 可以直接回指主语" : "主语不是 *I*，没有供 *myself* 回指的对象；而且去掉另一个人名后，动词或介词后面自然只剩 **me**"}。`,
   ],
   [
     [
@@ -482,8 +491,8 @@ const thisNoun = choose(
   "this-with-a-noun",
   ["This with a Noun", "this 加名词"],
   [
-    "*This* or *that* standing alone often points at a whole idea, and the reader may not know which: *The bus was late again. This made us miss the play.* Add a noun that names the idea: ***This delay** made us miss the play.* The noun turns a vague pointer into a clear one.",
-    "单独使用的 *this* 或 *that* 常常指代一整个意思，读者可能不知道指的是什么：*The bus was late again. This made us miss the play.* 加一个名词把这个意思说出来：***This delay** made us miss the play.* 名词让含糊的指代变得清楚。",
+    "Starting a second sentence with a bare *This* or *It* leaves readers guessing which detail you mean: *The bus was late again. This made us miss the play.* Adding a summary noun right after *This* locks in the meaning: ***This delay** made us miss the play.*\n\n> **Watch out.** Whenever you start a sentence with *This*, ask yourself *This what?*—if you can name the idea in one word (*this delay*, *this rule*, *this discovery*), write that noun.",
+    "第二句开头只写一个光秃秃的 *This* 或 *It*，会让读者猜不准指代的是哪件事：*The bus was late again. This made us miss the play.* 在 *This* 后面加上概括名词就能锁死指代：***This delay** made us miss the play.*\n\n> **注意。** 每次用 *This* 开头时，问自己一句*这个什么？*——只要能用一个词概括前面的意思（*this delay*、*this rule*、*this discovery*），就把它写出来。",
   ],
   ["Which opening makes the second sentence clear?", "哪个开头能让第二句清楚？"],
   `
@@ -518,7 +527,10 @@ const thisNoun = choose(
   Our class read a book every week. ___ improved our vocabulary.|This routine|This|It
   The road was repaved over the summer. ___ made biking much safer.|This repair|This|It
   `,
-  (right) => [`*${right}* names the idea the pronoun points at.`, `*${right}* 把代词所指的意思说了出来。`],
+  (right) => [
+    `**${right}** names the idea from the first sentence directly instead of leaving a bare pronoun hanging.\n\n**Check.** Read the second sentence on its own: **${right}** tells the reader what happened without forcing them to hunt back through the first sentence.`,
+    `**${right}** 直接点明了前一句说的那件事，而不是留下一个含糊的光杆代词。\n\n**检验。** 单独读第二句：**${right}** 让读者立刻明白指什么，不必回头在前一句里猜。`,
+  ],
   [
     ["*{wrong}* alone points at the whole idea without naming it.", "单独的 *{wrong}* 指代整个意思，却没有把它说出来。"],
     [
@@ -569,23 +581,23 @@ const agreement = label(
   "proofreading-for-agreement",
   ["Proofreading for Agreement", "校对主谓一致"],
   [
-    "To proofread a sentence with a phrase between subject and verb, cover the phrase and read the subject with the verb: *The box (of old letters) **is** in the attic*. If the verb fits the noun inside the phrase instead, *are*, it **agrees with the noun in the phrase** and must be fixed.",
-    "校对主语和动词之间有短语的句子时，把短语遮住，只读主语和动词：*The box (of old letters) **is** in the attic*。如果动词与短语里的名词一致，如 *are*，那它就是**与短语中的名词一致**了，必须改正。",
+    "To proofread a sentence with a prepositional phrase between subject and verb, cover the phrase with your thumb and read what remains: *The box (of old letters) **is** in the attic*. If the verb matches the noun inside the phrase (*letters are*) instead of the true subject (*box*), it **agrees with the noun in the phrase**.\n\n> **Watch out.** Phrases beginning with *of*, *in*, *on*, *to*, or *with* never contain the subject—always jump left past the preposition to find the real subject.",
+    "校对主语和动词之间夹着介词短语的句子时，用手遮住短语再读剩下的部分：*The box (of old letters) **is** in the attic*。如果动词跟着短语里的名词变（*letters are*）而不是跟着真正的主语（*box*），它就**与短语中的名词一致**了。\n\n> **注意。** 由 *of*、*in*、*on*、*to*、*with* 引导的短语里绝不会出现主语——务必越过介词往左找真正的主语。",
   ],
   ["Is the verb in this sentence correct?", "这个句子中的动词正确吗？"],
   agreementLabels,
   {
     correct: L(
       "正确",
-      "With the phrase covered, the verb agrees with the subject.",
-      "遮住短语后，动词与主语一致。",
+      "Covering the phrase between subject and verb shows that the verb matches the true subject; this sentence is **correct**.\n\n**Check.** Read just the subject and verb side by side without the middle phrase: singular subject pairs with singular verb, or plural with plural.",
+      "遮住主语和动词之间的短语后，动词与真正的主语一致，所以这句**正确**。\n\n**检验。** 去掉中间的介词短语，把主语和动词挨在一起读：单数配单数，复数配复数，完全吻合。",
       "With the phrase covered, the verb does not fit the subject.",
       "遮住短语后，动词与主语不一致。",
     ),
     "agrees with the noun in the phrase": L(
       "与短语中的名词一致",
-      "The verb fits the noun inside the phrase, not the subject before it.",
-      "动词与短语里的名词一致，而不是与前面的主语一致。",
+      "The verb mistakenly matches the noun inside the prepositional phrase instead of the real subject before it; it **agrees with the noun in the phrase**.\n\n**Check.** Cross out the *of/in/on/to/with* phrase and read the subject straight into the verb: the mismatch jumps out right away.",
+      "动词误跟介词短语里的名词保持一致，而忽略了前面真正的主语，因此属于**与短语中的名词一致**。\n\n**检验。** 划掉 *of/in/on/to/with* 短语，直接把主语和动词连起来读：单复数不搭配立刻暴露出来。",
       "The verb agrees with the subject.",
       "动词与主语一致。",
     ),
@@ -596,8 +608,8 @@ const numberStart = choose(
   "a-number-at-the-start",
   ["A Number at the Start", "句首的数字"],
   [
-    "Never begin a sentence with a figure. Spell the number out, with a hyphen between tens and ones from *twenty-one* to *ninety-nine*: ***Twenty-five** students signed up*. If the number is long, rewrite the sentence so it does not come first.",
-    "句子不能以阿拉伯数字开头。要把数字拼写出来，*twenty-one* 到 *ninety-nine* 的十位和个位之间加连字符：***Twenty-five** students signed up*。如果数字很长，就改写句子，不让它放在句首。",
+    "Never begin a sentence with a numeral like *25*. Spell the number out in words, and put a hyphen between tens and ones from *twenty-one* to *ninety-nine*: ***Twenty-five** students signed up*.\n\n> **Watch out.** Two traps appear together here: leaving a digit at the start (*25*) and forgetting the hyphen in a compound number (*Twenty five*).",
+    "句首不要直接写阿拉伯数字（如 *25*），而要把数字拼写出来，并且在 *twenty-one* 到 *ninety-nine* 的十位和个位之间加连字符：***Twenty-five** students signed up*。\n\n> **注意。** 这里常同时踩两个坑：句首保留数字（*25*），或者忘了给复合数字加连字符（*Twenty five*）。",
   ],
   ["Which opening is correct?", "哪个开头是正确的？"],
   `
@@ -633,8 +645,8 @@ const numberStart = choose(
   ___ climbers reached the top of the mountain.|Fifty-two|52|Fifty two
   `,
   (right) => [
-    `*${right}* spells the number out, with a hyphen, at the start of the sentence.`,
-    `*${right}* 在句首把数字拼写了出来，并加了连字符。`,
+    `**${right}** spells the sentence-opening number out in words and connects tens and ones with a hyphen.\n\n**Check.** Verify both rules at once: no Arabic numeral starts the sentence, and the compound number between 21 and 99 carries a hyphen.`,
+    `**${right}** 在句首把数字拼写成了英文单词，并用连字符连接十位和个位。\n\n**检验。** 同时核对两条规则：句首不用阿拉伯数字，且 21 到 99 之间的复合数字中间带有连字符。`,
   ],
   [
     ["*{wrong}* begins the sentence with a figure.", "*{wrong}* 用阿拉伯数字开头。"],
@@ -646,8 +658,8 @@ const plural = choose(
   "fixing-a-shift-with-the-plural",
   ["Fixing a Shift with the Plural", "用复数纠正数的变换"],
   [
-    "A sentence that starts with a singular word such as *every student* and then says *their* shifts number. One clean fix is to make the whole sentence **plural**: *Every student must bring his or her lunch* becomes ***All students** must bring **their** lunches*. Check that the verb and the nouns change too.",
-    "以 *every student* 这样的单数词开头、后面却用 *their* 的句子发生了数的变换。一个干净的改法是把整个句子改成**复数**：*Every student must bring his or her lunch* 变成 ***All students** must bring **their** lunches*。注意动词和名词也要跟着变。",
+    "A sentence that opens with singular *every student* and switches to *their* shifts number. One clean fix is to shift the **entire** sentence to plural: *Every student must bring their lunch* → ***All students** must bring **their** lunches*. Remember to update the determiner, noun, verb, and pronoun together.\n\n> **Watch out.** Never write *Every students* or *A drivers*—*every*, *each*, and *a* only work with singular nouns, so drop them or change them to *all* when making the subject plural.",
+    "句子用单数 *every student* 开头，后面却换成 *their*，就出现了数的变换。一个利落的改法是把**整句**都改成复数：*Every student must bring their lunch* → ***All students** must bring **their** lunches*。注意限定词、名词、动词和代词要一起改。\n\n> **注意。** 千万别写成 *Every students* 或 *A drivers*——*every*、*each* 和 *a* 只能配单数名词，改复数时要把它们删掉或换成 *all*。",
   ],
   ["Which revision is plural throughout?", "哪个修改从头到尾都是复数？"],
   `
@@ -682,7 +694,10 @@ const plural = choose(
   Every author reads their book aloud.|All authors read their books aloud.|All authors reads his or her book aloud.|Every authors read their books aloud.
   Each team member wears their jersey.|All team members wear their jerseys.|All team members wears his or her jersey.|Each team members wear their jerseys.
   `,
-  (right) => [`"${right}" makes the subject, the pronoun and the verb all plural.`, `“${right}”让主语、代词和动词都成了复数。`],
+  (right) => [
+    `The consistent plural revision is: **${right}** Subject, verb, and pronoun all stay plural from start to finish.\n\n**Check.** Scan three spots in order—the opening noun phrase, the main verb, and the pronoun *their*—and confirm no singular marker (*every*, *each*, *a*, *his or her*, or *-s* verb) remains.`,
+    `通篇保持复数的改写是：**${right}** 主语、动词和代词从头到尾都是复数。\n\n**检验。** 依次核对三处——开头名词短语、主谓动词和代词 *their*——确认没有残留任何单数标记（*every*、*each*、*a*、*his or her* 或单三动词）。`,
+  ],
   [
     ['"{wrong}" makes the subject plural but keeps a singular pronoun.', "“{wrong}”把主语改成了复数，但代词仍是单数。"],
     [
@@ -696,8 +711,8 @@ const passiveParticiple = choose(
   "the-participle-after-be",
   ["The Participle After Be", "be 后面的过去分词"],
   [
-    "The passive is a form of *be* plus a **past participle**: *The window **was broken** by the ball*. With an irregular verb the participle is not the simple past: *broken*, not *broke*; *written*, not *wrote*. A made-up form such as *breaked* is never right.",
-    "被动语态由 *be* 的某种形式加**过去分词**构成：*The window **was broken** by the ball*。不规则动词的过去分词不同于一般过去式：是 *broken* 而不是 *broke*，是 *written* 而不是 *wrote*。*breaked* 这样编造的形式永远是错的。",
+    "The passive voice pairs a form of *be* (*is*, *was*, *were*, *has been*) with a **past participle**: *The window **was broken** by the ball*. Irregular verbs often have a different past participle from their simple past (*broken*, not *broke*; *written*, not *wrote*), and invented *-ed* forms like *breaked* never exist.\n\n> **Watch out.** Test the verb in the frame *have ___* (*have broken*, *have written*, *have sung*)—the exact same form goes after *was* or *were* in the passive.",
+    "被动语态由 *be* 的某种形式（*is*、*was*、*were*、*has been*）加**过去分词**构成：*The window **was broken** by the ball*。不规则动词的过去分词往往不同于一般过去式（是 *broken* 而非 *broke*，是 *written* 而非 *wrote*），而 *breaked* 这类生造的 *-ed* 形式根本不存在。\n\n> **注意。** 用 *have ___* 框架测试一下（*have broken*、*have written*、*have sung*）——被动语态里 *was* 或 *were* 后面用的正是同一个形式。",
   ],
   ["Which form completes the sentence?", "哪个形式能补全句子？"],
   `
@@ -733,8 +748,8 @@ const passiveParticiple = choose(
   The trophy was ___ in the front window.|hidden|hid|hided
   `,
   (right) => [
-    `After a form of *be*, the passive takes the past participle *${right}*.`,
-    `在 *be* 的某种形式后面，被动语态用过去分词 *${right}*。`,
+    `After a form of *be*, the passive voice requires the past participle **${right}**.\n\n**Check.** Put **${right}** after *has/have* (*has ${right}*): it is the genuine past participle, whereas the simple past or a made-up *-ed* form fails that test.`,
+    `在 *be* 动词后面，被动语态必须使用过去分词 **${right}**。\n\n**检验。** 把 **${right}** 放进 *has/have ___*（*has ${right}*）检验：它正是标准的过去分词，而一般过去式或生造的 *-ed* 形式都通不过这个检验。`,
   ],
   [
     ["*{wrong}* is the simple past or another form, not the past participle.", "*{wrong}* 是一般过去式或其他形式，不是过去分词。"],
@@ -746,8 +761,8 @@ const possessiveOrPlural = choose(
   "possessive-or-plural",
   ["Possessive or Plural", "所有格还是复数"],
   [
-    "A plural only counts: *The girls ran*. A possessive owns something, and the noun after it shows what: *the girls' coats* (more than one girl), *the girl's coat* (one girl). Ask two questions: does the word own the next noun, and is it one or more than one?",
-    "复数只表示数量：*The girls ran*。所有格表示拥有某物，后面的名词说明拥有的是什么：*the girls' coats*（不止一个女孩），*the girl's coat*（一个女孩）。要问两个问题：这个词是否拥有后面的名词？它是一个还是不止一个？",
+    "A plain **plural** only counts (*The players ran onto the field*). A **plural possessive** owns the noun right after it (*the players' uniforms*). Ask two quick questions: does the word own the next noun, and are there several owners (*s'*) or just one (*'s*)?\n\n> **Watch out.** Do not add an apostrophe to a plain plural just because it ends in *-s*—if a verb follows immediately (*The players ran*), no ownership is being shown.",
+    "普通**复数**只表示数量（*The players ran onto the field*）；**复数所有格**则拥有紧跟在后面的名词（*the players' uniforms*）。快速问自己两个问题：这个词有没有拥有后面的名词？拥有者是多个（*s'*）还是一个（*'s*）？\n\n> **注意。** 别一看到词尾有 *-s* 就顺手加撇号——如果后面紧跟着动词（*The players ran*），并没有表示所属关系。",
   ],
   ["Which word completes the sentence?", "哪个词能补全句子？"],
   `
@@ -783,8 +798,8 @@ const possessiveOrPlural = choose(
   Our ___ names were called one by one.|cousins'|cousins|cousin's
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": the word is ${right.endsWith("'") ? "a plural that owns the next noun" : "a plural that only counts"}.`,
-    `“${shown.replace("___", right)}”：这个词是${right.endsWith("'") ? "拥有后面名词的复数" : "只表示数量的复数"}。`,
+    `The completed sentence is *${shown.replace("___", `**${right}**`)}* Here **${right}** is ${right.endsWith("'") ? "a plural possessive owning the noun right after it" : "a plain plural with nothing owned after it"}.\n\n**Check.** Look at the word directly after the blank: ${right.endsWith("'") ? "it is a noun belonging to more than one owner, so the apostrophe goes *after* the *-s*" : "it is a verb or preposition rather than an owned noun, so no apostrophe belongs here"}.`,
+    `完整的句子是 *${shown.replace("___", `**${right}**`)}* 这里的 **${right}** 是${right.endsWith("'") ? "拥有后面名词的复数所有格" : "只表示数量的普通复数"}。\n\n**检验。** 看空格紧后面的词：${right.endsWith("'") ? "它是属于多个拥有者的名词，所以撇号放在 *-s* 后面" : "它是动词或介词，不是被拥有的名词，所以不需要撇号"}。`,
   ],
   [
     [
@@ -799,8 +814,8 @@ const noDouble = choose(
   "when-not-to-double",
   ["When Not to Double", "什么时候不双写"],
   [
-    "Double the final consonant only after **one** short vowel: *stop*, *stopping*. Do not double when the word ends in **two consonants** (*jump*, *jumping*), has **two vowels** before the last consonant (*rain*, *raining*), ends in *w*, *x* or *y* (*box*, *boxing*), or is stressed on an earlier syllable (*open*, *opening*).",
-    "只有在**一个**短元音后面才双写末尾辅音：*stop*、*stopping*。以下情况不双写：词以**两个辅音**结尾（*jump*、*jumping*），最后一个辅音前有**两个元音**（*rain*、*raining*），以 *w*、*x* 或 *y* 结尾（*box*、*boxing*），或者重音在前面的音节上（*open*、*opening*）。",
+    "Double the final consonant before *-ing*, *-ed*, or *-er* only after a **single stressed short vowel** followed by **one** consonant (*stop* → *stopping*). Do **not** double after two vowels (*rain* → *raining*), two consonants (*jump* → *jumped*), final *w/x/y* (*box* → *boxing*), or an unstressed final syllable (*open* → *opening*).\n\n> **Watch out.** Say two-syllable words aloud to hear the stress: *OP-en* and *VIS-it* stress the first syllable, so the final consonant stays single.",
+    "只有在**重读的单个短元音**后接**单个**辅音时，加 *-ing*、*-ed* 或 *-er* 才双写末尾辅音（*stop* → *stopping*）。以下情况**不**双写：前面有两个元音（*rain* → *raining*）、末尾有两个辅音（*jump* → *jumped*）、以 *w/x/y* 结尾（*box* → *boxing*），或末尾音节非重读（*open* → *opening*）。\n\n> **注意。** 把双音节词大声读出来听重音：*OP-en* 和 *VIS-it* 的重音都在第一音节，所以末尾辅音不双写。",
   ],
   ["Which spelling is correct?", "哪个拼写正确？"],
   `
@@ -836,8 +851,8 @@ const noDouble = choose(
   offer + ing|offering|offerring|offring
   `,
   (right) => [
-    `*${right}* keeps a single consonant: the rule for doubling does not apply.`,
-    `*${right}* 保留单个辅音：双写规则在这里不适用。`,
+    `**${right}** keeps the final consonant single because the base word does not meet the doubling rule.\n\n**Check.** Inspect the end of the base word: it has two vowels, two consonants, *w/x/y*, or an unstressed ending—so simply attach the suffix directly without doubling or dropping letters.`,
+    `**${right}** 保留了单个末尾辅音，因为原词不符合双写条件。\n\n**检验。** 检查原词词尾：它要么前面有两个元音、要么以双辅音或 *w/x/y* 结尾、要么尾音节不重读——因此直接接后缀，既不双写也不删字母。`,
   ],
   [
     ["*{wrong}* doubles a consonant that should stay single.", "*{wrong}* 双写了本应保持单个的辅音。"],
@@ -886,23 +901,23 @@ const colon = label(
   "colons-that-do-not-belong",
   ["Colons That Do Not Belong", "不该用的冒号"],
   [
-    "A colon follows a **complete sentence**: *We need three things: flour, eggs and milk*. A colon that comes right after a verb or a preposition splits a sentence in the middle: *My favorite sports are: soccer…* is wrong. Delete the colon, or add words such as *the following* to complete the sentence first.",
-    "冒号要跟在一个**完整的句子**后面：*We need three things: flour, eggs and milk*。紧跟在动词或介词后面的冒号会把句子从中间截断：*My favorite sports are: soccer…* 是错的。删掉冒号，或者先加上 *the following* 之类的词把句子补完整。",
+    "A colon must follow a **complete sentence**: *We need three things: flour, eggs and milk*. Putting a colon right after a verb or preposition cuts the sentence in half: *My favorite sports are: soccer…* is wrong. Either delete the colon or finish the sentence with words like *the following*.\n\n> **Watch out.** Cover everything from the colon to the end—if what is left before the colon cannot stand as a complete sentence (*We need*, *The box was full of*), the colon does not belong.",
+    "冒号必须跟在**完整的句子**后面：*We need three things: flour, eggs and milk*。把冒号直接放在动词或介词后面会把句子拦腰截断：*My favorite sports are: soccer…* 是错的。要么删掉冒号，要么加上 *the following* 把前半句说完整。\n\n> **注意。** 遮住冒号及后面的所有内容——如果冒号前面剩下的部分不能独立成句（如 *We need*、*The box was full of*），这个冒号就不该用。",
   ],
   ["Is the colon used correctly?", "这个冒号用得对吗？"],
   colonLabels,
   {
     "correct colon": L(
       "冒号正确",
-      "The words before the colon form a complete sentence.",
-      "冒号前面的词组成了一个完整的句子。",
+      "The words before the colon form a complete sentence that introduces the list or explanation; this is a **correct colon**.\n\n**Check.** Put a period right where the colon sits and read the first half alone: it stands cleanly as a full sentence.",
+      "冒号前面的部分本身就是完整句子，用来引出后面的列举或解释，因此**冒号正确**。\n\n**检验。** 把冒号临时换成句号，单读前半句：意思完整，可以独立成句。",
       "The colon comes right after a verb or a preposition.",
       "冒号紧跟在动词或介词后面。",
     ),
     "colon after a verb or preposition": L(
       "冒号用在动词或介词之后",
-      "The colon splits the sentence right after a verb or a preposition.",
-      "冒号紧跟在动词或介词后面，把句子截断了。",
+      "The colon interrupts the sentence directly after a verb (*are*, *need*, *includes*) or a preposition (*of*, *on*, *with*); this is a **colon after a verb or preposition**.\n\n**Check.** Stop reading at the colon: the words before it leave you hanging with an unfinished thought, proving the colon splits the sentence improperly.",
+      "冒号紧跟在动词（*are*、*need*、*includes*）或介词（*of*、*on*、*with*）后面，把句子硬生生切开，属于**冒号用在动词或介词之后**。\n\n**检验。** 读到冒号就停下：前半截话明显没说完，证明冒号不该插在这里。",
       "The words before the colon form a complete sentence.",
       "冒号前面的词组成了一个完整的句子。",
     ),
@@ -913,8 +928,8 @@ const neitherOf = choose(
   "neither-of-and-either-of",
   ["Neither Of and Either Of", "neither of 和 either of"],
   [
-    "*Either* and *neither* on their own, or followed by *of*, mean **one** of two, so in formal writing they take a singular verb: *Neither of the twins **is** ready*; *Either of the roads **leads** to town*. This differs from *neither … nor*, where the verb agrees with the nearer subject.",
-    "单独使用或后接 *of* 的 *either* 和 *neither* 表示两者中的**一个**，所以在正式写作中用单数动词：*Neither of the twins **is** ready*；*Either of the roads **leads** to town*。这与 *neither … nor* 不同，后者的动词与较近的主语一致。",
+    "Standing before *of*, **either** (either one) and **neither** (not one) are singular in formal writing and take a singular verb: *Neither of the twins **is** ready*; *Either of the roads **leads** to town*. That differs from *neither … nor*, where the verb matches the nearer subject.\n\n> **Watch out.** Do not let the plural noun after *of* (*twins*, *roads*, *answers*) pull the verb into the plural—mentally insert *one*: *Neither [one] of the twins **is** ready*.",
+    "放在 *of* 前面的 **either**（两者中任一个）和 **neither**（两者中哪一个都不）在正式写作中都作单数，配单数动词：*Neither of the twins **is** ready*；*Either of the roads **leads** to town*。这和 *neither … nor* 不同，后者的动词看就近主语。\n\n> **注意。** 别被 *of* 后面的复数名词（*twins*、*roads*、*answers*）带偏成复数动词——在心里补一个 *one*：*Neither [one] of the twins **is** ready*。",
   ],
   ["Which verb is right in formal writing?", "在正式写作中，哪个动词正确？"],
   `
@@ -950,8 +965,8 @@ const neitherOf = choose(
   Either of the cats ___ on my bed.|sleeps|sleep|sleeping
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": *either* or *neither* means one of two, so the verb is singular.`,
-    `“${shown.replace("___", right)}”：*either* 或 *neither* 表示两者中的一个，所以动词用单数。`,
+    `In formal writing, *either* and *neither* are singular, so **${right}** is right: *${shown.replace("___", `**${right}**`)}*\n\n**Check.** Cover the *of* phrase and read *Neither/Either one **${right}***: the singular finite verb agrees cleanly with *one*.`,
+    `在正式写作中，*either* 和 *neither* 作单数，所以该用 **${right}**：*${shown.replace("___", `**${right}**`)}*\n\n**检验。** 遮住 *of* 短语，读作 *Neither/Either one **${right}***：单数限定动词和 *one* 严丝合缝。`,
   ],
   [
     [
@@ -966,8 +981,8 @@ const linking = choose(
   "after-a-linking-verb",
   ["After a Linking Verb", "系动词之后"],
   [
-    "A linking verb, such as *be*, *seem*, *look*, *taste*, *smell*, *sound* and *feel*, connects the subject to a word that describes it, so it takes an **adjective**: *The soup tastes **good***; *The milk smells **bad***. An action verb takes an adverb: *She sings **well***. *Well* can be an adjective too, meaning healthy: *I feel well today*.",
-    "系动词，如 *be*、*seem*、*look*、*taste*、*smell*、*sound* 和 *feel*，把主语和描述它的词连接起来，所以后面用**形容词**：*The soup tastes **good***；*The milk smells **bad***。行为动词后面用副词：*She sings **well***。*well* 也可以作形容词，表示身体健康：*I feel well today*。",
+    "Linking verbs (*be*, *seem*, *look*, *taste*, *smell*, *sound*, *feel*, *grow*, *become*, *stay*, *turn*) connect the subject to an **adjective** that describes the subject: *The soup tastes **good***; *The milk smells **bad***. Action verbs take adverbs (*She sings **well***).\n\n> **Watch out.** Replace the verb with *is* or *was*—if the sentence still makes sense (*The soup **is** good*, *The garden **is** beautiful*), the verb is acting as a linking verb and takes an adjective, not an *-ly* adverb.",
+    "系动词（*be*、*seem*、*look*、*taste*、*smell*、*sound*、*feel*、*grow*、*become*、*stay*、*turn*）把主语和描述主语的**形容词**连起来：*The soup tastes **good***；*The milk smells **bad***。行为动词后面才用副词（*She sings **well***）。\n\n> **注意。** 把动词临时换成 *is* 或 *was*——如果句子依然说得通（*The soup **is** good*、*The garden **is** beautiful*），它就是系动词，后面要用形容词，而不是 *-ly* 副词。",
   ],
   ["Which word completes the sentence?", "哪个词能补全句子？"],
   `
@@ -1003,8 +1018,8 @@ const linking = choose(
   The baby looks ___ in that hat.|cute|cutely|cuteness
   `,
   (right, shown) => [
-    `"${shown.replace("___", right)}": a linking verb connects the subject to an adjective that describes it.`,
-    `“${shown.replace("___", right)}”：系动词把主语和描述它的形容词连接起来。`,
+    `The linking verb calls for the adjective **${right}**: *${shown.replace("___", `**${right}**`)}*\n\n**Check.** Swap the verb for *is* or *was* (*It is **${right}***): the adjective describes the subject directly, whereas an *-ly* adverb or noun does not fit.`,
+    `系动词后面要用形容词 **${right}**：*${shown.replace("___", `**${right}**`)}*\n\n**检验。** 把动词换成 *is* 或 *was*（*It is **${right}***）：形容词直接描述主语，而 *-ly* 副词或名词都放不进去。`,
   ],
   [
     [
@@ -1019,8 +1034,8 @@ const titleColon = choose(
   "after-a-colon-in-a-title",
   ["After a Colon in a Title", "标题中冒号之后"],
   [
-    "In a title, the first word after a **colon** is capitalized, even a small word such as *a*, *the* or *of*: *Star Wars: **A** New Hope*. So are the first and the last word of the title. Other short articles, conjunctions and prepositions stay small.",
-    "在标题中，**冒号**后的第一个词要大写，即使是 *a*、*the* 或 *of* 这样的小词：*Star Wars: **A** New Hope*。标题的第一个词和最后一个词也要大写。其他短小的冠词、连词和介词保持小写。",
+    "In a title, always capitalize the **first word after a colon**, even if it is a short article or preposition like *a*, *an*, *the*, or *from*: *Star Wars: **A** New Hope*. Also capitalize the first word, the last word, and all major words, while keeping other short articles, conjunctions, and prepositions lowercase.\n\n> **Watch out.** Treat the subtitle after a colon like a fresh title—so *a*, *the*, and *of* stay lowercase inside the title, *except* right at the start or right after the colon.",
+    "在标题中，**冒号后的第一个词**一律大写，哪怕它是 *a*、*an*、*the* 或 *from* 这样的小词：*Star Wars: **A** New Hope*。标题的首词、尾词和所有实词也要大写，其余短冠词、连词和介词保持小写。\n\n> **注意。** 把冒号后的副标题当成新标题的开头——*a*、*the*、*of* 在标题中间小写，但出现在最开头或紧跟冒号后面时必须大写。",
   ],
   ["Which title is capitalized correctly?", "哪个标题的大写正确？"],
   `
@@ -1056,8 +1071,8 @@ const titleColon = choose(
   gardens: a year of growing|Gardens: A Year of Growing|Gardens: a Year of Growing|Gardens: A Year Of Growing
   `,
   (right) => [
-    `"${right}" capitalizes the first word after the colon and keeps other small words small.`,
-    `“${right}”把冒号后的第一个词大写，其他小词保持小写。`,
+    `**${right}** follows every title-capitalization rule, including capitalizing the first word right after the colon.\n\n**Check.** Check three checkpoints in **${right}**: the first word, the first word after the colon, and the last word are all capitalized, while short inner words like *of*, *in*, and *the* stay lowercase.`,
+    `**${right}** 完整遵守了标题大小写规则，包括把冒号后的第一个词大写。\n\n**检验。** 核对 **${right}** 中的三个关键位置：首词、冒号后首词和尾词都已大写，而中间的 *of*、*in*、*the* 等小词保持小写。`,
   ],
   [
     ['"{wrong}" keeps the first word after the colon small.', "“{wrong}”没有把冒号后的第一个词大写。"],
@@ -1069,8 +1084,8 @@ const hyphenPrefix = choose(
   "prefixes-that-take-a-hyphen",
   ["Prefixes That Take a Hyphen", "要加连字符的前缀"],
   [
-    "Most prefixes join the base word with no hyphen: *rewrite*, *preview*, *unhappy*. A hyphen is needed before a **capital letter** or a **number** (*anti-American*, *pre-1900*), after *self-*, *ex-* meaning former and *all-* (*self-made*, *ex-president*, *all-star*), and when the prefix would make a double vowel that is hard to read or a different word (*re-elect*, *re-cover* meaning cover again).",
-    "大多数前缀与词根直接相连，不加连字符：*rewrite*、*preview*、*unhappy*。以下情况需要连字符：词根以**大写字母**或**数字**开头（*anti-American*、*pre-1900*），前缀是 *self-*、表示“前任”的 *ex-* 和 *all-*（*self-made*、*ex-president*、*all-star*），以及加前缀后会出现难读的双元音或变成另一个词（*re-elect*，表示“重新覆盖”的 *re-cover*）。",
+    "Most prefixes join straight onto the base word with **no hyphen**: *rewrite*, *preview*, *unhappy*, *misspell*. Add a hyphen before a **capital letter** or **number** (*anti-American*, *pre-1900*), after *self-*, *ex-* (former), and *all-* (*self-made*, *ex-president*, *all-star*), or to separate a confusing double vowel (*re-elect*).\n\n> **Watch out.** Do not drop a double consonant when prefix and root meet—*mis + spell* joins cleanly into *misspell* with both *s*'s and no hyphen.",
+    "大多数前缀直接连在词根上，**不加连字符**：*rewrite*、*preview*、*unhappy*、*misspell*。遇到**大写字母**或**数字**前（*anti-American*、*pre-1900*），在 *self-*、表示“前任”的 *ex-* 和 *all-* 后（*self-made*、*ex-president*、*all-star*），或为了隔开易混淆的双元音（*re-elect*）时，才加连字符。\n\n> **注意。** 前缀和词根相接时别删掉重复辅音——*mis + spell* 直接合成 *misspell*，保留两个 *s* 且不加连字符。",
   ],
   ["Which spelling is correct?", "哪个拼写正确？"],
   `
@@ -1105,7 +1120,10 @@ const hyphenPrefix = choose(
   over + cook|overcook|over-cook|over cook
   semi + circle|semicircle|semi-circle|semi circle
   `,
-  (right) => [`*${right}* follows the rule for this prefix.`, `*${right}* 符合这个前缀的规则。`],
+  (right) => [
+    `**${right}** applies the hyphenation rule for this prefix accurately.\n\n**Check.** Ask whether the word triggers one of the hyphen exceptions (*self-*, *ex-*, *all-*, a capital letter, or awkward double *e*): ${right.includes("-") ? "yes, so the hyphen is required" : "no, so the prefix joins directly as one solid word"}.`,
+    `**${right}** 准确遵守了这个前缀的连字符规则。\n\n**检验。** 对照连字符例外清单（*self-*、*ex-*、*all-*、大写字母或难读的双元音 *ee*）：${right.includes("-") ? "触发了例外，因此必须加连字符" : "未触发例外，因此直接合写成一个词"}。`,
+  ],
   [
     ["*{wrong}* gets the hyphen wrong for this prefix.", "*{wrong}* 在这个前缀上用错了连字符。"],
     ["*{wrong}* splits the word or drops a letter.", "*{wrong}* 把词拆开了，或者漏掉了字母。"],

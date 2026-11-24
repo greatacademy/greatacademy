@@ -2,7 +2,7 @@
 
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
-import { criterion, onePiece } from "./judged-kit.ts";
+import { checkedPiece, criterion } from "./judged-kit.ts";
 
 /** scriptBank asks for a script of one scene with a problem between two or three characters. */
 const scriptBank: readonly WritingItem[] = [
@@ -317,6 +317,10 @@ export const scriptBioTopics4: readonly TopicDef[] = [
       "Write a one-scene script for two or three characters, in script format, with a problem, dialogue that shows who the characters are and stage directions that help the actors.",
       "为两三个人物写一场戏的剧本：用剧本格式，有一个问题，用对话表现人物是什么样的人，用舞台说明帮助演员。",
     ),
+    intro: t(
+      "Put two friends on a crowded school bus eyeing the same last seat, and let their dialogue and bracketed stage directions carry the whole scene—no narrator needed. That is how a short one-scene script comes alive.",
+      "把两个都想抢校车最后一个座位的朋友放进同一场戏里，不用叙述者，只靠台词和括号里的舞台说明就把冲突和性格演活——这就是短剧本的写法。",
+    ),
     prerequisites: ["script-format", "writing-a-narrative-paragraph"],
     encompasses: [{ topic: "script-format", weight: 0.3 }],
     xp: 22,
@@ -327,8 +331,8 @@ export const scriptBioTopics4: readonly TopicDef[] = [
         "a-scene-with-a-problem",
         t("A Scene with a Problem", "有问题的一场戏"),
         t(
-          "A good scene has a **problem**: two characters want different things, or something goes wrong. The scene shows the problem, lets the characters argue or try, and brings it to some end. Write every line in **script format**: *MAYA: (running up the steps) Wait! That seat is mine.*",
-          "好的一场戏要有一个**问题**：两个人物想要不同的东西，或者出了什么差错。这场戏展现问题，让人物争论或尝试，最后给出某种结果。每句台词都要用**剧本格式**写：*MAYA: (running up the steps) Wait! That seat is mine.*",
+          "A good scene has a **problem**: two characters want different things, or something goes wrong. The scene shows the problem, lets the characters argue or try, and brings it to some end. Write every line in **script format**: *MAYA: (running up the steps) Wait! That seat is mine.*\n\n> **Watch out.** Do not slip back into story narration with quotation marks or *she said*—every line must begin with the speaker's name and a colon.",
+          "好的一场戏要有一个**问题**：两个人物想要不同的东西，或者出了什么差错。这场戏展现问题，让人物争论或尝试，最后给出某种结果。每句台词都要用**剧本格式**写：*MAYA: (running up the steps) Wait! That seat is mine.*\n\n> **注意。** 不要写着写着滑回故事写法（加引号或 *she said*）——每行台词都必须以角色名加冒号开头。",
         ),
         writingGenerator(
           t(
@@ -338,15 +342,18 @@ export const scriptBioTopics4: readonly TopicDef[] = [
           scriptBank,
           ["g4-script-format", "g4-script-conflict", "g4-script-dialogue"],
           { minWords: 50, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Check every line for script format (SPEAKER:, stage directions in brackets, no quotation marks) and confirm the scene introduces a problem and reaches an ending.",
+            "逐行检查剧本格式（角色名加冒号、括号里的舞台说明、不加引号），并确认这场戏提出了冲突且有收尾。",
+          ),
         ),
       ),
       point(
         "dialogue-and-directions",
         t("Dialogue and Directions", "对话和舞台说明"),
         t(
-          "In a script there is no narrator, so the **dialogue** must show who the characters are: a shy boy says *Um... I don't want to take someone's seat.* **Stage directions** in brackets tell the actors what to do and how to speak: *(quietly, not moving)*, *(smiling for the first time)*.",
-          "剧本中没有叙述者，所以**对话**必须表现出人物是什么样的人：害羞的男孩会说 *Um... I don't want to take someone's seat.* 括号中的**舞台说明**告诉演员做什么、怎么说：*(quietly, not moving)*、*(smiling for the first time)*。",
+          "In a script there is no narrator, so the **dialogue** must show who the characters are: a shy boy says *Um... I don't want to take someone's seat.* **Stage directions** in brackets tell the actors what to do and how to speak: *(quietly, not moving)*, *(smiling for the first time)*.\n\n> **Watch out.** Make your stage directions actable—write what an actor can *show* on stage (*(pacing, holding a card)*), not hidden thoughts no audience could see.",
+          "剧本中没有叙述者，所以**对话**必须表现出人物是什么样的人：害羞的男孩会说 *Um... I don't want to take someone's seat.* 括号中的**舞台说明**告诉演员做什么、怎么说：*(quietly, not moving)*、*(smiling for the first time)*。\n\n> **注意。** 舞台说明必须能演出来——写演员能*做*出的动作和语气（如 *(pacing, holding a card)*），不要写观众看不见的内心独白。",
         ),
         writingGenerator(
           t(
@@ -356,7 +363,10 @@ export const scriptBioTopics4: readonly TopicDef[] = [
           sceneBank,
           ["g4-script-dialogue", "g4-script-directions", "g4-script-format"],
           { minWords: 50, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Read your dialogue aloud to check that each character sounds distinct, and confirm you included bracketed stage directions that tell actors how to move or speak.",
+            "把台词念一遍，检查每个角色的语气各有特点，并确认包含了指导演员动作或语气的括号舞台说明。",
+          ),
         ),
       ),
     ],
@@ -368,6 +378,10 @@ export const scriptBioTopics4: readonly TopicDef[] = [
       "Write a paragraph from notes about a person who made a difference: who they were, the key events of their life in order, facts from the notes and why their work still matters.",
       "根据笔记写一个段落，介绍一位改变了世界的人：他们是谁，按顺序写出生平大事，事实来自笔记，并说明他们的成就为什么至今仍然重要。",
     ),
+    intro: t(
+      "A few jotted notes—*born 1867 in Warsaw; discovered radium; won two Nobel Prizes*—become a strong biography paragraph when you open by naming who the person was, weave the facts in time order, and close with why their work still matters.",
+      "几条零散笔记——“1867 年生于华沙；发现镭；两获诺贝尔奖”——只要开头点明人物身份、按时间顺序串起事实、结尾说明至今仍重要的原因，就能写成一段扎实的人物生平。",
+    ),
     prerequisites: ["writing-a-paragraph", "biography-or-autobiography", "turning-notes-into-sentences"],
     encompasses: [{ topic: "turning-notes-into-sentences", weight: 0.3 }],
     xp: 22,
@@ -378,23 +392,26 @@ export const scriptBioTopics4: readonly TopicDef[] = [
         "who-they-were-and-why-they-matter",
         t("Who They Were and Why They Matter", "他们是谁，为什么重要"),
         t(
-          "A paragraph of biography opens by saying **who the person was** and what they are known for: *Marie Curie was a scientist known for her discoveries about radioactivity.* It ends by saying **why their work still matters** today. In between, it turns the notes into sentences, keeping every fact as the notes give it.",
-          "人物生平段落开头说明**这个人是谁**、以什么闻名：*Marie Curie was a scientist known for her discoveries about radioactivity.* 结尾说明**他们的成就为什么至今仍然重要**。中间把笔记写成句子，每个事实都和笔记一致。",
+          "A paragraph of biography opens by saying **who the person was** and what they are known for: *Marie Curie was a scientist known for her discoveries about radioactivity.* It ends by saying **why their work still matters** today. In between, it turns the notes into sentences, keeping every fact as the notes give it.\n\n> **Watch out.** Do not invent dates or achievements that are not in the notes—stick accurately to the facts provided.",
+          "人物生平段落开头说明**这个人是谁**、以什么闻名：*Marie Curie was a scientist known for her discoveries about radioactivity.* 结尾说明**他们的成就为什么至今仍然重要**。中间把笔记写成句子，每个事实都和笔记一致。\n\n> **注意。** 不要编造笔记里没有的年份或成就——严格忠实于给出的事实。",
         ),
         writingGenerator(
           t("Use the notes to write a paragraph in English about the person.", "根据笔记，用英语写一个介绍这个人的段落。"),
           bioBank,
           ["g4-bio-person", "g4-bio-facts", "g4-bio-importance"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Verify your first sentence introduces who the person was, every date and fact matches the notes accurately, and your final sentence explains why their work still matters.",
+            "核对首句交代了人物身份、每个年份和事实都与笔记完全一致，且末句说明了他们的成就为何至今仍重要。",
+          ),
         ),
       ),
       point(
         "the-events-of-a-life-in-order",
         t("The Events of a Life in Order", "按顺序写生平大事"),
         t(
-          "Notes are not always in order. Before you write, find the **year or age** of each event and put them in time order, starting with the birth. Words such as *as a girl*, *later*, *in 1960* and *two years later* help the reader follow the life from one event to the next.",
-          "笔记不一定是按顺序排的。动笔之前，找出每件事的**年份或年龄**，按时间顺序排好，从出生开始。*as a girl*、*later*、*in 1960*、*two years later* 这样的词帮助读者从一件事跟到下一件事。",
+          "Notes are not always in order. Before you write, find the **year or age** of each event and put them in time order, starting with the birth. Words such as *as a girl*, *later*, *in 1960* and *two years later* help the reader follow the life from one event to the next.\n\n> **Watch out.** The first note in the prompt is often a later achievement (like winning a prize)—do not copy the notes' scrambled order into your paragraph.",
+          "笔记不一定是按顺序排的。动笔之前，找出每件事的**年份或年龄**，按时间顺序排好，从出生开始。*as a girl*、*later*、*in 1960*、*two years later* 这样的词帮助读者从一件事跟到下一件事。\n\n> **注意。** 题目里第一条笔记往往是后来的成就（如获奖）——千万别照搬笔记的乱序来写。",
         ),
         writingGenerator(
           t(
@@ -404,7 +421,10 @@ export const scriptBioTopics4: readonly TopicDef[] = [
           bioOrderBank,
           ["g4-bio-order", "g4-bio-facts", "g4-bio-person"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Scan every year and age in your paragraph from start to finish and confirm they move strictly forward from birth to later achievements.",
+            "从头到尾扫一遍段落里的每个年份和年龄，确认它们严格按从出生到后期成就的先后顺序排列。",
+          ),
         ),
       ),
     ],

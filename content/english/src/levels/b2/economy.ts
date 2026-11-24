@@ -1280,30 +1280,32 @@ const subjectBefore = (shown: string) => lower((shown.split(" ___")[0] ?? "").tr
 /** whyNotPassive explains an active form, or the base form after be or been. */
 const whyNotPassive = (wrong: string, right: string, shown: string, position: number): Text => {
   const subject = subjectBefore(shown);
-  const rule = passiveRule(right, subject);
   const be = right.includes(" been ") ? "been" : "be";
-  const first =
-    position === 0
-      ? t(
-          `*${wrong}* is active: it says that *${subject}* did the action, and it has no *${be}*.`,
-          `*${wrong}* 是主动形式，意思成了 *${subject}* 做了这件事，而且缺少 *${be}*。`,
-        )
-      : position === 2
-        ? t(
-            `*${wrong.split(" ").at(-1) ?? ""}* is the *-ing* form, which makes it active and continuous: it says that *${subject}* is doing the action.`,
-            `*${wrong.split(" ").at(-1) ?? ""}* 是 *-ing* 形式，这就成了主动的进行时，意思是 *${subject}* 在做这件事。`,
-          )
-        : t(
-            `*${wrong.split(" ").at(-1) ?? ""}* is the base form, which never follows *${be}* in the passive.`,
-            `*${wrong.split(" ").at(-1) ?? ""}* 是动词原形，被动语态里 *${be}* 后面不能用原形。`,
-          );
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  if (position === 0)
+    return t(
+      `*${wrong}* is active—it says *${subject}* performed the action and leaves out *${be}*.`,
+      `*${wrong}* 是主动形式，意思成了 *${subject}* 自己做了动作，而且漏掉了 *${be}*。`,
+    );
+  if (position === 2)
+    return t(
+      `*${wrong.split(" ").at(-1) ?? ""}* is the *-ing* form, making an active continuous verb rather than a passive past participle.`,
+      `*${wrong.split(" ").at(-1) ?? ""}* 是 *-ing* 形式，构成了主动进行时，而不是被动所需的过去分词。`,
+    );
+  return t(
+    `*${wrong.split(" ").at(-1) ?? ""}* is the base form; passive *${be}* must be followed by the past participle.`,
+    `*${wrong.split(" ").at(-1) ?? ""}* 是动词原形，被动语态的 *${be}* 后面必须接过去分词。`,
+  );
 };
 
 /** passiveWhy explains the passive in the gap of shown. */
 const passiveWhy = (right: string, shown: string): Text => {
-  const rule = passiveRule(right, subjectBefore(shown));
-  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  const subject = subjectBefore(shown);
+  const rule = passiveRule(right, subject);
+  const be = right.includes(" been ") ? "has/have been" : "modal + be";
+  return t(
+    `${rule.en}: ${fill(shown, right)}\n\n**Check.** Confirm *${subject}* receives the action, so the verb needs *${be}* + past participle (*${right}*).`,
+    `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 确认 *${subject}* 是承受动作的一方，因此动词必须是 *${be}* + 过去分词（*${right}*）。`,
+  );
 };
 
 /** passiveRewriteWhy explains a passive written from an active sentence with they. */
@@ -1312,8 +1314,8 @@ const passiveRewriteWhy = (right: string): Text => {
   const subject = lower(match?.[1] ?? "");
   const rule = passiveRule(match?.[2] ?? right, subject);
   return t(
-    `*They* means people in general, so leave it out and begin with *${subject}*. ${rule.en}: ${right}`,
-    `*They* 泛指人们，被动句中省略，以 *${subject}* 开头。${rule["zh-CN"]}：${right}`,
+    `*They* means people in general, so leave it out and begin with *${subject}*. ${rule.en}: ${right}\n\n**Check.** Verify *${subject}* opens the sentence, *they* is omitted, and *be/been* + past participle matches the original tense or modal.`,
+    `*They* 泛指人们，被动句中省略，以 *${subject}* 开头。${rule["zh-CN"]}：${right}\n\n**检验。** 核对句子以 *${subject}* 开头、省略了 *they*，且 *be/been* + 过去分词与原句时态或情态动词一致。`,
   );
 };
 
@@ -1323,6 +1325,10 @@ const passiveForms: TopicDef = {
   summary: t(
     "The factory has been closed. Jobs could be lost. The present perfect passive takes has or have been and the past participle; a modal passive takes the modal, be and the past participle.",
     "The factory has been closed. Jobs could be lost。现在完成时的被动语态用 has/have been 加过去分词；情态动词的被动语态用情态动词加 be 加过去分词。",
+  ),
+  intro: t(
+    "In news and business reports, the result often matters more than who did it: *The bridge has been repaired* and *Costs must be reduced.* Adding passive *be* or *been* keeps the focus on the thing affected.",
+    "新闻和工作报告常先交代结果而非执行者：*The bridge has been repaired*、*Costs must be reduced.* 只要在完成时或情态动词后加上 *been* 或 *be* 再接过去分词，就能把焦点放在受影响的事物上。",
   ),
   prerequisites: ["active-and-passive-voice", "present-perfect-or-past-simple"],
   encompasses: [
@@ -1336,8 +1342,8 @@ const passiveForms: TopicDef = {
       "forms",
       t("Has been done and can be done", "has been done 和 can be done"),
       t(
-        "The passive puts the thing that something happens to first. With a **perfect** or a **modal**, keep the passive *be* and change only the word before it:\n\n- present perfect: *has / have **been** + past participle*: *The hospital **has been built**.*\n- modal: *can, could, may, might, must, should, will + **be** + past participle*: *Jobs **could be lost**.*\n\nTwo mistakes are common: leaving out *been* or *be* (*The report has published* means the report did the publishing), and using the base form after *be* (*must be sign*).",
-        "被动语态把承受动作的事物放在前面。和**完成时**或**情态动词**连用时，被动的 *be* 保留，只改变它前面的词：\n\n- 现在完成时：*has / have **been** + 过去分词*：*The hospital **has been built**.*\n- 情态动词：*can、could、may、might、must、should、will + **be** + 过去分词*：*Jobs **could be lost**.*\n\n常见错误有两个：漏掉 *been* 或 *be*（*The report has published* 意思成了“报告发表了别的东西”），以及在 *be* 后面用动词原形（*must be sign*）。中文常不用“被”字（“报告已经发表了”），英语却必须用被动形式。",
+        "The passive puts the thing that something happens to first. With a **perfect** or a **modal**, keep the passive *be* and change only the word before it:\n\n- present perfect: *has / have **been** + past participle*: *The hospital **has been built**.*\n- modal: *can, could, may, might, must, should, will + **be** + past participle*: *Jobs **could be lost**.*\n\n> **Watch out.** Do not drop *been* or *be* (*The report has published* means the report published something else), and never use a base verb or *-ing* form after *be/been* (*must be sign* is wrong).",
+        "被动语态把承受动作的事物放在前面。和**完成时**或**情态动词**连用时，被动的 *be* 保留，只改变它前面的词：\n\n- 现在完成时：*has / have **been** + 过去分词*：*The hospital **has been built**.*\n- 情态动词：*can、could、may、might、must、should、will + **be** + 过去分词*：*Jobs **could be lost**.*\n\n中文常不用“被”字（“报告已经发表了”），英语却必须用被动形式。\n\n> **注意。** 不要漏掉 *been* 或 *be*（*The report has published* 意思成了“报告发表了别的东西”），也不要在 *be/been* 后用动词原形或 *-ing*（*must be sign* 是错的）。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), passiveChoice, passiveWhy, whyNotPassive),
     ),
@@ -1345,8 +1351,8 @@ const passiveForms: TopicDef = {
       "rewrite",
       t("From active to passive", "主动句改为被动句"),
       t(
-        "Rewrite the sentence in the passive, beginning with the thing that the action happens to. *They* means people in general, so leave it out:\n\n- *They have sold the house.* → *The house has been sold.*\n- *They should plant more trees.* → *More trees should be planted.*\n\nKeep the tense or the modal of the active sentence, and keep the rest of the sentence in the same order.",
-        "把句子改成被动语态，以承受动作的事物开头。*They* 泛指人们，被动句中省略：\n\n- *They have sold the house.* → *The house has been sold.*\n- *They should plant more trees.* → *More trees should be planted.*\n\n保持原句的时态或情态动词，句子其余部分的顺序不变。",
+        "Rewrite the sentence in the passive, beginning with the thing that the action happens to. *They* means people in general, so leave it out:\n\n- *They have sold the house.* → *The house has been sold.*\n- *They should plant more trees.* → *More trees should be planted.*\n\nKeep the tense or the modal of the active sentence, and keep the rest of the sentence in the same order.\n\n> **Watch out.** Check subject-verb agreement in the present perfect passive: *They have sold the house* shifts from plural *have* to singular *The house **has** been sold*.",
+        "把句子改成被动语态，以承受动作的事物开头。*They* 泛指人们，被动句中省略：\n\n- *They have sold the house.* → *The house has been sold.*\n- *They should plant more trees.* → *More trees should be planted.*\n\n保持原句的时态或情态动词，句子其余部分的顺序不变。\n\n> **注意。** 现在完成时被动要重新核对主谓一致：*They have sold the house* 改成被动后，主语变成单数 *The house*，助动词也要跟着变成 *has*（*The house **has** been sold*）。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1478,27 +1484,36 @@ function causativeRule(text: string): Text {
 /** causativeWhy explains have or get, the thing and the participle in the gap of shown. */
 const causativeWhy = (right: string, shown: string): Text => {
   const rule = causativeRule(shown);
-  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  return t(
+    `${rule.en}: ${fill(shown, right)}\n\n**Check.** Verify the order—*have/get* + thing + past participle—because the thing receives the action.`,
+    `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 核对语序——*have/get* + 事物 + 过去分词——因为事物是承受动作的一方。`,
+  );
 };
 
 /** whyNotCausative explains the participle before the thing, or a form that is not the participle. */
 const whyNotCausative = (wrong: string, _right: string, shown: string, position: number): Text => {
-  const rule = causativeRule(shown);
   const item = causativeOf(shown);
   const pp = item?.[5] ?? "";
   const last = wrong.split(" ").at(-1) ?? "";
-  let first: Text;
   if (position === 0 && wrong.split(" ").length > 1 && wrong.includes(` ${pp} `))
-    first = t(
-      `*${wrong}* puts the participle before the thing, which says the subject did the job.`,
-      `*${wrong}* 把过去分词放在事物前面，意思成了主语自己做的。`,
+    return t(
+      `*${wrong}* puts the participle before the thing, which says the subject did the job themselves.`,
+      `*${wrong}* 把过去分词放在事物前面，意思成了主语自己做的这件事。`,
     );
-  else if (wrong.startsWith("to ") || wrong.includes(" to "))
-    first = t(`*to ${last}* would mean the thing is meant to do the action itself.`, `*to ${last}* 意思成了事物自己去做这个动作。`);
-  else if (wrong.endsWith("ing"))
-    first = t(`*${last}* would mean the thing is doing the action itself.`, `*${last}* 意思成了事物自己正在做这个动作。`);
-  else first = t(`*${last}* is the base form, not the past participle.`, `*${last}* 是动词原形，不是过去分词。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  if (wrong.startsWith("to ") || wrong.includes(" to "))
+    return t(
+      `*to ${last}* implies the thing is meant to perform the action itself rather than receive it.`,
+      `*to ${last}* 意思成了事物自己去做这个动作，而不是承受动作。`,
+    );
+  if (wrong.endsWith("ing"))
+    return t(
+      `*${last}* implies the thing is performing the action itself rather than having the work done to it.`,
+      `*${last}* 意思成了事物自己正在做这个动作，而不是请人处理。`,
+    );
+  return t(
+    `*${last}* is the base form, not the past participle needed after the object.`,
+    `*${last}* 是动词原形，不是事物后面所需的过去分词。`,
+  );
 };
 
 const causative: TopicDef = {
@@ -1507,6 +1522,10 @@ const causative: TopicDef = {
   summary: t(
     "We had the office painted. When someone else does a job for the subject, use have or get, the thing, and the past participle.",
     "We had the office painted。主语安排别人为自己做某事时，用 have 或 get 加事物再加过去分词。",
+  ),
+  intro: t(
+    "Say *I fixed my bike* and you picked up the wrench yourself; say *I had my bike fixed* and a mechanic did it for you. Placing the object between *have/get* and the past participle separates your own work from a service you arranged.",
+    "说 *I fixed my bike* 是你自己修的；说 *I had my bike fixed* 才是请修车师傅修的。把事物夹在 *have/get* 和过去分词中间，就能区分“自己做”和“请人做”。",
   ),
   prerequisites: ["active-and-passive-voice"],
   encompasses: [{ topic: "active-and-passive-voice", weight: 0.2 }],
@@ -1517,8 +1536,8 @@ const causative: TopicDef = {
       "order",
       t("Have, the thing, the participle", "have、事物、过去分词"),
       t(
-        "When you arrange for someone else to do a job for you, use **have + the thing + past participle**:\n\n- *We **had the office painted**.* (Painters did it; we paid them.)\n- *I **had my hair cut** yesterday.*\n\nThe order matters. *We **had painted** the office* is the past perfect: it means we did the painting ourselves. *Have* changes for the tense (*has*, *had*, *will have*, *is having*), but the participle stays the same.",
-        "安排别人为你做某事时，用 **have + 事物 + 过去分词**：\n\n- *We **had the office painted**.*（是油漆工刷的，我们付钱。）\n- *I **had my hair cut** yesterday.*\n\n语序很重要。*We **had painted** the office* 是过去完成时，意思是我们自己刷的。中文说“我昨天剪了头发”，并不说明是谁剪的；英语要说 *I had my hair cut*，否则 *I cut my hair* 就是自己剪的。*have* 随时态变化（*has*、*had*、*will have*、*is having*），过去分词不变。",
+        "When you arrange for someone else to do a job for you, use **have + the thing + past participle**:\n\n- *We **had the office painted**.* (Painters did it; we paid them.)\n- *I **had my hair cut** yesterday.*\n\n*Have* changes for the tense (*has*, *had*, *will have*, *is having*), while the past participle stays the same.\n\n> **Watch out.** Keep the thing **between** *have* and the participle: *We had painted the office* is the past perfect and means we painted it ourselves.",
+        "安排别人为你做某事时，用 **have + 事物 + 过去分词**：\n\n- *We **had the office painted**.*（是油漆工刷的，我们付钱。）\n- *I **had my hair cut** yesterday.*\n\n中文说“我昨天剪了头发”，并不说明是谁剪的；英语要说 *I had my hair cut*，否则 *I cut my hair* 就是自己剪的。*have* 随时态变化（*has*、*had*、*will have*、*is having*），过去分词不变。\n\n> **注意。** 事物一定要放在 *have* 和过去分词**中间**：*We had painted the office* 是过去完成时，意思变成了我们自己刷的。",
       ),
       choiceGenerator(
         t("Someone else did the job for the subject. Choose the words for the gap.", "这件事是别人为主语做的。选出填入空白处的词。"),
@@ -1531,8 +1550,8 @@ const causative: TopicDef = {
       "get",
       t("Get something done", "get something done"),
       t(
-        "In everyday English, *get* works in the same way as *have*: *We **got** the office **painted**.* *You should **get** your teeth **checked**.*\n\nAfter the thing comes the **past participle**, because the thing does not do the action: the teeth are checked. Not *get your teeth check* or *get your teeth to check*.",
-        "在日常英语中，*get* 的用法和 *have* 一样：*We **got** the office **painted**.* *You should **get** your teeth **checked**.*\n\n事物后面用**过去分词**，因为事物是被处理的一方：牙齿是被检查的。不能说 *get your teeth check*，也不能说 *get your teeth to check*。",
+        "In everyday English, *get* works in the same way as *have*: *We **got** the office **painted**.* *You should **get** your teeth **checked**.*\n\nAfter the thing comes the **past participle**, because the thing does not do the action: the teeth are checked.\n\n> **Watch out.** Never put a base verb, *to* + verb, or *-ing* after the object (*get your teeth check* or *get your teeth to check* is wrong)—always use the past participle.",
+        "在日常英语中，*get* 的用法和 *have* 一样：*We **got** the office **painted**.* *You should **get** your teeth **checked**.*\n\n事物后面用**过去分词**，因为事物是被处理的一方：牙齿是被检查的。\n\n> **注意。** 事物后面不能接动词原形、*to* 不定式或 *-ing*（*get your teeth check* 或 *get your teeth to check* 都是错的），必须用过去分词。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), participleChoice, causativeWhy, whyNotCausative),
     ),
@@ -1540,8 +1559,8 @@ const causative: TopicDef = {
       "write",
       t("Writing have something done", "写 have something done 的句子"),
       t(
-        "Write a sentence from the parts: the subject, the form of *have*, the thing, the verb and the rest. Put the thing before the verb and change the verb into its past participle: *We / had / the office / paint / last month* becomes *We had the office painted last month.* You may use *get* instead of *have*.",
-        "根据各部分写句子：主语、*have* 的形式、事物、动词和其余部分。把事物放在动词前面，并把动词变成过去分词：*We / had / the office / paint / last month* 写成 *We had the office painted last month.* 也可以用 *get* 代替 *have*。",
+        "Write a sentence from the parts: the subject, the form of *have*, the thing, the verb and the rest. Put the thing before the verb and change the verb into its past participle: *We / had / the office / paint / last month* becomes *We had the office painted last month.* You may use *get* instead of *have*.\n\n> **Watch out.** Do not leave the verb in its base form and do not place the participle before the object.",
+        "根据各部分写句子：主语、*have* 的形式、事物、动词和其余部分。把事物放在动词前面，并把动词变成过去分词：*We / had / the office / paint / last month* 写成 *We had the office painted last month.* 也可以用 *get* 代替 *have*。\n\n> **注意。** 不要把动词留在原形，也不要把过去分词放到事物前面。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1549,7 +1568,10 @@ const causative: TopicDef = {
         causativeTyped,
         (right) => {
           const rule = causativeRule(right);
-          return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+          return t(
+            `${rule.en}: ${right}\n\n**Check.** Verify *have/get* + object + past participle, with the time or place phrase at the end.`,
+            `${rule["zh-CN"]}：${right}\n\n**检验。** 核对 *have/get* + 事物 + 过去分词的语序，并确认时间或地点短语放在句末。`,
+          );
         },
       ),
     ),
@@ -1628,6 +1650,10 @@ const report = judgedTopic({
     "Write a report of 200 to 250 words with headings for a manager or a committee: its purpose, what was found, and recommendations, in a neutral tone.",
     "为经理或委员会写一篇 200 到 250 词、带小标题的报告：目的、调查发现和建议，语气中立。",
   ),
+  intro: t(
+    "A committee reading a report on a new bus route wants three things fast: why the report was written, what the numbers showed, and what action to take next—organized under clear headings in neutral, factual prose.",
+    "委员会看一份新公交线路报告时，最关心三件事：为什么写这份报告、调查数据发现了什么、下一步该怎么做——用清晰的小标题和中立客观的事实表达出来。",
+  ),
   prerequisites: ["summarizing-a-text", "writing-a-formal-email"],
   encompasses: [
     { topic: "summarizing-a-text", weight: 0.2 },
@@ -1638,8 +1664,8 @@ const report = judgedTopic({
     id: "report",
     title: t("Purpose, findings, recommendations", "目的、发现、建议"),
     explanation: t(
-      "A report gives a reader, such as a manager or a committee, facts to help them decide something. It is organized so that it is easy to find information:\n\n1. **Introduction**: say what the report is about and who it is for: *The aim of this report is to... It is based on a survey of 40 staff.*\n2. **Findings**, in one or two sections with headings: give facts and figures, not feelings: *Thirty of the 40 staff were in favor... However, ten people had concerns.*\n3. **Recommendations**: say clearly what should be done, and make sure each recommendation follows from the findings: *It is recommended that... The company should...*\n\nUse **short headings**, a **neutral tone** and impersonal phrases (*It was found that..., Most people said...*). Write full forms (*do not*, not *don't*), and avoid words such as *awesome* or *terrible*. Unlike an essay, a report does not need to be interesting to read: it needs to be clear.",
-      "报告为读者（例如经理或委员会）提供事实，帮助他们做决定。它的结构要让人容易找到信息：\n\n1. **引言（Introduction）**：说明报告的内容和对象：*The aim of this report is to... It is based on a survey of 40 staff.*\n2. **发现（Findings）**，分一两个带小标题的部分：写事实和数字，不写感受：*Thirty of the 40 staff were in favor... However, ten people had concerns.*\n3. **建议（Recommendations）**：清楚地说明应该做什么，每条建议都要来自前面的发现：*It is recommended that... The company should...*\n\n用**简短的小标题**、**中立的语气**和非人称的说法（*It was found that..., Most people said...*）。不用缩写（写 *do not*，不写 *don't*），也不用 *awesome*、*terrible* 这样带感情的词。报告和作文不同，不需要读起来有趣，但必须清楚。中文工作报告常先写背景和意义，英语报告则开门见山，直接说明目的。",
+      "A report gives a reader, such as a manager or a committee, facts to help them decide something. It is organized so that it is easy to find information:\n\n1. **Introduction**: say what the report is about and who it is for: *The aim of this report is to... It is based on a survey of 40 staff.*\n2. **Findings**, in one or two sections with headings: give facts and figures, not feelings: *Thirty of the 40 staff were in favor... However, ten people had concerns.*\n3. **Recommendations**: say clearly what should be done, and make sure each recommendation follows from the findings: *It is recommended that... The company should...*\n\nUse **short headings**, a **neutral tone** and impersonal phrases (*It was found that..., Most people said...*). Write full forms (*do not*, not *don't*), and avoid words such as *awesome* or *terrible*.\n\n> **Watch out.** Never introduce a recommendation that is not backed by your findings, and never slip into chatty contractions or emotional adjectives.",
+      "报告为读者（例如经理或委员会）提供事实，帮助他们做决定。它的结构要让人容易找到信息：\n\n1. **引言（Introduction）**：说明报告的内容和对象：*The aim of this report is to... It is based on a survey of 40 staff.*\n2. **发现（Findings）**，分一两个带小标题的部分：写事实和数字，不写感受：*Thirty of the 40 staff were in favor... However, ten people had concerns.*\n3. **建议（Recommendations）**：清楚地说明应该做什么，每条建议都要来自前面的发现：*It is recommended that... The company should...*\n\n用**简短的小标题**、**中立的语气**和非人称的说法（*It was found that..., Most people said...*）。不用缩写（写 *do not*，不写 *don't*），也不用 *awesome*、*terrible* 这样带感情的词。中文工作报告常先写背景和意义，英语报告则开门见山，直接说明目的。\n\n> **注意。** 不要提出前面“发现”里没有依据的建议，也不要混入口语缩写或情绪化形容词。",
     ),
   },
   question: t(

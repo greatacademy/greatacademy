@@ -22,6 +22,10 @@ const quoted = (model: string) =>
 /** onePiece shows the model of a task after a verdict. */
 export const onePiece = (model: string) => t(`One good answer:\n\n${quoted(model)}`, `一个好的答案：\n\n${quoted(model)}`);
 
+/** checkedPiece shows a model answer followed by a task-specific self-check. */
+export const checkedPiece = (checkEn: string, checkZh: string) => (model: string) =>
+  t(`One good answer:\n\n${quoted(model)}\n\n**Check.** ${checkEn}`, `一个好的答案：\n\n${quoted(model)}\n\n**检验。** ${checkZh}`);
+
 /** labBank gives the notes of a kitchen experiment to write up. */
 const labBank: readonly WritingItem[] = [
   {
@@ -399,6 +403,10 @@ export const judgedTopics5a: readonly TopicDef[] = [
       "Write up a kitchen experiment from notes: the question, the method in order, the results and a conclusion the results support.",
       "根据笔记写一份厨房实验报告：问题、按顺序写出的方法、结果，以及有结果支持的结论。",
     ),
+    intro: t(
+      "A clear lab write-up turns messy notes into four distinct parts—Question, Method, Results, and Conclusion—so another reader can repeat the test and see why the data support your answer.",
+      "一份清楚的实验报告会把零散笔记整理成四个清晰的部分——问题、方法、结果和结论——让别人能照着重复实验，并看清数据为什么支持你的结论。",
+    ),
     prerequisites: after("reading-about-an-experiment", "writing-a-how-to-paragraph"),
     encompasses: [{ topic: "writing-a-how-to-paragraph", weight: 0.2 }],
     xp: 22,
@@ -409,8 +417,8 @@ export const judgedTopics5a: readonly TopicDef[] = [
         "question-and-method",
         t("The Question and the Method", "问题与方法"),
         t(
-          "A write-up of an experiment begins with the **question** it set out to answer: *Does salt make ice melt faster?* Then it gives the **method**: what was done, step by step, in order, with words such as *first*, *next* and *then*. The method must be clear enough for someone else to repeat the experiment exactly.",
-          "实验报告以实验要回答的**问题**开头：*Does salt make ice melt faster?* 然后写出**方法**：按顺序一步一步写出做了什么，用 *first*、*next*、*then* 等词连接。方法要写得足够清楚，让别人能完全照着重复这个实验。",
+          "A write-up of an experiment begins with the **question** it set out to answer: *Does salt make ice melt faster?* Then it gives the **method**: what was done, step by step, in order, with words such as *first*, *next* and *then*. The method must be clear enough for someone else to repeat the experiment exactly.\n\n> **Watch out.** Keep your results out of the Method section—Method tells only *what you did*, step by step, never what happened at the end.",
+          "实验报告以实验要回答的**问题**开头：*Does salt make ice melt faster?* 然后写出**方法**：按顺序一步一步写出做了什么，用 *first*、*next*、*then* 等词连接。方法要写得足够清楚，让别人能完全照着重复这个实验。\n\n> **注意。** 不要把实验结果写进“方法”部分——方法只写你*按步骤做了什么*，不写最后发生了什么。",
         ),
         writingGenerator(
           t(
@@ -420,15 +428,18 @@ export const judgedTopics5a: readonly TopicDef[] = [
           labBank,
           ["g5-lab-question", "g5-lab-method", "g5-lab-conclusion"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Check that your write-up opens with the exact question, lists the steps in order so another student could repeat the test, and keeps the results and conclusion in their own sections.",
+            "检查报告以实验问题开头、方法步骤按顺序写得足够具体以便他人重复，并把结果和结论分别放在各自部分。",
+          ),
         ),
       ),
       point(
         "results-and-conclusion",
         t("Results and a Conclusion", "结果与结论"),
         t(
-          "The **results** report only what was seen or measured: *The salted cube melted after 20 minutes; the plain one after 35.* The **conclusion** then answers the question, and it must follow from the results: *Salt makes ice melt faster, because the salted cube melted 15 minutes sooner.* Keep the two apart, and never claim more than the results show.",
-          "**结果**只报告看到或测量到的东西：*The salted cube melted after 20 minutes; the plain one after 35.* 然后**结论**回答问题，而且必须从结果中得出：*Salt makes ice melt faster, because the salted cube melted 15 minutes sooner.* 把两者分开写，结论不要超出结果所能说明的范围。",
+          "The **results** report only what was seen or measured: *The salted cube melted after 20 minutes; the plain one after 35.* The **conclusion** then answers the question, and it must follow from the results: *Salt makes ice melt faster, because the salted cube melted 15 minutes sooner.* Keep the two apart, and never claim more than the results show.\n\n> **Watch out.** Do not invent claims the measurements did not test—your conclusion must directly answer the question using the numbers or observations in Results.",
+          "**结果**只报告看到或测量到的东西：*The salted cube melted after 20 minutes; the plain one after 35.* 然后**结论**回答问题，而且必须从结果中得出：*Salt makes ice melt faster, because the salted cube melted 15 minutes sooner.* 把两者分开写，结论不要超出结果所能说明的范围。\n\n> **注意。** 不要编造数据没测出来的说法——结论必须直接用“结果”里的数字或观察来回答开头的问题。",
         ),
         writingGenerator(
           t(
@@ -438,7 +449,10 @@ export const judgedTopics5a: readonly TopicDef[] = [
           labBank,
           ["g5-lab-result", "g5-lab-conclusion", "g5-lab-question"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Verify that Results reports the exact numbers or observations from the notes and that Conclusion answers the opening question using those measurements alone.",
+            "核对“结果”部分准确写出了笔记里的数字或观察，且“结论”只依据这些数据直接回答了开头的问题。",
+          ),
         ),
       ),
     ],
@@ -450,6 +464,10 @@ export const judgedTopics5a: readonly TopicDef[] = [
       "Answer a question about a passage in three to five sentences: a clear answer, a detail or short quotation from the passage, and a sentence that explains how it supports the answer.",
       "用三到五句话回答关于一段文字的问题：清楚的答案、文中的细节或简短引文，以及一句解释它如何支持答案的话。",
     ),
+    intro: t(
+      "A strong reading response does three things in a few sentences: it states a direct answer, backs it up with an exact detail or short quotation from the passage, and explains how that evidence proves the point.",
+      "一段有力的阅读回答只需三到五句话做好三件事：直接给出答案、引用文中的具体细节或短引文作证，再解释这条证据如何支撑你的答案。",
+    ),
     prerequisites: after("answering-a-question-in-sentences", "quoting-accurately"),
     encompasses: [{ topic: "quoting-accurately", weight: 0.2 }],
     xp: 22,
@@ -460,8 +478,8 @@ export const judgedTopics5a: readonly TopicDef[] = [
         "a-clear-answer-with-evidence",
         t("A Clear Answer with Evidence", "清楚的答案和证据"),
         t(
-          "Begin with a **clear answer** that turns the question into a statement: *Grandpa kept the map because it helped him remember his home.* Then give **evidence**: a specific detail from the passage, or a few of its exact words in quotation marks. Evidence shows the reader that the answer comes from the text, not from a guess.",
-          "先用一个**清楚的答案**开头，把问题变成陈述句：*Grandpa kept the map because it helped him remember his home.* 然后给出**证据**：文中的一个具体细节，或放在引号里的几个原词。证据让读者看到答案来自文本，而不是猜测。",
+          "Begin with a **clear answer** that turns the question into a statement: *Grandpa kept the map because it helped him remember his home.* Then give **evidence**: a specific detail from the passage, or a few of its exact words in quotation marks. Evidence shows the reader that the answer comes from the text, not from a guess.\n\n> **Watch out.** Do not start with *Because…* alone or copy an entire paragraph—state a complete answer first, then quote or cite just the specific words that prove it.",
+          "先用一个**清楚的答案**开头，把问题变成陈述句：*Grandpa kept the map because it helped him remember his home.* 然后给出**证据**：文中的一个具体细节，或放在引号里的几个原词。证据让读者看到答案来自文本，而不是猜测。\n\n> **注意。** 不要直接用 *Because…* 残句开头，也不要整段照抄原文——先写完整的答案句，再只引用最能证明答案的关键词句。",
         ),
         writingGenerator(
           t(
@@ -471,15 +489,18 @@ export const judgedTopics5a: readonly TopicDef[] = [
           responseBank,
           ["g5-response-answer", "g5-response-evidence"],
           { minWords: 40, maxChars: 1200 },
-          onePiece,
+          checkedPiece(
+            "Check that your first sentence directly answers the question, you included a specific detail or accurate short quotation from the passage, and your whole answer is 3 to 5 sentences.",
+            "检查第一句直接回答了问题、文中包含准确的具体细节或简短引文，且全文控制在三到五句话。",
+          ),
         ),
       ),
       point(
         "explaining-the-evidence",
         t("Explaining the Evidence", "解释证据"),
         t(
-          "Evidence does not speak for itself. After it, add a sentence that **explains** how it supports the answer, in your own words: *Since the farm is gone, the map is the only way he can still see it.* An answer that only strings quotations together leaves the reader to do the thinking.",
-          "证据不会自己说话。在证据之后，要用自己的话加一句**解释**，说明它如何支持答案：*Since the farm is gone, the map is the only way he can still see it.* 只把引文串在一起的回答，是把思考留给了读者。",
+          "Evidence does not speak for itself. After it, add a sentence that **explains** how it supports the answer, in your own words: *Since the farm is gone, the map is the only way he can still see it.* An answer that only strings quotations together leaves the reader to do the thinking.\n\n> **Watch out.** Never end your response right after a quotation—always add your own sentence connecting that quotation back to your answer.",
+          "证据不会自己说话。在证据之后，要用自己的话加一句**解释**，说明它如何支持答案：*Since the farm is gone, the map is the only way he can still see it.* 只把引文串在一起的回答，是把思考留给了读者。\n\n> **注意。** 千万不要在引文处戛然而止——引文后一定要用自己的话把证据和答案联系起来。",
         ),
         writingGenerator(
           t(
@@ -489,7 +510,10 @@ export const judgedTopics5a: readonly TopicDef[] = [
           responseBank,
           ["g5-response-explains", "g5-response-evidence", "g5-response-answer"],
           { minWords: 40, maxChars: 1200 },
-          onePiece,
+          checkedPiece(
+            "Verify that after your quotation or detail, at least one sentence in your own words explains *how* that evidence proves your opening answer.",
+            "核对引文或细节之后，至少有一句你自己的话讲清了这条证据*如何*证明开头的答案。",
+          ),
         ),
       ),
     ],
@@ -500,6 +524,10 @@ export const judgedTopics5a: readonly TopicDef[] = [
     summary: t(
       "Write a report on a planet or a mission: an introduction that hooks and previews, a body paragraph for each main point with facts from given notes, and a conclusion.",
       "写一篇关于某颗行星或某次太空任务的报告：能吸引读者并预告内容的引言、每个要点一个含有笔记中事实的主体段落，以及结论。",
+    ),
+    intro: t(
+      "A multi-paragraph report guides the reader from start to finish: an introduction hooks attention and previews the main points, each body paragraph develops one point with facts from your notes, and a short conclusion ties everything together.",
+      "多段式报告一路引导读者：引言吸引注意并预告要点，每个主体段落用笔记中的事实展开一个要点，最后用简短结论收束全文。",
     ),
     prerequisites: after("writing-a-two-paragraph-report", "planning-a-multi-paragraph-piece", "previewing-the-topic"),
     encompasses: [
@@ -514,23 +542,26 @@ export const judgedTopics5a: readonly TopicDef[] = [
         "an-introduction-that-previews",
         t("An Introduction That Previews", "预告内容的引言"),
         t(
-          "A longer report opens with a **hook**, a surprising fact or question, and then a **preview** that tells the reader what the report will cover, in order: *This report explains what Mars is like and how rovers are exploring it.* Each body paragraph then keeps the promise of the preview, one main point at a time.",
-          "较长的报告以一个**吸引读者的开头**开始，比如一个出人意料的事实或问题，然后用**预告**告诉读者报告将按什么顺序讲哪些内容：*This report explains what Mars is like and how rovers are exploring it.* 接下来每个主体段落兑现预告的承诺，一次讲一个要点。",
+          "A longer report opens with a **hook**, a surprising fact or question, and then a **preview** that tells the reader what the report will cover, in order: *This report explains what Mars is like and how rovers are exploring it.* Each body paragraph then keeps the promise of the preview, one main point at a time.\n\n> **Watch out.** Check that your body paragraphs follow the *exact same order* as the points promised in your preview sentence.",
+          "较长的报告以一个**吸引读者的开头**开始，比如一个出人意料的事实或问题，然后用**预告**告诉读者报告将按什么顺序讲哪些内容：*This report explains what Mars is like and how rovers are exploring it.* 接下来每个主体段落兑现预告的承诺，一次讲一个要点。\n\n> **注意。** 检查主体段落的先后顺序，确保与引言预告里列出的要点顺序完全一致。",
         ),
         writingGenerator(
           t("Write the report in English, with an introduction that hooks and previews.", "用英语写这篇报告，引言要吸引读者并预告内容。"),
           reportBank,
           ["g5-report-preview", "g5-report-sections", "g5-report-conclusion"],
           { minWords: 110, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Check that your introduction opens with a hook and previews your main points, each body paragraph matches one previewed point in order, and your ending wraps up the report.",
+            "检查引言有吸引人的开头和要点预告、主体段落按预告顺序各讲一个要点，且结尾收束全文。",
+          ),
         ),
       ),
       point(
         "body-paragraphs-built-from-notes",
         t("Body Paragraphs Built from Notes", "用笔记写主体段落"),
         t(
-          "Sort the notes by main point before you write: each group becomes one **body paragraph**. Open it with its main point and support that point with **specific facts** from the notes: names, numbers and dates. Then close the report with a **conclusion** that pulls the main points together, without adding a new fact.",
-          "动笔之前，先按要点把笔记分组：每一组成为一个**主体段落**。段落以要点开头，用笔记中的**具体事实**支持它：名称、数字和日期。最后用**结论**收束报告，把各个要点合在一起，不再加入新的事实。",
+          "Sort the notes by main point before you write: each group becomes one **body paragraph**. Open it with its main point and support that point with **specific facts** from the notes: names, numbers and dates. Then close the report with a **conclusion** that pulls the main points together, without adding a new fact.\n\n> **Watch out.** Do not dump facts from different topics into one paragraph, and do not introduce brand-new statistics in your conclusion.",
+          "动笔之前，先按要点把笔记分组：每一组成为一个**主体段落**。段落以要点开头，用笔记中的**具体事实**支持它：名称、数字和日期。最后用**结论**收束报告，把各个要点合在一起，不再加入新的事实。\n\n> **注意。** 不要把不同主题的事实混塞进同一段，也不要在结论段才突然引入新数据。",
         ),
         writingGenerator(
           t(
@@ -540,7 +571,10 @@ export const judgedTopics5a: readonly TopicDef[] = [
           reportBank,
           ["g5-report-evidence", "g5-report-sections", "g5-report-conclusion"],
           { minWords: 110, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Verify that each body paragraph sticks to one grouped point with concrete names, numbers, or dates from the notes, and that the conclusion summarizes without adding new facts.",
+            "核对每个主体段落紧扣一个分组要点、包含笔记中的具体名称/数字/日期，且结论段只作总结不加新事实。",
+          ),
         ),
       ),
     ],
@@ -551,6 +585,10 @@ export const judgedTopics5a: readonly TopicDef[] = [
     summary: t(
       "Write an opinion piece of three or four paragraphs on a question of civics: the opinion, a paragraph for each reason in a logical order with facts, and a conclusion.",
       "就一个公民问题写一篇三到四段的观点文章：观点、按合理顺序排列并有事实支持的每个理由各一段，以及结论。",
+    ),
+    intro: t(
+      "To persuade readers on a civic question, state your position clearly up front, give each reason its own paragraph backed by real facts, and close by summing up why your view makes sense.",
+      "要就一个公共议题说服读者，开头要亮明立场，每个理由独立成段并用真实事实支撑，最后总结为何你的主张合理。",
     ),
     prerequisites: after("writing-an-opinion-paragraph", "one-paragraph-per-reason"),
     encompasses: [
@@ -565,30 +603,36 @@ export const judgedTopics5a: readonly TopicDef[] = [
         "a-paragraph-for-each-reason",
         t("A Paragraph for Each Reason", "每个理由一段"),
         t(
-          "An opinion piece of several paragraphs states its **opinion** in the first paragraph. Each body paragraph then gives **one reason**, opening with it (*One reason is that…*), in an order the reader can follow; saving the strongest for last leaves it in the reader's mind. Linking words such as *first*, *more importantly* and *in conclusion* guide the reader through.",
-          "多段的观点文章在第一段说出**观点**。然后每个主体段落给出**一个理由**，并以它开头（*One reason is that…*），理由要按读者容易理解的顺序排列；把最有力的留到最后，能让它留在读者心中。*first*、*more importantly*、*in conclusion* 等连接词引导读者读下去。",
+          "An opinion piece of several paragraphs states its **opinion** in the first paragraph. Each body paragraph then gives **one reason**, opening with it (*One reason is that…*), in an order the reader can follow; saving the strongest for last leaves it in the reader's mind. Linking words such as *first*, *more importantly* and *in conclusion* guide the reader through.\n\n> **Watch out.** Do not squeeze two different reasons into the same body paragraph—start a new paragraph for each reason and link them clearly.",
+          "多段的观点文章在第一段说出**观点**。然后每个主体段落给出**一个理由**，并以它开头（*One reason is that…*），理由要按读者容易理解的顺序排列；把最有力的留到最后，能让它留在读者心中。*first*、*more importantly*、*in conclusion* 等连接词引导读者读下去。\n\n> **注意。** 不要把两个不同的理由挤在同一主体段里——每个理由单独成段，并用过渡词清楚衔接。",
         ),
         writingGenerator(
           t("Write the opinion piece in English, with a paragraph for each reason.", "用英语写这篇观点文章，每个理由写一段。"),
           opinionBank,
           ["w4-states-opinion", "g5-opinion-reasons-ordered", "g5-opinion-conclusion"],
           { minWords: 90, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Check that your opening states a clear opinion, each body paragraph develops one distinct reason in a logical order with linking words, and your ending restates the opinion.",
+            "检查首段亮明观点、每个主体段按合理顺序展开一个独立理由并有过渡词，结尾重申立场。",
+          ),
         ),
       ),
       point(
         "facts-for-every-reason",
         t("Facts for Every Reason", "每个理由都有事实"),
         t(
-          "A reason persuades when **facts** stand behind it: a number, an example from a real place, or what happened when someone tried the idea. *In Australia, more than nine out of ten citizens vote* persuades more than *lots of people would vote*. End with a **conclusion** that restates the opinion in new words and sums up the reasons.",
-          "有**事实**支撑的理由才有说服力：一个数字、一个真实地方的例子，或有人尝试这个想法后发生的事。*In Australia, more than nine out of ten citizens vote* 比 *lots of people would vote* 更有说服力。最后用**结论**换一种说法重申观点，并总结理由。",
+          "A reason persuades when **facts** stand behind it: a number, an example from a real place, or what happened when someone tried the idea. *In Australia, more than nine out of ten citizens vote* persuades more than *lots of people would vote*. End with a **conclusion** that restates the opinion in new words and sums up the reasons.\n\n> **Watch out.** Repeating *I think* or *everyone knows* is not evidence—back each reason with a concrete fact, number, or real example.",
+          "有**事实**支撑的理由才有说服力：一个数字、一个真实地方的例子，或有人尝试这个想法后发生的事。*In Australia, more than nine out of ten citizens vote* 比 *lots of people would vote* 更有说服力。最后用**结论**换一种说法重申观点，并总结理由。\n\n> **注意。** 反复说 *I think* 或 *everyone knows* 不算证据——每个理由都要配上具体事实、数字或真实事例。",
         ),
         writingGenerator(
           t("Write the opinion piece in English, backing every reason with facts.", "用英语写这篇观点文章，每个理由都用事实支持。"),
           opinionBank,
           ["g5-opinion-evidence", "g5-opinion-conclusion", "w4-states-opinion"],
           { minWords: 90, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Verify that every body paragraph includes at least one concrete fact, number, or real example behind its reason, and that your conclusion restates the opinion in fresh words.",
+            "核对每个主体段的理由后面都配有至少一个具体事实、数字或真实事例，且结论用新措辞重申观点。",
+          ),
         ),
       ),
     ],
@@ -600,6 +644,10 @@ export const judgedTopics5a: readonly TopicDef[] = [
       "Write a paragraph or two that joins what two short texts say about one topic, showing how their information connects or differs, with a detail from each.",
       "写一到两段话，把两篇短文关于同一主题的内容结合起来，说明它们的信息如何联系或不同，并各给出一个细节。",
     ),
+    intro: t(
+      "Reading two texts on the same subject gives you a fuller picture than either one alone. Good synthesis names both sources, pulls an accurate detail from each, and explains how their ideas connect or contrast.",
+      "围绕同一主题读两篇短文，能看到单篇看不全的图景。好的综合写作会点明两篇来源、各取准确细节，并讲清两者的联系或差异。",
+    ),
     prerequisites: after("combining-information-from-two-texts", "writing-a-compare-and-contrast-paragraph"),
     encompasses: [{ topic: "writing-a-compare-and-contrast-paragraph", weight: 0.3 }],
     xp: 22,
@@ -610,23 +658,26 @@ export const judgedTopics5a: readonly TopicDef[] = [
         "using-both-texts",
         t("Using Both Texts", "使用两篇文本"),
         t(
-          "When you write about two texts, use **both**, and name each one: *Text A explains…, while Text B shows…* Take at least one **specific detail** from each, accurately, as a few exact words or in your own words. A piece that leans on only one text has not done the job.",
-          "就两篇文本写作时，要**两篇都用**，并说出每一篇：*Text A explains…, while Text B shows…* 从每篇中至少准确地取一个**具体细节**，可以引用几个原词，也可以用自己的话。只依靠一篇文本的文章没有完成任务。",
+          "When you write about two texts, use **both**, and name each one: *Text A explains…, while Text B shows…* Take at least one **specific detail** from each, accurately, as a few exact words or in your own words. A piece that leans on only one text has not done the job.\n\n> **Watch out.** Check that both Text A and Text B appear by name with a concrete detail from each—relying on only one source leaves the prompt half-answered.",
+          "就两篇文本写作时，要**两篇都用**，并说出每一篇：*Text A explains…, while Text B shows…* 从每篇中至少准确地取一个**具体细节**，可以引用几个原词，也可以用自己的话。只依靠一篇文本的文章没有完成任务。\n\n> **注意。** 确认 Text A 和 Text B 都被点名并各取了一个具体细节——只用其中一篇等于只答了一半。",
         ),
         writingGenerator(
           t("Write in English about both texts, with a detail from each.", "用英语就两篇文本写作，每篇各给出一个细节。"),
           twoTextsBank,
           ["g5-twotexts-both", "g5-twotexts-evidence"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Check that you named both Text A and Text B and included at least one accurate detail or short quotation from each.",
+            "检查文中同时提到了 Text A 和 Text B，并从两篇中各取了至少一个准确细节或简短引文。",
+          ),
         ),
       ),
       point(
         "how-the-texts-connect",
         t("How the Texts Connect", "两篇文本的联系"),
         t(
-          "Do not just summarize one text and then the other. Say **how they connect**: one may explain why something in the other happened, give a later part of the same story, or show the opposite side. Linking words such as *in contrast*, *similarly* and *together, the texts show* make the connection clear.",
-          "不要先概括一篇、再概括另一篇。要说出**它们怎样联系**：一篇可能解释另一篇中某件事发生的原因，讲同一个故事后来的部分，或展示相反的一面。*in contrast*、*similarly*、*together, the texts show* 等连接词能把这种联系说清楚。",
+          "Do not just summarize one text and then the other. Say **how they connect**: one may explain why something in the other happened, give a later part of the same story, or show the opposite side. Linking words such as *in contrast*, *similarly* and *together, the texts show* make the connection clear.\n\n> **Watch out.** Writing two separate mini-summaries side by side is not enough—include a sentence that explicitly explains how the two texts fit together or disagree.",
+          "不要先概括一篇、再概括另一篇。要说出**它们怎样联系**：一篇可能解释另一篇中某件事发生的原因，讲同一个故事后来的部分，或展示相反的一面。*in contrast*、*similarly*、*together, the texts show* 等连接词能把这种联系说清楚。\n\n> **注意。** 把两篇小摘要并排写出来还不够——一定要明确写出一句话，说明两篇文本如何相互补充、解释或对比。",
         ),
         writingGenerator(
           t(
@@ -636,7 +687,10 @@ export const judgedTopics5a: readonly TopicDef[] = [
           twoTextsBank,
           ["g5-twotexts-connects", "g5-twotexts-both", "g5-twotexts-evidence"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Verify that your response uses linking words (*in contrast, similarly, together*) to explain how Text A and Text B connect, backed by a detail from each.",
+            "核对回答用连接词（如 *in contrast、similarly、together*）讲清了 Text A 和 Text B 的联系，并各附具体细节。",
+          ),
         ),
       ),
     ],

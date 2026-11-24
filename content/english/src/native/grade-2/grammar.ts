@@ -12,6 +12,10 @@ const pastEd = topic("grammar", {
   id: "past-tense-with-ed",
   title: ["The Past with -ed", "用 -ed 表示过去"],
   summary: ["Add *-ed* to an action word to tell what already happened.", "在动作词后加 *-ed*，表示已经发生的事。"],
+  intro: [
+    "At breakfast, you tell your friend, *Yesterday I **walked** to the park.* That little **-ed** at the end tells your friend the walk already happened. In this lesson, you will use **-ed** for the past and spell it carefully.",
+    "吃早饭时，你对朋友说：*Yesterday I **walked** to the park.* 词尾那个小小的 **-ed** 告诉朋友，去公园是已经发生过的事。这节课，你会练习用 **-ed** 表示过去，并把词尾拼对。",
+  ],
   after: ["joining-with-and"],
   xp: 10,
   points: [
@@ -19,8 +23,8 @@ const pastEd = topic("grammar", {
       "now-or-already",
       ["Now or Already", "现在还是已经"],
       [
-        "An action word tells **when**. *I jump* is now; *I jump**ed*** already happened. Words like *yesterday*, *last night* and *this morning* tell you it already happened, so the action word adds **-ed**.",
-        "动作词能表示**时间**。*I jump* 是现在；*I jump**ed*** 是已经发生的。*yesterday*、*last night*、*this morning* 这样的词告诉你事情已经发生了，所以动作词要加 **-ed**。",
+        "An action word tells **when**. *I jump* happens now; *I jump**ed*** already happened. Clue words like *yesterday*, *last night*, and *this morning* tell you to add **-ed**.\n\n> **Watch out.** An *-ing* word like *jumping* cannot stand alone to tell the past.",
+        "动作词能说明**时间**。*I jump* 是现在；*I jump**ed*** 是已经发生过的事。看到 *yesterday*、*last night*、*this morning* 这样的时间词，动作词就要加 **-ed**。\n\n> **注意。** 像 *jumping* 这样带 *-ing* 的词不能单独用来表示过去。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -56,14 +60,17 @@ const pastEd = topic("grammar", {
       Last week, we ___ a box of toys.|packed|pack|packing
       `,
       (right, shown) => [
-        `*${filled(shown, right)}*: it already happened, so the action word adds *-ed*.`,
-        `*${filled(shown, right)}*：事情已经发生了，所以动作词加 *-ed*。`,
+        `*${filled(shown, right)}* — the action already happened, so the verb ends in **-ed**.\n\n**Check.** Point to the time clue at the start of *${filled(shown, right)}* (like *Yesterday* or *Last night*): it tells you the action is finished, which matches **${right}**.`,
+        `*${filled(shown, right)}* —— 这件事已经发生了，所以动作词以 **-ed** 结尾。\n\n**检验。** 指一指 *${filled(shown, right)}* 开头的时间线索词（如 *Yesterday* 或 *Last night*）：它说明事情已经过去，正配 **${right}**。`,
       ],
       [
-        ["*{wrong}* tells about now, but the sentence says it already happened.", "*{wrong}* 说的是现在，但句子说的是已经发生的事。"],
         [
-          "*{wrong}* needs a helping word such as *was*, and it does not tell the past here.",
-          "*{wrong}* 需要 *was* 这样的助词，在这里不能表示过去。",
+          "*{wrong}* tells about right now, but the time clue says it already happened.",
+          "*{wrong}* 表示现在，但时间词说明事情已经发生了。",
+        ],
+        [
+          "*{wrong}* needs a helping word like *was*, and it does not show the past by itself.",
+          "*{wrong}* 需要 *was* 这样的辅助词，不能单独表示过去。",
         ],
       ],
     ),
@@ -71,8 +78,8 @@ const pastEd = topic("grammar", {
       "spelling-the-ed",
       ["Spelling the -ed", "-ed 的拼写"],
       [
-        "Most words just add **-ed**: *jump**ed***. A word ending in **e** adds only **-d**: *bake*, *bake**d***. A short word ending in one vowel and one consonant doubles the last letter: *hop*, *ho**pped***; *stop*, *sto**pped***.",
-        "大多数词直接加 **-ed**：*jump**ed***。以 **e** 结尾的词只加 **-d**：*bake*、*bake**d***。以一个元音加一个辅音结尾的短词，要双写最后一个字母：*hop*、*ho**pped***；*stop*、*sto**pped***。",
+        "Check the end of the base word before adding *-ed*: most words just add **-ed** (*jump**ed***); a word ending in **e** adds only **-d** (*bake* → *bake**d***); a short word ending in one vowel and one consonant doubles that last letter (*hop* → *ho**pped***).\n\n> **Watch out.** Forgetting to double the last letter can turn *hopped* into *hoped*—a completely different word!",
+        "加 *-ed* 前先看原词结尾：大多数词直接加 **-ed**（*jump**ed***）；以 **e** 结尾的词只加 **-d**（*bake* → *bake**d***）；以一个短元音加一个辅音结尾的短词，双写末尾字母再加 **-ed**（*hop* → *ho**pped***）。\n\n> **注意。** 忘了双写末尾字母会把 *hopped*（跳）变成 *hoped*（希望），意思全变了！",
       ],
       ["Which is the right spelling?", "哪个拼写是对的？"],
       `
@@ -107,10 +114,31 @@ const pastEd = topic("grammar", {
       tug|tugged|tuged|tugd
       joke|joked|jokeed|jokked
       `,
-      (right, shown) => [`*${shown}* becomes *${right}*.`, `*${shown}* 变成 *${right}*。`],
+      (right, shown) => {
+        const ruleEn = shown.endsWith("e")
+          ? `**${shown}** already ends in *e*, so just add **-d** to spell **${right}**.`
+          : right.length === shown.length + 3
+            ? `**${shown}** is a short word ending in one vowel and one consonant, so double the **${shown.at(-1)}** before **-ed** to spell **${right}**.`
+            : `**${shown}** ends in two consonants, so just add **-ed** to spell **${right}**.`;
+        const ruleZh = shown.endsWith("e")
+          ? `**${shown}** 已经以 *e* 结尾，直接加 **-d** 得到 **${right}**。`
+          : right.length === shown.length + 3
+            ? `**${shown}** 是以单个元音加单个辅音结尾的短词，双写末尾字母 **${shown.at(-1)}** 再加 **-ed**，得到 **${right}**。`
+            : `**${shown}** 末尾有两个辅音，直接加 **-ed** 得到 **${right}**。`;
+        return [
+          `${ruleEn}\n\n**Check.** Look at the vowel in **${right}**: ${shown.endsWith("e") ? "keeping one *e* avoids a double *ee* and keeps the vowel saying its name." : right.length === shown.length + 3 ? "the doubled consonant protects the short vowel sound." : "the two consonants at the end already protect the short vowel, so no extra letter is needed."}`,
+          `${ruleZh}\n\n**检验。** 看 **${right}** 里的元音：${shown.endsWith("e") ? "只留一个 *e* 不会出现多余的 *ee*，也能保住长元音。" : right.length === shown.length + 3 ? "双写辅音能保住前面的短元音读法。" : "词尾本来就有两个辅音，能保住短元音，不需要再双写。"}`,
+        ];
+      },
       [
-        ["*{wrong}* does not follow the rule for this word's ending.", "*{wrong}* 不符合这个词结尾的拼写规则。"],
-        ["*{wrong}* is not how the past is spelled.", "*{wrong}* 不是过去式的正确拼写。"],
+        [
+          "*{wrong}* breaks the ending rule (doubling, silent *e*, or plain *-ed*) for *{shown}*.",
+          "*{wrong}* 违反了 *{shown}* 词尾加 *-ed* 的拼写规则。",
+        ],
+        [
+          "*{wrong}* leaves out the *e* or doubles a letter that should not be doubled.",
+          "*{wrong}* 漏掉了 *e*，或者在不该双写的地方双写了字母。",
+        ],
       ],
     ),
   ],
@@ -123,6 +151,10 @@ const pastIrregular = topic("grammar", {
     "Some action words change their spelling for the past: *run*, *ran*; *go*, *went*.",
     "有些动作词表示过去时会改变拼写：*run*、*ran*；*go*、*went*。",
   ],
+  intro: [
+    "No one says, *Yesterday I **goed** to the zoo*—we say, *Yesterday I **went** to the zoo!* A group of everyday action words change shape instead of adding *-ed*. Let's practice using and spotting them.",
+    "没有人会说 *Yesterday I **goed** to the zoo*，我们都说 *Yesterday I **went** to the zoo!* 有一批常用的动作词表示过去时不加 *-ed*，而是直接变形。这节课我们来练熟它们。",
+  ],
   after: ["past-tense-with-ed"],
   xp: 10,
   points: [
@@ -130,8 +162,8 @@ const pastIrregular = topic("grammar", {
       "the-past-that-changes",
       ["The Past That Changes", "会变的过去式"],
       [
-        "Some action words do not add *-ed*. They change: *run* → ***ran***, *go* → ***went***, *see* → ***saw***, *eat* → ***ate***, *sit* → ***sat***, *come* → ***came***. You learn them by using them.",
-        "有些动作词不加 *-ed*，而是变形：*run* → ***ran***，*go* → ***went***，*see* → ***saw***，*eat* → ***ate***，*sit* → ***sat***，*come* → ***came***。多用就记住了。",
+        "Some action words do not add *-ed* for the past—they change: *run* → **ran**, *go* → **went**, *see* → **saw**, *eat* → **ate**, *sit* → **sat**, *come* → **came**.\n\n> **Watch out.** Adding *-ed* to these words (*runned*, *eated*, *goed*) makes a word that does not exist in English.",
+        "有些动作词表示过去时不加 *-ed*，而是变形：*run* → **ran**、*go* → **went**、*see* → **saw**、*eat* → **ate**、*sit* → **sat**、*come* → **came**。\n\n> **注意。** 给这些词加 *-ed*（如 *runned*、*eated*、*goed*）会拼出英语里不存在的词。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -167,20 +199,23 @@ const pastIrregular = topic("grammar", {
       Last week, the baby ___ two teeth.|grew|growed|grow
       `,
       (right, shown) => [
-        `*${filled(shown, right)}*: this action word changes for the past.`,
-        `*${filled(shown, right)}*：这个动作词的过去式要变形。`,
+        `*${filled(shown, right)}* — this verb changes its form for the past instead of adding *-ed*.\n\n**Check.** Say *${filled(shown, right)}* aloud: **${right}** sounds natural with the past time clue, while the *-ed* form sounds made up.`,
+        `*${filled(shown, right)}* —— 这个动作词表示过去时要变形，不能加 *-ed*。\n\n**检验。** 大声读一遍 *${filled(shown, right)}*：**${right}** 搭配前面的过去时间词很自然，而加 *-ed* 的写法读起来生硬不对劲。`,
       ],
       [
-        ["*{wrong}* adds *-ed*, but this word changes instead.", "*{wrong}* 加了 *-ed*，但这个词要变形。"],
-        ["*{wrong}* tells about now, not the past.", "*{wrong}* 说的是现在，不是过去。"],
+        [
+          "*{wrong}* tries to add *-ed*, but this verb changes its spelling for the past.",
+          "*{wrong}* 硬加了 *-ed*，但这个词的过去式要变形。",
+        ],
+        ["*{wrong}* is the present form (now), not the past form.", "*{wrong}* 是现在时形式，不能用来配表示过去的时间词。"],
       ],
     ),
     choose(
       "fixing-the-past",
       ["Fixing the Past", "改正过去式"],
       [
-        "Read your writing and check each action word that tells the past. If you wrote *-ed* on a word that changes, fix it: *I **runned*** → *I **ran***.",
-        "读一读自己写的东西，检查每个表示过去的动作词。如果给一个要变形的词加了 *-ed*，就改正它：*I **runned*** → *I **ran***。",
+        "When you check your own writing, look at every past action word. If you added *-ed* to a word that changes, fix it: *I **runned*** → *I **ran***.\n\n> **Watch out.** Also check that you did not leave the present form (*run*) in a sentence with *yesterday* or *last week*.",
+        "检查自己写的句子时，盯住每个表示过去的动作词。如果给会变形的词加了 *-ed*，就改过来：*I **runned*** → *I **ran***。\n\n> **注意。** 还要检查有没有在带 *yesterday*、*last week* 的句子里误用原形（如 *run*）。",
       ],
       ["Which sentence is right?", "哪个句子是对的？"],
       `
@@ -215,10 +250,16 @@ const pastIrregular = topic("grammar", {
       swim|The kids swam in the lake.|The kids swimmed in the lake.|The kids swim in the lake last week.
       fall|The leaf fell down.|The leaf falled down.|The leaf fall down yesterday.
       `,
-      (right) => [`*${right}* uses the right past form.`, `*${right}* 用了正确的过去式。`],
+      (right, shown) => [
+        `*${right}* uses the true past form of **${shown}**.\n\n**Check.** Read *${right}* aloud and compare it to **${shown}**: it shows the past without tacking *-ed* onto **${shown}**.`,
+        `*${right}* 用了 **${shown}** 正确的过去式。\n\n**检验。** 大声读一遍 *${right}*，并和原形 **${shown}** 对照：它既准确表达了过去，又没有硬加 *-ed*。`,
+      ],
       [
-        ["*{wrong}* adds *-ed* to a word that changes.", "*{wrong}* 给要变形的词加了 *-ed*。"],
-        ["*{wrong}* tells about the past with a word for now.", "*{wrong}* 用表示现在的词来说过去的事。"],
+        [
+          "*{wrong}* adds *-ed* to *{shown}*, which is a verb that changes instead.",
+          "*{wrong}* 给 *{shown}* 加了 *-ed*，但这个词表示过去时要变形。",
+        ],
+        ["*{wrong}* uses the present form *{shown}* with a past time word.", "*{wrong}* 在过去时间里用了原形 *{shown}*，时态不对。"],
       ],
     ),
   ],
@@ -228,6 +269,10 @@ const beVerbs = topic("grammar", {
   id: "is-are-was-were",
   title: ["Is, Are, Was and Were", "is、are、was 和 were"],
   summary: ["Use *is* and *was* for one, *are* and *were* for more than one.", "一个用 *is* 和 *was*，多个用 *are* 和 *were*。"],
+  intro: [
+    "Point to one puddle: *My shoe **is** wet.* Point to both: *My shoes **are** wet!* Yesterday, those same sentences used **was** and **were**. Let's match these four helper words to how many and when.",
+    "指着一只湿鞋说：*My shoe **is** wet.* 指着两只湿鞋说：*My shoes **are** wet!* 要是说昨天，它们就变成 **was** 和 **were**。这节课我们来把这四个词和数量、时间配对好。",
+  ],
   after: ["past-tense-with-ed"],
   xp: 10,
   points: [
@@ -235,8 +280,8 @@ const beVerbs = topic("grammar", {
       "is-or-are",
       ["Is or Are", "is 还是 are"],
       [
-        "Use **is** for one person or thing, and **are** for more than one: *The cat **is** wet. The cats **are** wet.* With *you* and *we*, use *are*: *We **are** ready.*",
-        "一个人或一样东西用 **is**，多个用 **are**：*The cat **is** wet. The cats **are** wet.*。*you* 和 *we* 也用 *are*：*We **are** ready.*。",
+        "For right now, use **is** for one person or thing (*The cat **is** wet*) and **are** for more than one (*The cats **are** wet*). Always use **are** with *you* and *we* (*We **are** ready*).\n\n> **Watch out.** Check for an *-s* at the end of the naming word—*my shoes* is more than one, so it takes *are*.",
+        "表示现在时，一个人或一样东西用 **is**（*The cat **is** wet*），多个用 **are**（*The cats **are** wet*）。*you* 和 *we* 总是用 **are**（*We **are** ready*）。\n\n> **注意。** 留意名称词末尾有没有 *-s*——*my shoes* 是两只（多个），所以要用 *are*。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -272,17 +317,17 @@ const beVerbs = topic("grammar", {
       The road ___ wet.|is|are
       `,
       (right, shown) => [
-        `*${filled(shown, right)}*: ${right === "is" ? "one, so *is*" : "more than one, or *you* or *we*, so *are*"}.`,
-        `*${filled(shown, right)}*：${right === "is" ? "一个，所以用 *is*" : "多个，或是 *you*、*we*，所以用 *are*"}。`,
+        `*${filled(shown, right)}* — use **${right}** ${right === "is" ? "for one person or thing" : "for more than one, or with *you* or *we*"}.\n\n**Check.** Swap the subject for *${right === "is" ? "It" : "They"}* (or keep *you/we*): *${right === "is" ? "It is" : "They are"}...* sounds right aloud.`,
+        `*${filled(shown, right)}* —— ${right === "is" ? "主语是一个，所以用 **is**" : "主语是多个（或是 *you*、*we*），所以用 **are**"}。\n\n**检验。** 把主语换成 *${right === "is" ? "It" : "They"}*（或保留 *you/we*）：*${right === "is" ? "It is" : "They are"}...* 读起来顺口。`,
       ],
-      [["*{wrong}* does not match how many there are.", "*{wrong}* 和数量不相符。"]],
+      [["*{wrong}* does not match how many (or *you/we*) in this sentence.", "*{wrong}* 和句子里的数量（或 *you/we*）不匹配。"]],
     ),
     choose(
       "was-or-were",
       ["Was or Were", "was 还是 were"],
       [
-        "For the past, *is* becomes **was** and *are* becomes **were**: *The cat **was** wet. The cats **were** wet.* With *you* and *we*, use *were*: *We **were** late.*",
-        "表示过去时，*is* 变成 **was**，*are* 变成 **were**：*The cat **was** wet. The cats **were** wet.*。*you* 和 *we* 用 *were*：*We **were** late.*。",
+        "For the past, *is* becomes **was** (*The cat **was** wet*, *I **was** tired*) and *are* becomes **were** (*The cats **were** wet*, *We **were** late*, *You **were** funny*).\n\n> **Watch out.** *I* takes *was*, while *you* and *we* always take *were*.",
+        "表示过去时，*is* 变成 **was**（*The cat **was** wet*、*I **was** tired*），*are* 变成 **were**（*The cats **were** wet*、*We **were** late*、*You **were** funny*）。\n\n> **注意。** *I* 配 *was*，而 *you* 和 *we* 总是配 *were*。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -318,10 +363,10 @@ const beVerbs = topic("grammar", {
       The apples ___ green.|were|was
       `,
       (right, shown) => [
-        `*${filled(shown, right)}*: ${right === "was" ? "one, in the past, so *was*" : "more than one, or *you* or *we*, in the past, so *were*"}.`,
-        `*${filled(shown, right)}*：${right === "was" ? "一个，过去，所以用 *was*" : "多个，或是 *you*、*we*，过去，所以用 *were*"}。`,
+        `*${filled(shown, right)}* — use **${right}** in the past ${right === "was" ? "for one (or *I*)" : "for more than one, or with *you* or *we*"}.\n\n**Check.** Think of the present version first: *${right === "was" ? "is/am" : "are"}* turns into **${right}** in the past.`,
+        `*${filled(shown, right)}* —— 表示过去时，${right === "was" ? "一个（或 *I*）用 **was**" : "多个（或 *you*、*we*）用 **were**"}。\n\n**检验。** 先想它对应的现在时：*${right === "was" ? "is/am" : "are"}* 变成过去时正好是 **${right}**。`,
       ],
-      [["*{wrong}* does not match how many there are.", "*{wrong}* 和数量不相符。"]],
+      [["*{wrong}* does not match how many (or *I/you/we*) in this sentence.", "*{wrong}* 和句子里的数量（或 *I/you/we*）不匹配。"]],
     ),
   ],
 });
@@ -330,6 +375,10 @@ const owning = topic("grammar", {
   id: "owning-with-apostrophe-s",
   title: ["Owning with 's", "用 's 表示所属"],
   summary: ["Add *'s* to a naming word to show who owns something: *Sam's hat*.", "在名称词后加 *'s* 表示东西属于谁：*Sam's hat*。"],
+  intro: [
+    "You find a red mitten on the bench and ask, *Whose mitten is this?* Maya calls out, *That is **Maya's** mitten!* That tiny mark—an apostrophe plus *s* (**'s**)—shows who owns something.",
+    "你在长椅上捡到一只红手套，问：*这是谁的手套？* 米娅喊道：*That is **Maya's** mitten!* 那个小小的撇号加 *s*（**'s**），用来说明东西属于谁。",
+  ],
   after: ["is-are-was-were"],
   xp: 10,
   points: [
@@ -337,8 +386,8 @@ const owning = topic("grammar", {
       "whose-is-it",
       ["Whose Is It", "是谁的"],
       [
-        "To show that something belongs to someone, add an **apostrophe and s**: *the hat that Sam has* is ***Sam's** hat*; *the bone of the dog* is *the **dog's** bone*.",
-        "要表示某样东西属于某人，就加**撇号和 s**：*the hat that Sam has* 就是 ***Sam's** hat*；*the bone of the dog* 就是 *the **dog's** bone*。",
+        "To show who owns something, put **'s** on the **owner**: *the hat that Sam has* → ***Sam's** hat*; *the bone of the dog* → *the **dog's** bone*.\n\n> **Watch out.** Put *'s* on the owner, not on the thing they own (*Sam's hat*, never *Sam hat's*).",
+        "要表示东西属于谁，在**拥有者**后面加 **'s**：*the hat that Sam has* → ***Sam's** hat*；*the bone of the dog* → *the **dog's** bone*。\n\n> **注意。** 把 *'s* 加在拥有者后面，不要加在东西后面（要写 *Sam's hat*，不能写 *Sam hat's*）。",
       ],
       ["Which words fit?", "哪些词合适？"],
       `
@@ -373,18 +422,24 @@ const owning = topic("grammar", {
       The song that Pam sings is ___.|Pam's song|Pams song|Pam song's
       The horn the car has is ___.|the car's horn|the cars horn|the car horn's
       `,
-      (right) => [`*${right}*: *'s* goes on the one who owns it.`, `*${right}*：*'s* 加在拥有者后面。`],
+      (right) => [
+        `**${right}** puts **'s** right on the owner.\n\n**Check.** Ask *Who owns it?* Then look at **${right}**: the apostrophe and *s* sit right after the owner's name, before the thing they own.`,
+        `**${right}** 把 **'s** 加在了拥有者后面。\n\n**检验。** 问*是谁的？* 再看 **${right}**：撇号和 *s* 正好紧跟在拥有者后面、物品前面。`,
+      ],
       [
-        ["*{wrong}* leaves out the apostrophe.", "*{wrong}* 漏掉了撇号。"],
-        ["*{wrong}* puts *'s* on the thing, not on the one who owns it.", "*{wrong}* 把 *'s* 加在了东西上，而不是拥有者上。"],
+        [
+          "*{wrong}* leaves out the apostrophe, so it looks like more than one instead of owning.",
+          "*{wrong}* 漏掉了撇号，看起来像复数而不是所属。",
+        ],
+        ["*{wrong}* puts *'s* on the thing instead of on the owner.", "*{wrong}* 把 *'s* 加在了东西上，应该加在拥有者上。"],
       ],
     ),
     choose(
       "owning-or-more-than-one",
       ["Owning or More Than One", "所属还是复数"],
       [
-        "An *s* at the end can mean two things. With an apostrophe, ***'s*** shows owning: *the cat's bowl*. With no apostrophe, ***s*** means more than one: *two cats*. Do not use an apostrophe just to make more than one.",
-        "词尾的 *s* 有两种意思。带撇号的 ***'s*** 表示所属：*the cat's bowl*。不带撇号的 ***s*** 表示多个：*two cats*。不要只为了表示多个而加撇号。",
+        "An *s* at the end can do two jobs. With an apostrophe, **'s** shows owning (*the cat's bowl*). Without an apostrophe, **s** means more than one (*two cats*).\n\n> **Watch out.** Never add an apostrophe just to make a word plural—write *two cats*, not *two cat's*.",
+        "词尾的 *s* 有两种用法：带撇号的 **'s** 表示所属（*the cat's bowl*）；不带撇号的 **s** 表示多个（*two cats*）。\n\n> **注意。** 只表示多个时绝不要加撇号——写 *two cats*，不写 *two cat's*。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -419,11 +474,14 @@ const owning = topic("grammar", {
       The ___ wheels are big.|truck's|trucks
       I see two ___ on the road.|trucks|truck's
       `,
-      (right, shown) => [
-        `*${filled(shown, right)}*: ${right.includes("'") ? "it shows owning, so it takes *'s*" : "it means more than one, so no apostrophe"}.`,
-        `*${filled(shown, right)}*：${right.includes("'") ? "它表示所属，所以用 *'s*" : "它表示多个，所以不加撇号"}。`,
-      ],
-      [["*{wrong}* is the other kind of *s*.", "*{wrong}* 是另一种 *s*。"]],
+      (right, shown) => {
+        const owns = right.includes("'");
+        return [
+          `*${filled(shown, right)}* — ${owns ? "it shows owning, so it takes **'s**" : "it means more than one, so it takes plain **s** with no apostrophe"}.\n\n**Check.** Look right after the blank in *${shown}*: ${owns ? "there is a thing that belongs to it, so you need **'s**." : "there is no owned thing right after it—it just counts more than one, so leave out the apostrophe."}`,
+          `*${filled(shown, right)}* —— ${owns ? "这里表示所属，所以用 **'s**" : "这里表示多个，所以直接加 **s**，不加撇号"}。\n\n**检验。** 看 *${shown}* 空格后面：${owns ? "紧跟着一样属于它的东西，所以需要 **'s**。" : "后面没有跟着属于它的东西，只是数了多个，所以不加撇号。"}`,
+        ];
+      },
+      [["*{wrong}* is the other kind of *s* (owning vs. more than one).", "*{wrong}* 用成了另一种 *s*（把所属和复数搞混了）。"]],
     ),
   ],
 });
@@ -432,6 +490,10 @@ const comparing = topic("grammar", {
   id: "adjectives-that-compare",
   title: ["Describing Words That Compare", "表示比较的描述词"],
   summary: ["Add *-er* to compare two things and *-est* to compare three or more.", "比较两样东西加 *-er*，比较三样或更多加 *-est*。"],
+  intro: [
+    "You line up three pencils on your desk. The green one is **longer** than the blue one, and the yellow one is the **longest** of all! Adding **-er** or **-est** lets you compare sizes, speeds, and more.",
+    "你把三支铅笔排在桌上：绿色的比蓝色的**更长**（longer），黄色的则是三支里**最长**（longest）的！在描述词后加 **-er** 或 **-est**，就能比较大小、快慢和高矮。",
+  ],
   after: ["is-are-was-were"],
   xp: 10,
   points: [
@@ -439,8 +501,8 @@ const comparing = topic("grammar", {
       "er-or-est",
       ["-er or -est", "-er 还是 -est"],
       [
-        "To compare **two** things, add **-er**: *A dog is big**ger** than a cat.* To compare **three or more**, add **-est**: *The elephant is the big**gest** of all.* Look for *than* (two) or *the … of all* (more).",
-        "比较**两样**东西时加 **-er**：*A dog is big**ger** than a cat.*。比较**三样或更多**时加 **-est**：*The elephant is the big**gest** of all.*。找一找 *than*（两样）或 *the … of all*（更多）。",
+        "To compare **two** things, add **-er**: *A dog is big**ger** than a cat.* To compare **three or more**, add **-est**: *The elephant is the big**gest** of all.* Look for *than* (two) or *the … of all* (three or more).\n\n> **Watch out.** Do not use *-est* when you are only comparing two things with *than*.",
+        "比较**两样**东西加 **-er**：*A dog is big**ger** than a cat.* 比较**三样或更多**加 **-est**：*The elephant is the big**gest** of all.* 留意线索词 *than*（比两个）或 *the … of all*（三个及以上）。\n\n> **注意。** 句子里有 *than* 只比较两样东西时，不要用 *-est*。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -475,21 +537,27 @@ const comparing = topic("grammar", {
       A mouse is ___ than a rat.|smaller|smallest|small
       The ant is the ___ bug I saw.|smallest|smaller|small
       `,
-      (right, shown) => [
-        `*${filled(shown, right)}*: ${right.endsWith("est") ? "three or more, so *-est*" : "two things, so *-er*"}.`,
-        `*${filled(shown, right)}*：${right.endsWith("est") ? "三样或更多，所以用 *-est*" : "两样东西，所以用 *-er*"}。`,
-      ],
+      (right, shown) => {
+        const superlative = right.endsWith("est");
+        return [
+          `*${filled(shown, right)}* — ${superlative ? "it compares three or more, so use **-est**" : "it compares two things, so use **-er**"}.\n\n**Check.** Spot the clue word in *${shown}*: ${superlative ? "*the* + a whole group points to **-est**." : "*than* compares just two things, which points to **-er**."}`,
+          `*${filled(shown, right)}* —— ${superlative ? "这是三个及以上相比，所以用 **-est**" : "这是两样东西相比，所以用 **-er**"}。\n\n**检验。** 找 *${shown}* 里的线索词：${superlative ? "*the* 加上一个整体范围，对应 **-est**。" : "*than* 只比较两样东西，对应 **-er**。"}`,
+        ];
+      },
       [
-        ["*{wrong}* compares the wrong number of things.", "*{wrong}* 比较的数量不对。"],
-        ["*{wrong}* does not compare at all.", "*{wrong}* 根本没有比较。"],
+        [
+          "*{wrong}* compares the wrong number of things (two vs. three or more).",
+          "*{wrong}* 比较的数量不对（把两者比较和三者及以上搞混了）。",
+        ],
+        ["*{wrong}* is the plain describing word—it does not compare at all.", "*{wrong}* 只是普通的描述词，没有表达比较。"],
       ],
     ),
     choose(
       "spelling-er-and-est",
       ["Spelling -er and -est", "-er 和 -est 的拼写"],
       [
-        "Spell with care: a word ending in **e** adds only *-r* or *-st* (*nice*, *nicer*, *nicest*); a short word ending in one vowel and one consonant doubles it (*big*, *bi**gg**er*); a word ending in **y** changes it to **i** (*happy*, *happ**i**er*).",
-        "拼写时要小心：以 **e** 结尾的词只加 *-r* 或 *-st*（*nice*、*nicer*、*nicest*）；以一个元音加一个辅音结尾的短词要双写（*big*、*bi**gg**er*）；以 **y** 结尾的词把 **y** 变成 **i**（*happy*、*happ**i**er*）。",
+        "Check the end of the base word before adding *-er* or *-est*: ending in **e** adds only *-r* or *-st* (*nice* → *nicer*); one short vowel + one consonant doubles the last letter (*big* → *bi**gg**er*); ending in **y** changes *y* to **i** (*happy* → *happ**i**er*).\n\n> **Watch out.** Do not keep *y* before *-er* or *-est* (*happyer* is wrong—change *y* to *i*).",
+        "加 *-er* 或 *-est* 前先看原词结尾：以 **e** 结尾只加 *-r* 或 *-st*（*nice* → *nicer*）；一个短元音加一个辅音结尾要双写末字母（*big* → *bi**gg**er*）；以 **y** 结尾把 *y* 改成 **i**（*happy* → *happ**i**er*）。\n\n> **注意。** 不要在 *-er* 或 *-est* 前保留 *y*（*happyer* 是错的，要把 *y* 改成 *i*）。",
       ],
       ["Which is the right spelling?", "哪个拼写是对的？"],
       `
@@ -524,10 +592,26 @@ const comparing = topic("grammar", {
       mad + est|maddest|madest|madst
       pretty + er|prettier|prettyer|pretter
       `,
-      (right, shown) => [`*${shown}* makes *${right}*.`, `*${shown}* 变成 *${right}*。`],
+      (right, shown) => {
+        const base = shown.split("+")[0]?.trim() ?? "";
+        const ruleEn = base.endsWith("e")
+          ? `**${base}** ends in *e*, so drop the extra *e* and spell **${right}**.`
+          : base.endsWith("y")
+            ? `**${base}** ends in *y*, so change *y* to *i* to spell **${right}**.`
+            : `**${base}** ends in one short vowel and one consonant, so double the **${base.at(-1)}** to spell **${right}**.`;
+        const ruleZh = base.endsWith("e")
+          ? `**${base}** 以 *e* 结尾，不重复写 *e*，拼成 **${right}**。`
+          : base.endsWith("y")
+            ? `**${base}** 以 *y* 结尾，把 *y* 改成 *i* 再加词尾，拼成 **${right}**。`
+            : `**${base}** 以一个短元音加一个辅音结尾，双写末字母 **${base.at(-1)}** 再加词尾，拼成 **${right}**。`;
+        return [
+          `${ruleEn}\n\n**Check.** Look at where the ending joins **${base}** in **${right}**: there is no double *ee*, no leftover *y*, and short-vowel words keep their doubled letter.`,
+          `${ruleZh}\n\n**检验。** 看 **${right}** 词根和词尾的连接处：没有多余的 *ee*，也没有留着没改的 *y*，短元音词也保住了双写辅音。`,
+        ];
+      },
       [
-        ["*{wrong}* misses the change this ending needs.", "*{wrong}* 没有按这个词尾的规则变化。"],
-        ["*{wrong}* is not a word.", "*{wrong}* 不是一个词。"],
+        ["*{wrong}* skips the spelling change needed at the end of the base word.", "*{wrong}* 漏掉了原词结尾该做的拼写变化。"],
+        ["*{wrong}* drops a needed letter or spells the ending wrong.", "*{wrong}* 漏写了必需的字母，或词尾拼错了。"],
       ],
     ),
   ],
@@ -540,6 +624,10 @@ const irregularPlurals = topic("grammar", {
     "Some naming words change for more than one: *child*, *children*; *mouse*, *mice*.",
     "有些名称词表示多个时会变形：*child*、*children*；*mouse*、*mice*。",
   ],
+  intro: [
+    "Put on one sock, then two socks—easy, just add *s*! Now look at your feet: you have *one foot* and *two **feet***, never *two foots*. A small group of naming words change their shape for more than one.",
+    "一只袜子是 *sock*，两只袜子加 *s* 变成 *socks*——很简单！可看看你的脚：一只脚是 *one foot*，两只脚是 *two **feet***，不能说 *two foots*。有一小批名称词变复数时会直接变形。",
+  ],
   after: ["one-and-more-than-one"],
   xp: 10,
   points: [
@@ -547,8 +635,8 @@ const irregularPlurals = topic("grammar", {
       "the-plural-that-changes",
       ["The Plural That Changes", "会变的复数"],
       [
-        "Most naming words add *s*, but a few change: *man* → ***men***, *woman* → ***women***, *child* → ***children***, *foot* → ***feet***, *tooth* → ***teeth***, *mouse* → ***mice***, *goose* → ***geese***. Some stay the same: *one sheep*, *two **sheep***; *one fish*, *two **fish***.",
-        "大多数名称词加 *s*，但有一些会变形：*man* → ***men***，*woman* → ***women***，*child* → ***children***，*foot* → ***feet***，*tooth* → ***teeth***，*mouse* → ***mice***，*goose* → ***geese***。还有一些不变：*one sheep*、*two **sheep***；*one fish*、*two **fish***。",
+        "A few naming words change for more than one instead of adding *s*: *man* → **men**, *woman* → **women**, *child* → **children**, *foot* → **feet**, *tooth* → **teeth**, *mouse* → **mice**, *goose* → **geese**. Some stay the same: *one sheep*, *two **sheep***.\n\n> **Watch out.** Never add an extra *s* onto a changed plural—write *children* and *feet*, never *childrens* or *feets*.",
+        "有少数名称词变复数时不加 *s*，而是直接变形：*man* → **men**、*woman* → **women**、*child* → **children**、*foot* → **feet**、*tooth* → **teeth**、*mouse* → **mice**、*goose* → **geese**。还有一些单复数同形：*one sheep*、*two **sheep***。\n\n> **注意。** 变形后的复数已经表示多个，绝不要再多加一个 *s*（不能写 *childrens* 或 *feets*）。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -584,20 +672,23 @@ const irregularPlurals = topic("grammar", {
       The ___ sang at the party.|children|childs|childrens
       `,
       (right, shown) => [
-        `*${filled(shown, right)}*: this word changes for more than one.`,
-        `*${filled(shown, right)}*：这个词的复数要变形。`,
+        `*${filled(shown, right)}* — **${right}** is the true plural form, with no *-s* added.\n\n**Check.** Say *${filled(shown, right)}* aloud: **${right}** already means more than one all by itself, so adding *-s* would double up the plural.`,
+        `*${filled(shown, right)}* —— **${right}** 是正确的复数形式，不需要再加 *-s*。\n\n**检验。** 大声读一遍 *${filled(shown, right)}*：**${right}** 本身就表示多个，再加 *-s* 就画蛇添足了。`,
       ],
       [
-        ["*{wrong}* adds *s*, but this word changes instead.", "*{wrong}* 加了 *s*，但这个词要变形。"],
-        ["*{wrong}* changes the word and adds *s* too.", "*{wrong}* 既变了形又加了 *s*。"],
+        [
+          "*{wrong}* tries to add *s* to the singular word, but this word changes instead (or stays the same).",
+          "*{wrong}* 直接给单数加了 *s*，但这个词变复数要变形（或保持不变）。",
+        ],
+        ["*{wrong}* adds an extra *s* on top of a word that is already plural.", "*{wrong}* 在已经表示多个的词后面又多加了一个 *s*。"],
       ],
     ),
     choose(
       "one-or-more",
       ["One or More", "一个还是多个"],
       [
-        "Read for *how many*: one is ***child***, more is ***children***. A word like *a*, *one* or *my* (for one thing) needs the word for one.",
-        "看清*有多少*：一个是 ***child***，多个是 ***children***。*a*、*one* 这样的词后面要用表示一个的词。",
+        "Look for count clues before the blank: *a*, *one*, *each*, or *that* means **one** (*a child*, *one mouse*); *two*, *three*, *both*, *all*, or *those* means **more than one** (*three children*, *two mice*).\n\n> **Watch out.** Words like *each* and *that* always go with one, while *both* and *those* always go with more than one.",
+        "先看空格前面的数量线索：*a*、*one*、*each*、*that* 表示**一个**（*a child*、*one mouse*）；*two*、*three*、*both*、*all*、*those* 表示**多个**（*three children*、*two mice*）。\n\n> **注意。** *each* 和 *that* 总是配单数，*both* 和 *those* 总是配复数。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -632,8 +723,14 @@ const irregularPlurals = topic("grammar", {
       Those ___ are my aunts.|women|woman
       One ___ fixed the car.|man|men
       `,
-      (right, shown) => [`*${filled(shown, right)}* matches how many there are.`, `*${filled(shown, right)}* 和数量相符。`],
-      [["*{wrong}* is the word for the other number.", "*{wrong}* 是表示另一种数量的词。"]],
+      (right, shown) => {
+        const plural = ["children", "mice", "feet", "teeth", "men", "geese", "women"].includes(right);
+        return [
+          `*${filled(shown, right)}* — the sentence talks about ${plural ? "more than one" : "just one"}, so use **${right}**.\n\n**Check.** Circle the clue word in *${shown}* (such as *a/one/each* vs. *two/both/all/those*): it matches **${right}** (${plural ? "plural" : "singular"}).`,
+          `*${filled(shown, right)}* —— 句子里说的是${plural ? "多个" : "一个"}，所以用 **${right}**。\n\n**检验。** 圈出 *${shown}* 里的数量线索词（如 *a/one/each* 对应一个，*two/both/all/those* 对应多个）：和 **${right}** 完全一致。`,
+        ];
+      },
+      [["*{wrong}* is for the other count (one vs. more than one).", "*{wrong}* 表示的是另一种数量（单复数弄反了）。"]],
     ),
   ],
 });
@@ -645,6 +742,10 @@ const contractions = topic("grammar", {
     "Two words can be pushed together, with an apostrophe for the missing letters: *do not*, *don't*.",
     "两个词可以合在一起，用撇号代替省去的字母：*do not*、*don't*。",
   ],
+  intro: [
+    "When we talk, we often squeeze two short words into one: instead of *I am ready*, we say ***I'm** ready!* The little apostrophe mark (**'**) sits right where the squeezed-out letters used to be.",
+    "说话时，我们常把两个短词挤成一个：不说 *I am ready*，而是说 ***I'm** ready!* 那个小小的撇号（**'**）正好放在被省掉的字母原来待的位置。",
+  ],
   after: ["owning-with-apostrophe-s"],
   xp: 10,
   points: [
@@ -652,21 +753,21 @@ const contractions = topic("grammar", {
       "two-words-into-one",
       ["Two Words into One", "两个词变一个"],
       [
-        "A **contraction** joins two words and leaves out a letter or two. An **apostrophe** goes where the letters were: *do not* → *don**'**t*; *I am* → *I**'**m*; *it is* → *it**'**s*; *cannot* → *can**'**t*.",
-        "**缩写形式**把两个词合在一起，并省去一两个字母。**撇号**放在字母省去的地方：*do not* → *don**'**t*；*I am* → *I**'**m*；*it is* → *it**'**s*；*cannot* → *can**'**t*。",
+        "A **contraction** squeezes two words into one and puts an **apostrophe (')** where the missing letters were: *do not* → *don**'**t* (missing *o*), *I am* → *I**'**m* (missing *a*), *it is* → *it**'**s* (missing *i*).\n\n> **Watch out.** Put the apostrophe right where the letters vanished—in *n't* words, it always replaces the *o* in *not*.",
+        "**缩写形式**把两个词合在一起，并用**撇号（'）**标出省掉的字母：*do not* → *don**'**t*（省了 *o*）、*I am* → *I**'**m*（省了 *a*）、*it is* → *it**'**s*（省了 *i*）。\n\n> **注意。** 撇号一定要放在字母消失的原位置——以 *n't* 结尾的词，撇号总是代替 *not* 里的 *o*。",
       ],
       ["Which is the contraction?", "哪个是缩写形式？"],
       `
       do not|don't|do'nt|dont
-      I am|I'm|Im|I'am
-      it is|it's|its|i'ts
+      I am|I'm|I'am|Im
+      it is|it's|i'ts|its
       cannot|can't|ca'nt|cant
       is not|isn't|is'nt|isnt
-      we are|we're|were|w'ere
-      you are|you're|your|yo'ure
+      we are|we're|w'ere|were
+      you are|you're|yo'ure|your
       did not|didn't|did'nt|didnt
-      she is|she's|shes|sh'es
-      they are|they're|theyre|the'yre
+      she is|she's|sh'es|shes
+      they are|they're|the'yre|theyre
       he is|he's|h'es|hes
       was not|wasn't|was'nt|wasnt
       are not|aren't|are'nt|arent
@@ -689,20 +790,26 @@ const contractions = topic("grammar", {
       you have|you've|yo'uve|youve
       `,
       (right, shown) => [
-        `*${shown}* becomes *${right}*: the apostrophe takes the place of the missing letter.`,
-        `*${shown}* 变成 *${right}*：撇号代替了省去的字母。`,
+        `*${shown}* becomes **${right}**: the apostrophe stands in for the dropped letter(s).\n\n**Check.** Put the missing letter(s) back where the apostrophe sits in **${right}**: you get *${shown}* again, so the apostrophe is in the right spot.`,
+        `*${shown}* 缩写成 **${right}**：撇号代替了被省掉的字母。\n\n**检验。** 把省掉的字母填回 **${right}** 撇号所在的位置，正好还原成 *${shown}*，说明撇号放对了地方。`,
       ],
       [
-        ["*{wrong}* puts the apostrophe in the wrong place.", "*{wrong}* 把撇号放错了地方。"],
-        ["*{wrong}* leaves out the apostrophe, so it is another word or no word.", "*{wrong}* 漏掉了撇号，成了另一个词或者不成词。"],
+        [
+          "*{wrong}* puts the apostrophe in the wrong spot (not where the letters were dropped).",
+          "*{wrong}* 把撇号放错了位置，没有放在省掉字母的地方。",
+        ],
+        [
+          "*{wrong}* leaves out the apostrophe completely, turning it into another word or a misspelling.",
+          "*{wrong}* 完全漏掉了撇号，变成了别的词或错拼。",
+        ],
       ],
     ),
     choose(
       "what-the-contraction-means",
       ["What the Contraction Means", "缩写形式的意思"],
       [
-        "To read a contraction, say the two words it stands for: *We **can't** go* means *We **cannot** go*. *I'll* is *I will*; *won't* is *will not*.",
-        "读缩写形式时，说出它代表的两个词：*We **can't** go* 就是 *We **cannot** go*。*I'll* 是 *I will*；*won't* 是 *will not*。",
+        "To unpack a contraction, put the missing letters back: *We **can't** go* means *We **cannot** go*; *I'll* means *I will*; *won't* means *will not*.\n\n> **Watch out.** Check the time word too: *isn't* means *is not* (now), while *wasn't* means *was not* (past).",
+        "要看懂缩写形式，就把省掉的字母补回去：*We **can't** go* 就是 *We **cannot** go*；*I'll* 是 *I will*；*won't* 是 *will not*。\n\n> **注意。** 还要看清时态：*isn't* 是 *is not*（现在），*wasn't* 是 *was not*（过去）。",
       ],
       ["What do the bold words mean?", "粗体部分是什么意思？"],
       `
@@ -737,10 +844,16 @@ const contractions = topic("grammar", {
       **He'll** win the race.|He will|He is|He would
       **Who's** at the door?|Who is|Who was|Whose
       `,
-      (right) => [`The contraction stands for *${right}*.`, `这个缩写形式代表 *${right}*。`],
+      (right, shown) => {
+        const expanded = shown.replace(/\*\*[^*]+\*\*/u, right);
+        return [
+          `The contraction stands for **${right}**.\n\n**Check.** Put **${right}** back into the sentence and read it aloud: *${expanded}* — it keeps the exact same meaning and time.`,
+          `这个缩写形式代表 **${right}**。\n\n**检验。** 把 **${right}** 代回原句大声读一遍：*${expanded}* —— 意思和时态完全一致。`,
+        ];
+      },
       [
-        ["*{wrong}* uses the wrong first or second word.", "*{wrong}* 第一个或第二个词不对。"],
-        ["*{wrong}* tells a different time or a different word.", "*{wrong}* 表示的时间或词不对。"],
+        ["*{wrong}* changes the time or picks the wrong helper word for this contraction.", "*{wrong}* 改变了时态，或选错了对应的助词。"],
+        ["*{wrong}* does not shrink into the bold contraction shown in the sentence.", "*{wrong}* 缩写后并不能变成句子里粗体的那个词。"],
       ],
     ),
   ],
@@ -753,6 +866,10 @@ const andButOr = topic("grammar", {
     "Join two sentences with *and* to add, *but* to show a difference, and *or* to give a choice.",
     "用 *and* 连接表示补充，用 *but* 表示不同，用 *or* 表示选择。",
   ],
+  intro: [
+    "Three little glue words do very different jobs: *I drew a cat, **and** I colored it* (adds more), *It was sunny, **but** it felt chilly* (a surprise), *Do you want red, **or** do you want blue?* (a choice). Let's pick the right glue word and put the comma in the right spot.",
+    "三个小小的连接词各有分工：*I drew a cat, **and** I colored it*（补充更多），*It was sunny, **but** it felt chilly*（转折意外），*Do you want red, **or** do you want blue?*（二选一）。这节课我们来选对连接词，并把逗号放对位置。",
+  ],
   after: ["past-tense-with-ed"],
   xp: 10,
   points: [
@@ -760,8 +877,8 @@ const andButOr = topic("grammar", {
       "the-joining-word",
       ["The Joining Word", "连接词"],
       [
-        "Pick the joining word that fits the meaning: **and** adds one more thing (*I ran, **and** I jumped*); **but** shows something different or surprising (*I ran, **but** I was slow*); **or** gives a choice (*We can walk, **or** we can ride*).",
-        "根据意思选连接词：**and** 再补充一件事（*I ran, **and** I jumped*）；**but** 表示不同或意外（*I ran, **but** I was slow*）；**or** 提供选择（*We can walk, **or** we can ride*）。",
+        "Choose the joining word by how the two ideas connect: **and** adds more (*I ran, **and** I jumped*); **but** shows a difference or surprise (*I ran, **but** I was slow*); **or** gives a choice (*We can walk, **or** we can ride*).\n\n> **Watch out.** Read both halves before choosing—a surprise or contrast needs *but*, not *and*.",
+        "根据前后两句的关系选连接词：**and** 表示补充（*I ran, **and** I jumped*）；**but** 表示不同或意外（*I ran, **but** I was slow*）；**or** 表示选择（*We can walk, **or** we can ride*）。\n\n> **注意。** 选之前先读完前后两半句——如果前后相反或出人意料，要用 *but* 而不是 *and*。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -796,21 +913,24 @@ const andButOr = topic("grammar", {
       The door was open, ___ nobody was inside.|but|or|and
       I fed the fish, ___ then I fed the dog.|and|or|but
       `,
-      (right) => [
-        `*${right}* fits: it ${right === "and" ? "adds one more thing" : right === "but" ? "shows something different" : "gives a choice"}.`,
-        `*${right}* 合适：它${right === "and" ? "补充了一件事" : right === "but" ? "表示不同" : "提供了选择"}。`,
+      (right, shown) => [
+        `*${filled(shown, right)}* — **${right}** fits because the second half ${right === "and" ? "adds one more idea" : right === "but" ? "shows a contrast or surprise" : "offers a choice"}.\n\n**Check.** Ask what the two halves do together: ${right === "and" ? "both happen together (add → **and**)." : right === "but" ? "the second part pushes against the first (contrast → **but**)." : "you pick one of the two (choice → **or**)."}`,
+        `*${filled(shown, right)}* —— 用 **${right}**，因为后半句${right === "and" ? "补充了一件事" : right === "but" ? "表示转折或意外" : "提供了另一个选择"}。\n\n**检验。** 想想前后两半句的关系：${right === "and" ? "两件事顺着发生（补充 → **and**）。" : right === "but" ? "后半句和前半句相反或出人意料（转折 → **but**）。" : "在两件事里选一个（选择 → **or**）。"}`,
       ],
       [
-        ["*{wrong}* joins the sentences, but it does not fit the meaning.", "*{wrong}* 能连接句子，但不符合意思。"],
-        ["*{wrong}* gives the wrong meaning here.", "*{wrong}* 在这里表达的意思不对。"],
+        [
+          "Put *{wrong}* in the sentence—it signals a different link (adding vs. contrast vs. choice).",
+          "把 *{wrong}* 放进去读一读，它表达的是另一种逻辑关系（补充、转折或选择）。",
+        ],
+        ["*{wrong}* does not match how the two halves relate to each other.", "*{wrong}* 和前后两半句之间的关系对不上。"],
       ],
     ),
     choose(
       "the-comma-before-the-joining-word",
       ["The Comma Before the Joining Word", "连接词前的逗号"],
       [
-        "When *and*, *but* or *or* joins two whole sentences, put a **comma** before it: *I was hungry**,** and I ate.* Do not join two whole sentences with only a comma.",
-        "当 *and*、*but* 或 *or* 连接两个完整的句子时，在它前面加**逗号**：*I was hungry**,** and I ate.*。不要只用逗号连接两个完整的句子。",
+        "When *and*, *but*, or *or* joins two whole sentences, put a **comma** right **before** the joining word: *I was hungry**,** and I ate.*\n\n> **Watch out.** Never join two whole sentences with only a comma—and never put the comma *after* the joining word.",
+        "用 *and*、*but* 或 *or* 连接两个完整句子时，在连接词**前面**加一个**逗号**：*I was hungry**,** and I ate.*\n\n> **注意。** 不要只用逗号硬连两个完整句子，也不要把逗号放到连接词*后面*。",
       ],
       ["Which sentence is joined the right way?", "哪个句子连接得对？"],
       `
@@ -845,10 +965,16 @@ const andButOr = topic("grammar", {
       Kim planted seeds / she watered them every day|Kim planted seeds, and she watered them every day.|Kim planted seeds, she watered them every day.|Kim planted seeds and, she watered them every day.
       You can take the bus / you can walk to school|You can take the bus, or you can walk to school.|You can take the bus, you can walk to school.|You can take the bus or, you can walk to school.
       `,
-      (right) => [`*${right}*: the comma comes before the joining word.`, `*${right}*：逗号放在连接词前面。`],
+      (right) => [
+        `*${right}* puts the comma right before the joining word.\n\n**Check.** Find the joining word (*and*, *but*, or *or*) in *${right}*: the comma sits directly to its left, with a complete sentence on each side.`,
+        `*${right}* 把逗号放在了连接词的正前面。\n\n**检验。** 找到 *${right}* 里的连接词（*and*、*but* 或 *or*）：逗号紧贴在它左边，而且逗号左右两边各自都是完整的句子。`,
+      ],
       [
-        ["*{wrong}* joins two whole sentences with only a comma.", "*{wrong}* 只用逗号连接了两个完整的句子。"],
-        ["*{wrong}* puts the comma after the joining word.", "*{wrong}* 把逗号放在了连接词后面。"],
+        [
+          "*{wrong}* tries to glue two whole sentences with only a comma—it is missing the joining word.",
+          "*{wrong}* 只用逗号硬连两个完整句子，漏掉了连接词。",
+        ],
+        ["*{wrong}* puts the comma *after* the joining word instead of before it.", "*{wrong}* 把逗号放到了连接词*后面*，应该放在前面。"],
       ],
     ),
   ],
@@ -861,6 +987,10 @@ const letters = topic("grammar", {
     "Put a comma after the greeting and the closing of a letter, and between the day and the year.",
     "在书信的称呼和结束语后面加逗号，在日期的日和年之间加逗号。",
   ],
+  intro: [
+    "When you write a postcard to your grandma, commas show where to pause at the top and bottom: *May 4, 2026*, *Dear Nana,*, and *Love, Leo*. Let's place every comma and capital in the right spot.",
+    "给外婆写明信片时，逗号标出了开头和结尾的停顿：*May 4, 2026*、*Dear Nana,*、*Love, Leo*。这节课我们来把书信里的逗号和大写都写对。",
+  ],
   after: ["and-but-and-or"],
   xp: 10,
   points: [
@@ -868,8 +998,8 @@ const letters = topic("grammar", {
       "greeting-and-closing",
       ["Greeting and Closing", "称呼和结束语"],
       [
-        "A letter starts with a **greeting** and ends with a **closing**. Both are followed by a **comma**: *Dear Gran**,*** … *Love**,*** *Sam*. The first word of each starts with a capital.",
-        "书信以**称呼**开头，以**结束语**结尾。二者后面都要加**逗号**：*Dear Gran**,*** … *Love**,*** *Sam*。它们的第一个词都要大写。",
+        "A letter begins with a **greeting** (*Dear Gran**,***) and ends with a **closing** (*Love**,*** *Sam*). Start the first word with a capital letter and put a **comma** after the greeting or closing.\n\n> **Watch out.** Use a comma—never a period—after *Dear Gran* or *Love*.",
+        "书信以**称呼**（*Dear Gran**,***）开头，以**结束语**（*Love**,*** *Sam*）结尾。第一个词要大写，称呼或结束语后面用**逗号**。\n\n> **注意。** 在 *Dear Gran* 或 *Love* 后面要用逗号，不要用句号。",
       ],
       ["Which is written the right way?", "哪个写对了？"],
       `
@@ -905,20 +1035,20 @@ const letters = topic("grammar", {
       the closing, from Ivy|Many thanks, Ivy|Many thanks. Ivy|many thanks, Ivy
       `,
       (right) => [
-        `*${right}*: a capital at the start and a comma after the greeting or closing.`,
-        `*${right}*：开头大写，称呼或结束语后面加逗号。`,
+        `*${right}* starts with a capital letter and uses a comma right after the greeting or closing.\n\n**Check.** Do a two-point check on *${right}*: (1) the first letter (**${right[0]}**) is capital, and (2) the mark after the greeting or closing is a comma (**,**), not a period.`,
+        `*${right}* 开头大写，且在称呼或结束语后面用了逗号。\n\n**检验。** 对 *${right}* 做两步检查：（1）第一个字母（**${right[0]}**）是大写；（2）称呼或结束语后面是逗号（**,**），不是句号。`,
       ],
       [
-        ["*{wrong}* uses a period where a comma belongs.", "*{wrong}* 在该用逗号的地方用了句号。"],
-        ["*{wrong}* does not start with a capital.", "*{wrong}* 开头没有大写。"],
+        ["*{wrong}* uses a period instead of a comma.", "*{wrong}* 在该用逗号的地方用了句号。"],
+        ["*{wrong}* starts with a small letter instead of a capital.", "*{wrong}* 开头漏掉了大写。"],
       ],
     ),
     choose(
       "commas-in-dates",
       ["Commas in Dates", "日期中的逗号"],
       [
-        "A date that has the month, the day and the year puts a **comma** between the day and the year: *May 4**,** 2026*. The month starts with a capital.",
-        "包含月、日、年的日期，在日和年之间加**逗号**：*May 4**,** 2026*。月份要大写。",
+        "In a full date (month, day, year), capitalize the month and put a **comma** between the **day** and the **year**: *May 4**,** 2026*.\n\n> **Watch out.** Do not put the comma between the month and the day—it separates the two numbers.",
+        "写完整日期（月、日、年）时，月份首字母大写，在**日**和**年**之间加**逗号**：*May 4**,** 2026*。\n\n> **注意。** 不要把逗号放在月和日之间——逗号是用来隔开日和年这两个数字的。",
       ],
       ["Which date is written the right way?", "哪个日期写对了？"],
       `
@@ -953,10 +1083,19 @@ const letters = topic("grammar", {
       the twenty-ninth of April, 2027|April 29, 2027|April, 29 2027|april 29, 2027
       the thirtieth of October, 2028|October 30, 2028|October, 30 2028|october 30, 2028
       `,
-      (right) => [`*${right}*: the comma goes between the day and the year.`, `*${right}*：逗号放在日和年之间。`],
+      (right) => [
+        `**${right}** capitalizes the month and puts the comma between the day and the year.\n\n**Check.** Find the two numbers in **${right}**: the comma sits right between them so they do not run together, and the month starts with a capital **${right[0]}**.`,
+        `**${right}** 的月份首字母大写，逗号放在了日和年之间。\n\n**检验。** 找 **${right}** 里的两个数字：逗号正好把日和年隔开，且月份首字母 **${right[0]}** 是大写。`,
+      ],
       [
-        ["*{wrong}* puts the comma between the month and the day.", "*{wrong}* 把逗号放在了月和日之间。"],
-        ["*{wrong}* starts the month with a small letter.", "*{wrong}* 的月份没有大写。"],
+        [
+          "*{wrong}* puts the comma between the month and the day instead of between the two numbers.",
+          "*{wrong}* 把逗号放在了月和日之间，应该放在日和年两个数字之间。",
+        ],
+        [
+          "*{wrong}* starts the month with a small letter, but month names are always capitalized.",
+          "*{wrong}* 的月份用了小写，但月份名总是要大写的。",
+        ],
       ],
     ),
   ],

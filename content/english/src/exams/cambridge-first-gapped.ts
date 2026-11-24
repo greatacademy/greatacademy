@@ -319,9 +319,21 @@ function items(g: Gapped, wholeText: boolean): readonly SolvedChoice[] {
       shown: wholeText ? `${whole(g)}\n\n**Gap ${i + 1}**` : paragraph(gap),
       right: removed,
       wrong,
+      whyNot: wrong.map((w) => {
+        const clean = w.replace(/\.$/u, "");
+        return w === g.extra
+          ? t(
+              `"${clean}" is the extra sentence that contradicts or does not fit the text at all.`,
+              `“${clean}”是多余的干扰句，与文章内容矛盾或无法衔接任何空格。`,
+            )
+          : t(
+              `"${clean}" belongs to a different point in the text and does not link smoothly to the sentences before and after this gap.`,
+              `“${clean}”属于文章别处，与这个空格前后的句子衔接不上。`,
+            );
+      }),
       solution: t(
-        `**${removed}** ${en} The other sentences belong in other gaps or in none: they do not link to the words around this one.`,
-        `**${removed}** ${zh} 其他句子属于别的空格，或者哪个空格都不适合：它们和这个空格前后的话接不上。`,
+        `**${removed}** ${en} The other sentences belong in other gaps or in none: they do not link to the words around this one.\n\n**Check.** Read the sentence before the gap, the chosen sentence, and the sentence after it together—verify every pronoun, linker, and time cue connects cleanly.`,
+        `**${removed}** ${zh} 其他句子属于别的空格，或者哪个空格都不适合：它们和这个空格前后的话接不上。\n\n**检验。** 把空格前一句、填入的句子和空格后一句连起来通读一遍，确认所有代词、连接词和时间线索都严丝合缝。`,
       ),
     };
   });
@@ -335,6 +347,10 @@ export const gappedText: TopicDef = examTopic({
     "Cambridge First Reading Part 6 style: sentences have been taken out of a text, and each one goes back into its gap.",
     "剑桥 B2 First 阅读第 6 部分风格：从文章中抽出若干句子，把每一句放回它的空格。",
   ),
+  intro: t(
+    "A removed sentence in B2 First Part 6 acts like a bridge: if the line after the gap begins with *As a result* or *These small habits*, only a sentence that supplies the cause or the habits can lock both sides together.",
+    "B2 First 第 6 部分的抽离句就像一座桥梁：如果空格后一句以 *As a result* 或 *These small habits* 开头，只有交代了原因或具体习惯的那一句才能把前后两头牢牢接上。",
+  ),
   strand: "reading",
   prerequisites: ["choosing-transitions"],
   encompasses: [
@@ -347,8 +363,8 @@ export const gappedText: TopicDef = examTopic({
       "fce-filling-one-gap",
       t("Linking a Sentence to Its Neighbours", "让句子与前后衔接"),
       t(
-        "A sentence that fits a gap links to the sentence **before** it and the sentence **after** it. Look for the words that point backwards or forwards: *this*, *these*, *them*, *there*, *the change*; linking words such as *so*, *yet*, *as a result*, *for example*; and names or ideas that come up again. A sentence that fits the subject but leaves *them* or *so* with nothing to refer to is wrong. Read the paragraph again with your sentence in the gap to check that it flows.",
-        "能填入空格的句子要和**前一句**、**后一句**都衔接得上。寻找向前或向后指的词：*this*、*these*、*them*、*there*、*the change*；连接词，如 *so*、*yet*、*as a result*、*for example*；以及再次出现的名字或意思。一句话如果话题对，却让 *them* 或 *so* 无所指，就是错的。把句子放进空格再读一遍段落，确认读起来顺畅。",
+        "A sentence that fits a gap links to the sentence **before** it and the sentence **after** it. Look for the words that point backwards or forwards: *this*, *these*, *them*, *there*, *the change*; linking words such as *so*, *yet*, *as a result*, *for example*; and names or ideas that come up again. A sentence that fits the subject but leaves *them* or *so* with nothing to refer to is wrong. Read the paragraph again with your sentence in the gap to check that it flows.\n\n> **Watch out.** Never check only the sentence **before** the gap—many distractors look fine after line 1 but break the pronoun or transition in the sentence **after** the gap.",
+        "能填入空格的句子要和**前一句**、**后一句**都衔接得上。寻找向前或向后指的词：*this*、*these*、*them*、*there*、*the change*；连接词，如 *so*、*yet*、*as a result*、*for example*；以及再次出现的名字或意思。一句话如果话题对，却让 *them* 或 *so* 无所指，就是错的。把句子放进空格再读一遍段落，确认读起来顺畅。\n\n> **注意。** 切忌只看空格**前一句**——许多干扰句接在前一句后面看似顺畅，却会让空格**后一句**里的代词或转折词失去着落。",
       ),
       solvedChoiceGenerator(
         t("Choose the sentence that fills the gap.", "选出填入空格的句子。"),
@@ -359,8 +375,8 @@ export const gappedText: TopicDef = examTopic({
       "fce-working-through-a-text",
       t("Working Through a Whole Text", "完成整篇填句"),
       t(
-        "In the exam, six sentences have been taken out of a text, and there is one more that fits nowhere. First read the whole text to follow its story or argument. Then take the gaps one by one, checking each sentence against what comes before and after. Every removed sentence fits somewhere, so one that looks possible for this gap may belong better in another; the extra sentence often matches the subject but contradicts the text.",
-        "考试中，从一篇文章里抽出了六个句子，另外还有一个哪里都不适合的句子。先通读全文，把握故事或论证的脉络。再逐个空格处理，用前后文核对每个句子。每个被抽出的句子都有自己的位置，所以看起来适合这个空格的句子，也许更适合另一个空格；多出的那一句常常话题相符，却与文章矛盾。",
+        "In the exam, six sentences have been taken out of a text, and there is one more that fits nowhere. First read the whole text to follow its story or argument. Then take the gaps one by one, checking each sentence against what comes before and after. Every removed sentence fits somewhere, so one that looks possible for this gap may belong better in another; the extra sentence often matches the subject but contradicts the text.\n\n> **Watch out.** Watch out for the **extra sentence**—it usually shares keywords with the passage while quietly contradicting a fact, timeline, or outcome in the text.",
+        "考试中，从一篇文章里抽出了六个句子，另外还有一个哪里都不适合的句子。先通读全文，把握故事或论证的脉络。再逐个空格处理，用前后文核对每个句子。每个被抽出的句子都有自己的位置，所以看起来适合这个空格的句子，也许更适合另一个空格；多出的那一句常常话题相符，却与文章矛盾。\n\n> **注意。** 提防那句**多余的干扰句**——它通常会复用文章里的关键词，却在事实、时间线或结果上与原文悄悄矛盾。",
       ),
       solvedChoiceGenerator(
         t("Choose the sentence that fills the gap named below the text.", "选出填入短文下方指定空格的句子。"),

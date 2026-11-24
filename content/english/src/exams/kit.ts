@@ -33,6 +33,7 @@ export interface ExamTopicSpec {
   readonly id: string;
   readonly title: Text;
   readonly summary: Text;
+  readonly intro?: Text;
   readonly strand: Strand;
   readonly prerequisites: readonly string[];
   readonly encompasses: readonly EncompassingDef[];
@@ -46,6 +47,7 @@ export function examTopic(spec: ExamTopicSpec): TopicDef {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
+    ...(spec.intro ? { intro: spec.intro } : {}),
     strand: spec.strand,
     prerequisites: spec.prerequisites,
     encompasses: spec.encompasses,
@@ -60,6 +62,7 @@ export interface JudgedExamSpec {
   readonly id: string;
   readonly title: Text;
   readonly summary: Text;
+  readonly intro?: Text;
   readonly prerequisites: readonly string[];
   readonly encompasses: readonly EncompassingDef[];
   readonly criteria: readonly string[];
@@ -70,6 +73,8 @@ export interface JudgedExamSpec {
   readonly xp: number;
   /** what names the kind of text in the solution, such as an essay. */
   readonly what: Text;
+  /** check overrides the default self-check paragraph appended to the model answer. */
+  readonly check?: Text;
 }
 
 /** quote shows a text as a block quote, every line of it. */
@@ -78,10 +83,17 @@ export const quote = (text: string) => `> ${text.replace(/\n/gu, "\n> ")}`;
 /** judgedExamTopic builds a practice-only writing topic judged by a model against criteria of the exams. */
 export function judgedExamTopic(spec: JudgedExamSpec): TopicDef {
   if (spec.bank.length < 12) throw new Error(`${spec.id}: fewer than 12 tasks`);
+  const check =
+    spec.check ??
+    t(
+      `Re-read your ${spec.what.en} against the task: verify that every part of the prompt is answered, the organization is clear, and grammar and spelling are accurate.`,
+      `对照题目重读你的${spec.what["zh-CN"]}：确认已回应题目的全部要求，结构清晰，且语法和拼写准确。`,
+    );
   return {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
+    ...(spec.intro ? { intro: spec.intro } : {}),
     strand: "writing",
     prerequisites: spec.prerequisites,
     encompasses: spec.encompasses,
@@ -94,7 +106,10 @@ export function judgedExamTopic(spec: JudgedExamSpec): TopicDef {
         spec.point.title,
         spec.point.explanation,
         writingGenerator(spec.question, spec.bank, spec.criteria, spec.limits, (model) =>
-          t(`One good ${spec.what.en}:\n\n${quote(model)}`, `一篇好的${spec.what["zh-CN"]}：\n\n${quote(model)}`),
+          t(
+            `One good ${spec.what.en}:\n\n${quote(model)}\n\n**Check.** ${check.en}`,
+            `一篇好的${spec.what["zh-CN"]}：\n\n${quote(model)}\n\n**检验。** ${check["zh-CN"]}`,
+          ),
         ),
       ),
     ],
@@ -206,6 +221,16 @@ export function replyGenerator(question: Text, bank: readonly ReplyItem[]): Gene
     for (let tries = 0; isRight(shuffled) && tries < item.chunks.length; tries++) shuffled = [...shuffled.slice(1), shuffled[0] as number];
     const expected = rightOrders.map((order) => order.map((original) => shuffled.indexOf(original)));
     const reply = sentenceOf(item.chunks, item.end);
+    const check =
+      item.end === "?"
+        ? t(
+            "Read the reply aloud after speaker A's line: check whether it is a direct question (auxiliary before subject) or an indirect question (*do you know* / *can you tell me* + statement order).",
+            "把回答接在 A 的话后面通读一遍：核对是直接疑问句（助动词在主语前）还是间接疑问句（*do you know* / *can you tell me* 后用陈述句语序）。",
+          )
+        : t(
+            "Read the reply aloud after speaker A's line: verify subject + verb order, place/time details at the end, and a natural answer to A.",
+            "把回答接在 A 的话后面通读一遍：核对主语 + 谓语语序、放在句末的地点或时间细节，以及语义上自然回应了 A。",
+          );
     return {
       prompt: joinText([question, same(quote(`**A:** ${item.said}\n\n**B:** …${item.end === "?" ? "?" : ""}`))]),
       answer: {
@@ -213,7 +238,10 @@ export function replyGenerator(question: Text, bank: readonly ReplyItem[]): Gene
         expected: expected.map((o) => [...o]),
         input: { kind: "order", items: shuffled.map((i) => same(item.chunks[i] as string)) },
       },
-      solution: t(`A good reply:\n\n${quote(reply)}`, `合适的回答：\n\n${quote(reply)}`),
+      solution: t(
+        `A good reply:\n\n${quote(reply)}\n\n**Check.** ${check.en}`,
+        `合适的回答：\n\n${quote(reply)}\n\n**检验。** ${check["zh-CN"]}`,
+      ),
       canonical: (expected[0] as number[]).join(","),
       wrong: isRight(shuffled) ? [] : [shuffled.map((_, i) => i).join(",")],
     };

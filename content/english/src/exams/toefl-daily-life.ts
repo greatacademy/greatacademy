@@ -458,14 +458,25 @@ function items(pick: (e: Everyday) => readonly Question[], inferred: boolean): r
         shown: `${e.text}\n\n**${question}**`,
         right,
         wrong,
+        whyNot: wrong.map((w) =>
+          inferred
+            ? t(
+                `"${w}" goes beyond what the text supports or assumes a detail the writer never implies.`,
+                `“${w}”超出了原文的依据，或加入原文并未暗示的猜测。`,
+              )
+            : t(
+                `"${w}" does not answer this question—check the exact detail in the text.`,
+                `“${w}”并非本题所问的细节，请核对原文对应信息。`,
+              ),
+        ),
         solution: inferred
           ? t(
-              `**${right}** The text does not say it directly, but it follows from: "${evidence}${end(evidence)}" The other options go further than the text, or rely on guesses it gives no reason for.`,
-              `**${right}** 原文没有直接说，但可以从这里推出："${evidence}${end(evidence)}" 其他选项超出了原文，或者是原文没有依据的猜测。`,
+              `**${right}** The text does not say it directly, but it follows from: "${evidence}${end(evidence)}" The other options go further than the text, or rely on guesses it gives no reason for.\n\n**Check.** Verify that if the quoted line is true, this conclusion must follow—without adding outside assumptions.`,
+              `**${right}** 原文没有直接说，但可以从这里推出："${evidence}${end(evidence)}" 其他选项超出了原文，或者是原文没有依据的猜测。\n\n**检验。** 确认只要所引原文成立，这一推论就必然成立，且没有掺入文外臆测。`,
             )
           : t(
-              `**${right}** The text says: "${evidence}${end(evidence)}" The other options use real times, places or words from the text, but not the ones that answer this question.`,
-              `**${right}** 原文是："${evidence}${end(evidence)}" 其他选项用的是原文中真实出现的时间、地点或词语，但回答的不是这个问题。`,
+              `**${right}** The text says: "${evidence}${end(evidence)}" The other options use real times, places or words from the text, but not the ones that answer this question.\n\n**Check.** Match the question directly back to the quoted line in the text to confirm the exact detail.`,
+              `**${right}** 原文是："${evidence}${end(evidence)}" 其他选项用的是原文中真实出现的时间、地点或词语，但回答的不是这个问题。\n\n**检验。** 把问题直接对照所引原文，核实时间、地点或条件完全一致。`,
             ),
       })),
     ),
@@ -482,6 +493,10 @@ export const dailyLifeReading: TopicDef = examTopic({
     "TOEFL-style questions on short everyday texts such as notices, emails, messages and adverts: details, and what the text suggests.",
     "托福风格的题目，围绕通知、邮件、短信、广告等简短的日常文本：细节题，以及原文暗示了什么的推断题。",
   ),
+  intro: t(
+    "A short campus notice or café sign looks easy until a question traps you with a real date from the wrong line or a plausible guess the text never implies. Reading daily texts with precision means separating stated facts from safe inferences.",
+    "校园通知或咖啡馆告示看似简单，但考题常把另一行里的真实日期或看似合理的文外猜测做成陷阱。精准阅读日常文本，要同时拿稳直接细节和有据推断。",
+  ),
   strand: "reading",
   prerequisites: ["reading-workplace-documents", "making-inferences"],
   encompasses: [
@@ -494,8 +509,8 @@ export const dailyLifeReading: TopicDef = examTopic({
       "toefl-daily-life-details",
       t("Finding Practical Details", "找出实用细节"),
       t(
-        "Everyday texts, such as notices, emails, messages and adverts, are short and full of practical facts: times, places, prices, reasons and changes. Read the question first, then scan the text for the part that answers it. The right option often says the same thing in other words. Wrong options usually take a real time, place or name from the text and put it where it does not belong.",
-        "通知、邮件、短信、广告等日常文本都很短，满是实用信息：时间、地点、价格、原因和变动。先读问题，再在文中找到回答它的那一部分。正确选项常常用别的话说出同样的意思。错误选项通常把原文中真实出现的时间、地点或名字放到了不对的地方。",
+        "Everyday texts, such as notices, emails, messages and adverts, are short and full of practical facts: times, places, prices, reasons and changes. Read the question first, then scan the text for the part that answers it. The right option often says the same thing in other words.\n\n> **Watch out.** Wrong options often recycle a real time, price, or place from another sentence in the notice—check that the detail answers **this exact** question.",
+        "通知、邮件、短信、广告等日常文本都很短，满是实用信息：时间、地点、价格、原因和变动。先读问题，再在文中找到回答它的那一部分。正确选项常常用别的话说出同样的意思。\n\n> **注意。** 错误选项常把通知里另一句话中的真实时间、价格或地点拿来凑数——务必核对它回答的是不是**这一题**。",
       ),
       solvedChoiceGenerator(
         question,
@@ -506,8 +521,8 @@ export const dailyLifeReading: TopicDef = examTopic({
       "toefl-daily-life-inferences",
       t("What the Text Suggests", "原文暗示了什么"),
       t(
-        "Some questions ask what a text suggests: why the writer mentions something, what will probably happen next, or who would suit an offer. The answer is not written in the text, but it must follow from what is. Find the sentence the question is about and ask what must be true if that sentence is true. A café that *only accepts card payments* cannot take cash; a family day with *our highest number ever* means earlier ones had fewer visitors. Reject options that go further than the text or rest on your own guesses.",
-        "有些题问的是原文暗示了什么：作者为什么提到某件事，接下来可能会发生什么，或者谁适合某个机会。答案没有写在原文里，但必须能从原文推出。找到题目所问的那句话，想一想如果它是真的，什么也一定是真的。一家*只接受刷卡*的咖啡馆不能收现金；家庭日迎来*有史以来最多的人数*，说明以前的人数更少。超出原文或基于自己猜测的选项要排除。",
+        "Some questions ask what a text suggests: why the writer mentions something, what will probably happen next, or who would suit an offer. The answer is not written in the text, but it must follow from what is. Find the sentence the question is about and ask what must be true if that sentence is true. A café that *only accepts card payments* cannot take cash; a family day with *our highest number ever* means earlier ones had fewer visitors.\n\n> **Watch out.** An inference is **not** a free guess—reject any option that adds an outside reason or goes even one step further than the text forces.",
+        "有些题问的是原文暗示了什么：作者为什么提到某件事，接下来可能会发生什么，或者谁适合某个机会。答案没有写在原文里，但必须能从原文推出。找到题目所问的那句话，想一想如果它是真的，什么也一定是真的。一家*只接受刷卡*的咖啡馆不能收现金；家庭日迎来*有史以来最多的人数*，说明以前的人数更少。\n\n> **注意。** 推断**不是**自由猜测——凡是掺入文外理由或比原文多跨出一步的选项都要排除。",
       ),
       solvedChoiceGenerator(
         question,

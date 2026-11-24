@@ -363,6 +363,10 @@ const thereIsAndThereAre: TopicDef = {
     "There is a lamp. There are two beds. English says what is in a place with there is and there are.",
     "There is a lamp. There are two beds. 英语用 there is 和 there are 说某处有什么。",
   ),
+  intro: t(
+    "To say what is in a living room, English says *There is a big window* (one thing) and *There are three chairs* (more than one)—never *Have a big window*. In this topic, you match *There is* and *There are* to singular and plural items, replace *Have* mistakes, and ask *Is there…?* / *Are there…?* questions.",
+    "说客厅里有什么，英语说 *There is a big window*（单数）和 *There are three chairs*（复数）——绝不说 *Have a big window*。本主题带你区分 *There is* 与 *There are*、改正误用 *Have* 的句子，并写出 *Is there…?* / *Are there…?* 问句。",
+  ),
   prerequisites: ["plural-nouns-with-s", "a1-words-home"],
   encompasses: [
     { topic: "plural-nouns-with-s", weight: 0.3 },
@@ -375,15 +379,19 @@ const thereIsAndThereAre: TopicDef = {
       "choose",
       t("There is or there are", "there is 还是 there are"),
       t(
-        "To say what is in a place, start with *there*: *There is a lamp in my room.* Use *is* for one thing and *are* for more: *There are two beds.*\n\nThe short form of *there is* is *there's*.",
-        "说某处有什么，句子以 *there* 开头：*There is a lamp in my room.* 一样东西用 *is*，多样东西用 *are*：*There are two beds.*\n\n*there is* 的缩写是 *there's*。",
+        "To say what is in a place, start with *there*: *There is a lamp in my room.* Use *is* for one thing and *are* for more: *There are two beds.*\n\nThe short form of *there is* is *there's*.\n\n> **Watch out.** Look *after* the blank to decide between *is* and *are*: *a/an* + singular noun takes *is*, while a number or *some* + plural noun takes *are*—and never use *have* after *There*.",
+        "说某处有什么，句子以 *there* 开头：*There is a lamp in my room.* 一样东西用 *is*，多样东西用 *are*：*There are two beds.*\n\n*there is* 的缩写是 *there's*。\n\n> **注意。** 看空白*后面*的名词来定 *is* 还是 *are*：*a/an* 加单数用 *is*，数字或 *some* 加复数用 *are*；*There* 后面绝不能接 *have*。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         thereChoiceBank,
         (right, shown) => {
-          const reason = thereReason(shown.split("___ ")[1]?.split(" in ")[0] ?? "", right);
-          return t(`${reason.en}: ${shown.replace("___", `*${right}*`)}`, `${reason["zh-CN"]}：${shown.replace("___", `*${right}*`)}`);
+          const thing = shown.split("___ ")[1]?.split(" in ")[0] ?? "";
+          const reason = thereReason(thing, right);
+          return t(
+            `${reason.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Check whether *${thing}* is singular (*is*) or plural (*are*), and confirm the sentence uses *There ${right}*, never *have*.`,
+            `${reason["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 核对 *${thing}* 是单数（*is*）还是复数（*are*），并确认用的是 *There ${right}* 而非 *have*。`,
+          );
         },
         (wrong, _right, shown) => {
           const thing = shown.split("___ ")[1]?.split(" in ")[0] ?? "";
@@ -398,8 +406,8 @@ const thereIsAndThereAre: TopicDef = {
       "fix",
       t("Not have, but there is", "不用 have，用 there is"),
       t(
-        "Chinese says *yǒu* (有) for both *have* and *there is*, so learners write *Have a lamp in my room.* In English, a place does not *have* here: say *There is a lamp in my room.*",
-        "中文“有”既表示 *have*，也表示 *there is*，所以学习者常写 *Have a lamp in my room.* 或 *There have two beds.* 说某处有某物时，英语要用 *There is* 或 *There are*：*There is a lamp in my room.*",
+        "Chinese says *yǒu* (有) for both *have* and *there is*, so learners write *Have a lamp in my room.* In English, a place does not *have* here: say *There is a lamp in my room.*\n\n> **Watch out.** Replace *Have* or *There have* with *There is* (singular) or *There are* (plural)—never leave *have* in the sentence.",
+        "中文“有”既表示 *have*，也表示 *there is*，所以学习者常写 *Have a lamp in my room.* 或 *There have two beds.* 说某处有某物时，英语要用 *There is* 或 *There are*：*There is a lamp in my room.*\n\n> **注意。** 把 *Have* 或 *There have* 换成 *There is*（单数）或 *There are*（复数）——句中绝不能保留 *have*。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -407,10 +415,11 @@ const thereIsAndThereAre: TopicDef = {
         thereFixBank,
         (right) => {
           const be = right.startsWith("There is") ? "is" : "are";
-          const reason = thereReason(right.replace(/^There (is|are) /u, "").split(" in ")[0] ?? "", be);
+          const thing = right.replace(/^There (is|are) /u, "").split(" in ")[0] ?? "";
+          const reason = thereReason(thing, be);
           return t(
-            `A place does not *have* things in English; to say what is in it, start with *There*. ${reason.en}: ${right}`,
-            `英语里地点不能 *have* 东西；说某处有什么，要以 *There* 开头。${reason["zh-CN"]}：${right}`,
+            `A place does not *have* things in English; to say what is in it, start with *There*. ${reason.en}: ${right}\n\n**Check.** Verify that *have* is gone and that *There ${be}* matches the number of *${thing}*.`,
+            `英语里地点不能 *have* 东西；说某处有什么，要以 *There* 开头。${reason["zh-CN"]}：${right}\n\n**检验。** 确认 *have* 已去掉，且 *There ${be}* 与 *${thing}* 的单复数一致。`,
           );
         },
       ),
@@ -419,15 +428,15 @@ const thereIsAndThereAre: TopicDef = {
       "ask",
       t("Is there? Are there?", "Is there? Are there?"),
       t(
-        "For a question, put *is* or *are* first: *Is there a lamp in your room? Are there any toys?* In a question, *some* and a number become *any*.",
-        "疑问句把 *is* 或 *are* 放到句首：*Is there a lamp in your room? Are there any toys?* 疑问句中，*some* 和数字要换成 *any*。",
+        "For a question, put *is* or *are* first: *Is there a lamp in your room? Are there any toys?* In a question, *some* and a number become *any*.\n\n> **Watch out.** Make *all* required changes together: swap *There is/are* to *Is/Are there*, switch *some* or a plural number (*two*, *three*) to *any*, and end with a question mark.",
+        "疑问句把 *is* 或 *are* 放到句首：*Is there a lamp in your room? Are there any toys?* 疑问句中，*some* 和数字要换成 *any*。\n\n> **注意。** 几处改动要一起做：把 *There is/are* 倒装成 *Is/Are there*，把复数前的 *some* 或数字（*two*、*three*）换成 *any*，句末加问号。",
       ),
       typedGenerator("sentence", t("Make the sentence a question.", "把句子改成疑问句。"), thereQuestionBank, (right, shown) => {
         const be = right.split(" ")[0] ?? "";
         const changed = / any /u.test(right) && !/ any /u.test(shown);
         return t(
-          `For a question, put *${be}* before *there*${changed ? ", and *some* or a number becomes *any*" : " and end with a question mark"}: ${right}`,
-          `疑问句把 *${be}* 放到 *there* 前面${changed ? "，*some* 或数字要换成 *any*" : "，句末用问号"}：${right}`,
+          `For a question, put *${be}* before *there*${changed ? ", and *some* or a number becomes *any*" : " and end with a question mark"}: ${right}\n\n**Check.** Verify the question frame: *${be} there* at the front, ${changed ? "*any* before the plural noun, " : ""}and a question mark at the end.`,
+          `疑问句把 *${be}* 放到 *there* 前面${changed ? "，*some* 或数字要换成 *any*" : "，句末用问号"}：${right}\n\n**检验。** 核对问句结构：句首是 *${be} there*，${changed ? "复数名词前已换成 *any*，" : ""}句末是问号。`,
         );
       }),
     ),
@@ -515,8 +524,8 @@ const placeWhy = (right: string, shown: string) => {
   const stop = shown.lastIndexOf(". ", shown.indexOf("___"));
   const sentence = shown.slice(stop < 0 ? 0 : stop + 2).replace("___", `*${right}*`);
   return t(
-    `*${right}* means ${placeMeaning[right]?.en}, which is just what the words before it describe: ${sentence}`,
-    `*${right}* 的意思是${placeMeaning[right]?.["zh-CN"]}，正是前面描述的位置：${sentence}`,
+    `*${right}* means ${placeMeaning[right]?.en}, which is just what the words before it describe: ${sentence}\n\n**Check.** Picture the two objects from the clue sentence—check which object is the subject of the final sentence and confirm *${right}* puts it in the exact spot described.`,
+    `*${right}* 的意思是${placeMeaning[right]?.["zh-CN"]}，正是前面描述的位置：${sentence}\n\n**检验。** 按前一句在脑中摆出两样东西的位置——看清最后一句的主语是哪一样，确认 *${right}* 准确说出了它的位置。`,
   );
 };
 
@@ -531,6 +540,10 @@ const prepositionsOfPlace: TopicDef = {
   id: "prepositions-of-place",
   title: t("Next To, Behind and Between", "next to、behind 和 between"),
   summary: t("The lamp is next to the bed. The cat is between the chairs.", "The lamp is next to the bed. The cat is between the chairs."),
+  intro: t(
+    "If the lamp is on the left, the desk is on the right, and the bed is in the middle, then *The bed is between the lamp and the desk.* Everyday place words—*next to*, *behind*, *in front of*, *between*, *near*, *on*, and *under*—pin down exact positions before the noun. In this topic, you read spatial clues and choose or type the matching place preposition.",
+    "如果台灯在左、书桌在右、床在中间，就可以说 *The bed is between the lamp and the desk.* 英语用 *next to*、*behind*、*in front of*、*between*、*near*、*on* 和 *under* 等方位词放在名词前精确定位。本主题带你根据空间描述选择并写出对应的方位词。",
+  ),
   prerequisites: ["in-on-and-under", "a1-words-things-at-home"],
   encompasses: [
     { topic: "in-on-and-under", weight: 0.4 },
@@ -543,8 +556,8 @@ const prepositionsOfPlace: TopicDef = {
       "choose",
       t("Where things are", "东西在哪里"),
       t(
-        "*next to*: side by side. *behind*: at the back. *in front of*: at the front, the other way round from *behind*. *between*: in the middle of two things. *near*: not far. And *in*, *on* and *under*.\n\nThe word comes before the place: *The cat is behind the sofa.*",
-        "*next to*：紧挨着。*behind*：在后面。*in front of*：在前面，和 *behind* 相反。*between*：在两者之间。*near*：在附近。还有 *in*、*on*、*under*。\n\n中文说“在沙发后面”，方位词放在后面；英语正好相反，方位词放在前面：*The cat is behind the sofa.*",
+        "*next to*: side by side. *behind*: at the back. *in front of*: at the front, the other way round from *behind*. *between*: in the middle of two things. *near*: not far. And *in*, *on* and *under*.\n\nThe word comes before the place: *The cat is behind the sofa.*\n\n> **Watch out.** Watch reversed sentences carefully: if A is *behind* B, then B is *in front of* A—check *which* object sits before `is ___`.",
+        "*next to*：紧挨着。*behind*：在后面。*in front of*：在前面，和 *behind* 相反。*between*：在两者之间。*near*：在附近。还有 *in*、*on*、*under*。\n\n中文说“在沙发后面”，方位词放在后面；英语正好相反，方位词放在前面：*The cat is behind the sofa.*\n\n> **注意。** 留心主宾互换的句子：如果 A 在 B 后面（*behind*），那么 B 就在 A 前面（*in front of*）——一定要看清 `is ___` 前面是哪样东西。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), placeChoiceBank, placeWhy, whyNotPlace),
     ),
@@ -552,8 +565,8 @@ const prepositionsOfPlace: TopicDef = {
       "type",
       t("Writing the place words", "写出方位词"),
       t(
-        "Read where the things are and type the word or words: *behind*, *in front of*, *next to*, *between*, *near*, *on* or *under*.",
-        "读一读东西的位置，输入方位词：*behind*、*in front of*、*next to*、*between*、*near*、*on* 或 *under*。",
+        "Read where the things are and type the word or words: *behind*, *in front of*, *next to*, *between*, *near*, *on* or *under*—for example, *The shop is two minutes from my home. It's **near** my home.*\n\n> **Watch out.** Do not drop small words in multi-word prepositions: write all three words of *in front of* and both words of *next to*.",
+        "读一读东西的位置，输入方位词：*behind*、*in front of*、*next to*、*between*、*near*、*on* 或 *under*，例如 *The shop is two minutes from my home. It's **near** my home.*\n\n> **注意。** 多词方位短语不要漏词：*in front of* 三个词要写全，*next to* 两个词要写全。",
       ),
       typedGenerator("word-form", t("Type the word or words for the gap.", "输入填入空白处的词。"), placeTypedBank, placeWhy),
     ),
@@ -603,10 +616,11 @@ const roomTypedBank: readonly TypedItem[] = roomItems.map(
 /** roomWhy explains a sentence about a room from its note: there is or there are, then the thing, then the place. */
 const roomWhy = (right: string, shown: string): Text => {
   const [thing = "", place = ""] = shown.split(" / ");
-  const reason = thereReason(thing, right.startsWith("There is") ? "is" : "are");
+  const be = right.startsWith("There is") ? "is" : "are";
+  const reason = thereReason(thing, be);
   return t(
-    `${reason.en}; then comes the thing, and the place *${place}* goes at the end: ${right}`,
-    `${reason["zh-CN"]}；后面先写东西，位置 *${place}* 放在句末：${right}`,
+    `${reason.en}; then comes the thing, and the place *${place}* goes at the end: ${right}\n\n**Check.** Verify the order *There ${be} + ${thing} + ${place}.*—matching *${be}* to *${thing}* and keeping the place at the end.`,
+    `${reason["zh-CN"]}；后面先写东西，位置 *${place}* 放在句末：${right}\n\n**检验。** 核对语序 *There ${be} + ${thing} + ${place}.*——确认 *${be}* 与 *${thing}* 单复数一致，且方位短语放在句末。`,
   );
 };
 
@@ -616,6 +630,10 @@ const writingAboutARoom: TopicDef = {
   summary: t(
     "Turn notes into sentences: a desk / next to the window becomes There is a desk next to the window.",
     "把笔记写成句子：a desk / next to the window 写成 There is a desk next to the window.",
+  ),
+  intro: t(
+    "Turn a room note like `two chairs / near the bed` into natural English: *There are two chairs near the bed.* Start with *There is* or *There are* to match the item, name the item next, and place the location phrase at the end. In this topic, you pick and write clean room-description sentences.",
+    "把房间笔记 `two chairs / near the bed` 写成自然的英语：*There are two chairs near the bed.* 先按物品单复数用 *There is* 或 *There are* 开头，再写物品，最后把位置放在句末。本主题带你选出并写出规范的房间描写句。",
   ),
   prerequisites: ["there-is-and-there-are", "prepositions-of-place"],
   encompasses: [
@@ -629,8 +647,8 @@ const writingAboutARoom: TopicDef = {
       "choose",
       t("The sentence for a note", "选出符合笔记的句子"),
       t(
-        "A note gives a thing and a place. The sentence starts with *There is* for one thing or *There are* for more, then the thing, then the place.\n\n*a desk / next to the window* → *There is a desk next to the window.*",
-        "笔记给出一样东西和一个位置。写成句子时，一样东西用 *There is* 开头，多样东西用 *There are*，后面先写东西，再写位置。\n\n*a desk / next to the window* → *There is a desk next to the window.*\n\n中文常把位置放在前面（“窗户旁边有一张书桌”），英语一般把位置放在句末。",
+        "A note gives a thing and a place. The sentence starts with *There is* for one thing or *There are* for more, then the thing, then the place.\n\n*a desk / next to the window* → *There is a desk next to the window.*\n\n> **Watch out.** Never start with *Have* (*Have a desk…*), and check whether the item is singular (*a lamp* -> *There is*) or plural (*some books* -> *There are*).",
+        "笔记给出一样东西和一个位置。写成句子时，一样东西用 *There is* 开头，多样东西用 *There are*，后面先写东西，再写位置。\n\n*a desk / next to the window* → *There is a desk next to the window.*\n\n中文常把位置放在前面（“窗户旁边有一张书桌”），英语一般把位置放在句末。\n\n> **注意。** 绝不用 *Have* 开头（如 *Have a desk…*），同时核对物品是单数（*a lamp* -> *There is*）还是复数（*some books* -> *There are*）。",
       ),
       choiceGenerator(
         t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"),
@@ -648,8 +666,8 @@ const writingAboutARoom: TopicDef = {
       "write",
       t("Writing the sentence", "写出句子"),
       t(
-        "Write a whole sentence for the note: *There is* for one thing or *There are* for more, then the thing, then the place. Start with a capital letter and end with a period.",
-        "根据笔记写一个完整的句子：一样东西用 *There is*，多样东西用 *There are*，后面先写东西，再写位置。句首大写，句末加句号。",
+        "Write a whole sentence for the note: *There is* for one thing or *There are* for more, then the thing, then the place—for example, *some books / under the window* → *There are some books under the window.* Start with a capital letter and end with a period.\n\n> **Watch out.** Keep every word of the note's item and place phrase intact, and put the place phrase at the end of the sentence.",
+        "根据笔记写一个完整的句子：一样东西用 *There is*，多样东西用 *There are*，后面先写东西，再写位置，例如 *some books / under the window* → *There are some books under the window.* 句首大写，句末加句号。\n\n> **注意。** 完整保留笔记中的物品和方位短语，并把方位短语放在句末。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), roomTypedBank, roomWhy),
     ),

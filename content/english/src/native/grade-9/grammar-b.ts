@@ -219,7 +219,9 @@ const usageClaims = [
   ],
 ] as const;
 const ruleLines = join(
-  usageClaims.flatMap(([claim, kind, examples]) => examples.map((example) => `${claim}, as in "${example}".|${kind}`)),
+  usageClaims.flatMap(([claim, kind, examples]) =>
+    examples.map((example) => `${claim}, as in "${example}"${/[.!?]$/.test(example) ? "" : "."}|${kind}`),
+  ),
 );
 const groupNouns = ["boys", "girls", "players", "students", "guests", "workers"] as const;
 const theirThings = ["a ticket", "a locker", "a badge", "a seat"] as const;
@@ -629,14 +631,18 @@ const brackets = topic("grammar", {
     "Square brackets mark the words a writer changes or adds inside a quotation, so that it fits the sentence and stays clear; [sic] marks an error in the original.",
     "方括号标出作者在引文中改动或添加的词，使引文与句子相符并保持清楚；[sic] 标出原文中的错误。",
   ],
+  intro: [
+    "When a diary reads *'They left before dawn'*, quoting it as *'[the explorers] left before dawn'* clarifies who *they* are without pretending the diary used that word. **Square brackets** keep every editorial adjustment transparent.",
+    "当一则日记写着 *They left before dawn* 时，引用成 *'[the explorers] left before dawn'* 既说清了“他们”是谁，又不会冒充日记原词。**方括号**能让引文里的每一处微调都公开透明。",
+  ],
   after: ["ellipses-in-quotations"],
   points: [
     choose(
       "using-brackets-correctly",
       ["Using Brackets Correctly", "正确使用方括号"],
       [
-        "A quotation must give the writer's exact words. When you need to change a word so that the quotation fits your sentence or makes sense on its own, put the change in **square brackets**: *Odysseus says that “[he] longed to see the smoke rise from [his] own land.”* Brackets can replace a pronoun with a name (*[Juliet]* for *she*), change a verb to fit your tense, change a capital letter, or add a missing word.\n\nNever use parentheses for these changes: parentheses would look like part of the original.",
-        "引文必须给出作者的原话。为了让引文与你的句子相符，或在单独看时意思清楚而需要改动某个词时，把改动放在**方括号**里：*Odysseus says that “[he] longed to see the smoke rise from [his] own land.”* 方括号可以用名字替换代词（用 *[Juliet]* 替换 *she*），改动动词使之与你的时态一致，改动大小写，或补上缺少的词。\n\n这些改动不能用圆括号：圆括号看起来像是原文的一部分。",
+        "A quotation must give the writer's exact words. When you need to change a word so that the quotation fits your sentence or makes sense on its own, put the change in **square brackets**: *Odysseus says that “[he] longed to see the smoke rise from [his] own land.”* Brackets can replace a pronoun with a name (*[Juliet]* for *she*), change a verb to fit your tense, change a capital letter, or add a missing word.\n\nNever use parentheses for these changes: parentheses would look like part of the original.\n\n> **Watch out.** Always use **square brackets** `[ ]`, never parentheses `( )`, and never silently alter a word inside quotation marks without bracketing the change.",
+        "引文必须给出作者的原话。为了让引文与你的句子相符，或在单独看时意思清楚而需要改动某个词时，把改动放在**方括号**里：*Odysseus says that “[he] longed to see the smoke rise from [his] own land.”* 方括号可以用名字替换代词（用 *[Juliet]* 替换 *she*），改动动词使之与你的时态一致，改动大小写，或补上缺少的词。\n\n这些改动不能用圆括号：圆括号看起来像是原文的一部分。\n\n> **注意。** 务必使用**方括号** `[ ]`，绝不用圆括号 `( )`，也绝不在引号内悄悄改动原文而不加方括号。",
       ],
       ["Which quotation uses brackets correctly?", "哪个引文正确使用了方括号？"],
       `
@@ -673,8 +679,8 @@ ${bracketLines}
         Original: "Its walls were never breached." Name the fortress.|The guidebook boasts that "[the castle's] walls were never breached."|The guidebook boasts that "(the castle's) walls were never breached."|The guidebook boasts that "the castle's walls were never breached."
       `,
       (right) => [
-        `${right} The changed or added words sit in square brackets, so the reader can see exactly which words are not the original's.`,
-        `${right} 改动或添加的词放在方括号里，读者能看清哪些词不是原文的。`,
+        `${right} The changed or added words sit in square brackets, so the reader can see exactly which words are not the original's.\n\n**Check.** Compare the quotation word for word against the Original line: every substituted or adjusted word is inside [ ] (never ( ) or unmarked).`,
+        `${right} 改动或添加的词放在方括号里，读者能看清哪些词不是原文的。\n\n**检验。** 把引文和 Original 原文逐词核对：凡是替换或调整的词都在 [ ] 内（既不是 ( )，也没有漏标）。`,
       ],
       [
         [
@@ -691,8 +697,8 @@ ${bracketLines}
       "why-the-brackets-are-there",
       ["Why the Brackets Are There", "方括号的用途"],
       [
-        "Brackets in a quotation do one of four jobs. They **replace a pronoun** with the name it stands for, so the reader knows who is meant: *“[Juliet] drinks the potion.”* They **fit the grammar** of your sentence, changing a verb's tense or a capital letter: *She said they “[were] ready.”* They **add a missing word** that the quotation needs to make sense alone. And **[sic]**, Latin for *thus*, tells the reader that an error was in the original and is not yours: *“The ship sank in 1812 [sic].”*",
-        "引文中的方括号有四种用途。**替换代词**，换成它所指的名字，让读者知道指的是谁：*“[Juliet] drinks the potion.”* **配合语法**，使引文符合你的句子，改动动词时态或大小写：*She said they “[were] ready.”* **补充缺少的词**，让引文单独看时意思完整。**[sic]**（拉丁文“原文如此”）告诉读者错误出自原文，不是你的：*“The ship sank in 1812 [sic].”*",
+        "Brackets in a quotation do one of four jobs. They **replace a pronoun** with the name it stands for, so the reader knows who is meant: *“[Juliet] drinks the potion.”* They **fit the grammar** of your sentence, changing a verb's tense or a capital letter: *She said they “[were] ready.”* They **add a missing word** that the quotation needs to make sense alone. And **[sic]**, Latin for *thus*, tells the reader that an error was in the original and is not yours: *“The ship sank in 1812 [sic].”*\n\n> **Watch out.** Look inside the brackets to tell the four jobs apart: `[sic]` always marks an original error, a lowercase letter like `[t]` or verb tense like `[were]` fits grammar, a person/group name replaces a pronoun, and a missing function word (*[not]*, *[the]*, *[with]*) supplies an omitted word.",
+        "引文中的方括号有四种用途。**替换代词**，换成它所指的名字，让读者知道指的是谁：*“[Juliet] drinks the potion.”* **配合语法**，使引文符合你的句子，改动动词时态或大小写：*She said they “[were] ready.”* **补充缺少的词**，让引文单独看时意思完整。**[sic]**（拉丁文“原文如此”）告诉读者错误出自原文，不是你的：*“The ship sank in 1812 [sic].”*\n\n> **注意。** 直接看方括号里的内容区分四种用途：`[sic]` 必标原文错误，小写字母或动词时态变动（`[t]`、`[were]`）是配合语法，人名或群体名是替换代词，补进的 *not/the/with* 等词是补充缺词。",
       ],
       ["What job do the brackets do in this quotation?", "这个引文中的方括号起什么作用？"],
       `
@@ -731,29 +737,29 @@ ${whyBracketLines}
       {
         "replaces a pronoun": L(
           "替换代词",
-          "The bracketed name stands where the original had a pronoun such as *he*, *she* or *they*, so the reader knows who is meant.",
-          "方括号里的名字放在原文代词（如 *he*、*she*、*they*）的位置上，让读者知道指的是谁。",
+          "The bracketed name stands where the original had a pronoun such as *he*, *she* or *they*, so the reader knows who is meant.\n\n**Check.** Substitute *he*, *she*, or *they* back into the brackets: it reveals the pronoun the writer clarified with a specific name.",
+          "方括号里的名字放在原文代词（如 *he*、*she*、*they*）的位置上，让读者知道指的是谁。\n\n**检验。** 把 *he*、*she* 或 *they* 代回方括号位置：正好还原出作者用具体人名替换的原代词。",
           "The brackets do not stand in for a pronoun here.",
           "这里的方括号并不是替换代词。",
         ),
         "fits the grammar": L(
           "配合语法",
-          "The brackets change a verb's tense or a capital letter so that the quotation fits the writer's own sentence.",
-          "方括号改动了动词时态或大小写，使引文与作者自己的句子相符。",
+          "The brackets change a verb's tense or a capital letter so that the quotation fits the writer's own sentence.\n\n**Check.** Look at what is inside the brackets: a verb form or single lowercase letter adjusted to match the surrounding sentence's tense or capitalization.",
+          "方括号改动了动词时态或大小写，使引文与作者自己的句子相符。\n\n**检验。** 看方括号里的内容：调整的是动词时态或单个字母大小写，以衔接外层句子的语法。",
           "The brackets do not change a verb or a capital letter to fit the sentence.",
           "这里的方括号并没有为了配合句子而改动动词或大小写。",
         ),
         "adds a missing word": L(
           "补充缺少的词",
-          "The bracketed word was not in the original; it is added so that the quotation makes sense on its own.",
-          "方括号里的词原文没有，是为了让引文单独看时意思完整而添加的。",
+          "The bracketed word was not in the original; it is added so that the quotation makes sense on its own.\n\n**Check.** Remove the bracketed word temporarily: the quote feels telegraphic or incomplete without it, showing a missing word was supplied.",
+          "方括号里的词原文没有，是为了让引文单独看时意思完整而添加的。\n\n**检验。** 临时去掉方括号里的词：引文会显得残缺或意思反转，说明这里补充了原句缺省的词。",
           "The brackets do not add a word that the original left out.",
           "这里的方括号并没有补充原文省略的词。",
         ),
         "marks an error in the original": L(
           "标出原文错误",
-          "[sic] tells the reader that the mistake was in the original and has been copied faithfully.",
-          "[sic] 告诉读者错误出自原文，引用者如实照录。",
+          "[sic] tells the reader that the mistake was in the original and has been copied faithfully.\n\n**Check.** Spot `[sic]` directly after the misspelled word or factual error: it signals that the error belongs to the original source.",
+          "[sic] 告诉读者错误出自原文，引用者如实照录。\n\n**检验。** 认出紧跟在拼写或事实错误后面的 `[sic]`：它专门用来标明错误出自原文。",
           "There is no [sic] here, so the brackets do not mark an error in the original.",
           "这里没有 [sic]，所以方括号并不是标出原文的错误。",
         ),
@@ -769,14 +775,18 @@ const literaryPresent = topic("grammar", {
     "Writing about what happens in a story, poem or play, and about what an author does in a text, in the present tense, while events of history and of authors' lives stay in the past.",
     "用现在时写故事、诗歌或戏剧中发生的事，以及作者在文本中所做的事；而历史事件和作者的生平仍用过去时。",
   ],
+  intro: [
+    "Even though Mary Shelley *wrote* *Frankenstein* in 1818 (past tense for history), Victor *creates* the creature every time a reader opens the book (present tense for the text). Separating the **literary present** from the historical past keeps analytical essays sharp and consistent.",
+    "尽管玛丽·雪莱在 1818 年*写下*了《弗兰肯斯坦》（历史事件用过去时），但每次读者翻开书，维克多都在*创造*那个怪物（文本情节用现在时）。分清**文学现在时**与历史过去时，文学评论的时态才不会混乱。",
+  ],
   after: ["when-to-shift-tense"],
   points: [
     choose(
       "the-tense-for-a-text",
       ["The Tense for a Text", "写文本时用的时态"],
       [
-        "A story happens again every time someone reads it, so when you write about literature you use the **present tense**: *Romeo **meets** Juliet at a feast. Shakespeare **shows** how quickly love grows.* This is the **literary present**. It holds for what characters do, what a text says and what an author does in it (*Orwell **warns**, the poem **ends***).\n\nEvents of history and of an author's life stay in the **past**: *Shakespeare **wrote** the play around 1595.*",
-        "每当有人读故事时，故事就又发生一次，所以写文学评论时用**现在时**：*Romeo **meets** Juliet at a feast. Shakespeare **shows** how quickly love grows.* 这就是**文学现在时**。人物做的事、文本说的话以及作者在文本中所做的事都用它（*Orwell **warns**、the poem **ends***）。\n\n历史事件和作者的生平仍用**过去时**：*Shakespeare **wrote** the play around 1595.*",
+        "A story happens again every time someone reads it, so when you write about literature you use the **present tense**: *Romeo **meets** Juliet at a feast. Shakespeare **shows** how quickly love grows.* This is the **literary present**. It holds for what characters do, what a text says and what an author does in it (*Orwell **warns**, the poem **ends***).\n\nEvents of history and of an author's life stay in the **past**: *Shakespeare **wrote** the play around 1595.*\n\n> **Watch out.** Do not let an old publication date fool you into using past tense for the *plot*—even a 3,000-year-old epic like *The Odyssey* takes the present tense when you describe what happens inside the poem.",
+        "每当有人读故事时，故事就又发生一次，所以写文学评论时用**现在时**：*Romeo **meets** Juliet at a feast. Shakespeare **shows** how quickly love grows.* 这就是**文学现在时**。人物做的事、文本说的话以及作者在文本中所做的事都用它（*Orwell **warns**、the poem **ends***）。\n\n历史事件和作者的生平仍用**过去时**：*Shakespeare **wrote** the play around 1595.*\n\n> **注意。** 别因为作品年代久远就在写*情节*时用过去时——哪怕是三千年前的史诗，只要写文本里发生的事，就用一般现在时。",
       ],
       ["Which verb fits the sentence of a literary essay?", "哪个动词适合文学评论中的这个句子？"],
       `
@@ -813,8 +823,8 @@ ${tenseLines}
         Keats ___ the poem a year before he died.|wrote|writes|is writing
       `,
       (right) => [
-        `**${right}** fits: what happens in a text and what an author does in it take the present tense, while history and the author's life take the past.`,
-        `**${right}** 合适：文本中发生的事和作者在文本中所做的事用现在时，而历史和作者的生平用过去时。`,
+        `**${right}** fits: what happens in a text and what an author does in it take the present tense, while history and the author's life take the past.\n\n**Check.** Ask whether the event happens *inside the pages of the work* (literary present) or *in real-world biography/history* (simple past): **${right}** matches that realm.`,
+        `**${right}** 合适：文本中发生的事和作者在文本中所做的事用现在时，而历史和作者的生平用过去时。\n\n**检验。** 问问这件事发生在*作品书页之内*（文学现在时），还是发生在*真实历史或作者生平中*（一般过去时）：**${right}** 与之完全对应。`,
       ],
       [
         [
@@ -831,8 +841,8 @@ ${tenseLines}
       "text-or-history",
       ["Text or History?", "文本还是历史？"],
       [
-        "Before choosing a tense, decide what the sentence is about. If it is about **what happens in a text** (characters, events of the plot, what a passage says or does), use the present. If it is about **the author's life or the real past** (when a book was written, how it was received, what happened in history), use the past. One paragraph can do both: *Achebe **wrote** the novel in 1958. In it, Okonkwo **fears** being thought weak.*",
-        "选择时态之前，先判断句子说的是什么。如果说的是**文本中发生的事**（人物、情节、某段文字说了什么或起什么作用），用现在时。如果说的是**作者的生平或真实的过去**（书何时写成、如何被接受、历史上发生了什么），用过去时。一个段落可以两者兼有：*Achebe **wrote** the novel in 1958. In it, Okonkwo **fears** being thought weak.*",
+        "Before choosing a tense, decide what the sentence is about. If it is about **what happens in a text** (characters, events of the plot, what a passage says or does), use the present. If it is about **the author's life or the real past** (when a book was written, how it was received, what happened in history), use the past. One paragraph can do both: *Achebe **wrote** the novel in 1958. In it, Okonkwo **fears** being thought weak.*\n\n> **Watch out.** Watch out for sentences about the *book as a physical/historical object* (*'The book was banned'*, *'The first edition had 500 copies'*)—those are real-world **history** (past tense), not events inside the plot.",
+        "选择时态之前，先判断句子说的是什么。如果说的是**文本中发生的事**（人物、情节、某段文字说了什么或起什么作用），用现在时。如果说的是**作者的生平或真实的过去**（书何时写成、如何被接受、历史上发生了什么），用过去时。一个段落可以两者兼有：*Achebe **wrote** the novel in 1958. In it, Okonkwo **fears** being thought weak.*\n\n> **注意。** 留心把书当作*历史物件*来写的句子（如“该书曾被禁”“首版只印了五百册”）——这些属于真实**历史**（过去时），而不是书里的情节。",
       ],
       [
         "Is the sentence about the text or about history, and so which tense does it need?",
@@ -874,22 +884,22 @@ ${textOrHistory}
       {
         "the text: present tense": L(
           "文本：现在时",
-          "The sentence is about what happens in the text, so it takes the literary present.",
-          "这个句子说的是文本中发生的事，所以用文学现在时。",
+          "The sentence is about what happens in the text, so it takes the literary present.\n\n**Check.** Ask whether the subject is a character, narrator, or part of the work itself: yes, so its action lives in the literary present.",
+          "这个句子说的是文本中发生的事，所以用文学现在时。\n\n**检验。** 看主语是否是人物、叙述者或作品本身的组成部分：是的，因此用文学现在时。",
           "The sentence is not about what happens in the text, so the literary present does not fit.",
           "这个句子说的不是文本中发生的事，所以不适合用文学现在时。",
         ),
         "history: past tense": L(
           "历史：过去时",
-          "The sentence is about the author's life or the real past, so it takes the past tense.",
-          "这个句子说的是作者的生平或真实的过去，所以用过去时。",
+          "The sentence is about the author's life or the real past, so it takes the past tense.\n\n**Check.** Spot the real-world anchor (an author's biography, publication date, audience reception, or historical event): real past events take the past tense.",
+          "这个句子说的是作者的生平或真实的过去，所以用过去时。\n\n**检验。** 认出真实历史锚点（作者生平、出版年份、读者反响或史实）：真实过去事件用过去时。",
           "The sentence is not about the author's life or the real past, so the past tense does not fit.",
           "这个句子说的不是作者的生平或真实的过去，所以不适合用过去时。",
         ),
         "an author's habit: present perfect": L(
           "作者的习惯：现在完成时",
-          "The sentence is about something an author has done again and again up to now.",
-          "这个句子说的是作者到现在为止一再做的事。",
+          "The sentence is about something an author has done again and again up to now.\n\n**Check.** Verify whether the sentence tracks a repeated habit continuing to the present rather than a single text event or finished past event.",
+          "这个句子说的是作者到现在为止一再做的事。\n\n**检验。** 确认句子说的是延续至今的反复习惯，而非单一文本情节或已结束的史实。",
           "The sentence is not about something an author has done over and over up to now; it is about one text or one past event.",
           "这个句子说的不是作者到现在为止一再做的事，而是关于一个文本或一件过去的事。",
         ),
@@ -905,14 +915,18 @@ const myths = topic("grammar", {
     "Telling the real rules of standard English from myths such as never splitting an infinitive, and from choices of style that depend on the task.",
     "区分标准英语的真正规则、诸如“绝不能分裂不定式”之类的误区，以及取决于写作任务的风格选择。",
   ],
+  intro: [
+    "Writing *to boldly go* or *But the gate stayed shut* breaks a famous classroom **myth**, not a rule of English—whereas *Each of the runners have a number* breaks a real grammar rule. Separating real rules, myths, and style choices keeps your editing sharp.",
+    "写 *to boldly go* 或 *But the gate stayed shut* 触犯的只是广为流传的**误区**，而非英语规则；而 *Each of the runners have a number* 才真正违反语法。分清真规则、误区和风格选择，修改文章才能有的放矢。",
+  ],
   after: ["formal-and-informal-english", "subject-verb-agreement"],
   points: [
     label(
       "rule-myth-or-choice",
       ["Rule, Myth or Choice of Style", "规则、误区还是风格选择"],
       [
-        "Some advice about English is a **real rule**: break it and the sentence is wrong in standard English (*a verb agrees with its subject*). Some is a **myth**: careful writers have always broken it, and dictionaries and style guides allow it (*never split an infinitive*, *never end a sentence with a preposition*, *never begin a sentence with* and). And some is a **choice of style** that depends on the task and the reader (*avoid* I *in a formal essay*, *avoid contractions in a report*).",
-        "关于英语的建议，有些是**真正的规则**：违反了，句子在标准英语中就是错的（*动词与主语一致*）。有些是**误区**：优秀的作家一向不遵守，词典和文体指南也允许（*绝不能分裂不定式*、*句子绝不能以介词结尾*、*句子绝不能以 and 开头*）。还有些是**风格选择**，取决于写作任务和读者（*正式论文中避免用 I*、*报告中避免用缩约形式*）。",
+        "Some advice about English is a **real rule**: break it and the sentence is wrong in standard English (*a verb agrees with its subject*). Some is a **myth**: careful writers have always broken it, and dictionaries and style guides allow it (*never split an infinitive*, *never end a sentence with a preposition*, *never begin a sentence with* and). And some is a **choice of style** that depends on the task and the reader (*avoid* I *in a formal essay*, *avoid contractions in a report*).\n\n> **Watch out.** Notice the clue inside **choice of style** items: they usually specify a *genre or audience* (*in a formal report*, *in a magazine article*, *in a newspaper*), whereas a **myth** issues a blanket *Never...* ban that standard English does not enforce.",
+        "关于英语的建议，有些是**真正的规则**：违反了，句子在标准英语中就是错的（*动词与主语一致*）。有些是**误区**：优秀的作家一向不遵守，词典和文体指南也允许（*绝不能分裂不定式*、*句子绝不能以介词结尾*、*句子绝不能以 and 开头*）。还有些是**风格选择**，取决于写作任务和读者（*正式论文中避免用 I*、*报告中避免用缩约形式*）。\n\n> **注意。** **风格选择**往往指明了特定*文体或读者*（如“在正式报告中”“在杂志文章里”），而**误区**常是一刀切的“绝不能……”，标准英语本身并不禁止。",
       ],
       ["Is this piece of advice a real rule, a myth or a choice of style?", "这条建议是真正的规则、误区还是风格选择？"],
       `
@@ -951,22 +965,22 @@ ${ruleLines}
       {
         "real rule": L(
           "真正的规则",
-          "Breaking this advice makes a sentence incorrect in standard English, so careful writers follow it.",
-          "违反这条建议会使句子在标准英语中出错，所以认真的作者都会遵守。",
+          "Breaking this advice makes a sentence incorrect in standard English, so careful writers follow it.\n\n**Check.** Imagine breaking this advice in a published book: it would produce a genuine grammatical or mechanical error, confirming it is a **real rule**.",
+          "违反这条建议会使句子在标准英语中出错，所以认真的作者都会遵守。\n\n**检验。** 设想在正式出版物里违反这条建议：会产生真正的语法或标点错误，确认它是**真正的规则**。",
           "Careful writers break this advice without error, or it depends on the task, so it is not a real rule.",
           "优秀的作者违反这条建议也不算错，或者它取决于写作任务，所以不是真正的规则。",
         ),
         myth: L(
           "误区",
-          "Good writers have long broken this advice, and dictionaries and style guides accept the result, so it is a myth.",
-          "优秀的作家一向不遵守这条建议，词典和文体指南也接受这样的用法，所以它是误区。",
+          "Good writers have long broken this advice, and dictionaries and style guides accept the result, so it is a myth.\n\n**Check.** Recall whether respected authors and major style guides routinely allow what this ban forbids: yes, proving it is a **myth**.",
+          "优秀的作家一向不遵守这条建议，词典和文体指南也接受这样的用法，所以它是误区。\n\n**检验。** 想想名家和主流文体指南是否经常允许这种写法：是的，说明它只是**误区**。",
           "This advice is not a myth: either breaking it makes a real error, or it is a sensible choice for some tasks.",
           "这条建议不是误区：要么违反它会造成真正的错误，要么它是某些任务中合理的选择。",
         ),
         "choice of style": L(
           "风格选择",
-          "This advice depends on the task and the reader: it is sensible for some kinds of writing and not needed in others.",
-          "这条建议取决于写作任务和读者：在某些文体中合理，在另一些文体中则不必。",
+          "This advice depends on the task and the reader: it is sensible for some kinds of writing and not needed in others.\n\n**Check.** Notice how the advice varies with genre, publication, or audience (report vs. story, magazine vs. academic paper)—that marks a **choice of style**.",
+          "这条建议取决于写作任务和读者：在某些文体中合理，在另一些文体中则不必。\n\n**检验。** 注意这条建议会随文体、刊物或读者而变（如报告与故事、杂志与论文之别）——这正是**风格选择**。",
           "This advice does not depend on the task: it is either always right or not a rule at all.",
           "这条建议并不取决于写作任务：它要么总是对的，要么根本不是规则。",
         ),
@@ -976,8 +990,8 @@ ${ruleLines}
       "acceptable-or-an-error",
       ["Acceptable or an Error?", "可以接受还是错误？"],
       [
-        "Judge a sentence by the real rules, not the myths. *She decided to quickly leave* splits an infinitive, but it is **acceptable**. *Who did you go with?* ends with a preposition and is **acceptable**. *Each of the boys have a ticket* breaks the rule of agreement and is an **error**. A sentence can also be correct but **too informal** for formal writing: *The results were kind of awesome.*",
-        "用真正的规则而不是误区来判断句子。*She decided to quickly leave* 分裂了不定式，但**可以接受**。*Who did you go with?* 以介词结尾，也**可以接受**。*Each of the boys have a ticket* 违反了主谓一致规则，是**错误**。一个句子也可能是对的，但对正式写作来说**太随意**：*The results were kind of awesome.*",
+        "Judge a sentence by the real rules, not the myths. *She decided to quickly leave* splits an infinitive, but it is **acceptable**. *Who did you go with?* ends with a preposition and is **acceptable**. *Each of the boys have a ticket* breaks the rule of agreement and is an **error**. A sentence can also be correct but **too informal** for formal writing: *The results were kind of awesome.*\n\n> **Watch out.** Distinguish **an error** (broken grammar such as subject-verb disagreement, comma splice, or dangling modifier) from **too informal** (grammatically sound English marred by slang like *super*, *sketchy*, or *no cap*).",
+        "用真正的规则而不是误区来判断句子。*She decided to quickly leave* 分裂了不定式，但**可以接受**。*Who did you go with?* 以介词结尾，也**可以接受**。*Each of the boys have a ticket* 违反了主谓一致规则，是**错误**。一个句子也可能是对的，但对正式写作来说**太随意**：*The results were kind of awesome.*\n\n> **注意。** 分清**错误**（真正违反语法，如主谓不一致、逗号粘连或悬垂修饰）与**太随意**（语法没问题，但夹杂了 *super*、*sketchy* 等口语俚语）。",
       ],
       [
         "In a formal essay, is this sentence acceptable, an error, or too informal?",
@@ -1019,22 +1033,22 @@ ${acceptableLines}
       {
         acceptable: L(
           "可以接受",
-          "The sentence breaks only a myth, such as splitting an infinitive or ending with a preposition, or none at all, so it is acceptable in formal writing.",
-          "这个句子只违反了某个误区（如分裂不定式或以介词结尾），或者什么都没违反，所以在正式写作中可以接受。",
+          "The sentence breaks only a myth, such as splitting an infinitive or ending with a preposition, or none at all, so it is acceptable in formal writing.\n\n**Check.** Check grammar and tone separately: agreement, clauses, and pronouns are all sound, and there is no slang—only an old myth at most.",
+          "这个句子只违反了某个误区（如分裂不定式或以介词结尾），或者什么都没违反，所以在正式写作中可以接受。\n\n**检验。** 分别检查语法和语体：主谓一致、分句和代词都没有毛病，也没有口语俚语，至多只是打破了旧误区。",
           "The sentence breaks a real rule or is too informal, so it is not acceptable as it stands.",
           "这个句子违反了真正的规则或太随意，所以照原样是不能接受的。",
         ),
         "an error": L(
           "错误",
-          "The sentence breaks a real rule of standard English, such as agreement, pronoun case or the joining of clauses.",
-          "这个句子违反了标准英语的真正规则，如主谓一致、代词的格或分句的连接。",
+          "The sentence breaks a real rule of standard English, such as agreement, pronoun case or the joining of clauses.\n\n**Check.** Pinpoint the broken structural rule (such as *Each ... have*, *Neither ... were*, a comma splice, or a dangling modifier): fixing it requires a grammar repair, not just a tone change.",
+          "这个句子违反了标准英语的真正规则，如主谓一致、代词的格或分句的连接。\n\n**检验。** 找出被违反的结构规则（如 *Each ... have*、逗号粘连或悬垂修饰）：这需要修改语法，而不只是换个正式词。",
           "The sentence breaks no real rule of standard English.",
           "这个句子没有违反标准英语的真正规则。",
         ),
         "too informal": L(
           "太随意",
-          "The grammar is fine, but slang or casual words such as *kind of*, *super* or *a bunch of* do not suit a formal essay.",
-          "语法没有问题，但 *kind of*、*super*、*a bunch of* 这样的俚语或随意的词不适合正式论文。",
+          "The grammar is fine, but slang or casual words such as *kind of*, *super* or *a bunch of* do not suit a formal essay.\n\n**Check.** Swap out the casual slang phrase for a formal adjective or noun: the sentence structure itself is already grammatical, confirming the issue is register.",
+          "语法没有问题，但 *kind of*、*super*、*a bunch of* 这样的俚语或随意的词不适合正式论文。\n\n**检验。** 把句中的口语俚语换成正式词：句子结构本身语法无误，说明问题出在语体太随意。",
           "The sentence uses no slang or casual words that would be out of place in a formal essay.",
           "这个句子没有用在正式论文中不合适的俚语或随意的词。",
         ),
@@ -1050,14 +1064,18 @@ const confused5 = topic("grammar", {
     "Pairs such as allude and elude, credible and credulous, or disinterested and uninterested look or sound alike but mean different things.",
     "allude 和 elude、credible 和 credulous、disinterested 和 uninterested 这样的词形或读音相近，意思却不同。",
   ],
+  intro: [
+    "Calling a judge *uninterested* insults their attention, whereas calling them *disinterested* praises their fairness. Ten high-school look-alike pairs—like *allude/elude*, *appraise/apprise*, and *historic/historical*—carry completely different meanings behind nearly identical spellings.",
+    "说一位法官 *uninterested* 是嫌他心不在焉，说他 *disinterested* 则是称赞他公正无私。十组高中高频形近词（如 *allude/elude*、*appraise/apprise*、*historic/historical*）拼写只差毫厘，含义却大相径庭。",
+  ],
   after: ["commonly-confused-words-4"],
   points: [
     choose(
       "the-word-that-fits",
       ["The Word That Fits", "合适的词"],
       [
-        "Ten more pairs that careful writers keep apart. To **allude** is to mention indirectly; to **elude** is to escape. To **appraise** is to judge the value of; to **apprise** is to inform. To **cite** is to quote; a **site** is a place; **sight** is seeing. **Credible** means believable; **credulous** means too ready to believe. **Disinterested** means fair, with nothing to gain; **uninterested** means bored. **Historic** means important in history; **historical** means having to do with the past. **Ingenious** means clever; **ingenuous** means innocent and trusting. **Loath** (adjective) means unwilling; to **loathe** (verb) is to hate. **Perspective** is a point of view; **prospective** means likely to be. **Respectfully** means with respect; **respectively** means in the order given.",
-        "又有十对需要认真区分的词。**allude** 是暗指，**elude** 是逃避。**appraise** 是估价，**apprise** 是通知。**cite** 是引用，**site** 是地点，**sight** 是视力或景象。**credible** 意为可信的，**credulous** 意为轻信的。**disinterested** 意为公正无私的，**uninterested** 意为不感兴趣的。**historic** 意为有历史意义的，**historical** 意为与过去有关的。**ingenious** 意为巧妙的，**ingenuous** 意为天真坦率的。**loath**（形容词）意为不情愿的，**loathe**（动词）意为憎恨。**perspective** 是观点，**prospective** 意为可能的、未来的。**respectfully** 意为恭敬地，**respectively** 意为分别地（按所列顺序）。",
+        "Ten more pairs that careful writers keep apart. To **allude** is to mention indirectly; to **elude** is to escape. To **appraise** is to judge the value of; to **apprise** is to inform. To **cite** is to quote; a **site** is a place; **sight** is seeing. **Credible** means believable; **credulous** means too ready to believe. **Disinterested** means fair, with nothing to gain; **uninterested** means bored. **Historic** means important in history; **historical** means having to do with the past. **Ingenious** means clever; **ingenuous** means innocent and trusting. **Loath** (adjective) means unwilling; to **loathe** (verb) is to hate. **Perspective** is a point of view; **prospective** means likely to be. **Respectfully** means with respect; **respectively** means in the order given.\n\n> **Watch out.** Check part of speech as well as meaning: *loath* is an adjective (*loath to leave*), whereas *loathe* is a verb (*loathe getting wet*); *cite* is a verb, whereas *site* and *sight* are nouns.",
+        "又有十对需要认真区分的词。**allude** 是暗指，**elude** 是逃避。**appraise** 是估价，**apprise** 是通知。**cite** 是引用，**site** 是地点，**sight** 是视力或景象。**credible** 意为可信的，**credulous** 意为轻信的。**disinterested** 意为公正无私的，**uninterested** 意为不感兴趣的。**historic** 意为有历史意义的，**historical** 意为与过去有关的。**ingenious** 意为巧妙的，**ingenuous** 意为天真坦率的。**loath**（形容词）意为不情愿的，**loathe**（动词）意为憎恨。**perspective** 是观点，**prospective** 意为可能的、未来的。**respectfully** 意为恭敬地，**respectively** 意为分别地（按所列顺序）。\n\n> **注意。** 既看词义也看词性：*loath* 是形容词（*loath to leave*），*loathe* 是动词（*loathe getting wet*）；*cite* 是动词，*site* 和 *sight* 是名词。",
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
       `
@@ -1093,11 +1111,14 @@ ${fitWordLines}\n${fitWordMore}
         The students stood ___ when the principal entered.|respectfully|respectively|respectably
         The red and blue lines show sales in May and June, ___.|respectively|respectfully|respective
       `,
-      (right) => [`**${right}** is the word with the meaning this sentence needs.`, `**${right}** 才是这个句子需要的意思。`],
+      (right) => [
+        `**${right}** is the word with the meaning this sentence needs.\n\n**Check.** Replace the blank with the plain-English meaning of **${right}** and check the part of speech: both sense and grammar lock into the sentence.`,
+        `**${right}** 才是这个句子需要的意思。\n\n**检验。** 把 **${right}** 的释义代回空格并核对词性：词义和语法都与全句完全契合。`,
+      ],
       [
         [
-          "*{wrong}* looks or sounds like **{right}**, but it means something else, and that meaning does not fit here.",
-          "*{wrong}* 看起来或听起来像 **{right}**，但意思不同，那个意思在这里不合适。",
+          "*{wrong}* looks or sounds like its partner word, but it carries the other meaning, which does not fit this sentence.",
+          "*{wrong}* 与它的形近词外观或读音相似，但表达的是另一层意思，不适合这个句子。",
         ],
         [
           "*{wrong}* is a different word, or a different form, that does not give the meaning the sentence needs.",
@@ -1109,8 +1130,8 @@ ${fitWordLines}\n${fitWordMore}
       "the-word-for-the-meaning",
       ["The Word for the Meaning", "符合释义的词"],
       [
-        "Learn each pair by a clue. *Allude* and *mention* both have to do with speech; *elude* and *escape* both begin with *e*. *Apprise* has the *s* of *say*. A *credulous* person is full of belief; a *credible* story is able to be believed. A *disinterested* judge has no *interest* (stake) in the result. *Respectively* keeps things in their *respective* places.",
-        "用线索记住每一对词。*allude* 与 *mention* 都和说话有关；*elude* 与 *escape* 都以 *e* 开头。*apprise* 里有 *say*（告诉）的意思。*credulous* 的人充满了相信；*credible* 的故事能够被相信。*disinterested* 的法官与结果没有 *interest*（利害关系）。*respectively* 让事物各归其位。",
+        "Learn each pair by a clue. *Allude* and *mention* both have to do with speech; *elude* and *escape* both begin with *e*. *Apprise* has the *s* of *say*. A *credulous* person is full of belief; a *credible* story is able to be believed. A *disinterested* judge has no *interest* (stake) in the result. *Respectively* keeps things in their *respective* places.\n\n> **Watch out.** Do not mix up **credible** (*-ible* = able to be believed, usually a story or source) with **credulous** (*-ous* = full of belief, always a person), or **historic** (momentous) with **historical** (from the past).",
+        "用线索记住每一对词。*allude* 与 *mention* 都和说话有关；*elude* 与 *escape* 都以 *e* 开头。*apprise* 里有 *say*（告诉）的意思。*credulous* 的人充满了相信；*credible* 的故事能够被相信。*disinterested* 的法官与结果没有 *interest*（利害关系）。*respectively* 让事物各归其位。\n\n> **注意。** 别混淆 **credible**（*-ible* = 可信的，常形容故事或来源）与 **credulous**（*-ous* = 轻信的，形容人），也别混淆 **historic**（有历史意义的）与 **historical**（与历史有关的）。",
       ],
       ["Which word has this meaning?", "哪个词有这个意思？"],
       `
@@ -1147,13 +1168,13 @@ ${meaningLines}
         a novel set in the past is this kind of fiction|historical|historic|history
       `,
       (right) => [
-        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.`,
-        `**${right}** 有这个意思；其他选项是形似的词，意思不同。`,
+        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.\n\n**Check.** Use the word-part or memory clue inside **${right}** (prefix, suffix, or anchor word) to confirm it maps directly to the given definition.`,
+        `**${right}** 有这个意思；其他选项是形似的词，意思不同。\n\n**检验。** 借助 **${right}** 里的词缀或记忆线索确认：它正对应题干给出的释义。`,
       ],
       [
         [
-          "*{wrong}* looks or sounds like **{right}**, but it has a different meaning.",
-          "*{wrong}* 看起来或听起来像 **{right}**，但意思不同。",
+          "*{wrong}* looks or sounds like its partner word, but it has the other meaning.",
+          "*{wrong}* 与它的形近词外观或读音相似，但意思是另一回事。",
         ],
         ["*{wrong}* is another word or form; it does not have this meaning.", "*{wrong}* 是另一个词或词形，没有这个意思。"],
       ],
@@ -1168,14 +1189,18 @@ const spelling = topic("grammar", {
     "Thirty words that even good writers misspell, such as accommodate, conscientious, definitely and rhythm, with ways to remember them.",
     "连好的作者也常拼错的三十个词，如 accommodate、conscientious、definitely 和 rhythm，以及记住它们的方法。",
   ],
+  intro: [
+    "Writing *definately* or *accomodate* trips up even seasoned writers because English speech blurs unstressed vowels and hides doubled consonants. Spotting the exact letter patterns turns tricky words into automatic habits.",
+    "写错 *definitely* 或 *accommodate* 连熟练写作者也常中招，因为英语口语会弱化非重读元音、掩盖双写辅音。摸清每个词的拼写陷阱，就能把易错词变成肌肉记忆。",
+  ],
   after: ["spelling-words-with-suffixes", "spelling-words-with-prefixes"],
   points: [
     choose(
       "the-correct-spelling",
       ["The Correct Spelling", "正确的拼写"],
       [
-        "Some words trip up even strong writers because their spelling hides a doubled letter, a silent letter or a vowel that is not pronounced clearly. Memory tricks help. *Accommodate* has room for two *c*'s and two *m*'s. *Definitely* has *finite* in it. *Separate* has *a rat* in it. *Rhythm* has two *h*'s and no vowels but *y*. *Conscience* is *con* + *science*. *Necessary* has one *collar* (c) and two *sleeves* (s).",
-        "有些词连写作好的人也会拼错，因为它们的拼写里藏着双写字母、不发音的字母或读得不清楚的元音。记忆窍门会有帮助。*accommodate* 有地方容纳两个 *c* 和两个 *m*。*definitely* 里有 *finite*。*separate* 里有 *a rat*。*rhythm* 有两个 *h*，除了 *y* 没有别的元音。*conscience* 是 *con* + *science*。*necessary* 有一个“领子”（c）和两只“袖子”（s）。",
+        "Some words trip up even strong writers because their spelling hides a doubled letter, a silent letter or a vowel that is not pronounced clearly. Memory tricks help. *Accommodate* has room for two *c*'s and two *m*'s. *Definitely* has *finite* in it. *Separate* has *a rat* in it. *Rhythm* has two *h*'s and no vowels but *y*. *Conscience* is *con* + *science*. *Necessary* has one *collar* (c) and two *sleeves* (s).\n\n> **Watch out.** Do not spell by ear on unstressed middle syllables—check the anchor pattern inside the word (*finite* in *definitely*, two *c*'s and two *m*'s in *accommodate*, *ar* in *separate*).",
+        "有些词连写作好的人也会拼错，因为它们的拼写里藏着双写字母、不发音的字母或读得不清楚的元音。记忆窍门会有帮助。*accommodate* 有地方容纳两个 *c* 和两个 *m*。*definitely* 里有 *finite*。*separate* 里有 *a rat*。*rhythm* 有两个 *h*，除了 *y* 没有别的元音。*conscience* 是 *con* + *science*。*necessary* 有一个“领子”（c）和两只“袖子”（s）。\n\n> **注意。** 非重读的中间音节切忌只凭听觉拼写——检查词里的记忆锚点（如 *definitely* 里的 *finite*、*accommodate* 里的双 *c* 双 *m*、*separate* 里的 *ar*）。",
       ],
       ["Which spelling is correct?", "哪个拼写是正确的？"],
       `
@@ -1212,8 +1237,8 @@ ${spellingLines}
         They waited in the ___ for the doctor.|corridor|corridore|coridor
       `,
       (right) => [
-        `**${right}** is the correct spelling; the other choices drop, double or swap a letter.`,
-        `**${right}** 是正确的拼写；其他选项漏写、多写或调换了字母。`,
+        `**${right}** is the correct spelling; the other choices drop, double or swap a letter.\n\n**Check.** Scan **${right}** letter by letter—checking every doubled consonant, silent letter, and unstressed vowel—to verify none is missing or swapped.`,
+        `**${right}** 是正确的拼写；其他选项漏写、多写或调换了字母。\n\n**检验。** 逐字母核对 **${right}** 的双写辅音、不发音字母和弱读元音：确认没有漏写、多写或颠倒。`,
       ],
       [
         [
@@ -1221,8 +1246,8 @@ ${spellingLines}
           "*{wrong}* 漏写或错放了这个词需要的字母，这是拼这个词时常见的错误。",
         ],
         [
-          "*{wrong}* writes a sound with the wrong letters; the correct spelling is **{right}**.",
-          "*{wrong}* 用错了表示某个音的字母；正确的拼写是 **{right}**。",
+          "*{wrong}* writes a sound with the wrong letters; check the doubled consonants and unstressed vowels carefully.",
+          "*{wrong}* 用错了表示某个音的字母；仔细核对双写辅音和弱读元音。",
         ],
       ],
     ),
@@ -1230,8 +1255,8 @@ ${spellingLines}
       "find-the-misspelled-word",
       ["Find the Misspelled Word", "找出拼错的词"],
       [
-        "When you proofread, slow down on the words you know are tricky. Read each word as letters, not as a sound. Look for doubled letters (*accommodate*, *embarrass*, *occurred*), letters that are not pronounced (*government*, *February*, *Wednesday*), and vowels that sound alike (*separate*, *definite*, *independent*). Spell-checkers miss words that are real but wrong, so look closely at every one.",
-        "校对时，遇到你知道容易出错的词要放慢速度。把每个词当作字母来读，而不是当作声音。注意双写字母（*accommodate*、*embarrass*、*occurred*）、不发音的字母（*government*、*February*、*Wednesday*）和读音相近的元音（*separate*、*definite*、*independent*）。拼写检查器发现不了拼成了另一个真实单词的错误，所以每个词都要仔细看。",
+        "When you proofread, slow down on the words you know are tricky. Read each word as letters, not as a sound. Look for doubled letters (*accommodate*, *embarrass*, *occurred*), letters that are not pronounced (*government*, *February*, *Wednesday*), and vowels that sound alike (*separate*, *definite*, *independent*). Spell-checkers miss words that are real but wrong, so look closely at every one.\n\n> **Watch out.** Do not skim the sentence for meaning—read each candidate word slowly as a string of letters so your eye catches a missing *n* (*goverment*), missing *r* (*Febuary*), or wrong vowel (*independant*).",
+        "校对时，遇到你知道容易出错的词要放慢速度。把每个词当作字母来读，而不是当作声音。注意双写字母（*accommodate*、*embarrass*、*occurred*）、不发音的字母（*government*、*February*、*Wednesday*）和读音相近的元音（*separate*、*definite*、*independent*）。拼写检查器发现不了拼成了另一个真实单词的错误，所以每个词都要仔细看。\n\n> **注意。** 校对时别只顺着句意扫读——把每个候选词拆成字母慢看，才能揪出漏掉的 *n*（*goverment*）、漏掉的 *r*（*Febuary*）或写错的元音（*independant*）。",
       ],
       ["Which word in the sentence is misspelled?", "句子中哪个词拼错了？"],
       `
@@ -1268,12 +1293,18 @@ ${misspelledLines}
         The tired athelete crossed the finish line.|athelete|crossed|finish
       `,
       (right) => [
-        `**${right}** is misspelled; check the dictionary spelling of the word.`,
-        `**${right}** 拼错了；查一查这个词在词典中的拼写。`,
+        `**${right}** is misspelled; check the dictionary spelling of the word.\n\n**Check.** Inspect the letters of **${right}** one by one (watching for dropped silent letters, wrong vowel endings, or single vs. double consonants): the slip stands out once you read it as letters rather than sounds.`,
+        `**${right}** 拼错了；查一查这个词在词典中的拼写。\n\n**检验。** 逐字母细看 **${right}**（留意不发音字母、弱读元音和双写辅音）：按字母而不是按读音看，拼写破绽立刻显现。`,
       ],
       [
-        ["*{wrong}* is spelled correctly; the misspelled word is **{right}**.", "*{wrong}* 拼写正确；拼错的词是 **{right}**。"],
-        ["*{wrong}* is spelled correctly too; look again at **{right}**.", "*{wrong}* 拼写也正确；再看看 **{right}**。"],
+        [
+          "*{wrong}* is spelled correctly; check the other words in the sentence letter by letter.",
+          "*{wrong}* 拼写正确；逐字母检查句中其他词。",
+        ],
+        [
+          "*{wrong}* is standard dictionary spelling too; look closely for a dropped, doubled, or swapped letter elsewhere.",
+          "*{wrong}* 也是词典标准拼写；仔细看看句中别处是否漏写、多写或写错了字母。",
+        ],
       ],
     ),
   ],

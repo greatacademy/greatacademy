@@ -442,24 +442,24 @@ const parallelLabels: Readonly<Record<string, Label>> = {
   parallel: {
     zh: "平行",
     why: [
-      "Every item in the series has the same form, all gerunds or all infinitives, so the sentence is balanced.",
-      "并列的各项形式相同，都是动名词或都是不定式，所以句子是平衡的。",
+      "Every item in the series has the same form, all gerunds or all infinitives, so the sentence is balanced.\n\n**Check.** Line up the first word of each item in the list: every slot matches (*-ing / -ing / -ing* or *to / to / to*), with no stray clause.",
+      "并列的各项形式相同，都是动名词或都是不定式，所以句子是平衡的。\n\n**检验。** 把并列各项的开头词排成一列：每一项形式完全一致（全为 *-ing* 或全为不定式），没有混入完整从句。",
     ],
     not: ["The items of this series do not all share one form.", "这组并列项的形式并不都相同。"],
   },
   "mixes gerunds and infinitives": {
     zh: "混用了动名词和不定式",
     why: [
-      "Some items end in *-ing* and others begin with *to*, so the series breaks its pattern.",
-      "有些项以 *-ing* 结尾，有些以 *to* 开头，所以并列打破了自己的格式。",
+      "Some items end in *-ing* and others begin with *to*, so the series breaks its pattern.\n\n**Check.** Compare the opening of each item in the list: at least one uses *-ing* while another switches to *to + verb*.",
+      "有些项以 *-ing* 结尾，有些以 *to* 开头，所以并列打破了自己的格式。\n\n**检验。** 逐项对照开头词：既有 *-ing* 形式，又夹杂了 *to + 动词*，破坏了平行结构。",
     ],
     not: ["The series does not mix *-ing* forms with *to* forms.", "这组并列项没有混用 *-ing* 形式和 *to* 形式。"],
   },
   "mixes a verbal with a clause": {
     zh: "混用了非谓语和从句",
     why: [
-      "The series begins with verbals but ends with a whole clause that has its own subject, such as *she studied* or *that they rest*.",
-      "并列项以非谓语形式开头，最后却是一个有自己主语的完整从句，如 *she studied* 或 *that they rest*。",
+      "The series begins with verbals but ends with a whole clause that has its own subject, such as *she studied* or *that they rest*.\n\n**Check.** Look at the final item after *and*: it introduces its own subject and verb (or *that + subject + verb*) instead of staying a verbal.",
+      "并列项以非谓语形式开头，最后却是一个有自己主语的完整从句，如 *she studied* 或 *that they rest*。\n\n**检验。** 看 *and* 后面的最后一项：它突然带上了自己的主语和动词（或 *that* 从句），而不是与前面一致的非谓语形式。",
     ],
     not: ["No item of the series is a whole clause with its own subject.", "并列项中没有带自己主语的完整从句。"],
   },
@@ -472,14 +472,18 @@ const parallelVerbals = topic("grammar", {
     "Verbals in a series share one form: walking, talking and laughing, or to walk, to talk and to laugh.",
     "并列的非谓语形式要保持一致：walking, talking and laughing，或 to walk, to talk and to laugh。",
   ],
+  intro: [
+    "A list like *He spent the morning stretching, jogging, and to swim* trips the reader on the final item. Keeping **parallel verbals** means lining up every item in the same grammatical groove — all gerunds or all infinitives.",
+    "像 *He spent the morning stretching, jogging, and to swim* 这样的句子会在最后一项把读者绊倒。保持**非谓语平行**就是让并列各项走同一条语法轨道——全用动名词，或全用不定式。",
+  ],
   after: ["parallel-structure", "identifying-verbals"],
   points: [
     choose(
       "matching-the-form",
       ["Matching the Form", "形式一致"],
       [
-        "When verbals stand in a series, give them all the same form. A list that starts with gerunds keeps to gerunds: *The workers wanted **resting**, **eating** and **sleeping**...* is clumsy, but *They spent Sunday **resting**, **eating** and **sleeping*** is balanced. A list that starts with infinitives keeps to infinitives: *They hoped **to rest**, **to eat** and **to sleep**.* After the first *to*, the others may drop it: *to rest, eat and sleep*.",
-        "非谓语形式并列时，要让它们形式相同。以动名词开头的并列要一直用动名词：*They spent Sunday **resting**, **eating** and **sleeping**.* 以不定式开头的并列要一直用不定式：*They hoped **to rest**, **to eat** and **to sleep**.* 第一个 *to* 之后，其余的可以省去 *to*：*to rest, eat and sleep*。",
+        "When verbals stand in a series, give them all the same form. A list that starts with gerunds keeps to gerunds: *The workers wanted **resting**, **eating** and **sleeping**...* is clumsy, but *They spent Sunday **resting**, **eating** and **sleeping*** is balanced. A list that starts with infinitives keeps to infinitives: *They hoped **to rest**, **to eat** and **to sleep**.* After the first *to*, the others may drop it: *to rest, eat and sleep*.\n\n> **Watch out.** Check the first two items in the series before filling the blank—do not switch from *-ing* to *to + verb*, or slip into a full clause with a subject (*they swept*).",
+        "非谓语形式并列时，要让它们形式相同。以动名词开头的并列要一直用动名词：*They spent Sunday **resting**, **eating** and **sleeping**.* 以不定式开头的并列要一直用不定式：*They hoped **to rest**, **to eat** and **to sleep**.* 第一个 *to* 之后，其余的可以省去 *to*：*to rest, eat and sleep*。\n\n> **注意。** 填空前先看前两项的形式——不要从 *-ing* 跳到 *to + 动词*，也不要滑成带主语的完整分句（如 *they swept*）。",
       ],
       ["Which words complete the series in the same form?", "哪个选项能让并列项形式一致？"],
       `
@@ -516,8 +520,8 @@ ${formLines}
         They decided to leave the farm, to take the train and ___.|to find a job|finding a job|they found a job
       `,
       (right) => [
-        `**${right}** has the same form as the other items, so the series stays parallel.`,
-        `**${right}** 与其他并列项形式相同，所以并列保持平行。`,
+        `**${right}** has the same form as the other items, so the series stays parallel.\n\n**Check.** Read the three items in a row (*item 1, item 2, and ${right}*): every slot starts with the exact same verbal form.`,
+        `**${right}** 与其他并列项形式相同，所以并列保持平行。\n\n**检验。** 把三个并列项连着读一遍：每一项都保持完全相同的非谓语形式。`,
       ],
       [
         [
@@ -534,8 +538,8 @@ ${formLines}
       "is-the-series-parallel",
       ["Is the Series Parallel?", "并列是否平行？"],
       [
-        "To check a series, find its items and look at the first word of each. *-ing*, *-ing*, *-ing* is parallel; *to*, *to*, *to* is parallel. A series that mixes them (*to rest, eating and sleeping*) is not, and neither is one whose last item becomes a clause with its own subject (*resting, eating and they slept*).",
-        "检查并列时，找出各项，看每项的第一个词。*-ing*、*-ing*、*-ing* 是平行的；*to*、*to*、*to* 也是平行的。混用两者的并列（*to rest, eating and sleeping*）不平行，最后一项变成带自己主语的从句的并列（*resting, eating and they slept*）也不平行。",
+        "To check a series, find its items and look at the first word of each. *-ing*, *-ing*, *-ing* is parallel; *to*, *to*, *to* is parallel. A series that mixes them (*to rest, eating and sleeping*) is not, and neither is one whose last item becomes a clause with its own subject (*resting, eating and they slept*).\n\n> **Watch out.** Look closely at the last item after *and*—that is where a hidden shift to a different verbal or a full clause usually sneaks in.",
+        "检查并列时，找出各项，看每项的第一个词。*-ing*、*-ing*、*-ing* 是平行的；*to*、*to*、*to* 也是平行的。混用两者的并列（*to rest, eating and sleeping*）不平行，最后一项变成带自己主语的从句的并列（*resting, eating and they slept*）也不平行。\n\n> **注意。** 重点盯紧 *and* 后面的最后一项——混用另一种非谓语或滑成完整分句的毛病往往藏在那里。",
       ],
       ["Is the series in this sentence parallel?", "这个句子里的并列平行吗？"],
       `
@@ -580,24 +584,24 @@ const hyphenLabels: Readonly<Record<string, Label>> = {
   "hyphen: it comes before the noun": {
     zh: "加连字符：修饰语在名词前",
     why: [
-      "The words work together as one modifier before the noun, so a hyphen joins them: *a well-known scientist*.",
-      "这几个词在名词前共同作一个修饰语，所以用连字符连起来：*a well-known scientist*。",
+      "The words work together as one modifier before the noun, so a hyphen joins them: *a well-known scientist*.\n\n**Check.** Confirm both conditions: the phrase sits directly before the noun it describes, and its first word does not end in *-ly*.",
+      "这几个词在名词前共同作一个修饰语，所以用连字符连起来：*a well-known scientist*。\n\n**检验。** 核对两条：短语紧挨在被修饰的名词前面，且第一个词不是以 *-ly* 结尾的副词。",
     ],
     not: ["The modifier here does not stand as one unit before a noun.", "这里的修饰语没有作为一个整体放在名词前。"],
   },
   "no hyphen: it comes after the noun": {
     zh: "不加连字符：修饰语在名词后",
     why: [
-      "The modifier comes after the noun, usually after a verb such as *is*, so its words stand apart: *The scientist is well known.*",
-      "修饰语在名词后面，通常在 *is* 这样的动词后，所以各个词分开写：*The scientist is well known.*",
+      "The modifier comes after the noun, usually after a verb such as *is*, so its words stand apart: *The scientist is well known.*\n\n**Check.** Look for the noun it describes: the noun appears earlier in the sentence, and the italicized phrase follows a linking verb.",
+      "修饰语在名词后面，通常在 *is* 这样的动词后，所以各个词分开写：*The scientist is well known.*\n\n**检验。** 找被修饰的名词：名词在前面，斜体短语跟在系动词之后。",
     ],
     not: ["The modifier here comes before the noun, not after it.", "这里的修饰语在名词前，而不是在名词后。"],
   },
   "no hyphen: the first word ends in -ly": {
     zh: "不加连字符：第一个词以 -ly 结尾",
     why: [
-      "The first word is an adverb ending in *-ly*, which clearly modifies the next word, so no hyphen is needed: *a highly trained crew*.",
-      "第一个词是以 *-ly* 结尾的副词，它显然修饰后一个词，所以不需要连字符：*a highly trained crew*。",
+      "The first word is an adverb ending in *-ly*, which clearly modifies the next word, so no hyphen is needed: *a highly trained crew*.\n\n**Check.** Look at the ending of the first italicized word: it ends in *-ly*, which already signals an adverb modifying the word right after it.",
+      "第一个词是以 *-ly* 结尾的副词，它显然修饰后一个词，所以不需要连字符：*a highly trained crew*。\n\n**检验。** 看斜体部分第一个词的词尾：它以 *-ly* 结尾，本身就表明它修饰紧随其后的词，不需要连字符。",
     ],
     not: ["The first word of the modifier does not end in *-ly*.", "修饰语的第一个词不是以 *-ly* 结尾的。"],
   },
@@ -610,14 +614,18 @@ const compoundModifiers = topic("grammar", {
     "Two or more words that act as one modifier before a noun are joined by hyphens: a well-known scientist, a five-year study.",
     "在名词前共同作一个修饰语的两个或多个词要用连字符连接：a well-known scientist、a five-year study。",
   ],
+  intro: [
+    "Without a hyphen, *a small town baker* could mean a tiny baker from town rather than a baker from a *small-town* shop. Hyphenating compound modifiers before a noun glues their words into one clear unit—except after *-ly* adverbs or when the modifier comes after the noun.",
+    "少了连字符，*a small town baker* 就可能被误读成“个子矮小的城镇面包师”，而不是“小镇上的面包师”。名词前的复合修饰语要用连字符连成整体，但 *-ly* 副词后和名词后的修饰语除外。",
+  ],
   after: ["hyphens"],
   points: [
     choose(
       "joining-the-modifier",
       ["Joining the Modifier", "连接修饰语"],
       [
-        "A **compound modifier** is two or more words that together describe a noun. Before the noun, join them with hyphens so the reader takes them as one idea: *a **well-known** scientist*, *a **five-year** study*, *a **slow-moving** glacier*. After the noun they stand apart: *The scientist is **well known**.* Never hyphenate an adverb ending in *-ly*: *a **highly trained** crew*. And the hyphen joins only the modifier, never the noun.",
-        "**复合修饰语**是共同描述一个名词的两个或多个词。在名词前，要用连字符把它们连起来，让读者把它们当作一个意思：*a **well-known** scientist*、*a **five-year** study*、*a **slow-moving** glacier*。在名词后则分开写：*The scientist is **well known**.* 以 *-ly* 结尾的副词永远不加连字符：*a **highly trained** crew*。连字符只连接修饰语，不连接名词。",
+        "A **compound modifier** is two or more words that together describe a noun. Before the noun, join them with hyphens so the reader takes them as one idea: *a **well-known** scientist*, *a **five-year** study*, *a **slow-moving** glacier*. After the noun they stand apart: *The scientist is **well known**.* Never hyphenate an adverb ending in *-ly*: *a **highly trained** crew*. And the hyphen joins only the modifier, never the noun.\n\n> **Watch out.** Never attach a hyphen to the noun itself (*well-known-scientist*), and never hyphenate after an *-ly* adverb (*highly-trained*) or after a linking verb (*was well-known*).",
+        "**复合修饰语**是共同描述一个名词的两个或多个词。在名词前，要用连字符把它们连起来，让读者把它们当作一个意思：*a **well-known** scientist*、*a **five-year** study*、*a **slow-moving** glacier*。在名词后则分开写：*The scientist is **well known**.* 以 *-ly* 结尾的副词永远不加连字符：*a **highly trained** crew*。连字符只连接修饰语，不连接名词。\n\n> **注意。** 绝不要把连字符一路连到名词上（如 *well-known-scientist*），也不要在 *-ly* 副词后或系动词后加连字符。",
       ],
       ["Which is hyphenated correctly?", "哪个选项的连字符用法正确？"],
       `
@@ -654,8 +662,8 @@ ${joinLines}
         The idea was ___.|hotly debated|hotly-debated|hotly-debated-ly
       `,
       (right) => [
-        `**${right}** is right: hyphens join a compound modifier before a noun, but not after the noun and not after an *-ly* word.`,
-        `**${right}** 是正确的：名词前的复合修饰语用连字符连接，在名词后或 *-ly* 词后则不用。`,
+        `**${right}** is right: hyphens join a compound modifier before a noun, but not after the noun and not after an *-ly* word.\n\n**Check.** Check position and ending: if the modifier sits before a noun and does not begin with an *-ly* adverb, join its parts—never attaching the noun itself.`,
+        `**${right}** 是正确的：名词前的复合修饰语用连字符连接，在名词后或 *-ly* 词后则不用。\n\n**检验。** 核对位置和词尾：如果修饰语在名词前且首词不是 *-ly* 副词，就用连字符连起修饰语本身，绝不连到名词上。`,
       ],
       [
         [
@@ -672,8 +680,8 @@ ${joinLines}
       "does-it-need-a-hyphen",
       ["Does It Need a Hyphen?", "需要连字符吗？"],
       [
-        "Ask two questions. Does the modifier come **before** the noun? If it comes after, as in *The study was long term*, no hyphen. Does its first word end in **-ly**? If so, as in *a newly found species*, no hyphen. Only a modifier before the noun whose first word is not an *-ly* adverb takes the hyphen: *a long-term study*.",
-        "问两个问题。修饰语在名词**前面**吗？如果在后面，如 *The study was long term*，就不加连字符。它的第一个词以 **-ly** 结尾吗？如果是，如 *a newly found species*，也不加连字符。只有在名词前、第一个词不是 *-ly* 副词的修饰语才加连字符：*a long-term study*。",
+        "Ask two questions. Does the modifier come **before** the noun? If it comes after, as in *The study was long term*, no hyphen. Does its first word end in **-ly**? If so, as in *a newly found species*, no hyphen. Only a modifier before the noun whose first word is not an *-ly* adverb takes the hyphen: *a long-term study*.\n\n> **Watch out.** Check the *-ly* test even when the phrase sits right before a noun (*a newly hatched turtle* still takes **no hyphen** because *newly* ends in *-ly*).",
+        "问两个问题。修饰语在名词**前面**吗？如果在后面，如 *The study was long term*，就不加连字符。它的第一个词以 **-ly** 结尾吗？如果是，如 *a newly found species*，也不加连字符。只有在名词前、第一个词不是 *-ly* 副词的修饰语才加连字符：*a long-term study*。\n\n> **注意。** 即使短语紧挨在名词前面，也要先查 *-ly*（如 *a newly hatched turtle* 因为 *newly* 以 *-ly* 结尾，仍然**不加连字符**）。",
       ],
       ["The hyphens have been taken out. Which rule applies to the words in italics?", "连字符已被去掉。斜体部分适用哪条规则？"],
       `
@@ -718,24 +726,24 @@ const whoeverLabels: Readonly<Record<string, Label>> = {
   "subject of its clause": {
     zh: "从句的主语",
     why: [
-      "The pronoun does the verb of its own clause (*whoever **knocks***, *who **lived***), so it takes the subject form *who* or *whoever*.",
-      "代词是它所在从句中动词的执行者（*whoever **knocks***、*who **lived***），所以用主格 *who* 或 *whoever*。",
+      "The pronoun does the verb of its own clause (*whoever **knocks***, *who **lived***), so it takes the subject form *who* or *whoever*.\n\n**Check.** Substitute *he/she* inside the clause: *he knocks* or *she lived* works smoothly, proving the pronoun is the clause's subject.",
+      "代词是它所在从句中动词的执行者（*whoever **knocks***、*who **lived***），所以用主格 *who* 或 *whoever*。\n\n**检验。** 在从句里换成 *he/she* 试读：主语位置完全通顺，证实它是从句的主语。",
     ],
     not: ["The pronoun is not the one doing the verb of its clause.", "这个代词不是它所在从句中动词的执行者。"],
   },
   "object of its clause": {
     zh: "从句的宾语",
     why: [
-      "Someone else does the verb of the clause, and the pronoun receives it (*whom **she** feared*), so it takes the object form *whom* or *whomever*.",
-      "从句的动词由别人执行，代词承受这个动作（*whom **she** feared*），所以用宾格 *whom* 或 *whomever*。",
+      "Someone else does the verb of the clause, and the pronoun receives it (*whom **she** feared*), so it takes the object form *whom* or *whomever*.\n\n**Check.** Reorder the clause with *him/her* (*she feared him*): another subject already performs the verb, so the pronoun is its object.",
+      "从句的动词由别人执行，代词承受这个动作（*whom **she** feared*），所以用宾格 *whom* 或 *whomever*。\n\n**检验。** 用 *him/her* 还原从句（如 *she feared him*）：从句已有别的主语，代词作动词宾语。",
     ],
     not: ["The pronoun is not the object of a verb in its clause.", "这个代词不是从句中动词的宾语。"],
   },
   "object of a preposition": {
     zh: "介词的宾语",
     why: [
-      "The pronoun comes right after a preposition such as *to*, *with* or *for* and belongs to it, so it takes the object form *whom* or *whomever*.",
-      "代词紧跟在 *to*、*with* 或 *for* 这样的介词后面并受它支配，所以用宾格 *whom* 或 *whomever*。",
+      "The pronoun comes right after a preposition such as *to*, *with* or *for* and belongs to it, so it takes the object form *whom* or *whomever*.\n\n**Check.** Spot the preposition printed right alongside *whom* (*to whom*, *with whom*, *for whom*): the pronoun completes that prepositional phrase directly.",
+      "代词紧跟在 *to*、*with* 或 *for* 这样的介词后面并受它支配，所以用宾格 *whom* 或 *whomever*。\n\n**检验。** 看 *whom* 紧前面的介词（如 *to whom*、*with whom*、*for whom*）：代词直接作这个介词的宾语。",
     ],
     not: [
       "The pronoun does not belong to a preposition; check whether the preposition's object is the whole clause instead.",
@@ -751,14 +759,18 @@ const whoever = topic("grammar", {
     "The job a pronoun does in its own clause decides its form: whoever as a subject, whomever as an object.",
     "代词在自己从句中的作用决定它的形式：作主语用 whoever，作宾语用 whomever。",
   ],
+  intro: [
+    "In *Hand the key to whoever arrives first*, the preposition *to* tempts writers into *whomever*—but inside its own clause, *whoever* is the subject of *arrives*. Always test the pronoun's job inside its own clause.",
+    "在 *Hand the key to whoever arrives first* 中，介词 *to* 容易让人误选 *whomever*，但在这个从句内部，*whoever* 是 *arrives* 的主语。选形式永远要看代词在自己从句中的成分。",
+  ],
   after: ["who-and-whom"],
   points: [
     choose(
       "the-right-form",
       ["The Right Form", "正确的形式"],
       [
-        "**Who** and **whoever** are subjects; **whom** and **whomever** are objects. *Whoever* and *whomever* mean *any person who* or *any person whom*, while *who* and *whom* point to a person already named. What decides the form is the job inside the pronoun's **own clause**, not the word before it: *Give the prize to **whoever** finishes first* uses *whoever*, because it is the subject of *finishes*, even though *to* comes before it.",
-        "**who** 和 **whoever** 作主语；**whom** 和 **whomever** 作宾语。*whoever* 和 *whomever* 意为“任何……的人”，而 *who* 和 *whom* 指已经提到的人。决定形式的是代词在**自己从句**中的作用，而不是它前面的词：*Give the prize to **whoever** finishes first* 用 *whoever*，因为它是 *finishes* 的主语，尽管前面有 *to*。",
+        "**Who** and **whoever** are subjects; **whom** and **whomever** are objects. *Whoever* and *whomever* mean *any person who* or *any person whom*, while *who* and *whom* point to a person already named. What decides the form is the job inside the pronoun's **own clause**, not the word before it: *Give the prize to **whoever** finishes first* uses *whoever*, because it is the subject of *finishes*, even though *to* comes before it.\n\n> **Watch out.** Do not let a preposition before the blank (*to*, *for*, *with*) trick you into *whomever*—bracket the entire clause after the preposition and test *he* (subject → *who/whoever*) vs. *him* (object → *whom/whomever*).",
+        "**who** 和 **whoever** 作主语；**whom** 和 **whomever** 作宾语。*whoever* 和 *whomever* 意为“任何……的人”，而 *who* 和 *whom* 指已经提到的人。决定形式的是代词在**自己从句**中的作用，而不是它前面的词：*Give the prize to **whoever** finishes first* 用 *whoever*，因为它是 *finishes* 的主语，尽管前面有 *to*。\n\n> **注意。** 不要被空格前的介词（*to*、*for*、*with*）骗去选 *whomever*——把介词后的整个从句括出来，用 *he*（主语用 *who/whoever*）和 *him*（宾语用 *whom/whomever*）测试。",
       ],
       ["Which pronoun fits the blank?", "空格里应该填哪个代词？"],
       `
@@ -795,8 +807,8 @@ ${rightForm}
         The girl ___ everyone blamed was innocent.|whom|who|whomever
       `,
       (right) => [
-        `**${right}** has the right form for its job in its own clause and the right meaning: a person named, or any person.`,
-        `**${right}** 在自己的从句中作用正确，意思也正确：指已提到的人，或指任何人。`,
+        `**${right}** has the right form for its job in its own clause and the right meaning: a person named, or any person.\n\n**Check.** Test the clause by itself with *he* or *him*: *he* matches *who/whoever* (subject), *him* matches *whom/whomever* (object), and *-ever* is used only when no specific person was named earlier.`,
+        `**${right}** 在自己的从句中作用正确，意思也正确：指已提到的人，或指任何人。\n\n**检验。** 把从句单独拿出来用 *he/him* 替换：能换 *he* 用 *who/whoever*（主语），能换 *him* 用 *whom/whomever*（宾语），且前面没指明具体人时才加 *-ever*。`,
       ],
       [
         [
@@ -813,8 +825,8 @@ ${rightForm}
       "the-job-in-the-clause",
       ["The Job in the Clause", "在从句中的作用"],
       [
-        "Find the clause that the pronoun begins and its verb. If the pronoun does the verb, it is the **subject of its clause** (*who*, *whoever*). If someone else in the clause does the verb to it, it is the **object of its clause** (*whom*, *whomever*). If it comes after a preposition and belongs to it alone, it is the **object of a preposition** (*whom*): *the friend **with whom** she traveled*.",
-        "找出代词引导的从句和从句的动词。如果代词执行这个动词，它是**从句的主语**（*who*、*whoever*）。如果从句中别的人对它执行动作，它是**从句的宾语**（*whom*、*whomever*）。如果它跟在介词后面并只受介词支配，它是**介词的宾语**（*whom*）：*the friend **with whom** she traveled*。",
+        "Find the clause that the pronoun begins and its verb. If the pronoun does the verb, it is the **subject of its clause** (*who*, *whoever*). If someone else in the clause does the verb to it, it is the **object of its clause** (*whom*, *whomever*). If it comes after a preposition and belongs to it alone, it is the **object of a preposition** (*whom*): *the friend **with whom** she traveled*.\n\n> **Watch out.** In *Give the key to whoever asks*, the preposition *to* takes the *whole clause* as its object, so *whoever* itself is still the **subject of its clause**, not the object of a preposition.",
+        "找出代词引导的从句和从句的动词。如果代词执行这个动词，它是**从句的主语**（*who*、*whoever*）。如果从句中别的人对它执行动作，它是**从句的宾语**（*whom*、*whomever*）。如果它跟在介词后面并只受介词支配，它是**介词的宾语**（*whom*）：*the friend **with whom** she traveled*。\n\n> **注意。** 在 *Give the key to whoever asks* 里，介词 *to* 的宾语是*整个从句*，而 *whoever* 本身仍然是**从句的主语**，不是介词的宾语。",
       ],
       ["What job does the pronoun in bold do?", "粗体的代词起什么作用？"],
       `
@@ -862,14 +874,18 @@ const inverted = topic("grammar", {
     "In poetry and drama the verb may come before the subject; find the subject to read the line and to make the verb agree.",
     "在诗歌和戏剧中，动词可能出现在主语前面；找出主语，才能读懂句子，并让动词与它一致。",
   ],
+  intro: [
+    "In *Behind the curtain stood two nervous actors*, the curtain is not standing—the actors are. **Inverted sentences** flip the verb ahead of the subject for rhythm or suspense, so finding the true subject after the verb unlocks both meaning and agreement.",
+    "在 *Behind the curtain stood two nervous actors* 中，站着的不是幕布，而是两位紧张的演员。**倒装句**为了节奏或悬念把动词提到主语前面，先在动词后面找到真正的主语，才能读懂意思并配对主谓一致。",
+  ],
   after: ["agreement-with-tricky-subjects"],
   points: [
     choose(
       "finding-the-subject",
       ["Finding the Subject", "找出主语"],
       [
-        "Most English sentences put the subject before the verb. **Inverted** sentences turn this around, often after a phrase of place or time: *Into the hall **burst the angry duke**.* Plays and poems invert words for rhythm and emphasis: *Sweet are the uses of adversity* means *The uses of adversity are sweet.* To read the line, ask who or what does the verb. The subject is usually the noun after the verb, not the noun in the opening phrase.",
-        "大多数英语句子把主语放在动词前面。**倒装句**把顺序颠倒过来，常常是在表示地点或时间的短语之后：*Into the hall **burst the angry duke**.* 戏剧和诗歌为了节奏和强调而倒装：*Sweet are the uses of adversity* 的意思是 *The uses of adversity are sweet.* 要读懂这一行，就问是谁或什么执行了这个动词。主语通常是动词后面的名词，而不是开头短语中的名词。",
+        "Most English sentences put the subject before the verb. **Inverted** sentences turn this around, often after a phrase of place or time: *Into the hall **burst the angry duke**.* Plays and poems invert words for rhythm and emphasis: *Sweet are the uses of adversity* means *The uses of adversity are sweet.* To read the line, ask who or what does the verb. The subject is usually the noun after the verb, not the noun in the opening phrase.\n\n> **Watch out.** Never pick a noun trapped inside a prepositional phrase at the start (*the hall*, *the stage*, *the hill*)—a noun after *in*, *on*, *into*, or *behind* cannot be the sentence's subject.",
+        "大多数英语句子把主语放在动词前面。**倒装句**把顺序颠倒过来，常常是在表示地点或时间的短语之后：*Into the hall **burst the angry duke**.* 戏剧和诗歌为了节奏和强调而倒装：*Sweet are the uses of adversity* 的意思是 *The uses of adversity are sweet.* 要读懂这一行，就问是谁或什么执行了这个动词。主语通常是动词后面的名词，而不是开头短语中的名词。\n\n> **注意。** 绝不要选句首介词短语里的名词（如 *the hall*、*the stage*、*the hill*）——跟在 *in*、*on*、*into*、*behind* 后面的名词不能作句子主语。",
       ],
       ["What is the subject of the sentence?", "这个句子的主语是什么？"],
       `
@@ -906,8 +922,8 @@ ${subjectLines}
         In the corner sat a silent friar.|a silent friar|the corner|sat a silent friar
       `,
       (right) => [
-        `The subject is **${right}**: it is what does the verb, though it comes after it. In usual order the line would begin with it.`,
-        `主语是 **${right}**：它执行动词的动作，尽管它在动词后面。按通常的语序，这一行会以它开头。`,
+        `The subject is **${right}**: it is what does the verb, though it comes after it. In usual order the line would begin with it.\n\n**Check.** Put **${right}** first in plain subject-verb order (*${upper(right)} + verb + ...*): the sentence reads naturally with the exact same meaning.`,
+        `主语是 **${right}**：它执行动词的动作，尽管它在动词后面。按通常的语序，这一行会以它开头。\n\n**检验。** 把 **${right}** 移到句首还原为“主语 + 动词”的正常语序：意思完全不变且读起来自然顺畅。`,
       ],
       [
         [
@@ -924,8 +940,8 @@ ${subjectLines}
       "agreeing-in-an-inverted-sentence",
       ["Agreement in an Inverted Sentence", "倒装句中的主谓一致"],
       [
-        "In an inverted sentence the verb still agrees with its subject, which comes after it. *On the stage **stand** three witches*: the subject is *witches*, so the verb is plural. *There **is** a letter*, but *There **are** two letters*. Do not let the noun in the opening phrase (*the stage*) decide the verb. Find the subject after the verb first, then choose.",
-        "在倒装句中，动词仍要与在它后面的主语一致。*On the stage **stand** three witches*：主语是 *witches*，所以动词用复数。*There **is** a letter*，但 *There **are** two letters*。不要让开头短语里的名词（*the stage*）决定动词。先找出动词后面的主语，再做选择。",
+        "In an inverted sentence the verb still agrees with its subject, which comes after it. *On the stage **stand** three witches*: the subject is *witches*, so the verb is plural. *There **is** a letter*, but *There **are** two letters*. Do not let the noun in the opening phrase (*the stage*) decide the verb. Find the subject after the verb first, then choose.\n\n> **Watch out.** Ignore *There*, *Here*, and any noun inside the opening phrase—flip the sentence so the noun after the blank comes first, then check whether it is singular or plural.",
+        "在倒装句中，动词仍要与在它后面的主语一致。*On the stage **stand** three witches*：主语是 *witches*，所以动词用复数。*There **is** a letter*，但 *There **are** two letters*。不要让开头短语里的名词（*the stage*）决定动词。先找出动词后面的主语，再做选择。\n\n> **注意。** 忽略 *There*、*Here* 以及句首介词短语里的名词——把空格后的主语挪到前面，再判断它是单数还是复数。",
       ],
       ["Which verb agrees with the subject?", "哪个动词与主语一致？"],
       `
@@ -962,8 +978,8 @@ ${agreeLines}
         Near the window ___ a lute.|rests|rest|resting
       `,
       (right) => [
-        `**${right}** agrees with the subject that follows the verb, not with the noun in the opening phrase.`,
-        `**${right}** 与动词后面的主语一致，而不是与开头短语中的名词一致。`,
+        `**${right}** agrees with the subject that follows the verb, not with the noun in the opening phrase.\n\n**Check.** Put the noun after the blank in front of **${right}**: a singular subject pairs with the singular verb, and a plural subject pairs with the plural verb.`,
+        `**${right}** 与动词后面的主语一致，而不是与开头短语中的名词一致。\n\n**检验。** 把空格后面的主语放到 **${right}** 前面试读：单数主语配单数动词，复数主语配复数动词，主谓完全一致。`,
       ],
       [
         [
@@ -983,91 +999,112 @@ const confusedLabels: Readonly<Record<string, Label>> = {
   elicit: {
     zh: "elicit（引出，诱出）",
     why: [
-      "*Elicit* means to draw out a response or information: *to elicit a reply*.",
-      "*elicit* 意为引出回应或信息：*to elicit a reply*。",
+      "*Elicit* means to draw out a response or information: *to elicit a reply*.\n\n**Check.** Replace the blank with *draw out*: it fits the verb slot, whereas *illicit* is an adjective meaning unlawful.",
+      "*elicit* 意为引出回应或信息：*to elicit a reply*。\n\n**检验。** 把空格换成“引出”：这里需要动词，而 *illicit* 是意为“非法的”形容词。",
     ],
     not: ["*Elicit* means to draw out a response, which does not fit here.", "*elicit* 意为引出回应，这里不合适。"],
   },
   illicit: {
     zh: "illicit（非法的）",
-    why: ["*Illicit* means not allowed by law or by custom: *illicit trade*.", "*illicit* 意为法律或习俗不允许的：*illicit trade*。"],
+    why: [
+      "*Illicit* means not allowed by law or by custom: *illicit trade*.\n\n**Check.** Spot the *ill-* start (like *illegal*) and the adjective slot before a noun: it describes something unlawful, not the verb *elicit*.",
+      "*illicit* 意为法律或习俗不允许的：*illicit trade*。\n\n**检验。** 看开头的 *ill-*（像 *illegal*）以及名词前的形容词位置：它形容违法的事物，而不是动词 *elicit*。",
+    ],
     not: ["*Illicit* means against the law, which does not fit here.", "*illicit* 意为违法的，这里不合适。"],
   },
   eminent: {
     zh: "eminent（杰出的）",
-    why: ["*Eminent* means famous and respected: *an eminent scientist*.", "*eminent* 意为著名而受尊敬的：*an eminent scientist*。"],
+    why: [
+      "*Eminent* means famous and respected: *an eminent scientist*.\n\n**Check.** Check what the word modifies: it praises a distinguished person, whereas *imminent* describes an event about to happen.",
+      "*eminent* 意为著名而受尊敬的：*an eminent scientist*。\n\n**检验。** 看它修饰的对象：这里赞誉的是一位杰出人物，而 *imminent* 形容即将发生的事件。",
+    ],
     not: ["*Eminent* means famous and respected, which does not fit here.", "*eminent* 意为杰出的，这里不合适。"],
   },
   imminent: {
     zh: "imminent（即将发生的）",
-    why: ["*Imminent* means about to happen: *an imminent storm*.", "*imminent* 意为即将发生的：*an imminent storm*。"],
+    why: [
+      "*Imminent* means about to happen: *an imminent storm*.\n\n**Check.** Link *imm-* to *immediate*: the sentence warns of an event about to strike, not a famous person.",
+      "*imminent* 意为即将发生的：*an imminent storm*。\n\n**检验。** 联想 *imm-* 和 *immediate*：句子说的是某事即将发生，而不是杰出人物。",
+    ],
     not: ["*Imminent* means about to happen, which does not fit here.", "*imminent* 意为即将发生的，这里不合适。"],
   },
   discreet: {
     zh: "discreet（谨慎的）",
-    why: ["*Discreet* means careful not to attract attention or to give away secrets.", "*discreet* 意为谨慎、不引人注意或不泄露秘密的。"],
+    why: [
+      "*Discreet* means careful not to attract attention or to give away secrets.\n\n**Check.** Test the meaning *careful and tactful*: the double *ee* stays quietly together, matching a person or action that avoids drawing attention.",
+      "*discreet* 意为谨慎、不引人注意或不泄露秘密的。\n\n**检验。** 代入“谨慎、不动声色”：两个 *e* 并排挨着，正好对应守口如瓶或低调行事。",
+    ],
     not: ["*Discreet* means careful and quiet, which does not fit here.", "*discreet* 意为谨慎的，这里不合适。"],
   },
   discrete: {
     zh: "discrete（分离的，独立的）",
-    why: ["*Discrete* means separate and distinct: *three discrete steps*.", "*discrete* 意为分开的、各自独立的：*three discrete steps*。"],
+    why: [
+      "*Discrete* means separate and distinct: *three discrete steps*.\n\n**Check.** Remember that the *t* separates the two *e*s in *discrete*, matching separate units, steps, or groups.",
+      "*discrete* 意为分开的、各自独立的：*three discrete steps*。\n\n**检验。** 记住 *discrete* 里的 *t* 把两个 *e* 隔开了，正好对应彼此独立的步骤、单元或分组。",
+    ],
     not: ["*Discrete* means separate, which does not fit here.", "*discrete* 意为分离的，这里不合适。"],
   },
   censor: {
     zh: "censor（审查，删除）",
     why: [
-      "To *censor* is to remove or ban parts of a book, film or letter thought unacceptable.",
-      "*censor* 指删除或禁止书、电影或信件中被认为不可接受的部分。",
+      "To *censor* is to remove or ban parts of a book, film or letter thought unacceptable.\n\n**Check.** Look at the object being acted on: it is a text, film, or broadcast being cut or banned—not a person being formally scolded.",
+      "*censor* 指删除或禁止书、电影或信件中被认为不可接受的部分。\n\n**检验。** 看动作的对象：被删改或禁播的是书、电影或报刊，而不是受到正式谴责的人。",
     ],
     not: ["To *censor* is to cut or ban material, which does not fit here.", "*censor* 指删除或禁止内容，这里不合适。"],
   },
   censure: {
     zh: "censure（谴责）",
-    why: ["To *censure* is to criticize someone strongly and formally.", "*censure* 指强烈而正式地批评某人。"],
+    why: [
+      "To *censure* is to criticize someone strongly and formally.\n\n**Check.** Look at the target: a council, senate, or board is formally criticizing an official or organization, not cutting pages out of a book.",
+      "*censure* 指强烈而正式地批评某人。\n\n**检验。** 看对象：议会、委员会或机构正在正式谴责某位官员或组织，而不是删剪书稿。",
+    ],
     not: ["To *censure* is to criticize formally, which does not fit here.", "*censure* 指正式谴责，这里不合适。"],
   },
   adverse: {
     zh: "adverse（不利的）",
     why: [
-      "*Adverse* means harmful or unfavorable: *adverse weather*, *adverse effects*.",
-      "*adverse* 意为有害的、不利的：*adverse weather*、*adverse effects*。",
+      "*Adverse* means harmful or unfavorable: *adverse weather*, *adverse effects*.\n\n**Check.** Check what it describes: it modifies conditions, weather, or effects (never followed by *to* for a person's reluctance).",
+      "*adverse* 意为有害的、不利的：*adverse weather*、*adverse effects*。\n\n**检验。** 看修饰对象：它修饰天气、环境或副作用（而不是像 *averse to* 那样形容人的反感）。",
     ],
     not: ["*Adverse* describes harmful conditions, not a person's dislike.", "*adverse* 描述有害的条件，不是人的反感。"],
   },
   averse: {
     zh: "averse（反感的，不愿意的）",
     why: [
-      "*Averse* means unwilling or opposed, and it describes a person: *averse to risk*.",
-      "*averse* 意为不愿意的、反对的，用来描述人：*averse to risk*。",
+      "*Averse* means unwilling or opposed, and it describes a person: *averse to risk*.\n\n**Check.** Spot the *to* right after the blank and the living subject: someone (or a cat) dislikes or resists something.",
+      "*averse* 意为不愿意的、反对的，用来描述人：*averse to risk*。\n\n**检验。** 看空格紧后面的 *to* 和主语：是某人（或动物）对某事心存反感或不情愿。",
     ],
     not: ["*Averse* describes a person's dislike, which does not fit here.", "*averse* 描述人的反感，这里不合适。"],
   },
   flaunt: {
     zh: "flaunt（炫耀）",
     why: [
-      "To *flaunt* is to show something off proudly: *to flaunt one's wealth*.",
-      "*flaunt* 指得意地炫耀某物：*to flaunt one's wealth*。",
+      "To *flaunt* is to show something off proudly: *to flaunt one's wealth*.\n\n**Check.** Replace the blank with *show off*: the object is wealth, medals, or talent being displayed proudly, not a rule being broken.",
+      "*flaunt* 指得意地炫耀某物：*to flaunt one's wealth*。\n\n**检验。** 换成“炫耀”试读：宾语是财富、奖牌或才华，而不是被违反的规章。",
     ],
     not: ["To *flaunt* is to show off, which does not fit here.", "*flaunt* 指炫耀，这里不合适。"],
   },
   flout: {
     zh: "flout（公然违抗）",
     why: [
-      "To *flout* is to break a rule openly, as if it did not matter: *to flout the law*.",
-      "*flout* 指公然违反规则，好像规则无关紧要：*to flout the law*。",
+      "To *flout* is to break a rule openly, as if it did not matter: *to flout the law*.\n\n**Check.** Look at the object: it is a law, curfew, limit, or rule being openly defied, not a possession being shown off.",
+      "*flout* 指公然违反规则，好像规则无关紧要：*to flout the law*。\n\n**检验。** 看宾语：被公然践踏的是法律、宵禁、限速或校规，而不是拿来炫耀的财物。",
     ],
     not: ["To *flout* is to break a rule openly, which does not fit here.", "*flout* 指公然违反规则，这里不合适。"],
   },
   ensure: {
     zh: "ensure（确保）",
-    why: ["To *ensure* is to make certain that something happens.", "*ensure* 指确保某事发生。"],
+    why: [
+      "To *ensure* is to make certain that something happens.\n\n**Check.** Substitute *make sure*: no insurance policy or financial coverage is involved—just making certain an outcome occurs.",
+      "*ensure* 指确保某事发生。\n\n**检验。** 换成“确保”试读：这里不涉及买保险或理赔，只是保证结果落实。",
+    ],
     not: ["To *ensure* is to make certain, which does not fit here.", "*ensure* 指确保，这里不合适。"],
   },
   insure: {
     zh: "insure（为……投保）",
     why: [
-      "To *insure* is to buy insurance, so that you are paid if something is lost or damaged.",
-      "*insure* 指购买保险，在东西丢失或损坏时获得赔偿。",
+      "To *insure* is to buy insurance, so that you are paid if something is lost or damaged.\n\n**Check.** Spot the valuable property or risk (*house*, *car*, *cargo*, *against fire/theft*): financial insurance is what fits.",
+      "*insure* 指购买保险，在东西丢失或损坏时获得赔偿。\n\n**检验。** 看宾语和风险提示（房子、汽车、货物、防火灾或盗窃）：这里说的是购买保险。",
     ],
     not: ["To *insure* is to buy insurance, which does not fit here.", "*insure* 指投保，这里不合适。"],
   },
@@ -1080,14 +1117,18 @@ const confused4 = topic("grammar", {
     "Pairs such as elicit and illicit, eminent and imminent, or adverse and averse look or sound alike but mean different things.",
     "elicit 与 illicit、eminent 与 imminent、adverse 与 averse 这样的词形近或音近，意思却不同。",
   ],
+  intro: [
+    "Saying *The council voted to censor the mayor* instead of *censure* changes a formal scolding into silencing the mayor's words. Mastering high-level look-alike and sound-alike pairs keeps formal writing accurate.",
+    "把 *censure the mayor*（谴责市长）误写成 *censor the mayor*（审查市长），意思就彻底跑偏了。辨清这组高阶形近词与音近词，才能让正式写作准确无误。",
+  ],
   after: ["commonly-confused-words-3"],
   points: [
     label(
       "words-that-look-alike",
       ["Words That Look Alike", "形近词"],
       [
-        "Some pairs differ by a letter or two. To **elicit** is to draw out (*elicit a reply*); **illicit** means against the law (*illicit trade*: the *ill* is a clue). **Eminent** means famous and respected; **imminent** means about to happen (*imminent* and *immediate* both begin with *imm*). **Discreet** means careful and quiet; **discrete** means separate (the *t* separates the two *e*s). To **censor** is to cut or ban; to **censure** is to criticize.",
-        "有些词只差一两个字母。**elicit** 指引出（*elicit a reply*）；**illicit** 意为违法的（*illicit trade*：*ill* 是线索）。**eminent** 意为杰出的；**imminent** 意为即将发生的（*imminent* 和 *immediate* 都以 *imm* 开头）。**discreet** 意为谨慎的；**discrete** 意为分离的（*t* 把两个 *e* 分开了）。**censor** 是删除或禁止；**censure** 是谴责。",
+        "Some pairs differ by a letter or two. To **elicit** is to draw out (*elicit a reply*); **illicit** means against the law (*illicit trade*: the *ill* is a clue). **Eminent** means famous and respected; **imminent** means about to happen (*imminent* and *immediate* both begin with *imm*). **Discreet** means careful and quiet; **discrete** means separate (the *t* separates the two *e*s). To **censor** is to cut or ban; to **censure** is to criticize.\n\n> **Watch out.** Check part of speech as well as spelling: *elicit* is a verb while *illicit* is an adjective, and *censor* acts on media or text while *censure* targets a person or group.",
+        "有些词只差一两个字母。**elicit** 指引出（*elicit a reply*）；**illicit** 意为违法的（*illicit trade*：*ill* 是线索）。**eminent** 意为杰出的；**imminent** 意为即将发生的（*imminent* 和 *immediate* 都以 *imm* 开头）。**discreet** 意为谨慎的；**discrete** 意为分离的（*t* 把两个 *e* 分开了）。**censor** 是删除或禁止；**censure** 是谴责。\n\n> **注意。** 既看拼写也看词性和搭配：*elicit* 是动词而 *illicit* 是形容词，*censor* 针对出版物或媒体而 *censure* 针对人或机构。",
       ],
       ["Which word belongs in the blank?", "空格里应该填哪个词？"],
       `
@@ -1129,8 +1170,8 @@ ${lookAlikeLines}
       "words-that-sound-alike",
       ["Words That Sound Alike", "音近词"],
       [
-        "**Adverse** describes harmful conditions (*adverse weather*); **averse** describes a person who dislikes something (*averse to risk*). To **flaunt** is to show off (*flaunt one's wealth*); to **flout** is to break a rule openly (*flout the law*). To **ensure** is to make certain; to **insure** is to buy insurance. Ask what the sentence is about: a condition or a person, showing off or breaking a rule, making certain or paying for cover.",
-        "**adverse** 描述有害的条件（*adverse weather*）；**averse** 描述讨厌某事的人（*averse to risk*）。**flaunt** 是炫耀（*flaunt one's wealth*）；**flout** 是公然违反规则（*flout the law*）。**ensure** 是确保；**insure** 是投保。问问句子说的是什么：是条件还是人，是炫耀还是违规，是确保还是买保险。",
+        "**Adverse** describes harmful conditions (*adverse weather*); **averse** describes a person who dislikes something (*averse to risk*). To **flaunt** is to show off (*flaunt one's wealth*); to **flout** is to break a rule openly (*flout the law*). To **ensure** is to make certain; to **insure** is to buy insurance. Ask what the sentence is about: a condition or a person, showing off or breaking a rule, making certain or paying for cover.\n\n> **Watch out.** Look for quick context clues: *averse* is followed by *to*, *flout* takes a rule or law as its object, and *insure* protects property or cargo financially.",
+        "**adverse** 描述有害的条件（*adverse weather*）；**averse** 描述讨厌某事的人（*averse to risk*）。**flaunt** 是炫耀（*flaunt one's wealth*）；**flout** 是公然违反规则（*flout the law*）。**ensure** 是确保；**insure** 是投保。问问句子说的是什么：是条件还是人，是炫耀还是违规，是确保还是买保险。\n\n> **注意。** 抓紧上下文线索：*averse* 后常接 *to*，*flout* 的宾语是法律或规定，而 *insure* 涉及财产或货物的保险理赔。",
       ],
       ["Which word belongs in the blank?", "空格里应该填哪个词？"],
       `
@@ -1178,14 +1219,18 @@ const prepositionRelatives = topic("grammar", {
     "Formal English moves the preposition before which or whom: the country in which she was born, the friend to whom he wrote.",
     "正式英语把介词移到 which 或 whom 前面：the country in which she was born、the friend to whom he wrote。",
   ],
+  intro: [
+    "In everyday speech we say *the harbor the boats left from*, but formal essays move *from* ahead of the pronoun: *the harbor from which the boats left.* Moving the preposition requires **which** for things, **whom** for people, and dropping the duplicate at the end.",
+    "日常口语里我们说 *the harbor the boats left from*，但正式文章会把 *from* 移到关系代词前面：*the harbor from which the boats left.* 介词前置后，指物用 **which**、指人用 **whom**，并且不能在句末重复留下介词。",
+  ],
   after: ["who-which-and-that", "who-and-whom"],
   points: [
     choose(
       "the-pronoun-after-the-preposition",
       ["The Pronoun After the Preposition", "介词后的代词"],
       [
-        "Everyday English often ends a relative clause with a preposition: *the country she was born **in***. Formal English moves the preposition to the front: *the country **in which** she was born*. After a preposition, use **which** for things and **whom** for people. Never use *that* or *who* right after a preposition: *in that* and *to who* are wrong.",
-        "日常英语常常让关系从句以介词结尾：*the country she was born **in***。正式英语把介词移到前面：*the country **in which** she was born*。介词后面，指物用 **which**，指人用 **whom**。介词后面绝不能直接用 *that* 或 *who*：*in that* 和 *to who* 都是错的。",
+        "Everyday English often ends a relative clause with a preposition: *the country she was born **in***. Formal English moves the preposition to the front: *the country **in which** she was born*. After a preposition, use **which** for things and **whom** for people. Never use *that* or *who* right after a preposition: *in that* and *to who* are wrong.\n\n> **Watch out.** Check two rules at once: first, eliminate *that* and *who* immediately after any preposition; second, match **which** to a thing/place and **whom** to a person.",
+        "日常英语常常让关系从句以介词结尾：*the country she was born **in***。正式英语把介词移到前面：*the country **in which** she was born*。介词后面，指物用 **which**，指人用 **whom**。介词后面绝不能直接用 *that* 或 *who*：*in that* 和 *to who* 都是错的。\n\n> **注意。** 同时把好两道关：先直接排除介词后的 *that* 和 *who*；再核对先行词是事物/地点（用 **which**）还是人（用 **whom**）。",
       ],
       ["Which words complete the formal sentence?", "哪个选项能补全这个正式的句子？"],
       `
@@ -1222,8 +1267,8 @@ ${afterPrep}
         The guide ___ they crossed the mountains was a girl of fifteen.|with whom|with who|with which
       `,
       (right) => [
-        `**${right}** is formal and right: the preposition comes first, followed by *which* for a thing or *whom* for a person.`,
-        `**${right}** 正式而正确：介词在前，后面指物用 *which*，指人用 *whom*。`,
+        `**${right}** is formal and right: the preposition comes first, followed by *which* for a thing or *whom* for a person.\n\n**Check.** Look at the noun right before the blank: ${right.endsWith("whom") ? "it names a person, so the preposition takes **whom**" : "it names a thing, place, or idea, so the preposition takes **which**"} (never *who* or *that*).`,
+        `**${right}** 正式而正确：介词在前，后面指物用 *which*，指人用 *whom*。\n\n**检验。** 看空格前的先行词：${right.endsWith("whom") ? "它指人，所以介词后用 **whom**" : "它指事物、地点或概念，所以介词后用 **which**"}（绝不用 *who* 或 *that*）。`,
       ],
       [
         [
@@ -1240,8 +1285,8 @@ ${afterPrep}
       "the-formal-version",
       ["The Formal Version", "正式的说法"],
       [
-        "To make a relative clause formal, move its final preposition to the front, before *which* or *whom*, and take it off the end: *the town I lived **in*** becomes *the town **in which** I lived*. Two mistakes are common: keeping the preposition at the end as well (*in which I lived in*) and putting *that* after the moved preposition (*in that I lived*).",
-        "要让关系从句变得正式，就把句末的介词移到 *which* 或 *whom* 前面，并把它从句末去掉：*the town I lived **in*** 变成 *the town **in which** I lived*。常见的错误有两种：句末仍保留介词（*in which I lived in*），以及在移到前面的介词后用 *that*（*in that I lived*）。",
+        "To make a relative clause formal, move its final preposition to the front, before *which* or *whom*, and take it off the end: *the town I lived **in*** becomes *the town **in which** I lived*. Two mistakes are common: keeping the preposition at the end as well (*in which I lived in*) and putting *that* after the moved preposition (*in that I lived*).\n\n> **Watch out.** Count the prepositions in your chosen phrase—there must be only **one**, sitting right before *which* or *whom* (never *that*).",
+        "要让关系从句变得正式，就把句末的介词移到 *which* 或 *whom* 前面，并把它从句末去掉：*the town I lived **in*** 变成 *the town **in which** I lived*。常见的错误有两种：句末仍保留介词（*in which I lived in*），以及在移到前面的介词后用 *that*（*in that I lived*）。\n\n> **注意。** 数一数所选短语里的介词——只能出现**一次**，且紧跟在它后面的是 *which* 或 *whom*（绝不是 *that*）。",
       ],
       ["Which is the correct formal version?", "哪个是正确的正式说法？"],
       `
@@ -1278,8 +1323,8 @@ ${formalLines}
         the doctor they owed their lives to|the doctor to whom they owed their lives|the doctor to whom they owed their lives to|the doctor to that they owed their lives
       `,
       (right) => [
-        `*${right}* moves the preposition before the pronoun and drops it from the end.`,
-        `*${right}* 把介词移到代词前面，并把它从句末去掉。`,
+        `*${right}* moves the preposition before the pronoun and drops it from the end.\n\n**Check.** Verify both ends of the clause: the preposition appears once before *which*/*whom* (not *that*), and it has been removed from the end.`,
+        `*${right}* 把介词移到代词前面，并把它从句末去掉。\n\n**检验。** 核对从句首尾：介词只在 *which*/*whom*（非 *that*）前出现一次，句末已不再重复。`,
       ],
       [
         ["*{wrong}* keeps the preposition at the end as well, so it appears twice.", "*{wrong}* 在句末也保留了介词，于是介词出现了两次。"],

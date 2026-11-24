@@ -416,10 +416,11 @@ const thirdRule = (verb: string, third: string): Text => {
 /** thirdWhy explains the -s form in a gapped sentence about one person. */
 const thirdWhy = (right: string, shown: string): Text => {
   const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
-  const rule = thirdRule(shown.match(/\((.*)\)$/u)?.[1] ?? "", right);
+  const verb = shown.match(/\((.*)\)$/u)?.[1] ?? "";
+  const rule = thirdRule(verb, right);
   return t(
-    `*${shown.split(" ___")[0]}* is one person, so the verb needs an ending, and ${rule.en}: ${sentence}`,
-    `*${shown.split(" ___")[0]}* 是单个的人，动词要加词尾；${rule["zh-CN"]}：${sentence}`,
+    `*${shown.split(" ___")[0]}* is one person, so the verb needs an ending, and ${rule.en}: ${sentence}\n\n**Check.** Look at the base verb *${verb}*—its final letters tell you whether to add *-s*, *-es*, change *y* to *-ies*, or use *has*.`,
+    `*${shown.split(" ___")[0]}* 是单个的人，动词要加词尾；${rule["zh-CN"]}：${sentence}\n\n**检验。** 看原形动词 *${verb}* 的末尾字母——据此确认是加 *-s*、加 *-es*、变 *y* 为 *-ies*，还是用不规则的 *has*。`,
   );
 };
 
@@ -430,6 +431,10 @@ const thirdPersonS: TopicDef = {
     "After he, she, it or one person, a verb in the present simple ends in -s or -es.",
     "主语是 he、she、it 或单个的人时，一般现在时的动词加 -s 或 -es。",
   ),
+  intro: t(
+    "Compare *I walk to school* with *Ben walks to school*, and *I wash the dishes* with *My mom washes the dishes*. Whenever the subject is *he*, *she*, *it*, or one person, the present-simple verb takes an ending (*-s*, *-es*, *-ies*, or *has*). In this topic, you choose, spell, and fix third-person singular verbs.",
+    "比较 *I walk to school* 和 *Ben walks to school*，以及 *I wash the dishes* 和 *My mom washes the dishes*。只要主语是 *he*、*she*、*it* 或单个的人，一般现在时的动词就要变化词尾（*-s*、*-es*、*-ies* 或 *has*）。本主题带你选择、拼写并改正第三人称单数动词。",
+  ),
   prerequisites: ["present-simple", "he-she-and-it"],
   encompasses: [{ topic: "present-simple", weight: 0.5 }],
   xp: 20,
@@ -439,8 +444,8 @@ const thirdPersonS: TopicDef = {
       "choose",
       t("Adding -s after he and she", "he 和 she 后面加 -s"),
       t(
-        "After *he*, *she*, *it* or one person, the verb ends in *-s*: *She gets up at seven. Tom plays football.*\n\nAdd *-es* after *ch*, *sh*, *s*, *x* and *o*: *watches*, *brushes*, *goes*, *does*. A consonant and *y* becomes *-ies*: *study* → *studies*. *Have* becomes *has*.",
-        "主语是 *he*、*she*、*it* 或单个的人时，动词要加 *-s*：*She gets up at seven. Tom plays football.* 中文动词从不变化，所以漏掉这个 *-s* 是最常见的错误。\n\n以 *ch*、*sh*、*s*、*x*、*o* 结尾的动词加 *-es*：*watches*、*brushes*、*goes*、*does*。辅音字母加 *y* 结尾的，变 *y* 为 *i* 再加 *-es*：*study* → *studies*。*have* 变成 *has*。",
+        "After *he*, *she*, *it* or one person, the verb ends in *-s*: *She gets up at seven. Tom plays football.*\n\nAdd *-es* after *ch*, *sh*, *s*, *x* and *o*: *watches*, *brushes*, *goes*, *does*. A consonant and *y* becomes *-ies*: *study* → *studies*. *Have* becomes *has*.\n\n> **Watch out.** Check the letter right before *y*: *study* (consonant + *y*) becomes *studies*, while *play* (vowel + *y*) simply adds *-s* (*plays*, never *plaies*).",
+        "主语是 *he*、*she*、*it* 或单个的人时，动词要加 *-s*：*She gets up at seven. Tom plays football.* 中文动词从不变化，所以漏掉这个 *-s* 是最常见的错误。\n\n以 *ch*、*sh*、*s*、*x*、*o* 结尾的动词加 *-es*：*watches*、*brushes*、*goes*、*does*。辅音字母加 *y* 结尾的，变 *y* 为 *i* 再加 *-es*：*study* → *studies*。*have* 变成 *has*。\n\n> **注意。** 看清 *y* 前面的字母：*study*（辅音 + *y*）变成 *studies*，而 *play*（元音 + *y*）直接加 *-s*（*plays*，绝不是 *plaies*）。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
@@ -462,8 +467,8 @@ const thirdPersonS: TopicDef = {
       "spell",
       t("Spelling the -s form", "拼写 -s 形式"),
       t(
-        "Type the verb with its ending after one person: most verbs add *-s*, verbs that end in *ch*, *sh*, *s*, *x* or *o* add *-es*, a consonant and *y* becomes *-ies*, and *have* becomes *has*.",
-        "写出单数第三人称后加了词尾的动词：大多数动词加 *-s*；以 *ch*、*sh*、*s*、*x*、*o* 结尾的加 *-es*；辅音字母加 *y* 结尾的变成 *-ies*；*have* 变成 *has*。",
+        "Type the verb with its ending after one person: most verbs add *-s* (*works*), verbs that end in *ch*, *sh*, *s*, *x* or *o* add *-es* (*finishes*, *goes*), a consonant and *y* becomes *-ies* (*studies*), and *have* becomes *has*.\n\n> **Watch out.** Never write *haves*, *gos*, or *dos*—remember the special spellings *has*, *goes*, and *does*.",
+        "写出单数第三人称后加了词尾的动词：大多数动词加 *-s*（*works*）；以 *ch*、*sh*、*s*、*x*、*o* 结尾的加 *-es*（*finishes*、*goes*）；辅音字母加 *y* 结尾的变成 *-ies*（*studies*）；*have* 变成 *has*。\n\n> **注意。** 切勿写成 *haves*、*gos* 或 *dos*——牢记特殊拼写 *has*、*goes* 和 *does*。",
       ),
       typedGenerator("word-form", t("Type the verb in the right form.", "输入动词的正确形式。"), thirdTypedBank, thirdWhy),
     ),
@@ -471,8 +476,8 @@ const thirdPersonS: TopicDef = {
       "fix",
       t("Finding the missing -s", "找出漏掉的 -s"),
       t(
-        "Each sentence is about one person, like *Tom* or *my mom*, but its verb has no ending, the way a Chinese verb never changes. Give the verb the ending it needs and write the sentence again.",
-        "每个句子说的都是一个人，比如 *Tom* 或 *my mom*，但动词像中文一样没有变化。给动词加上需要的词尾，把句子重写一遍。",
+        "Each sentence is about one person, like *Tom* or *my mom*, but its verb has no ending, the way a Chinese verb never changes: *Ben finish work at five.* → *Ben finishes work at five.* Give the verb the ending it needs and write the sentence again.\n\n> **Watch out.** Change only the verb's ending—keep the subject, the rest of the sentence, the capital letter, and the period intact.",
+        "每个句子说的都是一个人，比如 *Tom* 或 *my mom*，但动词像中文一样没有变化：*Ben finish work at five.* → *Ben finishes work at five.* 给动词加上需要的词尾，把句子重写一遍。\n\n> **注意。** 只改动词词尾——主语、其余部分、句首大写和句末句号都保持不变。",
       ),
       typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), thirdFixBank, (right, shown) => {
         const subject = singleSubjects.find((s) => shown.startsWith(`${s} `)) ?? "";
@@ -480,8 +485,8 @@ const thirdPersonS: TopicDef = {
         const third = right.slice(subject.length + 1).split(" ")[0] ?? "";
         const rule = thirdRule(verb, third);
         return t(
-          `*${subject}* is one person, so the verb needs an ending, and ${rule.en}: ${shown} → ${right}`,
-          `*${subject}* 是单个的人，动词要加词尾；${rule["zh-CN"]}：${shown} → ${right}`,
+          `*${subject}* is one person, so the verb needs an ending, and ${rule.en}: ${shown} → ${right}\n\n**Check.** Verify that *${verb}* changed to *${third}* after singular subject *${subject}* while every other word stayed unchanged.`,
+          `*${subject}* 是单个的人，动词要加词尾；${rule["zh-CN"]}：${shown} → ${right}\n\n**检验。** 确认单数主语 *${subject}* 后的 *${verb}* 已改为 *${third}*，句子其余部分保持不变。`,
         );
       }),
     ),
@@ -576,10 +581,13 @@ const frequencyWhy = (right: string, shown: string): Text => {
   const adverb = shown.match(/\((\w+)\)$/u)?.[1] ?? "";
   const verb = (shown.includes(" / ") ? shown.split(" / ")[1] : shown.split(" ").slice(1).join(" "))?.split(" ")[0] ?? "";
   return ["am", "is", "are"].includes(verb)
-    ? t(`*${adverb}* goes after *${verb}*, not before it: ${right}`, `*${adverb}* 放在 *${verb}* 后面，而不是前面：${right}`)
+    ? t(
+        `*${adverb}* goes after *${verb}*, not before it: ${right}\n\n**Check.** Spot the verb *${verb}*—because it is a form of *be*, *${adverb}* sits right after it (not before it and not at the end).`,
+        `*${adverb}* 放在 *${verb}* 后面，而不是前面：${right}\n\n**检验。** 找到动词 *${verb}*——它是 *be* 动词，所以 *${adverb}* 紧跟在它后面（不在前面，也不在句末）。`,
+      )
     : t(
-        `*${adverb}* goes in the middle of the sentence, right before a verb like *${verb}*: ${right}`,
-        `*${adverb}* 放在句子中间，紧挨在 *${verb}* 这样的动词前面：${right}`,
+        `*${adverb}* goes in the middle of the sentence, right before a verb like *${verb}*: ${right}\n\n**Check.** Spot the action verb *${verb}*—because it is not *be*, *${adverb}* sits right in front of it (never at the end of the sentence).`,
+        `*${adverb}* 放在句子中间，紧挨在 *${verb}* 这样的动词前面：${right}\n\n**检验。** 找到实义动词 *${verb}*——它不是 *be*，所以 *${adverb}* 紧挨在它前面（绝不放在句末）。`,
       );
 };
 
@@ -609,6 +617,10 @@ const adverbsOfFrequency: TopicDef = {
     "I always get up at seven. She is never late. These words go before the verb, but after am, is and are.",
     "I always get up at seven. She is never late. 这些词放在动词前，但放在 am、is、are 之后。",
   ),
+  intro: t(
+    "Compare *We usually walk to school.* with *The bus is usually full.* Notice the flip: frequency words like *always*, *usually*, and *never* stand *before* ordinary verbs (*walk*) but *after* *am*, *is*, and *are*. In this topic, you place frequency adverbs in the exact right slot.",
+    "比较 *We usually walk to school.* 和 *The bus is usually full.* 注意位置变化：*always*、*usually*、*never* 等频度副词放在实义动词（*walk*）*前面*，但放在 *am*、*is*、*are* *后面*。本主题带你把频度副词放到准确位置。",
+  ),
   prerequisites: ["present-simple", "a1-words-how-often"],
   encompasses: [{ topic: "a1-words-how-often", weight: 0.4 }],
   xp: 15,
@@ -618,8 +630,8 @@ const adverbsOfFrequency: TopicDef = {
       "choose",
       t("Where the word goes", "这些词放在哪里"),
       t(
-        "*always* (every time), *usually*, *often*, *sometimes*, *never* (not at any time).\n\nThey go before the verb: *I always get up at seven.* But they go after *am*, *is* and *are*: *She is never late.*",
-        "*always*（总是）、*usually*（通常）、*often*（经常）、*sometimes*（有时）、*never*（从不）。\n\n它们放在一般动词前面：*I always get up at seven.* 但放在 *am*、*is*、*are* 后面：*She is never late.* 不要像中文“我七点起床总是”那样放在句末。",
+        "*always* (every time), *usually*, *often*, *sometimes*, *never* (not at any time).\n\nThey go before the verb: *I always get up at seven.* But they go after *am*, *is* and *are*: *She is never late.*\n\n> **Watch out.** Check whether the verb is *am/is/are* or an action verb before placing the adverb, and never push *always*, *usually*, or *never* to the very end of the sentence.",
+        "*always*（总是）、*usually*（通常）、*often*（经常）、*sometimes*（有时）、*never*（从不）。\n\n它们放在一般动词前面：*I always get up at seven.* 但放在 *am*、*is*、*are* 后面：*She is never late.* 不要像中文“我七点起床总是”那样放在句末。\n\n> **注意。** 放词前先看谓语是 *am/is/are* 还是实义动词，且切勿把 *always*、*usually*、*never* 放到句末。",
       ),
       choiceGenerator(
         t("Which sentence puts the word in the right place?", "哪个句子把这个词放对了位置？"),
@@ -632,8 +644,8 @@ const adverbsOfFrequency: TopicDef = {
       "write",
       t("Putting the word in", "把词放进句子"),
       t(
-        "Write the sentence with the word: before a verb like *get* or *walk*, after *am*, *is* or *are*.",
-        "把这个词放进句子：放在 *get*、*walk* 这样的动词前，放在 *am*、*is*、*are* 后。",
+        "Write the sentence with the word: before a verb like *get* or *walk* (*Tom usually eats rice*), and after *am*, *is* or *are* (*My room is always clean*).\n\n> **Watch out.** Keep every other word in the sentence unchanged—just drop the bracketed adverb into the one right slot next to the verb.",
+        "把这个词放进句子：放在 *get*、*walk* 这样的动词前（*Tom usually eats rice*），放在 *am*、*is*、*are* 后（*My room is always clean*）。\n\n> **注意。** 句子其余词保持不变，只需把括号里的频度副词准确放进紧挨动词的那一侧。",
       ),
       typedGenerator("sentence", t("Write the sentence again.", "重写这个句子。"), frequencyTypedBank, frequencyWhy),
     ),
@@ -703,8 +715,8 @@ const routineWhy = (right: string, shown: string): Text => {
   const [name = "", verb = ""] = shown.split(" / ");
   const third = right.slice(name.length + 1).split(" at ")[0] ?? "";
   return t(
-    `*${name}* is one person, so *${verb}* becomes *${third}*, and the time goes last, after *at*: ${right}`,
-    `*${name}* 是单个的人，所以 *${verb}* 变成 *${third}*；时间放在句末，前面加 *at*：${right}`,
+    `*${name}* is one person, so *${verb}* becomes *${third}*, and the time goes last, after *at*: ${right}\n\n**Check.** Verify all three pieces in order: *${name}* (who) + *${third}* (with third-person ending) + *at [time]* at the end, closing with a period.`,
+    `*${name}* 是单个的人，所以 *${verb}* 变成 *${third}*；时间放在句末，前面加 *at*：${right}\n\n**检验。** 按顺序核对三处：主语 *${name}* + 带单三词尾的 *${third}* + 句末的 *at [时间]*，并以句号结尾。`,
   );
 };
 
@@ -714,6 +726,10 @@ const routinesWriting: TopicDef = {
   summary: t(
     "Turn notes into sentences about a day: Lily / get up / 7:00 becomes Lily gets up at seven o'clock.",
     "把笔记写成描述一天的句子：Lily / get up / 7:00 写成 Lily gets up at seven o'clock.",
+  ),
+  intro: t(
+    "Turn a short schedule note like `Tom / eat lunch / 12:00` into a natural English sentence: *Tom eats lunch at twelve o'clock.* Three small details turn notes into real sentences—the third-person verb ending, *at* before the clock time, and putting the time at the end. In this topic, you pick and write complete routine sentences from notes.",
+    "把作息笔记 `Tom / eat lunch / 12:00` 写成自然的英语句子：*Tom eats lunch at twelve o'clock.* 三个细节把笔记变成完整句子——单三动词词尾、钟点前的 *at*，以及把时间放在句末。本主题带你把笔记准确写成日常作息句。",
   ),
   prerequisites: ["third-person-s", "writing-capitals-and-periods"],
   encompasses: [
@@ -727,8 +743,8 @@ const routinesWriting: TopicDef = {
       "choose",
       t("The sentence for a note", "选出符合笔记的句子"),
       t(
-        "A note gives who, what and when. The sentence keeps that order and adds what the note leaves out: the *-s* after one person, *at* before the time, a capital letter and a period.\n\n*Lily / get up / 7:00* → *Lily gets up at seven o'clock.*",
-        "笔记给出“谁、做什么、什么时候”。写成句子时保持这个顺序，并补上笔记省略的部分：单数主语后动词加 *-s*，时间前加 *at*，句首大写，句末加句号。\n\n*Lily / get up / 7:00* → *Lily gets up at seven o'clock.*\n\n注意时间放在句末，不像中文“莉莉七点起床”那样放在动词前。",
+        "A note gives who, what and when. The sentence keeps that order and adds what the note leaves out: the *-s* after one person, *at* before the time, a capital letter and a period.\n\n*Lily / get up / 7:00* → *Lily gets up at seven o'clock.*\n\n> **Watch out.** Check *both* the verb ending (*gets*, *has*, *goes*, *watches*) and the word order—do not put *At seven o'clock* in front of the subject.",
+        "笔记给出“谁、做什么、什么时候”。写成句子时保持这个顺序，并补上笔记省略的部分：单数主语后动词加 *-s*，时间前加 *at*，句首大写，句末加句号。\n\n*Lily / get up / 7:00* → *Lily gets up at seven o'clock.*\n\n注意时间放在句末，不像中文“莉莉七点起床”那样放在动词前。\n\n> **注意。** 同时核对动词词尾（*gets*、*has*、*goes*、*watches*）和语序——不要把 *At seven o'clock* 放到主语前面。",
       ),
       choiceGenerator(
         t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"),
@@ -755,8 +771,8 @@ const routinesWriting: TopicDef = {
       "write",
       t("Writing the sentence", "写出句子"),
       t(
-        "Write a whole sentence for the note. You can write the time in words or in numbers: *at seven o'clock* or *at 7:00*.",
-        "根据笔记写一个完整的句子。时间可以用英文单词或数字表示：*at seven o'clock* 或 *at 7:00*。",
+        "Write a whole sentence for the note, such as *Ben / do homework / 5:00* → *Ben does homework at five o'clock.* You can write the time in words or in numbers: *at seven o'clock* or *at 7:00*.\n\n> **Watch out.** Do not copy the base verb unchanged (*have* -> *has*, *go* -> *goes*, *do* -> *does*, *finish* -> *finishes*), and remember *at* before the time.",
+        "根据笔记写一个完整的句子，例如 *Ben / do homework / 5:00* → *Ben does homework at five o'clock.* 时间可以用英文单词或数字表示：*at seven o'clock* 或 *at 7:00*。\n\n> **注意。** 不要直接照抄原形动词（*have* -> *has*、*go* -> *goes*、*do* -> *does*、*finish* -> *finishes*），也别漏掉时间前的 *at*。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), routineTypedBank, routineWhy),
     ),

@@ -18,14 +18,18 @@ const objective = topic("writing", {
     "Writing a report or an explanation in an objective tone: facts and attributed claims instead of personal feelings, loaded words and exaggeration.",
     "用客观的语气写报道或说明文：用事实和注明出处的说法，而不是个人感受、带感情色彩的词语和夸张。",
   ],
+  intro: [
+    "Reporting *The bridge opened three weeks late* informs the reader; writing *The bridge suffered an inexcusable delay* sneaks the reporter's anger into the news. In this topic, you choose objective sentences and distinguish verifiable facts, attributed claims, and unattributed opinions.",
+    "写 *The bridge opened three weeks late* 是在告知读者，而写 *The bridge suffered an inexcusable delay* 却把记者的情绪塞进了报道。本主题带你选出客观表述，并区分事实、注明出处的说法与作者的个人观点。",
+  ],
   after: ["formal-style", "facts-interpretations-and-judgments"],
   points: [
     choose(
       "the-objective-sentence",
       ["The Objective Sentence", "客观的句子"],
       [
-        "In a news report, a research report or an explanation, the writer stays in the background. An **objective** sentence states facts or reports who claimed what: *The council voted 7 to 2 to close the pool. Residents' groups called the decision unfair.* It avoids **personal feelings** (*I was shocked*), **loaded words** (*the outrageous decision*) and **exaggeration** (*the worst decision in history*). Objective does not mean dull: precise facts can be as powerful as opinions.",
-        "在新闻报道、研究报告或说明文中，作者退居幕后。**客观**的句子陈述事实，或报道谁说了什么：*The council voted 7 to 2 to close the pool. Residents' groups called the decision unfair.* 它避免**个人感受**（*I was shocked*）、**带感情色彩的词语**（*the outrageous decision*）和**夸张**（*the worst decision in history*）。客观并不意味着枯燥：精确的事实可以和观点一样有力。",
+        "In a news report, a research report or an explanation, the writer stays in the background. An **objective** sentence states facts or reports who claimed what: *The council voted 7 to 2 to close the pool. Residents' groups called the decision unfair.* It avoids **personal feelings** (*I was shocked*), **loaded words** (*the outrageous decision*) and **exaggeration** (*the worst decision in history*). Objective does not mean dull: precise facts can be as powerful as opinions.\n\n> **Watch out.** Watch for *both* kinds of bias: first-person feelings (*I think*, *sadly*, *it worries me*) and sweeping exaggerations (*forever*, *everyone*, *most terrible in history*) both break an objective tone.",
+        "在新闻报道、研究报告或说明文中，作者退居幕后。**客观**的句子陈述事实，或报道谁说了什么：*The council voted 7 to 2 to close the pool. Residents' groups called the decision unfair.* 它避免**个人感受**（*I was shocked*）、**带感情色彩的词语**（*the outrageous decision*）和**夸张**（*the worst decision in history*）。客观并不意味着枯燥：精确的事实可以和观点一样有力。\n\n> **注意。** 同时防备*两种*跑偏：第一人称感受（*I think*、*sadly*、*it worries me*）和夸大其词（*forever*、*everyone*、*most terrible in history*）都会破坏客观语气。",
       ],
       ["Which sentence keeps an objective tone?", "哪个句子保持了客观的语气？"],
       `
@@ -61,8 +65,8 @@ const objective = topic("writing", {
         A report on a vaccine program|Clinics gave the vaccine to 30,000 children in the first month.|I am grateful to the wonderful nurses who did this.|Every child on Earth has now been vaccinated.
       `,
       (right) => [
-        `"${right}" states a fact precisely, without the writer's feelings or exaggeration.`,
-        `“${right}” 精确地陈述了事实，没有作者的个人感受或夸张。`,
+        `"${right}" states a fact precisely, without the writer's feelings or exaggeration.\n\n**Check.** Scan the sentence for first-person reactions (*I*, *we*, *sadly*) and superlative exaggerations: none appear, and every detail can be verified from records.`,
+        `“${right}” 精确地陈述了事实，没有作者的个人感受或夸张。\n\n**检验。** 检查句中是否夹带第一人称情绪或绝对化夸张：都没有，每个细节都能通过记录核实。`,
       ],
       [
         [
@@ -79,8 +83,8 @@ const objective = topic("writing", {
       "fact-attributed-claim-or-opinion",
       ["Fact, Attributed Claim or the Writer's Opinion", "事实、注明出处的说法还是作者的观点"],
       [
-        "An objective writer may report opinions, as long as they belong to someone else and are **attributed**: *Critics called the plan wasteful.* A **fact** can be checked: *The plan costs 3 million dollars.* The **writer's opinion** is a judgment with no source, and it does not belong in an objective report: *The plan is a waste of money.*",
-        "客观的作者可以报道观点，只要这些观点属于别人，并且**注明出处**：*Critics called the plan wasteful.* **事实**是可以核实的：*The plan costs 3 million dollars.* **作者的观点**是没有出处的判断，它不属于客观报道：*The plan is a waste of money.*",
+        "An objective writer may report opinions, as long as they belong to someone else and are **attributed**: *Critics called the plan wasteful.* A **fact** can be checked: *The plan costs 3 million dollars.* The **writer's opinion** is a judgment with no source, and it does not belong in an objective report: *The plan is a waste of money.*\n\n> **Watch out.** Do not label a strong opinion *the writer's opinion* if the sentence names who said it (*Supporters called…*, *Residents complained…*)—once attributed to a named source, reporting that claim is objective.",
+        "客观的作者可以报道观点，只要这些观点属于别人，并且**注明出处**：*Critics called the plan wasteful.* **事实**是可以核实的：*The plan costs 3 million dollars.* **作者的观点**是没有出处的判断，它不属于客观报道：*The plan is a waste of money.*\n\n> **注意。** 即使句子里出现了强烈评价，只要写明了是谁说的（如 *Supporters called…*、*Residents complained…*），就属于**注明出处的说法**，而不是作者自己的观点。",
       ],
       ["What kind of statement is this?", "这是哪种陈述？"],
       `
@@ -118,22 +122,22 @@ const objective = topic("writing", {
       {
         "a fact": L(
           "事实",
-          "It can be checked, by measurement, records or counting, and it carries no judgment.",
-          "它可以通过测量、记录或计数来核实，不带任何判断。",
+          "It can be checked, by measurement, records or counting, and it carries no judgment.\n\n**Check.** Ask whether two people who disagree on the issue would still have to agree on this number, date, or event: yes, because it is verifiable without judgment.",
+          "它可以通过测量、记录或计数来核实，不带任何判断。\n\n**检验。** 问问持相反立场的两方是否都必须承认这个数字、日期或事件：是的，它可直接核查且不带评价。",
           "It cannot simply be checked as true or false.",
           "它无法简单地核实真假。",
         ),
         "an attributed claim": L(
           "注明出处的说法",
-          "It reports a judgment and says whose it is, so an objective writer may include it.",
-          "它报道了一个判断，并说明这是谁的判断，所以客观的作者可以使用它。",
+          "It reports a judgment and says whose it is, so an objective writer may include it.\n\n**Check.** Spot the named speaker and reporting verb (*said*, *called*, *warned*, *argued*): the opinion is clearly credited to someone else rather than stated in the reporter's own voice.",
+          "它报道了一个判断，并说明这是谁的判断，所以客观的作者可以使用它。\n\n**检验。** 找出明确署名的说话方与转述动词：评价归属于他人，而不是记者以自己的口吻下断语。",
           "It does not say who holds the view it reports.",
           "它没有说明所报道的观点是谁的。",
         ),
         "the writer's opinion": L(
           "作者的观点",
-          "It is a judgment with no source, so it is the writer's own view and breaks the objective tone.",
-          "它是没有出处的判断，因此是作者自己的看法，破坏了客观的语气。",
+          "It is a judgment with no source, so it is the writer's own view and breaks the objective tone.\n\n**Check.** Look for a value judgment (*ugly*, *disaster*, *ridiculous*, *should*) with no speaker named: because nobody else is quoted, the judgment comes straight from the writer.",
+          "它是没有出处的判断，因此是作者自己的看法，破坏了客观的语气。\n\n**检验。** 句中出现价值判断或主张，却没有任何署名来源：既然没引用他人，这只能是作者自己的立场。",
           "It is not a judgment offered by the writer without a source.",
           "它不是作者未注明出处给出的判断。",
         ),
@@ -149,14 +153,18 @@ const theme = topic("writing", {
     "Writing a theme as a complete, arguable idea about life that the text supports, rather than a single word, a plot summary or a command.",
     "把主题写成文本所支持的、关于人生的完整而可论证的观点，而不是一个单词、情节概要或命令句。",
   ],
+  intro: [
+    "Writing *Revenge* names only a shelf label, and writing *Never seek revenge* sounds like a bumper sticker; writing *People who pursue revenge often become what they hated* states an arguable theme an essay can actually prove. In this topic, you sort theme statements from common false starts and choose the sharpest wording.",
+    "只写 *Revenge* 只是贴了个话题标签，写 *Never seek revenge* 像是标语说教；只有写成 *People who pursue revenge often become what they hated*，才是文章真正能论证的主题陈述。本主题带你区分真正的主题陈述与常见误写，并选出最精准的表述。",
+  ],
   after: ["how-a-theme-develops", "an-analytical-thesis"],
   points: [
     label(
       "is-it-a-theme-statement",
       ["Is It a Theme Statement?", "这是主题陈述吗？"],
       [
-        "A **theme statement** is a complete sentence that says what a text suggests about life: *Ambition that ignores conscience destroys the person it drives.* It is not a **topic word**, which names a subject but says nothing about it (*ambition*). It is not a **plot summary**, which tells what happens to particular characters (*Macbeth kills the king to become king*). And it is not a **command or cliché**, which preaches a moral or repeats a tired saying (*Never be too ambitious*; *Crime does not pay*).",
-        "**主题陈述**是一个完整的句子，说明文本对人生提出了什么看法：*Ambition that ignores conscience destroys the person it drives.* 它不是**话题词**，话题词只说出主题领域，却没有说出任何看法（*ambition*）。它不是**情节概要**，情节概要讲的是特定人物发生了什么（*Macbeth kills the king to become king*）。它也不是**命令或陈词滥调**，后者是在说教或重复老套的说法（*Never be too ambitious*；*Crime does not pay*）。",
+        "A **theme statement** is a complete sentence that says what a text suggests about life: *Ambition that ignores conscience destroys the person it drives.* It is not a **topic word**, which names a subject but says nothing about it (*ambition*). It is not a **plot summary**, which tells what happens to particular characters (*Macbeth kills the king to become king*). And it is not a **command or cliché**, which preaches a moral or repeats a tired saying (*Never be too ambitious*; *Crime does not pay*).\n\n> **Watch out.** Test any complete sentence in two quick steps: if it names story characters or events, it is a **plot summary**; if it gives an order or recites a proverb, it is a **command or cliché**.",
+        "**主题陈述**是一个完整的句子，说明文本对人生提出了什么看法：*Ambition that ignores conscience destroys the person it drives.* 它不是**话题词**，话题词只说出主题领域，却没有说出任何看法（*ambition*）。它不是**情节概要**，情节概要讲的是特定人物发生了什么（*Macbeth kills the king to become king*）。它也不是**命令或陈词滥调**，后者是在说教或重复老套的说法（*Never be too ambitious*；*Crime does not pay*）。\n\n> **注意。** 碰到完整句子做两步筛查：提到具体故事人物和事件的是**情节概要**；发号施令或照搬俗语的是**命令或陈词滥调**。",
       ],
       ["What is this statement about a story?", "这句关于故事的话属于什么？"],
       `
@@ -194,29 +202,29 @@ const theme = topic("writing", {
       {
         "a theme statement": L(
           "主题陈述",
-          "It is a complete, general idea about life that a reader could argue for with evidence from the text.",
-          "它是一个完整的、关于人生的普遍性观点，读者可以用文本中的证据为之论证。",
+          "It is a complete, general idea about life that a reader could argue for with evidence from the text.\n\n**Check.** Verify all three marks: it is a full declarative sentence, it speaks about human life in general (not one story's characters), and it avoids commanding or reciting a proverb.",
+          "它是一个完整的、关于人生的普遍性观点，读者可以用文本中的证据为之论证。\n\n**检验。** 同时核对三点：它是完整陈述句、探讨普遍人生而非某篇具体情节，且既不说教也不套用俗语。",
           "It is not a complete, general idea about life.",
           "它不是一个完整的、关于人生的普遍性观点。",
         ),
         "a topic word": L(
           "话题词",
-          "It names a subject but makes no statement about it, so there is nothing to argue.",
-          "它只说出了一个主题领域，却没有对它作出任何陈述，所以没有可论证的内容。",
+          "It names a subject but makes no statement about it, so there is nothing to argue.\n\n**Check.** Look for a main verb and a claim: there is none—only a bare noun or noun phrase naming a subject area.",
+          "它只说出了一个主题领域，却没有对它作出任何陈述，所以没有可论证的内容。\n\n**检验。** 找找句中有没有主谓结构和完整判断：没有，只有一个光秃秃的话题名词或短语。",
           "It is a full statement, not just the name of a subject.",
           "它是一个完整的陈述，而不只是一个主题领域的名称。",
         ),
         "a plot summary": L(
           "情节概要",
-          "It tells what happens to particular characters, not what the story suggests about life in general.",
-          "它讲的是特定人物发生了什么，而不是故事对人生的普遍性看法。",
+          "It tells what happens to particular characters, not what the story suggests about life in general.\n\n**Check.** Notice the specific characters and actions from one story: it stays inside the plot instead of stepping back to state a general truth about life.",
+          "它讲的是特定人物发生了什么，而不是故事对人生的普遍性看法。\n\n**检验。** 留意句中具体的人物与情节动作：它停留在单个故事内部，没有提炼出关于人生的普遍见解。",
           "It does not retell events involving particular characters.",
           "它没有复述特定人物所经历的事件。",
         ),
         "a command or cliché": L(
           "命令或陈词滥调",
-          "It preaches a rule or repeats a familiar saying, instead of expressing the particular insight of the text.",
-          "它在宣讲规则或重复熟悉的说法，而不是表达这篇文本独特的见解。",
+          "It preaches a rule or repeats a familiar saying, instead of expressing the particular insight of the text.\n\n**Check.** Notice either an imperative order telling the reader how to behave or a worn-out saying that could be slapped onto almost any story.",
+          "它在宣讲规则或重复熟悉的说法，而不是表达这篇文本独特的见解。\n\n**检验。** 它要么是教人该怎么做的祈使训诫，要么是放之四海皆准的熟语套话，没有说出文本独特的思想。",
           "It does not preach a rule or repeat a familiar saying.",
           "它没有宣讲规则，也没有重复熟悉的说法。",
         ),
@@ -226,8 +234,8 @@ const theme = topic("writing", {
       "the-stronger-theme-statement",
       ["The Stronger Theme Statement", "更好的主题陈述"],
       [
-        "A strong theme statement is **specific**: it names the conditions under which its idea holds (*ambition that ignores conscience*), rather than making a sweeping claim about all people. It is **arguable**: a thoughtful reader could disagree. And it is **supported** by the whole text, not just one scene. Avoid absolute words such as *always*, *never* and *everyone* unless the text truly supports them.",
-        "好的主题陈述是**具体的**：它说明其观点成立的条件（*ambition that ignores conscience*），而不是对所有人作出笼统的论断。它是**可论证的**：有思想的读者可能不同意。它还要**有整篇文本支持**，而不只是一个场景。除非文本确实支持，否则避免使用 *always*、*never*、*everyone* 这样的绝对化词语。",
+        "A strong theme statement is **specific**: it names the conditions under which its idea holds (*ambition that ignores conscience*), rather than making a sweeping claim about all people. It is **arguable**: a thoughtful reader could disagree. And it is **supported** by the whole text, not just one scene. Avoid absolute words such as *always*, *never* and *everyone* unless the text truly supports them.\n\n> **Watch out.** Reject *both* extremes: a one-word or bare-judgment label (*Money is bad.*) says too little, while an all-or-nothing claim (*Everyone… always…*) overstates what any single story can prove.",
+        "好的主题陈述是**具体的**：它说明其观点成立的条件（*ambition that ignores conscience*），而不是对所有人作出笼统的论断。它是**可论证的**：有思想的读者可能不同意。它还要**有整篇文本支持**，而不只是一个场景。除非文本确实支持，否则避免使用 *always*、*never*、*everyone* 这样的绝对化词语。\n\n> **注意。** 两端都要排除：过于简略的标签（*Money is bad.*）信息太少，而动辄 *everyone*、*always* 的绝对化断语又超出了单个故事所能证明的范围。",
       ],
       ["Which theme statement is the strongest?", "哪个主题陈述最好？"],
       `
@@ -263,8 +271,8 @@ const theme = topic("writing", {
         A poem about the last day of summer|Joy feels sharper when we know it is ending.|Summer.|Every ending is always sad.
       `,
       (right) => [
-        `"${right}" is specific, arguable and fits the whole story, without sweeping words such as *always* or *never*.`,
-        `“${right}” 具体、可论证，并符合整个故事，没有 *always* 或 *never* 这样笼统的词。`,
+        `"${right}" is specific, arguable and fits the whole story, without sweeping words such as *always* or *never*.\n\n**Check.** Check that the sentence passes both filters: it says something concrete and debatable about the story's core tension, and it avoids absolute overclaims like *all*, *always*, or *never*.`,
+        `“${right}” 具体、可论证，并符合整个故事，没有 *always* 或 *never* 这样笼统的词。\n\n**检验。** 确认这句话通过双重筛选：它围绕故事的核心张力提出了具体而可论证的见解，且避开了 *all*、*always*、*never* 等绝对化表述。`,
       ],
       [
         [
@@ -287,14 +295,18 @@ const qualifications = topic("writing", {
     "In a letter of application or a personal statement, proving a quality with a specific example and a result instead of only claiming it.",
     "在求职信或个人陈述中，用具体的事例和结果来证明某种品质，而不只是声称自己具备它。",
   ],
+  intro: [
+    "Saying *I am reliable* asks a hiring manager to take your word for it; saying *I opened the bakery at 6 a.m. every Saturday for two years without missing a shift* lets the facts speak. In this topic, you pick evidence-backed sentences and place each sentence in the right part of an application letter.",
+    "写 *I am reliable* 只是让对方凭空相信你；写 *I opened the bakery at 6 a.m. every Saturday for two years without missing a shift* 则是让事实替你说话。本主题带你挑出有证据支撑的表述，并辨认它们在申请信中的位置。",
+  ],
   after: ["formal-style", "supporting-reasons-with-facts"],
   points: [
     choose(
       "show-do-not-claim",
       ["Show, Do Not Claim", "要展示，不要声称"],
       [
-        "Anyone can write *I am hard-working* or *I am a natural leader*. A reader who must choose between applicants believes **evidence**: a specific example of what you did and, if possible, a **result** that can be checked. *I organized a book drive that collected 600 books for the town library* proves leadership better than any adjective. Keep the claim, but let an example carry it.",
-        "谁都能写 *I am hard-working* 或 *I am a natural leader*。必须在申请人之间作出选择的读者相信的是**证据**：你做过什么的具体事例，最好还有可以核实的**结果**。*I organized a book drive that collected 600 books for the town library* 比任何形容词都更能证明领导力。可以保留你的说法，但要让事例来支撑它。",
+        "Anyone can write *I am hard-working* or *I am a natural leader*. A reader who must choose between applicants believes **evidence**: a specific example of what you did and, if possible, a **result** that can be checked. *I organized a book drive that collected 600 books for the town library* proves leadership better than any adjective. Keep the claim, but let an example carry it.\n\n> **Watch out.** Do not be fooled by emphatic wording (*extremely*, *born leader*, *most reliable you will ever meet*)—stronger adjectives still prove nothing without a concrete action and outcome.",
+        "谁都能写 *I am hard-working* 或 *I am a natural leader*。必须在申请人之间作出选择的读者相信的是**证据**：你做过什么的具体事例，最好还有可以核实的**结果**。*I organized a book drive that collected 600 books for the town library* 比任何形容词都更能证明领导力。可以保留你的说法，但要让事例来支撑它。\n\n> **注意。** 不要被夸张的自夸迷惑（如 *extremely*、*born leader*、*most reliable*）——没有具体行动和结果，再响亮的形容词也证明不了什么。",
       ],
       ["Which sentence best proves the quality for a letter of application?", "在求职信中，哪个句子最能证明这一品质？"],
       `
@@ -330,8 +342,8 @@ const qualifications = topic("writing", {
         Quality: care for the environment|I started a composting program in our cafeteria that now diverts about 40 kilograms of food waste a week.|I care deeply about the environment.|The environment is everyone's responsibility.
       `,
       (right) => [
-        `"${right}" proves the quality with a specific action and a result the reader can believe.`,
-        `“${right}” 用具体的行动和读者可以相信的结果证明了这一品质。`,
+        `"${right}" proves the quality with a specific action and a result the reader can believe.\n\n**Check.** Ask whether a reader could verify this claim with a teacher or manager: yes, because it names a concrete action, timeframe, or measurable result instead of empty self-praise.`,
+        `“${right}” 用具体的行动和读者可以相信的结果证明了这一品质。\n\n**检验。** 问问读者能否找老师或主管核实这句话：可以，因为它给出了具体的行动、时长或可衡量结果，而不是空口自夸。`,
       ],
       [
         [
@@ -348,8 +360,8 @@ const qualifications = topic("writing", {
       "the-part-of-the-letter",
       ["The Part of the Letter", "信件的组成部分"],
       [
-        "A letter of application has a clear shape. The **opening** names the position and how the writer learned of it. The **evidence** paragraphs match the writer's experience to what the job needs, with examples. The **closing** thanks the reader, mentions availability for an interview and signs off politely.",
-        "求职信有清晰的结构。**开头**说明所申请的职位以及作者是如何得知的。**证据**段落用事例把作者的经历与工作的要求对应起来。**结尾**感谢读者，说明可以参加面试的时间，并礼貌地署名。",
+        "A letter of application has a clear shape. The **opening** names the position and how the writer learned of it. The **evidence** paragraphs match the writer's experience to what the job needs, with examples. The **closing** thanks the reader, mentions availability for an interview and signs off politely.\n\n> **Watch out.** Check the *job* of the sentence in the letter: naming the advertised role belongs in **the opening**, describing past work or results belongs in **the evidence**, and thanking the reader or offering interview dates belongs in **the closing**.",
+        "求职信有清晰的结构。**开头**说明所申请的职位以及作者是如何得知的。**证据**段落用事例把作者的经历与工作的要求对应起来。**结尾**感谢读者，说明可以参加面试的时间，并礼貌地署名。\n\n> **注意。** 看这句话在信中承担的*任务*：点明申请的岗位和信息来源属于**开头**，列举过往经历与成果属于**证据**，致谢、说明面试时间或礼貌收尾属于**结尾**。",
       ],
       ["Which part of a letter of application does this sentence belong to?", "这句话属于求职信的哪个部分？"],
       `
@@ -387,22 +399,22 @@ const qualifications = topic("writing", {
       {
         "the opening": L(
           "开头",
-          "It names the position being applied for and how the writer learned about it.",
-          "它说明了所申请的职位以及作者是如何得知这个职位的。",
+          "It names the position being applied for and how the writer learned about it.\n\n**Check.** Notice that the sentence states *why the letter is being written*—identifying the specific role right away—before giving past examples or signing off.",
+          "它说明了所申请的职位以及作者是如何得知这个职位的。\n\n**检验。** 注意这句话交代了*写信目的*——第一时间点出申请的具体职位——排在举证经历和礼貌收尾之前。",
           "It does not introduce the position or how the writer heard of it.",
           "它没有介绍所申请的职位，也没有说明作者如何得知。",
         ),
         "the evidence": L(
           "证据",
-          "It gives a specific example of the writer's experience that matches what the job needs.",
-          "它给出了与工作要求相符的、作者经历中的具体事例。",
+          "It gives a specific example of the writer's experience that matches what the job needs.\n\n**Check.** Look at the verb tense and content: it reports concrete past work, skills, or results that prove readiness for the role.",
+          "它给出了与工作要求相符的、作者经历中的具体事例。\n\n**检验。** 看句子的时态与内容：它陈述的是过往具体工作、技能或成果，用来证明自己胜任岗位。",
           "It does not give an example of the writer's experience.",
           "它没有给出作者经历中的事例。",
         ),
         "the closing": L(
           "结尾",
-          "It thanks the reader, mentions availability or a reply, and ends the letter politely.",
-          "它感谢读者，提到可以面谈的时间或期待回复，并礼貌地结束信件。",
+          "It thanks the reader, mentions availability or a reply, and ends the letter politely.\n\n**Check.** Notice the forward-looking wrap-up—thanking the reader, noting interview availability, or signing off—which always comes at the very end of the letter.",
+          "它感谢读者，提到可以面谈的时间或期待回复，并礼貌地结束信件。\n\n**检验。** 留意面向下一步的收束动作——致谢、说明可面谈时间、期待回复或署名——这些都属于信末。",
           "It does not thank the reader or bring the letter to a close.",
           "它没有感谢读者，也没有结束信件。",
         ),

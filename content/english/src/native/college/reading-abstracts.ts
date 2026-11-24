@@ -100,10 +100,40 @@ const missingItems: readonly ChoiceItem[] = abstracts.flatMap((abstract, a) =>
   }),
 );
 
-const explainMove = (right: string) => {
+const explainSentenceMove = (right: string) => {
   const move = right as Move;
   const [en, zh] = moveWhat[move];
-  return t(`**${right}**: ${en}.`, `**${right}**（${moveZh[move]}）：${zh}。`);
+  return t(
+    `**${right}**: ${en}.\n\n**Check.** Ask what job the bold sentence does in the five-move sequence (background → gap or aim → method → result → implication): here it supplies the **${right}**.`,
+    `**${right}**（${moveZh[move]}）：${zh}。\n\n**检验。** 对照摘要的五个语步顺序（背景 → 研究空白或目的 → 方法 → 结果 → 意义），看加粗句承担的功能：这里完成的是**${moveZh[move]}**。`,
+  );
+};
+
+const explainMissingMove = (right: string) => {
+  const move = right as Move;
+  const [en, zh] = moveWhat[move];
+  return t(
+    `**${right}** is missing: ${en}, and none of the four sentences here does that job.\n\n**Check.** Walk through the four sentences in order against the five moves—the gap in the chain is **${right}**.`,
+    `缺少 **${right}**（${moveZh[move]}）：${zh}，而这里的四个句子都没有完成这一步。\n\n**检验。** 按五个语步顺序逐句核对这四句话，链条中跳过的正是**${moveZh[move]}**。`,
+  );
+};
+
+const whyNotSentenceMove = (wrong: string) => {
+  const move = wrong as Move;
+  const [en, zh] = moveWhat[move];
+  return t(
+    `Not **${wrong}**: in a **${wrong}** move, ${en}, which is not what the bold sentence is doing.`,
+    `不是 **${wrong}**（${moveZh[move]}）：**${moveZh[move]}**语步的特点是${zh}，而加粗句并不是在做这件事。`,
+  );
+};
+
+const whyNotMissingMove = (wrong: string) => {
+  const move = wrong as Move;
+  const [en, zh] = moveWhat[move];
+  return t(
+    `**${wrong}** is already present in the abstract—one of the sentences already does that job (${en}).`,
+    `**${wrong}**（${moveZh[move]}）已经在摘要里出现了——文中已有句子完成了这一步（${zh}）。`,
+  );
 };
 
 /** abstractMoves is the college topic of the moves of a research abstract. */
@@ -114,6 +144,10 @@ export const abstractMoves: TopicDef = {
     "The five moves of a research abstract: background, gap or aim, method, result and implication.",
     "研究摘要的五个语步：背景、研究空白或目的、方法、结果和意义。",
   ),
+  intro: t(
+    "A well-written abstract packs an entire study into five compact sentences: why the topic matters, what is still unknown, how the study ran, what it found, and what follows. Spotting those five moves lets you scan any paper in seconds.",
+    "一篇规范的研究摘要用短短五句话浓缩整篇论文：领域背景、研究空白或目的、研究方法、主要结果与实践意义。认出这五个语步，就能在几秒内抓住任何论文的骨架。",
+  ),
   prerequisites: ["reading-a-research-paper"],
   encompasses: [{ topic: "reading-a-research-paper", weight: 0.2 }],
   xp: 14,
@@ -123,19 +157,29 @@ export const abstractMoves: TopicDef = {
       "naming-the-move",
       t("Naming the Move of a Sentence", "说出句子的语步"),
       t(
-        "An abstract tells the whole study in a few sentences, and each sentence makes one **move**. The **background** says what is known or why it matters. The **gap or aim** says what is not known or what the study sets out to do; it often begins with *however*, *little is known*, *this study asks* or *the aim was*. The **method** says how: the people or things studied, how many, and what was done, usually in the past tense. The **result** reports what was found, often with figures. The **implication** says what it means, usually with *may*, *suggest* or *should*.\n\nTo name a move, ask what the sentence does, not what it is about: a sentence full of figures can be a method (*we surveyed 2,300 riders*) or a result (*only 9 per cent of trips*).",
-        "摘要用几句话讲完整个研究，每句话完成一个**语步**。**背景**说明已知的情况或其重要性。**研究空白或目的**说明尚未知道什么，或本研究要做什么；常以 *however*、*little is known*、*this study asks*、*the aim was* 开头。**方法**说明怎样做：研究对象、数量和做法，通常用过去时。**结果**报告发现了什么，常带数据。**意义**说明发现意味着什么，常用 *may*、*suggest*、*should*。\n\n判断语步，要问句子在做什么，而不是它在讲什么：满是数字的句子可能是方法（*we surveyed 2,300 riders*），也可能是结果（*only 9 per cent of trips*）。",
+        "An abstract tells the whole study in a few sentences, and each sentence makes one **move**. The **background** says what is known or why it matters. The **gap or aim** says what is not known or what the study sets out to do; it often begins with *however*, *little is known*, *this study asks* or *the aim was*. The **method** says how: the people or things studied, how many, and what was done, usually in the past tense. The **result** reports what was found, often with figures. The **implication** says what it means, usually with *may*, *suggest* or *should*.\n\n> **Watch out.** Do not label a sentence **result** just because it contains numbers—*we surveyed 2,300 riders* reports the sample size (**method**), whereas *only 9 per cent of trips replaced a car* reports what was found (**result**).",
+        "摘要用几句话讲完整个研究，每句话完成一个**语步**。**背景**说明已知的情况或其重要性。**研究空白或目的**说明尚未知道什么，或本研究要做什么；常以 *however*、*little is known*、*this study asks*、*the aim was* 开头。**方法**说明怎样做：研究对象、数量和做法，通常用过去时。**结果**报告发现了什么，常带数据。**意义**说明发现意味着什么，常用 *may*、*suggest*、*should*。\n\n> **注意。** 不要一看到数字就判为**结果**——*we surveyed 2,300 riders* 说的是样本规模（**方法**），而 *only 9 per cent of trips replaced a car* 才是研究发现（**结果**）。",
       ),
-      choiceGenerator(t("Which move does the sentence in bold make?", "加粗的句子属于哪个语步？"), sentenceItems, explainMove),
+      choiceGenerator(
+        t("Which move does the sentence in bold make?", "加粗的句子属于哪个语步？"),
+        sentenceItems,
+        explainSentenceMove,
+        whyNotSentenceMove,
+      ),
     ),
     point(
       "finding-the-missing-move",
       t("Finding the Missing Move", "找出缺少的语步"),
       t(
-        "A complete abstract makes all five moves in order: background, gap or aim, method, result, implication. When one is missing, the abstract jumps: from a known problem straight to *we interviewed 36 employees* without saying what the study wanted to know, or from the method straight to what companies should do without saying what was found. Read the abstract move by move and find the place where a step of the story is skipped.",
-        "完整的摘要按顺序包含五个语步：背景、研究空白或目的、方法、结果、意义。缺了一个，摘要就会跳跃：从已知的问题直接跳到 *we interviewed 36 employees*，却没说研究想知道什么；或者从方法直接跳到公司应该怎么做，却没说发现了什么。逐个语步地读摘要，找出跳过了哪一步。",
+        "A complete abstract makes all five moves in order: background, gap or aim, method, result, implication. When one is missing, the abstract jumps: from a known problem straight to *we interviewed 36 employees* without saying what the study wanted to know, or from the method straight to what companies should do without saying what was found. Read the abstract move by move and find the place where a step of the story is skipped.\n\n> **Watch out.** Check the **order** as well as the content: if an abstract jumps from background directly to method, the missing piece is **gap or aim**—even if the background already mentions a problem.",
+        "完整的摘要按顺序包含五个语步：背景、研究空白或目的、方法、结果、意义。缺了一个，摘要就会跳跃：从已知的问题直接跳到 *we interviewed 36 employees*，却没说研究想知道什么；或者从方法直接跳到公司应该怎么做，却没说发现了什么。逐个语步地读摘要，找出跳过了哪一步。\n\n> **注意。** 既要看内容，也要看**顺序**：如果摘要从背景直接跳到方法，即使背景里提到了一个现象，缺失的依然是**研究空白或目的**。",
       ),
-      choiceGenerator(t("Which move is missing from this abstract?", "这篇摘要缺少哪个语步？"), missingItems, explainMove),
+      choiceGenerator(
+        t("Which move is missing from this abstract?", "这篇摘要缺少哪个语步？"),
+        missingItems,
+        explainMissingMove,
+        whyNotMissingMove,
+      ),
     ),
   ],
 };

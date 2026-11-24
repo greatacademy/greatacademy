@@ -474,16 +474,16 @@ const toVerbIn = (sentence: string): string => {
 };
 
 /** whyNotTo explains a verb after want, hope or decide without to, or with -ing. */
-const whyNotTo = (wrong: string, right: string, shown: string, position: number): Text => {
+const whyNotTo = (wrong: string, _right: string, shown: string, position: number): Text => {
   const verb = toVerbIn(shown);
   return position === 0
     ? t(
-        `*${wrong}* leaves out *to*. After *${verb}*, English puts *to* before the next verb: *${right}*.`,
-        `*${wrong}* 漏了 *to*。在 *${verb}* 后面，下一个动词前要加 *to*：*${right}*。`,
+        `*${wrong}* leaves out *to*. After *${verb}*, English puts *to* before the next plain verb.`,
+        `*${wrong}* 漏了 *to*。在 *${verb}* 后面，下一个动词原形前必须加 *to*。`,
       )
     : t(
-        `*${wrong}* is the *-ing* form. *${verb}* takes *to* and the first form, not *-ing*: *${right}*.`,
-        `*${wrong}* 是 *-ing* 形式。*${verb}* 后面接 *to* 加原形，不接 *-ing*：*${right}*。`,
+        `*${wrong}* uses the *-ing* form, but *${verb}* takes *to* plus the plain verb, not *-ing*.`,
+        `*${wrong}* 用了 *-ing* 形式，但 *${verb}* 后面接 *to* 加动词原形，不接 *-ing*。`,
       );
 };
 
@@ -500,6 +500,10 @@ const verbsFollowedByTo: TopicDef = {
     "I want to go. She decided to stay. We hope to see you. Some verbs take to and the first form of another verb after them.",
     "I want to go. She decided to stay. We hope to see you. 有些动词后面接 to 加另一个动词的原形。",
   ),
+  intro: t(
+    "In *She plans to invite her cousins*, two verbs stand next to each other, linked by *to*. Verbs of wishing, deciding and planning (*want, hope, decide, plan, need, promise*) always connect to the next verb with *to* + base form.",
+    "在 *She plans to invite her cousins* 里，两个动词靠 *to* 连在一起。表示想要、决定、计划的动词（*want、hope、decide、plan、need、promise*）后面总是接 *to* + 动词原形。",
+  ),
   prerequisites: ["present-simple", "a2-words-events"],
   encompasses: [
     { topic: "present-simple", weight: 0.2 },
@@ -512,8 +516,8 @@ const verbsFollowedByTo: TopicDef = {
       "form",
       t("To and the verb", "to 加动词"),
       t(
-        "After *want*, *would like*, *hope*, *decide*, *plan*, *need*, *promise*, *agree* and *refuse*, use *to* and the first form of the next verb:\n\n- *I want to buy a new phone.*\n- *We decided to stay at home.*\n- *He refused to clean the kitchen.*\n\nDo not leave out *to*: not *I want buy*. Do not add *-ing*: not *We decided staying*.",
-        "在 *want*、*would like*、*hope*、*decide*、*plan*、*need*、*promise*、*agree* 和 *refuse* 后面，用 *to* 加下一个动词的原形：\n\n- *I want to buy a new phone.*\n- *We decided to stay at home.*\n- *He refused to clean the kitchen.*\n\n中文说“我想买”，两个动词直接连在一起，英语中间要加 *to*：不说 *I want buy*，也不说 *We decided staying*。",
+        "After *want*, *would like*, *hope*, *decide*, *plan*, *need*, *promise*, *agree* and *refuse*, use *to* and the first form of the next verb:\n\n- *I want to buy a new phone.*\n- *We decided to stay at home.*\n- *He refused to clean the kitchen.*\n\n> **Watch out.** Never drop *to* (*I want buy* is wrong) and never use *-ing* after these verbs (*We decided staying* is wrong).",
+        "在 *want*、*would like*、*hope*、*decide*、*plan*、*need*、*promise*、*agree* 和 *refuse* 后面，用 *to* 加下一个动词的原形：\n\n- *I want to buy a new phone.*\n- *We decided to stay at home.*\n- *He refused to clean the kitchen.*\n\n> **注意。** 中文说“我想买”，两个动词直接连在一起，但英语中间不能省 *to*（*I want buy* 是错的），也不要接 *-ing*（*We decided staying* 是错的）。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -521,8 +525,8 @@ const verbsFollowedByTo: TopicDef = {
         (right, shown) => {
           const verb = toVerbIn(shown);
           return t(
-            `*${verb}* is one of the verbs that take *to* and the first form of the next verb: ${fill(shown, right)}`,
-            `*${verb}* 属于后面接 *to* 加下一个动词原形的动词：${fill(shown, right)}`,
+            `*${verb}* is one of the verbs that take *to* and the first form of the next verb: ${fill(shown, right)}\n\n**Check.** Verify the pattern right after *${verb}*: *to* + plain verb (*${right}*), with no *-ing* and no *-s*.`,
+            `*${verb}* 属于后面接 *to* 加下一个动词原形的动词：${fill(shown, right)}\n\n**检验。** 核对 *${verb}* 后面的结构：*to* + 动词原形（*${right}*），既不加 *-ing* 也不加 *-s*。`,
           );
         },
         whyNotTo,
@@ -532,8 +536,8 @@ const verbsFollowedByTo: TopicDef = {
       "write",
       t("Writing with want to and decided to", "用 want to 和 decided to 写句子"),
       t(
-        "Write the sentence from the note. The first verb changes: *-s* after *he*, *she* and one person (*She wants*), *-ed* for the past (*We decided*). The second verb never changes: *to* and its first form.\n\n*She wants to visit the castle. They decided to stay at home yesterday.*",
-        "根据笔记写句子。第一个动词要变：*he*、*she* 和单个人后面加 *-s*（*She wants*），过去的事加 *-ed*（*We decided*）。第二个动词永远不变：*to* 加原形。\n\n*She wants to visit the castle. They decided to stay at home yesterday.*",
+        "Write the sentence from the note. The first verb changes: *-s* after *he*, *she* and one person (*She wants*), *-ed* for the past (*We decided*). The second verb never changes: *to* and its first form.\n\n*She wants to visit the castle. They decided to stay at home yesterday.*\n\n> **Watch out.** Put the *-s* or *-ed* only on the first verb—never on the verb after *to* (*She wants to visits* is wrong).",
+        "根据笔记写句子。第一个动词要变：*he*、*she* 和单个人后面加 *-s*（*She wants*），过去的事加 *-ed*（*We decided*）。第二个动词永远不变：*to* 加原形。\n\n*She wants to visit the castle. They decided to stay at home yesterday.*\n\n> **注意。** 只有第一个动词随主语或时态变化，*to* 后面的动词永远保持原形（*She wants to visits* 是错的）。",
       ),
       typedGenerator("sentence", t("Write a sentence from the note.", "根据笔记写一个句子。"), toTypedBank, (right) => {
         const first = firstToVerb(right);
@@ -543,8 +547,8 @@ const verbsFollowedByTo: TopicDef = {
             ? t("takes *-s* after one person", "单个人作主语时加 *-s*")
             : t("stays plain after this subject", "在这个主语后面用原形");
         return t(
-          `The first verb ${how.en} (*${first}*), and the second is always *to* with its first form: ${right}`,
-          `第一个动词${how["zh-CN"]}（*${first}*），第二个动词总是 *to* 加原形：${right}`,
+          `The first verb ${how.en} (*${first}*), and the second is always *to* with its first form: ${right}\n\n**Check.** Check both verbs: the first (*${first}*) matches the subject and tense, and the second stays *to* + plain verb.`,
+          `第一个动词${how["zh-CN"]}（*${first}*），第二个动词总是 *to* 加原形：${right}\n\n**检验。** 核对两个动词：第一个（*${first}*）符合主语和时态，第二个保持 *to* + 动词原形。`,
         );
       }),
     ),
@@ -633,6 +637,10 @@ const writingAnInvitationAndAReply = judgedTopic({
     "Write an invitation that says what, when and where, or a reply that says yes, or says no with a reason.",
     "写一份邀请，说明是什么活动、什么时间、在哪里；或者写一封回复，接受邀请，或者说明理由并拒绝。",
   ),
+  intro: t(
+    "A good invitation gives every practical detail—*Join us for a picnic on Sunday at 11:00 in River Park!*—and a polite reply thanks the host first, then clearly accepts or declines with a reason.",
+    "一份好邀请会把实用信息写全（*Join us for a picnic on Sunday at 11:00 in River Park!*），而礼貌的回复总是先道谢，再明确答应或说明理由婉拒。",
+  ),
   prerequisites: ["writing-a-short-note", "will-for-the-future"],
   encompasses: [
     { topic: "writing-a-short-note", weight: 0.3 },
@@ -643,8 +651,8 @@ const writingAnInvitationAndAReply = judgedTopic({
     id: "invitation",
     title: t("What, when and where; yes or no", "什么、何时、何地；接受还是拒绝"),
     explanation: t(
-      "**An invitation** says what the event is, when it is and where it is: *I'm having a birthday party next Saturday at my house, from three to six.* Then ask: *Can you come?*\n\n**A reply** thanks the writer first: *Thanks for the invitation!* Then say yes (*I'd love to come*) or no with a reason (*I'm sorry, but I can't come. We're visiting my aunt that weekend.*)",
-      "**邀请**要说明是什么活动、什么时间、在哪里：*I'm having a birthday party next Saturday at my house, from three to six.* 然后问：*Can you come?*\n\n**回复**先感谢对方：*Thanks for the invitation!* 然后接受（*I'd love to come*），或者说明理由并拒绝（*I'm sorry, but I can't come. We're visiting my aunt that weekend.*）。直接说 *No, I can't* 不够礼貌，要加上 *sorry* 和理由。",
+      "**An invitation** says what the event is, when it is and where it is: *I'm having a birthday party next Saturday at my house, from three to six.* Then ask: *Can you come?*\n\n**A reply** thanks the writer first: *Thanks for the invitation!* Then say yes (*I'd love to come*) or no with a reason (*I'm sorry, but I can't come. We're visiting my aunt that weekend.*)\n\n> **Watch out.** When saying no, never write a blunt *No, I can't*—add *I'm sorry* and a short reason, and remember to open with a greeting and close with your name.",
+      "**邀请**要说明是什么活动、什么时间、在哪里：*I'm having a birthday party next Saturday at my house, from three to six.* 然后问：*Can you come?*\n\n**回复**先感谢对方：*Thanks for the invitation!* 然后接受（*I'd love to come*），或者说明理由并拒绝（*I'm sorry, but I can't come. We're visiting my aunt that weekend.*）。\n\n> **注意。** 拒绝时不要生硬地只说 *No, I can't*，要加上 *I'm sorry* 和简短理由，并记得写全称呼和署名。",
     ),
   },
   question: t(

@@ -409,13 +409,13 @@ function statementItems(f: Featured): readonly LabelledItem[] {
       shown: `${f.text}\n\n${peopleList(f)}\n\n**Statement:** ${statement}`,
       right: person,
       solution: t(
-        `**${letter}** (${name}): "${evidence}${end(evidence)}" The statement says this in other words. The others speak about the same subject but say something different.`,
-        `**${letter}**（${name}）："${evidence}${end(evidence)}" 陈述用别的话说出了这一点。其他人谈的是同一话题，但说法不同。`,
+        `**${letter}** (${name}): "${evidence}${end(evidence)}" The statement says this in other words. The others speak about the same subject but say something different.\n\n**Check.** Verify that the quote belongs to ${name} and matches the entire statement, not just one shared keyword.`,
+        `**${letter}**（${name}）："${evidence}${end(evidence)}" 陈述用别的话说出了这一点。其他人谈的是同一话题，但说法不同。\n\n**检验。** 确认所引原话确实出自 ${name}，且与整条陈述的意思吻合，而不只是共享某个关键词。`,
       ),
       whyNot: (label) =>
         t(
-          `${f.people[label]} speaks about the subject too, but does not say this. Look for ${name}'s words: "${evidence}${end(evidence)}"`,
-          `${f.people[label]} 也谈到了这个话题，但没有这样说。看 ${name} 的话："${evidence}${end(evidence)}"`,
+          `${f.people[label]} speaks about the same subject, but does not make this particular claim in the text.`,
+          `${f.people[label]} 也谈到了同一话题，但在原文中并没有提出这一具体观点。`,
         ),
     };
   });
@@ -426,9 +426,15 @@ function questionItems(f: Featured): readonly SolvedChoice[] {
     shown: `${f.text}\n\n**${question}**`,
     right,
     wrong,
+    whyNot: wrong.map((w) =>
+      t(
+        `"${w}" does not match what the passage states—check the exact sentence in the text about this point.`,
+        `“${w}”与原文所说不符，请核对文中谈到这一点的原句。`,
+      ),
+    ),
     solution: t(
-      `**${right}** The text says: "${evidence}${end(evidence)}" The other options borrow words from the text but change what it says, or say something it does not say.`,
-      `**${right}** 原文是："${evidence}${end(evidence)}" 其他选项借用了原文的词语，却改变了原文的意思，或者说了原文没有说的话。`,
+      `**${right}** The text says: "${evidence}${end(evidence)}" The other options borrow words from the text but change what it says, or say something it does not say.\n\n**Check.** Match the chosen option back to "${evidence}${end(evidence)}"—both say the same thing in different words.`,
+      `**${right}** 原文是："${evidence}${end(evidence)}" 其他选项借用了原文的词语，却改变了原文的意思，或者说了原文没有说的话。\n\n**检验。** 把所选答案与原句“${evidence}${end(evidence)}”对照——两者只是换了说法，意思完全一致。`,
     ),
   }));
 }
@@ -440,6 +446,10 @@ export const matchingFeaturesAndChoice: TopicDef = examTopic({
   summary: t(
     "IELTS-style questions on a text about several people: match each statement to the person who says it, and choose the answer that means what the text says.",
     "雅思风格的题目，短文介绍几个人的观点：把每条陈述与说出它的人匹配，并选出与原文意思相同的答案。",
+  ),
+  intro: t(
+    "When three researchers debate the same issue in one short passage, IELTS tests whether you can keep their views apart—matching each paraphrased claim to the right speaker and spotting subtle traps in four-option multiple choice.",
+    "当三位研究者在同一篇短文里讨论同一话题时，雅思会考查你能否把他们的观点分清：既能把换说法的陈述对应到正确的人，也能在四选一中识破偷换概念的干扰项。",
   ),
   strand: "reading",
   prerequisites: ["supporting-details", "making-inferences"],
@@ -453,8 +463,8 @@ export const matchingFeaturesAndChoice: TopicDef = examTopic({
       "ielts-matching-features",
       t("Matching Features", "人物观点匹配"),
       t(
-        "In **matching features**, a text reports what several people found or think, and each statement says what one of them said in other words. First find each name in the text and mark what that person says. Then pick out the key idea of the statement and look for the same meaning, not the same words: *fewer visits to their family doctor* can be *better health*.\n\nThe usual trap is a person who speaks about the same subject but says something different, so check that the whole statement fits.",
-        "在**人物观点匹配**题中，短文介绍几个人的发现或看法，每条陈述用别的话转述其中一个人的话。先在文中找到每个名字，标出这个人说了什么。然后抓住陈述的关键意思，找相同的意思而不是相同的词：*fewer visits to their family doctor* 可以是 *better health*。\n\n常见的陷阱是另一个人谈的是同一话题但说法不同，所以要核对整条陈述都符合。",
+        "In **matching features**, a text reports what several people found or think, and each statement says what one of them said in other words. First find each name in the text and mark what that person says. Then pick out the key idea of the statement and look for the same meaning, not the same words: *fewer visits to their family doctor* can be *better health*.\n\n> **Watch out.** Several speakers often mention the same topic—never stop at a matching noun; check that the **whole** claim belongs to that person.",
+        "在**人物观点匹配**题中，短文介绍几个人的发现或看法，每条陈述用别的话转述其中一个人的话。先在文中找到每个名字，标出这个人说了什么。然后抓住陈述的关键意思，找相同的意思而不是相同的词：*fewer visits to their family doctor* 可以是 *better health*。\n\n> **注意。** 几位人物常常讨论同一个话题——不要看到相同的名词就停下，务必核对**整条**观点确实出自这个人。",
       ),
       labelGenerator(
         t(
@@ -469,8 +479,8 @@ export const matchingFeaturesAndChoice: TopicDef = examTopic({
       "ielts-multiple-choice",
       t("Multiple Choice", "单项选择"),
       t(
-        "IELTS multiple-choice questions follow the order of the text. Find the part of the text the question is about, read it closely, then check each option against it. Wrong options often repeat words from the text but change the meaning, mix up who said what, or say something the text never says. Choose the option that means the same as the text, even when it uses different words.",
-        "雅思单项选择题按原文顺序出题。先找到题目所问的那部分原文，仔细读，再逐个用它核对选项。错误选项常常重复原文的词却改变了意思、把一个人的话安到另一个人身上，或者说了原文根本没说的话。要选与原文意思相同的选项，哪怕它用了不同的词。",
+        "IELTS multiple-choice questions follow the order of the text. Find the part of the text the question is about, read it closely, then check each option against it. Choose the option that means the same as the text, even when it uses different words.\n\n> **Watch out.** Wrong options often reuse exact words from the passage while swapping who said what, reversing the meaning, or adding a claim the passage never makes.",
+        "雅思单项选择题按原文顺序出题。先找到题目所问的那部分原文，仔细读，再逐个用它核对选项。要选与原文意思相同的选项，哪怕它用了不同的词。\n\n> **注意。** 错误选项常常照搬原文词汇，却把甲的话安到乙头上、把意思说反，或塞进原文根本没提的说法。",
       ),
       solvedChoiceGenerator(
         t("Choose the correct answer to the question below the text.", "选出短文下方问题的正确答案。"),

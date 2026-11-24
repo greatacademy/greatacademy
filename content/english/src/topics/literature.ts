@@ -28,10 +28,19 @@ const deviceBank: readonly ChoiceItem[] = [
 ];
 
 const deviceWhy = new Map([
-  ["personification", ["It gives a human action or feeling to something that is not human.", "它把人的动作或感受赋予非人的事物。"]],
+  [
+    "personification",
+    [
+      "It gives a human action or feeling to something that is not human.\n\n**Check.** Spot the nonhuman subject (wind, car, sun, stairs) and the human verb paired with it—only a person could literally do that action.",
+      "它把人的动作或感受赋予非人的事物。\n\n**检验。** 找出非人的主语（风、车、太阳、楼梯等）和配给它的动作——只有人才能真正做出这种举动。",
+    ],
+  ],
   [
     "hyperbole",
-    ["It exaggerates far beyond the truth for effect, and no one takes it literally.", "它为了效果而远远夸大事实，没有人会按字面理解。"],
+    [
+      "It exaggerates far beyond the truth for effect, and no one takes it literally.\n\n**Check.** Test the claim literally (a million times, weighing a ton, a mile long)—it is wildly impossible, proving deliberate exaggeration.",
+      "它为了效果而远远夸大事实，没有人会按字面理解。\n\n**检验。** 按字面检验这个说法（一百万次、重达一吨、一英里长）——现实中绝无可能，证实是有意夸张。",
+    ],
   ],
 ]);
 
@@ -94,22 +103,22 @@ const soundWhy = new Map([
   [
     "alliteration",
     [
-      "Several nearby words begin with the same consonant sound, which you hear when you read the line aloud.",
-      "几个相邻的词以同一个辅音开头，把句子读出来就能听到。",
+      "Several nearby words begin with the same consonant sound, which you hear when you read the line aloud.\n\n**Check.** Say the first sound of each main word in the line—the repeated opening consonant confirms alliteration.",
+      "几个相邻的词以同一个辅音开头，把句子读出来就能听到。\n\n**检验。** 读出句中主要单词的首音——反复出现的开头辅音证实是头韵。",
     ],
   ],
   [
     "onomatopoeia",
     [
-      "A word imitates the sound it names, so saying it aloud sounds like the thing itself.",
-      "一个词模仿它所指的声音，读出来就像那个东西发出的声音。",
+      "A word imitates the sound it names, so saying it aloud sounds like the thing itself.\n\n**Check.** Listen to the sound word (*buzz*, *sizzle*, *crash*, *drip*)—its pronunciation mimics the real-world noise.",
+      "一个词模仿它所指的声音，读出来就像那个东西发出的声音。\n\n**检验。** 听听句中的拟声词（如 *buzz*、*sizzle*、*crash*、*drip*）——读音本身就在模仿现实声响。",
     ],
   ],
   [
     "rhyme",
     [
-      "Words at the ends of the line's parts share the same ending sound, while their first sounds differ.",
-      "几个词的结尾音相同，而开头的音不同。",
+      "Words at the ends of the line's parts share the same ending sound, while their first sounds differ.\n\n**Check.** Pair the rhyming words aloud—their vowel and ending sounds match cleanly.",
+      "几个词的结尾音相同，而开头的音不同。\n\n**检验。** 把押韵的词放一起读出——它们的元音和尾音完全呼应。",
     ],
   ],
 ]);
@@ -138,11 +147,41 @@ const plotBank: readonly ChoiceItem[] = [
 ];
 
 const plotWhy = new Map([
-  ["exposition", ["It introduces the characters and the setting before the problem begins.", "它在问题出现之前介绍人物和背景。"]],
-  ["rising action", ["The problem builds and the tension grows.", "问题逐渐发展，紧张感不断增强。"]],
-  ["climax", ["It is the turning point, the moment of greatest tension.", "这是转折点，紧张感最强的时刻。"]],
-  ["falling action", ["The tension eases after the turning point.", "转折点之后紧张感逐渐缓和。"]],
-  ["resolution", ["The problem is settled and the story ends.", "问题得到解决，故事结束。"]],
+  [
+    "exposition",
+    [
+      "It introduces the characters and the setting before the problem begins.\n\n**Check.** Notice no crisis has started yet—this moment only places the characters in their world.",
+      "它在问题出现之前介绍人物和背景。\n\n**检验。** 注意此时危机尚未发生——这里只交代人物和初始环境。",
+    ],
+  ],
+  [
+    "rising action",
+    [
+      "The problem builds and the tension grows.\n\n**Check.** Ask whether the trouble is escalating here without yet reaching the decisive showdown—yes, that is rising action.",
+      "问题逐渐发展，紧张感不断增强。\n\n**检验。** 看这里的麻烦是不是正在升级、但尚未到达最终对决——正是发展阶段。",
+    ],
+  ],
+  [
+    "climax",
+    [
+      "It is the turning point, the moment of greatest tension.\n\n**Check.** Notice the character directly faces the peak danger or choice—everything after this moment shifts toward the outcome.",
+      "这是转折点，紧张感最强的时刻。\n\n**检验。** 注意人物在这里直面最大危机或关键抉择——此后局势便转向收尾。",
+    ],
+  ],
+  [
+    "falling action",
+    [
+      "The tension eases after the turning point.\n\n**Check.** Notice the peak crisis has just passed and events are winding down toward the final settlement.",
+      "转折点之后紧张感逐渐缓和。\n\n**检验。** 注意最危急的关头已经过去，情节正朝着最终解决回落。",
+    ],
+  ],
+  [
+    "resolution",
+    [
+      "The problem is settled and the story ends.\n\n**Check.** Notice the conflict is completely over and we see the characters' new normal at the close of the story.",
+      "问题得到解决，故事结束。\n\n**检验。** 注意冲突已经彻底落幕，这里呈现的是故事结尾的新状态。",
+    ],
+  ],
 ]);
 
 const conflictBank: readonly ChoiceItem[] = [
@@ -445,6 +484,10 @@ export const literatureTopics: readonly TopicDef[] = [
     id: "personification-and-hyperbole",
     title: t("Personification and Hyperbole", "拟人和夸张"),
     summary: t("Giving human qualities to things, and exaggerating for effect.", "赋予事物人的特点，以及为了效果而夸大。"),
+    intro: t(
+      "*The lanterns winked across the harbor* gives human life to lamps (**personification**); *My pack weighed a thousand pounds* stretches reality to show exhaustion (**hyperbole**). Both create vivid pictures that literal facts cannot.",
+      "*The lanterns winked across the harbor* 赋予灯笼人的神态（**拟人**）；*My pack weighed a thousand pounds* 借极度夸大表现疲惫（**夸张**）。两者都能营造平实字面达不到的鲜明画面。",
+    ),
     prerequisites: ["similes-and-metaphors"],
     encompasses: [{ topic: "similes-and-metaphors", weight: 0.2 }],
     xp: 12,
@@ -453,8 +496,8 @@ export const literatureTopics: readonly TopicDef[] = [
         "naming-the-device",
         t("Naming the Device", "辨认修辞"),
         t(
-          "**Personification** gives human actions or feelings to something that is not human: *The wind whispered*. **Hyperbole** is an exaggeration so great that no one takes it literally: *I have told you a million times*. Like similes and metaphors, both are figurative: they mean something other than what the words literally say.",
-          "**拟人**把人的动作或感受赋予非人的事物：*The wind whispered*。**夸张**是极度的夸大，没有人会按字面理解：*I have told you a million times*。和明喻、暗喻一样，两者都是修辞性的：意思不同于字面。",
+          "**Personification** gives human actions or feelings to something that is not human: *The wind whispered*. **Hyperbole** is an exaggeration so great that no one takes it literally: *I have told you a million times*. Like similes and metaphors, both are figurative: they mean something other than what the words literally say.\n\n> **Watch out.** Ask *what makes the sentence impossible literally*: if an object acts like a person, it is personification; if a number or size is stretched wildly, it is hyperbole.",
+          "**拟人**把人的动作或感受赋予非人的事物：*The wind whispered*。**夸张**是极度的夸大，没有人会按字面理解：*I have told you a million times*。和明喻、暗喻一样，两者都是修辞性的：意思不同于字面。\n\n> **注意。** 问一句*字面上哪里不可能*：若物体像人一样行动或有情绪，是拟人；若数量、大小或时间被极度放大，是夸张。",
         ),
         named(["Which device does the sentence use?", "这句话用了哪种修辞？"], [...deviceBank, ...deviceMore], deviceWhy, deviceNot),
       ),
@@ -462,14 +505,16 @@ export const literatureTopics: readonly TopicDef[] = [
         "effect-of-the-device",
         t("The Effect of the Device", "修辞的效果"),
         t(
-          "Writers choose devices for an effect. Personification can make a thing seem friendly, fierce or tired; hyperbole stresses a feeling such as boredom, hunger or impatience. To explain the effect, say what the device makes the reader feel or picture, not what the words literally claim.",
-          "作者为了效果而选择修辞。拟人可以让事物显得友善、凶猛或疲惫；夸张强调无聊、饥饿或不耐烦之类的感受。解释效果时，要说出修辞让读者有什么感受或想象，而不是字面上说了什么。",
+          "Writers choose devices for an effect. Personification can make a thing seem friendly, fierce or tired; hyperbole stresses a feeling such as boredom, hunger or impatience. To explain the effect, say what the device makes the reader feel or picture, not what the words literally claim.\n\n> **Watch out.** Reject any choice that treats the image as a literal fact (such as a sea literally eating or a test literally measuring miles).",
+          "作者为了效果而选择修辞。拟人可以让事物显得友善、凶猛或疲惫；夸张强调无聊、饥饿或不耐烦之类的感受。解释效果时，要说出修辞让读者有什么感受或想象，而不是字面上说了什么。\n\n> **注意。** 排除任何按字面当真理解的选项（比如把大海当成真的肚子饿，或把试卷当成真有几英里长）。",
         ),
         pick(
           ["What is the effect of the figurative language?", "这里修辞的效果是什么？"],
           [...deviceEffectBank, ...deviceEffectMore],
-          (right) => `${right} The other choices read the words literally, which misses the effect.`,
-          (right) => `${right} 其他选项按字面理解，没有抓住效果。`,
+          (right) =>
+            `${right} The other choices read the words literally, which misses the effect.\n\n**Check.** Notice this choice describes the *feeling or impression* created for the reader rather than a literal measurement or fact.`,
+          (right) =>
+            `${right} 其他选项按字面理解，没有抓住效果。\n\n**检验。** 注意这个选项点出的是修辞带给读者的*感受或画面*，而不是字面上的事实或数据。`,
           (_wrong, _right, _shown, position) =>
             position === 0
               ? [
@@ -488,6 +533,10 @@ export const literatureTopics: readonly TopicDef[] = [
     id: "sound-devices",
     title: t("Sound Devices", "声音修辞"),
     summary: t("Alliteration, onomatopoeia and rhyme, and the rhyme scheme of a stanza.", "头韵、拟声和押韵，以及诗节的韵式。"),
+    intro: t(
+      "Poets shape music out of ordinary words: repeated starting sounds (*silver sails*), sound-imitating words (*hiss*, *thud*), and end-rhyme patterns (*ABAB* or *AABB*) all give lines rhythm you can hear aloud.",
+      "诗人用寻常词语谱出音乐感：重复的开头辅音（*silver sails*）、摹声词（*hiss*、*thud*）以及行尾押韵模式（*ABAB* 或 *AABB*），大声读出来就能听见节奏。",
+    ),
     prerequisites: [],
     encompasses: [],
     xp: 12,
@@ -496,8 +545,8 @@ export const literatureTopics: readonly TopicDef[] = [
         "alliteration-onomatopoeia-rhyme",
         t("Alliteration, Onomatopoeia and Rhyme", "头韵、拟声和押韵"),
         t(
-          "**Alliteration** repeats the first consonant sound of nearby words: *big brown bears*. **Onomatopoeia** is a word that sounds like what it names: *buzz, sizzle, crash*. **Rhyme** repeats the ending sounds of words: *night* and *bright*. Read the line aloud and listen for which one you hear.",
-          "**头韵**是相邻的词重复相同的开头辅音：*big brown bears*。**拟声**是听起来像它所指声音的词：*buzz, sizzle, crash*。**押韵**是词尾音相同：*night* 和 *bright*。把句子读出来，听听用的是哪一种。",
+          "**Alliteration** repeats the first consonant sound of nearby words: *big brown bears*. **Onomatopoeia** is a word that sounds like what it names: *buzz, sizzle, crash*. **Rhyme** repeats the ending sounds of words: *night* and *bright*. Read the line aloud and listen for which one you hear.\n\n> **Watch out.** Check *where* the sound effect happens: beginning consonant sounds = alliteration, matching endings = rhyme, a noise-imitating word = onomatopoeia.",
+          "**头韵**是相邻的词重复相同的开头辅音：*big brown bears*。**拟声**是听起来像它所指声音的词：*buzz, sizzle, crash*。**押韵**是词尾音相同：*night* 和 *bright*。把句子读出来，听听用的是哪一种。\n\n> **注意。** 分清声音效果出现的位置：词首辅音重复是头韵，词尾读音呼应是押韵，模仿现实声响的词是拟声。",
         ),
         named(
           ["Which sound device does the line use most?", "这行主要用了哪种声音修辞？"],
@@ -510,14 +559,16 @@ export const literatureTopics: readonly TopicDef[] = [
         "rhyme-scheme",
         t("Rhyme Scheme", "韵式"),
         t(
-          "A **rhyme scheme** labels the end sounds of the lines in a stanza with letters. The first end sound is A; each line that rhymes with it is also A; the next new sound is B, and so on. *Day, sun, play, fun* is ABAB. A line that rhymes with nothing still gets its own letter, as in ABCB.",
-          "**韵式**用字母标出诗节各行的尾音。第一个尾音记为 A，与它押韵的行也记为 A；下一个新的尾音记为 B，依此类推。*day, sun, play, fun* 是 ABAB。不与任何行押韵的行也有自己的字母，例如 ABCB。",
+          "A **rhyme scheme** labels the end sounds of the lines in a stanza with letters. The first end sound is A; each line that rhymes with it is also A; the next new sound is B, and so on. *Day, sun, play, fun* is ABAB. A line that rhymes with nothing still gets its own letter, as in ABCB.\n\n> **Watch out.** Always test the *spoken sound* of each line's final word, not just its spelling—and never reuse a letter for a line that does not rhyme.",
+          "**韵式**用字母标出诗节各行的尾音。第一个尾音记为 A，与它押韵的行也记为 A；下一个新的尾音记为 B，依此类推。*day, sun, play, fun* 是 ABAB。不与任何行押韵的行也有自己的字母，例如 ABCB。\n\n> **注意。** 按每行尾词的*实际读音*（而不只看拼写）标字母——不押韵的行一定要给新字母。",
         ),
         pick(
           ["What is the rhyme scheme of this stanza? A slash marks the end of each line.", "这个诗节的韵式是什么？斜线表示每行的结尾。"],
           [...rhymeSchemeBank, ...rhymeSchemeMore],
-          (right) => `The rhyme scheme is **${right}**. Give the first end sound A, and a new letter to each new sound.`,
-          (right) => `韵式是 **${right}**。第一个尾音记为 A，每个新的尾音用一个新字母。`,
+          (right) =>
+            `The rhyme scheme is **${right}**. Give the first end sound A, and a new letter to each new sound.\n\n**Check.** Read only the last word of each of the four lines in order and assign A to the first sound—the four letters spell **${right}**.`,
+          (right) =>
+            `韵式是 **${right}**。第一个尾音记为 A，每个新的尾音用一个新字母。\n\n**检验。** 按顺序只读四行各自的尾词，给第一个尾音标 A——依次标出的四个字母正是 **${right}**。`,
           schemeNot,
         ),
       ),
@@ -527,6 +578,10 @@ export const literatureTopics: readonly TopicDef[] = [
     id: "plot-and-conflict",
     title: t("Plot and Conflict", "情节与冲突"),
     summary: t("The stages of a plot, and the kinds of conflict that drive it.", "情节的各个阶段，以及推动情节的冲突类型。"),
+    intro: t(
+      "Every story moves through a shape (**plot**) powered by a struggle (**conflict**): a sailor trapped in a gale faces nature, while a student debating whether to confess a mistake faces an inner conflict.",
+      "每个故事都沿着一定的结构（**情节**）展开，由核心斗争（**冲突**）推动：风暴中的水手对抗自然，犹豫是否坦白错误的学生则在与内心交战。",
+    ),
     prerequisites: ["characters"],
     encompasses: [{ topic: "characters", weight: 0.2 }],
     xp: 12,
@@ -535,8 +590,8 @@ export const literatureTopics: readonly TopicDef[] = [
         "stages-of-plot",
         t("Stages of a Plot", "情节的阶段"),
         t(
-          "Most plots follow a pattern. The **exposition** introduces the characters and setting. In the **rising action**, a problem appears and grows. The **climax** is the turning point, the moment of greatest tension. In the **falling action**, the tension eases, and the **resolution** settles the problem.",
-          "大多数情节遵循一个模式。**开端**介绍人物和背景。在**发展**中，问题出现并不断加剧。**高潮**是转折点，紧张感最强的时刻。在**回落**中，紧张感缓和，**结局**解决问题。",
+          "Most plots follow a pattern. The **exposition** introduces the characters and setting. In the **rising action**, a problem appears and grows. The **climax** is the turning point, the moment of greatest tension. In the **falling action**, the tension eases, and the **resolution** settles the problem.\n\n> **Watch out.** Do not confuse *rising action* (trouble building) with *climax* (the single peak moment where everything turns), or *falling action* with *resolution*.",
+          "大多数情节遵循一个模式。**开端**介绍人物和背景。在**发展**中，问题出现并不断加剧。**高潮**是转折点，紧张感最强的时刻。在**回落**中，紧张感缓和，**结局**解决问题。\n\n> **注意。** 不要混淆*发展*（问题升级）与*高潮*（决定局势的最高点），也不要混淆*回落*与*结局*。",
         ),
         named(["Which part of the plot is this event?", "这件事属于情节的哪个部分？"], [...plotBank, ...plotMore], plotWhy, plotNot),
       ),
@@ -544,14 +599,15 @@ export const literatureTopics: readonly TopicDef[] = [
         "kinds-of-conflict",
         t("Kinds of Conflict", "冲突的类型"),
         t(
-          "A **conflict** is the struggle at the heart of a plot. It may be between two characters, between a character and nature, between a character and society (its rules or beliefs), or inside a character's own mind, as a hard choice or a fear.",
-          "**冲突**是情节核心的斗争。它可能发生在两个人物之间、人物与自然之间、人物与社会（其规则或观念）之间，也可能发生在人物内心，表现为艰难的抉择或恐惧。",
+          "A **conflict** is the struggle at the heart of a plot. It may be between two characters, between a character and nature, between a character and society (its rules or beliefs), or inside a character's own mind, as a hard choice or a fear.\n\n> **Watch out.** Name the *opposing force*: another person (*character*), weather/wilderness (*nature*), a law or unfair custom (*society*), or the character's own fear/choice (*self*).",
+          "**冲突**是情节核心的斗争。它可能发生在两个人物之间、人物与自然之间、人物与社会（其规则或观念）之间，也可能发生在人物内心，表现为艰难的抉择或恐惧。\n\n> **注意。** 找准*对抗的对象*：另一个人（人物）、风暴或自然环境（自然）、法规或成见（社会），还是人物自己的恐惧或抉择（自我）。",
         ),
         pick(
           ["What kind of conflict is this?", "这是哪种冲突？"],
           [...conflictBank, ...conflictMore],
-          (right) => `This is **${right}**: ask what or whom the character is struggling against.`,
-          (right) => `这是 **${right}**：问一问人物在和谁或什么作斗争。`,
+          (right) =>
+            `This is **${right}**: ask what or whom the character is struggling against.\n\n**Check.** Identify the two sides of the struggle in the prompt—they match **${right}** directly.`,
+          (right) => `这是 **${right}**：问一问人物在和谁或什么作斗争。\n\n**检验。** 找出题干中对抗的双方——正好对应 **${right}**。`,
           conflictNot,
         ),
       ),
@@ -564,6 +620,10 @@ export const literatureTopics: readonly TopicDef[] = [
       "The message about life a story conveys, as opposed to its topic or its plot.",
       "故事传达的人生道理，区别于它的话题或情节。",
     ),
+    intro: t(
+      "A story's **topic** might be *honesty* and its **plot** might be *a boy admits he broke a vase*, but its **theme** is a full-sentence insight about life: *Telling the truth builds trust even when it is hard.*",
+      "一个故事的**话题**可以是“诚实”，**情节**可以是“男孩承认打碎了花瓶”，而**主题**则是完整句子表达的人生道理：“即使很难，说真话也能赢得信任。”",
+    ),
     prerequisites: ["lesson-of-a-story"],
     encompasses: [{ topic: "lesson-of-a-story", weight: 0.3 }],
     xp: 12,
@@ -572,15 +632,16 @@ export const literatureTopics: readonly TopicDef[] = [
         "theme-topic-or-plot",
         t("Theme, Topic or Plot", "主题、话题还是情节"),
         t(
-          "A **theme** is a message about life, stated as a full sentence: *Pride can lead to a fall*. A **topic** is a single word or phrase, such as *kings* or *courage*. A sentence that only retells what happens is **plot**. Unlike a fable's lesson, a theme is rarely stated; you infer it from what the characters do and what happens to them.",
-          "**主题**是关于人生的道理，用完整的句子表达：*Pride can lead to a fall*。**话题**是一个词或短语，比如 *kings* 或 *courage*。只复述发生了什么的句子是**情节**。和寓言的道理不同，主题很少直接说出来，需要从人物的行为及其遭遇中推断。",
+          "A **theme** is a message about life, stated as a full sentence: *Pride can lead to a fall*. A **topic** is a single word or phrase, such as *kings* or *courage*. A sentence that only retells what happens is **plot**. Unlike a fable's lesson, a theme is rarely stated; you infer it from what the characters do and what happens to them.\n\n> **Watch out.** A theme must pass two tests: it is a *complete sentence*, and it applies beyond the specific characters' names and events.",
+          "**主题**是关于人生的道理，用完整的句子表达：*Pride can lead to a fall*。**话题**是一个词或短语，比如 *kings* 或 *courage*。只复述发生了什么的句子是**情节**。和寓言的道理不同，主题很少直接说出来，需要从人物的行为及其遭遇中推断。\n\n> **注意。** 主题必须同时通过两项检验：它是*完整句子*，且不局限于故事里具体的人物名字和事件。",
         ),
         pick(
           ["Which states the theme of this story?", "哪一项陈述了这个故事的主题？"],
           [...themeBank, ...themeMore],
           (right) =>
-            `*${right}* is a message about life in a full sentence. The other choices are only a topic or a retelling of the plot.`,
-          (right) => `*${right}* 是用完整句子表达的人生道理。其他选项只是话题或情节复述。`,
+            `*${right}* is a message about life in a full sentence. The other choices are only a topic or a retelling of the plot.\n\n**Check.** Notice this statement is a complete sentence that holds true outside this one story—unlike a single-word topic or a plot summary.`,
+          (right) =>
+            `*${right}* 是用完整句子表达的人生道理。其他选项只是话题或情节复述。\n\n**检验。** 注意这是一句放之故事之外也成立的完整句子——既不是单个话题词，也不是情节复述。`,
           (wrong, _right, _shown, position) =>
             position === 0
               ? [
@@ -597,14 +658,16 @@ export const literatureTopics: readonly TopicDef[] = [
         "evidence-for-a-theme",
         t("Evidence for a Theme", "主题的依据"),
         t(
-          "A theme is supported by what happens because of a character's choices. To find evidence, look for an event that shows the message in action. A detail about the setting or a character's looks may be true but says nothing about the theme.",
-          "主题由人物的选择所带来的结果来支持。要找依据，就找能体现这个道理的事件。关于背景或人物外貌的细节也许是真的，却与主题无关。",
+          "A theme is supported by what happens because of a character's choices. To find evidence, look for an event that shows the message in action. A detail about the setting or a character's looks may be true but says nothing about the theme.\n\n> **Watch out.** Skip background facts about appearance, weather, or age—pick the event where a character's *choice and consequence* prove the theme.",
+          "主题由人物的选择所带来的结果来支持。要找依据，就找能体现这个道理的事件。关于背景或人物外貌的细节也许是真的，却与主题无关。\n\n> **注意。** 跳过外貌、天气或年龄等背景细节——选出人物做出*选择并承担后果*、直接印证主题的事件。",
         ),
         pick(
           ["Which event best supports the theme?", "哪个事件最能支持这个主题？"],
           [...themeEvidenceBank, ...themeEvidenceMore],
-          (right) => `*${right}* shows the theme in action. The other details are true of the story but say nothing about its message.`,
-          (right) => `*${right}* 体现了这个主题。其他细节虽属于故事，却与它的道理无关。`,
+          (right) =>
+            `*${right}* shows the theme in action. The other details are true of the story but say nothing about its message.\n\n**Check.** Link this event directly to the stated theme: a character acts and the result proves the lesson, whereas the other options are plain background details.`,
+          (right) =>
+            `*${right}* 体现了这个主题。其他细节虽属于故事，却与它的道理无关。\n\n**检验。** 把这个事件和主题对照：人物采取行动并迎来相应结果，直接印证了主题，而另两项只是普通背景信息。`,
           (wrong) => [
             `*${wrong}* may be true of the story, but no one makes a choice in it and lives with the result, so it does not show the theme in action.`,
             `*${wrong}* 也许属于故事，但其中没有人物做出选择并承担结果，所以它没有体现主题。`,
@@ -617,6 +680,10 @@ export const literatureTopics: readonly TopicDef[] = [
     id: "tone-and-mood",
     title: t("Tone and Mood", "语气与氛围"),
     summary: t("The writer's attitude, and the feeling a passage creates in the reader.", "作者的态度，以及一段文字在读者心中营造的感觉。"),
+    intro: t(
+      "Think of **tone** as the speaker's voice (playful, admiring, or sarcastic) and **mood** as the room's atmosphere (cozy, tense, or eerie). Word choice and sensory details reveal both.",
+      "可以把**语气**想成说话人的声调（俏皮、赞叹或讽刺），把**氛围**想成房间里的气息（温馨、紧张或阴森）。用词和感官细节会同时透露这两者。",
+    ),
     prerequisites: ["characters"],
     encompasses: [],
     xp: 10,
@@ -625,14 +692,16 @@ export const literatureTopics: readonly TopicDef[] = [
         "identifying-tone",
         t("Identifying Tone", "辨别语气"),
         t(
-          "**Tone** is the writer's attitude toward the subject: joyful, sad, serious, humorous, angry, sarcastic. It comes from word choice and details, not from the subject alone: a rainy day can be written about peacefully or with sarcasm. In sarcasm, the words say the opposite of what the writer means.",
-          "**语气**是作者对所写内容的态度：欢快、悲伤、严肃、幽默、愤怒、讽刺。它来自用词和细节，而不仅仅是话题：下雨天既可以写得宁静，也可以写得讽刺。讽刺时，字面意思与作者的真实意思相反。",
+          "**Tone** is the writer's attitude toward the subject: joyful, sad, serious, humorous, angry, sarcastic. It comes from word choice and details, not from the subject alone: a rainy day can be written about peacefully or with sarcasm. In sarcasm, the words say the opposite of what the writer means.\n\n> **Watch out.** Check whether the writer's praise actually matches the situation—praising a ruined picnic or a missed bus signals *sarcastic* tone, not joyful tone.",
+          "**语气**是作者对所写内容的态度：欢快、悲伤、严肃、幽默、愤怒、讽刺。它来自用词和细节，而不仅仅是话题：下雨天既可以写得宁静，也可以写得讽刺。讽刺时，字面意思与作者的真实意思相反。\n\n> **注意。** 检查夸奖的话是否与处境相符——对着淋湿的野餐或错过的公交说“太棒了”，表达的是*讽刺*而不是欢快。",
         ),
         pick(
           ["What is the tone of this passage?", "这段话的语气是什么？"],
           [...toneBank, ...toneMore],
-          (right) => `The tone is **${right}**: the word choice and details show this attitude. The other choices do not fit those words.`,
-          (right) => `语气是 **${right}**：用词和细节表现了这种态度。其他选项与这些词不符。`,
+          (right) =>
+            `The tone is **${right}**: the word choice and details show this attitude. The other choices do not fit those words.\n\n**Check.** Read the passage aloud as if speaking it—the loaded words and phrasing naturally call for a **${right}** voice.`,
+          (right) =>
+            `语气是 **${right}**：用词和细节表现了这种态度。其他选项与这些词不符。\n\n**检验。** 把这段话当成口语大声读出来——其中的用词和口吻自然带着 **${right}** 的态度。`,
           toneNot,
         ),
       ),
@@ -640,15 +709,16 @@ export const literatureTopics: readonly TopicDef[] = [
         "mood",
         t("Mood", "氛围"),
         t(
-          "**Mood** is the feeling a passage creates in the reader, while tone is the writer's attitude. Setting and sensory details build mood: fog, a bare branch and a crow make a scene eerie; a fire, warmth and cocoa make it cozy.",
-          "**氛围**是一段文字在读者心中营造的感觉，而语气是作者的态度。背景和感官细节营造氛围：雾、光秃秃的树枝和乌鸦让场景阴森；炉火、温暖和可可让它温馨。",
+          "**Mood** is the feeling a passage creates in the reader, while tone is the writer's attitude. Setting and sensory details build mood: fog, a bare branch and a crow make a scene eerie; a fire, warmth and cocoa make it cozy.\n\n> **Watch out.** Point to the *sensory clues* (light, sound, weather, silence) in the passage—those physical details directly establish the mood.",
+          "**氛围**是一段文字在读者心中营造的感觉，而语气是作者的态度。背景和感官细节营造氛围：雾、光秃秃的树枝和乌鸦让场景阴森；炉火、温暖和可可让它温馨。\n\n> **注意。** 找出文中的*感官线索*（光线、声音、天气、寂静）——这些具体画面直接决定了氛围。",
         ),
         pick(
           ["What mood does this passage create?", "这段话营造了什么氛围？"],
           [...moodBank, ...moodMore],
           (right) =>
-            `The mood is **${right}**: the setting and details make the reader feel this way. The other moods would need different details.`,
-          (right) => `氛围是 **${right}**：背景和细节让读者有这种感觉。其他氛围需要不同的细节。`,
+            `The mood is **${right}**: the setting and details make the reader feel this way. The other moods would need different details.\n\n**Check.** List two sensory details from the passage—both pull the reader straight into a **${right}** atmosphere.`,
+          (right) =>
+            `氛围是 **${right}**：背景和细节让读者有这种感觉。其他氛围需要不同的细节。\n\n**检验。** 挑出文中的两处感官细节——它们共同把读者带入 **${right}** 的氛围中。`,
           moodNot,
         ),
       ),

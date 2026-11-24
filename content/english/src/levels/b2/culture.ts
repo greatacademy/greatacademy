@@ -1412,37 +1412,41 @@ function cleftRule(right: string, shown: string): Text {
 /** cleftWhy puts the rule of the cleft before a sentence. */
 const cleftWhy = (right: string, shown: string): Text => {
   const rule = cleftRule(right, shown);
-  return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+  const check = right.startsWith("What ")
+    ? t(
+        "**Check.** Confirm the sentence starts with *What* (not *That*), has no extra *it* before *is/was*, and places the focus after *is/was*.",
+        "**检验。** 确认句子以 *What*（不是 *That*）开头，*is/was* 前没有多余的 *it*，且被强调部分放在 *is/was* 后面。",
+      )
+    : t(
+        "**Check.** Confirm *It is/was* + focus + *that* (never *what*), with no extra pronoun repeating the focus in the rest of the clause.",
+        "**检验。** 确认结构为 *It is/was* + 被强调部分 + *that*（绝不用 *what*），且后面不再用代词重复该成分。",
+      );
+  return t(`${rule.en}: ${right}\n\n${check.en}`, `${rule["zh-CN"]}：${right}\n\n${check["zh-CN"]}`);
 };
 
 /** whyNotItCleft explains what in an it-cleft, or a pronoun that repeats the focus. */
-const whyNotItCleft = (_wrong: string, right: string, shown: string, position: number): Text => {
-  const rule = cleftRule(right, shown);
-  const first =
-    position === 0
-      ? t("*what* never joins the focus of an *It* cleft to the rest.", "*It* 分裂句里不能用 *what* 连接被强调部分和其余部分。")
-      : t(
-          `The part after *that* repeats *${focusOf(shown)}* with a pronoun, but the focus already fills that place.`,
-          `*that* 后面又用代词重复了 *${focusOf(shown)}*，但被强调的部分已经占了这个位置。`,
-        );
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
-};
+const whyNotItCleft = (_wrong: string, _right: string, shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        "*what* cannot link the focus of an *It* cleft to the rest of the sentence; use *that* (or *who/which*).",
+        "*It* 分裂句里不能用 *what* 连接被强调部分和其余部分，应使用 *that*（或 *who/which*）。",
+      )
+    : t(
+        `The clause after *that* repeats *${focusOf(shown)}* with an extra pronoun, even though the focus already fills that slot.`,
+        `*that* 后面又用代词重复了 *${focusOf(shown)}*，但被强调部分已经占住了这个位置。`,
+      );
 
 /** whyNotWhatCleft explains That instead of What, or it before the verb of a what-cleft. */
-const whyNotWhatCleft = (_wrong: string, right: string, shown: string, position: number): Text => {
-  const rule = cleftRule(right, shown);
-  const first =
-    position === 0
-      ? t(
-          "A clause that begins with *That* does not name the thing in focus; the cleft begins with *What*.",
-          "以 *That* 开头的从句不能表示被强调的事物，分裂句要以 *What* 开头。",
-        )
-      : t(
-          "The *what*-clause is already the subject of the verb, so there is no *it* before it.",
-          "*what* 从句已经是动词的主语，所以动词前不再加 *it*。",
-        );
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
-};
+const whyNotWhatCleft = (_wrong: string, _right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        "A cleft clause that highlights the thing in focus must start with *What*, not *That*.",
+        "用来突出被强调事物的从句必须以 *What* 开头，不能用 *That*。",
+      )
+    : t(
+        "The *what*-clause already serves as the subject of *is/was*, so adding *it* before the verb creates a double subject.",
+        "*what* 从句本身就是 *is/was* 的主语，动词前再加 *it* 会造成主语重复。",
+      );
 
 const cleftSentences: TopicDef = {
   id: "cleft-sentences",
@@ -1450,6 +1454,10 @@ const cleftSentences: TopicDef = {
   summary: t(
     "It was the food that surprised me most. What I miss is the language. A cleft sentence splits a plain sentence in two to put one part in focus.",
     "It was the food that surprised me most. What I miss is the language。分裂句把一个普通句子分成两部分，突出其中一部分。",
+  ),
+  intro: t(
+    "A plain sentence like *Maya designed the poster* treats every part evenly. Split it into *It was Maya who designed the poster* or *What Maya designed was the poster*, and a spotlight swings straight onto one chosen detail.",
+    "普通句子 *Maya designed the poster* 语气平铺直叙；拆成分裂句 *It was Maya who designed the poster* 或 *What Maya designed was the poster*，聚光灯就会立刻打到你想强调的那一项上。",
   ),
   prerequisites: ["relative-clauses"],
   encompasses: [{ topic: "relative-clauses", weight: 0.3 }],
@@ -1460,8 +1468,8 @@ const cleftSentences: TopicDef = {
       "it-cleft",
       t("It is ... that ...", "It is ... that ..."),
       t(
-        "To put one part of a sentence in focus, put it after *It is* or *It was* and the rest after *that*:\n\n- *The food surprised me most.* → *It was **the food** that surprised me most.*\n- *I miss the language most.* → *It is **the language** that I miss most.*\n\nThe part after *that* is not complete without the focus, so it must not repeat it with a pronoun: not *It was the food that it surprised me*, not *It is the language that I miss it*. The joining word is *that* (or *who* for a person, *which* for a thing), never *what*.",
-        "要突出句子的某一部分，就把它放在 *It is* 或 *It was* 后面，其余部分放在 *that* 后面：\n\n- *The food surprised me most.* → *It was **the food** that surprised me most.*\n- *I miss the language most.* → *It is **the language** that I miss most.*\n\n*that* 后面的部分缺了被强调的成分，不能再用代词重复它：不能说 *It was the food that it surprised me*，也不能说 *It is the language that I miss it*。连接词用 *that*（指人也可用 *who*，指物也可用 *which*），不能用 *what*。中文用“正是……”“就是……才……”来强调（“正是这里的食物让我最吃惊”），英语则要用 *It was ... that ...* 这个固定框架。",
+        "To put one part of a sentence in focus, put it after *It is* or *It was* and the rest after *that*:\n\n- *The food surprised me most.* → *It was **the food** that surprised me most.*\n- *I miss the language most.* → *It is **the language** that I miss most.*\n\nThe joining word is *that* (or *who* for a person, *which* for a thing).\n\n> **Watch out.** Never link an *It*-cleft with *what* (*It was the food what...* is wrong), and never repeat the focus with a pronoun after *that* (*It is the language that I miss it* is wrong).",
+        "要突出句子的某一部分，就把它放在 *It is* 或 *It was* 后面，其余部分放在 *that* 后面：\n\n- *The food surprised me most.* → *It was **the food** that surprised me most.*\n- *I miss the language most.* → *It is **the language** that I miss most.*\n\n连接词用 *that*（指人也可用 *who*，指物也可用 *which*）。中文用“正是……”“就是……才……”来强调，英语则用 *It was ... that ...* 这个固定框架。\n\n> **注意。** *It* 分裂句绝不能用 *what* 连接（*It was the food what...* 是错的），也绝不能在 *that* 后面再用代词重复被强调的成分（*It is the language that I miss it* 是错的）。",
       ),
       choiceGenerator(
         t("Choose the sentence that puts the words in focus.", "选出突出所给部分的句子。"),
@@ -1474,8 +1482,8 @@ const cleftSentences: TopicDef = {
       "what-cleft",
       t("What ... is ...", "What ... is ..."),
       t(
-        "Another way to focus on something is to begin with a *what*-clause and put the focus after *is* or *was*:\n\n- *I need a long holiday.* → *What I need **is** a long holiday.*\n- *The ending annoyed me.* → *What annoyed me **was** the ending.*\n\nThe sentence begins with *What*, not *That*, and the *what*-clause is the subject of *is*, so there is no *it* before the verb: not *What I need it is a holiday*.",
-        "另一种强调方式是用 *what* 从句开头，把被强调的部分放在 *is* 或 *was* 后面：\n\n- *I need a long holiday.* → *What I need **is** a long holiday.*\n- *The ending annoyed me.* → *What annoyed me **was** the ending.*\n\n句子以 *What* 开头，不是 *That*；*what* 从句本身就是 *is* 的主语，所以动词前不再加 *it*：不能说 *What I need it is a holiday*。这和中文“我需要的是一个长假”结构很像：“我需要的”对应 *What I need*，“是”对应 *is*。",
+        "Another way to focus on something is to begin with a *what*-clause and put the focus after *is* or *was*:\n\n- *I need a long holiday.* → *What I need **is** a long holiday.*\n- *The ending annoyed me.* → *What annoyed me **was** the ending.*\n\n> **Watch out.** Start with ***What*** (never *That*), and do not insert *it* before *is/was* (*What I need it is a holiday* is wrong because the *what*-clause is already the subject).",
+        "另一种强调方式是用 *what* 从句开头，把被强调的部分放在 *is* 或 *was* 后面：\n\n- *I need a long holiday.* → *What I need **is** a long holiday.*\n- *The ending annoyed me.* → *What annoyed me **was** the ending.*\n\n这和中文“我需要的是一个长假”结构很像：“我需要的”对应 *What I need*，“是”对应 *is*。\n\n> **注意。** 句首必须用 ***What***（不能用 *That*），且 *is/was* 前不能多加 *it*（*What I need it is a holiday* 是错的，因为 *what* 从句本身就是主语）。",
       ),
       choiceGenerator(
         t("Choose the sentence that puts the words in focus.", "选出突出所给部分的句子。"),
@@ -1488,8 +1496,8 @@ const cleftSentences: TopicDef = {
       "write",
       t("Writing cleft sentences", "写分裂句"),
       t(
-        "Rewrite the sentence to put the words in brackets in focus, beginning as the note says: *The food surprised me most. (focus: the food; begin with It)* becomes *It was the food that surprised me most.* *I need a long holiday. (focus: a long holiday; begin with What)* becomes *What I need is a long holiday.*\n\nKeep the tense of the plain sentence: *is* for the present, *was* for the past. After *It*, you may join with *who* for a person or *which* for a thing, and leave out *that* when the focus is the object.",
-        "改写句子，突出括号里的部分，并按提示开头：*The food surprised me most. (focus: the food; begin with It)* 写成 *It was the food that surprised me most.* *I need a long holiday. (focus: a long holiday; begin with What)* 写成 *What I need is a long holiday.*\n\n保持原句的时态：现在用 *is*，过去用 *was*。用 *It* 开头时，指人可以用 *who*，指物可以用 *which*；被强调的是宾语时可以省略 *that*。",
+        "Rewrite the sentence to put the words in brackets in focus, beginning as the note says: *The food surprised me most. (focus: the food; begin with It)* becomes *It was the food that surprised me most.* *I need a long holiday. (focus: a long holiday; begin with What)* becomes *What I need is a long holiday.*\n\nKeep the tense of the plain sentence: *is* for the present, *was* for the past. After *It*, you may join with *who* for a person or *which* for a thing, and leave out *that* when the focus is the object.\n\n> **Watch out.** Match *is* or *was* to the original sentence's tense, and double-check that you did not leave a stray pronoun behind.",
+        "改写句子，突出括号里的部分，并按提示开头：*The food surprised me most. (focus: the food; begin with It)* 写成 *It was the food that surprised me most.* *I need a long holiday. (focus: a long holiday; begin with What)* 写成 *What I need is a long holiday.*\n\n保持原句的时态：现在用 *is*，过去用 *was*。用 *It* 开头时，指人可以用 *who*，指物可以用 *which*；被强调的是宾语时可以省略 *that*。\n\n> **注意。** *is* 和 *was* 要与原句时态一致，写完后再检查有没有多留一个重复指代的代词。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1573,6 +1581,10 @@ const proposal = judgedTopic({
     "Write a proposal of 200 to 250 words, with headings, for a project the task names: the need, what you propose, how it would work and why it should be chosen.",
     "为任务给出的项目写一篇 200 到 250 词、带小标题的提案：需求、你的提议、如何实施以及为什么应该被采纳。",
   ),
+  intro: t(
+    "Pitching a weekend repair café to a town council takes more than enthusiasm: a clear proposal states the gap it fills, outlines the plan, explains how it would run using *would*, and shows why the benefits justify the cost.",
+    "向市政委员会提议举办周末社区维修角，光靠热情不够：好的提案会点明现实缺口、简述方案、用 *would* 说清如何落地，并说明好处为何值得投入。",
+  ),
   prerequisites: ["writing-a-report"],
   encompasses: [{ topic: "writing-a-report", weight: 0.4 }],
   criteria: ["b2-proposal-need", "b2-proposal-headings", "b2-proposal-plan", "b2-proposal-benefits", "b2-neutral-register"],
@@ -1580,8 +1592,8 @@ const proposal = judgedTopic({
     id: "proposal",
     title: t("Need, plan, benefits", "需求、方案、益处"),
     explanation: t(
-      "A proposal asks a reader, such as a council, a head teacher or a manager, to accept a plan. Like a report, it has headings and a neutral tone, but it looks forward and tries to persuade. Plan four sections:\n\n1. **Introduction**: say what the proposal is for and why it is needed, with a fact if you can: *The purpose of this proposal is to... At present, ...*\n2. **The proposal**: say in one or two sentences what you suggest: *I propose a weekly language café...*\n3. **How it would work**: give practical details: who would do what, when, where and what it would cost. Use *would*: *Volunteers would meet...*\n4. **Why it should be chosen**: give the benefits and end with a confident sentence: *I therefore recommend that this proposal be accepted.*\n\nA report says what **is**; a proposal says what **would** happen. Keep it formal, with no contractions.",
-      "提案请读者（例如市议会、校长或经理）接受一个计划。它和报告一样有小标题、语气中立，但它着眼于未来，并且要说服读者。安排四个部分：\n\n1. **引言（Introduction）**：说明提案的目的和为什么需要它，最好有一个事实：*The purpose of this proposal is to... At present, ...*\n2. **提议（The proposal）**：用一两句话说明你的建议：*I propose a weekly language café...*\n3. **如何实施（How it would work）**：给出具体细节：谁做什么、什么时候、在哪里、花多少钱。用 *would*：*Volunteers would meet...*\n4. **为什么应该采纳（Why it should be chosen）**：说明益处，并用一句有把握的话结尾：*I therefore recommend that this proposal be accepted.*\n\n报告说的是现在**是**什么样；提案说的是将来**会**怎样。保持正式，不用缩写。中文申请书常先讲很多背景和决心，英语提案则要尽快说明要做什么、怎样做、有什么好处。",
+      "A proposal asks a reader, such as a council, a head teacher or a manager, to accept a plan. Like a report, it has headings and a neutral tone, but it looks forward and tries to persuade. Plan four sections:\n\n1. **Introduction**: say what the proposal is for and why it is needed, with a fact if you can: *The purpose of this proposal is to... At present, ...*\n2. **The proposal**: say in one or two sentences what you suggest: *I propose a weekly language café...*\n3. **How it would work**: give practical details: who would do what, when, where and what it would cost. Use *would*: *Volunteers would meet...*\n4. **Why it should be chosen**: give the benefits and end with a confident sentence: *I therefore recommend that this proposal be accepted.*\n\nA report says what **is**; a proposal says what **would** happen. Keep it formal, with no contractions.\n\n> **Watch out.** Do not write a proposal like a report about the past—use *would* for the proposed plan, include concrete practical details (who, when, cost), and keep clear headings.",
+      "提案请读者（例如市议会、校长或经理）接受一个计划。它和报告一样有小标题、语气中立，但它着眼于未来，并且要说服读者。安排四个部分：\n\n1. **引言（Introduction）**：说明提案的目的和为什么需要它，最好有一个事实：*The purpose of this proposal is to... At present, ...*\n2. **提议（The proposal）**：用一两句话说明你的建议：*I propose a weekly language café...*\n3. **如何实施（How it would work）**：给出具体细节：谁做什么、什么时候、在哪里、花多少钱。用 *would*：*Volunteers would meet...*\n4. **为什么应该采纳（Why it should be chosen）**：说明益处，并用一句有把握的话结尾：*I therefore recommend that this proposal be accepted.*\n\n报告说的是现在**是**什么样；提案说的是将来**会**怎样。保持正式，不用缩写。中文申请书常先讲很多背景和决心，英语提案则要尽快说明要做什么、怎样做、有什么好处。\n\n> **注意。** 不要把提案写成回顾过去的报告——描述拟议方案时用 *would*，给出具体的执行细节（人员、时间、预算），并用小标题分清层次。",
     ),
   },
   question: t(

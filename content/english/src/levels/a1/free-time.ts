@@ -485,6 +485,10 @@ const likeAndLove: TopicDef = {
     "I like swimming. She loves dancing. After like, love and enjoy, a verb takes -ing.",
     "I like swimming. She loves dancing. 在 like、love 和 enjoy 后面，动词用 -ing 形式。",
   ),
+  intro: t(
+    "Say what someone enjoys doing: *Tom enjoys taking photos.* and *My parents love cooking.* English does not stack two plain verbs side by side (*Tom enjoys take*), so the activity verb takes *-ing*. In this topic, you choose, spell, and fix *-ing* verbs after *like*, *love*, and *enjoy*.",
+    "表达某人喜欢做什么，英语说 *Tom enjoys taking photos.* 和 *My parents love cooking.* 两个原形动词不能直接并列（不能说 *Tom enjoys take*），后面的活动动词要变成 *-ing* 形式。本主题带你选择、拼写并改正 *like*、*love*、*enjoy* 后的 *-ing* 动词。",
+  ),
   prerequisites: ["present-simple", "a1-words-sports-and-music"],
   encompasses: [
     { topic: "present-simple", weight: 0.2 },
@@ -497,8 +501,8 @@ const likeAndLove: TopicDef = {
       "choose",
       t("A verb after like", "like 后面的动词"),
       t(
-        "After *like*, *love* and *enjoy*, a second verb takes *-ing*: *I like swimming. She loves dancing. We enjoy playing chess.*\n\nThe second verb never takes *-s*: not *She likes dances*.",
-        "在 *like*、*love* 和 *enjoy* 后面，第二个动词用 *-ing* 形式：*I like swimming. She loves dancing. We enjoy playing chess.*\n\n中文说“我喜欢游泳”，两个动词直接连在一起；英语不能说 *I like swim*，第二个动词也不能加 *-s*。",
+        "After *like*, *love* and *enjoy*, a second verb takes *-ing*: *I like swimming. She loves dancing. We enjoy playing chess.*\n\nThe second verb never takes *-s*: not *She likes dances*.\n\n> **Watch out.** Only the *first* verb (*like/likes*, *love/loves*, *enjoy/enjoys*) changes for the subject—the second verb always takes *-ing* with exact spelling (*dancing*, *swimming*, *riding*).",
+        "在 *like*、*love* 和 *enjoy* 后面，第二个动词用 *-ing* 形式：*I like swimming. She loves dancing. We enjoy playing chess.*\n\n中文说“我喜欢游泳”，两个动词直接连在一起；英语不能说 *I like swim*，第二个动词也不能加 *-s*。\n\n> **注意。** 只有*第一个*动词（*like/likes*、*love/loves*、*enjoy/enjoys*）随主语变化——第二个动词一律用拼写正确的 *-ing* 形式（*dancing*、*swimming*、*riding*）。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
@@ -506,8 +510,8 @@ const likeAndLove: TopicDef = {
         (right, shown) => {
           const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
           return t(
-            `After *${likeVerbOf(shown)}*, a second verb takes *-ing*, never *-s*: ${sentence}`,
-            `*${likeVerbOf(shown)}* 后面的第二个动词用 *-ing* 形式，不加 *-s*：${sentence}`,
+            `After *${likeVerbOf(shown)}*, a second verb takes *-ing*, never *-s*: ${sentence}\n\n**Check.** Confirm that *${right}* ends in *-ing* and follows the *-ing* spelling rule for the base verb in brackets.`,
+            `*${likeVerbOf(shown)}* 后面的第二个动词用 *-ing* 形式，不加 *-s*：${sentence}\n\n**检验。** 确认 *${right}* 以 *-ing* 结尾，且符合括号中原形动词的 *-ing* 拼写规则。`,
           );
         },
         (wrong, _right, shown, position) =>
@@ -531,26 +535,30 @@ const likeAndLove: TopicDef = {
       "spell",
       t("Spelling the -ing form", "拼写 -ing 形式"),
       t(
-        "Add *-ing*: *read → reading*. Drop a last *e*: *dance → dancing*, *ride → riding*. Double one last consonant after one short vowel: *swim → swimming*, *run → running*.",
-        "直接加 *-ing*：*read → reading*。以不发音的 *e* 结尾的去 *e*：*dance → dancing*、*ride → riding*。以一个短元音加一个辅音结尾的双写辅音：*swim → swimming*、*run → running*。",
+        "Add *-ing*: *read → reading*. Drop a last *e*: *dance → dancing*, *ride → riding*. Double one last consonant after one short vowel: *swim → swimming*, *run → running*.\n\n> **Watch out.** Do not double a consonant after two vowels (*read* -> *reading*, *paint* -> *painting*, *cook* -> *cooking*) or drop *y* before *-ing* (*play* -> *playing*, *fly* -> *flying*).",
+        "直接加 *-ing*：*read → reading*。以不发音的 *e* 结尾的去 *e*：*dance → dancing*、*ride → riding*。以一个短元音加一个辅音结尾的双写辅音：*swim → swimming*、*run → running*。\n\n> **注意。** 两个元音字母后面不要双写（*read* -> *reading*、*paint* -> *painting*、*cook* -> *cooking*），以 *y* 结尾的词也不要去 *y*（*play* -> *playing*、*fly* -> *flying*）。",
       ),
       typedGenerator("word-form", t("Type the verb with -ing.", "输入动词的 -ing 形式。"), likeSpellBank, (right, shown) => {
+        const base = shown.match(/\((.*)\)$/u)?.[1] ?? "";
         const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
-        const rule = ingRule(shown.match(/\((.*)\)$/u)?.[1] ?? "", right);
-        return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+        const rule = ingRule(base, right);
+        return t(
+          `${rule.en}: ${sentence}\n\n**Check.** Check the ending of *${base}*—verify whether it drops silent *e*, doubles one final consonant after one short vowel, or just adds *-ing*.`,
+          `${rule["zh-CN"]}：${sentence}\n\n**检验。** 核对原形 *${base}* 的词尾——确认该去不发音的 *e*、双写单辅音，还是直接加 *-ing*。`,
+        );
       }),
     ),
     point(
       "fix",
       t("Fixing the second verb", "改正第二个动词"),
       t(
-        "Each sentence puts two verbs side by side, as Chinese does. Give the second one *-ing*. After *like* and *love* you may also write *to* and the verb (*I like to swim*), but after *enjoy* only *-ing* is right.",
-        "每个句子都像中文一样把两个动词直接连在一起。把第二个动词改成 *-ing* 形式。在 *like* 和 *love* 后面也可以用 *to* 加动词（*I like to swim*），但 *enjoy* 后面只能用 *-ing*。",
+        "Each sentence puts two verbs side by side, as Chinese does: *We enjoy play chess.* → *We enjoy playing chess.* Give the second one *-ing*. After *like* and *love* you may also write *to* and the verb (*I like to swim*), but after *enjoy* only *-ing* is right.\n\n> **Watch out.** Never write *enjoy to [verb]*—*enjoy* always takes *-ing*—and never write *to* + *-ing* together.",
+        "每个句子都像中文一样把两个动词直接连在一起：*We enjoy play chess.* → *We enjoy playing chess.* 把第二个动词改成 *-ing* 形式。在 *like* 和 *love* 后面也可以用 *to* 加动词（*I like to swim*），但 *enjoy* 后面只能用 *-ing*。\n\n> **注意。** 绝不能写 *enjoy to [动词]*（*enjoy* 后面只能用 *-ing*），也绝不能把 *to* 和 *-ing* 混在一起用。",
       ),
       typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), likeFixBank, (right, shown) =>
         t(
-          `Two verbs cannot stand side by side: after *${likeVerbOf(shown)}*, the second verb takes *-ing*: ${shown} → ${right}`,
-          `两个动词不能直接连在一起：*${likeVerbOf(shown)}* 后面的第二个动词要用 *-ing* 形式：${shown} → ${right}`,
+          `Two verbs cannot stand side by side: after *${likeVerbOf(shown)}*, the second verb takes *-ing*: ${shown} → ${right}\n\n**Check.** Confirm that *${likeVerbOf(shown)}* kept its right subject agreement while the activity verb directly after it now carries *-ing*.`,
+          `两个动词不能直接连在一起：*${likeVerbOf(shown)}* 后面的第二个动词要用 *-ing* 形式：${shown} → ${right}\n\n**检验。** 确认 *${likeVerbOf(shown)}* 与主语保持一致，紧随其后的活动动词已改为正确的 *-ing* 形式。`,
         ),
       ),
     ),
@@ -608,8 +616,8 @@ const likesWhy = (right: string): Text => {
   const verb = likeVerbOf(right);
   const s = verb.endsWith("s");
   return t(
-    `*${verb}* ${s ? "takes *-s* after one person" : "takes no *-s* after *I* or more than one"}, and each activity after it takes *-ing*: ${right}`,
-    `*${verb}* ${s ? "在单数第三人称主语后加 *-s*" : "在 *I* 或复数主语后不加 *-s*"}，后面的每项活动都用 *-ing* 形式：${right}`,
+    `*${verb}* ${s ? "takes *-s* after one person" : "takes no *-s* after *I* or more than one"}, and each activity after it takes *-ing*: ${right}\n\n**Check.** Check both spots: *${verb}* agrees with the subject (${s ? "singular -> *-s*" : "*I*/plural -> no *-s*"}), and every activity after it carries *-ing* (never *to + -ing*).`,
+    `*${verb}* ${s ? "在单数第三人称主语后加 *-s*" : "在 *I* 或复数主语后不加 *-s*"}，后面的每项活动都用 *-ing* 形式：${right}\n\n**检验。** 核对两处：*${verb}* 与主语一致（${s ? "单数加 *-s*" : "*I* 或复数不加 *-s*"}），后面的每项活动都用 *-ing*（不写 *to + -ing*）。`,
   );
 };
 
@@ -619,6 +627,10 @@ const writingAboutLikes: TopicDef = {
   summary: t(
     "Turn notes into sentences: Ben / like / ride a bike becomes Ben likes riding a bike.",
     "把笔记写成句子：Ben / like / ride a bike 写成 Ben likes riding a bike.",
+  ),
+  intro: t(
+    "Turn a hobby note like `Mia / enjoy / paint pictures + fly kites` into a full sentence: *Mia enjoys painting pictures and flying kites.* Both pieces have to be right—third-person *-s* on *like/love/enjoy* when the subject is one person, and *-ing* on every activity that follows. In this topic, you pick and write hobby sentences from notes.",
+    "把爱好笔记 `Mia / enjoy / paint pictures + fly kites` 写成完整句子：*Mia enjoys painting pictures and flying kites.* 两处都要对——单数主语后的 *like/love/enjoy* 加 *-s*，后面的每项活动动词都改成 *-ing*。本主题带你根据笔记写出规范的爱好句子。",
   ),
   prerequisites: ["like-and-love-with-ing", "joining-with-and-but-or"],
   encompasses: [
@@ -632,8 +644,8 @@ const writingAboutLikes: TopicDef = {
       "choose",
       t("The sentence for a note", "选出符合笔记的句子"),
       t(
-        "A note gives a person, a verb and one or two activities. The sentence gives *like*, *love* or *enjoy* an *-s* after one person, turns each activity into *-ing*, and joins two of them with *and*.\n\n*Ben / like / ride a bike + play chess* → *Ben likes riding a bike and playing chess.*",
-        "笔记给出一个人、一个动词和一两项活动。写成句子时，单数主语后的 *like*、*love*、*enjoy* 加 *-s*，每项活动改成 *-ing* 形式，两项活动用 *and* 连接。\n\n*Ben / like / ride a bike + play chess* → *Ben likes riding a bike and playing chess.*",
+        "A note gives a person, a verb and one or two activities. The sentence gives *like*, *love* or *enjoy* an *-s* after one person, turns each activity into *-ing*, and joins two of them with *and*.\n\n*Ben / like / ride a bike + play chess* → *Ben likes riding a bike and playing chess.*\n\n> **Watch out.** When there are two activities joined by *and*, *both* verbs must take *-ing*—and never mix *to* with *-ing* (*to riding* is wrong).",
+        "笔记给出一个人、一个动词和一两项活动。写成句子时，单数主语后的 *like*、*love*、*enjoy* 加 *-s*，每项活动改成 *-ing* 形式，两项活动用 *and* 连接。\n\n*Ben / like / ride a bike + play chess* → *Ben likes riding a bike and playing chess.*\n\n> **注意。** 有两项活动用 *and* 连接时，*两个*动词都要变成 *-ing* 形式；且绝不能把 *to* 和 *-ing* 混用（*to riding* 是错的）。",
       ),
       choiceGenerator(
         t("Choose the sentence that matches the note.", "选出与笔记相符的句子。"),
@@ -660,8 +672,8 @@ const writingAboutLikes: TopicDef = {
       "write",
       t("Writing the sentence", "写出句子"),
       t(
-        "Write a whole sentence for the note: the person, *like*, *love* or *enjoy* with *-s* after one person, and each activity with *-ing*, joined by *and*. Start with a capital letter and end with a period.",
-        "根据笔记写一个完整的句子：先写人，再写 *like*、*love* 或 *enjoy*（单数第三人称主语后加 *-s*），每项活动用 *-ing* 形式，用 *and* 连接。句首大写，句末加句号。",
+        "Write a whole sentence for the note: the person, *like*, *love* or *enjoy* with *-s* after one person, and each activity with *-ing*, joined by *and*—for example, *My friends / love / swim + sing songs* → *My friends love swimming and singing songs.* Start with a capital letter and end with a period.\n\n> **Watch out.** Check the subject first (*I* and *My friends* take *no -s*; *Ben*, *Mia*, *Grandpa*, and *My brother* take *-s*), then check every *-ing* spelling.",
+        "根据笔记写一个完整的句子：先写人，再写 *like*、*love* 或 *enjoy*（单数第三人称主语后加 *-s*），每项活动用 *-ing* 形式，用 *and* 连接，例如 *My friends / love / swim + sing songs* → *My friends love swimming and singing songs.* 句首大写，句末加句号。\n\n> **注意。** 先核对主语（*I*、*My friends* 不加 *-s*；*Ben*、*Mia*、*Grandpa*、*My brother* 加 *-s*），再逐一核对 *-ing* 拼写。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), likesTypedBank, (right) =>
         likesWhy(right),

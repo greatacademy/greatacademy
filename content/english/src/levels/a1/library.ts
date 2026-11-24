@@ -284,8 +284,8 @@ const objectWhy = (right: string, shown: string) => {
   const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
   const subject = shown.match(/\((.*)\)$/u)?.[1] ?? "";
   return t(
-    `The gap comes after a verb or a word like *to* or *with*, so *${subject}* becomes *${right}*: ${sentence}`,
-    `空白在动词或 *to*、*with* 这样的词后面，所以 *${subject}* 要变成宾格 *${right}*：${sentence}`,
+    `The gap comes after a verb or a word like *to* or *with*, so *${subject}* becomes *${right}*: ${sentence}\n\n**Check.** Look directly before the gap: a verb or a preposition (*to, with, for, at*) comes before it, so the object form *${right}* fits, not the subject form *${subject}*.`,
+    `空白在动词或 *to*、*with* 这样的词后面，所以 *${subject}* 要变成宾格 *${right}*：${sentence}\n\n**检验。** 看空白前面：前面是动词或介词（*to、with、for、at*），所以要用宾格 *${right}*，不能用主格 *${subject}*。`,
   );
 };
 
@@ -316,6 +316,10 @@ const objectPronouns: TopicDef = {
     "Can you help me? I like her. Give them to us. After a verb or a word like to and with, I becomes me, he becomes him and they becomes them.",
     "Can you help me? I like her. Give them to us. 在动词或 to、with 这样的词后面，I 变成 me，he 变成 him，they 变成 them。",
   ),
+  intro: t(
+    "Compare *He knows me* and *I know him*. In English, a pronoun changes form when it moves from before the verb to after the verb or after a word like *to*, *for* or *with*.",
+    "比较 *He knows me* 和 *I know him*。在英语里，代词从动词前面移到动词后面，或者移到 *to*、*for*、*with* 后面时，词形会发生变化。",
+  ),
   prerequisites: ["my-your-his-her", "a1-words-books"],
   encompasses: [
     { topic: "my-your-his-her", weight: 0.3 },
@@ -328,8 +332,8 @@ const objectPronouns: TopicDef = {
       "choose",
       t("I or me, he or him", "I 还是 me，he 还是 him"),
       t(
-        "Before a verb: *I, he, she, we, they*. After a verb or after *to, with, for, at, next to*: *me, him, her, us, them*.\n\n*I* like *her*. *She* likes *me*. *Give the book to him.*",
-        "动词前用主格：*I、he、she、we、they*。动词后或 *to、with、for、at、next to* 后用宾格：*me、him、her、us、them*。\n\n*I* like *her*. *She* likes *me*. *Give the book to him.*\n\n中文“我”“他”放在哪里都不变，英语却要变形；也不要和 *my、his、our* 这些表示“……的”的词混淆。",
+        "Before a verb, use a subject pronoun: *I, he, she, we, they*. After a verb or after *to, with, for, at, next to*, use an object pronoun: *me, him, her, us, them*.\n\n*I* like *her*. *She* likes *me*. *Give the book to him.*\n\n> **Watch out.** Do not use a possessive word like *my*, *his* or *our* in an object slot: say *Wait for me*, not *Wait for my* or *Wait for I*.",
+        "动词前用主格：*I、he、she、we、they*。动词后或 *to、with、for、at、next to* 后用宾格：*me、him、her、us、them*。\n\n*I* like *her*. *She* likes *me*. *Give the book to him.*\n\n> **注意。** 中文“我”“他”放在哪里都不变，英语却要变形；也不要把表示“……的”的 *my、his、our* 放进宾语位置，要说 *Wait for me*，不要说 *Wait for my* 或 *Wait for I*。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), objectChoiceBank, objectWhy, whyNotObject),
     ),
@@ -337,15 +341,15 @@ const objectPronouns: TopicDef = {
       "replace",
       t("A pronoun in place of a name", "用代词代替名字"),
       t(
-        "Once we know who it is, we use a pronoun: *I see Tom every day.* → *I see him every day.* One man or boy: *him*. One woman or girl: *her*. More than one person or thing: *them*. You and others: *us*.",
-        "知道说的是谁以后，就用代词：*I see Tom every day.* → *I see him every day.* 一个男性：*him*。一个女性：*her*。多个人或物：*them*。包括自己在内的几个人：*us*。",
+        "Once we know who or what we are talking about, we can replace the noun after the verb with an object pronoun: *I see Tom every day.* → *I see him every day.* One man or boy: *him*. One woman or girl: *her*. More than one person or thing: *them*. You and others: *us*.\n\n> **Watch out.** Plural things also take *them* after a verb—say *Put them on the desk*, not *Put they on the desk*.",
+        "知道说的是谁或什么之后，就可以用宾格代词代替动词后面的名词：*I see Tom every day.* → *I see him every day.* 一个男性：*him*；一个女性：*her*；多个人或物：*them*；包括自己在内的几个人：*us*。\n\n> **注意。** 复数事物在动词后面同样用 *them*——要说 *Put them on the desk*，不要说 *Put they on the desk*。",
       ),
       typedGenerator("sentence", t("Use a pronoun.", "使用代词。"), replaceBank, (right, shown) => {
         const noun = shown.match(/\((.*)\)$/u)?.[1] ?? "";
         const object = [...namedPeople, ...namedThings].find(([n]) => n === noun)?.[1] ?? "";
         return t(
-          `*${noun}* is ${objectFor[object]?.en}, and after a verb or a word like *to* that is *${object}*: ${right}`,
-          `*${noun}* 指${objectFor[object]?.["zh-CN"]}，在动词或 *to* 这样的词后面用 *${object}*：${right}`,
+          `*${noun}* is ${objectFor[object]?.en}, and after a verb or a word like *to* that is *${object}*: ${right}\n\n**Check.** Confirm that *${noun}* is completely replaced by *${object}* (not *${object === "him" ? "he" : object === "her" ? "she" : object === "us" ? "we" : "they"}*) and that the rest of the sentence stays unchanged.`,
+          `*${noun}* 指${objectFor[object]?.["zh-CN"]}，在动词或 *to* 这样的词后面用 *${object}*：${right}\n\n**检验。** 确认 *${noun}* 已经完整替换成宾格 *${object}*（而不是主格 *${object === "him" ? "he" : object === "her" ? "she" : object === "us" ? "we" : "they"}*），并且句子的其余部分保持不变。`,
         );
       }),
     ),
@@ -446,22 +450,31 @@ const articleNoun = (shown: string) => (shown.split("___ ")[1] ?? "").split(/[ .
 const articleWhy = (right: string, shown: string) => {
   const sentence = shown.replace("___", `*${right}*`);
   const noun = articleNoun(shown);
-  const reason =
-    right.toLowerCase() !== "the"
+  const isThe = right.toLowerCase() === "the";
+  const reason = !isThe
+    ? t(
+        `This is the first time the ${noun} comes up, one of many, so it takes *a* or *an*, and *${noun}* starts with a ${right === "an" ? "vowel" : "consonant"} sound`,
+        `这是第一次提到 ${noun}，是许多中的一个，所以用 *a* 或 *an*；*${noun}* 以${right === "an" ? "元音" : "辅音"}开头`,
+      )
+    : shown.startsWith("There is")
       ? t(
-          `This is the first time the ${noun} comes up, one of many, so it takes *a* or *an*, and *${noun}* starts with a ${right === "an" ? "vowel" : "consonant"} sound`,
-          `这是第一次提到 ${noun}，是许多中的一个，所以用 *a* 或 *an*；*${noun}* 以${right === "an" ? "元音" : "辅音"}开头`,
+          `The sentence before already named the ${noun}, so now we both know which one and it takes *the*`,
+          `前一句已经提到了 ${noun}，双方都知道是哪一个，所以用 *the*`,
         )
-      : shown.startsWith("There is")
-        ? t(
-            `The sentence before already named the ${noun}, so now we both know which one and it takes *the*`,
-            `前一句已经提到了 ${noun}，双方都知道是哪一个，所以用 *the*`,
-          )
-        : t(
-            "There is only one, or the words around it say which one, so it takes *the*",
-            "这样东西独一无二，或者前后的词说明了是哪一个，所以用 *the*",
-          );
-  return t(`${reason.en}: ${sentence}`, `${reason["zh-CN"]}：${sentence}`);
+      : t(
+          "There is only one, or the words around it say which one, so it takes *the*",
+          "这样东西独一无二，或者前后的词说明了是哪一个，所以用 *the*",
+        );
+  const check = !isThe
+    ? t(
+        `**Check.** Ask two things: is this the first mention (yes → *a/an*), and does *${noun}* begin with a vowel sound (${right === "an" ? "yes → *an*" : "no → *a*"})?`,
+        `**检验。** 问自己两个问题：这是不是第一次提到（是 → 用 *a/an*）？*${noun}* 的开头是不是元音（${right === "an" ? "是 → 用 *an*" : "不是 → 用 *a*"}）？`,
+      )
+    : t(
+        `**Check.** Ask whether both speaker and listener know which exact one is meant—here they do, so *${right}* fits.`,
+        `**检验。** 问问自己，说话双方是否都知道指哪一个——这里双方都清楚，所以用 *${right}*。`,
+      );
+  return t(`${reason.en}: ${sentence}\n\n${check.en}`, `${reason["zh-CN"]}：${sentence}\n\n${check["zh-CN"]}`);
 };
 
 /** whyNotArticle says what a wrong article shows the learner misread. */
@@ -494,6 +507,10 @@ const theArticleThe: TopicDef = {
     "I have a book. The book is about cats. A is for one of many, the for the one we both know.",
     "I have a book. The book is about cats. a 指许多中的一个，the 指双方都知道的那一个。",
   ),
+  intro: t(
+    "Look at the shift in *I found a key. The key is silver.* The first sentence introduces one key out of many with *a*; the second points back to that exact key with *the*.",
+    "看这两句的变化：*I found a key. The key is silver.* 第一句用 *a* 引出众多钥匙中的一把，第二句用 *the* 回指刚才那把特定的钥匙。",
+  ),
   prerequisites: ["a-and-an", "a1-words-library"],
   encompasses: [
     { topic: "a-and-an", weight: 0.4 },
@@ -506,8 +523,8 @@ const theArticleThe: TopicDef = {
       "choose",
       t("A or the", "a 还是 the"),
       t(
-        "*a* or *an*: one of many, the first time you say it. *I have a book.*\n\n*the*: the one we both know. It is the second time you say it (*The book is about cats*), there is only one (*the sun*), or the words around it say which one (*the first day*, *the title of this book*, *the book you wanted*). Also *in the morning*, *play the piano*.",
-        "*a* 或 *an*：许多中的一个，第一次提到时用。*I have a book.*\n\n*the*：说话双方都知道的那一个。第二次提到时用（*The book is about cats*）；独一无二的东西用（*the sun*）；前后的词说明了是哪一个时用（*the first day*、*the title of this book*、*the book you wanted*）。还有 *in the morning*、*play the piano*。\n\n中文没有冠词，“书”可以指任何书，也可以指那本书；英语必须用 *a* 或 *the* 表明是哪一种。",
+        "*a* or *an*: one of many, the first time you say it (*I have a book*). *the*: the one we both know—because it is the second time you say it (*The book is about cats*), there is only one (*the sun*), or the words around it say which one (*the first day*, *the title of this book*, *the book you wanted*). Fixed phrases like *in the morning* and *play the piano* also take *the*.\n\n> **Watch out.** Do not use *the* on a brand-new, unspecific noun—say *I have a dictionary*, not *I have the dictionary* when the listener has never heard of it.",
+        "*a* 或 *an*：许多中的一个，第一次提到时用（*I have a book*）。*the*：双方都知道的那一个——第二次提到时用（*The book is about cats*），独一无二的东西用（*the sun*），或前后的词说明了是哪一个时用（*the first day*、*the title of this book*、*the book you wanted*）。固定搭配 *in the morning*、*play the piano* 也用 *the*。\n\n> **注意。** 中文没有冠词，“书”可以泛指也可以特指；英语里第一次提到泛指的单数名词不要误用 *the*，要说 *I have a dictionary*，而不是 *I have the dictionary*。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), articleChoiceBank, articleWhy, whyNotArticle),
     ),
@@ -515,8 +532,8 @@ const theArticleThe: TopicDef = {
       "type",
       t("Writing a, an or the", "写出 a、an 或 the"),
       t(
-        "Type *a*, *an* or *the*. Ask: is it one of many, said for the first time, or the one we both know?",
-        "输入 *a*、*an* 或 *the*。想一想：是第一次提到的许多中的一个，还是双方都知道的那一个？",
+        "When you type *a*, *an* or *the*, decide in two steps: first ask if the listener already knows which one (*There is an apple on the desk. The apple is red.*), and if not, check the first sound of the next word (*an egg*, *a story*).\n\n> **Watch out.** At the start of a sentence, capitalize the article (*The sky is blue*, not *the sky is blue*), and match *an* to a vowel sound (*an old map*).",
+        "输入 *a*、*an* 或 *the* 时分两步判断：先看听话人是否已经知道指哪一个（*There is an apple on the desk. The apple is red.*）；如果是首次提到，再看后面词的开头发音（*an egg*、*a story*）。\n\n> **注意。** 句首的冠词要大写（*The sky is blue*，不要写成 *the sky is blue*），*an* 要根据紧跟其后的词的开头元音来选（*an old map*）。",
       ),
       typedGenerator("word-form", t("Type the word for the gap.", "输入填入空白处的词。"), articleTypedBank, articleWhy),
     ),
@@ -532,7 +549,10 @@ const criterion = (id: string): CriterionSpec => {
 };
 
 const oneNote = (model: string) =>
-  t(`One good note:\n\n> ${model.replace(/\n/gu, "\n> ")}`, `一张好的便条：\n\n> ${model.replace(/\n/gu, "\n> ")}`);
+  t(
+    `One good note:\n\n> ${model.replace(/\n/gu, "\n> ")}\n\n**Check.** Verify that your note opens with the reader's name, answers every part of the task in two to four clear sentences, and ends with your own name.`,
+    `一张好的便条：\n\n> ${model.replace(/\n/gu, "\n> ")}\n\n**检验。** 核对你的便条：开头有没有写收信人称呼，中间有没有用两到四个清楚的句子把题目要求写全，结尾有没有署名。`,
+  );
 
 /** tellBank asks for a note that tells someone where you are or what you are doing. */
 const tellBank: readonly WritingItem[] = [
@@ -660,6 +680,10 @@ const writingAShortNote: TopicDef = {
     "Write a note of two to four sentences for a reason the task gives: to say where you are, to ask for something, or to thank someone.",
     "根据任务写一张两到四句话的便条：说你在哪里、请人帮忙或者向人道谢。",
   ),
+  intro: t(
+    "A short note gets one message across quickly: *Hi Dad, I'm at the bookstore with Leo. I will be home for dinner. Sam.* Opening with a greeting and closing with your name makes the note complete.",
+    "短便条用来快速交代一件事：*Hi Dad, I'm at the bookstore with Leo. I will be home for dinner. Sam.* 开头有称呼、结尾有署名，便条才完整。",
+  ),
   prerequisites: ["joining-with-and-but-or", "writing-capital-letters-for-names", "object-pronouns"],
   encompasses: [
     { topic: "joining-with-and-but-or", weight: 0.2 },
@@ -673,8 +697,8 @@ const writingAShortNote: TopicDef = {
       "telling",
       t("A note that tells", "告知的便条"),
       t(
-        "A note starts with the reader's name (*Dear Mom,* or *Hi Tom,*), says what the reader needs to know in two to four short sentences, and ends with your name.\n\nTo say where you are: *I'm at the library with Lily.* What you are doing: *We are doing our project.* When you'll be back: *I will be home at six o'clock.*",
-        "便条以收信人的称呼开头（*Dear Mom,* 或 *Hi Tom,*），用两到四个短句说清对方需要知道的事，最后写上自己的名字。\n\n说你在哪里：*I'm at the library with Lily.* 在做什么：*We are doing our project.* 什么时候回来：*I will be home at six o'clock.*",
+        "A note starts with the reader's name (*Dear Mom,* or *Hi Tom,*), says what the reader needs to know in two to four short sentences, and ends with your name.\n\nTo say where you are: *I'm at the library with Lily.* What you are doing: *We are doing our project.* When you'll be back: *I will be home at six o'clock.*\n\n> **Watch out.** Do not forget the greeting at the top or your name at the bottom—without them, the reader cannot tell who the note is for or who wrote it.",
+        "便条以收信人的称呼开头（*Dear Mom,* 或 *Hi Tom,*），用两到四个短句说清对方需要知道的事，最后写上自己的名字。\n\n说你在哪里：*I'm at the library with Lily.* 在做什么：*We are doing our project.* 什么时候回来：*I will be home at six o'clock.*\n\n> **注意。** 别漏掉开头的称呼和结尾的署名——没有它们，对方看不出便条是写给谁、谁写的。",
       ),
       writingGenerator(
         t(
@@ -691,8 +715,8 @@ const writingAShortNote: TopicDef = {
       "asking-and-thanking",
       t("A note that asks or thanks", "请求或感谢的便条"),
       t(
-        "To ask, use *Can you...?* or *Can I...?* and *please*, and say why: *Can I borrow your dictionary, please? I need it for my homework.*\n\nTo thank, say what for and add one more sentence: *Thank you for the book! I love stories about animals.*",
-        "请求时用 *Can you...?* 或 *Can I...?* 加 *please*，并说明原因：*Can I borrow your dictionary, please? I need it for my homework.*\n\n感谢时说明为什么感谢，再多写一句：*Thank you for the book! I love stories about animals.*",
+        "To ask, use *Can you...?* or *Can I...?* and *please*, and say why: *Can I borrow your dictionary, please? I need it for my homework.*\n\nTo thank, say what for and add one more sentence: *Thank you for the book! I love stories about animals.*\n\n> **Watch out.** Remember the question mark after *Can you...?* or *Can I...?*, and write at least two full sentences rather than a single phrase.",
+        "请求时用 *Can you...?* 或 *Can I...?* 加 *please*，并说明原因：*Can I borrow your dictionary, please? I need it for my homework.*\n\n感谢时说明为什么感谢，再多写一句：*Thank you for the book! I love stories about animals.*\n\n> **注意。** *Can you...?* 或 *Can I...?* 结尾别忘加问号，并且至少写两句完整的句子，不要只写一个短语。",
       ),
       writingGenerator(
         t(

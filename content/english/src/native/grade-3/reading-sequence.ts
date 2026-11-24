@@ -109,12 +109,12 @@ const firstBank: readonly Ask[] = timelines.flatMap((tl) =>
       wrong: [late, "They happened in the same year."],
       why: bce
         ? t(
-            `${yearText(ye)} comes before ${yearText(yl)}: years before the Common Era count down, so the bigger number is earlier.`,
-            `${yearText(ye)} 在 ${yearText(yl)} 之前：公元前的年份是倒着数的，所以数字越大越早。`,
+            `${yearText(ye)} comes before ${yearText(yl)}: years before the Common Era count down toward year 1, so the bigger number is earlier.\n\n**Check.** Find both events on the timeline—"${bare(early)}" sits above "${bare(late)}".`,
+            `${yearText(ye)} 在 ${yearText(yl)} 之前：公元前的年份朝着公元 1 年倒着数，所以数字越大越早。\n\n**检验。**在时间线上找出两件事——"${bare(early)}"排在"${bare(late)}"上面。`,
           )
         : t(
-            `${yearText(ye)} comes before ${yearText(yl)}: in years of the Common Era, the smaller number is earlier.`,
-            `${yearText(ye)} 在 ${yearText(yl)} 之前：公元的年份数字越小越早。`,
+            `${yearText(ye)} comes before ${yearText(yl)}: in years of the Common Era, the smaller number is earlier.\n\n**Check.** Find both events on the timeline—"${bare(early)}" sits above "${bare(late)}".`,
+            `${yearText(ye)} 在 ${yearText(yl)} 之前：公元的年份数字越小越早。\n\n**检验。**在时间线上找出两件事——"${bare(early)}"排在"${bare(late)}"上面。`,
           ),
       whyNot: [
         bce
@@ -151,6 +151,8 @@ const apartBank: readonly Ask[] = timelines.flatMap((tl) =>
     const bce = ya < 0;
     const sum = Math.abs(ya) + Math.abs(yb);
     const wrong = bce ? [sum, diff + 10] : [diff + 10, diff > 10 ? diff - 10 : diff + 20];
+    const big = Math.max(Math.abs(ya), Math.abs(yb));
+    const small = Math.min(Math.abs(ya), Math.abs(yb));
     return {
       question: t(
         `How many years apart were these two events: “${bare(ea)}” and “${bare(eb)}”?`,
@@ -160,19 +162,29 @@ const apartBank: readonly Ask[] = timelines.flatMap((tl) =>
       right: `${diff} years`,
       wrong: wrong.map((n) => `${n} years`),
       why: t(
-        `To find how far apart two events were, subtract the smaller year number from the bigger one: ${Math.max(Math.abs(ya), Math.abs(yb))} − ${Math.min(Math.abs(ya), Math.abs(yb))} = ${diff}.`,
-        `要算出两件事相隔多久，就用较大的年份数减去较小的年份数：${Math.max(Math.abs(ya), Math.abs(yb))} − ${Math.min(Math.abs(ya), Math.abs(yb))} = ${diff}。`,
+        `To find how far apart two events were, subtract the smaller year number from the bigger one: ${big} − ${small} = ${diff} years.\n\n**Check.** Add it back: ${small} + ${diff} = ${big}, which matches the other year.`,
+        `要算出两件事相隔多久，就用较大的年份数减去较小的年份数：${big} − ${small} = ${diff} 年。\n\n**检验。**倒推加回去：${small} + ${diff} = ${big}，正好对上另一个年份。`,
       ),
-      whyNot: wrong.map((n) =>
+      whyNot: wrong.map((n, idx) =>
         n === sum && bce
           ? t(
-              "That adds the two years. Both are BCE, so subtract one from the other instead.",
-              "这是把两个年份加起来了。两个都是公元前的年份，应该相减。",
+              "That adds the two years. Both are BCE, so subtract the smaller number from the bigger one instead.",
+              "这是把两个年份加起来了。两个都是公元前的年份，应该用大数减小数。",
             )
-          : t(
-              "That is off by ten or more; subtract the smaller year number from the bigger one again.",
-              "这差了十年或更多；再用较大的年份数减一次较小的年份数。",
-            ),
+          : n < diff
+            ? t(
+                "That number is too small: adding it to the smaller year does not reach the bigger year.",
+                "这个数字太小了：加到较小的年份上，还够不到较大的年份。",
+              )
+            : idx === 0
+              ? t(
+                  "That number is too big: adding it to the smaller year goes past the bigger year.",
+                  "这个数字太大了：加到较小的年份上，会超过较大的年份。",
+                )
+              : t(
+                  "That overshoots the gap even further—subtract the two year numbers again carefully.",
+                  "这个数字偏大得更多——再仔细把两个年份相减一次。",
+                ),
       ),
     };
   }),
@@ -223,8 +235,8 @@ const procedureOrderBank: readonly Arrange[] = procedures.map((p) => ({
   shown: "",
   steps: p.steps,
   why: t(
-    `The right order is: ${p.steps.join(" ")} Each step gets things ready for the next one.`,
-    `正确的顺序是：${p.steps.join(" ")} 每一步都为下一步做好准备。`,
+    `The right order is: ${p.steps.join(" ")} Each step gets things ready for the next one.\n\n**Check.** Read the steps from first to last—every step already has what it needs from the steps before it.`,
+    `正确的顺序是：${p.steps.join(" ")} 每一步都为下一步做好准备。\n\n**检验。**从头到尾顺着读一遍——每一步需要的条件，前面的步骤都已经准备好了。`,
   ),
 }));
 
@@ -239,8 +251,8 @@ const skipBank: readonly Ask[] = procedures.map((p) => {
     right: p.result,
     wrong: [nothing, slower],
     why: t(
-      `Without this step, the experiment fails: ${p.result} Each step of a procedure has a job that later steps depend on.`,
-      `没有这一步，实验就会失败：${p.result} 步骤中的每一步都有自己的作用，后面的步骤要依靠它。`,
+      `Without step ${p.skip + 1}, the experiment fails: ${p.result}\n\n**Check.** Look at the steps that come after step ${p.skip + 1}—they depend on what that step set up.`,
+      `没有第 ${p.skip + 1} 步，实验就会失败：${p.result}\n\n**检验。**看看第 ${p.skip + 1} 步后面的步骤——它们都要依靠这一步准备好的条件。`,
     ),
     whyNot: [
       t("Every step of a procedure has a job, so skipping one changes what happens.", "步骤中的每一步都有作用，跳过一步就会改变结果。"),
@@ -420,8 +432,8 @@ const bothBank: readonly Ask[] = textPairs.flatMap((p) =>
       right: point,
       wrong: [i === 0 ? p.onlyA : p.onlyB, p.neither],
       why: t(
-        `Both texts say this: ${point} A point both texts make can be found in each of them, in its own words.`,
-        `两篇文章都这样说：${point} 两篇都提到的要点，在每篇文章里都能找到，只是说法不同。`,
+        `Both texts say this: ${point}\n\n**Check.** Point to the line in Text 1 and the line in Text 2 that state this fact—both texts include it, each in its own words.`,
+        `两篇文章都这样说：${point}\n\n**检验。**在第一篇和第二篇里分别找到说出这个事实的那一句——两篇都提到了，只是说法不同。`,
       ),
       whyNot: [
         t("Only one of the texts makes that point; the other one does not mention it.", "只有其中一篇文章提到了这一点；另一篇没有提到。"),
@@ -438,8 +450,8 @@ const onlyBank: readonly Ask[] = textPairs.flatMap((p): Ask[] => [
     right: p.onlyA,
     wrong: [p.shared[0], p.onlyB],
     why: t(
-      `Only Text 1 says this: ${p.onlyA} Text 2 is about the same topic, but it adds other points instead.`,
-      `只有第一篇这样说：${p.onlyA} 第二篇文章话题相同，但补充的是别的要点。`,
+      `Only Text 1 says this: ${p.onlyA}\n\n**Check.** Scan Text 2 for that fact—it is not there, because Text 2 adds different points instead.`,
+      `只有第一篇这样说：${p.onlyA}\n\n**检验。**扫读第二篇文章找这个事实——里面没有，第二篇补充的是别的要点。`,
     ),
     whyNot: [
       t("Both texts make that point, so it is not one that only Text 1 makes.", "两篇文章都提到了这一点，所以它不是只有第一篇才有的要点。"),
@@ -452,8 +464,8 @@ const onlyBank: readonly Ask[] = textPairs.flatMap((p): Ask[] => [
     right: p.onlyB,
     wrong: [p.shared[1], p.onlyA],
     why: t(
-      `Only Text 2 says this: ${p.onlyB} Text 1 is about the same topic, but it adds other points instead.`,
-      `只有第二篇这样说：${p.onlyB} 第一篇文章话题相同，但补充的是别的要点。`,
+      `Only Text 2 says this: ${p.onlyB}\n\n**Check.** Scan Text 1 for that fact—it is not there, because Text 1 adds different points instead.`,
+      `只有第二篇这样说：${p.onlyB}\n\n**检验。**扫读第一篇文章找这个事实——里面没有，第一篇补充的是别的要点。`,
     ),
     whyNot: [
       t("Both texts make that point, so it is not one that only Text 2 makes.", "两篇文章都提到了这一点，所以它不是只有第二篇才有的要点。"),
@@ -477,8 +489,8 @@ export const sequenceTopics: readonly TopicDef[] = [
         "which-came-first",
         t("Which Came First", "哪件事先发生"),
         t(
-          "A **timeline** lists events in order, from the earliest to the latest. In years of the Common Era, a smaller number is earlier: 1903 came before 1969.\n\nYears **before the Common Era**, written BCE, count down toward year 1, so there a bigger number is earlier: 2560 BCE came before 1550 BCE.",
-          "**时间线**按从早到晚的顺序列出事件。公元的年份，数字越小越早：1903 年在 1969 年之前。\n\n**公元前**的年份写作 BCE，它们是朝着公元 1 年倒着数的，所以数字越大越早：公元前 2560 年在公元前 1550 年之前。",
+          "A **timeline** lists events in order, from earliest to latest. In years of the Common Era, a smaller number is earlier: 1903 came before 1969.\n\nYears **before the Common Era**, written BCE, count down toward year 1, so a bigger number is earlier: 2560 BCE came before 1550 BCE.\n\n> **Watch out.** Do not treat BCE years like regular numbers—3100 BCE is much earlier than 30 BCE, not later.",
+          "**时间线**按从早到晚的顺序列出事件。公元的年份，数字越小越早：1903 年在 1969 年之前。\n\n**公元前**的年份写作 BCE，它们朝着公元 1 年倒着数，所以数字越大越早：公元前 2560 年在公元前 1550 年之前。\n\n> **注意。**不要把公元前的年份当成普通数字——公元前 3100 年比公元前 30 年早得多，而不是更晚。",
         ),
         askGenerator(firstBank),
       ),
@@ -486,12 +498,17 @@ export const sequenceTopics: readonly TopicDef[] = [
         "how-long-apart",
         t("How Long Apart", "相隔多久"),
         t(
-          "To find how many years apart two events were, **subtract** the smaller year from the bigger one: from 1903 to 1969 is 1969 − 1903 = 66 years.\n\nWhen both years are BCE, subtract the same way, the smaller number from the bigger: from 1046 BCE to 551 BCE is 1046 − 551 = 495 years. Do not add them.",
-          "要算出两件事相隔多少年，就用较大的年份**减去**较小的年份：从 1903 年到 1969 年是 1969 − 1903 = 66 年。\n\n两个年份都是公元前时，也一样用大数减小数：从公元前 1046 年到公元前 551 年是 1046 − 551 = 495 年。不要把它们相加。",
+          "To find how many years apart two events were, **subtract** the smaller year number from the bigger one: from 1903 to 1969 is 1969 − 1903 = 66 years.\n\nWhen both years are BCE, subtract the same way, the smaller number from the bigger: from 1046 BCE to 551 BCE is 1046 − 551 = 495 years.\n\n> **Watch out.** Do not add two BCE years together—both are on the same side of year 1, so you still subtract.",
+          "要算出两件事相隔多少年，就用较大的年份数**减去**较小的年份数：从 1903 年到 1969 年是 1969 − 1903 = 66 年。\n\n两个年份都是公元前时，也一样用大数减小数：从公元前 1046 年到公元前 551 年是 1046 − 551 = 495 年。\n\n> **注意。**不要把两个公元前年份加起来——它们都在公元 1 年的同一侧，所以仍然要相减。",
         ),
         askGenerator(apartBank),
       ),
     ],
+    undefined,
+    t(
+      "A museum wall shows two dates side by side: *1876: First telephone call* and *1927: First television picture*. A timeline puts dates in order so you can tell at a glance which event came first and how many years separate them.",
+      "博物馆的墙上并排写着两个日期：*1876: First telephone call* 和 *1927: First television picture*。时间线把日期按顺序排好，让你一眼就能看出哪件事先发生、两件事相隔多少年。",
+    ),
   ),
   topic(
     "steps-in-a-procedure",
@@ -506,8 +523,8 @@ export const sequenceTopics: readonly TopicDef[] = [
         "ordering-the-steps",
         t("Putting the Steps in Order", "给步骤排序"),
         t(
-          "A **procedure** tells how to do something step by step. The order matters: you get things ready first, then you do the test, then you look at what happened.\n\nTo order steps, ask what each one needs: you cannot float a cork until the tub has water, and you cannot compare results before there are any.",
-          "**操作步骤**一步一步地告诉你怎样做一件事。顺序很重要：先做好准备，再进行测试，最后观察结果。\n\n给步骤排序时，问问每一步需要什么：盆里没有水，就不能让软木塞浮起来；还没有结果，就不能比较结果。",
+          "A **procedure** tells how to do something step by step. The order matters: you get things ready first, then you do the test, then you look at what happened.\n\nTo order steps, ask what each one needs: you cannot float a cork until the tub has water, and you cannot compare results before there are any.\n\n> **Watch out.** Do not put the measuring or comparing step before the test itself—you have to run the test first to get something to check.",
+          "**操作步骤**一步一步地告诉你怎样做一件事。顺序很重要：先做好准备，再进行测试，最后观察结果。\n\n给步骤排序时，问问每一步需要什么：盆里没有水，就不能让软木塞浮起来；还没有结果，就不能比较结果。\n\n> **注意。**不要把测量或比较的步骤排在测试前面——必须先做测试，才能有结果去观察。",
         ),
         arrangeGenerator(procedureOrderBank),
       ),
@@ -515,12 +532,17 @@ export const sequenceTopics: readonly TopicDef[] = [
         "skipping-a-step",
         t("If a Step Is Skipped", "如果跳过一步"),
         t(
-          "Every step of a procedure has a **job**. If you skip one, a later step cannot do its job, and the experiment fails or gives an unfair answer.\n\nTo see what goes wrong, ask what the skipped step made ready. Without water on the paper towel, the bean stays dry and never sprouts.",
-          "操作步骤中的每一步都有自己的**作用**。跳过一步，后面的步骤就无法起作用，实验就会失败或者得出不公平的结果。\n\n要看出会出什么问题，就问问被跳过的那一步准备了什么。纸巾上没有水，豆子就一直是干的，永远不会发芽。",
+          "Every step of a procedure has a **job**. If you skip one, a later step cannot do its job, and the experiment fails or gives an unfair answer.\n\nTo see what goes wrong, ask what the skipped step made ready. Without water on the paper towel, the bean stays dry and never sprouts.\n\n> **Watch out.** Skipping a step does not just make an experiment slower—it removes something the later steps need.",
+          "操作步骤中的每一步都有自己的**作用**。跳过一步，后面的步骤就无法起作用，实验就会失败或者得出不公平的结果。\n\n要看出会出什么问题，就问问被跳过的那一步准备了什么。纸巾上没有水，豆子就一直是干的，永远不会发芽。\n\n> **注意。**跳过一步不只是让实验变慢——它拿走了后面步骤所依赖的条件。",
         ),
         askGenerator(skipBank),
       ),
     ],
+    undefined,
+    t(
+      "Suppose you want to grow a bean in a bag: wet a paper towel, put the bean on it, seal the bag, and tape it to a sunny window. In a procedure, each step prepares what the next step needs.",
+      "假如你想在袋子里种一颗豆子：先把纸巾打湿，放上豆子，封好袋子，再贴到有阳光的窗上。在操作步骤里，每一步都在为下一步准备条件。",
+    ),
   ),
   topic(
     "two-texts-on-one-topic",
@@ -535,8 +557,8 @@ export const sequenceTopics: readonly TopicDef[] = [
         "a-point-both-make",
         t("A Point Both Texts Make", "两篇都提到的要点"),
         t(
-          "Two texts on the same topic often make some of the **same key points**, each in its own words. One says *bees collect nectar*, the other *as a bee collects nectar*: both make that point.\n\nTo find a shared point, check it in **each** text. If only one text says it, it is not shared.",
-          "关于同一话题的两篇文章，常常用各自的说法提到一些**相同的要点**。一篇说 *bees collect nectar*，另一篇说 *as a bee collects nectar*：两篇都提到了这个要点。\n\n要找共同的要点，就在**每一篇**里检查。如果只有一篇这样说，它就不是共同的要点。",
+          "Two texts on the same topic often make some of the **same key points**, each in its own words. One says *bees collect nectar*, the other *as a bee collects nectar*: both make that point.\n\nTo find a shared point, check it in **each** text. If only one text says it, it is not shared.\n\n> **Watch out.** Do not expect the exact same wording in both texts—the same fact is often phrased two different ways.",
+          "关于同一话题的两篇文章，常常用各自的说法提到一些**相同的要点**。一篇说 *bees collect nectar*，另一篇说 *as a bee collects nectar*：两篇都提到了这个要点。\n\n要找共同的要点，就在**每一篇**里检查。如果只有一篇这样说，它就不是共同的要点。\n\n> **注意。**不要指望两篇文章用一模一样的词句——同一个事实常常有两种不同的说法。",
         ),
         askGenerator(bothBank),
       ),
@@ -544,11 +566,16 @@ export const sequenceTopics: readonly TopicDef[] = [
         "a-point-only-one-makes",
         t("A Point Only One Text Makes", "只有一篇提到的要点"),
         t(
-          "Each text also **adds** points of its own. One text about bees may tell how big a hive is; the other may tell how bees help plants make fruit.\n\nTo find a point only one text makes, look for a fact in it that the other text does not mention at all. Reading both texts gives you more facts than either one alone.",
-          "每篇文章也会**补充**自己的要点。一篇讲蜜蜂的文章可能说蜂巢有多大；另一篇可能说蜜蜂怎样帮助植物结果。\n\n要找只有一篇提到的要点，就在这一篇里找另一篇完全没有提到的事实。两篇都读，能比只读一篇得到更多的事实。",
+          "Each text also **adds** points of its own. One text about bees may tell how big a hive is; the other may tell how bees help plants make fruit.\n\nTo find a point only one text makes, look for a fact in it that the other text does not mention at all. Reading both texts gives you more facts than either one alone.\n\n> **Watch out.** Check which text the question asks about—a fact from Text 2 is wrong if the question asks for a point only in Text 1.",
+          "每篇文章也会**补充**自己的要点。一篇讲蜜蜂的文章可能说蜂巢有多大；另一篇可能说蜜蜂怎样帮助植物结果。\n\n要找只有一篇提到的要点，就在这一篇里找另一篇完全没有提到的事实。两篇都读，能比只读一篇得到更多的事实。\n\n> **注意。**看清题目问的是哪一篇——如果问只有第一篇提到的要点，第二篇里的事实就不对。",
         ),
         askGenerator(onlyBank),
       ),
     ],
+    undefined,
+    t(
+      "Two short books about volcanoes both say lava is melted rock, yet one explains how volcanoes erupt while the other explains how old lava becomes rich soil. Reading two texts on one topic lets you see what they share and what each adds.",
+      "两本讲火山的小书都说熔岩是融化的岩石，但一本讲火山怎样喷发，另一本讲冷却后的熔岩怎样变成肥沃的土壤。读同一话题的两篇文章，能帮你看清它们共同说了什么、各自又补充了什么。",
+    ),
   ),
 ];

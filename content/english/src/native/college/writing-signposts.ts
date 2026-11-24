@@ -188,6 +188,10 @@ export const signposting: TopicDef = {
     "The phrases that tell a reader where a text is going: previewing what comes, adding, contrasting, giving an example, showing a result and summing up.",
     "告诉读者文章走向的短语：预告下文、补充、对比、举例、说明结果和总结。",
   ),
+  intro: t(
+    "Opening a sentence with *However,* tells the reader to brace for a turn before they even reach the subject; opening with *Consequently,* signals a direct outcome. In this topic, you pick the signpost that fits the logical link between sentences and name what each bold signpost signals.",
+    "句首一个 *However,* 在读者读到主语之前就预告了转折；句首一个 *Consequently,* 则直接标明因果结果。本主题带你根据句间逻辑选用恰当的路标词，并准确说出加粗路标词的作用。",
+  ),
   prerequisites: ["cohesion-old-before-new"],
   encompasses: [{ topic: "cohesion-old-before-new", weight: 0.2 }],
   xp: 12,
@@ -197,30 +201,56 @@ export const signposting: TopicDef = {
       "choosing-a-signpost",
       t("Choosing a Signpost", "选择路标词"),
       t(
-        "A **signpost** tells the reader how the next sentence relates to the last one, before they read it. To choose one, decide what the next sentence does:\n\n- **previews** what the text will do: *In what follows*, *In this essay*\n- **adds** a further point of the same kind: *In addition*, *Furthermore*, *Moreover*\n- **contrasts** with what came before: *However*, *By contrast*, *Even so*\n- **gives an example** of a general claim: *For example*, *For instance*, *To illustrate*\n- **shows a result**: *As a result*, *Therefore*, *Consequently*\n- **sums up** what has been said: *In short*, *To sum up*, *In summary*\n\nA wrong signpost misleads: *However* promises a contrast, and the reader looks for one.",
-        "**路标词**在读者读下一句之前就告诉他，下一句和上一句是什么关系。选择路标词，要先判断下一句在做什么：\n\n- **预告**下文要做什么：*In what follows*、*In this essay*\n- **补充**同类的另一个要点：*In addition*、*Furthermore*、*Moreover*\n- 与前文形成**对比**：*However*、*By contrast*、*Even so*\n- 为一般性说法**举例**：*For example*、*For instance*、*To illustrate*\n- 说明**结果**：*As a result*、*Therefore*、*Consequently*\n- **总结**前面的内容：*In short*、*To sum up*、*In summary*\n\n用错路标词会误导读者：*However* 预示着转折，读者就会去找转折。",
+        "A **signpost** tells the reader how the next sentence relates to the last one, before they read it. To choose one, decide what the next sentence does:\n\n- **previews** what the text will do: *In what follows*, *In this essay*\n- **adds** a further point of the same kind: *In addition*, *Furthermore*, *Moreover*\n- **contrasts** with what came before: *However*, *By contrast*, *Even so*\n- **gives an example** of a general claim: *For example*, *For instance*, *To illustrate*\n- **shows a result**: *As a result*, *Therefore*, *Consequently*\n- **sums up** what has been said: *In short*, *To sum up*, *In summary*\n\nA wrong signpost misleads: *However* promises a contrast, and the reader looks for one.\n\n> **Watch out.** Do not confuse **adding** (*In addition*, *Furthermore*) with **showing a result** (*As a result*, *Therefore*)—ask whether the first sentence *causes* the second or merely sits beside it as a second point.",
+        "**路标词**在读者读下一句之前就告诉他，下一句和上一句是什么关系。选择路标词，要先判断下一句在做什么：\n\n- **预告**下文要做什么：*In what follows*、*In this essay*\n- **补充**同类的另一个要点：*In addition*、*Furthermore*、*Moreover*\n- 与前文形成**对比**：*However*、*By contrast*、*Even so*\n- 为一般性说法**举例**：*For example*、*For instance*、*To illustrate*\n- 说明**结果**：*As a result*、*Therefore*、*Consequently*\n- **总结**前面的内容：*In short*、*To sum up*、*In summary*\n\n用错路标词会误导读者：*However* 预示着转折，读者就会去找转折。\n\n> **注意。** 不要把**补充**（*In addition*、*Furthermore*）和**说明结果**（*As a result*、*Therefore*）混用——问问前一句是否*导致*了后一句，还是两者只是并列的两个要点。",
       ),
-      choiceGenerator(t("Which signpost fits the gap?", "哪个路标词适合填入空格？"), gapItems, (right) => {
-        const job = jobOf(right);
-        const [en, zh] = jobName[job];
-        return t(`**${right}** fits, because the second sentence ${en}.`, `**${right}** 合适，因为第二句的作用是${zh}。`);
-      }),
+      choiceGenerator(
+        t("Which signpost fits the gap?", "哪个路标词适合填入空格？"),
+        gapItems,
+        (right) => {
+          const job = jobOf(right);
+          const [en, zh] = jobName[job];
+          return t(
+            `**${right}** fits, because the second sentence ${en}.\n\n**Check.** Read the two sentences without any signpost and name their logical link first: because the second sentence ${en}, **${right}** matches that link.`,
+            `**${right}** 合适，因为第二句的作用是${zh}。\n\n**检验。** 先遮住空格通读两句并判断它们的逻辑关系：第二句是在${zh}，因此只有 **${right}** 与该关系吻合。`,
+          );
+        },
+        (wrong) => {
+          const wJob = jobOf(wrong);
+          const [wEn, wZh] = jobName[wJob];
+          return t(
+            `*${wrong}* signals that the next sentence ${wEn}, which does not match the actual relationship between these two sentences.`,
+            `*${wrong}* 预示后一句的作用是${wZh}，与这两句之间的实际逻辑关系不符。`,
+          );
+        },
+      ),
     ),
     point(
       "naming-what-a-signpost-does",
       t("Naming What a Signpost Does", "说出路标词的作用"),
       t(
-        "Reading is faster when you notice signposts: they tell you whether the next sentence previews, adds, contrasts, gives an example, shows a result or sums up. *However* and *Even so* warn that something unexpected follows; *Therefore* and *Consequently* say that what follows is caused by what came before; *In short* and *To sum up* say that nothing new is coming, only the point of what you have read.",
-        "注意路标词，阅读就会更快：它们告诉你下一句是在预告、补充、对比、举例、说明结果还是总结。*However* 和 *Even so* 提醒你后面有出乎意料的内容；*Therefore* 和 *Consequently* 说明后面的内容是前文导致的；*In short* 和 *To sum up* 说明后面不会有新内容，只是你所读内容的要点。",
+        "Reading is faster when you notice signposts: they tell you whether the next sentence previews, adds, contrasts, gives an example, shows a result or sums up. *However* and *Even so* warn that something unexpected follows; *Therefore* and *Consequently* say that what follows is caused by what came before; *In short* and *To sum up* say that nothing new is coming, only the point of what you have read.\n\n> **Watch out.** Distinguish a **preview** (*In this essay*, *In what follows*, which maps what is *coming*) from a **summary** (*In short*, *To sum up*, which distills what was *just said*).",
+        "注意路标词，阅读就会更快：它们告诉你下一句是在预告、补充、对比、举例、说明结果还是总结。*However* 和 *Even so* 提醒你后面有出乎意料的内容；*Therefore* 和 *Consequently* 说明后面的内容是前文导致的；*In short* 和 *To sum up* 说明后面不会有新内容，只是你所读内容的要点。\n\n> **注意。** 分清**预告**（*In this essay*、*In what follows*，勾勒*下文*安排）与**总结**（*In short*、*To sum up*，收束*前文*要点）。",
       ),
-      choiceGenerator(t("What does the signpost in bold do?", "加粗的路标词起什么作用？"), jobItems, (right, shown) => {
-        const job = jobOf(right);
-        const signpost = (/\*\*(.+?)\*\*/u.exec(shown)?.[1] ?? "").replace(/,$/u, "");
-        return t(
-          `**${right}**: *${signpost}* tells the reader that the sentence ${right}.`,
-          `**${right}**（${jobName[job][1]}）：*${signpost}* 告诉读者这句话的作用是${jobName[job][1]}。`,
-        );
-      }),
+      choiceGenerator(
+        t("What does the signpost in bold do?", "加粗的路标词起什么作用？"),
+        jobItems,
+        (right, shown) => {
+          const job = jobOf(right);
+          const signpost = (/\*\*(.+?)\*\*/u.exec(shown)?.[1] ?? "").replace(/,$/u, "");
+          return t(
+            `**${right}**: *${signpost}* tells the reader that the sentence ${right}.\n\n**Check.** Look at how the second sentence actually behaves after *${signpost}*: it ${right}, confirming the signpost's role.`,
+            `**${right}**（${jobName[job][1]}）：*${signpost}* 告诉读者这句话的作用是${jobName[job][1]}。\n\n**检验。** 核对 *${signpost}* 后面的句子实际在做什么：它确实在${jobName[job][1]}，印证了该路标词的功能。`,
+          );
+        },
+        (wrong) => {
+          const wJob = jobOf(wrong);
+          return t(
+            `This signpost does not signal that the sentence ${wrong}; check both the bold phrase itself and how the second sentence connects to the first.`,
+            `这个路标词并不表示“${jobName[wJob][1]}”；请同时核对加粗短语本身以及第二句与第一句的逻辑衔接。`,
+          );
+        },
+      ),
     ),
   ],
 };

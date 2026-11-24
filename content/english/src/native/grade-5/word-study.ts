@@ -69,14 +69,18 @@ const homographTopic = topic("vocabulary", {
     "Words spelled alike with different meanings and sometimes different sounds, such as wind, tear, close and record.",
     "拼写相同、意思不同、有时读音也不同的词，例如 wind、tear、close 和 record。",
   ],
+  intro: [
+    "In *The **wind** blew* and ***wind** the clock*, the letters are identical, yet both the meaning and the pronunciation change. Reading the surrounding words tells you which homograph you have and how to say it.",
+    "在 *The **wind** blew* 和 ***wind** the clock* 中，字母拼写完全一样，但意思和读音都变了。结合周围的词，就能判断是哪一个同形异义词以及该怎么读。",
+  ],
   after: ["multiple-meaning-words"],
   points: [
     point(
       "meaning-of-a-homograph",
       t("The Meaning of a Homograph", "同形异义词的意思"),
       t(
-        "A **homograph** is a word spelled the same as another word but with a different meaning, and often a different sound. *The **wind** blew* is moving air; ***wind** the clock* means to turn it. The other words of the sentence tell you which word you are reading.",
-        "**同形异义词**和另一个词拼写相同，但意思不同，读音也常常不同。*The **wind** blew* 里的 wind 是流动的空气；*__wind__ the clock* 的 wind 是转动、上发条。句子里的其他词会告诉你读到的是哪个词。",
+        "A **homograph** is a word spelled the same as another word but with a different meaning, and often a different sound. *The **wind** blew* is moving air; ***wind** the clock* means to turn it. The other words of the sentence tell you which word you are reading.\n\n> **Watch out.** Do not stop at the first meaning of the word that pops into your head—check whether it fits the action or noun right next to it in the sentence.",
+        "**同形异义词**和另一个词拼写相同，但意思不同，读音也常常不同。*The **wind** blew* 里的 wind 是流动的空气；*__wind__ the clock* 的 wind 是转动、上发条。句子里的其他词会告诉你读到的是哪个词。\n\n> **注意。** 不要只凭脑海里跳出来的第一个意思作答——要检验它是否和句中紧挨着的动词或名词搭配得上。",
       ),
       choiceGenerator(
         t("What does the word in bold mean in this sentence?", "这个句子中加粗的词是什么意思？"),
@@ -84,8 +88,8 @@ const homographTopic = topic("vocabulary", {
         (right, shown) => {
           const { h, s } = senseOf(shown);
           return t(
-            `Here **${h.word}** means *${right}*, and it is said ${s.said}. The rest of the sentence shows which of the two words it is.`,
-            `这里 **${h.word}** 的意思是 *${right}*，读法：${s.said}。句子的其余部分说明它是两个词中的哪一个。`,
+            `Here **${h.word}** means *${right}*, and it is said ${s.said}.\n\n**Check.** Substitute *${right}* for **${h.word}** in the sentence—the whole thought makes immediate sense, whereas the other meaning of **${h.word}** does not.`,
+            `这里 **${h.word}** 的意思是 *${right}*，读法：${s.said}。\n\n**检验。** 把句中的 **${h.word}** 换成 *${right}*——整句话立刻通顺，而 **${h.word}** 的另一个意思放进去讲不通。`,
           );
         },
         (wrong, _right, shown, position) => {
@@ -106,8 +110,8 @@ const homographTopic = topic("vocabulary", {
       "saying-a-homograph",
       t("How a Homograph Is Said", "同形异义词的读法"),
       t(
-        "Many homographs are said in two ways, one for each meaning. *Tear* rhymes with *fear* when it is a drop from the eye and with *bear* when it means to rip. Some change only the part that is said strongly: a **PRES**ent is a gift, but to pre**SENT** is to show. Read the sentence first, then say the word.",
-        "许多同形异义词有两种读法，每种意思一种。*tear* 表示眼泪时与 *fear* 押韵，表示撕时与 *bear* 押韵。有些词只是重读的部分不同：**PRES**ent 是礼物，pre**SENT** 是呈现、颁发。先读懂句子，再读出这个词。",
+        "Many homographs are said in two ways, one for each meaning. *Tear* rhymes with *fear* when it is a drop from the eye and with *bear* when it means to rip. Some change only the part that is said strongly: a **PRES**ent is a gift, but to pre**SENT** is to show. Read the sentence first, then say the word.\n\n> **Watch out.** Match the pronunciation clue to the word's *meaning* in the sentence—do not pick a sentence just because the word sits in the same spot.",
+        "许多同形异义词有两种读法，每种意思一种。*tear* 表示眼泪时与 *fear* 押韵，表示撕时与 *bear* 押韵。有些词只是重读的部分不同：**PRES**ent 是礼物，pre**SENT** 是呈现、颁发。先读懂句子，再读出这个词。\n\n> **注意。** 要把读音提示和词在句中的*意思*对应起来——不要只看词在句子里的位置就作选择。",
       ),
       choiceGenerator(
         t("In which sentence is the word said this way?", "在哪个句子里，这个词是这样读的？"),
@@ -115,16 +119,21 @@ const homographTopic = topic("vocabulary", {
         (right, shown) => {
           const { h, s } = senseOf(right);
           return t(
-            `When **${h.word}** means *${s.means}*, it is said ${s.said}, as in this sentence. ${shown.replace(/\*\*/g, "")} goes with that meaning only.`,
-            `**${h.word}** 表示 *${s.means}* 时，读法是：${s.said}，正如这个句子。这种读法只对应这个意思。`,
+            `When **${h.word}** means *${s.means}*, it is said ${s.said}, as in this sentence.\n\n**Check.** Read the chosen sentence aloud using the pronunciation clue (${shown.replace(/\*\*/g, "")})—it matches the meaning *${s.means}* cleanly.`,
+            `**${h.word}** 表示 *${s.means}* 时，读法是：${s.said}，正如这个句子。\n\n**检验。** 按读音提示（${shown.replace(/\*\*/g, "")}）朗读所选句子——读音与 *${s.means}* 的意思完全一致。`,
           );
         },
-        (wrong) => {
+        (wrong, _right, _shown, position) => {
           const { h, s } = senseOf(wrong);
-          return t(
-            `In that sentence **${h.word}** means *${s.means}*, so it is said ${s.said}, not the way asked for.`,
-            `在那个句子里 **${h.word}** 的意思是 *${s.means}*，所以读法是：${s.said}，不是题目要求的读法。`,
-          );
+          return position === 0
+            ? t(
+                `In that sentence **${h.word}** means *${s.means}*, so it is said ${s.said}, not the way asked for.`,
+                `在那个句子里 **${h.word}** 的意思是 *${s.means}*，所以读法是：${s.said}，不是题目要求的读法。`,
+              )
+            : t(
+                `Here too **${h.word}** carries the other sense (*${s.means}*), which takes the pronunciation ${s.said}.`,
+                `这句里的 **${h.word}** 也是另一个意思（*${s.means}*），对应读法为：${s.said}。`,
+              );
         },
       ),
     ),
@@ -181,6 +190,7 @@ const rootTopic = (
   id: string,
   title: Pair,
   summary: Pair,
+  intro: Pair,
   after: string,
   list: readonly Root[],
   origin: Pair,
@@ -201,6 +211,7 @@ const rootTopic = (
     id,
     title,
     summary,
+    intro,
     after: [after],
     xp: 15,
     points: [
@@ -214,8 +225,8 @@ const rootTopic = (
           (right) => {
             const r = byMeaning(right);
             return t(
-              `The root *${r?.root}* means *${right}*: ${r?.words.map(([w]) => `**${w}**`).join(", ")} all carry that meaning.`,
-              `词根 *${r?.root}* 的意思是"${r?.zh}"：${r?.words.map(([w]) => `**${w}**`).join("、")} 都带有这个意思。`,
+              `The root *${r?.root}* means *${right}*: ${r?.words.map(([w]) => `**${w}**`).join(", ")} all carry that meaning.\n\n**Check.** Test *${right}* against another word in the family (${r?.words.map(([w]) => `*${w}*`).join(" or ")})—the same core idea shows up in each one.`,
+              `词根 *${r?.root}* 的意思是“${r?.zh}”：${r?.words.map(([w]) => `**${w}**`).join("、")} 都带有这个意思。\n\n**检验。** 用同族词（${r?.words.map(([w]) => `*${w}*`).join(" 或 ")}）核对“${r?.zh}”——每个词里都包含这个核心含义。`,
             );
           },
           (wrong) => {
@@ -237,8 +248,8 @@ const rootTopic = (
           (right, shown) => {
             const r = byWord(right);
             return t(
-              `**${right}** means *${shown}*. Its root *${r?.root}* means *${r?.means}*, which points to the meaning.`,
-              `**${right}** 的意思是 *${shown}*。它的词根 *${r?.root}* 意为"${r?.zh}"，指向这个意思。`,
+              `**${right}** means *${shown}*. Its root *${r?.root}* means *${r?.means}*, which points to the meaning.\n\n**Check.** Spot *${r?.root}* inside **${right}** and connect *${r?.means}* back to “${shown}”—the root and definition match directly.`,
+              `**${right}** 的意思是 *${shown}*。它的词根 *${r?.root}* 意为“${r?.zh}”，指向这个意思。\n\n**检验。** 在 **${right}** 中找到词根 *${r?.root}*，把“${r?.zh}”与“${shown}”对照——词根与释义直接对应。`,
             );
           },
           (wrong) => {
@@ -262,17 +273,21 @@ const greekRoots = rootTopic(
     "Ten Greek roots that build the words of science: astro, hydr, chron, cycl, meter, logy, zoo, phys, techn and dyna.",
     "构成科学词汇的十个希腊词根：astro、hydr、chron、cycl、meter、logy、zoo、phys、techn 和 dyna。",
   ],
+  [
+    "Words like *hydroelectric*, *barometer*, and *chronicle* look intimidating until you spot the Greek roots inside them (*hydr* = water, *meter* = measure, *chron* = time). Learning ten science roots opens up dozens of technical terms.",
+    "*hydroelectric*、*barometer*、*chronicle* 看似难记，但认出里面的希腊词根（*hydr* = 水，*meter* = 测量，*chron* = 时间）就豁然开朗。掌握十个科学词根，就能读懂一大批专业词。",
+  ],
   "greek-roots-1",
   greek,
   ["Greek", "希腊"],
   [
     [
-      "Many words of science are built from Greek roots. *Astro* means star, *hydr* water, *chron* time, *cycl* wheel or ring, *meter* measure, *logy* study of, *zoo* animal, *phys* nature, *techn* skill and *dyna* power. Find the root, and it tells you part of what the word means.",
-      "许多科学词汇由希腊词根构成。*astro* 意为星，*hydr* 水，*chron* 时间，*cycl* 轮或环，*meter* 测量，*logy* 学科，*zoo* 动物，*phys* 自然，*techn* 技艺，*dyna* 力量。找到词根，就知道这个词的一部分意思。",
+      "Many words of science are built from Greek roots. *Astro* means star, *hydr* water, *chron* time, *cycl* wheel or ring, *meter* measure, *logy* study of, *zoo* animal, *phys* nature, *techn* skill and *dyna* power. Find the root, and it tells you part of what the word means.\n\n> **Watch out.** Do not guess from a single familiar letter—use the definition beside the example word to confirm what the italicized root contributes.",
+      "许多科学词汇由希腊词根构成。*astro* 意为星，*hydr* 水，*chron* 时间，*cycl* 轮或环，*meter* 测量，*logy* 学科，*zoo* 动物，*phys* 自然，*techn* 技艺，*dyna* 力量。找到词根，就知道这个词的一部分意思。\n\n> **注意。** 不要只凭几个眼熟的字母瞎猜——结合例词旁边的释义，确认斜体词根贡献了哪部分意思。",
     ],
     [
-      "When you meet a long word of science, split it into its parts. *Thermometer* has *meter*, measure, so it is a tool that measures; *zoologist* has *zoo*, animal, so it is someone who studies animals. Match the root to the meaning you need.",
-      "遇到长的科学词汇时，把它拆成几个部分。*thermometer* 含有 *meter*（测量），所以是测量的工具；*zoologist* 含有 *zoo*（动物），所以是研究动物的人。把词根和你需要的意思对上。",
+      "When you meet a long word of science, split it into its parts. *Thermometer* has *meter*, measure, so it is a tool that measures; *zoologist* has *zoo*, animal, so it is someone who studies animals. Match the root to the meaning you need.\n\n> **Watch out.** Check the *whole* word after spotting the root—*biology*, *geology*, and *ecology* all share *-logy* (study of), so the first root decides which science it is.",
+      "遇到长的科学词汇时，把它拆成几个部分。*thermometer* 含有 *meter*（测量），所以是测量的工具；*zoologist* 含有 *zoo*（动物），所以是研究动物的人。把词根和你需要的意思对上。\n\n> **注意。** 认出词根后还要看*整个词*——*biology*、*geology*、*ecology* 都有 *-logy*（学科），决定具体学科的是前面的词根。",
     ],
   ],
 );
@@ -284,17 +299,21 @@ const latinRoots = rootTopic(
     "Ten Latin roots of the earth and the sky: terr, aqua, sol, lun, stell, vent, nav, flu, grav and orb.",
     "有关大地与天空的十个拉丁词根：terr、aqua、sol、lun、stell、vent、nav、flu、grav 和 orb。",
   ],
+  [
+    "When astronomers talk about *solar* flares, *lunar* eclipses, and *interstellar* dust, they are using Latin roots for sun, moon, and star. Ten Latin roots of earth and sky help you decode science and geography terms.",
+    "天文学家说 *solar* flares、*lunar* eclipses、*interstellar* dust 时，用的正是代表太阳、月亮和星星的拉丁词根。掌握这十个大地与天空的拉丁词根，就能读懂大量科学和地理词汇。",
+  ],
   "latin-roots-1",
   latin,
   ["Latin", "拉丁"],
   [
     [
-      "Latin gave English many words of the earth and the sky. *Terr* means earth, *aqua* water, *sol* sun, *lun* moon, *stell* star, *vent* wind or air, *nav* ship, *flu* flow, *grav* heavy and *orb* a round path or ball. The root is the part of the word that carries this meaning.",
-      "拉丁语给了英语许多有关大地与天空的词。*terr* 意为土地，*aqua* 水，*sol* 太阳，*lun* 月亮，*stell* 星，*vent* 风或空气，*nav* 船，*flu* 流动，*grav* 重，*orb* 圆形轨道或球。词根就是词中承载这个意思的部分。",
+      "Latin gave English many words of the earth and the sky. *Terr* means earth, *aqua* water, *sol* sun, *lun* moon, *stell* star, *vent* wind or air, *nav* ship, *flu* flow, *grav* heavy and *orb* a round path or ball. The root is the part of the word that carries this meaning.\n\n> **Watch out.** Keep *sol* (sun), *lun* (moon), and *stell* (star) distinct—all three belong to the sky, so link each one to a familiar word like *solar*, *lunar*, or *constellation*.",
+      "拉丁语给了英语许多有关大地与天空的词。*terr* 意为土地，*aqua* 水，*sol* 太阳，*lun* 月亮，*stell* 星，*vent* 风或空气，*nav* 船，*flu* 流动，*grav* 重，*orb* 圆形轨道或球。词根就是词中承载这个意思的部分。\n\n> **注意。** 分清 *sol*（太阳）、*lun*（月亮）和 *stell*（星）——三者都与天空有关，可以把它们分别和 *solar*、*lunar*、*constellation* 绑在一起记忆。",
     ],
     [
-      "A Latin root helps you choose between words that look alike. *Solar* has *sol*, the sun; *stellar* has *stell*, the stars; *lunar* has *lun*, the moon. Read the meaning you need, think of the root that carries it, and find the word that holds that root.",
-      "拉丁词根能帮你区分长得相似的词。*solar* 含有 *sol*（太阳）；*stellar* 含有 *stell*（星）；*lunar* 含有 *lun*（月亮）。读懂需要的意思，想一想承载它的词根，再找含有这个词根的词。",
+      "A Latin root helps you choose between words that look alike. *Solar* has *sol*, the sun; *stellar* has *stell*, the stars; *lunar* has *lun*, the moon. Read the meaning you need, think of the root that carries it, and find the word that holds that root.\n\n> **Watch out.** Do not confuse *aqua* (water) with *terr* (land) or *vent* (air)—match the key noun in the definition straight to its Latin root.",
+      "拉丁词根能帮你区分长得相似的词。*solar* 含有 *sol*（太阳）；*stellar* 含有 *stell*（星）；*lunar* 含有 *lun*（月亮）。读懂需要的意思，想一想承载它的词根，再找含有这个词根的词。\n\n> **注意。** 不要混淆 *aqua*（水）、*terr*（土地）和 *vent*（风/空气）——先把释义里的核心概念和拉丁词根对上。",
     ],
   ],
 );
@@ -339,14 +358,18 @@ const namesAndMyths = topic("vocabulary", {
     "Words that come from people, places and myths: marathon, olympic, echo, atlas, panic, titanic and more.",
     "来自人物、地名和神话的词：marathon、olympic、echo、atlas、panic、titanic 等。",
   ],
+  intro: [
+    "Why do we call a book of maps an *atlas* or a sudden wave of fear *panic*? Both words grew out of ancient Greek myths—Atlas holding up the sky and the god Pan startling travelers—and remembering the story locks in the meaning.",
+    "为什么地图册叫 *atlas*，突如其来的恐慌叫 *panic*？这两个词都源自古希腊神话——扛天的巨人阿特拉斯与惊吓旅人的潘神——记住背后的故事，词义就牢牢印在脑海里。",
+  ],
   after: ["context-clues"],
   points: [
     point(
       "meaning-of-a-word-from-a-myth",
       t("What the Word Means", "这个词的意思"),
       t(
-        "Some English words began as names of people, places or characters of myths. A **marathon** is a long race or task; an **echo** is a sound that comes back; **panic** is a sudden fear. Today they are ordinary words, so the sentence around them tells you what they mean.",
-        "有些英语单词起初是人名、地名或神话人物的名字。**marathon** 是长跑或漫长的任务；**echo** 是回声；**panic** 是突然的恐慌。如今它们是普通的词，所以周围的句子会告诉你它们的意思。",
+        "Some English words began as names of people, places or characters of myths. A **marathon** is a long race or task; an **echo** is a sound that comes back; **panic** is a sudden fear. Today they are ordinary words, so the sentence around them tells you what they mean.\n\n> **Watch out.** Do not let the myth's name distract you—substitute your chosen meaning straight into the sentence to verify that it fits the everyday scene.",
+        "有些英语单词起初是人名、地名或神话人物的名字。**marathon** 是长跑或漫长的任务；**echo** 是回声；**panic** 是突然的恐慌。如今它们是普通的词，所以周围的句子会告诉你它们的意思。\n\n> **注意。** 不要被神话名带偏——把选中的意思直接代入句子的日常场景，验证它是否通顺。",
       ),
       choiceGenerator(
         t("What does the word in bold mean?", "加粗的词是什么意思？"),
@@ -354,8 +377,8 @@ const namesAndMyths = topic("vocabulary", {
         (right, shown) => {
           const m = mythOf(shown);
           return t(
-            `**${m?.word}** means *${right}*. It comes from ${m?.story}, and the sentence uses it in that sense.`,
-            `**${m?.word}** 的意思是 *${right}*。它来自${m?.storyZh}，句子正是用了这个意思。`,
+            `**${m?.word}** means *${right}*. It comes from ${m?.story}, and the sentence uses it in that sense.\n\n**Check.** Replace **${m?.word}** in the sentence with *${right}*—the sentence keeps its exact sense.`,
+            `**${m?.word}** 的意思是 *${right}*。它来自${m?.storyZh}，句子正是用了这个意思。\n\n**检验。** 把句中的 **${m?.word}** 换成 *${right}*——整句话的意思完全吻合。`,
           );
         },
         (wrong) => {
@@ -368,8 +391,8 @@ const namesAndMyths = topic("vocabulary", {
       "story-behind-the-word",
       t("The Story Behind the Word", "词背后的故事"),
       t(
-        "Knowing the story behind a word helps you remember it. A **herculean** task needs the strength of Hercules, the hero of twelve great labors; an **odyssey** is a long journey like the voyage home of Odysseus; a **mentor** is a guide, like the friend who guided the son of Odysseus.",
-        "知道一个词背后的故事，有助于记住它。**herculean** 的任务需要赫拉克勒斯（完成十二项艰巨任务的英雄）那样的力气；**odyssey** 是像奥德修斯归乡航程那样漫长的旅程；**mentor** 是引路人，就像那位引导奥德修斯之子的朋友。",
+        "Knowing the story behind a word helps you remember it. A **herculean** task needs the strength of Hercules, the hero of twelve great labors; an **odyssey** is a long journey like the voyage home of Odysseus; a **mentor** is a guide, like the friend who guided the son of Odysseus.\n\n> **Watch out.** Match the *key feature* of the story (like a long journey, a repeating voice, or holding up the world) to how the bold word is used in the sentence.",
+        "知道一个词背后的故事，有助于记住它。**herculean** 的任务需要赫拉克勒斯（完成十二项艰巨任务的英雄）那样的力气；**odyssey** 是像奥德修斯归乡航程那样漫长的旅程；**mentor** 是引路人，就像那位引导奥德修斯之子的朋友。\n\n> **注意。** 抓住故事的*核心特征*（如漫长航程、重复声音、扛起天空），再和句中加粗词的用法对应起来。",
       ),
       choiceGenerator(
         t("Which story does the word in bold come from?", "加粗的词来自哪个故事？"),
@@ -377,8 +400,8 @@ const namesAndMyths = topic("vocabulary", {
         (right, shown) => {
           const m = mythOf(shown);
           return t(
-            `**${m?.word}** comes from ${right}; that is why it means *${m?.means}*.`,
-            `**${m?.word}** 来自${m?.storyZh}，所以它的意思是 *${m?.means}*。`,
+            `**${m?.word}** comes from ${right}; that is why it means *${m?.means}*.\n\n**Check.** Link the key detail of that story back to how **${m?.word}** works in the sentence—the origin explains the modern meaning.`,
+            `**${m?.word}** 来自${m?.storyZh}，所以它的意思是 *${m?.means}*。\n\n**检验。** 把故事的关键情节和 **${m?.word}** 在句中的用法连起来看——来源正好解释了它的现代含义。`,
           );
         },
         (wrong) => {
@@ -459,14 +482,18 @@ const blendedWords = topic("vocabulary", {
     "Words made by blending two words, such as smog and brunch, and words made by shortening a longer one, such as lab and photo.",
     "由两个词混合而成的词，如 smog 和 brunch；以及由长词缩短而成的词，如 lab 和 photo。",
   ],
+  intro: [
+    "English constantly invents shorter words in two ways: blending two words into one (*breakfast* + *lunch* → *brunch*) or clipping a long word down (*laboratory* → *lab*). Spotting the source words makes both meanings and formal equivalents clear.",
+    "英语常通过两种方式造出更短的新词：把两个词混成一个（*breakfast* + *lunch* → *brunch*），或把长词截短（*laboratory* → *lab*）。认清来源词，就能准确理解意思并在正式写作里还原原词。",
+  ],
   after: ["compound-words"],
   points: [
     point(
       "the-two-words-of-a-blend",
       t("The Two Words of a Blend", "混合词的两个来源词"),
       t(
-        "A **blend** joins the start of one word to the end of another, so it keeps part of each meaning. *Smog* is *smoke* and *fog*; *brunch* is *breakfast* and *lunch*; *motel* is *motor* and *hotel*. To find the two words, ask what the thing is a mix of.",
-        "**混合词**把一个词的开头和另一个词的结尾接在一起，因此保留了两者的部分意思。*smog* 是 *smoke* 加 *fog*；*brunch* 是 *breakfast* 加 *lunch*；*motel* 是 *motor* 加 *hotel*。要找出这两个词，问问这个东西是什么和什么的混合。",
+        "A **blend** joins the start of one word to the end of another, so it keeps part of each meaning. *Smog* is *smoke* and *fog*; *brunch* is *breakfast* and *lunch*; *motel* is *motor* and *hotel*. To find the two words, ask what the thing is a mix of.\n\n> **Watch out.** Do not pick a pair just because the letters sound similar—*both* source words must actually describe what the blended word means.",
+        "**混合词**把一个词的开头和另一个词的结尾接在一起，因此保留了两者的部分意思。*smog* 是 *smoke* 加 *fog*；*brunch* 是 *breakfast* 加 *lunch*；*motel* 是 *motor* 加 *hotel*。要找出这两个词，问问这个东西是什么和什么的混合。\n\n> **注意。** 不要只看读音相近就选——两个来源词的意思都必须真正符合混合词的含义。",
       ),
       choiceGenerator(
         t("Which two words were blended to make the word in bold?", "加粗的词是由哪两个词混合而成的？"),
@@ -474,23 +501,28 @@ const blendedWords = topic("vocabulary", {
         (right, shown) => {
           const b = blendOf(shown);
           return t(
-            `**${b?.word}** blends *${right}*: it keeps the start of the first word and the end of the second, and its meaning mixes both.`,
-            `**${b?.word}** 由 *${right}* 混合而成：保留第一个词的开头和第二个词的结尾，意思也是两者的混合。`,
+            `**${b?.word}** blends *${right}*: it keeps the start of the first word and the end of the second, and its meaning mixes both.\n\n**Check.** Check both pieces of *${right}* against **${b?.word}**—the opening letters come from the first word, the ending letters from the second, and both meanings fit.`,
+            `**${b?.word}** 由 *${right}* 混合而成：保留第一个词的开头和第二个词的结尾，意思也是两者的混合。\n\n**检验。** 把 *${right}* 的两个词分别对照 **${b?.word}**——开头字母来自第一个词，结尾字母来自第二个词，两者的意思也都吻合。`,
           );
         },
-        (wrong, right) =>
-          t(
-            `*${wrong}* sounds close, but its meaning is not part of the word; the blend is *${right}*.`,
-            `*${wrong}* 听起来接近，但它的意思不在这个词里；正确的来源是 *${right}*。`,
-          ),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `*${wrong}* sounds close, but the first word does not match the meaning of the blend.`,
+                `*${wrong}* 听起来接近，但第一个词的意思不在这个混合词里。`,
+              )
+            : t(
+                `*${wrong}* borrows a similar ending sound, yet its second word does not fit what the blend means.`,
+                `*${wrong}* 虽然结尾读音相似，但第二个词不符合这个混合词的含义。`,
+              ),
       ),
     ),
     point(
       "the-full-word-of-a-short-one",
       t("The Full Word of a Shortened One", "缩略词的完整形式"),
       t(
-        "A **shortened word** (a clipping) keeps one part of a longer word and means the same: *lab* is *laboratory*, *photo* is *photograph*, *flu* is *influenza*. Short words are fine in everyday speech; in formal writing the full word is often better, so it helps to know it.",
-        "**缩略词**保留长词的一部分，意思不变：*lab* 是 *laboratory*，*photo* 是 *photograph*，*flu* 是 *influenza*。缩略词在日常说话中很常用；正式写作中往往用完整的词更好，所以要知道它的完整形式。",
+        "A **shortened word** (a clipping) keeps one part of a longer word and means the same: *lab* is *laboratory*, *photo* is *photograph*, *flu* is *influenza*. Short words are fine in everyday speech; in formal writing the full word is often better, so it helps to know it.\n\n> **Watch out.** Several longer words may share the same starting letters (like *laboratory* and *labyrinth*)—substitute the full word into the sentence to make sure the meaning matches.",
+        "**缩略词**保留长词的一部分，意思不变：*lab* 是 *laboratory*，*photo* 是 *photograph*，*flu* 是 *influenza*。缩略词在日常说话中很常用；正式写作中往往用完整的词更好，所以要知道它的完整形式。\n\n> **注意。** 好几个长词可能开头字母一样（如 *laboratory* 和 *labyrinth*）——把完整单词代回原句，确认意思完全一致。",
       ),
       choiceGenerator(
         t("Which full word is the word in bold short for?", "加粗的词是哪个完整单词的缩略形式？"),
@@ -498,15 +530,20 @@ const blendedWords = topic("vocabulary", {
         (right, shown) => {
           const s = shortOf(shown);
           return t(
-            `**${s?.word}** is short for *${right}*, and it keeps the same meaning in this sentence.`,
-            `**${s?.word}** 是 *${right}* 的缩略形式，在这个句子里意思相同。`,
+            `**${s?.word}** is short for *${right}*, and it keeps the same meaning in this sentence.\n\n**Check.** Read the sentence with *${right}* in place of **${s?.word}**—the meaning stays identical and *${right}* contains the clipped part.`,
+            `**${s?.word}** 是 *${right}* 的缩略形式，在这个句子里意思相同。\n\n**检验。** 把句中的 **${s?.word}** 换成 *${right}* 读一遍——句意完全不变，而且 *${right}* 包含这个缩略部分。`,
           );
         },
-        (wrong, right) =>
-          t(
-            `*${wrong}* begins with similar letters but means something else; the full word here is *${right}*.`,
-            `*${wrong}* 开头的字母相似，但意思不同；这里的完整单词是 *${right}*。`,
-          ),
+        (wrong, _right, _shown, position) =>
+          position === 0
+            ? t(
+                `*${wrong}* begins with similar letters, but putting it into the sentence changes the meaning completely.`,
+                `*${wrong}* 开头字母相似，但放进句子里意思完全不对。`,
+              )
+            : t(
+                `*${wrong}* is a related or look-alike word, not the exact longer word that was shortened here.`,
+                `*${wrong}* 只是形近词或相关词，并不是这里截短前的完整原词。`,
+              ),
       ),
     ),
   ],
@@ -516,22 +553,34 @@ const blendedWords = topic("vocabulary", {
 const relations: Record<string, Label> = {
   "same meaning": {
     zh: "同义",
-    why: ["The two words mean nearly the same thing.", "这两个词的意思几乎相同。"],
+    why: [
+      "The two words mean nearly the same thing.\n\n**Check.** Try using both words to describe the same situation—they express the same idea.",
+      "这两个词的意思几乎相同。\n\n**检验。** 试着用这两个词描述同一个情境——它们表达的是同一个意思。",
+    ],
     not: ["Words of the same meaning could swap places in a sentence; these cannot.", "同义词能在句子中互换，这两个词不能。"],
   },
   opposites: {
     zh: "反义",
-    why: ["The two words mean the opposite of each other.", "这两个词意思相反。"],
+    why: [
+      "The two words mean the opposite of each other.\n\n**Check.** Put *not* in front of the first word—it points straight to the second word.",
+      "这两个词意思相反。\n\n**检验。** 在第一个词前面加上“不”——意思正好指向第二个词。",
+    ],
     not: ["Opposites mean contrary things; these two are not contrary.", "反义词意思相反，这两个词并不相反。"],
   },
   "part to whole": {
     zh: "部分与整体",
-    why: ["The first is one part of the second.", "前一个是后一个的一部分。"],
+    why: [
+      "The first is one part of the second.\n\n**Check.** Test the frame “a ___ is part of a ___”—the first word fits inside the second.",
+      "前一个是后一个的一部分。\n\n**检验。** 代入句框“___是___的一部分”——前一个词正好属于后一个词的组成部分。",
+    ],
     not: ["For part to whole, the first must be a piece of the second; it is not.", "部分与整体要求前一个是后一个的一部分，这里不是。"],
   },
   "tool to user": {
     zh: "工具与使用者",
-    why: ["The first is a tool or aid the second uses in their work.", "前一个是后一个工作时使用的工具或帮手。"],
+    why: [
+      "The first is a tool or aid the second uses in their work.\n\n**Check.** Test the frame “a [second] uses a [first]”—the second word names the person who uses that tool.",
+      "前一个是后一个工作时使用的工具或帮手。\n\n**检验。** 代入句框“后一个使用前一个”——后一个词正好是使用这种工具的人。",
+    ],
     not: [
       "For tool to user, the second must use the first in their work; that is not the link here.",
       "工具与使用者要求后一个在工作中使用前一个，这里不是这种关系。",
@@ -539,7 +588,10 @@ const relations: Record<string, Label> = {
   },
   "cause to effect": {
     zh: "因果",
-    why: ["The first causes or leads to the second.", "前一个导致后一个。"],
+    why: [
+      "The first causes or leads to the second.\n\n**Check.** Test the frame “[first] can cause [second]”—the first triggers the second as its result.",
+      "前一个导致后一个。\n\n**检验。** 代入句框“前一个会引发后一个”——前一个是原因，后一个是它带来的结果。",
+    ],
     not: ["For cause to effect, the first must bring about the second; it does not.", "因果关系要求前一个导致后一个，这里不是。"],
   },
 };
@@ -624,6 +676,10 @@ const wordAnalogies = topic("vocabulary", {
     "An analogy pairs words that relate in the same way: synonyms, opposites, part and whole, tool and user, cause and effect.",
     "类比把关系相同的两对词放在一起：同义、反义、部分与整体、工具与使用者、因果。",
   ],
+  intro: [
+    "*Telescope is to astronomer as microscope is to biologist* works because both pairs follow the exact same *tool-to-user* link. Naming the relationship of the first pair in a short sentence unlocks any analogy.",
+    "*Telescope is to astronomer as microscope is to biologist* 成立，因为两对词都是“工具与使用者”关系。用一句短话说出第一对词的关系，就能解开任何词语类比。",
+  ],
   // synonyms-and-antonyms stands in as context-clues, which shades-of-meaning already implies.
   after: ["shades-of-meaning"],
   points: [
@@ -631,8 +687,8 @@ const wordAnalogies = topic("vocabulary", {
       "how-two-words-relate",
       ["How Two Words Relate", "两个词的关系"],
       [
-        "An analogy is built on how two words relate. They may mean the **same** (*bold : brave*), be **opposites** (*deny : admit*), be a **part** of a **whole** (*mast : ship*), a **tool** and its **user** (*brush : painter*), or a **cause** and its **effect** (*storm : flood*). Say the link as a sentence: a mast is part of a ship.",
-        "类比的基础是两个词的关系。它们可能**同义**（*bold : brave*），**反义**（*deny : admit*），是**部分与整体**（*mast : ship*），**工具与使用者**（*brush : painter*），或者**因果**（*storm : flood*）。把关系说成一句话：桅杆是船的一部分。",
+        "An analogy is built on how two words relate. They may mean the **same** (*bold : brave*), be **opposites** (*deny : admit*), be a **part** of a **whole** (*mast : ship*), a **tool** and its **user** (*brush : painter*), or a **cause** and its **effect** (*storm : flood*). Say the link as a sentence: a mast is part of a ship.\n\n> **Watch out.** Check the *direction* of the pair too—*spark : fire* is cause to effect, whereas *page : book* is part to whole.",
+        "类比的基础是两个词的关系。它们可能**同义**（*bold : brave*），**反义**（*deny : admit*），是**部分与整体**（*mast : ship*），**工具与使用者**（*brush : painter*），或者**因果**（*storm : flood*）。把关系说成一句话：桅杆是船的一部分。\n\n> **注意。** 还要留意词对的*方向*——*spark : fire* 是因果，而 *page : book* 是部分与整体。",
       ],
       ["How are these two words related?", "这两个词是什么关系？"],
       relationLines,
@@ -642,8 +698,8 @@ const wordAnalogies = topic("vocabulary", {
       "completing-an-analogy",
       ["Completing an Analogy", "完成类比"],
       [
-        "To complete an analogy, find how the first pair relates, then find the word that makes the second pair relate in the same way. *Clue is to detective as map is to ___*: a detective uses clues, so the answer is the person who uses a map, an *explorer*. A word that merely goes with the other is not enough.",
-        "完成类比时，先找出第一对词的关系，再找一个词让第二对词也有同样的关系。*Clue is to detective as map is to ___*：侦探使用线索，所以答案是使用地图的人，*explorer*。只是和另一个词有联系还不够。",
+        "To complete an analogy, find how the first pair relates, then find the word that makes the second pair relate in the same way. *Clue is to detective as map is to ___*: a detective uses clues, so the answer is the person who uses a map, an *explorer*. A word that merely goes with the other is not enough.\n\n> **Watch out.** Do not pick a word just because it belongs to the same topic (like *road* for *map*)—put both pairs into the exact same bridge sentence.",
+        "完成类比时，先找出第一对词的关系，再找一个词让第二对词也有同样的关系。*Clue is to detective as map is to ___*：侦探使用线索，所以答案是使用地图的人，*explorer*。只是和另一个词有联系还不够。\n\n> **注意。** 不要只因两个词话题相近就选它（比如看到 *map* 就选 *road*）——要把两对词放进同一个关系句里验证。",
       ],
       ["Which word completes the analogy?", "哪个词能完成这个类比？"],
       analogyItems,
@@ -651,18 +707,18 @@ const wordAnalogies = topic("vocabulary", {
         const rel = analogyRelation(shown);
         const zh = relations[rel]?.zh ?? "";
         return [
-          `The first pair is ${rel}, so the second pair must be ${rel} too: the answer is **${right}**.`,
-          `第一对词的关系是${zh}，第二对也必须是${zh}：答案是 **${right}**。`,
+          `The first pair is ${rel}, so the second pair must be ${rel} too: the answer is **${right}**.\n\n**Check.** Build one bridge sentence for the first pair and plug **${right}** into the same sentence for the second pair—both pairs match the ${rel} link.`,
+          `第一对词的关系是${zh}，第二对也必须是${zh}：答案是 **${right}**。\n\n**检验。** 用第一对词造一个关系句，再把 **${right}** 代入第二对的同一个关系句——两对都严格符合${zh}关系。`,
         ];
       },
       [
         [
-          "*{wrong}* goes with the word, but not in the same way as the first pair; the pair needs **{right}**.",
-          "*{wrong}* 与这个词有联系，但关系与第一对不同；应选 **{right}**。",
+          "*{wrong}* is related in topic to the given word, but it does not form the same relationship as the first pair.",
+          "*{wrong}* 只是和给出的词话题相关，但构成的关系与第一对不同。",
         ],
         [
-          "*{wrong}* is linked to the second pair in another way; match the link of the first pair, which gives **{right}**.",
-          "*{wrong}* 与第二对词的联系是另一种关系；要照第一对的关系，答案是 **{right}**。",
+          "*{wrong}* links to the given word in a different way—restate the exact link of the first pair and test each option against it.",
+          "*{wrong}* 与给出的词是另一种联系——先用一句话说出第一对词的确切关系，再逐个检验选项。",
         ],
       ],
     ),

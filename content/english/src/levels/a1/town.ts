@@ -449,9 +449,10 @@ const whWhy = (right: string, shown: string): Text => {
   const [after, answer] = whParts(shown);
   const kind = whKind(right, after);
   const full = shown.replace("___", right);
+  const phrase = `${right}${after.startsWith("time") || /^(old|many|much)\b/u.test(after) ? ` ${after.split(" ")[0]}` : ""}`;
   return t(
-    `The answer *${answer}* gives ${kind.en}, and *${right}${after.startsWith("time") || /^(old|many|much)\b/u.test(after) ? ` ${after.split(" ")[0]}` : ""}* asks about ${kind.en}: ${full}`,
-    `回答 *${answer}* 说的是${kind["zh-CN"]}，而 *${right}${after.startsWith("time") || /^(old|many|much)\b/u.test(after) ? ` ${after.split(" ")[0]}` : ""}* 问的正是${kind["zh-CN"]}：${full}`,
+    `The answer *${answer}* gives ${kind.en}, and *${phrase}* asks about ${kind.en}: ${full}\n\n**Check.** Read the completed question and answer together: *${phrase}* directly matches the information in *${answer}*`,
+    `回答 *${answer}* 说的是${kind["zh-CN"]}，而 *${phrase}* 问的正是${kind["zh-CN"]}：${full}\n\n**检验。** 把完整的问句和答句连起来读：*${phrase}* 问的正好对应 *${answer}* 给出的信息。`,
   );
 };
 
@@ -473,12 +474,12 @@ const whAskWhy = (right: string, shown: string): Text => {
   const next = right.slice(ask.length + 1).split(" ")[0] ?? "";
   return /^(do|does|is|are)$/u.test(next)
     ? t(
-        `*${shown}* gives the answer, so put *${ask}* first, then *${next}* before the subject, as in a yes/no question: ${right}`,
-        `*${shown}* 里有答案，所以把 *${ask}* 放在句首，再像一般疑问句那样把 *${next}* 放在主语前：${right}`,
+        `*${shown}* gives the answer, so put *${ask}* first, then *${next}* before the subject, as in a yes/no question: ${right}\n\n**Check.** Confirm the order at the front (*${ask}* + *${next}* + subject) and make sure the answer piece from the statement is no longer in the question.`,
+        `*${shown}* 里有答案，所以把 *${ask}* 放在句首，再像一般疑问句那样把 *${next}* 放在主语前：${right}\n\n**检验。** 核对句首语序（*${ask}* + *${next}* + 主语），并确认陈述句里表示答案的那部分已经从问句里去掉。`,
       )
     : t(
-        `Here *${ask}* asks about the subject itself, so the verb comes straight after it with no *do*: ${right}`,
-        `这里 *${ask}* 问的就是主语，所以动词直接跟在后面，不用 *do*：${right}`,
+        `Here *${ask}* asks about the subject itself, so the verb comes straight after it with no *do*: ${right}\n\n**Check.** Replace *${ask}* with the subject from the statement—if the original sentence reappears, the verb is in the right place without *do*.`,
+        `这里 *${ask}* 问的就是主语，所以动词直接跟在后面，不用 *do*：${right}\n\n**检验。** 把陈述句的主语代回 *${ask}* 的位置——如果能还原成原句，就说明动词位置正确，不需要加 *do*。`,
       );
 };
 
@@ -488,6 +489,10 @@ const whQuestions: TopicDef = {
   summary: t(
     "Where does Tom live? When is your birthday? Questions with where, when, what, who, how and why.",
     "Where does Tom live? When is your birthday? 用 where、when、what、who、how 和 why 提问。",
+  ),
+  intro: t(
+    "A yes/no question only asks *if* something is true (*Does the train leave at nine?*). A *wh-* question asks for the missing fact itself (*When does the train leave?*), putting the question word at the very front.",
+    "一般疑问句只问“是不是”（*Does the train leave at nine?*），而特殊疑问句直接问缺少的信息（*When does the train leave?*），并把疑问词放在句首。",
   ),
   prerequisites: ["present-simple-questions", "questions-with-be"],
   encompasses: [
@@ -501,8 +506,8 @@ const whQuestions: TopicDef = {
       "choose",
       t("Which question word", "选哪个疑问词"),
       t(
-        "Each question word asks about one thing:\n\n- *where*: a place (*In Beijing.*)\n- *when*, *what time*: a time (*At nine. On Sunday.*)\n- *what*: a thing (*A taxi.*)\n- *who*: a person (*Ms. Wang.*)\n- *how*: the way (*By bus.*); *how old*, *how many*, *how much*\n- *why*: the reason (*Because …*)\n\nLook at the answer to choose the word.",
-        "每个疑问词问一类东西：\n\n- *where*：地点（*In Beijing.*）\n- *when*、*what time*：时间（*At nine. On Sunday.*）\n- *what*：事物（*A taxi.*）\n- *who*：人（*Ms. Wang.*）\n- *how*：方式（*By bus.*）；还有 *how old*、*how many*、*how much*\n- *why*：原因（*Because …*）\n\n看回答来选疑问词。",
+        "Each question word asks about one thing:\n\n- *where*: a place (*In Beijing.*)\n- *when*, *what time*: a time (*At nine. On Sunday.*)\n- *what*: a thing (*A taxi.*)\n- *who*: a person (*Ms. Wang.*)\n- *how*: the way (*By bus.*); *how old*, *how many*, *how much*\n- *why*: the reason (*Because …*)\n\nLook at the answer to choose the word.\n\n> **Watch out.** Check the word right after the blank—*___ old* takes *How*, *___ time* takes *What*, and *___ many* takes *How*.",
+        "每个疑问词问一类东西：\n\n- *where*：地点（*In Beijing.*）\n- *when*、*what time*：时间（*At nine. On Sunday.*）\n- *what*：事物（*A taxi.*）\n- *who*：人（*Ms. Wang.*）\n- *how*：方式（*By bus.*）；还有 *how old*、*how many*、*how much*\n- *why*：原因（*Because …*）\n\n看回答来选疑问词。\n\n> **注意。** 留意空白后面紧跟的词——*___ old* 用 *How*，*___ time* 用 *What*，*___ many* 用 *How*。",
       ),
       choiceGenerator(t("Choose the question word for the answer.", "根据回答选择疑问词。"), whChoiceBank, whWhy, whyNotWh),
     ),
@@ -510,8 +515,8 @@ const whQuestions: TopicDef = {
       "ask",
       t("Making wh- questions", "构成特殊疑问句"),
       t(
-        "Put the question word first, then the question as you know it: *Does Tom live near the station?* → *Where does Tom live?* *Is the bank next to the hotel?* → *Where is the bank?*\n\nWhen *who* or *how many people* is the subject, there is no *do*: *Who drives the bus?*",
-        "先写疑问词，再接一般疑问句的语序：*Does Tom live near the station?* → *Where does Tom live?* *Is the bank next to the hotel?* → *Where is the bank?*\n\n中文的疑问词留在原位（“汤姆住在哪里？”），英语要把它放到句首。如果 *who* 或 *how many people* 本身就是主语，就不用 *do*：*Who drives the bus?*",
+        "Put the question word first, then the question order you already know: *Does Tom live near the station?* → *Where does Tom live?* *Is the bank next to the hotel?* → *Where is the bank?*\n\nWhen *who* or *how many people* is the subject itself, there is no *do*: *Who drives the bus?*\n\n> **Watch out.** Do not keep statement order after a question word (*Where Tom lives?* is wrong; say *Where does Tom live?*), and drop the *-s* from the main verb after *does*.",
+        "先写疑问词，再接一般疑问句的语序：*Does Tom live near the station?* → *Where does Tom live?* *Is the bank next to the hotel?* → *Where is the bank?*\n\n如果 *who* 或 *how many people* 本身就是主语，就不用 *do*：*Who drives the bus?*\n\n> **注意。** 中文把疑问词留在原位（“汤姆住在哪里？”），英语要把疑问词放句首并倒装（不能写 *Where Tom lives?*，要写 *Where does Tom live?*），且 *does* 后面的实义动词要还原。",
       ),
       typedGenerator("sentence-pattern", t("Write the question.", "写出问句。"), whAskBank, whAskWhy),
     ),
@@ -628,12 +633,12 @@ const requestTypedBank: readonly TypedItem[] = interleave([
 const requestWhy = (right: string): Text =>
   right.startsWith("Can I")
     ? t(
-        `To ask if you may do something, put *Can* first, then *I* and the plain verb, with no *to*: ${right}`,
-        `请求允许自己做事时，*Can* 放在句首，再接 *I* 和动词原形，不加 *to*：${right}`,
+        `To ask if you may do something, put *Can* first, then *I* and the plain verb, with no *to*: ${right}\n\n**Check.** Verify the pattern: *Can* + *I* + plain verb (no *to*), ending with a question mark.`,
+        `请求允许自己做事时，*Can* 放在句首，再接 *I* 和动词原形，不加 *to*：${right}\n\n**检验。** 核对结构：*Can* + *I* + 动词原形（不加 *to*），句末用问号。`,
       )
     : t(
-        `To ask someone to do something, put *Can* first, then *you* and the plain verb, with no *to*: ${right}`,
-        `请别人做事时，*Can* 放在句首，再接 *you* 和动词原形，不加 *to*：${right}`,
+        `To ask someone to do something, put *Can* first, then *you* and the plain verb, with no *to*: ${right}\n\n**Check.** Verify the pattern: *Can* + *you* + plain verb (no *to*), ending with a question mark.`,
+        `请别人做事时，*Can* 放在句首，再接 *you* 和动词原形，不加 *to*：${right}\n\n**检验。** 核对结构：*Can* + *you* + 动词原形（不加 *to*），句末用问号。`,
       );
 
 /** whyNotRequest explains a wrong request with can. */
@@ -657,6 +662,10 @@ const canForRequests: TopicDef = {
     "Can you open the door? Can I sit here? Asking people to do things, and asking to do them yourself.",
     "Can you open the door? Can I sit here? 请别人做事，以及请求允许自己做事。",
   ),
+  intro: t(
+    "You already know *can* for ability (*I can swim*). In everyday talk, *Can you pass the map?* and *Can I borrow a pen?* use the same verb to make polite requests.",
+    "你已经学过用 *can* 表示能力（*I can swim*）。日常交流里，*Can you pass the map?* 和 *Can I borrow a pen?* 用同一个词提出礼貌的请求。",
+  ),
   prerequisites: ["can-for-ability", "a1-words-directions"],
   encompasses: [
     { topic: "can-for-ability", weight: 0.4 },
@@ -669,8 +678,8 @@ const canForRequests: TopicDef = {
       "choose",
       t("Can you, can I", "Can you 和 Can I"),
       t(
-        "To ask someone to do something, say *Can you …?*: *Can you open the door?* To ask if you may do something, say *Can I …?*: *Can I sit here?*\n\n*Can* comes first, and the verb after it has no *to* and no *-s*.",
-        "请别人做事，说 *Can you …?*：*Can you open the door?* 请求允许自己做事，说 *Can I …?*：*Can I sit here?*\n\n*Can* 放在句首，后面的动词不加 *to*，也不加 *-s*。",
+        "To ask someone to do something, say *Can you …?*: *Can you open the door?* To ask if you may do something, say *Can I …?*: *Can I sit here?*\n\n*Can* comes first, and the verb after it has no *to* and no *-s*.\n\n> **Watch out.** Never put *to* after *can* (*Can you to help me?* is wrong) and do not keep statement order (*You can help me?*).",
+        "请别人做事，说 *Can you …?*：*Can you open the door?* 请求允许自己做事，说 *Can I …?*：*Can I sit here?*\n\n*Can* 放在句首，后面的动词不加 *to*，也不加 *-s*。\n\n> **注意。** 千万不要在 *can* 后面加 *to*（*Can you to help me?* 是错的），也不要保留陈述句语序（*You can help me?*）。",
       ),
       choiceGenerator(t("Which request is right?", "哪个请求是对的？"), requestChoiceBank, requestWhy, whyNotRequest),
     ),
@@ -678,8 +687,8 @@ const canForRequests: TopicDef = {
       "ask",
       t("Asking politely", "礼貌地请求"),
       t(
-        "An order like *Open the door.* can sound rude. Make it a question with *Can you …?* and add *please*: *Can you open the door, please?* For yourself, *I want to sit here.* becomes *Can I sit here, please?*",
-        "*Open the door.* 这样的祈使句听起来可能不礼貌。把它改成 *Can you …?* 的问句，再加上 *please*：*Can you open the door, please?* 为自己请求时，*I want to sit here.* 变成 *Can I sit here, please?*",
+        "An order like *Open the door.* can sound rude. Make it a question with *Can you …?* and add *please*: *Can you open the door, please?* For yourself, *I want to sit here.* becomes *Can I sit here, please?*\n\n> **Watch out.** Drop *I want to* or *I'd like to* completely before writing *Can I …?*, and end with a question mark instead of a period.",
+        "*Open the door.* 这样的祈使句听起来可能不礼貌。把它改成 *Can you …?* 的问句，再加上 *please*：*Can you open the door, please?* 为自己请求时，*I want to sit here.* 变成 *Can I sit here, please?*\n\n> **注意。** 改写成 *Can I …?* 时要把 *I want to* 或 *I'd like to* 全部去掉，句末用问号而不是句号。",
       ),
       typedGenerator("sentence-pattern", t("Make it a polite request.", "改成礼貌的请求。"), requestTypedBank, (right) => {
         const why = requestWhy(right);
@@ -770,6 +779,10 @@ const writingDirectionsToYourHome: TopicDef = {
     "Write a note that tells a visitor how to get to your home: where to start, the steps in order and how to know they've arrived.",
     "写一张便条告诉来访者怎么到你家：从哪里出发、按顺序走哪些路、怎样知道到了。",
   ),
+  intro: t(
+    "Good directions guide a visitor step by step from a landmark they know right to your door: *Start at the station. Walk straight to the bridge and turn left. My building is opposite the bakery.* Clear verbs and landmarks keep the reader from getting lost.",
+    "好的路线指引能把客人从熟悉的地标一步步带到家门口：*Start at the station. Walk straight to the bridge and turn left. My building is opposite the bakery.* 清晰的动词加上地标，对方才不会迷路。",
+  ),
   prerequisites: ["imperatives", "prepositions-of-place", "a1-words-directions", "writing-a-short-note"],
   encompasses: [
     { topic: "imperatives", weight: 0.3 },
@@ -784,8 +797,8 @@ const writingDirectionsToYourHome: TopicDef = {
       "directions",
       t("Start, steps and arriving", "出发点、步骤和到达"),
       t(
-        "Directions are orders, so they start with the verb: *Turn left. Go past the bank. Cross the road.*\n\n- Start from the place the reader knows: *Get off the bus at the station.*\n- Give the steps in order, with turns and things to look for: *Turn right at the corner. Go past the park.*\n- Say how they will know your home: *My house is the blue one next to the park.*",
-        "指路用祈使句，句子以动词开头：*Turn left. Go past the bank. Cross the road.*\n\n- 从对方知道的地方说起：*Get off the bus at the station.*\n- 按顺序说步骤，写清在哪里转弯、会经过什么：*Turn right at the corner. Go past the park.*\n- 说明怎样认出你家：*My house is the blue one next to the park.*",
+        "Directions are orders, so they start with the verb: *Turn left. Go past the bank. Cross the road.*\n\n- Start from the place the reader knows: *Get off the bus at the station.*\n- Give the steps in order, with turns and things to look for: *Turn right at the corner. Go past the park.*\n- Say how they will know your home: *My house is the blue one next to the park.*\n\n> **Watch out.** Put the steps in the real order the visitor walks them, and do not forget a greeting at the start and your name at the end.",
+        "指路用祈使句，句子以动词开头：*Turn left. Go past the bank. Cross the road.*\n\n- 从对方知道的地方说起：*Get off the bus at the station.*\n- 按顺序说步骤，写清在哪里转弯、会经过什么：*Turn right at the corner. Go past the park.*\n- 说明怎样认出你家：*My house is the blue one next to the park.*\n\n> **注意。** 按来访者实际行走的先后顺序写步骤，也别忘了开头写称呼、结尾写署名。",
       ),
       writingGenerator(
         t(
@@ -795,7 +808,11 @@ const writingDirectionsToYourHome: TopicDef = {
         directionsBank,
         directionsCriteria,
         { minWords: 25, maxChars: 700 },
-        (model) => t(`One good note:\n\n> ${model.replace(/\n/gu, "\n> ")}`, `一张好的便条：\n\n> ${model.replace(/\n/gu, "\n> ")}`),
+        (model) =>
+          t(
+            `One good note:\n\n> ${model.replace(/\n/gu, "\n> ")}\n\n**Check.** Trace the route from start to finish: confirm your note has a greeting, names the starting place, gives clear steps in order, tells how to spot your home, and ends with your name.`,
+            `一张好的便条：\n\n> ${model.replace(/\n/gu, "\n> ")}\n\n**检验。** 从头到尾顺一遍路线：确认便条有称呼、写明了出发点、按顺序给出了清晰的步骤、说明了怎么认出你家，并在结尾署了名。`,
+          ),
       ),
     ),
   ],

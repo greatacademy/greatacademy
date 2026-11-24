@@ -3,7 +3,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 
 /** limits are the length limits of a grade 7 essay. */
 const limits = { minWords: 120, maxChars: 3600 };
@@ -209,6 +209,10 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
       "Write a suspense story that builds tension step by step, controls its pace with sentence length and resolves the danger in an ending that follows from the story.",
       "写一个悬疑故事：一步步制造紧张感，用句子长短控制节奏，并在合乎情理的结尾中化解危险。",
     ),
+    intro: t(
+      "A scraping sound in an empty hallway keeps a reader turning pages far better than announcing *It was scary*. A **suspense story** raises the stakes detail by detail, tightens the sentence rhythm at the climax, and resolves the mystery cleanly.",
+      "空走廊里传来的刮擦声，比直说 *It was scary* 更能让读者屏住呼吸。**悬疑故事**靠细节一步步抬高紧张感，在高潮收紧句式节奏，最后给出合乎情理的揭晓。",
+    ),
     prerequisites: after("pacing-with-sentence-length", "contrasting-points-of-view"),
     encompasses: [{ topic: "pacing-with-sentence-length", weight: 0.2 }],
     xp: 22,
@@ -219,8 +223,8 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
         "building-the-tension",
         t("Building the Tension", "制造紧张感"),
         t(
-          "Suspense comes from a **question the reader wants answered**: what is making that sound? Will the bridge hold? Raise the stakes step by step with small details: a sound comes closer, a light goes out, time runs short. Delay the answer until the climax, and then resolve it in a way that makes sense, perhaps with a surprise.",
-          "悬念来自一个**读者想知道答案的问题**：是什么发出了那个声音？桥会断吗？用小细节一步步提高风险：声音越来越近，灯熄灭了，时间越来越少。把答案推迟到高潮，然后以合乎情理的方式揭晓，也可以带点意外。",
+          "Suspense thrives on an **unanswered question**: what is making that sound? Will the rope hold? Escalate the danger step by step with concrete sensory clues—a closer footstep, a flickering bulb, a locked latch—delaying the reveal until the climax, then resolving it logically.\n\n> **Watch out.** Do not give away the cause in paragraph two, and do not end with a cheap trick (*It was all a dream*)—build steadily and pay off the clues you planted.",
+          "悬念源于一个**悬而未决的问题**：那声音是什么？绳子撑得住吗？用具体的感官细节一步步升级险情——逼近的脚步、闪烁的灯光、锁死的门闩——把答案压到高潮再合理解开。\n\n> **注意。** 既不要第二段就提前泄底，也不要用“原来是一场梦”草草收尾——稳步铺垫并让前面的线索在结尾呼应。",
         ),
         writingGenerator(
           t(
@@ -230,15 +234,18 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
           suspenseBank,
           ["g7-suspense-builds", "g7-suspense-ending", "g7-suspense-pacing"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Trace the tension curve in your draft: at least two escalating clues build the mystery before the climax, and the ending resolves the danger cleanly from details already in the story.",
+            "检查故事的紧张曲线：高潮前至少有两处层层递进的线索，结尾则顺着前文埋下的细节合理解开悬念。",
+          ),
         ),
       ),
       point(
         "pacing-the-climax",
         t("Pacing the Climax", "控制高潮的节奏"),
         t(
-          "Use sentence length to control the reader's heartbeat. Slow down the tense moment before the climax with a longer sentence full of details. Then, at the moment of greatest action, switch to **short, sharp sentences**: *Closer. Her light hit a pair of eyes.* After the climax, let the pace relax again for the ending.",
-          "用句子的长短控制读者的心跳。在高潮之前的紧张时刻，用充满细节的长句放慢节奏。到了动作最激烈的时刻，换成**短促有力的句子**：*Closer. Her light hit a pair of eyes.* 高潮过后，让节奏放松下来，进入结尾。",
+          "Sentence length controls the reader's pulse. Stretch out the uneasy wait before the climax with longer, detail-rich sentences; then, as danger hits, snap into **short, punchy sentences**: *Closer. Her light hit a pair of eyes.* Once the climax breaks, relax into longer sentences again.\n\n> **Watch out.** If every sentence in the whole story is short, the climax loses its punch—contrast longer buildup sentences against sharp climax sentences.",
+          "句子的长短掌控着读者的心跳。高潮前的不安等待用细节饱满的长句拉慢节奏；危机骤然逼近时切换为**短促利落的短句**：*Closer. Her light hit a pair of eyes.* 高潮过去后，再放缓句式收尾。\n\n> **注意。** 如果通篇都是短句，高潮反而失去爆发力——要把铺垫段的长句和高潮处的短句形成鲜明对比。",
         ),
         writingGenerator(
           t(
@@ -248,7 +255,10 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
           suspenseBank,
           ["g7-suspense-pacing", "g7-suspense-builds", "g7-suspense-ending"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Read your buildup and climax aloud: verify that longer sentences stretch the waiting moment while short, sharp sentences accelerate the exact instant of the reveal.",
+            "大声读一遍铺垫段和高潮段：确认等待时刻用了较长句子放慢节奏，揭晓瞬间切换成短促有力的短句。",
+          ),
         ),
       ),
     ],
@@ -260,6 +270,10 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
       "Write an argument in five paragraphs: an introduction ending in a claim, body paragraphs each with one reason and its evidence, an answer to the other side and a conclusion.",
       "写一篇五段式议论文：以论点结尾的引言，每段一个理由及其证据的主体段落，对反方观点的回应，以及结论。",
     ),
+    intro: t(
+      "Putting every argument move together—hook and thesis, two focused evidence paragraphs, a fair counterclaim and rebuttal, and a resonant conclusion—creates the classic **five-paragraph argument**.",
+      "把议论文的所有核心招式合为一体——引子与论点、两段有证据的主体论证、公正的反方与反驳，以及有力的收尾——就构成了经典的**五段式议论文**。",
+    ),
     prerequisites: after("relevant-and-sufficient-evidence", "writing-a-counterclaim-paragraph"),
     encompasses: [{ topic: "writing-a-counterclaim-paragraph", weight: 0.2 }],
     xp: 22,
@@ -270,8 +284,8 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
         "claim-and-reasons",
         t("The Claim and Its Reasons", "论点及其理由"),
         t(
-          "A five-paragraph argument opens with a short hook and ends its introduction with a **claim** that states your position and previews your reasons: *Schools should adopt a four-day week because it saves money and gives students time to rest.* Each body paragraph then develops **one reason**, with relevant evidence, a fact, number or example, and a sentence that explains how it supports the claim.",
-          "五段式议论文以简短的开场白开头，引言最后提出**论点**，说明你的立场并预告理由：*Schools should adopt a four-day week because it saves money and gives students time to rest.* 然后每个主体段落展开**一个理由**，给出相关的证据，即事实、数字或例子，并用一句话解释它如何支持论点。",
+          "Open with a brief hook and end paragraph one with a **claim** that previews your reasons: *Schools should adopt a four-day week because it saves money and gives students time to rest.* Devote each of the next body paragraphs to **one distinct reason**, backed by concrete evidence and an explanation linking that evidence to the claim.\n\n> **Watch out.** Do not cram two unrelated reasons into a single body paragraph—give each reason its own paragraph with its own evidence and explanation.",
+          "第一段用简短引子开场，段尾亮明**论点**并预告理由：*Schools should adopt a four-day week because it saves money and gives students time to rest.* 接下来的每个主体段专注展开**一条独立理由**，配上具体证据以及说明证据如何支持论点的分析。\n\n> **注意。** 别把两条毫不相干的理由塞进同一段——每条理由独占一段，各自配齐证据和解释。",
         ),
         writingGenerator(
           t(
@@ -281,15 +295,18 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
           argumentBank,
           ["g7-argument-claim", "g7-argument-evidence", "g7-argument-structure"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your structure paragraph by paragraph: intro ending in a clear claim, body paragraphs each developing one reason with evidence and explanation, a counterclaim paragraph, and a conclusion.",
+            "逐段核对文章结构：引言以明确论点收尾，每个主体段围绕一条理由展开并配证据与解释，接着一段回应反方，最后一段总结。",
+          ),
         ),
       ),
       point(
         "answering-the-other-side",
         t("Answering the Other Side", "回应反方观点"),
         t(
-          "A strong argument faces the other side. In one paragraph, state the strongest objection fairly (*Some people argue that…*), then answer it with a reason or evidence (*However, …*). Close with a conclusion that restates the claim in new words and leaves the reader with a final push.",
-          "有力的议论文要直面反方观点。用一段话公正地说出最有力的反对意见（*Some people argue that…*），然后用理由或证据回应它（*However, …*）。最后用结论换一种说法重申论点，并给读者最后一推。",
+          "Dedicate a paragraph near the end to the strongest opposing view: introduce it fairly (*Some people argue that…*), then pivot and rebut it with a solid reason or evidence (*However, …*). Finish with a conclusion that restates your claim in fresh words and leaves the reader with a memorable closing thought.\n\n> **Watch out.** Do not introduce brand-new evidence in the conclusion or copy your introduction's claim word for word—restate it freshly and close strong.",
+          "在结尾前专门用一段回应对方最有力的反对意见：先公正引出（*Some people argue that…*），再转折并用扎实理由或证据反驳（*However, …*）。最后一段换一种说法重申论点，留下令人印象深刻的收束。\n\n> **注意。** 结尾段既不要塞进全新论据，也不要逐字照抄引言里的论点句——换词重申并有力收尾。",
         ),
         writingGenerator(
           t(
@@ -299,7 +316,10 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
           argumentBank,
           ["g6-answers-other-side", "g7-argument-structure", "g7-argument-claim"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify your counterclaim paragraph states a real opposing view fairly and answers it directly, and that your conclusion restates your claim in new words without repeating the opening verbatim.",
+            "核对反方段落是否公正陈述并正面反驳了反对观点，结尾段是否用新措辞重申了论点而未照抄开头。",
+          ),
         ),
       ),
     ],
@@ -311,6 +331,10 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
       "Write a speech that speaks to its listeners: an opening that grabs them, a story and facts that persuade, an answer to doubts and a call to action that tells them what to do.",
       "写一篇面向听众的演讲稿：抓住听众的开头，有说服力的故事和事实，对疑虑的回应，以及告诉他们该做什么的号召。",
     ),
+    intro: t(
+      "Unlike an essay read silently at a desk, a **persuasive speech** talks straight to a room full of listeners—opening with a vivid picture or question, blending story with proof, and ending with a concrete call to action.",
+      "不同于在书桌前默读的议论文，**说服性演讲稿**直接面向满场听众——用生动画面或提问开场，把故事与事实结合起来，最后以具体行动号召收尾。",
+    ),
     prerequisites: after("writing-a-call-to-action", "loaded-language"),
     encompasses: [{ topic: "writing-a-call-to-action", weight: 0.2 }],
     xp: 22,
@@ -321,8 +345,8 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
         "speaking-to-listeners",
         t("Speaking to Listeners", "面向听众"),
         t(
-          "A speech is written to be heard. Speak directly to your audience (*Good morning, everyone*), and grab their attention with a **question**, a **picture** they can imagine or a short **story**. Then persuade with more than one move: a personal story makes the issue real, and a fact or statistic gives proof.",
-          "演讲稿是写来听的。直接对听众说话（*Good morning, everyone*），用一个**问题**、一幅他们能想象的**画面**或一个简短的**故事**抓住他们的注意力。然后用不止一种手法进行说服：个人故事让问题变得真实，事实或统计数字提供证据。",
+          "A speech is written for the ear. Address your listeners directly (*Good morning, everyone*), hook them with a **question**, a vivid **picture**, or a brief **story**, and combine at least two persuasive moves—such as a human story to make listeners care plus a concrete fact or statistic to prove the point.\n\n> **Watch out.** Do not write a stiff essay with *This paper will prove…*—use direct spoken address (*you*, *we*) and natural, rhythmic sentences meant to be read aloud.",
+          "演讲稿是写给耳朵听的。直接面向听众开口（*Good morning, everyone*），用**提问**、生动**画面**或简短**故事**抓住注意力，再结合至少两种说服手法——例如用真实故事打动人心，并用具体事实或数据加以证实。\n\n> **注意。** 别写成板正的书面论文（如 *This paper will prove…*）——要用直接对话听众的口吻（*you*、*we*）和适合朗读的自然节奏。",
         ),
         writingGenerator(
           t(
@@ -332,15 +356,18 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
           speechBank,
           ["g7-speech-opening", "g7-speech-moves", "g7-speech-call"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Read your opening and middle aloud: confirm you address the audience directly, hook them with a question, picture, or story, and combine at least two distinct persuasive moves.",
+            "把开头和主体段朗读一遍：确认直接面向听众说话，用提问、画面或故事开场，并结合了至少两种不同的说服手法。",
+          ),
         ),
       ),
       point(
         "ending-with-a-call-to-action",
         t("Ending with a Call to Action", "以号召行动结束"),
         t(
-          "Before the end, answer the doubt your listeners may have (*Some of you might think…*). Then finish with a **call to action** that tells them exactly what to do and when or where: *This Saturday, at nine in the morning, meet us at the bridge.* A speech that ends without one leaves listeners moved but doing nothing.",
-          "结尾之前，回应听众可能有的疑虑（*Some of you might think…*）。然后用**号召行动**结束，明确告诉他们做什么以及何时或何地：*This Saturday, at nine in the morning, meet us at the bridge.* 没有号召的演讲会让听众受到触动却什么也不做。",
+          "Near the end, answer the main doubt your listeners might hold (*Some of you might think…*), then close with a specific **call to action** telling them *what* to do and *when* or *where*: *This Saturday at nine, meet us at the bridge.* Without a clear next step, even a moving speech fades away.\n\n> **Watch out.** Replace vague endings (*Let's all try to do better*) with one concrete action listeners can take right away.",
+          "结尾前先回应听众心里可能有的疑虑（*Some of you might think…*），再用具体的**号召行动**收尾，说清*做什么*以及*何时或何地*：*This Saturday at nine, meet us at the bridge.* 没有明确下一步，再动人的演讲也会很快被遗忘。\n\n> **注意。** 把空泛口号（*Let's all try to do better*）换成听众立刻能照做的一件具体行动。",
         ),
         writingGenerator(
           t(
@@ -350,7 +377,10 @@ export const writingJudgedTopics7b: readonly TopicDef[] = [
           speechBank,
           ["g7-speech-call", "g7-speech-moves", "g7-speech-opening"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your closing paragraphs: verify you addressed one listener doubt fairly and ended with a specific action telling listeners what to do and when or where.",
+            "核对结尾部分：确认公正回应了一处听众疑虑，并以具体行动号召收尾，明确交代了做什么以及时间或地点。",
+          ),
         ),
       ),
     ],

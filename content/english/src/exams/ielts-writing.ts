@@ -169,6 +169,10 @@ export const writingTask1: TopicDef = judgedExamTopic({
     "Describe a table of figures in at least 150 words, as in IELTS Academic Writing Task 1: an overview, the main features and comparisons.",
     "按照雅思学术类写作 Task 1 的要求，用至少 150 词描述一个数据表格：概述、主要特征和比较。",
   ),
+  intro: t(
+    "In 20 minutes and at least 150 words, IELTS Task 1 rewards selection over exhaustive listing: paraphrase what the table shows, write a crisp *Overall* overview, and group key figures into two comparison paragraphs.",
+    "雅思 Task 1 要求在 20 分钟内写满 150 词以上，看重提炼而非报流水账：先换说法交代图表内容，紧接着写清晰的 *Overall* 概述，再用两段分组比较关键数据。",
+  ),
   prerequisites: ["ielts-describing-data", "writing-a-report"],
   encompasses: [
     { topic: "ielts-describing-data", weight: 0.4 },
@@ -179,8 +183,8 @@ export const writingTask1: TopicDef = judgedExamTopic({
     id: "task-1",
     title: t("A report on data", "数据报告"),
     explanation: t(
-      "Task 1 asks you to report data, not to explain it. Plan four short paragraphs in about 20 minutes:\n\n1. **Introduction**: say what the table shows in your own words (*The table compares ...*). Do not copy the task.\n2. **Overview**: two sentences on the most important features: the biggest, the smallest, the main trend, the main change (*Overall, ...*). Examiners look for this paragraph first.\n3. **Two body paragraphs**: group the figures and compare them, quoting the key numbers accurately: *rose sharply from 17% to 25%; almost twice as many; the highest, at 52%*.\n\nDo not mention every number, and do not give reasons or opinions that the data does not show. No conclusion with new ideas is needed; the overview does that job.",
-      "Task 1 要你报告数据，而不是解释数据。用约 20 分钟写四个短段：\n\n1. **引言**：用自己的话说明表格显示了什么（*The table compares ...*），不要照抄题目。\n2. **概述**：用两句话写出最重要的特征：最大、最小、主要趋势、主要变化（*Overall, ...*）。考官首先找的就是这一段。\n3. **两个主体段**：把数字分组比较，准确引用关键数字：*rose sharply from 17% to 25%; almost twice as many; the highest, at 52%*。\n\n不要提到每个数字，也不要给出数据没有显示的原因或观点。不需要写含新内容的结论，概述已经起到这个作用。",
+      "Task 1 asks you to report data, not to explain it. Plan four short paragraphs in about 20 minutes:\n\n1. **Introduction**: say what the table shows in your own words (*The table compares ...*). Do not copy the task.\n2. **Overview**: two sentences on the most important features: the biggest, the smallest, the main trend, the main change (*Overall, ...*). Examiners look for this paragraph first.\n3. **Two body paragraphs**: group the figures and compare them, quoting the key numbers accurately: *rose sharply from 17% to 25%; almost twice as many; the highest, at 52%*.\n\n> **Watch out.** Never omit the **Overview** paragraph (Band 6+ requires a clear overview), and never invent outside causes or personal opinions that are not in the table.",
+      "Task 1 要你报告数据，而不是解释数据。用约 20 分钟写四个短段：\n\n1. **引言**：用自己的话说明表格显示了什么（*The table compares ...*），不要照抄题目。\n2. **概述**：用两句话写出最重要的特征：最大、最小、主要趋势、主要变化（*Overall, ...*）。考官首先找的就是这一段。\n3. **两个主体段**：把数字分组比较，准确引用关键数字：*rose sharply from 17% to 25%; almost twice as many; the highest, at 52%*。\n\n> **注意。** 千万不要漏写 **Overview（概述段）**，也不要自行脑补表格里没有的原因或个人看法。",
     ),
   },
   question: t(
@@ -191,6 +195,10 @@ export const writingTask1: TopicDef = judgedExamTopic({
   limits: { minWords: 150, maxChars: 2200 },
   xp: 25,
   what: t("report", "报告"),
+  check: t(
+    "Check four Task 1 essentials: at least 150 words, a clear *Overall* overview paragraph, accurate key figures and comparisons, and zero invented causes or personal opinions.",
+    "核对 Task 1 四个要点：不少于 150 词、有清晰的 *Overall* 概述段、关键数字与比较准确无误，且没有加入表格外的原因推测或个人观点。",
+  ),
 });
 
 /** writingTask2 is IELTS Writing Task 2, judged by a model. */
@@ -200,6 +208,10 @@ export const writingTask2: TopicDef = judgedExamTopic({
   summary: t(
     "Write an essay of at least 250 words on a view, a debate or a problem, as in IELTS Writing Task 2.",
     "按照雅思写作 Task 2 的要求，就一个观点、一场争论或一个问题写一篇至少 250 词的议论文。",
+  ),
+  intro: t(
+    "Every IELTS Task 2 prompt carries an exact instruction—agree/disagree, discuss both views, causes and solutions, or advantages vs. disadvantages. Answering **every** part of that instruction with developed body paragraphs is the key to a high band.",
+    "每道雅思 Task 2 题目都有明确指令——同意与否、讨论双方、原因与对策，或利弊权衡。完整回应指令的**每一部分**并把主体段充分展开，才是拿高分的关键。",
   ),
   prerequisites: ["writing-an-opinion-essay"],
   encompasses: [
@@ -211,8 +223,8 @@ export const writingTask2: TopicDef = judgedExamTopic({
     id: "task-2",
     title: t("An essay in 40 minutes", "40 分钟的议论文"),
     explanation: t(
-      "First decide what kind of question it is, because each asks for something different:\n\n- *To what extent do you agree?* Give your position, and keep it to the end.\n- *Discuss both views and give your own opinion.* One paragraph on each view, and your opinion clearly stated.\n- *What are the causes, and what are the solutions?* or *What problems ...?* Answer **both** questions.\n- *Is this a positive or negative development? Do the advantages outweigh the disadvantages?* Weigh both sides and say which wins.\n\nThen plan four or five paragraphs: an introduction that rephrases the question and states your position; two or three body paragraphs, each with one main idea explained and supported by an example; a conclusion that sums up. Spend about five minutes planning and leave a few minutes to check.",
-      "先判断题型，因为每种题型要求不同：\n\n- *To what extent do you agree?* 表明立场，并坚持到最后。\n- *Discuss both views and give your own opinion.* 每种观点各写一段，并清楚写出自己的看法。\n- *What are the causes, and what are the solutions?* 或 *What problems ...?* **两个**问题都要回答。\n- *Is this a positive or negative development? Do the advantages outweigh the disadvantages?* 权衡两方面，并说明哪一方占上风。\n\n然后安排四到五段：引言换一种说法复述题目并表明立场；两到三个主体段，每段一个主要观点，加以解释并举例支持；结论加以概括。用约五分钟构思，留几分钟检查。中国考生常见的问题是只回答了题目的一部分，或者通篇罗列观点而不展开：每个观点都要说明“为什么”和“例如”。",
+      "First decide what kind of question it is, because each asks for something different:\n\n- *To what extent do you agree?* Give your position, and keep it to the end.\n- *Discuss both views and give your own opinion.* One paragraph on each view, and your opinion clearly stated.\n- *What are the causes, and what are the solutions?* or *What problems ...?* Answer **both** questions.\n- *Is this a positive or negative development? Do the advantages outweigh the disadvantages?* Weigh both sides and say which wins.\n\nThen plan four or five paragraphs: an introduction that rephrases the question and states your position; two or three body paragraphs, each with one main idea explained and supported by an example; a conclusion that sums up.\n\n> **Watch out.** Do not answer only half of a two-part prompt, and do not list five thin points without explanation—develop two or three clear ideas with *why* and a concrete example.",
+      "先判断题型，因为每种题型要求不同：\n\n- *To what extent do you agree?* 表明立场，并坚持到最后。\n- *Discuss both views and give your own opinion.* 每种观点各写一段，并清楚写出自己的看法。\n- *What are the causes, and what are the solutions?* 或 *What problems ...?* **两个**问题都要回答。\n- *Is this a positive or negative development? Do the advantages outweigh the disadvantages?* 权衡两方面，并说明哪一方占上风。\n\n然后安排四到五段：引言换一种说法复述题目并表明立场；两到三个主体段，每段一个主要观点，加以解释并举例支持；结论加以概括。\n\n> **注意。** 切忌漏答双问句中的一问，也不要罗列四五个空泛观点而不展开——每个主体段都要把一个核心论点说清“为什么”并配上具体例子。",
     ),
   },
   question: t(
@@ -223,4 +235,8 @@ export const writingTask2: TopicDef = judgedExamTopic({
   limits: { minWords: 250, maxChars: 3400 },
   xp: 45,
   what: t("essay", "议论文"),
+  check: t(
+    "Verify at least 250 words, every part of the prompt answered, a consistent position from introduction to conclusion, and each body paragraph developed with explanation and an example.",
+    "核对不少于 250 词、题目每一问都已回应、立场从引言到结论前后一致，且每个主体段都用解释和实例充分展开。",
+  ),
 });

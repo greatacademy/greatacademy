@@ -510,6 +510,10 @@ const countableAndUncountable: TopicDef = {
     "An apple, two apples, but some rice, some water: some nouns are never counted and take no -s and no a.",
     "an apple、two apples，但说 some rice、some water：有些名词不能数，不加 -s，也不用 a。",
   ),
+  intro: t(
+    "Compare *some bananas* with *some water*: you can count bananas one by one, so after *some* they take *-s*, whereas *water* is a substance you do not count individually, so it never takes *-s* or *a*. In this topic, you sort countable and uncountable food nouns and fix common mistakes like *a bread* or *two cookie*.",
+    "比较 *some bananas* 和 *some water*：香蕉可以一根根数，在 *some* 后面要加 *-s*；而 *water* 是不可数物质，既不加 *-s* 也不用 *a*。本主题带你区分可数与不可数食物名词，并改正 *a bread*、*two cookie* 等常见错误。",
+  ),
   prerequisites: ["plural-nouns-with-s", "a1-words-food"],
   encompasses: [
     { topic: "plural-nouns-with-s", weight: 0.4 },
@@ -522,16 +526,20 @@ const countableAndUncountable: TopicDef = {
       "choose",
       t("Apples, but rice", "apples，但 rice"),
       t(
-        "Some nouns you can count: *an apple, two apples, some eggs*. Others you cannot: *rice, bread, meat, milk, water, juice, sugar, salt, soup*. They have no *-s* and no *a*: *some rice*, not *some rices* or *a rice*.\n\nAfter *some* and in *Do you like...?*, a noun you can count takes *-s*: *some apples*, *Do you like eggs?*",
-        "有些名词可以数：*an apple、two apples、some eggs*。有些不能数：*rice、bread、meat、milk、water、juice、sugar、salt、soup*。它们不加 *-s*，也不用 *a*：说 *some rice*，不说 *some rices* 或 *a rice*。\n\n中文名词不分单复数，所以要记住：在 *some* 后面和 *Do you like...?* 里，可数名词要用复数：*some apples*、*Do you like eggs?*",
+        "Some nouns you can count: *an apple, two apples, some eggs*. Others you cannot: *rice, bread, meat, milk, water, juice, sugar, salt, soup*. They have no *-s* and no *a*: *some rice*, not *some rices* or *a rice*.\n\nAfter *some* and in *Do you like...?*, a noun you can count takes *-s*: *some apples*, *Do you like eggs?*\n\n> **Watch out.** Ask “Can I say *two ___s*?” before choosing: if not (like *bread*, *milk*, *rice*, *soup*), keep it bare with no *a* and no *-s*; if yes, make it plural after *some* or *Do you like…*",
+        "有些名词可以数：*an apple、two apples、some eggs*。有些不能数：*rice、bread、meat、milk、water、juice、sugar、salt、soup*。它们不加 *-s*，也不用 *a*：说 *some rice*，不说 *some rices* 或 *a rice*。\n\n中文名词不分单复数，所以要记住：在 *some* 后面和 *Do you like...?* 里，可数名词要用复数：*some apples*、*Do you like eggs?*\n\n> **注意。** 选择前先问一句“能不能数两个？”：不能数（如 *bread*、*milk*、*rice*、*soup*）就保持原形、不加 *a* 也不加 *-s*；能数且跟在 *some* 或 *Do you like…* 后就用复数。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
         countChoiceBank,
         (right, shown) => {
+          const noun = shown.match(/\((.*)\)$/u)?.[1] ?? "";
           const sentence = shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`);
-          const reason = countReason(shown.match(/\((.*)\)$/u)?.[1] ?? "", right);
-          return t(`${reason.en}: ${sentence}`, `${reason["zh-CN"]}：${sentence}`);
+          const reason = countReason(noun, right);
+          return t(
+            `${reason.en}: ${sentence}\n\n**Check.** Test whether *${noun}* can be counted one by one—${right === noun ? "it cannot, so it stays bare with no *a* and no *-s*" : `it can, so after *some* or *Do you like…* it takes the plural *${right}*`}.`,
+            `${reason["zh-CN"]}：${sentence}\n\n**检验。** 想想 *${noun}* 能不能一个个计数——${right === noun ? "不能数，所以保持原形，不加 *a* 也不加 *-s*" : `可以数，所以在 *some* 或 *Do you like…* 后面用复数 *${right}*`}。`,
+          );
         },
         whyNotCount,
       ),
@@ -540,15 +548,18 @@ const countableAndUncountable: TopicDef = {
       "fix",
       t("Fixing the noun", "改正名词"),
       t(
-        "Find the noun that is wrong: *rices*, *a bread* and *two apple* are all mistakes. Write the sentence right.",
-        "找出用错的名词：*rices*、*a bread* 和 *two apple* 都是错的。把句子改正。",
+        "Find the noun that is wrong: *rices*, *a bread* and *two apple* are all mistakes. Write the sentence right.\n\n> **Watch out.** For an uncountable noun with *a/an* (like *a bread*), replace *a/an* with *some* or drop it; for a countable noun after a number (*two*, *three*, *five*), add the right plural ending (*-s*, *-es*, or *-ies*).",
+        "找出用错的名词：*rices*、*a bread* 和 *two apple* 都是错的。把句子改正。\n\n> **注意。** 不可数名词前误加了 *a/an*（如 *a bread*）时，把 *a/an* 去掉或换成 *some*；数字（*two*、*three*、*five*）后的可数名词则要补上正确的复数词尾（*-s*、*-es* 或 *-ies*）。",
       ),
       typedGenerator("sentence-pattern", t("Fix the sentence.", "改正这个句子。"), countFixBank, (right) => {
         const words = right.replace(/[.,?]/gu, "").split(" ");
         const uncountable = uncountables.find((u) => words.includes(u));
         const counted = countables.find(([, many]) => words.includes(many));
         const reason = uncountable ? countReason(uncountable, uncountable) : countReason(counted?.[0] ?? "", counted?.[1] ?? "");
-        return t(`${reason.en}: ${right}`, `${reason["zh-CN"]}：${right}`);
+        return t(
+          `${reason.en}: ${right}\n\n**Check.** Verify the noun form in your fixed sentence—no *-s* or *a/an* on an uncountable noun, and the right plural spelling after a number greater than one.`,
+          `${reason["zh-CN"]}：${right}\n\n**检验。** 复查改后句子里的名词形式——不可数名词不带 *-s* 或 *a/an*，大于 1 的数字后面的可数名词拼写出正确的复数。`,
+        );
       }),
     ),
   ],
@@ -653,6 +664,10 @@ const someAndAny: TopicDef = {
     "There is some milk. Is there any juice? There isn't any bread. Some in statements, any in questions and negatives.",
     "There is some milk. Is there any juice? There isn't any bread. 肯定句用 some，疑问句和否定句用 any。",
   ),
+  intro: t(
+    "Look at the kitchen table: *There are some bananas on the table.*, *Are there any bananas on the table?*, and *There aren't any bananas on the table.* English switches from *some* in positive statements to *any* in questions and negatives. In this topic, you pick, type, and convert between *some* and *any*.",
+    "看看餐桌上的三句话：*There are some bananas on the table.*、*Are there any bananas on the table?* 和 *There aren't any bananas on the table.* 英语在肯定句里用 *some*，一到疑问句和否定句就换成 *any*。本主题带你选择、拼写并在 *some* 与 *any* 之间准确转换。",
+  ),
   prerequisites: ["countable-and-uncountable-nouns", "a1-words-meals"],
   encompasses: [
     { topic: "countable-and-uncountable-nouns", weight: 0.3 },
@@ -665,16 +680,16 @@ const someAndAny: TopicDef = {
       "choose",
       t("Some or any", "some 还是 any"),
       t(
-        "*some* in a statement: *There is some milk.* *There are some eggs.*\n\n*any* in a question or after *not*: *Is there any juice?* *There aren't any eggs.*\n\nBoth go with plurals (*eggs*) and with nouns you don't count (*milk*), never with *a*.",
-        "肯定句用 *some*：*There is some milk.* *There are some eggs.*\n\n疑问句和否定句用 *any*：*Is there any juice?* *There aren't any eggs.*\n\n两者都可以接复数名词（*eggs*）和不可数名词（*milk*）。中文“一些”“什么”不随句型变化，英语却要根据句子是肯定、疑问还是否定来选择。",
+        "*some* in a statement: *There is some milk.* *There are some eggs.*\n\n*any* in a question or after *not*: *Is there any juice?* *There aren't any eggs.*\n\nBoth go with plurals (*eggs*) and with nouns you don't count (*milk*), never with *a*.\n\n> **Watch out.** Check the verb and end mark first: a `?` at the end or *n't*/*not* in the verb immediately calls for *any*, never *some*—and never pick *a* before a plural or uncountable noun.",
+        "肯定句用 *some*：*There is some milk.* *There are some eggs.*\n\n疑问句和否定句用 *any*：*Is there any juice?* *There aren't any eggs.*\n\n两者都可以接复数名词（*eggs*）和不可数名词（*milk*）。中文“一些”“什么”不随句型变化，英语却要根据句子是肯定、疑问还是否定来选择。\n\n> **注意。** 先看动词和句末标点：句末有 `?` 或动词带 *n't*/*not* 就立刻用 *any*；同时绝不在复数或不可数名词前选 *a*。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         someChoiceBank,
         (right, shown) =>
           t(
-            `${someReason(shown).en}: ${shown.replace("___", `*${right}*`)}`,
-            `${someReason(shown)["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+            `${someReason(shown).en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Check two cues—sentence type (positive -> *some*, question/negative -> *any*) and noun type (plural or uncountable, so *a* is ruled out).`,
+            `${someReason(shown)["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 核对两条线索——句型（肯定用 *some*，疑问/否定用 *any*）和名词（复数或不可数，排除 *a*）。`,
           ),
         whyNotSome,
       ),
@@ -683,13 +698,13 @@ const someAndAny: TopicDef = {
       "type",
       t("Writing some or any", "写出 some 或 any"),
       t(
-        "First see what kind of sentence it is. Type *some* when it is a statement, and *any* when it is a question or has *not* or *n't* in it.",
-        "先看句子是哪一种。肯定句写 *some*；疑问句，或者句子里有 *not*、*n't* 时，写 *any*。",
+        "First see what kind of sentence it is. Type *some* when it is a statement (*There is some soup.*), and *any* when it is a question (*Is there any soup?*) or has *not* or *n't* in it (*There isn't any soup.*).\n\n> **Watch out.** Look closely at *isn't* / *aren't*—it is easy to miss *n't* when reading fast and type *some* by habit.",
+        "先看句子是哪一种。肯定句写 *some*（*There is some soup.*）；疑问句（*Is there any soup?*），或者句子里有 *not*、*n't*（*There isn't any soup.*）时，写 *any*。\n\n> **注意。** 留心动词里的 *isn't* / *aren't*——读得太快容易看漏 *n't*，习惯性敲成 *some*。",
       ),
       typedGenerator("word-form", t("Type the word for the gap.", "输入填入空白处的词。"), someTypedBank, (right, shown) =>
         t(
-          `${someReason(shown).en}: ${shown.replace("___", `*${right}*`)}`,
-          `${someReason(shown)["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+          `${someReason(shown).en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Scan for a question mark (?) or *n't*/*not*: if either appears, *any* is required; if neither appears, *some* fits.`,
+          `${someReason(shown)["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 扫一眼句中有没有问号（?）或 *n't*/*not*：有其一就用 *any*，都没有就用 *some*。`,
         ),
       ),
     ),
@@ -697,18 +712,18 @@ const someAndAny: TopicDef = {
       "change",
       t("From some to any", "从 some 变成 any"),
       t(
-        "When a statement becomes a question or a negative, *some* becomes *any*: *There is some milk.* → *Is there any milk?* → *There isn't any milk.*",
-        "肯定句变成疑问句或否定句时，*some* 要变成 *any*：*There is some milk.* → *Is there any milk?* → *There isn't any milk.*",
+        "When a statement becomes a question or a negative, *some* becomes *any*: *There is some milk.* → *Is there any milk?* → *There isn't any milk.*\n\n> **Watch out.** Make *both* changes together: flip *There is/are* to *Is/Are there* (with `?`) or add *n't/not*, AND change *some* to *any*.",
+        "肯定句变成疑问句或否定句时，*some* 要变成 *any*：*There is some milk.* → *Is there any milk?* → *There isn't any milk.*\n\n> **注意。** 两处变化要一起做：既要把 *There is/are* 改成 *Is/Are there*（配 `?`）或加上 *n't/not*，又要同时把 *some* 换成 *any*。",
       ),
       typedGenerator("sentence-pattern", t("Change the sentence.", "改写这个句子。"), changeBank, (right) =>
         right.endsWith("?")
           ? t(
-              `A question puts *${right.split(" ")[0]}* before *there*, and in a question *some* becomes *any*: ${right}`,
-              `疑问句把 *${right.split(" ")[0]}* 放在 *there* 前面，疑问句里的 *some* 要变成 *any*：${right}`,
+              `A question puts *${right.split(" ")[0]}* before *there*, and in a question *some* becomes *any*: ${right}\n\n**Check.** Verify all three marks of the question: *${right.split(" ")[0]} there* at the start, *any* instead of *some*, and a question mark (?) at the end.`,
+              `疑问句把 *${right.split(" ")[0]}* 放在 *there* 前面，疑问句里的 *some* 要变成 *any*：${right}\n\n**检验。** 核对问句的三处：句首是 *${right.split(" ")[0]} there*，*some* 已换成 *any*，句末是问号（?）。`,
             )
           : t(
-              `A negative adds *n't* to *is* or *are*, and after *not* the word *some* becomes *any*: ${right}`,
-              `否定句在 *is* 或 *are* 后加 *n't*，在否定句里 *some* 要变成 *any*：${right}`,
+              `A negative adds *n't* to *is* or *are*, and after *not* the word *some* becomes *any*: ${right}\n\n**Check.** Verify both negative changes: *isn't*/*aren't* (or *is/are not*) in the verb, and *any* in place of *some*.`,
+              `否定句在 *is* 或 *are* 后加 *n't*，在否定句里 *some* 要变成 *any*：${right}\n\n**检验。** 核对否定句的两处变化：动词里已有 *isn't*/*aren't*（或 *is/are not*），且 *some* 已换成 *any*。`,
             ),
       ),
     ),
@@ -827,6 +842,10 @@ const joiningWithAndButOr: TopicDef = {
     "Join two short sentences: and adds, but shows a difference, or gives a choice.",
     "把两个短句连起来：and 表示补充，but 表示转折，or 表示选择。",
   ),
+  intro: t(
+    "Compare *The shop opens at nine, and it closes at six.*, *The shop is open, but the bank isn't open.*, and *Is the shop open on Saturday or Sunday?* Three tiny joining words—*and* (adding), *but* (contrasting), and *or* (choosing)—turn choppy short sentences into smooth English. In this topic, you pick the right connector and join two sentences cleanly.",
+    "比较这三句话：*The shop opens at nine, and it closes at six.*、*The shop is open, but the bank isn't open.* 和 *Is the shop open on Saturday or Sunday?* 三个简短的连接词——*and*（补充）、*but*（转折）和 *or*（选择）——能把零散的短句连成流畅的英语。本主题带你选对连接词并规范地合并句子。",
+  ),
   prerequisites: ["writing-words-in-order"],
   encompasses: [{ topic: "writing-words-in-order", weight: 0.3 }],
   xp: 20,
@@ -836,16 +855,16 @@ const joiningWithAndButOr: TopicDef = {
       "choose",
       t("And, but or or", "and、but 还是 or"),
       t(
-        "*and* adds one more thing: *Tom plays football, and Anna plays the piano.*\n\n*but* joins two things that are different, often one yes and one no: *I like tea, but I don't like coffee.*\n\n*or* gives a choice: *Do you want tea or coffee?*",
-        "*and* 表示再加一件事：*Tom plays football, and Anna plays the piano.*\n\n*but* 连接两件不同的事，常常一个肯定一个否定：*I like tea, but I don't like coffee.*\n\n*or* 表示选择：*Do you want tea or coffee?*\n\n中文的“和”只连接名词，连接两个句子时英语要用 *and*；中文常说“虽然……但是……”，英语只用一个 *but*。",
+        "*and* adds one more thing: *Tom plays football, and Anna plays the piano.*\n\n*but* joins two things that are different, often one yes and one no: *I like tea, but I don't like coffee.*\n\n*or* gives a choice: *Do you want tea or coffee?*\n\n> **Watch out.** Check the relationship between the two halves: if one half is positive and the other is negative (or surprising), use *but*; if the sentence asks you to pick one of two options, use *or*.",
+        "*and* 表示再加一件事：*Tom plays football, and Anna plays the piano.*\n\n*but* 连接两件不同的事，常常一个肯定一个否定：*I like tea, but I don't like coffee.*\n\n*or* 表示选择：*Do you want tea or coffee?*\n\n中文的“和”只连接名词，连接两个句子时英语要用 *and*；中文常说“虽然……但是……”，英语只用一个 *but*。\n\n> **注意。** 先看前后两半的逻辑关系：一正一反或意思转折用 *but*；在两项里选一个用 *or*；顺承补充用 *and*。",
       ),
       choiceGenerator(
         t("Choose the word that joins the sentence.", "选出连接句子的词。"),
         joinChoiceBank,
         (right, shown) =>
           t(
-            `${joinReason(right).en}: ${shown.replace("___", `*${right}*`)}`,
-            `${joinReason(right)["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+            `${joinReason(right).en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Test the meaning of the two halves together—${right === "and" ? "they simply add up without contrast" : right === "but" ? "they pull in opposite directions" : "they offer two alternatives to choose between"}, confirming *${right}*.`,
+            `${joinReason(right)["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 合起来体会前后两半的意思——${right === "and" ? "二者只是并列补充、没有转折" : right === "but" ? "前后一正一反形成对比" : "是在两个选项里二选一"}，确认用 *${right}*。`,
           ),
         whyNotJoin,
       ),
@@ -854,19 +873,19 @@ const joiningWithAndButOr: TopicDef = {
       "join",
       t("Joining two sentences", "把两个句子连起来"),
       t(
-        "Take away the period of the first sentence, put a comma and the joining word, and start the second part with a small letter, unless it begins with *I* or a name.\n\nTwo questions about a choice become one: *Do you want tea or coffee?*",
-        "去掉第一个句子的句号，加上逗号和连接词，第二部分以小写字母开头，除非它以 *I* 或名字开头。\n\n两个关于选择的问句合成一个：*Do you want tea or coffee?*",
+        "Take away the period of the first sentence, put a comma and the joining word, and start the second part with a small letter, unless it begins with *I* or a name: *My mom is a doctor, and my dad is a teacher.*\n\nTwo questions about a choice become one: *Do you want tea or coffee?*\n\n> **Watch out.** Do not keep the first period or question mark in the middle of the joined sentence (*I like tea. but…* and *Do you want tea? or coffee?* are both wrong).",
+        "去掉第一个句子的句号，加上逗号和连接词，第二部分以小写字母开头，除非它以 *I* 或名字开头：*My mom is a doctor, and my dad is a teacher.*\n\n两个关于选择的问句合成一个：*Do you want tea or coffee?*\n\n> **注意。** 不要把第一句的句号或问号留在合并后的句子中间（*I like tea. but…* 和 *Do you want tea? or coffee?* 都不对）。",
       ),
       typedGenerator("sentence-pattern", t("Join the sentences.", "把句子连起来。"), joinTypedBank, (right, shown) => {
         const joiner = shown.match(/\((\w+)\)$/u)?.[1] ?? "";
         return joiner === "or"
           ? t(
-              `Two questions about a choice become one: keep the first question and add *or* and the other choice: ${right}`,
-              `两个关于选择的问句合成一个：保留第一个问句，再加 *or* 和另一个选项：${right}`,
+              `Two questions about a choice become one: keep the first question and add *or* and the other choice: ${right}\n\n**Check.** Verify there is only one question mark at the very end and *or* links the two choices cleanly without repeating the stem.`,
+              `两个关于选择的问句合成一个：保留第一个问句，再加 *or* 和另一个选项：${right}\n\n**检验。** 确认句末只有一个问号，且 *or* 直接连接两个选项，没有重复前半截问句。`,
             )
           : t(
-              `Drop the period of the first sentence, add a comma and *${joiner}*, and go on with a small letter unless it is *I* or a name: ${right}`,
-              `去掉第一句的句号，加逗号和 *${joiner}*，后半句以小写字母开头，除非是 *I* 或名字：${right}`,
+              `Drop the period of the first sentence, add a comma and *${joiner}*, and go on with a small letter unless it is *I* or a name: ${right}\n\n**Check.** Check the joint in the middle: the first period is replaced by a comma and *${joiner}*, the second part starts lowercase (unless *I* or a name), and one period closes the sentence.`,
+              `去掉第一句的句号，加逗号和 *${joiner}*，后半句以小写字母开头，除非是 *I* 或名字：${right}\n\n**检验。** 检查中间的连接处：第一句的句号已换成逗号加 *${joiner}*，后半句首字母改为小写（*I* 或人名除外），全句以一个句号结尾。`,
             );
       }),
     ),

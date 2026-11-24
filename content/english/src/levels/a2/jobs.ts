@@ -418,12 +418,12 @@ const askWhy = (right: string, shown: string): Text => {
   const kind = word === "Who" ? t("a person", "人") : t("a thing", "物");
   return shown.startsWith("**")
     ? t(
-        `*${bold}* did the action, so *${word}* (for ${kind.en}) takes its place and the verb stays in the past, with no *did*: ${right}`,
-        `*${bold}* 是动作的发出者，所以用 *${word}*（问${kind["zh-CN"]}）直接代替它，动词保持过去式，不用 *did*：${right}`,
+        `*${bold}* did the action, so *${word}* (for ${kind.en}) takes its place and the verb stays in the past, with no *did*: ${right}\n\n**Check.** Replace *${word}* with *${bold}*—the original statement reappears word for word, confirming no *did* is needed.`,
+        `*${bold}* 是动作的发出者，所以用 *${word}*（问${kind["zh-CN"]}）直接代替它，动词保持过去式，不用 *did*：${right}\n\n**检验。** 把 *${bold}* 代回 *${word}* 的位置——原句原样出现，说明这是主语问句，不需要 *did*。`,
       )
     : t(
-        `The action was done to *${bold}*, so ask with *${word}* (for ${kind.en}), then *did*, the subject and the first form of the verb: ${right}`,
-        `*${bold}* 是动作的对象，所以用 *${word}*（问${kind["zh-CN"]}）提问，再接 *did*、主语和动词原形：${right}`,
+        `The action was done to *${bold}*, so ask with *${word}* (for ${kind.en}), then *did*, the subject and the first form of the verb: ${right}\n\n**Check.** Verify the object-question pattern: *${word}* + *did* + subject + plain verb, with *${bold}* removed.`,
+        `*${bold}* 是动作的对象，所以用 *${word}*（问${kind["zh-CN"]}）提问，再接 *did*、主语和动词原形：${right}\n\n**检验。** 核对宾语问句结构：*${word}* + *did* + 主语 + 动词原形，且问句里不再出现 *${bold}*。`,
       );
 };
 
@@ -453,6 +453,10 @@ const subjectAndObjectQuestions: TopicDef = {
     "Who called you? asks about the one who did it and has no did. Who did you call? asks about the other one.",
     "Who called you? 问的是动作的发出者，不用 did；Who did you call? 问的是动作的对象。",
   ),
+  intro: t(
+    "Compare *Who fixed the bike?* (asking who did the fixing—no *did*) with *What did the mechanic fix?* (asking what received the action—uses *did* + base verb). One extra word completely changes who you are asking about.",
+    "比较 *Who fixed the bike?*（问谁修的——不用 *did*）和 *What did the mechanic fix?*（问修了什么——用 *did* + 动词原形）。多一个 *did*，问的对象就完全不同。",
+  ),
   prerequisites: ["wh-questions", "past-simple-questions-and-negatives"],
   encompasses: [
     { topic: "past-simple-questions-and-negatives", weight: 0.3 },
@@ -465,8 +469,8 @@ const subjectAndObjectQuestions: TopicDef = {
       "which-question",
       t("Asking about the doer or the other one", "问发出者还是问对象"),
       t(
-        "*Lily called Sam.* You can ask about either person.\n\n- About the one who did it (**Lily**): *who* or *what* takes the place of the subject, and the verb stays as it is, with no *did*: *Who called Sam?*\n- About the other one (**Sam**): use *did* and the first form of the verb, as in other questions: *Who did Lily call?*\n\nNot *Who did called Sam?* and not *Who did Lily called?*",
-        "*Lily called Sam.* 两个人都可以问。\n\n- 问动作的发出者（**Lily**）：*who* 或 *what* 直接代替主语，动词不变，不用 *did*：*Who called Sam?*\n- 问动作的对象（**Sam**）：和别的问句一样，用 *did* 加动词原形：*Who did Lily call?*\n\n不说 *Who did called Sam?*，也不说 *Who did Lily called?* 中文“谁给萨姆打了电话？”和“莉莉给谁打了电话？”语序不变，英语问对象时却要加 *did* 并把主语放在后面。",
+        "*Lily called Sam.* You can ask about either person.\n\n- About the one who did it (**Lily**): *who* or *what* takes the place of the subject, and the verb stays as it is, with no *did*: *Who called Sam?*\n- About the other one (**Sam**): use *did* and the first form of the verb, as in other questions: *Who did Lily call?*\n\n> **Watch out.** Never write *Who did called Sam?* (no *did* in a subject question) and never write *Who did Lily called?* (the verb after *did* must return to its plain form).",
+        "*Lily called Sam.* 两个人都可以问。\n\n- 问动作的发出者（**Lily**）：*who* 或 *what* 直接代替主语，动词不变，不用 *did*：*Who called Sam?*\n- 问动作的对象（**Sam**）：和别的问句一样，用 *did* 加动词原形：*Who did Lily call?*\n\n> **注意。** 问发出者不要加 *did*（不说 *Who did called Sam?*），问对象时 *did* 后面的动词要还原（不说 *Who did Lily called?*）。",
       ),
       choiceGenerator(
         t("Choose the question that asks about the words in bold.", "选出就加粗部分提问的问句。"),
@@ -479,8 +483,8 @@ const subjectAndObjectQuestions: TopicDef = {
       "write",
       t("Writing the question", "写出问句"),
       t(
-        "Write a question about the words in bold. If they did the action, put *who* or *what* in their place: *Who called Sam?* If the action was done to them, use *did*: *Who did Lily call?*",
-        "就加粗部分写一个问句。如果加粗部分是动作的发出者，用 *who* 或 *what* 代替它：*Who called Sam?* 如果加粗部分是动作的对象，用 *did*：*Who did Lily call?*",
+        "Write a question about the words in bold. If they did the action, put *who* or *what* in their place: *Who called Sam?* If the action was done to them, use *did* + subject + plain verb: *Who did Lily call?*\n\n> **Watch out.** Check whether the bold words are a person (*Who*) or a thing (*What*), and drop the bold words from the question itself.",
+        "就加粗部分写一个问句。如果加粗部分是动作的发出者，用 *who* 或 *what* 代替它：*Who called Sam?* 如果加粗部分是动作的对象，用 *did* + 主语 + 动词原形：*Who did Lily call?*\n\n> **注意。** 先分清加粗部分是人（*Who*）还是物（*What*），并确保加粗部分不再出现在问句里。",
       ),
       typedGenerator("sentence", t("Write a question about the words in bold.", "就加粗部分写一个问句。"), askTypedBank, askWhy),
     ),
@@ -559,6 +563,10 @@ const writingAboutYourDreamJob = judgedTopic({
     "Write six to eight sentences about a job you would like: what it is, why you want it, and what you will do to get it.",
     "写六到八句话，讲一份你想做的工作：是什么、为什么想做、你将怎样得到它。",
   ),
+  intro: t(
+    "A strong paragraph about a dream job connects your goal, your reasons, and your next steps: *I would like to be an architect because I love drawing buildings. I'm going to study math and art, and I will visit famous buildings to learn from them.*",
+    "写理想工作的段落会把目标、理由和行动连成一线：*I would like to be an architect because I love drawing buildings. I'm going to study math and art, and I will visit famous buildings to learn from them.*",
+  ),
   prerequisites: ["writing-about-future-plans", "expanding-with-because-but-so"],
   encompasses: [
     { topic: "writing-about-future-plans", weight: 0.3 },
@@ -569,8 +577,8 @@ const writingAboutYourDreamJob = judgedTopic({
     id: "dream-job",
     title: t("The job, why and how", "工作、原因和做法"),
     explanation: t(
-      "Say what job you would like: *I would like to be a pilot. My dream job is to be a doctor.*\n\nGive reasons with *because* and *so*: *I love planes, so I want to fly.*\n\nSay what you will do to get it with *going to* or *will*: *I'm going to study math. I will go to flight school.*",
-      "说出你想做的工作：*I would like to be a pilot. My dream job is to be a doctor.*\n\n用 *because* 和 *so* 说明理由：*I love planes, so I want to fly.*\n\n用 *going to* 或 *will* 说你将怎样做：*I'm going to study math. I will go to flight school.*\n\n注意职业前要加 *a* 或 *an*：说 *I want to be a doctor*，不说 *I want to be doctor*。",
+      "Say what job you would like: *I would like to be a pilot. My dream job is to be a doctor.*\n\nGive reasons with *because* and *so*: *I love planes, so I want to fly.*\n\nSay what you will do to get it with *going to* or *will*: *I'm going to study math. I will go to flight school.*\n\n> **Watch out.** Always put *a* or *an* before a singular job name (*a doctor*, *an engineer*—never *I want to be doctor*), and use *going to* or *will* for your future steps.",
+      "说出你想做的工作：*I would like to be a pilot. My dream job is to be a doctor.*\n\n用 *because* 和 *so* 说明理由：*I love planes, so I want to fly.*\n\n用 *going to* 或 *will* 说你将怎样做：*I'm going to study math. I will go to flight school.*\n\n> **注意。** 单数职业名词前不能漏掉 *a* 或 *an*（要说 *a doctor*、*an engineer*，不说 *I want to be doctor*），写未来打算时用 *going to* 或 *will*。",
     ),
   },
   question: t(

@@ -109,10 +109,18 @@ export const plotStageStep = point(
   "the-stage-of-the-plot",
   t("The Stage of the Plot", "情节的阶段"),
   t(
-    "Most plays follow the shape of a plot. Placing a scene in it tells you what that scene is for.\n\n- **Exposition**: characters, place and situation, before the conflict begins.\n- **Rising action**: the conflict starts and grows through new problems and complications.\n- **Climax**: the turning point, the moment of highest tension when the conflict is decided.\n- **Falling action**: the consequences of the climax, as tension eases.\n- **Resolution**: the new, settled state of things at the end.\n\nTo place a scene, ask whether the main conflict has started, whether it is being decided right now, and whether it is already over. A scene full of action is not always the climax: it is the climax only if the outcome is decided there.",
-    "大多数戏剧都遵循情节的结构。把一场戏放到这个结构中，就能知道这场戏的作用。\n\n- **开端**（exposition）：在冲突开始之前交代人物、地点和处境。\n- **上升情节**（rising action）：冲突开始，并通过新的问题和波折不断加剧。\n- **高潮**（climax）：转折点，紧张程度最高、冲突得到决定的时刻。\n- **下降情节**（falling action）：高潮的后果，紧张感逐渐缓和。\n- **结局**（resolution）：结尾时事物新的、安定的状态。\n\n要给一场戏定位，就问问主要冲突是否已经开始、是否正在此刻得到决定、是否已经结束。充满动作的场景不一定是高潮：只有结局在那里得到决定，它才是高潮。",
+    "Most plays follow the shape of a plot. Placing a scene in it tells you what that scene is for.\n\n- **Exposition**: characters, place and situation, before the conflict begins.\n- **Rising action**: the conflict starts and grows through new problems and complications.\n- **Climax**: the turning point, the moment of highest tension when the conflict is decided.\n- **Falling action**: the consequences of the climax, as tension eases.\n- **Resolution**: the new, settled state of things at the end.\n\nTo place a scene, ask whether the main conflict has started, whether it is being decided right now, and whether it is already over. A scene full of action is not always the climax: it is the climax only if the outcome is decided there.\n\n> **Watch out.** Do not confuse **falling action** with **resolution**: falling action still handles the immediate fallout right after the turning point, whereas resolution jumps to the settled new normal.",
+    "大多数戏剧都遵循情节的结构。把一场戏放到这个结构中，就能知道这场戏的作用。\n\n- **开端**（exposition）：在冲突开始之前交代人物、地点和处境。\n- **上升情节**（rising action）：冲突开始，并通过新的问题和波折不断加剧。\n- **高潮**（climax）：转折点，紧张程度最高、冲突得到决定的时刻。\n- **下降情节**（falling action）：高潮的后果，紧张感逐渐缓和。\n- **结局**（resolution）：结尾时事物新的、安定的状态。\n\n要给一场戏定位，就问问主要冲突是否已经开始、是否正在此刻得到决定、是否已经结束。充满动作的场景不一定是高潮：只有结局在那里得到决定，它才是高潮。\n\n> **注意。** 不要把**下降情节**和**结局**混为一谈：下降情节还在处理转折点刚发生后的直接余波，结局则已经进入尘埃落定后的新常态。",
   ),
-  labelChoice(["Which stage of the plot does this scene belong to?", "这一场属于情节的哪个阶段？"], stageLines, stageLabels),
+  labelChoice(
+    ["Which stage of the plot does this scene belong to?", "这一场属于情节的哪个阶段？"],
+    stageLines,
+    stageLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Locate the main conflict on the timeline: before it starts is exposition, while it escalates is rising action, at the decisive choice is climax, in the immediate aftermath is falling action, and in the settled future is resolution.`,
+      `这是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 把主要冲突放到时间线上定位：冲突开始前是开端，矛盾升级中是上升情节，决定性抉择处是高潮，直接余波是下降情节，尘埃落定后的新常态是结局。`,
+    ],
+  ),
 );
 
 // How far to trust a document.
@@ -204,13 +212,17 @@ export const trustStep = point(
   "how-far-to-trust-it",
   t("How Far to Trust It", "可以在多大程度上信任它"),
   t(
-    "Once you know who made a document, when, for whom and why, you can judge how far to trust it **on a particular question**.\n\n- **A firsthand witness with no clear reason to slant**, writing at the time, is the strongest evidence: a diary, a private letter, minutes taken in the room.\n- **A maker with a reason to slant** was there, but gains or loses from the story: a company's report on its own strike, a general's account of his own courage.\n- **A secondhand account** repeats what someone else saw, and details drift as stories pass along.\n- **An account written long after** may come from a real witness, but memory fades and later events reshape it.\n\nThe same document can be strong on one question and weak on another: a company report may be exact on its costs and slanted on its workers.",
-    "一旦你知道了一份文献是谁、在什么时候、为谁、为什么制作的，你就能判断在**某个具体问题上**可以在多大程度上信任它。\n\n- 当时写下的、**没有明显偏向理由的亲历者**的记录是最有力的证据：日记、私人信件、在现场记录的会议纪要。\n- **有歪曲理由的制作者**当时在场，但故事怎么讲关系到他的得失：公司关于自己工厂罢工的报告、将军对自己英勇表现的叙述。\n- **二手叙述**转述别人看到的事，细节会随着故事的流传而走样。\n- **事后很久写成的叙述**可能出自真正的亲历者，但记忆会模糊，后来的事件也会重塑它。\n\n同一份文献可能在一个问题上很有力，在另一个问题上却很薄弱：公司报告在成本上可能很准确，在工人问题上却有所偏向。",
+    "Once you know who made a document, when, for whom and why, you can judge how far to trust it **on a particular question**.\n\n- **A firsthand witness with no clear reason to slant**, writing at the time, is the strongest evidence: a diary, a private letter, minutes taken in the room.\n- **A maker with a reason to slant** was there, but gains or loses from the story: a company's report on its own strike, a general's account of his own courage.\n- **A secondhand account** repeats what someone else saw, and details drift as stories pass along.\n- **An account written long after** may come from a real witness, but memory fades and later events reshape it.\n\nThe same document can be strong on one question and weak on another: a company report may be exact on its costs and slanted on its workers.\n\n> **Watch out.** Check three filters in order: first, was the maker actually there? (If not, it is **secondhand**.) Second, was it written decades later? (If so, **written long after**.) Third, does the maker gain or lose on *this specific question*? (If so, **reason to slant**.)",
+    "一旦你知道了一份文献是谁、在什么时候、为谁、为什么制作的，你就能判断在**某个具体问题上**可以在多大程度上信任它。\n\n- 当时写下的、**没有明显偏向理由的亲历者**的记录是最有力的证据：日记、私人信件、在现场记录的会议纪要。\n- **有歪曲理由的制作者**当时在场，但故事怎么讲关系到他的得失：公司关于自己工厂罢工的报告、将军对自己英勇表现的叙述。\n- **二手叙述**转述别人看到的事，细节会随着故事的流传而走样。\n- **事后很久写成的叙述**可能出自真正的亲历者，但记忆会模糊，后来的事件也会重塑它。\n\n同一份文献可能在一个问题上很有力，在另一个问题上却很薄弱：公司报告在成本上可能很准确，在工人问题上却有所偏向。\n\n> **注意。** 按三步排查：第一，制作者是否在现场？（不在就是**二手**。）第二，是否隔了数十年才写成？（是则属于**事后很久**。）第三，制作者在*当前这个问题*上是否有利害得失？（有则属于**有歪曲理由**。）",
   ),
   labelChoice(
     ["How far can this document be trusted on the question, and why?", "在这个问题上，这份文献可以在多大程度上信任？为什么？"],
     trustLines,
     trustLabels,
+    (right, _shown, entry) => [
+      `The verdict is **${right}**. ${entry.why[0]}\n\n**Check.** Test the document's presence at the scene, timing, and self-interest on this exact question: those three checks lock in **${right}**.`,
+      `判断结果是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 对照这一具体问题核查制作者是否在场、写成时间以及有无利害关系：这三项检验直接锁定**${entry.zh}**。`,
+    ],
   ),
 );
 
@@ -258,15 +270,15 @@ export const reflectionStep = point(
   "writing-the-reflection",
   t("Writing the Reflection", "写出反思"),
   t(
-    "A personal essay earns its meaning in the reflection, where the older self looks back at what the younger self lived. A good reflection does three things: it stays tied to the **particular** experience, it says something the writer **did not see at the time**, and it is honest about complicated feelings. *I understand now that I was not protecting myself from the smell; I was protecting myself from seeing him weak.*\n\nTwo weaker endings tempt writers. A **stock moral**, such as *family is the most important thing*, could end a thousand essays and so says nothing about this one. **More narration or description**, such as what the weather was like at the funeral, keeps telling the story and never steps back to say what it means.",
-    "个人随笔的意义来自反思：现在的自己回望过去的自己所经历的一切。好的反思做到三点：它紧扣**具体**的经历，说出作者**当时没有看清**的东西，并且坦诚地面对复杂的感受。*I understand now that I was not protecting myself from the smell; I was protecting myself from seeing him weak.*\n\n有两种较弱的结尾容易吸引作者。**套话式的道理**，比如 *family is the most important thing*，可以给一千篇随笔作结尾，因此对这一篇什么也没说。**继续叙述或描写**，比如葬礼那天的天气，只是在接着讲故事，从来没有抽身出来说明它的意义。",
+    "A personal essay earns its meaning in the reflection, where the older self looks back at what the younger self lived. A good reflection does three things: it stays tied to the **particular** experience, it says something the writer **did not see at the time**, and it is honest about complicated feelings. *I understand now that I was not protecting myself from the smell; I was protecting myself from seeing him weak.*\n\nTwo weaker endings tempt writers. A **stock moral**, such as *family is the most important thing*, could end a thousand essays and so says nothing about this one. **More narration or description**, such as what the weather was like at the funeral, keeps telling the story and never steps back to say what it means.\n\n> **Watch out.** Reject any option that starts with *This teaches us that…* / *This proves that…* (stock moral) or merely describes props and weather without stepping back to interpret the experience.",
+    "个人随笔的意义来自反思：现在的自己回望过去的自己所经历的一切。好的反思做到三点：它紧扣**具体**的经历，说出作者**当时没有看清**的东西，并且坦诚地面对复杂的感受。*I understand now that I was not protecting myself from the smell; I was protecting myself from seeing him weak.*\n\n有两种较弱的结尾容易吸引作者。**套话式的道理**，比如 *family is the most important thing*，可以给一千篇随笔作结尾，因此对这一篇什么也没说。**继续叙述或描写**，比如葬礼那天的天气，只是在接着讲故事，从来没有抽身出来说明它的意义。\n\n> **注意。** 排除以“这告诉我们……”开头的万金油大道理，也排除只继续描写物件或天气、始终不抽身阐释意义的选项。",
   ),
   kindedChoice(
     ["Which sentence gives this passage the reflection it needs?", "哪个句子为这段文字提供了它所需要的反思？"],
     reflectionBank,
     (right) => [
-      `*${right}* The older self looks back at this particular experience and says what the younger self could not see at the time.`,
-      `*${right}* 现在的自己回望这段具体的经历，说出了过去的自己当时看不清的东西。`,
+      `*${right}* The older self looks back at this particular experience and says what the younger self could not see at the time.\n\n**Check.** Ask whether this sentence could fit only *this* specific memory (not any generic essay) and whether it interprets the experience from a later vantage point: yes.`,
+      `*${right}* 现在的自己回望这段具体的经历，说出了过去的自己当时看不清的东西。\n\n**检验。** 问问这句话是否只贴合这段具体经历（而非套话），且以事后的视角道出了更深一层的领悟：正是如此。`,
     ],
     [
       [

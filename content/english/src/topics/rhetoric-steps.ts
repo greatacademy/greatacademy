@@ -64,8 +64,8 @@ export const appealStep = point(
   "choosing-an-appeal-to-add",
   t("Adding an Appeal", "加入一种诉求"),
   t(
-    "A writer who knows the three appeals can choose one on purpose. To support the claim *Our town should open a pool*:\n\n- **Ethos** brings in credibility: *As a lifeguard for twelve summers, I have taught hundreds of children to swim.*\n- **Pathos** brings in feeling, usually through a picture of one person: *Picture a ten-year-old at the edge of the lake, never having learned to swim.*\n- **Logos** brings in reasoning: *The nearest pool is forty minutes away, and six in ten children here cannot swim.*\n\nWhich to add depends on what the argument lacks. Numbers without a face can feel cold, so add pathos; a moving story with no facts can seem manipulative, so add logos; an unknown writer needs ethos.",
-    "了解三种诉求的作者可以有意识地加以选择。比如要支持 *Our town should open a pool* 这一主张：\n\n- **人格诉求**（ethos）引入可信度：*As a lifeguard for twelve summers, I have taught hundreds of children to swim.*\n- **情感诉求**（pathos）引入情感，通常借助对一个人的描绘：*Picture a ten-year-old at the edge of the lake, never having learned to swim.*\n- **理性诉求**（logos）引入推理：*The nearest pool is forty minutes away, and six in ten children here cannot swim.*\n\n加入哪一种，取决于论证缺什么。只有数字没有人物会显得冷漠，就加入情感诉求；只有动人的故事没有事实会显得在煽情，就加入理性诉求；不为人知的作者则需要人格诉求。",
+    "A writer who knows the three appeals can choose one on purpose. To support the claim *Our town should open a pool*:\n\n- **Ethos** brings in credibility: *As a lifeguard for twelve summers, I have taught hundreds of children to swim.*\n- **Pathos** brings in feeling, usually through a picture of one person: *Picture a ten-year-old at the edge of the lake, never having learned to swim.*\n- **Logos** brings in reasoning: *The nearest pool is forty minutes away, and six in ten children here cannot swim.*\n\nWhich to add depends on what the argument lacks. Numbers without a face can feel cold, so add pathos; a moving story with no facts can seem manipulative, so add logos; an unknown writer needs ethos.\n\n> **Watch out.** All three choices support the same claim—read the bold appeal name at the end of the prompt first, then match it to credentials (**ethos**), a human picture (**pathos**), or facts and figures (**logos**).",
+    "了解三种诉求的作者可以有意识地加以选择。比如要支持 *Our town should open a pool* 这一主张：\n\n- **人格诉求**（ethos）引入可信度：*As a lifeguard for twelve summers, I have taught hundreds of children to swim.*\n- **情感诉求**（pathos）引入情感，通常借助对一个人的描绘：*Picture a ten-year-old at the edge of the lake, never having learned to swim.*\n- **理性诉求**（logos）引入推理：*The nearest pool is forty minutes away, and six in ten children here cannot swim.*\n\n加入哪一种，取决于论证缺什么。只有数字没有人物会显得冷漠，就加入情感诉求；只有动人的故事没有事实会显得在煽情，就加入理性诉求；不为人知的作者则需要人格诉求。\n\n> **注意。** 三个选项都支持同一个主张——先看清题干末尾加粗的诉求名称，再对应资历权威（**ethos**）、人物画面（**pathos**）或事实数据（**logos**）。",
   ),
   choiceGenerator(
     t("Which sentence supports the claim with the appeal named?", "哪个句子用所指定的诉求来支持这一主张？"),
@@ -73,7 +73,10 @@ export const appealStep = point(
     (right, shown) => {
       const name = askedName(shown);
       const [en, zh] = appealUse[name] ?? ["", ""];
-      return t(`**${right}** It uses ${name}: ${en}.`, `**${right}** 它运用了${appealZh[name] ?? name}：${zh}。`);
+      return t(
+        `**${right}** It uses ${name}: ${en}.\n\n**Check.** Match the requested appeal (**${name}**) to what drives the sentence—credentials for ethos, a vivid human scene for pathos, or measurable facts for logos.`,
+        `**${right}** 它运用了${appealZh[name] ?? name}：${zh}。\n\n**检验。** 将题目要求的**${appealZh[name] ?? name}**与句子的支撑方式核对：人格看资历，情感看人物画面，理性看可核查的数据与因果。`,
+      );
     },
     (wrong, _right, shown) => {
       const name = appeals.nameOf.get(wrong) ?? "";
@@ -121,8 +124,8 @@ export const deviceStep = point(
   "putting-a-device-to-work",
   t("Putting a Device to Work", "运用修辞手法"),
   t(
-    "Each device does a different job, so choose the one that suits your point.\n\n- **Anaphora** builds momentum by repeating the opening words of each part: *We will work when we are tired, we will work when we are doubted...* It suits a call to action or a rising list.\n- **Antithesis** sharpens a contrast by setting opposites in balanced phrases: *Starting is easy; finishing is what takes courage.* It suits a point that one thing matters more than another.\n- A **rhetorical question** invites the listener to supply the obvious answer: *If we stop now, who will finish what we began?* It suits a moment when you want the audience to agree in their own words.\n\nTo check your choice, look for the pattern itself: repeated openings, paired opposites, or a question that needs no answer.",
-    "每种修辞手法的作用不同，所以要选择适合你观点的那一种。\n\n- **首语重复**（anaphora）通过重复每部分开头的词来积聚气势：*We will work when we are tired, we will work when we are doubted...* 它适合号召行动或层层递进的列举。\n- **对照**（antithesis）把相反的意思放在平衡的短语里，使对比更鲜明：*Starting is easy; finishing is what takes courage.* 它适合表达某事比另一件事更重要。\n- **反问**（rhetorical question）让听众自己说出显而易见的答案：*If we stop now, who will finish what we began?* 它适合你希望听众用自己的话表示赞同的时候。\n\n检查你的选择时，就找这种模式本身：重复的开头、成对的相反意思，或者不需要回答的问题。",
+    "Each device does a different job, so choose the one that suits your point.\n\n- **Anaphora** builds momentum by repeating the opening words of each part: *We will work when we are tired, we will work when we are doubted...* It suits a call to action or a rising list.\n- **Antithesis** sharpens a contrast by setting opposites in balanced phrases: *Starting is easy; finishing is what takes courage.* It suits a point that one thing matters more than another.\n- A **rhetorical question** invites the listener to supply the obvious answer: *If we stop now, who will finish what we began?* It suits a moment when you want the audience to agree in their own words.\n\nTo check your choice, look for the pattern itself: repeated openings, paired opposites, or a question that needs no answer.\n\n> **Watch out.** All three options express the same point—match the bold device name strictly by its surface pattern (repeated clause openings, balanced opposites, or a question mark).",
+    "每种修辞手法的作用不同，所以要选择适合你观点的那一种。\n\n- **首语重复**（anaphora）通过重复每部分开头的词来积聚气势：*We will work when we are tired, we will work when we are doubted...* 它适合号召行动或层层递进的列举。\n- **对照**（antithesis）把相反的意思放在平衡的短语里，使对比更鲜明：*Starting is easy; finishing is what takes courage.* 它适合表达某事比另一件事更重要。\n- **反问**（rhetorical question）让听众自己说出显而易见的答案：*If we stop now, who will finish what we began?* 它适合你希望听众用自己的话表示赞同的时候。\n\n检查你的选择时，就找这种模式本身：重复的开头、成对的相反意思，或者不需要回答的问题。\n\n> **注意。** 三个选项表达的观点相同——严格按形式特征对号入座：重复的分句开头（首语重复）、对称的反义对比（对照）或问号结尾的反问。",
   ),
   choiceGenerator(
     t("Which sentence makes the point with the device named?", "哪个句子用所指定的修辞手法表达了这个观点？"),
@@ -130,7 +133,10 @@ export const deviceStep = point(
     (right, shown) => {
       const name = askedName(shown);
       const [en, zh] = deviceUse[name] ?? ["", ""];
-      return t(`**${right}** It uses ${name}: ${en}.`, `**${right}** 它运用了${deviceZh[name] ?? name}：${zh}。`);
+      return t(
+        `**${right}** It uses ${name}: ${en}.\n\n**Check.** Verify the exact surface mark of **${name}**: repeated clause openings for anaphora, balanced opposing halves for antithesis, or an obvious-answer question for a rhetorical question.`,
+        `**${right}** 它运用了${deviceZh[name] ?? name}：${zh}。\n\n**检验。** 核对**${deviceZh[name] ?? name}**的句式特征：首语重复看相同开头，对照看对称反义，反问看不言自明的问句。`,
+      );
     },
     (wrong, _right, shown) => {
       const name = devices.nameOf.get(wrong) ?? "";
@@ -188,15 +194,15 @@ export const repairStep = point(
   "repairing-the-argument",
   t("Repairing the Argument", "修补论证"),
   t(
-    "Naming a fallacy is half the work; the other half is replacing it with sound reasoning. Each fallacy has a natural repair.\n\n- **Ad hominem**: judge the argument, not the person. Look at the evidence and the method.\n- **Straw man**: restate the other side's view accurately, then respond to that.\n- **False dilemma**: name the other options between the two extremes.\n- **Slippery slope**: treat the first step on its own, and show how its effects could be checked or limited.\n- **Hasty generalization**: ask for more cases, such as surveys or records, before drawing a broad conclusion.\n- **Bandwagon**: ask what actually makes the thing good, not how many people choose it.\n\nWatch for two false repairs: one keeps the same flaw in new words, and the other swaps it for a different flaw.",
-    "说出谬误的名称只完成了一半，另一半是用合理的推理取代它。每种谬误都有相应的修补方法。\n\n- **人身攻击**：评判论点而不是人，去看证据和方法。\n- **稻草人**：准确地重述对方的观点，再对它作出回应。\n- **非此即彼**：说出两个极端之间的其他选择。\n- **滑坡**：单独看待第一步，并说明怎样检验或限制它的影响。\n- **以偏概全**：在得出宽泛的结论之前，要求更多的例子，比如调查或记录。\n- **从众**：问一问究竟是什么让这件事好，而不是有多少人选择它。\n\n要警惕两种假修补：一种换个说法保留了同样的谬误，另一种把它换成了另一种谬误。",
+    "Naming a fallacy is half the work; the other half is replacing it with sound reasoning. Each fallacy has a natural repair.\n\n- **Ad hominem**: judge the argument, not the person. Look at the evidence and the method.\n- **Straw man**: restate the other side's view accurately, then respond to that.\n- **False dilemma**: name the other options between the two extremes.\n- **Slippery slope**: treat the first step on its own, and show how its effects could be checked or limited.\n- **Hasty generalization**: ask for more cases, such as surveys or records, before drawing a broad conclusion.\n- **Bandwagon**: ask what actually makes the thing good, not how many people choose it.\n\nWatch for two false repairs: one keeps the same flaw in new words, and the other swaps it for a different flaw.\n\n> **Watch out.** Do not pick a revision just because it drops the original wording—check that it does not smuggle in a *new* fallacy (like attacking critics or jumping to an extreme).",
+    "说出谬误的名称只完成了一半，另一半是用合理的推理取代它。每种谬误都有相应的修补方法。\n\n- **人身攻击**：评判论点而不是人，去看证据和方法。\n- **稻草人**：准确地重述对方的观点，再对它作出回应。\n- **非此即彼**：说出两个极端之间的其他选择。\n- **滑坡**：单独看待第一步，并说明怎样检验或限制它的影响。\n- **以偏概全**：在得出宽泛的结论之前，要求更多的例子，比如调查或记录。\n- **从众**：问一问究竟是什么让这件事好，而不是有多少人选择它。\n\n要警惕两种假修补：一种换个说法保留了同样的谬误，另一种把它换成了另一种谬误。\n\n> **注意。** 不要看到改写了原句就选它——还要检查它有没有悄悄换进*另一种*谬误（比如转而攻击批评者或滑向极端）。",
   ),
   kindedChoice(
     ["Which revision fixes the flaw in this argument?", "哪种修改纠正了这个论证中的缺陷？"],
     repairBank,
     (right) => [
-      `*${right}* It drops the faulty move and turns to evidence or a fair statement of the question, which is what sound reasoning needs.`,
-      `*${right}* 它去掉了错误的推理，转而依靠证据或对问题的公正陈述，这正是合理推理所需要的。`,
+      `*${right}* It drops the faulty move and turns to evidence or a fair statement of the question, which is what sound reasoning needs.\n\n**Check.** Ask two questions about the revision: does it remove the original flaw, and does it point to checkable evidence or a balanced option without introducing any new fallacy?`,
+      `*${right}* 它去掉了错误的推理，转而依靠证据或对问题的公正陈述，这正是合理推理所需要的。\n\n**检验。** 对改写做两步核查：既去掉了原有的推理漏洞，又指向可核查的证据或折中方案，且没有引入新谬误。`,
     ],
     [
       [
@@ -303,10 +309,18 @@ export const sourceWeaknessStep = point(
   "the-weakness-of-a-source",
   t("The Weakness of a Source", "来源的弱点"),
   t(
-    "Choosing the best source is easier once you can say what is wrong with the others. Ask the four questions again, and name the one a source fails.\n\n- **No named author with expertise**: an anonymous post, a username, or someone with no training in the subject.\n- **Its maker gains from the answer**: a company reviewing its own product, or a group funding research on its own cause.\n- **It is out of date**: a source too old for a question about how things are *now*. For a question about the past, an old source can be the best one.\n- **It shows no evidence**: even an expert's word is weak when it gives no data, records or references that a reader could check.\n\nA source can fail more than one test; choose the failure that matters most for the question asked.",
-    "一旦你能说出其他来源的问题所在，选出最好的来源就更容易了。再问一遍那四个问题，说出某个来源没有通过的那一项。\n\n- **没有署名的专业作者**：匿名帖子、网名，或者在这一领域没有受过训练的人。\n- **作者能从答案中获利**：公司评价自己的产品，或者某个团体资助关于自身主张的研究。\n- **内容已过时**：对于关于*现在*情况的问题来说太旧的来源。如果问题是关于过去的，旧来源反而可能是最好的。\n- **没有展示证据**：即使是专家的话，如果没有给出读者可以核查的数据、记录或参考资料，也是薄弱的。\n\n一个来源可能有不止一项不合格；选出对所问问题最要紧的那一项。",
+    "Choosing the best source is easier once you can say what is wrong with the others. Ask the four questions again, and name the one a source fails.\n\n- **No named author with expertise**: an anonymous post, a username, or someone with no training in the subject.\n- **Its maker gains from the answer**: a company reviewing its own product, or a group funding research on its own cause.\n- **It is out of date**: a source too old for a question about how things are *now*. For a question about the past, an old source can be the best one.\n- **It shows no evidence**: even an expert's word is weak when it gives no data, records or references that a reader could check.\n\nA source can fail more than one test; choose the failure that matters most for the question asked.\n\n> **Watch out.** Check whether the author *is* a named expert who simply gives *no data or studies*—in that case the weakness is **it shows no evidence**, not lack of expertise.",
+    "一旦你能说出其他来源的问题所在，选出最好的来源就更容易了。再问一遍那四个问题，说出某个来源没有通过的那一项。\n\n- **没有署名的专业作者**：匿名帖子、网名，或者在这一领域没有受过训练的人。\n- **作者能从答案中获利**：公司评价自己的产品，或者某个团体资助关于自身主张的研究。\n- **内容已过时**：对于关于*现在*情况的问题来说太旧的来源。如果问题是关于过去的，旧来源反而可能是最好的。\n- **没有展示证据**：即使是专家的话，如果没有给出读者可以核查的数据、记录或参考资料，也是薄弱的。\n\n一个来源可能有不止一项不合格；选出对所问问题最要紧的那一项。\n\n> **注意。** 如果作者本身是署名的专家，只是没有拿出任何数据或研究佐证，那么最大弱点是**没有展示证据**，而不是“没有署名的专业作者”。",
   ),
-  labelChoice(["What weakens this source most for the question?", "对这个问题来说，这个来源最大的弱点是什么？"], sourceLines, sourceLabels),
+  labelChoice(
+    ["What weakens this source most for the question?", "对这个问题来说，这个来源最大的弱点是什么？"],
+    sourceLines,
+    sourceLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Test the four source checks in order (named expertise, conflict of interest, date vs. question, and verifiable evidence): the decisive breakdown here is **${right}**.`,
+      `最大弱点是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 按四项来源标准（署名专业性、利益冲突、年代与问题、可核查证据）逐项排查：这里最致命的缺口正是**${entry.zh}**。`,
+    ],
+  ),
 );
 
 // Reading a trait from a detail.
@@ -353,15 +367,15 @@ export const traitStep = point(
   "reading-the-trait",
   t("Reading the Trait", "读出人物特点"),
   t(
-    "Indirect characterization leaves the reader to name the trait. To do it, ask what kind of person would act, speak or think this way, and look for the trait that explains the detail **best**. A character who washes every dish without being asked is *helpful*; one who counts a tip three times and takes a coin back is *stingy*.\n\nTwo answers tempt readers. The **opposite** trait comes from misreading the detail, often by missing a small word or a tone: smiling for the cameras and leaving when they stop shows *insincerity*, not genuine care. A trait that is merely **possible**, such as *athletic* for a character who runs laps, is not wrong about the person but is not what the detail shows: it is determination that gets him up in the dark.",
-    "间接塑造让读者自己说出人物的特点。要做到这一点，就问问什么样的人会这样行动、这样说话或这样想，并找出**最能**解释这个细节的特点。不用别人开口就把所有碗洗了的人物是 *helpful*（乐于助人）；把小费数三遍又拿回一枚硬币的人物是 *stingy*（吝啬）。\n\n有两种答案容易误导读者。**相反**的特点来自误读细节，往往是漏看了一个小词或某种语气：在镜头前微笑、镜头一停就离开，表现的是*虚伪*，而不是真心关怀。仅仅**可能**成立的特点，比如说跑圈的人物 *athletic*（擅长运动），对这个人来说不算错，却不是细节所表现的：让他在黑暗中起床的是决心。",
+    "Indirect characterization leaves the reader to name the trait. To do it, ask what kind of person would act, speak or think this way, and look for the trait that explains the detail **best**. A character who washes every dish without being asked is *helpful*; one who counts a tip three times and takes a coin back is *stingy*.\n\nTwo answers tempt readers. The **opposite** trait comes from misreading the detail, often by missing a small word or a tone: smiling for the cameras and leaving when they stop shows *insincerity*, not genuine care. A trait that is merely **possible**, such as *athletic* for a character who runs laps, is not wrong about the person but is not what the detail shows: it is determination that gets him up in the dark.\n\n> **Watch out.** Reject a trait that is merely *compatible* with the scene—choose the one that directly explains *why* the character did this specific action.",
+    "间接塑造让读者自己说出人物的特点。要做到这一点，就问问什么样的人会这样行动、这样说话或这样想，并找出**最能**解释这个细节的特点。不用别人开口就把所有碗洗了的人物是 *helpful*（乐于助人）；把小费数三遍又拿回一枚硬币的人物是 *stingy*（吝啬）。\n\n有两种答案容易误导读者。**相反**的特点来自误读细节，往往是漏看了一个小词或某种语气：在镜头前微笑、镜头一停就离开，表现的是*虚伪*，而不是真心关怀。仅仅**可能**成立的特点，比如说跑圈的人物 *athletic*（擅长运动），对这个人来说不算错，却不是细节所表现的：让他在黑暗中起床的是决心。\n\n> **注意。** 排除那些仅仅与场景“不冲突”的特点——要选最直接解释人物*为何*做出这一具体举动的性格词。",
   ),
   kindedChoice(
     ["Which trait does this detail show best?", "这个细节最能体现人物的哪种特点？"],
     traitBank,
     (right) => [
-      `The character is **${right}**: this is the trait that best explains why someone would act or speak this way.`,
-      `这个人物是 **${right}**：这个特点最能解释一个人为什么会这样行动或说话。`,
+      `The character is **${right}**: this is the trait that best explains why someone would act or speak this way.\n\n**Check.** Ask "What motive drives the specific gesture or words in the sentence?" Only **${right}** accounts for the key detail rather than merely guessing a side quality.`,
+      `这个人物是 **${right}**：这个特点最能解释一个人为什么会这样行动或说话。\n\n**检验。** 追问“是什么动机驱动了句中这个具体举动或话语？”只有 **${right}** 直接解释了核心细节，而非顺带猜测的旁支特征。`,
     ],
     [
       [
@@ -529,10 +543,18 @@ export const allusionChoiceStep = point(
   "choosing-an-allusion",
   t("Choosing an Allusion", "选用典故"),
   t(
-    "To use an allusion yourself, match the situation to the story. Ask what the situation is really about, then recall which story carries that meaning.\n\n- A huge job: **a Herculean task**, from the twelve labors of Hercules.\n- One weak spot in someone strong: **an Achilles' heel**.\n- An act that releases trouble you cannot undo: **opening Pandora's box**.\n- A harmless-looking thing that hides a threat: **a Trojan horse**.\n- Success in everything: **the Midas touch**.\n- A win that costs too much: **a Pyrrhic victory**, from King Pyrrhus.\n- The small against the giant: **David and Goliath**.\n- A choice with no way back: **crossing the Rubicon**, from Julius Caesar.\n- A long, troubled journey: **an odyssey**, from Odysseus.\n- Help for a stranger: **a good Samaritan**, from the parable.\n\nA wrong allusion confuses rather than enriches: calling a costly win *the Midas touch* tells the reader the opposite of what you mean.",
-    "要自己使用典故，就要让情境与故事相配。先问问这个情境实际上讲的是什么，再想想哪个故事带有这层意思。\n\n- 艰巨的工作：**a Herculean task**，出自赫拉克勒斯的十二项苦差。\n- 强者身上的唯一弱点：**an Achilles' heel**（阿喀琉斯之踵）。\n- 放出无法挽回的麻烦的行为：**opening Pandora's box**（打开潘多拉的盒子）。\n- 外表无害、内藏威胁的东西：**a Trojan horse**（特洛伊木马）。\n- 做什么都成功：**the Midas touch**（点金术）。\n- 代价过大的胜利：**a Pyrrhic victory**，出自皮洛士国王。\n- 弱小对抗巨人：**David and Goliath**（大卫与歌利亚）。\n- 没有回头路的抉择：**crossing the Rubicon**（渡过卢比孔河），出自尤利乌斯·恺撒。\n- 漫长而艰险的旅程：**an odyssey**，出自奥德修斯。\n- 帮助陌生人：**a good Samaritan**（好撒玛利亚人），出自寓言。\n\n用错的典故只会让人困惑而不能增色：把代价惨重的胜利称作 *the Midas touch*，告诉读者的恰恰与你的本意相反。",
+    "To use an allusion yourself, match the situation to the story. Ask what the situation is really about, then recall which story carries that meaning.\n\n- A huge job: **a Herculean task**, from the twelve labors of Hercules.\n- One weak spot in someone strong: **an Achilles' heel**.\n- An act that releases trouble you cannot undo: **opening Pandora's box**.\n- A harmless-looking thing that hides a threat: **a Trojan horse**.\n- Success in everything: **the Midas touch**.\n- A win that costs too much: **a Pyrrhic victory**, from King Pyrrhus.\n- The small against the giant: **David and Goliath**.\n- A choice with no way back: **crossing the Rubicon**, from Julius Caesar.\n- A long, troubled journey: **an odyssey**, from Odysseus.\n- Help for a stranger: **a good Samaritan**, from the parable.\n\nA wrong allusion confuses rather than enriches: calling a costly win *the Midas touch* tells the reader the opposite of what you mean.\n\n> **Watch out.** Do not mix up **a Trojan horse** (a hidden danger inside an innocent exterior) with **Pandora's box** (an action that unleashes an unstoppable chain of troubles).",
+    "要自己使用典故，就要让情境与故事相配。先问问这个情境实际上讲的是什么，再想想哪个故事带有这层意思。\n\n- 艰巨的工作：**a Herculean task**，出自赫拉克勒斯的十二项苦差。\n- 强者身上的唯一弱点：**an Achilles' heel**（阿喀琉斯之踵）。\n- 放出无法挽回的麻烦的行为：**opening Pandora's box**（打开潘多拉的盒子）。\n- 外表无害、内藏威胁的东西：**a Trojan horse**（特洛伊木马）。\n- 做什么都成功：**the Midas touch**（点金术）。\n- 代价过大的胜利：**a Pyrrhic victory**，出自皮洛士国王。\n- 弱小对抗巨人：**David and Goliath**（大卫与歌利亚）。\n- 没有回头路的抉择：**crossing the Rubicon**（渡过卢比孔河），出自尤利乌斯·恺撒。\n- 漫长而艰险的旅程：**an odyssey**，出自奥德修斯。\n- 帮助陌生人：**a good Samaritan**（好撒玛利亚人），出自寓言。\n\n用错的典故只会让人困惑而不能增色：把代价惨重的胜利称作 *the Midas touch*，告诉读者的恰恰与你的本意相反。\n\n> **注意。** 不要把**特洛伊木马**（外表无害、内藏危险）和**潘多拉的盒子**（一个举动引发一连串失控的麻烦）混为一谈。",
   ),
-  labelChoice(["Which allusion fits this situation best?", "哪个典故最适合这个情境？"], allusionLines, allusionLabels),
+  labelChoice(
+    ["Which allusion fits this situation best?", "哪个典故最适合这个情境？"],
+    allusionLines,
+    allusionLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Summarize the prompt's core pattern in one phrase and match it to the original myth or event: only **${right}** carries that exact structure.`,
+      `这是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 用一句话概括题干的核心模式，再对照原典故事：只有**${entry.zh}**具备完全对应的结构。`,
+    ],
+  ),
 );
 
 // What a contradiction means.
@@ -579,15 +601,15 @@ export const contradictionStep = point(
   "the-truth-in-the-contradiction",
   t("The Truth in the Contradiction", "矛盾中的道理"),
   t(
-    "A paradox or an oxymoron is never a mistake. The writer joins ideas that clash so that the reader stops and looks for the sense that makes both true. To find it, take each half seriously and ask how it could be true **in a different way**: *The more I give away, the richer I feel* is true if *richer* means a fuller life rather than more money.\n\nTwo misreadings are common. One treats the contradiction as a plain error or as impossible, and so misses the point. The other invents a meaning unrelated to the two clashing ideas, such as reading *a loud silence* as noise from next door. The meaning must come from the clash itself.",
-    "悖论或矛盾修饰从来不是错误。作者把互相冲突的意思放在一起，让读者停下来，寻找使两者都成立的那层意思。要找到它，就认真对待每一半，并问问它怎样能**以另一种方式**成立：*The more I give away, the richer I feel* 中，如果 *richer* 指生活更充实而不是钱更多，这句话就成立了。\n\n常见的误读有两种。一种把矛盾当作单纯的错误或不可能的事，因而抓不住要点。另一种编造出与这两个冲突的意思无关的含义，比如把 *a loud silence* 理解为隔壁传来的噪音。含义必须来自冲突本身。",
+    "A paradox or an oxymoron is never a mistake. The writer joins ideas that clash so that the reader stops and looks for the sense that makes both true. To find it, take each half seriously and ask how it could be true **in a different way**: *The more I give away, the richer I feel* is true if *richer* means a fuller life rather than more money.\n\nTwo misreadings are common. One treats the contradiction as a plain error or as impossible, and so misses the point. The other invents a meaning unrelated to the two clashing ideas, such as reading *a loud silence* as noise from next door. The meaning must come from the clash itself.\n\n> **Watch out.** Test every candidate interpretation against *both* halves of the clash: if it explains away one half as a mistake or ignores the clash altogether, it misses the figure.",
+    "悖论或矛盾修饰从来不是错误。作者把互相冲突的意思放在一起，让读者停下来，寻找使两者都成立的那层意思。要找到它，就认真对待每一半，并问问它怎样能**以另一种方式**成立：*The more I give away, the richer I feel* 中，如果 *richer* 指生活更充实而不是钱更多，这句话就成立了。\n\n常见的误读有两种。一种把矛盾当作单纯的错误或不可能的事，因而抓不住要点。另一种编造出与这两个冲突的意思无关的含义，比如把 *a loud silence* 理解为隔壁传来的噪音。含义必须来自冲突本身。\n\n> **注意。** 用冲突的*两半*去检验每个选项：凡是把其中一半当成说错话、或者干脆无视这组冲突的解释，都没有读懂修辞。",
   ),
   kindedChoice(
     ["What truth does the contradiction in this sentence point to?", "这个句子中的矛盾指向什么道理？"],
     contradictionBank,
     (right) => [
-      `*${right}* Read in this way, both clashing ideas are true at once, which is the point the writer wants the reader to find.`,
-      `*${right}* 这样理解，两个冲突的意思就同时成立了，这正是作者希望读者发现的要点。`,
+      `*${right}* Read in this way, both clashing ideas are true at once, which is the point the writer wants the reader to find.\n\n**Check.** Verify that this reading keeps *both* sides of the sentence's contradiction alive—each side holds true in its own sense rather than canceling the other out.`,
+      `*${right}* 这样理解，两个冲突的意思就同时成立了，这正是作者希望读者发现的要点。\n\n**检验。** 确认这一解读让句子里矛盾的*两面*同时成立——两面各自在更深一层上为真，而不是互相推翻。`,
     ],
     [
       [

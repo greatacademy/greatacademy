@@ -10,6 +10,10 @@ const latin10 = parts({
     "Ten more Latin roots: cord, gress, plic, volv, sid, sign, dorm, jud, nunc and brev.",
     "另外十个拉丁词根：cord、gress、plic、volv、sid、sign、dorm、jud、nunc 和 brev。",
   ],
+  intro: [
+    "Once you recognize *gress* (*step*), *digress* (step aside), *transgress* (step across a line), and *regress* (step back) all unpack themselves without a dictionary. In this topic, you master ten Latin roots and combine them with prefixes to read formal prose.",
+    "只要认出 *gress*（步），*digress*（离题）、*transgress*（越界）和 *regress*（倒退）不查词典也能一眼拆开。本主题带你掌握十个拉丁词根，并结合前缀解读正式书面语词汇。",
+  ],
   after: ["latin-roots-9"],
   kind: ["Latin root", "拉丁词根"],
   list: partLines(`
@@ -26,12 +30,12 @@ const latin10 = parts({
   `),
   explanations: [
     [
-      "Ten more Latin **roots**. *Cord* means heart, *gress* step, *plic* fold, *volv* roll, *sid* sit, *sign* mark, *dorm* sleep, *jud* judge, *nunc* declare and *brev* short. A *cordial* greeting comes from the heart; a *dormant* volcano is asleep; *brevity* is shortness. Knowing the root lets you guess the meaning of a word you have never seen.",
-      "另外十个拉丁**词根**。*cord* 意为心，*gress* 步，*plic* 折叠，*volv* 滚动，*sid* 坐，*sign* 标记，*dorm* 睡，*jud* 判断，*nunc* 宣告，*brev* 短。*cordial* 的问候发自内心；*dormant* 的火山处于沉睡；*brevity* 是简短。知道词根，就能猜出没见过的词的意思。",
+      "Ten more Latin **roots**. *Cord* means heart, *gress* step, *plic* fold, *volv* roll, *sid* sit, *sign* mark, *dorm* sleep, *jud* judge, *nunc* declare and *brev* short. A *cordial* greeting comes from the heart; a *dormant* volcano is asleep; *brevity* is shortness. Knowing the root lets you guess the meaning of a word you have never seen.\n\n> **Watch out.** Do not confuse *cord* (*heart*, as in *cordial*) with English *cord* (*rope*), or *sid* (*sit*, as in *preside*) with *side*—verify the root's meaning across the whole family.",
+      "另外十个拉丁**词根**。*cord* 意为心，*gress* 步，*plic* 折叠，*volv* 滚动，*sid* 坐，*sign* 标记，*dorm* 睡，*jud* 判断，*nunc* 宣告，*brev* 短。*cordial* 的问候发自内心；*dormant* 的火山处于沉睡；*brevity* 是简短。知道词根，就能猜出没见过的词的意思。\n\n> **注意。** 不要把 *cord*（心，如 *cordial*）和英语 *cord*（绳索）混淆，也别把 *sid*（坐，如 *preside*）当成 *side*——务必用整个词族核对词根意思。",
     ],
     [
-      "Prefixes steer the root. With *cord*, *con-* (together) gives **concord** and *dis-* (apart) gives **discord**. With *gress*, *di-* (aside) gives **digress**, *trans-* (across) **transgress** and *re-* (back) **regress**. With *nunc*, *de-* (down) gives **denounce**, to speak against, and *re-* (back) gives **renounce**, to give back up. Read the prefix, then the root, and put them together.",
-      "前缀决定词根的方向。与 *cord* 搭配，*con-*（一起）构成 **concord**，*dis-*（分开）构成 **discord**。与 *gress* 搭配，*di-*（偏离）构成 **digress**，*trans-*（越过）构成 **transgress**，*re-*（向后）构成 **regress**。与 *nunc* 搭配，*de-*（向下）构成 **denounce**，谴责；*re-*（返回）构成 **renounce**，放弃。先读前缀，再读词根，然后把意思合起来。",
+      "Prefixes steer the root. With *cord*, *con-* (together) gives **concord** and *dis-* (apart) gives **discord**. With *gress*, *di-* (aside) gives **digress**, *trans-* (across) **transgress** and *re-* (back) **regress**. With *nunc*, *de-* (down) gives **denounce**, to speak against, and *re-* (back) gives **renounce**, to give back up. Read the prefix, then the root, and put them together.\n\n> **Watch out.** Notice how opposite prefixes flip the same root (*concord* vs. *discord*, *denounce* vs. *renounce*)—read the prefix first before locking in the word.",
+      "前缀决定词根的方向。与 *cord* 搭配，*con-*（一起）构成 **concord**，*dis-*（分开）构成 **discord**。与 *gress* 搭配，*di-*（偏离）构成 **digress**，*trans-*（越过）构成 **transgress**，*re-*（向后）构成 **regress**。与 *nunc* 搭配，*de-*（向下）构成 **denounce**，谴责；*re-*（返回）构成 **renounce**，放弃。先读前缀，再读词根，然后把意思合起来。\n\n> **注意。** 留意相反前缀如何反转同一个词根的方向（如 *concord* 与 *discord*、*denounce* 与 *renounce*）——锁定答案前先看清前缀。",
     ],
   ],
 });
@@ -42,6 +46,10 @@ const greek9 = parts({
   summary: [
     "Ten more Greek roots: ped, agog, tax, top, tom, zo, odont, phras, stas and orama.",
     "另外十个希腊词根：ped、agog、tax、top、tom、zo、odont、phras、stas 和 orama。",
+  ],
+  intro: [
+    "Know that *tom* means *cut*, and you suddenly see the shared thread linking *anatomy* (cutting open to study), *atom* (uncuttable), and *dichotomy* (a cut into two). In this topic, you learn ten Greek roots and unpack compound academic words.",
+    "知道 *tom* 表示“切”，你就能一眼看穿 *anatomy*（解剖）、*atom*（不可再分之原子）与 *dichotomy*（二分法）之间的血缘联系。本主题带你掌握十个希腊词根，并拆解学术复合词。",
   ],
   after: ["greek-roots-8"],
   kind: ["Greek root", "希腊词根"],
@@ -59,12 +67,12 @@ const greek9 = parts({
   `),
   explanations: [
     [
-      "Ten more Greek **roots**. *Ped* means child, *agog* lead, *tax* arrange, *top* place, *tom* cut, *zo* animal, *odont* tooth, *phras* speak, *stas* standing and *orama* view. A *pediatrician* treats children; *topography* describes a place; *zoology* studies animals; a *panorama* is a view of everything.",
-      "另外十个希腊**词根**。*ped* 意为儿童，*agog* 引导，*tax* 排列，*top* 地方，*tom* 切，*zo* 动物，*odont* 牙齿，*phras* 说，*stas* 站立，*orama* 景象。*pediatrician* 给儿童看病；*topography* 描述一个地方；*zoology* 研究动物；*panorama* 是全景。",
+      "Ten more Greek **roots**. *Ped* means child, *agog* lead, *tax* arrange, *top* place, *tom* cut, *zo* animal, *odont* tooth, *phras* speak, *stas* standing and *orama* view. A *pediatrician* treats children; *topography* describes a place; *zoology* studies animals; a *panorama* is a view of everything.\n\n> **Watch out.** Do not confuse Greek *ped* (*child*, as in *pediatrician*, *pedagogy*) with Latin *ped* (*foot*, as in *pedal*)—check the word family around it.",
+      "另外十个希腊**词根**。*ped* 意为儿童，*agog* 引导，*tax* 排列，*top* 地方，*tom* 切，*zo* 动物，*odont* 牙齿，*phras* 说，*stas* 站立，*orama* 景象。*pediatrician* 给儿童看病；*topography* 描述一个地方；*zoology* 研究动物；*panorama* 是全景。\n\n> **注意。** 不要把希腊词根 *ped*（儿童，如 *pediatrician*、*pedagogy*）和拉丁词根 *ped*（脚，如 *pedal*）搞混——务必结合同族词义判断。",
     ],
     [
-      "Greek words are often built from two roots or a prefix and a root. *Dem* (people) and *agog* give **demagogue**, a misleader of the people. *Ou* (no) and *top* give **utopia**, a place that does not exist. *Dicho* (in two) and *tom* give **dichotomy**, a cut in two. *Ortho* (straight) and *odont* give **orthodontist**, a straightener of teeth. Split the word and read each part.",
-      "希腊语词常由两个词根或一个前缀加一个词根构成。*dem*（人民）加 *agog* 构成 **demagogue**，煽动民众的人。*ou*（没有）加 *top* 构成 **utopia**，并不存在的地方。*dicho*（分成两半）加 *tom* 构成 **dichotomy**，一分为二。*ortho*（直）加 *odont* 构成 **orthodontist**，矫正牙齿的医生。把词拆开，逐个读出各部分。",
+      "Greek words are often built from two roots or a prefix and a root. *Dem* (people) and *agog* give **demagogue**, a misleader of the people. *Ou* (no) and *top* give **utopia**, a place that does not exist. *Dicho* (in two) and *tom* give **dichotomy**, a cut in two. *Ortho* (straight) and *odont* give **orthodontist**, a straightener of teeth. Split the word and read each part.\n\n> **Watch out.** Read *both* Greek roots in a compound (*homeo-* + *stas* = steady standing, *meta-* + *stas* = change of place) so you do not mix up words sharing the same ending.",
+      "希腊语词常由两个词根或一个前缀加一个词根构成。*dem*（人民）加 *agog* 构成 **demagogue**，煽动民众的人。*ou*（没有）加 *top* 构成 **utopia**，并不存在的地方。*dicho*（分成两半）加 *tom* 构成 **dichotomy**，一分为二。*ortho*（直）加 *odont* 构成 **orthodontist**，矫正牙齿的医生。把词拆开，逐个读出各部分。\n\n> **注意。** 拆解希腊复合词时要看全*两个*词根（如 *homeo-* + *stas* 为稳态，*meta-* + *stas* 为转移），以免把同词尾的词弄混。",
     ],
   ],
 });
@@ -75,6 +83,10 @@ const latin11 = parts({
   summary: [
     "Ten more Latin roots: am, ann, clin, doc, fin, flu, grav, hab, man and nav.",
     "另外十个拉丁词根：am、ann、clin、doc、fin、flu、grav、hab、man 和 nav。",
+  ],
+  intro: [
+    "Spot *flu* (*flow*) inside *fluent*, *affluent*, and *superfluous*, and all three images come alive: words flowing smoothly, wealth flowing in, and extras overflowing. In this topic, you learn ten Latin roots and trace how prefixes turn their meanings.",
+    "在 *fluent*、*affluent* 和 *superfluous* 里认出 *flu*（流），三个画面立刻跃然纸上：话语流畅、财富涌入、多余溢出。本主题带你掌握十个拉丁词根，并辨别前缀带来的词义转向。",
   ],
   after: ["latin-roots-10"],
   kind: ["Latin root", "拉丁词根"],
@@ -92,12 +104,12 @@ const latin11 = parts({
   `),
   explanations: [
     [
-      "Ten more Latin **roots**. *Am* means love, *ann* year, *clin* lean, *doc* teach, *fin* end, *flu* flow, *grav* heavy, *hab* hold, *man* hand and *nav* ship. An *amiable* person is easy to love; an *annual* event comes each year; *fluent* speech flows; a *manual* job is done by hand.",
-      "另外十个拉丁**词根**。*am* 意为爱，*ann* 年，*clin* 倾斜，*doc* 教，*fin* 结束，*flu* 流，*grav* 重，*hab* 持有，*man* 手，*nav* 船。*amiable* 的人讨人喜爱；*annual* 的活动每年一次；*fluent* 的话语流畅；*manual* 的工作用手完成。",
+      "Ten more Latin **roots**. *Am* means love, *ann* year, *clin* lean, *doc* teach, *fin* end, *flu* flow, *grav* heavy, *hab* hold, *man* hand and *nav* ship. An *amiable* person is easy to love; an *annual* event comes each year; *fluent* speech flows; a *manual* job is done by hand.\n\n> **Watch out.** Watch for vowel shifts inside the root—*ann* becomes *-enn-* in *perennial*, and *hab* becomes *-hib-* in *prohibit*, while keeping the same core meaning.",
+      "另外十个拉丁**词根**。*am* 意为爱，*ann* 年，*clin* 倾斜，*doc* 教，*fin* 结束，*flu* 流，*grav* 重，*hab* 持有，*man* 手，*nav* 船。*amiable* 的人讨人喜爱；*annual* 的活动每年一次；*fluent* 的话语流畅；*manual* 的工作用手完成。\n\n> **注意。** 留意词根里的元音微调——*ann* 在 *perennial* 里变成 *-enn-*，*hab* 在 *prohibit* 里变成 *-hib-*，但核心意思不变。",
     ],
     [
-      "A root can hide inside a longer word. *Per-* (through) and *ann* give **perennial**, lasting through the years. *Super-* (over) and *flu* give **superfluous**, overflowing what is needed. *E-* (out) and *man* give **emancipate**, to take out of someone's hand. *Circum-* (around) and *nav* give **circumnavigate**. Find the root, then let the prefix tell you which way it turns.",
-      "词根可能藏在较长的词里。*per-*（贯穿）加 *ann* 构成 **perennial**，常年的。*super-*（超过）加 *flu* 构成 **superfluous**，多余的。*e-*（出）加 *man* 构成 **emancipate**，从他人手中解放出来。*circum-*（环绕）加 *nav* 构成 **circumnavigate**，环航。先找出词根，再看前缀把意思引向哪里。",
+      "A root can hide inside a longer word. *Per-* (through) and *ann* give **perennial**, lasting through the years. *Super-* (over) and *flu* give **superfluous**, overflowing what is needed. *E-* (out) and *man* give **emancipate**, to take out of someone's hand. *Circum-* (around) and *nav* give **circumnavigate**. Find the root, then let the prefix tell you which way it turns.\n\n> **Watch out.** Do not confuse *incline* (lean toward), *decline* (lean down / refuse), and *recline* (lean back)—the prefix carries the whole difference.",
+      "词根可能藏在较长的词里。*per-*（贯穿）加 *ann* 构成 **perennial**，常年的。*super-*（超过）加 *flu* 构成 **superfluous**，多余的。*e-*（出）加 *man* 构成 **emancipate**，从他人手中解放出来。*circum-*（环绕）加 *nav* 构成 **circumnavigate**，环航。先找出词根，再看前缀把意思引向哪里。\n\n> **注意。** 分清 *incline*（倾向）、*decline*（下降/婉拒）和 *recline*（斜倚）——决定词义差别的正是前缀。",
     ],
   ],
 });
@@ -108,6 +120,10 @@ const greek10 = parts({
   summary: [
     "Ten more Greek roots: acro, cardi, cephal, cycl, derm, gastr, iso, macro, neur and pod.",
     "另外十个希腊词根：acro、cardi、cephal、cycl、derm、gastr、iso、macro、neur 和 pod。",
+  ],
+  intro: [
+    "Long scientific terms like *hypodermic* (*under + skin*) and *tachycardia* (*fast + heart*) look intimidating only until you spot the Greek roots inside them. In this topic, you master ten Greek roots widely used in medicine, biology, and geometry.",
+    "像 *hypodermic*（皮下的）和 *tachycardia*（心动过速）这样的科学长词，只要认出里面的希腊词根，立刻就不再吓人。本主题带你掌握十个在医学、生物与几何中高频出现的希腊词根。",
   ],
   after: ["greek-roots-9"],
   kind: ["Greek root", "希腊词根"],
@@ -125,12 +141,12 @@ const greek10 = parts({
   `),
   explanations: [
     [
-      "Ten more Greek **roots**. *Acro* means high, *cardi* heart, *cephal* head, *cycl* circle, *derm* skin, *gastr* stomach, *iso* equal, *macro* large, *neur* nerve and *pod* foot. A *cardiologist* treats the heart; a *dermatologist* the skin; a *tripod* stands on three feet.",
-      "另外十个希腊**词根**。*acro* 意为高，*cardi* 心脏，*cephal* 头，*cycl* 圆，*derm* 皮肤，*gastr* 胃，*iso* 相等，*macro* 大，*neur* 神经，*pod* 足。*cardiologist* 治心脏；*dermatologist* 治皮肤；*tripod* 用三只脚站立。",
+      "Ten more Greek **roots**. *Acro* means high, *cardi* heart, *cephal* head, *cycl* circle, *derm* skin, *gastr* stomach, *iso* equal, *macro* large, *neur* nerve and *pod* foot. A *cardiologist* treats the heart; a *dermatologist* the skin; a *tripod* stands on three feet.\n\n> **Watch out.** Keep *acro* (*high*, as in *acrophobia*) separate from *aero* (*air*), and *macro* (*large*) separate from *micro* (*small*).",
+      "另外十个希腊**词根**。*acro* 意为高，*cardi* 心脏，*cephal* 头，*cycl* 圆，*derm* 皮肤，*gastr* 胃，*iso* 相等，*macro* 大，*neur* 神经，*pod* 足。*cardiologist* 治心脏；*dermatologist* 治皮肤；*tripod* 用三只脚站立。\n\n> **注意。** 分清 *acro*（高，如 *acrophobia*）与 *aero*（空气），以及 *macro*（大）与 *micro*（小）。",
     ],
     [
-      "Medical words are built like chains. *Epi-* (upon) and *derm* give **epidermis**, the skin on top. *Hypo-* (under) and *derm* give **hypodermic**, under the skin. *-itis* (swelling) joins a root for a part of the body: **gastritis**, **encephalitis**. *-algia* (pain) gives **neuralgia**, nerve pain. Read each link in turn.",
-      "医学词汇像链条一样构成。*epi-*（在上）加 *derm* 构成 **epidermis**，表皮。*hypo-*（在下）加 *derm* 构成 **hypodermic**，皮下的。*-itis*（炎症）接在表示身体部位的词根后：**gastritis**、**encephalitis**。*-algia*（疼痛）构成 **neuralgia**，神经痛。逐个读出每一环。",
+      "Medical words are built like chains. *Epi-* (upon) and *derm* give **epidermis**, the skin on top. *Hypo-* (under) and *derm* give **hypodermic**, under the skin. *-itis* (swelling) joins a root for a part of the body: **gastritis**, **encephalitis**. *-algia* (pain) gives **neuralgia**, nerve pain. Read each link in turn.\n\n> **Watch out.** Check the suffix as well as the body-part root—*-ologist* names the doctor, *-itis* names inflammation, and *-algia* names pain.",
+      "医学词汇像链条一样构成。*epi-*（在上）加 *derm* 构成 **epidermis**，表皮。*hypo-*（在下）加 *derm* 构成 **hypodermic**，皮下的。*-itis*（炎症）接在表示身体部位的词根后：**gastritis**、**encephalitis**。*-algia*（疼痛）构成 **neuralgia**，神经痛。逐个读出每一环。\n\n> **注意。** 除了身体部位词根，还要看后缀——*-ologist* 指专科医生，*-itis* 指炎症，*-algia* 指疼痛。",
     ],
   ],
 });
@@ -141,6 +157,10 @@ const latin12 = parts({
   summary: [
     "Ten more Latin roots: mar, matr, med, migr, noc, patr, plen, pon, punct and rect.",
     "另外十个拉丁词根：mar、matr、med、migr、noc、patr、plen、pon、punct 和 rect。",
+  ],
+  intro: [
+    "Pair *e-* (*out*) with *migr* (*move*) and you get *emigrant* (one who leaves); swap in *im-* (*in*) and you get *immigrant* (one who arrives). In this topic, you learn ten Latin roots and see how paired roots and prefixes build precise vocabulary.",
+    "把 *e-*（出）和 *migr*（迁移）拼在一起就是 *emigrant*（移出者），换成 *im-*（入）就成了 *immigrant*（移入者）。本主题带你掌握十个拉丁词根，看清成对词根与前缀如何构建精准词汇。",
   ],
   after: ["latin-roots-11"],
   kind: ["Latin root", "拉丁词根"],
@@ -158,12 +178,12 @@ const latin12 = parts({
   `),
   explanations: [
     [
-      "Ten more Latin **roots**. *Mar* means sea, *matr* mother, *med* middle, *migr* move, *noc* harm, *patr* father, *plen* full, *pon* put, *punct* point and *rect* straight. *Maritime* law is the law of the sea; a *paternal* uncle is a father's brother; *innocuous* words do no harm; to *rectify* is to put right.",
-      "另外十个拉丁**词根**。*mar* 意为海，*matr* 母亲，*med* 中间，*migr* 迁移，*noc* 伤害，*patr* 父亲，*plen* 满，*pon* 放置，*punct* 点，*rect* 直。*maritime* 法是海洋法；*paternal* 的叔伯是父亲的兄弟；*innocuous* 的话没有害处；*rectify* 是纠正。",
+      "Ten more Latin **roots**. *Mar* means sea, *matr* mother, *med* middle, *migr* move, *noc* harm, *patr* father, *plen* full, *pon* put, *punct* point and *rect* straight. *Maritime* law is the law of the sea; a *paternal* uncle is a father's brother; *innocuous* words do no harm; to *rectify* is to put right.\n\n> **Watch out.** Notice that *noc* (*harm*) also appears as *nox-* in *noxious*—both carry the core idea of harm, while *in-* flips it to *harmless* (*innocuous*, *innocent*).",
+      "另外十个拉丁**词根**。*mar* 意为海，*matr* 母亲，*med* 中间，*migr* 迁移，*noc* 伤害，*patr* 父亲，*plen* 满，*pon* 放置，*punct* 点，*rect* 直。*maritime* 法是海洋法；*paternal* 的叔伯是父亲的兄弟；*innocuous* 的话没有害处；*rectify* 是纠正。\n\n> **注意。** 留意 *noc*（伤害）在 *noxious* 里拼作 *nox-*——核心都是“伤害”，加上 *in-* 后才翻转为“无害”（*innocuous*、*innocent*）。",
     ],
     [
-      "Pairs of roots make pairs of words. *Matr* and *patr* give **maternal** and **paternal**, **matriarch** and **patriarch**. With *migr*, *e-* (out) gives **emigrant**, one who leaves, and *im-* (in) gives **immigrant**, one who arrives. With *noc*, *in-* (not) gives **innocuous** and **innocent**, doing no harm. Learn the pair together.",
-      "成对的词根构成成对的词。*matr* 和 *patr* 构成 **maternal** 和 **paternal**、**matriarch** 和 **patriarch**。与 *migr* 搭配，*e-*（出）构成 **emigrant**，移出者；*im-*（入）构成 **immigrant**，移入者。与 *noc* 搭配，*in-*（不）构成 **innocuous** 和 **innocent**，无害的。成对地学。",
+      "Pairs of roots make pairs of words. *Matr* and *patr* give **maternal** and **paternal**, **matriarch** and **patriarch**. With *migr*, *e-* (out) gives **emigrant**, one who leaves, and *im-* (in) gives **immigrant**, one who arrives. With *noc*, *in-* (not) gives **innocuous** and **innocent**, doing no harm. Learn the pair together.\n\n> **Watch out.** Check the single-letter contrast in paired words (*matr-* vs. *patr-*, *e-* vs. *im-*, *noxious* vs. *innocuous*) before selecting your answer.",
+      "成对的词根构成成对的词。*matr* 和 *patr* 构成 **maternal** 和 **paternal**、**matriarch** 和 **patriarch**。与 *migr* 搭配，*e-*（出）构成 **emigrant**，移出者；*im-*（入）构成 **immigrant**，移入者。与 *noc* 搭配，*in-*（不）构成 **innocuous** 和 **innocent**，无害的。成对地学。\n\n> **注意。** 作答前盯紧成对词里的关键差异（*matr-* 对 *patr-*、*e-* 对 *im-*、*noxious* 对 *innocuous*）。",
     ],
   ],
 });
@@ -174,6 +194,10 @@ const greek11 = parts({
   summary: [
     "Ten more Greek roots: gon, hier, mis, opt, oste, psych, soma, techn, tox and typ.",
     "另外十个希腊词根：gon、hier、mis、opt、oste、psych、soma、techn、tox 和 typ。",
+  ],
+  intro: [
+    "When *psych* (*mind*) meets *soma* (*body*), you get *psychosomatic*—an illness of the mind felt in the body. In this topic, you learn ten Greek roots across science, medicine, and criticism, and split two-root compounds cleanly.",
+    "当 *psych*（心灵）遇上 *soma*（身体），就构成了 *psychosomatic*（身心相关的）。本主题带你掌握十个贯穿科学、医学与批评领域的希腊词根，并熟练拆解双词根复合词。",
   ],
   after: ["greek-roots-10"],
   kind: ["Greek root", "希腊词根"],
@@ -191,12 +215,12 @@ const greek11 = parts({
   `),
   explanations: [
     [
-      "Ten more Greek **roots**. *Gon* means angle, *hier* sacred, *mis* hate, *opt* eye, *oste* bone, *psych* mind, *soma* body, *techn* skill, *tox* poison and *typ* model. A *hexagon* has six angles; a *misanthrope* hates people; *toxic* waste is poisonous; a *prototype* is the first model.",
-      "另外十个希腊**词根**。*gon* 意为角，*hier* 神圣，*mis* 憎恨，*opt* 眼，*oste* 骨，*psych* 心灵，*soma* 身体，*techn* 技艺，*tox* 毒，*typ* 模型。*hexagon* 有六个角；*misanthrope* 憎恨人类；*toxic* 的废物有毒；*prototype* 是最初的模型。",
+      "Ten more Greek **roots**. *Gon* means angle, *hier* sacred, *mis* hate, *opt* eye, *oste* bone, *psych* mind, *soma* body, *techn* skill, *tox* poison and *typ* model. A *hexagon* has six angles; a *misanthrope* hates people; *toxic* waste is poisonous; a *prototype* is the first model.\n\n> **Watch out.** Do not confuse Greek *mis-* (*hate*, as in *misanthrope*, *misogyny*) with the English prefix *mis-* (*wrongly*, as in *misspell*)—check whether the word means *hatred of something*.",
+      "另外十个希腊**词根**。*gon* 意为角，*hier* 神圣，*mis* 憎恨，*opt* 眼，*oste* 骨，*psych* 心灵，*soma* 身体，*techn* 技艺，*tox* 毒，*typ* 模型。*hexagon* 有六个角；*misanthrope* 憎恨人类；*toxic* 的废物有毒；*prototype* 是最初的模型。\n\n> **注意。** 不要把希腊词根 *mis-*（憎恨，如 *misanthrope*、*misogyny*）和英语前缀 *mis-*（错误地，如 *misspell*）混为一谈——看整个词是否表达“憎恨某物”。",
     ],
     [
-      "Two Greek roots often join in one word. *Psych* and *soma* give **psychosomatic**, from mind to body. *Mis* and *anthrop* (human) give **misanthrope**. *Arch* (first) and *typ* give **archetype**, the first model; *stereo* (solid, fixed) and *typ* give **stereotype**. Split the word where the roots meet.",
-      "两个希腊词根常常合成一个词。*psych* 加 *soma* 构成 **psychosomatic**，由心及身的。*mis* 加 *anthrop*（人）构成 **misanthrope**。*arch*（最初）加 *typ* 构成 **archetype**，原型；*stereo*（固定）加 *typ* 构成 **stereotype**，刻板印象。在词根相接处把词拆开。",
+      "Two Greek roots often join in one word. *Psych* and *soma* give **psychosomatic**, from mind to body. *Mis* and *anthrop* (human) give **misanthrope**. *Arch* (first) and *typ* give **archetype**, the first model; *stereo* (solid, fixed) and *typ* give **stereotype**. Split the word where the roots meet.\n\n> **Watch out.** Compare *archetype* (original literary/ideal model), *prototype* (first working model of a machine), and *stereotype* (fixed cliché)—the prefix before *-type* tells them apart.",
+      "两个希腊词根常常合成一个词。*psych* 加 *soma* 构成 **psychosomatic**，由心及身的。*mis* 加 *anthrop*（人）构成 **misanthrope**。*arch*（最初）加 *typ* 构成 **archetype**，原型；*stereo*（固定）加 *typ* 构成 **stereotype**，刻板印象。在词根相接处把词拆开。\n\n> **注意。** 区分 *archetype*（原型）、*prototype*（试制样机）与 *stereotype*（刻板印象）——看清 *-type* 前面的前缀就能一眼分辨。",
     ],
   ],
 });
@@ -207,6 +231,10 @@ const latin13 = parts({
   summary: [
     "Ten more Latin roots: sci, sol, son, spir, string, sumpt, tact, ten, turb and urb.",
     "另外十个拉丁词根：sci、sol、son、spir、string、sumpt、tact、ten、turb 和 urb。",
+  ],
+  intro: [
+    "From *sci* (*know*) come *omniscient* (all-knowing), *prescient* (knowing beforehand), and *conscience* (knowing right from wrong within oneself). In this final set of Latin roots, you master ten high-frequency roots and follow their leap from physical to figurative meaning.",
+    "由 *sci*（知道）衍生出 *omniscient*（全知的）、*prescient*（有先见之明的）和 *conscience*（良知）。在最后这组拉丁词根中，你掌握十个高频词根，并体会它们从具象到比喻义的延伸。",
   ],
   after: ["latin-roots-12"],
   kind: ["Latin root", "拉丁词根"],
@@ -224,12 +252,12 @@ const latin13 = parts({
   `),
   explanations: [
     [
-      "Ten more Latin **roots**. *Sci* means know, *sol* alone, *son* sound, *spir* breathe, *string* bind, *sumpt* take, *tact* touch, *ten* hold, *turb* disturb and *urb* city. An *omniscient* narrator knows everything; *solitude* is being alone; a *tenacious* dog holds on; *urban* life is city life.",
-      "另外十个拉丁**词根**。*sci* 意为知道，*sol* 单独，*son* 声音，*spir* 呼吸，*string* 捆紧，*sumpt* 拿，*tact* 触摸，*ten* 持有，*turb* 搅动，*urb* 城市。*omniscient* 的叙述者无所不知；*solitude* 是独处；*tenacious* 的狗紧咬不放；*urban* 生活是城市生活。",
+      "Ten more Latin **roots**. *Sci* means know, *sol* alone, *son* sound, *spir* breathe, *string* bind, *sumpt* take, *tact* touch, *ten* hold, *turb* disturb and *urb* city. An *omniscient* narrator knows everything; *solitude* is being alone; a *tenacious* dog holds on; *urban* life is city life.\n\n> **Watch out.** Do not confuse *sol* (*alone*, as in *solitude*) with *sol* (*sun*, as in *solar*), or *string* (*bind tight*, as in *stringent*) with *string* (*thread*)—check the word family.",
+      "另外十个拉丁**词根**。*sci* 意为知道，*sol* 单独，*son* 声音，*spir* 呼吸，*string* 捆紧，*sumpt* 拿，*tact* 触摸，*ten* 持有，*turb* 搅动，*urb* 城市。*omniscient* 的叙述者无所不知；*solitude* 是独处；*tenacious* 的狗紧咬不放；*urban* 生活是城市生活。\n\n> **注意。** 不要把 *sol*（单独，如 *solitude*）与 *sol*（太阳，如 *solar*）混淆，也别把 *string*（捆紧，如 *stringent*）当成绳子——务必结合词族核对。",
     ],
     [
-      "The same root can take on a figurative sense. *Spir*, to breathe, gives **inspire**, to breathe ideas in, and **expire**, to breathe one's last, and so to end. *Urb*, city, gives **urbane**, with the polish of city manners. *Tact*, touch, gives **intact**, untouched. Start from the physical meaning, then follow it to the figure.",
-      "同一个词根可以带上比喻义。*spir*（呼吸）构成 **inspire**，把想法“吸入”，以及 **expire**，呼出最后一口气，进而表示结束。*urb*（城市）构成 **urbane**，带有城市礼仪的文雅。*tact*（触摸）构成 **intact**，未被触碰的。从具体意义出发，再引申到比喻义。",
+      "The same root can take on a figurative sense. *Spir*, to breathe, gives **inspire**, to breathe ideas in, and **expire**, to breathe one's last, and so to end. *Urb*, city, gives **urbane**, with the polish of city manners. *Tact*, touch, gives **intact**, untouched. Start from the physical meaning, then follow it to the figure.\n\n> **Watch out.** Notice the subtle suffix difference between *urban* (relating to a city) and *urbane* (polished and refined in manner), and between *assumption* (an unproven premise) and *presumptuous* (overstepping bounds).",
+      "同一个词根可以带上比喻义。*spir*（呼吸）构成 **inspire**，把想法“吸入”，以及 **expire**，呼出最后一口气，进而表示结束。*urb*（城市）构成 **urbane**，带有城市礼仪的文雅。*tact*（触摸）构成 **intact**，未被触碰的。从具体意义出发，再引申到比喻义。\n\n> **注意。** 留意近形词的细微差别：*urban*（城市的）与 *urbane*（举止文雅的），以及 *assumption*（假设）与 *presumptuous*（冒昧僭越的）。",
     ],
   ],
 });

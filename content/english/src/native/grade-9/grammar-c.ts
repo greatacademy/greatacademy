@@ -153,18 +153,25 @@ const modalPerfects = topic("grammar", {
     "*Should have*, *could have*, *must have* and *might have*: never *should of*, never *would have* in the *if* clause of the past, and what each says about the past.",
     "*should have*、*could have*、*must have* 和 *might have*：绝不写成 *should of*，过去的 *if* 从句中不用 *would have*，以及它们各自对过去表达了什么。",
   ],
+  intro: [
+    "In conversation, *could've* blurs into *could of*, and *If I would have known* slips out unchallenged—yet in formal writing both marks look careless. Mastering **modal perfects** keeps the spelling, past *if*-clauses, and degree of certainty exact.",
+    "在口语里，*could've* 常被听成 *could of*，*If I would have known* 也常常脱口而出——但在正式写作中两者都是明显错误。掌握**情态动词完成式**，才能让拼写、过去条件从句和推测语气都准确无误。",
+  ],
   after: ["conditional-sentences"],
   points: [
     choose(
       "have-not-of",
       ["Have, Not Of", "是 have，不是 of"],
       [
-        "In speech, *should have* sounds like *should've*, which some writers mishear as *should of*. The form is always a modal, then **have**, then a past participle: *should have called*, *could have won*, *must have left*. *Of* is a preposition and cannot follow a modal, and *had* cannot either.",
-        "在口语中，*should have* 听起来像 *should've*，有些人误听成 *should of*。正确的形式总是情态动词加 **have** 再加过去分词：*should have called*、*could have won*、*must have left*。*of* 是介词，不能跟在情态动词后面，*had* 也不能。",
+        "In speech, *should have* sounds like *should've*, which some writers mishear as *should of*. The form is always a modal, then **have**, then a past participle: *should have called*, *could have won*, *must have left*. *Of* is a preposition and cannot follow a modal, and *had* cannot either.\n\n> **Watch out.** Never trust your ear on *'ve*—expand the contraction in your head to **have** (*should have*, *must have*, *would have*), never *of* or *had*.",
+        "在口语中，*should have* 听起来像 *should've*，有些人误听成 *should of*。正确的形式总是情态动词加 **have** 再加过去分词：*should have called*、*could have won*、*must have left*。*of* 是介词，不能跟在情态动词后面，*had* 也不能。\n\n> **注意。** 别光凭口语读音拼写 *'ve*——在心里把它还原成完整的 **have**（*should have*、*must have*、*would have*），绝不能写成 *of* 或 *had*。",
       ],
       ["Which words complete the sentence?", "哪组词能补全句子？"],
       ofLines,
-      (right) => [`*${right}*: a modal, then *have*, then the past participle.`, `*${right}*：情态动词，加 *have*，再加过去分词。`],
+      (right) => [
+        `*${right}*: a modal, then *have*, then the past participle.\n\n**Check.** Verify the three-word slot pattern: **modal + have + past participle**—*of* is a preposition and *had* cannot follow a modal.`,
+        `*${right}*：情态动词，加 *have*，再加过去分词。\n\n**检验。** 核对三词结构：**情态动词 + have + 过去分词**——*of* 是介词，*had* 也不能跟在情态动词后面。`,
+      ],
       [
         [
           "*{wrong}* writes down how *have* sounds in speech; *of* cannot follow a modal.",
@@ -177,14 +184,14 @@ const modalPerfects = topic("grammar", {
       "the-past-if-clause",
       ["The Past If Clause", "过去的 if 从句"],
       [
-        "A conditional about the past puts the **past perfect** in the *if* clause and *would have*, *could have* or *might have* in the result: *If I **had known** about the storm, I would have stayed home*. *Would have* belongs in the result only; *If I would have known* is a common error in formal writing.",
-        "关于过去的条件句在 *if* 从句中用**过去完成时**，在结果从句中用 *would have*、*could have* 或 *might have*：*If I **had known** about the storm, I would have stayed home*。*would have* 只属于结果从句；*If I would have known* 是正式写作中的常见错误。",
+        "A conditional about the past puts the **past perfect** in the *if* clause and *would have*, *could have* or *might have* in the result: *If I **had known** about the storm, I would have stayed home*. *Would have* belongs in the result only; *If I would have known* is a common error in formal writing.\n\n> **Watch out.** Keep *would have* strictly in the result clause—if the blank sits right inside the *if* clause of a past unreal conditional, use **had + past participle**.",
+        "关于过去的条件句在 *if* 从句中用**过去完成时**，在结果从句中用 *would have*、*could have* 或 *might have*：*If I **had known** about the storm, I would have stayed home*。*would have* 只属于结果从句；*If I would have known* 是正式写作中的常见错误。\n\n> **注意。** *would have* 只能留在结果从句里——只要空格位于过去虚拟条件句的 *if* 从句中，就用 **had + 过去分词**。",
       ],
       ["Which form completes the *if* clause?", "哪个形式能补全 *if* 从句？"],
       pastIfLines,
       (right, shown) => [
-        `"${shown.replace("___", right)}": the *if* clause of the past takes the past perfect.`,
-        `“${shown.replace("___", right)}”：过去的 *if* 从句用过去完成时。`,
+        `"${shown.replace("___", right)}": the *if* clause of the past takes the past perfect.\n\n**Check.** Look at the result clause (*would/could/might have ...*): it describes an unreal past result, which pairs with **had + past participle** (**${right}**) inside the *if* clause.`,
+        `“${shown.replace("___", right)}”：过去的 *if* 从句用过去完成时。\n\n**检验。** 看后面的结果分句（*would/could/might have ...*）：它表示与过去事实相反的结果，因此 *if* 从句必须用过去完成时（**${right}**）。`,
       ],
       [
         ["*{wrong}* belongs in the result clause, not in the *if* clause.", "*{wrong}* 属于结果从句，不属于 *if* 从句。"],
@@ -195,12 +202,15 @@ const modalPerfects = topic("grammar", {
       "what-the-modal-perfect-says",
       ["What the Modal Perfect Says", "情态动词完成式表达了什么"],
       [
-        "Each modal perfect judges the past differently. *Must have* means the writer is almost **certain** it happened. *Might have*, *may have* and *could have* mean it is **possible**. *Should have* and *ought to have* mean it was the right or expected thing but **did not happen**. *Can't have* and *couldn't have* mean it is **impossible**.",
-        "每个情态动词完成式对过去的判断都不同。*must have* 表示作者几乎**肯定**它发生过。*might have*、*may have* 和 *could have* 表示它**可能**发生过。*should have* 和 *ought to have* 表示那本是正确或应该做的事，但**没有发生**。*can't have* 和 *couldn't have* 表示它**不可能**发生过。",
+        "Each modal perfect judges the past differently. *Must have* means the writer is almost **certain** it happened. *Might have*, *may have* and *could have* mean it is **possible**. *Should have* and *ought to have* mean it was the right or expected thing but **did not happen**. *Can't have* and *couldn't have* mean it is **impossible**.\n\n> **Watch out.** Do not confuse *could have* (positive: *possible*) with *couldn't have* (negative: *impossible*), or *must have* (strong certainty) with *should have* (unfulfilled duty or regret).",
+        "每个情态动词完成式对过去的判断都不同。*must have* 表示作者几乎**肯定**它发生过。*might have*、*may have* 和 *could have* 表示它**可能**发生过。*should have* 和 *ought to have* 表示那本是正确或应该做的事，但**没有发生**。*can't have* 和 *couldn't have* 表示它**不可能**发生过。\n\n> **注意。** 不要混淆 *could have*（肯定：可能发生）与 *couldn't have*（否定：不可能发生），也别把 *must have*（高度肯定）和 *should have*（本该做却没做）弄混。",
       ],
       ["What does the second sentence say about the past?", "第二句对过去表达了什么？"],
       senseLines,
-      (right) => [`The modal perfect here says: ${right}`, `这里的情态动词完成式表达的是：${right}`],
+      (right) => [
+        `The modal perfect here says: ${right}\n\n**Check.** Identify the modal verb before *have* (*must* = almost certain, *might/may/could* = possible, *should/ought to* = right/expected but undone, *can't/couldn't* = impossible): it matches this exact judgment.`,
+        `这里的情态动词完成式表达的是：${right}\n\n**检验。** 定位 *have* 前面的情态动词（*must* = 几乎肯定，*might/may/could* = 可能，*should/ought to* = 本该如此却未发生，*can't/couldn't* = 不可能），它与该判断完全一致。`,
+      ],
       [
         ["That is what a different modal perfect would say.", "那是另一个情态动词完成式表达的意思。"],
         ["That is what yet another modal perfect would say.", "那是又一个情态动词完成式表达的意思。"],
@@ -478,43 +488,47 @@ const plagiarism = topic("writing", {
     "Using a source honestly: copied words in quotation marks, a paraphrase in your own words and structure, a citation for each idea that came from someone else, and none for common knowledge.",
     "诚实地使用资料：抄录的词句要加引号，转述要用自己的词语和句式，来自他人的每个观点都要注明出处，常识则不需要。",
   ],
+  intro: [
+    "Swapping *big* for *large* in someone else's sentence and tacking on a citation at the end is still **patchwriting**, not honest paraphrasing. Knowing when to quote, how to rebuild an idea in your own structure, and what requires a citation keeps your research completely honest.",
+    "照搬别人的句子结构、只把几个词换成同义词，就算末尾附了出处依然属于**拼凑改写**，而不是合理转述。分清何时引用、如何用自己的句式重述观点、以及哪些事实需要注明出处，才能做到诚实治学。",
+  ],
   after: ["paraphrasing-a-source"],
   points: [
     label(
       "fair-use-or-plagiarism",
       ["Fair Use or Plagiarism", "合理使用还是抄袭"],
       [
-        "Copying a source's words without **quotation marks** is plagiarism, even with a citation. So is **patchwriting**: keeping the source's sentence and swapping a few words for synonyms. A **fair paraphrase** restates the idea in your own words and your own structure, and cites the author. A **fair quotation** puts the author's exact words in quotation marks, and cites them too.",
-        "照抄资料的原话而不加**引号**是抄袭，即使注明了出处也一样。**拼凑改写**也是抄袭：保留原句结构，只把几个词换成同义词。**合理转述**用你自己的词语和句式重述观点，并注明作者。**合理引用**把作者的原话放在引号里，同样要注明出处。",
+        "Copying a source's words without **quotation marks** is plagiarism, even with a citation. So is **patchwriting**: keeping the source's sentence and swapping a few words for synonyms. A **fair paraphrase** restates the idea in your own words and your own structure, and cites the author. A **fair quotation** puts the author's exact words in quotation marks, and cites them too.\n\n> **Watch out.** Adding `(Author)` at the end never excuses missing quotation marks or patchwriting—if the exact wording or sentence skeleton still belongs to the source, it is plagiarism.",
+        "照抄资料的原话而不加**引号**是抄袭，即使注明了出处也一样。**拼凑改写**也是抄袭：保留原句结构，只把几个词换成同义词。**合理转述**用你自己的词语和句式重述观点，并注明作者。**合理引用**把作者的原话放在引号里，同样要注明出处。\n\n> **注意。** 在句末加上 `(作者)` 并不能抵消漏加引号或拼凑改写——只要原话或原句骨架仍照搬原文，就构成抄袭。",
       ],
       ["How does the student use the source?", "这个学生是如何使用资料的？"],
       useLabels,
       {
         "copied without quotation marks": L(
           "照抄而未加引号",
-          "The student's sentence is the source's sentence word for word, with no quotation marks.",
-          "学生的句子与原句一字不差，而且没有加引号。",
+          "The student's sentence is the source's sentence word for word, with no quotation marks.\n\n**Check.** Compare the student's text word by word against the Source: the wording is identical and lacks quotation marks, so even a citation cannot save it.",
+          "学生的句子与原句一字不差，而且没有加引号。\n\n**检验。** 把学生句与原文逐词比对：用词完全照搬却未加引号，哪怕附了出处也是照抄。",
           "The student did not copy the source word for word without quotation marks.",
           "这个学生并没有一字不差地照抄而不加引号。",
         ),
         patchwriting: L(
           "拼凑改写",
-          "The student kept the source's sentence and only swapped some words for synonyms.",
-          "学生保留了原句的结构，只把一些词换成了同义词。",
+          "The student kept the source's sentence and only swapped some words for synonyms.\n\n**Check.** Line up the clauses of the student's sentence under the Source: the clause order and skeleton stay the same, with only isolated synonyms swapped in.",
+          "学生保留了原句的结构，只把一些词换成了同义词。\n\n**检验。** 把学生句和原文逐分句对齐：句式骨架原封不动，只是零星换了几个近义词。",
           "The student did not just swap words in the source's sentence.",
           "这个学生并不只是替换了原句中的词。",
         ),
         "fair paraphrase": L(
           "合理转述",
-          "The student restated the idea in new words and a new structure, and cited the author.",
-          "学生用新的词语和句式重述了观点，并注明了作者。",
+          "The student restated the idea in new words and a new structure, and cited the author.\n\n**Check.** Compare both vocabulary *and* sentence structure against the Source: both are freshly built, the core idea stays accurate, and the author is credited.",
+          "学生用新的词语和句式重述了观点，并注明了作者。\n\n**检验。** 同时对照用词和句式：两者都重新组织过，原意准确，且注明了作者。",
           "The student did not restate the idea in their own words and structure.",
           "这个学生没有用自己的词语和句式重述观点。",
         ),
         "fair quotation": L(
           "合理引用",
-          "The author's exact words are in quotation marks, and the author is named.",
-          "作者的原话放在了引号里，并点明了作者。",
+          "The author's exact words are in quotation marks, and the author is named.\n\n**Check.** Look for the quotation marks around the borrowed phrase and the author's name in the sentence: both exact wording and credit are properly marked.",
+          "作者的原话放在了引号里，并点明了作者。\n\n**检验。** 检查借用的原话是否放在引号里，且句中注明了作者：原词和出处都标得清清楚楚。",
           "The student did not put the author's exact words in quotation marks.",
           "这个学生没有把作者的原话放在引号里。",
         ),
@@ -524,14 +538,14 @@ const plagiarism = topic("writing", {
       "the-fair-paraphrase",
       ["The Fair Paraphrase", "合理的转述"],
       [
-        "To paraphrase fairly, read the source, look away, and write the idea as you would explain it to a friend; then check that no phrase of the source survives without quotation marks, and cite the author. A version that follows the source word by word, even with synonyms, is not your own.",
-        "要合理地转述，先读原文，然后移开视线，像给朋友解释那样写下这个观点；再检查有没有原文的短语未加引号就留了下来，并注明作者。逐字跟随原文的版本，即使换了同义词，也不是你自己的。",
+        "To paraphrase fairly, read the source, look away, and write the idea as you would explain it to a friend; then check that no phrase of the source survives without quotation marks, and cite the author. A version that follows the source word by word, even with synonyms, is not your own.\n\n> **Watch out.** Do not let a handful of synonym swaps (*kids* for *children*, *alter* for *change*) fool you—overlay the candidate sentence on the original; if the clause order matches step for step, it is patchwriting.",
+        "要合理地转述，先读原文，然后移开视线，像给朋友解释那样写下这个观点；再检查有没有原文的短语未加引号就留了下来，并注明作者。逐字跟随原文的版本，即使换了同义词，也不是你自己的。\n\n> **注意。** 别被换几个同义词（如把 *children* 换成 *kids*）蒙蔽——把选项叠在原句上对照，只要分句顺序一步步照搬，就是拼凑改写。",
       ],
       ["Which is a fair paraphrase of the source?", "哪个是对这段资料的合理转述？"],
       fairLines,
       (right) => [
-        `"${right}" restates the idea in new words and a new structure, and names the author.`,
-        `“${right}”用新的词语和句式重述了观点，并点明了作者。`,
+        `"${right}" restates the idea in new words and a new structure, and names the author.\n\n**Check.** Compare the sentence skeleton against the Source: it reorganizes the clauses in fresh words while preserving the meaning and crediting the author.`,
+        `“${right}”用新的词语和句式重述了观点，并点明了作者。\n\n**检验。** 把句式骨架与原文对照：分句和措辞都已重新组织，意思准确无误，并且注明了作者。`,
       ],
       [
         ['"{wrong}" copies the source word for word without quotation marks.', "“{wrong}”一字不差地照抄了原文，而且没有加引号。"],
@@ -542,23 +556,23 @@ const plagiarism = topic("writing", {
       "what-needs-a-citation",
       ["What Needs a Citation", "什么需要注明出处"],
       [
-        "**Common knowledge**, facts that most readers know or can find in any reference book, needs no citation: *Water freezes at zero degrees Celsius*. A statistic, a finding, an estimate or someone's opinion came from **one source**, so it **needs a citation**: *A 2019 survey found that 62 percent of teenagers sleep less than eight hours*. When in doubt, cite.",
-        "**常识**，即大多数读者都知道或在任何参考书中都能查到的事实，不需要注明出处：*Water freezes at zero degrees Celsius*。统计数字、研究发现、估计或某人的观点来自**某个特定来源**，所以**需要注明出处**：*A 2019 survey found that 62 percent of teenagers sleep less than eight hours*。拿不准的时候，就注明出处。",
+        "**Common knowledge**, facts that most readers know or can find in any reference book, needs no citation: *Water freezes at zero degrees Celsius*. A statistic, a finding, an estimate or someone's opinion came from **one source**, so it **needs a citation**: *A 2019 survey found that 62 percent of teenagers sleep less than eight hours*. When in doubt, cite.\n\n> **Watch out.** Any specific number from a survey, study, poll, or measurement—and any individual scholar's argument or estimate—is *never* common knowledge and must always be cited.",
+        "**常识**，即大多数读者都知道或在任何参考书中都能查到的事实，不需要注明出处：*Water freezes at zero degrees Celsius*。统计数字、研究发现、估计或某人的观点来自**某个特定来源**，所以**需要注明出处**：*A 2019 survey found that 62 percent of teenagers sleep less than eight hours*。拿不准的时候，就注明出处。\n\n> **注意。** 任何来自调查、研究、民调或测量的具体数字，以及某位学者个人的论断或估算，都*绝不是*常识，必须注明出处。",
       ],
       ["Does this sentence need a citation?", "这个句子需要注明出处吗？"],
       citeLabels,
       {
         "common knowledge": L(
           "常识",
-          "Most readers know this, and any reference book states it.",
-          "大多数读者都知道这一点，任何参考书都有记载。",
+          "Most readers know this, and any reference book states it.\n\n**Check.** Ask whether you would need a specific study or author to verify this fact: no—it is basic, widely established reference knowledge.",
+          "大多数读者都知道这一点，任何参考书都有记载。\n\n**检验。** 问问自己核实这条事实需不需要找某项特定研究或作者：不需要，它是人尽皆知的基础常识。",
           "This is a finding, a number or an opinion from one source.",
           "这是来自某个特定来源的发现、数字或观点。",
         ),
         "needs a citation": L(
           "需要注明出处",
-          "This is a finding, a number or an opinion that came from one source.",
-          "这是来自某个特定来源的发现、数字或观点。",
+          "This is a finding, a number or an opinion that came from one source.\n\n**Check.** Spot the source-specific cue (a survey, study, estimate, measurement, or individual claim): because a reader could ask *'Says who?'*, it requires a citation.",
+          "这是来自某个特定来源的发现、数字或观点。\n\n**检验。** 认出特定来源的标志（调查、研究、估算、测量或个人论断）：读者完全可以追问“这是谁说的？”，因此必须注明出处。",
           "Most readers know this, and any reference book states it.",
           "大多数读者都知道这一点，任何参考书都有记载。",
         ),

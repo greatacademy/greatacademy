@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after, covers } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 
 /** limits are the length limits of a grade 11 essay. */
 export const limits = { minWords: 180, maxChars: 5400 };
@@ -210,6 +210,10 @@ export const judgedTopics11a: readonly TopicDef[] = [
       "Write a short analysis that traces a motif through a story, from its first appearance to its last, and explains what its changes show.",
       "写一篇简短的分析，追踪一个母题在故事中从第一次到最后一次的出现，并解释它的变化说明了什么。",
     ),
+    intro: t(
+      "When a ruined bridge begins as a target for children's stones and ends covered in flowers, tracing that shift reveals the whole story's arc from grudge to reconciliation. In this topic, you write a short motif analysis that states what the motif stands for and tracks each return with quoted evidence.",
+      "当一座残桥起初被孩子们扔石子、结尾却铺满鲜花时，追踪这一变化就能看清故事从积怨走向和解的完整轨迹。本主题带你写一篇母题分析，提出母题所承载的意义，并引用原文按顺序追踪它的每一次回归。",
+    ),
     prerequisites: after("motifs-in-a-story", "writing-a-thematic-analysis"),
     encompasses: covers(0.2, "motifs-in-a-story"),
     xp: 24,
@@ -220,8 +224,8 @@ export const judgedTopics11a: readonly TopicDef[] = [
         "what-the-motif-means",
         t("What the Motif Means", "母题意味着什么"),
         t(
-          "Open with a claim about what the motif **stands for** and what its changes show: *The stopped clock is a motif of a family frozen by grief, and its last appearance shows that healing does not mean returning to the past.* Do not only name the motif or describe it.",
-          "开头要提出一个论点，说明母题**代表**什么、它的变化说明了什么：*The stopped clock is a motif of a family frozen by grief, and its last appearance shows that healing does not mean returning to the past.* 不要只说出母题或描述它。",
+          "Open with a claim about what the motif **stands for** and what its changes show: *The stopped clock is a motif of a family frozen by grief, and its last appearance shows that healing does not mean returning to the past.* Do not only name the motif or describe it.\n\n> **Watch out.** Do not stop at *The clock appears three times in the story*—your opening sentence must interpret what the motif *represents* and what its shift across the story means.",
+          "开头要提出一个论点，说明母题**代表**什么、它的变化说明了什么：*The stopped clock is a motif of a family frozen by grief, and its last appearance shows that healing does not mean returning to the past.* 不要只说出母题或描述它。\n\n> **注意。** 不要只停在“这座钟在故事里出现了三次”——开头句必须阐释母题*代表什么*，以及它在全文中的变化意味着什么。",
         ),
         writingGenerator(
           t(
@@ -231,15 +235,18 @@ export const judgedTopics11a: readonly TopicDef[] = [
           motifBank,
           ["g11-motif-claim", "g11-motif-trace", "g11-motif-quotes"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your opening claim and body paragraphs: does the first sentence state what the motif represents and how its meaning evolves, and do the later paragraphs prove that shift with brief quotes from the story?",
+            "核对开头论点与主体段：首句是否点明了母题的象征意义及其演变方向，后文是否用简短引文一步步证明这一变化？",
+          ),
         ),
       ),
       point(
         "each-return-of-the-motif",
         t("Each Return of the Motif", "母题的每一次回归"),
         t(
-          'Then take the appearances **in order**: the first, the turning point and the last. Quote a short phrase from each and explain what has changed: *The clock is now ticking, but "five hours wrong," so life has begun again without matching the old time.*',
-          '然后**按顺序**分析母题的出现：第一次、转折点和最后一次。从每一处引用简短的词句，并解释发生了什么变化：*The clock is now ticking, but "five hours wrong," so life has begun again without matching the old time.*',
+          'Then take the appearances **in order**: the first, the turning point and the last. Quote a short phrase from each and explain what has changed: *The clock is now ticking, but "five hours wrong," so life has begun again without matching the old time.*\n\n> **Watch out.** Cover all three stages—first appearance, turning point, and final image—and explain *what changed* after every quote rather than merely retelling the plot.',
+          '然后**按顺序**分析母题的出现：第一次、转折点和最后一次。从每一处引用简短的词句，并解释发生了什么变化：*The clock is now ticking, but "five hours wrong," so life has begun again without matching the old time.*\n\n> **注意。** 务必走全三个阶段——首次出现、转折点与最终画面——并在每处引文后解释*发生了怎样的变化*，不要滑向复述情节。',
         ),
         writingGenerator(
           t(
@@ -249,7 +256,10 @@ export const judgedTopics11a: readonly TopicDef[] = [
           motifBank,
           ["g11-motif-trace", "g11-motif-quotes", "g11-motif-claim"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check the sequence of your paragraphs: did you trace the motif from first appearance through its turning point to its final return, quoting a short phrase at each stage and explaining the shift?",
+            "检查段落顺序：是否按“首次出现 → 转折点 → 最后回归”追踪母题，且每个阶段都引用原词并阐释了变化？",
+          ),
         ),
       ),
     ],
@@ -261,6 +271,10 @@ export const judgedTopics11a: readonly TopicDef[] = [
       "Write a meditative essay that begins with a close look at something in nature and moves, through concrete detail, to a larger idea about life.",
       "写一篇沉思性散文，从细致观察自然中的某样东西开始，借助具体细节，过渡到一个关于人生的更大观念。",
     ),
+    intro: t(
+      "Watching tidewater slip back from a pier and uncover rusted bolts can lead a writer naturally to a quiet realization about what stays beneath the surface. In this topic, you write a meditative essay that grounds reflection in close physical observation before widening into personal insight.",
+      "盯着潮水从码头退去、露出锈迹斑斑的螺栓，往往能自然引出对“表面之下留存着什么”的沉思。本主题带你写一篇沉思性散文：先用细致的具象观察立住画面，再一步步过渡到真切的人生感悟。",
+    ),
     prerequisites: after("moving-between-concrete-and-abstract", "writing-a-reflective-essay"),
     encompasses: covers(0.2, "moving-between-concrete-and-abstract"),
     xp: 24,
@@ -271,8 +285,8 @@ export const judgedTopics11a: readonly TopicDef[] = [
         "looking-closely",
         t("Looking Closely", "细致地观察"),
         t(
-          "Begin with **the thing itself**, observed closely enough that a reader can see it: *Its bark is split into deep grey plates, and one low branch has been worn smooth by generations of children.* Use specific details of color, shape, sound and change, not general words such as *beautiful*.",
-          "从**事物本身**开始，观察得足够细致，让读者能看见它：*Its bark is split into deep grey plates, and one low branch has been worn smooth by generations of children.* 用颜色、形状、声音和变化等具体细节，而不是 *beautiful* 之类笼统的词。",
+          "Begin with **the thing itself**, observed closely enough that a reader can see it: *Its bark is split into deep grey plates, and one low branch has been worn smooth by generations of children.* Use specific details of color, shape, sound and change, not general words such as *beautiful*.\n\n> **Watch out.** Hold back the big lesson in the opening paragraph—earn the reader's attention first with sharp sensory details (*color, texture, motion, sound*) instead of starting with a vague slogan about nature.",
+          "从**事物本身**开始，观察得足够细致，让读者能看见它：*Its bark is split into deep grey plates, and one low branch has been worn smooth by generations of children.* 用颜色、形状、声音和变化等具体细节，而不是 *beautiful* 之类笼统的词。\n\n> **注意。** 开头段先沉住气，不要急着抛大道理——先用精准的感官细节（色彩、质地、动静、声音）让读者身临其境，而不是用空泛赞美起笔。",
         ),
         writingGenerator(
           t(
@@ -282,15 +296,18 @@ export const judgedTopics11a: readonly TopicDef[] = [
           meditateBank,
           ["g11-meditation-observation", "g11-meditation-movement", "g11-meditation-insight"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Reread your opening paragraph: could a reader sketch the scene from your specific sensory details alone before any abstract reflection begins?",
+            "重读开头段：在抽象思考展开之前，读者能否仅凭你的具体感官细节在脑海里画出这幅画面？",
+          ),
         ),
       ),
       point(
         "from-the-thing-to-the-thought",
         t("From the Thing to the Thought", "从事物到思考"),
         t(
-          "Then let the observation **lead** to an idea, and show the step: *Watching the swallows, I realized that the size of a task is defeated by the size of each step.* End with an insight that grows out of the details and applies to your own life, without turning into a lecture.",
-          "然后让观察**引出**一个观念，并展示这一步：*Watching the swallows, I realized that the size of a task is defeated by the size of each step.* 结尾给出一个从细节中生长出来、又能用于自己生活的感悟，而不要变成说教。",
+          "Then let the observation **lead** to an idea, and show the step: *Watching the swallows, I realized that the size of a task is defeated by the size of each step.* End with an insight that grows out of the details and applies to your own life, without turning into a lecture.\n\n> **Watch out.** Show the *bridge* from physical detail to personal insight—if the ending reads like a generic proverb that could fit any scene, tie it back to what you actually observed.",
+          "然后让观察**引出**一个观念，并展示这一步：*Watching the swallows, I realized that the size of a task is defeated by the size of each step.* 结尾给出一个从细节中生长出来、又能用于自己生活的感悟，而不要变成说教。\n\n> **注意。** 交代清楚从具象细节走向个人感悟的*过渡桥梁*——如果结尾像一句放之四海而皆准的格言，就把它重新扣回你亲眼观察到的细节。",
         ),
         writingGenerator(
           t(
@@ -300,7 +317,10 @@ export const judgedTopics11a: readonly TopicDef[] = [
           meditateBank,
           ["g11-meditation-movement", "g11-meditation-insight", "g11-meditation-observation"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Trace the turn in your essay: does your closing reflection grow directly out of the concrete details you observed and speak honestly to your own life without preaching?",
+            "检查文章的过渡：结尾的感悟是否自然生长于前文的具体观察，并真诚联系到自己的生活而不流于说教？",
+          ),
         ),
       ),
     ],
@@ -312,6 +332,10 @@ export const judgedTopics11a: readonly TopicDef[] = [
       "Write a short critique that summarizes an argument fairly, finds its unstated assumptions and weak evidence, and reaches a balanced judgment.",
       "写一篇简短的评析，公正地概述一个论证，找出其未言明的假设和薄弱的证据，并得出平衡的判断。",
     ),
+    intro: t(
+      "A sharp critique of an editorial calling to abolish cash does not simply say *I disagree*—it summarizes the writer's case fairly, exposes where the Sweden comparison assumes causation, and weighs real strengths alongside blind spots. In this topic, you write a balanced critique that tests both evidence and hidden assumptions.",
+      "评析一篇主张取消现金的评论，不是简单说一句“我不同意”，而是先公正概括作者的理由，再指出拿瑞典作对比时隐含的因果假设，并客观权衡其长处与盲区。本主题带你写出结构清晰、公允有力的论证评析。",
+    ),
     prerequisites: after("unstated-assumptions", "summarizing-an-opposing-view-fairly"),
     encompasses: covers(0.2, "unstated-assumptions", "summarizing-an-opposing-view-fairly"),
     xp: 24,
@@ -322,8 +346,8 @@ export const judgedTopics11a: readonly TopicDef[] = [
         "the-argument-in-fair-words",
         t("The Argument in Fair Words", "用公正的语言概述论证"),
         t(
-          "Open by stating the writer's **claim and main reasons** in neutral words: *The writer argues that the school should ban phones because phones lower grades and cause bullying.* Then give your overall view in a sentence, before you test the parts.",
-          "开头用中性的语言陈述作者的**主张和主要理由**：*The writer argues that the school should ban phones because phones lower grades and cause bullying.* 然后用一句话给出你的总体看法，再去检验各个部分。",
+          "Open by stating the writer's **claim and main reasons** in neutral words: *The writer argues that the school should ban phones because phones lower grades and cause bullying.* Then give your overall view in a sentence, before you test the parts.\n\n> **Watch out.** Do not sneer or caricature the original passage in your opening summary—state the writer's actual claim and reasons neutrally before laying out your overall evaluation.",
+          "开头用中性的语言陈述作者的**主张和主要理由**：*The writer argues that the school should ban phones because phones lower grades and cause bullying.* 然后用一句话给出你的总体看法，再去检验各个部分。\n\n> **注意。** 开头概述时不要讽刺或歪曲原文——先用中性语言准确概括作者的主张与理由，再给出你的总体评价。",
         ),
         writingGenerator(
           t(
@@ -333,15 +357,18 @@ export const judgedTopics11a: readonly TopicDef[] = [
           critiqueBank,
           ["g11-critique-summary", "g11-critique-assumption", "g11-critique-judgment"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your first paragraph: does it summarize the writer's claim and reasons in neutral words the writer would recognize, followed by a clear one-sentence overall judgment?",
+            "检查第一段：是否用作者本人也会认可的中性措辞概括了主张与主要理由，并紧接着给出清晰的总体判断？",
+          ),
         ),
       ),
       point(
         "testing-the-reasoning",
         t("Testing the Reasoning", "检验推理"),
         t(
-          "Then test the argument piece by piece: name an **unstated assumption** (*The argument assumes that phones cause the lower grades*), point out weak evidence or fallacies, and give the argument credit where it is strong. End with a **balanced judgment** and what would make the argument better.",
-          "然后逐一检验论证：说出一个**未言明的假设**（*The argument assumes that phones cause the lower grades*），指出薄弱的证据或谬误，并在论证有力之处给予肯定。结尾给出**平衡的判断**，以及怎样能让论证更好。",
+          "Then test the argument piece by piece: name an **unstated assumption** (*The argument assumes that phones cause the lower grades*), point out weak evidence or fallacies, and give the argument credit where it is strong. End with a **balanced judgment** and what would make the argument better.\n\n> **Watch out.** Do not turn a critique into a one-sided takedown—acknowledge what is plausible or well-founded in the passage, name at least one hidden assumption, and explain specifically what evidence would strengthen the case.",
+          "然后逐一检验论证：说出一个**未言明的假设**（*The argument assumes that phones cause the lower grades*），指出薄弱的证据或谬误，并在论证有力之处给予肯定。结尾给出**平衡的判断**，以及怎样能让论证更好。\n\n> **注意。** 不要把评析写成一边倒的攻击——肯定原文合理或有据之处，明确点出至少一个未言明的假设，并说明补充什么证据能让论证更站得住脚。",
         ),
         writingGenerator(
           t(
@@ -351,7 +378,10 @@ export const judgedTopics11a: readonly TopicDef[] = [
           critiqueBank,
           ["g11-critique-assumption", "g11-critique-judgment", "g11-critique-summary"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify three moves in your critique: you expose at least one unstated assumption, acknowledge a genuine merit of the argument, and close with a balanced judgment suggesting how the case could be strengthened.",
+            "核对评析中的三个动作：是否点出了至少一个未言明的假设、肯定了原文的可取之处，并以平衡的判断与改进建议作结？",
+          ),
         ),
       ),
     ],

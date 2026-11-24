@@ -817,18 +817,19 @@ function backRule(text: string): Text {
 
 /** whyNotBack explains a verb that did not move back, or a form that is not a past. */
 const whyNotBack = (wrong: string, right: string, shown: string, position: number): Text => {
-  const rule = backRule(shown);
-  let first: Text;
   const item = saidOf(shown);
   const spoken = item ? spokenVerb(item[1], item[3], item[4][0]) : wrong;
   if (right === "were" && wrong === "was")
-    first = t("*was* is for one person or thing, but the subject is plural.", "*was* 用于单数主语，但这里的主语是复数。");
-  else if (position === 0 && wrong === "am" && spoken !== "am" && spoken !== "'m")
-    first = t("*am* goes only with *I*, and it is not a past form.", "*am* 只和 *I* 连用，而且不是过去式。");
-  else if (position === 0) first = t(`*${wrong}* is the verb as it was said, in the present.`, `*${wrong}* 是原话里的现在时动词。`);
-  else if (wrong === "not") first = t("*not* alone has no verb to make the negative.", "只有 *not*，没有构成否定的助动词。");
-  else first = t(`*${wrong}* is not a past form.`, `*${wrong}* 不是过去式。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+    return t("*was* is for one person or thing, but the reported subject is plural.", "*was* 用于单数主语，但这里转述的主语是复数。");
+  if (position === 0 && wrong === "am" && spoken !== "am" && spoken !== "'m")
+    return t("*am* goes only with *I*, and it is not a past form.", "*am* 只和 *I* 连用，而且不是过去式。");
+  if (position === 0)
+    return t(
+      `*${wrong}* stays in the present tense as originally spoken, without moving one step back after *said*.`,
+      `*${wrong}* 保留了原话里的现在时，没有在 *said* 后面往过去退一步。`,
+    );
+  if (wrong === "not") return t("*not* alone has no auxiliary verb to form a past negative.", "只有 *not*，缺少构成过去否定的助动词。");
+  return t(`*${wrong}* is not the past form needed after *said*.`, `*${wrong}* 不是 *said* 后面需要的过去形式。`);
 };
 
 /** pronounRule names how the speaker's I or my changes, from the right pronoun and the speaker. */
@@ -843,26 +844,34 @@ function pronounRule(right: string, shown: string): Text {
 }
 
 /** whyNotPronoun explains a pronoun kept from the speaker's words, or one for the other sex. */
-const whyNotPronoun = (wrong: string, right: string, shown: string, position: number): Text => {
-  const rule = pronounRule(right, shown);
-  const first =
-    position === 0
-      ? t(`*${wrong}* is the speaker's own word, which changes when you report it.`, `*${wrong}* 是说话人自己的用词，转述时要改变。`)
-      : t(
-          `*${wrong}* would be about ${/^(he|his)$/u.test(wrong) ? "a man" : "a woman"}.`,
-          `*${wrong}* 指的是${/^(he|his)$/u.test(wrong) ? "男性" : "女性"}。`,
-        );
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+const whyNotPronoun = (wrong: string, _right: string, shown: string, position: number): Text => {
+  const name = saidOf(shown)?.[0] ?? "the speaker";
+  return position === 0
+    ? t(
+        `*${wrong}* is the speaker's own direct-speech word, which must shift to match ${name} in reported speech.`,
+        `*${wrong}* 是直接引语里说话人自己的用词，转述时要改成对应 ${name} 的代词。`,
+      )
+    : t(
+        `*${wrong}* refers to ${/^(he|his)$/u.test(wrong) ? "a man" : "a woman"}, which does not match ${name}.`,
+        `*${wrong}* 指的是${/^(he|his)$/u.test(wrong) ? "男性" : "女性"}，与 ${name} 不一致。`,
+      );
 };
 
 /** reportWhy explains a written report: the pronoun changes and the verb moves back. */
 const reportWhy = (right: string): Text => {
   const item = saidOf(right);
   const back = backRule(right);
-  if (!item) return t(`${back.en}: ${right}`, `${back["zh-CN"]}：${right}`);
+  if (!item)
+    return t(
+      `${back.en}: ${right}\n\n**Check.** Verify that the quotation marks are gone, the pronoun fits the speaker, and the verb has shifted back into the past.`,
+      `${back["zh-CN"]}：${right}\n\n**检验。** 确认已去掉引号、代词与说话人一致，且动词已往过去退一步。`,
+    );
   const [name, words, report] = item;
   const pronoun = pronounRule(report.split(" ")[0] ?? "", quoteOf(name, words));
-  return t(`${pronoun.en}, and ${back.en.replace(/^After/u, "after")}: ${right}`, `${pronoun["zh-CN"]}；${back["zh-CN"]}：${right}`);
+  return t(
+    `${pronoun.en}, and ${back.en.replace(/^After/u, "after")}: ${right}\n\n**Check.** Compare the original quote with your report: *I/my* now matches ${name}, and the verb has shifted back one tense after *said*.`,
+    `${pronoun["zh-CN"]}；${back["zh-CN"]}：${right}\n\n**检验。** 对照原话和转述句：*I/my* 已改成对应 ${name} 的代词，且 *said* 后的动词已往过去退一步。`,
+  );
 };
 
 const reportedSpeech: TopicDef = {
@@ -871,6 +880,10 @@ const reportedSpeech: TopicDef = {
   summary: t(
     '"I am tired," she said becomes She said that she was tired: the verb moves back in time, and I and my become she and her.',
     '"I am tired," she said 变成 She said that she was tired：动词往过去退一步，I 和 my 变成 she 和 her。',
+  ),
+  intro: t(
+    "When you pass on someone's words later—*\"I like the news,\" Ben said* → *Ben said that he liked the news*—two things shift together: the speaker's *I/my* becomes *he/his* or *she/her*, and the present verb moves one step back into the past.",
+    '转述别人的话时（*"I like the news," Ben said* → *Ben said that he liked the news*），有两处联动变化：说话人的 *I/my* 变成 *he/his* 或 *she/her*，现在时动词往过去退一步。',
   ),
   prerequisites: ["past-simple-irregular", "object-pronouns"],
   encompasses: [{ topic: "past-simple-irregular", weight: 0.2 }],
@@ -881,15 +894,18 @@ const reportedSpeech: TopicDef = {
       "back",
       t("The verb moves back", "动词往过去退一步"),
       t(
-        "When you report what someone said with *said*, the verb usually moves back in time:\n\n- *am / is* → *was*, *are* → *were*\n- *like* → *liked*, *go* → *went*, *have* → *had*\n- *don't / doesn't* → *didn't*\n- *am reading* → *was reading*\n\n*\"I am tired,\" Anna said.* → *Anna said that she **was** tired.*\n\nYou can leave out *that*: *Anna said she was tired.*",
-        "用 *said* 转述别人的话时，动词通常往过去退一步：\n\n- *am / is* → *was*，*are* → *were*\n- *like* → *liked*，*go* → *went*，*have* → *had*\n- *don't / doesn't* → *didn't*\n- *am reading* → *was reading*\n\n*\"I am tired,\" Anna said.* → *Anna said that she **was** tired.*\n\n*that* 可以省略：*Anna said she was tired.* 中文转述时动词不变（“她说她累了”），英语却要把动词变成过去式。",
+        "When you report what someone said with *said*, the verb usually moves back in time:\n\n- *am / is* → *was*, *are* → *were*\n- *like* → *liked*, *go* → *went*, *have* → *had*\n- *don't / doesn't* → *didn't*\n- *am reading* → *was reading*\n\n*\"I am tired,\" Anna said.* → *Anna said that she **was** tired.* You can leave out *that*: *Anna said she was tired.*\n\n> **Watch out.** Do not leave the verb in the present after *said* (*Anna said she is tired* misses the backshift taught here), and remember *don't/doesn't* becomes *didn't* + plain verb.",
+        "用 *said* 转述别人的话时，动词通常往过去退一步：\n\n- *am / is* → *was*，*are* → *were*\n- *like* → *liked*，*go* → *went*，*have* → *had*\n- *don't / doesn't* → *didn't*\n- *am reading* → *was reading*\n\n*\"I am tired,\" Anna said.* → *Anna said that she **was** tired.* *that* 可以省略。\n\n> **注意。** 中文转述时动词不变（“她说她累了”），但英语在 *said* 后面要把现在时退成过去式，否定 *don't/doesn't* 变成 *didn't* 加动词原形。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
         backChoice,
         (right, shown) => {
           const rule = backRule(shown);
-          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+          return t(
+            `${rule.en}: ${fill(shown, right)}\n\n**Check.** Spot *said* at the start and confirm the verb (*${right}*) has shifted back into the past and agrees with its subject.`,
+            `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 看句首的 *said*，确认动词 *${right}* 已往过去退一步且与主语一致。`,
+          );
         },
         whyNotBack,
       ),
@@ -898,15 +914,18 @@ const reportedSpeech: TopicDef = {
       "pronouns",
       t("I becomes he or she", "I 变成 he 或 she"),
       t(
-        "The speaker's *I* and *my* change to fit the person you are talking about: *\"I love my job,\" Amy said.* → *Amy said that **she** loved **her** job.* A man's *I* becomes *he* and his *my* becomes *his*; a woman's become *she* and *her*.",
-        '说话人的 *I* 和 *my* 要按所指的人改变：*"I love my job," Amy said.* → *Amy said that **she** loved **her** job.* 男性说的 *I* 变成 *he*，*my* 变成 *his*；女性说的变成 *she* 和 *her*。',
+        "The speaker's *I* and *my* change to fit the person you are talking about: *\"I love my job,\" Amy said.* → *Amy said that **she** loved **her** job.* A man's *I* becomes *he* and his *my* becomes *his*; a woman's become *she* and *her*.\n\n> **Watch out.** Do not keep the speaker's *I* or *my* inside reported speech, and match the pronoun to the speaker's name (*he/his* vs. *she/her*).",
+        '说话人的 *I* 和 *my* 要按所指的人改变：*"I love my job," Amy said.* → *Amy said that **she** loved **her** job.* 男性说的 *I* 变成 *he*，*my* 变成 *his*；女性说的变成 *she* 和 *her*。\n\n> **注意。** 转述时不要保留原话的 *I* 或 *my*，并根据说话人核对 *he/his* 还是 *she/her*。',
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         pronounChoice,
         (right, shown) => {
           const rule = pronounRule(right, shown);
-          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+          return t(
+            `${rule.en}: ${fill(shown, right)}\n\n**Check.** Check who spoke the quote and whether the gap needs a subject (*he/she*) or a possessive (*his/her*).`,
+            `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 核对说话人是谁，以及空白处需要主格（*he/she*）还是所有格（*his/her*）。`,
+          );
         },
         whyNotPronoun,
       ),
@@ -915,8 +934,8 @@ const reportedSpeech: TopicDef = {
       "write",
       t("Reporting what people said", "转述别人的话"),
       t(
-        'Write the report of the words: start with the speaker and *said that*, change *I* and *my*, and move the verb back. *"I have a cold," Ryan said.* → *Ryan said that he had a cold.* You may leave out *that*.',
-        '转述这句话：以说话人和 *said that* 开头，改变 *I* 和 *my*，把动词往过去退一步。*"I have a cold," Ryan said.* → *Ryan said that he had a cold.* 可以省略 *that*。',
+        'Write the report of the words: start with the speaker and *said that*, change *I* and *my*, and move the verb back. *"I have a cold," Ryan said.* → *Ryan said that he had a cold.* You may leave out *that*.\n\n> **Watch out.** Make both changes together—shift the pronoun AND shift the verb—and drop the quotation marks.',
+        '转述这句话：以说话人和 *said that* 开头，改变 *I* 和 *my*，把动词往过去退一步。*"I have a cold," Ryan said.* → *Ryan said that he had a cold.* 可以省略 *that*。\n\n> **注意。** 两处改动别漏其一——代词要换、动词也要退成过去式，并去掉引号。',
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1012,6 +1031,10 @@ const writingAnArticle = judgedTopic({
     "Write an article of 150 to 200 words for a school magazine or website, with a title, an opening that catches the reader, two or three paragraphs and an ending for the reader.",
     "为校刊或网站写一篇 150 到 200 词的文章：有标题，开头能吸引读者，有两三个段落，结尾面向读者。",
   ),
+  intro: t(
+    "A magazine article pulls readers in from the very first line: *Have you ever wondered what happens when a whole class gives up phones for a week?* A catchy title, focused paragraphs, and a direct closing keep readers scrolling to the end.",
+    "杂志文章第一句就要抓住读者：*Have you ever wondered what happens when a whole class gives up phones for a week?* 亮眼标题、清晰分段加上面向读者的收尾，才能让人一口气读完。",
+  ),
   prerequisites: ["writing-a-paragraph"],
   encompasses: [{ topic: "writing-a-paragraph", weight: 0.3 }],
   criteria: ["b1-article-title-and-opening", "b1-article-paragraphs", "b1-article-reader"],
@@ -1019,8 +1042,8 @@ const writingAnArticle = judgedTopic({
     id: "article",
     title: t("Title, opening and paragraphs", "标题、开头和段落"),
     explanation: t(
-      "An article is written for readers who can stop reading at any time, so it must keep them interested:\n\n- **A title** that says what the article is about or makes the reader curious: *A Week Without My Phone*.\n- **An opening** that catches the reader: a question (*Are you bored at the weekend?*), a surprising fact or a short scene.\n- **Two or three paragraphs**, each about one main idea, joined with words such as *first*, *however* and *finally*.\n- **An ending** that speaks to the reader: advice, a question or an invitation (*Why don't you try it too?*).\n\nWrite in a lively but correct style, and talk to the reader as *you*.",
-      "文章的读者随时可能停止阅读，所以要让他们一直有兴趣：\n\n- **标题**：说明文章写什么，或者让读者好奇：*A Week Without My Phone*。\n- **开头**要吸引读者：一个问题（*Are you bored at the weekend?*）、一个出人意料的事实或一个小场景。\n- **两三个段落**，每段写一个主要意思，用 *first*、*however*、*finally* 等词连接。\n- **结尾**要面向读者：提建议、提问题或发出邀请（*Why don't you try it too?*）。\n\n文风可以生动，但要正确，用 *you* 直接对读者说话。中文作文常先铺陈背景，英语文章则第一句就要抓住读者。",
+      "An article is written for readers who can stop reading at any time, so it must keep them interested:\n\n- **A title** that says what the article is about or makes the reader curious: *A Week Without My Phone*.\n- **An opening** that catches the reader: a question (*Are you bored at the weekend?*), a surprising fact or a short scene.\n- **Two or three paragraphs**, each about one main idea, joined with words such as *first*, *however* and *finally*.\n- **An ending** that speaks to the reader: advice, a question or an invitation (*Why don't you try it too?*).\n\n> **Watch out.** Do not forget a title or start with a dull announcement like *Today I will write about...*—hook the reader directly and address them as *you*.",
+      "文章的读者随时可能停止阅读，所以要让他们一直有兴趣：\n\n- **标题**：说明文章写什么，或者让读者好奇：*A Week Without My Phone*。\n- **开头**要吸引读者：一个问题（*Are you bored at the weekend?*）、一个出人意料的事实或一个小场景。\n- **两三个段落**，每段写一个主要意思，用 *first*、*however*、*finally* 等词连接。\n- **结尾**要面向读者：提建议、提问题或发出邀请（*Why don't you try it too?*）。\n\n> **注意。** 别漏掉标题，也不要用沉闷的 *Today I will write about...* 开头——直接用问题或场景抓住读者，并用 *you* 与读者对话。",
     ),
   },
   question: t(

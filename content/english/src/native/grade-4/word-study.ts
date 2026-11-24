@@ -63,15 +63,19 @@ const clueFindBank: readonly Item[] = clueRows.map((row) => ({
   right: row.clue,
   wrong: row.spans,
   why: t(
-    `“${row.clue}” ${clueKind(row.restates)[0]}. Signal words such as *or*, *that is*, *in other words*, *such as*, *like*, *including* and *for example*, or a pair of commas, often mark a clue.`,
-    `“${row.clue}” ${clueKind(row.restates)[1]}。*or*、*that is*、*in other words*、*such as*、*like*、*including*、*for example* 这样的信号词，或者一对逗号，常常标出线索。`,
+    `“${row.clue}” ${clueKind(row.restates)[0]}. Signal words such as *or*, *that is*, *in other words*, *such as*, *like*, *including* and *for example*, or a pair of commas, often mark a clue.\n\n**Check.** Read the sentence again focusing on *${row.word}* and “${row.clue}”—removing “${row.clue}” leaves the hard word unexplained.`,
+    `“${row.clue}” ${clueKind(row.restates)[1]}。*or*、*that is*、*in other words*、*such as*、*like*、*including*、*for example* 这样的信号词，或者一对逗号，常常标出线索。\n\n**检验。** 重读句子，聚焦 *${row.word}* 和“${row.clue}”——去掉“${row.clue}”，这个难词就失去了直接解释。`,
   ),
-  whyNot: row.spans.map((s) =>
+  whyNot: [
     t(
-      `“${s}” is part of the sentence, but it tells what happens or where, not what *${row.word}* means or what it includes.`,
-      `“${s}” 是句子的一部分，但它说的是发生了什么或在哪里，而不是 *${row.word}* 的意思或包括什么。`,
+      `“${row.spans[0]}” tells what happens or gives extra context, not what *${row.word}* means or includes.`,
+      `“${row.spans[0]}” 说的是发生了什么或补充背景，不是在解释 *${row.word}* 的意思或例子。`,
     ),
-  ),
+    t(
+      `“${row.spans[1]}” is another part of the sentence without a restatement or example signal for *${row.word}*.`,
+      `“${row.spans[1]}” 只是句子的另一部分，既没有重述 *${row.word}*，也没有举出它的例子。`,
+    ),
+  ],
 }));
 
 /** clueMeaningBank asks for the meaning of a hard word from its clue. */
@@ -81,15 +85,19 @@ const clueMeaningBank: readonly Item[] = clueRows.map((row) => ({
   right: row.meaning,
   wrong: row.meanings,
   why: t(
-    `*${row.word}* means ${row.meaning}. The clue “${row.clue}” ${clueKind(row.restates)[0]}${row.restates ? ", so the meaning is right there in the sentence" : "; ask what the examples have in common"}.`,
-    `*${row.word}* 的意思是 ${row.meaning}。线索“${row.clue}”${clueKind(row.restates)[1]}${row.restates ? "，所以意思就在句子里" : "；问问这些例子有什么共同点"}。`,
+    `*${row.word}* means ${row.meaning}. The clue “${row.clue}” ${clueKind(row.restates)[0]}${row.restates ? ", so the meaning is right there in the sentence" : "; ask what the examples have in common"}.\n\n**Check.** Substitute “${row.meaning}” for *${row.word}* in the sentence—the whole sentence still makes clear, accurate sense.`,
+    `*${row.word}* 的意思是 ${row.meaning}。线索“${row.clue}”${clueKind(row.restates)[1]}${row.restates ? "，所以意思就在句子里" : "；问问这些例子有什么共同点"}。\n\n**检验。** 把“${row.meaning}”代入句中 *${row.word}* 的位置——整句话依然通顺准确。`,
   ),
-  whyNot: row.meanings.map((m) =>
+  whyNot: [
     t(
-      `“${m}” does not match the clue “${row.clue}”. A meaning has to fit what the sentence itself says about the word.`,
-      `“${m}” 与线索“${row.clue}”不符。词义必须符合句子本身对这个词的说明。`,
+      `“${row.meanings[0]}” does not fit the clue “${row.clue}” given in the sentence.`,
+      `“${row.meanings[0]}” 与句中给出的线索“${row.clue}”不符。`,
     ),
-  ),
+    t(
+      `“${row.meanings[1]}” describes something different from what “${row.clue}” tells us about *${row.word}*.`,
+      `“${row.meanings[1]}” 说的和“${row.clue}”对 *${row.word}* 的说明不一致。`,
+    ),
+  ],
 }));
 
 // Greek and Latin roots of the body.
@@ -162,8 +170,8 @@ const rootMeaningBank: readonly Item[] = rootRows.map((row, i) => {
     right: row.parts[0],
     wrong: wrongRoots.map((r) => roots[r]?.[0] ?? r),
     why: t(
-      `*${row.root}* means **${row.parts[0]}**, so *${row.word}* means ${row.meaning}. Knowing the root lets you guess many medical and science words.`,
-      `*${row.root}* 的意思是**${row.parts[1]}**，所以 *${row.word}* 的意思是 ${row.meaning}。知道词根就能猜出许多医学和科学词汇。`,
+      `*${row.root}* means **${row.parts[0]}**, so *${row.word}* means ${row.meaning}. Knowing the root lets you unlock many medical and science words.\n\n**Check.** Link **${row.parts[0]}** back to *${row.word}* (${row.meaning})—the body part fits the word's meaning directly.`,
+      `*${row.root}* 的意思是**${row.parts[1]}**，所以 *${row.word}* 的意思是 ${row.meaning}。知道词根就能猜出许多医学和科学词汇。\n\n**检验。** 把**${row.parts[1]}**和 *${row.word}*（${row.meaning}）联系起来——词根对应的身体部位正好吻合词义。`,
     ),
     whyNot: wrongRoots.map((r) =>
       t(
@@ -181,15 +189,19 @@ const rootWordBank: readonly Item[] = rootRows.map((row) => ({
   right: row.meaning,
   wrong: row.wrong,
   why: t(
-    `*${row.word}* has the root *${row.root}*, which means ${row.parts[0]}, so it means ${row.meaning}.`,
-    `*${row.word}* 含有词根 *${row.root}*（${row.parts[1]}），所以它的意思是 ${row.meaning}。`,
+    `*${row.word}* has the root *${row.root}*, which means ${row.parts[0]}, so it means ${row.meaning}.\n\n**Check.** Break *${row.word}* into its root (*${row.root}* = ${row.parts[0]}) and ending—both parts point directly to “${row.meaning}”.`,
+    `*${row.word}* 含有词根 *${row.root}*（${row.parts[1]}），所以它的意思是 ${row.meaning}。\n\n**检验。** 把 *${row.word}* 拆成词根（*${row.root}* = ${row.parts[1]}）和词尾——两部分都指向“${row.meaning}”。`,
   ),
-  whyNot: row.wrong.map((w) =>
+  whyNot: [
     t(
-      `“${w}” does not have to do with the ${row.parts[0]}, which is what *${row.root}* means. Some words only look alike: *dent* in a car is not a tooth.`,
-      `“${w}” 与${row.parts[1]}无关，而 *${row.root}* 的意思正是${row.parts[1]}。有些词只是看起来相像：车上的 *dent*（凹痕）和牙齿无关。`,
+      `“${row.wrong[0]}” is a look-alike trap that ignores the body root *${row.root}* (${row.parts[0]}).`,
+      `“${row.wrong[0]}” 是形近词陷阱，忽略了表示${row.parts[1]}的词根 *${row.root}*。`,
     ),
-  ),
+    t(
+      `“${row.wrong[1]}” connects to the wrong body part or object rather than *${row.root}* (${row.parts[0]}).`,
+      `“${row.wrong[1]}” 对应了别的身体部位或事物，而不是 *${row.root}*（${row.parts[1]}）。`,
+    ),
+  ],
 }));
 
 // The prefixes in-, im-, il- and ir-.
@@ -253,22 +265,29 @@ const prefixForms = ["in", "im", "il", "ir"];
 /** prefixFormBank asks for the form of the prefix that fits a base word. */
 const prefixFormBank: readonly Item[] = prefixRows.map((row, i) => {
   const others = prefixForms.filter((p) => p !== row.prefix);
-  const wrong = [pick(others, i), pick(others, i + 1)].map((p) => `${p}${row.base}`);
+  const p0 = pick(others, i);
+  const p1 = pick(others, i + 1);
+  const w0 = `${p0}${row.base}`;
+  const w1 = `${p1}${row.base}`;
   return {
     question: t(`Which word means *not ${row.base}*?`, `哪个词的意思是“不 ${row.base}”？`),
     shown: "",
     right: row.word,
-    wrong,
+    wrong: [w0, w1],
     why: t(
-      `**${row.word}**: ${prefixWhy[row.prefix]?.[0]}. The prefix changes its spelling to fit the first letter of *${row.base}*, but it still means *not*.`,
-      `**${row.word}**：${prefixWhy[row.prefix]?.[1]}。前缀会根据 *${row.base}* 的首字母改变拼写，但意思仍然是“不”。`,
+      `**${row.word}**: ${prefixWhy[row.prefix]?.[0]}. The prefix changes its spelling to fit the first letter of *${row.base}*, but it still means *not*.\n\n**Check.** Look at the first letter of *${row.base}* (*${row.base[0]}*) and say **${row.word}** aloud—*${row.prefix}-* blends smoothly into *${row.base}*.`,
+      `**${row.word}**：${prefixWhy[row.prefix]?.[1]}。前缀会根据 *${row.base}* 的首字母改变拼写，但意思仍然是“不”。\n\n**检验。** 看 *${row.base}* 的首字母（*${row.base[0]}*）并读一遍 **${row.word}**——*${row.prefix}-* 与 *${row.base}* 衔接自然。`,
     ),
-    whyNot: wrong.map((w) =>
+    whyNot: [
       t(
-        `“${w}” uses the wrong form of the prefix. *${row.base}* begins with *${row.base[0]}*, and ${prefixWhy[row.prefix]?.[0]}.`,
-        `“${w}” 用错了前缀形式。*${row.base}* 以 *${row.base[0]}* 开头，${prefixWhy[row.prefix]?.[1]}。`,
+        `“${w0}” puts *${p0}-* in front of *${row.base[0]}*, but ${prefixWhy[p0]?.[0]}.`,
+        `“${w0}” 在 *${row.base[0]}* 前用了 *${p0}-*，而${prefixWhy[p0]?.[1]}。`,
       ),
-    ),
+      t(
+        `“${w1}” uses *${p1}-*, which does not pair with a base starting in *${row.base[0]}*.`,
+        `“${w1}” 用了 *${p1}-*，不搭配以 *${row.base[0]}* 开头的词根。`,
+      ),
+    ],
   };
 });
 
@@ -279,8 +298,8 @@ const prefixMeaningBank: readonly Item[] = prefixRows.map((row) => ({
   right: row.meaning,
   wrong: row.wrong,
   why: t(
-    `*${row.prefix}-* means *not*, so *${row.word}* means ${row.meaning}. Split the word into its prefix and its base, *${row.prefix}* + *${row.base}*.`,
-    `*${row.prefix}-* 的意思是“不”，所以 *${row.word}* 的意思是 ${row.meaning}。把这个词拆成前缀和词根：*${row.prefix}* + *${row.base}*。`,
+    `*${row.prefix}-* means *not*, so *${row.word}* means ${row.meaning}. Split the word into its prefix and its base, *${row.prefix}* + *${row.base}*.\n\n**Check.** Read “not ${row.base}” next to “${row.meaning}”—they express the same opposite idea.`,
+    `*${row.prefix}-* 的意思是“不”，所以 *${row.word}* 的意思是 ${row.meaning}。把这个词拆成前缀和词根：*${row.prefix}* + *${row.base}*。\n\n**检验。** 把“不 ${row.base}”与“${row.meaning}”对照——两者表达的是同一个反义概念。`,
   ),
   whyNot: [
     t(
@@ -445,8 +464,8 @@ const fitBank: readonly Item[] = fields(fitLines).map(([head, shown, right, w1, 
     right,
     wrong: [w1, w2],
     why: t(
-      `*${right}* means ${shadeOf(head, right)}, which is what the sentence describes. Synonyms share a meaning, but each has its own shade.`,
-      `*${right}* 的意思是 ${shadeOf(head, right)}，正是句子描述的情形。同义词意思相近，但各有细微差别。`,
+      `*${right}* means ${shadeOf(head, right)}, which is what the sentence describes. Synonyms share a meaning, but each has its own shade.\n\n**Check.** Read the sentence with **${right}** in the blank—its exact shade matches the scene's clues, unlike *${w1}* or *${w2}*.`,
+      `*${right}* 的意思是 ${shadeOf(head, right)}，正是句子描述的情形。同义词意思相近，但各有细微差别。\n\n**检验。** 把 **${right}** 填回句子里通读——它的细微语义正好贴合句中线索，而 *${w1}* 和 *${w2}* 都不吻合。`,
     ),
     whyNot: [w1, w2].map((w) =>
       t(
@@ -469,15 +488,19 @@ const oddBank: readonly Item[] = fields(oddLines).map(([head, shown, odd, fit1, 
     right: odd,
     wrong: [fit1, fit2],
     why: t(
-      `*${odd}* means ${shadeOf(head, odd)}, which does not fit what the sentence describes. A thesaurus gives choices, but you must check each one against the sentence.`,
-      `*${odd}* 的意思是 ${shadeOf(head, odd)}，与句子描述的不符。同义词词典给出选择，但每个词都要放回句子里检验。`,
+      `*${odd}* means ${shadeOf(head, odd)}, which does not fit what the sentence describes. A thesaurus gives choices, but you must check each one against the sentence.\n\n**Check.** Picture the sentence with **${odd}** in the blank—it clashes with the scene, whereas both *${fit1}* and *${fit2}* work naturally.`,
+      `*${odd}* 的意思是 ${shadeOf(head, odd)}，与句子描述的不符。同义词词典给出选择，但每个词都要放回句子里检验。\n\n**检验。** 把 **${odd}** 放进空里想象一下画面——它与语境冲突，而 *${fit1}* 和 *${fit2}* 都自然贴切。`,
     ),
-    whyNot: [fit1, fit2].map((w) =>
+    whyNot: [
       t(
-        `*${w}* fits the sentence: its shade of meaning matches the clues, so it is not the word to reject.`,
-        `*${w}* 适合这个句子：它的细微意思与线索相符，所以不是要排除的词。`,
+        `*${fit1}* fits the sentence naturally, so it is a good synonym here, not the odd one out.`,
+        `*${fit1}* 放进句中很自然，是合适的同义词，不是要排除的那一个。`,
       ),
-    ),
+      t(
+        `*${fit2}* also matches the clues in the sentence; look for the choice whose shade of meaning clashes with the scene.`,
+        `*${fit2}* 同样符合句中线索；找出那个细微意思与画面冲突的词。`,
+      ),
+    ],
   };
 });
 
@@ -534,15 +557,19 @@ const personFormBank: readonly Item[] = personRows.map((row) => ({
   right: row.word,
   wrong: row.forms,
   why: t(
-    `A person who ${row.does} is a **${row.word}**. The suffix *-${row.suffix}* turns a word into a person who does something; each word has the suffix it always takes.`,
-    `${row.does}的人叫 **${row.word}**。后缀 *-${row.suffix}* 把一个词变成做某事的人；每个词都有它固定使用的后缀。`,
+    `A person who ${row.does} is a **${row.word}**. The suffix *-${row.suffix}* turns a word into a person who does something; each word has the suffix it always takes.\n\n**Check.** Say **${row.word}** in a sentence (“The ${row.word} arrived early”)—it is the real English word with its standard person suffix *-${row.suffix}*.`,
+    `${row.does}的人叫 **${row.word}**。后缀 *-${row.suffix}* 把一个词变成做某事的人；每个词都有它固定使用的后缀。\n\n**检验。** 把 **${row.word}** 放进句子里读（如 *The ${row.word} arrived early*）——它是带标准表人后缀 *-${row.suffix}* 的真实英语单词。`,
   ),
-  whyNot: row.forms.map((f) =>
+  whyNot: [
     t(
-      `“${f}” is not a word: it uses the wrong suffix. The person-word is *${row.word}*, with *-${row.suffix}*.`,
-      `“${f}” 不是一个词：它用错了后缀。表示人的词是 *${row.word}*，用 *-${row.suffix}*。`,
+      `“${row.forms[0]}” attaches the wrong person suffix and is not a standard English word.`,
+      `“${row.forms[0]}” 拼错了表示人的后缀，不是标准英语单词。`,
     ),
-  ),
+    t(
+      `“${row.forms[1]}” is also not a real English word—each base pairs with one fixed person suffix.`,
+      `“${row.forms[1]}” 同样不是真实的英语单词——每个词根只配一个固定的表人后缀。`,
+    ),
+  ],
 }));
 
 /** personMeaningBank asks what a person-word means. */
@@ -552,15 +579,19 @@ const personMeaningBank: readonly Item[] = personRows.map((row) => ({
   right: `a person who ${row.does}`,
   wrong: row.meanings,
   why: t(
-    `A *${row.word}* is a person who ${row.does}. The suffix *-${row.suffix}* tells you the word names a person, not a thing or a place.`,
-    `*${row.word}* 指${row.does}的人。后缀 *-${row.suffix}* 告诉你这个词指人，而不是物或地方。`,
+    `A *${row.word}* is a person who ${row.does}. The suffix *-${row.suffix}* tells you the word names a person, not a thing or a place.\n\n**Check.** Separate *${row.word}* into its base and *-${row.suffix}*: the suffix signals “a person,” ruling out objects and places.`,
+    `*${row.word}* 指${row.does}的人。后缀 *-${row.suffix}* 告诉你这个词指人，而不是物或地方。\n\n**检验。** 把 *${row.word}* 拆成词根和 *-${row.suffix}*：后缀表明它指“人”，可以直接排除物品和地点。`,
   ),
-  whyNot: row.meanings.map((m) =>
+  whyNot: [
     t(
-      `“${m}” is not a person. A word that ends in *-${row.suffix}* here names someone who does something.`,
-      `“${m}” 不是人。这里以 *-${row.suffix}* 结尾的词指做某事的人。`,
+      `“${row.meanings[0]}” describes a thing, place, or event rather than a person.`,
+      `“${row.meanings[0]}” 说的是物、地点或活动，而不是人。`,
     ),
-  ),
+    t(
+      `“${row.meanings[1]}” names an object or idea; a word ending in *-${row.suffix}* here names a person who does that work.`,
+      `“${row.meanings[1]}” 指的是物品或概念；这里以 *-${row.suffix}* 结尾的词指从事这项工作的人。`,
+    ),
+  ],
 }));
 
 /** wordStudyTopics4 are the topics of word study of grade 4. */
@@ -572,6 +603,10 @@ export const wordStudyTopics4: readonly TopicDef[] = [
       "A text often explains a hard word by saying it again in easier words or by giving examples of it.",
       "文章常常用更简单的词重新说一遍难词，或者举例来解释它。",
     ),
+    intro: t(
+      "When a science article writes *Nocturnal animals, such as owls and bats, hunt after dark*, you do not need a dictionary to unlock *nocturnal*—the examples right inside the sentence give it away.",
+      "看到科普文章里写 *Nocturnal animals, such as owls and bats, hunt after dark* 时，不用查词典也能猜出 *nocturnal* 的意思——句中的例子已经把答案藏在身边了。",
+    ),
     prerequisites: ["context-clues"],
     encompasses: [{ topic: "context-clues", weight: 0.3 }],
     xp: 14,
@@ -581,8 +616,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "finding-restatement-and-example-clues",
         t("Finding the Clue", "找出线索"),
         t(
-          "Writers of science and history books know their readers meet hard words, so they explain them in the sentence.\n\n- A **restatement** says the word again in easier words, often after *or*, *that is*, *in other words* or *which means*, or between commas: *Magma, or melted rock, rises slowly.*\n- An **example** clue lists members of the group the word names, after *such as*, *like*, *including* or *for example*: *Igneous rocks, such as granite and basalt, ...*",
-          "科学和历史书的作者知道读者会遇到难词，所以会在句子里解释它们。\n\n- **重述**用更简单的词把这个词再说一遍，常放在 *or*、*that is*、*in other words* 或 *which means* 后面，或者放在两个逗号之间：*Magma, or melted rock, rises slowly.*\n- **举例**线索列出这个词所指类别中的成员，放在 *such as*、*like*、*including* 或 *for example* 后面：*Igneous rocks, such as granite and basalt, ...*",
+          "Writers of science and history books know their readers meet hard words, so they explain them in the sentence.\n\n- A **restatement** says the word again in easier words, often after *or*, *that is*, *in other words* or *which means*, or between commas: *Magma, or melted rock, rises slowly.*\n- An **example** clue lists members of the group the word names, after *such as*, *like*, *including* or *for example*: *Igneous rocks, such as granite and basalt, ...*\n\n> **Watch out.** Do not pick a phrase that merely tells what happened next—the clue directly restates the word or lists examples of it.",
+          "科学和历史书的作者知道读者会遇到难词，所以会在句子里解释它们。\n\n- **重述**用更简单的词把这个词再说一遍，常放在 *or*、*that is*、*in other words* 或 *which means* 后面，或者放在两个逗号之间：*Magma, or melted rock, rises slowly.*\n- **举例**线索列出这个词所指类别中的成员，放在 *such as*、*like*、*including* 或 *for example* 后面：*Igneous rocks, such as granite and basalt, ...*\n\n> **注意。** 不要选只说明“后来发生了什么”的短语——真正的线索会直接重述难词或列出它的例子。",
         ),
         itemGenerator(clueFindBank),
       ),
@@ -590,8 +625,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "meaning-from-restatement-and-examples",
         t("Meaning from the Clue", "从线索推断词义"),
         t(
-          "Once you find the clue, use it. A restatement hands you the meaning: put it in place of the hard word and read the sentence again. Examples need one more step: ask what the examples have in common, and that is what the word names. *Granite and basalt* are both rocks that were once melted, so *igneous* means made from melted rock.",
-          "找到线索后就要用上它。重述直接给出意思：把它放在难词的位置上，再读一遍句子。举例还要多一步：问问这些例子有什么共同点，那就是这个词所指的东西。*granite* 和 *basalt* 都是曾经熔化过的岩石，所以 *igneous* 的意思是由熔岩形成的。",
+          "Once you find the clue, use it. A restatement hands you the meaning: put it in place of the hard word and read the sentence again. Examples need one more step: ask what the examples have in common, and that is what the word names. *Granite and basalt* are both rocks that were once melted, so *igneous* means made from melted rock.\n\n> **Watch out.** Watch out for a choice that confuses one example with the whole group or ignores what the examples share.",
+          "找到线索后就要用上它。重述直接给出意思：把它放在难词的位置上，再读一遍句子。举例还要多一步：问问这些例子有什么共同点，那就是这个词所指的东西。*granite* 和 *basalt* 都是曾经熔化过的岩石，所以 *igneous* 的意思是由熔岩形成的。\n\n> **注意。** 小心把某个具体例子当成整个词义，或忽略了例子之间的共同点。",
         ),
         itemGenerator(clueMeaningBank),
       ),
@@ -603,6 +638,10 @@ export const wordStudyTopics4: readonly TopicDef[] = [
     summary: t(
       "Roots such as cardi (heart), derm (skin), dent (tooth) and audi (hear) build many words of the body and of medicine.",
       "cardi（心脏）、derm（皮肤）、dent（牙齿）、audi（听）这样的词根构成了许多关于身体和医学的词。",
+    ),
+    intro: t(
+      "Long medical words like *cardiologist* or *optometrist* look intimidating until you spot the tiny roots inside them—*cardi* (heart) and *opt* (eye)—which tell you immediately what part of the body they belong to.",
+      "像 *cardiologist*、*optometrist* 这样的长医学词乍看吓人，但只要认出里面的小词根——*cardi*（心脏）和 *opt*（眼睛）——就能立刻知道它们和身体的哪个部位有关。",
     ),
     prerequisites: ["greek-roots-1", "latin-roots-1"],
     encompasses: [
@@ -616,8 +655,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "meanings-of-body-roots",
         t("What the Roots Mean", "词根的意思"),
         t(
-          "Doctors and scientists name parts of the body with old Greek and Latin roots:\n\n- *cardi*: heart · *derm*: skin · *dent*: tooth · *ped*, *pod*: foot · *manu*: hand\n- *ocul*, *opt*: eye · *pulmo*: lung · *gastr*: stomach · *neur*: nerve · *audi*: hear\n\nFind the root inside a long word, and you know what part of the body it is about.",
-          "医生和科学家用古希腊语和拉丁语词根给身体部位命名：\n\n- *cardi*：心脏 · *derm*：皮肤 · *dent*：牙齿 · *ped*、*pod*：脚 · *manu*：手\n- *ocul*、*opt*：眼睛 · *pulmo*：肺 · *gastr*：胃 · *neur*：神经 · *audi*：听\n\n在长词中找到词根，就知道它和身体的哪个部分有关。",
+          "Doctors and scientists name parts of the body with old Greek and Latin roots:\n\n- *cardi*: heart · *derm*: skin · *dent*: tooth · *ped*, *pod*: foot · *manu*: hand\n- *ocul*, *opt*: eye · *pulmo*: lung · *gastr*: stomach · *neur*: nerve · *audi*: hear\n\nFind the root inside a long word, and you know what part of the body it is about.\n\n> **Watch out.** Do not confuse look-alike roots: *ped/pod* means *foot* (*pedal*, *tripod*), while *manu* means *hand* (*manual*).",
+          "医生和科学家用古希腊语和拉丁语词根给身体部位命名：\n\n- *cardi*：心脏 · *derm*：皮肤 · *dent*：牙齿 · *ped*、*pod*：脚 · *manu*：手\n- *ocul*、*opt*：眼睛 · *pulmo*：肺 · *gastr*：胃 · *neur*：神经 · *audi*：听\n\n在长词中找到词根，就知道它和身体的哪个部分有关。\n\n> **注意。** 别把形近词根弄混：*ped/pod* 表示“脚”（*pedal*、*tripod*），*manu* 表示“手”（*manual*）。",
         ),
         itemGenerator(rootMeaningBank),
       ),
@@ -625,8 +664,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "words-from-body-roots",
         t("Words Built from the Roots", "由词根构成的词"),
         t(
-          "To work out a word, find its root and then the rest: *-ist* and *-ologist* name a person, *-al* and *-ic* mean *having to do with*, and *-ology* means *the study of*. So a *dermatologist* is a doctor of the skin, and *dental* means having to do with teeth. Watch for words that only look alike: a *dent* in a car has nothing to do with teeth.",
-          "推断一个词时，先找词根，再看其余部分：*-ist* 和 *-ologist* 指人，*-al* 和 *-ic* 表示“与……有关的”，*-ology* 表示“……学”。所以 *dermatologist* 是皮肤科医生，*dental* 表示与牙齿有关的。小心那些只是看起来相像的词：车上的 *dent*（凹痕）和牙齿毫无关系。",
+          "To work out a word, find its root and then the rest: *-ist* and *-ologist* name a person, *-al* and *-ic* mean *having to do with*, and *-ology* means *the study of*. So a *dermatologist* is a doctor of the skin, and *dental* means having to do with teeth.\n\n> **Watch out.** Watch for words that only look alike: *cardi-* is about the heart (not playing cards), *gastr-* is about the stomach (not gas stations), and *dent-* is about teeth (not a car dent).",
+          "推断一个词时，先找词根，再看其余部分：*-ist* 和 *-ologist* 指人，*-al* 和 *-ic* 表示“与……有关的”，*-ology* 表示“……学”。所以 *dermatologist* 是皮肤科医生，*dental* 表示与牙齿有关的。\n\n> **注意。** 小心只是拼写相像的干扰项：*cardi-* 关乎心脏（不是纸牌 card），*gastr-* 关乎胃（不是加油站 gas），*dent-* 关乎牙齿（不是车上的凹痕 dent）。",
         ),
         itemGenerator(rootWordBank),
       ),
@@ -639,6 +678,10 @@ export const wordStudyTopics4: readonly TopicDef[] = [
       "The prefix meaning not changes its spelling to fit the base word: impossible, illegal, irregular, inactive.",
       "表示“不”的前缀会根据词根改变拼写：impossible、illegal、irregular、inactive。",
     ),
+    intro: t(
+      "Try saying *inpossible* or *inregular* quickly—your tongue naturally turns them into *impossible* and *irregular*. That one sound shift explains why the same “not” prefix wears four spellings: *in-*, *im-*, *il-*, and *ir-*.",
+      "试着快速读一读 *inpossible* 或 *inregular*——舌头会自然把它们读成 *impossible* 和 *irregular*。正是这个发音变化，让表示“不”的前缀有了 *in-*、*im-*、*il-*、*ir-* 四种拼法。",
+    ),
     prerequisites: ["common-prefixes"],
     encompasses: [{ topic: "common-prefixes", weight: 0.2 }],
     xp: 14,
@@ -648,8 +691,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "choosing-the-form-of-the-prefix",
         t("Choosing the Form of the Prefix", "选择前缀的形式"),
         t(
-          "The prefix *in-* means *not*, and it changes its last letter to match the base word, which makes the word easier to say:\n\n- *im-* before *m* and *p*: *immature*, *impossible*\n- *il-* before *l*: *illegal*, *illogical*\n- *ir-* before *r*: *irregular*, *irresponsible*\n- *in-* before other letters: *inactive*, *incorrect*, *invisible*\n\nThat is why these words have double letters: *il* + *legal* = *illegal*.",
-          "前缀 *in-* 表示“不”，它会改变最后一个字母来配合词根，使单词更容易读：\n\n- *m* 和 *p* 前用 *im-*：*immature*、*impossible*\n- *l* 前用 *il-*：*illegal*、*illogical*\n- *r* 前用 *ir-*：*irregular*、*irresponsible*\n- 其他字母前用 *in-*：*inactive*、*incorrect*、*invisible*\n\n这就是这些词中有双写字母的原因：*il* + *legal* = *illegal*。",
+          "The prefix *in-* means *not*, and it changes its last letter to match the base word, which makes the word easier to say:\n\n- *im-* before *m* and *p*: *immature*, *impossible*\n- *il-* before *l*: *illegal*, *illogical*\n- *ir-* before *r*: *irregular*, *irresponsible*\n- *in-* before other letters: *inactive*, *incorrect*, *invisible*\n\n> **Watch out.** Do not drop one of the double letters when the prefix meets a matching start: *il* + *legal* = *illegal* (two *l*s), and *ir* + *regular* = *irregular* (two *r*s).",
+          "前缀 *in-* 表示“不”，它会改变最后一个字母来配合词根，使单词更容易读：\n\n- *m* 和 *p* 前用 *im-*：*immature*、*impossible*\n- *l* 前用 *il-*：*illegal*、*illogical*\n- *r* 前用 *ir-*：*irregular*、*irresponsible*\n- 其他字母前用 *in-*：*inactive*、*incorrect*、*invisible*\n\n> **注意。** 前缀和词根首字母相同时不要少写一个字母：*il* + *legal* = *illegal*（两个 *l*），*ir* + *regular* = *irregular*（两个 *r*）。",
         ),
         itemGenerator(prefixFormBank),
       ),
@@ -657,8 +700,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "meanings-of-words-with-the-prefix",
         t("What the New Word Means", "新词的意思"),
         t(
-          "Whatever its spelling, the prefix means *not*: *illegible* writing is not legible, too messy to read. Split the word into prefix and base, find what the base means, then turn it around. Be careful: *in-* can also mean *inside*, as in *indoors*, so check that *not* makes sense.",
-          "不管怎么拼写，这个前缀都表示“不”：*illegible* 的字迹就是不清楚、乱得看不懂的字迹。把单词拆成前缀和词根，找出词根的意思，再把它反过来。要小心：*in-* 也可以表示“在里面”，例如 *indoors*，所以要检查“不”的意思是否讲得通。",
+          "Whatever its spelling, the prefix means *not*: *illegible* writing is not legible, too messy to read. Split the word into prefix and base, find what the base means, then turn it around.\n\n> **Watch out.** *In-* can also mean *inside* (as in *indoors*), and these prefixes never mean *again*—check that “not + base” fits the meaning.",
+          "不管怎么拼写，这个前缀都表示“不”：*illegible* 的字迹就是不清楚、乱得看不懂的字迹。把单词拆成前缀和词根，找出词根的意思，再把它反过来。\n\n> **注意。** *in-* 有时也表示“在里面”（如 *indoors*），而且这组前缀从不表示“再次”——要核对“不 + 词根”是否讲得通。",
         ),
         itemGenerator(prefixMeaningBank),
       ),
@@ -671,6 +714,10 @@ export const wordStudyTopics4: readonly TopicDef[] = [
       "A thesaurus lists words of similar meaning, which differ in strength and use, so a writer chooses the one that fits.",
       "同义词词典列出意思相近的词，它们在程度和用法上不同，所以作者要选择合适的那个。",
     ),
+    intro: t(
+      "You would not say a sleeping baby *marched* across the room or a mouse *gobbled* a crumb in tiny bites. A thesaurus offers rich synonyms, but you still have to match each word's exact shade of meaning to the sentence.",
+      "你不会说小老鼠“狼吞虎咽”地小口啃奶酪，也不会说游行士兵“轻手轻脚”地走过广场。同义词词典提供丰富的近义词，但你必须挑选细微意思最贴合句子的那个。",
+    ),
     prerequisites: after("using-a-dictionary-and-glossary"),
     // The outline also names synonyms-and-antonyms; its stand-in, context-clues, is implied by the stand-in of this one.
     encompasses: [],
@@ -681,8 +728,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "choosing-a-synonym-that-fits",
         t("Choosing the Synonym That Fits", "选择合适的同义词"),
         t(
-          "A **thesaurus** lists synonyms for a word: under *walk* you might find *stroll*, *march*, *tiptoe*, *stagger* and *stride*. They are not all the same. Each has a **shade of meaning**: *stroll* is slow and relaxed, *march* is in step, *tiptoe* is quiet. Read the sentence for clues, then pick the synonym whose shade matches them.",
-          "**同义词词典**列出一个词的同义词：在 *walk* 下面你可能找到 *stroll*、*march*、*tiptoe*、*stagger* 和 *stride*。它们并不完全相同，各有**细微的意思差别**：*stroll* 是悠闲地慢走，*march* 是齐步走，*tiptoe* 是轻手轻脚地走。读句子找线索，再挑选细微意思与线索相符的同义词。",
+          "A **thesaurus** lists synonyms for a word: under *walk* you might find *stroll*, *march*, *tiptoe*, *stagger* and *stride*. They are not all the same. Each has a **shade of meaning**: *stroll* is slow and relaxed, *march* is in step, *tiptoe* is quiet. Read the sentence for clues, then pick the synonym whose shade matches them.\n\n> **Watch out.** Never swap in a thesaurus word just because it sounds fancy—check how fast, loud, strong, or polite the word actually is.",
+          "**同义词词典**列出一个词的同义词：在 *walk* 下面你可能找到 *stroll*、*march*、*tiptoe*、*stagger* 和 *stride*。它们并不完全相同，各有**细微的意思差别**：*stroll* 是悠闲地慢走，*march* 是齐步走，*tiptoe* 是轻手轻脚地走。读句子找线索，再挑选细微意思与线索相符的同义词。\n\n> **注意。** 不要只因为某个词听起来高级就随便替换——先核对它的速度、音量、程度或语气是否贴合句意。",
         ),
         itemGenerator(fitBank),
       ),
@@ -690,8 +737,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "rejecting-the-wrong-shade",
         t("Rejecting the Wrong Shade", "排除意思不合适的词"),
         t(
-          "A thesaurus never tells you which synonym to use. Some are stronger (*furious* is angrier than *annoyed*), some are softer, and some fit only certain things (*roomy* is about space inside). Try each one in the sentence and reject the one whose shade of meaning does not match.",
-          "同义词词典从不告诉你该用哪个同义词。有的程度更强（*furious* 比 *annoyed* 更生气），有的更弱，有的只适用于某些事物（*roomy* 说的是内部空间）。把每个词放进句子里试一试，排除细微意思不相符的那个。",
+          "A thesaurus never tells you which synonym to use. Some are stronger (*furious* is angrier than *annoyed*), some are softer, and some fit only certain things (*roomy* is about space inside). Try each one in the sentence and reject the one whose shade of meaning does not match.\n\n> **Watch out.** Remember the question asks for the word that does **not** fit—do not accidentally click one of the two synonyms that work well.",
+          "同义词词典从不告诉你该用哪个同义词。有的程度更强（*furious* 比 *annoyed* 更生气），有的更弱，有的只适用于某些事物（*roomy* 说的是内部空间）。把每个词放进句子里试一试，排除细微意思不相符的那个。\n\n> **注意。** 看清题目问的是**不合适**的那一个——别误选了放进句子里很通顺的同义词。",
         ),
         itemGenerator(oddBank),
       ),
@@ -704,6 +751,10 @@ export const wordStudyTopics4: readonly TopicDef[] = [
       "The suffixes -ist, -ian, -or, -er, -eer and -ant make a word for a person who does something: scientist, historian, inventor.",
       "后缀 -ist、-ian、-or、-er、-eer 和 -ant 构成表示做某事的人的词：scientist、historian、inventor。",
     ),
+    intro: t(
+      "A *pianist* plays the piano, a *librarian* runs a library, and an *engineer* designs bridges. Different endings (*-ist*, *-ian*, *-or*, *-er*, *-eer*, *-ant*) all signal one thing: a person who does that work.",
+      "*pianist* 弹钢琴，*librarian* 管理图书馆，*engineer* 设计桥梁。*-ist*、*-ian*、*-or*、*-er*、*-eer*、*-ant* 这些不同的后缀都在传递同一个信号：从事这项工作的人。",
+    ),
     prerequisites: ["common-suffixes"],
     encompasses: [{ topic: "common-suffixes", weight: 0.2 }],
     xp: 14,
@@ -713,8 +764,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "choosing-the-person-word",
         t("Choosing the Person-Word", "选择表示人的词"),
         t(
-          "Several suffixes make a word for a person who does something:\n\n- *-ist*: *scientist*, *artist*, *cyclist*\n- *-ian*: *historian*, *librarian*, *musician*\n- *-or*: *inventor*, *actor*, *sculptor*\n- *-er*: *teacher*, *explorer*, *farmer*\n- *-eer*: *pioneer*, *engineer*, *volunteer*\n- *-ant*: *assistant*, *servant*, *contestant*\n\nEach word takes one suffix, so learn them as you meet them.",
-          "有几个后缀能构成表示做某事的人的词：\n\n- *-ist*：*scientist*、*artist*、*cyclist*\n- *-ian*：*historian*、*librarian*、*musician*\n- *-or*：*inventor*、*actor*、*sculptor*\n- *-er*：*teacher*、*explorer*、*farmer*\n- *-eer*：*pioneer*、*engineer*、*volunteer*\n- *-ant*：*assistant*、*servant*、*contestant*\n\n每个词只用一种后缀，所以遇到时就记住它们。",
+          "Several suffixes make a word for a person who does something:\n\n- *-ist*: *scientist*, *artist*, *cyclist*\n- *-ian*: *historian*, *librarian*, *musician*\n- *-or*: *inventor*, *actor*, *sculptor*\n- *-er*: *teacher*, *explorer*, *farmer*\n- *-eer*: *pioneer*, *engineer*, *volunteer*\n- *-ant*: *assistant*, *servant*, *contestant*\n\n> **Watch out.** Do not guess *-er* for every person word—*inventor*, *actor*, and *sculptor* take *-or*, while *scientist* and *artist* take *-ist*.",
+          "有几个后缀能构成表示做某事的人的词：\n\n- *-ist*：*scientist*、*artist*、*cyclist*\n- *-ian*：*historian*、*librarian*、*musician*\n- *-or*：*inventor*、*actor*、*sculptor*\n- *-er*：*teacher*、*explorer*、*farmer*\n- *-eer*：*pioneer*、*engineer*、*volunteer*\n- *-ant*：*assistant*、*servant*、*contestant*\n\n> **注意。** 不要所有表人的词都猜 *-er*——*inventor*、*actor*、*sculptor* 用 *-or*，*scientist* 和 *artist* 用 *-ist*。",
         ),
         itemGenerator(personFormBank),
       ),
@@ -722,8 +773,8 @@ export const wordStudyTopics4: readonly TopicDef[] = [
         "meanings-of-person-words",
         t("What a Person-Word Means", "表示人的词的意思"),
         t(
-          "When a word ends in one of these suffixes, it usually names a person, and the rest of the word tells what they do: a *historian* studies history, a *sculptor* makes sculptures, a *contestant* takes part in a contest. In a biography such words tell you at once what someone's work was.",
-          "一个词以这些后缀结尾时，通常指人，词的其余部分说明他们做什么：*historian* 研究历史，*sculptor* 制作雕塑，*contestant* 参加比赛。在传记里，这些词能让你立刻知道一个人从事什么工作。",
+          "When a word ends in one of these suffixes, it usually names a person, and the rest of the word tells what they do: a *historian* studies history, a *sculptor* makes sculptures, a *contestant* takes part in a contest. In a biography such words tell you at once what someone's work was.\n\n> **Watch out.** Distinguish the person from the place, tool, or activity—a *violinist* is the player, not the violin case or the song.",
+          "一个词以这些后缀结尾时，通常指人，词的其余部分说明他们做什么：*historian* 研究历史，*sculptor* 制作雕塑，*contestant* 参加比赛。在传记里，这些词能让你立刻知道一个人从事什么工作。\n\n> **注意。** 把“人”与地点、工具或活动区分开——*violinist* 是演奏者，不是琴盒也不是曲子。",
         ),
         itemGenerator(personMeaningBank),
       ),

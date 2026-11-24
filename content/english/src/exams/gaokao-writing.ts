@@ -169,6 +169,10 @@ export const practicalWriting: TopicDef = judgedExamTopic({
     "Write an email, a notice, an invitation or a letter of about 80 words that covers every point of a task, as in the practical writing of the Gaokao.",
     "按照高考应用文写作的形式，写一封约 80 词的邮件、通知、邀请或书信，覆盖任务的每个要点。",
   ),
+  intro: t(
+    "In an 80-word Gaokao practical task—whether inviting a foreign teacher to judge a contest or posting a Book Swap notice—every word earns its keep: clear purpose up front, every numbered point developed, and the exact format and tone for the reader.",
+    "在约 80 词的高考应用文写作中（无论是邀请外教当评委，还是发布换书日通知），每一句都要直奔要点：开头点明目的、逐条展开所有要点，并用符合读者的格式与语气收尾。",
+  ),
   prerequisites: ["writing-a-formal-email"],
   encompasses: [
     { topic: "writing-a-formal-email", weight: 0.3 },
@@ -179,8 +183,8 @@ export const practicalWriting: TopicDef = judgedExamTopic({
     id: "practical-writing",
     title: t("Practical writing", "应用文写作"),
     explanation: t(
-      "Read the task and number its points: each one needs at least a sentence, and a point you leave out costs more than a small mistake. Begin with the reason for writing, give each point its own few sentences with a detail or a reason, and end politely. A letter or email has a greeting, such as *Dear Mr. Smith*, and a closing with the name the task gives; a notice has a title and the facts its readers need: what, when, where and how. Keep to about 80 words, and choose the tone for the reader: friendly to a friend, polite to a teacher or a stranger.",
-      "读题时给要点编号：每个要点至少要写一句，漏掉一个要点比犯一个小错误损失更大。开头说明写信的目的，每个要点用几句话展开，并给出细节或理由，结尾要礼貌。书信或邮件要有称呼，如 *Dear Mr. Smith*，以及署有题目所给姓名的结束语；通知要有标题，并写明读者需要的信息：什么事、什么时间、什么地点、怎样参加。篇幅控制在 80 词左右，语气要适合读者：对朋友亲切，对老师或陌生人礼貌。",
+      "Read the task and number its points: each one needs at least a sentence, and a point you leave out costs more than a small mistake. Begin with the reason for writing, give each point its own few sentences with a detail or a reason, and end politely. A letter or email has a greeting, such as *Dear Mr. Smith*, and a closing with the name the task gives; a notice has a title and the facts its readers need: what, when, where and how. Keep to about 80 words, and choose the tone for the reader: friendly to a friend, polite to a teacher or a stranger.\n\n> **Watch out.** Never drop one of the numbered bullet points or forget the required format (greeting + sign-off as *Li Hua* for emails/letters, or a clear title and event details for notices).",
+      "读题时给要点编号：每个要点至少要写一句，漏掉一个要点比犯一个小错误损失更大。开头说明写信的目的，每个要点用几句话展开，并给出细节或理由，结尾要礼貌。书信或邮件要有称呼，如 *Dear Mr. Smith*，以及署有题目所给姓名的结束语；通知要有标题，并写明读者需要的信息：什么事、什么时间、什么地点、怎样参加。篇幅控制在 80 词左右，语气要适合读者：对朋友亲切，对老师或陌生人礼貌。\n\n> **注意。** 切勿遗漏任何一个编号要点，也别忘了体裁格式（邮件/书信要有称呼和署名 *Li Hua*，通知要有清晰标题与时间地点等信息）。",
     ),
   },
   question: t("Write the text the task asks for.", "按要求写出这篇应用文。"),
@@ -188,6 +192,10 @@ export const practicalWriting: TopicDef = judgedExamTopic({
   limits: { minWords: 60, maxChars: 1000 },
   xp: 15,
   what: t("answer", "范文"),
+  check: t(
+    "Confirm you wrote around 80 words, covered every numbered point with a brief detail, used the right greeting/closing or notice title, and matched the tone to the reader.",
+    "核对篇幅约 80 词、逐条覆盖并展开了所有编号要点、称呼落款或通知标题格式正确，且语气符合收件人身份。",
+  ),
 });
 
 /** continuationWriting is the continuation writing of the writing section of the paper. */
@@ -198,6 +206,10 @@ export const continuationWriting: TopicDef = judgedExamTopic({
     "Read a story and continue it in two paragraphs of about 150 words in all, each beginning with a given sentence, as in the continuation writing of the Gaokao.",
     "按照高考读后续写的形式，读一个故事，用两段共约 150 词把它续写完，每段以所给的句子开头。",
   ),
+  intro: t(
+    "Gaokao Continuation Writing hands you a story mid-crisis and two paragraph-opening sentences: your job is to bridge paragraph 1 naturally into paragraph 2, resolve the central conflict in past tense, and bring the characters alive with concrete actions and dialogue.",
+    "高考读后续写会给你一个停在关键节点的故事和两个段首句：你需要让第一段自然过渡到第二段，用过去时收束核心矛盾，并用具体动作与对话让人物立体起来。",
+  ),
   prerequisites: ["writing-a-story"],
   encompasses: [{ topic: "writing-a-story", weight: 0.5 }],
   criteria: ["gaokao-continuation-plot", "gaokao-continuation-detail"],
@@ -205,8 +217,8 @@ export const continuationWriting: TopicDef = judgedExamTopic({
     id: "continuation-writing",
     title: t("Continuation writing", "读后续写"),
     explanation: t(
-      "Before you write, ask what the story is about and how its main character feels at the end of it. The first given sentence tells you what happens next, and the second tells you where the story must arrive, so the first paragraph must lead to the second. Keep the characters as the story has shown them, and finish with an ending that answers the problem the story raised. Show rather than tell: what people do, how they feel and a few words they say, in the past tense of the story.",
-      "动笔之前，先想一想故事讲的是什么、主人公在故事结尾有什么感受。第一段所给的句子告诉你接下来发生了什么，第二段所给的句子告诉你故事要走向哪里，所以第一段必须自然地引出第二段。人物要保持原文中的样子，结尾要回应故事提出的问题。要用描写代替叙述：写人物做了什么、有什么感受、说了哪几句话，并沿用故事的过去时。",
+      "Before you write, ask what the story is about and how its main character feels at the end of it. The first given sentence tells you what happens next, and the second tells you where the story must arrive, so the first paragraph must lead to the second. Keep the characters as the story has shown them, and finish with an ending that answers the problem the story raised. Show rather than tell: what people do, how they feel and a few words they say, in the past tense of the story.\n\n> **Watch out.** Do not let paragraph 1 jump ahead past the second given sentence, and do not switch out of past tense or leave the story's original conflict unresolved.",
+      "动笔之前，先想一想故事讲的是什么、主人公在故事结尾有什么感受。第一段所给的句子告诉你接下来发生了什么，第二段所给的句子告诉你故事要走向哪里，所以第一段必须自然地引出第二段。人物要保持原文中的样子，结尾要回应故事提出的问题。要用描写代替叙述：写人物做了什么、有什么感受、说了哪几句话，并沿用故事的过去时。\n\n> **注意。** 不要在第一段就提前写完第二段段首句之后的情节，也不要在叙事中途误切到现在时或忘了收束原文的核心矛盾。",
     ),
   },
   question: t("Continue the story as the task asks.", "按要求续写这个故事。"),
@@ -214,4 +226,8 @@ export const continuationWriting: TopicDef = judgedExamTopic({
   limits: { minWords: 120, maxChars: 1600 },
   xp: 25,
   what: t("continuation", "续写"),
+  check: t(
+    "Check that your two paragraphs total around 150 words, start with the exact given sentences, bridge smoothly from paragraph 1 to paragraph 2, stay in past tense, and resolve the story's problem with vivid action and dialogue.",
+    "核对两段共约 150 词、严格以给定段首句开头、第一段自然衔接第二段、全程保持过去时，并用生动的动作和对话圆满解决原文矛盾。",
+  ),
 });

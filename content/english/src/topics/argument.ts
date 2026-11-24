@@ -503,6 +503,10 @@ export const argumentTopics: readonly TopicDef[] = [
     id: "claims",
     title: t("Claims", "论点"),
     summary: t("The position an argument takes, as opposed to a fact about the subject.", "论证所持的立场，区别于关于话题的事实。"),
+    intro: t(
+      "*Our town has three parks* is a fact nobody can debate; *Our town should turn the empty lot on Oak Street into a fourth park* is a **claim** you can argue for. Every strong argument starts with a debatable, precise claim.",
+      "*Our town has three parks* 是无可争辩的事实；*Our town should turn the empty lot on Oak Street into a fourth park* 才是可以展开论证的**论点**。有力论证的第一步，是提出可争辩、够具体的论点。",
+    ),
     prerequisites: ["fact-and-opinion"],
     encompasses: [{ topic: "fact-and-opinion", weight: 0.3 }],
     xp: 10,
@@ -511,15 +515,16 @@ export const argumentTopics: readonly TopicDef[] = [
         "finding-the-claim",
         t("Finding the Claim", "找出论点"),
         t(
-          "A **claim** is the position an argument takes: something that people could reasonably disagree with and that the writer will try to prove. *Schools should start later* is a claim. *Most schools start before eight* is a fact, which can be checked and could serve as evidence. Claims often use words such as *should, must* or *more than*.",
-          "**论点**是论证所持的立场：别人可以合理地反对、作者要设法证明的观点。*Schools should start later* 是论点。*Most schools start before eight* 是事实，可以核实，也可以用作论据。论点常用 *should, must, more than* 这样的词。",
+          "A **claim** is the debatable position an argument sets out to prove: *Schools should start an hour later*. By contrast, *Most schools start before eight* is a checkable fact—useful as evidence, but not a claim. Claims often signal a stance with words like *should*, *must*, or *does more harm than good*.\n\n> **Watch out.** Do not mistake an interesting statistic or survey fact for a claim—if you can settle it simply by looking it up, it is a fact, not a claim.",
+          "**论点**是论证准备证明、别人可以合理反对的立场：*Schools should start an hour later*。相比之下，*Most schools start before eight* 是可核查的事实——可以当论据，但不是论点。论点常带 *should*、*must* 或 *does more harm than good* 等立场词。\n\n> **注意。** 别把有趣的统计数字或调查结果当成论点——只要查一下记录就能定对错的，就是事实而不是论点。",
         ),
         pick(
           ["Which sentence is a claim that an argument could prove?", "哪个句子是可以用论证来证明的论点？"],
           [...claimBank, ...claimMore],
           (right) =>
-            `*${right}* takes a position that people could disagree with. The other sentences are facts, which could be evidence but not the claim.`,
-          (right) => `*${right}* 表明了一个别人可能反对的立场。其他句子是事实，可以作为论据，但不是论点。`,
+            `The claim is: **${right}** It stakes out a debatable position, whereas the other two sentences only report checkable facts.\n\n**Check.** Try putting *I disagree that…* in front of each option: only this sentence sparks a real debate rather than a quick lookup.`,
+          (right) =>
+            `论点是：**${right}** 它亮出了可争辩的立场，而另两句只是陈述可核查的事实。\n\n**检验。** 试着在每个选项前加上“我反对……”：只有这一句会引发真正辩论，而不是查一下资料就结束了。`,
           factNot,
         ),
       ),
@@ -527,14 +532,16 @@ export const argumentTopics: readonly TopicDef[] = [
         "precise-claims",
         t("Precise Claims", "明确的论点"),
         t(
-          "A good claim is **precise**: it says exactly what should happen or what is true, so the reader knows what the argument will prove. *Drinks are important* is too vague to argue about. *Our school should replace soda machines with water fountains* tells exactly what the writer wants and could be supported with evidence.",
-          "好的论点是**明确的**：它准确说出应该发生什么或什么是真的，让读者知道论证要证明什么。*Drinks are important* 太含糊，无从论证。*Our school should replace soda machines with water fountains* 准确说出了作者的主张，并且可以用论据支持。",
+          "A strong claim is **precise**: it names exactly who should act or what should change so readers know what the essay will prove. *Drinks are important* is too vague to debate, while *Our school should replace soda machines with water fountains* gives a concrete, arguable proposal.\n\n> **Watch out.** Eliminate both traps: a vague platitude (*Tests are a big deal*) and a plain fact (*The library closes at six*)—only a specific, debatable proposal counts.",
+          "好的论点必须**明确**：说清该由谁来做、具体改变什么，让读者一眼看懂文章要证明什么。*Drinks are important* 过于空泛无法论证，而 *Our school should replace soda machines with water fountains* 提出了具体可辩的主张。\n\n> **注意。** 同时避开两个陷阱：空洞的套话（*Tests are a big deal*）和纯事实（*The library closes at six*）——只有具体且可争辩的主张才算明确论点。",
         ),
         pick(
           ["Which is the most precise claim?", "哪一项是最明确的论点？"],
           [...preciseClaimBank, ...preciseClaimMore],
-          (right) => `*${right}* says exactly what the writer wants. One other choice is too vague to argue, and the other is a fact.`,
-          (right) => `*${right}* 准确说出了作者的主张。另一个选项太含糊，无法论证；还有一个是事实。`,
+          (right) =>
+            `The most precise claim is: **${right}** It specifies a clear action or stance that can be argued with evidence.\n\n**Check.** Ask two questions: *Could someone reasonably disagree?* and *Does it name a specific change?* Only this option answers yes to both.`,
+          (right) =>
+            `最明确的论点是：**${right}** 它提出了清晰具体的行动或立场，可以用论据展开论证。\n\n**检验。** 问两个问题：*别人能否合理反对？**它是否说清了具体改什么？*只有这个选项两项都满足。`,
           preciseNot,
         ),
       ),
@@ -544,6 +551,10 @@ export const argumentTopics: readonly TopicDef[] = [
     id: "evidence",
     title: t("Evidence", "论据"),
     summary: t("Evidence that is relevant to a claim, and evidence that is strong.", "与论点相关的论据，以及有力的论据。"),
+    intro: t(
+      "Saying *Trees live for centuries* is true, yet it does nothing to prove *Trees cool city streets*—whereas measuring a ten-degree drop in the shade proves it directly. Effective **evidence** must be both **relevant** to the claim and **strong** enough to check.",
+      "说 *Trees live for centuries* 固然没错，却证明不了 *Trees cool city streets*；而测出树荫下降温十度才能直接证明。好**论据**必须同时做到**切题相关**且**扎实可核查**。",
+    ),
     prerequisites: ["claims"],
     encompasses: [{ topic: "claims", weight: 0.3 }],
     xp: 12,
@@ -552,14 +563,16 @@ export const argumentTopics: readonly TopicDef[] = [
         "relevant-evidence",
         t("Relevant Evidence", "相关的论据"),
         t(
-          "**Evidence** is the facts, numbers, examples and expert findings that support a claim. Evidence is **relevant** only if it helps prove the claim. A true fact about the same subject that does not bear on the claim is not relevant, however interesting it is.",
-          "**论据**是支持论点的事实、数字、例子和专家的发现。只有能帮助证明论点的论据才是**相关的**。一个关于同一话题、却与论点无关的真实事实，再有趣也不相关。",
+          "**Evidence** consists of facts, numbers, examples, and studies used to support a claim. Evidence is **relevant** only when it directly bears on the claim: for *Learning music helps students in other subjects*, *Music students scored higher on math tests* is relevant, while *Pianos have 88 keys* is off-point.\n\n> **Watch out.** Do not pick a fact just because it shares a keyword (*trees*, *phones*, *dogs*) with the claim—ask whether it actually gives a reason to accept the claim.",
+          "**论据**是用来支持论点的事实、数字、例子和研究。只有直接关乎论点成立与否的论据才是**相关的**：对 *Learning music helps students in other subjects*，*Music students scored higher on math tests* 相关，而 *Pianos have 88 keys* 毫无关系。\n\n> **注意。** 别因为某个事实和论点带有相同关键词（*trees*、*phones*、*dogs*）就选它——问问它到底能不能帮你相信论点。",
         ),
         pick(
           ["Which evidence is relevant to the claim?", "哪项论据与论点相关？"],
           [...relevantEvidenceBank, ...relevantEvidenceMore],
-          (right) => `*${right}* helps prove the claim. The other sentences are about the same subject but do not support the claim.`,
-          (right) => `*${right}* 有助于证明论点。其他句子与同一话题有关，却不支持这个论点。`,
+          (right) =>
+            `The relevant evidence is: **${right}** It directly backs up what the claim asserts.\n\n**Check.** Suppose this sentence is true—does it actually make the claim more believable? Yes, whereas the other two options are merely background trivia on the same topic.`,
+          (right) =>
+            `相关的论据是：**${right}** 它直接支撑了论点所主张的内容。\n\n**检验。** 假设这句话属实——它真的会让论点更可信吗？是的，而另两项只是同一题材的无关背景。`,
           unrelatedNot,
         ),
       ),
@@ -567,14 +580,16 @@ export const argumentTopics: readonly TopicDef[] = [
         "stronger-evidence",
         t("Stronger Evidence", "更有力的论据"),
         t(
-          "Strong evidence is specific and can be checked: numbers, records, studies and surveys of many people. Weak evidence is a personal feeling, one person's opinion, or a vague statement such as *everybody knows*. When two pieces of evidence support the same claim, choose the one a doubting reader could check.",
-          "有力的论据具体且可以核实：数字、记录、研究和对许多人的调查。薄弱的论据是个人感受、一个人的看法，或者 *everybody knows* 这样含糊的说法。当两条论据支持同一论点时，选择持怀疑态度的读者能够核实的那一条。",
+          "Strong evidence is specific and verifiable: counts, city records, multi-student surveys, and published studies. Weak evidence leans on personal feelings (*I feel scared*), one friend's story, or empty claims (*everybody knows*). Compare *Police reports show six crashes at that crosswalk* (strong) against *Some parents say it seems risky* (weak).\n\n> **Watch out.** A longer anecdote about one friend or sibling still counts as weak evidence—look for measured data or records covering many cases.",
+          "有力的论据具体且可核查：统计数字、官方记录、大样本调查和专业研究。薄弱论据只靠个人感受（*I feel scared*）、某个朋友的经历或空话（*everybody knows*）。对比 *Police reports show six crashes at that crosswalk*（有力）和 *Some parents say it seems risky*（薄弱）。\n\n> **注意。** 哪怕把一个朋友或亲戚的经历写得很长，它仍然只是个例——要找有测量数据、官方记录或多样本支撑的那一项。",
         ),
         pick(
           ["Which is the strongest evidence for the claim?", "哪项是支持论点最有力的论据？"],
           [...strongerEvidenceBank, ...strongerEvidenceMore],
-          (right) => `*${right}* is specific and can be checked. The other choices are feelings, one person's view or vague statements.`,
-          (right) => `*${right}* 具体且可以核实。其他选项是感受、一个人的看法或含糊的说法。`,
+          (right) =>
+            `The strongest evidence is: **${right}** It offers checkable numbers, records, or research rather than feelings or hearsay.\n\n**Check.** Ask whether a skeptical reader could independently verify this evidence: yes—it cites concrete records, counts, or studies instead of one person's opinion.`,
+          (right) =>
+            `最有力的论据是：**${right}** 它拿出可核查的数字、记录或研究，而不是感受或传闻。\n\n**检验。** 问问持怀疑态度的读者能否独立核实这条证据：可以——它引用的都是具体记录、统计或研究，而非个人印象。`,
           weakNot,
         ),
       ),
@@ -584,6 +599,10 @@ export const argumentTopics: readonly TopicDef[] = [
     id: "reasoning",
     title: t("Reasoning", "推理"),
     summary: t("The explanation of how evidence supports a claim.", "说明论据如何支持论点的解释。"),
+    intro: t(
+      "Even solid evidence needs a bridge to the claim—and a conclusion must never outrun what the data actually proved. Sound **reasoning** connects evidence to claim and keeps every conclusion strictly within its proof.",
+      "再扎实的论据也需要搭桥连向论点，而结论也绝不能跑出证据证明的范围。严密的**推理**既能讲清论据如何推出论点，也能把结论稳稳控制在证据边界之内。",
+    ),
     prerequisites: ["evidence"],
     encompasses: [{ topic: "evidence", weight: 0.3 }],
     xp: 12,
@@ -592,14 +611,16 @@ export const argumentTopics: readonly TopicDef[] = [
         "connecting-evidence-to-claim",
         t("Connecting Evidence to the Claim", "把论据和论点联系起来"),
         t(
-          "**Reasoning** explains why the evidence proves the claim. It builds a bridge: *if* this evidence is true, *then* the claim follows, *because*… Reasoning does not repeat the evidence or add an unrelated fact; it shows the link between the two.",
-          "**推理**解释论据为什么能证明论点。它搭起一座桥：*如果*这个论据成立，*那么*论点就成立，*因为*……推理不是重复论据，也不是添加无关的事实，而是揭示两者之间的联系。",
+          "**Reasoning** builds the logical bridge from evidence to claim: *if* the evidence is true, *then* the claim follows, *because…*. For *Claim: Bike lanes make streets safer / Evidence: Cities with bike lanes report fewer crashes*, the reasoning is *Separating bikes from cars gives them less chance to collide*.\n\n> **Watch out.** Do not pick a sentence that simply drops in another loose fact about bikes or streets—reasoning must explicitly link *both* the evidence and the claim.",
+          "**推理**在论据和论点之间架起逻辑桥梁：*如果*论据属实，*那么*论点成立，*因为……*。对“论点：自行车道让街道更安全 / 论据：建了自行车道的城市碰撞事故更少”，推理是 *Separating bikes from cars gives them less chance to collide*。\n\n> **注意。** 别选仅仅补充另一条零散事实的句子——推理必须同时扣住*论据*和*论点*两头。",
         ),
         pick(
           ["Which sentence best explains how the evidence supports the claim?", "哪个句子最好地解释了论据如何支持论点？"],
           [...reasoningBank, ...reasoningMore],
-          (right) => `*${right}* links the evidence to the claim. The other sentences add facts or opinions without showing that link.`,
-          (right) => `*${right}* 把论据和论点联系起来。其他句子只是添加了事实或看法，没有揭示这种联系。`,
+          (right) =>
+            `The reasoning bridge is: **${right}** It explains *why* the evidence makes the claim follow.\n\n**Check.** Verify that this sentence connects both halves—taking what the evidence shows and explaining how it achieves what the claim calls for.`,
+          (right) =>
+            `起到逻辑桥梁作用的推理是：**${right}** 它解释了*为什么*这条论据能推出论点。\n\n**检验。** 核对这句话是否接住了两端——顺着论据呈现的事实，说明它如何促成论点所主张的结果。`,
           reasoningNot,
         ),
       ),
@@ -607,15 +628,16 @@ export const argumentTopics: readonly TopicDef[] = [
         "conclusions-that-fit",
         t("Conclusions That Fit the Evidence", "与论据相符的结论"),
         t(
-          "Sound reasoning claims no more than the evidence shows. A survey of one class tells you about that class, not about all students everywhere. Watch for words such as *all, every, never, always* and *only*: they often stretch a conclusion past its evidence.",
-          "合理的推理不会超出论据所能证明的范围。对一个班的调查只能说明这个班，而不能说明各地所有学生。留意 *all, every, never, always, only* 这样的词：它们常常让结论超出论据。",
+          "Sound reasoning never claims more than the evidence actually measured. If 20 of 25 students in one class like science, you may conclude *Most students in our class like science*—not *All students everywhere love science*. Extreme words like *all*, *every*, *never*, *always*, and *only* are red flags for overreach.\n\n> **Watch out.** Match the **scope** of the evidence (one class, one orchard, two students, one crosswalk) to the scope of the conclusion—reject any option that stretches a small sample into *everyone* or *everywhere*.",
+          "合理的推理从不超出证据实际测量的范围。如果一个班 25 人里有 20 人喜欢科学，可以得出 *Most students in our class like science*，而不能说 *All students everywhere love science*。*all*、*every*、*never*、*always*、*only* 这类绝对词往往是过度推论的信号。\n\n> **注意。** 把证据的**范围**（一个班、一片果园、两名学生、一条斑马线）和结论的范围一一对齐——凡是把局部样本夸大成*所有人*或*所有地方*的选项一律排除。",
         ),
         pick(
           ["Which conclusion does the evidence support?", "论据支持哪个结论？"],
           [...conclusionBank, ...conclusionMore],
           (right) =>
-            `*${right}* claims no more than the evidence shows. The other conclusions go far beyond it or give an opinion it does not prove.`,
-          (right) => `*${right}* 没有超出论据所能证明的范围。其他结论远远超出了论据，或者给出了论据无法证明的看法。`,
+            `The supported conclusion is: **${right}** It stays faithfully inside the group and scope that the evidence actually measured.\n\n**Check.** Compare the quantifiers (*most*, *many*, *may*, *seems*) against the extreme words (*all*, *every*, *never*, *only*) in the other options: only this conclusion avoids claiming more than the data prove.`,
+          (right) =>
+            `证据支持的结论是：**${right}** 它忠实留在证据实际测量的对象和范围内。\n\n**检验。** 对比这一句里的克制措辞（*most*、*many*、*may*、*seems*）和另两项里的绝对词（*all*、*every*、*never*、*only*）：只有这个结论没有超出数据范围。`,
           conclusionNot,
         ),
       ),
@@ -625,6 +647,10 @@ export const argumentTopics: readonly TopicDef[] = [
     id: "counterclaims-and-rebuttals",
     title: t("Counterclaims and Rebuttals", "反方观点与反驳"),
     summary: t("An opposing view an argument takes up, and the answer to it.", "论证中提到的反对意见，以及对它的回应。"),
+    intro: t(
+      "Ignoring the other side makes an argument look fragile. Naming a fair **counterclaim** (*Shop owners fear losing car traffic*) and answering it with a **rebuttal** (*Towns that closed streets saw foot traffic rise*) makes your case far stronger.",
+      "对反对声音视而不见，反而会让论证显得站不住脚。先公正摆出**反方观点**（*店主担心禁车后客流减少*），再用**反驳**回应（*禁车城镇步行客流反而增加*），论证才会更有说服力。",
+    ),
     prerequisites: ["reasoning"],
     encompasses: [{ topic: "reasoning", weight: 0.2 }],
     xp: 12,
@@ -633,14 +659,16 @@ export const argumentTopics: readonly TopicDef[] = [
         "finding-the-counterclaim",
         t("Finding the Counterclaim", "找出反方观点"),
         t(
-          "A **counterclaim** is a view that opposes the writer's claim. Strong arguments state one fairly, often after words such as *some say, critics argue* or *others believe*. A reason that supports the writer's own claim is not a counterclaim, even if it appears near one.",
-          "**反方观点**是与作者论点相反的观点。有力的论证会公正地陈述反方观点，常常用 *some say, critics argue, others believe* 这样的词引出。支持作者自己论点的理由不是反方观点，即使它出现在反方观点旁边。",
+          "A **counterclaim** states a reasonable objection from the *opposing* side, often introduced by *Some say*, *Critics worry*, or *Others argue*. For *Claim: Schools should require uniforms*, *Some say uniforms limit students' self-expression* is a counterclaim, whereas *Uniforms save families money* supports the claim.\n\n> **Watch out.** Check which side of the debate each sentence pushes toward—two of the options will *support* the claim, and only one pushes *against* it.",
+          "**反方观点**从*对立面*提出合理的反对意见，常用 *Some say*、*Critics worry* 或 *Others argue* 引出。对“论点：学校应要求穿校服”，*Some say uniforms limit students' self-expression* 是反方观点，而 *Uniforms save families money* 是在支持原论点。\n\n> **注意。** 核对每个选项站在辩论的哪一边——其中两项都在*支持*原论点，只有一项是*反对*它的。",
         ),
         pick(
           ["Which sentence states a counterclaim to this claim?", "哪个句子陈述了这个论点的反方观点？"],
           [...counterclaimBank, ...counterclaimMore],
-          (right) => `*${right}* opposes the claim. The other sentences are reasons that support it.`,
-          (right) => `*${right}* 反对这个论点。其他句子是支持论点的理由。`,
+          (right) =>
+            `The counterclaim is: **${right}** It voices a genuine objection from the opposite side of the issue.\n\n**Check.** Ask *Would someone who disagrees with the claim say this?* Yes—whereas the other two sentences are arguments in favor of the claim.`,
+          (right) =>
+            `反方观点是：**${right}** 它提出了对立一方的真实顾虑。\n\n**检验。** 问一句*反对原论点的人会说出这句话吗？*会的——而另外两句都是在帮原论点说话。`,
           sideNot,
         ),
       ),
@@ -648,14 +676,16 @@ export const argumentTopics: readonly TopicDef[] = [
         "choosing-a-rebuttal",
         t("Choosing a Rebuttal", "选择反驳"),
         t(
-          "A **rebuttal** answers a counterclaim and shows why the writer's claim still holds. It often begins with *however, yet, still* or *even so*, and it gives a reason or evidence. Agreeing with the counterclaim, or repeating a general fact, is not a rebuttal.",
-          "**反驳**回应反方观点，说明为什么作者的论点仍然成立。它常以 *however, yet, still, even so* 开头，并给出理由或论据。认同反方观点或重复一般事实都不是反驳。",
+          "A **rebuttal** turns back against a counterclaim—often with *However*, *Yet*, *Still*, or *Even so*—and offers a reason, solution, or evidence showing why the main claim still stands. Simply agreeing with the objection (*Skateboards are very noisy*) or stating a neutral fact is not a rebuttal.\n\n> **Watch out.** A rebuttal must *answer* the specific worry raised in the counterclaim, not just mention the same topic.",
+          "**反驳**常用 *However*、*Yet*、*Still* 或 *Even so* 转折，针对反方观点给出理由、解决方案或证据，说明己方论点依然成立。单纯赞同对方（*Skateboards are very noisy*）或说一句无关痛痒的常识都不是反驳。\n\n> **注意。** 反驳必须直接*回应*反方提出的那个具体顾虑，而不能只是顺着同一个话题泛泛而谈。",
         ),
         pick(
           ["Which sentence is the best rebuttal to the counterclaim?", "哪个句子是对这个反方观点最好的反驳？"],
           [...rebuttalBank, ...rebuttalMore],
-          (right) => `*${right}* answers the counterclaim with a reason. The other sentences agree with it or only state a general fact.`,
-          (right) => `*${right}* 用理由回应了反方观点。其他句子要么认同它，要么只陈述了一般事实。`,
+          (right) =>
+            `The strongest rebuttal is: **${right}** It directly addresses the opposing worry and explains why the main claim still holds.\n\n**Check.** Look for the pivot (*However*, *Yet*, *Still*, *But*, *Even so*) followed by a concrete answer to the counterclaim—rather than agreeing with it or drifting to a generic fact.`,
+          (right) =>
+            `最有力的反驳是：**${right}** 它正面回应了反方顾虑，并说明己方论点为何依然站得住脚。\n\n**检验。** 找到转折词（*However*、*Yet*、*Still*、*But*、*Even so*）以及紧随其后的具体应对理由——它既没有附和反方，也没有跑去说空泛常识。`,
           rebuttalNot,
         ),
       ),

@@ -44,8 +44,8 @@ const findBank: readonly Ask[] = passages.flatMap((p) =>
       right,
       wrong: [p.sentences[other] ?? "", p.sentences[third] ?? ""],
       why: t(
-        `The answer is in these words of the passage: “${right}” A reader can point to the sentence that answers a question.`,
-        `答案就在文中的这句话里：“${right}” 读者可以指出回答问题的那一句。`,
+        `The answer is in this sentence: *${right}*\n\n**Check.** Read the question (“${question}”) right beside *${right}*: the sentence directly gives the fact asked for, while the other two sentences answer different questions.`,
+        `答案就在这句话里：*${right}*\n\n**检验。** 把问题（“${question}”）和 *${right}* 对照着读：这一句直接给出了所问的事实，而另外两句回答的是别的问题。`,
       ),
       whyNot: [
         t(
@@ -67,8 +67,8 @@ const whichQuestionBank: readonly Ask[] = passages.flatMap((p) =>
       right: question,
       wrong: [other, p.unanswered],
       why: t(
-        `The sentence in bold gives the answer to “${question}” Its words tell exactly what the question asks.`,
-        `粗体的句子给出了“${question}”的答案。它的词句正好说出了问题所问的内容。`,
+        `The bold sentence directly answers “${question}”\n\n**Check.** Read “${question}” followed immediately by the bold sentence: it sounds like a natural question-and-answer pair.`,
+        `粗体的句子正好回答了“${question}”\n\n**检验。** 把“${question}”和粗体句连着读一遍，正好是一问一答。`,
       ),
       whyNot: [
         t(
@@ -158,8 +158,8 @@ const valueBank: readonly Ask[] = towns.flatMap((town) =>
         right: deg(right),
         wrong: [deg(sameRow), deg(sameColumn)],
         why: t(
-          `Find the row for ${day} and the column for the ${column}: where they meet, the table says ${right} °C.`,
-          `找到${dayZh[day]}那一行和${zhColumn}气温那一列：它们交汇的地方写着 ${right} °C。`,
+          `Follow the **${day}** row across to the **${column}** column: the value there is **${right} °C**.\n\n**Check.** Trace back from **${right} °C**—go left to confirm the row says **${day}**, and go up to confirm the heading says **${column}**.`,
+          `沿**${dayZh[day]}**这一行向右找到**${zhColumn}**气温那一列，交汇处的数值是 **${right} °C**。\n\n**检验。** 从 **${right} °C** 倒着核对：往左看行名是**${dayZh[day]}**，往上看列标题是**${zhColumn}**。`,
         ),
         whyNot: [
           t(
@@ -195,8 +195,8 @@ const compareBank: readonly Ask[] = towns.flatMap((town) =>
         right: warm,
         wrong: [cool, "They were the same."],
         why: t(
-          `${warm} had a high of ${hw} °C and ${cool} a high of ${hc} °C, and ${hw} is the greater number.`,
-          `${dayZh[warm]}的最高气温是 ${hw} °C，${dayZh[cool]}是 ${hc} °C，${hw} 更大。`,
+          `In the High column, ${warm} is **${hw} °C** and ${cool} is **${hc} °C**, so **${warm}** was warmer.\n\n**Check.** Compare the two numbers on a thermometer: ${hw} > ${hc}, confirming **${warm}** had the higher temperature.`,
+          `在“最高”那一列里，${dayZh[warm]}是 **${hw} °C**，${dayZh[cool]}是 **${hc} °C**，所以**${dayZh[warm]}**更暖和。\n\n**检验。** 比较温度计上的两个数值：${hw} > ${hc}，确认**${dayZh[warm]}**最高气温更高。`,
         ),
         whyNot: [
           t(
@@ -218,8 +218,8 @@ const compareBank: readonly Ask[] = towns.flatMap((town) =>
         right: `${diff} degrees`,
         wrong: [`${hw} degrees`, `${wrongDiff} degrees`],
         why: t(
-          `Subtract the two highs: ${hw} − ${hc} = ${diff}, so ${warm} was ${diff} degrees warmer.`,
-          `用两天的最高气温相减：${hw} − ${hc} = ${diff}，所以${dayZh[warm]}高 ${diff} 度。`,
+          `Subtract the two highs: ${hw} − ${hc} = **${diff}**, so ${warm} was **${diff} degrees** warmer.\n\n**Check.** Add back to verify: ${hc} + ${diff} = ${hw}, which matches ${warm}'s high in the High column.`,
+          `用两天的最高气温相减：${hw} − ${hc} = **${diff}**，所以${dayZh[warm]}高 **${diff} 度**。\n\n**检验。** 用加法倒推验算：${hc} + ${diff} = ${hw}，正好等于${dayZh[warm]}在“最高”列里的数值。`,
         ),
         whyNot: [
           t(
@@ -316,8 +316,8 @@ const kindLines = `
 const purpose = kinded(
   ["Which text should this reader choose?", "这位读者应该选择哪个文本？"],
   (right) => [
-    `The reader needs ${right}: it is the right kind of text for this purpose, and it is on the right subject.`,
-    `读者需要的是 ${right}：对这个目的来说，它的种类合适，主题也对。`,
+    `The reader should choose ${right}.\n\n**Check.** Verify both needs: it matches the reader's **purpose** (facts, story, or how-to) and the reader's **subject**, whereas each wrong choice misses one of the two.`,
+    `这位读者应该选 ${right}。\n\n**检验。** 对照两项要求：它既符合读者的**目的**（查事实、读故事还是学做法），又对上了**主题**，而另两个选项各漏了一项。`,
   ],
   [
     [
@@ -402,7 +402,10 @@ const letterPartsBank: readonly Ask[] = letters.flatMap((l): Ask[] => [
     shown: l.text,
     right: l.writer,
     wrong: [l.reader, l.other],
-    why: t(`The writer signs the letter at the end, under the closing: ${l.writer}.`, `写信人在信的结尾、结束语下面签名：${l.writer}。`),
+    why: t(
+      `**${l.writer}** wrote the letter—the writer signs at the very bottom under the closing.\n\n**Check.** Look at the top greeting (*Dear ${l.reader},*) vs. the bottom signature (**${l.writer}**): the top names the reader, and the bottom names the writer.`,
+      `**${l.writer}** 写了这封信——写信人在信尾结束语下面签名。\n\n**检验。** 对照开头称呼（*Dear ${l.reader},*）和末尾署名（**${l.writer}**）：开头是收信人，末尾才是写信人。`,
+    ),
     whyNot: [
       t("That is the person the letter is written to: the name after Dear in the greeting.", "这是收信人：称呼里 Dear 后面的名字。"),
       t(
@@ -417,8 +420,8 @@ const letterPartsBank: readonly Ask[] = letters.flatMap((l): Ask[] => [
     right: l.reader,
     wrong: [l.writer, l.other],
     why: t(
-      `The greeting names the reader: Dear ${l.reader}. A letter is written to the person in its greeting.`,
-      `称呼说出了收信人：Dear ${l.reader}。信是写给称呼里那个人的。`,
+      `The letter is written to **${l.reader}**, named right in the greeting (*Dear ${l.reader},*).\n\n**Check.** Compare the greeting (*Dear ${l.reader},*) with the signature (*${l.writer}*): *Dear* always introduces the reader.`,
+      `这封信是写给 **${l.reader}** 的，开头的称呼（*Dear ${l.reader},*）直接点明了收信人。\n\n**检验。** 对照开头称呼（*Dear ${l.reader},*）和末尾署名（*${l.writer}*）：*Dear* 后面永远是收信人。`,
     ),
     whyNot: [
       t(
@@ -437,8 +440,8 @@ const letterPartsBank: readonly Ask[] = letters.flatMap((l): Ask[] => [
     right: l.date,
     wrong: [l.past, l.coming],
     why: t(
-      `The date at the top of a letter tells when it was written: ${l.date}. Other dates in the body tell about events.`,
-      `信顶部的日期说明它是什么时候写的：${l.date}。正文里的其他日期说的是一些事情。`,
+      `The letter was written on **${l.date}**, shown in the date line at the top.\n\n**Check.** Check where **${l.date}** sits: it stands alone on the top line above *Dear ${l.reader},*, while the other dates appear inside body sentences about events.`,
+      `这封信写于 **${l.date}**，标在信最顶部的日期行。\n\n**检验。** 看 **${l.date}** 的位置：它单独写在 *Dear ${l.reader},* 上方的顶部，而其他日期都在正文里讲别的事情。`,
     ),
     whyNot: [
       t(
@@ -460,8 +463,8 @@ const letterReasonBank: readonly Ask[] = letters.flatMap((l): Ask[] => [
     right: l.reason,
     wrong: [l.detail, l.notReason],
     why: t(
-      `${l.writer} wrote ${l.reason}. The reason for a letter covers the whole of it, its news and what it asks.`,
-      `${l.writer} 写信的目的是：${l.reason}。写信的原因要涵盖整封信的内容：它的消息和它的请求。`,
+      `${l.writer} wrote **${l.reason}**.\n\n**Check.** Look across the whole body of the letter: the news and the closing thought all point to **${l.reason}**, not just one minor detail.`,
+      `${l.writer} 写信是为了**${l.reason}**。\n\n**检验。** 通看整封信的正文：消息和结尾都围绕着**${l.reason}**，而不只是一个小细节。`,
     ),
     whyNot: [
       t(
@@ -477,8 +480,8 @@ const letterReasonBank: readonly Ask[] = letters.flatMap((l): Ask[] => [
     right: l.request,
     wrong: [l.inLetter, l.notInLetter],
     why: t(
-      `The request is the question near the end of the letter: ${l.writer} asks ${l.reader} ${l.request}.`,
-      `请求就是信快结束时提出的问题：${l.writer} 请 ${l.reader} ${l.request}。`,
+      `${l.writer} asks ${l.reader} **${l.request}**.\n\n**Check.** Find the question mark or *please* near the end of the body: that sentence directly asks ${l.reader} **${l.request}**.`,
+      `${l.writer} 请 ${l.reader} **${l.request}**。\n\n**检验。** 找到正文末尾附近的问号或 *please* 那一句：它直接请 ${l.reader} **${l.request}**。`,
     ),
     whyNot: [
       t("That is in the letter, but it is not something the writer asks the reader to do.", "这在信里出现了，但不是写信人请收信人做的事。"),
@@ -505,8 +508,8 @@ export const factTopics: readonly TopicDef[] = [
         "finding-the-answering-sentence",
         t("Finding the Sentence That Answers", "找到回答问题的句子"),
         t(
-          "When a question asks about a text of facts, the answer is **in the text**. Find the key words of the question, such as *hump* or *sink*, and look for the sentence that uses them or words that mean the same.\n\nThen check: does the sentence tell exactly what the question asks? A sentence about the same animal may answer a different question.",
-          "当问题问的是一篇事实性文本时，答案**就在文本里**。找出问题的关键词，比如 *hump* 或 *sink*，再找使用了这些词或意思相同的词的句子。\n\n然后检查：这一句是否正好说出了问题所问的内容？说同一种动物的句子，可能回答的是另一个问题。",
+          "When a question asks about a text of facts, the answer sits right in the words. Spot the question's key words—like *hump* or *sink*—and locate the sentence that answers that exact point.\n\n> **Watch out.** Another sentence about the same animal may still answer a completely different question.",
+          "关于事实短文的问题，答案就在文字里。先抓出问题里的关键词（如 *hump*、*sink*），再定位直接回答这一点的原句。\n\n> **注意。** 同篇里讲同一种动物的其他句子，回答的可能是另一个问题。",
         ),
         askGenerator(findBank),
       ),
@@ -514,12 +517,17 @@ export const factTopics: readonly TopicDef[] = [
         "which-question-a-sentence-answers",
         t("Which Question a Sentence Answers", "句子回答了哪个问题"),
         t(
-          "Each sentence of a text of facts answers a question of its own. *A thick layer of fat keeps them warm* answers *What keeps penguins warm?*\n\nTo match a sentence to its question, ask what the sentence tells. Some questions are not answered by the text at all, and a reader should notice that too.",
-          "事实性文本的每一句都回答一个自己的问题。*A thick layer of fat keeps them warm* 回答的是 *What keeps penguins warm?*\n\n要把句子和问题对上，就问问这一句说了什么。有些问题文本根本没有回答，读者也应该注意到这一点。",
+          "Each sentence of a fact text answers one specific question: *A thick layer of fat keeps them warm* answers *What keeps penguins warm?* Read what the bold sentence tells, then match it to its exact question.\n\n> **Watch out.** Some questions are never answered anywhere in the passage—notice when a detail is missing.",
+          "事实短文的每一句都对应一个具体问题：*A thick layer of fat keeps them warm* 回答的是 *What keeps penguins warm?* 看清粗体句说了什么，再配对对应的问题。\n\n> **注意。** 有些问题短文根本没有回答，别选文中找不到依据的问题。",
         ),
         askGenerator(whichQuestionBank),
       ),
     ],
+    14,
+    t(
+      "Reading a science paragraph is like being a detective with the evidence right on the page: for every question, you can put your finger on the exact sentence that proves the answer.",
+      "读科普短文就像拿着现场证据当小侦探：每个问题的答案，你都能用手指直接点在原文的那一句话上。",
+    ),
   ),
   topic(
     "reading-a-table",
@@ -534,8 +542,8 @@ export const factTopics: readonly TopicDef[] = [
         "finding-a-value",
         t("Finding a Value in a Table", "在表格里找到一个数值"),
         t(
-          "A **table** sets out facts in **rows**, which go across, and **columns**, which go down. The headings at the top say what each column holds, such as *High (°C)*; the first column names each row, such as *Monday*.\n\nTo find a fact, go along the row and down the column: the fact is in the cell where they meet.",
-          "**表格**把事实排成横着的**行**和竖着的**列**。顶部的标题说明每一列是什么，比如 *High (°C)*；第一列给每一行命名，比如 *Monday*。\n\n要找一个事实，就沿着这一行、顺着这一列看：事实就在它们交汇的格子里。",
+          "A **table** organizes facts into **rows** (across) and **columns** (down). Move across the row for the day—such as *Monday*—and down the column for the heading—such as *High (°C)*—to read the number where they meet.\n\n> **Watch out.** Double-check both the row label and the column heading so you do not read from the wrong column.",
+          "**表格**把信息排成横着的**行**和竖着的**列**。先横着找到对应日期的行（如 *Monday*），再竖着对准列标题（如 *High (°C)*），交汇格里的数就是答案。\n\n> **注意。** 行名和列标题都要核对，别看串了列。",
         ),
         askGenerator(valueBank),
       ),
@@ -543,12 +551,17 @@ export const factTopics: readonly TopicDef[] = [
         "comparing-values",
         t("Comparing Two Values", "比较两个数值"),
         t(
-          "A table makes it easy to compare. To find which day was warmer, find both numbers in the same column and see which is greater. To find **by how much**, subtract the smaller number from the greater one: 21 − 15 = 6, so one day was 6 degrees warmer.\n\nKeep to one column: comparing a high with a low gives the wrong answer.",
-          "表格让比较变得容易。要找出哪一天更暖和，就在同一列里找到两个数，看哪个更大。要算出**高多少**，就用大数减去小数：21 − 15 = 6，所以有一天高 6 度。\n\n要在同一列里比较：拿最高气温和最低气温比，会得出错误的答案。",
+          "To compare two days in a table, pull both numbers from the **same column**: if one high is 21 °C and another is 15 °C, 21 °C is warmer by 21 − 15 = 6 degrees.\n\n> **Watch out.** Stay inside the High column—mixing a High with a Low or grabbing one day's total instead of the difference gives the wrong answer.",
+          "比较表格里的两天时，要从**同一列**取数：比如最高温分别是 21 °C 和 15 °C，前者高出 21 − 15 = 6 度。\n\n> **注意。** 务必留在同一列里比较，不要把最高温和最低温混在一起，也不要把某天的数值当成差值。",
         ),
         askGenerator(compareBank),
       ),
     ],
+    14,
+    t(
+      "A weather chart packs a whole week of highs and lows into a neat grid. Once you follow rows across and columns down, you can read any number—and compare days—in seconds.",
+      "一张天气表把一整周的最高、最低气温整齐地装进格子里。学会横看行、竖看列，几秒钟就能读准数值并算出温差。",
+    ),
   ),
   topic(
     "fiction-and-nonfiction",
@@ -563,21 +576,29 @@ export const factTopics: readonly TopicDef[] = [
         "telling-the-kind-of-text",
         t("Telling the Kind of Text", "分辨文本的种类"),
         t(
-          "**Fiction** tells a made-up story: characters, a problem, and often things that could never happen, like a talking teapot. **Nonfiction** gives true facts about the real world, often with numbers, headings, a glossary or a table of contents. A **poem** is written in short lines, often with rhyme.\n\nAsk: is this telling a story someone invented, teaching facts, or singing in lines?",
-          "**虚构作品**讲编出来的故事：有角色、有问题，还常有不可能发生的事，比如会说话的茶壶。**非虚构作品**给出关于真实世界的事实，常常有数字、标题、词汇表或目录。**诗**写成短短的诗行，常常押韵。\n\n问问自己：这是在讲别人编的故事、传授事实，还是用诗行在歌唱？",
+          "**Fiction** tells an invented story with characters and a plot (like a talking teapot). **Nonfiction** teaches true facts about the real world, often with numbers or headings. **A poem** is arranged in short lines, often with rhythm or rhyme.\n\n> **Watch out.** Look at both the shape on the page (short lines vs. paragraphs) and whether the events are real facts or an invented story.",
+          "**虚构作品**讲编出来的故事，有人物和情节（如会说话的茶壶）；**非虚构作品**介绍真实世界的事实，常带数字或标题；**诗**写成短行，常带节奏或押韵。\n\n> **注意。** 既看版面形式（短诗行还是连贯段落），也看内容是真事实还是编出来的故事。",
         ),
-        labelChoice(["What kind of text is this?", "这是什么种类的文本？"], kindLines, kindLabels),
+        labelChoice(["What kind of text is this?", "这是什么种类的文本？"], kindLines, kindLabels, (right, _shown, entry) => [
+          `This text is **${right}**. ${entry.why[0]}\n\n**Check.** Ask two questions: *Is it written in short poem lines?* and *Does it teach real facts or tell a made-up story?* ${right === "a poem" ? "Short lines with rhythm/rhyme → **a poem**." : right === "nonfiction" ? "Paragraph of real-world facts → **nonfiction**." : "Invented characters and events → **fiction**."}`,
+          `这段文本是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 问两个问题：*它是不是短行诗体？* 和 *它是讲真实事实还是编出来的故事？* ${right === "a poem" ? "短行带节奏/押韵 → **诗**。" : right === "nonfiction" ? "真实世界的事实 → **非虚构作品**。" : "编造的人物和情节 → **虚构作品**。"}`,
+        ]),
       ),
       point(
         "choosing-a-text-for-a-purpose",
         t("Choosing a Text for a Purpose", "为目的选择文本"),
         t(
-          "A reader chooses a text for a **purpose**. To learn facts for a report, choose nonfiction on the subject. To enjoy a made-up adventure, choose fiction. To learn how to make something, choose a how-to book.\n\nCheck two things: the **kind** of text and its **subject**. A story about a shark will not tell you what real sharks eat.",
-          "读者根据**目的**选择文本。为写报告而学习事实，就选这个主题的非虚构作品。想享受编出来的冒险故事，就选虚构作品。想学怎样做一样东西，就选操作指南。\n\n检查两件事：文本的**种类**和它的**主题**。一个关于鲨鱼的故事，不会告诉你真正的鲨鱼吃什么。",
+          "Match your book to your **purpose**: choose nonfiction to gather facts for a report, fiction to enjoy a made-up adventure, and a how-to guide to learn how to make something.\n\n> **Watch out.** Check both the *kind* of book and its *subject*—a funny story about a shark will not give you reliable science facts about sharks.",
+          "根据阅读**目的**选书：写报告查事实选非虚构读物，休闲看故事选虚构故事，学手工做法选操作指南。\n\n> **注意。** 书的*种类*和*主题*都要对上——关于鲨鱼的童话故事不能拿来当科普报告的依据。",
         ),
         askGenerator(purposeBank),
       ),
     ],
+    14,
+    t(
+      "Walk into a library and you will see storybooks on one side and fact books on the other. Knowing fiction, nonfiction, and poetry helps you pick the right book for whatever you want to read or learn.",
+      "走进图书馆，一边是故事书，一边是科普书。分清虚构作品、非虚构作品和诗歌，就能按自己的需要挑对书。",
+    ),
   ),
   topic(
     "reading-a-letter",
@@ -592,8 +613,8 @@ export const factTopics: readonly TopicDef[] = [
         "who-wrote-it-to-whom-and-when",
         t("Who Wrote It, to Whom and When", "谁写的、写给谁、什么时候写的"),
         t(
-          "Every friendly letter tells three things in fixed places. The **date** at the top says when it was written. The **greeting**, such as *Dear Grandma Rose,* names the reader. The **signature** at the end, under the closing, names the writer.\n\nOther names and dates in the body are about the news, not about who wrote the letter or when.",
-          "每封书信都在固定的位置说明三件事。顶部的**日期**说明写信的时间。**称呼**（比如 *Dear Grandma Rose,*）说出收信人。结尾结束语下面的**签名**说出写信人。\n\n正文里的其他名字和日期讲的是消息内容，而不是谁写的信、什么时候写的。",
+          "Every friendly letter puts three key facts in fixed spots: the **date** at the top tells when it was written, the **greeting** (*Dear Grandma Rose,*) names the reader, and the **signature** at the bottom names the writer.\n\n> **Watch out.** Names and dates mentioned inside the body are part of the news—do not confuse them with the writer, reader, or date of the letter.",
+          "每封友好书信都在固定位置交代三件事：顶部的**日期**是写信时间，**称呼**（*Dear Grandma Rose,*）是收信人，末尾的**签名**是写信人。\n\n> **注意。** 正文里提到的其他人名和日期只是信中消息，不要和写信人、收信人或写信日期搞混。",
         ),
         askGenerator(letterPartsBank),
       ),
@@ -601,11 +622,16 @@ export const factTopics: readonly TopicDef[] = [
         "why-it-was-written",
         t("Why It Was Written and What It Asks", "写信的原因和请求"),
         t(
-          "A letter is written for a **reason**: to thank someone, to share news, to say sorry, or to ask for something. The reason covers the whole letter, not one detail of it.\n\nMany letters also make a **request**. Look for a sentence that asks a question or says *please*, often near the end: that is what the writer wants the reader to do.",
-          "写信总有一个**原因**：感谢某人、分享消息、道歉或请求帮助。原因要涵盖整封信，而不是其中一个细节。\n\n很多信还会提出**请求**。找出提问或说 *please* 的句子，它们常在信的结尾附近：那就是写信人希望收信人做的事。",
+          "Every letter has a main **reason** (sharing news, thanking, inviting, or apologizing) that covers the whole body. Many letters also end with a **request**—look for a question or *please* near the end.\n\n> **Watch out.** Do not pick a single small detail when asked why the whole letter was written.",
+          "每封信都有一个涵盖全篇的**写信原因**（分享消息、致谢、邀请或道歉）。许多信末尾还会提出**请求**——留意结尾附近的问句或 *please*。\n\n> **注意。** 问整封信为什么写时，不要只抓其中一个小细节。",
         ),
         askGenerator(letterReasonBank),
       ),
     ],
+    14,
+    t(
+      "When a letter lands in your mailbox, its layout tells you the basics at a glance—date at the top, *Dear …* for the reader, and a signature at the bottom—while the body shares the news and any request.",
+      "收到一封信时，版式一眼就能告诉你基本信息——顶部日期、开头称呼、末尾署名——而正文则藏着消息和请求。",
+    ),
   ),
 ];

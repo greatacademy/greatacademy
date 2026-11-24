@@ -326,6 +326,10 @@ const aAndAn: TopicDef = {
   id: "a-and-an",
   title: t("A and An", "a 和 an"),
   summary: t("One thing takes a or an: a pen, an egg.", "一个东西前面要用 a 或 an：a pen、an egg。"),
+  intro: t(
+    "Compare *an umbrella* with *a red umbrella*: both name one umbrella, yet *an* changes to *a* because the word directly after it starts with a consonant sound (*red*). In this topic, you pick *a* or *an* by the very next sound and fix sentences that drop the article before a singular noun.",
+    "比较 *an umbrella* 和 *a red umbrella*：说的都是一把伞，但 *an* 变成了 *a*，因为紧跟其后的词 *red* 以辅音开头。本主题带你按紧随其后的发音选择 *a* 或 *an*，并补全单数名词前漏掉的冠词。",
+  ),
   prerequisites: ["pre-a1-words-how-many"],
   encompasses: [{ topic: "pre-a1-words-how-many", weight: 0.3 }],
   xp: 15,
@@ -335,8 +339,8 @@ const aAndAn: TopicDef = {
       "choose",
       t("A or an?", "用 a 还是 an？"),
       t(
-        "Use *an* when the next word starts with the sound of *a*, *e*, *i*, *o* or *u*: *an egg*, *an apple*, *an old book*. Use *a* before other sounds: *a pen*, *a big egg*.\n\nLook at the word right after it, not at the noun: *a big egg*, but *an egg*.",
-        "下一个词以 *a*、*e*、*i*、*o*、*u* 的音开头时用 *an*：*an egg*、*an apple*、*an old book*。其他音前面用 *a*：*a pen*、*a big egg*。\n\n要看紧跟在后面的那个词，而不是名词：*a big egg*，但 *an egg*。",
+        "Use *an* when the next word starts with the sound of *a*, *e*, *i*, *o* or *u*: *an egg*, *an apple*, *an old book*. Use *a* before other sounds: *a pen*, *a big egg*.\n\nLook at the word right after it, not at the noun: *a big egg*, but *an egg*.\n\n> **Watch out.** Always check the word *immediately* after the blank—an adjective like *red* or *old* sits between the article and the noun and decides between *a* and *an*.",
+        "下一个词以 *a*、*e*、*i*、*o*、*u* 的音开头时用 *an*：*an egg*、*an apple*、*an old book*。其他音前面用 *a*：*a pen*、*a big egg*。\n\n要看紧跟在后面的那个词，而不是名词：*a big egg*，但 *an egg*。\n\n> **注意。** 永远只看*紧挨着*空白的那个词——像 *red*、*old* 这样的形容词夹在冠词和名词中间时，由它来决定用 *a* 还是 *an*。",
       ),
       choiceGenerator(
         t("Choose a or an.", "选择 a 或 an。"),
@@ -344,8 +348,8 @@ const aAndAn: TopicDef = {
         (right, shown) => {
           const sound = soundOf(right, nextWord(shown));
           return t(
-            `The word after the gap decides: ${sound.en}. ${shown.replace("___", `*${right}*`)}`,
-            `看空白后面的那个词：${sound["zh-CN"]}。${shown.replace("___", `*${right}*`)}`,
+            `The word after the gap decides: ${sound.en}. ${shown.replace("___", `*${right}*`)}\n\n**Check.** Say *${right} ${nextWord(shown)}* aloud—the opening sound of *${nextWord(shown)}* pairs smoothly with *${right}*.`,
+            `看空白后面的那个词：${sound["zh-CN"]}。${shown.replace("___", `*${right}*`)}\n\n**检验。** 把 *${right} ${nextWord(shown)}* 读出来——*${nextWord(shown)}* 的开头音正好与 *${right}* 搭配。`,
           );
         },
         (wrong, _right, shown) => {
@@ -363,8 +367,8 @@ const aAndAn: TopicDef = {
       "do-not-leave-out",
       t("Never leaving out a or an", "不要漏掉 a 或 an"),
       t(
-        "When you talk about one thing, English needs *a* or *an* before it: *It is a pen.*, not *It is pen.*",
-        "中文说“这是笔”“我有猫”，不需要“一个”；英语说单个的东西时，前面一定要有 *a* 或 *an*：说 *It is a pen.*，不说 *It is pen.*",
+        "When you talk about one thing, English needs *a* or *an* before it: *It is a pen.*, not *It is pen.*\n\n> **Watch out.** Put *a* or *an* before the *whole* noun phrase (including any adjective): write *It is a red apple.*, never *It is red a apple.*",
+        "中文说“这是笔”“我有猫”，不需要“一个”；英语说单个的东西时，前面一定要有 *a* 或 *an*：说 *It is a pen.*，不说 *It is pen.*\n\n> **注意。** 把 *a* 或 *an* 放在整个名词短语（含形容词）的最前面：写 *It is a red apple.*，不要写成 *It is red a apple.*",
       ),
       typedGenerator(
         "sentence",
@@ -375,8 +379,8 @@ const aAndAn: TopicDef = {
           const next = right.split(` ${article} `)[1]?.split(/[ .]/u)[0] ?? "";
           const sound = soundOf(article, next);
           return t(
-            `*${shown}* talks about one thing, so it needs *a* or *an*, and ${sound.en}: ${right}`,
-            `*${shown}* 说的是单个的东西，所以要有 *a* 或 *an*；${sound["zh-CN"]}：${right}`,
+            `*${shown}* talks about one thing, so it needs *a* or *an*, and ${sound.en}: ${right}\n\n**Check.** Verify that *${article}* sits right before the singular noun phrase and matches the starting sound of *${next}*.`,
+            `*${shown}* 说的是单个的东西，所以要有 *a* 或 *an*；${sound["zh-CN"]}：${right}\n\n**检验。** 确认 *${article}* 放在单数名词短语前面，并且与 *${next}* 的开头音一致。`,
           );
         },
       ),
@@ -424,6 +428,10 @@ const pluralNouns: TopicDef = {
   id: "plural-nouns-with-s",
   title: t("One Cat, Two Cats", "一只猫，两只猫"),
   summary: t("More than one takes -s or -es: two cats, three boxes.", "多于一个时，名词加 -s 或 -es：two cats、three boxes。"),
+  intro: t(
+    "Compare *one desk, four desks* with *one dish, four dishes*: whenever you count more than one thing in English, the noun itself changes at the end, adding *-s* or *-es* depending on its final letters. In this topic, you choose and spell regular plural nouns accurately.",
+    "比较 *one desk, four desks* 与 *one dish, four dishes*：英语里只要数量超过一个，名词词尾就会变化，按末尾字母加 *-s* 或 *-es*。本主题带你准确选择并拼写规则复数名词。",
+  ),
   prerequisites: ["pre-a1-words-numbers", "a-and-an"],
   encompasses: [{ topic: "pre-a1-words-numbers", weight: 0.3 }],
   xp: 15,
@@ -433,8 +441,8 @@ const pluralNouns: TopicDef = {
       "choose",
       t("Adding -s", "加 -s"),
       t(
-        "For more than one, add *-s* to the noun: *one cat, two cats*. Add *-es* after *s*, *x*, *ch* and *sh*: *one box, three boxes*; *one watch, two watches*.",
-        "中文用量词表示数量（三只猫、两本书），名词本身不变。英语没有量词，但名词要变：多于一个时加 *-s*：*one cat, two cats*。以 *s*、*x*、*ch*、*sh* 结尾的词加 *-es*：*one box, three boxes*；*one watch, two watches*。",
+        "For more than one, add *-s* to the noun: *one cat, two cats*. Add *-es* after *s*, *x*, *ch* and *sh*: *one box, three boxes*; *one watch, two watches*.\n\n> **Watch out.** Do not leave the noun unchanged after a number like *two* or *five*, and only add *-es* when the singular ends in *s*, *x*, *ch*, or *sh*.",
+        "中文用量词表示数量（三只猫、两本书），名词本身不变。英语没有量词，但名词要变：多于一个时加 *-s*：*one cat, two cats*。以 *s*、*x*、*ch*、*sh* 结尾的词加 *-es*：*one box, three boxes*；*one watch, two watches*。\n\n> **注意。** 在 *two*、*five* 等数字后面不要漏加复数词尾，同时只有单数以 *s*、*x*、*ch* 或 *sh* 结尾时才加 *-es*。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
@@ -442,8 +450,8 @@ const pluralNouns: TopicDef = {
         (right, shown) => {
           const rule = pluralRule(right);
           return t(
-            `The number says more than one, so the noun is plural, and ${rule.en}: ${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
-            `数字表示多于一个，所以名词用复数；${rule["zh-CN"]}：${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
+            `The number says more than one, so the noun is plural, and ${rule.en}: ${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}\n\n**Check.** Look at the singular noun's last letters—if they are *s*, *x*, *ch*, or *sh*, add *-es*; otherwise add *-s*.`,
+            `数字表示多于一个，所以名词用复数；${rule["zh-CN"]}：${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}\n\n**检验。** 看原形名词的末尾字母——是 *s*、*x*、*ch* 或 *sh* 就加 *-es*，其余直接加 *-s*。`,
           );
         },
         (wrong, _right, _shown, position) =>
@@ -467,14 +475,14 @@ const pluralNouns: TopicDef = {
       "type",
       t("Writing plurals", "写出复数"),
       t(
-        "Write the noun for more than one. Most nouns add *-s*; nouns that end in *s*, *x*, *ch* or *sh* add *-es*.",
-        "写出名词的复数。大多数名词加 *-s*；以 *s*、*x*、*ch*、*sh* 结尾的名词加 *-es*。",
+        "Write the noun for more than one. Most nouns add *-s* (*two books*); nouns that end in *s*, *x*, *ch* or *sh* add *-es* (*three buses*).\n\n> **Watch out.** Check the final letters before you type *-s* or *-es*: words like *bus*, *glass*, *box*, *watch*, and *dish* need *-es*, not just *-s*.",
+        "写出名词的复数。大多数名词加 *-s*（*two books*）；以 *s*、*x*、*ch*、*sh* 结尾的名词加 *-es*（*three buses*）。\n\n> **注意。** 输入前先看末尾字母：*bus*、*glass*、*box*、*watch*、*dish* 这类词要加 *-es*，不能只加 *-s*。",
       ),
       typedGenerator("word-form", t("Type the missing word.", "输入缺少的词。"), pluralTypedBank, (right, shown) => {
         const rule = pluralRule(right);
         return t(
-          `More than one needs the plural, and ${rule.en}: ${shown.replace("___", `*${right}*`)}`,
-          `多于一个要用复数；${rule["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+          `More than one needs the plural, and ${rule.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Verify the base spelling is untouched and that the ending matches the final letters (*-es* after *s/x/ch/sh*, *-s* otherwise).`,
+          `多于一个要用复数；${rule["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 确认原词拼写未改动，且词尾与末尾字母匹配（*s/x/ch/sh* 后加 *-es*，其余加 *-s*）。`,
         );
       }),
     ),
@@ -549,6 +557,10 @@ const capitalsAndPeriods: TopicDef = {
     "A sentence begins with a capital letter and ends with a period or a question mark, and I is always a capital.",
     "句子以大写字母开头，以句号或问号结尾，I 永远大写。",
   ),
+  intro: t(
+    "Compare *anna and i are friends* with *Anna and I are friends.* Every written English sentence has clear boundaries: a capital letter at the start, capitals for *I* and names, and a period (.) or question mark (?) at the end. In this topic, you spot and write sentences with correct capitals and end marks.",
+    "比较 *anna and i are friends* 和 *Anna and I are friends.* 英语书面句子有明确的边界：句首字母大写，*I* 和人名大写，句末加句号（.）或问号（?）。本主题带你辨认并写出大小写和句末标点都规范的句子。",
+  ),
   prerequisites: ["the-verb-be"],
   encompasses: [{ topic: "the-verb-be", weight: 0.2 }],
   xp: 15,
@@ -558,8 +570,8 @@ const capitalsAndPeriods: TopicDef = {
       "choose",
       t("Spotting the right sentence", "找出写对的句子"),
       t(
-        "A sentence starts with a capital letter: *My*, not *my*. It ends with a period (.), or with a question mark (?) when it asks something. The word *I* and names like *Ben* always start with a capital.",
-        "英语句子以大写字母开头：写 *My*，不写 *my*。陈述句以句号（.）结尾——注意英语句号是一个小圆点，不是中文的“。”；问句以问号（?）结尾。*I* 和 *Ben* 这样的名字永远大写。",
+        "A sentence starts with a capital letter: *My*, not *my*. It ends with a period (.), or with a question mark (?) when it asks something. The word *I* and names like *Ben* always start with a capital.\n\n> **Watch out.** Check *all three* places before picking: the very first letter, every *I* or person's name inside the sentence, and whether the sentence tells (.) or asks (?).",
+        "英语句子以大写字母开头：写 *My*，不写 *my*。陈述句以句号（.）结尾——注意英语句号是一个小圆点，不是中文的“。”；问句以问号（?）结尾。*I* 和 *Ben* 这样的名字永远大写。\n\n> **注意。** 选择前检查*三处*：句首第一个字母、句中所有的 *I* 和人名，以及句子是在陈述（.）还是在提问（?）。",
       ),
       choiceGenerator(
         t("Which sentence is written right?", "哪个句子写对了？"),
@@ -567,8 +579,8 @@ const capitalsAndPeriods: TopicDef = {
         (right) => {
           const end = endMark(right);
           return t(
-            `${right} It starts with a capital letter, writes *I* and names with capitals, and ends with ${end.en}.`,
-            `${right} 句首大写，*I* 和名字大写，句末用${end["zh-CN"]}。`,
+            `${right} It starts with a capital letter, writes *I* and names with capitals, and ends with ${end.en}.\n\n**Check.** Scan left to right: capital at the start, every *I* and name capitalized, and the end mark matches whether the sentence tells or asks.`,
+            `${right} 句首大写，*I* 和名字大写，句末用${end["zh-CN"]}。\n\n**检验。** 从左到右扫一遍：句首大写，所有 *I* 和人名大写，句末标点与陈述或提问一致。`,
           );
         },
         (wrong, right) =>
@@ -592,8 +604,8 @@ const capitalsAndPeriods: TopicDef = {
       "write",
       t("Writing sentences right", "正确地写句子"),
       t(
-        "Copy the sentence with a capital letter at the start, capitals for *I* and for names, and a period or a question mark at the end.",
-        "抄写句子：句首大写，*I* 和名字大写，句末加句号或问号。",
+        "Copy the sentence with a capital letter at the start, capitals for *I* and for names, and a period or a question mark at the end: *how old are you* → *How old are you?*\n\n> **Watch out.** Do not forget capitals *inside* the sentence (like *Tom*, *Ms. Li*, or *I*), and use `?` if the sentence starts with a question word or verb (*What*, *How*, *Is*, *Are*).",
+        "抄写句子：句首大写，*I* 和名字大写，句末加句号或问号，例如 *how old are you* → *How old are you?*\n\n> **注意。** 别忘了句中的大写（如 *Tom*、*Ms. Li* 和 *I*）；以疑问词或动词（*What*、*How*、*Is*、*Are*）开头的问句要以 `?` 结尾。",
       ),
       typedGenerator(
         "sentence",
@@ -602,8 +614,8 @@ const capitalsAndPeriods: TopicDef = {
         (right) => {
           const end = endMark(right);
           return t(
-            `Start with a capital letter, write *I* and names with capitals, and end with ${end.en}: ${right}`,
-            `句首大写，*I* 和名字大写，句末用${end["zh-CN"]}：${right}`,
+            `Start with a capital letter, write *I* and names with capitals, and end with ${end.en}: ${right}\n\n**Check.** Check three spots in your sentence: first letter capitalized, any *I* or name capitalized, and a final period or question mark.`,
+            `句首大写，*I* 和名字大写，句末用${end["zh-CN"]}：${right}\n\n**检验。** 核对句子里的三处：首字母大写、句中 *I* 和人名大写，以及末尾的句号或问号。`,
           );
         },
       ),

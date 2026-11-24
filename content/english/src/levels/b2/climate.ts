@@ -1296,33 +1296,50 @@ function futureRule(right: string, sentence: string): Text {
 /** futureWhy puts the rule of the future form before a sentence. */
 const futureWhy = (right: string, shown: string, sentence: string): Text => {
   const rule = futureRule(right, shown);
-  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+  const check = right.includes(" have ")
+    ? t(
+        "**Check.** Look at the deadline (*by* ...): the action finishes **before** that point, so use *will have* + past participle.",
+        "**检验。** 看时间截止点（*by*……）：动作在那一刻**之前完成**，所以用 *will have* + 过去分词。",
+      )
+    : t(
+        "**Check.** Look at the future moment: the action is **in progress** right then, so use *will be* + *-ing*.",
+        "**检验。** 看将来的那个时刻：动作在那一刻**正在进行**，所以用 *will be* + *-ing*。",
+      );
+  return t(`${rule.en}: ${sentence}\n\n${check.en}`, `${rule["zh-CN"]}：${sentence}\n\n${check["zh-CN"]}`);
 };
 
 /** whyNotFuture explains the other future form, or a form of will that is not made right. */
-const whyNotFuture = (wrong: string, right: string, shown: string): Text => {
-  const rule = futureRule(right, shown);
+const whyNotFuture = (wrong: string, right: string): Text => {
   const [w0, w1 = "", w2 = ""] = wrong.split(" ");
   const perfect = right.includes(" have ");
-  let first: Text;
-  if (w0 !== "will") first = t(`*${wrong}* has no *will*, but the time is in the future.`, `*${wrong}* 没有 *will*，但说的是将来的时间。`);
-  else if (w1 === "had")
-    first = t("After *will* the verb is in its base form: *have*, not *had*.", "*will* 后面的动词用原形：用 *have*，不用 *had*。");
-  else if (w1.endsWith("ing")) first = t("*will* needs *be* before the *-ing* form.", "*will* 和 *-ing* 之间要有 *be*。");
-  else if (w1 === "be" && !w2.endsWith("ing"))
-    first = t(`*be* is followed by the *-ing* form, not *${w2}*.`, `*be* 后面接 *-ing* 形式，不接 *${w2}*。`);
-  else if (w1 === "be" && perfect)
-    first = t(
-      `*${wrong}* is the future continuous, for an action still in progress then.`,
-      `*${wrong}* 是将来进行时，表示那时动作还在进行。`,
+  if (w0 !== "will")
+    return t(`*${wrong}* leaves out *will*, so it does not refer to a future time.`, `*${wrong}* 缺少 *will*，不能指将来的时间。`);
+  if (w1 === "had")
+    return t(
+      `After *will* the helper must stay in its base form (*have*), never *had*.`,
+      `*will* 后面的助动词必须用原形 *have*，不能用 *had*。`,
     );
-  else if (w1 === "have" && !perfect)
-    first = t(
-      `*${wrong}* is the future perfect, for an action already finished by then.`,
-      `*${wrong}* 是将来完成时，表示那时动作已经完成。`,
+  if (w1.endsWith("ing"))
+    return t(
+      `*will* cannot be followed directly by *-ing*; the future continuous needs *be* in between.`,
+      `*will* 后面不能直接接 *-ing*，将来进行时中间必须有 *be*。`,
     );
-  else first = t(`*${w2}* is not the past participle.`, `*${w2}* 不是过去分词。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  if (w1 === "be" && !w2.endsWith("ing"))
+    return t(
+      `In the future continuous, *will be* is followed by the *-ing* form, not *${w2}*.`,
+      `将来进行时里 *will be* 后面要接 *-ing* 形式，不能接 *${w2}*。`,
+    );
+  if (w1 === "be" && perfect)
+    return t(
+      `*${wrong}* is the future continuous (in progress at that time), not a completed action.`,
+      `*${wrong}* 是将来进行时（那时正在进行），不表示到那时已经完成。`,
+    );
+  if (w1 === "have" && !perfect)
+    return t(
+      `*${wrong}* is the future perfect (already finished by then), not an action in progress at that moment.`,
+      `*${wrong}* 是将来完成时（到那时已经完成），不表示那一刻正在进行。`,
+    );
+  return t(`*${w2}* is not the past participle required after *will have*.`, `*${w2}* 不是 *will have* 后面所需的过去分词。`);
 };
 
 const futureForms: TopicDef = {
@@ -1331,6 +1348,10 @@ const futureForms: TopicDef = {
   summary: t(
     "By 2050 the glacier will have melted. This time next year we will be living on solar power. The future perfect says what will be finished by a time; the future continuous says what will be in progress at a time.",
     "By 2050 the glacier will have melted. This time next year we will be living on solar power。将来完成时说到某时已经完成的事，将来进行时说某时正在进行的事。",
+  ),
+  intro: t(
+    "Picture 9 a.m. next Monday: *I will be driving to the coast* puts you in the middle of the journey, while *By noon I will have arrived* looks back from noon at a finished trip.",
+    "想象下周一上午九点：*I will be driving to the coast* 把你放在路途中，而 *By noon I will have arrived* 则是站在中午回看已经完成的行程。",
   ),
   prerequisites: ["will-for-the-future", "present-perfect-or-past-simple"],
   encompasses: [
@@ -1344,8 +1365,8 @@ const futureForms: TopicDef = {
       "meaning",
       t("Finished or in progress", "已完成还是正在进行"),
       t(
-        "Both forms look at one moment in the future:\n\n- **will have + past participle** (the future perfect): the action will be **finished before** that moment. It often comes with *by*: *By 2050 most glaciers **will have melted**. By Friday I **will have written** the report.*\n- **will be + -ing** (the future continuous): the action will be **in progress at** that moment: *This time next year we **will be living** on solar power. At eight tomorrow I **will be flying** to Oslo.*\n\nA future time needs *will*: not *By 2050 most glaciers have melted*.",
-        "两种形式都着眼于将来的某一时刻：\n\n- **will have + 过去分词**（将来完成时）：动作在那一刻**之前已经完成**，常和 *by*（到……为止）连用：*By 2050 most glaciers **will have melted**. By Friday I **will have written** the report.*\n- **will be + -ing**（将来进行时）：动作在那一刻**正在进行**：*This time next year we **will be living** on solar power. At eight tomorrow I **will be flying** to Oslo.*\n\n中文说“到 2050 年冰川就已经融化了”“明天八点我正在飞往奥斯陆”，靠“已经”“正在”表示；英语要靠动词形式。说将来的时间一定要用 *will*，不能说 *By 2050 most glaciers have melted*。",
+        "Both forms look at one moment in the future:\n\n- **will have + past participle** (the future perfect): the action will be **finished before** that moment. It often comes with *by*: *By 2050 most glaciers **will have melted**. By Friday I **will have written** the report.*\n- **will be + -ing** (the future continuous): the action will be **in progress at** that moment: *This time next year we **will be living** on solar power. At eight tomorrow I **will be flying** to Oslo.*\n\n> **Watch out.** Never drop *will* with a future deadline—*By 2050 most glaciers have melted* is present perfect, not future perfect.",
+        "两种形式都着眼于将来的某一时刻：\n\n- **will have + 过去分词**（将来完成时）：动作在那一刻**之前已经完成**，常和 *by*（到……为止）连用：*By 2050 most glaciers **will have melted**. By Friday I **will have written** the report.*\n- **will be + -ing**（将来进行时）：动作在那一刻**正在进行**：*This time next year we **will be living** on solar power. At eight tomorrow I **will be flying** to Oslo.*\n\n中文说“到 2050 年冰川就已经融化了”“明天八点我正在飞往奥斯陆”，靠“已经”“正在”表示；英语要靠动词形式。\n\n> **注意。** 说将来的截止时间不能漏掉 *will*——*By 2050 most glaciers have melted* 是现在完成时，不是将来完成时。",
       ),
       choiceGenerator(
         t(
@@ -1361,8 +1382,8 @@ const futureForms: TopicDef = {
       "form",
       t("Forming the two futures", "两种将来时的构成"),
       t(
-        "After *will* the verb is always in its base form, so the forms are fixed:\n\n- **will have** + past participle: *will have **gone***, *will have **written***, not *will had gone* or *will have went*.\n- **will be** + -ing: *will be **working***, not *will be work* or *will working*.\n\nThe same forms are used with every subject: *she will have finished*, not *she will has finished*.",
-        "*will* 后面的动词永远用原形，所以形式是固定的：\n\n- **will have** + 过去分词：*will have **gone***、*will have **written***，不是 *will had gone*，也不是 *will have went*。\n- **will be** + -ing：*will be **working***，不是 *will be work*，也不是 *will working*。\n\n所有主语都用同样的形式：*she will have finished*，不是 *she will has finished*。",
+        "After *will* the verb is always in its base form, so the forms are fixed:\n\n- **will have** + past participle: *will have **gone***, *will have **written***, not *will had gone* or *will have went*.\n- **will be** + -ing: *will be **working***, not *will be work* or *will working*.\n\n> **Watch out.** Keep *will have* and *will be* unchanged for every subject—never write *she will has finished*, *will had*, or *will working*.",
+        "*will* 后面的动词永远用原形，所以形式是固定的：\n\n- **will have** + 过去分词：*will have **gone***、*will have **written***，不是 *will had gone*，也不是 *will have went*。\n- **will be** + -ing：*will be **working***，不是 *will be work*，也不是 *will working*。\n\n> **注意。** 所有主语后面都固定用 *will have* 和 *will be*——绝不能写成 *she will has finished*、*will had* 或 *will working*。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -1375,8 +1396,8 @@ const futureForms: TopicDef = {
       "write",
       t("Writing about the future", "写将来的事"),
       t(
-        "Write the sentence from its parts. The words in brackets say whether the action will be finished or in progress: *By 2030 / the city / ban petrol cars (It will be finished before then.)* becomes *By 2030, the city will have banned petrol cars.* *This time next year / we / live on solar power (It will be in progress at that time.)* becomes *This time next year, we will be living on solar power.* The comma after the time is optional, and you may write *we'll* for *we will*.",
-        "根据各部分写句子。括号里的话说明动作那时是已完成还是正在进行：*By 2030 / the city / ban petrol cars (It will be finished before then.)* 写成 *By 2030, the city will have banned petrol cars.* *This time next year / we / live on solar power (It will be in progress at that time.)* 写成 *This time next year, we will be living on solar power.* 时间后面的逗号可有可无，*we will* 也可以写成 *we'll*。",
+        "Write the sentence from its parts. The words in brackets say whether the action will be finished or in progress: *By 2030 / the city / ban petrol cars (It will be finished before then.)* becomes *By 2030, the city will have banned petrol cars.* *This time next year / we / live on solar power (It will be in progress at that time.)* becomes *This time next year, we will be living on solar power.* The comma after the time is optional, and you may write *we'll* for *we will*.\n\n> **Watch out.** Check the verb ending before finishing: *will have* takes the **past participle**, while *will be* takes the **-ing** form.",
+        "根据各部分写句子。括号里的话说明动作那时是已完成还是正在进行：*By 2030 / the city / ban petrol cars (It will be finished before then.)* 写成 *By 2030, the city will have banned petrol cars.* *This time next year / we / live on solar power (It will be in progress at that time.)* 写成 *This time next year, we will be living on solar power.* 时间后面的逗号可有可无，*we will* 也可以写成 *we'll*。\n\n> **注意。** 写完检查动词形态：*will have* 后面必须是**过去分词**，*will be* 后面必须是 **-ing** 形式。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1460,6 +1481,10 @@ const opinionEssay = judgedTopic({
     "Write an essay of 250 to 300 words that states a clear opinion on a question, supports it in two or more body paragraphs, deals with an opposing view, and concludes.",
     "写一篇 250 到 300 词的议论文：对问题表明清楚的观点，用两个或更多主体段落支持它，回应一个相反的看法，并得出结论。",
   ),
+  intro: t(
+    "Asked whether cities should charge drivers to enter downtown, a strong opinion essay takes a clear stand in the opening paragraph, backs it with two focused reasons, answers a fair counterargument, and sums up without adding new points.",
+    "面对“城市中心是否应收取拥堵费”这类问题，好的观点类议论文会在开头明确亮出立场，用两段聚焦的理由展开论证，正面回应一个合理反对意见，并在结尾收束而不另起新论点。",
+  ),
   prerequisites: ["introductions-and-conclusions"],
   encompasses: [
     { topic: "writing-a-thesis-statement", weight: 0.3 },
@@ -1470,8 +1495,8 @@ const opinionEssay = judgedTopic({
     id: "opinion-essay",
     title: t("Opinion, reasons, conclusion", "观点、理由、结论"),
     explanation: t(
-      "An opinion essay answers a question with your own view and gives reasons for it. Plan four or five paragraphs:\n\n1. **Introduction**: introduce the subject in a sentence or two, then state your opinion clearly: *In my opinion, ... / I strongly believe that ...*\n2. **Two body paragraphs**: each gives **one** reason. Begin with a topic sentence (*Firstly, ... / The main reason is that ...*), then explain it and give an example or a fact.\n3. **An opposing view** (often a short paragraph): show that you know what the other side thinks, then answer it: *Some people argue that ... However, ...*\n4. **Conclusion**: say your opinion again in different words and sum up your reasons: *In conclusion, ...* Do not add a new reason here.\n\nLink your ideas with words such as *Firstly, In addition, Moreover, However, For example, As a result*. Keep a neutral, formal tone: no contractions (*do not*, not *don't*) and no very emotional words.",
-      "观点类议论文就一个问题给出自己的看法并说明理由。安排四到五段：\n\n1. **引言**：用一两句话引出话题，然后清楚地表明观点：*In my opinion, ... / I strongly believe that ...*\n2. **两个主体段**：每段只讲**一个**理由。用主题句开头（*Firstly, ... / The main reason is that ...*），然后解释，并举一个例子或事实。\n3. **相反的观点**（常是较短的一段）：说明你了解对方的想法，然后回应：*Some people argue that ... However, ...*\n4. **结论**：换一种说法重申观点并概括理由：*In conclusion, ...* 不要在这里加新的理由。\n\n用 *Firstly, In addition, Moreover, However, For example, As a result* 等词连接观点。语气中立、正式：不用缩写（写 *do not*，不写 *don't*），也不用过于情绪化的词。中文议论文常在结尾才亮出观点，或者先铺垫很多背景；英语议论文要在引言末尾就明确表态，后面每段都为它服务。",
+      "An opinion essay answers a question with your own view and gives reasons for it. Plan four or five paragraphs:\n\n1. **Introduction**: introduce the subject in a sentence or two, then state your opinion clearly: *In my opinion, ... / I strongly believe that ...*\n2. **Two body paragraphs**: each gives **one** reason. Begin with a topic sentence (*Firstly, ... / The main reason is that ...*), then explain it and give an example or a fact.\n3. **An opposing view** (often a short paragraph): show that you know what the other side thinks, then answer it: *Some people argue that ... However, ...*\n4. **Conclusion**: say your opinion again in different words and sum up your reasons: *In conclusion, ...* Do not add a new reason here.\n\nLink your ideas with words such as *Firstly, In addition, Moreover, However, For example, As a result*. Keep a neutral, formal tone: no contractions (*do not*, not *don't*).\n\n> **Watch out.** State your position clearly at the end of the introduction—do not save your opinion for the conclusion—and never introduce a brand-new argument in the final paragraph.",
+      "观点类议论文就一个问题给出自己的看法并说明理由。安排四到五段：\n\n1. **引言**：用一两句话引出话题，然后清楚地表明观点：*In my opinion, ... / I strongly believe that ...*\n2. **两个主体段**：每段只讲**一个**理由。用主题句开头（*Firstly, ... / The main reason is that ...*），然后解释，并举一个例子或事实。\n3. **相反的观点**（常是较短的一段）：说明你了解对方的想法，然后回应：*Some people argue that ... However, ...*\n4. **结论**：换一种说法重申观点并概括理由：*In conclusion, ...* 不要在这里加新的理由。\n\n用 *Firstly, In addition, Moreover, However, For example, As a result* 等词连接观点。语气中立、正式：不用缩写（写 *do not*，不写 *don't*）。中文议论文常在结尾才亮出观点，或者先铺垫很多背景；英语议论文要在引言末尾就明确表态，后面每段都为它服务。\n\n> **注意。** 务必在引言结尾就明确表明立场，不要留到结尾才亮明观点；结论段只总结，绝不塞进新论点。",
     ),
   },
   question: t(

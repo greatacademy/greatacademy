@@ -591,15 +591,19 @@ const abstractBank: readonly Ask[] = abstractRows.map(([shown = "", right = "", 
   right,
   wrong: [c1, c2],
   why: t(
-    `*${right}* is abstract: it names a feeling, an idea or a quality, something you cannot see, hear or touch. The other nouns name people, animals, places or things you could point to.`,
-    `*${right}* 是抽象名词：它表示一种感受、想法或品质，是看不见、听不到、摸不着的。其他名词指的是能指出来的人、动物、地方或东西。`,
+    `**${right}** is the abstract noun: it names a feeling, idea, or quality.\n\n**Check.** Try the five-senses test on **${right}**: you cannot see, touch, hear, or photograph **${right}** itself, while *${c1}* and *${c2}* are concrete things you can point to.`,
+    `**${right}** 是抽象名词：它表示一种感受、想法或品质。\n\n**检验。** 对 **${right}** 做五感测试：你没法看见、摸到、听到或拍下 **${right}** 本身，而 *${c1}* 和 *${c2}* 都是能直接指出来的具体事物。`,
   ),
-  whyNot: [c1, c2].map((c) =>
+  whyNot: [
     t(
-      `*${c}* is a concrete noun: it names something you could see or touch. An abstract noun names a feeling or an idea.`,
-      `*${c}* 是具体名词：它指的是能看见或摸到的东西。抽象名词表示感受或想法。`,
+      `*${c1}* is a concrete noun—you can see, touch, or picture it as a physical thing.`,
+      `*${c1}* 是具体名词——你能看见、摸到它，或在画面里直接指出来。`,
     ),
-  ),
+    t(
+      `*${c2}* names something physical you can sense, not an idea, feeling, or quality.`,
+      `*${c2}* 指的是感官可以感知的具体事物，不是想法、感受或品质。`,
+    ),
+  ],
 }));
 
 // Forming abstract nouns: sentence with a gap|the word to start from|the abstract noun|wrong|wrong.
@@ -694,17 +698,17 @@ const collectiveBank: readonly Ask[] = collectiveRows.map(([shown = "", right = 
   right,
   wrong: [members, other],
   why: t(
-    `*${right}* is the collective noun: it names a whole group as one thing. You can have one ${right}, even though it is made of many members.`,
-    `*${right}* 是集合名词：它把整个群体当作一个整体来称呼。虽然它由许多成员组成，但可以说“一个 ${right}”。`,
+    `**${right}** is the collective noun because it names the whole group as a single unit.\n\n**Check.** Put *one* in front of it: *one ${right}* is a single group made up of many members, whereas *${members}* names the individual members.`,
+    `**${right}** 是集合名词，它把整个群体当作一个整体来称呼。\n\n**检验。** 在它前面加上 *one*：*one ${right}* 是一个由许多成员组成的单一群体，而 *${members}* 指的则是里面的一个个成员。`,
   ),
   whyNot: [
     t(
-      `*${members}* is a noun in the sentence, but it does not name a group as one thing; it names people, animals or things one by one.`,
-      `*${members}* 是句中的名词，但它不是把群体当作整体来称呼，而是指一个个的人、动物或东西。`,
+      `*${members}* names the individual people, animals, or things one by one, not the group as a single unit.`,
+      `*${members}* 指的是一个个的人、动物或东西，不是把群体当作整体。`,
     ),
     t(
-      `*${other}* is a noun, but it names a single thing, a place or a time, not a group of members.`,
-      `*${other}* 是名词，但它指的是一个东西、地方或时间，而不是由成员组成的群体。`,
+      `*${other}* names a single thing, place, or time, not a group made of members.`,
+      `*${other}* 指的是单个事物、地点或时间，不是由成员组成的群体。`,
     ),
   ],
 }));
@@ -712,18 +716,15 @@ const collectiveBank: readonly Ask[] = collectiveRows.map(([shown = "", right = 
 const agreement = kinded(
   ["Which verb agrees with the collective noun?", "哪个动词与集合名词一致？"],
   (right, shown) => [
-    `${gapFill(shown, right)} A collective noun names one group acting together, so it takes the singular verb *${right}*.`,
-    `${gapFill(shown, right)} 集合名词指一个共同行动的群体，所以要用单数动词 *${right}*。`,
+    `${gapFill(shown, right)}\n\nThe collective noun names one group acting as a unit, so it takes the singular verb **${right}**.\n\n**Check.** Hide any *of …* phrase and swap the collective noun for *It*: *It ${right}…* sounds right, confirming a singular verb.`,
+    `${gapFill(shown, right)}\n\n集合名词把群体当作一个整体，所以配单数动词 **${right}**。\n\n**检验。** 先遮住 *of …* 短语，把集合名词换成 *It*：*It ${right}…* 读起来顺口，确认该用单数动词。`,
   ],
   [
     [
-      "*{wrong}* is the verb for a plural subject. The group acts as one, so the sentence needs *{right}*.",
-      "*{wrong}* 是复数主语用的动词。这个群体是作为一个整体行动的，所以句子要用 *{right}*。",
+      "*{wrong}* is for a plural subject, but this collective noun acts as one single group.",
+      "*{wrong}* 用于复数主语，但这里的集合名词是作为一个整体行动的。",
     ],
-    [
-      "*{wrong}* cannot be the main verb of the sentence on its own; the sentence needs *{right}*.",
-      "*{wrong}* 不能单独做句子的谓语动词，句子要用 *{right}*。",
-    ],
+    ["*{wrong}* cannot serve as the main verb of this sentence on its own.", "*{wrong}* 不能单独充当这个句子的谓语动词。"],
   ],
 );
 
@@ -842,8 +843,20 @@ const endingChoiceBank: readonly Ask[] = endingItems.map(({ verb, rule, ending, 
     shown: "",
     right,
     wrong,
-    why: t(`It is **${right}**. ${en}`, `正确的是 **${right}**。${zh}`),
-    whyNot: wrong.map((w) => t(`*${w}* does not follow the rule. ${en}`, `*${w}* 不符合规则。${zh}`)),
+    why: t(
+      `The right spelling is **${right}**. ${en}\n\n**Check.** Look at where *${verb}* meets ${ending} in **${right}**: the vowel sound stays true to *${verb}* and no extra letter is left behind or missing.`,
+      `正确拼写是 **${right}**。${zh}\n\n**检验。** 看 **${right}** 中 *${verb}* 和 ${ending} 的衔接处：元音读法与原词一致，没有多写或漏写字母。`,
+    ),
+    whyNot: [
+      t(
+        `*${wrong[0]}* misses the ending change needed at the end of *${verb}* before ${ending}.`,
+        `*${wrong[0]}* 漏掉了 *${verb}* 加 ${ending} 前词尾该做的拼写变化。`,
+      ),
+      t(
+        `*${wrong[1]}* applies the wrong spelling change to *${verb}* before ${ending}.`,
+        `*${wrong[1]}* 对 *${verb}* 加 ${ending} 用错了拼写变化规则。`,
+      ),
+    ],
   };
 });
 
@@ -923,8 +936,8 @@ const greetingBank: readonly Ask[] = rows(`
     right: `Dear ${name},`,
     wrong: [`Dear ${name}.`, `Dear, ${name}`],
     why: t(
-      `The greeting of a friendly letter begins with a capital letter and ends with a comma: **Dear ${name},**. The body of the letter starts on the next line.`,
-      `友好书信的称呼以大写字母开头，以逗号结尾：**Dear ${name},**。正文从下一行开始。`,
+      `The greeting of a friendly letter begins with a capital letter and ends with a comma: **Dear ${name},**\n\n**Check.** Check two things on **Dear ${name},**: the first word starts with a capital **D**, and the comma sits right after the name—not after *Dear* and never as a period.`,
+      `友好书信的称呼以大写字母开头，以逗号结尾：**Dear ${name},**\n\n**检验。** 检查 **Dear ${name},** 的两处：开头 **D** 大写，逗号紧跟在名字后面，既不在 *Dear* 后面也不是句号。`,
     ),
     whyNot: [
       t(
@@ -964,8 +977,8 @@ ${moreClosings.join("\n")}
     right: `${closing},`,
     wrong: [`${closing}.`, oneWord ? closing : `${capitals},`],
     why: t(
-      `A closing begins with a capital letter, only its first word has one, and it ends with a comma: **${closing},**. The writer's name goes on the line below it.`,
-      `结束语以大写字母开头，只有第一个词大写，并以逗号结尾：**${closing},**。写信人的名字写在下一行。`,
+      `A closing capitalizes only its first word and ends with a comma: **${closing},**\n\n**Check.** Look at **${closing},**: only the very first letter is capital, and a comma—not a period—leads to the writer's name on the next line.`,
+      `结束语只有第一个词首字母大写，并以逗号结尾：**${closing},**\n\n**检验。** 看 **${closing},**：只有最开头的字母大写，末尾用逗号（不是句号）引出下一行的署名。`,
     ),
     whyNot: [
       t("A closing is not a sentence, so it ends with a comma, not a period.", "结束语不是句子，所以以逗号结尾，而不是句号。"),
@@ -1099,8 +1112,8 @@ ${possessiveBuilt}
     right,
     wrong: [w1, w2],
     why: t(
-      `${gapFill(shown, right)} Here ${en}, which is what the sentence needs. To test a contraction, say the two long words in its place.`,
-      `${gapFill(shown, right)} 这里 ${zh}，正是句子需要的。检验缩写形式时，可以把它换成两个完整的词读一读。`,
+      `${gapFill(shown, right)}\n\nHere ${en}, which matches the meaning of the sentence.\n\n**Check.** Test the blank by expanding any contraction into two words (such as *it is*, *they are*, *you are*, or *who is*): ${right.includes("'") ? "the two full words make sense here, so the contraction with an apostrophe is right." : "the two full words sound wrong here, so the word without an apostrophe is right."}`,
+      `${gapFill(shown, right)}\n\n这里 ${zh}，正符合句意。\n\n**检验。** 把缩约形式展开成两个完整词（如 *it is*、*they are*、*you are*、*who is*）代进空格读一遍：${right.includes("'") ? "展开后说得通，所以用带撇号的缩约形式。" : "展开后说不通，所以用不带撇号的词。"}`,
     ),
     whyNot: [w1, w2].map((w) => {
       const [wen, wzh] = meaningOfWord(w);
@@ -1184,14 +1197,17 @@ ${verbKindBuilt}
 const linked = kinded(
   ["Which word does the linking verb join to the subject, to name or describe it?", "系动词把哪个词和主语连接起来，用来说明或描述主语？"],
   (right, shown) => [
-    `In "${shown}", the linking verb joins the subject to *${right}*, which tells what the subject is or is like.`,
-    `在“${shown}”中，系动词把主语和 *${right}* 连接起来，说明主语是什么或怎么样。`,
+    `In “${shown}” the linking verb joins the subject to **${right}**, which tells what the subject is or is like.\n\n**Check.** Drop any extra place or time phrase at the end of “${shown}”—**${right}** still sits right after the linking verb and directly describes or renames the subject.`,
+    `在 *${shown}* 中，系动词把主语和 **${right}** 连接起来，说明主语是什么或怎么样。\n\n**检验。** 把 *${shown}* 末尾的时间或地点短语遮住：**${right}** 依然紧跟在系动词后面，直接说明主语的特征或身份。`,
   ],
   [
-    ["*{wrong}* is the subject itself; the linking verb joins it to *{right}*.", "*{wrong}* 是主语本身，系动词把它和 *{right}* 连接起来。"],
     [
-      "*{wrong}* is part of a later phrase; it does not name or describe the subject itself.",
-      "*{wrong}* 是后面短语的一部分，并不说明或描述主语本身。",
+      "*{wrong}* is the subject itself, not the word that describes or renames it after the linking verb.",
+      "*{wrong}* 是主语本身，不是系动词后面说明主语的词。",
+    ],
+    [
+      "*{wrong}* is inside a later place or time phrase; it does not name or describe the subject itself.",
+      "*{wrong}* 在后面的地点或时间短语里，并不是直接说明主语本身。",
     ],
   ],
 );
@@ -1378,23 +1394,23 @@ const rewriteWhy = (right: string): Text => {
   switch (kindOfRewrite.get(right)) {
     case "question":
       return t(
-        `**${right}** A question moves the helping verb, such as *is*, *can* or *will*, in front of the subject and ends with a question mark.`,
-        `**${right}** 疑问句把 *is*、*can*、*will* 等助动词移到主语前面，并以问号结尾。`,
+        `**${right}**\n\nA question moves the helping verb (*is*, *can*, or *will*) in front of the subject and ends with a question mark.\n\n**Check.** Move the first word back after the subject to recover the original statement, and confirm the sentence ends with **?**`,
+        `**${right}**\n\n疑问句把助动词（*is*、*can*、*will*）移到主语前面，并以问号结尾。\n\n**检验。** 把句首的助动词放回主语后面，能还原回原陈述句，且句末是问号 **?**。`,
       );
     case "exclamation":
       return t(
-        `**${right}** An exclamation that begins with *What a* shows strong feeling and ends with an exclamation mark; *that is* may follow or be left out.`,
-        `**${right}** 以 *What a* 开头的感叹句表达强烈的感情，以感叹号结尾；后面的 *that is* 可以加，也可以省略。`,
+        `**${right}**\n\nAn exclamation starting with *What a* expresses strong feeling and ends with an exclamation mark.\n\n**Check.** Read **${right}** aloud with excitement: it begins with *What a* and closes with **!**`,
+        `**${right}**\n\n以 *What a* 开头的感叹句表达强烈情感，以感叹号结尾。\n\n**检验。** 带着赞叹的语气读一遍 **${right}**：以 *What a* 开头，并以感叹号 **!** 结尾。`,
       );
     case "command":
       return t(
-        `**${right}** A command begins with what to do; its subject, *you*, is understood, and it ends with a period, or an exclamation mark for a strong command.`,
-        `**${right}** 祈使句以要做的动作开头，主语 *you* 被省略，以句号结尾，语气强烈时用感叹号。`,
+        `**${right}**\n\nA command begins directly with the action verb (with *you* understood) and ends with a period or an exclamation mark.\n\n**Check.** Put an invisible *(You)* in front of **${right}**: it reads as a clear instruction telling someone what to do.`,
+        `**${right}**\n\n祈使句直接以动作动词开头（省略主语 *you*），以句号或感叹号结尾。\n\n**检验。** 在 **${right}** 前面默念一个省略的 *(You)*：它成了一句清晰的指令。`,
       );
     default:
       return t(
-        `**${right}** A statement puts the subject first, then the verb, and ends with a period.`,
-        `**${right}** 陈述句先说主语，再说动词，以句号结尾。`,
+        `**${right}**\n\nA statement puts the subject first, then the verb, and ends with a period.\n\n**Check.** Read **${right}** aloud: it shares a fact instead of asking for an answer, and it ends with **.**`,
+        `**${right}**\n\n陈述句先写主语再写动词，以句号结尾。\n\n**检验。** 大声读一遍 **${right}**：它是在陈述事实而不是提问，句末是句号 **.**。`,
       );
   }
 };
@@ -1486,18 +1502,22 @@ const spellRule = (word: string, rule: string): readonly [string, string] => {
 
 const spellChoiceBank: readonly Ask[] = endingSpellRows.map(([shown = "", word = "", w1 = "", w2 = "", rule = ""]) => {
   const [en, zh] = spellRule(word, rule);
+  const shortRule = rule === "ck" || rule === "tch" || rule === "dge";
   return {
     question: t("Which spelling of the missing word is correct?", "所缺单词的哪种拼写是正确的？"),
     shown,
     right: word,
     wrong: [w1, w2],
-    why: t(`${gapFill(shown, word)} ${en}`, `${gapFill(shown, word)} ${zh}`),
+    why: t(
+      `${gapFill(shown, word)}\n\n${en}\n\n**Check.** Say **${word}** slowly and listen to the sound right before the ending: ${shortRule ? "it is a single short vowel, so the longer ending (*ck*, *tch*, or *dge*) protects the short sound." : "it is a long vowel or a consonant, so the shorter ending (*k*, *ch*, or *ge*) is used."}`,
+      `${gapFill(shown, word)}\n\n${zh}\n\n**检验。** 慢读 **${word}**，听词尾前的音：${shortRule ? "前面紧挨着单个短元音，所以用较长的词尾（*ck*、*tch*、*dge*）保住短音。" : "前面是长元音或辅音，所以用较短的词尾（*k*、*ch*、*ge*）。"}`,
+    ),
     whyNot: [
-      t(`*${w1}* uses the spelling for the other side of the rule. ${en}`, `*${w1}* 用了规则另一种情况的拼写。${zh}`),
       t(
-        `*${w2}* is not how the word this sentence needs is spelled: it breaks the rule or makes a different word.`,
-        `*${w2}* 不是句子所需单词的拼法：它要么不符合规则，要么成了另一个词。`,
+        `*${w1}* uses the wrong side of the short-vowel vs. long-vowel/consonant rule.`,
+        `*${w1}* 把“单短元音后”和“长元音/辅音后”的拼写规则用反了。`,
       ),
+      t(`*${w2}* spells the ending with the wrong sound or letters for this word.`, `*${w2}* 词尾的字母或发音与这个词不符。`),
     ],
   };
 });
@@ -1523,8 +1543,8 @@ export const grammarTopics: readonly TopicDef[] = [
         "concrete-or-abstract",
         t("Concrete or Abstract", "具体名词还是抽象名词"),
         t(
-          "A **concrete noun** names something you can see, hear, touch, taste or smell: *knight*, *dragon*, *bread*. An **abstract noun** names a feeling, an idea or a quality that you cannot touch: *courage*, *friendship*, *honesty*.\n\nTo tell them apart, ask: could I put it in a box or take a picture of it? You can photograph a knight, but not his courage.",
-          "**具体名词**指能看见、听到、摸到、尝到或闻到的东西：*knight*、*dragon*、*bread*。**抽象名词**表示摸不着的感受、想法或品质：*courage*、*friendship*、*honesty*。\n\n区分它们时可以问：我能把它放进盒子里或给它拍照吗？骑士可以拍照，他的勇气却不能。",
+          "A **concrete noun** names something you can see, hear, touch, taste, or smell: *knight*, *dragon*, *bread*. An **abstract noun** names a feeling, idea, or quality that you cannot touch: *courage*, *friendship*, *honesty*.\n\nTo tell them apart, ask: *Could I put it in a box or take a picture of it?* You can photograph a knight, but not his courage.\n\n> **Watch out.** Abstract nouns are still nouns—they can be the subject or object of a sentence even though you cannot hold them.",
+          "**具体名词**指能看见、听到、摸到、尝到或闻到的东西：*knight*、*dragon*、*bread*。**抽象名词**表示摸不着的感受、想法或品质：*courage*、*friendship*、*honesty*。\n\n区分它们时可以问：*我能把它放进盒子里或给它拍照吗？* 骑士可以拍照，他的勇气却不能。\n\n> **注意。** 抽象名词虽然摸不着，但依然是名词，可以在句中作主语或宾语。",
         ),
         askGenerator(abstractBank),
       ),
@@ -1532,21 +1552,28 @@ export const grammarTopics: readonly TopicDef[] = [
         "forming-abstract-nouns",
         t("Forming Abstract Nouns", "构成抽象名词"),
         t(
-          "Many abstract nouns are made from an adjective or a verb with a suffix: *kind* → *kindness*, *free* → *freedom*, *friend* → *friendship*, *child* → *childhood*, *enjoy* → *enjoyment*, *imagine* → *imagination*, *honest* → *honesty*.\n\nSome change their spelling: *brave* → *bravery*, *wise* → *wisdom*, *strong* → *strength*, *true* → *truth*, *choose* → *choice*, *proud* → *pride*. When you are not sure, say the word in a sentence and listen for the one you have heard before.",
-          "许多抽象名词由形容词或动词加后缀构成：*kind* → *kindness*，*free* → *freedom*，*friend* → *friendship*，*child* → *childhood*，*enjoy* → *enjoyment*，*imagine* → *imagination*，*honest* → *honesty*。\n\n有些会改变拼写：*brave* → *bravery*，*wise* → *wisdom*，*strong* → *strength*，*true* → *truth*，*choose* → *choice*，*proud* → *pride*。拿不准时，把词放进句子里读一读，找出你听过的那个。",
+          "Many abstract nouns are built from an adjective or verb with a suffix: *kind* → *kindness*, *free* → *freedom*, *friend* → *friendship*, *child* → *childhood*, *enjoy* → *enjoyment*, *imagine* → *imagination*, *honest* → *honesty*. Some change their spelling: *brave* → *bravery*, *wise* → *wisdom*, *strong* → *strength*, *true* → *truth*, *choose* → *choice*, *proud* → *pride*.\n\n> **Watch out.** Do not just tack *-ness* onto every word (*braveness* or *wiseness* is wrong—check which ending English really uses).",
+          "许多抽象名词由形容词或动词加后缀构成：*kind* → *kindness*、*free* → *freedom*、*friend* → *friendship*、*child* → *childhood*、*enjoy* → *enjoyment*、*imagine* → *imagination*、*honest* → *honesty*。有些会变形：*brave* → *bravery*、*wise* → *wisdom*、*strong* → *strength*、*true* → *truth*、*choose* → *choice*、*proud* → *pride*。\n\n> **注意。** 不要给每个词都硬加 *-ness*（*braveness*、*wiseness* 都不对，要看这个词实际搭配的后缀）。",
         ),
         typedGenerator(
           "word-form",
           t("Type the abstract noun made from the word in brackets, to fill the gap.", "输入由括号里的词构成的抽象名词，填入空格。"),
           formingBank,
-          (right) =>
-            t(
-              `From *${formingBase.get(right) ?? ""}* comes the abstract noun **${right}**, the name of the quality or the idea. Learn the ending with the word, because the suffixes differ.`,
-              `由 *${formingBase.get(right) ?? ""}* 构成的抽象名词是 **${right}**，表示这种品质或想法。要连同词尾一起记，因为后缀各不相同。`,
-            ),
+          (right, shown) => {
+            const base = formingBase.get(right) ?? "";
+            return t(
+              `From *${base}* comes the abstract noun **${right}**.\n\n**Check.** Put **${right}** into the sentence (*${shown.replace("___", `**${right}**`)}*) and read it aloud: it names a quality or idea and fits smoothly in the noun spot.`,
+              `由 *${base}* 构成的抽象名词是 **${right}**。\n\n**检验。** 把 **${right}** 放回句中大声读一遍（*${shown.replace("___", `**${right}**`)}*）：它表示一种品质或概念，在名词位置上通顺自然。`,
+            );
+          },
         ),
       ),
     ],
+    14,
+    t(
+      "You can hold a trophy in your hands, but you cannot hold *pride* or *patience*—yet all three are nouns. In this topic, you will spot abstract nouns for ideas and feelings and build them from base words.",
+      "你能把手里的奖杯捧起来，却没法捧起“自豪”或“耐心”——但它们全都是名词。这节课，你会学会辨认表示想法和感受的抽象名词，并从基础词构出它们。",
+    ),
   ),
   topic(
     "collective-nouns",
@@ -1561,8 +1588,8 @@ export const grammarTopics: readonly TopicDef[] = [
         "finding-the-collective-noun",
         t("Finding the Collective Noun", "找出集合名词"),
         t(
-          "A **collective noun** names a group as one thing: a *herd* of goats, a *flock* of geese, a *team* of players, a *class* of children. The group is made of many members, but the noun is singular: one herd, one team.\n\nIn *A herd of goats climbed the hill*, *goats* names the members one by one, and *herd* names them all as one group.",
-          "**集合名词**把一个群体当作一个整体来称呼：a *herd* of goats，a *flock* of geese，a *team* of players，a *class* of children。群体由许多成员组成，但这个名词是单数：one herd，one team。\n\n在 *A herd of goats climbed the hill* 中，*goats* 指一只只的山羊，*herd* 把它们当作一个群体。",
+          "A **collective noun** names a group as one thing: a *herd* of goats, a *flock* of geese, a *team* of players, a *class* of children. In *A herd of goats climbed the hill*, *goats* names the individual animals, while **herd** names them all as one group.\n\n> **Watch out.** Do not pick the plural member noun after *of* (*goats*, *geese*)—pick the singular group word (*herd*, *flock*).",
+          "**集合名词**把一个群体当作一个整体来称呼：a *herd* of goats、a *flock* of geese、a *team* of players、a *class* of children。在 *A herd of goats climbed the hill* 中，*goats* 指一只只山羊，**herd** 才是把它们合称的集合名词。\n\n> **注意。** 不要选 *of* 后面的复数成员名词（*goats*、*geese*），要选表示整个群体的单数词（*herd*、*flock*）。",
         ),
         askGenerator(collectiveBank),
       ),
@@ -1570,12 +1597,17 @@ export const grammarTopics: readonly TopicDef[] = [
         "verbs-with-collective-nouns",
         t("Verbs with Collective Nouns", "集合名词的动词一致"),
         t(
-          "When a group acts as one, its collective noun takes a **singular verb**: *The flock **is** flying south. The team **practices** on Saturday. The band **has** played for years.*\n\nDo not be fooled by a plural noun after *of*: in *A swarm of bees buzzes*, the subject is *swarm*, not *bees*.",
-          "当群体作为一个整体行动时，集合名词用**单数动词**：*The flock **is** flying south. The team **practices** on Saturday. The band **has** played for years.*\n\n不要被 *of* 后面的复数名词迷惑：在 *A swarm of bees buzzes* 中，主语是 *swarm*，不是 *bees*。",
+          "When a group acts as one, its collective noun takes a **singular verb**: *The flock **is** flying south. The team **practices** on Saturday. The band **has** played for years.*\n\n> **Watch out.** Do not let a plural noun after *of* fool you: in *A swarm of bees buzzes*, the subject is *swarm* (one), not *bees*.",
+          "当群体作为一个整体行动时，集合名词配**单数动词**：*The flock **is** flying south. The team **practices** on Saturday. The band **has** played for years.*\n\n> **注意。** 别被 *of* 后面的复数名词带偏：在 *A swarm of bees buzzes* 中，主语是单数 *swarm*，不是 *bees*。",
         ),
         askGenerator(agreementBank),
       ),
     ],
+    14,
+    t(
+      "Watch a dozen geese cross the sky together: you can call them many *geese*, or you can call them one *flock*. Nouns like *flock*, *team*, and *swarm* wrap a whole group into one singular word—and match singular verbs.",
+      "看一群大雁结伴飞过天空：你可以叫它们许多只 *geese*，也可以把它们合称作一群 *flock*。像 *flock*、*team*、*swarm* 这样的词把整个群体打包成一个单数名词，搭配单数动词。",
+    ),
   ),
   topic(
     "adding-ed-and-ing",
@@ -1590,8 +1622,8 @@ export const grammarTopics: readonly TopicDef[] = [
         "choosing-the-spelling",
         t("Choosing the Spelling", "选择正确的拼写"),
         t(
-          "Look at the end of the verb before you add *-ed* or *-ing*.\n\n- One short vowel and one consonant: double the consonant. *stop* → *stopped*, *stopping*.\n- A silent *e*: drop it. *bake* → *baked*, *baking*.\n- A consonant and *y*: change *y* to *i* before *-ed* only. *carry* → *carried*, but *carrying*.\n- A vowel and *y*: keep the *y*. *play* → *played*, *playing*.\n- Anything else: just add the ending. *jump* → *jumped*, *rain* → *raining*.\n\nThe rules matter: *hoped* comes from *hope*, but *hopped* comes from *hop*.",
-          "加 *-ed* 或 *-ing* 之前，先看动词的结尾。\n\n- 一个短元音加一个辅音：双写辅音。*stop* → *stopped*、*stopping*。\n- 不发音的 *e*：去掉。*bake* → *baked*、*baking*。\n- 辅音加 *y*：只在 *-ed* 前把 *y* 变成 *i*。*carry* → *carried*，但 *carrying*。\n- 元音加 *y*：保留 *y*。*play* → *played*、*playing*。\n- 其他情况：直接加词尾。*jump* → *jumped*，*rain* → *raining*。\n\n规则很重要：*hoped* 来自 *hope*，而 *hopped* 来自 *hop*。",
+          "Check the end of the verb before adding *-ed* or *-ing*:\n\n- One short vowel + one consonant → double the consonant: *stop* → *stopped*, *stopping*.\n- Silent *e* → drop it: *bake* → *baked*, *baking*.\n- Consonant + *y* → change *y* to *i* before *-ed* only: *carry* → *carried*, but *carrying*.\n- Vowel + *y* or anything else → keep the base: *play* → *played*, *jump* → *jumped*.\n\n> **Watch out.** Never change *y* to *i* before *-ing* (*carriing* is wrong), and do not confuse *hoped* (*hope*) with *hopped* (*hop*).",
+          "加 *-ed* 或 *-ing* 前先看动词结尾：\n\n- 单短元音 + 单辅音 → 双写末辅音：*stop* → *stopped*、*stopping*。\n- 不发音的 *e* → 去掉 *e*：*bake* → *baked*、*baking*。\n- 辅音 + *y* → 只在 *-ed* 前把 *y* 变 *i*：*carry* → *carried*，但 *carrying*。\n- 元音 + *y* 或其他情况 → 直接加：*play* → *played*、*jump* → *jumped*。\n\n> **注意。** *-ing* 前绝不把 *y* 变成 *i*（不能写 *carriing*），也要分清 *hoped*（来自 *hope*）和 *hopped*（来自 *hop*）。",
         ),
         askGenerator(endingChoiceBank),
       ),
@@ -1599,16 +1631,24 @@ export const grammarTopics: readonly TopicDef[] = [
         "typing-the-ending",
         t("Typing the Verb with Its Ending", "写出加词尾的动词"),
         t(
-          "To write a verb with its ending, decide first which rule its last letters call for, then spell it: double the consonant after one short vowel (*plan* → *planned*), drop a silent *e* (*smile* → *smiling*), change a *y* after a consonant to *i* before *-ed* (*study* → *studied*), and otherwise just add the ending (*look* → *looked*).",
-          "写加词尾的动词时，先根据最后几个字母判断用哪条规则，再拼写：一个短元音后双写辅音（*plan* → *planned*），去掉不发音的 *e*（*smile* → *smiling*），辅音后的 *y* 在 *-ed* 前变成 *i*（*study* → *studied*），其他情况直接加词尾（*look* → *looked*）。",
+          "Decide which ending rule the last letters call for before typing: double after one short vowel (*plan* → *planned*), drop a silent *e* (*smile* → *smiling*), change consonant + *y* to *i* before *-ed* (*study* → *studied*), or add the ending directly (*look* → *looked*).\n\n> **Watch out.** Check the two letters right before the ending—words ending in two consonants like *jump* never double.",
+          "动笔前先看原词最后两个字母该套哪条规则：单短元音后双写（*plan* → *planned*）、去掉不发音 *e*（*smile* → *smiling*）、辅音加 *y* 在 *-ed* 前变 *i*（*study* → *studied*），其他直接加（*look* → *looked*）。\n\n> **注意。** 像 *jump* 这样末尾本来就有两个辅音的词，绝不要再双写。",
         ),
         typedGenerator("word-form", t("Type the verb with its ending.", "写出加上词尾后的动词。"), endingTypedBank, (right) => {
           const item = endingRuleOf.get(right);
           const [en, zh] = endingRule(item?.verb ?? "", item?.rule ?? "", item?.ending ?? "");
-          return t(`It is spelled **${right}**. ${en}`, `正确拼写是 **${right}**。${zh}`);
+          return t(
+            `It is spelled **${right}**. ${en}\n\n**Check.** Read **${right}** aloud and inspect the join between *${item?.verb ?? ""}* and ${item?.ending ?? ""}: the vowel sound stays accurate and there is no doubled *ii* or stray silent *e*.`,
+            `正确拼写是 **${right}**。${zh}\n\n**检验。** 读出 **${right}** 并检查 *${item?.verb ?? ""}* 与 ${item?.ending ?? ""} 的衔接处：元音读法不变，没有多余的 *e* 或错变的 *ii*。`,
+          );
         }),
       ),
     ],
+    14,
+    t(
+      "Why does *tap* become *tapped* with two *p*'s while *tape* becomes *taped* with one? A few clear spelling rules at the end of a verb keep the vowel sound from changing when you add *-ed* or *-ing*.",
+      "为什么 *tap* 变成 *tapped* 要写两个 *p*，而 *tape* 变成 *taped* 只写一个？掌握动词词尾的几条拼写规则，就能在加 *-ed* 和 *-ing* 时稳稳保住元音读法。",
+    ),
   ),
   topic(
     "commas-in-dates-addresses-and-letters",
@@ -1623,8 +1663,8 @@ export const grammarTopics: readonly TopicDef[] = [
         "commas-in-dates-and-places",
         t("Commas in Dates and Places", "日期和地名中的逗号"),
         t(
-          "In a date, a comma goes between the day and the year: *June 12, 2019*. If the day of the week comes first, a comma follows it too: *Saturday, July 11, 2026*.\n\nIn a place, a comma goes between the city and its state or country: *Cairo, Egypt*; *Austin, Texas*. There is no comma between the month and the day.",
-          "日期中，日和年之间加逗号：*June 12, 2019*。如果前面有星期几，星期几后面也加逗号：*Saturday, July 11, 2026*。\n\n地名中，城市和州或国家之间加逗号：*Cairo, Egypt*；*Austin, Texas*。月份和日之间不加逗号。",
+          "In a date, put a comma between the day and the year (*June 12, 2019*) and after a weekday if one comes first (*Saturday, July 11, 2026*). In a place name, put a comma between the city and its state or country (*Cairo, Egypt*; *Austin, Texas*).\n\n> **Watch out.** Never put a comma between the month and the day (*June, 12 2019* is wrong).",
+          "日期中，日和年之间加逗号（*June 12, 2019*），若前面有星期几，星期几后也加逗号（*Saturday, July 11, 2026*）。地名中，城市和州或国家之间加逗号（*Cairo, Egypt*；*Austin, Texas*）。\n\n> **注意。** 月份和日之间不能加逗号（*June, 12 2019* 是错的）。",
         ),
         typedGenerator(
           "sentence",
@@ -1632,8 +1672,8 @@ export const grammarTopics: readonly TopicDef[] = [
           commaBank,
           (right) =>
             t(
-              `**${right}** A comma goes between the day and the year, after the day of the week, and between a city and its state or country.`,
-              `**${right}** 日和年之间、星期几之后、城市和州或国家之间都要加逗号。`,
+              `**${right}**\n\nCommas separate the day from the year, follow a weekday, and separate a city from its state or country.\n\n**Check.** Scan every comma in **${right}**: each comma separates two numbers (day and year) or two geographic levels (city and state/country), with no comma between a month and its day.`,
+              `**${right}**\n\n逗号把日和年隔开，跟在星期几后面，并把城市和州或国家隔开。\n\n**检验。** 逐一检查 **${right}** 里的每个逗号：要么隔开日与年两个数字，要么隔开城市与州/国家，月份和日之间没有多余逗号。`,
             ),
         ),
       ),
@@ -1641,12 +1681,17 @@ export const grammarTopics: readonly TopicDef[] = [
         "commas-in-letters",
         t("Commas in Letters", "书信中的逗号"),
         t(
-          "A friendly letter has a comma after its greeting and after its closing:\n\n*Dear Grandma,*\n...\n*Your friend,*\n*Mia*\n\nThe greeting begins with *Dear* and a capital, and the comma comes after the name. The closing begins with a capital, only on its first word, and the writer's name goes on the line below.",
-          "友好书信的称呼和结束语后面都要加逗号：\n\n*Dear Grandma,*\n……\n*Your friend,*\n*Mia*\n\n称呼以 *Dear* 和大写字母开头，逗号放在名字后面。结束语只有第一个词首字母大写，写信人的名字写在下一行。",
+          "A friendly letter puts a comma after its greeting (*Dear Grandma,*) and after its closing (*Your friend,*), with the writer's name on the line below. Only the first word of a closing is capitalized.\n\n> **Watch out.** Never put a period after a greeting or closing, and never put a comma right after *Dear*.",
+          "友好书信在称呼（*Dear Grandma,*）和结束语（*Your friend,*）后面都要加逗号，下一行再署名。结束语只有第一个词首字母大写。\n\n> **注意。** 称呼和结束语后面不要用句号，也不要把逗号错放在 *Dear* 后面。",
         ),
         askGenerator([...greetingBank, ...closingBank]),
       ),
     ],
+    14,
+    t(
+      "Look at the top of an envelope or postcard: *Boston, Massachusetts* and *October 14, 2026*. Without commas, numbers and place names blur together. Let's place commas cleanly in dates, places, and friendly letters.",
+      "看看信封和明信片上的写法：*Boston, Massachusetts* 和 *October 14, 2026*。少了逗号，数字和地名就会糊在一起。这节课我们来把日期、地名和书信里的逗号都放准。",
+    ),
   ),
   topic(
     "contractions",
@@ -1661,13 +1706,13 @@ export const grammarTopics: readonly TopicDef[] = [
         "forming-contractions",
         t("Forming Contractions", "构成缩约形式"),
         t(
-          "A **contraction** is two words squeezed into one. An apostrophe takes the place of the letters that are left out: *do not* → *don't* (the *o* of *not* is gone), *I am* → *I'm*, *they are* → *they're*, *we have* → *we've*.\n\nThe apostrophe goes exactly where the letters were, not between the two words: *don't*, not *do'nt*. Two contractions are special: *will not* → *won't* and *cannot* → *can't*.",
-          "**缩约形式**是把两个词压缩成一个词。撇号代替被省略的字母：*do not* → *don't*（*not* 的 *o* 省略了），*I am* → *I'm*，*they are* → *they're*，*we have* → *we've*。\n\n撇号要放在字母被省略的地方，而不是两个词之间：写 *don't*，不写 *do'nt*。有两个特殊的：*will not* → *won't*，*cannot* → *can't*。",
+          "A **contraction** squeezes two words into one and puts an apostrophe exactly where letters are left out: *do not* → *don't* (missing *o*), *I am* → *I'm*, *they are* → *they're*, *we have* → *we've*. Two special ones are *will not* → *won't* and *cannot* → *can't*.\n\n> **Watch out.** Put the apostrophe where the letters vanished, not between the two original words (*don't*, never *do'nt*).",
+          "**缩约形式**把两个词合在一起，撇号准确放在省略字母的原位置：*do not* → *don't*（省了 *o*）、*I am* → *I'm*、*they are* → *they're*、*we have* → *we've*。两个特殊的是 *will not* → *won't* 和 *cannot* → *can't*。\n\n> **注意。** 撇号放在字母消失的位置，不要放在原词的分界处（写 *don't*，不写 *do'nt*）。",
         ),
         typedGenerator("word-form", t("Type the contraction of these words.", "输入这些词的缩约形式。"), contractionBank, (right, shown) =>
           t(
-            `*${wordsOf(shown)}* becomes **${right}**: the apostrophe stands where letters were left out.`,
-            `*${wordsOf(shown)}* 缩约成 **${right}**：撇号代替了被省略的字母。`,
+            `*${wordsOf(shown)}* becomes **${right}**: the apostrophe stands in for the omitted letter(s).\n\n**Check.** Put the missing letter(s) back at the apostrophe in **${right}**: it expands straight back to *${wordsOf(shown)}*.`,
+            `*${wordsOf(shown)}* 缩约成 **${right}**：撇号代替了省略的字母。\n\n**检验。** 把省掉的字母填回 **${right}** 的撇号处，正好还原成 *${wordsOf(shown)}*。`,
           ),
         ),
       ),
@@ -1675,12 +1720,17 @@ export const grammarTopics: readonly TopicDef[] = [
         "contraction-or-possessive",
         t("Contraction or Possessive", "缩约形式还是所有格"),
         t(
-          "Some contractions sound just like possessive words: *it's* and *its*, *they're* and *their* (and *there*), *you're* and *your*, *who's* and *whose*.\n\nTo choose, say the two long words in the gap. If *it is* fits (*It is going to rain*), write *it's*. If it does not (*The dog wagged it is tail*), write *its*, which means belonging to it. A possessive pronoun never has an apostrophe.",
-          "有些缩约形式和表示所属的词读音一样：*it's* 和 *its*，*they're* 和 *their*（还有 *there*），*you're* 和 *your*，*who's* 和 *whose*。\n\n选择时，把两个完整的词放进空格读一读。如果 *it is* 说得通（*It is going to rain*），就写 *it's*；如果说不通（*The dog wagged it is tail*），就写 *its*，意思是“它的”。物主代词从来不带撇号。",
+          "Some contractions sound identical to possessive words: *it's* / *its*, *they're* / *their* / *there*, *you're* / *your*, *who's* / *whose*. Say the two full words in the blank: if *it is* fits (*It is going to rain*), write **it's**; if not (*The dog wagged its tail*), write **its**.\n\n> **Watch out.** Possessive pronouns (*its*, *their*, *your*, *whose*) never take an apostrophe.",
+          "有些缩约形式和物主代词同音：*it's* / *its*、*they're* / *their* / *there*、*you're* / *your*、*who's* / *whose*。把两个完整词代进空格读：*it is* 说得通就用 **it's**，说不通就用 **its**。\n\n> **注意。** 物主代词（*its*、*their*、*your*、*whose*）从来不带撇号。",
         ),
         askGenerator(possessiveBank),
       ),
     ],
+    14,
+    t(
+      "*It's* raining outside, so the cat shook *its* wet paws. Those two words sound identical, yet only one has an apostrophe! In this topic, you will form contractions and tell them apart from look-alike possessives.",
+      "*It's* raining outside, so the cat shook *its* wet paws. 这两个词读音一模一样，却只有一个带撇号！这节课，你会练习拼写缩约形式，并把它们和同音的所有格区分清楚。",
+    ),
   ),
   topic(
     "action-and-linking-verbs",
@@ -1695,21 +1745,29 @@ export const grammarTopics: readonly TopicDef[] = [
         "action-or-linking",
         t("Action or Linking", "行为动词还是系动词"),
         t(
-          "An **action verb** tells what the subject does: *The workers **built** a wall. The river **flowed**.* A **linking verb** shows no action. It joins the subject to a word that names or describes it: *The wall **was** long. The night **became** cold. The silk **felt** smooth.*\n\nTo test a verb, put *is* in its place. If the sentence still makes sense (*The silk is smooth*), the verb is linking.",
-          "**行为动词**说明主语做什么：*The workers **built** a wall. The river **flowed**.* **系动词**不表示动作，它把主语和说明或描述主语的词连接起来：*The wall **was** long. The night **became** cold. The silk **felt** smooth.*\n\n检验方法：用 *is* 替换这个动词。如果句子仍然说得通（*The silk is smooth*），它就是系动词。",
+          "An **action verb** tells what the subject does: *The workers **built** a wall.* A **linking verb** shows no action—it connects the subject to a word that renames or describes it: *The wall **was** long. The silk **felt** smooth.*\n\nTo test a verb, swap in *is* or *was*: if *The silk was smooth* still makes sense, the verb is linking.\n\n> **Watch out.** Sense verbs like *felt*, *looked*, *smelled*, and *tasted* can be linking verbs when they describe the subject rather than an action.",
+          "**行为动词**说明主语做什么：*The workers **built** a wall.* **系动词**不表示动作，而是把主语和描述或说明主语的词连起来：*The wall **was** long. The silk **felt** smooth.*\n\n检验方法：把它换成 *is* 或 *was*，如果 *The silk was smooth* 仍然通顺，就是系动词。\n\n> **注意。** *felt*、*looked*、*smelled*、*tasted* 这类感官动词用来描述主语状态时，也是系动词。",
         ),
-        labelChoice(["What is the word in bold?", "加粗的词是什么？"], verbKindLines, verbLabels),
+        labelChoice(["What is the word in bold?", "加粗的词是什么？"], verbKindLines, verbLabels, (right, shown, entry) => [
+          `The bold word in *${shown}* is **${right}**. ${entry.why[0]}\n\n**Check.** ${right === "linking verb" ? "Replace the bold verb with *is* or *was*: the sentence still makes sense, confirming it links the subject to a description or name." : right === "action verb" ? "Replace the bold verb with *is* or *was*: the sentence breaks, confirming it shows a real action." : "Remove the bold word and look for the real verb: the sentence still has its verb elsewhere, so the bold word is a noun or adjective."}`,
+          `*${shown}* 中加粗的词是**${entry.zh}**。${entry.why[1]}\n\n**检验。** ${right === "linking verb" ? "把加粗的词换成 *is* 或 *was*：句意依然通顺，确认它是系动词。" : right === "action verb" ? "把加粗的词换成 *is* 或 *was*：句子不通，确认它表示具体动作。" : "找一找句子里真正的动词在其他位置，可见加粗词是名词或形容词，不是动词。"}`,
+        ]),
       ),
       point(
         "after-the-linking-verb",
         t("After the Linking Verb", "系动词后面的词"),
         t(
-          "After a linking verb comes a word that names or describes the subject: *The river was **muddy**. My grandfather was a **potter**.* It tells what the subject is or what it is like.\n\nTo find it, ask: the subject was what? *The river was muddy* answers *muddy*. Words in a phrase that follows, such as *after the flood*, tell when or where, not what the subject is.",
-          "系动词后面是说明或描述主语的词：*The river was **muddy**. My grandfather was a **potter**.* 它说明主语是什么或怎么样。\n\n找它时可以问：主语是什么样的？*The river was muddy* 的答案是 *muddy*。后面短语里的词，比如 *after the flood*，说明的是时间或地点，而不是主语是什么。",
+          "A linking verb connects the subject to a word that describes or renames it: *The river was **muddy**. My grandfather was a **potter**.* Ask: *The subject was what?*\n\n> **Watch out.** Ignore words tucked inside a place or time phrase like *after the flood* or *in the kitchen*—they tell when or where, not what the subject is.",
+          "系动词后面紧连着描述或说明主语的词：*The river was **muddy**. My grandfather was a **potter**.* 问一问：*主语是什么样的？*\n\n> **注意。** 不要选后面时间或地点短语（如 *after the flood*、*in the kitchen*）里的词，它们说明何时何地，不是说明主语本身。",
         ),
         askGenerator(linkedBank),
       ),
     ],
+    14,
+    t(
+      "Compare *The chef **tasted** the soup* with *The soup **tasted** spicy*. In the first sentence, the chef does an action; in the second, *tasted* simply links *soup* to *spicy*. Let's tell action verbs from linking verbs and spot what follows a linking verb.",
+      "比一比 *The chef **tasted** the soup* 和 *The soup **tasted** spicy*：第一句里厨师在做一个动作，第二句里 *tasted* 只是把汤和“辣”连在一起。这节课我们来区分行为动词和系动词，并找出系动词后面的表语词。",
+    ),
   ),
   topic(
     "four-kinds-of-sentences",
@@ -1724,17 +1782,20 @@ export const grammarTopics: readonly TopicDef[] = [
         "naming-the-kind",
         t("Naming the Kind of Sentence", "说出句子的种类"),
         t(
-          "There are four kinds of sentences.\n\n- A **statement** tells something and ends with a period: *The drum is loud.*\n- A **question** asks something and ends with a question mark: *Can you play the violin?*\n- A **command** tells someone to do something; its subject, *you*, is left out: *Hold the bow gently.*\n- An **exclamation** shows strong feeling and ends with an exclamation mark: *What a beautiful song that was!*\n\nA strong command can end with an exclamation mark too, so look at what the sentence does, not only at its end mark.",
-          "句子有四种。\n\n- **陈述句**陈述一件事，以句号结尾：*The drum is loud.*\n- **疑问句**提出问题，以问号结尾：*Can you play the violin?*\n- **祈使句**要求别人做某事，省略了主语 *you*：*Hold the bow gently.*\n- **感叹句**表达强烈的感情，以感叹号结尾：*What a beautiful song that was!*\n\n语气强烈的祈使句也可以用感叹号结尾，所以要看句子的作用，而不只看结尾标点。",
+          "Sentences do four different jobs:\n\n- **Statement** (tells, `.`): *The drum is loud.*\n- **Question** (asks, `?`): *Can you play the violin?*\n- **Command** (tells someone to act, `.` or `!`, understood *you*): *Hold the bow gently.*\n- **Exclamation** (strong feeling, `!`): *What a beautiful song that was!*\n\n> **Watch out.** A strong command can end with an exclamation mark too, so check what the sentence *does*, not just its end mark.",
+          "句子有四种作用：\n\n- **陈述句**（说明事实，`.`）：*The drum is loud.*\n- **疑问句**（提出问题，`?`）：*Can you play the violin?*\n- **祈使句**（要求行动，`.` 或 `!`，省略主语 *you*）：*Hold the bow gently.*\n- **感叹句**（强烈情感，`!`）：*What a beautiful song that was!*\n\n> **注意。** 语气强烈的祈使句也可以用感叹号结尾，所以不能只看标点，要看句子的作用。",
         ),
-        labelChoice(["What kind of sentence is this?", "这是哪一种句子？"], kindLines, kindLabels),
+        labelChoice(["What kind of sentence is this?", "这是哪一种句子？"], kindLines, kindLabels, (right, shown, entry) => [
+          `*${shown}* is a **${right}**. ${entry.why[0]}\n\n**Check.** ${right === "command" ? "Put an invisible *(You)* at the front: it tells someone what to do, so it is a command." : right === "question" ? "Read it aloud: it expects an answer and ends with **?**." : right === "exclamation" ? "Read it aloud: it bursts out with strong feeling rather than giving a calm fact or an order, and ends with **!**." : "Read it aloud: it calmly states a fact (not an order or question) and ends with **.**."}`,
+          `*${shown}* 是**${entry.zh}**。${entry.why[1]}\n\n**检验。** ${right === "command" ? "在句首补一个省略的 *(You)*：它在发出指令，所以是祈使句。" : right === "question" ? "大声读一遍：它在等对方回答，句末是问号 **?**。" : right === "exclamation" ? "大声读一遍：它在抒发强烈情感而不是平淡陈述或下指令，句末是感叹号 **!**。" : "大声读一遍：它在平实陈述一件事，不是指令也不是提问，句末是句号 **.**。"}`,
+        ]),
       ),
       point(
         "changing-the-kind",
         t("Changing the Kind of Sentence", "改变句子的种类"),
         t(
-          "To turn a statement into a question, move the helping verb in front of the subject and end with a question mark: *The drum is loud.* → *Is the drum loud?* To turn it back, put the subject first again and end with a period.\n\nTo make a command, start with what to do: *You should clap on the beat.* → *Clap on the beat.* To make an exclamation, begin with *What a*: *That is a loud drum.* → *What a loud drum that is!*",
-          "把陈述句改成疑问句，要把助动词移到主语前面，并以问号结尾：*The drum is loud.* → *Is the drum loud?* 改回来时，把主语放回前面，以句号结尾。\n\n改成祈使句，要以要做的动作开头：*You should clap on the beat.* → *Clap on the beat.* 改成感叹句，以 *What a* 开头：*That is a loud drum.* → *What a loud drum that is!*",
+          "You can reshape the same idea into any of the four kinds: move the helping verb to the front for a question (*The drum is loud.* → *Is the drum loud?*), start with the action verb for a command (*You should clap on the beat.* → *Clap on the beat.*), or open with *What a* for an exclamation (*That is a loud drum.* → *What a loud drum that is!*).\n\n> **Watch out.** Changing the kind of sentence almost always changes its end mark too—do not forget to update `.`, `?`, or `!`.",
+          "同一个意思可以改写成四种句子：把助动词移到句首变疑问句（*The drum is loud.* → *Is the drum loud?*），直接以动词开头变祈使句（*You should clap on the beat.* → *Clap on the beat.*），用 *What a* 开头变感叹句（*That is a loud drum.* → *What a loud drum that is!*）。\n\n> **注意。** 改写句型时别忘了同步更换句末标点（`.`、`?` 或 `!`）。",
         ),
         typedGenerator(
           "sentence-pattern",
@@ -1744,6 +1805,11 @@ export const grammarTopics: readonly TopicDef[] = [
         ),
       ),
     ],
+    14,
+    t(
+      "Listen to a music rehearsal: *The cello is ready.* *Can you hear the beat?* *Tap your foot.* *What a lively tune!* Four sentences, four different jobs—and each one has its own pattern and end mark.",
+      "听听音乐排练现场：*The cello is ready.*（陈述）*Can you hear the beat?*（提问）*Tap your foot.*（指令）*What a lively tune!*（感叹）四句话有四种作用，各有句式和标点。",
+    ),
   ),
   topic(
     "spelling-ck-tch-and-dge",
@@ -1758,8 +1824,8 @@ export const grammarTopics: readonly TopicDef[] = [
         "choosing-the-ending-spelling",
         t("Choosing the Spelling of the Ending", "选择词尾的拼写"),
         t(
-          "Listen to the vowel before the last sound of the word.\n\n- After **one short vowel**, /k/ is *ck*, /ch/ is *tch* and /j/ is *dge*: *stick*, *patch*, *bridge*.\n- After a **long vowel** or a **consonant**, /k/ is *k*, /ch/ is *ch* and /j/ is *ge*: *cake*, *milk*; *beach*, *bench*; *page*, *large*.\n\nThe extra letter (*c*, *t* or *d*) keeps the short vowel short.",
-          "听一听单词最后一个音前面的元音。\n\n- 在**一个短元音**之后，/k/ 拼作 *ck*，/ch/ 拼作 *tch*，/j/ 拼作 *dge*：*stick*、*patch*、*bridge*。\n- 在**长元音**或**辅音**之后，/k/ 拼作 *k*，/ch/ 拼作 *ch*，/j/ 拼作 *ge*：*cake*、*milk*；*beach*、*bench*；*page*、*large*。\n\n多出来的字母（*c*、*t* 或 *d*）让短元音保持短音。",
+          "Listen to the sound right before the final /k/, /ch/, or /j/:\n\n- After **one short vowel** → *ck*, *tch*, *dge*: *stick*, *patch*, *bridge*.\n- After a **long vowel** or a **consonant** → *k*, *ch*, *ge*: *cake*, *milk*; *beach*, *bench*; *page*, *large*.\n\n> **Watch out.** Words with a consonant right before the ending—like *milk*, *bench*, and *large*—never use *ck*, *tch*, or *dge*.",
+          "听词尾 /k/、/ch/、/j/ 前面紧挨着的音：\n\n- **单个短元音**后 → *ck*、*tch*、*dge*：*stick*、*patch*、*bridge*。\n- **长元音**或**辅音**后 → *k*、*ch*、*ge*：*cake*、*milk*；*beach*、*bench*；*page*、*large*。\n\n> **注意。** 词尾前紧挨着辅音的词（如 *milk*、*bench*、*large*），一律不用 *ck*、*tch*、*dge*。",
         ),
         askGenerator(spellChoiceBank),
       ),
@@ -1767,19 +1833,29 @@ export const grammarTopics: readonly TopicDef[] = [
         "typing-the-word",
         t("Typing the Word", "写出单词"),
         t(
-          "To finish a word, say it and listen: is the vowel before the last sound short, as in *duck*, or long, as in *bike*? Is there a consonant before it, as in *lunch*? Then choose: *ck*, *tch* or *dge* after one short vowel, and *k*, *ch* or *ge* otherwise.",
-          "补全单词时，先读出来仔细听：最后一个音前面的元音是像 *duck* 那样的短元音，还是像 *bike* 那样的长元音？前面是不是辅音，比如 *lunch*？然后选择：一个短元音之后用 *ck*、*tch* 或 *dge*，其他情况用 *k*、*ch* 或 *ge*。",
+          "Say the whole word aloud and listen to the sound right before the end: a single short vowel (*duck*, *match*, *edge*) takes *ck*, *tch*, or *dge*; a long vowel or consonant (*bike*, *lunch*, *page*) takes *k*, *ch*, or *ge*.\n\n> **Watch out.** Remember to type the entire word, including the starting letters shown before the blank.",
+          "把整个词读出来，听清词尾前的音：单个短元音（*duck*、*match*、*edge*）后用 *ck*、*tch*、*dge*；长元音或辅音（*bike*、*lunch*、*page*）后用 *k*、*ch*、*ge*。\n\n> **注意。** 输入时要写出完整单词，别漏掉空格前给出的开头字母。",
         ),
         typedGenerator(
           "word-form",
           t("The word with the gap is only begun. Type the whole word.", "带空格的单词只写了开头，请输入整个单词。"),
           spellTypedBank,
           (right) => {
-            const [en, zh] = spellRule(right, spellRuleOf.get(right) ?? "");
-            return t(`The word is **${right}**. ${en}`, `这个词是 **${right}**。${zh}`);
+            const rule = spellRuleOf.get(right) ?? "";
+            const [en, zh] = spellRule(right, rule);
+            const shortRule = rule === "ck" || rule === "tch" || rule === "dge";
+            return t(
+              `The word is **${right}**. ${en}\n\n**Check.** Say **${right}** aloud and listen right before the ending: ${shortRule ? "you hear one short vowel, which calls for the extra guard letter (*c*, *t*, or *d*)." : "you hear a long vowel or a consonant, so no extra guard letter is needed."}`,
+              `这个词是 **${right}**。${zh}\n\n**检验。** 读出 **${right}**，听词尾前的音：${shortRule ? "前面是单个短元音，所以需要多加一个保护字母（*c*、*t* 或 *d*）。" : "前面是长元音或辅音，不需要多加保护字母。"}`,
+            );
           },
         ),
       ),
     ],
+    14,
+    t(
+      "Why do *back* and *bike* end differently even though both end with the /k/ sound? The secret is the sound right before it! One short vowel calls for a thicker ending (*ck*, *tch*, *dge*) to keep the vowel short.",
+      "为什么 *back* 和 *bike* 都以 /k/ 结尾，拼法却不同？秘密藏在它前面的那个音里！单个短元音后需要更厚的词尾（*ck*、*tch*、*dge*）来守住短音。",
+    ),
   ),
 ];

@@ -1222,11 +1222,13 @@ function modalMeans(kind: Deduction | "should"): Text {
 
 /** whyNotGuess explains a modal that does not match how sure the speaker is. */
 const whyNotGuess =
-  (after: Text) =>
-  (wrong: string, right: string): Text => {
+  (_after: Text) =>
+  (wrong: string, _right: string): Text => {
     const first = modalMeans(kindOf(wrong));
-    const rule = guessRule(kindOf(right), after);
-    return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+    return t(
+      `${first.en} That does not match the level of certainty shown in brackets.`,
+      `${first["zh-CN"]}这与括号里给出的把握程度或语气不符。`,
+    );
   };
 
 /** guessWhy explains the modal in the gap of shown, with what follows it. */
@@ -1234,7 +1236,10 @@ const guessWhy =
   (after: Text) =>
   (right: string, shown: string): Text => {
     const rule = guessRule(kindOf(right), after);
-    return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+    return t(
+      `${rule.en}: ${fill(shown, right)}\n\n**Check.** Match the modal (*${kindOf(right)}*) to the clue in brackets: *must* = sure true, *can't* = sure false, *might* = possible, *should* = past regret.`,
+      `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 对照括号里的提示核对情态动词（*${kindOf(right)}*）：*must* 确信是真的，*can't* 确信不是，*might* 有可能，*should* 表示过去本该做却没做。`,
+    );
   };
 
 const guessChoice: readonly ChoiceItem[] = guesses.map(
@@ -1335,6 +1340,10 @@ const deduction: TopicDef = {
     "It must be a virus. It can't be serious. It might be an allergy. Must says what we are sure of, can't what is impossible, and might what is possible.",
     "It must be a virus. It can't be serious. It might be an allergy。must 表示确信，can't 表示不可能，might 表示有可能。",
   ),
+  intro: t(
+    "Hearing thunder outside, you judge from the clues: *It must be a storm* (certain), *It can't be sunny* (impossible), or *It might be hail* (possible). Each modal marks a different level of certainty about the present.",
+    "听见窗外打雷，你会根据线索推测：*It must be a storm*（肯定）、*It can't be sunny*（不可能）或 *It might be hail*（有可能）。不同的情态动词对应对当下的不同把握程度。",
+  ),
   prerequisites: ["may-might-and-could"],
   encompasses: [{ topic: "may-might-and-could", weight: 0.3 }],
   xp: 30,
@@ -1344,8 +1353,8 @@ const deduction: TopicDef = {
       "sure",
       t("Must, can't or might", "must、can't 还是 might"),
       t(
-        "When you guess about the present from what you can see or know, choose the modal by how sure you are:\n\n- **must**: you are sure it is true. *She has a fever. She **must** be ill.*\n- **can't**: you are sure it is not true. *He ate ten minutes ago. He **can't** be hungry.*\n- **might**, **may** or **could**: it is possible. *She **might** be busy.*\n\nThe opposite of *must* here is *can't*, not *mustn't*: *mustn't* means that something is not allowed.",
-        "根据看到或知道的情况推测现在时，按把握程度选情态动词：\n\n- **must**：确信是真的。*She has a fever. She **must** be ill.*\n- **can't**：确信不是真的。*He ate ten minutes ago. He **can't** be hungry.*\n- **might**、**may** 或 **could**：有可能。*She **might** be busy.*\n\n这里 *must* 的反义是 *can't*，不是 *mustn't*：*mustn't* 表示“不允许”。中文“一定”“不可能”“可能”正好对应这三个词，但不要把“一定不是”说成 *mustn't be*。",
+        "When you guess about the present from what you can see or know, choose the modal by how sure you are:\n\n- **must**: you are sure it is true. *She has a fever. She **must** be ill.*\n- **can't**: you are sure it is not true. *He ate ten minutes ago. He **can't** be hungry.*\n- **might**, **may** or **could**: it is possible. *She **might** be busy.*\n\n> **Watch out.** The negative opposite of deduction *must* is ***can't***, never *mustn't* (*mustn't* means prohibited, not “surely not”).",
+        "根据看到或知道的情况推测现在时，按把握程度选情态动词：\n\n- **must**：确信是真的。*She has a fever. She **must** be ill.*\n- **can't**：确信不是真的。*He ate ten minutes ago. He **can't** be hungry.*\n- **might**、**may** 或 **could**：有可能。*She **might** be busy.*\n\n中文“一定”“不可能”“可能”正好对应这三个词。\n\n> **注意。** 表示推测时，*must* 的反义词是 ***can't***，绝不是 *mustn't*（*mustn't* 表示“禁止”，不是“一定不是”）。",
       ),
       choiceGenerator(
         t(
@@ -1361,16 +1370,16 @@ const deduction: TopicDef = {
       "doing",
       t("Must be doing", "must be doing"),
       t(
-        "To guess about what is happening **at this moment**, use the modal with **be** and the **-ing** form:\n\n- *She isn't answering. She **must be sleeping**.*\n- *He looks calm. He **can't be worrying** about the exam.*\n\nNot *must sleeping* (the *be* is missing) and not *must be sleep*.",
-        "推测**此刻正在发生**的事，用情态动词加 **be** 再加 **-ing** 形式：\n\n- *She isn't answering. She **must be sleeping**.*\n- *He looks calm. He **can't be worrying** about the exam.*\n\n不能说 *must sleeping*（缺了 *be*），也不能说 *must be sleep*。",
+        "To guess about what is happening **at this moment**, use the modal with **be** and the **-ing** form:\n\n- *She isn't answering. She **must be sleeping**.*\n- *He looks calm. He **can't be worrying** about the exam.*\n\n> **Watch out.** Keep base ***be*** between the modal and the *-ing* verb—*must sleeping*, *must been sleeping*, and *must be sleep* are all wrong.",
+        "推测**此刻正在发生**的事，用情态动词加 **be** 再加 **-ing** 形式：\n\n- *She isn't answering. She **must be sleeping**.*\n- *He looks calm. He **can't be worrying** about the exam.*\n\n> **注意。** 情态动词和 *-ing* 之间必须保留原形 ***be***——*must sleeping*、*must been sleeping* 和 *must be sleep* 都是错的。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
         doingChoice,
         (right, shown) =>
           t(
-            `The guess is about what is happening at this moment, so the modal takes *be* and the *-ing* form: ${fill(shown, right)}`,
-            `推测的是此刻正在发生的事，所以情态动词后面接 *be* 加 *-ing*：${fill(shown, right)}`,
+            `The guess is about what is happening at this moment, so the modal takes *be* and the *-ing* form: ${fill(shown, right)}\n\n**Check.** Confirm the modal is followed directly by base *be* + *-ing* (*${right}*).`,
+            `推测的是此刻正在发生的事，所以情态动词后面接 *be* 加 *-ing*：${fill(shown, right)}\n\n**检验。** 确认情态动词后紧跟原形 *be* + *-ing*（*${right}*）。`,
           ),
         (wrong) =>
           wrong.startsWith("been ")
@@ -1393,8 +1402,8 @@ const deduction: TopicDef = {
       "write",
       t("Writing a guess", "写出推测"),
       t(
-        "Rewrite the sentence with a modal and *be*:\n\n- *I'm sure that she is tired.* → *She **must be** tired.*\n- *I'm sure that he isn't hungry.* → *He **can't be** hungry.*\n- *Perhaps it is an allergy.* → *It **might be** an allergy.* (*may* and *could* are also right.)",
-        "用情态动词加 *be* 改写句子：\n\n- *I'm sure that she is tired.* → *She **must be** tired.*\n- *I'm sure that he isn't hungry.* → *He **can't be** hungry.*\n- *Perhaps it is an allergy.* → *It **might be** an allergy.*（也可以用 *may* 或 *could*。）",
+        "Rewrite the sentence with a modal and *be*:\n\n- *I'm sure that she is tired.* → *She **must be** tired.*\n- *I'm sure that he isn't hungry.* → *He **can't be** hungry.*\n- *Perhaps it is an allergy.* → *It **might be** an allergy.* (*may* and *could* are also right.)\n\n> **Watch out.** After any modal, *is/are/am* always changes to base *be*—and never add *to* (*must to be* is wrong).",
+        "用情态动词加 *be* 改写句子：\n\n- *I'm sure that she is tired.* → *She **must be** tired.*\n- *I'm sure that he isn't hungry.* → *He **can't be** hungry.*\n- *Perhaps it is an allergy.* → *It **might be** an allergy.*（也可以用 *may* 或 *could*。）\n\n> **注意。** 情态动词后面，*is/are/am* 一律改成原形 *be*，且不能加 *to*（*must to be* 是错的）。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1402,7 +1411,10 @@ const deduction: TopicDef = {
         guessTyped,
         (right) => {
           const rule = guessRule(kindOf(right), t("*be*", "*be*"));
-          return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+          return t(
+            `${rule.en}: ${right}\n\n**Check.** Verify the modal matches the certainty level and is followed directly by base *be*.`,
+            `${rule["zh-CN"]}：${right}\n\n**检验。** 核对情态动词与把握程度一致，且后面直接接原形 *be*。`,
+          );
         },
       ),
     ),
@@ -1515,6 +1527,10 @@ const pastModals: TopicDef = {
     "They should have tested it. She might have forgotten. A modal with have and a past participle looks back at the past: must have, can't have and might have guess, and should have criticizes.",
     "They should have tested it. She might have forgotten。情态动词加 have 加过去分词回看过去：must have、can't have、might have 表示推测，should have 表示批评或后悔。",
   ),
+  intro: t(
+    "When a colleague arrives soaking wet, you look back at what happened: *He must have walked in the rain*, or *He should have brought an umbrella.* Adding *have* + past participle turns any modal toward the past.",
+    "看到同事淋成落汤鸡，你回推刚才发生了什么：*He must have walked in the rain*，或者惋惜道 *He should have brought an umbrella.* 情态动词加上 *have* + 过去分词，就能把推测或批评指向过去。",
+  ),
   prerequisites: ["modals-of-deduction", "present-perfect-or-past-simple"],
   encompasses: [
     { topic: "modals-of-deduction", weight: 0.4 },
@@ -1527,8 +1543,8 @@ const pastModals: TopicDef = {
       "meaning",
       t("Must have, can't have, might have, should have", "must have、can't have、might have、should have"),
       t(
-        "To guess about the **past**, put **have + past participle** after the modal:\n\n- **must have**: you are sure it happened. *The streets are wet. It **must have rained**.*\n- **can't have**: you are sure it did not happen. *It was dark. He **can't have seen** us.*\n- **might have**: perhaps it happened. *She **might have gone** home.*\n\n**Should have** says that something was the right thing to do, but it did not happen: *I failed. I **should have studied** harder.*",
-        "推测**过去**的事，在情态动词后用 **have + 过去分词**：\n\n- **must have**：确信发生过。*The streets are wet. It **must have rained**.*\n- **can't have**：确信没发生。*It was dark. He **can't have seen** us.*\n- **might have**：也许发生过。*She **might have gone** home.*\n\n**should have** 表示本该做却没做：*I failed. I **should have studied** harder.* 中文说“我本该更努力的”，英语不说 *I should study harder*（那是说现在和以后）。",
+        "To guess about the **past**, put **have + past participle** after the modal:\n\n- **must have**: you are sure it happened. *The streets are wet. It **must have rained**.*\n- **can't have**: you are sure it did not happen. *It was dark. He **can't have seen** us.*\n- **might have**: perhaps it happened. *She **might have gone** home.*\n\n**Should have** says that something was the right thing to do, but it did not happen: *I failed. I **should have studied** harder.*\n\n> **Watch out.** Do not use plain *should + base verb* for past regret—*I should study harder* talks about now or the future, not a past mistake.",
+        "推测**过去**的事，在情态动词后用 **have + 过去分词**：\n\n- **must have**：确信发生过。*The streets are wet. It **must have rained**.*\n- **can't have**：确信没发生。*It was dark. He **can't have seen** us.*\n- **might have**：也许发生过。*She **might have gone** home.*\n\n**should have** 表示本该做却没做：*I failed. I **should have studied** harder.*\n\n> **注意。** 表达过去本该做却没做，不能只用 *should + 动词原形*——*I should study harder* 说的是现在或以后，不是过去的遗憾。",
       ),
       choiceGenerator(
         t(
@@ -1544,8 +1560,8 @@ const pastModals: TopicDef = {
       "form",
       t("Have and the past participle", "have 加过去分词"),
       t(
-        "After a modal, always use **have**, never *had* or *has*, and then the **past participle**: *must have **gone***, not *must had gone* or *must have went*. In speech, *have* sounds like *of* (*must've*), but it is never written *must of*.",
-        "情态动词后面一律用 **have**，不用 *had* 或 *has*，然后接**过去分词**：*must have **gone***，不是 *must had gone*，也不是 *must have went*。口语中 *have* 弱读，听起来像 *of*（*must've*），但绝不能写成 *must of*。",
+        "After a modal, always use **have**, never *had* or *has*, and then the **past participle**: *must have **gone***, not *must had gone* or *must have went*.\n\n> **Watch out.** In speech *must've* sounds like *must of*, but in writing it is always **have**—never *of*, never *had*, and never *to have*.",
+        "情态动词后面一律用 **have**，不用 *had* 或 *has*，然后接**过去分词**：*must have **gone***，不是 *must had gone*，也不是 *must have went*。\n\n> **注意。** 口语中 *must've* 弱读起来像 *must of*，但书面永远写 **have**——不能写成 *of*、*had* 或 *to have*。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -1553,32 +1569,25 @@ const pastModals: TopicDef = {
         (right, shown) => {
           const pp = right.split(" ").at(-1) ?? "";
           return t(
-            `After a modal, the past takes *have*, never *had*, and then the past participle, *${pp}*: ${fill(shown, right)}`,
-            `情态动词后面表示过去，用 *have*，不用 *had*，再接过去分词 *${pp}*：${fill(shown, right)}`,
+            `After a modal, the past takes *have*, never *had*, and then the past participle, *${pp}*: ${fill(shown, right)}\n\n**Check.** Verify the three-part chain: modal + base *have* + past participle (*${pp}*).`,
+            `情态动词后面表示过去，用 *have*，不用 *had*，再接过去分词 *${pp}*：${fill(shown, right)}\n\n**检验。** 核对三段结构：情态动词 + 原形 *have* + 过去分词（*${pp}*）。`,
           );
         },
-        (wrong, right) => {
-          const pp = right.split(" ").at(-1) ?? "";
+        (wrong) => {
           const [, w1 = "", w2 = ""] = wrong.split(" ");
           if (w1 === "to")
-            return t(
-              `A modal is followed directly by its verb, with no *to*: *${right}*.`,
-              `情态动词后面直接跟动词，不加 *to*：*${right}*。`,
-            );
+            return t(`A modal is followed directly by base *have*, never by *to have*.`, `情态动词后面直接接原形 *have*，不能加 *to*。`);
           if (w1 === "had")
             return t(
-              `After a modal, the verb is in its base form: *have*, not *had*. Then comes the past participle, *${pp}*.`,
-              `情态动词后面的动词用原形：用 *have*，不用 *had*，再接过去分词 *${pp}*。`,
+              `After a modal, the helper stays in its base form (*have*), never *had*.`,
+              `情态动词后面的助动词必须用原形 *have*，不能用 *had*。`,
             );
           if (w1 === "have")
             return t(
-              `*${w2}* is the past simple, not the past participle. After *have* comes *${pp}*.`,
-              `*${w2}* 是一般过去式，不是过去分词。*have* 后面要用 *${pp}*。`,
+              `*${w2}* is the past simple, not the past participle required after *have*.`,
+              `*${w2}* 是一般过去式，不是 *have* 后面所需的过去分词。`,
             );
-          return t(
-            `*${wrong}* leaves out *have*, so it does not talk about the past. Use *${right}*.`,
-            `*${wrong}* 漏掉了 *have*，没有表示过去。要用 *${right}*。`,
-          );
+          return t(`*${wrong}* leaves out *have*, so it does not refer back to the past.`, `*${wrong}* 漏掉了 *have*，无法回指过去。`);
         },
       ),
     ),
@@ -1586,8 +1595,8 @@ const pastModals: TopicDef = {
       "write",
       t("Writing about the past with a modal", "用情态动词写过去的事"),
       t(
-        "Rewrite the sentence with a modal, *have* and the past participle:\n\n- *I'm sure that she missed the bus.* → *She **must have missed** the bus.*\n- *It's impossible that he saw us.* → *He **can't have seen** us.*\n- *Perhaps she went home.* → *She **might have gone** home.*\n- *I didn't study harder, and that was a mistake.* → *I **should have studied** harder.*",
-        "用情态动词加 *have* 加过去分词改写句子：\n\n- *I'm sure that she missed the bus.* → *She **must have missed** the bus.*\n- *It's impossible that he saw us.* → *He **can't have seen** us.*\n- *Perhaps she went home.* → *She **might have gone** home.*\n- *I didn't study harder, and that was a mistake.* → *I **should have studied** harder.*",
+        "Rewrite the sentence with a modal, *have* and the past participle:\n\n- *I'm sure that she missed the bus.* → *She **must have missed** the bus.*\n- *It's impossible that he saw us.* → *He **can't have seen** us.*\n- *Perhaps she went home.* → *She **might have gone** home.*\n- *I didn't study harder, and that was a mistake.* → *I **should have studied** harder.*\n\n> **Watch out.** Check irregular verbs carefully: *saw* becomes *seen*, *went* becomes *gone*, and *wrote* becomes *written* after *have*.",
+        "用情态动词加 *have* 加过去分词改写句子：\n\n- *I'm sure that she missed the bus.* → *She **must have missed** the bus.*\n- *It's impossible that he saw us.* → *He **can't have seen** us.*\n- *Perhaps she went home.* → *She **might have gone** home.*\n- *I didn't study harder, and that was a mistake.* → *I **should have studied** harder.*\n\n> **注意。** 留心不规则动词的过去分词：放在 *have* 后面时，*saw* 要变成 *seen*，*went* 变成 *gone*，*wrote* 变成 *written*。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1598,7 +1607,10 @@ const pastModals: TopicDef = {
         pastTyped,
         (right) => {
           const rule = guessRule(kindOf(right), haveAfter);
-          return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+          return t(
+            `${rule.en}: ${right}\n\n**Check.** Verify the modal matches the clue and is followed by base *have* + past participle.`,
+            `${rule["zh-CN"]}：${right}\n\n**检验。** 核对情态动词与句意线索一致，且后面是原形 *have* + 过去分词。`,
+          );
         },
       ),
     ),

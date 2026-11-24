@@ -18,14 +18,18 @@ const atmosphere = topic("writing", {
     "Atmosphere comes from details of sight, sound, smell and touch chosen to point the same way, not from naming the feeling.",
     "氛围来自指向同一方向的视觉、听觉、嗅觉和触觉细节，而不是直接说出那种感觉。",
   ],
+  intro: [
+    "Writing *The station was lonely* tells the reader what to feel and convinces no one; writing *A single bench stood under a buzzing lamp as the last train's red light faded* makes them feel it. Atmosphere is built by aiming sight, sound, smell, and touch in the same emotional direction.",
+    "只写“车站很孤单”只是命令读者去感受，毫无说服力；而写“嗡嗡作响的孤灯下空着一条长椅，末班车的尾灯渐渐消失”，读者自然会感到孤单。氛围靠的是让视觉、听觉、嗅觉和触觉细节朝同一方向发力。",
+  ],
   after: ["choosing-sensory-details", "recognizing-gothic-elements"],
   points: [
     label(
       "does-it-build-the-atmosphere",
       ["Does It Build the Atmosphere", "它是否营造了氛围"],
       [
-        "A writer who wants the reader to feel dread does not write *It was scary.* Instead, they choose details of the senses that all point the same way: *The candle guttered, and somewhere below, a door creaked open by itself.* A sentence can **build the atmosphere** with such details, it can **name the feeling** instead of showing it, or it can give a **detail that breaks the mood**, such as a cheerful or flat detail in a scene of dread.",
-        "想让读者感到恐惧的作者，不会写 *It was scary.* 而是选择全都指向同一方向的感官细节：*The candle guttered, and somewhere below, a door creaked open by itself.* 一个句子可以用这样的细节**营造氛围**；也可以**直接说出感觉**而不加以展现；还可能给出**破坏氛围的细节**，比如在恐怖场景中出现欢快或平淡的细节。",
+        "A writer who wants the reader to feel dread does not write *It was scary.* Instead, they choose details of the senses that all point the same way: *The candle guttered, and somewhere below, a door creaked open by itself.* A sentence can **build the atmosphere** with such details, it can **name the feeling** instead of showing it, or it can give a **detail that breaks the mood**, such as a cheerful or flat detail in a scene of dread.\n\n> **Watch out.** Separate *naming* from *breaking*: an adjective like *spooky* or *frightening* merely names the feeling without sensory proof, while a bright, cozy, or practical detail pulls the mood in the opposite direction.",
+        "想让读者感到恐惧的作者，不会写 *It was scary.* 而是选择全都指向同一方向的感官细节：*The candle guttered, and somewhere below, a door creaked open by itself.* 一个句子可以用这样的细节**营造氛围**；也可以**直接说出感觉**而不加以展现；还可能给出**破坏氛围的细节**，比如在恐怖场景中出现欢快或平淡的细节。\n\n> **注意。** 分清“直接说出感觉”和“破坏氛围”：*spooky*、*frightening* 只是贴了情绪标签却没有感官画面，而明亮、温馨或琐碎实用的细节则会把氛围拉向反方向。",
       ],
       ["A writer wants a mood of dread. What does this sentence do?", "作者想营造恐惧的氛围。这个句子起了什么作用？"],
       `
@@ -63,22 +67,22 @@ const atmosphere = topic("writing", {
       {
         "builds the atmosphere": L(
           "营造了氛围",
-          "The sentence uses details of the senses that all point toward dread, so the reader feels the mood without being told it.",
-          "这个句子使用全都指向恐惧的感官细节，读者无需被告知就能感受到氛围。",
+          "The sentence uses details of the senses that all point toward dread, so the reader feels the mood without being told it.\n\n**Check.** Point to the concrete sights, sounds, smells, or cold textures in the sentence: none of them says *scary*, yet every detail tightens the dread.",
+          "这个句子使用全都指向恐惧的感官细节，读者无需被告知就能感受到氛围。\n\n**检验。** 指认句中的具体画面、声音、气味或冰冷触感：它没有直接说“可怕”，却让每个细节都把恐惧拉紧。",
           "The sentence does not build the mood with sensory details.",
           "这个句子没有用感官细节营造氛围。",
         ),
         "names the feeling": L(
           "直接说出感觉",
-          "The sentence tells the reader the place was scary or eerie instead of giving details that would make them feel it.",
-          "这个句子直接告诉读者这里可怕或诡异，而不是给出让读者自己感受到的细节。",
+          "The sentence tells the reader the place was scary or eerie instead of giving details that would make them feel it.\n\n**Check.** Spot the abstract emotion word (*frightening*, *scared*, *creepy*, *eerie*, *spooky*, *sinister*): it labels the mood without showing anything the senses can perceive.",
+          "这个句子直接告诉读者这里可怕或诡异，而不是给出让读者自己感受到的细节。\n\n**检验。** 找出抽象的情绪形容词（如 *frightening*、*scared*、*creepy*、*eerie*、*spooky*）：它只贴了标签，没有提供可感知的感官画面。",
           "The sentence does not simply name a feeling.",
           "这个句子并不只是说出一种感觉。",
         ),
         "breaks the mood": L(
           "破坏了氛围",
-          "The detail is cheerful, cozy or flatly practical, so it pulls against the dread the writer wants.",
-          "这个细节欢快、温馨或平淡务实，与作者想要的恐惧背道而驰。",
+          "The detail is cheerful, cozy or flatly practical, so it pulls against the dread the writer wants.\n\n**Check.** Notice the tone of the concrete detail itself: it feels bright, comfy, or ordinary—undercutting dread rather than deepening it.",
+          "这个细节欢快、温馨或平淡务实，与作者想要的恐惧背道而驰。\n\n**检验。** 看这个具体细节本身的基调：它显得明亮、舒适或日常，反而冲淡而不是加深了恐惧感。",
           "The detail does not pull against the mood of dread.",
           "这个细节并没有与恐惧的氛围背道而驰。",
         ),
@@ -88,8 +92,8 @@ const atmosphere = topic("writing", {
       "the-detail-that-fits-the-mood",
       ["The Detail That Fits the Mood", "符合氛围的细节"],
       [
-        "Each mood has its own details. Peace may come from *soft light on still water*; tension from *a clock ticking in a silent room*; gloom from *gray rain on empty streets*. Choose a detail of the senses that matches the mood, and be wary of two mistakes: a detail that **points to a different mood**, and a sentence that **only names the mood** with no detail at all.",
-        "每种氛围都有自己的细节。宁静可以来自 *soft light on still water*；紧张来自 *a clock ticking in a silent room*；阴郁来自 *gray rain on empty streets*。选择与氛围相符的感官细节，并警惕两种错误：**指向另一种氛围**的细节，以及**只说出氛围名称**、没有任何细节的句子。",
+        "Each mood has its own details. Peace may come from *soft light on still water*; tension from *a clock ticking in a silent room*; gloom from *gray rain on empty streets*. Choose a detail of the senses that matches the mood, and be wary of two mistakes: a detail that **points to a different mood**, and a sentence that **only names the mood** with no detail at all.\n\n> **Watch out.** Check two things: first, rule out any option that merely repeats the mood word (*was very peaceful*, *felt extremely tense*); second, make sure the sensory image points to the exact mood asked for, not its opposite.",
+        "每种氛围都有自己的细节。宁静可以来自 *soft light on still water*；紧张来自 *a clock ticking in a silent room*；阴郁来自 *gray rain on empty streets*。选择与氛围相符的感官细节，并警惕两种错误：**指向另一种氛围**的细节，以及**只说出氛围名称**、没有任何细节的句子。\n\n> **注意。** 检查两点：先排除只是复述情绪词的选项（如 *was very peaceful*、*felt extremely tense*）；再核对感官画面指向的是题目要求的氛围，而不是相反的情绪。",
       ],
       ["Which sentence best creates the mood given?", "哪个句子最能营造所给的氛围？"],
       `
@@ -124,7 +128,10 @@ const atmosphere = topic("writing", {
         Mood: grandeur.|Columns rose a hundred feet into the gold-painted dome, and every footstep echoed.|Everyone who walked in could tell at once that the cathedral was grand, and everyone there felt it.|The chapel was a small room with plastic chairs.
         Mood: danger.|The ice groaned beneath them, and a black crack raced toward their feet.|Crossing the ice was very dangerous.|The ice was a meter thick and safe for a whole team of horses.
       `,
-      (right) => [`*${right}* uses details of the senses that point toward that mood.`, `*${right}* 使用了指向这种氛围的感官细节。`],
+      (right) => [
+        `*${right}* uses details of the senses that point toward that mood.\n\n**Check.** Verify both criteria: it avoids merely naming the mood word, and every concrete sight, sound, or sensation inside it aligns with the requested atmosphere.`,
+        `*${right}* 使用了指向这种氛围的感官细节。\n\n**检验。** 核对两条标准：它没有直接把情绪词挂在嘴边，而且其中的视觉、听觉或触觉画面全都朝题目要求的氛围收拢。`,
+      ],
       [
         [
           "*{wrong}* only names the mood and gives no detail of the senses to create it.",
@@ -143,14 +150,18 @@ const stageDirections = topic("writing", {
     "Stage directions tell actors what to do and how, in the present tense, with things an audience can see or hear, never thoughts they cannot.",
     "舞台说明用现在时告诉演员做什么、怎样做，写的是观众能看到或听到的东西，而不是他们无法感知的想法。",
   ],
+  intro: [
+    "An audience in row twenty cannot read a character's mind, so *(He worries about the exam)* gives an actor nothing to play, whereas *(He taps his pencil and checks the clock twice)* works immediately. Good stage directions stay in the present tense and show only what can be seen or heard.",
+    "坐在第二十排的观众看不透角色的内心，所以 *(He worries about the exam)* 让演员无从下手，而 *(He taps his pencil and checks the clock twice)* 立刻就能演出来。好的舞台说明一律用现在时，只写看得见、听得着的动作与声光。",
+  ],
   after: ["script-format"],
   points: [
     label(
       "will-it-work-on-stage",
       ["Will It Work on Stage", "它在舞台上可行吗"],
       [
-        "A stage direction is an instruction to actors and the crew, written in the **present tense**: *(She crosses to the window and pulls the curtain shut.)* A **playable** direction describes what an audience can see or hear. A direction that tells **an inner thought** cannot be performed: no actor can show that a character *remembers her tenth birthday*. A direction in **the past tense** reads like a story instead of an instruction.",
-        "舞台说明是给演员和工作人员的指示，用**现在时**写成：*(She crosses to the window and pulls the curtain shut.)* **可表演的**说明描述观众能看到或听到的东西。写**内心想法**的说明无法表演：没有演员能表现出角色 *remembers her tenth birthday*。用**过去时**写的说明读起来像故事而不是指示。",
+        "A stage direction is an instruction to actors and the crew, written in the **present tense**: *(She crosses to the window and pulls the curtain shut.)* A **playable** direction describes what an audience can see or hear. A direction that tells **an inner thought** cannot be performed: no actor can show that a character *remembers her tenth birthday*. A direction in **the past tense** reads like a story instead of an instruction.\n\n> **Watch out.** Check two things in order: first, is the verb in the **present tense** (not past)? Second, could a camera or microphone capture it onstage (not a hidden thought, memory, or wish)?",
+        "舞台说明是给演员和工作人员的指示，用**现在时**写成：*(She crosses to the window and pulls the curtain shut.)* **可表演的**说明描述观众能看到或听到的东西。写**内心想法**的说明无法表演：没有演员能表现出角色 *remembers her tenth birthday*。用**过去时**写的说明读起来像故事而不是指示。\n\n> **注意。** 按顺序查两项：第一，动词是不是**现在时**（而非过去时）？第二，摄影机或麦克风能不能拍到、录到（而非看不见的内心想法、回忆或愿望）？",
       ],
       ["Is this stage direction ready for the stage?", "这条舞台说明能直接用于舞台吗？"],
       `
@@ -188,22 +199,22 @@ const stageDirections = topic("writing", {
       {
         playable: L(
           "可表演的",
-          "The direction is in the present tense and describes actions, sounds or lights the audience can see or hear.",
-          "这条说明用现在时，描述观众能看到或听到的动作、声音或灯光。",
+          "The direction is in the present tense and describes actions, sounds or lights the audience can see or hear.\n\n**Check.** Verify both tests: the verbs are present tense (*crosses*, *strikes*, *enters*, *rises*) and every detail is directly visible or audible onstage.",
+          "这条说明用现在时，描述观众能看到或听到的动作、声音或灯光。\n\n**检验。** 双向核对：动词是现在时，且每一项内容都是观众在台上直接看得见或听得着的。",
           "The direction cannot be performed as it is written.",
           "这条说明按原样无法表演。",
         ),
         "an inner thought": L(
           "内心想法",
-          "The direction describes a thought, memory or wish that an actor cannot show, so the audience would never know it.",
-          "这条说明描述了演员无法表现的想法、回忆或愿望，观众永远无法得知。",
+          "The direction describes a thought, memory or wish that an actor cannot show, so the audience would never know it.\n\n**Check.** Spot the invisible mental verb (*remembers*, *wonders*, *hopes*, *fears*, *thinks*, *knows*, *doubts*, *recalls*): an audience cannot see inside a character's head.",
+          "这条说明描述了演员无法表现的想法、回忆或愿望，观众永远无法得知。\n\n**检验。** 找出表示心理活动的动词（如 *remembers*、*wonders*、*hopes*、*thinks*、*knows*、*doubts*）：观众看不见角色脑子里的想法。",
           "The direction describes something the audience can see or hear.",
           "这条说明描述的是观众能看到或听到的东西。",
         ),
         "the past tense": L(
           "过去时",
-          "The direction describes visible action, but in the past tense, so it reads like a story rather than an instruction.",
-          "这条说明描述了可见的动作，但用的是过去时，读起来像故事而不是指示。",
+          "The direction describes visible action, but in the past tense, so it reads like a story rather than an instruction.\n\n**Check.** Check the verb tense (*crossed*, *struck*, *slammed*, *was*, *sank*, *entered*, *rose*): stage directions must use present tense so actors read them as live cues.",
+          "这条说明描述了可见的动作，但用的是过去时，读起来像故事而不是指示。\n\n**检验。** 核对动词时态（如 *crossed*、*struck*、*slammed*、*sank*、*rose*）：舞台说明必须用现在时，作为现场表演指示。",
           "The direction is written in the present tense.",
           "这条说明是用现在时写的。",
         ),
@@ -213,8 +224,8 @@ const stageDirections = topic("writing", {
       "showing-it-on-stage",
       ["Showing It on Stage", "在舞台上表现出来"],
       [
-        "When a character feels something, the stage direction must turn the feeling into something visible or audible. *She is nervous* becomes *(She twists her ring and keeps glancing at the door.)* Avoid two mistakes: a direction that still **only states the feeling**, and one that shows an action **that does not fit** the feeling.",
-        "当角色有某种感受时，舞台说明必须把感受变成可见或可听的东西。*She is nervous* 变成 *(She twists her ring and keeps glancing at the door.)* 避免两种错误：仍然**只陈述感受**的说明，以及表现的动作与感受**不相符**的说明。",
+        "When a character feels something, the stage direction must turn the feeling into something visible or audible. *She is nervous* becomes *(She twists her ring and keeps glancing at the door.)* Avoid two mistakes: a direction that still **only states the feeling**, and one that shows an action **that does not fit** the feeling.\n\n> **Watch out.** Imagine watching the actor with the sound off: the right direction gives a physical gesture or movement that unmistakably matches the feeling named in the prompt.",
+        "当角色有某种感受时，舞台说明必须把感受变成可见或可听的东西。*She is nervous* 变成 *(She twists her ring and keeps glancing at the door.)* 避免两种错误：仍然**只陈述感受**的说明，以及表现的动作与感受**不相符**的说明。\n\n> **注意。** 想象把声音关掉看演员表演：正确的舞台说明会给出一个具体动作或神态，让人一眼就看出题干指定的感受。",
       ],
       ["Which stage direction best shows the feeling to an audience?", "哪条舞台说明最能向观众表现这种感受？"],
       `
@@ -249,7 +260,10 @@ const stageDirections = topic("writing", {
         He is sneaky.|(He tiptoes to the desk, glancing back, and slips a key into his pocket.)|(He is being sneaky, and the audience should understand exactly how this feels.)|(He marches loudly to the desk and announces himself.)
         She is heartbroken.|(She tears up the photograph and turns away, her shoulders shaking.)|(She is heartbroken.)|(She frames the photograph and hums to herself.)
       `,
-      (right) => [`*${right}* turns the feeling into an action the audience can see.`, `*${right}* 把感受变成了观众能看到的动作。`],
+      (right) => [
+        `*${right}* turns the feeling into an action the audience can see.\n\n**Check.** Picture an actor performing *${right}* onstage: it gives a concrete physical cue rather than naming the emotion, and that cue clearly signals the target feeling.`,
+        `*${right}* 把感受变成了观众能看到的动作。\n\n**检验。** 想象演员在台上做出 *${right}* 的动作：它给出的是具体可演的形体细节而非情绪标签，且准确传达了目标感受。`,
+      ],
       [
         [
           "*{wrong}* still only states the feeling, so the actor is given nothing to do.",
@@ -268,14 +282,18 @@ const interviewing = topic("writing", {
     "A good interview asks open questions that invite stories, and the write-up quotes the person's exact words with an attribution.",
     "好的采访提出引出故事的开放式问题，写作时要准确引用对方的原话并注明是谁说的。",
   ],
+  intro: [
+    'Asking *"Did you like your old neighborhood?"* usually gets a flat *"Yes,"* whereas *"What do you still picture when you think of your old street?"* unlocks a real story. Good interviewing combines open questions with faithful, attributed quotations.',
+    "问“你喜欢以前住的街区吗？”往往只换来一个干巴巴的“喜欢”，而问“想起以前那条街时，你脑海里最先浮现什么画面？”才能引出真正的故事。好的采访既要会提开放式问题，也要准确引用并注明说话人。",
+  ],
   after: ["quoting-accurately", "integrating-quotations"],
   points: [
     label(
       "what-kind-of-question",
       ["What Kind of Question", "什么样的问题"],
       [
-        "In an interview, the question shapes the answer. An **open question** invites a story or an explanation: *What do you remember about your first day in the new country?* A **yes-or-no question** gets a one-word answer: *Were you scared?* A **leading question** puts the answer in the person's mouth: *Wasn't it terrible to leave your home?*",
-        "在采访中，问题决定回答。**开放式问题**引出故事或解释：*What do you remember about your first day in the new country?* **是非问题**只能得到一个词的回答：*Were you scared?* **诱导性问题**把答案塞进对方嘴里：*Wasn't it terrible to leave your home?*",
+        "In an interview, the question shapes the answer. An **open question** invites a story or an explanation: *What do you remember about your first day in the new country?* A **yes-or-no question** gets a one-word answer: *Were you scared?* A **leading question** puts the answer in the person's mouth: *Wasn't it terrible to leave your home?*\n\n> **Watch out.** Distinguish a plain **yes-or-no question** (*Did you...?*, *Were you...?*) from a **leading question** (*Wasn't it...?*, *Surely...?*, *...didn't you?*): the leading question pushes the speaker to agree with a built-in opinion.",
+        "在采访中，问题决定回答。**开放式问题**引出故事或解释：*What do you remember about your first day in the new country?* **是非问题**只能得到一个词的回答：*Were you scared?* **诱导性问题**把答案塞进对方嘴里：*Wasn't it terrible to leave your home?*\n\n> **注意。** 分清普通的**是非问题**（*Did you...?*、*Were you...?*）和**诱导性问题**（*Wasn't it...?*、*Surely...?*、*...didn't you?*）：后者把预设看法塞进问题里，逼着受访者附和。",
       ],
       ["What kind of interview question is this?", "这是什么样的采访问题？"],
       `
@@ -313,22 +331,22 @@ const interviewing = topic("writing", {
       {
         "an open question": L(
           "开放式问题",
-          "The question begins with *what*, *how* or *tell me* and invites a story or an explanation in the person's own words.",
-          "这个问题以 *what*、*how* 或 *tell me* 开头，引导对方用自己的话讲故事或解释。",
+          "The question begins with *what*, *how* or *tell me* and invites a story or an explanation in the person's own words.\n\n**Check.** Try answering it with just *yes* or *no*: you cannot—and it does not steer the interviewee toward a preset judgment.",
+          "这个问题以 *what*、*how* 或 *tell me* 开头，引导对方用自己的话讲故事或解释。\n\n**检验。** 试着只用“是”或“不是”来回答：根本答不出来，而且它也没有把受访者引向预设结论。",
           "The question can be answered in a word or suggests its own answer.",
           "这个问题可以用一个词回答，或者暗示了答案。",
         ),
         "a yes-or-no question": L(
           "是非问题",
-          "The question can be answered with *yes* or *no*, so it is unlikely to draw out a story.",
-          "这个问题可以用 *yes* 或 *no* 回答，所以不太可能引出故事。",
+          "The question can be answered with *yes* or *no*, so it is unlikely to draw out a story.\n\n**Check.** Notice that it starts neutrally with *Were*, *Did*, *Was*, or *Do*—it accepts a one-word *yes* or *no* without nudging the speaker toward either side.",
+          "这个问题可以用 *yes* 或 *no* 回答，所以不太可能引出故事。\n\n**检验。** 注意它以中性的 *Were*、*Did*、*Was* 或 *Do* 开头——一个“是”或“否”就能打发，且没有暗示倾向。",
           "The question cannot be answered with yes or no alone.",
           "这个问题不能只用是或否来回答。",
         ),
         "a leading question": L(
           "诱导性问题",
-          "The question suggests the answer the interviewer expects, with words like *surely*, *must have* or a tag such as *didn't it?*",
-          "这个问题用 *surely*、*must have* 或 *didn't it?* 之类的附加语，暗示了采访者期待的答案。",
+          "The question suggests the answer the interviewer expects, with words like *surely*, *must have* or a tag such as *didn't it?*\n\n**Check.** Spot the built-in push (*wasn't*, *don't you*, *must have*, *surely*, or a tag like *right?* / *weren't they?*): the interviewer is fishing for agreement.",
+          "这个问题用 *surely*、*must have* 或 *didn't it?* 之类的附加语，暗示了采访者期待的答案。\n\n**检验。** 找出题中暗含的诱导词（如 *wasn't*、*don't you*、*must have*、*surely* 或反意疑问尾缀）：提问者在引导对方顺着自己的意思答。",
           "The question does not push the person toward an answer.",
           "这个问题没有把对方推向某个答案。",
         ),
@@ -338,8 +356,8 @@ const interviewing = topic("writing", {
       "quoting-what-they-said",
       ["Quoting What They Said", "引用对方所说的话"],
       [
-        'When you write up an interview, a direct quotation must keep the person\'s **exact words** in quotation marks, and say **who said it**: *"I cried for a week," said Mrs. Okafor.* If you change the words, drop the quotation marks and report them instead: *Mrs. Okafor said she cried for a week.* Two mistakes are common: putting **changed words inside quotation marks**, and giving a quotation **with no speaker**.',
-        '整理采访时，直接引语必须把对方的**原话**放在引号里，并说明**是谁说的**：*"I cried for a week," said Mrs. Okafor.* 如果改动了用词，就去掉引号，改为转述：*Mrs. Okafor said she cried for a week.* 常见的错误有两种：把**改动过的话放在引号里**，以及给出的引语**没有说话人**。',
+        "When you write up an interview, a direct quotation must keep the person's **exact words** in quotation marks, and say **who said it**: *\"I cried for a week,\" said Mrs. Okafor.* If you change the words, drop the quotation marks and report them instead: *Mrs. Okafor said she cried for a week.* Two mistakes are common: putting **changed words inside quotation marks**, and giving a quotation **with no speaker**.\n\n> **Watch out.** Check two things side by side: match the text inside quotation marks word for word against what the speaker actually said, and confirm the speaker's name is attached outside the quotation marks.",
+        '整理采访时，直接引语必须把对方的**原话**放在引号里，并说明**是谁说的**：*"I cried for a week," said Mrs. Okafor.* 如果改动了用词，就去掉引号，改为转述：*Mrs. Okafor said she cried for a week.* 常见的错误有两种：把**改动过的话放在引号里**，以及给出的引语**没有说话人**。\n\n> **注意。** 同时核对两处：引号里的字句必须与受访者原话逐字一致，且引号外面要交代说话人姓名。',
       ],
       ["The person said the words shown. Which write-up quotes them correctly?", "受访者说了所示的话。哪种写法正确地引用了它们？"],
       `
@@ -375,8 +393,8 @@ const interviewing = topic("writing", {
         Mr. Lopez said: We sang the old songs on the boat to stay brave.|"We sang the old songs on the boat to stay brave," said Mr. Lopez.|"We sang to keep our spirits up," said Mr. Lopez with a quiet smile.|"We sang the old songs on the boat to stay brave."
       `,
       (right) => [
-        `${right} The exact words are in quotation marks, and the speaker is named.`,
-        `${right} 原话放在引号里，并注明了说话人。`,
+        `${right} The exact words are in quotation marks, and the speaker is named.\n\n**Check.** Compare the words inside quotation marks against the speaker's line word for word, then verify the attribution names who spoke—both requirements are met.`,
+        `${right} 原话放在引号里，并注明了说话人。\n\n**检验。** 把引号里的内容与受访者原话逐字对照，再确认句外标明了说话人——两项要求全部满足。`,
       ],
       [
         [

@@ -736,47 +736,54 @@ const ifPastWhy = (right: string, shown: string): Text => {
           "The situation is only imagined, so the *if*-part takes the past simple, which here does not mean past time",
           "这是想象的情况，所以 *if* 部分用一般过去时，这里的过去时不表示过去的时间",
         );
-  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  const check =
+    right === "were"
+      ? t(
+          "**Check.** Spot *would* in the result clause: the situation is imagined, and *be* takes *were* for every subject in the *if*-clause.",
+          "**检验。** 看结果句里的 *would*：这是假设想象的情况，*if* 从句里 *be* 对所有人称都用 *were*。",
+        )
+      : t(
+          `**Check.** Spot *would* in the result clause: the situation is imagined, so the *if*-clause takes the past simple (*${right}*), not *would* or the present.`,
+          `**检验。** 看结果句里的 *would*：这是假设想象的情况，所以 *if* 从句用一般过去时（*${right}*），不用 *would* 或现在时。`,
+        );
+  return t(`${rule.en}: ${fill(shown, right)}\n\n${check.en}`, `${rule["zh-CN"]}：${fill(shown, right)}\n\n${check["zh-CN"]}`);
 };
 
 /** whyNotIfPast explains would or the present in the if-part of a second conditional. */
-const whyNotIfPast = (wrong: string, right: string, _shown: string, position: number): Text =>
+const whyNotIfPast = (wrong: string, _right: string, _shown: string, position: number): Text =>
   position === 0
-    ? t(
-        `*would* never goes in the *if*-part. An imagined situation takes the past simple, *${right}*.`,
-        `*if* 部分不能用 *would*。想象的情况要用一般过去时 *${right}*。`,
-      )
+    ? t("*would* never goes inside the *if*-clause of a second conditional.", "第二条件句的 *if* 从句里不能用 *would*。")
     : t(
-        `*${wrong}* is the present, which is for a real possibility. The result has *would*, so the situation is only imagined, and the *if*-part takes *${right}*.`,
-        `*${wrong}* 是一般现在时，用于真实的可能。结果部分用了 *would*，说明是想象的情况，*if* 部分要用 *${right}*。`,
+        `*${wrong}* is the present simple, which is for a real possibility. The *would* in the result shows this situation is imagined.`,
+        `*${wrong}* 是一般现在时，用于真实可能。结果部分有 *would*，说明这是想象的情况，不能用现在时。`,
       );
 
 /** wouldWhy explains would and the base form in the result of a second conditional. */
 const wouldWhy = (right: string, shown: string): Text =>
   t(
-    `The *if*-part is in the past, so the situation is only imagined, and the result takes *would* and the base form: ${fill(shown, right)}`,
-    `*if* 部分用了过去时，说明是想象的情况，结果部分用 *would* 加动词原形：${fill(shown, right)}`,
+    `The *if*-part is in the past, so the situation is only imagined, and the result takes *would* and the base form: ${fill(shown, right)}\n\n**Check.** Verify the pairing: past simple in the *if*-clause → *would* + plain verb (no *to*, not *will*) in the result.`,
+    `*if* 部分用了过去时，说明是想象的情况，结果部分用 *would* 加动词原形：${fill(shown, right)}\n\n**检验。** 核对搭配：*if* 从句用一般过去时 → 结果主句用 *would* + 动词原形（不加 *to*，也不用 *will*）。`,
   );
 
 /** whyNotWould explains will or would to in the result of a second conditional. */
-const whyNotWould = (_wrong: string, right: string, _shown: string, position: number): Text =>
+const whyNotWould = (_wrong: string, _right: string, _shown: string, position: number): Text =>
   position === 0
     ? t(
-        `*will* is for a real possibility, so it does not go with an *if*-part in the past. Use *${right}*.`,
-        `*will* 用于真实的可能，不能和过去时的 *if* 部分搭配。要用 *${right}*。`,
+        "*will* is for a real future possibility and does not pair with an imagined past-tense *if*-clause.",
+        "*will* 用于真实将来可能，不能和表示想象的过去时 *if* 从句搭配。",
       )
-    : t(`*would* is never followed by *to*. Use *${right}*.`, `*would* 后面从不加 *to*。要用 *${right}*。`);
+    : t("*would* is followed directly by the base verb, never by *to*.", "*would* 后面直接接动词原形，从不加 *to*。");
 
 /** imaginedWriteWhy explains how a second conditional is put together, with the comma when the if-part comes first. */
 const imaginedWriteWhy = (right: string): Text =>
   right.startsWith("If ")
     ? t(
-        `For an imagined situation, the *if*-part takes the past simple, then a comma, and the result takes *would* and the base form: ${right}`,
-        `想象的情况，*if* 部分用一般过去时，后面加逗号，结果部分用 *would* 加动词原形：${right}`,
+        `For an imagined situation, the *if*-part takes the past simple, then a comma, and the result takes *would* and the base form: ${right}\n\n**Check.** Check all three marks: past simple after *If* (no *would*), a comma between the clauses, and *would/'d* + base verb in the result.`,
+        `想象的情况，*if* 部分用一般过去时，后面加逗号，结果部分用 *would* 加动词原形：${right}\n\n**检验。** 核对三处：*If* 从句用一般过去时（不加 *would*）、两句间有逗号、结果主句用 *would/'d* + 动词原形。`,
       )
     : t(
-        `For an imagined situation, the result takes *would* and the base form, and the *if*-part after it takes the past simple, with no comma: ${right}`,
-        `想象的情况，结果部分用 *would* 加动词原形，后面的 *if* 部分用一般过去时，不加逗号：${right}`,
+        `For an imagined situation, the result takes *would* and the base form, and the *if*-part after it takes the past simple, with no comma: ${right}\n\n**Check.** Check all three marks: *would/'d* + base verb first, no comma before *if*, and past simple after *if*.`,
+        `想象的情况，结果部分用 *would* 加动词原形，后面的 *if* 部分用一般过去时，不加逗号：${right}\n\n**检验。** 核对三处：先写 *would/'d* + 动词原形、*if* 前不加逗号、*if* 后用一般过去时。`,
       );
 
 const secondConditional: TopicDef = {
@@ -785,6 +792,10 @@ const secondConditional: TopicDef = {
   summary: t(
     "If I had a robot, I would never cook. An imagined situation takes the past after if and would in the result; If I were you is the usual form with be.",
     "If I had a robot, I would never cook。想象的情况在 if 后面用过去时，结果用 would；be 动词通常用 If I were you。",
+  ),
+  intro: t(
+    "To imagine a different present or an unlikely future—*If we had faster trains, we would visit every weekend*—English shifts the *if*-clause to the past simple and uses *would* + base verb in the result.",
+    "想象与现在不同或不太可能的情况（*If we had faster trains, we would visit every weekend*）时，英语把 *if* 从句动词往过去退一步，结果主句用 *would* + 动词原形。",
   ),
   prerequisites: ["first-conditional", "was-and-were"],
   encompasses: [
@@ -798,8 +809,8 @@ const secondConditional: TopicDef = {
       "if-part",
       t("The past after if", "if 后面用过去时"),
       t(
-        "To talk about a situation you only imagine, now or in the future, use *if* + the **past simple**, and *would* in the result:\n\n- *If I **had** a robot, I would never cook.* (I don't have one.)\n- *If she **lived** near the sea, she would swim every day.* (She doesn't.)\n\nThe past here does not mean past time; it shows that the situation is not real. Do not use *would* after *if*: not *If I would have*. With *be*, use *were* for every person: *If I **were** you, I would take the job.* (In speech, *If I was* is also heard.)\n\nCompare the first conditional, for things that may really happen: *If it rains, we will stay at home.*",
-        "说只是想象的情况（现在或将来）时，用 *if* 加**一般过去时**，结果部分用 *would*：\n\n- *If I **had** a robot, I would never cook.*（我其实没有。）\n- *If she **lived** near the sea, she would swim every day.*（她其实不住在海边。）\n\n这里的过去时不表示过去的时间，而表示情况不是真的。中文用“要是……就……”加语气表达想象，英语却靠动词往过去退一步。*if* 后面不用 *would*：不能说 *If I would have*。*be* 动词对所有人称都用 *were*：*If I **were** you, I would take the job.*（口语里也有人说 *If I was*。）\n\n比较第一条件句，说真的可能发生的事：*If it rains, we will stay at home.*",
+        "To talk about a situation you only imagine, now or in the future, use *if* + the **past simple**, and *would* in the result:\n\n- *If I **had** a robot, I would never cook.* (I don't have one.)\n- *If she **lived** near the sea, she would swim every day.* (She doesn't.)\n\nWith *be*, use *were* for every person: *If I **were** you, I would take the job.*\n\n> **Watch out.** The past simple here signals imagination, not past time—and never put *would* inside the *if*-clause (*If I would have* is wrong).",
+        "说只是想象的情况（现在或将来）时，用 *if* 加**一般过去时**，结果部分用 *would*：\n\n- *If I **had** a robot, I would never cook.*（我其实没有。）\n- *If she **lived** near the sea, she would swim every day.*（她其实不住在海边。）\n\n*be* 动词对所有人称都用 *were*：*If I **were** you, I would take the job.*\n\n> **注意。** 这里的过去时表示假设想象，不是过去时间；且 *if* 从句里绝不能放 *would*（*If I would have* 是错的）。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), ifPastChoice, ifPastWhy, whyNotIfPast),
     ),
@@ -807,8 +818,8 @@ const secondConditional: TopicDef = {
       "result",
       t("Would in the result", "结果部分用 would"),
       t(
-        "The result of an imagined situation takes *would* + the base form: *If I were rich, I **would buy** a big house.* *Will* is for real possibilities, so it does not go with a past *if*-part, and *would* is never followed by *to*. You may write *I'd* for *I would*.",
-        "想象情况的结果用 *would* 加动词原形：*If I were rich, I **would buy** a big house.* *will* 用于真实的可能，不能和过去时的 *if* 部分搭配；*would* 后面也从不加 *to*。*I would* 可以写成 *I'd*。",
+        "The result of an imagined situation takes *would* + the base form: *If I were rich, I **would buy** a big house.* You may write *I'd* for *I would*.\n\n> **Watch out.** Do not use *will* with a past-tense *if*-clause, and never add *to* after *would* (*would to buy* is wrong).",
+        "想象情况的结果用 *would* 加动词原形：*If I were rich, I **would buy** a big house.* *I would* 可以写成 *I'd*。\n\n> **注意。** 过去时的 *if* 从句不能配 *will*，且 *would* 后面从不加 *to*（*would to buy* 是错的）。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wouldChoice, wouldWhy, whyNotWould),
     ),
@@ -816,8 +827,8 @@ const secondConditional: TopicDef = {
       "write",
       t("Writing second conditionals", "写第二条件句"),
       t(
-        "Write the sentence from the note about an imagined situation. The arrow → means the *if*-part comes first, with a comma: *imagine: if I have a robot → I never cook* becomes *If I had a robot, I would never cook.* The arrow ← means the result comes first, with no comma: *I would never cook if I had a robot.*",
-        "根据笔记写一个关于想象情况的句子。箭头 → 表示 *if* 部分在前，后面加逗号：*imagine: if I have a robot → I never cook* 写成 *If I had a robot, I would never cook.* 箭头 ← 表示结果在前，不加逗号：*I would never cook if I had a robot.*",
+        "Write the sentence from the note about an imagined situation. The arrow → means the *if*-part comes first, with a comma: *imagine: if I have a robot → I never cook* becomes *If I had a robot, I would never cook.* The arrow ← means the result comes first, with no comma: *I would never cook if I had a robot.*\n\n> **Watch out.** Use *were* for *be* after *if* (*If I were...*), keep the verb after *would* in its plain form, and only add a comma when *If* starts the sentence.",
+        "根据笔记写一个关于想象情况的句子。箭头 → 表示 *if* 部分在前，后面加逗号：*imagine: if I have a robot → I never cook* 写成 *If I had a robot, I would never cook.* 箭头 ← 表示结果在前，不加逗号：*I would never cook if I had a robot.*\n\n> **注意。** *if* 后的 *be* 用 *were*，*would* 后面用动词原形，只有 *If* 在句首时才加逗号。",
       ),
       typedGenerator(
         "sentence-pattern",

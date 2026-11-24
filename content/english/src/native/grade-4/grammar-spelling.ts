@@ -119,8 +119,8 @@ const nounRows = fields(nounLines).map(([verb, noun, first, second]) => {
 
 const nounWhy = (row: (typeof nounRows)[number], shown: string): Text =>
   t(
-    `${fill(shown, row.noun)} The verb is *${row.verb}*, and ${row.rule.en}. Listen to the end of the verb to choose: *-t* gives *-tion*, *-d* or *-de* gives *-sion*.`,
-    `${fill(shown, row.noun)} 动词是 *${row.verb}*，${row.rule.zh}。听动词的结尾来选择：*-t* 变成 *-tion*，*-d* 或 *-de* 变成 *-sion*。`,
+    `${fill(shown, row.noun)} The verb is *${row.verb}*, and ${row.rule.en}.\n\n**Check.** Look at the last letters of *${row.verb}* (*${row.verb.slice(-3)}*) and read **${row.noun}** in the sentence—the ending follows the rule and fits the blank as a noun.`,
+    `${fill(shown, row.noun)} 动词是 *${row.verb}*，${row.rule.zh}。\n\n**检验。** 看 *${row.verb}* 的词尾（*${row.verb.slice(-3)}*），再把 **${row.noun}** 放回句中通读——词尾符合规则，作为名词也通顺。`,
   );
 
 /** nounChoiceBank asks for the spelling of the noun made from a verb. */
@@ -131,12 +131,16 @@ const nounChoiceBank: readonly Item[] = nounRows.flatMap((row) =>
     right: row.noun,
     wrong: row.wrong,
     why: nounWhy(row, shown),
-    whyNot: row.wrong.map((w) =>
+    whyNot: [
       t(
-        `“${w}” is not how the noun is spelled. The verb ends in *${row.verb.slice(-2)}*, and ${row.rule.en}.`,
-        `“${w}” 拼写不对。动词以 *${row.verb.slice(-2)}* 结尾，${row.rule.zh}。`,
+        `“${row.wrong[0]}” uses the wrong ending for a verb ending in *${row.verb.slice(-2)}*—remember that ${row.rule.en}.`,
+        `“${row.wrong[0]}” 对以 *${row.verb.slice(-2)}* 结尾的动词用错了词尾——记住：${row.rule.zh}。`,
       ),
-    ),
+      t(
+        `“${row.wrong[1]}” keeps or changes the wrong letters at the end of *${row.verb}*; check how *${row.verb}* ends before adding *-ion*.`,
+        `“${row.wrong[1]}” 在 *${row.verb}* 词尾保留或改动了错误的字母；加 *-ion* 前先看清 *${row.verb}* 的结尾。`,
+      ),
+    ],
   })),
 );
 
@@ -280,15 +284,19 @@ const silentFindBank: readonly Item[] = silentRows.map((row) => ({
   right: row.silent,
   wrong: row.other,
   why: t(
-    `In *${row.word}* the **${row.silent}** is silent. Say the word slowly: you never hear the ${row.silent}, but it has been written for hundreds of years, since people once said it.`,
-    `*${row.word}* 中的 **${row.silent}** 不发音。慢慢读这个词：你听不到 ${row.silent}，但几百年来人们一直写它，因为从前人们是读出来的。`,
+    `In *${row.word}* the **${row.silent}** is silent. People once pronounced it, so English kept the letter in spelling even after the sound faded.\n\n**Check.** Say *${row.word}* aloud slowly and track each sound you hear: the letter **${row.silent}** produces no sound of its own.`,
+    `*${row.word}* 中的 **${row.silent}** 不发音。人们从前会读出这个音，后来读音消失了，但拼写里保留了这个字母。\n\n**检验。** 慢声朗读 *${row.word}*，逐一核对你听到的音：字母 **${row.silent}** 没有任何发音。`,
   ),
-  whyNot: row.other.map((o) =>
+  whyNot: [
     t(
-      `You can hear the *${o}* when you say *${row.word}* aloud, so it is not silent. Look for the letter you write but never say.`,
-      `大声读 *${row.word}* 时能听到 *${o}*，所以它不是不发音的字母。找出写了却从不读出来的那个字母。`,
+      `You can clearly hear *${row.other[0]}* when you say *${row.word}* aloud, so *${row.other[0]}* is pronounced, not silent.`,
+      `大声读 *${row.word}* 时能清楚听到 *${row.other[0]}*，所以 *${row.other[0]}* 是发音字母，不是不发音的。`,
     ),
-  ),
+    t(
+      `Listen to *${row.word}* again: *${row.other[1]}* is part of the sound you actually speak—look for the letter you skip in speech.`,
+      `再听一遍 *${row.word}*：*${row.other[1]}* 是你实际读出来的音——找找读的时候完全跳过的那个字母。`,
+    ),
+  ],
 }));
 
 /** silentSpellBank asks for the right spelling of a word with a silent letter in a sentence. */
@@ -298,15 +306,19 @@ const silentSpellBank: readonly Item[] = silentRows.map((row) => ({
   right: row.word,
   wrong: row.wrong,
   why: t(
-    `${fill(row.shown, row.word)} The word keeps its silent **${row.silent}**, which you must write even though you do not hear it.`,
-    `${fill(row.shown, row.word)} 这个词保留不发音的 **${row.silent}**，虽然听不到，但一定要写出来。`,
+    `${fill(row.shown, row.word)} The word keeps its silent **${row.silent}**, which you must write even though you do not hear it.\n\n**Check.** Read the completed sentence aloud and picture the silent-letter pattern in **${row.word}**—dropping **${row.silent}** either makes a misspelling or a different word.`,
+    `${fill(row.shown, row.word)} 这个词保留不发音的 **${row.silent}**，虽然听不到，但一定要写出来。\n\n**检验。** 把填好的句子读一遍，回想 **${row.word}** 里的不发音字母组合——去掉 **${row.silent}** 会拼错，甚至变成另一个词。`,
   ),
-  whyNot: row.wrong.map((w) =>
+  whyNot: [
     t(
-      `“${w}” is not the spelling of the word in this sentence: the word is *${row.word}*, with a silent *${row.silent}* and no extra letters.`,
-      `“${w}” 不是这个句子里那个词的拼写：应该是 *${row.word}*，有一个不发音的 *${row.silent}*，也没有多余的字母。`,
+      `“${row.wrong[0]}” leaves out the silent letter that belongs in this word; spelling purely by ear drops a required letter.`,
+      `“${row.wrong[0]}” 漏掉了这个词里必须写出的不发音字母；只按读音拼会丢掉这个字母。`,
     ),
-  ),
+    t(
+      `“${row.wrong[1]}” alters or doubles letters elsewhere in the word instead of keeping the standard spelling with its silent letter.`,
+      `“${row.wrong[1]}” 在词的其他位置改动或多写了字母，不符合带不发音字母的标准拼写。`,
+    ),
+  ],
 }));
 
 // ie and ei.
@@ -402,8 +414,8 @@ const ieRows = fields(ieLines).map(([word, swap, other, en, zh, shown, rule, sho
 
 const ieWhy = (row: (typeof ieRows)[number], shown: string = row.shown): Text =>
   t(
-    `${fill(shown, row.word)} In *${row.word}*, ${row.rule[0]}. The rule: *i* before *e*, except after *c*, or when it sounds like /ay/.`,
-    `${fill(shown, row.word)} 在 *${row.word}* 中，${row.rule[1]}。规则是：*i* 在 *e* 前，*c* 后例外，读作 /ay/ 时也例外。`,
+    `${fill(shown, row.word)} In *${row.word}*, ${row.rule[0]}.\n\n**Check.** Test the rhyme (*i* before *e*, except after *c*, or when sounded like /ay/) against **${row.word}** and confirm it fits the sentence's meaning (${row.meaning[0]}).`,
+    `${fill(shown, row.word)} 在 *${row.word}* 中，${row.rule[1]}。\n\n**检验。** 用口诀（*i* 在 *e* 前，*c* 后或读 /ay/ 例外）核对 **${row.word}**，并确认它符合句意（${row.meaning[1]}）。`,
   );
 
 /** ieChoiceBank asks for the spelling of a word with ie or ei in a sentence. */
@@ -416,12 +428,12 @@ const ieChoiceBank: readonly Item[] = ieRows.flatMap((row) =>
     why: ieWhy(row, shown),
     whyNot: [
       t(
-        `“${row.wrong[0]}” puts the two letters in the wrong order. In *${row.word}*, ${row.rule[0]}.`,
-        `“${row.wrong[0]}” 把两个字母的顺序弄反了。在 *${row.word}* 中，${row.rule[1]}。`,
+        `“${row.wrong[0]}” reverses the *i* and *e*—check the sound and whether *c* comes right before those two letters.`,
+        `“${row.wrong[0]}” 把 *i* 和 *e* 的顺序写反了——先听读音，再看这两个字母前面是不是 *c*。`,
       ),
       t(
-        `“${row.wrong[1]}” spells the sound as it is heard, but the word is written with *${row.word.includes("ie") ? "ie" : "ei"}*.`,
-        `“${row.wrong[1]}” 按照读音来拼写，但这个词要用 *${row.word.includes("ie") ? "ie" : "ei"}* 来写。`,
+        `“${row.wrong[1]}” writes the vowel sound by ear (or uses a different homophone) instead of the *ie*/*ei* spelling that fits this sentence.`,
+        `“${row.wrong[1]}” 照读音拼写（或混用了同音词），不是这个句子里正确的 *ie*/*ei* 拼法。`,
       ),
     ],
   })),
@@ -447,6 +459,10 @@ export const spellingTopics4: readonly TopicDef[] = [
       "Nouns made from verbs end in -tion or -sion, following the end of the verb: erupt, eruption; erode, erosion.",
       "由动词构成的名词以 -tion 或 -sion 结尾，取决于动词的结尾：erupt 变 eruption，erode 变 erosion。",
     ),
+    intro: t(
+      "Say *action* and *decision* aloud: the endings sound almost alike, yet one uses *-tion* and the other uses *-sion*. Looking back at the base verb—*act* ends in *t*, while *decide* ends in *de*—tells you which ending to write every time.",
+      "读一读 *action* 和 *decision*：两个词尾听起来很像，却一个写 *-tion*，一个写 *-sion*。回头看原来的动词——*act* 以 *t* 结尾，*decide* 以 *de* 结尾——就能准确判断该写哪一个。",
+    ),
     prerequisites: ["common-suffixes"],
     encompasses: [{ topic: "common-suffixes", weight: 0.2 }],
     xp: 14,
@@ -456,8 +472,8 @@ export const spellingTopics4: readonly TopicDef[] = [
         "choosing-tion-or-sion",
         t("Choosing -tion or -sion", "选择 -tion 还是 -sion"),
         t(
-          "Many nouns are made by adding *-ion* to a verb, and the end of the verb tells you how to spell it.\n\n- A verb ending in *t* adds *-ion*: *erupt*, *eruption*; *collect*, *collection*.\n- A verb ending in *-ate* drops the *e*: *create*, *creation*.\n- A verb ending in *d* or *de* drops it and takes *-sion*: *erode*, *erosion*; *divide*, *division*; *extend*, *extension*.\n- A verb ending in *ss* adds *-ion*: *discuss*, *discussion*.\n- A verb ending in *-mit* becomes *-mission*: *admit*, *admission*.",
-          "很多名词是在动词后加 *-ion* 构成的，动词的结尾告诉你怎么拼写。\n\n- 以 *t* 结尾的动词加 *-ion*：*erupt*、*eruption*；*collect*、*collection*。\n- 以 *-ate* 结尾的动词去掉 *e*：*create*、*creation*。\n- 以 *d* 或 *de* 结尾的动词去掉它们，加 *-sion*：*erode*、*erosion*；*divide*、*division*；*extend*、*extension*。\n- 以 *ss* 结尾的动词加 *-ion*：*discuss*、*discussion*。\n- 以 *-mit* 结尾的动词变成 *-mission*：*admit*、*admission*。",
+          "Many nouns are made by adding *-ion* to a verb, and the end of the verb tells you how to spell it.\n\n- A verb ending in *t* adds *-ion*: *erupt*, *eruption*; *collect*, *collection*.\n- A verb ending in *-ate* drops the *e*: *create*, *creation*.\n- A verb ending in *d* or *de* drops it and takes *-sion*: *erode*, *erosion*; *divide*, *division*; *extend*, *extension*.\n- A verb ending in *ss* adds *-ion*: *discuss*, *discussion*.\n- A verb ending in *-mit* becomes *-mission*: *admit*, *admission*.\n\n> **Watch out.** Do not keep *d* or *de* before *-sion* (*erodtion* is wrong) and do not write *-tion* after *-mit* (*admittion* is wrong).",
+          "很多名词是在动词后加 *-ion* 构成的，动词的结尾告诉你怎么拼写。\n\n- 以 *t* 结尾的动词加 *-ion*：*erupt*、*eruption*；*collect*、*collection*。\n- 以 *-ate* 结尾的动词去掉 *e*：*create*、*creation*。\n- 以 *d* 或 *de* 结尾的动词去掉它们，加 *-sion*：*erode*、*erosion*；*divide*、*division*；*extend*、*extension*。\n- 以 *ss* 结尾的动词加 *-ion*：*discuss*、*discussion*。\n- 以 *-mit* 结尾的动词变成 *-mission*：*admit*、*admission*。\n\n> **注意。** 不要在 *-sion* 前保留 *d* 或 *de*（*erodtion* 是错的），也不要在 *-mit* 后写 *-tion*（*admittion* 是错的）。",
         ),
         itemGenerator(nounChoiceBank),
       ),
@@ -465,8 +481,8 @@ export const spellingTopics4: readonly TopicDef[] = [
         "typing-tion-and-sion-nouns",
         t("Typing the Noun", "输入名词"),
         t(
-          "Now write the noun yourself. Say the verb, look at its last letters, and use the rule: *t* and *-ate* give *-tion*, *d* and *de* give *-sion*, *ss* gives *-ssion*, and *-mit* gives *-mission*. Check that you did not keep a letter the rule drops, as in *erodtion*.",
-          "现在自己写出名词。读出动词，看它的最后几个字母，然后用规则：*t* 和 *-ate* 变成 *-tion*，*d* 和 *de* 变成 *-sion*，*ss* 变成 *-ssion*，*-mit* 变成 *-mission*。检查你有没有保留规则要求去掉的字母，例如 *erodtion*。",
+          "Now write the noun yourself. For example, from *explode* (ends in *-de*), drop *de* and add *-sion* to get *explosion*; from *celebrate* (ends in *-ate*), drop *e* and add *-ion* to get *celebration*.\n\n> **Watch out.** Check the base verb's exact ending before you type—a single extra *e* or wrong *t*/*s* ruins the spelling.",
+          "现在自己写出名词。例如，由 *explode*（以 *-de* 结尾）去掉 *de* 加 *-sion* 得到 *explosion*；由 *celebrate*（以 *-ate* 结尾）去掉 *e* 加 *-ion* 得到 *celebration*。\n\n> **注意。** 输入前先看清原动词的准确结尾——多一个 *e* 或弄混 *t*/*s* 都会拼错。",
         ),
         typedGenerator(
           "word-form",
@@ -487,6 +503,10 @@ export const spellingTopics4: readonly TopicDef[] = [
       "Some letters are written but not heard: k in knight, w in wrist and sword, b in climb, g in gnaw, t in castle.",
       "有些字母写出来却不发音：knight 中的 k，wrist 和 sword 中的 w，climb 中的 b，gnaw 中的 g，castle 中的 t。",
     ),
+    intro: t(
+      "When you say *crumb* or *whistle*, your mouth skips the *b* and the *t*, yet your pencil still has to write them. Grouping silent letters into patterns (*kn*, *wr*, *mb*, *gn*, *stle*) makes these tricky spellings easy to remember.",
+      "读 *crumb* 或 *whistle* 时，嘴里跳过了 *b* 和 *t*，下笔时却必须写出来。把不发音字母按组合归类（*kn*、*wr*、*mb*、*gn*、*stle*），这些容易写错的词就很好记。",
+    ),
     prerequisites: after("spelling-ck-tch-and-dge"),
     encompasses: [],
     xp: 14,
@@ -496,8 +516,8 @@ export const spellingTopics4: readonly TopicDef[] = [
         "finding-silent-letters",
         t("Finding the Silent Letter", "找出不发音的字母"),
         t(
-          "English keeps many letters people stopped saying long ago. Learn them in groups:\n\n- *k* before *n*: *knight*, *knee*, *knife*.\n- *w* before *r*: *wrist*, *write*, and also *sword* and *answer*.\n- *b* after *m* or before *t*: *climb*, *lamb*, *doubt*.\n- *g* before *n*: *gnaw*, *sign*, *design*.\n- *t* after *s*: *castle*, *listen*, *whistle*.\n- *h*, *l* and *n* in words such as *hour*, *half* and *autumn*.",
-          "英语保留了许多人们很久以前就不再读出来的字母。按组来记：\n\n- *n* 前的 *k*：*knight*、*knee*、*knife*。\n- *r* 前的 *w*：*wrist*、*write*，还有 *sword* 和 *answer*。\n- *m* 后或 *t* 前的 *b*：*climb*、*lamb*、*doubt*。\n- *n* 前的 *g*：*gnaw*、*sign*、*design*。\n- *s* 后的 *t*：*castle*、*listen*、*whistle*。\n- *hour*、*half*、*autumn* 这类词中的 *h*、*l* 和 *n*。",
+          "English keeps many letters people stopped saying long ago. Learn them in groups:\n\n- *k* before *n*: *knight*, *knee*, *knife*.\n- *w* before *r*: *wrist*, *write*, and also *sword* and *answer*.\n- *b* after *m* or before *t*: *climb*, *lamb*, *doubt*.\n- *g* before *n*: *gnaw*, *sign*, *design*.\n- *t* after *s*: *castle*, *listen*, *whistle*.\n- *h*, *l* and *n* in words such as *hour*, *half* and *autumn*.\n\n> **Watch out.** Say the word aloud slowly—do not guess a letter is silent just because it sits next to another consonant.",
+          "英语保留了许多人们很久以前就不再读出来的字母。按组来记：\n\n- *n* 前的 *k*：*knight*、*knee*、*knife*。\n- *r* 前的 *w*：*wrist*、*write*，还有 *sword* 和 *answer*。\n- *m* 后或 *t* 前的 *b*：*climb*、*lamb*、*doubt*。\n- *n* 前的 *g*：*gnaw*、*sign*、*design*。\n- *s* 后的 *t*：*castle*、*listen*、*whistle*。\n- *hour*、*half*、*autumn* 这类词中的 *h*、*l* 和 *n*。\n\n> **注意。** 慢慢把词读出来——不要因为某个字母紧挨着另一个辅音就猜它不发音。",
         ),
         itemGenerator(silentFindBank),
       ),
@@ -505,8 +525,8 @@ export const spellingTopics4: readonly TopicDef[] = [
         "spelling-words-with-silent-letters",
         t("Choosing the Spelling", "选择拼写"),
         t(
-          "When you write a word with a silent letter, you cannot trust your ears. Picture the word, remember its group (*kn*, *wr*, *mb*, *gn*, *stle*), and write the letter you do not hear. Some words without it are other words: *night* is not *knight*, and *rap* is not *wrap*.",
-          "写含不发音字母的词时，不能只靠耳朵。在脑子里想出这个词的样子，记住它属于哪一组（*kn*、*wr*、*mb*、*gn*、*stle*），把听不到的字母写出来。有些词少了这个字母就成了别的词：*night* 不是 *knight*，*rap* 也不是 *wrap*。",
+          "When you write a word with a silent letter, you cannot trust your ears alone. Picture the word, remember its group (*kn*, *wr*, *mb*, *gn*, *stle*), and write the letter you do not hear. For example, *The knight rode out* needs *kn-*, while *night* means the dark hours.\n\n> **Watch out.** Dropping a silent letter often creates a different real word (*knot* vs. *not*, *wrap* vs. *rap*, *whole* vs. *hole*)—always check the meaning in the sentence.",
+          "写含不发音字母的词时，不能只靠耳朵。在脑子里想出这个词的样子，记住它属于哪一组（*kn*、*wr*、*mb*、*gn*、*stle*），把听不到的字母写出来。例如 *The knight rode out* 要用 *kn-*，而 *night* 指的是夜晚。\n\n> **注意。** 漏掉不发音字母常常会变成另一个真实存在的词（*knot* 和 *not*、*wrap* 和 *rap*、*whole* 和 *hole*）——一定要结合句意核对。",
         ),
         itemGenerator(silentSpellBank),
       ),
@@ -519,6 +539,10 @@ export const spellingTopics4: readonly TopicDef[] = [
       "I comes before e except after c or when the sound is /ay/, with a few exceptions to learn: their, weird, height.",
       "i 在 e 前，c 后或读作 /ay/ 时例外，还有几个要记住的特例：their、weird、height。",
     ),
+    intro: t(
+      "Compare *shield*, *ceiling*, and *sleigh*: all three put *i* and *e* side by side, yet in different orders. One short rhyme—plus a small list of rule-breakers like *weird* and *their*—handles almost every *ie*/*ei* word you will ever write.",
+      "比较 *shield*、*ceiling* 和 *sleigh*：三个词里 *i* 和 *e* 都挨在一起，顺序却不同。记住一句短口诀，再加上 *weird*、*their* 等少数特例，几乎就能搞定所有含 *ie*/*ei* 的单词。",
+    ),
     prerequisites: after("spelling-ck-tch-and-dge"),
     encompasses: [],
     xp: 14,
@@ -528,8 +552,8 @@ export const spellingTopics4: readonly TopicDef[] = [
         "choosing-ie-or-ei",
         t("Choosing ie or ei", "选择 ie 还是 ei"),
         t(
-          "The old rhyme helps: *i before e, except after c, or when sounded like /ay/, as in neighbor and weigh*.\n\n- *ie* for the long *ee* sound: *piece*, *field*, *believe*, *chief*.\n- *ei* after *c*: *receive*, *ceiling*, *receipt*.\n- *ei* for the /ay/ sound: *eight*, *vein*, *reign*.\n\nA few common words break the rule and must be learned: *their*, *weird*, *height*, *seize*, *foreign*, *either*.",
-          "一句老口诀能帮忙：*i 在 e 前，c 后例外，读作 /ay/ 时也例外，例如 neighbor 和 weigh*。\n\n- 长音 *ee* 用 *ie*：*piece*、*field*、*believe*、*chief*。\n- *c* 后用 *ei*：*receive*、*ceiling*、*receipt*。\n- 读作 /ay/ 用 *ei*：*eight*、*vein*、*reign*。\n\n有几个常用词不守规则，必须记住：*their*、*weird*、*height*、*seize*、*foreign*、*either*。",
+          "The old rhyme helps: *i before e, except after c, or when sounded like /ay/, as in neighbor and weigh*.\n\n- *ie* for the long *ee* sound: *piece*, *field*, *believe*, *chief*.\n- *ei* after *c*: *receive*, *ceiling*, *receipt*.\n- *ei* for the /ay/ sound: *eight*, *vein*, *reign*.\n\nA few common words break the rule and must be learned: *their*, *weird*, *height*, *seize*, *foreign*, *either*.\n\n> **Watch out.** Do not apply the rhyme blindly to rule-breakers like *weird*, *their*, *either*, *neither*, or *height*—memorize those exceptions.",
+          "一句老口诀能帮忙：*i 在 e 前，c 后例外，读作 /ay/ 时也例外，例如 neighbor 和 weigh*。\n\n- 长音 *ee* 用 *ie*：*piece*、*field*、*believe*、*chief*。\n- *c* 后用 *ei*：*receive*、*ceiling*、*receipt*。\n- 读作 /ay/ 用 *ei*：*eight*、*vein*、*reign*。\n\n有几个常用词不守规则，必须记住：*their*、*weird*、*height*、*seize*、*foreign*、*either*。\n\n> **注意。** 不要把口诀硬套在 *weird*、*their*、*either*、*neither*、*height* 这些特例上——这几个词要单独记住。",
         ),
         itemGenerator(ieChoiceBank),
       ),
@@ -537,8 +561,8 @@ export const spellingTopics4: readonly TopicDef[] = [
         "typing-ie-and-ei-words",
         t("Typing ie and ei Words", "输入 ie 和 ei 单词"),
         t(
-          "Now type the word from its meaning. Decide on the sound first: long *ee*, or /ay/? Then check for a *c* just before the two letters. If the word is one of the exceptions, such as *their* or *height*, spell it from memory.",
-          "现在根据词义输入单词。先判断读音：是长音 *ee* 还是 /ay/？再看这两个字母前面是不是 *c*。如果这个词是 *their*、*height* 这样的特例，就凭记忆拼写。",
+          "Now type the word from its meaning. For example, for *a part of something*, say *piece*: long *ee* with no *c* before it gives *ie*; for *the top of a room*, say *ceiling*: *c* before the sound gives *ei*.\n\n> **Watch out.** Watch for homophones too: *piece* (a part) vs. *peace*, and *reign* (rule) vs. *rein* (a horse's strap).",
+          "现在根据词义输入单词。例如表示“一部分”的 *piece*，发长音 *ee* 且前面不是 *c*，用 *ie*；表示“天花板”的 *ceiling*，前面是 *c*，用 *ei*。\n\n> **注意。** 还要小心同音词：*piece*（一部分）和 *peace*（和平），*reign*（统治）和 *rein*（缰绳）。",
         ),
         typedGenerator(
           "word-form",

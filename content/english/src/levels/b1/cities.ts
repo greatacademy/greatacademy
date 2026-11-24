@@ -864,33 +864,43 @@ function soRule(right: string, shown: string): Text {
 /** soWhy explains so, such or such a in the gap of shown. */
 const soWhy = (right: string, shown: string): Text => {
   const rule = soRule(right, shown);
-  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  return t(
+    `${rule.en}: ${fill(shown, right)}\n\n**Check.** Look at what follows the gap: adjective alone or *many/much/few/little* → *so*; singular noun phrase → *such a/an*; plural or uncountable noun phrase → *such*.`,
+    `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 看空白后面的结构：单独形容词或 *many/much/few/little* → *so*；单数名词短语 → *such a/an*；复数或不可数名词短语 → *such*。`,
+  );
 };
 
 /** whyNotSo explains a wrong choice among so, such, such a and such an. */
-const whyNotSo = (wrong: string, right: string, shown: string): Text => {
-  const rule = soRule(right, shown);
+const whyNotSo = (wrong: string, right: string): Text => {
   if (wrong === "so a")
     return t(
-      "*so a* is never right. Before an adjective and a singular noun, use *such a*.",
-      "不能说 *so a*。形容词加单数名词前要用 *such a*。",
+      "*so a* is never grammatical in English before an adjective and a singular noun.",
+      "英语里绝不能在形容词和单数名词前用 *so a*。",
     );
   if (/^such an?$/u.test(wrong) && /^such an?$/u.test(right))
     return t(
-      "*an* goes before a vowel sound and *a* before a consonant sound, so look at the next word.",
-      "*an* 用在元音音素前，*a* 用在辅音音素前，要看后面的词。",
+      "*an* goes before a vowel sound and *a* before a consonant sound—check the first sound of the next word.",
+      "*an* 用在元音音素前，*a* 用在辅音音素前——看紧跟在后面的词的开头发音。",
     );
   const use: Record<string, Text> = {
     so: t(
-      "*so* goes before an adjective alone, or before *many*, *much*, *few* and *little*",
-      "*so* 用在单独的形容词前，或 *many、much、few、little* 前",
+      "*so* goes before an adjective alone (or *many, much, few, little*), not before an adjective + noun phrase.",
+      "*so* 用在单独的形容词前（或 *many、much、few、little* 前），不用于“形容词 + 名词”短语前。",
     ),
-    such: t("*such* goes before a plural or uncountable noun", "*such* 用在复数名词或不可数名词前"),
-    "such a": t("*such a* goes before a singular noun", "*such a* 用在单数名词前"),
-    "such an": t("*such an* goes before a singular noun that starts with a vowel sound", "*such an* 用在以元音音素开头的单数名词前"),
+    such: t(
+      "*such* without *a/an* goes before a plural or uncountable noun phrase, not here.",
+      "不带 *a/an* 的 *such* 用于复数或不可数名词短语前，不适合这里。",
+    ),
+    "such a": t(
+      "*such a* requires a singular countable noun phrase, which does not match what follows the gap.",
+      "*such a* 后面必须接单数可数名词短语，与这里空白后的结构不符。",
+    ),
+    "such an": t(
+      "*such an* requires a singular countable noun phrase starting with a vowel sound, which does not match here.",
+      "*such an* 后面必须接以元音音素开头的单数可数名词短语，与这里不符。",
+    ),
   };
-  const of = use[wrong] ?? t(`*${wrong}*`, `*${wrong}*`);
-  return t(`${of.en}. ${rule.en}.`, `${of["zh-CN"]}。${rule["zh-CN"]}。`);
+  return use[wrong] ?? t(`*${wrong}* does not match the words after the gap.`, `*${wrong}* 与空白后面的词不匹配。`);
 };
 
 const soAndSuch: TopicDef = {
@@ -899,6 +909,10 @@ const soAndSuch: TopicDef = {
   summary: t(
     "The city is so crowded. It is such a crowded city. So goes before an adjective alone, such a before an adjective with a singular noun, such before plural and uncountable nouns; so... that and such... that give a result.",
     "The city is so crowded. It is such a crowded city. so 用在单独的形容词前，such a 用在形容词加单数名词前，such 用在复数和不可数名词前；so... that 和 such... that 表示结果。",
+  ),
+  intro: t(
+    "Compare *The subway is so fast* with *It is such a fast subway*. Both intensify the description, but *so* attaches to a standalone adjective while *such (a/an)* attaches to a noun phrase.",
+    "比较 *The subway is so fast* 和 *It is such a fast subway*。两者都在加强语气，但 *so* 修饰单独的形容词，*such (a/an)* 修饰带名词的短语。",
   ),
   prerequisites: ["too-and-enough"],
   encompasses: [{ topic: "too-and-enough", weight: 0.2 }],
@@ -909,8 +923,8 @@ const soAndSuch: TopicDef = {
       "so-or-such-a",
       t("So crowded, such a crowded city", "so crowded 和 such a crowded city"),
       t(
-        "*So* and *such* both make a word stronger, like *very*. Which one you use depends on what comes after:\n\n- *so* + an adjective alone: *The city is **so** crowded.*\n- *such a* (or *such an*) + adjective + a singular noun: *It is **such a** crowded city.* *It was **such an** easy test.*\n\nNever say *so a crowded city* or *such crowded*.",
-        "*so* 和 *such* 都像 *very* 一样加强语气，用哪个要看后面跟什么：\n\n- *so* + 单独的形容词：*The city is **so** crowded.*\n- *such a*（或 *such an*）+ 形容词 + 单数名词：*It is **such a** crowded city.* *It was **such an** easy test.*\n\n不能说 *so a crowded city*，也不能说 *such crowded*。中文“这么挤”“这么挤的城市”都用“这么”，英语却要分 so 和 such。",
+        "*So* and *such* both make a word stronger, like *very*. Which one you use depends on what comes after:\n\n- *so* + an adjective alone: *The city is **so** crowded.*\n- *such a* (or *such an*) + adjective + a singular noun: *It is **such a** crowded city.* *It was **such an** easy test.*\n\n> **Watch out.** Never write *so a crowded city* or *such crowded*—check whether a noun follows the adjective.",
+        "*so* 和 *such* 都像 *very* 一样加强语气，用哪个要看后面跟什么：\n\n- *so* + 单独的形容词：*The city is **so** crowded.*\n- *such a*（或 *such an*）+ 形容词 + 单数名词：*It is **such a** crowded city.* *It was **such an** easy test.*\n\n> **注意。** 不能说 *so a crowded city*，也不能说 *such crowded*——先看形容词后面有没有名词。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), soOrSuchA, soWhy, whyNotSo),
     ),
@@ -918,8 +932,8 @@ const soAndSuch: TopicDef = {
       "such",
       t("Such, such a and so many", "such、such a 和 so many"),
       t(
-        "With **plural** or **uncountable** nouns, use *such* without *a*: *They are **such** nice people.* *We had **such** good weather.* With a **singular** noun, use *such a*: *She has **such a** beautiful voice.*\n\nBefore *many, much, few* and *little*, use *so*: ***so** many people*, ***so** much traffic*.",
-        "**复数**名词或**不可数**名词前用 *such*，不加 *a*：*They are **such** nice people.* *We had **such** good weather.* **单数**名词前用 *such a*：*She has **such a** beautiful voice.*\n\n*many、much、few、little* 前面用 *so*：***so** many people*，***so** much traffic*。",
+        "With **plural** or **uncountable** nouns, use *such* without *a*: *They are **such** nice people.* *We had **such** good weather.* With a **singular** noun, use *such a*: *She has **such a** beautiful voice.*\n\nBefore *many, much, few* and *little*, use *so*: ***so** many people*, ***so** much traffic*.\n\n> **Watch out.** Do not put *a* before plural or uncountable nouns (*such a good weather* is wrong), and always use *so*—not *such*—before *many, much, few, little*.",
+        "**复数**名词或**不可数**名词前用 *such*，不加 *a*：*They are **such** nice people.* *We had **such** good weather.* **单数**名词前用 *such a*：*She has **such a** beautiful voice.*\n\n*many、much、few、little* 前面用 *so*：***so** many people*，***so** much traffic*。\n\n> **注意。** 复数或不可数名词前不要加 *a*（*such a good weather* 是错的），且 *many、much、few、little* 前一律用 *so* 而不用 *such*。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), suchChoice, soWhy, whyNotSo),
     ),
@@ -927,8 +941,8 @@ const soAndSuch: TopicDef = {
       "that",
       t("So... that and such... that", "so... that 和 such... that"),
       t(
-        "Join two sentences to show a result with *so... that* or *such... that*. Replace *very* with the word in brackets: *The coffee was very hot. I couldn't drink it. (so)* → *The coffee was **so** hot **that** I couldn't drink it.* *It was a very good film. We watched it twice. (such)* → *It was **such a** good film **that** we watched it twice.* You may leave out *that*.",
-        "用 *so... that* 或 *such... that* 把两个句子连起来，表示结果。用括号里的词替换 *very*：*The coffee was very hot. I couldn't drink it. (so)* → *The coffee was **so** hot **that** I couldn't drink it.* *It was a very good film. We watched it twice. (such)* → *It was **such a** good film **that** we watched it twice.* *that* 可以省略。",
+        "Join two sentences to show a result with *so... that* or *such... that*. Replace *very* with the word in brackets: *The coffee was very hot. I couldn't drink it. (so)* → *The coffee was **so** hot **that** I couldn't drink it.* *It was a very good film. We watched it twice. (such)* → *It was **such a** good film **that** we watched it twice.* You may leave out *that*.\n\n> **Watch out.** With *such*, move *a/an* after *such* (*such a good film*, never *a such good film*), and drop *very* completely.",
+        "用 *so... that* 或 *such... that* 把两个句子连起来，表示结果。用括号里的词替换 *very*：*The coffee was very hot. I couldn't drink it. (so)* → *The coffee was **so** hot **that** I couldn't drink it.* *It was a very good film. We watched it twice. (such)* → *It was **such a** good film **that** we watched it twice.* *that* 可以省略。\n\n> **注意。** 用 *such* 时把 *a/an* 放在 *such* 后面（*such a good film*，不要写成 *a such good film*），并且把原来的 *very* 彻底删掉。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -937,12 +951,12 @@ const soAndSuch: TopicDef = {
         (right, shown) =>
           shown.endsWith("(so)")
             ? t(
-                `*so* replaces *very* before the adjective alone, and *that* brings in the result: ${right}`,
-                `用 *so* 替换单独形容词前的 *very*，再用 *that* 引出结果：${right}`,
+                `*so* replaces *very* before the adjective alone, and *that* brings in the result: ${right}\n\n**Check.** Verify that *very* is gone, *so* precedes the adjective, and the result clause follows smoothly.`,
+                `用 *so* 替换单独形容词前的 *very*，再用 *that* 引出结果：${right}\n\n**检验。** 确认 *very* 已删去、*so* 在形容词前，且结果分句自然衔接。`,
               )
             : t(
-                `*such* replaces *very* before an adjective with a noun, keeping *a* for a singular noun, and *that* brings in the result: ${right}`,
-                `用 *such* 替换“形容词加名词”前的 *very*，单数名词保留 *a*，再用 *that* 引出结果：${right}`,
+                `*such* replaces *very* before an adjective with a noun, keeping *a* for a singular noun, and *that* brings in the result: ${right}\n\n**Check.** Verify that *very* is gone, *such (a/an)* precedes the noun phrase in the right order, and the result clause follows.`,
+                `用 *such* 替换“形容词加名词”前的 *very*，单数名词保留 *a*，再用 *that* 引出结果：${right}\n\n**检验。** 确认 *very* 已删去、*such (a/an)* 语序正确，且结果分句自然衔接。`,
               ),
       ),
     ),
@@ -1140,7 +1154,11 @@ function modalRule(right: string): Text {
 /** modalWhyText puts the rule of may, might and could before a sentence. */
 const modalWhyText = (right: string, sentence: string): Text => {
   const rule = modalRule(right);
-  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+  const neg = / not /u.test(` ${right} `);
+  return t(
+    `${rule.en}: ${sentence}\n\n**Check.** Verify the modal pattern: ${neg ? "*might not / may not* + plain verb (no *doesn't* and no *to*)" : "*may / might / could* + plain verb (no *to* and no *-s*)"}, expressing possibility rather than certainty.`,
+    `${rule["zh-CN"]}：${sentence}\n\n**检验。** 核对情态动词结构：${neg ? "*might not / may not* + 动词原形（不用 *doesn't*，不加 *to*）" : "*may / might / could* + 动词原形（不加 *to*，不加 *-s*）"}，表达“可能”而非“确定”。`,
+  );
 };
 
 /** whyNotModalForm explains doesn't with might, to after it, or a verb that is not the base form. */
@@ -1153,10 +1171,9 @@ const whyNotModalForm = (wrong: string, right: string): Text => {
     );
   if (/ to /u.test(wrong))
     return t(`*${modal}* takes the base form straight after it, with no *to*.`, `*${modal}* 后面直接接动词原形，不加 *to*。`);
-  const base = right.split(" ").pop() ?? "";
   return t(
-    `*${wrong.split(" ").pop() ?? ""}* is not the base form. After *${modal}* the verb is *${base}*.`,
-    `*${wrong.split(" ").pop() ?? ""}* 不是动词原形。*${modal}* 后面要用 *${base}*。`,
+    `*${wrong.split(" ").pop() ?? ""}* is not the base form—after *${modal}*, the verb must stay in its plain base form.`,
+    `*${wrong.split(" ").pop() ?? ""}* 不是动词原形——*${modal}* 后面必须接动词原形。`,
   );
 };
 
@@ -1173,6 +1190,10 @@ const mayMightCould: TopicDef = {
     "The bus might be late. It could rain. May, might and could with the base form say that something is possible but not certain; may not and might not say it is possibly not true.",
     "The bus might be late. It could rain. may、might、could 加动词原形表示有可能但不确定；may not 和 might not 表示可能不。",
   ),
+  intro: t(
+    "When you are not sure—*Perhaps the tram is delayed*—English can say the same thing more naturally with *may*, *might* or *could*: *The tram might be delayed.* All three take the plain base verb directly.",
+    "不太确定时（*Perhaps the tram is delayed*），英语常改用 *may*、*might* 或 *could* 表达得更自然：*The tram might be delayed.* 三者后面都直接接动词原形。",
+  ),
   prerequisites: ["should-and-must", "b1-words-little-words-4"],
   encompasses: [
     { topic: "should-and-must", weight: 0.2 },
@@ -1185,8 +1206,8 @@ const mayMightCould: TopicDef = {
       "form",
       t("Might be, may not come", "might be 和 may not come"),
       t(
-        "*May*, *might* and *could* are followed by the **base form** of the verb, with no *to* and no *-s*:\n\n- *The bus **might be** late.*\n- *She **may know** the answer.*\n- *It **could rain** later.*\n\nFor the negative, put *not* after *may* or *might*: *She **might not come**.* *He **may not be** at work.* Do not use *doesn't*: not *She doesn't might come*. (*Could not* means something else, *was not able to*, so use *might not* or *may not* for a possibility.)",
-        "*may*、*might* 和 *could* 后面接**动词原形**，不加 *to*，也不加 *-s*：\n\n- *The bus **might be** late.*\n- *She **may know** the answer.*\n- *It **could rain** later.*\n\n否定句在 *may* 或 *might* 后面加 *not*：*She **might not come**.* *He **may not be** at work.* 不能用 *doesn't*：不能说 *She doesn't might come*。（*could not* 意思不同，表示“没能”，所以说可能不时用 *might not* 或 *may not*。）",
+        "*May*, *might* and *could* are followed by the **base form** of the verb, with no *to* and no *-s*:\n\n- *The bus **might be** late.*\n- *She **may know** the answer.*\n- *It **could rain** later.*\n\nFor the negative, put *not* after *may* or *might*: *She **might not come**.* *He **may not be** at work.*\n\n> **Watch out.** Never write *doesn't might* or *might to come*, and do not use *could not* for possibility (*couldn't* means “impossible / was not able to”; use *might not* or *may not* instead).",
+        "*may*、*might* 和 *could* 后面接**动词原形**，不加 *to*，也不加 *-s*：\n\n- *The bus **might be** late.*\n- *She **may know** the answer.*\n- *It **could rain** later.*\n\n否定句在 *may* 或 *might* 后面加 *not*：*She **might not come**.* *He **may not be** at work.*\n\n> **注意。** 不能写 *doesn't might* 或 *might to come*，也不要用 *could not* 表示“可能不”（*could not* 表示“不可能/没能”，要用 *might not* 或 *may not*）。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -1199,8 +1220,8 @@ const mayMightCould: TopicDef = {
       "meaning",
       t("Possible, not certain", "可能，不确定"),
       t(
-        "Use *may*, *might* or *could* when you think something is **possible**, but you are not sure. They mean the same as *perhaps*:\n\n- *Perhaps the bus is late.* = *The bus **might be** late.*\n- *Perhaps she won't come.* = *She **might not** come.*\n\nCompare: *The bus **is** late* and *It **will** rain* say you are sure. *The bus **must** be late* says you are almost sure, and *She **can't** come* says it is impossible.",
-        "认为某事**有可能**但不确定时，用 *may*、*might* 或 *could*，意思和 *perhaps* 一样：\n\n- *Perhaps the bus is late.* = *The bus **might be** late.*\n- *Perhaps she won't come.* = *She **might not** come.*\n\n比较：*The bus **is** late* 和 *It **will** rain* 表示确定。*The bus **must** be late* 表示几乎肯定，*She **can't** come* 表示不可能。中文“可能”“也许”放在动词前就行，英语用这几个情态动词表达同样的意思。",
+        "Use *may*, *might* or *could* when you think something is **possible**, but you are not sure. They mean the same as *perhaps*:\n\n- *Perhaps the bus is late.* = *The bus **might be** late.*\n- *Perhaps she won't come.* = *She **might not** come.*\n\nCompare: *The bus **is** late* and *It **will** rain* say you are sure; *must* says almost sure; *can't* says impossible.\n\n> **Watch out.** Do not equate *perhaps* with *must*, *can't*, or *will certainly*—those express certainty, whereas *may/might/could* express possibility.",
+        "认为某事**有可能**但不确定时，用 *may*、*might* 或 *could*，意思和 *perhaps* 一样：\n\n- *Perhaps the bus is late.* = *The bus **might be** late.*\n- *Perhaps she won't come.* = *She **might not** come.*\n\n比较：*The bus **is** late* 和 *It **will** rain* 表示确定；*must* 表示几乎肯定；*can't* 表示不可能。\n\n> **注意。** 不要把 *perhaps* 换成 *must*、*can't* 或 *will certainly*——它们表达“肯定/不可能”，而 *may/might/could* 表达“有可能”。",
       ),
       choiceGenerator(
         t("Choose the sentence that means the same.", "选出意思相同的句子。"),
@@ -1213,8 +1234,8 @@ const mayMightCould: TopicDef = {
       "write",
       t("Writing with may, might and could", "用 may、might、could 写句子"),
       t(
-        "Write the sentence again without *perhaps*, using *might*, *may* or *could*: *Perhaps the bus is late.* → *The bus might be late.* For a negative sentence, use *might not* or *may not*: *Perhaps she won't come.* → *She might not come.*",
-        "去掉 *perhaps*，用 *might*、*may* 或 *could* 改写句子：*Perhaps the bus is late.* → *The bus might be late.* 否定句用 *might not* 或 *may not*：*Perhaps she won't come.* → *She might not come.*",
+        "Write the sentence again without *perhaps*, using *might*, *may* or *could*: *Perhaps the bus is late.* → *The bus might be late.* For a negative sentence, use *might not* or *may not*: *Perhaps she won't come.* → *She might not come.*\n\n> **Watch out.** Drop *perhaps* and *will/won't/is/are* cleanly and put the plain base verb right after the modal (*is late* → *might be late*).",
+        "去掉 *perhaps*，用 *might*、*may* 或 *could* 改写句子：*Perhaps the bus is late.* → *The bus might be late.* 否定句用 *might not* 或 *may not*：*Perhaps she won't come.* → *She might not come.*\n\n> **注意。** 去掉 *perhaps* 以及原来的 *will/won't/is/are*，在情态动词后面接动词原形（*is late* → *might be late*）。",
       ),
       typedGenerator(
         "sentence-pattern",

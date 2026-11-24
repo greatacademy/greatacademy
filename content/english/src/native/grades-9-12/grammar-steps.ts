@@ -100,10 +100,18 @@ export const punctuationFixStep = point(
   "fixing-the-punctuation",
   t("Fixing the Punctuation", "修正标点"),
   t(
-    "Writers most often misuse these marks in three ways, and each has a quick test.\n\n- A **comma splice** joins two complete clauses with a comma alone: *The library closed at six, we went home.* Test: could the words on each side of the comma stand alone? If so, use a semicolon or a period, or add *and*, *but* or *so*. A word such as *however* does not fix it.\n- A **colon after an incomplete clause**: *The recipe needs: flour and eggs.* Test: could the words before the colon end with a period? If not, remove the colon.\n- A **semicolon before a phrase**: *We waited; standing in the rain.* Test: is there a complete clause after the semicolon? If not, use a comma.\n\nIf every mark passes its test, the sentence is correct.",
-    "作者最常在三个方面误用这些标点，每一种都有简单的检验方法。\n\n- **逗号粘连**（comma splice）只用逗号连接两个完整分句：*The library closed at six, we went home.* 检验：逗号两边的文字能否各自独立成句？如果能，就用分号或句号，或者加上 *and*、*but*、*so*。*however* 这样的词不能纠正这个错误。\n- **冒号前不是完整分句**：*The recipe needs: flour and eggs.* 检验：冒号前的文字能否以句号结尾？如果不能，就去掉冒号。\n- **分号后面是短语**：*We waited; standing in the rain.* 检验：分号后面是否有完整分句？如果没有，就改用逗号。\n\n如果每个标点都通过了检验，句子就是正确的。",
+    "Writers most often misuse these marks in three ways, and each has a quick test.\n\n- A **comma splice** joins two complete clauses with a comma alone: *The library closed at six, we went home.* Test: could the words on each side of the comma stand alone? If so, use a semicolon or a period, or add *and*, *but* or *so*. A word such as *however* does not fix it.\n- A **colon after an incomplete clause**: *The recipe needs: flour and eggs.* Test: could the words before the colon end with a period? If not, remove the colon.\n- A **semicolon before a phrase**: *We waited; standing in the rain.* Test: is there a complete clause after the semicolon? If not, use a comma.\n\nIf every mark passes its test, the sentence is correct.\n\n> **Watch out.** Watch for *however* between two commas—*The play was long, however, nobody left* is still a **comma splice**, because *however* is a conjunctive adverb and needs a semicolon before it.",
+    "作者最常在三个方面误用这些标点，每一种都有简单的检验方法。\n\n- **逗号粘连**（comma splice）只用逗号连接两个完整分句：*The library closed at six, we went home.* 检验：逗号两边的文字能否各自独立成句？如果能，就用分号或句号，或者加上 *and*、*but*、*so*。*however* 这样的词不能纠正这个错误。\n- **冒号前不是完整分句**：*The recipe needs: flour and eggs.* 检验：冒号前的文字能否以句号结尾？如果不能，就去掉冒号。\n- **分号后面是短语**：*We waited; standing in the rain.* 检验：分号后面是否有完整分句？如果没有，就改用逗号。\n\n如果每个标点都通过了检验，句子就是正确的。\n\n> **注意。** 留心被两个逗号夹住的 *however*——*The play was long, however, nobody left* 依然是**逗号粘连**，因为 *however* 是连接副词，前面必须用分号。",
   ),
-  labelChoice(["What is wrong with the punctuation of this sentence?", "这个句子的标点有什么错误？"], punctuationLines, punctuationLabels),
+  labelChoice(
+    ["What is wrong with the punctuation of this sentence?", "这个句子的标点有什么错误？"],
+    punctuationLines,
+    punctuationLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Test the words on each side of the punctuation mark as standalone sentences: that clause-independence test directly confirms **${right}**.`,
+      `这是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 把标点前后的文字分别当作独立句子试读：能否独立成句的检验直接印证了**${entry.zh}**。`,
+    ],
+  ),
 );
 
 // Building the shape of a sentence.
@@ -145,8 +153,8 @@ export const shapeBuildStep = point(
   "building-the-shape",
   t("Building the Shape", "构造句子的形态"),
   t(
-    "Given a main clause and some details, you can build either shape on purpose.\n\n- For a **periodic** sentence, put every detail first and save the main clause for the very end: *After an hour of silence, loud across the empty yard, the bell rang.* The reader waits, and the last words land hardest.\n- For a **cumulative** sentence, state the main clause first and let the details follow it: *The bell rang after an hour of silence, loud across the empty yard.*\n\nA sentence that puts some details before the main clause and some after is neither: it is a mixed shape, perfectly good English, but it gives up the suspense of the periodic and the easy flow of the cumulative.",
-    "给定一个主句和一些细节，你可以有意识地构造出任意一种形态。\n\n- 要构造**圆周句**（periodic），就把所有细节放在前面，把主句留到最后：*After an hour of silence, loud across the empty yard, the bell rang.* 读者一直在等待，最后的词分量最重。\n- 要构造**累积句**（cumulative），就先说出主句，再让细节跟在后面：*The bell rang after an hour of silence, loud across the empty yard.*\n\n把一部分细节放在主句前、一部分放在主句后的句子两者都不是：它是混合形态，也是很好的英语，但既没有圆周句的悬念，也没有累积句的流畅。",
+    "Given a main clause and some details, you can build either shape on purpose.\n\n- For a **periodic** sentence, put every detail first and save the main clause for the very end: *After an hour of silence, loud across the empty yard, the bell rang.* The reader waits, and the last words land hardest.\n- For a **cumulative** sentence, state the main clause first and let the details follow it: *The bell rang after an hour of silence, loud across the empty yard.*\n\nA sentence that puts some details before the main clause and some after is neither: it is a mixed shape, perfectly good English, but it gives up the suspense of the periodic and the easy flow of the cumulative.\n\n> **Watch out.** Do not pick a split sentence that sandwiches the main clause between two details—in a pure periodic or cumulative sentence, *all* details sit on one side of the main clause.",
+    "给定一个主句和一些细节，你可以有意识地构造出任意一种形态。\n\n- 要构造**圆周句**（periodic），就把所有细节放在前面，把主句留到最后：*After an hour of silence, loud across the empty yard, the bell rang.* 读者一直在等待，最后的词分量最重。\n- 要构造**累积句**（cumulative），就先说出主句，再让细节跟在后面：*The bell rang after an hour of silence, loud across the empty yard.*\n\n把一部分细节放在主句前、一部分放在主句后的句子两者都不是：它是混合形态，也是很好的英语，但既没有圆周句的悬念，也没有累积句的流畅。\n\n> **注意。** 不要选把主句夹在两条细节中间的混合句——纯粹的圆周句或累积句里，*所有*细节都集中在主句同一侧。",
   ),
   kindedChoice(
     ["Which sentence builds the shape asked for from these parts?", "哪个句子用这些部分构造出了所要求的形态？"],
@@ -154,12 +162,12 @@ export const shapeBuildStep = point(
     (right, shown) =>
       shown.includes("**periodic**")
         ? [
-            `*${right}* Every detail comes first and the main clause waits until the end, which is what makes a sentence periodic.`,
-            `*${right}* 所有细节都在前面，主句一直等到句末，这正是圆周句的特点。`,
+            `*${right}* Every detail comes first and the main clause waits until the end, which is what makes a sentence periodic.\n\n**Check.** Locate the main clause in the answer: it sits at the very end with zero trailing modifiers, confirming a periodic shape.`,
+            `*${right}* 所有细节都在前面，主句一直等到句末，这正是圆周句的特点。\n\n**检验。** 定位答案里的主句：它压在句尾，后面没有任何修饰语，确认是圆周句。`,
           ]
         : [
-            `*${right}* The main clause comes first and every detail follows it, which is what makes a sentence cumulative.`,
-            `*${right}* 主句在前，所有细节都跟在后面，这正是累积句的特点。`,
+            `*${right}* The main clause comes first and every detail follows it, which is what makes a sentence cumulative.\n\n**Check.** Locate the main clause in the answer: it opens the sentence with zero leading modifiers, confirming a cumulative shape.`,
+            `*${right}* 主句在前，所有细节都跟在后面，这正是累积句的特点。\n\n**检验。** 定位答案里的主句：它打头阵，前面没有任何修饰语，确认是累积句。`,
           ],
     [
       [
@@ -267,10 +275,18 @@ export const conditionStep = point(
   "naming-the-condition",
   t("Naming the Condition", "辨别条件类型"),
   t(
-    "To check a conditional you have written, name its kind from the verbs in both clauses.\n\n- **Real**: *if* + present, then *will* or the present. *If the bus is late, we will walk.*\n- **Unreal present**: *if* + past or *were*, then *would* + verb. *If I had a car, I would drive.*\n- **Unreal past**: *if* + *had* + participle, then *would have* + participle. *If we had left earlier, we would have caught the train.*\n- **Mixed**: the clauses point to different times. A past condition with a present result: *If she had studied medicine, she would be a doctor now.* A present condition with a past result: *If he were more careful, he would not have broken the vase.*\n\nTime words such as *now*, *yesterday* and *last year* often show which times the clauses refer to.",
-    "要检查自己写的条件句，就根据两个分句中的动词说出它的类型。\n\n- **真实条件**：*if* + 一般现在时，结果用 *will* 或一般现在时。*If the bus is late, we will walk.*\n- **与现在事实相反**：*if* + 过去时或 *were*，结果用 *would* + 动词。*If I had a car, I would drive.*\n- **与过去事实相反**：*if* + *had* + 分词，结果用 *would have* + 分词。*If we had left earlier, we would have caught the train.*\n- **混合条件**：两个分句指向不同的时间。过去的条件配现在的结果：*If she had studied medicine, she would be a doctor now.* 现在的条件配过去的结果：*If he were more careful, he would not have broken the vase.*\n\n*now*、*yesterday*、*last year* 这样的时间词常常能表明分句所指的时间。",
+    "To check a conditional you have written, name its kind from the verbs in both clauses.\n\n- **Real**: *if* + present, then *will* or the present. *If the bus is late, we will walk.*\n- **Unreal present**: *if* + past or *were*, then *would* + verb. *If I had a car, I would drive.*\n- **Unreal past**: *if* + *had* + participle, then *would have* + participle. *If we had left earlier, we would have caught the train.*\n- **Mixed**: the clauses point to different times. A past condition with a present result: *If she had studied medicine, she would be a doctor now.* A present condition with a past result: *If he were more careful, he would not have broken the vase.*\n\nTime words such as *now*, *yesterday* and *last year* often show which times the clauses refer to.\n\n> **Watch out.** Check *both* halves before labeling—seeing *had* in the *if* clause does not guarantee **unreal past** if the result uses plain *would* + verb about *now* (that is **mixed**).",
+    "要检查自己写的条件句，就根据两个分句中的动词说出它的类型。\n\n- **真实条件**：*if* + 一般现在时，结果用 *will* 或一般现在时。*If the bus is late, we will walk.*\n- **与现在事实相反**：*if* + 过去时或 *were*，结果用 *would* + 动词。*If I had a car, I would drive.*\n- **与过去事实相反**：*if* + *had* + 分词，结果用 *would have* + 分词。*If we had left earlier, we would have caught the train.*\n- **混合条件**：两个分句指向不同的时间。过去的条件配现在的结果：*If she had studied medicine, she would be a doctor now.* 现在的条件配过去的结果：*If he were more careful, he would not have broken the vase.*\n\n*now*、*yesterday*、*last year* 这样的时间词常常能表明分句所指的时间。\n\n> **注意。** 下结论前务必同时核对*两个*分句——看到 *if* 从句里有 *had* 并不一定是**与过去事实相反**，如果结果分句用 *would* + 动词原形谈*现在*，那就是**混合条件**。",
   ),
-  labelChoice(["What kind of conditional sentence is this?", "这是哪种条件句？"], conditionLines, conditionLabels),
+  labelChoice(
+    ["What kind of conditional sentence is this?", "这是哪种条件句？"],
+    conditionLines,
+    conditionLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Pair the tense of the *if* clause with the tense of the result clause: their combination uniquely identifies **${right}**.`,
+      `这是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 把 *if* 从句的动词形式与结果分句的动词形式配对核对：两者的组合唯一对应**${entry.zh}**。`,
+    ],
+  ),
 );
 
 // Combining with an absolute phrase.
@@ -318,15 +334,15 @@ export const absoluteCombineStep = point(
   "combining-with-an-absolute",
   t("Combining with an Absolute Phrase", "用独立主格结构合并句子"),
   t(
-    "Two sentences often become one by turning the second into an absolute phrase. Keep its noun, and drop its *was* or *were*: *The runner crossed the line. Her arms were raised high.* becomes *The runner crossed the line, **her arms raised high**.* The detail now hangs off the whole sentence like a close-up.\n\nTwo near misses are common. Keeping *was* or *were* leaves two complete clauses joined by a comma, which is a comma splice. Dropping the noun turns the phrase into a participial phrase that describes the subject, which changes the meaning and can make it dangle: *Glowing in the dark, the old man sat on the porch* says the man was glowing.",
-    "把第二个句子变成独立主格结构，常常能把两句合成一句。保留它的名词，去掉它的 *was* 或 *were*：*The runner crossed the line. Her arms were raised high.* 就变成 *The runner crossed the line, **her arms raised high**.* 这个细节现在附着在整个句子上，就像一个特写镜头。\n\n有两种常见的差错。保留 *was* 或 *were*，就会留下两个只用逗号连接的完整分句，也就是逗号粘连。去掉名词，短语就变成了修饰主语的分词短语，这会改变意思，还可能造成悬垂修饰：*Glowing in the dark, the old man sat on the porch* 说的是老人在发光。",
+    "Two sentences often become one by turning the second into an absolute phrase. Keep its noun, and drop its *was* or *were*: *The runner crossed the line. Her arms were raised high.* becomes *The runner crossed the line, **her arms raised high**.* The detail now hangs off the whole sentence like a close-up.\n\nTwo near misses are common. Keeping *was* or *were* leaves two complete clauses joined by a comma, which is a comma splice. Dropping the noun turns the phrase into a participial phrase that describes the subject, which changes the meaning and can make it dangle: *Glowing in the dark, the old man sat on the porch* says the man was glowing.\n\n> **Watch out.** Check the part after the comma: it must keep the second sentence's *noun* and drop its finite verb (*was*/*were*)—if *was*/*were* is still there, it is a comma splice; if the noun vanished, it is a participial phrase.",
+    "把第二个句子变成独立主格结构，常常能把两句合成一句。保留它的名词，去掉它的 *was* 或 *were*：*The runner crossed the line. Her arms were raised high.* 就变成 *The runner crossed the line, **her arms raised high**.* 这个细节现在附着在整个句子上，就像一个特写镜头。\n\n有两种常见的差错。保留 *was* 或 *were*，就会留下两个只用逗号连接的完整分句，也就是逗号粘连。去掉名词，短语就变成了修饰主语的分词短语，这会改变意思，还可能造成悬垂修饰：*Glowing in the dark, the old man sat on the porch* 说的是老人在发光。\n\n> **注意。** 核对逗号后面的部分：它必须保留第二句的*名词*并删去限定动词（*was*/*were*）——留着 *was*/*were* 就是逗号粘连，删掉名词就变成了分词短语。",
   ),
   kindedChoice(
     ["Which sentence combines the two using an absolute phrase?", "哪个句子用独立主格结构把两句合并了起来？"],
     absoluteCombineBank,
     (right) => [
-      `*${right}* The second sentence keeps its noun and drops *was* or *were*, so it becomes an absolute phrase attached by a comma.`,
-      `*${right}* 第二句保留了名词，去掉了 *was* 或 *were*，于是变成了用逗号连接的独立主格结构。`,
+      `*${right}* The second sentence keeps its noun and drops *was* or *were*, so it becomes an absolute phrase attached by a comma.\n\n**Check.** Verify two details after the comma: the second sentence's noun is still present, and no finite *was* or *were* remains to create a comma splice.`,
+      `*${right}* 第二句保留了名词，去掉了 *was* 或 *were*，于是变成了用逗号连接的独立主格结构。\n\n**检验。** 核对逗号后面的两点：第二句的名词还在，且已去掉限定动词 *was* 或 *were*，没有形成逗号粘连。`,
     ],
     [
       [
@@ -422,10 +438,13 @@ export const clauseKindStep = point(
   "noun-relative-or-adverb",
   t("Noun, Relative or Adverb Clause", "名词性、定语还是状语从句"),
   t(
-    "The same words, such as *where*, *that* or *when*, can begin three kinds of clause, so look at the job, not the first word.\n\n- A **noun clause** fills a noun's place. Replace it with *something* and the sentence still works: *Nobody knew **where the key was hidden*** becomes *Nobody knew something*.\n- A **relative clause** follows a noun and describes it: *The house **where the key was hidden** burned down.* Ask which house: the one where the key was hidden.\n- An **adverb clause** tells when, where, why or under what condition, and can usually move to the other end of the sentence: *We found the key **where the map said*** can become *Where the map said, we found the key.*",
-    "同样的词，比如 *where*、*that* 或 *when*，可以引导三种从句，所以要看从句的作用，而不是它的第一个词。\n\n- **名词性从句**占据名词的位置。把它换成 *something*，句子仍然成立：*Nobody knew **where the key was hidden*** 可以变成 *Nobody knew something*。\n- **定语从句**跟在名词后面并修饰它：*The house **where the key was hidden** burned down.* 问一问是哪座房子：藏钥匙的那座。\n- **状语从句**说明时间、地点、原因或条件，通常可以移到句子的另一端：*We found the key **where the map said*** 可以变成 *Where the map said, we found the key.*",
+    "The same words, such as *where*, *that* or *when*, can begin three kinds of clause, so look at the job, not the first word.\n\n- A **noun clause** fills a noun's place. Replace it with *something* and the sentence still works: *Nobody knew **where the key was hidden*** becomes *Nobody knew something*.\n- A **relative clause** follows a noun and describes it: *The house **where the key was hidden** burned down.* Ask which house: the one where the key was hidden.\n- An **adverb clause** tells when, where, why or under what condition, and can usually move to the other end of the sentence: *We found the key **where the map said*** can become *Where the map said, we found the key.*\n\n> **Watch out.** Never judge by the opening word (*where*, *that*, *when*) alone—run the substitution test: if *something* fits cleanly, it is a **noun clause**; if it sits right after a noun to define it, it is a **relative clause**; if it can move to the other end of the sentence as a time/place/reason modifier, it is an **adverb clause**.",
+    "同样的词，比如 *where*、*that* 或 *when*，可以引导三种从句，所以要看从句的作用，而不是它的第一个词。\n\n- **名词性从句**占据名词的位置。把它换成 *something*，句子仍然成立：*Nobody knew **where the key was hidden*** 可以变成 *Nobody knew something*。\n- **定语从句**跟在名词后面并修饰它：*The house **where the key was hidden** burned down.* 问一问是哪座房子：藏钥匙的那座。\n- **状语从句**说明时间、地点、原因或条件，通常可以移到句子的另一端：*We found the key **where the map said*** 可以变成 *Where the map said, we found the key.*\n\n> **注意。** 绝不要只看开头的引导词（*where*、*that*、*when*）——做替换测试：能换成 *something* 的是**名词性从句**，紧跟名词并限定它的是**定语从句**，能整体移到句首或句末表时间、地点、原因的是**状语从句**。",
   ),
-  labelChoice(["What kind of clause is the one in bold?", "加粗的从句是哪一种？"], clauseLines, clauseLabels),
+  labelChoice(["What kind of clause is the one in bold?", "加粗的从句是哪一种？"], clauseLines, clauseLabels, (right, _shown, entry) => [
+    `It is **${right}**. ${entry.why[0]}\n\n**Check.** Test replacing the bold clause with *something*, checking for an immediately preceding noun it modifies, or moving it to the opposite end of the sentence: only **${right}** passes.`,
+    `它是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 依次尝试换成 *something*、检查前面是否有被它修饰的名词、以及能否整体移到句子另一端：只有**${entry.zh}**通过检验。`,
+  ]),
 );
 
 // Fixing a quotation's lead-in.
@@ -440,8 +459,8 @@ const leadInLabels: Readonly<Record<string, Label>> = {
   [commaAfterThat]: {
     zh: "that 后面多了逗号",
     why: [
-      "After *that*, the quotation simply continues the writer's sentence, so no comma should come between *that* and the quotation.",
-      "在 *that* 之后，引文直接接续作者的句子，所以 *that* 和引文之间不应该有逗号。",
+      "After *that*, the quotation simply continues the writer's sentence, so no comma should come between *that* and the quotation.\n\n**Check.** Drop the comma after *that* and read the whole sentence straight through: it flows as one unbroken clause.",
+      "在 *that* 之后，引文直接接续作者的句子，所以 *that* 和引文之间不应该有逗号。\n\n**检验。** 删掉 *that* 后面的逗号通读全句：整句话顺畅连贯，不需要停顿。",
     ],
     not: [
       "No comma follows *that* here, or there is no *that* before the quotation at all.",
@@ -451,8 +470,8 @@ const leadInLabels: Readonly<Record<string, Label>> = {
   [colonAfterFragment]: {
     zh: "冒号前不是完整分句",
     why: [
-      "A colon may introduce a quotation only after a complete clause, and the words before this colon cannot stand alone as a sentence.",
-      "只有在完整分句后面才能用冒号引出引文，而这个冒号前的文字不能独立成句。",
+      "A colon may introduce a quotation only after a complete clause, and the words before this colon cannot stand alone as a sentence.\n\n**Check.** Put a period right where the colon stands: the words before it form an incomplete fragment, proving a colon does not belong there.",
+      "只有在完整分句后面才能用冒号引出引文，而这个冒号前的文字不能独立成句。\n\n**检验。** 把冒号临时换成句号读前半句：它只是个不完整的片段，说明这里不能用冒号。",
     ],
     not: [
       "Either there is no colon here, or the words before it form a complete clause, which may take a colon.",
@@ -462,16 +481,16 @@ const leadInLabels: Readonly<Record<string, Label>> = {
   [missingComma]: {
     zh: "引导语后缺少逗号",
     why: [
-      "A signal phrase such as *the narrator says* needs a comma before the quotation, and this sentence leaves it out.",
-      "*the narrator says* 这样的引导语后面需要用逗号引出引文，而这个句子漏掉了逗号。",
+      "A signal phrase such as *the narrator says* needs a comma before the quotation, and this sentence leaves it out.\n\n**Check.** Look right between the reporting verb and the opening quotation mark: there is no *that* and no comma separating them.",
+      "*the narrator says* 这样的引导语后面需要用逗号引出引文，而这个句子漏掉了逗号。\n\n**检验。** 看引述动词和前引号之间：既没有 *that*，也没有逗号隔开。",
     ],
     not: ["The signal phrase here, if there is one, is already followed by its comma.", "这里如果有引导语，它后面已经有逗号了。"],
   },
   [unmarkedChange]: {
     zh: "改动的词没有加方括号",
     why: [
-      "The source said *I* or *my*, and the writer changed it to fit the sentence, so the changed word must go in square brackets.",
-      "原文说的是 *I* 或 *my*，作者为了适应句子而改动了它，所以改动的词必须放在方括号里。",
+      "The source said *I* or *my*, and the writer changed it to fit the sentence, so the changed word must go in square brackets.\n\n**Check.** Compare the words inside the quotation marks word for word against the Source line: a pronoun was silently swapped without square brackets.",
+      "原文说的是 *I* 或 *my*，作者为了适应句子而改动了它，所以改动的词必须放在方括号里。\n\n**检验。** 把引号里的词和 Source 原文逐词核对：其中有人称代词被改动却没有加方括号。",
     ],
     not: [
       "No word of the quotation has been changed without brackets: the words inside the marks are the source's own.",
@@ -481,8 +500,8 @@ const leadInLabels: Readonly<Record<string, Label>> = {
   [worksIn]: {
     zh: "没有错误",
     why: [
-      "The lead-in and its punctuation fit together, and any word changed from the source is already in square brackets.",
-      "引导语和标点相互匹配，凡是改动原文的词都已经放在方括号里了。",
+      "The lead-in and its punctuation fit together, and any word changed from the source is already in square brackets.\n\n**Check.** Run all four checks on the Writer line: the mark before the quote matches the lead-in, and every adjusted word from the Source is bracketed.",
+      "引导语和标点相互匹配，凡是改动原文的词都已经放在方括号里了。\n\n**检验。** 用四条规则逐一核对 Writer 句：引文前的标点与引导方式匹配，且改动原文之处都加了方括号。",
     ],
     not: [
       "Something here breaks a rule: check the mark after the lead-in, and whether any changed word lacks brackets.",
@@ -529,8 +548,8 @@ export const leadInFixStep = point(
   "fixing-the-lead-in",
   t("Fixing the Lead-In", "修正引文的引导方式"),
   t(
-    'When you revise an essay, check each quotation against four rules, since each has a typical slip.\n\n- After ***that***, no comma: *The narrator admits that "[he has] never trusted the sea."*\n- A **colon** only after a complete clause. *The captain says:* is not one, so it takes a comma; *The captain gives one order:* is one, so it may take a colon.\n- After a **signal phrase** such as *the mother warns*, a **comma** before the quotation.\n- If you change a word of the source, such as *I* to *he*, put the changed word in **square brackets**: *[he]*.\n\nIf the lead-in passes all four, the quotation is worked in correctly.',
-    '修改文章时，要用四条规则检查每一处引文，因为每条规则都有一种常见的疏漏。\n\n- ***that*** 之后不加逗号：*The narrator admits that "[he has] never trusted the sea."*\n- **冒号**只能跟在完整分句后面。*The captain says:* 不是完整分句，所以用逗号；*The captain gives one order:* 是完整分句，所以可以用冒号。\n- 在 *the mother warns* 这类**引导语**后面，引文前要用**逗号**。\n- 如果改动了原文的词，比如把 *I* 改成 *he*，就要把改动的词放在**方括号**里：*[he]*。\n\n如果引导部分通过了全部四条检验，引文就融入得正确。',
+    'When you revise an essay, check each quotation against four rules, since each has a typical slip.\n\n- After ***that***, no comma: *The narrator admits that "[he has] never trusted the sea."*\n- A **colon** only after a complete clause. *The captain says:* is not one, so it takes a comma; *The captain gives one order:* is one, so it may take a colon.\n- After a **signal phrase** such as *the mother warns*, a **comma** before the quotation.\n- If you change a word of the source, such as *I* to *he*, put the changed word in **square brackets**: *[he]*.\n\nIf the lead-in passes all four, the quotation is worked in correctly.\n\n> **Watch out.** Do not stop checking once the punctuation looks right—always compare the quoted words against the Source line to catch any pronoun changed without square brackets.',
+    '修改文章时，要用四条规则检查每一处引文，因为每条规则都有一种常见的疏漏。\n\n- ***that*** 之后不加逗号：*The narrator admits that "[he has] never trusted the sea."*\n- **冒号**只能跟在完整分句后面。*The captain says:* 不是完整分句，所以用逗号；*The captain gives one order:* 是完整分句，所以可以用冒号。\n- 在 *the mother warns* 这类**引导语**后面，引文前要用**逗号**。\n- 如果改动了原文的词，比如把 *I* 改成 *he*，就要把改动的词放在**方括号**里：*[he]*。\n\n如果引导部分通过了全部四条检验，引文就融入得正确。\n\n> **注意。** 别看到标点没错就急着选“没有错误”——一定要拿引文和 Source 原文逐词对照，看有没有人称代词被悄悄改动却没加方括号。',
   ),
   labelChoice(
     ["What is wrong with how the writer works this quotation in?", "作者引用这句话的方式有什么错误？"],
@@ -584,15 +603,15 @@ export const stressStep = point(
   "stressing-the-words",
   t("Stressing the Words", "强调指定的词"),
   t(
-    "To put weight on particular words, choose the move that brings them to a place of stress, and get its grammar right.\n\n- A **negative or limiting word** (*never, rarely, only then, not until, no sooner*) moves to the front, and the helping verb comes before the subject: *Never **had we** seen such a flood.* Without that swap, *Never we had seen* is not English.\n- A **phrase of place** moves to the front, and the main verb comes before the subject: *Under the hill stood an old oak.*\n- A **person or thing** takes the stress in a cleft: *It was Maria who found the ring.*\n- An **object or idea** takes the end of a *What ... is* cleft: *What we need is more time.*\n\nA correct rewrite that stresses other words misses the point.",
-    "要强调特定的词，就选择能把它们移到重读位置的方式，并且语法要正确。\n\n- **否定词或限制词**（*never, rarely, only then, not until, no sooner*）移到句首，助动词放在主语前面：*Never **had we** seen such a flood.* 不这样调换，*Never we had seen* 就不是正确的英语。\n- **地点短语**移到句首，主要动词放在主语前面：*Under the hill stood an old oak.*\n- 用分裂句强调**某人或某物**：*It was Maria who found the ring.*\n- 用 *What ... is* 分裂句把**宾语或想法**放到句末：*What we need is more time.*\n\n语法正确、却强调了别的词的改写，没有抓住要点。",
+    "To put weight on particular words, choose the move that brings them to a place of stress, and get its grammar right.\n\n- A **negative or limiting word** (*never, rarely, only then, not until, no sooner*) moves to the front, and the helping verb comes before the subject: *Never **had we** seen such a flood.* Without that swap, *Never we had seen* is not English.\n- A **phrase of place** moves to the front, and the main verb comes before the subject: *Under the hill stood an old oak.*\n- A **person or thing** takes the stress in a cleft: *It was Maria who found the ring.*\n- An **object or idea** takes the end of a *What ... is* cleft: *What we need is more time.*\n\nA correct rewrite that stresses other words misses the point.\n\n> **Watch out.** Check *two* things on every option: first, that the inversion or cleft grammar is valid (no missing auxiliary swap or broken word order), and second, that the spotlight actually falls on the **bold** words.",
+    "要强调特定的词，就选择能把它们移到重读位置的方式，并且语法要正确。\n\n- **否定词或限制词**（*never, rarely, only then, not until, no sooner*）移到句首，助动词放在主语前面：*Never **had we** seen such a flood.* 不这样调换，*Never we had seen* 就不是正确的英语。\n- **地点短语**移到句首，主要动词放在主语前面：*Under the hill stood an old oak.*\n- 用分裂句强调**某人或某物**：*It was Maria who found the ring.*\n- 用 *What ... is* 分裂句把**宾语或想法**放到句末：*What we need is more time.*\n\n语法正确、却强调了别的词的改写，没有抓住要点。\n\n> **注意。** 每个选项都要做*两步*核查：先看倒装或分裂句的语法是否成立（助动词是否倒装、语序是否完整），再看聚光灯是否真的落在题面**加粗**的词上。",
   ),
   kindedChoice(
     ["Which rewrite puts the stress on the words in bold?", "哪种改写把重音放在了加粗的词上？"],
     stressBank,
     (right) => [
-      `*${right}* It moves the bold words to the front or into a cleft, where the stress falls, and keeps the grammar the move needs.`,
-      `*${right}* 它把加粗的词移到句首或放进分裂句，即重音所在的位置，并保持了这种调整所需要的语法。`,
+      `*${right}* It moves the bold words to the front or into a cleft, where the stress falls, and keeps the grammar the move needs.\n\n**Check.** Verify both conditions: the bold words sit in the stressed slot (sentence front or cleft focus) and the verb–subject order is grammatical.`,
+      `*${right}* 它把加粗的词移到句首或放进分裂句，即重音所在的位置，并保持了这种调整所需要的语法。\n\n**检验。** 双重核对：加粗的词落在了重读位置（句首或分裂句焦点处），且主谓语序完全合乎语法。`,
     ],
     [
       [
@@ -687,12 +706,16 @@ export const rhythmStep = point(
   "what-the-sentence-does",
   t("What the Sentence Does", "句子起什么作用"),
   t(
-    "To judge a sentence's effect, compare its length with the sentences just before it.\n\n- A **short sentence after long ones lands a point**. The long sentences build up detail and expectation; the short one stops the reader and carries the weight: *...we walked to the edge of the cliff. The sea was gone.*\n- A **long sentence after short ones releases tension**. Short, choppy sentences feel tense; a long, flowing one lets the reader breathe out: *Thunder. Rain. A scream. Then, as the storm rolled away...*\n- A sentence about as long as its neighbors **keeps the same rhythm**. That is often fine for ordinary narration, but it creates no special effect.\n\nThe effect comes from the contrast, so always read the bold sentence together with what precedes it.",
-    "要判断一个句子的效果，就把它的长短与紧挨在它前面的句子作比较。\n\n- **长句之后的短句落下要点**。长句积累细节和期待；短句让读者停下来，承载分量：*...we walked to the edge of the cliff. The sea was gone.*\n- **短句之后的长句释放紧张**。简短、断续的句子让人感到紧张；舒展流畅的长句让读者松一口气：*Thunder. Rain. A scream. Then, as the storm rolled away...*\n- 与周围句子长短差不多的句子**保持原有的节奏**。对一般的叙述来说这常常没问题，但它不会产生特别的效果。\n\n效果来自对比，所以一定要把加粗的句子和它前面的内容一起读。",
+    "To judge a sentence's effect, compare its length with the sentences just before it.\n\n- A **short sentence after long ones lands a point**. The long sentences build up detail and expectation; the short one stops the reader and carries the weight: *...we walked to the edge of the cliff. The sea was gone.*\n- A **long sentence after short ones releases tension**. Short, choppy sentences feel tense; a long, flowing one lets the reader breathe out: *Thunder. Rain. A scream. Then, as the storm rolled away...*\n- A sentence about as long as its neighbors **keeps the same rhythm**. That is often fine for ordinary narration, but it creates no special effect.\n\nThe effect comes from the contrast, so always read the bold sentence together with what precedes it.\n\n> **Watch out.** Never judge the bold sentence in isolation—a short sentence following equally short sentences does *not* land a point; it simply keeps the same rhythm.",
+    "要判断一个句子的效果，就把它的长短与紧挨在它前面的句子作比较。\n\n- **长句之后的短句落下要点**。长句积累细节和期待；短句让读者停下来，承载分量：*...we walked to the edge of the cliff. The sea was gone.*\n- **短句之后的长句释放紧张**。简短、断续的句子让人感到紧张；舒展流畅的长句让读者松一口气：*Thunder. Rain. A scream. Then, as the storm rolled away...*\n- 与周围句子长短差不多的句子**保持原有的节奏**。对一般的叙述来说这常常没问题，但它不会产生特别的效果。\n\n效果来自对比，所以一定要把加粗的句子和它前面的内容一起读。\n\n> **注意。** 绝不要孤立地看加粗的句子——跟在一堆同样短的句子后面的短句并*不会*落下要点，而只是延续原有节奏。",
   ),
   labelChoice(
     ["What does the sentence in bold do to the rhythm of the paragraph?", "加粗的句子对段落的节奏起什么作用？"],
     rhythmLines,
     rhythmLabels,
+    (right, _shown, entry) => [
+      `It is **${right}**. ${entry.why[0]}\n\n**Check.** Compare the length of the bold sentence directly with the sentences immediately before it: that contrast (or lack of contrast) confirms **${right}**.`,
+      `这是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 把加粗句子的长度直接与紧挨在前的句子对比：两者是否形成反差直接印证了**${entry.zh}**。`,
+    ],
   ),
 );

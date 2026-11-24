@@ -175,6 +175,10 @@ export const readingSkillTopics68: readonly TopicDef[] = [
       "Who wrote a source, when, and how close they were to the events: and which source fits a question.",
       "资料由谁、在何时写成，作者离事件有多近，以及哪种资料适合回答一个问题。",
     ),
+    intro: t(
+      "A soldier's pocket journal from a winter campaign is a **primary source**; a historian's chapter written a century later from twenty journals is a **secondary source**. Knowing the difference helps you pick the right evidence for any question.",
+      "一名士兵在冬季战役中写下的随身日记是**一手资料**；历史学家一百年后综合二十本日记写成的章节是**二手资料**。分清两者，才能为每个问题选出最合适的证据。",
+    ),
     prerequisites: ["authors-purpose"],
     encompasses: [
       { topic: "authors-purpose", weight: 0.2 },
@@ -187,16 +191,16 @@ export const readingSkillTopics68: readonly TopicDef[] = [
         "primary-or-secondary",
         t("Primary or Secondary", "一手还是二手"),
         t(
-          "A **primary source** was made by someone who was there, at the time: a diary, a letter, a photograph, a speech, a map drawn on the journey, an object from the period, an interview with a witness. A **secondary source** was made later by someone who studied primary sources: a textbook, an encyclopedia, a documentary, a biography, a history article.\n\nAsk two questions: who made it, and when? A source made at the time by someone involved is primary, even if it is short or simple. A source made afterward to explain the events is secondary, even if it is excellent.",
-          "**一手资料**由亲历者在当时制作：日记、信件、照片、演讲、旅途中画的地图、那个时代的物品、对目击者的采访。**二手资料**由研究过一手资料的人后来制作：课本、百科全书、纪录片、传记、历史文章。\n\n问两个问题：谁制作的？什么时候制作的？由当事人在当时制作的资料是一手资料，即使它很短或很简单。事后为解释事件而制作的资料是二手资料，即使它非常出色。",
+          "A **primary source** was made by someone who was there, at the time: a diary, a letter, a photograph, a speech, a map drawn on the journey, an object from the period, an interview with a witness. A **secondary source** was made later by someone who studied primary sources: a textbook, an encyclopedia, a documentary, a biography, a history article.\n\nAsk two questions: who made it, and when? A source made at the time by someone involved is primary, even if it is short or simple. A source made afterward to explain the events is secondary, even if it is excellent.\n\n> **Watch out.** Do not judge by quality or authority—a modern textbook or documentary is still a *secondary* source because its author was not there at the time.",
+          "**一手资料**由亲历者在当时制作：日记、信件、照片、演讲、旅途中画的地图、那个时代的物品、对目击者的采访。**二手资料**由研究过一手资料的人后来制作：课本、百科全书、纪录片、传记、历史文章。\n\n问两个问题：谁制作的？什么时候制作的？由当事人在当时制作的资料是一手资料，即使它很短或很简单。事后为解释事件而制作的资料是二手资料，即使它非常出色。\n\n> **注意。** 不要凭资料是否权威来判断——现代课本或纪录片即便再专业，也属于*二手*资料，因为作者并没有亲历当时。",
         ),
         choiceGenerator(
           t("Is this a primary or a secondary source about the event?", "关于这个事件，这是一手资料还是二手资料？"),
           sourceKindBank,
           (right) =>
             t(
-              `It is **${right}**. Ask who made it and when: ${right === primary ? "it was made at the time by someone involved." : "it was made later, to explain the events."}`,
-              `它是**${right === primary ? "一手资料" : "二手资料"}**。问一问谁在什么时候制作了它：${right === primary ? "它由当事人在当时制作。" : "它是事后为解释事件而制作的。"}`,
+              `It is **${right}**. Ask who made it and when: ${right === primary ? "it was made at the time by someone involved." : "it was made later, to explain the events."}\n\n**Check.** Trace the creator's distance from the event—${right === primary ? "they witnessed or created it firsthand during the period, making it primary." : "they looked back afterward using other records, making it secondary."}`,
+              `它是**${right === primary ? "一手资料" : "二手资料"}**。问一问谁在什么时候制作了它：${right === primary ? "它由当事人在当时制作。" : "它是事后为解释事件而制作的。"}\n\n**检验。** 检查制作者与事件的距离——${right === primary ? "制作者在当时亲历或直接产出，因此是一手资料。" : "制作者事后依据其他记录回顾整理，因此是二手资料。"}`,
             ),
           (wrong) =>
             t(
@@ -209,16 +213,16 @@ export const readingSkillTopics68: readonly TopicDef[] = [
         "the-best-source",
         t("The Best Source for a Question", "最适合回答问题的资料"),
         t(
-          "Which source is best depends on the question. To learn what something was like for the people there, how they felt or what they saw, a primary source from a witness is best. To learn the big picture, such as why something happened or how common it was, a secondary source that brings together many primary sources is often better than any one of them.\n\nA source made for another purpose, such as an advertisement, a toy or a story made up later, rarely answers a question about what really happened.",
-          "哪种资料最好取决于问题。要了解当事人的经历、感受或所见，目击者留下的一手资料最好。要了解全局，比如某事为什么发生、有多普遍，综合了许多一手资料的二手资料往往比其中任何一份都更好。\n\n为其他目的而制作的东西，比如广告、玩具或后来编的故事，很少能回答真实发生了什么的问题。",
+          "Which source is best depends on the question. To learn what something was like for the people there, how they felt or what they saw, a primary source from a witness is best. To learn the big picture, such as why something happened or how common it was, a secondary source that brings together many primary sources is often better than any one of them.\n\nA source made for another purpose, such as an advertisement, a toy or a story made up later, rarely answers a question about what really happened.\n\n> **Watch out.** Match the *scope* of the question: one person's memory answers how *they* felt, whereas a broad historical or scientific trend needs a study that gathers many records.",
+          "哪种资料最好取决于问题。要了解当事人的经历、感受或所见，目击者留下的一手资料最好。要了解全局，比如某事为什么发生、有多普遍，综合了许多一手资料的二手资料往往比其中任何一份都更好。\n\n为其他目的而制作的东西，比如广告、玩具或后来编的故事，很少能回答真实发生了什么的问题。\n\n> **注意。** 核对问题的*范围*：个人感受适合找当事人的记录，而跨越多年或多地的趋势或原因，则需要汇总多份记录的研究资料。",
         ),
         choiceGenerator(
           t("Which source would best answer the question?", "哪份资料最能回答这个问题？"),
           bestSourceBank,
           (right) =>
             t(
-              `**${right}** fits the question: it was made by someone in a position to know the answer.`,
-              `**${right}** 适合这个问题：它的作者能够知道答案。`,
+              `**${right}** fits the question: it was made by someone in a position to know the answer.\n\n**Check.** Ask whether **${right}** can actually provide the evidence the question asks for—unlike the other choices, its creator had direct access to the needed facts.`,
+              `**${right}** 适合这个问题：它的作者能够知道答案。\n\n**检验。** 问问 **${right}** 能否真正提供问题所需的证据——与另外两项不同，它的作者能直接掌握所需事实。`,
             ),
           (wrong) =>
             t(
@@ -236,6 +240,10 @@ export const readingSkillTopics68: readonly TopicDef[] = [
       "How two authors present the same events or facts differently: what they agree on, where they conflict, and what each stresses.",
       "两位作者怎样以不同方式呈现同样的事件或事实：哪里一致，哪里矛盾，各自强调什么。",
     ),
+    intro: t(
+      "Two articles on the same city bridge can both be factual while pulling readers in opposite directions: one highlights faster commutes, the other highlights higher tolls—or two sources might flatly disagree on the year it opened. Comparing texts side by side shows where they agree, where they conflict, and what each author chose to spotlight.",
+      "两篇写同一座大桥的报道可以都基于事实，却把读者引向截然不同的感受：一篇强调通勤提速，另一篇强调过桥费上涨；有时两份资料甚至会在通车年份上直接冲突。把两篇文本并排对比，就能看清它们哪里一致、哪里矛盾，以及各自突出了什么。",
+    ),
     prerequisites: ["citing-textual-evidence", "compare-and-contrast-in-texts"],
     encompasses: [
       { topic: "compare-and-contrast-in-texts", weight: 0.3 },
@@ -248,16 +256,28 @@ export const readingSkillTopics68: readonly TopicDef[] = [
         "agree-or-conflict",
         t("Agree or Conflict", "一致还是矛盾"),
         t(
-          "When two texts treat the same topic, compare what each says on the same point. They **agree** when they say the same thing, perhaps in different words. They **conflict** when both cannot be true: one says 1932, the other 1937. Often they simply give **different details** that can both be true: one tells how whales travel, the other how they sing.\n\nA conflict tells you to check a third source, or to ask which of the two is more credible.",
-          "两篇文本谈论同一话题时，要比较它们在同一点上说了什么。如果它们说的是同一件事（也许措辞不同），就是**一致**。如果两者不可能同时为真，就是**矛盾**：一个说 1932 年，另一个说 1937 年。它们也常常只是给出**不同的细节**，而这些细节可以同时成立：一个讲鲸怎样迁徙，另一个讲鲸怎样唱歌。\n\n遇到矛盾时，就要查找第三份资料，或者判断两者中哪一个更可信。",
+          "When two texts treat the same topic, compare what each says on the same point. They **agree** when they say the same thing, perhaps in different words. They **conflict** when both cannot be true: one says 1932, the other 1937. Often they simply give **different details** that can both be true: one tells how whales travel, the other how they sing.\n\nA conflict tells you to check a third source, or to ask which of the two is more credible.\n\n> **Watch out.** Do not call two statements a *conflict* just because they talk about different aspects of the same subject—two statements conflict only when it is impossible for both to be true at once.",
+          "两篇文本谈论同一话题时，要比较它们在同一点上说了什么。如果它们说的是同一件事（也许措辞不同），就是**一致**。如果两者不可能同时为真，就是**矛盾**：一个说 1932 年，另一个说 1937 年。它们也常常只是给出**不同的细节**，而这些细节可以同时成立：一个讲鲸怎样迁徙，另一个讲鲸怎样唱歌。\n\n遇到矛盾时，就要查找第三份资料，或者判断两者中哪一个更可信。\n\n> **注意。** 不要因为两句话谈的是同一主题的不同方面就判成“矛盾”——只有当两句话绝不可能同时成立时，它们才算矛盾。",
         ),
         choiceGenerator(
           t("How do the two texts relate?", "这两篇文本是什么关系？"),
           agreementBank,
           (right) =>
             t(
-              `**${capitalize(right)}.** Compare what each text says on the same point.`,
-              `**${zhRelation[right]}**。比较两篇文本在同一点上说了什么。`,
+              `**${capitalize(right)}.** Compare what each text claims on the same point.\n\n**Check.** Ask *Could both statements be true at the same time?* — ${
+                right === agree
+                  ? "yes, and in fact they state the very same fact in different words."
+                  : right === conflict
+                    ? "no, if Text A is right then Text B must be wrong."
+                    : "yes, because each describes a separate detail about the topic."
+              }`,
+              `**${zhRelation[right]}**。比较两篇文本在同一点上的说法。\n\n**检验。** 问一句“两句话能同时为真吗？”——${
+                right === agree
+                  ? "能，而且两者其实就是用不同措辞说了同一件事。"
+                  : right === conflict
+                    ? "不能，如果文本 A 对，文本 B 就必然错。"
+                    : "能，因为两者分别介绍了这个话题的不同侧面。"
+              }`,
             ),
           (wrong) =>
             t(
@@ -270,13 +290,17 @@ export const readingSkillTopics68: readonly TopicDef[] = [
         "what-each-author-stresses",
         t("What Each Author Stresses", "每位作者强调什么"),
         t(
-          "Two authors can report true facts about the same subject and still give readers very different impressions, because each chooses what to include and what to leave out. One account of a new highway tells of the time it saves; another tells of the forest it cut down.\n\nTo compare them, ask of each text: what does it focus on, whose side or experience does it present, and what does it leave out that the other includes?",
-          "两位作者可以就同一话题报道真实的事实，却给读者留下截然不同的印象，因为每个人都在选择写什么、不写什么。关于一条新公路，一篇报道讲它节省的时间，另一篇讲它砍掉的森林。\n\n比较时，对每篇文本问：它关注什么？它呈现了谁的立场或经历？它省略了什么，而另一篇写到了？",
+          "Two authors can report true facts about the same subject and still give readers very different impressions, because each chooses what to include and what to leave out. One account of a new highway tells of the time it saves; another tells of the forest it cut down.\n\nTo compare them, ask of each text: what does it focus on, whose side or experience does it present, and what does it leave out that the other includes?\n\n> **Watch out.** Check both halves of the answer choice carefully: a wrong choice often describes Text B accurately while falsely claiming Text A says the same thing, or invents a disagreement neither text states.",
+          "两位作者可以就同一话题报道真实的事实，却给读者留下截然不同的印象，因为每个人都在选择写什么、不写什么。关于一条新公路，一篇报道讲它节省的时间，另一篇讲它砍掉的森林。\n\n比较时，对每篇文本问：它关注什么？它呈现了谁的立场或经历？它省略了什么，而另一篇写到了？\n\n> **注意。** 选项的前后两半都要核对：干扰项常常把文本 B 说对了，却硬说文本 A 也是这么写的，或者编造出两篇文本根本没提的分歧。",
         ),
         choiceGenerator(
           t("How do the two authors present the topic differently?", "两位作者呈现这个话题的方式有什么不同？"),
           focusBank,
-          (right) => t(`${right} Each author chose different facts to put first.`, `${right} 每位作者选择突出的事实不同。`),
+          (right) =>
+            t(
+              `${right} Each author chose different facts to put first.\n\n**Check.** Verify both halves against the prompt: the first half matches what Text A actually emphasizes, and the second half matches what Text B actually emphasizes.`,
+              `${right} 每位作者选择突出的事实不同。\n\n**检验。** 对照原文逐一核对前后两半：前半句正好对应文本 A 的重点，后半句正好对应文本 B 的重点。`,
+            ),
           (wrong) =>
             t(
               `“${wrong}” does not match the texts. Read each one again and ask what it focuses on and what it leaves out.`,

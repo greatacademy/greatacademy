@@ -53,8 +53,8 @@ const openingBank: readonly Ask[] = stories.map((s) => ({
   right: s.plain,
   wrong: [s.noWho, s.noWhen],
   why: t(
-    "This opening names the main character, the place and the time, so the reader knows who, where and when from the first sentence.",
-    "这个开头说出了主角、地点和时间，读者从第一句就知道是谁、在哪里、什么时候。",
+    "This opening names the main character, the place and the time, so the reader knows who, where and when from the first sentence.\n\n**Check.** Point to all three parts in the sentence—the character (*who*), the place (*where*), and the time (*when*) are all there.",
+    "这个开头说出了主角、地点和时间，读者从第一句就知道是谁、在哪里、什么时候。\n\n**检验。**在句子里逐一找出三样信息——人物（*who*）、地点（*where*）和时间（*when*）全都齐全。",
   ),
   whyNot: [
     t(
@@ -74,8 +74,8 @@ const hintBank: readonly Ask[] = stories.map((s) => ({
   right: s.hint,
   wrong: [s.other, s.plain],
   why: t(
-    "This opening tells who, where and when, and it also hints at the trouble to come, so the reader wants to find out what happens.",
-    "这个开头说出了是谁、在哪里、什么时候，还暗示了将要到来的麻烦，让读者想知道接下来会怎样。",
+    "This opening tells who, where and when, and it also hints at the trouble to come, so the reader wants to find out what happens.\n\n**Check.** Compare the end of this opening with the problem—the clue points straight to that exact trouble.",
+    "这个开头说出了是谁、在哪里、什么时候，还暗示了将要到来的麻烦，让读者想知道接下来会怎样。\n\n**检验。**把这个开头的后半句和题目里的问题对照——线索正好指向那个麻烦。",
   ),
   whyNot: [
     t(
@@ -95,8 +95,8 @@ const solvingEndBank: readonly Ask[] = stories.map((s) => ({
   right: s.solves,
   wrong: [s.unsolved, s.otherEnd],
   why: t(
-    `The problem was this: ${s.problem} This ending settles it, so the story can end.`,
-    `问题是：${s.problem} 这个结尾解决了它，故事因此可以结束。`,
+    `The problem was this: ${s.problem} This ending settles it so the story can close.\n\n**Check.** Ask whether the trouble from the opening is still there after this ending—it is gone.`,
+    `问题是：${s.problem} 这个结尾解决了它，故事因此可以结束。\n\n**检验。**问问自己：有了这个结尾之后，开头那个麻烦还在吗？已经彻底解决了。`,
   ),
   whyNot: [
     t("That ending leaves the problem just where it was; nothing has been solved.", "这个结尾让问题原封不动；什么都没有解决。"),
@@ -113,8 +113,8 @@ const fittingEndBank: readonly Ask[] = stories.map((s) => ({
   right: s.solves,
   wrong: [s.nowhere, s.unlike],
   why: t(
-    "In this ending the characters solve the problem themselves, in a way that fits who they are and what they want.",
-    "在这个结尾里，角色用符合自己性格和愿望的方式亲自解决了问题。",
+    "In this ending the characters solve the problem themselves, in a way that fits who they are and what they want.\n\n**Check.** Ask two questions: did the character take action instead of waiting for magic, and does the ending still match what the character wanted?",
+    "在这个结尾里，角色用符合自己性格和愿望的方式亲自解决了问题。\n\n**检验。**问两个问题：是角色自己想办法而不是靠突如其来的魔法吗？结果依然符合角色原来的愿望吗？两个都是。",
   ),
   whyNot: [
     t(
@@ -132,13 +132,16 @@ const fittingEndBank: readonly Ask[] = stories.map((s) => ({
 
 const reasonChoice = kinded(
   ["Which reason supports this opinion?", "哪个理由支持这个观点？"],
-  (right) => [
-    `*${right}* gives a reason to agree with the opinion, so it supports it.`,
-    `*${right}* 给出了赞同这个观点的理由，所以它支持这个观点。`,
+  (right, shown) => [
+    `“${right}” gives a reason to agree with the opinion, so it supports it.\n\n**Check.** Join the two with *because* after “${shown.replace(/\.$/, "")}”—the reason makes the opinion stronger rather than arguing against it.`,
+    `“${right}”给出了赞同这个观点的理由，所以它支持这个观点。\n\n**检验。**用 *because* 把它接在“${shown.replace(/\.$/, "")}”后面读一遍——它让观点更有说服力，而不是反驳它。`,
   ],
   [
-    ["{wrong} is a reason for the opposite opinion: it argues against this one.", "{wrong} 是支持相反观点的理由：它反驳的是这个观点。"],
-    ["{wrong} is true, but it gives no reason at all to agree with the opinion.", "{wrong} 是真的，但它根本没有给出赞同这个观点的理由。"],
+    ["“{wrong}” is a reason for the opposite opinion: it argues against this one.", "“{wrong}”是支持相反观点的理由：它反驳的是这个观点。"],
+    [
+      "“{wrong}” is true, but it gives no reason at all to agree with the opinion.",
+      "“{wrong}”是真的，但它根本没有给出赞同这个观点的理由。",
+    ],
   ],
 );
 
@@ -227,7 +230,10 @@ const linkBank: readonly Ask[] = rows(`
     shown,
     right,
     wrong: [w1, w2],
-    why: t(`*${right}* ${role}, and the words after the gap do just that.`, `*${right}* ${roleZh}，而空白后面的内容正是这样。`),
+    why: t(
+      `*${right}* ${role}, and the words after the gap do just that.\n\n**Check.** Read the completed sentence aloud: “${shown.replace("___", right)}” The link matches how the two ideas connect.`,
+      `*${right}* ${roleZh}，而空白后面的内容正是这样。\n\n**检验。**把填好的句子读一遍：“${shown.replace("___", right)}” 连接词正好符合前后两句的关系。`,
+    ),
     whyNot: [w1, w2].map((w) => {
       const [r, rz] = roleOf(w);
       return t(`*${w}* ${r}, but the words after the gap do not.`, `*${w}* ${rz}，但空白后面的内容不是这样。`);
@@ -239,10 +245,13 @@ const linkBank: readonly Ask[] = rows(`
 
 const strongVerbChoice = kinded(
   ["Which verb fits the meaning in brackets?", "哪个动词符合括号里的意思？"],
-  (right, shown) => [
-    `*${right}* shows exactly the meaning in brackets: ${shown.replace("___", right).replace(/ \(.*\)$/, "")}`,
-    `*${right}* 正好表现了括号里的意思：${shown.replace("___", right).replace(/ \(.*\)$/, "")}`,
-  ],
+  (right, shown) => {
+    const filled = shown.replace("___", right).replace(/ \(.*\)$/, "");
+    return [
+      `*${right}* shows the exact meaning in brackets: “${filled}”\n\n**Check.** Picture the scene as you read “${filled}”—the verb matches the exact speed, force, or sound in brackets.`,
+      `*${right}* 正好表现了括号里的意思：“${filled}”\n\n**检验。**读着“${filled}”想象画面——这个动词准确对应括号里描述的速度、力度或声音。`,
+    ];
+  },
   [
     [
       "*{wrong}* is a strong verb, but it shows a different way of moving or sounding from the one in brackets.",
@@ -297,9 +306,10 @@ const replaceChoice = kinded(
   ["Which strong verb should replace the weak verb in bold?", "哪个生动的动词应该替换粗体的弱动词？"],
   (right, shown) => {
     const weak = /\*\*(.+?)\*\*/.exec(shown)?.[1] ?? "";
+    const filled = shown.replace(/\*\*(.+?)\*\*/, right);
     return [
-      `*${right}* shows exactly how, and it fits the clues in the sentence much better than the weak verb *${weak}*.`,
-      `*${right}* 准确地表现了动作的方式，比弱动词 *${weak}* 更符合句子里的线索。`,
+      `*${right}* shows exactly how the action happens, fitting the clues much better than the weak verb *${weak}*.\n\n**Check.** Read the sentence with *${right}* in place: “${filled}” Every clue in the sentence agrees with it.`,
+      `*${right}* 准确地表现了动作的方式，比弱动词 *${weak}* 更符合句子里的线索。\n\n**检验。**把 *${right}* 代回原句读一遍：“${filled}” 句中的每个线索都和它一致。`,
     ];
   },
   [
@@ -361,8 +371,8 @@ export const writingStoryTopics: readonly TopicDef[] = [
         "who-where-and-when",
         t("Who, Where and When", "谁、在哪里、什么时候"),
         t(
-          "A good story opening tells the reader three things at once: **who** the story is about, **where** it happens and **when**. *On a windy Saturday in the park, Lin flew her new kite* names Lin, the park and a windy Saturday.\n\nAn opening without a character, or without a place and a time, leaves the reader guessing.",
-          "好的故事开头一下子告诉读者三件事：故事写的是**谁**，发生在**哪里**，**什么时候**。*On a windy Saturday in the park, Lin flew her new kite* 说出了 Lin、公园和一个刮风的星期六。\n\n没有角色，或者没有地点和时间的开头，会让读者摸不着头脑。",
+          "A good story opening tells the reader three things at once: **who** the story is about, **where** it happens and **when**. *On a windy Saturday in the park, Lin flew her new kite* names Lin, the park and a windy Saturday.\n\nAn opening without a character, or without a place and a time, leaves the reader guessing.\n\n> **Watch out.** Check for all three parts—a lively sentence that skips the place and time, or leaves out the character, is missing a piece.",
+          "好的故事开头一下子告诉读者三件事：故事写的是**谁**，发生在**哪里**，**什么时候**。*On a windy Saturday in the park, Lin flew her new kite* 说出了 Lin、公园和一个刮风的星期六。\n\n没有角色，或者没有地点和时间的开头，会让读者摸不着头脑。\n\n> **注意。**三样信息要逐一核对——哪怕句子写得很生动，只要漏了地点和时间，或者漏了人物，就不完整。",
         ),
         askGenerator(openingBank),
       ),
@@ -370,12 +380,17 @@ export const writingStoryTopics: readonly TopicDef[] = [
         "an-opening-that-sets-up-the-problem",
         t("An Opening That Sets Up the Problem", "为问题做铺垫的开头"),
         t(
-          "The best openings also **hint at the problem** to come. If the story is about a kite stuck in a tree, the opening might show the kite flying *right toward the tall oak*.\n\nThe hint must fit this story's problem. An opening that hints at some other trouble, or at none, does not set it up.",
-          "最好的开头还会**暗示将要出现的问题**。如果故事讲的是风筝卡在树上，开头就可能写风筝*正朝着那棵高大的橡树*飞去。\n\n暗示必须符合这个故事的问题。暗示了别的麻烦，或者什么都没暗示的开头，都没有为它做铺垫。",
+          "The best openings also **hint at the problem** to come. If the story is about a kite stuck in a tree, the opening might show the kite flying *right toward the tall oak*.\n\nThe hint must fit this story's problem. An opening that hints at some other trouble, or at none, does not set it up.\n\n> **Watch out.** Do not pick an opening just because it sounds dramatic—make sure the trouble it hints at matches the problem given in the question.",
+          "最好的开头还会**暗示将要出现的问题**。如果故事讲的是风筝卡在树上，开头就可能写风筝*正朝着那棵高大的橡树*飞去。\n\n暗示必须符合这个故事的问题。暗示了别的麻烦，或者什么都没暗示的开头，都没有为它做铺垫。\n\n> **注意。**不要只因为某个开头听起来惊险就选它——一定要核对它暗示的麻烦是不是题目里说的那个问题。",
         ),
         askGenerator(hintBank),
       ),
     ],
+    undefined,
+    t(
+      "*Early one summer morning at the beach, Sam let his puppy off the leash for just a minute, and it ran off.* In a single sentence, the reader knows who, where, when, and the trouble ahead. A strong opening hooks the reader right away.",
+      "*Early one summer morning at the beach, Sam let his puppy off the leash for just a minute, and it ran off.* 短短一句话，读者就知道了人物、地点、时间和即将到来的麻烦。好的开头一下子就能抓住读者。",
+    ),
   ),
   topic(
     "ending-a-story",
@@ -387,8 +402,8 @@ export const writingStoryTopics: readonly TopicDef[] = [
         "an-ending-that-solves-the-problem",
         t("An Ending That Solves the Problem", "解决问题的结尾"),
         t(
-          "A story's ending must **solve its problem**. If the kite is stuck in a tree, the ending tells how it comes down.\n\nAn ending that leaves the problem where it was does not finish the story, and an ending that solves some other problem misses the point. Find the problem first, then look for the ending that settles it.",
-          "故事的结尾必须**解决它的问题**。如果风筝卡在树上，结尾就要讲它是怎样下来的。\n\n让问题原封不动的结尾没有讲完故事，解决别的问题的结尾则偏离了重点。先找出问题，再找解决它的结尾。",
+          "A story's ending must **solve its problem**. If the kite is stuck in a tree, the ending tells how it comes down.\n\nAn ending that leaves the problem where it was does not finish the story, and an ending that solves some other problem misses the point. Find the problem first, then look for the ending that settles it.\n\n> **Watch out.** An ending that fixes a completely different trouble still leaves the real problem unsolved.",
+          "故事的结尾必须**解决它的问题**。如果风筝卡在树上，结尾就要讲它是怎样下来的。\n\n让问题原封不动的结尾没有讲完故事，解决别的问题的结尾则偏离了重点。先找出问题，再找解决它的结尾。\n\n> **注意。**哪怕某个结尾听起来很圆满，如果它解决的是另一件事，原来的问题还是没解决。",
         ),
         askGenerator(solvingEndBank),
       ),
@@ -396,12 +411,17 @@ export const writingStoryTopics: readonly TopicDef[] = [
         "an-ending-that-fits",
         t("An Ending That Fits the Characters", "符合角色的结尾"),
         t(
-          "A good ending also **fits the characters**. They solve the problem themselves, in a way that matches what they want and who they are: Lin wants her kite back, so she asks for help to get it.\n\nAn ending where magic suddenly fixes everything comes from nowhere, and one where a character stops wanting what they wanted does not fit.",
-          "好的结尾还要**符合角色**。角色亲自解决问题，方式符合他们的愿望和性格：Lin 想要回她的风筝，所以她请人帮忙把它取下来。\n\n突然出现魔法把一切都解决的结尾来得毫无来由；角色突然不再想要自己一直想要的东西，这样的结尾也不符合角色。",
+          "A good ending also **fits the characters**. They solve the problem themselves, in a way that matches what they want and who they are: Lin wants her kite back, so she asks for help to get it.\n\nAn ending where magic suddenly fixes everything comes from nowhere, and one where a character stops wanting what they wanted does not fit.\n\n> **Watch out.** Beware of sudden magic or a character suddenly giving up—the character should earn the ending through their own choice.",
+          "好的结尾还要**符合角色**。角色亲自解决问题，方式符合他们的愿望和性格：Lin 想要回她的风筝，所以她请人帮忙把它取下来。\n\n突然出现魔法把一切都解决的结尾来得毫无来由；角色突然不再想要自己一直想要的东西，这样的结尾也不符合角色。\n\n> **注意。**警惕突然冒出的魔法，或者角色莫名其妙放弃愿望——好的结尾应该靠角色自己的行动赢得。",
         ),
         askGenerator(fittingEndBank),
       ),
     ],
+    undefined,
+    t(
+      "When Sam loses his puppy at the beach, a satisfying ending shows him calling along the shore until Rex runs back—not a passing dolphin carrying the dog out of nowhere. A good ending settles the problem in a way that fits the character.",
+      "Sam 在海滩丢了小狗，令人满意的结尾是他沿着海岸一路呼喊直到小狗跑回来——而不是突然游来一只海豚把狗送回。好的结尾既解决开头的问题，又符合角色的性格和愿望。",
+    ),
   ),
   topic(
     "linking-reasons-to-an-opinion",
@@ -416,8 +436,8 @@ export const writingStoryTopics: readonly TopicDef[] = [
         "the-reason-that-supports",
         t("The Reason That Supports", "支持观点的理由"),
         t(
-          "An **opinion** says what someone thinks: *Dogs make better pets than goldfish.* A **reason** tells why, and a good reason makes a reader more likely to agree: *you can play with a dog*.\n\nA reason for the other side argues against the opinion, and a fact that is simply true, like *dogs have four legs*, gives no reason at all.",
-          "**观点**说出某人的想法：*Dogs make better pets than goldfish.* **理由**说明为什么，好的理由会让读者更愿意赞同：*你可以和狗一起玩*。\n\n支持另一方的理由反驳了这个观点；而只是真实的事实，比如*狗有四条腿*，根本不算理由。",
+          "An **opinion** says what someone thinks: *Dogs make better pets than goldfish.* A **reason** tells why, and a good reason makes a reader more likely to agree: *you can play with a dog*.\n\nA reason for the other side argues against the opinion, and a fact that is simply true, like *dogs have four legs*, gives no reason at all.\n\n> **Watch out.** Do not pick a true fact just because it is true—ask whether it actually gives a reason to agree with the opinion.",
+          "**观点**说出某人的想法：*Dogs make better pets than goldfish.* **理由**说明为什么，好的理由会让读者更愿意赞同：*你可以和狗一起玩*。\n\n支持另一方的理由反驳了这个观点；而只是真实的事实，比如*狗有四条腿*，根本不算理由。\n\n> **注意。**不要只因为一句话是真的就选它——要问问它是不是真的给出了赞同这个观点的理由。",
         ),
         askGenerator(reasonBank),
       ),
@@ -425,12 +445,17 @@ export const writingStoryTopics: readonly TopicDef[] = [
         "the-linking-word",
         t("The Linking Word", "连接词"),
         t(
-          "Linking words show how ideas connect. **Because** and **since** come before a reason: *Dogs are good pets because they are loyal.* **Therefore** comes before a result that follows: *Bikes do not pollute. Therefore, more people should ride them.* **For example** comes before an example.\n\nRead what comes after the gap, then choose the word that does that job.",
-          "连接词表明想法之间怎样联系。**because** 和 **since** 放在原因前面：*Dogs are good pets because they are loyal.* **therefore** 放在随之而来的结果前面：*Bikes do not pollute. Therefore, more people should ride them.* **for example** 放在例子前面。\n\n读一读空白后面的内容，再选择起这个作用的词。",
+          "Linking words show how ideas connect. **Because** and **since** come before a reason: *Dogs are good pets because they are loyal.* **Therefore** comes before a result that follows: *Bikes do not pollute. Therefore, more people should ride them.* **For example** comes before an example.\n\nRead what comes after the gap, then choose the word that does that job.\n\n> **Watch out.** Look closely at direction: *because* and *since* point to the reason, while *therefore* points to the result.",
+          "连接词表明想法之间怎样联系。**because** 和 **since** 放在原因前面：*Dogs are good pets because they are loyal.* **therefore** 放在随之而来的结果前面：*Bikes do not pollute. Therefore, more people should ride them.* **for example** 放在例子前面。\n\n读一读空白后面的内容，再选择起这个作用的词。\n\n> **注意。**分清方向：*because* 和 *since* 后面跟原因，而 *therefore* 后面跟结果。",
         ),
         askGenerator(linkBank),
       ),
     ],
+    undefined,
+    t(
+      "Saying *Our school should have a longer recess* is only a start; adding *because playing outside helps us focus in class* gives readers a reason to agree. Strong opinion writing pairs clear reasons with the right linking words.",
+      "只说 *Our school should have a longer recess* 还不够；加上 *because playing outside helps us focus in class*，读者才会觉得有道理。有力的观点写作要把理由和恰当的连接词配合起来。",
+    ),
   ),
   topic(
     "strong-verbs",
@@ -445,8 +470,8 @@ export const writingStoryTopics: readonly TopicDef[] = [
         "the-verb-that-fits-the-meaning",
         t("The Verb That Fits the Meaning", "符合意思的动词"),
         t(
-          "A **strong verb** paints a picture. *Went* says only that the leaves moved; *skittered* shows them moving quickly and lightly, and *crept* would show them moving slowly.\n\nStrong verbs are not all alike: each shows its own way of moving or sounding. Choose the one whose meaning matches what the writer wants to show.",
-          "**生动的动词**能描绘出画面。*went* 只说明叶子动了；*skittered* 表现出它们又快又轻地移动，而 *crept* 表现的是慢慢地移动。\n\n生动的动词并不都一样：每个都表现自己特有的动作或声音。选择意思和作者想表现的内容相符的那个。",
+          "A **strong verb** paints a picture. *Went* says only that the leaves moved; *skittered* shows them moving quickly and lightly, and *crept* would show them moving slowly.\n\nStrong verbs are not all alike: each shows its own way of moving or sounding. Choose the one whose meaning matches what the writer wants to show.\n\n> **Watch out.** Every choice is a strong verb—do not pick the flashiest word; pick the one that matches the exact meaning in brackets.",
+          "**生动的动词**能描绘出画面。*went* 只说明叶子动了；*skittered* 表现出它们又快又轻地移动，而 *crept* 表现的是慢慢地移动。\n\n生动的动词并不都一样：每个都表现自己特有的动作或声音。选择意思和作者想表现的内容相符的那个。\n\n> **注意。**每个选项都是生动的动词——不要挑最花哨的，而要挑和括号里的意思完全一致的那个。",
         ),
         askGenerator(strongVerbBank),
       ),
@@ -454,11 +479,16 @@ export const writingStoryTopics: readonly TopicDef[] = [
         "replacing-a-weak-verb",
         t("Replacing a Weak Verb", "替换弱动词"),
         t(
-          "**Weak verbs** such as *went*, *said*, *ate* and *moved* tell what happened but not how. To make a sentence stronger, replace the weak verb with one that shows how.\n\nUse the clues in the sentence: *at top speed* calls for *galloped*, not *tiptoed*; *so softly* calls for *whispered*, not *bellowed*.",
-          "像 *went*、*said*、*ate*、*moved* 这样的**弱动词**只说出发生了什么，却没有说怎样发生。要让句子更有力，就用能表现方式的动词替换弱动词。\n\n利用句子里的线索：*at top speed* 需要 *galloped* 而不是 *tiptoed*；*so softly* 需要 *whispered* 而不是 *bellowed*。",
+          "**Weak verbs** such as *went*, *said*, *ate* and *moved* tell what happened but not how. To make a sentence stronger, replace the weak verb with one that shows how.\n\nUse the clues in the sentence: *at top speed* calls for *galloped*, not *tiptoed*; *so softly* calls for *whispered*, not *bellowed*.\n\n> **Watch out.** Check the clues in the rest of the sentence—a verb like *sprinted* clashes with *slowly*, even though both are about moving.",
+          "像 *went*、*said*、*ate*、*moved* 这样的**弱动词**只说出发生了什么，却没有说怎样发生。要让句子更有力，就用能表现方式的动词替换弱动词。\n\n利用句子里的线索：*at top speed* 需要 *galloped* 而不是 *tiptoed*；*so softly* 需要 *whispered* 而不是 *bellowed*。\n\n> **注意。**一定要看句子里其余的线索——像 *sprinted* 这样的词虽然也表示移动，却和 *slowly* 互相矛盾。",
         ),
         askGenerator(replaceBank),
       ),
     ],
+    undefined,
+    t(
+      "*The tired hikers walked up the hill* tells what happened, whereas *The tired hikers trudged up the hill* lets you feel every heavy step. Choosing exact, strong verbs brings actions and sounds to life.",
+      "*The tired hikers walked up the hill* 只说出发生了什么，而 *The tired hikers trudged up the hill* 让你感受到每一步的沉重。选对生动的动词，动作和声音就立刻鲜活起来。",
+    ),
   ),
 ];

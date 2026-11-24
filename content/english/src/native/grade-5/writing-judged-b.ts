@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after } from "./links.ts";
-import { criterion, onePiece } from "./writing-judged-a.ts";
+import { checkedPiece, criterion } from "./writing-judged-a.ts";
 
 /** newsBank gives the notes of an event to write up as a news article. */
 const newsBank: readonly WritingItem[] = [
@@ -271,6 +271,10 @@ export const judgedTopics5b: readonly TopicDef[] = [
       "Write a short news article from notes about a bridge or a building: a lead with the five Ws, facts in order of importance, a quotation from someone involved and no opinion of the writer.",
       "根据关于一座桥或一栋建筑的笔记写一篇短新闻：包含五个W的导语、按重要性排列的事实、相关人员的引语，不加入作者的观点。",
     ),
+    intro: t(
+      "A newspaper report puts the biggest news first—answering *who, what, when, where,* and *why/how* in the opening lead—then adds facts from most to least important, a speaker's quotation, and zero personal opinion.",
+      "新闻报道把最重要的消息放在最前面——用导语回答“谁、什么事、何时、何地、为何/如何”——再按重要程度递减展开事实，配上一句当事人的引语，不夹杂作者的个人评价。",
+    ),
     prerequisites: after("reading-a-news-article", "formal-style"),
     encompasses: [{ topic: "formal-style", weight: 0.2 }],
     xp: 22,
@@ -281,8 +285,8 @@ export const judgedTopics5b: readonly TopicDef[] = [
         "a-lead-with-the-five-ws",
         t("A Lead with the Five Ws", "包含五个W的导语"),
         t(
-          "A news article opens with its **lead**: one or two sentences that tell **who**, **what**, **when** and **where**, and often **why** or **how**: *The new Riverside Bridge opened on Saturday, May 4, joining the two sides of Millbrook.* Then the facts follow in **order of importance**, the biggest news first and the small details last, so a reader who stops early still has the main story.",
-          "新闻报道以**导语**开头：用一两句话说明**谁**、**什么事**、**什么时候**、**在哪里**，常常还有**为什么**或**怎样**：*The new Riverside Bridge opened on Saturday, May 4, joining the two sides of Millbrook.* 接着按**重要性顺序**写出事实，最重要的新闻在前，小细节在后，这样读者即使只读开头也能知道主要内容。",
+          "A news article opens with its **lead**: one or two sentences that tell **who**, **what**, **when** and **where**, and often **why** or **how**: *The new Riverside Bridge opened on Saturday, May 4, joining the two sides of Millbrook.* Then the facts follow in **order of importance**, the biggest news first and the small details last, so a reader who stops early still has the main story.\n\n> **Watch out.** Do not save the main event for the end like a story—put the biggest news right in the opening lead.",
+          "新闻报道以**导语**开头：用一两句话说明**谁**、**什么事**、**什么时候**、**在哪里**，常常还有**为什么**或**怎样**：*The new Riverside Bridge opened on Saturday, May 4, joining the two sides of Millbrook.* 接着按**重要性顺序**写出事实，最重要的新闻在前，小细节在后，这样读者即使只读开头也能知道主要内容。\n\n> **注意。** 不要像讲故事那样把主事件留到结尾——最重要的消息必须放在开头的导语里。",
         ),
         writingGenerator(
           t(
@@ -292,15 +296,18 @@ export const judgedTopics5b: readonly TopicDef[] = [
           newsBank,
           ["g5-news-lead", "g5-news-order", "g5-news-objective"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Check that your opening lead answers who, what, when, and where, the remaining details run from most to least important, and the tone stays neutral.",
+            "检查导语交代了谁、什么事、何时、何地，其余细节按重要程度由高到低排列，且语气保持客观中立。",
+          ),
         ),
       ),
       point(
         "quotations-and-no-opinion",
         t("A Quotation and No Opinion", "引语与不带观点"),
         t(
-          'A news article reports; it does not judge. It keeps the writer\'s own feelings out, so no *amazing* or *I think*, and uses a formal style. Opinions may appear only as **quotations** from people involved, in quotation marks and with the speaker named: *"The bridge did exactly what we designed it to do," said chief engineer Lena Park.*',
-          '新闻报道只报道，不评判。它不写作者自己的感受，所以不用 *amazing* 或 *I think*，并使用正式文体。观点只能以相关人员的**引语**形式出现，放在引号里并说出说话人：*"The bridge did exactly what we designed it to do," said chief engineer Lena Park.*',
+          'A news article reports; it does not judge. It keeps the writer\'s own feelings out, so no *amazing* or *I think*, and uses a formal style. Opinions may appear only as **quotations** from people involved, in quotation marks and with the speaker named: *"The bridge did exactly what we designed it to do," said chief engineer Lena Park.*\n\n> **Watch out.** Scan your draft for words like *wonderful, exciting,* or *I believe* outside quotation marks—cut them or let a quoted speaker say how they feel.',
+          '新闻报道只报道，不评判。它不写作者自己的感受，所以不用 *amazing* 或 *I think*，并使用正式文体。观点只能以相关人员的**引语**形式出现，放在引号里并说出说话人：*"The bridge did exactly what we designed it to do," said chief engineer Lena Park.*\n\n> **注意。** 通读草稿，把引号外面的 *wonderful、exciting、I believe* 等主观词全部删掉——观点只能放进当事人的引语里。',
         ),
         writingGenerator(
           t(
@@ -310,7 +317,10 @@ export const judgedTopics5b: readonly TopicDef[] = [
           newsBank,
           ["g5-news-quote", "g5-news-objective", "g5-news-lead"],
           { minWords: 60, maxChars: 2000 },
-          onePiece,
+          checkedPiece(
+            "Verify that you included a properly punctuated quotation with a named speaker and removed any personal opinions or exclamation marks of your own.",
+            "核对文中有一句标点正确并注明说话人的引语，且正文里没有任何作者自己的观点或感叹号。",
+          ),
         ),
       ),
     ],
@@ -321,6 +331,10 @@ export const judgedTopics5b: readonly TopicDef[] = [
     summary: t(
       "Write a short mystery of several paragraphs: a puzzle set up early, clues the reader can follow, one red herring, a solution the clues explain and scenes that show rather than tell.",
       "写一篇几段长的短篇推理故事：开头就提出谜题，有读者能跟随的线索和一条误导线索，结局由线索解释，场景要展示而不是直接告诉。",
+    ),
+    intro: t(
+      "A fair mystery invites the reader to play detective: it opens with a puzzle, plants real clues alongside one misleading red herring, and ends with a solution that clicks straight back to what the reader already saw.",
+      "公平的推理故事会邀请读者一起当侦探：开头抛出谜题，把真线索和一条误导线索自然藏进场景，最后用读者早已见过的线索解开真相。",
     ),
     prerequisites: after("writing-a-narrative-paragraph", "planning-a-story-arc", "clues-and-red-herrings"),
     encompasses: [
@@ -335,8 +349,8 @@ export const judgedTopics5b: readonly TopicDef[] = [
         "a-puzzle-and-its-clues",
         t("A Puzzle and Its Clues", "谜题与线索"),
         t(
-          "A mystery sets up its **puzzle** in the first lines: something missing, strange or unexplained. Then it places **clues** where the reader can notice them, details that will matter later, such as crumbs leading the wrong way. It also adds one **red herring**, a clue that points at the wrong answer, so the reader has something to think about.",
-          "推理故事在开头几行就提出**谜题**：某样东西不见了、有什么奇怪或无法解释的事。然后把**线索**放在读者能注意到的地方，也就是以后会起作用的细节，比如往错误方向延伸的面包屑。它还要加入一条**误导线索**，指向错误的答案，让读者有东西可想。",
+          "A mystery sets up its **puzzle** in the first lines: something missing, strange or unexplained. Then it places **clues** where the reader can notice them, details that will matter later, such as crumbs leading the wrong way. It also adds one **red herring**, a clue that points at the wrong answer, so the reader has something to think about.\n\n> **Watch out.** Make sure your real clues actually appear *before* the ending—hiding them until the detective's final speech makes the puzzle unfair.",
+          "推理故事在开头几行就提出**谜题**：某样东西不见了、有什么奇怪或无法解释的事。然后把**线索**放在读者能注意到的地方，也就是以后会起作用的细节，比如往错误方向延伸的面包屑。它还要加入一条**误导线索**，指向错误的答案，让读者有东西可想。\n\n> **注意。** 真正的线索一定要在结局*之前*就出现——藏到最后由侦探凭空说出，谜题就不公平了。",
         ),
         writingGenerator(
           t(
@@ -346,22 +360,28 @@ export const judgedTopics5b: readonly TopicDef[] = [
           mysteryBank,
           ["g5-mystery-puzzle", "g5-mystery-clues", "g35-narrative-shows"],
           { minWords: 120, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Check that your opening introduces the puzzle right away, plants at least two real clues and one red herring in action scenes, and shows details rather than just telling them.",
+            "检查开头立刻提出谜题、在具体场景中埋下了至少两条真线索和一条误导线索，并且用细节展示而非空洞概述。",
+          ),
         ),
       ),
       point(
         "a-solution-the-clues-explain",
         t("A Solution the Clues Explain", "由线索解释的结局"),
         t(
-          "A fair mystery is solved by the **clues** the reader has already seen, not by luck or by a fact that appears only at the end. When the detective explains, the reader should think, *Of course, the paw prints!* Show the scenes through actions and details instead of telling the reader what to think, so the reader can solve the puzzle too.",
-          "公平的推理故事要用读者已经看到的**线索**来解开谜题，而不是靠运气，也不是靠到最后才出现的事实。侦探解释的时候，读者应该想：*Of course, the paw prints!* 用动作和细节展示场景，而不是告诉读者该怎么想，这样读者也能一起解谜。",
+          "A fair mystery is solved by the **clues** the reader has already seen, not by luck or by a fact that appears only at the end. When the detective explains, the reader should think, *Of course, the paw prints!* Show the scenes through actions and details instead of telling the reader what to think, so the reader can solve the puzzle too.\n\n> **Watch out.** Do not solve the case with a sudden confession or a lucky coincidence—tie the final answer directly to the clues you planted earlier.",
+          "公平的推理故事要用读者已经看到的**线索**来解开谜题，而不是靠运气，也不是靠到最后才出现的事实。侦探解释的时候，读者应该想：*Of course, the paw prints!* 用动作和细节展示场景，而不是告诉读者该怎么想，这样读者也能一起解谜。\n\n> **注意。** 不要靠突然自首或巧合来破案——结局必须直接扣回前面埋下的线索。",
         ),
         writingGenerator(
           t("Write the mystery in English, with a solution that the clues explain.", "用英语写这个推理故事，结局要由线索来解释。"),
           mysteryBank,
           ["g5-mystery-solution", "g5-mystery-clues", "g35-narrative-shows"],
           { minWords: 120, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Trace your ending backward through the story—confirm every key piece of the solution points to a clue the reader already saw, and explain why the red herring was misleading.",
+            "从结局倒推回去——确认破案的每个关键点都对应前文出现过的线索，并交代误导线索为何只是虚惊一场。",
+          ),
         ),
       ),
     ],
@@ -372,6 +392,10 @@ export const judgedTopics5b: readonly TopicDef[] = [
     summary: t(
       "Write a true story of several paragraphs about a time you faced a challenge: set the situation, slow down at the key moment, show your feelings and end with what you learned.",
       "写一篇几段长的真实故事，讲你面对挑战的一次经历：交代情境，在关键时刻放慢节奏，表现你的感受，最后写出你学到了什么。",
+    ),
+    intro: t(
+      "Great personal narratives do not race through a whole day—they set the challenge quickly, zoom in second by second on the turning point, show feelings through actions, and close with what you took away.",
+      "精彩的个人经历叙事不会平铺直叙地记流水账——它快速交代挑战，在转折关头放慢镜头逐秒描写，用动作展现感受，最后写出自己的收获。",
     ),
     prerequisites: after("writing-a-narrative-paragraph", "pacing-a-story"),
     encompasses: [
@@ -386,23 +410,26 @@ export const judgedTopics5b: readonly TopicDef[] = [
         "slowing-down-at-the-key-moment",
         t("Slowing Down at the Key Moment", "在关键时刻放慢节奏"),
         t(
-          "A personal narrative tells a **true** story from your own life. Set the situation quickly: who, where, and what the challenge was. Then **slow down** at the key moment, the jump off the diving board or the knock on the neighbor's door, and tell it second by second, with what you saw, heard and said.",
-          "个人经历叙事讲的是你自己生活中的**真实**故事。快速交代情境：有谁、在哪里、面对的挑战是什么。然后在关键时刻**放慢节奏**，比如从跳台上跳下去或敲邻居家门的那一刻，一秒一秒地写出你看到、听到和说了什么。",
+          "A personal narrative tells a **true** story from your own life. Set the situation quickly: who, where, and what the challenge was. Then **slow down** at the key moment, the jump off the diving board or the knock on the neighbor's door, and tell it second by second, with what you saw, heard and said.\n\n> **Watch out.** Do not spend half your story getting ready and then rush past the big moment in one sentence—give the turning point the most detail.",
+          "个人经历叙事讲的是你自己生活中的**真实**故事。快速交代情境：有谁、在哪里、面对的挑战是什么。然后在关键时刻**放慢节奏**，比如从跳台上跳下去或敲邻居家门的那一刻，一秒一秒地写出你看到、听到和说了什么。\n\n> **注意。** 不要花一半篇幅写准备过程，到了关键时刻却一句话带过——把最丰富的细节留给转折那一刻。",
         ),
         writingGenerator(
           t("Write the true story in English, slowing down at the key moment.", "用英语写这个真实的故事，在关键时刻放慢节奏。"),
           personalBank,
           ["g35-narrative-situation", "g5-personal-pacing", "g5-personal-feelings"],
           { minWords: 100, maxChars: 3600 },
-          onePiece,
+          checkedPiece(
+            "Check that your opening quickly sets the scene and challenge, and that your longest, most detailed paragraph slows down at the turning point with sights, sounds, or dialogue.",
+            "检查开头简洁交代了情境与挑战，且篇幅最长、细节最丰富的那一段正好在关键转折处放慢了节奏。",
+          ),
         ),
       ),
       point(
         "feelings-and-what-you-learned",
         t("Feelings and What You Learned", "感受与收获"),
         t(
-          "Let the reader feel what you felt. Instead of only *I was scared*, show it: *My knees shook, and my hands gripped the cold rail.* Then end by **looking back**: say what you learned or how you changed, in a sentence or two: *I learned that the scariest part of trying something new is the moment before you start.*",
-          "让读者感受到你的感受。不要只写 *I was scared*，要把它表现出来：*My knees shook, and my hands gripped the cold rail.* 最后要**反思**：用一两句话说出你学到了什么或你有了怎样的改变：*I learned that the scariest part of trying something new is the moment before you start.*",
+          "Let the reader feel what you felt. Instead of only *I was scared*, show it: *My knees shook, and my hands gripped the cold rail.* Then end by **looking back**: say what you learned or how you changed, in a sentence or two: *I learned that the scariest part of trying something new is the moment before you start.*\n\n> **Watch out.** Do not end abruptly right after the action finishes—add a closing reflection that tells what the experience taught you.",
+          "让读者感受到你的感受。不要只写 *I was scared*，要把它表现出来：*My knees shook, and my hands gripped the cold rail.* 最后要**反思**：用一两句话说出你学到了什么或你有了怎样的改变：*I learned that the scariest part of trying something new is the moment before you start.*\n\n> **注意。** 不要事情一做完就草草收尾——结尾要加上一两句回望与反思，点明这次经历教会了你什么。",
         ),
         writingGenerator(
           t(
@@ -412,7 +439,10 @@ export const judgedTopics5b: readonly TopicDef[] = [
           personalBank,
           ["g5-personal-feelings", "g5-personal-reflection", "g35-narrative-situation"],
           { minWords: 100, maxChars: 3600 },
-          onePiece,
+          checkedPiece(
+            "Verify that you showed your feelings through physical details or actions (not just naming an emotion) and closed with a clear sentence about what you learned.",
+            "核对文中用肢体动作或细节展现了感受（不只是贴情绪标签），并以一句清楚的反思收尾。",
+          ),
         ),
       ),
     ],
@@ -424,6 +454,10 @@ export const judgedTopics5b: readonly TopicDef[] = [
       "Write two or three diary entries by an invented person of a past time: a first-person voice, details true to the period, the writer's feelings and events in order by date.",
       "以一个虚构的古代人物的身份写两三篇日记：用第一人称，细节符合那个时代，写出作者的感受，事件按日期顺序排列。",
     ),
+    intro: t(
+      "A historical diary lets you step into another century: write as *I* on dated entries in chronological order, fill each day with period-accurate details, and let the writer's real hopes and worries come through.",
+      "历史日记带你走进另一个时代：用第一人称写下按日期顺序排列的几篇日记，融入符合那个时代的真实细节，写出人物当时的期盼与担忧。",
+    ),
     prerequisites: after("reading-diaries-and-letters", "writing-a-narrative-paragraph"),
     encompasses: [{ topic: "reading-diaries-and-letters", weight: 0.2 }],
     xp: 22,
@@ -434,8 +468,8 @@ export const judgedTopics5b: readonly TopicDef[] = [
         "a-voice-from-the-past",
         t("A Voice from the Past", "来自过去的声音"),
         t(
-          "A diary from history is written by an **invented person** of a real time and place, in the **first person**, as if on the very day: *Today we left the harbor.* Each entry has a **date**, and the entries go in order of time. Fill them with **details true to the period**: lanterns, wagons, whale oil, not telephones in ancient Athens.",
-          "历史日记由一个真实时代和地点中的**虚构人物**来写，用**第一人称**，就像写在当天一样：*Today we left the harbor.* 每篇日记都有**日期**，并按时间顺序排列。要写满**符合那个时代的细节**：提灯、马车、鲸油，而不是古代雅典的电话。",
+          "A diary from history is written by an **invented person** of a real time and place, in the **first person**, as if on the very day: *Today we left the harbor.* Each entry has a **date**, and the entries go in order of time. Fill them with **details true to the period**: lanterns, wagons, whale oil, not telephones in ancient Athens.\n\n> **Watch out.** Check every object and word against the year of your diary—modern inventions or slang break the illusion right away.",
+          "历史日记由一个真实时代和地点中的**虚构人物**来写，用**第一人称**，就像写在当天一样：*Today we left the harbor.* 每篇日记都有**日期**，并按时间顺序排列。要写满**符合那个时代的细节**：提灯、马车、鲸油，而不是古代雅典的电话。\n\n> **注意。** 对照日记的年代检查每一件物品和用词——混入现代发明或现代口头禅会立刻穿帮。",
         ),
         writingGenerator(
           t(
@@ -445,15 +479,18 @@ export const judgedTopics5b: readonly TopicDef[] = [
           diaryBank,
           ["g5-diary-voice", "g5-diary-order", "g5-diary-period"],
           { minWords: 90, maxChars: 3000 },
-          onePiece,
+          checkedPiece(
+            "Check that you wrote 2 to 3 dated entries in chronological order using *I/we*, and that every object, place, and custom fits the historical period.",
+            "检查写了两到三篇带日期、按时间顺序排列的第一人称日记，且所有器物、地点和习俗都符合那个历史时期。",
+          ),
         ),
       ),
       point(
         "feelings-in-a-time-gone-by",
         t("Feelings in a Time Gone By", "旧时光里的感受"),
         t(
-          "A diary is private, so its writer says what they **feel**: fear in a storm at sea, pride in a parent, homesickness for the fields. The feelings bring the past to life, but they must still fit the time: a child of 1850 worries about the voyage, not about missing a bus. Use details of daily life, such as work, food and travel, to show what that time was like.",
-          "日记是私人的，所以写日记的人会写出自己的**感受**：海上风暴中的恐惧、为父母感到的骄傲、对家乡田野的思念。感受让过去变得鲜活，但仍要符合那个时代：1850年的孩子担心的是航行，而不是错过公共汽车。用工作、食物、旅行等日常生活细节来表现那个时代的样子。",
+          "A diary is private, so its writer says what they **feel**: fear in a storm at sea, pride in a parent, homesickness for the fields. The feelings bring the past to life, but they must still fit the time: a child of 1850 worries about the voyage, not about missing a bus. Use details of daily life, such as work, food and travel, to show what that time was like.\n\n> **Watch out.** Do not write a dry textbook summary of history—show how daily events make your diarist feel, worry, or hope.",
+          "日记是私人的，所以写日记的人会写出自己的**感受**：海上风暴中的恐惧、为父母感到的骄傲、对家乡田野的思念。感受让过去变得鲜活，但仍要符合那个时代：1850年的孩子担心的是航行，而不是错过公共汽车。用工作、食物、旅行等日常生活细节来表现那个时代的样子。\n\n> **注意。** 不要写成干巴巴的历史教科书摘要——要写出日常遭遇如何让这位写日记的人感到紧张、欣喜或期盼。",
         ),
         writingGenerator(
           t(
@@ -463,7 +500,10 @@ export const judgedTopics5b: readonly TopicDef[] = [
           diaryBank,
           ["g5-diary-feelings", "g5-diary-period", "g5-diary-voice"],
           { minWords: 90, maxChars: 3000 },
-          onePiece,
+          checkedPiece(
+            "Verify that each entry shares the diarist's personal feelings alongside concrete period details of food, work, or travel, all written in first-person voice.",
+            "核对每篇日记都在第一人称叙述中写出了人物的真实感受，并结合了符合时代的饮食、劳作或出行细节。",
+          ),
         ),
       ),
     ],

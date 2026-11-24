@@ -10,8 +10,11 @@ const criterion = (id: string): CriterionSpec => {
   return found;
 };
 
-const onePiece = (model: string) =>
-  t(`One good response:\n\n> ${model.replaceAll("\n\n", "\n>\n> ")}`, `一个好的回答：\n\n> ${model.replaceAll("\n\n", "\n>\n> ")}`);
+const checkedResponse = (checkEn: string, checkZh: string) => (model: string) =>
+  t(
+    `One good response:\n\n> ${model.replaceAll("\n\n", "\n>\n> ")}\n\n**Check.** ${checkEn}`,
+    `一个好的回答：\n\n> ${model.replaceAll("\n\n", "\n>\n> ")}\n\n**检验。** ${checkZh}`,
+  );
 
 /** mythBank asks for a myth retold from notes in two or three paragraphs. */
 const mythBank: readonly WritingItem[] = [
@@ -438,6 +441,10 @@ export const writingTopics68: readonly TopicDef[] = [
       "A myth retold from notes in two or three paragraphs, keeping its conflict and its lesson.",
       "根据笔记用两三个段落复述一则神话，保留其中的冲突和寓意。",
     ),
+    intro: t(
+      "Retelling a myth from short notes—such as King Midas's golden wish or Nüwa mending the cracked sky—means shaping the bare plot into vivid scenes with a clear conflict, a turning point, and a lesson that grows naturally from the ending.",
+      "根据简短笔记复述神话——如迈达斯国王的点金愿或女娲补天——要把干巴巴的情节线索写成有画面感的段落，保住核心冲突、转折点，以及从结局中自然流露的寓意。",
+    ),
     prerequisites: ["writing-a-narrative-paragraph", "plot-and-conflict"],
     encompasses: [
       { topic: "writing-a-narrative-paragraph", weight: 0.4 },
@@ -451,15 +458,18 @@ export const writingTopics68: readonly TopicDef[] = [
         "telling-a-myth",
         t("Telling a Myth", "讲述神话"),
         t(
-          "A myth is an old story, often about gods and heroes, that explains something about the world or teaches how to live. To retell one, keep three things: the **conflict** (what the hero wants and what stands in the way), the **events** in order up to the turning point and its outcome, and the **lesson** or explanation at the end.\n\nThen make it your own telling. Open by setting the scene, add a line of dialogue or a vivid detail at the key moment, and use a new paragraph when the story turns. Close by making the lesson clear, but through the ending rather than a lecture: *His pride had made him ask for a power he could not handle.*",
-          "神话是古老的故事，常常讲述神和英雄，用来解释世界上的某些现象或教人如何生活。复述神话时，要保留三点：**冲突**（主人公想要什么、遇到了什么阻碍）、按顺序直到转折点及其结果的**事件**，以及结尾的**寓意**或解释。\n\n然后用你自己的方式讲述。开头交代场景，在关键时刻加一句对话或一个生动的细节，故事转折时另起一段。结尾让寓意清楚，但要通过结局而不是说教来体现：*His pride had made him ask for a power he could not handle.*",
+          "A myth is an old story, often about gods and heroes, that explains something about the world or teaches how to live. To retell one, keep three things: the **conflict** (what the hero wants and what stands in the way), the **events** in order up to the turning point and its outcome, and the **lesson** or explanation at the end.\n\nThen make it your own telling. Open by setting the scene, add a line of dialogue or a vivid detail at the key moment, and use a new paragraph when the story turns. Close by making the lesson clear, but through the ending rather than a lecture: *His pride had made him ask for a power he could not handle.*\n\n> **Watch out.** Do not just copy the source notes word for word—expand them into a real story with a paragraph break at the turning point and a vivid detail or line of dialogue.",
+          "神话是古老的故事，常常讲述神和英雄，用来解释世界上的某些现象或教人如何生活。复述神话时，要保留三点：**冲突**（主人公想要什么、遇到了什么阻碍）、按顺序直到转折点及其结果的**事件**，以及结尾的**寓意**或解释。\n\n然后用你自己的方式讲述。开头交代场景，在关键时刻加一句对话或一个生动的细节，故事转折时另起一段。结尾让寓意清楚，但要通过结局而不是说教来体现：*His pride had made him ask for a power he could not handle.*\n\n> **注意。** 不要把原始笔记原样照抄——要扩展成真正的故事，在转折处分段，并加入生动细节或对话。",
         ),
         writingGenerator(
           t("Use the notes to retell the myth in English, in two or three paragraphs.", "根据笔记，用英语分两三个段落复述这则神话。"),
           mythBank,
           ["g68-myth-conflict", "g68-myth-sequence", "g68-myth-telling", "g68-myth-lesson"],
           { minWords: 110, maxChars: 3200 },
-          onePiece,
+          checkedResponse(
+            "Check that your retelling keeps the conflict and event order from the notes, breaks into a new paragraph at the turning point, adds vivid telling, and makes the lesson clear at the end.",
+            "检查你的复述是否保留了笔记中的冲突与事件顺序、在转折处分段、加入了生动描写，并在结尾自然呈现寓意。",
+          ),
         ),
       ),
     ],
@@ -470,6 +480,10 @@ export const writingTopics68: readonly TopicDef[] = [
     summary: t(
       "A paragraph on what a poem's images and sounds make the reader feel, quoting it.",
       "写一个段落，引用诗句，说明诗中的意象和声音让读者有什么感受。",
+    ),
+    intro: t(
+      "Responding to a poem means naming the exact feeling it leaves behind—such as *wistful*, *serene*, or *ominous*—and showing how specific images, comparisons, and sounds from the poem build that feeling.",
+      "回应一首诗，要先准确说出它带来的感受——例如 *wistful*、*serene* 或 *ominous*——再引用具体诗句，分析其中的意象、修辞和声音如何营造这种氛围。",
     ),
     prerequisites: ["tone-and-mood", "writing-a-paragraph"],
     encompasses: [
@@ -484,15 +498,18 @@ export const writingTopics68: readonly TopicDef[] = [
         "images-sounds-and-feeling",
         t("Images, Sounds and Feeling", "意象、声音与情感"),
         t(
-          'A response to a poem opens with a claim about the feeling it creates, named precisely: *wistful*, *ominous*, *serene*, not just *sad* or *happy*. Then it proves the claim with the poem\'s own words, in quotation marks, and explains **how** each quoted part creates the feeling: what an image makes us picture, what a simile compares, what a repeated sound or a short line does to the pace.\n\nQuote briefly, a few words at a time, and spend more words explaining than quoting. Mark line breaks with a slash: *"upside down and perfectly. / A heron lifts one foot."*',
-          '回应一首诗时，开头先提出关于它所营造情感的论点，并准确地命名这种情感：*wistful*、*ominous*、*serene*，而不只是 *sad* 或 *happy*。然后用诗中的原话（加引号）来证明这个论点，并解释每处引文**怎样**营造了这种情感：一个意象让我们想象什么，一个明喻比较了什么，一个重复的声音或一行短句对节奏有什么作用。\n\n引用要简短，每次几个词，解释的文字要多于引用的文字。用斜线标出分行：*"upside down and perfectly. / A heron lifts one foot."*',
+          'A response to a poem opens with a claim about the feeling it creates, named precisely: *wistful*, *ominous*, *serene*, not just *sad* or *happy*. Then it proves the claim with the poem\'s own words, in quotation marks, and explains **how** each quoted part creates the feeling: what an image makes us picture, what a simile compares, what a repeated sound or a short line does to the pace.\n\nQuote briefly, a few words at a time, and spend more words explaining than quoting. Mark line breaks with a slash: *"upside down and perfectly. / A heron lifts one foot."*\n\n> **Watch out.** Never drop in a quote and move on—follow every quoted phrase with an explanation of *how* its image or sound creates the mood.',
+          '回应一首诗时，开头先提出关于它所营造情感的论点，并准确地命名这种情感：*wistful*、*ominous*、*serene*，而不只是 *sad* 或 *happy*。然后用诗中的原话（加引号）来证明这个论点，并解释每处引文**怎样**营造了这种情感：一个意象让我们想象什么，一个明喻比较了什么，一个重复的声音或一行短句对节奏有什么作用。\n\n引用要简短，每次几个词，解释的文字要多于引用的文字。用斜线标出分行：*"upside down and perfectly. / A heron lifts one foot."*\n\n> **注意。** 不要只甩出引文就跳过去——每处引文后面都要紧接着说明它的意象或声音*如何*营造情绪。',
         ),
         writingGenerator(
           t("Read the poem and write a paragraph about it in English.", "阅读这首诗，用英语写一个段落来回应它。"),
           poemBank,
           ["g68-poem-feeling", "g68-poem-quotes", "g68-poem-how", "g68-poem-focus"],
           { minWords: 80, maxChars: 2400 },
-          onePiece,
+          checkedResponse(
+            "Verify that your first sentence names a precise feeling, that you weave in short quoted phrases in quotation marks, and that every quote is followed by an explanation of how it works.",
+            "核对首句是否准确点明情感、文中是否穿插简短的带引号原句，且每处引文后都解释了它如何起作用。",
+          ),
         ),
       ),
     ],
@@ -503,6 +520,10 @@ export const writingTopics68: readonly TopicDef[] = [
     summary: t(
       "A paragraph that explains a topic from notes with facts, definitions and examples, in a clear order.",
       "根据笔记写一个段落，用事实、定义和例子按清晰的顺序说明一个话题。",
+    ),
+    intro: t(
+      "An informative paragraph teaches a topic clearly and objectively: it opens with a focused topic sentence, organizes facts from the notes in a logical sequence with transitions, defines unfamiliar terms, and closes by showing why the topic matters.",
+      "说明段落旨在清晰客观地讲解一个主题：用聚焦的主题句开篇，用过渡词按逻辑顺序组织笔记中的事实，解释生僻术语，并在结尾点出主题的重要性。",
     ),
     prerequisites: ["writing-a-paragraph", "text-structures"],
     encompasses: [
@@ -517,15 +538,18 @@ export const writingTopics68: readonly TopicDef[] = [
         "explaining-from-notes",
         t("Explaining from Notes", "根据笔记进行说明"),
         t(
-          "An informative paragraph teaches the reader about a topic without arguing for a side. Its topic sentence names the topic and the main point: *Roman aqueducts carried fresh water into cities using only gravity.* The body gives the facts from the notes, defines any special word the reader may not know (*magma, which is melted rock*), and adds examples.\n\nPut the facts in an order the reader can follow, such as steps in a process, causes and effects, or parts of a whole, and link them with transitions: *first, then, because of this, for example, however*. End with a sentence that sums up why the topic matters, not with your opinion of it.",
-          "说明段落向读者介绍一个话题，而不是为某一方辩护。主题句点明话题和要点：*Roman aqueducts carried fresh water into cities using only gravity.* 正文给出笔记中的事实，解释读者可能不懂的专门用词（*magma, which is melted rock*），并举出例子。\n\n按读者能够理解的顺序安排事实，比如过程的步骤、因果关系或整体的各个部分，并用过渡词连接：*first, then, because of this, for example, however*。结尾用一句话总结这个话题为什么重要，而不是发表你对它的看法。",
+          "An informative paragraph teaches the reader about a topic without arguing for a side. Its topic sentence names the topic and the main point: *Roman aqueducts carried fresh water into cities using only gravity.* The body gives the facts from the notes, defines any special word the reader may not know (*magma, which is melted rock*), and adds examples.\n\nPut the facts in an order the reader can follow, such as steps in a process, causes and effects, or parts of a whole, and link them with transitions: *first, then, because of this, for example, however*. End with a sentence that sums up why the topic matters, not with your opinion of it.\n\n> **Watch out.** Keep personal opinions (*I think*, *amazing*) out of an informative paragraph—let accurate facts and clear order do the teaching.",
+          "说明段落向读者介绍一个话题，而不是为某一方辩护。主题句点明话题和要点：*Roman aqueducts carried fresh water into cities using only gravity.* 正文给出笔记中的事实，解释读者可能不懂的专门用词（*magma, which is melted rock*），并举出例子。\n\n按读者能够理解的顺序安排事实，比如过程的步骤、因果关系或整体的各个部分，并用过渡词连接：*first, then, because of this, for example, however*。结尾用一句话总结这个话题为什么重要，而不是发表你对它的看法。\n\n> **注意。** 说明段落里不要夹带个人主观评价（*I think*、*amazing*）——用准确的事实和清晰的顺序来说明。",
         ),
         writingGenerator(
           t("Use the notes to write an informative paragraph in English.", "根据笔记用英语写一个说明段落。"),
           informBank,
           ["g68-inform-topic", "g68-inform-facts", "g68-inform-order", "g68-inform-close"],
           { minWords: 80, maxChars: 2400 },
-          onePiece,
+          checkedResponse(
+            "Check that your paragraph opens with a clear topic sentence, includes the key facts and definitions from the notes in logical order, and ends by explaining why the topic matters.",
+            "检查段落是否以清晰的主题句开篇、按逻辑顺序融入笔记中的关键事实与定义，并以说明其重要性的句子收尾。",
+          ),
         ),
       ),
     ],
@@ -536,6 +560,10 @@ export const writingTopics68: readonly TopicDef[] = [
     summary: t(
       "The central idea of a longer text and how it is developed, in a few sentences and without opinions.",
       "用几句话写出较长文本的中心思想及其展开方式，不加入个人观点。",
+    ),
+    intro: t(
+      "A friend asks what a three-page article on coral bleaching says—not whether you liked it. An **objective summary** distills the author's central idea and main supporting points in your own words, leaving personal opinions out.",
+      "朋友问你一篇三页的珊瑚白化文章讲了什么，而不是你喜不喜欢它。**客观摘要**用自己的话提炼作者的中心思想和主要支撑点，不夹杂个人评价。",
     ),
     prerequisites: ["writing-a-summary", "citing-textual-evidence"],
     encompasses: [
@@ -550,8 +578,8 @@ export const writingTopics68: readonly TopicDef[] = [
         "central-idea-and-development",
         t("The Central Idea and Its Development", "中心思想及其展开"),
         t(
-          "An **objective summary** tells what a text says, not what you think of it. Open with the text's **central idea**, often with a phrase such as *The text explains that…* or *The article describes…*. Then show how the text **develops** that idea: its main supporting points, in the order the text gives them, leaving out examples and small details.\n\nStay objective: no *I think*, no *interesting* or *amazing*, and nothing the text does not say. Use your own words and keep it short, about a third of the length of the original or less.",
-          "**客观摘要**讲述文本说了什么，而不是你对它的看法。开头写出文本的**中心思想**，常用 *The text explains that…* 或 *The article describes…* 这样的短语。然后说明文本怎样**展开**这个思想：按文本的顺序写出主要的支撑要点，省略例子和次要细节。\n\n保持客观：不写 *I think*，不用 *interesting* 或 *amazing* 这类词，也不写文本没有说的内容。用自己的话，写得简短，大约是原文的三分之一或更短。",
+          "An **objective summary** reports what a text says without judging it. Open with the text's **central idea** (*The article explains that…*), then trace its main supporting points in order while cutting small examples and side details.\n\nStay strictly objective: skip *I think*, skip judgment words like *amazing* or *boring*, and add nothing outside the passage. Use your own wording and keep it brief—roughly a third of the original or shorter.\n\n> **Watch out.** Even a flattering adjective like *fascinating* or *brilliant* breaks objectivity—if the author did not state it as a fact, cut it from your summary.",
+          "**客观摘要**只转述文章说了什么，不加评判。开头先点明文章的**中心思想**（*The article explains that…*），接着按顺序概括主要支撑要点，删去零碎例子和枝节。\n\n严格保持客观：不写 *I think*，不用 *amazing* 或 *boring* 等评价词，也不添加原文之外的内容。用自己的话简短表达，篇幅控制在原文的三分之一以内。\n\n> **注意。** 哪怕是 *fascinating*、*brilliant* 这样的夸奖词也会破坏客观性——只要不是原文陈述的事实，就从摘要里删掉。",
         ),
         writingGenerator(
           t(
@@ -561,7 +589,10 @@ export const writingTopics68: readonly TopicDef[] = [
           summaryBank,
           ["g68-summary-central", "g68-summary-development", "g68-summary-objective", "g68-summary-concise"],
           { minWords: 40, maxChars: 1400 },
-          onePiece,
+          checkedResponse(
+            "Scan your summary for three things: the opening sentence states the central idea, the next sentences cover the main points in your own words, and zero opinion words (*I think*, *interesting*, *great*) appear anywhere.",
+            "逐项核对你的摘要：首句点明中心思想，后续句子用自己的话概括主要支撑点，且全文没有出现任何个人评价词（*I think*、*interesting*、*great*）。",
+          ),
         ),
       ),
     ],
@@ -572,6 +603,10 @@ export const writingTopics68: readonly TopicDef[] = [
     summary: t(
       "An event told by one character, with only what that character can know, see and feel.",
       "由一个人物讲述一个事件，只写这个人物能知道、看到和感受到的内容。",
+    ),
+    intro: t(
+      "A parade looks completely different to the drummer in front, the lost child on the curb, and the shopkeeper sweeping up afterward. Staying locked inside one character's eyes—limiting every detail to what *they* can see, hear, and know—turns a flat report into a vivid **point-of-view narrative**.",
+      "同一场游行，在领队鼓手、路边走散的孩子和事后扫街的店主眼里截然不同。始终锁定在单一人物的视野里，只写他能看到、听到和知道的细节，就能把平淡的记叙变成鲜活的**限定视角叙事**。",
     ),
     prerequisites: ["writing-a-narrative-paragraph", "narrative-point-of-view"],
     encompasses: [
@@ -586,15 +621,18 @@ export const writingTopics68: readonly TopicDef[] = [
         "one-characters-eyes",
         t("Through One Character's Eyes", "通过一个人物的眼睛"),
         t(
-          "The same event looks different to each person who lives through it. To tell it from one point of view, choose your narrator and stay with them, usually as *I*. Tell only what they can see, hear and know: a girl on the shore can see the ships but cannot know what the sailors are thinking, unless she guesses.\n\nShow the narrator's thoughts and feelings, through their body (*my hands went cold*) and their own words for things: a child who has never seen a ship might think the sail is a fallen cloud. Give the event a beginning and an end, and let the last line show what it meant to that person.",
-          "同一件事，在每个亲历者眼中都不一样。要从一个视角讲述，就选定叙述者并始终跟随他，通常用 *I*。只写他能看到、听到和知道的：岸边的女孩能看到船，却不能知道水手在想什么，除非她去猜测。\n\n通过叙述者的身体（*my hands went cold*）和他自己对事物的说法来表现他的想法和感受：一个从没见过船的孩子，可能会以为船帆是落下来的云。让事件有开头和结尾，并用最后一句表现这件事对这个人意味着什么。",
+          "The same event looks different to each person who lives through it. To tell it from one point of view, choose your narrator and stay with them, usually as *I*. Tell only what they can see, hear and know: a girl on the shore can see the ships but cannot know what the sailors are thinking, unless she guesses.\n\nShow the narrator's thoughts and feelings, through their body (*my hands went cold*) and their own words for things: a child who has never seen a ship might think the sail is a fallen cloud. Give the event a beginning and an end, and let the last line show what it meant to that person.\n\n> **Watch out.** Do not slip into mind-reading another character (*The captain felt nervous inside*)—your narrator can only report outward clues (*The captain gripped the rail*) and their own guesses.",
+          "同一件事，在每个亲历者眼中都不一样。要从一个视角讲述，就选定叙述者并始终跟随他，通常用 *I*。只写他能看到、听到和知道的：岸边的女孩能看到船，却不能知道水手在想什么，除非她去猜测。\n\n通过叙述者的身体（*my hands went cold*）和他自己对事物的说法来表现他的想法和感受：一个从没见过船的孩子，可能会以为船帆是落下来的云。让事件有开头和结尾，并用最后一句表现这件事对这个人意味着什么。\n\n> **注意。** 不要不小心写穿帮、去读别人的内心（如“船长心里很紧张”）——你的叙述者只能写自己看到的外部线索（“船长紧紧抓着栏杆”）以及自己的猜测。",
         ),
         writingGenerator(
           t("Write a narrative in English from the point of view given.", "按照所给的视角，用英语写一段叙事。"),
           viewBank,
           ["g68-pov-consistent", "g68-pov-limits", "g68-pov-inner", "g68-pov-event"],
           { minWords: 90, maxChars: 2400 },
-          onePiece,
+          checkedResponse(
+            "Re-read your narrative sentence by sentence: confirm the pronoun stays consistent, every detail fits what this narrator could actually see or know, and the closing line shows what the event meant to them.",
+            "逐句重读你的叙事：确认人称始终一致，每个细节都没有超出该叙述者的所见所知，且结尾点明了这件事对他的意义。",
+          ),
         ),
       ),
     ],

@@ -1746,28 +1746,33 @@ function reportRule(shown: string): Text {
 /** reportWhy puts the pattern of the reporting verb before a sentence. */
 const reportWhy = (sentence: string, shown: string): Text => {
   const rule = reportRule(shown);
-  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+  return t(
+    `${rule.en}: ${sentence}\n\n**Check.** Verify the reporting verb's fixed complement pattern (*-ing*, *prep + -ing*, *to + verb*, or *object + to + verb*) matches the sentence.`,
+    `${rule["zh-CN"]}：${sentence}\n\n**检验。** 核对转述动词的固定搭配（*-ing*、*介词 + -ing*、*to + 动词原形* 或 *宾语 + to + 动词原形*）是否与句子一致。`,
+  );
 };
 
 /** whyNotPattern explains a pattern that the reporting verb does not take. */
 const whyNotPattern = (wrong: string, right: string, shown: string): Text => {
-  const rule = reportRule(shown);
   const item = reportOf(shown);
   const base = item?.[1] ?? "";
   const pattern = item?.[6] ?? "ing";
   const [w0 = "", w1 = ""] = wrong.split(" ");
-  let first: Text;
-  if (w0 === "to") first = t(`*${base}* does not take *to* and a verb.`, `*${base}* 后面不接 *to* 加动词。`);
-  else if (w1 === "to") first = t(`*${base}* never takes an object and *to*.`, `*${base}* 后面不能接宾语加 *to*。`);
-  else if (wrong.split(" ").length === 1 && wrong.endsWith("ing"))
-    first = t(`*${base}* does not take the *-ing* form.`, `*${base}* 后面不接 *-ing* 形式。`);
-  else if (wrong.split(" ").length === 1)
-    first = t(`*${wrong}* is the base form alone, which no reporting verb takes.`, `*${wrong}* 只是动词原形，转述动词后面不能直接接原形。`);
-  else if (pattern === "prep-ing" && w1.endsWith("ing") && w0 !== right.split(" ")[0])
-    first = t(`*${base}* takes *${right.split(" ")[0]}*, not *${w0}*.`, `*${base}* 搭配 *${right.split(" ")[0]}*，不搭配 *${w0}*。`);
-  else
-    first = t(`After the preposition *${w0}*, the verb takes *-ing*, not the base form.`, `介词 *${w0}* 后面的动词要用 *-ing*，不用原形。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  if (w0 === "to") return t(`*${base}* does not take *to* and a base verb.`, `*${base}* 后面不接 *to* 加动词原形。`);
+  if (w1 === "to") return t(`*${base}* never takes an object followed by *to*.`, `*${base}* 后面不能接宾语加 *to*。`);
+  if (wrong.split(" ").length === 1 && wrong.endsWith("ing"))
+    return t(`*${base}* does not take a bare *-ing* form.`, `*${base}* 后面不直接接 *-ing* 形式。`);
+  if (wrong.split(" ").length === 1)
+    return t(
+      `*${wrong}* is a bare base verb, which reporting verbs do not take directly.`,
+      `*${wrong}* 只是动词原形，转述动词后面不能直接接原形。`,
+    );
+  if (pattern === "prep-ing" && w1.endsWith("ing") && w0 !== right.split(" ")[0])
+    return t(`*${w0}* is the wrong preposition for *${base}*.`, `*${w0}* 不是 *${base}* 搭配的介词。`);
+  return t(
+    `After the preposition *${w0}*, the verb must take *-ing*, not the base form.`,
+    `介词 *${w0}* 后面的动词必须用 *-ing*，不能用原形。`,
+  );
 };
 
 /** takes names what the wrong reporting verbs are followed by. */
@@ -1804,16 +1809,14 @@ function verbRule(right: string, shown: string): Text {
 }
 
 /** whyNotVerb explains a reporting verb that cannot take the words after the gap. */
-const whyNotVerb = (wrong: string, right: string, shown: string): Text => {
-  const rule = verbRule(right, shown);
+const whyNotVerb = (wrong: string): Text => {
   const what = takes[wrong];
-  const first = what
+  return what
     ? t(
         `*${wrong}* takes ${what.en}, which does not fit the words after the gap.`,
         `*${wrong}* 后面接${what["zh-CN"].startsWith("*") ? " " : ""}${what["zh-CN"]}，和空白后面的词不相配。`,
       )
-    : t(`*${wrong}* cannot take the words after the gap.`, `*${wrong}* 不能和空白后面的词搭配。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+    : t(`*${wrong}* cannot take the structure after the gap.`, `*${wrong}* 不能和空白后面的结构搭配。`);
 };
 
 const reportingVerbs: TopicDef = {
@@ -1822,6 +1825,10 @@ const reportingVerbs: TopicDef = {
   summary: t(
     "She denied taking it. He urged us to vote. They agreed to share the cost. Instead of said, a reporting verb tells what the speaker did, and each verb has its own pattern: -ing, a preposition and -ing, to, or an object and to.",
     "She denied taking it. He urged us to vote. They agreed to share the cost。转述动词代替 said，说明说话人做了什么；每个动词有自己的句型：接 -ing、接介词加 -ing、接 to，或者接宾语加 to。",
+  ),
+  intro: t(
+    "Instead of repeating *said* in every line of a news story, English uses verbs that name the speaker's action—*She admitted making a mistake*, *He offered to help*, *They blamed us for the delay*—each locked to its own verb pattern.",
+    "新闻报道里不会句句都写 *said*，英语会用直接点明说话人行为的转述动词——*She admitted making a mistake*、*He offered to help*、*They blamed us for the delay*——每个动词都有自己固定的后续句型。",
   ),
   prerequisites: ["reported-speech", "gerunds-and-infinitives"],
   encompasses: [
@@ -1835,8 +1842,8 @@ const reportingVerbs: TopicDef = {
       "pattern",
       t("What follows the verb", "动词后面接什么"),
       t(
-        "A reporting verb sums up what someone said, and each one is followed by its own pattern:\n\n- **-ing**: *deny, admit, suggest, recommend*: *Tom **denied taking** the money. Mia **suggested taking** a taxi.*\n- **a preposition + -ing**: *apologize for, insist on, accuse someone of, blame someone for, thank someone for, congratulate someone on*: *Anna **apologized for being** late. Jake **accused** Leo **of stealing** his phone.*\n- **to + verb**: *refuse, agree, offer, promise, threaten, claim*: *Ana **refused to sign** the form.*\n- **an object + to + verb**: *urge, warn, advise, encourage, remind, beg, invite, order*: *The candidate **urged us to vote**.* A negative puts *not* before *to*: *warned the children **not to swim***.\n\n*Suggest* never takes an object and *to*: not *Mia suggested us to take a taxi*.",
-        "转述动词概括别人说的话，每个动词后面有自己的句型：\n\n- 接 **-ing**：*deny, admit, suggest, recommend*：*Tom **denied taking** the money. Mia **suggested taking** a taxi.*\n- 接**介词加 -ing**：*apologize for, insist on, accuse someone of, blame someone for, thank someone for, congratulate someone on*：*Anna **apologized for being** late. Jake **accused** Leo **of stealing** his phone.*\n- 接 **to 加动词原形**：*refuse, agree, offer, promise, threaten, claim*：*Ana **refused to sign** the form.*\n- 接**宾语加 to 加动词原形**：*urge, warn, advise, encourage, remind, beg, invite, order*：*The candidate **urged us to vote**.* 否定时 *not* 放在 *to* 前面：*warned the children **not to swim***。\n\n中文说“建议我们打车”，但英语的 *suggest* 不能接宾语加 to：不能说 *Mia suggested us to take a taxi*。同样，“拒绝签字”是 *refused to sign*，不是 *refused signing*；“否认拿了钱”是 *denied taking*，不是 *denied to take*。",
+        "A reporting verb sums up what someone said, and each one is followed by its own pattern:\n\n- **-ing**: *deny, admit, suggest, recommend*: *Tom **denied taking** the money. Mia **suggested taking** a taxi.*\n- **a preposition + -ing**: *apologize for, insist on, accuse someone of, blame someone for, thank someone for, congratulate someone on*: *Anna **apologized for being** late. Jake **accused** Leo **of stealing** his phone.*\n- **to + verb**: *refuse, agree, offer, promise, threaten, claim*: *Ana **refused to sign** the form.*\n- **an object + to + verb**: *urge, warn, advise, encourage, remind, beg, invite, order*: *The candidate **urged us to vote**.* A negative puts *not* before *to*: *warned the children **not to swim***.\n\n> **Watch out.** *Suggest* never takes an object + *to* (*Mia suggested us to take a taxi* is wrong)—use *suggested taking* or *suggested that we take*.",
+        "转述动词概括别人说的话，每个动词后面有自己的句型：\n\n- 接 **-ing**：*deny, admit, suggest, recommend*：*Tom **denied taking** the money. Mia **suggested taking** a taxi.*\n- 接**介词加 -ing**：*apologize for, insist on, accuse someone of, blame someone for, thank someone for, congratulate someone on*：*Anna **apologized for being** late. Jake **accused** Leo **of stealing** his phone.*\n- 接 **to 加动词原形**：*refuse, agree, offer, promise, threaten, claim*：*Ana **refused to sign** the form.*\n- 接**宾语加 to 加动词原形**：*urge, warn, advise, encourage, remind, beg, invite, order*：*The candidate **urged us to vote**.* 否定时 *not* 放在 *to* 前面：*warned the children **not to swim***。\n\n“拒绝签字”是 *refused to sign*，“否认拿了钱”是 *denied taking*。\n\n> **注意。** 中文说“建议我们打车”，但英语的 *suggest* 绝不能接宾语加 *to*（*Mia suggested us to take a taxi* 是错的），应说 *suggested taking* 或 *suggested that we take*。",
       ),
       choiceGenerator(
         t("Report what was said. Choose the words for the gap.", "转述别人说的话。选出填入空白处的词。"),
@@ -1849,15 +1856,18 @@ const reportingVerbs: TopicDef = {
       "verb",
       t("Choosing the reporting verb", "选择转述动词"),
       t(
-        "Choose the verb that says what the speaker did and fits the words after the gap. A denial is *denied*, an apology is *apologized*, a strong request is *urged*, a warning is *warned*.\n\nThe pattern after the gap rules out the others: *suggest* and *say* cannot take an object and *to* (not *said us to vote*), *explain* cannot take a person straight after it, and *blame* takes *for*, while *accuse* takes *of*: *They **blamed** the coach **for** losing. Jake **accused** Leo **of** stealing.*",
-        "选出既能说明说话人做了什么、又和空白后面的词相配的动词。否认用 *denied*，道歉用 *apologized*，强烈请求用 *urged*，警告用 *warned*。\n\n空白后面的句型能排除其他动词：*suggest* 和 *say* 不能接宾语加 to（不能说 *said us to vote*），*explain* 后面不能直接接人，*blame* 搭配 *for*，*accuse* 搭配 *of*：*They **blamed** the coach **for** losing. Jake **accused** Leo **of** stealing.* 中文的“说”可以说成“说让我们去投票”，英语的 *say* 却不能这样用。",
+        "Choose the verb that says what the speaker did and fits the words after the gap. A denial is *denied*, an apology is *apologized*, a strong request is *urged*, a warning is *warned*.\n\nThe pattern after the gap rules out the others: *suggest* and *say* cannot take an object and *to* (not *said us to vote*), *explain* cannot take a person straight after it, and *blame* takes *for*, while *accuse* takes *of*: *They **blamed** the coach **for** losing. Jake **accused** Leo **of** stealing.*\n\n> **Watch out.** Always check both meaning and grammar together: even if a verb fits the meaning, it is wrong if the preposition or structure after the gap does not match (such as *accuse* with *for* or *explain* + person).",
+        "选出既能说明说话人做了什么、又和空白后面的词相配的动词。否认用 *denied*，道歉用 *apologized*，强烈请求用 *urged*，警告用 *warned*。\n\n空白后面的句型能排除其他动词：*suggest* 和 *say* 不能接宾语加 to（不能说 *said us to vote*），*explain* 后面不能直接接人，*blame* 搭配 *for*，*accuse* 搭配 *of*：*They **blamed** the coach **for** losing. Jake **accused** Leo **of** stealing.* 中文的“说”可以说成“说让我们去投票”，英语的 *say* 却不能这样用。\n\n> **注意。** 语义和句型必须同时对上：即使意思相近，如果空白后面的介词或结构不配（如 *accuse* 后面出现 *for*，或 *explain* 直接接人），也必须排除。",
       ),
       choiceGenerator(
         t("Report what was said. Choose the verb for the gap.", "转述别人说的话。选出填入空白处的动词。"),
         verbChoice,
         (right, shown) => {
           const rule = verbRule(right, shown);
-          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+          return t(
+            `${rule.en}: ${fill(shown, right)}\n\n**Check.** Confirm *${right}* matches both the speaker's intent in the quote and the exact grammar pattern after the gap.`,
+            `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 确认 *${right}* 既准确概括了引语意图，又完全匹配空白后面的语法结构。`,
+          );
         },
         whyNotVerb,
       ),
@@ -1866,8 +1876,8 @@ const reportingVerbs: TopicDef = {
       "write",
       t("Reporting with the verb", "用转述动词改写"),
       t(
-        'Report the quotation with the verb in brackets, in the past simple, and with the pattern that verb takes: *"I didn\'t take the money," said Tom. (deny)* becomes *Tom denied taking the money.* *"Please vote!" the candidate said to us. (urge)* becomes *The candidate urged us to vote.*\n\nUse the verb\'s own pattern, not a *that*-clause, and change *I*, *you* and *my* to fit the report, as in reported speech. After *deny*, *admit*, *apologize for* and *accuse of* you may also write *having* + past participle: *Tom denied having taken the money.*',
-        '用括号里的动词转述引语，动词用一般过去时，后面接这个动词的句型：*"I didn\'t take the money," said Tom. (deny)* 写成 *Tom denied taking the money.* 不要用 *that* 从句，并像间接引语一样把 *I*、*you*、*my* 改成合适的词。*deny*、*admit*、*apologize for* 和 *accuse of* 后面也可以写 *having* 加过去分词：*Tom denied having taken the money.*',
+        'Report the quotation with the verb in brackets, in the past simple, and with the pattern that verb takes: *"I didn\'t take the money," said Tom. (deny)* becomes *Tom denied taking the money.* *"Please vote!" the candidate said to us. (urge)* becomes *The candidate urged us to vote.*\n\nUse the verb\'s own pattern, not a *that*-clause, and change *I*, *you* and *my* to fit the report, as in reported speech. After *deny*, *admit*, *apologize for* and *accuse of* you may also write *having* + past participle: *Tom denied having taken the money.*\n\n> **Watch out.** Put the reporting verb in the **past simple** and check pronouns (*I* → *he/she*, *my* → *his/her*) so the reported sentence matches the reporter\'s viewpoint.',
+        '用括号里的动词转述引语，动词用一般过去时，后面接这个动词的句型：*"I didn\'t take the money," said Tom. (deny)* 写成 *Tom denied taking the money.* 不要用 *that* 从句，并像间接引语一样把 *I*、*you*、*my* 改成合适的词。*deny*、*admit*、*apologize for* 和 *accuse of* 后面也可以写 *having* 加过去分词：*Tom denied having taken the money.*\n\n> **注意。** 括号里的转述动词要改成**一般过去时**，并核对人称代词（*I* → *he/she*、*my* → *his/her*）是否已按转述视角调整。',
       ),
       typedGenerator(
         "sentence-pattern",

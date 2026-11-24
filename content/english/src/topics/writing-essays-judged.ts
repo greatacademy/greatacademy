@@ -9,10 +9,13 @@ const criterion = (id: string): CriterionSpec => {
   return found;
 };
 
-const shown =
-  (what: [string, string]) =>
+const checkedShown =
+  (what: [string, string], checkEn: string, checkZh: string) =>
   (model: string): Text =>
-    t(`One good ${what[0]}:\n\n> ${model.replaceAll("\n", "\n> ")}`, `一个好的${what[1]}：\n\n> ${model.replaceAll("\n", "\n> ")}`);
+    t(
+      `One good ${what[0]}:\n\n> ${model.replaceAll("\n", "\n> ")}\n\n**Check.** ${checkEn}`,
+      `一个好的${what[1]}：\n\n> ${model.replaceAll("\n", "\n> ")}\n\n**检验。** ${checkZh}`,
+    );
 
 /** thesisBank asks for a one-sentence thesis that answers a question of debate. */
 const thesisBank: readonly WritingItem[] = [
@@ -560,6 +563,10 @@ export const judgedEssayTopics: readonly TopicDef[] = [
       "Answer a question of debate in one sentence that takes a side and says why.",
       "用一句话回答一个有争议的问题：表明立场，并说明理由。",
     ),
+    intro: t(
+      "Before writing an argument essay, distill your entire case into one compass sentence: a **thesis statement** that takes a clear stand and previews the reasons you will prove.",
+      "动笔写议论文之前，先把整篇论证浓缩成一句指南针式的**论点句**：鲜明表明立场，并预告你将要证明的主要理由。",
+    ),
     prerequisites: ["claims", "writing-an-opinion-paragraph"],
     encompasses: [{ topic: "claims", weight: 0.4 }],
     xp: 14,
@@ -569,8 +576,8 @@ export const judgedEssayTopics: readonly TopicDef[] = [
         "a-position-and-its-reasons",
         t("A Position and Its Reasons", "立场及其理由"),
         t(
-          "The **thesis statement** is the one sentence an argument essay sets out to prove. It takes a side that a reasonable person could disagree with, and it names the main reasons the essay will give.\n\n*Phones are common in schools* is a fact, not a thesis: nobody argues with it. *Phones should be banned in lessons, because they distract students and make cheating easy* takes a side and gives two reasons, each of which can become a body paragraph.",
-          "**论点句**（thesis statement）是议论文要证明的那一句话。它表明一个讲道理的人也可能不同意的立场，并点出文章将给出的主要理由。\n\n*Phones are common in schools* 是事实，不是论点：没有人会反驳它。*Phones should be banned in lessons, because they distract students and make cheating easy* 表明了立场并给出两个理由，每个理由都能写成一个主体段落。",
+          "The **thesis statement** is the single sentence an argument essay sets out to prove. It takes a side someone could reasonably disagree with and previews the main reasons.\n\n*Phones are common in schools* is only a fact. *Phones should be banned in lessons, because they distract students and make cheating easy* takes a side and names two distinct reasons—each ready to become a body paragraph.\n\n> **Watch out.** Do not announce your essay (*In this essay I will argue…*) or sit on the fence (*Phones have good and bad sides*)—state your stand and your reasons directly in one sentence.",
+          "**论点句**（thesis statement）是整篇议论文要证明的那一句话：表明一个合理可辩的立场，并点出主要理由。\n\n*Phones are common in schools* 只是事实。*Phones should be banned in lessons, because they distract students and make cheating easy* 既亮明立场又给出两条不同理由，每条都能展开成一个主体段落。\n\n> **注意。** 不要写报幕句（*In this essay I will argue…*），也不要骑墙（*Phones have good and bad sides*）——用一句话直接说清立场和理由。",
         ),
         writingGenerator(
           t(
@@ -580,7 +587,11 @@ export const judgedEssayTopics: readonly TopicDef[] = [
           thesisBank,
           thesisCriteria,
           { minWords: 10, maxChars: 400 },
-          shown(["thesis statement", "论点句"]),
+          checkedShown(
+            ["thesis statement", "论点句"],
+            "Confirm your draft is a single sentence that takes one clear side (debatable, not a plain fact) and names at least two distinct reasons after *because* or *since*.",
+            "核对你的句子：只有一句完整的话，表明清晰可争辩的立场（而非纯事实），并在 *because* 或 *since* 后点出至少两条不同的理由。",
+          ),
         ),
       ),
     ],
@@ -591,6 +602,10 @@ export const judgedEssayTopics: readonly TopicDef[] = [
     summary: t(
       "Plan an essay before drafting it: a thesis, the reasons that support it, and evidence for each reason.",
       "动笔前先规划文章：论点、支持它的理由，以及每个理由的论据。",
+    ),
+    intro: t(
+      "Drafting without a plan often leads to repeating the same point twice or running out of proof halfway through. **Outlining an argument** maps your thesis, two or three distinct reasons, and concrete evidence for each before you write paragraph one.",
+      "不列提纲直接动笔，常会把同一个理由说两遍，或者写到一半拿不出证据。**列论证提纲**让你在写第一段之前就排好论点、两三条不同理由和各自对应的论据。",
     ),
     prerequisites: ["writing-a-thesis-statement", "evidence"],
     encompasses: [
@@ -604,8 +619,8 @@ export const judgedEssayTopics: readonly TopicDef[] = [
         "planning-the-reasons",
         t("Planning Reasons and Evidence", "规划理由和论据"),
         t(
-          "An outline is the skeleton of an essay. Write the thesis at the top. Under it, list two or three **reasons**, each one different and each one a reason for the thesis. Under every reason, note the **evidence** you will use: a fact, an example or an expert's words.\n\nIf a reason has no evidence you can name, it is not ready, and the outline shows you that before you have written a single paragraph.",
-          "提纲是文章的骨架。把论点写在最上面。在它下面列出两三个**理由**，每个理由各不相同，而且都能支持论点。在每个理由下面，注明你要用的**论据**：一个事实、一个例子或专家的话。\n\n如果某个理由举不出论据，它就还没准备好；提纲能让你在写出任何段落之前就发现这一点。",
+          "An outline is the skeleton of your essay. Put your **thesis** at the top, list two or three distinct **reasons** underneath, and pair each reason with specific **evidence**—a fact, real-world example, or expert finding.\n\nIf a reason has no evidence you can name (*1. Cooking saves money → Evidence: ?*), the outline catches that gap before you waste time drafting.\n\n> **Watch out.** Check that your reasons do not repeat the same idea in different words, and that *every* reason has its own matching evidence underneath it.",
+          "提纲是文章的骨架。顶部写**论点**，下面列出两三条彼此不同的**理由**，每条理由下再配上具体的**论据**——事实、现实事例或专家发现。\n\n如果某条理由配不出论据（*1. Cooking saves money → Evidence: ?*），提纲能让你在动笔前就发现缺口。\n\n> **注意。** 检查各条理由有没有换词重复，并确认*每一条*理由下面都配有对口的论据。",
         ),
         writingGenerator(
           t(
@@ -615,7 +630,11 @@ export const judgedEssayTopics: readonly TopicDef[] = [
           outlineBank,
           outlineCriteria,
           { minWords: 40, maxChars: 2000 },
-          shown(["outline", "提纲"]),
+          checkedShown(
+            ["outline", "提纲"],
+            "Check that your outline has a clear thesis at the top, two or three distinct reasons, and a specific fact or example paired directly under every single reason.",
+            "核对你的提纲：顶部有清晰论点，下面有两三条互不重复的理由，且每一条理由下面都直接配有具体事实或例子。",
+          ),
         ),
       ),
     ],
@@ -626,6 +645,10 @@ export const judgedEssayTopics: readonly TopicDef[] = [
     summary: t(
       "Make a point, support it with evidence from a source, and explain how the evidence proves the point.",
       "提出观点，用来源中的论据支持它，并解释论据怎样证明观点。",
+    ),
+    intro: t(
+      "Dropping a quotation into a paragraph and walking away leaves readers wondering *So what?* A strong **evidence paragraph** follows three steps—state your point, cite the source, and explain how that evidence proves your point.",
+      "把引文往段落里一放就不管，读者只会纳闷“那又怎样？”。有力的**论据段落**要走齐三步：提出分论点、引用来源证据、解释证据如何证明分论点。",
     ),
     prerequisites: ["outlining-an-argument", "reasoning"],
     encompasses: [
@@ -639,8 +662,8 @@ export const judgedEssayTopics: readonly TopicDef[] = [
         "point-evidence-explanation",
         t("Point, Evidence, Explanation", "观点、论据、解释"),
         t(
-          "A strong body paragraph does three things. It opens with a **point** that supports the thesis. It gives **evidence** from a source: quote the exact words in quotation marks, or put them closely in your own. Then it **explains** the evidence: why does it prove the point? Explaining is the step most often skipped, and it is the one that shows your thinking.\n\nEvidence alone, *The study found that students slept better*, leaves the reader to guess. Add the link: *This shows that...*, *Because of this...*, *This matters because...*.",
-          "一个有力的主体段落要做三件事。开头提出支持论点的**观点**。给出来源中的**论据**：用引号引用原话，或用自己的话准确转述。然后**解释**论据：它为什么能证明观点？解释是最常被省略的一步，也正是展示你思考的一步。\n\n只有论据，例如 *The study found that students slept better*，读者只能自己去猜。要加上联系：*This shows that...*、*Because of this...*、*This matters because...*。",
+          "A strong body paragraph moves in three beats: open with a **point** supporting the thesis, bring in **evidence** from the source (quoted accurately or paraphrased closely), and **explain** how that evidence proves the point.\n\nStopping at *The study found that students slept better* leaves the work unfinished—bridge the gap with *This shows that…*, *Because of this…*, or *This matters because…*.\n\n> **Watch out.** Do not end your paragraph right after the quotation—always add at least one or two sentences of your own explaining *why* that evidence proves your topic sentence.",
+          "有力的主体段落分三拍推进：开头提出支持总论点的**分论点**，接着引入来源中的**论据**（准确引用或贴切转述），最后**解释**这条论据为什么能证明分论点。\n\n只写到 *The study found that students slept better* 就停笔是不够的——要用 *This shows that…*、*Because of this…* 或 *This matters because…* 把逻辑桥搭完整。\n\n> **注意。** 不要在引文结束处直接收尾——务必补上一两句自己的分析，说明这条论据*为什么*能证明主题句。",
         ),
         writingGenerator(
           t(
@@ -650,7 +673,11 @@ export const judgedEssayTopics: readonly TopicDef[] = [
           evidenceBank,
           evidenceCriteria,
           { minWords: 50, maxChars: 2000 },
-          shown(["body paragraph", "主体段落"]),
+          checkedShown(
+            ["body paragraph", "主体段落"],
+            "Check all three beats in order: a clear opening point, accurate evidence drawn from the passage, and your own explanation connecting that evidence back to the point.",
+            "按顺序核对三拍：开头有清晰分论点，中间准确引用或转述了文段论据，结尾用自己的话解释了论据如何证明分论点。",
+          ),
         ),
       ),
     ],
@@ -661,6 +688,10 @@ export const judgedEssayTopics: readonly TopicDef[] = [
     summary: t(
       "State the strongest view against your own fairly, then answer it with a reason.",
       "公正地陈述反对你的最有力的观点，再用理由回应它。",
+    ),
+    intro: t(
+      "When readers see that you understand their biggest objection—and still have a convincing answer—they trust your argument far more. A **counterclaim paragraph** presents the opposing view fairly, pivots, and rebuts it with reason or evidence.",
+      "当读者看到你理解他们最大的顾虑、并且还能给出令人信服的回应时，他们会更信任你的论证。**反方观点段落**先公正陈述对立看法，再转折并用理由或论据加以反驳。",
     ),
     prerequisites: ["counterclaims-and-rebuttals", "writing-an-evidence-paragraph"],
     encompasses: [
@@ -674,8 +705,8 @@ export const judgedEssayTopics: readonly TopicDef[] = [
         "answering-the-other-side",
         t("Answering the Other Side", "回应另一方"),
         t(
-          "Readers who disagree with you are more likely to listen if you show that you understand them. Introduce the opposing view with *Some people argue*, *Critics say* or *Others believe*, and state it fairly, as its supporters would. You may admit what is true in it.\n\nThen turn with *However*, *Yet* or *Even so*, and give a **reason or evidence** why your claim still holds. Simply saying the other side is wrong is not a rebuttal.",
-          "如果你表现出理解反对你的读者，他们就更愿意听你说。用 *Some people argue*、*Critics say* 或 *Others believe* 引出反方观点，并像它的支持者那样公正地陈述它。你可以承认其中正确的部分。\n\n然后用 *However*、*Yet* 或 *Even so* 转折，给出你的论点仍然成立的**理由或论据**。只说对方错了，不算反驳。",
+          "Start by stating the opposing side fairly using frames like *Some people argue*, *Critics say*, or *Others believe*—and you may concede what is reasonable in it (*It is true that a phone can help a student look up facts*).\n\nThen pivot with *However*, *Yet*, or *Even so* and deliver a **reason or evidence** showing why your claim still wins.\n\n> **Watch out.** Do not caricature the other side (*Only foolish people think…*) and do not merely dismiss it (*They are wrong*)—state their best objection fairly and answer it with substance.",
+          "先用 *Some people argue*、*Critics say* 或 *Others believe* 公正引出反方看法，也可以适度承认其中合理之处（*It is true that a phone can help a student look up facts*）。\n\n接着用 *However*、*Yet* 或 *Even so* 转折，摆出**理由或论据**说明为什么己方论点依然更有力。\n\n> **注意。** 既不要把对方丑化成稻草人（*Only foolish people think…*），也不要只丢一句“他们错了”——先公正呈现对方最有力的顾虑，再拿出实质理由回应。",
         ),
         writingGenerator(
           t(
@@ -685,7 +716,11 @@ export const judgedEssayTopics: readonly TopicDef[] = [
           counterclaimBank,
           counterCriteria,
           { minWords: 45, maxChars: 2000 },
-          shown(["paragraph", "段落"]),
+          checkedShown(
+            ["paragraph", "段落"],
+            "Check that your paragraph names a genuine opposing view fairly, uses a clear pivot (*However*, *Yet*, *Even so*), and answers that specific objection with a reason or evidence.",
+            "核对段落三要素：公正说出了真实存在的反对观点，使用了清晰的转折词（*However*、*Yet*、*Even so*），并针对那个具体顾虑给出了理由或论据。",
+          ),
         ),
       ),
     ],
@@ -697,6 +732,10 @@ export const judgedEssayTopics: readonly TopicDef[] = [
       "Open an essay by drawing the reader in and stating the thesis; close it by restating the thesis and leaving a final thought.",
       "开头吸引读者并提出论点；结尾重申论点，并留下最后的思考。",
     ),
+    intro: t(
+      "An essay's first paragraph and last paragraph are its doorway in and doorway out. On a topic like building protected bike lanes, the opening draws the reader onto a crowded street before naming the thesis, while the closing echoes that claim in fresh words and leaves the reader picturing a safer commute.",
+      "文章的第一段和最后一段是入口与出口。以修建独立自行车道为例，开头先把读者带进拥挤的街道再亮出论点，结尾则换一种说法呼应论点，并让读者看到更安全的通勤图景。",
+    ),
     prerequisites: ["writing-a-thesis-statement"],
     encompasses: [{ topic: "writing-a-thesis-statement", weight: 0.4 }],
     xp: 18,
@@ -706,8 +745,8 @@ export const judgedEssayTopics: readonly TopicDef[] = [
         "writing-an-introduction",
         t("Writing an Introduction", "写开头"),
         t(
-          "An introduction moves from the reader's world to the essay's claim. It opens with a **hook**: a striking fact, a short scene, or a question that makes the reader care. A sentence or two of background follows. The thesis comes last, so the reader ends the introduction knowing exactly what the essay will prove.\n\nAvoid announcing the essay, as in *In this essay I will talk about bikes*: start with the subject itself.",
-          "开头把读者从他们的世界带到文章的论点。它以一个**引子**（hook）开始：一个惊人的事实、一个简短的场景，或一个让读者关心的问题。接着用一两句交代背景。论点放在最后，让读者读完开头就确切知道文章要证明什么。\n\n不要宣布式开头，例如 *In this essay I will talk about bikes*：要直接从话题本身写起。",
+          "An introduction moves from the reader's world to the essay's claim. It opens with a **hook**: a striking fact, a short scene, or a question that makes the reader care. A sentence or two of background follows. The thesis comes last, so the reader ends the introduction knowing exactly what the essay will prove.\n\nAvoid announcing the essay, as in *In this essay I will talk about bikes*: start with the subject itself.\n\n> **Watch out.** Do not bury the thesis in the middle of the paragraph or skip the background between the hook and the claim; the reader needs a smooth bridge into your position.",
+          "开头把读者从他们的世界带到文章的论点。它以一个**引子**（hook）开始：一个惊人的事实、一个简短的场景，或一个让读者关心的问题。接着用一两句交代背景。论点放在最后，让读者读完开头就确切知道文章要证明什么。\n\n不要宣布式开头，例如 *In this essay I will talk about bikes*：要直接从话题本身写起。\n\n> **注意。**不要把论点埋在段落中间，也不要省去引子与论点之间的背景过渡；读者需要一座平顺的桥走向你的立场。",
         ),
         writingGenerator(
           t(
@@ -717,15 +756,19 @@ export const judgedEssayTopics: readonly TopicDef[] = [
           introBank,
           introCriteria,
           { minWords: 35, maxChars: 1500 },
-          shown(["introduction", "开头"]),
+          checkedShown(
+            ["introduction", "开头"],
+            "Read the first and last sentences side by side: the first should pull the reader into the topic without saying 'In this essay', and the last should state the thesis clearly enough to guide the whole essay.",
+            "把第一句和最后一句并排读一遍：第一句应直接把读者带入话题而非说“在这篇文章里”，最后一句则应清楚亮出统领全文的论点。",
+          ),
         ),
       ),
       point(
         "writing-a-conclusion",
         t("Writing a Conclusion", "写结尾"),
         t(
-          "A conclusion moves the other way, from the essay back to the reader's world. It restates the thesis **in new words** and sums up the reasons briefly, without new evidence. Then it leaves a **final thought**: why the issue matters, what should happen next, or what the future could look like.\n\nCopying the thesis word for word, or ending with *That is the end of my essay*, wastes the last thing the reader sees.",
-          "结尾方向相反，从文章回到读者的世界。它**换一种说法**重申论点，并简要总结理由，不再加入新的论据。然后留下**最后的思考**：这个问题为什么重要、接下来应该怎么做，或者未来可能是什么样子。\n\n逐字照抄论点，或以 *That is the end of my essay* 收尾，都浪费了读者最后看到的地方。",
+          "A conclusion moves the other way, from the essay back to the reader's world. It restates the thesis **in new words** and sums up the reasons briefly, without new evidence. Then it leaves a **final thought**: why the issue matters, what should happen next, or what the future could look like.\n\nCopying the thesis word for word, or ending with *That is the end of my essay*, wastes the last thing the reader sees.\n\n> **Watch out.** Do not introduce a brand-new statistic or reason in the conclusion; new evidence belongs in a body paragraph, not at the exit.",
+          "结尾方向相反，从文章回到读者的世界。它**换一种说法**重申论点，并简要总结理由，不再加入新的论据。然后留下**最后的思考**：这个问题为什么重要、接下来应该怎么做，或者未来可能是什么样子。\n\n逐字照抄论点，或以 *That is the end of my essay* 收尾，都浪费了读者最后看到的地方。\n\n> **注意。**不要在结尾里突然加入全新的数据或理由；新论据应该放在主体段落，而不是出口处。",
         ),
         writingGenerator(
           t(
@@ -735,7 +778,11 @@ export const judgedEssayTopics: readonly TopicDef[] = [
           conclusionBank,
           conclusionCriteria,
           { minWords: 35, maxChars: 1500 },
-          shown(["conclusion", "结尾"]),
+          checkedShown(
+            ["conclusion", "结尾"],
+            "Compare the conclusion with the prompt's thesis: the claim should be rephrased rather than copied word for word, no new argument should appear, and the last sentence should look outward to why the issue matters.",
+            "把结尾和题干里的论点对照一遍：观点应换用新措辞而不是逐字照抄，不要冒出新论据，最后一句应向外延伸，点明这件事为何重要。",
+          ),
         ),
       ),
     ],
@@ -747,6 +794,10 @@ export const judgedEssayTopics: readonly TopicDef[] = [
       "Find what a draft paragraph is missing and rewrite it so it does its job, keeping its point.",
       "找出草稿段落缺少什么，改写它使其发挥作用，同时保留它的观点。",
     ),
+    intro: t(
+      "Suppose a draft paragraph argues for a school garden, then suddenly spends two sentences complaining about cafeteria pizza. Fixing commas will not save it — revising means cutting the drift, adding the missing explanation, and rebuilding the paragraph so every sentence backs the main point.",
+      "假如一段草稿在论证修建校园菜园，却突然用两句话抱怨食堂的披萨。只改逗号救不了它——修改意味着删去跑题的内容、补上缺失的解释，并重新组织段落，让每一句都服务于核心观点。",
+    ),
     prerequisites: ["writing-an-evidence-paragraph"],
     encompasses: [{ topic: "writing-an-evidence-paragraph", weight: 0.3 }],
     xp: 20,
@@ -756,8 +807,8 @@ export const judgedEssayTopics: readonly TopicDef[] = [
         "fixing-what-is-missing",
         t("Fixing What Is Missing", "补上缺少的部分"),
         t(
-          "Revising is more than fixing spelling. Read the draft as a stranger would, and ask what stops it from working: no clear topic sentence, a sentence off the point, evidence with no explanation, vague words, or ideas out of order. Then rewrite to fix that problem, while keeping the paragraph's point.\n\nA revision may add, cut, move or replace whole sentences. Correcting a few words is editing, and it rarely fixes a paragraph that does not work.",
-          "修改不只是改拼写。像陌生人一样读草稿，问问是什么让它不起作用：没有清楚的主题句、有离题的句子、论据没有解释、用词含糊，或者顺序混乱。然后改写以解决这个问题，同时保留段落的观点。\n\n修改可以增加、删去、移动或替换整个句子。只改几个词是校对，很少能挽救一个不起作用的段落。",
+          "Revising is more than fixing spelling. Read the draft as a stranger would, and ask what stops it from working: no clear topic sentence, a sentence off the point, evidence with no explanation, vague words, or ideas out of order. Then rewrite to fix that problem, while keeping the paragraph's point.\n\nA revision may add, cut, move or replace whole sentences. Correcting a few words is editing, and it rarely fixes a paragraph that does not work.\n\n> **Watch out.** Do not just swap a few synonyms and leave the named flaw untouched — and do not throw away the draft's original claim while fixing it.",
+          "修改不只是改拼写。像陌生人一样读草稿，问问是什么让它不起作用：没有清楚的主题句、有离题的句子、论据没有解释、用词含糊，或者顺序混乱。然后改写以解决这个问题，同时保留段落的观点。\n\n修改可以增加、删去、移动或替换整个句子。只改几个词是校对，很少能挽救一个不起作用的段落。\n\n> **注意。**不要只换几个近义词而把指出的毛病原样留着，也不要在修改时把草稿原本的观点丢掉。",
         ),
         writingGenerator(
           t(
@@ -767,7 +818,11 @@ export const judgedEssayTopics: readonly TopicDef[] = [
           revisionBank,
           revisionCriteria,
           { minWords: 35, maxChars: 2000 },
-          shown(["revision", "修改稿"]),
+          checkedShown(
+            ["revision", "修改稿"],
+            "Check the revision against two tests: first, confirm the draft's original main point is still intact; second, verify that the specific flaw named in the prompt is completely gone.",
+            "用两条标准检验修改稿：第一，确认草稿原本的核心观点仍然保留；第二，确认题干指出的那处毛病已经彻底解决。",
+          ),
         ),
       ),
     ],

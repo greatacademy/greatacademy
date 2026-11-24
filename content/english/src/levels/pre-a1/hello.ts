@@ -280,6 +280,10 @@ const theVerbBe: TopicDef = {
   id: "the-verb-be",
   title: t("Am, Is and Are", "am、is 和 are"),
   summary: t("I am, you are, she is: the verb be, which English never leaves out.", "I am、you are、she is：英语中不能省略的动词 be。"),
+  intro: t(
+    "Look at *My sister is at school* and *We are here*: English never skips the linking verb, and its form changes with the subject (*am*, *is*, or *are*). In this topic, you match each subject to the right form of *be*, fix sentences that leave *be* out, and use everyday short forms like *I'm* and *they're*.",
+    "看看 *My sister is at school* 和 *We are here*：英语从不省略连系动词，而且它要跟着主语变成 *am*、*is* 或 *are*。本主题带你把主语与正确的 *be* 形式配对、补上漏掉的 *be*，并掌握 *I'm*、*they're* 等常用缩写。",
+  ),
   prerequisites: ["pre-a1-words-i-and-you"],
   encompasses: [{ topic: "pre-a1-words-i-and-you", weight: 0.5 }],
   xp: 15,
@@ -289,16 +293,16 @@ const theVerbBe: TopicDef = {
       "choose",
       t("Choosing am, is or are", "选择 am、is 还是 are"),
       t(
-        "*I am*. *He is*, *she is*, *it is*, and one person or thing *is*. *You are*, *we are*, *they are*, and more than one *are*.\n\n*I am happy. Tom is at home. The dogs are here.*",
-        "*I* 后面用 *am*。*he*、*she*、*it* 和单个的人或东西后面用 *is*。*you*、*we*、*they* 和多个的人或东西后面用 *are*。\n\n*I am happy. Tom is at home. The dogs are here.*",
+        "*I am*. *He is*, *she is*, *it is*, and one person or thing *is*. *You are*, *we are*, *they are*, and more than one *are*.\n\n*I am happy. Tom is at home. The dogs are here.*\n\n> **Watch out.** *You* always takes *are*—even when you are talking to just one person—and *am* goes only with *I*.",
+        "*I* 后面用 *am*。*he*、*she*、*it* 和单个的人或东西后面用 *is*。*you*、*we*、*they* 和多个的人或东西后面用 *are*。\n\n*I am happy. Tom is at home. The dogs are here.*\n\n> **注意。** 哪怕只对一个人说话，*you* 后面也永远用 *are*；而 *am* 只和 *I* 连用。",
       ),
       choiceGenerator(
         t("Choose the word for the gap.", "选出填入空白处的词。"),
         beChoiceBank,
         (right, shown) =>
           t(
-            `The subject is *${beSubject(shown)}*, and ${beRule[right]?.en}: ${shown.replace("___", `*${right}*`)}`,
-            `主语是 *${beSubject(shown)}*，${beRule[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}`,
+            `The subject is *${beSubject(shown)}*, and ${beRule[right]?.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Count the subject before the gap (*I* -> *am*, one person/thing -> *is*, *you* or more than one -> *are*) and confirm *${right}* matches.`,
+            `主语是 *${beSubject(shown)}*，${beRule[right]?.["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 核对空白前的主语（*I* 配 *am*，单数配 *is*，*you* 或复数配 *are*），确认 *${right}* 与主语一致。`,
           ),
         (wrong, _right, shown) =>
           t(
@@ -311,8 +315,8 @@ const theVerbBe: TopicDef = {
       "do-not-leave-out",
       t("Never leaving out be", "不要漏掉 be"),
       t(
-        "An English sentence needs a verb. When you say how someone is or where they are, the verb is *am*, *is* or *are*.\n\nNot *She happy.* but *She is happy.*",
-        "英语句子必须有动词。中文说“她很高兴”“我在家”，没有“是”，可英语描述状态或位置时一定要用 *am*、*is* 或 *are*。\n\n不说 *She happy.*，要说 *She is happy.*",
+        "An English sentence needs a verb. When you say how someone is or where they are, the verb is *am*, *is* or *are*.\n\nNot *She happy.* but *She is happy.*\n\n> **Watch out.** Do not translate Chinese sentences like “她很高兴” or “他在家” word for word—English always needs *am*, *is*, or *are* between the subject and an adjective or place.",
+        "英语句子必须有动词。中文说“她很高兴”“我在家”，没有“是”，可英语描述状态或位置时一定要用 *am*、*is* 或 *are*。\n\n不说 *She happy.*，要说 *She is happy.*\n\n> **注意。** 不要把中文的“她很高兴”“他在家”逐字直译成英语——主语和形容词或地点之间必须放上 *am*、*is* 或 *are*。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -320,8 +324,8 @@ const theVerbBe: TopicDef = {
         missingBeBank,
         (right, shown) =>
           t(
-            `*${shown}* has no verb, and an English sentence needs one. To say how or where someone is, add *am*, *is* or *are*: ${right}`,
-            `*${shown}* 没有动词，而英语句子必须有动词。说明人怎么样或在哪里，要加上 *am*、*is* 或 *are*：${right}`,
+            `*${shown}* has no verb, and an English sentence needs one. To say how or where someone is, add *am*, *is* or *are*: ${right}\n\n**Check.** Find the verb right after the subject in your sentence—confirm *am*, *is*, or *are* is there and matches the subject.`,
+            `*${shown}* 没有动词，而英语句子必须有动词。说明人怎么样或在哪里，要加上 *am*、*is* 或 *are*：${right}\n\n**检验。** 检查主语后面紧跟着的词——确认已经补上与主语相配的 *am*、*is* 或 *are*。`,
           ),
       ),
     ),
@@ -329,16 +333,16 @@ const theVerbBe: TopicDef = {
       "short-forms",
       t("Short forms", "缩写形式"),
       t(
-        "In speaking and in friendly writing, *am*, *is* and *are* get short: *I'm*, *he's*, *she's*, *it's*, *you're*, *we're*, *they're*. The mark ' stands for the missing letter.",
-        "口语和非正式书面语中，*am*、*is*、*are* 常常缩写：*I'm*、*he's*、*she's*、*it's*、*you're*、*we're*、*they're*。撇号 ' 代替省掉的字母。",
+        "In speaking and in friendly writing, *am*, *is* and *are* get short: *I'm*, *he's*, *she's*, *it's*, *you're*, *we're*, *they're*. The mark ' stands for the missing letter.\n\n> **Watch out.** Never drop the apostrophe (write *I'm*, not *Im*), and match the ending to the verb: *'m* = *am*, *'s* = *is*, *'re* = *are*.",
+        "口语和非正式书面语中，*am*、*is*、*are* 常常缩写：*I'm*、*he's*、*she's*、*it's*、*you're*、*we're*、*they're*。撇号 ' 代替省掉的字母。\n\n> **注意。** 千万别漏写撇号（写 *I'm*，不写 *Im*），并核对缩写结尾：*'m* = *am*、*'s* = *is*、*'re* = *are*。",
       ),
       choiceGenerator(
         t("Choose the short form of the sentence.", "选出这个句子的缩写形式。"),
         shortFormBank,
         (right, shown) =>
           t(
-            `The short form joins the subject and the verb, and the mark ' stands for the letters left out: ${shown} → ${right}`,
-            `缩写形式把主语和动词连在一起，撇号 ' 代替省掉的字母：${shown} → ${right}`,
+            `The short form joins the subject and the verb, and the mark ' stands for the letters left out: ${shown} → ${right}\n\n**Check.** Expand the contraction back out (*'m* -> *am*, *'s* -> *is*, *'re* -> *are*) and confirm you get the exact original sentence with the apostrophe in place.`,
+            `缩写形式把主语和动词连在一起，撇号 ' 代替省掉的字母：${shown} → ${right}\n\n**检验。** 把缩写还原展开（*'m* -> *am*、*'s* -> *is*、*'re* -> *are*），确认能准确还原原句且撇号没有遗漏。`,
           ),
         (_wrong, _right, _shown, position) =>
           position === 0

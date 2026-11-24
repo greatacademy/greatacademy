@@ -9,8 +9,11 @@ const criterion = (id: string): CriterionSpec => {
   return found;
 };
 
-const shown = (model: string) =>
-  t(`One good essay:\n\n> ${model.replaceAll("\n\n", "\n>\n> ")}`, `一篇好的文章：\n\n> ${model.replaceAll("\n\n", "\n>\n> ")}`);
+const checkedShown = (checkEn: string, checkZh: string) => (model: string) =>
+  t(
+    `One good essay:\n\n> ${model.replaceAll("\n\n", "\n>\n> ")}\n\n**Check.** ${checkEn}`,
+    `一篇好的文章：\n\n> ${model.replaceAll("\n\n", "\n>\n> ")}\n\n**检验。** ${checkZh}`,
+  );
 
 /** argumentEssayBank asks for a whole argument essay on a question of debate, each with a model essay of five paragraphs. */
 const argumentEssayBank: readonly WritingItem[] = [
@@ -91,6 +94,10 @@ export const argumentEssayTopics: readonly TopicDef[] = [
       "Put the moves together: an introduction with a thesis, two reasons with evidence, a counterclaim answered, and a conclusion.",
       "把各个步骤合在一起：带论点的开头、两个有论据的理由、回应过的反方观点，以及结尾。",
     ),
+    intro: t(
+      "When a debate is worth a whole essay — say, whether a town should ban single-use bottles at public events — a single paragraph cannot carry the opening, two supported reasons, a fair answer to the other side, and a closing thought. Putting those five moves in order turns an opinion into a reasoned case.",
+      "当一个争论值得写一整篇文章时——比如城镇是否应该在公共活动中禁用一次性塑料瓶——单靠一段装不下开头、两个有论据的理由、对反方观点的公正回应和收尾思考。把这五个步骤按顺序合在一起，才能把个人看法变成站得住脚的论证。",
+    ),
     prerequisites: ["writing-a-counterclaim-paragraph", "introductions-and-conclusions", "revising-a-draft"],
     encompasses: [
       { topic: "writing-an-evidence-paragraph", weight: 0.3 },
@@ -105,8 +112,8 @@ export const argumentEssayTopics: readonly TopicDef[] = [
         "the-whole-essay",
         t("The Whole Essay", "整篇文章"),
         t(
-          "An argument essay puts together every move you have practiced. A plan of five paragraphs works well:\n\n1. An **introduction** with a hook, a little background and the thesis at the end.\n2. A **body paragraph** for the first reason, with evidence or an example, and an explanation of how it supports the thesis.\n3. A **body paragraph** for the second reason, built the same way.\n4. A **counterclaim paragraph**: the strongest view against yours, stated fairly, then answered with a reason.\n5. A **conclusion** that restates the thesis in new words and leaves a final thought.\n\nLink the paragraphs with words such as *First*, *In addition*, *However* and *In short*. Plan before you write, and reread before you hand it in: once handed in, the essay is judged as it is, and the verdict comes after the session ends.",
-          "议论文把你练过的各个步骤合在一起。五段式的安排很好用：\n\n1. **开头**：引子、少量背景，最后是论点。\n2. 第一个理由的**主体段落**：有论据或例子，并解释它怎样支持论点。\n3. 第二个理由的**主体段落**，写法相同。\n4. **反方观点段落**：公正地陈述反对你的最有力的观点，再用理由回应它。\n5. **结尾**：换一种说法重申论点，并留下最后的思考。\n\n用 *First*、*In addition*、*However*、*In short* 等词把段落连起来。动笔前先列提纲，交之前再读一遍：文章一旦交上，就按原样评判，结果在这次学习结束后才出来。",
+          "An argument essay puts together every move you have practiced. A plan of five paragraphs works well:\n\n1. An **introduction** with a hook, a little background and the thesis at the end.\n2. A **body paragraph** for the first reason, with evidence or an example, and an explanation of how it supports the thesis.\n3. A **body paragraph** for the second reason, built the same way.\n4. A **counterclaim paragraph**: the strongest view against yours, stated fairly, then answered with a reason.\n5. A **conclusion** that restates the thesis in new words and leaves a final thought.\n\nLink the paragraphs with words such as *First*, *In addition*, *However* and *In short*. Plan before you write, and reread before you hand it in: once handed in, the essay is judged as it is, and the verdict comes after the session ends.\n\n> **Watch out.** Do not drop the counterclaim paragraph or turn the conclusion into a copy of the introduction; an argument stays persuasive only when it answers the strongest objection and closes with fresh wording.",
+          "议论文把你练过的各个步骤合在一起。五段式的安排很好用：\n\n1. **开头**：引子、少量背景，最后是论点。\n2. 第一个理由的**主体段落**：有论据或例子，并解释它怎样支持论点。\n3. 第二个理由的**主体段落**，写法相同。\n4. **反方观点段落**：公正地陈述反对你的最有力的观点，再用理由回应它。\n5. **结尾**：换一种说法重申论点，并留下最后的思考。\n\n用 *First*、*In addition*、*However*、*In short* 等词把段落连起来。动笔前先列提纲，交之前再读一遍：文章一旦交上，就按原样评判，结果在这次学习结束后才出来。\n\n> **注意。**不要省掉反方观点段落，也不要把结尾写成开头的照抄；只有正面回应最有力的反对意见并用新措辞收尾，论证才真正有说服力。",
         ),
         writingGenerator(
           t(
@@ -116,7 +123,10 @@ export const argumentEssayTopics: readonly TopicDef[] = [
           argumentEssayBank,
           essayCriteria,
           { minWords: 150, maxChars: 5000 },
-          shown,
+          checkedShown(
+            "Label each paragraph's job in the margin: introduction with thesis, two distinct reason paragraphs with evidence, a counterclaim paragraph that answers the objection, and a conclusion that restates the thesis in fresh words.",
+            "在每段旁边标出它的任务：带论点的开头、两段各自有论据的理由、先陈述再回应的反方段落，以及换用新措辞重申论点的结尾。",
+          ),
         ),
       ),
     ],

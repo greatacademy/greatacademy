@@ -10,6 +10,10 @@ const latin9 = parts({
     "Ten more Latin roots: anim, fug, solv, tempor, tang, cad, pung, vor, flict and cumb.",
     "另外十个拉丁词根：anim、fug、solv、tempor、tang、cad、pung、vor、flict 和 cumb。",
   ],
+  intro: [
+    "Knowing that *tang* means *touch* immediately links *tangible* (touchable), *intangible* (untouchable), and a geometric *tangent* (a line that touches a curve). In this topic, you master ten high-level Latin roots and decode academic vocabulary by combining them with prefixes.",
+    "只要知道 *tang* 表示“接触”，就能立刻把 *tangible*（摸得着的）、*intangible*（无形的）和几何里的 *tangent*（切线）串在一起。本主题带你掌握十个高阶拉丁词根，并结合前缀拆解学术词汇。",
+  ],
   after: ["latin-roots-8"],
   kind: ["Latin root", "拉丁词根"],
   list: partLines(`
@@ -26,12 +30,12 @@ const latin9 = parts({
   `),
   explanations: [
     [
-      "Ten more Latin **roots**. *Anim* means mind or spirit, *fug* flee, *solv* loosen, *tempor* time, *tang* touch, *cad* fall, *pung* prick, *vor* eat, *flict* strike and *cumb* lie down. A *fugitive* flees; a *tangible* object can be touched; a *voracious* reader eats up books. Knowing the root lets you guess the meaning of a word you have never seen.",
-      '另外十个拉丁**词根**。*anim* 意为心灵或精神，*fug* 逃，*solv* 松开，*tempor* 时间，*tang* 接触，*cad* 落下，*pung* 刺，*vor* 吃，*flict* 打击，*cumb* 躺下。*fugitive* 是逃跑的人；*tangible* 的东西摸得到；*voracious* 的读者大口"吞食"书本。知道词根，就能猜出没见过的词的意思。',
+      "Ten more Latin **roots**. *Anim* means mind or spirit, *fug* flee, *solv* loosen, *tempor* time, *tang* touch, *cad* fall, *pung* prick, *vor* eat, *flict* strike and *cumb* lie down. A *fugitive* flees; a *tangible* object can be touched; a *voracious* reader eats up books. Knowing the root lets you guess the meaning of a word you have never seen.\n\n> **Watch out.** Do not confuse *tempor* (*time*, as in *temporary*) with *temper* (*mood or mix*), or *cad* (*fall*, as in *cascade*) with *card*—always test the meaning across two words in the family.",
+      "另外十个拉丁**词根**。*anim* 意为心灵或精神，*fug* 逃，*solv* 松开，*tempor* 时间，*tang* 接触，*cad* 落下，*pung* 刺，*vor* 吃，*flict* 打击，*cumb* 躺下。*fugitive* 是逃跑的人；*tangible* 的东西摸得到；*voracious* 的读者大口“吞食”书本。知道词根，就能猜出没见过的词的意思。\n\n> **注意。** 不要把 *tempor*（时间，如 *temporary*）和 *temper*（脾气）混为一谈，也别望文生义——务必用同族里的两个词互相印证词根含义。",
     ],
     [
-      "Prefixes steer the root. With *anim*, *un-* (one) gives **unanimous**, of one mind, and *magn-* (great) gives **magnanimous**, great in spirit. With *solv*, *ab-* (away) gives **absolve**, to release from blame. With *tempor*, *con-* (with) gives **contemporary**, of the same time. With *cumb*, *suc-* (under) gives **succumb**, to fall beneath. Read the prefix, then the root, and put them together.",
-      "前缀决定词根的方向。与 *anim* 搭配，*un-*（一）构成 **unanimous**，一致同意的；*magn-*（大）构成 **magnanimous**，宽宏大量的。与 *solv* 搭配，*ab-*（离开）构成 **absolve**，免除罪责。与 *tempor* 搭配，*con-*（共同）构成 **contemporary**，同时代的。与 *cumb* 搭配，*suc-*（在下）构成 **succumb**，屈服。先读前缀，再读词根，然后把意思合起来。",
+      "Prefixes steer the root. With *anim*, *un-* (one) gives **unanimous**, of one mind, and *magn-* (great) gives **magnanimous**, great in spirit. With *solv*, *ab-* (away) gives **absolve**, to release from blame. With *tempor*, *con-* (with) gives **contemporary**, of the same time. With *cumb*, *suc-* (under) gives **succumb**, to fall beneath. Read the prefix, then the root, and put them together.\n\n> **Watch out.** Several words share the same root with different prefixes (like *unanimous* vs. *magnanimous*, or *inflict* vs. *conflict*)—read the prefix carefully before choosing.",
+      "前缀决定词根的方向。与 *anim* 搭配，*un-*（一）构成 **unanimous**，一致同意的；*magn-*（大）构成 **magnanimous**，宽宏大量的。与 *solv* 搭配，*ab-*（离开）构成 **absolve**，免除罪责。与 *tempor* 搭配，*con-*（共同）构成 **contemporary**，同时代的。与 *cumb* 搭配，*suc-*（在下）构成 **succumb**，屈服。先读前缀，再读词根，然后把意思合起来。\n\n> **注意。** 不少词共用同一词根而前缀不同（如 *unanimous* 与 *magnanimous*，或 *inflict* 与 *conflict*）——作答前一定要核对前缀方向。",
     ],
   ],
 });
@@ -42,6 +46,10 @@ const greek8 = parts({
   summary: [
     "Ten more Greek roots: crit, phob, thes, bibl, erg, icon, hedon, plast, glyph and esthe.",
     "另外十个希腊词根：crit、phob、thes、bibl、erg、icon、hedon、plast、glyph 和 esthe。",
+  ],
+  intro: [
+    "Recognize *thes* (*put or place*) and *syn-* (*together*), and *synthesis* literally unpacks itself as *putting ideas together*. In this topic, you learn ten Greek roots common in humanities and science and split compound words into their parts.",
+    "认出 *thes*（放置）和 *syn-*（一起），*synthesis* 便自然拆解为“把观点放到一起（综合）”。本主题带你掌握十个常见于人文与科学领域的希腊词根，并拆解复合词的含义。",
   ],
   after: ["greek-roots-7"],
   kind: ["Greek root", "希腊词根"],
@@ -59,12 +67,12 @@ const greek8 = parts({
   `),
   explanations: [
     [
-      "Ten more Greek **roots**. *Crit* means judge, *phob* fear, *thes* put, *bibl* book, *erg* work, *icon* image, *hedon* pleasure, *plast* mold, *glyph* carving and *esthe* feeling. A *criterion* is a standard of judgment; a *phobia* is a fear; a *thesis* is a claim put forward; *ergonomic* chairs make work easier.",
-      "另外十个希腊**词根**。*crit* 意为判断，*phob* 恐惧，*thes* 放置，*bibl* 书，*erg* 工作，*icon* 图像，*hedon* 快乐，*plast* 塑造，*glyph* 雕刻，*esthe* 感觉。*criterion* 是判断的标准；*phobia* 是恐惧；*thesis* 是提出的论点；*ergonomic* 的椅子让工作更轻松。",
+      "Ten more Greek **roots**. *Crit* means judge, *phob* fear, *thes* put, *bibl* book, *erg* work, *icon* image, *hedon* pleasure, *plast* mold, *glyph* carving and *esthe* feeling. A *criterion* is a standard of judgment; a *phobia* is a fear; a *thesis* is a claim put forward; *ergonomic* chairs make work easier.\n\n> **Watch out.** Look past modern everyday meanings: *plastic* in *plasticity* means *able to be molded or shaped*, not merely the synthetic material, and *erg* (*work*) hides inside *energy* and *synergy*.",
+      "另外十个希腊**词根**。*crit* 意为判断，*phob* 恐惧，*thes* 放置，*bibl* 书，*erg* 工作，*icon* 图像，*hedon* 快乐，*plast* 塑造，*glyph* 雕刻，*esthe* 感觉。*criterion* 是判断的标准；*phobia* 是恐惧；*thesis* 是提出的论点；*ergonomic* 的椅子让工作更轻松。\n\n> **注意。** 不要局限于日常引申义：*plasticity* 里的 *plast* 指“可塑、成形”，不只是塑料；而 *erg*（工作）则藏在 *energy* 和 *synergy* 里。",
     ],
     [
-      "Greek words are often built from two roots or a prefix and a root. *Xeno* (stranger) and *phob* give **xenophobia**, fear of strangers. *Syn-* (together) and *thes* give **synthesis**, putting together. *An-* (without) and *esthe* give **anesthesia**, without feeling. *Icon* and *clast* (break) give **iconoclast**, a breaker of images. Split the word and read each part.",
-      "希腊语词常由两个词根或一个前缀加一个词根构成。*xeno*（陌生人）加 *phob* 构成 **xenophobia**，惧外。*syn-*（一起）加 *thes* 构成 **synthesis**，综合。*an-*（没有）加 *esthe* 构成 **anesthesia**，失去感觉。*icon* 加 *clast*（打破）构成 **iconoclast**，打破偶像的人。把词拆开，逐个读出各部分。",
+      "Greek words are often built from two roots or a prefix and a root. *Xeno* (stranger) and *phob* give **xenophobia**, fear of strangers. *Syn-* (together) and *thes* give **synthesis**, putting together. *An-* (without) and *esthe* give **anesthesia**, without feeling. *Icon* and *clast* (break) give **iconoclast**, a breaker of images. Split the word and read each part.\n\n> **Watch out.** Check *both* halves of a Greek compound—*bibliophile* (*book + love*) and *bibliography* (*book + write*) share *bibl*, so the second half determines the meaning.",
+      "希腊语词常由两个词根或一个前缀加一个词根构成。*xeno*（陌生人）加 *phob* 构成 **xenophobia**，惧外。*syn-*（一起）加 *thes* 构成 **synthesis**，综合。*an-*（没有）加 *esthe* 构成 **anesthesia**，失去感觉。*icon* 加 *clast*（打破）构成 **iconoclast**，打破偶像的人。把词拆开，逐个读出各部分。\n\n> **注意。** 务必把希腊复合词的*前后两半*都看全——*bibliophile*（书 + 爱）和 *bibliography*（书 + 写）都含 *bibl*，真正区分词义的是后半部分。",
     ],
   ],
 });
@@ -75,6 +83,10 @@ const nounSuffixes = parts({
   summary: [
     "Ten suffixes that turn words into nouns: -tude, -ism, -ence, -ity, -ure, -cy, -ery, -age, -hood and -mony.",
     "十个把词变成名词的后缀：-tude、-ism、-ence、-ity、-ure、-cy、-ery、-age、-hood 和 -mony。",
+  ],
+  intro: [
+    "Adding *-tude* to *grat-* turns thankful into *gratitude*; adding *-ism* to *skeptic* turns a doubter into *skepticism*. In this topic, you learn ten noun-forming suffixes and match abstract definitions to the exact noun built from a base and suffix.",
+    "给 *grat-* 加上 *-tude*，就把“感激”变成名词 *gratitude*；给 *skeptic* 加上 *-ism*，就构成了 *skepticism*（怀疑主义）。本主题带你掌握十个构成名词的后缀，并依据词干与后缀的组合准确辨认抽象名词。",
   ],
   after: ["word-parts-that-form-adjectives"],
   kind: ["suffix", "后缀"],
@@ -92,12 +104,12 @@ const nounSuffixes = parts({
   `),
   explanations: [
     [
-      "A **suffix** can turn a word into a noun and add a meaning of its own. *-tude*, *-ity* and *-hood* name a state or quality: *fortitude* is the quality of being strong, *integrity* of being honest, *childhood* the state of being a child. *-ism* names a belief or practice: *skepticism* is the habit of doubting. *-ery* can name a place: a *bakery*. *-age* can name a result or a collection: *wreckage*, *baggage*. Nouns made with these suffixes help you write about ideas, not only about things.",
-      "**后缀**可以把词变成名词，并加上自己的意思。*-tude*、*-ity* 和 *-hood* 表示状态或性质：*fortitude* 是坚强的品质，*integrity* 是正直，*childhood* 是童年。*-ism* 表示信念或做法：*skepticism* 是怀疑的习惯。*-ery* 可以表示场所：*bakery*。*-age* 可以表示结果或集合：*wreckage*、*baggage*。用这些后缀构成的名词能帮助你书写思想，而不只是事物。",
+      "A **suffix** can turn a word into a noun and add a meaning of its own. *-tude*, *-ity* and *-hood* name a state or quality: *fortitude* is the quality of being strong, *integrity* of being honest, *childhood* the state of being a child. *-ism* names a belief or practice: *skepticism* is the habit of doubting. *-ery* can name a place: a *bakery*. *-age* can name a result or a collection: *wreckage*, *baggage*. Nouns made with these suffixes help you write about ideas, not only about things.\n\n> **Watch out.** Notice that several noun suffixes mean *state or quality* (*-tude*, *-ity*, *-ence*, *-hood*), whereas *-ism* points to a belief/practice and *-ery* / *-age* often name a place, result, or collection.",
+      "**后缀**可以把词变成名词，并加上自己的意思。*-tude*、*-ity* 和 *-hood* 表示状态或性质：*fortitude* 是坚强的品质，*integrity* 是正直，*childhood* 是童年。*-ism* 表示信念或做法：*skepticism* 是怀疑的习惯。*-ery* 可以表示场所：*bakery*。*-age* 可以表示结果或集合：*wreckage*、*baggage*。用这些后缀构成的名词能帮助你书写思想，而不只是事物。\n\n> **注意。** 多个名词后缀都可表示“状态或性质”（*-tude*、*-ity*、*-ence*、*-hood*），而 *-ism* 侧重信念或做法，*-ery* 和 *-age* 常指场所、结果或集合。",
     ],
     [
-      "To find the word for a definition, look for the base inside it, then the suffix. *The state of being thankful* is *grat* (thanks) with *-tude*: **gratitude**. *The condition of being unknown by name* is *anonymous* with *-ity*: **anonymity**. *The ability to read and write* is *literate* with *-cy*: **literacy**. Watch for spelling changes: *brief* becomes **brevity**, *close* becomes **closure**.",
-      "要找出符合释义的词，先找出其中的词干，再找后缀。*the state of being thankful* 是 *grat*（感谢）加 *-tude*：**gratitude**。*the condition of being unknown by name* 是 *anonymous* 加 *-ity*：**anonymity**。*the ability to read and write* 是 *literate* 加 *-cy*：**literacy**。注意拼写变化：*brief* 变成 **brevity**，*close* 变成 **closure**。",
+      "To find the word for a definition, look for the base inside it, then the suffix. *The state of being thankful* is *grat* (thanks) with *-tude*: **gratitude**. *The condition of being unknown by name* is *anonymous* with *-ity*: **anonymity**. *The ability to read and write* is *literate* with *-cy*: **literacy**. Watch for spelling changes: *brief* becomes **brevity**, *close* becomes **closure**.\n\n> **Watch out.** Do not let a spelling shift hide the base word (*brief* → *brevity*, *anonymous* → *anonymity*, *diplomat* → *diplomacy*)—match both the core meaning of the base and the suffix's role.",
+      "要找出符合释义的词，先找出其中的词干，再找后缀。*the state of being thankful* 是 *grat*（感谢）加 *-tude*：**gratitude**。*the condition of being unknown by name* 是 *anonymous* 加 *-ity*：**anonymity**。*the ability to read and write* 是 *literate* 加 *-cy*：**literacy**。注意拼写变化：*brief* 变成 **brevity**，*close* 变成 **closure**。\n\n> **注意。** 别被拼写微调挡住视线（如 *brief* → *brevity*、*anonymous* → *anonymity*、*diplomat* → *diplomacy*）——同时核对词干核心含义与后缀功能。",
     ],
   ],
 });

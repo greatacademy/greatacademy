@@ -44,6 +44,7 @@ const labelTopic = (spec: {
   id: string;
   title: Text;
   summary: Text;
+  intro?: Text;
   prerequisites: string[];
   encompasses: { topic: string; weight: number }[];
   point: string;
@@ -53,12 +54,14 @@ const labelTopic = (spec: {
   bank: readonly ChoiceItem[];
   why: Readonly<Record<string, readonly [string, string]>>;
   zh: Readonly<Record<string, string>>;
+  check?: (right: string) => readonly [string, string];
   /** next is the knowledge point that follows, from recognizing a part to using it. */
   next: KnowledgePointDef;
 }): TopicDef => ({
   id: spec.id,
   title: spec.title,
   summary: spec.summary,
+  ...(spec.intro ? { intro: spec.intro } : {}),
   prerequisites: spec.prerequisites,
   encompasses: spec.encompasses,
   xp: 16,
@@ -71,12 +74,17 @@ const labelTopic = (spec: {
       choiceGenerator(
         spec.question,
         spec.bank,
-        (right) =>
-          t(`It is **${right}**. ${spec.why[right]?.[0] ?? ""}`, `这是**${spec.zh[right] ?? right}**。${spec.why[right]?.[1] ?? ""}`),
-        (wrong, right) =>
+        (right) => {
+          const ck = spec.check?.(right);
+          return t(
+            `It is **${right}**. ${spec.why[right]?.[0] ?? ""}${ck ? `\n\n**Check.** ${ck[0]}` : ""}`,
+            `这是**${spec.zh[right] ?? right}**。${spec.why[right]?.[1] ?? ""}${ck ? `\n\n**检验。** ${ck[1]}` : ""}`,
+          );
+        },
+        (wrong) =>
           t(
-            `It is not ${wrong} but **${right}**. ${spec.why[right]?.[0] ?? ""}`,
-            `这不是${spec.zh[wrong] ?? wrong}，而是**${spec.zh[right] ?? right}**。${spec.why[right]?.[1] ?? ""}`,
+            `That is not **${wrong}**: ${spec.why[wrong]?.[0] ? spec.why[wrong][0].charAt(0).toLowerCase() + spec.why[wrong][0].slice(1) : "check what this passage actually does."}`,
+            `这不是**${spec.zh[wrong] ?? wrong}**：${spec.zh[wrong] ?? wrong}的特点是“${spec.why[wrong]?.[1]?.replace(/。$/u, "") ?? ""}”，与此处不符。`,
           ),
       ),
     ),
@@ -594,13 +602,17 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       "The question an article asks, the earlier work it answers, its claim, its evidence and its limits.",
       "一篇文章提出的问题、它所回应的已有研究、它的主张、证据和局限。",
     ),
+    intro: t(
+      "Reading a dense journal article from word one can feel like wading through fog—until you notice that every sentence plays one of five roles: posing a question, citing earlier work, staking a claim, giving evidence, or admitting a limit.",
+      "逐字硬啃学术期刊论文常常让人如坠雾里，但一旦看出每句话都在扮演五种角色之一——提出问题、综述已有研究、提出主张、给出证据或承认局限——整篇论证的结构就会立刻清晰。",
+    ),
     prerequisites: ["evaluating-sources", "rhetorical-situation"],
     encompasses: [{ topic: "rhetorical-situation", weight: 0.1 }],
     point: "the-moves-of-an-article",
     pointTitle: t("The Moves of an Article", "文章的论证步骤"),
     explanation: t(
-      "An academic article is a turn in a conversation among researchers, and nearly every sentence makes one of five **moves**.\n\n- **The question**: what the article sets out to answer (*This article asks why...*).\n- **Earlier work**: what others have found or argued, often with names and years (*Previous studies have found...*). The article usually answers it by filling a gap, extending it, or disagreeing.\n- **The claim**: the article's own answer (*We argue that...*, *We conclude that...*).\n- **The evidence**: data, records, quotations or results that support the claim, often with numbers.\n- **A limitation**: what the evidence cannot show (*Because our sample came from one city...*).\n\nReading critically starts with sorting the sentences into these moves. Then you can ask whether the evidence really supports the claim, and whether the limitations are as small as the authors hope.",
-      "一篇学术文章是研究者之间对话中的一次发言，几乎每个句子都在完成五种**论证步骤**之一。\n\n- **问题**：文章要回答什么（*This article asks why...*）。\n- **已有研究**：别人已经发现或论证了什么，常带有人名和年份（*Previous studies have found...*）。文章通常通过填补空白、加以拓展或提出异议来回应它。\n- **主张**：文章自己的答案（*We argue that...*、*We conclude that...*）。\n- **证据**：支持主张的数据、记录、引文或结果，常带有数字。\n- **局限**：证据无法说明的东西（*Because our sample came from one city...*）。\n\n批判性阅读从把句子归入这些步骤开始。然后你就可以追问：证据是否真的支持主张，局限是否像作者希望的那样小。",
+      "An academic article is a turn in a conversation among researchers, and nearly every sentence makes one of five **moves**.\n\n- **The question**: what the article sets out to answer (*This article asks why...*).\n- **Earlier work**: what others have found or argued, often with names and years (*Previous studies have found...*). The article usually answers it by filling a gap, extending it, or disagreeing.\n- **The claim**: the article's own answer (*We argue that...*, *We conclude that...*).\n- **The evidence**: data, records, quotations or results that support the claim, often with numbers.\n- **A limitation**: what the evidence cannot show (*Because our sample came from one city...*).\n\n> **Watch out.** Separate **earlier work** from the authors' own **claim**: a sentence naming prior studies or past researchers reports the conversation so far, not the article's own conclusion.",
+      "一篇学术文章是研究者之间对话中的一次发言，几乎每个句子都在完成五种**论证步骤**之一。\n\n- **问题**：文章要回答什么（*This article asks why...*）。\n- **已有研究**：别人已经发现或论证了什么，常带有人名和年份（*Previous studies have found...*）。文章通常通过填补空白、加以拓展或提出异议来回应它。\n- **主张**：文章自己的答案（*We argue that...*、*We conclude that...*）。\n- **证据**：支持主张的数据、记录、引文或结果，常带有数字。\n- **局限**：证据无法说明的东西（*Because our sample came from one city...*）。\n\n> **注意。** 分清**已有研究**与作者自己的**主张**：提到前人研究或过去学者的句子是在交代已有讨论，而不是本文自己的结论。",
     ),
     question: t("Which move does this sentence from an article make?", "文章中的这个句子完成的是哪一个论证步骤？"),
     bank: movesBank,
@@ -618,6 +630,10 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       ],
     },
     zh: { [question]: "问题", [earlier]: "已有研究", [claim]: "主张", [evidence]: "证据", [limitation]: "局限" },
+    check: (right) => [
+      `Ask what job the sentence performs in the argument (question, earlier work, claim, evidence, or limitation) to confirm **${right}**.`,
+      `判断这句话在论证中承担的角色（问题、已有研究、主张、证据或局限），即可确认为**${right === question ? "问题" : right === earlier ? "已有研究" : right === claim ? "主张" : right === evidence ? "证据" : "局限"}**。`,
+    ],
     next: abstractMoveStep,
   }),
   labelTopic({
@@ -627,13 +643,17 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       "Peer review, abstracts and references, and telling a scholarly source from a popular or an unreliable one.",
       "同行评审、摘要和参考文献，以及区分学术资料、大众资料和不可靠的资料。",
     ),
+    intro: t(
+      "A glossy magazine story on sleep, a university-press study, and a mattress ad all talk about the same topic—yet only one can anchor an academic claim. Learning the signals of peer review lets you sort them fast.",
+      "关于睡眠的杂志报道、大学出版社的学术专著和床垫广告讲的都是同一个话题，但只有一种能支撑学术论点。掌握同行评审等识别信号，就能迅速把它们分清。",
+    ),
     prerequisites: ["evaluating-sources"],
     encompasses: [{ topic: "evaluating-sources", weight: 0.3 }],
     point: "telling-sources-apart",
     pointTitle: t("Telling Sources Apart", "区分资料类型"),
     explanation: t(
-      "Research papers rest on **scholarly** sources, so learn to recognize them.\n\n- A **scholarly source** is written by experts for experts and checked before publication, usually by **peer review**: other researchers read it anonymously and recommend changes or rejection. It names its authors and their institutions, explains its methods, and lists its references. Journal articles, books from university presses, theses and conference papers are typical.\n- A **popular source**, such as a newspaper, a magazine, a documentary or a book for general readers, can be accurate and useful for background, but it is written for the public, is not peer reviewed and seldom shows its evidence in full. Follow it back to the study it reports.\n- An **unreliable source** gives no author or no evidence, sells something, or cannot be checked. Do not cite it as evidence.\n\nTo search, use the library's databases rather than a general search engine, read the **abstract** first to decide whether a source fits, and use each good source's reference list to find others.",
-      "研究论文建立在**学术**资料之上，所以要学会识别它们。\n\n- **学术资料**由专家为专家撰写，发表前经过审核，通常是**同行评审**：其他研究者匿名审读，并建议修改或拒稿。它写明作者及其所属机构，说明研究方法，列出参考文献。期刊论文、大学出版社的书、学位论文和会议论文都是典型的学术资料。\n- **大众资料**，如报纸、杂志、纪录片或面向普通读者的书，可以准确，也可用作背景，但它是写给公众的，未经同行评审，很少完整展示证据。要顺着它找到它所报道的原始研究。\n- **不可靠的资料**没有作者或没有证据，在推销东西，或者无法核实。不要把它当作证据引用。\n\n查找资料时，用图书馆的数据库而不是普通搜索引擎；先读**摘要**，判断资料是否合用；再利用每份好资料的参考文献找到其他资料。",
+      "Research papers rest on **scholarly** sources, so learn to recognize them.\n\n- A **scholarly source** is written by experts for experts and checked before publication, usually by **peer review**: other researchers read it anonymously and recommend changes or rejection. It names its authors and their institutions, explains its methods, and lists its references. Journal articles, books from university presses, theses and conference papers are typical.\n- A **popular source**, such as a newspaper, a magazine, a documentary or a book for general readers, can be accurate and useful for background, but it is written for the public, is not peer reviewed and seldom shows its evidence in full. Follow it back to the study it reports.\n- An **unreliable source** gives no author or no evidence, sells something, or cannot be checked. Do not cite it as evidence.\n\n> **Watch out.** Do not call a reputable newspaper or documentary **unreliable**—it is a **popular source** (accurate for background, just not peer-reviewed), whereas anonymous or promotional pages with no checkable evidence are **unreliable**.",
+      "研究论文建立在**学术**资料之上，所以要学会识别它们。\n\n- **学术资料**由专家为专家撰写，发表前经过审核，通常是**同行评审**：其他研究者匿名审读，并建议修改或拒稿。它写明作者及其所属机构，说明研究方法，列出参考文献。期刊论文、大学出版社的书、学位论文和会议论文都是典型的学术资料。\n- **大众资料**，如报纸、杂志、纪录片或面向普通读者的书，可以准确，也可用作背景，但它是写给公众的，未经同行评审，很少完整展示证据。要顺着它找到它所报道的原始研究。\n- **不可靠的资料**没有作者或没有证据，在推销东西，或者无法核实。不要把它当作证据引用。\n\n> **注意。** 不要把正规报纸或纪录片归为**不可靠的资料**——它们属于**大众资料**（可作背景参考，只是未经同行评审）；没有可核查作者或证据、或以推销为目的的才算**不可靠的资料**。",
     ),
     question: t("What kind of source is this?", "这是哪一类资料？"),
     bank: sourceBank,
@@ -652,6 +672,10 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       ],
     },
     zh: { [scholarly]: "学术资料", [popular]: "大众资料", [unreliable]: "不可靠的资料" },
+    check: (right) => [
+      `Check three cues—expert authorship, peer review with methods/references, and verifiable evidence—to confirm **${right}**.`,
+      `核查三条线索——是否由专家撰写、是否经同行评审并附方法与参考文献、是否有可核查的证据——确认为**${right === scholarly ? "学术资料" : right === popular ? "大众资料" : "不可靠的资料"}**。`,
+    ],
     next: sourceForNeedStep,
   }),
   labelTopic({
@@ -661,13 +685,17 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       "Following a claim back to the study it came from, and noticing where it changed on the way.",
       "顺着一个说法找到它所出自的研究，并注意它在传播途中哪里发生了变化。",
     ),
+    intro: t(
+      "A study of 400 commuters in one city finds a modest link between cycling and lower stress; two headlines later it has turned into *Cycling cures stress everywhere*. In this topic, you compare later reports against original studies to spot exaggeration, broadening, and false causation.",
+      "一项针对某市 400 名通勤者的研究发现骑车与较低压力略有相关，转过两手新闻标题就变成了“骑车在各地都能根治压力”。本主题带你把转述报道与原始研究对照，识破夸大、扩大范围和把关联说成因果。",
+    ),
     prerequisites: ["evaluating-sources"],
     encompasses: [{ topic: "evaluating-sources", weight: 0.2 }],
     point: "how-claims-change",
     pointTitle: t("How Claims Change", "说法是怎样变化的"),
     explanation: t(
-      "A finding often reaches you second or third hand, through a news story, a post or a textbook, and it may have changed on the way. Before you cite a claim, trace it back to the original study and compare the two.\n\n- **Faithful**: the report keeps the finding's size, certainty and scope.\n- **Exaggerated**: the report makes the effect bigger or surer than it was: *slightly* becomes *dramatically*, *more likely* becomes *almost always*.\n- **Broadened**: the report extends the finding to people, places or things the study never included: one city becomes *everywhere*, teenagers become *people of all ages*.\n- **A link turned into a cause**: the study found that two things go together, and the report says that one *makes*, *lowers* or *raises* the other. Only an experiment can show a cause.\n\nCite the original whenever you can, and describe it as carefully as its authors did.",
-      "一个研究发现常常是经过新闻报道、帖子或教科书转了两三手才到你这里的，途中可能已经变了样。引用一个说法之前，要追溯到原始研究，把两者加以比较。\n\n- **忠实于原文**：报道保持了发现的程度、确定性和范围。\n- **夸大**：报道让效果显得比实际更大或更确定：*slightly* 变成 *dramatically*，*more likely* 变成 *almost always*。\n- **扩大范围**：报道把发现推广到研究从未涉及的人群、地方或事物：一座城市变成*各地*，青少年变成*所有年龄的人*。\n- **把关联说成因果**：研究发现两件事同时出现，报道却说其中一件*造成*、*降低*或*提高*了另一件。只有实验才能证明因果。\n\n尽可能引用原始研究，并像其作者那样谨慎地描述它。",
+      "A finding often reaches you second or third hand, through a news story, a post or a textbook, and it may have changed on the way. Before you cite a claim, trace it back to the original study and compare the two.\n\n- **Faithful**: the report keeps the finding's size, certainty and scope.\n- **Exaggerated**: the report makes the effect bigger or surer than it was: *slightly* becomes *dramatically*, *more likely* becomes *almost always*.\n- **Broadened**: the report extends the finding to people, places or things the study never included: one city becomes *everywhere*, teenagers become *people of all ages*.\n- **A link turned into a cause**: the study found that two things go together, and the report says that one *makes*, *lowers* or *raises* the other. Only an experiment can show a cause.\n\nCite the original whenever you can, and describe it as carefully as its authors did.\n\n> **Watch out.** Check the exact change between the two sentences: a stronger adverb (*dramatically*, *always*) = **exaggerated**, a wider group (*everywhere*, *all ages*) = **broadened**, and a causal verb (*makes*, *lowers*, *raises*) from a non-experimental study = **a link turned into a cause**.",
+      "一个研究发现常常是经过新闻报道、帖子或教科书转了两三手才到你这里的，途中可能已经变了样。引用一个说法之前，要追溯到原始研究，把两者加以比较。\n\n- **忠实于原文**：报道保持了发现的程度、确定性和范围。\n- **夸大**：报道让效果显得比实际更大或更确定：*slightly* 变成 *dramatically*，*more likely* 变成 *almost always*。\n- **扩大范围**：报道把发现推广到研究从未涉及的人群、地方或事物：一座城市变成*各地*，青少年变成*所有年龄的人*。\n- **把关联说成因果**：研究发现两件事同时出现，报道却说其中一件*造成*、*降低*或*提高*了另一件。只有实验才能证明因果。\n\n尽可能引用原始研究，并像其作者那样谨慎地描述它。\n\n> **注意。** 对比原研究和后来的报道到底改了哪一处：换了更绝对的程度词（*dramatically*、*always*）是**夸大**；放大了适用人群或地区（*everywhere*、*all ages*）是**扩大范围**；把观察调查改成因果动词（*makes*、*lowers*、*raises*）则是**把关联说成因果**。",
     ),
     question: t("How does the later report treat the original finding?", "后来的报道是怎样对待原始发现的？"),
     bank: traceBank,
@@ -687,6 +715,10 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       ],
     },
     zh: { [faithful]: "忠实于原文", [exaggerated]: "夸大", [broadened]: "扩大范围", [caused]: "把关联说成因果" },
+    check: (right) => [
+      `Compare the later report against the original study on three points—effect size, group studied, and link vs. cause—to confirm it is **${right}**.`,
+      `把后来报道与原始研究从效果大小、研究对象、关联还是因果三点逐一对照，确认它属于**${right === faithful ? "忠实于原文" : right === exaggerated ? "夸大" : right === broadened ? "扩大范围" : "把关联说成因果"}**。`,
+    ],
     next: faithfulReportStep(claimCores),
   }),
   labelTopic({
@@ -696,13 +728,17 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       "The abstract, introduction, methods, results and discussion, and what each one tells you.",
       "摘要、引言、方法、结果和讨论，以及每一部分告诉你什么。",
     ),
+    intro: t(
+      "Experienced readers rarely read a twenty-page study straight through like a novel. Knowing the five standard sections—abstract, introduction, methods, results, and discussion—lets you jump straight to the exact evidence you need.",
+      "有经验的读者很少像读小说那样从头到尾读完二十页论文。熟悉摘要、引言、方法、结果和讨论这五个标准部分，就能直奔自己需要的信息。",
+    ),
     prerequisites: ["reading-academic-arguments"],
     encompasses: [{ topic: "reading-academic-arguments", weight: 0.3 }],
     point: "the-parts-of-a-paper",
     pointTitle: t("The Parts of a Paper", "论文的各个部分"),
     explanation: t(
-      "Most research papers in the sciences and social sciences follow the same order, and knowing it lets you read them efficiently.\n\n- **The abstract**: the whole study in one paragraph, its question, method, main finding and what it suggests.\n- **The introduction**: why the topic matters, what earlier work has found, and the gap or question this study takes up.\n- **The methods**: who or what was studied and exactly how, in enough detail for someone to repeat it.\n- **The results**: what was found, usually as numbers, tables and figures, without interpretation.\n- **The discussion**: what the results mean, how they fit earlier work, their limitations, and what should be studied next.\n\nRead the abstract first to decide whether the paper is relevant, then the discussion to see what the authors claim, and only then the methods and results to judge whether the claim holds.",
-      "理科和社会科学的大多数研究论文都按相同的顺序编排，了解这一点能让你高效地阅读。\n\n- **摘要**：用一段话概括整个研究，包括问题、方法、主要发现及其意义。\n- **引言**：这个主题为什么重要，已有研究发现了什么，本研究要填补的空白或要回答的问题。\n- **方法**：研究了谁或什么，具体是怎样研究的，详细到别人可以重复。\n- **结果**：发现了什么，通常用数字、表格和图表呈现，不加解释。\n- **讨论**：结果意味着什么，与已有研究如何对应，有哪些局限，下一步该研究什么。\n\n先读摘要，判断论文是否相关；再读讨论，看作者主张什么；最后读方法和结果，判断主张是否站得住。",
+      "Most research papers in the sciences and social sciences follow the same order, and knowing it lets you read them efficiently.\n\n- **The abstract**: the whole study in one paragraph, its question, method, main finding and what it suggests.\n- **The introduction**: why the topic matters, what earlier work has found, and the gap or question this study takes up.\n- **The methods**: who or what was studied and exactly how, in enough detail for someone to repeat it.\n- **The results**: what was found, usually as numbers, tables and figures, without interpretation.\n- **The discussion**: what the results mean, how they fit earlier work, their limitations, and what should be studied next.\n\n> **Watch out.** Separate **results** from **discussion**: plain numbers and statistical comparisons belong in **results**, while explanations, implications, and limitations belong in **discussion**.",
+      "理科和社会科学的大多数研究论文都按相同的顺序编排，了解这一点能让你高效地阅读。\n\n- **摘要**：用一段话概括整个研究，包括问题、方法、主要发现及其意义。\n- **引言**：这个主题为什么重要，已有研究发现了什么，本研究要填补的空白或要回答的问题。\n- **方法**：研究了谁或什么，具体是怎样研究的，详细到别人可以重复。\n- **结果**：发现了什么，通常用数字、表格和图表呈现，不加解释。\n- **讨论**：结果意味着什么，与已有研究如何对应，有哪些局限，下一步该研究什么。\n\n> **注意。** 分清**结果**与**讨论**：单纯报告数字和统计比较属于**结果**，而解释原因、讨论意义或承认局限则属于**讨论**。",
     ),
     question: t("Which part of a research paper does this sentence most likely come from?", "这个句子最可能出自研究论文的哪一部分？"),
     bank: paperBank,
@@ -723,6 +759,10 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       ],
     },
     zh: { [abstract]: "摘要", [introduction]: "引言", [methods]: "方法", [results]: "结果", [discussion]: "讨论" },
+    check: (right) => [
+      `Match the sentence's job—overview, background/gap, procedure, raw figures, or interpretation—to confirm **${right}**.`,
+      `对照句子承担的任务（全篇概览、背景/空白、实验步骤、原始数据或意义解读），确认为**${right === abstract ? "摘要" : right === introduction ? "引言" : right === methods ? "方法" : right === results ? "结果" : "讨论"}**。`,
+    ],
     next: sectionStep,
   }),
   labelTopic({
@@ -732,13 +772,17 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       "Diction, sentence length and rhythm, and how they shape a reader's experience.",
       "措辞、句子长短和节奏，以及它们怎样影响读者的感受。",
     ),
+    intro: t(
+      "Compare *The lights went out. Nobody moved. Then the door opened.* with a single winding sentence that builds clause upon clause: the words carry the same event, yet sentence length, diction, and rhythm create a completely different feel.",
+      "比较 *The lights went out. Nobody moved. Then the door opened.* 和一个层层叠加的长句：讲的是同一件事，但句子长短、措辞与节奏营造出的读者感受截然不同。",
+    ),
     prerequisites: ["rhetorical-devices"],
     encompasses: [{ topic: "rhetorical-devices", weight: 0.2 }],
     point: "naming-a-style",
     pointTitle: t("Naming a Style", "辨识风格"),
     explanation: t(
-      "**Style** is how a writer says something, and it changes what the reader feels. Three things make most of it.\n\n- **Diction**, the choice of words. **Formal, technical** diction uses long, precise and specialized words (*administration of the compound*, *indemnify*); it sounds authoritative and distant. **Plain, informal** diction uses everyday words, contractions and the rhythms of speech (*Honestly, the test was a mess*); it sounds close and personal.\n- **Sentence length**. **Short sentences** in a row slow the reader down and make each fact land hard; they suit shock and emphasis. **A long sentence that builds**, adding phrase after phrase, carries the reader forward and often saves its main point for the end.\n- **Rhythm**. **Repetition** of a word or a structure (*we will rebuild..., we will rebuild...*) gives prose the beat of a speech and binds its ideas together.\n\nTo analyze style, name the feature, quote it, and say what it does to the reader.",
-      "**风格**是作者表达的方式，它会改变读者的感受。风格主要由三个方面构成。\n\n- **措辞**，即用词的选择。**正式、专业**的措辞使用长而精确的专门词语（*administration of the compound、indemnify*），听起来权威而有距离感。**朴素、随意**的措辞使用日常词语、缩略形式和口语节奏（*Honestly, the test was a mess*），听起来亲近而个人化。\n- **句子长短**。一连串的**短句**让读者放慢速度，让每个事实都掷地有声，适合表现震惊和强调。**层层推进的长句**一个短语接一个短语地添加，带着读者向前走，常把要点留到最后。\n- **节奏**。词语或结构的**重复**（*we will rebuild..., we will rebuild...*）使文章具有演讲的节拍，并把各个意思联结在一起。\n\n分析风格时，要指出特征、引用原文，并说明它对读者产生了什么作用。",
+      "**Style** is how a writer says something, and it changes what the reader feels. Three things make most of it.\n\n- **Diction**, the choice of words. **Formal, technical** diction uses long, precise and specialized words (*administration of the compound*, *indemnify*); it sounds authoritative and distant. **Plain, informal** diction uses everyday words, contractions and the rhythms of speech (*Honestly, the test was a mess*); it sounds close and personal.\n- **Sentence length**. **Short sentences** in a row slow the reader down and make each fact land hard; they suit shock and emphasis. **A long sentence that builds**, adding phrase after phrase, carries the reader forward and often saves its main point for the end.\n- **Rhythm**. **Repetition** of a word or a structure (*we will rebuild..., we will rebuild...*) gives prose the beat of a speech and binds its ideas together.\n\n> **Watch out.** Look at the **dominant** craft choice in the passage: repeated openings signal **repetition for rhythm**, rapid full stops signal **short sentences**, and specialized jargon vs. everyday contractions separates **formal** from **informal** diction.",
+      "**风格**是作者表达的方式，它会改变读者的感受。风格主要由三个方面构成。\n\n- **措辞**，即用词的选择。**正式、专业**的措辞使用长而精确的专门词语（*administration of the compound、indemnify*），听起来权威而有距离感。**朴素、随意**的措辞使用日常词语、缩略形式和口语节奏（*Honestly, the test was a mess*），听起来亲近而个人化。\n- **句子长短**。一连串的**短句**让读者放慢速度，让每个事实都掷地有声，适合表现震惊和强调。**层层推进的长句**一个短语接一个短语地添加，带着读者向前走，常把要点留到最后。\n- **节奏**。词语或结构的**重复**（*we will rebuild..., we will rebuild...*）使文章具有演讲的节拍，并把各个意思联结在一起。\n\n> **注意。** 抓住文段里最**突出**的手法：反复出现的开头结构是**用重复营造节奏**，接连不断的句号是**用短句强调**，专业术语与口语缩略词则区分了**正式**与**随意**措辞。",
     ),
     question: t("Which feature of style stands out most in this passage?", "这段文字最突出的风格特征是什么？"),
     bank: styleBank,
@@ -765,6 +809,10 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       [informal]: "朴素、随意的措辞",
       [repetition]: "用重复营造节奏",
     },
+    check: (right) => [
+      `Re-read the passage aloud and check its sentence boundaries, word register, and repeated patterns to confirm **${right}**.`,
+      `默读一遍文段，检查句界长短、用词正式度与重复结构，即可确认为**${right === short ? "用短句强调" : right === long ? "层层推进的长句" : right === formal ? "正式、专业的措辞" : right === informal ? "朴素、随意的措辞" : "用重复营造节奏"}**。`,
+    ],
     next: styleChoiceStep,
   }),
   drawn(
@@ -775,13 +823,17 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
         "What data show and hide: correlation and cause, small samples, and misleading comparisons and scales.",
         "数据揭示和掩盖了什么：相关与因果、小样本，以及误导性的比较和刻度。",
       ),
+      intro: t(
+        "A chart showing umbrella sales and rain-boot sales climbing together looks convincing until you notice neither causes the other—rain drives both. In this topic, you diagnose flawed conclusions drawn from charts and statistics, and choose the modest claim the data genuinely support.",
+        "一张显示雨伞销量和雨靴销量同步上涨的图表看似很有说服力，但两者互不为因果——真正推动它们的是下雨。本主题带你诊断图表和统计数据中的错误推论，并选出数据真正支持的审慎结论。",
+      ),
       prerequisites: ["evaluating-sources", "logical-fallacies"],
       encompasses: [{ topic: "logical-fallacies", weight: 0.2 }],
       point: "judging-a-conclusion-from-data",
       pointTitle: t("Judging a Conclusion From Data", "判断由数据得出的结论"),
       explanation: t(
-        "Numbers make an argument look solid, so check what they can actually support. Three faults are common.\n\n- **Correlation taken as cause**: two things rise and fall together, and the writer concludes that one causes the other. A third factor may drive both (hot weather sells ice cream and causes sunburn), or the cause may run the other way. Only a controlled experiment shows a cause.\n- **Too small a sample**: a few cases, or cases from one place, are used to describe a whole population.\n- **A misleading comparison**: raw totals compared where rates per person are needed, a chart whose axis does not start at zero, months or groups that are not alike, or only the years that suit the argument.\n\nA **supported conclusion** stays within the data: it describes what was measured, among whom, and with the certainty the method allows.",
-        "数字让论证看起来很扎实，所以要检查它们究竟能支持什么。常见的错误有三种。\n\n- **把相关当成因果**：两件事一起升降，作者就断定其中一件导致了另一件。可能是第三个因素同时推动了两者（炎热的天气既卖出冰淇淋又造成晒伤），也可能因果方向正好相反。只有对照实验才能证明因果。\n- **样本太小**：用少数几个案例，或者一个地方的案例，来描述整个群体。\n- **误导性的比较**：在需要比较人均比率时比较总数，图表的纵轴不从零开始，比较的月份或群体并不相似，或者只挑选对论点有利的年份。\n\n**有依据的结论**不超出数据的范围：它描述测量了什么、在哪些人中测量，并且只达到研究方法所允许的确定程度。",
+        "Numbers make an argument look solid, so check what they can actually support. Three faults are common.\n\n- **Correlation taken as cause**: two things rise and fall together, and the writer concludes that one causes the other. A third factor may drive both (hot weather sells ice cream and causes sunburn), or the cause may run the other way. Only a controlled experiment shows a cause.\n- **Too small a sample**: a few cases, or cases from one place, are used to describe a whole population.\n- **A misleading comparison**: raw totals compared where rates per person are needed, a chart whose axis does not start at zero, months or groups that are not alike, or only the years that suit the argument.\n\nA **supported conclusion** stays within the data: it describes what was measured, among whom, and with the certainty the method allows.\n\n> **Watch out.** Separate the three data faults cleanly: *how many cases* = **too small a sample**, *totals vs. rates or truncated axes* = **a misleading comparison**, and *two trends moving together claimed as cause* = **correlation taken as cause**.",
+        "数字让论证看起来很扎实，所以要检查它们究竟能支持什么。常见的错误有三种。\n\n- **把相关当成因果**：两件事一起升降，作者就断定其中一件导致了另一件。可能是第三个因素同时推动了两者（炎热的天气既卖出冰淇淋又造成晒伤），也可能因果方向正好相反。只有对照实验才能证明因果。\n- **样本太小**：用少数几个案例，或者一个地方的案例，来描述整个群体。\n- **误导性的比较**：在需要比较人均比率时比较总数，图表的纵轴不从零开始，比较的月份或群体并不相似，或者只挑选对论点有利的年份。\n\n**有依据的结论**不超出数据的范围：它描述测量了什么、在哪些人中测量，并且只达到研究方法所允许的确定程度。\n\n> **注意。** 分清三类数据硬伤：看样本量够不够是**样本太小**，看总数/比率或截断纵轴是**误导性的比较**，看同步升降被硬说成因果则是**把相关当成因果**。",
       ),
       question: t("Is the conclusion supported, or what is wrong with it?", "这个结论有依据吗？如果没有，问题出在哪里？"),
       bank: statsBank,
@@ -804,6 +856,10 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
         ],
       },
       zh: { [supported]: "有依据的结论", [correlation]: "把相关当成因果", [small]: "样本太小", [misleading]: "误导性的比较" },
+      check: (right) => [
+        `Check the data's sample size, comparison baseline/scale, and study design against the conclusion's claim to confirm **${right}**.`,
+        `对照样本规模、比较基线或刻度以及研究设计来复核结论力度，确认为**${right === supported ? "有依据的结论" : right === correlation ? "把相关当成因果" : right === small ? "样本太小" : "误导性的比较"}**。`,
+      ],
       next: dataConclusionStep,
     }),
     { "judging-a-conclusion-from-data": risingTogether },
@@ -815,13 +871,17 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       "Policies, postings, minutes and instructions, and telling what they require from what they offer or report.",
       "政策、招聘启事、会议纪要和说明，以及区分其中哪些是要求、哪些是可选、哪些只是告知。",
     ),
+    intro: t(
+      "A three-line office notice can pack a mandatory deadline (*must submit by Friday*), an optional perk (*may join the lunch*), and background news (*the elevator was serviced*) side by side. Spotting the signal words keeps you from missing what actually matters.",
+      "短短三行公司通知往往把硬性要求（*must submit by Friday*）、可选福利（*may join the lunch*）和背景信息（*the elevator was serviced*）混写在一起。抓住关键词，才能不漏掉真正必须办的事。",
+    ),
     prerequisites: ["text-features"],
     encompasses: [{ topic: "text-features", weight: 0.2 }],
     point: "what-a-document-asks-of-you",
     pointTitle: t("What a Document Asks of You", "文件对你有什么要求"),
     explanation: t(
-      "Workplace documents mix three kinds of sentence, and reading them well means telling which is which.\n\n- **A required action** is something you must do. Look for *must*, *shall*, *are required to*, a plain command (*Return the form...*), and deadlines with consequences (*the offer lapses*).\n- **An optional action** is something you may do if you wish. Look for *may*, *can*, *are welcome to*, *are encouraged to*, *feel free to*, *if you would like*, and *not required*.\n- **Information only** asks nothing of you: it reports a fact, a change or a decision (*The office will be closed on 1 January*; *The minutes are attached for your records*).\n\nWhen you read a policy, a job posting or a set of instructions, mark every required action and its deadline first; those are the sentences that cost you if you miss them.",
-      "职场文件里混杂着三类句子，读好它们就是要分清哪句属于哪类。\n\n- **必须执行的行动**是你一定要做的事。注意 *must、shall、are required to*、直接的祈使句（*Return the form...*）以及带有后果的截止日期（*the offer lapses*）。\n- **可选的行动**是你愿意就可以做的事。注意 *may、can、are welcome to、are encouraged to、feel free to、if you would like* 和 *not required*。\n- **仅供告知**的句子对你没有任何要求：它报告一个事实、一项变化或一个决定（*The office will be closed on 1 January*；*The minutes are attached for your records*）。\n\n阅读政策、招聘启事或说明时，先标出每一项必须执行的行动及其截止日期，因为错过这些句子会让你付出代价。",
+      "Workplace documents mix three kinds of sentence, and reading them well means telling which is which.\n\n- **A required action** is something you must do. Look for *must*, *shall*, *are required to*, a plain command (*Return the form...*), and deadlines with consequences (*the offer lapses*).\n- **An optional action** is something you may do if you wish. Look for *may*, *can*, *are welcome to*, *are encouraged to*, *feel free to*, *if you would like*, and *not required*.\n- **Information only** asks nothing of you: it reports a fact, a change or a decision (*The office will be closed on 1 January*; *The minutes are attached for your records*).\n\n> **Watch out.** Phrases like *are encouraged to* and *are welcome to* sound polite and positive, yet they signal an **optional action**, not a **required action**.",
+      "职场文件里混杂着三类句子，读好它们就是要分清哪句属于哪类。\n\n- **必须执行的行动**是你一定要做的事。注意 *must、shall、are required to*、直接的祈使句（*Return the form...*）以及带有后果的截止日期（*the offer lapses*）。\n- **可选的行动**是你愿意就可以做的事。注意 *may、can、are welcome to、are encouraged to、feel free to、if you would like* 和 *not required*。\n- **仅供告知**的句子对你没有任何要求：它报告一个事实、一项变化或一个决定（*The office will be closed on 1 January*；*The minutes are attached for your records*）。\n\n> **注意。** *are encouraged to*、*are welcome to* 听起来积极客气，但它们表示的是**可选的行动**，而不是**必须执行的行动**。",
     ),
     question: t("What does this sentence from a workplace document ask of the reader?", "职场文件中的这个句子对读者有什么要求？"),
     bank: workBank,
@@ -837,6 +897,10 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       [information]: ["It reports a fact or a decision and asks the reader to do nothing.", "它报告一个事实或决定，不要求读者做任何事。"],
     },
     zh: { [required]: "必须执行的行动", [optional]: "可选的行动", [information]: "仅供告知" },
+    check: (right) => [
+      `Check the modal or verb (*must/required/command* vs. *may/welcome/encouraged* vs. plain statement of fact) to confirm **${right}**.`,
+      `检查句中的情态动词或句式（*must/required*/祈使句 vs. *may/welcome/encouraged* vs. 纯事实陈述），确认为**${right === required ? "必须执行的行动" : right === optional ? "可选的行动" : "仅供告知"}**。`,
+    ],
     next: actionStep,
   }),
   labelTopic({
@@ -846,13 +910,17 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       "What a funder asks for: who may apply, how proposals will be judged, what to submit, and what the money covers.",
       "资助方的要求：谁可以申请、提案怎样评审、需要提交什么，以及资金可以用于什么。",
     ),
+    intro: t(
+      "A great project idea still gets rejected unread if it misses a single rule in the request for proposals—wrong applicant type, ineligible cost, or one page too long. Sorting RFP rules into four buckets prevents easy disqualifications.",
+      "哪怕项目构想再精彩，只要触犯项目征集书里的一条硬规定——资格不符、预算列了不资助的项目，或超出一页——就会在审阅前被直接刷掉。把要求归入四类，就能避开这类低级失误。",
+    ),
     prerequisites: ["reading-workplace-documents"],
     encompasses: [{ topic: "reading-workplace-documents", weight: 0.3 }],
     point: "the-parts-of-a-request",
     pointTitle: t("The Parts of a Request", "征集书的各个部分"),
     explanation: t(
-      "A **request for proposals** (RFP) is a funder's invitation to apply for money or a contract. Before you write a word of a proposal, read the request and sort its sentences into four kinds.\n\n- **Who may apply**: the eligibility rules. If you do not qualify, nothing else matters.\n- **How proposals will be judged**: the criteria and their weights. Your proposal should answer each one, in the funder's own words where you can.\n- **What to submit and when**: page limits, required sections and attachments, the format and the deadline. Funders often reject proposals that break these rules without reading them.\n- **What the funding covers**: the amount, the time it covers, and what the money may and may not be spent on. Your budget must fit.\n\nMake a checklist from the request and tick off each point as your proposal meets it.",
-      "**项目征集书**（request for proposals，简称 RFP）是资助方邀请申请资金或合同的文件。在动笔写提案之前，先读征集书，把其中的句子分成四类。\n\n- **谁可以申请**：申请资格。如果你不符合资格，其他一切都无从谈起。\n- **提案怎样评审**：评审标准及其权重。你的提案应该逐条回应，尽可能使用资助方自己的措辞。\n- **需要提交什么、何时提交**：篇幅限制、必需的部分和附件、格式和截止日期。违反这些规则的提案常常不经审阅就被拒绝。\n- **资金可以用于什么**：金额、资助期限，以及资金可以和不可以用于哪些方面。你的预算必须与之相符。\n\n根据征集书列一张清单，提案每满足一项就勾掉一项。",
+      "A **request for proposals** (RFP) is a funder's invitation to apply for money or a contract. Before you write a word of a proposal, read the request and sort its sentences into four kinds.\n\n- **Who may apply**: the eligibility rules. If you do not qualify, nothing else matters.\n- **How proposals will be judged**: the criteria and their weights. Your proposal should answer each one, in the funder's own words where you can.\n- **What to submit and when**: page limits, required sections and attachments, the format and the deadline. Funders often reject proposals that break these rules without reading them.\n- **What the funding covers**: the amount, the time it covers, and what the money may and may not be spent on. Your budget must fit.\n\n> **Watch out.** Do not mix up **what to submit** (attachments like a budget sheet or page limits) with **what the funding covers** (what the grant money itself may pay for).",
+      "**项目征集书**（request for proposals，简称 RFP）是资助方邀请申请资金或合同的文件。在动笔写提案之前，先读征集书，把其中的句子分成四类。\n\n- **谁可以申请**：申请资格。如果你不符合资格，其他一切都无从谈起。\n- **提案怎样评审**：评审标准及其权重。你的提案应该逐条回应，尽可能使用资助方自己的措辞。\n- **需要提交什么、何时提交**：篇幅限制、必需的部分和附件、格式和截止日期。违反这些规则的提案常常不经审阅就被拒绝。\n- **资金可以用于什么**：金额、资助期限，以及资金可以和不可以用于哪些方面。你的预算必须与之相符。\n\n> **注意。** 不要把**需要提交什么**（如必须附预算表、页数上限）和**资金可以用于什么**（资助款本身能支付哪些开销）混为一谈。",
     ),
     question: t("Which part of the request for proposals does this sentence belong to?", "这个句子属于项目征集书的哪一部分？"),
     bank: rfpBank,
@@ -863,6 +931,10 @@ export const readingSkillTopicsCollege: readonly TopicDef[] = [
       [covers]: ["It says how much money is offered or what it may be spent on.", "它说明提供多少资金或资金可以用于什么。"],
     },
     zh: { [eligible]: "谁可以申请", [judged]: "提案怎样评审", [submit]: "需要提交什么、何时提交", [covers]: "资金可以用于什么" },
+    check: (right) => [
+      `Ask whether the rule governs applicant eligibility, scoring criteria, submission format/deadline, or allowed expenses to confirm **${right}**.`,
+      `判断该条款约束的是申请资格、评审标准、提交格式/截止时间还是资金用途，即可确认为**${right === eligible ? "谁可以申请" : right === judged ? "提案怎样评审" : right === submit ? "需要提交什么、何时提交" : "资金可以用于什么"}**。`,
+    ],
     next: planCheckStep,
   }),
 ];

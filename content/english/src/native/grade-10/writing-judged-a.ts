@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after, covers } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 
 /** limits are the length limits of a grade 10 essay. */
 export const limits = { minWords: 150, maxChars: 4800 };
@@ -210,6 +210,10 @@ export const judgedTopics10a: readonly TopicDef[] = [
       "Write a short analysis that states the theme of a fable or story as a complete idea and shows, with quoted details, how the text develops it.",
       "写一篇简短的分析，把寓言或故事的主题陈述为一个完整的观点，并引用细节说明文本如何发展这一主题。",
     ),
+    intro: t(
+      "A fable about a crow hoarding bright junk until no room remains for her eggs is not merely about *greed*—it argues that chasing possessions can crowd out what gives life meaning. In this topic, you write a thematic analysis that states a complete idea and traces how the text builds it with short quotations.",
+      "一则写乌鸦不停囤积亮晶晶的杂物、直到巢里再也放不下鸟蛋的寓言，并不只是在讲“贪婪”——它提出追逐占有会挤走生命真正重要的东西。本主题带你写一篇主题分析，提出完整观点并用简短引文追踪文本如何层层展开。",
+    ),
     prerequisites: after("stating-a-theme", "writing-a-literary-analysis-essay"),
     encompasses: covers(0.2, "stating-a-theme"),
     xp: 24,
@@ -220,8 +224,8 @@ export const judgedTopics10a: readonly TopicDef[] = [
         "the-theme-as-an-idea",
         t("The Theme as an Idea", "主题是一个观点"),
         t(
-          "Open with the theme as a **complete idea about life** that the text supports: *The fable suggests that the desire to possess things can crowd out what gives life its meaning.* Do not name only a topic (*greed*) or retell the plot.",
-          "开头要把主题陈述为文本所支持的、**关于人生的完整观点**：*The fable suggests that the desire to possess things can crowd out what gives life its meaning.* 不要只说出一个话题（*greed*），也不要复述情节。",
+          "Open with the theme as a **complete idea about life** that the text supports: *The fable suggests that the desire to possess things can crowd out what gives life its meaning.* Do not name only a topic (*greed*) or retell the plot.\n\n> **Watch out.** Check your opening sentence before drafting the body: if it names only a single abstract noun (*greed*, *kindness*) or recounts what happened to the character, rewrite it as a general, arguable claim about life.",
+          "开头要把主题陈述为文本所支持的、**关于人生的完整观点**：*The fable suggests that the desire to possess things can crowd out what gives life its meaning.* 不要只说出一个话题（*greed*），也不要复述情节。\n\n> **注意。** 动笔写主体段前先核对开头第一句：如果它只说了一个抽象词（如 *greed*、*kindness*）或复述了人物遭遇，就把它改写成关于人生的完整可论证观点。",
         ),
         writingGenerator(
           t(
@@ -231,15 +235,18 @@ export const judgedTopics10a: readonly TopicDef[] = [
           themeBank,
           ["g10-theme-statement", "g10-theme-development", "g10-theme-quotes"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Reread your first paragraph: does it state a complete, arguable idea about life (not a topic word or plot summary), and does every later paragraph point back to it?",
+            "重读第一段：它是否把主题陈述为关于人生的完整可论证观点（而非话题词或情节复述），且后文各段都紧扣它展开？",
+          ),
         ),
       ),
       point(
         "how-the-text-builds-it",
         t("How the Text Builds It", "文本如何构建主题"),
         t(
-          'Then trace **how the text develops** the theme from beginning to end: a pattern, a symbol, a turning point or an ironic ending. Quote short phrases and explain what each one adds: *The word "grateful" is the most painful in the fable, because...*',
-          '然后从头到尾追踪**文本如何发展**这一主题：一种模式、一个象征、一个转折点或一个反讽的结局。引用简短的词句，并解释每一处起了什么作用：*The word "grateful" is the most painful in the fable, because...*',
+          'Then trace **how the text develops** the theme from beginning to end: a pattern, a symbol, a turning point or an ironic ending. Quote short phrases and explain what each one adds: *The word "grateful" is the most painful in the fable, because...*\n\n> **Watch out.** Do not drop a quotation into a paragraph and move on—follow every quoted phrase with a sentence explaining *how* that exact detail advances the theme.',
+          '然后从头到尾追踪**文本如何发展**这一主题：一种模式、一个象征、一个转折点或一个反讽的结局。引用简短的词句，并解释每一处起了什么作用：*The word "grateful" is the most painful in the fable, because...*\n\n> **注意。** 不要把引文放进段落就草草收尾——每处引文后面都要紧跟一句分析，说明这个具体细节*如何*推进主题。',
         ),
         writingGenerator(
           t(
@@ -249,7 +256,10 @@ export const judgedTopics10a: readonly TopicDef[] = [
           themeBank,
           ["g10-theme-development", "g10-theme-quotes", "g10-theme-statement"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check the arc of your body paragraphs: do you move from the opening through the turning point to the ending, quoting short exact phrases and explaining what each adds?",
+            "检查主体段的推进脉络：是否从开头、转折点一路写到结局，并引用简短原词解释每一处如何深化主题？",
+          ),
         ),
       ),
     ],
@@ -261,6 +271,10 @@ export const judgedTopics10a: readonly TopicDef[] = [
       "Write an essay comparing how two texts present the same subject, explaining how differences of language and purpose create different views.",
       "写一篇文章，比较两篇文本如何呈现同一主题，解释语言和写作目的的不同如何形成不同的看法。",
     ),
+    intro: t(
+      "A travel brochure and a fisherman's memoir can look at the exact same coastline and produce two opposite portraits because each writer serves a different reader and goal. In this topic, you write a comparative essay that links both texts under one claim and explains why their language diverges.",
+      "旅游宣传册和老渔民的回忆录面对同一片海岸，却会写出截然相反的图景，因为两者的读者与目的各不相同。本主题带你写一篇比较文章，用一个统领全文的论点把两篇文本联系起来，并剖析语言差异背后的原因。",
+    ),
     prerequisites: after("a-subject-in-two-mediums", "writing-a-compare-and-contrast-essay"),
     encompasses: covers(0.2, "a-subject-in-two-mediums"),
     xp: 24,
@@ -271,8 +285,8 @@ export const judgedTopics10a: readonly TopicDef[] = [
         "a-claim-about-both",
         t("A Claim About Both", "关于两者的论点"),
         t(
-          "Open with a claim that names **what the texts share and how they differ**: *Both texts describe the sea, but the memoir presents it as a force that gives and takes life, while the brochure presents it as harmless.* Then discuss each text with quoted words.",
-          "开头提出一个论点，说明**两篇文本的共同点和不同点**：*Both texts describe the sea, but the memoir presents it as a force that gives and takes life, while the brochure presents it as harmless.* 然后引用原文讨论每篇文本。",
+          "Open with a claim that names **what the texts share and how they differ**: *Both texts describe the sea, but the memoir presents it as a force that gives and takes life, while the brochure presents it as harmless.* Then discuss each text with quoted words.\n\n> **Watch out.** Make sure your thesis mentions *both* texts and states a real contrast between them—writing two separate summaries back to back is not a comparison.",
+          "开头提出一个论点，说明**两篇文本的共同点和不同点**：*Both texts describe the sea, but the memoir presents it as a force that gives and takes life, while the brochure presents it as harmless.* 然后引用原文讨论每篇文本。\n\n> **注意。** 论点必须同时涵盖*两篇*文本并点明核心差异——把两篇各自的概要前后拼在一起并不算比较。",
         ),
         writingGenerator(
           t(
@@ -282,15 +296,18 @@ export const judgedTopics10a: readonly TopicDef[] = [
           compareBank,
           ["g10-compare-claim", "g10-compare-language", "g10-compare-purpose"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your opening claim and body paragraphs: does the thesis name both texts' shared subject and key difference, and do you back each side with short quoted words?",
+            "检查开头论点与主体段：论点是否同时点明两篇文本的共同题材与核心差异，并用简短引文分别支撑两边？",
+          ),
         ),
       ),
       point(
         "why-they-differ",
         t("Why They Differ", "为什么不同"),
         t(
-          "A comparison is more than two summaries. Explain **why** the texts differ: who wrote each one, for whom and for what purpose. *The brochure must make the sea attractive to strangers; the fisherman has lived with it all his life.* End with what reading them together reveals.",
-          "比较不只是两段概要。要解释两篇文本**为什么**不同：各是谁写的，写给谁，出于什么目的。*The brochure must make the sea attractive to strangers; the fisherman has lived with it all his life.* 最后说明把它们放在一起读能揭示什么。",
+          "A comparison is more than two summaries. Explain **why** the texts differ: who wrote each one, for whom and for what purpose. *The brochure must make the sea attractive to strangers; the fisherman has lived with it all his life.* End with what reading them together reveals.\n\n> **Watch out.** Do not stop at listing different words—connect each writer's diction directly to *audience and purpose* so the reader sees why the two portraits diverge.",
+          "比较不只是两段概要。要解释两篇文本**为什么**不同：各是谁写的，写给谁，出于什么目的。*The brochure must make the sea attractive to strangers; the fisherman has lived with it all his life.* 最后说明把它们放在一起读能揭示什么。\n\n> **注意。** 不要只罗列两篇用词的不同——把每篇的措辞直接联系到*读者与写作目的*，让读者看清差异为何产生。",
         ),
         writingGenerator(
           t(
@@ -300,7 +317,10 @@ export const judgedTopics10a: readonly TopicDef[] = [
           compareBank,
           ["g10-compare-purpose", "g10-compare-language", "g10-compare-claim"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify your analysis of cause and conclusion: do you explain *why* each writer's purpose and audience produce different language, and close with an insight gained from reading both together?",
+            "核对原因分析与结尾：是否解释了各自的读者和目的*为何*造就不同的语言，并在结尾点出对照阅读两篇文本的新收获？",
+          ),
         ),
       ),
     ],
@@ -312,6 +332,10 @@ export const judgedTopics10a: readonly TopicDef[] = [
       "Write a descriptive essay that brings a place to life through details of several senses, organized to build one dominant impression.",
       "写一篇描写性文章，用多种感官的细节让一个地方栩栩如生，并组织这些细节来营造一个主导印象。",
     ),
+    intro: t(
+      "Calling a train station *busy* tells the reader almost nothing; capturing the hiss of air brakes, the smell of wet coats, and a conductor's clipped whistle lets the reader step onto the platform. In this topic, you write a descriptive essay powered by multiple senses and unified by one dominant impression.",
+      "说火车站“很热闹”几乎给不出画面；写气刹的嘶嘶声、湿大衣的气味和列车员短促的哨音，才让读者如临站台。本主题带你调动多种感官写一篇地点描写文，并用一个主导印象统领全篇。",
+    ),
     prerequisites: after("creating-atmosphere-with-sensory-details", "writing-a-descriptive-paragraph"),
     encompasses: covers(0.2, "creating-atmosphere-with-sensory-details"),
     xp: 24,
@@ -322,8 +346,8 @@ export const judgedTopics10a: readonly TopicDef[] = [
         "details-of-the-senses",
         t("Details of the Senses", "感官的细节"),
         t(
-          "Describe the place through **at least three senses**, with precise details rather than general words: not *it was noisy* but *a metal shutter rattles up*; not *it smelled nice* but *the sweetness of the first loaves from the bakery stall*.",
-          "通过**至少三种感官**描写这个地方，用精确的细节而不是笼统的词：不说 *it was noisy*，而说 *a metal shutter rattles up*；不说 *it smelled nice*，而说 *the sweetness of the first loaves from the bakery stall*。",
+          "Describe the place through **at least three senses**, with precise details rather than general words: not *it was noisy* but *a metal shutter rattles up*; not *it smelled nice* but *the sweetness of the first loaves from the bakery stall*.\n\n> **Watch out.** Avoid relying on sight alone—audit your draft to make sure sound, smell, touch, or taste appear alongside visual details, and cut vague labels like *nice* or *interesting*.",
+          "通过**至少三种感官**描写这个地方，用精确的细节而不是笼统的词：不说 *it was noisy*，而说 *a metal shutter rattles up*；不说 *it smelled nice*，而说 *the sweetness of the first loaves from the bakery stall*。\n\n> **注意。** 不要只写视觉画面——自查草稿，确保声音、气味、触觉或味觉与视觉细节并重，并删去 *nice*、*interesting* 等空泛词。",
         ),
         writingGenerator(
           t(
@@ -333,15 +357,18 @@ export const judgedTopics10a: readonly TopicDef[] = [
           placeBank,
           ["g10-place-senses", "g10-place-impression", "g10-place-order"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Count the distinct senses in your draft: can you point to concrete, specific details from at least three different senses (not just sight) without falling back on vague adjectives?",
+            "数一数草稿里调动了几种感官：能否指出至少三种不同感官的具体细节（不只靠视觉），并且没有退回到空泛的形容词？",
+          ),
         ),
       ),
       point(
         "one-dominant-impression",
         t("One Dominant Impression", "一个主导印象"),
         t(
-          "Choose **one dominant impression**, such as peace, loss or energy, and let every detail serve it. Order the details clearly, by time, by space or by sense, and end with a sentence that shows what the place means: *In this room, time does not pass; it waits.*",
-          "选择**一个主导印象**，比如宁静、失落或活力，让每个细节都为它服务。按时间、空间或感官清楚地安排细节，并以一个说明这个地方意义的句子结尾：*In this room, time does not pass; it waits.*",
+          "Choose **one dominant impression**, such as peace, loss or energy, and let every detail serve it. Order the details clearly, by time, by space or by sense, and end with a sentence that shows what the place means: *In this room, time does not pass; it waits.*\n\n> **Watch out.** Cut any detail that pulls against your chosen mood or appears in a random order—every paragraph should move smoothly along one clear path (time, space, or sense) toward that single impression.",
+          "选择**一个主导印象**，比如宁静、失落或活力，让每个细节都为它服务。按时间、空间或感官清楚地安排细节，并以一个说明这个地方意义的句子结尾：*In this room, time does not pass; it waits.*\n\n> **注意。** 删掉与主导基调相冲或顺序杂乱的细节——各段要沿着清晰脉络（时间、空间或感官）稳步推进到同一个核心印象。",
         ),
         writingGenerator(
           t(
@@ -351,7 +378,10 @@ export const judgedTopics10a: readonly TopicDef[] = [
           placeBank,
           ["g10-place-impression", "g10-place-order", "g10-place-senses"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check the structure and closing line: can a reader name your single dominant impression, follow your spatial/time order cleanly, and feel what the place means in the final sentence?",
+            "检查结构与结尾句：读者能否一眼说出你营造的唯一主导印象、顺畅跟上时间或空间顺序，并在结尾句读出这个地方的意义？",
+          ),
         ),
       ),
     ],

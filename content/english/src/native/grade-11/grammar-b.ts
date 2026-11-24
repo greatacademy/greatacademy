@@ -138,20 +138,24 @@ const limiting = topic("grammar", {
     "Words such as *only*, *just*, *almost* and *nearly*, which limit the word right after them, and modifiers that squint at two words at once.",
     "*only*、*just*、*almost* 和 *nearly* 等词限定紧跟在它们后面的词，以及同时可能修饰前后两个词的“斜视”修饰语。",
   ],
+  intro: [
+    "Compare *He almost ate the whole loaf* (he touched none of it) with *He ate almost the whole loaf* (only a heel is left). Where you drop *only*, *almost*, or *often* can quietly flip a sentence's meaning. In this topic, you place limiting modifiers cleanly and spot squinting modifiers.",
+    "比较 *He almost ate the whole loaf*（差点吃但一口没吃）与 *He ate almost the whole loaf*（吃掉了几乎整条面包）。*only*、*almost*、*often* 放错一个位置，句意就可能悄悄反转。本主题带你精准安放限定修饰语，并识别制造歧义的“斜视”修饰语。",
+  ],
   after: ["dangling-modifiers"],
   points: [
     choose(
       "what-only-limits",
       ["What Only Limits", "only 限定了什么"],
       [
-        "*Only* limits the word or phrase that comes **right after** it. *She reads only poetry on Sundays* means nothing but poetry; *Only she reads poetry on Sundays* means no one else does; *She reads poetry only on Sundays* means at no other time. Moving *only* moves the meaning, so careful writers put it next to what it limits.",
-        "*Only* 限定**紧跟在它后面**的词或短语。*She reads only poetry on Sundays* 的意思是只读诗；*Only she reads poetry on Sundays* 的意思是没有别人读；*She reads poetry only on Sundays* 的意思是别的时候不读。*only* 一移动，意思就跟着变，所以认真的作者把它放在它所限定的词旁边。",
+        "*Only* limits the word or phrase that comes **right after** it. *She reads only poetry on Sundays* means nothing but poetry; *Only she reads poetry on Sundays* means no one else does; *She reads poetry only on Sundays* means at no other time. Moving *only* moves the meaning, so careful writers put it next to what it limits.\n\n> **Watch out.** Do not read by habit—look at the exact word or phrase standing *immediately to the right* of *only*: subject (*no one else*), object (*nothing else*), or time phrase (*at no other time*).",
+        "*Only* 限定**紧跟在它后面**的词或短语。*She reads only poetry on Sundays* 的意思是只读诗；*Only she reads poetry on Sundays* 的意思是没有别人读；*She reads poetry only on Sundays* 的意思是别的时候不读。*only* 一移动，意思就跟着变，所以认真的作者把它放在它所限定的词旁边。\n\n> **注意。** 不要凭习惯猜测——直接看 *only* 右边紧挨着的是主语（没有别人）、宾语（没有别物）还是时间短语（没有别的时间）。",
       ],
       ["What does *only* limit in this sentence?", "在这个句子里，*only* 限定的是什么？"],
       onlyMeanings,
       (right, shown) => [
-        `In "${shown}", *only* comes right before what it limits, so the sentence means **${right}**.`,
-        `在“${shown}”中，*only* 紧挨在它所限定的成分之前，所以句子的意思是 **${right}**。`,
+        `In "${shown}", *only* comes right before what it limits, so the sentence means **${right}**.\n\n**Check.** Read the word or phrase sitting immediately after *only* in "${shown}": that slot directly signals **${right}**.`,
+        `在“${shown}”中，*only* 紧挨在它所限定的成分之前，所以句子的意思是 **${right}**。\n\n**检验。** 圈出“${shown}”里紧跟在 *only* 后面的成分：它直接对应 **${right}**。`,
       ],
       [
         ["*{wrong}* would need *only* before a different word.", "要表达“{wrong}”，*only* 得放在另一个词前面。"],
@@ -162,12 +166,15 @@ const limiting = topic("grammar", {
       "placing-almost-and-nearly",
       ["Placing Almost and Nearly", "almost 和 nearly 的位置"],
       [
-        "*Almost*, *nearly*, *just* and *only* go before the amount they qualify, not before the verb. *The team lost almost all its games* says it lost most of them; *The team almost lost all its games* says it came close to losing but did not. At the start of the sentence they qualify the whole clause, which is rarely what is meant.",
-        "*Almost*、*nearly*、*just* 和 *only* 应放在它们所修饰的数量之前，而不是动词之前。*The team lost almost all its games* 说的是输掉了大部分比赛；*The team almost lost all its games* 说的是差点全输但其实没有。放在句首时，它们修饰的是整个分句，这通常不是作者的本意。",
+        "*Almost*, *nearly*, *just* and *only* go before the amount they qualify, not before the verb. *The team lost almost all its games* says it lost most of them; *The team almost lost all its games* says it came close to losing but did not. At the start of the sentence they qualify the whole clause, which is rarely what is meant.\n\n> **Watch out.** Putting *almost* or *nearly* right before the verb (*almost lost*) implies the event *barely avoided happening*; slide it right next to the number or quantity (*almost all*, *just ten minutes*).",
+        "*Almost*、*nearly*、*just* 和 *only* 应放在它们所修饰的数量之前，而不是动词之前。*The team lost almost all its games* 说的是输掉了大部分比赛；*The team almost lost all its games* 说的是差点全输但其实没有。放在句首时，它们修饰的是整个分句，这通常不是作者的本意。\n\n> **注意。** 把 *almost* 或 *nearly* 放在动词前（*almost lost*）会变成“差点发生但没发生”；必须紧挨着数量词放置（*almost all*、*just ten minutes*）。",
       ],
       ["Which sentence places the word correctly?", "哪个句子把这个词放在了正确的位置？"],
       placeLines,
-      (right) => [`"${right}" puts the word right before the amount it qualifies.`, `“${right}”把这个词放在了它所修饰的数量之前。`],
+      (right) => [
+        `"${right}" puts the word right before the amount it qualifies.\n\n**Check.** Check what sits directly after the limiting word in "${right}": it is the quantity or amount itself, not the verb or the whole clause.`,
+        `“${right}”把这个词放在了它所修饰的数量之前。\n\n**检验。** 看“${right}”里限定词后面紧挨着什么：正是数量成分本身，而不是动词或整个句首。`,
+      ],
       [
         [
           '"{wrong}" puts the word before the verb, which says the action came close to happening but did not.',
@@ -180,30 +187,30 @@ const limiting = topic("grammar", {
       "clear-or-squinting",
       ["Clear or Squinting", "清楚还是斜视"],
       [
-        "A **squinting** modifier sits between two words and could belong to either: in *Students who study often get good grades*, *often* could go with *study* or with *get*. Move it so that only one reading is possible. A limiting word before the verb can also say the opposite of what is meant: *She nearly read every book* says she read none of them.",
-        "**斜视**修饰语夹在两个词之间，可能属于任何一个：在 *Students who study often get good grades* 中，*often* 既可以修饰 *study*，也可以修饰 *get*。把它移开，让句子只有一种理解。放在动词前的限定词也可能表达与本意相反的意思：*She nearly read every book* 说的是她一本也没读。",
+        "A **squinting** modifier sits between two words and could belong to either: in *Students who study often get good grades*, *often* could go with *study* or with *get*. Move it so that only one reading is possible. A limiting word before the verb can also say the opposite of what is meant: *She nearly read every book* says she read none of them.\n\n> **Watch out.** Test every adverb wedged between two verbs (*study often get*, *said on Monday she would call*): if attaching it to the left and attaching it to the right *both* make sense, it is **ambiguous**.",
+        "**斜视**修饰语夹在两个词之间，可能属于任何一个：在 *Students who study often get good grades* 中，*often* 既可以修饰 *study*，也可以修饰 *get*。把它移开，让句子只有一种理解。放在动词前的限定词也可能表达与本意相反的意思：*She nearly read every book* 说的是她一本也没读。\n\n> **注意。** 遇到夹在两个动词中间的副词或时间短语（如 *study often get*、*said on Monday she would call*），分别往左、往右结合读一遍：两边都讲得通就是**有歧义**。",
       ],
       ["Is the modifier in this sentence placed clearly?", "这个句子中的修饰语位置清楚吗？"],
       modifierLabels,
       {
         "ambiguous: could modify either side": L(
           "有歧义：可能修饰前后两边",
-          "The modifier sits between two words and could belong to either, so the sentence has two readings.",
-          "修饰语夹在两个词之间，可能属于任何一个，所以句子有两种理解。",
+          "The modifier sits between two words and could belong to either, so the sentence has two readings.\n\n**Check.** Try reading the modifier with the word before it, then with the word after it: both readings work, confirming it squints.",
+          "修饰语夹在两个词之间，可能属于任何一个，所以句子有两种理解。\n\n**检验。** 把修饰语分别和前面的词、后面的词连读：两种理解都成立，说明它是斜视修饰语。",
           "The modifier can belong to only one word here.",
           "这里的修饰语只能属于一个词。",
         ),
         "says it did not happen": L(
           "说成了没有发生",
-          "The limiting word sits before the verb, so the sentence says the action came close to happening but did not.",
-          "限定词放在动词前，句子的意思变成动作差点发生但没有发生。",
+          "The limiting word sits before the verb, so the sentence says the action came close to happening but did not.\n\n**Check.** Check what comes directly after *almost* or *nearly*: because the verb follows it, the sentence claims the event never actually occurred.",
+          "限定词放在动词前，句子的意思变成动作差点发生但没有发生。\n\n**检验。** 看 *almost* 或 *nearly* 后面紧跟着什么：紧跟动词，导致句意变成事情差点发生却没发生。",
           "The limiting word is not placed before the verb.",
           "限定词没有放在动词之前。",
         ),
         clear: L(
           "清楚",
-          "The modifier sits next to the only word it can belong to.",
-          "修饰语紧挨着它唯一能修饰的词。",
+          "The modifier sits next to the only word it can belong to.\n\n**Check.** Verify that the modifier is anchored beside a single target (neither wedged between two verbs nor sitting before the verb when it limits a quantity).",
+          "修饰语紧挨着它唯一能修饰的词。\n\n**检验。** 确认修饰语只紧挨着唯一目标，既没有夹在两个动词之间，也没有把限定数量的词错放在动词前。",
           "The modifier could belong to two words, or the limiting word sits before the verb.",
           "修饰语可能修饰两个词，或限定词放在了动词之前。",
         ),
@@ -464,20 +471,24 @@ const inversion = topic("grammar", {
     "Sentences that put a place, a negative or *only* first and the verb before the subject, as in *Into the room walked a stranger* and *Never have I seen such a crowd*, and the agreement they need.",
     "把地点、否定词或 *only* 放在句首、把动词放在主语前面的句子，如 *Into the room walked a stranger* 和 *Never have I seen such a crowd*，以及它们所需的主谓一致。",
   ],
+  intro: [
+    "Opening with *Out of the fog stepped two watchmen* or *Seldom had the harbor been so quiet* flips the normal subject-verb order to heighten suspense and emphasis. In this topic, you locate the delayed subject, match the verb to it, and invert cleanly after opening negatives.",
+    "以 *Out of the fog stepped two watchmen* 或 *Seldom had the harbor been so quiet* 开头，颠倒常规主谓语序，能立刻增强悬念与强调效果。本主题带你找准后置主语、做好主谓一致，并掌握否定词置首后的倒装语序。",
+  ],
   after: ["reading-inverted-sentences", "word-order-for-emphasis"],
   points: [
     choose(
       "finding-the-subject",
       ["Finding the Subject", "找出主语"],
       [
-        "When a phrase of place or direction comes first, the verb may come before the subject: *Into the room walked **a stranger***. The subject is still the one doing or being: ask *who walked?* The noun in the opening phrase, such as *the room*, belongs to a preposition and is never the subject.",
-        "当表示地点或方向的短语放在句首时，动词可以放在主语之前：*Into the room walked **a stranger***。主语仍然是发出动作或处于状态的那个：问一问 *who walked?* 句首短语里的名词，如 *the room*，属于介词，从来不是主语。",
+        "When a phrase of place or direction comes first, the verb may come before the subject: *Into the room walked **a stranger***. The subject is still the one doing or being: ask *who walked?* The noun in the opening phrase, such as *the room*, belongs to a preposition and is never the subject.\n\n> **Watch out.** Never pick the first noun in the sentence if it sits inside a prepositional phrase (*Into the room*, *On the hill*)—the real subject waits *after* the verb.",
+        "当表示地点或方向的短语放在句首时，动词可以放在主语之前：*Into the room walked **a stranger***。主语仍然是发出动作或处于状态的那个：问一问 *who walked?* 句首短语里的名词，如 *the room*，属于介词，从来不是主语。\n\n> **注意。** 不要顺手选句首第一个名词——如果它跟在介词后面（如 *Into the room*、*On the hill*），它只是介词宾语，真正的主语在动词*后面*。",
       ],
       ["What is the subject of this sentence?", "这个句子的主语是什么？"],
       subjectLines,
       (right) => [
-        `*${right}* is what the verb is about, though it comes after the verb.`,
-        `*${right}* 是动词所陈述的对象，虽然它在动词后面。`,
+        `*${right}* is what the verb is about, though it comes after the verb.\n\n**Check.** Flip the sentence back into ordinary subject-first order: **${right}** moves straight to the front before the verb, proving it is the true subject.`,
+        `*${right}* 是动词所陈述的对象，虽然它在动词后面。\n\n**检验。** 把句子还原为常规主谓语序：**${right}** 立刻回到动词前面作主语，证明它才是真正的主语。`,
       ],
       [
         [
@@ -491,14 +502,14 @@ const inversion = topic("grammar", {
       "agreement-after-inversion",
       ["Agreement After Inversion", "倒装后的主谓一致"],
       [
-        "The verb agrees with the subject that follows it, not with the noun of the opening phrase: *Among the guests **were** two famous actors*, *On the table **was** a pile of letters*. Find the subject after the verb, decide whether it is singular or plural, then choose the verb.",
-        "动词与它后面的主语一致，而不是与句首短语里的名词一致：*Among the guests **were** two famous actors*，*On the table **was** a pile of letters*。先找出动词后面的主语，判断它是单数还是复数，再选择动词。",
+        "The verb agrees with the subject that follows it, not with the noun of the opening phrase: *Among the guests **were** two famous actors*, *On the table **was** a pile of letters*. Find the subject after the verb, decide whether it is singular or plural, then choose the verb.\n\n> **Watch out.** Cross out the opening prepositional phrase (*Among the guests*, *On the table*) in your head before choosing singular or plural—and watch for compound subjects joined by *and* after the verb.",
+        "动词与它后面的主语一致，而不是与句首短语里的名词一致：*Among the guests **were** two famous actors*，*On the table **was** a pile of letters*。先找出动词后面的主语，判断它是单数还是复数，再选择动词。\n\n> **注意。** 选单复数前先在心里划掉句首的介词短语（如 *Among the guests*、*On the table*），同时留意动词后面有没有由 *and* 连接的并列主语。",
       ],
       ["Which verb agrees with the subject?", "哪个动词与主语一致？"],
       agreementLines,
       (right, shown) => [
-        `"${shown.replace("___", right)}": the verb agrees with the subject that comes after it.`,
-        `“${shown.replace("___", right)}”：动词与它后面的主语一致。`,
+        `"${shown.replace("___", right)}": the verb agrees with the subject that comes after it.\n\n**Check.** Put the post-verbal subject in front of **${right}** in normal order: the singular or plural match confirms **${right}** fits cleanly.`,
+        `“${shown.replace("___", right)}”：动词与它后面的主语一致。\n\n**检验。** 把动词后面的主语搬到 **${right}** 前面按正常语序连读：单复数完全吻合，确认选 **${right}**。`,
       ],
       [
         [
@@ -512,14 +523,14 @@ const inversion = topic("grammar", {
       "inverting-after-a-negative",
       ["Inverting After a Negative", "否定词后的倒装"],
       [
-        "When a negative or limiting word opens a sentence, *never*, *seldom*, *rarely*, *hardly*, *no sooner*, *little*, *not until*, *only then* and *under no circumstances*, an auxiliary comes before the subject, as in a question: *Never **have I** seen such a crowd*. With no auxiliary, add *do*, *does* or *did*: *Only then **did we** realize the danger*. Keeping the usual order, or putting the main verb before the subject, is wrong.",
-        "当否定词或限定词放在句首时，如 *never*、*seldom*、*rarely*、*hardly*、*no sooner*、*little*、*not until*、*only then* 和 *under no circumstances*，助动词要像疑问句一样放在主语前面：*Never **have I** seen such a crowd*。没有助动词时，加上 *do*、*does* 或 *did*：*Only then **did we** realize the danger*。保持正常语序，或把实义动词放到主语前面，都是错的。",
+        "When a negative or limiting word opens a sentence, *never*, *seldom*, *rarely*, *hardly*, *no sooner*, *little*, *not until*, *only then* and *under no circumstances*, an auxiliary comes before the subject, as in a question: *Never **have I** seen such a crowd*. With no auxiliary, add *do*, *does* or *did*: *Only then **did we** realize the danger*. Keeping the usual order, or putting the main verb before the subject, is wrong.\n\n> **Watch out.** Invert **only the auxiliary** (or *do/does/did*) ahead of the subject—never move the main verb itself in front of the subject (*Rarely left the king* is wrong; write *Rarely did the king leave*).",
+        "当否定词或限定词放在句首时，如 *never*、*seldom*、*rarely*、*hardly*、*no sooner*、*little*、*not until*、*only then* 和 *under no circumstances*，助动词要像疑问句一样放在主语前面：*Never **have I** seen such a crowd*。没有助动词时，加上 *do*、*does* 或 *did*：*Only then **did we** realize the danger*。保持正常语序，或把实义动词放到主语前面，都是错的。\n\n> **注意。** 只把**助动词**（或 *do/does/did*）提到主语前面——绝不能把实义动词直接提到主语前面（*Rarely left the king* 是错的，应写 *Rarely did the king leave*）。",
       ],
       ["Which sentence opens with the negative correctly?", "哪个句子正确地以否定词开头？"],
       negativeLines,
       (right) => [
-        `"${right}" puts an auxiliary before the subject after the opening negative.`,
-        `“${right}”在句首否定词之后把助动词放在了主语前面。`,
+        `"${right}" puts an auxiliary before the subject after the opening negative.\n\n**Check.** Cover the opening negative phrase in "${right}": the remainder (*auxiliary + subject + main verb*) reads just like a standard yes/no question.`,
+        `“${right}”在句首否定词之后把助动词放在了主语前面。\n\n**检验。** 遮住“${right}”开头的否定或限定短语，剩下的部分（助动词 + 主语 + 实义动词）恰好是一般疑问句语序。`,
       ],
       [
         ['"{wrong}" keeps the usual order of subject and verb after the opening word.', "“{wrong}”在句首词之后仍用正常的主谓语序。"],
@@ -639,36 +650,40 @@ const agency = topic("grammar", {
     "The passive without an agent, which can hide who is responsible, as in *Mistakes were made*, how to tell it from a passive that suits its purpose, and how to name who acted.",
     "不带施动者的被动语态，它可能掩盖责任人，如 *Mistakes were made*；如何把它与恰当使用的被动语态区分开，以及如何点明施动者。",
   ],
+  intro: [
+    "When a factory spokesperson announces *Waste was discharged into the canal*, the grammar neatly erases who opened the valve. Yet in *The bridge was built in 1890*, leaving out the builders is completely natural. In this topic, you tell evasive passives from apt ones, restore the actor, and explain what the passive does in context.",
+    "当工厂发言人宣称 *Waste was discharged into the canal* 时，被动语态顺手抹去了打开阀门的人；而在 *The bridge was built in 1890* 里，省去建造者却完全自然。本主题带你区分回避责任的被动句与恰当的被动句，还原施动者，并分析被动语态在语境中的作用。",
+  ],
   after: ["reducing-nominalizations"],
   points: [
     label(
       "hiding-or-suiting",
       ["Hiding or Suiting", "掩盖还是恰当"],
       [
-        "A passive may leave out who acted. That suits its purpose when the actor is unknown (*My bike was stolen*), obvious (*The suspect was arrested*), or beside the point, as in a method (*The samples were heated*). But when someone is responsible for a harm or a choice, a passive with no agent can **hide who is responsible**: *Mistakes were made* does not say by whom. An active sentence **names who acted**.",
-        "被动语态可以不提施动者。当施动者未知（*My bike was stolen*）、显而易见（*The suspect was arrested*）或无关紧要时，例如描述方法（*The samples were heated*），这样用是恰当的。但当某人应对一个损害或决定负责时，不带施动者的被动语态就可能**掩盖责任人**：*Mistakes were made* 没有说是谁犯的错。主动句则**点明施动者**。",
+        "A passive may leave out who acted. That suits its purpose when the actor is unknown (*My bike was stolen*), obvious (*The suspect was arrested*), or beside the point, as in a method (*The samples were heated*). But when someone is responsible for a harm or a choice, a passive with no agent can **hide who is responsible**: *Mistakes were made* does not say by whom. An active sentence **names who acted**.\n\n> **Watch out.** Check voice *first*, then accountability: if the subject performs the verb, it **names who acted**; if it is passive, ask whether naming the doer matters for accountability (hiding) or is unknown, obvious, or irrelevant (suiting).",
+        "被动语态可以不提施动者。当施动者未知（*My bike was stolen*）、显而易见（*The suspect was arrested*）或无关紧要时，例如描述方法（*The samples were heated*），这样用是恰当的。但当某人应对一个损害或决定负责时，不带施动者的被动语态就可能**掩盖责任人**：*Mistakes were made* 没有说是谁犯的错。主动句则**点明施动者**。\n\n> **注意。** 先看语态再看责任：主语直接发出动作就是**点明施动者**；若是被动语态，则判断略去施动者是在回避追责（掩盖责任人），还是因为未知、显而易见或无关紧要（恰当）。",
       ],
       ["What does the voice of this sentence do?", "这个句子的语态起了什么作用？"],
       agencyLabels,
       {
         "hides who is responsible": L(
           "掩盖责任人",
-          "Someone is responsible for this harm or choice, and the passive leaves them out.",
-          "有人应对这个损害或决定负责，而被动语态把他们略去了。",
+          "Someone is responsible for this harm or choice, and the passive leaves them out.\n\n**Check.** Ask *who should answer for this action?*—the sentence uses an agentless passive precisely where accountability matters.",
+          "有人应对这个损害或决定负责，而被动语态把他们略去了。\n\n**检验。** 追问“谁该为这件事负责？”——句子恰恰在需要追责的地方用了不带施动者的被动语态。",
           "No one responsible is left out of this sentence.",
           "这个句子没有略去应负责任的人。",
         ),
         "suits its purpose": L(
           "恰当",
-          "The actor is unknown, obvious or beside the point, so the passive keeps the focus where it belongs.",
-          "施动者未知、显而易见或无关紧要，被动语态把重点放在了应有的位置。",
+          "The actor is unknown, obvious or beside the point, so the passive keeps the focus where it belongs.\n\n**Check.** Ask whether naming the actor would add needed accountability: here the doer is unknown, obvious, or secondary to the method or fact.",
+          "施动者未知、显而易见或无关紧要，被动语态把重点放在了应有的位置。\n\n**检验。** 问问点出施动者是否影响追责：这里的施动者未知、显而易见，或远不如方法与事实本身重要。",
           "The passive here leaves out someone who is responsible, or the sentence is active.",
           "这里的被动语态略去了应负责任的人，或者这个句子是主动句。",
         ),
         "names who acted": L(
           "点明施动者",
-          "The sentence is active, and its subject is the one who acted.",
-          "这个句子是主动句，主语就是施动者。",
+          "The sentence is active, and its subject is the one who acted.\n\n**Check.** Look at the opening subject and verb: the actor stands upfront in active voice, so responsibility is stated outright.",
+          "这个句子是主动句，主语就是施动者。\n\n**检验。** 看句首主语与谓语：施动者以主动语态直接站了出来，没有隐藏责任主体。",
           "The sentence does not name who acted as its subject.",
           "这个句子没有把施动者作为主语点明。",
         ),
@@ -678,12 +693,15 @@ const agency = topic("grammar", {
       "naming-the-actor",
       ["Naming the Actor", "点明施动者"],
       [
-        "To name who acted, make the actor the subject and the passive's subject the object: *Mistakes were made* becomes *The managers made mistakes*. Adding *it is said* only hides the actor further, and an active sentence about another actor changes what happened.",
-        "要点明施动者，就让施动者做主语，让被动句的主语做宾语：*Mistakes were made* 变成 *The managers made mistakes*。加上 *it is said* 只会把施动者藏得更深；换成关于另一个施动者的主动句，则改变了事实。",
+        "To name who acted, make the actor the subject and the passive's subject the object: *Mistakes were made* becomes *The managers made mistakes*. Adding *it is said* only hides the actor further, and an active sentence about another actor changes what happened.\n\n> **Watch out.** Verify *both* halves of the active rewrite: the subject must match the actor given in parentheses, and the verb and object must match the original event.",
+        "要点明施动者，就让施动者做主语，让被动句的主语做宾语：*Mistakes were made* 变成 *The managers made mistakes*。加上 *it is said* 只会把施动者藏得更深；换成关于另一个施动者的主动句，则改变了事实。\n\n> **注意。** 核对改写句的两部分：主语必须是括号里给出的施动者，动作和对象也必须与原事件一致。",
       ],
       ["Which revision names who acted?", "哪个修改点明了施动者？"],
       revealLines,
-      (right) => [`"${right}" makes the actor the subject of an active sentence.`, `“${right}”让施动者做了主动句的主语。`],
+      (right) => [
+        `"${right}" makes the actor the subject of an active sentence.\n\n**Check.** Compare "${right}" against the prompt: the given actor now stands as the active subject performing the exact action described.`,
+        `“${right}”让施动者做了主动句的主语。\n\n**检验。** 对照题干核对“${right}”：给出的施动者已站到主动句主语位置，且保留了原句的动作与对象。`,
+      ],
       [
         [
           '"{wrong}" keeps the passive and adds a vaguer phrase, which hides the actor further.',
@@ -696,12 +714,15 @@ const agency = topic("grammar", {
       "what-the-passive-does-here",
       ["What the Passive Does Here", "被动语态在这里的作用"],
       [
-        "In rhetorical analysis, ask what a passive does in its context. In a press release about a failure, a passive with no agent shifts attention from who failed; in a lab report or a history, it keeps the focus on what was done. The same form can be honest in one place and evasive in another.",
-        "做修辞分析时，要问被动语态在上下文中起了什么作用。在一份关于失误的新闻稿里，不带施动者的被动语态会把注意力从失误者身上移开；在实验报告或历史书里，它让重点落在做了什么上。同样的形式在一处可能是坦诚的，在另一处则可能是在回避。",
+        "In rhetorical analysis, ask what a passive does in its context. In a press release about a failure, a passive with no agent shifts attention from who failed; in a lab report or a history, it keeps the focus on what was done. The same form can be honest in one place and evasive in another.\n\n> **Watch out.** Check the *genre* named at the start of the prompt—a press release about a scandal hides blame, whereas a lab report, history book, or news brief keeps focus on the method, event, or obvious actor.",
+        "做修辞分析时，要问被动语态在上下文中起了什么作用。在一份关于失误的新闻稿里，不带施动者的被动语态会把注意力从失误者身上移开；在实验报告或历史书里，它让重点落在做了什么上。同样的形式在一处可能是坦诚的，在另一处则可能是在回避。\n\n> **注意。** 先看题干开头点出的*文体语境*——丑闻新闻稿中的无主被动是在回避追责，而实验报告、历史书或新闻简讯中的被动则重在突出方法、事件或显而易见的主体。",
       ],
       ["What does the passive do in this context?", "在这个语境中，被动语态起了什么作用？"],
       whyLines,
-      (right) => [`Here: ${right}`, `在这里：${right}`],
+      (right) => [
+        `Here: ${right}\n\n**Check.** Match the context named in the prompt (scandal press release vs. neutral report or sign) to whether omitting the doer evades blame or keeps the focus on the topic.`,
+        `在这里：${right}\n\n**检验。** 对照题干给出的语境（丑闻公关稿还是客观报告/告示），判断省去施动者是在回避追责，还是在聚焦主题本身。`,
+      ],
       [
         ["That is what a passive does in a different context, not in this one.", "这是被动语态在另一种语境中的作用，不是在这里的作用。"],
         ["A passive with no agent does not name who acted.", "不带施动者的被动语态不会点明施动者。"],

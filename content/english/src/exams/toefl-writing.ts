@@ -196,6 +196,10 @@ export const writingAnEmail: TopicDef = judgedExamTopic({
     "Write an email of about 100 words or more in a few minutes that does each thing a situation asks, to a professor, a classmate or an office.",
     "在几分钟内写一封约 100 词或更长的邮件，完成情境要求的每一件事，收信人是教授、同学或某个办公室。",
   ),
+  intro: t(
+    "With only 7 minutes on the clock, a strong TOEFL email hits every required bullet point in short, clear paragraphs while matching its greeting and tone to the reader—formal for a professor, warm for a classmate.",
+    "在短短 7 分钟内，好的托福邮件用简短清晰的段落逐一完成题目要求的全部要点，同时让称呼与语气契合收件人——对教授正式礼貌，对同学自然亲切。",
+  ),
   prerequisites: ["writing-a-formal-email"],
   encompasses: [{ topic: "writing-a-formal-email", weight: 0.4 }],
   criteria: ["toefl-email-all-tasks", "toefl-email-register", "toefl-email-clear"],
@@ -203,8 +207,8 @@ export const writingAnEmail: TopicDef = judgedExamTopic({
     id: "email",
     title: t("An email for a situation", "按情境写邮件"),
     explanation: t(
-      "You have about 7 minutes. Read the situation and the three things you must do, then write:\n\n1. **A greeting that suits the reader**: *Dear Dr. Evans* for a professor or an office, *Hi Sam* for a classmate.\n2. **The purpose in the first sentence or two**: *I am writing to ...*, *I'm sorry, but ...*\n3. **One short paragraph for each thing you must do**, with a detail that makes it real: a date, a room number, a reason.\n4. **A polite closing**: *Thank you for your help. Best regards,* and your name.\n\nUse full forms and polite requests (*Could you ...? Would it be possible ...?*) for a professor; contractions are fine for a friend.",
-      "时间约 7 分钟。读懂情境和必须完成的三件事，然后这样写：\n\n1. **符合收信人的称呼**：给教授或办公室写 *Dear Dr. Evans*，给同学写 *Hi Sam*。\n2. **开头一两句说明目的**：*I am writing to ...*、*I'm sorry, but ...*\n3. **每件事写一小段**，加上使内容具体的细节：日期、房间号、理由。\n4. **礼貌的结尾**：*Thank you for your help. Best regards,* 再写上你的名字。\n\n给教授写信时用完整形式和礼貌的请求（*Could you ...? Would it be possible ...?*）；给朋友写信可以用缩写。",
+      "You have about 7 minutes. Read the situation and the three things you must do, then write:\n\n1. **A greeting that suits the reader**: *Dear Dr. Evans* for a professor or an office, *Hi Sam* for a classmate.\n2. **The purpose in the first sentence or two**: *I am writing to ...*, *I'm sorry, but ...*\n3. **One short paragraph for each thing you must do**, with a detail that makes it real: a date, a room number, a reason.\n4. **A polite closing**: *Thank you for your help. Best regards,* and your name.\n\n> **Watch out.** Check off **all three** required tasks before time runs out, and avoid using casual slang or abrupt demands when writing to a professor or university office.",
+      "时间约 7 分钟。读懂情境和必须完成的三件事，然后这样写：\n\n1. **符合收信人的称呼**：给教授或办公室写 *Dear Dr. Evans*，给同学写 *Hi Sam*。\n2. **开头一两句说明目的**：*I am writing to ...*、*I'm sorry, but ...*\n3. **每件事写一小段**，加上使内容具体的细节：日期、房间号、理由。\n4. **礼貌的结尾**：*Thank you for your help. Best regards,* 再写上你的名字。\n\n> **注意。** 交卷前务必逐条核对题目要求的**全部三件事**，写给教授或学校办公室时不要用随意口语或生硬命令。",
     ),
   },
   question: t(
@@ -215,6 +219,10 @@ export const writingAnEmail: TopicDef = judgedExamTopic({
   limits: { minWords: 80, maxChars: 1600 },
   xp: 15,
   what: t("email", "邮件"),
+  check: t(
+    "Verify that every task bullet in the prompt is answered with concrete details, the greeting and tone fit the recipient, and the email opens clearly and closes politely.",
+    "核对题目要求的每一项任务都已用具体细节完成，称呼和语气符合收件人身份，且开头直奔主题、结尾礼貌得体。",
+  ),
 });
 
 /** academicDiscussion is the Writing for an Academic Discussion task of TOEFL Writing. */
@@ -224,6 +232,10 @@ export const academicDiscussion: TopicDef = judgedExamTopic({
   summary: t(
     "Write a post of about 100 words or more that answers a professor's question with a clear opinion and a reason, and adds something to what two classmates said.",
     "写一篇约 100 词或更长的帖子，用明确的观点和理由回答教授的问题，并在两位同学的发言之外补充新的内容。",
+  ),
+  intro: t(
+    "In 10 minutes, a high-scoring TOEFL Academic Discussion post states a clear opinion in sentence one, engages a classmate by name, and contributes a fresh reason backed by a concrete example.",
+    "在 10 分钟内，高分托福学术讨论帖会在首句亮出明确观点、点名回应一位同学，并补充一个两位同学未提及的新理由和具体例子。",
   ),
   prerequisites: ["writing-an-opinion-paragraph", "counterclaims-and-rebuttals"],
   encompasses: [
@@ -235,8 +247,8 @@ export const academicDiscussion: TopicDef = judgedExamTopic({
     id: "discussion-post",
     title: t("A post to a class discussion", "课堂讨论帖"),
     explanation: t(
-      "You have 10 minutes. Read the professor's question and both classmates' posts, then write one paragraph:\n\n1. **Your opinion in the first sentence**: *In my opinion, cities should ...*\n2. **A link to a classmate**: agree or disagree with one of them by name (*Marcus makes an important point, but ...*).\n3. **Something new**: a reason or an example that neither classmate gave, explained in two or three sentences. A short example from your own life works well.\n4. **A final sentence** that brings it back to your opinion.\n\nDo not only repeat what the classmates said: the post must add to the discussion.",
-      "时间 10 分钟。读懂教授的问题和两位同学的帖子，然后写一段：\n\n1. **第一句写出你的观点**：*In my opinion, cities should ...*\n2. **联系一位同学**：点名同意或反对其中一位（*Marcus makes an important point, but ...*）。\n3. **新的内容**：给出两位同学都没有提到的理由或例子，用两三句话展开。用自己生活中的一个简短例子效果很好。\n4. **最后一句**回到你的观点。\n\n不要只重复同学的话：你的帖子必须为讨论增添新内容。",
+      "You have 10 minutes. Read the professor's question and both classmates' posts, then write one paragraph:\n\n1. **Your opinion in the first sentence**: *In my opinion, cities should ...*\n2. **A link to a classmate**: agree or disagree with one of them by name (*Marcus makes an important point, but ...*).\n3. **Something new**: a reason or an example that neither classmate gave, explained in two or three sentences. A short example from your own life works well.\n4. **A final sentence** that brings it back to your opinion.\n\n> **Watch out.** Do not spend your whole post summarizing or paraphrasing what the two classmates already wrote—make sure most of your words develop **your own** new reason and example.",
+      "时间 10 分钟。读懂教授的问题和两位同学的帖子，然后写一段：\n\n1. **第一句写出你的观点**：*In my opinion, cities should ...*\n2. **联系一位同学**：点名同意或反对其中一位（*Marcus makes an important point, but ...*）。\n3. **新的内容**：给出两位同学都没有提到的理由或例子，用两三句话展开。用自己生活中的一个简短例子效果很好。\n4. **最后一句**回到你的观点。\n\n> **注意。** 不要把整段篇幅都用来复述两位同学已经写过的话——大部分字数要用来展开**你自己**的新理由和具体例子。",
     ),
   },
   question: t(
@@ -247,4 +259,8 @@ export const academicDiscussion: TopicDef = judgedExamTopic({
   limits: { minWords: 100, maxChars: 1800 },
   xp: 20,
   what: t("post", "帖子"),
+  check: t(
+    "Check that your post reaches at least 100 words, states your opinion immediately, references a classmate by name, and develops a genuinely new reason with an example.",
+    "核对帖子不少于 100 词、开头立刻表明观点、点名联系了一位同学，并用实例充分展开了一个真正的新理由。",
+  ),
 });

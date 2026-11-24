@@ -76,8 +76,8 @@ export function pairTopic(spec: PairSpec): TopicDef {
         prompt: t("Listen. Which word do you hear?", "听录音。你听到的是哪个词？"),
         listen: [heard(said)],
         solution: t(
-          `You hear *${said}*, not *${other}*. Listen to both and hear the difference.`,
-          `你听到的是 *${said}*，不是 *${other}*。把两个词都听一听，听出它们的区别。`,
+          `You hear *${said}*, not *${other}*. Listen to both and hear the difference.\n\n**Check.** Replay *${said}* and *${other}* back to back and focus on the single contrasting sound that separates them.`,
+          `你听到的是 *${said}*，不是 *${other}*。把两个词都听一听，听出它们的区别。\n\n**检验。** 把 *${said}* 和 *${other}* 连续重放一遍，专注分辨把它们区分开的那一个音。`,
         ),
         ...sounds(said, other),
       },
@@ -106,10 +106,13 @@ export function pairTopic(spec: PairSpec): TopicDef {
         ),
         listen: [heard(first), heard(second)],
         solution: alike
-          ? t(`You hear *${first}* twice: the same word.`, `你两次听到的都是 *${first}*：是同一个词。`)
+          ? t(
+              `You hear *${first}* twice: the same word.\n\n**Check.** Replay both clips back to back—the target sound stays identical from first to second (*${first}*).`,
+              `你两次听到的都是 *${first}*：是同一个词。\n\n**检验。** 连续重放两段录音——两次的目标发音完全一致，都是 *${first}*。`,
+            )
           : t(
-              `You hear *${first}* and then *${second}*: two different words.`,
-              `你先听到 *${first}*，再听到 *${second}*：是两个不同的词。`,
+              `You hear *${first}* and then *${second}*: two different words.\n\n**Check.** Replay both clips back to back—listen for the shift on the target sound between *${first}* and *${second}*.`,
+              `你先听到 *${first}*，再听到 *${second}*：是两个不同的词。\n\n**检验。** 连续重放两段录音——注意听 *${first}* 与 *${second}* 在目标音上的明显差别。`,
             ),
         ...sounds(first, second),
       },
@@ -118,22 +121,36 @@ export function pairTopic(spec: PairSpec): TopicDef {
     );
   };
 
+  const [a0, b0] = pairs[0]!;
+  const [a1, b1] = pairs[1] ?? pairs[0]!;
   return {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
+    intro: t(
+      `Compare *${a0}* and *${b0}*: they differ by just one sound, yet swapping that sound turns one word into another. In this topic, you train your ear to tell the two sounds apart—first by picking the word you hear, then by judging whether two spoken words are the same or different.`,
+      `比较 *${a0}* 和 *${b0}*：两个词只差一个音，却变成了完全不同的词。本主题专门训练耳朵分辨这两个音——先听音选词，再判断连续听到的两个词是相同还是不同。`,
+    ),
     prerequisites: spec.prerequisites,
     encompasses: [],
     xp: 10,
     strand: "listening",
     knowledgePoints: [
-      point("which", t("Which word?", "哪个词？"), spec.sounds, whichWord),
+      point(
+        "which",
+        t("Which word?", "哪个词？"),
+        t(
+          `${spec.sounds.en}\n\n> **Watch out.** Focus on the contrasting sound itself rather than guessing from spelling—replay the clip whenever the two words feel close.`,
+          `${spec.sounds["zh-CN"]}\n\n> **注意。** 专注辨认相区别的那个音，不要凭拼写猜测——拿不准时可以随时重放录音。`,
+        ),
+        whichWord,
+      ),
       point(
         "same",
         t("The same or different?", "相同还是不同？"),
         t(
-          "Two words are played one after the other. Some pairs are the same word twice; others differ only in these two sounds. Listen for the sound, not for the rest of the word.",
-          "依次播放两个词。有的是同一个词说两遍，有的只在这两个音上不同。注意听这个音，而不是词的其他部分。",
+          `Two words are played one after the other, such as *${a1}* and *${b1}*. Some pairs are the same word twice; others differ only in these two sounds. Listen for the sound, not for the rest of the word.\n\n> **Watch out.** Do not let matching letters at the start or end fool you—compare the exact contrasting sound in both clips.`,
+          `依次播放两个词，例如 *${a1}* 和 *${b1}*。有的是同一个词说两遍，有的只在这两个音上不同。注意听这个音，而不是词的其他部分。\n\n> **注意。** 不要被开头或结尾相同的辅音迷惑——专门对比两段录音里相区别的那个音。`,
         ),
         sameOrNot,
       ),
@@ -226,8 +243,8 @@ export function unitListening(spec: UnitListeningSpec): TopicDef {
         prompt: t("Listen to the sentence. Which of these words do you hear in it?", "听句子。你在句子里听到了下面哪个词？"),
         listen: [heard(item.sentence)],
         solution: t(
-          `You hear:\n\n> ${item.sentence}\n\nThe word is *${item.right}*.`,
-          `你听到的是：\n\n> ${item.sentence}\n\n这个词是 *${item.right}*。`,
+          `You hear:\n\n> ${item.sentence}\n\nThe word is *${item.right}*.\n\n**Check.** Replay the clip while reading the sentence above and hear *${item.right}* right in place.`,
+          `你听到的是：\n\n> ${item.sentence}\n\n这个词是 *${item.right}*。\n\n**检验。** 对照上面的原句重放一遍录音，在句中听清 *${item.right}* 出现的位置。`,
         ),
       },
       options.map(same),
@@ -258,7 +275,10 @@ export function unitListening(spec: UnitListeningSpec): TopicDef {
       {
         prompt: t(`Listen, then answer.\n\n**${q.en}**`, `听录音，然后回答。\n\n**${q.en}**\n\n（${q["zh-CN"]}）`),
         listen: [item.path],
-        solution: t(`You hear:\n\n${said}\n\nThe answer is *${item.x}*.`, `你听到的是：\n\n${said}\n\n答案是 *${item.x}*。`),
+        solution: t(
+          `You hear:\n\n${said}\n\nThe answer is *${item.x}*.\n\n**Check.** Match the question (*${q.en}*) against the transcript above—*${item.x}* answers what is asked, while *${item.y}* belongs to another part of the recording.`,
+          `你听到的是：\n\n${said}\n\n答案是 *${item.x}*。\n\n**检验。** 对照上面的原话核对问题（*${q["zh-CN"]}*）——*${item.x}* 直接回答所问内容，而 *${item.y}* 属于录音中的另一处信息。`,
+        ),
       },
       options.map(same),
       right,
@@ -274,10 +294,17 @@ export function unitListening(spec: UnitListeningSpec): TopicDef {
     );
   };
 
+  const w0 = words[0]!;
+  const w1 = words[1] ?? w0;
+  const f0 = spec.frames[0]!;
   return {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
+    intro: t(
+      `In spoken English, familiar words like *${w0.head}* arrive at natural speed inside a whole sentence—for example: *${w0.sentences[0]?.full ?? ""}* In this topic, you first catch this unit's words inside spoken sentences, then follow short dialogues and announcements to pick out the exact detail asked.`,
+      `在真实口语中，像 *${w0.head}* 这样的熟悉词会以自然语速出现在整句话里，例如：*${w0.sentences[0]?.full ?? ""}* 本主题先训练你在听到的句子里捕捉本单元词汇，再听懂简短对话与通知，抓住问题所问的具体信息。`,
+    ),
     prerequisites: latestOf(spec.words),
     encompasses: [],
     xp: 12,
@@ -287,8 +314,8 @@ export function unitListening(spec: UnitListeningSpec): TopicDef {
         "words",
         t("Words you hear", "听到的词"),
         t(
-          "A sentence with the words of this unit is played; you do not see it. Listen to the whole sentence, then choose the one word of the three that it says.",
-          "播放一个含有本单元词汇的句子，你看不到句子。听完整个句子，再从三个词中选出句子里说到的那一个。",
+          `A sentence with the words of this unit is played, such as one using *${w1.head}*; you do not see it. Listen to the whole sentence, then choose the one word of the three that it says.\n\n> **Watch out.** Listen all the way to the end of the sentence before choosing—the word you need may appear at the start, middle, or end.`,
+          `播放一个含有本单元词汇的句子（例如包含 *${w1.head}*），你看不到句子。听完整个句子，再从三个词中选出句子里说到的那一个。\n\n> **注意。** 听完整句话再选——目标词可能出现在句首、句中或句尾。`,
         ),
         hearWord,
       ),
@@ -296,8 +323,8 @@ export function unitListening(spec: UnitListeningSpec): TopicDef {
         "dialogues",
         t("Dialogues and announcements", "对话和通知"),
         t(
-          "Read the question first, so that you know what to listen for. The recording often names more than one time, place or thing: only one answers the question. You can play it again as often as you like.",
-          "先读问题，知道要听什么。录音里常常说到不止一个时间、地点或事物，只有一个能回答问题。录音可以反复播放。",
+          `Read the question first—such as *${f0.question.en}*—so that you know what to listen for. The recording often names more than one time, place or thing: only one answers the question. You can play it again as often as you like.\n\n> **Watch out.** Do not pick the first familiar option you hear—dialogues often mention a second, decoy detail alongside the real answer.`,
+          `先读问题（例如“${f0.question["zh-CN"]}”），知道要听什么。录音里常常说到不止一个时间、地点或事物，只有一个能回答问题。录音可以反复播放。\n\n> **注意。** 不要一听到熟悉的词就选——对话里常常同时提到一个干扰项，要确认它回答的是问题问的那一项。`,
         ),
         dialogue,
       ),

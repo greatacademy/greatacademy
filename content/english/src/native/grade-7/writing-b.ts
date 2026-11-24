@@ -18,14 +18,18 @@ const analogy = topic("writing", {
     "An analogy explains something new by comparing it with something familiar that works the same way, and a good one matches the feature that matters.",
     "类比用一个运作方式相同的熟悉事物来解释新事物；好的类比要与关键特征相吻合。",
   ],
+  intro: [
+    "Telling a newcomer that a submarine's ballast tanks work *like a diver's lungs taking in or pushing out air* makes an unfamiliar machine click in one sentence. A strong **analogy** borrows something familiar that works the same way.",
+    "告诉初学者潜艇的压载水舱*就像潜水员吸气呼气的肺一样*，一句话就能把陌生的机械原理讲透。好的**类比**借用运作方式相同的熟悉事物来化难为易。",
+  ],
   after: ["comparisons-that-explain"],
   points: [
     choose(
       "the-analogy-that-fits",
       ["The Analogy That Fits", "合适的类比"],
       [
-        "An **analogy** helps a reader understand something unfamiliar by comparing it to something they already know. A good analogy matches the **key feature** you want to explain: the heart *pushes* blood, so it is like a pump. A weak analogy compares things that look alike but do not work alike, and a plain fact, however true, is not an analogy at all.",
-        "**类比**把陌生的事物与读者已经熟悉的事物相比较，帮助读者理解。好的类比与你要解释的**关键特征**相吻合：心脏*推动*血液，所以它像一个水泵。弱的类比比较的是外表相似而运作方式不同的东西；而一个单纯的事实，无论多么正确，都不是类比。",
+        "An **analogy** explains an unfamiliar process by matching it to something familiar that works the **same way**: because the heart *pushes* blood through tubes, comparing it to a **pump** explains how it works. Comparing only surface appearance (*shaped like a fist*) misses the mechanism, and a bare fact makes no comparison at all.\n\n> **Watch out.** Test the verb in the prompt (*moves*, *controls*, *protects*, *stores*)—the right analogy mirrors that *action*, not the object's color or shape.",
+        "**类比**用运作方式**相同**的熟悉事物来解释陌生原理：心脏*推动*血液在血管里流动，所以比作**水泵**能讲清它的机制。只比外形（*shaped like a fist*）没讲到运作方式，而纯事实根本不是类比。\n\n> **注意。** 盯紧题干里的动作词（*moves*、*controls*、*protects*、*stores*）——好类比对应的是这个*功能*，而不是颜色或形状。",
       ],
       ["Which sentence explains the idea with an analogy that fits?", "哪个句子用了合适的类比来解释这个概念？"],
       `
@@ -61,8 +65,8 @@ const analogy = topic("writing", {
         How hormones carry signals|Hormones are like letters sent through the mail to tell distant organs what to do.|Hormones are tiny, like grains of sand.|Hormones are made in glands such as the thyroid in the neck and the adrenal glands above the kidneys.
       `,
       (right, shown) => [
-        `**${right}** compares the part with something familiar that works the same way, which explains ${shown.toLowerCase()}.`,
-        `**${right}** 把这个部分与一个运作方式相同的熟悉事物相比，解释了它的作用。`,
+        `The fitting analogy is: **${right}** It matches *${shown.toLowerCase()}* to a familiar thing that performs the exact same job.\n\n**Check.** Ask *Does this comparison explain how the part works, rather than merely what it looks like or listing a raw fact?* Yes—the familiar object mirrors the exact function.`,
+        `合适的类比是：**${right}** 它把这一机制与功能完全相同的熟悉事物对应起来。\n\n**检验。** 问一句*这个比喻解释的是它如何运作，而不是只说外表或干巴巴列事实吗？*是的，熟悉事物正好映照出核心功能。`,
       ],
       [
         [
@@ -79,8 +83,8 @@ const analogy = topic("writing", {
       "where-the-analogy-stands",
       ["Judging an Analogy", "评价一个类比"],
       [
-        "Test an analogy before you use it. A **helpful analogy** matches how the thing works. A **misleading analogy** matches something that does not matter, or suggests something false: saying the heart is *like a brain* would make readers think it thinks. And a sentence that only states a fact, with no comparison, is **not an analogy**.",
-        "使用类比之前要检验它。**有帮助的类比**与事物的运作方式相吻合。**误导性的类比**吻合的是无关紧要的特征，或暗示了错误的东西：说心脏*像大脑*会让读者以为它会思考。而只陈述事实、不作任何比较的句子，**不是类比**。",
+        "Every analogy needs a quick accuracy test. A **helpful analogy** mirrors how the thing truly works (*the heart is like a pump*). A **misleading analogy** suggests a false mechanism (*the heart is like a brain that decides where blood goes*). A sentence with no comparison (*The heart beats 100,000 times a day*) is **not an analogy**.\n\n> **Watch out.** Do not label a sentence **a helpful analogy** just because it uses *like*—check whether the comparison teaches the right mechanism or plants a false idea.",
+        "用类比前要做一次准确性检验。**有帮助的类比**准确映照真实机制（*the heart is like a pump*）；**误导性的类比**会暗示错误原理（*the heart is like a brain that decides where blood goes*）；没有作比较的纯事实（*The heart beats 100,000 times a day*）则**不是类比**。\n\n> **注意。** 别一看到 *like* 就判为**有帮助的类比**——要检查它讲清了真实机制，还是灌输了错误印象。",
       ],
       ["How well does this sentence explain the idea?", "这个句子对概念的解释怎么样？"],
       `
@@ -118,22 +122,22 @@ const analogy = topic("writing", {
       {
         "a helpful analogy": L(
           "有帮助的类比",
-          "The comparison matches how the thing really works, so it helps the reader understand.",
-          "这个比较与事物真正的运作方式相吻合，所以能帮助读者理解。",
+          "The comparison matches how the thing genuinely works, making the concept clearer; it is **a helpful analogy**.\n\n**Check.** Ask what a reader learns from the *like* image: they come away with an accurate mental model of the real process.",
+          "这个比喻与事物的真实运作方式一致，能帮读者秒懂，因此是**有帮助的类比**。\n\n**检验。** 想想读者顺着 *like* 后面的画面会理解成什么：他们得到的正是真实原理的准确模型。",
           "This comparison does not match how the thing works.",
           "这个比较与事物的运作方式不吻合。",
         ),
         "a misleading analogy": L(
           "误导性的类比",
-          "The comparison suggests something false about how the thing works, so it would confuse the reader.",
-          "这个比较暗示了关于事物运作方式的错误信息，会让读者困惑。",
+          "The comparison implies a false function or behavior that would confuse a learner; it is **a misleading analogy**.\n\n**Check.** Follow the *like* comparison literally—does the real organ or process actually work that way? No, it gives the wrong idea.",
+          "这个比喻暗示了错误的功能或特性，会把读者带偏，因此是**误导性的类比**。\n\n**检验。** 顺着 *like* 后面的比喻推一步——真实器官或过程真是那样运作的吗？不是，它会造成误解。",
           "This sentence does not suggest anything false.",
           "这个句子并没有暗示任何错误的信息。",
         ),
         "not an analogy": L(
           "不是类比",
-          "The sentence states a fact but compares the thing with nothing familiar.",
-          "这个句子陈述了一个事实，但没有把这件东西与任何熟悉的事物相比。",
+          "The sentence merely reports a literal fact without comparing the subject to anything else; it is **not an analogy**.\n\n**Check.** Look for a comparison marker (*like*, *as*) linking two different domains: none appears, only a direct statement of fact.",
+          "这个句子只陈述了一个字面事实，没有和别的事物作类比，因此**不是类比**。\n\n**检验。** 找一找连接两个不同领域的比较信号（如 *like*、*as*）：根本没有，它只是直接陈述事实。",
           "This sentence does compare the thing with something familiar.",
           "这个句子确实把这件东西与熟悉的事物作了比较。",
         ),
@@ -149,14 +153,18 @@ const pacing = topic("writing", {
     "Short sentences speed up a moment of action, long sentences slow a moment down for detail and feeling, and a summary sentence skips over time that does not matter.",
     "短句加快动作的节奏，长句放慢某个时刻以展现细节和感受，概括句则跳过无关紧要的时间。",
   ],
+  intro: [
+    "*The branch cracked. He lunged. Cold water closed over his head.* races past like a sprint, while a thirty-word sentence lingers over every detail. Controlling **pacing with sentence length** lets a writer speed up danger, slow down wonder, or skip quiet weeks in one line.",
+    "*The branch cracked. He lunged. Cold water closed over his head.* 像冲刺一样疾驰而过，而一个三十词的长句则会把瞬间拉慢、细细铺陈。用**句子长短控制节奏**，就能在惊险处加速、在动情处放慢、在平淡处一笔带过。",
+  ],
   after: ["pacing-a-story"],
   points: [
     label(
       "what-the-sentences-do",
       ["What the Sentences Do", "这些句子起什么作用"],
       [
-        "The length of your sentences controls how fast a reader moves. **Short, sharp sentences speed up the action**: *The rope snapped. She fell. Darkness.* **Long sentences with details slow down the moment**, letting readers feel every second. And a **summary** jumps over time quickly: *Three weeks passed before anyone spoke of the storm again.*",
-        "句子的长短决定读者前进的速度。**短促有力的句子加快动作的节奏**：*The rope snapped. She fell. Darkness.* **带细节的长句放慢这一刻**，让读者感受每一秒。而**概括**能快速跳过一段时间：*Three weeks passed before anyone spoke of the storm again.*",
+        "Sentence length acts like a movie camera's speed. **Short, clipped sentences speed up the action**: *The rope snapped. She fell. Darkness.* **Long, layered sentences slow down the moment** with sensory detail so readers linger inside one second. A brief **summary** skips across uneventful stretches: *Three weeks passed before anyone spoke of the storm again.*\n\n> **Watch out.** Both a short action burst and a summary can be brief—check whether the words pack rapid second-by-second action (*speeds up*) or jump across days, months, or years (*summarizes time passing*).",
+        "句子的长短就像电影镜头的快慢。**短促利落的句子加快动作**：*The rope snapped. She fell. Darkness.* **细节层叠的长句放慢这一刻**，让读者沉浸在一瞬之间。简短的**概括**则直接跨过平淡时段：*Three weeks passed before anyone spoke of the storm again.*\n\n> **注意。** 动作短句和概括句字数都可能很少——看它是在一秒一拍地推进动作（**加快动作**），还是跨过了几天、几个月或几年（**概括时间流逝**）。",
       ],
       ["What does this passage do to the pace of the story?", "这段文字对故事的节奏有什么作用？"],
       `
@@ -194,22 +202,22 @@ const pacing = topic("writing", {
       {
         "speeds up the action": L(
           "加快动作",
-          "Short, sharp sentences push the reader quickly through a moment of action.",
-          "短促有力的句子推动读者快速经历一个动作场面。",
+          "A rapid string of clipped, punchy sentences drives the reader fast through a sudden burst of action; it **speeds up the action**.\n\n**Check.** Count the words per sentence: two to four words separated by hard full stops create an urgent, breathless beat.",
+          "一连串短促有力的短句推着读者飞快冲过突发动作场面，因此**加快动作**。\n\n**检验。** 数一下每句词数：每句只有两到四个词、句号干脆利落，营造出屏息般紧迫的节奏。",
           "These sentences are not short and sharp.",
           "这些句子并不短促有力。",
         ),
         "slows down the moment": L(
           "放慢这一刻",
-          "A long sentence full of details stretches a single moment so the reader feels it.",
-          "充满细节的长句延长了一个瞬间，让读者感受它。",
+          "One flowing, detail-packed sentence stretches a single instant so the reader sees, hears, and feels every second; it **slows down the moment**.\n\n**Check.** Notice how much story time passes inside this long sentence—just a few seconds, expanded with rich sensory details.",
+          "一个绵长而细节饱满的长句把短短一瞬间拉长，让读者看清、听清、感受到每一秒，因此**放慢这一刻**。\n\n**检验。** 看看这么长的句子里故事时间其实只过去了几秒——全靠丰富的感官细节把瞬间放大了。",
           "This passage does not stretch one moment with details.",
           "这段文字并没有用细节延长某个瞬间。",
         ),
         "summarizes time passing": L(
           "概括时间流逝",
-          "The sentence jumps quickly over days, months or years in which little matters.",
-          "这个句子快速跳过无关紧要的几天、几个月或几年。",
+          "One compact line skips smoothly over days, weeks, months, or years where nothing crucial happens; it **summarizes time passing**.\n\n**Check.** Look at the time span named (*weeks*, *summer*, *years*, *winter*, *days*): a huge stretch of calendar time is compressed into a single sentence.",
+          "短短一句话轻巧地跨过了没有大事发生的几天、几周、几个月或几年，因此**概括时间流逝**。\n\n**检验。** 看句中的时间跨度词（*weeks*、*summer*、*years*、*winter*、*days*）：漫长的一段时间被压缩进了一句话里。",
           "This passage does not skip over a stretch of time.",
           "这段文字并没有跳过一段时间。",
         ),
@@ -219,8 +227,8 @@ const pacing = topic("writing", {
       "the-version-that-fits-the-moment",
       ["The Version That Fits the Moment", "适合这一刻的写法"],
       [
-        "Match the pace to the moment. A sudden, dangerous event reads best in **short sentences**. A moment full of emotion or wonder reads best in a **long, detailed sentence**. A stretch of time where little happens should be **summarized** in one sentence so the story can move on.",
-        "节奏要与这一刻相配。突然而危险的事件最适合用**短句**。充满感情或惊奇的时刻最适合用**带细节的长句**。没什么事发生的一段时间应该用一句话**概括**，好让故事继续往前。",
+        "Match sentence length to the emotional job of the scene. Use **short, sharp bursts** for sudden danger or split-second action (*The wolf sprang. The sheep scattered. Dust flew.*), a **long, sensory sentence** for awe or deep emotion, and a **one-line summary** to cross quiet months or years.\n\n> **Watch out.** Read the prompt's scene type first: is it a *sudden action*, a *quiet emotional instant*, or a *long stretch of time*? Pick the sentence rhythm built for that exact job.",
+        "让句长契合场景的情感需求：突发危险或电光火石的动作配**短促短句**（*The wolf sprang. The sheep scattered. Dust flew.*），惊奇或深情瞬间配**细节丰富的长句**，漫长平淡的岁月配**一句话概括**。\n\n> **注意。** 先判断清题干场景的类型：是*突发动作*、*细腻瞬间*，还是*漫长时段*？再选对应的句式节奏。",
       ],
       ["Which version best fits this moment of the story?", "哪种写法最适合故事中的这一刻？"],
       `
@@ -255,7 +263,10 @@ const pacing = topic("writing", {
         The moment a long-lost dog returns home|The dog limped up the path, thin and muddy, and when she knelt down it pressed its head against her chest and whined softly, as if it had never left.|Dog. Home. Joy.|The dog came home in the spring.
         The years a town spends rebuilding after a flood|It took the town five years to rebuild after the flood.|Build. Build. Build.|She lifted a brick from the muddy pile, feeling its cold weight, and set it carefully on the new wall of the school.
       `,
-      (right, shown) => [`**${right}** The pace fits ${shown.toLowerCase()}.`, `**${right}** 这种节奏适合故事中的这一刻。`],
+      (right, shown) => [
+        `The best pacing for *${shown.toLowerCase()}* is: **${right}**\n\n**Check.** Match the sentence length to the scene's energy: sudden action gets short bursts, awe or emotion gets a slow detailed sentence, and long spans of waiting get a brisk summary.`,
+        `最契合这一刻的写法是：**${right}**\n\n**检验。** 把句长对照场景节奏：突发动作配短句加速，深情惊奇配长句放慢，漫长等待配一句话概括。`,
+      ],
       [
         ["*{wrong}* uses the wrong pace for this moment.", "*{wrong}* 用了不适合这一刻的节奏。"],
         ["*{wrong}* rushes past or drags out a moment that needs a different pace.", "*{wrong}* 匆匆跳过或拖长了需要另一种节奏的时刻。"],
@@ -271,14 +282,18 @@ const callToAction = topic("writing", {
     "A call to action ends a persuasive piece by telling readers exactly what to do, when and where, in a way they can actually manage.",
     "号召行动的结尾告诉读者具体要做什么、什么时候做、在哪里做，而且是他们真正做得到的事，以此结束一篇说服性文章。",
   ],
+  intro: [
+    "Ending a speech with *Someone should care about clean water* leaves everyone nodding and walking away; ending with *Sign the creek-cleanup sheet at the gym door before Friday* gets people moving. A strong **call to action** is specific and doable.",
+    "演讲以 *Someone should care about clean water* 收尾，大家只会点点头各自离开；以 *Sign the creek-cleanup sheet at the gym door before Friday* 收尾，才会让人立刻行动。有力的**号召行动**必须具体且可行。",
+  ],
   after: ["how-a-speaker-builds-an-argument", "choosing-relevant-reasons"],
   points: [
     choose(
       "the-strongest-call-to-action",
       ["The Strongest Call to Action", "最有力的号召"],
       [
-        "A **call to action** is the last push of a persuasive piece. It tells readers **exactly what to do**, often with **when** and **where**: *Put every empty bottle in the blue bin by the cafeteria door, starting Monday.* A sentence that only says the issue is important, or that someone should do something, gives readers nothing to act on.",
-        "**号召行动**是说服性文章的最后一推。它明确告诉读者**该做什么**，常常还说明**何时**、**何地**：*Put every empty bottle in the blue bin by the cafeteria door, starting Monday.* 只说问题很重要，或者说应该有人做点什么的句子，不能让读者付诸行动。",
+        "A **call to action** closes a persuasive piece by telling the audience **exactly what to do**, usually with **when** and **where**: *Put every empty bottle in the blue bin by the cafeteria door, starting Monday.* Merely saying a topic matters or hoping *someone* acts gives readers no concrete step.\n\n> **Watch out.** Look for an imperative action verb (*Meet*, *Bring*, *Sign*, *Turn off*, *Vote*) paired with a real time or place—reject statements that only praise the cause.",
+        "**号召行动**在说服性文章结尾直接告诉受众**具体做什么**，通常还指明**何时**、**何地**：*Put every empty bottle in the blue bin by the cafeteria door, starting Monday.* 只说议题很重要或希望“有人管管”，没给读者任何可落地的动作。\n\n> **注意。** 寻找祈使动词（*Meet*、*Bring*、*Sign*、*Turn off*、*Vote*）加上具体时间或地点——排除只泛泛称赞重要性的句子。",
       ],
       ["Which sentence is the strongest call to action for this goal?", "哪个句子是实现这个目标最有力的号召？"],
       `
@@ -314,8 +329,8 @@ const callToAction = topic("writing", {
         Goal: get students to use the stairs|Take the stairs instead of the elevator every day this month.|Exercise is good for your health.|The elevator is crowded in the mornings.
       `,
       (right) => [
-        `**${right}** It tells readers exactly what to do, and when or where, so they can act at once.`,
-        `**${right}** 它明确告诉读者要做什么，以及何时或何地做，让他们能立即行动。`,
+        `The strongest call to action is: **${right}** It directs the audience to one concrete step with a clear time or place.\n\n**Check.** Imagine finishing a speech with this line—would a listener know the exact first move to make right away? Yes.`,
+        `最有力的号召是：**${right}** 它直接给出了具体行动步骤以及明确的时间或地点。\n\n**检验。** 设想用这句话结束演讲——听众听完后立刻知道第一步该做什么吗？完全清楚。`,
       ],
       [
         [
@@ -329,8 +344,8 @@ const callToAction = topic("writing", {
       "what-the-call-lacks",
       ["What the Call Lacks", "这个号召缺少什么"],
       [
-        "Check a call to action for three problems. It may be **clear and specific**, telling readers what to do and when or where. It may be **too vague**: *Help the environment* or *Do your part* names no particular action. Or it may ask for **too much**, an action few readers could really take, such as *Never use plastic again* or *Give all your savings*.",
-        "检查号召行动时要看三点。它可能**清楚具体**，告诉读者做什么以及何时或何地做。它可能**太含糊**：*Help the environment* 或 *Do your part* 没有提出具体行动。或者它可能**要求过高**，提出很少有读者真正做得到的行动，比如 *Never use plastic again* 或 *Give all your savings*。",
+        "Judge every call to action against three standards: **clear and specific** (one realistic action, often with when or where: *Bring one can of soup by Friday*), **too vague** (no concrete action: *Help the hungry*, *Do your part*), or **asks for too much** (unrealistic extreme: *Never use electricity again*, *Give all your money*).\n\n> **Watch out.** Even a dramatic command with a clear verb (*Sell your family's car this week*) fails if ordinary readers cannot realistically do it—that is **asks for too much**.",
+        "用三条标准衡量号召行动：**清楚具体**（普通人做得到的具体行动，常含时间地点：*Bring one can of soup by Friday*）、**太含糊**（没有具体动作：*Help the hungry*、*Do your part*），或**要求过高**（不切实际的极端要求：*Never use electricity again*、*Give all your money*）。\n\n> **注意。** 即使动词很具体（如 *Sell your family's car this week*），如果普通读者根本做不到，也属于**要求过高**。",
       ],
       ["How good is this call to action?", "这个号召怎么样？"],
       `
@@ -368,22 +383,22 @@ const callToAction = topic("writing", {
       {
         "clear and specific": L(
           "清楚具体",
-          "It names one action that readers can really take, often with when or where.",
-          "它提出了读者真正做得到的一个行动，常常还说明何时或何地。",
+          "It names one concrete, manageable action—often with a clear time or place—so it is **clear and specific**.\n\n**Check.** Ask two questions: *Do I know exactly what to do?* and *Could an ordinary reader actually do it?* Yes to both.",
+          "它给出了具体可行的一步行动（常含时间或地点），因此**清楚具体**。\n\n**检验。** 问两个问题：*我确切知道要做什么吗？**普通读者真的做得到吗？*两项都是肯定的。",
           "This call does not name a specific action that readers can manage.",
           "这个号召没有提出读者做得到的具体行动。",
         ),
         "too vague": L(
           "太含糊",
-          "It sounds good but names no particular action, so readers do not know what to do.",
-          "它听起来不错，却没有提出具体行动，读者不知道该做什么。",
+          "It expresses a nice sentiment yet names no concrete action, leaving readers unsure what to do; it is **too vague**.\n\n**Check.** Try to picture yourself carrying out this instruction right now: you cannot, because no specific task, time, or place is given.",
+          "听起来很积极，却没有说出任何具体做法，读者无从下手，因此**太含糊**。\n\n**检验。** 试着想象自己现在立刻照做：根本不知从何做起，因为没有具体任务、时间或地点。",
           "This call does name a particular action.",
           "这个号召确实提出了一个具体行动。",
         ),
         "asks for too much": L(
           "要求过高",
-          "It asks for an action so large that few readers could really take it.",
-          "它要求的行动太大，很少有读者真正做得到。",
+          "It demands an extreme sacrifice or impossible scale that almost no listener could carry out; it **asks for too much**.\n\n**Check.** Notice the extreme words (*all*, *never*, *every weekend*, *entire city*, *quit school*): the task is far beyond what an ordinary reader can manage.",
+          "它要求的代价或规模极端到几乎没人能做到，因此**要求过高**。\n\n**检验。** 看句中的极端限定词（*all*、*never*、*every weekend*、*entire city*、*quit school*）：这远远超出了普通读者的可行范围。",
           "This call does not ask for an impossibly large action.",
           "这个号召并没有提出大得做不到的要求。",
         ),
@@ -399,14 +414,18 @@ const labConclusion = topic("writing", {
     "A lab conclusion answers the question of the experiment, states the result with data, explains why it happened and suggests a next step, claiming no more than the data show.",
     "实验结论回答实验的问题，用数据说明结果，解释其原因，并提出下一步，所作的结论不超出数据所能证明的范围。",
   ],
+  intro: [
+    "Finishing a science experiment is only half the work—a crisp **lab conclusion** states what happened, cites the exact measurements, explains the science behind the result, and stays strictly inside what the test actually proved.",
+    "做完科学实验只完成了一半——扎实的**实验结论**要回答实验问题、给出测量数据、用科学原理解释原因，并严格把结论控制在实验真正证明的范围内。",
+  ],
   after: ["distinguishing-observation-and-inference"],
   points: [
     label(
       "the-part-of-the-conclusion",
       ["The Part of the Conclusion", "结论的组成部分"],
       [
-        "A strong lab conclusion has four parts. It **answers the question** the experiment asked. It **gives the data** that support the answer. It **explains why** the result happened, using science ideas. And it **suggests a next step**, such as a new test or a way to improve the experiment.",
-        "一个有力的实验结论有四个部分。它**回答实验提出的问题**。它**给出支持这个答案的数据**。它用科学原理**解释结果出现的原因**。它还**提出下一步**，比如新的检验或改进实验的方法。",
+        "A complete lab conclusion moves through four parts: it **answers the question** (*Salt water froze more slowly than fresh water*), **gives the data** (*40 minutes vs. 65 minutes*), **explains why** using a science concept (*Salt interferes with water molecules forming ice crystals*), and **suggests a next step** (*A future test could try several amounts of salt*).\n\n> **Watch out.** Separate **answers the question** (the overall takeaway without raw measurements) from **gives the data** (the exact numbers and units measured in the test).",
+        "完整的实验结论分四部分：**回答问题**（*Salt water froze more slowly than fresh water*）、**给出数据**（*40 minutes vs. 65 minutes*）、用科学原理**解释原因**（*Salt interferes with water molecules forming ice crystals*），以及**提出下一步**（*A future test could try several amounts of salt*）。\n\n> **注意。** 分清**回答问题**（不含原始读数的总结论）和**给出数据**（实验中测得的具体数字与单位）。",
       ],
       ["Which part of a lab conclusion is this sentence?", "这个句子是实验结论的哪个部分？"],
       `
@@ -444,29 +463,29 @@ const labConclusion = topic("writing", {
       {
         "answers the question": L(
           "回答问题",
-          "The sentence states the main finding: the answer to the question the experiment asked.",
-          "这个句子说出了主要发现，也就是实验所提问题的答案。",
+          "The sentence states the main finding of the test directly; it **answers the question**.\n\n**Check.** Notice that it reports *what happened* overall without citing raw measurements, scientific mechanisms, or future tests.",
+          "这个句子直接说出了实验的核心发现，因此属于**回答问题**。\n\n**检验。** 注意它概括了*实验结果是什么*，既没有列具体读数，也没有讲原理或提后续方案。",
           "This sentence does not state the main answer to the question.",
           "这个句子没有说出问题的主要答案。",
         ),
         "gives the data": L(
           "给出数据",
-          "The sentence gives the measurements that support the answer.",
-          "这个句子给出了支持答案的测量数据。",
+          "The sentence cites the exact numbers and units measured during the experiment; it **gives the data**.\n\n**Check.** Spot the quantitative readings (*meters*, *minutes*, *cm*, *°C*, *seconds*): those recorded measurements prove the finding.",
+          "这个句子列出了实验中测得的精确数字和单位，因此属于**给出数据**。\n\n**检验。** 找一找定量读数（*meters*、*minutes*、*cm*、*°C*、*seconds*）：正是这些实测数据在支撑结论。",
           "This sentence gives no measurements.",
           "这个句子没有给出测量数据。",
         ),
         "explains why": L(
           "解释原因",
-          "The sentence uses a science idea to explain why the result happened.",
-          "这个句子用科学原理解释了结果出现的原因。",
+          "The sentence brings in a scientific principle (lift, gravity, heat transfer, light absorption) to account for the outcome; it **explains why**.\n\n**Check.** Ask whether the sentence tells *how* or *why* nature produced the result rather than simply reporting numbers: yes.",
+          "这个句子引入科学原理（升力、重力、热传导、光吸收等）来说明结果成因，因此属于**解释原因**。\n\n**检验。** 问问句子是在解释*为什么会这样*，而不是光报实验数字：是的。",
           "This sentence does not explain why the result happened.",
           "这个句子没有解释结果出现的原因。",
         ),
         "suggests a next step": L(
           "提出下一步",
-          "The sentence suggests a new test or an improvement for the future.",
-          "这个句子提出了今后的新检验或改进方法。",
+          "The sentence proposes a follow-up experiment or a way to improve the procedure next time; it **suggests a next step**.\n\n**Check.** Look for forward-looking cues (*Next*, *A future test*, *Next time*, *We could also*): it points beyond today's lab.",
+          "这个句子提出了下次的延伸实验或改进方法，因此属于**提出下一步**。\n\n**检验。** 看面向未来的信号词（*Next*、*A future test*、*Next time*、*We could also*）：它指向下一步研究。",
           "This sentence does not suggest anything for the future.",
           "这个句子没有为今后提出任何建议。",
         ),
@@ -476,8 +495,8 @@ const labConclusion = topic("writing", {
       "a-conclusion-the-data-support",
       ["A Conclusion the Data Support", "数据支持的结论"],
       [
-        "A conclusion must match the data. It should not **go beyond** them, claiming that a result true for paper planes is true for all aircraft, or that one test proves something forever. And it must not **contradict** them, claiming the opposite of what was measured. State what the data show, and only that.",
-        "结论必须与数据一致。它不应**超出**数据，比如声称纸飞机的结果适用于所有飞行器，或者说一次检验就永远证明了某件事。它也不能**与数据矛盾**，声称与测量结果相反的东西。只说数据显示了什么。",
+        "A valid lab conclusion sticks tightly to the measured numbers. For *Long-wing paper planes: 8 m; short-wing: 5 m*, *In this test, long-wing paper planes flew farther* is supported—whereas *Long wings make every aircraft fly farther* **goes beyond** the data, and *Short-wing planes flew farther* **contradicts** them.\n\n> **Watch out.** Reject any option containing absolute words (*every*, *all*, *never*, *always*, *forever*, *only*)—one classroom lab can never prove a universal law.",
+        "合格的实验结论必须紧贴实测数字。对“长翼纸飞机 8 米，短翼 5 米”，*In this test, long-wing paper planes flew farther* 有数据支持；而 *Long wings make every aircraft fly farther* **超出了**数据范围，*Short-wing planes flew farther* 则**与数据矛盾**。\n\n> **注意。** 凡是含绝对词（*every*、*all*、*never*、*always*、*forever*、*only*）的选项一律警惕——一次实验绝不可能证明放之四海皆准的定律。",
       ],
       ["Which conclusion do these data support?", "这些数据支持哪个结论？"],
       `
@@ -512,7 +531,10 @@ const labConclusion = topic("writing", {
         Students who chewed gum: 7 words remembered; no gum: 7 words.|Chewing gum made no difference in this test.|Chewing gum harms the memory of everyone.|Students who chewed gum remembered more.
         Dark soil: 28°C; light sand: 22°C at noon.|The dark soil was warmer at noon.|Dark soil is always the best for farming.|The light sand was warmer at noon.
       `,
-      (right) => [`**${right}** It states what the data show, no more and no less.`, `**${right}** 它说明了数据所显示的内容，不多也不少。`],
+      (right) => [
+        `The supported conclusion is: **${right}** It matches the direction of the measurements without exaggerating beyond this test.\n\n**Check.** Compare the two numbers in the prompt directly against this sentence: the larger/faster side matches the data, and no extreme word (*all*, *every*, *never*, *forever*) stretches the claim.`,
+        `数据支持的结论是：**${right}** 它与实测方向一致，也没有夸大超出本次实验范围。\n\n**检验。** 把题干里的两个数值直接对照这句话：高低快慢方向完全一致，且没有 *all*、*every*、*never*、*forever* 等过度拔高的词。`,
+      ],
       [
         ["*{wrong}* goes far beyond what one test can show.", "*{wrong}* 远远超出了一次检验所能证明的范围。"],
         ["*{wrong}* contradicts the data: the measurements show the opposite.", "*{wrong}* 与数据矛盾：测量结果显示的正好相反。"],
@@ -528,14 +550,18 @@ const headline = topic("writing", {
     "A news headline names the main event in a few strong words without opinion, and the lead gives the most important facts first: who, what, when and where.",
     "新闻标题用几个有力的词说出主要事件，不带观点；导语先给出最重要的事实：谁、什么事、何时、何地。",
   ],
+  intro: [
+    "A busy reader scans a front page in three seconds: *Flood Closes Six Main Street Shops* tells the whole story at a glance, while *Weather Is in the News Again* says nothing. Writing a sharp **headline** and **lead** puts the key facts up front with zero opinion.",
+    "忙碌的读者三秒就能扫完头版：*Flood Closes Six Main Street Shops* 一眼交代核心新闻，而 *Weather Is in the News Again* 什么也没说。写好**标题**和**导语**，就是把最重要的事实客观地摆在最前面。",
+  ],
   after: ["reading-a-news-article"],
   points: [
     choose(
       "the-best-headline",
       ["The Best Headline", "最好的标题"],
       [
-        "A **headline** tells readers the main event in a few words. It uses a strong, present-tense verb (*wins*, *opens*, *floods*) and specific nouns. It does not give the writer's opinion (*Amazing!*, *Shameful*), and it is not so vague that readers cannot tell what happened (*Something Happens at School*).",
-        "**标题**用几个词告诉读者主要事件。它使用有力的一般现在时动词（*wins*、*opens*、*floods*）和具体的名词。它不表达作者的观点（*Amazing!*、*Shameful*），也不能含糊到读者看不出发生了什么（*Something Happens at School*）。",
+        "A news **headline** summarizes the main event in a handful of words using a crisp present-tense verb (*Wins*, *Closes*, *Opens*) or *to* + verb for future plans (*Library to Open Wing*). Keep it factual and specific—never inject opinion (*Amazing!*, *Shameful!*) and never stay vague (*Something Happens at School*).\n\n> **Watch out.** Exclamation marks and cheerleading adjectives (*Best Ever!*, *Horrible*, *Genius*) are instant giveaways of opinionated headlines—rule them out.",
+        "新闻**标题**用寥寥数词和利落的一般现在时动词（*Wins*、*Closes*、*Opens*）或表示将来的 *to* + 动词（*Library to Open Wing*）概括核心事件。要具体、客观——既不夹杂观点（*Amazing!*、*Shameful!*），也不能含糊其辞（*Something Happens at School*）。\n\n> **注意。** 感叹号和夸张评价词（*Best Ever!*、*Horrible*、*Genius*）是观点化标题的明显标志——直接排除。",
       ],
       ["Which is the best headline for this story?", "哪个是这篇报道最好的标题？"],
       `
@@ -571,8 +597,8 @@ const headline = topic("writing", {
         Facts: A new hospital wing for children opened on Tuesday.|New Children's Hospital Wing Opens|Fantastic Hospital Wing Is a Miracle!|Hospital Has an Update
       `,
       (right) => [
-        `**${right}** It names the main event with a strong verb and specific facts, and it gives no opinion.`,
-        `**${right}** 它用有力的动词和具体的事实说出了主要事件，没有表达观点。`,
+        `**${right}** is the strongest headline: it states the core news with a crisp verb and concrete facts, free of opinion.\n\n**Check.** Test all three rules on **${right}**: a reader knows *who/what* happened at once, no emotional judgment appears, and every word pulls its weight.`,
+        `**${right}** 是最好的标题：用利落的动词和具体事实点明核心事件，且不带个人观点。\n\n**检验。** 用三条标准核对 **${right}**：读者一眼看懂发生了什么，没有情绪化评价词，而且字字精炼。`,
       ],
       [
         ["*{wrong}* gives an opinion instead of reporting the event.", "*{wrong}* 表达了观点，而不是报道事件。"],
@@ -583,8 +609,8 @@ const headline = topic("writing", {
       "the-best-lead",
       ["The Best Lead", "最好的导语"],
       [
-        "The **lead** is the first sentence of a news story. It gives the most important facts at once: **who**, **what**, **when** and **where**, and sometimes **why**. A lead that begins with a minor detail buries the news, and a lead that gives the reporter's opinion is not objective.",
-        "**导语**是新闻报道的第一句话。它立刻给出最重要的事实：**谁**、**什么事**、**何时**、**何地**，有时还有**为什么**。从次要细节开始的导语埋没了新闻，表达记者观点的导语则不客观。",
+        "The **lead** is the opening sentence of a news report. It delivers the core facts immediately—**who**, **what**, **when**, and **where** (and sometimes **why**)—in a calm, objective voice. Starting with trivia (*The bus left early*) buries the news, while adding praise or anger (*a disgrace*, *true heroes*) breaks journalistic objectivity.\n\n> **Watch out.** Count the core *W* facts (*who, what, when, where*) in the opening sentence—if a sentence only gives background fluff or reporter opinions, it fails as a lead.",
+        "**导语**是新闻报道的第一句话，要求用平实客观的口吻第一时间交代核心要素——**谁**、**什么事**、**何时**、**何地**（有时还有**为什么**）。从无关紧要的细节写起（*The bus left early*）会埋没新闻，夹杂夸奖或指责（*a disgrace*、*true heroes*）则违背新闻客观性。\n\n> **注意。** 数一数开头句里交代了几个核心要素（谁、什么事、何时、何地）——如果只写背景闲话或记者评价，就不合格。",
       ],
       ["Which is the best lead for this story?", "哪个是这篇报道最好的导语？"],
       `
@@ -620,8 +646,8 @@ const headline = topic("writing", {
         Coin found in garden|A family in Greenwood found a 200-year-old silver coin while digging in their garden on Sunday.|The family's garden has tomatoes, beans and roses.|This incredible discovery is the luckiest thing that has ever happened.
       `,
       (right) => [
-        `**${right}** It puts the key facts first: who, what, when and where.`,
-        `**${right}** 它把关键事实放在最前面：谁、什么事、何时、何地。`,
+        `The strongest lead is: **${right}** It opens straight with the key facts—who, what, when, and where—in an objective tone.\n\n**Check.** Verify that even if a reader stopped after this single sentence, they would know the main event accurately with zero reporter bias.`,
+        `最好的导语是：**${right}** 它以客观口吻开门见山地交代了谁、什么事、何时、何地等核心事实。\n\n**检验。** 设想读者只读完这一句就停下：他已经准确掌握了新闻主干，且没有受到记者个人情绪的左右。`,
       ],
       [
         ["*{wrong}* begins with a minor detail and buries the news.", "*{wrong}* 从次要细节开始，埋没了新闻。"],

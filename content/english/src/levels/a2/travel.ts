@@ -449,22 +449,21 @@ const goWhy = (sentence: string): Text => {
   const be = /\b(am|is|are)\b/u.exec(sentence)?.[1] ?? (/^I'm/u.test(sentence) ? "am" : "are");
   const rule = goBeRule(be);
   return t(
-    `A plan made before takes *am*, *is* or *are* with *going to* and the first form of the verb; ${rule.en}: ${sentence}`,
-    `事先做好的计划用 *am / is / are* 加 *going to* 再加动词原形；${rule["zh-CN"]}：${sentence}`,
+    `A plan made before takes *am*, *is* or *are* with *going to* and the first form of the verb; ${rule.en}: ${sentence}\n\n**Check.** Verify all three pieces in order: *${be}* (matching the subject) + *going to* + plain verb.`,
+    `事先做好的计划用 *am / is / are* 加 *going to* 再加动词原形；${rule["zh-CN"]}：${sentence}\n\n**检验。** 按顺序核对三部分：与主语一致的 *${be}* + *going to* + 动词原形。`,
   );
 };
 
 /** whyNotGo explains the wrong form of be, or going without to. */
-const whyNotGo = (wrong: string, right: string, _shown: string, position: number): Text => {
+const whyNotGo = (wrong: string, _right: string, _shown: string, position: number): Text => {
   if (position === 1)
     return t(
-      `*${wrong}* leaves out *to*. A plan takes *going to* and then the verb: *${right}*.`,
-      `*${wrong}* 漏了 *to*。计划要用 *going to* 再接动词：*${right}*。`,
+      `*${wrong}* leaves out *to*. A plan needs *going to* right before the plain verb.`,
+      `*${wrong}* 漏了 *to*。表达计划要用 *going to* 再接动词原形。`,
     );
-  const rule = goBeRule(right.split(" ")[0] ?? "");
   return t(
-    `*${wrong}* has the wrong form of *be*: ${rule.en}, so it is *${right}*.`,
-    `*${wrong}* 用错了 *be* 的形式：${rule["zh-CN"]}，所以是 *${right}*。`,
+    `*${wrong}* uses the wrong form of *be* for this subject—check whether it needs *am*, *is* or *are*.`,
+    `*${wrong}* 里的 *be* 动词与主语不匹配——请核对主语该配 *am*、*is* 还是 *are*。`,
   );
 };
 
@@ -474,6 +473,10 @@ const beGoingTo: TopicDef = {
   summary: t(
     "We are going to visit the castle. Going to is for plans already made.",
     "We are going to visit the castle. be going to 表示已经做好的计划。",
+  ),
+  intro: t(
+    "When you already have a plan—*I'm going to pack my bag tonight*—English links *am / is / are*, *going to*, and the plain verb to show intention.",
+    "说已经定好的计划时（如 *I'm going to pack my bag tonight*），英语用 *am / is / are* + *going to* + 动词原形来表达打算。",
   ),
   prerequisites: ["present-continuous", "a2-words-holidays"],
   encompasses: [
@@ -487,8 +490,8 @@ const beGoingTo: TopicDef = {
       "form",
       t("Am, is or are going to", "am、is 还是 are going to"),
       t(
-        "For a plan you have already made, use *am*, *is* or *are* with *going to* and the first form of a verb:\n\n- *I am going to fly to Beijing.* (*I'm*)\n- *She is going to stay in a hotel.* (*She's*)\n- *We are going to visit the castle.* (*We're*)\n\nDo not leave out *to*: *We are going to visit*, not *We are going visit*.",
-        "表示已经做好的计划，用 *am / is / are* 加 *going to* 再加动词原形：\n\n- *I am going to fly to Beijing.*（*I'm*）\n- *She is going to stay in a hotel.*（*She's*）\n- *We are going to visit the castle.*（*We're*）\n\n不要漏掉 *to*：说 *We are going to visit*，不说 *We are going visit*。中文“打算”“准备”常常对应 *be going to*，但 *be* 不能省略。",
+        "For a plan you have already made, use *am*, *is* or *are* with *going to* and the first form of a verb:\n\n- *I am going to fly to Beijing.* (*I'm*)\n- *She is going to stay in a hotel.* (*She's*)\n- *We are going to visit the castle.* (*We're*)\n\n> **Watch out.** Never drop *be* (*We going to visit*) and never drop *to* (*We are going visit*).",
+        "表示已经做好的计划，用 *am / is / are* 加 *going to* 再加动词原形：\n\n- *I am going to fly to Beijing.*（*I'm*）\n- *She is going to stay in a hotel.*（*She's*）\n- *We are going to visit the castle.*（*We're*）\n\n> **注意。** 既不能漏掉 *be*（*We going to visit*），也不能漏掉 *to*（*We are going visit*）。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -501,8 +504,8 @@ const beGoingTo: TopicDef = {
       "write",
       t("Writing a plan", "写出计划"),
       t(
-        "Write the plan in the note with *going to*. You may use the short forms *I'm*, *we're*, *they're* and *she's*.",
-        "用 *going to* 写出笔记里的计划。可以用缩写 *I'm*、*we're*、*they're* 和 *she's*。",
+        "Write the plan in the note with *going to*: *We / visit the castle / next Sunday* → *We are going to visit the castle next Sunday.* You may use the short forms *I'm*, *we're*, *they're* and *she's*.\n\n> **Watch out.** Check that *am/is/are* matches the subject and that *going to* is followed by the plain verb.",
+        "用 *going to* 写出笔记里的计划：*We / visit the castle / next Sunday* → *We are going to visit the castle next Sunday.* 可以用缩写 *I'm*、*we're*、*they're* 和 *she's*。\n\n> **注意。** 核对 *am/is/are* 与主语一致，并且 *going to* 后面接动词原形。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), goTypedBank, goWhy),
     ),
@@ -510,14 +513,14 @@ const beGoingTo: TopicDef = {
       "question",
       t("Asking about plans", "询问计划"),
       t(
-        "To ask about a plan, put *am*, *is* or *are* before the subject: *You are going to fly.* → *Are you going to fly?* *Tom is going to stay.* → *Is Tom going to stay?* Do not use *do*.",
-        "询问计划时，把 *am / is / are* 放到主语前面：*You are going to fly.* → *Are you going to fly?* *Tom is going to stay.* → *Is Tom going to stay?* 不要用 *do*。",
+        "To ask about a plan, put *am*, *is* or *are* before the subject: *You are going to fly.* → *Are you going to fly?* *Tom is going to stay.* → *Is Tom going to stay?*\n\n> **Watch out.** Do not use *Do* or *Does* (*Do you going to fly?* is wrong)—simply move *am/is/are* to the front and end with a question mark.",
+        "询问计划时，把 *am / is / are* 放到主语前面：*You are going to fly.* → *Are you going to fly?* *Tom is going to stay.* → *Is Tom going to stay?*\n\n> **注意。** 不要用 *Do* 或 *Does*（*Do you going to fly?* 是错的）——直接把 *am/is/are* 移到句首，句末加问号。",
       ),
       typedGenerator("sentence", t("Make the sentence a question.", "把句子改成疑问句。"), goQuestionBank, (right) => {
         const be = right.split(" ")[0] ?? "";
         return t(
-          `To ask about a plan, move *${be.toLowerCase()}* before the subject and keep *going to* and the verb after it, with no *do*: ${right}`,
-          `询问计划时，把 *${be.toLowerCase()}* 移到主语前面，后面保留 *going to* 和动词，不用 *do*：${right}`,
+          `To ask about a plan, move *${be.toLowerCase()}* before the subject and keep *going to* and the verb after it, with no *do*: ${right}\n\n**Check.** Verify the front order (*${be}* + subject + *going to* + verb) and the closing question mark.`,
+          `询问计划时，把 *${be.toLowerCase()}* 移到主语前面，后面保留 *going to* 和动词，不用 *do*：${right}\n\n**检验。** 核对句首语序（*${be}* + 主语 + *going to* + 动词）和句末问号。`,
         );
       }),
     ),
@@ -703,25 +706,25 @@ const willTypedBank: readonly TypedItem[] = everyPair(willSubjects, willGuesses)
 const willWhy = (sentence: string): Text =>
   /won't|will not/u.test(sentence)
     ? t(
-        `*won't* (*will not*) is the same for every person, and the verb after it stays in its first form: ${sentence}`,
-        `*won't*（*will not*）对所有人称都一样，后面的动词用原形：${sentence}`,
+        `*won't* (*will not*) is the same for every person, and the verb after it stays in its first form: ${sentence}\n\n**Check.** Verify that *won't* is used directly (no *don't*) and is followed by the plain verb with no *to*.`,
+        `*won't*（*will not*）对所有人称都一样，后面的动词用原形：${sentence}\n\n**检验。** 确认直接用 *won't* 否定（不加 *don't*），后面紧接不带 *to* 的动词原形。`,
       )
     : t(
-        `*will* is the same for every person, and the verb after it stays in its first form: ${sentence}`,
-        `*will* 对所有人称都一样，后面的动词用原形：${sentence}`,
+        `*will* is the same for every person, and the verb after it stays in its first form: ${sentence}\n\n**Check.** Look right after *will*: there is no *to* and no *-s* on the verb, no matter who the subject is.`,
+        `*will* 对所有人称都一样，后面的动词用原形：${sentence}\n\n**检验。** 看 *will* 后面：无论主语是谁，都没有 *to*，动词也不加 *-s*。`,
       );
 
 /** whyNotWill explains -s or to after will, or do with will. */
-const whyNotWill = (wrong: string, right: string): Text => {
+const whyNotWill = (wrong: string): Text => {
   if (wrong.startsWith("don't"))
     return t(
-      `*will* makes its own negative, *won't*, and never takes *do*: *${right}*.`,
-      `*will* 自己构成否定 *won't*，从不和 *do* 连用：*${right}*。`,
+      "*will* makes its own negative directly and never takes *do* or *don't*.",
+      "*will* 自己直接构成否定，从不和 *do* 或 *don't* 连用。",
     );
   if (/ to /u.test(wrong))
     return t(
-      `*${wrong}* puts *to* after *${wrong.split(" ")[0]}*, but the verb comes straight after it.`,
-      `*${wrong}* 在 *${wrong.split(" ")[0]}* 后面加了 *to*，但动词应直接跟在后面。`,
+      `*${wrong}* puts *to* after *${wrong.split(" ")[0]}*, but the plain verb comes straight after it.`,
+      `*${wrong}* 在 *${wrong.split(" ")[0]}* 后面加了 *to*，但动词原形应直接跟在后面。`,
     );
   return t(
     `*${wrong}* adds *-s* to the verb. After *will* the verb stays in its first form for every person.`,
@@ -734,20 +737,20 @@ const planWhy = (right: string, shown: string): Text => {
   const done = fill(shown, right).replace("I *'ll*", "*I'll*");
   return right === "'ll"
     ? t(
-        `The speaker decides at the moment of speaking, often to help, so it takes *will* (*'ll*): ${done}`,
-        `说话人是当场做出决定，常常是主动帮忙，所以用 *will*（*'ll*）：${done}`,
+        `The speaker decides at the moment of speaking, often to help, so it takes *will* (*'ll*): ${done}\n\n**Check.** Ask when the decision was made: right now, in response to what just happened → *'ll*.`,
+        `说话人是当场做出决定，常常是主动帮忙，所以用 *will*（*'ll*）：${done}\n\n**检验。** 判断决定的时间：是刚发生这件事后当场决定的 → 用 *'ll*。`,
       )
     : t(
-        `The first sentence shows that the plan was made before speaking, so it takes *going to*: ${done}`,
-        `第一句说明计划在说话前就已做好，所以用 *going to*：${done}`,
+        `The first sentence shows that the plan was made before speaking, so it takes *going to*: ${done}\n\n**Check.** Look at the first sentence: the speaker already booked or decided earlier → *be going to*.`,
+        `第一句说明计划在说话前就已做好，所以用 *going to*：${done}\n\n**检验。** 看第一句：说话前就已订好或决定好 → 用 *be going to*。`,
       );
 };
 
 /** whyNotPlan explains will for a plan, going to for a decision now, or be alone before a verb. */
-const whyNotPlan = (wrong: string, right: string): Text => {
+const whyNotPlan = (wrong: string): Text => {
   if (wrong === "will")
     return t(
-      "*will* is for a decision made at the moment of speaking, but this plan was made before.",
+      "*will* is for a decision made at the moment of speaking, but this plan was already made before.",
       "*will* 用于说话时当场做出的决定，但这个计划是事先做好的。",
     );
   if (wrong.endsWith("going to"))
@@ -756,8 +759,8 @@ const whyNotPlan = (wrong: string, right: string): Text => {
       "*going to* 用于事先做好的计划，但这里说话人是当场做出决定。",
     );
   return t(
-    `*${wrong}* alone cannot come before the first form of a verb. ${right === "'ll" ? "A decision made now takes *'ll*." : `A plan made before takes *${right}*.`}`,
-    `*${wrong}* 不能单独放在动词原形前面。${right === "'ll" ? "当场的决定用 *'ll*。" : `事先的计划用 *${right}*。`}`,
+    `*${wrong}* alone cannot come straight before the first form of a verb to express the future.`,
+    `*${wrong}* 不能单独放在动词原形前面来表示将来。`,
   );
 };
 
@@ -767,6 +770,10 @@ const willForTheFuture: TopicDef = {
   summary: t(
     "It will probably rain. I'll help you. Will is for predictions and for decisions made now.",
     "It will probably rain. I'll help you. will 用于预测和当下做出的决定。",
+  ),
+  intro: t(
+    "When you guess what will happen (*It will probably snow tonight*) or offer help on the spot (*I'll carry that bag*), English uses *will* (or *'ll* / *won't*) straight before the plain verb.",
+    "预测将要发生的事（*It will probably snow tonight*）或当场决定帮忙（*I'll carry that bag*）时，英语用 *will*（或 *'ll* / *won't*）直接接动词原形。",
   ),
   prerequisites: ["a2-words-future", "be-going-to"],
   encompasses: [
@@ -780,8 +787,8 @@ const willForTheFuture: TopicDef = {
       "form",
       t("Will and won't with a verb", "will 和 won't 加动词"),
       t(
-        "*will* and *won't* (*will not*) are the same for every person, and the verb after them stays in its first form:\n\n- *It will be cold. She will help you.* — not *will helps*\n- *I won't tell anyone.* — not *don't will tell*\n\nDo not put *to* after *will*: *will pass*, not *will to pass*.",
-        "*will* 和 *won't*（*will not*）对所有人称都一样，后面的动词用原形：\n\n- *It will be cold. She will help you.*，不说 *will helps*\n- *I won't tell anyone.*，不说 *don't will tell*\n\n*will* 后面不加 *to*：说 *will pass*，不说 *will to pass*。",
+        "*will* and *won't* (*will not*) are the same for every person, and the verb after them stays in its first form:\n\n- *It will be cold. She will help you.*\n- *I won't tell anyone.*\n\n> **Watch out.** Never add *-s* after *will* (*will helps*), never add *to* (*will to pass*), and never use *don't* with *will* (*don't will tell*).",
+        "*will* 和 *won't*（*will not*）对所有人称都一样，后面的动词用原形：\n\n- *It will be cold. She will help you.*\n- *I won't tell anyone.*\n\n> **注意。** *will* 后面的动词绝不加 *-s*（不说 *will helps*）、不加 *to*（不说 *will to pass*），也绝不和 *don't* 连用（不说 *don't will tell*）。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -794,8 +801,8 @@ const willForTheFuture: TopicDef = {
       "plan-or-now",
       t("A plan or a decision now", "计划还是当下的决定"),
       t(
-        "Use *going to* for a plan you made before you speak: *We bought the tickets. We are going to fly to Rome.*\n\nUse *will* (*'ll*) for a decision you make at the moment you speak, often to offer help: *The phone is ringing. — I'll answer it.*",
-        "说话之前就已经做好的计划，用 *going to*：*We bought the tickets. We are going to fly to Rome.*\n\n说话时当场做出的决定，常常是主动提供帮助，用 *will*（*'ll*）：*The phone is ringing. — I'll answer it.*",
+        "Use *going to* for a plan you made before you speak: *We bought the tickets. We are going to fly to Rome.*\n\nUse *will* (*'ll*) for a decision you make at the moment you speak, often to offer help: *The phone is ringing. — I'll answer it.*\n\n> **Watch out.** Look at the first sentence for the clue: if it mentions booking or planning earlier, choose *be going to*; if it describes a sudden situation right now, choose *'ll*.",
+        "说话之前就已经做好的计划，用 *going to*：*We bought the tickets. We are going to fly to Rome.*\n\n说话时当场做出的决定，常常是主动提供帮助，用 *will*（*'ll*）：*The phone is ringing. — I'll answer it.*\n\n> **注意。** 看第一句的线索：提到早就订好或计划好，用 *be going to*；描述眼下突然发生的情况、当场回应，用 *'ll*。",
       ),
       choiceGenerator(t("Choose the best words for the gap.", "选出最适合填入空白处的词。"), planChoiceBank, planWhy, whyNotPlan),
     ),
@@ -803,18 +810,18 @@ const willForTheFuture: TopicDef = {
       "write",
       t("Writing a prediction", "写出预测"),
       t(
-        "Write the prediction with *will* and *probably*. *probably* goes after *will* but before *won't*: *We will probably win. We probably won't win.*",
-        "用 *will* 和 *probably* 写出预测。*probably* 放在 *will* 后面，但放在 *won't* 前面：*We will probably win. We probably won't win.*",
+        "Write the prediction with *will* and *probably*. *probably* goes after *will* but before *won't*: *We will probably win. We probably won't win.*\n\n> **Watch out.** Watch the position of *probably*: *will probably* (positive) vs. *probably won't* (negative)—do not write *won't probably*.",
+        "用 *will* 和 *probably* 写出预测。*probably* 放在 *will* 后面，但放在 *won't* 前面：*We will probably win. We probably won't win.*\n\n> **注意。** 留意 *probably* 的位置：肯定句是 *will probably*，否定句是 *probably won't*——不要写成 *won't probably*。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), willTypedBank, (right) =>
         /won't/u.test(right)
           ? t(
-              `A prediction takes *will*, and its negative is *won't*; *probably* goes before *won't*, and the verb stays in its first form: ${right}`,
-              `预测用 *will*，否定是 *won't*；*probably* 放在 *won't* 前面，动词用原形：${right}`,
+              `A prediction takes *will*, and its negative is *won't*; *probably* goes before *won't*, and the verb stays in its first form: ${right}\n\n**Check.** Verify the order: subject + *probably won't* + plain verb (no *to*).`,
+              `预测用 *will*，否定是 *won't*；*probably* 放在 *won't* 前面，动词用原形：${right}\n\n**检验。** 核对语序：主语 + *probably won't* + 动词原形（不加 *to*）。`,
             )
           : t(
-              `A prediction takes *will*; *probably* goes after *will*, and the verb stays in its first form: ${right}`,
-              `预测用 *will*；*probably* 放在 *will* 后面，动词用原形：${right}`,
+              `A prediction takes *will*; *probably* goes after *will*, and the verb stays in its first form: ${right}\n\n**Check.** Verify the order: subject + *will probably* (or *'ll probably*) + plain verb (no *to*).`,
+              `预测用 *will*；*probably* 放在 *will* 后面，动词用原形：${right}\n\n**检验。** 核对语序：主语 + *will probably*（或 *'ll probably*）+ 动词原形（不加 *to*）。`,
             ),
       ),
     ),
@@ -893,6 +900,10 @@ const writingAboutFuturePlans = judgedTopic({
     "Write six to eight sentences about a trip you are going to take: where, when, how and what you will do there.",
     "写六到八句话，讲一次你将要去的旅行：去哪里、什么时候、怎么去、在那里做什么。",
   ),
+  intro: t(
+    "A clear travel plan blends settled arrangements (*We are going to take the morning train to Hangzhou*) with predictions (*I think it will be warm*). Covering where, when, how and what makes the plan complete.",
+    "清晰的旅行计划会把定好的安排（*We are going to take the morning train to Hangzhou*）和预测（*I think it will be warm*）自然结合起来。写全地点、时间、交通和活动，计划就完整了。",
+  ),
   prerequisites: ["be-going-to", "writing-a-postcard"],
   encompasses: [
     { topic: "be-going-to", weight: 0.3 },
@@ -903,8 +914,8 @@ const writingAboutFuturePlans = judgedTopic({
     id: "plans",
     title: t("Where, when, how and what", "去哪里、什么时候、怎么去、做什么"),
     explanation: t(
-      "Talk about the future with *going to* for your plans and *will* for what you think will happen:\n\n- Where and when: *Next month we are going to visit Sanya.*\n- How: *We are going to fly there.*\n- What you will do: *We are going to swim every day. We will probably visit an island.*",
-      "用 *going to* 说计划，用 *will* 说你认为会发生的事：\n\n- 去哪里、什么时候：*Next month we are going to visit Sanya.*\n- 怎么去：*We are going to fly there.*\n- 要做什么：*We are going to swim every day. We will probably visit an island.*\n\n不要把将来的事写成一般现在时，比如 *Next month we visit Sanya.*",
+      "Talk about the future with *going to* for your plans and *will* for what you think will happen:\n\n- Where and when: *Next month we are going to visit Sanya.*\n- How: *We are going to fly there.*\n- What you will do: *We are going to swim every day. We will probably visit an island.*\n\n> **Watch out.** Do not use the present simple for future plans (*Next month we visit Sanya* is wrong—use *are going to visit* or *will visit*).",
+      "用 *going to* 说计划，用 *will* 说你认为会发生的事：\n\n- 去哪里、什么时候：*Next month we are going to visit Sanya.*\n- 怎么去：*We are going to fly there.*\n- 要做什么：*We are going to swim every day. We will probably visit an island.*\n\n> **注意。** 不要把将来的计划写成一般现在时（*Next month we visit Sanya* 是错的，要用 *are going to visit* 或 *will visit*）。",
     ),
   },
   question: t(

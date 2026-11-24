@@ -2,7 +2,7 @@
 // and is made of naming words, action words and describing words; it can tell or ask, and two can be joined by *and*.
 
 import type { TopicDef } from "@ga/content";
-import { choose, type Label, label, topic } from "../grade-6/kit.ts";
+import { choose, type Label, label, type Pair, topic } from "../grade-6/kit.ts";
 
 /** L builds a label from its Chinese name, why it is right and why it is not. */
 const L = (zh: string, whyEn: string, whyZh: string, notEn: string, notZh: string): Label => ({
@@ -14,12 +14,22 @@ const L = (zh: string, whyEn: string, whyZh: string, notEn: string, notZh: strin
 /** filled is a sentence with its blank filled by the right word. */
 const filled = (shown: string, right: string) => shown.replace("___", right);
 
+/** wordAfterBlank returns the word right after ___ in a fill-in-the-blank prompt. */
+const wordAfterBlank = (shown: string) => {
+  const after = shown.split("___")[1]?.trim() ?? "";
+  return after.split(/\s+/u)[0]?.replace(/[.,!?]+$/u, "") ?? "";
+};
+
 const capitals = topic("grammar", {
   id: "starting-a-sentence-with-a-capital",
   title: ["Starting a Sentence with a Capital", "句子以大写字母开头"],
   summary: [
     "Every sentence starts with a capital letter, and the word *I* is always a capital.",
     "每个句子都以大写字母开头，单词 *I* 总是大写。",
+  ],
+  intro: [
+    "You write a short note on your drawing: *My dog runs fast.* Look at the very first letter—it is a big **M** so the reader knows a new sentence starts there. In this lesson, you will start sentences with a capital letter and always write **I** big.",
+    "你在自己的画下面写了一句话：*My dog runs fast.* 看最前面那个字母——它是个大写的 **M**，告诉看画的人新的一句话从这里开始。这节课，你会练习句首大写，以及把 **I** 永远写成大写。",
   ],
   after: ["first-and-last-letters"],
   xp: 10,
@@ -28,8 +38,8 @@ const capitals = topic("grammar", {
       "the-first-letter",
       ["The First Letter", "第一个字母"],
       [
-        "A sentence always starts with a **capital letter**: *The cat sat.* not *the cat sat.* Look at the first word: its first letter must be big.",
-        "句子总是以**大写字母**开头：要写 *The cat sat.*，不能写 *the cat sat.*。看第一个词：它的首字母必须大写。",
+        "A sentence always starts with a **capital letter**: ***T**he cat sat.*, not *the cat sat.* Look at the very first letter of the first word and make it big.\n\n> **Watch out.** Do not put the capital on the second letter or the second word by mistake.",
+        "句子总是以**大写字母**开头：要写 ***T**he cat sat.*，不能写 *the cat sat.*。盯住第一个词的首字母，把它写成大写。\n\n> **注意。** 不要错把大写放到第二个字母或第二个词上。",
       ],
       ["Which sentence starts the right way?", "哪个句子的开头是对的？"],
       `
@@ -64,12 +74,15 @@ const capitals = topic("grammar", {
       my cat naps a lot|My cat naps a lot.|my cat naps a lot.|my Cat naps a lot.
       the kids sit on the rug|The kids sit on the rug.|the kids sit on the rug.|the Kids sit on the rug.
       `,
-      (right) => [`*${right}* starts with a capital letter.`, `*${right}* 以大写字母开头。`],
+      (right) => [
+        `*${right}* starts with a capital **${right[0]}** on the first word.\n\n**Check.** Point to the very first letter (**${right[0]}**): it is big, and the rest of the first word stays small.`,
+        `*${right}* 的第一个词以大写字母 **${right[0]}** 开头。\n\n**检验。** 指着最前面那个字母（**${right[0]}**）：它是大写的，第一个词后面的字母都是小写。`,
+      ],
       [
-        ["*{wrong}* starts with a small letter.", "*{wrong}* 以小写字母开头。"],
+        ["*{wrong}* starts with a small letter, so it is missing its starting capital.", "*{wrong}* 以小写字母开头，漏掉了句首大写。"],
         [
-          "*{wrong}* puts the capital in the wrong place: it belongs on the first letter of the first word.",
-          "*{wrong}* 大写的位置不对：应该是第一个词的第一个字母大写。",
+          "*{wrong}* puts the capital in the wrong spot instead of on the very first letter.",
+          "*{wrong}* 把大写放错了位置，应该放在最前面的第一个字母上。",
         ],
       ],
     ),
@@ -77,8 +90,8 @@ const capitals = topic("grammar", {
       "the-word-i",
       ["The Word I", "单词 I"],
       [
-        "When you write about yourself, the word **I** is always a capital letter, at the start of a sentence or in the middle: *Mom and **I** ran.*",
-        "写自己时，单词 **I** 总是大写，不论在句首还是句中：*Mom and **I** ran.*。",
+        "When you write about yourself, the word **I** is always a capital letter—at the start or in the middle: *Mom and **I** ran.* Remember to start the sentence with a capital too.\n\n> **Watch out.** Never write the word *I* as a small *i*, even in the middle of a sentence.",
+        "写自己时，单词 **I** 永远要大写，不管在句首还是句中：*Mom and **I** ran.* 别忘了句子开头也要大写。\n\n> **注意。** 即使在句子中间，也绝不能把表示“我”的 *I* 写成小写 *i*。",
       ],
       ["Which sentence is written the right way?", "哪个句子写对了？"],
       `
@@ -113,12 +126,18 @@ const capitals = topic("grammar", {
       Dad and I dig|Dad and I dig.|Dad and i dig.|dad and I dig.
       I hid in the box|I hid in the box.|i hid in the box.|I Hid in the box.
       `,
-      (right) => [`*${right}*: the word *I* and the first letter are capitals.`, `*${right}*：单词 *I* 和句子的第一个字母都大写。`],
+      (right) => [
+        `*${right}* capitalizes both the first word and the word **I**, and keeps ordinary words small.\n\n**Check.** Run two quick checks on *${right}*: (1) the first letter (**${right[0]}**) is big, and (2) the word **I** stands tall as a capital.`,
+        `*${right}* 把第一个词和单词 **I** 都写成了大写，其他普通词保持小写。\n\n**检验。** 对 *${right}* 做两步检查：（1）第一个字母（**${right[0]}**）是大写；（2）单词 **I** 是大写的。`,
+      ],
       [
-        ["*{wrong}* writes *I* as a small letter, but *I* is always a capital.", "*{wrong}* 把 *I* 写成了小写，但 *I* 总是大写的。"],
         [
-          "*{wrong}* puts a capital where it does not belong, or leaves one out.",
-          "*{wrong}* 在不该大写的地方用了大写，或漏掉了该有的大写。",
+          "*{wrong}* writes *I* as a small letter, but *I* is always a capital.",
+          "*{wrong}* 把 *I* 写成了小写，但表示“我”的 *I* 总是大写的。",
+        ],
+        [
+          "*{wrong}* either forgets the capital at the start or puts an extra capital on an ordinary word.",
+          "*{wrong}* 要么漏掉了句首大写，要么把普通词写成了大写。",
         ],
       ],
     ),
@@ -129,6 +148,10 @@ const names = topic("grammar", {
   id: "capitals-for-names",
   title: ["Capitals for Names", "名字用大写"],
   summary: ["The name of a person, a pet, a day or a place starts with a capital letter.", "人名、宠物名、星期名和地名都以大写字母开头。"],
+  intro: [
+    "Look at the cubby tags in your classroom: *Maya*, *Leo*, *Nora*. Every name starts with a big letter because it belongs to one special person. Days and places get a big letter too!",
+    "看看教室里收纳格上的名字牌：*Maya*、*Leo*、*Nora*。每个名字都以大写字母开头，因为它属于某一个特别的人。星期几和地名也一样要大写！",
+  ],
   after: ["starting-a-sentence-with-a-capital"],
   xp: 10,
   points: [
@@ -136,8 +159,8 @@ const names = topic("grammar", {
       "names-of-people-and-pets",
       ["Names of People and Pets", "人和宠物的名字"],
       [
-        "A **name** is the word for one special person or pet, like *Sam*, *Lily* or *Rex*. A name always starts with a capital letter, even in the middle of a sentence: *I see **Sam**.*",
-        "**名字**是某一个特定的人或宠物的称呼，比如 *Sam*、*Lily*、*Rex*。名字总是以大写字母开头，在句子中间也是如此：*I see **Sam**.*。",
+        "A **name** is the special word for one person or pet, like ***S**am*, ***L**ily*, or ***R**ex*. It always starts with a capital letter, even in the middle of a sentence: *I see **Sam**.*\n\n> **Watch out.** Capitalize only the first letter of a name—not the second letter too.",
+        "**名字**是某一个特定的人或宠物的称呼，比如 ***S**am*、***L**ily*、***R**ex*。不管在句首还是句中，名字的首字母都要大写：*I see **Sam**.*\n\n> **注意。** 名字只需要第一个字母大写，不要把后面的字母也写成大写。",
       ],
       ["Which sentence writes the name the right way?", "哪个句子的名字写对了？"],
       `
@@ -172,12 +195,15 @@ const names = topic("grammar", {
       Ava|Ava ran fast.|ava ran fast.|aVa ran fast.
       Bo|The pig is Bo.|The pig is bo.|The pig is BO.
       `,
-      (right) => [`*${right}*: the name starts with a capital letter.`, `*${right}*：名字以大写字母开头。`],
+      (right, shown) => [
+        `*${right}* starts the name **${shown}** with a capital **${shown[0]}**.\n\n**Check.** Look at **${shown}** letter by letter: only the first letter (**${shown[0]}**) is big, and the rest (${shown.slice(1)}) are small.`,
+        `*${right}* 把名字 **${shown}** 的首字母 **${shown[0]}** 写成了大写。\n\n**检验。** 逐字母看 **${shown}**：只有第一个字母（**${shown[0]}**）是大写，后面的字母（${shown.slice(1)}）都是小写。`,
+      ],
       [
-        ["*{wrong}* starts the name with a small letter.", "*{wrong}* 的名字以小写字母开头。"],
+        ["*{wrong}* writes the name with a small first letter.", "*{wrong}* 把名字的第一个字母写成了小写。"],
         [
-          "*{wrong}* has a capital in the middle of the name; only the first letter is a capital.",
-          "*{wrong}* 在名字中间用了大写；只有第一个字母大写。",
+          "*{wrong}* puts an extra capital inside the name; only the very first letter should be big.",
+          "*{wrong}* 在名字里面多用了大写；只有第一个字母该大写。",
         ],
       ],
     ),
@@ -185,21 +211,21 @@ const names = topic("grammar", {
       "days-and-places",
       ["Days and Places", "星期和地点"],
       [
-        "The days of the week and the names of places are names too, so they start with a capital: ***Monday***, ***Sunday***, ***China***, ***London***. A word for any day or any place, like *day* or *park*, does not.",
-        "星期的名称和地名也是名字，所以也以大写字母开头：***Monday***、***Sunday***、***China***、***London***。泛指的词，比如 *day*、*park*，不用大写。",
+        "The days of the week and the names of real places are special names too, so they start with a capital: ***M**onday*, ***S**unday*, ***C**hina*, ***L**ondon*. Ordinary words like *day* or *park* stay small.\n\n> **Watch out.** Do not capitalize a word just because it is a place—*park* or *city* can mean any park or city, so it stays small.",
+        "星期几和真实地名也是专有名字，所以首字母要大写：***M**onday*、***S**unday*、***C**hina*、***L**ondon*。普通词如 *day*、*park* 保持小写。\n\n> **注意。** 不要看到表示地方的词就大写——*park* 或 *city* 可以指任何公园或城市，所以保持小写。",
       ],
       ["Which word needs a capital letter?", "哪个词需要大写？"],
       `
       We swim on monday at the pool.|monday|swim|pool
-      My aunt lives in china in a big city.|china|aunt|city
+      My aunt lives in china in a big city.|china|lives|city
       On sunday we go to the park.|sunday|go|park
       We went to london on a bus.|london|went|bus
       The fair is on friday this week.|friday|fair|week
       I saw paris from a plane.|paris|saw|plane
-      We have art on tuesday at school.|tuesday|art|school
-      My friend is from japan and likes fish.|japan|friend|fish
+      We have art on tuesday at school.|tuesday|have|school
+      My friend is from japan and likes fish.|japan|likes|fish
       On saturday we play in the sand.|saturday|play|sand
-      The ship sails to canada at night.|canada|ship|night
+      The ship sails to canada at night.|canada|sails|night
       We run on wednesday in the hall.|wednesday|run|hall
       My uncle lives in mexico by the sea.|mexico|lives|sea
       On thursday we bake a cake.|thursday|bake|cake
@@ -221,13 +247,22 @@ const names = topic("grammar", {
       On saturday we clean the yard.|saturday|clean|yard
       The train goes to chicago at noon.|chicago|goes|train
       `,
-      (right) => [
-        `*${right}* names one day or one place, so it starts with a capital.`,
-        `*${right}* 是某一天或某个地方的名字，所以要大写。`,
-      ],
+      (right) => {
+        const cap = `${right[0]?.toUpperCase() ?? ""}${right.slice(1)}`;
+        return [
+          `**${right}** is the special name of one day or one place, so it should be written **${cap}**.\n\n**Check.** Ask: *Can I find **${cap}** on a calendar or a map?* Yes—so it needs a capital letter.`,
+          `**${right}** 是某一天或某个地方的专有名称，应该写成 **${cap}**。\n\n**检验。** 问自己：*能在日历或地图上找到 **${cap}** 吗？* 能——所以它需要大写。`,
+        ];
+      },
       [
-        ["*{wrong}* is an action word, not a name.", "*{wrong}* 是动作词，不是名字。"],
-        ["*{wrong}* can mean any one of many, so it is not a name.", "*{wrong}* 可以指许多中的任何一个，所以不是名字。"],
+        [
+          "*{wrong}* is not a day on a calendar or a place on a map, so it stays small.",
+          "*{wrong}* 不是日历上的星期，也不是地图上的地名，所以保持小写。",
+        ],
+        [
+          "*{wrong}* can mean any one of many, not one special place or day.",
+          "*{wrong}* 可以指许多同类中的一个，不是某个特定的地名或星期。",
+        ],
       ],
     ),
   ],
@@ -237,6 +272,10 @@ const marks = topic("grammar", {
   id: "telling-and-asking-sentences",
   title: ["Telling and Asking Sentences", "陈述句和疑问句"],
   summary: ["A telling sentence ends with a period, an asking sentence with a question mark.", "陈述句以句号结尾，疑问句以问号结尾。"],
+  intro: [
+    "At lunch, Mia says, *I have an apple.* Then Leo asks, *Can I have a slice?* One sentence gives news, and the other wants an answer. In this lesson, you will tell them apart and pick the right end mark.",
+    "吃午饭时，米娅说：*I have an apple.* 接着利奥问：*Can I have a slice?* 一句是在告诉你一件事，另一句是在等回答。这节课，你会区分这两种句子，并选对句末标点。",
+  ],
   after: ["starting-a-sentence-with-a-capital"],
   xp: 10,
   points: [
@@ -244,8 +283,8 @@ const marks = topic("grammar", {
       "telling-or-asking",
       ["Telling or Asking", "陈述还是提问"],
       [
-        "A **telling sentence** tells something: *The sun is hot.* An **asking sentence** asks something and wants an answer: *Is the sun hot?* Asking sentences often start with *Can*, *Is*, *Do*, *Who*, *What* or *Where*.",
-        "**陈述句**说明一件事：*The sun is hot.*。**疑问句**提出问题，需要回答：*Is the sun hot?*。疑问句常以 *Can*、*Is*、*Do*、*Who*、*What* 或 *Where* 开头。",
+        "A **telling sentence** tells a fact: *The sun is hot.* An **asking sentence** asks for an answer: *Is the sun hot?* Asking sentences often start with *Can*, *Is*, *Do*, *Who*, *What*, or *Where*.\n\n> **Watch out.** Read the first word carefully: *The bus is big* tells, while *Is the bus big* asks.",
+        "**陈述句**说明一件事：*The sun is hot.* **疑问句**提出问题、等着回答：*Is the sun hot?* 疑问句常以 *Can*、*Is*、*Do*、*Who*、*What* 或 *Where* 开头。\n\n> **注意。** 看清第一个词：*The bus is big* 是在陈述，而 *Is the bus big* 是在提问。",
       ],
       ["Does this sentence tell or ask?", "这个句子是在陈述还是在提问？"],
       `
@@ -285,24 +324,28 @@ const marks = topic("grammar", {
           "陈述句",
           "It tells something, so it is a telling sentence and ends with a period.",
           "它在说明一件事，所以是陈述句，以句号结尾。",
-          "It does not ask anything: it tells something.",
-          "它没有提问，而是在说明一件事。",
+          "*{shown}* wants an answer—it is asking, not telling.",
+          "*{shown}* 需要回答，它是在提问，不是在陈述。",
         ),
         asking: L(
           "疑问句",
           "It asks something and wants an answer, so it ends with a question mark.",
           "它在提问，需要回答，所以以问号结尾。",
-          "It wants an answer, so it does not just tell.",
-          "它需要回答，所以不只是在说明。",
+          "*{shown}* just gives information—it does not ask for an answer.",
+          "*{shown}* 只是告诉你一件事，并没有提出问题。",
         ),
       },
+      (right, shown, entry) => [
+        `*${shown}* is a **${right}** sentence. ${entry.why[0]}\n\n**Check.** Imagine a friend says *${shown}* to you. ${right === "asking" ? "You need to answer back, so it is an asking sentence." : "You do not need to answer a question—you just hear the news, so it is a telling sentence."}`,
+        `*${shown}* 是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 想象朋友对你说了 *${shown}*。${right === "asking" ? "你需要给出回答，所以这是疑问句。" : "你不需要回答问题，只是听到了一个消息，所以这是陈述句。"}`,
+      ],
     ),
     choose(
       "the-end-mark",
       ["The End Mark", "句末标点"],
       [
-        "Every sentence ends with a mark. A telling sentence ends with a **period** (.); an asking sentence ends with a **question mark** (?).",
-        "每个句子结尾都有标点。陈述句以**句号**（.）结尾；疑问句以**问号**（?）结尾。",
+        "Every sentence ends with a mark. A telling sentence ends with a **period** (.): *The cat is wet**.** An asking sentence ends with a **question mark** (?): *Is the cat wet**?***\n\n> **Watch out.** A comma (,) pauses inside a sentence; it can never end a sentence.",
+        "每个句子末尾都有标点。陈述句用**句号**（.）：*The cat is wet**.** 疑问句用**问号**（?）：*Is the cat wet**?***\n\n> **注意。** 逗号（,）只能用在句子中间停顿，不能用来结束句子。",
       ],
       ["Which mark ends this sentence?", "这个句子末尾该用哪个标点？"],
       `
@@ -337,13 +380,16 @@ const marks = topic("grammar", {
       Do ducks swim ___|?|.|,
       Ducks swim in the pond ___|.|?|,
       `,
-      (right, shown) => [
-        `"${filled(shown, right).replace(" ?", "?").replace(" .", ".")}": it ${right === "?" ? "asks, so it ends with a question mark" : "tells, so it ends with a period"}.`,
-        `“${filled(shown, right).replace(" ?", "?").replace(" .", ".")}”：它${right === "?" ? "在提问，所以以问号结尾" : "在陈述，所以以句号结尾"}。`,
-      ],
+      (right, shown) => {
+        const sentence = filled(shown, right).replace(" ?", "?").replace(" .", ".");
+        return [
+          `*${sentence}* — it ${right === "?" ? "asks something, so it ends with a question mark (**?**)" : "tells something, so it ends with a period (**.**)"}.\n\n**Check.** Say *${sentence}* aloud. ${right === "?" ? "You wait for an answer, which matches **?**." : "Your voice drops at the end to share a fact, which matches **.**."}`,
+          `*${sentence}* —— 它${right === "?" ? "在提问，所以以问号（**?**）结尾" : "在陈述，所以以句号（**.**）结尾"}。\n\n**检验。** 大声读一遍 *${sentence}*。${right === "?" ? "读完你在等对方回答，正好配问号 **?**。" : "读完语调落下来，是在说一件事，正好配句号 **.**。"}`,
+        ];
+      },
       [
-        ["*{wrong}* is the mark for the other kind of sentence.", "*{wrong}* 是另一种句子用的标点。"],
-        ["A comma does not end a sentence.", "逗号不能用来结束句子。"],
+        ["*{wrong}* is the end mark for the other kind of sentence.", "*{wrong}* 是另一种句子的句末标点。"],
+        ["A comma (,) cannot end a sentence.", "逗号（,）不能用来结束句子。"],
       ],
     ),
   ],
@@ -356,6 +402,10 @@ const order = topic("grammar", {
     "The words of a sentence go in an order that makes sense: who, then what they do.",
     "句子里的词要按合理的顺序排列：先说谁，再说做什么。",
   ],
+  intro: [
+    "Suppose your word cards fall on the floor: *hops / bunny / the*. If you read them in that order, it sounds silly! Put *who* first and *what it does* next, and you get *The bunny hops.* Now let's put telling and asking sentences in order.",
+    "假如你的单词卡片掉在了地上：*hops / bunny / the*。照这样读出来会怪怪的！先把“谁”放前面，再把“做什么”放后面，就成了 *The bunny hops.* 这节课我们来排好陈述句和疑问句的词序。",
+  ],
   after: ["telling-and-asking-sentences"],
   xp: 10,
   points: [
@@ -363,8 +413,8 @@ const order = topic("grammar", {
       "who-then-what",
       ["Who, Then What", "先说谁，再说做什么"],
       [
-        "In a telling sentence, first comes **who or what** the sentence is about, then **what they do**: *The dog runs.* not *Runs the dog.* Mixed-up words do not make sense.",
-        "在陈述句中，先说**谁或什么**，再说**做什么**：*The dog runs.*，而不是 *Runs the dog.*。词序打乱了，意思就不通了。",
+        "In a telling sentence, put **who or what** first, then **what they do** (or what they are like): *The dog runs.*, not *Runs the dog.*\n\n> **Watch out.** *The* or *a* always stays right in front of its naming word—*the dog*, never *dog the*.",
+        "在陈述句里，先说**谁或什么**，再说**做什么**（或怎么样）：*The dog runs.*，不能说 *Runs the dog.*\n\n> **注意。** *the* 或 *a* 总是紧挨在名称词前面——要说 *the dog*，不能说 *dog the*。",
       ],
       ["Which sentence has its words in the right order?", "哪个句子的词序是对的？"],
       `
@@ -399,18 +449,24 @@ const order = topic("grammar", {
       bed, soft, is, the|The bed is soft.|Soft is the bed.|Is soft the bed.
       jump, can, we|We can jump.|Jump can we.|Can jump we.
       `,
-      (right) => [`*${right}* says who first, then what.`, `*${right}* 先说谁，再说做什么。`],
+      (right) => [
+        `*${right}* puts who or what first, then what happens.\n\n**Check.** Read *${right}* aloud and ask two questions in order: *Who or what?* (at the start) and *What happens?* (next). It sounds natural and makes sense.`,
+        `*${right}* 先说谁或什么，再说发生了什么。\n\n**检验。** 把 *${right}* 大声读出来，依次问两个问题：*谁或什么？*（在句首）和*怎么样/做什么？*（在后面），读起来自然通顺。`,
+      ],
       [
-        ["*{wrong}* puts what happens before who does it.", "*{wrong}* 把做什么放在了谁的前面。"],
-        ["*{wrong}* mixes up the words, so it does not make sense.", "*{wrong}* 把词序打乱了，意思不通。"],
+        [
+          "*{wrong}* puts the words backwards, so who does the action is in the wrong spot.",
+          "*{wrong}* 把词序颠倒了，发出动作的人或物不在正确位置。",
+        ],
+        ["*{wrong}* scrambles the words so the sentence does not make sense.", "*{wrong}* 把词序打乱了，整句话说不通。"],
       ],
     ),
     choose(
       "asking-order",
       ["The Order of an Asking Sentence", "疑问句的词序"],
       [
-        "An asking sentence often turns the order around: *You can swim.* becomes ***Can you** swim?* and *The cat is wet.* becomes ***Is the cat** wet?*",
-        "疑问句常常把词序倒过来：*You can swim.* 变成 ***Can you** swim?*，*The cat is wet.* 变成 ***Is the cat** wet?*。",
+        "To turn a telling sentence into an asking sentence, move **Can** or **Is** to the very front: *You **can** swim.* → ***Can** you swim?* and *The cat **is** wet.* → ***Is** the cat wet?*\n\n> **Watch out.** Do not leave *can* or *is* at the end of the question.",
+        "把陈述句变成疑问句，要把 **Can** 或 **Is** 移到最前面：*You **can** swim.* → ***Can** you swim?*，*The cat **is** wet.* → ***Is** the cat wet?*\n\n> **注意。** 不要把 *can* 或 *is* 留在问句的末尾。",
       ],
       ["Which asking sentence is in the right order?", "哪个疑问句的词序是对的？"],
       `
@@ -445,13 +501,19 @@ const order = topic("grammar", {
       You can see me.|Can you see me?|You see can me?|See me can you?
       The van is new.|Is the van new?|The van new is?|New the van is?
       `,
-      (right, shown) => [
-        `*${shown}* becomes *${right}*: the word *Can* or *Is* moves to the front.`,
-        `*${shown}* 变成 *${right}*：*Can* 或 *Is* 移到最前面。`,
-      ],
+      (right, shown) => {
+        const front = right.split(" ")[0] ?? "";
+        return [
+          `Move **${front}** to the front of *${shown}* to get *${right}*\n\n**Check.** Move **${front}** back after the naming word: you get the original sentence *${shown}* again, so the order is right.`,
+          `把 **${front}** 移到 *${shown}* 的最前面，就得到 *${right}*\n\n**检验。** 把 **${front}** 放回主语后面，正好还原成原句 *${shown}*，说明词序没错。`,
+        ];
+      },
       [
-        ["*{wrong}* leaves *Can* or *Is* at the end, where it does not belong.", "*{wrong}* 把 *Can* 或 *Is* 留在了句末，位置不对。"],
-        ["*{wrong}* mixes up the words.", "*{wrong}* 把词序打乱了。"],
+        [
+          "*{wrong}* puts *can* or *is* after the action or describing word instead of at the front.",
+          "*{wrong}* 把 *can* 或 *is* 放在了后面，而不是句首。",
+        ],
+        ["*{wrong}* mixes up the words so the question does not sound right.", "*{wrong}* 把词序打乱了，读起来不通顺。"],
       ],
     ),
   ],
@@ -461,31 +523,53 @@ const order = topic("grammar", {
 const wordKinds: Readonly<Record<string, Label>> = {
   naming: L(
     "名称词",
-    "It names a person, an animal, a place or a thing.",
+    "It names a person, an animal, a place, or a thing.",
     "它是人、动物、地方或东西的名称。",
-    "It does not name a person, animal, place or thing.",
-    "它不是人、动物、地方或东西的名称。",
+    "*{shown}* does not name a person, animal, place, or thing—you cannot say *a {shown}* by itself.",
+    "*{shown}* 不是人、动物、地方或东西的名称，不能单独说 *a {shown}*。",
   ),
   action: L(
     "动作词",
     "It tells what someone or something does.",
     "它说明某人或某物做什么。",
-    "It does not tell what someone does.",
-    "它没有说明某人做什么。",
+    "*{shown}* is not something you can do—try saying *I can {shown}*, and it does not fit.",
+    "*{shown}* 不是能做出来的动作，试试说 *I can {shown}*，说不通。",
   ),
   describing: L(
     "描述词",
-    "It tells what something is like: its color, size or how many.",
-    "它说明东西是什么样的：颜色、大小或数量。",
-    "It does not tell what something is like.",
-    "它没有说明东西是什么样的。",
+    "It tells what something is like—its color, size, or feel.",
+    "它说明东西是什么样的，比如颜色、大小或触感。",
+    "*{shown}* does not tell what a thing looks or feels like.",
+    "*{shown}* 没有说明一样东西是什么样子的。",
   ),
+};
+
+/** wordKindCheck builds an independent frame-test check for naming, action, or describing words. */
+const wordKindCheck = (right: string, shown: string, entry: Label): Pair => {
+  if (right === "naming")
+    return [
+      `**${shown}** is a **naming** word. ${entry.why[0]}\n\n**Check.** Put *the* in front of it: *the ${shown}* makes sense, so **${shown}** is a naming word.`,
+      `**${shown}** 是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 在它前面加上 *the*：*the ${shown}* 说得通，所以 **${shown}** 是名称词。`,
+    ];
+  if (right === "action")
+    return [
+      `**${shown}** is an **action** word. ${entry.why[0]}\n\n**Check.** Put it in *I can ___*: *I can ${shown}* makes sense and is something you can do, so **${shown}** is an action word.`,
+      `**${shown}** 是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 把它放进 *I can ___*：*I can ${shown}* 说得通，也是能做出来的动作，所以 **${shown}** 是动作词。`,
+    ];
+  return [
+    `**${shown}** is a **describing** word. ${entry.why[0]}\n\n**Check.** Put it before a naming word like *cat* or *box*: *a ${shown} box* tells what kind of box, so **${shown}** is a describing word.`,
+    `**${shown}** 是**${entry.zh}**。${entry.why[1]}\n\n**检验。** 把它放在 *cat* 或 *box* 这样的名称词前面：*a ${shown} box* 说明是什么样的盒子，所以 **${shown}** 是描述词。`,
+  ];
 };
 
 const naming = topic("grammar", {
   id: "naming-words",
   title: ["Naming Words", "名称词"],
   summary: ["Naming words name people, animals, places and things.", "名称词是人、动物、地方和东西的名称。"],
+  intro: [
+    "Look around your room and point to three things: a *bed*, a *lamp*, a *book*. Every word you just said is a **naming word**. Naming words name people, animals, places, and things.",
+    "看看你的房间，指一指三样东西：*bed*、*lamp*、*book*。你刚才说出的每个词都是**名称词**。名称词用来称呼人、动物、地方和东西。",
+  ],
   after: ["starting-a-sentence-with-a-capital"],
   xp: 10,
   points: [
@@ -493,8 +577,8 @@ const naming = topic("grammar", {
       "is-it-a-naming-word",
       ["Is It a Naming Word?", "它是名称词吗？"],
       [
-        "A **naming word** (a noun) names a person (*mom*), an animal (*dog*), a place (*park*) or a thing (*cup*). You can put *a* or *the* in front of it: *a dog*, *the park*.",
-        "**名称词**（名词）是人（*mom*）、动物（*dog*）、地方（*park*）或东西（*cup*）的名称。前面可以加 *a* 或 *the*：*a dog*、*the park*。",
+        "A **naming word** (a noun) names a person (*mom*), an animal (*dog*), a place (*park*), or a thing (*cup*). You can put *a* or *the* in front of it: *a dog*, *the park*.\n\n> **Watch out.** Words like *run* (an action) or *red* (a color) do not name a thing by themselves.",
+        "**名称词**（名词）是人（*mom*）、动物（*dog*）、地方（*park*）或东西（*cup*）的名称。前面可以加 *a* 或 *the*：*a dog*、*the park*。\n\n> **注意。** 像 *run*（动作）或 *red*（颜色）这样的词本身不是名称词。",
       ],
       ["What kind of word is it?", "这是哪一类词？"],
       `
@@ -530,13 +614,14 @@ const naming = topic("grammar", {
       wet|describing|naming|action
       `,
       wordKinds,
+      wordKindCheck,
     ),
     choose(
       "finding-the-naming-word",
       ["Finding the Naming Word", "找出名称词"],
       [
-        "To find the naming word in a sentence, ask *who?* or *what?*: in *The frog sat.*, what sat? The **frog**. *Frog* is the naming word.",
-        "要找出句子里的名称词，就问*谁？*或*什么？*：在 *The frog sat.* 中，什么坐着？是 **frog**。*frog* 就是名称词。",
+        "To find the naming word in a sentence, ask *who?* or *what?*: in *The frog sat.*, what sat? The **frog**. So *frog* is the naming word.\n\n> **Watch out.** Small words like *the*, *a*, and *is* help the sentence, but they are not naming words.",
+        "要找出句子里的名称词，就问*谁？*或*什么？*：在 *The frog sat.* 中，什么坐着？是 **frog**。所以 *frog* 是名称词。\n\n> **注意。** *the*、*a*、*is* 这样的小词只是帮着连句，不是名称词。",
       ],
       ["Which word is a naming word?", "哪个词是名称词？"],
       `
@@ -571,13 +656,19 @@ const naming = topic("grammar", {
       The kite flew high.|kite|flew|high
       My pen is new.|pen|new|is
       `,
-      (right, shown) => [`In *${shown}*, *${right}* names who or what.`, `在 *${shown}* 中，*${right}* 说出了是谁或是什么。`],
+      (right, shown) => [
+        `In *${shown}*, **${right}** names who or what the sentence is about.\n\n**Check.** Picture the sentence in your head: you can point right to **${right}** as a person, animal, or thing.`,
+        `在 *${shown}* 中，**${right}** 说出了句子讲的是谁或是什么。\n\n**检验。** 在脑海里画出这幅画面：你能直接指出 **${right}** 这个人、动物或东西。`,
+      ],
       [
         [
-          "*{wrong}* tells what happens or what it is like, so it is not a naming word.",
+          "*{wrong}* tells what happens or what something is like, so it is not a naming word.",
           "*{wrong}* 说明发生了什么或是什么样子，所以不是名称词。",
         ],
-        ["*{wrong}* is a small helping word, not a name for anything.", "*{wrong}* 是一个小的辅助词，不是任何东西的名称。"],
+        [
+          "*{wrong}* is a helper or detail word, not a name for a person, animal, place, or thing.",
+          "*{wrong}* 是辅助词或修饰词，不是人、动物、地方或东西的名称。",
+        ],
       ],
     ),
   ],
@@ -587,6 +678,10 @@ const actions = topic("grammar", {
   id: "action-words",
   title: ["Action Words", "动作词"],
   summary: ["Action words tell what someone or something does.", "动作词说明某人或某物做什么。"],
+  intro: [
+    "At recess, Mia jumps, Leo kicks a ball, and a bird lands on the fence. Every word that tells what they do is an **action word**. Without an action word, a picture stays frozen!",
+    "课间休息时，米娅跳起来，利奥踢球，一只小鸟落在篱笆上。每个说出“做什么”的词都是**动作词**。没有动作词，画面就动不起来啦！",
+  ],
   after: ["naming-words"],
   xp: 10,
   points: [
@@ -594,8 +689,8 @@ const actions = topic("grammar", {
       "finding-the-action-word",
       ["Finding the Action Word", "找出动作词"],
       [
-        "An **action word** (a verb) tells what someone does: *run*, *hop*, *eat*, *sing*. Ask *what does it do?*: in *The dog digs.*, the dog **digs**.",
-        "**动作词**（动词）说明某人做什么：*run*、*hop*、*eat*、*sing*。问*它做什么？*：在 *The dog digs.* 中，狗在 **digs**（挖）。",
+        "An **action word** (a verb) tells what someone or something does: *run*, *hop*, *eat*, *sing*. Ask *what does it do?* In *The dog digs.*, the dog **digs**.\n\n> **Watch out.** Do not pick the person or animal doing the action—pick the word that shows the move.",
+        "**动作词**（动词）说明某人或某物做什么：*run*、*hop*、*eat*、*sing*。问*它做什么？* 在 *The dog digs.* 中，狗在 **digs**（挖）。\n\n> **注意。** 不要选出做动作的人或动物，要选出表示动作的那个词。",
       ],
       ["Which word is the action word?", "哪个词是动作词？"],
       `
@@ -630,18 +725,21 @@ const actions = topic("grammar", {
       The bell rings.|rings|bell|the
       The kids wave.|wave|kids|the
       `,
-      (right, shown) => [`In *${shown}*, *${right}* tells what is done.`, `在 *${shown}* 中，*${right}* 说明做了什么。`],
+      (right, shown) => [
+        `In *${shown}*, **${right}** tells the action that happens.\n\n**Check.** Act out *${shown}* like a tiny movie: **${right}** is the part that moves or happens.`,
+        `在 *${shown}* 中，**${right}** 说出了发生的动作。\n\n**检验。** 把 *${shown}* 当成一段小动画演出来：动起来的那一下就是 **${right}**。`,
+      ],
       [
-        ["*{wrong}* names who or what, so it is a naming word.", "*{wrong}* 说的是谁或什么，所以是名称词。"],
-        ["*{wrong}* does not tell what anyone does.", "*{wrong}* 没有说明谁在做什么。"],
+        ["*{wrong}* names a person, animal, or thing, so it is a naming word.", "*{wrong}* 是人、动物或东西的名称，所以是名称词。"],
+        ["*{wrong}* is a helper word or another naming word, not the action.", "*{wrong}* 是小词或另一个名称词，不是动作。"],
       ],
     ),
     choose(
       "an-action-that-fits",
       ["An Action That Fits", "合适的动作"],
       [
-        "Pick an action word that makes sense for who does it: a fish can **swim**, but a fish cannot **fly**. Read the whole sentence to check.",
-        "选一个对这个人或动物合理的动作词：鱼会 **swim**（游泳），但不会 **fly**（飞）。把整句读一遍来检查。",
+        "Pick an action word that makes sense for who does it: a fish can **swim**, but a fish cannot **fly**. Read the whole sentence to see if the picture makes sense.\n\n> **Watch out.** All the choices are real action words, so check *who* is doing the action first.",
+        "选一个符合主语的动作词：鱼会 **swim**（游泳），但不会 **fly**（飞）。把整句话读一遍，看看画面合不合理。\n\n> **注意。** 几个选项都是动作词，所以要先看清楚是*谁*在做这个动作。",
       ],
       ["Which action word makes sense?", "哪个动作词说得通？"],
       `
@@ -676,10 +774,19 @@ const actions = topic("grammar", {
       The horse can ___.|run|read|sing
       Gran ___ a story.|reads|barks|digs
       `,
-      (right, shown) => [`*${filled(shown, right)}* makes sense.`, `*${filled(shown, right)}* 说得通。`],
+      (right, shown) => [
+        `*${filled(shown, right)}* matches what the subject really does.\n\n**Check.** Picture *${filled(shown, right)}* in your mind: it is a real, everyday action, while the other choices sound silly here.`,
+        `*${filled(shown, right)}* 符合主语真正会做的动作。\n\n**检验。** 在脑海里想象 *${filled(shown, right)}* 的画面：这是合情合理的动作，而另两个词放进去会很奇怪。`,
+      ],
       [
-        ["*{wrong}* is an action word, but it does not fit here.", "*{wrong}* 是动作词，但在这里不合理。"],
-        ["*{wrong}* does not make sense in this sentence.", "*{wrong}* 放在这个句子里说不通。"],
+        [
+          "Think about who is in the sentence: *{wrong}* is not an action they do here.",
+          "想想句子里是谁：在这里它不会做 *{wrong}* 这个动作。",
+        ],
+        [
+          "Put *{wrong}* into the sentence and picture it—that action does not match the sentence.",
+          "把 *{wrong}* 放进句子里想一想画面——这个动作和句子搭不上。",
+        ],
       ],
     ),
   ],
@@ -692,6 +799,10 @@ const describing = topic("grammar", {
     "Describing words tell what a thing is like: its color, size, shape or how many.",
     "描述词说明东西是什么样的：颜色、大小、形状或数量。",
   ],
+  intro: [
+    "Suppose your friend says, *I lost my hat.* You ask, *Which one?* Your friend says, *My **yellow** hat!* The word **yellow** paints a picture. Words that tell color, size, feel, or how many are **describing words**.",
+    "假如朋友说：*I lost my hat.* 你会问：*哪一顶？* 朋友说：*My **yellow** hat!* 单词 **yellow** 一下子画出了样子。说明颜色、大小、触感或数量的词就是**描述词**。",
+  ],
   after: ["naming-words"],
   xp: 10,
   points: [
@@ -699,8 +810,8 @@ const describing = topic("grammar", {
       "naming-action-or-describing",
       ["Naming, Action or Describing", "名称、动作还是描述"],
       [
-        "A **describing word** (an adjective) tells what a naming word is like: *a **red** hat*, *a **big** dog*, ***two** cats*, *a **soft** bed*. It often comes just before the naming word.",
-        "**描述词**（形容词）说明名称词是什么样的：*a **red** hat*、*a **big** dog*、***two** cats*、*a **soft** bed*。它常放在名称词的前面。",
+        "A **describing word** (an adjective) tells what a naming word is like: *a **red** hat*, *a **big** dog*, ***two** cats*, *a **soft** bed*. It often sits right before the naming word.\n\n> **Watch out.** A describing word cannot be the thing itself—*soft* tells how a bed feels, while *bed* is the naming word.",
+        "**描述词**（形容词）说明名称词是什么样的：*a **red** hat*、*a **big** dog*、***two** cats*、*a **soft** bed*。它常紧挨在名称词前面。\n\n> **注意。** 描述词本身不是东西——*soft* 说的是床摸起来的感觉，*bed* 才是名称词。",
       ],
       ["What kind of word is it?", "这是哪一类词？"],
       `
@@ -736,13 +847,14 @@ const describing = topic("grammar", {
       climb|action|naming|describing
       `,
       wordKinds,
+      wordKindCheck,
     ),
     choose(
       "finding-the-describing-word",
       ["Finding the Describing Word", "找出描述词"],
       [
-        "Ask *what kind?* or *how many?*: in *I see a big ship.*, what kind of ship? A **big** one. *Big* is the describing word.",
-        "问*什么样的？*或*有多少？*：在 *I see a big ship.* 中，什么样的船？**big**（大的）。*big* 就是描述词。",
+        "To find a describing word in a sentence, ask *what kind?* or *how many?* In *I see a big ship.*, what kind of ship? A **big** one—so *big* is the describing word.\n\n> **Watch out.** Number words like *two* and *six* are describing words too when they tell how many.",
+        "要找出句子里的描述词，就问*什么样的？*或*有多少？* 在 *I see a big ship.* 中，什么样的船？**big**（大的）——所以 *big* 是描述词。\n\n> **注意。** *two*、*six* 这样说明数量的数字词放在名称词前面时，也是描述词。",
       ],
       ["Which word is the describing word?", "哪个词是描述词？"],
       `
@@ -777,10 +889,19 @@ const describing = topic("grammar", {
       The old man naps.|old|man|naps
       She got a long rope.|long|rope|got
       `,
-      (right, shown) => [`In *${shown}*, *${right}* tells what kind or how many.`, `在 *${shown}* 中，*${right}* 说明什么样的或有多少。`],
+      (right, shown) => [
+        `In *${shown}*, **${right}** tells what kind or how many.\n\n**Check.** Cover up **${right}** and read the rest of *${shown}*: you still know the main thing, just without the detail of what kind or how many.`,
+        `在 *${shown}* 中，**${right}** 说明是什么样的或有多少。\n\n**检验。** 遮住 **${right}** 再读 *${shown}*：句子的大意还在，只是少了“什么样的”或“多少个”的细节。`,
+      ],
       [
-        ["*{wrong}* names a thing, so it is a naming word.", "*{wrong}* 是东西的名称，所以是名称词。"],
-        ["*{wrong}* tells what someone does, so it is an action word.", "*{wrong}* 说明某人做什么，所以是动作词。"],
+        [
+          "*{wrong}* names the person, animal, or thing itself, so it is a naming word.",
+          "*{wrong}* 本身是人、动物或东西的名称，所以是名称词。",
+        ],
+        [
+          "*{wrong}* tells the action (or links the sentence), not what a thing is like.",
+          "*{wrong}* 表示动作（或连接句子），不是说明东西是什么样的。",
+        ],
       ],
     ),
   ],
@@ -790,6 +911,10 @@ const plurals = topic("grammar", {
   id: "one-and-more-than-one",
   title: ["One and More Than One", "一个和多个"],
   summary: ["Add *s* to a naming word for more than one: one cat, two cats.", "名称词表示多个时加 *s*：one cat，two cats。"],
+  intro: [
+    "On the table sits *one cup*. Your mom brings another, so now there are *two cups*. Adding a tiny ending tells the reader whether there is one or more than one!",
+    "桌上放着 *one cup*（一个杯子）。妈妈又拿来一个，现在是 *two cups*（两个杯子）。在词尾加上一点变化，就能告诉读者是一个还是多个！",
+  ],
   after: ["naming-words"],
   xp: 10,
   points: [
@@ -797,8 +922,8 @@ const plurals = topic("grammar", {
       "adding-s",
       ["Adding S", "加 s"],
       [
-        "Most naming words add **s** for more than one: *one cat*, *two cat**s***; *a pig*, *six pig**s***. A word like *one* or *a* means just one, so no *s*.",
-        "大多数名称词表示多个时要加 **s**：*one cat*、*two cat**s***；*a pig*、*six pig**s***。*one* 或 *a* 表示只有一个，所以不加 *s*。",
+        "Most naming words add **s** for more than one: *one cat*, *two cat**s***; *a pig*, *six pig**s***. Words like *one* or *a* mean just one, so no *s*.\n\n> **Watch out.** Do not add *es* to an ordinary word like *cat* or *dog*—just add *s*.",
+        "大多数名称词表示多个时直接加 **s**：*one cat*、*two cat**s***；*a pig*、*six pig**s***。*one* 或 *a* 表示只有一个，所以不加 *s*。\n\n> **注意。** 像 *cat*、*dog* 这样的普通词不要加 *es*，只要加 *s*。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -834,20 +959,23 @@ const plurals = topic("grammar", {
       Eight ___ are in the nest.|eggs|egg|egges
       `,
       (right, shown) => [
-        `*${filled(shown, right)}*: ${right.endsWith("s") ? "more than one, so add *s*" : "just one, so no *s*"}.`,
-        `*${filled(shown, right)}*：${right.endsWith("s") ? "多于一个，所以加 *s*" : "只有一个，所以不加 *s*"}。`,
+        `*${filled(shown, right)}* — there ${right.endsWith("s") ? "is more than one, so add **s**" : "is only one, so leave off **s**"}.\n\n**Check.** Find the number word in *${shown}* and hold up that many fingers: ${right.endsWith("s") ? "more than one finger means the naming word ends in **s**." : "one finger means the naming word stays plain with no **s**."}`,
+        `*${filled(shown, right)}* —— 这里${right.endsWith("s") ? "多于一个，所以词尾加 **s**" : "只有一个，所以不加 **s**"}。\n\n**检验。** 找出 *${shown}* 里表示数量的词，伸出对应根数的手指：${right.endsWith("s") ? "多于一根手指，名称词末尾要加 **s**。" : "只有一根手指，名称词保持原形不加 **s**。"}`,
       ],
       [
-        ["*{wrong}* does not match how many there are.", "*{wrong}* 和数量不相符。"],
-        ["*{wrong}* is not a word: just add *s*.", "*{wrong}* 不是一个词：只要加 *s* 就行了。"],
+        ["*{wrong}* does not match the count in the sentence (one vs. more than one).", "*{wrong}* 和句子里的数量（一个还是多个）对不上。"],
+        [
+          "*{wrong}* has the wrong ending—this word only needs a plain *s* for more than one.",
+          "*{wrong}* 的词尾不对——这个词变复数只需要直接加 *s*。",
+        ],
       ],
     ),
     choose(
       "adding-es",
       ["Adding ES", "加 es"],
       [
-        "A naming word that ends in **s**, **x**, **sh** or **ch** adds **es** for more than one, because it is easier to say: *one box*, *two box**es***; *a dish*, *three dish**es***.",
-        "以 **s**、**x**、**sh** 或 **ch** 结尾的名称词，表示多个时加 **es**，因为这样更容易读：*one box*、*two box**es***；*a dish*、*three dish**es***。",
+        "A naming word that ends in **s**, **x**, **sh**, or **ch** adds **es** for more than one so it is easy to say: *one box*, *two box**es***; *a dish*, *three dish**es***.\n\n> **Watch out.** Adding only *s* makes a hiss you cannot say clearly, like *boxs*—use *es* instead.",
+        "以 **s**、**x**、**sh** 或 **ch** 结尾的名称词，表示多个时加 **es**，这样才读得顺口：*one box*、*two box**es***；*a dish*、*three dish**es***。\n\n> **注意。** 只加 *s* 会变成难读的 *boxs*，要加 *es*。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -882,13 +1010,16 @@ const plurals = topic("grammar", {
       I counted ten ___.|inches|inchs|inch
       We heard two loud ___.|crashes|crashs|crash
       `,
-      (right) => [
-        `*${right}*: the word ends in s, x, sh or ch, so it adds *es*.`,
-        `*${right}*：这个词以 s、x、sh 或 ch 结尾，所以加 *es*。`,
+      (right, shown) => [
+        `*${filled(shown, right)}* — the base word ends in *s*, *x*, *sh*, or *ch*, so it adds **es**.\n\n**Check.** Say **${right}** aloud: you hear an extra beat at the end (*-es*), which tells you *es* is needed.`,
+        `*${filled(shown, right)}* —— 原词以 *s*、*x*、*sh* 或 *ch* 结尾，所以要加 **es**。\n\n**检验。** 大声读出 **${right}**：词尾多出一个清楚的音节（*-es*），说明这里必须加 *es*。`,
       ],
       [
-        ["*{wrong}* adds only *s*, but this word needs *es*.", "*{wrong}* 只加了 *s*，但这个词要加 *es*。"],
-        ["*{wrong}* means just one, but there are more.", "*{wrong}* 表示只有一个，但这里是多个。"],
+        [
+          "*{wrong}* adds only *s*, which is hard to say after *s*, *x*, *sh*, or *ch*—it needs *es*.",
+          "*{wrong}* 只加了 *s*，在 *s*、*x*、*sh*、*ch* 后面很难读出来，需要加 *es*。",
+        ],
+        ["*{wrong}* means only one, but the sentence talks about more than one.", "*{wrong}* 只表示一个，但句子里说的是多个。"],
       ],
     ),
   ],
@@ -901,6 +1032,10 @@ const articles = topic("grammar", {
     "Use *an* before a word that starts with a vowel sound, and *a* before the others.",
     "以元音开头的词前用 *an*，其他词前用 *a*。",
   ],
+  intro: [
+    "Try saying *a apple* fast—your mouth bumps between the two *a* sounds! Put a tiny *n* in between and say *an apple*: smooth and easy. That is why we choose **a** or **an** by the sound that comes next.",
+    "试着快一点读 *a apple*——两个元音撞在一起，嘴巴会卡一下！中间加上一个 *n* 读 *an apple*，一下子就顺口了。这就是我们要看后面词的开头来选 **a** 还是 **an** 的原因。",
+  ],
   after: ["naming-words", "reading-short-vowel-words"],
   xp: 10,
   points: [
@@ -908,8 +1043,8 @@ const articles = topic("grammar", {
       "a-or-an-before-a-word",
       ["A or An Before a Word", "词前用 a 还是 an"],
       [
-        "Use **an** before a word that starts with a vowel, *a*, *e*, *i*, *o* or *u*: ***an** egg*, ***an** ant*. Use **a** before the other letters: ***a** cat*, ***a** dog*.",
-        "以元音字母 *a*、*e*、*i*、*o*、*u* 开头的词前用 **an**：***an** egg*、***an** ant*。其他字母开头的词前用 **a**：***a** cat*、***a** dog*。",
+        "Use **an** before a word that starts with a vowel (*a*, *e*, *i*, *o*, *u*): ***an** egg*, ***an** ant*. Use **a** before the other letters: ***a** cat*, ***a** dog*.\n\n> **Watch out.** Check the very first letter of the word right after the blank.",
+        "以元音字母（*a*、*e*、*i*、*o*、*u*）开头的词前面用 **an**：***an** egg*、***an** ant*。其他字母开头的词前面用 **a**：***a** cat*、***a** dog*。\n\n> **注意。** 盯住空格后面那个词的第一个字母。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -944,18 +1079,22 @@ const articles = topic("grammar", {
       He saw ___ ant on the jam.|an|a
       I need ___ pen.|a|an
       `,
-      (right, shown) => [
-        `*${filled(shown, right)}*: the next word starts with ${right.toLowerCase() === "an" ? "a vowel, so *an*" : "a letter that is not a vowel, so *a*"}.`,
-        `*${filled(shown, right)}*：下一个词${right.toLowerCase() === "an" ? "以元音开头，所以用 *an*" : "不以元音开头，所以用 *a*"}。`,
-      ],
-      [["*{wrong}* goes before words that start the other way.", "*{wrong}* 用在另一类开头的词前面。"]],
+      (right, shown) => {
+        const next = wordAfterBlank(shown);
+        const vowel = right.toLowerCase() === "an";
+        return [
+          `*${filled(shown, right)}* — **${next}** starts with ${vowel ? `the vowel **${next[0]}**, so use **${right}**` : `**${next[0]}** (not a vowel), so use **${right}**`}.\n\n**Check.** Say *${right.toLowerCase()} ${next}* aloud: ${vowel ? `the *n* in *an* keeps the two vowel sounds smooth instead of bumping.` : `it flows smoothly without an extra *n*.`}`,
+          `*${filled(shown, right)}* —— **${next}** 以${vowel ? `元音 **${next[0]}** 开头，所以用 **${right}**` : `非元音 **${next[0]}** 开头，所以用 **${right}**`}。\n\n**检验。** 大声连读 *${right.toLowerCase()} ${next}*：${vowel ? `*an* 里的 *n* 把两个元音隔开，读起来很顺口。` : `不需要多加 *n*，直接读就很顺口。`}`,
+        ];
+      },
+      [["*{wrong}* does not match the first letter of the word right after the blank.", "*{wrong}* 和空格后面那个词的首字母不匹配。"]],
     ),
     choose(
       "a-or-an-with-a-describing-word",
       ["A or An with a Describing Word", "有描述词时用 a 还是 an"],
       [
-        "Look at the word right after *a* or *an*. If a describing word comes first, it decides: ***an** egg*, but ***a** big egg*; ***a** cat*, but ***an** old cat*.",
-        "看 *a* 或 *an* 后面紧跟的那个词。如果先出现描述词，就由描述词决定：***an** egg*，但 ***a** big egg*；***a** cat*，但 ***an** old cat*。",
+        "Look at the word **right after** *a* or *an*. When a describing word comes first, it decides: ***an** egg*, but ***a** big egg*; ***a** cat*, but ***an** old cat*.\n\n> **Watch out.** Do not jump ahead to the naming word—only the very next word counts.",
+        "只看紧跟在 *a* 或 *an* 后面的那个词。前面加了描述词时，就由描述词来决定：***an** egg*，但 ***a** big egg*；***a** cat*，但 ***an** old cat*。\n\n> **注意。** 不要跳过描述词去看后面的名称词——只看紧挨着的第一个词。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -990,14 +1129,18 @@ const articles = topic("grammar", {
       It is ___ old van.|an|a
       We saw ___ fat ox.|a|an
       `,
-      (right, shown) => [
-        `*${filled(shown, right)}*: the word right after starts with ${right === "an" ? "a vowel, so *an*" : "a letter that is not a vowel, so *a*"}.`,
-        `*${filled(shown, right)}*：紧跟其后的词${right === "an" ? "以元音开头，所以用 *an*" : "不以元音开头，所以用 *a*"}。`,
-      ],
+      (right, shown) => {
+        const next = wordAfterBlank(shown);
+        const vowel = right === "an";
+        return [
+          `*${filled(shown, right)}* — the word right after the blank is **${next}**, which starts with ${vowel ? `the vowel **${next[0]}**, so use **an**` : `**${next[0]}** (not a vowel), so use **a**`}.\n\n**Check.** Say *${right} ${next}* aloud together: your mouth glides right through it.`,
+          `*${filled(shown, right)}* —— 紧跟空格的词是 **${next}**，它以${vowel ? `元音 **${next[0]}** 开头，所以用 **an**` : `非元音 **${next[0]}** 开头，所以用 **a**`}。\n\n**检验。** 把 *${right} ${next}* 连起来大声读一遍，顺口不卡嘴。`,
+        ];
+      },
       [
         [
-          "Look at the word just after the blank, not the naming word: *{wrong}* does not fit it.",
-          "看紧跟在空格后面的词，而不是名称词：*{wrong}* 和它不搭配。",
+          "Look at the describing word right after the blank, not the naming word: *{wrong}* does not match its first sound.",
+          "看紧跟在空格后面的描述词，而不是后面的名称词：*{wrong}* 和它的开头读音不搭配。",
         ],
       ],
     ),
@@ -1011,6 +1154,10 @@ const pronouns = topic("grammar", {
     "Words like *he*, *she*, *it* and *they* take the place of naming words.",
     "*he*、*she*、*it*、*they* 这样的词可以代替名称词。",
   ],
+  intro: [
+    "Listen to this: *Maya got a kite. Maya ran up the hill. Maya flew the kite.* Saying *Maya* over and over sounds bumpy! Swap in **she**—*She ran up the hill*—and the story flows smoothly.",
+    "听听这段话：*Maya got a kite. Maya ran up the hill. Maya flew the kite.* 一遍遍重复 *Maya* 好拗口！换成 **she**——*She ran up the hill*——故事一下子就顺畅多了。",
+  ],
   after: ["naming-words"],
   xp: 10,
   points: [
@@ -1018,8 +1165,8 @@ const pronouns = topic("grammar", {
       "the-word-that-takes-its-place",
       ["The Word That Takes Its Place", "代替它的词"],
       [
-        "So that we do not say a name again and again, a short word takes its place: **he** for a boy or a man, **she** for a girl or a woman, **it** for a thing or an animal, **they** for more than one.",
-        "为了不一遍又一遍地重复名字，可以用一个短词来代替：男孩或男人用 **he**，女孩或女人用 **she**，东西或动物用 **it**，多于一个用 **they**。",
+        "A short word (a pronoun) can take the place of a naming word: **he** for a boy or man, **she** for a girl or woman, **it** for one thing or animal, **they** for more than one, and **we** for someone and *I*.\n\n> **Watch out.** Count how many people or things are in bold: two or more always take *they* (or *we* if *I* is included).",
+        "可以用一个短词（代词）代替名称词：男孩或男人用 **he**，女孩或女人用 **she**，一个东西或动物用 **it**，多于一个用 **they**，别人和 *I* 一起用 **we**。\n\n> **注意。** 数一数粗体部分有几个人或东西：两个及以上用 *they*（如果包含 *I* 就用 *we*）。",
       ],
       ["Which word can take the place of the bold words?", "哪个词可以代替粗体部分？"],
       `
@@ -1054,18 +1201,24 @@ const pronouns = topic("grammar", {
       **The cake** is sweet.|It|She|They
       **Lily** sings a song.|She|He|They
       `,
-      (right) => [`*${right}* takes the place of the bold words.`, `*${right}* 可以代替粗体部分。`],
+      (right, shown) => {
+        const swapped = shown.replace(/\*\*[^*]+\*\*/u, right);
+        return [
+          `**${right}** takes the place of the bold words.\n\n**Check.** Swap **${right}** into the sentence and read it aloud: *${swapped}* — it matches who and how many.`,
+          `**${right}** 可以代替粗体部分。\n\n**检验。** 把 **${right}** 代回原句大声读一遍：*${swapped}* —— 人称和数量都对得上。`,
+        ];
+      },
       [
-        ["*{wrong}* is for a different kind of person or thing.", "*{wrong}* 用于另一类人或东西。"],
-        ["*{wrong}* does not match how many there are.", "*{wrong}* 和数量不相符。"],
+        ["*{wrong}* stands for a different kind of person or thing.", "*{wrong}* 指的是另一类人或东西。"],
+        ["*{wrong}* does not match how many (or whether *I* is included).", "*{wrong}* 和数量（或是否包含“我”）不匹配。"],
       ],
     ),
     choose(
       "i-or-me-and-we-or-us",
       ["I or Me, We or Us", "I 还是 me，we 还是 us"],
       [
-        "Use **I** and **we** for who does the action, at the front: ***I** ran.* ***We** sat.* Use **me** and **us** after the action word: *Mom hugs **me**.* *Dad sees **us**.*",
-        "做动作的人用 **I** 和 **we**，放在前面：***I** ran.* ***We** sat.*。放在动作词后面的用 **me** 和 **us**：*Mom hugs **me**.* *Dad sees **us**.*。",
+        "Use **I** and **we** for who does the action, at the front: ***I** ran.* ***We** sat.* Use **me** and **us** after the action word or *to/with*: *Mom hugs **me**.* *Dad sees **us**.*\n\n> **Watch out.** Do not say *Me can hop*—at the start of a sentence doing the action, use *I* or *We*.",
+        "做动作的人用 **I** 和 **we**，放在句首：***I** ran.* ***We** sat.* 放在动作词或 *to/with* 后面的用 **me** 和 **us**：*Mom hugs **me**.* *Dad sees **us**.*\n\n> **注意。** 不要说 *Me can hop*——在句首做动作时要用 *I* 或 *We*。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -1100,11 +1253,19 @@ const pronouns = topic("grammar", {
       ___ ride the bus.|We|Us
       Kim plays with ___.|us|we
       `,
-      (right, shown) => [
-        `*${filled(shown, right)}*: ${["I", "We"].includes(right) ? "it does the action, at the front" : "it comes after the action word"}.`,
-        `*${filled(shown, right)}*：${["I", "We"].includes(right) ? "它做动作，放在前面" : "它放在动作词后面"}。`,
+      (right, shown) => {
+        const subject = ["I", "We"].includes(right);
+        return [
+          `*${filled(shown, right)}* — ${subject ? `**${right}** does the action at the front of the sentence` : `**${right}** comes after the action word`}.\n\n**Check.** Find the action word in *${filled(shown, right)}*: **${right}** sits ${subject ? "before it, doing the action" : "after it, receiving the action"}, so it sounds right aloud.`,
+          `*${filled(shown, right)}* —— ${subject ? `**${right}** 在句首做动作` : `**${right}** 在动作词后面`}。\n\n**检验。** 找出 *${filled(shown, right)}* 里的动作词：**${right}** 在动作词${subject ? "前面（发出动作）" : "后面（接受动作）"}，大声读起来顺口。`,
+        ];
+      },
+      [
+        [
+          "*{wrong}* belongs in the other spot—before vs. after the action word.",
+          "*{wrong}* 应该放在句子的另一个位置（动作词前面还是后面）。",
+        ],
       ],
-      [["*{wrong}* belongs in the other place in the sentence.", "*{wrong}* 应该用在句子的另一个位置。"]],
     ),
   ],
 });
@@ -1113,6 +1274,10 @@ const joining = topic("grammar", {
   id: "joining-with-and",
   title: ["Joining with And", "用 and 连接"],
   summary: ["Two short sentences, or two naming words, can be joined with *and*.", "两个短句或两个名称词可以用 *and* 连接起来。"],
+  intro: [
+    "Writing *Maya swims. Leo swims.* takes two bumpy sentences. Glue the two names together with **and**: *Maya and Leo swim.* One smooth sentence says it all!",
+    "写 *Maya swims. Leo swims.* 显得两句话一顿一顿的。用 **and** 把两个名字粘在一起：*Maya and Leo swim.* 一句顺畅的话就全说明白了！",
+  ],
   after: ["action-words", "describing-words"],
   xp: 10,
   points: [
@@ -1120,8 +1285,8 @@ const joining = topic("grammar", {
       "two-into-one",
       ["Two into One", "两句变一句"],
       [
-        "When two sentences say the same thing about two people, join them with **and**: *Sam ran. Ben ran.* becomes ***Sam and Ben** ran.* When one person does two things, join the actions: *I sat. I ate.* becomes *I **sat and ate**.*",
-        "当两个句子对两个人说了同样的事，就用 **and** 连接：*Sam ran. Ben ran.* 变成 ***Sam and Ben** ran.*。当一个人做了两件事，就把两个动作连起来：*I sat. I ate.* 变成 *I **sat and ate**.*。",
+        "When two people do the same thing, join their names with **and**: *Sam ran. Ben ran.* → ***Sam and Ben** ran.* When one person does two things, join the actions: *I sat. I ate.* → *I **sat and ate**.*\n\n> **Watch out.** Put *and* right between the two matching parts—never leave *and* out or stick it at the very start.",
+        "当两个人做同一件事，用 **and** 把名字连起来：*Sam ran. Ben ran.* → ***Sam and Ben** ran.* 当一个人做两件事，把两个动作连起来：*I sat. I ate.* → *I **sat and ate**.*\n\n> **注意。** 把 *and* 放在两个并列词的中间——不要漏掉，也不要放到奇怪的位置。",
       ],
       ["Which sentence joins the two?", "哪个句子把两句连起来了？"],
       `
@@ -1156,18 +1321,27 @@ const joining = topic("grammar", {
       Meg runs. Max runs.|Meg and Max run.|Meg runs and Max.|Meg Max run.
       We eat. We drink.|We eat and drink.|We eat we drink.|We and eat drink.
       `,
-      (right) => [`*${right}* joins the two with *and* and makes sense.`, `*${right}* 用 *and* 把两句连了起来，意思通顺。`],
+      (right, shown) => [
+        `*${right}* puts **and** between the two matching parts to join the sentences cleanly.\n\n**Check.** Split *${right}* back apart at **and**: you get the same two ideas as *${shown}*, with no missing or jumbled words.`,
+        `*${right}* 把 **and** 放在两个并列部分之间，把两句自然连成了一句。\n\n**检验。** 从 **and** 处把 *${right}* 拆回两句，意思正好和原来的 *${shown}* 一致，没有漏词也没有乱序。`,
+      ],
       [
-        ["*{wrong}* puts *and* in the wrong place.", "*{wrong}* 把 *and* 放错了位置。"],
-        ["*{wrong}* leaves out *and*, so it runs together.", "*{wrong}* 漏掉了 *and*，句子连在一起了。"],
+        [
+          "*{wrong}* either puts *and* in the wrong spot or leaves out *and* between the two sentences.",
+          "*{wrong}* 要么把 *and* 放错了位置，要么两句之间漏了 *and*。",
+        ],
+        [
+          "*{wrong}* puts *and* in the wrong place or drops it, so the words collide.",
+          "*{wrong}* 把 *and* 放错了地方或漏掉了，词语撞在了一起。",
+        ],
       ],
     ),
     choose(
       "is-or-are-after-and",
       ["Is or Are After And", "and 之后用 is 还是 are"],
       [
-        "Two naming words joined by *and* make more than one, so they take **are**: *The cat **is** wet*, but *The cat and the dog **are** wet*.",
-        "两个用 *and* 连接的名称词表示多于一个，所以用 **are**：*The cat **is** wet*，但 *The cat and the dog **are** wet*。",
+        "Two naming words joined by **and** make more than one, so they take **are**: *The cat **is** wet*, but *The cat and the dog **are** wet*.\n\n> **Watch out.** Count everyone before the blank—if there is an *and*, there are at least two, so use *are*.",
+        "两个用 **and** 连起来的名称词表示多于一个，所以要用 **are**：*The cat **is** wet*，但 *The cat and the dog **are** wet*。\n\n> **注意。** 数一数空格前面有几个——只要有 *and*，就是两个及以上，要用 *are*。",
       ],
       ["Which word fits?", "哪个词合适？"],
       `
@@ -1203,10 +1377,15 @@ const joining = topic("grammar", {
       The milk ___ cold.|is|are
       `,
       (right, shown) => [
-        `*${filled(shown, right)}*: ${right === "are" ? "more than one, so *are*" : "just one, so *is*"}.`,
-        `*${filled(shown, right)}*：${right === "are" ? "多于一个，所以用 *are*" : "只有一个，所以用 *is*"}。`,
+        `*${filled(shown, right)}* — there ${right === "are" ? "is more than one (joined by *and*), so use **are**" : "is only one, so use **is**"}.\n\n**Check.** Swap the front words for *${right === "are" ? "They" : "It"}*: *${right === "are" ? "They are" : "It is"}...* sounds right, confirming **${right}**.`,
+        `*${filled(shown, right)}* —— 前面${right === "are" ? "有 *and* 连接的多于一个，所以用 **are**" : "只有一个，所以用 **is**"}。\n\n**检验。** 把主语换成 *${right === "are" ? "They" : "It"}*：*${right === "are" ? "They are" : "It is"}...* 读起来顺口，确认该用 **${right}**。`,
       ],
-      [["*{wrong}* does not match how many there are.", "*{wrong}* 和数量不相符。"]],
+      [
+        [
+          "*{wrong}* does not match how many are before the blank (one takes *is*, two or more take *are*).",
+          "*{wrong}* 和空格前面的数量不匹配（一个用 *is*，两个及以上用 *are*）。",
+        ],
+      ],
     ),
   ],
 });

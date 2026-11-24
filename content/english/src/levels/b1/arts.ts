@@ -993,19 +993,16 @@ const phrasalOf = (shown: string) =>
 const verbWithMeaning = (meaning: string): string | undefined => phrasals.find(([, , , , m]) => m === meaning)?.[3];
 
 /** whyNotParticle explains a small word that makes another phrasal verb or none that fits. */
-const whyNotParticle = (wrong: string, right: string, shown: string): Text => {
+const whyNotParticle = (wrong: string, _right: string, shown: string): Text => {
   const [, , , verb = "", meaning = ""] = phrasalOf(shown) ?? [];
   const base = verb.split(" ")[0] ?? "";
   const other = phrasals.find(([, , , v]) => v === `${base} ${wrong}` || v.startsWith(`${base} ${wrong} `));
   return other
     ? t(
-        `*${other[3]}* means *${other[4]}*, which does not fit here. The sentence needs *${verb}*, which means *${meaning}*.`,
-        `*${other[3]}* 的意思是 *${other[4]}*，放在这里不合适。这句需要 *${verb}*，意思是 *${meaning}*。`,
+        `*${other[3]}* means *${other[4]}*, which does not match the meaning needed in this sentence.`,
+        `*${other[3]}* 的意思是 *${other[4]}*，与这句话需要的意思不符。`,
       )
-    : t(
-        `*${base} ${wrong}* does not mean *${meaning}*. That meaning takes *${right}*: *${verb}*.`,
-        `*${base} ${wrong}* 没有 *${meaning}* 的意思。这个意思要用 *${right}*：*${verb}*。`,
-      );
+    : t(`*${base} ${wrong}* does not mean *${meaning}* in English.`, `英语里 *${base} ${wrong}* 并不表示 *${meaning}*。`);
 };
 
 const phrasalVerbs: TopicDef = {
@@ -1014,6 +1011,10 @@ const phrasalVerbs: TopicDef = {
   summary: t(
     "turn down, find out, give up, look after: a verb and a small word together often mean something new; an object pronoun goes between them: turn it down.",
     "turn down, find out, give up, look after：动词和一个小词合在一起常常有新的意思；宾语代词放在两者中间：turn it down。",
+  ),
+  intro: t(
+    "Change one small particle and the whole meaning flips: *turn on* (start), *turn off* (stop), *turn up* (louder), *turn down* (quieter or refuse). And when the object is a pronoun like *it* or *them*, it slides right into the middle: *turn it down*.",
+    "换一个小词，整个意思就变了：*turn on*（打开）、*turn off*（关掉）、*turn up*（调大）、*turn down*（调小或拒绝）。如果宾语是 *it* 或 *them* 这样的代词，必须放进中间：*turn it down*。",
   ),
   prerequisites: ["b1-words-little-words-5", "present-perfect-or-past-simple"],
   encompasses: [{ topic: "b1-words-little-words-5", weight: 0.1 }],
@@ -1024,8 +1025,8 @@ const phrasalVerbs: TopicDef = {
       "particle",
       t("The small word", "小词"),
       t(
-        "A **phrasal verb** is a verb with a small word such as *up, down, on, off, out, back, in, away*. The small word changes the meaning, so the right one matters:\n\n- *Turn **up** the music* (make it louder) / *Turn **down** the music* (make it quieter).\n- *Put **on** your coat* (start wearing it) / *Take **off** your shoes* (remove them).\n- *Look **up** a word* (in a dictionary) / *Look **after** a child* (take care of it).\n\nRead the whole sentence: the context tells you which small word fits.",
-        "**短语动词**是动词加一个小词，比如 *up, down, on, off, out, back, in, away*。小词会改变意思，所以要选对：\n\n- *Turn **up** the music*（调大声）/ *Turn **down** the music*（调小声）。\n- *Put **on** your coat*（穿上）/ *Take **off** your shoes*（脱下）。\n- *Look **up** a word*（查词典）/ *Look **after** a child*（照顾）。\n\n读完整个句子：上下文告诉你哪个小词合适。中文用“上”“下”“开”“关”这样的补语表达类似的意思，但英语的小词常常不能按字面翻译。",
+        "A **phrasal verb** is a verb with a small word such as *up, down, on, off, out, back, in, away*. The small word changes the meaning, so the right one matters:\n\n- *Turn **up** the music* (make it louder) / *Turn **down** the music* (make it quieter).\n- *Put **on** your coat* (start wearing it) / *Take **off** your shoes* (remove them).\n- *Look **up** a word* (in a dictionary) / *Look **after** a child* (take care of it).\n\n> **Watch out.** Do not translate the small word literally from Chinese—read the whole sentence to see which verb + particle pair matches the situation.",
+        "**短语动词**是动词加一个小词，比如 *up, down, on, off, out, back, in, away*。小词会改变意思，所以要选对：\n\n- *Turn **up** the music*（调大声）/ *Turn **down** the music*（调小声）。\n- *Put **on** your coat*（穿上）/ *Take **off** your shoes*（脱下）。\n- *Look **up** a word*（查词典）/ *Look **after** a child*（照顾）。\n\n> **注意。** 不要按中文字面硬译小词——通读整句语境，选出与句意匹配的“动词 + 小词”固定搭配。",
       ),
       choiceGenerator(
         t("Choose the small word that completes the phrasal verb.", "选出构成短语动词的小词。"),
@@ -1033,8 +1034,8 @@ const phrasalVerbs: TopicDef = {
         (right, shown) => {
           const [, , , verb = "", meaning = ""] = phrasalOf(shown) ?? [];
           return t(
-            `The sentence needs the meaning *${meaning}*, and that is *${verb}*, so the small word is *${right}*: ${fill(shown, right)}`,
-            `这句需要表达 *${meaning}* 的意思，也就是 *${verb}*，所以小词是 *${right}*：${fill(shown, right)}`,
+            `The sentence needs the meaning *${meaning}*, and that is *${verb}*, so the small word is *${right}*: ${fill(shown, right)}\n\n**Check.** Substitute *${meaning}* back into the sentence—it matches the context and confirms *${verb}*.`,
+            `这句需要表达 *${meaning}* 的意思，也就是 *${verb}*，所以小词是 *${right}*：${fill(shown, right)}\n\n**检验。** 把 *${meaning}* 代回原句验证——句意完全通顺，印证了短语动词 *${verb}*。`,
           );
         },
         whyNotParticle,
@@ -1044,8 +1045,8 @@ const phrasalVerbs: TopicDef = {
       "meaning",
       t("What a phrasal verb means", "短语动词的意思"),
       t(
-        "The meaning of a phrasal verb is often not the meaning of its two words added together: *give up* means *stop trying*, not *give* + *up*. *Break down* means *stop working*, for a machine; *bring up* a child means *care for it until it is an adult*.\n\nLearn each phrasal verb with an example sentence, and use the context to work out what it means.",
-        "短语动词的意思常常不是两个词意思的简单相加：*give up* 的意思是“放弃”，不是 *give* + *up*。*Break down* 指机器“出故障”；*bring up* a child 指“把孩子抚养长大”。\n\n每个短语动词都和例句一起记，并借助上下文推断它的意思。",
+        "The meaning of a phrasal verb is often not the meaning of its two words added together: *give up* means *stop trying*, not *give* + *up*. *Break down* means *stop working*, for a machine; *bring up* a child means *care for it until it is an adult*.\n\n> **Watch out.** Do not guess from the base verb alone—test each candidate meaning inside the sentence to see which one actually makes sense.",
+        "短语动词的意思常常不是两个词意思的简单相加：*give up* 的意思是“放弃”，不是 *give* + *up*。*Break down* 指机器“出故障”；*bring up* a child 指“把孩子抚养长大”。\n\n> **注意。** 不要只看前面的动词字面猜意思——把选项放进整句话里检验，看哪一个意思与上下文严丝合缝。",
       ),
       choiceGenerator(
         t("What does the phrasal verb mean in this sentence?", "这个短语动词在句中是什么意思？"),
@@ -1053,8 +1054,8 @@ const phrasalVerbs: TopicDef = {
         (right, shown) => {
           const [sentence = "", verb = ""] = shown.split(" → ");
           return t(
-            `In this sentence *${verb}* means *${right}*, which the rest of the sentence makes clear: ${sentence}`,
-            `在这句话里，*${verb}* 的意思是 *${right}*，句子的其他部分说明了这一点：${sentence}`,
+            `In this sentence *${verb}* means *${right}*, which the rest of the sentence makes clear: ${sentence}\n\n**Check.** Replace *${verb}* in the sentence with *${right}*—the sentence keeps the exact same meaning.`,
+            `在这句话里，*${verb}* 的意思是 *${right}*，句子的其他部分说明了这一点：${sentence}\n\n**检验。** 用 *${right}* 替换句中的 *${verb}*——整句话的意思完全不变。`,
           );
         },
         (wrong, _right, shown) => {
@@ -1070,14 +1071,20 @@ const phrasalVerbs: TopicDef = {
       "pronoun",
       t("Turn it down, not turn down it", "说 turn it down，不说 turn down it"),
       t(
-        "With many phrasal verbs, the object can go after the small word or between the two parts: *turn down **the music*** or *turn **the music** down*.\n\nBut an **object pronoun** (*it, them, her, him, me*) always goes **between** the verb and the small word:\n\n- *Turn **it** down.* — not *Turn down it.*\n- *Pick **them** up.* — not *Pick up them.*\n- *Call **her** back.* — not *Call back her.*\n\nType the verb, the pronoun and the small word in that order.",
-        "许多短语动词的宾语可以放在小词后面，也可以放在两部分中间：*turn down **the music*** 或 *turn **the music** down*。\n\n但**宾语代词**（*it, them, her, him, me*）总是放在动词和小词**中间**：\n\n- *Turn **it** down.*，不说 *Turn down it.*\n- *Pick **them** up.*，不说 *Pick up them.*\n- *Call **her** back.*，不说 *Call back her.*\n\n按动词、代词、小词的顺序输入。",
+        "With many phrasal verbs, the object can go after the small word or between the two parts: *turn down **the music*** or *turn **the music** down*.\n\nBut an **object pronoun** (*it, them, her, him, me*) always goes **between** the verb and the small word:\n\n- *Turn **it** down.* — not *Turn down it.*\n- *Pick **them** up.* — not *Pick up them.*\n- *Call **her** back.* — not *Call back her.*\n\n> **Watch out.** Never put a pronoun like *it*, *them*, *him* or *her* after the particle (*turn down it* is always wrong).",
+        "许多短语动词的宾语可以放在小词后面，也可以放在两部分中间：*turn down **the music*** 或 *turn **the music** down*。\n\n但**宾语代词**（*it, them, her, him, me*）总是放在动词和小词**中间**：\n\n- *Turn **it** down.*，不说 *Turn down it.*\n- *Pick **them** up.*，不说 *Pick up them.*\n- *Call **her** back.*，不说 *Call back her.*\n\n> **注意。** 绝不要把 *it、them、him、her* 这类代词放在小词后面（*turn down it* 永远是错的）。",
       ),
       typedGenerator(
         "word-form",
         t("Type the phrasal verb with the pronoun in brackets in the right place.", "输入短语动词，把括号中的代词放在正确的位置。"),
         pronounTyped,
-        (right, shown) => t(fill(shown, right), `${fill(shown, right)}（代词放在动词和小词中间）`),
+        (right, shown) => {
+          const [verb = "", pronoun = "", particle = ""] = right.split(" ");
+          return t(
+            `An object pronoun goes between the verb and the small word: ${fill(shown, right)}\n\n**Check.** Verify the three-word order: verb (*${verb}*) + pronoun (*${pronoun}*) + particle (*${particle}*).`,
+            `宾语代词放在动词和小词中间：${fill(shown, right)}\n\n**检验。** 核对三词顺序：动词（*${verb}*）+ 代词（*${pronoun}*）+ 小词（*${particle}*）。`,
+          );
+        },
       ),
     ),
   ],
@@ -1155,6 +1162,10 @@ const writingAReview = judgedTopic({
     "Write a review of 150 to 200 words of a film, a book, a show or an exhibition: what it is, what is good and bad about it, and whether you recommend it.",
     "写一篇 150 到 200 词的评论，评一部电影、一本书、一场演出或一个展览：它是什么，好在哪里、不好在哪里，你是否推荐。",
   ),
+  intro: t(
+    "A balanced review helps readers decide if a film, book or show is for them: give a brief overview without spoilers, weigh both strengths and weaknesses with specific examples, and finish with a clear recommendation.",
+    "一篇公允的评论能帮读者决定要不要看一部电影、一本书或一场演出：简短介绍且不剧透，用具体例子兼谈优点与不足，最后给出明确的推荐结论。",
+  ),
   prerequisites: ["writing-an-opinion-paragraph"],
   encompasses: [{ topic: "writing-an-opinion-paragraph", weight: 0.3 }],
   criteria: ["b1-review-what-it-is", "b1-review-good-and-bad", "b1-review-recommendation"],
@@ -1162,8 +1173,8 @@ const writingAReview = judgedTopic({
     id: "review",
     title: t("What it is, good and bad, and a recommendation", "是什么、优缺点和推荐"),
     explanation: t(
-      "A review tells readers what something is like and whether they should try it. Plan four paragraphs:\n\n1. **What it is**: the name and the type, and a short description without the ending: *The Last Lighthouse is an adventure film about a girl who lives in a lighthouse.*\n2. **What is good**, with examples: *The best thing about the film is the photography. The scenes of the storm are so dramatic that...*\n3. **What is not so good**: *However, the middle part is rather slow.*\n4. **Your recommendation**: who would enjoy it and why: *Overall, I would recommend it to anyone who enjoys adventure stories.*\n\nUse describing words (*dramatic, vivid, dull, original, impressive*), linking words (*however, on the other hand, overall, in conclusion*) and a title. Don't tell the whole plot or the ending!",
-      "评论告诉读者某样东西怎么样、值不值得去看。分四段来写：\n\n1. **它是什么**：名称和类型，加上不透露结局的简短介绍：*The Last Lighthouse is an adventure film about a girl who lives in a lighthouse.*\n2. **好在哪里**，举例说明：*The best thing about the film is the photography. The scenes of the storm are so dramatic that...*\n3. **不足之处**：*However, the middle part is rather slow.*\n4. **你的推荐**：谁会喜欢，为什么：*Overall, I would recommend it to anyone who enjoys adventure stories.*\n\n用描述性的词（*dramatic, vivid, dull, original, impressive*）、连接词（*however, on the other hand, overall, in conclusion*），并加一个标题。不要把整个情节或结局都讲出来！中文影评常常只说好或只说坏，英语的评论一般好坏都谈，最后给出明确的推荐。",
+      "A review tells readers what something is like and whether they should try it. Plan four paragraphs:\n\n1. **What it is**: the name and the type, and a short description without the ending: *The Last Lighthouse is an adventure film about a girl who lives in a lighthouse.*\n2. **What is good**, with examples: *The best thing about the film is the photography. The scenes of the storm are so dramatic that...*\n3. **What is not so good**: *However, the middle part is rather slow.*\n4. **Your recommendation**: who would enjoy it and why: *Overall, I would recommend it to anyone who enjoys adventure stories.*\n\n> **Watch out.** Do not spoil the ending or write only praise—include a title, balance strengths with at least one weakness, and state clearly who you recommend it to.",
+      "评论告诉读者某样东西怎么样、值不值得去看。分四段来写：\n\n1. **它是什么**：名称和类型，加上不透露结局的简短介绍：*The Last Lighthouse is an adventure film about a girl who lives in a lighthouse.*\n2. **好在哪里**，举例说明：*The best thing about the film is the photography. The scenes of the storm are so dramatic that...*\n3. **不足之处**：*However, the middle part is rather slow.*\n4. **你的推荐**：谁会喜欢，为什么：*Overall, I would recommend it to anyone who enjoys adventure stories.*\n\n> **注意。** 不要剧透结局，也不要一味夸赞——加上标题，既谈亮点也谈至少一处不足，并在结尾明确说出推荐给哪类读者。",
     ),
   },
   question: t(

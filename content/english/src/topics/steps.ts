@@ -27,8 +27,9 @@ export const bars = (lines: string, wrongCount?: number): ChoiceItem[] =>
     return [shown, right, wrong];
   });
 
-/** fill replaces {wrong} and {right} in a text of feedback with the options. */
-const fill = (s: string, wrong: string, right: string) => s.replaceAll("{wrong}", wrong).replaceAll("{right}", right);
+/** fill replaces {wrong}, {right} and {shown} in a text of feedback with the options and prompt text. */
+const fill = (s: string, wrong: string, right: string, shown: string) =>
+  s.replaceAll("{wrong}", wrong).replaceAll("{right}", right).replaceAll("{shown}", shown);
 
 /**
  * kindedChoice builds a choice whose wrong options are listed in a fixed order of kinds: the first wrong option of
@@ -46,9 +47,9 @@ export function kindedChoice(
     t(question[0], question[1]),
     bank,
     (right, shown) => t(...why(right, shown)),
-    (wrong, right, _shown, position) => {
+    (wrong, right, shown, position) => {
       const [en, zh] = kinds[position] ?? ["", ""];
-      return t(fill(en, wrong, right), fill(zh, wrong, right));
+      return t(fill(en, wrong, right, shown), fill(zh, wrong, right, shown));
     },
   );
 }
@@ -62,9 +63,15 @@ export interface Label {
 
 /**
  * labelChoice builds a choice whose options are labels of a table. Lines are "shown|right" or "shown|right|wrong|wrong";
- * a line with no wrong options takes the next two labels of the table after the right one.
+ * a line with no wrong options takes the next two labels of the table after the right one. When why is given, it builds
+ * the solution from the right label, its table entry and what was shown.
  */
-export function labelChoice(question: Pair, lines: string, labels: Readonly<Record<string, Label>>): Generator {
+export function labelChoice(
+  question: Pair,
+  lines: string,
+  labels: Readonly<Record<string, Label>>,
+  why?: (right: string, shown: string, entry: Label) => Pair,
+): Generator {
   const names = Object.keys(labels);
   const label = (name: string): Label => {
     const found = labels[name];
@@ -82,10 +89,14 @@ export function labelChoice(question: Pair, lines: string, labels: Readonly<Reco
   return choiceGenerator(
     t(question[0], question[1]),
     bank,
-    (right) => {
+    (right, shown) => {
       const l = label(right);
+      if (why) return t(...why(right, shown, l));
       return t(`It is **${right}**. ${l.why[0]}`, `这是**${l.zh}**。${l.why[1]}`);
     },
-    (wrong) => t(...label(wrong).not),
+    (wrong, right, shown) => {
+      const [en, zh] = label(wrong).not;
+      return t(fill(en, wrong, right, shown), fill(zh, wrong, right, shown));
+    },
   );
 }

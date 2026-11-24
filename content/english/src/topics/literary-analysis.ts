@@ -102,16 +102,16 @@ const narratorBank: readonly ChoiceItem[] = [
 
 const narratorWhy: Readonly<Record<string, readonly [string, string]>> = {
   "first person": [
-    "The narrator is a character who says *I*, so we know only what that character sees and thinks.",
-    "叙述者是说 *I* 的人物，所以我们只知道这个人物看到和想到的。",
+    "The narrator is a character who says *I*, so we know only what that character sees and thinks.\n\n**Check.** Spot *I*, *my*, or *we* outside quotation marks—it proves the narrator is inside the story.",
+    "叙述者是说 *I* 的人物，所以我们只知道这个人物看到和想到的。\n\n**检验。** 找出引号外面的 *I*、*my* 或 *we*——这证实叙述者就是故事中人。",
   ],
   "third person limited": [
-    "The narrator stands outside the story but shares the thoughts of one character only.",
-    "叙述者在故事之外，但只讲述一个人物的想法。",
+    "The narrator stands outside the story but shares the thoughts of one character only.\n\n**Check.** Count whose inner thoughts or feelings appear: only one character's mind is opened, and no *I* narrates.",
+    "叙述者在故事之外，但只讲述一个人物的想法。\n\n**检验。** 数一数文段揭露了几个人的内心：只进入了一个人物的头脑，而且叙述者没用 *I*。",
   ],
   "third person omniscient": [
-    "The narrator stands outside the story and knows what more than one character thinks or does unseen.",
-    "叙述者在故事之外，知道不止一个人物的想法或背后的行动。",
+    "The narrator stands outside the story and knows what more than one character thinks or does unseen.\n\n**Check.** Notice that the narrator steps into at least two characters' minds or reveals hidden events neither character can see.",
+    "叙述者在故事之外，知道不止一个人物的想法或背后的行动。\n\n**检验。** 注意叙述者至少进入了两个人物的内心，或交代了角色彼此看不见的隐情。",
   ],
 };
 
@@ -264,9 +264,18 @@ const ironyBank: readonly ChoiceItem[] = [
 ];
 
 const ironyWhy: Readonly<Record<string, readonly [string, string]>> = {
-  "verbal irony": ["A character says the opposite of what they mean.", "人物说的话与他们真正的意思相反。"],
-  "situational irony": ["What happens is the opposite of what anyone would expect.", "发生的事情与任何人的预期相反。"],
-  "dramatic irony": ["The reader or audience knows something a character does not.", "读者或观众知道某个人物不知道的事情。"],
+  "verbal irony": [
+    "A character says the opposite of what they mean.\n\n**Check.** Compare the speaker's literal words with the scene around them: the words praise or celebrate something that is clearly going wrong.",
+    "人物说的话与他们真正的意思相反。\n\n**检验。** 把说话人的字面话语和眼前处境对照一下：嘴上在夸赞或庆幸，实际处境却正好相反。",
+  ],
+  "situational irony": [
+    "What happens is the opposite of what anyone would expect.\n\n**Check.** Ask whether the reversal lies in an *event* rather than in a character's words or a secret the reader holds: here the outcome itself flips the setup upside down.",
+    "发生的事情与任何人的预期相反。\n\n**检验。** 看这个反转是不是发生在*事件结果*本身，而不是人物的口头反话或读者独知的秘密：这里恰恰是事情的结局颠覆了原本的设定。",
+  ],
+  "dramatic irony": [
+    "The reader or audience knows something a character does not.\n\n**Check.** Separate what the audience knows from what the character believes: that gap in knowledge creates tension as the character acts in the dark.",
+    "读者或观众知道某个人物不知道的事情。\n\n**检验。** 分别看读者知道什么、人物又以为是什么：正是这层信息差让人物在蒙在鼓里时制造出张力。",
+  ],
 };
 
 const ironyNot = meaning({
@@ -318,11 +327,17 @@ const orderBank: readonly ChoiceItem[] = [
 ];
 
 const orderWhy: Readonly<Record<string, readonly [string, string]>> = {
-  foreshadowing: ["A hint suggests something that will happen later in the story.", "一个暗示预示了故事后面将要发生的事。"],
-  flashback: ["The story moves back in time to show an earlier event.", "故事回到过去，展示较早发生的事件。"],
+  foreshadowing: [
+    "A hint suggests something that will happen later in the story.\n\n**Check.** Test the timeline: the scene stays in the present, yet a specific warning or ominous detail points ahead to trouble or a turning point.",
+    "一个暗示预示了故事后面将要发生的事。\n\n**检验。** 核对时间线：场景停留在当下，但其中某个警告或不安的细节正指向后文的麻烦或转折。",
+  ],
+  flashback: [
+    "The story moves back in time to show an earlier event.\n\n**Check.** Look for the time shift: the narrative steps backward into a memory or an earlier period rather than moving forward in the present.",
+    "故事回到过去，展示较早发生的事件。\n\n**检验。** 找时间跳转：叙述退回到了回忆或更早的时期，而不是停留在当下向前推进。",
+  ],
   neither: [
-    "The events are told in plain order, with no hint of what is coming and no move back in time.",
-    "事件按顺序平铺直叙，既没有对后事的暗示，也没有回到过去。",
+    "The events are told in plain order, with no hint of what is coming and no move back in time.\n\n**Check.** Confirm both negatives: the timeline never steps backward, and no ominous detail warns of a future twist.",
+    "事件按顺序平铺直叙，既没有对后事的暗示，也没有回到过去。\n\n**检验。** 双向确认：时间线既没有倒回过去，文段中也没有任何预示未来波折的暗示。",
   ],
 };
 
@@ -518,6 +533,10 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
       "First person, third person limited and third person omniscient, and how each shapes what the reader learns.",
       "第一人称、第三人称有限视角和第三人称全知视角，以及它们怎样影响读者所知道的内容。",
     ),
+    intro: t(
+      "Compare *I wondered why my sister was quiet* (first person), *Omar wondered why his sister was quiet* (third person limited), and *Omar worried, while across town his sister was laughing* (third person omniscient). Who tells a story—and how many minds they can enter—controls every secret the reader learns.",
+      "比较这三句：*I wondered why my sister was quiet*（第一人称）、*Omar wondered why his sister was quiet*（第三人称有限视角）、*Omar worried, while across town his sister was laughing*（第三人称全知视角）。由谁讲故事、能走进几个人的内心，决定了读者能知道多少秘密。",
+    ),
     prerequisites: ["point-of-view"],
     encompasses: [{ topic: "point-of-view", weight: 0.4 }],
     xp: 12,
@@ -526,8 +545,8 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         "limited-or-omniscient",
         t("Limited or Omniscient", "有限视角还是全知视角"),
         t(
-          "A third-person narrator stands outside the story, but narrators differ in what they know. A **third person limited** narrator shares the thoughts of one character only. A **third person omniscient** narrator knows what several characters think and feel, and what happens where none of them can see.\n\nTo tell them apart, count whose thoughts the narrator reports. One mind means limited; more than one means omniscient. A narrator who says *I* is **first person**.",
-          "第三人称叙述者在故事之外，但他们所知道的不同。**第三人称有限视角**（third person limited）的叙述者只讲述一个人物的想法。**第三人称全知视角**（third person omniscient）的叙述者知道多个人物的所想所感，以及任何人物都看不到的地方发生的事。\n\n要区分它们，就数一数叙述者讲了谁的想法。只有一个人的内心是有限视角；不止一个是全知视角。说 *I* 的叙述者是**第一人称**（first person）。",
+          "A third-person narrator stands outside the story, but narrators differ in what they know. A **third person limited** narrator shares the thoughts of one character only. A **third person omniscient** narrator knows what several characters think and feel, and what happens where none of them can see.\n\nTo tell them apart, count whose thoughts the narrator reports. One mind means limited; more than one means omniscient. A narrator who says *I* is **first person**.\n\n> **Watch out.** Do not confuse third person limited with omniscient just because two characters appear in the scene—check how many characters' *inner thoughts* are revealed.",
+          "第三人称叙述者在故事之外，但他们所知道的不同。**第三人称有限视角**（third person limited）的叙述者只讲述一个人物的想法。**第三人称全知视角**（third person omniscient）的叙述者知道多个人物的所想所感，以及任何人物都看不到的地方发生的事。\n\n要区分它们，就数一数叙述者讲了谁的想法。只有一个人的内心是有限视角；不止一个是全知视角。说 *I* 的叙述者是**第一人称**（first person）。\n\n> **注意。** 不要因为场景里出现了两个人物就判为全知视角——要数有几个人的*内心想法*被写了出来。",
         ),
         named(
           ["What point of view is this passage told in?", "这段文字是用哪种视角叙述的？"],
@@ -540,14 +559,16 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         "what-the-narrator-changes",
         t("How the Narrator Shapes a Story", "叙述者怎样塑造故事"),
         t(
-          "The choice of narrator decides what the reader knows, and so how the story feels. A first-person or limited narrator keeps the reader inside one mind: we share that character's surprises and mistakes, which builds suspense and closeness. An omniscient narrator lets the reader see more than any one character, so we may understand every side, or know of a danger the characters do not.\n\nA first-person narrator may also be wrong, or may hide the truth, and the reader then learns to read past the narrator's words.",
-          "叙述者的选择决定了读者知道什么，也因此决定故事给人的感受。第一人称或有限视角的叙述者让读者留在一个人的内心中：我们和这个人物一同经历意外和错误，这能营造悬念和亲近感。全知叙述者让读者看到的比任何一个人物都多，所以我们可能理解每一方，或者知道人物不知道的危险。\n\n第一人称叙述者也可能出错或隐瞒真相，读者就要学会读出叙述者话语之外的意思。",
+          "The choice of narrator decides what the reader knows, and so how the story feels. A first-person or limited narrator keeps the reader inside one mind: we share that character's surprises and mistakes, which builds suspense and closeness. An omniscient narrator lets the reader see more than any one character, so we may understand every side, or know of a danger the characters do not.\n\nA first-person narrator may also be wrong, or may hide the truth, and the reader then learns to read past the narrator's words.\n\n> **Watch out.** Match the effect directly to the narrator's *limits*: a first-person or limited narrator cannot reveal every character's secret thoughts.",
+          "叙述者的选择决定了读者知道什么，也因此决定故事给人的感受。第一人称或有限视角的叙述者让读者留在一个人的内心中：我们和这个人物一同经历意外和错误，这能营造悬念和亲近感。全知叙述者让读者看到的比任何一个人物都多，所以我们可能理解每一方，或者知道人物不知道的危险。\n\n第一人称叙述者也可能出错或隐瞒真相，读者就要学会读出叙述者话语之外的意思。\n\n> **注意。** 把效果直接对准叙述者的*视野限制*：第一人称或有限视角不可能揭露所有人物的秘密想法。",
         ),
         pick(
           ["What is the most likely effect of this choice of narrator?", "这种叙述者的选择最可能产生什么效果？"],
           [...narratorEffectBank, ...narratorEffectMore],
-          (right) => `*${right}* The narrator decides what the reader can know, and this effect follows from that.`,
-          (right) => `*${right}* 叙述者决定了读者能知道什么，这个效果正是由此而来。`,
+          (right) =>
+            `*${right}* The narrator decides what the reader can know, and this effect follows from that.\n\n**Check.** Trace what this specific narrator can and cannot see—the effect *${right}* follows directly from that exact window of knowledge.`,
+          (right) =>
+            `*${right}* 叙述者决定了读者能知道什么，这个效果正是由此而来。\n\n**检验。** 核对这位叙述者能看到和看不到的范围——这个效果正是该视角限制的直接结果。`,
           (wrong) => [
             `*${wrong}* does not fit this narrator: ask whose thoughts the narrator can share, and what the reader therefore knows or does not know.`,
             `*${wrong}* 与这个叙述者不符：问问叙述者能讲述谁的想法，以及读者因此知道或不知道什么。`,
@@ -560,6 +581,10 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
     id: "symbolism",
     title: t("Symbolism", "象征"),
     summary: t("An object, place or event that stands for an idea larger than itself.", "代表比自身更大的意义的物品、地点或事件。"),
+    intro: t(
+      "In a story where a torn map is taped back together as two sisters reconcile, the map is more than paper—it stands for their repaired trust. **Symbolism** lets a concrete object carry an abstract idea through the plot.",
+      "如果一个故事里，两姐妹和好时把一张撕破的地图重新粘好，那张地图就不只是纸——它代表着两人修复后的信任。**象征**就是让具体的物件在情节中承载抽象的含义。",
+    ),
     prerequisites: ["theme"],
     encompasses: [{ topic: "theme", weight: 0.2 }],
     xp: 16,
@@ -568,14 +593,16 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         "reading-a-symbol",
         t("Reading a Symbol", "解读象征"),
         t(
-          "A **symbol** is something concrete, an object, a place, an animal or the weather, that also stands for an idea: freedom, hope, a broken friendship. Writers signal a symbol by bringing it back at important moments, and by letting it change when the characters change.\n\nTo read one, ask what the object has to do with the characters' feelings or the story's conflict. A plain fact about the object, such as what it looks like, is not what it stands for.",
-          "**象征**（symbol）是具体的东西，例如物品、地点、动物或天气，同时代表一种意义：自由、希望、破裂的友谊。作者会让象征在关键时刻反复出现，并随人物的变化而变化，以此提示它的存在。\n\n解读时，问问这个东西与人物的感受或故事的冲突有什么关系。关于它的字面事实，比如它的样子，并不是它所象征的意义。",
+          "A **symbol** is something concrete, an object, a place, an animal or the weather, that also stands for an idea: freedom, hope, a broken friendship. Writers signal a symbol by bringing it back at important moments, and by letting it change when the characters change.\n\nTo read one, ask what the object has to do with the characters' feelings or the story's conflict. A plain fact about the object, such as what it looks like, is not what it stands for.\n\n> **Watch out.** Do not stop at a literal detail—like a hobby, a season, or a price—when the object keeps mirroring what the character feels or struggles against.",
+          "**象征**（symbol）是具体的东西，例如物品、地点、动物或天气，同时代表一种意义：自由、希望、破裂的友谊。作者会让象征在关键时刻反复出现，并随人物的变化而变化，以此提示它的存在。\n\n解读时，问问这个东西与人物的感受或故事的冲突有什么关系。关于它的字面事实，比如它的样子，并不是它所象征的意义。\n\n> **注意。** 当某个物件不断映照人物的情感或冲突时，不要停留在爱好、季节或价格这类字面细节上。",
         ),
         pick(
           ["What does the object in this passage most likely stand for?", "这段文字中的东西最可能象征什么？"],
           [...symbolBank, ...symbolMore],
-          (right) => `It stands for *${right}*. The object appears, and changes, at the moments that matter to that idea.`,
-          (right) => `它象征 *${right}*。这个东西在与此意义相关的关键时刻出现并发生变化。`,
+          (right) =>
+            `It stands for *${right}*. The object appears, and changes, at the moments that matter to that idea.\n\n**Check.** Trace when the object shows up in the passage: it shifts right alongside the character's inner state or conflict, pointing beyond its literal use to *${right}*.`,
+          (right) =>
+            `它象征 *${right}*。这个东西在与此意义相关的关键时刻出现并发生变化。\n\n**检验。** 追踪这个物件在文段中出现的时机：它恰好随着人物的内心状态或冲突一起变化，说明它的意义超越了字面用途，指向 *${right}*。`,
           (wrong) => [
             `*${wrong}* reads the object literally. A symbol stands for an idea tied to the characters' feelings or conflict.`,
             `*${wrong}* 是在按字面理解这个东西。象征代表与人物感受或冲突相关的意义。`,
@@ -592,6 +619,10 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
       "Verbal, situational and dramatic irony: the gap between what is said, expected or known and what is true.",
       "言语反讽、情境反讽和戏剧反讽：所说、所预期或所知与事实之间的落差。",
     ),
+    intro: t(
+      "A locksmith who locks himself out of his own shop is funny precisely because his job makes that the last thing anyone expects. **Irony** lives in that sharp gap between appearance or expectation and reality.",
+      "锁匠把自己反锁在店门外之所以好笑，正是因为他的职业让这件事成了最出乎意料的结局。**反讽**就藏在表面、预期与现实之间的这种强烈落差里。",
+    ),
     prerequisites: ["plot-and-conflict"],
     encompasses: [],
     xp: 16,
@@ -600,8 +631,8 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         "three-kinds-of-irony",
         t("Three Kinds of Irony", "三种反讽"),
         t(
-          "**Irony** is a gap between how things seem and how they are. In **verbal irony**, a character says the opposite of what they mean: *Great, another flat tire.* In **situational irony**, an event turns out the opposite of what anyone would expect: a lifeguard who needs rescuing. In **dramatic irony**, the reader knows something a character does not, and watches them walk toward it.",
-          "**反讽**（irony）是表面与实际之间的落差。在**言语反讽**（verbal irony）中，人物说的与本意相反：*Great, another flat tire.* 在**情境反讽**（situational irony）中，事件的结果与任何人的预期相反：救生员自己需要被救。在**戏剧反讽**（dramatic irony）中，读者知道人物不知道的事，看着他们一步步走向它。",
+          "**Irony** is a gap between how things seem and how they are. In **verbal irony**, a character says the opposite of what they mean: *Great, another flat tire.* In **situational irony**, an event turns out the opposite of what anyone would expect: a lifeguard who needs rescuing. In **dramatic irony**, the reader knows something a character does not, and watches them walk toward it.\n\n> **Watch out.** Do not call an ordinary coincidence or a plain bit of bad luck ironic—check whether the gap is in *spoken words* (verbal), a *reversed outcome* (situational), or *unequal knowledge* between reader and character (dramatic).",
+          "**反讽**（irony）是表面与实际之间的落差。在**言语反讽**（verbal irony）中，人物说的与本意相反：*Great, another flat tire.* 在**情境反讽**（situational irony）中，事件的结果与任何人的预期相反：救生员自己需要被救。在**戏剧反讽**（dramatic irony）中，读者知道人物不知道的事，看着他们一步步走向它。\n\n> **注意。** 不要把普通巧合或单纯倒霉当成反讽——先看落差出在*说话内容*（言语反讽）、*结果颠覆*（情境反讽），还是读者与人物之间的*信息差*（戏剧反讽）。",
         ),
         named(["What kind of irony is this?", "这是哪种反讽？"], [...ironyBank, ...ironyMore], ironyWhy, ironyNot),
       ),
@@ -612,6 +643,10 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
     id: "foreshadowing-and-flashback",
     title: t("Foreshadowing and Flashback", "伏笔与倒叙"),
     summary: t("Hints of what is to come, and scenes that move back in time.", "对将来之事的暗示，以及回到过去的场景。"),
+    intro: t(
+      "A narrator who pauses before an exam to remember failing last year's test is stepping backward (**flashback**), while a loose wheel bolt nobody notices before a road trip quietly points forward (**foreshadowing**). Both tools bend the timeline to build tension and meaning.",
+      "考前停下来回忆去年失利的那一幕是向后跳（**倒叙**），而长途出发前没人注意到的松动螺母则是向前指（**伏笔**）。这两种手法通过打破平铺直叙的时间线来制造张力和深意。",
+    ),
     prerequisites: ["plot-and-conflict"],
     encompasses: [{ topic: "plot-and-conflict", weight: 0.2 }],
     xp: 14,
@@ -620,8 +655,8 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         "hints-and-memories",
         t("Hints Ahead and Steps Back", "向前的暗示与向后的回顾"),
         t(
-          "Writers do not always tell events in order. **Foreshadowing** drops a hint of something that will happen later: a warning ignored, a crack no one fixes, a calm that feels too calm. A **flashback** moves the story back in time to show an earlier event, often through a memory, and then returns to the present.\n\nWords such as *remembered*, *years earlier* or *went back to* often mark a flashback. A detail that makes the reader uneasy about what comes next is often foreshadowing.",
-          "作者并不总是按顺序讲述事件。**伏笔**（foreshadowing）埋下对后事的暗示：被忽视的警告、没人修的裂缝、平静得过分的平静。**倒叙**（flashback）把故事带回过去，展示较早的事件，常通过回忆来实现，然后再回到当下。\n\n*remembered*、*years earlier*、*went back to* 这样的词常标志着倒叙。让读者对接下来的事感到不安的细节，往往是伏笔。",
+          "Writers do not always tell events in order. **Foreshadowing** drops a hint of something that will happen later: a warning ignored, a crack no one fixes, a calm that feels too calm. A **flashback** moves the story back in time to show an earlier event, often through a memory, and then returns to the present.\n\nWords such as *remembered*, *years earlier* or *went back to* often mark a flashback. A detail that makes the reader uneasy about what comes next is often foreshadowing.\n\n> **Watch out.** Do not confuse a plain sequence of everyday actions with foreshadowing or flashback—only label it if the scene clearly shifts to an earlier time or plants a clue about what is coming.",
+          "作者并不总是按顺序讲述事件。**伏笔**（foreshadowing）埋下对后事的暗示：被忽视的警告、没人修的裂缝、平静得过分的平静。**倒叙**（flashback）把故事带回过去，展示较早的事件，常通过回忆来实现，然后再回到当下。\n\n*remembered*、*years earlier*、*went back to* 这样的词常标志着倒叙。让读者对接下来的事感到不安的细节，往往是伏笔。\n\n> **注意。** 不要把普通的日常流水账当成伏笔或倒叙——只有当场景明确退回过去，或埋下指向后事的线索时，才属于这两类手法。",
         ),
         named(
           ["Is this foreshadowing, a flashback, or neither?", "这是伏笔、倒叙，还是两者都不是？"],
@@ -637,6 +672,10 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
     id: "citing-textual-evidence",
     title: t("Citing Textual Evidence", "引用文本证据"),
     summary: t("Choose the quotation from a story that proves a claim about it.", "选出能证明关于故事的某个论点的引文。"),
+    intro: t(
+      "Calling a character *resourceful* is only an opinion until you point to the exact line where she rigs a sail out of a raincoat. **Citing textual evidence** pairs a claim with the quotation that proves it—and explains the link.",
+      "说一个人物*足智多谋*只是看法，直到你指着原文里她用雨衣做成船帆的那一句才算成立。**引用文本证据**就是把论点与能证明它的原话配对，并讲清两者之间的联系。",
+    ),
     prerequisites: ["theme"],
     encompasses: [{ topic: "theme", weight: 0.2 }],
     xp: 14,
@@ -645,14 +684,16 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         "the-quotation-that-proves",
         t("The Quotation That Proves", "能证明论点的引文"),
         t(
-          "A claim about a story, such as *Tomas is generous*, needs evidence from the text. The best quotation shows the quality in action: what a character does, says or thinks. A quotation that only mentions the character, or tells where they live, is about the right person but proves nothing.\n\nBefore choosing, ask: if a reader doubted the claim, would this line change their mind?",
-          "关于故事的论点，例如 *Tomas is generous*，需要文本中的证据。最好的引文展示这一特点的实际表现：人物做了什么、说了什么或想了什么。只提到这个人物、或说他住在哪里的引文，虽然说的是对的人，却证明不了什么。\n\n选择之前先问：如果读者怀疑这个论点，这句话能改变他们的看法吗？",
+          "A claim about a story—such as *Tomas is generous*—must be backed by a quotation showing that trait in action: what the character does, says, or thinks. A line that merely mentions Tomas's name or describes his house is about the right character yet proves nothing.\n\n> **Watch out.** Do not pick a quote just because it names the same character—ask whether a skeptical reader would be convinced by that single line.",
+          "关于故事的论点（如 *Tomas is generous*）必须用展示该特点实际表现的引文来支撑：人物做了什么、说了什么或想了什么。只提到 Tomas 的名字或住处的句子虽然涉及同一个人，却证明不了论点。\n\n> **注意。** 别因为引文里出现了同一个人名就选它——问问怀疑论点的读者看了这一句会不会被说服。",
         ),
         pick(
           ["Read the claim and choose the best evidence.", "阅读论点，选出最好的证据。"],
           [...citeBank, ...citeMore],
-          (right) => `${right} shows the quality in action, so it proves the claim.`,
-          (right) => `${right} 展示了这一特点的实际表现，所以能证明论点。`,
+          (right) =>
+            `${right} shows the quality directly in action, proving the claim.\n\n**Check.** Imagine a reader who doubts the claim: this quotation gives concrete words or behavior from the text that directly answer that doubt.`,
+          (right) =>
+            `${right} 直接展现了这一特点的实际表现，因此能证明论点。\n\n**检验。** 设想一位怀疑这个论点的读者：这条引文拿出了文本中的具体言行，正好直接回应他的疑问。`,
           citeNot,
         ),
       ),
@@ -666,6 +707,10 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
       "Make a claim about what a passage means or how it is written, quote it, and explain the quotation.",
       "对一段文字的含义或写法提出论点，引用原文，并解释引文。",
     ),
+    intro: t(
+      "If a story describes an attic where *only a single bulb swung in the draft*, summarizing the plot only says someone went upstairs. A literary analysis paragraph turns that detail into a claim about mood, quotes the exact words, and explains how they create unease.",
+      "如果故事写到阁楼里*only a single bulb swung in the draft*，复述情节只会说有人上了楼。文学评析段落则会把这一细节提炼为关于氛围的论点，引用原话，并解释它怎样制造不安。",
+    ),
     prerequisites: ["citing-textual-evidence", "writing-an-evidence-paragraph"],
     encompasses: [
       { topic: "citing-textual-evidence", weight: 0.4 },
@@ -678,8 +723,8 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
         "claim-quote-explain",
         t("Claim, Quote, Explain", "论点、引用、解释"),
         t(
-          "Writing about literature follows the same steps as any argument, but the evidence is the text itself. Open with a **claim** about the passage that a reader could discuss: what it shows about a character, what an object stands for, how the writer creates a mood. A summary of what happens is not a claim.\n\nThen **quote** the words that prove it, in quotation marks, and **explain** them: which word or detail matters, and why? A good explanation often names the writer's choice: *the simile makes...*, *the short sentences show...*",
-          "评析文学作品的步骤与任何论证相同，只是证据就是文本本身。开头提出一个读者可以讨论的关于这段文字的**论点**：它体现了人物的什么、某个东西象征什么、作者怎样营造氛围。复述情节不是论点。\n\n然后用引号**引用**能证明论点的原话，并**解释**它们：哪个词或细节重要？为什么？好的解释常会点明作者的写法：*the simile makes...*、*the short sentences show...*",
+          "Writing about literature follows the same steps as any argument, but the evidence is the text itself. Open with a **claim** about the passage that a reader could discuss: what it shows about a character, what an object stands for, how the writer creates a mood. A summary of what happens is not a claim.\n\nThen **quote** the words that prove it, in quotation marks, and **explain** them: which word or detail matters, and why? A good explanation often names the writer's choice: *the simile makes...*, *the short sentences show...*\n\n> **Watch out.** Do not stop right after dropping in a quotation—always follow the quote with your own explanation showing *how* those exact words prove your claim.",
+          "评析文学作品的步骤与任何论证相同，只是证据就是文本本身。开头提出一个读者可以讨论的关于这段文字的**论点**：它体现了人物的什么、某个东西象征什么、作者怎样营造氛围。复述情节不是论点。\n\n然后用引号**引用**能证明论点的原话，并**解释**它们：哪个词或细节重要？为什么？好的解释常会点明作者的写法：*the simile makes...*、*the short sentences show...*\n\n> **注意。** 不要放完引文就戛然而止——引文后面一定要跟上自己的解释，说明这些原话*怎样*证明了你的论点。",
         ),
         writingGenerator(
           t(
@@ -689,7 +734,11 @@ export const literaryAnalysisTopics: readonly TopicDef[] = [
           analysisBank,
           ["w5-literary-claim", "w5-uses-source", "w5-explains-evidence"],
           { minWords: 50, maxChars: 2000 },
-          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+          (model) =>
+            t(
+              `One good paragraph:\n\n> ${model}\n\n**Check.** Verify all three parts in order: an arguable claim (not just a plot summary), exact words quoted from the passage in quotation marks, and commentary explaining how those words prove the claim.`,
+              `一个好的段落：\n\n> ${model}\n\n**检验。** 按顺序核对三个部分：可讨论的论点（而非情节复述）、带引号的原文引述，以及说明这些词句如何证明论点的分析。`,
+            ),
         ),
       ),
     ],

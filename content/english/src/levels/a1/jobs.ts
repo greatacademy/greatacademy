@@ -364,6 +364,10 @@ const wasAndWere: TopicDef = {
     "I was at home. They were busy. The verb be in the past, and questions with it.",
     "I was at home. They were busy. be 动词的过去式，以及用它提问。",
   ),
+  intro: t(
+    "Today *she is* at the office; yesterday *she was* at home. Today *they are* free; yesterday *they were* busy. *Was* and *were* are the past forms of *be*.",
+    "今天是 *she is* at the office，昨天变成 *she was* at home；今天是 *they are* free，昨天变成 *they were* busy。*was* 和 *were* 就是 *be* 的过去式。",
+  ),
   prerequisites: ["the-verb-be", "a1-words-jobs"],
   encompasses: [
     { topic: "the-verb-be", weight: 0.3 },
@@ -376,15 +380,19 @@ const wasAndWere: TopicDef = {
       "choose",
       t("Was or were", "was 还是 were"),
       t(
-        "For the past, *am* and *is* become *was*, and *are* becomes *were*:\n\n- *I was*, *he was*, *she was*, *it was*, *my dad was*\n- *you were*, *we were*, *they were*, *the nurses were*\n\nWords like *yesterday*, *last week* and *an hour ago* tell you it's the past.",
-        "谈过去时，*am* 和 *is* 变成 *was*，*are* 变成 *were*：\n\n- *I was*、*he was*、*she was*、*it was*、*my dad was*\n- *you were*、*we were*、*they were*、*the nurses were*\n\n中文说“昨天在医院”，动词不变；英语要看 *yesterday*、*last week*、*an hour ago* 这样的词，把 be 换成过去式。",
+        "For the past, *am* and *is* become *was*, and *are* becomes *were*:\n\n- *I was*, *he was*, *she was*, *it was*, *my dad was*\n- *you were*, *we were*, *they were*, *the nurses were*\n\nWords like *yesterday*, *last week* and *an hour ago* tell you it's the past.\n\n> **Watch out.** *You* always takes *were*—even when you are talking to one person (*You were late*, never *You was late*).",
+        "谈过去时，*am* 和 *is* 变成 *was*，*are* 变成 *were*：\n\n- *I was*、*he was*、*she was*、*it was*、*my dad was*\n- *you were*、*we were*、*they were*、*the nurses were*\n\n看到 *yesterday*、*last week*、*an hour ago* 这样的词，就知道要用过去式。\n\n> **注意。** 中文说“昨天在医院”动词不变，英语不能留着 *is/are*；另外 *you* 即使指一个人也始终配 *were*（*You were late*，不能说 *You was late*）。",
       ),
       choiceGenerator(
         t("Fill in the blank.", "填空。"),
         pastChoiceBank,
         (right, shown) => {
-          const reason = wasReason(shown.split(" ___")[0] ?? "", right);
-          return t(`${reason.en}: ${shown.replace("___", `*${right}*`)}`, `${reason["zh-CN"]}：${shown.replace("___", `*${right}*`)}`);
+          const who = shown.split(" ___")[0] ?? "";
+          const reason = wasReason(who, right);
+          return t(
+            `${reason.en}: ${shown.replace("___", `*${right}*`)}\n\n**Check.** Match two clues: the past time phrase at the end rules out *am/is/are*, and the subject *${who}* pairs with *${right}*.`,
+            `${reason["zh-CN"]}：${shown.replace("___", `*${right}*`)}\n\n**检验。** 核对两条线索：句末的过去时间词排除了 *am/is/are*，主语 *${who}* 搭配的是 *${right}*。`,
+          );
         },
         (wrong, _right, shown, position) =>
           position === 0
@@ -402,27 +410,30 @@ const wasAndWere: TopicDef = {
       "fix",
       t("Fixing was and were", "改正 was 和 were"),
       t(
-        "Each sentence has the wrong form of *be*: *were* for *was*, *was* for *were*, or a present form where the time is past. Write it again.",
-        "每个句子里 *be* 的形式都错了：该用 *was* 的用了 *were*，该用 *were* 的用了 *was*，或者时间是过去却用了现在时。重写句子。",
+        "Each sentence has the wrong form of *be*: *were* for *was*, *was* for *were*, or a present form (*am, is, are*) where the time is past. For example: *The farmers was busy last week.* → *The farmers were busy last week.*\n\n> **Watch out.** Check both tense and subject—a plural noun like *Tom and Ben* needs *were*, even though *Ben* is right next to the verb.",
+        "每个句子里 *be* 的形式都错了：该用 *was* 的用了 *were*，该用 *were* 的用了 *was*，或者时间是过去却用了 *am/is/are*。例如：*The farmers was busy last week.* → *The farmers were busy last week.*\n\n> **注意。** 时态和主语单复数都要查——像 *Tom and Ben* 这样的复数主语要用 *were*，不要只看紧挨着动词的 *Ben*。",
       ),
       typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), pastFixBank, (right) => {
         const [who = "", be = ""] = right.split(/ (was|were) /u);
         const reason = wasReason(who, be);
-        return t(`The time is past, and ${reason.en}: ${right}`, `时间是过去，${reason["zh-CN"]}：${right}`);
+        return t(
+          `The time is past, and ${reason.en}: ${right}\n\n**Check.** Verify that the verb is now past tense (*${be}*), agrees with *${who}*, and leaves the rest of the sentence intact.`,
+          `时间是过去，${reason["zh-CN"]}：${right}\n\n**检验。** 确认动词已改成过去式 *${be}*、与主语 *${who}* 一致，且句子其余部分保持不变。`,
+        );
       }),
     ),
     point(
       "ask",
       t("Questions with was and were", "用 was 和 were 提问"),
       t(
-        "To ask a question, put *was* or *were* before the subject, as with *is* and *are*: *He was at home.* → *Was he at home?* *They were busy.* → *Were they busy?*",
-        "提问时，把 *was* 或 *were* 放到主语前面，和 *is*、*are* 一样：*He was at home.* → *Was he at home?* *They were busy.* → *Were they busy?*",
+        "To ask a question, put *was* or *were* before the subject, as with *is* and *are*: *He was at home.* → *Was he at home?* *They were busy.* → *Were they busy?*\n\n> **Watch out.** Do not add *did* in front of *was* or *were*—simply move *was* or *were* to the front and end with a question mark.",
+        "提问时，把 *was* 或 *were* 放到主语前面，和 *is*、*are* 一样：*He was at home.* → *Was he at home?* *They were busy.* → *Were they busy?*\n\n> **注意。** 不要在 *was* 或 *were* 前面加 *did*——直接把 *was* 或 *were* 移到句首，句末加上问号即可。",
       ),
       typedGenerator("sentence", t("Make a question.", "把句子改成疑问句。"), pastAskBank, (right) => {
         const be = right.split(" ")[0] ?? "";
         return t(
-          `As with *is* and *are*, a question puts *${be}* before the subject and ends with a question mark: ${right}`,
-          `和 *is*、*are* 一样，疑问句把 *${be}* 放到主语前面，句末用问号：${right}`,
+          `As with *is* and *are*, a question puts *${be}* before the subject and ends with a question mark: ${right}\n\n**Check.** Read the first two parts: *${be}* comes first, the subject follows immediately, and the sentence ends with a question mark.`,
+          `和 *is*、*are* 一样，疑问句把 *${be}* 放到主语前面，句末用问号：${right}\n\n**检验。** 检查句首和句尾：*${be}* 在最前面，紧接着主语，句末是问号。`,
         );
       }),
     ),
@@ -510,6 +521,10 @@ const writingAboutAPerson: TopicDef = {
     "Write four to six sentences about a person: who they are, what they look like and what they do.",
     "写四到六句话介绍一个人：这个人是谁、长什么样、做什么。",
   ),
+  intro: t(
+    "A short portrait introduces a person in a few clear lines: *My coach is Mr. Chen. He is tall and has short black hair. He teaches us basketball every Saturday and always smiles.* Name, appearance and actions give the reader a full picture.",
+    "简短的人物介绍几句话就能立住形象：*My coach is Mr. Chen. He is tall and has short black hair. He teaches us basketball every Saturday and always smiles.* 身份、外貌、日常动作合在一起，人物就立体了。",
+  ),
   prerequisites: ["third-person-s", "have-and-has", "a1-words-describing-people", "writing-a-short-note"],
   encompasses: [
     { topic: "third-person-s", weight: 0.3 },
@@ -524,8 +539,8 @@ const writingAboutAPerson: TopicDef = {
       "person",
       t("Who, looks and does", "是谁、长相、做什么"),
       t(
-        "Say three things about the person:\n\n- who they are: *This is my grandpa. He is seventy.*\n- what they look like: *He is tall. He has short white hair.*\n- what they do: *He lives on a farm and grows apples.*\n\nThe person is *he* or *she*, so the verbs end in *-s*: *he lives*, *she works*, *he has*.",
-        "写一个人要说三件事：\n\n- 是谁：*This is my grandpa. He is seventy.*\n- 长什么样：*He is tall. He has short white hair.*\n- 做什么：*He lives on a farm and grows apples.*\n\n写的是 *he* 或 *she*，所以动词要加 *-s*：*he lives*、*she works*、*he has*。",
+        "Say three things about the person:\n\n- who they are: *This is my grandpa. He is seventy.*\n- what they look like: *He is tall. He has short white hair.*\n- what they do: *He lives on a farm and grows apples.*\n\nThe person is *he* or *she*, so the verbs end in *-s*: *he lives*, *she works*, *he has*.\n\n> **Watch out.** Do not drop the *-s* on third-person verbs (*she work* → *she works*) or mix up *is* and *has* (*He has tall* is wrong; say *He is tall* and *He has brown eyes*).",
+        "写一个人要说三件事：\n\n- 是谁：*This is my grandpa. He is seventy.*\n- 长什么样：*He is tall. He has short white hair.*\n- 做什么：*He lives on a farm and grows apples.*\n\n写的是 *he* 或 *she*，所以动词要加 *-s*：*he lives*、*she works*、*he has*。\n\n> **注意。** 第三人称单数动词别漏掉 *-s*（*she work* → *she works*），也别混淆 *is* 和 *has*（*He has tall* 是错的，要说 *He is tall* 和 *He has brown eyes*）。",
       ),
       writingGenerator(
         t(
@@ -535,7 +550,11 @@ const writingAboutAPerson: TopicDef = {
         personBank,
         personCriteria,
         { minWords: 25, maxChars: 600 },
-        (model) => t(`One good description:\n\n> ${model}`, `一段好的描述：\n\n> ${model}`),
+        (model) =>
+          t(
+            `One good description:\n\n> ${model}\n\n**Check.** Verify that your paragraph has four to six sentences covering who the person is, what they look like, and what they do, with *-s* or *has* on every *he/she* verb.`,
+            `一段好的描述：\n\n> ${model}\n\n**检验。** 核对你的段落：有没有四到六句话，是否写清了人物是谁、长什么样、做什么，以及每个 *he/she* 后的动词是否都用了 *-s* 或 *has*。`,
+          ),
       ),
     ),
   ],

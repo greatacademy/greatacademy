@@ -896,38 +896,48 @@ const sameFamily = (a: string, b: string) =>
 /** whyNotTag explains a tag with the wrong pronoun, the same polarity as the sentence, or the wrong helping verb. */
 const whyNotTag = (wrong: string, right: string, shown: string): Text => {
   const statement = shown.replace(/, ___\?$/u, "");
-  const rule = tagRule(statement, right);
   const [, wrongPronoun = ""] = wrong.split(" ");
   const [, rightPronoun = ""] = right.split(" ");
   const negativeTag = (tag: string) => /n't/u.test(tag);
-  let first: Text;
   if (wrongPronoun !== rightPronoun)
-    first = t(
-      `A tag never uses *${wrongPronoun}*; it uses a personal pronoun such as *${rightPronoun}*.`,
-      `反意疑问不用 *${wrongPronoun}*，要用 *${rightPronoun}* 这样的人称代词。`,
+    return t(
+      `A question tag never repeats *${wrongPronoun}*; it replaces the subject with a personal pronoun (*he, she, it, they*, etc.).`,
+      `反意疑问里不用 *${wrongPronoun}*，要把主语换成人称代词（*he、she、it、they* 等）。`,
     );
-  else if (negativeTag(wrong) === /n't|never/u.test(statement))
-    first = t(
-      `*${wrong}* is ${negativeTag(wrong) ? "negative" : "positive"}, like the sentence, but the tag must be the opposite.`,
-      `*${wrong}* 和句子一样是${negativeTag(wrong) ? "否定" : "肯定"}的，但反意疑问要相反。`,
+  if (negativeTag(wrong) === /n't|never/u.test(statement))
+    return t(
+      `*${wrong}* has the same polarity (${negativeTag(wrong) ? "negative" : "positive"}) as the statement, but a tag must flip polarity.`,
+      `*${wrong}* 和主句一样是${negativeTag(wrong) ? "否定" : "肯定"}的，但反意疑问必须与主句相反。`,
     );
-  else if (sameFamily(helperOf(wrong), helperOf(right)))
-    first = t(`*${wrong.split(" ")[0]}* does not agree with *${rightPronoun}*.`, `*${wrong.split(" ")[0]}* 和 *${rightPronoun}* 不一致。`);
-  else first = t(`*${helperOf(wrong)}* is not the helping verb of this sentence.`, `*${helperOf(wrong)}* 不是这个句子的助动词。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  if (sameFamily(helperOf(wrong), helperOf(right)))
+    return t(
+      `*${wrong.split(" ")[0]}* does not agree with the subject pronoun *${rightPronoun}*.`,
+      `*${wrong.split(" ")[0]}* 与主语代词 *${rightPronoun}* 单复数不一致。`,
+    );
+  return t(
+    `*${helperOf(wrong)}* does not match the helping verb or tense of the statement.`,
+    `*${helperOf(wrong)}* 与主句的助动词或时态不匹配。`,
+  );
 };
 
 /** tagWhy explains the tag in the gap of shown. */
 const tagWhy = (right: string, shown: string): Text => {
-  const rule = tagRule(shown.replace(/, ___\?$/u, ""), right);
-  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  const statement = shown.replace(/, ___\?$/u, "");
+  const rule = tagRule(statement, right);
+  return t(
+    `${rule.en}: ${fill(shown, right)}\n\n**Check.** Verify all three checks: polarity flips (+ ↔ −), helping verb matches the statement's verb/tense, and the subject becomes a pronoun.`,
+    `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 核对三项：正负相反（肯 ↔ 否）、助动词与主句动词和时态一致、主语换成了人称代词。`,
+  );
 };
 
 /** tagWriteWhy explains a written sentence with its tag. */
 const tagWriteWhy = (right: string, shown: string): Text => {
   const tag = right.slice(shown.length + 2).replace(/\?$/u, "");
   const rule = tagRule(shown, tag);
-  return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+  return t(
+    `${rule.en}: ${right}\n\n**Check.** Confirm the comma before *${tag}*, opposite polarity, matching helping verb + pronoun, and the closing question mark.`,
+    `${rule["zh-CN"]}：${right}\n\n**检验。** 确认 *${tag}* 前有逗号、正负相反、助动词与人称代词匹配，且句末有问号。`,
+  );
 };
 
 const questionTags: TopicDef = {
@@ -936,6 +946,10 @@ const questionTags: TopicDef = {
   summary: t(
     "You're coming, aren't you? She didn't call, did she? A positive sentence takes a negative tag, a negative sentence a positive one, with the helping verb of the sentence.",
     "You're coming, aren't you? She didn't call, did she? 肯定句配否定的反意疑问，否定句配肯定的，助动词跟句子一致。",
+  ),
+  intro: t(
+    "In conversation, adding a short tag checks if the listener agrees: *He can drive, can't he?* *We aren't late, are we?* Unlike Chinese “对吧？”, an English tag changes its verb, polarity, and pronoun to match the statement.",
+    "对话里在句末加个简短反意疑问可以向对方确认：*He can drive, can't he?* *We aren't late, are we?* 和中文通用的“对吧？”不同，英语反意疑问的助动词、正负和代词都要随主句变化。",
   ),
   prerequisites: ["present-simple-questions", "was-and-were"],
   encompasses: [
@@ -949,8 +963,8 @@ const questionTags: TopicDef = {
       "positive",
       t("Tags after positive sentences", "肯定句后的反意疑问"),
       t(
-        "A question tag is a short question at the end of a sentence. You use it to check something or to ask someone to agree. After a **positive** sentence, the tag is **negative**:\n\n- *You're coming, **aren't you**?* (*are* → *aren't*)\n- *She plays tennis, **doesn't she**?* (no helping verb, so use *do / does / did*)\n- *They went home, **didn't they**?*\n- *You can swim, **can't you**?*\n\nThe tag uses the same helping verb as the sentence (*is, are, was, have, can, will, should*...), or *do / does / did* when there is none, and a pronoun for the subject: *Anna* → *she*, *this* → *it*, *those* → *they*.",
-        "反意疑问是放在句末的简短问句，用来确认或请对方同意。**肯定**句后面用**否定**的反意疑问：\n\n- *You're coming, **aren't you**?*（*are* → *aren't*）\n- *She plays tennis, **doesn't she**?*（句中没有助动词，用 *do / does / did*）\n- *They went home, **didn't they**?*\n- *You can swim, **can't you**?*\n\n反意疑问用句子里的助动词（*is, are, was, have, can, will, should* 等），没有助动词就用 *do / does / did*；主语换成代词：*Anna* → *she*，*this* → *it*，*those* → *they*。中文一句“对吧？”“是不是？”可以用在所有句子后面，英语却要随句子的动词和主语变化。",
+        "A question tag is a short question at the end of a sentence. After a **positive** sentence, the tag is **negative**:\n\n- *You're coming, **aren't you**?* (*are* → *aren't*)\n- *She plays tennis, **doesn't she**?* (no helping verb, so use *do / does / did*)\n- *They went home, **didn't they**?*\n- *You can swim, **can't you**?*\n\nThe tag uses the same helping verb as the sentence, or *do / does / did* when there is none, and a pronoun for the subject: *Anna* → *she*, *this* → *it*, *those* → *they*.\n\n> **Watch out.** Never repeat a name or *this/that* in the tag (*Anna is here, isn't Anna?* is wrong—use *she*), and never put a positive tag after a positive statement.",
+        "反意疑问是放在句末的简短问句，用来确认或请对方同意。**肯定**句后面用**否定**的反意疑问：\n\n- *You're coming, **aren't you**?*（*are* → *aren't*）\n- *She plays tennis, **doesn't she**?*（句中没有助动词，用 *do / does / did*）\n- *They went home, **didn't they**?*\n- *You can swim, **can't you**?*\n\n反意疑问用句子里的助动词，没有助动词就用 *do / does / did*；主语换成代词：*Anna* → *she*，*this* → *it*，*those* → *they*。\n\n> **注意。** 反意疑问里不能重复人名或 *this/that*（*isn't Anna?* 是错的，要用 *she*），肯定句后面也不要接肯定的反意疑问。",
       ),
       choiceGenerator(t("Choose the question tag.", "选出正确的反意疑问。"), tagChoice(positives), tagWhy, whyNotTag),
     ),
@@ -958,8 +972,8 @@ const questionTags: TopicDef = {
       "negative",
       t("Tags after negative sentences", "否定句后的反意疑问"),
       t(
-        "After a **negative** sentence, the tag is **positive**:\n\n- *You aren't angry, **are you**?*\n- *She doesn't eat meat, **does she**?*\n- *They didn't call, **did they**?*\n\nWords such as *never* make a sentence negative too, so the tag is positive: *You never listen to me, **do you**?*",
-        "**否定**句后面用**肯定**的反意疑问：\n\n- *You aren't angry, **are you**?*\n- *She doesn't eat meat, **does she**?*\n- *They didn't call, **did they**?*\n\n*never* 这样的词也让句子变成否定，所以反意疑问用肯定：*You never listen to me, **do you**?*",
+        "After a **negative** sentence, the tag is **positive**:\n\n- *You aren't angry, **are you**?*\n- *She doesn't eat meat, **does she**?*\n- *They didn't call, **did they**?*\n\nWords such as *never* make a sentence negative too, so the tag is positive: *You never listen to me, **do you**?*\n\n> **Watch out.** Spot hidden negatives like *never*—*She never complains, doesn't she?* is wrong because *never* already makes the statement negative.",
+        "**否定**句后面用**肯定**的反意疑问：\n\n- *You aren't angry, **are you**?*\n- *She doesn't eat meat, **does she**?*\n- *They didn't call, **did they**?*\n\n*never* 这样的词也让句子变成否定，所以反意疑问用肯定：*You never listen to me, **do you**?*\n\n> **注意。** 留心 *never* 这类隐含否定词——*She never complains, doesn't she?* 是错的，因为 *never* 已经让主句是否定，反意疑问要用肯定。",
       ),
       choiceGenerator(t("Choose the question tag.", "选出正确的反意疑问。"), tagChoice(negatives), tagWhy, whyNotTag),
     ),
@@ -967,8 +981,8 @@ const questionTags: TopicDef = {
       "write",
       t("Adding question tags", "加上反意疑问"),
       t(
-        "Write the sentence with a question tag at the end. Put a comma before the tag and a question mark after it: *She plays tennis* → *She plays tennis, doesn't she?*",
-        "在句末加上反意疑问，写出整句。反意疑问前加逗号，后面加问号：*She plays tennis* → *She plays tennis, doesn't she?*",
+        "Write the sentence with a question tag at the end. Put a comma before the tag and a question mark after it: *She plays tennis* → *She plays tennis, doesn't she?*\n\n> **Watch out.** Check the comma, the contracted negative (*isn't, doesn't, didn't, can't, won't*), the pronoun, and the closing question mark.",
+        "在句末加上反意疑问，写出整句。反意疑问前加逗号，后面加问号：*She plays tennis* → *She plays tennis, doesn't she?*\n\n> **注意。** 核对逗号、否定缩写（*isn't、doesn't、didn't、can't、won't*）、人称代词和句末问号。",
       ),
       typedGenerator("sentence", t("Add a question tag and write the whole sentence.", "加上反意疑问，写出整句。"), tagTyped, tagWriteWhy),
     ),
@@ -1149,35 +1163,38 @@ const whItemOf = (frame: string, right: string) => whItems.find(([, f, r]) => f 
 /** whWhy explains the statement order after a question word. */
 const whWhy = (right: string, shown: string): Text => {
   const rule = indirectRule(whItemOf(shown, right)?.[0] ?? "", false);
-  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  return t(
+    `${rule.en}: ${fill(shown, right)}\n\n**Check.** Read the embedded clause (*${right}*): subject comes before verb, and any *do/does/did* is gone.`,
+    `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 读一遍嵌入部分（*${right}*）：主语在动词前面，且没有多余的 *do/does/did*。`,
+  );
 };
 
 /** whyNotWh explains the order of a question, or a word wrong in the statement order. */
 const whyNotWh = (wrong: string, right: string, shown: string, position: number): Text => {
   const direct = whItemOf(shown, right)?.[0] ?? "";
-  const rule = indirectRule(direct, false);
   const w = wrong.split(" ");
   const r = right.split(" ");
   const extra = w.filter((x) => !r.includes(x));
   const missing = r.filter((x) => !w.includes(x));
   const helper = doIn(direct);
-  let first: Text;
-  if (position === 0) first = t(`*${wrong}* keeps the order of a question.`, `*${wrong}* 还是疑问句语序。`);
-  else if (extra.length === 0 && missing.length === 0)
-    first = t(`*${wrong}* puts the verb in the wrong place.`, `*${wrong}* 动词的位置不对。`);
-  else if (missing.length === 0)
-    first = t(`*${extra.join(" ")}* is not needed: the subject is already there.`, `不需要 *${extra.join(" ")}*，句子已经有主语了。`);
-  else if (helper)
-    first = t(
-      `With *${helper}* gone, the verb carries the tense and the person itself: *${missing.join(" ")}*, not *${extra.join(" ")}*.`,
-      `去掉 *${helper}* 后，动词本身要体现时态和人称：用 *${missing.join(" ")}*，不用 *${extra.join(" ")}*。`,
+  if (position === 0)
+    return t(
+      `*${wrong}* keeps direct-question order, but inside a longer sentence it must switch to statement order (subject before verb).`,
+      `*${wrong}* 保留了直接疑问句语序，放进长句里要改成陈述句语序（主语在动词前）。`,
     );
-  else
-    first = t(
-      `*${extra.join(" ")}* is the wrong form here; the verb is *${missing.join(" ")}*.`,
-      `这里 *${extra.join(" ")}* 的形式不对，要用 *${missing.join(" ")}*。`,
+  if (extra.length === 0 && missing.length === 0)
+    return t(`*${wrong}* puts the verb in the wrong position for statement order.`, `*${wrong}* 的动词位置不符合陈述句语序。`);
+  if (missing.length === 0)
+    return t(`*${extra.join(" ")}* is extra—the clause already has its subject.`, `不需要多余的 *${extra.join(" ")}*，分句已经有主语了。`);
+  if (helper)
+    return t(
+      `Once *${helper}* is dropped, the verb itself must carry the right tense or *-s* ending rather than staying *${extra.join(" ")}*.`,
+      `去掉 *${helper}* 后，实义动词本身要体现正确的时态或 *-s*，不能留在 *${extra.join(" ")}*。`,
     );
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  return t(
+    `*${extra.join(" ")}* does not agree with the subject or tense of the embedded clause.`,
+    `*${extra.join(" ")}* 与嵌入分句的主语或时态不一致。`,
+  );
 };
 
 /** yesNoOf finds the yes-no question of a frame and its statement after if. */
@@ -1186,28 +1203,34 @@ const yesNoOf = (frame: string, right: string) => yesNoItems.find(([, f, s]) => 
 /** ifWhy explains if and the statement order after it. */
 const ifWhy = (right: string, shown: string): Text => {
   const rule = indirectRule(yesNoOf(shown, right), true);
-  return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  return t(
+    `${rule.en}: ${fill(shown, right)}\n\n**Check.** Verify both parts: *if* introduces the yes-no question, and the words after *if* follow statement order (subject before verb).`,
+    `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 核对两处：用 *if* 引导一般疑问句，且 *if* 后面采用陈述句语序（主语在动词前）。`,
+  );
 };
 
 /** whyNotIf explains a yes-no question without if, or with the order of a question after if. */
-const whyNotIf = (_wrong: string, right: string, shown: string, position: number): Text => {
-  const rule = indirectRule(yesNoOf(shown, right), true);
-  const first =
-    position === 0
-      ? t("*if* is right, but the words after it keep the order of a question.", "*if* 没错，但后面的词还是疑问句语序。")
-      : t(
-          "This keeps the question as it was, with no *if* and the order of a question.",
-          "这里照搬了原来的问句，没有 *if*，还是疑问句语序。",
-        );
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
-};
+const whyNotIf = (_wrong: string, _right: string, _shown: string, position: number): Text =>
+  position === 0
+    ? t(
+        "*if* is right, but the words after it still use inverted question order instead of statement order.",
+        "*if* 用对了，但后面的词依然是倒装的疑问句语序，没有改成陈述句语序。",
+      )
+    : t(
+        "This copies the direct question as it was—it is missing *if* and still uses question order.",
+        "这里直接照搬了原问句，既少了引导词 *if*，又保留了疑问句语序。",
+      );
 
 /** indirectWriteWhy explains a written indirect question from its direct question. */
 const indirectWriteWhy = (right: string): Text => {
   const wh = whItems.find(([, frame, r]) => frame.replace("___", r) === right);
   const yesNo = yesNoItems.find(([, frame, s]) => frame.replace("___", `if ${s}`) === right);
   const rule = indirectRule(wh?.[0] ?? yesNo?.[0] ?? "", !wh);
-  return t(`${rule.en}: ${right}`, `${rule["zh-CN"]}：${right}`);
+  const mark = right.endsWith("?") ? "question mark" : "period";
+  return t(
+    `${rule.en}: ${right}\n\n**Check.** Confirm statement order inside the embedded clause, no leftover *do/does/did*, and a closing ${mark} matching the outer opener.`,
+    `${rule["zh-CN"]}：${right}\n\n**检验。** 确认嵌入分句是陈述句语序、没有残留 *do/does/did*，且句末标点与外层开头一致。`,
+  );
 };
 
 const indirectQuestions: TopicDef = {
@@ -1216,6 +1239,10 @@ const indirectQuestions: TopicDef = {
   summary: t(
     "Do you know where the station is? Inside a longer question or sentence, a question takes the order of a statement, without do, does or did; a yes-no question takes if or whether.",
     "Do you know where the station is? 问句放进更长的问句或句子里，要用陈述句语序，不用 do、does、did；一般疑问句用 if 或 whether 引导。",
+  ),
+  intro: t(
+    "Asking *Where is the exit?* directly can sound abrupt. Wrapping it inside *Could you tell me where the exit is?* sounds polite—and flips the inner question back into statement order (*the exit is*).",
+    "直接问 *Where is the exit?* 有时显得生硬，放进 *Could you tell me where the exit is?* 里就礼貌得多——同时里面的问句要恢复陈述句语序（*the exit is*）。",
   ),
   prerequisites: ["wh-questions", "reported-speech"],
   encompasses: [
@@ -1229,8 +1256,8 @@ const indirectQuestions: TopicDef = {
       "wh",
       t("Where the station is", "where the station is 的语序"),
       t(
-        "To ask politely, you can put a question inside a longer one: *Do you know...?*, *Could you tell me...?* You can also put one inside a sentence: *I wonder...*, *I don't know...*.\n\nThe question inside then takes the order of a **statement**: the subject comes before the verb, and *do, does* and *did* disappear:\n\n- *Where **is the station**?* → *Do you know where **the station is**?*\n- *What time **does the film start**?* → *Can you tell me what time **the film starts**?*\n- *What **did she say**?* → *I didn't hear what **she said**.*\n\nThe question mark goes at the end only if the whole sentence is a question.",
-        "礼貌地提问时，可以把一个问题放进更长的问句里：*Do you know...?*、*Could you tell me...?*；也可以放进陈述句里：*I wonder...*、*I don't know...*。\n\n里面的问题要用**陈述句语序**：主语在动词前面，*do、does、did* 去掉：\n\n- *Where **is the station**?* → *Do you know where **the station is**?*\n- *What time **does the film start**?* → *Can you tell me what time **the film starts**?*\n- *What **did she say**?* → *I didn't hear what **she said**.*\n\n中文的问句和陈述句语序一样（“车站在哪儿”），所以很容易说成 *Do you know where is the station?*。整句是问句才用问号。",
+        "To ask politely, you can put a question inside a longer one (*Do you know...?*, *Could you tell me...?*), or inside a statement (*I wonder...*, *I don't know...*).\n\nThe question inside then takes the order of a **statement**: the subject comes before the verb, and *do, does* and *did* disappear:\n\n- *Where **is the station**?* → *Do you know where **the station is**?*\n- *What time **does the film start**?* → *Can you tell me what time **the film starts**?*\n- *What **did she say**?* → *I didn't hear what **she said**.*\n\n> **Watch out.** Never keep inverted question order after the *wh-* word (*Do you know where is the station?* is wrong), and remember to put *-s* or the past tense back on the main verb when *does/did* drops.",
+        "礼貌地提问时，可以把一个问题放进更长的问句里（*Do you know...?*、*Could you tell me...?*），也可以放进陈述句里（*I wonder...*、*I don't know...*）。\n\n里面的问题要用**陈述句语序**：主语在动词前面，*do、does、did* 去掉：\n\n- *Where **is the station**?* → *Do you know where **the station is**?*\n- *What time **does the film start**?* → *Can you tell me what time **the film starts**?*\n- *What **did she say**?* → *I didn't hear what **she said**.*\n\n> **注意。** 不要在疑问词后面保留倒装语序（*Do you know where is the station?* 是错的），去掉 *does/did* 后记得把 *-s* 或过去式补回实义动词上。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), whChoice, whWhy, whyNotWh),
     ),
@@ -1238,8 +1265,8 @@ const indirectQuestions: TopicDef = {
       "if",
       t("If or whether for yes-no questions", "一般疑问句用 if 或 whether"),
       t(
-        "A question that is answered with *yes* or *no* has no question word, so you add ***if*** or ***whether*** and use the order of a statement:\n\n- *Is the museum open?* → *Do you know **if the museum is open**?*\n- *Did Tom call?* → *I wonder **if Tom called**.*",
-        "用 *yes* 或 *no* 回答的问题没有疑问词，所以要加 ***if*** 或 ***whether***，再用陈述句语序：\n\n- *Is the museum open?* → *Do you know **if the museum is open**?*\n- *Did Tom call?* → *I wonder **if Tom called**.*\n\n中文说“你知道博物馆开不开门吗”，英语里不能省掉 if。",
+        "A question that is answered with *yes* or *no* has no question word, so you add ***if*** or ***whether*** and use the order of a statement:\n\n- *Is the museum open?* → *Do you know **if the museum is open**?*\n- *Did Tom call?* → *I wonder **if Tom called**.*\n\n> **Watch out.** Do not drop *if/whether*, and do not keep *is/does/did* in front of the subject after *if* (*if is the museum open* is wrong).",
+        "用 *yes* 或 *no* 回答的问题没有疑问词，所以要加 ***if*** 或 ***whether***，再用陈述句语序：\n\n- *Is the museum open?* → *Do you know **if the museum is open**?*\n- *Did Tom call?* → *I wonder **if Tom called**.*\n\n> **注意。** 不能省掉 *if/whether*，也不能在 *if* 后面保留倒装语序（*if is the museum open* 是错的）。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), yesNoChoice, ifWhy, whyNotIf),
     ),
@@ -1247,8 +1274,8 @@ const indirectQuestions: TopicDef = {
       "write",
       t("Writing indirect questions", "写间接疑问句"),
       t(
-        "Put the question into the longer sentence that starts after the arrow. Use the order of a statement, drop *do, does* and *did*, and add *if* or *whether* for a yes-no question. Keep the question mark only when the whole sentence is a question: *Where is the station? → Do you know...* becomes *Do you know where the station is?*",
-        "把问题放进箭头后面开头的长句里。用陈述句语序，去掉 *do、does、did*，一般疑问句加 *if* 或 *whether*。只有整句是问句才保留问号：*Where is the station? → Do you know...* 写成 *Do you know where the station is?*",
+        "Put the question into the longer sentence that starts after the arrow. Use the order of a statement, drop *do, does* and *did*, and add *if* or *whether* for a yes-no question: *Where is the station? → Do you know...* becomes *Do you know where the station is?*\n\n> **Watch out.** Match the end punctuation to the outer frame—*Do you know...?* ends with `?`, while *I wonder...* and *I'm not sure...* end with a period.",
+        "把问题放进箭头后面开头的长句里。用陈述句语序，去掉 *do、does、did*，一般疑问句加 *if* 或 *whether*：*Where is the station? → Do you know...* 写成 *Do you know where the station is?*\n\n> **注意。** 句末标点看外层主句——*Do you know...?* 用问号，而 *I wonder...*、*I'm not sure...* 是陈述句，用句号。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1356,6 +1383,10 @@ const writingALetterOfAdvice = judgedTopic({
     "Reply to a letter from someone with a problem with a friend or a family member: show you understand, give two pieces of advice with reasons, and end kindly.",
     "回复一封讲述与朋友或家人之间问题的来信：表示理解，提出两条带理由的建议，并友好地结尾。",
   ),
+  intro: t(
+    "When someone writes to you with a personal dilemma, lecturing them rarely helps. A thoughtful reply starts with empathy (*I can understand why you feel hurt*), offers two practical suggestions with reasons, and closes with warm encouragement.",
+    "别人向你倾诉人际困扰时，上来就说教往往不起作用。贴心的建议信会先表达共情（*I can understand why you feel hurt*），再给出两条带理由的实用建议，最后用温暖的鼓励收尾。",
+  ),
   prerequisites: ["writing-an-informal-email", "first-conditional"],
   encompasses: [
     { topic: "writing-an-informal-email", weight: 0.3 },
@@ -1366,8 +1397,8 @@ const writingALetterOfAdvice = judgedTopic({
     id: "advice",
     title: t("Understanding, advice and a kind ending", "理解、建议和友好的结尾"),
     explanation: t(
-      "A letter of advice answers someone who has a problem. It has three parts:\n\n- **Show you understand** the problem and the writer's feelings: *I'm sorry to hear that... It's normal to feel...*\n- **Give two pieces of advice, each with a reason**: *I think you should... because... Why don't you...? If you..., she will...* Begin each one with *First* or *Secondly* so the reader can follow.\n- **End kindly**, with hope or encouragement: *I hope things get better soon. Good luck!*\n\nWrite to the person by name, in a friendly, informal style, and sign your name.",
-      "建议信是回复遇到问题的人。它有三部分：\n\n- **表示理解**问题和来信人的感受：*I'm sorry to hear that... It's normal to feel...*\n- **提出两条建议，每条都有理由**：*I think you should... because... Why don't you...? If you..., she will...* 用 *First*、*Secondly* 开头，让读者容易跟上。\n- **友好地结尾**，表达希望或鼓励：*I hope things get better soon. Good luck!*\n\n直接称呼对方的名字，用友好、非正式的语气，最后署名。中文回信常常直接讲道理，英语的建议信先表示理解，建议也要说得委婉，比如用 *Why don't you...?* 而不是 *You must...*。",
+      "A letter of advice answers someone who has a problem. It has three parts:\n\n- **Show you understand** the problem and the writer's feelings: *I'm sorry to hear that... It's normal to feel...*\n- **Give two pieces of advice, each with a reason**: *I think you should... because... Why don't you...? If you..., she will...* Begin each one with *First* or *Secondly* so the reader can follow.\n- **End kindly**, with hope or encouragement: *I hope things get better soon. Good luck!*\n\n> **Watch out.** Do not jump straight into orders like *You must...*—open with empathy, explain *why* each suggestion helps, and sign off warmly.",
+      "建议信是回复遇到问题的人。它有三部分：\n\n- **表示理解**问题和来信人的感受：*I'm sorry to hear that... It's normal to feel...*\n- **提出两条建议，每条都有理由**：*I think you should... because... Why don't you...? If you..., she will...* 用 *First*、*Secondly* 开头，让读者容易跟上。\n- **友好地结尾**，表达希望或鼓励：*I hope things get better soon. Good luck!*\n\n> **注意。** 不要一上来就用 *You must...* 发号施令——先共情，再说明每条建议为什么有效，最后温暖收尾并署名。",
     ),
   },
   question: t(

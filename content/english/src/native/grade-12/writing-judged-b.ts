@@ -3,7 +3,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after, covers } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 import { limits } from "./writing-judged-a.ts";
 
 /** translateBank gives a line with a word-for-word gloss and two translations for the student to compare. */
@@ -143,6 +143,10 @@ export const judgedTopics12b: readonly TopicDef[] = [
       "Write a short essay that compares two translations of the same line, quoting the words that differ, explaining what each difference does, and judging which serves the original better.",
       "写一篇短文，比较同一句话的两种译文，引用不同的词语，解释每种差异的作用，并判断哪种更能体现原文。",
     ),
+    intro: t(
+      "Given a word-for-word gloss like *Snow falls. Gate stays shut*, one translator might write *Snow falls. The gate stays shut.* while another writes *As the snow falls softly, the gate remains closed.* Comparing them well means stating the central difference up front, quoting the exact words that diverge, explaining each effect on tone or pacing, and judging which version serves the original—and which reader—best.",
+      "面对逐词释义 *Snow falls. Gate stays shut*，一位译者可能译为 *Snow falls. The gate stays shut.*，另一位可能译为 *As the snow falls softly, the gate remains closed.* 写好译本比较，要开篇点明核心差异，精准引用分歧词语，分析各自对语气与节奏的效果，并判断哪一版更忠于原文、更适合哪类读者。",
+    ),
     prerequisites: after("comparing-translations", "writing-a-comparison-of-two-texts"),
     encompasses: covers(0.2, "comparing-translations"),
     xp: 24,
@@ -153,8 +157,8 @@ export const judgedTopics12b: readonly TopicDef[] = [
         "the-main-difference",
         t("The Main Difference", "主要差异"),
         t(
-          "Open with a claim about **the main difference** between the translations and what it does: *Both translations carry the sadness of the original, but B keeps its broken, image-by-image form, while A smooths it into one flowing sentence.* Use the word-for-word gloss to check which translation adds, drops or changes something.",
-          "开头提出一个论点，说明两种译文**主要的差异**及其作用：*Both translations carry the sadness of the original, but B keeps its broken, image-by-image form, while A smooths it into one flowing sentence.* 用逐词释义来核查哪种译文增加、删去或改变了什么。",
+          "Open with a claim about **the main difference** between the translations and what it does: *Both translations carry the sadness of the original, but B keeps its broken, image-by-image form, while A smooths it into one flowing sentence.* Use the word-for-word gloss to check which translation adds, drops or changes something.\n\n> **Watch out.** Do not open with *Translation A and Translation B are very different*—name the *specific* difference (restraint vs. explanation, plain vs. formal voice, short pauses vs. flowing syntax) and its overall effect right in your thesis.",
+          "开头提出一个论点，说明两种译文**主要的差异**及其作用：*Both translations carry the sadness of the original, but B keeps its broken, image-by-image form, while A smooths it into one flowing sentence.* 用逐词释义来核查哪种译文增加、删去或改变了什么。\n\n> **注意。** 不要用“译文 A 和译文 B 很不一样”这样空泛的话开头——在中心论点里直接点明*具体*差异（如克制与直白、平实与书面、短句停顿与流畅长句）及其整体效果。",
         ),
         writingGenerator(
           t(
@@ -164,15 +168,18 @@ export const judgedTopics12b: readonly TopicDef[] = [
           translateBank,
           ["g12-translation-claim", "g12-translation-evidence", "g12-translation-judgment"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your opening claim against the word-for-word gloss: verify that it names a concrete stylistic or meaning difference between A and B and states how that difference shapes the reader's experience.",
+            "对照逐词释义检查你的开篇论点：确认它指出了译文 A 与 B 在风格或意义上的具体分歧，并说明这种分歧如何影响读者的阅读感受。",
+          ),
         ),
       ),
       point(
         "the-words-that-differ",
         t("The Words That Differ", "不同的词语"),
         t(
-          "Then **quote** the words that differ from both translations and explain the effect of each choice on the reader: word choice and connotation, sentence shape and rhythm, meaning added or lost. Give each translation credit for what it does well, and end with a **judgment** of which serves the original, and which reader, better.",
-          "然后从两种译文中**引用**不同的词语，并解释每个选择对读者的效果：用词和联想意义、句式和节奏、意义的增减。肯定每种译文做得好的地方，最后**判断**哪种更能体现原文、更适合哪类读者。",
+          "Then **quote** the words that differ from both translations and explain the effect of each choice on the reader: word choice and connotation, sentence shape and rhythm, meaning added or lost. Give each translation credit for what it does well, and end with a **judgment** of which serves the original, and which reader, better.\n\n> **Watch out.** Always check additions or omissions against the word-for-word gloss—never assume a smoother English phrasing is more faithful when it quietly inserts emotions or explanations absent from the original.",
+          "然后从两种译文中**引用**不同的词语，并解释每个选择对读者的效果：用词和联想意义、句式和节奏、意义的增减。肯定每种译文做得好的地方，最后**判断**哪种更能体现原文、更适合哪类读者。\n\n> **注意。** 务必对照逐词释义核对增删内容——不要以为读起来更顺畅的英语译文就更忠实，它可能悄悄加进了原文没有的情绪或解释。",
         ),
         writingGenerator(
           t(
@@ -182,7 +189,10 @@ export const judgedTopics12b: readonly TopicDef[] = [
           translateBank,
           ["g12-translation-evidence", "g12-translation-judgment", "g12-translation-claim"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that you quote exact words from both translations and the gloss, explain the effect of each divergence (not just that the words differ), acknowledge a strength in each version, and close with a reasoned judgment.",
+            "确认你准确引用了两版译文及逐词释义中的原词，解释了每处差异的效果（而不只说“用词不同”），肯定了两版各自的优点，并以有理有据的判断收尾。",
+          ),
         ),
       ),
     ],
@@ -194,6 +204,10 @@ export const judgedTopics12b: readonly TopicDef[] = [
       "Write a proposal that states a risk in absolute numbers, recommends specific measures with their costs, and answers an objection in calm, persuasive words.",
       "写一份提案，用绝对数字陈述风险，提出具体措施及其成本，并用冷静而有说服力的语言回应一个反对意见。",
     ),
+    intro: t(
+      "When asking a city council to fund a safer crosswalk, shouting *This street is a death trap!* rarely moves a budget committee—showing that *6 pedestrians were struck in three years versus 1 on comparable streets*, pricing a raised crossing at *14,000 dollars*, and answering concerns about commute delays does. A persuasive risk proposal pairs calm absolute numbers with concrete costs and a fair reply to the main objection.",
+      "向市议会申请经费改造斑马线时，高喊“这条街是死亡陷阱！”很难打动预算委员会；给出*三年内 6 名行人被撞、同类街道仅 1 起*的绝对数字、标明抬高式人行横道需 *14,000 美元*，并冷静回应通勤变慢的担忧，才真正有说服力。好的降险提案把冷静的绝对数据、具体成本和公正的反驳回应结合在一起。",
+    ),
     prerequisites: after("explaining-a-risk-clearly", "writing-an-editorial"),
     encompasses: covers(0.2, "explaining-a-risk-clearly"),
     xp: 24,
@@ -204,8 +218,8 @@ export const judgedTopics12b: readonly TopicDef[] = [
         "the-size-of-the-risk",
         t("The Size of the Risk", "风险有多大"),
         t(
-          "Open by stating **what you propose** and to whom. Then show **the size of the risk** with the absolute numbers from the facts, who is affected and how it compares: *Nine children were hit in five years, about two a year; on similar roads the figure is about one every five years.* Keep the words calm and let the numbers do the work.",
-          "开头说明**你提议什么**、向谁提议。然后用事实中的绝对数字说明**风险有多大**、谁受影响，以及与什么相比：*Nine children were hit in five years, about two a year; on similar roads the figure is about one every five years.* 措辞保持冷静，让数字说话。",
+          "Open by stating **what you propose** and to whom. Then show **the size of the risk** with the absolute numbers from the facts, who is affected and how it compares: *Nine children were hit in five years, about two a year; on similar roads the figure is about one every five years.* Keep the words calm and let the numbers do the work.\n\n> **Watch out.** Do not drop the baseline or inflate the danger with scare words like *catastrophic* or *ticking time bomb*—decision-makers trust proposals that state exact absolute numbers and fair comparisons calmly.",
+          "开头说明**你提议什么**、向谁提议。然后用事实中的绝对数字说明**风险有多大**、谁受影响，以及与什么相比：*Nine children were hit in five years, about two a year; on similar roads the figure is about one every five years.* 措辞保持冷静，让数字说话。\n\n> **注意。** 不要省去基线，也不要用 *catastrophic*、*ticking time bomb* 这类恐吓词夸大危险——决策者更信任用冷静语气给出准确绝对数字和公平比较的提案。",
         ),
         writingGenerator(
           t(
@@ -215,15 +229,18 @@ export const judgedTopics12b: readonly TopicDef[] = [
           proposalBank,
           ["g12-proposal-risk", "g12-proposal-plan", "g12-proposal-objection"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your opening two paragraphs against the fact sheet: confirm that you address the right decision-maker with a specific proposal, cite the exact absolute numbers and comparison without exaggeration, and keep an objective tone.",
+            "对照事实清单检查前两段：确认你面向正确的决策者提出了具体建议，准确引用绝对数字与比较数据而无夸张，并保持客观冷静的语气。",
+          ),
         ),
       ),
       point(
         "the-plan-and-the-objection",
         t("The Plan and the Objection", "方案与反对意见"),
         t(
-          "Then set out the **measures**, what each would do and what it costs, and explain why they are worth it. State **the objection** in the facts fairly, answer it with reasons and numbers, and end by asking the reader for a specific action by a specific time.",
-          "然后列出**措施**，说明每项措施的作用和成本，并解释为什么值得。公正地陈述事实中的**反对意见**，用理由和数字回应它，最后请读者在特定时间前采取特定行动。",
+          "Then set out the **measures**, what each would do and what it costs, and explain why they are worth it. State **the objection** in the facts fairly, answer it with reasons and numbers, and end by asking the reader for a specific action by a specific time.\n\n> **Watch out.** Never brush off the stated objection as selfish or foolish—acknowledge its real cost or concern, weigh it quantitatively against the risk reduced, and close with a concrete next step.",
+          "然后列出**措施**，说明每项措施的作用和成本，并解释为什么值得。公正地陈述事实中的**反对意见**，用理由和数字回应它，最后请读者在特定时间前采取特定行动。\n\n> **注意。** 不要把题干中的反对意见贬低为自私或愚蠢——要承认对方真实的成本或顾虑，用数据和理由与降低的风险作权衡，并在结尾提出具体可执行的下一步请求。",
         ),
         writingGenerator(
           t(
@@ -233,7 +250,10 @@ export const judgedTopics12b: readonly TopicDef[] = [
           proposalBank,
           ["g12-proposal-plan", "g12-proposal-objection", "g12-proposal-risk"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that every recommended measure includes its exact cost and mechanism, that the prompt's objection is stated fairly and answered with concrete reasons or figures, and that the final sentence requests a specific decision on a clear timeline.",
+            "核对每项建议措施是否都写明了准确成本和作用机制，确认题干中的反对意见得到了公正陈述和有理有据的回应，并检查结尾是否在明确时间节点上提出了具体行动请求。",
+          ),
         ),
       ),
     ],

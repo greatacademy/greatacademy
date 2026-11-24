@@ -513,9 +513,15 @@ const references: readonly SolvedChoice[] = interleave(
         shown: `${c.text}\n\n**What does "${word}" refer to in "${phrase}"?**`,
         right,
         wrong: [...wrong],
+        whyNot: wrong.map((w) =>
+          t(
+            `Substituting "${w}" for "${word}" in "${phrase}" does not fit the grammar or meaning of the sentence in this context.`,
+            `把“${w}”代入 "${phrase}" 中的 "${word}"，在语法或句意上都与当前语境不符。`,
+          ),
+        ),
         solution: t(
-          `"${word}" refers to **${right}**. The text says: "${evidence}${end(evidence)}"`,
-          `"${word}" 指的是 **${right}**。原文是："${evidence}${end(evidence)}"`,
+          `"${word}" refers to **${right}**. The text says: "${evidence}${end(evidence)}"\n\n**Check.** Replace "${word}" in "${phrase}" with **${right}** and confirm the sentence reads naturally and matches the text.`,
+          `"${word}" 指的是 **${right}**。原文是："${evidence}${end(evidence)}"\n\n**检验。** 把 **${right}** 代回 "${phrase}" 中的 "${word}"，确认句子通顺且与原文意思一致。`,
         ),
       }),
     ),
@@ -529,7 +535,17 @@ const meanings: readonly SolvedChoice[] = interleave(
         shown: `${c.text}\n\n**${question}**`,
         right,
         wrong: [...wrong],
-        solution: t(`**${right}** The text says: "${evidence}${end(evidence)}"`, `**${right}** 原文是："${evidence}${end(evidence)}"`),
+        whyNot: wrong.map((w) => {
+          const clean = w.replace(/\.$/u, "");
+          return t(
+            `The passage does not support this claim ("${clean}")—re-read the sentences around the question's target.`,
+            `原文并不支持“${clean}”这一说法——请重读题目对应处前后的句子。`,
+          );
+        }),
+        solution: t(
+          `**${right}** The text says: "${evidence}${end(evidence)}"\n\n**Check.** Verify that the quoted evidence says the same thing as the chosen answer, without adding anything the writer never claimed.`,
+          `**${right}** 原文是："${evidence}${end(evidence)}"\n\n**检验。** 核对所引原文与所选答案表达的是同一个意思，且没有掺入作者未说过的内容。`,
+        ),
       }),
     ),
   ),
@@ -543,6 +559,10 @@ export const closeReading: TopicDef = examTopic({
     "Cambridge First Reading Part 5 style: short texts with questions on what a word refers to and on what the writer means.",
     "剑桥 First 阅读第 5 部分风格：短文后的题目，问某个词指代什么，以及作者是什么意思。",
   ),
+  intro: t(
+    "In B2 First Reading Part 5, every distractor borrows real nouns from the passage—so a pronoun like *which* or a remark like *it was another matter* can only be solved by checking the exact surrounding lines, not by spotting familiar words.",
+    "在 B2 First 阅读第 5 部分中，每个干扰项都会借用原文出现过的词——因此遇到 *which* 这类指代词或 *it was another matter* 这样的委婉表达，必须紧扣上下文原句核对，不能凭眼熟的词汇盲选。",
+  ),
   strand: "reading",
   prerequisites: ["making-inferences"],
   encompasses: [{ topic: "making-inferences", weight: 0.2 }],
@@ -552,8 +572,8 @@ export const closeReading: TopicDef = examTopic({
       "fce-what-words-refer-to",
       t("What Words Refer To", "词语的指代"),
       t(
-        "Words such as *it*, *this*, *that*, *which*, *them*, *one* and *so* stand in for something said nearby, usually just before. To find it, read the sentence before the word as well as the sentence it is in, then try each option in the word's place: the right one makes the sentence say what the text means. *This* and *which* often stand for a whole idea, not a single noun.",
-        "*it*、*this*、*that*、*which*、*them*、*one*、*so* 这类词代替附近说过的内容，通常就在它前面。要找到它，除了这个词所在的句子，还要读前一句；再把每个选项代入这个词的位置，正确的那个能让句子表达原文的意思。*this* 和 *which* 常常指一整个意思，而不是一个名词。",
+        "Words such as *it*, *this*, *that*, *which*, *them*, *one* and *so* stand in for something said nearby, usually just before. To find it, read the sentence before the word as well as the sentence it is in, then try each option in the word's place: the right one makes the sentence say what the text means. *This* and *which* often stand for a whole idea, not a single noun.\n\n> **Watch out.** Do not automatically pick the nearest noun before the pronoun—check whether singular/plural agreement and the **whole preceding clause** make sense when substituted.",
+        "*it*、*this*、*that*、*which*、*them*、*one*、*so* 这类词代替附近说过的内容，通常就在它前面。要找到它，除了这个词所在的句子，还要读前一句；再把每个选项代入这个词的位置，正确的那个能让句子表达原文的意思。*this* 和 *which* 常常指一整个意思，而不是一个名词。\n\n> **注意。** 不要本能地选离代词最近的名词——代入时要同时核对单复数以及是否指代**前面整个分句的意思**。",
       ),
       solvedChoiceGenerator(t("Read the text and answer the question.", "阅读短文，回答问题。"), references),
     ),
@@ -561,8 +581,8 @@ export const closeReading: TopicDef = examTopic({
       "fce-what-the-writer-means",
       t("What the Writer Means", "作者的意思"),
       t(
-        "Part 5 questions often ask what a phrase means, how the writer felt, or what a remark suggests. The answer is in the text, but in other words. Find the part the question is about and read a sentence or two on each side. Wrong options usually mention things that are in the text, but say something about them that the text does not.",
-        "第 5 部分的题目常问某个说法是什么意思、作者有什么感受，或某句话暗示了什么。答案在原文里，只是换了说法。找到题目所问的部分，再把前后各读一两句。错误选项通常提到原文中确有的事物，但对它们的说法原文并没有讲。",
+        "Part 5 questions often ask what a phrase means, how the writer felt, or what a remark suggests. The answer is in the text, but in other words. Find the part the question is about and read a sentence or two on each side. Wrong options usually mention things that are in the text, but say something about them that the text does not.\n\n> **Watch out.** Beware of options that repeat exact words from the passage while twisting the writer's attitude or reversing cause and effect.",
+        "第 5 部分的题目常问某个说法是什么意思、作者有什么感受，或某句话暗示了什么。答案在原文里，只是换了说法。找到题目所问的部分，再把前后各读一两句。错误选项通常提到原文中确有的事物，但对它们的说法原文并没有讲。\n\n> **注意。** 警惕那些照搬原文原词、却悄悄扭曲作者态度或颠倒因果关系的选项。",
       ),
       solvedChoiceGenerator(t("Read the text and answer the question.", "阅读短文，回答问题。"), meanings),
     ),

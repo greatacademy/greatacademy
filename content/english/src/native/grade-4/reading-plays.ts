@@ -116,15 +116,19 @@ const directionBank: readonly Item[] = directions.map((d) => ({
   right: d.right,
   wrong: [...d.wrong],
   why: t(
-    `It tells the actor: ${d.right} Stage directions are in brackets; actors follow them and never read them aloud.`,
-    `它告诉演员：${d.right} 舞台指示写在括号里；演员照着做，但从不念出来。`,
+    `It tells the actor: ${d.right} Stage directions are in brackets; actors follow them and never read them aloud.\n\n**Check.** Picture an actor on stage following ${d.direction}—the movement, sound, or voice matches “${d.right}” without speaking the bracketed words.`,
+    `它告诉演员：${d.right} 舞台指示写在括号里；演员照着做，但从不念出来。\n\n**检验。** 想象演员在舞台上照着 ${d.direction} 表演——动作、声音或语气正好吻合，而且不念出括号里的字。`,
   ),
-  whyNot: d.wrong.map((w) =>
+  whyNot: [
     t(
-      `“${w}” is not what the direction says. Read the words in brackets as instructions for moving or speaking.`,
-      `“${w}”不是这个指示说的。把括号里的话当作动作或说话方式的说明来读。`,
+      `“${d.wrong[0]}” does the opposite or a different action from what ${d.direction} instructs.`,
+      `“${d.wrong[0]}”做的动作与 ${d.direction} 的指示相反或不同。`,
     ),
-  ),
+    t(
+      `“${d.wrong[1]}” misunderstands the stage direction—remember that words inside brackets are acted out, not read aloud.`,
+      `“${d.wrong[1]}”误解了舞台指示——记住括号里的话是要演出来，而不是念出来的。`,
+    ),
+  ],
 }));
 
 // Poem, play or story.
@@ -219,7 +223,10 @@ const featureBank: readonly Item[] = fields(formLines).map(([text, kind], i) => 
     shown: text,
     right: right[0],
     wrong: wrong.map((w) => w[0]),
-    why: t(`${right[0]} That is a feature of ${kind}.`, `${right[1]} 这是${formKinds[kind]?.zh}的特点。`),
+    why: t(
+      `${right[0]} That is a feature of ${kind}.\n\n**Check.** Look right at the sample text above—you can point directly to that feature, whereas the other two features belong to different genres.`,
+      `${right[1]} 这是${formKinds[kind]?.zh}的特点。\n\n**检验。** 直接对照上面的示例文本——能一眼看到这个特点，而另外两个特点属于别的文体。`,
+    ),
     whyNot: wrong.map((w, n) =>
       t(
         `“${w[0]}” is a feature of ${others[n]}, and this text does not have it.`,
@@ -318,12 +325,13 @@ const narrationDirectionBank: readonly Item[] = scriptRows(narrationDirectionLin
   right: r.right,
   wrong: [...r.wrong],
   why: t(
-    `${r.right} matches. When a story becomes a script, what the narrator says the characters do becomes a stage direction in brackets, in the present tense.`,
-    `${r.right} 与它相符。故事改编成剧本时，叙述者讲的角色动作变成括号里的舞台指示，用现在时。`,
+    `${r.right} matches. When a story becomes a script, what the narrator says the characters do becomes a stage direction in brackets, in the present tense.\n\n**Check.** Compare the action and mood in the story sentence with ${r.right}—the same character performs the same action in present-tense brackets.`,
+    `${r.right} 与它相符。故事改编成剧本时，叙述者讲的角色动作变成括号里的舞台指示，用现在时。\n\n**检验。** 把故事句子里的动作、神态和 ${r.right} 对照——同一角色在括号里用现在时完成同样的动作。`,
   ),
-  whyNot: r.wrong.map((w) =>
-    t(`${w} shows something different from what the narrator says happens.`, `${w} 表现的与叙述者所说的发生的事不同。`),
-  ),
+  whyNot: [
+    t(`${r.wrong[0]} reverses or changes the action described by the narrator.`, `${r.wrong[0]} 把叙述者描述的动作改反了或改掉了。`),
+    t(`${r.wrong[1]} shows a different event from what happens in the story sentence.`, `${r.wrong[1]} 表现的不是故事句子里发生的动作。`),
+  ],
 }));
 
 /** narrationDialogueBank asks for the line of dialogue that matches what a narrator reports. */
@@ -333,8 +341,8 @@ const narrationDialogueBank: readonly Item[] = scriptRows(narrationDialogueLines
   right: r.right,
   wrong: [...r.wrong],
   why: t(
-    `${r.right} matches. In a script, the character's name comes first, then a colon, then their own words, without quotation marks.`,
-    `${r.right} 与它相符。在剧本中，先写角色的名字，再写冒号，然后是他们自己说的话，不加引号。`,
+    `${r.right} matches. In a script, the character's name comes first, then a colon, then their own words, without quotation marks.\n\n**Check.** Verify all three script rules: the right speaker's name comes before the colon, the words match the story's meaning, and there are no quotation marks.`,
+    `${r.right} 与它相符。在剧本中，先写角色的名字，再写冒号，然后是他们自己说的话，不加引号。\n\n**检验。** 核对剧本台词三条规则：冒号前是正确的说话人、台词符合原意、没有引号。`,
   ),
   whyNot: [
     t("This gives the words to the wrong character. Check who speaks in the narration.", "这把台词给了错误的角色。看看叙述中是谁在说话。"),
@@ -411,6 +419,10 @@ export const playTopics4: readonly TopicDef[] = [
       "A play has a cast of characters, a setting, scenes, dialogue after each speaker's name and stage directions in brackets.",
       "剧本有角色表、场景、分场、写在说话人名字后面的台词，以及写在括号里的舞台指示。",
     ),
+    intro: t(
+      "Open a play script and you immediately see bold names followed by colons, brief notes in parentheses like *(Lights dim)*, and a list of characters at the top. Each part has a job so actors and directors know exactly what to say and do.",
+      "翻开剧本，最先映入眼帘的是加粗的角色名与冒号、括号里的 *(Lights dim)*，以及开头的角色表。每个部分各有分工，让演员和导演一眼就知道该说什么、怎么演。",
+    ),
     prerequisites: after("parts-of-stories-and-poems"),
     encompasses: [],
     xp: 14,
@@ -420,8 +432,8 @@ export const playTopics4: readonly TopicDef[] = [
         "naming-a-part-of-a-script",
         t("Naming a Part of a Script", "说出剧本的组成部分"),
         t(
-          "A **script** is a play written down. It begins with the **cast of characters**, a list of the people in the play. Each **scene** begins with its **setting**: where and when it takes place. Then comes the **dialogue**, each line after the speaker's name and a colon, and **stage directions** in brackets that tell the actors what to do.",
-          "**剧本**是写下来的戏剧。它以**角色表**开头，列出剧中的人物。每一**场**以**场景说明**开始：说明发生的地点和时间。接着是**台词**，每行写在说话人的名字和冒号后面，还有写在括号里、告诉演员做什么的**舞台指示**。",
+          "A **script** is a play written down. It begins with the **cast of characters**, a list of the people in the play. Each **scene** begins with its **setting**: where and when it takes place. Then comes the **dialogue**, each line after the speaker's name and a colon, and **stage directions** in brackets that tell the actors what to do.\n\n> **Watch out.** Do not confuse a *setting* (`SCENE 1: The palace garden...`) with a *stage direction* (`(The Queen stamps her foot.)`)—the setting describes the place at the start of a scene, while stage directions guide actions during the scene.",
+          "**剧本**是写下来的戏剧。它以**角色表**开头，列出剧中的人物。每一**场**以**场景说明**开始：说明发生的地点和时间。接着是**台词**，每行写在说话人的名字和冒号后面，还有写在括号里、告诉演员做什么的**舞台指示**。\n\n> **注意。** 别把*场景说明*（`SCENE 1: The palace garden...`）和*舞台指示*（`(The Queen stamps her foot.)`）混为一谈——场景说明在开场交代时间地点，舞台指示则在戏中指导动作。",
         ),
         nameKind({
           lines: scriptLines,
@@ -434,8 +446,8 @@ export const playTopics4: readonly TopicDef[] = [
         "what-a-stage-direction-tells",
         t("What a Stage Direction Tells", "舞台指示说明了什么"),
         t(
-          "A **stage direction** is written in brackets and is never spoken. It tells an actor how to move, *(She tiptoes across the stage.)*, or how to speak, *(whispering)*, or what happens on stage, *(Lights dim.)*. Read it as an instruction.",
-          "**舞台指示**写在括号里，从来不念出来。它告诉演员怎样动作，*(She tiptoes across the stage.)*；怎样说话，*(whispering)*；或者舞台上发生什么，*(Lights dim.)*。要把它当作指令来读。",
+          "A **stage direction** is written in brackets and is never spoken. It tells an actor how to move, *(She tiptoes across the stage.)*, or how to speak, *(whispering)*, or what happens on stage, *(Lights dim.)*. Read it as an instruction.\n\n> **Watch out.** Actors never read words inside brackets aloud—*(pause)* means stop briefly, not say the word “pause.”",
+          "**舞台指示**写在括号里，从来不念出来。它告诉演员怎样动作，*(She tiptoes across the stage.)*；怎样说话，*(whispering)*；或者舞台上发生什么，*(Lights dim.)*。要把它当作指令来读。\n\n> **注意。** 演员绝不会把括号里的词念出来——*(pause)* 是停顿一下，而不是念出“pause”这个词。",
         ),
         itemGenerator(directionBank),
       ),
@@ -448,6 +460,10 @@ export const playTopics4: readonly TopicDef[] = [
       "Poems have lines, stanzas, rhythm and rhyme; plays have dialogue and stage directions; stories have a narrator and paragraphs.",
       "诗有诗行、诗节、节奏和韵脚；剧本有台词和舞台指示；故事有叙述者和段落。",
     ),
+    intro: t(
+      "A queen banning rain can appear in rhyming lines, in paragraphs with quotation marks, or in a script with `QUEEN:` and `(stamping)`. Even before reading every word, the layout and clues on the page tell you whether you are reading a poem, a play, or a story.",
+      "女王禁止下雨的情节，可以写成押韵的诗行、带引号的故事段落，也可以写成带 `QUEEN:` 和 `(stamping)` 的剧本。不用逐字读完，版式和文本特征就能帮你分辨诗、剧本和故事。",
+    ),
     prerequisites: ["parts-of-a-play"],
     encompasses: [{ topic: "parts-of-a-play", weight: 0.3 }],
     xp: 14,
@@ -457,8 +473,8 @@ export const playTopics4: readonly TopicDef[] = [
         "naming-the-kind-of-a-text",
         t("Naming the Kind of a Text", "说出文字的种类"),
         t(
-          "The same events can be told as a **poem**, a **play** or a **story**, and each looks different on the page. A poem is set out in lines, often with rhythm and rhyme (here a slash marks where a line ends). A play puts each speaker's name before their words. A story has a narrator who tells what happens in sentences.",
-          "同样的事件可以写成**诗**、**剧本**或**故事**，每种在纸面上看起来都不一样。诗分行排列，常有节奏和韵脚（这里用斜线表示一行结束的地方）。剧本把每个说话人的名字放在台词前面。故事有叙述者，用句子讲述发生的事。",
+          "The same events can be told as a **poem**, a **play** or a **story**, and each looks different on the page. A poem is set out in lines, often with rhythm and rhyme (here a slash marks where a line ends). A play puts each speaker's name before their words. A story has a narrator who tells what happens in sentences.\n\n> **Watch out.** Both plays and stories can contain characters talking—look for speaker labels with colons and brackets (play) versus quotation marks and a narrator like *she cried* (story).",
+          "同样的事件可以写成**诗**、**剧本**或**故事**，每种在纸面上看起来都不一样。诗分行排列，常有节奏和韵脚（这里用斜线表示一行结束的地方）。剧本把每个说话人的名字放在台词前面。故事有叙述者，用句子讲述发生的事。\n\n> **注意。** 剧本和故事里都可以有对话——剧本用“角色名 + 冒号”和括号，故事则用引号和 *she cried* 这类叙述语。",
         ),
         nameKind({
           lines: formLines,
@@ -471,8 +487,8 @@ export const playTopics4: readonly TopicDef[] = [
         "the-feature-that-shows-the-kind",
         t("The Feature That Shows the Kind", "显示种类的特点"),
         t(
-          "To explain how you know the kind of a text, name a feature it has. A poem: lines that rhyme, a steady beat. A play: speakers' names before their words, stage directions in brackets, no quotation marks. A story: a narrator, spoken words in quotation marks, sentences rather than lines.",
-          "要说明你怎样知道一段文字的种类，就说出它具有的一个特点。诗：押韵的诗行、稳定的节拍。剧本：台词前有说话人的名字、括号里的舞台指示、没有引号。故事：有叙述者、说的话放在引号里、用句子而不是分行。",
+          "To explain how you know the kind of a text, name a feature it has. A poem: lines that rhyme, a steady beat. A play: speakers' names before their words, stage directions in brackets, no quotation marks. A story: a narrator, spoken words in quotation marks, sentences rather than lines.\n\n> **Watch out.** Check that the feature you choose is actually visible in the sample above—do not pick a feature that belongs to one of the other two genres.",
+          "要说明你怎样知道一段文字的种类，就说出它具有的一个特点。诗：押韵的诗行、稳定的节拍。剧本：台词前有说话人的名字、括号里的舞台指示、没有引号。故事：有叙述者、说的话放在引号里、用句子而不是分行。\n\n> **注意。** 确认你选的特点在上面的示例中确实看得到——不要选属于另外两种文体的特点。",
         ),
         itemGenerator(featureBank),
       ),
@@ -485,6 +501,10 @@ export const playTopics4: readonly TopicDef[] = [
       "When a story becomes a script, the narrator's words become dialogue and stage directions.",
       "故事改编成剧本时，叙述者的话变成了台词和舞台指示。",
     ),
+    intro: t(
+      "Turn *The dragon grinned, showing every shiny tooth* into a play, and there is no narrator left to say it—instead, the script writes *(The Dragon grins widely.)* and lets the actor show it on stage.",
+      "把故事里的“巨龙露出一口亮闪闪的牙齿笑起来”改写成剧本时，没有叙述者了——剧本改写成 *(The Dragon grins widely.)*，让演员在舞台上直接演出来。",
+    ),
     prerequisites: after("parts-of-a-play", "retelling-key-events"),
     encompasses: [{ topic: "parts-of-a-play", weight: 0.2 }],
     xp: 14,
@@ -494,8 +514,8 @@ export const playTopics4: readonly TopicDef[] = [
         "narration-into-stage-directions",
         t("Narration into Stage Directions", "把叙述变成舞台指示"),
         t(
-          "A story's narrator tells what the characters do: *Maya crept toward the box, holding her breath.* A script has no narrator, so the same action becomes a **stage direction** in brackets, usually in the present tense: *(Maya tiptoes toward the box, holding her breath.)* The direction must show the same action and the same feeling.",
-          "故事的叙述者讲述角色做了什么：*Maya crept toward the box, holding her breath.* 剧本没有叙述者，所以同样的动作变成括号里的**舞台指示**，通常用现在时：*(Maya tiptoes toward the box, holding her breath.)* 舞台指示必须表现同样的动作和感情。",
+          "A story's narrator tells what the characters do: *Maya crept toward the box, holding her breath.* A script has no narrator, so the same action becomes a **stage direction** in brackets, usually in the present tense: *(Maya tiptoes toward the box, holding her breath.)* The direction must show the same action and the same feeling.\n\n> **Watch out.** Keep the exact action and mood of the narration—do not switch a shy or careful movement into an opposite one.",
+          "故事的叙述者讲述角色做了什么：*Maya crept toward the box, holding her breath.* 剧本没有叙述者，所以同样的动作变成括号里的**舞台指示**，通常用现在时：*(Maya tiptoes toward the box, holding her breath.)* 舞台指示必须表现同样的动作和感情。\n\n> **注意。** 保持原文的动作和神态不变——不要把小心翼翼或害羞的动作改成了相反的举动。",
         ),
         itemGenerator(narrationDirectionBank),
       ),
@@ -503,8 +523,8 @@ export const playTopics4: readonly TopicDef[] = [
         "reported-words-into-dialogue",
         t("Reported Words into Dialogue", "把转述的话变成台词"),
         t(
-          "When a narrator reports what a character said, *Maya told Grandpa that she thought the robot had blinked*, the script gives the character's own words after their name: *MAYA: Grandpa, I think the robot just blinked at me!* Check that the right character speaks, and leave out quotation marks.",
-          "叙述者转述角色说的话时，*Maya told Grandpa that she thought the robot had blinked*，剧本在角色名字后写出他们自己的话：*MAYA: Grandpa, I think the robot just blinked at me!* 要检查说话的角色对不对，并且不加引号。",
+          "When a narrator reports what a character said, *Maya told Grandpa that she thought the robot had blinked*, the script gives the character's own words after their name: *MAYA: Grandpa, I think the robot just blinked at me!* Check that the right character speaks, and leave out quotation marks.\n\n> **Watch out.** Watch for two common mistakes: assigning the line to the listener instead of the speaker, or leaving story quotation marks around script dialogue.",
+          "叙述者转述角色说的话时，*Maya told Grandpa that she thought the robot had blinked*，剧本在角色名字后写出他们自己的话：*MAYA: Grandpa, I think the robot just blinked at me!* 要检查说话的角色对不对，并且不加引号。\n\n> **注意。** 谨防两个常见错误：把台词安到了听话人头上，或者在剧本台词里多写了故事用的引号。",
         ),
         itemGenerator(narrationDialogueBank),
       ),
@@ -517,6 +537,10 @@ export const playTopics4: readonly TopicDef[] = [
       "What a character says, does and thinks, and what others say about them, show who they are.",
       "角色说的话、做的事、想的事，以及别人对他们的评价，都表现出他们是什么样的人。",
     ),
+    intro: t(
+      "When a boy hands back a dropped wallet saying *It's all there. I didn't take anything*, no narrator has to label him *honest*—his own words and actions reveal his character right on stage.",
+      "男孩把捡到的钱包还给失主，说“东西都在，我一样没拿”——不需要叙述者贴标签，他自己的言行就已经在舞台上展现出了诚实的品格。",
+    ),
     prerequisites: after("character-change"),
     encompasses: [{ topic: "characters", weight: 0.2 }],
     xp: 14,
@@ -526,8 +550,8 @@ export const playTopics4: readonly TopicDef[] = [
         "the-trait-a-line-shows",
         t("The Trait a Line Shows", "一句台词表现的特点"),
         t(
-          "A play has no narrator to tell us what a character is like, so we learn it from what they **say** and **think**. *I'm scared of the dark, but someone has to go down. I'll go.* shows a brave character: she is afraid and acts anyway. Name the trait the words show.",
-          "剧本没有叙述者告诉我们角色是什么样的人，所以我们从他们**说的**和**想的**中了解。*I'm scared of the dark, but someone has to go down. I'll go.* 表现了一个勇敢的角色：她害怕，却仍然去做。说出这些话表现的特点。",
+          "A play has no narrator to tell us what a character is like, so we learn it from what they **say** and **think**. *I'm scared of the dark, but someone has to go down. I'll go.* shows a brave character: she is afraid and acts anyway. Name the trait the words show.\n\n> **Watch out.** Distinguish closely related traits—acting despite fear shows *bravery*, whereas admitting a mistake shows *honesty*.",
+          "剧本没有叙述者告诉我们角色是什么样的人，所以我们从他们**说的**和**想的**中了解。*I'm scared of the dark, but someone has to go down. I'll go.* 表现了一个勇敢的角色：她害怕，却仍然去做。说出这些话表现的特点。\n\n> **注意。** 区分相近的性格特点——害怕却依然行动是“勇敢”，承认错误是“诚实”。",
         ),
         nameKind(traitSpec),
       ),
@@ -535,8 +559,8 @@ export const playTopics4: readonly TopicDef[] = [
         "the-line-that-shows-a-trait",
         t("The Line That Shows a Trait", "表现某个特点的台词"),
         t(
-          "Now start from the trait and find the words that show it. A kind character offers help; a selfish one keeps things for themselves; an impatient one cannot wait; an honest one tells the truth even when it costs them. Look for what the words do, not just what they mention.",
-          "现在从特点出发，找出表现它的话。善良的角色主动帮忙；自私的角色把东西留给自己；急躁的角色等不及；诚实的角色即使吃亏也说真话。要看这些话在做什么，而不只是它们提到了什么。",
+          "Now start from the trait and find the words that show it. A kind character offers help; a selfish one keeps things for themselves; an impatient one cannot wait; an honest one tells the truth even when it costs them. Look for what the words do, not just what they mention.\n\n> **Watch out.** Check the character's attitude, not just a single word—someone mentioning a friend can still be acting selfishly if they refuse to share.",
+          "现在从特点出发，找出表现它的话。善良的角色主动帮忙；自私的角色把东西留给自己；急躁的角色等不及；诚实的角色即使吃亏也说真话。要看这些话在做什么，而不只是它们提到了什么。\n\n> **注意。** 要看角色的态度和做法，不只看表面词语——即使提到了朋友，不肯分享依然是自私。",
         ),
         findKind(traitSpec),
       ),

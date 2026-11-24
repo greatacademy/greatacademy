@@ -1256,53 +1256,56 @@ const pastIfTyped: readonly TypedItem[] = interleave([
 /** pastIfWhy explains had and the past participle in the if-part of a third conditional. */
 const pastIfWhy = (right: string, shown: string): Text =>
   t(
-    `The *if*-part imagines a past that did not happen, so it takes the past perfect, *had* and the past participle: ${fill(shown, right)}`,
-    `*if* 部分想象的是没有发生的过去，所以用过去完成时，即 *had* 加过去分词：${fill(shown, right)}`,
+    `The *if*-part imagines a past that did not happen, so it takes the past perfect, *had* and the past participle: ${fill(shown, right)}\n\n**Check.** Spot *would have* in the result clause: the condition is an unreal past, so the *if*-clause takes *had* + past participle (*${right}*).`,
+    `*if* 部分想象的是没有发生的过去，所以用过去完成时，即 *had* 加过去分词：${fill(shown, right)}\n\n**检验。** 看结果句里的 *would have*：这是与过去事实相反的条件，*if* 从句必须用 *had* + 过去分词（*${right}*）。`,
   );
 
 /** whyNotPastIf explains would or the past simple in the if-part of a third conditional. */
-const whyNotPastIf = (wrong: string, right: string, _shown: string, position: number): Text =>
+const whyNotPastIf = (wrong: string, _right: string, _shown: string, position: number): Text =>
   position === 0
-    ? t(`*would* never goes in the *if*-part. An imagined past takes *${right}*.`, `*if* 部分不能用 *would*。想象的过去要用 *${right}*。`)
+    ? t(
+        `*would* never goes inside the *if*-clause of a third conditional; use the past perfect there.`,
+        `第三条件句的 *if* 从句里不能用 *would*，应使用过去完成时。`,
+      )
     : t(
-        `*${wrong}* is the past simple, which imagines the present, not the past. An imagined past takes *${right}*.`,
-        `*${wrong}* 是一般过去时，想象的是现在，不是过去。想象的过去要用 *${right}*。`,
+        `*${wrong}* is the past simple, which imagines the present rather than an unreal past.`,
+        `*${wrong}* 是一般过去时，想象的是现在而不是没有发生的过去。`,
       );
 
 /** wouldHaveWhy explains would have and the past participle in the result of a third conditional. */
 const wouldHaveWhy = (right: string, shown: string): Text =>
   t(
-    `The imagined result in the past takes *would have* and the past participle: ${fill(shown, right)}`,
-    `对过去想象的结果用 *would have* 加过去分词：${fill(shown, right)}`,
+    `The imagined result in the past takes *would have* and the past participle: ${fill(shown, right)}\n\n**Check.** After *would*, the helper is always base *have* (never *had*), followed by the past participle (*${right}*).`,
+    `对过去想象的结果用 *would have* 加过去分词：${fill(shown, right)}\n\n**检验。** *would* 后面永远接原形 *have*（绝不是 *had*），再接过去分词（*${right}*）。`,
   );
 
 /** whyNotWouldHave explains would had, or had without would, in the result. */
-const whyNotWouldHave = (wrong: string, right: string, _shown: string, position: number): Text =>
+const whyNotWouldHave = (wrong: string, _right: string, _shown: string, position: number): Text =>
   position === 0
     ? t(
-        `After *would* the verb is in its base form, so it is *have*, never *had*. Use *${right}*.`,
-        `*would* 后面的动词用原形，所以是 *have*，不能用 *had*。要用 *${right}*。`,
+        `After *would* the helper must stay in its base form (*have*), never *had*.`,
+        `*would* 后面的助动词必须用原形 *have*，不能用 *had*。`,
       )
     : position === 1
       ? t(
-          `*${wrong}* leaves out *would*, so it says what really happened before something else. The imagined result takes *${right}*.`,
-          `*${wrong}* 漏掉了 *would*，说的是在另一件事之前真实发生的事。想象的结果要用 *${right}*。`,
+          `*${wrong}* leaves out *would*, so it states a real earlier past event instead of an imagined result.`,
+          `*${wrong}* 漏掉了 *would*，意思成了过去真实发生的更早动作，而不是想象的结果。`,
         )
       : t(
-          `*${wrong}* copies the *had* of the *if*-part into the result. The result takes *would have* and the past participle alone: *${right}*.`,
-          `*${wrong}* 把 *if* 部分的 *had* 搬进了结果部分。结果部分只用 *would have* 加过去分词：*${right}*。`,
+          `*${wrong}* repeats the *had* from the *if*-clause; the result clause needs only *would have* + past participle.`,
+          `*${wrong}* 把 *if* 从句里的 *had* 多余地搬进了结果句；结果句只需要 *would have* 加过去分词。`,
         );
 
 /** pastIfWriteWhy explains how a third conditional is put together, with the comma when the if-part comes first. */
 const pastIfWriteWhy = (right: string): Text =>
   right.startsWith("If ")
     ? t(
-        `For an imagined past, the *if*-part takes *had* and the past participle, then a comma, and the result takes *would have* and the past participle: ${right}`,
-        `想象过去时，*if* 部分用 *had* 加过去分词，后面加逗号，结果部分用 *would have* 加过去分词：${right}`,
+        `For an imagined past, the *if*-part takes *had* and the past participle, then a comma, and the result takes *would have* and the past participle: ${right}\n\n**Check.** Verify *If* + *had* + past participle, a comma between clauses, and *would have* + past participle in the result.`,
+        `想象过去时，*if* 部分用 *had* 加过去分词，后面加逗号，结果部分用 *would have* 加过去分词：${right}\n\n**检验。** 核对 *If* + *had* + 过去分词、两句之间的逗号，以及结果句里的 *would have* + 过去分词。`,
       )
     : t(
-        `For an imagined past, the result takes *would have* and the past participle, and the *if*-part after it takes *had* and the past participle, with no comma: ${right}`,
-        `想象过去时，结果部分用 *would have* 加过去分词，后面的 *if* 部分用 *had* 加过去分词，不加逗号：${right}`,
+        `For an imagined past, the result takes *would have* and the past participle, and the *if*-part after it takes *had* and the past participle, with no comma: ${right}\n\n**Check.** Verify *would have* + past participle first, then *if* + *had* + past participle with no comma before *if*.`,
+        `想象过去时，结果部分用 *would have* 加过去分词，后面的 *if* 部分用 *had* 加过去分词，不加逗号：${right}\n\n**检验。** 核对前半句的 *would have* + 过去分词、后半句的 *if* + *had* + 过去分词，且 *if* 前不加逗号。`,
       );
 
 const thirdConditional: TopicDef = {
@@ -1311,6 +1314,10 @@ const thirdConditional: TopicDef = {
   summary: t(
     "If they had voted, the result would have been different. An imagined past takes the past perfect after if and would have with the past participle in the result.",
     "If they had voted, the result would have been different。想象过去的情况时，if 后面用过去完成时，结果部分用 would have 加过去分词。",
+  ),
+  intro: t(
+    "Looking back at a missed train, you say *If we had left ten minutes earlier, we would have caught it.* Because the past cannot be changed, English pairs *if* + *had* + past participle with *would have* + past participle.",
+    "回想错过的一班车，英语说 *If we had left ten minutes earlier, we would have caught it.* 过去无法改写，所以 *if* 从句用 *had* + 过去分词，结果主句用 *would have* + 过去分词。",
   ),
   prerequisites: ["second-conditional", "past-perfect"],
   encompasses: [
@@ -1324,8 +1331,8 @@ const thirdConditional: TopicDef = {
       "if-part",
       t("Had done after if", "if 后面用 had 加过去分词"),
       t(
-        "To imagine a different past, one that did not happen, use *if* + the **past perfect** (*had* + past participle):\n\n- *If they **had voted**, the result would have been different.* (They did not vote.)\n- *If I **had known** about the party, I would have come.* (I did not know.)\n\nThe *if*-part never takes *would*: not *If I would have known*. The past simple (*If I knew*) is for an imagined **present**, not for the past.",
-        "想象一个与过去事实相反的情况时，用 *if* 加**过去完成时**（*had* 加过去分词）：\n\n- *If they **had voted**, the result would have been different.*（事实上他们没投票。）\n- *If I **had known** about the party, I would have come.*（事实上我不知道。）\n\n*if* 部分不能用 *would*：不能说 *If I would have known*。一般过去时（*If I knew*）是想象**现在**的情况，不是过去。中文说“要是我早知道”，靠“早”和“了”表示过去，英语则要靠动词形式 *had known*。",
+        "To imagine a different past, one that did not happen, use *if* + the **past perfect** (*had* + past participle):\n\n- *If they **had voted**, the result would have been different.* (They did not vote.)\n- *If I **had known** about the party, I would have come.* (I did not know.)\n\nThe past simple (*If I knew*) is for an imagined **present**, not for the past.\n\n> **Watch out.** Never put *would* or *would have* inside the *if*-clause (*If I would have known* is wrong)—*would have* belongs only in the result clause.",
+        "想象一个与过去事实相反的情况时，用 *if* 加**过去完成时**（*had* 加过去分词）：\n\n- *If they **had voted**, the result would have been different.*（事实上他们没投票。）\n- *If I **had known** about the party, I would have come.*（事实上我不知道。）\n\n一般过去时（*If I knew*）是想象**现在**的情况，不是过去。中文说“要是我早知道”，靠“早”和“了”表示过去，英语则要靠动词形式 *had known*。\n\n> **注意。** 绝不能在 *if* 从句里放 *would* 或 *would have*（*If I would have known* 是错的）——*would have* 只能出现在结果主句里。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), pastIfChoice, pastIfWhy, whyNotPastIf),
     ),
@@ -1333,8 +1340,8 @@ const thirdConditional: TopicDef = {
       "result",
       t("Would have done in the result", "结果部分用 would have 加过去分词"),
       t(
-        "The imagined result in the past takes *would have* + the **past participle**: *If you had studied harder, you **would have passed** the exam.*\n\nAfter *would* the verb is always in the base form, so it is *would **have***, never *would had*. Do not leave out *would* either: *you had passed* says what really happened before something else.\n\nWhen the *if*-part comes first, put a comma after it. You can also say *might have* or *could have* when the result is less certain.",
-        "过去想象的结果用 *would have* 加**过去分词**：*If you had studied harder, you **would have passed** the exam.*\n\n*would* 后面永远跟动词原形，所以是 *would **have***，不能说 *would had*。也不要省略 *would*：*you had passed* 说的是过去真实发生在另一件事之前的事。\n\n*if* 部分在前时后面加逗号。结果不太确定时，也可以用 *might have* 或 *could have*。",
+        "The imagined result in the past takes *would have* + the **past participle**: *If you had studied harder, you **would have passed** the exam.*\n\nWhen the *if*-part comes first, put a comma after it. You can also say *might have* or *could have* when the result is less certain.\n\n> **Watch out.** After *would*, always write base *have*—never *would had*—and do not drop *would* (*you had passed* describes a real past event, not an imagined result).",
+        "过去想象的结果用 *would have* 加**过去分词**：*If you had studied harder, you **would have passed** the exam.*\n\n*if* 部分在前时后面加逗号。结果不太确定时，也可以用 *might have* 或 *could have*。\n\n> **注意。** *would* 后面永远写原形 *have*（不能写成 *would had*），也不要省掉 *would*（*you had passed* 表示过去真实发生的事，不是假设结果）。",
       ),
       choiceGenerator(t("Choose the words for the gap.", "选出填入空白处的词。"), wouldHaveChoice, wouldHaveWhy, whyNotWouldHave),
     ),
@@ -1342,8 +1349,8 @@ const thirdConditional: TopicDef = {
       "write",
       t("Writing third conditionals", "写第三条件句"),
       t(
-        "Write the sentence from the note about an imagined past. The arrow → means the *if*-part comes first: *if you study harder → you pass the exam* becomes *If you had studied harder, you would have passed the exam.* The arrow ← means the result comes first: *You would have passed the exam if you had studied harder.* You may write *you'd* for *you had* and *you would*, and *would've* for *would have*.",
-        "根据笔记写一个想象过去的句子。箭头 → 表示 *if* 部分在前：*if you study harder → you pass the exam* 写成 *If you had studied harder, you would have passed the exam.* 箭头 ← 表示结果在前：*You would have passed the exam if you had studied harder.* 可以把 *you had* 和 *you would* 写成 *you'd*，把 *would have* 写成 *would've*。",
+        "Write the sentence from the note about an imagined past. The arrow → means the *if*-part comes first: *if you study harder → you pass the exam* becomes *If you had studied harder, you would have passed the exam.* The arrow ← means the result comes first: *You would have passed the exam if you had studied harder.* You may write *you'd* for *you had* and *you would*, and *would've* for *would have*.\n\n> **Watch out.** Use a comma only when the *if*-clause comes first; omit the comma when the result clause comes first, and check that both verbs are past participles.",
+        "根据笔记写一个想象过去的句子。箭头 → 表示 *if* 部分在前：*if you study harder → you pass the exam* 写成 *If you had studied harder, you would have passed the exam.* 箭头 ← 表示结果在前：*You would have passed the exam if you had studied harder.* 可以把 *you had* 和 *you would* 写成 *you'd*，把 *would have* 写成 *would've*。\n\n> **注意。** 只有 *if* 从句在前时才加逗号，结果句在前时不加逗号；写完后核对两个实义动词是否都是过去分词。",
       ),
       typedGenerator(
         "sentence-pattern",

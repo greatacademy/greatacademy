@@ -542,94 +542,112 @@ const confusedLabels: Readonly<Record<string, Label>> = {
   principal: {
     zh: "principal（校长；主要的）",
     why: [
-      "*Principal* is the head of a school, or an adjective meaning main or most important.",
-      "*principal* 指校长，或作形容词，意为主要的、最重要的。",
+      "*Principal* is the head of a school, or an adjective meaning main or most important.\n\n**Check.** Substitute *school head* or *main* in the blank: the sentence keeps the exact meaning.",
+      "*principal* 指校长，或作形容词，意为主要的、最重要的。\n\n**检验。** 把空格换成“校长”或“主要的”读一遍，句意完全吻合。",
     ],
     not: ["*Principal* means the head of a school or main, which does not fit here.", "*principal* 意为校长或主要的，这里不合适。"],
   },
   principle: {
     zh: "principle（原则）",
-    why: ["*Principle* is a rule or a belief that guides what someone does.", "*principle* 指指导人们行为的规则或信念。"],
+    why: [
+      "*Principle* is a rule or a belief that guides what someone does.\n\n**Check.** Substitute *rule* in the blank: both *principle* and *rule* end in *-le*, and *rule* fits the sentence.",
+      "*principle* 指指导人们行为的规则或信念。\n\n**检验。** 把空格换成 *rule*（规则），两词都以 *-le* 结尾，放进句中意思顺畅。",
+    ],
     not: ["*Principle* is a rule or belief, which does not fit here.", "*principle* 指规则或信念，这里不合适。"],
   },
   compliment: {
     zh: "compliment（赞美）",
     why: [
-      "*Compliment* is praise, or to praise someone: *She complimented my drawing.*",
-      "*compliment* 指赞美，或赞美某人：*She complimented my drawing.*",
+      "*Compliment* is praise, or to praise someone: *She complimented my drawing.*\n\n**Check.** Substitute *praise* in the blank: the sentence still says someone expressed admiration.",
+      "*compliment* 指赞美，或赞美某人：*She complimented my drawing.*\n\n**检验。** 把空格换成“夸奖/赞美”，句意仍然是表达欣赏。",
     ],
     not: ["*Compliment* means praise, which does not fit here.", "*compliment* 意为赞美，这里不合适。"],
   },
   complement: {
     zh: "complement（补充；相配）",
     why: [
-      "*Complement* means to complete or go well with something: *The sauce complements the fish.*",
-      "*complement* 意为补全或与某物相配：*The sauce complements the fish.*",
+      "*Complement* means to complete or go well with something: *The sauce complements the fish.*\n\n**Check.** Notice *compl**e**ment* shares its *e* with *compl**e**te*: the sentence is about completing or matching, not praising.",
+      "*complement* 意为补全或与某物相配：*The sauce complements the fish.*\n\n**检验。** *compl**e**ment* 和 *compl**e**te* 一样带 *e*，句子说的是配齐或相配，而不是夸奖。",
     ],
     not: ["*Complement* means to complete or go well with, which does not fit here.", "*complement* 意为补全或相配，这里不合适。"],
   },
   stationary: {
     zh: "stationary（静止的）",
-    why: ["*Stationary* means not moving; remember *a* for *at rest*.", "*stationary* 意为静止不动的；可以用 *a* 联想 *at rest*。"],
+    why: [
+      "*Stationary* means not moving; remember *a* for *at rest*.\n\n**Check.** Substitute *still* or *not moving* in the blank: the sentence is describing a lack of motion.",
+      "*stationary* 意为静止不动的；可以用 *a* 联想 *at rest*。\n\n**检验。** 把空格换成“静止不动的”读一遍，句子描述的正是没有移动的状态。",
+    ],
     not: ["*Stationary* means not moving, which does not fit here.", "*stationary* 意为静止的，这里不合适。"],
   },
   stationery: {
     zh: "stationery（文具）",
     why: [
-      "*Stationery* is writing paper and envelopes; remember *e* for *envelope*.",
-      "*stationery* 指信纸和信封等文具；可以用 *e* 联想 *envelope*。",
+      "*Stationery* is writing paper and envelopes; remember *e* for *envelope*.\n\n**Check.** Substitute *writing paper* in the blank: the sentence talks about supplies for writing, not staying still.",
+      "*stationery* 指信纸和信封等文具；可以用 *e* 联想 *envelope*。\n\n**检验。** 把空格换成“信纸/文具”，句子说的是书写用品，而不是保持静止。",
     ],
     not: ["*Stationery* is writing paper, which does not fit here.", "*stationery* 指文具，这里不合适。"],
   },
   council: {
     zh: "council（委员会）",
     why: [
-      "*Council* is a group of people chosen to make decisions, such as a city council.",
-      "*council* 指被选出来做决定的一群人，如市议会。",
+      "*Council* is a group of people chosen to make decisions, such as a city council.\n\n**Check.** Substitute *committee* in the blank: the sentence refers to an elected or official group.",
+      "*council* 指被选出来做决定的一群人，如市议会。\n\n**检验。** 把空格换成“委员会/议会”，句子指的正是负责决策的团体。",
     ],
     not: ["*Council* is a group that decides, which does not fit here.", "*council* 指决策团体，这里不合适。"],
   },
   counsel: {
     zh: "counsel（建议；劝告）",
-    why: ["*Counsel* is advice, or to give advice: *She counseled patience.*", "*counsel* 指建议，或给予建议：*She counseled patience.*"],
+    why: [
+      "*Counsel* is advice, or to give advice: *She counseled patience.*\n\n**Check.** Substitute *advice* or *advise* in the blank: the sentence is about guidance, not a governing board.",
+      "*counsel* 指建议，或给予建议：*She counseled patience.*\n\n**检验。** 把空格换成“建议”或“劝告”，句子谈的是指导意见，而不是议会团体。",
+    ],
     not: ["*Counsel* means advice, which does not fit here.", "*counsel* 意为建议，这里不合适。"],
   },
   allusion: {
     zh: "allusion（典故；暗指）",
-    why: ["*Allusion* is a brief mention of a famous person, story or event.", "*allusion* 指对著名人物、故事或事件的简短提及。"],
+    why: [
+      "*Allusion* is a brief mention of a famous person, story or event.\n\n**Check.** Substitute *reference* in the blank: the sentence points to a known work or event rather than a visual trick.",
+      "*allusion* 指对著名人物、故事或事件的简短提及。\n\n**检验。** 把空格换成“典故/提及”，句子指向的是某个广为人知的作品或事件，而非错觉。",
+    ],
     not: ["*Allusion* is a mention of something famous, which does not fit here.", "*allusion* 指暗指著名的事物，这里不合适。"],
   },
   illusion: {
     zh: "illusion（错觉；幻想）",
-    why: ["*Illusion* is something that looks real or true but is not.", "*illusion* 指看起来真实但并非如此的东西。"],
+    why: [
+      "*Illusion* is something that looks real or true but is not.\n\n**Check.** Substitute *false appearance* or *trick of the eye* in the blank: the sentence describes something deceptive.",
+      "*illusion* 指看起来真实但并非如此的东西。\n\n**检验。** 把空格换成“假象/错觉”，句子描述的正是让人看花眼的现象。",
+    ],
     not: ["*Illusion* is a false appearance, which does not fit here.", "*illusion* 指假象，这里不合适。"],
   },
   emigrate: {
     zh: "emigrate（移居出境）",
     why: [
-      "*Emigrate* is to **leave** one's own country to live elsewhere: emigrate **from**.",
-      "*emigrate* 指**离开**本国去别处居住：emigrate **from**。",
+      "*Emigrate* is to **leave** one's own country to live elsewhere: *emigrate from*.\n\n**Check.** Look at the preposition right after the blank: *from* signals leaving (*e-* for *exit*), which pairs with *emigrate*.",
+      "*emigrate* 指**离开**本国去别处居住：*emigrate from*。\n\n**检验。** 看空格后面的介词：*from* 表示“离开”（*e-* 对应 *exit*），与 *emigrate* 搭配。",
     ],
     not: ["*Emigrate* means to leave a country, which does not fit here.", "*emigrate* 意为离开一个国家，这里不合适。"],
   },
   immigrate: {
     zh: "immigrate（移居入境）",
     why: [
-      "*Immigrate* is to **come into** a new country to live: immigrate **to**.",
-      "*immigrate* 指**来到**一个新国家居住：immigrate **to**。",
+      "*Immigrate* is to **come into** a new country to live: *immigrate to*.\n\n**Check.** Look at the preposition right after the blank: *to* signals moving into a destination (*in-* for *into*), which pairs with *immigrate*.",
+      "*immigrate* 指**来到**一个新国家居住：*immigrate to*。\n\n**检验。** 看空格后面的介词：*to* 表示“进入目的地”（*im-* 对应 *into*），与 *immigrate* 搭配。",
     ],
     not: ["*Immigrate* means to come into a country, which does not fit here.", "*immigrate* 意为移入一个国家，这里不合适。"],
   },
   farther: {
     zh: "farther（更远，指距离）",
-    why: ["*Farther* is for real distance you could measure.", "*farther* 用于可以测量的实际距离。"],
+    why: [
+      "*Farther* is for real physical distance you could measure.\n\n**Check.** Ask whether you could measure the gap in meters or miles — here you can, so *farther* (with *far* inside it) fits.",
+      "*farther* 用于可以测量的实际距离。\n\n**检验。** 看这段差距能否用米或公里量出来——这里可以，所以用含 *far* 的 *farther*。",
+    ],
     not: ["*Farther* is for measurable distance, which this is not.", "*farther* 用于可测量的距离，这里不是。"],
   },
   further: {
     zh: "further（进一步）",
     why: [
-      "*Further* means more or to a greater degree, for ideas and time rather than distance.",
-      "*further* 意为更多或更进一步，用于想法和时间，而不是距离。",
+      "*Further* means more or to a greater degree, for ideas, discussion, or time rather than physical distance.\n\n**Check.** Substitute *additional* or *more* in the blank: the sentence makes full sense without any physical distance involved.",
+      "*further* 意为更多或更进一步，用于想法、讨论或时间，而不是实际距离。\n\n**检验。** 把空格换成“更多的”或“更深入地”，句意通顺且不涉及物理距离。",
     ],
     not: [
       "*Further* means more, for ideas rather than distance, which does not fit here.",
@@ -638,34 +656,49 @@ const confusedLabels: Readonly<Record<string, Label>> = {
   },
   imply: {
     zh: "imply（暗示）",
-    why: ["The speaker or writer **implies**: suggests something without saying it.", "说话人或写作者**暗示**：不直接说出而加以暗示。"],
+    why: [
+      "The speaker, writer, or clue **implies**: it suggests something without stating it outright.\n\n**Check.** Check who is doing the action: the sender of the message hints at it, rather than a reader working it out.",
+      "说话人、写作者或线索**暗示**：不直接说出而加以提示。\n\n**检验。** 看动作的主语：是发出信息的一方在含蓄表达，而不是读者在推理。",
+    ],
     not: ["*Imply* is what a speaker does, which does not fit here.", "*imply* 是说话人做的事，这里不合适。"],
   },
   infer: {
     zh: "infer（推断）",
-    why: ["The listener or reader **infers**: works out a meaning from clues.", "听者或读者**推断**：根据线索得出意思。"],
+    why: [
+      "The listener or reader **infers**: they work out a meaning from clues.\n\n**Check.** Check who is doing the action: someone is drawing a conclusion *from* evidence, which is what *infer* names.",
+      "听者或读者**推断**：根据线索得出意思。\n\n**检验。** 看动作的主语：是接收信息的一方根据线索得出结论，所以用 *infer*。",
+    ],
     not: ["*Infer* is what a listener does, which does not fit here.", "*infer* 是听者做的事，这里不合适。"],
   },
   precede: {
     zh: "precede（在……之前）",
-    why: ["*Precede* means to come before: *A storm preceded the flood.*", "*precede* 意为在……之前：*A storm preceded the flood.*"],
+    why: [
+      "*Precede* means to come before: *A storm preceded the flood.*\n\n**Check.** Notice the prefix *pre-* means *before*: substituting *come before* keeps the exact timeline of the sentence.",
+      "*precede* 意为在……之前：*A storm preceded the flood.*\n\n**检验。** 前缀 *pre-* 表示“在……之前”，把空格换成“先于……发生”，时间顺序完全一致。",
+    ],
     not: ["*Precede* means to come before, which does not fit here.", "*precede* 意为在前，这里不合适。"],
   },
   proceed: {
     zh: "proceed（继续进行）",
-    why: ["*Proceed* means to go on or continue: *Please proceed to gate four.*", "*proceed* 意为继续进行：*Please proceed to gate four.*"],
+    why: [
+      "*Proceed* means to go on or continue: *Please proceed to gate four.*\n\n**Check.** Notice the prefix *pro-* means *forward*: substituting *go forward* or *continue* fits the sentence.",
+      "*proceed* 意为继续进行：*Please proceed to gate four.*\n\n**检验。** 前缀 *pro-* 表示“向前”，把空格换成“继续”或“前往”，句意自然通顺。",
+    ],
     not: ["*Proceed* means to go on, which does not fit here.", "*proceed* 意为继续，这里不合适。"],
   },
   adapt: {
     zh: "adapt（适应）",
-    why: ["*Adapt* means to change in order to fit new conditions.", "*adapt* 意为为了适应新情况而改变。"],
+    why: [
+      "*Adapt* means to change in order to fit new conditions.\n\n**Check.** Substitute *adjust* in the blank: *adapt* and *adjust* both start with *ad-* and describe changing to fit.",
+      "*adapt* 意为为了适应新情况而改变。\n\n**检验。** 把空格换成“调整/适应”，句子说的是为适应环境而做出改变。",
+    ],
     not: ["*Adapt* means to change to fit, which does not fit here.", "*adapt* 意为适应，这里不合适。"],
   },
   adopt: {
     zh: "adopt（采用；收养）",
     why: [
-      "*Adopt* means to take something as your own, such as a plan, a rule or a child.",
-      "*adopt* 意为把某物当作自己的，如采用计划、规则或收养孩子。",
+      "*Adopt* means to take something as your own, such as a plan, a rule or a child.\n\n**Check.** Substitute *take as one's own* in the blank: nothing is being reshaped to fit — something is being taken in.",
+      "*adopt* 意为把某物当作自己的，如采用计划、规则或收养孩子。\n\n**检验。** 把空格换成“采纳”或“收养”，句子说的是接纳为己有，而不是改造适应。",
     ],
     not: ["*Adopt* means to take as your own, which does not fit here.", "*adopt* 意为采用，这里不合适。"],
   },
@@ -678,14 +711,18 @@ const confused = topic("grammar", {
     "Pairs such as principal and principle, imply and infer, or farther and further sound alike or close, but mean different things.",
     "principal 与 principle、imply 与 infer、farther 与 further 这样的词读音相同或相近，意思却不同。",
   ],
+  intro: [
+    "Spell-checkers never catch a real word put in the wrong slot: *The town council gave wise counsel* and *A speaker implies while a listener infers.* One letter can flip a sentence's meaning from praise to matching or from leaving to arriving. In this topic you distinguish homophones and look-alike pairs by their meaning and clues in the sentence.",
+    "拼写检查不会标出用错位置的真实单词，例如 *The town council gave wise counsel* 或 *A speaker implies while a listener infers.* 往往一个字母之差，句意就从“赞美”变成“相配”，或从“移出”变成“移入”。本节通过词义和语境线索区分同音词与形近易混词。",
+  ],
   after: ["commonly-confused-words-2"],
   points: [
     label(
       "words-that-sound-alike",
       ["Words That Sound Alike", "同音词"],
       [
-        "Some words sound the same but are spelled differently and mean different things. A **principal** runs a school (*the principal is your pal*); a **principle** is a rule. A **compliment** is praise; to **complement** is to complete. **Stationary** means not moving; **stationery** is paper for letters. A **council** is a group; **counsel** is advice.",
-        "有些词读音相同，拼写和意思却不同。**principal** 是校长（*the principal is your pal*）；**principle** 是原则。**compliment** 是赞美；**complement** 是补全。**stationary** 意为静止的；**stationery** 是写信用的纸。**council** 是委员会；**counsel** 是建议。",
+        "Some words sound the same but are spelled differently and mean different things. A **principal** runs a school (*the principal is your pal*); a **principle** is a rule. A **compliment** is praise; to **complement** is to complete. **Stationary** means not moving; **stationery** is paper for letters. A **council** is a group; **counsel** is advice.\n\n> **Watch out.** *Principal* is not only a noun for a school head; it is also an adjective meaning *main* (*the principal reason*). Always check whether the sentence means *main* or *rule*.",
+        "有些词读音相同，拼写和意思却不同。**principal** 是校长（*the principal is your pal*）；**principle** 是原则。**compliment** 是赞美；**complement** 是补全。**stationary** 意为静止的；**stationery** 是写信用的纸。**council** 是委员会；**counsel** 是建议。\n\n> **注意。** *principal* 不只是名词“校长”，还能作形容词表示“主要的”（*the principal reason*）。要看句子表达的是“主要的”还是“原则”。",
       ],
       ["Which word belongs in the blank?", "空格里应该填哪个词？"],
       `
@@ -727,8 +764,8 @@ ${soundAlikeLines}
       "words-close-in-meaning-or-form",
       ["Words Close in Meaning or Form", "意思或形式相近的词"],
       [
-        "Other pairs look or sound close. An **allusion** mentions something famous; an **illusion** is a false appearance. You **emigrate from** your country and **immigrate to** a new one. **Farther** is for distance; **further** means more. A speaker **implies**; a listener **infers**. To **precede** is to come before; to **proceed** is to go on. To **adapt** is to change; to **adopt** is to take as your own.",
-        "另一些词对的形式或读音相近。**allusion** 是提及著名的事物；**illusion** 是假象。你从本国 **emigrate from**，移入新的国家是 **immigrate to**。**farther** 用于距离；**further** 意为更进一步。说话人 **imply**（暗示）；听者 **infer**（推断）。**precede** 是在前；**proceed** 是继续。**adapt** 是适应；**adopt** 是采用。",
+        "Other pairs look or sound close. An **allusion** mentions something famous; an **illusion** is a false appearance. You **emigrate from** your country and **immigrate to** a new one. **Farther** is for distance; **further** means more. A speaker **implies**; a listener **infers**. To **precede** is to come before; to **proceed** is to go on. To **adapt** is to change; to **adopt** is to take as your own.\n\n> **Watch out.** *Imply* and *infer* are opposite sides of the same moment: the speaker or clue *implies*, and the listener or reader *infers*. Check which side is the subject of the sentence.",
+        "另一些词对的形式或读音相近。**allusion** 是提及著名的事物；**illusion** 是假象。你从本国 **emigrate from**，移入新的国家是 **immigrate to**。**farther** 用于距离；**further** 意为更进一步。说话人 **imply**（暗示）；听者 **infer**（推断）。**precede** 是在前；**proceed** 是继续。**adapt** 是适应；**adopt** 是采用。\n\n> **注意。** *imply* 和 *infer* 是同一件事的两面：说话人或线索去 *imply*（暗示），听者或读者去 *infer*（推断）。要看句子的主语站在哪一边。",
       ],
       ["Which word belongs in the blank?", "空格里应该填哪个词？"],
       `
@@ -776,14 +813,18 @@ const semicolons = topic("grammar", {
     "A semicolon joins two complete sentences that belong together, also before a transition such as however; it also separates list items that contain commas.",
     "分号连接两个关系紧密的完整句子，也用在 however 等过渡词之前；分号还用于分隔本身含有逗号的列表项。",
   ],
+  intro: [
+    "A comma is too weak to hold two complete sentences together, while a period can feel too abrupt. A semicolon bridges them neatly: *The ferry docked; passengers hurried ashore.* Semicolons also keep complex lists readable when the items already contain commas. In this topic you join clauses with semicolons and punctuate heavy lists.",
+    "两个完整句子只用逗号连太弱，用句号断开又显得生硬，分号正好搭起桥梁：*The ferry docked; passengers hurried ashore.* 当列表项本身已含逗号时，分号也能让层次一目了然。本节练习用分号连接独立从句以及分隔复杂列表。",
+  ],
   after: ["however-and-therefore"],
   points: [
     choose(
       "semicolon-or-comma",
       ["Semicolon or Comma", "分号还是逗号"],
       [
-        "Two complete sentences cannot be joined by a comma alone; that is a comma splice. Join them with a **semicolon**: *The price rose; few people bought it.* When a transition such as *however*, *therefore* or *as a result* starts the second sentence, put a semicolon before it and a comma after it: *The price rose; **however,** people kept buying.* A comma is enough only with *and*, *but* or *so*.",
-        "两个完整的句子不能只用逗号连接，那是逗号粘连句。可以用**分号**连接：*The price rose; few people bought it.* 当 *however*、*therefore* 或 *as a result* 这样的过渡词引出第二个句子时，在它前面用分号，后面用逗号：*The price rose; **however,** people kept buying.* 只有与 *and*、*but* 或 *so* 连用时，逗号才够。",
+        "Two complete sentences cannot be joined by a comma alone; that is a comma splice. Join them with a **semicolon**: *The price rose; few people bought it.* When a transition such as *however*, *therefore* or *as a result* starts the second sentence, put a semicolon before it and a comma after it: *The price rose; **however,** people kept buying.* A comma is enough only with *and*, *but* or *so*.\n\n> **Watch out.** Do not put a semicolon before *and*, *but*, or *so* when joining two short clauses, and do not put a comma before *however* when a complete sentence stands on each side.",
+        "两个完整的句子不能只用逗号连接，那是逗号粘连句。可以用**分号**连接：*The price rose; few people bought it.* 当 *however*、*therefore* 或 *as a result* 这样的过渡词引出第二个句子时，在它前面用分号，后面用逗号：*The price rose; **however,** people kept buying.* 只有与 *and*、*but* 或 *so* 连用时，逗号才够。\n\n> **注意。** 用 *and*、*but*、*so* 连接两个短句时前面用逗号而非分号；而 *however* 两侧都是完整句子时，前面必须用分号而不能只用逗号。",
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
@@ -820,8 +861,8 @@ ${semicolonLines}
         we ran out of change therefore we paid by card|We ran out of change; therefore, we paid by card.|We ran out of change, therefore, we paid by card.|We ran out of change; therefore we, paid by card.
       `,
       (right) => [
-        `*${right}* joins two complete sentences correctly: a semicolon, a semicolon before a transition with a comma after it, or a comma before *and*, *but* or *so*.`,
-        `*${right}* 正确地连接了两个完整的句子：用分号，在过渡词前用分号、后用逗号，或在 *and*、*but*、*so* 前用逗号。`,
+        `*${right}* joins the two complete sentences cleanly: a semicolon between standalone clauses, a semicolon before a transition with a comma after it, or a comma before *and*, *but* or *so*.\n\n**Check.** Test both sides of the semicolon (or the comma + *and*/*but*/*so*): each side can stand alone as a full sentence with its own subject and verb.`,
+        `*${right}* 准确连接了两个完整句子：独立分句之间用分号，过渡词前用分号、后用逗号，*and*、*but*、*so* 前用逗号。\n\n**检验。** 分别检查分号（或逗号加 *and*/*but*/*so*）两侧：两边各自都有主语和谓语，都能独立成句。`,
       ],
       [
         [
@@ -838,8 +879,8 @@ ${semicolonLines}
       "semicolons-in-a-list",
       ["Semicolons in a List", "列表中的分号"],
       [
-        "Items in a list are usually separated by commas. But when the items themselves contain commas, as with *city, country* or *name, job*, separate the items with **semicolons** so the reader can tell them apart: *We visited Lima, Peru; Quito, Ecuador; and Bogotá, Colombia.*",
-        "列表中的各项通常用逗号分隔。但当各项本身含有逗号时，如 *city, country* 或 *name, job*，就要用**分号**分隔各项，好让读者分清：*We visited Lima, Peru; Quito, Ecuador; and Bogotá, Colombia.*",
+        "Items in a list are usually separated by commas. But when the items themselves contain commas, as with *city, country* or *name, job*, separate the items with **semicolons** so the reader can tell them apart: *We visited Lima, Peru; Quito, Ecuador; and Bogotá, Colombia.*\n\n> **Watch out.** Keep the comma *inside* each item (*Lima, Peru*) and put the semicolon *between* items. Swapping them (*Lima; Peru, Quito; Ecuador*) splits each pair apart.",
+        "列表中的各项通常用逗号分隔。但当各项本身含有逗号时，如 *city, country* 或 *name, job*，就要用**分号**分隔各项，好让读者分清：*We visited Lima, Peru; Quito, Ecuador; and Bogotá, Colombia.*\n\n> **注意。** 每一项内部仍然用逗号（*Lima, Peru*），项与项之间才用分号。如果反过来写成 *Lima; Peru, Quito; Ecuador*，就把本来成对的内容拆散了。",
       ],
       ["Which sentence is punctuated correctly?", "哪个句子的标点正确？"],
       `
@@ -876,8 +917,8 @@ ${listLines}
         The stalls sold hats wool and straw bags large and small and belts.|The stalls sold hats, wool and straw; bags, large and small; and belts.|The stalls sold hats, wool and straw, bags, large and small, and belts.|The stalls sold hats; wool and straw, bags; large and small, and belts.
       `,
       (right) => [
-        `*${right}* uses semicolons between the items, because each item already contains a comma.`,
-        `*${right}* 在各项之间用分号，因为每一项本身已经含有逗号。`,
+        `*${right}* uses semicolons between the three list items while keeping commas inside each item.\n\n**Check.** Count the chunks separated by semicolons: there are three complete entries, and none of the internal pairs is split apart.`,
+        `*${right}* 在三个列表项之间用分号分隔，同时在每一项内部保留逗号。\n\n**检验。** 数一数分号隔开的块：正好是三项完整内容，没有任何一项内部被拆散。`,
       ],
       [
         [
@@ -897,14 +938,18 @@ const pastPerfect = topic("grammar", {
     "When a story is already in the past, had plus a past participle shows what happened even earlier.",
     "当故事已经在讲过去时，用 had 加过去分词表示更早发生的事。",
   ],
+  intro: [
+    "When a story already sits in the past, you need a way to step one layer further back: *By noon, the baker had sold every loaf.* The helping verb *had* marks the earlier event so the timeline never tangles. In this topic you read timelines with the past perfect and choose between simple past and past perfect.",
+    "当故事本身已经发生在过去，需要再往前追溯一步时，就用过去完成时：*By noon, the baker had sold every loaf.* 助动词 *had* 标出更早发生的动作，让时间线清清楚楚。本节练习辨认过去完成时的先后顺序，并在一般过去时与过去完成时之间做出选择。",
+  ],
   after: ["irregular-past-participles"],
   points: [
     choose(
       "which-came-first",
       ["Which Came First", "哪件事先发生"],
       [
-        "The **past perfect** (*had* + past participle) marks the **earlier** of two past events: *When the crew woke, the ship **had drifted** off course.* The drifting came first; the waking came second. With *before*, *after* or *by the time*, the past perfect goes with the event that happened first.",
-        "**过去完成时**（*had* + 过去分词）标出两件过去的事中**较早**的一件：*When the crew woke, the ship **had drifted** off course.* 漂离航线在前，醒来在后。与 *before*、*after* 或 *by the time* 连用时，过去完成时用于先发生的那件事。",
+        "The **past perfect** (*had* + past participle) marks the **earlier** of two past events: *When the crew woke, the ship **had drifted** off course.* The drifting came first; the waking came second. With *before*, *after* or *by the time*, the past perfect goes with the event that happened first.\n\n> **Watch out.** Do not assume the first clause in the sentence happened first. Read the verbs: whichever event carries *had* + past participle happened earlier.",
+        "**过去完成时**（*had* + 过去分词）标出两件过去的事中**较早**的一件：*When the crew woke, the ship **had drifted** off course.* 漂离航线在前，醒来在后。与 *before*、*after* 或 *by the time* 连用时，过去完成时用于先发生的那件事。\n\n> **注意。** 不要以为排在句子前半句的事就一定先发生。要看动词：带 *had* 加过去分词的那个动作才发生在前面。",
       ],
       ["Which event happened first?", "哪件事先发生？"],
       `
@@ -941,8 +986,8 @@ ${firstLines}
         The ship had landed safely, so the families cheered.|the ship landed|the families cheered|the two happened at the same moment
       `,
       (right) => [
-        `First, **${right}**: the verb with *had* marks the earlier of the two past events.`,
-        `先发生的是 **${right}**：带 *had* 的动词标出两件过去的事中较早的那件。`,
+        `First, **${right}**: the verb with *had* marks the earlier of the two past events.\n\n**Check.** Put the two events on a timeline: the *had* action was already finished before the simple-past event took place.`,
+        `先发生的是 **${right}**：带 *had* 的动词标出两件过去的事中较早的那件。\n\n**检验。** 把两件事排在时间线上：带 *had* 的动作在一般过去时的事件发生之前就已经完成了。`,
       ],
       [
         [
@@ -959,8 +1004,8 @@ ${firstLines}
       "past-or-past-perfect",
       ["Past or Past Perfect", "一般过去时还是过去完成时"],
       [
-        "Use the **simple past** for the main line of events and the **past perfect** for something that happened before it: *When I **got** home, my brother **had eaten** all the soup.* Do not use the past perfect for events told in the order they happened: *I woke up, **ate** breakfast and **left**.*",
-        "用**一般过去时**讲事件的主线，用**过去完成时**讲在它之前发生的事：*When I **got** home, my brother **had eaten** all the soup.* 按发生顺序讲述的事件不要用过去完成时：*I woke up, **ate** breakfast and **left**.*",
+        "Use the **simple past** for the main line of events and the **past perfect** for something that happened before it: *When I **got** home, my brother **had eaten** all the soup.* Do not use the past perfect for events told in the order they happened: *I woke up, **ate** breakfast and **left**.*\n\n> **Watch out.** Do not mix *has/have* (present perfect) into a past-tense story: when the anchor event is in the past (*got*, *arrived*, *rang*), the earlier action needs *had*, not *has* or *have*.",
+        "用**一般过去时**讲事件的主线，用**过去完成时**讲在它之前发生的事：*When I **got** home, my brother **had eaten** all the soup.* 按发生顺序讲述的事件不要用过去完成时：*I woke up, **ate** breakfast and **left**.*\n\n> **注意。** 过去时态的故事里不要混入 *has/have*（现在完成时）：当基准事件是过去时（*got*、*arrived*、*rang*）时，更早的动作要用 *had*，而不是 *has* 或 *have*。",
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
@@ -997,8 +1042,8 @@ ${perfectLines}
         She got up, ___ her coat and went outside.|grabbed|had grabbed|grabs
       `,
       (right) => [
-        `**${right}** fits the order of events: the past perfect for something earlier, the simple past for the main line of the story.`,
-        `**${right}** 符合事件的顺序：较早的事用过去完成时，故事主线用一般过去时。`,
+        `**${right}** matches the sentence's timeline: past perfect (*had* + participle) for an earlier past event, or simple past for actions moving forward in order.\n\n**Check.** Ask whether the blank reaches back before another past verb or simply continues a chain of past actions — *${right}* fits that exact step.`,
+        `**${right}** 符合句子的时间线：更早发生的过去动作配过去完成时（*had* + 过去分词），顺着时间推进的连续动作配一般过去时。\n\n**检验。** 判断空格是在另一个过去动作之前发生，还是顺着过去动作往下推进，*${right}* 正好对应这一步。`,
       ],
       [
         [
@@ -1018,14 +1063,18 @@ const demands = topic("grammar", {
     "After verbs such as demand, insist, propose and recommend, and after it is essential that, the verb takes its base form: that every voter be heard.",
     "在 demand、insist、propose、recommend 等动词之后，以及 it is essential that 之后，动词用原形：that every voter be heard。",
   ],
+  intro: [
+    "After a demand or proposal, English strips the verb down to its bare base form: *The referee insisted that the clock stop* and *It is vital that he be ready.* Notice there is no *-s* on *stop* and no *is* in place of *be*. In this topic you choose the subjunctive base form and distinguish demands from ordinary statements of fact.",
+    "在要求或提议之后，英语会把从句动词还原成不带任何变化的原形：*The referee insisted that the clock stop* 和 *It is vital that he be ready.* 注意 *stop* 不加 *-s*，*be* 也不变成 *is*。本节练习在要求与提议从句中使用动词原形，并区分虚拟语气与普通陈述。",
+  ],
   after: ["verb-moods"],
   points: [
     choose(
       "the-base-form-after-that",
       ["The Base Form after That", "that 之后的动词原形"],
       [
-        "After verbs of demanding and proposing, such as *demand*, *insist*, *propose*, *recommend*, *request*, *suggest* and *ask*, the verb in the *that* clause takes its **base form**, with no *-s* and no tense: *The marchers demanded that the law **change**.* *We propose that she **be** our speaker.* Expressions such as *it is essential that* and *it is important that* work the same way.",
-        "在 *demand*、*insist*、*propose*、*recommend*、*request*、*suggest* 和 *ask* 等表示要求和提议的动词之后，*that* 从句中的动词用**原形**，不加 *-s*，也没有时态变化：*The marchers demanded that the law **change**.* *We propose that she **be** our speaker.* *it is essential that* 和 *it is important that* 等说法也是如此。",
+        "After verbs of demanding and proposing, such as *demand*, *insist*, *propose*, *recommend*, *request*, *suggest* and *ask*, the verb in the *that* clause takes its **base form**, with no *-s* and no tense: *The marchers demanded that the law **change**.* *We propose that she **be** our speaker.* Expressions such as *it is essential that* and *it is important that* work the same way.\n\n> **Watch out.** Even when the main verb is in the past (*demanded*, *insisted*) or the subject is singular (*he*, *she*, *every voter*), the *that*-clause verb still stays in its plain base form (*be*, *tell*, *drink*).",
+        "在 *demand*、*insist*、*propose*、*recommend*、*request*、*suggest* 和 *ask* 等表示要求和提议的动词之后，*that* 从句中的动词用**原形**，不加 *-s*，也没有时态变化：*The marchers demanded that the law **change**.* *We propose that she **be** our speaker.* *it is essential that* 和 *it is important that* 等说法也是如此。\n\n> **注意。** 即使主句动词是过去时（*demanded*、*insisted*），或者从句主语是第三人称单数（*he*、*she*、*every voter*），*that* 从句里的动词也一律保持原形（*be*、*tell*、*drink*）。",
       ],
       ["Which verb completes the sentence?", "哪个动词能补全句子？"],
       `
@@ -1062,8 +1111,8 @@ ${baseLines}
         The law demands that every child ___ to school.|go|goes|went
       `,
       (right) => [
-        `**${right}** is the base form, which a verb takes in a *that* clause after a demand, a proposal or *it is essential that*.`,
-        `**${right}** 是动词原形，在表示要求、提议或 *it is essential that* 之后的 *that* 从句中，动词用原形。`,
+        `**${right}** is the plain base form, which the subjunctive requires in a *that* clause after a demand, proposal, or *it is essential/important/vital that*.\n\n**Check.** Test the verb after *to* (*to ${right}*): it matches the dictionary base form with no *-s* and no past ending.`,
+        `**${right}** 是动词原形，在表示要求、提议或 *it is essential/important/vital that* 之后的 *that* 从句中，虚拟语气要求用原形。\n\n**检验。** 把它放到 *to* 后面试一下（*to ${right}*）：正好是不加 *-s*、不带过去式的词典原形。`,
       ],
       [
         [
@@ -1080,8 +1129,8 @@ ${baseLines}
       "subjunctive-or-not",
       ["Subjunctive or Not", "是否用虚拟语气"],
       [
-        "Not every *that* clause takes the subjunctive. After verbs of **demanding or proposing**, the base form is right: *She insisted that he **leave**.* After verbs of **knowing or saying a fact**, such as *know*, *say*, *think* or *notice*, use an ordinary tense: *She noticed that he **leaves** early.* And *insist* can also mean *say firmly that something is true*: *He insisted that he **was** innocent.*",
-        "并不是每个 *that* 从句都用虚拟语气。在表示**要求或提议**的动词之后，用原形是正确的：*She insisted that he **leave**.* 在表示**知道或陈述事实**的动词如 *know*、*say*、*think* 或 *notice* 之后，用普通时态：*She noticed that he **leaves** early.* 而且 *insist* 也可以表示*坚称某事属实*：*He insisted that he **was** innocent.*",
+        "Not every *that* clause takes the subjunctive. After verbs of **demanding or proposing**, the base form is right: *She insisted that he **leave**.* After verbs of **knowing or saying a fact**, such as *know*, *say*, *think* or *notice*, use an ordinary tense: *She noticed that he **leaves** early.* And *insist* can also mean *say firmly that something is true*: *He insisted that he **was** innocent.*\n\n> **Watch out.** Do not switch to the base form just because you see the word *that*. Look at the verb *before* *that*: only a demand, request, proposal, or urgency trigger calls for the subjunctive.",
+        "并不是每个 *that* 从句都用虚拟语气。在表示**要求或提议**的动词之后，用原形是正确的：*She insisted that he **leave**.* 在表示**知道或陈述事实**的动词如 *know*、*say*、*think* 或 *notice* 之后，用普通时态：*She noticed that he **leaves** early.* 而且 *insist* 也可以表示*坚称某事属实*：*He insisted that he **was** innocent.*\n\n> **注意。** 不要一看到 *that* 就改用动词原形。要先看 *that* 前面的主句动词：只有表示要求、请求、提议或紧迫性的表达才触发虚拟语气。",
       ],
       ["Is the verb in italics correct?", "斜体的动词是否正确？"],
       `
@@ -1121,16 +1170,16 @@ ${subjunctiveLabels}
         correct: {
           zh: "正确",
           why: [
-            "The verb fits the clause: the base form after a demand or proposal, an ordinary tense after a verb of knowing or saying.",
-            "这个动词与从句相符：在要求或提议之后用原形，在表示知道或陈述的动词之后用普通时态。",
+            "The verb fits the clause: the base form after a demand or proposal, or an ordinary tense after a verb of knowing or stating a fact.\n\n**Check.** Check the trigger before *that*: it matches the mood of the italicized verb.",
+            "这个动词与从句相符：要求或提议之后用了原形，表示知道或陈述事实的动词之后用了普通时态。\n\n**检验。** 对照 *that* 前面的引导词：它与斜体动词的语气完全匹配。",
           ],
           not: ["The verb does not fit the kind of clause it is in, so it is not correct.", "这个动词与它所在的从句类型不符，所以不正确。"],
         },
         "should be the base form": {
           zh: "应该用原形",
           why: [
-            "The clause follows a demand, a request or a proposal, so the verb should take its base form, with no *-s* or tense.",
-            "这个从句跟在要求、请求或提议之后，所以动词应该用原形，不加 *-s*，也不带时态。",
+            "The clause follows a demand, request, or proposal, so the verb should take its bare base form with no *-s* or tense.\n\n**Check.** Replace the italicized verb with its plain base form (*be*, *change*, *leave*): the sentence now follows the subjunctive rule.",
+            "这个从句跟在要求、请求或提议之后，所以动词应该用不加 *-s*、不带时态的原形。\n\n**检验。** 把斜体动词换成不带词尾变化的原形（如 *be*、*change*、*leave*），就符合虚拟语气规则了。",
           ],
           not: [
             "The clause does not follow a demand or proposal that calls for the base form here.",
@@ -1140,8 +1189,8 @@ ${subjunctiveLabels}
         "should be an ordinary tense": {
           zh: "应该用普通时态",
           why: [
-            "The clause follows a verb of knowing, thinking or saying a fact, so it needs an ordinary tense, not the base form.",
-            "这个从句跟在表示知道、认为或陈述事实的动词之后，所以要用普通时态，而不是原形。",
+            "The clause follows a verb of knowing, thinking, or reporting a fact, so it needs an ordinary tense rather than the subjunctive base form.\n\n**Check.** Ask whether the main clause is urging someone to act or reporting what is true — it reports a fact, so an ordinary tense belongs here.",
+            "这个从句跟在表示知道、认为或陈述事实的动词之后，所以要用普通时态，而不是虚拟语气原形。\n\n**检验。** 看主句是在要求别人做什么，还是在陈述事实——这里是在陈述事实，因此应该用普通时态。",
           ],
           not: [
             "The clause does not follow a verb of knowing or saying, so an ordinary tense is not what it needs.",
@@ -1157,24 +1206,24 @@ const passiveLabels: Readonly<Record<string, Label>> = {
   "the passive fits": {
     zh: "被动语态合适",
     why: [
-      "The person who did the action does not matter here; what matters is what happened to the thing tested, so the passive fits.",
-      "这里做动作的人并不重要，重要的是被测试的东西发生了什么，所以用被动语态合适。",
+      "The person who did the action does not matter here; what matters is what happened to the thing tested, so the passive keeps the focus in the right place.\n\n**Check.** Ask *Would naming the lab worker add anything useful?* — no, the procedure and sample are the whole point.",
+      "这里做动作的人并不重要，重要的是被测试的东西经历了什么，所以被动语态把焦点放在了正确的位置上。\n\n**检验。** 问一句“写出是谁操作的，会增加有用的信息吗？”——不会，重点全在实验步骤和样本上。",
     ],
     not: ["Here the doer matters, so the passive is not the better choice.", "这里做动作的人很重要，所以被动语态不是更好的选择。"],
   },
   "the active is better: the doer is the point": {
     zh: "主动语态更好：做动作的人正是重点",
     why: [
-      "The sentence names the doer, and the doer is the news, so the active voice puts that person first: *The Wright brothers made the first powered flight.*",
-      "句子点出了做动作的人，而这个人正是要说的重点，所以主动语态把他放在最前面：*The Wright brothers made the first powered flight.*",
+      "The sentence names the doer, and that person is the news, so the active voice puts the doer right at the front.\n\n**Check.** Flip the sentence so the named doer is the subject: the sentence becomes shorter and more direct.",
+      "句子点出了做动作的人，而且这个人正是要传达的重点，用主动语态就能把他直接放到句首。\n\n**检验。** 把点出名字的动作执行者改作主语读一遍，句子立刻更简短、更有力。",
     ],
     not: ["This sentence does not name a doer who is the point of the sentence.", "这个句子并没有点出作为句子重点的做动作的人。"],
   },
   "the active is better: the passive hides who is responsible": {
     zh: "主动语态更好：被动语态掩盖了谁负责",
     why: [
-      "Someone is responsible for what happened, but the passive leaves that person out, so the sentence dodges the question *who did it?* The active voice would have to name them.",
-      "有人要为所发生的事负责，但被动语态把这个人省去了，句子回避了“是谁做的？”这个问题。用主动语态就必须说出是谁。",
+      "Someone is responsible for what went wrong, but the passive leaves that person out and dodges the question *who did it?*\n\n**Check.** Try adding *by …* to the sentence: you realize the real actor is missing on purpose, which the active voice would force into the open.",
+      "有人要为出的问题负责，但被动语态把这个人省去了，回避了“到底是谁干的？”。\n\n**检验。** 试着在句尾补上 *by …*，就会发现真正该负责的人被刻意藏了起来，而主动语态会迫使句子说清楚。",
     ],
     not: [
       "This sentence does not hide a responsible person; either the doer does not matter or the doer is named.",
@@ -1190,14 +1239,18 @@ const passiveScience = topic("grammar", {
     "Science writing often uses the passive to keep the focus on what was tested, but the active is better when the doer matters.",
     "科学写作常用被动语态，把重点放在被测试的东西上；但当做动作的人重要时，主动语态更好。",
   ],
+  intro: [
+    "In a lab report, nobody cares which student held the beaker; readers care about the sample: *The crystals were weighed after drying.* Yet outside routine procedures, the passive can feel clunky or evasive. In this topic you build passive verb phrases accurately and judge when science or history writing should stay active.",
+    "在实验报告里，读者关心的不是哪位同学端着烧杯，而是样本本身：*The crystals were weighed after drying.* 但在常规实验步骤之外，滥用被动语态会让句子笨重，甚至掩盖责任人。本节练习正确构成被动语态，并判断何时该用主动语态。",
+  ],
   after: ["active-and-passive-voice"],
   points: [
     choose(
       "forming-the-passive",
       ["Forming the Passive", "构成被动语态"],
       [
-        "The **passive voice** is a form of *be* plus a past participle: *The wing **was tested** in a wind tunnel.* The thing acted on becomes the subject. The tense lives in *be*: *is tested*, *was tested*, *has been tested*, *will be tested*. Science reports use it to describe what was done in an experiment.",
-        "**被动语态**由 *be* 的某种形式加过去分词构成：*The wing **was tested** in a wind tunnel.* 被作用的东西成为主语。时态体现在 *be* 上：*is tested*、*was tested*、*has been tested*、*will be tested*。科学报告用它来描述实验中做了什么。",
+        "The **passive voice** is a form of *be* plus a past participle: *The wing **was tested** in a wind tunnel.* The thing acted on becomes the subject. The tense lives in *be*: *is tested*, *was tested*, *has been tested*, *will be tested*. Science reports use it to describe what was done in an experiment.\n\n> **Watch out.** *Was testing* is not passive — it is past progressive active (*someone was testing*). Passive always pairs *be* with a **past participle** (*was tested*, *were frozen*).",
+        "**被动语态**由 *be* 的某种形式加过去分词构成：*The wing **was tested** in a wind tunnel.* 被作用的东西成为主语。时态体现在 *be* 上：*is tested*、*was tested*、*has been tested*、*will be tested*。科学报告用它来描述实验中做了什么。\n\n> **注意。** *was testing* 不是被动语态，而是过去进行时的主动语态。被动语态必须由 *be* 加**过去分词**构成（如 *was tested*、*were frozen*）。",
       ],
       ["Which words complete the sentence in the passive?", "哪个选项能用被动语态补全句子？"],
       `
@@ -1234,8 +1287,8 @@ ${passiveLines}
         The final design ___ by the judges last week.|was chosen|chose|was choosing
       `,
       (right) => [
-        `**${right}** is a form of *be* plus a past participle, the passive, with the thing acted on as the subject.`,
-        `**${right}** 是 *be* 的某种形式加过去分词，即被动语态，以被作用的东西为主语。`,
+        `**${right}** pairs the right tense of *be* with the past participle, forming the passive with the tested item as subject.\n\n**Check.** Verify two parts: *be* matches the subject's number and time clue, and the main verb is a past participle (not *-ing* and not bare active past).`,
+        `**${right}** 用正确时态的 *be* 搭配过去分词，构成了以被测物体为主语的被动语态。\n\n**检验。** 核对两部分：*be* 的形式与主语单复数和时间状语一致，后面的实义动词是过去分词（不是 *-ing*，也不是单独的主动过去式）。`,
       ],
       [
         ["*{wrong}* is active, which would make the object itself do the action.", "*{wrong}* 是主动语态，会让那个物体自己去做这个动作。"],
@@ -1249,8 +1302,8 @@ ${passiveLines}
       "when-the-passive-fits",
       ["When the Passive Fits", "什么时候用被动语态合适"],
       [
-        "In a lab report, the passive fits when the **doer does not matter**: *The water **was heated** to 80 degrees* (it does not matter who turned on the heat). Use the **active** when the doer is the point (*The Wright brothers flew the first plane*) or when the passive hides who is responsible and makes the sentence vague (*Mistakes were made*).",
-        "在实验报告中，当**做动作的人不重要**时，用被动语态合适：*The water **was heated** to 80 degrees*（谁打开热源并不重要）。当做动作的人正是重点时（*The Wright brothers flew the first plane*），或者被动语态掩盖了谁负责、让句子含糊时（*Mistakes were made*），要用**主动语态**。",
+        "In a lab report, the passive fits when the **doer does not matter**: *The water **was heated** to 80 degrees* (it does not matter who turned on the heat). Use the **active** when the doer is the point (*The Wright brothers flew the first plane*) or when the passive hides who is responsible and makes the sentence vague (*Mistakes were made*).\n\n> **Watch out.** Not every sentence with *by + person* belongs in the passive. When the person named after *by* is the real headline — an inventor, author, or witness — flip the sentence to active.",
+        "在实验报告中，当**做动作的人不重要**时，用被动语态合适：*The water **was heated** to 80 degrees*（谁打开热源并不重要）。当做动作的人正是重点时（*The Wright brothers flew the first plane*），或者被动语态掩盖了谁负责、让句子含糊时（*Mistakes were made*），要用**主动语态**。\n\n> **注意。** 并非所有带 *by + 人名* 的句子都适合用被动语态。如果 *by* 后面的人正是句子的主角（发明者、作者、当事人），改为主动语态会更直接。",
       ],
       ["Is the passive a good choice here, or would the active be better?", "这里用被动语态好，还是用主动语态更好？"],
       `
@@ -1298,14 +1351,18 @@ const plurals = topic("grammar", {
     "Some science words keep the plural of the language they came from: one fungus, two fungi; one criterion, two criteria; one analysis, two analyses.",
     "一些科学词汇保留了来源语言的复数形式：one fungus, two fungi；one criterion, two criteria；one analysis, two analyses。",
   ],
+  intro: [
+    "Many scientific terms borrowed from Latin and Greek do not add *-s* to become plural: *one syllabus, two syllabi* and *one cactus, two cacti.* Because those plurals end in *-i*, *-a*, *-ae*, or *-es*, they can also fool writers into using singular verbs with plural nouns. In this topic you form classical plurals and match singular or plural forms to the rest of the sentence.",
+    "许多源自拉丁语和希腊语的科学词汇不靠加 *-s* 变复数，比如 *one syllabus, two syllabi* 和 *one cactus, two cacti*。由于这些复数以 *-i*、*-a*、*-ae* 或 *-es* 结尾，很容易被误当成单数。本节练习构成这些经典复数形式，并根据句中线索正确选用单数或复数。",
+  ],
   after: ["plural-nouns"],
   points: [
     choose(
       "making-the-plural",
       ["Making the Plural", "构成复数"],
       [
-        "Many words of science come from Latin or Greek and keep their old plurals. **-us** becomes **-i** (*fungus*, *fungi*). **-um** becomes **-a** (*bacterium*, *bacteria*). **-is** becomes **-es** (*analysis*, *analyses*). **-on** becomes **-a** (*criterion*, *criteria*). **-a** becomes **-ae** (*larva*, *larvae*). **-ix** or **-ex** becomes **-ices** (*appendix*, *appendices*).",
-        "许多科学词汇来自拉丁语或希腊语，保留了原来的复数形式。**-us** 变成 **-i**（*fungus*、*fungi*）。**-um** 变成 **-a**（*bacterium*、*bacteria*）。**-is** 变成 **-es**（*analysis*、*analyses*）。**-on** 变成 **-a**（*criterion*、*criteria*）。**-a** 变成 **-ae**（*larva*、*larvae*）。**-ix** 或 **-ex** 变成 **-ices**（*appendix*、*appendices*）。",
+        "Many words of science come from Latin or Greek and keep their old plurals. **-us** becomes **-i** (*fungus*, *fungi*). **-um** becomes **-a** (*bacterium*, *bacteria*). **-is** becomes **-es** (*analysis*, *analyses*). **-on** becomes **-a** (*criterion*, *criteria*). **-a** becomes **-ae** (*larva*, *larvae*). **-ix** or **-ex** becomes **-ices** (*appendix*, *appendices*).\n\n> **Watch out.** Match the singular ending to its exact family: *-us* goes to *-i* (*nuclei*), while *-a* goes to *-ae* (*larvae*) — do not mix *-i* and *-ae* across endings.",
+        "许多科学词汇来自拉丁语或希腊语，保留了原来的复数形式。**-us** 变成 **-i**（*fungus*、*fungi*）。**-um** 变成 **-a**（*bacterium*、*bacteria*）。**-is** 变成 **-es**（*analysis*、*analyses*）。**-on** 变成 **-a**（*criterion*、*criteria*）。**-a** 变成 **-ae**（*larva*、*larvae*）。**-ix** 或 **-ex** 变成 **-ices**（*appendix*、*appendices*）。\n\n> **注意。** 要把单数词尾和对应的复数变化对上号：*-us* 变 *-i*（*nuclei*），*-a* 变 *-ae*（*larvae*），不要把 *-i* 和 *-ae* 混用。",
       ],
       ["What is the plural?", "复数形式是什么？"],
       `
@@ -1342,8 +1399,8 @@ ${pluralLines}
         one memorandum, two ___|memoranda|memorandums|memorandi
       `,
       (right) => [
-        `**${right}** keeps the plural of the word's Latin or Greek source.`,
-        `**${right}** 保留了这个词的拉丁语或希腊语来源中的复数形式。`,
+        `**${right}** keeps the classical plural of the word's Latin or Greek ending.\n\n**Check.** Trace the singular ending in the prompt (*-us → -i*, *-um/-on → -a*, *-is → -es*, *-a → -ae*, *-ix/-ex → -ices*): it maps directly to *${right}*.`,
+        `**${right}** 保留了这个词拉丁语或希腊语词尾对应的经典复数形式。\n\n**检验。** 对照题面中单数词的词尾变化（*-us → -i*、*-um/-on → -a*、*-is → -es*、*-a → -ae*、*-ix/-ex → -ices*），正好得到 *${right}*。`,
       ],
       [
         [
@@ -1357,8 +1414,8 @@ ${pluralLines}
       "one-or-many",
       ["One or Many", "单数还是复数"],
       [
-        "Because these plurals do not end in *-s*, they are easy to mistake for singulars. *Criteria*, *phenomena*, *bacteria* and *fungi* are plural: *These criteria **are** strict.* The singulars are *criterion*, *phenomenon*, *bacterium* and *fungus*: *This criterion **is** strict.* Match the noun to *this* or *these* and to the verb.",
-        "因为这些复数不以 *-s* 结尾，所以容易被误当作单数。*criteria*、*phenomena*、*bacteria* 和 *fungi* 是复数：*These criteria **are** strict.* 单数是 *criterion*、*phenomenon*、*bacterium* 和 *fungus*：*This criterion **is** strict.* 名词要与 *this* 或 *these* 以及动词一致。",
+        "Because these plurals do not end in *-s*, they are easy to mistake for singulars. *Criteria*, *phenomena*, *bacteria* and *fungi* are plural: *These criteria **are** strict.* The singulars are *criterion*, *phenomenon*, *bacterium* and *fungus*: *This criterion **is** strict.* Match the noun to *this* or *these* and to the verb.\n\n> **Watch out.** Never add *-s* onto a word that is already plural (*criterias*, *bacterias*, *fungis*): *-a*, *-i*, and *-ae* already carry the plural meaning.",
+        "因为这些复数不以 *-s* 结尾，所以容易被误当作单数。*criteria*、*phenomena*、*bacteria* 和 *fungi* 是复数：*These criteria **are** strict.* 单数是 *criterion*、*phenomenon*、*bacterium* 和 *fungus*：*This criterion **is** strict.* 名词要与 *this* 或 *these* 以及动词一致。\n\n> **注意。** 不要给本身已经是复数的词再加 *-s*（如 *criterias*、*bacterias*、*fungis*）：*-a*、*-i*、*-ae* 本身就已经表示复数了。",
       ],
       ["Which word completes the sentence?", "哪个词能补全句子？"],
       `
@@ -1395,8 +1452,8 @@ ${numberLines}
         The ___ were collected over two years.|data|datum|datas
       `,
       (right) => [
-        `**${right}** matches the rest of the sentence: *this* or *a* and *is* go with the singular, *these* and *are* with the plural.`,
-        `**${right}** 与句子其余部分一致：*this* 或 *a* 和 *is* 配单数，*these* 和 *are* 配复数。`,
+        `**${right}** matches the number clues in the sentence: *a*, *one*, *this*, *each* and *is/was* take the singular; *these*, *both*, *several*, *many* and *are/were* take the plural.\n\n**Check.** Check the determiner and verb next to the blank: they agree with *${right}* in number, and *${right}* is a valid Latin/Greek form with no extra *-s*.`,
+        `**${right}** 与句中的单复数线索一致：*a*、*one*、*this*、*each* 和 *is/was* 配单数；*these*、*both*、*several*、*many* 和 *are/were* 配复数。\n\n**检验。** 核对空格前后的限定词和动词：它们与 *${right}* 的单复数一致，且 *${right}* 是规范词形、没有多余的 *-s*。`,
       ],
       [
         ["*{wrong}* has the wrong number for the words around it.", "*{wrong}* 的单复数与周围的词不一致。"],

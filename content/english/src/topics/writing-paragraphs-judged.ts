@@ -348,6 +348,9 @@ const reasonsCriteria = ["w4-states-opinion", "w4-gives-reasons", "w4-answers-pr
 const opinionCriteria = ["w4-states-opinion", "w4-gives-reasons", "w4-supports-point", "w4-concludes"];
 const stepsCriteria = ["w4-topic-sentence", "w4-in-order", "w4-uses-transitions", "w4-answers-prompt"];
 
+const checkedParagraph = (checkEn: string, checkZh: string) => (model: string) =>
+  t(`One good paragraph:\n\n> ${model}\n\n**Check.** ${checkEn}`, `一个好的段落：\n\n> ${model}\n\n**检验。**${checkZh}`);
+
 /**
  * judgedParagraphTopics are the paragraphs a learner writes, judged by a model
  * against yes-or-no criteria. A learner for whom no route qualifies does not get them.
@@ -359,6 +362,10 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
     summary: t(
       "Write paragraphs of your own: a topic sentence, details that support it, and a closing sentence.",
       "自己动笔写段落：主题句、支持它的细节和结尾句。",
+    ),
+    intro: t(
+      "A strong paragraph has three working parts: a topic sentence that announces the point, concrete details that show it, and a closing sentence that wraps it up in fresh words. Putting all three together turns scattered notes into clear writing.",
+      "一个好段落由三部分协同完成：点明要点的主题句、支撑观点的具体细节，以及换种说法收束的结尾句。把这三部分组合起来，零散的笔记就成了清楚流畅的段落。",
     ),
     prerequisites: ["removing-off-topic-sentences", "choosing-transitions"],
     encompasses: [
@@ -372,8 +379,8 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
         "from-notes",
         t("From Notes to a Paragraph", "把笔记写成段落"),
         t(
-          "Notes list facts; a paragraph makes a point with them. Before you write, ask what the notes add up to, and say that in your first sentence: that is the **topic sentence**. Then turn each note into a full sentence that supports it.\n\nNotes: *rain all week; the river rose; the bridge closed*. Topic sentence: *The storm caused trouble across town.* Each note then becomes a sentence that shows the trouble.",
-          "笔记罗列事实；段落用事实来说明一个观点。动笔之前先想一想：这些笔记合起来说明了什么？把它写成第一句，这就是**主题句**（topic sentence）。然后把每条笔记写成支持它的完整句子。\n\n笔记：*rain all week; the river rose; the bridge closed*。主题句：*The storm caused trouble across town.* 接着每条笔记都写成一个说明这些麻烦的句子。",
+          "Notes list facts; a paragraph makes a point with them. Before you write, ask what the notes add up to, and say that in your first sentence: that is the **topic sentence**. Then turn each note into a full sentence that supports it.\n\nNotes: *rain all week; the river rose; the bridge closed*. Topic sentence: *The storm caused trouble across town.* Each note then becomes a sentence that shows the trouble.\n\n> **Watch out.** Do not just copy the notes with periods—write an opening topic sentence that ties all the notes together first.",
+          "笔记罗列事实；段落用事实来说明一个观点。动笔之前先想一想：这些笔记合起来说明了什么？把它写成第一句，这就是**主题句**（topic sentence）。然后把每条笔记写成支持它的完整句子。\n\n笔记：*rain all week; the river rose; the bridge closed*。主题句：*The storm caused trouble across town.* 接着每条笔记都写成一个说明这些麻烦的句子。\n\n> **注意。**不要只是给笔记加上句号——先写一句能把所有笔记串起来的主题句。",
         ),
         writingGenerator(
           t(
@@ -383,15 +390,18 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
           fromNotesBank,
           notesCriteria,
           { minWords: 25, maxChars: 1200 },
-          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+          checkedParagraph(
+            "Check off every note against your paragraph: your first sentence should state the main point, and every note should appear as a complete supporting sentence.",
+            "对照笔记逐条核对你的段落：第一句应点明中心，每条笔记都应写成支持它的完整句子。",
+          ),
         ),
       ),
       point(
         "specific-details",
         t("Giving Specific Details", "给出具体细节"),
         t(
-          "A point is believed when it is shown. General words such as *nice*, *fun* or *good* tell the reader little; a specific detail, example or fact shows them. *The park is fun* is general. *The park has a zip line that runs over the pond* is specific.\n\nAfter your topic sentence, give at least one detail the reader could picture or check.",
-          "观点要靠展示才能让人信服。*nice*、*fun*、*good* 这样笼统的词告诉读者的很少；具体的细节、例子或事实才能展示观点。*The park is fun* 是笼统的说法，*The park has a zip line that runs over the pond* 才具体。\n\n在主题句之后，至少给出一个读者能想象出来或能核实的细节。",
+          "A point is believed when it is shown. General words such as *nice*, *fun* or *good* tell the reader little; a specific detail, example or fact shows them. *The park is fun* is general. *The park has a zip line that runs over the pond* is specific.\n\nAfter your topic sentence, give at least one detail the reader could picture or check.\n\n> **Watch out.** If your middle sentences only repeat *it is great* or *I like it a lot*, replace them with concrete names, numbers, actions, or sights.",
+          "观点要靠展示才能让人信服。*nice*、*fun*、*good* 这样笼统的词告诉读者的很少；具体的细节、例子或事实才能展示观点。*The park is fun* 是笼统的说法，*The park has a zip line that runs over the pond* 才具体。\n\n在主题句之后，至少给出一个读者能想象出来或能核实的细节。\n\n> **注意。**如果中间的句子只是反复说 *it is great* 或 *I like it a lot*，把它们换成具体的名字、数字、动作或画面。",
         ),
         writingGenerator(
           t(
@@ -401,15 +411,18 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
           detailBank,
           detailCriteria,
           { minWords: 30, maxChars: 1200 },
-          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+          checkedParagraph(
+            "Point to at least one concrete detail or example in your paragraph that a reader could actually picture or check.",
+            "在你的段落里指出至少一个具体细节或例子，确认读者真的能想象出来或核实它。",
+          ),
         ),
       ),
       point(
         "closing-sentence",
         t("Closing the Paragraph", "写好结尾句"),
         t(
-          "A paragraph that stops after its last detail feels cut off. A **closing sentence** brings the reader back to the point: it sums it up, or says why it matters, in new words rather than repeating the topic sentence.\n\nTopic sentence: *Our town needs a new library.* Closing sentence: *A new library would give everyone in town a place to learn.*",
-          "一个段落在最后一个细节后戛然而止，会显得没有写完。**结尾句**（closing sentence）把读者带回要点：用新的说法总结要点或说明它为何重要，而不是重复主题句。\n\n主题句：*Our town needs a new library.* 结尾句：*A new library would give everyone in town a place to learn.*",
+          "A paragraph that stops after its last detail feels cut off. A **closing sentence** brings the reader back to the point: it sums it up, or says why it matters, in new words rather than repeating the topic sentence.\n\nTopic sentence: *Our town needs a new library.* Closing sentence: *A new library would give everyone in town a place to learn.*\n\n> **Watch out.** Do not copy your topic sentence word for word, and do not introduce a brand-new topic in the final line.",
+          "一个段落在最后一个细节后戛然而止，会显得没有写完。**结尾句**（closing sentence）把读者带回要点：用新的说法总结要点或说明它为何重要，而不是重复主题句。\n\n主题句：*Our town needs a new library.* 结尾句：*A new library would give everyone in town a place to learn.*\n\n> **注意。**不要一字不差地照抄主题句，也不要在最后一句另起新话题。",
         ),
         writingGenerator(
           t(
@@ -419,7 +432,10 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
           fullBank,
           fullCriteria,
           { minWords: 35, maxChars: 1500 },
-          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+          checkedParagraph(
+            "Compare your first and last sentences: the last sentence should echo your main idea in fresh words without adding a new topic.",
+            "对照你的第一句和最后一句：最后一句应换种说法呼应主题，不再引入新话题。",
+          ),
         ),
       ),
     ],
@@ -431,6 +447,10 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
       "State what you think in the first sentence, back it with reasons, and close by bringing the reader back to your opinion.",
       "在第一句说出你的看法，用理由支持它，结尾再把读者带回你的观点。",
     ),
+    intro: t(
+      "To convince a reader that every school should have a library, state your stand clearly in sentence one, give two distinct reasons, and finish by tying back to your opinion. Clear structure turns a personal view into a persuasive paragraph.",
+      "想说服读者“每所学校都应该有图书馆”，第一句要亮明立场，接着给出两条各不相同的理由，最后收回到你的观点。清晰的结构能把个人想法变成有说服力的段落。",
+    ),
     prerequisites: ["writing-a-paragraph"],
     encompasses: [{ topic: "writing-a-paragraph", weight: 0.4 }],
     xp: 20,
@@ -440,8 +460,8 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
         "opinion-and-reasons",
         t("An Opinion and Its Reasons", "观点和理由"),
         t(
-          "An **opinion** is what you think, and other people may think differently: *Dogs make better pets than cats.* State it plainly in your first sentence, so the reader knows where you stand.\n\nThen give **reasons**: why do you think so? Each reason should be different. *Dogs are fun* and *Dogs are enjoyable* are one reason said twice. *Dogs get you outside every day* and *Dogs can learn tricks* are two.",
-          "**观点**（opinion）是你的看法，别人可能看法不同：*Dogs make better pets than cats.* 在第一句就明确说出来，让读者知道你的立场。\n\n然后给出**理由**（reason）：你为什么这样想？每条理由应当不同。*Dogs are fun* 和 *Dogs are enjoyable* 是同一条理由说了两遍；*Dogs get you outside every day* 和 *Dogs can learn tricks* 才是两条。",
+          "An **opinion** is what you think, and other people may think differently: *Dogs make better pets than cats.* State it plainly in your first sentence, so the reader knows where you stand.\n\nThen give **reasons**: why do you think so? Each reason should be different. *Dogs are fun* and *Dogs are enjoyable* are one reason said twice. *Dogs get you outside every day* and *Dogs can learn tricks* are two.\n\n> **Watch out.** Check that your two reasons are truly *different*—rewording the same reason twice counts as only one.",
+          "**观点**（opinion）是你的看法，别人可能看法不同：*Dogs make better pets than cats.* 在第一句就明确说出来，让读者知道你的立场。\n\n然后给出**理由**（reason）：你为什么这样想？每条理由应当不同。*Dogs are fun* 和 *Dogs are enjoyable* 是同一条理由说了两遍；*Dogs get you outside every day* 和 *Dogs can learn tricks* 才是两条。\n\n> **注意。**核对你的两条理由是不是真的*不同*——把同一条理由换个词说两遍，只算一条。",
         ),
         writingGenerator(
           t(
@@ -451,15 +471,18 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
           opinionBank,
           reasonsCriteria,
           { minWords: 30, maxChars: 1200 },
-          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+          checkedParagraph(
+            "Check that your first sentence states a clear side, and count at least two distinct reasons—not the same idea phrased twice.",
+            "确认第一句明确亮出了立场，再数一数是不是有至少两条各不相同的理由，而不是同一条说两遍。",
+          ),
         ),
       ),
       point(
         "closing-an-opinion",
         t("Closing an Opinion Paragraph", "观点段落的结尾"),
         t(
-          "An opinion paragraph ends by bringing the reader back to the opinion, now that the reasons have been given. Use new words rather than copying the first sentence, and words such as *For these reasons* or *That is why* can lead into it.\n\nOpinion: *Every school should have a garden.* Closing: *For these reasons, a garden is worth the space it takes.*\n\nKeep every sentence on your opinion: a sentence about something else weakens the paragraph.",
-          "观点段落在给出理由之后，结尾要把读者带回观点。用新的说法，而不是照抄第一句；可以用 *For these reasons* 或 *That is why* 这样的词引出结尾。\n\n观点：*Every school should have a garden.* 结尾：*For these reasons, a garden is worth the space it takes.*\n\n每个句子都要围绕你的观点：写别的事情的句子会削弱段落。",
+          "An opinion paragraph ends by bringing the reader back to the opinion, now that the reasons have been given. Use new words rather than copying the first sentence, and words such as *For these reasons* or *That is why* can lead into it.\n\nOpinion: *Every school should have a garden.* Closing: *For these reasons, a garden is worth the space it takes.*\n\nKeep every sentence on your opinion: a sentence about something else weakens the paragraph.\n\n> **Watch out.** Do not switch sides at the end or leave the paragraph without a closing sentence that returns to your opinion.",
+          "观点段落在给出理由之后，结尾要把读者带回观点。用新的说法，而不是照抄第一句；可以用 *For these reasons* 或 *That is why* 这样的词引出结尾。\n\n观点：*Every school should have a garden.* 结尾：*For these reasons, a garden is worth the space it takes.*\n\n每个句子都要围绕你的观点：写别的事情的句子会削弱段落。\n\n> **注意。**结尾不要改变立场，也不要写完理由就戛然而止——用新说法收回到你的观点。",
         ),
         writingGenerator(
           t(
@@ -469,7 +492,10 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
           opinionBank,
           opinionCriteria,
           { minWords: 35, maxChars: 1500 },
-          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+          checkedParagraph(
+            "Read your opening opinion and your closing sentence together—both should take the same stand, with the closing summing it up in fresh words.",
+            "把开头的观点句和结尾句放在一起读——两句立场一致，结尾换了新的说法收束全段。",
+          ),
         ),
       ),
     ],
@@ -480,6 +506,10 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
     summary: t(
       "Explain how to do something: name the task, give the steps in order, and connect them with transitions.",
       "说明怎样做一件事：点明任务，按顺序写出步骤，并用过渡词把它们连接起来。",
+    ),
+    intro: t(
+      "Explaining how to make a sandwich or wash your hands only works when every step comes in the exact order someone must follow. Naming the task first and linking the steps with *first*, *next*, *then*, and *finally* keeps your reader on track.",
+      "讲怎样做三明治或洗手，只有每一步都按实际先后顺序来写，读者才能照做成功。先点明任务，再用 *first*、*next*、*then*、*finally* 串联步骤，读起来就一目了然。",
     ),
     prerequisites: ["writing-a-paragraph"],
     encompasses: [
@@ -494,8 +524,8 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
         "steps-in-order",
         t("Steps in Order", "按顺序写步骤"),
         t(
-          "A how-to paragraph opens by naming the task: *Planting a seed takes only a few minutes.* Then it gives the steps in the order the reader must do them. A step out of order can spoil the task: you cannot water a seed you have not planted yet.\n\n**Transitions** show the reader where each step begins: *first*, *next*, *then*, *after that*, *finally*.",
-          "操作步骤段落开头先点明任务：*Planting a seed takes only a few minutes.* 然后按读者要做的顺序写出步骤。步骤顺序错了，事情就可能做不成：种子还没种下，就没法浇水。\n\n**过渡词**（transition）告诉读者每一步从哪里开始：*first*、*next*、*then*、*after that*、*finally*。",
+          "A how-to paragraph opens by naming the task: *Planting a seed takes only a few minutes.* Then it gives the steps in the order the reader must do them. A step out of order can spoil the task: you cannot water a seed you have not planted yet.\n\n**Transitions** show the reader where each step begins: *first*, *next*, *then*, *after that*, *finally*.\n\n> **Watch out.** Imagine someone following your instructions literally—do not skip a needed step or put a step before what it requires.",
+          "操作步骤段落开头先点明任务：*Planting a seed takes only a few minutes.* 然后按读者要做的顺序写出步骤。步骤顺序错了，事情就可能做不成：种子还没种下，就没法浇水。\n\n**过渡词**（transition）告诉读者每一步从哪里开始：*first*、*next*、*then*、*after that*、*finally*。\n\n> **注意。**想象有人一字不差地照着你的步骤做——不要漏掉关键一步，也不要把后面的步骤写到前面。",
         ),
         writingGenerator(
           t(
@@ -505,7 +535,10 @@ export const judgedParagraphTopics: readonly TopicDef[] = [
           stepsBank,
           stepsCriteria,
           { minWords: 35, maxChars: 1500 },
-          (model) => t(`One good paragraph:\n\n> ${model}`, `一个好的段落：\n\n> ${model}`),
+          checkedParagraph(
+            "Walk through your paragraph as if doing the task for the first time: does sentence one name the task, are the steps in true order, and do transitions (*first, next, then, finally*) mark them?",
+            "假装自己是第一次做这件事，顺着段落走一遍：第一句点明任务了吗？步骤顺序对吗？用上 *first、next、then、finally* 这样的过渡词了吗？",
+          ),
         ),
       ),
     ],

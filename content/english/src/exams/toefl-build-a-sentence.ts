@@ -91,6 +91,10 @@ export const buildASentence: TopicDef = examTopic({
     "Put words and phrases in order to reply to another speaker: first statements, then questions and indirect questions.",
     "把词语排成顺序，回答另一个人的话：先是陈述句，再是疑问句和间接疑问句。",
   ),
+  intro: t(
+    "In TOEFL Build a Sentence, scrambled chunks must snap into natural English word order—including the tricky switch from *When is the exam?* to *Do you know when the exam is?* inside an indirect question.",
+    "托福连词成句要求把打乱的词块拼成地道的英语对话——既要摆正主谓宾与时间地点顺序，也要在间接疑问句里从 *When is the exam?* 切换到 *Do you know when the exam is?* 这样的陈述语序。",
+  ),
   strand: "writing",
   prerequisites: ["indirect-questions", "subject-and-object-questions"],
   encompasses: [{ topic: "indirect-questions", weight: 0.2 }],
@@ -100,8 +104,8 @@ export const buildASentence: TopicDef = examTopic({
       "statements",
       t("Statements", "陈述句"),
       t(
-        "Read what the other speaker said first: the reply must answer it. Find the subject and its verb, put them together, and build outward: what comes after the verb, then the details of place and time, which usually go last.",
-        "先读对方说的话：回答必须回应它。找到主语和谓语动词放在一起，再向外扩展：先放动词后面的成分，再放地点和时间等细节，它们通常放在最后。",
+        "Read what the other speaker said first: the reply must answer it. Find the subject and its verb, put them together, and build outward: what comes after the verb, then the details of place and time, which usually go last.\n\n> **Watch out.** Do not drop time or place phrases between a verb and its object—keep subject + verb + object tight, and place time/place chunks at the end.",
+        "先读对方说的话：回答必须回应它。找到主语和谓语动词放在一起，再向外扩展：先放动词后面的成分，再放地点和时间等细节，它们通常放在最后。\n\n> **注意。** 不要把时间或地点词块插进动词和宾语之间——先紧扣“主语 + 谓语 + 宾语”，再把时间或地点放到句末。",
       ),
       replyGenerator(question, statements),
     ),
@@ -109,8 +113,8 @@ export const buildASentence: TopicDef = examTopic({
       "questions",
       t("Questions and indirect questions", "疑问句和间接疑问句"),
       t(
-        "A direct question puts the helping verb before the subject: *how long did you stay*. An indirect question, after *do you know* or *can you tell me*, keeps the order of a statement: *do you know when the paper is due*, not *when is the paper due*.",
-        "直接疑问句把助动词放在主语前面：how long did you stay。间接疑问句跟在 do you know、can you tell me 之后，保持陈述句语序：do you know when the paper is due，而不是 when is the paper due。",
+        "A direct question puts the helping verb before the subject: *how long did you stay*. An indirect question, after *do you know* or *can you tell me*, keeps the order of a statement: *do you know when the paper is due*, not *when is the paper due*.\n\n> **Watch out.** Once you see an opener like *do you know*, *can you tell me*, or *did they explain*, switch the inner clause back to **subject before verb**—never invert twice.",
+        "直接疑问句把助动词放在主语前面：*how long did you stay*。间接疑问句跟在 *do you know*、*can you tell me* 之后，保持陈述句语序：*do you know when the paper is due*，而不是 *when is the paper due*。\n\n> **注意。** 只要前面有 *do you know*、*can you tell me* 或 *did they explain* 这样的外层框架，里面的从句就必须恢复**主语在动词前**的陈述语序，切忌双重倒装。",
       ),
       replyGenerator(question, questions),
     ),

@@ -972,21 +972,25 @@ function participleRule(right: string, shown: string): Text {
 }
 
 /** whyNotPerfect explains has or have in a story about the past, or a form that is not the participle. */
-const whyNotPerfect = (wrong: string, right: string, shown: string, position: number): Text => {
-  const rule = participleRule(right, shown);
+const whyNotPerfect = (wrong: string, _right: string, shown: string, position: number): Text => {
   const base = verbOf(shown);
   const form = wrong.split(" ").pop() ?? "";
-  let first: Text;
   if (position === 0)
-    first = t(
-      `*${wrong.split(" ")[0]}* makes the present perfect, but this is a story about the past.`,
-      `*${wrong.split(" ")[0]}* 构成的是现在完成时，但这里讲的是过去的事。`,
+    return t(
+      `*${wrong.split(" ")[0]}* makes the present perfect, not the past perfect needed in a story set in the past.`,
+      `*${wrong.split(" ")[0]}* 构成的是现在完成时，不是过去背景故事里需要的过去完成时。`,
     );
-  else if (form === base) first = t(`*${form}* is the base form, not the past participle.`, `*${form}* 是动词原形，不是过去分词。`);
-  else if (form.endsWith("ed"))
-    first = t(`*${form}* is not a word: *${base}* is irregular.`, `没有 *${form}* 这个词：*${base}* 是不规则动词。`);
-  else first = t(`*${form}* is the past simple, not the past participle.`, `*${form}* 是一般过去式，不是过去分词。`);
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  if (form === base)
+    return t(
+      `*${form}* is the base form, not the past participle required after *had*.`,
+      `*${form}* 是动词原形，不是 *had* 后要求的过去分词。`,
+    );
+  if (form.endsWith("ed"))
+    return t(`*${form}* is not a valid form—*${base}* is irregular.`, `没有 *${form}* 这个词——*${base}* 是不规则动词。`);
+  return t(
+    `*${form}* is the past simple, not the past participle required after *had*.`,
+    `*${form}* 是一般过去式，不是 *had* 后要求的过去分词。`,
+  );
 };
 
 /** perfectIn finds the verb with had in a sentence. */
@@ -995,20 +999,20 @@ const perfectIn = (sentence: string) => /\bhad(n't)? \w+/u.exec(sentence)?.[0] ?
 /** firstWhy explains which event the past perfect puts first. */
 const firstWhy = (right: string, shown: string): Text =>
   t(
-    `*${perfectIn(shown)}* is the past perfect, so it is the earlier event: ${shown} → ${right}`,
-    `*${perfectIn(shown)}* 是过去完成时，表示先发生的事：${shown} → ${right}`,
+    `*${perfectIn(shown)}* is the past perfect, so it is the earlier event: ${shown} → ${right}\n\n**Check.** Compare the two verb forms: the clause with *had* + past participle (*${perfectIn(shown)}*) happened first, and the past-simple clause happened second.`,
+    `*${perfectIn(shown)}* 是过去完成时，表示先发生的事：${shown} → ${right}\n\n**检验。** 对比两个动词：带 *had* + 过去分词（*${perfectIn(shown)}*）的事件先发生，一般过去时的事件后发生。`,
   );
 
 /** whyNotFirst explains the later event, or the two events at the same time. */
 const whyNotFirst = (wrong: string, _right: string, shown: string): Text =>
   wrong === bothAtOnce
     ? t(
-        `*${perfectIn(shown)}* shows that one event came before the other, not at the same time.`,
-        `*${perfectIn(shown)}* 表示一件事比另一件事先发生，不是同时发生。`,
+        `*${perfectIn(shown)}* marks an earlier past event, showing that one happened before the other—not at the same time.`,
+        `*${perfectIn(shown)}* 标出更早发生的过去事件，说明两件事有先后，不是同时发生。`,
       )
     : t(
-        `*${wrong}* is the event in the past simple, so it came later. *${perfectIn(shown)}* is the earlier one.`,
-        `*${wrong}* 是一般过去时的那件事，是后发生的。*${perfectIn(shown)}* 才是先发生的。`,
+        `*${wrong}* is the event in the past simple, which marks the later event rather than the earlier one.`,
+        `*${wrong}* 用的是一般过去时，表示后发生的那件事，而不是先发生的那件。`,
       );
 
 const pastPerfect: TopicDef = {
@@ -1017,6 +1021,10 @@ const pastPerfect: TopicDef = {
   summary: t(
     "When we arrived, the film had started. Had with a past participle is for the earlier of two past events; hadn't with a participle says it had not happened.",
     "When we arrived, the film had started. had 加过去分词表示两件过去的事里更早发生的那件；hadn't 加过去分词表示那时还没发生。",
+  ),
+  intro: t(
+    "When a story looks back from one past moment to an even earlier one—*By the time the train reached the station, the storm had already passed*—English marks the earlier event with *had* + past participle.",
+    "当故事从一个过去的时间点再往前追溯更早发生的事（*By the time the train reached the station, the storm had already passed*），英语用 *had* + 过去分词来标出先发生的事件。",
   ),
   prerequisites: ["present-perfect-or-past-simple"],
   encompasses: [
@@ -1030,15 +1038,18 @@ const pastPerfect: TopicDef = {
       "form",
       t("Had and the past participle", "had 加过去分词"),
       t(
-        "The past perfect is ***had*** + **past participle** for every person: *I had started, she had started, they had gone*. The negative is ***hadn't*** (*had not*): *We hadn't eaten.*\n\nRegular verbs add *-ed* (*start → had started*); many common verbs have their own participle: *go → had gone, eat → had eaten, see → had seen, take → had taken, write → had written*.\n\nDo not use *has* or *have* in a story about the past: *When we arrived, the film **had** started*, not *has started*.",
-        "过去完成时是 ***had*** + **过去分词**，所有人称都一样：*I had started, she had started, they had gone*。否定是 ***hadn't***（*had not*）：*We hadn't eaten.*\n\n规则动词加 *-ed*（*start → had started*）；许多常用动词有自己的过去分词：*go → had gone, eat → had eaten, see → had seen, take → had taken, write → had written*。\n\n讲过去的事时不要用 *has* 或 *have*：*When we arrived, the film **had** started*，不说 *has started*。",
+        "The past perfect is ***had*** + **past participle** for every person: *I had started, she had started, they had gone*. The negative is ***hadn't*** (*had not*): *We hadn't eaten.*\n\nRegular verbs add *-ed* (*start → had started*); many common verbs have their own participle: *go → had gone, eat → had eaten, see → had seen, take → had taken, write → had written*.\n\n> **Watch out.** Do not use *has/have* in a past narrative (*When we arrived, the film has started* is wrong), and use the third form (past participle), not the past simple (*had went* is wrong).",
+        "过去完成时是 ***had*** + **过去分词**，所有人称都一样：*I had started, she had started, they had gone*。否定是 ***hadn't***（*had not*）：*We hadn't eaten.*\n\n规则动词加 *-ed*（*start → had started*）；许多常用动词有自己的过去分词：*go → had gone, eat → had eaten, see → had seen, take → had taken, write → had written*。\n\n> **注意。** 过去语境里不要用 *has/have*（*has started* 是错的），且 *had* 后面用第三态过去分词而不是一般过去式（*had went* 是错的）。",
       ),
       choiceGenerator(
         t("Choose the past perfect of the verb in brackets.", "选出括号中动词的过去完成时。"),
         perfectChoice,
         (right, shown) => {
           const rule = participleRule(right, shown);
-          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+          return t(
+            `${rule.en}: ${fill(shown, right)}\n\n**Check.** Verify both pieces of *${right}*: *had/hadn't* (never *has/have*) plus the third form (past participle).`,
+            `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 核对 *${right}* 的两部分：用 *had/hadn't*（不用 *has/have*）加第三态过去分词。`,
+          );
         },
         whyNotPerfect,
       ),
@@ -1047,8 +1058,8 @@ const pastPerfect: TopicDef = {
       "first",
       t("The earlier of two past events", "两件过去的事里更早的一件"),
       t(
-        "When you tell about two things that happened in the past, the past perfect shows which one happened **first**:\n\n- *When we arrived, the film **had started**.* (The film started first; then we arrived.)\n- *When we arrived, the film **started**.* (We arrived, and then it started.)\n\nThe verb in the past simple (*arrived*) is the later event; the verb with *had* is the earlier one, even if it comes second in the sentence.",
-        "讲过去发生的两件事时，过去完成时表示哪一件**先**发生：\n\n- *When we arrived, the film **had started**.*（电影先开始，我们后到。）\n- *When we arrived, the film **started**.*（我们到了，电影接着开始。）\n\n用一般过去时的动词（*arrived*）是后发生的事；带 *had* 的动词是先发生的事，即使它在句子里排在后面。中文常用“已经”“早就”表示先后，英语靠动词的形式表示。",
+        "When you tell about two things that happened in the past, the past perfect shows which one happened **first**:\n\n- *When we arrived, the film **had started**.* (The film started first; then we arrived.)\n- *When we arrived, the film **started**.* (We arrived, and then it started.)\n\nThe verb in the past simple (*arrived*) is the later event; the verb with *had* is the earlier one, even if it comes second in the sentence.\n\n> **Watch out.** Do not judge by word order—the clause with *had* + participle is always the earlier event, even when it appears at the end of the sentence.",
+        "讲过去发生的两件事时，过去完成时表示哪一件**先**发生：\n\n- *When we arrived, the film **had started**.*（电影先开始，我们后到。）\n- *When we arrived, the film **started**.*（我们到了，电影接着开始。）\n\n用一般过去时的动词（*arrived*）是后发生的事；带 *had* 的动词是先发生的事，即使它在句子里排在后面。\n\n> **注意。** 不要按前后语序猜测——带 *had* + 过去分词的分句永远是更早发生的事，哪怕它写在句尾。",
       ),
       choiceGenerator(t("Which happened first?", "哪件事先发生？"), firstChoice, firstWhy, whyNotFirst),
     ),
@@ -1056,8 +1067,8 @@ const pastPerfect: TopicDef = {
       "write",
       t("Writing the past perfect", "写过去完成时"),
       t(
-        "Type the past perfect of the verb in brackets: *had* + the past participle. When the brackets say *not*, write *hadn't* (or *had not*) + the past participle: *(not lock)* → *hadn't locked*. When they say *never*, put it between *had* and the participle: *had never been*.",
-        "输入括号中动词的过去完成时：*had* + 过去分词。括号里有 *not* 时，写 *hadn't*（或 *had not*）+ 过去分词：*(not lock)* → *hadn't locked*。有 *never* 时，把它放在 *had* 和过去分词之间：*had never been*。",
+        "Type the past perfect of the verb in brackets: *had* + the past participle. When the brackets say *not*, write *hadn't* (or *had not*) + the past participle: *(not lock)* → *hadn't locked*. When they say *never*, put it between *had* and the participle: *had never been*.\n\n> **Watch out.** Place *never* between *had* and the participle (*had never seen*, not *never had seen*), and check irregular participles carefully (*written, taken, eaten, gone*).",
+        "输入括号中动词的过去完成时：*had* + 过去分词。括号里有 *not* 时，写 *hadn't*（或 *had not*）+ 过去分词：*(not lock)* → *hadn't locked*。有 *never* 时，把它放在 *had* 和过去分词之间：*had never been*。\n\n> **注意。** *never* 放在 *had* 和过去分词之间（*had never seen*），并核对不规则过去分词的拼写（*written、taken、eaten、gone*）。",
       ),
       typedGenerator(
         "word-form",
@@ -1065,7 +1076,10 @@ const pastPerfect: TopicDef = {
         perfectTyped,
         (right, shown) => {
           const rule = participleRule(right, shown);
-          return t(`${rule.en}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+          return t(
+            `${rule.en}: ${fill(shown, right)}\n\n**Check.** Verify that *had / hadn't / had never* is followed by the exact past participle of *${verbOf(shown)}*.`,
+            `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 确认 *had / hadn't / had never* 后面接的是 *${verbOf(shown)}* 准确的过去分词。`,
+          );
         },
       ),
     ),
@@ -1171,6 +1185,10 @@ const summarizingAText = judgedTopic({
     "Summarize a short text in 50 to 80 words, in your own words, with its main point and key details only.",
     "用自己的话把一篇短文概括成 50 到 80 词，只写主要观点和关键细节。",
   ),
+  intro: t(
+    "A strong summary distills a 180-word article into a tight 60-word paragraph without copying sentences or adding opinions: state the central idea first, keep only the essential facts, and leave out side examples.",
+    "好的摘要能把 180 词的短文浓缩成 60 词左右的紧凑段落，既不照抄原句也不夹带个人看法：先点明主旨，只保留关键事实，删去次要例子。",
+  ),
   prerequisites: ["writing-a-paragraph"],
   encompasses: [{ topic: "writing-a-paragraph", weight: 0.2 }],
   criteria: ["b1-summary-main-point", "b1-summary-key-details", "b1-summary-own-words"],
@@ -1178,8 +1196,8 @@ const summarizingAText = judgedTopic({
     id: "summary",
     title: t("The main point in your own words", "用自己的话写主要观点"),
     explanation: t(
-      "A summary tells a reader who has not read a text what it says, in far fewer words:\n\n- **Start with the main point** of the whole text, often in one sentence: *The idea that we use only ten percent of our brains is a myth.*\n- **Add only the key details** that support it: the important facts, steps or reasons. Leave out examples, small details, numbers that do not matter and anything repeated.\n- **Use your own words**: do not copy whole sentences. Change the words and join ideas: *Many people believe... but scientists say this is a myth* → *The idea that... is a myth.*\n- **Do not add your opinion** or information that is not in the text.\n\nA good way to start: read the text twice, underline the most important sentence of each part, then close the text and write.",
-      "摘要是用少得多的词告诉没读过原文的人原文讲了什么：\n\n- **先写全文的主要观点**，常常一句话就够：*The idea that we use only ten percent of our brains is a myth.*\n- **只加支持它的关键细节**：重要的事实、步骤或原因。省掉例子、小细节、不重要的数字和重复的内容。\n- **用自己的话**：不要整句照抄。换个说法，把意思合并：*Many people believe... but scientists say this is a myth* → *The idea that... is a myth.*\n- **不要加自己的看法**，也不要加原文没有的信息。\n\n好方法是：把原文读两遍，在每一部分最重要的句子下面画线，然后合上原文再写。中文概括常常照搬原文的句子，英语的摘要要求换成自己的话。",
+      "A summary tells a reader who has not read a text what it says, in far fewer words:\n\n- **Start with the main point** of the whole text, often in one sentence: *The idea that we use only ten percent of our brains is a myth.*\n- **Add only the key details** that support it: the important facts, steps or reasons. Leave out examples, small details and anything repeated.\n- **Use your own words**: do not copy whole sentences. Change the words and join ideas: *Many people believe... but scientists say this is a myth* → *The idea that... is a myth.*\n- **Do not add your opinion** or information that is not in the text.\n\n> **Watch out.** Stay within the 50–80 word range, avoid lifting whole sentences verbatim from the passage, and keep personal opinions (*I think...*) out of the summary.",
+      "摘要是用少得多的词告诉没读过原文的人原文讲了什么：\n\n- **先写全文的主要观点**，常常一句话就够：*The idea that we use only ten percent of our brains is a myth.*\n- **只加支持它的关键细节**：重要的事实、步骤或原因。省掉例子、小细节和重复的内容。\n- **用自己的话**：不要整句照抄。换个说法，把意思合并：*Many people believe... but scientists say this is a myth* → *The idea that... is a myth.*\n- **不要加自己的看法**，也不要加原文没有的信息。\n\n> **注意。** 字数控制在 50–80 词左右，不要整句照搬原文，也不要加入 *I think...* 这类个人观点。",
     ),
   },
   question: t(

@@ -560,34 +560,33 @@ const mannerWhy = (right: string, shown: string): Text => {
   const [, adverb = "", person = "", verb = ""] = mannerOf(adjective) ?? [];
   if (/ is a ___/u.test(shown))
     return t(
-      `The gap comes before the noun *${person}* and says what the person is like, so it needs the adjective: ${fill(shown, right)}`,
-      `空白在名词 *${person}* 前面，说明这个人是什么样的，所以用形容词：${fill(shown, right)}`,
+      `The gap comes before the noun *${person}* and says what the person is like, so it needs the adjective: ${fill(shown, right)}\n\n**Check.** Look directly after the gap: the noun *${person}* follows, so the adjective *${right}*—not the adverb—is required.`,
+      `空白在名词 *${person}* 前面，说明这个人是什么样的，所以用形容词：${fill(shown, right)}\n\n**检验。** 看空白后面：紧跟名词 *${person}*，所以必须用形容词 *${right}*，不用副词。`,
     );
   const rule = adverbRule(adjective, adverb);
   return t(
-    `The gap comes after the verb *${verb}* and says how, so it needs the adverb; ${rule.en}: ${fill(shown, right)}`,
-    `空白在动词 *${verb}* 后面，说明动作怎样做，所以用副词；${rule["zh-CN"]}：${fill(shown, right)}`,
+    `The gap comes after the verb *${verb}* and says how, so it needs the adverb; ${rule.en}: ${fill(shown, right)}\n\n**Check.** Ask what the gap describes: it tells *how* someone ${verb}, so the adverb *${right}* fits.`,
+    `空白在动词 *${verb}* 后面，说明动作怎样做，所以用副词；${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 看空白修饰什么：它说明动作 *${verb}* 是怎样进行的，因此要用副词 *${right}*。`,
   );
 };
 
 /** whyNotManner explains an adjective after a verb, an adverb before a noun, or a misspelt adverb. */
-const whyNotManner = (wrong: string, right: string, shown: string): Text => {
+const whyNotManner = (wrong: string, _right: string, shown: string): Text => {
   const adjective = /\((\w+)\)$/u.exec(shown)?.[1] ?? "";
   const [, adverb = ""] = mannerOf(adjective) ?? [];
-  const rule = adverbRule(adjective, adverb);
   if (wrong === adjective)
     return t(
-      `*${wrong}* is an adjective. After a verb, saying how, English uses the adverb: ${rule.en}.`,
-      `*${wrong}* 是形容词。在动词后面说明怎样做，英语要用副词：${rule["zh-CN"]}。`,
+      `*${wrong}* is an adjective for describing a noun. Here the gap comes after a verb and tells how the action is done.`,
+      `*${wrong}* 是修饰名词的形容词。这里空白在动词后面，说明动作怎样做，不能用形容词。`,
     );
   if (wrong === adverb)
     return t(
-      `*${wrong}* is an adverb and goes with a verb. Before a noun, use the adjective *${right}*.`,
-      `*${wrong}* 是副词，修饰动词。名词前面要用形容词 *${right}*。`,
+      `*${wrong}* is an adverb for a verb, but here a noun follows the gap, so an adjective is needed.`,
+      `*${wrong}* 是修饰动词的副词，但这里空白后面有名词，需要用形容词。`,
     );
   return t(
-    `*${wrong}* is not a word: ${rule.en}${/ is a ___/u.test(shown) ? `, and before a noun you need the adjective *${right}* anyway` : ""}.`,
-    `*${wrong}* 不是正确的词：${rule["zh-CN"]}${/ is a ___/u.test(shown) ? `；而且名词前本来就要用形容词 *${right}*` : ""}。`,
+    `*${wrong}* is not a valid English form${/ is a ___/u.test(shown) ? ", and before a noun you need the adjective form anyway" : " of this adverb"}.`,
+    `*${wrong}* 不是正确的英语词形${/ is a ___/u.test(shown) ? "，而且名词前本来就需要用形容词" : ""}。`,
   );
 };
 
@@ -597,6 +596,10 @@ const adverbsOfManner: TopicDef = {
   summary: t(
     "She runs quickly. He plays well. A word that says how goes after the verb and usually ends in -ly.",
     "She runs quickly. He plays well. 说明“怎样做”的词放在动词后面，通常以 -ly 结尾。",
+  ),
+  intro: t(
+    "Compare *He is a careful driver* (adjective before a noun) with *He drives carefully* (adverb after a verb). When a word tells *how* an action happens, English switches from the adjective to the adverb.",
+    "比较 *He is a careful driver*（名词前用形容词）和 *He drives carefully*（动词后用副词）。说明动作“怎样做”时，英语要从形容词切换成副词。",
   ),
   prerequisites: ["adjectives-before-nouns", "a2-words-adverbs"],
   encompasses: [
@@ -610,8 +613,8 @@ const adverbsOfManner: TopicDef = {
       "choose",
       t("Adjective or adverb", "形容词还是副词"),
       t(
-        "An adjective says what a person or thing is like, and goes before a noun: *a quick runner*. An adverb says how someone does something, and goes after the verb: *She runs quickly.*\n\n- Most adverbs add *-ly*: *quick → quickly*, *careful → carefully*, *loud → loudly*.\n- *-y* becomes *-ily*: *easy → easily*.\n- *good* becomes *well*: *a good swimmer → She swims well.*\n- *fast* and *hard* do not change: *He runs fast. She works hard.*",
-        "形容词说明人或事物是什么样的，放在名词前：*a quick runner*。副词说明动作怎样做，放在动词后：*She runs quickly.*\n\n- 大多数副词加 *-ly*：*quick → quickly*、*careful → carefully*、*loud → loudly*。\n- 以 *-y* 结尾的变成 *-ily*：*easy → easily*。\n- *good* 变成 *well*：*a good swimmer → She swims well.*\n- *fast* 和 *hard* 不变：*He runs fast. She works hard.*\n\n中文常说“跑得快”“唱得好”，英语不用 *runs quick*、*sings good*，要用副词。",
+        "An adjective says what a person or thing is like, and goes before a noun: *a quick runner*. An adverb says how someone does something, and goes after the verb: *She runs quickly.*\n\n- Most adverbs add *-ly*: *quick → quickly*, *careful → carefully*, *loud → loudly*.\n- *-y* becomes *-ily*: *easy → easily*.\n- *good* becomes *well*: *a good swimmer → She swims well.*\n- *fast* and *hard* do not change: *He runs fast. She works hard.*\n\n> **Watch out.** Do not use *good* after a verb (*She swims good* or *goodly* is wrong—use *well*), and do not put an *-ly* adverb directly before a noun (*a quickly runner* is wrong).",
+        "形容词说明人或事物是什么样的，放在名词前：*a quick runner*。副词说明动作怎样做，放在动词后：*She runs quickly.*\n\n- 大多数副词加 *-ly*：*quick → quickly*、*careful → carefully*、*loud → loudly*。\n- 以 *-y* 结尾的变成 *-ily*：*easy → easily*。\n- *good* 变成 *well*：*a good swimmer → She swims well.*\n- *fast* 和 *hard* 不变：*He runs fast. She works hard.*\n\n> **注意。** 动词后面不能用 *good* 或 *goodly*（要说 *She swims well*），名词前面也不要误用 *-ly* 副词（*a quickly runner* 是错的）。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), mannerChoiceBank, mannerWhy, whyNotManner),
     ),
@@ -619,8 +622,8 @@ const adverbsOfManner: TopicDef = {
       "write",
       t("Saying it with an adverb", "用副词表达"),
       t(
-        "Say the same thing with the verb and an adverb: *Tom is a careful driver.* → *Tom drives carefully.* Remember *good → well*.",
-        "用动词加副词表达同样的意思：*Tom is a careful driver.* → *Tom drives carefully.* 注意 *good → well*。",
+        "Say the same thing with the verb and an adverb: *Tom is a careful driver.* → *Tom drives carefully.* Remember *good → well* (*Lin is a good swimmer.* → *Lin swims well.*).\n\n> **Watch out.** Place the adverb after the verb (or after the verb + object) and check the spelling of *-ly* (e.g., *careful* → *carefully*, with two *l*s).",
+        "用动词加副词表达同样的意思：*Tom is a careful driver.* → *Tom drives carefully.* 注意 *good → well*（*Lin is a good swimmer.* → *Lin swims well.*）。\n\n> **注意。** 副词放在动词（或动词+宾语）后面，并留意拼写（例如 *careful* → *carefully* 有两个 *l*）。",
       ),
       typedGenerator(
         "sentence",
@@ -631,8 +634,8 @@ const adverbsOfManner: TopicDef = {
           const [, adverb = ""] = mannerOf(adjective) ?? [];
           const rule = adverbRule(adjective, adverb);
           return t(
-            `With the verb, the word that says how is an adverb, and it goes after the verb; ${rule.en}: ${right}`,
-            `用动词表达时，说明怎样做的词是副词，放在动词后面；${rule["zh-CN"]}：${right}`,
+            `With the verb, the word that says how is an adverb, and it goes after the verb; ${rule.en}: ${right}\n\n**Check.** Verify that the noun phrase (*a ${adjective} ...*) is replaced by the verb followed by the adverb *${adverb}*.`,
+            `用动词表达时，说明怎样做的词是副词，放在动词后面；${rule["zh-CN"]}：${right}\n\n**检验。** 确认原句的名词短语（*a ${adjective} ...*）已完整改写成“动词 + 副词 *${adverb}*”。`,
           );
         },
       ),
@@ -709,24 +712,21 @@ const couldTypedBank: readonly TypedItem[] = couldRows.map(([[subject, was], act
 const couldWhy = (sentence: string): Text =>
   /couldn't|could not/u.test(sentence)
     ? t(
-        `This happened in the past, so *can't* becomes *couldn't*, with the plain verb after it: ${sentence}`,
-        `这是过去的事，所以 *can't* 变成 *couldn't*，后面接动词原形：${sentence}`,
+        `This happened in the past, so *can't* becomes *couldn't*, with the plain verb after it: ${sentence}\n\n**Check.** Verify two things: the past time clue calls for *couldn't* (not *can't* or *didn't could*), and the verb right after it is plain.`,
+        `这是过去的事，所以 *can't* 变成 *couldn't*，后面接动词原形：${sentence}\n\n**检验。** 核对两处：过去语境要用 *couldn't*（不用 *can't* 或 *didn't could*），后面紧接动词原形。`,
       )
     : t(
-        `This is about the past, so *can* becomes *could*, with the plain verb after it: ${sentence}`,
-        `这是过去的事，所以 *can* 变成 *could*，后面接动词原形：${sentence}`,
+        `This is about the past, so *can* becomes *could*, with the plain verb after it: ${sentence}\n\n**Check.** Verify two things: the past time clue calls for *could* (not *can*), and the verb right after it is plain with no *to*.`,
+        `这是过去的事，所以 *can* 变成 *could*，后面接动词原形：${sentence}\n\n**检验。** 核对两处：过去语境要用 *could*（不用 *can*），后面直接接动词原形、不加 *to*。`,
       );
 
 /** whyNotCould explains can for the past, to after could, or did with could. */
-const whyNotCould = (wrong: string, right: string): Text => {
+const whyNotCould = (wrong: string): Text => {
   if (wrong === "can" || wrong === "can't")
-    return t(
-      `*${wrong}* is for now. This is about the past, so it takes *${right}*.`,
-      `*${wrong}* 用于现在。这是过去的事，要用 *${right}*。`,
-    );
+    return t(`*${wrong}* is for the present, but the sentence is about the past.`, `*${wrong}* 用于现在，可这个句子说的是过去的事。`);
   if (wrong === "could to")
     return t("*could* takes the plain verb straight after it, with no *to*.", "*could* 后面直接接动词原形，不加 *to*。");
-  return t("*could* makes its own negative, *couldn't*, and never takes *did*.", "*could* 自己构成否定 *couldn't*，从不和 *did* 连用。");
+  return t("*could* makes its own negative directly and never takes *did*.", "*could* 自己直接构成否定，从不和 *did* 连用。");
 };
 
 const couldForPastAbility: TopicDef = {
@@ -735,6 +735,10 @@ const couldForPastAbility: TopicDef = {
   summary: t(
     "I could swim when I was five. We couldn't see the ball. Could is can in the past.",
     "I could swim when I was five. We couldn't see the ball. could 是 can 的过去式。",
+  ),
+  intro: t(
+    "Compare *Now I can skate* with *When I was six, I couldn't skate at all*. To talk about what someone was or was not able to do in the past, *can / can't* becomes *could / couldn't*.",
+    "比较 *Now I can skate* 和 *When I was six, I couldn't skate at all*。说过去能做或不能做某事时，*can / can't* 变成 *could / couldn't*。",
   ),
   prerequisites: ["can-for-ability", "past-simple-irregular"],
   encompasses: [{ topic: "can-for-ability", weight: 0.3 }],
@@ -745,8 +749,8 @@ const couldForPastAbility: TopicDef = {
       "choose",
       t("Could or couldn't", "could 还是 couldn't"),
       t(
-        "*Could* is the past of *can*: *I can swim now. I could swim when I was five.* The negative is *couldn't* (*could not*): *We couldn't see the ball.*\n\nThe verb after *could* stays in its first form, with no *to*: *She could ride a bike*, not *could to ride* or *could rode*. Do not use *did* with it: *didn't could* is wrong.",
-        "*could* 是 *can* 的过去式：*I can swim now. I could swim when I was five.* 否定是 *couldn't*（*could not*）：*We couldn't see the ball.*\n\n*could* 后面的动词用原形，不加 *to*：*She could ride a bike*，不说 *could to ride* 或 *could rode*。也不要和 *did* 一起用：*didn't could* 是错的。",
+        "*Could* is the past of *can*: *I can swim now. I could swim when I was five.* The negative is *couldn't* (*could not*): *We couldn't see the ball.*\n\nThe verb after *could* stays in its first form, with no *to*: *She could ride a bike.*\n\n> **Watch out.** Never write *could to* (*could to ride*), never put a past verb after *could* (*could rode*), and never use *didn't* with *could* (*didn't could* is wrong).",
+        "*could* 是 *can* 的过去式：*I can swim now. I could swim when I was five.* 否定是 *couldn't*（*could not*）：*We couldn't see the ball.*\n\n*could* 后面的动词用原形，不加 *to*：*She could ride a bike.*\n\n> **注意。** 不要写 *could to*（*could to ride*），不要在 *could* 后面再把动词变过去式（*could rode*），也绝不能把 *didn't* 和 *could* 连用（*didn't could* 是错的）。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -759,8 +763,8 @@ const couldForPastAbility: TopicDef = {
       "write",
       t("Writing with could", "用 could 写句子"),
       t(
-        "Write a sentence from the note with *could* or *couldn't*, and the verb in its first form. *not* in the note means *couldn't*.",
-        "根据笔记用 *could* 或 *couldn't* 写句子，动词用原形。笔记里有 *not* 就用 *couldn't*。",
+        "Write a sentence from the note with *could* or *couldn't*, and the verb in its first form: *Tom / ride a bike / when he was five* → *Tom could ride a bike when he was five.* *not* in the note means *couldn't*.\n\n> **Watch out.** Keep the action verb plain after *could / couldn't* (no *-ed* and no *to*), and end with a period.",
+        "根据笔记用 *could* 或 *couldn't* 写句子，动词用原形：*Tom / ride a bike / when he was five* → *Tom could ride a bike when he was five.* 笔记里有 *not* 就用 *couldn't*。\n\n> **注意。** *could / couldn't* 后面的动词保持原形（不加 *-ed* 也不加 *to*），句末加句号。",
       ),
       typedGenerator("sentence-pattern", t("Write a sentence from the note.", "根据笔记写一个句子。"), couldTypedBank, couldWhy),
     ),
@@ -839,6 +843,10 @@ const writingAboutAPastEvent = judgedTopic({
     "Write six to eight sentences about a game, a race or a match: what happened, in order, and how it ended.",
     "写六到八句话，讲一场游戏、赛跑或比赛：按顺序讲发生了什么，以及结果如何。",
   ),
+  intro: t(
+    "A lively match report takes the reader from kickoff to the final whistle: *Last Friday our class ran a relay race. At first we fell behind, then Maya ran quickly and passed two runners. Finally we finished first.*",
+    "精彩的比赛记叙会带读者从开场走到终场：*Last Friday our class ran a relay race. At first we fell behind, then Maya ran quickly and passed two runners. Finally we finished first.*",
+  ),
   prerequisites: ["writing-sentences-in-the-past", "adverbs-of-manner"],
   encompasses: [
     { topic: "writing-sentences-in-the-past", weight: 0.3 },
@@ -849,8 +857,8 @@ const writingAboutAPastEvent = judgedTopic({
     id: "event",
     title: t("What happened and how it ended", "发生了什么，结果如何"),
     explanation: t(
-      "Tell the story in the past simple, in order:\n\n- When and where it was, and who played: *Last Saturday our team played against Green Park School.*\n- What happened, step by step, with *then*, *after that*, *finally*: *Then our coach shouted. After that we played better.*\n- How it ended: *We won 2 to 1.* *I came second.*\n\nWords like *quickly*, *loudly* and *hard* say how things happened.",
-      "用一般过去时按顺序讲故事：\n\n- 什么时候、在哪里、谁参加：*Last Saturday our team played against Green Park School.*\n- 按顺序讲发生了什么，用 *then*、*after that*、*finally*：*Then our coach shouted. After that we played better.*\n- 结果如何：*We won 2 to 1.* *I came second.*\n\n用 *quickly*、*loudly*、*hard* 等副词说明事情是怎样发生的。",
+      "Tell the story in the past simple, in order:\n\n- When and where it was, and who played: *Last Saturday our team played against Green Park School.*\n- What happened, step by step, with *then*, *after that*, *finally*: *Then our coach shouted. After that we played better.*\n- How it ended: *We won 2 to 1.* *I came second.*\n\nWords like *quickly*, *loudly* and *hard* say how things happened.\n\n> **Watch out.** Keep every event verb in the past simple and make sure you clearly state how the game or race ended.",
+      "用一般过去时按顺序讲故事：\n\n- 什么时候、在哪里、谁参加：*Last Saturday our team played against Green Park School.*\n- 按顺序讲发生了什么，用 *then*、*after that*、*finally*：*Then our coach shouted. After that we played better.*\n- 结果如何：*We won 2 to 1.* *I came second.*\n\n用 *quickly*、*loudly*、*hard* 等副词说明事情是怎样发生的。\n\n> **注意。** 全文叙事动词保持一般过去时，并务必清楚交代比赛或活动的最终结果。",
     ),
   },
   question: t(

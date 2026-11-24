@@ -53,20 +53,24 @@ const participial = topic("writing", {
     "Two sentences about one subject can become one when an action turns into a participial phrase placed right next to the noun it describes.",
     "关于同一主语的两个句子，可以把其中一个动作变成分词短语，紧挨它所修饰的名词，合并成一句。",
   ],
+  intro: [
+    "*The baker opened the oven. He smelled warm cinnamon* merges cleanly into *Opening the oven, the baker smelled warm cinnamon.* Placing the *-ing* phrase right before the person who does it keeps both facts and avoids dangling modifiers.",
+    "*The baker opened the oven. He smelled warm cinnamon* 可以利落地合并为 *Opening the oven, the baker smelled warm cinnamon.* 让 *-ing* 短语紧挨动作发出者，既保留全部原意又避免悬垂修饰语。",
+  ],
   after: ["participial-phrases", "combining-with-relative-clauses"],
   points: [
     choose(
       "the-combined-sentence",
       ["The Combined Sentence", "合并后的句子"],
       [
-        "When two sentences share a subject, one action can become a **participial phrase** with an *-ing* verb: *The scribe sat by the river. He copied the laws.* becomes *Sitting by the river, the scribe copied the laws.* The combined sentence must keep **both facts** and their order in time; it must not change who did what or what happened first.",
-        "两个句子主语相同时，可以把其中一个动作变成带 *-ing* 动词的**分词短语**：*The scribe sat by the river. He copied the laws.* 变成 *Sitting by the river, the scribe copied the laws.* 合并后的句子必须保留**两个事实**及其时间顺序，不能改变谁做了什么，也不能改变先后顺序。",
+        "When two sentences share a subject, one action can become a **participial phrase** with an *-ing* verb: *The scribe sat by the river. He copied the laws.* becomes *Sitting by the river, the scribe copied the laws.* The combined sentence must keep **both facts** and their order in time; it must not change who did what or what happened first.\n\n> **Watch out.** Check *two* things before picking: the original meaning and time order must stay intact, and the doer of the *-ing* phrase must sit right after the comma.",
+        "两个句子主语相同时，可以把其中一个动作变成带 *-ing* 动词的**分词短语**：*The scribe sat by the river. He copied the laws.* 变成 *Sitting by the river, the scribe copied the laws.* 合并后的句子必须保留**两个事实**及其时间顺序，不能改变谁做了什么，也不能改变先后顺序。\n\n> **注意。** 选前查*两项*：原意和时间先后不能变，且 *-ing* 短语的动作发出者必须紧跟逗号之后。",
       ],
       ["Which sentence combines the two and keeps their meaning?", "哪个句子合并了这两句并保留了原意？"],
       combinedSentence,
       (right) => [
-        `**${right}** The first action became an *-ing* phrase, and the sentence keeps both facts in the same order.`,
-        `**${right}** 第一个动作变成了 *-ing* 短语，句子按原来的顺序保留了两个事实。`,
+        `**${right}** The first action became an *-ing* phrase, and the sentence keeps both facts in the same order.\n\n**Check.** Verify that the noun right after the comma performs the opening *-ing* action and that both original facts still match.`,
+        `**${right}** 第一个动作变成了 *-ing* 短语，句子按原来的顺序保留了两个事实。\n\n**检验。** 确认紧跟逗号的名词正是开头 *-ing* 动作的发出者，且原来两条事实都没有走样。`,
       ],
       [
         [
@@ -83,14 +87,14 @@ const participial = topic("writing", {
       "the-phrase-next-to-its-noun",
       ["The Phrase Next to Its Noun", "短语紧挨它的名词"],
       [
-        "A participial phrase at the start of a sentence describes the **first noun after the comma**. *Sitting by the river, the scribe copied the laws* is right: the scribe sat. *Sitting by the river, the laws were copied* says that the laws sat by the river, a **dangling modifier**. Choose the sentence where the noun after the comma is the one doing the action.",
-        "放在句首的分词短语修饰的是**逗号后的第一个名词**。*Sitting by the river, the scribe copied the laws* 是对的：坐着的是抄写员。*Sitting by the river, the laws were copied* 等于说法律坐在河边，这就是**垂悬修饰语**。要选出逗号后的名词正是做这个动作的人或物的句子。",
+        "A participial phrase at the start of a sentence describes the **first noun after the comma**. *Sitting by the river, the scribe copied the laws* is right: the scribe sat. *Sitting by the river, the laws were copied* says that the laws sat by the river, a **dangling modifier**. Choose the sentence where the noun after the comma is the one doing the action.\n\n> **Watch out.** Ask literally: *who is doing the -ing verb?* If the first noun after the comma is an object or a passive subject, the modifier dangles.",
+        "放在句首的分词短语修饰的是**逗号后的第一个名词**。*Sitting by the river, the scribe copied the laws* 是对的：坐着的是抄写员。*Sitting by the river, the laws were copied* 等于说法律坐在河边，这就是**垂悬修饰语**。要选出逗号后的名词正是做这个动作的人或物的句子。\n\n> **注意。** 按字面问一句：*是谁在做 -ing 这个动作？* 如果逗号后第一个名词是物或被动主语，就会造成垂悬修饰语。",
       ],
       ["Which combined sentence puts the phrase next to the right noun?", "哪个合并句把短语放在了正确的名词旁边？"],
       phraseByNoun,
       (right) => [
-        `**${right}** The noun right after the comma is the one doing the action of the *-ing* phrase.`,
-        `**${right}** 紧跟逗号的名词正是做 *-ing* 短语中那个动作的人或物。`,
+        `**${right}** The noun right after the comma is the one doing the action of the *-ing* phrase.\n\n**Check.** Point to the subject right after the comma—it is the exact doer of the opening *-ing* phrase, with no passive swap or changed meaning.`,
+        `**${right}** 紧跟逗号的名词正是做 *-ing* 短语中那个动作的人或物。\n\n**检验。** 找到逗号后的主语——它正是开头 *-ing* 动作的发出者，没有被动错位，也没有改写原意。`,
       ],
       [
         [
@@ -146,20 +150,24 @@ const paraphrase = topic("writing", {
     "A paraphrase keeps every idea of the source in new words and a new sentence order, adds nothing and changes no fact.",
     "转述用新的词语和新的句子顺序保留来源的每一个意思，不增加内容，也不改变任何事实。",
   ],
+  intro: [
+    "Swapping one word in a source sentence is still copying, while changing a date or cause breaks the truth. A real paraphrase rebuilds the sentence in fresh words and structure while keeping every fact identical.",
+    "只换掉原句里一两个词仍算照抄，改动年份或原因又会背离事实。真正的转述会用全新的词句和语序重述，同时让每条事实分毫不差。",
+  ],
   after: ["quote-paraphrase-or-summary"],
   points: [
     choose(
       "the-paraphrase-that-keeps-the-meaning",
       ["The Paraphrase That Keeps the Meaning", "保留原意的转述"],
       [
-        "To **paraphrase** is to say what a source says in your own words. A good paraphrase changes the words *and* the order of the sentence, but keeps every fact: the same who, what, when and how many. Read the source, then check each choice fact by fact.",
-        "**转述**就是用自己的话说出来源的内容。好的转述既改变词语*也*改变句子顺序，但保留每一个事实：同样的人物、事情、时间和数量。先读来源，再逐个事实地检查每个选项。",
+        "To **paraphrase** is to say what a source says in your own words. A good paraphrase changes the words *and* the order of the sentence, but keeps every fact: the same who, what, when and how many. Read the source, then check each choice fact by fact.\n\n> **Watch out.** Reject both traps: one distractor alters a name, number, or cause, while the other copies the source's exact wording with only a tiny tweak.",
+        "**转述**就是用自己的话说出来源的内容。好的转述既改变词语*也*改变句子顺序，但保留每一个事实：同样的人物、事情、时间和数量。先读来源，再逐个事实地检查每个选项。\n\n> **注意。** 避开两个陷阱：一个干扰项篡改了人名、数字或原因，另一个则几乎原样照抄原文，只微调了一两个字。",
       ],
       ["Which is the best paraphrase of the source?", "哪一项是对来源最好的转述？"],
       keepsMeaning,
       (right) => [
-        `**${right}** It uses new words and a new order, and every fact of the source is still there.`,
-        `**${right}** 它用了新的词语和新的顺序，来源中的每个事实都还在。`,
+        `**${right}** It uses new words and a new order, and every fact of the source is still there.\n\n**Check.** Compare each fact (who, what, when, how many) against the source, then confirm the sentence structure is genuinely rewritten.`,
+        `**${right}** 它用了新的词语和新的顺序，来源中的每个事实都还在。\n\n**检验。** 逐条核对人物、事件、时间和数量是否与原文一致，再确认句式确实已经重新组织。`,
       ],
       [
         [
@@ -176,8 +184,8 @@ const paraphrase = topic("writing", {
       "what-is-wrong-with-it",
       ["What Is Wrong with It", "它有什么问题"],
       [
-        "A paraphrase can go wrong in two ways. It **copies the source** when it keeps most of the words and their order, changing only a word or two; that is not your own words. It **changes a fact** when a name, a number, a place or a cause is different from the source. A paraphrase that does neither is **a good paraphrase**.",
-        "转述可能在两方面出错。如果它保留了大部分词语及其顺序，只改了一两个词，就是**照抄来源**，不算自己的话。如果人名、数字、地点或原因与来源不同，就是**改变了事实**。两种错误都没有的转述就是**好的转述**。",
+        "A paraphrase can go wrong in two ways. It **copies the source** when it keeps most of the words and their order, changing only a word or two; that is not your own words. It **changes a fact** when a name, a number, a place or a cause is different from the source. A paraphrase that does neither is **a good paraphrase**.\n\n> **Watch out.** Check *accuracy* first (same names, numbers, direction of cause), then check *originality* (new phrasing and word order).",
+        "转述可能在两方面出错。如果它保留了大部分词语及其顺序，只改了一两个词，就是**照抄来源**，不算自己的话。如果人名、数字、地点或原因与来源不同，就是**改变了事实**。两种错误都没有的转述就是**好的转述**。\n\n> **注意。** 先查*准确性*（人名、数字、因果方向是否一致），再查*改写度*（词语和语序是否真正换新）。",
       ],
       ["Source and paraphrase: what is true of the paraphrase?", "来源与转述：这个转述属于哪种情况？"],
       paraphraseRows
@@ -190,7 +198,10 @@ const paraphrase = topic("writing", {
       {
         "a good paraphrase": {
           zh: "好的转述",
-          why: ["The words and their order are new, and every fact matches the source.", "词语和顺序都是新的，每个事实都与来源一致。"],
+          why: [
+            "The words and their order are new, and every fact matches the source.\n\n**Check.** Compare the two sentences side by side: the wording and clause order changed, while every fact remained accurate.",
+            "词语和顺序都是新的，每个事实都与来源一致。\n\n**检验。** 并排对照两句：措辞和语序都换了新，而每条事实都准确无误。",
+          ],
           not: [
             "Something is wrong here: either the words are copied or a fact has changed.",
             "这里有问题：要么词语是照抄的，要么事实被改了。",
@@ -199,14 +210,17 @@ const paraphrase = topic("writing", {
         "it copies the source": {
           zh: "照抄来源",
           why: [
-            "It keeps nearly all the words of the source in the same order; only a word or two has changed.",
-            "它几乎按原来的顺序保留了来源的所有词语，只改了一两个词。",
+            "It keeps nearly all the words of the source in the same order; only a word or two has changed.\n\n**Check.** Line up the source and the paraphrase word for word—almost every phrase repeats verbatim in the same order.",
+            "它几乎按原来的顺序保留了来源的所有词语，只改了一两个词。\n\n**检验。** 逐词对照原文和转述——几乎整句原封不动地照搬了原来的词序。",
           ],
           not: ["The words here are not copied; the sentence has been put in new words.", "这里的词语不是照抄的，句子已经换了说法。"],
         },
         "it changes a fact": {
           zh: "改变了事实",
-          why: ["A name, number, place or cause is different from the source.", "某个人名、数字、地点或原因与来源不同。"],
+          why: [
+            "A name, number, place or cause is different from the source.\n\n**Check.** Spot the specific detail that conflicts with the source—a swapped name, altered number, or reversed cause.",
+            "某个人名、数字、地点或原因与来源不同。\n\n**检验。** 找出与原文冲突的具体细节——人名、数字被改，或因果方向说反了。",
+          ],
           not: ["Every fact here matches the source.", "这里的每个事实都与来源一致。"],
         },
       },
@@ -218,48 +232,48 @@ const relationLabels: Readonly<Record<string, Label>> = {
   adding: {
     zh: "补充",
     why: [
-      "The second sentence adds another point of the same kind; *furthermore*, *also* or *in addition* fits.",
-      "第二句补充同类的另一个要点，适合用 *furthermore*、*also* 或 *in addition*。",
+      "The second sentence adds another point of the same kind; *furthermore*, *also* or *in addition* fits.\n\n**Check.** Notice both sentences point in the same direction—the second stacks another supporting fact onto the first.",
+      "第二句补充同类的另一个要点，适合用 *furthermore*、*also* 或 *in addition*。\n\n**检验。** 注意前后两句方向一致——第二句在第一句基础上叠加了一条同类信息。",
     ],
     not: ["The second sentence does not simply add another point of the same kind.", "第二句并不只是补充同类的另一个要点。"],
   },
   contrast: {
     zh: "对比",
     why: [
-      "The second sentence turns to a difference or an opposite; *however* or *on the other hand* fits.",
-      "第二句转向差异或相反的一面，适合用 *however* 或 *on the other hand*。",
+      "The second sentence turns to a difference or an opposite; *however* or *on the other hand* fits.\n\n**Check.** Substitute *but* between the two sentences—the second pulls against or differs sharply from the first.",
+      "第二句转向差异或相反的一面，适合用 *however* 或 *on the other hand*。\n\n**检验。** 在两句间换成“但是/然而”——第二句与第一句形成鲜明对照或转折。",
     ],
     not: ["The second sentence does not turn to an opposite point.", "第二句没有转向相反的一面。"],
   },
   "cause and effect": {
     zh: "因果",
     why: [
-      "The second sentence tells what resulted from the first; *as a result* or *therefore* fits.",
-      "第二句说明第一句造成的结果，适合用 *as a result* 或 *therefore*。",
+      "The second sentence tells what resulted from the first; *as a result* or *therefore* fits.\n\n**Check.** Ask *what happened because of the first sentence?*—the second sentence states that exact outcome.",
+      "第二句说明第一句造成的结果，适合用 *as a result* 或 *therefore*。\n\n**检验。** 问一句“因为第一句发生了什么？”——第二句正好说出这个结果。",
     ],
     not: ["The second sentence is not a result of the first.", "第二句不是第一句的结果。"],
   },
   example: {
     zh: "举例",
     why: [
-      "The second sentence gives a particular case of the first; *for instance* or *for example* fits.",
-      "第二句给出第一句的具体事例，适合用 *for instance* 或 *for example*。",
+      "The second sentence gives a particular case of the first; *for instance* or *for example* fits.\n\n**Check.** Notice the first sentence makes a general statement and the second zooms in on one concrete instance.",
+      "第二句给出第一句的具体事例，适合用 *for instance* 或 *for example*。\n\n**检验。** 注意第一句是概括说法，第二句落到了一个具体实例上。",
     ],
     not: ["The second sentence is not a particular case of the first.", "第二句不是第一句的具体事例。"],
   },
   time: {
     zh: "时间",
     why: [
-      "The second sentence tells what happened at another point in time; *meanwhile*, *later* or *afterward* fits.",
-      "第二句说明在另一时间发生的事，适合用 *meanwhile*、*later* 或 *afterward*。",
+      "The second sentence tells what happened at another point in time; *meanwhile*, *later* or *afterward* fits.\n\n**Check.** Notice the transition places the second event at the same time as or right after the first.",
+      "第二句说明在另一时间发生的事，适合用 *meanwhile*、*later* 或 *afterward*。\n\n**检验。** 注意这个过渡词交代了第二件事与第一件事在时间上的同时或先后关系。",
     ],
     not: ["The link between the two sentences is not one of time.", "两句之间不是时间关系。"],
   },
   conclusion: {
     zh: "总结",
     why: [
-      "The second sentence sums up what came before; *in short* or *in conclusion* fits.",
-      "第二句概括前面的内容，适合用 *in short* 或 *in conclusion*。",
+      "The second sentence sums up what came before; *in short* or *in conclusion* fits.\n\n**Check.** Notice the first sentence lists several points and the second wraps them up into one summary verdict.",
+      "第二句概括前面的内容，适合用 *in short* 或 *in conclusion*。\n\n**检验。** 注意前一句列举了多项内容，后一句把它们收束成一句总括评价。",
     ],
     not: ["The second sentence does not sum up what came before.", "第二句没有概括前面的内容。"],
   },
@@ -315,14 +329,18 @@ const transitions = topic("writing", {
     "Transitions name how two ideas relate: adding, contrast, cause and effect, example, time and conclusion.",
     "过渡词说明两个观点之间的关系：补充、对比、因果、举例、时间和总结。",
   ],
+  intro: [
+    "Six families of transitions steer a reader smoothly from one sentence to the next: adding (*Furthermore*), contrast (*However*), cause and effect (*Therefore*), example (*For instance*), time (*Meanwhile*), and conclusion (*In short*).",
+    "六类过渡词能顺畅地引导读者从上一句走到下一句：补充（*Furthermore*）、对比（*However*）、因果（*Therefore*）、举例（*For instance*）、时间（*Meanwhile*）和总结（*In short*）。",
+  ],
   after: ["linking-words-for-reasons-and-contrast"],
   points: [
     label(
       "how-the-ideas-relate",
       ["How the Ideas Relate", "观点之间是什么关系"],
       [
-        "A transition tells the reader how the second sentence relates to the first. It can mark **adding** another point (*furthermore*), a **contrast** (*however*), a **cause and effect** (*as a result*), an **example** of the first (*for instance*), a step in **time** (*meanwhile*), or a **conclusion** that sums up (*in short*). Read the two sentences, notice the transition in italics, and name the relation.",
-        "过渡词告诉读者第二句和第一句是什么关系。它可以表示**补充**另一个要点（*furthermore*）、**对比**（*however*）、**因果**（*as a result*）、第一句的**举例**（*for instance*）、**时间**上的一步（*meanwhile*），或者概括前文的**总结**（*in short*）。读这两句话，注意斜体的过渡词，说出它们的关系。",
+        "A transition tells the reader how the second sentence relates to the first. It can mark **adding** another point (*furthermore*), a **contrast** (*however*), a **cause and effect** (*as a result*), an **example** of the first (*for instance*), a step in **time** (*meanwhile*), or a **conclusion** that sums up (*in short*). Read the two sentences, notice the transition in italics, and name the relation.\n\n> **Watch out.** Check the logical link between the *two sentences* as well as the italicized word—both point to the same relation.",
+        "过渡词告诉读者第二句和第一句是什么关系。它可以表示**补充**另一个要点（*furthermore*）、**对比**（*however*）、**因果**（*as a result*）、第一句的**举例**（*for instance*）、**时间**上的一步（*meanwhile*），或者概括前文的**总结**（*in short*）。读这两句话，注意斜体的过渡词，说出它们的关系。\n\n> **注意。** 除了看斜体的过渡词，也要看*前后两句*之间的逻辑关系——两者共同指向同一种关系。",
       ],
       ["What relation does the transition in italics show?", "斜体的过渡词表示什么关系？"],
       transitionRelation,
@@ -332,14 +350,14 @@ const transitions = topic("writing", {
       "the-transition-that-fits",
       ["The Transition That Fits", "合适的过渡词"],
       [
-        "Each relation has its own transitions. **Adding**: *furthermore*, *in addition*, *also*. **Contrast**: *however*, *on the other hand*, *in contrast*. **Cause and effect**: *as a result*, *therefore*, *consequently*. **Example**: *for instance*, *for example*. **Time**: *meanwhile*, *later*, *afterward*. **Conclusion**: *in short*, *in conclusion*. A wrong transition tells the reader the wrong relation.",
-        "每种关系都有自己的过渡词。**补充**：*furthermore*、*in addition*、*also*。**对比**：*however*、*on the other hand*、*in contrast*。**因果**：*as a result*、*therefore*、*consequently*。**举例**：*for instance*、*for example*。**时间**：*meanwhile*、*later*、*afterward*。**总结**：*in short*、*in conclusion*。用错过渡词，就会把错误的关系告诉读者。",
+        "Each relation has its own transitions. **Adding**: *furthermore*, *in addition*, *also*. **Contrast**: *however*, *on the other hand*, *in contrast*. **Cause and effect**: *as a result*, *therefore*, *consequently*. **Example**: *for instance*, *for example*. **Time**: *meanwhile*, *later*, *afterward*. **Conclusion**: *in short*, *in conclusion*. A wrong transition tells the reader the wrong relation.\n\n> **Watch out.** Name the relationship between the two sentences *first* (adding, contrast, cause, example, time, or conclusion), then pick the transition from that exact family.",
+        "每种关系都有自己的过渡词。**补充**：*furthermore*、*in addition*、*also*。**对比**：*however*、*on the other hand*、*in contrast*。**因果**：*as a result*、*therefore*、*consequently*。**举例**：*for instance*、*for example*。**时间**：*meanwhile*、*later*、*afterward*。**总结**：*in short*、*in conclusion*。用错过渡词，就会把错误的关系告诉读者。\n\n> **注意。** 先判断前后两句之间是哪一种关系（补充、对比、因果、举例、时间还是总结），再从对应的过渡词组里选。",
       ],
       ["Which transition fits the gap?", "哪个过渡词适合填入空格？"],
       transitionChoice,
       (right, shown) => [
-        `*${shown.replace("___", right)}* **${right}** names the relation between the two sentences.`,
-        `*${shown.replace("___", right)}* **${right}** 说明了两句之间的关系。`,
+        `*${shown.replace("___", right)}* **${right}** names the relation between the two sentences.\n\n**Check.** Read both sentences aloud with **${right}** in place—the logical turn between the two ideas clicks smoothly.`,
+        `*${shown.replace("___", right)}* **${right}** 说明了两句之间的关系。\n\n**检验。** 把 **${right}** 填进空白处通读两句——前后两句的逻辑衔接自然顺畅。`,
       ],
       [
         ["*{wrong}* names a different relation from the one between these sentences.", "*{wrong}* 表示的关系与这两句之间的关系不同。"],
@@ -432,20 +450,24 @@ const defining = topic("writing", {
     "A good definition names the class a thing belongs to and what sets it apart, and never uses the word to define itself.",
     "好的定义说出事物所属的类别以及它与众不同之处，而且从不用这个词本身来定义它。",
   ],
+  intro: [
+    "Saying *A compass is when you find north* leaves out what kind of object a compass is, and *A compass is a compassing tool* goes in a circle. A crisp definition names the **class** (*an instrument*) plus **what sets it apart** (*whose magnetic needle points north*).",
+    "说 *A compass is when you find north* 漏掉了指南针所属的类别，说 *A compass is a compassing tool* 则是同义反复。清楚的定义要先点出**类别**（一种仪器），再说明**区别特征**（磁针指向北方）。",
+  ],
   after: ["technical-words-in-context"],
   points: [
     choose(
       "the-better-definition",
       ["The Better Definition", "更好的定义"],
       [
-        "A good definition has two parts: the **class** the thing belongs to (*a geyser is a hot spring*) and **what sets it apart** from others in the class (*that shoots water into the air*). Avoid definitions that use the word itself (*a geyser is something that geysers*) and those that begin with *is when* or *is where*, which name no class.",
-        "好的定义有两部分：事物所属的**类别**（*a geyser is a hot spring*）和它与同类事物的**区别**（*that shoots water into the air*）。避免用这个词本身来下定义（*a geyser is something that geysers*），也避免用 *is when* 或 *is where* 开头，因为它们没有说出类别。",
+        "A good definition has two parts: the **class** the thing belongs to (*a geyser is a hot spring*) and **what sets it apart** from others in the class (*that shoots water into the air*). Avoid definitions that use the word itself (*a geyser is something that geysers*) and those that begin with *is when* or *is where*, which name no class.\n\n> **Watch out.** Check for two instant red flags: repeating the root of the word being defined, or starting with *is when*, *is where*, or *is about*.",
+        "好的定义有两部分：事物所属的**类别**（*a geyser is a hot spring*）和它与同类事物的**区别**（*that shoots water into the air*）。避免用这个词本身来下定义（*a geyser is something that geysers*），也避免用 *is when* 或 *is where* 开头，因为它们没有说出类别。\n\n> **注意。** 留意两个明显雷区：用被定义词本身的词根来解释自己，或者用 *is when*、*is where*、*is about* 开头。",
       ],
       ["Choose the better definition.", "选出更好的定义。"],
       betterDefinition,
       (right) => [
-        `**${right}** It names the class and then what sets this thing apart.`,
-        `**${right}** 它说出了类别，又说出了这个事物的区别特征。`,
+        `**${right}** It names the class and then what sets this thing apart.\n\n**Check.** Spot the clear class noun after *is* (*a hot spring*, *a mountain*, *a unit*) and verify the rest explains how it differs without repeating the term itself.`,
+        `**${right}** 它说出了类别，又说出了这个事物的区别特征。\n\n**检验。** 找出 *is* 后面的明确类别名词，并确认后半句说清了特征且没有重复被定义的词。`,
       ],
       [
         [
@@ -462,14 +484,14 @@ const defining = topic("writing", {
       "defining-it-in-the-explanation",
       ["Defining It in the Explanation", "在说明中下定义"],
       [
-        "In an explanation, define a new term **the first time you use it**, inside the same sentence, often after a comma: *Farmers used irrigation, a system of canals that carried water to their fields.* A sentence that uses the term without defining it leaves a new reader lost, and one that defines it with the same word does not help.",
-        "在说明文中，要在**第一次使用**新术语时就在同一句中给出定义，常放在逗号之后：*Farmers used irrigation, a system of canals that carried water to their fields.* 使用术语却不加定义，会让初学的读者不明白；用同一个词来定义它也没有帮助。",
+        "In an explanation, define a new term **the first time you use it**, inside the same sentence, often after a comma: *Farmers used irrigation, a system of canals that carried water to their fields.* A sentence that uses the term without defining it leaves a new reader lost, and one that defines it with the same word does not help.\n\n> **Watch out.** Imagine a reader who has never heard the term—only the sentence that gives a real plain-language meaning right beside the word helps them.",
+        "在说明文中，要在**第一次使用**新术语时就在同一句中给出定义，常放在逗号之后：*Farmers used irrigation, a system of canals that carried water to their fields.* 使用术语却不加定义，会让初学的读者不明白；用同一个词来定义它也没有帮助。\n\n> **注意。** 设想一位从未听过该术语的读者——只有紧挨术语给出通俗释义的句子才能让他真正读懂。",
       ],
       ["Which sentence defines the term within the explanation?", "哪个句子在说明中给术语下了定义？"],
       definesInExplanation,
       (right) => [
-        `**${right}** It uses the term and, right beside it, says what the term means.`,
-        `**${right}** 它使用了这个术语，并在旁边紧接着说明了它的意思。`,
+        `**${right}** It uses the term and, right beside it, says what the term means.\n\n**Check.** Cover the technical term itself—the brief phrase right after it still tells a newcomer exactly what it is.`,
+        `**${right}** 它使用了这个术语，并在旁边紧接着说明了它的意思。\n\n**检验。** 遮住那个术语本身——紧跟在它后面的短语依然能让初学者明白它是什么。`,
       ],
       [
         ["*{wrong}* uses the term without saying what it means.", "*{wrong}* 使用了术语，却没有说明它的意思。"],
@@ -526,20 +548,24 @@ const precise = topic("writing", {
     "Explanations use exact words and amounts instead of vague ones: rose 3 meters, not went up a lot; collide, not bump into.",
     "说明文用准确的词语和数量代替含糊的说法：rose 3 meters 而不是 went up a lot；collide 而不是 bump into。",
   ],
+  intro: [
+    "Writing *The glacier got smaller* leaves a scientist asking *how much, and how fast?* Replacing fuzzy phrases with exact measurements (*shrank by 50 meters in ten years*) and exact verbs (*collided*, *absorbed*) makes science writing clear and testable.",
+    "写 *The glacier got smaller* 会让科学家追问“小了多少？多快？”把含糊说法换成具体数值（*shrank by 50 meters in ten years*）和准确动词（*collided*、*absorbed*），科学说明才清楚可核查。",
+  ],
   after: ["formal-style"],
   points: [
     choose(
       "finding-the-vague-word",
       ["Finding the Vague Word", "找出含糊的词"],
       [
-        "Vague words leave the reader guessing: *a lot*, *stuff*, *really small*, *a while*, *got bigger*. In science, the reader needs to know **how much**, **how long** and **exactly what happened**. Find the word or phrase that a scientist would replace with a number or an exact verb.",
-        "含糊的词让读者只能去猜：*a lot*、*stuff*、*really small*、*a while*、*got bigger*。在科学写作中，读者需要知道**多少**、**多久**以及**到底发生了什么**。找出科学家会用数字或准确动词替换的词或短语。",
+        "Vague words leave the reader guessing: *a lot*, *stuff*, *really small*, *a while*, *got bigger*. In science, the reader needs to know **how much**, **how long** and **exactly what happened**. Find the word or phrase that a scientist would replace with a number or an exact verb.\n\n> **Watch out.** Ask *can two readers disagree on what this means?* A concrete noun like *volcano* or *cell* is clear, while *a lot*, *pretty tall*, or *stuff* is fuzzy.",
+        "含糊的词让读者只能去猜：*a lot*、*stuff*、*really small*、*a while*、*got bigger*。在科学写作中，读者需要知道**多少**、**多久**以及**到底发生了什么**。找出科学家会用数字或准确动词替换的词或短语。\n\n> **注意。** 问一句：*两个读者对这个词的理解会不会差很远？* *volcano*、*cell* 这类具体名词已经清楚，而 *a lot*、*pretty tall*、*stuff* 则含糊不清。",
       ],
       ["Which word or phrase is vague?", "哪个词或短语含糊？"],
       findVague,
       (right) => [
-        `**${right}** is vague: it does not say how much or exactly what happened. A number or an exact verb would replace it.`,
-        `**${right}** 是含糊的：它没有说明多少或到底发生了什么，应该用数字或准确的动词替换。`,
+        `**${right}** is vague: it does not say how much or exactly what happened. A number or an exact verb would replace it.\n\n**Check.** Ask *how much?* or *what exact process?* about **${right}**—it cannot answer without a measurement or a precise scientific verb.`,
+        `**${right}** 是含糊的：它没有说明多少或到底发生了什么，应该用数字或准确的动词替换。\n\n**检验。** 对着 **${right}** 追问“具体多少？”或“究竟发生了什么过程？”——不换成数值或准确动词就无法回答。`,
       ],
       [
         ["*{wrong}* is already exact enough; it is not the vague part.", "*{wrong}* 已经足够准确，不是含糊的部分。"],
@@ -550,14 +576,14 @@ const precise = topic("writing", {
       "the-precise-revision",
       ["The Precise Revision", "精确的修改"],
       [
-        "A precise revision replaces a vague word with an **exact amount** (*3 meters*, *45 seconds*) or an **exact verb** (*collided*, *examined*, *absorbed*), and it keeps the facts true. Adding words like *very* or *super* does not make a sentence precise, and a revision that changes what happened is wrong.",
-        "精确的修改用**准确的数量**（*3 meters*、*45 seconds*）或**准确的动词**（*collided*、*examined*、*absorbed*）替换含糊的词，并保持事实正确。加上 *very* 或 *super* 之类的词并不能使句子精确，而改变了所发生的事情的修改是错误的。",
+        "A precise revision replaces a vague word with an **exact amount** (*3 meters*, *45 seconds*) or an **exact verb** (*collided*, *examined*, *absorbed*), and it keeps the facts true. Adding words like *very* or *super* does not make a sentence precise, and a revision that changes what happened is wrong.\n\n> **Watch out.** Check *precision* and *accuracy* together—one distractor just piles on vague intensifiers (*very, very*, *super*), while the other uses exact numbers that contradict the original fact.",
+        "精确的修改用**准确的数量**（*3 meters*、*45 seconds*）或**准确的动词**（*collided*、*examined*、*absorbed*）替换含糊的词，并保持事实正确。加上 *very* 或 *super* 之类的词并不能使句子精确，而改变了所发生的事情的修改是错误的。\n\n> **注意。** *精确度*和*事实准确性*都要核对——一个干扰项只是堆砌模糊程度词（*very, very*、*super*），另一个虽有数字却把原意说反了。",
       ],
       ["Which revision makes the sentence precise?", "哪个修改使句子变得精确？"],
       preciseRevision,
       (right) => [
-        `**${right}** It replaces the vague words with an exact amount or verb and keeps the fact the same.`,
-        `**${right}** 它用准确的数量或动词替换了含糊的词，并保持事实不变。`,
+        `**${right}** It replaces the vague words with an exact amount or verb and keeps the fact the same.\n\n**Check.** Confirm that **${right}** gives a measurable number or exact scientific verb *and* points in the same factual direction as the original sentence.`,
+        `**${right}** 它用准确的数量或动词替换了含糊的词，并保持事实不变。\n\n**检验。** 确认 **${right}** 给出了可测量的数值或准确的科学动词，并且事实方向与原句一致。`,
       ],
       [
         [

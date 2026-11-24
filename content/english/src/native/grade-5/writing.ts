@@ -52,20 +52,24 @@ const researchQuestion = topic("writing", {
     "A good research question is narrow enough to answer from a few sources and cannot be answered with yes or no.",
     "好的研究问题范围要小，用几个来源就能回答，而且不能用“是”或“否”来回答。",
   ],
+  intro: [
+    "*What is water?* would fill an encyclopedia, while *Is rain wet?* takes one word to answer. A strong research question focuses on one clear angle and starts with *how* or *why* so a few sources can answer it in depth.",
+    "*What is water?* 写一整套百科全书都答不完，而 *Is rain wet?* 一个词就答完了。好的研究问题聚焦一个具体切口，用 *how* 或 *why* 提问，让几个来源就能深入回答。",
+  ],
   after: ["skimming-and-scanning"],
   points: [
     choose(
       "the-better-research-question",
       ["The Better Research Question", "更好的研究问题"],
       [
-        "A research question guides what you read and write. A good one is **narrow**: a few sources can answer it in a short report. It is also **open**: it begins with *how*, *why* or *what happens* and cannot be answered with *yes* or *no*. *What is water?* is far too broad; *Is rain made of water?* is answered in one word.",
-        "研究问题指引你读什么、写什么。好的研究问题范围**小**：几个来源就能在一篇短报告里回答它。它还是**开放的**：以 *how*、*why* 或 *what happens* 开头，不能用 *yes* 或 *no* 回答。*What is water?* 范围太大；*Is rain made of water?* 一个词就答完了。",
+        "A research question guides what you read and write. A good one is **narrow**: a few sources can answer it in a short report. It is also **open**: it begins with *how*, *why* or *what happens* and cannot be answered with *yes* or *no*. *What is water?* is far too broad; *Is rain made of water?* is answered in one word.\n\n> **Watch out.** Test every question twice: can *yes/no* answer it? (Too closed.) Would it take a whole book to answer? (Too broad.)",
+        "研究问题指引你读什么、写什么。好的研究问题范围**小**：几个来源就能在一篇短报告里回答它。它还是**开放的**：以 *how*、*why* 或 *what happens* 开头，不能用 *yes* 或 *no* 回答。*What is water?* 范围太大；*Is rain made of water?* 一个词就答完了。\n\n> **注意。** 用两道关检验每个问题：能只用“是/否”回答吗？（太窄太死。）需要写一整本书才答得完吗？（太宽泛。）",
       ],
       ["Which is the best research question for the report?", "哪个是这篇报告最好的研究问题？"],
       betterQuestions,
       (right) => [
-        `**${right}** is narrow enough for a few sources and needs more than yes or no to answer.`,
-        `**${right}** 范围够小，几个来源就能回答，而且不能只用“是”或“否”回答。`,
+        `**${right}** is narrow enough for a few sources and needs more than yes or no to answer.\n\n**Check.** Try answering **${right}** with *yes* or *no* (it requires a real explanation) and check its scope (it focuses on one specific slice of the topic).`,
+        `**${right}** 范围够小，几个来源就能回答，而且不能只用“是”或“否”回答。\n\n**检验。** 试着用“是/否”回答 **${right}**（不行，需要解释），再看它的范围（聚焦主题的一个具体切口）。`,
       ],
       [
         [
@@ -79,14 +83,14 @@ const researchQuestion = topic("writing", {
       "narrowing-a-broad-question",
       ["Narrowing a Broad Question", "缩小过大的问题"],
       [
-        "To narrow a broad question, pick **one part** of the topic and ask **how** or **why** about it. *What are bridges?* becomes *Why do suspension bridges hang from cables?* Be careful not to narrow it so far that it becomes a yes-or-no question, and not to swap it for another broad one.",
-        "要缩小过大的问题，就选出主题的**一个方面**，并对它提出 **how** 或 **why** 的问题。*What are bridges?* 可以变成 *Why do suspension bridges hang from cables?* 注意不要缩小到只能用“是”或“否”回答，也不要换成另一个同样宽泛的问题。",
+        "To narrow a broad question, pick **one part** of the topic and ask **how** or **why** about it. *What are bridges?* becomes *Why do suspension bridges hang from cables?* Be careful not to narrow it so far that it becomes a yes-or-no question, and not to swap it for another broad one.\n\n> **Watch out.** Adding a detail does not fix a question if it turns into *Is …?* or *Do …?*—keep the narrowed question open with *how* or *why*.",
+        "要缩小过大的问题，就选出主题的**一个方面**，并对它提出 **how** 或 **why** 的问题。*What are bridges?* 可以变成 *Why do suspension bridges hang from cables?* 注意不要缩小到只能用“是”或“否”回答，也不要换成另一个同样宽泛的问题。\n\n> **注意。** 缩小范围时别一不小心改成 *Is …?* 或 *Do …?* 的是非题——要继续用 *how* 或 *why* 保持开放。",
       ],
       ["Which question narrows it best?", "哪个问题把它缩小得最好？"],
       narrowedQuestions,
       (right) => [
-        `**${right}** picks one part of the topic and asks how or why about it.`,
-        `**${right}** 选出主题的一个方面，并提出了 how 或 why 的问题。`,
+        `**${right}** picks one part of the topic and asks how or why about it.\n\n**Check.** Confirm **${right}** zooms in on one concrete part of the original topic and asks for an explanation rather than a one-word *yes* or *no*.`,
+        `**${right}** 选出主题的一个方面，并提出了 how 或 why 的问题。\n\n**检验。** 确认 **${right}** 聚焦在原主题的一个具体方面，并且需要展开解释而不是只答“是”或“否”。`,
       ],
       [
         ["*{wrong}* is still too broad to answer from a few sources.", "*{wrong}* 仍然太宽泛，几个来源回答不了。"],
@@ -175,18 +179,25 @@ const accordingToASource = topic("writing", {
     "A report says where a fact comes from with a signal phrase (According to the Water Atlas, The museum's website explains that).",
     "报告用引导语说明事实的出处（According to the Water Atlas，The museum's website explains that）。",
   ],
+  intro: [
+    "Writing *According to The Water Atlas, only about three percent of Earth's water is fresh* tells the reader both the fact and where it came from—and keeps a paraphrase clean with a comma and no quotation marks.",
+    "写 *According to The Water Atlas, only about three percent of Earth's water is fresh* 既给出事实又交代出处，用逗号隔开且不对转述加引号，规范清楚。",
+  ],
   after: ["listing-sources", "paraphrasing-a-sentence"],
   points: [
     choose(
       "a-signal-phrase-that-names-the-source",
       ["A Signal Phrase That Names the Source", "说出来源的引导语"],
       [
-        "When a report gives a fact from research, it tells the reader **where the fact comes from**. A **signal phrase** names the source: *According to The Water Atlas*, *The museum's website explains that*, *As Dr. Sen reports*. Vague words such as *some people say* name no source, and naming the wrong source misleads the reader.",
-        "报告给出研究得来的事实时，要告诉读者**事实出自哪里**。**引导语**说出来源：*According to The Water Atlas*、*The museum's website explains that*、*As Dr. Sen reports*。*some people say* 这样含糊的话没有说出来源，而说错来源会误导读者。",
+        "When a report gives a fact from research, it tells the reader **where the fact comes from**. A **signal phrase** names the source: *According to The Water Atlas*, *The museum's website explains that*, *As Dr. Sen reports*. Vague words such as *some people say* name no source, and naming the wrong source misleads the reader.\n\n> **Watch out.** Check that the signal phrase names the *exact* source listed in the prompt—not a vague phrase like *some people say* and not a different book or person.",
+        "报告给出研究得来的事实时，要告诉读者**事实出自哪里**。**引导语**说出来源：*According to The Water Atlas*、*The museum's website explains that*、*As Dr. Sen reports*。*some people say* 这样含糊的话没有说出来源，而说错来源会误导读者。\n\n> **注意。** 核对引导语里写的是题干给出的*准确*来源——既不能含糊写 *some people say*，也不能张冠李戴成别的书或人。",
       ],
       ["Which sentence names the source of the fact correctly?", "哪个句子正确地说出了事实的来源？"],
       sourcedItems,
-      (right) => [`**${right}** names the source the fact really comes from.`, `**${right}** 说出了事实真正的来源。`],
+      (right) => [
+        `**${right}** names the source the fact really comes from.\n\n**Check.** Match the source inside **${right}** word for word against the source given in the prompt—both match cleanly.`,
+        `**${right}** 说出了事实真正的来源。\n\n**检验。** 把 **${right}** 里的来源名称与题干给出的来源逐字对照——完全一致。`,
+      ],
       [
         ["*{wrong}* names no source at all, so the reader cannot check the fact.", "*{wrong}* 根本没有说出来源，读者无法核实这个事实。"],
         ["*{wrong}* names a source the fact did not come from.", "*{wrong}* 说出的来源并不是这个事实的出处。"],
@@ -196,14 +207,14 @@ const accordingToASource = topic("writing", {
       "adding-a-signal-phrase-to-a-paraphrase",
       ["Adding a Signal Phrase to a Paraphrase", "给转述加上引导语"],
       [
-        "A **paraphrase** gives a source's idea in your own words, so it takes **no quotation marks**: those are only for a source's exact words. Put the signal phrase first and follow it with a **comma**: *According to the zoo's guidebook, a giraffe sleeps for less than two hours a day.*",
-        "**转述**用自己的话表达来源的意思，所以**不用引号**：引号只用于来源的原话。把引导语放在前面，后面加**逗号**：*According to the zoo's guidebook, a giraffe sleeps for less than two hours a day.*",
+        "A **paraphrase** gives a source's idea in your own words, so it takes **no quotation marks**: those are only for a source's exact words. Put the signal phrase first and follow it with a **comma**: *According to the zoo's guidebook, a giraffe sleeps for less than two hours a day.*\n\n> **Watch out.** Check two things at once: no quotation marks around a paraphrase, and a comma right after *According to [source]*.",
+        "**转述**用自己的话表达来源的意思，所以**不用引号**：引号只用于来源的原话。把引导语放在前面，后面加**逗号**：*According to the zoo's guidebook, a giraffe sleeps for less than two hours a day.*\n\n> **注意。** 同时核对两点：转述不加引号，且 *According to [来源]* 后面要有逗号。",
       ],
       ["Which sentence adds the signal phrase correctly?", "哪个句子正确地加上了引导语？"],
       punctuatedItems,
       (right) => [
-        `**${right}** puts the signal phrase first, with a comma and no quotation marks around the paraphrase.`,
-        `**${right}** 把引导语放在前面，加了逗号，转述部分不用引号。`,
+        `**${right}** puts the signal phrase first, with a comma and no quotation marks around the paraphrase.\n\n**Check.** Inspect **${right}** for two punctuation details: a comma right after the source name and zero quotation marks around your own paraphrase.`,
+        `**${right}** 把引导语放在前面，加了逗号，转述部分不用引号。\n\n**检验。** 检查 **${right}** 的两处标点：来源名称后有逗号，且自己的转述部分没有加引号。`,
       ],
       [
         [
@@ -292,18 +303,25 @@ const combiningAndReducing = topic("writing", {
     "Sentences grow clearer when repeated words are cut and two ideas are joined in one sentence.",
     "删去重复的词语、把两个意思合成一句，句子就会更清楚。",
   ],
+  intro: [
+    "Trimming *The bridge was long in length and it stretched across the river* down to *The long bridge stretched across the river* removes every wasted word while keeping the full picture sharp.",
+    "把 *The bridge was long in length and it stretched across the river* 精简为 *The long bridge stretched across the river*，删掉了所有赘词，画面反而更清晰利落。",
+  ],
   after: ["combining-with-phrases"],
   points: [
     choose(
       "the-version-without-needless-words",
       ["The Version Without Needless Words", "没有多余词语的版本"],
       [
-        "Good writers cut **needless words**: words that repeat what another word already says. *Long in length*, *return back* and *whispered quietly* each say one thing twice. Phrases such as *due to the fact that* shrink to *because*. Cut the extra words, but keep the meaning: a shorter sentence that says something different is not better.",
-        "好的作者会删去**多余的词语**：重复了其他词已表达的意思的词。*long in length*、*return back* 和 *whispered quietly* 都把一个意思说了两遍。*due to the fact that* 这样的短语可以缩成 *because*。删去多余的词，但要保留原意：更短却意思不同的句子并不更好。",
+        "Good writers cut **needless words**: words that repeat what another word already says. *Long in length*, *return back* and *whispered quietly* each say one thing twice. Phrases such as *due to the fact that* shrink to *because*. Cut the extra words, but keep the meaning: a shorter sentence that says something different is not better.\n\n> **Watch out.** Shortest is not automatically best—verify that the trimmed sentence still keeps the *exact* time, actor, and meaning of the original.",
+        "好的作者会删去**多余的词语**：重复了其他词已表达的意思的词。*long in length*、*return back* 和 *whispered quietly* 都把一个意思说了两遍。*due to the fact that* 这样的短语可以缩成 *because*。删去多余的词，但要保留原意：更短却意思不同的句子并不更好。\n\n> **注意。** 最短的不一定最好——核对精简后的句子是否完整保留了原句的时间、人物和意思。",
       ],
       ["Which version cuts the needless words and keeps the meaning?", "哪个版本删去了多余的词语，又保留了原意？"],
       reduceLines,
-      (right) => [`**${right}** says the same thing with no word repeated or wasted.`, `**${right}** 意思不变，没有重复或多余的词。`],
+      (right) => [
+        `**${right}** says the same thing with no word repeated or wasted.\n\n**Check.** Compare **${right}** with the original sentence—every key idea is still there, and every repetitive phrase is gone.`,
+        `**${right}** 意思不变，没有重复或多余的词。\n\n**检验。** 把 **${right}** 和原句对照——核心意思完整保留，多余重复的词组已经删净。`,
+      ],
       [
         ["*{wrong}* still repeats words that say the same thing.", "*{wrong}* 仍然有意思重复的词。"],
         ["*{wrong}* is shorter but changes the meaning.", "*{wrong}* 虽然更短，却改变了原意。"],
@@ -313,14 +331,14 @@ const combiningAndReducing = topic("writing", {
       "combining-three-short-sentences",
       ["Combining Three Short Sentences", "合并三个短句"],
       [
-        "Three short sentences about one thing often read better as **one**. Fold describing words in front of the noun (*the old stone bridge*), join actions with one subject (*dug a pit, covered it and sat*), or use a joining word such as *when* or *because*. Do not just string the sentences together with commas or with *and* after *and*.",
-        "关于同一件事的三个短句，合成**一句**往往更好读。把描写词放在名词前面（*the old stone bridge*），把同一主语的几个动作连起来（*dug a pit, covered it and sat*），或用 *when*、*because* 等连接词。不要只用逗号或一个接一个的 *and* 把句子串起来。",
+        "Three short sentences about one thing often read better as **one**. Fold describing words in front of the noun (*the old stone bridge*), join actions with one subject (*dug a pit, covered it and sat*), or use a joining word such as *when* or *because*. Do not just string the sentences together with commas or with *and* after *and*.\n\n> **Watch out.** Watch out for comma splices (three sentences glued with commas) and *and … and …* chains—fold adjectives and clauses smoothly instead.",
+        "关于同一件事的三个短句，合成**一句**往往更好读。把描写词放在名词前面（*the old stone bridge*），把同一主语的几个动作连起来（*dug a pit, covered it and sat*），或用 *when*、*because* 等连接词。不要只用逗号或一个接一个的 *and* 把句子串起来。\n\n> **注意。** 避开逗号粘连（用逗号硬粘三句话）和一串 *and … and …*——把修饰词和从句自然融合进去。",
       ],
       ["Which is the best way to combine the three sentences?", "合并这三个句子最好的方式是哪一个？"],
       combineLines,
       (right) => [
-        `**${right}** joins the ideas in one smooth sentence with no repeated words.`,
-        `**${right}** 把几个意思合成一个流畅的句子，没有重复的词。`,
+        `**${right}** joins the ideas in one smooth sentence with no repeated words.\n\n**Check.** Check that **${right}** keeps all three original facts in one grammatically sound sentence without comma splices or repeated *and*s.`,
+        `**${right}** 把几个意思合成一个流畅的句子，没有重复的词。\n\n**检验。** 核对 **${right}** 在一个语法规范的句子里保留了原来的三条信息，既没有逗号粘连也没有多余的 *and*。`,
       ],
       [
         [
@@ -352,12 +370,18 @@ const qpsSources = rows(`
 const usesLabels: Record<string, Label> = {
   "a quotation": {
     zh: "引用",
-    why: ["It gives the speaker's exact words inside quotation marks.", "它在引号里给出说话人的原话。"],
+    why: [
+      "It gives the speaker's exact words inside quotation marks.\n\n**Check.** Spot the quotation marks (or the goal of keeping striking, exact words)—exact wording always calls for a quotation.",
+      "它在引号里给出说话人的原话。\n\n**检验。** 看引号（或题目要求保留精彩原话）——需要逐字保留原话时就是引用。",
+    ],
     not: ["A quotation repeats exact words in quotation marks; this sentence does not.", "引用要在引号里重复原话；这个句子没有。"],
   },
   "a paraphrase": {
     zh: "转述",
-    why: ["It gives one idea of the source in new words, with no quotation marks.", "它用新的话表达来源中的一个意思，不用引号。"],
+    why: [
+      "It gives one idea of the source in new words, with no quotation marks.\n\n**Check.** Notice it focuses on one specific fact or sentence restated in the writer's own words rather than summarizing the entire source.",
+      "它用新的话表达来源中的一个意思，不用引号。\n\n**检验。** 注意它只用自己的话重述其中一个具体事实或句子，而不是概括整篇来源。",
+    ],
     not: [
       "A paraphrase restates one idea in new words; this sentence does something else.",
       "转述用新的话重述一个意思；这个句子做的是别的事。",
@@ -365,7 +389,10 @@ const usesLabels: Record<string, Label> = {
   },
   "a summary": {
     zh: "概括",
-    why: ["It gives the main point of the whole source in a few words of its own.", "它用自己的几句话给出整个来源的要点。"],
+    why: [
+      "It gives the main point of the whole source in a few words of its own.\n\n**Check.** Notice it pulls together the big idea of the *entire* source without quoting exact words or zooming in on a single tiny fact.",
+      "它用自己的几句话给出整个来源的要点。\n\n**检验。** 注意它提炼的是*整个*来源的中心意思，既不照搬原话，也不局限于单个小细节。",
+    ],
     not: ["A summary gives the main point of the whole source; this sentence does not.", "概括给出整个来源的要点；这个句子没有。"],
   },
 };
@@ -416,14 +443,18 @@ const quoteParaphraseSummary = topic("writing", {
     "A writer quotes exact words that are striking, paraphrases a single fact and summarizes a whole passage.",
     "作者引用精彩的原话，转述单个事实，概括整段文字。",
   ],
+  intro: [
+    "When using a scientist's report, you can quote a vivid phrase like *“rivers of ice”*, paraphrase one specific measurement in your own words, or summarize the entire report in two sentences. Matching the method to your purpose keeps your writing crisp.",
+    "借用科学报告时，你可以引用 *“rivers of ice”* 这样的生动原话，可以用自己的话转述其中一条具体数据，也可以用两句话概括整篇报告。按写作目的选对方式，文章会更清晰得体。",
+  ],
   after: ["paraphrasing-a-sentence", "quotation-marks-for-quotations"],
   points: [
     label(
       "quotation-paraphrase-or-summary",
       ["A Quotation, a Paraphrase or a Summary", "引用、转述还是概括"],
       [
-        "A writer can use a source in three ways. A **quotation** gives the source's **exact words** in quotation marks. A **paraphrase** gives **one idea** of the source in the writer's own words, about as long as the original. A **summary** gives the **main point of the whole source** in a few words, leaving out the details.",
-        "作者可以用三种方式使用来源。**引用**在引号里给出来源的**原话**。**转述**用作者自己的话表达来源的**一个意思**，长度和原文差不多。**概括**用几句话给出**整个来源的要点**，省略细节。",
+        "A writer can use a source in three ways. A **quotation** gives the source's **exact words** in quotation marks. A **paraphrase** gives **one idea** of the source in the writer's own words, about as long as the original. A **summary** gives the **main point of the whole source** in a few words, leaving out the details.\n\n> **Watch out.** Do not confuse a *paraphrase* with a *summary*—a paraphrase restates *one specific detail or sentence* in new words, while a summary condenses the *entire* source.",
+        "作者可以用三种方式使用来源。**引用**在引号里给出来源的**原话**。**转述**用作者自己的话表达来源的**一个意思**，长度和原文差不多。**概括**用几句话给出**整个来源的要点**，省略细节。\n\n> **注意。** 不要混淆“转述”和“概括”——转述是用新措辞重述*其中一个具体细节或句子*，概括则是提炼*整个*来源的要点。",
       ],
       ["How does the writer use the source here?", "作者在这里是怎样使用来源的？"],
       usesLines,
@@ -433,8 +464,8 @@ const quoteParaphraseSummary = topic("writing", {
       "which-to-use-for-a-purpose",
       ["Which to Use for a Purpose", "按目的选择用法"],
       [
-        "Choose the way that fits your **purpose**. **Quote** when the exact words matter: they are vivid, famous, or needed as proof. **Paraphrase** when you need one fact or idea and the source's words are hard or dull. **Summarize** when you need the main point of a whole text without its details.",
-        "选择符合你**目的**的用法。原话很重要时就**引用**：它们生动、有名，或需要作为证据。需要一个事实或意思、而原文难懂或平淡时就**转述**。需要整篇文字的要点而不要细节时就**概括**。",
+        "Choose the way that fits your **purpose**. **Quote** when the exact words matter: they are vivid, famous, or needed as proof. **Paraphrase** when you need one fact or idea and the source's words are hard or dull. **Summarize** when you need the main point of a whole text without its details.\n\n> **Watch out.** Look for clue words in the situation: *word for word / vivid phrase* signals **quotation**, *one fact / single sentence* signals **paraphrase**, and *whole article / big idea* signals **summary**.",
+        "选择符合你**目的**的用法。原话很重要时就**引用**：它们生动、有名，或需要作为证据。需要一个事实或意思、而原文难懂或平淡时就**转述**。需要整篇文字的要点而不要细节时就**概括**。\n\n> **注意。** 抓住情境里的关键词：提到“原话/生动措辞”选**引用**，提到“一个事实/单句”选**转述**，提到“整篇文章/大意”选**概括**。",
       ],
       ["Which should the writer use?", "作者应该用哪一种？"],
       purposeLines,
@@ -496,18 +527,25 @@ const quotationAsSupport = topic("writing", {
     "A quotation supports a point when it is introduced, quoted exactly and followed by a sentence that explains it.",
     "引文要先引出、准确引用，后面再用一句话解释它，才能支持观点。",
   ],
+  intro: [
+    "Dropping a quotation into a paragraph is only half the work—you also need to pick the exact quote that proves your claim and follow it with a sentence in your own words explaining *how* it proves the point.",
+    "把引文放进段落只完成了一半——既要挑出真正能证明观点的那一句，又要在后面用自己的话解释它*怎样*支撑了观点。",
+  ],
   after: ["quoting-accurately", "facts-definitions-and-examples"],
   points: [
     choose(
       "the-quotation-that-supports-the-point",
       ["The Quotation That Supports the Point", "支持观点的引文"],
       [
-        "A quotation earns its place when it gives the reader a **reason to believe** the point. Several quotations may come from the same source and be about the same subject, but only one shows what the point says. For *Glaciers are shrinking*, a quotation about the glacier's edge moving back is evidence; one about the valley's U shape is not.",
-        "引文只有在给读者**相信观点的理由**时才有用。几句引文可能出自同一来源、讲同一主题，但只有一句能表明观点所说的事。对于 *Glaciers are shrinking*，讲冰川边缘后退的引文是证据；讲山谷 U 形的引文则不是。",
+        "A quotation earns its place when it gives the reader a **reason to believe** the point. Several quotations may come from the same source and be about the same subject, but only one shows what the point says. For *Glaciers are shrinking*, a quotation about the glacier's edge moving back is evidence; one about the valley's U shape is not.\n\n> **Watch out.** All three quotations are about the same topic—match the *specific claim* in the point (like *shrinking* vs. *carving valleys*), not just the topic noun.",
+        "引文只有在给读者**相信观点的理由**时才有用。几句引文可能出自同一来源、讲同一主题，但只有一句能表明观点所说的事。对于 *Glaciers are shrinking*，讲冰川边缘后退的引文是证据；讲山谷 U 形的引文则不是。\n\n> **注意。** 三句引文围绕同一个主题——要紧扣观点里的*具体主张*（如“正在缩小”而不是“雕刻山谷”），不能只看主题词相同。",
       ],
       ["Which quotation best supports the point?", "哪句引文最能支持这个观点？"],
       supportQuoteItems,
-      (right) => [`${right} gives a reason to believe the point.`, `${right} 为相信这个观点提供了理由。`],
+      (right) => [
+        `${right} gives a reason to believe the point.\n\n**Check.** Read the point and then ${right} right after it—the quote supplies direct evidence for that exact claim.`,
+        `${right} 为相信这个观点提供了理由。\n\n**检验。** 先读观点，紧接着读 ${right}——这句引文直接为该主张提供了证据。`,
+      ],
       [
         ["*{wrong}* is about the same subject but supports a different point.", "*{wrong}* 主题相同，但支持的是另一个观点。"],
         ["*{wrong}* does not show what the point says.", "*{wrong}* 并不能表明观点所说的事。"],
@@ -517,12 +555,15 @@ const quotationAsSupport = topic("writing", {
       "the-sentence-that-explains-it",
       ["The Sentence That Explains It", "解释引文的句子"],
       [
-        "After a quotation, a writer adds a sentence that **explains** how it supports the point, often beginning *This shows that*. The explanation connects the quotation to the point in new words. It does not just repeat the quotation, and it does not wander off to another idea.",
-        "引文之后，作者要加一句话**解释**它如何支持观点，常常以 *This shows that* 开头。解释用新的话把引文和观点联系起来。它不只是重复引文，也不会扯到别的意思上去。",
+        "After a quotation, a writer adds a sentence that **explains** how it supports the point, often beginning *This shows that*. The explanation connects the quotation to the point in new words. It does not just repeat the quotation, and it does not wander off to another idea.\n\n> **Watch out.** Reject sentences that merely copy the quote after *In other words,* or drift into an unrelated side fact—a real explanation spells out the link to the point.",
+        "引文之后，作者要加一句话**解释**它如何支持观点，常常以 *This shows that* 开头。解释用新的话把引文和观点联系起来。它不只是重复引文，也不会扯到别的意思上去。\n\n> **注意。** 排除只在 *In other words,* 后面照抄原话或扯到无关闲话的选项——真正的解释要用新措辞点明引文与观点的联系。",
       ],
       ["Which sentence best explains how the quotation supports the point?", "哪个句子最好地解释了引文如何支持观点？"],
       explainItems,
-      (right) => [`**${right}** connects the quotation to the point in new words.`, `**${right}** 用新的话把引文和观点联系起来。`],
+      (right) => [
+        `**${right}** connects the quotation to the point in new words.\n\n**Check.** Check that **${right}** neither copies the quotation word for word nor drifts off-topic—it explicitly links the quote back to the point.`,
+        `**${right}** 用新的话把引文和观点联系起来。\n\n**检验。** 确认 **${right}** 既没有照抄原话也没有跑题——它明确把引文扣回了观点。`,
+      ],
       [
         [
           "*{wrong}* only repeats the quotation in the same words and explains nothing.",
@@ -592,18 +633,25 @@ const previewingTheTopic = topic("writing", {
     "After its hook, the introduction of a report says what the report will cover, in the order of its sections.",
     "报告的引言在开头吸引读者之后，要按各部分的顺序说明报告将讲哪些内容。",
   ],
+  intro: [
+    "If a report on Mars covers its red dust, its weather, and its rovers, the preview sentence—*This report explains why Mars looks red, what the weather is like on Mars and how rovers explore Mars*—gives the reader an exact map in that exact order.",
+    "如果一篇火星报告依次讲红色土壤、火星天气和火星探测车，引言里的预告句就按完全相同的顺序点出这三部分，给读者一张清晰的阅读地图。",
+  ],
   after: ["choosing-a-hook"],
   points: [
     choose(
       "the-preview-that-matches-the-sections",
       ["The Preview That Matches the Sections", "与各部分相符的预告"],
       [
-        "After the hook, a report's introduction **previews** what is coming: one sentence that names each section. The preview works like a map for the reader, so it must match the report: it names **every** section and **only** the sections the report has. A preview that promises something the report never covers misleads the reader.",
-        "在开头吸引读者之后，报告的引言要**预告**接下来的内容：用一句话说出每个部分。预告就像给读者的指南，所以必须与报告相符：它说出**每一个**部分，而且**只**说报告里有的部分。承诺了报告根本没讲的内容的预告会误导读者。",
+        "After the hook, a report's introduction **previews** what is coming: one sentence that names each section. The preview works like a map for the reader, so it must match the report: it names **every** section and **only** the sections the report has. A preview that promises something the report never covers misleads the reader.\n\n> **Watch out.** Count the sections in the prompt (3) and check them off one by one in the preview—reject any option with 2 or 4 sections.",
+        "在开头吸引读者之后，报告的引言要**预告**接下来的内容：用一句话说出每个部分。预告就像给读者的指南，所以必须与报告相符：它说出**每一个**部分，而且**只**说报告里有的部分。承诺了报告根本没讲的内容的预告会误导读者。\n\n> **注意。** 数清题干给出的部分数（3 个），再在预告句里逐一打钩核对——多出或漏掉任何一部分都不对。",
       ],
       ["Which preview matches the report's sections?", "哪个预告与报告的各部分相符？"],
       matchItems,
-      (right) => [`**${right}** names each section of the report and nothing else.`, `**${right}** 说出了报告的每个部分，没有别的。`],
+      (right) => [
+        `**${right}** names each section of the report and nothing else.\n\n**Check.** Count the three sections in the prompt and check each one off inside **${right}**—all three are present with no extra topic tacked on.`,
+        `**${right}** 说出了报告的每个部分，没有别的。\n\n**检验。** 对照题干的三个部分在 **${right}** 中逐一打钩——三项齐全且没有多出无关内容。`,
+      ],
       [
         ["*{wrong}* promises a section the report never covers.", "*{wrong}* 承诺了报告根本没讲的部分。"],
         ["*{wrong}* leaves out one of the report's sections.", "*{wrong}* 漏掉了报告的一个部分。"],
@@ -613,12 +661,15 @@ const previewingTheTopic = topic("writing", {
       "the-preview-in-the-order-of-the-sections",
       ["The Preview in the Order of the Sections", "按各部分顺序排列的预告"],
       [
-        "A preview names the sections **in the order they come**. If the report explains first why Mars looks red, then its weather, then its rovers, the preview names them in that order. Then the reader knows what to expect and when, and each section arrives just where the preview said it would.",
-        "预告要**按各部分出现的顺序**说出它们。如果报告先解释火星为什么是红色的，再讲天气，然后讲探测车，预告就按这个顺序说。这样读者就知道会读到什么、什么时候读到，每个部分都正好出现在预告说的位置。",
+        "A preview names the sections **in the order they come**. If the report explains first why Mars looks red, then its weather, then its rovers, the preview names them in that order. Then the reader knows what to expect and when, and each section arrives just where the preview said it would.\n\n> **Watch out.** All three options list the same three sections—compare the *1-2-3 order* against the numbered plan in the prompt.",
+        "预告要**按各部分出现的顺序**说出它们。如果报告先解释火星为什么是红色的，再讲天气，然后讲探测车，预告就按这个顺序说。这样读者就知道会读到什么、什么时候读到，每个部分都正好出现在预告说的位置。\n\n> **注意。** 三个选项包含同样的三个部分——把选项里的先后次序与题干的 1-2-3 编号逐一比对。",
       ],
       ["Which preview names the sections in the right order?", "哪个预告按正确的顺序说出了各部分？"],
       orderPreviewItems,
-      (right) => [`**${right}** names the sections in the order the report gives them.`, `**${right}** 按报告给出的顺序说出了各部分。`],
+      (right) => [
+        `**${right}** names the sections in the order the report gives them.\n\n**Check.** Match items 1, 2, and 3 in the prompt against the first, second, and third items in **${right}**—the order matches 1-2-3.`,
+        `**${right}** 按报告给出的顺序说出了各部分。\n\n**检验。** 把题干的 1、2、3 顺序和 **${right}** 的先后次序对照——1-2-3 完全一致。`,
+      ],
       [
         ["*{wrong}* names the right sections in the wrong order.", "*{wrong}* 说出的部分对，但顺序错了。"],
         [
@@ -720,20 +771,24 @@ const planningSeveralParagraphs = topic("writing", {
     "A plan gives the introduction, one body paragraph for each main point and a conclusion.",
     "文章计划包括引言、每个要点各一个主体段落，以及结论。",
   ],
+  intro: [
+    "Before drafting a three-paragraph report, a writer groups related notes under one clear main point per body paragraph and plans a conclusion that ties every body paragraph together without adding brand-new facts.",
+    "写三段式报告前，作者先把相关笔记按要点分组，让每个主体段落聚焦一个明确要点，再规划一个能把所有要点收束在一起、不引入新事实的结论。",
+  ],
   after: ["outlining-a-report", "ordering-paragraphs"],
   points: [
     choose(
       "the-main-point-of-a-body-paragraph",
       ["The Main Point of a Body Paragraph", "主体段落的要点"],
       [
-        "Before writing, group your notes: facts that belong together make **one body paragraph**. Then name the **main point** they share, which becomes the paragraph's topic sentence. The main point is wider than any single fact in the notes but narrower than the subject of the whole report.",
-        "写作之前，先把笔记分组：属于一起的事实组成**一个主体段落**。然后说出它们共同的**要点**，作为这一段的主题句。要点比笔记中的任何一个事实都宽，但比整篇报告的主题窄。",
+        "Before writing, group your notes: facts that belong together make **one body paragraph**. Then name the **main point** they share, which becomes the paragraph's topic sentence. The main point is wider than any single fact in the notes but narrower than the subject of the whole report.\n\n> **Watch out.** Check the size of each option: a single fact from the notes is too narrow, while a general statement about the whole report's subject is too broad.",
+        "写作之前，先把笔记分组：属于一起的事实组成**一个主体段落**。然后说出它们共同的**要点**，作为这一段的主题句。要点比笔记中的任何一个事实都宽，但比整篇报告的主题窄。\n\n> **注意。** 衡量选项的范围大小：只说其中一条笔记太窄，泛泛介绍整篇报告的大主题又太宽。",
       ],
       ["What is the main point of this body paragraph?", "这个主体段落的要点是什么？"],
       mainPointItems,
       (right) => [
-        `**${right}** sums up every note in the group, so it is the paragraph's main point.`,
-        `**${right}** 概括了这一组的每条笔记，所以是这一段的要点。`,
+        `**${right}** sums up every note in the group, so it is the paragraph's main point.\n\n**Check.** Test every note in the group against **${right}**—all three notes fit neatly underneath it as supporting details.`,
+        `**${right}** 概括了这一组的每条笔记，所以是这一段的要点。\n\n**检验。** 用这一组的每条笔记对照 **${right}**——三条笔记都能作为支撑细节归入其下。`,
       ],
       [
         ["*{wrong}* is only one of the notes, too narrow to cover the others.", "*{wrong}* 只是其中一条笔记，太窄，概括不了其他笔记。"],
@@ -744,12 +799,15 @@ const planningSeveralParagraphs = topic("writing", {
       "what-the-conclusion-says",
       ["What the Conclusion Says", "结论说什么"],
       [
-        "The last paragraph of the plan is the **conclusion**. It pulls the main points of the body paragraphs together into one closing thought, so the reader leaves knowing what the whole piece showed. It does not bring in a new fact, and it does not repeat a detail from just one paragraph.",
-        "计划的最后一段是**结论**。它把各主体段落的要点合成一个收尾的想法，让读者读完时知道整篇文章说明了什么。结论不引入新的事实，也不只重复某一段里的细节。",
+        "The last paragraph of the plan is the **conclusion**. It pulls the main points of the body paragraphs together into one closing thought, so the reader leaves knowing what the whole piece showed. It does not bring in a new fact, and it does not repeat a detail from just one paragraph.\n\n> **Watch out.** Reject any sentence that introduces an unmentioned fact or zooms in on just one of the three body paragraphs—a true conclusion echoes *all three*.",
+        "计划的最后一段是**结论**。它把各主体段落的要点合成一个收尾的想法，让读者读完时知道整篇文章说明了什么。结论不引入新的事实，也不只重复某一段里的细节。\n\n> **注意。** 排除引入新事实或只抓住三段中某一段细节的句子——真正的结论要呼应*全部三个*主体段落。",
       ],
       ["Which sentence should the conclusion give?", "结论应该写哪一句？"],
       conclusionItems,
-      (right) => [`**${right}** pulls all three main points together.`, `**${right}** 把三个要点合在了一起。`],
+      (right) => [
+        `**${right}** pulls all three main points together.\n\n**Check.** Check off body paragraphs 1, 2, and 3 inside **${right}**—all three are reflected without introducing any new fact.`,
+        `**${right}** 把三个要点合在了一起。\n\n**检验。** 在 **${right}** 里核对主体段 1、2、3 的要点——三段都得到呼应，且没有塞入新事实。`,
+      ],
       [
         ["*{wrong}* brings in a new fact that no paragraph discussed.", "*{wrong}* 引入了没有哪段讨论过的新事实。"],
         [
@@ -825,20 +883,24 @@ const orderingReasons = topic("writing", {
     "Reasons go in an order the reader can follow, often saving the strongest for last, and each is linked to the opinion.",
     "理由要按读者容易理解的顺序排列，常常把最有力的放在最后，而且每个理由都与观点相联系。",
   ],
+  intro: [
+    "To argue for a town bike path, “it keeps riders safe from cars” carries far more weight than “bikes come in bright colors.” Choosing your strongest reasons and building up to the best one last makes an opinion piece persuasive.",
+    "主张修建自行车道时，“保护骑车人免受汽车碰撞”远比“自行车颜色鲜艳”更有分量。挑出最有力的理由并由弱到强压轴呈现，观点文章才更有说服力。",
+  ],
   after: ["supporting-reasons-with-facts"],
   points: [
     choose(
       "the-strongest-reason",
       ["The Strongest Reason", "最有力的理由"],
       [
-        "Not all reasons are equally strong. The **strongest reason** matters most to the reader: it is about safety, health, fairness or something many people need, and facts can back it up. A reason about looks or liking is weak, and a reason that does not connect to the opinion is no reason at all.",
-        "理由并不都一样有力。**最有力的理由**对读者最重要：它关乎安全、健康、公平或许多人的需要，而且有事实支持。关于外观或喜好的理由很弱，而与观点无关的理由根本算不上理由。",
+        "Not all reasons are equally strong. The **strongest reason** matters most to the reader: it is about safety, health, fairness or something many people need, and facts can back it up. A reason about looks or liking is weak, and a reason that does not connect to the opinion is no reason at all.\n\n> **Watch out.** Compare what is at stake in each option—reasons tied to safety, health, learning, or real need outweigh reasons about looks or personal taste.",
+        "理由并不都一样有力。**最有力的理由**对读者最重要：它关乎安全、健康、公平或许多人的需要，而且有事实支持。关于外观或喜好的理由很弱，而与观点无关的理由根本算不上理由。\n\n> **注意。** 比较每个选项的分量——关乎安全、健康、学习或实际需要的理由，远胜于只谈外观或个人喜好的理由。",
       ],
       ["Which is the strongest reason for the opinion?", "哪个是支持这个观点最有力的理由？"],
       strongestItems,
       (right) => [
-        `**${right}** matters most to the reader and can be backed with facts.`,
-        `**${right}** 对读者最重要，而且可以用事实支持。`,
+        `**${right}** matters most to the reader and can be backed with facts.\n\n**Check.** Weigh **${right}** against the other two options—it addresses the biggest real-world benefit and can be proven with evidence.`,
+        `**${right}** 对读者最重要，而且可以用事实支持。\n\n**检验。** 把 **${right}** 和另外两项权衡比较——它关乎最重大的实际益处，而且能用证据支撑。`,
       ],
       [
         [
@@ -852,14 +914,14 @@ const orderingReasons = topic("writing", {
       "putting-reasons-in-order",
       ["Putting Reasons in Order", "给理由排序"],
       [
-        "Writers often build from the weakest reason to the **strongest**, saving the best for last so it stays with the reader. Starting with the strongest can work in a short piece, but then the piece trails off; burying it in the middle hides it. In this skill, order the reasons from weakest to strongest.",
-        "作者常常从最弱的理由写到**最有力**的理由，把最好的留到最后，让它留在读者心中。在短文里先写最有力的理由也可以，但文章随后就会越来越弱；把它埋在中间会让它被忽略。在这项技能中，要把理由从最弱排到最有力。",
+        "Writers often build from the weakest reason to the **strongest**, saving the best for last so it stays with the reader. Starting with the strongest can work in a short piece, but then the piece trails off; burying it in the middle hides it. In this skill, order the reasons from weakest to strongest.\n\n> **Watch out.** Identify the *strongest* reason first and place its letter at the very *end*—do not bury it in the middle or spend it first.",
+        "作者常常从最弱的理由写到**最有力**的理由，把最好的留到最后，让它留在读者心中。在短文里先写最有力的理由也可以，但文章随后就会越来越弱；把它埋在中间会让它被忽略。在这项技能中，要把理由从最弱排到最有力。\n\n> **注意。** 先找出*最有力*的那条理由，把它的字母排在*最后*——不要埋在中间，也不要一开头就用完。",
       ],
       ["In what order should the reasons come?", "这些理由应该按什么顺序排列？"],
       orderReasonItems,
       (right) => [
-        `**${right}**: the reasons grow stronger, and the best one ends the piece.`,
-        `**${right}**：理由越来越有力，最好的一条放在结尾。`,
+        `**${right}**: the reasons grow stronger, and the best one ends the piece.\n\n**Check.** Look at the last letter in **${right}**—it is the strongest reason, so the argument climbs steadily from weakest to strongest.`,
+        `**${right}**：理由越来越有力，最好的一条放在结尾。\n\n**检验。** 看 **${right}** 最后的字母——正好是最有力的那条理由，论证由弱到强层层推进。`,
       ],
       [
         [
@@ -931,20 +993,24 @@ const onePerReason = topic("writing", {
     "In an opinion piece each body paragraph opens with one reason and gives the facts that support it.",
     "在观点文章中，每个主体段落以一个理由开头，并给出支持它的事实。",
   ],
+  intro: [
+    "In a multi-paragraph opinion essay, giving each reason its own paragraph keeps your argument organized: the topic sentence names that one reason, and every supporting fact inside the paragraph proves that exact reason.",
+    "写多段观点文章时，让每个理由各自成段，论证就条理分明：主题句点明这一条理由，段内的每个事实都专门支撑这条理由。",
+  ],
   after: ["ordering-reasons-logically", "planning-a-multi-paragraph-piece"],
   points: [
     choose(
       "the-topic-sentence-of-a-reason-paragraph",
       ["The Topic Sentence of a Reason Paragraph", "理由段落的主题句"],
       [
-        "In an opinion piece of several paragraphs, each body paragraph is about **one reason**. Its first sentence, the **topic sentence**, states that reason (*One reason is that…*, *Another reason is that…*). The facts that follow support it. The topic sentence is not the opinion itself and not one of the facts.",
-        "在多段的观点文章中，每个主体段落讲**一个理由**。它的第一句，也就是**主题句**，说出这个理由（*One reason is that…*、*Another reason is that…*）。后面的事实支持它。主题句不是观点本身，也不是其中一个事实。",
+        "In an opinion piece of several paragraphs, each body paragraph is about **one reason**. Its first sentence, the **topic sentence**, states that reason (*One reason is that…*, *Another reason is that…*). The facts that follow support it. The topic sentence is not the opinion itself and not one of the facts.\n\n> **Watch out.** Do not pick a sentence that simply repeats the overall opinion or copies one of the specific facts—the topic sentence states the *reason* that unites both facts.",
+        "在多段的观点文章中，每个主体段落讲**一个理由**。它的第一句，也就是**主题句**，说出这个理由（*One reason is that…*、*Another reason is that…*）。后面的事实支持它。主题句不是观点本身，也不是其中一个事实。\n\n> **注意。** 不要选只是重复总观点或照搬某条具体事实的句子——主题句要概括两条事实共同支撑的那条*理由*。",
       ],
       ["Which sentence should open this paragraph?", "哪个句子应该作为这个段落的开头？"],
       topicSentenceItems,
       (right) => [
-        `**${right}** states the reason that the facts of the paragraph support.`,
-        `**${right}** 说出了这一段的事实所支持的理由。`,
+        `**${right}** states the reason that the facts of the paragraph support.\n\n**Check.** Read both facts in the prompt right after **${right}**—both facts directly prove that exact reason.`,
+        `**${right}** 说出了这一段的事实所支持的理由。\n\n**检验。** 读完 **${right}** 后紧接着读题干里的两条事实——两条事实都直接证明了这个理由。`,
       ],
       [
         ["*{wrong}* repeats the opinion instead of giving a reason for it.", "*{wrong}* 重复了观点，而没有给出理由。"],
@@ -955,12 +1021,15 @@ const onePerReason = topic("writing", {
       "moving-a-fact-to-its-paragraph",
       ["Moving a Fact to Its Paragraph", "把事实移到它所属的段落"],
       [
-        "Each fact belongs in the paragraph of the **reason it supports**. When you revise, check every fact: does it show this paragraph's reason? A fact about cost belongs with the reason about saving money, not with the reason about safety. Move it to the paragraph where it does its work.",
-        "每个事实都属于它**所支持的理由**的那一段。修改时，要检查每个事实：它能说明这一段的理由吗？关于花费的事实属于讲省钱的理由那一段，而不属于讲安全的那一段。把它移到能发挥作用的段落去。",
+        "Each fact belongs in the paragraph of the **reason it supports**. When you revise, check every fact: does it show this paragraph's reason? A fact about cost belongs with the reason about saving money, not with the reason about safety. Move it to the paragraph where it does its work.\n\n> **Watch out.** Match the *focus* of the fact (such as cost, safety, health, or learning) straight to the matching reason paragraph.",
+        "每个事实都属于它**所支持的理由**的那一段。修改时，要检查每个事实：它能说明这一段的理由吗？关于花费的事实属于讲省钱的理由那一段，而不属于讲安全的那一段。把它移到能发挥作用的段落去。\n\n> **注意。** 把事实的*侧重点*（如花费、安全、健康或学习）直接对应到相应理由的段落。",
       ],
       ["Where does the fact belong?", "这个事实应该放在哪里？"],
       moveFactItems,
-      (right) => [`The fact shows that reason, so it goes in **${right}**.`, `这个事实能说明那个理由，所以应该放在 **${right}**。`],
+      (right) => [
+        `The fact shows that reason, so it goes in **${right}**.\n\n**Check.** Read the topic sentence of **${right}** followed by the given fact—the fact directly backs up that reason.`,
+        `这个事实能说明那个理由，所以应该放在 **${right}**。\n\n**检验。** 把 **${right}** 的主题句和这条事实连起来读——事实正好直接支撑那个理由。`,
+      ],
       [
         ["*{wrong}* has a different reason, which this fact does not show.", "*{wrong}* 讲的是另一个理由，这个事实不能说明它。"],
         ["*{wrong}* is not right: the fact does support one of the reasons.", "*{wrong}* 不对：这个事实确实支持其中一个理由。"],
@@ -973,22 +1042,34 @@ const onePerReason = topic("writing", {
 const linkLabels: Record<string, Label> = {
   "a result": {
     zh: "结果",
-    why: ["The second idea follows from the first.", "第二个意思是第一个意思的结果。"],
+    why: [
+      "The second idea follows from the first.\n\n**Check.** Substitute *so* or *because of that* for the linking word—the second sentence states what happened as a consequence.",
+      "第二个意思是第一个意思的结果。\n\n**检验。** 把连接词换成“因此/所以”——后一句正是前一句带来的结果。",
+    ],
     not: ["The linking word does not show that one idea follows from the other.", "这个连接词并不表示一个意思是另一个的结果。"],
   },
   "a contrast": {
     zh: "对比",
-    why: ["The second idea differs from or goes against the first.", "第二个意思与第一个不同或相反。"],
+    why: [
+      "The second idea differs from or goes against the first.\n\n**Check.** Substitute *but* for the linking word—the two sentences pull in opposite directions.",
+      "第二个意思与第一个不同或相反。\n\n**检验。** 把连接词换成“但是/然而”——前后两句形成明显对照或转折。",
+    ],
     not: ["The linking word does not set the ideas against each other.", "这个连接词并没有把两个意思对立起来。"],
   },
   "a likeness": {
     zh: "相似",
-    why: ["The second idea is like the first.", "第二个意思与第一个相似。"],
+    why: [
+      "The second idea is like the first.\n\n**Check.** Substitute *in the same way* for the linking word—both sentences share a parallel pattern or trait.",
+      "第二个意思与第一个相似。\n\n**检验。** 把连接词换成“同样地”——前后两句展现相似的规律或特点。",
+    ],
     not: ["The linking word does not show that the ideas are alike.", "这个连接词并不表示两个意思相似。"],
   },
   "an example or detail": {
     zh: "例子或细节",
-    why: ["The second idea gives a specific example or detail of the first.", "第二个意思给出第一个意思的具体例子或细节。"],
+    why: [
+      "The second idea gives a specific example or detail of the first.\n\n**Check.** Notice that the second sentence zooms in with one concrete instance of the general statement before it.",
+      "第二个意思给出第一个意思的具体例子或细节。\n\n**检验。** 注意后一句用具体事例或细节把前一句的概括说法具体化了。",
+    ],
     not: ["The linking word does not introduce an example or detail.", "这个连接词并没有引出例子或细节。"],
   },
 };
@@ -1066,14 +1147,18 @@ const linkingWords = topic("writing", {
     "Linking words join ideas within and across paragraphs: consequently, specifically, in contrast, on the other hand, similarly, however.",
     "连接词在段落内和段落间连接意思：consequently、specifically、in contrast、on the other hand、similarly、however。",
   ],
+  intro: [
+    "Linking words act like road signs between sentences and paragraphs: *Consequently* tells the reader a result is coming, *In contrast* signals an opposite turn, *Similarly* points to a parallel case, and *Specifically* zooms in on a detail.",
+    "连接词就像句子与段落之间的路标：*Consequently* 提示接下来是结果，*In contrast* 表示转折对比，*Similarly* 引出相似情况，*Specifically* 则聚焦到具体细节。",
+  ],
   after: ["linking-words-for-information"],
   points: [
     label(
       "what-a-linking-word-shows",
       ["What a Linking Word Shows", "连接词表示什么"],
       [
-        "A **linking word** tells the reader how two ideas connect. *Consequently*, *as a result* and *therefore* show **a result**. *However*, *in contrast* and *on the other hand* show **a contrast**. *Similarly*, *likewise* and *in the same way* show **a likeness**. *Specifically*, *for example* and *for instance* bring in **an example or detail**.",
-        "**连接词**告诉读者两个意思怎样联系。*Consequently*、*as a result* 和 *therefore* 表示**结果**。*However*、*in contrast* 和 *on the other hand* 表示**对比**。*Similarly*、*likewise* 和 *in the same way* 表示**相似**。*Specifically*、*for example* 和 *for instance* 引出**例子或细节**。",
+        "A **linking word** tells the reader how two ideas connect. *Consequently*, *as a result* and *therefore* show **a result**. *However*, *in contrast* and *on the other hand* show **a contrast**. *Similarly*, *likewise* and *in the same way* show **a likeness**. *Specifically*, *for example* and *for instance* bring in **an example or detail**.\n\n> **Watch out.** Check the relationship between the *two whole sentences* as well as the linking phrase—the meaning of both sentences confirms the link.",
+        "**连接词**告诉读者两个意思怎样联系。*Consequently*、*as a result* 和 *therefore* 表示**结果**。*However*、*in contrast* 和 *on the other hand* 表示**对比**。*Similarly*、*likewise* 和 *in the same way* 表示**相似**。*Specifically*、*for example* 和 *for instance* 引出**例子或细节**。\n\n> **注意。** 除了看连接词本身，还要看*前后两整句*之间的逻辑关系——两句话的意思会共同印证这种连接。",
       ],
       ["What does the linking word show?", "这个连接词表示什么？"],
       linkLines,
@@ -1083,12 +1168,15 @@ const linkingWords = topic("writing", {
       "the-word-that-joins-two-paragraphs",
       ["The Word That Joins Two Paragraphs", "连接两个段落的词"],
       [
-        "A linking word at the start of a paragraph tells the reader how it connects to the one before. Read the end of the first paragraph and the start of the second, decide how the ideas connect (a result, a contrast, a likeness or an example), and choose the word that shows it.",
-        "段落开头的连接词告诉读者这一段与上一段怎样联系。读第一段的结尾和第二段的开头，判断两个意思是什么关系（结果、对比、相似还是例子），再选出表示这种关系的词。",
+        "A linking word at the start of a paragraph tells the reader how it connects to the one before. Read the end of the first paragraph and the start of the second, decide how the ideas connect (a result, a contrast, a likeness or an example), and choose the word that shows it.\n\n> **Watch out.** Decide the relationship *before* looking at the options—two linking words that sound formal can still signal opposite logic (like *Consequently* vs. *In contrast*).",
+        "段落开头的连接词告诉读者这一段与上一段怎样联系。读第一段的结尾和第二段的开头，判断两个意思是什么关系（结果、对比、相似还是例子），再选出表示这种关系的词。\n\n> **注意。** 先判断两段之间的逻辑关系，再看选项——同样正式的连接词，表达的逻辑可能完全相反（比如 *Consequently* 和 *In contrast*）。",
       ],
       ["Which linking word best fills the blank?", "哪个连接词最适合填空？"],
       joinLines,
-      (right) => [`**${right}** shows how the second paragraph connects to the first.`, `**${right}** 表明了第二段与第一段的关系。`],
+      (right) => [
+        `**${right}** shows how the second paragraph connects to the first.\n\n**Check.** Read the end of paragraph 1 and the start of paragraph 2 aloud with **${right}** in the blank—the shift in logic flows smoothly without clashing.`,
+        `**${right}** 表明了第二段与第一段的关系。\n\n**检验。** 把 **${right}** 填进空白处，连着第一段结尾和第二段开头大声读一遍——前后逻辑衔接顺畅，没有违和感。`,
+      ],
       [
         ["*{wrong}* shows a different connection from the one between these ideas.", "*{wrong}* 表示的关系与这两个意思之间的关系不同。"],
         ["*{wrong}* does not fit how the two paragraphs connect.", "*{wrong}* 与两个段落之间的联系不符。"],
@@ -1170,18 +1258,25 @@ const formalStyle = topic("writing", {
     "Reports and news articles use a formal style: the third person, exact words, no slang and no exclamations.",
     "报告和新闻报道使用正式文体：用第三人称、用词准确、不用俚语、不用感叹句。",
   ],
+  intro: [
+    "In a text message you might write *“That comet was super cool, no joke!”* In a science report, you switch to **formal style**: *“The comet passed within fifty million kilometers of Earth.”* Formal writing replaces slang, vague fillers, and personal exclamations with calm, exact third-person statements.",
+    "发短信时你可能会写 *“That comet was super cool, no joke!”*，但写科学报告时要切换到**正式文体**：*“The comet passed within fifty million kilometers of Earth.”* 正式文体用冷静、准确的第三人称陈述，取代俚语、含糊的口语词和个人感叹。",
+  ],
   after: ["formal-and-informal-english"],
   points: [
     choose(
       "the-sentence-in-a-formal-style",
       ["The Sentence in a Formal Style", "正式文体的句子"],
       [
-        "Reports and news articles keep a **formal style**. They use the **third person** (not *I think*), **exact words** and numbers instead of *tons* or *like*, and **no slang**. They state facts calmly, without exclamations about how the writer feels. Save *awesome* and *wow* for talking with friends.",
-        "报告和新闻报道使用**正式文体**。它们用**第三人称**（不用 *I think*），用**准确的词语**和数字代替 *tons* 或 *like*，**不用俚语**。它们平静地陈述事实，不用感叹句表达作者的感受。*awesome* 和 *wow* 留到和朋友聊天时再用。",
+        "Reports and news articles keep a **formal style**. They use the **third person** (not *I think*), **exact words** and numbers instead of *tons* or *like*, and **no slang**. They state facts calmly, without exclamations about how the writer feels. Save *awesome* and *wow* for talking with friends.\n\n> **Watch out.** Check for hidden informal markers: casual fillers (*like*, *kinda*, *stuff*, *gonna*), first-person opinions (*I think*, *I love*), and exclamation marks.",
+        "报告和新闻报道使用**正式文体**。它们用**第三人称**（不用 *I think*），用**准确的词语**和数字代替 *tons* 或 *like*，**不用俚语**。它们平静地陈述事实，不用感叹句表达作者的感受。*awesome* 和 *wow* 留到和朋友聊天时再用。\n\n> **注意。** 留心隐藏的非正式痕迹：口语垫词（*like*、*kinda*、*stuff*、*gonna*）、第一人称主观感受（*I think*、*I love*）以及感叹号。",
       ],
       ["Which sentence keeps a formal style?", "哪个句子保持了正式文体？"],
       formalLines,
-      (right) => [`**${right}** uses exact words, with no slang and no exclamation.`, `**${right}** 用词准确，没有俚语，也没有感叹。`],
+      (right) => [
+        `**${right}** uses exact words, with no slang and no exclamation.\n\n**Check.** Scan **${right}** for *I/you*, slang (*tons*, *like*, *kinda*), or exclamation marks—none appear, and the sentence states a verifiable fact calmly.`,
+        `**${right}** 用词准确，没有俚语，也没有感叹。\n\n**检验。** 扫一眼 **${right}**，里面没有 *I/you*、俚语（*tons*、*like*、*kinda*）或感叹号，整句平静地陈述了一个可核实的事实。`,
+      ],
       [
         ["*{wrong}* uses slang and vague words such as *like* or *tons*.", "*{wrong}* 用了俚语和 *like*、*tons* 这类含糊的词。"],
         ["*{wrong}* shouts the writer's own feelings with an exclamation.", "*{wrong}* 用感叹句喊出了作者自己的感受。"],
@@ -1191,12 +1286,15 @@ const formalStyle = topic("writing", {
       "rewriting-a-sentence-formally",
       ["Rewriting a Sentence Formally", "把句子改写成正式文体"],
       [
-        "To make an informal sentence formal, replace each slang word with an **exact** one: *a ton of money* becomes *forty million dollars* or *a great deal of money*, *super excited* becomes *pleased*. Keep the meaning the same: the formal sentence must still say what the informal one said.",
-        "要把非正式的句子改成正式的，就把每个俚语换成**准确**的词：*a ton of money* 改成 *forty million dollars* 或 *a great deal of money*，*super excited* 改成 *pleased*。意思要保持不变：正式的句子仍要说出原句的意思。",
+        "To make an informal sentence formal, replace each slang word with an **exact** one: *a ton of money* becomes *forty million dollars* or *a great deal of money*, *super excited* becomes *pleased*. Keep the meaning the same: the formal sentence must still say what the informal one said.\n\n> **Watch out.** Check *both* style and meaning—one distractor keeps casual slang, while the other sounds formal but flips the original meaning.",
+        "要把非正式的句子改成正式的，就把每个俚语换成**准确**的词：*a ton of money* 改成 *forty million dollars* 或 *a great deal of money*，*super excited* 改成 *pleased*。意思要保持不变：正式的句子仍要说出原句的意思。\n\n> **注意。** *文体*和*原意*两项都要核对——一个干扰项仍留着口语俚语，另一个虽然听起来正式，却把原意说反了。",
       ],
       ["Which is the best formal version of the sentence?", "哪个是这个句子最好的正式版本？"],
       rewriteLines,
-      (right) => [`**${right}** says the same thing in exact, formal words.`, `**${right}** 用准确、正式的词语说出了同样的意思。`],
+      (right) => [
+        `**${right}** says the same thing in exact, formal words.\n\n**Check.** Compare **${right}** with the original sentence: the core fact is unchanged, and every casual word has been replaced by standard, precise phrasing.`,
+        `**${right}** 用准确、正式的词语说出了同样的意思。\n\n**检验。** 把 **${right}** 和原句对照：核心事实没有变，而且所有口语词都换成了规范准确的表达。`,
+      ],
       [
         ["*{wrong}* still uses slang.", "*{wrong}* 仍然用了俚语。"],
         ["*{wrong}* is formal but changes the meaning.", "*{wrong}* 虽然正式，却改变了原意。"],
@@ -1209,17 +1307,26 @@ const formalStyle = topic("writing", {
 const arcLabels: Record<string, Label> = {
   "the beginning": {
     zh: "开头",
-    why: ["It introduces the character and sets up the problem.", "它介绍人物并引出问题。"],
+    why: [
+      "It introduces the character and sets up the problem.\n\n**Check.** Notice that nothing has escalated or been solved yet—this event only puts the main character and the initial problem on the board.",
+      "它介绍人物并引出问题。\n\n**检验。** 注意此时矛盾还没有升级，也还没有解决——这件事只是把主角和最初的问题摆了出来。",
+    ],
     not: ["The beginning sets up the problem; this event comes later.", "开头引出问题；这件事发生得更晚。"],
   },
   "a rising event": {
     zh: "发展事件",
-    why: ["It makes the problem harder and raises the stakes.", "它让问题更难，提高了风险。"],
+    why: [
+      "It makes the problem harder and raises the stakes.\n\n**Check.** Ask whether the character's situation gets *worse* or *harder* here—it adds a new obstacle without solving the problem yet.",
+      "它让问题更难，提高了风险。\n\n**检验。** 问问主角的处境在这里是不是变得*更糟*或*更难*了——它增添了新障碍，还没有解决问题。",
+    ],
     not: ["Rising events make the problem harder; this event does not.", "发展事件让问题更难；这件事没有。"],
   },
   "the turning point": {
     zh: "转折点",
-    why: ["It is the moment the character acts, and the problem begins to be solved.", "这是人物采取行动、问题开始得到解决的时刻。"],
+    why: [
+      "It is the moment the character acts, and the problem begins to be solved.\n\n**Check.** Spot the character's decisive action—once this step happens, the problem stops getting worse and starts moving toward a solution.",
+      "这是人物采取行动、问题开始得到解决的时刻。\n\n**检验。** 找出人物的关键行动——这一步一发生，问题就不再恶化，开始走向解决。",
+    ],
     not: [
       "The turning point is where the character acts to solve the problem; this is not it.",
       "转折点是人物采取行动解决问题的地方；这不是。",
@@ -1227,7 +1334,10 @@ const arcLabels: Record<string, Label> = {
   },
   "the ending": {
     zh: "结局",
-    why: ["It shows how things turn out after the problem is solved.", "它表明问题解决后事情的结果。"],
+    why: [
+      "It shows how things turn out after the problem is solved.\n\n**Check.** Notice that the danger or obstacle is already over here—this event shows the reward, relief, or new normal afterward.",
+      "它表明问题解决后事情的结果。\n\n**检验。** 注意这里的危险或困难已经过去——这件事展示的是事后的收获、宽慰或新生活。",
+    ],
     not: ["The ending comes after the problem is solved; this event comes before.", "结局在问题解决之后；这件事发生在之前。"],
   },
 };
@@ -1294,14 +1404,18 @@ const storyArc = topic("writing", {
     "A story goes from a beginning that sets up the problem, through events that raise the stakes, to a turning point and an ending.",
     "故事从引出问题的开头开始，经过不断加大风险的事件，到达转折点和结局。",
   ],
+  intro: [
+    "Before drafting a story, writers sketch a **story arc** in four beats: a **beginning** that sets up the problem (a bakery's oven breaks before the festival), a **rising event** that raises the stakes (rain traps the repair van), a **turning point** where the character acts (the baker borrows the school kitchen), and an **ending** showing how things turn out.",
+    "动笔写故事前，作者会先勾出四步**情节线**：**开头**引出问题（节日前面包房的烤箱坏了），**发展事件**让局势更紧迫（大雨困住了维修车），**转折点**由人物果断行动（面包师借用学校厨房），最后用**结局**交代结果。",
+  ],
   after: ["ending-a-story"],
   points: [
     label(
       "placing-events-in-the-story-plan",
       ["Placing Events in the Story Plan", "把事件放进故事计划"],
       [
-        "A story plan has four parts. **The beginning** introduces the character and the problem. **Rising events** make the problem harder, raising the stakes. **The turning point** is the moment the character acts, and the problem starts to be solved. **The ending** shows how things turn out. Placing each event tells you what it must do.",
-        "故事计划有四个部分。**开头**介绍人物和问题。**发展事件**让问题更难，提高风险。**转折点**是人物采取行动、问题开始得到解决的时刻。**结局**表明事情的结果。确定每件事的位置，就知道它要起什么作用。",
+        "A story plan has four parts. **The beginning** introduces the character and the problem. **Rising events** make the problem harder, raising the stakes. **The turning point** is the moment the character acts, and the problem starts to be solved. **The ending** shows how things turn out. Placing each event tells you what it must do.\n\n> **Watch out.** Do not mix up a *rising event* (the trouble gets worse) with the *turning point* (the character takes action that starts solving it).",
+        "故事计划有四个部分。**开头**介绍人物和问题。**发展事件**让问题更难，提高风险。**转折点**是人物采取行动、问题开始得到解决的时刻。**结局**表明事情的结果。确定每件事的位置，就知道它要起什么作用。\n\n> **注意。** 不要把*发展事件*（麻烦变得更严重）和*转折点*（人物采取行动开始解决问题）混在一起。",
       ],
       ["Where does this event belong in the story plan?", "这件事在故事计划中属于哪一部分？"],
       arcLines,
@@ -1311,12 +1425,15 @@ const storyArc = topic("writing", {
       "the-event-that-should-be-the-turning-point",
       ["The Event That Should Be the Turning Point", "应该作为转折点的事件"],
       [
-        "The **turning point** is the most important moment of a story: the character **acts**, and that action begins to solve the problem. An event that makes the problem worse belongs before it, and an event that shows how things end belongs after it. Look for the moment of choice and action.",
-        "**转折点**是故事最重要的时刻：人物**采取行动**，这一行动开始解决问题。让问题变糟的事件应放在它之前，表明结局的事件应放在它之后。要寻找人物做出选择并行动的那一刻。",
+        "The **turning point** is the most important moment of a story: the character **acts**, and that action begins to solve the problem. An event that makes the problem worse belongs before it, and an event that shows how things end belongs after it. Look for the moment of choice and action.\n\n> **Watch out.** Check the *direction* of the event: if trouble deepens, it is still rising action; if the problem is already over, it is the ending.",
+        "**转折点**是故事最重要的时刻：人物**采取行动**，这一行动开始解决问题。让问题变糟的事件应放在它之前，表明结局的事件应放在它之后。要寻找人物做出选择并行动的那一刻。\n\n> **注意。** 看事件的*走向*：如果麻烦加深，还属于发展阶段；如果问题已经尘埃落定，那就是结局。",
       ],
       ["Which event should be the turning point of the story?", "哪件事应该是故事的转折点？"],
       turnItems,
-      (right) => [`**${right}** is the moment the character acts to solve the problem.`, `**${right}** 是人物采取行动解决问题的时刻。`],
+      (right) => [
+        `**${right}** is the moment the character acts to solve the problem.\n\n**Check.** Compare **${right}** with the problem stated in the prompt: this single action directly answers that problem and shifts the story toward a solution.`,
+        `**${right}** 是人物采取行动解决问题的时刻。\n\n**检验。** 把 **${right}** 和题干里的问题对照：正是这一步行动直接回应了问题，把故事推向解决。`,
+      ],
       [
         ["*{wrong}* makes the problem worse, so it comes before the turning point.", "*{wrong}* 让问题更糟，所以在转折点之前。"],
         ["*{wrong}* shows how things end, so it comes after the turning point.", "*{wrong}* 表明结局，所以在转折点之后。"],
@@ -1405,20 +1522,24 @@ const pacingAStory = topic("writing", {
     "A writer slows down at the moments that matter, with detail and dialogue, and speeds up the rest with a summary (Three days passed).",
     "作者在重要的时刻放慢节奏，加入细节和对话；在其他地方用概括加快节奏（Three days passed）。",
   ],
+  intro: [
+    "Good stories do not spend the same number of lines on every minute. You speed past a three-hour train ride with *“Three hours later, we stepped onto the platform,”* and slow down to write second by second when the suitcase goes missing.",
+    "好故事不会把每一分钟都写得一样长。三小时的火车旅程只需一句 *“Three hours later, we stepped onto the platform.”* 快速带过，但当行李箱不见的那一刻，就要放慢节奏，一秒一秒地展开描写。",
+  ],
   after: ["planning-a-story-arc", "showing-not-telling"],
   points: [
     choose(
       "the-moment-to-slow-down",
       ["The Moment to Slow Down", "该放慢的时刻"],
       [
-        "**Pacing** is how fast a story moves. A writer **slows down** at the moment that matters most, the moment of danger, choice or discovery, telling it second by second with detail, thoughts and dialogue. Ordinary stretches such as drives, chores and waiting get only a sentence or are skipped.",
-        "**节奏**是故事推进的快慢。作者在最重要的时刻**放慢节奏**，也就是危险、抉择或发现的时刻，用细节、想法和对话一秒一秒地写出来。开车、做家务、等待这样的普通过程只用一句话带过，或干脆略去。",
+        "**Pacing** is how fast a story moves. A writer **slows down** at the moment that matters most, the moment of danger, choice or discovery, telling it second by second with detail, thoughts and dialogue. Ordinary stretches such as drives, chores and waiting get only a sentence or are skipped.\n\n> **Watch out.** Ask where the outcome hangs in the balance—ordinary preparation, rides, or waiting should be compressed, not expanded.",
+        "**节奏**是故事推进的快慢。作者在最重要的时刻**放慢节奏**，也就是危险、抉择或发现的时刻，用细节、想法和对话一秒一秒地写出来。开车、做家务、等待这样的普通过程只用一句话带过，或干脆略去。\n\n> **注意。** 问问哪里关系到结果成败——普通的准备、乘车或等待应该压缩带过，而不是铺开细写。",
       ],
       ["Which moment should the writer slow down for?", "作者应该在哪个时刻放慢节奏？"],
       slowItems,
       (right) => [
-        `**${right}** is the moment that matters most, so it deserves detail and dialogue.`,
-        `**${right}** 是最重要的时刻，所以值得写入细节和对话。`,
+        `**${right}** is the moment that matters most, so it deserves detail and dialogue.\n\n**Check.** Picture the reader leaning forward—**${right}** is the high-stakes beat where something actually changes, unlike the routine parts in the other options.`,
+        `**${right}** 是最重要的时刻，所以值得写入细节和对话。\n\n**检验。** 想象读者屏住呼吸的瞬间——**${right}** 正是局势发生转折的关键节点，而不是其他选项里的日常琐事。`,
       ],
       [
         ["*{wrong}* is an ordinary stretch the reader does not need in detail.", "*{wrong}* 是读者不需要详细了解的普通过程。"],
@@ -1429,14 +1550,14 @@ const pacingAStory = topic("writing", {
       "the-sentence-that-speeds-past",
       ["The Sentence That Speeds Past", "快速带过的句子"],
       [
-        "To **speed up**, a writer sums up a dull stretch in one sentence: *Three days passed*, *Four hours later, we arrived*, *The summer flew by*. Listing every step of the stretch slows the story down when nothing is happening. And a sentence that jumps to the next event without covering the gap leaves the reader lost.",
-        "要**加快节奏**，作者就用一句话概括平淡的过程：*Three days passed*、*Four hours later, we arrived*、*The summer flew by*。把这段过程的每一步都列出来，会在什么都没发生时拖慢故事。而直接跳到下一件事、不交代中间过程的句子会让读者摸不着头脑。",
+        "To **speed up**, a writer sums up a dull stretch in one sentence: *Three days passed*, *Four hours later, we arrived*, *The summer flew by*. Listing every step of the stretch slows the story down when nothing is happening. And a sentence that jumps to the next event without covering the gap leaves the reader lost.\n\n> **Watch out.** A good transition sentence still *names the time or journey that passed*—jumping straight to the next event skips the bridge altogether.",
+        "要**加快节奏**，作者就用一句话概括平淡的过程：*Three days passed*、*Four hours later, we arrived*、*The summer flew by*。把这段过程的每一步都列出来，会在什么都没发生时拖慢故事。而直接跳到下一件事、不交代中间过程的句子会让读者摸不着头脑。\n\n> **注意。** 好的过渡句仍会*交代经过的时间或路程*——直接跳到下一件事会漏掉衔接。",
       ],
       ["Which sentence speeds past the dull stretch?", "哪个句子快速带过了平淡的过程？"],
       speedLines,
       (right) => [
-        `**${right}** sums up the whole stretch in one sentence and moves on.`,
-        `**${right}** 用一句话概括了整个过程，然后继续往下讲。`,
+        `**${right}** sums up the whole stretch in one sentence and moves on.\n\n**Check.** Notice that **${right}** names the span of time or distance in a single clean sentence—no tedious step-by-step list, and no sudden jump that leaves out the gap.`,
+        `**${right}** 用一句话概括了整个过程，然后继续往下讲。\n\n**检验。** 注意 **${right}** 用干净利落的一句话交代了经过的时间或路程——既没有罗列琐碎步骤，也没有凭空跳过时间空档。`,
       ],
       [
         ["*{wrong}* lists every dull step, which slows the story down.", "*{wrong}* 列出了每一个平淡的步骤，拖慢了故事。"],
@@ -1487,12 +1608,34 @@ const kindNames: Record<string, Pair> = {
   s: ["spelling", "拼写"],
   w: ["confused word", "易混词"],
 };
-const kindRules: Record<string, string> = {
-  c: "names, days, months, titles and the first word of a sentence take a capital letter",
-  e: "two sentences need an end mark between them, not a comma",
-  m: "the items of a list are separated by commas",
-  s: "the word must be spelled correctly",
-  w: "words that sound alike, such as their, there and they're, must not be swapped",
+const kindRules: Record<string, Pair> = {
+  c: ["names, days, months, titles and the first word of a sentence take a capital letter", "专有名词、星期、月份、称谓和句首单词需要大写"],
+  e: ["two sentences need an end mark between them, not a comma", "两个完整句子之间需要句末标点，不能只用逗号"],
+  m: ["the items of a list are separated by commas", "列举并列项之间要用逗号隔开"],
+  s: ["the word must be spelled correctly", "这个词的拼写有误"],
+  w: ["words that sound alike, such as their, there and they're, must not be swapped", "同音或形近易混词不能用错"],
+};
+const kindChecks: Record<string, Pair> = {
+  c: [
+    "Check whether the word starts a sentence or names a specific person, place, day, month, or title—it must begin with a capital letter.",
+    "检查这个词是否位于句首，或是具体的人名、地名、星期、月份或称谓——首字母必须大写。",
+  ],
+  e: [
+    "Read the words on each side of the comma: both sides can stand alone as complete sentences, so a period is required between them.",
+    "分别读逗号前后两部分：两边都能独立成句，中间必须用句号断开。",
+  ],
+  m: [
+    "Count the listed items in that phrase: three or more items in a series need commas between them.",
+    "数一数这里的并列项：三个及以上并列项之间需要用逗号分隔。",
+  ],
+  s: [
+    "Look closely at the letters in the word—it is not a real English spelling, even if it sounds close when read aloud.",
+    "仔细看这个词的字母拼写——即使读音相近，它也不是正确的英文拼法。",
+  ],
+  w: [
+    "Test the word's meaning in the sentence: it is a real English word, but a different word with a similar sound belongs in this slot.",
+    "结合句意检验这个词：它本身是合法英文词，但这里该用另一个读音相近的词。",
+  ],
 };
 const proofMark = /\[([cemsw]):([^>\]]*)>([^\]]*)\]/g;
 const proofErrors = (p: string) => [...p.matchAll(proofMark)].map((m) => ({ kind: m[1] ?? "", wrong: m[2] ?? "", right: m[3] ?? "" }));
@@ -1521,20 +1664,32 @@ const proofreading = topic("writing", {
     "Before a piece is finished, the writer checks it for one kind of error at a time: capitals, end marks, commas, spelling, confused words.",
     "文章完成之前，作者要一次检查一种错误：大写、句末标点、逗号、拼写、易混词。",
   ],
+  intro: [
+    "Trying to catch every mistake in one fast read makes small slips invisible. Proofreaders do separate passes—one pass for capitals, one for end marks, one for commas, one for spelling, and one for confused words—until all errors in a paragraph are gone.",
+    "想一口气扫出所有错误，小毛病很容易漏掉。校对时要分趟检查——一趟查大写，一趟查句末标点，一趟查逗号，一趟查拼写，一趟查易混词——直到把整段的错误全部清零。",
+  ],
   after: ["commas-in-a-series", "commonly-confused-words"],
   points: [
     choose(
       "an-error-of-one-kind",
       ["An Error of One Kind", "某一类错误"],
       [
-        "Proofreaders read a piece **several times**, looking for **one kind of error** each time: first **capital letters** (names, days, months, titles, the first word of a sentence), then **end marks** (two sentences joined by a comma need a period), then **commas** between the items of a list, then **spelling**, then **confused words** such as *their*, *there* and *they're*. Looking for one kind at a time keeps errors from slipping past.",
-        "校对的人要把文章读**好几遍**，每遍只找**一种错误**：先找**大写字母**（名字、星期、月份、称谓、句首单词），然后是**句末标点**（用逗号连起来的两个句子需要句号），再是列举项之间的**逗号**，接着是**拼写**，最后是 *their*、*there* 和 *they're* 这样的**易混词**。一次只找一种，错误就不容易漏掉。",
+        "Proofreaders read a piece **several times**, looking for **one kind of error** each time: first **capital letters** (names, days, months, titles, the first word of a sentence), then **end marks** (two sentences joined by a comma need a period), then **commas** between the items of a list, then **spelling**, then **confused words** such as *their*, *there* and *they're*. Looking for one kind at a time keeps errors from slipping past.\n\n> **Watch out.** All three choices are real errors in the paragraph—make sure you pick the one that matches the *exact error type* asked for.",
+        "校对的人要把文章读**好几遍**，每遍只找**一种错误**：先找**大写字母**（名字、星期、月份、称谓、句首单词），然后是**句末标点**（用逗号连起来的两个句子需要句号），再是列举项之间的**逗号**，接着是**拼写**，最后是 *their*、*there* 和 *they're* 这样的**易混词**。一次只找一种，错误就不容易漏掉。\n\n> **注意。** 三个选项都是段落里真实存在的错误——务必选出符合题目指定的*那一类*错误。",
       ],
       ["Find the error of the kind named.", "找出所说的那一类错误。"],
       findItems,
       (right, shown) => {
         const k = kindOfFind(shown);
-        return [`${right} is the ${kindNames[k]?.[0]} error: ${kindRules[k]}.`, `${right} 是${kindNames[k]?.[1]}错误。`];
+        const rule = kindRules[k] ?? ["the word must be corrected", "这里需要改正"];
+        const check = kindChecks[k] ?? [
+          "Re-read the sentence carefully to confirm this exact error type.",
+          "重读句子确认它正是这一类错误。",
+        ];
+        return [
+          `${right} is the ${kindNames[k]?.[0]} error: ${rule[0]}.\n\n**Check.** ${check[0]}`,
+          `${right} 是${kindNames[k]?.[1]}错误：${rule[1]}。\n\n**检验。** ${check[1]}`,
+        ];
       },
       [
         ["{wrong} is an error too, but of a different kind.", "{wrong} 也是错误，但属于另一类。"],
@@ -1545,12 +1700,15 @@ const proofreading = topic("writing", {
       "every-error-corrected",
       ["Every Error Corrected", "改正所有错误"],
       [
-        "A finished piece has **no errors left**. After checking each kind in turn, the proofreader reads once more to make sure every error has been found and fixed. A version that fixes two errors but leaves the third is not finished yet, so compare each version with the original, error by error.",
-        "完成的文章**不再有错误**。逐一检查每类错误之后，校对的人还要再读一遍，确认每个错误都已找到并改正。改了两处却留下第三处的版本还没有完成，所以要把每个版本和原文逐个错误地对照。",
+        "A finished piece has **no errors left**. After checking each kind in turn, the proofreader reads once more to make sure every error has been found and fixed. A version that fixes two errors but leaves the third is not finished yet, so compare each version with the original, error by error.\n\n> **Watch out.** Do not stop after spotting two fixes—each paragraph starts with *three* errors, and both distractors leave one unfixed.",
+        "完成的文章**不再有错误**。逐一检查每类错误之后，校对的人还要再读一遍，确认每个错误都已找到并改正。改了两处却留下第三处的版本还没有完成，所以要把每个版本和原文逐个错误地对照。\n\n> **注意。** 看到改了两处别急着选——原段共有*三处*错误，两个干扰项都各漏改了一处。",
       ],
       ["Which version corrects every error in the paragraph?", "哪个版本改正了这一段中的所有错误？"],
       everyItems,
-      (right) => [`**${right}** fixes all three errors, with none left behind.`, `**${right}** 改正了全部三个错误，一个也没有留下。`],
+      (right) => [
+        `This version fixes all three errors, with none left behind:\n\n> ${right}\n\n**Check.** Compare the original paragraph sentence by sentence against this version: all three original mistakes (capitals, punctuation, spelling, or confused words) have been repaired.`,
+        `这个版本改正了全部三个错误，一处也没有漏掉：\n\n> ${right}\n\n**检验。** 把原段逐句与这个版本对照：原先的三处毛病（大写、标点、拼写或易混词）已经全部修好。`,
+      ],
       [
         ["*{wrong}* fixes two errors but leaves one behind.", "*{wrong}* 改正了两个错误，却留下了一个。"],
         ["*{wrong}* still has one error that was not corrected.", "*{wrong}* 仍有一个错误没有改正。"],

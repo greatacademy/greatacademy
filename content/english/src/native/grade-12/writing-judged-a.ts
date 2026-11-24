@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after, covers } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 
 /** limits are the length limits of a grade 12 essay. */
 export const limits = { minWords: 180, maxChars: 5400 };
@@ -210,6 +210,10 @@ export const judgedTopics12a: readonly TopicDef[] = [
       "Write a profile that turns the facts about a person into a story centered on a moral choice, its cost, and why it matters to others.",
       "写一篇人物特写，把关于一个人的事实写成以一个道德抉择为中心的故事，写出它的代价以及它对他人的意义。",
     ),
+    intro: t(
+      "Compare a dry bio—*Nadia Ortiz worked at a water utility and reported a falsified test in 2020*—with a scene-led opening: *Every afternoon Nadia Ortiz walks past the reservoir she once tested, carrying a clipboard for a community clinic instead of the city.* A compelling profile turns raw facts into a narrative anchored on the exact moment of choice, what it cost, and what it reveals to the rest of us.",
+      "比较平淡的履历——*Nadia Ortiz 曾在水务公司工作，2020 年举报了一份造假检测*——与场景化的开头：*每天下午，Nadia Ortiz 都会走过她曾检测过的水库，手里拿的不再是市政表格，而是社区诊所的记录板。* 出色的人物特写把冷冰冰的事实织成故事，聚焦抉择的瞬间、付出的代价以及对公众的意义。",
+    ),
     prerequisites: after("reading-an-investigative-report", "choosing-precise-diction"),
     encompasses: covers(0.2, "reading-an-investigative-report"),
     xp: 24,
@@ -220,8 +224,8 @@ export const judgedTopics12a: readonly TopicDef[] = [
         "the-moment-of-choice",
         t("The Moment of Choice", "抉择的时刻"),
         t(
-          "Build the profile around **the moment of choice**: what the person saw, what they were told to do, what they did instead and what it cost them. Open with a concrete scene or a striking fact rather than a summary: *Every morning at five, Elena Varga slides trays of bread into an oven.* Then go back to the choice.",
-          "围绕**抉择的时刻**来写这篇特写：这个人看到了什么、被要求做什么、实际做了什么、为此付出了什么代价。用一个具体场景或一个醒目的事实开头，而不是概述：*Every morning at five, Elena Varga slides trays of bread into an oven.* 然后再回到那个抉择。",
+          "Build the profile around **the moment of choice**: what the person saw, what they were told to do, what they did instead and what it cost them. Open with a concrete scene or a striking fact rather than a summary: *Every morning at five, Elena Varga slides trays of bread into an oven.* Then go back to the choice.\n\n> **Watch out.** Do not just copy the fact sheet in chronological bullet order—lead with a concrete scene or vivid contrast, and make clear what was at stake at the exact moment the person refused.",
+          "围绕**抉择的时刻**来写这篇特写：这个人看到了什么、被要求做什么、实际做了什么、为此付出了什么代价。用一个具体场景或一个醒目的事实开头，而不是概述：*Every morning at five, Elena Varga slides trays of bread into an oven.* 然后再回到那个抉择。\n\n> **注意。** 不要按时间顺序把事实清单原样抄成流水账——要以具体场景或鲜明对比开头，并清楚点明当事人说“不”那一刻面临的利害得失。",
         ),
         writingGenerator(
           t(
@@ -231,15 +235,18 @@ export const judgedTopics12a: readonly TopicDef[] = [
           profileBank,
           ["g12-profile-choice", "g12-profile-detail", "g12-profile-meaning"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Re-read your opening and middle paragraphs: verify that the first sentence puts the reader in a concrete scene or contrast, and that you clearly state what the person saw, the pressure they faced, what they chose, and the personal cost.",
+            "重读开头和主体段：确认首句用具体场景或鲜明对比把读者带入人物处境，并清楚交代了当事人看到的问题、面临的压力、作出的抉择以及付出的个人代价。",
+          ),
         ),
       ),
       point(
         "why-the-choice-matters",
         t("Why the Choice Matters", "这个抉择为什么重要"),
         t(
-          "Use the facts precisely, with numbers and the person's own words, and explain what the quotation shows: *For her, the numbers on a report were never abstract.* End by saying **why the choice matters** beyond this one person, without turning the profile into praise or a sermon.",
-          "准确地使用事实，包括数字和这个人自己的话，并解释引语说明了什么：*For her, the numbers on a report were never abstract.* 结尾说明这个抉择**为什么重要**，其意义超出这一个人，但不要把特写写成颂词或说教。",
+          "Use the facts precisely, with numbers and the person's own words, and explain what the quotation shows: *For her, the numbers on a report were never abstract.* End by saying **why the choice matters** beyond this one person, without turning the profile into praise or a sermon.\n\n> **Watch out.** Never drop the quotation in without unpacking it, and avoid generic praise like *She is a true hero we should all admire*—connect the person's specific act to a concrete lesson about institutions or public trust.",
+          "准确地使用事实，包括数字和这个人自己的话，并解释引语说明了什么：*For her, the numbers on a report were never abstract.* 结尾说明这个抉择**为什么重要**，其意义超出这一个人，但不要把特写写成颂词或说教。\n\n> **注意。** 不要把引语原封不动丢在段尾却不加解读，也不要用“她是值得所有人敬佩的英雄”之类空洞赞美收尾——要把当事人的具体行动与制度运作或公共信任的现实启示联系起来。",
         ),
         writingGenerator(
           t(
@@ -249,7 +256,10 @@ export const judgedTopics12a: readonly TopicDef[] = [
           profileBank,
           ["g12-profile-detail", "g12-profile-meaning", "g12-profile-choice"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check every number, date, and quotation against the given facts, confirm that you unpack what the quotation reveals, and make sure the closing explains the broader public significance without preaching.",
+            "对照题干逐一核对数字、年份和引语是否准确，确认你解读了引语背后的含义，并检查结尾是否在不空洞说教的前提下点明了这件事对公众的普遍意义。",
+          ),
         ),
       ),
     ],
@@ -261,6 +271,10 @@ export const judgedTopics12a: readonly TopicDef[] = [
       "Write a short philosophical essay that defines its key term, takes a position, tests it with an example or thought experiment, and answers the strongest objection.",
       "写一篇哲学短文，定义关键术语，表明立场，用一个例子或思想实验检验它，并回应最有力的反对意见。",
     ),
+    intro: t(
+      "Ask *Should historical monuments to flawed leaders be removed?* Without first defining what a monument *does*—honoring a person versus recording history—an essay drifts into slogans. A philosophical essay advances step by step: define the key term cleanly, commit to a thesis, test it with a concrete case or thought experiment, and confront the strongest counterargument before concluding.",
+      "面对“是否应拆除有污点历史人物的纪念碑”这类问题，如果不先界定纪念碑的功能——是赞颂人物还是记录历史——文章就会流于口号。哲学短文步步为营：先清晰界定关键术语，再亮明立场，用具体案例或思想实验检验，最后直面并回应最有力的反驳。",
+    ),
     prerequisites: after("following-a-thought-experiment", "defining-a-term-in-an-argument", "writing-a-critique-of-an-argument"),
     encompasses: covers(0.2, "following-a-thought-experiment", "defining-a-term-in-an-argument"),
     xp: 24,
@@ -271,8 +285,8 @@ export const judgedTopics12a: readonly TopicDef[] = [
         "terms-and-a-position",
         t("Terms and a Position", "术语与立场"),
         t(
-          "Begin by **defining** the key term in plain words with clear limits: *By a lie I mean a statement that the speaker believes is false, made in order to make someone else believe it.* Then state your **position** in one sentence, and test it with a case: an example or a thought experiment that brings out what most people would say.",
-          "开头用平实的词**定义**关键术语，并划出清楚的界限：*By a lie I mean a statement that the speaker believes is false, made in order to make someone else believe it.* 然后用一句话表明你的**立场**，并用一个情形检验它：一个例子或一个思想实验，引出多数人会给出的回答。",
+          "Begin by **defining** the key term in plain words with clear limits: *By a lie I mean a statement that the speaker believes is false, made in order to make someone else believe it.* Then state your **position** in one sentence, and test it with a case: an example or a thought experiment that brings out what most people would say.\n\n> **Watch out.** Avoid circular or loaded definitions (*Free will means being free*) and do not stop after describing your thought experiment—explicitly explain what the reader's intuition about the case shows for your thesis.",
+          "开头用平实的词**定义**关键术语，并划出清楚的界限：*By a lie I mean a statement that the speaker believes is false, made in order to make someone else believe it.* 然后用一句话表明你的**立场**，并用一个情形检验它：一个例子或一个思想实验，引出多数人会给出的回答。\n\n> **注意。** 避免循环或偏向性定义（如 *Free will means being free*），也不要讲完思想实验就戛然而止——务必明确说明人们对该情形的直觉如何支撑你的立场。",
         ),
         writingGenerator(
           t(
@@ -282,15 +296,18 @@ export const judgedTopics12a: readonly TopicDef[] = [
           philosophyBank,
           ["g12-philosophy-definition", "g12-philosophy-case", "g12-philosophy-objection"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that your opening paragraph gives a non-circular working definition of the key term and a one-sentence thesis, and that your example or thought experiment directly tests that thesis rather than merely restating it.",
+            "核对开头段是否给出了不循环的工作定义和一句话立场，并确认你的例子或思想实验真正检验了该立场，而不是单纯换句话重复论点。",
+          ),
         ),
       ),
       point(
         "the-strongest-objection",
         t("The Strongest Objection", "最有力的反对意见"),
         t(
-          "Then state **the strongest objection** to your position fairly, as its supporters would put it, and **answer** it: show what it gets right and why your position still holds, or how it must be limited. End with a conclusion that says what your reasoning has shown.",
-          "然后公正地陈述对你立场**最有力的反对意见**，就像其支持者会表述的那样，并**回应**它：指出它对的地方，以及为什么你的立场仍然成立，或者必须加上什么限制。最后用结论说明你的推理表明了什么。",
+          "Then state **the strongest objection** to your position fairly, as its supporters would put it, and **answer** it: show what it gets right and why your position still holds, or how it must be limited. End with a conclusion that says what your reasoning has shown.\n\n> **Watch out.** Do not invent a weak straw man just to knock it down easily—present the counterargument at its strongest, acknowledge whatever truth it holds, and show precisely why your refined position survives it.",
+          "然后公正地陈述对你立场**最有力的反对意见**，就像其支持者会表述的那样，并**回应**它：指出它对的地方，以及为什么你的立场仍然成立，或者必须加上什么限制。最后用结论说明你的推理表明了什么。\n\n> **注意。** 不要捏造一个不堪一击的“稻草人”来凑数——要把反方最有力的理由公正呈现出来，承认其中合理之处，再具体说明你的立场（或加上限定后）为何依然站得住脚。",
         ),
         writingGenerator(
           t(
@@ -300,7 +317,10 @@ export const judgedTopics12a: readonly TopicDef[] = [
           philosophyBank,
           ["g12-philosophy-case", "g12-philosophy-objection", "g12-philosophy-definition"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Ask whether a defender of the opposing view would recognize your objection as fair and serious, then check that your reply answers it with a reason (not mere assertion) and that your conclusion reflects the qualified claim.",
+            "想想反方支持者是否会认可你陈述的反对意见公正有力，再检查你的回应是否给出了实质理由（而非武断否认），以及结尾是否准确总结了经过检验后的立场。",
+          ),
         ),
       ),
     ],
@@ -312,6 +332,10 @@ export const judgedTopics12a: readonly TopicDef[] = [
       "Write a review that describes a work briefly, judges it with reasons tied to specific features and their effects, weighs a weakness, and ends with a clear verdict.",
       "写一篇评论，简要描述作品，用与具体特点及其效果相联系的理由评判它，衡量一处不足，并以明确的结论结尾。",
     ),
+    intro: t(
+      "A review that says only *The sculpture show is breathtaking and everyone should go* tells a reader nothing verifiable. A strong review sketches what the work is in a few crisp lines, links every praise or criticism to a concrete artistic choice and its effect, weighs a real flaw fairly, and closes with a clear verdict on who will value it.",
+      "只写 *The sculpture show is breathtaking and everyone should go* 的评论给不了读者任何可核查的依据。好的评论会用寥寥数语交代作品全貌，把每条褒贬都系在具体艺术手法及其效果上，公正权衡一处不足，并以面向特定受众的明确结论收尾。",
+    ),
     prerequisites: after("evaluating-a-review", "choosing-precise-diction"),
     encompasses: covers(0.2, "evaluating-a-review"),
     xp: 24,
@@ -322,8 +346,8 @@ export const judgedTopics12a: readonly TopicDef[] = [
         "what-the-work-is",
         t("What the Work Is", "作品是什么"),
         t(
-          "Open with your overall judgment in a sentence, then **describe** the work briefly so a reader who has not seen it knows what it is: its form, its subject and its most important features. Description should be short and accurate; it prepares for the judgment rather than replacing it.",
-          "开头用一句话给出你的总体评判，然后简要**描述**作品，让没看过的读者知道它是什么：它的形式、主题和最重要的特点。描述要简短准确；它为评判做准备，而不是取代评判。",
+          "Open with your overall judgment in a sentence, then **describe** the work briefly so a reader who has not seen it knows what it is: its form, its subject and its most important features. Description should be short and accurate; it prepares for the judgment rather than replacing it.\n\n> **Watch out.** Do not spend half the review retelling every detail of the prompt—keep the description tight so you leave room to analyze *how* the work's choices affect its audience.",
+          "开头用一句话给出你的总体评判，然后简要**描述**作品，让没看过的读者知道它是什么：它的形式、主题和最重要的特点。描述要简短准确；它为评判做准备，而不是取代评判。\n\n> **注意。** 不要用一半篇幅复述题干里的所有细节——描述要精炼，把主要篇幅留给分析作品的具体选择如何影响受众。",
         ),
         writingGenerator(
           t(
@@ -333,15 +357,18 @@ export const judgedTopics12a: readonly TopicDef[] = [
           reviewBank,
           ["g12-review-description", "g12-review-reasons", "g12-review-verdict"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your first two paragraphs: confirm that the opening states a clear overall judgment and that the description accurately orientates an unfamiliar reader in a few concise sentences without swallowing the whole review.",
+            "检查前两段：确认开篇给出了明确的整体评判，随后的描述用简短准确的几句话让没看过作品的读者了解其基本面貌，且没有喧宾夺主。",
+          ),
         ),
       ),
       point(
         "judgment-with-reasons",
         t("Judgment with Reasons", "有理由的评判"),
         t(
-          "Support every judgment with **a specific feature and its effect**: *Leaving out the faces is the photographer's boldest choice, because without them we see what work has done to people.* Name at least one weakness fairly, and end with a **verdict** that says who the work is for.",
-          "每个评判都要用**一个具体特点及其效果**来支持：*Leaving out the faces is the photographer's boldest choice, because without them we see what work has done to people.* 公正地指出至少一处不足，并以一个说明作品适合谁的**结论**结尾。",
+          "Support every judgment with **a specific feature and its effect**: *Leaving out the faces is the photographer's boldest choice, because without them we see what work has done to people.* Name at least one weakness fairly, and end with a **verdict** that says who the work is for.\n\n> **Watch out.** Replace vague praise (*stunning*, *unforgettable*) with cause-and-effect analysis (*feature -> audience effect*), and make sure your named weakness is grounded in the actual work rather than an invented fault.",
+          "每个评判都要用**一个具体特点及其效果**来支持：*Leaving out the faces is the photographer's boldest choice, because without them we see what work has done to people.* 公正地指出至少一处不足，并以一个说明作品适合谁的**结论**结尾。\n\n> **注意。** 把空泛夸赞（如 *stunning*、*unforgettable*）换成“具体手法 -> 受众效果”的分析，并确保指出的不足基于作品本身，而非凭空编造。",
         ),
         writingGenerator(
           t(
@@ -351,7 +378,10 @@ export const judgedTopics12a: readonly TopicDef[] = [
           reviewBank,
           ["g12-review-reasons", "g12-review-verdict", "g12-review-description"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify three things in your body and closing: at least two judgments pair a concrete feature of the work with its effect, at least one real limitation is weighed fairly, and the final sentence tells readers clearly who would value the work.",
+            "核对主体与结尾的三项要点：至少两处评判把作品具体特点与受众效果挂钩，公正权衡了至少一处真实不足，且结尾明确说明了这部作品适合哪类读者或观众。",
+          ),
         ),
       ),
     ],

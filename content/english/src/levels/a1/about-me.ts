@@ -440,6 +440,10 @@ const presentSimple: TopicDef = {
     "I live in Beijing. We speak Chinese. What is true or usual, with no ending after I, you, we and they.",
     "I live in Beijing. We speak Chinese. 一般现在时说明真实或经常的情况；I、you、we、they 后面的动词不加词尾。",
   ),
+  intro: t(
+    "Compare *They read books every day.* with *They are happy.* When a sentence already has an action verb like *read*, *walk*, or *eat*, English does not put *am* or *are* in front of it—and after *I*, *you*, *we*, *they*, or plural subjects, the verb stays plain. In this topic, you choose the plain present-simple verb and remove extra *am*/*are*.",
+    "比较 *They read books every day.* 和 *They are happy.* 句子里已经有 *read*、*walk*、*eat* 这样的实义动词时，前面不再加 *am* 或 *are*；而且主语是 *I*、*you*、*we*、*they* 或复数时，动词保持原形。本主题带你正确选用一般现在时动词原形，并去掉多余的 *am*/*are*。",
+  ),
   prerequisites: ["the-verb-be", "a1-words-about-me"],
   encompasses: [{ topic: "a1-words-about-me", weight: 0.3 }],
   xp: 15,
@@ -449,16 +453,16 @@ const presentSimple: TopicDef = {
       "choose",
       t("The plain verb", "动词原形"),
       t(
-        "To say what is true or what happens often, use the present simple. With *I*, *you*, *we*, *they* and more than one person, the verb is plain: *I live in Beijing. We speak Chinese. My friends play football.*",
-        "说明真实情况或经常发生的事，用一般现在时。主语是 *I*、*you*、*we*、*they* 或多个人时，动词用原形：*I live in Beijing. We speak Chinese. My friends play football.*",
+        "To say what is true or what happens often, use the present simple. With *I*, *you*, *we*, *they* and more than one person, the verb is plain: *I live in Beijing. We speak Chinese. My friends play football.*\n\n> **Watch out.** Do not slip *am* or *are* in front of a plain verb (*I am live*), and do not use a bare *-ing* word (*I living*) as the only verb of a sentence.",
+        "说明真实情况或经常发生的事，用一般现在时。主语是 *I*、*you*、*we*、*they* 或多个人时，动词用原形：*I live in Beijing. We speak Chinese. My friends play football.*\n\n> **注意。** 不要在实义动词前多加 *am* 或 *are*（如 *I am live*），也不要把单独的 *-ing* 形式（如 *I living*）当作整句的谓语动词。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
         presentChoiceBank,
         (right, shown) =>
           t(
-            `With *${shown.split(" ___")[0]}*, the present simple uses the plain verb, with no ending and no *am* or *are*: ${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
-            `主语是 *${shown.split(" ___")[0]}* 时，一般现在时用动词原形，不加词尾，也不加 *am* 或 *are*：${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}`,
+            `With *${shown.split(" ___")[0]}*, the present simple uses the plain verb, with no ending and no *am* or *are*: ${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}\n\n**Check.** Confirm that *${shown.split(" ___")[0]}* is *I*, *you*, *we*, *they*, or plural, and that *${right}* sits right after it with no *am/are* and no *-ing*.`,
+            `主语是 *${shown.split(" ___")[0]}* 时，一般现在时用动词原形，不加词尾，也不加 *am* 或 *are*：${shown.replace(/ \(.*\)$/u, "").replace("___", `*${right}*`)}\n\n**检验。** 确认主语 *${shown.split(" ___")[0]}* 是 *I*、*you*、*we*、*they* 或复数，且 *${right}* 紧跟在主语后面，既没有 *am/are* 也没有 *-ing*。`,
           ),
         (wrong, _right, _shown, position) =>
           position === 0
@@ -476,15 +480,15 @@ const presentSimple: TopicDef = {
       "no-be",
       t("No am or are before the verb", "动词前不加 am 或 are"),
       t(
-        "A sentence with a verb like *live*, *speak* or *like* needs no *am*, *is* or *are*. Not *I am live in Beijing.* but *I live in Beijing.*",
-        "句子里已经有 *live*、*speak*、*like* 这样的动词时，就不再需要 *am*、*is*、*are*。说中文的人学了 *I am* 以后，常写出 *I am live in Beijing.*，正确的是 *I live in Beijing.*",
+        "A sentence with a verb like *live*, *speak* or *like* needs no *am*, *is* or *are*. Not *I am live in Beijing.* but *I live in Beijing.*\n\n> **Watch out.** Remove *am* or *are* and leave the action verb completely plain—do not add *-s* after *I*, *you*, *we*, *they*, or plural subjects.",
+        "句子里已经有 *live*、*speak*、*like* 这样的动词时，就不再需要 *am*、*is*、*are*。说中文的人学了 *I am* 以后，常写出 *I am live in Beijing.*，正确的是 *I live in Beijing.*\n\n> **注意。** 删掉多余的 *am* 或 *are* 后，实义动词保持原形——在 *I*、*you*、*we*、*they* 或复数主语后不要多加 *-s*。",
       ),
       typedGenerator("sentence", t("Fix the sentence.", "改正这个句子。"), presentTypedBank, (right, shown) => {
         const be = shown.includes(" am ") ? "am" : "are";
         const verb = shown.split(` ${be} `)[1]?.split(" ")[0] ?? "";
         return t(
-          `The sentence already has the verb *${verb}*, so *${be}* must go: ${shown} → ${right}`,
-          `句子里已经有动词 *${verb}*，所以要去掉 *${be}*：${shown} → ${right}`,
+          `The sentence already has the verb *${verb}*, so *${be}* must go: ${shown} → ${right}\n\n**Check.** Read the fixed sentence—there is now just one verb (*${verb}*) directly after the subject, with no *${be}* in front of it.`,
+          `句子里已经有动词 *${verb}*，所以要去掉 *${be}*：${shown} → ${right}\n\n**检验。** 读一遍改后的句子——主语后面现在只有一个实义动词 *${verb}*，前面没有多余的 *${be}*。`,
         );
       }),
     ),

@@ -11,6 +11,10 @@ const latin4 = parts({
     "Ten more Latin roots: magn, nov, mort, sens, grat, pos, flect, clud, viv and cogn.",
     "另外十个拉丁词根：magn、nov、mort、sens、grat、pos、flect、clud、viv 和 cogn。",
   ],
+  intro: [
+    "Once you know *nov* means *new*, *renovate*, *novice*, and *novel* snap into one family instantly. Ten high-utility Latin roots unlock dozens of academic words across literature, history, and science.",
+    "一旦知道 *nov* 意为“新”，*renovate*、*novice* 和 *novel* 立刻串成一家。掌握这十个高频拉丁词根，就能批量读懂文学、历史和科学中的学术词。",
+  ],
   after: ["latin-roots-3"],
   kind: ["Latin root", "拉丁词根"],
   list: partLines(`
@@ -27,12 +31,12 @@ const latin4 = parts({
   `),
   explanations: [
     [
-      "A Latin **root** carries the core meaning of a word, and prefixes and suffixes change it. *Magn* means great, *nov* new, *mort* death, *sens* feel, *grat* thanks or pleasing, *pos* put, *flect* bend, *clud* shut, *viv* live and *cogn* know. A root may change its spelling a little (*flex* in *flexible*, *vit* in *vital*), but its meaning stays.",
-      "拉丁**词根**承载词的核心意思，前缀和后缀改变它。*magn* 意为大，*nov* 新，*mort* 死亡，*sens* 感觉，*grat* 感谢或令人愉快，*pos* 放置，*flect* 弯曲，*clud* 关闭，*viv* 活，*cogn* 知道。词根的拼写可能稍有变化（*flexible* 中的 *flex*，*vital* 中的 *vit*），但意思不变。",
+      "A Latin **root** carries the core meaning of a word while prefixes and suffixes steer it. *Magn* means great, *nov* new, *mort* death, *sens* feel, *grat* thanks or pleasing, *pos* put, *flect* bend, *clud* shut, *viv* live, and *cogn* know. Spelling can shift slightly (*flex* in *flexible*, *vit* in *vital*), yet the core meaning stays.\n\n> **Watch out.** Do not confuse look-alike roots—check the example word's definition beside the root to confirm its exact core sense.",
+      "拉丁**词根**承载词的核心意思，前缀和后缀微调方向。*magn* 意为大，*nov* 新，*mort* 死亡，*sens* 感觉，*grat* 感谢或令人愉快，*pos* 放置，*flect* 弯曲，*clud* 关闭，*viv* 活，*cogn* 知道。拼写可能微调（*flexible* 中的 *flex*，*vital* 中的 *vit*），核心意思不变。\n\n> **注意。** 别混淆拼写接近的词根——结合旁边例词的释义来印证核心意思。",
     ],
     [
-      "To choose a word for a meaning, find the root that matches the core of the meaning, then check the rest of the word. *To shut someone out* needs *clud* (shut) with *ex-* (out): **exclude**. *Living forever* needs *mort* (death) with *im-* (not): **immortal**.",
-      "根据意思选词时，先找出与意思核心相符的词根，再看词的其余部分。*to shut someone out* 需要 *clud*（关闭）加 *ex-*（出）：**exclude**。*living forever* 需要 *mort*（死亡）加 *im-*（不）：**immortal**。",
+      "To pick the word for a definition, match the core idea to its root, then check the prefix or suffix. *To shut someone out* pairs *clud* (shut) with *ex-* (out) → **exclude**; *living forever* pairs *mort* (death) with *im-* (not) → **immortal**.\n\n> **Watch out.** Two choices can share the same root (*include* vs. *exclude*)—always read the prefix carefully so you do not pick the opposite.",
+      "根据释义选词时，先用词根锁定核心意思，再看前缀或后缀。*to shut someone out* 用 *clud*（关闭）配 *ex-*（出）→ **exclude**；*living forever* 用 *mort*（死亡）配 *im-*（不）→ **immortal**。\n\n> **注意。** 两个选项可能共享同一词根（如 *include* 与 *exclude*）——务必看清前缀，免得选成反义词。",
     ],
   ],
 });
@@ -43,6 +47,10 @@ const greek3 = parts({
   summary: [
     "Ten more Greek roots: phil, soph, anthrop, arch, nym, pan, hom, dox, ortho and crypt.",
     "另外十个希腊词根：phil、soph、anthrop、arch、nym、pan、hom、dox、ortho 和 crypt。",
+  ],
+  intro: [
+    "Split *pseudonym* into *pseudo* (false) + *nym* (name), and a daunting literary term becomes transparent. These ten Greek roots power the vocabulary of ideas, government, and language.",
+    "把 *pseudonym* 拆成 *pseudo*（假）+ *nym*（名字），一个看似生僻的文学术语立刻一目了然。这十个希腊词根是思想、政体与语言类词汇的基石。",
   ],
   after: ["greek-roots-2"],
   kind: ["Greek root", "希腊词根"],
@@ -60,12 +68,12 @@ const greek3 = parts({
   `),
   explanations: [
     [
-      "Greek roots fill the words of ideas and learning. *Phil* means love, *soph* wise, *anthrop* human, *arch* chief or rule, *nym* name, *pan* all, *hom* same, *dox* opinion, *ortho* straight or correct and *crypt* hidden. Two Greek roots often join: *phil* + *soph* is the love of wisdom, **philosophy**.",
-      "希腊词根构成许多关于思想和学问的词。*phil* 意为爱，*soph* 智慧，*anthrop* 人类，*arch* 首领或统治，*nym* 名字，*pan* 全部，*hom* 相同，*dox* 意见，*ortho* 直或正确，*crypt* 隐藏。两个希腊词根常常连用：*phil* + *soph* 就是对智慧的爱，**philosophy**。",
+      "Greek roots anchor the language of ideas and learning. *Phil* means love, *soph* wise, *anthrop* human, *arch* chief or rule, *nym* name, *pan* all, *hom* same, *dox* opinion, *ortho* straight or correct, and *crypt* hidden. Two Greek roots often fuse together: *phil* + *soph* → **philosophy** (love of wisdom).\n\n> **Watch out.** Notice that *hom* (same, as in *homophone*) differs from Latin *homo* (human)—check the Greek root's meaning inside the example word.",
+      "希腊词根支撑着大量思想与学术词汇。*phil* 意为爱，*soph* 智慧，*anthrop* 人类，*arch* 首领或统治，*nym* 名字，*pan* 全部，*hom* 相同，*dox* 意见，*ortho* 直或正确，*crypt* 隐藏。两个希腊词根常合体构词：*phil* + *soph* → **philosophy**（爱智慧）。\n\n> **注意。** 希腊词根 *hom* 表示“相同”（如 *homophone*），不要与拉丁词 *homo*（人）混淆——结合例词释义来确认。",
     ],
     [
-      "Build the meaning from the parts. *A false name* needs *nym* (name) with *pseudo* (false): **pseudonym**. *A view of all of an area* needs *pan* (all) with *orama* (view): **panorama**. When two words share a root, the other part tells them apart.",
-      "用各部分拼出意思。*a false name* 需要 *nym*（名字）加 *pseudo*（假）：**pseudonym**。*a view of all of an area* 需要 *pan*（全部）加 *orama*（景象）：**panorama**。两个词词根相同时，靠另一部分区分它们。",
+      "Assemble the meaning piece by piece. *A false name* combines *pseudo* (false) + *nym* (name) → **pseudonym**; *a wide view of all of an area* combines *pan* (all) + *orama* (view) → **panorama**. When two words share one root, the second part separates them.\n\n> **Watch out.** Check *both* halves of the compound word—*monarch* (*one* ruler) and *anarchy* (*no* ruler) both carry *arch* yet mean opposite things.",
+      "逐块拼出词义。*a false name* 由 *pseudo*（假）+ *nym*（名字）→ **pseudonym**；*a wide view of all of an area* 由 *pan*（全部）+ *orama*（景象）→ **panorama**。词根相同时，靠另一半区分。\n\n> **注意。** 复合词的两半都要看——*monarch*（*一位*统治者）和 *anarchy*（*无*统治者）都含 *arch*，意思却截然相反。",
     ],
   ],
 });
@@ -76,6 +84,10 @@ const scienceSuffixes = parts({
   summary: [
     "Ten suffixes of science and medicine: -itis, -cide, -phobia, -vore, -ectomy, -osis, -arium, -oid, -emia and -ician.",
     "十个科学与医学的后缀：-itis、-cide、-phobia、-vore、-ectomy、-osis、-arium、-oid、-emia 和 -ician。",
+  ],
+  intro: [
+    "Medical and science terms look long only until you read their endings: *-itis* signals inflammation, *-ectomy* surgical removal, and *-arium* a place for keeping something. Ten suffixes decode an entire shelf of science words.",
+    "医学和科学词汇看着长，读懂词尾就豁然开朗：*-itis* 表示发炎，*-ectomy* 表示切除，*-arium* 表示场所。掌握这十个后缀，能一下子读通一整排科学术语。",
   ],
   after: ["common-suffixes"],
   kind: ["suffix", "后缀"],
@@ -93,12 +105,12 @@ const scienceSuffixes = parts({
   `),
   explanations: [
     [
-      "Many words of science and medicine end in a Greek or Latin **suffix** that tells you what kind of thing the word names. *-itis* is swelling and soreness, *-cide* killing, *-phobia* fear, *-vore* an eater, *-ectomy* cutting out, *-osis* a diseased condition, *-arium* a place for, *-oid* like, *-emia* a condition of the blood and *-ician* a person skilled in something.",
-      "许多科学和医学词汇以希腊或拉丁**后缀**结尾，后缀告诉你这个词指哪一类事物。*-itis* 指发炎，*-cide* 杀死，*-phobia* 恐惧，*-vore* 食者，*-ectomy* 切除，*-osis* 病症，*-arium* 场所，*-oid* 像，*-emia* 血液病症，*-ician* 擅长某事的人。",
+      "Scientific and medical terms often end in a Greek or Latin **suffix** that tells what category of thing the word names: *-itis* (swelling and soreness), *-cide* (killing), *-phobia* (fear), *-vore* (eater), *-ectomy* (cutting out), *-osis* (diseased condition), *-arium* (place for), *-oid* (shaped like), *-emia* (blood condition), and *-ician* (skilled person).\n\n> **Watch out.** Do not confuse *-itis* (inflammation), *-osis* (a diseased condition), and *-emia* (specifically a *blood* condition)—each narrows down a different medical category.",
+      "科学和医学词汇常以希腊或拉丁**后缀**结尾，指明事物所属类别：*-itis*（发炎）、*-cide*（杀死）、*-phobia*（恐惧）、*-vore*（食者）、*-ectomy*（切除）、*-osis*（病症）、*-arium*（场所）、*-oid*（形似）、*-emia*（血液病症）、*-ician*（专业人员）。\n\n> **注意。** 分清 *-itis*（发炎）、*-osis*（一般病症）和 *-emia*（特指*血液*病症）——它们各自锁定不同的医学类别。",
     ],
     [
-      "Read the suffix first, then the beginning. *Herbivore* and *carnivore* are both eaters (*-vore*); *herb* (plant) and *carn* (meat) tell what they eat. *Tonsillitis* and *tonsillectomy* both concern the tonsils; *-itis* is a swelling of them, *-ectomy* an operation that cuts them out.",
-      "先读后缀，再读开头。*herbivore* 和 *carnivore* 都是食者（*-vore*）；*herb*（植物）和 *carn*（肉）说明它们吃什么。*tonsillitis* 和 *tonsillectomy* 都与扁桃体有关；*-itis* 是它发炎，*-ectomy* 是把它切除的手术。",
+      "Read the suffix first to get the category, then the root to get the target. *Herbivore* and *carnivore* are both eaters (*-vore*); *herb* (plant) and *carn* (meat) specify the diet. *Tonsillitis* and *tonsillectomy* both involve the tonsils, yet *-itis* is swelling while *-ectomy* is removal.\n\n> **Watch out.** When two options start the same way, focus squarely on the ending—one suffix can change an illness (*-itis*) into a surgery (*-ectomy*).",
+      "先看后缀定大类，再看前半部分定对象。*herbivore* 和 *carnivore* 都是食者（*-vore*），*herb*（植物）和 *carn*（肉）说明吃什么。*tonsillitis* 和 *tonsillectomy* 都涉及扁桃体，但 *-itis* 是发炎，*-ectomy* 是切除手术。\n\n> **注意。** 两个选项开头相同时，盯紧词尾——换一个后缀就会把疾病（*-itis*）变成手术（*-ectomy*）。",
     ],
   ],
 });
@@ -109,6 +121,10 @@ const adjectiveSuffixes = parts({
   summary: [
     "Ten suffixes that turn words into adjectives: -ous, -ive, -ish, -ward, -proof, -fold, -ary, -some, -esque and -ic.",
     "十个把词变成形容词的后缀：-ous、-ive、-ish、-ward、-proof、-fold、-ary、-some、-esque 和 -ic。",
+  ],
+  intro: [
+    "Adding *-proof* to *water* builds *waterproof*, and adding *-ward* to *sky* builds *skyward*: ten adjective-making **suffixes** let you read and form precise descriptive words on the fly.",
+    "给 *water* 加上 *-proof* 得到 *waterproof*，给 *sky* 加上 *-ward* 得到 *skyward*：掌握这十个构词**后缀**，就能自如理解和辨认精准的形容词。",
   ],
   after: ["suffixes-that-change-word-class"],
   kind: ["suffix", "后缀"],
@@ -126,12 +142,12 @@ const adjectiveSuffixes = parts({
   `),
   explanations: [
     [
-      "A **suffix** at the end of a word can make it an adjective and add a meaning. *-ous* means full of, *-ive* tending to, *-ish* somewhat or like, *-ward* in the direction of, *-proof* safe against, *-fold* times as many, *-ary* relating to, *-some* causing, *-esque* in the style of and *-ic* of the nature of.",
-      "词尾的**后缀**可以把词变成形容词并增加意思。*-ous* 意为充满，*-ive* 倾向于，*-ish* 有点或像，*-ward* 朝……方向，*-proof* 防……的，*-fold* 倍，*-ary* 与……有关，*-some* 引起，*-esque* ……风格的，*-ic* 具有……性质的。",
+      "An adjective **suffix** shifts a base word into a describing word and adds a specific shade of meaning: *-ous* (full of), *-ive* (tending to), *-ish* (somewhat or like), *-ward* (in the direction of), *-proof* (safe against), *-fold* (times as many), *-ary* (relating to), *-some* (causing or tending to), *-esque* (in the style of), and *-ic* (of the nature of).\n\n> **Watch out.** Watch the subtle difference between *-ish* (*like* or *somewhat*, often playful or critical, as in *childish*) and *-esque* (*in the artistic style of*, as in *picturesque*).",
+      "形容词**后缀**既把词干变成修饰词，又添上具体语义：*-ous*（充满）、*-ive*（倾向于）、*-ish*（有点/像）、*-ward*（朝……方向）、*-proof*（防……的）、*-fold*（倍）、*-ary*（与……有关）、*-some*（引起/易于）、*-esque*（……风格的）、*-ic*（具有……性质的）。\n\n> **注意。** 区分 *-ish*（有点/像，常带口语或批评色彩，如 *childish*）和 *-esque*（某种艺术风格，如 *picturesque*）。",
     ],
     [
-      "Split the word into its base and its suffix, and put the two meanings together. *Water* + *-proof* (safe against) is **waterproof**, safe against water. *Trouble* + *-some* (causing) is **troublesome**, causing trouble. The base word may lose a letter, as *glory* does in *glorious*.",
-      "把词拆成词干和后缀，再把两个意思合起来。*water* + *-proof*（防）是 **waterproof**，防水。*trouble* + *-some*（引起）是 **troublesome**，引起麻烦。词干可能会少一个字母，比如 *glory* 在 *glorious* 中。",
+      "Split the word into base + suffix and fuse their meanings: *water* + *-proof* (safe against) → **waterproof**; *trouble* + *-some* (causing) → **troublesome**. The base may trim a letter before the suffix (*glory* → *glorious*).\n\n> **Watch out.** Match *both* the base word and the suffix to the clue—*homeward* and *eastward* share *-ward*, so the base decides the direction.",
+      "把词拆成词干加后缀再合义：*water* + *-proof*（防）→ **waterproof**；*trouble* + *-some*（引起）→ **troublesome**。词干接后缀时有时会省去或变换字母（*glory* → *glorious*）。\n\n> **注意。** 词干和后缀两头都要对上释义——*homeward* 和 *eastward* 都带 *-ward*，方向由词干决定。",
     ],
   ],
 });
@@ -142,6 +158,10 @@ const latin5 = parts({
   summary: [
     "Ten Latin roots of speech, law and society: loqu, clam, lingu, jur, liber, equ, civ, pop, fort and pac.",
     "十个有关言语、法律和社会的拉丁词根：loqu、clam、lingu、jur、liber、equ、civ、pop、fort 和 pac。",
+  ],
+  intro: [
+    "Words from civics and debate—*eloquent*, *jurisdiction*, *equality*, *pacifist*—all spring from ten Latin roots of speech, law, and public life. Knowing the roots makes complex civic vocabulary readable at sight.",
+    "公民课和辩论中的高频词——*eloquent*、*jurisdiction*、*equality*、*pacifist*——都源自这十个关于言语、法律与公共生活的拉丁词根。掌握它们，复杂的社会议题词汇便能一眼读懂。",
   ],
   after: ["latin-roots-4"],
   kind: ["Latin root", "拉丁词根"],
@@ -159,12 +179,12 @@ const latin5 = parts({
   `),
   explanations: [
     [
-      "Latin gave English the words of speech, law and life together. *Loqu* means speak, *clam* cry out, *lingu* tongue or language, *jur* law or swear, *liber* free, *equ* equal, *civ* citizen, *pop* people, *fort* strong and *pac* peace. The spelling may shift (*claim* in *exclaim*, *just* beside *jur*), but the core meaning stays.",
-      "拉丁语给了英语许多关于言语、法律和共同生活的词。*loqu* 意为说，*clam* 呼喊，*lingu* 舌头或语言，*jur* 法律或发誓，*liber* 自由，*equ* 相等，*civ* 公民，*pop* 人民，*fort* 强，*pac* 和平。拼写可能有变化（*exclaim* 中的 *claim*），但核心意思不变。",
+      "Latin supplied English with its core vocabulary of speech, law, and citizenship: *loqu* (speak), *clam* (cry out), *lingu* (tongue or language), *jur* (law or swear), *liber* (free), *equ* (equal), *civ* (citizen), *pop* (people), *fort* (strong), and *pac* (peace). Spelling shifts slightly (*claim* in *exclaim*), while the core meaning holds.\n\n> **Watch out.** Do not confuse *civ* (citizen, as in *civic*) with *pop* (people in general, as in *population*)—check which specific meaning the example word highlights.",
+      "拉丁语为英语提供了言语、法律与公共生活的核心词根：*loqu*（说）、*clam*（呼喊）、*lingu*（舌头/语言）、*jur*（法律/发誓）、*liber*（自由）、*equ*（相等）、*civ*（公民）、*pop*（人民）、*fort*（强）、*pac*（和平）。拼写偶有变化（如 *exclaim* 中的 *claim*），核心义不变。\n\n> **注意。** 别把 *civ*（公民，如 *civic*）和 *pop*（人民/人口，如 *population*）弄混——看清例词释义强调哪一个。",
     ],
     [
-      "Match the core of a meaning to its root, then let the prefix or suffix finish it. *Able to speak two languages* needs *lingu* (language) with *bi-* (two): **bilingual**. *Lying after swearing to tell the truth* needs *jur* (swear) with *per-* (wrongly): **perjury**.",
-      "把意思的核心与词根对上，再让前缀或后缀补全它。*able to speak two languages* 需要 *lingu*（语言）加 *bi-*（二）：**bilingual**。*lying after swearing to tell the truth* 需要 *jur*（发誓）加 *per-*（错误地）：**perjury**。",
+      "Match the definition's core idea to its root, then let prefixes and suffixes complete the word: *able to speak two languages* → *bi-* (two) + *lingu* (language) = **bilingual**; *lying after swearing to tell the truth* → *per-* (wrongly) + *jur* (swear) = **perjury**.\n\n> **Watch out.** Read the whole clue before choosing—*exclaim* (cry out suddenly) and *proclaim* (announce publicly) share *clam* yet differ by prefix.",
+      "先用词根对准核心意思，再让前缀和后缀定型：*able to speak two languages* → *bi-*（二）+ *lingu*（语言）= **bilingual**；*lying after swearing to tell the truth* → *per-*（错误地）+ *jur*（发誓）= **perjury**。\n\n> **注意。** 先读完整个释义再选——*exclaim*（突然呼喊）和 *proclaim*（公开宣布）词根都是 *clam*，区别全在前缀。",
     ],
   ],
 });
@@ -175,6 +195,10 @@ const greek4 = parts({
   summary: [
     "Ten Greek roots of flight, machines and light: aer, naut, baro, helic, pter, cosm, mechan, pyr, gyr and phot.",
     "十个有关飞行、机器和光的希腊词根：aer、naut、baro、helic、pter、cosm、mechan、pyr、gyr 和 phot。",
+  ],
+  intro: [
+    "Why is a *helicopter* not split into *heli + copter*? Its true Greek pieces are *helic* (spiral) + *pter* (wing). Ten Greek roots of flight, light, and machinery turn engineering terms into clear blueprints.",
+    "为什么 *helicopter* 不是拆成 *heli + copter*？它真正的希腊词根是 *helic*（螺旋）+ *pter*（翅膀）。这十个关于飞行、光和机械的希腊词根，能把工程科技术语拆成一目了然的蓝图。",
   ],
   after: ["greek-roots-3"],
   kind: ["Greek root", "希腊词根"],
@@ -192,12 +216,12 @@ const greek4 = parts({
   `),
   explanations: [
     [
-      "The words of flight and machines are full of Greek. *Aer* means air, *naut* sailor or ship, *baro* weight or pressure, *helic* spiral, *pter* wing, *cosm* world or order, *mechan* machine, *pyr* fire, *gyr* circle or turn and *phot* light. One word can hold two roots: a **helicopter** is a *helic* (spiral) *pter* (wing).",
-      "飞行和机器的词汇里有很多希腊词根。*aer* 意为空气，*naut* 水手或船，*baro* 重量或压力，*helic* 螺旋，*pter* 翅膀，*cosm* 世界或秩序，*mechan* 机器，*pyr* 火，*gyr* 圆或旋转，*phot* 光。一个词可以含两个词根：**helicopter** 就是 *helic*（螺旋）*pter*（翅膀）。",
+      "Words of flight, light, and machinery draw heavily on Greek: *aer* (air), *naut* (sailor or ship), *baro* (weight or pressure), *helic* (spiral), *pter* (wing), *cosm* (world or order), *mechan* (machine), *pyr* (fire), *gyr* (circle or turn), and *phot* (light). Single words often fuse two roots, like *astronaut* (*astro* star + *naut* sailor).\n\n> **Watch out.** Do not confuse *helic* (spiral) with *gyr* (circle or turn)—check whether the example word describes a spiral shape (*helix*) or a spinning circle (*gyroscope*, *gyre*).",
+      "飞行、光与机械类词汇大量借用希腊词根：*aer*（空气）、*naut*（水手/船）、*baro*（重量/压力）、*helic*（螺旋）、*pter*（翅膀）、*cosm*（世界/秩序）、*mechan*（机器）、*pyr*（火）、*gyr*（圆/旋转）、*phot*（光）。一个词常合并两个词根，如 *astronaut*（*astro* 星 + *naut* 水手）。\n\n> **注意。** 别把 *helic*（螺旋）和 *gyr*（圆/旋转）混为一谈——结合例词看它指螺旋形态（*helix*）还是旋转圆周（*gyroscope*、*gyre*）。",
     ],
     [
-      "To choose a word, find the root that holds the key idea. *A tool that measures the pressure of the air* needs *baro* (pressure) with *meter* (measure): **barometer**. *A person who travels in space* needs *naut* (sailor) with *astro* (star): **astronaut**.",
-      "选词时，找出含有关键意思的词根。*a tool that measures the pressure of the air* 需要 *baro*（压力）加 *meter*（测量）：**barometer**。*a person who travels in space* 需要 *naut*（水手）加 *astro*（星星）：**astronaut**。",
+      "Find the root carrying the clue's key idea, then check the companion root: *a tool that measures air pressure* pairs *baro* (pressure) + *meter* (measure) → **barometer**; *a sailor of the stars* pairs *astro* (star) + *naut* (sailor) → **astronaut**.\n\n> **Watch out.** Watch for silent letters in Greek roots—*pter* begins with a silent *p* in *pterodactyl*, yet still appears clearly in *helicopter*.",
+      "找出对应释义核心概念的词根，再核对另一半：*a tool that measures air pressure* 用 *baro*（压力）+ *meter*（测量）→ **barometer**；*a sailor of the stars* 用 *astro*（星）+ *naut*（水手）→ **astronaut**。\n\n> **注意。** 留意希腊词根里的不发音字母——*pterodactyl* 开头的 *p* 不发音，但它在 *helicopter* 里同样代表“翅膀”。",
     ],
   ],
 });
@@ -248,20 +272,24 @@ const moreIdioms = topic("vocabulary", {
     "Fifteen idioms of everyday English, such as break the ice, cut corners and a blessing in disguise.",
     "十五个日常英语习语，如 break the ice、cut corners 和 a blessing in disguise。",
   ],
+  intro: [
+    "If a teammate says *We're in the same boat* on a dry basketball court, nobody looks for oars—they mean everyone shares the same tough situation. Everyday English is packed with **idioms** whose meaning lives in the whole phrase, not the single words.",
+    "如果队友在干燥的篮球场上说 *We're in the same boat*，没人会去找船桨——意思是大家处境相同。日常英语充满这类**习语**，意思藏在整组短语里，而不是单个字面。",
+  ],
   after: ["idioms"],
   points: [
     choose(
       "what-an-idiom-means",
       ["What an Idiom Means", "习语的意思"],
       [
-        "An **idiom** is a group of words whose meaning cannot be worked out from the words one by one. *Break the ice* has nothing to do with ice; it means making people feel relaxed when they first meet. Read the whole sentence and ask what the idiom must mean for the sentence to make sense.",
-        "**习语**是一组词，它的意思不能从单个词的意思推出来。*break the ice* 与冰无关，意思是让初次见面的人放松下来。读完整个句子，想想习语必须是什么意思，句子才说得通。",
+        "An **idiom** is a fixed phrase whose meaning cannot be guessed word by word: *break the ice* means helping strangers feel comfortable, not smashing frozen water. Use the surrounding sentence to work out what the whole phrase must mean.\n\n> **Watch out.** Ignore literal word traps—if the sentence talks about a surprise party and says *let the cat out of the bag*, the meaning is about leaking a secret, not pets.",
+        "**习语**是不能逐字照字面推算意思的固定短语：*break the ice* 意为打破僵局让人放松，而不是砸冰块。结合整句话的语境，就能推知整组短语的意思。\n\n> **注意。** 避开字面陷阱——如果句子在讲惊喜派对并说 *let the cat out of the bag*，说的是说漏秘密，和猫毫无关系。",
       ],
       ["What does the idiom in italics mean?", "斜体的习语是什么意思？"],
       idiomMeaning,
       (right) => [
-        `*${idiomByMeaning(right)}* means **${right}**; read as a whole, the idiom makes the sentence make sense.`,
-        `*${idiomByMeaning(right)}* 的意思是 **${right}**；把习语作为一个整体理解，句子才说得通。`,
+        `*${idiomByMeaning(right)}* means **${right}**; read as a single expression, it fits the sentence naturally.\n\n**Check.** Substitute **${right}** in place of *${idiomByMeaning(right)}* in the sentence: the scene stays logical and clear, whereas the other meanings clash with the context.`,
+        `*${idiomByMeaning(right)}* 的意思是 **${right}**；当作整体理解，整句话顺理成章。\n\n**检验。** 把 **${right}** 代回原句替换 *${idiomByMeaning(right)}*：句意完全通顺合理，而另外两个意思与语境格格不入。`,
       ],
       [
         ["*{wrong}* is the meaning of a different idiom, not of the one in italics.", "*{wrong}* 是另一个习语的意思，不是斜体习语的意思。"],
@@ -275,14 +303,14 @@ const moreIdioms = topic("vocabulary", {
       "idiom-for-a-situation",
       ["The Idiom for a Situation", "适合情境的习语"],
       [
-        "To choose an idiom for a situation, first say in plain words what is happening: someone is too nervous to go on; someone tried to do too much. Then pick the idiom whose meaning is the same. Do not be misled by a word in the situation that also appears in an idiom.",
-        "为情境选择习语时，先用平常的话说出发生了什么：有人紧张得做不下去；有人想做的事太多了。再选出意思相同的习语。不要被情境中恰好也出现在某个习语里的词误导。",
+        "To match an idiom to a real-life scenario, first summarize what is happening in plain English (*she grew too nervous at the last second* → **get cold feet**; *he skipped steps to save time* → **cut corners**). Then pick the idiom carrying that exact meaning.\n\n> **Watch out.** Never pick an idiom just because it shares a random word with the story (like *boat* or *ice*)—match the underlying situation.",
+        "为情境选配习语时，先用大白话概括发生了什么（*临阵退缩太紧张* → **get cold feet**；*为省时偷工减料* → **cut corners**），再选出含义一致的习语。\n\n> **注意。** 别因为某个习语和情境里碰巧有同一个词（如 *boat* 或 *ice*）就选它——要看本质情境是否吻合。",
       ],
       ["Which idiom describes this situation?", "哪个习语能描述这个情境？"],
       idiomFit,
       (right) => [
-        `**${right}** fits: it means ${idiomMeans(right)}, which is what happens here.`,
-        `**${right}** 合适：它的意思是 ${idiomMeans(right)}，这正是这里发生的事。`,
+        `**${right}** fits because it means *${idiomMeans(right)}*, matching the situation directly.\n\n**Check.** Compare *${idiomMeans(right)}* against the key action in the prompt: it captures the exact twist or dilemma described there.`,
+        `**${right}** 最贴切，因为它的意思是“${idiomMeans(right)}”，与眼前情境完全吻合。\n\n**检验。** 把“${idiomMeans(right)}”对照题干里的核心事件：正好点中了这个情境的关键转折或处境。`,
       ],
       [
         ["*{wrong}* means something else; this situation is not about that.", "*{wrong}* 的意思是另一回事，这个情境说的不是那件事。"],
@@ -341,20 +369,24 @@ const euphemismTopic = topic("vocabulary", {
     "Words that make something harsh or unpleasant sound softer, such as passed away for died and let go for fired.",
     "把严厉或令人不快的事说得更柔和的词，如用 passed away 代替 died，用 let go 代替 fired。",
   ],
+  intro: [
+    "A company announces *negative growth* instead of *losses*, and a friend says *between jobs* instead of *unemployed*. Recognizing **euphemisms** helps you see both polite tact and spin in news, ads, and everyday speech.",
+    "公司用 *negative growth* 代替“亏损”，朋友用 *between jobs* 代替“失业”。认出**委婉语**，既能体会礼貌体贴，也能看穿新闻和广告里的粉饰措辞。",
+  ],
   after: ["connotation-and-precise-words"],
   points: [
     choose(
       "what-a-euphemism-means",
       ["What a Euphemism Means", "委婉语的意思"],
       [
-        "A **euphemism** is a mild word or phrase used in place of one that sounds harsh, sad or rude: *passed away* for *died*, *let go* for *fired*. People use euphemisms to be kind, but news reports, ads and officials also use them to hide how bad something is. To read one, say the plain word it stands for.",
-        "**委婉语**是用来代替听起来严厉、悲伤或粗鲁的词的温和说法：用 *passed away* 代替 *died*，用 *let go* 代替 *fired*。人们用委婉语表示体贴，但新闻报道、广告和官员也用它来掩盖事情有多糟。读到委婉语时，要说出它所代替的直白说法。",
+        "A **euphemism** swaps a mild or polite phrase in place of a harsh, sad, or blunt word: *passed away* for *died*, *let go* for *fired*. Speakers use euphemisms out of kindness—or, in ads and official reports, to blur bad news. Translate the soft phrase back into plain English to see the reality.\n\n> **Watch out.** Do not let positive-sounding words (*budget-friendly*, *pre-owned*, *correctional facility*) hide the plain fact underneath—ask what blunt word the sentence is avoiding.",
+        "**委婉语**用温和客气的短语代替刺耳、悲伤或直白的词：用 *passed away* 代替 *died*，用 *let go* 代替 *fired*。人们用委婉语有时出于体贴，有时在广告和公报里是为了淡化坏消息。把它翻译回直白英语，就能看清真相。\n\n> **注意。** 别被听起来好听的包装词（*budget-friendly*、*pre-owned*、*correctional facility*）迷惑——问问句子真正回避的是哪个直白词。",
       ],
       ["What does the euphemism in italics plainly mean?", "斜体的委婉语直白地说是什么意思？"],
       euphemismMeaning,
       (right) => [
-        `*${euphemismByPlain(right)}* is a softer way of saying **${right}**.`,
-        `*${euphemismByPlain(right)}* 是 **${right}** 的委婉说法。`,
+        `*${euphemismByPlain(right)}* is a softer way of saying **${right}**.\n\n**Check.** Plug **${right}** directly into the sentence in place of *${euphemismByPlain(right)}*: the factual meaning stays the same, only the gentle cushion is removed.`,
+        `*${euphemismByPlain(right)}* 是 **${right}** 的委婉说法。\n\n**检验。** 把 **${right}** 直接代回原句替换 *${euphemismByPlain(right)}*：事实意思分毫不差，只是拿掉了温和包装。`,
       ],
       [
         ["*{wrong}* is what a different euphemism stands for.", "*{wrong}* 是另一个委婉语所代替的意思。"],
@@ -365,14 +397,14 @@ const euphemismTopic = topic("vocabulary", {
       "euphemism-for-a-plain-word",
       ["The Euphemism for a Plain Word", "直白说法的委婉语"],
       [
-        "Writers choose between a plain word and a euphemism for their purpose. To soften the sentence, find the plain word that carries the harsh meaning, such as *died* or *prison*, and choose the mild phrase that stands for exactly that, such as *passed away* or *correctional facility*.",
-        "作者会根据目的在直白的词和委婉语之间选择。要让句子柔和一些，先找出带有严厉意思的直白词，如 *died* 或 *prison*，再选出正好代替它的温和说法，如 *passed away* 或 *correctional facility*。",
+        "To soften a blunt sentence without changing its factual meaning, spot the harsh word (*died*, *prison*, *used*) and replace it with the euphemism built for that exact word (*passed away*, *correctional facility*, *pre-owned*).\n\n> **Watch out.** Make sure the euphemism preserves the exact fact—picking a mild phrase for a different idea changes what the sentence says.",
+        "要在不改变事实的前提下让句子更柔和，先找出刺耳的直白词（*died*、*prison*、*used*），再换成专门对应的委婉语（*passed away*、*correctional facility*、*pre-owned*）。\n\n> **注意。** 委婉语必须保留原句的准确事实——选错对应的温和说法会把意思改歪。",
       ],
       ["Which euphemism could soften this sentence?", "哪个委婉语能使这个句子更柔和？"],
       euphemismFor,
       (right) => [
-        `**${right}** is the mild way of saying ${plainOf(right)}, the harsh meaning in this sentence.`,
-        `**${right}** 是 ${plainOf(right)} 的温和说法，正是这个句子中严厉的意思。`,
+        `**${right}** is the mild stand-in for *${plainOf(right)}*, softening the blunt wording while keeping the meaning intact.\n\n**Check.** Verify that *${plainOf(right)}* matches the exact harsh idea in the prompt—the other euphemisms soften completely different facts.`,
+        `**${right}** 是 *${plainOf(right)}* 的温和替身，既柔化了直白措辞，又完整保留了原意。\n\n**检验。** 核对 *${plainOf(right)}* 正好对应题干中的直白表达——另外两个委婉语柔化的是完全不同的事实。`,
       ],
       [
         [

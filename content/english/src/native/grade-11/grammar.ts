@@ -346,14 +346,18 @@ const nominalizations = topic("grammar", {
     "Turning nouns made from verbs, such as decision, failure and analysis, back into verbs, so that sentences name who does what.",
     "把由动词变来的名词，如 decision、failure 和 analysis，还原为动词，让句子说清谁做了什么。",
   ],
+  intro: [
+    "Writing *The panel carried out an evaluation of the contract* takes nine words to say *The panel evaluated the contract*. In this topic, you spot buried verbs and actorless passives, then release the hidden action back into a direct verb.",
+    "写 *The panel carried out an evaluation of the contract* 用九个词才说出 *The panel evaluated the contract* 的意思。本主题带你识破埋藏在名词里的动词与隐去施动者的被动句，把动作重新解放为干脆的谓语动词。",
+  ],
   after: ["cutting-wordiness", "active-and-passive-for-emphasis"],
   points: [
     label(
       "what-weakens-the-sentence",
       ["What Weakens the Sentence", "是什么削弱了句子"],
       [
-        "A **nominalization** is a noun made from a verb or an adjective: *decide* becomes *decision*, *fail* becomes *failure*, *careful* becomes *carefulness*. Too many of them bury the action in nouns and leave weak verbs such as *make*, *have* and *be*: *The committee made a decision to conduct an investigation.* Compare: *The committee decided to investigate.* A sentence can also hide the actor in a **passive with no actor**: *Mistakes were made.* A **direct** sentence names the actor as the subject and the action as the verb.",
-        "**名词化**是由动词或形容词变来的名词：*decide* 变成 *decision*，*fail* 变成 *failure*，*careful* 变成 *carefulness*。名词化太多，会把动作埋进名词里，只留下 *make*、*have*、*be* 这样无力的动词：*The committee made a decision to conduct an investigation.* 比较：*The committee decided to investigate.* 句子也可能用**不提施动者的被动句**把施动者藏起来：*Mistakes were made.* **直接**的句子以施动者作主语，以动作作谓语动词。",
+        "A **nominalization** is a noun made from a verb or an adjective: *decide* becomes *decision*, *fail* becomes *failure*, *careful* becomes *carefulness*. Too many of them bury the action in nouns and leave weak verbs such as *make*, *have* and *be*: *The committee made a decision to conduct an investigation.* Compare: *The committee decided to investigate.* A sentence can also hide the actor in a **passive with no actor**: *Mistakes were made.* A **direct** sentence names the actor as the subject and the action as the verb.\n\n> **Watch out.** Check the main verb first: a light verb like *made*, *gave*, or *conducted* paired with an abstract noun (*decision*, *review*) marks **a buried verb**, whereas *was/were + past participle* with no *by* phrase marks **a passive with no actor**.",
+        "**名词化**是由动词或形容词变来的名词：*decide* 变成 *decision*，*fail* 变成 *failure*，*careful* 变成 *carefulness*。名词化太多，会把动作埋进名词里，只留下 *make*、*have*、*be* 这样无力的动词：*The committee made a decision to conduct an investigation.* 比较：*The committee decided to investigate.* 句子也可能用**不提施动者的被动句**把施动者藏起来：*Mistakes were made.* **直接**的句子以施动者作主语，以动作作谓语动词。\n\n> **注意。** 先看谓语动词：*made*、*gave*、*conducted* 等轻动词搭配抽象名词（如 *decision*、*review*）是**埋藏的动词**；*was/were + 过去分词* 且没有 *by* 短语才是**不提施动者的被动句**。",
       ],
       ["What, if anything, weakens this sentence?", "如果有的话，是什么削弱了这个句子？"],
       `
@@ -394,22 +398,22 @@ ${weakLines}
       {
         "a buried verb": L(
           "埋藏的动词",
-          "The action is hidden in a noun made from a verb, held up by a weak verb such as make, give or conduct.",
-          "动作藏在由动词变来的名词里，由 make、give、conduct 之类无力的动词撑着。",
+          "The action is hidden in a noun made from a verb, held up by a weak verb such as make, give or conduct.\n\n**Check.** Spot the abstract noun in the predicate and turn it into a verb: replacing the weak verb + noun pair with that single verb says the same thing directly.",
+          "动作藏在由动词变来的名词里，由 make、give、conduct 之类无力的动词撑着。\n\n**检验。** 找出谓语里的抽象名词并还原成动词：用这一个动词替换“轻动词 + 名词”后句意不变，说明原句确有埋藏的动词。",
           "No action is buried in a noun made from a verb.",
           "没有动作被埋进由动词变来的名词里。",
         ),
         "a passive with no actor": L(
           "不提施动者的被动句",
-          "The sentence uses the passive and never says who did the action.",
-          "句子用了被动语态，却从未说明是谁做了这个动作。",
+          "The sentence uses the passive and never says who did the action.\n\n**Check.** Ask *who did this?* after reading the sentence: because the passive verb has no *by* agent, the doer is missing.",
+          "句子用了被动语态，却从未说明是谁做了这个动作。\n\n**检验。** 读完后追问一句“谁干的？”：被动谓语后没有 *by* 施动者，行动主体完全隐身。",
           "The sentence is not a passive that leaves out the actor.",
           "这个句子不是省略施动者的被动句。",
         ),
         "direct and clear": L(
           "直接清楚",
-          "The actor is the subject and the action is the verb, so nothing is buried or hidden.",
-          "施动者是主语，动作是谓语动词，没有任何东西被埋藏或隐藏。",
+          "The actor is the subject and the action is the verb, so nothing is buried or hidden.\n\n**Check.** Pair the sentence's subject directly with its main verb: the real doer performs the real action without any filler verb or hidden agent.",
+          "施动者是主语，动作是谓语动词，没有任何东西被埋藏或隐藏。\n\n**检验。** 把主语和谓语动词直接配对：真正的施动者直接发出核心动作，没有虚弱动词也没有隐去主体。",
           "The sentence buries its action in a noun or hides who acted.",
           "这个句子把动作埋进了名词，或藏起了施动者。",
         ),
@@ -419,8 +423,8 @@ ${weakLines}
       "the-verb-set-free",
       ["The Verb Set Free", "让动词解放出来"],
       [
-        "To revise a nominalization, find the noun that hides an action, turn it back into a verb and make the actor its subject. *The government's expansion of the program took place in 2020* becomes *The government expanded the program in 2020.* *We had a discussion about the problem* becomes *We discussed the problem.* The revision should keep the meaning and usually comes out shorter.",
-        "修改名词化时，找出藏着动作的名词，把它还原为动词，再让施动者作主语。*The government's expansion of the program took place in 2020* 改为 *The government expanded the program in 2020.* *We had a discussion about the problem* 改为 *We discussed the problem.* 修改后的句子应保持原意，而且通常更短。",
+        "To revise a nominalization, find the noun that hides an action, turn it back into a verb and make the actor its subject. *The government's expansion of the program took place in 2020* becomes *The government expanded the program in 2020.* *We had a discussion about the problem* becomes *We discussed the problem.* The revision should keep the meaning and usually comes out shorter.\n\n> **Watch out.** Check *who acts on whom* after freeing the verb—a short sentence that swaps subject and object reverses the original meaning.",
+        "修改名词化时，找出藏着动作的名词，把它还原为动词，再让施动者作主语。*The government's expansion of the program took place in 2020* 改为 *The government expanded the program in 2020.* *We had a discussion about the problem* 改为 *We discussed the problem.* 修改后的句子应保持原意，而且通常更短。\n\n> **注意。** 还原动词后务必核对“谁对谁做了什么”——把主语和宾语对调的短句会彻底颠倒原意。",
       ],
       ["Which revision frees the verb and keeps the meaning?", "哪个修改让动词解放出来并保持了原意？"],
       `
@@ -457,8 +461,8 @@ ${freedLines}
         The company made an investment in solar power.|The company invested in solar power.|An investment in solar power was made.|Solar power invested in the company.
       `,
       (right) => [
-        `"${right}" turns the buried noun back into a verb with the actor as its subject, so it is shorter and keeps the meaning.`,
-        `“${right}” 把埋藏的名词还原为动词，并以施动者作主语，所以更短且保持原意。`,
+        `"${right}" turns the buried noun back into a verb with the actor as its subject, so it is shorter and keeps the meaning.\n\n**Check.** Verify three things in "${right}": the original actor is still the subject, the buried noun has become the main verb, and the original meaning is unchanged.`,
+        `“${right}”把埋藏的名词还原为动词，并以施动者作主语，所以更短且保持原意。\n\n**检验。** 核对“${right}”的三点：原来的施动者仍是主语、埋藏的名词已变成谓语动词，且原意完整未变。`,
       ],
       [
         [
@@ -478,14 +482,18 @@ const mixed = topic("grammar", {
     "Sentences that start with one structure and end with another, and subjects joined to predicates that cannot fit them, as in the reason is because.",
     "以一种结构开头却以另一种结构结尾的句子，以及主语与不能搭配的谓语连在一起的句子，如 the reason is because。",
   ],
+  intro: [
+    "Sentences like *In the poem shows the storm* and *The reason we stopped is because of snow* sound ordinary in casual speech, yet their grammar collides mid-sentence. In this topic, you distinguish mixed constructions from faulty predication and mend both cleanly.",
+    "像 *In the poem shows the storm* 和 *The reason we stopped is because of snow* 这样的句子在口语里很常见，但在语法上却中途撞了车。本主题带你区分混杂结构与搭配不当，并把两类病句修补通顺。",
+  ],
   after: ["complements-and-objects", "noun-adjective-and-adverb-clauses"],
   points: [
     label(
       "what-is-wrong-with-the-sentence",
       ["What Is Wrong with the Sentence", "句子有什么问题"],
       [
-        "A **mixed construction** begins with one grammatical structure and switches to another, so the sentence has no proper subject: *By working hard at night made her tired.* (A phrase beginning *by* cannot be the subject.) **Faulty predication** joins a subject to a predicate that does not fit it logically: *The reason is because…*, *Democracy is when…*, *The cost was expensive.* A reason is not *because*; democracy is not a time; a cost is *high*, not *expensive*. A **correct** sentence keeps one structure from start to end.",
-        "**混杂结构**以一种语法结构开头，又换成另一种结构，使句子没有真正的主语：*By working hard at night made her tired.*（以 *by* 开头的短语不能作主语。）**搭配不当**是把主语和逻辑上不相配的谓语连在一起：*The reason is because…*、*Democracy is when…*、*The cost was expensive.* reason 不能是 *because*；democracy 不是一个时间；cost 应该是 *high*，而不是 *expensive*。**正确**的句子从头到尾保持一种结构。",
+        "A **mixed construction** begins with one grammatical structure and switches to another, so the sentence has no proper subject: *By working hard at night made her tired.* (A phrase beginning *by* cannot be the subject.) **Faulty predication** joins a subject to a predicate that does not fit it logically: *The reason is because…*, *Democracy is when…*, *The cost was expensive.* A reason is not *because*; democracy is not a time; a cost is *high*, not *expensive*. A **correct** sentence keeps one structure from start to end.\n\n> **Watch out.** Tell the two errors apart by finding the subject: if the sentence starts with a preposition or conjunction (*By…*, *In…*, *Because…*) that leaves the verb with no grammatical subject, it is **a mixed construction**; if there *is* a subject linked by *is/was* to a predicate that logically mismatches it (*is when*, *is because*, *price was expensive*), it is **faulty predication**.",
+        "**混杂结构**以一种语法结构开头，又换成另一种结构，使句子没有真正的主语：*By working hard at night made her tired.*（以 *by* 开头的短语不能作主语。）**搭配不当**是把主语和逻辑上不相配的谓语连在一起：*The reason is because…*、*Democracy is when…*、*The cost was expensive.* reason 不能是 *because*；democracy 不是一个时间；cost 应该是 *high*，而不是 *expensive*。**正确**的句子从头到尾保持一种结构。\n\n> **注意。** 找主语即可区分两类错误：如果句首多了介词或连词（*By…*、*In…*、*Because…*），导致谓语动词失去合法主语，就是**混杂结构**；如果主语存在，但通过 *is/was* 连上了逻辑不匹配的谓语（*is when*、*is because*、*price was expensive*），就是**搭配不当**。",
       ],
       ["What, if anything, is wrong with this sentence?", "如果有的话，这个句子有什么问题？"],
       `
@@ -530,22 +538,22 @@ ${wrongLines}
       {
         "a mixed construction": L(
           "混杂结构",
-          "The sentence starts with one structure, such as a phrase or a clause that cannot be a subject, and finishes as if it had a subject.",
-          "句子以一种不能作主语的结构（如短语或从句）开头，结尾却像是有主语一样。",
+          "The sentence starts with one structure, such as a phrase or a clause that cannot be a subject, and finishes as if it had a subject.\n\n**Check.** Try to underline a single noun or gerund subject before the main verb: the opening preposition or conjunction blocks it, proving the two halves collide.",
+          "句子以一种不能作主语的结构（如短语或从句）开头，结尾却像是有主语一样。\n\n**检验。** 试着在主句动词前划出合法主语：句首的介词或连词挡住了主语，说明前后两套结构中途相撞。",
           "The sentence does not switch from one structure to another.",
           "这个句子并没有从一种结构换成另一种结构。",
         ),
         "faulty predication": L(
           "搭配不当",
-          "The subject and the predicate do not fit logically, as in a reason that is because or a price that is expensive.",
-          "主语和谓语在逻辑上不相配，比如 reason 是 because，或 price 是 expensive。",
+          "The subject and the predicate do not fit logically, as in a reason that is because or a price that is expensive.\n\n**Check.** Set the subject directly beside what comes after the linking verb (*X = Y*): the two sides belong to mismatched categories or repeat the same idea redundantly.",
+          "主语和谓语在逻辑上不相配，比如 reason 是 because，或 price 是 expensive。\n\n**检验。** 把主语和系动词后的成分做成等式（X = Y）核对：两边范畴不匹配，或语义重复叠加。",
           "The subject and the predicate fit each other logically.",
           "主语和谓语在逻辑上是相配的。",
         ),
         correct: L(
           "正确",
-          "The sentence keeps one structure from start to end, and its subject and predicate fit.",
-          "句子从头到尾保持一种结构，主语和谓语也相配。",
+          "The sentence keeps one structure from start to end, and its subject and predicate fit.\n\n**Check.** Confirm both halves: the main verb has a true grammatical subject, and any linking verb equates matching categories.",
+          "句子从头到尾保持一种结构，主语和谓语也相配。\n\n**检验。** 同时核对两点：谓语动词有合法主语，且主系表两侧在逻辑上完全匹配。",
           "The sentence mixes structures or joins a subject to a predicate that does not fit.",
           "这个句子混用了结构，或主语与谓语不相配。",
         ),
@@ -555,8 +563,8 @@ ${wrongLines}
       "mending-the-sentence",
       ["Mending the Sentence", "修补句子"],
       [
-        "To mend a mixed construction, give the sentence a true subject: drop the word that turned the subject into a phrase (*By studying improved* → *Studying improved*), or add a subject after a comma (*By studying, she improved*). To mend faulty predication, make the predicate fit the subject: *the reason is that*, *democracy is a system in which*, *the price was high*.",
-        "修补混杂结构，要给句子一个真正的主语：去掉把主语变成短语的那个词（*By studying improved* → *Studying improved*），或在逗号后补上主语（*By studying, she improved*）。修补搭配不当，要让谓语与主语相配：*the reason is that*、*democracy is a system in which*、*the price was high*。",
+        "To mend a mixed construction, give the sentence a true subject: drop the word that turned the subject into a phrase (*By studying improved* → *Studying improved*), or add a subject after a comma (*By studying, she improved*). To mend faulty predication, make the predicate fit the subject: *the reason is that*, *democracy is a system in which*, *the price was high*.\n\n> **Watch out.** Adding a comma after *By…* or *In…* without supplying a new subject (*By studying, improved…*) still leaves the verb subjectless; you must either drop the preposition or supply a real subject.",
+        "修补混杂结构，要给句子一个真正的主语：去掉把主语变成短语的那个词（*By studying improved* → *Studying improved*），或在逗号后补上主语（*By studying, she improved*）。修补搭配不当，要让谓语与主语相配：*the reason is that*、*democracy is a system in which*、*the price was high*。\n\n> **注意。** 只在 *By…* 或 *In…* 后面加个逗号却不补新主语（*By studying, improved…*），动词依然没有主语——要么删去介词，要么补出真正的主语。",
       ],
       ["Which revision mends the sentence?", "哪个修改修补了这个句子？"],
       `
@@ -593,8 +601,8 @@ ${mendLines}
         The result of the vote was that the law was rejected by voting.|The voters rejected the law.|The result of the vote was the law was rejected by the voting.|The result of the vote was rejecting by voting.
       `,
       (right) => [
-        `"${right}" gives the sentence one structure from start to end, with a subject and a predicate that fit.`,
-        `“${right}” 让句子从头到尾只有一种结构，主语与谓语也相配。`,
+        `"${right}" gives the sentence one structure from start to end, with a subject and a predicate that fit.\n\n**Check.** Read the subject and predicate of "${right}" side by side: the clause now has a single unbroken grammatical skeleton and a logically matched predicate.`,
+        `“${right}”让句子从头到尾只有一种结构，主语与谓语也相配。\n\n**检验。** 对照读“${right}”的主语与谓语：句子骨架连贯统一，主谓逻辑也严丝合缝。`,
       ],
       [
         ['"{wrong}" keeps the faulty structure, only moving a comma or a word.', "“{wrong}”保留了错误的结构，只是挪动了一个逗号或一个词。"],
@@ -611,14 +619,18 @@ const restrictive = topic("grammar", {
     "Clauses, phrases and appositives that are essential to the meaning take no commas; those that add extra information are set off with commas.",
     "对意思必不可少的从句、短语和同位语不加逗号；补充额外信息的则用逗号隔开。",
   ],
+  intro: [
+    "Two commas around *who wore helmets* turn *Only the riders with helmets joined the parade* into *All the riders joined the parade, and they all happened to wear helmets*. In this topic, you punctuate restrictive and nonrestrictive elements accurately and read what the commas change in meaning.",
+    "在 *who wore helmets* 两边加上一对逗号，就会把“只有戴头盔的骑手参加了游行”变成“所有骑手都参加了游行，而且都戴了头盔”。本主题带你准确标点限制性与非限制性成分，并读出逗号带来的语义变化。",
+  ],
   after: ["some-of-whom-and-whose"],
   points: [
     choose(
       "commas-or-none",
       ["Commas or None", "加逗号还是不加"],
       [
-        "A **restrictive** element tells *which one* and is essential to the meaning, so it takes **no commas**: *The students who passed the test went on the trip* (only those students went). A **nonrestrictive** element adds extra information about something already identified, so it is set off **with commas**: *My brother, who lives in Ohio, is a doctor* (I have one brother; where he lives is extra). Use *that* only in restrictive clauses; *which* with commas introduces a nonrestrictive one.",
-        "**限制性**成分说明*是哪一个*，对意思必不可少，所以**不加逗号**：*The students who passed the test went on the trip*（只有通过考试的学生去了）。**非限制性**成分为已经明确的事物补充额外信息，所以要**用逗号隔开**：*My brother, who lives in Ohio, is a doctor*（我只有一个哥哥，他住在哪里是额外信息）。*that* 只用于限制性从句；前面有逗号的 *which* 引导非限制性从句。",
+        "A **restrictive** element tells *which one* and is essential to the meaning, so it takes **no commas**: *The students who passed the test went on the trip* (only those students went). A **nonrestrictive** element adds extra information about something already identified, so it is set off **with commas**: *My brother, who lives in Ohio, is a doctor* (I have one brother; where he lives is extra). Use *that* only in restrictive clauses; *which* with commas introduces a nonrestrictive one.\n\n> **Watch out.** Never place just *one* comma around a middle modifier—either use **zero commas** (restrictive) or a **matching pair of commas** (nonrestrictive), never a lone comma splitting subject from verb.",
+        "**限制性**成分说明*是哪一个*，对意思必不可少，所以**不加逗号**：*The students who passed the test went on the trip*（只有通过考试的学生去了）。**非限制性**成分为已经明确的事物补充额外信息，所以要**用逗号隔开**：*My brother, who lives in Ohio, is a doctor*（我只有一个哥哥，他住在哪里是额外信息）。*that* 只用于限制性从句；前面有逗号的 *which* 引导非限制性从句。\n\n> **注意。** 绝不要在句中修饰成分旁边只放*一个*逗号——要么**不加逗号**（限制性），要么**成对加逗号**（非限制性），单个逗号会把主语和谓语硬生生切开。",
       ],
       ["Which sentence is punctuated correctly for the meaning given?", "对于所给的意思，哪个句子的标点是正确的？"],
       `
@@ -655,8 +667,8 @@ ${commaLines}
         The Declaration is one document; its date is extra information.|The Declaration of Independence, which was signed in 1776, hangs in Washington.|The Declaration of Independence which was signed in 1776 hangs in Washington.|The Declaration of Independence, which was signed in 1776 hangs in Washington.
       `,
       (right) => [
-        `"${right}" matches the meaning: an essential element takes no commas, and an extra one is set off by a pair of commas.`,
-        `“${right}” 符合所给的意思：必不可少的成分不加逗号，额外的成分用一对逗号隔开。`,
+        `"${right}" matches the meaning: an essential element takes no commas, and an extra one is set off by a pair of commas.\n\n**Check.** Try deleting the middle clause or name from "${right}": if removing it would change *which* group or person is meant, zero commas belong; if the noun is already uniquely identified, a matching pair of commas sets off the extra detail.`,
+        `“${right}”符合所给的意思：必不可少的成分不加逗号，额外的成分用一对逗号隔开。\n\n**检验。** 试着把“${right}”中间的修饰成分删去：如果删掉就说不清指哪一部分，则不加逗号；如果先行词本身已唯一确定，则用一对逗号隔开额外说明。`,
       ],
       [
         [
@@ -673,8 +685,8 @@ ${commaLines}
       "what-the-commas-say",
       ["What the Commas Say", "逗号说明了什么"],
       [
-        "Commas change the meaning. Without commas, *The passengers who had tickets boarded the train* means **only some** passengers boarded: those with tickets. With commas, *The passengers, who had tickets, boarded the train* means **all** passengers boarded, and all had tickets. Before you add or remove commas, ask whether the element picks out a smaller group or simply adds a fact. A third reading is possible when a **single comma** wrongly splits the subject from its verb: that sentence is simply **punctuated wrongly**.",
-        "逗号会改变意思。不加逗号，*The passengers who had tickets boarded the train* 表示**只有一部分**乘客上了车：有票的那些。加了逗号，*The passengers, who had tickets, boarded the train* 表示**所有**乘客都上了车，而且都有票。加或删逗号之前，要问这个成分是挑出一个更小的群体，还是只补充一个事实。还有第三种情况：**单个逗号**错误地把主语和谓语隔开，这个句子就是**标点错误**。",
+        "Commas change the meaning. Without commas, *The passengers who had tickets boarded the train* means **only some** passengers boarded: those with tickets. With commas, *The passengers, who had tickets, boarded the train* means **all** passengers boarded, and all had tickets. Before you add or remove commas, ask whether the element picks out a smaller group or simply adds a fact. A third reading is possible when a **single comma** wrongly splits the subject from its verb: that sentence is simply **punctuated wrongly**.\n\n> **Watch out.** Count the commas around the clause first: **0** = restricts to only some, **2** = adds an extra fact about all, **1** = punctuated wrongly.",
+        "逗号会改变意思。不加逗号，*The passengers who had tickets boarded the train* 表示**只有一部分**乘客上了车：有票的那些。加了逗号，*The passengers, who had tickets, boarded the train* 表示**所有**乘客都上了车，而且都有票。加或删逗号之前，要问这个成分是挑出一个更小的群体，还是只补充一个事实。还有第三种情况：**单个逗号**错误地把主语和谓语隔开，这个句子就是**标点错误**。\n\n> **注意。** 先数清从句两侧的逗号数量：**0 个** = 限定为其中一部分，**2 个** = 对全体补充事实，**1 个** = 标点错误。",
       ],
       ["What does the punctuation of this sentence tell you?", "这个句子的标点告诉了你什么？"],
       `
@@ -716,22 +728,22 @@ ${commaSayLines}
       {
         "only some, picked out": L(
           "只有一部分，被挑出来",
-          "With no commas, the clause is restrictive: it picks out only the members of the group it describes.",
-          "没有逗号，这个从句是限制性的：它只挑出所描述的那部分成员。",
+          "With no commas, the clause is restrictive: it picks out only the members of the group it describes.\n\n**Check.** Count the commas around the relative clause: zero commas means it narrows the noun down to just that subset.",
+          "没有逗号，这个从句是限制性的：它只挑出所描述的那部分成员。\n\n**检验。** 数一下定语从句两侧的逗号：没有逗号，说明它把名词范围缩小为满足条件的这一部分。",
           "The sentence does not use a clause without commas to pick out part of a group.",
           "这个句子没有用不加逗号的从句挑出群体中的一部分。",
         ),
         "all, with an extra fact": L(
           "全部，附加一个事实",
-          "A pair of commas makes the clause nonrestrictive: it adds a fact about the whole group.",
-          "一对逗号使从句成为非限制性的：它为整个群体补充一个事实。",
+          "A pair of commas makes the clause nonrestrictive: it adds a fact about the whole group.\n\n**Check.** Count the commas around the clause: a matching pair sets it off as extra commentary applying to the entire group.",
+          "一对逗号使从句成为非限制性的：它为整个群体补充一个事实。\n\n**检验。** 数一下从句两侧的逗号：成对逗号把它隔成补充说明，适用于整个群体。",
           "The clause is not set off by a pair of commas.",
           "这个从句没有用一对逗号隔开。",
         ),
         "punctuated wrongly": L(
           "标点错误",
-          "A single comma splits the subject from its verb, which is never correct.",
-          "单个逗号把主语和谓语分开了，这永远是错误的。",
+          "A single comma splits the subject from its verb, which is never correct.\n\n**Check.** Count the commas around the clause: there is only one comma before the main verb with no opening partner, breaking the sentence.",
+          "单个逗号把主语和谓语分开了，这永远是错误的。\n\n**检验。** 数一下从句两侧的逗号：谓语动词前孤零零地多出一个逗号、前面却没有配对逗号，把主谓硬生生切开。",
           "No single comma splits the subject from its verb.",
           "没有单个逗号把主语和谓语分开。",
         ),
@@ -747,14 +759,18 @@ const confused7 = topic("grammar", {
     "Pairs such as discreet and discrete, flaunt and flout, or imply and infer look or sound alike but mean different things.",
     "discreet 和 discrete、flaunt 和 flout、imply 和 infer 这样的词形或读音相近，意思却不同。",
   ],
+  intro: [
+    "Saying a company *flaunted* safety rules pictures it showing them off proudly, when you meant it *flouted*—openly defied—them. In this topic, you master ten high-school look-alike pairs in context and match each word to its exact definition.",
+    "把违反安全规定说成 *flaunted*，意思就变成了“炫耀规定”，其实应该用表示公然违抗的 *flouted*。本主题带你结合语境掌握十组高中高频形近易混词，并精准配对词义。",
+  ],
   after: ["commonly-confused-words-6"],
   points: [
     choose(
       "the-word-that-fits",
       ["The Word That Fits", "合适的词"],
       [
-        "Ten more pairs that careful writers keep apart. **Discreet** means careful not to reveal secrets; **discrete** means separate. To **flaunt** is to show off; to **flout** is to openly ignore a rule. To **imply** is to suggest; to **infer** is to conclude. **Complement** completes; **compliment** praises. **Elicit** is to draw out; **illicit** means illegal. **Eminent** means famous; **imminent** means about to happen. **Principal** means main, or the head of a school; a **principle** is a rule or belief. **Stationary** means not moving; **stationery** is writing paper. **Tortuous** means full of twists; **torturous** means painful. To **adapt** is to change to fit; to **adopt** is to take as one's own.",
-        "又有十对需要认真区分的词。**discreet** 意为谨慎的、不泄露秘密的，**discrete** 意为分离的。**flaunt** 是炫耀，**flout** 是公然违抗规则。**imply** 是暗示，**infer** 是推断。**complement** 是补足，**compliment** 是称赞。**elicit** 是引出，**illicit** 意为非法的。**eminent** 意为著名的，**imminent** 意为即将发生的。**principal** 意为主要的，或指校长；**principle** 是原则或信念。**stationary** 意为静止的，**stationery** 是信纸文具。**tortuous** 意为曲折的，**torturous** 意为痛苦的。**adapt** 是改变以适应，**adopt** 是采用、收养。",
+        "Ten more pairs that careful writers keep apart. **Discreet** means careful not to reveal secrets; **discrete** means separate. To **flaunt** is to show off; to **flout** is to openly ignore a rule. To **imply** is to suggest; to **infer** is to conclude. **Complement** completes; **compliment** praises. **Elicit** is to draw out; **illicit** means illegal. **Eminent** means famous; **imminent** means about to happen. **Principal** means main, or the head of a school; a **principle** is a rule or belief. **Stationary** means not moving; **stationery** is writing paper. **Tortuous** means full of twists; **torturous** means painful. To **adapt** is to change to fit; to **adopt** is to take as one's own.\n\n> **Watch out.** Check the direction of the action or the spelling cue: the speaker **implies** while the listener **infers**, and station**e**ry (with *e*) is for *e*nvelopes while station**a**ry (with *a*) means standing still.",
+        "又有十对需要认真区分的词。**discreet** 意为谨慎的、不泄露秘密的，**discrete** 意为分离的。**flaunt** 是炫耀，**flout** 是公然违抗规则。**imply** 是暗示，**infer** 是推断。**complement** 是补足，**compliment** 是称赞。**elicit** 是引出，**illicit** 意为非法的。**eminent** 意为著名的，**imminent** 意为即将发生的。**principal** 意为主要的，或指校长；**principle** 是原则或信念。**stationary** 意为静止的，**stationery** 是信纸文具。**tortuous** 意为曲折的，**torturous** 意为痛苦的。**adapt** 是改变以适应，**adopt** 是采用、收养。\n\n> **注意。** 核对动作方向和拼写线索：说话者 **imply**（暗示），听话者 **infer**（推断）；带 *e* 的 station**e**ry 对应信封（*e*nvelopes），带 *a* 的 station**a**ry 表示静止不动。",
       ],
       ["Which word fits the sentence?", "哪个词适合这个句子？"],
       `
@@ -793,13 +809,13 @@ ${fitLines7}
         The rebels chose to ___ the king's order and marched anyway.|flout|flaunt|float
       `,
       (right) => [
-        `**${right}** has the meaning this sentence needs; the other choices are look-alike words whose meanings differ.`,
-        `**${right}** 具有这个句子需要的意思；其他选项是形似的词，意思不同。`,
+        `**${right}** has the meaning this sentence needs; the other choices are look-alike words whose meanings differ.\n\n**Check.** Substitute a plain synonym for **${right}** directly into the blank: the sentence's meaning and part of speech hold cleanly, unlike its look-alike partner.`,
+        `**${right}** 具有这个句子需要的意思；其他选项是形似的词，意思不同。\n\n**检验。** 用 **${right}** 的直白近义词代入空格通读：句意与词性完全通顺，而形近词代入后意思就不合。`,
       ],
       [
         [
-          "*{wrong}* looks or sounds like **{right}**, but it has a different meaning.",
-          "*{wrong}* 看起来或听起来像 **{right}**，但意思不同。",
+          "*{wrong}* is the look-alike partner from this pair, and it carries a different meaning.",
+          "*{wrong}* 是这组形近词里的另一个，意思不同。",
         ],
         ["*{wrong}* is another word or form; it does not have this meaning.", "*{wrong}* 是另一个词或词形，没有这个意思。"],
       ],
@@ -808,8 +824,8 @@ ${fitLines7}
       "the-word-for-the-meaning",
       ["The Word for the Meaning", "符合释义的词"],
       [
-        "Learn each pair by a clue. *Discrete* has its *t* standing apart, separate from the *e*. To *flout* a rule is to go *out* of it. The speaker *implies*; the listener *infers*. A *complement* *completes*; a *compliment* is what *I* like to hear. *Illicit* is *ill*egal. *Imminent* is *im*mediate. The *principal* is your *pal*; a *principle* is a ru*le*. Station*e*ry is for *e*nvelopes. To *adopt* is to take an *option*.",
-        "用线索记住每一对词。*discrete* 里的 *t* 把两个 *e* 分开。*flout* 规则就是跳 *out* 规则之外。说话的人 *imply*，听话的人 *infer*。*complement* 是 *complete*（补全）；*compliment* 是 *I* 爱听的话。*illicit* 就是 *ill*egal（非法）。*imminent* 是 *im*mediate（即将）。*principal* 是你的 *pal*（朋友，即校长）；*principle* 是一条 ru*le*（规则）。station*e*ry 用于 *e*nvelope（信封）。*adopt* 是选取一个 *option*。",
+        "Learn each pair by a clue. *Discrete* has its *t* standing apart, separate from the *e*. To *flout* a rule is to go *out* of it. The speaker *implies*; the listener *infers*. A *complement* *completes*; a *compliment* is what *I* like to hear. *Illicit* is *ill*egal. *Imminent* is *im*mediate. The *principal* is your *pal*; a *principle* is a ru*le*. Station*e*ry is for *e*nvelopes. To *adopt* is to take an *option*.\n\n> **Watch out.** Do not let sound-alikes trick you—verify the distinguishing letter or root (*-e-* vs. *-a-*, *-le* vs. *-al*, *im-* vs. *e-*) before locking in your answer.",
+        "用线索记住每一对词。*discrete* 里的 *t* 把两个 *e* 分开。*flout* 规则就是跳 *out* 规则之外。说话的人 *imply*，听话的人 *infer*。*complement* 是 *complete*（补全）；*compliment* 是 *I* 爱听的话。*illicit* 就是 *ill*egal（非法）。*imminent* 是 *im*mediate（即将）。*principal* 是你的 *pal*（朋友，即校长）；*principle* 是一条 ru*le*（规则）。station*e*ry 用于 *e*nvelope（信封）。*adopt* 是选取一个 *option*。\n\n> **注意。** 别被同音或近音词迷惑——锁定答案前务必核对区分字母或词头（*-e-* 与 *-a-*、*-le* 与 *-al*、*im-* 与 *e-*）。",
       ],
       ["Which word has this meaning?", "哪个词有这个意思？"],
       `
@@ -846,13 +862,13 @@ ${meaningLines7}
         a matching tie does this for a shirt|complement|compliment|complain
       `,
       (right) => [
-        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.`,
-        `**${right}** 有这个意思；其他选项是形似的词，意思不同。`,
+        `**${right}** has this meaning; the other choices are look-alike words whose meanings differ.\n\n**Check.** Test the spelling clue on **${right}** (its distinguishing letter or root): it maps directly onto the definition given, ruling out its near-twin.`,
+        `**${right}** 有这个意思；其他选项是形似的词，意思不同。\n\n**检验。** 用 **${right}** 的拼写线索（关键字母或词根）反推释义：它与题干完全吻合，排除了形近词。`,
       ],
       [
         [
-          "*{wrong}* looks or sounds like **{right}**, but it has a different meaning.",
-          "*{wrong}* 看起来或听起来像 **{right}**，但意思不同。",
+          "*{wrong}* is the look-alike partner from this pair, and it carries a different meaning.",
+          "*{wrong}* 是这组形近词里的另一个，意思不同。",
         ],
         ["*{wrong}* is another word or form; it does not have this meaning.", "*{wrong}* 是另一个词或词形，没有这个意思。"],
       ],

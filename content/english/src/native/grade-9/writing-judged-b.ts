@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after, covers } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 import { limits } from "./writing-judged-a.ts";
 
 /** comingBank asks for a true or imagined narrative about growing up. */
@@ -208,6 +208,10 @@ export const judgedTopics9b: readonly TopicDef[] = [
       "Write a narrative built around one turning point, showing who the narrator was before and after it and ending with a reflection on what it meant.",
       "写一篇围绕一个转折点展开的叙事，表现叙述者在转折前后的样子，并以对其意义的反思结尾。",
     ),
+    intro: t(
+      "Growing up rarely announces itself with a speech—it happens in a single evening when a childhood certainty cracks and you step into a wider, harder view of the world. A coming-of-age narrative anchors that shift in one concrete scene and looks back with honest reflection.",
+      "成长很少伴随慷慨陈词，它往往发生在某一个傍晚：童年的笃定突然裂开一道缝，你开始以更宽广也更清醒的眼光打量世界。成长叙事把这份转变定格在一个具体场景里，并以真诚的回望收束。",
+    ),
     prerequisites: after("writing-a-reflective-essay", "manipulating-time-in-a-story"),
     encompasses: covers(0.2, "writing-a-reflective-essay"),
     xp: 24,
@@ -218,8 +222,8 @@ export const judgedTopics9b: readonly TopicDef[] = [
         "one-turning-point",
         t("One Turning Point", "一个转折点"),
         t(
-          "A coming-of-age narrative is built around **one turning point**: a moment when you see the world or yourself differently. Show it as a **scene**, with action and dialogue, and make clear who you were **before** it: *Until I was thirteen, I believed my older cousin Marco could do anything.*",
-          "成长叙事围绕**一个转折点**展开：在那一刻，你以不同的眼光看待世界或自己。把它写成一个有动作和对话的**场景**，并交代清楚你在此**之前**是什么样的人：*Until I was thirteen, I believed my older cousin Marco could do anything.*",
+          "A coming-of-age narrative is built around **one turning point**: a moment when you see the world or yourself differently. Show it as a **scene**, with action and dialogue, and make clear who you were **before** it: *Until I was thirteen, I believed my older cousin Marco could do anything.*\n\n> **Watch out.** Do not summarize a whole year of life—zoom into one specific afternoon or conversation where the old belief breaks, and let action and dialogue carry it.",
+          "成长叙事围绕**一个转折点**展开：在那一刻，你以不同的眼光看待世界或自己。把它写成一个有动作和对话的**场景**，并交代清楚你在此**之前**是什么样的人：*Until I was thirteen, I believed my older cousin Marco could do anything.*\n\n> **注意。** 不要泛泛概括一整年的生活——把镜头拉近到旧观念碎裂的那一个下午或那场对话，让动作和对话推进转折。",
         ),
         writingGenerator(
           t(
@@ -229,15 +233,18 @@ export const judgedTopics9b: readonly TopicDef[] = [
           comingBank,
           ["g9-coming-turning-point", "g9-coming-before-after", "g9-coming-reflection"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check that the opening establishes who the narrator was before the event, and that the turning point unfolds as a live scene with specific action or dialogue.",
+            "核对开头是否交代清楚叙述者之前的样子，以及转折点是否以包含具体动作或对话的实时场景展开。",
+          ),
         ),
       ),
       point(
         "looking-back",
         t("Looking Back", "回望"),
         t(
-          "End by **looking back** from the present: what do you understand now that you did not understand then? Suggest the meaning rather than stating a moral. *I used to think being trusted was a reward. Now I know it is a weight* reflects; *This taught me to be responsible* only labels.",
-          "结尾要从现在**回望**：你现在明白了什么当时不明白的事？暗示意义，而不是直接说出道理。*I used to think being trusted was a reward. Now I know it is a weight* 是反思；*This taught me to be responsible* 只是贴标签。",
+          "End by **looking back** from the present: what do you understand now that you did not understand then? Suggest the meaning rather than stating a moral. *I used to think being trusted was a reward. Now I know it is a weight* reflects; *This taught me to be responsible* only labels.\n\n> **Watch out.** Avoid generic fortune-cookie morals (*'never give up'*, *'family comes first'*)—tie your closing insight directly to the specific shift in how you see the world now.",
+          "结尾要从现在**回望**：你现在明白了什么当时不明白的事？暗示意义，而不是直接说出道理。*I used to think being trusted was a reward. Now I know it is a weight* 是反思；*This taught me to be responsible* 只是贴标签。\n\n> **注意。** 避开放之四海而皆准的套话（如“永不放弃”“家人最重要”）——把结尾的领悟紧扣到你如今看待世界方式的具体变化上。",
         ),
         writingGenerator(
           t(
@@ -247,7 +254,10 @@ export const judgedTopics9b: readonly TopicDef[] = [
           comingBank,
           ["g9-coming-reflection", "g9-coming-before-after", "g9-coming-turning-point"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check the closing paragraph: does it articulate a specific before-and-after shift in understanding that could only belong to this experience?",
+            "检查结尾段落：它是否说出了只有这段经历才能带来的、具体的前后认知变化？",
+          ),
         ),
       ),
     ],
@@ -259,6 +269,10 @@ export const judgedTopics9b: readonly TopicDef[] = [
       "Write a short story in an imagined world, building the world through details in scenes and following its main difference to a consequence for a character.",
       "在一个想象的世界中写一个短篇故事，通过场景中的细节构建世界，并把这个世界的主要不同之处推演为人物所面对的后果。",
     ),
+    intro: t(
+      "When everyone's remaining years glow on their wrist, a teenager wearing long sleeves in July tells the whole story in one gesture. Speculative fiction drops the reader into an altered world through vivid details and traces how its rule reshapes one human choice.",
+      "当每个人的余生年数都亮在手腕上，大夏天穿着长袖的少年一个举动就道出了一切。推想小说用场景里的具体细节让读者置身异世界，并推演那条奇特规则如何重塑一个人的抉择。",
+    ),
     prerequisites: after("reading-speculative-fiction", "writing-a-heros-trial"),
     encompasses: covers(0.2, "reading-speculative-fiction"),
     xp: 24,
@@ -269,8 +283,8 @@ export const judgedTopics9b: readonly TopicDef[] = [
         "building-the-world-in-scenes",
         t("Building the World in Scenes", "在场景中构建世界"),
         t(
-          "Do not open with a long explanation of how the world works. Build it through **details in scenes**: *Every morning at six, the water truck came to Greenhill Street, and every person received four cups.* One concrete detail tells the reader more than a paragraph of history.",
-          "不要以一大段说明世界如何运转的文字开头。通过**场景中的细节**来构建它：*Every morning at six, the water truck came to Greenhill Street, and every person received four cups.* 一个具体细节比一段历史交代更能让读者明白。",
+          "Do not open with a long explanation of how the world works. Build it through **details in scenes**: *Every morning at six, the water truck came to Greenhill Street, and every person received four cups.* One concrete detail tells the reader more than a paragraph of history.\n\n> **Watch out.** Skip textbook-style history dumps (*'In the year 2090, the government passed a law...'*)—drop straight into an everyday moment where the world's rule is already in action.",
+          "不要以一大段说明世界如何运转的文字开头。通过**场景中的细节**来构建它：*Every morning at six, the water truck came to Greenhill Street, and every person received four cups.* 一个具体细节比一段历史交代更能让读者明白。\n\n> **注意。** 省去教科书式的背景交代（如“2090 年政府颁布了一项法令……”）——直接切入日常生活片段，让世界的规则自然运转起来。",
         ),
         writingGenerator(
           t(
@@ -280,15 +294,18 @@ export const judgedTopics9b: readonly TopicDef[] = [
           speculativeBank,
           ["g9-speculative-world", "g9-speculative-consequence", "g9-speculative-mirror"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your opening two paragraphs: does the reader discover the world's rule through concrete objects, routines, and actions rather than an encyclopedia-style explanation?",
+            "检查开头两段：读者是否通过具体物件、日常惯例和动作发现这个世界的规则，而不是读一段百科全书式的说明？",
+          ),
         ),
       ),
       point(
         "following-the-difference",
         t("Following the Difference", "推演不同之处"),
         t(
-          "Ask **what would follow** from the world's main difference, and let it fall on one character: if water is rationed by the cup, what happens when a grandmother falls ill? The best speculative stories also make the reader think about **our own world**, without a lecture.",
-          "问一问这个世界的主要不同之处**会带来什么**，并让后果落在一个人物身上：如果水按杯配给，祖母病了会怎样？最好的推想小说还会让读者联想到**我们自己的世界**，而不必说教。",
+          "Ask **what would follow** from the world's main difference, and let it fall on one character: if water is rationed by the cup, what happens when a grandmother falls ill? The best speculative stories also make the reader think about **our own world**, without a lecture.\n\n> **Watch out.** Do not treat the premise as mere decoration—the central dilemma of your plot must be impossible *without* the world's special rule.",
+          "问一问这个世界的主要不同之处**会带来什么**，并让后果落在一个人物身上：如果水按杯配给，祖母病了会怎样？最好的推想小说还会让读者联想到**我们自己的世界**，而不必说教。\n\n> **注意。** 不要把科幻设定当成可有可无的背景装饰——故事的核心困境必须*直接源于*这个世界的特殊规则。",
         ),
         writingGenerator(
           t(
@@ -298,7 +315,10 @@ export const judgedTopics9b: readonly TopicDef[] = [
           speculativeBank,
           ["g9-speculative-consequence", "g9-speculative-world", "g9-speculative-mirror"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that the protagonist's hard choice grows directly out of the prompt's altered rule and leaves the reader reflecting on our own world without preaching.",
+            "核对主人公的艰难抉择是否直接由题干的特殊规则引发，并在不说教的前提下让读者联想到现实世界。",
+          ),
         ),
       ),
     ],
@@ -310,6 +330,10 @@ export const judgedTopics9b: readonly TopicDef[] = [
       "Write an argument that answers a question with a qualified claim, uses the sources given and judges how strong each is, and answers a counterclaim.",
       "写一篇议论文：用有限定的主张回答问题，使用所给材料并判断每份材料的说服力，并回应反方观点。",
     ),
+    intro: t(
+      "Treating a 2,000-student study and a beverage company's poll as equal evidence weakens your case before it begins. Writing a source-based argument means weighing each source's size, funding, and method, qualifying your claim, and answering the strongest objection.",
+      "把两千名学生的研究和饮料公司出资的民调当成同等分量的证据，论证还没展开就先站不住脚了。写基于材料的议论文，需要衡量每份材料的样本、出资方和方法，提出有限定的主张，并正面回应最有力的反对意见。",
+    ),
     prerequisites: after("writing-a-five-paragraph-argument", "weighing-health-claims", "introducing-and-explaining-evidence"),
     encompasses: covers(0.2, "writing-a-five-paragraph-argument", "weighing-health-claims"),
     xp: 24,
@@ -320,8 +344,8 @@ export const judgedTopics9b: readonly TopicDef[] = [
         "weighing-each-source",
         t("Weighing Each Source", "衡量每份材料"),
         t(
-          "Sources are not equally strong. Before you use one, ask: **how large** was the study? **Who paid** for it? Does it show a **cause** or only a link? Then say so in your essay: *This study is weak. It included only 60 students and did not control for tooth brushing, so it shows a link but not a cause.*",
-          "材料的说服力并不相同。使用之前先问：研究**规模**有多大？**谁出资**？它表明的是**因果**还是仅仅是关联？然后在文章中说出来：*This study is weak. It included only 60 students and did not control for tooth brushing, so it shows a link but not a cause.*",
+          "Sources are not equally strong. Before you use one, ask: **how large** was the study? **Who paid** for it? Does it show a **cause** or only a link? Then say so in your essay: *This study is weak. It included only 60 students and did not control for tooth brushing, so it shows a link but not a cause.*\n\n> **Watch out.** Do not just drop source facts in as unquestioned truth—explicitly note *why* a large independent study carries more weight than a small, funded, or correlational one.",
+          "材料的说服力并不相同。使用之前先问：研究**规模**有多大？**谁出资**？它表明的是**因果**还是仅仅是关联？然后在文章中说出来：*This study is weak. It included only 60 students and did not control for tooth brushing, so it shows a link but not a cause.*\n\n> **注意。** 不要把材料里的数字不加分辨地当成定论——要明确指出大样本独立研究*为什么*比小样本、利益相关方出资或仅显示关联的研究更有分量。",
         ),
         writingGenerator(
           t(
@@ -331,15 +355,18 @@ export const judgedTopics9b: readonly TopicDef[] = [
           argumentBank,
           ["g9-argument-weighs-sources", "g9-argument-claim", "g9-argument-counterclaim"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check that your essay cites at least two of the provided sources by name and explicitly evaluates each source's sample size, funding, or correlation-vs.-causation limit.",
+            "核对文章是否明确引用了至少两份所给材料，并具体评估了它们的样本规模、出资背景或因果/关联局限。",
+          ),
         ),
       ),
       point(
         "answering-the-best-objection",
         t("Answering the Best Objection", "回应最有力的反对意见"),
         t(
-          "State a **qualified claim** that the evidence can support, then give the other side its **best evidence** before you answer it: *The strongest objection is cost. … However, the source comes from the bus company, and the cost must be weighed against the benefits.*",
-          "提出证据能够支持的**有限定的主张**，然后先给出对方**最有力的证据**，再加以回应：*The strongest objection is cost. … However, the source comes from the bus company, and the cost must be weighed against the benefits.*",
+          "State a **qualified claim** that the evidence can support, then give the other side its **best evidence** before you answer it: *The strongest objection is cost. … However, the source comes from the bus company, and the cost must be weighed against the benefits.*\n\n> **Watch out.** Do not knock down a weak straw man or overclaim (*'proves beyond doubt'*)—state the opposing side's strongest source fairly, then show why your qualified position still holds.",
+          "提出证据能够支持的**有限定的主张**，然后先给出对方**最有力的证据**，再加以回应：*The strongest objection is cost. … However, the source comes from the bus company, and the cost must be weighed against the benefits.*\n\n> **注意。** 不要挑软柿子捏，也不要过度断言（如“彻底证明”）——先公允呈现反方最有力的材料，再说明为何你有限定的立场依然成立。",
         ),
         writingGenerator(
           t(
@@ -349,7 +376,10 @@ export const judgedTopics9b: readonly TopicDef[] = [
           argumentBank,
           ["g9-argument-claim", "g9-argument-counterclaim", "g9-argument-weighs-sources"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that your thesis is appropriately qualified to match the evidence, and that you present and answer the strongest opposing source with reasons rather than dismissing it.",
+            "核对中心论点是否带有与证据强度相称的限定，并是否公允呈现且用理由回应了最有力的反方材料。",
+          ),
         ),
       ),
     ],

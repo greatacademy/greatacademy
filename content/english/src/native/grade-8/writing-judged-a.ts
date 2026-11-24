@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 
 /** limits are the length limits of a grade 8 essay. */
 export const limits = { minWords: 140, maxChars: 4200 };
@@ -274,6 +274,10 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
       "Write an argument that answers a historical question with a clear claim, supports it with quotations from primary sources and answers a different view.",
       "写一篇议论文：用明确的论点回答一个历史问题，用原始资料中的引语支持它，并回应不同的观点。",
     ),
+    intro: t(
+      "Was the printing press mainly a religious revolution or a commercial one? Historians settle questions like that not by guessing, but by taking a clear position, quoting eyewitnesses with their dates, and answering the strongest rival reading of the sources.",
+      "印刷术的普及主要是一场宗教变革，还是商业变革？历史学家不是凭感觉下结论，而是提出明确立场、标明年份和说话人来引用原始资料，并正面回应另一种最有力的解读。",
+    ),
     prerequisites: after("quoting-a-primary-source", "acknowledging-conflicting-viewpoints"),
     encompasses: [{ topic: "quoting-a-primary-source", weight: 0.2 }],
     xp: 24,
@@ -284,8 +288,8 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
         "arguing-from-the-sources",
         t("Arguing from the Sources", "依据资料论证"),
         t(
-          'An argument about history answers a question that historians can disagree about, such as *Was the Revolution mainly about taxes?* State a **claim** that takes a side, then support it with the words of people who were there. Introduce each quotation with its speaker and year, and explain what it shows: *Even a Loyalist farmer admitted in 1775 that "the quarrel is about who rules."*',
-          '关于历史的议论文回答一个历史学家可能有分歧的问题，例如 *Was the Revolution mainly about taxes?* 提出一个表明立场的**论点**，再用亲历者的话来支持它。每条引语都要交代说话人和年份，并解释它说明了什么：*Even a Loyalist farmer admitted in 1775 that "the quarrel is about who rules."*',
+          'An argument about history answers a question that historians can disagree about, such as *Was the Revolution mainly about taxes?* State a **claim** that takes a side, then support it with the words of people who were there. Introduce each quotation with its speaker and year, and explain what it shows: *Even a Loyalist farmer admitted in 1775 that "the quarrel is about who rules."*\n\n> **Watch out.** Do not drop a primary-source quotation into a paragraph without naming its speaker and date, and never leave a quote unexplained—spell out how those words support your historical claim.',
+          '关于历史的议论文回答一个历史学家可能有分歧的问题，例如 *Was the Revolution mainly about taxes?* 提出一个表明立场的**论点**，再用亲历者的话来支持它。每条引语都要交代说话人和年份，并解释它说明了什么：*Even a Loyalist farmer admitted in 1775 that "the quarrel is about who rules."*\n\n> **注意。** 不要直接把原始资料引语扔进段落而不交代说话人和年份，也不要引完就走——必须说明这些话如何支撑你的历史论点。',
         ),
         writingGenerator(
           t(
@@ -295,15 +299,18 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
           historyBank,
           ["g8-history-claim", "g8-history-sources", "g8-history-other-view"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check three elements: an arguable historical claim in the opening, primary-source quotations introduced with speaker and year, and commentary explaining how each source backs the claim.",
+            "核对三个要素：开头有可争辩的历史论点、每条原始资料引语都交代了说话人与年份，并有分析说明它们如何支撑论点。",
+          ),
         ),
       ),
       point(
         "answering-another-view",
         t("Answering Another View", "回应另一种观点"),
         t(
-          "Historians often read the same sources in different ways. A strong argument names a **different view** fairly, *Some argue that the colonists simply did not want to pay*, then answers it with evidence: *Yet such small taxes would hardly have led to war.* Answer the other view before your conclusion, so that the essay ends on your own claim.",
-          "历史学家常常以不同方式解读同样的资料。有力的议论文会公正地指出**不同的观点**，如 *Some argue that the colonists simply did not want to pay*，再用证据回应它：*Yet such small taxes would hardly have led to war.* 要在结论之前回应另一种观点，让文章以你自己的论点结束。",
+          "Historians often read the same sources in different ways. A strong argument names a **different view** fairly, *Some argue that the colonists simply did not want to pay*, then answers it with evidence: *Yet such small taxes would hardly have led to war.* Answer the other view before your conclusion, so that the essay ends on your own claim.\n\n> **Watch out.** Do not dismiss the opposing interpretation without evidence or let it sit unanswered at the end—rebut it with a specific source and return to your thesis in the closing paragraph.",
+          "历史学家常常以不同方式解读同样的资料。有力的议论文会公正地指出**不同的观点**，如 *Some argue that the colonists simply did not want to pay*，再用证据回应它：*Yet such small taxes would hardly have led to war.* 要在结论之前回应另一种观点，让文章以你自己的论点结束。\n\n> **注意。** 不要没有证据就草率否定对立观点，也不要把它留到结尾悬而不答——用具体资料反驳后，在结尾回到自己的论点。",
         ),
         writingGenerator(
           t(
@@ -313,7 +320,10 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
           historyBank,
           ["g8-history-other-view", "g8-history-sources", "g8-history-claim"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that a rival interpretation of the historical question is stated fairly, answered directly with evidence from the prompt's sources, and followed by a conclusion that reinforces your own claim.",
+            "确认文章公正陈述了一种对立的历史解读，用题干提供的资料直接回应了它，并在结尾段重新收束回自己的论点。",
+          ),
         ),
       ),
     ],
@@ -325,6 +335,10 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
       "Write an objective report that combines facts and numbers from two sources and says where each key fact comes from.",
       "写一篇客观的报告：综合两份资料中的事实和数字，并说明每个关键事实的出处。",
     ),
+    intro: t(
+      "If Source A gives a bridge's construction cost and Source B records how many ferries it replaced, a strong report does not paste Source A above Source B. It weaves both sources into paragraphs organized by topic while crediting every key figure.",
+      "如果资料 A 给出一座大桥的造价，资料 B 记录它取代了多少班渡轮，好的报告不会把两份资料生硬地上下拼贴，而是按主题把两份资料编织进段落里，同时标明每个关键数据的出处。",
+    ),
     prerequisites: after("using-statistics-in-a-sentence", "tracking-a-central-idea"),
     encompasses: [{ topic: "using-statistics-in-a-sentence", weight: 0.2 }],
     xp: 24,
@@ -335,8 +349,8 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
         "combining-two-sources",
         t("Combining Two Sources", "综合两份资料"),
         t(
-          "A report from sources does not summarize one source and then the other. It is organized by **idea**: each paragraph gathers the facts on one point, from whichever source gives them. A census may tell you how fast a city grew, while a doctor's report tells you what that growth did to people's health; together they explain more than either does alone.",
-          "根据资料写的报告不是先概括一份资料再概括另一份。它按**要点**组织：每段汇集关于一个要点的事实，不管它们来自哪份资料。人口普查可能告诉你一座城市增长得多快，而医生的报告告诉你这种增长对人们健康的影响；两者结合起来比单独任何一份说明得更多。",
+          "A report from sources does not summarize one source and then the other. It is organized by **idea**: each paragraph gathers the facts on one point, from whichever source gives them. A census may tell you how fast a city grew, while a doctor's report tells you what that growth did to people's health; together they explain more than either does alone.\n\n> **Watch out.** Do not leave out one of the two sources or invent numbers not given in the prompt—every paragraph should advance a clear idea built strictly from the two sources.",
+          "根据资料写的报告不是先概括一份资料再概括另一份。它按**要点**组织：每段汇集关于一个要点的事实，不管它们来自哪份资料。人口普查可能告诉你一座城市增长得多快，而医生的报告告诉你这种增长对人们健康的影响；两者结合起来比单独任何一份说明得更多。\n\n> **注意。** 不要漏掉其中任何一份资料，也不要编造题干里没有的数字——每一段都应围绕一个清晰要点，严格依托两份资料展开。",
         ),
         writingGenerator(
           t(
@@ -346,15 +360,18 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
           sourcesBank,
           ["g8-sources-both", "g8-sources-credits", "g8-sources-objective"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check that facts from both Source A and Source B appear across the report, grouped by clear subtopics rather than dumped as two separate summaries.",
+            "核对资料 A 和资料 B 的事实是否都在报告中出现，并且按清晰的小主题组织，而不是生硬地分成两份资料各自的摘要。",
+          ),
         ),
       ),
       point(
         "crediting-each-fact",
         t("Crediting Each Fact", "注明每个事实的出处"),
         t(
-          "A reader should be able to tell where each number and key fact came from. Credit your sources as you go, with phrases such as *according to the census*, *the doctor's report found* or *the same record shows*. Keep the tone **objective**: report what the sources say accurately, and leave out your own opinions.",
-          "读者应该能分辨每个数字和关键事实来自哪里。边写边注明出处，使用 *according to the census*、*the doctor's report found*、*the same record shows* 等短语。保持**客观**的语气：准确地报告资料所说的内容，不加入你自己的看法。",
+          "A reader should be able to tell where each number and key fact came from. Credit your sources as you go, with phrases such as *according to the census*, *the doctor's report found* or *the same record shows*. Keep the tone **objective**: report what the sources say accurately, and leave out your own opinions.\n\n> **Watch out.** Do not slip into personal opinions (*I think this was terrible*) or drop uncredited statistics—tag each key figure with the source that reported it.",
+          "读者应该能分辨每个数字和关键事实来自哪里。边写边注明出处，使用 *according to the census*、*the doctor's report found*、*the same record shows* 等短语。保持**客观**的语气：准确地报告资料所说的内容，不加入你自己的看法。\n\n> **注意。** 不要夹杂个人感想（如 *I think this was terrible*），也不要放出没有出处的数字——每个关键数据都要标明来源。",
         ),
         writingGenerator(
           t(
@@ -364,7 +381,10 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
           sourcesBank,
           ["g8-sources-credits", "g8-sources-objective", "g8-sources-both"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Scan every statistic and key fact in the report: each one should be attributed to its source (for example, *according to...* or *the record shows*), and the voice should stay neutral throughout.",
+            "逐个检查报告中的数字和关键事实：每一处都应注明出处（如 *according to...* 或 *the record shows*），且全文保持客观中立的语气。",
+          ),
         ),
       ),
     ],
@@ -376,6 +396,10 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
       "Write a scientific explanation that makes a claim, backs it with evidence from data, connects the two with reasoning and keeps the claim within what the evidence shows.",
       "写一篇科学解释：提出论断，用数据中的证据支持它，用推理把两者联系起来，并让论断不超出证据所显示的范围。",
     ),
+    intro: t(
+      "When arctic foxes grow white coats in winter and brown coats in summer, listing temperature charts is only half the job. A scientific explanation pairs a clear claim with data, bridges them with a mechanism, and states the limits of the evidence.",
+      "当北极狐冬天长出白毛、夏天换成棕毛时，只列出气温数据还远远不够。科学解释要把明确论断与数据配对，用科学机理把两者连起来，并说明证据的适用边界。",
+    ),
     prerequisites: after("qualifying-a-claim"),
     encompasses: [{ topic: "qualifying-a-claim", weight: 0.2 }],
     xp: 24,
@@ -386,8 +410,8 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
         "claim-evidence-and-reasoning",
         t("Claim, Evidence and Reasoning", "论断、证据和推理"),
         t(
-          "A scientific explanation has three parts. The **claim** answers the question: *The beaks became deeper because the drought favored birds that could crack hard seeds.* The **evidence** gives the data: *the average depth rose from 9.4 mm to 9.9 mm.* The **reasoning** connects them with a scientific idea: *Because beak depth is inherited, the survivors' young had deeper beaks.*",
-          "科学解释有三个部分。**论断**回答问题：*The beaks became deeper because the drought favored birds that could crack hard seeds.* **证据**给出数据：*the average depth rose from 9.4 mm to 9.9 mm.* **推理**用科学原理把两者联系起来：*Because beak depth is inherited, the survivors' young had deeper beaks.*",
+          "A scientific explanation has three parts. The **claim** answers the question: *The beaks became deeper because the drought favored birds that could crack hard seeds.* The **evidence** gives the data: *the average depth rose from 9.4 mm to 9.9 mm.* The **reasoning** connects them with a scientific idea: *Because beak depth is inherited, the survivors' young had deeper beaks.*\n\n> **Watch out.** Do not stop after copying the data—without the **reasoning** paragraph explaining *why* the numbers support the claim, the explanation is incomplete.",
+          "科学解释有三个部分。**论断**回答问题：*The beaks became deeper because the drought favored birds that could crack hard seeds.* **证据**给出数据：*the average depth rose from 9.4 mm to 9.9 mm.* **推理**用科学原理把两者联系起来：*Because beak depth is inherited, the survivors' young had deeper beaks.*\n\n> **注意。** 不要把数据抄完就结束——少了说明数据*为什么*能支撑论断的**推理**部分，科学解释就不完整。",
         ),
         writingGenerator(
           t(
@@ -397,15 +421,18 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
           scienceBank,
           ["g8-science-claim", "g8-science-reasoning", "g8-science-qualified"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check the three-part chain: a direct claim answering the question, accurate numbers or observations from the prompt's data, and scientific reasoning that explains the mechanism linking data to claim.",
+            "核对三段链条：直接回答问题的论断、来自题干数据的准确数字或观察结果，以及讲清数据与论断之间因果机理的科学推理。",
+          ),
         ),
       ),
       point(
         "knowing-the-limits",
         t("Knowing the Limits", "了解局限"),
         t(
-          "A careful explanation ends by saying how far the evidence reaches. If the data come from one island or three caves, say so, and use words such as *suggests*, *most likely* or *in this study*: *This study covers one island, so it does not prove that every population changes this quickly.* But do not hedge so much that the claim disappears.",
-          "严谨的解释最后会说明证据能推及多远。如果数据来自一个岛屿或三个洞穴，就要说明，并使用 *suggests*、*most likely* 或 *in this study* 等词：*This study covers one island, so it does not prove that every population changes this quickly.* 但不要含糊到论断都消失了。",
+          "A careful explanation ends by saying how far the evidence reaches. If the data come from one island or three caves, say so, and use words such as *suggests*, *most likely* or *in this study*: *This study covers one island, so it does not prove that every population changes this quickly.* But do not hedge so much that the claim disappears.\n\n> **Watch out.** Avoid absolute words like *proves forever* or *always* when the dataset is limited—and do not weaken the conclusion so much that it says *we cannot know anything*.",
+          "严谨的解释最后会说明证据能推及多远。如果数据来自一个岛屿或三个洞穴，就要说明，并使用 *suggests*、*most likely* 或 *in this study* 等词：*This study covers one island, so it does not prove that every population changes this quickly.* 但不要含糊到论断都消失了。\n\n> **注意。** 数据样本有限时，避免使用 *proves forever*、*always* 等绝对措辞；同时别退让到只剩“什么都说不准”。",
         ),
         writingGenerator(
           t(
@@ -415,7 +442,10 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
           scienceBank,
           ["g8-science-qualified", "g8-science-reasoning", "g8-science-claim"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that the closing paragraph names a real boundary of the dataset (such as one place, one time period, or incomplete fossils) while still stating clearly what the evidence strongly suggests.",
+            "确认结尾段点明了数据的真实边界（如单一地点、单一时期或有限样本），同时仍清楚说出这些证据有力支持的结论。",
+          ),
         ),
       ),
     ],
@@ -427,6 +457,10 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
       "Write a Gothic tale that builds dread through details of the senses, uses Gothic elements such as a gloomy setting or a secret from the past and ends at a moment of horror or revelation.",
       "写一个哥特故事：用感官细节营造恐惧，运用阴森的环境、过去的秘密等哥特元素，并在恐怖或真相揭示的时刻结束。",
     ),
+    intro: t(
+      "A candle guttering in a drafty bell tower, a portrait whose eyes seem shifted since yesterday, a locked cellar door that rattles at midnight — Gothic fiction builds dread slowly through atmosphere and buried history before striking with a final revelation.",
+      "漏风钟楼里明灭的烛火、仿佛比昨天转了眼神的肖像、午夜作响的上锁地窖门——哥特故事先用阴郁氛围和尘封往事步步累积寒意，最后在真相揭开的那一刻戛然而止。",
+    ),
     prerequisites: after("creating-atmosphere-with-sensory-details"),
     encompasses: [{ topic: "creating-atmosphere-with-sensory-details", weight: 0.2 }],
     xp: 24,
@@ -437,8 +471,8 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
         "a-setting-full-of-dread",
         t("A Setting Full of Dread", "充满恐惧的环境"),
         t(
-          "A Gothic tale lives in its setting: an old house, a ruined abbey, a marsh in the mist. Build the dread through **the senses**: *Mist crawled across the heather; the door groaned; the air smelled of damp stone.* Never write *it was scary*; let the details make the reader feel it.",
-          "哥特故事依托于它的环境：一座老宅、一座废弃的修道院、雾中的沼泽。通过**感官**营造恐惧：*Mist crawled across the heather; the door groaned; the air smelled of damp stone.* 绝不要写 *it was scary*；让细节使读者自己感受到。",
+          "A Gothic tale lives in its setting: an old house, a ruined abbey, a marsh in the mist. Build the dread through **the senses**: *Mist crawled across the heather; the door groaned; the air smelled of damp stone.* Never write *it was scary*; let the details make the reader feel it.\n\n> **Watch out.** Replace flat labels like *creepy* or *terrifying* with concrete sights, sounds, smells, and textures that let the reader feel the chill firsthand.",
+          "哥特故事依托于它的环境：一座老宅、一座废弃的修道院、雾中的沼泽。通过**感官**营造恐惧：*Mist crawled across the heather; the door groaned; the air smelled of damp stone.* 绝不要写 *it was scary*；让细节使读者自己感受到。\n\n> **注意。** 把 *creepy*、*terrifying* 这类空泛标签换成具体的视觉、听觉、气味和触感细节，让读者自己感到寒意。",
         ),
         writingGenerator(
           t(
@@ -448,15 +482,18 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
           gothicBank,
           ["g8-gothic-atmosphere", "g8-gothic-elements", "g7-suspense-ending"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check that the continuation keeps the prompt's opening, uses specific sensory details (sound, light, cold, smell) to create dread, and closes on an eerie reveal rather than explaining everything away.",
+            "确认续写紧承题干开头，用具体的感官细节（声音、光线、寒意、气味）营造压迫感，并在令人毛骨悚然的揭示处收尾，而非把悬念平淡解释完。",
+          ),
         ),
       ),
       point(
         "the-secret-and-the-revelation",
         t("The Secret and the Revelation", "秘密与揭示"),
         t(
-          "Gothic tales turn on **a secret from the past**: a diary, a portrait, a locked room. Plant hints of the secret as the story goes, and let a touch of the **supernatural** grow until a final moment reveals it: *Beneath the picture, a brass plate gave her name, my name, and a date a hundred years ago.* End at that moment of horror or revelation.",
-          "哥特故事围绕着**过去的秘密**展开：一本日记、一幅肖像、一间上锁的房间。随着故事推进埋下秘密的线索，让**超自然**的迹象逐渐增强，直到最后一刻揭示秘密：*Beneath the picture, a brass plate gave her name, my name, and a date a hundred years ago.* 在那个恐怖或揭示的时刻结束。",
+          "Gothic tales turn on **a secret from the past**: a diary, a portrait, a locked room. Plant hints of the secret as the story goes, and let a touch of the **supernatural** grow until a final moment reveals it: *Beneath the picture, a brass plate gave her name, my name, and a date a hundred years ago.* End at that moment of horror or revelation.\n\n> **Watch out.** Do not keep writing two extra paragraphs after the chilling reveal—stop right at the turning image so the shock lingers.",
+          "哥特故事围绕着**过去的秘密**展开：一本日记、一幅肖像、一间上锁的房间。随着故事推进埋下秘密的线索，让**超自然**的迹象逐渐增强，直到最后一刻揭示秘密：*Beneath the picture, a brass plate gave her name, my name, and a date a hundred years ago.* 在那个恐怖或揭示的时刻结束。\n\n> **注意。** 真相揭开后不要再拖沓地多写几段收尾解释——停在最具冲击力的那一幕，让余韵留下来。",
         ),
         writingGenerator(
           t(
@@ -466,7 +503,10 @@ export const writingJudgedTopics8a: readonly TopicDef[] = [
           gothicBank,
           ["g8-gothic-elements", "g7-suspense-ending", "g8-gothic-atmosphere"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Trace the clues from the middle of the story to the last paragraph: earlier hints should point toward the buried secret, and the final line should land directly on the revelation.",
+            "从故事中段追踪到最后一段：前面的线索应一步步指向尘封的秘密，而最后一句正好落在真相揭开的那一瞬。",
+          ),
         ),
       ),
     ],

@@ -67,8 +67,8 @@ const chainOrderBank: readonly Item[] = chains.flatMap((chain) =>
       right: order([0, 1, 2, 3]),
       wrong: s.wrong.map(order),
       why: t(
-        `The chain runs ${order([0, 1, 2, 3])}: ${chain.join(" → ")}. Each link is the effect of the one before it and the cause of the one after it.`,
-        `这条链的顺序是 ${order([0, 1, 2, 3])}。每个环节都是前一个环节的结果，又是后一个环节的原因。`,
+        `The chain runs ${order([0, 1, 2, 3])}: ${chain.join(" → ")}. Each link is the effect of the one before it and the cause of the one after it.\n\n**Check.** Read the four links in order with “so” between them—every step naturally causes the next.`,
+        `这条链的顺序是 ${order([0, 1, 2, 3])}。每个环节都是前一个环节的结果，又是后一个环节的原因。\n\n**检验。** 按这个顺序用“因此”把四个环节连起来读——每一步都自然引发下一步。`,
       ),
       whyNot: s.wrong.map((o) => {
         const [first, second] = swapped(o);
@@ -92,15 +92,19 @@ const chainMissingBank: readonly Item[] = chains.flatMap((chain, c) =>
       right: chain[gap] ?? "",
       wrong: others,
       why: t(
-        `The missing link is “${chain[gap]}”. It is the effect of “${chain[gap - 1]}” and the cause of “${chain[gap + 1]}”, so it joins the two.`,
-        `缺少的环节是“${chain[gap]}”。它是“${chain[gap - 1]}”的结果，又是“${chain[gap + 1]}”的原因，把两者连了起来。`,
+        `The missing link is “${chain[gap]}”. It is the effect of “${chain[gap - 1]}” and the cause of “${chain[gap + 1]}”, so it joins the two.\n\n**Check.** Read the three consecutive links together—each arrow now connects a real cause to its direct effect.`,
+        `缺少的环节是“${chain[gap]}”。它是“${chain[gap - 1]}”的结果，又是“${chain[gap + 1]}”的原因，把两者连了起来。\n\n**检验。** 把前后三个环节连起来读——每个箭头现在都把真正的原因连向直接结果。`,
       ),
-      whyNot: others.map((o) =>
+      whyNot: [
         t(
-          `“${o}” belongs to a different chain of events. It does not follow from “${chain[gap - 1]}”, and it does not lead to “${chain[gap + 1]}”.`,
-          `“${o}”属于另一条事件链。它既不是“${chain[gap - 1]}”的结果，也不会导致“${chain[gap + 1]}”。`,
+          `“${others[0]}” comes from a different process and does not follow from “${chain[gap - 1]}”.`,
+          `“${others[0]}” 属于另一个过程，并不是由“${chain[gap - 1]}”引起的。`,
         ),
-      ),
+        t(
+          `“${others[1]}” is also from another chain—it cannot lead to “${chain[gap + 1]}”.`,
+          `“${others[1]}” 同样属于另一条因果链——它无法导致“${chain[gap + 1]}”。`,
+        ),
+      ],
     };
   }),
 );
@@ -174,8 +178,8 @@ const stageBank: readonly Item[] = processes.flatMap((p, n) =>
       right: stage.what,
       wrong: [later, elsewhere],
       why: t(
-        `“${stage.what}” is step ${i + 1} of ${p.stages.length}. The signal words *first*, *next*, *then* and *finally* show the order of the steps.`,
-        `“${stage.what}”是 ${p.stages.length} 步中的第 ${i + 1} 步。信号词 *first*、*next*、*then* 和 *finally* 表示步骤的顺序。`,
+        `“${stage.what}” is step ${i + 1} of ${p.stages.length}. The signal words *first*, *next*, *then* and *finally* show the order of the steps.\n\n**Check.** Find the signal word for step ${i + 1} in the paragraph—it introduces “${stage.what}” directly.`,
+        `“${stage.what}”是 ${p.stages.length} 步中的第 ${i + 1} 步。信号词 *first*、*next*、*then* 和 *finally* 表示步骤的顺序。\n\n**检验。** 在段落里找到第 ${i + 1} 步的信号词——后面紧跟的就是“${stage.what}”。`,
       ),
       whyNot: [
         t(
@@ -202,8 +206,8 @@ const reasonBank: readonly Item[] = processes.flatMap((p, n) =>
       right: `Because ${stage.why}.`,
       wrong: [`Because ${sibling}.`, `Because ${elsewhere}.`],
       why: t(
-        `The explanation gives the reason right after the step, with *because*: ${stage.why}. An explanation tells not only what happens but why.`,
-        `说明在这一步后面用 *because* 给出了原因。一篇说明不仅告诉你发生了什么，还告诉你为什么。`,
+        `The explanation gives the reason right after the step, with *because*: ${stage.why}. An explanation tells not only what happens but why.\n\n**Check.** Locate “${stage.what}” in the text and read the *because* clause right after it—it states this exact reason.`,
+        `说明在这一步后面用 *because* 给出了原因。一篇说明不仅告诉你发生了什么，还告诉你为什么。\n\n**检验。** 在文中找到“${stage.what}”，读它后面紧跟的 *because* 从句——写的正是这个原因。`,
       ),
       whyNot: [
         t(
@@ -360,8 +364,8 @@ const tableExtremeBank: readonly Item[] = tables.flatMap((table) =>
         right: name(right),
         wrong: [name(opposite), name(other)],
         why: t(
-          `Read down the column “${column[0]}”: the ${table.thing} with ${phrase} is the **${name(right)}**, with ${value(table, right, c)} ${column[1]}.`,
-          `往下看“${column[0]}”这一栏：数值${most ? "最大" : "最小"}的是 **${name(right)}**，为 ${value(table, right, c)} ${column[1]}。`,
+          `Read down the column “${column[0]}”: the ${table.thing} with ${phrase} is the **${name(right)}**, with ${value(table, right, c)} ${column[1]}.\n\n**Check.** Compare ${value(table, right, c)} against every other number in the “${column[0]}” column—no other row is ${most ? "higher" : "lower"}.`,
+          `往下看“${column[0]}”这一栏：数值${most ? "最大" : "最小"}的是 **${name(right)}**，为 ${value(table, right, c)} ${column[1]}。\n\n**检验。** 把 ${value(table, right, c)} 和“${column[0]}”一栏的其余数字逐一比较——没有哪一行更${most ? "大" : "小"}。`,
         ),
         whyNot: [
           t(
@@ -406,14 +410,16 @@ const tableTwoColumnBank: readonly Item[] = tables.flatMap((table) =>
           right,
           wrong,
           why: t(
-            `First find the row: the ${table.thing} with ${most ? first[2] : first[3]} is the ${name}. Then read across that row to the column “${second[0]}”: **${right}**.`,
-            `先找到那一行：“${first[0]}”一栏数值${most ? "最大" : "最小"}的是 ${name}。再沿着这一行读到“${second[0]}”一栏：**${right}**。`,
+            `First find the row: the ${table.thing} with ${most ? first[2] : first[3]} is the ${name}. Then read across that row to the column “${second[0]}”: **${right}**.\n\n**Check.** Trace across the **${name}** row and down the “${second[0]}” column—they intersect at **${right}**.`,
+            `先找到那一行：“${first[0]}”一栏数值${most ? "最大" : "最小"}的是 ${name}。再沿着这一行读到“${second[0]}”一栏：**${right}**。\n\n**检验。** 沿 **${name}** 这一行向右、沿“${second[0]}”这一栏向下——交叉处正好是 **${right}**。`,
           ),
-          whyNot: wrong.map((w) =>
-            t(
-              `${w} is in the table, but not where the row of the ${name} meets the column “${second[0]}”. Use one column to find the row and the other to read the answer.`,
-              `${w} 在表中，但不在 ${name} 那一行与“${second[0]}”那一栏交叉的地方。用一栏找到行，再用另一栏读出答案。`,
-            ),
+          whyNot: wrong.map((w, idx) =>
+            idx === 0
+              ? t(`${w} comes from another row in the table rather than the ${name} row.`, `${w} 来自表中的另一行，而不是 ${name} 这一行。`)
+              : t(
+                  `${w} comes from the wrong column of the table—make sure you read the “${second[0]}” column.`,
+                  `${w} 读错了列——要读取“${second[0]}”这一栏的数值。`,
+                ),
           ),
         };
       }),
@@ -474,8 +480,8 @@ const skimBank: readonly Item[] = skimRows.map((row) => ({
   right: row.about,
   wrong: [row.narrow, row.off],
   why: t(
-    `The text is about ${row.about}. Skimming means reading only the headings and first sentences: together, the headings show the topic that all the sections share.`,
-    `这篇文章讲的是 ${row.about}。略读就是只读小标题和首句：把小标题放在一起，就能看出所有部分共同的主题。`,
+    `The text is about ${row.about}. Skimming means reading only the headings and first sentences: together, the headings show the topic that all the sections share.\n\n**Check.** Test “${row.about}” against all three headings—every single heading fits under this topic.`,
+    `这篇文章讲的是 ${row.about}。略读就是只读小标题和首句：把小标题放在一起，就能看出所有部分共同的主题。\n\n**检验。** 用“${row.about}”逐一对照三个小标题——每个小标题都属于这个主题。`,
   ),
   whyNot: [
     t(
@@ -496,14 +502,19 @@ const scanBank: readonly Item[] = skimRows.map((row) => {
     right,
     wrong,
     why: t(
-      `“${right}” is the section to read. Scanning means looking for the key word of your question, then reading only the section whose heading matches it.`,
-      `应该读“${right}”这一部分。扫读就是找出问题中的关键词，再只读小标题与之相符的那一部分。`,
+      `“${right}” is the section to read. Scanning means looking for the key word of your question, then reading only the section whose heading matches it.\n\n**Check.** Match the key idea of the question to “${right}”—the other two headings cover different subtopics.`,
+      `应该读“${right}”这一部分。扫读就是找出问题中的关键词，再只读小标题与之相符的那一部分。\n\n**检验。** 把问题的核心关键词与“${right}”对照——另外两个小标题讲的是别的子话题。`,
     ),
-    whyNot: wrong.map((w) =>
-      t(
-        `The section “${w}” is about something else, so the fact is not likely to be there. Match the key word of the question to a heading.`,
-        `“${w}”这一部分讲的是别的内容，所以这个事实不太可能在那里。要把问题中的关键词和小标题对应起来。`,
-      ),
+    whyNot: wrong.map((w, idx) =>
+      idx === 0
+        ? t(
+            `The section “${w}” covers a different subtopic and would not answer this specific question.`,
+            `“${w}”这一部分讲的是另一个子话题，不会回答这个具体问题。`,
+          )
+        : t(
+            `“${w}” does not match the key idea in the question—scan the headings again for the closest match.`,
+            `“${w}”与问题中的核心词不对应——再扫读一遍小标题，找最贴合的那一项。`,
+          ),
     ),
   };
 });
@@ -560,14 +571,19 @@ const pointForEvidenceBank: readonly Item[] = supportGroups.flatMap((group) =>
         right: p.claim,
         wrong: others,
         why: t(
-          `The evidence supports the point “${p.claim}” It is a fact or an example that shows this point is true.`,
-          `这条证据支持观点“${p.claim}”。它是证明这个观点正确的事实或例子。`,
+          `The evidence supports the point “${p.claim}” It is a fact or an example that shows this point is true.\n\n**Check.** Ask “If this evidence is true, which claim does it prove?”—only “${p.claim}” follows directly from it.`,
+          `这条证据支持观点“${p.claim}”。它是证明这个观点正确的事实或例子。\n\n**检验。** 问自己“如果这条证据是真的，它直接证明了哪个观点？”——只有“${p.claim}”能由它直接推出。`,
         ),
-        whyNot: others.map((o) =>
-          t(
-            `“${o}” is another point of the same text, but this evidence says nothing that proves it.`,
-            `“${o}”是同一篇文章的另一个观点，但这条证据并不能证明它。`,
-          ),
+        whyNot: others.map((o, idx) =>
+          idx === 0
+            ? t(
+                `“${o}” is another point in the text, but this evidence addresses a different claim.`,
+                `“${o}”是文中的另一个观点，但这条证据说明的不是它。`,
+              )
+            : t(
+                `This evidence gives no proof for “${o}”—match the key detail in the evidence to the claim it backs.`,
+                `这条证据并不能证明“${o}”——把证据中的关键信息与它所支持的观点对应起来。`,
+              ),
         ),
       };
     }),
@@ -585,14 +601,19 @@ const evidenceForPointBank: readonly Item[] = supportGroups.flatMap((group) =>
         right: e,
         wrong: others,
         why: t(
-          `This evidence backs the point: it gives a fact or an example that shows “${p.claim}” is true.`,
-          `这条证据支持了这个观点：它给出的事实或例子证明“${p.claim}”是对的。`,
+          `This evidence backs the point: it gives a fact or an example that shows “${p.claim}” is true.\n\n**Check.** Read the claim and this sentence back to back—the evidence gives concrete proof for “${p.claim}”.`,
+          `这条证据支持了这个观点：它给出的事实或例子证明“${p.claim}”是对的。\n\n**检验。** 把观点和这句话连起来读——这条证据为“${p.claim}”提供了具体依据。`,
         ),
-        whyNot: others.map((o) =>
-          t(
-            `“${o}” is true and comes from the same text, but it supports a different point.`,
-            `“${o}”是真的，也来自同一篇文章，但它支持的是另一个观点。`,
-          ),
+        whyNot: others.map((o, idx) =>
+          idx === 0
+            ? t(
+                `“${o}” is a true fact from the same article, but it backs a different claim.`,
+                `“${o}”虽然出自同一篇文章且属实，但它支持的是另一个观点。`,
+              )
+            : t(
+                `“${o}” does not prove “${p.claim}”—check which sentence directly gives a reason or example for this claim.`,
+                `“${o}”并不能证明“${p.claim}”——找找哪一句直接为这个观点提供了理由或例证。`,
+              ),
         ),
       };
     }),
@@ -637,8 +658,8 @@ const bothTextsBank: readonly Item[] = twoTextRows.flatMap((row, r) =>
       right: both,
       wrong: [row.onlyA, row.onlyB, foreign],
       why: t(
-        `“${both}” joins a fact from Text A with a fact from Text B. Neither text says this alone; a reader puts them together.`,
-        `“${both}”把文章 A 的一个事实和文章 B 的一个事实结合在一起。两篇文章单独都没这样说；是读者把它们合在一起的。`,
+        `“${both}” joins a fact from Text A with a fact from Text B. Neither text says this alone; a reader puts them together.\n\n**Check.** Cover Text B and see if Text A alone proves “${both}”, then cover Text A—neither single text is enough on its own.`,
+        `“${both}”把文章 A 的一个事实和文章 B 的一个事实结合在一起。两篇文章单独都没这样说；是读者把它们合在一起的。\n\n**检验。** 盖住文章 B 看文章 A 能否单独推出“${both}”，再盖住文章 A——单看哪一篇都不够。`,
       ),
       whyNot: [
         t(`“${row.onlyA}” comes from Text A alone. You do not need Text B for it.`, `“${row.onlyA}”只来自文章 A，不需要文章 B。`),
@@ -670,8 +691,8 @@ const whichTextBank: readonly Item[] = twoTextRows.flatMap((row) =>
       right,
       wrong,
       why: t(
-        `**${right}** says it. When you write about a topic from two texts, keep track of which fact came from which source.`,
-        `**${right}** 说了这一点。用两篇文章写一个话题时，要记清每个事实来自哪篇文章。`,
+        `**${right}** says it. When you write about a topic from two texts, keep track of which fact came from which source.\n\n**Check.** Re-read **${right}** directly—the exact idea “${statement}” is stated there and not in the other text.`,
+        `**${right}** 说了这一点。用两篇文章写一个话题时，要记清每个事实来自哪篇文章。\n\n**检验。** 重读 **${right}**——“${statement}”这个信息明确出现在这里，而另一篇里没有。`,
       ),
       whyNot: wrong.map((w) =>
         w === "neither text"
@@ -695,15 +716,16 @@ const neitherBank: readonly Item[] = twoTextRows.map((row) => ({
   right: "neither text",
   wrong: ["Text A", "Text B"],
   why: t(
-    "**Neither text** says this, and it is not true. A statement about a topic is not supported just because the texts are about the same topic.",
-    "**两篇文章都没有**这样说，而且这个说法并不正确。不能因为两篇文章话题相同，就认为某个说法得到了支持。",
+    "**Neither text** says this, and it is not true. A statement about a topic is not supported just because the texts are about the same topic.\n\n**Check.** Scan both Text A and Text B for this claim—neither passage mentions or supports it.",
+    "**两篇文章都没有**这样说，而且这个说法并不正确。不能因为两篇文章话题相同，就认为某个说法得到了支持。\n\n**检验。** 把文章 A 和文章 B 各扫读一遍——两篇都既没提到也没支持这个说法。",
   ),
-  whyNot: ["Text A", "Text B"].map((w) =>
+  whyNot: [
+    t("Text A is on the same general topic, but it never states this claim.", "文章 A 虽然话题相同，但从未说过这句话。"),
     t(
-      `${w} is about the same topic, but it never says this. Look for the fact itself, not just the topic.`,
-      `${w} 话题相同，但从没这样说。要找事实本身，而不只是话题。`,
+      "Text B does not state this claim either—verify the exact fact instead of matching by topic alone.",
+      "文章 B 同样没有这样说——要核对具体事实，不能只看话题相关就选。",
     ),
-  ),
+  ],
 }));
 
 /** infoTopics4 are the reading topics of grade 4 about informational texts. */
@@ -715,6 +737,10 @@ export const infoTopics4: readonly TopicDef[] = [
       "In science and history one effect often becomes the cause of the next: rain soaks a hillside, the soil grows heavy, the slope slides.",
       "在科学和历史中，一个结果常常成为下一个结果的原因：雨水浸透山坡，土壤变重，山坡滑落。",
     ),
+    intro: t(
+      "When water seeps into a rock crack and freezes, the ice pushes the crack wider until the rock splits apart. In science and history, one effect often triggers the next like falling dominoes—that linked sequence is a cause-and-effect chain.",
+      "当水渗进岩石裂缝并在夜里结冰，冰把裂缝撑宽，岩石最终裂成碎块。在科学与历史中，一个结果常常像多米诺骨牌一样引发下一个结果——这就是因果链。",
+    ),
     prerequisites: ["cause-and-effect-in-texts"],
     encompasses: [{ topic: "cause-and-effect-in-texts", weight: 0.3 }],
     xp: 14,
@@ -724,8 +750,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "ordering-a-chain",
         t("Putting a Chain in Order", "把因果链排序"),
         t(
-          "A **chain of causes and effects** is a row of events in which each one makes the next happen: *rain soaks a hillside*, so *the soil grows heavy*, so *the slope slides*. To put the links in order, find the one that starts everything, then ask of each link: what did this cause? The last link is the final effect.",
-          "**因果链**是一串事件，每个事件都引起下一个：*雨水浸透山坡*，所以*土壤变重*，所以*山坡滑落*。要排好环节的顺序，先找到引起一切的那个环节，然后对每个环节问：它引起了什么？最后一个环节是最终的结果。",
+          "A **chain of causes and effects** is a row of events in which each one makes the next happen: *rain soaks a hillside*, so *the soil grows heavy*, so *the slope slides*. To put the links in order, find the one that starts everything, then ask of each link: what did this cause? The last link is the final effect.\n\n> **Watch out.** Do not just spot the first and last events—check the two middle links carefully so you do not swap cause and effect.",
+          "**因果链**是一串事件，每个事件都引起下一个：*雨水浸透山坡*，所以*土壤变重*，所以*山坡滑落*。要排好环节的顺序，先找到引起一切的那个环节，然后对每个环节问：它引起了什么？最后一个环节是最终的结果。\n\n> **注意。** 不要只看头尾两个事件——中间两个环节也要仔细核对，免得把因果顺序颠倒。",
         ),
         itemGenerator(chainOrderBank),
       ),
@@ -733,8 +759,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "finding-the-missing-link",
         t("Finding the Missing Link", "找出缺失的环节"),
         t(
-          "When one link is missing, look at the links on each side of the gap. The missing link must be an effect of the link before it and a cause of the link after it. An event that is true but belongs to another chain does not join the two.",
-          "缺少一个环节时，看看空缺两边的环节。缺失的环节必须是前一个环节的结果，又是后一个环节的原因。一个事件即使是真的，但如果属于另一条链，也连不起这两个环节。",
+          "When one link is missing, look at the links on each side of the gap. For example, between *A volcano erupts* and *The ash blocks some sunlight*, the missing link must be *Ash rises high into the sky*—it is caused by the eruption and causes the blocked sunlight.\n\n> **Watch out.** An event that is true in nature but belongs to a different chain will not connect both sides of the gap.",
+          "缺少一个环节时，看看空缺两边的环节。例如在“火山喷发”和“火山灰遮挡部分阳光”之间，缺失的环节一定是“火山灰升到高空”——它由喷发引起，又导致遮挡阳光。\n\n> **注意。** 即使某个事件本身符合科学事实，只要它属于另一条因果链，就无法把空缺前后连起来。",
         ),
         itemGenerator(chainMissingBank),
       ),
@@ -747,6 +773,10 @@ export const infoTopics4: readonly TopicDef[] = [
       "An explanation tells what happens and why, step by step, in a process of nature or a machine.",
       "说明文一步一步地讲述自然过程或机器中发生了什么以及为什么。",
     ),
+    intro: t(
+      "A geyser does not just shoot water into the sky by magic—rainwater seeps down, hot rock heats it, pressure builds in a narrow tube, and steam blasts upward. Reading an explanation means tracking both the steps and the reasons behind each one.",
+      "间歇泉并不是凭空把水喷向天空——雨水渗入地下，滚烫的岩石将其加热，狭窄管道里压力积聚，最后蒸汽和水柱冲天而出。读懂说明文，既要理清步骤，也要抓住每一步背后的原因。",
+    ),
     prerequisites: after("steps-in-a-procedure"),
     encompasses: [{ topic: "sequence-in-texts", weight: 0.2 }],
     xp: 14,
@@ -756,8 +786,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "what-happens-at-each-stage",
         t("What Happens at Each Stage", "每个阶段发生什么"),
         t(
-          "An explanation of how something works goes through a **process** in order: how a geyser erupts, how a turbine makes power. Signal words such as *first*, *next*, *then*, *after that* and *finally* mark the stages. To find what happens at a stage, find the stage before it, then read on to the next signal word.",
-          "说明事物如何运作的文章按顺序讲述一个**过程**：间歇泉怎样喷发，涡轮机怎样发电。*first*、*next*、*then*、*after that*、*finally* 这样的信号词标出各个阶段。要找出某个阶段发生什么，先找到它前面的阶段，再读到下一个信号词。",
+          "An explanation of how something works goes through a **process** in order: how a geyser erupts, how a turbine makes power. Signal words such as *first*, *next*, *then*, *after that* and *finally* mark the stages. To find what happens at a stage, find the stage before it, then read on to the next signal word.\n\n> **Watch out.** Do not skip ahead a step—when asked what happens *right after* step 1, choose step 2, not step 3 or 4.",
+          "说明事物如何运作的文章按顺序讲述一个**过程**：间歇泉怎样喷发，涡轮机怎样发电。*first*、*next*、*then*、*after that*、*finally* 这样的信号词标出各个阶段。要找出某个阶段发生什么，先找到它前面的阶段，再读到下一个信号词。\n\n> **注意。** 不要跳步——问某一步*紧接着*发生什么时，要找紧邻的下一步，不要跳到更后面的阶段。",
         ),
         itemGenerator(stageBank),
       ),
@@ -765,8 +795,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "why-each-stage-happens",
         t("Why Each Stage Happens", "每个阶段为什么发生"),
         t(
-          "An explanation does more than list steps: it tells **why** each one happens, often with *because*, *so*, *since* or *as a result*. To answer a why question, find the step in the text and read the reason joined to it. Do not borrow the reason of a different step.",
-          "说明文不只是列出步骤：它还告诉你每一步**为什么**发生，常用 *because*、*so*、*since* 或 *as a result*。回答“为什么”的问题时，在文中找到这一步，读出与它相连的原因。不要借用另一步的原因。",
+          "An explanation does more than list steps: it tells **why** each one happens, often with *because*, *so*, *since* or *as a result*. For example, *the blades turn a shaft, because the shaft is joined to the center of the blades*. Find the exact step in the text and read the reason attached to it.\n\n> **Watch out.** Every step in the passage has its own *because* clause—do not borrow the reason belonging to a neighboring step.",
+          "说明文不只是列出步骤：它还告诉你每一步**为什么**发生，常用 *because*、*so*、*since* 或 *as a result*。例如“叶片带动转轴，因为转轴连接在叶片中心”。在文中找到对应步骤，读紧跟它的原因。\n\n> **注意。** 文中每一步都有自己的 *because* 原因——不要张冠李戴，拿相邻步骤的原因来回答。",
         ),
         itemGenerator(reasonBank),
       ),
@@ -779,6 +809,10 @@ export const infoTopics4: readonly TopicDef[] = [
       "A table of several places or things lets a reader compare them on each measure and find the largest, the smallest and the differences.",
       "包含多个地方或事物的表格让读者能按每项指标比较它们，找出最大、最小和差异。",
     ),
+    intro: t(
+      "Which desert is larger, the Sahara or the Gobi—and which gets less rain? Putting measurements into rows and columns lets you compare several places or animals at a glance without hunting through paragraphs.",
+      "撒哈拉沙漠和戈壁沙漠哪个面积更大，哪个降雨更少？把数据放进表格的行和列里，就能一眼比较多个地方或动物，不用在长段文字里翻找。",
+    ),
     prerequisites: after("reading-a-table"),
     encompasses: [],
     xp: 14,
@@ -788,8 +822,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "greatest-and-least-in-a-table",
         t("Greatest and Least", "最大和最小"),
         t(
-          "A **table** puts facts into **rows** (one for each place or thing) and **columns** (one for each measure). To find which is greatest or least on a measure, find its column by the heading, read every number down that column, and pick the largest or smallest. Then read across to the start of the row for its name.",
-          "**表格**把事实排成**行**（每个地方或事物一行）和**列**（每项指标一列）。要找出某项指标最大或最小的是哪个，先按标题找到那一列，往下读这一列的每个数字，挑出最大或最小的，再沿着这一行读到开头找出它的名称。",
+          "A **table** puts facts into **rows** (one for each place or thing) and **columns** (one for each measure). To find which is greatest or least on a measure, find its column by the heading, read every number down that column, and pick the largest or smallest. Then read across to the start of the row for its name.\n\n> **Watch out.** Watch negative numbers in temperature columns—`-10 °C` is colder (smaller) than `-3 °C`, and both are colder than `12 °C`.",
+          "**表格**把事实排成**行**（每个地方或事物一行）和**列**（每项指标一列）。要找出某项指标最大或最小的是哪个，先按标题找到那一列，往下读这一列的每个数字，挑出最大或最小的，再沿着这一行读到开头找出它的名称。\n\n> **注意。** 温度栏里要留意负数——`-10 °C` 比 `-3 °C` 更冷（数值更小），两者都比 `12 °C` 冷。",
         ),
         itemGenerator(tableExtremeBank),
       ),
@@ -797,8 +831,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "questions-that-need-two-columns",
         t("Questions That Need Two Columns", "需要两栏的问题"),
         t(
-          "Some questions need two columns. *The coldest biome: how much rain does it get?* First use one column to find the row: the coldest is the tundra. Then stay in that row and move across to the other column to read the answer. Keep your finger on the row so you do not slip into the row above or below.",
-          "有些问题需要用到两栏。*最冷的生物群落降雨量是多少？* 先用一栏找到那一行：最冷的是苔原。然后留在这一行，横着移到另一栏读出答案。用手指按住这一行，以免看错到上一行或下一行。",
+          "Some questions need two columns. *The coldest biome: how much rain does it get?* First use one column to find the row: the coldest is the tundra. Then stay in that row and move across to the other column to read the answer. Keep your finger on the row so you do not slip into the row above or below.\n\n> **Watch out.** Do not answer with the greatest/least value of the second column—use the first column to pick the row, then read the second column in *that same row*.",
+          "有些问题需要用到两栏。*最冷的生物群落降雨量是多少？* 先用一栏找到那一行：最冷的是苔原。然后留在这一行，横着移到另一栏读出答案。用手指按住这一行，以免看错到上一行或下一行。\n\n> **注意。** 不要直接找第二栏的最大/最小值——先用第一栏锁定那一行，再读*同一行*里第二栏的数据。",
         ),
         itemGenerator(tableTwoColumnBank),
       ),
@@ -811,6 +845,10 @@ export const infoTopics4: readonly TopicDef[] = [
       "Skimming reads headings and first sentences to learn what a text is about; scanning looks for one key word or number.",
       "略读是读小标题和首句以了解文章大意；扫读是寻找一个关键词或数字。",
     ),
+    intro: t(
+      "Before reading a long encyclopedia article on bees, you can glance over its three headings (*Collecting Nectar*, *Inside the Hive*, *From Nectar to Honey*) to see the whole topic—or jump straight to *Inside the Hive* when you only need to know where bees live.",
+      "读一篇关于蜜蜂的长科普前，扫一眼三个小标题（*Collecting Nectar*、*Inside the Hive*、*From Nectar to Honey*）就能掌握全篇主题；如果只想知道蜜蜂住在哪儿，直接跳到 *Inside the Hive* 就行。",
+    ),
     prerequisites: ["text-features"],
     encompasses: [{ topic: "text-features", weight: 0.2 }],
     xp: 14,
@@ -820,8 +858,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "skimming-for-the-topic",
         t("Skimming for the Topic", "略读找主题"),
         t(
-          "To **skim**, read only the title, the headings and the first sentence of each section. In a minute you learn what the whole text is about, before you decide to read it all. The topic is what every heading has in common, not the subject of a single section.",
-          "**略读**时只读标题、小标题和每一部分的第一句。一分钟内你就能了解整篇文章讲什么，再决定要不要全部读完。主题是所有小标题的共同点，而不是某一部分的内容。",
+          "To **skim**, read only the title, the headings and the first sentence of each section. For example, headings like *Wind*, *Water*, and *Ice* together point to *how weather changes the land*. The topic is what every heading has in common.\n\n> **Watch out.** Do not pick an answer that fits only one heading—the whole text's topic must cover all the headings together.",
+          "**略读**时只读标题、小标题和每一部分的第一句。例如 *Wind*、*Water*、*Ice* 三个小标题合在一起指向“天气如何改变地表”。主题是所有小标题的共同点。\n\n> **注意。** 不要选只符合其中一个小标题的选项——整篇文章的主题必须能涵盖全部小标题。",
         ),
         itemGenerator(skimBank),
       ),
@@ -829,8 +867,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "scanning-for-a-fact",
         t("Scanning for a Fact", "扫读找事实"),
         t(
-          "To **scan**, you already know what you are looking for: a name, a date, a number, a key word. Pick the key word of your question, find the heading that matches it, and read only that section. Your eyes move quickly over everything else.",
-          "**扫读**时你已经知道要找什么：一个名字、一个日期、一个数字、一个关键词。挑出问题中的关键词，找到与之相符的小标题，只读那一部分，其余的都快速扫过。",
+          "To **scan**, you already know what you are looking for: a name, a date, a number, a key word. Pick the key word of your question—for example, *penguins* points straight to *Penguins in the South*—and read only that section.\n\n> **Watch out.** Sometimes the question uses a synonym or example instead of the exact heading word (like *flutes* under *Wind Instruments*), so link the idea, not only identical spelling.",
+          "**扫读**时你已经知道要找什么：一个名字、一个日期、一个数字、一个关键词。挑出问题中的关键词——例如 *penguins* 直接指向 *Penguins in the South*——只读那一部分。\n\n> **注意。** 有时问题里用的是同义词或具体例子，而不是小标题原词（如用 *flutes* 对应 *Wind Instruments*），要按语义对应，不要只找一模一样的词。",
         ),
         itemGenerator(scanBank),
       ),
@@ -840,6 +878,10 @@ export const infoTopics4: readonly TopicDef[] = [
     id: "how-authors-support-points",
     title: t("How Authors Support Points", "作者如何支持观点"),
     summary: t("An author backs each point of a text with reasons and evidence.", "作者用理由和证据来支持文章中的每个观点。"),
+    intro: t(
+      "Anyone can claim *Castles were built for defense*, but a strong writer proves it with concrete evidence: three-meter-thick stone walls and water-filled moats. Good readers always link each claim to the specific facts that back it up.",
+      "谁都可以说“城堡是为防御而建的”，但好作者会给出具体证据：三米厚的石墙和注满水的护城河。会读文章的人总会把每个观点和支撑它的具体事实连起来看。",
+    ),
     prerequisites: ["supporting-details"],
     encompasses: [
       { topic: "main-idea", weight: 0.2 },
@@ -852,8 +894,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "the-point-evidence-supports",
         t("The Point the Evidence Supports", "证据支持的观点"),
         t(
-          "An author of an informational text makes **points**, such as *Exercise makes the heart stronger*, and backs each one with **evidence**: facts, numbers, examples and the words of experts. To find which point a piece of evidence supports, ask: if this is true, what does it prove?",
-          "信息类文章的作者会提出**观点**，例如 *Exercise makes the heart stronger*，并用**证据**来支持每个观点：事实、数字、例子和专家的话。要找出一条证据支持哪个观点，就问：如果这是真的，它证明了什么？",
+          "An author of an informational text makes **points**, such as *Exercise makes the heart stronger*, and backs each one with **evidence**: facts, numbers, examples and the words of experts. To find which point a piece of evidence supports, ask: if this is true, what does it prove?\n\n> **Watch out.** All three choices may be real points from the same article—check which specific point the given fact actually proves.",
+          "信息类文章的作者会提出**观点**，例如 *Exercise makes the heart stronger*，并用**证据**来支持每个观点：事实、数字、例子和专家的话。要找出一条证据支持哪个观点，就问：如果这是真的，它证明了什么？\n\n> **注意。** 三个选项可能都是同一篇文章里的真实观点——要核对这条事实到底证明哪一个。",
         ),
         itemGenerator(pointForEvidenceBank),
       ),
@@ -861,8 +903,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "evidence-for-a-point",
         t("Evidence for a Point", "支持观点的证据"),
         t(
-          "Now start from the point and look for its evidence. The right evidence is about the same thing as the point and shows that it is true. Other sentences of the text may be true too, but if they are about a different point, they do not support this one.",
-          "现在从观点出发去找证据。正确的证据与观点说的是同一件事，并能证明它是对的。文章中的其他句子也许也是真的，但如果它们说的是另一个观点，就不能支持这一个。",
+          "Now start from the point and look for its evidence. For *Solar power is clean*, the fact *Solar panels make electricity without smoke* directly proves it. Other sentences of the text may be true too, but if they are about a different point, they do not support this one.\n\n> **Watch out.** Being true and on the same broad topic is not enough—the evidence must directly back the specific claim asked about.",
+          "现在从观点出发去找证据。对于“太阳能很清洁”，*Solar panels make electricity without smoke* 直接证明了它。文章中的其他句子也许也是真的，但如果它们说的是另一个观点，就不能支持这一个。\n\n> **注意。** 光是“真实且主题相关”还不够——证据必须直接支撑题目问的那个具体观点。",
         ),
         itemGenerator(evidenceForPointBank),
       ),
@@ -875,6 +917,10 @@ export const infoTopics4: readonly TopicDef[] = [
       "To write or speak about a topic, a reader joins what two texts say into one picture.",
       "要就一个话题写作或发言，读者要把两篇文章所说的内容整合起来。",
     ),
+    intro: t(
+      "Text A explains that wind turbines turn moving air into electricity; Text B notes that winds blow strongest along coasts and hills. Putting both together lets you conclude something neither text stated alone: windy coasts are ideal spots for turbines.",
+      "文章 A 讲风力涡轮机能把风转化为电，文章 B 讲海岸和山丘的风力最强。把两篇合起来看，就能得出任何一篇单独没说的结论：多风的海岸非常适合建风力涡轮机。",
+    ),
     prerequisites: after("two-texts-on-one-topic"),
     encompasses: [],
     xp: 14,
@@ -884,8 +930,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "statements-that-need-both-texts",
         t("Statements That Need Both Texts", "需要两篇文章的说法"),
         t(
-          "Two texts on one topic often give different facts. A reader who knows both can say something neither text says alone: Text A says solar panels make the most power at midday, Text B says deserts get the most sun, so a desert is a good place for solar panels. A statement that joins a fact from each text needs both.",
-          "关于同一话题的两篇文章常常给出不同的事实。两篇都读过的读者能说出两篇单独都没说的话：文章 A 说太阳能板正午发电最多，文章 B 说沙漠阳光最多，所以沙漠是安装太阳能板的好地方。把两篇文章各一个事实结合起来的说法需要两篇文章。",
+          "Two texts on one topic often give different facts. A reader who knows both can say something neither text says alone: Text A says solar panels make the most power at midday, Text B says deserts get the most sun, so a desert is a good place for solar panels. A statement that joins a fact from each text needs both.\n\n> **Watch out.** Do not pick a true sentence that comes from Text A alone or Text B alone—the right answer must combine a detail from *each* text.",
+          "关于同一话题的两篇文章常常给出不同的事实。两篇都读过的读者能说出两篇单独都没说的话：文章 A 说太阳能板正午发电最多，文章 B 说沙漠阳光最多，所以沙漠是安装太阳能板的好地方。把两篇文章各一个事实结合起来的说法需要两篇文章。\n\n> **注意。** 不要选只来自文章 A 或只来自文章 B 的正确句子——正确答案必须同时用到*两篇*文章的信息。",
         ),
         itemGenerator(bothTextsBank),
       ),
@@ -893,8 +939,8 @@ export const infoTopics4: readonly TopicDef[] = [
         "which-text-a-fact-comes-from",
         t("Which Text a Fact Comes From", "事实来自哪篇文章"),
         t(
-          "When you use two texts, keep track of where each fact came from, so you can check it and name your source. Find the fact in the text itself, even if it is said in other words. Some statements are about the topic but come from neither text.",
-          "使用两篇文章时，要记清每个事实来自哪里，这样才能核对并说明出处。要在文章中找到这个事实本身，即使它是用别的话说的。有些说法虽然与话题有关，却不来自任何一篇文章。",
+          "When you use two texts, keep track of where each fact came from, so you can check it and name your source. Find the fact in the text itself, even if it is said in other words. For example, *Bicycles use no fuel* may appear in Text A, while *Bicycles run on electricity* appears in neither text.\n\n> **Watch out.** Never assume a statement is in a text just because it shares keywords—verify that the passage actually makes that claim.",
+          "使用两篇文章时，要记清每个事实来自哪里，这样才能核对并说明出处。要在文章中找到这个事实本身，即使它是用别的话说的。例如“自行车不用燃料”可能出自文章 A，而“自行车用电驱动”在两篇里都没出现。\n\n> **注意。** 别因为句子里有相同关键词就以为文章说过——必须核实文章里确实表达了这个事实。",
         ),
         itemGenerator([...whichTextBank, ...neitherBank]),
       ),

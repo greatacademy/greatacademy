@@ -104,7 +104,10 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
       {
         prompt: t("Listen to the word, then say it.", "听这个词，然后说出来。"),
         listen: [heard(w.head)],
-        solution: t(`The word is *${w.head}*: ${w.meaning.en}.`, `这个词是 *${w.head}*：${w.meaning["zh-CN"]}。`),
+        solution: t(
+          `The word is *${w.head}*: ${w.meaning.en.replace(/[.。]+$/u, "")}.\n\n**Check.** Replay the recording of *${w.head}* and say it once more right after, matching the stressed syllable and final sound.`,
+          `这个词是 *${w.head}*：${w.meaning["zh-CN"].replace(/[.。]+$/u, "")}。\n\n**检验。** 再听一遍 *${w.head}* 的示范发音并跟读一次，注意重读音节和词尾发音。`,
+        ),
         ...withSounds(spoken(w.head)),
       },
       "repeat",
@@ -127,7 +130,10 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
     return spokenProblem(
       {
         prompt: t("Read the sentence aloud.", "大声朗读这个句子。"),
-        solution: t(`Listen to the sentence read aloud, and read it once more with it.`, "听一听这个句子的朗读，再跟着读一遍。"),
+        solution: t(
+          `Listen to the sentence read aloud, and read it once more with it.\n\n**Check.** Compare your reading with the recording—make sure every small word (*a*, *the*, *is*, *in*) and word ending is spoken clearly.`,
+          `听一听这个句子的朗读，再跟着读一遍。\n\n**检验。** 把你的朗读对照示范录音听一遍——确认每个小词（*a*、*the*、*is*、*in*）和词尾都读清楚了。`,
+        ),
         ...withSounds(spoken(s)),
       },
       "read",
@@ -161,7 +167,10 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
           `听问题，然后用 *${item.x}* 完整地大声回答。\n\n**${q}**`,
         ),
         listen: [heard(q)],
-        solution: t(`You can say:\n\n> ${model}`, `可以这样说：\n\n> ${model}`),
+        solution: t(
+          `You can say:\n\n> ${model}\n\n**Check.** Replay the model answer and compare your sentence—confirm you spoke a complete sentence with a subject, a verb, and *${item.x}*, not just the single word.`,
+          `可以这样说：\n\n> ${model}\n\n**检验。** 听一遍示范回答并对照自己说的话——确认你说出的是包含主语、动词和 *${item.x}* 的完整句子，而不只是单个词。`,
+        ),
         ...withSounds(spoken(model)),
       },
       "say",
@@ -172,10 +181,22 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
     );
   };
 
+  const w0 = said[0]!;
+  const w1 = said[1] ?? w0;
+  const s0 = sentences[0]!;
+  const s1 = sentences[1] ?? s0;
+  const f0 = spec.frames[0]!;
+  const f0Val = f0.values[0]!;
+  const f0Model = f0.answers[0]!.replaceAll("{x}", f0Val);
+
   const speaking: TopicDef = {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
+    intro: t(
+      `Start by hearing *${w0.head}* clearly and saying it aloud, then move up to reading a full sentence such as: *${s0}* In this topic, you repeat this unit's key words after a model recording and read complete sentences aloud at a steady pace.`,
+      `先听清 *${w0.head}* 并大声跟读，再进阶到完整朗读句子，例如：*${s0}* 本主题带你先跟读本单元核心词汇，再以平稳语速朗读完整句子。`,
+    ),
     prerequisites: [spec.listening],
     encompasses: [],
     xp: 12,
@@ -186,8 +207,8 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
         "repeat",
         t("Say the words", "说单词"),
         t(
-          "Play the word, then press record and say it as you heard it. You do not need to lose your accent: what counts is that the word is clear. Listen to the recording as often as you like before you speak.",
-          "先播放这个词，再按下录音，照着听到的说出来。不需要改掉口音，关键是让人听清。开口之前，录音可以反复听。",
+          `Play the word—such as *${w1.head}*—then press record and say it as you heard it. You do not need to lose your accent: what counts is that the word is clear. Listen to the recording as often as you like before you speak.\n\n> **Watch out.** Speak at a clear, steady volume and finish the final consonant so the word is not mistaken for a similar-sounding word.`,
+          `先播放这个词（例如 *${w1.head}*），再按下录音，照着听到的说出来。不需要改掉口音，关键是让人听清。开口之前，录音可以反复听。\n\n> **注意。** 用清晰平稳的音量说出每个词，尤其要把词尾辅音发完整，避免听起来像另一个相近的词。`,
         ),
         repeat,
       ),
@@ -195,8 +216,8 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
         "read",
         t("Read aloud", "朗读"),
         t(
-          "Read the sentence aloud at a calm speed, as if you were telling someone. Read every word as it is written, small words too, and say each one clearly. If a word is new, listen to it in the solution and read again.",
-          "用平稳的语速大声朗读，就像在对别人说话。每个词都要照原文读出来，小词也不能漏，每个词都要读清楚。遇到生词，可以在解答里听它的读音再读一遍。",
+          `Read the sentence aloud at a calm speed—for example: *${s1}* Read every word as it is written, small words too, and say each one clearly. If a word is new, listen to it in the solution and read again.\n\n> **Watch out.** Do not skip small words (*a*, *the*, *is*, *to*) or swallow plural *-s* endings; read every word on the screen cleanly.`,
+          `用平稳的语速大声朗读，例如：*${s1}* 每个词都要照原文读出来，小词也不能漏，每个词都要读清楚。遇到生词，可以在解答里听它的读音再读一遍。\n\n> **注意。** 不要漏读 *a*、*the*、*is*、*to* 等小词，也不要吞掉复数 *-s* 词尾；把屏幕上的每个词都读清楚。`,
         ),
         read,
       ),
@@ -209,6 +230,10 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
       "Answer questions on the unit's theme aloud, in a full sentence with a given word.",
       "用给出的词，完整地大声回答本单元主题的问题。",
     ),
+    intro: t(
+      `When someone asks *${f0.question}* and gives you *${f0Val}*, a full spoken answer sounds like: *${f0Model}* In this topic, you listen to questions on this unit's theme and answer aloud in complete sentences.`,
+      `当别人问 *${f0.question}* 并给出提示词 *${f0Val}* 时，完整的口语回答是：*${f0Model}* 本主题带你听懂本单元主题的问题，并用完整句子大声作答。`,
+    ),
     prerequisites: [spec.id],
     encompasses: [],
     xp: 8,
@@ -220,8 +245,8 @@ export function unitSpeaking(spec: UnitSpeakingSpec): readonly [TopicDef, TopicD
         "say",
         t("Answer aloud", "开口回答"),
         t(
-          "Listen to the question and answer it in a full sentence, with the word you are given. Say the whole sentence, not only the word, and use the question's own words: *Where do you live?* — *I live in Paris.*",
-          "听问题，用给出的词完整地回答。要说出整句话，而不只是那个词，并借用问题里的说法：*Where do you live?* — *I live in Paris.*",
+          "Listen to the question and answer it in a full sentence, with the word you are given. Say the whole sentence, not only the word, and use the question's own words: *Where do you live?* — *I live in Paris.*\n\n> **Watch out.** Never answer with just the single given word—speak a full sentence with a subject and the right verb form.",
+          "听问题，用给出的词完整地回答。要说出整句话，而不只是那个词，并借用问题里的说法：*Where do you live?* — *I live in Paris.*\n\n> **注意。** 不要只说出给出的单个词——要说出包含主语和正确动词形式的完整句子。",
         ),
         answer,
       ),

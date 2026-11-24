@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 
 /** limits are the length limits of a grade 7 essay. */
 const limits = { minWords: 120, maxChars: 3600 };
@@ -274,6 +274,10 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
       "Write an informative essay from notes sorted by category: an introduction that previews the categories, a paragraph for each one and a conclusion that ties them together.",
       "根据按类别整理的笔记写一篇说明性文章：引言预告各个类别，每个类别一段，结论把它们联系在一起。",
     ),
+    intro: t(
+      "Dumping twenty facts about a country into one wall of text loses the reader. Sorting notes into clean categories—previewed in the introduction, unpacked one paragraph at a time, and tied together at the end—turns raw notes into a sharp **informative essay**.",
+      "把关于一个国家的二十条事实堆成一整块文字，只会让读者看晕。把笔记按清晰类别分好——引言预告、每段专讲一类、结尾收束——才能把零散笔记写成条理分明的**说明性文章**。",
+    ),
     prerequisites: after("organizing-by-category", "writing-an-informative-paragraph"),
     encompasses: [{ topic: "organizing-by-category", weight: 0.2 }],
     xp: 22,
@@ -284,8 +288,8 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
         "previewing-the-categories",
         t("Previewing the Categories", "预告各个类别"),
         t(
-          "An informative essay begins by naming its topic and **previewing its categories**, so the reader knows the plan: *This essay looks at its land, its history and the daily life of its people.* Then each body paragraph takes one category in that same order and opens with a sentence that names it.",
-          "说明性文章开头要说出主题并**预告各个类别**，让读者了解文章的安排：*This essay looks at its land, its history and the daily life of its people.* 然后每个主体段落按同样的顺序写一个类别，并以点明这个类别的句子开头。",
+          "An informative essay opens by introducing its subject and **previewing its categories** in order: *This essay looks at its land, its history, and the daily life of its people.* Each body paragraph then follows that exact order and opens with a topic sentence naming its category.\n\n> **Watch out.** Keep the body paragraphs in the *same* order as your introduction preview—if your intro lists *land, history, daily life*, do not jump straight to *daily life* in paragraph two.",
+          "说明性文章开头先点明主题，并按顺序列出**各个类别的预告**：*This essay looks at its land, its history, and the daily life of its people.* 随后的每个主体段严格按同一顺序展开，并以点明该类别的主题句开头。\n\n> **注意。** 主体段的顺序要和引言预告完全一致——如果引言预告的是*地理、历史、日常生活*，第二段就不要先写*日常生活*。",
         ),
         writingGenerator(
           t(
@@ -295,15 +299,18 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
           informBank,
           ["g7-inform-preview", "g7-inform-categories", "g6-facts-from-notes"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your introduction's preview list against your body paragraphs: every category appears in the exact same order, and each paragraph opens with a clear topic sentence.",
+            "对照引言中的类别预告和主体段落：每个类别按完全一致的顺序出现，且每段都以清晰的主题句开头。",
+          ),
         ),
       ),
       point(
         "keeping-each-paragraph-focused",
         t("Keeping Each Paragraph Focused", "让每一段集中于一点"),
         t(
-          "Each body paragraph holds only the facts of its own category: a fact about history does not belong in the paragraph about the land. Use the facts from the notes accurately, in your own words. End with a conclusion that ties the categories together into one idea about the topic.",
-          "每个主体段落只写属于自己类别的事实：关于历史的事实不应出现在写地理的段落里。准确地使用笔记中的事实，并用自己的话表达。结尾用结论把各个类别联系起来，形成对主题的一个整体看法。",
+          "Keep every body paragraph strictly inside its own category: a fact about Viking history belongs in the history paragraph, never in the geography paragraph. Put the notes' facts accurately into your own words, and finish with a conclusion that draws all categories into one closing insight.\n\n> **Watch out.** Do not copy note fragments word for word or leave a stray fact sitting in the wrong category paragraph.",
+          "每个主体段落只放属于本类别的事实：关于维京历史的事实应放在历史段，不能混进地理段。用自己的话准确转述笔记事实，并在结尾把各个类别收束成一个整体认识。\n\n> **注意。** 既不要逐字照搬笔记片段，也不要把某条事实误放进别的类别段落。",
         ),
         writingGenerator(
           t(
@@ -313,7 +320,10 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
           informBank,
           ["g7-inform-categories", "g6-facts-from-notes", "w4-concludes"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Read each body paragraph alone and confirm every fact belongs strictly to that paragraph's category, uses your own wording accurately, and leads into a unifying conclusion.",
+            "逐段单读每个主体段，确认每条事实都严格归属本段类别、用自己的话准确表达，并自然引出收束全文的结论。",
+          ),
         ),
       ),
     ],
@@ -325,6 +335,10 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
       "Write a short story set at a real moment in history: an invented character facing a problem in a scene, with details true to the period and the real events kept accurate.",
       "写一个以真实历史时刻为背景的短篇故事：一个虚构人物在一个场景中面对问题，细节符合那个时代，真实事件保持准确。",
     ),
+    intro: t(
+      "A young apprentice hurrying through Pompeii's narrow stone streets on an August morning in 79 CE is invented, yet the volcano, the forum, and the clay bread ovens are real. **Historical fiction** blends an invented character's drama with accurate history.",
+      "公元 79 年八月清晨穿行在庞贝狭窄石街上的年轻学徒是虚构的，但火山、广场和陶土烤炉都是真实的。**历史小说**把虚构人物的命运放进准确的历史现场。",
+    ),
     prerequisites: after("using-period-details", "pacing-a-story"),
     encompasses: [{ topic: "using-period-details", weight: 0.2 }],
     xp: 22,
@@ -335,8 +349,8 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
         "a-character-in-a-real-moment",
         t("A Character in a Real Moment", "真实时刻中的人物"),
         t(
-          "Historical fiction places an **invented character** inside a **real event**. Keep the real facts exactly as they happened, such as the date, the place and what happened, and invent only the character, their family and what they say and feel. Show one tense **scene** with action and dialogue, and let the character face a problem that comes to a turning point.",
-          "历史小说把一个**虚构人物**放进一个**真实事件**中。真实的事实，如日期、地点和发生的事，要完全按历史来写；只虚构人物、他的家人以及他说的话和感受。写出一个紧张的**场景**，有动作和对话，让人物面对一个问题并走到一个转折点。",
+          "Historical fiction places an **invented character** inside a **real historical event**. Keep every given historical fact—date, place, and real outcome—completely accurate, and invent only the character, their choices, dialogue, and feelings inside one tense scene with a clear turning point.\n\n> **Watch out.** Never alter the real historical event to make your character's life easier—let your character react to history as it actually happened.",
+          "历史小说把**虚构人物**置于**真实历史事件**之中。日期、地点和历史走向等既定事实必须严格准确，只虚构人物、对话、心理和抉择，写成一个有动作、有转折的紧张场景。\n\n> **注意。** 绝不要为了迁就剧情而改动真实历史事件——让你的人物在真实发生的历史里作出反应。",
         ),
         writingGenerator(
           t(
@@ -346,15 +360,18 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
           historicalBank,
           ["g7-hist-facts", "g7-hist-scene", "g7-hist-period"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your draft against the prompt's historical notes: every real date, place, and event stays accurate, while an invented character faces a concrete problem through action and dialogue.",
+            "对照题干的历史背景核查草稿：所有真实年代、地点和事件准确无误，同时虚构人物通过动作和对话面对具体困境。",
+          ),
         ),
       ),
       point(
         "bringing-the-period-to-life",
         t("Bringing the Period to Life", "让时代鲜活起来"),
         t(
-          "Fill the scene with **details of the period**: the clothes, tools, food, buildings, light and transport people really had. A girl in Pompeii sweeps beside a brick oven and wraps her coins in a leather pouch; she does not check a clock. Check every object against the time and leave out anything from later.",
-          "在场景中写入**时代细节**：人们真正拥有的衣服、工具、食物、建筑、照明和交通工具。庞贝城的女孩在砖砌的烤炉旁扫地，把钱币包在皮袋里；她不会去看钟。要对照那个时代检查每一件物品，删去任何后来才有的东西。",
+          "Ground your scene in **period-accurate details**: real clothing, tools, food, lighting, buildings, and transport. A girl in ancient Pompeii sweeps beside a brick oven and ties coins in a leather pouch—she never glances at a wristwatch or flips a light switch.\n\n> **Watch out.** Audit every object and phrase for anachronisms (modern gadgets, slang, or materials that did not exist in that century) and replace any that slip in.",
+          "用**符合时代的细节**让场景立起来：当时真实的衣着、工具、食物、照明、建筑和交通方式。古庞贝的女孩在砖炉旁扫地、把钱币装进皮袋，绝不会看手表或按电灯开关。\n\n> **注意。** 逐一排查文中的物品和说法，把那个年代还不存在的现代物件、材料或流行语全部清理掉。",
         ),
         writingGenerator(
           t(
@@ -364,7 +381,10 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
           historicalBank,
           ["g7-hist-period", "g7-hist-scene", "g7-hist-facts"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Underline at least three concrete period details (clothing, tools, lighting, food, or transport) in your story and verify that nothing modern slipped into the scene.",
+            "在故事里标出至少三个具体的时代细节（衣着、工具、照明、食物或交通），并确认没有混入任何现代物件。",
+          ),
         ),
       ),
     ],
@@ -376,6 +396,10 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
       "Write a short report from data: the trends with exact numbers, comparisons between amounts and a conclusion that claims no more than the data show.",
       "根据数据写一篇简短的报告：用精确数字说明趋势，比较不同的数量，结论不超出数据所能证明的范围。",
     ),
+    intro: t(
+      "Numbers on a table do not speak until a writer names the trend, cites exact figures, compares amounts accurately, and stays honest about what the table *cannot* prove. That discipline defines a **report with data**.",
+      "表格里的数字不会自己开口，需要作者点明趋势、引用精确数值、准确比较数量，同时诚实说明数据*不能*证明什么——这就是**数据报告**的核心要求。",
+    ),
     prerequisites: after("reporting-numbers-from-a-graph", "correlation-or-cause"),
     encompasses: [{ topic: "reporting-numbers-from-a-graph", weight: 0.2 }],
     xp: 22,
@@ -386,8 +410,8 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
         "reporting-the-numbers",
         t("Reporting the Numbers", "报告数字"),
         t(
-          "A data report tells the reader what the numbers say. Name each **trend** and back it with the **exact values**: *The number of wolves rose from 14 in 1995 to 119 in 2000.* Then **compare** amounts with careful words such as *twice as many*, *half* or *2,000 more*, and check your arithmetic before you write.",
-          "数据报告告诉读者数字说明了什么。说出每个**趋势**，并用**精确数值**支持它：*The number of wolves rose from 14 in 1995 to 119 in 2000.* 然后用 *twice as many*、*half*、*2,000 more* 等准确的词**比较**数量，写之前先检查计算。",
+          "A clear data report states each **trend** and backs it with **exact values** from the dataset: *The wolf population rose from 14 in 1995 to 119 in 2000.* Make precise **comparisons** (*twice as many*, *nearly half*, *2,000 more*) and double-check every subtraction or ratio.\n\n> **Watch out.** Do not replace exact figures with vague words like *a lot* or *went way up*, and check your arithmetic before claiming *twice* or *half*.",
+          "清晰的数据报告先点明**趋势**，再用数据表中的**精确数值**支撑：*The wolf population rose from 14 in 1995 to 119 in 2000.* 用准确的词作**比较**（*twice as many*、*nearly half*、*2,000 more*），动笔前核对好每一次加减和倍数计算。\n\n> **注意。** 不要用 *a lot*、*went way up* 等模糊词替代精确数字，写 *twice* 或 *half* 前先验算一遍。",
         ),
         writingGenerator(
           t(
@@ -397,15 +421,18 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
           dataBank,
           ["g7-data-accurate", "g7-data-compares", "g7-data-limits"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify every number and comparison in your draft directly against the prompt's data table, confirming no figure was misread and every calculation holds.",
+            "把草稿中的每一个数字和比较结果逐一与题干数据表核对，确认没有抄错数字，且倍数或差值计算正确。",
+          ),
         ),
       ),
       point(
         "what-the-data-can-and-cannot-show",
         t("What the Data Can and Cannot Show", "数据能说明什么、不能说明什么"),
         t(
-          "When two things change together, a report can say they are linked, but it must be careful about **cause**. Say what the data suggest, then name another thing that could explain the pattern: *The data show that elk fell as wolves rose; however, hunting and harsh winters also changed.* End with a conclusion that stays within the evidence.",
-          "当两件事一起变化时，报告可以说它们有联系，但谈到**因果**时必须谨慎。先说出数据暗示了什么，再指出另一个可能解释这种规律的因素：*The data show that elk fell as wolves rose; however, hunting and harsh winters also changed.* 结论不要超出证据。",
+          "When two variables rise or fall together, report the link without overclaiming **cause**. State what the pattern suggests, then note at least one other factor that could help explain it: *Elk numbers fell as wolves rose; however, hunting and severe winters also changed.* Keep your conclusion strictly within the data.\n\n> **Watch out.** Avoid words like *proves* when you only have observational numbers—use measured phrasing like *suggests* or *is linked to* and acknowledge possible outside factors.",
+          "当两个量同时升降时，要如实报告关联，切忌轻率断定**因果**。先说明数据呈现出什么规律，再指出至少一个可能影响结果的外部因素：*Elk numbers fell as wolves rose; however, hunting and severe winters also changed.* 结论绝不越出数据边界。\n\n> **注意。** 面对观察数据时避免使用 *proves* 这类绝对字眼——改用 *suggests*、*is linked to* 等谨慎措辞，并说明其他可能因素。",
         ),
         writingGenerator(
           t(
@@ -415,7 +442,10 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
           dataBank,
           ["g7-data-limits", "g7-data-accurate", "g7-data-compares"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your conclusion: it clearly separates what the numbers show from what they cannot prove, names a possible other factor, and avoids absolute words like *proves*.",
+            "核对结尾段：清楚区分数据能说明什么和不能证明什么，点出了至少一个其他可能因素，没有滥用 *proves* 这类绝对词。",
+          ),
         ),
       ),
     ],
@@ -427,6 +457,10 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
       "Write an essay that traces a chain of causes and effects, each link supported with a fact and joined by words that show how one thing led to the next.",
       "写一篇追溯因果链的文章，每个环节都有事实支持，并用表示前因后果的词连接起来。",
     ),
+    intro: t(
+      "Real-world events rarely stop at one cause and one result—clearing a hillside forest loosens soil, silts up rivers, and harms fish downstream. A **cause-and-effect essay** traces that whole chain link by link.",
+      "现实中的事件很少只停在一因一果——砍掉山坡森林会冲松泥土、淤塞河流、危及下游鱼群。**因果文章**正是把整条连锁反应一环扣一环地讲清楚。",
+    ),
     prerequisites: after("writing-a-cause-and-effect-paragraph", "cause-and-effect-in-history"),
     encompasses: [{ topic: "writing-a-cause-and-effect-paragraph", weight: 0.2 }],
     xp: 22,
@@ -437,8 +471,8 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
         "tracing-the-chain",
         t("Tracing the Chain", "追溯因果链"),
         t(
-          "Many events do not have one cause and one effect; they set off a **chain**, in which each effect becomes the cause of the next. Trace the chain in order, one link per paragraph or a few sentences, and join the links with words such as *as a result*, *because of this*, *this, in turn,* and *finally*.",
-          "许多事件不只有一个原因和一个结果；它们引发一条**因果链**，每个结果又成为下一个结果的原因。按顺序追溯这条链，每个环节写一段或几句话，并用 *as a result*、*because of this*、*this, in turn,*、*finally* 等词把各环节连接起来。",
+          "In a **causal chain**, each effect becomes the cause of the next step. Walk through the chain in chronological order—one link per paragraph or section—and bind the links with clear signal phrases such as *as a result*, *because of this*, *this, in turn,* and *finally*.\n\n> **Watch out.** Do not skip a middle link in the chain or scramble the order—the reader should be able to follow Step 1 → Step 2 → Step 3 without guessing.",
+          "在**因果链**中，前一步的结果会成为下一步的原因。按时间顺序逐环推进——每段或每节写清一个环节——并用 *as a result*、*because of this*、*this, in turn,*、*finally* 等信号词把链条扣紧。\n\n> **注意。** 不要跳过中间环节或打乱先后顺序——让读者无需猜测就能顺着“第一步 → 第二步 → 第三步”一路读懂。",
         ),
         writingGenerator(
           t(
@@ -448,15 +482,18 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
           causeBank,
           ["g7-cause-chain", "g35-cause-signals", "g7-cause-evidence"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Trace the sequence of events across your paragraphs: each link follows in order, uses a clear cause-and-effect transition, and leaves no missing step in the chain.",
+            "顺着段落检查事件链条：各环节按顺序衔接，使用了清晰的因果过渡词，中间没有断档。",
+          ),
         ),
       ),
       point(
         "explaining-each-link",
         t("Explaining Each Link", "解释每个环节"),
         t(
-          "Each link needs more than a name; explain **how** the cause produced the effect, using a fact from the notes: *Tree roots hold soil in place like a net. When the trees are cut, the roots die, and the soil is left loose.* End with a conclusion that looks back over the whole chain, from the first cause to the last effect.",
-          "每个环节不只是点出名字，还要用笔记中的事实解释原因**如何**产生了结果：*Tree roots hold soil in place like a net. When the trees are cut, the roots die, and the soil is left loose.* 最后用结论回顾整条链，从第一个原因到最后一个结果。",
+          "Naming two events is not enough—explain **how** the cause produces the effect using concrete facts from the notes: *Tree roots hold soil in place like a net. When the trees are cut, the roots die, and the soil washes away.* Close with a conclusion looking back across the entire chain.\n\n> **Watch out.** Check that every paragraph explains the *mechanism* connecting cause to effect instead of merely listing events in time order.",
+          "只把两件事的名字报出来还不够——要用笔记中的具体事实解释原因**如何**产生结果：*Tree roots hold soil in place like a net. When the trees are cut, the roots die, and the soil washes away.* 结尾回顾整条链条作总结。\n\n> **注意。** 检查每一段是否讲清了前因引发后果的*作用机制*，而不只是按时间流水账罗列事件。",
         ),
         writingGenerator(
           t(
@@ -466,7 +503,10 @@ export const writingJudgedTopics7a: readonly TopicDef[] = [
           causeBank,
           ["g7-cause-evidence", "g7-cause-chain", "w4-concludes"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check each link in your essay: confirm you explained *how* the cause produced the effect with a concrete fact from the notes, and that your conclusion sums up the whole chain.",
+            "逐环核对文章：确认每处都借助笔记中的具体事实解释了前因*如何*引发后果，且结尾总结了整条因果链。",
+          ),
         ),
       ),
     ],

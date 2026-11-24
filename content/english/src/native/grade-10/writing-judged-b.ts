@@ -3,7 +3,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after, covers } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 import { limits } from "./writing-judged-a.ts";
 
 /** editorialBank gives an issue on which the student writes an editorial for a school or town newspaper. */
@@ -207,6 +207,10 @@ export const judgedTopics10b: readonly TopicDef[] = [
       "Write an editorial for a school or town newspaper that takes a clear position on a local issue, supports it with evidence, answers the other side and ends with a call to act.",
       "为学校或城镇报纸写一篇社论，就一个本地问题表明清楚的立场，用证据支持它，回应对方观点，并以行动号召结尾。",
     ),
+    intro: t(
+      "A strong town editorial does not just vent frustration about crowded streets—it states a concrete proposal up front, backs it with local numbers, answers merchants' worries fairly, and tells the council what to vote for. In this topic, you write a newspaper editorial from opening stand to closing call to act.",
+      "一篇有力的城镇社论不会只抱怨街道拥堵——它一开头就亮明具体主张，用本地数据支撑，公允回应商户的顾虑，最后告诉议会该怎么投票。本主题带你从开篇立场到结尾号召完整写出一篇社论。",
+    ),
     prerequisites: after("writing-an-argument-with-sources", "identifying-bias-in-the-news"),
     encompasses: covers(0.2, "writing-an-argument-with-sources"),
     xp: 24,
@@ -217,8 +221,8 @@ export const judgedTopics10b: readonly TopicDef[] = [
         "a-position-on-a-local-issue",
         t("A Position on a Local Issue", "对本地问题表明立场"),
         t(
-          "An editorial speaks for the paper. State the **position** early and plainly: *The council should close Main Street to cars on weekends.* Support it with **facts your readers can check**, such as figures, surveys and the example of another place, not only feelings.",
-          "社论代表报纸发声。要尽早、明白地陈述**立场**：*The council should close Main Street to cars on weekends.* 用**读者能核实的事实**支持它，例如数字、调查和其他地方的例子，而不只是感受。",
+          "An editorial speaks for the paper. State the **position** early and plainly: *The council should close Main Street to cars on weekends.* Support it with **facts your readers can check**, such as figures, surveys and the example of another place, not only feelings.\n\n> **Watch out.** Do not bury your stance at the end or rely on personal venting—state what should be done in the opening paragraph and ground every reason in verifiable facts.",
+          "社论代表报纸发声。要尽早、明白地陈述**立场**：*The council should close Main Street to cars on weekends.* 用**读者能核实的事实**支持它，例如数字、调查和其他地方的例子，而不只是感受。\n\n> **注意。** 不要把立场藏到结尾，也不要只靠情绪发泄——首段就亮明该怎么做，并用可核查的事实撑起每条理由。",
         ),
         writingGenerator(
           t(
@@ -228,15 +232,18 @@ export const judgedTopics10b: readonly TopicDef[] = [
           editorialBank,
           ["g10-editorial-position", "g10-editorial-evidence", "g10-editorial-other-side"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your first paragraph and body evidence: is your stance stated plainly near the top, and is each argument backed by checkable facts rather than bare opinion?",
+            "检查第一段与主体论据：立场是否在开头就明白亮出，每条理由是否都有可核实的事实支撑而不只是个人看法？",
+          ),
         ),
       ),
       point(
         "answering-the-other-side",
         t("Answering the Other Side", "回应对方观点"),
         t(
-          "A fair editorial **names the strongest objection** and answers it: *Some shop owners worry that customers who drive will stay away. This concern deserves an answer...* Then it ends with what readers or leaders **should do**.",
-          "公正的社论会**指出最有力的反对意见**并加以回应：*Some shop owners worry that customers who drive will stay away. This concern deserves an answer...* 然后以读者或决策者**应当做什么**结尾。",
+          "A fair editorial **names the strongest objection** and answers it: *Some shop owners worry that customers who drive will stay away. This concern deserves an answer...* Then it ends with what readers or leaders **should do**.\n\n> **Watch out.** Never mock or brush off critics with a straw man—state the opposing worry as clearly as an opponent would, answer it directly, and close with a concrete next step.",
+          "公正的社论会**指出最有力的反对意见**并加以回应：*Some shop owners worry that customers who drive will stay away. This concern deserves an answer...* 然后以读者或决策者**应当做什么**结尾。\n\n> **注意。** 绝不用稻草人式的嘲讽敷衍反对者——把对方的核心顾虑公允说清并正面回应，最后给出具体的行动建议。",
         ),
         writingGenerator(
           t(
@@ -246,7 +253,10 @@ export const judgedTopics10b: readonly TopicDef[] = [
           editorialBank,
           ["g10-editorial-other-side", "g10-editorial-position", "g10-editorial-evidence"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your counterargument and ending: would someone on the other side recognize their strongest objection as fairly stated, and does your final paragraph tell readers or leaders a concrete action to take?",
+            "检查反方回应与结尾：持相反立场的人是否会认可你公允陈述了他们最有力的顾虑，且末段给出了具体的行动号召？",
+          ),
         ),
       ),
     ],
@@ -258,6 +268,10 @@ export const judgedTopics10b: readonly TopicDef[] = [
       "Write a formal letter applying for a job, a volunteer place or a program, showing with specific evidence why you are suited to it.",
       "写一封正式信件，申请一份工作、一个志愿岗位或一个项目，用具体证据说明你为何适合。",
     ),
+    intro: t(
+      "Hiring managers read dozens of letters claiming *I am hard-working*; the letter that wins an interview names the exact role in line one and backs every strength with concrete results. In this topic, you write a complete formal letter of application.",
+      "招聘者每天都会看到几十封自称“我工作努力”的信；真正赢得面试的申请信第一句就写明岗位，并用具体成果证明每一项优势。本主题带你写出一封规范有力的正式申请信。",
+    ),
     prerequisites: after("showing-qualifications-with-evidence", "writing-a-letter-to-a-leader"),
     encompasses: covers(0.2, "showing-qualifications-with-evidence"),
     xp: 24,
@@ -268,8 +282,8 @@ export const judgedTopics10b: readonly TopicDef[] = [
         "the-purpose-and-the-evidence",
         t("The Purpose and the Evidence", "目的和证据"),
         t(
-          "Say in the first sentence **what you are applying for** and where you saw it. Then show that you are suited with **specific evidence**: what you did, how long, and what came of it. *For eight months I have worked on Saturday mornings at my uncle's café* says more than *I am hard-working.*",
-          "第一句就说明**你申请的是什么**，以及在哪里看到。然后用**具体证据**说明你适合：你做过什么、做了多久、有什么结果。*For eight months I have worked on Saturday mornings at my uncle's café* 比 *I am hard-working* 更有说服力。",
+          "Say in the first sentence **what you are applying for** and where you saw it. Then show that you are suited with **specific evidence**: what you did, how long, and what came of it. *For eight months I have worked on Saturday mornings at my uncle's café* says more than *I am hard-working.*\n\n> **Watch out.** Hunt down bare self-praise adjectives (*reliable*, *organized*, *passionate*) and pair every one with a concrete task, duration, or measurable result.",
+          "第一句就说明**你申请的是什么**，以及在哪里看到。然后用**具体证据**说明你适合：你做过什么、做了多久、有什么结果。*For eight months I have worked on Saturday mornings at my uncle's café* 比 *I am hard-working* 更有说服力。\n\n> **注意。** 排查空泛的自夸形容词（如 *reliable*、*organized*、*passionate*），每一项品质都必须配上具体做过的事、持续时长或可核实的结果。",
         ),
         writingGenerator(
           t(
@@ -279,15 +293,18 @@ export const judgedTopics10b: readonly TopicDef[] = [
           applicationBank,
           ["g10-application-purpose", "g10-application-evidence", "g10-application-format"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check your opening sentence and body examples: does line one name the exact position, and does every claimed strength rest on a specific action and outcome?",
+            "检查首句与主体事例：第一句是否写明申请的岗位，每项自称的优势是否都有具体行动与结果作证？",
+          ),
         ),
       ),
       point(
         "a-formal-letter-that-closes-well",
         t("A Formal Letter That Closes Well", "结尾得体的正式信件"),
         t(
-          "Keep the conventions of a **formal letter**: a greeting such as *Dear Ms. Romero,*, one paragraph for each kind of evidence, a polite and confident tone, and a closing that gives your **availability**, thanks the reader and asks for an interview, before *Yours sincerely* and your name.",
-          "遵守**正式信件**的格式：用 *Dear Ms. Romero,* 这样的称呼，每类证据一段，语气礼貌而自信，结尾说明你**何时有空**、感谢读者并请求面试，然后写 *Yours sincerely* 和你的名字。",
+          "Keep the conventions of a **formal letter**: a greeting such as *Dear Ms. Romero,*, one paragraph for each kind of evidence, a polite and confident tone, and a closing that gives your **availability**, thanks the reader and asks for an interview, before *Yours sincerely* and your name.\n\n> **Watch out.** Avoid casual greetings (*Hi there*) or contractions that slip into texting style, and double-check that your closing includes all three elements: availability, thanks, and a polite interview request.",
+          "遵守**正式信件**的格式：用 *Dear Ms. Romero,* 这样的称呼，每类证据一段，语气礼貌而自信，结尾说明你**何时有空**、感谢读者并请求面试，然后写 *Yours sincerely* 和你的名字。\n\n> **注意。** 避免随意的称呼（如 *Hi there*）或口语缩略语气，并核对结尾段是否齐全：何时有空、致谢、礼貌请求面试三项缺一不可。",
         ),
         writingGenerator(
           t(
@@ -297,7 +314,10 @@ export const judgedTopics10b: readonly TopicDef[] = [
           applicationBank,
           ["g10-application-format", "g10-application-purpose", "g10-application-evidence"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Inspect the formal frame from top to bottom: formal salutation, focused evidence paragraphs, polite tone throughout, and a closing with availability, thanks, an interview request, and formal sign-off.",
+            "从头到尾核对正式信件格式：正式称呼、分段清晰的证据、得体自信的语气，以及包含时间安排、致谢、面试请求和落款的结尾。",
+          ),
         ),
       ),
     ],
@@ -309,6 +329,10 @@ export const judgedTopics10b: readonly TopicDef[] = [
       "Write a short satire in a familiar form, such as an advertisement, an announcement or a news report, that exaggerates a real folly to make a serious point.",
       "用广告、通知或新闻报道等常见形式写一篇简短的讽刺作品，夸大一种真实的愚蠢行为，以表达一个严肃的观点。",
     ),
+    intro: t(
+      "A mock office memo scheduling a mandatory three-hour meeting to plan how to hold fewer meetings never lectures the reader—its straight-faced absurdity exposes the real problem faster than a serious speech ever could. In this topic, you write a short satire that aims at a real folly and sustains a deadpan voice.",
+      "一则一本正经发出“强制召开三小时会议，讨论如何减少开会”的恶搞办公通知，从不正面说教，却靠一本正经的荒诞比严肃演讲更快戳中痛点。本主题带你针对现实弊病写出夸张而沉稳的讽刺短文。",
+    ),
     prerequisites: after("understanding-satire", "writing-an-argument-with-sources"),
     encompasses: covers(0.2, "understanding-satire"),
     xp: 24,
@@ -319,8 +343,8 @@ export const judgedTopics10b: readonly TopicDef[] = [
         "a-target-and-an-exaggeration",
         t("A Target and an Exaggeration", "目标和夸张"),
         t(
-          "Satire mocks a **real folly** that readers will recognize, such as too much homework or too many meetings, and pushes it to an **absurd extreme**: *Since you study eight subjects, this comes to thirty-two hours of homework each evening.* The exaggeration should make the serious point plain.",
-          "讽刺嘲弄读者能认出的**真实愚蠢行为**，例如作业太多或会议太多，并把它推向**荒唐的极端**：*Since you study eight subjects, this comes to thirty-two hours of homework each evening.* 夸张应当让严肃的观点一目了然。",
+          "Satire mocks a **real folly** that readers will recognize, such as too much homework or too many meetings, and pushes it to an **absurd extreme**: *Since you study eight subjects, this comes to thirty-two hours of homework each evening.* The exaggeration should make the serious point plain.\n\n> **Watch out.** Make sure the exaggeration stays tethered to a recognizable real-world habit—random silliness with no real target is just nonsense, not satire.",
+          "讽刺嘲弄读者能认出的**真实愚蠢行为**，例如作业太多或会议太多，并把它推向**荒唐的极端**：*Since you study eight subjects, this comes to thirty-two hours of homework each evening.* 夸张应当让严肃的观点一目了然。\n\n> **注意。** 夸张必须紧扣读者认得出的现实弊病——没有真实靶子的胡闹只是搞笑，不算讽刺。",
         ),
         writingGenerator(
           t(
@@ -330,15 +354,18 @@ export const judgedTopics10b: readonly TopicDef[] = [
           satireBank,
           ["g10-satire-target", "g10-satire-exaggeration", "g10-satire-voice"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Ask two questions about your draft: can a reader immediately identify the real-world folly you are mocking, and does pushing it to an absurd extreme make your serious point clear?",
+            "问自己两个问题：读者能否立刻认出你嘲讽的现实弊病？把它推向荒唐极端后，背后的严肃观点是否一目了然？",
+          ),
         ),
       ),
       point(
         "a-straight-faced-voice",
         t("A Straight-Faced Voice", "一本正经的口吻"),
         t(
-          "Borrow a **familiar form**, such as an advertisement, an official letter or a news report, and keep its **straight face**: the speaker praises the folly as if it were sensible. *Doctors recommend two hours of screen time a day. The iStare 12 recommends doctors find a hobby.*",
-          "借用一种**常见形式**，例如广告、公函或新闻报道，并保持**一本正经**：说话者把愚蠢的事当作明智之举来称赞。*Doctors recommend two hours of screen time a day. The iStare 12 recommends doctors find a hobby.*",
+          "Borrow a **familiar form**, such as an advertisement, an official letter or a news report, and keep its **straight face**: the speaker praises the folly as if it were sensible. *Doctors recommend two hours of screen time a day. The iStare 12 recommends doctors find a hobby.*\n\n> **Watch out.** Never break character at the end to add *'Of course, I'm joking—actually we shouldn't...'*—explaining the joke ruins the deadpan irony.",
+          "借用一种**常见形式**，例如广告、公函或新闻报道，并保持**一本正经**：说话者把愚蠢的事当作明智之举来称赞。*Doctors recommend two hours of screen time a day. The iStare 12 recommends doctors find a hobby.*\n\n> **注意。** 千万别在结尾破功加上“当然我只是开玩笑，其实我们不应该……”——把笑点点破会彻底毁掉反讽效果。",
         ),
         writingGenerator(
           t(
@@ -348,7 +375,10 @@ export const judgedTopics10b: readonly TopicDef[] = [
           satireBank,
           ["g10-satire-voice", "g10-satire-target", "g10-satire-exaggeration"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Reread your satire aloud for tone: does it sound like a genuine ad, memo, or report from start to finish without ever winking or lecturing the reader directly?",
+            "出声重读你的讽刺短文：它是否从头到尾都像一则真实的广告、公函或报道，没有中途破功或直接说教？",
+          ),
         ),
       ),
     ],

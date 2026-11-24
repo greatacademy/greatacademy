@@ -1313,24 +1313,42 @@ const gapNeeds: Record<Linker, Text> = {
 
 /** contrastWhy names the rule of the linking word and applies it to the sentence. */
 const contrastWhy = (right: string, shown: string): Text => {
-  const rule = linkerRule[linkerOf(right)];
-  return t(`${sentenceCase(rule.en)}: ${fill(shown, right)}`, `${rule["zh-CN"]}：${fill(shown, right)}`);
+  const kind = linkerOf(right);
+  const rule = linkerRule[kind];
+  const needs = gapNeeds[kind];
+  return t(
+    `${sentenceCase(rule.en)}: ${fill(shown, right)}\n\n**Check.** Inspect what sits around the gap: ${needs.en}, which matches *${right}*.`,
+    `${rule["zh-CN"]}：${fill(shown, right)}\n\n**检验。** 检查空格前后的结构：${needs["zh-CN"]}，正好匹配 *${right}*。`,
+  );
 };
 
 /** whyNotContrast explains a linking word whose structure does not match the words around the gap. */
 const whyNotContrast = (wrong: string, right: string): Text => {
   const rule = linkerRule[linkerOf(wrong)];
   const needs = gapNeeds[linkerOf(right)];
-  return t(
-    `${sentenceCase(rule.en)}, but here ${needs.en}. So the gap takes *${right}*.`,
-    `${rule["zh-CN"]}，而这里${needs["zh-CN"]}，所以要用 *${right}*。`,
-  );
+  return t(`${sentenceCase(rule.en)}, whereas here ${needs.en}.`, `${rule["zh-CN"]}，而这里${needs["zh-CN"]}。`);
 };
 
 /** joinedWhy names the rule of the linking word a joined sentence uses. */
 const joinedWhy = (right: string): Text => {
-  const rule = linkerRule[linkerOf(right)];
-  return t(`${sentenceCase(rule.en)}: ${right}`, `${rule["zh-CN"]}：${right}`);
+  const kind = linkerOf(right);
+  const rule = linkerRule[kind];
+  const check =
+    kind === "although"
+      ? t(
+          "**Check.** Confirm there is a clause after *although* and no extra *but* in the main clause.",
+          "**检验。** 确认 *although* 后接完整从句，且主句里没有多余的 *but*。",
+        )
+      : kind === "despite"
+        ? t(
+            "**Check.** Confirm *despite* is followed by a noun phrase or *-ing* (not a clause, and never *despite of*).",
+            "**检验。** 确认 *despite* 后接名词短语或 *-ing*（不接从句，也不写 *despite of*）。",
+          )
+        : t(
+            "**Check.** Confirm *however* sits after a semicolon or full stop and is followed by a comma.",
+            "**检验。** 确认 *however* 前面是分号或句号，后面有逗号。",
+          );
+  return t(`${sentenceCase(rule.en)}: ${right}\n\n${check.en}`, `${rule["zh-CN"]}：${right}\n\n${check["zh-CN"]}`);
 };
 
 /** whyNotJoined explains although with but, despite with a clause, or however after a comma. */
@@ -1358,6 +1376,10 @@ const linkingWordsOfContrast: TopicDef = {
     "Although it was legal, it was unfair. Despite the law, it continued. It was legal; however, it was unfair. Each linking word of contrast takes a different structure.",
     "Although it was legal, it was unfair. Despite the law, it continued. It was legal; however, it was unfair. 每个表示对比的连接词后面接不同的结构。",
   ),
+  intro: t(
+    "*Although the fine was steep*, *despite the steep fine*, and *The fine was steep; however, ...* all express contrast—yet each demands its own grammar and punctuation.",
+    "*Although the fine was steep*、*despite the steep fine* 和 *The fine was steep; however, ...* 都在表达转折，但各自的语法结构和标点完全不同。",
+  ),
   prerequisites: ["subordinating-conjunctions", "b2-words-linking-1"],
   encompasses: [{ topic: "subordinating-conjunctions", weight: 0.3 }],
   xp: 30,
@@ -1367,8 +1389,8 @@ const linkingWordsOfContrast: TopicDef = {
       "structure",
       t("What follows each word", "每个词后面接什么"),
       t(
-        "Three words show contrast, and each is followed by a different structure:\n\n- *Although* (or *even though*, *though*) + a **clause** with a subject and a verb: *Although it was raining, we went for a walk.*\n- *Despite* (or *in spite of*) + a **noun phrase** or an **-ing form**: *Despite the rain, we went for a walk. Despite being tired, he finished the report.*\n- *However* joins two **separate sentences**. It comes after a full stop or a semicolon and is followed by a comma: *It was raining; however, we went for a walk.*\n\n*Despite it was raining* and *despite of the rain* are both wrong.",
-        "三个词都表示对比，但后面接的结构不同：\n\n- *Although*（或 *even though*、*though*）后面接有主语和谓语的**从句**：*Although it was raining, we went for a walk.*\n- *Despite*（或 *in spite of*）后面接**名词短语**或 **-ing 形式**：*Despite the rain, we went for a walk. Despite being tired, he finished the report.*\n- *However* 连接两个**独立的句子**，前面用句号或分号，后面用逗号：*It was raining; however, we went for a walk.*\n\n*Despite it was raining* 和 *despite of the rain* 都是错的。",
+        "Three words show contrast, and each is followed by a different structure:\n\n- *Although* (or *even though*, *though*) + a **clause** with a subject and a verb: *Although it was raining, we went for a walk.*\n- *Despite* (or *in spite of*) + a **noun phrase** or an **-ing form**: *Despite the rain, we went for a walk. Despite being tired, he finished the report.*\n- *However* joins two **separate sentences**. It comes after a full stop or a semicolon and is followed by a comma: *It was raining; however, we went for a walk.*\n\n> **Watch out.** Never write *despite of* (it is *despite* alone, or *in spite of*) and never put a subject + verb clause directly after *despite* (*Despite it was raining* is wrong).",
+        "三个词都表示对比，但后面接的结构不同：\n\n- *Although*（或 *even though*、*though*）后面接有主语和谓语的**从句**：*Although it was raining, we went for a walk.*\n- *Despite*（或 *in spite of*）后面接**名词短语**或 **-ing 形式**：*Despite the rain, we went for a walk. Despite being tired, he finished the report.*\n- *However* 连接两个**独立的句子**，前面用句号或分号，后面用逗号：*It was raining; however, we went for a walk.*\n\n> **注意。** 绝不要写成 *despite of*（只用 *despite*，或用 *in spite of*），也不要在 *despite* 后面直接接主谓从句（*Despite it was raining* 是错的）。",
       ),
       choiceGenerator(t("Choose the word for the gap.", "选出填入空白处的词。"), contrastChoice, contrastWhy, whyNotContrast),
     ),
@@ -1376,8 +1398,8 @@ const linkingWordsOfContrast: TopicDef = {
       "no-but",
       t("Although without but", "although 不和 but 连用"),
       t(
-        "Chinese pairs *suīrán* with *dànshì* (虽然……但是……), but English uses only **one** linking word for one contrast. Choose *although* **or** *but*, never both:\n\n- *Although it was legal, it was unfair.* ✓\n- *It was legal, but it was unfair.* ✓\n- *Although it was legal, but it was unfair.* ✗\n\nAlso check the structure: *despite* never takes a clause, and *however* cannot join two clauses with only a comma.",
-        "中文说“虽然……但是……”，英语一个对比只用**一个**连接词：*although* 和 *but* 只能选一个，不能同时用：\n\n- *Although it was legal, it was unfair.* ✓\n- *It was legal, but it was unfair.* ✓\n- *Although it was legal, but it was unfair.* ✗\n\n还要检查结构：*despite* 后面不接从句，*however* 也不能只用逗号连接两个分句。这是中国学生最常见的错误之一。",
+        "Chinese pairs *suīrán* with *dànshì* (虽然……但是……), but English uses only **one** linking word for one contrast. Choose *although* **or** *but*, never both:\n\n- *Although it was legal, it was unfair.* ✓\n- *It was legal, but it was unfair.* ✓\n- *Although it was legal, but it was unfair.* ✗\n\n> **Watch out.** Check every contrast sentence for three classic traps: *although ... but* (double linker), *despite* + clause, and *however* joined by only a comma.",
+        "中文说“虽然……但是……”，英语一个对比只用**一个**连接词：*although* 和 *but* 只能选一个，不能同时用：\n\n- *Although it was legal, it was unfair.* ✓\n- *It was legal, but it was unfair.* ✓\n- *Although it was legal, but it was unfair.* ✗\n\n这是中国学生最常见的错误之一。\n\n> **注意。** 检查转折句时盯紧三个高频陷阱：*although ... but* 连用、*despite* 后接从句，以及只用逗号连接 *however*。",
       ),
       choiceGenerator(t("Choose the correct sentence.", "选出正确的句子。"), sentenceChoice, joinedWhy, whyNotJoined),
     ),
@@ -1385,8 +1407,8 @@ const linkingWordsOfContrast: TopicDef = {
       "write",
       t("Joining contrasts", "连接对比的句子"),
       t(
-        "Join the two sentences with the word in brackets:\n\n- *although*: *Although he was tired, he finished the report.* You may also put the *although* clause second: *He finished the report although he was tired.*\n- *despite*: turn the first sentence into a noun phrase or an *-ing* form: *Despite being tired, he finished the report.*\n- *however*: keep two sentences: *He was tired; however, he finished the report.*\n\nYou may write *even though* or *though* for *although*, and *in spite of* for *despite*.",
-        "用括号里的词把两个句子连起来：\n\n- *although*：*Although he was tired, he finished the report.* 也可以把 *although* 从句放在后面：*He finished the report although he was tired.*\n- *despite*：把第一句改成名词短语或 *-ing* 形式：*Despite being tired, he finished the report.*\n- *however*：保留两个句子：*He was tired; however, he finished the report.*\n\n*although* 也可以写成 *even though* 或 *though*，*despite* 也可以写成 *in spite of*。",
+        "Join the two sentences with the word in brackets:\n\n- *although*: *Although he was tired, he finished the report.* You may also put the *although* clause second: *He finished the report although he was tired.*\n- *despite*: turn the first sentence into a noun phrase or an *-ing* form: *Despite being tired, he finished the report.*\n- *however*: keep two sentences: *He was tired; however, he finished the report.*\n\nYou may write *even though* or *though* for *although*, and *in spite of* for *despite*.\n\n> **Watch out.** With *however*, always place a semicolon (`;`) or period before it and a comma after it—a comma before *however* creates a comma splice.",
+        "用括号里的词把两个句子连起来：\n\n- *although*：*Although he was tired, he finished the report.* 也可以把 *although* 从句放在后面：*He finished the report although he was tired.*\n- *despite*：把第一句改成名词短语或 *-ing* 形式：*Despite being tired, he finished the report.*\n- *however*：保留两个句子：*He was tired; however, he finished the report.*\n\n*although* 也可以写成 *even though* 或 *though*，*despite* 也可以写成 *in spite of*。\n\n> **注意。** 用 *however* 时，前面必须是分号（`;`）或句号、后面加逗号——在 *however* 前只用逗号属于逗号拼接错误。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1470,6 +1492,10 @@ const letterToAnEditor = judgedTopic({
     "Write a letter of 200 to 250 words to a newspaper in response to an article the task summarizes: state your view, support it, and propose what should be done.",
     "针对题目概述的一篇报纸文章，给报社写一封 200 到 250 词的信：表明观点，加以支持，并提出应该怎么做。",
   ),
+  intro: t(
+    "When a local paper proposes shutting down a neighborhood park for parking, a persuasive letter to the editor names the article right away, states a reasoned stance with concrete evidence, and proposes a practical alternative in formal, measured English.",
+    "当本地报纸提议把社区公园改建成停车场时，一封有说服力的读者来信会先点明回应的文章，再用具体论据亮明立场，最后以正式克制的语气提出可行替代方案。",
+  ),
   prerequisites: ["writing-a-letter-of-complaint", "writing-an-evidence-paragraph"],
   encompasses: [
     { topic: "writing-a-letter-of-complaint", weight: 0.3 },
@@ -1480,8 +1506,8 @@ const letterToAnEditor = judgedTopic({
     id: "letter-to-an-editor",
     title: t("Respond, argue, propose", "回应、论证、建议"),
     explanation: t(
-      "A letter to an editor answers an article for the newspaper's readers. Plan four or five paragraphs:\n\n1. **The article**: name it and say what it claimed: *I am writing in response to your article of 12 May, \"Library to close on Sundays\", which reported ...*\n2. **Your view**: say clearly whether you agree, and admit what is true on the other side: *Although I understand the frustration of shopkeepers, I believe that ...*\n3. **Your support**: reasons with evidence, such as figures, examples from other places or your own experience: *According to the library's own figures, ...*\n4. **Your proposal**: what should be done, and by whom: *I would therefore urge the council to ...*\n\nOpen with *Dear Editor,* and close with *Yours faithfully,* and your name. Write formally and firmly, without contractions or insults: you are trying to persuade other readers, not to win a fight.",
-      '写给编辑的信是面向报纸读者回应一篇文章。安排四到五段：\n\n1. **文章**：说出文章的标题和日期，概述它的观点：*I am writing in response to your article of 12 May, "Library to close on Sundays", which reported ...*\n2. **你的观点**：明确表示是否同意，并承认对方观点中合理的地方：*Although I understand the frustration of shopkeepers, I believe that ...*\n3. **你的论据**：理由加证据，例如数字、其他地方的例子或亲身经历：*According to the library\'s own figures, ...*\n4. **你的建议**：应该做什么、由谁来做：*I would therefore urge the council to ...*\n\n以 *Dear Editor,* 开头，以 *Yours faithfully,* 和你的名字结尾。语气正式而坚定，不用缩写，不攻击别人：你的目的是说服其他读者，而不是吵赢一场架。',
+      "A letter to an editor answers an article for the newspaper's readers. Plan four or five paragraphs:\n\n1. **The article**: name it and say what it claimed: *I am writing in response to your article of 12 May, \"Library to close on Sundays\", which reported ...*\n2. **Your view**: say clearly whether you agree, and admit what is true on the other side: *Although I understand the frustration of shopkeepers, I believe that ...*\n3. **Your support**: reasons with evidence, such as figures, examples from other places or your own experience: *According to the library's own figures, ...*\n4. **Your proposal**: what should be done, and by whom: *I would therefore urge the council to ...*\n\nOpen with *Dear Editor,* and close with *Yours faithfully,* and your name. Write formally and firmly, without contractions or insults.\n\n> **Watch out.** Remember that you are persuading public readers, not venting—open by referencing the article directly, avoid contractions or personal attacks, and close with a concrete call to action.",
+      '写给编辑的信是面向报纸读者回应一篇文章。安排四到五段：\n\n1. **文章**：说出文章的标题和日期，概述它的观点：*I am writing in response to your article of 12 May, "Library to close on Sundays", which reported ...*\n2. **你的观点**：明确表示是否同意，并承认对方观点中合理的地方：*Although I understand the frustration of shopkeepers, I believe that ...*\n3. **你的论据**：理由加证据，例如数字、其他地方的例子或亲身经历：*According to the library\'s own figures, ...*\n4. **你的建议**：应该做什么、由谁来做：*I would therefore urge the council to ...*\n\n以 *Dear Editor,* 开头，以 *Yours faithfully,* 和你的名字结尾。语气正式而坚定，不用缩写，不攻击别人。\n\n> **注意。** 你是在说服广大读者而不是发泄情绪——开头要直接点明回应的文章，不用缩写或人身攻击，结尾给出具体可行的行动建议。',
     ),
   },
   question: t(

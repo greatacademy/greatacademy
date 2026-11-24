@@ -18,14 +18,18 @@ const defining = topic("writing", {
     "Stating what a key word such as freedom, success or fair means in an argument, so that the reader and the writer argue about the same thing.",
     "说明 freedom、success 或 fair 之类关键词在论证中的含义，使读者和作者争论的是同一件事。",
   ],
+  intro: [
+    "Two debaters arguing over whether a city is *affordable* can talk past each other for an hour if one means *rent below a third of local median income* while the other means *cheaper than New York*. Stating a clear, bounded, neutral working definition up front ensures both sides test the same claim—avoiding circular loops and loaded definitions that smuggle in the conclusion.",
+    "两位辩手争论一座城市是否“负担得起”，如果一方指*房租低于当地中位收入的三分之一*，另一方指*比纽约便宜*，争论一小时也各说各话。开篇给出清楚、有界限、中立的工作定义，才能让双方围绕同一件事展开讨论，避免循环定义或把结论偷渡进词义的偏向性定义。",
+  ],
   after: ["facts-definitions-and-examples", "qualifying-a-claim"],
   points: [
     label(
       "what-kind-of-definition",
       ["What Kind of Definition", "哪一种定义"],
       [
-        "Arguments often turn on a word that people use in different ways: *freedom*, *success*, *fair*, *art*. A **working definition** says plainly what the writer means by the word in this argument, in other terms, with its limits: *By success I mean a job that pays enough to live on and that the person chose.* A **circular definition** uses the word, or a form of it, to define itself: *Success is being successful.* A **loaded definition** builds the writer's conclusion into the meaning, so the argument is won by definition: *Art is anything that makes me feel deeply.*",
-        "论证常常取决于一个人们用法各异的词：*freedom*、*success*、*fair*、*art*。**工作定义**用别的词清楚地说明作者在这个论证中所指的意思，并划出界限：*我所说的成功，是指一份收入足以维持生活、且由本人选择的工作。* **循环定义**用这个词本身或它的变体来定义自己：*成功就是取得成功。* **偏向性定义**把作者的结论放进词义里，使论证靠定义取胜：*艺术就是任何能让我深受感动的东西。*",
+        "Arguments often turn on a word that people use in different ways: *freedom*, *success*, *fair*, *art*. A **working definition** says plainly what the writer means by the word in this argument, in other terms, with its limits: *By success I mean a job that pays enough to live on and that the person chose.* A **circular definition** uses the word, or a form of it, to define itself: *Success is being successful.* A **loaded definition** builds the writer's conclusion into the meaning, so the argument is won by definition: *Art is anything that makes me feel deeply.*\n\n> **Watch out.** Do not mistake a **loaded definition** for a **working definition** just because it uses different words: if the definition quietly forces the reader to agree with the writer's personal bias or verdict (*any money spent on programs I oppose*), it is loaded.",
+        "论证常常取决于一个人们用法各异的词：*freedom*、*success*、*fair*、*art*。**工作定义**用别的词清楚地说明作者在这个论证中所指的意思，并划出界限：*我所说的成功，是指一份收入足以维持生活、且由本人选择的工作。* **循环定义**用这个词本身或它的变体来定义自己：*成功就是取得成功。* **偏向性定义**把作者的结论放进词义里，使论证靠定义取胜：*艺术就是任何能让我深受感动的东西。*\n\n> **注意。** 不要因为某个定义换了别的词就把它当成**工作定义**：只要它悄悄把作者的个人偏好或结论塞进词义里（如*任何花在我反对的项目上的钱*），它就是偏向性定义。",
       ],
       ["What kind of definition is this?", "这是哪一种定义？"],
       `
@@ -63,22 +67,22 @@ const defining = topic("writing", {
       {
         "a working definition": L(
           "工作定义",
-          "It says in other words what the term means in this argument and sets clear limits that a reader could apply.",
-          "它用别的词说明这个术语在本论证中的含义，并划出读者能够应用的清楚界限。",
+          "It says in other words what the term means in this argument and sets clear limits that a reader could apply.\n\n**Check.** Ask whether two people on opposite sides of the debate could both apply this boundary to real cases without first agreeing on the final verdict—if yes, it is a working definition.",
+          "它用别的词说明这个术语在本论证中的含义，并划出读者能够应用的清楚界限。\n\n**检验。** 想想持相反立场的双方能否都用这条标准去检验具体案例，而不必先同意作者的最终结论——如果可以，就是工作定义。",
           "It does not explain the term in other words with clear limits.",
           "它没有用别的词说明这个术语并划出清楚的界限。",
         ),
         "a circular definition": L(
           "循环定义",
-          "It defines the word by using the same word or a form of it, so the reader learns nothing new.",
-          "它用这个词本身或它的变体来定义这个词，读者什么新东西也学不到。",
+          "It defines the word by using the same word or a form of it, so the reader learns nothing new.\n\n**Check.** Spot the defined term (or its root word) reappearing inside the explanation—someone who did not already know the word would gain no test for applying it.",
+          "它用这个词本身或它的变体来定义这个词，读者什么新东西也学不到。\n\n**检验。** 看看被定义的词（或它的同根词）是不是直接重复出现在解释里——原本不懂这个词的人读完依然无从判断。",
           "It does not define the word by repeating the word itself.",
           "它没有用这个词本身来定义这个词。",
         ),
         "a loaded definition": L(
           "偏向性定义",
-          "It builds the writer's own preference or conclusion into the meaning, so the argument is decided by definition.",
-          "它把作者自己的偏好或结论放进了词义里，使论证靠定义就分出了胜负。",
+          "It builds the writer's own preference or conclusion into the meaning, so the argument is decided by definition.\n\n**Check.** Test whether an opponent could accept this meaning as a fair starting point—because it smuggles in personal taste or a foregone judgment, an opponent would reject it immediately.",
+          "它把作者自己的偏好或结论放进了词义里，使论证靠定义就分出了胜负。\n\n**检验。** 想想反方读者愿不愿意接受这个定义作为讨论起点——因为它夹带了个人好恶或预设结论，反方会立刻拒绝。",
           "It does not build the writer's conclusion into the meaning.",
           "它没有把作者的结论放进词义里。",
         ),
@@ -88,8 +92,8 @@ const defining = topic("writing", {
       "the-definition-that-works",
       ["The Definition That Works", "可用的定义"],
       [
-        "A definition that works for an argument is **clear** (it uses words the reader already knows), **limited** (it says what counts and what does not) and **neutral** (a reader on the other side could accept it as a starting point). It does not repeat the word, it does not win the argument by itself, and it is not so broad that everything counts.",
-        "适用于论证的定义要**清楚**（用读者已经认识的词）、**有界限**（说明什么算、什么不算）、**中立**（对方的读者也能把它当作出发点接受）。它不重复这个词本身，不靠定义就赢得论证，也不宽泛到什么都算。",
+        "A definition that works for an argument is **clear** (it uses words the reader already knows), **limited** (it says what counts and what does not) and **neutral** (a reader on the other side could accept it as a starting point). It does not repeat the word, it does not win the argument by itself, and it is not so broad that everything counts.\n\n> **Watch out.** Reject any option that echoes the term's own root (*a person who has expertise*, *the state of being private*) or locks in an extreme personal rule (*never*, *anything I personally like*).",
+        "适用于论证的定义要**清楚**（用读者已经认识的词）、**有界限**（说明什么算、什么不算）、**中立**（对方的读者也能把它当作出发点接受）。它不重复这个词本身，不靠定义就赢得论证，也不宽泛到什么都算。\n\n> **注意。** 排除任何重复词根的选项（如 *a person who has expertise*、*the state of being private*），也排除塞进极端个人偏好的选项（如 *never*、*anything I personally like*）。",
       ],
       ["Which definition would work best in an argument?", "哪个定义最适合用在论证中？"],
       `
@@ -125,8 +129,8 @@ const defining = topic("writing", {
         a loyal citizen|one who obeys the law and takes part in public life|a citizen who is loyal|one who never criticizes the government
       `,
       (right) => [
-        `"${right}" uses plain words, sets limits on what counts and does not decide the argument in advance.`,
-        `“${right}”用平实的词，划定了什么算数的界限，也没有预先决定论证的结果。`,
+        `"${right}" uses plain words, sets limits on what counts and does not decide the argument in advance.\n\n**Check.** Check all three tests: it avoids repeating the term's root, gives a concrete boundary you can test against examples, and stays neutral enough for both sides of a debate to adopt.`,
+        `“${right}”用平实的词，划定了什么算数的界限，也没有预先决定论证的结果。\n\n**检验。** 逐一核对三条标准：不重复词根、给出可对照案例检验的具体界限，且足够中立，辩论双方都能共同采用。`,
       ],
       [
         ['"{wrong}" defines the term with the term itself, so it explains nothing.', "“{wrong}”用术语本身来定义术语，所以什么也没解释。"],
@@ -146,14 +150,18 @@ const diction = topic("writing", {
     "Replacing vague words such as thing, good, nice and very with words that say exactly what is meant, with the right connotation for the purpose.",
     "把 thing、good、nice、very 之类含糊的词换成准确表达意思、联想意义也符合目的的词。",
   ],
+  intro: [
+    "Saying *The rescue crew did good stuff* hides all the action, while *The rescue crew meddled in the flood* twists a praiseworthy act into an insult. In this topic, you diagnose whether a word is vague, carries the wrong connotation, or hits the exact mark—and pick the sharpest replacement.",
+    "说 *The rescue crew did good stuff* 过于笼统，而说 *The rescue crew meddled in the flood* 又把善举说成了多管闲事。本主题带你诊断用词是含糊、感情色彩错位还是精准到位，并挑出最贴切的替换词。",
+  ],
   after: ["connotation-and-precise-words", "formal-style"],
   points: [
     label(
       "is-the-word-right",
       ["Is the Word Right", "这个词用得对吗"],
       [
-        "**Diction** is word choice. A word can fail in two ways. It can be **vague**: *thing*, *stuff*, *good*, *bad*, *nice*, *very*, *a lot*, *interesting* tell the reader almost nothing. Or it can have the **wrong connotation**: it means roughly the right thing but carries feelings that do not fit (*The general's stubborn courage saved the city* praises with a word of blame; *The thief was frugal with the stolen money* uses praise for a crime). **Precise** diction names exactly what is meant, with the feeling the writer intends.",
-        "**措辞**就是用词。一个词可能以两种方式失败。它可能**含糊**：*thing*、*stuff*、*good*、*bad*、*nice*、*very*、*a lot*、*interesting* 几乎没有告诉读者任何东西。也可能**联想意义不对**：它的意思大致对，却带着不相称的感情（*The general's stubborn courage saved the city* 用一个贬义词去称赞；*The thief was frugal with the stolen money* 对犯罪用了褒义词）。**精确**的措辞准确说出所指，并带着作者想要的感情。",
+        "**Diction** is word choice. A word can fail in two ways. It can be **vague**: *thing*, *stuff*, *good*, *bad*, *nice*, *very*, *a lot*, *interesting* tell the reader almost nothing. Or it can have the **wrong connotation**: it means roughly the right thing but carries feelings that do not fit (*The general's stubborn courage saved the city* praises with a word of blame; *The thief was frugal with the stolen money* uses praise for a crime). **Precise** diction names exactly what is meant, with the feeling the writer intends.\n\n> **Watch out.** Tell **vague** apart from **wrong connotation**: a vague word (*good*, *stuff*, *things*) is too broad to picture, whereas a wrong-connotation word (*smirked*, *lurked*, *nosy*) is vivid and specific, but its attitude clashes with the sentence.",
+        "**措辞**就是用词。一个词可能以两种方式失败。它可能**含糊**：*thing*、*stuff*、*good*、*bad*、*nice*、*very*、*a lot*、*interesting* 几乎没有告诉读者任何东西。也可能**联想意义不对**：它的意思大致对，却带着不相称的感情（*The general's stubborn courage saved the city* 用一个贬义词去称赞；*The thief was frugal with the stolen money* 对犯罪用了褒义词）。**精确**的措辞准确说出所指，并带着作者想要的感情。\n\n> **注意。** 分清**含糊**与**联想意义不对**：含糊词（*good*、*stuff*、*things*）空泛得看不出具体内容；联想意义不对的词（*smirked*、*lurked*、*nosy*）很具体，但褒贬态度与句意唱反调。",
       ],
       ["What is true of the word in bold?", "加粗的词是什么情况？"],
       `
@@ -191,22 +199,22 @@ const diction = topic("writing", {
       {
         vague: L(
           "含糊",
-          "The word is so general that it tells the reader almost nothing specific.",
-          "这个词太笼统，几乎没有告诉读者任何具体的东西。",
+          "The word is so general that it tells the reader almost nothing specific.\n\n**Check.** Try picturing the bold word on its own: because it could stand for almost anything without detail, it is **vague**.",
+          "这个词太笼统，几乎没有告诉读者任何具体的东西。\n\n**检验。** 单看加粗的词去想象画面：它空泛得可以指代无数种情况，因此属于**含糊**。",
           "The word is not too general to tell the reader something specific.",
           "这个词并没有笼统到说不出具体内容。",
         ),
         "the wrong connotation": L(
           "联想意义不对",
-          "The word means roughly the right thing but carries feelings that clash with what the sentence is saying.",
-          "这个词的意思大致对，但带着与句意冲突的感情色彩。",
+          "The word means roughly the right thing but carries feelings that clash with what the sentence is saying.\n\n**Check.** Compare the bold word's praise-or-blame tone with the rest of the sentence: a negative word lands on a positive act (or vice versa), creating a clash in connotation.",
+          "这个词的意思大致对，但带着与句意冲突的感情色彩。\n\n**检验。** 把加粗词的褒贬色彩与全句态度对照：褒义词落在坏事上（或贬义词落在好事上），感情色彩明显错位。",
           "The feelings the word carries do not clash with the sentence.",
           "这个词的感情色彩与句子并不冲突。",
         ),
         precise: L(
           "精确",
-          "The word names exactly what is meant, with feelings that fit the sentence.",
-          "这个词准确说出所指，感情色彩也与句子相符。",
+          "The word names exactly what is meant, with feelings that fit the sentence.\n\n**Check.** Test both criteria: the bold wording gives a concrete, specific picture *and* its tone matches the sentence's attitude.",
+          "这个词准确说出所指，感情色彩也与句子相符。\n\n**检验。** 同时检验两条标准：加粗词给出了具体清晰的画面，且褒贬语气与全句完全一致。",
           "The word is too general or carries the wrong feelings.",
           "这个词太笼统，或带着不对的感情色彩。",
         ),
@@ -216,8 +224,8 @@ const diction = topic("writing", {
       "the-precise-word",
       ["The Precise Word", "精确的词"],
       [
-        "To choose a precise word, ask what exactly you mean and what feeling you want the reader to have. Instead of *walked*, did the person *stroll*, *march*, *limp* or *trudge*? Instead of *said*, did she *whisper*, *insist* or *admit*? A precise word is specific, fits the facts the sentence gives, and carries the right feeling; a vague word says too little, and a word with the wrong connotation says something the writer did not intend.",
-        "选择精确的词，要问自己确切的意思是什么、想让读者有什么感受。不说 *walked*，那人是 *stroll*（闲逛）、*march*（行进）、*limp*（跛行）还是 *trudge*（艰难地走）？不说 *said*，她是 *whisper*（低语）、*insist*（坚持）还是 *admit*（承认）？精确的词具体、符合句中给出的事实，并带着恰当的感情；含糊的词说得太少，联想意义不对的词则说出了作者并不想说的东西。",
+        "To choose a precise word, ask what exactly you mean and what feeling you want the reader to have. Instead of *walked*, did the person *stroll*, *march*, *limp* or *trudge*? Instead of *said*, did she *whisper*, *insist* or *admit*? A precise word is specific, fits the facts the sentence gives, and carries the right feeling; a vague word says too little, and a word with the wrong connotation says something the writer did not intend.\n\n> **Watch out.** Do not pick a vivid word just because it sounds dramatic—check the clue in the rest of the sentence (for example, tired feet, secrecy, or pride) to make sure its connotation and meaning actually match.",
+        "选择精确的词，要问自己确切的意思是什么、想让读者有什么感受。不说 *walked*，那人是 *stroll*（闲逛）、*march*（行进）、*limp*（跛行）还是 *trudge*（艰难地走）？不说 *said*，她是 *whisper*（低语）、*insist*（坚持）还是 *admit*（承认）？精确的词具体、符合句中给出的事实，并带着恰当的感情；含糊的词说得太少，联想意义不对的词则说出了作者并不想说的东西。\n\n> **注意。** 不要只因为某个词听起来生动夸张就选它——务必核对句中的具体线索（如疲惫、保密或自豪），确保词义与褒贬色彩都真正吻合。",
       ],
       ["Which word is most precise for the sentence?", "哪个词放在句子里最精确？"],
       `
@@ -254,8 +262,8 @@ const diction = topic("writing", {
         The report ___ the dangers of the new chemical.|warns of|talks about things like|celebrates
       `,
       (right) => [
-        `**${right}** names exactly what happens and fits the facts and the feeling of the sentence.`,
-        `**${right}** 准确说出了发生的事，也符合句子的事实和感情色彩。`,
+        `**${right}** names exactly what happens and fits the facts and the feeling of the sentence.\n\n**Check.** Substitute **${right}** into the blank and check it against the sentence's context clues: it is both specific (not vague) and matches the scene's tone and facts.`,
+        `**${right}** 准确说出了发生的事，也符合句子的事实和感情色彩。\n\n**检验。** 把 **${right}** 代回空格，对照句中语境线索：它既具体明确（不含糊），又与场景的事实和语气严丝合缝。`,
       ],
       [
         ["*{wrong}* is too vague; it tells the reader almost nothing specific.", "*{wrong}* 太含糊，几乎没有告诉读者任何具体的东西。"],
@@ -275,14 +283,18 @@ const riskClearly = topic("writing", {
     "Writing about a danger so that readers learn its real size: absolute numbers, a fair comparison and calm words, rather than alarm or false comfort.",
     "写到某种危险时，让读者了解它的真实大小：给出绝对数字、公平的比较和冷静的措辞，而不是制造恐慌或虚假的安慰。",
   ],
+  intro: [
+    "Suppose a town reports on an icy intersection: writing *Killer junction triples crash odds!* creates panic, while *Good drivers have nothing to worry about* hides real danger. Writing *Collisions rose from 2 to 6 per 10,000 winter trips, mostly after dusk* gives readers the absolute rate, the time frame, and calm wording so they can make an informed choice.",
+    "假设小镇要通报一处结冰路口的隐患：写 *Killer junction triples crash odds!* 会制造恐慌，而写 *Good drivers have nothing to worry about* 又掩盖了真实风险。写成 *Collisions rose from 2 to 6 per 10,000 winter trips, mostly after dusk*，用冷静的语言给出绝对比率和时间范围，读者才能做出明智判断。",
+  ],
   after: ["reading-risk-and-probability", "keeping-an-objective-tone"],
   points: [
     label(
       "how-the-risk-is-told",
       ["How the Risk Is Told", "风险是怎样讲述的"],
       [
-        "A writer who explains a risk can mislead in two directions. An **alarming** statement gives only a relative change or a frightening story, or uses words such as *deadly*, *soaring* and *shocking*, so readers fear more than the numbers justify. A **falsely reassuring** statement waves the risk away with words like *perfectly safe*, *nothing to worry about* or *only a tiny chance*, without numbers. A **clear and fair** statement gives the absolute numbers, compares them with something familiar, and uses calm words.",
-        "说明风险的作者可能从两个方向误导读者。**制造恐慌**的说法只给出相对变化或吓人的故事，或使用 *deadly*、*soaring*、*shocking* 之类的词，让读者的恐惧超过数字所能支持的程度。**虚假安慰**的说法用 *perfectly safe*、*nothing to worry about* 或 *only a tiny chance* 之类的话把风险一笔带过，却不给数字。**清楚公正**的说法给出绝对数字，与熟悉的事物比较，并使用冷静的措辞。",
+        "A writer who explains a risk can mislead in two directions. An **alarming** statement gives only a relative change or a frightening story, or uses words such as *deadly*, *soaring* and *shocking*, so readers fear more than the numbers justify. A **falsely reassuring** statement waves the risk away with words like *perfectly safe*, *nothing to worry about* or *only a tiny chance*, without numbers. A **clear and fair** statement gives the absolute numbers, compares them with something familiar, and uses calm words.\n\n> **Watch out.** Even a true-sounding percentage like *raises risk by 18%* or *doubles your chance* is **alarming** when it omits the absolute baseline—without knowing the starting rate, the reader cannot gauge the real size of the danger.",
+        "说明风险的作者可能从两个方向误导读者。**制造恐慌**的说法只给出相对变化或吓人的故事，或使用 *deadly*、*soaring*、*shocking* 之类的词，让读者的恐惧超过数字所能支持的程度。**虚假安慰**的说法用 *perfectly safe*、*nothing to worry about* 或 *only a tiny chance* 之类的话把风险一笔带过，却不给数字。**清楚公正**的说法给出绝对数字，与熟悉的事物比较，并使用冷静的措辞。\n\n> **注意。** 哪怕听起来像数据的说法（如 *raises risk by 18%* 或 *doubles your chance*），只要省去了绝对基线，依然属于**制造恐慌**——不知道原本的概率，读者就无法判断危险到底有多大。",
       ],
       ["How does this sentence tell the risk?", "这个句子是怎样讲述风险的？"],
       `
@@ -320,22 +332,22 @@ const riskClearly = topic("writing", {
       {
         alarming: L(
           "制造恐慌",
-          "It uses only a relative change, a single frightening case or dramatic words, so the risk seems larger than it is.",
-          "它只用相对变化、单个吓人的案例或夸张的词语，让风险显得比实际更大。",
+          "It uses only a relative change, a single frightening case or dramatic words, so the risk seems larger than it is.\n\n**Check.** Look for fear-inducing adjectives (*deadly*, *shocking*, *terrifying*), a single tragic anecdote, or a bare relative multiplier (*doubles*, *triples*, *18%*) with no absolute baseline.",
+          "它只用相对变化、单个吓人的案例或夸张的词语，让风险显得比实际更大。\n\n**检验。** 看看句中是不是用了煽动恐惧的词语（*deadly*、*shocking*、*terrifying*）、单个惨痛案例，或缺少基线的相对倍数（*doubles*、*triples*、*18%*）。",
           "It does not make the risk sound larger than the numbers show.",
           "它没有让风险听起来比数字显示的更大。",
         ),
         "falsely reassuring": L(
           "虚假安慰",
-          "It dismisses the risk with comforting words, a tradition or one lucky case, and gives no numbers.",
-          "它用安慰的话、传统或一个幸运的案例把风险一笔带过，不给出任何数字。",
+          "It dismisses the risk with comforting words, a tradition or one lucky case, and gives no numbers.\n\n**Check.** Notice that the sentence brushes danger aside with blanket assurances (*perfectly safe*, *never*, *relax*) or one survivor's story, giving zero measurable data.",
+          "它用安慰的话、传统或一个幸运的案例把风险一笔带过，不给出任何数字。\n\n**检验。** 注意句子用绝对化的打包票（*perfectly safe*、*never*、*relax*）或单个幸存者案例把风险轻描淡写地带过，完全没有可衡量的数字。",
           "It does not wave the risk away without numbers.",
           "它没有在不给数字的情况下把风险一笔带过。",
         ),
         "clear and fair": L(
           "清楚公正",
-          "It gives absolute numbers, often with a comparison, in calm words, so readers can judge the risk.",
-          "它用冷静的措辞给出绝对数字，常常还有比较，读者可以自己判断风险。",
+          "It gives absolute numbers, often with a comparison, in calm words, so readers can judge the risk.\n\n**Check.** Verify both elements: the sentence supplies concrete absolute figures (or careful study findings with limits) and keeps an even, matter-of-fact tone.",
+          "它用冷静的措辞给出绝对数字，常常还有比较，读者可以自己判断风险。\n\n**检验。** 核实两项要素：句子提供了具体的绝对数字（或严谨说明边界的研究结果），同时保持平实冷静的语气。",
           "It leaves out the absolute numbers or colors them with alarm or comfort.",
           "它省去了绝对数字，或用恐慌或安慰给数字染了色。",
         ),
@@ -345,8 +357,8 @@ const riskClearly = topic("writing", {
       "the-clearest-statement",
       ["The Clearest Statement", "最清楚的说法"],
       [
-        "When you write about a risk, give the **baseline** and the **change** as absolute numbers (*from 2 to 4 in 10,000*), say **who** and **over what time** (*women taking the pill, each year*), and where it helps, compare it with a familiar risk. Keep the words calm: let the numbers carry the weight. Leave out *deadly*, *soaring* and *shocking*, and leave out *perfectly safe* and *nothing to worry about*.",
-        "写到风险时，要用绝对数字给出**基线**和**变化**（*从万分之二到万分之四*），说明**对谁**、**在多长时间内**（*服药的女性，每年*），在有帮助的地方与一种熟悉的风险作比较。措辞保持冷静：让数字说话。去掉 *deadly*、*soaring* 和 *shocking*，也去掉 *perfectly safe* 和 *nothing to worry about*。",
+        "When you write about a risk, give the **baseline** and the **change** as absolute numbers (*from 2 to 4 in 10,000*), say **who** and **over what time** (*women taking the pill, each year*), and where it helps, compare it with a familiar risk. Keep the words calm: let the numbers carry the weight. Leave out *deadly*, *soaring* and *shocking*, and leave out *perfectly safe* and *nothing to worry about*.\n\n> **Watch out.** Reject both extremes: an exclamation-filled warning with only a relative jump (*doubles*, *18% higher*) and a casual dismissal (*completely safe*, *never hurt anyone*) that hides the numbers.",
+        "写到风险时，要用绝对数字给出**基线**和**变化**（*从万分之二到万分之四*），说明**对谁**、**在多长时间内**（*服药的女性，每年*），在有帮助的地方与一种熟悉的风险作比较。措辞保持冷静：让数字说话。去掉 *deadly*、*soaring* 和 *shocking*，也去掉 *perfectly safe* 和 *nothing to worry about*。\n\n> **注意。** 避开两个极端：只有相对增幅和感叹号的恐吓说法（如 *doubles*、*18% higher*），以及隐去数字、轻描淡写的敷衍安慰（如 *completely safe*、*never hurt anyone*）。",
       ],
       ["Which statement explains the risk most clearly and fairly?", "哪个说法最清楚、最公正地说明了风险？"],
       `
@@ -382,8 +394,8 @@ const riskClearly = topic("writing", {
         a dog breed and bites|About 2 in 10,000 owners of the breed report a serious bite each year.|This vicious breed is a menace to every family!|My dog would never bite anyone, so the breed is safe.
       `,
       (right) => [
-        `"${right}" gives absolute numbers, says who is affected and over what time, and uses calm words.`,
-        `“${right}”给出了绝对数字，说明了受影响的人和时间范围，措辞也很冷静。`,
+        `"${right}" gives absolute numbers, says who is affected and over what time, and uses calm words.\n\n**Check.** Confirm that the statement specifies measurable numbers or concrete limits, names the affected group or timeframe, and avoids both scare words and blanket reassurance.`,
+        `“${right}”给出了绝对数字，说明了受影响的人和时间范围，措辞也很冷静。\n\n**检验。** 确认这句话给出了可衡量的绝对数字或明确边界，交代了受影响群体或时间范围，且既无恐吓词也无空洞的打包票。`,
       ],
       [
         [

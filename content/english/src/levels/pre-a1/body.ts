@@ -172,6 +172,10 @@ const adjectivesBeforeNouns: TopicDef = {
   id: "adjectives-before-nouns",
   title: t("Big Eyes, Long Hair", "大眼睛，长头发"),
   summary: t("A describing word comes before the noun and never takes -s.", "形容词放在名词前，而且从不加 -s。"),
+  intro: t(
+    "Look at *My dog has four long legs.* and *The baby has a small nose.* In English, a describing word sits right before the noun—after *a* or a number—and never adds *-s*, even when the noun is plural. In this topic, you place adjectives cleanly before nouns.",
+    "看看 *My dog has four long legs.* 和 *The baby has a small nose.* 英语里形容词紧挨在名词前面、位于 *a* 或数字之后，而且即使名词是复数，形容词也从不加 *-s*。本主题带你把形容词准确放在名词前面。",
+  ),
   prerequisites: ["pre-a1-words-body", "pre-a1-words-colors", "have-and-has"],
   encompasses: [
     { topic: "pre-a1-words-body", weight: 0.3 },
@@ -185,16 +189,16 @@ const adjectivesBeforeNouns: TopicDef = {
       "choose",
       t("Where the describing word goes", "形容词放在哪里"),
       t(
-        "A describing word like *big*, *long* or *blue* comes before the noun: *long hair*, *two big eyes*. It never takes *-s*, even before more than one: *two big eyes*, not *two bigs eyes*.",
-        "*big*、*long*、*blue* 这样的形容词放在名词前：*long hair*、*two big eyes*。名词是复数时，形容词也不加 *-s*：说 *two big eyes*，不说 *two bigs eyes*。",
+        "A describing word like *big*, *long* or *blue* comes before the noun: *long hair*, *two big eyes*. It never takes *-s*, even before more than one: *two big eyes*, not *two bigs eyes*.\n\n> **Watch out.** Check two things on the describing word: it sits *before* the noun (not after it), and it stays plain with *no -s* even when the noun is plural.",
+        "*big*、*long*、*blue* 这样的形容词放在名词前：*long hair*、*two big eyes*。名词是复数时，形容词也不加 *-s*：说 *two big eyes*，不说 *two bigs eyes*。\n\n> **注意。** 检查形容词的两点：位置在名词*前面*（不在后面），且即使名词是复数，形容词也绝不加 *-s*。",
       ),
       choiceGenerator(
         t("Which sentence is right?", "哪个句子是对的？"),
         adjectiveChoiceBank,
         (right) =>
           t(
-            `${right} The describing word comes right before the noun, after any number, and never takes *-s*.`,
-            `${right} 形容词放在名词正前方、数字后面，而且从不加 *-s*。`,
+            `${right} The describing word comes right before the noun, after any number, and never takes *-s*.\n\n**Check.** Find the noun at the end of the sentence—confirm the describing word sits directly in front of it with no *-s* attached.`,
+            `${right} 形容词放在名词正前方、数字后面，而且从不加 *-s*。\n\n**检验。** 找到句尾的名词——确认形容词紧挨在它前面，且没有加 *-s*。`,
           ),
         (_wrong, _right, _shown, position) =>
           position === 0
@@ -212,14 +216,14 @@ const adjectivesBeforeNouns: TopicDef = {
       "write",
       t("Adding a describing word", "加上形容词"),
       t(
-        "Put the describing word right before the noun, after any number: *two eyes* → *two blue eyes*.",
-        "把形容词放在名词正前方，数字后面：*two eyes* → *two blue eyes*。",
+        "Put the describing word right before the noun, after any number: *two eyes* → *two blue eyes*.\n\n> **Watch out.** Slide the describing word *between* the article or number (*a*, *two*, *four*) and the noun—never put it before *a* or after the noun.",
+        "把形容词放在名词正前方，数字后面：*two eyes* → *two blue eyes*。\n\n> **注意。** 把形容词插在冠词或数字（*a*、*two*、*four*）与名词*之间*——不要放在 *a* 前面，也不要放在名词后面。",
       ),
       typedGenerator("sentence", t("Write the sentence again.", "重写这个句子。"), adjectiveTypedBank, (right, shown) => {
         const adjective = shown.match(/\((.*)\)$/u)?.[1] ?? "";
         return t(
-          `*${adjective}* goes right before the noun, after any number, and takes no *-s*: ${right}`,
-          `*${adjective}* 放在名词正前方、数字后面，不加 *-s*：${right}`,
+          `*${adjective}* goes right before the noun, after any number, and takes no *-s*: ${right}\n\n**Check.** Verify the order *[a / number] + ${adjective} + [noun]* and confirm *${adjective}* has no *-s*.`,
+          `*${adjective}* 放在名词正前方、数字后面，不加 *-s*：${right}\n\n**检验。** 核对语序“*[a / 数字] + ${adjective} + [名词]*”，并确认 *${adjective}* 没有加 *-s*。`,
         );
       }),
     ),
@@ -331,6 +335,10 @@ const writingAboutYourself: TopicDef = {
     "Write sentences about yourself from notes: your name, your age and what you have.",
     "根据提示写关于自己的句子：你的名字、年龄和你拥有的东西。",
   ),
+  intro: t(
+    "Turn a short profile note like `name: Mia` or `age: 9` into a complete English sentence: *My name is Mia.* and *I am nine years old.* Notice how each kind of note uses its own pattern (*My name is…*, *I am…*, *I have…*, *I like…*). In this topic, you pick and write clean self-introduction sentences from notes.",
+    "把 `name: Mia` 或 `age: 9` 这样的简短信息写成完整的英语句子：*My name is Mia.* 和 *I am nine years old.* 每类信息都有固定句型（*My name is…*、*I am…*、*I have…*、*I like…*）。本主题带你根据提示选出并写出规范的自我介绍句。",
+  ),
   prerequisites: ["writing-words-in-order", "have-and-has"],
   encompasses: [
     { topic: "writing-words-in-order", weight: 0.3 },
@@ -343,15 +351,18 @@ const writingAboutYourself: TopicDef = {
       "choose",
       t("The right sentence for a note", "选出符合提示的句子"),
       t(
-        "*My name is Ben.* *I am eight years old.* (not *I have eight years.*) *I have a dog.* *I have black hair.* *I like cats.*",
-        "*My name is Ben.* *I am eight years old.*（说年龄用 *am*，不用 *have*，也不能漏掉 *am*）*I have a dog.* *I have black hair.*（颜色放在 *hair* 前面）*I like cats.*",
+        "*My name is Ben.* *I am eight years old.* (not *I have eight years.*) *I have a dog.* *I have black hair.* *I like cats.*\n\n> **Watch out.** Check the verb for each note: use *is* for your name, *am* (never *have*) for your age, *have* (never *has*) for what you own or look like, and *like* (no *am* and no *-s*) for what you like.",
+        "*My name is Ben.* *I am eight years old.*（说年龄用 *am*，不用 *have*，也不能漏掉 *am*）*I have a dog.* *I have black hair.*（颜色放在 *hair* 前面）*I like cats.*\n\n> **注意。** 按提示类型核对动词：名字用 *is*，年龄用 *am*（不用 *have*），拥有或外貌用 *have*（不用 *has*），喜欢用 *like*（不加 *am*，也不加 *-s*）。",
       ),
       choiceGenerator(
         t("Choose the sentence that matches the note.", "选出与提示相符的句子。"),
         aboutYouChoiceBank,
         (right, shown) => {
           const rule = noteRule[noteKind(shown)];
-          return t(`${rule?.en}: ${right}`, `${rule?.["zh-CN"]}：${right}`);
+          return t(
+            `${rule?.en}: ${right}\n\n**Check.** Verify the sentence has a subject (*I* or *My name*), the exact verb for this kind of note, and adjectives placed before the noun.`,
+            `${rule?.["zh-CN"]}：${right}\n\n**检验。** 确认句子有主语（*I* 或 *My name*）、用了这类提示对应的动词，且形容词放在名词前面。`,
+          );
         },
         (_wrong, _right, shown, position) => noteMistakes[noteKind(shown)]?.[position === 0 ? 0 : 1] ?? t("", ""),
       ),
@@ -360,8 +371,8 @@ const writingAboutYourself: TopicDef = {
       "write",
       t("Turning notes into sentences", "把提示写成句子"),
       t(
-        "Write a whole sentence about yourself for each note: a capital letter, *I* or *My*, a verb, and a period.\n\n*age: 8* → *I am eight years old.*\n*have: a cat* → *I have a cat.*",
-        "根据每条提示写一个完整的句子：大写字母开头，用 *I* 或 *My*，要有动词，句末加句号。\n\n*age: 8* → *I am eight years old.*\n*have: a cat* → *I have a cat.*",
+        "Write a whole sentence about yourself for each note: a capital letter, *I* or *My*, a verb, and a period.\n\n*age: 8* → *I am eight years old.*\n*have: a cat* → *I have a cat.*\n\n> **Watch out.** Spell number words out for ages (*eight*, not `8`), keep *I* capitalized, and never drop the verb (*am*, *is*, *have*, or *like*).",
+        "根据每条提示写一个完整的句子：大写字母开头，用 *I* 或 *My*，要有动词，句末加句号。\n\n*age: 8* → *I am eight years old.*\n*have: a cat* → *I have a cat.*\n\n> **注意。** 年龄中的数字要拼写成英文词（如 *eight*），*I* 永远大写，也千万别漏掉动词（*am*、*is*、*have* 或 *like*）。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -370,8 +381,8 @@ const writingAboutYourself: TopicDef = {
         (right, shown) => {
           const rule = noteRule[noteKind(shown)];
           return t(
-            `${rule?.en}, in a whole sentence with a capital letter and a period: ${right}`,
-            `${rule?.["zh-CN"]}，写成完整的句子，大写开头，句号结尾：${right}`,
+            `${rule?.en}, in a whole sentence with a capital letter and a period: ${right}\n\n**Check.** Check four items in your sentence: capital first letter, the right verb for the note, describing words before nouns, and a final period.`,
+            `${rule?.["zh-CN"]}，写成完整的句子，大写开头，句号结尾：${right}\n\n**检验。** 核对四处：句首大写、动词与提示类型相符、形容词在名词前，以及句末句号。`,
           );
         },
       ),

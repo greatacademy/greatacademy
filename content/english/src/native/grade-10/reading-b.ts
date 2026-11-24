@@ -18,14 +18,18 @@ const bias = topic("reading", {
     "How a news report can lean to one side without telling a lie: by its choice of words, of sources, of facts left out and of what goes in the headline.",
     "一篇新闻报道如何在不说谎的情况下偏向一方：通过措辞、消息来源的选择、遗漏的事实以及标题的内容。",
   ],
+  intro: [
+    "Two front-page stories can report the exact same city vote without a single false fact, yet one calls it *a reckless cut* and quotes only critics while the other buries the library closures in the last line. In this topic, you identify four ways news reports lean and pick the most neutral wording.",
+    "两篇头版报道可以报道同一次市政投票、不含一句假话，却因为一方称其为“鲁莽削减”且只采访批评者，另一方把图书馆关闭埋在末行，而给出截然不同的印象。本主题带你识别新闻偏向的四种方式，并选出最中立的表述。",
+  ],
   after: ["loaded-language", "facts-interpretations-and-judgments"],
   points: [
     label(
       "how-the-report-leans",
       ["How the Report Leans", "报道如何偏向"],
       [
-        "A report can be **biased** even when every fact in it is true. Watch for four kinds of bias. **Word choice**: *protesters* or *rioters*, *tax relief* or *tax cuts for the rich*. **Selection of sources**: quoting only one side, or only officials. **Omission**: leaving out a fact that would change the reader's view. **Placement**: putting one side in the headline and the other in the last paragraph, where few readers reach.",
-        "即使报道中的每个事实都是真的，它仍可能有**偏见**。要注意四种偏见。**措辞**：说 *protesters* 还是 *rioters*，说 *tax relief* 还是 *tax cuts for the rich*。**消息来源的选择**：只引用一方，或只引用官员。**遗漏**：略去会改变读者看法的事实。**位置安排**：把一方放在标题里，把另一方放在最后一段，那里很少有读者读到。",
+        "A report can be **biased** even when every fact in it is true. Watch for four kinds of bias. **Word choice**: *protesters* or *rioters*, *tax relief* or *tax cuts for the rich*. **Selection of sources**: quoting only one side, or only officials. **Omission**: leaving out a fact that would change the reader's view. **Placement**: putting one side in the headline and the other in the last paragraph, where few readers reach.\n\n> **Watch out.** Tell **omission** apart from **placement**: if a key fact is *completely missing* from the story, it is **omission**; if it *is* included, but buried on page twelve or in the final paragraph beneath a one-sided headline, it is **placement**.",
+        "即使报道中的每个事实都是真的，它仍可能有**偏见**。要注意四种偏见。**措辞**：说 *protesters* 还是 *rioters*，说 *tax relief* 还是 *tax cuts for the rich*。**消息来源的选择**：只引用一方，或只引用官员。**遗漏**：略去会改变读者看法的事实。**位置安排**：把一方放在标题里，把另一方放在最后一段，那里很少有读者读到。\n\n> **注意。** 分清**遗漏**与**位置安排**：关键事实在报道里*根本没提*是**遗漏**；报道里*提了*，却压在末段或内页、与一边倒的标题形成反差，才是**位置安排**。",
       ],
       ["What kind of bias does this report show?", "这篇报道表现出哪种偏见？"],
       `
@@ -63,29 +67,29 @@ const bias = topic("reading", {
       {
         "word choice": L(
           "措辞",
-          "The report uses words with strong feelings attached, which push the reader toward one side.",
-          "报道使用了带有强烈感情色彩的词语，推动读者倒向一方。",
+          "The report uses words with strong feelings attached, which push the reader toward one side.\n\n**Check.** Spot the emotionally loaded label quoted in the prompt: swapping that phrase for a plain, factual term would remove the slant immediately.",
+          "报道使用了带有强烈感情色彩的词语，推动读者倒向一方。\n\n**检验。** 找出题干中带强烈褒贬色彩的标签词：只要把它换成平实的中性词，偏向立刻就会消失。",
           "The bias does not lie in loaded words.",
           "偏见并不在于带有感情色彩的词语。",
         ),
         "selection of sources": L(
           "消息来源的选择",
-          "The report lets only one side speak, so the reader hears one point of view.",
-          "报道只让一方发声，读者只能听到一种观点。",
+          "The report lets only one side speak, so the reader hears one point of view.\n\n**Check.** Count who is quoted or interviewed and who is missing: the microphone goes almost entirely to one side of the dispute.",
+          "报道只让一方发声，读者只能听到一种观点。\n\n**检验。** 数一数报道采访或引用了谁、又漏掉了谁：话筒几乎完全递给了争论的一方。",
           "The bias does not lie in which people are quoted.",
           "偏见并不在于引用了哪些人的话。",
         ),
         omission: L(
           "遗漏",
-          "The report leaves out an important fact that would change how the reader sees the story.",
-          "报道略去了一个会改变读者看法的重要事实。",
+          "The report leaves out an important fact that would change how the reader sees the story.\n\n**Check.** Notice that the key counter-fact is absent from the report altogether—not merely moved to a later paragraph.",
+          "报道略去了一个会改变读者看法的重要事实。\n\n**检验。** 注意这个足以扭转印象的关键事实在报道中完全缺席，而不是仅仅被挪到了后文。",
           "The report does not leave out a key fact.",
           "报道并没有略去关键事实。",
         ),
         placement: L(
           "位置安排",
-          "The report puts one side up front, in the headline, and buries the important other side near the end.",
-          "报道把一方放在前面的标题里，把重要的另一方埋在结尾附近。",
+          "The report puts one side up front, in the headline, and buries the important other side near the end.\n\n**Check.** Compare the prominent slot (headline or front page) with the buried slot (last paragraph or back page): both facts appear, but their positions tilt what most readers take away.",
+          "报道把一方放在前面的标题里，把重要的另一方埋在结尾附近。\n\n**检验。** 对照显眼位置（标题或头版）与隐蔽位置（末段或内页）：两边事实都写了，但排版落差左右了读者的印象。",
           "The bias does not lie in what goes in the headline and what is buried.",
           "偏见并不在于什么放进标题、什么被埋在后面。",
         ),
@@ -95,8 +99,8 @@ const bias = topic("reading", {
       "the-neutral-version",
       ["The Neutral Version", "中立的版本"],
       [
-        "To test a report for bias, imagine how a fair reporter would write the same sentence. **Neutral** language names what happened without praise or blame: *workers went on strike* rather than *workers abandoned their posts* or *heroic workers stood up*. A neutral sentence keeps the facts and drops the feeling words.",
-        "要检验报道是否有偏见，就想象一位公正的记者会如何写同一个句子。**中立**的语言只说明发生了什么，不褒也不贬：*workers went on strike*，而不是 *workers abandoned their posts* 或 *heroic workers stood up*。中立的句子保留事实，去掉带感情色彩的词。",
+        "To test a report for bias, imagine how a fair reporter would write the same sentence. **Neutral** language names what happened without praise or blame: *workers went on strike* rather than *workers abandoned their posts* or *heroic workers stood up*. A neutral sentence keeps the facts and drops the feeling words.\n\n> **Watch out.** Check *verbs and modifiers* as well as obvious adjectives—verbs like *grabbed*, *ducked*, *rambled*, or *soared* smuggle praise or blame into a sentence just as much as *greedy* or *heroic*.",
+        "要检验报道是否有偏见，就想象一位公正的记者会如何写同一个句子。**中立**的语言只说明发生了什么，不褒也不贬：*workers went on strike*，而不是 *workers abandoned their posts* 或 *heroic workers stood up*。中立的句子保留事实，去掉带感情色彩的词。\n\n> **注意。** 除了显眼的形容词，还要盯紧*动词和副词*——*grabbed*、*ducked*、*rambled*、*soared* 这类词和 *greedy*、*heroic* 一样暗藏褒贬。",
       ],
       ["Which version of the sentence is the most neutral?", "这个句子的哪个版本最中立？"],
       `
@@ -132,8 +136,8 @@ const bias = topic("reading", {
         A sentence about a march|Students marched to protest the fee increase.|Students skipped class to march against fees.|Students marched bravely for their future.
       `,
       (right) => [
-        `"${right}" states what happened and keeps the facts, without words of praise or blame.`,
-        `“${right}” 说明了发生的事，保留了事实，没有褒扬或指责的词语。`,
+        `"${right}" states what happened and keeps the facts, without words of praise or blame.\n\n**Check.** Test whether supporters and critics of the event could both accept this sentence as accurate: yes, because every verb and noun reports the bare event without slant.`,
+        `“${right}” 说明了发生的事，保留了事实，没有褒扬或指责的词语。\n\n**检验。** 检验一下：支持和反对双方是否都会认可这句话的陈述？是的，因为每个动词和名词都只陈述事实，不带偏向。`,
       ],
       [
         [
@@ -156,14 +160,18 @@ const numbers = topic("reading", {
     "The common ways true numbers give a false picture: a percentage without its base, an average that hides the spread, a cut-off axis and a sample too small or too chosen.",
     "真实的数字给出错误印象的常见方式：没有基数的百分比、掩盖分布的平均数、截断的坐标轴，以及过小或经过挑选的样本。",
   ],
+  intro: [
+    "A headline boasting *Bike thefts doubled!* sounds alarming until you learn the count rose from one bike to two. Accurate numbers can still paint a distorted picture. In this topic, you diagnose four classic statistical tricks and choose the first critical question a reader should ask.",
+    "标题高喊“自行车失窃翻了一番！”听起来触目惊心，直到你发现数量只是从 1 辆涨到了 2 辆。准确的数字同样能制造误导。本主题带你识破四种常见数字花招，并选出读者最先该追问的关键问题。",
+  ],
   after: ["correlation-or-cause", "reporting-numbers-from-a-graph"],
   points: [
     label(
       "the-trick-in-the-number",
       ["The Trick in the Number", "数字里的花招"],
       [
-        "A number can be accurate and still mislead. Watch for a **percentage without a base**: *crime doubled* may mean it rose from two cases to four. Watch for an **average that hides the spread**: one billionaire in a room makes the average income huge. Watch for a **chosen sample**: a survey of a product's own fans says little about everyone. And watch for a **cut-off graph**, whose vertical axis starts high so that a small change looks huge.",
-        "一个数字可能准确，却仍然误导人。要留意**没有基数的百分比**：*犯罪翻了一番* 可能只是从两起增加到四起。要留意**掩盖分布的平均数**：房间里有一位亿万富翁，平均收入就会高得惊人。要留意**经过挑选的样本**：对某产品自己的粉丝做调查，几乎说明不了所有人的情况。还要留意**截断的图表**，其纵轴从很高的数值开始，使小小的变化看起来很大。",
+        "A number can be accurate and still mislead. Watch for a **percentage without a base**: *crime doubled* may mean it rose from two cases to four. Watch for an **average that hides the spread**: one billionaire in a room makes the average income huge. Watch for a **chosen sample**: a survey of a product's own fans says little about everyone. And watch for a **cut-off graph**, whose vertical axis starts high so that a small change looks huge.\n\n> **Watch out.** Look at *what creates the illusion*—a tiny starting count behind a big percent is **a percentage without a base**, an outlier or split group behind one mean is **an average that hides the spread**, who got surveyed is **a chosen sample**, and a y-axis not starting at zero is **a cut-off graph**.",
+        "一个数字可能准确，却仍然误导人。要留意**没有基数的百分比**：*犯罪翻了一番* 可能只是从两起增加到四起。要留意**掩盖分布的平均数**：房间里有一位亿万富翁，平均收入就会高得惊人。要留意**经过挑选的样本**：对某产品自己的粉丝做调查，几乎说明不了所有人的情况。还要留意**截断的图表**，其纵轴从很高的数值开始，使小小的变化看起来很大。\n\n> **注意。** 找准*假象从哪儿来*：大百分比背后基数极小是**没有基数的百分比**；极端值或两极分化拉偏均值是**掩盖分布的平均数**；挑人问卷是**经过挑选的样本**；纵轴不从零开始是**截断的图表**。",
       ],
       ["What makes this use of numbers misleading?", "这种对数字的使用为什么具有误导性？"],
       `
@@ -201,29 +209,29 @@ const numbers = topic("reading", {
       {
         "a percentage without a base": L(
           "没有基数的百分比",
-          "A large percentage is reported, but the starting number is so small that the change means little.",
-          "报道了很大的百分比，但起始数字非常小，变化其实没什么意义。",
+          "A large percentage is reported, but the starting number is so small that the change means little.\n\n**Check.** Compare the headline's dramatic percent or multiple with the tiny raw count in the second sentence: the small base inflates a tiny shift.",
+          "报道了很大的百分比，但起始数字非常小，变化其实没什么意义。\n\n**检验。** 对照前半句惊人的百分比（或倍数）与后半句极小的原始数量：正是极小的基数放大了微小的变化。",
           "The problem is not a big percentage built on a tiny starting number.",
           "问题并不在于以极小的起始数字算出的大百分比。",
         ),
         "an average that hides the spread": L(
           "掩盖分布的平均数",
-          "The average is correct, but a few extreme values pull it away from what is typical, or hide two very different groups.",
-          "平均数没有算错，但少数极端值把它拉离了典型情况，或掩盖了两个截然不同的群体。",
+          "The average is correct, but a few extreme values pull it away from what is typical, or hide two very different groups.\n\n**Check.** Compare the single reported average with the actual spread in the second sentence: outliers or two opposite halves make the average unrepresentative.",
+          "平均数没有算错，但少数极端值把它拉离了典型情况，或掩盖了两个截然不同的群体。\n\n**检验。** 把给出的单个平均数与后半句的实际分布对照：极端值或两极分化让这个平均数失去了代表性。",
           "The problem is not an average distorted by extreme values.",
           "问题并不在于被极端值扭曲的平均数。",
         ),
         "a chosen sample": L(
           "经过挑选的样本",
-          "The people asked were chosen in a way that favors the result, so they do not represent everyone.",
-          "被调查的人是以有利于结果的方式挑选的，因此不能代表所有人。",
+          "The people asked were chosen in a way that favors the result, so they do not represent everyone.\n\n**Check.** Ask *who was polled* in the second sentence: only fans, supporters, or paid insiders—never a fair cross-section of the whole group.",
+          "被调查的人是以有利于结果的方式挑选的，因此不能代表所有人。\n\n**检验。** 看后半句*问的是哪些人*：全是粉丝、支持者或利益相关方，根本不代表整体。",
           "The problem is not who was chosen for the survey.",
           "问题并不在于调查选了哪些人。",
         ),
         "a cut-off graph": L(
           "截断的图表",
-          "The vertical axis does not start at zero, so a small difference looks huge.",
-          "纵轴不是从零开始，因此小小的差别显得很大。",
+          "The vertical axis does not start at zero, so a small difference looks huge.\n\n**Check.** Check where the vertical axis starts and ends: because it zooms into a narrow slice above zero, a small change is stretched visually into a cliff.",
+          "纵轴不是从零开始，因此小小的差别显得很大。\n\n**检验。** 看纵轴的起点和跨度：因为截去了零点以下的刻度、只放大极窄区间，微小波动在视觉上被拉成了悬崖。",
           "The problem is not the scale of a graph.",
           "问题并不在于图表的刻度。",
         ),
@@ -233,8 +241,8 @@ const numbers = topic("reading", {
       "the-question-to-ask",
       ["The Question to Ask", "应该问的问题"],
       [
-        "A careful reader meets a striking number with a question. For a percentage: *a percentage of what?* For an average: *what is typical, and how spread out are the values?* For a survey: *who was asked, and who chose them?* For a link between two things: *could something else cause both?* Asking the right question is the first step to judging the claim.",
-        "细心的读者遇到惊人的数字时会提出问题。对于百分比：*是什么的百分比？* 对于平均数：*典型的情况是怎样的，数值的分布有多散？* 对于调查：*问了谁，又是谁挑选了他们？* 对于两件事之间的关联：*会不会是别的原因同时导致了二者？* 问对问题是判断这个说法的第一步。",
+        "A careful reader meets a striking number with a question. For a percentage: *a percentage of what?* For an average: *what is typical, and how spread out are the values?* For a survey: *who was asked, and who chose them?* For a link between two things: *could something else cause both?* Asking the right question is the first step to judging the claim.\n\n> **Watch out.** Match the question to the *exact statistical device* in the claim—a percent needs its starting base, an average needs its spread, a survey needs its sample, a graph needs its axis, and a correlation needs a possible third cause.",
+        "细心的读者遇到惊人的数字时会提出问题。对于百分比：*是什么的百分比？* 对于平均数：*典型的情况是怎样的，数值的分布有多散？* 对于调查：*问了谁，又是谁挑选了他们？* 对于两件事之间的关联：*会不会是别的原因同时导致了二者？* 问对问题是判断这个说法的第一步。\n\n> **注意。** 问题必须精准对应说法里的*统计手段*——百分比问基数，平均数问分布，调查问样本，图表问坐标轴，相关性问第三方原因。",
       ],
       ["Which question should a careful reader ask first?", "细心的读者首先应该问什么问题？"],
       `
@@ -270,8 +278,8 @@ const numbers = topic("reading", {
         "A study of 12 people proves the drug works."|Is a sample of 12 people large enough?|What does the drug taste like, and is it taken as a pill or a liquid?|Where did the twelve people live?
       `,
       (right) => [
-        `"${right}" is the question that tests whether the number really supports the claim.`,
-        `“${right}” 是检验这个数字是否真正支持该说法的问题。`,
+        `"${right}" is the question that tests whether the number really supports the claim.\n\n**Check.** Ask what happens once you get the answer to "${right}"—it directly exposes whether the statistic is solid or misleading, unlike a side question.`,
+        `“${right}” 是检验这个数字是否真正支持该说法的问题。\n\n**检验。** 想想拿到“${right}”的答案后会怎样——它能直接检验这组统计到底靠不靠谱，而其余问题只触及无关细节。`,
       ],
       [
         [
@@ -294,14 +302,18 @@ const satire = topic("reading", {
     "How satire uses humor to criticize: finding its target, recognizing its tools, and reading past the literal words to the point it makes.",
     "讽刺作品如何用幽默进行批评：找到它的批评对象，识别它的手法，并透过字面意思读出它要表达的观点。",
   ],
+  intro: [
+    "A mock news flash announcing *Local Man Reads Entire Terms and Conditions, Doctors Baffled* makes you laugh first and then realize it is mocking unread fine print. In this topic, you identify the four main tools of satire and look past surface jokes to name the real-world target.",
+    "一条恶搞快讯写着“本地男子读完整个用户协议，医生百思不得其解”，先让人发笑，随即点出无人细读冗长条款的现实。本主题带你识别四种主要讽刺手法，并透过表面笑点找出现实中的批评对象。",
+  ],
   after: ["irony", "personification-and-hyperbole"],
   points: [
     label(
       "the-tool-of-the-satirist",
       ["The Tool of the Satirist", "讽刺者的手法"],
       [
-        "**Satire** mocks a person, a group or an idea in order to criticize it and, often, to change it. Its main tools are **exaggeration**, which stretches a fault until it looks absurd; **irony**, which says the opposite of what is meant, often in a straight face; **parody**, which imitates the style of a known form, such as a news report or an advertisement, to mock it; and **reversal**, which turns the expected roles upside down, so that animals rule people or children teach adults.",
-        "**讽刺作品**嘲弄某个人、某个群体或某种观念，以便批评它，并常常希望改变它。它的主要手法有：**夸张**，把缺点放大到荒谬可笑；**反讽**，一本正经地说出与本意相反的话；**戏仿**，模仿新闻报道、广告等人们熟知的形式的风格来嘲弄它；**颠倒**，把预期的角色颠倒过来，比如动物统治人类，孩子教导大人。",
+        "**Satire** mocks a person, a group or an idea in order to criticize it and, often, to change it. Its main tools are **exaggeration**, which stretches a fault until it looks absurd; **irony**, which says the opposite of what is meant, often in a straight face; **parody**, which imitates the style of a known form, such as a news report or an advertisement, to mock it; and **reversal**, which turns the expected roles upside down, so that animals rule people or children teach adults.\n\n> **Watch out.** Check the *form* first: if the passage mimics a recognizable genre (breaking news, ad copy, weather forecast, manual), it is **parody**; if roles swap places, it is **reversal**; if praise means blame, it is **irony**; if a real habit is blown up to impossible size, it is **exaggeration**.",
+        "**讽刺作品**嘲弄某个人、某个群体或某种观念，以便批评它，并常常希望改变它。它的主要手法有：**夸张**，把缺点放大到荒谬可笑；**反讽**，一本正经地说出与本意相反的话；**戏仿**，模仿新闻报道、广告等人们熟知的形式的风格来嘲弄它；**颠倒**，把预期的角色颠倒过来，比如动物统治人类，孩子教导大人。\n\n> **注意。** 先看*形式*：借用新闻、广告、天气预报或说明书外壳的是**戏仿**；把主客、强弱角色互换的是**颠倒**；正话反说的是**反讽**；把现实毛病吹到荒唐程度的是**夸张**。",
       ],
       ["Which tool of satire does this passage mainly use?", "这段文字主要使用了哪种讽刺手法？"],
       `
@@ -339,29 +351,29 @@ const satire = topic("reading", {
       {
         exaggeration: L(
           "夸张",
-          "The passage stretches a real fault or habit until it becomes absurd.",
-          "这段文字把一个真实存在的缺点或习惯放大到荒谬的地步。",
+          "The passage stretches a real fault or habit until it becomes absurd.\n\n**Check.** Notice that the joke comes from pushing an ordinary annoyance to an impossible extreme—without mimicking a specific media format, swapping roles, or praising it sarcastically.",
+          "这段文字把一个真实存在的缺点或习惯放大到荒谬的地步。\n\n**检验。** 笑点来自把日常毛病推到不合常理的极端——既不是套用某种文体外壳，也不是角色互换或正话反说。",
           "The passage does not mainly stretch a fault to an absurd extreme.",
           "这段文字并不是主要把缺点放大到荒谬的程度。",
         ),
         irony: L(
           "反讽",
-          "The words praise or approve on the surface, but the writer means the opposite.",
-          "字面上是赞扬或赞同，但作者的意思恰恰相反。",
+          "The words praise or approve on the surface, but the writer means the opposite.\n\n**Check.** Compare the surface praise or calm approval with the absurd reality right beside it: the speaker means the exact reverse of what the words claim.",
+          "字面上是赞扬或赞同，但作者的意思恰恰相反。\n\n**检验。** 把字面上的夸赞或淡定认可与紧跟其后的荒诞事实对照：说话者的真实意思正好相反。",
           "The passage does not say the opposite of what it means.",
           "这段文字并没有说出与本意相反的话。",
         ),
         parody: L(
           "戏仿",
-          "The passage imitates a familiar form, such as a news headline, an advertisement or an epic, to mock its subject.",
-          "这段文字模仿人们熟知的形式，如新闻标题、广告或史诗，来嘲弄它的对象。",
+          "The passage imitates a familiar form, such as a news headline, an advertisement or an epic, to mock its subject.\n\n**Check.** Spot the borrowed genre template (news alert, ad, forecast, guide, manual, or epic) used to dress up a ridiculous topic.",
+          "这段文字模仿人们熟知的形式，如新闻标题、广告或史诗，来嘲弄它的对象。\n\n**检验。** 认出借用的现成文体外壳（新闻快讯、广告、预报、指南、说明书或史诗），用正经格式包裹荒唐内容。",
           "The passage does not imitate the style of a familiar form.",
           "这段文字并没有模仿某种人们熟知的形式的风格。",
         ),
         reversal: L(
           "颠倒",
-          "The passage turns the usual roles upside down, so that the weak rule the strong or the young teach the old.",
-          "这段文字把通常的角色颠倒过来，弱者统治强者，年轻人教导长者。",
+          "The passage turns the usual roles upside down, so that the weak rule the strong or the young teach the old.\n\n**Check.** Identify the two roles in the scene and compare them with normal life: the usual authority and subordinate have traded places.",
+          "这段文字把通常的角色颠倒过来，弱者统治强者，年轻人教导长者。\n\n**检验。** 找出场景里的两个角色并与现实对照：平时的主导方和被主导方正好互换了位置。",
           "The passage does not turn the usual roles upside down.",
           "这段文字并没有把通常的角色颠倒过来。",
         ),
@@ -371,8 +383,8 @@ const satire = topic("reading", {
       "the-target-of-the-satire",
       ["The Target of the Satire", "讽刺的对象"],
       [
-        "Every satire has a **target**: the person, group, habit or idea it criticizes. The target is rarely named outright. To find it, ask what fault is being exaggerated or praised with irony, and who in the real world shows that fault. The **point** of the satire is the criticism it makes of that target.",
-        "每部讽刺作品都有一个**对象**：它所批评的人、群体、习惯或观念。对象很少被直接点名。要找到它，就问一问：被夸大或被反讽地赞扬的是什么缺点，现实中又是谁有这个缺点。讽刺作品的**观点**就是它对这个对象的批评。",
+        "Every satire has a **target**: the person, group, habit or idea it criticizes. The target is rarely named outright. To find it, ask what fault is being exaggerated or praised with irony, and who in the real world shows that fault. The **point** of the satire is the criticism it makes of that target.\n\n> **Watch out.** Do not mistake the *props* of the joke (statues, cameras, bags, foxes) for the target—translate the joke into the real human habit or social flaw being criticized.",
+        "每部讽刺作品都有一个**对象**：它所批评的人、群体、习惯或观念。对象很少被直接点名。要找到它，就问一问：被夸大或被反讽地赞扬的是什么缺点，现实中又是谁有这个缺点。讽刺作品的**观点**就是它对这个对象的批评。\n\n> **注意。** 不要把笑话里的*道具*（雕像、镜头、购物袋、狐狸）当成讽刺对象——把笑点翻译回现实中受批评的人类习气或社会弊病。",
       ],
       ["What is the main target of this satire?", "这段讽刺的主要对象是什么？"],
       `
@@ -408,8 +420,8 @@ const satire = topic("reading", {
         In the fable, the foxes hold a conference on the safety of chickens.|people in power who claim to protect those they exploit|foxes who are hungry|farmers who keep chickens
       `,
       (right) => [
-        `The target is ${right}: that is the real-world fault the passage exaggerates or praises with irony.`,
-        `批评对象是“${right}”：这正是文段所夸大或反讽地赞扬的现实中的缺点。`,
+        `The target is ${right}: that is the real-world fault the passage exaggerates or praises with irony.\n\n**Check.** Ask "What real-world habit or hypocrisy is the writer hoping readers will notice and laugh at?" That points straight to **${right}**, not a literal prop in the joke.`,
+        `批评对象是“${right}”：这正是文段所夸大或反讽地赞扬的现实中的缺点。\n\n**检验。** 问问“作者想让读者笑完之后反思哪种现实弊病或虚伪？”答案直接指向“${right}”，而不是笑话里的字面道具。`,
       ],
       [
         [

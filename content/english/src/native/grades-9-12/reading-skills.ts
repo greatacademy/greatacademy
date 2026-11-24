@@ -324,6 +324,10 @@ export const readingSkillTopics912: readonly TopicDef[] = [
       "How a play tells its story with no narrator: exposition in dialogue, dramatic irony, and stage directions that reveal character.",
       "没有叙述者的戏剧怎样讲故事：通过对话交代背景、戏剧性反讽，以及揭示人物性格的舞台说明。",
     ),
+    intro: t(
+      "When a script opens with `[He locks the drawer twice before answering the knock]`, we already sense secrecy without a narrator saying a word. Plays build their whole world out of dialogue, stage directions, and what the audience knows.",
+      "当剧本一开头写着 `[He locks the drawer twice before answering the knock]`，无需叙述者多说一个字，我们就能感到他的戒心。戏剧正是靠台词、舞台说明和观众掌握的信息来撑起整个世界的。",
+    ),
     prerequisites: ["irony"],
     encompasses: [
       { topic: "irony", weight: 0.2 },
@@ -336,14 +340,17 @@ export const readingSkillTopics912: readonly TopicDef[] = [
         "reading-a-script",
         t("Reading a Script", "阅读剧本"),
         t(
-          "A play has no narrator to explain things, so a playwright tells the audience what it needs through three tools.\n\n- **Exposition** in dialogue: characters mention the past and the situation as they talk (*As you know, brother, Father has been dead ten years...*). A play is divided into **acts** and **scenes**, and the first scene usually carries the most exposition.\n- **Dramatic irony**: the audience knows something a character does not, so the character's words mean more to us than to them. A king who toasts his loyal brother with a cup we know is poisoned is a classic example.\n- **Stage directions**, usually in italics or brackets, tell actors what to do. The best ones reveal character through action: a woman who straightens the chairs twice before answering is anxious or controlling, though no one says so.\n\nRead a script by asking, for each passage, what the audience learns and how.",
-          "戏剧没有叙述者来解释，所以剧作家用三种手段告诉观众需要知道的内容。\n\n- 通过对话**交代背景**（exposition）：人物在交谈中提到过去和目前的处境（*As you know, brother, Father has been dead ten years...*）。戏剧分为**幕**（act）和**场**（scene），第一场通常交代的背景最多。\n- **戏剧性反讽**（dramatic irony）：观众知道人物不知道的事，所以人物的话对我们的意义比对他们更多。国王用一杯我们知道有毒的酒向“忠诚的”弟弟敬酒，就是经典的例子。\n- **舞台说明**（stage directions）通常用斜体或方括号标出，告诉演员做什么。最好的舞台说明通过动作揭示人物：一个女人在回答前把椅子摆正了两遍，说明她焦虑或控制欲强，尽管没有人这样说。\n\n阅读剧本时，对每一段都问一问：观众了解到了什么，是怎样了解到的。",
+          "A play has no narrator to explain things, so a playwright tells the audience what it needs through three tools.\n\n- **Exposition** in dialogue: characters mention the past and the situation as they talk (*As you know, brother, Father has been dead ten years...*). A play is divided into **acts** and **scenes**, and the first scene usually carries the most exposition.\n- **Dramatic irony**: the audience knows something a character does not, so the character's words mean more to us than to them. A king who toasts his loyal brother with a cup we know is poisoned is a classic example.\n- **Stage directions**, usually in italics or brackets, tell actors what to do. The best ones reveal character through action: a woman who straightens the chairs twice before answering is anxious or controlling, though no one says so.\n\nRead a script by asking, for each passage, what the audience learns and how.\n\n> **Watch out.** Do not call any bracketed note a stage direction that reveals character—in dramatic irony, brackets often tell *the audience* a secret the speaker does not know, and the point lies in the spoken line that follows.",
+          "戏剧没有叙述者来解释，所以剧作家用三种手段告诉观众需要知道的内容。\n\n- 通过对话**交代背景**（exposition）：人物在交谈中提到过去和目前的处境（*As you know, brother, Father has been dead ten years...*）。戏剧分为**幕**（act）和**场**（scene），第一场通常交代的背景最多。\n- **戏剧性反讽**（dramatic irony）：观众知道人物不知道的事，所以人物的话对我们的意义比对他们更多。国王用一杯我们知道有毒的酒向“忠诚的”弟弟敬酒，就是经典的例子。\n- **舞台说明**（stage directions）通常用斜体或方括号标出，告诉演员做什么。最好的舞台说明通过动作揭示人物：一个女人在回答前把椅子摆正了两遍，说明她焦虑或控制欲强，尽管没有人这样说。\n\n阅读剧本时，对每一段都问一问：观众了解到了什么，是怎样了解到的。\n\n> **注意。** 不要一见到方括号就选“揭示人物性格的舞台说明”——戏剧性反讽里的方括号常用来交代*观众*知道而说话人不知道的秘密，真正的重点在后面那句台词。",
         ),
         choiceGenerator(
           t("What does the playwright use this excerpt to do?", "剧作家用这段节选做什么？"),
           dramaBank,
           (right) =>
-            t(`It is **${right}**. ${dramaWhy[right]?.[0] ?? ""}`, `这是**${dramaZh[right] ?? right}**。${dramaWhy[right]?.[1] ?? ""}`),
+            t(
+              `It is **${right}**. ${dramaWhy[right]?.[0] ?? ""}\n\n**Check.** Ask *how* the audience learns the key fact here: if it is purely silent action in brackets, it is a stage direction; if the audience knows a secret that makes the spoken line sting, it is dramatic irony; if spoken lines fill in backstory, it is exposition.`,
+              `这是**${dramaZh[right] ?? right}**。${dramaWhy[right]?.[1] ?? ""}\n\n**检验。** 问问观众是*如何*获知关键信息的：纯靠方括号里的无声动作展示性格就是舞台说明；观众掌握秘密而说话人蒙在鼓里就是戏剧性反讽；靠台词交代前情背景就是交代背景。`,
+            ),
           (wrong) =>
             t(
               wrong === irony
@@ -369,6 +376,10 @@ export const readingSkillTopics912: readonly TopicDef[] = [
       "Four questions for any document of the past: who made it, when and where, for whom, and why.",
       "面对任何历史文献都要问的四个问题：谁制作的、何时何地、为谁、为什么。",
     ),
+    intro: t(
+      "A 1910 dockyard diary written that evening and a shipping company's press release printed the next day describe the same strike in very different ways. In this topic, you read key clues about who created a historical document, when, for whom, and why, then judge how far to trust it.",
+      "一份写于 1910 年罢工当晚的码头日记，和航运公司次日发布的新闻稿，讲述同一场罢工却截然不同。本主题带你从历史文献的细节读出作者、时空、读者与目的，并判断在具体问题上能在多大程度上信任它。",
+    ),
     prerequisites: ["primary-and-secondary-sources", "rhetorical-situation"],
     encompasses: [
       { topic: "primary-and-secondary-sources", weight: 0.3 },
@@ -381,16 +392,16 @@ export const readingSkillTopics912: readonly TopicDef[] = [
         "questioning-a-document",
         t("Questioning a Document", "追问一份文献"),
         t(
-          "A historical document is evidence, but never neutral evidence: someone made it, at a particular moment, for particular readers, to do something. Historians ask four questions before trusting it.\n\n- **Who made it?** A signature, a seal, a byline, an official stamp. A private's letter and a general's report see the same battle differently.\n- **When and where?** A date and a place, which tell you what the maker could and could not have known.\n- **For whom?** An address, a greeting, the place it was published. A speech to miners and a memo to a cabinet are written differently.\n- **Why?** What it asks its readers to do or believe: buy, join, vote, obey, remember.\n\nEach detail of a document usually answers one of these questions best. Reading it means noticing which one, and what it changes about how far you trust the rest.",
-          "历史文献是证据，但从来不是中立的证据：有人在特定的时刻、为特定的读者、为了达到某种目的而制作了它。历史学家在信任它之前会问四个问题。\n\n- **是谁制作的？** 签名、印章、署名、官方印戳。士兵的家信和将军的报告看到的是同一场战役的不同面貌。\n- **何时何地？** 日期和地点，告诉你制作者能知道什么、不能知道什么。\n- **为谁制作的？** 收信人、称呼、发表的地方。对矿工的演讲和给内阁的备忘录写法不同。\n- **为什么？** 它要求读者做什么或相信什么：购买、加入、投票、服从、铭记。\n\n文献中的每个细节通常最能回答其中一个问题。阅读文献，就是要注意到它回答的是哪一个，以及这会怎样改变你对其余内容的信任程度。",
+          "A historical document is evidence, but never neutral evidence: someone made it, at a particular moment, for particular readers, to do something. Historians ask four questions before trusting it.\n\n- **Who made it?** A signature, a seal, a byline, an official stamp. A private's letter and a general's report see the same battle differently.\n- **When and where?** A date and a place, which tell you what the maker could and could not have known.\n- **For whom?** An address, a greeting, the place it was published. A speech to miners and a memo to a cabinet are written differently.\n- **Why?** What it asks its readers to do or believe: buy, join, vote, obey, remember.\n\nEach detail of a document usually answers one of these questions best. Reading it means noticing which one, and what it changes about how far you trust the rest.\n\n> **Watch out.** Do not confuse **for whom** (the greeting, recipient, or venue where it was published) with **why** (the action or belief the document urges)—a salutation names the audience, whereas a call to enlist or donate reveals the purpose.",
+          "历史文献是证据，但从来不是中立的证据：有人在特定的时刻、为特定的读者、为了达到某种目的而制作了它。历史学家在信任它之前会问四个问题。\n\n- **是谁制作的？** 签名、印章、署名、官方印戳。士兵的家信和将军的报告看到的是同一场战役的不同面貌。\n- **何时何地？** 日期和地点，告诉你制作者能知道什么、不能知道什么。\n- **为谁制作的？** 收信人、称呼、发表的地方。对矿工的演讲和给内阁的备忘录写法不同。\n- **为什么？** 它要求读者做什么或相信什么：购买、加入、投票、服从、铭记。\n\n文献中的每个细节通常最能回答其中一个问题。阅读文献，就是要注意到它回答的是哪一个，以及这会怎样改变你对其余内容的信任程度。\n\n> **注意。** 分清**为谁制作的**（称呼、收件人或刊载渠道）与**为什么**（要求读者采取的行动或相信的主张）——抬头指向受众，号召捐款或入伍才指向目的。",
         ),
         choiceGenerator(
           t("Which question about the document does this detail answer best?", "这个细节最能回答关于这份文献的哪个问题？"),
           documentBank,
           (right) =>
             t(
-              `It tells you **${right}**. Notice it, because that fact shapes how you read the rest of the document.`,
-              `它告诉你这份文献**${documentZh[right] ?? right}**。要注意这一点，因为它影响你怎样解读文献的其余部分。`,
+              `It tells you **${right}**. Notice it, because that fact shapes how you read the rest of the document.\n\n**Check.** Classify the exact kind of clue given—a signature/author, a date/location, a recipient/venue, or a call to action—to confirm it directly answers **${right}**.`,
+              `它告诉你这份文献**${documentZh[right] ?? right}**。要注意这一点，因为它影响你怎样解读文献的其余部分。\n\n**检验。** 核对线索本身的类型——署名/制作者、日期/地点、收件人/发布场合，还是行动号召——即可确认它直接回答**${documentZh[right] ?? right}**。`,
             ),
           (wrong) =>
             t(
@@ -409,6 +420,10 @@ export const readingSkillTopics912: readonly TopicDef[] = [
       "The shapes of poems, from the sonnet and villanelle to blank and free verse, and the four common meters of English.",
       "诗歌的各种形式，从十四行诗和维拉内拉诗到无韵诗和自由诗，以及英语中四种常见的格律。",
     ),
+    intro: t(
+      "Fourteen rhymed lines ending in a crisp couplet signal a sonnet before you even finish reading; a steady da-DUM pulse with no end rhyme marks blank verse. In this topic, you recognize six major poetic forms by their structure and hear the four basic English meters from stressed and unstressed syllables.",
+      "十四行押韵诗以干脆的对句收尾，一眼就能认出是十四行诗；不押韵却保持稳定“轻重”节拍的诗行则是无韵诗。本主题带你从结构辨认六种主要诗体，并借重音模式听出英语的四种基本格律。",
+    ),
     prerequisites: ["sound-devices"],
     encompasses: [{ topic: "sound-devices", weight: 0.3 }],
     xp: 14,
@@ -418,16 +433,16 @@ export const readingSkillTopics912: readonly TopicDef[] = [
         "naming-the-form",
         t("Naming the Form", "辨别诗体"),
         t(
-          "A poem's **form** is its shape: how many lines, how they rhyme, what repeats.\n\n- A **sonnet** has fourteen lines with a set rhyme scheme and a turn in thought, often before a final couplet.\n- A **villanelle** has nineteen lines, five tercets and a quatrain, on two rhymes, with two lines that return as refrains.\n- A **haiku** has three short unrhymed lines, often of five, seven and five syllables, fixing a moment in nature.\n- A **ballad** tells a story in short rhymed stanzas, usually quatrains, often with a refrain, as old songs did.\n- **Blank verse** is unrhymed iambic pentameter: lines of ten syllables with a steady da-DUM beat, as in Shakespeare's plays.\n- **Free verse** has neither regular meter nor rhyme; its lines follow the rhythms of speech and breath.\n\nForm matters because poets use it: a villanelle's refrains can feel like an obsession that will not let go.",
-          "诗的**形式**（form）就是它的形态：有多少行、怎样押韵、什么在重复。\n\n- **十四行诗**（sonnet）有十四行，有固定的押韵格式，思路会有转折，常在最后的对句之前。\n- **维拉内拉诗**（villanelle）有十九行，由五个三行诗节和一个四行诗节组成，只用两个韵，有两行作为叠句反复出现。\n- **俳句**（haiku）有三行不押韵的短句，常为五、七、五音节，定格自然中的一个瞬间。\n- **叙事歌谣**（ballad）用押韵的短诗节（通常是四行）讲故事，常有叠句，就像古老的歌曲一样。\n- **无韵诗**（blank verse）是不押韵的抑扬格五音步诗：每行十个音节，有稳定的“轻重”节拍，如莎士比亚的戏剧。\n- **自由诗**（free verse）既没有规则的格律也不押韵，诗行跟随说话和呼吸的节奏。\n\n形式很重要，因为诗人会利用它：维拉内拉诗的叠句可以让人感到一种挥之不去的执念。",
+          "A poem's **form** is its shape: how many lines, how they rhyme, what repeats.\n\n- A **sonnet** has fourteen lines with a set rhyme scheme and a turn in thought, often before a final couplet.\n- A **villanelle** has nineteen lines, five tercets and a quatrain, on two rhymes, with two lines that return as refrains.\n- A **haiku** has three short unrhymed lines, often of five, seven and five syllables, fixing a moment in nature.\n- A **ballad** tells a story in short rhymed stanzas, usually quatrains, often with a refrain, as old songs did.\n- **Blank verse** is unrhymed iambic pentameter: lines of ten syllables with a steady da-DUM beat, as in Shakespeare's plays.\n- **Free verse** has neither regular meter nor rhyme; its lines follow the rhythms of speech and breath.\n\nForm matters because poets use it: a villanelle's refrains can feel like an obsession that will not let go.\n\n> **Watch out.** Tell **blank verse** apart from **free verse**: neither one rhymes, so check the beat—steady ten-syllable iambic lines are **blank verse**, whereas uneven line lengths with no regular beat are **free verse**.",
+          "诗的**形式**（form）就是它的形态：有多少行、怎样押韵、什么在重复。\n\n- **十四行诗**（sonnet）有十四行，有固定的押韵格式，思路会有转折，常在最后的对句之前。\n- **维拉内拉诗**（villanelle）有十九行，由五个三行诗节和一个四行诗节组成，只用两个韵，有两行作为叠句反复出现。\n- **俳句**（haiku）有三行不押韵的短句，常为五、七、五音节，定格自然中的一个瞬间。\n- **叙事歌谣**（ballad）用押韵的短诗节（通常是四行）讲故事，常有叠句，就像古老的歌曲一样。\n- **无韵诗**（blank verse）是不押韵的抑扬格五音步诗：每行十个音节，有稳定的“轻重”节拍，如莎士比亚的戏剧。\n- **自由诗**（free verse）既没有规则的格律也不押韵，诗行跟随说话和呼吸的节奏。\n\n形式很重要，因为诗人会利用它：维拉内拉诗的叠句可以让人感到一种挥之不去的执念。\n\n> **注意。** 分清**无韵诗**与**自由诗**：两者都不押韵，关键看节拍——整齐的十音节抑扬格是**无韵诗**，长短不一、没有固定节拍的才是**自由诗**。",
         ),
         choiceGenerator(
           t("Which form is this poem written in?", "这首诗是用哪种诗体写的？"),
           formBank,
           (right) =>
             t(
-              `It is **${right}**: the number of lines, the rhyme and what repeats all point to it.`,
-              `这是 **${right}**：行数、押韵和重复的部分都指向它。`,
+              `It is **${right}**: the number of lines, the rhyme and what repeats all point to it.\n\n**Check.** Verify the structural fingerprint of **${right}** against the poem—line count, presence or absence of end rhyme, regular meter, and any returning refrains.`,
+              `这是 **${right}**：行数、押韵和重复的部分都指向它。\n\n**检验。** 对照诗面核实 **${right}** 的结构特征——行数、是否押尾韵、有无规则格律以及是否有反复出现的叠句。`,
             ),
           (wrong) =>
             t(
@@ -440,14 +455,17 @@ export const readingSkillTopics912: readonly TopicDef[] = [
         "hearing-the-meter",
         t("Hearing the Meter", "听出格律"),
         t(
-          "**Meter** is the pattern of stressed and unstressed syllables in a line, counted in units called **feet**. English poems mostly use four.\n\n- **Iambic**: da-DUM, as in *the WIND was COLD*. It is closest to ordinary speech and the most common.\n- **Trochaic**: DUM-da, as in *TELL me WHERE*. It sounds like a chant or a spell.\n- **Anapestic**: da-da-DUM, as in *in the DARK of the NIGHT*. It gallops.\n- **Dactylic**: DUM-da-da, as in *MERrily, MERrily*. It falls and rolls.\n\nIn these lines the stressed syllables are in capitals. Look at where each line begins and how many weak syllables sit between the strong ones: one weak syllable means a two-syllable foot, two mean a three-syllable foot. Many lines vary at their very end, so judge by the pattern of the whole line.",
-          "**格律**（meter）是诗行中重读与非重读音节的模式，以称为**音步**（feet）的单位计算。英语诗歌主要用四种。\n\n- **抑扬格**（iambic）：轻重，如 *the WIND was COLD*。它最接近日常说话，也最常见。\n- **扬抑格**（trochaic）：重轻，如 *TELL me WHERE*。听起来像咒语或吟唱。\n- **抑抑扬格**（anapestic）：轻轻重，如 *in the DARK of the NIGHT*。它像马在奔跑。\n- **扬抑抑格**（dactylic）：重轻轻，如 *MERrily, MERrily*。它有下沉、滚动之感。\n\n这些诗行中的重读音节用大写字母标出。看看每行怎样开头，以及重音之间有几个弱音节：一个弱音节说明是双音节音步，两个说明是三音节音步。许多诗行在末尾有变化，所以要根据整行的模式来判断。",
+          "**Meter** is the pattern of stressed and unstressed syllables in a line, counted in units called **feet**. English poems mostly use four.\n\n- **Iambic**: da-DUM, as in *the WIND was COLD*. It is closest to ordinary speech and the most common.\n- **Trochaic**: DUM-da, as in *TELL me WHERE*. It sounds like a chant or a spell.\n- **Anapestic**: da-da-DUM, as in *in the DARK of the NIGHT*. It gallops.\n- **Dactylic**: DUM-da-da, as in *MERrily, MERrily*. It falls and rolls.\n\nIn these lines the stressed syllables are in capitals. Look at where each line begins and how many weak syllables sit between the strong ones: one weak syllable means a two-syllable foot, two mean a three-syllable foot. Many lines vary at their very end, so judge by the pattern of the whole line.\n\n> **Watch out.** Check *two* things in order: first, does the line start weak (rising: iambic/anapestic) or strong (falling: trochaic/dactylic)? Second, are there *one* or *two* weak syllables between each pair of capitals?",
+          "**格律**（meter）是诗行中重读与非重读音节的模式，以称为**音步**（feet）的单位计算。英语诗歌主要用四种。\n\n- **抑扬格**（iambic）：轻重，如 *the WIND was COLD*。它最接近日常说话，也最常见。\n- **扬抑格**（trochaic）：重轻，如 *TELL me WHERE*。听起来像咒语或吟唱。\n- **抑抑扬格**（anapestic）：轻轻重，如 *in the DARK of the NIGHT*。它像马在奔跑。\n- **扬抑抑格**（dactylic）：重轻轻，如 *MERrily, MERrily*。它有下沉、滚动之感。\n\n这些诗行中的重读音节用大写字母标出。看看每行怎样开头，以及重音之间有几个弱音节：一个弱音节说明是双音节音步，两个说明是三音节音步。许多诗行在末尾有变化，所以要根据整行的模式来判断。\n\n> **注意。** 按两步判断：先看行首是弱读（上升格：抑扬/抑抑扬）还是重读（下降格：扬抑/扬抑抑）；再数相邻两个大写重音之间夹着*一个*还是*两个*弱音节。",
         ),
         choiceGenerator(
           t("The stressed syllables are in capitals. What is the meter of this line?", "重读音节用大写字母标出。这一行是什么格律？"),
           meterBank,
           (right) =>
-            t(`It is **${right}**. ${meterWhy[right]?.[0] ?? ""}`, `这是**${meterZh[right] ?? right}**。${meterWhy[right]?.[1] ?? ""}`),
+            t(
+              `It is **${right}**. ${meterWhy[right]?.[0] ?? ""}\n\n**Check.** Mark the opening beat (weak vs. CAPITAL) and count the lowercase syllables between consecutive capitals: that two-step scan locks in **${right}**.`,
+              `这是**${meterZh[right] ?? right}**。${meterWhy[right]?.[1] ?? ""}\n\n**检验。** 先看行首是小写弱音还是大写重音，再数相邻大写重音之间的小写音节数：这两步检查直接锁定**${meterZh[right] ?? right}**。`,
+            ),
           (wrong) =>
             t(
               `In ${wrong} meter, ${meterWhy[wrong]?.[0]?.replace(/^Each foot is/, "each foot would be") ?? ""} Count the weak syllables between the capitals.`,
@@ -464,6 +482,10 @@ export const readingSkillTopics912: readonly TopicDef[] = [
       "How an essayist moves between telling an experience, describing it, and reflecting on what it means.",
       "随笔作者怎样在讲述经历、描写场景和反思意义之间转换。",
     ),
+    intro: t(
+      "A strong personal essay braids three strands: what happened (**narration**), what the room looked and smelled like (**description**), and what the older writer understands now (**reflection**). In this topic, you tell those three moves apart and pick the reflection that earns its meaning from the scene.",
+      "优秀的个人随笔把三条线拧在一起：发生了什么（**叙述**）、现场的声色气味（**描写**），以及如今的作者回望时的领悟（**反思**）。本主题带你辨别这三种句子功能，并为叙事选出真正从经历中生长出来的反思。",
+    ),
     prerequisites: ["narrative-point-of-view", "authors-purpose"],
     encompasses: [
       { topic: "narrative-point-of-view", weight: 0.2 },
@@ -476,14 +498,17 @@ export const readingSkillTopics912: readonly TopicDef[] = [
         "story-scene-and-meaning",
         t("Story, Scene and Meaning", "故事、场景与意义"),
         t(
-          "A **personal essay** tells a true experience from the writer's life and asks what it means. It has two voices: the **younger self** who lived the experience, and the **older self** who is writing now and understands more.\n\nIts sentences do three kinds of work.\n- **Narration** tells what happened: *The bus left without me.*\n- **Description** shows a place or moment, with no event: *Her kitchen smelled of ginger and frying garlic.*\n- **Reflection** steps back to say what it means, often with words such as *now*, *later*, *I realize*, *I think*, or a general truth: *Only years later did I understand that she was teaching me patience.*\n\nA strong essay moves between them. Too little reflection and it is only a story; too much and it becomes a lecture.",
-          "**个人随笔**（personal essay）讲述作者生活中的一段真实经历，并追问它意味着什么。它有两个声音：经历这件事的**过去的自己**，以及正在写作、理解得更多的**现在的自己**。\n\n随笔中的句子做三种事情。\n- **叙述**（narration）讲述发生了什么：*The bus left without me.*\n- **描写**（description）展示一个地方或时刻，其中没有事件发生：*Her kitchen smelled of ginger and frying garlic.*\n- **反思**（reflection）从事件中抽身出来，说明它的意义，常用 *now、later、I realize、I think* 这类词，或者一个普遍的道理：*Only years later did I understand that she was teaching me patience.*\n\n好的随笔在三者之间转换。反思太少，它就只是一个故事；反思太多，它就变成了说教。",
+          "A **personal essay** tells a true experience from the writer's life and asks what it means. It has two voices: the **younger self** who lived the experience, and the **older self** who is writing now and understands more.\n\nIts sentences do three kinds of work.\n- **Narration** tells what happened: *The bus left without me.*\n- **Description** shows a place or moment, with no event: *Her kitchen smelled of ginger and frying garlic.*\n- **Reflection** steps back to say what it means, often with words such as *now*, *later*, *I realize*, *I think*, or a general truth: *Only years later did I understand that she was teaching me patience.*\n\nA strong essay moves between them. Too little reflection and it is only a story; too much and it becomes a lecture.\n\n> **Watch out.** Check whether an event actually *happens* (action verbs moving time forward = **narration**), whether the camera pauses on sensory details (**description**), or whether the older self steps back to interpret what it meant (**reflection**).",
+          "**个人随笔**（personal essay）讲述作者生活中的一段真实经历，并追问它意味着什么。它有两个声音：经历这件事的**过去的自己**，以及正在写作、理解得更多的**现在的自己**。\n\n随笔中的句子做三种事情。\n- **叙述**（narration）讲述发生了什么：*The bus left without me.*\n- **描写**（description）展示一个地方或时刻，其中没有事件发生：*Her kitchen smelled of ginger and frying garlic.*\n- **反思**（reflection）从事件中抽身出来，说明它的意义，常用 *now、later、I realize、I think* 这类词，或者一个普遍的道理：*Only years later did I understand that she was teaching me patience.*\n\n好的随笔在三者之间转换。反思太少，它就只是一个故事；反思太多，它就变成了说教。\n\n> **注意。** 核对句子的核心动作：推动事件往前走的是**叙述**，镜头停在感官画面上的是**描写**，抽身而出点明过往意义的是**反思**。",
         ),
         choiceGenerator(
           t("What is this sentence of a personal essay doing?", "个人随笔中的这个句子在做什么？"),
           essayBank,
           (right) =>
-            t(`It is **${right}**. ${essayWhy[right]?.[0] ?? ""}`, `这是**${essayZh[right] ?? right}**。${essayWhy[right]?.[1] ?? ""}`),
+            t(
+              `It is **${right}**. ${essayWhy[right]?.[0] ?? ""}\n\n**Check.** Ask whether the sentence advances an action, paints sensory details of a place, or steps back from the past to interpret its meaning: that three-way test confirms **${right}**.`,
+              `这是**${essayZh[right] ?? right}**。${essayWhy[right]?.[1] ?? ""}\n\n**检验。** 问问这句话是在推进事件、描绘场景感官，还是跳出往事解读意义：三项排查直接确认**${essayZh[right] ?? right}**。`,
+            ),
           (wrong) =>
             t(
               wrong === reflection

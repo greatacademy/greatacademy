@@ -50,8 +50,8 @@ const synonymBank: readonly Ask[] = synonymRows.map(([shown = "", word = "", syn
   right: syn,
   wrong: [ant, other],
   why: t(
-    `*${syn}* is a synonym of *${word}*: put it in place of the word in bold and the sentence still says the same thing. ${swap(shown, word, syn)}`,
-    `*${syn}* 是 *${word}* 的同义词：用它替换加粗的词，句子意思不变。${swap(shown, word, syn)}`,
+    `**${syn}** is a synonym of *${word}* because both carry nearly the same meaning.\n\n**Check.** Substitute **${syn}** into the sentence: *${swap(shown, word, syn)}* — the scene stays the same, while *${ant}* flips it.`,
+    `**${syn}** 是 *${word}* 的同义词，两者意思相近。\n\n**检验。** 把 **${syn}** 代入原句：*${swap(shown, word, syn)}* —— 句子意思不变，而换上 *${ant}* 意思就会反过来。`,
   ),
   whyNot: [
     t(
@@ -71,8 +71,8 @@ const antonymBank: readonly Ask[] = synonymRows.map(([shown = "", word = "", syn
   right: ant,
   wrong: [syn, other],
   why: t(
-    `*${ant}* is an antonym of *${word}*: put it in place of the word in bold and the sentence turns around. ${swap(shown, word, ant)}`,
-    `*${ant}* 是 *${word}* 的反义词：用它替换加粗的词，句子的意思就反过来了。${swap(shown, word, ant)}`,
+    `**${ant}** is an antonym of *${word}* because it means the opposite.\n\n**Check.** Put **${ant}** in place of *${word}*: *${swap(shown, word, ant)}* — the sentence now says the exact opposite of the original.`,
+    `**${ant}** 是 *${word}* 的反义词，两者意思相反。\n\n**检验。** 把 **${ant}** 代入 *${word}* 的位置：*${swap(shown, word, ant)}* —— 整句话的意思正好反过来了。`,
   ),
   whyNot: [
     t(
@@ -134,8 +134,8 @@ const compoundMeaningBank: readonly Ask[] = compoundRows.map(
     right: meaning,
     wrong: [onePart, mixed],
     why: t(
-      `Split it into its two words: *${a}* + *${b}*. Its meaning comes from both of them: *${word}* is ${meaning}.`,
-      `把它拆成两个词：*${a}* + *${b}*。它的意思来自这两个词：*${word}* 是 ${meaning}。`,
+      `Split **${word}** into *${a}* + *${b}*: it means **${meaning}**.\n\n**Check.** Check both parts: the second word (*${b}*) names what kind of thing it is, and the first word (*${a}*) narrows it down—both pieces appear in **${meaning}**.`,
+      `把 **${word}** 拆成 *${a}* + *${b}*：它的意思是 **${meaning}**。\n\n**检验。** 核对前后两个词：后词（*${b}*）说明是什么事物，前词（*${a}*）限定种类，两部分在 **${meaning}** 里都用上了。`,
     ),
     whyNot: [
       t(
@@ -157,8 +157,8 @@ const compoundBuildBank: readonly Ask[] = compoundRows.map(
     right: word,
     wrong: [n1, n2],
     why: t(
-      `*${a}* + *${b}* = **${word}**, ${meaning}. Each of its two words gives part of the meaning.`,
-      `*${a}* + *${b}* = **${word}**，意思是 ${meaning}。它的两个词各自提供一部分意思。`,
+      `*${a}* + *${b}* = **${word}**, meaning *${meaning}*.\n\n**Check.** Split **${word}** back into *${a}* and *${b}* and match them to the prompt: each half matches one part of the definition, unlike *${n1}* or *${n2}*.`,
+      `*${a}* + *${b}* = **${word}**，意思是 *${meaning}*。\n\n**检验。** 把 **${word}** 拆回 *${a}* 和 *${b}* 对照题干：前后两部分都与定义吻合，而 *${n1}* 和 *${n2}* 的另一半意思对不上。`,
     ),
     whyNot: [
       t(`*${n1}* is a compound too, but it means ${m1}.`, `*${n1}* 也是复合词，但它的意思是 ${m1}。`),
@@ -209,8 +209,8 @@ const homophoneChoiceBank: readonly Ask[] = [0, 1].flatMap((r) =>
       right: word,
       wrong: [other, made],
       why: t(
-        `${gapFill(shown, word)} *${word}* means ${en}, which is what the sentence needs. Homophones sound alike, so choose by meaning.`,
-        `${gapFill(shown, word)} *${word}* 的意思是“${zh}”，正是句子需要的。同音词读音相同，要按意思来选。`,
+        `${gapFill(shown, word)}\n\n**${word}** means *${en}*, which matches the sentence.\n\n**Check.** Replace the blank with the meaning (*${en}*): it makes complete sense here, whereas *${other}* (*${oen}*) does not.`,
+        `${gapFill(shown, word)}\n\n**${word}** 的意思是“${zh}”，正符合句意。\n\n**检验。** 把释义“${zh}”代入空格读一遍，句意通顺；而同音词 *${other}*（“${ozh}”）放进去说不通。`,
       ),
       whyNot: [
         t(
@@ -283,8 +283,8 @@ const shadeArrangeBank: readonly Arrange[] = shadeRows.map(([a = "", b = "", c =
   shown: "",
   steps: [a, b, c],
   why: t(
-    `From weakest to strongest: *${a}*, *${b}*, *${c}*. The words share a meaning, but *${c}* says it most strongly and *${a}* least.`,
-    `从弱到强：*${a}*、*${b}*、*${c}*。这些词意思相近，但 *${c}* 程度最强，*${a}* 最弱。`,
+    `From weakest to strongest: **${a}** → **${b}** → **${c}**.\n\n**Check.** Picture the three on a scale from mild to extreme: **${a}** is the gentlest, **${b}** is stronger, and **${c}** is the strongest—stepping backward from **${c}** to **${a}** gets milder at every step.`,
+    `从弱到强排列：**${a}** → **${b}** → **${c}**。\n\n**检验。** 在脑海里从轻到重排成阶梯：**${a}** 最轻，**${b}** 居中，**${c}** 最强；从 **${c}** 倒着往回看到 **${a}**，每一步都在变轻。`,
   ),
 }));
 
@@ -299,8 +299,8 @@ const shadeChoiceBank: readonly Ask[] = shadeRows.map(([a = "", b = "", c = "", 
     right,
     wrong,
     why: t(
-      `${gapFill(shown, right)} The clues in the sentence show how strong the word must be, and *${right}* is the one of *${a}*, *${b}* and *${c}* that matches.`,
-      `${gapFill(shown, right)} 句中的线索说明了这个词需要多强的程度，在 *${a}*、*${b}*、*${c}* 中只有 *${right}* 合适。`,
+      `${gapFill(shown, right)}\n\nAmong *${a}*, *${b}*, and *${c}*, **${right}** matches the exact degree the clues describe.\n\n**Check.** Compare the strength clues in the sentence against the ladder *${a} → ${b} → ${c}*: **${right}** hits the right rung without understating or exaggerating.`,
+      `${gapFill(shown, right)}\n\n在 *${a}*、*${b}*、*${c}* 中，**${right}** 的程度正好符合句中线索。\n\n**检验。** 对照强度阶梯 *${a} → ${b} → ${c}* 再读句中线索：**${right}** 既不偏轻也不过头。`,
     ),
     whyNot: wrong.map((w) =>
       words.indexOf(w) < k
@@ -361,8 +361,8 @@ const orderBank: readonly Arrange[] = orderRows.map((words) => {
     shown: "",
     steps: words,
     why: t(
-      `In alphabetical order: ${words.join(", ")}. When the first letters are the same, compare the second letters, and if those match too, the third.`,
-      `按字母顺序：${words.join("、")}。首字母相同时比较第二个字母，第二个也相同就比较第三个。`,
+      `In alphabetical order: **${words.join(", ")}**.\n\n**Check.** Compare each neighboring pair at the first letter where they differ: reading from last to first (${[...words].reverse().join(", ")}) steps backward through the alphabet every time.`,
+      `按字母顺序：**${words.join("、")}**。\n\n**检验。** 逐对检查相邻两词第一个不同的字母：从后往前倒着看（${[...words].reverse().join("、")}），每一步都在字母表里往前退。`,
     ),
   };
 });
@@ -411,8 +411,8 @@ const guideBank: readonly Ask[] = guideRows.map(([g1 = "", g2 = "", between = ""
     right: between,
     wrong: [before, after],
     why: t(
-      `*${between}* comes after *${g1}* and before *${g2}* in alphabetical order, so it is on this page. Guide words show the first and the last word of a page.`,
-      `按字母顺序，*${between}* 在 *${g1}* 之后、*${g2}* 之前，所以在这一页。导词表示一页上的第一个词和最后一个词。`,
+      `**${between}** falls between *${g1}* and *${g2}* in alphabetical order, so it appears on this page.\n\n**Check.** Run two side-by-side checks: *${g1}* comes before **${between}**, and **${between}** comes before *${g2}*—neither *${before}* nor *${after}* passes both checks.`,
+      `按字母顺序，**${between}** 排在 *${g1}* 之后、*${g2}* 之前，所以就在这一页。\n\n**检验。** 做两步核对：*${g1}* 在 **${between}** 前面，且 **${between}** 在 *${g2}* 前面——*${before}* 和 *${after}* 都不满足这两个条件。`,
     ),
     whyNot: [
       t(
@@ -476,8 +476,8 @@ const entryBank: readonly Ask[] = entryRows.map(([word = "", shown = "", right =
     right,
     wrong: [m2, m3],
     why: t(
-      `In this sentence, *${word}* means ${right}. An entry lists each meaning separately, so try each one in the sentence and keep the one that makes sense.`,
-      `在这个句子里，*${word}* 的意思是 ${right}。词条把每个意思分开列出，把每个意思代入句子，保留说得通的那个。`,
+      `In this sentence, *${word}* means **${right}**.\n\n**Check.** Substitute **${right}** in place of *${word}* in the sentence: it makes clear sense, while the other numbered meanings do not fit the scene.`,
+      `在这个句子里，*${word}* 的意思是 **${right}**。\n\n**检验。** 把 **${right}** 代回原句替换 *${word}*：整句话自然通顺，而词条里另外几个义项放进去都说不通。`,
     ),
     whyNot: [m2, m3].map((m) =>
       t(
@@ -522,13 +522,13 @@ const literalBank: readonly Ask[] = usePairs.flatMap(([phrase = "", literal = ""
       right: literal,
       wrong: [figurative, nextFigurative],
       why: t(
-        `In "${literal}", the words mean exactly what they say: picture it, and that is what happens. The other sentences use their phrases to mean something else.`,
-        `在“${literal}”中，词语就是字面意思：想象一下，事情正是这样发生的。其他句子中的短语表示的是另外的意思。`,
+        `In *${literal}*, the phrase **${phrase}** is used literally—the words mean exactly what they say.\n\n**Check.** Picture the scene in your head: it can actually happen in real life, whereas the other two sentences use their phrases as idioms.`,
+        `在 *${literal}* 中，短语 **${phrase}** 是字面用法，词语就是字面意思。\n\n**检验。** 在脑海里画出这个画面：这件事在现实中真的会发生，而另外两句里的短语都是比喻或习语。`,
       ),
       whyNot: [figurative, nextFigurative].map((s) =>
         t(
-          `Here the phrase does not mean what its words say; nobody in "${s}" is really doing that. It is nonliteral.`,
-          `这里的短语并不是字面意思，“${s}”中没有人真的那样做。它是非字面用法。`,
+          `Here the phrase does not mean what its words say; nobody in *${s}* is really doing that—it is nonliteral.`,
+          `这里的短语并不是字面意思，*${s}* 中没有人真的那样做——它是非字面用法。`,
         ),
       ),
     },
@@ -541,12 +541,12 @@ const literalBank: readonly Ask[] = usePairs.flatMap(([phrase = "", literal = ""
       right: figurative,
       wrong: [literal, nextLiteral],
       why: t(
-        `In "${figurative}", *${phrase}* does not mean what its words say; it is a nonliteral phrase with a meaning of its own.`,
-        `在“${figurative}”中，*${phrase}* 不是字面意思，而是有自己含义的非字面短语。`,
+        `In “${figurative}” **${phrase}** is nonliteral—it carries a special idiom meaning rather than its word-for-word picture.\n\n**Check.** Take the words literally in “${figurative}”—that literal picture cannot really happen here, confirming it is a nonliteral phrase.`,
+        `在 *${figurative}* 中，**${phrase}** 是非字面用法，表达的是习语含义而不是逐字画面。\n\n**检验。** 把 *${figurative}* 按字面去想：画面在现实里说不通，确认这是非字面短语。`,
       ),
       whyNot: [literal, nextLiteral].map((s) =>
         t(
-          `In "${s}", the words mean exactly what they say, so the phrase is used literally.`,
+          `In “${s}” the words mean exactly what they say, so the phrase is used literally.`,
           `在“${s}”中，词语就是字面意思，所以短语是按字面使用的。`,
         ),
       ),
@@ -593,8 +593,8 @@ const idiomBank: readonly Ask[] = idiomRows.map(([shown = "", meaning = "", lite
   right: meaning,
   wrong: [literal, wrongMeaning],
   why: t(
-    `Here the phrase means **${meaning}**. A nonliteral phrase has a meaning of its own, and the rest of the sentence is the clue to it.`,
-    `这里这个短语的意思是 **${meaning}**。非字面短语有它自己的意思，句子的其余部分就是线索。`,
+    `Here the bold phrase means **${meaning}**.\n\n**Check.** Replace the bold phrase in *${shown}* with **${meaning}**: the whole sentence makes clear, real-world sense, while "${literal}" is only the literal picture.`,
+    `这里加粗短语的意思是 **${meaning}**。\n\n**检验。** 把 **${meaning}** 代入 *${shown}* 替换加粗短语：整句话合情合理，而“${literal}”只是字面画面。`,
   ),
   whyNot: [
     t(
@@ -623,8 +623,8 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "choosing-the-synonym",
         t("Choosing the Synonym", "选择同义词"),
         t(
-          "A **synonym** is a word that means nearly the same as another word: *shout* and *yell*, *tiny* and *small*. To test a synonym, put it in place of the word in the sentence. If the sentence still says the same thing, it is a synonym.\n\nBe careful: a word about the same subject is not always a synonym. *Whisper* is also about the voice, but it means the opposite of *shout*.",
-          "**同义词**是和另一个词意思几乎相同的词：*shout* 和 *yell*，*tiny* 和 *small*。检验方法是把它替换到句子里，如果句子意思不变，它就是同义词。\n\n要注意：说同一件事的词不一定是同义词。*whisper* 也和说话的声音有关，但它和 *shout* 意思相反。",
+          "A **synonym** means nearly the same as another word: *shout* and *yell*, *tiny* and *small*. Test a synonym by substituting it into the sentence—the meaning should stay the same.\n\n> **Watch out.** A word from the same topic can still be the opposite—*whisper* is about voice too, but it is an antonym of *shout*.",
+          "**同义词**与另一个词意思几乎相同：*shout* 和 *yell*、*tiny* 和 *small*。把候选词代进原句，意思不变就是同义词。\n\n> **注意。** 同主题的词可能是反义词——*whisper* 也和声音有关，但它与 *shout* 意思相反。",
         ),
         askGenerator(synonymBank),
       ),
@@ -632,12 +632,17 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "choosing-the-antonym",
         t("Choosing the Antonym", "选择反义词"),
         t(
-          "An **antonym** is a word that means the opposite of another word: *ancient* and *new*, *wide* and *narrow*. Put an antonym in place of a word, and the sentence turns around: *The path was narrow* becomes *The path was wide*.\n\nA word that only changes the subject, such as *dark* for *narrow*, is not an antonym: it says something different, not the opposite.",
-          "**反义词**是和另一个词意思相反的词：*ancient* 和 *new*，*wide* 和 *narrow*。用反义词替换一个词，句子的意思就反过来：*The path was narrow* 变成 *The path was wide*。\n\n只是换了话题的词（比如用 *dark* 替换 *narrow*）不是反义词：它说的是另一件事，而不是相反的意思。",
+          "An **antonym** means the opposite of another word: *ancient* and *new*, *wide* and *narrow*. Put an antonym in place of a word and the sentence flips around: *The path was narrow* → *The path was wide*.\n\n> **Watch out.** A merely different word (like *dark* for *narrow*) is not an antonym—an antonym flips the exact same scale.",
+          "**反义词**与另一个词意思相反：*ancient* 和 *new*、*wide* 和 *narrow*。换上反义词后，句意会彻底反过来：*The path was narrow* → *The path was wide*。\n\n> **注意。** 只是换成别的意思（比如用 *dark* 换 *narrow*）不是反义词——反义词必须在同一维度上正反相对。",
         ),
         askGenerator(antonymBank),
       ),
     ],
+    14,
+    t(
+      "When you revise a story, swapping *big* for *enormous* keeps your meaning while making it sharper; swapping *quiet* for *noisy* flips the scene completely. Knowing synonyms and antonyms gives you control over exact word choice.",
+      "修改故事时，把 *big* 换成 *enormous* 意思不变却更生动；把 *quiet* 换成 *noisy* 则让画面彻底反转。掌握同义词和反义词，能让你精准选词。",
+    ),
   ),
   topic(
     "compound-words",
@@ -652,8 +657,8 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "splitting-a-compound",
         t("Splitting a Compound", "拆分复合词"),
         t(
-          "A **compound word** is two words joined into one: *sun* + *flower* = *sunflower*, *earth* + *worm* = *earthworm*. To find its meaning, split it into its two words. Usually the second word names the thing, and the first tells what kind: an *earthworm* is a worm that lives in the earth, and a *houseboat* is a boat that is a house.\n\nUse both words. A meaning that uses only one of them, or joins them the wrong way round, is not the meaning of the compound.",
-          "**复合词**是由两个词合成的一个词：*sun* + *flower* = *sunflower*，*earth* + *worm* = *earthworm*。要弄清它的意思，就把它拆成两个词。通常后一个词说出是什么东西，前一个词说明是哪一种：*earthworm* 是生活在泥土里的虫，*houseboat* 是当作住房的船。\n\n两个词都要用上。只用了其中一个词的意思，或者把两个词的关系弄反了，都不是这个复合词的意思。",
+          "A **compound word** joins two smaller words into one: *sun* + *flower* = *sunflower*, *earth* + *worm* = *earthworm*. Usually the **second** word names the thing and the **first** tells what kind: a *houseboat* is a boat you live in, while a *boathouse* is a house for boats.\n\n> **Watch out.** Watch the order of the two words—reversing them (*houseboat* vs. *boathouse*) changes the meaning completely.",
+          "**复合词**把两个小词合成一个词：*sun* + *flower* = *sunflower*、*earth* + *worm* = *earthworm*。通常**后词**说明是什么东西，**前词**说明是哪一种：*houseboat* 是住人的船，*boathouse* 是停船的房子。\n\n> **注意。** 留心两个词的先后顺序——颠倒顺序（*houseboat* 和 *boathouse*）意思完全不同。",
         ),
         askGenerator(compoundMeaningBank),
       ),
@@ -661,12 +666,17 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "building-a-compound",
         t("Building a Compound", "组成复合词"),
         t(
-          "To build the compound that fits a meaning, find the thing it names and what kind it is. *A bag you carry on your back* is a pack for the back: *back* + *pack* = *backpack*.\n\nMany compounds share a word: *backpack*, *backyard* and *backbone* all begin with *back*. Check the other word too, because it decides the meaning.",
-          "要组成符合某个意思的复合词，先找出它指的是什么东西，以及是哪一种。*A bag you carry on your back* 是背在背上的包：*back* + *pack* = *backpack*。\n\n许多复合词共用一个词：*backpack*、*backyard* 和 *backbone* 都以 *back* 开头。还要检查另一个词，因为它决定了意思。",
+          "To build a compound from a definition, spot the main thing (second word) and its kind (first word): *a bag you carry on your back* → *back* + *pack* = **backpack**.\n\n> **Watch out.** Many compounds share one half (*backpack*, *backyard*, *backbone*)—always check *both* halves against the definition.",
+          "根据释义组复合词时，先找主体事物（后词），再找限定特征（前词）：*a bag you carry on your back* → *back* + *pack* = **backpack**。\n\n> **注意。** 很多复合词共用一半（*backpack*、*backyard*、*backbone*），一定要前后两部分都核对。",
         ),
         askGenerator(compoundBuildBank),
       ),
     ],
+    14,
+    t(
+      "Even if you have never seen the word *starfish* or *raincoat* before, you already know both halves inside it! Splitting and building compound words unlocks dozens of longer words at once.",
+      "就算你第一次见到 *starfish* 或 *raincoat*，里面的两个小词你早就认识了！学会拆分和组合复合词，一次就能解锁一大批长词。",
+    ),
   ),
   topic(
     "homophones",
@@ -681,8 +691,8 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "choosing-the-homophone",
         t("Choosing the Homophone", "选择同音词"),
         t(
-          "**Homophones** are words that sound the same but are spelled differently and mean different things: a *bear* is an animal, and *bare* means with nothing covering it. Because you cannot hear the difference, decide by meaning.\n\nThe pairs of this topic are *bear* and *bare*, *tail* and *tale*, *flower* and *flour*, *hole* and *whole*, *knight* and *night*, *pair* and *pear*, *sea* and *see*, *weak* and *week*, *right* and *write*, *blew* and *blue*, *meat* and *meet*, and *plain* and *plane*.",
-          "**同音词**是读音相同、拼写和意思不同的词：*bear* 是一种动物，*bare* 的意思是没有遮盖的。因为听不出区别，所以要按意思来判断。\n\n本主题的同音词有：*bear* 和 *bare*，*tail* 和 *tale*，*flower* 和 *flour*，*hole* 和 *whole*，*knight* 和 *night*，*pair* 和 *pear*，*sea* 和 *see*，*weak* 和 *week*，*right* 和 *write*，*blew* 和 *blue*，*meat* 和 *meet*，*plain* 和 *plane*。",
+          "**Homophones** sound identical but differ in spelling and meaning: a *bear* is an animal, while *bare* means uncovered. Since your ears cannot tell them apart, decide from the meaning of the sentence.\n\nPairs in this topic: *bear/bare*, *tail/tale*, *flower/flour*, *hole/whole*, *knight/night*, *pair/pear*, *sea/see*, *weak/week*, *right/write*, *blew/blue*, *meat/meet*, *plain/plane*.\n\n> **Watch out.** Never choose a homophone by sound alone—check which spelling matches the meaning in the sentence.",
+          "**同音词**读音相同但拼写和意思不同：*bear* 是熊，*bare* 是光秃秃的。光靠耳朵分不出来，必须根据句意选择。\n\n本主题同音词对：*bear/bare*、*tail/tale*、*flower/flour*、*hole/whole*、*knight/night*、*pair/pear*、*sea/see*、*weak/week*、*right/write*、*blew/blue*、*meat/meet*、*plain/plane*。\n\n> **注意。** 绝不要只凭读音选同音词，要核对拼写是否符合句意。",
         ),
         askGenerator(homophoneChoiceBank),
       ),
@@ -690,8 +700,8 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "fixing-the-homophone",
         t("Fixing the Wrong Homophone", "改正用错的同音词"),
         t(
-          "A spell checker will not catch a wrong homophone, because each word is spelled correctly. You have to read for meaning. Read each word and ask: is this the word that means what the sentence needs? *The dog wagged its tale* sounds right, but a *tale* is a story; the dog wags its *tail*.",
-          "拼写检查发现不了用错的同音词，因为每个词本身拼写都没错，只能靠理解意思。读每一个词时都问一问：这个词的意思是不是句子需要的？*The dog wagged its tale* 听起来没错，但 *tale* 是故事，狗摇的是 *tail*（尾巴）。",
+          "A spell checker will miss a wrong homophone because both spellings are real words. Read for meaning: *The dog wagged its tale* sounds right, yet *tale* means a story—it should be **tail**.\n\n> **Watch out.** Check every word that has a sound-alike twin, even when it looks neatly spelled.",
+          "拼写检查器查不出用错的同音词，因为两个拼法都是真词。要逐词读意思：*The dog wagged its tale* 听着没错，但 *tale* 是故事，应改成 **tail**。\n\n> **注意。** 即使单词拼写本身没错，也要留意它是不是误用了同音词。",
         ),
         typedGenerator(
           "word-form",
@@ -703,13 +713,18 @@ export const wordStudyTopics: readonly TopicDef[] = [
           (right, shown) => {
             const item = homophoneFixWhy.get(`${right}|${shown}`);
             return t(
-              `The word should be **${right}**, which means ${item?.en ?? ""}. *${item?.other ?? ""}* sounds the same, but it means ${item?.oen ?? ""}.`,
-              `应该用 **${right}**，意思是“${item?.zh ?? ""}”。*${item?.other ?? ""}* 读音相同，但意思是“${item?.ozh ?? ""}”。`,
+              `The word should be **${right}** (*${item?.en ?? ""}*), not *${item?.other ?? ""}* (*${item?.oen ?? ""}*).\n\n**Check.** Put the meaning of **${right}** (*${item?.en ?? ""}*) into the sentence: it fits the scene, whereas *${item?.other ?? ""}* does not.`,
+              `应该改成 **${right}**（“${item?.zh ?? ""}”），而不是 *${item?.other ?? ""}*（“${item?.ozh ?? ""}”）。\n\n**检验。** 把 **${right}** 的意思（“${item?.zh ?? ""}”）代回原句读一遍：句意通顺，而 *${item?.other ?? ""}* 说不通。`,
             );
           },
         ),
       ),
     ],
+    14,
+    t(
+      "If someone writes, *I ate a pair for lunch*, you might wonder—a pair of shoes?! *Pair* and *pear* sound identical, yet spelling changes the whole picture. Let's pick and fix homophones by meaning.",
+      "如果有人写 *I ate a pair for lunch*，你可能会纳闷——午饭吃了一双鞋？！*pair* 和 *pear* 读音一样，拼写不同意思却天差地别。这节课我们来按句意选对、改对同音词。",
+    ),
   ),
   topic(
     "shades-of-meaning",
@@ -724,8 +739,8 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "ordering-by-strength",
         t("Ordering by Strength", "按程度排序"),
         t(
-          "Some words share a meaning but differ in how strong they are. *Cool*, *chilly* and *freezing* all describe cold, but *freezing* is the coldest. *Damp* is a little wet, and *soaked* is as wet as you can be.\n\nTo put words in order, picture each one. Ask which is the mildest, and which is the most extreme.",
-          "有些词意思相同，但程度强弱不同。*cool*、*chilly* 和 *freezing* 都表示冷，但 *freezing* 最冷。*damp* 是有点湿，*soaked* 是湿透了。\n\n给这些词排序时，想象每个词描述的情景，问一问哪个最轻，哪个最极端。",
+          "Related words often form a ladder from mild to extreme: *cool* → *chilly* → *freezing*; *damp* → *wet* → *soaked*. Picture each word in real life to decide which is mildest and which is strongest.\n\n> **Watch out.** Check the middle word carefully—stepping from first to last should grow stronger at every step.",
+          "意思相近的词常按程度排成梯子：*cool* → *chilly* → *freezing*；*damp* → *wet* → *soaked*。想象每个词对应的真实画面，判断谁最轻、谁最强。\n\n> **注意。** 仔细核对中间那个词——从第一个到最后一个，每一步都要更强一级。",
         ),
         arrangeGenerator(shadeArrangeBank),
       ),
@@ -733,12 +748,17 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "choosing-the-right-strength",
         t("Choosing the Right Strength", "选择程度合适的词"),
         t(
-          "A good writer chooses the word of exactly the right strength. If the pond froze solid, *cool* is too weak; if you just want your jacket off, *scorching* is too strong.\n\nLook for clues in the sentence that tell how strong the feeling or the weather is, such as *so ... that*, *a little* or *not too*, and choose the word that matches them.",
-          "好的写作者会选程度正好合适的词。如果池塘冻得结结实实，*cool* 就太弱了；如果只是想脱掉外套，*scorching* 又太强了。\n\n在句子里找表示程度的线索，比如 *so ... that*、*a little* 或 *not too*，然后选出与之相符的词。",
+          "Match a word's strength to the sentence's clues: if the pond froze solid, *cool* is too mild; if you only want a light breeze, *freezing* is too extreme. Look for clue words like *a little*, *barely*, or *so … that*.\n\n> **Watch out.** Do not automatically pick the strongest word—sometimes the sentence calls for the mildest shade.",
+          "根据句中线索挑选强弱刚好的词：池塘结冰时 *cool* 太轻，只需微风时 *freezing* 又太重。留意 *a little*、*barely*、*so … that* 等程度线索。\n\n> **注意。** 不要逢题就选最强的词——有时句子正需要程度最轻的那个。",
         ),
         askGenerator(shadeChoiceBank),
       ),
     ],
+    14,
+    t(
+      "A drizzle leaves your jacket *damp*; falling into a creek leaves it *soaked*. Both mean wet, yet they paint completely different pictures. In this topic, you will rank words by strength and choose the exact shade a sentence needs.",
+      "毛毛雨只会让外套有点潮（*damp*），掉进小溪则会湿透（*soaked*）。两个词都表示湿，画面却完全不同。这节课你会按程度给词排序，并选出最贴切的那个词。",
+    ),
   ),
   topic(
     "using-a-dictionary-and-glossary",
@@ -753,8 +773,8 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "alphabetical-order",
         t("Alphabetical Order", "字母顺序"),
         t(
-          "A dictionary, and the glossary at the back of a book, list words in **alphabetical order**. When two words begin with the same letter, look at the second letter: *bread* comes before *brown* because *e* comes before *o*. If the second letters match too, look at the third: *star* comes before *stay*, because *r* comes before *y*.",
-          "词典和书后的词汇表都按**字母顺序**排列单词。两个词首字母相同时，看第二个字母：*bread* 排在 *brown* 前面，因为 *e* 在 *o* 前面。如果第二个字母也相同，就看第三个：*star* 排在 *stay* 前面，因为 *r* 在 *y* 前面。",
+          "Dictionaries and glossaries list entries in **alphabetical order**. When first letters match, compare second letters (*bread* before *brown* because *e* < *o*); when those match too, compare third letters (*star* before *stay* because *r* < *y*).\n\n> **Watch out.** Do not stop at the first letter—keep scanning right until you hit the first letter that differs.",
+          "词典和词汇表都按**字母顺序**排列。首字母相同时比第二个字母（*bread* 在 *brown* 前，因为 *e* 在 *o* 前）；第二个也相同就比第三个（*star* 在 *stay* 前，因为 *r* 在 *y* 前）。\n\n> **注意。** 不要只看首字母，要一直向右比到第一个不同的字母。",
         ),
         arrangeGenerator(orderBank),
       ),
@@ -762,8 +782,8 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "guide-words",
         t("Guide Words", "导词"),
         t(
-          "At the top of each dictionary page are two **guide words**: the first and the last word on that page. A word is on the page if it comes after the first guide word and before the second in alphabetical order.\n\nIf the guide words are *maple* and *market*, then *march* is on the page, *magic* is on an earlier page, and *mask* is on a later one.",
-          "词典每页顶部有两个**导词**：这一页的第一个词和最后一个词。如果一个词按字母顺序排在第一个导词之后、第二个导词之前，它就在这一页。\n\n如果导词是 *maple* 和 *market*，那么 *march* 在这一页，*magic* 在前面的页，*mask* 在后面的页。",
+          "The two **guide words** at the top of a dictionary page show the first and last words on that page. With guide words *maple* and *market*, **march** is on the page, *magic* is earlier, and *mask* is later.\n\n> **Watch out.** A word must pass *both* checks: after the first guide word *and* before the second.",
+          "词典页顶的两个**导词**标出本页的第一个和最后一个词。导词为 *maple* 和 *market* 时，**march** 在本页，*magic* 在前面页，*mask* 在后面页。\n\n> **注意。** 必须同时满足两个条件：排在第一个导词之后，*并且*排在第二个导词之前。",
         ),
         askGenerator(guideBank),
       ),
@@ -771,12 +791,17 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "choosing-the-meaning",
         t("Choosing the Meaning", "选择词义"),
         t(
-          "Many words have more than one meaning, and a dictionary entry numbers them: *bat* 1. a small animal with wings 2. a stick used to hit a ball. To find the one you need, read the sentence, try each meaning in place of the word, and keep the one that makes sense. *The bat flew out of the cave* needs the animal, not the stick.",
-          "许多词有不止一个意思，词典词条会给它们编号：*bat* 1. 一种有翅膀的小动物 2. 用来击球的棒子。要找到需要的那个意思，先读句子，再把每个意思代入替换这个词，保留说得通的那个。*The bat flew out of the cave* 指的是动物，而不是球棒。",
+          "Many words have numbered meanings in a dictionary entry: *bat* 1. a flying animal, 2. a stick for hitting a ball. Test each numbered meaning inside the sentence and keep the one that makes sense (*The bat flew out of the cave* → 1).\n\n> **Watch out.** Do not always grab meaning 1—read the whole sentence and test every listed definition.",
+          "很多词在词条里有多个编号义项：*bat* 1. 蝙蝠，2. 球棒。把每个义项依次代回原句，保留说得通的那个（*The bat flew out of the cave* → 1）。\n\n> **注意。** 不要默认选第 1 个义项，要把所有义项都放进原句里试一试。",
         ),
         askGenerator(entryBank),
       ),
     ],
+    14,
+    t(
+      "Opening a thick dictionary can feel like hunting for a needle in a haystack—unless you know alphabetical order, guide words at the top corners, and numbered definitions. Let's put all three tools to work.",
+      "翻开厚厚的词典，如果不懂字母顺序、页顶导词和编号义项，找起词来就像大海捞针。这节课我们把这三个查词工具全部练熟。",
+    ),
   ),
   topic(
     "literal-and-nonliteral-phrases",
@@ -791,8 +816,8 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "literal-or-not",
         t("Literal or Not", "是否字面义"),
         t(
-          "A phrase is **literal** when its words mean exactly what they say: *Grandma cut a piece of cake* is about real cake. The same phrase can be **nonliteral**, with a meaning of its own: *The test was a piece of cake* means the test was easy.\n\nTo tell them apart, picture the words. If that could really be happening in the sentence, the phrase is literal. If it could not, such as a test made of cake, it is nonliteral.",
-          "如果短语的词语就是字面意思，它就是**字面用法**：*Grandma cut a piece of cake* 说的是真的蛋糕。同一个短语也可以是**非字面用法**，有它自己的意思：*The test was a piece of cake* 的意思是考试很容易。\n\n要区分它们，就想象一下这些词描述的情景。如果句子里真的可能发生这样的事，就是字面用法；如果不可能（比如用蛋糕做的考试），就是非字面用法。",
+          "A phrase is **literal** when the words mean exactly what they say (*Grandma cut a piece of cake*). It is **nonliteral** when it carries a special meaning of its own (*The test was a piece of cake* = easy).\n\n> **Watch out.** The exact same phrase can be literal in one sentence and nonliteral in another—always check the whole sentence.",
+          "词语就是字面意思时叫**字面用法**（*Grandma cut a piece of cake*）；表达特殊习语含义时叫**非字面用法**（*The test was a piece of cake* = 很简单）。\n\n> **注意。** 同一个短语在这句里可能是字面义，在另一句里可能是非字面义，一定要结合整句判断。",
         ),
         askGenerator(literalBank),
       ),
@@ -800,11 +825,16 @@ export const wordStudyTopics: readonly TopicDef[] = [
         "what-the-phrase-means",
         t("What the Phrase Means", "短语的含义"),
         t(
-          "A nonliteral phrase, or idiom, has a meaning you have to learn or work out from the sentence around it. *It's raining cats and dogs, so take an umbrella* cannot mean that pets are falling; the umbrella tells you it is raining very hard.\n\nUse the clues of the sentence, and choose the meaning that fits them, not the picture the words make.",
-          "非字面短语，也就是习语，有一个需要学习或从上下文推断的意思。*It's raining cats and dogs, so take an umbrella* 不可能是说宠物从天而降；雨伞告诉你雨下得很大。\n\n利用句子中的线索，选择与线索相符的意思，而不是词语描绘的画面。",
+          "Use the surrounding sentence to figure out a nonliteral phrase (idiom): in *It's raining cats and dogs, so take an umbrella*, the umbrella tells you it is raining very hard—not that pets are falling from the sky.\n\n> **Watch out.** Skip any option that simply describes the silly word-for-word picture.",
+          "利用上下文线索推断非字面短语（习语）的意思：在 *It's raining cats and dogs, so take an umbrella* 里，雨伞说明雨下得很大，而不是天上下猫狗。\n\n> **注意。** 排除那些只照着字面画面直译的选项。",
         ),
         askGenerator(idiomBank),
       ),
     ],
+    14,
+    t(
+      "If your coach says, *Break a leg!* before the school play, she is not wishing you an injury—she is wishing you good luck! Everyday English is full of playful nonliteral phrases, and context clues help you decode them.",
+      "演出前老师对你说 *Break a leg!*，可不是盼着你摔断腿，而是在祝你好运！日常英语里充满有趣的非字面短语，这节课我们来辨认并读懂它们。",
+    ),
   ),
 ];

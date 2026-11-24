@@ -158,15 +158,15 @@ export const symbolThemeStep = point(
   "the-theme-a-symbol-carries",
   t("The Theme a Symbol Carries", "象征所承载的主题"),
   t(
-    "A symbol matters because of the **theme** it helps express: a message about people or life that the whole story suggests. To get from a symbol to a theme, follow what happens to the object. If a broken fence is rebuilt with a gate, the change mirrors the characters, and the theme follows the change: *people can open the walls that anger builds.*\n\nA theme is a statement about life, not about the object itself. *Fences can be damaged by storms* is true, but it is about wood, not people. A theme also has to fit the ending: a symbol that is repaired, freed or passed on points toward hope, so a gloomy message would read the story backward.",
-    "象征的意义在于它所表达的**主题**：整个故事所暗示的关于人或生活的道理。要从象征推出主题，就要跟踪这个东西发生了什么。如果一道破篱笆被重建并留了一扇门，这个变化映照着人物，主题也随之而来：*人们可以打开愤怒筑起的墙。*\n\n主题是关于生活的陈述，而不是关于东西本身的陈述。*篱笆会被暴风雨损坏* 是事实，但它讲的是木头，而不是人。主题还必须与结局相符：一个被修好、被放飞或被传承下去的象征指向希望，如果得出悲观的道理，就是把故事读反了。",
+    "A symbol matters because of the **theme** it helps express: a message about people or life that the whole story suggests. To get from a symbol to a theme, follow what happens to the object. If a broken fence is rebuilt with a gate, the change mirrors the characters, and the theme follows the change: *people can open the walls that anger builds.*\n\nA theme is a statement about life, not about the object itself. *Fences can be damaged by storms* is true, but it is about wood, not people. A theme also has to fit the ending: a symbol that is repaired, freed or passed on points toward hope, so a gloomy message would read the story backward.\n\n> **Watch out.** Check both direction and scope: a real theme speaks about *people or life* (not just how the physical object works) and matches the *outcome* of the symbol at the end.",
+    "象征的意义在于它所表达的**主题**：整个故事所暗示的关于人或生活的道理。要从象征推出主题，就要跟踪这个东西发生了什么。如果一道破篱笆被重建并留了一扇门，这个变化映照着人物，主题也随之而来：*人们可以打开愤怒筑起的墙。*\n\n主题是关于生活的陈述，而不是关于东西本身的陈述。*篱笆会被暴风雨损坏* 是事实，但它讲的是木头，而不是人。主题还必须与结局相符：一个被修好、被放飞或被传承下去的象征指向希望，如果得出悲观的道理，就是把故事读反了。\n\n> **注意。** 同时核对范围和方向：真正的主题谈的是*人或生活*（不只是物品本身的物理特性），并且与象征在结尾处的*变化结果*一致。",
   ),
   kindedChoice(
     ["Which theme does the symbol in this passage help express?", "这段文字中的象征有助于表达哪个主题？"],
     symbolThemeBank,
     (right) => [
-      `*${right}* The object changes along with the characters, and this message about life follows from that change.`,
-      `*${right}* 这个东西随着人物一起变化，这条关于生活的道理正是从这一变化中得出的。`,
+      `*${right}* The object changes along with the characters, and this message about life follows from that change.\n\n**Check.** Compare what happens to the symbol by the final sentence with the message in *${right}*: it lifts the physical detail to a human truth and matches the story's ending rather than reversing it.`,
+      `*${right}* 这个东西随着人物一起变化，这条关于生活的道理正是从这一变化中得出的。\n\n**检验。** 把文段最后一句中象征的结局与 *${right}* 对照：它把具体物件上升为关于人的道理，而且顺应故事的结局，没有把意思读反。`,
     ],
     [
       [
@@ -186,15 +186,15 @@ export const ironyMakingStep = point(
   "making-the-gap",
   t("Making the Gap", "制造落差"),
   t(
-    "Writers create irony by opening a **gap** on purpose. For **situational irony**, set up an expectation and then reverse it: the fire chief's own notes catch fire during his safety speech. For **verbal irony**, give a character words that say the opposite of what the moment means: soaked by rain, he says, *What a perfect day for a walk.* For **dramatic irony**, let the reader know something and give a character a line that shows he does not: *Nothing can stop me now,* says the driver heading for a washed-out bridge.\n\nTwo choices never make irony. An ending that turns out as expected has no gap. A surprise that is simply unrelated, such as a bird landing nearby, is random, not a reversal of what was expected.",
-    "作者有意制造**落差**来形成反讽。**情境反讽**是先建立一个预期，再把它颠倒：消防队长在讲防火安全时，自己的讲稿着了火。**言语反讽**是让人物说出与当时情形相反的话：被雨淋透的他说 *What a perfect day for a walk.* **戏剧反讽**是让读者知道某件事，再让人物说出一句显示他并不知道的话：开向被冲毁的桥的司机说 *Nothing can stop me now.*\n\n有两种选择永远构不成反讽：结果和预期一样的结局没有落差；与预期毫不相干的意外，比如一只鸟落在附近，只是随机事件，并没有颠倒预期。",
+    "Writers create irony by opening a **gap** on purpose. For **situational irony**, set up an expectation and then reverse it: the fire chief's own notes catch fire during his safety speech. For **verbal irony**, give a character words that say the opposite of what the moment means: soaked by rain, he says, *What a perfect day for a walk.* For **dramatic irony**, let the reader know something and give a character a line that shows he does not: *Nothing can stop me now,* says the driver heading for a washed-out bridge.\n\nTwo choices never make irony. An ending that turns out as expected has no gap. A surprise that is simply unrelated, such as a bird landing nearby, is random, not a reversal of what was expected.\n\n> **Watch out.** Do not pick a random off-topic remark just because it sounds unexpected—irony must directly *reverse* the setup, the speaker's real feeling, or what the audience already knows.",
+    "作者有意制造**落差**来形成反讽。**情境反讽**是先建立一个预期，再把它颠倒：消防队长在讲防火安全时，自己的讲稿着了火。**言语反讽**是让人物说出与当时情形相反的话：被雨淋透的他说 *What a perfect day for a walk.* **戏剧反讽**是让读者知道某件事，再让人物说出一句显示他并不知道的话：开向被冲毁的桥的司机说 *Nothing can stop me now.*\n\n有两种选择永远构不成反讽：结果和预期一样的结局没有落差；与预期毫不相干的意外，比如一只鸟落在附近，只是随机事件，并没有颠倒预期。\n\n> **注意。** 不要因为某个选项显得突然就选它——反讽必须直接*颠倒*原本的预期、说话人的真实感受，或观众已知的真相。",
   ),
   kindedChoice(
     ["Read the situation and choose the answer to its question.", "阅读情境，回答其中的问题。"],
     ironyMakingBank,
     (right) => [
-      `*${right}* It turns the situation against what was expected, meant or known, and that gap is what makes irony.`,
-      `*${right}* 它让情境与预期、本意或人物所知相反，正是这种落差构成了反讽。`,
+      `*${right}* It turns the situation against what was expected, meant or known, and that gap is what makes irony.\n\n**Check.** Test the chosen line or ending against the setup: instead of matching the expectation or drifting off to an unrelated detail, it flips the exact point of the scene upside down.`,
+      `*${right}* 它让情境与预期、本意或人物所知相反，正是这种落差构成了反讽。\n\n**检验。** 把所选句子或结局放回原情境核对：它既没有顺着预期发展，也没有扯开话题，而是把场景的核心预设正好翻转了过来。`,
     ],
     [
       [
@@ -214,15 +214,15 @@ export const foreshadowStep = point(
   "where-the-hint-points",
   t("Where the Hint Points", "暗示指向哪里"),
   t(
-    "Once you notice a hint, ask **what it points to**. Foreshadowing works by connection: a first-aid kit left behind points to an injury; a branch no one cuts points to a fall; a warning laughed at points to the danger it named. The event it prepares is usually the one the hint is about, and it usually comes as a problem or a discovery.\n\nTwo readings go wrong. One jumps to an event that has nothing to do with the hint, such as a prize or a new hobby. The other reads the hint backward and predicts that all will be well, when the whole point of a warning ignored or a crack unrepaired is that trouble is on its way.",
-    "注意到一个暗示后，要问**它指向什么**。伏笔靠联系起作用：被留下的急救包指向受伤；没人锯掉的树枝指向它的掉落；被嘲笑的警告指向它所说的危险。它所铺垫的事件通常就是暗示所涉及的那件事，而且往往以问题或发现的形式出现。\n\n有两种解读是错的。一种跳到与暗示毫无关系的事件上，比如得奖或新爱好。另一种把暗示读反了，预言一切都会顺利，而被忽视的警告、没修好的裂缝，其用意恰恰是麻烦就要来了。",
+    "Once you notice a hint, ask **what it points to**. Foreshadowing works by connection: a first-aid kit left behind points to an injury; a branch no one cuts points to a fall; a warning laughed at points to the danger it named. The event it prepares is usually the one the hint is about, and it usually comes as a problem or a discovery.\n\nTwo readings go wrong. One jumps to an event that has nothing to do with the hint, such as a prize or a new hobby. The other reads the hint backward and predicts that all will be well, when the whole point of a warning ignored or a crack unrepaired is that trouble is on its way.\n\n> **Watch out.** Tie your prediction directly to the exact object, warning, or detail planted in the scene—if an option ignores that clue or claims nothing will come of it, rule it out.",
+    "注意到一个暗示后，要问**它指向什么**。伏笔靠联系起作用：被留下的急救包指向受伤；没人锯掉的树枝指向它的掉落；被嘲笑的警告指向它所说的危险。它所铺垫的事件通常就是暗示所涉及的那件事，而且往往以问题或发现的形式出现。\n\n有两种解读是错的。一种跳到与暗示毫无关系的事件上，比如得奖或新爱好。另一种把暗示读反了，预言一切都会顺利，而被忽视的警告、没修好的裂缝，其用意恰恰是麻烦就要来了。\n\n> **注意。** 预测必须紧扣文段中埋下的具体物件、警告或细节——如果某个选项无视了这条线索，或者声称一切相安无事，就应直接排除。",
   ),
   kindedChoice(
     ["What does the detail in this passage most likely foreshadow?", "这段文字中的细节最可能预示什么？"],
     foreshadowBank,
     (right) => [
-      `*${right}* The hint is about exactly this, so the event it prepares is the one it is connected to.`,
-      `*${right}* 暗示讲的正是这件事，所以它所铺垫的就是与它相关的事件。`,
+      `*${right}* The hint is about exactly this, so the event it prepares is the one it is connected to.\n\n**Check.** Ask why the author bothered to mention the clue in the passage: *${right}* pays off that specific detail directly, whereas the other options either ignore it or cancel it out.`,
+      `*${right}* 暗示讲的正是这件事，所以它所铺垫的就是与它相关的事件。\n\n**检验。** 想想作者为什么特意在文段里写出那个细节：*${right}* 正好让这条线索在后文落到实处，而其他选项要么无视了它，要么把它的作用抵消了。`,
     ],
     [
       [
@@ -242,15 +242,15 @@ export const explainStep = point(
   "explaining-the-quotation",
   t("Explaining the Quotation", "解释引文"),
   t(
-    "A quotation does not speak for itself. After it, write a sentence of **explanation** that shows *how* its words prove the claim. Point to the exact detail that matters and say what it reveals: *Stepping in front of the dog with only an umbrella shows she puts herself in danger for others, which is what bravery means.*\n\nTwo kinds of sentence look like explanations but are not. A **restatement** repeats the quotation in other words and adds nothing: the reader already knows what it says. A **drift** leaves the text for a personal opinion or a new topic, such as *I am afraid of dogs too*, and never connects the quotation to the claim.",
-    "引文不会自己说话。引文之后，要写一句**解释**，说明它的词句*怎样*证明论点。指出关键的细节，并说明它揭示了什么：*Stepping in front of the dog with only an umbrella shows she puts herself in danger for others, which is what bravery means.*\n\n有两种句子看似解释，其实不是。**复述**只是换个说法重复引文，没有增加任何东西：读者已经知道它说了什么。**跑题**离开文本，转向个人看法或新话题，例如 *I am afraid of dogs too*，始终没有把引文和论点联系起来。",
+    "A quotation does not speak for itself. Follow it with an **explanation** that points to a key detail and shows *how* it proves the claim: *Stepping in front of the dog with only an umbrella shows she puts herself in danger for others, which is what bravery means.*\n\nAvoid two non-explanations: a **restatement** merely rewords the quote without adding insight, and a **drift** wanders off into a personal opinion (*I am afraid of dogs too*).\n\n> **Watch out.** Check that the sentence explicitly connects *what the quote shows* to *the claim's key trait*—repeating the quote in simpler words is not explaining it.",
+    "引文不会自己说话。引文之后要写一句**解释**，点出关键细节并说明它*怎样*证明论点：*Stepping in front of the dog with only an umbrella shows she puts herself in danger for others, which is what bravery means.*\n\n避开两种伪解释：**复述**只是换词重复引文而没有推进思考，**跑题**则扯到个人感想（*I am afraid of dogs too*）。\n\n> **注意。** 确认这句话明确把*引文表现出的细节*和*论点的核心特质*连了起来——换个说法重说一遍引文不算解释。",
   ),
   kindedChoice(
     ["Which sentence best explains how the quotation supports the claim?", "哪个句子最好地解释了引文怎样支持论点？"],
     explainBank,
     (right) => [
-      `*${right}* It points to the detail that matters and says what that detail reveals, which links the quotation to the claim.`,
-      `*${right}* 它指出了关键的细节，并说明这个细节揭示了什么，从而把引文和论点联系了起来。`,
+      `The best explanation is: **${right}** It zooms in on the telling detail and connects it directly back to the claim.\n\n**Check.** Verify two halves in this sentence: it refers to what happened in the quote *and* spells out what that proves about the claim—neither merely restating the quote nor drifting off topic.`,
+      `最好的解释是：**${right}** 它抓住关键细节，并将其直接连回论点。\n\n**检验。** 检查这句话的两端：一端紧扣引文里的具体细节，另一端明确点出这如何证明论点——既没有原地复述，也没有跑题。`,
     ],
     [
       [

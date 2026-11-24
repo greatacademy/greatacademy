@@ -165,6 +165,10 @@ export const essayTopic: TopicDef = judgedExamTopic({
     "Write an essay of 140 to 190 words for a teacher that answers a question, discusses both given notes and adds an idea of your own, as in Part 1 of B2 First Writing.",
     "按照 B2 First 写作第 1 部分的要求，为老师写一篇 140 至 190 词的议论文：回答问题，讨论所给的两点提示，并加上自己的一个观点。",
   ),
+  intro: t(
+    "A B2 First essay gives you two notes—say *pollution* and *shops*—and asks for a third idea of your own, all in 140 to 190 words. Covering all three points in clear, neutral paragraphs is what secures top marks for content and organisation.",
+    "B2 First 议论文会给出两点提示（例如*污染*和*商铺*），并要求你在 140 至 190 词内补充第三个自拟观点。用清晰、中性的段落把三点全部展开，才能在内容和结构上拿高分。",
+  ),
   prerequisites: ["writing-an-opinion-essay"],
   encompasses: [{ topic: "writing-an-opinion-essay", weight: 0.5 }],
   criteria: ["fce-essay-notes", "fce-essay-answer", "fce-organized"],
@@ -172,8 +176,8 @@ export const essayTopic: TopicDef = judgedExamTopic({
     id: "essay",
     title: t("An essay with two notes and your own idea", "包含两点提示和自己观点的议论文"),
     explanation: t(
-      "Part 1 is compulsory, and every essay has the same shape: a question, two notes and a third point that is yours. Plan five short paragraphs in about 40 minutes:\n\n1. **Introduction**: rephrase the question and give your view in a sentence.\n2. **The first note**, explained with a reason or an example.\n3. **The second note**, the same way; it may support the other side, which you then answer (*It is true that ... However, ...*).\n4. **Your own idea**: a point the notes do not mention, such as cost, safety or the effect on families.\n5. **Conclusion**: sum up and repeat your view in new words.\n\nWrite in a neutral style for a teacher, link the paragraphs (*Firstly*, *On the other hand*, *In addition*, *To sum up*) and stay within 140 to 190 words. An essay that leaves out a note, or forgets the third idea, cannot get full marks for content.",
-      "第 1 部分是必答题，每篇议论文的结构都一样：一个问题、两点提示，以及属于你自己的第三点。用约 40 分钟安排五个短段：\n\n1. **引言**：换一种说法复述问题，用一句话表明看法。\n2. **第一点提示**：用理由或例子加以解释。\n3. **第二点提示**：同样处理；它可能支持另一方，你随后加以回应（*It is true that ... However, ...*）。\n4. **自己的观点**：写一个提示中没有提到的方面，例如费用、安全或对家庭的影响。\n5. **结论**：总结全文，用新的说法重申你的看法。\n\n用适合写给老师的中性文体，段落之间要有衔接（*Firstly*、*On the other hand*、*In addition*、*To sum up*），字数控制在 140 至 190 词。漏掉一点提示，或者忘了第三个观点，内容分就不可能拿满。",
+      "Part 1 is compulsory, and every essay has the same shape: a question, two notes and a third point that is yours. Plan five short paragraphs in about 40 minutes:\n\n1. **Introduction**: rephrase the question and give your view in a sentence.\n2. **The first note**, explained with a reason or an example.\n3. **The second note**, the same way; it may support the other side, which you then answer (*It is true that ... However, ...*).\n4. **Your own idea**: a point the notes do not mention, such as cost, safety or the effect on families.\n5. **Conclusion**: sum up and repeat your view in new words.\n\nWrite in a neutral style for a teacher, link the paragraphs (*Firstly*, *On the other hand*, *In addition*, *To sum up*) and stay within 140 to 190 words. An essay that leaves out a note, or forgets the third idea, cannot get full marks for content.\n\n> **Watch out.** Do not forget the **third (your own) idea** or slip into chatty contractions and slang—the reader is your teacher, so keep the tone neutral to formal.",
+      "第 1 部分是必答题，每篇议论文的结构都一样：一个问题、两点提示，以及属于你自己的第三点。用约 40 分钟安排五个短段：\n\n1. **引言**：换一种说法复述问题，用一句话表明看法。\n2. **第一点提示**：用理由或例子加以解释。\n3. **第二点提示**：同样处理；它可能支持另一方，你随后加以回应（*It is true that ... However, ...*）。\n4. **自己的观点**：写一个提示中没有提到的方面，例如费用、安全或对家庭的影响。\n5. **结论**：总结全文，用新的说法重申你的看法。\n\n用适合写给老师的中性文体，段落之间要有衔接（*Firstly*、*On the other hand*、*In addition*、*To sum up*），字数控制在 140 至 190 词。漏掉一点提示，或者忘了第三个观点，内容分就不可能拿满。\n\n> **注意。** 千万别漏掉**第三点（自己的观点）**，也不要写成随意口语——读者是老师，语气要保持中性偏正式。",
     ),
   },
   question: t(
@@ -184,6 +188,10 @@ export const essayTopic: TopicDef = judgedExamTopic({
   limits: { minWords: 140, maxChars: 1600 },
   xp: 30,
   what: t("essay", "议论文"),
+  check: t(
+    "Confirm your essay is 140–190 words, discusses both given notes plus a distinct third idea of your own, and keeps a neutral tone with clear paragraph links.",
+    "核对议论文在 140–190 词之间，完整讨论了两点给定提示并加上了一个独立的自拟观点，且语体中性、段落衔接清晰。",
+  ),
 });
 
 /** part2Topic is Part 2 of B2 First Writing, judged by a model. */
@@ -193,6 +201,10 @@ export const part2Topic: TopicDef = judgedExamTopic({
   summary: t(
     "Write an article, an email or letter, a report or a review of 140 to 190 words, in the form and register its reader expects, as in Part 2 of B2 First Writing.",
     "按照 B2 First 写作第 2 部分的要求，写一篇 140 至 190 词的文章、电子邮件或信件、报告或评论，形式和语体要符合读者的期待。",
+  ),
+  intro: t(
+    "A lively magazine article, a formal application letter, a headed school report, and a film review look and sound completely different. In B2 First Part 2, matching the format and register to the target reader matters as much as answering every bullet.",
+    "生动的杂志文章、正式的申请信、带小标题的校园报告和影评在格式与语气上截然不同。在 B2 First 第 2 部分中，让体裁与语域契合目标读者，与覆盖所有要点同样重要。",
   ),
   prerequisites: ["writing-an-article", "writing-a-review", "writing-a-report"],
   encompasses: [
@@ -206,8 +218,8 @@ export const part2Topic: TopicDef = judgedExamTopic({
     id: "part-2",
     title: t("Four kinds of text for four readers", "写给四类读者的四种文本"),
     explanation: t(
-      "In the test you choose one of three tasks, so know all four kinds of text. First find the reader and every point the task asks you to cover, then write in the form that reader expects:\n\n- **Article**: a title, an opening that catches the reader's interest, a lively and personal style, perhaps a question to the reader at the end.\n- **Email or letter**: a greeting and a closing that fit the reader; friendly and informal for a friend (*Hi Sam*, *Best wishes*), polite and formal for a manager or a director (*Dear Ms Carter*, *Yours sincerely*), with the reason for writing near the start.\n- **Report**: a neutral style, short headings, facts first and recommendations at the end (*I would recommend that ...*).\n- **Review**: say what is being reviewed, describe it briefly, give your opinion of its good and bad points, and end with a recommendation.\n\nAnswer every part of the task, and stay within 140 to 190 words.",
-      "考试中要从三个任务里选一个，所以四种文本都要会写。先找出读者和任务要求涵盖的每一点，再写成读者期待的形式：\n\n- **文章**：有标题，开头吸引读者，文风生动、有个人色彩，结尾可以向读者提一个问题。\n- **电子邮件或信件**：称呼和结束语要适合读者；给朋友的写得友好随意（*Hi Sam*、*Best wishes*），给经理或负责人的写得礼貌正式（*Dear Ms Carter*、*Yours sincerely*），并在开头说明写信目的。\n- **报告**：文体中性，用简短的小标题，先写事实，最后提出建议（*I would recommend that ...*）。\n- **评论**：说明评论的对象，简要描述，评价其优缺点，最后给出是否推荐的建议。\n\n回答任务的每一部分，字数控制在 140 至 190 词。",
+      "In the test you choose one of three tasks, so know all four kinds of text. First find the reader and every point the task asks you to cover, then write in the form that reader expects:\n\n- **Article**: a title, an opening that catches the reader's interest, a lively and personal style, perhaps a question to the reader at the end.\n- **Email or letter**: a greeting and a closing that fit the reader; friendly and informal for a friend (*Hi Sam*, *Best wishes*), polite and formal for a manager or a director (*Dear Ms Carter*, *Yours sincerely*), with the reason for writing near the start.\n- **Report**: a neutral style, short headings, facts first and recommendations at the end (*I would recommend that ...*).\n- **Review**: say what is being reviewed, describe it briefly, give your opinion of its good and bad points, and end with a recommendation.\n\nAnswer every part of the task, and stay within 140 to 190 words.\n\n> **Watch out.** Never mix registers or formats—do not write a report like a chatty letter, and do not forget a title for an article or headings for a report.",
+      "考试中要从三个任务里选一个，所以四种文本都要会写。先找出读者和任务要求涵盖的每一点，再写成读者期待的形式：\n\n- **文章**：有标题，开头吸引读者，文风生动、有个人色彩，结尾可以向读者提一个问题。\n- **电子邮件或信件**：称呼和结束语要适合读者；给朋友的写得友好随意（*Hi Sam*、*Best wishes*），给经理或负责人的写得礼貌正式（*Dear Ms Carter*、*Yours sincerely*），并在开头说明写信目的。\n- **报告**：文体中性，用简短的小标题，先写事实，最后提出建议（*I would recommend that ...*）。\n- **评论**：说明评论的对象，简要描述，评价其优缺点，最后给出是否推荐的建议。\n\n回答任务的每一部分，字数控制在 140 至 190 词。\n\n> **注意。** 切忌混用语体或格式——不要把报告写成随意的书信，也别忘了给文章加标题、给报告加小标题。",
     ),
   },
   question: t(
@@ -218,4 +230,8 @@ export const part2Topic: TopicDef = judgedExamTopic({
   limits: { minWords: 140, maxChars: 1600 },
   xp: 30,
   what: t("answer", "范文"),
+  check: t(
+    "Verify the word count (140–190 words), the required format (title, headings, or greeting/closing), consistent register for the target reader, and coverage of every question in the prompt.",
+    "核对字数（140–190 词）、体裁格式（标题、小标题或称呼落款）、面向目标读者的语体一致性，以及是否回答了题干中的每一个问题。",
+  ),
 });

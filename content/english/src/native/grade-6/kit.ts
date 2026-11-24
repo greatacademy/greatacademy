@@ -34,6 +34,7 @@ export interface PartsSpec {
   readonly id: string;
   readonly title: Pair;
   readonly summary: Pair;
+  readonly intro?: Pair;
   readonly after: readonly string[];
   /** kind names the part in questions, such as "Latin root" or "prefix". */
   readonly kind: Pair;
@@ -59,6 +60,7 @@ export const parts = (spec: PartsSpec): TopicDef => {
     id: spec.id,
     title: spec.title,
     summary: spec.summary,
+    intro: spec.intro,
     after: spec.after,
     points: [
       point(
@@ -71,8 +73,8 @@ export const parts = (spec: PartsSpec): TopicDef => {
           (right) => {
             const p = byMeaning(right);
             return t(
-              `The ${kind[0]} *${p?.part}* means *${right}*: ${p?.words.map(([w]) => `**${w}**`).join(", ")} all carry that meaning.`,
-              `${kind[1]} *${p?.part}* 的意思是"${p?.zh}"：${p?.words.map(([w]) => `**${w}**`).join("、")} 都带有这个意思。`,
+              `The ${kind[0]} *${p?.part}* means *${right}*: ${p?.words.map(([w]) => `**${w}**`).join(", ")} all carry that meaning.\n\n**Check.** Test the meaning *${right}* against another word in the same family (${p?.words[1]?.[0]} or ${p?.words[2]?.[0]})—it fits there too.`,
+              `${kind[1]} *${p?.part}* 的意思是“${p?.zh}”：${p?.words.map(([w]) => `**${w}**`).join("、")} 都带有这个意思。\n\n**检验。** 把“${p?.zh}”代入同家族的另一个词（${p?.words[1]?.[0]} 或 ${p?.words[2]?.[0]}）里验证——同样说得通。`,
             );
           },
           (wrong) => {
@@ -94,8 +96,8 @@ export const parts = (spec: PartsSpec): TopicDef => {
           (right, shown) => {
             const p = byWord(right);
             return t(
-              `**${right}** means *${shown}*. Its ${kind[0]} *${p?.part}* means *${p?.means}*, which points to the meaning.`,
-              `**${right}** 的意思是 *${shown}*。它的${kind[1]} *${p?.part}* 意为"${p?.zh}"，指向这个意思。`,
+              `**${right}** means *${shown}*. Its ${kind[0]} *${p?.part}* means *${p?.means}*, which points to the meaning.\n\n**Check.** Spot *${p?.part}* inside **${right}** and confirm that *${p?.means}* matches the core idea of *${shown}*.`,
+              `**${right}** 的意思是 *${shown}*。它的${kind[1]} *${p?.part}* 意为“${p?.zh}”，指向这个意思。\n\n**检验。** 在 **${right}** 里找到 *${p?.part}*，确认“${p?.zh}”正好扣住 *${shown}* 的核心含义。`,
             );
           },
           (wrong) => {

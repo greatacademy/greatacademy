@@ -811,27 +811,48 @@ const endMarkNot = (wrong: string) => {
 };
 
 /** finishNot gives the feedback for an ending that does not do what the connecting word of the sentence promises. */
-const finishNot = (wrong: string, _right: string, shown: string) => {
+const finishNot = (wrong: string, _right: string, shown: string, position: number) => {
   const joiner = ["because", "but", "so"].find((w) => shown.includes(` ${w} ___`)) ?? "";
   if (/^(because|but|so)\b/.test(wrong))
     return t(
-      `*${wrong}* starts with another joining word, but the sentence already has *${joiner}*.`,
-      `*${wrong}* 又以一个连接词开头，可句子里已经有 *${joiner}* 了。`,
+      `“${wrong}” starts with another joining word, yet the sentence already has *${joiner}*.`,
+      `“${wrong}”又以一个连接词开头，可句子里已经有 *${joiner}* 了。`,
     );
-  const says: Readonly<Record<string, readonly [string, string]>> = {
+  const says: Readonly<Record<string, readonly [readonly [string, string], readonly [string, string]]>> = {
     because: [
-      "*Because* needs a reason for the first part, and this ending gives none.",
-      "*because* 需要说明前半句的原因，这个结尾没有给出原因。",
+      [
+        `“${wrong}” does not explain why the first part happened—*because* calls for a reason.`,
+        `“${wrong}”没有说明前半句为什么发生——*because* 后面需要原因。`,
+      ],
+      [
+        `After *because*, “${wrong}” does not give a cause for the opening statement.`,
+        `在 *because* 后面，“${wrong}”并没有给出前半句的原因。`,
+      ],
     ],
     but: [
-      "*But* needs an ending that goes against what you might expect from the first part, and this one does not.",
-      "*but* 需要一个出人意料、与前半句相对的结尾，这个结尾不是。",
+      [
+        `“${wrong}” does not contrast with the first part—*but* calls for a turn or surprise.`,
+        `“${wrong}”没有和前半句形成转折——*but* 后面需要意外或反差。`,
+      ],
+      [
+        `After *but*, “${wrong}” points the same way as the first part instead of pushing back against it.`,
+        `在 *but* 后面，“${wrong}”和前半句朝同一个方向说，没有转折。`,
+      ],
     ],
-    so: ["*So* needs a result of the first part, and this ending is not one.", "*so* 需要前半句的结果，这个结尾不是结果。"],
+    so: [
+      [
+        `“${wrong}” is not a result of the first part—*so* calls for what happened because of it.`,
+        `“${wrong}”不是前半句的结果——*so* 后面需要因此发生的事。`,
+      ],
+      [
+        `After *so*, “${wrong}” does not follow as a consequence of the opening statement.`,
+        `在 *so* 后面，“${wrong}”并不是前半句引发的后果。`,
+      ],
+    ],
   };
-  const said = says[joiner];
-  if (!said) throw new Error(`no joining word in ${shown}`);
-  return t(...said);
+  const pair = says[joiner];
+  if (!pair) throw new Error(`no joining word in ${shown}`);
+  return t(...pair[position === 0 ? 0 : 1]);
 };
 
 // More items, built from hand-written cores by deterministic templates.
@@ -1059,6 +1080,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
     id: "capitals-and-end-punctuation",
     title: t("Capitals and End Punctuation", "大写和句末标点"),
     summary: t("Begin with a capital, end with the right mark, and capitalize names.", "句首大写，句末用对标点，专有名称大写。"),
+    intro: t(
+      "Look at *we visited dr. shah on monday.*—fixing it to *We visited Dr. Shah on Monday.* marks the sentence start and every proper name. Ending each sentence with `.`, `?`, or `!` tells the reader how to read it.",
+      "看这句话：*we visited dr. shah on monday.* 改成 *We visited Dr. Shah on Monday.*，句首和专有名称就一目了然；再配上恰当的句号、问号或感叹号，读者就知道该用什么语气读。",
+    ),
     prerequisites: ["complete-sentences-and-fragments"],
     encompasses: [{ topic: "complete-sentences-and-fragments", weight: 0.3 }],
     xp: 8,
@@ -1067,30 +1092,34 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "capitals",
         t("Capital Letters", "大写字母"),
         t(
-          "Every sentence begins with a capital letter. So do the names of people, places, days, months and languages, and titles such as *Dr.* before a name. The pronoun *I* is always a capital.\n\nCommon nouns are not capitalized: *a street*, but *Oak Street*.",
-          "每个句子都以大写字母开头。人名、地名、星期、月份、语言，以及姓名前的 *Dr.* 这类称谓也要大写。代词 *I* 永远大写。\n\n普通名词不大写：*a street*，但 *Oak Street*。",
+          "Every sentence begins with a capital letter. So do the names of people, places, days, months and languages, and titles such as *Dr.* before a name. The pronoun *I* is always a capital.\n\nCommon nouns are not capitalized: *a street*, but *Oak Street*.\n\n> **Watch out.** Do not forget the standalone pronoun *I*, days of the week (*Monday*), months (*July*), or titles before a name (*Dr. Shah*, *Ms. Reed*).",
+          "每个句子都以大写字母开头。人名、地名、星期、月份、语言，以及姓名前的 *Dr.* 这类称谓也要大写。代词 *I* 永远大写。\n\n普通名词不大写：*a street*，但 *Oak Street*。\n\n> **注意。**别漏掉单独的代词 *I*、星期（*Monday*）、月份（*July*）和姓名前的称谓（*Dr. Shah*、*Ms. Reed*）。",
         ),
         typedGenerator(
           "sentence",
           t("Rewrite the sentence with the correct capital letters.", "用正确的大写字母改写句子。"),
           [...capitalBank, ...capitalMore],
-          (right) => t(`**${right}** Capitalize the first word and every name.`, `**${right}** 第一个词和所有专有名称都要大写。`),
+          (right) =>
+            t(
+              `**${right}** Capitalize the first word, the pronoun *I*, and every proper name.\n\n**Check.** Scan every word in **${right}**: the first word and every specific person, place, day, month, language, or *I* starts with a capital, and common words stay lower case.`,
+              `**${right}** 第一个词、代词 *I* 和所有专有名称都要大写。\n\n**检验。**逐词检查 **${right}**：句首词以及特定人名、地名、星期、月份、语言和 *I* 都大写了，普通词保持小写。`,
+            ),
         ),
       ),
       point(
         "end-marks",
         t("End Marks", "句末标点"),
         t(
-          "A statement or a request ends with a period. A direct question ends with a question mark. A strong feeling or a warning ends with an exclamation mark.\n\nA sentence that only reports a question is a statement: *She asked where I was going.*",
-          "陈述句或请求以句号结尾。直接疑问句以问号结尾。强烈情感或警告以感叹号结尾。\n\n只是转述问题的句子是陈述句：*She asked where I was going.*",
+          "A statement or a request ends with a period. A direct question ends with a question mark. A strong feeling or a warning ends with an exclamation mark.\n\nA sentence that only reports a question is a statement: *She asked where I was going.*\n\n> **Watch out.** Watch out for sentences starting with *She asked …* or *I wonder …*—they report a question rather than asking one directly, so they end with a period, not a question mark.",
+          "陈述句或请求以句号结尾。直接疑问句以问号结尾。强烈情感或警告以感叹号结尾。\n\n只是转述问题的句子是陈述句：*She asked where I was going.*\n\n> **注意。**小心 *She asked …* 或 *I wonder …* 开头的句子——它们是在转述而不是直接发问，句末要用句号，不用问号。",
         ),
         choiceGenerator(
           t("Which mark ends the sentence?", "句末应该用哪个标点？"),
           [...endMarkBank, ...endMarkMore],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} Ask whether it states, asks or exclaims.`,
-              `${shown.replace("___", `**${right}**`)} 判断它是陈述、提问还是感叹。`,
+              `${shown.replace("___", `**${right}**`)} Ask whether the sentence states, asks directly, or exclaims.\n\n**Check.** Read the sentence aloud: ${right === "?" ? "your voice asks directly for an answer, calling for a question mark (?)." : right === "!" ? "it carries strong feeling or a warning, calling for an exclamation mark (!)." : "it tells or politely asks without a direct question, calling for a period (.)."}`,
+              `${shown.replace("___", `**${right}**`)} 判断它是陈述、直接提问还是感叹。\n\n**检验。**把句子读一遍：${right === "?" ? "它在直接提问等待回答，所以用问号。" : right === "!" ? "它带有强烈感情或警告，所以用感叹号。" : "它只是陈述或平和请求，不是直接提问，所以用句号。"}`,
             ),
           endMarkNot,
         ),
@@ -1101,6 +1130,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
     id: "commas-in-a-series",
     title: t("Commas in a Series", "并列项中的逗号"),
     summary: t("Separate three or more items with commas, but not two.", "用逗号分隔三项或更多，两项不用。"),
+    intro: t(
+      "*We packed maps, flashlights, and extra socks* needs commas because three items are listed, whereas *We packed maps and flashlights* takes no comma at all. Counting the items tells you right away whether commas belong.",
+      "*We packed maps, flashlights, and extra socks* 列举了三样东西，需要逗号分隔；而 *We packed maps and flashlights* 只有两样，不用逗号。先数清并列项的个数，就能立刻判断是否该加逗号。",
+    ),
     prerequisites: ["coordinating-conjunctions"],
     encompasses: [{ topic: "coordinating-conjunctions", weight: 0.2 }],
     xp: 8,
@@ -1109,8 +1142,8 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "adding-series-commas",
         t("Adding the Commas", "添加逗号"),
         t(
-          "Separate three or more items in a list with commas: *We bought apples, pears, and plums.* The comma before *and* is called the serial comma. Some writers leave it out, and both are accepted here.\n\nDo not put a comma before the first item or after the last one.",
-          "用逗号分隔列表中的三项或更多：*We bought apples, pears, and plums.* *and* 前的逗号叫作连续逗号。有些作者会省略，这里两种都接受。\n\n第一项之前和最后一项之后都不加逗号。",
+          "Separate three or more items in a list with commas: *We bought apples, pears, and plums.* The comma before *and* is called the serial comma. Some writers leave it out, and both are accepted here.\n\nDo not put a comma before the first item or after the last one.\n\n> **Watch out.** Never put a comma between the verb and the first item (*We bought, apples…*) or after the last item in the list.",
+          "用逗号分隔列表中的三项或更多：*We bought apples, pears, and plums.* *and* 前的逗号叫作连续逗号。有些作者会省略，这里两种都接受。\n\n第一项之前和最后一项之后都不加逗号。\n\n> **注意。** 绝不要在动词和第一项之间加逗号（如 *We bought, apples…*），也不要在最后一项后面多加逗号。",
         ),
         typedGenerator(
           "sentence-pattern",
@@ -1118,8 +1151,8 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           [...seriesBank, ...seriesMore],
           (right) =>
             t(
-              `**${right}** Commas separate the items and do not come before the first or after the last.`,
-              `**${right}** 逗号分隔各项，不放在第一项之前或最后一项之后。`,
+              `**${right}** Commas separate the items and do not come before the first or after the last.\n\n**Check.** Point to each item in the list of **${right}**—commas sit only *between* the listed items, never before the first or after the last.`,
+              `**${right}** 逗号分隔各项，不放在第一项之前或最后一项之后。\n\n**检验。** 逐个点出 **${right}** 里的并列项——逗号只出现在各项*之间*，首项前和末项后都没有逗号。`,
             ),
         ),
       ),
@@ -1127,14 +1160,17 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "two-or-three",
         t("Two Items or Three", "两项还是三项"),
         t(
-          "Two items joined by *and* or *or* take no comma: *Salt and pepper sat on the table.* A comma appears only when a list has three or more items.",
-          "用 *and* 或 *or* 连接的两项不加逗号：*Salt and pepper sat on the table.* 只有三项或更多时才用逗号。",
+          "Two items joined by *and* or *or* take no comma: *Salt and pepper sat on the table.* A comma appears only when a list has three or more items.\n\n> **Watch out.** Count the actual items joined by *and* or *or*—if there are only two, drop the comma even if the items are longer phrases.",
+          "用 *and* 或 *or* 连接的两项不加逗号：*Salt and pepper sat on the table.* 只有三项或更多时才用逗号。\n\n> **注意。** 数清 *and* 或 *or* 连接的到底有几项——只要只有两项，哪怕短语较长也不要加逗号。",
         ),
         choiceGenerator(
           t("Which sentence uses commas correctly?", "哪个句子逗号用得正确？"),
           [...seriesOrNotBank, ...seriesOrNotMore],
           (right) =>
-            t(`**${right}** Count the items: only three or more need commas.`, `**${right}** 数一数并列项：三项或更多才需要逗号。`),
+            t(
+              `**${right}** Count the items: only three or more need commas.\n\n**Check.** Count the listed items in **${right}**: ${right.includes(",") ? "there are three or more items, so commas separate them cleanly." : "there are only two items joined by *and* or *or*, so no comma is used."}`,
+              `**${right}** 数一数并列项：三项或更多才需要逗号。\n\n**检验。** 数一下 **${right}** 里的并列项：${right.includes(",") ? "共有三项或更多，所以用逗号清晰隔开。" : "只有两项用 *and* 或 *or* 连接，所以不加逗号。"}`,
+            ),
           (wrong) =>
             wrong.includes(",")
               ? t(
@@ -1153,6 +1189,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
     id: "expanding-with-because-but-so",
     title: t("Expanding with Because, But and So", "用 because、but、so 扩展句子"),
     summary: t("The same idea grows in three directions: reason, contrast and result.", "同一个想法朝三个方向扩展：原因、转折和结果。"),
+    intro: t(
+      "Start with *Maya stayed home*: add *because she had a fever* for a reason, *, but she still finished her work* for a contrast, or *, so she missed the game* for a result. Three small words let one short sentence grow in three clear directions.",
+      "从 *Maya stayed home* 出发：加上 *because she had a fever* 说明原因，加上 *, but she still finished her work* 表示转折，加上 *, so she missed the game* 说明结果。三个小词让一个短句朝三个清晰的方向延伸。",
+    ),
     prerequisites: ["coordinating-conjunctions"],
     encompasses: [{ topic: "coordinating-conjunctions", weight: 0.3 }],
     xp: 10,
@@ -1161,16 +1201,16 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "matching-the-ending",
         t("Matching the Ending", "匹配结尾"),
         t(
-          "A short idea can grow with one of three words, and each one demands a different ending. *Because* gives a reason. *But* gives a contrast or a surprise. *So* gives a result.\n\nThe plants died **because** nobody watered them. The plants died, **but** the seeds survived. The plants died, **so** we planted new ones.",
-          "一个简短的想法可以用三个词扩展，每个词要求不同的结尾。*because* 给出原因。*but* 给出转折或意外。*so* 给出结果。\n\nThe plants died **because** nobody watered them. The plants died, **but** the seeds survived. The plants died, **so** we planted new ones.",
+          "A short idea can grow with one of three words, and each one demands a different ending. *Because* gives a reason. *But* gives a contrast or a surprise. *So* gives a result.\n\nThe plants died **because** nobody watered them. The plants died, **but** the seeds survived. The plants died, **so** we planted new ones.\n\n> **Watch out.** Do not pick an ending that repeats the joining word (*because … so …*) or gives a reason when *so* asks for a result.",
+          "一个简短的想法可以用三个词扩展，每个词要求不同的结尾。*because* 给出原因。*but* 给出转折或意外。*so* 给出结果。\n\nThe plants died **because** nobody watered them. The plants died, **but** the seeds survived. The plants died, **so** we planted new ones.\n\n> **注意。**不要选重复带连接词的结尾（如 *because … so …*），也不要在 *so* 后面错填原因。",
         ),
         choiceGenerator(
           t("Which ending fits the sentence?", "哪个结尾适合这个句子？"),
           [...finishBank, ...finishMore],
           (right, shown) =>
             t(
-              `${shown.replace("___", `**${right}**`)} The ending has to do what the connecting word promises.`,
-              `${shown.replace("___", `**${right}**`)} 结尾必须符合连接词所表示的关系。`,
+              `${shown.replace("___", `**${right}**`)} The ending matches what the connecting word promises.\n\n**Check.** Check the joining word right before the blank: ${shown.includes("because") ? "*because* asks *why?*, and this ending gives the reason." : shown.includes(", but") ? "*but* signals a surprise or contrast, and this ending turns against what you might expect." : "*so* asks *what happened next as a result?*, and this ending gives that result."}`,
+              `${shown.replace("___", `**${right}**`)} 结尾正好符合连接词所表示的关系。\n\n**检验。**看空格前面的连接词：${shown.includes("because") ? "*because* 问“为什么”，这个结尾正好给出原因。" : shown.includes(", but") ? "*but* 表示转折或意外，这个结尾正好转向相反的方向。" : "*so* 问“因此发生了什么”，这个结尾正好给出结果。"}`,
             ),
           finishNot,
         ),
@@ -1179,28 +1219,36 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "joining-with-but-so",
         t("Joining with But and So", "用 but 和 so 连接"),
         t(
-          "To join two complete sentences with *but* or *so*, drop the first period, add a comma and the word, and lower the capital of the second sentence unless it is a name: *The road was icy, so we drove slowly.*",
-          "用 *but* 或 *so* 连接两个完整句子时，去掉第一个句号，加上逗号和连词，并把第二句的首字母改成小写（名字除外）：*The road was icy, so we drove slowly.*",
+          "To join two complete sentences with *but* or *so*, drop the first period, add a comma and the word, and lower the capital of the second sentence unless it is a name: *The road was icy, so we drove slowly.*\n\n> **Watch out.** Remember both the comma before *but* or *so* and changing the second sentence's opening capital to lower case (except *I* or a proper name).",
+          "用 *but* 或 *so* 连接两个完整句子时，去掉第一个句号，加上逗号和连词，并把第二句的首字母改成小写（名字除外）：*The road was icy, so we drove slowly.*\n\n> **注意。**别忘了 *but* 或 *so* 前面的逗号，也要把第二句开头的字母改成小写（*I* 和专有名词除外）。",
         ),
         typedGenerator(
           "sentence",
           t("Join the two sentences into one.", "把两个句子合并成一句。"),
           [...expandBank, ...expandMore],
-          (right) => t(`**${right}** A comma comes before the connecting word.`, `**${right}** 连接词前要加逗号。`),
+          (right) =>
+            t(
+              `**${right}** A comma and the conjunction join the two complete sentences.\n\n**Check.** Check the seam: comma right before *but* or *so*, lower-case start on the second clause (unless *I* or a name), and one period at the end.`,
+              `**${right}** 用逗号和连词把两个完整句子连成一句。\n\n**检验。**检查衔接处：*but* 或 *so* 前面有逗号，第二句开头改成小写（*I* 或人名除外），句末保留一个句号。`,
+            ),
         ),
       ),
       point(
         "joining-with-because",
         t("Joining with Because", "用 because 连接"),
         t(
-          "*Because* attaches the reason to the result: *We stayed inside because it was raining.* Make sure the reason follows the word. *It was raining because we stayed inside* reverses the meaning.\n\nIf you begin with *Because*, a comma follows the reason: *Because it was raining, we stayed inside.*",
-          "*because* 把原因接到结果上：*We stayed inside because it was raining.* 要确保原因紧跟这个词。*It was raining because we stayed inside* 把意思弄反了。\n\n如果以 *Because* 开头，原因之后要加逗号：*Because it was raining, we stayed inside.*",
+          "*Because* attaches the reason to the result: *We stayed inside because it was raining.* Make sure the reason follows the word. *It was raining because we stayed inside* reverses the meaning.\n\nIf you begin with *Because*, a comma follows the reason: *Because it was raining, we stayed inside.*\n\n> **Watch out.** Put *because* right before the *cause*, not before the result—and if you start the sentence with *Because*, do not forget the comma after the reason.",
+          "*because* 把原因接到结果上：*We stayed inside because it was raining.* 要确保原因紧跟这个词。*It was raining because we stayed inside* 把意思弄反了。\n\n如果以 *Because* 开头，原因之后要加逗号：*Because it was raining, we stayed inside.*\n\n> **注意。***because* 必须紧接在*原因*前面，不要放到结果前面——如果用 *Because* 开头，别忘了在原因后面加逗号。",
         ),
         typedGenerator(
           "sentence-pattern",
           t("Join the two sentences into one.", "把两个句子合并成一句。"),
           [...becauseBank, ...becauseMore],
-          (right) => t(`**${right}** The word *because* comes right before the reason.`, `**${right}** *because* 紧接在原因之前。`),
+          (right) =>
+            t(
+              `**${right}** The word *because* comes right before the reason.\n\n**Check.** Read the part right after *because*—it must explain *why* the other part happened, not the other way around.`,
+              `**${right}** *because* 紧接在原因之前。\n\n**检验。**读一读 *because* 后面的部分——它必须解释另一半*为什么*发生，不能因果倒置。`,
+            ),
         ),
       ),
     ],
@@ -1209,6 +1257,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
     id: "combining-with-conjunctions",
     title: t("Combining with Conjunctions", "用连词合并句子"),
     summary: t("Join short sentences with the conjunction that states their relationship.", "用能表明关系的连词把短句合并起来。"),
+    intro: t(
+      "Two choppy sentences—*The rain stopped. We went outside.*—flow smoothly as *The rain stopped, so we went outside.* Choosing a coordinating or subordinating conjunction turns short sentences into clear, connected ideas.",
+      "两个零碎的短句 *The rain stopped. We went outside.* 合并成 *The rain stopped, so we went outside.* 后就流畅多了。选对并列连词或从属连词，能让短句连成思路清晰的长句。",
+    ),
     prerequisites: ["subordinating-conjunctions", "expanding-with-because-but-so"],
     encompasses: [
       { topic: "subordinating-conjunctions", weight: 0.5 },
@@ -1220,23 +1272,26 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "combining-coordinating",
         t("With a Coordinating Conjunction", "用并列连词"),
         t(
-          "When two sentences carry equal weight, join them with a comma and *and, but, or* or *so*. The two sentences keep their order and all their words: *The bell rang, and the students left.*",
-          "两个句子分量相等时，用逗号加 *and, but, or* 或 *so* 连接。两句保持顺序，也保留所有词：*The bell rang, and the students left.*",
+          "When two sentences carry equal weight, join them with a comma and *and, but, or* or *so*. The two sentences keep their order and all their words: *The bell rang, and the students left.*\n\n> **Watch out.** Joining two complete sentences needs *both* a comma and the conjunction—leaving out the comma creates a run-on.",
+          "两个句子分量相等时，用逗号加 *and, but, or* 或 *so* 连接。两句保持顺序，也保留所有词：*The bell rang, and the students left.*\n\n> **注意。**连接两个完整句子时，逗号和连词缺一不可——漏掉逗号就会变成连写句。",
         ),
         typedGenerator(
           "sentence",
           t("Join the two sentences into one.", "把两个句子合并成一句。"),
           [...coordinatingBank, ...coordinatingMore],
           (right) =>
-            t(`**${right}** A comma and a conjunction join the two complete sentences.`, `**${right}** 用逗号加连词连接两个完整句子。`),
+            t(
+              `**${right}** A comma and a conjunction join the two complete sentences.\n\n**Check.** Verify that both sides could still stand alone as full sentences, and that one comma sits right before the conjunction.`,
+              `**${right}** 用逗号加连词连接两个完整句子。\n\n**检验。**确认前后两半各自都能独立成句，而且连词前面恰好有一个逗号。`,
+            ),
         ),
       ),
       point(
         "combining-subordinating",
         t("With a Subordinating Conjunction", "用从属连词"),
         t(
-          "A subordinating conjunction makes one idea depend on the other. Put the word before the idea it belongs to, and choose either order: *She kept running although the hill was steep*, or *Although the hill was steep, she kept running.*\n\nOnly the second order takes a comma.",
-          "从属连词让一个意思依赖另一个。把这个词放在它所属的意思之前，两种顺序都可以：*She kept running although the hill was steep*，或 *Although the hill was steep, she kept running.*\n\n只有第二种顺序要加逗号。",
+          "A subordinating conjunction makes one idea depend on the other. Put the word before the idea it belongs to, and choose either order: *She kept running although the hill was steep*, or *Although the hill was steep, she kept running.*\n\nOnly the second order takes a comma.\n\n> **Watch out.** Attach the conjunction to the *second* sentence's idea, and add a comma only when that dependent clause comes first.",
+          "从属连词让一个意思依赖另一个。把这个词放在它所属的意思之前，两种顺序都可以：*She kept running although the hill was steep*，或 *Although the hill was steep, she kept running.*\n\n只有第二种顺序要加逗号。\n\n> **注意。**连词要放在*第二句*的意思前面；只有当这个从句移到句首时，才在它后面加逗号。",
         ),
         typedGenerator(
           "sentence-pattern",
@@ -1244,8 +1299,8 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           [...conjunctionBank, ...subordinateMore],
           (right) =>
             t(
-              `**${right}** The conjunction opens the dependent clause, and that clause takes a comma if it comes first.`,
-              `**${right}** 连词引导从句；从句在前时要加逗号。`,
+              `**${right}** The conjunction opens the dependent clause, and that clause takes a comma only if it comes first.\n\n**Check.** Confirm the conjunction sits in front of the second idea, and check the comma rule: comma after a front clause, no comma before an end clause.`,
+              `**${right}** 连词引导从句；只有从句在前时才加逗号。\n\n**检验。**确认连词放在第二个意思前面，再核对逗号规则：从句在前加逗号，从句在后不加逗号。`,
             ),
         ),
       ),
@@ -1255,6 +1310,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
     id: "fixing-run-ons",
     title: t("Fixing Run-ons", "修改连写句"),
     summary: t("Repair run-ons and comma splices with a period or a conjunction.", "用句号或连词修改连写句和逗号拼接。"),
+    intro: t(
+      "*The lights flickered the rain pounded on the roof* can be fixed in two clean ways: split it into two sentences with a period, or join the two clauses with a comma and *and*.",
+      "*The lights flickered the rain pounded on the roof* 有两种利落的改法：用句号拆成两句话，或者用逗号加 *and* 把两句话连起来。",
+    ),
     prerequisites: ["run-ons-and-comma-splices"],
     encompasses: [{ topic: "run-ons-and-comma-splices", weight: 0.5 }],
     xp: 10,
@@ -1263,8 +1322,8 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "fixing-with-a-period",
         t("With a Period", "用句号"),
         t(
-          "The simplest repair is to make two sentences. Find where the first complete sentence ends, put a period there, and begin the next with a capital: *The sun set. We drove home.*",
-          "最简单的修改是分成两句。找到第一个完整句子结束的地方，加上句号，下一句以大写字母开头：*The sun set. We drove home.*",
+          "The simplest repair is to make two sentences. Find where the first complete sentence ends, put a period there, and begin the next with a capital: *The sun set. We drove home.*\n\n> **Watch out.** Remember to capitalize the first word of the new sentence right after the period—leaving it lowercase keeps the repair incomplete.",
+          "最简单的修改是分成两句。找到第一个完整句子结束的地方，加上句号，下一句以大写字母开头：*The sun set. We drove home.*\n\n> **注意。**别忘了把句号后面新句子的首字母改成大写——如果仍是小写，修改就不算完整。",
         ),
         typedGenerator(
           "sentence",
@@ -1272,8 +1331,8 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           [...periodFixBank, ...periodFixMore],
           (right) =>
             t(
-              `**${right}** Each complete sentence now has its own capital and period.`,
-              `**${right}** 每个完整句子现在都有自己的大写字母和句号。`,
+              `**${right}** Each complete sentence now has its own capital and period.\n\n**Check.** Read the two sentences in **${right}** one by one—each has its own subject and verb, starts with a capital letter, and ends with a period.`,
+              `**${right}** 每个完整句子现在都有自己的大写字母和句号。\n\n**检验。**逐句读一遍 **${right}**——每句都有自己的主语和动词，以大写字母开头，以句号结尾。`,
             ),
         ),
       ),
@@ -1281,14 +1340,18 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "fixing-with-a-conjunction",
         t("With a Comma and a Conjunction", "用逗号加连词"),
         t(
-          "To keep one sentence and show how the ideas relate, put a comma and a conjunction between them: *The test was hard, but I finished it anyway.* A comma alone is not enough, and neither is a conjunction alone.",
-          "如果要保持一句话并表明意思间的关系，就在中间加逗号和连词：*The test was hard, but I finished it anyway.* 只有逗号不够，只有连词也不够。",
+          "To keep one sentence and show how the ideas relate, put a comma and a conjunction between them: *The test was hard, but I finished it anyway.* A comma alone is not enough, and neither is a conjunction alone.\n\n> **Watch out.** Put the comma *before* the conjunction, not after it—and choose the conjunction (*and, but, or, so*) that matches how the two clauses connect.",
+          "如果要保持一句话并表明意思间的关系，就在中间加逗号和连词：*The test was hard, but I finished it anyway.* 只有逗号不够，只有连词也不够。\n\n> **注意。**逗号要放在连词*前面*而不是后面，而且要选用符合前后关系的连词（*and, but, or, so*）。",
         ),
         typedGenerator(
           "sentence",
           t("Rewrite this as one correct sentence.", "把它改写成一个正确的句子。"),
           [...conjunctionFixBank, ...conjunctionFixMore],
-          (right) => t(`**${right}** The comma and the conjunction work together.`, `**${right}** 逗号和连词要一起使用。`),
+          (right) =>
+            t(
+              `**${right}** The comma and the conjunction work together.\n\n**Check.** Look at the join in **${right}**—both sides could stand alone as sentences, and a comma plus a matching conjunction sits neatly between them.`,
+              `**${right}** 逗号和连词要一起使用。\n\n**检验。**检查 **${right}** 的连接处——两边都能独立成句，中间恰好有一个逗号加合适的并列连词。`,
+            ),
         ),
       ),
     ],
@@ -1297,6 +1360,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
     id: "combining-with-relative-clauses",
     title: t("Combining with Relative Clauses", "用关系从句合并句子"),
     summary: t("Turn one sentence into a clause that describes a noun in another.", "把一个句子变成修饰另一句中名词的从句。"),
+    intro: t(
+      "Two choppy sentences—*The hiker found the spring. She carried the map*—fold smoothly into *The hiker who carried the map found the spring.* Relative clauses tuck one sentence right behind the noun it describes.",
+      "两句零碎的短句——*The hiker found the spring. She carried the map*——可以流畅合并成 *The hiker who carried the map found the spring.* 关系从句把第二句直接收进它所修饰的名词后面。",
+    ),
     prerequisites: ["relative-clauses", "combining-with-conjunctions"],
     encompasses: [
       { topic: "relative-clauses", weight: 0.5 },
@@ -1308,8 +1375,8 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "clauses-that-identify",
         t("Clauses That Identify", "限定性从句"),
         t(
-          "When the second sentence tells which one, replace its pronoun with *who* or *that* and place it right after the noun: *The boy plays drums. He lives next door* becomes *The boy who lives next door plays drums.*\n\nDrop the old pronoun: not *who he lives*, and not *that Mia baked it*. No commas are needed, because the clause is needed to identify the noun.",
-          "第二句说明“哪一个”时，把其中的代词换成 *who* 或 *that*，放在名词之后：*The boy plays drums. He lives next door* 变成 *The boy who lives next door plays drums.*\n\n要去掉原来的代词：不是 *who he lives*，也不是 *that Mia baked it*。不需要逗号，因为从句是确定名词所必需的。",
+          "When the second sentence tells which one, replace its pronoun with *who* or *that* and place it right after the noun: *The boy plays drums. He lives next door* becomes *The boy who lives next door plays drums.*\n\nDrop the old pronoun: not *who he lives*, and not *that Mia baked it*. No commas are needed, because the clause is needed to identify the noun.\n\n> **Watch out.** Delete the repeated pronoun (*he*, *she*, *it*, *they*) when you replace it with *who* or *that*—leaving both in makes a double subject or object.",
+          "第二句说明“哪一个”时，把其中的代词换成 *who* 或 *that*，放在名词之后：*The boy plays drums. He lives next door* 变成 *The boy who lives next door plays drums.*\n\n要去掉原来的代词：不是 *who he lives*，也不是 *that Mia baked it*。不需要逗号，因为从句是确定名词所必需的。\n\n> **注意。** 换成 *who* 或 *that* 后，一定要删掉原来的代词（*he*、*she*、*it*、*they*）——两者都留着会造成重复主语或宾语。",
         ),
         typedGenerator(
           "sentence-pattern",
@@ -1317,8 +1384,8 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           [...whoCombineBank, ...moreWhoCombine],
           (right) =>
             t(
-              `**${right}** The clause sits right after the noun it describes, and the old pronoun is gone.`,
-              `**${right}** 从句紧跟所修饰的名词，原来的代词已去掉。`,
+              `**${right}** The clause sits right after the noun it describes, and the old pronoun is gone.\n\n**Check.** Verify that the relative clause immediately follows its noun, uses *who* or *that* with no leftover pronoun, and takes no commas.`,
+              `**${right}** 从句紧跟所修饰的名词，原来的代词已去掉。\n\n**检验。** 确认关系从句紧跟所修饰的名词、用 *who* 或 *that* 且没有残留原代词，而且不加逗号。`,
             ),
         ),
       ),
@@ -1326,14 +1393,18 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "clauses-that-add",
         t("Clauses That Add Information", "补充信息的从句"),
         t(
-          "When the noun is already clear, the clause only adds information. Set it off with two commas, and use *who* for people or *which* for things: *My coat, which is very old, keeps me warm.* *That* does not work here.",
-          "名词已经明确时，从句只是补充信息。用两个逗号把它隔开，人用 *who*，物用 *which*：*My coat, which is very old, keeps me warm.* 这里不能用 *that*。",
+          "When the noun is already clear, the clause only adds information. Set it off with two commas, and use *who* for people or *which* for things: *My coat, which is very old, keeps me warm.* *That* does not work here.\n\n> **Watch out.** Always use *both* commas around a mid-sentence nonessential clause, and never use *that* after a comma.",
+          "名词已经明确时，从句只是补充信息。用两个逗号把它隔开，人用 *who*，物用 *which*：*My coat, which is very old, keeps me warm.* 这里不能用 *that*。\n\n> **注意。** 位于句中的非限定性从句两边必须有*两个*逗号，且逗号后不能用 *that*。",
         ),
         typedGenerator(
           "sentence",
           t("Join the two sentences into one.", "把两个句子合并成一句。"),
           [...whichCombineBank, ...moreWhichCombine],
-          (right) => t(`**${right}** Two commas set off the added information.`, `**${right}** 用两个逗号隔开补充信息。`),
+          (right) =>
+            t(
+              `**${right}** Two commas set off the added information.\n\n**Check.** Cover the words between the two commas and read the sentence—the main sentence still reads cleanly, and the clause uses *who* or *which*.`,
+              `**${right}** 用两个逗号隔开补充信息。\n\n**检验。** 遮住两个逗号之间的内容通读全句——主句依然完整通顺，且从句用的是 *who* 或 *which*。`,
+            ),
         ),
       ),
     ],
@@ -1342,6 +1413,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
     id: "combining-with-appositives",
     title: t("Combining with Appositives", "用同位语合并句子"),
     summary: t("Fold a sentence that renames a noun into a short phrase beside it.", "把为名词换说法的句子压缩成紧挨它的短语。"),
+    intro: t(
+      "Instead of writing *Dr. Patel led the tour. She is a geologist*, cut *She is* and tuck the noun phrase beside the name: *Dr. Patel, a geologist, led the tour.* An appositive packs two sentences into one tight, smooth line.",
+      "与其写两句 *Dr. Patel led the tour. She is a geologist*，不如删掉 *She is*，把名词短语紧挨人名放进去：*Dr. Patel, a geologist, led the tour.* 同位语能把两句话收拢成精练流畅的一句。",
+    ),
     prerequisites: ["appositives", "combining-with-relative-clauses"],
     encompasses: [
       { topic: "appositives", weight: 0.5 },
@@ -1353,8 +1428,8 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "folding-into-an-appositive",
         t("Folding a Sentence In", "把句子压缩进去"),
         t(
-          "A second sentence of the form *He is our coach* can shrink to a phrase. Remove *He is*, place the rest after the noun, and set it off with commas: *Mr. Cole blew the whistle. He is our coach* becomes *Mr. Cole, our coach, blew the whistle.*",
-          "*He is our coach* 这种形式的第二句可以压缩成短语。去掉 *He is*，把其余部分放在名词之后，并用逗号隔开：*Mr. Cole blew the whistle. He is our coach* 变成 *Mr. Cole, our coach, blew the whistle.*",
+          "A second sentence of the form *He is our coach* can shrink to a phrase. Remove *He is*, place the rest after the noun, and set it off with commas: *Mr. Cole blew the whistle. He is our coach* becomes *Mr. Cole, our coach, blew the whistle.*\n\n> **Watch out.** Do not forget the *second* comma right after the appositive—missing it traps the main verb inside the renaming phrase.",
+          "*He is our coach* 这种形式的第二句可以压缩成短语。去掉 *He is*，把其余部分放在名词之后，并用逗号隔开：*Mr. Cole blew the whistle. He is our coach* 变成 *Mr. Cole, our coach, blew the whistle.*\n\n> **注意。** 别漏掉同位语后面的*第二个*逗号——少了一个逗号会让主句动词和同位语粘在一起。",
         ),
         typedGenerator(
           "sentence",
@@ -1362,8 +1437,8 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
           [...appositiveCombineBank, ...moreAppositiveCombine],
           (right) =>
             t(
-              `**${right}** The phrase renames the noun, with a comma on each side.`,
-              `**${right}** 短语为名词换了个说法，两边各有一个逗号。`,
+              `**${right}** The phrase renames the noun, with a comma on each side.\n\n**Check.** Drop the phrase between the two commas—the remaining words form the complete original first sentence.`,
+              `**${right}** 短语为名词换了个说法，两边各有一个逗号。\n\n**检验。** 去掉两个逗号之间的短语——剩下的部分正好是完整的第一句。`,
             ),
         ),
       ),
@@ -1371,15 +1446,18 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "appositive-at-the-end",
         t("At the End of a Sentence", "放在句末"),
         t(
-          "When the noun being renamed ends the sentence, the appositive follows it with a single comma: *We thanked Ana, the bus driver.* There is nothing after it, so no second comma is needed.",
-          "被换说法的名词位于句末时，同位语跟在它后面，只用一个逗号：*We thanked Ana, the bus driver.* 后面没有内容，所以不需要第二个逗号。",
+          "When the noun being renamed ends the sentence, the appositive follows it with a single comma: *We thanked Ana, the bus driver.* There is nothing after it, so no second comma is needed.\n\n> **Watch out.** Check that the appositive ends with the sentence's period (never a second comma) and drops the extra *is/was*.",
+          "被换说法的名词位于句末时，同位语跟在它后面，只用一个逗号：*We thanked Ana, the bus driver.* 后面没有内容，所以不需要第二个逗号。\n\n> **注意。** 确认句末同位语后面直接用句号收尾（不加第二个逗号），并且已经删去多余的 *is/was*。",
         ),
         typedGenerator(
           "sentence",
           t("Join the two sentences into one with an appositive.", "用同位语把两个句子合并成一句。"),
           [...appositiveEndBank, ...moreAppositiveEnd],
           (right) =>
-            t(`**${right}** One comma sets off an appositive that ends the sentence.`, `**${right}** 位于句末的同位语只用一个逗号隔开。`),
+            t(
+              `**${right}** One comma sets off an appositive that ends the sentence.\n\n**Check.** Read the words before the comma—they form a complete sentence, and the noun phrase after the comma renames its final noun.`,
+              `**${right}** 位于句末的同位语只用一个逗号隔开。\n\n**检验。** 读逗号前面的部分——它本身是完整的句子，而逗号后的名词短语正好重命名句末的名词。`,
+            ),
         ),
       ),
     ],
@@ -1388,6 +1466,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
     id: "varying-sentence-openings",
     title: t("Varying Sentence Openings", "变换句子开头"),
     summary: t("Begin some sentences with a phrase instead of the subject.", "有些句子不用主语开头，而用短语开头。"),
+    intro: t(
+      "Paragraphs where every sentence begins *I walked… I saw… I heard…* sound flat. Moving a time or place phrase (*Before sunrise, …*) or a participial phrase (*Holding the lantern, …*) to the front adds rhythm and variety.",
+      "如果段里每句话都用 *I walked… I saw… I heard…* 开头，读起来会很平淡。把时间或地点短语（*Before sunrise, …*）或分词短语（*Holding the lantern, …*）提前到句首，能让句式更有节奏和变化。",
+    ),
     prerequisites: ["prepositional-phrases", "participial-phrases"],
     encompasses: [
       { topic: "prepositional-phrases", weight: 0.2 },
@@ -1399,29 +1481,36 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "opening-with-a-phrase",
         t("Opening with a Prepositional Phrase", "用介词短语开头"),
         t(
-          "Sentences that all begin with the subject become monotonous. Move a phrase that says when or where to the front, followed by a comma, and lower the capital of the old first word: *We went home after the movie* becomes *After the movie, we went home.*",
-          "全都以主语开头的句子会显得单调。把表示时间或地点的短语移到句首，后面加逗号，并把原来第一个词改成小写：*We went home after the movie* 变成 *After the movie, we went home.*",
+          "Sentences that all begin with the subject become monotonous. Move a phrase that says when or where to the front, followed by a comma, and lower the capital of the old first word: *We went home after the movie* becomes *After the movie, we went home.*\n\n> **Watch out.** Remember two small capital-letter fixes: capitalize the new first word, and lowercase the old first word (unless it is *I* or a proper name).",
+          "全都以主语开头的句子会显得单调。把表示时间或地点的短语移到句首，后面加逗号，并把原来第一个词改成小写：*We went home after the movie* 变成 *After the movie, we went home.*\n\n> **注意。** 别忘两处大小写调整：新句首单词要大写，原句首单词要改小写（除非是 *I* 或专有名词）。",
         ),
         typedGenerator(
           "sentence-pattern",
           t("Rewrite the sentence so that it opens with its phrase of time or place.", "改写句子，让表示时间或地点的短语位于句首。"),
           [...openingPhraseBank, ...moreOpeningPhrase],
           (right) =>
-            t(`**${right}** The meaning is the same, and the sentence opens differently.`, `**${right}** 意思不变，只是开头不同。`),
+            t(
+              `**${right}** The meaning is the same, and the sentence opens differently.\n\n**Check.** Verify the opening phrase is followed by a comma, the main subject and verb remain intact, and capitalization is adjusted.`,
+              `**${right}** 意思不变，只是开头不同。\n\n**检验。** 确认句首短语后加了逗号、主句主谓完整，且大小写已相应调整。`,
+            ),
         ),
       ),
       point(
         "opening-with-a-participle",
         t("Opening with a Participial Phrase", "用分词短语开头"),
         t(
-          "When one subject does two actions, the first can become an opening phrase: *Sara laughed at the joke and dropped her fork* becomes *Laughing at the joke, Sara dropped her fork.*\n\nThe doer of the action must come right after the comma.",
-          "同一个主语做两个动作时，第一个动作可以变成开头的短语：*Sara laughed at the joke and dropped her fork* 变成 *Laughing at the joke, Sara dropped her fork.*\n\n动作的发出者必须紧跟逗号。",
+          "When one subject does two actions, the first can become an opening phrase: *Sara laughed at the joke and dropped her fork* becomes *Laughing at the joke, Sara dropped her fork.*\n\nThe doer of the action must come right after the comma.\n\n> **Watch out.** Drop *and* when you turn the first verb into an *-ing* phrase, and place the person doing that action right after the comma.",
+          "同一个主语做两个动作时，第一个动作可以变成开头的短语：*Sara laughed at the joke and dropped her fork* 变成 *Laughing at the joke, Sara dropped her fork.*\n\n动作的发出者必须紧跟逗号。\n\n> **注意。** 把第一个动词改成 *-ing* 短语时要去掉 *and*，并让执行该动作的主语紧跟在逗号后面。",
         ),
         typedGenerator(
           "sentence",
           t("Rewrite the sentence as told.", "按要求改写句子。"),
           [...openingParticipleBank, ...moreOpeningParticiple],
-          (right) => t(`**${right}** The doer of the action follows the comma.`, `**${right}** 动作的发出者紧跟逗号。`),
+          (right) =>
+            t(
+              `**${right}** The doer of the action follows the comma.\n\n**Check.** Ask who performs the opening *-ing* action—that exact subject stands immediately after the comma, and the extra *and* is gone.`,
+              `**${right}** 动作的发出者紧跟逗号。\n\n**检验。** 问一句句首 *-ing* 动作是谁做的——这位主语正好紧挨逗号之后，且多余的 *and* 已删去。`,
+            ),
         ),
       ),
     ],
@@ -1430,6 +1519,10 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
     id: "cutting-wordiness",
     title: t("Cutting Wordiness", "删减冗词"),
     summary: t("Say the same thing in fewer words.", "用更少的词表达同样的意思。"),
+    intro: t(
+      "*In the event that it rains, the game will be moved by the coach* takes fourteen words to say *If it rains, the coach will move the game*. **Cutting wordiness** swaps bloated phrases, deletes repetition, and turns wordy passives into brisk active verbs.",
+      "*In the event that it rains, the game will be moved by the coach* 用十四个词才说出 *If it rains, the coach will move the game* 的意思。**删减冗词**就是用精炼短词替换拖沓短语、去掉语义重复，并把啰嗦的被动句改为主动句。",
+    ),
     prerequisites: ["active-and-passive-voice"],
     encompasses: [{ topic: "active-and-passive-voice", weight: 0.3 }],
     xp: 10,
@@ -1438,16 +1531,16 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "replacing-filler",
         t("Replacing Long Phrases", "替换冗长短语"),
         t(
-          "Many long phrases mean the same as one short word. *Due to the fact that* means *because*, and *at this point in time* means *now*. Use the short word unless the long one adds something.",
-          "许多冗长的短语和一个短词意思相同。*due to the fact that* 就是 *because*，*at this point in time* 就是 *now*。除非长的表达确有所增，否则用短词。",
+          "Many multi-word filler phrases mean no more than a single plain word: *due to the fact that* → **because**, *at this point in time* → **now**. Swap in the one-word equivalent whenever the long phrase adds no nuance.\n\n> **Watch out.** Shorter is only better when the **exact meaning** stays intact—never trade a phrase for a short word that changes the logical link.",
+          "许多拖沓的多词短语和一个简单短词意思完全一样：*due to the fact that* 就是 **because**，*at this point in time* 就是 **now**。只要长短语没增添新意，就换成单字表达。\n\n> **注意。** 精简的前提是**原意完全不变**——绝不要为了短而换成改变逻辑关系的词。",
         ),
         choiceGenerator(
           t("Which word can replace this phrase?", "哪个词可以替换这个短语？"),
           [...fillerBank, ...moreFillers],
           (right, shown) =>
             t(
-              `*${shown}* means **${right}**. One word that says the same thing makes the sentence shorter and clearer.`,
-              `*${shown}* 的意思是 **${right}**。用一个意思相同的词，句子更短也更清楚。`,
+              `*${shown}* can be tightened to **${right}** with zero loss of meaning.\n\n**Check.** Substitute **${right}** into a sample sentence where *${shown}* would appear—the logical meaning stays identical while cutting extra syllables.`,
+              `*${shown}* 可以精简为 **${right}**，意思丝毫不减。\n\n**检验。** 把 **${right}** 代入原本用 *${shown}* 的句子里读一遍——逻辑关系完全不变，句子却干净得多。`,
             ),
           (wrong, _right, shown) =>
             t(
@@ -1460,13 +1553,17 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "cutting-sentences",
         t("Cutting Repetition", "去掉重复"),
         t(
-          "Cut words that repeat what is already clear. *Red in color* says *red* twice, since red is a color. *Square in shape* and *personal opinion* do the same.\n\nThe tightest version keeps all the meaning and adds nothing.",
-          "删掉重复已明确内容的词。*red in color* 其实说了两次 *red*，因为红色本来就是颜色。*square in shape* 和 *personal opinion* 也是如此。\n\n最精练的版本保留全部意思，不多加任何内容。",
+          "Delete words that merely echo what is already built into another word: *red in color* says *red* twice (red is already a color); *square in shape* and *personal opinion* do the same. The tightest sentence keeps every fact and cuts every echo.\n\n> **Watch out.** Check whether a noun or modifier is already implied by its neighbor (*free gift*, *past history*, *completely full*)—if cutting it changes no meaning, cut it.",
+          "删掉重复已有含义的词：*red in color* 把“颜色”说了两遍，*square in shape* 和 *personal opinion* 也是一样。最精练的句子保留全部信息，不留半点回声。\n\n> **注意。** 检查相邻词语是否语义重叠（如 *free gift*、*past history*、*completely full*）——删掉后意思不变，就果断删去。",
         ),
         choiceGenerator(
           t("Which sentence says it most directly?", "哪个句子表达得最直接？"),
           [...wordyBank, ...moreWordy],
-          (right) => t(`**${right}** It keeps the meaning and drops the extra words.`, `**${right}** 它保留了意思，去掉了多余的词。`),
+          (right) =>
+            t(
+              `The tightest version is: **${right}** It keeps the full meaning while stripping out dead weight.\n\n**Check.** Compare **${right}** word by word against the longer choices: nothing factual was lost, yet every repeated idea and padded phrase is gone.`,
+              `最直接的表达是：**${right}** 它保留了完整意思，去掉了所有冗余词。\n\n**检验。** 把 **${right}** 和较长的选项逐词对照：没有漏掉任何事实，却清掉了重复和凑字数的短语。`,
+            ),
           (wrong) =>
             t(
               `*${wrong}* still has extra words that add no meaning: an idea said twice, or a long phrase for a short word.`,
@@ -1478,15 +1575,18 @@ export const sentenceWritingTopics: readonly TopicDef[] = [
         "active-is-shorter",
         t("Making It Active", "改为主动"),
         t(
-          "The passive usually takes more words than the active. Rewriting with the doer as the subject is often the quickest way to shorten a sentence: *The ball was kicked by Sam* becomes *Sam kicked the ball.*",
-          "被动句通常比主动句用词更多。让动作发出者作主语，往往是缩短句子最快的办法：*The ball was kicked by Sam* 变成 *Sam kicked the ball.*",
+          "Passive sentences usually drag along extra words (*was ... by*). Moving the doer to the subject slot is often the fastest way to tighten a sentence: *The ball was kicked by Sam* → *Sam kicked the ball.*\n\n> **Watch out.** Keep the exact tense and meaning when you flip to active—only drop the passive *be* and *by*.",
+          "被动句常拖着多余的 *was … by*。把动作发出者提为句首主语，往往是压缩句子最快的方法：*The ball was kicked by Sam* → *Sam kicked the ball.*\n\n> **注意。** 改为主动时要保持原时态和原意不变——只删去被动的 *be* 和 *by*。",
         ),
         typedGenerator(
           "sentence",
           t("Rewrite the sentence in the active voice.", "把句子改写成主动语态。"),
           [...activeBank, ...moreActive],
           (right) =>
-            t(`**${right}** The doer is now the subject, and the sentence is shorter.`, `**${right}** 动作发出者成为主语，句子也更短了。`),
+            t(
+              `In active voice: **${right}** The doer leads the sentence and the extra passive words are gone.\n\n**Check.** Count the words and check the tense: **${right}** uses fewer words than the passive original while keeping the same doer, receiver, and time.`,
+              `改为主动语态：**${right}** 动作发出者作主语，多余的被动结构全部去掉了。\n\n**检验。** 数一下词数并核对时态：**${right}** 比原被动句更简短，同时动作发出者、承受者和时态完全一致。`,
+            ),
         ),
       ),
     ],

@@ -19,14 +19,18 @@ const scientificArgument = topic("reading", {
     "A scientific argument is only as strong as its evidence and its reasoning: a fair test, enough cases and a conclusion that stays within what was found.",
     "科学论证的力度取决于证据和推理：公平的检验、足够的样本，以及不超出发现范围的结论。",
   ],
+  intro: [
+    "Hearing that *five gardeners used a new spray and grew giant tomatoes* sounds tempting—until you ask how many gardens were tested and what happened to unsprayed plants. Evaluating a scientific argument means checking both the design of the test and whether the conclusion stays within the data.",
+    "听说“五位园丁用了新喷雾，种出了大番茄”听起来很诱人——直到你追问一共测了多少块地、没喷雾的番茄又长得怎样。评估科学论证既要检验实验设计，也要看结论有没有越出数据边界。",
+  ],
   after: ["checking-a-claim-against-the-evidence", "correlation-or-cause"],
   points: [
     label(
       "is-the-test-sound",
       ["Is the Test Sound", "检验是否可靠"],
       [
-        "Before trusting a scientific claim, look at how the evidence was gathered. A **sound test** studies many cases and compares them with a group that did not get the treatment. A test with **too few cases** may show only chance: two finches are not a population. A test with **no comparison** cannot show that the treatment made the difference, because we do not know what would have happened without it.",
-        "在相信一个科学论断之前，要看证据是怎样收集的。**可靠的检验**研究许多个案，并把它们与没有接受处理的一组作比较。**样本太少**的检验可能只反映了偶然：两只雀鸟代表不了一个种群。**没有对照**的检验无法证明是处理带来了差别，因为我们不知道如果不处理会怎样。",
+        "Before trusting a scientific claim, look at how the evidence was gathered. A **sound test** studies many cases and compares them with a group that did not get the treatment. A test with **too few cases** may show only chance: two finches are not a population. A test with **no comparison** cannot show that the treatment made the difference, because we do not know what would have happened without it.\n\n> **Watch out.** Check sample size and control group in order: only 1–5 subjects means **too few cases**; hundreds of subjects with no untreated/control group means **no comparison**; both a large sample and a fair control group make **a sound test**.",
+        "在相信一个科学论断之前，要看证据是怎样收集的。**可靠的检验**研究许多个案，并把它们与没有接受处理的一组作比较。**样本太少**的检验可能只反映了偶然：两只雀鸟代表不了一个种群。**没有对照**的检验无法证明是处理带来了差别，因为我们不知道如果不处理会怎样。\n\n> **注意。** 按顺序查样本量和对照组：只有一两个到五个样本是**样本太少**；样本很大却没有未处理对照组是**没有对照**；只有大样本加公平对照才是**可靠的检验**。",
       ],
       ["How sound is the test behind this claim?", "这个论断背后的检验可靠吗？"],
       `
@@ -64,22 +68,22 @@ const scientificArgument = topic("reading", {
       {
         "a sound test": L(
           "可靠的检验",
-          "The test studies many cases and compares them with a group that did not get the treatment, so a real difference can show up.",
-          "这个检验研究了许多个案，并与没有接受处理的一组作比较，所以能显示真正的差别。",
+          "The test studies many cases and compares them with a group that did not get the treatment, so a real difference can show up.\n\n**Check.** Verify both pillars of a fair study: a large sample size *and* a clear comparison group (before/after, treated/untreated, or different sites).",
+          "这个检验研究了许多个案，并与没有接受处理的一组作比较，所以能显示真正的差别。\n\n**检验。** 核对可靠实验的两根支柱：足够大的样本量，*以及*明确的对照组（处理组与未处理组、前后对比或不同地点对比）。",
           "The test lacks enough cases or a group to compare with.",
           "这个检验缺少足够的个案或对照组。",
         ),
         "too few cases": L(
           "样本太少",
-          "The test looks at only a handful of cases, so its result may be just chance.",
-          "这个检验只看了少数几个个案，所以结果可能只是偶然。",
+          "The test looks at only a handful of cases, so its result may be just chance.\n\n**Check.** Count the subjects tested (one, two, three, four, or five): a handful of observations is far too tiny to rule out luck.",
+          "这个检验只看了少数几个个案，所以结果可能只是偶然。\n\n**检验。** 数一下样本数量（只有一到五个）：寥寥几个个案远远不足以排除偶然性。",
           "The test studies plenty of cases.",
           "这个检验研究的个案足够多。",
         ),
         "no comparison": L(
           "没有对照",
-          "The test studies many cases but has no group without the treatment, so we cannot tell whether the treatment made the difference.",
-          "这个检验研究了许多个案，但没有不接受处理的对照组，所以无法判断是不是处理带来了差别。",
+          "The test studies many cases but has no group without the treatment, so we cannot tell whether the treatment made the difference.\n\n**Check.** Ask *what happened to the group that did not get the treatment?* The prompt explicitly notes no untreated or baseline group was checked.",
+          "这个检验研究了许多个案，但没有不接受处理的对照组，所以无法判断是不是处理带来了差别。\n\n**检验。** 问一句“没接受处理的那一组结果怎样？”：题干明确指出没有观察对照组或基准组。",
           "The test does compare with a group that did not get the treatment, or it has too few cases to matter.",
           "这个检验确实与未处理组作了比较，或者个案太少，谈不上对照。",
         ),
@@ -89,8 +93,8 @@ const scientificArgument = topic("reading", {
       "does-the-conclusion-follow",
       ["Does the Conclusion Follow", "结论是否成立"],
       [
-        "Even good evidence can be stretched too far. A conclusion that **follows** stays within what was found: *Finches with deeper beaks survived the drought better.* A conclusion that **claims too much** goes beyond the evidence, to all animals, all times or certainty: *This proves evolution explains everything.* And a conclusion that **mistakes a link for a cause** treats two things that happen together as if one caused the other.",
-        "即使证据很好，也可能被引申得太远。**成立的结论**不超出发现的范围：*Finches with deeper beaks survived the drought better.* **说得太多的结论**超越了证据，扩展到所有动物、所有时代或断言绝对确定：*This proves evolution explains everything.* **把关联当作因果的结论**把同时发生的两件事当作一件导致另一件。",
+        "Even good evidence can be stretched too far. A conclusion that **follows** stays within what was found: *Finches with deeper beaks survived the drought better.* A conclusion that **claims too much** goes beyond the evidence, to all animals, all times or certainty: *This proves evolution explains everything.* And a conclusion that **mistakes a link for a cause** treats two things that happen together as if one caused the other.\n\n> **Watch out.** Separate **claims too much** from **mistakes a link for a cause**: sweeping words (*every*, *all*, *never*, *any*) overshoot the sample, while turning *A and B appear together* into *A causes B* confuses correlation with causation.",
+        "即使证据很好，也可能被引申得太远。**成立的结论**不超出发现的范围：*Finches with deeper beaks survived the drought better.* **说得太多的结论**超越了证据，扩展到所有动物、所有时代或断言绝对确定：*This proves evolution explains everything.* **把关联当作因果的结论**把同时发生的两件事当作一件导致另一件。\n\n> **注意。** 分清**说得太多**和**把关联当作因果**：用 *every*、*all*、*never* 无限外推是说得太多；把“甲乙同时出现”说成“甲导致乙”则是把关联当作因果。",
       ],
       ["Does the conclusion follow from the evidence?", "这个结论是否由证据推出？"],
       `
@@ -128,22 +132,22 @@ const scientificArgument = topic("reading", {
       {
         follows: L(
           "成立",
-          "The conclusion stays within what the evidence showed, about these animals in these conditions.",
-          "这个结论没有超出证据所显示的范围，只涉及这些动物和这些条件。",
+          "The conclusion stays within what the evidence showed, about these animals in these conditions.\n\n**Check.** Compare the group and scope in the evidence with the conclusion: it keeps the exact species, setting, and cautious wording without inventing an unproven cause.",
+          "这个结论没有超出证据所显示的范围，只涉及这些动物和这些条件。\n\n**检验。** 对照证据与结论的对象和范围：物种、条件和审慎措辞完全一致，既未越界外推，也未硬安因果。",
           "The conclusion goes beyond the evidence or treats a link as a cause.",
           "这个结论超出了证据，或把关联当作了因果。",
         ),
         "claims too much": L(
           "说得太多",
-          "The conclusion stretches the finding to all living things, all times or the future, far beyond what was studied.",
-          "这个结论把发现扩展到所有生物、所有时代或未来，远远超出了研究的范围。",
+          "The conclusion stretches the finding to all living things, all times or the future, far beyond what was studied.\n\n**Check.** Spot the overreach (*every*, *all*, *no medicine will ever*, *any bird*, or an unsupported future leap): the evidence never tested that broad a claim.",
+          "这个结论把发现扩展到所有生物、所有时代或未来，远远超出了研究的范围。\n\n**检验。** 找出越界词（如 *every*、*all*、*never*、*any* 或缺乏依据的未来断言）：证据从未检验过这么宽泛的范围。",
           "The conclusion does not stretch the finding beyond what was studied.",
           "这个结论没有把发现扩展到研究范围之外。",
         ),
         "mistakes a link for a cause": L(
           "把关联当作因果",
-          "Two things happen together, but the conclusion assumes one causes the other, when something else may explain both.",
-          "两件事同时出现，结论却认定一件导致另一件，而实际上可能是别的因素同时导致了两者。",
+          "Two things happen together, but the conclusion assumes one causes the other, when something else may explain both.\n\n**Check.** Look at the evidence: it only notes that two traits or counts appear together, yet the conclusion jumps to *makes*, *causes*, *attracts*, or *creates*.",
+          "两件事同时出现，结论却认定一件导致另一件，而实际上可能是别的因素同时导致了两者。\n\n**检验。** 看证据本身：它只记录了两件事同时出现，结论却武断跳到了“导致”“制造”或“吸引”的因果关系。",
           "The conclusion does not treat two linked things as cause and effect.",
           "这个结论没有把两件相关的事当作因果。",
         ),
@@ -159,14 +163,18 @@ const irrelevant = topic("reading", {
     "Irrelevant evidence can sound convincing while having nothing to do with the claim: it may answer another question, attack a person or appeal to the crowd.",
     "无关的证据听起来可能有说服力，却与论点毫无关系：它可能回答了另一个问题、攻击了某个人，或者诉诸大众。",
   ],
+  intro: [
+    "Saying *The bridge must be safe because ten thousand people cheered at its ribbon-cutting* sounds impressive until you notice that cheering cannot test steel cables. Spotting **irrelevant evidence** means catching facts that wander off the question, attack a person, or appeal to the crowd.",
+    "说“这座桥肯定安全，因为通车典礼上有一万人欢呼”听起来很有气势，但欢呼声检验不了钢缆的承重。识别**无关的证据**就是要识破偏题的事实、人身攻击和诉诸大众。",
+  ],
   after: ["relevant-and-sufficient-evidence"],
   points: [
     label(
       "relevant-or-not",
       ["Relevant or Not", "相关还是无关"],
       [
-        "Evidence is **relevant** when, if true, it makes the claim more likely. Irrelevant evidence comes in disguises. Some is **off the question**: it is true, but about something else. Some **attacks the person** who holds a view instead of the view itself. Some **appeals to the crowd**, saying many people believe a thing, as if that made it true.",
-        "证据如果属实能让论点更可能成立，就是**相关的**。无关的证据常常有伪装。有的**离开了问题**：它是真的，但说的是别的事。有的**攻击人身**，针对持观点的人而不是观点本身。有的**诉诸大众**，说很多人相信某事，好像这就能证明它是真的。",
+        "Evidence is **relevant** when, if true, it makes the claim more likely. Irrelevant evidence comes in disguises. Some is **off the question**: it is true, but about something else. Some **attacks the person** who holds a view instead of the view itself. Some **appeals to the crowd**, saying many people believe a thing, as if that made it true.\n\n> **Watch out.** Do not mark a true trivia fact as **relevant** just because it mentions Darwin or the Galapagos—ask whether it actually tests the theory of natural selection itself.",
+        "证据如果属实能让论点更可能成立，就是**相关的**。无关的证据常常有伪装。有的**离开了问题**：它是真的，但说的是别的事。有的**攻击人身**，针对持观点的人而不是观点本身。有的**诉诸大众**，说很多人相信某事，好像这就能证明它是真的。\n\n> **注意。** 不要因为某个花絮提到了达尔文或加拉帕戈斯就判为**相关**——问问它到底能不能检验自然选择理论本身。",
       ],
       [
         "Claim: The theory of evolution by natural selection is well supported. Is this evidence relevant?",
@@ -207,29 +215,29 @@ const irrelevant = topic("reading", {
       {
         relevant: L(
           "相关",
-          "If true, this evidence makes the claim more likely: it shows evolution at work or a pattern that evolution explains.",
-          "如果属实，这条证据会让论点更可能成立：它显示了进化在起作用，或显示了进化能解释的规律。",
+          "If true, this evidence makes the claim more likely: it shows evolution at work or a pattern that evolution explains.\n\n**Check.** Ask *does this biological observation directly test natural selection or common descent?* Yes—unlike biography, insults, or popularity polls.",
+          "如果属实，这条证据会让论点更可能成立：它显示了进化在起作用，或显示了进化能解释的规律。\n\n**检验。** 问一句“这条生物学观察是否直接检验了自然选择或共同祖先？”：是的，它不同于生平花絮、人身攻击或民意投票。",
           "This evidence, even if true, does not make the claim more likely.",
           "即使属实，这条证据也不会让论点更可能成立。",
         ),
         "off the question": L(
           "离开了问题",
-          "The fact may be true, but it is about something else, such as Darwin's life, and says nothing about whether the theory is right.",
-          "这个事实也许是真的，但说的是别的事，比如达尔文的生活，与理论是否正确毫无关系。",
+          "The fact may be true, but it is about something else, such as Darwin's life, and says nothing about whether the theory is right.\n\n**Check.** Notice that it neither insults anyone nor counts voters—it simply offers unrelated background trivia about a person, ship, or place.",
+          "这个事实也许是真的，但说的是别的事，比如达尔文的生活，与理论是否正确毫无关系。\n\n**检验。** 它既没有攻击人身，也没有拿人多说事——只是提了一句与科学理论真伪无关的背景花絮。",
           "This evidence is not simply a fact about something unrelated.",
           "这条证据并不只是与此无关的事实。",
         ),
         "attacks the person": L(
           "攻击人身",
-          "The evidence is about the character of someone on one side, not about the idea; a rude person can still be right or wrong.",
-          "这条证据说的是某一方某个人的品行，而不是观点本身；一个粗鲁的人也可能是对的或错的。",
+          "The evidence is about the character of someone on one side, not about the idea; a rude person can still be right or wrong.\n\n**Check.** Spot the personal flaw aimed at a critic or thinker (*cheating*, *rude*, *uneducated*, *jealous*, *failed exams*): it judges the person instead of the scientific evidence.",
+          "这条证据说的是某一方某个人的品行，而不是观点本身；一个粗鲁的人也可能是对的或错的。\n\n**检验。** 找出针对某个人品行或私德的指责：它在评价人，而不是检验科学证据。",
           "This evidence does not target a person's character.",
           "这条证据并没有针对某个人的品行。",
         ),
         "appeals to the crowd": L(
           "诉诸大众",
-          "The evidence says that many people believe or like the idea, but popularity does not make an idea true.",
-          "这条证据说很多人相信或喜欢这个观点，但受欢迎并不能证明观点正确。",
+          "The evidence says that many people believe or like the idea, but popularity does not make an idea true.\n\n**Check.** Spot the popularity cue (*most people*, *everyone knows*, *thousands*, *sold out*, *poll*): counting heads cannot prove a scientific claim.",
+          "这条证据说很多人相信或喜欢这个观点，但受欢迎并不能证明观点正确。\n\n**检验。** 识别“人多势众”的信号词（如 *most people*、*everyone*、*sold out*、*poll*）：人多或畅销并不能证明科学命题。",
           "This evidence does not rest on how many people believe something.",
           "这条证据并不依赖于有多少人相信某事。",
         ),
@@ -239,8 +247,8 @@ const irrelevant = topic("reading", {
       "what-is-wrong-with-it",
       ["What Is Wrong With It", "问题出在哪里"],
       [
-        "Once you suspect evidence is irrelevant, name the problem. Is it **off the question**, a true fact about something else? Does it **attack the person**, judging the speaker instead of the idea? Or does it **appeal to the crowd**, treating popularity, fame or tradition as proof? Naming the trick helps you answer it.",
-        "一旦怀疑证据无关，就要说出问题所在。它是**离开了问题**，是关于别的事情的真实事实吗？它是**攻击人身**，评判说话的人而不是观点吗？还是**诉诸大众**，把流行、名气或传统当作证据？说出这个伎俩，有助于你回应它。",
+        "Once you suspect evidence is irrelevant, name the problem. Is it **off the question**, a true fact about something else? Does it **attack the person**, judging the speaker instead of the idea? Or does it **appeal to the crowd**, treating popularity, fame or tradition as proof? Naming the trick helps you answer it.\n\n> **Watch out.** Check what the second sentence actually points to: a random side detail (*car*, *paint color*, *label*) → **off the question**; an insult at critics → **attacks the person**; numbers of fans, celebrities, or *always* → **appeals to the crowd**.",
+        "一旦怀疑证据无关，就要说出问题所在。它是**离开了问题**，是关于别的事情的真实事实吗？它是**攻击人身**，评判说话的人而不是观点吗？还是**诉诸大众**，把流行、名气或传统当作证据？说出这个伎俩，有助于你回应它。\n\n> **注意。** 看第二句到底在说什么：无关琐事（车、漆色、标签）→ **离开了问题**；贬低反对者品行 → **攻击人身**；拿众人、名人或“向来如此”当证据 → **诉诸大众**。",
       ],
       ["The claim is in the first sentence. What is wrong with the evidence that follows?", "第一句是论点。后面的证据有什么问题？"],
       `
@@ -278,22 +286,22 @@ const irrelevant = topic("reading", {
       {
         "off the question": L(
           "离开了问题",
-          "The evidence is about something that has nothing to do with whether the claim is true.",
-          "这条证据说的是与论点是否成立毫无关系的事情。",
+          "The evidence is about something that has nothing to do with whether the claim is true.\n\n**Check.** Compare the topic of sentence 2 with sentence 1: even if sentence 2 is 100% true, it gives zero reason to believe sentence 1.",
+          "这条证据说的是与论点是否成立毫无关系的事情。\n\n**检验。** 对照前后两句的话题：就算第二句完全属实，也与第一句成不成立毫无关系。",
           "The evidence does more than mention an unrelated fact.",
           "这条证据不只是提到一个无关的事实。",
         ),
         "attacks the person": L(
           "攻击人身",
-          "The evidence insults or judges the people on the other side instead of answering their reasons.",
-          "这条证据侮辱或评判对方的人，而不是回应他们的理由。",
+          "The evidence insults or judges the people on the other side instead of answering their reasons.\n\n**Check.** Notice that the second sentence targets the *critics'* habits, motives, or manners instead of addressing the claim itself.",
+          "这条证据侮辱或评判对方的人，而不是回应他们的理由。\n\n**检验。** 注意第二句把矛头对准了*反对者*的品行或动机，完全没有回答论点本身。",
           "The evidence does not judge a person's character.",
           "这条证据没有评判某个人的品行。",
         ),
         "appeals to the crowd": L(
           "诉诸大众",
-          "The evidence treats popularity, fame or long custom as proof, but many people can be wrong together.",
-          "这条证据把流行、名气或长期的习惯当作证据，但很多人可能一起犯错。",
+          "The evidence treats popularity, fame or long custom as proof, but many people can be wrong together.\n\n**Check.** Spot the crowd or fame appeal (*nearly everyone*, *thousands*, *best-selling*, *famous singer*, *always*, *poll*, *million*): popularity is not proof.",
+          "这条证据把流行、名气或长期的习惯当作证据，但很多人可能一起犯错。\n\n**检验。** 识别诉诸人多、名气或旧习的信号（如 *everyone*、*thousands*、*best-selling*、*always*、*poll*）：流行不等于正确。",
           "The evidence does not rely on what many people think or do.",
           "这条证据并不依赖于多数人的想法或做法。",
         ),
@@ -309,14 +317,18 @@ const unreliable = topic("reading", {
     "Some narrators cannot be fully trusted, because they do not understand, have something to hide or are not in their right mind; clues in the story reveal the truth.",
     "有些叙述者不能完全信任，因为他们不明白、有所隐瞒或神志不清；故事中的线索会揭示真相。",
   ],
+  intro: [
+    "When a first-person narrator insists, *'I am completely calm, calmer than anyone, and I certainly did not touch that envelope,'* the very way they speak tips us off. Reading an **unreliable narrator** means spotting why they distort the truth and reading the clues underneath their words.",
+    "当第一人称叙述者一再强调“我非常冷静，比任何人都冷静，我绝对没碰过那个信封”时，他的说话方式本身就露了马脚。读懂**不可靠的叙述者**，就是要识破他为何扭曲真相，并从字里行间的线索还原事实。",
+  ],
   after: ["contrasting-points-of-view"],
   points: [
     label(
       "why-not-trust-the-narrator",
       ["Why Not Trust the Narrator", "为什么不能信任叙述者"],
       [
-        "A first-person narrator tells us only what they see and believe. Some are **too innocent to understand**: a small child may describe a quarrel without grasping what it means. Some **have something to hide**: a narrator who did wrong may bend the story to look good. And some are **not in their right mind**: fear, illness or madness twists what they report, as in the tales of Edgar Allan Poe.",
-        "第一人称叙述者只告诉我们他们看到和相信的东西。有些叙述者**太天真，不明白真相**：小孩可能描述了一场争吵，却不懂它意味着什么。有些**有所隐瞒**：做了错事的叙述者可能歪曲故事，让自己显得好些。还有些**神志不清**：恐惧、疾病或疯狂扭曲了他们的讲述，就像埃德加·爱伦·坡的故事那样。",
+        "A first-person narrator tells us only what they see and believe. Some are **too innocent to understand**: a small child may describe a quarrel without grasping what it means. Some **have something to hide**: a narrator who did wrong may bend the story to look good. And some are **not in their right mind**: fear, illness or madness twists what they report, as in the tales of Edgar Allan Poe.\n\n> **Watch out.** Look at *what* goes wrong in the narrator's account: a childlike misreading of an adult scene → **too innocent**; slippery excuses for a misdeed → **has something to hide**; impossible sights or sounds (whispering walls, moving portraits, unheard bells) → **not in their right mind**.",
+        "第一人称叙述者只告诉我们他们看到和相信的东西。有些叙述者**太天真，不明白真相**：小孩可能描述了一场争吵，却不懂它意味着什么。有些**有所隐瞒**：做了错事的叙述者可能歪曲故事，让自己显得好些。还有些**神志不清**：恐惧、疾病或疯狂扭曲了他们的讲述，就像埃德加·爱伦·坡的故事那样。\n\n> **注意。** 看叙述究竟错在哪里：孩子般误解大人处境 → **太天真**；为自己的错事找借口 → **有所隐瞒**；看到或听到不合常理的幻觉（会说话的墙、会动的肖像、别人听不见的钟声）→ **神志不清**。",
       ],
       ["Why might this narrator not be reliable?", "这个叙述者为什么可能不可靠？"],
       `
@@ -354,22 +366,22 @@ const unreliable = topic("reading", {
       {
         "too innocent to understand": L(
           "太天真，不明白",
-          "The narrator, often a child, reports what happened honestly but misses what it means; the reader understands more.",
-          "叙述者（常常是孩子）如实讲述发生的事，却没明白它的意思；读者懂得更多。",
+          "The narrator, often a child, reports what happened honestly but misses what it means; the reader understands more.\n\n**Check.** Notice the narrator isn't lying or hallucinating—they report real details faithfully, yet draw a naive, cheerful conclusion that an older reader sees through.",
+          "叙述者（常常是孩子）如实讲述发生的事，却没明白它的意思；读者懂得更多。\n\n**检验。** 叙述者既没有撒谎也没有产生幻觉——他老实记下了细节，却得出了天真乐观的误判，读者一眼就能看穿。",
           "This narrator is not an innocent who simply misunderstands.",
           "这个叙述者并不是一个只是误解了的天真者。",
         ),
         "has something to hide": L(
           "有所隐瞒",
-          "The narrator has done wrong and bends the story to look innocent, and the excuses give the truth away.",
-          "叙述者做了错事，歪曲故事以显得无辜，而那些借口恰恰泄露了真相。",
+          "The narrator has done wrong and bends the story to look innocent, and the excuses give the truth away.\n\n**Check.** Spot the defensive dodge (*only borrowed*, *merely happened*, *certainly did not*, *more or less*, *except when*): the narrator is covering up guilt.",
+          "叙述者做了错事，歪曲故事以显得无辜，而那些借口恰恰泄露了真相。\n\n**检验。** 找出自我开脱的托词（如 *only borrowed*、*merely happened*、*certainly did not*）：叙述者正极力掩盖过错。",
           "This narrator is not defending their own wrongdoing.",
           "这个叙述者并没有为自己的过错辩解。",
         ),
         "not in their right mind": L(
           "神志不清",
-          "Fear, illness or madness makes the narrator see or hear things that are probably not there.",
-          "恐惧、疾病或疯狂让叙述者看到或听到可能并不存在的东西。",
+          "Fear, illness or madness makes the narrator see or hear things that are probably not there.\n\n**Check.** Notice the impossible perception (hearing a heartbeat through a wall, portraits whispering, shadows speaking, bells no one else hears): illness, panic, or madness is distorting reality.",
+          "恐惧、疾病或疯狂让叙述者看到或听到可能并不存在的东西。\n\n**检验。** 注意不合常理的感知（隔墙听见心跳、肖像低语、只有自己听见的敲击声）：疾病、恐慌或疯狂正在扭曲他的感知。",
           "This narrator's mind is not disturbed in this way.",
           "这个叙述者的神志并没有这样被扰乱。",
         ),
@@ -379,8 +391,8 @@ const unreliable = topic("reading", {
       "the-clue-to-the-truth",
       ["The Clue to the Truth", "揭示真相的线索"],
       [
-        "Readers catch an unreliable narrator through clues the writer plants. The narrator may **contradict themselves**, saying one thing and later another. **Others react differently**: other characters look frightened, laugh or say the opposite, which shows the narrator is wrong. Or the narrator **protests too much**, insisting again and again that they are calm, sane or innocent, which makes us doubt them.",
-        "读者通过作者埋下的线索识破不可靠的叙述者。叙述者可能**自相矛盾**，前面说一件事，后面又说另一件。**其他人的反应不同**：别的人物显得害怕、发笑或说出相反的话，表明叙述者错了。或者叙述者**极力辩白**，一再坚称自己很冷静、神志正常或清白，这反而让我们怀疑。",
+        "Readers catch an unreliable narrator through clues the writer plants. The narrator may **contradict themselves**, saying one thing and later another. **Others react differently**: other characters look frightened, laugh or say the opposite, which shows the narrator is wrong. Or the narrator **protests too much**, insisting again and again that they are calm, sane or innocent, which makes us doubt them.\n\n> **Watch out.** Check who reveals the crack in the story: two clashing statements by the narrator → **contradicts themself**; listeners' faces, laughter, or actions → **others react differently**; frantic repetition of one denial → **protests too much**.",
+        "读者通过作者埋下的线索识破不可靠的叙述者。叙述者可能**自相矛盾**，前面说一件事，后面又说另一件。**其他人的反应不同**：别的人物显得害怕、发笑或说出相反的话，表明叙述者错了。或者叙述者**极力辩白**，一再坚称自己很冷静、神志正常或清白，这反而让我们怀疑。\n\n> **注意。** 看破绽是怎么露出来的：前后两句自己打脸 → **自相矛盾**；旁人的神色或举动拆台 → **其他人的反应不同**；反复赌咒发誓否认同一件事 → **极力辩白**。",
       ],
       ["What clue shows that the narrator may not be reliable?", "什么线索表明叙述者可能不可靠？"],
       `
@@ -418,22 +430,22 @@ const unreliable = topic("reading", {
       {
         "contradicts themself": L(
           "自相矛盾",
-          "The narrator says one thing and later lets slip the opposite, so at least one of the two statements is false.",
-          "叙述者先说一件事，后来又无意中说出相反的话，所以至少有一句是假的。",
+          "The narrator says one thing and later lets slip the opposite, so at least one of the two statements is false.\n\n**Check.** Put the narrator's first quote beside the second quote: both cannot be true at once.",
+          "叙述者先说一件事，后来又无意中说出相反的话，所以至少有一句是假的。\n\n**检验。** 把叙述者前后两句原话并排对照：两句话互相抵触，不可能同时为真。",
           "The narrator does not say two things that clash.",
           "叙述者并没有说出两句相互冲突的话。",
         ),
         "others react differently": L(
           "其他人的反应不同",
-          "Other people's actions show the opposite of what the narrator claims, so we trust what we see over what we are told.",
-          "其他人的行为表明情况与叙述者所说的相反，所以我们相信看到的，而不是被告知的。",
+          "Other people's actions show the opposite of what the narrator claims, so we trust what we see over what we are told.\n\n**Check.** Contrast the narrator's boast with what the other characters physically do (leaving early, shutting windows, pushing plates away, shaking heads).",
+          "其他人的行为表明情况与叙述者所说的相反，所以我们相信看到的，而不是被告知的。\n\n**检验。** 把叙述者的自夸与旁人的实际反应（提前离场、关窗、推开盘子、摇头）对照，真相立刻暴露。",
           "No other character's reaction is set against the narrator's words here.",
           "这里没有用其他人物的反应来对照叙述者的话。",
         ),
         "protests too much": L(
           "极力辩白",
-          "The narrator repeats a denial over and over, and the very insistence makes us suspect the opposite.",
-          "叙述者一再重复否认，正是这种坚持让我们怀疑事实恰恰相反。",
+          "The narrator repeats a denial over and over, and the very insistence makes us suspect the opposite.\n\n**Check.** Notice the repeated words in a single speech (*calm ... calm*, *innocent ... innocent*, *honest ... honest*, *dearly ... dearly*): over-insisting raises doubt.",
+          "叙述者一再重复否认，正是这种坚持让我们怀疑事实恰恰相反。\n\n**检验。** 注意话里反复出现的同一个词（如接连强调“冷静”“清白”“诚实”）：此地无银式的重复反而让人起疑。",
           "The narrator does not keep repeating a denial.",
           "叙述者并没有一再重复否认。",
         ),
@@ -449,14 +461,18 @@ const gothic = topic("reading", {
     "Gothic tales build dread with gloomy settings, hints of the supernatural and buried secrets, using sensory detail, omens and delay.",
     "哥特故事用阴森的环境、超自然的暗示和隐藏的秘密营造恐惧，手法包括感官细节、预兆和延宕。",
   ],
+  intro: [
+    "A ruined abbey lashed by rain, a cold hand touching a shoulder in an empty chapel, and a locked wing nobody will discuss — Gothic fiction pairs three signature ingredients with sensory detail, omens, and slow delay to keep readers on edge.",
+    "风雨拍打的废弃修道院、空教堂里搭上肩膀的冰冷手掌、无人敢提的上锁西翼——哥特小说正是把这三种标志性元素与感官细节、预兆和刻意延宕结合起来，让读者步步心惊。",
+  ],
   after: ["tone-and-mood", "how-setting-shapes-a-story"],
   points: [
     label(
       "the-gothic-element",
       ["The Gothic Element", "哥特元素"],
       [
-        "Gothic fiction, from the 1700s to Poe and beyond, is built from a few familiar elements. A **gloomy setting**: a crumbling castle, a crypt, a storm on a moor. **The supernatural**, or the hint of it: ghosts, curses, a portrait that seems to move. And **a dark secret** from the past: a hidden crime, a locked room, a family's buried shame that slowly comes to light.",
-        "哥特小说从十八世纪到坡乃至以后，由几种熟悉的元素构成。**阴森的环境**：摇摇欲坠的城堡、墓穴、荒原上的暴风雨。**超自然**或对它的暗示：鬼魂、诅咒、仿佛会动的肖像。还有来自过去的**黑暗秘密**：隐藏的罪行、锁着的房间、慢慢暴露出来的家族耻辱。",
+        "Gothic fiction, from the 1700s to Poe and beyond, is built from a few familiar elements. A **gloomy setting**: a crumbling castle, a crypt, a storm on a moor. **The supernatural**, or the hint of it: ghosts, curses, a portrait that seems to move. And **a dark secret** from the past: a hidden crime, a locked room, a family's buried shame that slowly comes to light.\n\n> **Watch out.** Separate **a gloomy setting** from **a dark secret**: cracked stone, fog, and storms describe the *place*; a locked wing, burned diary, or scratched-out name hints at a *hidden human past*.",
+        "哥特小说从十八世纪到坡乃至以后，由几种熟悉的元素构成。**阴森的环境**：摇摇欲坠的城堡、墓穴、荒原上的暴风雨。**超自然**或对它的暗示：鬼魂、诅咒、仿佛会动的肖像。还有来自过去的**黑暗秘密**：隐藏的罪行、锁着的房间、慢慢暴露出来的家族耻辱。\n\n> **注意。** 分清**阴森的环境**和**黑暗秘密**：破败建筑、大雾和雷雨描写的是*环境本身*；上锁的房间、烧毁的日记或被划掉的名字指向的则是*被掩盖的往事*。",
       ],
       ["Which Gothic element does this detail mainly show?", "这个细节主要体现了哪种哥特元素？"],
       `
@@ -494,22 +510,22 @@ const gothic = topic("reading", {
       {
         "a gloomy setting": L(
           "阴森的环境",
-          "The detail paints a dark, decaying or stormy place that fills the story with gloom.",
-          "这个细节描绘了黑暗、破败或风雨交加的地方，让故事充满阴郁。",
+          "The detail paints a dark, decaying or stormy place that fills the story with gloom.\n\n**Check.** Notice that nothing supernatural happens and no hidden crime is mentioned—the dread comes purely from the decaying, dark, or storm-beaten place.",
+          "这个细节描绘了黑暗、破败或风雨交加的地方，让故事充满阴郁。\n\n**检验。** 这里没有超自然异象，也没提到隐秘罪行——压抑感完全来自破败、阴暗或风雨交加的场景本身。",
           "The detail is not mainly a description of a gloomy place.",
           "这个细节主要不是对阴森环境的描写。",
         ),
         "the supernatural": L(
           "超自然",
-          "The detail hints at something beyond nature, such as a ghost, a curse or an object that moves by itself.",
-          "这个细节暗示了超自然的东西，如鬼魂、诅咒或自己会动的物体。",
+          "The detail hints at something beyond nature, such as a ghost, a curse or an object that moves by itself.\n\n**Check.** Ask *could this happen by ordinary physical laws?* A moving portrait, phantom voice, or curse points straight to the supernatural.",
+          "这个细节暗示了超自然的东西，如鬼魂、诅咒或自己会动的物体。\n\n**检验。** 问一句“这符合日常物理常理吗？”：会转眼的肖像、空井里的呼唤或家族诅咒都直接指向超自然。",
           "Nothing beyond nature is suggested by this detail.",
           "这个细节没有暗示任何超自然的东西。",
         ),
         "a dark secret": L(
           "黑暗秘密",
-          "The detail points to something hidden from the past, such as a crime or a shame that people refuse to speak of.",
-          "这个细节指向过去被隐藏的事情，如人们不愿提起的罪行或耻辱。",
+          "The detail points to something hidden from the past, such as a crime or a shame that people refuse to speak of.\n\n**Check.** Spot the clue of deliberate concealment (locked wing, hidden key, burned diary, altered will, silence about someone): people are hiding a past truth.",
+          "这个细节指向过去被隐藏的事情，如人们不愿提起的罪行或耻辱。\n\n**检验。** 找出刻意隐瞒的线索（上锁的房间、藏匿的钥匙、焚毁的日记、讳莫如深的沉默）：有人在掩盖过去的真相。",
           "The detail does not point to a hidden past.",
           "这个细节没有指向被隐藏的过去。",
         ),
@@ -519,8 +535,8 @@ const gothic = topic("reading", {
       "how-the-writer-builds-dread",
       ["How the Writer Builds Dread", "作者如何营造恐惧"],
       [
-        "Gothic writers do not just name frightening things; they make us feel them. **Sensory detail** puts us in the scene through sound, smell and touch: *the stink of wet stone*. An **omen** is a sign that something bad will come: a raven on the gate, a cracked mirror. And **delay** holds back the reveal, making us wait: the hand on the doorknob, the slow creak, the pause before the door swings open.",
-        "哥特作家不只是说出可怕的东西，而是让我们感受到它们。**感官细节**通过声音、气味和触觉把我们带入场景：*the stink of wet stone*。**预兆**是坏事将至的征兆：大门上的乌鸦、裂开的镜子。**延宕**推迟揭示真相，让我们等待：门把上的手、缓慢的吱嘎声、门打开之前的停顿。",
+        "Gothic writers do not just name frightening things; they make us feel them. **Sensory detail** puts us in the scene through sound, smell and touch: *the stink of wet stone*. An **omen** is a sign that something bad will come: a raven on the gate, a cracked mirror. And **delay** holds back the reveal, making us wait: the hand on the doorknob, the slow creak, the pause before the door swings open.\n\n> **Watch out.** Check the mechanism of dread: physical sound/smell/touch/taste → **sensory detail**; a warning sign or eerie coincidence → **an omen**; stretching out time with pauses, counting, or inch-by-inch movement → **delay**.",
+        "哥特作家不只是说出可怕的东西，而是让我们感受到它们。**感官细节**通过声音、气味和触觉把我们带入场景：*the stink of wet stone*。**预兆**是坏事将至的征兆：大门上的乌鸦、裂开的镜子。**延宕**推迟揭示真相，让我们等待：门把上的手、缓慢的吱嘎声、门打开之前的停顿。\n\n> **注意。** 看恐惧是怎么制造出来的：声音、气味、触觉或味觉描写 → **感官细节**；不祥征兆或诡异巧合 → **预兆**；用停顿、数步或一寸寸放慢动作来吊胃口 → **延宕**。",
       ],
       ["How does this sentence mainly build dread?", "这个句子主要如何营造恐惧？"],
       `
@@ -558,22 +574,22 @@ const gothic = topic("reading", {
       {
         "sensory detail": L(
           "感官细节",
-          "The sentence makes us hear, smell, touch or taste the scene, so the fear feels close and real.",
-          "这个句子让我们听到、闻到、摸到或尝到场景，所以恐惧显得真切而逼近。",
+          "The sentence makes us hear, smell, touch or taste the scene, so the fear feels close and real.\n\n**Check.** Name the exact sense triggered (smell of rot, slimy stone, moaning wind, icy floor, metallic taste): physical sensation carries the dread.",
+          "这个句子让我们听到、闻到、摸到或尝到场景，所以恐惧显得真切而逼近。\n\n**检验。** 指认句中调动的感官（腐臭气味、湿滑石块、呜咽风声、刺骨寒意）：具体感官体验直接制造了恐惧。",
           "The sentence does not mainly work through the senses.",
           "这个句子主要不是通过感官起作用的。",
         ),
         "an omen": L(
           "预兆",
-          "The sentence shows a sign, often from nature, that warns something bad is coming.",
-          "这个句子显示了一个征兆（常常来自自然），预示坏事即将到来。",
+          "The sentence shows a sign, often from nature, that warns something bad is coming.\n\n**Check.** Notice the eerie sign (raven, cracked mirror, clock striking thirteen, black roses, sudden silence): it foretells disaster rather than describing a texture or stalling a reveal.",
+          "这个句子显示了一个征兆（常常来自自然），预示坏事即将到来。\n\n**检验。** 注意其中的不祥之兆（乌鸦、裂镜、敲响十三下的钟、突然安静的鸟群）：它在预告灾祸将至。",
           "The sentence shows no warning sign of what is to come.",
           "这个句子没有显示预示未来的征兆。",
         ),
         delay: L(
           "延宕",
-          "The sentence slows the action and holds back the reveal, so we must wait in suspense.",
-          "这个句子放慢了动作、推迟了揭示，让我们在悬念中等待。",
+          "The sentence slows the action and holds back the reveal, so we must wait in suspense.\n\n**Check.** Trace the pacing: pauses, stops, counting, or inch-by-inch steps stretch out the moment right before we see what is hidden.",
+          "这个句子放慢了动作、推迟了揭示，让我们在悬念中等待。\n\n**检验。** 看节奏变化：停顿、数步或一寸寸推进把揭示前的那一刻拉长，吊足胃口。",
           "The sentence does not hold back a reveal.",
           "这个句子没有推迟揭示。",
         ),
@@ -589,14 +605,18 @@ const shakespeareScene = topic("reading", {
     "Shakespeare's characters speak to each other in dialogue, to themselves in soliloquies and to the audience in asides; his lines can be put into plain modern English.",
     "莎士比亚的人物在对话中彼此交谈，在独白中自言自语，在旁白中对观众说话；他的台词可以转换成平实的现代英语。",
   ],
+  intro: [
+    "In a Shakespeare play, knowing *who* can hear a speech changes everything: an actor alone onstage bares their mind in a **soliloquy**, while a whispered **aside** lets the audience in on a plot right under another character's nose.",
+    "读莎士比亚戏剧时，先弄清“谁听得见这段话”至关重要：独自在台上吐露心声是**独白**，当着别人面悄悄对观众交底则是**旁白**；再把古词和倒装还原，台词就立刻明朗了。",
+  ],
   after: ["early-modern-english-words"],
   points: [
     label(
       "who-is-the-speech-for",
       ["Who Is the Speech For", "这段台词是说给谁听的"],
       [
-        "In a play, it matters who is meant to hear a speech. In **dialogue**, characters speak to each other. In a **soliloquy**, a character alone on stage thinks aloud, so we hear their true thoughts: Hamlet's *To be, or not to be*. In an **aside**, a character speaks a quick line to the audience that the others on stage do not hear, often to share a secret or a joke.",
-        "在戏剧中，台词是说给谁听的很重要。在**对话**中，人物彼此交谈。在**独白**中，人物独自在台上自言自语，所以我们听到了他的真实想法：哈姆雷特的 *To be, or not to be*。在**旁白**中，人物对观众说一句简短的话，台上其他人听不见，常用来透露秘密或开玩笑。",
+        "In a play, it matters who is meant to hear a speech. In **dialogue**, characters speak to each other. In a **soliloquy**, a character alone on stage thinks aloud, so we hear their true thoughts: Hamlet's *To be, or not to be*. In an **aside**, a character speaks a quick line to the audience that the others on stage do not hear, often to share a secret or a joke.\n\n> **Watch out.** Check who else is onstage: **alone** onstage speaking inner thoughts = **a soliloquy**; **others present** who do *not* hear the line = **an aside**; characters talking back and forth = **dialogue**.",
+        "在戏剧中，台词是说给谁听的很重要。在**对话**中，人物彼此交谈。在**独白**中，人物独自在台上自言自语，所以我们听到了他的真实想法：哈姆雷特的 *To be, or not to be*。在**旁白**中，人物对观众说一句简短的话，台上其他人听不见，常用来透露秘密或开玩笑。\n\n> **注意。** 看台上还有没有其他人：**独自一人**自言自语是**独白**；**别人在场却听不见**是对观众说的**旁白**；人物彼此交谈则是**对话**。",
       ],
       ["What kind of speech is this?", "这是哪一种台词？"],
       `
@@ -634,22 +654,22 @@ const shakespeareScene = topic("reading", {
       {
         dialogue: L(
           "对话",
-          "The characters speak to and answer each other, and all of them hear what is said.",
-          "人物彼此交谈、互相回应，所说的话他们都听得见。",
+          "The characters speak to and answer each other, and all of them hear what is said.\n\n**Check.** Confirm that the characters onstage are directly addressing one another (or an onstage crowd) with no secret line aimed only at the theater audience.",
+          "人物彼此交谈、互相回应，所说的话他们都听得见。\n\n**检验。** 确认台上人物是在彼此交谈（或对剧中众人发言），没有背着别人偷偷对剧场观众说话。",
           "The speech is not an exchange that the characters all hear.",
           "这段台词不是人物都能听见的交谈。",
         ),
         "a soliloquy": L(
           "独白",
-          "A character alone on stage thinks aloud, letting the audience hear their private thoughts.",
-          "人物独自在台上自言自语，让观众听到他的内心想法。",
+          "A character alone on stage thinks aloud, letting the audience hear their private thoughts.\n\n**Check.** Spot the cue *alone*: no other character is onstage to hear, so the speech is a soliloquy, not an aside.",
+          "人物独自在台上自言自语，让观众听到他的内心想法。\n\n**检验。** 抓住关键词 *alone*：台上没有其他人物在场，所以这是独白，不是旁白。",
           "The character is not alone on stage thinking aloud.",
           "人物并不是独自在台上自言自语。",
         ),
         "an aside": L(
           "旁白",
-          "A character speaks a short line to the audience while others are on stage, and the others do not hear it.",
-          "人物在其他人在场时对观众说一句简短的话，其他人听不见。",
+          "A character speaks a short line to the audience while others are on stage, and the others do not hear it.\n\n**Check.** Notice both conditions: other characters are present onstage, yet this remark is directed to the audience unheard by them.",
+          "人物在其他人在场时对观众说一句简短的话，其他人听不见。\n\n**检验。** 同时满足两条：台上还有其他人物，但这句话是背着他们说给观众听的。",
           "This is not a quick line to the audience that others on stage cannot hear.",
           "这不是台上其他人听不见的、对观众说的简短台词。",
         ),
@@ -659,8 +679,8 @@ const shakespeareScene = topic("reading", {
       "the-line-in-plain-english",
       ["The Line in Plain English", "用平实的英语说出台词"],
       [
-        "To read Shakespeare, turn each line into plain modern English. Watch for the old words (*thou*, *art*, *wherefore*), the inverted word order (*Sweet are the uses of adversity*) and the images. *Wherefore art thou Romeo?* does not ask where Romeo is; it asks **why** he must be Romeo, a Montague. Read the whole sentence, put the subject first, then say it as you would today.",
-        "读莎士比亚时，要把每行台词转换成平实的现代英语。注意古词（*thou*、*art*、*wherefore*）、倒装语序（*Sweet are the uses of adversity*）和意象。*Wherefore art thou Romeo?* 不是问罗密欧在哪里，而是问他**为什么**偏偏是罗密欧，一个蒙太古家的人。读完整句话，把主语放在前面，再用今天的说法说出来。",
+        "To read Shakespeare, turn each line into plain modern English. Watch for the old words (*thou*, *art*, *wherefore*), the inverted word order (*Sweet are the uses of adversity*) and the images. *Wherefore art thou Romeo?* does not ask where Romeo is; it asks **why** he must be Romeo, a Montague. Read the whole sentence, put the subject first, then say it as you would today.\n\n> **Watch out.** Do not translate Shakespeare's metaphors or archaic words literally—*lend me your ears* asks for attention (not physical ears), and *wherefore* means *why* (not *where*).",
+        "读莎士比亚时，要把每行台词转换成平实的现代英语。注意古词（*thou*、*art*、*wherefore*）、倒装语序（*Sweet are the uses of adversity*）和意象。*Wherefore art thou Romeo?* 不是问罗密欧在哪里，而是问他**为什么**偏偏是罗密欧，一个蒙太古家的人。读完整句话，把主语放在前面，再用今天的说法说出来。\n\n> **注意。** 不要把莎士比亚的比喻和古词按字面硬译——*lend me your ears* 是请大家倾听（不是借耳朵），*wherefore* 是“为什么”（不是“在哪里”）。",
       ],
       ["What does this line mean in plain English?", "这行台词用平实的英语是什么意思？"],
       rival(
@@ -698,7 +718,10 @@ const shakespeareScene = topic("reading", {
         `,
         1,
       ),
-      (right) => [`In plain English: **${right}**`, `用平实的英语说：**${right}**`],
+      (right) => [
+        `In plain English: **${right}**\n\n**Check.** Decode any archaic word or metaphor in the original line and reread the whole thought: **${right}** captures the speaker's figurative point without falling into a literal misreading.`,
+        `用平实的英语说：**${right}**\n\n**检验。** 逐个解开原台词里的古词或比喻再重读整句：**${right}** 准确抓住了说话人的真正意思，没有按字面误解。`,
+      ],
       [
         [
           "*{wrong}* misreads the line, taking an old word or image too literally.",
@@ -717,14 +740,18 @@ const production = topic("reading", {
     "A production of a play makes choices of set, acting and script; comparing it with the text shows what stays faithful and what is changed or added.",
     "一部戏的演出要在布景、表演和剧本上做出选择；把它与剧本比较，可以看出哪些忠于原作，哪些被改动或增添。",
   ],
+  intro: [
+    "Two directors staging the same balcony scene can produce two completely different moods — one with candlelight and whispers, another with neon fire escapes and shouting. Comparing a production to its script separates set and lighting, acting, and script changes, and tracks what is kept, altered, or newly invented.",
+    "两位导演排演同一场阳台戏，可以演出截然不同的氛围——一场用烛光与耳语，另一场用霓虹防火梯与喊叫。比较演出与剧本，就是要分清布景灯光、表演选择和剧本改动，并辨明哪些忠于原作、哪些删改或新增。",
+  ],
   after: ["parts-of-a-play", "comparing-texts-on-a-topic"],
   points: [
     label(
       "what-kind-of-choice",
       ["What Kind of Choice", "哪一种选择"],
       [
-        "A script gives the words, but a production must decide the rest. Some choices are about **set and lighting**: where and when the scene seems to take place, and how it looks. Some are **acting choices**: how an actor speaks, moves and reacts. And some are **changes to the script**: lines cut, moved or rewritten by the director.",
-        "剧本给出台词，但演出必须决定其余的一切。有些选择关于**布景和灯光**：场景似乎发生在哪里、什么时候，看起来是什么样子。有些是**表演选择**：演员怎样说话、动作和反应。还有些是**对剧本的改动**：导演删去、移动或改写台词。",
+        "A script gives the words, but a production must decide the rest. Some choices are about **set and lighting**: where and when the scene seems to take place, and how it looks. Some are **acting choices**: how an actor speaks, moves and reacts. And some are **changes to the script**: lines cut, moved or rewritten by the director.\n\n> **Watch out.** Check who or what changes: stage space, props, fog, or light → **set and lighting**; an actor's voice, pause, gesture, or expression → **an acting choice**; cutting, moving, reassigning, or rewriting lines → **a change to the script**.",
+        "剧本给出台词，但演出必须决定其余的一切。有些选择关于**布景和灯光**：场景似乎发生在哪里、什么时候，看起来是什么样子。有些是**表演选择**：演员怎样说话、动作和反应。还有些是**对剧本的改动**：导演删去、移动或改写台词。\n\n> **注意。** 看改动的对象：舞台空间、道具、雾气或灯光 → **布景和灯光**；演员的语气、停顿、动作或表情 → **表演选择**；删减、挪动、换人说或改写台词 → **对剧本的改动**。",
       ],
       ["What kind of production choice is this?", "这是哪一种演出选择？"],
       `
@@ -762,22 +789,22 @@ const production = topic("reading", {
       {
         "set and lighting": L(
           "布景和灯光",
-          "The choice is about how the stage looks: the place, the time, the light and the objects on it.",
-          "这个选择关于舞台的样子：地点、时间、灯光和台上的物件。",
+          "The choice is about how the stage looks: the place, the time, the light and the objects on it.\n\n**Check.** Notice that no lines are altered and no actor's delivery is described—the decision shapes the visual environment on stage.",
+          "这个选择关于舞台的样子：地点、时间、灯光和台上的物件。\n\n**检验。** 这里既没有改台词，也没有说演员怎么念——它塑造的是舞台上的视觉环境与光影。",
           "The choice is not about how the stage looks.",
           "这个选择与舞台的样子无关。",
         ),
         "an acting choice": L(
           "表演选择",
-          "The choice is about how an actor speaks, moves or reacts while saying the script's words.",
-          "这个选择关于演员在说剧本台词时怎样说话、动作或反应。",
+          "The choice is about how an actor speaks, moves or reacts while saying the script's words.\n\n**Check.** Focus on the performer: whispers, pauses, smiles, weeping, or movement happen in the actor's body and voice while keeping the script's words.",
+          "这个选择关于演员在说剧本台词时怎样说话、动作或反应。\n\n**检验。** 聚焦演员本人：低语、停顿、微笑、落泪或走位都是演员用声音和形体做出的诠释。",
           "The choice is not about how an actor performs.",
           "这个选择与演员的表演无关。",
         ),
         "a change to the script": L(
           "对剧本的改动",
-          "The choice changes the words themselves: lines are cut, moved, given to others or rewritten.",
-          "这个选择改动了台词本身：删去、移动、交给别人说或改写。",
+          "The choice changes the words themselves: lines are cut, moved, given to others or rewritten.\n\n**Check.** Compare the spoken text with the printed play: lines, scenes, or speakers have been cut, reordered, reassigned, or rewritten.",
+          "这个选择改动了台词本身：删去、移动、交给别人说或改写。\n\n**检验。** 对照演出文本与原剧本：台词、场次或说话人被删减、调序、换人或改写了。",
           "The choice leaves the script's words as they are.",
           "这个选择没有改动剧本的台词。",
         ),
@@ -787,8 +814,8 @@ const production = topic("reading", {
       "faithful-or-changed",
       ["Faithful or Changed", "忠实还是改动"],
       [
-        "Comparing a production with the script, ask how close it stays. Some choices are **faithful to the script**: they do what the stage directions and lines call for. Some **cut or change** what the script has. Others **add** something the script does not have at all: a silent scene, a new character, a song or a final image the playwright never wrote.",
-        "把演出与剧本比较时，要问它与剧本有多接近。有些选择**忠于剧本**：按照舞台说明和台词的要求去做。有些**删减或改动**了剧本原有的内容。还有些**增添**了剧本根本没有的东西：一段无声的场面、一个新人物、一首歌或剧作家从未写过的结尾画面。",
+        "Comparing a production with the script, ask how close it stays. Some choices are **faithful to the script**: they do what the stage directions and lines call for. Some **cut or change** what the script has. Others **add** something the script does not have at all: a silent scene, a new character, a song or a final image the playwright never wrote.\n\n> **Watch out.** Separate **cuts or changes it** from **adds something new**: altering or trimming something already in the script is a cut/change; inventing a brand-new scene, character, song, or video not in the script at all is an addition.",
+        "把演出与剧本比较时，要问它与剧本有多接近。有些选择**忠于剧本**：按照舞台说明和台词的要求去做。有些**删减或改动**了剧本原有的内容。还有些**增添**了剧本根本没有的东西：一段无声的场面、一个新人物、一首歌或剧作家从未写过的结尾画面。\n\n> **注意。** 分清**删减或改动**和**增添新内容**：修改或删掉剧本原有元素属于删改；凭空加入剧本里根本没有的场次、人物、歌曲或视频则属于增添。",
       ],
       ["How does this production choice compare with the script?", "这个演出选择与剧本相比如何？"],
       `
@@ -826,22 +853,22 @@ const production = topic("reading", {
       {
         "faithful to the script": L(
           "忠于剧本",
-          "The production does what the script's words and stage directions call for.",
-          "演出按照剧本的台词和舞台说明的要求去做。",
+          "The production does what the script's words and stage directions call for.\n\n**Check.** Match the first half (the script) with the second half (the staging): every element called for in the text appears just as written.",
+          "演出按照剧本的台词和舞台说明的要求去做。\n\n**检验。** 对照前半句的剧本要求与后半句的实际演出：两者完全一致，没有删改或另起炉灶。",
           "The production does not simply do what the script calls for.",
           "演出并不是简单地按剧本要求去做。",
         ),
         "cuts or changes it": L(
           "删减或改动",
-          "The production removes or alters something that the script has: words, characters, events or setting.",
-          "演出删去或改动了剧本原有的东西：台词、人物、情节或背景。",
+          "The production removes or alters something that the script has: words, characters, events or setting.\n\n**Check.** Spot what the script originally specified and how the production trimmed, replaced, or shifted it.",
+          "演出删去或改动了剧本原有的东西：台词、人物、情节或背景。\n\n**检验。** 找到剧本原本写定的内容，再看演出把它删短、替换或改成了别样。",
           "The production does not cut or alter what the script has.",
           "演出没有删减或改动剧本原有的内容。",
         ),
         "adds something new": L(
           "增添新内容",
-          "The production adds something the script does not have at all, such as a scene, character or song.",
-          "演出增添了剧本根本没有的东西，如一场戏、一个人物或一首歌。",
+          "The production adds something the script does not have at all, such as a scene, character or song.\n\n**Check.** Notice that nothing from the script is being replaced here—an entirely new scene, figure, song, or opening image has been invented.",
+          "演出增添了剧本根本没有的东西，如一场戏、一个人物或一首歌。\n\n**检验。** 这里不是替换剧本原有的元素，而是全新加入了一段原剧本根本不存在的场面、人物或歌曲。",
           "The production adds nothing that the script lacks.",
           "演出没有增添剧本所没有的东西。",
         ),
@@ -857,14 +884,18 @@ const oralHistory = topic("reading", {
     "An oral history records a person's spoken memories; it is strong on what an experience felt like, but dates, numbers and things the speaker only heard should be checked.",
     "口述历史记录一个人口头讲述的回忆；它擅长表现亲身经历的感受，但日期、数字和讲述者道听途说的事需要核实。",
   ],
+  intro: [
+    "When a ninety-year-old recalls *'I gripped my brother's hand in the cold hall'* alongside *'There were 12,000 people on our block'* and *'Neighbors said the landlord started the fire,'* a historian reads each line differently. Oral history preserves lived feelings while requiring records to verify numbers and filter out rumor.",
+    "当九十岁老人回忆“我在冰冷大厅里攥紧弟弟的手”，又说“我们街区有一万两千人”和“邻居说火是房东放的”，历史学家对这三句话的信任度截然不同。口述历史最珍贵的是亲身感受，而数字要查档案、传闻则要警惕。",
+  ],
   after: ["conflicting-accounts-of-one-event"],
   points: [
     label(
       "whose-words-are-these",
       ["Whose Words Are These", "这是谁的话"],
       [
-        "An oral history is usually printed as an interview. Most of it is **the speaker's memory**, in their own words. It also includes **the interviewer's question**, usually in a different type or marked *Q*. And the historian who edits it often adds **an editor's note**, in square brackets or a footnote, to explain a name, a place or a date the speaker mentions.",
-        "口述历史通常以访谈的形式印出。大部分是**讲述者的回忆**，用他们自己的话说。其中也有**采访者的提问**，通常用不同的字体或标为 *Q*。编辑访谈的历史学家还常常加上**编者注**，放在方括号或脚注里，解释讲述者提到的名字、地方或日期。",
+        "An oral history is usually printed as an interview. Most of it is **the speaker's memory**, in their own words. It also includes **the interviewer's question**, usually in a different type or marked *Q*. And the historian who edits it often adds **an editor's note**, in square brackets or a footnote, to explain a name, a place or a date the speaker mentions.\n\n> **Watch out.** Check the formatting cues first: `Q:` marks **the interviewer's question**, `[...]` marks **an editor's note**, and unmarked first-person recollection is **the speaker's memory**.",
+        "口述历史通常以访谈的形式印出。大部分是**讲述者的回忆**，用他们自己的话说。其中也有**采访者的提问**，通常用不同的字体或标为 *Q*。编辑访谈的历史学家还常常加上**编者注**，放在方括号或脚注里，解释讲述者提到的名字、地方或日期。\n\n> **注意。** 先看版式标记：`Q:` 开头的是**采访者的提问**，方括号 `[...]` 里的是**编者注**，没有标记的第一人称追忆则是**讲述者的回忆**。",
       ],
       ["In this oral history, whose words are these?", "在这份口述历史中，这是谁的话？"],
       `
@@ -905,22 +936,22 @@ const oralHistory = topic("reading", {
       {
         "the speaker's memory": L(
           "讲述者的回忆",
-          "These are the speaker's own words about what they lived through, often full of personal detail.",
-          "这是讲述者用自己的话讲述的亲身经历，常常充满个人细节。",
+          "These are the speaker's own words about what they lived through, often full of personal detail.\n\n**Check.** Notice the first-person voice (*I*, *we*, *my*) and the absence of `Q:` or square brackets—this is the interviewee speaking directly.",
+          "这是讲述者用自己的话讲述的亲身经历，常常充满个人细节。\n\n**检验。** 注意第一人称视角（*I*、*we*、*my*），且既无 `Q:` 也无方括号——这是受访者本人的原话。",
           "These words are not the speaker's own memories.",
           "这些话不是讲述者自己的回忆。",
         ),
         "the interviewer's question": L(
           "采访者的提问",
-          "The line, marked *Q*, is a question that prompts the speaker to remember.",
-          "这一行标为 *Q*，是引导讲述者回忆的问题。",
+          "The line, marked *Q*, is a question that prompts the speaker to remember.\n\n**Check.** Spot both the `Q:` label and the question mark prompting the interviewee for a memory.",
+          "这一行标为 *Q*，是引导讲述者回忆的问题。\n\n**检验。** 看开头的 `Q:` 标记和句末问号，它正是在向受访者发问。",
           "This line is not a question from the interviewer.",
           "这一行不是采访者的提问。",
         ),
         "an editor's note": L(
           "编者注",
-          "The words in square brackets were added by the historian to explain a name, place or date.",
-          "方括号中的话是历史学家加上的，用来解释名字、地方或日期。",
+          "The words in square brackets were added by the historian to explain a name, place or date.\n\n**Check.** Spot the enclosing `[...]` and the third-person historical context (*The speaker is referring to...*, dates, definitions) supplied by the editor.",
+          "方括号中的话是历史学家加上的，用来解释名字、地方或日期。\n\n**检验。** 看外层的 `[...]` 和第三人称的历史背景说明，这是编者补充的注释。",
           "These words are not a note added by the editor.",
           "这些话不是编者加的注释。",
         ),
@@ -930,8 +961,8 @@ const oralHistory = topic("reading", {
       "how-far-to-trust-it",
       ["How Far to Trust It", "可以相信到什么程度"],
       [
-        "Oral histories are precious because they keep what records leave out: what it **felt like** to live through an event. A speaker's own feelings and experiences can be trusted as their memory. But **exact dates and numbers**, recalled decades later, should be checked against records. And things the speaker did not see but **only heard about** from others are hearsay, the weakest kind of evidence.",
-        "口述历史之所以珍贵，是因为它保留了记录所遗漏的东西：亲身经历一件事**是什么感受**。讲述者自己的感受和经历可以当作他的回忆来相信。但几十年后回忆起的**确切日期和数字**，应该与记录核对。讲述者没有亲眼看见、**只是听别人说**的事是传闻，是最弱的证据。",
+        "Oral histories are precious because they keep what records leave out: what it **felt like** to live through an event. A speaker's own feelings and experiences can be trusted as their memory. But **exact dates and numbers**, recalled decades later, should be checked against records. And things the speaker did not see but **only heard about** from others are hearsay, the weakest kind of evidence.\n\n> **Watch out.** Check the source of the statement: personal feelings (*I was frightened*, *I felt proud*) → **trust it as experience**; specific dates, counts, or wages → **check it against records**; secondhand cues (*People said*, *My uncle told me*, *Rumor had it*) → **hearsay**.",
+        "口述历史之所以珍贵，是因为它保留了记录所遗漏的东西：亲身经历一件事**是什么感受**。讲述者自己的感受和经历可以当作他的回忆来相信。但几十年后回忆起的**确切日期和数字**，应该与记录核对。讲述者没有亲眼看见、**只是听别人说**的事是传闻，是最弱的证据。\n\n> **注意。** 辨明这句话的来源：亲身情感体验 → **当作亲身经历来相信**；具体日期、人数或工钱 → **与记录核对**；转述信号（*People said*、*My uncle told me*、*Rumor had it*）→ **传闻**。",
       ],
       ["How should a historian treat this statement from an oral history?", "历史学家应该如何对待口述历史中的这句话？"],
       `
@@ -969,22 +1000,22 @@ const oralHistory = topic("reading", {
       {
         "trust it as experience": L(
           "当作亲身经历来相信",
-          "The speaker describes their own feelings or experience, which only they can tell and which records rarely keep.",
-          "讲述者描述自己的感受或经历，这只有他们能讲，而记录很少保存。",
+          "The speaker describes their own feelings or experience, which only they can tell and which records rarely keep.\n\n**Check.** Notice the first-person emotion (*frightened*, *proud*, *ashamed*, *lonely*, *wept*): no archive records how a moment felt from the inside.",
+          "讲述者描述自己的感受或经历，这只有他们能讲，而记录很少保存。\n\n**检验。** 句中写的是讲述者亲历的内心感受（恐惧、自豪、羞愧、孤独、喜极而泣）：这是档案里查不到的珍贵体验。",
           "This is not the speaker's own feeling or experience.",
           "这不是讲述者自己的感受或经历。",
         ),
         "check it against records": L(
           "与记录核对",
-          "An exact date, number or fact recalled many years later may be wrong, so records of the time should be checked.",
-          "多年后回忆的确切日期、数字或事实可能有误，所以要查阅当时的记录。",
+          "An exact date, number or fact recalled many years later may be wrong, so records of the time should be checked.\n\n**Check.** Spot the precise figure, year, count, or sum of money: memory easily drifts on exact numbers, so a ship manifest, census, or ledger should verify it.",
+          "多年后回忆的确切日期、数字或事实可能有误，所以要查阅当时的记录。\n\n**检验。** 找出确切的年份、人数、天数或金额：记忆在精确数字上容易偏差，必须用当时档案核对。",
           "The statement is not an exact date, number or checkable fact.",
           "这句话不是确切的日期、数字或可以核实的事实。",
         ),
         "hearsay: only heard about": L(
           "传闻：只是听说",
-          "The speaker did not see this but heard it from others, so it is hearsay, the weakest kind of evidence.",
-          "讲述者没有亲眼看见，而是听别人说的，所以这是传闻，是最弱的证据。",
+          "The speaker did not see this but heard it from others, so it is hearsay, the weakest kind of evidence.\n\n**Check.** Spot the secondhand framing (*People said*, *My uncle told me*, *They say*, *My cousin heard*, *Rumor had it*): the speaker was not an eyewitness.",
+          "讲述者没有亲眼看见，而是听别人说的，所以这是传闻，是最弱的证据。\n\n**检验。** 识别转述信号（*People said*、*My uncle told me*、*Rumor had it* 等）：讲述者并非亲眼所见。",
           "The speaker is not passing on what others said.",
           "讲述者并不是在转述别人的话。",
         ),
@@ -1000,14 +1031,18 @@ const memoirReport = topic("reading", {
     "A memoir tells one person's experience with feeling; a report gives facts and numbers about many; each answers different questions.",
     "回忆录带着感情讲述一个人的经历；报告给出关于许多人的事实和数字；二者能回答不同的问题。",
   ],
+  intro: [
+    "To understand a wave of migration, a **memoir** lets you hear one child's heartbeat on the ship's deck, a **government report** gives the percentages and averages across thousands of families, and a **photograph** freezes how the hall looked. Knowing what each source does best lets you pick the right evidence for every question.",
+    "要理解一段移民潮，**回忆录**让你听见一个孩子在甲板上的心跳，**政府报告**给出成千上万家庭的比例与均值，**照片**定格大厅当时的模样。分清各类资料的长处，才能为每个问题选对证据。",
+  ],
   after: ["memoir-or-fiction", "comparing-texts-on-a-topic"],
   points: [
     label(
       "what-kind-of-source",
       ["What Kind of Source", "哪一种资料"],
       [
-        "Texts on the same subject can come from very different kinds of source. A **memoir** tells the writer's own story in the first person, with feelings and personal detail. A **government report** gives facts, numbers and findings in a neutral voice, about many people at once. A **letter to a newspaper** argues a view, trying to persuade readers of what should be done.",
-        "同一题材的文本可能来自截然不同的资料。**回忆录**以第一人称讲述作者自己的故事，带有感情和个人细节。**政府报告**用中立的口吻给出关于许多人的事实、数字和调查结果。**致报社的信**陈述观点，试图说服读者应该怎么做。",
+        "Texts on the same subject can come from very different kinds of source. A **memoir** tells the writer's own story in the first person, with feelings and personal detail. A **government report** gives facts, numbers and findings in a neutral voice, about many people at once. A **letter to a newspaper** argues a view, trying to persuade readers of what should be done.\n\n> **Watch out.** Do not confuse a **memoir** with a **letter to a newspaper** just because both can use *I*—a memoir narrates a personal memory (*I stood*, *I was nine*), while a newspaper letter urges public action (*I urge*, *the city must*, *Shame on*).",
+        "同一题材的文本可能来自截然不同的资料。**回忆录**以第一人称讲述作者自己的故事，带有感情和个人细节。**政府报告**用中立的口吻给出关于许多人的事实、数字和调查结果。**致报社的信**陈述观点，试图说服读者应该怎么做。\n\n> **注意。** 不要因为都有 *I* 就把**回忆录**和**致报社的信**混在一起——回忆录追叙个人经历（*I stood*、*I was nine*），而致报社的信呼吁公众或政府行动（*I urge*、*must*、*Shame on*）。",
       ],
       ["What kind of source does this sentence most likely come from?", "这个句子最可能出自哪一种资料？"],
       `
@@ -1045,22 +1080,22 @@ const memoirReport = topic("reading", {
       {
         "a memoir": L(
           "回忆录",
-          "The sentence tells the writer's own experience in the first person, with personal detail and feeling.",
-          "这个句子以第一人称讲述作者自己的经历，带有个人细节和感情。",
+          "The sentence tells the writer's own experience in the first person, with personal detail and feeling.\n\n**Check.** Look at the voice and content: first-person past memory (*I*, *my*) sharing an intimate moment rather than statistics or a public demand.",
+          "这个句子以第一人称讲述作者自己的经历，带有个人细节和感情。\n\n**检验。** 看视角与内容：第一人称回叙个人切身经历，既不是群体统计，也不是向公众发出的倡议。",
           "The sentence does not tell the writer's own experience with feeling.",
           "这个句子没有带着感情讲述作者自己的经历。",
         ),
         "a government report": L(
           "政府报告",
-          "The sentence gives facts or numbers about many people in a neutral voice, as a report does.",
-          "这个句子用中立的口吻给出关于许多人的事实或数字，就像报告那样。",
+          "The sentence gives facts or numbers about many people in a neutral voice, as a report does.\n\n**Check.** Spot the objective metrics or formal committee language (*percent*, *average*, *census*, *inspectors found*, *committee recommends*): neutral, population-wide data mark a report.",
+          "这个句子用中立的口吻给出关于许多人的事实或数字，就像报告那样。\n\n**检验。** 找出客观统计或官方调查用语（如 *percent*、*average*、*census*、*inspectors found*）：面向群体的中立数据正是报告的特征。",
           "The sentence gives no neutral facts or numbers about many people.",
           "这个句子没有给出关于许多人的中立事实或数字。",
         ),
         "a letter to a newspaper": L(
           "致报社的信",
-          "The sentence argues for what should be done, often with strong words like *must*, *shame* or *urge*.",
-          "这个句子主张应该怎么做，常用 *must*、*shame* 或 *urge* 等强烈的词语。",
+          "The sentence argues for what should be done, often with strong words like *must*, *shame* or *urge*.\n\n**Check.** Spot the persuasive call to action (*must*, *urge*, *disgrace*, *your readers*, *protest*, *Shame on*, *Let us*): the writer is campaigning to change minds or policy.",
+          "这个句子主张应该怎么做，常用 *must*、*shame* 或 *urge* 等强烈的词语。\n\n**检验。** 识别强烈的呼吁或抨击词（如 *must*、*urge*、*your readers*、*protest*、*Shame on*）：作者意在说服读者采取行动。",
           "The sentence does not argue for what should be done.",
           "这个句子没有主张应该怎么做。",
         ),
@@ -1070,8 +1105,8 @@ const memoirReport = topic("reading", {
       "which-source-answers-it",
       ["Which Source Answers It", "哪一种资料能回答"],
       [
-        "Each kind of source answers different questions. A **memoir** answers questions about one person's feelings and daily life: *What was the first night like?* A **report** answers questions about how many, how much and how often, across many people. A **photograph** answers questions about how something looked at a moment: the clothes, the rooms, the faces.",
-        "每种资料能回答不同的问题。**回忆录**回答关于一个人的感受和日常生活的问题：*What was the first night like?* **报告**回答关于许多人的多少、多大和多频繁的问题。**照片**回答某一时刻某物看起来是什么样子的问题：衣服、房间、面孔。",
+        "Each kind of source answers different questions. A **memoir** answers questions about one person's feelings and daily life: *What was the first night like?* A **report** answers questions about how many, how much and how often, across many people. A **photograph** answers questions about how something looked at a moment: the clothes, the rooms, the faces.\n\n> **Watch out.** Match the question's core ask: *how did one person feel / why did one person...* → **the memoir**; *how many / what percentage / average* → **the report**; *what did ... look like / how were they dressed* → **the photograph**.",
+        "每种资料能回答不同的问题。**回忆录**回答关于一个人的感受和日常生活的问题：*What was the first night like?* **报告**回答关于许多人的多少、多大和多频繁的问题。**照片**回答某一时刻某物看起来是什么样子的问题：衣服、房间、面孔。\n\n> **注意。** 对准问题核心：问个人感受或生活细节 → **回忆录**；问人数、比例或平均值 → **报告**；问外貌、衣着或现场景象 → **照片**。",
       ],
       ["Which source would best answer this question?", "哪一种资料最能回答这个问题？"],
       `
@@ -1109,22 +1144,22 @@ const memoirReport = topic("reading", {
       {
         "the memoir": L(
           "回忆录",
-          "The question asks about one person's feelings, thoughts or daily life, which only their own story can tell.",
-          "这个问题问的是一个人的感受、想法或日常生活，只有他自己的故事才能讲述。",
+          "The question asks about one person's feelings, thoughts or daily life, which only their own story can tell.\n\n**Check.** Notice the focus on a single person or family's inner feeling, motive, or private habit—neither statistics nor a camera can capture that.",
+          "这个问题问的是一个人的感受、想法或日常生活，只有他自己的故事才能讲述。\n\n**检验。** 问题聚焦于某一个人或家庭的内心感受、动机或私密生活细节——数字和照片都答不了。",
           "The question is not about one person's feelings or life.",
           "这个问题与一个人的感受或生活无关。",
         ),
         "the report": L(
           "报告",
-          "The question asks how many, how much or how often across many people, which a report's numbers answer.",
-          "这个问题问的是许多人当中的多少、多大或多频繁，报告中的数字能回答。",
+          "The question asks how many, how much or how often across many people, which a report's numbers answer.\n\n**Check.** Spot the quantitative cue (*How many*, *What percentage*, *How much*, *on average*, *What share*): only a statistical report covers the whole group.",
+          "这个问题问的是许多人当中的多少、多大或多频繁，报告中的数字能回答。\n\n**检验。** 识别数量提问词（多少、百分比、平均、占比）：只有统计报告能回答群体规模的问题。",
           "The question does not ask for numbers about many people.",
           "这个问题不是在问关于许多人的数字。",
         ),
         "the photograph": L(
           "照片",
-          "The question asks how something looked at a moment, which a picture shows best.",
-          "这个问题问的是某一时刻某物看起来是什么样子，照片最能显示。",
+          "The question asks how something looked at a moment, which a picture shows best.\n\n**Check.** Spot the visual cue (*look like*, *wear*, *dressed*, *faces*): a photograph records physical appearance directly.",
+          "这个问题问的是某一时刻某物看起来是什么样子，照片最能显示。\n\n**检验。** 识别视觉线索（看起来怎样、衣着、神态、场景）：照片能最直观地呈现当时的画面。",
           "The question is not about how something looked.",
           "这个问题与某物的样子无关。",
         ),
@@ -1140,14 +1175,18 @@ const oldTales = topic("reading", {
     "Modern stories often borrow the patterns of myths, fairy tales and old plays, keeping them, turning them upside down or moving them into a new setting.",
     "现代故事常常借用神话、童话和古老戏剧的模式，或保留它们，或颠倒它们，或把它们搬到新的背景中。",
   ],
+  intro: [
+    "A sci-fi story about a coder who steals clean-energy blueprints from a megacorporation to give away free power is retelling **Prometheus** in a modern setting. Recognizing the old tale underneath lets you see whether the writer kept the pattern, moved it to a new world, or flipped its meaning upside down.",
+    "一个科幻故事写程序员从大公司盗出清洁能源图纸免费造福大众，其实是在现代背景中重讲**普罗米修斯**。认出底层的古老传说，就能一眼看出作者是原样保留、搬入新世界，还是把寓意彻底翻转。",
+  ],
   after: ["archetypes-in-stories", "words-from-myths"],
   points: [
     label(
       "the-old-tale-behind-it",
       ["The Old Tale Behind It", "背后的古老传说"],
       [
-        "Many modern stories are built on old ones. A boy who builds wings from a kite and flies too close to danger echoes **Icarus**. A poor girl helped to a ball by a kind stranger echoes **Cinderella**. Two teenagers from feuding families who fall in love echo **Romeo and Juliet**. Spotting the old tale lets you see what the writer has kept and what the writer has changed.",
-        "许多现代故事建立在古老故事的基础上。一个男孩用风筝做成翅膀、飞得离危险太近，呼应了**伊卡洛斯**。一个穷女孩在好心陌生人的帮助下去参加舞会，呼应了**灰姑娘**。两个来自世仇家族的少年相爱，呼应了**罗密欧与朱丽叶**。认出古老的故事，就能看出作者保留了什么、改变了什么。",
+        "Many modern stories are built on old ones. A boy who builds wings from a kite and flies too close to danger echoes **Icarus**. A poor girl helped to a ball by a kind stranger echoes **Cinderella**. Two teenagers from feuding families who fall in love echo **Romeo and Juliet**. Spotting the old tale lets you see what the writer has kept and what the writer has changed.\n\n> **Watch out.** Look past modern props (planes, phones, tech firms, selfies) to the core plot skeleton—who is warned, what is forbidden, or what wish backfires—to identify the source tale.",
+        "许多现代故事建立在古老故事的基础上。一个男孩用风筝做成翅膀、飞得离危险太近，呼应了**伊卡洛斯**。一个穷女孩在好心陌生人的帮助下去参加舞会，呼应了**灰姑娘**。两个来自世仇家族的少年相爱，呼应了**罗密欧与朱丽叶**。认出古老的故事，就能看出作者保留了什么、改变了什么。\n\n> **注意。** 穿透飞机、手机、科技公司、自拍等现代包装，抓住核心情节骨架——谁不听警告、谁打开禁忌、谁的愿望适得其反——就能认出背后的古老传说。",
       ],
       ["Which old tale does this modern story draw on?", "这个现代故事借用了哪个古老传说？"],
       `
@@ -1185,64 +1224,64 @@ const oldTales = topic("reading", {
       {
         Icarus: L(
           "伊卡洛斯",
-          "Like Icarus, who flew too close to the sun on wax wings, the character ignores a warning, rises too high and falls.",
-          "就像用蜡做的翅膀飞得离太阳太近的伊卡洛斯，这个人物不听警告、飞得太高而坠落。",
+          "Like Icarus, who flew too close to the sun on wax wings, the character ignores a warning, rises too high and falls.\n\n**Check.** Match the signature beat: ignoring a warning about going too high and crashing down.",
+          "就像用蜡做的翅膀飞得离太阳太近的伊卡洛斯，这个人物不听警告、飞得太高而坠落。\n\n**检验。** 核对标志性情节：不听劝告、飞得或爬得太高而坠落。",
           "The story does not follow Icarus's pattern of rising too high and falling.",
           "这个故事没有沿用伊卡洛斯飞得太高而坠落的模式。",
         ),
         Cinderella: L(
           "灰姑娘",
-          "Like Cinderella, a mistreated girl or boy is helped to a grand event and noticed there, often leaving something behind.",
-          "就像灰姑娘，一个受虐待的人在帮助下去参加盛会并被注意到，常常留下某样东西。",
+          "Like Cinderella, a mistreated girl or boy is helped to a grand event and noticed there, often leaving something behind.\n\n**Check.** Match the signature beat: an overlooked servant or stepchild helped to attend a big party or ball.",
+          "就像灰姑娘，一个受虐待的人在帮助下去参加盛会并被注意到，常常留下某样东西。\n\n**检验。** 核对标志性情节：受冷落的主角得到帮助去参加盛会，并因此被瞩目。",
           "The story does not follow Cinderella's pattern.",
           "这个故事没有沿用灰姑娘的模式。",
         ),
         "Romeo and Juliet": L(
           "罗密欧与朱丽叶",
-          "Like Romeo and Juliet, two young people from feuding sides fall in love, often with a tragic end.",
-          "就像罗密欧与朱丽叶，来自敌对双方的两个年轻人相爱，结局常常是悲剧。",
+          "Like Romeo and Juliet, two young people from feuding sides fall in love, often with a tragic end.\n\n**Check.** Match the signature beat: young lovers caught between two rival or feuding groups.",
+          "就像罗密欧与朱丽叶，来自敌对双方的两个年轻人相爱，结局常常是悲剧。\n\n**检验。** 核对标志性情节：来自敌对或世仇双方的年轻人相爱。",
           "The story does not follow the pattern of lovers from feuding sides.",
           "这个故事没有沿用敌对双方恋人的模式。",
         ),
         Orpheus: L(
           "俄耳甫斯",
-          "Like Orpheus, who went to the underworld to bring back his wife, the character tries to rescue a lost love and fails by looking back or doubting.",
-          "就像去冥界带回妻子的俄耳甫斯，这个人物试图救回失去的爱人，却因回头或怀疑而失败。",
+          "Like Orpheus, who went to the underworld to bring back his wife, the character tries to rescue a lost love and fails by looking back or doubting.\n\n**Check.** Match the signature beat: journeying into shadow or danger to retrieve someone lost, with a rule not to look back.",
+          "就像去冥界带回妻子的俄耳甫斯，这个人物试图救回失去的爱人，却因回头或怀疑而失败。\n\n**检验。** 核对标志性情节：深入险境或阴影世界寻找逝去亲人，却因回头或怀疑而功亏一篑。",
           "The story does not follow Orpheus's pattern.",
           "这个故事没有沿用俄耳甫斯的模式。",
         ),
         "King Midas": L(
           "迈达斯国王",
-          "Like King Midas, whose touch turned everything to gold, the character's greed brings a gift that ruins life.",
-          "就像点物成金的迈达斯国王，这个人物的贪婪带来了毁掉生活的“礼物”。",
+          "Like King Midas, whose touch turned everything to gold, the character's greed brings a gift that ruins life.\n\n**Check.** Match the signature beat: a wish for wealth or gold that turns food and loved ones untouchable.",
+          "就像点物成金的迈达斯国王，这个人物的贪婪带来了毁掉生活的“礼物”。\n\n**检验。** 核对标志性情节：求财的愿望反而毁掉了食物与亲情。",
           "The story does not follow the pattern of a greedy wish that backfires.",
           "这个故事没有沿用贪婪的愿望适得其反的模式。",
         ),
         Pandora: L(
           "潘多拉",
-          "Like Pandora, the character opens something forbidden and lets troubles into the world, with hope left behind.",
-          "就像潘多拉，这个人物打开了被禁止打开的东西，让灾祸进入世界，只留下了希望。",
+          "Like Pandora, the character opens something forbidden and lets troubles into the world, with hope left behind.\n\n**Check.** Match the signature beat: opening a forbidden box, file, or vault that unleashes troubles while leaving hope inside.",
+          "就像潘多拉，这个人物打开了被禁止打开的东西，让灾祸进入世界，只留下了希望。\n\n**检验。** 核对标志性情节：打开被禁止打开的盒子、文件或密室，放出灾祸却留下一线希望。",
           "The story does not follow Pandora's pattern.",
           "这个故事没有沿用潘多拉的模式。",
         ),
         Odysseus: L(
           "奥德修斯",
-          "Like Odysseus, the character makes a long, dangerous journey home after a war or voyage.",
-          "就像奥德修斯，这个人物在战争或航行后踏上漫长而危险的归途。",
+          "Like Odysseus, the character makes a long, dangerous journey home after a war or voyage.\n\n**Check.** Match the signature beat: years of wandering through dangers while trying to return home to family.",
+          "就像奥德修斯，这个人物在战争或航行后踏上漫长而危险的归途。\n\n**检验。** 核对标志性情节：历经漫长而充满险阻的漂泊，一心盼望回到家人身边。",
           "The story does not follow the pattern of a long journey home.",
           "这个故事没有沿用漫长归途的模式。",
         ),
         Narcissus: L(
           "那喀索斯",
-          "Like Narcissus, who fell in love with his own reflection, the character becomes lost in love of their own image.",
-          "就像爱上自己倒影的那喀索斯，这个人物沉迷于自己的形象。",
+          "Like Narcissus, who fell in love with his own reflection, the character becomes lost in love of their own image.\n\n**Check.** Match the signature beat: obsessing over one's own reflection or screen image to the point of forgetting others.",
+          "就像爱上自己倒影的那喀索斯，这个人物沉迷于自己的形象。\n\n**检验。** 核对标志性情节：沉迷于自己的倒影或屏幕形象，忘却了身边的他人。",
           "The story does not follow the pattern of self-love.",
           "这个故事没有沿用自恋的模式。",
         ),
         Prometheus: L(
           "普罗米修斯",
-          "Like Prometheus, who stole fire from the gods for humans, the character gives a forbidden gift to people and is punished.",
-          "就像为人类从众神那里盗取火种的普罗米修斯，这个人物把被禁止的礼物送给人们，并因此受罚。",
+          "Like Prometheus, who stole fire from the gods for humans, the character gives a forbidden gift to people and is punished.\n\n**Check.** Match the signature beat: defying the powerful to share fire, knowledge, or technology with ordinary people, and paying the penalty.",
+          "就像为人类从众神那里盗取火种的普罗米修斯，这个人物把被禁止的礼物送给人们，并因此受罚。\n\n**检验。** 核对标志性情节：违抗强者把火种、知识或技术分享给普通人，并因此遭受惩罚。",
           "The story does not follow Prometheus's pattern.",
           "这个故事没有沿用普罗米修斯的模式。",
         ),
@@ -1252,8 +1291,8 @@ const oldTales = topic("reading", {
       "what-the-retelling-does",
       ["What the Retelling Does", "改写做了什么"],
       [
-        "A retelling can treat its source in three ways. It can **keep the old pattern**, telling the same story with the same meaning. It can **move it to a new setting**, keeping the plot but placing it in a modern city, a school or outer space. Or it can **turn it upside down**, reversing the roles or the ending to make a new point: Cinderella rescues the prince, or Pandora's box saves the world.",
-        "改写可以用三种方式处理原作。它可以**保留原有模式**，用同样的意义讲同一个故事。它可以**换到新的背景**，保留情节，但把它放在现代城市、学校或外太空中。或者它可以**把它颠倒过来**，反转角色或结局以表达新的观点：灰姑娘救了王子，或者潘多拉的盒子拯救了世界。",
+        "A retelling can treat its source in three ways. It can **keep the old pattern**, telling the same story with the same meaning. It can **move it to a new setting**, keeping the plot but placing it in a modern city, a school or outer space. Or it can **turn it upside down**, reversing the roles or the ending to make a new point: Cinderella rescues the prince, or Pandora's box saves the world.\n\n> **Watch out.** Check whether the *outcome/roles* flipped or only the *backdrop* changed: same plot in high school or space = **moves it to a new setting**; reversed rescuer, ending, or lesson = **turns it upside down**.",
+        "改写可以用三种方式处理原作。它可以**保留原有模式**，用同样的意义讲同一个故事。它可以**换到新的背景**，保留情节，但把它放在现代城市、学校或外太空中。或者它可以**把它颠倒过来**，反转角色或结局以表达新的观点：灰姑娘救了王子，或者潘多拉的盒子拯救了世界。\n\n> **注意。** 看变的是*舞台背景*还是*角色与结局*：情节照旧只是搬到现代校园或太空 → **换到新的背景**；救人者、结局或寓意彻底反转 → **颠倒过来**。",
       ],
       ["What does this retelling do with the old tale?", "这个改写对古老传说做了什么？"],
       `
@@ -1291,22 +1330,22 @@ const oldTales = topic("reading", {
       {
         "keeps the old pattern": L(
           "保留原有模式",
-          "The retelling tells the same story in the same kind of world, with the same meaning.",
-          "这个改写在同样的世界里讲同一个故事，意义也相同。",
+          "The retelling tells the same story in the same kind of world, with the same meaning.\n\n**Check.** Verify both setting and outcome: neither the traditional world nor the original plot/ending has been changed.",
+          "这个改写在同样的世界里讲同一个故事，意义也相同。\n\n**检验。** 核对背景与结局：既没有搬进现代或科幻世界，也没有反转原有情节和结局。",
           "The retelling changes the setting or reverses the story.",
           "这个改写改变了背景或颠倒了故事。",
         ),
         "moves it to a new setting": L(
           "换到新的背景",
-          "The retelling keeps the plot but places it in a new time or place, such as a modern city or outer space.",
-          "这个改写保留了情节，但把它放在新的时代或地点，如现代城市或外太空。",
+          "The retelling keeps the plot but places it in a new time or place, such as a modern city or outer space.\n\n**Check.** Notice that the core events and lesson stay the same—only the time period, place, or technology (school, spaceship, Silicon Valley, selfies) has been updated.",
+          "这个改写保留了情节，但把它放在新的时代或地点，如现代城市或外太空。\n\n**检验。** 核心情节和道理都没变，只是时代、地点或道具换成了现代校园、太空、硅谷或自拍。",
           "The retelling does not move the story to a new time or place.",
           "这个改写没有把故事搬到新的时代或地点。",
         ),
         "turns it upside down": L(
           "颠倒过来",
-          "The retelling reverses the roles or the ending, changing what the old story means.",
-          "这个改写反转了角色或结局，改变了古老故事的意义。",
+          "The retelling reverses the roles or the ending, changing what the old story means.\n\n**Check.** Compare the original outcome with this version: the hero's role, the curse, or the tragic ending has been flipped on its head.",
+          "这个改写反转了角色或结局，改变了古老故事的意义。\n\n**检验。** 把原版结局与这个版本对照：主角分工、诅咒效果或悲剧结局被彻底翻转了。",
           "The retelling does not reverse the old story's roles or ending.",
           "这个改写没有反转古老故事的角色或结局。",
         ),
@@ -1322,14 +1361,18 @@ const wholeArgument = topic("reading", {
     "To evaluate a whole argument, trace its main claim, supporting claims and evidence, then find its weakest link: thin evidence, a gap in reasoning or an ignored opposing view.",
     "整体评估论证时，要理清它的主要论点、分论点和证据，再找出最薄弱的环节：证据单薄、推理有跳跃或忽视了对立观点。",
   ],
+  intro: [
+    "An argument can have a bold thesis and still collapse if one link gives way — a single anecdote backing a huge policy, a leap in logic, or silence about the strongest objection. Evaluating an argument as a whole means mapping its structure first and then stress-testing its weakest link.",
+    "一篇议论文即便论点响亮，只要有一环撑不住就会垮掉——用单个小故事撑大政策、推理跳步，或对最有力的反对意见闭口不谈。整体评估论证要先理清三层结构，再精准找出最薄弱的一环。",
+  ],
   after: ["tracing-an-argument", "relevant-and-sufficient-evidence", "acknowledging-conflicting-viewpoints"],
   points: [
     label(
       "the-part-of-the-argument",
       ["The Part of the Argument", "论证的组成部分"],
       [
-        "A long argument has layers. The **main claim** is the one position the whole text defends: *Our town should welcome refugees.* **Supporting claims** are the reasons that hold it up, each a claim itself: *Newcomers have often revived dying towns.* And **evidence** is the facts, numbers and examples that back the supporting claims: *Utica's population fell for decades, then grew after 1990 as refugees arrived.*",
-        "长篇论证是有层次的。**主要论点**是全文捍卫的唯一立场：*Our town should welcome refugees.* **分论点**是支撑它的理由，每一个本身也是一个论点：*Newcomers have often revived dying towns.* **证据**是支持分论点的事实、数字和例子：*Utica's population fell for decades, then grew after 1990 as refugees arrived.*",
+        "A long argument has layers. The **main claim** is the one position the whole text defends: *Our town should welcome refugees.* **Supporting claims** are the reasons that hold it up, each a claim itself: *Newcomers have often revived dying towns.* And **evidence** is the facts, numbers and examples that back the supporting claims: *Utica's population fell for decades, then grew after 1990 as refugees arrived.*\n\n> **Watch out.** Distinguish **a supporting claim** from **evidence**: a supporting claim states a general *reason* why the main claim is right, while **evidence** gives a specific number, year, study, or named place to prove that reason.",
+        "长篇论证是有层次的。**主要论点**是全文捍卫的唯一立场：*Our town should welcome refugees.* **分论点**是支撑它的理由，每一个本身也是一个论点：*Newcomers have often revived dying towns.* **证据**是支持分论点的事实、数字和例子：*Utica's population fell for decades, then grew after 1990 as refugees arrived.*\n\n> **注意。** 分清**分论点**和**证据**：分论点给出支持总论点的概括性*理由*，而**证据**拿出具体的数字、年份、研究或地名来证明这个理由。",
       ],
       [
         "In an essay arguing that the town should welcome refugees, what is this sentence?",
@@ -1370,22 +1413,22 @@ const wholeArgument = topic("reading", {
       {
         "the main claim": L(
           "主要论点",
-          "The sentence states the one position the whole essay defends.",
-          "这个句子陈述了全文捍卫的唯一立场。",
+          "The sentence states the one position the whole essay defends.\n\n**Check.** Notice that it calls for the essay's overall action (*should open its doors*, *vote yes*, *must choose*, *urge every citizen*): every other paragraph exists to back this position.",
+          "这个句子陈述了全文捍卫的唯一立场。\n\n**检验。** 它直接提出全文的总主张或行动呼吁，其他所有段落都是为支撑这一立场而服务。",
           "The sentence is not the position the whole essay defends.",
           "这个句子不是全文捍卫的立场。",
         ),
         "a supporting claim": L(
           "分论点",
-          "The sentence gives one reason for the main claim; it is itself a claim that needs evidence.",
-          "这个句子给出主要论点的一个理由；它本身也是需要证据支持的论点。",
+          "The sentence gives one reason for the main claim; it is itself a claim that needs evidence.\n\n**Check.** Test the *because* link: *The town should welcome refugees BECAUSE [this sentence]* works, and the sentence still needs numbers or examples to back it up.",
+          "这个句子给出主要论点的一个理由；它本身也是需要证据支持的论点。\n\n**检验。** 用“应该接纳难民，因为……”测试完全顺畅，而且这句话本身还需要数字或事例来证明。",
           "The sentence is not a general reason that supports the main claim.",
           "这个句子不是支持主要论点的概括性理由。",
         ),
         evidence: L(
           "证据",
-          "The sentence gives a fact, number or example that backs up a supporting claim.",
-          "这个句子给出支持分论点的事实、数字或例子。",
+          "The sentence gives a fact, number or example that backs up a supporting claim.\n\n**Check.** Spot the concrete data point (a named town or school, a year, a percentage, or a study result): it supplies factual proof rather than stating a general reason.",
+          "这个句子给出支持分论点的事实、数字或例子。\n\n**检验。** 找出其中的具体事实（地名、校名、年份、百分比或研究结果）：它提供的是实证，而不是概括性理由。",
           "The sentence gives no specific fact, number or example.",
           "这个句子没有给出具体的事实、数字或例子。",
         ),
@@ -1395,8 +1438,8 @@ const wholeArgument = topic("reading", {
       "the-weakest-link",
       ["The Weakest Link", "最薄弱的环节"],
       [
-        "After tracing an argument, find where it is weakest. The **evidence may be thin**: a single story or one small study holds up a large claim. The **reasoning may skip a step**: the evidence is true, but it does not lead to the claim without an unstated, doubtful idea. Or the argument may **ignore the other side**, never answering the strongest objection to it.",
-        "理清论证之后，要找出它最薄弱的地方。**证据可能单薄**：一个故事或一项小研究支撑着一个大论点。**推理可能跳了一步**：证据是真的，但如果没有一个未说出的、可疑的想法，它推不出论点。或者论证可能**忽视了对立观点**，从未回应对它最有力的反对意见。",
+        "After tracing an argument, find where it is weakest. The **evidence may be thin**: a single story or one small study holds up a large claim. The **reasoning may skip a step**: the evidence is true, but it does not lead to the claim without an unstated, doubtful idea. Or the argument may **ignore the other side**, never answering the strongest objection to it.\n\n> **Watch out.** Pinpoint the exact flaw: one cousin, friend, or single case → **the evidence is thin**; an illogical leap from premise to conclusion (*so ...*) → **the reasoning skips a step**; explicitly omitting a major affected group or concern (*never mentions/discusses/addresses*) → **it ignores the other side**.",
+        "理清论证之后，要找出它最薄弱的地方。**证据可能单薄**：一个故事或一项小研究支撑着一个大论点。**推理可能跳了一步**：证据是真的，但如果没有一个未说出的、可疑的想法，它推不出论点。或者论证可能**忽视了对立观点**，从未回应对它最有力的反对意见。\n\n> **注意。** 精准定位漏洞：只拿一个亲友或个案说事 → **证据单薄**；前提和 *so* 后的结论之间强行跳跃 → **推理跳了一步**；对受影响群体或明显担忧避而不谈 → **忽视了对立观点**。",
       ],
       ["What is the weakest link in this argument?", "这个论证最薄弱的环节是什么？"],
       `
@@ -1434,22 +1477,22 @@ const wholeArgument = topic("reading", {
       {
         "the evidence is thin": L(
           "证据单薄",
-          "A single story, person or small case is asked to hold up a large claim; much more evidence is needed.",
-          "一个故事、一个人或一个小个案被用来支撑一个大论点；需要多得多的证据。",
+          "A single story, person or small case is asked to hold up a large claim; much more evidence is needed.\n\n**Check.** Count the evidence offered (*my cousin's town*, *one student*, *a single driver*, *two people*, *my friend*): one tiny anecdote cannot support a sweeping policy or rule.",
+          "一个故事、一个人或一个小个案被用来支撑一个大论点；需要多得多的证据。\n\n**检验。** 数一数给出的论据（只有一个亲戚、一名学生、两位试用者或朋友一句话）：零星个案撑不起宏大论断。",
           "The argument's main weakness is not a lack of evidence.",
           "这个论证的主要弱点不是证据不足。",
         ),
         "the reasoning skips a step": L(
           "推理跳了一步",
-          "The evidence may be true, but the claim does not follow from it without a doubtful idea the writer never states or defends.",
-          "证据也许是真的，但如果没有一个作者从未说明或论证的可疑想法，论点推不出来。",
+          "The evidence may be true, but the claim does not follow from it without a doubtful idea the writer never states or defends.\n\n**Check.** Look at the *so* bridge between premise and conclusion: even if the first fact is completely true, it does not logically prove the extreme conclusion.",
+          "证据也许是真的，但如果没有一个作者从未说明或论证的可疑想法，论点推不出来。\n\n**检验。** 看前提和 *so* 后结论之间的跨度：就算前半句完全属实，也推不出后半句的极端结论。",
           "The argument's main weakness is not a jump in its reasoning.",
           "这个论证的主要弱点不是推理上的跳跃。",
         ),
         "it ignores the other side": L(
           "忽视了对立观点",
-          "The argument never answers an obvious, serious objection, so readers who hold it will not be convinced.",
-          "这个论证从未回应一个明显而严肃的反对意见，所以持这种意见的读者不会被说服。",
+          "The argument never answers an obvious, serious objection, so readers who hold it will not be convinced.\n\n**Check.** Notice the second sentence pointing out a major stakeholder or drawback that the essay never mentions, discusses, or addresses.",
+          "这个论证从未回应一个明显而严肃的反对意见，所以持这种意见的读者不会被说服。\n\n**检验。** 第二句明确点出了文章闭口不谈的关键受影响群体或明显弊端，说明论证回避了反方观点。",
           "The argument's main weakness is not an ignored objection.",
           "这个论证的主要弱点不是忽视了反对意见。",
         ),

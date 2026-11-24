@@ -54,20 +54,24 @@ const twoMainIdeas = topic("reading", {
     "A longer text can have two or more main ideas, each with its own key details.",
     "较长的文章可以有两个或更多的主要观点，每个观点都有自己的关键细节。",
   ],
+  intro: [
+    "A two-paragraph article on glaciers might use paragraph 1 to explain how glaciers form and paragraph 2 to explain how they carve valleys. Longer informational texts often carry two or more main ideas, each backed by its own details.",
+    "一篇两段长的冰川文章，第一段可能讲冰川如何形成，第二段讲冰川如何雕刻山谷。较长的说明文往往包含两个或更多主要观点，各有对应的细节支撑。",
+  ],
   after: ["supporting-details"],
   points: [
     choose(
       "choosing-the-main-ideas",
       ["Choosing the Main Ideas", "选出主要观点"],
       [
-        "A short paragraph often has one main idea, but a longer text can have **two or more**. Each main idea usually gets its own paragraph or part, with key details that explain it. To find them, ask what each part is mostly about. A main idea that no part of the text explains is not one of its main ideas, however interesting it sounds.",
-        "一个短段落通常只有一个主要观点，但较长的文章可以有**两个或更多**。每个主要观点通常有自己的段落或部分，并有解释它的关键细节。要找出它们，就问问每一部分主要讲什么。文章中没有任何部分解释的观点，不管听起来多有趣，都不是它的主要观点。",
+        "A short paragraph often has one main idea, but a longer text can have **two or more**. Each main idea usually gets its own paragraph or part, with key details that explain it. To find them, ask what each part is mostly about. A main idea that no part of the text explains is not one of its main ideas, however interesting it sounds.\n\n> **Watch out.** Test *both* halves of an option against the two paragraphs—even one extra idea not discussed in the text disqualifies that option.",
+        "一个短段落通常只有一个主要观点，但较长的文章可以有**两个或更多**。每个主要观点通常有自己的段落或部分，并有解释它的关键细节。要找出它们，就问问每一部分主要讲什么。文章中没有任何部分解释的观点，不管听起来多有趣，都不是它的主要观点。\n\n> **注意。** 把选项里的*两半*分别对照两个段落——只要有一半文章根本没讲，这个选项就不对。",
       ],
       ["What are the two main ideas of this text?", "这篇文章的两个主要观点是什么？"],
       mainIdeaItems,
       (right) => [
-        `Each paragraph explains one idea with its details, so the main ideas are **${right}**.`,
-        `每个段落用细节解释一个观点，所以主要观点是 **${right}**。`,
+        `Each paragraph explains one idea with its details, so the main ideas are **${right}**.\n\n**Check.** Match the first part of **${right}** to paragraph 1 and the second part to paragraph 2—every paragraph is covered, with no outside idea added.`,
+        `每个段落用细节解释一个观点，所以主要观点是 **${right}**。\n\n**检验。** 把 **${right}** 的前半对应第一段、后半对应第二段——每段都有对应，且没有掺入文外观点。`,
       ],
       [
         ["*{wrong}* includes an idea that no paragraph of the text explains.", "*{wrong}* 包含了一个文章中没有段落解释的观点。"],
@@ -81,19 +85,19 @@ const twoMainIdeas = topic("reading", {
       "matching-details-to-main-ideas",
       ["Matching Details to Main Ideas", "把细节与主要观点对应"],
       [
-        "Every key detail supports one of the main ideas. To match a detail, ask which idea it helps explain: a detail about snow pressing into ice explains how glaciers form, not how they shape the land. Details that sit in one paragraph usually support that paragraph's main idea.",
-        "每个关键细节都支持其中一个主要观点。要对应细节，就问它帮助解释的是哪个观点：雪被压成冰的细节解释的是冰川如何形成，而不是冰川如何塑造地貌。同一段落里的细节通常支持那个段落的主要观点。",
+        "Every key detail supports one of the main ideas. To match a detail, ask which idea it helps explain: a detail about snow pressing into ice explains how glaciers form, not how they shape the land. Details that sit in one paragraph usually support that paragraph's main idea.\n\n> **Watch out.** Do not pick a main idea just because it shares one topic word with the detail—locate which paragraph holds the detail and check what that paragraph explains.",
+        "每个关键细节都支持其中一个主要观点。要对应细节，就问它帮助解释的是哪个观点：雪被压成冰的细节解释的是冰川如何形成，而不是冰川如何塑造地貌。同一段落里的细节通常支持那个段落的主要观点。\n\n> **注意。** 不要只因某个观点和细节有相同的主题词就选它——先找到细节所在的段落，看那一段在解释什么。",
       ],
       ["Which main idea does the detail support?", "这个细节支持哪个主要观点？"],
       detailItems,
       (right) => [
-        `The detail helps explain **${right}**, the main idea of the paragraph it belongs to.`,
-        `这个细节帮助解释 **${right}**，也就是它所在段落的主要观点。`,
+        `The detail helps explain **${right}**, the main idea of the paragraph it belongs to.\n\n**Check.** Find the detail inside the passage and reread the first sentence of its paragraph—they both focus on **${right}**.`,
+        `这个细节帮助解释 **${right}**，也就是它所在段落的主要观点。\n\n**检验。** 在原文中找到这个细节，再重读该段的首句——二者都围绕 **${right}** 展开。`,
       ],
       [
         [
-          "*{wrong}* is the other main idea; this detail sits with and explains **{right}**.",
-          "*{wrong}* 是另一个主要观点；这个细节解释的是 **{right}**。",
+          "*{wrong}* is the other main idea of the passage; this detail sits in a different paragraph and explains a different point.",
+          "*{wrong}* 是文章的另一个主要观点；这个细节位于另一段，解释的是另一个要点。",
         ],
         ["*{wrong}* is not a main idea of the text at all.", "*{wrong}* 根本不是这篇文章的主要观点。"],
       ],
@@ -138,20 +142,24 @@ const severalSources = topic("reading", {
     "A research question is answered by scanning several short sources and picking the one that holds each fact.",
     "研究问题的答案要通过浏览多个简短的来源，并找出每个事实所在的来源来获得。",
   ],
+  intro: [
+    "If you want to know whether Lake Baikal is deeper than Lake Superior, one source gives Baikal's depth and another gives Superior's. Scanning multiple short sources for key words lets you locate single facts or combine two sources cleanly.",
+    "想知道贝加尔湖是否比苏必利尔湖更深，一个来源给出贝加尔湖深度，另一个给出苏必利尔湖深度。按关键词快速浏览多个简短来源，就能定位单个事实或综合两个来源作答。",
+  ],
   after: ["skimming-and-scanning", "combining-information-from-two-texts"],
   points: [
     choose(
       "the-source-that-answers",
       ["The Source That Answers", "能回答问题的来源"],
       [
-        "When you research, you rarely read every source from start to end. First pick out the **key words** of your question, such as *Lake Baikal* or *how old*. Then scan each source for those words and stop at the one that holds the fact. A source about the right subject may still not hold the fact you need.",
-        "做研究时，你很少把每个来源从头读到尾。先找出问题中的**关键词**，例如 *Lake Baikal* 或 *how old*。然后在每个来源中寻找这些词，停在包含所需事实的那一个。一个主题相关的来源，也不一定包含你需要的事实。",
+        "When you research, you rarely read every source from start to end. First pick out the **key words** of your question, such as *Lake Baikal* or *how old*. Then scan each source for those words and stop at the one that holds the fact. A source about the right subject may still not hold the fact you need.\n\n> **Watch out.** Do not pick a source just because its title sounds close—check that the specific fact asked for is actually stated in its text.",
+        "做研究时，你很少把每个来源从头读到尾。先找出问题中的**关键词**，例如 *Lake Baikal* 或 *how old*。然后在每个来源中寻找这些词，停在包含所需事实的那一个。一个主题相关的来源，也不一定包含你需要的事实。\n\n> **注意。** 不要只看来源标题接近就作选择——必须确认正文中确实写出了题目要找的具体事实。",
       ],
       ["Which source answers the question?", "哪个来源能回答这个问题？"],
       oneSourceItems,
       (right) => [
-        `The key words of the question appear in **${right}**, and it holds the fact that answers it.`,
-        `问题的关键词出现在 **${right}** 中，它包含了回答问题的事实。`,
+        `The key words of the question appear in **${right}**, and it holds the fact that answers it.\n\n**Check.** Point to the exact number or fact inside **${right}** that answers the question—neither of the other two sources mentions it.`,
+        `问题的关键词出现在 **${right}** 中，它包含了回答问题的事实。\n\n**检验。** 在 **${right}** 里标出能直接回答问题的具体数字或事实——另外两个来源都没有提到它。`,
       ],
       [
         ["*{wrong}* is about another subject, so it does not hold this fact.", "*{wrong}* 讲的是另一个主题，所以不包含这个事实。"],
@@ -162,14 +170,14 @@ const severalSources = topic("reading", {
       "an-answer-that-needs-two-sources",
       ["An Answer That Needs Two Sources", "需要两个来源的答案"],
       [
-        "Some questions need facts from **two sources** put together. To compare the depths of two lakes, you need the depth of each, and each may be in a different source. Find the two things the question names, find the source for each, and then combine the facts to answer.",
-        "有些问题需要把**两个来源**的事实结合起来。要比较两个湖的深度，你需要每个湖的深度，而它们可能在不同的来源中。找出问题提到的两样东西，分别找到它们的来源，再把事实结合起来回答。",
+        "Some questions need facts from **two sources** put together. To compare the depths of two lakes, you need the depth of each, and each may be in a different source. Find the two things the question names, find the source for each, and then combine the facts to answer.\n\n> **Watch out.** Check *both* things named in the question—picking a pair that covers only one of them leaves you unable to compare or calculate.",
+        "有些问题需要把**两个来源**的事实结合起来。要比较两个湖的深度，你需要每个湖的深度，而它们可能在不同的来源中。找出问题提到的两样东西，分别找到它们的来源，再把事实结合起来回答。\n\n> **注意。** 核对问题里提到的*两样*事物——如果选中的组合只覆盖了其中一样，就无法完成比较或计算。",
       ],
       ["Which sources together answer the question?", "哪两个来源合起来能回答这个问题？"],
       twoSourceItems,
       (right) => [
-        `The question names two things, and their facts are in **${right}**: the answer combines them.`,
-        `问题提到两样东西，它们的事实分别在 **${right}** 中：答案要把它们结合起来。`,
+        `The question names two things, and their facts are in **${right}**: the answer combines them.\n\n**Check.** Match each of the two items in the question to one source in **${right}**—together they supply both needed facts.`,
+        `问题提到两样东西，它们的事实分别在 **${right}** 中：答案要把它们结合起来。\n\n**检验。** 把问题提到的两样事物分别对应到 **${right}** 中的两个来源——合在一起正好凑齐两条所需事实。`,
       ],
       [
         ["*{wrong}* includes a source that holds neither fact the question needs.", "*{wrong}* 包含了一个与问题所需事实都无关的来源。"],
@@ -183,7 +191,10 @@ const severalSources = topic("reading", {
 const partLabels: Record<string, Label> = {
   "the question": {
     zh: "问题",
-    why: ["It asks what the experiment sets out to find out.", "它提出实验要弄清楚的事情。"],
+    why: [
+      "It asks what the experiment sets out to find out.\n\n**Check.** Notice that it asks something to be tested rather than describing steps or measurements.",
+      "它提出实验要弄清楚的事情。\n\n**检验。** 注意它在提出待检验的问题，而不是写步骤或测量结果。",
+    ],
     not: [
       "The question asks what the experiment wants to find out; this sentence does not ask that.",
       "问题提出实验想弄清楚的事；这个句子不是在问这个。",
@@ -191,7 +202,10 @@ const partLabels: Record<string, Label> = {
   },
   "the method": {
     zh: "方法",
-    why: ["It tells a step of what the scientist did, and how.", "它讲述科学家做了什么、怎么做的一个步骤。"],
+    why: [
+      "It tells a step of what the scientist did, and how.\n\n**Check.** Look for the action done during the setup or test—it describes *how* the experiment was carried out, not what happened at the end.",
+      "它讲述科学家做了什么、怎么做的一个步骤。\n\n**检验。** 看句中的操作动作——它描述的是实验*怎么做*，而不是最后测到了什么。",
+    ],
     not: [
       "The method tells the steps that were followed; this sentence tells something else.",
       "方法讲述所遵循的步骤；这个句子讲的是别的。",
@@ -199,12 +213,18 @@ const partLabels: Record<string, Label> = {
   },
   "the results": {
     zh: "结果",
-    why: ["It tells what happened or what was measured.", "它讲述发生了什么或测量到了什么。"],
+    why: [
+      "It tells what happened or what was measured.\n\n**Check.** Spot the direct observation or measurement—it reports only what was seen, without yet drawing a general lesson.",
+      "它讲述发生了什么或测量到了什么。\n\n**检验。** 找出直接的观察或测量数据——它只汇报看到了什么，还没有下总结性结论。",
+    ],
     not: ["The results tell what was observed or measured; this sentence does not.", "结果讲述观察或测量到的情况；这个句子不是。"],
   },
   "the conclusion": {
     zh: "结论",
-    why: ["It tells what the results show, answering the question.", "它说明结果表明了什么，回答了问题。"],
+    why: [
+      "It tells what the results show, answering the question.\n\n**Check.** Notice that it interprets the measurements to state a takeaway that answers the original question.",
+      "它说明结果表明了什么，回答了问题。\n\n**检验。** 注意它是在解读测量结果，用来回答实验最初提出的问题。",
+    ],
     not: [
       "The conclusion explains what the results mean; this sentence does not explain that.",
       "结论解释结果意味着什么；这个句子没有解释这一点。",
@@ -282,14 +302,18 @@ const readingAnExperiment = topic("reading", {
   id: "reading-about-an-experiment",
   title: ["Reading About an Experiment", "阅读实验报告"],
   summary: ["A report of an experiment gives a question, a method, results and a conclusion.", "实验报告包括问题、方法、结果和结论。"],
+  intro: [
+    "Every science lab report follows a clear four-part structure—Question, Method, Results, and Conclusion—and a careful reader checks whether the conclusion stays strictly within what the measurements actually proved.",
+    "每份科学实验报告都遵循清晰的四段结构——问题、方法、结果和结论——细心的读者会核对结论是否严格基于实际测量数据。",
+  ],
   after: ["steps-in-a-procedure", "cause-and-effect-in-texts"],
   points: [
     label(
       "parts-of-an-experiment-report",
       ["The Parts of a Report", "报告的组成部分"],
       [
-        "A report of an experiment has four parts. The **question** says what the scientist wants to find out. The **method** tells the steps that were followed. The **results** tell what happened or what was measured, often with numbers. The **conclusion** says what the results show, and it answers the question.",
-        "实验报告有四个部分。**问题**说明科学家想弄清楚什么。**方法**讲述所遵循的步骤。**结果**讲述发生了什么或测量到了什么，常常带有数字。**结论**说明结果表明了什么，并回答问题。",
+        "A report of an experiment has four parts. The **question** says what the scientist wants to find out. The **method** tells the steps that were followed. The **results** tell what happened or what was measured, often with numbers. The **conclusion** says what the results show, and it answers the question.\n\n> **Watch out.** Do not confuse *results* with *conclusion*—results report raw observations or numbers, while the conclusion explains what those numbers prove.",
+        "实验报告有四个部分。**问题**说明科学家想弄清楚什么。**方法**讲述所遵循的步骤。**结果**讲述发生了什么或测量到了什么，常常带有数字。**结论**说明结果表明了什么，并回答问题。\n\n> **注意。** 不要把“结果”和“结论”弄混——结果只汇报观察到的现象或数字，结论才解释这些数字证明了什么。",
       ],
       ["Which part of an experiment report is this sentence?", "这个句子属于实验报告的哪一部分？"],
       partLines,
@@ -299,14 +323,14 @@ const readingAnExperiment = topic("reading", {
       "the-conclusion-the-results-support",
       ["The Conclusion the Results Support", "结果支持的结论"],
       [
-        "A good conclusion says only what the results show. It does not go further than the test: one plant that grew more in sunlight does not prove that no plant grows in the dark. And it never says the opposite of what was measured. Check each conclusion against the numbers.",
-        "好的结论只说结果所表明的事。它不会超出实验的范围：一株植物在阳光下长得更好，并不能证明植物在黑暗中都不能生长。结论也绝不会与测量结果相反。要用数字检验每个结论。",
+        "A good conclusion says only what the results show. It does not go further than the test: one plant that grew more in sunlight does not prove that no plant grows in the dark. And it never says the opposite of what was measured. Check each conclusion against the numbers.\n\n> **Watch out.** Watch for extreme words like *never*, *always*, or *for a year*—a single short test cannot prove an all-or-nothing claim.",
+        "好的结论只说结果所表明的事。它不会超出实验的范围：一株植物在阳光下长得更好，并不能证明植物在黑暗中都不能生长。结论也绝不会与测量结果相反。要用数字检验每个结论。\n\n> **注意。** 警惕 *never*、*always*、*for a year* 这类绝对词——一次简短的测试无法证明如此绝对的结论。",
       ],
       ["Which conclusion do these results support?", "这些结果支持哪个结论？"],
       conclusionLines,
       (right) => [
-        `**${right}** says just what the measurements show, no more and no less.`,
-        `**${right}** 恰好说出了测量结果所表明的事，不多也不少。`,
+        `**${right}** says just what the measurements show, no more and no less.\n\n**Check.** Compare **${right}** directly against the numbers in the Results—it matches their direction without exaggerating beyond the test.`,
+        `**${right}** 恰好说出了测量结果所表明的事，不多也不少。\n\n**检验。** 把 **${right}** 与“结果”里的数字直接对照——方向一致，且没有夸大到超出实验范围。`,
       ],
       [
         [
@@ -359,18 +383,25 @@ const pointsAndEvidence = topic("reading", {
     "In a longer text each point has its own reasons and evidence, and some evidence supports no point at all.",
     "在较长的文章中，每个观点都有自己的理由和证据，而有些证据并不支持任何观点。",
   ],
+  intro: [
+    "A science article on ice might claim that ice expands, floats, and melts faster with salt—each claim needs its own specific proof. Matching each piece of evidence to its exact point also reveals which claims are left unsupported.",
+    "一篇写冰的科普文可能提出三个观点：冰会膨胀、能漂浮、加盐融化更快——每个观点都需要各自的证据。把证据和观点一一对应，也能一眼看出哪个观点缺少支撑。",
+  ],
   after: ["how-authors-support-points"],
   points: [
     choose(
       "evidence-for-each-point",
       ["Evidence for Each Point", "每个观点的证据"],
       [
-        "An author who makes several **points** backs each one with its own **evidence**: facts, examples or results of tests. To match evidence to a point, ask what the evidence shows. A cracked bottle in the freezer shows that water expands when it freezes; it says nothing about whether ice floats. Evidence that shows none of the points does not support the text at all.",
-        "提出几个**观点**的作者会用各自的**证据**支持每个观点：事实、例子或实验结果。要把证据和观点对应，就问证据表明了什么。冰箱里冻裂的瓶子表明水结冰时会膨胀，但它与冰是否漂浮毫无关系。不能表明任何观点的证据，对文章根本没有支持作用。",
+        "An author who makes several **points** backs each one with its own **evidence**: facts, examples or results of tests. To match evidence to a point, ask what the evidence shows. A cracked bottle in the freezer shows that water expands when it freezes; it says nothing about whether ice floats. Evidence that shows none of the points does not support the text at all.\n\n> **Watch out.** All three points share the same broad topic (like *ice* or *air*)—focus on the *specific* behavior or property the evidence demonstrates.",
+        "提出几个**观点**的作者会用各自的**证据**支持每个观点：事实、例子或实验结果。要把证据和观点对应，就问证据表明了什么。冰箱里冻裂的瓶子表明水结冰时会膨胀，但它与冰是否漂浮毫无关系。不能表明任何观点的证据，对文章根本没有支持作用。\n\n> **注意。** 三个观点往往围绕同一个大主题（如冰或空气）——要紧扣这条证据所证明的*具体*性质或现象。",
       ],
       ["Which point does this evidence support?", "这条证据支持哪个观点？"],
       evidenceItems,
-      (right) => [`The evidence shows that this is true: **${right}**`, `这条证据表明这一点是正确的：**${right}**`],
+      (right) => [
+        `The evidence shows that this is true: **${right}**\n\n**Check.** Ask: if you only knew this piece of evidence, which of the three points would it directly prove? It proves: **${right}**`,
+        `这条证据表明这一点是正确的：**${right}**\n\n**检验。** 问一句：如果只给你这一条证据，它能直接证明三个观点中的哪一个？正是：**${right}**`,
+      ],
       [
         ["The evidence does not show *{wrong}*; it is about something else.", "这条证据并不能表明 *{wrong}*；它讲的是别的事。"],
         ["*{wrong}* is a different point, with evidence of its own.", "*{wrong}* 是另一个观点，有自己的证据。"],
@@ -380,14 +411,14 @@ const pointsAndEvidence = topic("reading", {
       "the-point-with-too-little-evidence",
       ["The Point with Too Little Evidence", "证据不足的观点"],
       [
-        "As you read, check that every point has evidence behind it. A point that stands alone, with no facts or examples after it, asks the reader to take it on trust. It may be true, but the text has not shown it. A careful reader notices such a point; a careful writer adds evidence to it.",
-        "阅读时，要检查每个观点后面是否都有证据。一个孤零零的观点，后面没有任何事实或例子，就是要读者凭信任接受它。它也许是对的，但文章并没有证明它。细心的读者会注意到这样的观点；细心的作者会为它补充证据。",
+        "As you read, check that every point has evidence behind it. A point that stands alone, with no facts or examples after it, asks the reader to take it on trust. It may be true, but the text has not shown it. A careful reader notices such a point; a careful writer adds evidence to it.\n\n> **Watch out.** Do not pick a point just because it sounds surprising—count the supporting facts or examples right after *each* point in the text.",
+        "阅读时，要检查每个观点后面是否都有证据。一个孤零零的观点，后面没有任何事实或例子，就是要读者凭信任接受它。它也许是对的，但文章并没有证明它。细心的读者会注意到这样的观点；细心的作者会为它补充证据。\n\n> **注意。** 不要只凭观点听起来是否意外作判断——逐一数一下文中*每个*观点后面跟着几条事实或例子。",
       ],
       ["Which point of this text has too little evidence?", "这篇文章的哪个观点证据不足？"],
       thinItems,
       (right) => [
-        `**${right}** stands alone: no fact or example follows it, while the other points each have two.`,
-        `**${right}** 孤零零地出现：后面没有任何事实或例子，而其他观点各有两条。`,
+        `**${right}** stands alone: no fact or example follows it, while the other points each have two.\n\n**Check.** Look back at the paragraph for **${right}**—it is a single bare statement with zero examples or measurements attached.`,
+        `**${right}** 孤零零地出现：后面没有任何事实或例子，而其他观点各有两条。\n\n**检验。** 回看 **${right}** 所在的段落——只有孤零零的一句断言，后面没有任何例子或数据。`,
       ],
       [
         ["*{wrong}* is followed by two pieces of evidence.", "*{wrong}* 后面跟着两条证据。"],
@@ -459,20 +490,24 @@ const comparisonsThatExplain = topic("reading", {
     "Science writers explain the very small or the very large by comparing it with something familiar (a cell is like a factory).",
     "科学作者把极小或极大的事物与熟悉的东西相比较来解释它（细胞就像一座工厂）。",
   ],
+  intro: [
+    "Calling a cell *a tiny factory* helps readers picture how it makes materials, yet no cell has human workers or metal machines. Reading scientific comparisons means spotting both the likeness they explain and where the comparison stops.",
+    "把细胞比作“微型工厂”，能让读者立刻明白它能制造所需物质，但细胞里并没有工人和机器。读懂科学里的比喻，既要抓住它解释的相似点，也要看清比喻在哪儿不再成立。",
+  ],
   after: ["similes-and-metaphors", "compare-and-contrast-in-texts"],
   points: [
     choose(
       "what-is-compared-with-what",
       ["What Is Compared with What", "把什么与什么相比"],
       [
-        "Science writers often explain something unfamiliar by comparing it with something the reader knows. The comparison has two sides: the **thing being explained** (a cell, a virus, a vaccine) and the **familiar thing** it is compared with (a factory, a pirate, a poster). Other words in the sentence only fill in the picture.",
-        "科学作者常常把陌生的事物与读者熟悉的事物相比较来解释它。比较有两方：**被解释的事物**（细胞、病毒、疫苗）和与之相比的**熟悉事物**（工厂、海盗、海报）。句子中的其他词只是让形象更完整。",
+        "Science writers often explain something unfamiliar by comparing it with something the reader knows. The comparison has two sides: the **thing being explained** (a cell, a virus, a vaccine) and the **familiar thing** it is compared with (a factory, a pirate, a poster). Other words in the sentence only fill in the picture.\n\n> **Watch out.** Make sure your answer includes *one item from each side* of *like* or *the way*—not two words from the same half of the sentence.",
+        "科学作者常常把陌生的事物与读者熟悉的事物相比较来解释它。比较有两方：**被解释的事物**（细胞、病毒、疫苗）和与之相比的**熟悉事物**（工厂、海盗、海报）。句子中的其他词只是让形象更完整。\n\n> **注意。** 答案必须从 *like* 或 *the way* 的*两边各取一样*，不要把同一半句里的两个词配成一对。",
       ],
       ["What two things does this sentence compare?", "这个句子把哪两样东西相比？"],
       comparedItems,
       (right) => [
-        `The sentence explains one thing by likening it to a familiar one: it compares **${right}**.`,
-        `这个句子把一样东西比作熟悉的事物来解释它：比较的是 **${right}**。`,
+        `The sentence explains one thing by likening it to a familiar one: it compares **${right}**.\n\n**Check.** Find the comparison word (*like* or *the way*) in the sentence—the two things in **${right}** sit directly on opposite sides of it.`,
+        `这个句子把一样东西比作熟悉的事物来解释它：比较的是 **${right}**。\n\n**检验。** 找出句中的比喻词（*like* 或 *the way*）——**${right}** 中的两样事物正好分居它的两侧。`,
       ],
       [
         [
@@ -489,18 +524,21 @@ const comparisonsThatExplain = topic("reading", {
       "what-the-comparison-explains-and-its-limits",
       ["What a Comparison Explains, and Its Limits", "比较能解释什么，以及它的局限"],
       [
-        "A comparison explains **one likeness**: a cell is like a factory because it makes the things it needs. Pushed too far, a comparison misleads: a cell has no workers or machines. Every comparison **stops being true** somewhere, where the two things differ, and a good reader notices where that is.",
-        "比较解释的是**一个相似之处**：细胞像工厂，因为它能制造自己所需的东西。比较推得太远就会误导人：细胞里没有工人和机器。每个比较都会在两样东西不同的地方**不再成立**，好的读者会注意到这一点。",
+        "A comparison explains **one likeness**: a cell is like a factory because it makes the things it needs. Pushed too far, a comparison misleads: a cell has no workers or machines. Every comparison **stops being true** somewhere, where the two things differ, and a good reader notices where that is.\n\n> **Watch out.** Read the question carefully to see whether it asks *what fact it explains* (the likeness) or *where it stops being true* (a key difference).",
+        "比较解释的是**一个相似之处**：细胞像工厂，因为它能制造自己所需的东西。比较推得太远就会误导人：细胞里没有工人和机器。每个比较都会在两样东西不同的地方**不再成立**，好的读者会注意到这一点。\n\n> **注意。** 看清题目问的是*解释了什么事实*（相似点），还是*在哪里不再成立*（关键差异）。",
       ],
       ["Read the comparison and answer the question.", "读这个比较，回答问题。"],
       explainItems,
       (right, shown) =>
         shown.includes("stop being true")
           ? [
-              `The two things differ here, so the comparison stops being true: **${right}**`,
-              `两样东西在这里不同，所以比较不再成立：**${right}**`,
+              `The two things differ here, so the comparison stops being true: **${right}**\n\n**Check.** Check that **${right}** states a real difference between the scientific subject and the everyday object, rather than a shared trait.`,
+              `两样东西在这里不同，所以比较不再成立：**${right}**\n\n**检验。** 确认 **${right}** 指出的是科学事物与日常事物之间的真实差异，而不是共同点。`,
             ]
-          : [`The likeness the comparison points to is this fact: **${right}**`, `这个比较所指的相似之处就是这个事实：**${right}**`],
+          : [
+              `The likeness the comparison points to is this fact: **${right}**\n\n**Check.** Check that **${right}** states a true scientific fact about the subject without taking the everyday image literally.`,
+              `这个比较所指的相似之处就是这个事实：**${right}**\n\n**检验。** 确认 **${right}** 说的是科学事物的真实特点，而不是按字面把日常事物照搬过来。`,
+            ],
       [
         [
           "*{wrong}* tells the other side of the comparison: where it holds or where it fails, not what was asked.",
@@ -586,20 +624,24 @@ const quotingAccurately = topic("reading", {
     "To explain what a text says or to support an inference, a reader quotes its exact words.",
     "为了解释文章说了什么或支持一个推断，读者要引用文章的原话。",
   ],
+  intro: [
+    "When you prove that Lena handled the microscope carefully, quoting *“She turned the knob slowly, a hair at a time”* word for word gives ironclad support—whereas changing even *slowly* to *quickly* turns it into a misquotation.",
+    "要证明 Lena 使用显微镜很小心，逐字引用 *“She turned the knob slowly, a hair at a time”* 才最有说服力——哪怕只把 *slowly* 改成 *quickly*，就成了错误引用。",
+  ],
   after: ["making-inferences", "quotation-marks-for-quotations"],
   points: [
     choose(
       "the-quotation-that-supports-an-inference",
       ["The Quotation That Supports an Inference", "支持推断的引文"],
       [
-        "An **inference** is something a reader works out from clues in a text. To show that it is fair, the reader **quotes** the words that led to it. The right quotation is the one that gives a reason to believe the inference: *She turned the knob slowly, a hair at a time* shows that Lena is careful; a sentence about her shout does not.",
-        "**推断**是读者根据文章中的线索推想出来的结论。为了表明推断合理，读者要**引用**导出这个推断的话。正确的引文要能为相信这个推断提供理由：*She turned the knob slowly, a hair at a time* 表明 Lena 很细心；而讲她大喊的句子则不能。",
+        "An **inference** is something a reader works out from clues in a text. To show that it is fair, the reader **quotes** the words that led to it. The right quotation is the one that gives a reason to believe the inference: *She turned the knob slowly, a hair at a time* shows that Lena is careful; a sentence about her shout does not.\n\n> **Watch out.** All three options come from the same passage—pick the specific sentence that actually provides evidence for the given inference.",
+        "**推断**是读者根据文章中的线索推想出来的结论。为了表明推断合理，读者要**引用**导出这个推断的话。正确的引文要能为相信这个推断提供理由：*She turned the knob slowly, a hair at a time* 表明 Lena 很细心；而讲她大喊的句子则不能。\n\n> **注意。** 三个选项都出自同一段文字——只选真正能为这个推断提供依据的那一句。",
       ],
       ["Which quotation best supports the inference?", "哪句引文最能支持这个推断？"],
       supportItems,
       (right) => [
-        `The words ${right} give the reason to believe the inference, so they are the quotation to use.`,
-        `${right} 这些话为相信这个推断提供了理由，所以应该引用它。`,
+        `The words ${right} give the reason to believe the inference, so they are the quotation to use.\n\n**Check.** Reread the inference right after ${right}—that single sentence supplies the exact clue the inference relies on.`,
+        `${right} 这些话为相信这个推断提供了理由，所以应该引用它。\n\n**检验。** 读完 ${right} 再对照题目里的推断——正是这一句提供了推断所依赖的关键线索。`,
       ],
       [
         ["*{wrong}* is from the text but gives no reason to believe this inference.", "*{wrong}* 出自文章，但不能为这个推断提供理由。"],
@@ -610,12 +652,15 @@ const quotingAccurately = topic("reading", {
       "an-exact-quotation",
       ["An Exact Quotation", "准确的引文"],
       [
-        "Words inside quotation marks must be **exactly** the words of the text: every word, in the same order. Changing one word (*slowly* to *quickly*), dropping one or adding one turns a quotation into a **misquotation**, and it may change the meaning. Before you quote, check your words against the text one by one.",
-        "引号里的话必须**完全**是原文的话：每个词都一样，顺序也一样。改动一个词（把 *slowly* 改成 *quickly*）、删掉一个词或加上一个词，都会让引文变成**错误引用**，还可能改变意思。引用之前，要把你写的话与原文逐词核对。",
+        "Words inside quotation marks must be **exactly** the words of the text: every word, in the same order. Changing one word (*slowly* to *quickly*), dropping one or adding one turns a quotation into a **misquotation**, and it may change the meaning. Before you quote, check your words against the text one by one.\n\n> **Watch out.** Do not skim—even a tiny swap like *many* vs. *most* or *forty* vs. *fifty* disqualifies a quotation.",
+        "引号里的话必须**完全**是原文的话：每个词都一样，顺序也一样。改动一个词（把 *slowly* 改成 *quickly*）、删掉一个词或加上一个词，都会让引文变成**错误引用**，还可能改变意思。引用之前，要把你写的话与原文逐词核对。\n\n> **注意。** 不要一目十行——哪怕把 *many* 换成 *most* 或把 *forty* 换成 *fifty*，都不算准确引用。",
       ],
       ["Which is an exact quotation of the text?", "哪一句准确地引用了原文？"],
       exactItems,
-      (right) => [`Word for word, ${right} matches the text.`, `${right} 与原文逐字相符。`],
+      (right) => [
+        `Word for word, ${right} matches the text.\n\n**Check.** Compare ${right} against the matching sentence in the passage from first word to last—every single word and number is identical.`,
+        `${right} 与原文逐字相符。\n\n**检验。** 把 ${right} 和原文对应句子从头到尾逐词比对——每个词和数字都分毫不差。`,
+      ],
       [
         ["*{wrong}* changes a word of the text, so it is a misquotation.", "*{wrong}* 改动了原文的一个词，所以是错误引用。"],
         ["*{wrong}* changes, drops or adds a word, so it is not exact.", "*{wrong}* 改动、删掉或加上了词，所以不准确。"],
@@ -629,8 +674,8 @@ const sourceLabels: Record<string, Label> = {
   "a legend": {
     zh: "传说",
     why: [
-      "It is a story people told about the past, with gods, heroes or wonders no evidence can show.",
-      "这是人们讲述的关于过去的故事，其中的神、英雄或奇迹没有证据能证明。",
+      "It is a story people told about the past, with gods, heroes or wonders no evidence can show.\n\n**Check.** Look for gods, mythical creatures, or supernatural feats—no physical ruin or contemporary record can prove them, marking a legend.",
+      "这是人们讲述的关于过去的故事，其中的神、英雄或奇迹没有证据能证明。\n\n**检验。** 找出神祇、神话生物或超自然奇迹——没有实物遗迹或当时记录能证实，属于传说。",
     ],
     not: [
       "A legend is a story with gods, heroes or wonders; this statement rests on evidence.",
@@ -639,12 +684,18 @@ const sourceLabels: Record<string, Label> = {
   },
   "evidence from objects or ruins": {
     zh: "来自实物或遗迹的证据",
-    why: ["It rests on things people made that we can still find and study.", "它基于人们制造的、我们至今仍能找到和研究的东西。"],
+    why: [
+      "It rests on things people made that we can still find and study.\n\n**Check.** Spot the physical thing mentioned (ruins, coins, pottery, tools, or graves)—historians study these material remains directly.",
+      "它基于人们制造的、我们至今仍能找到和研究的东西。\n\n**检验。** 找出提到的实物（遗迹、钱币、陶器、工具或墓葬）——历史学家可以直接研究这些物质遗存。",
+    ],
     not: ["This statement does not rest on objects or ruins that can be studied.", "这个说法并不基于可以研究的实物或遗迹。"],
   },
   "evidence from old writing": {
     zh: "来自古代文字的证据",
-    why: ["It rests on words written at the time that we can still read.", "它基于当时写下、我们至今仍能读到的文字。"],
+    why: [
+      "It rests on words written at the time that we can still read.\n\n**Check.** Spot the written source from the period (laws, letters, speeches, or histories)—the evidence comes from surviving text, not myth or unlabeled ruins.",
+      "它基于当时写下、我们至今仍能读到的文字。\n\n**检验。** 找出当时的书面来源（法律、书信、演说或史书）——证据来自留存至今的文字，而不是传说或纯实物。",
+    ],
     not: ["This statement does not rest on words written at the time.", "这个说法并不基于当时写下的文字。"],
   },
 };
@@ -721,14 +772,18 @@ const legendOrHistory = topic("reading", {
     "Myths and legends tell stories people believed or told about the past; history uses evidence such as ruins and writing.",
     "神话和传说讲述人们相信或流传的关于过去的故事；历史则使用遗迹和文字等证据。",
   ],
+  intro: [
+    "The tale of Athena gifting the first olive tree tells what ancient Greeks believed, while olive-oil jars unearthed from ruins show what Greek farmers actually grew. Separating legend from physical and written evidence is how historians read the past.",
+    "雅典娜赐予第一棵橄榄树的故事反映古希腊人的信仰，而遗迹中出土的橄榄油陶罐才证明古希腊农民真正种过什么。区分传说与实物、文献证据，是历史学家读懂过去的方法。",
+  ],
   after: ["historical-fiction-facts-and-inventions"],
   points: [
     label(
       "a-legend-or-evidence",
       ["A Legend or Evidence", "传说还是证据"],
       [
-        "The Greeks told **legends** and myths: stories of gods, heroes and wonders that explained their world. These stories tell us what people believed, but not what happened. **History** rests on **evidence**: things people made, such as ruins, coins and pots, and words written at the time, such as laws, letters and histories.",
-        "希腊人讲述**传说**和神话：关于神、英雄和奇迹的故事，用来解释他们的世界。这些故事告诉我们人们相信什么，却不能告诉我们发生了什么。**历史**建立在**证据**之上：人们制造的东西，例如遗迹、钱币和陶罐；以及当时写下的文字，例如法律、书信和史书。",
+        "The Greeks told **legends** and myths: stories of gods, heroes and wonders that explained their world. These stories tell us what people believed, but not what happened. **History** rests on **evidence**: things people made, such as ruins, coins and pots, and words written at the time, such as laws, letters and histories.\n\n> **Watch out.** Look closely at *what kind* of evidence the statement names—physical items (*coins, ruins, jars*) count as objects/ruins, whereas surviving texts (*laws, letters, histories*) count as old writing.",
+        "希腊人讲述**传说**和神话：关于神、英雄和奇迹的故事，用来解释他们的世界。这些故事告诉我们人们相信什么，却不能告诉我们发生了什么。**历史**建立在**证据**之上：人们制造的东西，例如遗迹、钱币和陶罐；以及当时写下的文字，例如法律、书信和史书。\n\n> **注意。** 看清句子提到的是*哪类*证据——实物（钱币、遗迹、陶罐）属于实物或遗迹，当时的文字（法律、书信、史书）属于古代文字。",
       ],
       ["Where does this statement come from?", "这个说法来自哪里？"],
       legendLines,
@@ -738,14 +793,14 @@ const legendOrHistory = topic("reading", {
       "the-evidence-a-historian-uses",
       ["The Evidence a Historian Uses", "历史学家使用的证据"],
       [
-        "A historian answers a question about the past with **evidence from the time**: objects and ruins that survive, and writing from people who lived then. A myth tells what people believed, not what happened; a modern film, book or guess was made long afterward by people who were not there.",
-        "历史学家用**当时的证据**回答关于过去的问题：保存下来的实物和遗迹，以及当时的人写下的文字。神话讲的是人们相信什么，而不是发生了什么；现代的电影、书或猜测是很久以后由不在场的人制作的。",
+        "A historian answers a question about the past with **evidence from the time**: objects and ruins that survive, and writing from people who lived then. A myth tells what people believed, not what happened; a modern film, book or guess was made long afterward by people who were not there.\n\n> **Watch out.** Reject both *myths* (even ancient ones) and *modern retellings* (movies, coloring books, recent stories)—real historical evidence comes directly from the period being studied.",
+        "历史学家用**当时的证据**回答关于过去的问题：保存下来的实物和遗迹，以及当时的人写下的文字。神话讲的是人们相信什么，而不是发生了什么；现代的电影、书或猜测是很久以后由不在场的人制作的。\n\n> **注意。** 既要排除*神话传说*，也要排除*现代改编作品*（电影、现代绘本或故事）——真正的历史证据必须直接来自所研究的那个时代。",
       ],
       ["Which would be the best evidence?", "哪一项是最好的证据？"],
       historianLines,
       (right) => [
-        `**${right}** comes from the time itself, so it can show what really happened.`,
-        `**${right}** 来自那个时代本身，所以能表明真实发生了什么。`,
+        `**${right}** comes from the time itself, so it can show what really happened.\n\n**Check.** Ask two questions about **${right}**: was it made or written during that ancient time, and does it directly answer the historian's question? Yes to both.`,
+        `**${right}** 来自那个时代本身，所以能表明真实发生了什么。\n\n**检验。** 问两个问题：**${right}** 是那个古代时期留下来的吗？它能直接回答历史学家的问题吗？两个都是。`,
       ],
       [
         [
@@ -762,19 +817,25 @@ const legendOrHistory = topic("reading", {
 const linkLabels: Record<string, Label> = {
   "a cause of the first": {
     zh: "第一件事的原因",
-    why: ["The second event happened earlier and made the first happen.", "第二件事发生得更早，并导致了第一件事。"],
+    why: [
+      "The second event happened earlier and made the first happen.\n\n**Check.** Put *because* between the first event and the second—the second event explains *why* the first occurred.",
+      "第二件事发生得更早，并导致了第一件事。\n\n**检验。** 在第一件事和第二件事之间放上“因为”——第二件事解释了第一件事*为什么*发生。",
+    ],
     not: ["The second event did not make the first one happen.", "第二件事并没有导致第一件事。"],
   },
   "a result of the first": {
     zh: "第一件事的结果",
-    why: ["The second event happened because of the first.", "第二件事是因为第一件事才发生的。"],
+    why: [
+      "The second event happened because of the first.\n\n**Check.** Put *so* or *as a result* between the first event and the second—the first event triggered the second.",
+      "第二件事是因为第一件事才发生的。\n\n**检验。** 在第一件事和第二件事之间放上“所以/因此”——第一件事引发了第二件事。",
+    ],
     not: ["The second event did not happen because of the first.", "第二件事并不是因为第一件事才发生的。"],
   },
   "a comparison with the first": {
     zh: "与第一件事的比较",
     why: [
-      "The second event is set beside the first to show how they are alike or different, not that one caused the other.",
-      "第二件事与第一件事并列，是为了说明它们的异同，而不是说一件导致了另一件。",
+      "The second event is set beside the first to show how they are alike or different, not that one caused the other.\n\n**Check.** Look for comparison signals (*by contrast, similarly, unlike*)—neither event caused the other.",
+      "第二件事与第一件事并列，是为了说明它们的异同，而不是说一件导致了另一件。\n\n**检验。** 找出比较信号词（*by contrast、similarly、unlike*）——两件事之间没有因果关系。",
     ],
     not: [
       "The second event is linked to the first by cause, not set beside it for comparison.",
@@ -848,14 +909,18 @@ const connectingEvents = topic("reading", {
     "A history text explains how one event led to another and how ideas spread.",
     "历史文章解释一件事如何导致另一件事，以及思想如何传播。",
   ],
+  intro: [
+    "History is rarely a bare list of dates: Greece's mountains separated its cities, so each city made its own laws and often clashed with its neighbors. Spotting causes, results, and comparisons lets you trace how one historical step triggered the next.",
+    "历史很少只是枯燥的年份表：希腊的群山隔开了各座城邦，于是各城邦自立法律，又常常与邻邦冲突。分清原因、结果与比较，就能看清历史事件如何环环相扣。",
+  ],
   after: ["cause-and-effect-chains", "reading-a-timeline"],
   points: [
     label(
       "how-two-events-connect",
       ["How Two Events Connect", "两件事如何联系"],
       [
-        "A history text does more than list events: it shows how they **connect**. One event can be a **cause** of another (*because*, *since*), a **result** of it (*as a result*, *so*, *led to*), or a **comparison** that sets two events side by side (*similarly*, *by contrast*, *unlike*). The signal words help, but always check which event came first and what made what happen.",
-        "历史文章不只是罗列事件，还要说明它们如何**联系**。一件事可以是另一件事的**原因**（*because*、*since*），也可以是它的**结果**（*as a result*、*so*、*led to*），或者是把两件事并列的**比较**（*similarly*、*by contrast*、*unlike*）。信号词有帮助，但一定要检查哪件事先发生、是什么导致了什么。",
+        "A history text does more than list events: it shows how they **connect**. One event can be a **cause** of another (*because*, *since*), a **result** of it (*as a result*, *so*, *led to*), or a **comparison** that sets two events side by side (*similarly*, *by contrast*, *unlike*). The signal words help, but always check which event came first and what made what happen.\n\n> **Watch out.** Check the *direction* of the arrow—if the second sentence starts with *because*, the second event is the **cause** of the first; if it starts with *as a result*, the second event is the **result** of the first.",
+        "历史文章不只是罗列事件，还要说明它们如何**联系**。一件事可以是另一件事的**原因**（*because*、*since*），也可以是它的**结果**（*as a result*、*so*、*led to*），或者是把两件事并列的**比较**（*similarly*、*by contrast*、*unlike*）。信号词有帮助，但一定要检查哪件事先发生、是什么导致了什么。\n\n> **注意。** 看清因果箭头的*方向*——第二句用 *because* 开头时，第二件事是第一件事的**原因**；用 *as a result* 开头时，第二件事是第一件事的**结果**。",
       ],
       ["How is the second event connected to the first?", "第二件事与第一件事是什么关系？"],
       linkLines,
@@ -865,14 +930,14 @@ const connectingEvents = topic("reading", {
       "the-event-that-led-to-another",
       ["The Event That Led to Another", "导致另一件事的事件"],
       [
-        "Many history texts describe a **chain** of events, each one leading to the next. To find what led to an event, look at the step just before it in the chain, where the text says *because of this*, *so* or *in turn*. An earlier step began the chain but did not lead to it directly; a later step is a result, not a cause.",
-        "许多历史文章描述一**连串**事件，每件事导致下一件事。要找出导致某件事的原因，就看链条中紧挨在它前面的那一步，也就是文章说 *because of this*、*so* 或 *in turn* 的地方。更早的一步开启了这个链条，但并不是直接原因；后面的一步是结果，不是原因。",
+        "Many history texts describe a **chain** of events, each one leading to the next. To find what led to an event, look at the step just before it in the chain, where the text says *because of this*, *so* or *in turn*. An earlier step began the chain but did not lead to it directly; a later step is a result, not a cause.\n\n> **Watch out.** Do not jump all the way back to the *first* sentence of the paragraph—find the event *immediately before* the target event in the chain.",
+        "许多历史文章描述一**连串**事件，每件事导致下一件事。要找出导致某件事的原因，就看链条中紧挨在它前面的那一步，也就是文章说 *because of this*、*so* 或 *in turn* 的地方。更早的一步开启了这个链条，但并不是直接原因；后面的一步是结果，不是原因。\n\n> **注意。** 不要直接跳回段落的*第一句*——找出链条里*紧挨在*目标事件前面的那一步。",
       ],
       ["Which event led directly to it?", "哪件事直接导致了它？"],
       ledItems,
       (right) => [
-        `In the chain, the step just before it is **${right}**, so that is what led to it.`,
-        `在这个链条中，紧挨在它前面的一步是 **${right}**，所以是它导致了这件事。`,
+        `In the chain, the step just before it is **${right}**, so that is what led to it.\n\n**Check.** Locate the target event in the passage and step back exactly one sentence—it is **${right}**.`,
+        `在这个链条中，紧挨在它前面的一步是 **${right}**，所以是它导致了这件事。\n\n**检验。** 在文中找到目标事件，再往前退恰好一句——正是 **${right}**。`,
       ],
       [
         [
@@ -893,19 +958,25 @@ const structureLabels: Record<string, Label> = {
   "time order": {
     zh: "时间顺序",
     why: [
-      "It tells events in the order they happened, with dates or words such as first and then.",
-      "它按事件发生的先后讲述，用到日期或 first、then 等词。",
+      "It tells events in the order they happened, with dates or words such as first and then.\n\n**Check.** Spot the sequence of dates or time markers (*first, then, later*) moving forward step by step.",
+      "它按事件发生的先后讲述，用到日期或 first、then 等词。\n\n**检验。** 找出按先后推进的年份或时间词（*first、then、later*）。",
     ],
     not: ["The text does not tell events in the order they happened.", "这段文字不是按事件发生的先后讲述的。"],
   },
   "problem and solution": {
     zh: "问题与解决",
-    why: ["It names a problem and then tells how it was or could be solved.", "它提出一个问题，再讲述问题是如何或可以如何解决的。"],
+    why: [
+      "It names a problem and then tells how it was or could be solved.\n\n**Check.** Find two parts in the passage: first a difficulty or risk, then the concrete fix or response.",
+      "它提出一个问题，再讲述问题是如何或可以如何解决的。\n\n**检验。** 在文中找到两部分：先提出困难或风险，再给出具体的解决办法。",
+    ],
     not: ["The text does not set out a problem and how it was solved.", "这段文字并没有提出问题和解决办法。"],
   },
   comparison: {
     zh: "比较",
-    why: ["It sets two things side by side to show how they are alike and different.", "它把两样东西并列，说明它们的异同。"],
+    why: [
+      "It sets two things side by side to show how they are alike and different.\n\n**Check.** Spot the two subjects being compared and a signal word like *both*, *but*, *unlike*, or *while*.",
+      "它把两样东西并列，说明它们的异同。\n\n**检验。** 找出并列比较的两个对象，以及 *both*、*but*、*unlike* 或 *while* 等信号词。",
+    ],
     not: ["The text does not set two things side by side.", "这段文字没有把两样东西并列比较。"],
   },
 };
@@ -969,14 +1040,18 @@ const structuresOfTwoTexts = topic("reading", {
     "Two texts on one topic can be built differently: one in time order, one as problem and solution, one as comparison.",
     "同一主题的两篇文章可以有不同的结构：一篇按时间顺序，一篇按问题与解决，一篇按比较。",
   ],
+  intro: [
+    "One article on space travel might trace launches from 1957 to 1969 (time order), while another explains how engineers keep astronauts' bones strong (problem and solution). Recognizing each text's structure shows what kind of understanding it offers.",
+    "同样写太空的文章，一篇可能按 1957 到 1969 年的历程展开（时间顺序），另一篇讲工程师如何防止宇航员骨质流失（问题与解决）。认清各自的结构，就能看出不同文章分别帮读者理解什么。",
+  ],
   after: ["text-structures"],
   points: [
     label(
       "naming-the-structure-of-a-text",
       ["Naming the Structure of a Text", "说出文章的结构"],
       [
-        "Two texts about space can be built in different ways. **Time order** tells events as they happened, with dates and words like *first* and *later*. **Problem and solution** names a difficulty and tells how it was solved. **Comparison** sets two things side by side with words like *both*, *but* and *unlike*. Naming the structure tells you how to read the text.",
-        "两篇关于太空的文章可以用不同的方式组织。**时间顺序**按事件发生的先后讲述，用到日期和 *first*、*later* 等词。**问题与解决**提出一个难题并讲述它是如何解决的。**比较**用 *both*、*but*、*unlike* 等词把两样东西并列。说出文章的结构，就知道该怎样读它。",
+        "Two texts about space can be built in different ways. **Time order** tells events as they happened, with dates and words like *first* and *later*. **Problem and solution** names a difficulty and tells how it was solved. **Comparison** sets two things side by side with words like *both*, *but* and *unlike*. Naming the structure tells you how to read the text.\n\n> **Watch out.** Do not pick *time order* just because a single year appears—check whether the whole passage traces steps over time, solves a problem, or compares two things.",
+        "两篇关于太空的文章可以用不同的方式组织。**时间顺序**按事件发生的先后讲述，用到日期和 *first*、*later* 等词。**问题与解决**提出一个难题并讲述它是如何解决的。**比较**用 *both*、*but*、*unlike* 等词把两样东西并列。说出文章的结构，就知道该怎样读它。\n\n> **注意。** 不要只因文中出现一个年份就选“时间顺序”——看整段文字究竟是在按时间推进、解决难题，还是对比两样事物。",
       ],
       ["How is this text organized?", "这段文字是怎样组织的？"],
       structureLines,
@@ -986,14 +1061,14 @@ const structuresOfTwoTexts = topic("reading", {
       "what-a-structure-helps-you-understand",
       ["What a Structure Helps You Understand", "结构帮助你理解什么"],
       [
-        "Each structure helps the reader understand something different about the same topic. **Time order** shows what happened when and how things changed. **Problem and solution** shows what was hard and how people dealt with it. **Comparison** shows how two things are alike and different. Two texts on one topic, built differently, teach different things.",
-        "每种结构帮助读者理解同一主题的不同方面。**时间顺序**表明什么时候发生了什么、事物如何变化。**问题与解决**表明什么是难题、人们如何应对。**比较**表明两样东西的异同。同一主题、结构不同的两篇文章，教给读者的东西也不同。",
+        "Each structure helps the reader understand something different about the same topic. **Time order** shows what happened when and how things changed. **Problem and solution** shows what was hard and how people dealt with it. **Comparison** shows how two things are alike and different. Two texts on one topic, built differently, teach different things.\n\n> **Watch out.** Match the structure's *purpose* rather than the topic alone—all three options talk about the same topic, so only one fits the named structure.",
+        "每种结构帮助读者理解同一主题的不同方面。**时间顺序**表明什么时候发生了什么、事物如何变化。**问题与解决**表明什么是难题、人们如何应对。**比较**表明两样东西的异同。同一主题、结构不同的两篇文章，教给读者的东西也不同。\n\n> **注意。** 按结构的*作用*来匹配，而不要只看主题——三个选项围绕同一主题，只有一项符合题目指定的结构。",
       ],
       ["What does this structure help the reader understand?", "这种结构帮助读者理解什么？"],
       helpsItems,
       (right, shown) => [
-        `${shown.replace(/^A text about .* is organized by /, "A structure of ").replace(/\.$/, "")} helps the reader understand ${right}.`,
-        `这种结构帮助读者理解：${right}。`,
+        `${shown.replace(/^A text about .* is organized by /, "A structure of ").replace(/\.$/, "")} helps the reader understand ${right}.\n\n**Check.** Match the structure named in the prompt (*time order*, *problem and solution*, or *comparison*) to the goal “${right}”—they align directly.`,
+        `这种结构帮助读者理解：${right}。\n\n**检验。** 把题干点出的结构（时间顺序、问题与解决或比较）与“${right}”对照——二者直接对应。`,
       ],
       [
         [
@@ -1087,18 +1162,25 @@ const severalAccounts = topic("reading", {
     "People who saw an event from different sides tell it differently, such as the meeting of the Aztec and the Spanish.",
     "从不同角度看到同一事件的人，讲述方式也不同，例如阿兹特克人与西班牙人的会面。",
   ],
+  intro: [
+    "When a new bridge opens, the mayor celebrates saving drivers twenty minutes while a shop owner on the old road mourns an empty store. Comparing multiple accounts of one event shows both the shared core facts and how each writer's position shapes their telling.",
+    "新桥通车时，市长称赞它为司机节省二十分钟，老街店主却忧心店里冷清。对比同一事件的多种记述，既能找出双方共同确认的核心事实，又能看清各自的立场如何塑造叙述。",
+  ],
   after: ["firsthand-and-secondhand-accounts"],
   points: [
     choose(
       "what-two-accounts-agree-on",
       ["What Two Accounts Agree On", "两种记述的共同之处"],
       [
-        "When two people tell about the same event, compare their accounts fact by fact. The facts that **both** accounts give are the ones a reader can trust most: two people from different sides would not both invent them. A fact that only one account gives may be true, but it rests on one person's word.",
-        "两个人讲述同一事件时，要逐条比较他们的记述。**两种**记述都提到的事实最值得读者相信：来自不同立场的两个人不会都编造它。只有一种记述提到的事实也许是真的，但它只凭一个人的说法。",
+        "When two people tell about the same event, compare their accounts fact by fact. The facts that **both** accounts give are the ones a reader can trust most: two people from different sides would not both invent them. A fact that only one account gives may be true, but it rests on one person's word.\n\n> **Watch out.** Check the detail in *Account A* and then in *Account B*—even a true detail from Account A is wrong if Account B never mentions it.",
+        "两个人讲述同一事件时，要逐条比较他们的记述。**两种**记述都提到的事实最值得读者相信：来自不同立场的两个人不会都编造它。只有一种记述提到的事实也许是真的，但它只凭一个人的说法。\n\n> **注意。** 把选项先在*记述 A* 里找一遍，再到*记述 B* 里找一遍——就算记述 A 里确实写了，只要记述 B 没提，就不算共同之处。",
       ],
       ["What do both accounts agree on?", "两种记述在哪一点上一致？"],
       agreeItems,
-      (right) => [`Both accounts tell this fact: **${right}**`, `两种记述都讲到了这个事实：**${right}**`],
+      (right) => [
+        `Both accounts tell this fact: **${right}**\n\n**Check.** Point to the matching line in Account A and the matching line in Account B—**${right}** appears in both.`,
+        `两种记述都讲到了这个事实：**${right}**\n\n**检验。** 分别在记述 A 和记述 B 里找到对应句子——两边都明确写到了：**${right}**`,
+      ],
       [
         ["*{wrong}* appears only in Account A.", "*{wrong}* 只出现在记述 A 中。"],
         ["*{wrong}* appears only in Account B.", "*{wrong}* 只出现在记述 B 中。"],
@@ -1108,12 +1190,15 @@ const severalAccounts = topic("reading", {
       "why-accounts-differ",
       ["Why Accounts Differ", "记述为什么不同"],
       [
-        "Accounts of one event differ because each writer has a **position**: where they stood, which side they were on, what they had to gain or lose. A soldier on the visitors' side and a writer on the side of the people visited notice different things and feel differently about them. Their differences do not mean that one invented the event.",
-        "同一事件的记述之所以不同，是因为每个作者都有自己的**立场**：他们站在哪里、属于哪一方、会得到或失去什么。来访一方的士兵和被访一方的作者注意到的东西不同，感受也不同。他们的差异并不意味着有人编造了这件事。",
+        "Accounts of one event differ because each writer has a **position**: where they stood, which side they were on, what they had to gain or lose. A soldier on the visitors' side and a writer on the side of the people visited notice different things and feel differently about them. Their differences do not mean that one invented the event.\n\n> **Watch out.** Do not assume one writer lied or missed the event just because the accounts differ—connect the difference directly to *who* each writer is and *what* they experienced.",
+        "同一事件的记述之所以不同，是因为每个作者都有自己的**立场**：他们站在哪里、属于哪一方、会得到或失去什么。来访一方的士兵和被访一方的作者注意到的东西不同，感受也不同。他们的差异并不意味着有人编造了这件事。\n\n> **注意。** 不要因为两种记述不同就断定有人撒谎或没看清——把差异直接联系到两位作者的身份和各自所处的立场。",
       ],
       ["Why do the accounts differ?", "这两种记述为什么不同？"],
       differItems,
-      (right) => [`The writers' positions explain the difference: ${right}`, `作者的立场解释了这种差异：${right}`],
+      (right) => [
+        `The writers' positions explain the difference: ${right}\n\n**Check.** Look at who wrote Account A and who wrote Account B—their roles directly explain why each focused on different details.`,
+        `作者的立场解释了这种差异：${right}\n\n**检验。** 对照记述 A 和记述 B 的作者身份——两人所处的位置和利害正好解释了他们为何各有侧重。`,
+      ],
       [
         [
           "*{wrong}* cannot be right: the accounts agree on the main facts, so the writers tell one event.",

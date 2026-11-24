@@ -86,7 +86,10 @@ export function nameKind(spec: KindSpec): Generator {
         shown: text,
         right,
         wrong,
-        why: t(`It is **${right}**. ${kind(right).is[0]}`, `这是**${kind(right).zh}**。${kind(right).is[1]}`),
+        why: t(
+          `It is **${right}**. ${kind(right).is[0]}\n\n**Check.** Compare the passage against the other two labels—neither describes what this text does.`,
+          `这是**${kind(right).zh}**。${kind(right).is[1]}\n\n**检验。** 把这段文字与另外两个类别逐一对照，它们都不符合这段文字的特点。`,
+        ),
         whyNot: wrong.map((w) =>
           t(
             `It is not **${w}**. ${kind(w).is[0]} Read the text again: it does not do that.`,
@@ -117,7 +120,10 @@ export function findKind(spec: KindSpec): Generator {
         shown: "",
         right: text,
         wrong: wrong.map(([w]) => w),
-        why: t(`“${text}” is **${right}**. ${kind(right).is[0]}`, `“${text}”是**${kind(right).zh}**。${kind(right).is[1]}`),
+        why: t(
+          `“${text}” is **${right}**. ${kind(right).is[0]}\n\n**Check.** Check the other two options: each belongs to a different category, so only “${text}” fits **${right}**.`,
+          `“${text}”是**${kind(right).zh}**。${kind(right).is[1]}\n\n**检验。** 核对另外两个选项：它们各自属于别的类别，只有“${text}”符合**${kind(right).zh}**。`,
+        ),
         whyNot: wrong.map(([w, k]) =>
           t(`“${w}” is ${k}, not ${right}. ${kind(k).is[0]}`, `“${w}”是${kind(k).zh}，不是${kind(right).zh}。${kind(k).is[1]}`),
         ),

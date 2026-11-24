@@ -1356,33 +1356,44 @@ function mixedRule(right: string): Text {
 /** mixedWhy puts the rule of the mixed conditional before a sentence. */
 const mixedWhy = (right: string, sentence: string): Text => {
   const rule = mixedRule(right);
-  return t(`${rule.en}: ${sentence}`, `${rule["zh-CN"]}：${sentence}`);
+  const check = right.includes("would have ")
+    ? t(
+        "**Check.** Match each half to its own time: present state in the *if*-clause (past simple) + past result (*would have* + past participle).",
+        "**检验。** 两半各对各的时间：*if* 从句表现在状态（一般过去时）+ 结果表过去（*would have* + 过去分词）。",
+      )
+    : t(
+        "**Check.** Match each half to its own time: past event in the *if*-clause (*had* + past participle) + present result (*would* + base verb).",
+        "**检验。** 两半各对各的时间：*if* 从句表过去事件（*had* + 过去分词）+ 结果表现在（*would* + 动词原形）。",
+      );
+  return t(`${rule.en}: ${sentence}\n\n${check.en}`, `${rule["zh-CN"]}：${sentence}\n\n${check["zh-CN"]}`);
 };
 
 /** whyNotMixed explains a result in the wrong time, will for an imagined past, or had alone. */
-const whyNotMixed = (wrong: string, right: string): Text => {
-  const rule = mixedRule(right);
-  let first: Text;
+const whyNotMixed = (wrong: string): Text => {
   if (wrong.startsWith("would have had "))
-    first = t(
-      `*${wrong}* adds a *had* the result does not take: after *would have* comes the past participle alone.`,
-      `*${wrong}* 多加了一个 *had*：*would have* 后面直接接过去分词。`,
+    return t(
+      `*${wrong}* inserts an extra *had*: *would have* goes straight to the past participle.`,
+      `*${wrong}* 多加了一个 *had*：*would have* 后面应直接接过去分词。`,
     );
-  else if (wrong.startsWith("would have "))
-    first = t(`*${wrong}* puts the result in the past, but it is about now.`, `*${wrong}* 把结果放在了过去，但结果说的是现在。`);
-  else if (wrong.startsWith("would "))
-    first = t(`*${wrong}* puts the result in the present, but it is in the past.`, `*${wrong}* 把结果放在了现在，但结果发生在过去。`);
-  else if (wrong.startsWith("will "))
-    first = t(
-      `*${wrong}* is for a real possibility, but the *if*-part imagines a past that did not happen.`,
-      `*${wrong}* 用于真实的可能，但 *if* 部分想象的是没有发生的过去。`,
+  if (wrong.startsWith("would have "))
+    return t(
+      `*${wrong}* places the result in the past, whereas the time clue points to now.`,
+      `*${wrong}* 把结果放进了过去，但时间线索指向的是现在。`,
     );
-  else
-    first = t(
-      `*${wrong}* says what really happened before something else, not an imagined result.`,
-      `*${wrong}* 说的是在另一件事之前真实发生的事，不是想象的结果。`,
+  if (wrong.startsWith("would "))
+    return t(
+      `*${wrong}* places the result in the present, whereas the time clue points to the past.`,
+      `*${wrong}* 把结果放在了现在，但时间线索指向的是过去。`,
     );
-  return t(`${first.en} ${rule.en}.`, `${first["zh-CN"]}${rule["zh-CN"]}。`);
+  if (wrong.startsWith("will "))
+    return t(
+      `*${wrong}* is for a real future possibility, not an imagined past condition.`,
+      `*${wrong}* 用于真实的将来可能，不能配与过去事实相反的假设。`,
+    );
+  return t(
+    `*${wrong}* states a real earlier past event rather than an imagined result.`,
+    `*${wrong}* 说的是过去真实发生的更早动作，不是假设的结果。`,
+  );
 };
 
 const mixedConditionals: TopicDef = {
@@ -1391,6 +1402,10 @@ const mixedConditionals: TopicDef = {
   summary: t(
     "If I had studied medicine, I would be a doctor now. If I spoke French, I would have understood the film. A mixed conditional joins an imagined past to a result now, or an imagined present to a result in the past.",
     "If I had studied medicine, I would be a doctor now. If I spoke French, I would have understood the film。混合条件句把想象的过去和现在的结果连在一起，或者把想象的现在和过去的结果连在一起。",
+  ),
+  intro: t(
+    "A past choice can shape today (*If she had taken the scholarship, she would live in Zurich now*), and a present trait can explain a past event (*If I were taller, I would have reached that shelf yesterday*). Mixed conditionals pair the time of each half independently.",
+    "过去的选择会影响现在（*If she had taken the scholarship, she would live in Zurich now*），而现在的特质也会影响过去（*If I were taller, I would have reached that shelf yesterday*）。混合条件句让条件和结果各自按自己的时间选动词形式。",
   ),
   prerequisites: ["third-conditional"],
   encompasses: [{ topic: "third-conditional", weight: 0.4 }],
@@ -1401,8 +1416,8 @@ const mixedConditionals: TopicDef = {
       "past-now",
       t("A different past, a different now", "过去不同，现在就不同"),
       t(
-        "When an imagined past would change the **present**, the *if*-part is a third conditional and the result is a second conditional:\n\n- *If I **had studied** medicine, I **would be** a doctor now.* (I didn't study it, so I'm not a doctor.)\n- *If we **had bought** that house ten years ago, we **would be** rich now.*\n\nWords such as *now*, *today* and *by now* show that the result is in the present, so it takes *would* + the base form, not *would have* + past participle.",
-        "想象的过去会改变**现在**时，*if* 部分用第三条件句，结果部分用第二条件句：\n\n- *If I **had studied** medicine, I **would be** a doctor now.*（我没学医，所以现在不是医生。）\n- *If we **had bought** that house ten years ago, we **would be** rich now.*\n\n*now*、*today*、*by now* 等词表明结果在现在，所以用 *would* 加动词原形，不用 *would have* 加过去分词。中文“要是当年学了医，现在就是医生了”靠“当年”“现在”区分时间，英语则要靠两部分不同的动词形式。",
+        "When an imagined past would change the **present**, the *if*-part is a third conditional and the result is a second conditional:\n\n- *If I **had studied** medicine, I **would be** a doctor now.* (I didn't study it, so I'm not a doctor.)\n- *If we **had bought** that house ten years ago, we **would be** rich now.*\n\nWords such as *now*, *today* and *by now* show that the result is in the present.\n\n> **Watch out.** Do not pull *have* into the result just because the *if*-clause has *had*: when the result is about **now**, use *would* + base verb, not *would have* + past participle.",
+        "想象的过去会改变**现在**时，*if* 部分用第三条件句，结果部分用第二条件句：\n\n- *If I **had studied** medicine, I **would be** a doctor now.*（我没学医，所以现在不是医生。）\n- *If we **had bought** that house ten years ago, we **would be** rich now.*\n\n*now*、*today*、*by now* 等词表明结果在现在。中文“要是当年学了医，现在就是医生了”靠“当年”“现在”区分时间，英语则要靠两部分不同的动词形式。\n\n> **注意。** 不要因为 *if* 从句里有 *had* 就顺手把结果也写成 *would have*：结果说的是**现在**，必须用 *would* + 动词原形。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -1415,8 +1430,8 @@ const mixedConditionals: TopicDef = {
       "now-past",
       t("A different now, a different past", "现在不同，过去就不同"),
       t(
-        "When an imagined **present** (something that is always or still true) would have changed the past, the *if*-part is a second conditional and the result is a third conditional:\n\n- *If I **spoke** French, I **would have understood** the film last night.* (I don't speak French, so I didn't understand it.)\n- *If he **were** braver, he **would have asked** her to dance.*\n\nWords such as *yesterday* and *last year* show that the result is in the past, so it takes *would have* + past participle. The result never takes *had* alone: *had understood* says what really happened before something else.",
-        "想象的**现在**（一直或至今仍然如此的情况）本会改变过去时，*if* 部分用第二条件句，结果部分用第三条件句：\n\n- *If I **spoke** French, I **would have understood** the film last night.*（我不会说法语，所以昨晚没看懂。）\n- *If he **were** braver, he **would have asked** her to dance.*\n\n*yesterday*、*last year* 等词表明结果在过去，所以用 *would have* 加过去分词。结果部分不能只用 *had*：*had understood* 说的是过去真实发生在另一件事之前的事。",
+        "When an imagined **present** (something that is always or still true) would have changed the past, the *if*-part is a second conditional and the result is a third conditional:\n\n- *If I **spoke** French, I **would have understood** the film last night.* (I don't speak French, so I didn't understand it.)\n- *If he **were** braver, he **would have asked** her to dance.*\n\nWords such as *yesterday* and *last year* show that the result is in the past, so it takes *would have* + past participle.\n\n> **Watch out.** Do not use plain *would* + base verb when the result is already in the past, and never write *had* alone without *would* (*had understood* states a real past fact).",
+        "想象的**现在**（一直或至今仍然如此的情况）本会改变过去时，*if* 部分用第二条件句，结果部分用第三条件句：\n\n- *If I **spoke** French, I **would have understood** the film last night.*（我不会说法语，所以昨晚没看懂。）\n- *If he **were** braver, he **would have asked** her to dance.*\n\n*yesterday*、*last year* 等词表明结果在过去，所以用 *would have* 加过去分词。\n\n> **注意。** 结果发生在过去时不能只用 *would* + 动词原形，也不能省略 *would* 只写 *had*（*had understood* 表示过去真实发生的事）。",
       ),
       choiceGenerator(
         t("Choose the words for the gap.", "选出填入空白处的词。"),
@@ -1429,8 +1444,8 @@ const mixedConditionals: TopicDef = {
       "write",
       t("Writing mixed conditionals", "写混合条件句"),
       t(
-        "Write the sentence from the note. The time words tell you which way it mixes:\n\n- A past event with a result *now*: *if I take the job in Tokyo in 2019 → I be in Japan now* becomes *If I had taken the job in Tokyo in 2019, I would be in Japan now.*\n- A present state with a result in the past: *if I speak French → I understand the film last night* becomes *If I spoke French, I would have understood the film last night.*\n\nPut a comma after the *if*-part. You may write *I'd* for *I had* and *I would*, *would've* for *would have*, and *was* for *were* after *I*, *he* and *she*.",
-        "根据笔记写句子。时间词告诉你怎样混合：\n\n- 过去的事情，结果在*现在*：*if I take the job in Tokyo in 2019 → I be in Japan now* 写成 *If I had taken the job in Tokyo in 2019, I would be in Japan now.*\n- 现在的状态，结果在过去：*if I speak French → I understand the film last night* 写成 *If I spoke French, I would have understood the film last night.*\n\n*if* 部分后面加逗号。可以把 *I had* 和 *I would* 写成 *I'd*，把 *would have* 写成 *would've*，*I*、*he*、*she* 后面的 *were* 也可以写成 *was*。",
+        "Write the sentence from the note. The time words tell you which way it mixes:\n\n- A past event with a result *now*: *if I take the job in Tokyo in 2019 → I be in Japan now* becomes *If I had taken the job in Tokyo in 2019, I would be in Japan now.*\n- A present state with a result in the past: *if I speak French → I understand the film last night* becomes *If I spoke French, I would have understood the film last night.*\n\nPut a comma after the *if*-part. You may write *I'd* for *I had* and *I would*, *would've* for *would have*, and *was* for *were* after *I*, *he* and *she*.\n\n> **Watch out.** Check the time of **both** clauses separately before writing—never assume both halves share the same tense.",
+        "根据笔记写句子。时间词告诉你怎样混合：\n\n- 过去的事情，结果在*现在*：*if I take the job in Tokyo in 2019 → I be in Japan now* 写成 *If I had taken the job in Tokyo in 2019, I would be in Japan now.*\n- 现在的状态，结果在过去：*if I speak French → I understand the film last night* 写成 *If I spoke French, I would have understood the film last night.*\n\n*if* 部分后面加逗号。可以把 *I had* 和 *I would* 写成 *I'd*，把 *would have* 写成 *would've*，*I*、*he*、*she* 后面的 *were* 也可以写成 *was*。\n\n> **注意。** 动笔前把前后两半的时间分开判断——不要默认两半用同一套时态。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -1514,6 +1529,10 @@ const balanceEssay = judgedTopic({
     "Write an essay of 250 to 300 words that introduces a question neutrally, gives the arguments for and the arguments against in separate paragraphs, and reaches a balanced conclusion.",
     "写一篇 250 到 300 词的议论文：中立地引出问题，分段列出支持和反对的论点，并得出权衡后的结论。",
   ),
+  intro: t(
+    "When debating whether schools should shorten the summer break, a for-and-against essay holds back its own verdict at the start, gives each side an equally well-developed paragraph, and weighs them in a balanced conclusion.",
+    "讨论“学校是否应缩短暑假”时，正反论证类议论文先不急于表态，而是给支持和反对两方同等充分的段落，最后在结论段权衡并给出判断。",
+  ),
   prerequisites: ["writing-an-opinion-essay", "writing-a-counterclaim-paragraph"],
   encompasses: [
     { topic: "writing-an-opinion-essay", weight: 0.3 },
@@ -1524,8 +1543,8 @@ const balanceEssay = judgedTopic({
     id: "for-and-against-essay",
     title: t("Both sides, then a judgment", "先讲两方，再下判断"),
     explanation: t(
-      "A for-and-against essay looks fairly at both sides of a question before you decide. Plan four paragraphs:\n\n1. **Introduction**: present the question and say that people disagree about it, without giving your own view yet: *There are strong arguments on both sides.*\n2. **Arguments for**: two or three points, each explained and supported with an example: *On the one hand, ... Furthermore, ...*\n3. **Arguments against**: the same number of points, as fully developed: *On the other hand, ... Critics point out that ...*\n4. **Conclusion**: weigh the two sides and say which you find stronger, or under what conditions each is right: *In conclusion, both sides make valid points. On balance, I believe ...* Do not add a new argument here.\n\nGive both sides a fair hearing: describe the side you disagree with as its supporters would, not as a weak position. Keep a neutral, formal tone, with no contractions.",
-      "正反论证类议论文在下结论之前公平地看待问题的两方面。安排四段：\n\n1. **引言**：提出问题，说明人们对此看法不一，先不表明自己的观点：*There are strong arguments on both sides.*\n2. **支持的论点**：两三点，每点都有解释和例子：*On the one hand, ... Furthermore, ...*\n3. **反对的论点**：同样多的论点，同样充分地展开：*On the other hand, ... Critics point out that ...*\n4. **结论**：权衡两方，说明你认为哪一方更有说服力，或者各自在什么条件下成立：*In conclusion, both sides make valid points. On balance, I believe ...* 不要在这里加新的论点。\n\n要公平地对待两方：像对方的支持者那样介绍你不赞同的一方，而不是把它写成不堪一击的观点。语气中立、正式，不用缩写。和观点类议论文不同，这种文章的引言不急于表态，判断留到结尾。",
+      "A for-and-against essay looks fairly at both sides of a question before you decide. Plan four paragraphs:\n\n1. **Introduction**: present the question and say that people disagree about it, without giving your own view yet: *There are strong arguments on both sides.*\n2. **Arguments for**: two or three points, each explained and supported with an example: *On the one hand, ... Furthermore, ...*\n3. **Arguments against**: the same number of points, as fully developed: *On the other hand, ... Critics point out that ...*\n4. **Conclusion**: weigh the two sides and say which you find stronger, or under what conditions each is right: *In conclusion, both sides make valid points. On balance, I believe ...* Do not add a new argument here.\n\nGive both sides a fair hearing: describe the side you disagree with as its supporters would, not as a weak position. Keep a neutral, formal tone, with no contractions.\n\n> **Watch out.** Keep your personal verdict out of the introduction—save it for the conclusion—and make sure both body paragraphs receive comparable depth.",
+      "正反论证类议论文在下结论之前公平地看待问题的两方面。安排四段：\n\n1. **引言**：提出问题，说明人们对此看法不一，先不表明自己的观点：*There are strong arguments on both sides.*\n2. **支持的论点**：两三点，每点都有解释和例子：*On the one hand, ... Furthermore, ...*\n3. **反对的论点**：同样多的论点，同样充分地展开：*On the other hand, ... Critics point out that ...*\n4. **结论**：权衡两方，说明你认为哪一方更有说服力，或者各自在什么条件下成立：*In conclusion, both sides make valid points. On balance, I believe ...* 不要在这里加新的论点。\n\n要公平地对待两方：像对方的支持者那样介绍你不赞同的一方，而不是把它写成不堪一击的观点。语气中立、正式，不用缩写。和观点类议论文不同，这种文章的引言不急于表态，判断留到结尾。\n\n> **注意。** 引言里先不要亮出个人立场，把判断留到结尾；两个主体段的篇幅与说理深度要大致均衡。",
     ),
   },
   question: t(

@@ -528,9 +528,16 @@ const continuing: readonly SolvedChoice[] = interleave(
       shown: `${s.text}\n\n**Paragraph:** ${given} ___`,
       right,
       wrong,
+      whyNot: wrong.map((w) => {
+        const clean = w.replace(/\.$/u, "");
+        return t(
+          `"${clean}" breaks continuity with the story or contradicts the given opening sentence.`,
+          `“${clean}”破坏了故事的连贯性，或与前文及所给段首句矛盾。`,
+        );
+      }),
       solution: t(
-        `**${right}** ${why} The sentence after a given opening must follow from it directly and agree with everything the story has said; a sudden new event or a contradiction loses marks.`,
-        `**${right}** ${why} 段首句之后的句子必须直接承接它，并与故事已有内容一致；突然出现的新事件或前后矛盾都会失分。`,
+        `**${right}** ${why} The sentence after a given opening must follow from it directly and agree with everything the story has said; a sudden new event or a contradiction loses marks.\n\n**Check.** Read the given opening together with this sentence and verify it matches every earlier fact (characters, setting, and problem).`,
+        `**${right}** ${why} 段首句之后的句子必须直接承接它，并与故事已有内容一致；突然出现的新事件或前后矛盾都会失分。\n\n**检验。** 把所给段首句与这一句连起来读一遍，确认它与前文的人物、场景和矛盾设定完全吻合。`,
       ),
     })),
   ),
@@ -540,9 +547,21 @@ const shownFeelings: readonly SolvedChoice[] = showing.map(([feeling, right, wro
   shown: `Which sentence **shows** that the character is *${feeling}*, without naming the feeling?`,
   right,
   wrong,
+  whyNot: wrong.map((w, idx) => {
+    const clean = w.replace(/\.$/u, "");
+    return idx < 2
+      ? t(
+          `"${clean}" only tells the reader the feeling directly instead of showing it through physical action or behaviour.`,
+          `“${clean}”只是直接说出情绪，没有通过动作或神态把它展现出来。`,
+        )
+      : t(
+          `"${clean}" shows an action, but it conveys a different or opposite feeling from *${feeling}*.`,
+          `“${clean}”虽然写了动作，但表现的是与 *${feeling}* 不同甚至相反的情绪。`,
+        );
+  }),
   solution: t(
-    `**${right}** It shows the feeling through actions and the body, so the reader sees it. *${wrong[0]}* and *${wrong[1]}* only name it, and *${wrong[2]}* shows a different feeling.`,
-    `**${right}** 它通过动作和身体反应来表现情感，让读者看到。*${wrong[0]}* 和 *${wrong[1]}* 只是说出了情感，*${wrong[2]}* 表现的是另一种情感。`,
+    `**${right}** It shows the feeling through actions and the body, so the reader sees it. *${wrong[0]}* and *${wrong[1]}* only name it, and *${wrong[2]}* shows a different feeling.\n\n**Check.** Verify that the sentence avoids naming *${feeling}* directly and lets the reader picture the feeling through concrete action.`,
+    `**${right}** 它通过动作和身体反应来表现情感，让读者看到。*${wrong[0]}* 和 *${wrong[1]}* 只是说出了情感，*${wrong[2]}* 表现的是另一种情感。\n\n**检验。** 确认这句话没有直接说出 *${feeling}*，而是让读者通过具体动作感受到这种情绪。`,
   ),
 }));
 
@@ -554,6 +573,10 @@ export const continuationSkills: TopicDef = examTopic({
     "Gaokao continuation writing, step by step: the sentence that follows a given paragraph opening, and the sentence that shows a feeling through action.",
     "高考读后续写的分步练习：承接所给段首句的句子，以及通过动作表现情感的句子。",
   ),
+  intro: t(
+    "High-scoring Gaokao continuations depend on two concrete habits: locking sentence two tightly onto the given opening without contradicting earlier details, and showing emotion (*tears rolled down her cheeks*) instead of naming it (*she was sad*).",
+    "高分高考读后续写靠两个硬功夫：一是把第二句紧紧接在段首句后面且不与前文矛盾，二是用具体动作神态（如 *tears rolled down her cheeks*）展现情绪，而非干巴巴地说 *she was sad*。",
+  ),
   strand: "writing",
   prerequisites: ["b1-words-emotions", "ordering-sentences-in-a-paragraph"],
   encompasses: [],
@@ -563,8 +586,8 @@ export const continuationSkills: TopicDef = examTopic({
       "gaokao-following-the-opening",
       t("Following the Given Opening", "承接所给段首句"),
       t(
-        "Each paragraph of a continuation starts with a sentence you are given. The sentence you write next must follow from it: if the given sentence says someone *took a deep breath and knelt down*, the next one says what they did or said then. It must also agree with the story: a character who is ill cannot suddenly appear, and a phone with no signal cannot ring. Keep the story moving toward solving its problem.",
-        "续写的每一段都以所给的段首句开头。你写的下一句必须承接它：如果段首句说某人 *took a deep breath and knelt down*，下一句就写他接着做了什么、说了什么。它还必须与故事一致：生病的人不能突然出现，没有信号的手机不能响。让故事朝着解决问题的方向发展。",
+        "Each paragraph of a continuation starts with a sentence you are given. The sentence you write next must follow from it: if the given sentence says someone *took a deep breath and knelt down*, the next one says what they did or said then. It must also agree with the story: a character who is ill cannot suddenly appear, and a phone with no signal cannot ring. Keep the story moving toward solving its problem.\n\n> **Watch out.** Never invent a shortcut that contradicts the story's setup—if a phone has no signal or a friend is home sick, that constraint still holds in your continuation.",
+        "续写的每一段都以所给的段首句开头。你写的下一句必须承接它：如果段首句说某人 *took a deep breath and knelt down*，下一句就写他接着做了什么、说了什么。它还必须与故事一致：生病的人不能突然出现，没有信号的手机不能响。让故事朝着解决问题的方向发展。\n\n> **注意。** 切忌为了图省事写出与前文设定矛盾的情节——如果前文交代了手机没信号或朋友生病，续写中必须严格遵守这些限制。",
       ),
       solvedChoiceGenerator(t("Choose the sentence that best follows the given opening.", "选出最能承接所给段首句的句子。"), continuing),
     ),
@@ -572,8 +595,8 @@ export const continuationSkills: TopicDef = examTopic({
       "gaokao-showing-feelings",
       t("Showing a Feeling", "表现情感"),
       t(
-        "Strong continuations show feelings instead of naming them. *She was nervous* tells the reader; *her hands trembled as she opened the envelope* lets the reader see it. Use what a character does, what their body does and what they say: *his face turned red*, *she could not sit still*, *he slammed the door*. Make sure the action matches the feeling.",
-        "好的续写表现情感而不是直接说出来。*She was nervous* 是告诉读者；*her hands trembled as she opened the envelope* 让读者看到。用人物的动作、身体反应和话语：*his face turned red*、*she could not sit still*、*he slammed the door*。确保动作与情感相符。",
+        "Strong continuations show feelings instead of naming them. *She was nervous* tells the reader; *her hands trembled as she opened the envelope* lets the reader see it. Use what a character does, what their body does and what they say: *his face turned red*, *she could not sit still*, *he slammed the door*. Make sure the action matches the feeling.\n\n> **Watch out.** Do not pick a sentence that still labels the emotion (*felt relieved*, *was angry*) or one whose physical action matches the **opposite** mood.",
+        "好的续写表现情感而不是直接说出来。*She was nervous* 是告诉读者；*her hands trembled as she opened the envelope* 让读者看到。用人物的动作、身体反应和话语：*his face turned red*、*she could not sit still*、*he slammed the door*。确保动作与情感相符。\n\n> **注意。** 排除那些仍然直接贴情绪标签（如 *felt relieved*、*was angry*）的句子，也要排除动作与目标情绪**相反**的选项。",
       ),
       solvedChoiceGenerator(t("Choose the best sentence.", "选出最佳句子。"), shownFeelings),
     ),

@@ -79,7 +79,15 @@ function completeGenerator(question: Text, bank: readonly Cut[]): (rng: Rng) => 
     return {
       prompt: joinText([question, same(quote(`${before}${kept}\\_\\_\\_${after}`))]),
       answer: { checker: "word-form", expected: [word, word.slice(kept.length)], input: { kind: "text" } },
-      solution: joinText([t(`The word is **${word}**.`, `这个词是 **${word}**。`), ...(why ? [why] : []), same(quote(full))]),
+      solution: joinText([
+        t(`The word is **${word}**.`, `这个词是 **${word}**。`),
+        ...(why ? [why] : []),
+        same(quote(full)),
+        t(
+          `**Check.** Read the completed sentence aloud with **${word}**: confirm the starting letters (${kept}…), the meaning, and the exact grammatical form all fit.`,
+          `**检验。** 把 **${word}** 放回整句通读一遍：确认开头字母（${kept}…）、语义以及词形/词性全都贴合。`,
+        ),
+      ]),
       canonical: word,
       wrong: [...item.wrong],
     };
@@ -183,6 +191,10 @@ export const completeTheWords: TopicDef = examTopic({
     "Complete a word cut after its first half, from the sentence around it: first short words, then longer words whose form the sentence decides.",
     "根据上下文补全只给出前半部分的单词：先是短词，再是形式由句子决定的长词。",
   ),
+  intro: t(
+    "When you see *The bridge was des___ by a young engineer*, the letters *des* point to *design*, and the passive *was* locks in the ending *-ed* (*designed*). Completing cut words pairs context meaning with exact grammar.",
+    "看到 *The bridge was des___ by a young engineer* 时，前几个字母 *des* 指向 *design*，而前面的被动助动词 *was* 锁定了过去分词词尾 *-ed*（*designed*）。补全单词既考上下文语义，也考精确词形。",
+  ),
   strand: "reading",
   prerequisites: ["b2-words-linking-1", "b2-words-research-2"],
   encompasses: [],
@@ -192,8 +204,8 @@ export const completeTheWords: TopicDef = examTopic({
       "short-words",
       t("Short words", "短词"),
       t(
-        "Read the whole sentence before you type. Ask what the sentence needs at the gap: a noun after *the*, a verb after *can*, a word such as *than* after *faster*. Then think of a word that begins with the letters shown and fits the meaning.",
-        "先读完整个句子再输入。想一想空格处句子需要什么：the 之后是名词，can 之后是动词，faster 之后是 than 等。然后想出一个以所给字母开头、意思又通顺的词。",
+        "Read the whole sentence before you type. Ask what the sentence needs at the gap: a noun after *the*, a verb after *can*, a word such as *than* after *faster*. Then think of a word that begins with the letters shown and fits the meaning.\n\n> **Watch out.** Watch near-lookalike words (*than* vs. *then*, *price* vs. *prize*, *well* vs. *good*) and check singular vs. plural before submitting.",
+        "先读完整个句子再输入。想一想空格处句子需要什么：the 之后是名词，can 之后是动词，faster 之后是 than 等。然后想出一个以所给字母开头、意思又通顺的词。\n\n> **注意。** 留心形近易混词（*than* 与 *then*、*price* 与 *prize*、*well* 与 *good*），提交前还要核对单复数。",
       ),
       completeGenerator(question, short),
     ),
@@ -201,8 +213,8 @@ export const completeTheWords: TopicDef = examTopic({
       "longer-words",
       t("Longer words and their forms", "长词及其形式"),
       t(
-        "With a longer word, the first half often shows the word, but not its ending. Look at the words around the gap: an article asks for a noun, *many* for a plural, *was* for a past participle, a preposition for *-ing*, and a verb or an adjective for an adverb in *-ly*.",
-        "长词的前半部分往往已经显示出是哪个词，但看不出词尾。看空格周围的词：冠词要求名词，many 要求复数，was 要求过去分词，介词要求 -ing 形式，修饰动词或形容词则用以 -ly 结尾的副词。",
+        "With a longer word, the first half often shows the word, but not its ending. Look at the words around the gap: an article asks for a noun, *many* for a plural, *was* for a past participle, a preposition for *-ing*, and a verb or an adjective for an adverb in *-ly*.\n\n> **Watch out.** Recognizing the root word is not enough—check the exact **ending** (*-tion*, *-ly*, *-ed*, *-ing*, or plural *-s*) required by the grammar around the blank.",
+        "长词的前半部分往往已经显示出是哪个词，但看不出词尾。看空格周围的词：冠词要求名词，many 要求复数，was 要求过去分词，介词要求 -ing 形式，修饰动词或形容词则用以 -ly 结尾的副词。\n\n> **注意。** 光认出词根还不够——务必核对空格前后语法所要求的准确**词尾**（*-tion*、*-ly*、*-ed*、*-ing* 或复数 *-s*）。",
       ),
       completeGenerator(question, long),
     ),

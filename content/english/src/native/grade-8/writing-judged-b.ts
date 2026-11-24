@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 import { limits } from "./writing-judged-a.ts";
 
 /** sceneBank gives the situation of a scene to write for the stage. */
@@ -208,6 +208,10 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
       "Write a scene in script format in which a conflict between characters reaches a turning point, with stage directions that show what the audience sees and hears.",
       "用剧本格式写一场戏：人物之间的冲突达到转折点，舞台说明要表现观众看到和听到的东西。",
     ),
+    intro: t(
+      "On stage, no narrator can tell the audience that a character is panicking — instead, the script shows her setting a teacup down so hard it rattles, then blurting out the truth. A stage scene drives a conflict to a clear turning point using only dialogue and visible, audible directions.",
+      "在舞台上，没有旁白可以告诉观众人物有多慌张——剧本只能写出她把茶杯重重放下、杯碟作响，随后脱口说出真相。一场舞台戏全靠对话和看得见、听得着的舞台说明，把冲突推向清晰的转折点。",
+    ),
     prerequisites: after("writing-stage-directions", "comparing-a-play-and-its-production"),
     encompasses: [{ topic: "writing-stage-directions", weight: 0.2 }],
     xp: 24,
@@ -218,8 +222,8 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
         "conflict-and-turning-point",
         t("Conflict and Turning Point", "冲突与转折点"),
         t(
-          "A good scene is built on **conflict**: two characters want different things, or one wants something the other is hiding. Let the conflict build through the dialogue until a **turning point**, a moment when something changes: a secret comes out, a choice is made, an enemy becomes an ally. End the scene soon after the turn.",
-          "好的一场戏建立在**冲突**之上：两个人物想要不同的东西，或者一个人想要另一个人隐瞒的东西。让冲突在对话中逐步升级，直到**转折点**，即某件事发生变化的时刻：秘密被揭开、作出选择、敌人变成盟友。转折之后尽快结束这场戏。",
+          "A good scene is built on **conflict**: two characters want different things, or one wants something the other is hiding. Let the conflict build through the dialogue until a **turning point**, a moment when something changes: a secret comes out, a choice is made, an enemy becomes an ally. End the scene soon after the turn.\n\n> **Watch out.** Do not let two characters argue in circles without anything changing—the scene needs a clear moment where a character's decision or confession shifts the balance.",
+          "好的一场戏建立在**冲突**之上：两个人物想要不同的东西，或者一个人想要另一个人隐瞒的东西。让冲突在对话中逐步升级，直到**转折点**，即某件事发生变化的时刻：秘密被揭开、作出选择、敌人变成盟友。转折之后尽快结束这场戏。\n\n> **注意。** 不要让两个人物原地兜圈子吵完却什么都没改变——这场戏必须有一个清晰的瞬间，靠某个决定或坦白扭转局势。",
         ),
         writingGenerator(
           t(
@@ -229,15 +233,18 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
           sceneBank,
           ["g8-scene-turn", "g4-script-format", "g8-scene-shows"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check the script's arc: speaker names and stage directions follow script format, the dialogue raises tension over the prompt's conflict, and a clear turning point changes the characters' positions before the scene ends.",
+            "核对剧本结构：人物名与舞台说明符合剧本格式，对话围绕题干冲突层层递进，并在收尾前出现一个改变局势的清晰转折点。",
+          ),
         ),
       ),
       point(
         "directions-that-show",
         t("Directions That Show", "起展现作用的说明"),
         t(
-          "On stage, the audience knows only what it can see and hear. Write stage directions in the **present tense** that turn feelings into actions: not *(She is afraid)* but *(Her hands shake; the cups rattle on the tray.)* Use directions for sounds and lights too, *(A bell strikes eleven.)*, and open the scene with a short direction that sets the place.",
-          "在舞台上，观众只知道他们能看到和听到的东西。用**现在时**写舞台说明，把感受变成动作：不写 *(She is afraid)*，而写 *(Her hands shake; the cups rattle on the tray.)* 也用说明表示声音和灯光，如 *(A bell strikes eleven.)*，并在开场用一段简短的说明交代地点。",
+          "On stage, the audience knows only what it can see and hear. Write stage directions in the **present tense** that turn feelings into actions: not *(She is afraid)* but *(Her hands shake; the cups rattle on the tray.)* Use directions for sounds and lights too, *(A bell strikes eleven.)*, and open the scene with a short direction that sets the place.\n\n> **Watch out.** Cut any stage direction that reports invisible thoughts (*he remembers his childhood*) or uses past tense—if an actor cannot perform it or a technician cannot cue it, rewrite it as action, sound, or light.",
+          "在舞台上，观众只知道他们能看到和听到的东西。用**现在时**写舞台说明，把感受变成动作：不写 *(She is afraid)*，而写 *(Her hands shake; the cups rattle on the tray.)* 也用说明表示声音和灯光，如 *(A bell strikes eleven.)*，并在开场用一段简短的说明交代地点。\n\n> **注意。** 删掉写内心想法（如 *he remembers his childhood*）或用过去时的舞台说明——演员演不出来、灯光音响做不出来的，就改写成动作、声音或灯光。",
         ),
         writingGenerator(
           t(
@@ -247,7 +254,10 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
           sceneBank,
           ["g8-scene-shows", "g4-script-format", "g8-scene-turn"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Read every stage direction by itself: confirm it is in the present tense, starts with a setting note, and describes something an audience could literally see or hear onstage.",
+            "把所有舞台说明单独读一遍：确认全部用现在时，开场交代了场景，且每一条都是观众在台下真能看到或听到的内容。",
+          ),
         ),
       ),
     ],
@@ -259,6 +269,10 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
       "Write a reflective essay that tells a specific experience in detail, contrasts how you saw it then with how you see it now and ends with what it means.",
       "写一篇反思性文章：详细讲述一段具体经历，对比当时和现在的看法，并以它的意义作结。",
     ),
+    intro: t(
+      "Everyone has a memory that looked like an embarrassment at twelve and looks like a turning point years later — like dropping a violin bow mid-recital and discovering the audience clapped anyway. A reflective essay pairs a vivid scene with the distance between *then* and *now*.",
+      "每个人都有一段十二岁时觉得丢脸、几年后却看成转折点的记忆——比如演奏会上掉下琴弓，却发现台下依然响起掌声。反思性文章把鲜活的场景与“当时”和“现在”的视角差距结合起来。",
+    ),
     prerequisites: after("interviewing-and-quoting-a-person", "comparing-a-memoir-and-a-report"),
     encompasses: [{ topic: "interviewing-and-quoting-a-person", weight: 0.2 }],
     xp: 24,
@@ -269,8 +283,8 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
         "telling-the-moment",
         t("Telling the Moment", "讲述那个时刻"),
         t(
-          "A reflective essay begins with **a specific experience**, told with concrete details: not *I felt left out at my new school*, but *A boy named Liam laughed and held his nose. Everyone looked at me.* Choose the moment when something shifted, tell it as a scene, and let a line of dialogue or a small detail carry the feeling.",
-          "反思性文章从**一段具体经历**开始，用具体细节讲述：不写 *I felt left out at my new school*，而写 *A boy named Liam laughed and held his nose. Everyone looked at me.* 选择事情发生转变的那个时刻，把它写成一个场景，让一句对话或一个小细节承载感受。",
+          "A reflective essay begins with **a specific experience**, told with concrete details: not *I felt left out at my new school*, but *A boy named Liam laughed and held his nose. Everyone looked at me.* Choose the moment when something shifted, tell it as a scene, and let a line of dialogue or a small detail carry the feeling.\n\n> **Watch out.** Do not summarize a whole year in three vague sentences—zoom into the exact scene, gesture, or spoken line that anchors the essay's reflection.",
+          "反思性文章从**一段具体经历**开始，用具体细节讲述：不写 *I felt left out at my new school*，而写 *A boy named Liam laughed and held his nose. Everyone looked at me.* 选择事情发生转变的那个时刻，把它写成一个场景，让一句对话或一个小细节承载感受。\n\n> **注意。** 不要用三句空话概括一整年——把镜头拉近到真正触发反思的那个具体场景、动作或原话上。",
         ),
         writingGenerator(
           t(
@@ -280,15 +294,18 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
           reflectionBank,
           ["g8-reflect-moment", "g8-reflect-insight", "g8-reflect-then-now"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check that the essay zooms into a concrete scene from the notes (with sensory detail or dialogue), contrasts the earlier reaction with today's view, and ends on a clear personal insight.",
+            "确认文章把笔记中的关键时刻写成具体场景（带感官细节或对话），对比了当时与现在的看法，并以清晰的个人感悟收尾。",
+          ),
         ),
       ),
       point(
         "then-and-now",
         t("Then and Now", "当时与现在"),
         t(
-          "What makes an essay reflective is the distance between **then and now**. Say how you saw the experience at the time, and how you see it today: *At the time, I thought I had to choose between my old life and my new one. Now I understand that the two can sit at the same table.* End with the **insight**: what the experience taught you, beyond what happened.",
-          "使文章具有反思性的，是**当时与现在**之间的距离。说出你当时如何看待这段经历，以及你今天如何看待它：*At the time, I thought I had to choose between my old life and my new one. Now I understand that the two can sit at the same table.* 以**感悟**结尾：这段经历教会了你什么，而不只是发生了什么。",
+          "What makes an essay reflective is the distance between **then and now**. Say how you saw the experience at the time, and how you see it today: *At the time, I thought I had to choose between my old life and my new one. Now I understand that the two can sit at the same table.* End with the **insight**: what the experience taught you, beyond what happened.\n\n> **Watch out.** Do not stop right after the story ends—if the essay never steps back to show how your understanding changed from *then* to *now*, it is only a narrative, not a reflection.",
+          "使文章具有反思性的，是**当时与现在**之间的距离。说出你当时如何看待这段经历，以及你今天如何看待它：*At the time, I thought I had to choose between my old life and my new one. Now I understand that the two can sit at the same table.* 以**感悟**结尾：这段经历教会了你什么，而不只是发生了什么。\n\n> **注意。** 不要讲完事情经过就收笔——如果文章没有拉开距离写出“当时以为”与“现在明白”之间的变化，它就只是记叙文，而不是反思性文章。",
         ),
         writingGenerator(
           t(
@@ -298,7 +315,10 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
           reflectionBank,
           ["g8-reflect-then-now", "g8-reflect-insight", "g8-reflect-moment"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Locate the explicit contrast between how the narrator judged the event at the time and what they understand now; confirm the final paragraph states a broader insight rather than merely repeating the plot.",
+            "找出文中明确对比“当时怎么想”和“现在怎么看”的句子；确认最后一段提炼出了更深层的领悟，而不只是重复经过。",
+          ),
         ),
       ),
     ],
@@ -310,6 +330,10 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
       "Write an essay that explains how a modern story retells an old tale: the pattern it keeps, what it changes and what the change does to the meaning.",
       "写一篇文章，解释一个现代故事如何改编一个古老的故事：它保留了什么模式、改变了什么，以及这种改变对意义有什么影响。",
     ),
+    intro: t(
+      "When a modern novel retells *The Odyssey* as a teenager crossing a city after a storm, the plot milestones stay recognizable while the hero's goal shifts. Writing about a retold tale means showing both what stays familiar and how the writer's changes transform the theme.",
+      "当现代小说把《奥德赛》改编成一名少年在暴风雨后穿城回家的故事时，情节脉络依然可辨，主角的目标却变了。分析改编故事的文章既要指出保留的框架，更要讲清作者的改动怎样重塑了主题。",
+    ),
     prerequisites: after("how-modern-stories-use-old-tales", "writing-a-literary-analysis-paragraph"),
     encompasses: [{ topic: "how-modern-stories-use-old-tales", weight: 0.2 }],
     xp: 24,
@@ -320,8 +344,8 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
         "what-is-kept-and-what-is-changed",
         t("What Is Kept and What Is Changed", "保留了什么，改变了什么"),
         t(
-          "An essay on a retold tale first shows the **pattern** the modern story keeps: the mistreated heroine, the warning ignored, the forbidden box opened. Then it identifies what the modern story **changes**: the setting, the hero, the ending. Give details from both stories side by side, with words such as *like*, *just as*, *by contrast* and *however*.",
-          "关于改编故事的文章首先说明现代故事保留的**模式**：受虐待的女主角、被忽视的警告、被打开的禁忌之盒。然后指出现代故事**改变**了什么：背景、主人公、结局。把两个故事的细节并列，使用 *like*、*just as*、*by contrast*、*however* 等词。",
+          "An essay on a retold tale first shows the **pattern** the modern story keeps: the mistreated heroine, the warning ignored, the forbidden box opened. Then it identifies what the modern story **changes**: the setting, the hero, the ending. Give details from both stories side by side, with words such as *like*, *just as*, *by contrast* and *however*.\n\n> **Watch out.** Do not just retell the old tale in paragraph one and the modern story in paragraph two—put matching details from both texts side by side so the pattern and the shift stand out clearly.",
+          "关于改编故事的文章首先说明现代故事保留的**模式**：受虐待的女主角、被忽视的警告、被打开的禁忌之盒。然后指出现代故事**改变**了什么：背景、主人公、结局。把两个故事的细节并列，使用 *like*、*just as*、*by contrast*、*however* 等词。\n\n> **注意。** 不要第一段复述老故事、第二段复述新故事——把两篇故事相对应的细节并排比较，保留的模式和做出的改动才会一目了然。",
         ),
         writingGenerator(
           t(
@@ -331,15 +355,18 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
           retoldBank,
           ["g8-retold-pattern", "g8-retold-change", "g8-retold-meaning"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Check that the essay pairs specific details from both the old tale and the modern retelling—first showing the shared pattern, then pinpointing the key changes and explaining how they shift the meaning.",
+            "核对文章是否把老故事和现代改编的具体细节并列对照：先指出共同的情节模式，再点明关键改动，并说明这些改动如何改变了故事的意义。",
+          ),
         ),
       ),
       point(
         "what-the-change-means",
         t("What the Change Means", "改变意味着什么"),
         t(
-          "Listing differences is not enough; the heart of the essay is **why the change matters**. Ask what lesson the old tale taught, and what the modern story teaches instead: *The old tale suggests that a good girl will be rewarded if she waits for help. The modern story suggests that skill and hard work can change a life.* End with that shift in meaning.",
-          "仅仅列出差异是不够的；文章的核心是**改变为什么重要**。问问古老的故事教了什么道理，现代故事又改教了什么：*The old tale suggests that a good girl will be rewarded if she waits for help. The modern story suggests that skill and hard work can change a life.* 以意义的这种转变作结。",
+          "Listing differences is not enough; the heart of the essay is **why the change matters**. Ask what lesson the old tale taught, and what the modern story teaches instead: *The old tale suggests that a good girl will be rewarded if she waits for help. The modern story suggests that skill and hard work can change a life.* End with that shift in meaning.\n\n> **Watch out.** Do not stop at surface differences (*one uses a bicycle instead of a carriage*)—always explain what new message or value that change puts at the center of the modern story.",
+          "仅仅列出差异是不够的；文章的核心是**改变为什么重要**。问问古老的故事教了什么道理，现代故事又改教了什么：*The old tale suggests that a good girl will be rewarded if she waits for help. The modern story suggests that skill and hard work can change a life.* 以意义的这种转变作结。\n\n> **注意。** 不要停在表面差异上（如“一个骑自行车，一个坐马车”）——必须点出这一改动把什么新的道理或价值观推到了现代故事的中心。",
         ),
         writingGenerator(
           t(
@@ -349,7 +376,10 @@ export const writingJudgedTopics8b: readonly TopicDef[] = [
           retoldBank,
           ["g8-retold-meaning", "g8-retold-change", "g8-retold-pattern"],
           limits,
-          onePiece,
+          checkedPiece(
+            "Verify that the closing analysis explicitly compares the old tale's message with the modern story's message and ties that shift directly to the changes discussed earlier.",
+            "确认结尾分析明确对比了老故事与现代改编各自传达的道理，并把这种意义的转变直接扣回到前文指出的改动上。",
+          ),
         ),
       ),
     ],

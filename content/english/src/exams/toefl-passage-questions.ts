@@ -456,14 +456,25 @@ function items(asked: (p: Passage) => readonly Asked[], purpose: boolean): reado
         shown: `${p.text}\n\n**${question}**`,
         right,
         wrong,
+        whyNot: wrong.map((w) =>
+          purpose
+            ? t(
+                `"${w}" does not describe the role this detail plays in the paragraph—check the sentence right before it.`,
+                `“${w}”并不是这个细节在段中的作用，请回看它前面的句子与衔接词。`,
+              )
+            : t(
+                `Replacing the target word with "${w}" changes or breaks the meaning of the sentence in this context.`,
+                `把原词换成“${w}”会改变或破坏这句话在当前语境中的意思。`,
+              ),
+        ),
         solution: purpose
           ? t(
-              `**${right}**. ${why} A question about why something is mentioned asks what it does in the passage: an example, a contrast, a cause, a limitation. Look at the sentence before it and the words that introduce it.`,
-              `**${right}**。${why} 问“为什么提到某事”，问的是它在文章中的作用：举例、对比、原因还是局限。看它前面的一句和引出它的词。`,
+              `**${right}**. ${why} A question about why something is mentioned asks what it does in the passage: an example, a contrast, a cause, a limitation. Look at the sentence before it and the words that introduce it.\n\n**Check.** Trace how this detail connects to the claim just before it—its rhetorical job matches **${right}**.`,
+              `**${right}**。${why} 问“为什么提到某事”，问的是它在文章中的作用：举例、对比、原因还是局限。看它前面的一句和引出它的词。\n\n**检验。** 顺着它与前一句观点的逻辑联系核对——它在文中的修辞作用正是 **${right}**。`,
             )
           : t(
-              `**${right}**. ${why} Put the option in place of the word: the right one keeps the meaning of the sentence. A common meaning of the word that does not fit here is the usual trap.`,
-              `**${right}**。${why} 把选项代入原词的位置：正确的选项能保持句子的意思。这个词的常见意思如果在这里不合适，就是常见的陷阱。`,
+              `**${right}**. ${why} Put the option in place of the word: the right one keeps the meaning of the sentence. A common meaning of the word that does not fit here is the usual trap.\n\n**Check.** Substitute **${right}** directly into the original sentence and verify the meaning stays completely intact.`,
+              `**${right}**。${why} 把选项代入原词的位置：正确的选项能保持句子的意思。这个词的常见意思如果在这里不合适，就是常见的陷阱。\n\n**检验。** 把 **${right}** 直接代回原句通读，确认句意保持不变。`,
             ),
       })),
     ),
@@ -478,6 +489,10 @@ export const passageQuestions: TopicDef = examTopic({
     "TOEFL-style questions after short academic passages: the meaning of a word in its context, and why the writer mentions something.",
     "托福风格的学术短文题：词在上下文中的意思，以及作者为什么提到某事。",
   ),
+  intro: t(
+    "TOEFL academic reading asks two staple questions: what a word means **in this exact sentence** (not in a dictionary list), and **why** the author brings up a particular example, contrast, or fact.",
+    "托福学术阅读常考两类核心题：某个词在**当前句中**的具体意思（而非词典里的常见义），以及作者**为什么**在段落里提到某个例子、对比或事实。",
+  ),
   strand: "reading",
   prerequisites: ["context-clues", "authors-purpose"],
   encompasses: [
@@ -490,8 +505,8 @@ export const passageQuestions: TopicDef = examTopic({
       "toefl-word-in-context",
       t("A Word in Its Context", "上下文中的词义"),
       t(
-        "The question asks what a word means in this sentence, not in general. Read the whole sentence and the one after it: they often explain the word, give an example or say the opposite. Then put each option in its place and keep the one that leaves the meaning unchanged.",
-        "题目问的是词在这个句子里的意思，不是一般的意思。读完整句和后一句：它们常常解释这个词、举例，或者说出相反的意思。再把每个选项代入原词的位置，保留不改变句意的那个。",
+        "The question asks what a word means in this sentence, not in general. Read the whole sentence and the one after it: they often explain the word, give an example or say the opposite. Then put each option in its place and keep the one that leaves the meaning unchanged.\n\n> **Watch out.** Do not grab a familiar dictionary meaning without testing it inside the sentence—TOEFL often tests a secondary sense that fits only the passage's context.",
+        "题目问的是词在这个句子里的意思，不是一般的意思。读完整句和后一句：它们常常解释这个词、举例，或者说出相反的意思。再把每个选项代入原词的位置，保留不改变句意的那个。\n\n> **注意。** 不要不代入原句就直接选你最熟悉的词典义——托福常考在特定上下文里才成立的引申义。",
       ),
       solvedChoiceGenerator(
         t("Choose the best answer.", "选出最佳答案。"),
@@ -502,8 +517,8 @@ export const passageQuestions: TopicDef = examTopic({
       "toefl-why-mentioned",
       t("Why the Writer Mentions It", "作者为什么提到它"),
       t(
-        "A question such as *Why does the author mention X?* asks about the job X does in the passage. Find X, then read what comes before it: a claim it supports, a view it contrasts with, a problem it causes or solves. Signal words help: *for example* marks an example, *however* a contrast or limitation, *this is why* a cause.",
-        "*Why does the author mention X?* 这类题问的是 X 在文章中的作用。找到 X，再读它前面的内容：它支持的观点、与之对比的看法、它引起或解决的问题。信号词有帮助：*for example* 表示举例，*however* 表示对比或局限，*this is why* 表示原因。",
+        "A question such as *Why does the author mention X?* asks about the job X does in the passage. Find X, then read what comes before it: a claim it supports, a view it contrasts with, a problem it causes or solves. Signal words help: *for example* marks an example, *however* a contrast or limitation, *this is why* a cause.\n\n> **Watch out.** Do not pick an option that merely repeats a true fact about X—answer **why** the author put X there (to illustrate, contrast, explain a cause, or qualify a claim).",
+        "*Why does the author mention X?* 这类题问的是 X 在文章中的作用。找到 X，再读它前面的内容：它支持的观点、与之对比的看法、它引起或解决的问题。信号词有帮助：*for example* 表示举例，*however* 表示对比或局限，*this is why* 表示原因。\n\n> **注意。** 不要选只是复述 X 本身事实的选项——要回答作者放进 X 的**目的**（举例、对比、解释原因还是限定观点）。",
       ),
       solvedChoiceGenerator(
         t("Choose the best answer.", "选出最佳答案。"),

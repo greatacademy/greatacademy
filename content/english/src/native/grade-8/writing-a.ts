@@ -18,14 +18,18 @@ const technical = topic("writing", {
     "A summary of a technical text keeps the key steps and ideas in plain words, leaves out minor detail and adds nothing the text did not say.",
     "技术性文本的概要用平实的话保留关键步骤和要点，略去次要细节，不添加原文没有的内容。",
   ],
+  intro: [
+    "A manual on how a water pump works might list bolt sizes, paint color, and serial numbers alongside the pumping cycle. Summarizing a technical text means keeping the core mechanism in plain language while cutting specs and personal opinions.",
+    "一份水泵说明书除了工作原理，还会写满螺栓尺寸、漆色和零件编号。概括技术性文本就是要把核心工作原理用平实的话留下来，同时删去琐碎规格和个人评价。",
+  ],
   after: ["keeping-a-summary-objective", "how-a-paragraph-is-built"],
   points: [
     label(
       "does-it-belong-in-the-summary",
       ["Does It Belong in the Summary", "它该不该写进概要"],
       [
-        "A technical text, such as a manual or an explanation of a machine, is full of detail. A summary keeps **the key idea or step**: what the machine does and the main stages of how. It drops **minor detail**: exact measurements, part numbers and asides that a reader of the summary does not need. And it never **adds what the text did not say**, such as your guess, your opinion or a fact from elsewhere.",
-        "技术性文本，如说明书或对机器的解释，充满了细节。概要保留**关键要点或步骤**：机器做什么，以及怎样做的主要阶段。它略去**次要细节**：概要读者不需要的精确尺寸、零件编号和题外话。它绝不**添加原文没有的内容**，比如你的猜测、你的看法或来自别处的事实。",
+        "A technical text, such as a manual or an explanation of a machine, is full of detail. A summary keeps **the key idea or step**: what the machine does and the main stages of how. It drops **minor detail**: exact measurements, part numbers and asides that a reader of the summary does not need. And it never **adds what the text did not say**, such as your guess, your opinion or a fact from elsewhere.\n\n> **Watch out.** Do not mistake an accurate measurement or diagram label for a key step—if removing it still leaves the reader understanding how the process works, it is a minor detail.",
+        "技术性文本，如说明书或对机器的解释，充满了细节。概要保留**关键要点或步骤**：机器做什么，以及怎样做的主要阶段。它略去**次要细节**：概要读者不需要的精确尺寸、零件编号和题外话。它绝不**添加原文没有的内容**，比如你的猜测、你的看法或来自别处的事实。\n\n> **注意。** 不要把精确尺寸或图注编号当成关键步骤——只要删掉它后读者仍能明白工作过程，它就是次要细节。",
       ],
       [
         "A text explains how a steam engine works. Does this sentence belong in a summary of it?",
@@ -66,22 +70,22 @@ const technical = topic("writing", {
       {
         "a key step": L(
           "关键步骤",
-          "The sentence gives a main idea or a main stage of the process, which any summary must keep.",
-          "这个句子给出主要观点或过程的主要阶段，任何概要都必须保留。",
+          "The sentence gives a main idea or a main stage of the process, which any summary must keep.\n\n**Check.** Ask what happens if you delete this sentence: the explanation of how the device works loses an essential stage.",
+          "这个句子给出主要观点或过程的主要阶段，任何概要都必须保留。\n\n**检验。** 试想删掉这一句：整个装置的工作原理就会少掉一个不可或缺的环节。",
           "The sentence is not one of the main ideas or stages of the text.",
           "这个句子不是原文的主要观点或阶段。",
         ),
         "a minor detail": L(
           "次要细节",
-          "The sentence gives an exact size, number or label that the text includes but a summary can leave out.",
-          "这个句子给出原文中有、但概要可以略去的精确尺寸、数字或标签。",
+          "The sentence gives an exact size, number or label that the text includes but a summary can leave out.\n\n**Check.** Notice that it names a specific measurement, count, color, or diagram label—a true fact from the text, yet not needed to explain how the system works.",
+          "这个句子给出原文中有、但概要可以略去的精确尺寸、数字或标签。\n\n**检验。** 注意它只交代了具体尺寸、数量、颜色或图示编号——虽来自原文，却不影响理解工作原理。",
           "The sentence is not a minor detail from the text.",
           "这个句子不是原文中的次要细节。",
         ),
         "not in the text": L(
           "原文没有",
-          "The sentence adds an opinion, a guess or a claim that the text never made, so it does not belong in a summary.",
-          "这个句子添加了原文从未提出的看法、猜测或论断，所以不该写进概要。",
+          "The sentence adds an opinion, a guess or a claim that the text never made, so it does not belong in a summary.\n\n**Check.** Spot the value judgment, outside fact, or speculation (*best*, *should*, *must have been*): an objective technical summary never inserts outside claims.",
+          "这个句子添加了原文从未提出的看法、猜测或论断，所以不该写进概要。\n\n**检验。** 识别其中的价值判断、外部事实或推测（如 *best*、*should*、*must have been*）：客观的技术概要绝不夹带原文之外的论断。",
           "The sentence does come from the text.",
           "这个句子确实来自原文。",
         ),
@@ -91,8 +95,8 @@ const technical = topic("writing", {
       "in-plain-words",
       ["In Plain Words", "用平实的话说"],
       [
-        "A summary of a technical text should be clear to a reader who is not an expert. Keep the meaning exact, but put long technical terms into plain words. *The apparatus effects a conversion of thermal energy into mechanical work* becomes *The machine turns heat into motion.* Two mistakes are common: **copying the jargon** of the source, and making it plain but **changing the meaning**.",
-        "技术性文本的概要应该让非专业的读者也能看懂。意思要准确，但要把冗长的术语换成平实的话。*The apparatus effects a conversion of thermal energy into mechanical work* 变成 *The machine turns heat into motion.* 常见的错误有两种：**照抄原文的术语**，以及说得平实却**改变了意思**。",
+        "A summary of a technical text should be clear to a reader who is not an expert. Keep the meaning exact, but put long technical terms into plain words. *The apparatus effects a conversion of thermal energy into mechanical work* becomes *The machine turns heat into motion.* Two mistakes are common: **copying the jargon** of the source, and making it plain but **changing the meaning**.\n\n> **Watch out.** Check both tests before picking: first, did it actually translate the technical jargon into everyday words? Second, did it keep the exact cause, direction, and order of events?",
+        "技术性文本的概要应该让非专业的读者也能看懂。意思要准确，但要把冗长的术语换成平实的话。*The apparatus effects a conversion of thermal energy into mechanical work* 变成 *The machine turns heat into motion.* 常见的错误有两种：**照抄原文的术语**，以及说得平实却**改变了意思**。\n\n> **注意。** 选之前过两道关：第一，是否真的把专业术语换成了日常用语？第二，因果方向和先后顺序是否丝毫未变？",
       ],
       ["Which plain-words version keeps the meaning of the technical sentence?", "哪个平实的版本保留了这个技术性句子的意思？"],
       `
@@ -128,8 +132,8 @@ const technical = topic("writing", {
         The capsule's heat shield dissipates the energy generated during reentry.|The shield carries away the heat made as the capsule returns to Earth.|The capsule's heat shield dissipates energy generated during reentry.|The shield makes the capsule hotter as it returns.
       `,
       (right) => [
-        `*${right}* says the same thing as the technical sentence, in words any reader can follow.`,
-        `*${right}* 与技术性句子意思相同，而且用的是任何读者都能看懂的话。`,
+        `*${right}* says the same thing as the technical sentence, in words any reader can follow.\n\n**Check.** Compare each technical term in the original with its plain replacement here: every cause, direction, and step matches without repeating the heavy jargon.`,
+        `*${right}* 与技术性句子意思相同，而且用的是任何读者都能看懂的话。\n\n**检验。** 把原句里的每个专业术语与这里的平实表达一一对照：因果、方向和步骤全部吻合，也没有照搬晦涩术语。`,
       ],
       [
         [
@@ -152,14 +156,18 @@ const primarySource = topic("writing", {
     "A quotation from a primary source is introduced with its speaker and context, explained after it, and changed only with brackets and ellipses.",
     "引用原始资料时，要先交代说话人和背景，引用后加以解释，改动时只能使用方括号和省略号。",
   ],
+  intro: [
+    'Dropping `"We shall overcome"` into a history paragraph without naming who spoke it, when, or why leaves the reader guessing. Quoting a primary source cleanly means introducing its context, explaining its significance, and marking any editorial change in square brackets.',
+    '在历史段落里直接扔进一句 `"We shall overcome"` 而不交代是谁说的、什么时候说的以及说明了什么，只会让读者一头雾水。规范引用原始资料要先交待出处、再加解释，并把任何微调用方括号标明。',
+  ],
   after: ["integrating-quotations", "quoting-accurately", "reading-a-founding-document"],
   points: [
     label(
       "how-is-the-quotation-used",
       ["How Is the Quotation Used", "引语是如何使用的"],
       [
-        "A quotation from a primary source, such as a letter, speech or declaration, needs help to do its work. A **well-integrated** quotation is introduced with who said it and when, and then explained: what it shows about the writer's point. A **dropped-in** quotation stands alone, with no introduction, so the reader does not know who is speaking. A quotation **left unexplained** is introduced, but the writer moves on without saying why it matters.",
-        "引用信件、演讲或宣言等原始资料时，需要帮助引语发挥作用。**融合得好**的引语会交代是谁、在什么时候说的，然后加以解释：它对作者的观点说明了什么。**突兀插入**的引语孤零零地放着，没有引入，读者不知道是谁在说话。**未加解释**的引语有引入，但作者没有说明它为什么重要就转向了别的话题。",
+        "A quotation from a primary source, such as a letter, speech or declaration, needs help to do its work. A **well-integrated** quotation is introduced with who said it and when, and then explained: what it shows about the writer's point. A **dropped-in** quotation stands alone, with no introduction, so the reader does not know who is speaking. A quotation **left unexplained** is introduced, but the writer moves on without saying why it matters.\n\n> **Watch out.** Check both sides of the quotation: if the front lacks a speaker/context, it is **dropped in**; if the front has a speaker but the sentence after it jumps to an unrelated trivia fact, it is **left unexplained**.",
+        "引用信件、演讲或宣言等原始资料时，需要帮助引语发挥作用。**融合得好**的引语会交代是谁、在什么时候说的，然后加以解释：它对作者的观点说明了什么。**突兀插入**的引语孤零零地放着，没有引入，读者不知道是谁在说话。**未加解释**的引语有引入，但作者没有说明它为什么重要就转向了别的话题。\n\n> **注意。** 同时检查引语的前后两端：前面没交代说话人或背景就是**突兀插入**；前面有交代但后面一句转去说无关琐事，就是**未加解释**。",
       ],
       ["How is the quotation used in this passage?", "这段文字中的引语是如何使用的？"],
       `
@@ -197,22 +205,22 @@ const primarySource = topic("writing", {
       {
         "well integrated": L(
           "融合得好",
-          "The quotation is introduced with its speaker and context, and then explained, so the reader sees why it matters.",
-          "引语交代了说话人和背景，随后又加以解释，所以读者明白它为什么重要。",
+          "The quotation is introduced with its speaker and context, and then explained, so the reader sees why it matters.\n\n**Check.** Verify both halves: the opening names who spoke or wrote the line, and the follow-up explains what those exact words show.",
+          "引语交代了说话人和背景，随后又加以解释，所以读者明白它为什么重要。\n\n**检验。** 核对前后两端：前面交代了说话人或出处，后面解释了这些原话说明了什么。",
           "The quotation is missing its introduction or its explanation.",
           "这条引语缺少引入或解释。",
         ),
         "dropped in": L(
           "突兀插入",
-          "The quotation stands alone with no speaker or context, so the reader does not know whose words they are.",
-          "引语孤零零地放着，没有说话人或背景，读者不知道是谁的话。",
+          "The quotation stands alone with no speaker or context, so the reader does not know whose words they are.\n\n**Check.** Look right before the opening quotation mark: no speaker or source introduces the line.",
+          "引语孤零零地放着，没有说话人或背景，读者不知道是谁的话。\n\n**检验。** 看前引号之前：没有任何说话人或文献来源来引入这句话。",
           "The quotation is introduced with its speaker.",
           "这条引语交代了说话人。",
         ),
         "left unexplained": L(
           "未加解释",
-          "The quotation is introduced, but the next sentence moves on to a side fact instead of saying what the words show.",
-          "引语有引入，但下一句转向了无关的事实，没有说明这些话说明了什么。",
+          "The quotation is introduced, but the next sentence moves on to a side fact instead of saying what the words show.\n\n**Check.** Read the sentence right after the quotation: it states a separate fact (like a date, place, or age) instead of interpreting the quoted words.",
+          "引语有引入，但下一句转向了无关的事实，没有说明这些话说明了什么。\n\n**检验。** 读引语紧接着的下一句：它只说了另一个旁枝事实（如日期、地点或年龄），却没有解读引语本身。",
           "The quotation is either explained or not introduced at all.",
           "这条引语要么得到了解释，要么根本没有引入。",
         ),
@@ -222,8 +230,8 @@ const primarySource = topic("writing", {
       "changing-a-quotation-fairly",
       ["Changing a Quotation Fairly", "合理地改动引语"],
       [
-        'Sometimes a quotation needs a small change to fit your sentence or to make it clear. Put any word you add or change in **square brackets**: *Paine wrote that "[these] are the times that try men\'s souls."* Use brackets to explain a pronoun too: *"They [the British] have cut off our trade."* Do not change words without brackets, and do not use parentheses, which make the added words look like the original writer\'s.',
-        '有时引语需要稍作改动，才能融入你的句子或变得清楚。你添加或改动的词要放在**方括号**里：*Paine wrote that "[these] are the times that try men\'s souls."* 也可以用方括号解释代词：*"They [the British] have cut off our trade."* 不要不加方括号就改词，也不要用圆括号，因为圆括号会让添加的词看起来像原作者的话。',
+        'Sometimes a quotation needs a small change to fit your sentence or to make it clear. Put any word you add or change in **square brackets**: *Paine wrote that "[these] are the times that try men\'s souls."* Use brackets to explain a pronoun too: *"They [the British] have cut off our trade."* Do not change words without brackets, and do not use parentheses, which make the added words look like the original writer\'s.\n\n> **Watch out.** Inside quotation marks, only **square brackets `[...]`** signal an editor\'s insertion or tweak—parentheses `(...)` belong to the original author, and unmarked changes misquote the source.',
+        '有时引语需要稍作改动，才能融入你的句子或变得清楚。你添加或改动的词要放在**方括号**里：*Paine wrote that "[these] are the times that try men\'s souls."* 也可以用方括号解释代词：*"They [the British] have cut off our trade."* 不要不加方括号就改词，也不要用圆括号，因为圆括号会让添加的词看起来像原作者的话。\n\n> **注意。** 在引号内，只有**方括号 `[...]`** 才表示引用者的补充或改动——圆括号 `(...)` 会被当成原作者的话，不加标记直接改词则是篡改原文。',
       ],
       ["Which correctly changes or explains the quotation?", "哪个选项正确地改动或解释了引语？"],
       `
@@ -259,8 +267,8 @@ const primarySource = topic("writing", {
         Original: "He alone can save us." (He is General Washington.)|"He [General Washington] alone can save us."|"General Washington alone can save us."|"He (General Washington) alone can save us."
       `,
       (right) => [
-        `${right} The added or changed words are in square brackets, so the reader can tell them from the original.`,
-        `${right} 添加或改动的词放在方括号里，读者能把它们和原文区分开。`,
+        `${right} The added or changed words are in square brackets, so the reader can tell them from the original.\n\n**Check.** Compare the words inside quotation marks with the original line: every word that differs from the source sits inside \`[...]\`, leaving the original text transparently marked.`,
+        `${right} 添加或改动的词放在方括号里，读者能把它们和原文区分开。\n\n**检验。** 把引号里的字句与原句逐字对照：凡是改动或补充的部分都明确放在 \`[...]\` 里，没有冒充原文。`,
       ],
       [
         [
@@ -283,14 +291,18 @@ const statistics = topic("writing", {
     "A statistic in a sentence needs its source and its context, and its wording must match the numbers: doubled, halved, a third.",
     "句子中的统计数据需要注明出处和背景，措辞也必须与数字相符：翻倍、减半、三分之一。",
   ],
+  intro: [
+    'Writing *"4,000 riders used the new ferry"* leaves two questions unanswered: who counted them, and is 4,000 a jump or a drop? Strong quantitative writing pairs every statistic with its source, a scale or comparison, and exact arithmetic wording.',
+    "只写“4,000 名乘客坐了新渡轮”会留下两个疑问：谁统计的？4,000 算暴涨还是暴跌？严谨的数据写作要给每个数字配上出处、参照对比，以及与算术严丝合缝的措辞。",
+  ],
   after: ["reporting-numbers-from-a-graph", "evidence"],
   points: [
     label(
       "does-the-number-do-its-job",
       ["Does the Number Do Its Job", "数字是否发挥了作用"],
       [
-        "A number convinces only when the reader knows where it came from and what it means. A **clear and sourced** statistic names its source and gives context, a year, a comparison or a total: *According to the 1851 census, half of Britain's people lived in towns, up from a fifth in 1800.* A statistic with **no source** asks the reader to take it on trust. A statistic with **no context** gives a bare number the reader cannot judge: is 30,000 a lot?",
-        "数字只有在读者知道它从哪里来、意味着什么时才有说服力。**清楚并注明出处**的统计数据会说明来源并给出背景，即年份、对比或总数：*According to the 1851 census, half of Britain's people lived in towns, up from a fifth in 1800.* **没有出处**的统计数据要求读者凭信任接受。**没有背景**的统计数据只给出一个光秃秃的数字，读者无法判断：三万算多吗？",
+        "A number convinces only when the reader knows where it came from and what it means. A **clear and sourced** statistic names its source and gives context, a year, a comparison or a total: *According to the 1851 census, half of Britain's people lived in towns, up from a fifth in 1800.* A statistic with **no source** asks the reader to take it on trust. A statistic with **no context** gives a bare number the reader cannot judge: is 30,000 a lot?\n\n> **Watch out.** Test both halves independently: does the sentence name *who recorded the number* (source), and does it show *how big the number is* via a share, total, or change over time (context)?",
+        "数字只有在读者知道它从哪里来、意味着什么时才有说服力。**清楚并注明出处**的统计数据会说明来源并给出背景，即年份、对比或总数：*According to the 1851 census, half of Britain's people lived in towns, up from a fifth in 1800.* **没有出处**的统计数据要求读者凭信任接受。**没有背景**的统计数据只给出一个光秃秃的数字，读者无法判断：三万算多吗？\n\n> **注意。** 分开查两项：句子有没有交代*谁统计的*（出处），又有没有通过比例、总数或前后变化说明这个数*有多大*（背景）？",
       ],
       ["How well does this sentence use its statistic?", "这个句子对统计数据的使用如何？"],
       `
@@ -328,22 +340,22 @@ const statistics = topic("writing", {
       {
         "clear and sourced": L(
           "清楚并注明出处",
-          "The sentence names where the number came from and gives a comparison, a total or a change, so the reader can judge it.",
-          "这个句子说明了数字的来源，并给出对比、总数或变化，读者能做出判断。",
+          "The sentence names where the number came from and gives a comparison, a total or a change, so the reader can judge it.\n\n**Check.** Point to both pieces in the sentence: the named report/record (source) and the fraction, total, or before-and-after shift (context).",
+          "这个句子说明了数字的来源，并给出对比、总数或变化，读者能做出判断。\n\n**检验。** 在句中同时指认两项：标明的报告或记录（出处），以及比例、总数或前后变化（背景）。",
           "The sentence lacks a source or the context needed to judge the number.",
           "这个句子缺少出处或判断数字所需的背景。",
         ),
         "no source given": L(
           "没有出处",
-          "The number has context, but the sentence does not say where it came from, so the reader must take it on trust.",
-          "数字有背景，但句子没有说明来源，读者只能凭信任接受。",
+          "The number has context, but the sentence does not say where it came from, so the reader must take it on trust.\n\n**Check.** Ask *who reported this figure?*: the sentence gives a comparison or share, yet names no census, survey, or record.",
+          "数字有背景，但句子没有说明来源，读者只能凭信任接受。\n\n**检验。** 问一句“这个数字是谁统计的？”：句子虽有对比或比例，却没有提任何普查、调查或记录。",
           "The sentence does name its source.",
           "这个句子注明了出处。",
         ),
         "no context": L(
           "没有背景",
-          "The source is named, but the number stands bare, with no total, comparison or change to show what it means.",
-          "注明了出处，但数字是孤立的，没有总数、对比或变化来说明它的意义。",
+          "The source is named, but the number stands bare, with no total, comparison or change to show what it means.\n\n**Check.** Ask *out of how many, or compared with what?*: even though the source is cited, a lone count cannot tell the reader whether the figure is large or small.",
+          "注明了出处，但数字是孤立的，没有总数、对比或变化来说明它的意义。\n\n**检验。** 问一句“占多少比例，或与什么相比？”：尽管写了出处，但一个孤零零的数字看不出大小轻重。",
           "The number is given with a comparison, a total or a change.",
           "这个数字有对比、总数或变化作为背景。",
         ),
@@ -353,8 +365,8 @@ const statistics = topic("writing", {
       "words-that-match-the-numbers",
       ["Words That Match the Numbers", "与数字相符的措辞"],
       [
-        "When you put numbers into words, the words must match. From 100 to 200 has **doubled**; from 100 to 50 has **halved** or **fallen by half**; 25 out of 100 is **a quarter**; from 100 to 400 has **quadrupled** or grown **fourfold**. Check the arithmetic before you write: a writer who says *tripled* for a rise from 30 to 60 loses the reader's trust.",
-        "把数字变成文字时，措辞必须相符。从 100 到 200 是**翻倍**（doubled）；从 100 到 50 是**减半**（halved 或 fallen by half）；100 中的 25 是**四分之一**（a quarter）；从 100 到 400 是**变为四倍**（quadrupled 或 fourfold）。写之前要核对算术：把从 30 到 60 的增长说成 *tripled* 的作者，会失去读者的信任。",
+        "When you put numbers into words, the words must match. From 100 to 200 has **doubled**; from 100 to 50 has **halved** or **fallen by half**; 25 out of 100 is **a quarter**; from 100 to 400 has **quadrupled** or grown **fourfold**. Check the arithmetic before you write: a writer who says *tripled* for a rise from 30 to 60 loses the reader's trust.\n\n> **Watch out.** Watch the preposition in drops: falling from 600 to 200 means it **fell to a third** (not *fell by a third*, which would leave 400)—always plug the wording back into the starting number to check.",
+        "把数字变成文字时，措辞必须相符。从 100 到 200 是**翻倍**（doubled）；从 100 到 50 是**减半**（halved 或 fallen by half）；100 中的 25 是**四分之一**（a quarter）；从 100 到 400 是**变为四倍**（quadrupled 或 fourfold）。写之前要核对算术：把从 30 到 60 的增长说成 *tripled* 的作者，会失去读者的信任。\n\n> **注意。** 留心下降时的介词：从 600 降到 200 是 **fell to a third**（降到三分之一），而不是 *fell by a third*（下降三分之一，那样会剩下 400）——务必把文字算回起始数字核验。",
       ],
       ["Which sentence describes the numbers accurately?", "哪个句子准确地描述了这些数字？"],
       `
@@ -389,7 +401,10 @@ const statistics = topic("writing", {
         Spinning speed: one thread by hand, eighty threads with the mule.|The spinning mule made eighty times as much thread.|The spinning mule made eight times as much thread.|The spinning mule made half as much thread.
         Travel time London to Edinburgh: 10 days by coach in 1750, 10 hours by train in 1850.|The journey became about twenty-four times faster.|The journey became twice as fast.|The journey became ten times slower.
       `,
-      (right) => [`*${right}* matches the arithmetic of the numbers given.`, `*${right}* 与所给数字的算术相符。`],
+      (right) => [
+        `*${right}* matches the arithmetic of the numbers given.\n\n**Check.** Apply the ratio or difference in the chosen sentence back to the starting figure in the prompt: it lands on the exact ending figure (or share) shown.`,
+        `*${right}* 与所给数字的算术相符。\n\n**检验。** 把所选句子里的倍数、分数或差值套回题干的起始数字算一遍：结果正好等于题干给出的最终数字（或比例）。`,
+      ],
       [
         ["*{wrong}* gets the size of the change wrong, saying too much or too little.", "*{wrong}* 把变化的幅度说错了，说多了或说少了。"],
         [
@@ -408,14 +423,18 @@ const qualifying = topic("writing", {
     "A qualified claim says no more than the evidence supports, using words like most, often or in these studies, without hedging so much it says nothing.",
     "限定过的论断不超出证据所支持的范围，使用 most、often 或 in these studies 等词，但又不过分含糊以致言之无物。",
   ],
+  intro: [
+    "If a trial of 40 gardeners finds that mulch kept soil cooler in 34 plots, claiming *mulch always saves every crop* overreaches, while *mulch might maybe do something* says nothing. **Qualifying a claim** calibrates its wording to match the exact reach of the evidence.",
+    "如果一项涉及 40 块菜地的试验发现覆盖物让 34 块地的土壤更凉爽，说“覆盖物总能拯救所有庄稼”就过于绝对，而说“覆盖物也许大概有点作用”又言之无物。**限定论断**就是让措辞恰好匹配证据的边界。",
+  ],
   after: ["claims", "evaluating-a-scientific-argument"],
   points: [
     label(
       "how-strong-is-the-claim",
       ["How Strong Is the Claim", "论断有多强"],
       [
-        "Scientists and careful writers fit the strength of a claim to the evidence. A **well-qualified** claim says exactly as much as the evidence shows, with words like *most*, *often*, *in this study* or *suggests*. A claim that is **too absolute** uses *all*, *always*, *never* or *proves* when the evidence covers only some cases. A claim that is **hedged into nothing** piles up so many *maybes* that it says nothing a reader can use.",
-        "科学家和严谨的作者让论断的强度与证据相符。**限定得当**的论断说的恰好与证据显示的一样多，使用 *most*、*often*、*in this study* 或 *suggests* 等词。**过于绝对**的论断在证据只涉及部分情况时使用 *all*、*always*、*never* 或 *proves*。**含糊到言之无物**的论断堆砌了太多 *maybe*，说不出任何读者可用的东西。",
+        "Scientists and careful writers fit the strength of a claim to the evidence. A **well-qualified** claim says exactly as much as the evidence shows, with words like *most*, *often*, *in this study* or *suggests*. A claim that is **too absolute** uses *all*, *always*, *never* or *proves* when the evidence covers only some cases. A claim that is **hedged into nothing** piles up so many *maybes* that it says nothing a reader can use.\n\n> **Watch out.** Check the qualifier words directly: *all/every/always/never* overshoots partial data, stacked *might/perhaps/maybe/possibly* empties the claim, and scoped words (*in these caves*, *most*, *suggests*) hit the sweet spot.",
+        "科学家和严谨的作者让论断的强度与证据相符。**限定得当**的论断说的恰好与证据显示的一样多，使用 *most*、*often*、*in this study* 或 *suggests* 等词。**过于绝对**的论断在证据只涉及部分情况时使用 *all*、*always*、*never* 或 *proves*。**含糊到言之无物**的论断堆砌了太多 *maybe*，说不出任何读者可用的东西。\n\n> **注意。** 直接核对限定词：*all/every/always/never* 超出了局部证据，堆砌 *might/perhaps/maybe/possibly* 会把论断掏空，而标明范围的词（*in these caves*、*most*、*suggests*）才恰到好处。",
       ],
       ["Evidence is given first. How well does the claim fit it?", "先给出证据。论断与证据的契合程度如何？"],
       `
@@ -453,22 +472,22 @@ const qualifying = topic("writing", {
       {
         "well qualified": L(
           "限定得当",
-          "The claim says exactly as much as the evidence shows, limited to the cases studied with words like *usually*, *often* or *suggests*.",
-          "这个论断说的恰好与证据显示的一样多，用 *usually*、*often* 或 *suggests* 等词限定在研究的范围内。",
+          "The claim says exactly as much as the evidence shows, limited to the cases studied with words like *usually*, *often* or *suggests*.\n\n**Check.** Compare the scope of the claim with the scope of the evidence: it stays inside the studied group while still stating a clear finding.",
+          "这个论断说的恰好与证据显示的一样多，用 *usually*、*often* 或 *suggests* 等词限定在研究的范围内。\n\n**检验。** 对照论断范围与证据范围：它没有越出研究样本的边界，同时仍给出了清晰的结论。",
           "The claim says more or less than the evidence supports.",
           "这个论断说得比证据支持的多或少。",
         ),
         "too absolute": L(
           "过于绝对",
-          "The claim uses *all*, *always*, *every* or *proves* and stretches far beyond the cases the evidence covers.",
-          "这个论断使用 *all*、*always*、*every* 或 *proves*，远远超出了证据涉及的范围。",
+          "The claim uses *all*, *always*, *every* or *proves* and stretches far beyond the cases the evidence covers.\n\n**Check.** Spot the sweeping word (*all*, *every*, *always*, *never*, *everywhere*, or *proves*): the evidence only covers part of the picture, so an absolute statement overreaches.",
+          "这个论断使用 *all*、*always*、*every* 或 *proves*，远远超出了证据涉及的范围。\n\n**检验。** 找出全称或绝对词（*all*、*every*、*always*、*never*、*everywhere* 或 *proves*）：证据只覆盖了部分情形，绝对断言超出了证据边界。",
           "The claim does not overstate the evidence.",
           "这个论断没有夸大证据。",
         ),
         "hedged into nothing": L(
           "含糊到言之无物",
-          "The claim stacks *maybe*, *perhaps* and *possibly* until it says nothing definite, though the evidence supports a clear claim.",
-          "这个论断堆砌 *maybe*、*perhaps* 和 *possibly*，直到什么确定的意思都没有，尽管证据支持一个明确的论断。",
+          "The claim stacks *maybe*, *perhaps* and *possibly* until it says nothing definite, though the evidence supports a clear claim.\n\n**Check.** Ask what concrete takeaway remains after the hedges: stacked doubts (*might*, *perhaps*, *maybe*, *something*) leave no usable claim at all.",
+          "这个论断堆砌 *maybe*、*perhaps* 和 *possibly*，直到什么确定的意思都没有，尽管证据支持一个明确的论断。\n\n**检验。** 问问去掉含糊词后还剩什么具体结论：一连串的 *might*、*perhaps*、*maybe* 把论断消解得一干二净。",
           "The claim does say something definite.",
           "这个论断确实说出了确定的意思。",
         ),
@@ -478,8 +497,8 @@ const qualifying = topic("writing", {
       "fitting-the-claim-to-the-evidence",
       ["Fitting the Claim to the Evidence", "让论断与证据相符"],
       [
-        "To qualify a claim, change the words that set its reach. Replace *all* with *most* or *many* when the evidence shows most; replace *always* with *often* or *usually*; replace *proves* with *suggests* or *shows* when one study is all you have; and limit the claim to *these islands* or *this study* when that is all that was studied. Do not overcorrect into a claim so weak it says nothing.",
-        "要限定论断，就改动决定其范围的词。证据显示的是大多数时，用 *most* 或 *many* 代替 *all*；用 *often* 或 *usually* 代替 *always*；只有一项研究时，用 *suggests* 或 *shows* 代替 *proves*；如果只研究了 *these islands* 或 *this study*，就把论断限定在这个范围内。不要矫枉过正，变成一个弱到言之无物的论断。",
+        "To qualify a claim, change the words that set its reach. Replace *all* with *most* or *many* when the evidence shows most; replace *always* with *often* or *usually*; replace *proves* with *suggests* or *shows* when one study is all you have; and limit the claim to *these islands* or *this study* when that is all that was studied. Do not overcorrect into a claim so weak it says nothing.\n\n> **Watch out.** Match the exact proportion or sample in the evidence (*8 of 10* → *most*, *one study* → *in one study*) rather than jumping to *every* or retreating to *might maybe*.",
+        "要限定论断，就改动决定其范围的词。证据显示的是大多数时，用 *most* 或 *many* 代替 *all*；用 *often* 或 *usually* 代替 *always*；只有一项研究时，用 *suggests* 或 *shows* 代替 *proves*；如果只研究了 *these islands* 或 *this study*，就把论断限定在这个范围内。不要矫枉过正，变成一个弱到言之无物的论断。\n\n> **注意。** 紧扣证据里的实际比例或样本（*8 of 10* 对应 *most*，*one study* 对应 *in one study*），既不夸大成 *every*，也不退缩成 *might maybe*。",
       ],
       ["Which revision best fits the claim to the evidence?", "哪个修改最能让论断与证据相符？"],
       `
@@ -515,8 +534,8 @@ const qualifying = topic("writing", {
         Evidence: one year of data. Claim: The new law has ended crime.|In its first year, the new law was followed by less crime.|The new law has ended every crime in the world.|The law might possibly do something.
       `,
       (right) => [
-        `*${right}* claims exactly as much as the evidence supports, no more and no less.`,
-        `*${right}* 的论断恰好与证据支持的程度相当，不多也不少。`,
+        `*${right}* claims exactly as much as the evidence supports, no more and no less.\n\n**Check.** Verify two boundaries: it trims the absolute word down to the sample or proportion actually given, yet still states a clear, testable takeaway.`,
+        `*${right}* 的论断恰好与证据支持的程度相当，不多也不少。\n\n**检验。** 核对两道边界：它把绝对措辞收回到实际给出的样本或比例之内，同时依然保留了明确、有意义的结论。`,
       ],
       [
         ["*{wrong}* stretches the claim even further than the evidence allows.", "*{wrong}* 把论断扩展得比证据允许的还要远。"],

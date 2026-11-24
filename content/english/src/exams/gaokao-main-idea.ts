@@ -504,14 +504,26 @@ function items(pick: (s: Short) => readonly Question[], inferred: boolean): read
         shown: `${s.text}\n\n**${question}**`,
         right,
         wrong,
+        whyNot: wrong.map((w) => {
+          const clean = w.replace(/\.$/u, "");
+          return inferred
+            ? t(
+                `"${clean}" either goes beyond what the passage states or contradicts the evidence in the text.`,
+                `“${clean}”超出了原文的依据，或与文中的信息不符。`,
+              )
+            : t(
+                `"${clean}" is too narrow, too broad, or not the central focus of the whole passage.`,
+                `“${clean}”要么只涉及局部细节、范围太窄，要么范围过宽，不是全文的中心。`,
+              );
+        }),
         solution: inferred
           ? t(
-              `**${right}** The text does not say it in so many words, but it follows from: "${evidence}${end(evidence)}" The other options go further than the text or have no support in it.`,
-              `**${right}** 原文没有直接这样说，但可以从这里推出："${evidence}${end(evidence)}" 其他选项超出了原文，或在原文中找不到依据。`,
+              `**${right}** The text does not say it in so many words, but it follows from: "${evidence}${end(evidence)}" The other options go further than the text or have no support in it.\n\n**Check.** Verify that the chosen inference follows directly from the quoted line without adding outside assumptions.`,
+              `**${right}** 原文没有直接这样说，但可以从这里推出："${evidence}${end(evidence)}" 其他选项超出了原文，或在原文中找不到依据。\n\n**检验。** 确认所选推论直接由所引原文推出，且没有掺入文外臆测。`,
             )
           : t(
-              `**${right}** The key sentence is: "${evidence}${end(evidence)}" The whole text is about this. The other options are only a detail of the text, too wide, or not about it at all.`,
-              `**${right}** 关键句是："${evidence}${end(evidence)}" 全文都围绕这一点。其他选项只是文中的一个细节、范围太大，或者与文章无关。`,
+              `**${right}** The key sentence is: "${evidence}${end(evidence)}" The whole text is about this. The other options are only a detail of the text, too wide, or not about it at all.\n\n**Check.** Check that every part of the passage—not just one sentence—fits under this main idea or title.`,
+              `**${right}** 关键句是："${evidence}${end(evidence)}" 全文都围绕这一点。其他选项只是文中的一个细节、范围太大，或者与文章无关。\n\n**检验。** 核对文章的各个部分（而不只是某一句细节）都能归入这个主旨或标题之下。`,
             ),
       })),
     ),
@@ -528,6 +540,10 @@ export const mainIdeaAndInference: TopicDef = examTopic({
     "Gaokao reading comprehension in short texts: what a text is mainly about and its best title, and what it suggests about people, results and the writer's attitude.",
     "高考阅读理解短文：文章主要讲什么、最佳标题，以及文章对人物、结果和作者态度的暗示。",
   ),
+  intro: t(
+    "Gaokao reading comprehension frequently tests two higher-level skills: choosing a title that covers the **whole** passage rather than one vivid detail, and drawing an inference that the text actually proves rather than one you merely imagine.",
+    "高考阅读理解常考两类高阶题型：选出能涵盖**全文**而非单一细节的最佳标题，以及做出原文有据可依、而非凭空臆测的推理判断。",
+  ),
   strand: "reading",
   prerequisites: ["identifying-topic-sentences", "making-inferences"],
   encompasses: [
@@ -540,8 +556,8 @@ export const mainIdeaAndInference: TopicDef = examTopic({
       "gaokao-main-idea-questions",
       t("Main Idea and Title", "主旨与标题"),
       t(
-        "A main idea question asks what the whole text is about. Look for the sentence the rest of the text explains or supports, often near the beginning, and check that every part of the text fits under it. A good title says the same thing in a few words, sometimes in a lively way, such as *A Bus With No Wheels* for a walking bus.\n\nWrong options are usually of three kinds: a detail from one sentence, which is too narrow; a subject so wide that the text covers only a small part of it; and something the text never discusses.",
-        "主旨大意题问的是全文讲什么。找出其余句子都在解释或支持的那句话，它常在开头，再检查文章的每一部分是否都能归到它下面。好的标题用几个词说出同样的意思，有时说得很生动，比如用 *A Bus With No Wheels* 指“步行巴士”。\n\n错误选项通常有三类：某一句中的细节，范围太窄；范围太大的话题，文章只涉及其中很小一部分；以及文章根本没讨论的内容。",
+        "A main idea question asks what the whole text is about. Look for the sentence the rest of the text explains or supports, often near the beginning, and check that every part of the text fits under it. A good title says the same thing in a few words, sometimes in a lively way, such as *A Bus With No Wheels* for a walking bus.\n\nWrong options are usually of three kinds: a detail from one sentence, which is too narrow; a subject so wide that the text covers only a small part of it; and something the text never discusses.\n\n> **Watch out.** Reject any option that is true of only **one sentence** in the passage—a true detail is the most common main-idea trap.",
+        "主旨大意题问的是全文讲什么。找出其余句子都在解释或支持的那句话，它常在开头，再检查文章的每一部分是否都能归到它下面。好的标题用几个词说出同样的意思，有时说得很生动，比如用 *A Bus With No Wheels* 指“步行巴士”。\n\n错误选项通常有三类：某一句中的细节，范围太窄；范围太大的话题，文章只涉及其中很小一部分；以及文章根本没讨论的内容。\n\n> **注意。** 排除那些只符合文中**某一句**的选项——“细节真实但以偏概全”是主旨题最常见的陷阱。",
       ),
       solvedChoiceGenerator(
         question,
@@ -552,8 +568,8 @@ export const mainIdeaAndInference: TopicDef = examTopic({
       "gaokao-inference-questions",
       t("Inference and Attitude", "推理与态度"),
       t(
-        "Inference questions ask what the text suggests: what a person is like, what a result shows, why the writer mentions something, or how the writer or a person feels. The answer is not written in the text, but it must follow from a sentence that is. *She never pushed him* shows that the coach was patient; *only a few went back to their old habits* means that most kept the new one.\n\nFor attitude, look at the words the writer chooses: *in fact, the opposite happened* or *finally ... in peace* show approval. Reject options that go further than the text or that you would only guess.",
-        "推理判断题问的是文章暗示了什么：人物是什么样的，结果说明了什么，作者为什么提到某件事，或者作者和人物有什么感受。答案没有写在文中，但必须能从文中某句话推出。*She never pushed him* 说明教练很有耐心；*only a few went back to their old habits* 说明大多数人保持了新习惯。\n\n判断态度要看作者的用词：*in fact, the opposite happened*、*finally ... in peace* 都表示赞同。超出原文或只能靠猜的选项要排除。",
+        "Inference questions ask what the text suggests: what a person is like, what a result shows, why the writer mentions something, or how the writer or a person feels. The answer is not written in the text, but it must follow from a sentence that is. *She never pushed him* shows that the coach was patient; *only a few went back to their old habits* means that most kept the new one.\n\nFor attitude, look at the words the writer chooses: *in fact, the opposite happened* or *finally ... in peace* show approval. Reject options that go further than the text or that you would only guess.\n\n> **Watch out.** Do not confuse a **fact copied word for word** or an **overstated guess** with a valid inference—an inference must be forced by the text's evidence.",
+        "推理判断题问的是文章暗示了什么：人物是什么样的，结果说明了什么，作者为什么提到某件事，或者作者和人物有什么感受。答案没有写在文中，但必须能从文中某句话推出。*She never pushed him* 说明教练很有耐心；*only a few went back to their old habits* 说明大多数人保持了新习惯。\n\n判断态度要看作者的用词：*in fact, the opposite happened*、*finally ... in peace* 都表示赞同。超出原文或只能靠猜的选项要排除。\n\n> **注意。** 不要把**过度臆测**当成合理推断——正确答案必须有原文确凿的依据支撑，不能比文本多跨一步。",
       ),
       solvedChoiceGenerator(
         question,

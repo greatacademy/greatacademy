@@ -349,6 +349,10 @@ const canForAbility: TopicDef = {
     "A bird can fly. A fish can't walk. After can the verb has no -s and no to.",
     "A bird can fly. A fish can't walk. can 后面的动词不加 -s，也不加 to。",
   ),
+  intro: t(
+    "Look at *A duck can swim.* and *A duck can't climb a tree.* Whether the subject is *I*, *she*, or *a duck*, *can* and *can't* never change, and the verb right after them stays completely plain—no *-s* and no *to*. In this topic, you spot and write accurate *can* / *can't* sentences.",
+    "看看 *A duck can swim.* 和 *A duck can't climb a tree.* 无论主语是 *I*、*she* 还是 *a duck*，*can* 和 *can't* 从不变化，后面的动词也一律用原形——不加 *-s*，也不加 *to*。本主题带你辨认并写出准确的 *can* / *can't* 句子。",
+  ),
   prerequisites: ["pre-a1-words-can-and-like"],
   encompasses: [{ topic: "pre-a1-words-can-and-like", weight: 0.4 }],
   xp: 15,
@@ -358,16 +362,16 @@ const canForAbility: TopicDef = {
       "choose",
       t("The verb after can", "can 后面的动词"),
       t(
-        "After *can* and *can't*, the verb stays plain: no *-s* and no *to*.\n\n*A bird can fly.* Not *A bird can flies.* or *A bird can to fly.*",
-        "*can* 和 *can't* 后面的动词用原形：不加 *-s*，也不加 *to*。\n\n说 *A bird can fly.*，不说 *A bird can flies.* 或 *A bird can to fly.*",
+        "After *can* and *can't*, the verb stays plain: no *-s* and no *to*.\n\n*A bird can fly.* Not *A bird can flies.* or *A bird can to fly.*\n\n> **Watch out.** Even after *he*, *she*, *Tom*, or *a bird*, never add *-s* to the verb after *can* or *can't*, and never insert *to* between them.",
+        "*can* 和 *can't* 后面的动词用原形：不加 *-s*，也不加 *to*。\n\n说 *A bird can fly.*，不说 *A bird can flies.* 或 *A bird can to fly.*\n\n> **注意。** 即使主语是 *he*、*she*、*Tom* 或 *a bird*，*can* / *can't* 后面的动词也绝不加 *-s*，中间也绝不加 *to*。",
       ),
       choiceGenerator(
         t("Which sentence is right?", "哪个句子是对的？"),
         canChoiceBank,
         (right) =>
           t(
-            `${right} After *can* and *can't*, the verb stays plain, with no *-s* and no *to*.`,
-            `${right} *can* 和 *can't* 后面的动词用原形，不加 *-s*，也不加 *to*。`,
+            `${right} After *can* and *can't*, the verb stays plain, with no *-s* and no *to*.\n\n**Check.** Look right after *can* / *can't*—there is no *to* in between and no *-s* on the verb.`,
+            `${right} *can* 和 *can't* 后面的动词用原形，不加 *-s*，也不加 *to*。\n\n**检验。** 紧盯着 *can* / *can't* 后面的词——中间没有 *to*，动词词尾也没有 *-s*。`,
           ),
         (_wrong, _right, _shown, position) =>
           position === 0
@@ -385,8 +389,8 @@ const canForAbility: TopicDef = {
       "write",
       t("Writing can and can't", "写 can 和 can't 的句子"),
       t(
-        "Write *can* for yes and *can't* for no. *Can't* is the short form of *cannot*. Never say *don't can*.\n\n*fish / swim (yes)* → *A fish can swim.*\n*fish / walk (no)* → *A fish can't walk.*",
-        "“是”用 *can*，“不是”用 *can't*。*can't* 是 *cannot* 的缩写。中文说“不会”，但英语不能说 *don't can*。\n\n*fish / swim (yes)* → *A fish can swim.*\n*fish / walk (no)* → *A fish can't walk.*",
+        "Write *can* for yes and *can't* for no. *Can't* is the short form of *cannot*. Never say *don't can*.\n\n*fish / swim (yes)* → *A fish can swim.*\n*fish / walk (no)* → *A fish can't walk.*\n\n> **Watch out.** For negative ability, write *can't* (or *cannot*)—never *don't can* or *not can*—and keep the verb right after it plain.",
+        "“是”用 *can*，“不是”用 *can't*。*can't* 是 *cannot* 的缩写。中文说“不会”，但英语不能说 *don't can*。\n\n*fish / swim (yes)* → *A fish can swim.*\n*fish / walk (no)* → *A fish can't walk.*\n\n> **注意。** 表达“不会/不能”时用 *can't*（或 *cannot*）——切勿写 *don't can* 或 *not can*——后面的动词保持原形。",
       ),
       typedGenerator(
         "sentence-pattern",
@@ -395,12 +399,12 @@ const canForAbility: TopicDef = {
         (right, shown) =>
           shown.endsWith("(yes)")
             ? t(
-                `The note says yes, so write *can*, and the verb after it stays plain: ${right}`,
-                `提示是 yes，所以用 *can*，后面的动词用原形：${right}`,
+                `The note says yes, so write *can*, and the verb after it stays plain: ${right}\n\n**Check.** Verify the pattern *[Subject] + can + [plain verb]* with a capital letter at the start and a period at the end.`,
+                `提示是 yes，所以用 *can*，后面的动词用原形：${right}\n\n**检验。** 核对结构“主语 + *can* + 动词原形”，确认句首大写、句末有句号。`,
               )
             : t(
-                `The note says no, so write *can't*, never *don't can*, and the verb after it stays plain: ${right}`,
-                `提示是 no，所以用 *can't*，不能说 *don't can*，后面的动词用原形：${right}`,
+                `The note says no, so write *can't*, never *don't can*, and the verb after it stays plain: ${right}\n\n**Check.** Verify the pattern *[Subject] + can't + [plain verb]* (not *don't can* or *not can*) with no *-s* or *to*.`,
+                `提示是 no，所以用 *can't*，不能说 *don't can*，后面的动词用原形：${right}\n\n**检验。** 核对结构“主语 + *can't* + 动词原形”（不是 *don't can* 或 *not can*），且没有 *-s* 或 *to*。`,
               ),
       ),
     ),
@@ -480,6 +484,10 @@ const questionsWithBe: TopicDef = {
   id: "questions-with-be",
   title: t("Questions with Be", "用 be 提问"),
   summary: t("Is it a cat? Yes, it is. The verb moves to the front.", "Is it a cat? Yes, it is. 动词移到句首。"),
+  intro: t(
+    "Turn *She is at home.* into a question by moving *is* to the front: *Is she at home?* Then answer cleanly with *Yes, she is.* or *No, she isn't.* In this topic, you form yes/no questions with *be* and choose natural short answers.",
+    "把 *She is at home.* 变成问句，要把 *is* 移到句首：*Is she at home?* 简略回答则是 *Yes, she is.* 或 *No, she isn't.* 本主题带你用 *be* 构成一般疑问句，并掌握规范的简略回答。",
+  ),
   prerequisites: ["the-verb-be", "pre-a1-words-animals"],
   encompasses: [{ topic: "the-verb-be", weight: 0.4 }],
   xp: 15,
@@ -489,16 +497,16 @@ const questionsWithBe: TopicDef = {
       "choose",
       t("The order of a question", "问句的语序"),
       t(
-        "To ask a yes-or-no question, move *am*, *is* or *are* to the front and end with a question mark.\n\n*It is a cat.* → *Is it a cat?*\n*They are ducks.* → *Are they ducks?*",
-        "中文把陈述句变成问句，只要在句末加“吗”：“它是猫吗？”英语却要把 *am*、*is* 或 *are* 移到句首，句末用问号。\n\n*It is a cat.* → *Is it a cat?*\n*They are ducks.* → *Are they ducks?*",
+        "To ask a yes-or-no question, move *am*, *is* or *are* to the front and end with a question mark.\n\n*It is a cat.* → *Is it a cat?*\n*They are ducks.* → *Are they ducks?*\n\n> **Watch out.** Check *both* ends of the question: the verb (*Is/Are*) must sit before the subject, and the sentence must end with `?`, not `.`",
+        "中文把陈述句变成问句，只要在句末加“吗”：“它是猫吗？”英语却要把 *am*、*is* 或 *are* 移到句首，句末用问号。\n\n*It is a cat.* → *Is it a cat?*\n*They are ducks.* → *Are they ducks?*\n\n> **注意。** 同时检查句首和句尾：动词（*Is/Are*）必须在主语前面，句末必须是 `?`，不能是句号。",
       ),
       choiceGenerator(
         t("Which one is a right question?", "哪一个是正确的问句？"),
         questionChoiceBank,
         (right) =>
           t(
-            `${right} A yes-or-no question puts *${right.split(" ")[0]?.toLowerCase()}* before the subject and ends with a question mark.`,
-            `${right} 一般疑问句把 *${right.split(" ")[0]?.toLowerCase()}* 放在主语前面，句末用问号。`,
+            `${right} A yes-or-no question puts *${right.split(" ")[0]?.toLowerCase()}* before the subject and ends with a question mark.\n\n**Check.** Verify both marks of a *be*-question: *${right.split(" ")[0]}* comes first before the subject, and a question mark (?) closes the sentence.`,
+            `${right} 一般疑问句把 *${right.split(" ")[0]?.toLowerCase()}* 放在主语前面，句末用问号。\n\n**检验。** 确认 *be* 问句的两个标志：*${right.split(" ")[0]}* 位于主语前，且句末以问号（?）结尾。`,
           ),
         (_wrong, _right, _shown, position) =>
           position === 0
@@ -516,16 +524,16 @@ const questionsWithBe: TopicDef = {
       "short-answers",
       t("Short answers", "简略回答"),
       t(
-        "Answer with *Yes* or *No*, the word for who or what, and the verb: *Is it a cat? Yes, it is.* / *No, it isn't.* A question with *you* gets an answer with *I*: *Are you sad? No, I am not.*\n\nIn a short yes answer, do not use a short form: say *Yes, it is.*, not *Yes, it's.*",
-        "用 *Yes* 或 *No*、代词和动词来回答：*Is it a cat? Yes, it is.* / *No, it isn't.* 问句中是 *you*，回答用 *I*：*Are you sad? No, I am not.*\n\n肯定的简略回答不能用缩写：说 *Yes, it is.*，不说 *Yes, it's.*",
+        "Answer with *Yes* or *No*, the word for who or what, and the verb: *Is it a cat? Yes, it is.* / *No, it isn't.* A question with *you* gets an answer with *I*: *Are you sad? No, I am not.*\n\nIn a short yes answer, do not use a short form: say *Yes, it is.*, not *Yes, it's.*\n\n> **Watch out.** Never contract a *Yes* short answer (*Yes, it's.* is wrong), and make sure *Yes* pairs with a positive verb while *No* pairs with *not* / *-n't*.",
+        "用 *Yes* 或 *No*、代词和动词来回答：*Is it a cat? Yes, it is.* / *No, it isn't.* 问句中是 *you*，回答用 *I*：*Are you sad? No, I am not.*\n\n肯定的简略回答不能用缩写：说 *Yes, it is.*，不说 *Yes, it's.*\n\n> **注意。** 肯定简略回答绝不能缩写（不能说 *Yes, it's.*），而且 *Yes* 后面用肯定动词，*No* 后面必须带 *not* 或 *-n't*。",
       ),
       choiceGenerator(
         t("Choose the short answer.", "选出简略回答。"),
         shortAnswerBank,
         (right, shown) =>
           t(
-            `A short answer is *${right.split(",")[0]}*, the word for who or what, and the verb of the question${right.startsWith("No") ? " with *not*" : ""}: ${shown.replace(/ \((yes|no)\)$/u, "")} ${right}`,
-            `简略回答由 *${right.split(",")[0]}*、代词和问句里的动词${right.startsWith("No") ? "加 *not*" : ""}组成：${shown.replace(/ \((yes|no)\)$/u, "")} ${right}`,
+            `A short answer is *${right.split(",")[0]}*, the word for who or what, and the verb of the question${right.startsWith("No") ? " with *not*" : ""}: ${shown.replace(/ \((yes|no)\)$/u, "")} ${right}\n\n**Check.** Confirm that *Yes/No* matches the verb's polarity (no contraction after *Yes*, *not/n't* included after *No*) and that the pronoun matches the question's subject.`,
+            `简略回答由 *${right.split(",")[0]}*、代词和问句里的动词${right.startsWith("No") ? "加 *not*" : ""}组成：${shown.replace(/ \((yes|no)\)$/u, "")} ${right}\n\n**检验。** 确认 *Yes/No* 与动词的肯定或否定一致（*Yes* 后不缩写，*No* 后必有 *not/n't*），且代词与问句主语对应。`,
           ),
         (_wrong, right, _shown, position) =>
           right.startsWith("Yes")
@@ -550,13 +558,13 @@ const questionsWithBe: TopicDef = {
       "write",
       t("Writing questions", "写问句"),
       t(
-        "Turn the sentence into a question: the verb goes first, and the end is a question mark.",
-        "把陈述句改成问句：动词放在最前面，句末用问号。",
+        "Turn the sentence into a question: the verb goes first, and the end is a question mark. For example: *Tom is at school.* → *Is Tom at school?*\n\n> **Watch out.** Remember to capitalize the moved verb (*Is* / *Are*), lower-case the subject unless it is *I* or a name (*The dog* -> *the dog*, but *Tom* stays *Tom*), and end with `?`.",
+        "把陈述句改成问句：动词放在最前面，句末用问号。例如：*Tom is at school.* → *Is Tom at school?*\n\n> **注意。** 移到句首的动词要大写（*Is* / *Are*），原主语除 *I* 和人名外改为小写（如 *The dog* -> *the dog*，但 *Tom* 仍大写），句末加 `?`。",
       ),
       typedGenerator("sentence", t("Write the sentence as a question.", "把这个句子改成问句。"), questionTypedBank, (right, shown) =>
         t(
-          `Move *${right.split(" ")[0]?.toLowerCase()}* to the front, before the subject, and end with a question mark: ${shown} → ${right}`,
-          `把 *${right.split(" ")[0]?.toLowerCase()}* 移到句首、主语前面，句末用问号：${shown} → ${right}`,
+          `Move *${right.split(" ")[0]?.toLowerCase()}* to the front, before the subject, and end with a question mark: ${shown} → ${right}\n\n**Check.** Swap the first two blocks back mentally (*${right}* -> *${shown}*)—you should recover the original statement cleanly, with the question mark replaced by a period.`,
+          `把 *${right.split(" ")[0]?.toLowerCase()}* 移到句首、主语前面，句末用问号：${shown} → ${right}\n\n**检验。** 在心里把句首动词和主语换回原位，应能完整还原原陈述句，并把句末的问号换回句号。`,
         ),
       ),
     ),

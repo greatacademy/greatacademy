@@ -4,7 +4,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { point, type WritingItem, writingGenerator } from "@ga/subject-english";
 import { after } from "../grade-5/links.ts";
-import { criterion, onePiece } from "../grade-5/writing-judged-a.ts";
+import { checkedPiece, criterion } from "../grade-5/writing-judged-a.ts";
 
 /** historyBank gives notes on how something worked in an early civilization. */
 const historyBank: readonly WritingItem[] = [
@@ -271,6 +271,10 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
       "Explain from notes how something worked in an early civilization: a topic sentence, the steps or parts in order, the facts in your own words and a conclusion on why it mattered.",
       "根据笔记说明早期文明中某样东西是怎样运作的：主题句、按顺序写出的步骤或组成部分、用自己的话写出的事实，以及说明其意义的结论。",
     ),
+    intro: t(
+      "A history explanation turns brief research notes—such as how Roman aqueducts carried hill water downhill by gravity—into a clear step-by-step account in your own words, ending with why that system mattered to the people who built it.",
+      "历史说明文把简短的资料笔记——例如罗马引水渠如何仅靠重力把山间清泉引入城市——用自己的话写成条理清晰的运作过程，并在结尾点出它对当时社会的意义。",
+    ),
     prerequisites: after("writing-a-three-paragraph-report", "paraphrasing-a-source"),
     encompasses: [{ topic: "writing-a-three-paragraph-report", weight: 0.2 }],
     xp: 22,
@@ -281,8 +285,8 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
         "explaining-how-it-worked",
         t("Explaining How It Worked", "说明它是怎样运作的"),
         t(
-          "A history explanation does more than say that something existed; it explains **how it worked**. Begin with a topic sentence that names the thing and what it did: *Mesopotamian farmers used irrigation to bring river water to dry fields.* Then take the reader through it step by step or part by part, using words such as *first*, *when*, *then* and *because*, so that the reader could describe the system to someone else.",
-          "历史说明文不只是说某样东西存在过，而是要说明**它是怎样运作的**。先写一个主题句，说出这样东西和它的作用：*Mesopotamian farmers used irrigation to bring river water to dry fields.* 然后用 *first*、*when*、*then*、*because* 等词，一步一步或一部分一部分地带读者了解它，让读者能把这个系统讲给别人听。",
+          "A history explanation does more than say that something existed; it explains **how it worked**. Begin with a topic sentence that names the thing and what it did: *Mesopotamian farmers used irrigation to bring river water to dry fields.* Then take the reader through it step by step or part by part, using words such as *first*, *when*, *then* and *because*, so that the reader could describe the system to someone else.\n\n> **Watch out.** Do not just list disconnected facts from the notes—connect each step or part so the reader sees *how* one piece makes the next work.",
+          "历史说明文不只是说某样东西存在过，而是要说明**它是怎样运作的**。先写一个主题句，说出这样东西和它的作用：*Mesopotamian farmers used irrigation to bring river water to dry fields.* 然后用 *first*、*when*、*then*、*because* 等词，一步一步或一部分一部分地带读者了解它，让读者能把这个系统讲给别人听。\n\n> **注意。** 不要把笔记里的事实零散罗列——要把每一步或每一部分串联起来，让读者看清它们*怎样*协同运作。",
         ),
         writingGenerator(
           t(
@@ -292,15 +296,18 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
           historyBank,
           ["g6-explains-how", "w4-topic-sentence", "g6-facts-from-notes"],
           { minWords: 100, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Verify that your explanation opens with a clear topic sentence, walks through the parts or steps in logical order, and stays faithful to every fact in the notes.",
+            "检查你的说明文是否以清晰的主题句开头、按逻辑顺序讲清各步骤或部件，并忠实于笔记中的每一条事实。",
+          ),
         ),
       ),
       point(
         "from-notes-to-an-explanation",
         t("From Notes to an Explanation", "从笔记到说明文"),
         t(
-          "Notes are short scraps: *canals from rivers; gates of mud and reeds*. Turn them into full sentences **in your own words**, and keep every fact accurate: do not change a number or add something the notes do not say. Then end with a conclusion that tells why the thing mattered: *With extra food, more people could live together, and the first cities grew.*",
-          "笔记只是零碎的片段：*canals from rivers; gates of mud and reeds*。要把它们**用自己的话**写成完整的句子，并保证每个事实都准确：不要改动数字，也不要添加笔记中没有的内容。最后用结论说明这样东西为什么重要：*With extra food, more people could live together, and the first cities grew.*",
+          "Notes are short scraps: *canals from rivers; gates of mud and reeds*. Turn them into full sentences **in your own words**, and keep every fact accurate: do not change a number or add something the notes do not say. Then end with a conclusion that tells why the thing mattered: *With extra food, more people could live together, and the first cities grew.*\n\n> **Watch out.** Re-check all dates, numbers, and names against the notes—paraphrasing changes the sentence wording, never the historical facts.",
+          "笔记只是零碎的片段：*canals from rivers; gates of mud and reeds*。要把它们**用自己的话**写成完整的句子，并保证每个事实都准确：不要改动数字，也不要添加笔记中没有的内容。最后用结论说明这样东西为什么重要：*With extra food, more people could live together, and the first cities grew.*\n\n> **注意。** 核对所有年份、数字和专名是否与笔记一致——用自己的话改写的是句式，绝不能改动历史事实。",
         ),
         writingGenerator(
           t(
@@ -310,7 +317,10 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
           historyBank,
           ["g6-facts-from-notes", "w4-concludes", "w4-topic-sentence"],
           { minWords: 100, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Compare your draft against the notes: every key fact is accurate in your own words, no invented claims were added, and the closing paragraph explains why the system mattered.",
+            "把草稿与笔记逐条核对：每项关键事实都用自己的话准确表达、没有凭空编造，且结尾段说明了它的历史意义。",
+          ),
         ),
       ),
     ],
@@ -322,6 +332,10 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
       "Explain a natural process from notes: the stages in the order they happen, linked by order and cause words, with each technical term defined the first time it is used.",
       "根据笔记说明一个自然过程：按发生顺序写出各个阶段，用表示顺序和因果的词连接，并在第一次使用技术术语时给出定义。",
     ),
+    intro: t(
+      "Explaining a natural process—such as how a seed germinates or how limestone dissolves into a cave—means walking a reader through the stages in exact order while defining each scientific term right when it first appears.",
+      "说明一个自然过程——比如种子如何发芽或石灰岩如何溶蚀成洞穴——需要按真实发生顺序讲清各个阶段，并在每个科学术语初次出现时顺手给出定义。",
+    ),
     prerequisites: after("defining-a-term-in-a-sentence", "writing-an-informative-paragraph"),
     encompasses: [{ topic: "defining-a-term-in-a-sentence", weight: 0.2 }],
     xp: 22,
@@ -332,8 +346,8 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
         "the-stages-in-order",
         t("The Stages in Order", "按顺序写出各个阶段"),
         t(
-          "A process happens in **stages**, and an explanation gives them in the order they happen. Link the stages with words that show order (*first*, *next*, *after that*, *finally*) and words that show cause (*because*, *so*, *as a result*), so the reader sees not only what happens next but why. Add a detail or a comparison that makes each stage clear: *the gases build up pressure, much as a bottle of soda holds bubbles.*",
-          "过程是分**阶段**进行的，说明文要按发生的顺序写出这些阶段。用表示顺序的词（*first*、*next*、*after that*、*finally*）和表示因果的词（*because*、*so*、*as a result*）把各阶段连接起来，让读者不仅知道接下来发生什么，还知道为什么。为每个阶段补充一个细节或比较，让它更清楚：*the gases build up pressure, much as a bottle of soda holds bubbles.*",
+          "A process happens in **stages**, and an explanation gives them in the order they happen. Link the stages with words that show order (*first*, *next*, *after that*, *finally*) and words that show cause (*because*, *so*, *as a result*), so the reader sees not only what happens next but why. Add a detail or a comparison that makes each stage clear: *the gases build up pressure, much as a bottle of soda holds bubbles.*\n\n> **Watch out.** Check that no stage is out of sequence—if stage 3 depends on stage 2, the reader must see stage 2 first.",
+          "过程是分**阶段**进行的，说明文要按发生的顺序写出这些阶段。用表示顺序的词（*first*、*next*、*after that*、*finally*）和表示因果的词（*because*、*so*、*as a result*）把各阶段连接起来，让读者不仅知道接下来发生什么，还知道为什么。为每个阶段补充一个细节或比较，让它更清楚：*the gases build up pressure, much as a bottle of soda holds bubbles.*\n\n> **注意。** 检查各阶段有没有颠倒顺序——如果第三步依赖第二步，就必须先交代第二步。",
         ),
         writingGenerator(
           t(
@@ -343,15 +357,18 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
           processBank,
           ["g6-process-in-order", "w4-gives-detail", "w4-concludes"],
           { minWords: 100, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Trace the sequence from start to finish: each stage appears in true chronological order, linked by sequence and cause words, and ends with a brief wrap-up.",
+            "从头到尾顺一遍流程：每个阶段都按真实先后顺序排列，用顺序和因果连接词衔接，并以简短总结收尾。",
+          ),
         ),
       ),
       point(
         "defining-the-terms",
         t("Defining the Terms", "给术语下定义"),
         t(
-          "An explanation of a process is full of technical words: *magma*, *evaporation*, *chromosome*. A reader who is new to the subject needs each one **defined the first time it appears**, usually right beside it: *magma, which is melted rock beneath Earth's surface*. Once a term is defined, use it the same way every time, and end by summing up the whole process in a sentence.",
-          "过程说明文里有很多技术术语：*magma*、*evaporation*、*chromosome*。初学这门学科的读者需要在每个术语**第一次出现时就看到它的定义**，通常紧挨着它：*magma, which is melted rock beneath Earth's surface*。术语一旦定义，之后每次都要以同样的意思使用，最后用一句话概括整个过程。",
+          "An explanation of a process is full of technical words: *magma*, *evaporation*, *chromosome*. A reader who is new to the subject needs each one **defined the first time it appears**, usually right beside it: *magma, which is melted rock beneath Earth's surface*. Once a term is defined, use it the same way every time, and end by summing up the whole process in a sentence.\n\n> **Watch out.** Do not drop a technical term in paragraph 2 and wait until the end to explain it—define it immediately on first mention.",
+          "过程说明文里有很多技术术语：*magma*、*evaporation*、*chromosome*。初学这门学科的读者需要在每个术语**第一次出现时就看到它的定义**，通常紧挨着它：*magma, which is melted rock beneath Earth's surface*。术语一旦定义，之后每次都要以同样的意思使用，最后用一句话概括整个过程。\n\n> **注意。** 不要在正文里直接甩出术语、等到结尾才解释——第一次提到时就要紧接着给出定义。",
         ),
         writingGenerator(
           t(
@@ -361,7 +378,10 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
           processBank,
           ["g6-defines-terms", "g6-process-in-order", "w4-concludes"],
           { minWords: 100, maxChars: 3200 },
-          onePiece,
+          checkedPiece(
+            "Underline every technical term in your draft and verify that each one is clearly defined the very first time it appears.",
+            "标出草稿中的每个技术术语，核对它们是否都在第一次出现时就给出了清晰定义。",
+          ),
         ),
       ),
     ],
@@ -373,6 +393,10 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
       "Compare two things in an essay of several paragraphs: an opening that names them and the points of comparison, a paragraph of likenesses, a paragraph of differences linked by transitions, and a conclusion.",
       "用几个段落的文章比较两样事物：开头说出两者和比较的方面，一段写相同点，一段用过渡词连接写不同点，最后写结论。",
     ),
+    intro: t(
+      "A compare-and-contrast essay does more than list facts about A and then B: it states the two subjects and the exact points of comparison up front, groups their likenesses and differences cleanly, and guides the reader with clear transitions.",
+      "比较对照文不只是先罗列 A 再罗列 B：它在开头点明两个对象及比较维度，分别条理清晰地展开相同点与不同点，并用过渡词引导读者在两者间切换。",
+    ),
     prerequisites: after("writing-a-compare-and-contrast-paragraph", "transitions-between-ideas"),
     encompasses: [{ topic: "writing-a-compare-and-contrast-paragraph", weight: 0.2 }],
     xp: 22,
@@ -383,8 +407,8 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
         "the-basis-of-comparison",
         t("The Basis of Comparison", "比较的依据"),
         t(
-          "A compare-and-contrast essay opens by naming the **two things** and the **points** on which it will compare them: *Comparing their rivers, their governments and their writing shows both their likenesses and their differences.* Then each body paragraph keeps to those points, and every likeness or difference is about **both** things: not *Egypt had the Nile*, but *Egypt's Nile flooded gently, while Mesopotamia's rivers flooded wildly.*",
-          "比较对照文在开头说出要比较的**两样事物**和比较的**方面**：*Comparing their rivers, their governments and their writing shows both their likenesses and their differences.* 然后每个主体段落都围绕这些方面展开，每个相同点或不同点都要涉及**两者**：不是 *Egypt had the Nile*，而是 *Egypt's Nile flooded gently, while Mesopotamia's rivers flooded wildly.*",
+          "A compare-and-contrast essay opens by naming the **two things** and the **points** on which it will compare them: *Comparing their rivers, their governments and their writing shows both their likenesses and their differences.* Then each body paragraph keeps to those points, and every likeness or difference is about **both** things: not *Egypt had the Nile*, but *Egypt's Nile flooded gently, while Mesopotamia's rivers flooded wildly.*\n\n> **Watch out.** Never mention a trait for only one side—if you tell how A behaves on a point, pair it directly with B on that same point.",
+          "比较对照文在开头说出要比较的**两样事物**和比较的**方面**：*Comparing their rivers, their governments and their writing shows both their likenesses and their differences.* 然后每个主体段落都围绕这些方面展开，每个相同点或不同点都要涉及**两者**：不是 *Egypt had the Nile*，而是 *Egypt's Nile flooded gently, while Mesopotamia's rivers flooded wildly.*\n\n> **注意。** 不要只写其中一方的特点——提到 A 在某个方面的表现，就要紧接着对应写出 B 在同一方面的表现。",
         ),
         writingGenerator(
           t(
@@ -394,15 +418,18 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
           compareBank,
           ["g6-compare-basis", "g6-likeness-and-difference", "w4-concludes"],
           { minWords: 140, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Check that your opening names both subjects and the points of comparison, that each body paragraph covers both subjects on those points, and that your conclusion sums up the contrast.",
+            "检查开头是否点明两个对象及比较方面、主体段是否在每个方面都兼顾两者，以及结尾是否总结了对比结论。",
+          ),
         ),
       ),
       point(
         "moving-between-likeness-and-difference",
         t("Moving Between Likeness and Difference", "在相同点和不同点之间转换"),
         t(
-          "Transitions tell the reader which way the essay is turning. Words such as *similarly*, *likewise* and *both* signal a likeness; *however*, *in contrast*, *on the other hand*, *whereas* and *while* signal a difference. Put a transition where the essay moves from likenesses to differences, and use them inside the paragraphs too, then end with a conclusion that says what the comparison shows.",
-          "过渡词告诉读者文章在往哪个方向转。*similarly*、*likewise*、*both* 等词表示相同点；*however*、*in contrast*、*on the other hand*、*whereas*、*while* 表示不同点。在文章从相同点转向不同点的地方用过渡词，段落内部也要用，最后用结论说明这次比较说明了什么。",
+          "Transitions tell the reader which way the essay is turning. Words such as *similarly*, *likewise* and *both* signal a likeness; *however*, *in contrast*, *on the other hand*, *whereas* and *while* signal a difference. Put a transition where the essay moves from likenesses to differences, and use them inside the paragraphs too, then end with a conclusion that says what the comparison shows.\n\n> **Watch out.** Check that each transition matches the logic of its sentence—do not use *similarly* before a contrast or *however* before a likeness.",
+          "过渡词告诉读者文章在往哪个方向转。*similarly*、*likewise*、*both* 等词表示相同点；*however*、*in contrast*、*on the other hand*、*whereas*、*while* 表示不同点。在文章从相同点转向不同点的地方用过渡词，段落内部也要用，最后用结论说明这次比较说明了什么。\n\n> **注意。** 核对每个过渡词是否与句子逻辑一致——不要在对比前误用 *similarly*，也不要在相同点前误用 *however*。",
         ),
         writingGenerator(
           t(
@@ -412,7 +439,10 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
           compareBank,
           ["g6-uses-transitions", "g6-likeness-and-difference", "w4-concludes"],
           { minWords: 140, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Circle the comparison and contrast transitions (*similarly*, *however*, *in contrast*, *whereas*) in your essay to confirm every shift between likenesses and differences is clearly signaled.",
+            "圈出文中的比较与对比过渡词（*similarly*、*however*、*in contrast*、*whereas*），确认每次从相同点转向不同点都有清晰路标。",
+          ),
         ),
       ),
     ],
@@ -424,6 +454,10 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
       "Tell one true moment from your own life as a scene, with what you saw, heard and felt, showing rather than telling, and end by looking back on what the moment meant.",
       "把自己生活中一个真实的时刻写成场景，写出你看到、听到和感受到的，用展示而不是告诉的方式，最后回顾这个时刻的意义。",
     ),
+    intro: t(
+      "A memoir scene zooms in on one unforgettable minute—standing at the edge of a high diving board or searching a rainy yard for a lost dog—and then steps back at the end to reflect on what that moment taught you.",
+      "回忆录场景把镜头拉近到某一个难忘的瞬间——站在高跳台边缘，或在雨夜院子里寻找走失的小狗——最后在结尾抽身回望，说出那一刻带给你的领悟。",
+    ),
     prerequisites: after("writing-a-personal-narrative", "showing-character-through-action"),
     encompasses: [{ topic: "writing-a-personal-narrative", weight: 0.2 }],
     xp: 22,
@@ -434,8 +468,8 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
         "one-moment-as-a-scene",
         t("One Moment as a Scene", "把一个时刻写成场景"),
         t(
-          "A memoir scene slows down **one moment** instead of summarizing a whole summer. Put the reader there: what you saw (*the water below glittered*), heard (*a boy sighed loudly on the ladder*) and felt (*my heart was pounding in my ears*). Let actions and words show your feelings rather than naming them, and include a line or two of what someone said.",
-          "回忆录场景把**一个时刻**放慢来写，而不是概括整个夏天。让读者身临其境：你看到的（*the water below glittered*）、听到的（*a boy sighed loudly on the ladder*）和感受到的（*my heart was pounding in my ears*）。用动作和话语展示你的感受，而不是直接说出来，并写进一两句别人说的话。",
+          "A memoir scene slows down **one moment** instead of summarizing a whole summer. Put the reader there: what you saw (*the water below glittered*), heard (*a boy sighed loudly on the ladder*) and felt (*my heart was pounding in my ears*). Let actions and words show your feelings rather than naming them, and include a line or two of what someone said.\n\n> **Watch out.** Do not summarize weeks of events—stay inside one single scene with concrete sights, sounds, actions, and dialogue.",
+          "回忆录场景把**一个时刻**放慢来写，而不是概括整个夏天。让读者身临其境：你看到的（*the water below glittered*）、听到的（*a boy sighed loudly on the ladder*）和感受到的（*my heart was pounding in my ears*）。用动作和话语展示你的感受，而不是直接说出来，并写进一两句别人说的话。\n\n> **注意。** 不要泛泛概括几周的经历——把笔墨聚焦在一个具体场景里，写出画面、声音、动作和对话。",
         ),
         writingGenerator(
           t(
@@ -445,15 +479,18 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
           memoirBank,
           ["g6-scene-in-a-moment", "g35-narrative-shows", "g6-reflects-on-meaning"],
           { minWords: 120, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Check that your piece stays inside one specific moment, uses sensory details and dialogue to show feelings rather than naming them, and closes with a brief reflection.",
+            "检查文章是否聚焦于一个具体瞬间、用感官细节和对话展示而非直白说出情绪，并以简短的回顾收尾。",
+          ),
         ),
       ),
       point(
         "looking-back-on-the-moment",
         t("Looking Back on the Moment", "回顾这个时刻"),
         t(
-          "What makes a memoir more than a story is the **look back**. After the scene, step out of the moment and speak from today: *Looking back, I see that...*, *Ever since, I have...*, *I realize now that...*. Say what the moment meant or how it changed you, in a sentence or two that grows out of the scene instead of a moral that could end any story.",
-          "让回忆录不只是一个故事的，是**回顾**。在场景之后，跳出那个时刻，从今天的角度说话：*Looking back, I see that...*、*Ever since, I have...*、*I realize now that...*。用一两句话说出这个时刻的意义或它如何改变了你，这些话要从场景中自然生发，而不是一句放在任何故事结尾都行的道理。",
+          "What makes a memoir more than a story is the **look back**. After the scene, step out of the moment and speak from today: *Looking back, I see that…*, *Ever since, I have…*, *I realize now that…*. Say what the moment meant or how it changed you, in a sentence or two that grows out of the scene instead of a moral that could end any story.\n\n> **Watch out.** Avoid generic morals like *“I learned never to give up”*—tie your closing reflection directly to a concrete detail from your own scene.",
+          "让回忆录不只是一个故事的，是**回顾**。在场景之后，跳出那个时刻，从今天的角度说话：*Looking back, I see that…*、*Ever since, I have…*、*I realize now that…*。用一两句话说出这个时刻的意义或它如何改变了你，这些话要从场景中自然生发，而不是一句放在任何故事结尾都行的道理。\n\n> **注意。** 避免套用“我学会了永不放弃”这类万能格言——把结尾的反思紧扣你自己场景里的具体细节。",
         ),
         writingGenerator(
           t(
@@ -463,7 +500,10 @@ export const writingJudgedTopics6a: readonly TopicDef[] = [
           memoirBank,
           ["g6-reflects-on-meaning", "g6-scene-in-a-moment", "g35-narrative-shows"],
           { minWords: 120, maxChars: 4000 },
-          onePiece,
+          checkedPiece(
+            "Read your final paragraph on its own: confirm it speaks from the present looking back and connects specifically to what happened in your scene.",
+            "单独读一遍结尾段：确认它是站在现在的角度回望，并且具体呼应了前面场景中发生的事。",
+          ),
         ),
       ),
     ],

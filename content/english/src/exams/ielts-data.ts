@@ -216,13 +216,13 @@ function trendItems(): readonly SolvedChoice[] {
         wrong: misreadings[trend].map(sentence),
         whyNot: misreadings[trend].map((tr) =>
           t(
-            `*${phrases[tr][variant]}* describes ${meaning[tr].en}, but ${s.unit(a)} to ${s.unit(b)} is a change of about ${change}%, which is ${meaning[trend].en}.`,
-            `*${phrases[tr][variant]}* 表示${meaning[tr]["zh-CN"]}，但从 ${s.unit(a)} 到 ${s.unit(b)} 变化约为 ${change}%，属于${meaning[trend]["zh-CN"]}。`,
+            `*${phrases[tr][variant]}* describes ${meaning[tr].en}, which does not match a move from ${s.unit(a)} to ${s.unit(b)} (about ${change}%).`,
+            `*${phrases[tr][variant]}* 表示${meaning[tr]["zh-CN"]}，与从 ${s.unit(a)} 到 ${s.unit(b)}（约 ${change}%）的实际变化不符。`,
           ),
         ),
         solution: t(
-          `From ${s.unit(a)} to ${s.unit(b)} is a change of about ${change}%: ${meaning[trend].en}. ${capital(phrases[trend][0])} fits it; a change of only a few per cent is stable, and a rise or fall of a third or more is sharp.`,
-          `从 ${s.unit(a)} 到 ${s.unit(b)}，变化约为 ${change}%，属于${meaning[trend]["zh-CN"]}，所以用 *${phrases[trend][0]}*。变化只有百分之几算 stable，升降三分之一以上才算 sharp。`,
+          `From ${s.unit(a)} to ${s.unit(b)} is a change of about ${change}%: ${meaning[trend].en}. ${capital(phrases[trend][0])} fits it; a change of only a few per cent is stable, and a rise or fall of a third or more is sharp.\n\n**Check.** Divide the change by the starting value (${change}%): match both the direction (up, down, or flat) and the size (slight vs. sharp) to *${phrases[trend][variant]}*.`,
+          `从 ${s.unit(a)} 到 ${s.unit(b)}，变化约为 ${change}%，属于${meaning[trend]["zh-CN"]}，所以用 *${phrases[trend][0]}*。变化只有百分之几算 stable，升降三分之一以上才算 sharp。\n\n**检验。** 用变化量除以起始值（约 ${change}%），同时核对方向（升、降或平稳）和幅度（小幅还是大幅），确认与 *${phrases[trend][variant]}* 一致。`,
         ),
       });
     }
@@ -428,8 +428,8 @@ function tableItems(table: Shares): readonly SolvedChoice[] {
         whyNot: wrongs.map((w) => t(`That sentence misreads the table. ${w.reason.en}`, `这句话读错了表格。${w.reason["zh-CN"]}`)),
 
         solution: t(
-          `${claim.sentence} ${claim.reason.en} Each of the other sentences misreads a figure: check every number, every comparison and every fraction against the table.`,
-          `${claim.sentence} ${claim.reason["zh-CN"]} 其他句子都读错了某个数字：要把每个数字、每个比较和每个分数都与表格核对。`,
+          `${claim.sentence} ${claim.reason.en} Each of the other sentences misreads a figure: check every number, every comparison and every fraction against the table.\n\n**Check.** Verify the exact percentage or ratio in the table—the numbers directly confirm this statement.`,
+          `${claim.sentence} ${claim.reason["zh-CN"]} 其他句子都读错了某个数字：要把每个数字、每个比较和每个分数都与表格核对。\n\n**检验。** 对照表格复核确切百分比或倍数关系，表格数字直接印证了上述说法。`,
         ),
       });
     });
@@ -457,6 +457,10 @@ export const describingData: TopicDef = drawn(
       "IELTS Task 1 language: choose the sentence that reports a table accurately, for trends over time and for proportions and comparisons.",
       "雅思 Task 1 的语言：选出准确报告表格的句子，包括随时间的趋势，以及比例和比较。",
     ),
+    intro: t(
+      "Calling a move from 40 to 42 a *dramatic jump*—or calling 20% *a third*—costs accuracy marks in IELTS Task 1. Matching verbs, fractions, and ratios directly to the arithmetic keeps your data report trustworthy.",
+      "把从 40 涨到 42 说成 *dramatic jump*，或者把 20% 说成 *a third*，都会在雅思 Task 1 失分。先算清增幅、分数与倍数，再挑选对应的英语表达，数据描述才能准确可靠。",
+    ),
     strand: "writing",
     prerequisites: ["b2-words-trends", "comparatives-and-superlatives"],
     encompasses: [
@@ -469,8 +473,8 @@ export const describingData: TopicDef = drawn(
         "describing-trends",
         t("Trends over Time", "随时间变化的趋势"),
         t(
-          "Work out how big a change is before you choose its words. Divide the change by the starting figure:\n\n- a change of only a few per cent: *remained stable, stayed roughly the same*;\n- a change of about a tenth: *rose slightly, fell slightly, increased a little*;\n- a change of a third or more: *rose sharply, fell sharply, increased dramatically*.\n\nAn examiner checks that your words match the figures. A rise from 40 to 42 is not *sharp*, however exciting it looks on a graph.",
-          "先算出变化有多大，再选词。用变化量除以起始数字：\n\n- 只变化百分之几：*remained stable, stayed roughly the same*；\n- 变化约十分之一：*rose slightly, fell slightly, increased a little*；\n- 变化三分之一或更多：*rose sharply, fell sharply, increased dramatically*。\n\n考官会检查你的用词是否与数字相符。从 40 到 42 的上升不是 *sharp*，不管它在图上看起来多显眼。",
+          "Work out how big a change is before you choose its words. Divide the change by the starting figure:\n\n- a change of only a few per cent: *remained stable, stayed roughly the same*;\n- a change of about a tenth: *rose slightly, fell slightly, increased a little*;\n- a change of a third or more: *rose sharply, fell sharply, increased dramatically*.\n\n> **Watch out.** Judge change by **percentage of the starting value**, not by how steep a chart looks—a rise from 40 to 42 (5%) is *slight* or *stable*, never *sharp*.",
+          "先算出变化有多大，再选词。用变化量除以起始数字：\n\n- 只变化百分之几：*remained stable, stayed roughly the same*；\n- 变化约十分之一：*rose slightly, fell slightly, increased a little*；\n- 变化三分之一或更多：*rose sharply, fell sharply, increased dramatically*。\n\n> **注意。** 按**相对起始值的百分比**判断幅度，不要被图表视觉效果迷惑——从 40 升到 42（仅 5%）绝不是 *sharp*。",
         ),
         solvedChoiceGenerator(trendQuestion, trendBank),
       ),
@@ -478,8 +482,8 @@ export const describingData: TopicDef = drawn(
         "describing-proportions",
         t("Proportions and Comparisons", "比例与比较"),
         t(
-          "For a table of percentages, report proportions and comparisons rather than every number.\n\n- Fractions: *about half* (50%), *a third* (33%), *a quarter* (25%), *a fifth* (20%), *a tenth* (10%). Use them only when the figure is close.\n- Comparisons: *roughly twice / three times / half that for ...*: divide one figure by the other.\n- The largest category: *the highest, at 38%*.\n\nCheck every sentence against the table: a wrong fraction or a reversed comparison is an error of accuracy, however good the English.",
-          "对于百分比表格，要报告比例和比较，而不是罗列每个数字。\n\n- 分数：*about half*（50%）、*a third*（33%）、*a quarter*（25%）、*a fifth*（20%）、*a tenth*（10%）。只有数字接近时才用。\n- 比较：*roughly twice / three times / half that for ...*：用一个数字除以另一个。\n- 最大的类别：*the highest, at 38%*。\n\n每句话都要与表格核对：分数用错或比较说反都是准确性错误，英语再好也没用。",
+          "For a table of percentages, report proportions and comparisons rather than every number.\n\n- Fractions: *about half* (50%), *a third* (33%), *a quarter* (25%), *a fifth* (20%), *a tenth* (10%). Use them only when the figure is close.\n- Comparisons: *roughly twice / three times / half that for ...*: divide one figure by the other.\n- The largest category: *the highest, at 38%*.\n\n> **Watch out.** Double-check the direction of every ratio and fraction against the table—reversing *twice* vs. *half* or mistaking 20% (*a fifth*) for *a quarter* (25%) is an accuracy error.",
+          "对于百分比表格，要报告比例和比较，而不是罗列每个数字。\n\n- 分数：*about half*（50%）、*a third*（33%）、*a quarter*（25%）、*a fifth*（20%）、*a tenth*（10%）。只有数字接近时才用。\n- 比较：*roughly twice / three times / half that for ...*：用一个数字除以另一个。\n- 最大的类别：*the highest, at 38%*。\n\n> **注意。** 对照表格复核每一处倍数方向和分数——把 *twice* 和 *half* 说反，或把 20%（*a fifth*）误写成 *a quarter*（25%），都属于数据不准确。",
         ),
         solvedChoiceGenerator(shareQuestion, shareBank),
       ),
