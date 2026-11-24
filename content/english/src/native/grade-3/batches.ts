@@ -3,7 +3,7 @@
 
 import type { Text, TopicDef } from "@ga/content";
 import type { WordBatch } from "../../pack.ts";
-import { type BatchSpec, type BatchWord, batchTopic, batchWords } from "../batch.ts";
+import { type BatchSpec, type BatchWord, batchTopicWithPool, batchWords, wordPool } from "../batch.ts";
 import { rows } from "./kit.ts";
 
 /** fromClues is the share of context clues that reading a word in a sentence practices. */
@@ -102,5 +102,6 @@ export const spec = (b: Grade3Batch): BatchSpec => ({
 /** batchesOf builds the topics and the word lists of batches. */
 export const batchesOf = (batches: readonly Grade3Batch[]): { topics: TopicDef[]; words: WordBatch[] } => {
   const specs = batches.map(spec);
-  return { topics: specs.map(batchTopic), words: specs.map(batchWords) };
+  const pool = wordPool(specs);
+  return { topics: specs.map((s) => batchTopicWithPool(s, pool)), words: specs.map(batchWords) };
 };

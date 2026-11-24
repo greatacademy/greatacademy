@@ -51,11 +51,27 @@ export interface BatchSpec {
 const stripEnd = (s: string) => s.replace(/[.。]+$/u, "");
 const capFirst = (s: string) => (s.length > 0 ? s[0]!.toUpperCase() + s.slice(1) : s);
 
+/** wordPool indexes every word across a set of batches so a topic can borrow same-part-of-speech distractors from the same grade. */
+export function wordPool(specs: readonly BatchSpec[]): ReadonlyMap<string, BatchWord> {
+  const pool = new Map<string, BatchWord>();
+  for (const s of specs) for (const w of s.words) if (!pool.has(w.word)) pool.set(w.word, w);
+  return pool;
+}
+
 /** batchTopic builds a vocabulary topic of three knowledge points: what each word means in a sentence, choosing it for a sentence, and spelling it; each has an item for every sentence of every word. */
 export function batchTopic(spec: BatchSpec): TopicDef {
+  return buildBatchTopic(spec);
+}
+
+/** batchTopicWithPool builds a vocabulary topic that can also borrow same-part-of-speech distractors from a same-grade word pool. */
+export function batchTopicWithPool(spec: BatchSpec, pool: ReadonlyMap<string, BatchWord>): TopicDef {
+  return buildBatchTopic(spec, pool);
+}
+
+function buildBatchTopic(spec: BatchSpec, pool?: ReadonlyMap<string, BatchWord>): TopicDef {
   const byWord = new Map(spec.words.map((w) => [w.word, w] as const));
   const find = (word: string): BatchWord => {
-    const found = byWord.get(word);
+    const found = byWord.get(word) ?? pool?.get(word);
     if (found === undefined) throw new Error(`${spec.id}: ${word} is not in the batch`);
     return found;
   };
@@ -91,7 +107,14 @@ export function batchTopic(spec: BatchSpec): TopicDef {
       instruction: t(`It means: ${w.meaning[0]}.`, `意思是：${w.meaning[0]}（${w.meaning[1]}）。`),
     })),
   );
-  const zhMeaning = (en: string) => spec.words.find((w) => w.meaning[0] === en)?.meaning[1] ?? en;
+  const findByMeaning = (en: string): BatchWord | undefined => {
+    const local = spec.words.find((w) => w.meaning[0] === en);
+    if (local) return local;
+    if (!pool) return undefined;
+    for (const w of pool.values()) if (w.meaning[0] === en) return w;
+    return undefined;
+  };
+  const zhMeaning = (en: string) => findByMeaning(en)?.meaning[1] ?? en;
   const firstWord = spec.words[0]!;
   const secondWord = spec.words[1] ?? firstWord;
   const thirdWord = spec.words[2] ?? secondWord;
@@ -175,7 +198,7 @@ export function batchTopic(spec: BatchSpec): TopicDef {
           },
           (wrong, _right, shown, position) => {
             const meta = meaningMeta.get(shown);
-            const other = spec.words.find((w) => w.meaning[0] === wrong);
+            const other = findByMeaning(wrong);
             const conflict = meta?.word.conflicts?.[position];
             if (conflict && other) {
               return t(

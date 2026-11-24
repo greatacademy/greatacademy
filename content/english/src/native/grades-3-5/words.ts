@@ -3,7 +3,7 @@
 import { type TopicDef, t } from "@ga/content";
 import { type ChoiceItem, choiceGenerator, point } from "@ga/subject-english";
 import type { WordBatch } from "../../pack.ts";
-import { type BatchSpec, batchTopic, batchWords } from "../batch.ts";
+import { type BatchSpec, batchTopicWithPool, batchWords, wordPool } from "../batch.ts";
 
 const fromClues = [{ topic: "context-clues", weight: 0.1 }] as const;
 
@@ -325,6 +325,24 @@ const waterCycle: BatchSpec = {
     "Ten words for how water moves and is used: moisture, absorb, drought, reservoir and more.",
     "十个关于水的运动和利用的词：moisture、absorb、drought、reservoir 等。",
   ),
+  intro: t(
+    "After a long **drought**, dark clouds finally drop rain that can **seep** into dry soil, rush across pavement as **runoff**, or refill the **reservoir** behind the dam so farmers can **irrigate** their fields. These ten words trace how water moves and how people save it.",
+    "久旱（**drought**）之后，乌云终于降下雨水：有的渗入（**seep**）干土，有的化作地表径流（**runoff**），有的蓄满大坝后的水库（**reservoir**），让农夫能灌溉（**irrigate**）农田。这十个词讲述水的循环与利用。",
+  ),
+  watchOut: {
+    meanings: t(
+      "Tell **absorb** (soak a liquid inward into a sponge, towel, or soil) apart from **seep** (ooze slowly *through* tiny cracks or sand) and **condense** (turn from gas/vapor back into liquid drops when cooled).",
+      "分清 **absorb**（像海绵或干土把液体吸进去）、**seep**（液体从小缝或沙层里慢慢渗出）和 **condense**（水蒸气遇冷凝结成水珠）。",
+    ),
+    use: t(
+      "Tell **reservoir** (a stored lake of water behind a dam) apart from **runoff** (rainwater flowing over hard ground instead of soaking in) and **moisture** (uncountable dampness in air, soil, or food).",
+      "分清 **reservoir**（大坝后蓄水的水库）、**runoff**（未渗入地下而在地表流走的径流）和 **moisture**（不可数名词，空气或土壤中的少量水分）。",
+    ),
+    spelling: t(
+      "Watch **reservoir** (*res-er-voir* with *-voir*), **drought** (*ough* saying /aʊ/, not *droughth*), and **irrigate** (double *r* + *-gate*).",
+      "注意 **reservoir** 结尾的 **-voir**、**drought** 里读 /aʊ/ 的 **ough**，以及 **irrigate** 的双写 **r**。",
+    ),
+  },
   domain: ["water and how it moves", "水及其运动"],
   prerequisites: ["context-clues"],
   encompasses: fromClues,
@@ -335,10 +353,30 @@ const waterCycle: BatchSpec = {
       meaning: ["a lake where water is stored for people to use", "水库，储存供人们使用的水的湖"],
       sentences: [
         "The town's drinking water is kept in a ___ behind the dam.",
-        "When the ___ is low, the city asks people to use less water.",
+        "When the water level in the ___ drops low, the city asks people to use less water.",
         "Pipes carry water from the ___ in the hills to every house in town.",
       ],
       confusions: ["runoff", "droplet"],
+      clues: [
+        "stored town drinking water held behind a dam",
+        "a stored water supply whose level can drop low",
+        "a hill storage lake feeding pipes to every house",
+      ],
+      contrast: [
+        "reservoir stores water in a lake behind a dam; runoff flows away over the ground",
+        "reservoir 是蓄水的水库；runoff 是地表流走的径流",
+      ],
+      conflicts: [
+        [
+          "runoff is rainwater flowing away over the ground, not a stored lake supplying a town",
+          "runoff 是沿地面流走的雨水，不是储存饮用水的水库",
+        ],
+        [
+          "droplet is a single tiny drop of liquid, not a large lake supplying a whole town",
+          "droplet 是一滴微小水珠，不是供应全镇用水的蓄水湖",
+        ],
+      ],
+      spelling: ["res · er · voir", "res-er + -voir ending saying /vwɑːr/", "res-er 加读 /vwɑːr/ 的结尾 -voir"],
     },
     {
       word: "droplet",
@@ -350,6 +388,23 @@ const waterCycle: BatchSpec = {
         "Look closely and you can see one tiny ___ rolling down the window.",
       ],
       confusions: ["moisture", "reservoir"],
+      clues: [
+        "one tiny cloud particle too small to fall as rain",
+        "a single bead of dew hanging from a grass tip",
+        "one tiny bead of water rolling down glass",
+      ],
+      contrast: [
+        "droplet is one countable tiny drop; moisture is uncountable dampness",
+        "droplet 是可数的单颗小水滴；moisture 是不可数的湿气水分",
+      ],
+      conflicts: [
+        [
+          "moisture is uncountable dampness, not a single countable bead of liquid",
+          "moisture 是不可数的湿气，不能接在 Each 或 A single 后面指一颗水滴",
+        ],
+        ["reservoir is a huge stored lake of water, the opposite of a tiny bead of liquid", "reservoir 是巨大的水库，与微小水滴正好相反"],
+      ],
+      spelling: ["drop · let", "drop + -let meaning small", "drop 加表示“小”的后缀 -let"],
     },
     {
       word: "moisture",
@@ -360,6 +415,23 @@ const waterCycle: BatchSpec = {
         "Cactus leaves are thick so that they can hold on to every bit of ___.",
       ],
       confusions: ["droplet", "drought"],
+      clues: [
+        "dampness left in soil helping seeds grow",
+        "excess dampness inside a bag making bread moldy",
+        "tiny bits of dampness held inside thick cactus leaves",
+      ],
+      contrast: [
+        "moisture is a small amount of water held in air, soil, or things; drought is a long dry spell with no rain",
+        "moisture 是空气或物体中的少量水分；drought 是久旱无雨",
+      ],
+      conflicts: [
+        [
+          "droplet is a single countable drop, not uncountable dampness spread through soil, air, or bread",
+          "droplet 是单颗可数水滴，不是弥散在土壤、袋子或叶片里的不可数水分",
+        ],
+        ["drought is a long spell without rain, the exact opposite of dampness", "drought 是长期干旱缺水，与湿气水分正相反"],
+      ],
+      spelling: ["mois · ture", "oi vowel team + -ture ending", "元音组合 oi 加结尾 -ture"],
     },
     {
       word: "absorb",
@@ -371,6 +443,22 @@ const waterCycle: BatchSpec = {
         "Use a paper towel to ___ the spilled milk.",
       ],
       confusions: ["seep", "condense"],
+      clues: ["a sponge soaking in a lot of water", "dry soil taking in a light rain quickly", "a paper towel soaking up spilled milk"],
+      contrast: [
+        "absorb takes liquid inward into a material; seep flows slowly through cracks",
+        "absorb 是把液体吸收进去；seep 是液体从缝隙慢慢渗出",
+      ],
+      conflicts: [
+        [
+          "seep means flowing slowly through tiny cracks (intransitive), not soaking up a liquid directly",
+          "seep 指液体从缝隙慢慢渗漏（不及物），不能接水或牛奶作宾语表示吸收",
+        ],
+        [
+          "condense means turning from gas into liquid as it cools, not soaking up liquid into a sponge or towel",
+          "condense 是气体遇冷凝结成液体，不是把液态水或牛奶吸走",
+        ],
+      ],
+      spelling: ["ab · sorb", "ab- + sorb (with b, not p)", "前缀 ab- 加以 b 结尾的 sorb"],
     },
     {
       word: "seep",
@@ -382,6 +470,26 @@ const waterCycle: BatchSpec = {
         "When the bucket cracked, water started to ___ out of the bottom.",
       ],
       confusions: ["absorb", "irrigate"],
+      clues: [
+        "rainwater moving slowly through sand into the ground",
+        "floodwater oozing slowly under a door",
+        "water leaking slowly through a cracked bucket bottom",
+      ],
+      contrast: [
+        "seep oozes slowly through tiny openings; absorb soaks liquid into a material",
+        "seep 是从缝隙慢慢渗流；absorb 是把液体吸收进去",
+      ],
+      conflicts: [
+        [
+          "absorb takes a liquid object into a material, rather than liquid oozing through cracks or sand",
+          "absorb 需要接被吸收的液体作宾语，不是水自己从缝隙或沙层慢慢渗出",
+        ],
+        [
+          "irrigate means channeling water to farm fields, not water leaking slowly through sand or a crack",
+          "irrigate 是引水灌溉农田，不是水从门缝或裂缝慢慢渗漏",
+        ],
+      ],
+      spelling: ["seep", "double e saying long e + p", "双写 e 发长 e 音加 p"],
     },
     {
       word: "irrigate",
@@ -390,9 +498,29 @@ const waterCycle: BatchSpec = {
       sentences: [
         "Farmers dig ditches from the river to ___ their fields in the dry season.",
         "Without rain, the farmers had to ___ their rice fields with water from the canal.",
-        "Long ago, Egyptians used buckets on poles to ___ the land by the river.",
+        "Long ago, Egyptians used buckets on poles to ___ the dry farmland by the river.",
       ],
       confusions: ["conserve", "seep"],
+      clues: [
+        "digging river ditches to bring water to dry fields",
+        "bringing canal water to rice fields when rain stops",
+        "lifting river water in buckets to water dry farmland",
+      ],
+      contrast: [
+        "irrigate brings water to crops through ditches or pipes; conserve saves water from waste",
+        "irrigate 是引水灌溉农田；conserve 是节约不浪费",
+      ],
+      conflicts: [
+        [
+          "conserve means saving a resource from waste, not channeling water to dry crop fields",
+          "conserve 是节约保护资源，不是挖沟渠引水浇灌干田",
+        ],
+        [
+          "seep means liquid oozing slowly through cracks, not actively watering farm fields",
+          "seep 是液体自行缓慢渗漏，不能接农田作宾语表示灌溉",
+        ],
+      ],
+      spelling: ["ir · ri · gate", "double r + i + -gate with silent e", "双写 r 加 i 和带 e 的 -gate"],
     },
     {
       word: "conserve",
@@ -401,20 +529,60 @@ const waterCycle: BatchSpec = {
       sentences: [
         "We turn off the tap while brushing our teeth to ___ water.",
         "Taking shorter showers is one easy way to ___ water at home.",
-        "Camels ___ water in their bodies so they can cross the desert.",
+        "Camels ___ water carefully inside their bodies so they can cross the desert without wasting it.",
       ],
       confusions: ["absorb", "irrigate"],
+      clues: [
+        "turning off the tap while brushing teeth to avoid waste",
+        "taking shorter showers to save water at home",
+        "holding water carefully without wasting it across a desert",
+      ],
+      contrast: [
+        "conserve uses a resource carefully without waste; absorb soaks liquid in",
+        "conserve 是节约避免浪费；absorb 是把液体吸进去",
+      ],
+      conflicts: [
+        [
+          "absorb means soaking a liquid into a material, not saving water by turning off taps or shortening showers",
+          "absorb 是吸收液体，不是关紧水龙头或减少浪费以节约用水",
+        ],
+        [
+          "irrigate means watering farm fields through ditches, not saving water from being wasted",
+          "irrigate 是引水灌溉农田，不是节约用水以免浪费",
+        ],
+      ],
+      spelling: ["con · serve", "con- + serve (er saying /ɜːr/ + silent e)", "前缀 con- 加 serve"],
     },
     {
       word: "drought",
       forms: ["droughts"],
       meaning: ["a long time with little or no rain", "干旱，长时间少雨或无雨"],
       sentences: [
-        "During the ___, the river shrank and the grass turned brown.",
-        "The ___ lasted three years, and many farms had no harvest.",
+        "During the long dry ___, the river shrank and the grass turned brown.",
+        "The ___ lasted three years without rain, and many farms had no harvest.",
         "After the long ___, the first rain made everyone dance in the street.",
       ],
       confusions: ["runoff", "moisture"],
+      clues: [
+        "a long dry spell shrinking rivers and browning grass",
+        "three rainless years ruining farm harvests",
+        "a long rainless period ending with celebratory first rain",
+      ],
+      contrast: [
+        "drought is a long spell with little or no rain; runoff is excess rainwater rushing over ground",
+        "drought 是长期干旱无雨；runoff 是雨水过剩流走的地表径流",
+      ],
+      conflicts: [
+        [
+          "runoff is rainwater flowing over the ground after rain, the opposite of a rainless period",
+          "runoff 是降雨后流走的地表径流，与久旱无雨正相反",
+        ],
+        [
+          "moisture is dampness in air or soil, the exact opposite of a long dry spell without rain",
+          "moisture 是空气或土壤中的水分湿气，与长期干旱无雨正相反",
+        ],
+      ],
+      spelling: ["drought", "dr blend + ough saying /aʊ/ + t", "dr 连缀加读 /aʊ/ 的 ough 和 t"],
     },
     {
       word: "runoff",
@@ -422,9 +590,29 @@ const waterCycle: BatchSpec = {
       sentences: [
         "On the hard parking lot, the rain became ___ that rushed into the drain.",
         "Muddy ___ from the farm washed into the stream after the storm.",
-        "Planting grass on the hill slows the ___ and lets the water soak in.",
+        "Planting grass on the hill slows the rainwater ___ and lets the water soak in.",
       ],
       confusions: ["drought", "reservoir"],
+      clues: [
+        "rain rushing off a hard parking lot into a drain",
+        "muddy storm water washing off a farm into a stream",
+        "hillside rainwater slowed by grass so it can soak in",
+      ],
+      contrast: [
+        "runoff is rainwater flowing away over the ground; reservoir is a lake storing water",
+        "runoff 是沿地面流走的雨水；reservoir 是蓄水的水库",
+      ],
+      conflicts: [
+        [
+          "drought is a long dry period without rain, the opposite of storm water rushing over ground",
+          "drought 是长期干旱无雨，与暴雨后冲进排水沟或溪流的地表水正相反",
+        ],
+        [
+          "reservoir is a still lake where water is stored, not muddy rainwater rushing across a parking lot or hill",
+          "reservoir 是蓄水湖泊，不是沿路面或山坡冲走的雨水水流",
+        ],
+      ],
+      spelling: ["run · off", "compound word: run + off (double f)", "合成词：run 加双写 f 的 off"],
     },
     {
       word: "condense",
@@ -432,10 +620,30 @@ const waterCycle: BatchSpec = {
       meaning: ["to change from a gas into a liquid as it cools", "凝结，气体冷却后变成液体"],
       sentences: [
         "Water vapor will ___ into drops on the outside of a cold glass.",
-        "On a cold morning, your breath seems to ___ into a little white cloud.",
-        "Steam from the shower will ___ on the cool bathroom mirror.",
+        "On a cold morning, warm water vapor in your breath will ___ into a little white cloud.",
+        "Hot steam from the shower will ___ into water drops on the cool bathroom mirror.",
       ],
       confusions: ["absorb", "conserve"],
+      clues: [
+        "water vapor turning into liquid drops on a cold glass",
+        "warm breath vapor turning into a visible cloud in cold air",
+        "hot shower steam turning into drops on a cool mirror",
+      ],
+      contrast: [
+        "condense changes cooling gas into liquid drops; absorb soaks liquid into a material",
+        "condense 是气体遇冷凝结成液体；absorb 是材料吸收液体",
+      ],
+      conflicts: [
+        [
+          "absorb means soaking up a liquid into a material, not gas or steam cooling into water drops",
+          "absorb 是把液体吸收进去，不是水蒸气遇冷凝结成水珠",
+        ],
+        [
+          "conserve means saving a resource carefully, not steam or vapor turning into liquid drops",
+          "conserve 是节约不浪费，不是水蒸气冷却后变成水滴",
+        ],
+      ],
+      spelling: ["con · dense", "con- + dense with silent e", "前缀 con- 加带词尾 e 的 dense"],
     },
   ],
 };
@@ -675,24 +883,24 @@ const plantLife: BatchSpec = {
         "The valley's ___ fields grew wheat, beans and melons.",
         "Farmers moved to the river because its banks were ___.",
       ],
-      confusions: ["nutrient", "seedling"],
+      confusions: ["dormant", "nocturnal"],
       clues: [
         "rich dark riverbank soil growing the best crops in the valley",
         "rich valley fields producing abundant wheat, beans, and melons",
         "rich riverbanks that attract farmers to plant crops",
       ],
       contrast: [
-        "fertile describes rich soil; nutrient is one substance inside the soil",
-        "fertile 是形容土壤肥沃的形容词；nutrient 是具体养分",
+        "fertile describes rich land able to grow strong plants; dormant means inactive for now",
+        "fertile 指肥沃能长庄稼的土地；dormant 指暂时休眠不活动",
       ],
       conflicts: [
         [
-          "nutrient is a noun for one substance inside soil, not an adjective describing land able to grow strong plants",
-          "nutrient 是表示养分的名词，不是形容土地肥沃的形容词",
+          "dormant means inactive and resting for now, not rich soil actively growing strong crops",
+          "dormant 指暂时休眠沉寂，不是能长出丰盛庄稼的肥沃土地",
         ],
         [
-          "seedling is a noun for a tiny young plant, not an adjective describing rich land for growing crops",
-          "seedling 是“幼苗”名词，不能作形容词描述肥沃的土地",
+          "nocturnal means active at night and asleep by day, not rich land able to grow strong plants",
+          "nocturnal 指夜间活动、白天睡觉，不能形容肥沃的农田河岸",
         ],
       ],
       spelling: ["fer · tile", "er saying /ɜːr/ and -tile ending", "发 /ɜːr/ 的 er 和结尾 -tile"],
@@ -1488,7 +1696,7 @@ const animalSurvival: BatchSpec = {
         "The shark is a ___ at the top of the ocean food chain.",
         "A rabbit freezes when it sees a ___ circling overhead.",
       ],
-      confusions: ["prey", "nocturnal"],
+      confusions: ["prey", "habitat"],
       clues: [
         "an owl hunting mice at night for food",
         "a shark hunting at the top of the ocean food chain",
@@ -1501,8 +1709,8 @@ const animalSurvival: BatchSpec = {
           "prey 是被追捕的猎物，与主动捕猎其他动物的捕食者正相反",
         ],
         [
-          "nocturnal is an adjective meaning active at night, not a noun for an animal that hunts other animals",
-          "nocturnal 是“夜行的”形容词，不是指代捕猎动物的名词",
+          "habitat is the natural home where an animal lives, not an animal that hunts other animals for food",
+          "habitat 是动物居住的栖息地，不是捕食其他动物的捕食者",
         ],
       ],
       spelling: ["pred · a · tor", "pr blend and -tor ending (not -ter)", "pr 连缀和结尾 -tor（不是 -ter）"],
@@ -1633,7 +1841,7 @@ const animalSurvival: BatchSpec = {
         "A spider does not learn to spin a web; it follows its ___.",
         "When a puppy sees a ball roll, its ___ is to chase it.",
       ],
-      confusions: ["camouflage", "adapt"],
+      confusions: ["camouflage", "habitat"],
       clues: [
         "a baby turtle knowing how to crawl toward the sea without being taught",
         "a spider knowing how to spin a web without ever learning",
@@ -1646,8 +1854,8 @@ const animalSurvival: BatchSpec = {
           "camouflage 是隐藏外表的花纹颜色，不是动物无须学习天生就会的行为本能",
         ],
         [
-          "adapt is a verb for changing to fit a place, not a noun for untaught behavior an animal is born with",
-          "adapt 是表示“适应”的动词，不是动物与生俱来的“本能”名词",
+          "habitat is the natural place where an animal lives, not an untaught behavior an animal is born with",
+          "habitat 是动物生活的自然环境，不是动物与生俱来的行为本能",
         ],
       ],
       spelling: ["in · stinct", "in- + stinct ending in nct", "in- 加以 nct 结尾的 stinct"],
@@ -1685,24 +1893,24 @@ const animalSurvival: BatchSpec = {
         "Owls are ___ hunters that use their sharp hearing in the dark.",
         "Because raccoons are ___, you rarely see them at noon.",
       ],
-      confusions: ["predator", "instinct"],
+      confusions: ["dormant", "fertile"],
       clues: [
         "bats sleeping all day and flying out after dark",
         "owls hunting in the dark with sharp hearing",
         "raccoons active at night so you rarely spot them at noon",
       ],
       contrast: [
-        "nocturnal describes night-active habits; predator means any hunter (day or night)",
-        "nocturnal 指夜间活动的习性；predator 泛指捕食者",
+        "nocturnal means active every night and asleep by day; dormant means inactive for a whole season or years",
+        "nocturnal 指昼伏夜出；dormant 指长时间休眠不活动",
       ],
       conflicts: [
         [
-          "predator is a noun for any meat-eating hunter, not an adjective meaning active at night and asleep by day",
-          "predator 是名词“捕食者”（白天黑夜都有），不是形容夜间活动、白天睡觉的形容词",
+          "dormant means inactive for a whole winter or centuries, not waking up every night to fly or hunt",
+          "dormant 指整季或多年休眠，不是每晚醒来活动的昼伏夜出",
         ],
         [
-          "instinct is a noun for untaught behavior, not an adjective meaning active at night",
-          "instinct 是名词“本能”，不能作形容词描述夜间活动的习性",
+          "fertile means able to grow strong plants, not active at night and asleep during the day",
+          "fertile 指土地肥沃，不能形容夜间活动、白天睡觉的动物习性",
         ],
       ],
       spelling: ["noc · tur · nal", "ct in the middle, ur, and -al ending", "中间 ct、ur 和结尾 -al"],
@@ -1985,24 +2193,24 @@ const bodySystems: BatchSpec = {
         "A vaccine helps make your body ___ to a disease.",
         "Some people are ___ to the cold that everyone else in the class caught.",
       ],
-      confusions: ["saliva", "pulse"],
+      confusions: ["dormant", "fertile"],
       clues: [
         "being protected from catching chickenpox again after having it once",
         "a vaccine helping protect the body against a disease",
         "staying protected from a cold everyone else caught",
       ],
       contrast: [
-        "immune is an adjective meaning protected from sickness; saliva and pulse are body nouns",
-        "immune 是形容词“有免疫力的”；saliva 和 pulse 是名词",
+        "immune means protected from a sickness; dormant means inactive for now",
+        "immune 是对疾病有免疫力；dormant 是暂时休眠不活动",
       ],
       conflicts: [
         [
-          "saliva is a noun for liquid in your mouth, not an adjective meaning protected from a sickness",
-          "saliva 是表示“唾液”的名词，不是形容不受疾病侵害的形容词",
+          "dormant means inactive for now like a sleeping volcano or bulb, not protected against catching a disease",
+          "dormant 指像火山或球茎那样暂时休眠，不是对疾病有免疫力",
         ],
         [
-          "pulse is a noun for the beat of blood, not an adjective meaning protected from a disease",
-          "pulse 是表示“脉搏”的名词，不是形容对疾病有免疫力的形容词",
+          "fertile means rich and able to grow plants, not protected from chickenpox, colds, or disease",
+          "fertile 指土地肥沃，不表示对疾病免疫",
         ],
       ],
       spelling: ["im · mune", "double m and silent e making long u", "双写 m 和让 u 读长音的词尾 e"],
@@ -2079,24 +2287,21 @@ const earthScience: BatchSpec = {
         "Wind and sand slowly ___ the soft rock into strange shapes.",
         "Without roots to hold it, the soil on the hill will ___ in the rain.",
       ],
-      confusions: ["tremor", "sediment"],
+      confusions: ["absorb", "condense"],
       clues: [
         "ocean waves slowly wearing a cliff farther back year after year",
         "wind and sand slowly carving soft rock into strange shapes",
         "rain slowly washing away unprotected hillside soil",
       ],
-      contrast: [
-        "erode is the verb for slowly wearing land away; sediment is the sand and mud left behind",
-        "erode 是“侵蚀磨损”的动词；sediment 是被搬运沉积下来的泥沙",
-      ],
+      contrast: ["erode wears rock or soil away slowly; absorb takes a liquid inward", "erode 是慢慢侵蚀磨损岩石土壤；absorb 是吸收液体"],
       conflicts: [
         [
-          "tremor is a noun for a small shaking of the ground, not a verb meaning to wear away slowly",
-          "tremor 是表示轻微地震的名词，不是表示慢慢侵蚀磨损的动词",
+          "absorb means soaking a liquid into a material, not waves, wind, or rain wearing rock and soil away",
+          "absorb 是吸收液体，不是海浪、风沙或雨水慢慢侵蚀悬崖和土壤",
         ],
         [
-          "sediment is a noun for bits of sand and mud carried by water or wind, not the verb for wearing rock or soil away",
-          "sediment 是名词“沉积物”，不能作动词表示水风慢慢侵蚀岩石和土壤",
+          "condense means changing from gas into liquid drops when cooled, not wearing rock or soil away",
+          "condense 是气体遇冷凝结成液体，不是侵蚀岩石或冲走山坡泥土",
         ],
       ],
       spelling: ["e · rode", "long e at the start and silent e making long o", "开头长音 e 和让 o 读长音的词尾 e"],
@@ -2279,15 +2484,15 @@ const earthScience: BatchSpec = {
         "The worker poured ___ glass into a mold to make a bottle.",
         "Deep inside the earth, iron is so hot that it is ___.",
       ],
-      confusions: ["dormant", "magma"],
+      confusions: ["dormant", "fertile"],
       clues: [
         "red-orange flowing lava melted by intense heat",
         "liquid-hot glass poured into a bottle mold",
         "iron deep inside Earth heated so high that it melts",
       ],
       contrast: [
-        "molten is an adjective meaning melted by great heat; magma is a noun for underground melted rock",
-        "molten 是形容词“熔化的”；magma 是名词“地下岩浆”",
+        "molten means melted by great heat; dormant means quiet and inactive for now",
+        "molten 是高温熔化的；dormant 是暂时休眠的",
       ],
       conflicts: [
         [
@@ -2295,8 +2500,8 @@ const earthScience: BatchSpec = {
           "dormant 指暂时沉寂休眠，不是被高温熔化成炽热液态",
         ],
         [
-          "magma is a noun for melted rock underground, not an adjective describing something melted by great heat",
-          "magma 是名词“岩浆”，不能作形容词表示“被高温熔化的”",
+          "fertile means able to grow strong plants, not melted by extreme heat like glowing lava, glass, or iron",
+          "fertile 指肥沃能长庄稼，不能形容高温熔化的熔岩、玻璃或铁水",
         ],
       ],
       spelling: ["mol · ten", "long o in mol and -ten ending", "mol 里的长 o 和结尾 -ten"],
@@ -2309,7 +2514,7 @@ const earthScience: BatchSpec = {
         "A ___ volcano may be quiet for centuries before it erupts.",
         "The bulbs stay ___ under the frozen ground all winter.",
       ],
-      confusions: ["molten", "crater"],
+      confusions: ["molten", "nocturnal"],
       clues: [
         "a volcano quiet for two hundred years yet still able to erupt again",
         "a volcano resting quietly for centuries before waking up",
@@ -2325,8 +2530,8 @@ const earthScience: BatchSpec = {
           "molten 指被高温熔化，与安静沉寂、过冬休眠正相反",
         ],
         [
-          "crater is a noun for a bowl-shaped hole, not an adjective meaning inactive for now",
-          "crater 是表示坑洞的名词，不是形容暂时休眠不活动的形容词",
+          "nocturnal means active every night and asleep by day, not resting inactive for centuries or a whole winter",
+          "nocturnal 指每晚昼伏夜出，不是沉寂数百年或整个冬天的休眠",
         ],
       ],
       spelling: ["dor · mant", "or in dor and -mant ending (not -ment)", "dor 里的 or 和结尾 -mant（不是 -ment）"],
@@ -2372,6 +2577,24 @@ const solarSystem: BatchSpec = {
     "Ten words for the sun, the planets and how we study them: orbit, axis, comet, gravity and more.",
     "十个关于太阳、行星以及我们如何研究它们的词：orbit、axis、comet、gravity 等。",
   ),
+  intro: t(
+    "On a clear night, you aim a **telescope** past a familiar **constellation** and imagine Earth spinning on its **axis** as **gravity** holds it in **orbit** around the sun. These ten words map the solar system and the wider universe.",
+    "晴朗的夜晚，你把望远镜（**telescope**）对准熟悉的星座（**constellation**），想象地球绕自转轴（**axis**）旋转，在引力（**gravity**）牵引下沿轨道（**orbit**）绕太阳公转。这十个词带你认识太阳系与宇宙。",
+  ),
+  watchOut: {
+    meanings: t(
+      "Tell **comet** (a ball of ice and dust that grows a glowing tail near the sun) apart from **asteroid** (a rocky object with no tail that orbits the sun, mostly between Mars and Jupiter).",
+      "分清 **comet**（靠近太阳会长出发光尾巴的冰尘彗星）和 **asteroid**（没有尾巴、多在火星与木星之间的岩石小行星）。",
+    ),
+    use: t(
+      "Tell **galaxy** (a huge system of billions of stars like the Milky Way) apart from **constellation** (a small star pattern in our night sky that looks like a spoon or hunter).",
+      "分清 **galaxy**（由数十亿颗恒星组成的庞大星系，如银河系）和 **constellation**（夜空中看似组成图案的几颗亮星星座）。",
+    ),
+    spelling: t(
+      "Watch **constellation** (double *l* + *-ation*), **asteroid** (*aster-* + *-oid*), and **telescope** (*tele-* + *scope* with silent *e*).",
+      "注意 **constellation** 的双写 **l**、**asteroid** 结尾的 **-oid**，以及 **telescope**（*tele* 加 *scope*）。",
+    ),
+  },
   domain: ["space and the solar system", "太空和太阳系"],
   prerequisites: ["context-clues"],
   encompasses: fromClues,
@@ -2381,11 +2604,31 @@ const solarSystem: BatchSpec = {
       forms: ["orbits", "orbited", "orbiting"],
       meaning: ["the curved path one object travels around another in space", "轨道，太空中一个物体绕另一个物体运行的弯曲路径"],
       sentences: [
-        "It takes the earth one year to travel all the way around its ___.",
+        "It takes the earth one year to travel all the way around its ___ around the sun.",
         "The moon takes about a month to finish one ___ around the earth.",
         "The space station's ___ carries it around the earth every ninety minutes.",
       ],
       confusions: ["axis", "galaxy"],
+      clues: [
+        "Earth's year-long curved path around the sun",
+        "the moon's month-long path around Earth",
+        "the space station's ninety-minute loop around Earth",
+      ],
+      contrast: [
+        "orbit is the curved path around another body; axis is the imaginary line through a planet's center",
+        "orbit 是绕另一天体运行的轨道；axis 是穿过行星中心的自转轴",
+      ],
+      conflicts: [
+        [
+          "axis is an imaginary line through the middle of a planet, not a curved path traveled around another body",
+          "axis 是穿过行星中心的假想自转轴，不是绕另一天体公转的环形轨道",
+        ],
+        [
+          "galaxy is a huge group of billions of stars, not the path a planet, moon, or station follows",
+          "galaxy 是由数十亿恒星组成的星系，不是绕行路径",
+        ],
+      ],
+      spelling: ["or · bit", "or + bit (short i)", "or 加短 i 的 bit"],
     },
     {
       word: "axis",
@@ -2396,17 +2639,54 @@ const solarSystem: BatchSpec = {
         "Uranus is tipped so far over that its ___ points almost at the sun.",
       ],
       confusions: ["orbit", "gravity"],
+      clues: [
+        "the center line Earth spins around once a day",
+        "Earth's tilted center line causing the seasons",
+        "Uranus's tipped spin line pointing almost at the sun",
+      ],
+      contrast: [
+        "axis is the imaginary center line a planet spins around; orbit is the path around another body",
+        "axis 是行星自转的中心轴线；orbit 是公转轨道",
+      ],
+      conflicts: [
+        [
+          "orbit is a curved path around another body, not the tilted center line a planet spins around",
+          "orbit 是公转的弯曲路径，不是行星自转所绕的倾斜中心轴",
+        ],
+        [
+          "gravity is a pulling force, not an imaginary line that can be tilted or point at the sun",
+          "gravity 是无形的吸引力，不是能倾斜或指向太阳的假想轴线",
+        ],
+      ],
+      spelling: ["ax · is", "short a + x + -is", "短音 a 加 x 和 -is"],
     },
     {
       word: "rotate",
       forms: ["rotates", "rotated", "rotating", "rotation"],
       meaning: ["to spin around a center", "旋转，绕着中心转动"],
       sentences: [
-        "As the earth begins to ___, our side turns away from the sun and night falls.",
-        "Watch the wheels ___ as the bike rolls downhill.",
-        "Venus takes longer to ___ once than to travel around the sun.",
+        "As the earth continues to ___ on its axis, our side turns away from the sun and night falls.",
+        "Watch the bike wheels ___ around their centers as the bicycle rolls downhill.",
+        "Venus takes longer to ___ once on its axis than to travel around the sun.",
       ],
-      confusions: ["orbit", "gravity"],
+      confusions: ["absorb", "condense"],
+      clues: [
+        "Earth spinning on its axis so night falls",
+        "bicycle wheels spinning around their centers downhill",
+        "Venus spinning once on its axis slower than its year",
+      ],
+      contrast: ["rotate means to spin around a center; absorb takes in a liquid", "rotate 是绕中心旋转；absorb 是吸收液体"],
+      conflicts: [
+        [
+          "absorb means taking in a liquid like a sponge, not spinning around an axis or wheel center",
+          "absorb 是吸收液体，不是地球或车轮绕中心旋转",
+        ],
+        [
+          "condense means turning from gas into liquid drops when cooled, not spinning around a center",
+          "condense 是气体遇冷凝结成液体，不是绕中心自转",
+        ],
+      ],
+      spelling: ["ro · tate", "long o in ro + -tate with silent e", "ro 读长 o 加带 e 的 -tate"],
     },
     {
       word: "galaxy",
@@ -2415,20 +2695,57 @@ const solarSystem: BatchSpec = {
       sentences: [
         "Our sun is just one of billions of stars in our ___.",
         "The Milky Way is the ___ that our solar system belongs to.",
-        "Through a large telescope, a faraway ___ looks like a faint spiral of light.",
+        "Through a large telescope, a faraway ___ of billions of stars looks like a faint spiral of light.",
       ],
       confusions: ["constellation", "orbit"],
+      clues: [
+        "a vast system holding billions of stars including our sun",
+        "the Milky Way system containing our solar system",
+        "a faraway spiral of billions of stars seen by telescope",
+      ],
+      contrast: [
+        "galaxy is a huge system of billions of stars; constellation is a small star pattern in the sky",
+        "galaxy 是数十亿颗恒星组成的星系；constellation 是夜空中几颗亮星连成的星座",
+      ],
+      conflicts: [
+        [
+          "constellation is a small pattern of stars seen from Earth, not a vast system of billions of stars like the Milky Way",
+          "constellation 只是夜空中看似连成图案的一小组亮星，不是包含数十亿恒星的银河系等星系",
+        ],
+        ["orbit is a curved path in space, not a huge group of billions of stars", "orbit 是天体运行的轨道，不是由数十亿恒星组成的星系"],
+      ],
+      spelling: ["gal · ax · y", "short a + ax + -y ending", "短 a 加 ax 和结尾 y"],
     },
     {
       word: "comet",
       forms: ["comets"],
       meaning: ["a ball of ice and dust that grows a glowing tail near the sun", "彗星，靠近太阳时会长出发光尾巴的冰尘球"],
       sentences: [
-        "As the ___ came close to the sun, its long, bright tail grew.",
+        "As the icy ___ came close to the sun, its long, bright tail grew.",
         "People were frightened long ago when a ___ with a glowing tail appeared in the sky.",
-        "The ___ returns near the sun only once every seventy-six years.",
+        "The icy ___ with its glowing tail returns near the sun only once every seventy-six years.",
       ],
-      confusions: ["galaxy", "constellation"],
+      confusions: ["asteroid", "constellation"],
+      clues: [
+        "an icy body growing a long bright tail near the sun",
+        "a sky visitor with a glowing tail that frightened people",
+        "a glowing-tailed icy body returning every seventy-six years",
+      ],
+      contrast: [
+        "comet is icy and grows a glowing tail near the sun; asteroid is rocky and has no tail",
+        "comet 是冰尘球、靠近太阳会长尾巴；asteroid 是岩石体、没有尾巴",
+      ],
+      conflicts: [
+        [
+          "asteroid is a rocky object with no tail, not an icy body growing a glowing tail near the sun",
+          "asteroid 是没有尾巴的岩石小行星，不会像彗星那样长出发光长尾",
+        ],
+        [
+          "constellation is a pattern of distant stars, not an icy body with a glowing tail returning near the sun",
+          "constellation 是遥远恒星组成的星座图案，不是带发光尾巴的冰尘天体",
+        ],
+      ],
+      spelling: ["com · et", "short o + single m + -et", "短 o、单个 m 加 -et"],
     },
     {
       word: "asteroid",
@@ -2436,10 +2753,30 @@ const solarSystem: BatchSpec = {
       meaning: ["a rocky object, smaller than a planet, that travels around the sun", "小行星，比行星小、绕太阳运行的岩石天体"],
       sentences: [
         "The ___ is a lump of rock about as wide as a city, with no tail at all.",
-        "Most of them are found in a belt between Mars and Jupiter, but this ___ came closer to the earth.",
-        "Scientists sent a spacecraft to collect dust from an old rocky ___.",
+        "Most rocky space bodies are found in a belt between Mars and Jupiter, but this ___ came closer to the earth.",
+        "Scientists sent a spacecraft to collect dust from an old rocky ___ orbiting the sun.",
       ],
       confusions: ["comet", "constellation"],
+      clues: [
+        "a city-wide lump of space rock with no tail",
+        "a rocky space body from the belt between Mars and Jupiter",
+        "an old rocky body orbiting the sun visited by spacecraft",
+      ],
+      contrast: [
+        "asteroid is a rocky object with no tail; comet is an icy body with a glowing tail",
+        "asteroid 是无尾岩石小行星；comet 是带发光尾巴的冰尘彗星",
+      ],
+      conflicts: [
+        [
+          "comet is a ball of ice and dust that grows a glowing tail, not a tailless lump of rock",
+          "comet 是靠近太阳会长尾巴的冰尘球，不是没有尾巴的岩石块",
+        ],
+        [
+          "constellation is a star pattern in the sky, not a solid lump of rock orbiting the sun",
+          "constellation 是遥远恒星连成的图案，不是可以采集尘土的岩石天体",
+        ],
+      ],
+      spelling: ["as · ter · oid", "aster- + -oid ending", "aster 加结尾 -oid"],
     },
     {
       word: "telescope",
@@ -2448,9 +2785,26 @@ const solarSystem: BatchSpec = {
       sentences: [
         "Through the ___, we could see the rings around Saturn.",
         "Galileo pointed his ___ at Jupiter and saw four moons.",
-        "A giant ___ in space sends back pictures of faraway stars.",
+        "A giant ___ in space sends back clear pictures of faraway stars.",
       ],
       confusions: ["astronaut", "axis"],
+      clues: [
+        "an instrument letting us see Saturn's rings up close",
+        "the instrument Galileo pointed at Jupiter to spot four moons",
+        "a giant space instrument photographing faraway stars",
+      ],
+      contrast: [
+        "telescope is a viewing tool for faraway objects; astronaut is a person who travels to space",
+        "telescope 是观测远处天体的望远镜；astronaut 是进入太空的宇航员",
+      ],
+      conflicts: [
+        [
+          "astronaut is a person trained for space travel, not an optical tool you look through or point at planets",
+          "astronaut 是宇航员（人），不是用来看土星光环或对准木星的光学仪器",
+        ],
+        ["axis is an imaginary spin line, not a tool for viewing faraway planets and stars", "axis 是假想自转轴，不是观测远方星辰的工具"],
+      ],
+      spelling: ["tel · e · scope", "tele- (far) + scope with silent e", "前缀 tele-（远）加 scope"],
     },
     {
       word: "astronaut",
@@ -2458,10 +2812,27 @@ const solarSystem: BatchSpec = {
       meaning: ["a person trained to travel into space", "宇航员，受过训练能进入太空的人"],
       sentences: [
         "The ___ floated inside the space station and waved at the camera.",
-        "Before the launch, the ___ trained for years.",
+        "Before the rocket launch into space, the ___ trained for years.",
         "Every ___ must exercise every day in space to keep her bones strong.",
       ],
       confusions: ["telescope", "comet"],
+      clues: [
+        "a space traveler floating and waving inside a space station",
+        "a space traveler training for years before rocket launch",
+        "a space traveler exercising daily to keep bones strong",
+      ],
+      contrast: [
+        "astronaut is a trained space traveler; telescope is a tool for viewing space",
+        "astronaut 是去太空的人；telescope 是观测太空的工具",
+      ],
+      conflicts: [
+        [
+          "telescope is an optical instrument, not a person who trains, waves, or exercises in space",
+          "telescope 是望远镜仪器，不是会训练、挥手或锻炼的人",
+        ],
+        ["comet is an icy space body, not a person trained to travel into space", "comet 是冰尘彗星，不是受训进入太空的人"],
+      ],
+      spelling: ["as · tro · naut", "astro- (star) + -naut (au saying /ɔː/)", "astro-（星）加含 au 的 -naut"],
     },
     {
       word: "gravity",
@@ -2472,6 +2843,26 @@ const solarSystem: BatchSpec = {
         "Without ___, the oceans would float away from the earth.",
       ],
       confusions: ["axis", "orbit"],
+      clues: [
+        "the invisible force pulling a dropped ball to the floor",
+        "the moon's weak pulling force letting astronauts leap high",
+        "the pulling force keeping Earth's oceans from floating away",
+      ],
+      contrast: [
+        "gravity is the pulling force between objects; orbit is the curved path around another body",
+        "gravity 是物体间的吸引力；orbit 是天体运行的轨道",
+      ],
+      conflicts: [
+        [
+          "axis is an imaginary line a planet spins around, not a force that pulls balls or holds oceans down",
+          "axis 是假想自转轴，不是把球拉向地面或吸住海水的力",
+        ],
+        [
+          "orbit is a curved path around another body, not the pulling force holding things to the ground",
+          "orbit 是公转路径，不是拉住物体和海洋的引力",
+        ],
+      ],
+      spelling: ["grav · i · ty", "gr blend, short a, and -ity ending", "gr 连缀、短 a 和结尾 -ity"],
     },
     {
       word: "constellation",
@@ -2479,10 +2870,30 @@ const solarSystem: BatchSpec = {
       meaning: ["a group of stars that seems to form a picture in the sky", "星座，在天空中看似组成图案的一群星"],
       sentences: [
         "The seven bright stars of the ___ look like a big spoon.",
-        "Sailors used the ___ called the Southern Cross to find their way.",
+        "Sailors used the star pattern of the ___ called the Southern Cross to find their way.",
         "Can you find the ___ shaped like a hunter with a belt of three stars?",
       ],
       confusions: ["galaxy", "asteroid"],
+      clues: [
+        "seven bright stars forming the shape of a big spoon",
+        "the Southern Cross star pattern guiding sailors",
+        "a star pattern shaped like a hunter with a three-star belt",
+      ],
+      contrast: [
+        "constellation is a sky picture made by a handful of stars; galaxy is a system of billions of stars",
+        "constellation 是夜空中几颗星连成的星座图案；galaxy 是数十亿恒星的星系",
+      ],
+      conflicts: [
+        [
+          "galaxy is a huge system of billions of stars, not a small sky pattern of seven stars shaped like a spoon or hunter",
+          "galaxy 是包含数十亿恒星的庞大星系，不是七颗星连成勺子或猎人形状的星座图案",
+        ],
+        [
+          "asteroid is a single rocky object orbiting the sun, not a group of bright stars forming a sky picture",
+          "asteroid 是单块岩石小行星，不是群星组成的星座图案",
+        ],
+      ],
+      spelling: ["con · stel · la · tion", "con- + double l in stell + -ation", "con- 加双写 l 和 -ation"],
     },
   ],
 };
@@ -2737,8 +3148,10 @@ const multipleMeanings: TopicDef = {
   ],
 };
 
+const pool35 = wordPool(batches);
+
 /** wordTopics35 are the vocabulary topics of grades 3 to 5. */
-export const wordTopics35: readonly TopicDef[] = [...batches.map(batchTopic), multipleMeanings];
+export const wordTopics35: readonly TopicDef[] = [...batches.map((b) => batchTopicWithPool(b, pool35)), multipleMeanings];
 
 /** vocabulary35 are the words the batches of grades 3 to 5 teach. */
 export const vocabulary35: readonly WordBatch[] = batches.map(batchWords);
