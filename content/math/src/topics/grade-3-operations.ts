@@ -2,8 +2,7 @@
 // 10 times 10, the properties, word problems, patterns, rounding and three-digit
 // addition and subtraction.
 
-import type { Problem, Rng, TopicDef } from "@ga/content";
-import { t } from "@ga/content";
+import type { Rng, TopicDef } from "@ga/content";
 import {
   arrayFigure,
   baseTenFigure,
@@ -13,24 +12,21 @@ import {
   earlyThings,
   earlyTopic,
   jumpsFigure,
-  nearbyWrong,
   numberLineFigure,
 } from "../early-grades-kit.ts";
+import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
-import { numberProblem } from "../problems.ts";
-import { reasoned } from "../wrong-reasons.ts";
-import { pickChoice } from "./grade-4-fractions.ts";
-
-/** whole builds a problem whose answer is a whole number. */
-function whole(prompt: readonly [string, string], answer: number, wrong: readonly number[], solution: readonly [string, string]): Problem {
-  return numberProblem({
-    prompt: t(prompt[0], prompt[1]),
-    answer,
-    form: "integer",
-    wrong: nearbyWrong(answer, ...wrong),
-    solution: t(solution[0], solution[1]),
-  });
-}
+import {
+  blockRowsFigure,
+  captioned,
+  factTriangleFigure,
+  hopsFigure,
+  type Pair,
+  partWholeBarFigure,
+  picked,
+  solved,
+  type Walk,
+} from "./early-grades-more-kit.ts";
 
 /** factorPair picks a fact whose first factor comes from the list and whose second runs from 2 to 10. */
 function factorPair(rng: Rng, factors: readonly number[]): [number, number] {
@@ -39,51 +35,88 @@ function factorPair(rng: Rng, factors: readonly number[]): [number, number] {
   return rng.bool() ? [a, b] : [b, a];
 }
 
-/** factPoints is a knowledge point that asks for products of the listed factors, both bare and in a word problem. */
-function factPoints(prefix: string, factors: readonly number[]) {
-  const shown = factors.join(", ");
+/** skipCount lists the first `times` multiples of n, starting at n. */
+const skipCount = (n: number, times: number) => Array.from({ length: times }, (_, i) => n * (i + 1));
+
+/** factPoints is the pair of knowledge points that ask for products of the listed factors and for a missing factor; fact and missing are the worked examples [a, b] of their explanations, each a times b. */
+function factPoints(prefix: string, factors: readonly number[], fact: readonly [number, number], missing: readonly [number, number]) {
+  const [fa, fb] = fact;
+  const [ma, mb] = missing;
   return [
     earlyPoint(
       `${prefix}-facts`,
       ["Finding the product", "求积"],
       [
-        `Multiplying by ${shown} gets faster when you notice how these facts are built. Each new fact is one more group than the fact before, so you can step up from a fact you already know by adding one more group. Practice until these answers come quickly, because later work leans on them.`,
-        `乘 ${shown} 时，留意这些算式是怎样构成的就会更快。每个新算式都比前一个多一组，所以可以从已经会的算式出发，再加一组。要练到能很快说出答案，因为后面的学习都要用到它们。`,
+        `What is $${fa} \\times ${fb}$? Start from a fact you know: $${fa - 1} \\times ${fb} = ${(fa - 1) * fb}$. One more group of ${fb} makes $${(fa - 1) * fb} + ${fb} = ${fa * fb}$.\n\nCheck: count by ${fb}s ${fa} times: ${skipCount(fb, fa).join(", ")}.\n\n> **Watch out.** $${fa} \\times ${fb}$ is ${fa} groups of ${fb}, not $${fa} + ${fb} = ${fa + fb}$.`,
+        `$${fa} \\times ${fb}$ 等于多少？从会的算式出发：$${fa - 1} \\times ${fb} = ${(fa - 1) * fb}$。再加一组 ${fb}：$${(fa - 1) * fb} + ${fb} = ${fa * fb}$。\n\n检验：${fb} 个 ${fb} 个地数 ${fa} 次：${skipCount(fb, fa).join("、")}。\n\n> **注意。** $${fa} \\times ${fb}$ 是 ${fa} 个 ${fb}，不是 $${fa} + ${fb} = ${fa + fb}$。`,
       ],
       (rng) => {
         const [a, b] = factorPair(rng, factors);
         const answer = a * b;
-        return whole(
+        return solved(
           [`What is $${a} \\times ${b}$?`, `$${a} \\times ${b}$ 等于多少？`],
           answer,
-          [a + b, answer + a, answer - b],
           [
-            `$${a} \\times ${b}$ means ${a} groups of ${b}, and ${a} groups of ${b} make ${answer}.`,
-            `$${a} \\times ${b}$ 表示 ${a} 个 ${b}，${a} 个 ${b} 是 ${answer}。`,
+            [
+              ["Start from a known fact", "从会的算式出发"],
+              [`${a - 1} ${a === 2 ? "group" : "groups"} of ${b}:`, `${a - 1} 个 ${b}：`],
+              [`${a - 1} \\times ${b} = ${(a - 1) * b}`],
+            ],
+            [["Add one more group", "再加一组"], [`One more ${b}:`, `再加一个 ${b}：`], [`${(a - 1) * b} + ${b} = ${answer}`]],
+          ],
+          [`Count by ${b}s ${a} times: ${skipCount(b, a).join(", ")}.`, `${b} 个 ${b} 个地数 ${a} 次：${skipCount(b, a).join("、")}。`],
+          [
+            [a + b, "That adds the two numbers. Multiplying counts the groups.", "这是把两个数相加。乘法是数组。"],
+            [answer + a, `That is one group of ${a} too many.`, `多了一组 ${a}。`],
+            [answer - b, `That is one group of ${b} too few.`, `少了一组 ${b}。`],
           ],
         );
       },
+      captioned(arrayFigure(fa, fb), `${fa} rows of ${fb}: ${fa * fb} in all.`, `${fa} 行，每行 ${fb} 个：一共 ${fa * fb} 个。`),
     ),
     earlyPoint(
       `${prefix}-missing-factors`,
       ["Finding a missing factor", "求未知因数"],
       [
-        "A multiplication fact can be read with a part missing. Ask how many groups, or how many in each group, would give the product. Skip counting by the known factor until you reach the product tells you the answer, and the number of skips is the missing factor. Multiply to check that it really gives the product.",
-        "乘法算式可以缺一部分来读。想一想多少组，或者每组多少个，才能得到这个积。用已知的因数跳着数，一直数到积，跳了几次，未知因数就是几。再乘一下，检验确实能得到这个积。",
+        `What goes in the box in $${ma} \\times \\square = ${ma * mb}$? Count by ${ma}s until you reach ${ma * mb}: ${skipCount(ma, mb).join(", ")}. That is ${mb} skips, so the box is ${mb}.\n\nCheck: $${ma} \\times ${mb} = ${ma * mb}$.\n\n> **Watch out.** The box is the number of skips, not the product ${ma * mb}.`,
+        `$${ma} \\times \\square = ${ma * mb}$，方框里填几？${ma} 个 ${ma} 个地数，数到 ${ma * mb}：${skipCount(ma, mb).join("、")}。数了 ${mb} 次，所以方框里是 ${mb}。\n\n检验：$${ma} \\times ${mb} = ${ma * mb}$。\n\n> **注意。** 方框里是数的次数，不是积 ${ma * mb}。`,
       ],
       (rng) => {
         const [a, b] = factorPair(rng, factors);
         const product = a * b;
-        return whole(
+        return solved(
           [`What number goes in the box? $${a} \\times \\square = ${product}$`, `方框里填几？$${a} \\times \\square = ${product}$`],
           b,
-          [product - a, product, a],
           [
-            `Count by ${a} until you reach ${product}. That takes ${b} skips, so $${a} \\times ${b} = ${product}$.`,
-            `${a} 个 ${a} 地数，数到 ${product}。一共数了 ${b} 次，所以 $${a} \\times ${b} = ${product}$。`,
+            [
+              ["Count by the known factor", "用已知因数数"],
+              [
+                `Count by ${a}s up to ${product}: ${skipCount(a, b).join(", ")}.`,
+                `${a} 个 ${a} 个地数到 ${product}：${skipCount(a, b).join("、")}。`,
+              ],
+            ],
+            [
+              ["Count the skips", "数次数"],
+              [`That is ${b} skips, so the box is ${b}.`, `数了 ${b} 次，所以方框里是 ${b}。`],
+            ],
+          ],
+          [`$${a} \\times ${b} = ${product}$.`, `$${a} \\times ${b} = ${product}$。`],
+          [
+            [
+              product - a,
+              "That subtracts. Find how many groups of the known factor make the product.",
+              "这是相减。要找几个已知因数合成积。",
+            ],
+            [product, "That is the product, not the missing factor.", "这是积，不是未知因数。"],
+            [a, "That is the factor you already know.", "这是已经知道的因数。"],
           ],
         );
       },
+      captioned(
+        hopsFigure([0, ...skipCount(ma, mb)]),
+        `Skips of ${ma} from 0 to ${ma * mb}: ${mb} skips.`,
+        `从 0 开始每次跳 ${ma}，跳到 ${ma * mb}：跳了 ${mb} 次。`,
+      ),
     ),
   ];
 }
@@ -102,64 +135,112 @@ const multiplicationAsEqualGroups = earlyTopic(
       "counting-equal-groups",
       ["Counting equal groups", "数相同的组"],
       [
-        "When things come in groups of the same size, you do not need to count them one by one. Multiplication counts them all at once. The first number tells how many groups there are, and the second tells how many are in each group. The answer, the product, is how many there are altogether.",
-        "当东西分成大小相同的组时，不需要一个一个地数。乘法一下子就能数出全部。第一个数说明有多少组，第二个数说明每组有多少个。结果，也就是积，说明一共有多少个。",
+        "There are 4 bags with 3 apples in each. That is 4 equal groups of 3, so $4 \\times 3 = 12$ apples.\n\nCheck: $3 + 3 + 3 + 3 = 12$.\n\n> **Watch out.** Multiply the number of groups by the size of each group. $4 + 3 = 7$ just adds the two numbers.",
+        "有 4 个袋子，每袋 3 个苹果。这是 4 个相同的组，每组 3 个，所以 $4 \\times 3 = 12$ 个苹果。\n\n检验：$3 + 3 + 3 + 3 = 12$。\n\n> **注意。** 要用组数乘每组的个数。$4 + 3 = 7$ 只是把两个数加起来。",
       ],
       (rng) => {
         const groups = rng.int(2, 9);
         const each = rng.int(2, 9);
         const thing = rng.pick(earlyThings);
         const answer = groups * each;
-        return whole(
+        return solved(
           [
             `There are ${groups} bags with ${each} ${thing.en} in each bag. How many ${thing.en} are there altogether?`,
             `有 ${groups} 个袋子，每个袋子里有 ${each} ${thing.unit}${thing.zh}。一共有多少${thing.unit}${thing.zh}？`,
           ],
           answer,
-          [groups + each],
           [
-            `There are ${groups} equal groups of ${each}, so we multiply: $${groups} \\times ${each} = ${answer}$.`,
-            `有 ${groups} 个相同的组，每组 ${each} ${thing.unit}，所以用乘法：$${groups} \\times ${each} = ${answer}$。`,
+            [
+              ["Find the groups", "找出组"],
+              [`${groups} equal groups, ${each} in each.`, `${groups} 个相同的组，每组 ${each} ${thing.unit}。`],
+            ],
+            [["Multiply", "相乘"], ["Groups times the size of each:", "组数乘每组的个数："], [`${groups} \\times ${each} = ${answer}`]],
           ],
+          [
+            `Add ${each} ${groups} times: $${Array<number>(groups).fill(each).join(" + ")} = ${answer}$.`,
+            `把 ${groups} 个 ${each} 相加：$${Array<number>(groups).fill(each).join(" + ")} = ${answer}$。`,
+          ],
+          [
+            [groups + each, "That adds the two numbers instead of counting the groups.", "这是把两个数相加，没有按组数。"],
+            [answer - each, "That is one bag too few.", "少算了一袋。"],
+            [answer + each, "That is one bag too many.", "多算了一袋。"],
+          ],
+          countersFigure(answer, each),
         );
       },
+      captioned(countersFigure(12, 3), "12 counters in 4 rows of 3: 4 × 3 = 12.", "12 个圆片，4 行，每行 3 个：4 × 3 = 12。"),
     ),
     earlyPoint(
       "from-repeated-addition-to-multiplication",
       ["From repeated addition to multiplication", "从重复相加到乘法"],
       [
-        "Adding the same number again and again is the same as multiplying. Count how many times the number is written: that count is the number of groups, and the number itself is the size of each group. Writing a long sum as a product is shorter, and it also gets the answer much sooner.",
-        "同一个数一遍一遍地加，和乘法是一样的。数一数这个数写了几次：这个次数就是组数，这个数本身就是每组的大小。把长长的加法写成乘法更简短，也能更快得到答案。",
+        "Look at $6 + 6 + 6 + 6 + 6$. The 6 is written 5 times, so it is 5 groups of 6: $5 \\times 6 = 30$.\n\nCheck: count by 6s: 6, 12, 18, 24, 30.\n\n> **Watch out.** Count how many times the number is written. That is the number of groups, not the number itself.",
+        "看 $6 + 6 + 6 + 6 + 6$。6 写了 5 次，所以是 5 个 6：$5 \\times 6 = 30$。\n\n检验：6 个 6 个地数：6、12、18、24、30。\n\n> **注意。** 要数这个数写了几次，这才是组数，不是这个数本身。",
       ],
       (rng) => {
         const count = rng.int(3, 7);
         const each = rng.int(2, 9);
         const sum = Array(count).fill(`${each}`).join(" + ");
         const asksFactor = rng.bool();
+        const counted: Walk = [
+          ["Count the addends", "数加数"],
+          [`${each} is written ${count} times.`, `${each} 写了 ${count} 次。`],
+        ];
+        const check: Pair = [
+          `Count by ${each}s ${count} times: ${skipCount(each, count).join(", ")}.`,
+          `${each} 个 ${each} 个地数 ${count} 次：${skipCount(each, count).join("、")}。`,
+        ];
         return asksFactor
-          ? whole(
+          ? solved(
               [
                 `The sum $${sum}$ equals $\\square \\times ${each}$. What number goes in the box?`,
                 `$${sum}$ 等于 $\\square \\times ${each}$。方框里填几？`,
               ],
               count,
-              [each * count, count + each],
               [
-                `The number ${each} is added ${count} times, so the sum is $${count} \\times ${each}$.`,
-                `${each} 加了 ${count} 次，所以这个和是 $${count} \\times ${each}$。`,
+                counted,
+                [
+                  ["Write the product", "写成乘法"],
+                  [`${count} groups of ${each}:`, `${count} 个 ${each}：`],
+                  [`${sum} = ${count} \\times ${each}`],
+                ],
+              ],
+              check,
+              [
+                [each * count, "That is the value of the sum, not the number of groups.", "这是和的值，不是组数。"],
+                [count + each, "That adds the two numbers.", "这是把两个数相加。"],
+                [each, "That is the size of each group, already in the product.", "这是每组的个数，乘法里已经有了。"],
               ],
             )
-          : whole(
+          : solved(
               [`Write $${sum}$ as a product and find its value.`, `把 $${sum}$ 写成乘法，并求出它的值。`],
               count * each,
-              [count + each],
               [
-                `The number ${each} is added ${count} times, so the sum is $${count} \\times ${each} = ${count * each}$.`,
-                `${each} 加了 ${count} 次，所以和是 $${count} \\times ${each} = ${count * each}$。`,
+                counted,
+                [
+                  ["Multiply", "相乘"],
+                  [`${count} groups of ${each}:`, `${count} 个 ${each}：`],
+                  [`${count} \\times ${each} = ${count * each}`],
+                ],
+              ],
+              check,
+              [
+                [count + each, "That adds the number of groups and the size of each.", "这把组数和每组的个数相加了。"],
+                [(count + 1) * each, `That is one ${each} too many.`, `多了一个 ${each}。`],
+                [(count - 1) * each, `That is one ${each} too few.`, `少了一个 ${each}。`],
               ],
             );
       },
+      captioned(
+        hopsFigure([0, 6, 12, 18, 24, 30]),
+        "Five hops of 6 from 0 to 30: 5 × 6 = 30.",
+        "从 0 开始跳 5 次，每次 6，到 30：5 × 6 = 30。",
+      ),
     ),
+  ],
+  [
+    "Grandma bakes 4 trays of buns with 3 buns on each tray. Instead of counting every bun, we can say 4 groups of 3, and write $4 \\times 3 = 12$.\n\nCheck: $3 + 3 + 3 + 3 = 12$.\n\nIn this lesson we read multiplication as equal groups and link it to repeated addition.",
+    "奶奶烤了 4 盘面包，每盘 3 个。不用一个一个地数，可以说 4 个 3，写成 $4 \\times 3 = 12$。\n\n检验：$3 + 3 + 3 + 3 = 12$。\n\n本课我们把乘法看成相同的组，并把它和重复相加联系起来。",
   ],
 );
 
@@ -177,53 +258,82 @@ const multiplicationWithArrays = earlyTopic(
       "counting-an-array",
       ["Counting an array", "数点阵"],
       [
-        "An array puts things in straight rows, with the same number in each row. Each row is an equal group, so the number of rows times the number in each row gives the total. Rows go across and columns go up and down. This picture of multiplication comes back later when you study area.",
-        "点阵把东西排成整齐的行，每行个数相同。每一行就是一个相同的组，所以行数乘每行的个数就是总数。行是横着的，列是竖着的。这种乘法的图形，以后学面积时还会用到。",
+        "This array has 3 rows with 5 dots in each row. Each row is an equal group, so there are $3 \\times 5 = 15$ dots.\n\nCheck: count by columns instead: 5 columns of 3 is 3, 6, 9, 12, 15.\n\n> **Watch out.** Count every dot, not just the edges. $3 + 5 = 8$ only adds one row and one column.",
+        "这个点阵有 3 行，每行 5 个点。每行是一个相同的组，所以有 $3 \\times 5 = 15$ 个点。\n\n检验：按列数：5 列，每列 3 个，3、6、9、12、15。\n\n> **注意。** 要数所有的点，不只是边上的。$3 + 5 = 8$ 只加了一行和一列。",
       ],
       (rng) => {
         const rows = rng.int(2, 8);
         const columns = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== rows));
         const answer = rows * columns;
-        return {
-          ...whole(
-            ["How many dots are in this array?", "这个点阵里有多少个点？"],
-            answer,
-            [rows + columns, rows * 2 + columns * 2],
+        return solved(
+          ["How many dots are in this array?", "这个点阵里有多少个点？"],
+          answer,
+          [
             [
-              `There are ${rows} rows with ${columns} dots in each row, so $${rows} \\times ${columns} = ${answer}$.`,
-              `有 ${rows} 行，每行 ${columns} 个点，所以 $${rows} \\times ${columns} = ${answer}$。`,
+              ["Count rows and columns", "数行和列"],
+              [`${rows} rows, with ${columns} dots in each row.`, `${rows} 行，每行 ${columns} 个点。`],
             ],
-          ),
-          figure: arrayFigure(rows, columns),
-        };
+            [["Multiply", "相乘"], ["Rows times the dots in a row:", "行数乘每行的点数："], [`${rows} \\times ${columns} = ${answer}`]],
+          ],
+          [
+            `Count by columns: ${columns} columns of ${rows} is ${skipCount(rows, columns).join(", ")}.`,
+            `按列数：${columns} 列，每列 ${rows} 个：${skipCount(rows, columns).join("、")}。`,
+          ],
+          [
+            [rows + columns, "That adds one row and one column instead of counting every dot.", "这只加了一行和一列，没有数所有的点。"],
+            [2 * (rows + columns), "That goes around the edge. Count the dots inside too.", "这是绕边数的。里面的点也要数。"],
+            [answer - columns, "That is one row too few.", "少了一行。"],
+          ],
+          arrayFigure(rows, columns),
+        );
       },
+      captioned(arrayFigure(3, 5), "An array of 3 rows of 5: 15 dots.", "3 行、每行 5 个的点阵：15 个点。"),
     ),
     earlyPoint(
       "rows-from-the-total",
       ["Rows from the total", "由总数求行数"],
       [
-        "If you know how many things are in an array and how many are in each row, you can find the number of rows. Build the array one row at a time and count by the row size until you reach the total. The number of rows you built is the answer, and multiplying checks your count.",
-        "如果知道点阵里一共有多少个，每行有多少个，就能求出有多少行。一行一行地摆，按每行的个数数，一直数到总数。摆了几行，答案就是几，再用乘法检验。",
+        "There are 24 chairs in rows of 6. Build the rows and count by 6s: 6, 12, 18, 24. That is 4 rows.\n\nCheck: $4 \\times 6 = 24$.\n\n> **Watch out.** The question asks for the number of rows, not the number of chairs in each row.",
+        "24 把椅子，每行 6 把。一行一行地摆，6 个 6 个地数：6、12、18、24。一共 4 行。\n\n检验：$4 \\times 6 = 24$。\n\n> **注意。** 问的是有几行，不是每行有几把。",
       ],
       (rng) => {
         const rows = rng.int(2, 9);
         const columns = rng.int(2, 9);
         const total = rows * columns;
         const thing = rng.pick(earlyThings);
-        return whole(
+        return solved(
           [
             `A shelf holds ${total} ${thing.en} in equal rows, with ${columns} in each row. How many rows are there?`,
             `架子上有 ${total} ${thing.unit}${thing.zh}，排成相同的若干行，每行 ${columns} ${thing.unit}。有多少行？`,
           ],
           rows,
-          [total - columns, total + columns],
           [
-            `Counting by ${columns} reaches ${total} after ${rows} rows, since $${rows} \\times ${columns} = ${total}$.`,
-            `按 ${columns} 数，数 ${rows} 行到 ${total}，因为 $${rows} \\times ${columns} = ${total}$。`,
+            [
+              ["Count by the row", "按每行的个数数"],
+              [
+                `Count by ${columns}s up to ${total}: ${skipCount(columns, rows).join(", ")}.`,
+                `${columns} 个 ${columns} 个地数到 ${total}：${skipCount(columns, rows).join("、")}。`,
+              ],
+            ],
+            [
+              ["Count the rows", "数行数"],
+              [`That is ${rows} rows.`, `一共 ${rows} 行。`],
+            ],
+          ],
+          [`$${rows} \\times ${columns} = ${total}$.`, `$${rows} \\times ${columns} = ${total}$。`],
+          [
+            [total - columns, "That subtracts one row. Count how many rows make the total.", "这只减去了一行。要数几行合成总数。"],
+            [columns, "That is the number in each row, not the number of rows.", "这是每行的个数，不是行数。"],
+            [total, "That is the total, not the number of rows.", "这是总数，不是行数。"],
           ],
         );
       },
+      captioned(arrayFigure(4, 6), "24 in rows of 6: 4 rows.", "24 个，每行 6 个：4 行。"),
     ),
+  ],
+  [
+    "The class sets out chairs in 3 rows with 5 chairs in each row. The neat rows make an array, and the total is $3 \\times 5 = 15$ chairs.\n\nCheck: $5 + 5 + 5 = 15$.\n\nIn this lesson we use rows and columns to see a product, and see why turning an array keeps it the same.",
+    "全班把椅子摆成 3 行，每行 5 把。整齐的行列就是点阵，总数是 $3 \\times 5 = 15$ 把。\n\n检验：$5 + 5 + 5 = 15$。\n\n本课我们用行和列来看积，并明白把点阵转一下积不变。",
   ],
 );
 
@@ -236,7 +346,11 @@ const multiplyingByTwoFiveTen = earlyTopic(
   ],
   ["multiplication-with-arrays"],
   ["3.OA.C.7"],
-  factPoints("twos-fives-and-tens", [2, 5, 10]),
+  factPoints("twos-fives-and-tens", [2, 5, 10], [7, 5], [5, 8]),
+  [
+    "Each hand has 5 fingers. To count the fingers on 7 hands, count by 5s: 5, 10, 15, 20, 25, 30, 35. So $7 \\times 5 = 35$.\n\nCheck: fives always end in 5 or 0, and 35 ends in 5.\n\nIn this lesson we learn the products of 2, 5 and 10 by skip counting and their patterns.",
+    "每只手有 5 根手指。数 7 只手的手指，5 个 5 个地数：5、10、15、20、25、30、35。所以 $7 \\times 5 = 35$。\n\n检验：乘 5 的积末位总是 5 或 0，35 的末位是 5。\n\n本课我们用跳着数和规律来掌握乘 2、5、10 的积。",
+  ],
 );
 
 const multiplyingByThreeFour = earlyTopic(
@@ -245,7 +359,11 @@ const multiplyingByThreeFour = earlyTopic(
   ["Know the products of 3 and 4, by building on doubles and adding one more group.", "掌握乘 3 和 4 的积：在二倍的基础上再加一组。"],
   ["multiplying-by-2-5-and-10"],
   ["3.OA.C.7"],
-  factPoints("threes-and-fours", [3, 4]),
+  factPoints("threes-and-fours", [3, 4], [4, 6], [3, 7]),
+  [
+    "A tricycle has 3 wheels. For 6 tricycles, start with 2 wheels each, $2 \\times 6 = 12$, then add the third wheel on each: $12 + 6 = 18$.\n\nCheck: $3 + 3 + 3 + 3 + 3 + 3 = 18$.\n\nIn this lesson we build the products of 3 and 4 from doubles and one more group.",
+    "一辆三轮车有 3 个轮子。6 辆三轮车，先按每辆 2 个算，$2 \\times 6 = 12$，再给每辆加 1 个：$12 + 6 = 18$。\n\n检验：$3 + 3 + 3 + 3 + 3 + 3 = 18$。\n\n本课我们用二倍再加一组的方法掌握乘 3 和 4 的积。",
+  ],
 );
 
 const multiplyingBySixToNine = earlyTopic(
@@ -254,7 +372,11 @@ const multiplyingBySixToNine = earlyTopic(
   ["Know the harder products, by building them from facts already learned.", "掌握较难的积：用已经学过的算式来构成。"],
   ["multiplying-by-3-and-4"],
   ["3.OA.C.7"],
-  factPoints("sixes-to-nines", [6, 7, 8, 9]),
+  factPoints("sixes-to-nines", [6, 7, 8, 9], [6, 8], [9, 6]),
+  [
+    "A box holds 6 rows of 8 crayons. You may not know $6 \\times 8$ yet, but you know $5 \\times 8 = 40$. One more row of 8 makes 48.\n\nCheck: $8 \\times 6$ is the same, and $8 + 8 + 8 + 8 + 8 + 8 = 48$.\n\nIn this lesson we build the harder products from facts we already know.",
+    "一盒蜡笔有 6 行，每行 8 支。你也许还不会 $6 \\times 8$，但你会 $5 \\times 8 = 40$。再加一行 8 支，就是 48。\n\n检验：$8 + 8 + 8 + 8 + 8 + 8 = 48$。\n\n本课我们用已经会的算式来构成较难的积。",
+  ],
 );
 
 const multiplyingByZeroAndOne = earlyTopic(
@@ -268,48 +390,118 @@ const multiplyingByZeroAndOne = earlyTopic(
       "products-with-zero-and-one",
       ["Products with 0 and 1", "含 0 和 1 的积"],
       [
-        "Think of groups. If each of several groups holds nothing, then there is nothing altogether, so multiplying by zero gives zero. One group of some number is just that number, so multiplying by one changes nothing. These two facts work for every number, however large it is, so no times table is needed.",
-        "想一想组。如果几组里每组都没有东西，那一共也没有东西，所以乘 0 得 0。一组某个数还是那个数，所以乘 1 什么也没变。这两条对每个数都成立，不管多大，都不需要乘法表。",
+        "Five empty plates hold no cookies: 5 groups of 0, so $5 \\times 0 = 0$. One plate of 7 cookies holds 7: one group of 7, so $1 \\times 7 = 7$.\n\nCheck: $0 + 0 + 0 + 0 + 0 = 0$.\n\n> **Watch out.** $5 \\times 0$ is 0, not 5. Multiplying by 0 is not the same as adding 0.",
+        "5 个空盘子里没有饼干：5 个 0，所以 $5 \\times 0 = 0$。一个盘子里有 7 块饼干，就是 7：一个 7，所以 $1 \\times 7 = 7$。\n\n检验：$0 + 0 + 0 + 0 + 0 = 0$。\n\n> **注意。** $5 \\times 0$ 是 0，不是 5。乘 0 和加 0 不一样。",
       ],
       (rng) => {
         const n = rng.int(2, 999);
         const zero = rng.bool();
         const first = rng.bool();
-        const answer = zero ? 0 : n;
         const k = zero ? 0 : 1;
         const shown = first ? `${n} \\times ${k}` : `${k} \\times ${n}`;
-        return whole(
-          [`What is $${shown}$?`, `$${shown}$ 等于多少？`],
-          answer,
-          [n + k, n + 1, 1, zero ? n : 0],
-          zero
-            ? [`Any number of groups of 0, or 0 groups of any number, make 0.`, `任意多组 0，或者 0 组任意的数，都是 0。`]
-            : [`One group of ${n}, or ${n} groups of one, make ${n}.`, `一组 ${n}，或者 ${n} 组 1，都是 ${n}。`],
-        );
+        return zero
+          ? solved(
+              [`What is $${shown}$?`, `$${shown}$ 等于多少？`],
+              0,
+              [
+                [
+                  ["Think of groups", "想一想组"],
+                  [
+                    first ? `${n} groups with nothing in each.` : `No groups of ${n} at all.`,
+                    first ? `${n} 组，每组什么也没有。` : `一组 ${n} 也没有。`,
+                  ],
+                ],
+                [["Find the total", "求总数"], ["Nothing in all:", "一共什么也没有："], [`${shown} = 0`]],
+              ],
+              [
+                "Any number of zeros added together is still 0, and no groups at all hold nothing.",
+                "多少个 0 加起来还是 0；一组也没有，就什么也没有。",
+              ],
+              [
+                [
+                  n,
+                  "That treats times 0 like plus 0. Groups of nothing make nothing.",
+                  "这是把乘 0 当成加 0 了。几组空的，还是什么也没有。",
+                ],
+                [1, "A product with 0 is 0, not 1.", "和 0 相乘得 0，不是 1。"],
+                [n + 1, "That adds. Multiplying by 0 always gives 0.", "这是相加。乘 0 总是得 0。"],
+              ],
+            )
+          : solved(
+              [`What is $${shown}$?`, `$${shown}$ 等于多少？`],
+              n,
+              [
+                [
+                  ["Think of groups", "想一想组"],
+                  [first ? `${n} groups of one.` : `One group of ${n}.`, first ? `${n} 个 1。` : `一个 ${n}。`],
+                ],
+                [["Find the total", "求总数"], [`That is ${n}:`, `就是 ${n}：`], [`${shown} = ${n}`]],
+              ],
+              [`One group of ${n} is just ${n}, and ${n} ones also make ${n}.`, `一个 ${n} 就是 ${n}，${n} 个 1 也是 ${n}。`],
+              [
+                [n + 1, "That adds 1 instead of multiplying by 1.", "这是加 1，不是乘 1。"],
+                [1, `One group of ${n} is ${n}, not 1.`, `一个 ${n} 是 ${n}，不是 1。`],
+                [0, "Only multiplying by 0 gives 0.", "只有乘 0 才得 0。"],
+              ],
+            );
       },
+      captioned(arrayFigure(1, 7), "One row of 7 dots: 1 × 7 = 7.", "一行 7 个点：1 × 7 = 7。"),
     ),
     earlyPoint(
       "choosing-the-factor-zero-or-one",
       ["Choosing the factor 0 or 1", "选择因数 0 或 1"],
       [
-        "When a product equals the other factor, the missing factor must be one, because only one group leaves a number as it is. When a product equals zero, and the other factor is not zero, then the missing factor must be zero. Noticing the size of the product tells you which case you have.",
-        "当积等于另一个因数时，未知因数一定是 1，因为只有一组才能让一个数保持不变。当积等于 0，而另一个因数不是 0 时，未知因数一定是 0。看一看积的大小，就知道是哪种情况。",
+        "In $8 \\times \\square = 8$ the product is 8 itself, so there is one group of 8: the box is 1. In $8 \\times \\square = 0$ the product is 0, so there are no groups: the box is 0.\n\nCheck: $8 \\times 1 = 8$ and $8 \\times 0 = 0$.\n\n> **Watch out.** For $8 \\times \\square = 8$ the box is 1, not 0. Adding 0 keeps a number, but multiplying by 0 makes 0.",
+        "$8 \\times \\square = 8$ 中，积就是 8 本身，所以是一组 8：方框里是 1。$8 \\times \\square = 0$ 中，积是 0，所以一组也没有：方框里是 0。\n\n检验：$8 \\times 1 = 8$，$8 \\times 0 = 0$。\n\n> **注意。** $8 \\times \\square = 8$ 的方框里是 1，不是 0。加 0 数不变，乘 0 却得 0。",
       ],
       (rng) => {
         const n = rng.int(2, 500);
         const zero = rng.bool();
         const answer = zero ? 0 : 1;
         const product = zero ? 0 : n;
-        return whole(
+        return solved(
           [`What number goes in the box? $${n} \\times \\square = ${product}$`, `方框里填几？$${n} \\times \\square = ${product}$`],
           answer,
-          [n, n + 1, 2, 10],
           zero
-            ? [`The product is 0, and only 0 groups of ${n} make 0.`, `积是 0，只有 0 组 ${n} 才是 0。`]
-            : [`The product is ${n} itself, and one group of ${n} is ${n}.`, `积就是 ${n}，一组 ${n} 就是 ${n}。`],
+            ? [
+                [
+                  ["Look at the product", "看积"],
+                  ["The product is 0.", "积是 0。"],
+                ],
+                [
+                  ["Find the factor", "求因数"],
+                  [`Only 0 groups of ${n} make 0, so the box is 0.`, `只有 0 个 ${n} 才是 0，所以方框里是 0。`],
+                ],
+              ]
+            : [
+                [
+                  ["Look at the product", "看积"],
+                  [`The product is ${n}, the same as the other factor.`, `积是 ${n}，和另一个因数一样。`],
+                ],
+                [
+                  ["Find the factor", "求因数"],
+                  [`One group of ${n} is ${n}, so the box is 1.`, `一个 ${n} 就是 ${n}，所以方框里是 1。`],
+                ],
+              ],
+          [`$${n} \\times ${answer} = ${product}$.`, `$${n} \\times ${answer} = ${product}$。`],
+          zero
+            ? [
+                [1, `${n} times 1 is ${n}, not 0.`, `${n} 乘 1 是 ${n}，不是 0。`],
+                [n, "That is the other factor, not the missing one.", "这是另一个因数，不是未知因数。"],
+              ]
+            : [
+                [0, `${n} times 0 is 0, not ${n}.`, `${n} 乘 0 是 0，不是 ${n}。`],
+                [n, `${n} times ${n} is far more than ${n}.`, `${n} 乘 ${n} 比 ${n} 大得多。`],
+                [2, `${n} times 2 is double ${n}.`, `${n} 乘 2 是 ${n} 的两倍。`],
+              ],
         );
       },
+      captioned(arrayFigure(1, 8), "One row of 8: one group of 8 is 8.", "一行 8 个：一个 8 就是 8。"),
     ),
+  ],
+  [
+    "Mia has 3 empty boxes. How many pencils are in them? Each box holds 0, so 3 groups of 0 is $3 \\times 0 = 0$ pencils.\n\nCheck: $0 + 0 + 0 = 0$.\n\nIn this lesson we see why a product with 0 is 0, and a product with 1 keeps the other number.",
+    "Mia 有 3 个空盒子。里面有几支铅笔？每盒 0 支，3 个 0 就是 $3 \\times 0 = 0$ 支。\n\n检验：$0 + 0 + 0 = 0$。\n\n本课我们明白为什么和 0 相乘得 0，和 1 相乘得原来的数。",
   ],
 );
 
@@ -324,40 +516,77 @@ const propertiesOfMultiplication = earlyTopic(
       "swapping-the-factors",
       ["Swapping the factors", "交换因数"],
       [
-        "Turn an array on its side and its rows become columns, but no dots appear or disappear. So two factors can swap places without changing the product. This cuts the number of facts to learn nearly in half, since knowing a fact one way means knowing it the other way too.",
-        "把点阵转过来，行就变成了列，但点没有增加也没有减少。所以两个因数可以交换位置，积不变。这几乎让要记的算式减少一半，因为知道一种写法就等于知道了另一种。",
+        "An array of 3 rows of 5 has 15 dots. Turn it on its side and it is 5 rows of 3, with the same 15 dots. So $3 \\times 5 = 5 \\times 3$.\n\nCheck: $5 + 5 + 5 = 15$ and $3 + 3 + 3 + 3 + 3 = 15$.\n\n> **Watch out.** Swapping the factors keeps the product. It does not change it to $3 + 5$.",
+        "3 行、每行 5 个的点阵有 15 个点。把它转过来，就是 5 行、每行 3 个，还是 15 个点。所以 $3 \\times 5 = 5 \\times 3$。\n\n检验：$5 + 5 + 5 = 15$，$3 + 3 + 3 + 3 + 3 = 15$。\n\n> **注意。** 交换因数，积不变，不会变成 $3 + 5$。",
       ],
       (rng) => {
         const a = rng.int(2, 9);
         const b = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== a));
         const asksBox = rng.bool();
+        const turn: Walk = [
+          ["Turn the array", "把点阵转过来"],
+          [
+            `${a} rows of ${b} turned on its side is ${b} rows of ${a}, with the same dots.`,
+            `${a} 行 ${b} 个转过来是 ${b} 行 ${a} 个，点数一样。`,
+          ],
+        ];
         return asksBox
-          ? whole(
+          ? solved(
               [
                 `What number goes in the box? $${a} \\times ${b} = ${b} \\times \\square$`,
                 `方框里填几？$${a} \\times ${b} = ${b} \\times \\square$`,
               ],
               a,
-              [b, a * b, a + b],
-              [`Swapping the factors keeps the product, so the box holds ${a}.`, `交换因数，积不变，所以方框里是 ${a}。`],
+              [
+                turn,
+                [
+                  ["Match the factors", "对应因数"],
+                  [`The same two factors swapped: the box is ${a}.`, `同样的两个因数换了位置：方框里是 ${a}。`],
+                  [`${a} \\times ${b} = ${b} \\times ${a}`],
+                ],
+              ],
+              [
+                `Both sides are ${a * b}: $${a} \\times ${b} = ${a * b}$ and $${b} \\times ${a} = ${a * b}$.`,
+                `两边都是 ${a * b}：$${a} \\times ${b} = ${a * b}$，$${b} \\times ${a} = ${a * b}$。`,
+              ],
+              [
+                [b, `That would make ${b} times ${b}, a different product.`, `那就成了 ${b} 乘 ${b}，积不一样。`],
+                [a * b, "That is the product, not the missing factor.", "这是积，不是未知因数。"],
+                [a + b, "That adds the factors.", "这是把因数相加。"],
+              ],
+              arrayFigure(a, b),
             )
-          : whole(
+          : solved(
               [
                 `Given that $${a} \\times ${b} = ${a * b}$, what is $${b} \\times ${a}$?`,
                 `已知 $${a} \\times ${b} = ${a * b}$，$${b} \\times ${a}$ 等于多少？`,
               ],
               a * b,
-              [a + b, a * b + a],
-              [`The factors have only swapped places, so the product is still ${a * b}.`, `因数只是交换了位置，所以积还是 ${a * b}。`],
+              [
+                turn,
+                [["Use the known fact", "用已知的算式"], ["The product stays the same:", "积不变："], [`${b} \\times ${a} = ${a * b}`]],
+              ],
+              [`Count by ${a}s ${b} times: ${skipCount(a, b).join(", ")}.`, `${a} 个 ${a} 个地数 ${b} 次：${skipCount(a, b).join("、")}。`],
+              [
+                [a + b, "That adds the factors.", "这是把因数相加。"],
+                [a * b + a, `That is one group of ${a} too many.`, `多了一组 ${a}。`],
+                [a * b - b, `That is one group of ${b} too few.`, `少了一组 ${b}。`],
+              ],
+              arrayFigure(a, b),
             );
       },
+      captioned(
+        arrayFigure(3, 5),
+        "3 rows of 5 dots; turned, it is 5 rows of 3: 15 either way.",
+        "3 行 5 个点；转过来是 5 行 3 个：都是 15。",
+      ),
     ),
     earlyPoint(
       "grouping-three-factors",
       ["Grouping three factors", "组合三个因数"],
       [
-        "With three factors, you may multiply any two of them first, and the product does not change. So look for a pair that is easy to work with, especially one that makes ten. Multiply this pair first, and then multiply by the factor that is left. Choosing well turns a hard product into an easy one.",
-        "三个因数相乘时，可以先乘其中任意两个，积不变。所以要找容易计算的一对，特别是能得 10 的一对。先乘这一对，再乘剩下的因数。选得好，难题就变容易了。",
+        "Find $4 \\times 2 \\times 5$. Look for an easy pair: $2 \\times 5 = 10$. Then $4 \\times 10 = 40$.\n\nCheck: group the other way: $4 \\times 2 = 8$ and $8 \\times 5 = 40$.\n\n> **Watch out.** Use all three factors. $2 \\times 5 = 10$ is only the first step.",
+        "求 $4 \\times 2 \\times 5$。找容易的一对：$2 \\times 5 = 10$。再算 $4 \\times 10 = 40$。\n\n检验：换一种组合：$4 \\times 2 = 8$，$8 \\times 5 = 40$。\n\n> **注意。** 三个因数都要用。$2 \\times 5 = 10$ 只是第一步。",
       ],
       (rng) => {
         const [a, b] = rng.pick([
@@ -373,17 +602,34 @@ const propertiesOfMultiplication = earlyTopic(
         const inFront = rng.bool();
         const shown = inFront ? `${c} \\times ${a} \\times ${b}` : `${a} \\times ${c} \\times ${b}`;
         const answer = a * b * c;
-        return whole(
+        return solved(
           [`What is $${shown}$?`, `$${shown}$ 等于多少？`],
           answer,
-          [a + b + c, a * b + c, a * c + b],
           [
-            `Multiply $${a} \\times ${b} = ${a * b}$ first. Then $${a * b} \\times ${c} = ${answer}$.`,
-            `先算 $${a} \\times ${b} = ${a * b}$。再算 $${a * b} \\times ${c} = ${answer}$。`,
+            [
+              ["Pick an easy pair", "选容易的一对"],
+              [`Multiply ${a} and ${b} first:`, `先乘 ${a} 和 ${b}：`],
+              [`${a} \\times ${b} = ${a * b}`],
+            ],
+            [["Multiply by the factor left", "再乘剩下的因数"], [`Then the ${c}:`, `再乘 ${c}：`], [`${a * b} \\times ${c} = ${answer}`]],
+          ],
+          [
+            `Group the other way: $${a} \\times ${c} = ${a * c}$ and $${a * c} \\times ${b} = ${answer}$.`,
+            `换一种组合：$${a} \\times ${c} = ${a * c}$，$${a * c} \\times ${b} = ${answer}$。`,
+          ],
+          [
+            [a + b + c, "That adds the three factors.", "这是把三个因数相加。"],
+            [a * b + c, `That adds the ${c} instead of multiplying by it.`, `这是加上 ${c}，应该乘 ${c}。`],
+            [a * b, `That stops after the first pair. Multiply by ${c} too.`, `这只算了第一对，还要乘 ${c}。`],
           ],
         );
       },
+      captioned(arrayFigure(2, 5), "2 rows of 5 make 10; four of these make 40.", "2 行 5 个是 10；四个这样的就是 40。"),
     ),
+  ],
+  [
+    "Sam has 4 boxes, each with 2 rows of 5 eggs. He can work out $2 \\times 5 = 10$ eggs in a box first, and then $4 \\times 10 = 40$.\n\nCheck: $4 \\times 2 = 8$ rows, and $8 \\times 5 = 40$ eggs too.\n\nIn this lesson we change the order or the grouping of factors to make a product easier.",
+    "Sam 有 4 盒鸡蛋，每盒 2 行、每行 5 个。他可以先算一盒 $2 \\times 5 = 10$ 个，再算 $4 \\times 10 = 40$ 个。\n\n检验：$4 \\times 2 = 8$ 行，$8 \\times 5 = 40$ 个，也一样。\n\n本课我们改变因数的顺序或组合方式，让乘法更容易。",
   ],
 );
 
@@ -398,51 +644,89 @@ const splittingAFactor = earlyTopic(
       "the-missing-part-of-a-split",
       ["The missing part of a split", "拆分中缺少的部分"],
       [
-        "A hard fact can be built from two easy ones. Eight groups of a number are five groups together with three more groups. So you may split one factor into two parts, as long as the parts add up to it. Both parts are multiplied by the other factor, and neither may be left out.",
-        "一个难的算式可以由两个容易的算式组成。8 组某个数就是 5 组再加 3 组。所以可以把一个因数拆成两部分，只要这两部分加起来等于它。两部分都要乘另一个因数，哪个也不能漏掉。",
+        "Split 8 into 5 and 3 to find $4 \\times 8$: $4 \\times 8 = 4 \\times 5 + 4 \\times 3 = 20 + 12 = 32$.\n\nCheck: count by 4s eight times: 4, 8, 12, 16, 20, 24, 28, 32.\n\n> **Watch out.** The two parts must add up to the factor you split. 5 and 3 make 8, so the missing part with 5 is 3.",
+        "把 8 拆成 5 和 3 来求 $4 \\times 8$：$4 \\times 8 = 4 \\times 5 + 4 \\times 3 = 20 + 12 = 32$。\n\n检验：4 个 4 个地数 8 次：4、8、12、16、20、24、28、32。\n\n> **注意。** 两部分加起来要等于拆开的那个因数。5 和 3 合成 8，所以和 5 搭配的是 3。",
       ],
       (rng) => {
         const a = rng.int(3, 9);
         const big = rng.int(6, 9);
         const part = rng.pick([2, 5]);
         const rest = big - part;
-        return whole(
+        return solved(
           [
             `What number goes in the box? $${a} \\times ${big} = ${a} \\times ${part} + ${a} \\times \\square$`,
             `方框里填几？$${a} \\times ${big} = ${a} \\times ${part} + ${a} \\times \\square$`,
           ],
           rest,
-          [big, part, a, big + part],
           [
-            `Since ${big} is ${part} and ${rest} together, the box holds ${rest}.`,
-            `因为 ${big} 由 ${part} 和 ${rest} 组成，所以方框里是 ${rest}。`,
+            [
+              ["See what was split", "看拆的是哪个数"],
+              [`${big} was split, and one part is ${part}.`, `拆的是 ${big}，一部分是 ${part}。`],
+            ],
+            [
+              ["Find the other part", "求另一部分"],
+              [`The parts add up to ${big}:`, `两部分合起来是 ${big}：`],
+              [`${big} - ${part} = ${rest}`],
+            ],
           ],
+          [
+            `$${a} \\times ${part} + ${a} \\times ${rest} = ${a * part} + ${a * rest} = ${a * big}$, which is $${a} \\times ${big}$.`,
+            `$${a} \\times ${part} + ${a} \\times ${rest} = ${a * part} + ${a * rest} = ${a * big}$，正是 $${a} \\times ${big}$。`,
+          ],
+          [
+            [big, `That is the whole factor. The two parts must add up to ${big}.`, `这是整个因数。两部分加起来才是 ${big}。`],
+            [part, "That is the part already written.", "这是已经写出的部分。"],
+            [a, "That is the other factor, which is not split.", "这是另一个因数，它没有拆。"],
+            [big + part, "That adds the parts. Subtract the known part from the factor.", "这是相加。要用因数减去已知部分。"],
+          ],
+          arrayFigure(a, big),
         );
       },
+      captioned(
+        arrayFigure(4, 8),
+        "4 rows of 8: the first 5 columns make 20 and the last 3 make 12.",
+        "4 行 8 个：前 5 列是 20，后 3 列是 12。",
+      ),
     ),
-    earlyPoint(
-      "multiplying-by-splitting-a-teen-factor",
-      ["Multiplying by a number past ten", "乘大于十的数"],
-      [
-        "Splitting works for factors greater than ten as well. Break the larger factor into ten and what is left. Multiply each of those parts, and add the two answers. Ten times a number is quick, so only one small fact needs any thought. This same idea is the heart of multiplying large numbers on paper.",
-        "拆分也适用于大于十的因数。把较大的因数拆成 10 和剩下的部分。分别相乘，再把两个答案相加。乘 10 很快，所以只有一个小算式需要想一想。这个想法正是以后笔算大数乘法的核心。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 9);
-        const rest = rng.int(1, 9);
-        const big = 10 + rest;
-        const answer = a * big;
-        return whole(
-          [`Split ${big} into 10 and ${rest} to find $${a} \\times ${big}$.`, `把 ${big} 拆成 10 和 ${rest}，求 $${a} \\times ${big}$。`],
-          answer,
-          [a * 10, a + big, a * rest, a * 10 + rest],
-          [
-            `$${a} \\times 10 = ${a * 10}$ and $${a} \\times ${rest} = ${a * rest}$. Adding them gives ${answer}.`,
-            `$${a} \\times 10 = ${a * 10}$，$${a} \\times ${rest} = ${a * rest}$。相加得 ${answer}。`,
-          ],
-        );
-      },
-    ),
+    {
+      ...earlyPoint(
+        "multiplying-by-splitting-a-teen-factor",
+        ["Multiplying by a number past ten", "乘大于十的数"],
+        [
+          "Find $6 \\times 14$. Split 14 into 10 and 4. Then $6 \\times 10 = 60$ and $6 \\times 4 = 24$, and $60 + 24 = 84$.\n\nCheck: $6 \\times 14$ is 14 added 6 times: 14, 28, 42, 56, 70, 84.\n\n> **Watch out.** Multiply both parts. $6 \\times 10 + 4 = 64$ forgets to multiply the 4.",
+          "求 $6 \\times 14$。把 14 拆成 10 和 4。$6 \\times 10 = 60$，$6 \\times 4 = 24$，$60 + 24 = 84$。\n\n检验：$6 \\times 14$ 是 6 个 14：14、28、42、56、70、84。\n\n> **注意。** 两部分都要乘。$6 \\times 10 + 4 = 64$ 忘了把 4 也乘上。",
+        ],
+        (rng) => {
+          const a = rng.int(2, 9);
+          const rest = rng.int(1, 9);
+          const big = 10 + rest;
+          const answer = a * big;
+          return solved(
+            [`Split ${big} into 10 and ${rest} to find $${a} \\times ${big}$.`, `把 ${big} 拆成 10 和 ${rest}，求 $${a} \\times ${big}$。`],
+            answer,
+            [
+              [["Multiply the ten", "乘 10"], [`${a} times 10:`, `${a} 乘 10：`], [`${a} \\times 10 = ${a * 10}`]],
+              [["Multiply the rest", "乘剩下的部分"], [`${a} times ${rest}:`, `${a} 乘 ${rest}：`], [`${a} \\times ${rest} = ${a * rest}`]],
+              [["Add the parts", "两部分相加"], ["Together:", "合起来："], [`${a * 10} + ${a * rest} = ${answer}`]],
+            ],
+            [
+              `Count by ${big}s ${a} times: ${skipCount(big, a).join(", ")}.`,
+              `${big} 个 ${big} 个地数 ${a} 次：${skipCount(big, a).join("、")}。`,
+            ],
+            [
+              [a * 10, `That multiplies only the 10. Multiply the ${rest} too.`, `这只乘了 10，还要乘 ${rest}。`],
+              [a + big, "That adds the factors.", "这是把因数相加。"],
+              [a * 10 + rest, `That adds the ${rest} instead of multiplying it by ${a}.`, `这是加上 ${rest}，应该用 ${a} 乘它。`],
+            ],
+          );
+        },
+      ),
+      figure: gradeDrawings["adding-the-two-parts"],
+    },
+  ],
+  [
+    "A garden has 4 rows of 8 plants. Count the plants in two easy parts: 4 rows of 5 is 20, and 4 rows of 3 is 12. Together that is 32.\n\nCheck: $4 \\times 8 = 32$.\n\nIn this lesson we break a factor into easier parts, multiply each, and add.",
+    "一块菜地有 4 行，每行 8 棵。分成容易的两部分来数：4 行 5 棵是 20，4 行 3 棵是 12。合起来是 32。\n\n检验：$4 \\times 8 = 32$。\n\n本课我们把一个因数拆成容易的部分，分别相乘，再相加。",
   ],
 );
 
@@ -457,30 +741,59 @@ const multiplyingByMultiplesOfTen = earlyTopic(
       "products-with-a-multiple-of-ten",
       ["Products with a multiple of ten", "乘整十数的积"],
       [
-        "A multiple of ten is a number of tens: 40 is 4 tens. So 3 times 40 is 3 groups of 4 tens, which makes 12 tens. Use the basic fact to count the tens, and then write the result as a number. The zero is there because the answer counts tens, and not because of a rule about zeros.",
-        "整十数就是若干个十：40 是 4 个十。所以 3 乘 40 就是 3 组 4 个十，也就是 12 个十。用基本算式数出有多少个十，再把结果写成数。末尾的 0 是因为答案数的是十，而不是因为什么关于零的规定。",
+        "Find $3 \\times 40$. 40 is 4 tens, so this is 3 groups of 4 tens: $3 \\times 4 = 12$ tens, which is 120.\n\nCheck: $40 + 40 + 40 = 120$.\n\n> **Watch out.** The answer counts tens. 12 tens is 120, not 12.",
+        "求 $3 \\times 40$。40 是 4 个十，所以是 3 组 4 个十：$3 \\times 4 = 12$ 个十，也就是 120。\n\n检验：$40 + 40 + 40 = 120$。\n\n> **注意。** 答案数的是十。12 个十是 120，不是 12。",
       ],
       (rng) => {
         const a = rng.int(2, 9);
         const tens = rng.int(2, 9);
         const answer = a * tens * 10;
-        return whole(
+        return solved(
           [`What is $${a} \\times ${tens * 10}$?`, `$${a} \\times ${tens * 10}$ 等于多少？`],
           answer,
-          [a * tens, answer * 10, a + tens * 10, answer + 10],
           [
-            `$${a} \\times ${tens}$ tens is ${a * tens} tens, which is ${answer}.`,
-            `$${a} \\times ${tens}$ 个十是 ${a * tens} 个十，也就是 ${answer}。`,
+            [
+              ["Count the tens", "数十"],
+              [`${tens * 10} is ${tens} tens, so use the fact:`, `${tens * 10} 是 ${tens} 个十，用算式：`],
+              [`${a} \\times ${tens} = ${a * tens}`],
+            ],
+            [
+              ["Write the number", "写成数"],
+              [`${a * tens} tens is ${answer}.`, `${a * tens} 个十是 ${answer}。`],
+            ],
           ],
+          [
+            `Add ${tens * 10} ${a} times: $${Array<number>(a)
+              .fill(tens * 10)
+              .join(" + ")} = ${answer}$.`,
+            `把 ${a} 个 ${tens * 10} 相加：$${Array<number>(a)
+              .fill(tens * 10)
+              .join(" + ")} = ${answer}$。`,
+          ],
+          [
+            [a * tens, `That is the number of tens. ${a * tens} tens is ${answer}.`, `这是十的个数。${a * tens} 个十是 ${answer}。`],
+            [answer * 10, "That has one zero too many.", "多写了一个 0。"],
+            [a + tens * 10, "That adds instead of multiplying.", "这是相加，不是相乘。"],
+          ],
+          blockRowsFigure(Array.from({ length: a }, (): [number, number, number] => [0, tens, 0])),
         );
       },
+      captioned(
+        blockRowsFigure([
+          [0, 4, 0],
+          [0, 4, 0],
+          [0, 4, 0],
+        ]),
+        "3 rows of 4 tens: 12 tens, or 120.",
+        "3 行，每行 4 个十：12 个十，也就是 120。",
+      ),
     ),
     earlyPoint(
       "word-problems-with-multiples-of-ten",
       ["Word problems with multiples of ten", "整十数的应用题"],
       [
-        "Packs and boxes often hold 10, 20 or 50 things, so everyday problems use these products. Find how many groups there are and how many are in each group. Then use a basic fact to count the tens. Saying the answer in tens first, such as 18 tens, makes it harder to lose or add a zero.",
-        "一包一盒常常装 10、20 或 50 个东西，所以日常问题会用到这样的乘法。找出有多少组、每组多少个。再用基本算式数出有多少个十。先说出有多少个十，比如 18 个十，就不容易少写或多写一个 0。",
+        "A store has 6 boxes with 30 pens in each. That is 6 groups of 3 tens: $6 \\times 3 = 18$ tens, so 180 pens.\n\nCheck: $30 + 30 + 30 + 30 + 30 + 30 = 180$.\n\n> **Watch out.** Say the answer in tens first, 18 tens, so you do not lose a zero or add an extra one.",
+        "商店有 6 箱笔，每箱 30 支。这是 6 组 3 个十：$6 \\times 3 = 18$ 个十，所以是 180 支。\n\n检验：$30 + 30 + 30 + 30 + 30 + 30 = 180$。\n\n> **注意。** 先说出有几个十，18 个十，就不会少写或多写 0。",
       ],
       (rng) => {
         const boxes = rng.int(2, 9);
@@ -488,20 +801,51 @@ const multiplyingByMultiplesOfTen = earlyTopic(
         const thing = rng.pick(earlyThings);
         const each = tens * 10;
         const answer = boxes * each;
-        return whole(
+        return solved(
           [
             `A store has ${boxes} boxes with ${each} ${thing.en} in each box. How many ${thing.en} does it have?`,
             `商店有 ${boxes} 箱${thing.zh}，每箱 ${each} ${thing.unit}。一共有多少${thing.unit}${thing.zh}？`,
           ],
           answer,
-          [boxes * tens, boxes + each, answer * 10],
           [
-            `There are ${boxes} groups of ${tens} tens, which is ${boxes * tens} tens, or ${answer}.`,
-            `一共是 ${boxes} 组 ${tens} 个十，也就是 ${boxes * tens} 个十，即 ${answer}。`,
+            [
+              ["Find the groups", "找出组"],
+              [`${boxes} boxes of ${each}, and ${each} is ${tens} tens.`, `${boxes} 箱，每箱 ${each}，${each} 是 ${tens} 个十。`],
+            ],
+            [["Count the tens", "数十"], ["Use the fact:", "用算式："], [`${boxes} \\times ${tens} = ${boxes * tens}`]],
+            [
+              ["Write the number", "写成数"],
+              [`${boxes * tens} tens is ${answer}.`, `${boxes * tens} 个十是 ${answer}。`],
+            ],
+          ],
+          [
+            `Add ${each} ${boxes} times: $${Array<number>(boxes).fill(each).join(" + ")} = ${answer}$.`,
+            `把 ${boxes} 个 ${each} 相加：$${Array<number>(boxes).fill(each).join(" + ")} = ${answer}$。`,
+          ],
+          [
+            [boxes * tens, `That is the number of tens, not the number of ${thing.en}.`, `这是十的个数，不是${thing.zh}的个数。`],
+            [boxes + each, "That adds instead of multiplying.", "这是相加，不是相乘。"],
+            [answer * 10, "That has one zero too many.", "多写了一个 0。"],
           ],
         );
       },
+      captioned(
+        blockRowsFigure([
+          [0, 3, 0],
+          [0, 3, 0],
+          [0, 3, 0],
+          [0, 3, 0],
+          [0, 3, 0],
+          [0, 3, 0],
+        ]),
+        "6 rows of 3 tens: 18 tens, or 180.",
+        "6 行，每行 3 个十：18 个十，也就是 180。",
+      ),
     ),
+  ],
+  [
+    "Stickers come in sheets of 20. Lea buys 3 sheets. 20 is 2 tens, so 3 sheets are $3 \\times 2 = 6$ tens, which is 60 stickers.\n\nCheck: $20 + 20 + 20 = 60$.\n\nIn this lesson we multiply by 10, 20 and up to 90 using a known fact and place value.",
+    "贴纸一张 20 个。Lea 买了 3 张。20 是 2 个十，所以 3 张是 $3 \\times 2 = 6$ 个十，也就是 60 个贴纸。\n\n检验：$20 + 20 + 20 = 60$。\n\n本课我们用已知的算式和数位来乘 10、20……90。",
   ],
 );
 
@@ -516,8 +860,8 @@ const divisionAsSharing = earlyTopic(
       "sharing-into-equal-groups",
       ["Sharing into equal groups", "平均分成几组"],
       [
-        "Sharing fairly means every group gets the same number, with nothing left over. Division tells how many each group gets. Picture handing things out one at a time, once around all the groups, again and again until none are left. The number of things each group ends up with is the answer to the division.",
-        "公平地分，就是每组得到的一样多，也没有剩余。除法告诉我们每组得到多少。想象一个一个地发，每组发一个，一轮又一轮，直到发完。每组最后得到几个，除法的答案就是几。",
+        "Share 12 grapes equally among 3 friends. Hand them out one at a time, round and round, until none are left. Each friend gets 4, so $12 \\div 3 = 4$.\n\nCheck: $3 \\times 4 = 12$.\n\n> **Watch out.** The answer is how many each friend gets, not the number of friends.",
+        "把 12 颗葡萄平均分给 3 个朋友。一颗一颗地发，一轮一轮地发，直到发完。每人得到 4 颗，所以 $12 \\div 3 = 4$。\n\n检验：$3 \\times 4 = 12$。\n\n> **注意。** 答案是每人得到几颗，不是有几个朋友。",
       ],
       (rng) => {
         const groups = rng.int(2, 9);
@@ -525,48 +869,83 @@ const divisionAsSharing = earlyTopic(
         const total = groups * each;
         const thing = rng.pick(earlyThings);
         const name = rng.pick(earlyNames);
-        return whole(
+        return solved(
           [
             `${name} shares ${total} ${thing.en} equally among ${groups} friends. How many does each friend get?`,
             `${name} 把 ${total} ${thing.unit}${thing.zh}平均分给 ${groups} 个朋友。每个朋友得到多少${thing.unit}？`,
           ],
           each,
-          [total - groups, total + groups, groups],
           [
-            `$${total} \\div ${groups} = ${each}$, because ${groups} groups of ${each} make ${total}.`,
-            `$${total} \\div ${groups} = ${each}$，因为 ${groups} 组 ${each} 是 ${total}。`,
+            [
+              ["Write the division", "列除法"],
+              [`${total} shared into ${groups} equal groups:`, `${total} 平均分成 ${groups} 份：`],
+              [`${total} \\div ${groups} = \\square`],
+            ],
+            [
+              ["Use a times fact", "用乘法算式"],
+              [`${groups} times what makes ${total}?`, `${groups} 乘几得 ${total}？`],
+              [`${groups} \\times ${each} = ${total}`],
+            ],
+          ],
+          [
+            `${groups} friends with ${each} each have $${groups} \\times ${each} = ${total}$.`,
+            `${groups} 个朋友每人 ${each} ${thing.unit}，一共 $${groups} \\times ${each} = ${total}$。`,
+          ],
+          [
+            [total - groups, "That subtracts. Sharing equally is dividing.", "这是相减。平均分要用除法。"],
+            [groups, "That is the number of friends, not each friend's share.", "这是朋友的人数，不是每人分到的。"],
+            [total + groups, "That adds. Sharing equally is dividing.", "这是相加。平均分要用除法。"],
           ],
         );
       },
+      captioned(countersFigure(12, 4), "12 counters shared into 3 rows: 4 in each row.", "12 个圆片平均分成 3 行：每行 4 个。"),
     ),
     earlyPoint(
       "reading-a-share-from-a-picture",
       ["Reading a share from a picture", "从图中读出平均分"],
       [
-        "A picture of counters can show a division. Each row stands for one group, and the counters in a row are one group's share. To check a division, count the rows and the counters in each row, and be sure the rows are all the same length. The whole picture then shows the number being divided.",
-        "圆片图可以表示除法。每一行代表一组，一行里的圆片就是一组分到的。要检验除法，就数一数行数和每行的个数，并确认每行一样长。整张图表示的就是被除的数。",
+        "This picture shows 15 counters in 3 equal rows. Each row is one group's share, and each row has 5. So $15 \\div 3 = 5$.\n\nCheck: $5 + 5 + 5 = 15$.\n\n> **Watch out.** Count the counters in one row for the share. The number of rows is the number of groups.",
+        "图中 15 个圆片平均排成 3 行。每行是一组分到的，每行 5 个。所以 $15 \\div 3 = 5$。\n\n检验：$5 + 5 + 5 = 15$。\n\n> **注意。** 每组分到几个，要数一行里的圆片。行数是组数。",
       ],
       (rng) => {
         const rows = rng.int(2, 6);
-        const each = rng.int(2, 7);
+        const each = rng.pick([2, 3, 4, 5, 6, 7].filter((v) => v !== rows));
         const total = rows * each;
-        return {
-          ...whole(
+        return solved(
+          [
+            `The ${total} counters are shared equally into ${rows} rows, as shown. What is $${total} \\div ${rows}$?`,
+            `如图，${total} 个圆片平均分成 ${rows} 行。$${total} \\div ${rows}$ 等于多少？`,
+          ],
+          each,
+          [
             [
-              `The ${total} counters are shared equally into ${rows} rows, as shown. What is $${total} \\div ${rows}$?`,
-              `如图，${total} 个圆片平均分成 ${rows} 行。$${total} \\div ${rows}$ 等于多少？`,
+              ["Find the groups", "找出组"],
+              [`Each of the ${rows} rows is one group.`, `${rows} 行中每行是一组。`],
             ],
-            each,
-            [total - rows, rows],
             [
-              `Each of the ${rows} rows holds ${each} counters, so $${total} \\div ${rows} = ${each}$.`,
-              `${rows} 行中每行有 ${each} 个圆片，所以 $${total} \\div ${rows} = ${each}$。`,
+              ["Count one row", "数一行"],
+              [`One row holds ${each} counters, so:`, `一行有 ${each} 个圆片，所以：`],
+              [`${total} \\div ${rows} = ${each}`],
             ],
-          ),
-          figure: countersFigure(total, each),
-        };
+          ],
+          [
+            `Add the rows: $${Array<number>(rows).fill(each).join(" + ")} = ${total}$.`,
+            `把各行加起来：$${Array<number>(rows).fill(each).join(" + ")} = ${total}$。`,
+          ],
+          [
+            [rows, "That is the number of rows, not the counters in each row.", "这是行数，不是每行的圆片数。"],
+            [total - rows, "That subtracts the rows from the total.", "这是用总数减行数。"],
+            [total, "That is all the counters, not one row.", "这是全部圆片，不是一行。"],
+          ],
+          countersFigure(total, each),
+        );
       },
+      captioned(countersFigure(15, 5), "15 counters in 3 rows of 5.", "15 个圆片，3 行，每行 5 个。"),
     ),
+  ],
+  [
+    "Three children share 12 grapes. They hand them out one each, round and round, until the bowl is empty. Each child ends up with 4.\n\nCheck: $4 + 4 + 4 = 12$.\n\nIn this lesson we share things equally and find how many each group gets.",
+    "三个孩子分 12 颗葡萄。他们一人一颗地发，一轮一轮，直到碗空了。每人最后得到 4 颗。\n\n检验：$4 + 4 + 4 = 12$。\n\n本课我们把东西平均分，求每组得到多少。",
   ],
 );
 
@@ -581,65 +960,85 @@ const divisionAsGrouping = earlyTopic(
       "how-many-groups",
       ["How many groups", "可以分几组"],
       [
-        "Division answers a second question. When the size of each group is known, it tells how many groups can be made. Take away one group at a time and count how many times you can do it. Both kinds of problem are written in the same way, but it helps to picture which question is being asked.",
-        "除法还回答另一个问题。知道每组的大小时，它告诉我们可以分成多少组。每次拿走一组，数一数可以拿几次。这两种问题写法相同，但在脑子里想清楚问的是哪一种会有帮助。",
+        "There are 20 apples and each bag holds 4. Fill one bag at a time: 4, 8, 12, 16, 20. That is 5 bags, so $20 \\div 4 = 5$.\n\nCheck: $5 \\times 4 = 20$.\n\n> **Watch out.** Here the size of each group is known. The answer is the number of bags, not the 4 in each bag.",
+        "有 20 个苹果，每袋装 4 个。一袋一袋地装：4、8、12、16、20。一共 5 袋，所以 $20 \\div 4 = 5$。\n\n检验：$5 \\times 4 = 20$。\n\n> **注意。** 这里知道的是每组的个数。答案是袋数，不是每袋的 4 个。",
       ],
       (rng) => {
         const each = rng.int(2, 9);
-        const groups = rng.int(2, 9);
+        const groups = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== each));
         const total = each * groups;
         const thing = rng.pick(earlyThings);
-        return whole(
+        return solved(
           [
             `There are ${total} ${thing.en}. Each bag holds ${each} of them. How many bags are needed for all of them?`,
             `有 ${total} ${thing.unit}${thing.zh}。每个袋子装 ${each} ${thing.unit}。装完需要多少个袋子？`,
           ],
           groups,
-          [total - each, total + each, each],
           [
-            `$${total} \\div ${each} = ${groups}$, because ${groups} bags of ${each} hold ${total}.`,
-            `$${total} \\div ${each} = ${groups}$，因为 ${groups} 袋、每袋 ${each} ${thing.unit}，一共 ${total} ${thing.unit}。`,
+            [
+              ["Fill bags one at a time", "一袋一袋地装"],
+              [
+                `Count by ${each}s up to ${total}: ${skipCount(each, groups).join(", ")}.`,
+                `${each} 个 ${each} 个地数到 ${total}：${skipCount(each, groups).join("、")}。`,
+              ],
+            ],
+            [["Count the bags", "数袋数"], [`That is ${groups} bags:`, `一共 ${groups} 袋：`], [`${total} \\div ${each} = ${groups}`]],
+          ],
+          [`$${groups} \\times ${each} = ${total}$.`, `$${groups} \\times ${each} = ${total}$。`],
+          [
+            [each, "That is how many go in each bag, not the number of bags.", "这是每袋装几个，不是袋数。"],
+            [total - each, "That takes away only one bag.", "这只拿走了一袋。"],
+            [total, "That is all the things, not the number of bags.", "这是全部的个数，不是袋数。"],
           ],
         );
       },
+      captioned(countersFigure(20, 4), "20 counters in groups of 4: 5 groups.", "20 个圆片，每组 4 个：5 组。"),
     ),
     {
       ...earlyPoint(
         "division-by-repeated-subtraction",
         ["Division by repeated subtraction", "用连减做除法"],
         [
-          "Taking away the same number again and again until nothing is left is another way to see division. Each time you subtract, you make one more group. So the number of subtractions is the quotient. A number line shows this as equal jumps backward from the starting number all the way down to zero.",
-          "一次又一次减去同一个数，直到减完，是看待除法的另一种方式。每减一次，就多分出一组。所以减的次数就是商。在数轴上，这就是从开始的数向左等距地跳，一直跳到 0。",
+          "Find $12 \\div 3$ on a number line. Start at 12 and jump back 3 each time: 9, 6, 3, 0. That is 4 jumps, so $12 \\div 3 = 4$.\n\nCheck: $4 \\times 3 = 12$.\n\n> **Watch out.** The answer is the number of jumps, not the size of each jump.",
+          "在数轴上求 $12 \\div 3$。从 12 开始，每次往回跳 3：9、6、3、0。跳了 4 次，所以 $12 \\div 3 = 4$。\n\n检验：$4 \\times 3 = 12$。\n\n> **注意。** 答案是跳的次数，不是每次跳多远。",
         ],
         (rng) => {
           const each = rng.int(2, 6);
-          const jumps = rng.int(2, 8);
+          const jumps = rng.pick([2, 3, 4, 5, 6, 7, 8].filter((v) => v !== each));
           const total = each * jumps;
+          const stops = Array.from({ length: jumps + 1 }, (_, i) => total - i * each);
           return {
-            ...whole(
+            ...solved(
               [
                 `On the number line, start at ${total} and jump back by ${each} each time. How many jumps reach 0?`,
                 `在数轴上，从 ${total} 开始，每次向回跳 ${each}。跳多少次到 0？`,
               ],
               jumps,
-              [total - each, each],
               [
-                `Counting back by ${each} from ${total} reaches 0 after ${jumps} jumps, so $${total} \\div ${each} = ${jumps}$.`,
-                `从 ${total} 开始 ${each} 个 ${each} 个地往回数，跳 ${jumps} 次到 0，所以 $${total} \\div ${each} = ${jumps}$。`,
+                [
+                  ["Jump back", "往回跳"],
+                  [`From ${total}: ${stops.slice(1).join(", ")}.`, `从 ${total} 开始：${stops.slice(1).join("、")}。`],
+                ],
+                [["Count the jumps", "数次数"], [`That is ${jumps} jumps:`, `跳了 ${jumps} 次：`], [`${total} \\div ${each} = ${jumps}`]],
               ],
+              [`$${jumps} \\times ${each} = ${total}$.`, `$${jumps} \\times ${each} = ${total}$。`],
+              [
+                [each, "That is the size of each jump, not the number of jumps.", "这是每次跳的长度，不是次数。"],
+                [total - each, "That is where the first jump lands.", "这是第一跳落下的地方。"],
+                [jumps + 1, "That counts the starting point as a jump.", "这把起点也算成了一跳。"],
+              ],
+              numberLineFigure(0, total, each, total),
             ),
-            figure: numberLineFigure(0, total, each, total),
-            solutionFigure: jumpsFigure(
-              0,
-              total,
-              each,
-              Array.from({ length: jumps + 1 }, (_, i) => total - i * each),
-            ),
+            solutionFigure: jumpsFigure(0, total, each, stops),
           };
         },
       ),
       figure: gradeDrawings2["division-as-making-groups#division-by-repeated-subtraction"],
     },
+  ],
+  [
+    "A baker has 20 muffins and puts 4 in each box. She fills boxes until the muffins run out and counts 5 boxes.\n\nCheck: $5 \\times 4 = 20$.\n\nIn this lesson we find how many groups of a given size can be made.",
+    "面包师有 20 个松饼，每盒装 4 个。她一盒一盒地装，直到装完，数了数一共 5 盒。\n\n检验：$5 \\times 4 = 20$。\n\n本课我们求可以分成多少个大小一定的组。",
   ],
 );
 
@@ -654,33 +1053,47 @@ const relatingMultiplicationDivision = earlyTopic(
       "a-quotient-from-a-product",
       ["A quotient from a product", "由积求商"],
       [
-        "Division undoes multiplication. To divide, ask what number times the divisor gives the number being divided. So a division can be read as a multiplication with a missing factor, and every multiplication fact you know also gives you two division facts. This is the fastest way to divide without counting.",
-        "除法是乘法的逆运算。做除法时，想一想什么数乘除数得到被除数。所以除法可以读成缺一个因数的乘法，你知道的每个乘法算式还给出了两个除法算式。这是不用数就能做除法的最快办法。",
+        "Given $6 \\times 7 = 42$, find $42 \\div 6$. Ask: 6 times what is 42? The fact says 7, so $42 \\div 6 = 7$.\n\nCheck: $7 \\times 6 = 42$.\n\n> **Watch out.** The quotient is the other factor, 7, not the 6 you divided by.",
+        "已知 $6 \\times 7 = 42$，求 $42 \\div 6$。想：6 乘几得 42？算式说是 7，所以 $42 \\div 6 = 7$。\n\n检验：$7 \\times 6 = 42$。\n\n> **注意。** 商是另一个因数 7，不是除数 6。",
       ],
       (rng) => {
         const a = rng.int(2, 10);
-        const b = rng.int(2, 10);
+        const b = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10].filter((v) => v !== a));
         const product = a * b;
-        return whole(
+        return solved(
           [
             `Given that $${a} \\times ${b} = ${product}$, what is $${product} \\div ${a}$?`,
             `已知 $${a} \\times ${b} = ${product}$，$${product} \\div ${a}$ 等于多少？`,
           ],
           b,
-          [product - a, product + a, a === b ? a + 1 : a],
           [
-            `Division undoes multiplication: $${a} \\times ${b} = ${product}$, so $${product} \\div ${a} = ${b}$.`,
-            `除法是乘法的逆运算：$${a} \\times ${b} = ${product}$，所以 $${product} \\div ${a} = ${b}$。`,
+            [
+              ["Turn it into a times question", "改成乘法问题"],
+              [`${a} times what is ${product}?`, `${a} 乘几得 ${product}？`],
+            ],
+            [["Read the fact", "读算式"], [`The fact gives ${b}:`, `算式告诉我们是 ${b}：`], [`${product} \\div ${a} = ${b}`]],
           ],
+          [`$${b} \\times ${a} = ${product}$.`, `$${b} \\times ${a} = ${product}$。`],
+          [
+            [a, "That is the number you divided by, not the quotient.", "这是除数，不是商。"],
+            [product - a, "That subtracts instead of dividing.", "这是相减，不是相除。"],
+            [product, "That is the product, not the quotient.", "这是积，不是商。"],
+          ],
+          factTriangleFigure(product, a, b, "×"),
         );
       },
+      captioned(
+        factTriangleFigure(42, 6, 7, "×"),
+        "A fact triangle with 42 on top and 6 and 7 below.",
+        "上面是 42、下面是 6 和 7 的算式三角形。",
+      ),
     ),
     earlyPoint(
       "the-unknown-in-a-division",
       ["The unknown in a division", "除法中的未知数"],
       [
-        "A box can stand for any number in a division, even the first one. If the box is the number being divided, multiply the other two numbers to find it. If the box is the divisor, then ask what number the first one is split into. Rewriting the sentence as a multiplication makes each case clear.",
-        "方框可以代表除法中的任何一个数，甚至是第一个数。如果方框是被除数，就把另外两个数相乘。如果方框是除数，就想一想第一个数被分成了多少份。把算式改写成乘法，每种情况都很清楚。",
+        "In $\\square \\div 4 = 6$ the box is the number being divided. Turn it into a multiplication: $4 \\times 6 = 24$, so the box is 24.\n\nCheck: $24 \\div 4 = 6$.\n\n> **Watch out.** When the box comes first, multiply. $6 - 4 = 2$ or $6 + 4 = 10$ will not do.",
+        "$\\square \\div 4 = 6$ 中，方框是被除数。改成乘法：$4 \\times 6 = 24$，所以方框里是 24。\n\n检验：$24 \\div 4 = 6$。\n\n> **注意。** 方框在最前面时要相乘。$6 - 4 = 2$ 或 $6 + 4 = 10$ 都不对。",
       ],
       (rng) => {
         const divisor = rng.int(2, 9);
@@ -688,32 +1101,66 @@ const relatingMultiplicationDivision = earlyTopic(
         const total = divisor * quotient;
         const first = rng.bool();
         return first
-          ? whole(
+          ? solved(
               [
                 `What number goes in the box? $\\square \\div ${divisor} = ${quotient}$`,
                 `方框里填几？$\\square \\div ${divisor} = ${quotient}$`,
               ],
               total,
-              [divisor + quotient, divisor, quotient],
               [
-                `The number being divided is the product of the other two: $${divisor} \\times ${quotient} = ${total}$.`,
-                `被除数是另外两个数的积：$${divisor} \\times ${quotient} = ${total}$。`,
+                [
+                  ["Rewrite as a multiplication", "改写成乘法"],
+                  [`The box is ${quotient} groups of ${divisor}.`, `方框里是 ${quotient} 个 ${divisor}。`],
+                ],
+                [["Multiply", "相乘"], ["The number being divided:", "被除数："], [`${divisor} \\times ${quotient} = ${total}`]],
               ],
+              [`$${total} \\div ${divisor} = ${quotient}$.`, `$${total} \\div ${divisor} = ${quotient}$。`],
+              [
+                [divisor + quotient, "That adds. The number being divided is a product.", "这是相加。被除数是一个积。"],
+                [divisor, "That is the divisor already in the sentence.", "这是算式里已有的除数。"],
+                [quotient, "That is the quotient already in the sentence.", "这是算式里已有的商。"],
+              ],
+              factTriangleFigure(null, divisor, quotient, "×"),
             )
-          : whole(
+          : solved(
               [
                 `What number goes in the box? $${total} \\div \\square = ${quotient}$`,
                 `方框里填几？$${total} \\div \\square = ${quotient}$`,
               ],
               divisor,
-              [total - quotient, quotient, total],
               [
-                `The sentence says $\\square \\times ${quotient} = ${total}$, so the box holds ${divisor}.`,
-                `这个算式就是 $\\square \\times ${quotient} = ${total}$，所以方框里是 ${divisor}。`,
+                [
+                  ["Rewrite as a multiplication", "改写成乘法"],
+                  ["The sentence says:", "这个算式就是："],
+                  [`\\square \\times ${quotient} = ${total}`],
+                ],
+                [
+                  ["Find the factor", "求因数"],
+                  [
+                    `${divisor} times ${quotient} is ${total}, so the box is ${divisor}.`,
+                    `${divisor} 乘 ${quotient} 是 ${total}，所以方框里是 ${divisor}。`,
+                  ],
+                ],
               ],
+              [`$${total} \\div ${divisor} = ${quotient}$.`, `$${total} \\div ${divisor} = ${quotient}$。`],
+              [
+                [total - quotient, "That subtracts instead of dividing.", "这是相减，不是相除。"],
+                [quotient, "That is the quotient already in the sentence.", "这是算式里已有的商。"],
+                [total, "That is the number being divided.", "这是被除数。"],
+              ],
+              factTriangleFigure(total, null, quotient, "×"),
             );
       },
+      captioned(
+        factTriangleFigure(null, 4, 6, "×"),
+        "A fact triangle with 4 and 6 below and the top unknown: 24.",
+        "下面是 4 和 6、上面未知的算式三角形：24。",
+      ),
     ),
+  ],
+  [
+    "Ben knows that 4 bags of 5 marbles make 20. So when 20 marbles are shared into 4 bags, he already knows each bag gets 5.\n\nCheck: $4 \\times 5 = 20$ and $20 \\div 4 = 5$.\n\nIn this lesson we use multiplication facts to find quotients and write facts that belong together.",
+    "Ben 知道 4 袋、每袋 5 颗弹珠是 20 颗。所以把 20 颗弹珠平均装进 4 个袋子时，他马上知道每袋 5 颗。\n\n检验：$4 \\times 5 = 20$，$20 \\div 4 = 5$。\n\n本课我们用乘法算式求商，并写出相关的一组算式。",
   ],
 );
 
@@ -728,48 +1175,125 @@ const divisionFacts = earlyTopic(
       "finding-a-quotient",
       ["Finding a quotient", "求商"],
       [
-        "To find a quotient quickly, think of the matching multiplication fact and not of the division. Say the divisor times what gives the number being divided. The larger facts, with factors from six to nine, deserve the most practice. When the answer comes without counting, you know that fact well enough to use in longer problems.",
-        "要很快求出商，就想对应的乘法算式，而不是除法本身。说一说除数乘几得被除数。因数在 6 到 9 之间的较大算式最需要练习。当不用数就能说出答案时，这个算式就熟到可以用在更长的题目中了。",
+        "Find $56 \\div 8$. Think of the times fact: 8 times what is 56? $8 \\times 7 = 56$, so $56 \\div 8 = 7$.\n\nCheck: count by 8s seven times: 8, 16, 24, 32, 40, 48, 56.\n\n> **Watch out.** Divide; do not subtract. $56 - 8 = 48$ is not the quotient.",
+        "求 $56 \\div 8$。想乘法算式：8 乘几得 56？$8 \\times 7 = 56$，所以 $56 \\div 8 = 7$。\n\n检验：8 个 8 个地数 7 次：8、16、24、32、40、48、56。\n\n> **注意。** 要除，不要减。$56 - 8 = 48$ 不是商。",
       ],
       (rng) => {
         const divisor = rng.int(2, 10);
         const answer = rng.int(2, 10);
         const total = divisor * answer;
-        return whole(
+        return solved(
           [`What is $${total} \\div ${divisor}$?`, `$${total} \\div ${divisor}$ 等于多少？`],
           answer,
-          [total - divisor, divisor + answer],
           [
-            `$${divisor} \\times ${answer} = ${total}$, so $${total} \\div ${divisor} = ${answer}$.`,
-            `$${divisor} \\times ${answer} = ${total}$，所以 $${total} \\div ${divisor} = ${answer}$。`,
+            [
+              ["Think of the times fact", "想乘法算式"],
+              [`${divisor} times what is ${total}?`, `${divisor} 乘几得 ${total}？`],
+              [`${divisor} \\times ${answer} = ${total}`],
+            ],
+            [
+              ["Read the quotient", "读出商"],
+              [`So ${total} divided by ${divisor} is ${answer}.`, `所以 ${total} 除以 ${divisor} 得 ${answer}。`],
+            ],
+          ],
+          [
+            `Count by ${divisor}s ${answer} times: ${skipCount(divisor, answer).join(", ")}.`,
+            `${divisor} 个 ${divisor} 个地数 ${answer} 次：${skipCount(divisor, answer).join("、")}。`,
+          ],
+          [
+            [total - divisor, "That subtracts instead of dividing.", "这是相减，不是相除。"],
+            [
+              divisor + answer,
+              `That adds the divisor to the answer. ${divisor} times ${answer} is the fact to use.`,
+              `这把除数和答案相加了。要用的是 ${divisor} 乘 ${answer}。`,
+            ],
+            [
+              answer + 1,
+              `That is one too many: ${divisor} times ${answer + 1} is ${divisor * (answer + 1)}.`,
+              `多了 1：${divisor} 乘 ${answer + 1} 是 ${divisor * (answer + 1)}。`,
+            ],
           ],
         );
       },
+      captioned(arrayFigure(8, 7), "56 dots in 8 rows: 7 in each row.", "56 个点排成 8 行：每行 7 个。"),
     ),
     earlyPoint(
       "dividing-with-zero-one-and-itself",
       ["Dividing with 0, 1 and the number itself", "含 0、1 和自身的除法"],
       [
-        "A few divisions follow simple rules. A number divided by one stays the same, as one group gets everything. A number divided by itself is one. Zero divided by any other number is zero, since nothing is being shared. Dividing by zero, however, has no answer, because no number of empty groups can make anything.",
-        "有几种除法遵循简单的规律。一个数除以 1 还是它本身，因为一组得到全部。一个数除以它本身得 1。0 除以任何别的数都得 0，因为没有东西可分。但是除以 0 没有答案，因为多少个空组也凑不出任何东西。",
+        "Share 9 cookies with 1 person: that person gets all 9, so $9 \\div 1 = 9$. Share 9 among 9 people: each gets 1, so $9 \\div 9 = 1$. Share 0 cookies among 9: each gets 0, so $0 \\div 9 = 0$.\n\nCheck: $1 \\times 9 = 9$, $9 \\times 1 = 9$ and $9 \\times 0 = 0$.\n\n> **Watch out.** $9 \\div 9$ is 1, not 0. A number divided by itself makes one whole group.",
+        "9 块饼干分给 1 个人：他得到全部 9 块，所以 $9 \\div 1 = 9$。分给 9 个人：每人 1 块，所以 $9 \\div 9 = 1$。0 块饼干分给 9 个人：每人 0 块，所以 $0 \\div 9 = 0$。\n\n检验：$1 \\times 9 = 9$，$9 \\times 1 = 9$，$9 \\times 0 = 0$。\n\n> **注意。** $9 \\div 9$ 是 1，不是 0。一个数除以它本身正好是一整组。",
       ],
       (rng) => {
         const n = rng.int(2, 200);
         const kind = rng.int(0, 2);
         const shown = kind === 0 ? `${n} \\div 1` : kind === 1 ? `${n} \\div ${n}` : `0 \\div ${n}`;
         const answer = kind === 0 ? n : kind === 1 ? 1 : 0;
-        return whole(
+        const walk: Walk[] =
+          kind === 0
+            ? [
+                [
+                  ["Think of sharing", "想一想分东西"],
+                  [`${n} shared with 1 person.`, `${n} 个分给 1 个人。`],
+                ],
+                [
+                  ["Find the share", "求每份"],
+                  [`That one person gets all ${n}.`, `这一个人得到全部 ${n} 个。`],
+                ],
+              ]
+            : kind === 1
+              ? [
+                  [
+                    ["Think of sharing", "想一想分东西"],
+                    [`${n} shared among ${n} people.`, `${n} 个分给 ${n} 个人。`],
+                  ],
+                  [
+                    ["Find the share", "求每份"],
+                    ["Each person gets 1.", "每人得到 1 个。"],
+                  ],
+                ]
+              : [
+                  [
+                    ["Think of sharing", "想一想分东西"],
+                    [`Nothing shared among ${n} people.`, `什么也没有，分给 ${n} 个人。`],
+                  ],
+                  [
+                    ["Find the share", "求每份"],
+                    ["Each person gets 0.", "每人得到 0 个。"],
+                  ],
+                ];
+        return solved(
           [`What is $${shown}$?`, `$${shown}$ 等于多少？`],
           answer,
-          [n, 0, 1, n + 1, n - 1],
+          walk,
           kind === 0
-            ? [`One group gets all ${n}, so the answer is ${n}.`, `一组得到全部 ${n} 个，所以答案是 ${n}。`]
+            ? [`$1 \\times ${n} = ${n}$.`, `$1 \\times ${n} = ${n}$。`]
             : kind === 1
-              ? [`${n} things in groups of ${n} make exactly 1 group.`, `${n} 个东西，每组 ${n} 个，正好是 1 组。`]
-              : [`There is nothing to share, so each group gets 0.`, `没有东西可分，所以每组得 0。`],
+              ? [`$${n} \\times 1 = ${n}$.`, `$${n} \\times 1 = ${n}$。`]
+              : [`$${n} \\times 0 = 0$.`, `$${n} \\times 0 = 0$。`],
+          kind === 0
+            ? [
+                [1, `That divides ${n} by itself. Dividing by 1 leaves ${n}.`, `这是 ${n} 除以它本身。除以 1 还是 ${n}。`],
+                [0, `Only 0 shared gives 0. Here ${n} is shared.`, `只有分 0 个才得 0。这里分的是 ${n} 个。`],
+                [n - 1, "That subtracts 1 instead of dividing by it.", "这是减 1，不是除以 1。"],
+              ]
+            : kind === 1
+              ? [
+                  [0, "That subtracts. A number divided by itself is 1.", "这是相减。一个数除以它本身得 1。"],
+                  [n, `That divides by 1, not by ${n}.`, `这是除以 1，不是除以 ${n}。`],
+                ]
+              : [
+                  [n, "There is nothing to share, so no one gets anything.", "没有东西可分，谁也分不到。"],
+                  [1, "There is nothing to share, so each share is 0, not 1.", "没有东西可分，每份是 0，不是 1。"],
+                ],
         );
       },
+      captioned(countersFigure(9, 9), "9 counters in one row: shared among 9, each gets 1.", "一行 9 个圆片：分给 9 个人，每人 1 个。"),
     ),
+  ],
+  [
+    "Leo has 56 stickers to put in 8 equal rows. He thinks: 8 times what is 56? He knows $8 \\times 7 = 56$, so each row gets 7.\n\nCheck: $7 \\times 8 = 56$.\n\nIn this lesson we find quotients quickly from the multiplication facts to 10 times 10.",
+    "Leo 要把 56 张贴纸贴成同样多的 8 行。他想：8 乘几得 56？他知道 $8 \\times 7 = 56$，所以每行 7 张。\n\n检验：$7 \\times 8 = 56$。\n\n本课我们由 10 乘 10 以内的乘法算式快速求商。",
   ],
 );
 
@@ -784,82 +1308,138 @@ const multiplyDivideWordProblems = earlyTopic(
       "multiply-or-divide",
       ["Multiply or divide", "乘还是除"],
       [
-        "In an equal-groups story there are three numbers: the number of groups, the size of each group, and the total. If the total is missing, multiply. If the total is known and one of the others is missing, divide. So before you calculate, find out which of the three numbers the question is asking for.",
-        "在相同的组的故事里有三个数：组数、每组的大小和总数。如果总数不知道，就用乘法。如果知道总数，缺的是另外两个中的一个，就用除法。所以计算之前，先看清问题问的是这三个数中的哪一个。",
+        "6 boxes hold 4 pens each. The total is missing, so multiply: $6 \\times 4 = 24$. If instead 24 pens go into 6 equal boxes, the size of each box is missing, so divide: $24 \\div 6 = 4$.\n\nCheck: $6 \\times 4 = 24$ fits both stories.\n\n> **Watch out.** Find which number is missing first: the groups, the size of each, or the total.",
+        "6 盒笔，每盒 4 支。总数不知道，所以相乘：$6 \\times 4 = 24$。如果是把 24 支笔平均放进 6 个盒子，不知道的是每盒几支，所以相除：$24 \\div 6 = 4$。\n\n检验：$6 \\times 4 = 24$ 对两个故事都成立。\n\n> **注意。** 先看缺的是哪个数：组数、每组的个数，还是总数。",
       ],
       (rng) => {
         const a = rng.int(2, 10);
-        const b = rng.int(2, 10);
+        const b = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10].filter((v) => v !== a));
         const thing = rng.pick(earlyThings);
         const name = rng.pick(earlyNames);
         const multiply = rng.bool();
         return multiply
-          ? whole(
+          ? solved(
               [
                 `${name} fills ${a} boxes with ${b} ${thing.en} each. How many ${thing.en} is that?`,
                 `${name} 装了 ${a} 盒${thing.zh}，每盒 ${b} ${thing.unit}。一共有多少${thing.unit}？`,
               ],
               a * b,
-              [a + b],
               [
-                `The total is missing, so multiply: $${a} \\times ${b} = ${a * b}$.`,
-                `总数不知道，所以用乘法：$${a} \\times ${b} = ${a * b}$。`,
+                [
+                  ["Find what is missing", "找出缺的数"],
+                  [`${a} groups of ${b} are known; the total is missing.`, `知道 ${a} 组、每组 ${b}，缺的是总数。`],
+                ],
+                [["Multiply", "相乘"], ["Groups times the size of each:", "组数乘每组的个数："], [`${a} \\times ${b} = ${a * b}`]],
+              ],
+              [`$${a * b} \\div ${a} = ${b}$ ${thing.en} in each box.`, `$${a * b} \\div ${a} = ${b}$，正是每盒的个数。`],
+              [
+                [a + b, "That adds. The total of equal groups is a product.", "这是相加。相同的组的总数要用乘法。"],
+                [a * b - b, "That is one box too few.", "少算了一盒。"],
+                [a * b + b, "That is one box too many.", "多算了一盒。"],
               ],
             )
-          : whole(
+          : solved(
               [
                 `${name} puts ${a * b} ${thing.en} into ${a} equal boxes. How many ${thing.en} go in each box?`,
                 `${name} 把 ${a * b} ${thing.unit}${thing.zh}平均放进 ${a} 个盒子。每盒放多少${thing.unit}？`,
               ],
               b,
-              [a * b - a, a * b + a, a * b * a],
               [
-                `The total is known and the size of a group is missing, so divide: $${a * b} \\div ${a} = ${b}$.`,
-                `知道总数，缺每组的大小，所以用除法：$${a * b} \\div ${a} = ${b}$。`,
+                [
+                  ["Find what is missing", "找出缺的数"],
+                  [
+                    `The total ${a * b} and the ${a} boxes are known; the size of each is missing.`,
+                    `知道总数 ${a * b} 和 ${a} 个盒子，缺的是每盒的个数。`,
+                  ],
+                ],
+                [["Divide", "相除"], ["Share the total into the boxes:", "把总数平均分到各盒："], [`${a * b} \\div ${a} = ${b}`]],
+              ],
+              [`$${a} \\times ${b} = ${a * b}$.`, `$${a} \\times ${b} = ${a * b}$。`],
+              [
+                [a * b - a, "That subtracts. Sharing equally is dividing.", "这是相减。平均分要用除法。"],
+                [a, "That is the number of boxes, not how many go in each.", "这是盒数，不是每盒的个数。"],
+                [a * b * a, "That multiplies, but the total is already known.", "这是相乘，但总数已经知道了。"],
               ],
             );
       },
+      captioned(countersFigure(24, 4), "24 counters in 6 rows of 4.", "24 个圆片，6 行，每行 4 个。"),
     ),
     earlyPoint(
       "times-as-many",
       ["Times as many", "几倍"],
       [
-        "Saying that one amount is some number of times as many as another is a comparison, and it also calls for multiplication. Three times as many means three groups the size of the smaller amount. Going the other way, if the larger amount and the times are known, then dividing gives the smaller amount.",
-        "说一个量是另一个量的几倍，是一种比较，也要用乘法。3 倍就是 3 组和较小的量一样大的组。反过来，如果知道较大的量和倍数，用除法就得到较小的量。",
+        "Leo has 4 shells. Mia has 3 times as many, so she has three groups the size of Leo's: $3 \\times 4 = 12$.\n\nCheck: $4 + 4 + 4 = 12$.\n\n> **Watch out.** 3 times as many is not 3 more. $4 + 3 = 7$ would be 3 more.",
+        "Leo 有 4 个贝壳。Mia 的是他的 3 倍，就是 3 组和 Leo 一样多：$3 \\times 4 = 12$。\n\n检验：$4 + 4 + 4 = 12$。\n\n> **注意。** 3 倍不是多 3 个。$4 + 3 = 7$ 是多 3 个。",
       ],
       (rng) => {
         const small = rng.int(2, 10);
-        const times = rng.int(2, 9);
+        const times = rng.pick([2, 3, 4, 5, 6, 7, 8, 9].filter((v) => v !== small));
         const thing = rng.pick(earlyThings);
-        const [p, q] = rng.pick(earlyNames.flatMap((a) => earlyNames.filter((b) => b !== a).map((b) => [a, b] as const)));
+        const [p, q] = rng.sample(earlyNames, 2) as [string, string];
         const forward = rng.bool();
         return forward
-          ? whole(
+          ? solved(
               [
                 `${p} has ${small} ${thing.en}. ${q} has ${times} times as many. How many does ${q} have?`,
                 `${p} 有 ${small} ${thing.unit}${thing.zh}。${q} 的${thing.zh}是 ${p} 的 ${times} 倍。${q} 有多少${thing.unit}？`,
               ],
               small * times,
-              [small + times],
               [
-                `${times} times as many as ${small} is $${times} \\times ${small} = ${small * times}$.`,
-                `${small} 的 ${times} 倍是 $${times} \\times ${small} = ${small * times}$。`,
+                [
+                  ["Read times as many", "理解几倍"],
+                  [`${q} has ${times} groups of ${small}.`, `${q} 有 ${times} 个 ${small}。`],
+                ],
+                [
+                  ["Multiply", "相乘"],
+                  [`${times} groups of ${small}:`, `${times} 个 ${small}：`],
+                  [`${times} \\times ${small} = ${small * times}`],
+                ],
               ],
+              [
+                `$${small * times} \\div ${times} = ${small}$, ${p}'s amount.`,
+                `$${small * times} \\div ${times} = ${small}$，正是 ${p} 的数量。`,
+              ],
+              [
+                [small + times, `That is ${times} more, not ${times} times as many.`, `这是多 ${times} 个，不是 ${times} 倍。`],
+                [small * (times - 1), `That is one group of ${small} too few.`, `少了一个 ${small}。`],
+                [small * (times + 1), `That is one group of ${small} too many.`, `多了一个 ${small}。`],
+              ],
+              partWholeBarFigure(Array<number>(times).fill(small), -1),
             )
-          : whole(
+          : solved(
               [
                 `${q} has ${small * times} ${thing.en}, which is ${times} times as many as ${p} has. How many does ${p} have?`,
                 `${q} 有 ${small * times} ${thing.unit}${thing.zh}，是 ${p} 的 ${times} 倍。${p} 有多少${thing.unit}？`,
               ],
               small,
-              [small * times - times, small * times + times, small * times * times],
               [
-                `Dividing undoes the times: $${small * times} \\div ${times} = ${small}$.`,
-                `用除法还原倍数：$${small * times} \\div ${times} = ${small}$。`,
+                [
+                  ["Read times as many", "理解几倍"],
+                  [
+                    `${small * times} is ${times} equal groups, and ${p} has one of them.`,
+                    `${small * times} 是 ${times} 个相同的组，${p} 有其中一组。`,
+                  ],
+                ],
+                [["Divide", "相除"], ["One of the groups:", "其中一组："], [`${small * times} \\div ${times} = ${small}`]],
+              ],
+              [`$${times} \\times ${small} = ${small * times}$.`, `$${times} \\times ${small} = ${small * times}$。`],
+              [
+                [
+                  small * times - times,
+                  `That takes away ${times}. Times as many means divide to go back.`,
+                  `这是减去 ${times}。倍数要用除法还原。`,
+                ],
+                [small * times * times, "That multiplies again. Divide to go back.", "这又乘了一次。应该用除法还原。"],
+                [times, "That is the number of times, not the amount.", "这是倍数，不是数量。"],
               ],
             );
       },
+      captioned(partWholeBarFigure([4, 4, 4], -1), "Three bars of 4 make 12: 3 times as many as 4.", "三段 4 合起来是 12：是 4 的 3 倍。"),
     ),
+  ],
+  [
+    "The class has 6 tables with 4 children at each. To find how many children there are, we multiply. To find how many sit at each table when 24 children share 6 tables, we divide.\n\nCheck: $6 \\times 4 = 24$ and $24 \\div 6 = 4$.\n\nIn this lesson we decide whether a story needs multiplying or dividing, and solve it.",
+    "全班有 6 张桌子，每张坐 4 个孩子。求一共有几个孩子，用乘法。24 个孩子平均坐 6 张桌子，求每张坐几个，用除法。\n\n检验：$6 \\times 4 = 24$，$24 \\div 6 = 4$。\n\n本课我们判断故事该用乘法还是除法，并解决问题。",
   ],
 );
 
@@ -874,8 +1454,8 @@ const twoStepWordProblems = earlyTopic(
       "groups-and-then-more",
       ["Groups and then more", "先分组再增减"],
       [
-        "Some problems need two steps. First work out the part that the story tells you about groups, and then use it to add or take away. Write down the result of the first step so that you do not lose it. At the end, read the question again to be sure you have answered what it asks.",
-        "有些问题需要两步。先算出故事中关于组的那部分，再用它来加或减。把第一步的结果写下来，以免忘记。最后再读一遍问题，确认回答的就是它所问的。",
+        "Ana has 3 packs of 5 stickers and 4 loose ones. First the packs: $3 \\times 5 = 15$. Then the loose ones: $15 + 4 = 19$ stickers.\n\nCheck: $5 + 5 + 5 + 4 = 19$.\n\n> **Watch out.** Do not stop after the first step. 15 is only the stickers in packs.",
+        "Ana 有 3 包贴纸，每包 5 张，另外还有 4 张散的。先算整包的：$3 \\times 5 = 15$。再加散的：$15 + 4 = 19$ 张。\n\n检验：$5 + 5 + 5 + 4 = 19$。\n\n> **注意。** 不要算完第一步就停。15 只是包里的贴纸。",
       ],
       (rng) => {
         const groups = rng.int(2, 9);
@@ -884,8 +1464,9 @@ const twoStepWordProblems = earlyTopic(
         const thing = rng.pick(earlyThings);
         const name = rng.pick(earlyNames);
         const lost = rng.bool() && groups * each > extra;
-        const answer = lost ? groups * each - extra : groups * each + extra;
-        return whole(
+        const packs = groups * each;
+        const answer = lost ? packs - extra : packs + extra;
+        return solved(
           lost
             ? [
                 `${name} has ${groups} packs of ${each} ${thing.en}, and gives away ${extra} of them. How many ${thing.en} are left?`,
@@ -896,42 +1477,85 @@ const twoStepWordProblems = earlyTopic(
                 `${name} 有 ${groups} 包${thing.zh}，每包 ${each} ${thing.unit}，另外还有 ${extra} ${thing.unit}散的。一共有多少${thing.unit}？`,
               ],
           answer,
-          [groups * each, groups + each + extra, groups * (each + extra)],
           [
-            `First, $${groups} \\times ${each} = ${groups * each}$. Then $${groups * each} ${lost ? "-" : "+"} ${extra} = ${answer}$.`,
-            `先算 $${groups} \\times ${each} = ${groups * each}$。再算 $${groups * each} ${lost ? "-" : "+"} ${extra} = ${answer}$。`,
+            [
+              ["Count the packs", "先算整包的"],
+              [`${groups} packs of ${each}:`, `${groups} 包，每包 ${each}：`],
+              [`${groups} \\times ${each} = ${packs}`],
+            ],
+            lost
+              ? [["Take away", "减去"], [`${extra} are given away:`, `送出 ${extra}：`], [`${packs} - ${extra} = ${answer}`]]
+              : [["Add the loose ones", "加上散的"], [`${extra} more:`, `再加 ${extra}：`], [`${packs} + ${extra} = ${answer}`]],
+          ],
+          lost
+            ? [
+                `$${answer} + ${extra} = ${packs}$, all the ${thing.en} in the packs.`,
+                `$${answer} + ${extra} = ${packs}$，正是包里的全部。`,
+              ]
+            : [
+                `$${answer} - ${extra} = ${packs}$, and $${packs} \\div ${groups} = ${each}$ in each pack.`,
+                `$${answer} - ${extra} = ${packs}$，$${packs} \\div ${groups} = ${each}$，正是每包的个数。`,
+              ],
+          [
+            [packs, "That stops after the first step.", "这只算了第一步。"],
+            [groups + each + extra, "That adds all three numbers. The packs must be multiplied.", "这把三个数都加起来了。整包的要用乘法。"],
+            [groups * (each + extra), `That puts the ${extra} into every pack.`, `这把 ${extra} 加到了每一包里。`],
+            [
+              lost ? packs + extra : packs - extra,
+              lost ? "That adds, but the ones given away are taken away." : "That takes away, but the loose ones are added.",
+              lost ? "这是加上，但送出的要减去。" : "这是减去，但散的要加上。",
+            ],
           ],
         );
       },
+      captioned(
+        partWholeBarFigure([5, 5, 5, 4], -1),
+        "Three packs of 5 and 4 loose: 19 in all.",
+        "三包各 5 张，再加 4 张散的：一共 19 张。",
+      ),
     ),
     earlyPoint(
       "sharing-what-is-left",
       ["Sharing what is left", "平均分剩下的"],
       [
-        "In this kind of problem, some of the total is taken away before the rest is shared. The order matters. Subtract first to find how many are left to share, and only then divide. Dividing the whole amount, and then subtracting, tells a different story and gives a different answer. Using a letter for the unknown can keep it clear.",
-        "在这类问题中，先拿走总数的一部分，再把剩下的平均分。顺序很重要。先减，算出还剩多少要分，然后才除。先除总数再减，讲的是另一个故事，答案也不同。用字母表示未知数可以把关系理清楚。",
+        "Ken has 20 cards, keeps 2, and shares the rest equally among 3 friends. First take away what he keeps: $20 - 2 = 18$. Then share: $18 \\div 3 = 6$ each.\n\nCheck: $3 \\times 6 + 2 = 20$.\n\n> **Watch out.** Subtract first, then divide. Sharing all 20 first tells a different story.",
+        "Ken 有 20 张卡片，自己留 2 张，其余的平均分给 3 个朋友。先减去留下的：$20 - 2 = 18$。再分：$18 \\div 3 = 6$，每人 6 张。\n\n检验：$3 \\times 6 + 2 = 20$。\n\n> **注意。** 先减，再除。先把 20 张都分掉，就是另一个故事了。",
       ],
       (rng) => {
         const groups = rng.int(2, 9);
         const each = rng.int(2, 9);
         const kept = rng.int(2, 12);
-        const total = groups * each + kept;
+        const rest = groups * each;
+        const total = rest + kept;
         const thing = rng.pick(earlyThings);
         const name = rng.pick(earlyNames);
-        return whole(
+        return solved(
           [
             `${name} has ${total} ${thing.en}, keeps ${kept} of them, and shares the rest equally among ${groups} friends. How many does each friend get?`,
             `${name} 有 ${total} ${thing.unit}${thing.zh}，自己留下 ${kept} ${thing.unit}，把其余的平均分给 ${groups} 个朋友。每个朋友得到多少${thing.unit}？`,
           ],
           each,
-          [total - kept, groups * each, total - groups],
           [
-            `First, $${total} - ${kept} = ${total - kept}$ are left to share. Then $${total - kept} \\div ${groups} = ${each}$.`,
-            `先算 $${total} - ${kept} = ${total - kept}$，这是要分的。再算 $${total - kept} \\div ${groups} = ${each}$。`,
+            [["Take away what is kept", "减去留下的"], ["The rest to share:", "要分的："], [`${total} - ${kept} = ${rest}`]],
+            [["Share the rest", "平均分"], [`Among ${groups} friends:`, `分给 ${groups} 个朋友：`], [`${rest} \\div ${groups} = ${each}`]],
+          ],
+          [
+            `$${groups} \\times ${each} + ${kept} = ${rest} + ${kept} = ${total}$.`,
+            `$${groups} \\times ${each} + ${kept} = ${rest} + ${kept} = ${total}$。`,
+          ],
+          [
+            [rest, "That is what is left to share, not each friend's part.", "这是要分的总数，不是每人分到的。"],
+            [total - groups, "That subtracts the number of friends instead of sharing.", "这是减去朋友的人数，没有平均分。"],
+            [each + kept, `That gives one friend the ${kept} that were kept.`, `这把留下的 ${kept} 也分给了一个朋友。`],
           ],
         );
       },
+      captioned(partWholeBarFigure([2, 6, 6, 6], -1), "20 cut into 2 kept and three shares of 6.", "20 分成留下的 2 和三份 6。"),
     ),
+  ],
+  [
+    "Sam buys 3 packs of 5 cards and finds 4 more on the floor. He works it out in two steps: $3 \\times 5 = 15$, then $15 + 4 = 19$ cards.\n\nCheck: $5 + 5 + 5 + 4 = 19$.\n\nIn this lesson we solve problems that take two steps, one at a time.",
+    "Sam 买了 3 包卡片，每包 5 张，又在地上捡到 4 张。他分两步算：$3 \\times 5 = 15$，再 $15 + 4 = 19$ 张。\n\n检验：$5 + 5 + 5 + 4 = 19$。\n\n本课我们一步一步解决需要两步的问题。",
   ],
 );
 
@@ -946,8 +1570,8 @@ const orderOfOperationsEarly = earlyTopic(
       "multiplying-before-adding",
       ["Multiplying before adding", "先乘后加"],
       [
-        "When an expression has both a product and a sum, everyone must work in the same order to get the same answer. The rule is to multiply or divide first, and then add or subtract, working from left to right. A story explains this: groups must be counted before extras can be added to them.",
-        "当算式里既有乘法又有加法时，大家必须按同样的顺序计算，才能得到同样的答案。规定是先乘除，后加减，从左到右。一个故事可以说明：要先数出各组有多少，才能再加上多出来的。",
+        "Find $3 + 4 \\times 2$. Multiply first: $4 \\times 2 = 8$. Then add: $3 + 8 = 11$. Think of 4 packs of 2 juice boxes and 3 single ones.\n\nCheck: $2 + 2 + 2 + 2 + 3 = 11$.\n\n> **Watch out.** Do not add first. $(3 + 4) \\times 2 = 14$ is a different answer.",
+        "求 $3 + 4 \\times 2$。先算乘法：$4 \\times 2 = 8$。再加：$3 + 8 = 11$。想一想 4 盒果汁，每盒 2 瓶，另外 3 瓶单的。\n\n检验：$2 + 2 + 2 + 2 + 3 = 11$。\n\n> **注意。** 不要先算加法。$(3 + 4) \\times 2 = 14$ 是另一个答案。",
       ],
       (rng) => {
         const a = rng.int(2, 15);
@@ -956,40 +1580,62 @@ const orderOfOperationsEarly = earlyTopic(
         const first = rng.bool();
         const shown = first ? `${b} \\times ${c} + ${a}` : `${a} + ${b} \\times ${c}`;
         const answer = a + b * c;
-        return whole(
+        return solved(
           [`What is $${shown}$?`, `$${shown}$ 等于多少？`],
           answer,
-          [(a + b) * c, b * (c + a), a + b + c],
           [
-            `Multiply first: $${b} \\times ${c} = ${b * c}$. Then add ${a} to get ${answer}.`,
-            `先算乘法：$${b} \\times ${c} = ${b * c}$。再加 ${a}，得 ${answer}。`,
+            [["Multiply first", "先算乘法"], ["The product:", "乘法："], [`${b} \\times ${c} = ${b * c}`]],
+            [["Then add", "再算加法"], [`Add the ${a}:`, `加上 ${a}：`], [`${b * c} + ${a} = ${answer}`]],
+          ],
+          [
+            `Add ${c} ${b} times and then ${a}: $${Array<number>(b).fill(c).join(" + ")} + ${a} = ${answer}$.`,
+            `把 ${b} 个 ${c} 加起来，再加 ${a}：$${Array<number>(b).fill(c).join(" + ")} + ${a} = ${answer}$。`,
+          ],
+          [
+            [first ? b * (c + a) : (a + b) * c, "That adds first. Multiply before adding.", "这是先算加法。要先乘后加。"],
+            [a + b + c, "That adds all three numbers.", "这把三个数都加起来了。"],
+            [a * b * c, "That multiplies all three numbers.", "这把三个数都乘起来了。"],
           ],
         );
       },
+      captioned(partWholeBarFigure([2, 2, 2, 2, 3], -1), "Four 2s and then 3 more: 8 + 3 = 11.", "四个 2 再加 3：8 + 3 = 11。"),
     ),
     earlyPoint(
       "parentheses-come-first",
       ["Parentheses come first", "先算括号里的"],
       [
-        "Parentheses change the order, because whatever is inside them is worked out first. The same three numbers can have different values with and without parentheses. They are useful when a story needs a sum or difference to be found before it is multiplied or shared, such as adding two amounts and then doubling the total.",
-        "括号会改变顺序，因为括号里的要先算。同样的三个数，有括号和没括号的值可能不同。当一个故事要先求和或差，再去乘或分时，括号就很有用，比如先把两个量相加，再把总数乘二。",
+        "Find $(3 + 2) \\times 4$. The parentheses come first: $3 + 2 = 5$. Then $5 \\times 4 = 20$. Think of 4 rows, each with 3 red and 2 blue beads.\n\nCheck: $3 \\times 4 + 2 \\times 4 = 12 + 8 = 20$.\n\n> **Watch out.** Without the parentheses, $3 + 2 \\times 4 = 11$. The parentheses change the answer.",
+        "求 $(3 + 2) \\times 4$。先算括号：$3 + 2 = 5$。再算 $5 \\times 4 = 20$。想一想 4 行珠子，每行 3 颗红的、2 颗蓝的。\n\n检验：$3 \\times 4 + 2 \\times 4 = 12 + 8 = 20$。\n\n> **注意。** 没有括号时，$3 + 2 \\times 4 = 11$。括号会改变答案。",
       ],
       (rng) => {
         const a = rng.int(2, 9);
         const b = rng.int(2, 9);
         const c = rng.int(2, 9);
         const answer = (a + b) * c;
-        return whole(
+        return solved(
           [`What is $(${a} + ${b}) \\times ${c}$?`, `$(${a} + ${b}) \\times ${c}$ 等于多少？`],
           answer,
-          [a + b * c, a * c + b, a + b + c],
           [
-            `The parentheses come first: $${a} + ${b} = ${a + b}$. Then $${a + b} \\times ${c} = ${answer}$.`,
-            `先算括号：$${a} + ${b} = ${a + b}$。再算 $${a + b} \\times ${c} = ${answer}$。`,
+            [["Parentheses first", "先算括号"], ["The sum inside:", "括号里的和："], [`${a} + ${b} = ${a + b}`]],
+            [["Then multiply", "再算乘法"], [`Times ${c}:`, `乘 ${c}：`], [`${a + b} \\times ${c} = ${answer}`]],
+          ],
+          [
+            `Multiply each part: $${a} \\times ${c} + ${b} \\times ${c} = ${a * c} + ${b * c} = ${answer}$.`,
+            `分别相乘：$${a} \\times ${c} + ${b} \\times ${c} = ${a * c} + ${b * c} = ${answer}$。`,
+          ],
+          [
+            [a + b * c, "That ignores the parentheses and multiplies first.", "这没管括号，先算了乘法。"],
+            [a * c + b, `That multiplies only the ${a} by ${c}.`, `这只把 ${a} 乘了 ${c}。`],
+            [a + b + c, "That adds all three numbers.", "这把三个数都加起来了。"],
           ],
         );
       },
+      captioned(arrayFigure(4, 5), "4 rows of 3 + 2 = 5: 20 in all.", "4 行，每行 3 + 2 = 5：一共 20。"),
     ),
+  ],
+  [
+    "Mom buys 4 packs of 2 yogurts and 3 single ones. Everyone must get 11, so we agree to multiply first: $4 \\times 2 = 8$, then $8 + 3 = 11$.\n\nCheck: $2 + 2 + 2 + 2 + 3 = 11$.\n\nIn this lesson we multiply or divide before adding or subtracting, unless parentheses say otherwise.",
+    "妈妈买了 4 盒酸奶，每盒 2 杯，还有 3 杯单的。为了大家都算出 11，约定先乘：$4 \\times 2 = 8$，再 $8 + 3 = 11$。\n\n检验：$2 + 2 + 2 + 2 + 3 = 11$。\n\n本课我们学习先乘除后加减，除非括号另有说明。",
   ],
 );
 
@@ -1004,74 +1650,109 @@ const arithmeticPatterns = earlyTopic(
       "the-next-number-in-a-pattern",
       ["The next number in a pattern", "规律中的下一个数"],
       [
-        "A number pattern follows a rule, such as adding the same number each time. Look at how each number differs from the one before it. If the difference stays the same, then the rule is to add that difference. Apply it again to find the next number, and check that it works for the numbers you were given.",
-        "数的规律遵循一条规则，比如每次都加同一个数。看一看每个数和前一个数相差多少。如果相差的数不变，规则就是加这个差。再用一次就得到下一个数，并检验它对已给的数都成立。",
+        "What comes next in 7, 11, 15, 19? Each number is 4 more than the one before, so the rule is add 4: $19 + 4 = 23$.\n\nCheck: the rule works all the way: $7 + 4 = 11$, $11 + 4 = 15$, $15 + 4 = 19$.\n\n> **Watch out.** Use the difference between the numbers, not just 1 more than the last number.",
+        "7、11、15、19 后面是几？每个数都比前一个多 4，规则是加 4：$19 + 4 = 23$。\n\n检验：规则从头到尾都成立：$7 + 4 = 11$，$11 + 4 = 15$，$15 + 4 = 19$。\n\n> **注意。** 要用相邻两数的差，不是比最后一个数多 1。",
       ],
       (rng) => {
         const step = rng.int(2, 12);
         const start = rng.int(1, 40);
         const terms = [0, 1, 2, 3].map((i) => start + i * step);
-        const answer = start + 4 * step;
-        return whole(
+        const last = terms[3] as number;
+        const answer = last + step;
+        return solved(
           [`What number comes next? $${terms.join(",\\ ")},\\ \\square$`, `下一个数是几？$${terms.join(",\\ ")},\\ \\square$`],
           answer,
-          [answer + step, (terms[3] as number) + 1, (terms[3] as number) + step + 1],
           [
-            `Each number is ${step} more than the one before, so the next is $${terms[3]} + ${step} = ${answer}$.`,
-            `每个数都比前一个多 ${step}，所以下一个是 $${terms[3]} + ${step} = ${answer}$。`,
+            [["Find the rule", "找规则"], ["The difference between neighbors:", "相邻两数的差："], [`${terms[1]} - ${terms[0]} = ${step}`]],
+            [["Apply it", "用规则"], [`Add ${step} to the last number:`, `最后一个数加 ${step}：`], [`${last} + ${step} = ${answer}`]],
           ],
+          [
+            `The rule works for every pair: ${terms
+              .slice(1)
+              .map((v, i) => `$${terms[i]} + ${step} = ${v}$`)
+              .join(", ")}.`,
+            `规则对每一对都成立：${terms
+              .slice(1)
+              .map((v, i) => `$${terms[i]} + ${step} = ${v}$`)
+              .join("，")}。`,
+          ],
+          [
+            [answer + step, "That skips a number in the pattern.", "这跳过了规律中的一个数。"],
+            [last + 1, `That adds 1, but the rule adds ${step}.`, `这是加 1，但规则是加 ${step}。`],
+            [last + step + 1, `That is 1 more than the next number.`, `比下一个数多了 1。`],
+          ],
+          hopsFigure([...terms, answer], true),
         );
       },
+      captioned(hopsFigure([7, 11, 15, 19, 23]), "Hops of 4: 7, 11, 15, 19, then 23.", "每次跳 4：7、11、15、19，然后是 23。"),
     ),
     earlyPoint(
       "even-and-odd-products",
       ["Even and odd products", "积的奇偶"],
       [
-        "An even number can be split into two equal parts, while an odd number has one left over. A product is odd only when both of its factors are odd. If even one factor is even, the whole product is even, since it is a number of equal pairs. So you can tell without finding the product at all.",
-        "偶数可以分成相等的两部分，奇数则会多出一个。只有两个因数都是奇数时，积才是奇数。只要有一个因数是偶数，整个积就是偶数，因为它可以看成若干对。所以不用算出积就能判断。",
+        "Is $13 \\times 24$ even or odd? 24 is even, so every group of 24 splits into two equal halves, and so does the whole product. It is even.\n\nCheck: try small numbers with the same ones digits: $3 \\times 4 = 12$, which is even.\n\n> **Watch out.** One even factor is enough to make the product even. The product is odd only when both factors are odd.",
+        "$13 \\times 24$ 是偶数还是奇数？24 是偶数，每组 24 都能分成相等的两半，整个积也能。所以是偶数。\n\n检验：用个位相同的小数试试：$3 \\times 4 = 12$，是偶数。\n\n> **注意。** 只要有一个因数是偶数，积就是偶数。只有两个因数都是奇数，积才是奇数。",
       ],
       (rng) => {
         const a = rng.int(11, 99);
         const b = rng.int(11, 99);
         const odd = a % 2 === 1 && b % 2 === 1;
-        const even = t("Even", "偶数");
-        const oddText = t("Odd", "奇数");
-        return reasoned(
-          pickChoice(
-            rng,
-            t(`Is the product $${a} \\times ${b}$ even or odd?`, `积 $${a} \\times ${b}$ 是偶数还是奇数？`),
-            odd ? oddText : even,
-            [
-              odd ? even : oddText,
-              t("It depends on the order of the factors", "取决于因数的顺序"),
-              t("It cannot be told without multiplying", "不算出来就不能判断"),
-            ],
-            odd
-              ? t(`Both ${a} and ${b} are odd, and a product of two odd numbers is odd.`, `${a} 和 ${b} 都是奇数，两个奇数的积是奇数。`)
-              : t(`At least one of ${a} and ${b} is even, so the product is even.`, `${a} 和 ${b} 中至少有一个是偶数，所以积是偶数。`),
-          ),
+        const even: Pair = ["Even", "偶数"];
+        const oddText: Pair = ["Odd", "奇数"];
+        const oa = a % 10;
+        const ob = b % 10;
+        const kind = (n: number): Pair => (n % 2 === 0 ? ["even", "偶数"] : ["odd", "奇数"]);
+        return picked(
+          rng,
+          [`Is the product $${a} \\times ${b}$ even or odd?`, `积 $${a} \\times ${b}$ 是偶数还是奇数？`],
+          odd ? oddText : even,
           [
             [
-              (odd ? even : oddText).en,
+              odd ? even : oddText,
               odd
-                ? "Both factors are odd, so no factor of 2 appears in the product."
-                : "At least one factor is even, so the product has a factor of 2.",
-              odd ? "两个因数都是奇数，所以积里没有因数 2。" : "至少有一个因数是偶数，所以积里有因数 2。",
+                ? "Both factors are odd, so the product cannot be split into equal pairs."
+                : "At least one factor is even, so the product splits into equal pairs.",
+              odd ? "两个因数都是奇数，积不能分成相等的两份。" : "至少有一个因数是偶数，积能分成相等的两份。",
             ],
             [
-              "It depends on the order of the factors",
+              ["It depends on the order of the factors", "取决于因数的顺序"],
               "Changing the order of the factors does not change the product.",
               "交换因数的顺序不会改变积。",
             ],
             [
-              "It cannot be told without multiplying",
+              ["It cannot be told without multiplying", "不算出来就不能判断"],
               "The ones digits of the factors decide it, so no multiplying is needed.",
               "看因数的个位就能判断，不用算出来。",
             ],
           ],
+          [
+            [
+              ["Look at each factor", "看每个因数"],
+              [`${a} is ${kind(a)[0]} and ${b} is ${kind(b)[0]}.`, `${a} 是${kind(a)[1]}，${b} 是${kind(b)[1]}。`],
+            ],
+            [
+              ["Decide", "判断"],
+              odd
+                ? ["Both are odd, so the product is odd.", "两个都是奇数，所以积是奇数。"]
+                : ["One factor is even, so the product is even.", "有一个因数是偶数，所以积是偶数。"],
+            ],
+          ],
+          [
+            `The ones digits give $${oa} \\times ${ob} = ${oa * ob}$, which is ${kind(oa * ob)[0]} too.`,
+            `个位相乘 $${oa} \\times ${ob} = ${oa * ob}$，也是${kind(oa * ob)[1]}。`,
+          ],
         );
       },
+      captioned(
+        arrayFigure(3, 4),
+        "3 rows of 4: each row splits into two equal halves, so 12 is even.",
+        "3 行 4 个：每行都能分成相等的两半，所以 12 是偶数。",
+      ),
     ),
+  ],
+  [
+    "Count the legs of some chairs: 4, 8, 12, 16. Each number is 4 more than the one before, and every one of them is even.\n\nCheck: $16 + 4 = 20$ is the next, and it is even too.\n\nIn this lesson we find and explain patterns in sums and products, including even and odd numbers.",
+    "数椅子腿：4、8、12、16。每个数都比前一个多 4，而且都是偶数。\n\n检验：下一个是 $16 + 4 = 20$，也是偶数。\n\n本课我们找出并说明和与积中的规律，包括奇数和偶数。",
   ],
 );
 
@@ -1089,8 +1770,8 @@ const placeValueThreeDigits = earlyTopic(
       "reading-base-ten-blocks",
       ["Reading base-ten blocks", "读十进制积木"],
       [
-        "Base-ten blocks show the value of each digit. A large square is one hundred, a long rod is ten, and a small cube is one. To name the number, count the squares, the rods and the cubes separately. Then write these three counts as digits, in the places for hundreds, tens and ones.",
-        "十进制积木显示每个数字的值。大正方形是一百，长条是十，小方块是一。要说出这个数，就分别数大正方形、长条和小方块。然后把这三个数写成数字，放在百位、十位和个位上。",
+        "The picture has 2 big squares, 3 rods and 4 small cubes. A big square is 100, a rod is 10 and a cube is 1. So it shows 2 hundreds, 3 tens and 4 ones: 234.\n\nCheck: $200 + 30 + 4 = 234$.\n\n> **Watch out.** Do not just add the counts. $2 + 3 + 4 = 9$ forgets what each block is worth.",
+        "图里有 2 个大方块、3 根长条和 4 个小方块。大方块是 100，长条是 10，小方块是 1。所以是 2 个百、3 个十和 4 个一：234。\n\n检验：$200 + 30 + 4 = 234$。\n\n> **注意。** 不要只把个数加起来。$2 + 3 + 4 = 9$ 忘了每种积木代表多少。",
       ],
       (rng) => {
         const hundreds = rng.int(1, 3);
@@ -1098,25 +1779,48 @@ const placeValueThreeDigits = earlyTopic(
         const ones = rng.int(0, 9);
         const answer = 100 * hundreds + 10 * tens + ones;
         return {
-          ...whole(
+          ...solved(
             ["What number do these blocks show?", "这些积木表示多少？"],
             answer,
-            [hundreds + tens + ones, 100 * ones + 10 * tens + hundreds, 100 * tens + 10 * hundreds + ones],
             [
-              `There ${hundreds === 1 ? "is 1 hundred" : `are ${hundreds} hundreds`}, ${tens} ${tens === 1 ? "ten" : "tens"} and ${ones} ${ones === 1 ? "one" : "ones"}, which make ${answer}.`,
-              `有 ${hundreds} 个百、${tens} 个十和 ${ones} 个一，合起来是 ${answer}。`,
+              [
+                ["Count each kind", "分别数"],
+                [
+                  `${hundreds} big ${hundreds === 1 ? "square" : "squares"}, ${tens} ${tens === 1 ? "rod" : "rods"} and ${ones} small ${ones === 1 ? "cube" : "cubes"}.`,
+                  `${hundreds} 个大方块、${tens} 根长条和 ${ones} 个小方块。`,
+                ],
+              ],
+              [
+                ["Write the digits", "写出数字"],
+                ["Hundreds, tens and ones in their places:", "按百位、十位、个位写："],
+                [`${100 * hundreds} + ${10 * tens} + ${ones} = ${answer}`],
+              ],
+            ],
+            [
+              `${answer} has ${hundreds} in the hundreds place, ${tens} in the tens place and ${ones} in the ones place, matching the blocks.`,
+              `${answer} 的百位是 ${hundreds}，十位是 ${tens}，个位是 ${ones}，和积木一致。`,
+            ],
+            [
+              [
+                hundreds + tens + ones,
+                "That adds the counts and forgets what each block is worth.",
+                "这只把个数加起来，忘了每种积木代表多少。",
+              ],
+              [100 * ones + 10 * tens + hundreds, "That puts the hundreds and the ones in swapped places.", "这把百位和个位放反了。"],
+              [100 * tens + 10 * hundreds + ones, "That puts the hundreds and the tens in swapped places.", "这把百位和十位放反了。"],
             ],
           ),
           figure: baseTenFigure(hundreds, tens, ones),
         };
       },
+      captioned(baseTenFigure(2, 3, 4), "2 hundreds, 3 tens and 4 ones: 234.", "2 个百、3 个十和 4 个一：234。"),
     ),
     earlyPoint(
       "tens-in-a-three-digit-number",
       ["Tens in a three-digit number", "三位数里有多少个十"],
       [
-        "Ten tens make one hundred, so hundreds can always be traded for tens. Counting the tens in a number therefore means counting those in the hundreds as well, and not only reading the tens digit. Trading in this way is what makes adding and subtracting possible when one place has too few or too many.",
-        "十个十是一百，所以百总可以换成十。因此，数一个数里有多少个十时，也要算上百里的十，而不能只读十位上的数字。这样的交换，正是在某一位不够或太多时，加减法能够进行的原因。",
+        "How many tens are in 236? Each hundred is 10 tens, so 2 hundreds are 20 tens. With the 3 tens, that is $20 + 3 = 23$ tens.\n\nCheck: $23 \\times 10 = 230$, and 236 is 230 and 6 ones.\n\n> **Watch out.** The tens digit alone is not the answer. 3 counts only the rods, not the tens inside the hundreds.",
+        "236 里有多少个十？每个百是 10 个十，2 个百就是 20 个十。再加 3 个十，一共 $20 + 3 = 23$ 个十。\n\n检验：$23 \\times 10 = 230$，236 就是 230 和 6 个一。\n\n> **注意。** 十位上的数字不是答案。3 只数了长条，没有数百里的十。",
       ],
       (rng) => {
         const hundreds = rng.int(1, 9);
@@ -1124,20 +1828,45 @@ const placeValueThreeDigits = earlyTopic(
         const ones = rng.int(1, 9);
         const n = 100 * hundreds + 10 * tens + ones;
         const answer = 10 * hundreds + tens;
-        return whole(
+        return solved(
           [
             `How many tens in all are there in ${n}? Count every ten, including those inside the hundreds, and ignore the ones.`,
             `${n} 里一共有多少个十？要数上百里的十，个位不算。`,
           ],
           answer,
-          [tens, hundreds, hundreds + tens, n],
           [
-            `Each hundred holds 10 tens, so ${hundreds} ${hundreds === 1 ? "hundred holds" : "hundreds hold"} ${10 * hundreds} tens. With ${tens} more ${tens === 1 ? "ten" : "tens"}, that makes ${answer}.`,
-            `每个百有 10 个十，所以 ${hundreds} 个百有 ${10 * hundreds} 个十。再加 ${tens} 个十，一共 ${answer} 个十。`,
+            [
+              ["Tens in the hundreds", "百里的十"],
+              [`Each hundred is 10 tens:`, "每个百是 10 个十："],
+              [`${hundreds} \\times 10 = ${10 * hundreds}`],
+            ],
+            [
+              ["Add the other tens", "加上其余的十"],
+              [`${tens} more ${tens === 1 ? "ten" : "tens"}:`, `再加 ${tens} 个十：`],
+              [`${10 * hundreds} + ${tens} = ${answer}`],
+            ],
+          ],
+          [
+            `$${answer} \\times 10 = ${10 * answer}$, and $${10 * answer} + ${ones} = ${n}$.`,
+            `$${answer} \\times 10 = ${10 * answer}$，$${10 * answer} + ${ones} = ${n}$。`,
+          ],
+          [
+            [tens, "That is only the tens digit. The hundreds hold tens too.", "这只是十位上的数字。百里也有十。"],
+            [hundreds + tens, "That counts each hundred as one ten instead of ten.", "这把每个百只算成一个十，应该是十个十。"],
+            [n, "That is the number itself, not the count of tens.", "这是这个数本身，不是十的个数。"],
           ],
         );
       },
+      captioned(
+        baseTenFigure(2, 3, 6),
+        "236: 2 hundreds are 20 tens, and 3 more rods make 23 tens.",
+        "236：2 个百是 20 个十，再加 3 根长条，一共 23 个十。",
+      ),
     ),
+  ],
+  [
+    "A shop packs pencils in boxes of 100, packs of 10 and single pencils. It has 2 boxes, 3 packs and 4 single pencils, so it has 234 pencils.\n\nCheck: $200 + 30 + 4 = 234$.\n\nIn this lesson we see a three-digit number as hundreds, tens and ones, and trade between the places.",
+    "商店把铅笔装成 100 支一箱、10 支一包，还有单支的。店里有 2 箱、3 包和 4 支，一共 234 支。\n\n检验：$200 + 30 + 4 = 234$。\n\n本课我们把三位数看成几百、几十和几，并在数位之间换算。",
   ],
 );
 
@@ -1152,35 +1881,63 @@ const roundingToNearestTen = earlyTopic(
       "the-closer-ten",
       ["The closer ten", "较近的整十数"],
       [
-        "Rounding replaces a number with a nearby one that is easier to use. A number lies between two tens, and rounding picks the closer of them. The ones digit decides: less than 5 goes down to the lower ten, and 5 or more goes up to the higher one. Numbers ending in 5 are halfway, and they go up by agreement.",
-        "取近似是用一个更好用的相近的数来代替。一个数位于两个整十数之间，取近似就选较近的那个。个位数字决定方向：小于 5 就向下取较小的整十数，大于或等于 5 就向上取较大的。末位是 5 的数正好在中间，约定向上。",
+        "Round 47 to the nearest ten. 47 is between 40 and 50. Its ones digit is 7, which is 5 or more, so 47 rounds up to 50.\n\nCheck: on the line, 47 is 3 steps from 50 and 7 steps from 40, so 50 is closer.\n\n> **Watch out.** A number ending in 5 is exactly halfway, and it rounds up.",
+        "把 47 取近似到十位。47 在 40 和 50 之间。个位是 7，大于或等于 5，所以向上取 50。\n\n检验：在数轴上，47 离 50 有 3 格，离 40 有 7 格，50 更近。\n\n> **注意。** 末位是 5 的数正好在中间，要向上取。",
       ],
       (rng) => {
         const n = rng.int(12, 989);
         const number = n % 10 === 0 ? n + 3 : n;
         const answer = Math.round(number / 10) * 10;
         const low = Math.floor(number / 10) * 10;
-        const other = answer === low ? low + 10 : low;
+        const ones = number % 10;
+        const up = answer !== low;
         return {
-          ...whole(
+          ...solved(
             [`Round ${number} to the nearest ten.`, `把 ${number} 取近似到十位。`],
             answer,
-            [other, Math.round(number / 100) * 100, number],
             [
-              `${number} lies between ${low} and ${low + 10}. Its ones digit is ${number % 10}, so it rounds ${answer === low ? "down" : "up"} to ${answer}.`,
-              `${number} 在 ${low} 和 ${low + 10} 之间。个位是 ${number % 10}，所以向${answer === low ? "下" : "上"}取 ${answer}。`,
+              [
+                ["Find the two tens", "找出两边的整十数"],
+                [`${number} is between ${low} and ${low + 10}.`, `${number} 在 ${low} 和 ${low + 10} 之间。`],
+              ],
+              [
+                ["Look at the ones digit", "看个位"],
+                up
+                  ? [
+                      `The ones digit is ${ones}, which is 5 or more, so round up to ${answer}.`,
+                      `个位是 ${ones}，大于或等于 5，所以向上取 ${answer}。`,
+                    ]
+                  : [
+                      `The ones digit is ${ones}, which is less than 5, so round down to ${answer}.`,
+                      `个位是 ${ones}，小于 5，所以向下取 ${answer}。`,
+                    ],
+              ],
+            ],
+            [
+              `${number} is ${Math.abs(number - answer)} away from ${answer} and ${Math.abs(number - (up ? low : low + 10))} away from ${up ? low : low + 10}.`,
+              `${number} 离 ${answer} 有 ${Math.abs(number - answer)}，离 ${up ? low : low + 10} 有 ${Math.abs(number - (up ? low : low + 10))}。`,
+            ],
+            [
+              [
+                up ? low : low + 10,
+                up ? "That rounds down, but the ones digit is 5 or more." : "That rounds up, but the ones digit is less than 5.",
+                up ? "这是向下取，但个位大于或等于 5。" : "这是向上取，但个位小于 5。",
+              ],
+              [Math.round(number / 100) * 100, "That rounds to the nearest hundred, not ten.", "这是取近似到百位，不是十位。"],
+              [number, "That leaves the number as it is.", "这没有取近似。"],
             ],
           ),
           figure: numberLineFigure(low, low + 10, 1, number),
         };
       },
+      captioned(numberLineFigure(40, 50, 1, 47), "47 lies between 40 and 50, closer to 50.", "47 在 40 和 50 之间，离 50 更近。"),
     ),
     earlyPoint(
       "estimating-a-sum-with-tens",
       ["Estimating a sum with tens", "用整十数估算和"],
       [
-        "An estimate tells about how large an answer should be. Round each number to the nearest ten, and then add the rounded numbers. This can be done in your head, and it gives a quick way of checking an exact answer. If an exact answer is far from the estimate, then it is worth working it out again.",
-        "估算告诉我们答案大约有多大。把每个数取近似到十位，再把近似数相加。这可以心算，也是检验准确答案的快速方法。如果准确答案和估算相差很远，就值得重新算一遍。",
+        "Estimate $28 + 53$. 28 rounds to 30 and 53 rounds to 50. So the sum is about $30 + 50 = 80$.\n\nCheck: the exact sum is $28 + 53 = 81$, close to 80.\n\n> **Watch out.** An estimate uses the rounded numbers. 81 is the exact sum, not the estimate.",
+        "估算 $28 + 53$。28 取近似是 30，53 取近似是 50。所以和大约是 $30 + 50 = 80$。\n\n检验：准确的和是 $28 + 53 = 81$，接近 80。\n\n> **注意。** 估算要用近似数相加。81 是准确的和，不是估算的结果。",
       ],
       (rng) => {
         const a = rng.int(11, 89);
@@ -1189,20 +1946,36 @@ const roundingToNearestTen = earlyTopic(
         const y = b % 10 === 0 ? b + 2 : b;
         const rx = Math.round(x / 10) * 10;
         const ry = Math.round(y / 10) * 10;
-        return whole(
+        return solved(
           [
             `Round each number to the nearest ten to estimate $${x} + ${y}$. What is the estimate?`,
             `把每个数取近似到十位，估算 $${x} + ${y}$。估算的结果是多少？`,
           ],
           rx + ry,
-          [x + y, rx + ry + 10, rx + ry - 10],
           [
-            `${x} rounds to ${rx} and ${y} rounds to ${ry}, and $${rx} + ${ry} = ${rx + ry}$.`,
-            `${x} 取近似是 ${rx}，${y} 取近似是 ${ry}，$${rx} + ${ry} = ${rx + ry}$。`,
+            [
+              ["Round each number", "分别取近似"],
+              [`${x} rounds to ${rx}, and ${y} rounds to ${ry}.`, `${x} 取近似是 ${rx}，${y} 取近似是 ${ry}。`],
+            ],
+            [["Add the rounded numbers", "把近似数相加"], ["The estimate:", "估算："], [`${rx} + ${ry} = ${rx + ry}`]],
+          ],
+          [
+            `The exact sum is $${x} + ${y} = ${x + y}$, which is close to ${rx + ry}.`,
+            `准确的和是 $${x} + ${y} = ${x + y}$，接近 ${rx + ry}。`,
+          ],
+          [
+            [x + y, "That is the exact sum, not the estimate.", "这是准确的和，不是估算的结果。"],
+            [rx + ry + 10, "That rounds one of the numbers the wrong way.", "有一个数取近似的方向错了。"],
+            [rx + ry - 10, "That rounds one of the numbers the wrong way.", "有一个数取近似的方向错了。"],
           ],
         );
       },
+      captioned(hopsFigure([30, 80]), "From 30, a hop of 50 reaches 80.", "从 30 跳 50，到 80。"),
     ),
+  ],
+  [
+    "A book costs 47 yuan. Mom says it is about 50 yuan, because 47 is closer to 50 than to 40.\n\nCheck: 47 is 3 away from 50 and 7 away from 40.\n\nIn this lesson we round a number to the closer ten and use it to estimate.",
+    "一本书 47 元。妈妈说大约 50 元，因为 47 离 50 比离 40 近。\n\n检验：47 离 50 有 3，离 40 有 7。\n\n本课我们把一个数取近似到较近的整十数，并用来估算。",
   ],
 );
 
@@ -1217,60 +1990,152 @@ const roundingToNearestHundred = earlyTopic(
       "the-closer-hundred",
       ["The closer hundred", "较近的整百数"],
       [
-        "Rounding to the nearest hundred works just like rounding to the nearest ten, one place over. The number lies between two hundreds, and the tens digit decides which is closer. Below 5 goes down and 5 or more goes up. The ones digit does not matter here, so it is a mistake to round in two stages.",
-        "取近似到百位和取近似到十位一样，只是往左移了一位。这个数位于两个整百数之间，十位数字决定哪个更近。小于 5 向下，大于或等于 5 向上。这里个位数字不起作用，所以分两步取近似是错的。",
+        "Round 372 to the nearest hundred. 372 is between 300 and 400. Its tens digit is 7, which is 5 or more, so it rounds up to 400.\n\nCheck: 372 is 28 from 400 and 72 from 300, so 400 is closer.\n\n> **Watch out.** Look at the tens digit, not the ones digit, and round only once.",
+        "把 372 取近似到百位。372 在 300 和 400 之间。十位是 7，大于或等于 5，所以向上取 400。\n\n检验：372 离 400 有 28，离 300 有 72，400 更近。\n\n> **注意。** 看十位，不看个位，而且只取一次近似。",
       ],
       (rng) => {
         const n = rng.int(110, 990);
         const number = n % 100 === 0 ? n + 30 : n;
         const low = Math.floor(number / 100) * 100;
         const answer = Math.round(number / 100) * 100;
-        return whole(
-          [`Round ${number} to the nearest hundred.`, `把 ${number} 取近似到百位。`],
-          answer,
-          [answer === low ? low + 100 : low, Math.round(number / 10) * 10, number],
-          [
-            `${number} lies between ${low} and ${low + 100}. Its tens digit is ${Math.floor(number / 10) % 10}, so it rounds ${answer === low ? "down" : "up"} to ${answer}.`,
-            `${number} 在 ${low} 和 ${low + 100} 之间。十位是 ${Math.floor(number / 10) % 10}，所以向${answer === low ? "下" : "上"}取 ${answer}。`,
-          ],
-        );
+        const tensDigit = Math.floor(number / 10) % 10;
+        const up = answer !== low;
+        const other = up ? low : low + 100;
+        return {
+          ...solved(
+            [`Round ${number} to the nearest hundred.`, `把 ${number} 取近似到百位。`],
+            answer,
+            [
+              [
+                ["Find the two hundreds", "找出两边的整百数"],
+                [`${number} is between ${low} and ${low + 100}.`, `${number} 在 ${low} 和 ${low + 100} 之间。`],
+              ],
+              [
+                ["Look at the tens digit", "看十位"],
+                up
+                  ? [
+                      `The tens digit is ${tensDigit}, which is 5 or more, so round up to ${answer}.`,
+                      `十位是 ${tensDigit}，大于或等于 5，所以向上取 ${answer}。`,
+                    ]
+                  : [
+                      `The tens digit is ${tensDigit}, which is less than 5, so round down to ${answer}.`,
+                      `十位是 ${tensDigit}，小于 5，所以向下取 ${answer}。`,
+                    ],
+              ],
+            ],
+            [
+              `${number} is ${Math.abs(number - answer)} away from ${answer} and ${Math.abs(number - other)} away from ${other}.`,
+              `${number} 离 ${answer} 有 ${Math.abs(number - answer)}，离 ${other} 有 ${Math.abs(number - other)}。`,
+            ],
+            [
+              [
+                other,
+                up ? "That rounds down, but the tens digit is 5 or more." : "That rounds up, but the tens digit is less than 5.",
+                up ? "这是向下取，但十位大于或等于 5。" : "这是向上取，但十位小于 5。",
+              ],
+              [Math.round(number / 10) * 10, "That rounds to the nearest ten, not hundred.", "这是取近似到十位，不是百位。"],
+              [number, "That leaves the number as it is.", "这没有取近似。"],
+            ],
+          ),
+          figure: numberLineFigure(low, low + 100, 10, number),
+        };
       },
+      captioned(
+        numberLineFigure(300, 400, 10, 372),
+        "372 lies between 300 and 400, closer to 400.",
+        "372 在 300 和 400 之间，离 400 更近。",
+      ),
     ),
     earlyPoint(
       "numbers-that-round-to-a-hundred",
       ["Numbers that round to a hundred", "取近似后是某个整百数的数"],
       [
-        "Many different numbers round to the same hundred. The smallest is 50 below it, since halfway rounds up, and the largest is 49 above it. Thinking about this range helps when a question gives the rounded value and asks what the exact value might have been. A rounded number tells only roughly how large something is.",
-        "许多不同的数取近似后得到同一个整百数。最小的比它小 50，因为正好在中间时向上取；最大的比它大 49。在题目给出近似值、问准确值可能是多少时，想一想这个范围很有帮助。近似数只大致说明一个量有多大。",
+        "Which numbers round to 400? The halfway numbers are 350 and 450. 350 rounds up to 400, and 449 rounds down to 400. So the smallest is 350 and the largest is 449.\n\nCheck: 349 rounds to 300, and 450 rounds to 500, so both are outside.\n\n> **Watch out.** 450 is halfway to 500, so it rounds up to 500, not down to 400.",
+        "哪些数取近似后是 400？中间的数是 350 和 450。350 向上取 400，449 向下取 400。所以最小是 350，最大是 449。\n\n检验：349 取近似是 300，450 取近似是 500，两个都不在范围里。\n\n> **注意。** 450 正好在 400 和 500 中间，要向上取 500，不是 400。",
       ],
       (rng) => {
         const hundred = 100 * rng.int(2, 19);
         const asksSmallest = rng.bool();
         const answer = asksSmallest ? hundred - 50 : hundred + 49;
-        return whole(
+        return solved(
           [
             `A whole number rounds to ${hundred} when rounded to the nearest hundred. What is the ${asksSmallest ? "smallest" : "largest"} it could be?`,
             `一个整数取近似到百位后是 ${hundred}。它${asksSmallest ? "最小" : "最大"}可能是多少？`,
           ],
           answer,
-          [
-            asksSmallest ? hundred - 49 : hundred + 50,
-            asksSmallest ? hundred - 100 : hundred + 99,
-            hundred,
-            asksSmallest ? hundred - 51 : hundred + 48,
-          ],
           asksSmallest
             ? [
-                `${hundred - 50} is exactly halfway, and halfway rounds up to ${hundred}. Anything smaller rounds down.`,
-                `${hundred - 50} 正好在中间，向上取得 ${hundred}。再小就向下取了。`,
+                [
+                  ["Find the halfway number", "找出中间的数"],
+                  [`Halfway between ${hundred - 100} and ${hundred}:`, `${hundred - 100} 和 ${hundred} 的中间：`],
+                  [`${hundred} - 50 = ${hundred - 50}`],
+                ],
+                [
+                  ["Decide", "判断"],
+                  [
+                    `Halfway rounds up, so ${hundred - 50} rounds to ${hundred}.`,
+                    `正好在中间的向上取，所以 ${hundred - 50} 取近似是 ${hundred}。`,
+                  ],
+                ],
               ]
             : [
-                `${hundred + 49} has a tens digit of 4, so it rounds down to ${hundred}. The next number, ${hundred + 50}, rounds up.`,
-                `${hundred + 49} 的十位是 4，所以向下取 ${hundred}。下一个数 ${hundred + 50} 就向上取了。`,
+                [
+                  ["Find the halfway number", "找出中间的数"],
+                  [`Halfway between ${hundred} and ${hundred + 100}:`, `${hundred} 和 ${hundred + 100} 的中间：`],
+                  [`${hundred} + 50 = ${hundred + 50}`],
+                ],
+                [
+                  ["Decide", "判断"],
+                  [
+                    `${hundred + 50} rounds up, so the number just before it is the largest: ${hundred + 49}.`,
+                    `${hundred + 50} 要向上取，所以它前面的 ${hundred + 49} 最大。`,
+                  ],
+                ],
               ],
+          asksSmallest
+            ? [
+                `${hundred - 51} has tens digit 4, so it rounds down to ${hundred - 100}.`,
+                `${hundred - 51} 的十位是 4，取近似是 ${hundred - 100}。`,
+              ]
+            : [`${hundred + 49} has tens digit 4, so it rounds down to ${hundred}.`, `${hundred + 49} 的十位是 4，取近似是 ${hundred}。`],
+          [
+            [
+              asksSmallest ? hundred - 49 : hundred + 50,
+              asksSmallest
+                ? `${hundred - 50} also rounds up to ${hundred}, so a smaller one works.`
+                : `${hundred + 50} is halfway, so it rounds up to ${hundred + 100}.`,
+              asksSmallest
+                ? `${hundred - 50} 也向上取 ${hundred}，还有更小的。`
+                : `${hundred + 50} 正好在中间，要向上取 ${hundred + 100}。`,
+            ],
+            [
+              asksSmallest ? hundred - 100 : hundred + 99,
+              `That rounds to ${asksSmallest ? hundred - 100 : hundred + 100}.`,
+              `它取近似是 ${asksSmallest ? hundred - 100 : hundred + 100}。`,
+            ],
+            [
+              hundred,
+              `${hundred} rounds to itself, but it is not the ${asksSmallest ? "smallest" : "largest"}.`,
+              `${hundred} 取近似是它自己，但不是${asksSmallest ? "最小" : "最大"}的。`,
+            ],
+            [
+              asksSmallest ? hundred - 51 : hundred + 48,
+              asksSmallest ? `That rounds down to ${hundred - 100}.` : `${hundred + 49} also rounds to ${hundred}, so a larger one works.`,
+              asksSmallest ? `它取近似是 ${hundred - 100}。` : `${hundred + 49} 也取近似是 ${hundred}，还有更大的。`,
+            ],
+          ],
         );
       },
+      captioned(
+        numberLineFigure(350, 450, 10, 400),
+        "From 350 up to 449, every number rounds to 400.",
+        "从 350 到 449，每个数取近似都是 400。",
+      ),
     ),
+  ],
+  [
+    "A school has 372 children. The newspaper says about 400 children, because 372 is closer to 400 than to 300.\n\nCheck: 372 is 28 from 400 and 72 from 300.\n\nIn this lesson we round a number to the closer hundred, looking at the tens digit.",
+    "一所学校有 372 个孩子。报纸上说大约 400 个，因为 372 离 400 比离 300 近。\n\n检验：372 离 400 有 28，离 300 有 72。\n\n本课我们看十位数字，把一个数取近似到较近的整百数。",
   ],
 );
 
@@ -1285,50 +2150,104 @@ const addingWithinThousand = earlyTopic(
       "adding-with-regrouping",
       ["Adding with regrouping", "进位加法"],
       [
-        "Add numbers one place at a time, starting with the ones. When the digits in a place add up to ten or more, trade ten of them for one in the next place to the left. It is easy to forget this extra one, so write it down at the top of the next column before adding that column.",
-        "按数位一位一位地加，从个位开始。当某一位的数字加起来满十或超过十，就用十个换左边一位的一个。这个多出来的一很容易忘记，所以在加下一列之前，把它写在那一列的上面。",
+        "Find $258 + 167$. Ones: $8 + 7 = 15$, so write 5 and carry 1 ten. Tens: $5 + 6 + 1 = 12$, so write 2 and carry 1 hundred. Hundreds: $2 + 1 + 1 = 4$. The sum is 425.\n\nCheck: $425 - 167 = 258$.\n\n> **Watch out.** Do not forget the carried 1. Without it you get 315.",
+        "求 $258 + 167$。个位：$8 + 7 = 15$，写 5，向十位进 1。十位：$5 + 6 + 1 = 12$，写 2，向百位进 1。百位：$2 + 1 + 1 = 4$。和是 425。\n\n检验：$425 - 167 = 258$。\n\n> **注意。** 别忘了进上来的 1。忘了就会得到 315。",
       ],
       (rng) => {
         const a = rng.int(115, 589);
         const b = rng.int(115, 399);
         const answer = a + b;
-        const noCarry =
-          (Math.floor(a / 100) + Math.floor(b / 100)) * 100 +
-          (((Math.floor(a / 10) % 10) + (Math.floor(b / 10) % 10)) % 10) * 10 +
-          (((a % 10) + (b % 10)) % 10);
-        return whole(
+        const [a2, a1, a0] = [Math.floor(a / 100), Math.floor(a / 10) % 10, a % 10];
+        const [b2, b1, b0] = [Math.floor(b / 100), Math.floor(b / 10) % 10, b % 10];
+        const c0 = a0 + b0 >= 10 ? 1 : 0;
+        const tensSum = a1 + b1 + c0;
+        const c1 = tensSum >= 10 ? 1 : 0;
+        const noCarry = (a2 + b2) * 100 + ((a1 + b1) % 10) * 10 + ((a0 + b0) % 10);
+        return solved(
           [`What is $${a} + ${b}$?`, `$${a} + ${b}$ 等于多少？`],
           answer,
-          [noCarry, answer + 100, answer - 100, answer + 10],
           [
-            `Ones: $${a % 10} + ${b % 10} = ${(a % 10) + (b % 10)}$. Add the tens and then the hundreds in the same way, carrying whenever a place reaches ten. The total is ${answer}.`,
-            `个位：$${a % 10} + ${b % 10} = ${(a % 10) + (b % 10)}$。十位和百位同样地加，满十就进位。总和是 ${answer}。`,
+            [
+              ["Add the ones", "加个位"],
+              c0 ? ["Ten or more, so carry 1 ten:", "满十，向十位进 1："] : ["Less than ten, so nothing to carry:", "不满十，不用进位："],
+              [`${a0} + ${b0} = ${a0 + b0}`],
+            ],
+            [
+              ["Add the tens", "加十位"],
+              c1
+                ? ["Ten or more, so carry 1 hundred:", "满十，向百位进 1："]
+                : ["Less than ten, so nothing to carry:", "不满十，不用进位："],
+              [c0 ? `${a1} + ${b1} + 1 = ${tensSum}` : `${a1} + ${b1} = ${tensSum}`],
+            ],
+            [
+              ["Add the hundreds", "加百位"],
+              ["The hundreds give the sum:", "加上百位，得到和："],
+              [c1 ? `${a2} + ${b2} + 1 = ${a2 + b2 + 1}` : `${a2} + ${b2} = ${a2 + b2}`],
+            ],
           ],
+          [`$${answer} - ${b} = ${a}$.`, `$${answer} - ${b} = ${a}$。`],
+          [
+            [noCarry, "That forgets to carry when a place reaches ten.", "某一位满十时忘了进位。"],
+            [answer + 100, "That carries one hundred too many.", "多进了一个百。"],
+            [answer - 100, "That forgets a carried hundred.", "忘了进上来的一个百。"],
+            [answer + 10, "That carries one ten too many.", "多进了一个十。"],
+          ],
+          blockRowsFigure([
+            [a2, a1, a0],
+            [b2, b1, b0],
+          ]),
         );
       },
+      captioned(
+        blockRowsFigure([
+          [2, 5, 8],
+          [1, 6, 7],
+        ]),
+        "258 above 167. 15 ones trade for 1 ten, 12 tens for 1 hundred: 425.",
+        "258 在上，167 在下。15 个一换成 1 个十，12 个十换成 1 个百：425。",
+      ),
     ),
     earlyPoint(
       "a-missing-addend-within-1000",
       ["A missing addend within 1,000", "1000 以内求未知加数"],
       [
-        "If one addend and the total are known, the other addend is what is still needed. Subtracting the known addend from the total gives this. Another way is to count up from the known addend, first to a nearby ten or hundred, then the rest of the way. Adding your answer to the known addend checks it.",
-        "如果知道一个加数和总和，另一个加数就是还需要的部分。用总和减去已知的加数，就得到它。另一种办法是从已知加数往上数，先到相近的整十或整百，再数剩下的。把答案和已知加数相加来检验。",
+        "Find the box in $245 + \\square = 412$. Count up from 245: 5 to reach 250, 150 more to reach 400, and 12 more to reach 412. That is $5 + 150 + 12 = 167$.\n\nCheck: $245 + 167 = 412$.\n\n> **Watch out.** Do not add 245 and 412. The box is the part still needed, so subtract or count up.",
+        "求 $245 + \\square = 412$ 中的方框。从 245 往上数：加 5 到 250，再加 150 到 400，再加 12 到 412。一共 $5 + 150 + 12 = 167$。\n\n检验：$245 + 167 = 412$。\n\n> **注意。** 不要把 245 和 412 相加。方框是还差的部分，要用减法或往上数。",
       ],
       (rng) => {
         const a = rng.int(120, 480);
         const answer = rng.int(110, 480);
         const total = a + answer;
-        return whole(
+        return solved(
           [`What number goes in the box? $${a} + \\square = ${total}$`, `方框里填几？$${a} + \\square = ${total}$`],
           answer,
-          [total + a, answer + 100, answer - 100, answer + 10],
           [
-            `Subtract: $${total} - ${a} = ${answer}$. Check: $${a} + ${answer} = ${total}$.`,
-            `做减法：$${total} - ${a} = ${answer}$。检验：$${a} + ${answer} = ${total}$。`,
+            [
+              ["Find what is needed", "找还差多少"],
+              [`The box is what takes ${a} up to ${total}.`, `方框是从 ${a} 到 ${total} 还差的部分。`],
+            ],
+            [["Subtract", "做减法"], ["The total minus the known addend:", "总和减去已知加数："], [`${total} - ${a} = ${answer}`]],
           ],
+          [`$${a} + ${answer} = ${total}$.`, `$${a} + ${answer} = ${total}$。`],
+          [
+            [total + a, "That adds the two numbers. The box is what is still needed.", "这是把两个数相加。方框是还差的部分。"],
+            [answer + 100, "That is 100 too many. Check by adding it back.", "多了 100。加回去检验一下。"],
+            [answer - 100, "That is 100 too few. Check by adding it back.", "少了 100。加回去检验一下。"],
+            [answer + 10, "That is 10 too many. A trade was missed.", "多了 10。漏了一次借位。"],
+          ],
+          hopsFigure([a, total], true),
         );
       },
+      captioned(
+        hopsFigure([245, 250, 400, 412]),
+        "Counting up from 245: 5, then 150, then 12 reach 412.",
+        "从 245 往上数：5，再 150，再 12，到 412。",
+      ),
     ),
+  ],
+  [
+    "A library has 258 storybooks and gets 167 more. To find the total, we add hundreds, tens and ones, trading 10 ones for a ten and 10 tens for a hundred: 425 books.\n\nCheck: $425 - 167 = 258$.\n\nIn this lesson we add three-digit numbers place by place, carrying when a place reaches ten.",
+    "图书馆有 258 本故事书，又来了 167 本。求一共多少本，就按百、十、一相加，10 个一换 1 个十，10 个十换 1 个百：425 本。\n\n检验：$425 - 167 = 258$。\n\n本课我们按数位相加三位数，某一位满十时进位。",
   ],
 );
 
@@ -1343,52 +2262,136 @@ const subtractingWithinThousand = earlyTopic(
       "subtracting-with-regrouping",
       ["Subtracting with regrouping", "退位减法"],
       [
-        "Subtract one place at a time, starting with the ones. If the top digit is too small, trade one from the next place to the left for ten in this place. Then subtract as usual. A common mistake is to subtract the smaller digit from the larger whichever is on top, which gives a result that adds back wrongly.",
-        "按数位一位一位地减，从个位开始。如果上面的数字太小，就从左边一位借一个，换成这一位的十个。然后照常减。常见的差错是不管哪个在上，都用大的减小的，这样的结果加回去就不对了。",
+        "Find $332 - 165$. Ones: 2 is less than 5, so trade 1 ten for 10 ones: $12 - 5 = 7$. Tens: 2 is less than 6, so trade 1 hundred: $12 - 6 = 6$. Hundreds: $2 - 1 = 1$. The answer is 167.\n\nCheck: $167 + 165 = 332$.\n\n> **Watch out.** Do not take the small digit from the big one. $5 - 2 = 3$ in the ones place is wrong.",
+        "求 $332 - 165$。个位：2 比 5 小，从十位借 1 个十换成 10 个一：$12 - 5 = 7$。十位：2 比 6 小，从百位借 1：$12 - 6 = 6$。百位：$2 - 1 = 1$。结果是 167。\n\n检验：$167 + 165 = 332$。\n\n> **注意。** 不能用大的数字减小的数字。个位算成 $5 - 2 = 3$ 是错的。",
       ],
       (rng) => {
         const b = rng.int(112, 468);
         const answer = rng.int(112, 468);
         const a = b + answer;
+        const [a2, a1, a0] = [Math.floor(a / 100), Math.floor(a / 10) % 10, a % 10];
+        const [b2, b1, b0] = [Math.floor(b / 100), Math.floor(b / 10) % 10, b % 10];
+        const t0 = a0 < b0 ? 1 : 0;
+        const tensTop = a1 - t0;
+        const t1 = tensTop < b1 ? 1 : 0;
         const wrongDigits = [0, 1, 2].reduce(
           (sum, i) => sum + Math.abs((Math.floor(a / 10 ** i) % 10) - (Math.floor(b / 10 ** i) % 10)) * 10 ** i,
           0,
         );
-        return whole(
+        return solved(
           [`What is $${a} - ${b}$?`, `$${a} - ${b}$ 等于多少？`],
           answer,
-          [wrongDigits, a + b, answer + 100, answer + 10],
           [
-            `Subtract place by place, trading from the next place wherever the top digit is too small. The result is ${answer}, and $${answer} + ${b} = ${a}$ checks it.`,
-            `按数位相减，上面的数字不够减就向前一位借。结果是 ${answer}，$${answer} + ${b} = ${a}$ 可以检验。`,
+            [
+              ["Subtract the ones", "减个位"],
+              t0
+                ? [`${a0} is less than ${b0}, so trade 1 ten for 10 ones:`, `${a0} 比 ${b0} 小，借 1 个十换成 10 个一：`]
+                : ["Enough ones, no trade:", "个位够减："],
+              [`${a0 + 10 * t0} - ${b0} = ${a0 + 10 * t0 - b0}`],
+            ],
+            [
+              ["Subtract the tens", "减十位"],
+              t1
+                ? [`${tensTop} is less than ${b1}, so trade 1 hundred for 10 tens:`, `${tensTop} 比 ${b1} 小，借 1 个百换成 10 个十：`]
+                : ["Enough tens, no trade:", "十位够减："],
+              [`${tensTop + 10 * t1} - ${b1} = ${tensTop + 10 * t1 - b1}`],
+            ],
+            [
+              ["Subtract the hundreds", "减百位"],
+              ["What is left of the hundreds:", "百位剩下的："],
+              [`${a2 - t1} - ${b2} = ${a2 - t1 - b2}`],
+            ],
+          ],
+          [`$${answer} + ${b} = ${a}$.`, `$${answer} + ${b} = ${a}$。`],
+          [
+            [
+              wrongDigits,
+              "That takes the smaller digit from the larger one in each place instead of trading.",
+              "这在每一位都用大的减小的，没有借位。",
+            ],
+            [a + b, "That adds instead of subtracting.", "这是加法，不是减法。"],
+            [answer + 100, "That forgets the hundred that was traded.", "忘了借走的一个百。"],
+            [answer + 10, "That forgets the ten that was traded.", "忘了借走的一个十。"],
           ],
         );
       },
+      captioned(
+        blockRowsFigure([
+          [3, 3, 2],
+          [3, 2, 12],
+          [2, 12, 12],
+        ]),
+        "332, then 1 ten traded for 12 ones, then 1 hundred traded for 12 tens.",
+        "332，先借 1 个十，个位变成 12，再借 1 个百，十位变成 12。",
+      ),
     ),
     earlyPoint(
       "subtracting-across-a-zero",
       ["Subtracting across a zero", "跨过零的减法"],
       [
-        "When the digit in the next place is zero, there is nothing to trade from there. Go one more place to the left: trade one hundred for ten tens, and then one of those tens for ten ones. Taking both steps in order keeps the number the same in value. Rounding the top number and adjusting is another good way.",
-        "当前一位的数字是 0 时，那里没有东西可借。再往左一位：把一个百换成十个十，再把其中一个十换成十个一。按顺序做这两步，数的大小不变。把上面的数取整再调整，也是好办法。",
+        "Find $304 - 128$. The ones need a trade, but there are 0 tens. So first trade 1 hundred for 10 tens, then 1 ten for 10 ones. Now 304 is 2 hundreds, 9 tens and 14 ones. $14 - 8 = 6$, $9 - 2 = 7$, $2 - 1 = 1$. The answer is 176.\n\nCheck: $176 + 128 = 304$.\n\n> **Watch out.** After trading, the 0 tens become 9, not 10, because one ten moved to the ones.",
+        "求 $304 - 128$。个位要借，可是十位是 0。所以先把 1 个百换成 10 个十，再把 1 个十换成 10 个一。现在 304 是 2 个百、9 个十和 14 个一。$14 - 8 = 6$，$9 - 2 = 7$，$2 - 1 = 1$。结果是 176。\n\n检验：$176 + 128 = 304$。\n\n> **注意。** 借完以后，十位的 0 变成 9，不是 10，因为有一个十给了个位。",
       ],
       (rng) => {
         const hundreds = rng.int(2, 9);
         const ones = rng.int(0, 5);
         const a = 100 * hundreds + ones;
-        const b = rng.int(ones + 11, 100 * (hundreds - 1) + 89);
+        const drawn = rng.int(ones + 11, 100 * (hundreds - 1) + 89);
+        const b = Math.floor(drawn / 10) % 10 === 0 ? drawn + 10 : drawn;
         const answer = a - b;
-        return whole(
+        const [b2, b1, b0] = [Math.floor(b / 100), Math.floor(b / 10) % 10, b % 10];
+        const tradeOnes = ones < b0;
+        const tensTop = tradeOnes ? 9 : 10;
+        const onesTop = tradeOnes ? ones + 10 : ones;
+        return solved(
           [`What is $${a} - ${b}$?`, `$${a} - ${b}$ 等于多少？`],
           answer,
-          [answer + 100, answer + 10, answer - 10, a + b],
           [
-            `Trade one hundred for 10 tens, and one of those tens for 10 ones, wherever a digit is too small. The result is ${answer}, and $${answer} + ${b} = ${a}$ checks it.`,
-            `遇到不够减时，把一个百换成 10 个十，再把其中一个十换成 10 个一。结果是 ${answer}，$${answer} + ${b} = ${a}$ 可以检验。`,
+            [
+              ["Trade across the zero", "跨过 0 借位"],
+              tradeOnes
+                ? [
+                    `There are 0 tens, so trade 1 hundred for 10 tens, then 1 ten for 10 ones: ${hundreds - 1} hundreds, 9 tens, ${onesTop} ones.`,
+                    `十位是 0，先把 1 个百换成 10 个十，再把 1 个十换成 10 个一：${hundreds - 1} 个百、9 个十、${onesTop} 个一。`,
+                  ]
+                : [
+                    `The tens need a trade, so trade 1 hundred for 10 tens: ${hundreds - 1} hundreds, 10 tens, ${ones} ones.`,
+                    `十位要借，把 1 个百换成 10 个十：${hundreds - 1} 个百、10 个十、${ones} 个一。`,
+                  ],
+            ],
+            [
+              ["Subtract each place", "逐位相减"],
+              ["Ones, tens, then hundreds:", "个位、十位、百位："],
+              [
+                `${onesTop} - ${b0} = ${onesTop - b0}`,
+                `${tensTop} - ${b1} = ${tensTop - b1}`,
+                `${hundreds - 1} - ${b2} = ${hundreds - 1 - b2}`,
+              ],
+            ],
+          ],
+          [`$${answer} + ${b} = ${a}$.`, `$${answer} + ${b} = ${a}$。`],
+          [
+            [answer + 100, "That forgets the hundred that was traded.", "忘了借走的一个百。"],
+            [answer + 10, "That keeps 10 tens after trading one of them to the ones.", "有一个十已经给了个位，十位却还当 10 个。"],
+            [answer - 10, "That trades one ten too many.", "多借了一个十。"],
+            [a + b, "That adds instead of subtracting.", "这是加法，不是减法。"],
           ],
         );
       },
+      captioned(
+        blockRowsFigure([
+          [3, 0, 4],
+          [2, 10, 4],
+          [2, 9, 14],
+        ]),
+        "304 as 3 hundreds and 4 ones, then 2 hundreds and 10 tens, then 9 tens and 14 ones.",
+        "304 是 3 个百和 4 个一，换成 2 个百和 10 个十，再换成 9 个十和 14 个一。",
+      ),
     ),
+  ],
+  [
+    "A farm has 332 eggs and sells 165. Some places are too small to subtract, so we trade a ten for ones and a hundred for tens. 167 eggs are left.\n\nCheck: $167 + 165 = 332$.\n\nIn this lesson we subtract three-digit numbers place by place, trading from the next place when needed.",
+    "农场有 332 个鸡蛋，卖了 165 个。有的数位不够减，就把一个十换成一，把一个百换成十。还剩 167 个。\n\n检验：$167 + 165 = 332$。\n\n本课我们按数位相减三位数，不够减时向前一位借。",
   ],
 );
 
