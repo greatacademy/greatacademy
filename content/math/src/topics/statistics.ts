@@ -3,7 +3,7 @@ import { t } from "@ga/content";
 import { type Axis, boxPlot, dec, dotPlot, type FiveNumberSummary, Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
-import { choiceProblem, isTerminating, numberProblem, steps } from "../problems.ts";
+import { isTerminating } from "../problems.ts";
 import { type Pair, tableFigure, type Walk } from "./early-grades-more-kit.ts";
 import { chosen, drawn, lesson, type Off, valued, withIntro } from "./grade-6-kit.ts";
 import { lineFigure, tapeFigure } from "./upper-grades-kit.ts";
@@ -72,7 +72,7 @@ export function boxPlotFigure(s: FiveNumberSummary, axis: Axis): Figure {
 }
 
 /** setOptions are the two data sets of a comparison. */
-const setOptions: readonly Text[] = [t("Data set A", "数据集 A"), t("Data set B", "数据集 B")];
+const _setOptions: readonly Text[] = [t("Data set A", "数据集 A"), t("Data set B", "数据集 B")];
 
 /** unitAxis is a number line from 0 to 10 for the small example data sets. */
 const unitAxis: Axis = { min: 0, max: 10, step: 1 };
@@ -669,84 +669,309 @@ export const meanAbsoluteDeviation: TopicDef = withIntro(
   ],
 );
 
-export const comparingDataSets: TopicDef = {
-  id: "comparing-data-sets",
-  title: t("Comparing Data Sets", "比较数据集"),
-  summary: t("Compare two data sets by their centers and by their spreads.", "通过集中趋势和离散程度比较两组数据。"),
-  prerequisites: ["mean-absolute-deviation", "range-and-interquartile-range"],
-  encompasses: [{ topic: "mean-of-a-data-set", weight: 0.6 }],
-  xp: 12,
-  standards: ["CCSS.7.SP.B.3", "CCSS.7.SP.B.4"],
-  knowledgePoints: [
-    {
-      id: "comparing-centers",
-      title: t("Comparing centers", "比较集中趋势"),
-      explanation: t(
-        "The mean and the median describe where a data set is centered. To compare two data sets, compute the same measure for both and subtract.\n\nThe heights (cm) of two seedling trays are A: $12, 15, 9, 14$ and B: $8, 10, 7, 11$. Their means are $12.5$ and $9$, so tray A is $3.5$ cm taller on average.",
-        "平均数和中位数描述一组数据的中心位置。比较两组数据时，对两组计算同一个量再相减。\n\n两盘幼苗的高度（厘米）为 A：$12, 15, 9, 14$，B：$8, 10, 7, 11$。平均数分别是 $12.5$ 和 $9$，所以 A 盘平均高 $3.5$ 厘米。",
-      ),
-      generate(rng) {
-        const n = rng.pick([4, 5]);
-        const useMedian = rng.bool(0.4);
-        for (;;) {
-          const a = data(rng, n, 10, 50);
-          const b = data(rng, n, 5, 45);
-          const [ca, cb] = useMedian ? [median(a), median(b)] : [mean(a), mean(b)];
-          const diff = ca.sub(cb);
-          if (diff.sign() <= 0) continue;
-          const measure = useMedian ? t("median", "中位数") : t("mean", "平均数");
-          return numberProblem({
-            prompt: t(
-              `Data set A is $${list(a)}$ and data set B is $${list(b)}$. How much greater is the ${measure.en} of A than the ${measure.en} of B?`,
-              `数据集 A 为 $${list(a)}$，数据集 B 为 $${list(b)}$。A 的${measure["zh-CN"]}比 B 的${measure["zh-CN"]}大多少？`,
-            ),
-            answer: diff,
-            form: "decimal",
-            wrong: useMedian ? [Q.of(a[Math.floor(n / 2)]! - b[Math.floor(n / 2)]!), ca] : [Q.of(sum(a) - sum(b)), ca],
-            solution: t(
-              `The ${measure.en} of A is $${dec(ca)}$ and the ${measure.en} of B is $${dec(cb)}$:${steps(`${dec(ca)} - ${dec(cb)} = ${dec(diff)}`)}`,
-              `A 的${measure["zh-CN"]}是 $${dec(ca)}$，B 的${measure["zh-CN"]}是 $${dec(cb)}$：${steps(`${dec(ca)} - ${dec(cb)} = ${dec(diff)}`)}`,
-            ),
-          });
-        }
-      },
-    },
-    {
-      id: "comparing-spreads",
-      title: t("Comparing spreads", "比较离散程度"),
-      explanation: t(
-        "The range, the interquartile range and the mean absolute deviation describe how spread out a data set is. A larger value means the data vary more; two data sets can have the same center and very different spreads. Compare the same measure for both sets.",
-        "极差、四分位距和平均绝对偏差描述一组数据的分散程度。数值越大，数据变化越大；两组数据可能中心相同而分散程度差别很大。比较时对两组用同一个量。",
-      ),
-      generate(rng) {
-        for (;;) {
-          const n = rng.pick([7, 8, 9]);
-          const a = data(rng, n, 1, 40);
-          const b = data(rng, n, 1, 40);
-          const iqr = (xs: number[]) => {
-            const [q1, q3] = quartiles(xs);
-            return q3.sub(q1);
-          };
-          const [ia, ib] = [iqr(a), iqr(b)];
-          const c = ia.cmp(ib);
-          if (c === 0) continue;
-          return choiceProblem({
-            prompt: t(
-              `Data set A is $${list(a)}$ and data set B is $${list(b)}$. Which data set has the greater interquartile range?`,
-              `数据集 A 为 $${list(a)}$，数据集 B 为 $${list(b)}$。哪组数据的四分位距更大？`,
-            ),
-            options: setOptions,
-            correct: c > 0 ? 0 : 1,
-            solution: t(
-              `Sorted, A is $${list(sorted(a))}$ with $\\text{IQR} = ${dec(ia)}$, and B is $${list(sorted(b))}$ with $\\text{IQR} = ${dec(ib)}$. So data set ${c > 0 ? "A" : "B"} has the greater interquartile range.`,
-              `排序后，A 为 $${list(sorted(a))}$，$\\text{IQR} = ${dec(ia)}$；B 为 $${list(sorted(b))}$，$\\text{IQR} = ${dec(ib)}$。所以数据集 ${c > 0 ? "A" : "B"} 的四分位距更大。`,
-            ),
-          });
-        }
-      },
-    },
+/** valueBars draws two data sets as bars, each value a piece as long as the value, set A above set B. */
+function valueBars(a: readonly number[], b: readonly number[]): Figure {
+  const bar = (xs: readonly number[], lit: boolean) => ({ pieces: xs.map((v) => ({ size: v, text: `${v}`, lit })) });
+  return tapeFigure(
+    [bar(a, true), bar(b, false)],
+    [
+      `Two bars, each value a piece as long as the value: set A (${list(a)}) above, set B (${list(b)}) below.`,
+      `两个长条，每个数值是一段，长度等于这个数值：上面是 A（${list(a)}），下面是 B（${list(b)}）。`,
+    ],
+  );
+}
+
+/** sortedBars draws two data sets in order as bars of equal pieces, set A above set B. */
+function sortedBars(a: readonly number[], b: readonly number[]): Figure {
+  const bar = (xs: readonly number[], lit: boolean) => ({ pieces: sorted(xs).map((v) => ({ size: 1, text: `${v}`, lit })) });
+  return tapeFigure(
+    [bar(a, true), bar(b, false)],
+    [
+      `Two bars of equal pieces holding the values in order: set A (${list(sorted(a))}) above, set B (${list(sorted(b))}) below.`,
+      `两个由相等小段组成的长条，按从小到大写着数值：上面是 A（${list(sorted(a))}），下面是 B（${list(sorted(b))}）。`,
+    ],
+  );
+}
+
+/** twoGroupsTape draws two groups as bars as long as their sizes, each labeled with its mean. */
+function twoGroupsTape(a: number, meanA: number, b: number, meanB: number): Figure {
+  return tapeFigure(
+    [
+      { total: `${a}`, pieces: [{ size: a, text: `${meanA}`, lit: true }] },
+      { total: `${b}`, pieces: [{ size: b, text: `${meanB}` }] },
+    ],
+    [
+      `Two bars as long as the groups, ${a} and ${b} members, labeled with their means ${meanA} and ${meanB}.`,
+      `两个长条，长度分别是两组的人数 ${a} 和 ${b}，标着各自的平均数 ${meanA} 和 ${meanB}。`,
+    ],
+  );
+}
+
+/** theMeanOfTwoGroupsTogether combines the means of two groups of different sizes into the mean of everyone, the third knowledge point of comparing data sets. */
+export const theMeanOfTwoGroupsTogether = lesson(
+  "the-mean-of-two-groups-together",
+  ["The mean of two groups together", "两组合起来的平均数"],
+  [
+    [
+      "A group of $4$ students averages $90$ points and a group of $6$ averages $80$. Each group’s total is its mean times its size: $4 \\times 90 = 360$ and $6 \\times 80 = 480$. Together, $\\frac{360 + 480}{10} = 84$.",
+      "一组 $4$ 名学生平均 $90$ 分，另一组 $6$ 名平均 $80$ 分。每组的总分是平均数乘人数：$4 \\times 90 = 360$，$6 \\times 80 = 480$。合起来是 $\\frac{360 + 480}{10} = 84$。",
+    ],
+    [
+      "The mean of everyone balances the distances: the $4$ students are $6$ above $84$ and the $6$ students are $4$ below, and $4 \\times 6 = 6 \\times 4$.",
+      "全体的平均数使距离平衡：$4$ 名学生比 $84$ 高 $6$，$6$ 名学生比 $84$ 低 $4$，而 $4 \\times 6 = 6 \\times 4$。",
+    ],
+    [
+      "Averaging the two means, $\\frac{90 + 80}{2} = 85$, is right only when the groups are the same size.",
+      "直接平均两个平均数，$\\frac{90 + 80}{2} = 85$，只有两组人数相同时才对。",
+    ],
   ],
-};
+  (rng) => {
+    const n1 = rng.int(2, 12);
+    const n2 = n1 + rng.int(1, 12);
+    const combined = rng.int(50, 90);
+    // The smaller group's mean stays at 20 or more.
+    const d = rng.int(1, Math.min(6, Math.floor((combined - 20) / n1)));
+    const m1 = combined + d * n2;
+    const m2 = combined - d * n1;
+    const total = n1 * m1 + n2 * m2;
+    const [what, whatZh] = rng.pick([
+      ["minutes of reading a week", "每周阅读分钟数"],
+      ["minutes of exercise a week", "每周锻炼分钟数"],
+      ["pages read in a month", "每月阅读页数"],
+    ] as const);
+    const offs: Off[] = [
+      [
+        Q.of(m1 + m2, 2),
+        "That averages the two means as if the groups were the same size.",
+        "这是把两个平均数直接平均，好像两组人数相同。",
+      ],
+      [total, "That is the total of everyone, not yet divided by the number of members.", "这是全体的总和，还没有除以总人数。"],
+      [Q.of(total, 2), "That divides by the $2$ groups instead of by the members.", "这是除以组数 $2$，而不是总人数。"],
+      [m1 + m2, "That adds the two means.", "这是把两个平均数相加。"],
+    ];
+    return valued(
+      [
+        `A group of $${n1}$ students averages $${m1}$ ${what}, and a group of $${n2}$ students averages $${m2}$. What is the mean for all $${n1 + n2}$ students together?`,
+        `一组 $${n1}$ 名学生的${whatZh}平均是 $${m1}$，另一组 $${n2}$ 名学生平均是 $${m2}$。全部 $${n1 + n2}$ 名学生合起来的平均数是多少？`,
+      ],
+      combined,
+      [
+        [
+          ["Find each total", "求各组的总和"],
+          ["A mean times its group’s size is the group’s total:", "平均数乘人数就是这组的总和："],
+          [`${n1} \\times ${m1} = ${n1 * m1}`, `${n2} \\times ${m2} = ${n2 * m2}`],
+        ],
+        [
+          ["Divide by everyone", "除以总人数"],
+          [`There are $${n1} + ${n2} = ${n1 + n2}$ students:`, `一共 $${n1} + ${n2} = ${n1 + n2}$ 名学生：`],
+          [`\\frac{${n1 * m1} + ${n2 * m2}}{${n1 + n2}} = \\frac{${total}}{${n1 + n2}} = ${combined}`],
+        ],
+      ],
+      [
+        `The distances balance: the $${n1}$ students are $${m1 - combined}$ above $${combined}$ and the $${n2}$ students are $${combined - m2}$ below, and $${n1} \\times ${m1 - combined} = ${n2} \\times ${combined - m2} = ${n1 * (m1 - combined)}$.`,
+        `距离平衡：$${n1}$ 名学生比 $${combined}$ 高 $${m1 - combined}$，$${n2}$ 名学生比它低 $${combined - m2}$，而 $${n1} \\times ${m1 - combined} = ${n2} \\times ${combined - m2} = ${n1 * (m1 - combined)}$。`,
+      ],
+      offs,
+      { figure: twoGroupsTape(n1, m1, n2, m2) },
+    );
+  },
+  twoGroupsTape(4, 90, 6, 80),
+);
+
+/** comparingDataSets compares two data sets by a measure of center and by the interquartile range. */
+export const comparingDataSets: TopicDef = withIntro(
+  {
+    id: "comparing-data-sets",
+    title: t("Comparing Data Sets", "比较数据集"),
+    summary: t("Compare two data sets by their centers and by their spreads.", "通过集中趋势和离散程度比较两组数据。"),
+    prerequisites: ["mean-absolute-deviation", "range-and-interquartile-range"],
+    encompasses: [{ topic: "mean-of-a-data-set", weight: 0.6 }],
+    xp: 12,
+    standards: ["CCSS.7.SP.B.3", "CCSS.7.SP.B.4"],
+    knowledgePoints: [
+      lesson(
+        "comparing-centers",
+        ["Comparing centers", "比较集中趋势"],
+        [
+          [
+            "The mean and the median describe where a data set is centered. To compare two data sets, compute the same measure for both and subtract. The heights (cm) of two seedling trays are A: $12, 15, 9, 14$ and B: $8, 10, 7, 11$. Their means are $\\frac{50}{4} = 12.5$ and $\\frac{36}{4} = 9$, so tray A is $3.5$ cm taller on average.",
+            "平均数和中位数描述一组数据的中心位置。比较两组数据时，对两组计算同一个量再相减。两盘幼苗的高度（厘米）为 A：$12, 15, 9, 14$，B：$8, 10, 7, 11$。平均数分别是 $\\frac{50}{4} = 12.5$ 和 $\\frac{36}{4} = 9$，所以 A 盘平均高 $3.5$ 厘米。",
+          ],
+          [
+            "Both trays have $4$ seedlings, so compare the totals: $50 - 36 = 14$ cm, shared by $4$ seedlings, is $\\frac{14}{4} = 3.5$ cm.",
+            "两盘都有 $4$ 棵，所以可以比较总和：$50 - 36 = 14$ 厘米，分给 $4$ 棵就是 $\\frac{14}{4} = 3.5$ 厘米。",
+          ],
+          [
+            "Compare like with like: the mean of one set against the mean of the other, never a mean against a median.",
+            "要用同一种量比较：一组的平均数对另一组的平均数，不能用平均数对中位数。",
+          ],
+        ],
+        (rng) => {
+          const n = rng.pick([4, 5]);
+          const useMedian = rng.bool(0.4);
+          for (;;) {
+            const a = data(rng, n, 10, 50);
+            const b = data(rng, n, 5, 45);
+            const [ca, cb] = useMedian ? [median(a), median(b)] : [mean(a), mean(b)];
+            const diff = ca.sub(cb);
+            if (diff.sign() <= 0) continue;
+            const [m, mZh] = useMedian ? ["median", "中位数"] : ["mean", "平均数"];
+            const h = Math.floor(n / 2);
+            // The middle of the data as listed, without sorting.
+            const unsorted = (xs: readonly number[]) => (n % 2 === 1 ? Q.of(xs[h]!) : Q.of(xs[h - 1]! + xs[h]!, 2));
+            const offs: Off[] = useMedian
+              ? [
+                  [unsorted(a).sub(unsorted(b)), "That takes the middle values before sorting the data.", "这是没有排序就取了中间的数。"],
+                  [ca, "That is the median of A alone.", "这只是 A 的中位数。"],
+                  [mean(a).sub(mean(b)), "That compares the means, not the medians.", "这比较的是平均数，而不是中位数。"],
+                ]
+              : [
+                  [
+                    sum(a) - sum(b),
+                    `That subtracts the totals without dividing by the $${n}$ values.`,
+                    `这是总和相减，没有除以数据个数 $${n}$。`,
+                  ],
+                  [ca, "That is the mean of A alone.", "这只是 A 的平均数。"],
+                  [median(a).sub(median(b)), "That compares the medians, not the means.", "这比较的是中位数，而不是平均数。"],
+                ];
+            return valued(
+              [
+                `Data set A is $${list(a)}$ and data set B is $${list(b)}$. How much greater is the ${m} of A than the ${m} of B?`,
+                `数据集 A 为 $${list(a)}$，数据集 B 为 $${list(b)}$。A 的${mZh}比 B 的${mZh}大多少？`,
+              ],
+              diff,
+              [
+                useMedian
+                  ? [
+                      ["Find each median", "分别求中位数"],
+                      [
+                        `Sorted, A is $${list(sorted(a))}$ and B is $${list(sorted(b))}$; the middle gives medians $${dec(ca)}$ and $${dec(cb)}$.`,
+                        `排序后，A 为 $${list(sorted(a))}$，B 为 $${list(sorted(b))}$；取中间得中位数 $${dec(ca)}$ 和 $${dec(cb)}$。`,
+                      ],
+                    ]
+                  : [
+                      ["Find each mean", "分别求平均数"],
+                      ["Add the values and divide by their number:", "把数值相加，再除以个数："],
+                      [`\\frac{${sum(a)}}{${n}} = ${dec(ca)}`, `\\frac{${sum(b)}}{${n}} = ${dec(cb)}`],
+                    ],
+                [
+                  ["Subtract", "相减"],
+                  [`The ${m} of A minus the ${m} of B:`, `A 的${mZh}减 B 的${mZh}：`],
+                  [`${dec(ca)} - ${dec(cb)} = ${dec(diff)}`],
+                ],
+              ],
+              useMedian
+                ? [
+                    `Add the difference to B’s median: $${dec(cb)} + ${dec(diff)} = ${dec(ca)}$, and in A’s sorted list ${n % 2 === 1 ? `the middle value is $${dec(ca)}$` : `the two middle values $${sorted(a)[h - 1]}$ and $${sorted(a)[h]}$ average $${dec(ca)}$`}.`,
+                    `把差加到 B 的中位数上：$${dec(cb)} + ${dec(diff)} = ${dec(ca)}$，而 A 排序后${n % 2 === 1 ? `中间的数正是 $${dec(ca)}$` : `中间两个数 $${sorted(a)[h - 1]}$ 和 $${sorted(a)[h]}$ 的平均数正是 $${dec(ca)}$`}。`,
+                  ]
+                : [
+                    `Both sets have $${n}$ values, so compare the totals: $${sum(a)} - ${sum(b)} = ${sum(a) - sum(b)}$, and $\\frac{${sum(a) - sum(b)}}{${n}} = ${dec(diff)}$.`,
+                    `两组都有 $${n}$ 个数，所以可以比较总和：$${sum(a)} - ${sum(b)} = ${sum(a) - sum(b)}$，$\\frac{${sum(a) - sum(b)}}{${n}} = ${dec(diff)}$。`,
+                  ],
+              offs,
+              { form: "decimal", figure: valueBars(a, b) },
+            );
+          }
+        },
+        valueBars([12, 15, 9, 14], [8, 10, 7, 11]),
+      ),
+      lesson(
+        "comparing-spreads",
+        ["Comparing spreads", "比较离散程度"],
+        [
+          [
+            "The range, the interquartile range and the mean absolute deviation describe how spread out a data set is; a larger value means the data vary more. For A: $2, 4, 5, 7, 9, 12, 15$ the quartiles are $4$ and $12$, so $\\text{IQR} = 8$. For B: $6, 7, 8, 9, 10, 11, 12$ they are $7$ and $11$, so $\\text{IQR} = 4$, and A is more spread out.",
+            "极差、四分位距和平均绝对偏差描述一组数据的分散程度；数值越大，数据变化越大。A：$2, 4, 5, 7, 9, 12, 15$ 的四分位数是 $4$ 和 $12$，$\\text{IQR} = 8$。B：$6, 7, 8, 9, 10, 11, 12$ 的四分位数是 $7$ 和 $11$，$\\text{IQR} = 4$，所以 A 更分散。",
+          ],
+          [
+            "In box plots, the IQR is the length of the box: A’s box from $4$ to $12$ is twice as long as B’s from $7$ to $11$.",
+            "在箱线图中，四分位距就是箱子的长度：A 的箱子从 $4$ 到 $12$，是 B 从 $7$ 到 $11$ 的两倍长。",
+          ],
+          [
+            "Sort the data before finding quartiles; the values in the order listed do not give them.",
+            "找四分位数之前要先排序；按原来的顺序是找不出来的。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const n = rng.pick([7, 8, 9]);
+            const a = data(rng, n, 1, 40);
+            const b = data(rng, n, 1, 40);
+            const [a1, a3] = quartiles(a);
+            const [b1, b3] = quartiles(b);
+            const [ia, ib] = [a3.sub(a1), b3.sub(b1)];
+            const c = ia.cmp(ib);
+            if (c === 0) continue;
+            const options: [Pair, Pair, Pair] = [
+              ["Data set A", "数据集 A"],
+              ["Data set B", "数据集 B"],
+              ["They have the same interquartile range", "两组的四分位距相同"],
+            ];
+            const [big, small] = c > 0 ? ["A", "B"] : ["B", "A"];
+            const [ib1, ib2] = c > 0 ? [ia, ib] : [ib, ia];
+            return chosen(
+              rng,
+              [
+                `Data set A is $${list(a)}$ and data set B is $${list(b)}$. Which data set has the greater interquartile range?`,
+                `数据集 A 为 $${list(a)}$，数据集 B 为 $${list(b)}$。哪组数据的四分位距更大？`,
+              ],
+              c > 0 ? options[0] : options[1],
+              [
+                [
+                  c > 0 ? options[1] : options[0],
+                  `Its interquartile range is $${dec(ib2)}$, smaller than ${big}’s $${dec(ib1)}$.`,
+                  `它的四分位距是 $${dec(ib2)}$，比 ${big} 的 $${dec(ib1)}$ 小。`,
+                ],
+                [
+                  options[2],
+                  `The interquartile ranges are $${dec(ia)}$ and $${dec(ib)}$, not equal.`,
+                  `两组的四分位距分别是 $${dec(ia)}$ 和 $${dec(ib)}$，并不相等。`,
+                ],
+              ],
+              [
+                [
+                  ["A’s interquartile range", "A 的四分位距"],
+                  [
+                    `Sorted, A is $${list(sorted(a))}$, with quartiles $${dec(a1)}$ and $${dec(a3)}$:`,
+                    `排序后，A 为 $${list(sorted(a))}$，四分位数是 $${dec(a1)}$ 和 $${dec(a3)}$：`,
+                  ],
+                  [`${dec(a3)} - ${dec(a1)} = ${dec(ia)}`],
+                ],
+                [
+                  ["B’s interquartile range", "B 的四分位距"],
+                  [
+                    `Sorted, B is $${list(sorted(b))}$, with quartiles $${dec(b1)}$ and $${dec(b3)}$:`,
+                    `排序后，B 为 $${list(sorted(b))}$，四分位数是 $${dec(b1)}$ 和 $${dec(b3)}$：`,
+                  ],
+                  [`${dec(b3)} - ${dec(b1)} = ${dec(ib)}`],
+                ],
+              ],
+              [
+                `In box plots, ${big}’s box would run $${dec(ib1)}$ units and ${small}’s only $${dec(ib2)}$, so the middle half of ${big} is more spread out.`,
+                `在箱线图中，${big} 的箱子长 $${dec(ib1)}$，${small} 的只有 $${dec(ib2)}$，所以 ${big} 中间一半的数据更分散。`,
+              ],
+              sortedBars(a, b),
+            );
+          }
+        },
+        sortedBars([2, 4, 5, 7, 9, 12, 15], [6, 7, 8, 9, 10, 11, 12]),
+      ),
+    ],
+  },
+  [
+    "Two seedling trays grow side by side. Tray A’s seedlings are $12, 15, 9, 14$ cm tall and tray B’s are $8, 10, 7, 11$ cm. Tray A’s mean, $12.5$ cm, is $3.5$ cm more than tray B’s $9$ cm.",
+    "两盘幼苗并排生长。A 盘幼苗高 $12, 15, 9, 14$ 厘米，B 盘高 $8, 10, 7, 11$ 厘米。A 盘的平均数 $12.5$ 厘米比 B 盘的 $9$ 厘米多 $3.5$ 厘米。",
+  ],
+  [
+    "The medians tell the same story: $\\frac{12 + 14}{2} = 13$ against $\\frac{8 + 10}{2} = 9$.",
+    "中位数也说明同样的情况：$\\frac{12 + 14}{2} = 13$ 对 $\\frac{8 + 10}{2} = 9$。",
+  ],
+  [
+    "compare two data sets by the same measure of center, and by their interquartile ranges.",
+    "用同一种集中趋势量比较两组数据，并比较它们的四分位距。",
+  ],
+);
 
 export const outliers: TopicDef = withIntro(
   {

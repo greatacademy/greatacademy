@@ -201,6 +201,12 @@ Stage 2: AP Calculus AB and BC, Calculus I and II. Counts are topics of these co
 | `ap-calculus-technology.ts` | 9 | done | |  |
 | other files | 18 | done | | Already taught by earlier stages when checked on 2026-11-23 |
 
+### Grades 1 to 8 and Prealgebra
+
+Stage 3 is done: 1st to 8th Grade Math and Prealgebra are held to the standard as whole courses, and `taughtTopics` is empty. Third knowledge points written outside a helper's files were exported from the topic's own file and wired into the `deeper-*.ts` entry by whoever coordinates.
+
+Stages 4 and 5 are paused and are not to be claimed until they are reopened.
+
 ## Open Gaps
 
 The board tracks whether a course exists, not whether it is finished. Measured on 2026-11-05:

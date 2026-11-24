@@ -6,17 +6,18 @@ import { t } from "@ga/content";
 import { plane, Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
-import { choose, type Pair, tableFigure, type Wrong, whole } from "./early-grades-more-kit.ts";
+import { type Pair, tableFigure, type Wrong } from "./early-grades-more-kit.ts";
 import { chosen, chosenMath, drawn, lesson, valued } from "./grade-6-kit.ts";
 import { cutBoxFigure, rightPrismFigure } from "./grade-7-measurement.ts";
 import { consecutiveAnglesInARatio, theValueThatMakesLinesParallel } from "./grade-8-angles.ts";
 import { theFastestPartOfATrip, theMissingValueInALinearTable } from "./grade-8-functions.ts";
+import { tableFigure as gridFigure } from "./grade-8-kit.ts";
 import { choosingAValueForNoSolution, readingWhatIsLeft, theRectangleInsideFourLines } from "./grade-8-linear-equations.ts";
 import { aCoefficientBeforeTheCubeRoot, aCubeOfASum, theVolumeFromTheSurfaceArea } from "./grade-8-radicals.ts";
 import { aMultipleOfARoot, integersBetweenTwoRoots, theSmallestMultiplierForARationalCubeRoot } from "./grade-8-real-numbers.ts";
 import { howLongItTakes } from "./grade-8-scientific-notation.ts";
-import { frac, fraction, signed, skill } from "./third-kit.ts";
-import { tapeFigure } from "./upper-grades-kit.ts";
+import { frac, signed } from "./third-kit.ts";
+import { lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** money writes a count of cents as dollars. */
 const money = (cents: number) => (cents / 100).toFixed(2);
@@ -890,53 +891,136 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
   "corresponding-angles": [theValueThatMakesLinesParallel],
   "consecutive-angles": [consecutiveAnglesInARatio],
   "comparing-data-sets-using-range-and-quartiles": [
-    skill(
+    lesson(
       "at-least-half-from-the-medians",
       ["At least half, from the medians", "由中位数判断至少一半"],
       [
-        "The median has half of the values at or above it. So at least half of a group is sure to have reached a score when its median is at that score or higher.",
-        "至少一半的数据大于或等于中位数。所以中位数不低于某分数时，这一组一定至少有一半达到该分数。",
+        [
+          "The median has half of the values at or above it. So at least half of a group is sure to have reached a score when its median is at that score or higher. With medians $64$ for A and $57$ for B, at least half of A scored $60$ or more; for B that is not sure.",
+          "至少一半的数据大于或等于中位数。所以中位数不低于某分数时，这一组一定至少有一半达到该分数。A 的中位数是 $64$，B 的是 $57$，所以 A 至少一半的人得分不低于 $60$；B 则不能确定。",
+        ],
+        [
+          "The upper half of A runs from $64$ up, all at least $60$; the upper half of B starts at $57$, below $60$.",
+          "A 的上半部分从 $64$ 开始，都不低于 $60$；B 的上半部分从 $57$ 开始，低于 $60$。",
+        ],
+        [
+          "The quartiles and the maximum do not decide it; only the median splits the data in half.",
+          "四分位数和最大值不能决定这一点；只有中位数把数据分成两半。",
+        ],
       ],
       (rng) => {
         const x = rng.int(40, 80);
-        const medA = x + (rng.bool() ? rng.int(1, 9) : -rng.int(1, 9));
-        const medB = x + (rng.bool() ? rng.int(1, 9) : -rng.int(1, 9));
+        const medA = x + (rng.bool() ? rng.int(0, 9) : -rng.int(1, 9));
+        const medB = x + (rng.bool() ? rng.int(0, 9) : -rng.int(1, 9));
         const five = (m: number) => `${m - rng.int(11, 20)}, ${m - rng.int(3, 10)}, ${m}, ${m + rng.int(3, 10)}, ${m + rng.int(11, 20)}`;
-        const correct = medA >= x && medB >= x ? 0 : medA >= x ? 1 : medB >= x ? 2 : 3;
-        const options: [string, string][] = [
-          ["Both classes", "两个班都可以确定"],
-          ["Class A only", "只有 A 班"],
-          ["Class B only", "只有 B 班"],
-          ["Neither class", "两个班都不能确定"],
+        const sure = [medA >= x, medB >= x] as const;
+        const options: readonly (readonly [Pair, boolean, boolean])[] = [
+          [["Both classes", "两个班都可以确定"], true, true],
+          [["Class A only", "只有 A 班"], true, false],
+          [["Class B only", "只有 B 班"], false, true],
+          [["Neither class", "两个班都不能确定"], false, false],
         ];
-        const a = five(medA);
-        const b = five(medB);
-        return choose(
+        const meds = [medA, medB];
+        const why = (k: 0 | 1): [string, string] => {
+          const c = k === 0 ? "A" : "B";
+          return sure[k]
+            ? [
+                `${c}’s median, $${meds[k]}$, is at least $${x}$, so at least half of ${c} scored $${x}$ or more.`,
+                `${c} 班的中位数 $${meds[k]}$ 不低于 $${x}$，所以 ${c} 班至少一半的人达到了。`,
+              ]
+            : [
+                `${c}’s median, $${meds[k]}$, is below $${x}$, so half of ${c} is not sure to reach it.`,
+                `${c} 班的中位数 $${meds[k]}$ 低于 $${x}$，所以不能确定 ${c} 班有一半达到。`,
+              ];
+        };
+        const right = options.find(([, a, b]) => a === sure[0] && b === sure[1])!;
+        const wrong: Wrong[] = options.filter((o) => o !== right).map(([o, a]) => [o, ...why(a !== sure[0] ? 0 : 1)]);
+        const [a, b] = [five(medA), five(medB)];
+        const lo = Math.floor((Math.min(x, medA, medB) - 2) / 5) * 5;
+        const hi = Math.ceil((Math.max(x, medA, medB) + 2) / 5) * 5;
+        return chosen(
           rng,
           [
             `These are the five-number summaries of two classes. A: $${a}$. B: $${b}$. For which classes can you be sure that at least half of the students scored $${x}$ or more?`,
             `这是两个班的五数概括。A 班：$${a}$。B 班：$${b}$。可以确定哪些班至少一半的学生得分不低于 $${x}$？`,
           ],
-          options[correct]!,
-          options.filter((_, i) => i !== correct),
-          [`The medians are ${medA} and ${medB}. Compare each with ${x}.`, `中位数是 ${medA} 和 ${medB}，分别与 ${x} 比较。`],
+          right[0],
+          wrong,
+          [
+            [
+              ["Read the medians", "读出中位数"],
+              [
+                `The median is the middle number of each summary: $${medA}$ for A and $${medB}$ for B.`,
+                `中位数是五数概括中间的数：A 班 $${medA}$，B 班 $${medB}$。`,
+              ],
+            ],
+            [
+              ["Compare each with the score", "分别与分数比较"],
+              [`${why(0)[0]} ${why(1)[0]}`, `${why(0)[1]}${why(1)[1]}`],
+            ],
+          ],
+          [
+            `Half of each class lies at or above its median: that half is all at least $${x}$ only when the median itself is at least $${x}$.`,
+            `每个班有一半的人不低于中位数：只有中位数本身不低于 $${x}$ 时，这一半人才都不低于 $${x}$。`,
+          ],
+          lineFigure(
+            {
+              lo,
+              hi,
+              step: 1,
+              labels: [lo, hi],
+              marks: [
+                { at: medA, text: "A" },
+                { at: medB, text: "B" },
+                { at: x, text: `${x}`, result: true },
+              ],
+            },
+            [
+              `A number line with the medians of A at ${medA} and B at ${medB}, and the score ${x} marked.`,
+              `数轴上标出 A 的中位数 ${medA}、B 的中位数 ${medB} 和分数 ${x}。`,
+            ],
+          ),
         );
       },
+      lineFigure(
+        {
+          lo: 50,
+          hi: 70,
+          step: 1,
+          labels: [50, 70],
+          marks: [
+            { at: 64, text: "A" },
+            { at: 57, text: "B" },
+            { at: 60, text: "60", result: true },
+          ],
+        },
+        [
+          "A number line with the medians of A at 64 and B at 57, and the score 60 marked.",
+          "数轴上标出 A 的中位数 64、B 的中位数 57 和分数 60。",
+        ],
+      ),
     ),
   ],
   "comparing-data-set-visualizations-using-standard-deviation-and-mad": [
-    skill(
+    lesson(
       "scaling-data-scales-its-spread",
       ["Scaling data scales its spread", "数据放大，离散程度也放大"],
       [
-        "Adding a constant slides a data set along and leaves its spread alone. Multiplying every value by a constant stretches all the gaps, so the spread is multiplied by that constant too.",
-        "加上常数只是平移数据，离散程度不变。每个值乘一个常数，所有间隔都被拉伸，所以离散程度也乘这个常数。",
+        [
+          "Adding a constant slides a data set along and leaves its spread alone. Multiplying every value by a constant stretches all the gaps, so the spread is multiplied by that constant too. A data set with a MAD of $4$ has a MAD of $4 \\times 3 = 12$ after every value is tripled.",
+          "加上常数只是平移数据，离散程度不变。每个值乘一个常数，所有间隔都被拉伸，所以离散程度也乘这个常数。平均绝对偏差为 $4$ 的数据，每个值乘 $3$ 后，平均绝对偏差是 $4 \\times 3 = 12$。",
+        ],
+        [
+          "Try a tiny set: $0, 8$ has mean $4$ and MAD $4$; tripled it is $0, 24$, with mean $12$ and MAD $12$.",
+          "用一组很小的数据试试：$0, 8$ 的平均数是 $4$，平均绝对偏差是 $4$；乘 $3$ 后是 $0, 24$，平均数是 $12$，平均绝对偏差是 $12$。",
+        ],
+        ["Adding a number to every value does not add it to the spread.", "每个值都加一个数，离散程度并不加这个数。"],
       ],
       (rng) => {
         const mad = rng.int(2, 20);
         const k = rng.int(2, 9);
         const mul = rng.bool();
-        return whole(
+        return valued(
           mul
             ? [
                 `A data set has a mean absolute deviation of $${mad}$. Every value is multiplied by $${k}$. What is the new mean absolute deviation?`,
@@ -947,47 +1031,192 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
                 `一组数据的平均绝对偏差是 $${mad}$。每个值都加 $${k}$。新的平均绝对偏差是多少？`,
               ],
           mul ? mad * k : mad,
-          mul ? [mad, mad + k, mad * k + k] : [mad + k, mad * k, k],
           mul
             ? [
-                `All gaps are $${k}$ times as wide, so it is $${mad} \\times ${k} = ${mad * k}$.`,
-                `所有间隔都变成 $${k}$ 倍，所以是 $${mad} \\times ${k} = ${mad * k}$。`,
+                [
+                  ["See what happens to the gaps", "看间隔怎样变化"],
+                  [
+                    `Multiplying by $${k}$ makes every distance from the mean $${k}$ times as long.`,
+                    `乘 $${k}$ 后，每个数据到平均数的距离都变成 $${k}$ 倍。`,
+                  ],
+                ],
+                [
+                  ["Scale the MAD", "放大平均绝对偏差"],
+                  ["So the mean of those distances is multiplied too:", "所以这些距离的平均数也乘这个数："],
+                  [`${mad} \\times ${k} = ${mad * k}`],
+                ],
               ]
             : [
-                `Adding $${k}$ moves every value equally, so the gaps and the deviation stay at $${mad}$.`,
-                `加 $${k}$ 使每个值移动相同的距离，所以间隔和偏差仍是 $${mad}$。`,
+                [
+                  ["See what happens to the gaps", "看间隔怎样变化"],
+                  [
+                    `Adding $${k}$ moves every value and the mean by $${k}$, so each distance from the mean stays the same.`,
+                    `加 $${k}$ 后，每个数据和平均数都移动 $${k}$，所以每个距离都不变。`,
+                  ],
+                ],
+                [
+                  ["Keep the MAD", "平均绝对偏差不变"],
+                  [`The MAD stays $${mad}$.`, `平均绝对偏差仍是 $${mad}$。`],
+                ],
               ],
+          mul
+            ? [
+                `Try a tiny set: $0, ${2 * mad}$ has MAD $${mad}$; times $${k}$ it is $0, ${2 * mad * k}$, with MAD $${mad * k}$.`,
+                `用很小的数据试试：$0, ${2 * mad}$ 的平均绝对偏差是 $${mad}$；乘 $${k}$ 后是 $0, ${2 * mad * k}$，平均绝对偏差是 $${mad * k}$。`,
+              ]
+            : [
+                `Try a tiny set: $0, ${2 * mad}$ has MAD $${mad}$; plus $${k}$ it is $${k}, ${2 * mad + k}$, still $${mad}$ from its mean $${mad + k}$.`,
+                `用很小的数据试试：$0, ${2 * mad}$ 的平均绝对偏差是 $${mad}$；加 $${k}$ 后是 $${k}, ${2 * mad + k}$，到平均数 $${mad + k}$ 的距离仍是 $${mad}$。`,
+              ],
+          mul
+            ? [
+                [mad, "Multiplying stretches the gaps; only adding leaves them alone.", "乘法会拉伸间隔；只有加法才不改变间隔。"],
+                [mad + k, `That adds $${k}$ to the MAD instead of multiplying.`, `这是把 $${k}$ 加到平均绝对偏差上，而不是相乘。`],
+                [mad * k + k, `That multiplies and then also adds $${k}$.`, `这是乘了之后又加了 $${k}$。`],
+              ]
+            : [
+                [mad + k, "Adding moves the values, not the gaps between them.", "加法移动的是数据，不是数据之间的间隔。"],
+                [mad * k, "That multiplies, but the values were only increased.", "这是相乘，但数据只是增加了。"],
+                [k, "That is how far each value moved, not the spread.", "这是每个数据移动的距离，不是离散程度。"],
+              ],
+          {
+            form: "integer",
+            figure: tapeFigure(
+              mul
+                ? [
+                    { total: "1×", pieces: [{ size: 1, text: `${mad}`, lit: true }] },
+                    { total: `${k}×`, pieces: Array.from({ length: k }, () => ({ size: 1, text: "" })) },
+                  ]
+                : [
+                    { total: "+0", pieces: [{ size: mad, text: `${mad}`, lit: true }] },
+                    {
+                      total: `+${k}`,
+                      pieces: [
+                        { size: k, text: `${k}` },
+                        { size: mad, text: "", lit: true },
+                      ],
+                    },
+                  ],
+              mul
+                ? [`A gap of ${mad}, and the same gap stretched to ${k} times its length.`, `长为 ${mad} 的间隔，以及把它拉长到 ${k} 倍。`]
+                : [`A gap of ${mad}, and the same gap after sliding ${k} along.`, `长为 ${mad} 的间隔，以及把它平移 ${k} 后。`],
+            ),
+          },
         );
       },
+      tapeFigure(
+        [
+          { total: "1×", pieces: [{ size: 4, text: "4", lit: true }] },
+          {
+            total: "3×",
+            pieces: [
+              { size: 4, text: "4" },
+              { size: 4, text: "4" },
+              { size: 4, text: "4" },
+            ],
+          },
+        ],
+        ["A gap of 4, and the same gap tripled to 12.", "长为 4 的间隔，以及把它乘 3 变成 12。"],
+      ),
     ),
   ],
   "comparing-data-sets-using-standard-deviation-and-mad": [
-    skill(
+    lesson(
       "how-many-deviations-above-the-mean",
       ["How many deviations above the mean", "比平均数高几个标准差"],
       [
-        "A distance from the mean means more when the data are tightly packed. Dividing that distance by the standard deviation measures it in units of spread, and it can compare different data sets.",
-        "数据越集中，到平均数的距离就越有意义。用这个距离除以标准差，就是以离散程度为单位的度量，可以比较不同的数据组。",
+        [
+          "A distance from the mean means more when the data are tightly packed. Dividing that distance by the standard deviation measures it in units of spread. With a mean of $70$ and a standard deviation of $5$, a score of $85$ is $15$ above the mean, which is $15 \\div 5 = 3$ standard deviations.",
+          "数据越集中，到平均数的距离就越有意义。用这个距离除以标准差，就是以离散程度为单位的度量。平均数是 $70$、标准差是 $5$ 时，$85$ 分比平均数高 $15$ 分，即 $15 \\div 5 = 3$ 个标准差。",
+        ],
+        ["Count up from the mean in steps of $5$: $75, 80, 85$ is three steps.", "从平均数起每次加 $5$：$75, 80, 85$，共三步。"],
+        [
+          "Divide the distance from the mean, not the score itself, by the standard deviation.",
+          "要用到平均数的距离除以标准差，而不是用分数本身去除。",
+        ],
       ],
       (rng) => {
         const mean = rng.int(40, 90);
         const sd = rng.int(2, 12);
         const k = rng.int(1, 5);
-        return whole(
+        const score = mean + k * sd;
+        const stepsUp = Array.from({ length: k }, (_, i) => mean + (i + 1) * sd);
+        return valued(
           [
-            `A test has a mean of $${mean}$ and a standard deviation of $${sd}$. A student scores $${mean + k * sd}$. How many standard deviations above the mean is this?`,
-            `一次测验的平均数是 $${mean}$，标准差是 $${sd}$。一名学生得 $${mean + k * sd}$ 分。这比平均数高几个标准差？`,
+            `A test has a mean of $${mean}$ and a standard deviation of $${sd}$. A student scores $${score}$. How many standard deviations above the mean is this?`,
+            `一次测验的平均数是 $${mean}$，标准差是 $${sd}$。一名学生得 $${score}$ 分。这比平均数高几个标准差？`,
           ],
           k,
-          [k * sd, k + 1, Math.round((mean + k * sd) / sd)],
           [
-            `The score is $${k * sd}$ above the mean, and $${k * sd} \\div ${sd} = ${k}$.`,
-            `比平均数高 $${k * sd}$ 分，$${k * sd} \\div ${sd} = ${k}$。`,
+            [
+              ["Find the distance from the mean", "求到平均数的距离"],
+              ["The score minus the mean:", "分数减平均数："],
+              [`${score} - ${mean} = ${k * sd}`],
+            ],
+            [
+              ["Divide by the standard deviation", "除以标准差"],
+              ["Measure that distance in standard deviations:", "用标准差来量这段距离："],
+              [`${k * sd} \\div ${sd} = ${k}`],
+            ],
           ],
+          [
+            `Count up from $${mean}$ in steps of $${sd}$: $${stepsUp.join(", ")}$ reaches $${score}$ in $${k}$ steps.`,
+            `从 $${mean}$ 起每次加 $${sd}$：$${stepsUp.join(", ")}$，$${k}$ 步到达 $${score}$。`,
+          ],
+          [
+            [k * sd, "That is the distance in points, not in standard deviations.", "这是以分为单位的距离，不是以标准差为单位。"],
+            [k + 1, "That counts the mean itself as a step.", "这把平均数本身也算作了一步。"],
+            [
+              Math.round(score / sd),
+              "That divides the score itself by the standard deviation, not its distance from the mean.",
+              "这是用分数本身除以标准差，而不是用它到平均数的距离。",
+            ],
+          ],
+          {
+            form: "integer",
+            figure: lineFigure(
+              {
+                lo: mean - sd,
+                hi: score + sd,
+                step: sd,
+                labels: [mean, score],
+                marks: [
+                  { at: mean, text: "" },
+                  { at: score, text: "", result: true },
+                ],
+              },
+              [
+                `A number line marked in steps of ${sd}, with the mean ${mean} and the score ${score} marked.`,
+                `每格为 ${sd} 的数轴，标出平均数 ${mean} 和分数 ${score}。`,
+              ],
+            ),
+          },
         );
       },
+      lineFigure(
+        {
+          lo: 65,
+          hi: 90,
+          step: 5,
+          labels: [70, 85],
+          marks: [
+            { at: 70, text: "" },
+            { at: 85, text: "", result: true },
+          ],
+          jumps: [
+            [70, 75],
+            [75, 80],
+            [80, 85],
+          ],
+        },
+        [
+          "A number line in steps of 5 with three jumps from the mean 70 to the score 85.",
+          "每格为 5 的数轴，从平均数 70 跳三步到分数 85。",
+        ],
+      ),
     ),
   ],
+
   "finding-unit-prices": [
     lesson(
       "the-best-buy",
@@ -1469,39 +1698,104 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "biased-and-unbiased-samples": [
-    skill(
+    lesson(
       "scaling-up-a-fair-sample",
       ["Scaling up a fair sample", "按比例推算公平样本"],
       [
-        "A fair sample is expected to have about the same fraction as the whole population. So the sample's fraction multiplied by the population gives an estimate, and it is no more than an estimate.",
-        "公平样本的比例应大致等于总体的比例。所以样本比例乘总体数量得到估计值，这只是估计。",
+        [
+          "A fair sample is expected to have about the same fraction as the whole population. If $12$ of $40$ students in a random sample ride a bike, about $\\frac{12}{40}$ of the $800$ students do: $\\frac{12}{40} \\times 800 = 240$.",
+          "公平样本的比例应大致等于总体的比例。随机抽取的 $40$ 名学生中有 $12$ 人骑自行车，那么 $800$ 名学生中大约也有 $\\frac{12}{40}$ 骑车：$\\frac{12}{40} \\times 800 = 240$。",
+        ],
+        [
+          "The university is $800 \\div 40 = 20$ times the sample, so $12 \\times 20 = 240$ as well.",
+          "全校是样本的 $800 \\div 40 = 20$ 倍，所以 $12 \\times 20 = 240$，结果一样。",
+        ],
+        ["The answer is an estimate for everyone, not the count in the sample.", "答案是对全体的估计，不是样本中的人数。"],
       ],
       (rng) => {
         const sample = rng.pick([20, 40, 60, 80, 100, 200]);
         const k = rng.pick([10, 20, 25, 30, 40, 50, 60]);
         const yes = rng.int(1, 9) * (sample / 20);
-        return whole(
+        const all = sample * k;
+        return valued(
           [
-            `In a random sample of ${sample} of the ${sample * k} students at a university, ${yes} ride a bike. About how many of all the students ride a bike?`,
-            `从一所大学的 ${sample * k} 名学生中随机抽取 ${sample} 人，有 ${yes} 人骑自行车。全校大约有多少学生骑自行车？`,
+            `In a random sample of ${sample} of the ${all} students at a university, ${yes} ride a bike. About how many of all the students ride a bike?`,
+            `从一所大学的 ${all} 名学生中随机抽取 ${sample} 人，有 ${yes} 人骑自行车。全校大约有多少学生骑自行车？`,
           ],
           yes * k,
-          [yes, yes + sample * k - sample, sample * k - yes * k],
           [
-            `The sample is $${frac(1, k)}$ of the students, so multiply ${yes} by ${k}: ${yes * k}.`,
-            `样本是学生总数的 $${frac(1, k)}$，所以 ${yes} 乘 ${k}：${yes * k}。`,
+            [
+              ["Find the fraction in the sample", "求样本中的比例"],
+              [`$${yes}$ of the $${sample}$ students ride a bike:`, `$${sample}$ 人中有 $${yes}$ 人骑车：`],
+              [`\\frac{${yes}}{${sample}}`],
+            ],
+            [
+              ["Take that fraction of everyone", "取全体的同样比例"],
+              ["Multiply by the number of students:", "乘学生总数："],
+              [`\\frac{${yes}}{${sample}} \\times ${all} = ${yes * k}`],
+            ],
           ],
+          [
+            `The university is $${all} \\div ${sample} = ${k}$ times the sample, and $${yes} \\times ${k} = ${yes * k}$.`,
+            `全校是样本的 $${all} \\div ${sample} = ${k}$ 倍，$${yes} \\times ${k} = ${yes * k}$。`,
+          ],
+          [
+            [yes, "That is the count in the sample, not in the whole university.", "这是样本中的人数，不是全校的人数。"],
+            [all - yes * k, "That is how many do not ride a bike.", "这是不骑自行车的人数。"],
+            [
+              yes + all - sample,
+              "That adds the extra students instead of scaling the sample up.",
+              "这是加上了多出来的人数，而不是按比例放大。",
+            ],
+          ],
+          {
+            form: "integer",
+            figure: tapeFigure(
+              [
+                {
+                  total: `${sample}`,
+                  pieces: [
+                    { size: yes, text: `${yes}`, lit: true },
+                    { size: sample - yes, text: `${sample - yes}` },
+                  ],
+                },
+              ],
+              [
+                `A bar of the ${sample} students in the sample, ${yes} of them shaded.`,
+                `样本中 ${sample} 名学生的长条，其中 ${yes} 人涂色。`,
+              ],
+            ),
+          },
         );
       },
+      tapeFigure(
+        [
+          {
+            total: "40",
+            pieces: [
+              { size: 12, text: "12", lit: true },
+              { size: 28, text: "28" },
+            ],
+          },
+        ],
+        ["A bar of the 40 students in the sample, 12 of them shaded.", "样本中 40 名学生的长条，其中 12 人涂色。"],
+      ),
     ),
   ],
   "cumulative-frequency": [
-    skill(
+    lesson(
       "a-frequency-from-the-running-totals",
       ["A frequency from the running totals", "由累积频数求频数"],
       [
-        "Each cumulative frequency is a running total of the frequencies so far. So the frequency of one value is the difference between its running total and the one before it.",
-        "累积频数是到目前为止频数的总和。所以一个值的频数，是它的累积频数减去前一个累积频数。",
+        [
+          "Each cumulative frequency is a running total of the frequencies so far. So the frequency of one value is its running total minus the one before it: with running totals $4, 9, 15$, the value in the middle occurs $9 - 4 = 5$ times.",
+          "累积频数是到目前为止频数的总和。所以一个值的频数，是它的累积频数减去前一个累积频数：累积频数为 $4, 9, 15$ 时，中间那个值出现 $9 - 4 = 5$ 次。",
+        ],
+        ["Add it back on: $4 + 5 = 9$, the next running total.", "再加回去：$4 + 5 = 9$，正是下一个累积频数。"],
+        [
+          "A running total counts every value up to that point, not just the one value.",
+          "累积频数统计的是到这一项为止的所有数据，不只是这一个值。",
+        ],
       ],
       (rng) => {
         const fs = Array.from({ length: 5 }, () => rng.int(2, 15));
@@ -1510,28 +1804,63 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const i = rng.int(1, 4);
         const table = `\\begin{array}{|c|c|c|c|c|c|}\\hline \\text{value} & 0 & 1 & 2 & 3 & 4 \\\\ \\hline \\text{total} & ${totals.join(" & ")} \\\\ \\hline\\end{array}`;
         const zhTable = table.replace("\\text{value}", "\\text{值}").replace("\\text{total}", "\\text{累积}");
-        return whole(
+        return valued(
           [
             `The table gives cumulative frequencies. How many of the values equal ${i}? $$${table}$$`,
             `表格给出累积频数。有多少个数据等于 ${i}？$$${zhTable}$$`,
           ],
           fs[i]!,
-          [totals[i]!, totals[i - 1]!, totals[i]! + totals[i - 1]!],
           [
-            `A frequency is the jump between running totals, so $${totals[i]} - ${totals[i - 1]} = ${fs[i]}$.`,
-            `频数是累积总数的增量，所以 $${totals[i]} - ${totals[i - 1]} = ${fs[i]}$。`,
+            [
+              ["Read two running totals", "读出两个累积频数"],
+              [
+                `Up to ${i} there are $${totals[i]}$ values, and up to ${i - 1} there are $${totals[i - 1]}$.`,
+                `到 ${i} 为止有 $${totals[i]}$ 个数据，到 ${i - 1} 为止有 $${totals[i - 1]}$ 个。`,
+              ],
+            ],
+            [
+              ["Subtract", "相减"],
+              [`The values equal to ${i} are the jump between them:`, `等于 ${i} 的数据就是两者的差：`],
+              [`${totals[i]} - ${totals[i - 1]} = ${fs[i]}`],
+            ],
           ],
+          [
+            `Add it back on: $${totals[i - 1]} + ${fs[i]} = ${totals[i]}$, the running total for ${i}.`,
+            `再加回去：$${totals[i - 1]} + ${fs[i]} = ${totals[i]}$，正是 ${i} 的累积频数。`,
+          ],
+          [
+            [
+              totals[i]!,
+              `That is the running total up to ${i}, which counts the smaller values too.`,
+              `这是到 ${i} 为止的累积频数，把较小的值也算进去了。`,
+            ],
+            [totals[i - 1]!, `That is the running total before ${i}.`, `这是 ${i} 之前的累积频数。`],
+            [
+              totals[i]! + totals[i - 1]!,
+              "That adds the two running totals; take the earlier one away instead.",
+              "这是把两个累积频数相加了；应该减去前一个。",
+            ],
+          ],
+          { form: "integer", figure: tableFigure(["0", "1", "2", "3", "4"], totals) },
         );
       },
+      tableFigure(["0", "1", "2"], [4, 9, 15]),
     ),
   ],
   "calculating-means-from-frequency-tables": [
-    skill(
+    lesson(
       "the-exact-mean-from-a-table",
       ["The exact mean from a table", "由频数表求准确的平均数"],
       [
-        "A frequency table is a short way of writing a long list. So the sum multiplies each value by its frequency, and the count is the sum of the frequencies, not the number of columns.",
-        "频数表是长列表的简写。所以总和是每个值乘它的频数，个数是频数之和，而不是列数。",
+        [
+          "A frequency table is a short way of writing a long list. The sum multiplies each value by its frequency, and the count is the sum of the frequencies. For $x = 1, 2, 3$ with $f = 2, 5, 3$: $\\frac{2 + 10 + 9}{10} = 2.1$.",
+          "频数表是长列表的简写。总和是每个值乘它的频数，个数是频数之和。$x = 1, 2, 3$，$f = 2, 5, 3$ 时：$\\frac{2 + 10 + 9}{10} = 2.1$。",
+        ],
+        [
+          "At the mean the distances balance: $2 \\cdot (1 - 2.1) + 5 \\cdot (2 - 2.1) + 3 \\cdot (3 - 2.1) = -2.2 - 0.5 + 2.7 = 0$.",
+          "在平均数处距离相互抵消：$2 \\cdot (1 - 2.1) + 5 \\cdot (2 - 2.1) + 3 \\cdot (3 - 2.1) = -2.2 - 0.5 + 2.7 = 0$。",
+        ],
+        ["Divide by the sum of the frequencies, not by the number of columns.", "要除以频数之和，而不是列数。"],
       ],
       (rng) => {
         const low = rng.bool();
@@ -1541,35 +1870,73 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const fs = low ? [f + 2 * g, free, f, g] : [f, g, free, 2 * f + g];
         const base = rng.int(0, 5);
         const vals = [base, base + 1, base + 2, base + 3];
-        const total = () => fs.reduce((s, f) => s + f, 0);
-        const sum = () => fs.reduce((s, f, i) => s + f * vals[i]!, 0);
-        const mean = sum() / total();
+        const count = fs.reduce((s, x) => s + x, 0);
+        const total = fs.reduce((s, x, i) => s + x * vals[i]!, 0);
+        const m = total / count;
         const table = `\\begin{array}{|c|c|c|c|c|}\\hline x & ${vals.join(" & ")} \\\\ \\hline f & ${fs.join(" & ")} \\\\ \\hline\\end{array}`;
-        return whole(
+        const pulls = vals.map((v, i) => fs[i]! * (v - m));
+        return valued(
           [`What is the mean of the data in this frequency table? $$${table}$$`, `这个频数表中数据的平均数是多少？$$${table}$$`],
-          mean,
-          [sum(), total(), base + 4 === mean ? mean + 1 : base + 4],
+          m,
           [
-            `The sum is ${sum()} and the count is ${total()}, and $${sum()} \\div ${total()} = ${mean}$.`,
-            `总和是 ${sum()}，个数是 ${total()}，$${sum()} \\div ${total()} = ${mean}$。`,
+            [
+              ["Find the sum and the count", "求总和与个数"],
+              ["Each value times its frequency, and the frequencies added:", "每个值乘它的频数，再把频数相加："],
+              [`${vals.map((v, i) => `${v} \\cdot ${fs[i]}`).join(" + ")} = ${total}`, `${fs.join(" + ")} = ${count}`],
+            ],
+            [["Divide", "相除"], ["The sum over the count:", "总和除以个数："], [`${total} \\div ${count} = ${m}`]],
           ],
+          [
+            `At the mean the distances balance: $${pulls.map((_, i) => `${fs[i]} \\cdot (${vals[i]} - ${m})`).join(" + ")} = ${pulls.map((p) => `(${p})`).join(" + ")} = 0$.`,
+            `在平均数处距离相互抵消：$${pulls.map((_, i) => `${fs[i]} \\cdot (${vals[i]} - ${m})`).join(" + ")} = ${pulls.map((p) => `(${p})`).join(" + ")} = 0$。`,
+          ],
+          [
+            [total, "That is the sum of the values; divide it by how many there are.", "这是数据的总和；还要除以个数。"],
+            [count, "That is how many values there are, not their mean.", "这是数据的个数，不是平均数。"],
+            [
+              Q.of(4 * base + 6, 4),
+              "That averages the four values in the top row and ignores how often each occurs.",
+              "这是只对第一行的四个值求平均，没有考虑各自出现的次数。",
+            ],
+          ],
+          {
+            figure: gridFigure(
+              ["f"],
+              vals.map(String),
+              [fs.map(String)],
+              [`A frequency table of the values ${vals.join(", ")}.`, `值 ${vals.join("、")} 的频数表。`],
+            ),
+          },
         );
       },
+      gridFigure(
+        ["f"],
+        ["1", "2", "3"],
+        [["2", "5", "3"]],
+        ["A frequency table: 1 twice, 2 five times, 3 three times.", "频数表：1 出现 2 次，2 出现 5 次，3 出现 3 次。"],
+      ),
     ),
   ],
   "calculating-medians-from-frequency-tables": [
-    skill(
+    lesson(
       "the-position-of-the-median",
       ["The position of the median", "中位数的位置"],
       [
-        "For an odd count, the median is one value, whose position is half of one more than the count. For an even count, it lies between two values, the lower being at half of the count.",
-        "个数为奇数时，中位数是一个值，位置是个数加 1 的一半。个数为偶数时，它在两个值之间，较前的位置是个数的一半。",
+        [
+          "For an odd count, the median is one value, in position $\\frac{n + 1}{2}$: of $7$ values, the $4$th. For an even count, it lies between two values, the lower at position $\\frac{n}{2}$: of $8$ values, between the $4$th and $5$th.",
+          "个数为奇数时，中位数是一个值，位置是 $\\frac{n + 1}{2}$：$7$ 个数据中的第 $4$ 个。个数为偶数时，它在两个值之间，较前的位置是 $\\frac{n}{2}$：$8$ 个数据中的第 $4$ 和第 $5$ 个之间。",
+        ],
+        [
+          "Count both sides: the $4$th of $7$ has $3$ values before it and $3$ after it.",
+          "数两边：$7$ 个中的第 $4$ 个，前面有 $3$ 个，后面也有 $3$ 个。",
+        ],
+        ["Half of an odd count is not a position; add one before halving.", "奇数的一半不是位置；先加 1 再除以 2。"],
       ],
       (rng) => {
         const n = rng.int(11, 120);
         const odd = n % 2 === 1;
         const answer = odd ? (n + 1) / 2 : n / 2;
-        return whole(
+        return valued(
           odd
             ? [
                 `A frequency table has ${n} values in order. In which position is the median?`,
@@ -1580,95 +1947,195 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
                 `频数表中有 ${n} 个按序排列的数据。中位数在相邻两个位置之间。较前的位置是第几个？`,
               ],
           answer,
-          [answer + 1, answer - 1, n],
+          [
+            [
+              ["Odd or even", "奇数还是偶数"],
+              odd
+                ? [`$${n}$ is odd, so the median is one value.`, `$${n}$ 是奇数，所以中位数是一个值。`]
+                : [`$${n}$ is even, so the median lies between two values.`, `$${n}$ 是偶数，所以中位数在两个值之间。`],
+            ],
+            odd
+              ? [["Find the middle", "找中间位置"], ["Add one and halve:", "加 1 再除以 2："], [`(${n} + 1) \\div 2 = ${answer}`]]
+              : [["Find the lower middle", "找较前的中间位置"], ["Halve the count:", "个数除以 2："], [`${n} \\div 2 = ${answer}`]],
+          ],
           odd
             ? [
-                `With an odd count the middle position is $(${n} + 1) \\div 2 = ${answer}$.`,
-                `个数为奇数时，中间位置是 $(${n} + 1) \\div 2 = ${answer}$。`,
+                `Count both sides: $${answer - 1}$ values come before position $${answer}$ and $${n} - ${answer} = ${n - answer}$ after it.`,
+                `数两边：第 $${answer}$ 个前面有 $${answer - 1}$ 个，后面有 $${n} - ${answer} = ${n - answer}$ 个。`,
               ]
             : [
-                `$${n} \\div 2 = ${answer}$, so the median is between positions ${answer} and ${answer + 1}.`,
-                `$${n} \\div 2 = ${answer}$，所以中位数在第 ${answer} 和第 ${answer + 1} 个之间。`,
+                `Count both sides: positions $1$ to $${answer}$ hold $${answer}$ values and positions $${answer + 1}$ to $${n}$ hold $${n - answer}$.`,
+                `数两边：第 $1$ 到第 $${answer}$ 个共 $${answer}$ 个，第 $${answer + 1}$ 到第 $${n}$ 个共 $${n - answer}$ 个。`,
               ],
+          [
+            [
+              answer + 1,
+              odd
+                ? "That is one place past the middle: more values would come before it than after it."
+                : "That is the upper of the two middle positions.",
+              odd ? "这是中间位置后面一位：它前面的数据会比后面多。" : "这是两个中间位置中较后的一个。",
+            ],
+            [
+              answer - 1,
+              "That is one place before the middle: fewer values would come before it than after it.",
+              "这是中间位置前面一位：它前面的数据会比后面少。",
+            ],
+            [n, "That is the last position, not the middle one.", "这是最后一个位置，不是中间位置。"],
+          ],
+          { form: "integer" },
         );
       },
+      tapeFigure(
+        [{ pieces: Array.from({ length: 7 }, (_, i) => ({ size: 1, text: `${i + 1}`, lit: i === 3 })) }],
+        ["Seven positions in a row, the 4th shaded.", "排成一行的七个位置，第 4 个涂色。"],
+      ),
     ),
   ],
   "calculating-modes-and-medians-from-histograms": [
-    {
-      ...skill(
-        "the-share-of-the-modal-class",
-        ["The share of the modal class", "众数组所占的比例"],
+    lesson(
+      "the-share-of-the-modal-class",
+      ["The share of the modal class", "众数组所占的比例"],
+      [
         [
-          "The tallest bar of a histogram marks the modal class. Its height counts the values in it, so its share of the data is its height divided by the sum of all the heights.",
-          "直方图中最高的条形是众数组。它的高度是这一组的个数，所以它所占的比例是高度除以所有高度之和。",
+          "The tallest bar of a histogram marks the modal class. Its height counts the values in it, so its share is its height divided by the sum of all the heights: bars $3, 10, 5, 2$ give $\\frac{10}{20} = 50\\%$.",
+          "直方图中最高的条形是众数组。它的高度是这一组的个数，所以它所占的比例是高度除以所有高度之和：条形高 $3, 10, 5, 2$ 时是 $\\frac{10}{20} = 50\\%$。",
         ],
-        (rng) => {
-          const total = rng.pick([20, 25, 50, 100]);
-          const max = Math.round(total * rng.pick([0.4, 0.48, 0.52, 0.6]));
-          const rest = total - max;
-          const a = rng.int(1, Math.floor(rest / 3));
-          const b = rng.int(1, Math.floor(rest / 3));
-          const c = rest - a - b;
-          const bars = rng.shuffle([max, a, b, c]);
-          const percent = (max * 100) / total;
-          return whole(
+        [
+          "The other bars hold $3 + 5 + 2 = 10$ of $20$, which is the other $50\\%$.",
+          "其他条形共 $3 + 5 + 2 = 10$ 个，占 $20$ 个中的另外 $50\\%$。",
+        ],
+        ["A bar's height is a count; turn it into a percent of all the values.", "条形的高度是个数；要化成占全部数据的百分比。"],
+      ],
+      (rng) => {
+        const total = rng.pick([20, 25, 50, 100]);
+        const max = Math.round(total * rng.pick([0.4, 0.48, 0.52, 0.6]));
+        const rest = total - max;
+        const a = rng.int(1, Math.floor(rest / 3));
+        const b = rng.int(1, Math.floor(rest / 3));
+        const c = rest - a - b;
+        const bars = rng.shuffle([max, a, b, c]);
+        const percent = (max * 100) / total;
+        return valued(
+          [
+            `A histogram has four bars with heights ${bars.join(", ")}. What percent of the values are in the modal class?`,
+            `直方图有四个条形，高度分别是 ${bars.join("、")}。众数组的数据占百分之几？`,
+          ],
+          percent,
+          [
             [
-              `A histogram has four bars with heights ${bars.join(", ")}. What percent of the values are in the modal class?`,
-              `直方图有四个条形，高度分别是 ${bars.join("、")}。众数组的数据占百分之几？`,
+              ["Find the tallest bar and the total", "找最高的条形和总数"],
+              [
+                "The modal class is the tallest bar; all the bars together count every value:",
+                "众数组是最高的条形；所有条形合起来是全部数据：",
+              ],
+              [`${bars.join(" + ")} = ${total}`],
             ],
-            percent,
-            [max, 25, 100 - percent],
             [
-              `The tallest bar is ${max} of ${total} values, which is ${percent}%.`,
-              `最高的条形是 ${total} 个数据中的 ${max} 个，即 ${percent}%。`,
+              ["Divide", "相除"],
+              [`The tallest bar holds $${max}$ of them:`, `最高的条形有 $${max}$ 个：`],
+              [`\\frac{${max}}{${total}} = ${percent}\\%`],
             ],
-          );
-        },
-      ),
-      figure: gradeDrawings4["calculating-modes-and-medians-from-histograms#the-share-of-the-modal-class"],
-    },
+          ],
+          [
+            `The other bars hold $${rest}$ of $${total}$, which is $${100 - percent}\\%$, and $${percent} + ${100 - percent} = 100$.`,
+            `其他条形共 $${rest}$ 个，占 $${total}$ 个中的 $${100 - percent}\\%$，$${percent} + ${100 - percent} = 100$。`,
+          ],
+          [
+            [max, "That is the height of the bar, a count, not a percent.", "这是条形的高度，是个数，不是百分比。"],
+            [25, "That gives each of the four bars an equal share, but the bars are not equal.", "这是让四个条形平分，但它们并不一样高。"],
+            [100 - percent, "That is the share of the other bars.", "这是其他条形所占的比例。"],
+          ],
+          { percent: true },
+        );
+      },
+      drawn(gradeDrawings4["calculating-modes-and-medians-from-histograms#the-share-of-the-modal-class"]),
+    ),
   ],
   "calculating-means-from-histograms": [
-    {
-      ...skill(
-        "the-greatest-possible-total",
-        ["The greatest possible total", "可能的最大总和"],
+    lesson(
+      "the-greatest-possible-total",
+      ["The greatest possible total", "可能的最大总和"],
+      [
         [
-          "A histogram hides the exact values, so a total can only be estimated. Using each class's upper end gives a total that the data cannot exceed, while the midpoints give a balanced estimate.",
-          "直方图隐藏了准确的值，所以总和只能估计。用每组的上限得到数据不可能超过的总和，用组中值则得到较均衡的估计。",
+          "A histogram hides the exact values, so a total can only be estimated. Putting each value at the top of its class gives a total the data cannot exceed: classes $10$ to $20$ and $20$ to $30$ with frequencies $3$ and $2$ give at most $3 \\cdot 20 + 2 \\cdot 30 = 120$.",
+          "直方图隐藏了准确的值，所以总和只能估计。把每个值都放在所在组的上限，得到数据不可能超过的总和：$10$ 到 $20$、$20$ 到 $30$ 两组的频数为 $3$ 和 $2$ 时，总和最多是 $3 \\cdot 20 + 2 \\cdot 30 = 120$。",
         ],
-        (rng) => {
-          const w = rng.pick([4, 6, 10, 20]);
-          const start = rng.int(1, 5) * w;
-          const fs = [rng.int(1, 9), rng.int(1, 9), rng.int(1, 9)];
-          const ups = [start + w, start + 2 * w, start + 3 * w];
-          const total = fs.reduce((s, f, i) => s + f * ups[i]!, 0);
-          const low = fs.reduce((s, f, i) => s + f * (ups[i]! - w), 0);
-          return whole(
+        [
+          "From the bottoms: $3 \\cdot 10 + 2 \\cdot 20 = 70$, and each of the $5$ values can rise by at most $10$: $70 + 50 = 120$.",
+          "从下限算：$3 \\cdot 10 + 2 \\cdot 20 = 70$，$5$ 个数据每个最多再大 $10$：$70 + 50 = 120$。",
+        ],
+        ["Multiply each top by its own frequency, not by the number of classes.", "每组的上限要乘该组自己的频数，而不是乘组数。"],
+      ],
+      (rng) => {
+        const w = rng.pick([4, 6, 10, 20]);
+        const start = rng.int(1, 5) * w;
+        const fs = [rng.int(1, 9), rng.int(1, 9), rng.int(1, 9)];
+        const ups = [start + w, start + 2 * w, start + 3 * w];
+        const total = fs.reduce((s, f, i) => s + f * ups[i]!, 0);
+        const low = fs.reduce((s, f, i) => s + f * (ups[i]! - w), 0);
+        const n = fs[0]! + fs[1]! + fs[2]!;
+        return valued(
+          [
+            `A histogram has classes ${start} to ${ups[0]}, ${ups[0]} to ${ups[1]} and ${ups[1]} to ${ups[2]}, with frequencies ${fs.join(", ")}. Each class includes its upper end. What is the greatest possible total of the values?`,
+            `直方图的组为 ${start} 到 ${ups[0]}、${ups[0]} 到 ${ups[1]}、${ups[1]} 到 ${ups[2]}，频数为 ${fs.join("、")}，每组都包含其上限。这些数据的总和最大可能是多少？`,
+          ],
+          total,
+          [
             [
-              `A histogram has classes ${start} to ${ups[0]}, ${ups[0]} to ${ups[1]} and ${ups[1]} to ${ups[2]}, with frequencies ${fs.join(", ")}. Each class includes its upper end. What is the greatest possible total of the values?`,
-              `直方图的组为 ${start} 到 ${ups[0]}、${ups[0]} 到 ${ups[1]}、${ups[1]} 到 ${ups[2]}，频数为 ${fs.join("、")}，每组都包含其上限。这些数据的总和最大可能是多少？`,
+              ["Put each value at the top", "每个值取上限"],
+              ["The largest each value can be is the top of its class:", "每个值最大是所在组的上限："],
+              [ups.join(", ")],
             ],
-            total,
-            [low, (total + low) / 2, ups[2]! * 3],
             [
-              `Put every value at the top of its class: $${fs.map((f, i) => `${f} \\times ${ups[i]}`).join(" + ")} = ${total}$.`,
-              `每个值都取所在组的上限：$${fs.map((f, i) => `${f} \\times ${ups[i]}`).join(" + ")} = ${total}$。`,
+              ["Multiply and add", "相乘再相加"],
+              ["Each top times its frequency:", "每个上限乘它的频数："],
+              [`${fs.map((f, i) => `${f} \\cdot ${ups[i]}`).join(" + ")} = ${total}`],
             ],
-          );
-        },
-      ),
-      figure: gradeDrawings4["calculating-means-from-histograms#the-greatest-possible-total"],
-    },
+          ],
+          [
+            `From the bottoms the total is $${low}$, and each of the $${n}$ values can rise by at most $${w}$: $${low} + ${n} \\cdot ${w} = ${total}$.`,
+            `从下限算总和是 $${low}$，$${n}$ 个数据每个最多再大 $${w}$：$${low} + ${n} \\cdot ${w} = ${total}$。`,
+          ],
+          [
+            [
+              low,
+              "That puts every value at the bottom of its class, which gives the least possible total.",
+              "这是把每个值都放在下限，得到的是最小可能的总和。",
+            ],
+            [
+              (total + low) / 2,
+              "That is the estimate from the midpoints, not the greatest possible total.",
+              "这是用组中值的估计，不是最大可能的总和。",
+            ],
+            [
+              ups[2]! * 3,
+              "That multiplies the top of the last class by the number of classes, not by the frequencies.",
+              "这是用最后一组的上限乘组数，而不是乘频数。",
+            ],
+          ],
+          { form: "integer" },
+        );
+      },
+      drawn(gradeDrawings4["calculating-means-from-histograms#the-greatest-possible-total"]),
+    ),
   ],
   "comparing-medians": [
-    skill(
+    lesson(
       "the-median-after-one-more-value",
       ["The median after one more value", "再加一个数后的中位数"],
       [
-        "A median depends only on position, so a new top value shifts the middle by half a place. However large the new value is, the median moves to the point between two old neighbors.",
-        "中位数只取决于位置，所以新的最大值使中间位置移动半格。不管新值多大，中位数都移到两个原有相邻值之间。",
+        [
+          "A median depends only on position, so a new top value shifts the middle by half a place. Scores $4, 6, 9, 13, 15$ have median $9$; add $90$ and the middle two of six are $9$ and $13$, so the median is $11$.",
+          "中位数只取决于位置，所以新的最大值使中间位置移动半格。分数 $4, 6, 9, 13, 15$ 的中位数是 $9$；加入 $90$ 后，六个数中间的两个是 $9$ 和 $13$，中位数是 $11$。",
+        ],
+        [
+          "Count around it: $4, 6, 9$ lie below $11$ and $13, 15, 90$ above, three on each side.",
+          "数两边：$4, 6, 9$ 在 $11$ 下面，$13, 15, 90$ 在上面，两边各三个。",
+        ],
+        [
+          "However large the new value is, the median moves only to the point between two old neighbors.",
+          "不管新值多大，中位数都只移到两个原有相邻值之间。",
+        ],
       ],
       (rng) => {
         const a = rng.int(2, 20);
@@ -1678,128 +2145,328 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const e = d + rng.int(1, 6);
         const big = e + rng.int(5, 200);
         const answer = (c + d) / 2;
-        return whole(
+        return valued(
           [
             `A class of 5 has quiz scores ${a}, ${b}, ${c}, ${d}, ${e}. A student who scored ${big} joins. What is the median now?`,
             `一个 5 人小组的分数是 ${a}、${b}、${c}、${d}、${e}。一名得 ${big} 分的学生加入。现在的中位数是多少？`,
           ],
           answer,
-          [c, d, Math.round((a + b + c + d + e + big) / 6)],
           [
-            `The middle two of the 6 values are ${c} and ${d}, whose mean is ${answer}.`,
-            `6 个值中间的两个是 ${c} 和 ${d}，它们的平均数是 ${answer}。`,
+            [
+              ["Order the six scores", "把六个分数排序"],
+              [`$${big}$ goes at the top:`, `$${big}$ 排在最后：`],
+              [`${a}, ${b}, ${c}, ${d}, ${e}, ${big}`],
+            ],
+            [
+              ["Average the middle two", "求中间两个的平均数"],
+              ["The 3rd and 4th scores:", "第 3 和第 4 个分数："],
+              [`\\frac{${c} + ${d}}{2} = ${answer}`],
+            ],
           ],
+          [
+            `Count around it: $${a}, ${b}, ${c}$ lie below $${answer}$ and $${d}, ${e}, ${big}$ above, three on each side.`,
+            `数两边：$${a}, ${b}, ${c}$ 在 $${answer}$ 下面，$${d}, ${e}, ${big}$ 在上面，两边各三个。`,
+          ],
+          [
+            [
+              c,
+              "That is the old median; with six scores the middle falls between two of them.",
+              "这是原来的中位数；六个分数的中间在两个分数之间。",
+            ],
+            [d, "That takes only the upper of the two middle scores.", "这只取了中间两个分数中较大的一个。"],
+            [
+              Math.round((a + b + c + d + e + big) / 6),
+              "That is about the mean, which the big score pulls up; the median depends only on order.",
+              "这接近平均数，被那个高分拉高了；中位数只取决于顺序。",
+            ],
+          ],
+          { figure: tableFigure(["1", "2", "3", "4", "5", "6"], [a, b, c, d, e, big]) },
         );
       },
+      tableFigure(["1", "2", "3", "4", "5", "6"], [4, 6, 9, 13, 15, 90]),
     ),
   ],
   "comparing-modes": [
-    skill(
+    lesson(
       "how-many-modes",
       ["How many modes", "有几个众数"],
       [
-        "A mode is a value that occurs most often, and several values can tie for that. So count how often each value occurs, and every value that reaches the highest count is a mode.",
-        "众数是出现次数最多的值，可能有几个值并列。所以数每个值出现几次，达到最高次数的值都是众数。",
+        [
+          "A mode is a value that occurs most often, and several values can tie for that. Count how often each value occurs; every value that reaches the highest count is a mode. In $3, 5, 3, 8, 5, 3, 5, 7$, both $3$ and $5$ occur three times, so there are two modes.",
+          "众数是出现次数最多的值，可能有几个值并列。数每个值出现几次，达到最高次数的值都是众数。在 $3, 5, 3, 8, 5, 3, 5, 7$ 中，$3$ 和 $5$ 都出现三次，所以有两个众数。",
+        ],
+        [
+          "Add up the counts: $3 + 3 + 1 + 1 = 8$, every value counted once.",
+          "把次数加起来：$3 + 3 + 1 + 1 = 8$，每个数据都正好数了一次。",
+        ],
+        ["A value that occurs once is not a mode when others occur more often.", "其他值出现得更多时，只出现一次的值不是众数。"],
       ],
       (rng) => {
         const count = rng.int(1, 3);
         const values = rng.sample([3, 5, 7, 8, 11, 12, 14, 16, 18, 21, 23, 25], count + 2) as number[];
         const list = rng.shuffle(values.flatMap((v, i) => (i < count ? [v, v, v] : [v])));
-        return whole(
-          [`How many modes does this data set have? ${list.join(", ")}`, `这组数据有几个众数？${list.join("、")}`],
+        const modes = values.slice(0, count).sort((x, y) => x - y);
+        return valued(
+          [`How many modes does this data set have? $${list.join(", ")}$`, `这组数据有几个众数？$${list.join(", ")}$`],
           count,
-          [count + 2, list.length, count + 1],
           [
-            `${count === 1 ? "One value occurs" : `${count} values occur`} three times, which is the highest count.`,
-            `有 ${count} 个值出现三次，是最高的次数。`,
+            [
+              ["Count each value", "数每个值"],
+              ["Tally how often each value occurs; the highest count is $3$.", "数每个值出现几次；最高的次数是 $3$。"],
+            ],
+            [
+              ["Count the values that reach it", "数达到最高次数的值"],
+              [`${modes.join(", ")} ${count === 1 ? "occurs" : "occur"} three times.`, `${modes.join("、")} 出现三次。`],
+            ],
           ],
+          [
+            `Add up the counts: $${count} \\cdot 3 + 2 \\cdot 1 = ${list.length}$, every value counted once.`,
+            `把次数加起来：$${count} \\cdot 3 + 2 \\cdot 1 = ${list.length}$，每个数据都正好数了一次。`,
+          ],
+          [
+            [
+              count + 2,
+              "That counts every different value, not just the most frequent ones.",
+              "这是数了所有不同的值，而不只是出现最多的。",
+            ],
+            [list.length, "That counts all the values in the list.", "这是数了列表中所有的数据。"],
+            [
+              count + 1,
+              "That counts one value too many: the values seen only once are not modes.",
+              "这多数了一个：只出现一次的值不是众数。",
+            ],
+          ],
+          { form: "integer" },
         );
       },
+      tableFigure(["3", "5", "7", "8"], [3, 3, 1, 1]),
     ),
   ],
   "assessing-visual-overlap-of-data-distributions": [
-    skill(
+    lesson(
       "the-width-of-the-overlap",
       ["The width of the overlap", "重叠部分的宽度"],
       [
-        "Two ranges overlap from the greater of their low ends to the smaller of their high ends. If that start is beyond that end, the data sets do not overlap at all.",
-        "两个范围从较大的下端重叠到较小的上端。如果这个起点超过了终点，两组数据就完全不重叠。",
+        [
+          "Two ranges overlap from the greater of their low ends to the smaller of their high ends. Scores from $20$ to $45$ and from $38$ to $60$ overlap from $38$ to $45$, a width of $7$. If that start is beyond that end, there is no overlap.",
+          "两个范围从较大的下端重叠到较小的上端。$20$ 到 $45$ 与 $38$ 到 $60$ 的分数从 $38$ 重叠到 $45$，宽度是 $7$。如果起点超过了终点，就没有重叠。",
+        ],
+        [
+          "The two widths are $25$ and $22$, and together they cover $20$ to $60$, a width of $40$: $25 + 22 - 40 = 7$ is counted twice.",
+          "两个宽度是 $25$ 和 $22$，合起来覆盖 $20$ 到 $60$，宽 $40$：$25 + 22 - 40 = 7$ 被算了两次。",
+        ],
+        ["The overlap ends at the smaller high end, not the larger one.", "重叠在较小的上端结束，不是较大的上端。"],
       ],
       (rng) => {
         const a = rng.int(10, 50);
         const w = rng.int(8, 25);
         const b = a + rng.int(1, w + 6);
         const v = rng.int(8, 25);
-        const answer = Math.max(0, Math.min(a + w, b + v) - b);
-        return whole(
+        const end = Math.min(a + w, b + v);
+        const top = Math.max(a + w, b + v);
+        const answer = Math.max(0, end - b);
+        const lo = Math.floor(a / 5) * 5;
+        const hi = Math.ceil(top / 5) * 5;
+        return valued(
           [
             `The scores of class A run from ${a} to ${a + w}, and those of class B run from ${b} to ${b + v}. How wide is the part of the scale where the two ranges overlap?`,
             `A 班的分数从 ${a} 到 ${a + w}，B 班的分数从 ${b} 到 ${b + v}。两个范围重叠部分的宽度是多少？`,
           ],
           answer,
-          [w, v, b - a],
           [
-            `The overlap starts at ${b} and ends at ${Math.min(a + w, b + v)}${answer === 0 ? ", so there is none" : `, a width of ${answer}`}.`,
-            `重叠从 ${b} 开始，到 ${Math.min(a + w, b + v)} 结束${answer === 0 ? "，所以没有重叠" : `，宽度是 ${answer}`}。`,
+            [
+              ["Find where the overlap starts and ends", "找重叠的起点和终点"],
+              [
+                `It starts at the greater low end, $${b}$, and ends at the smaller high end, $${end}$.`,
+                `它从较大的下端 $${b}$ 开始，到较小的上端 $${end}$ 结束。`,
+              ],
+            ],
+            answer > 0
+              ? [["Subtract", "相减"], ["The width is the end minus the start:", "宽度是终点减起点："], [`${end} - ${b} = ${answer}`]]
+              : [
+                  ["Compare", "比较"],
+                  [
+                    `The start $${b}$ is beyond the end $${end}$, so there is no overlap: the width is $0$.`,
+                    `起点 $${b}$ 超过了终点 $${end}$，所以没有重叠：宽度是 $0$。`,
+                  ],
+                ],
           ],
+          answer > 0
+            ? [
+                `The widths are $${w}$ and $${v}$, and together they cover $${a}$ to $${top}$, a width of $${top - a}$: $${w} + ${v} - ${top - a} = ${answer}$ is counted twice.`,
+                `两个宽度是 $${w}$ 和 $${v}$，合起来覆盖 $${a}$ 到 $${top}$，宽 $${top - a}$：$${w} + ${v} - ${top - a} = ${answer}$ 被算了两次。`,
+              ]
+            : [
+                `Class A ends at $${a + w}$ and class B starts at $${b}$, a gap of $${b - a - w}$, so the ranges never meet.`,
+                `A 班到 $${a + w}$ 结束，B 班从 $${b}$ 开始，中间隔着 $${b - a - w}$，所以两个范围不相交。`,
+              ],
+          [
+            [w, "That is the width of class A’s range.", "这是 A 班分数范围的宽度。"],
+            [v, "That is the width of class B’s range.", "这是 B 班分数范围的宽度。"],
+            [b - a, "That is the distance between the two low ends.", "这是两个下端之间的距离。"],
+          ],
+          {
+            form: "integer",
+            figure: lineFigure(
+              {
+                lo,
+                hi,
+                step: 5,
+                labels: [lo, hi],
+                marks: [
+                  { at: a, text: "A" },
+                  { at: b, text: "B" },
+                ],
+                jumps: [
+                  [a, a + w],
+                  [b, b + v],
+                ],
+              },
+              [
+                `Two ranges on a number line: A from ${a} to ${a + w}, B from ${b} to ${b + v}.`,
+                `数轴上的两个范围：A 从 ${a} 到 ${a + w}，B 从 ${b} 到 ${b + v}。`,
+              ],
+            ),
+          },
         );
       },
+      lineFigure(
+        {
+          lo: 20,
+          hi: 60,
+          step: 5,
+          labels: [20, 40, 60],
+          marks: [
+            { at: 20, text: "A" },
+            { at: 38, text: "B" },
+          ],
+          jumps: [
+            [20, 45],
+            [38, 60],
+          ],
+        },
+        ["Two ranges on a number line: A from 20 to 45, B from 38 to 60.", "数轴上的两个范围：A 从 20 到 45，B 从 38 到 60。"],
+      ),
     ),
   ],
   "experimental-probability-for-compound-events": [
-    skill(
+    lesson(
       "at-least-one-from-the-counts",
       ["At least one, from the counts", "由次数求“至少一个”"],
       [
-        "At least one head fails only when both coins are tails. So take the count of the double-tails outcome away from all the trials, and the rest are the successes.",
-        "只有两枚都反面时才没有“至少一个正面”。所以用总次数减去两个反面的次数，剩下的就是成功次数。",
+        [
+          "At least one head fails only when both coins are tails. If $40$ tosses of two coins give two heads $9$ times, one head $21$ times and no heads $10$ times, at least one head came up $9 + 21 = 30$ times: $\\frac{30}{40} = \\frac{3}{4}$.",
+          "只有两枚都反面时才没有“至少一个正面”。两枚硬币抛 $40$ 次，两个正面 $9$ 次，一个正面 $21$ 次，没有正面 $10$ 次，至少一个正面出现了 $9 + 21 = 30$ 次：$\\frac{30}{40} = \\frac{3}{4}$。",
+        ],
+        [
+          "Take the failures away instead: $1 - \\frac{10}{40} = \\frac{30}{40}$.",
+          "也可以减去失败的情况：$1 - \\frac{10}{40} = \\frac{30}{40}$。",
+        ],
+        [
+          "Use the counts from the trials, not the $\\frac{3}{4}$ that theory predicts.",
+          "要用实验中的次数，而不是理论上的 $\\frac{3}{4}$。",
+        ],
       ],
       (rng) => {
         const hh = rng.int(5, 30);
         const mix = rng.int(10, 50);
         const tt = rng.int(5, 30);
         const n = hh + mix + tt;
-        return fraction(
+        const p = Q.of(hh + mix, n);
+        return valued(
           [
             `Two coins were tossed together ${n} times, giving two heads ${hh} times, one head ${mix} times and no heads ${tt} times. What is the experimental probability of at least one head?`,
             `两枚硬币一起抛了 ${n} 次，两个正面 ${hh} 次，一个正面 ${mix} 次，没有正面 ${tt} 次。至少一个正面的实验概率是多少？`,
           ],
-          Q.of(hh + mix, n),
-          [Q.of(hh, n), Q.of(mix, n), Q.of(3, 4)],
+          p,
           [
-            `$${hh} + ${mix} = ${hh + mix}$ of the ${n} tosses had a head, so it is $${frac(hh + mix, n)}$.`,
-            `${n} 次中有 $${hh} + ${mix} = ${hh + mix}$ 次出现正面，所以是 $${frac(hh + mix, n)}$。`,
+            [["Count the successes", "数成功的次数"], ["Two heads or one head:", "两个正面或一个正面："], [`${hh} + ${mix} = ${hh + mix}`]],
+            [
+              ["Divide by the trials", "除以总次数"],
+              [`Out of $${n}$ tosses:`, `共 $${n}$ 次：`],
+              [`\\frac{${hh + mix}}{${n}} = ${p.toLatex()}`],
+            ],
           ],
+          [
+            `Take the failures away: $1 - \\frac{${tt}}{${n}} = \\frac{${n - tt}}{${n}} = ${p.toLatex()}$.`,
+            `减去失败的情况：$1 - \\frac{${tt}}{${n}} = \\frac{${n - tt}}{${n}} = ${p.toLatex()}$。`,
+          ],
+          [
+            [Q.of(hh, n), "That counts only the tosses with two heads.", "这只数了两个正面的次数。"],
+            [Q.of(mix, n), "That counts only the tosses with one head.", "这只数了一个正面的次数。"],
+            [Q.of(3, 4), "That is the theoretical probability, not the one from these counts.", "这是理论概率，不是由这些次数得到的概率。"],
+          ],
+          { form: "fraction", figure: tableFigure(["2 H", "1 H", "0 H"], [hh, mix, tt]) },
         );
       },
+      tableFigure(["2 H", "1 H", "0 H"], [9, 21, 10]),
     ),
   ],
   "simulating-compound-events": [
-    skill(
+    lesson(
       "how-many-numbers-stand-for-success",
       ["How many numbers stand for success", "用多少个数代表成功"],
       [
-        "A simulation matches a probability by giving success the same share of the random numbers. So the share of numbers that stand for success must equal the probability being simulated.",
-        "模拟时要让代表成功的随机数所占份额等于概率。所以代表成功的数的比例，必须等于要模拟的概率。",
+        [
+          "A simulation matches a probability by giving success the same share of the random numbers. To simulate $30\\%$ with whole numbers from $1$ to $20$, let $30\\%$ of the $20$ numbers, which is $6$ of them, stand for success.",
+          "模拟时要让代表成功的随机数所占份额等于概率。用 $1$ 到 $20$ 的整数模拟 $30\\%$ 的概率时，让 $20$ 个数中的 $30\\%$，即 $6$ 个数代表成功。",
+        ],
+        ["Check the share: $\\frac{6}{20} = \\frac{3}{10} = 30\\%$.", "检验比例：$\\frac{6}{20} = \\frac{3}{10} = 30\\%$。"],
+        [
+          "The percent is not itself the count: $30\\%$ of $20$ numbers is $6$, not $30$.",
+          "百分数本身不是个数：$20$ 个数的 $30\\%$ 是 $6$，不是 $30$。",
+        ],
       ],
       (rng) => {
         const n = rng.pick([10, 20, 50, 100, 200]);
         const p = rng.int(1, 9) * 10;
-        return whole(
+        const k = (n * p) / 100;
+        return valued(
           [
             `A simulation uses random whole numbers from 1 to ${n}, and an event has a probability of ${p}%. How many of the numbers should stand for the event happening?`,
             `模拟时用 1 到 ${n} 的随机整数，事件的概率是 ${p}%。应该用多少个数代表事件发生？`,
           ],
-          (n * p) / 100,
-          [p, n - (n * p) / 100, p / 10 === (n * p) / 100 ? p / 10 + 1 : p / 10],
+          k,
           [
-            `Each number is equally likely, so use $${p}\\%$ of the ${n} numbers, which is ${(n * p) / 100}.`,
-            `每个数的可能性相同，所以取 ${n} 个数的 $${p}\\%$，即 ${(n * p) / 100} 个。`,
+            [
+              ["Write the percent as a fraction", "把百分数写成分数"],
+              ["Each number is equally likely, so success needs this share:", "每个数的可能性相同，所以成功要占这个份额："],
+              [`${p}\\% = \\frac{${p}}{100}`],
+            ],
+            [
+              ["Take that share of the numbers", "取这些数中的这一份"],
+              [`There are $${n}$ numbers:`, `共有 $${n}$ 个数：`],
+              [`\\frac{${p}}{100} \\times ${n} = ${k}`],
+            ],
           ],
+          [
+            `Check the share: $\\frac{${k}}{${n}} = ${Q.of(k, n).toLatex()} = ${p}\\%$.`,
+            `检验比例：$\\frac{${k}}{${n}} = ${Q.of(k, n).toLatex()} = ${p}\\%$。`,
+          ],
+          [
+            [p, `That uses the percent as the count, but there are only ${n} numbers.`, `这是把百分数当成了个数，但只有 ${n} 个数。`],
+            [n - k, "That is how many numbers stand for the event not happening.", "这是代表事件不发生的数的个数。"],
+            [p / 10, "That is the count out of 10 numbers, not out of all of them.", "这是 10 个数中的个数，不是全部数中的个数。"],
+          ],
+          {
+            form: "integer",
+            figure: tapeFigure(
+              [{ total: `1–${n}`, pieces: Array.from({ length: 10 }, (_, i) => ({ size: 1, text: "", lit: i < p / 10 })) }],
+              [
+                `A bar of the numbers 1 to ${n} in ten equal parts, ${p / 10} of them shaded.`,
+                `1 到 ${n} 的数画成十等份的长条，其中 ${p / 10} 份涂色。`,
+              ],
+            ),
+          },
         );
       },
+      tapeFigure(
+        [{ total: "1–20", pieces: Array.from({ length: 10 }, (_, i) => ({ size: 1, text: "", lit: i < 3 })) }],
+        ["A bar of the numbers 1 to 20 in ten equal parts, 3 of them shaded.", "1 到 20 的数画成十等份的长条，其中 3 份涂色。"],
+      ),
     ),
   ],
+
   "classifying-square-roots-and-cube-roots-as-rational-or-irrational": [theSmallestMultiplierForARationalCubeRoot],
   "comparing-and-ordering-real-numbers": [integersBetweenTwoRoots],
   "estimating-expressions-with-irrational-numbers": [aMultipleOfARoot],

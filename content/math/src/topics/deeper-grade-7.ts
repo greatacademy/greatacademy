@@ -1498,34 +1498,90 @@ const cubesInARow = lesson(
   cubeRowFigure(3, "2 cm"),
 );
 
-const combinedMean: KnowledgePointDef = {
-  id: "the-mean-of-two-groups-together",
-  title: t("The mean of two groups together", "两组合并后的平均数"),
-  explanation: t(
-    "To combine two groups, the two means cannot simply be averaged, unless the groups have equal size. A mean times its count gives the total for that group. Add the two totals, and then divide by the total number of members. The combined mean always lies between the two group means and closer to that of the larger group. This also shows why a small group with an extreme mean does not move the overall mean very much.",
-    "合并两组时，除非两组人数相同，否则不能简单地对两个平均数求平均。平均数乘以个数得到这组的总和。把两个总和相加，再除以总人数。合并后的平均数总在两组平均数之间，并且更接近人数较多的一组。这也说明了为什么平均数极端的小组不会使总平均数变动太多。",
-  ),
-  generate(rng) {
-    const a = rng.int(5, 30);
-    const b = rng.int(5, 30);
-    const meanA = rng.int(50, 95);
-    const meanB = rng.pick([...Array(46).keys()].map((i) => 50 + i).filter((v) => v !== meanA));
-    const total = a * meanA + b * meanB;
-    const answer = Q.of(total, a + b);
-    return numberProblem({
-      prompt: t(
-        `A class of $${a}$ students has a mean score of $${meanA}$, and a class of $${b}$ students has a mean score of $${meanB}$. What is the mean score of all the students together? Give an exact value.`,
-        `一个 $${a}$ 人的班平均分是 $${meanA}$，一个 $${b}$ 人的班平均分是 $${meanB}$。所有学生的平均分是多少？写出准确值。`,
-      ),
-      answer,
-      wrong: [Q.of(meanA + meanB, 2), Q.of(total), Q.of(meanA + meanB), answer.add(Q.of(1)), Q.of(total, 2)],
-      solution: t(
-        `The totals are $${a} \\times ${meanA} = ${a * meanA}$ and $${b} \\times ${meanB} = ${b * meanB}$. Together, $${total} \\div ${a + b} = ${answer.toLatex()}$.`,
-        `两个总和是 $${a} \\times ${meanA} = ${a * meanA}$ 和 $${b} \\times ${meanB} = ${b * meanB}$。合起来 $${total} \\div ${a + b} = ${answer.toLatex()}$。`,
-      ),
-    });
+/** groupsTape draws two groups as bars as long as their sizes, each labeled with its mean. */
+function groupsTape(a: number, meanA: number, b: number, meanB: number): ReturnType<typeof tapeFigure> {
+  return tapeFigure(
+    [
+      { total: `${a}`, pieces: [{ size: a, text: `${meanA}`, lit: true }] },
+      { total: `${b}`, pieces: [{ size: b, text: `${meanB}` }] },
+    ],
+    [
+      `Two bars as long as the groups, ${a} and ${b} members, labeled with their means ${meanA} and ${meanB}.`,
+      `两个长条，长度分别是两组的人数 ${a} 和 ${b}，标着各自的平均数 ${meanA} 和 ${meanB}。`,
+    ],
+  );
+}
+
+const combinedMean = lesson(
+  "the-mean-of-two-groups-together",
+  ["The mean of two groups together", "两组合并后的平均数"],
+  [
+    [
+      "A class of $20$ students has a mean score of $80$ and a class of $5$ has a mean of $60$. A mean times its count gives the group’s total: $20 \\times 80 = 1600$ and $5 \\times 60 = 300$. Together, $\\frac{1600 + 300}{25} = 76$, closer to the mean of the larger class.",
+      "一个 $20$ 人的班平均分是 $80$，一个 $5$ 人的班平均分是 $60$。平均数乘个数得到这组的总和：$20 \\times 80 = 1600$，$5 \\times 60 = 300$。合起来是 $\\frac{1600 + 300}{25} = 76$，更接近人数较多的班的平均数。",
+    ],
+    [
+      "Start from the larger class’s mean and move toward the other by its share of the students: $80 - 20 \\times \\frac{5}{25} = 76$.",
+      "从大班的平均数出发，按另一班所占的人数比例向它移动：$80 - 20 \\times \\frac{5}{25} = 76$。",
+    ],
+    [
+      "Averaging the two means, $\\frac{80 + 60}{2} = 70$, treats $5$ students as if they were $20$.",
+      "直接对两个平均数求平均，$\\frac{80 + 60}{2} = 70$，相当于把 $5$ 个人当成了 $20$ 个人。",
+    ],
+  ],
+  (rng) => {
+    for (;;) {
+      const a = rng.int(5, 30);
+      const b = rng.int(5, 30);
+      if (a === b) continue;
+      const meanA = rng.int(50, 95);
+      const meanB = rng.int(50, 95);
+      if (meanA === meanB) continue;
+      const total = a * meanA + b * meanB;
+      const answer = Q.of(total, a + b);
+      const gap = meanB - meanA;
+      return valued(
+        [
+          `A class of $${a}$ students has a mean score of $${meanA}$, and a class of $${b}$ students has a mean score of $${meanB}$. What is the mean score of all the students together? Give an exact value.`,
+          `一个 $${a}$ 人的班平均分是 $${meanA}$，一个 $${b}$ 人的班平均分是 $${meanB}$。所有学生的平均分是多少？写出准确值。`,
+        ],
+        answer,
+        [
+          [
+            ["Find each total", "求各班的总分"],
+            ["A mean times its count is the group’s total:", "平均数乘人数就是这班的总分："],
+            [`${a} \\times ${meanA} = ${a * meanA}`, `${b} \\times ${meanB} = ${b * meanB}`],
+          ],
+          [
+            ["Divide by everyone", "除以总人数"],
+            [`There are $${a} + ${b} = ${a + b}$ students:`, `一共 $${a} + ${b} = ${a + b}$ 名学生：`],
+            [`\\frac{${a * meanA} + ${b * meanB}}{${a + b}} = ${answer.toLatex()}`],
+          ],
+        ],
+        [
+          `Start from the first mean and move toward the second by the second class’s share: $${meanA} ${gap > 0 ? "+" : "-"} ${Math.abs(gap)} \\times \\frac{${b}}{${a + b}} = ${answer.toLatex()}$.`,
+          `从第一个平均数出发，按第二个班所占的比例向第二个平均数移动：$${meanA} ${gap > 0 ? "+" : "-"} ${Math.abs(gap)} \\times \\frac{${b}}{${a + b}} = ${answer.toLatex()}$。`,
+        ],
+        [
+          [
+            Q.of(meanA + meanB, 2),
+            "That averages the two means as if the classes were the same size.",
+            "这是把两个平均数直接平均，好像两个班人数相同。",
+          ],
+          [
+            total,
+            "That is the total of all the scores, not yet divided by the number of students.",
+            "这是所有分数的总和，还没有除以学生人数。",
+          ],
+          [Q.of(total, 2), "That divides by the $2$ classes instead of by the students.", "这是除以班级数 $2$，而不是学生人数。"],
+          [meanA + meanB, "That adds the two means.", "这是把两个平均数相加。"],
+        ],
+        { figure: groupsTape(a, meanA, b, meanB) },
+      );
+    }
   },
-};
+  groupsTape(20, 80, 5, 60),
+);
 
 const addToReachProbability: KnowledgePointDef = {
   id: "adding-items-to-reach-a-probability",

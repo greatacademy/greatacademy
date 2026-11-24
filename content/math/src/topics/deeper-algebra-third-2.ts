@@ -19,6 +19,7 @@ import {
   thePowerOfAPowerOfANegative,
   theSignFromACountOfNegatives,
 } from "./integers.ts";
+import { theMeanOfTwoGroupsTogether } from "./statistics.ts";
 import { frac, integer, signed, skill } from "./third-kit.ts";
 
 /** deeperAlgebraThird2Points holds these third knowledge points, by topic. */
@@ -219,36 +220,7 @@ Say $(2, 3)$ solves $x + y = 5$ and $kx - y = 7$. Putting $x = 2$ and $y = 3$ in
   "area-of-parallelograms": [twoHeightsOfOneParallelogram],
   "area-of-trapezoids": [theMissingBaseOfATrapezoid],
   "composite-shapes": [subtractingAHole],
-  "comparing-data-sets": [
-    skill(
-      "the-mean-of-two-groups-together",
-      ["The mean of two groups together", "两组合起来的平均数"],
-      [
-        "The mean of two groups together is not the average of their means unless they are equal in size. Use each group's total, which is its mean times its size, and divide by everyone.",
-        "两组合起来的平均数，只有人数相等时才是两个平均数的平均。要用每组的总和，即平均数乘人数，再除以总人数。",
-      ],
-      (rng) => {
-        const n1 = rng.int(2, 12);
-        const n2 = n1 + rng.int(1, 12);
-        const combined = rng.int(50, 90);
-        const d = rng.int(1, 6);
-        const m1 = combined + d * n2;
-        const m2 = combined - d * n1;
-        return whole(
-          [
-            `A group of $${n1}$ has a mean score of $${m1}$, and a group of $${n2}$ has a mean score of $${m2}$. What is the mean score of all $${n1 + n2}$ together?`,
-            `$${n1}$ 人一组的平均分是 $${m1}$，$${n2}$ 人一组的平均分是 $${m2}$。这 $${n1 + n2}$ 人合起来的平均分是多少？`,
-          ],
-          combined,
-          [Math.round((m1 + m2) / 2) === combined ? combined + 1 : Math.round((m1 + m2) / 2), m1, m2],
-          [
-            `The total is $${n1} \\times ${m1} + ${n2} \\times ${m2} = ${n1 * m1 + n2 * m2}$, and dividing by $${n1 + n2}$ gives $${combined}$.`,
-            `总分是 $${n1} \\times ${m1} + ${n2} \\times ${m2} = ${n1 * m1 + n2 * m2}$，除以 $${n1 + n2}$ 得 $${combined}$。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "comparing-data-sets": [theMeanOfTwoGroupsTogether],
   "modeling-with-one-step-inequalities": [
     skill(
       "rounding-the-right-way-in-a-story",
