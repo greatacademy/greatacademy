@@ -14,93 +14,127 @@ const pets = vocabularyTopic({
     "Pets: hamsters, parrots, turtles, puppies and kittens; cages and feeding; tails, fur, wings and beaks.",
     "宠物：仓鼠、鹦鹉、乌龟、小狗和小猫；笼子和喂食；尾巴、皮毛、翅膀和喙。",
   ),
+  intro: t(
+    'Mia has a **hamster** that runs on its wheel all night, and her brother has a **parrot** that says "Hi!" from its **cage**. These words help you talk about the animals people keep and how to look after them.',
+    "米娅养了一只整夜在跑轮上跑的 **hamster**（仓鼠），她哥哥养了一只在 **cage**（笼子）里说“Hi!”的 **parrot**（鹦鹉）。这些词帮你谈论人们养的动物以及怎样照顾它们。",
+  ),
   prerequisites: ["pre-a1-words-animals"],
   words: [
     word(
       "pet pets",
       "an animal that lives with you at home",
       "宠物",
-      "Do you have a {pet}? — Yes, a cat.|cage beak | Dogs and cats are popular {pets}.|cages tails | My {pet} rabbit is called Snowy.|cage fur",
-      "cage puppy",
+      "A {pet} can be a dog, a cat, a bird or even a fish. | Dogs and cats are the most popular {pets} in our town.|kittens cages | My {pet} rabbit lives with us in the house.",
+      "kitten cage",
     ),
     word(
       "hamster hamsters",
       "a small furry animal like a big mouse, kept as a pet",
       "仓鼠",
-      "My {hamster} sleeps all day and runs on its wheel at night.|parrot turtle | A {hamster} keeps food in its cheeks.|parrot turtle | We keep our {hamsters} in a cage in my room.|parrots turtles",
-      "parrot kitten",
+      "My {hamster} sleeps all day and runs on its wheel at night. | A {hamster} keeps food in its soft, furry cheeks. | Our two {hamsters} dig tunnels in their bedding, like little mice.|parrots turtles",
+      "parrot turtle",
     ),
     word(
       "parrot parrots",
       "a bird with bright feathers that can learn to say words",
       "鹦鹉",
-      'Our {parrot} can say "Hello" and "Good morning".|hamster turtle | {Parrots} have green, red and blue feathers.|Hamsters Turtles | The {parrot} flew out of its cage.|hamster turtle',
+      'Our {parrot} can say "Hello" and "Good morning". | {Parrots} have bright green, red and blue feathers.|Hamsters Turtles | The {parrot} opened its wings and flew out of its cage.',
       "hamster turtle",
     ),
     word(
       "turtle turtles",
       "an animal with a hard shell that moves slowly",
       "乌龟；海龟",
-      "A {turtle} carries its house on its back.|parrot kitten | Sea {turtles} lay their eggs on the beach.|parrots kittens | My {turtle} is fifty years old!|kitten puppy",
+      "A {turtle} carries its hard shell on its back. | Sea {turtles} swim to the beach to lay their eggs.|hamsters parrots | My {turtle} moves so slowly that it takes ten minutes to cross the garden.",
       "hamster parrot",
     ),
     word(
       "puppy puppies",
       "a young dog",
       "小狗",
-      "Our dog had five {puppies}.|kittens parrots | The {puppy} chewed my shoe!|kitten parrot | A {puppy} needs a lot of sleep and a lot of play.|parrot turtle",
-      "kitten pet",
+      "Our dog had five {puppies}.|kittens parrots | The {puppy} chewed my shoe and then barked at it! | A {puppy} grows into a big dog in about a year.",
+      "kitten parrot",
     ),
     word(
       "kitten kittens",
       "a young cat",
       "小猫",
-      "The {kitten} is playing with a ball of wool.|puppy parrot | Our cat had three {kittens}: two black and one white.|puppies parrots | Be gentle with the {kitten}. She's very small.|puppy turtle",
-      "puppy pet",
+      "The {kitten} is purring as it plays with a ball of wool. | Our cat had three {kittens}: two black and one white.|puppies parrots | The little {kitten} will grow into a big cat.",
+      "puppy parrot",
     ),
     word(
       "cage cages",
       "a box made of metal bars to keep a bird or an animal in",
       "笼子",
-      "The bird is singing in its {cage}.|tail beak | Close the {cage} door, or the hamster will run away!|tail fur | Lions in old zoos lived in small {cages}.|tails beaks",
+      "The bird sings in its {cage} behind the metal bars. | Lock the {cage}, or the hamster will squeeze out between the bars! | Lions in old zoos lived in small {cages} made of iron bars.|pets tails",
       "pet tail",
     ),
     word(
       "feed feeds fed feeding",
       "to give food to a person or an animal",
       "喂养",
-      "Don't forget to {feed} the fish.|cage tail | I {fed} the cat at seven o'clock.|caged tailed | Please don't {feed} the animals at the zoo.|cage tail",
-      "eat give",
+      "Please don't {feed} the animals at the zoo; the keepers give them the right food. | I {fed} the cat a bowl of fish at seven o'clock.|ate washed | We {feed} our dog meat and rice twice a day.",
+      "eat wash",
     ),
     word(
       "tail tails",
       "the long part at the back of an animal's body",
       "尾巴",
-      "The dog is wagging its {tail}.|beak fur | Monkeys can hold branches with their {tails}.|beaks wings | A mouse has a long thin {tail}.|beak wing",
+      "The happy dog is wagging its {tail}. | Monkeys can hold branches with their long {tails}.|wings beaks | A mouse has a long, thin {tail} at the back of its body.",
       "wing beak",
     ),
     word(
       "fur",
       "the soft hair on an animal's body",
       "毛皮",
-      "My cat has soft white {fur}.|beak wing | In winter, the fox grows thick {fur}.|wings beaks | The dog's {fur} is wet from the rain.|beak cage",
-      "tail wing",
+      "My cat has soft white {fur} that I love to stroke. | In winter, the fox grows thick {fur} to keep warm. | The dog's {fur} is wet and muddy from the rain.",
+      "feathers shell",
     ),
     word(
       "wing wings",
       "one of the two parts a bird or an insect uses to fly",
       "翅膀",
-      "The bird opened its {wings} and flew away.|tails cages | A butterfly has beautiful {wings}.|tails cages | The chicken hurt its {wing}, so it couldn't fly.|tail cage",
+      "The bird opened its {wings} and flew away.|tails beaks | A butterfly has four bright {wings}.|tails beaks | The chicken hurt its {wing}, so it couldn't fly.",
       "tail beak",
     ),
     word(
       "beak beaks",
       "the hard pointed mouth of a bird",
       "喙；鸟嘴",
-      "The bird picked up the seed with its {beak}.|tail fur | Parrots have strong curved {beaks}.|tails cages | A duck's {beak} is flat and yellow.|tail fur",
-      "wing tail",
+      "The bird picked up the seed with its {beak}. | Parrots crack nuts with their strong, curved {beaks}.|tails wings | A duck's {beak} is flat and yellow, and it opens wide to eat.",
+      "tail wing",
     ),
   ],
+  teaching: {
+    watchOut: {
+      complete: t(
+        "Some of these words name a whole animal (*pet*, *hamster*), some a thing for it (*cage*) and some a part of its body (*tail*, *beak*). First ask whether the gap needs an animal, a thing or a body part.",
+        "这些词有的指整只动物（*pet*、*hamster*），有的指给动物用的东西（*cage*），有的指身体部位（*tail*、*beak*）。先判断空格需要的是动物、东西还是身体部位。",
+      ),
+      meaning: t(
+        "*Puppy* and *kitten* are both young animals: check whether the meaning says a young dog or a young cat.",
+        "*puppy* 和 *kitten* 都是幼小的动物：看清释义说的是小狗还是小猫。",
+      ),
+      spell: t(
+        "Many pet words double a letter in the middle: par**r**ot, pup**p**y, kit**t**en.",
+        "不少宠物词中间有双写字母：par**r**ot、pup**p**y、kit**t**en。",
+      ),
+    },
+    notes: `
+      pet|animals of many kinds, from dogs to fish;the dogs and cats people like to keep;a rabbit living with a family in the house|a pet is any animal you keep at home; a kitten is only a young cat|pet 指在家里养的任何动物；kitten 只是小猫|kitten=kitten is a young cat, one kind of animal, not any animal you keep at home=kitten 是小猫，只是一种动物，不是在家养的任何动物;cage=cage is a box of metal bars an animal is kept in, not the animal itself=cage 是关动物的金属笼子，不是动物本身|pet|the short e, as in *wet*|短元音 e，和 *wet* 一样
+      hamster|a small pet running on its wheel at night;a furry pet keeping food in its cheeks;two little pets digging tunnels like mice|a hamster is a furry pet like a big mouse; a parrot is a bird|hamster 是像大老鼠的毛茸茸宠物；parrot 是鸟|parrot=parrot is a bird with feathers and wings, not a small furry animal like a mouse=parrot 是长羽毛和翅膀的鸟，不是像老鼠的毛茸茸小动物;turtle=turtle has a hard shell and no fur, not a small furry animal like a mouse=turtle 有硬壳、没有毛，不是像老鼠的毛茸茸小动物|ham · ster|the ending -ster, not -sta|结尾是 -ster，不是 -sta
+      parrot|a pet that can say words;bright green, red and blue feathers;a pet flying out of its cage|a parrot is a bird that can learn words; a hamster is furry and cannot fly|parrot 是会学说话的鸟；hamster 毛茸茸，不会飞|hamster=hamster is a small furry animal with no feathers or wings, not a bird=hamster 是没有羽毛和翅膀的毛茸茸小动物，不是鸟;turtle=turtle is a slow animal with a hard shell, not a bird with bright feathers=turtle 是背着硬壳慢慢爬的动物，不是羽毛鲜艳的鸟|par · rot|the double r in the middle|中间双写 r
+      turtle|an animal carrying a hard shell on its back;sea animals laying their eggs on the beach;a pet so slow it takes ten minutes to cross a garden|a turtle has a hard shell and moves slowly; a hamster is soft and quick|turtle 有硬壳、爬得慢；hamster 毛软、动作快|hamster=hamster is a quick, furry little animal with no shell=hamster 是动作敏捷、毛茸茸的小动物，没有硬壳;parrot=parrot is a bird that flies, not a slow animal with a shell=parrot 是会飞的鸟，不是背着壳慢慢爬的动物|tur · tle|the ending -tle, said like -tl|结尾是 -tle，读作 -tl
+      puppy|the five babies of a dog;a young animal that chewed a shoe and barked;a young animal that grows into a big dog|a puppy is a young dog; a kitten is a young cat|puppy 是小狗；kitten 是小猫|kitten=kitten is a young cat, so it never barks or grows into a dog=kitten 是小猫，不会汪汪叫，也不会长成狗;parrot=parrot is a bird, not a young dog=parrot 是鸟，不是小狗|pup · py|the double p, and y changing to -ies for more than one|双写 p，复数要把 y 变成 -ies
+      kitten|a young animal purring as it plays with wool;the three babies of a cat;a young animal that grows into a big cat|a kitten is a young cat; a puppy is a young dog|kitten 是小猫；puppy 是小狗|puppy=puppy is a young dog, so it barks and grows into a dog, not a cat=puppy 是小狗，会汪汪叫，长大是狗，不是猫;parrot=parrot is a bird with feathers, not a baby cat=parrot 是长羽毛的鸟，不是小猫|kit · ten|the double t in the middle|中间双写 t
+      cage|a bird singing behind metal bars;a box a hamster could squeeze out of between the bars;small boxes of iron bars for lions|a cage is the box of bars; a pet is the animal kept in it|cage 是金属笼子；pet 是关在里面的动物|pet=pet is the animal you keep, not the box of bars it is kept in=pet 是养的动物，不是关它的笼子;tail=tail is a part of an animal's body, not a box an animal lives in=tail 是动物身体的一部分，不是动物住的笼子|cage|the silent e at the end that makes a say its name|词尾不发音的 e 让 a 读字母本音
+      feed|keepers giving zoo animals the right food;a bowl of fish given to a cat;meat and rice given to a dog twice a day|you feed an animal; the animal eats the food|人 feed（喂）动物，动物自己 eat（吃）|eat/ate=eat means to put food in your own mouth, not to give food to an animal=eat 是自己把食物吃进嘴里，不是给动物喂食;wash/washed=wash means to clean something with water, not to give it food=wash 是用水清洗，不是给食物|feed|the double e, and the past *fed*, not *feeded*|两个 e；过去式是 *fed*，不是 *feeded*
+      tail|a happy dog wagging something;the long parts monkeys hold branches with;the long, thin part at the back of a mouse|a tail is the long part at the back; a wing is for flying|tail 是身后长长的部分；wing 用来飞|wing=wing is the part a bird or an insect flies with, not the long part at the back of an animal=wing 是鸟或昆虫用来飞的部分，不是动物身后长长的部分;beak=beak is a bird's hard mouth at the front, not a part at the back of the body=beak 是鸟前面坚硬的嘴，不是身体后面的部分|tail|ai for the long a sound, not *tale*, the word for a story|ai 发长 a 音，别写成表示故事的 *tale*
+      fur|soft white hair on a cat;thick winter hair that keeps a fox warm;a dog's hair wet and muddy from rain|fur is soft hair on animals; feathers cover birds|fur 是动物身上的软毛；feathers 是鸟的羽毛|feathers=feathers are what cover a bird, not the soft hair of animals like cats and dogs=feathers 是鸟身上的羽毛，不是猫狗这类动物的软毛;shell=shell is a hard cover like a turtle's, not soft hair=shell 是乌龟那样的硬壳，不是柔软的毛|fur|ur, not er or ir|拼作 ur，不是 er 或 ir
+      wing|the parts a bird opened to fly away;the four bright parts of a butterfly;the part a hurt chicken could not fly with|wings are for flying; a tail is at the back of the body|wing 用来飞；tail 在身体后面|tail=tail is the part at the back of the body, not the part used for flying=tail 是身体后面的部分，不是用来飞的部分;beak=beak is a bird's hard mouth, not the part it flies with=beak 是鸟坚硬的嘴，不是用来飞的部分|wing|the letters -ing belong to the word itself here; it is not a verb ending|这里的 -ing 是单词本身，不是动词词尾
+      beak|the part a bird picks up seeds with;the strong, curved parts parrots crack nuts with;a duck's flat yellow mouth|a beak is a bird's mouth; wings are for flying|beak 是鸟的嘴；wing 用来飞|tail=tail is at the back of the body and cannot pick up or crack food=tail 长在身体后面，不能啄起或咬开食物;wing=wing is used for flying, not for eating=wing 是用来飞的，不是用来吃东西的|beak|ea for the long e sound, as in *speak*|ea 发长 e 音，和 *speak* 一样
+    `,
+  },
 });
 
 const wildlife = vocabularyTopic({

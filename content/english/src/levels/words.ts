@@ -91,6 +91,66 @@ export interface VocabularySpec {
   readonly prerequisites: readonly string[];
   readonly encompasses?: readonly EncompassingDef[];
   readonly words: readonly WordDef[];
+  /** teaching is the hand-written teaching of the topic; without it the topic falls back to the generic texts. */
+  readonly teaching?: WordsTeaching;
+}
+
+/**
+ * WordsTeaching is the hand-written teaching of a vocabulary topic of a level: a Watch out for each knowledge point and,
+ * in `notes`, one line per headword with eight fields separated by `|`:
+ *
+ * `head|clues|contrastEn|contrastZh|conflicts|chunks|trapEn|trapZh`
+ *
+ * - clues: one noun phrase per sentence of the word, in order, separated by `;`, read after "The sentence is about".
+ * - contrast: the word against the one it is most often confused with.
+ * - conflicts: for every wrong filler of the word's sentences, `filler=en=zh`, separated by `;`: what the filler means
+ *   and why that cannot fill these sentences, starting with the filler. A filler not taught in any topic lists its
+ *   forms with `/`, as `eat/ate`; a taught one is found by its headword.
+ * - chunks: the word in spoken pieces separated by ` · `, and the real spelling trap.
+ */
+export interface WordsTeaching {
+  readonly watchOut: { readonly complete: Text; readonly meaning: Text; readonly spell: Text };
+  readonly notes: string;
+}
+
+interface WordNote {
+  readonly clues: readonly string[];
+  readonly contrast: Text;
+  readonly conflicts: ReadonlyMap<string, Text>;
+  readonly chunks: string;
+  readonly trap: Text;
+}
+
+function parseNotes(id: string, words: readonly WordDef[], notes: string): ReadonlyMap<string, WordNote> {
+  const out = new Map<string, WordNote>();
+  for (const raw of notes.split("\n")) {
+    const line = raw.trim();
+    if (line === "") continue;
+    const f = line.split("|").map((x) => x.trim());
+    if (f.length !== 8 || f.some((x) => x === "")) throw new Error(`${id}: a note needs eight fields: ${line}`);
+    const [head, clues, cEn, cZh, conflicts, chunks, tEn, tZh] = f as [string, string, string, string, string, string, string, string];
+    const map = new Map<string, Text>();
+    for (const c of conflicts.split(";")) {
+      const [k, en, zh] = c.split("=").map((x) => x.trim());
+      if (!k || !en || !zh) throw new Error(`${id}: ${head}: a conflict needs filler=en=zh: ${c}`);
+      for (const form of k.split("/")) map.set(form.trim().toLowerCase(), t(en, zh));
+    }
+    out.set(head, { clues: clues.split(";").map((x) => x.trim()), contrast: t(cEn, cZh), conflicts: map, chunks, trap: t(tEn, tZh) });
+  }
+  for (const w of words) {
+    const n = out.get(w.head);
+    if (!n) throw new Error(`${id}: no note for ${w.head}`);
+    if (n.clues.length !== w.sentences.length)
+      throw new Error(`${id}: ${w.head} has ${w.sentences.length} sentences but ${n.clues.length} clues`);
+  }
+  if (out.size !== words.length) throw new Error(`${id}: notes name words that are not in the topic`);
+  return out;
+}
+
+/** conflictOf finds the reason a wrong filler does not fit, by its spelling or by the headword it belongs to. */
+function conflictOf(note: WordNote, wrong: string): Text | undefined {
+  const lower = wrong.toLowerCase();
+  return note.conflicts.get(lower) ?? note.conflicts.get(gloss(wrong)?.head.toLowerCase() ?? "");
 }
 
 /** VocabularyTopic is a vocabulary topic and the batch of words it teaches. */
@@ -123,6 +183,52 @@ const explainedSpell = (w: WordDef, s: WordSentence): Text =>
     `*${w.head}* means “${cleanMeaning(w.meaning.en)}”, so the completed sentence is:\n\n${s.full}\n\n**Check.** Check every letter of **${s.answer}** and confirm that its form—such as plural, tense, or capitalization—fits the gap.`,
     `*${w.head}* 的意思是“${cleanMeaning(w.meaning["zh-CN"])}”，完整句子是：\n\n${s.full}\n\n**检验。** 逐字母核对 **${s.answer}** 的拼写，并确认它的形式（如单复数、时态或大小写）符合空格要求。`,
   );
+
+const taughtComplete = (w: WordDef, s: WordSentence, n: WordNote, k: number): Text => {
+  const clue = n.clues[k] ?? n.clues[0] ?? "";
+  const others = s.wrong.map((x) => conflictOf(n, x)).filter((c): c is Text => c !== undefined);
+  const test =
+    others.length > 0
+      ? t(
+          `**Check.** Test the other choices in the gap: ${others.map((c) => c.en).join("; and ")}.`,
+          `**检验。** 把其他选项放进空格排除：${others.map((c) => c["zh-CN"]).join("；")}。`,
+        )
+      : t(
+          `**Check.** Read the completed sentence aloud—*${s.answer}* is the form the words around the gap need.`,
+          `**检验。** 把填好的句子读一遍——*${s.answer}* 正是空格前后的词需要的形式。`,
+        );
+  return joinText([
+    t(
+      `The sentence is about ${clue}, which calls for **${s.answer}**—“${cleanMeaning(w.meaning.en)}”:\n\n${s.full}`,
+      `句子说的是“${clue}”，所以要用 **${s.answer}**——“${cleanMeaning(w.meaning["zh-CN"])}”：\n\n${s.full}`,
+    ),
+    test,
+  ]);
+};
+
+const taughtMeaning = (w: WordDef, n: WordNote): Text =>
+  joinText([
+    t(
+      `**${w.head}** means “${cleanMeaning(w.meaning.en)}”, as in:\n\n${w.sentences[0]?.full ?? ""}`,
+      `**${w.head}** 的意思是“${cleanMeaning(w.meaning["zh-CN"])}”，例如：\n\n${w.sentences[0]?.full ?? ""}`,
+    ),
+    t(
+      `${capitalize(n.contrast.en)}.\n\n**Check.** Put the meaning back in place of **${w.head}** in that sentence—it still says the same thing.`,
+      `${n.contrast["zh-CN"]}。\n\n**检验。** 把这个释义代回例句替换 **${w.head}**——句子意思不变。`,
+    ),
+  ]);
+
+const taughtSpell = (w: WordDef, s: WordSentence, n: WordNote): Text =>
+  joinText([
+    t(
+      `*${w.head}* means “${cleanMeaning(w.meaning.en)}”, so the completed sentence is:\n\n${s.full}`,
+      `*${w.head}* 的意思是“${cleanMeaning(w.meaning["zh-CN"])}”，完整句子是：\n\n${s.full}`,
+    ),
+    t(
+      `**Check.** ${n.chunks.includes("·") ? `Say **${w.head}** in pieces—**${n.chunks}**—and watch` : `Say **${w.head}** slowly and watch`} ${n.trap.en}${s.answer.toLowerCase() === w.head.toLowerCase() ? "" : `; the gap needs the form **${s.answer}**`}.`,
+      `**检验。** ${n.chunks.includes("·") ? `把 **${w.head}** 分块读出来——**${n.chunks}**——注意` : `慢慢读 **${w.head}**，注意`}${n.trap["zh-CN"]}${s.answer.toLowerCase() === w.head.toLowerCase() ? "" : `；空格需要的形式是 **${s.answer}**`}。`,
+    ),
+  ]);
 
 /**
  * glossary maps each spelling of every headword of a vocabulary topic, in lower case, to its word, so that choosing a
@@ -281,16 +387,27 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
     for (const spelling of w.spellings) if (!glossary.has(spelling.toLowerCase())) glossary.set(spelling.toLowerCase(), w);
   const isAlike = (a: WordDef, b: string) => a.alike.includes(b) || (words.find((w) => w.head === b)?.alike.includes(a.head) ?? false);
 
+  const notes = spec.teaching ? parseNotes(id, words, spec.teaching.notes) : undefined;
+  if (notes)
+    for (const w of words)
+      for (const s of w.sentences)
+        for (const wrong of s.wrong)
+          if (!w.spellings.some((x) => x.toLowerCase() === wrong.toLowerCase()) && !conflictOf(notes.get(w.head)!, wrong))
+            throw new Error(`${id}: ${w.head} has no conflict for the filler ${wrong}`);
+
   const complete = distinct(
     interleave(
       words.map((w) =>
         w.sentences.map(
-          (s): ChoiceItem => ({
+          (s, k): ChoiceItem => ({
             prompt: joinText([t("Choose the word that completes the sentence.", "选出能填入句子空白处的词。"), quote(s.gapped)]),
             right: s.answer,
             wrong: s.wrong,
-            solution: explainedComplete(w, s),
-            whyNot: (wrong) => fitsNot(w, wrong, s.answer),
+            solution: notes ? taughtComplete(w, s, notes.get(w.head)!, k) : explainedComplete(w, s),
+            whyNot: (wrong) => {
+              const c = notes ? conflictOf(notes.get(w.head)!, wrong) : undefined;
+              return c ? t(`${capitalize(c.en)}.`, `${c["zh-CN"]}。`) : fitsNot(w, wrong, s.answer);
+            },
             sounds: sentenceSounds(w, s.full),
           }),
         ),
@@ -318,8 +435,11 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
             ]),
             right: w.head,
             wrong: wrong.filter((x): x is string => x !== undefined),
-            solution: explainedMeaning(w, w.sentences[0]?.full ?? ""),
-            whyNot: meansOther,
+            solution: notes ? taughtMeaning(w, notes.get(w.head)!) : explainedMeaning(w, w.sentences[0]?.full ?? ""),
+            whyNot: (wrong) => {
+              const c = notes ? conflictOf(notes.get(w.head)!, wrong) : undefined;
+              return c ? t(`${capitalize(c.en)}.`, `${c["zh-CN"]}。`) : meansOther(wrong);
+            },
             sounds: sentenceSounds(w, w.sentences[0]?.full ?? ""),
           }),
         );
@@ -338,7 +458,7 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
         ]),
         answer: s.answer,
         wrong: s.wrong,
-        solution: explainedSpell(w, s),
+        solution: notes ? taughtSpell(w, s, notes.get(w.head)!) : explainedSpell(w, s),
         sounds: sentenceSounds(w, s.full),
       })),
     ),
@@ -366,6 +486,10 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
   };
 
   const list = heads.map((h) => `*${h}*`).join(", ");
+  const watch = (key: "complete" | "meaning" | "spell", fallback: Text): Text =>
+    spec.teaching
+      ? t(`> **Watch out.** ${spec.teaching.watchOut[key].en}`, `> **注意。** ${spec.teaching.watchOut[key]["zh-CN"]}`)
+      : fallback;
   const w0 = words[0]!;
   const w1 = words[1] ?? w0;
   const w2 = words[2] ?? w0;
@@ -387,28 +511,55 @@ export function vocabularyTopic(spec: VocabularySpec): VocabularyTopic {
       point(
         "complete",
         t("Words in sentences", "句子中的词"),
-        t(
-          `The words of this topic: ${list}. Read the whole sentence before you choose: the words around the gap tell you which word fits, as in *${w1.sentences[0]?.full ?? ""}* (*${w1.head}*, “${cleanMeaning(w1.meaning.en)}”).\n\n> **Watch out.** Do not pick a word just because it looks familiar—check both the meaning of the whole sentence and the exact form the gap needs.`,
-          `本主题的词：${list}。先读完整个句子再选择：空白前后的词会告诉你哪个词合适，例如 *${w1.sentences[0]?.full ?? ""}*（*${w1.head}*，“${cleanMeaning(w1.meaning["zh-CN"])}”）。\n\n> **注意。** 不要只凭眼熟选词——既要看整句话的意思是否通顺，也要核对空格需要的具体词形。`,
-        ),
+        joinText([
+          t(
+            `The words of this topic: ${list}. Read the whole sentence before you choose: the words around the gap tell you which word fits, as in *${w1.sentences[0]?.full ?? ""}* (*${w1.head}*, “${cleanMeaning(w1.meaning.en)}”).`,
+            `本主题的词：${list}。先读完整个句子再选择：空白前后的词会告诉你哪个词合适，例如 *${w1.sentences[0]?.full ?? ""}*（*${w1.head}*，“${cleanMeaning(w1.meaning["zh-CN"])}”）。`,
+          ),
+          watch(
+            "complete",
+            t(
+              `> **Watch out.** Do not pick a word just because it looks familiar—check both the meaning of the whole sentence and the exact form the gap needs.`,
+              `> **注意。** 不要只凭眼熟选词——既要看整句话的意思是否通顺，也要核对空格需要的具体词形。`,
+            ),
+          ),
+        ]),
         choiceFrom(complete),
       ),
       point(
         "meaning",
         t("Words and meanings", "词和词义"),
-        t(
-          `Each word has its own meaning: for example, *${w2.head}* means “${cleanMeaning(w2.meaning.en)}”. Read the meaning carefully, then choose the word that matches it.\n\n> **Watch out.** Watch out for close pairs from the same topic—read the whole meaning before choosing so you do not swap opposites or near-neighbors.`,
-          `每个词都有自己的意思：例如 *${w2.head}* 的意思是“${cleanMeaning(w2.meaning["zh-CN"])}”。仔细读一读词义，再选出意思相符的词。\n\n> **注意。** 同主题里常有反义词或容易混的成对词——把释义读完整再选，别把相近的词张冠李戴。`,
-        ),
+        joinText([
+          t(
+            `Each word has its own meaning: for example, *${w2.head}* means “${cleanMeaning(w2.meaning.en)}”. Read the meaning carefully, then choose the word that matches it.`,
+            `每个词都有自己的意思：例如 *${w2.head}* 的意思是“${cleanMeaning(w2.meaning["zh-CN"])}”。仔细读一读词义，再选出意思相符的词。`,
+          ),
+          watch(
+            "meaning",
+            t(
+              `> **Watch out.** Watch out for close pairs from the same topic—read the whole meaning before choosing so you do not swap opposites or near-neighbors.`,
+              `> **注意。** 同主题里常有反义词或容易混的成对词——把释义读完整再选，别把相近的词张冠李戴。`,
+            ),
+          ),
+        ]),
         choiceFrom(forMeaning),
       ),
       point(
         "spell",
         t("Spelling the words", "拼写单词"),
-        t(
-          `Type the word that fills the gap—for example, *${w3.sentences[0]?.answer ?? w3.head}* in: *${w3.sentences[0]?.full ?? ""}* Spell it exactly, and use the form the sentence needs, such as *cats* after *two*.\n\n> **Watch out.** Check every letter and check whether the sentence calls for a changed form—such as a plural, a verb ending, or a capital letter at the start of a sentence.`,
-          `输入填空的词，例如 *${w3.sentences[0]?.full ?? ""}* 中的 *${w3.sentences[0]?.answer ?? w3.head}*。拼写要准确，并用句子需要的形式，比如 *two* 后面用 *cats*。\n\n> **注意。** 逐字母核对拼写，并检查句子是否需要变化形式——比如复数、动词变形或句首大写。`,
-        ),
+        joinText([
+          t(
+            `Type the word that fills the gap—for example, *${w3.sentences[0]?.answer ?? w3.head}* in: *${w3.sentences[0]?.full ?? ""}* Spell it exactly, and use the form the sentence needs, such as *cats* after *two*.`,
+            `输入填空的词，例如 *${w3.sentences[0]?.full ?? ""}* 中的 *${w3.sentences[0]?.answer ?? w3.head}*。拼写要准确，并用句子需要的形式，比如 *two* 后面用 *cats*。`,
+          ),
+          watch(
+            "spell",
+            t(
+              `> **Watch out.** Check every letter and check whether the sentence calls for a changed form—such as a plural, a verb ending, or a capital letter at the start of a sentence.`,
+              `> **注意。** 逐字母核对拼写，并检查句子是否需要变化形式——比如复数、动词变形或句首大写。`,
+            ),
+          ),
+        ]),
         typed,
       ),
     ],
