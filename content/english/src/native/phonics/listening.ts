@@ -55,7 +55,7 @@ function choice(
 }
 
 /** pictures is the knowledge point that plays a word and asks for its picture among two that sound alike. */
-function pictures(words: readonly string[], example: readonly [en: string, zh: string]) {
+function pictures(words: readonly string[], example: readonly [en: string, zh: string], watchOut: readonly [en: string, zh: string]) {
   const items = words.map((word) => ({ word, others: soundsLike(word, words) }));
   for (const { word } of items) heard(word);
   const generate: Generator = (rng: Rng) => {
@@ -92,8 +92,8 @@ function pictures(words: readonly string[], example: readonly [en: string, zh: s
     "pictures",
     t("Hear the word, find the picture", "听词找图"),
     t(
-      `Listen to the recording from start to end, then match it to its picture. ${example[0]}\n\n> **Watch out.** Do not tap after hearing only the first sound, because the other pictures have names that sound alike.`,
-      `把录音从头到尾听清楚，再找出对应的图片。${example[1]}\n\n> **注意。** 不要只听开头就急着点，其他图片的名称听起来很像。`,
+      `Listen to the recording from start to end, then match it to its picture. ${example[0]}\n\n> **Watch out.** ${watchOut[0]}`,
+      `把录音从头到尾听清楚，再找出对应的图片。${example[1]}\n\n> **注意。** ${watchOut[1]}`,
     ),
     generate,
   );
@@ -164,10 +164,17 @@ const hearingShortVowels: TopicDef = {
   xp: 8,
   strand: "listening",
   knowledgePoints: [
-    pictures(allPictureWords, [
-      "For *cat*, listen for *c*, short *a*, and *t*, then pick the cat picture.",
-      "比如听到 *cat*，听清 *c*、短 *a* 和 *t*，再选小猫的图片。",
-    ]),
+    pictures(
+      allPictureWords,
+      [
+        "For *cat*, listen for *c*, short *a*, and *t*, then pick the cat picture.",
+        "比如听到 *cat*，听清 *c*、短 *a* 和 *t*，再选小猫的图片。",
+      ],
+      [
+        "Listen all the way through the short middle vowel—*cat* and *cut*, or *bed* and *bad*, share the same first and last consonants.",
+        "务必听清中间的短元音——*cat* 和 *cut*、*bed* 和 *bad* 的首尾辅音完全相同。",
+      ],
+    ),
     parts(
       "vowel",
       t("The vowel in the middle", "中间的元音"),
@@ -199,10 +206,17 @@ const hearingDigraphs: TopicDef = {
   xp: 8,
   strand: "listening",
   knowledgePoints: [
-    pictures(allDigraphPictureWords, [
-      "For *ship*, listen for *sh* at the start and *p* at the end, then pick the ship picture.",
-      "比如听到 *ship*，听清开头的 *sh* 和结尾的 *p*，再选大船的图片。",
-    ]),
+    pictures(
+      allDigraphPictureWords,
+      [
+        "For *ship*, listen for *sh* at the start and *p* at the end, then pick the ship picture.",
+        "比如听到 *ship*，听清开头的 *sh* 和结尾的 *p*，再选大船的图片。",
+      ],
+      [
+        "Check whether the digraph sound (*sh*, *ch*, *th*, *ck*) comes at the start or end—*ship* and *chip* differ only in that first sound.",
+        "注意二合字母音（*sh*、*ch*、*th*、*ck*）出现在开头还是结尾——*ship* 和 *chip* 仅开头这一个音不同。",
+      ],
+    ),
     parts(
       "digraph",
       t("Two letters, one sound", "两个字母，一个音"),
@@ -237,10 +251,17 @@ const hearingBlends: TopicDef = {
   xp: 8,
   strand: "listening",
   knowledgePoints: [
-    pictures(allBlendPictureWords, [
-      "For *frog*, listen for both *f* and *r* at the start, then pick the frog picture.",
-      "比如听到 *frog*，听清开头的 *f* 和 *r* 两个音，再选青蛙的图片。",
-    ]),
+    pictures(
+      allBlendPictureWords,
+      [
+        "For *frog*, listen for both *f* and *r* at the start, then pick the frog picture.",
+        "比如听到 *frog*，听清开头的 *f* 和 *r* 两个音，再选青蛙的图片。",
+      ],
+      [
+        "Catch both consonants in the blend before tapping—*flag* and *frog* both start with *f*, but the second consonant changes the word.",
+        "点图前要听清连缀里的两个辅音——*flag* 和 *frog* 都以 *f* 开头，但第二个辅音不同。",
+      ],
+    ),
     parts(
       "blend",
       t("Two consonants together", "两个辅音连在一起"),
@@ -270,6 +291,7 @@ interface PhonicsPairSpec {
   readonly prerequisites: readonly string[];
   readonly pictureWords: readonly string[];
   readonly pictureExample: readonly [en: string, zh: string];
+  readonly pictureWatchOut: readonly [en: string, zh: string];
   readonly whichExplanation: Text;
   readonly sameExplanation: Text;
   readonly pairs: string;
@@ -389,7 +411,7 @@ function phonicsPairTopic(spec: PhonicsPairSpec): TopicDef {
     xp: 10,
     strand: "listening",
     knowledgePoints: [
-      pictures(spec.pictureWords, spec.pictureExample),
+      pictures(spec.pictureWords, spec.pictureExample, spec.pictureWatchOut),
       point("which", t("Which word?", "哪个词？"), spec.whichExplanation, whichWord),
       point("same", t("The same or different?", "相同还是不同？"), spec.sameExplanation, sameOrNot),
     ],
@@ -412,6 +434,10 @@ const hearingSilentE = phonicsPairTopic({
   pictureExample: [
     "For *kite*, listen for **i** saying its letter name, then pick the kite picture.",
     "比如听到 *kite*，听清 **i** 读出了字母名，再选风筝的图片。",
+  ],
+  pictureWatchOut: [
+    "Check the vowel length before tapping—silent-**e** words like *cake* and *bike* say the vowel's name, not a quick short vowel.",
+    "点图前先分辨元音长短——*cake*、*bike* 这类带不发音 **e** 的词元音读字母名，不是短促的短元音。",
   ],
   whichExplanation: t(
     "A silent **e** at the end makes the vowel say its letter name: *kit* has a short *i*, while *kite* says the name of **i**. Listen to the vowel in the middle and pick the word you hear.\n\n> **Watch out.** You cannot hear the silent **e** itself, so listen to whether the middle vowel is short or says its name.",
@@ -441,6 +467,10 @@ const hearingVowelTeams = phonicsPairTopic({
   pictureExample: [
     "For *rain*, listen for **a** saying its letter name between *r* and *n*, then pick the rain picture.",
     "比如听到 *rain*，听清 *r* 和 *n* 中间读出了 **a** 的字母名，再选下雨的图片。",
+  ],
+  pictureWatchOut: [
+    "Listen for the steady long vowel made by the vowel team (*ai*, *ee*, *oa*)—other pictures may share the same starting consonant.",
+    "听清元音组合（*ai*、*ee*、*oa*）发出的长元音——其他图片可能和它有相同的开头辅音。",
   ],
   whichExplanation: t(
     "A vowel team like **ee**, **ea**, **ai**, or **oa** makes a long vowel that says its letter name: *feed* has long **e**, while *fed* has short *e*. Listen to the vowel and pick the matching word.\n\n> **Watch out.** Both choices share the same consonants, so listen closely to whether the vowel is short or long.",

@@ -14,6 +14,24 @@ const characterTraits: BatchSpec = {
     "Ten words for what a character is like: generous, stubborn, timid, loyal and more.",
     "十个描述人物性格的词：generous、stubborn、timid、loyal 等。",
   ),
+  intro: t(
+    "The goat plants all four hooves on the bridge and will not budge an inch, no matter how hard the farmer pulls—that goat is **stubborn**! Exact character-trait words show who a character really is through what they do.",
+    "山羊四只蹄子死死钉在桥面上，农夫怎么拉都不肯挪半步——这就是固执（**stubborn**）。选准人物性格词，寥寥几笔就能把角色写活。",
+  ),
+  watchOut: {
+    meanings: t(
+      "Tell **stubborn** (refusing to budge even when wrong) apart from **determined** (sticking with a hard goal until you finish).",
+      "分清 **stubborn**（明知不对也不肯转弯的固执）和 **determined**（认准目标坚持到底的坚定）。",
+    ),
+    use: t(
+      "**Timid** means shy and easily scared, while **cautious** means smart and careful around real danger like icy roads or slippery rocks.",
+      "**timid** 是胆小怯生生，**cautious** 是面对结冰路面、湿滑石头时的明智谨慎——别把两者混用。",
+    ),
+    spelling: t(
+      "Watch **cautious** (*au* + *-tious*), **curious** (*-ious*), and **stubborn** (double *b*).",
+      "注意 **cautious** 的 **au** 与 **-tious**、**curious** 的 **-ious**，以及 **stubborn** 的双写 **b**。",
+    ),
+  },
   domain: ["what characters in stories are like", "故事人物性格"],
   prerequisites: ["context-clues"],
   encompasses: fromClues,
@@ -27,6 +45,23 @@ const characterTraits: BatchSpec = {
         "It was ___ of you to share your umbrella with me in the rain.",
       ],
       confusions: ["greedy", "humble"],
+      clues: [
+        "giving half of her lunch to a friend who forgot his",
+        "lending a ladder while refusing anything in return",
+        "sharing an umbrella with someone in the rain",
+      ],
+      contrast: ["generous gladly shares; greedy wants to keep everything", "generous 乐于分享；greedy 贪心独占"],
+      conflicts: [
+        [
+          "greedy means wanting more than you need, the exact opposite of happily giving or sharing with others",
+          "greedy 指贪得无厌，与乐于给予或分享正相反",
+        ],
+        [
+          "humble means staying modest about your own success, not happily giving or sharing what you have",
+          "humble 指不自夸炫耀，不指乐于把东西分给或借给别人",
+        ],
+      ],
+      spelling: ["gen · er · ous", "soft g (/dʒ/) at the start and -ous ending", "开头读 /dʒ/ 的 g 和结尾 -ous"],
     },
     {
       word: "stubborn",
@@ -36,17 +71,54 @@ const characterTraits: BatchSpec = {
         "My ___ little brother refused to wear a coat, even when it started to snow.",
         "No matter what anyone said, the ___ old man would not change his mind.",
       ],
-      confusions: ["determined", "timid"],
+      confusions: ["determined", "boastful"],
+      clues: [
+        "a goat refusing to budge off the bridge no matter how hard the farmer pulled",
+        "a little brother refusing to wear a coat even in the snow",
+        "an old man refusing to change his mind no matter what anyone said",
+      ],
+      contrast: [
+        "stubborn refuses to listen even when unreasonable; determined keeps working toward a worthwhile goal",
+        "stubborn 是一味犟着不听劝；determined 是认准有意义的目标坚持到底",
+      ],
+      conflicts: [
+        [
+          "determined means working steadily toward a positive goal, not refusing to listen or change your mind",
+          "determined 是为有意义的目标坚持不懈，不是一味固执不肯听劝",
+        ],
+        [
+          "boastful means bragging loudly about how great you are, not digging in your heels and refusing to budge",
+          "boastful 是爱吹牛炫耀，不是死活不肯改变主意",
+        ],
+      ],
+      spelling: ["stub · born", "double b and -orn ending", "中间双写 b 和结尾 -orn"],
     },
     {
       word: "timid",
       meaning: ["shy and easily frightened", "胆小的，容易害怕的"],
       sentences: [
         "The ___ kitten hid under the bed whenever a visitor came to the door.",
-        "The ___ deer stepped out of the woods, then ran back at the first sound.",
+        "The ___ deer trembled and bolted back into the woods at the faintest rustle of a leaf.",
         "Being ___, Jun spoke so softly that the teacher could hardly hear him.",
       ],
       confusions: ["cautious", "humble"],
+      clues: [
+        "a kitten hiding under the bed whenever a visitor comes to the door",
+        "a deer trembling and bolting back into the woods at the faintest rustle of a leaf",
+        "a shy student speaking so softly the teacher can hardly hear him",
+      ],
+      contrast: ["timid shrinks away in fear; cautious checks carefully before acting", "timid 是胆怯退缩；cautious 是冷静谨慎"],
+      conflicts: [
+        [
+          "cautious means checking smartly for real danger, not being shy and easily frightened",
+          "cautious 是面对真实危险时冷静防范，不是生性胆小、容易受惊或害羞",
+        ],
+        [
+          "humble means not bragging about your achievements, not being shy and easily frightened",
+          "humble 是功成不骄，不是胆小怕生、容易受惊",
+        ],
+      ],
+      spelling: ["tim · id", "single m and two short i sounds", "单个 m 和两个短音 i"],
     },
     {
       word: "boastful",
@@ -56,7 +128,24 @@ const characterTraits: BatchSpec = {
         "Nobody wanted to play with the ___ boy who always said he was the best.",
         "After winning one game, the team became ___ and told everyone they could never lose.",
       ],
-      confusions: ["generous", "curious"],
+      confusions: ["humble", "greedy"],
+      clues: [
+        "a hare telling the whole forest he is the fastest runner alive",
+        "a boy who always tells everyone he is the best",
+        "a team bragging after one win that they could never lose",
+      ],
+      contrast: ["boastful brags loudly; humble shares credit quietly", "boastful 爱自夸炫耀；humble 谦虚不居功"],
+      conflicts: [
+        [
+          "humble means not thinking you are better than others, the exact opposite of talking too proudly about yourself",
+          "humble 是谦虚不自满，与过分自夸吹嘘正相反",
+        ],
+        [
+          "greedy means wanting more things than you need, not talking too proudly about how great you are",
+          "greedy 是贪心多占东西，不是嘴上过分夸耀自己",
+        ],
+      ],
+      spelling: ["boast · ful", "oa spelling long o and single l in -ful", "发长 o 音的 oa 和单个 l 的 -ful"],
     },
     {
       word: "loyal",
@@ -66,8 +155,27 @@ const characterTraits: BatchSpec = {
         "Even when the others laughed at her, Kim stayed ___ to her best friend.",
         "The king trusted only his most ___ knight to guard the castle gate.",
       ],
-      confusions: ["stubborn", "timid"],
-      forms: ["loyalty"],
+      confusions: ["generous", "humble"],
+      clues: [
+        "a dog waiting faithfully by the gate every evening for its owner",
+        "standing faithfully by a best friend even when others laugh",
+        "a trusted knight guarding the king's castle gate",
+      ],
+      contrast: [
+        "loyal stands faithfully by someone through thick and thin; generous shares gifts or things",
+        "loyal 是患难与共、忠心相守；generous 是乐于施与财物",
+      ],
+      conflicts: [
+        [
+          "generous means happily giving or sharing things, not staying faithful and standing by someone",
+          "generous 侧重慷慨分享物品，不是始终忠心相守",
+        ],
+        [
+          "humble means staying modest about success, not staying faithful and devoted to someone",
+          "humble 指不自夸炫耀，不是忠心耿耿、始终支持",
+        ],
+      ],
+      spelling: ["loy · al", "oy spelling /ɔɪ/ and -al ending", "发 /ɔɪ/ 音的 oy 和结尾 -al"],
     },
     {
       word: "curious",
@@ -77,8 +185,24 @@ const characterTraits: BatchSpec = {
         "The ___ monkey picked up the camera and pressed every button.",
         "Ever since she saw the stars through a telescope, Ana has been ___ about space.",
       ],
-      confusions: ["cautious", "boastful"],
-      forms: ["curiosity"],
+      confusions: ["cautious", "determined"],
+      clues: [
+        "opening an old box to discover what makes a ticking sound",
+        "a monkey picking up a camera and pressing every button",
+        "wanting to learn all about space after seeing stars through a telescope",
+      ],
+      contrast: ["curious jumps in to investigate; cautious holds back to stay safe", "curious 急于一探究竟；cautious 先停步防危险"],
+      conflicts: [
+        [
+          "cautious means holding back carefully to avoid danger, not eagerly investigating to find out more",
+          "cautious 会小心避险，不像 curious 那样急于一探究竟、渴望了解",
+        ],
+        [
+          "determined means sticking firmly to a tough goal until finished, not simply feeling eager to explore or learn",
+          "determined 是下决心克服困难完成任务，不是单纯想弄明白、充满好奇",
+        ],
+      ],
+      spelling: ["cu · ri · ous", "single r and -ious ending", "单个 r 和结尾 -ious"],
     },
     {
       word: "cautious",
@@ -89,6 +213,26 @@ const characterTraits: BatchSpec = {
         "Be ___ when you cross the stream, because the stones are slippery.",
       ],
       confusions: ["timid", "curious"],
+      clues: [
+        "a hiker testing each rock with her foot before stepping on it",
+        "a driver slowing down on an icy road",
+        "stepping carefully across slippery stones in a stream",
+      ],
+      contrast: [
+        "cautious acts carefully around hazards; timid hides from ordinary things",
+        "cautious 是遇险细心防范；timid 是平时也胆小害怕",
+      ],
+      conflicts: [
+        [
+          "timid means shy and easily frightened even without danger, not acting smartly and carefully around real hazards",
+          "timid 是无端胆怯害羞，不是面对真实危险时的明智谨慎",
+        ],
+        [
+          "curious means eager to poke and explore, not carefully taking steps to avoid danger",
+          "curious 是好奇探寻，不是为了避开危险而小心防范",
+        ],
+      ],
+      spelling: ["cau · tious", "au saying /ɔː/ and -tious saying /ʃəs/", "发 /ɔː/ 的 au 和发 /ʃəs/ 的 -tious"],
     },
     {
       word: "greedy",
@@ -98,7 +242,24 @@ const characterTraits: BatchSpec = {
         "The ___ fox ate all the grapes and left none for the other animals.",
         "Do not be ___; take one cookie and leave the rest for your sisters.",
       ],
-      confusions: ["boastful", "stubborn"],
+      confusions: ["generous", "boastful"],
+      clues: [
+        "a king with a room full of gold who still wants more",
+        "a fox eating all the grapes and leaving none for others",
+        "taking too many cookies instead of leaving some for your sisters",
+      ],
+      contrast: ["greedy grabs too much; generous gladly shares", "greedy 贪得无厌；generous 乐于分享"],
+      conflicts: [
+        [
+          "generous means happily sharing with others, the exact opposite of wanting more than you need and keeping it all",
+          "generous 是乐于分享，与贪得无厌、独自霸占正相反",
+        ],
+        [
+          "boastful means bragging loudly about yourself, not grabbing more than your share",
+          "boastful 是嘴上吹牛炫耀，不是贪心多占、不肯留给别人",
+        ],
+      ],
+      spelling: ["gree · dy", "gr blend and double e", "gr 连缀和双写 e"],
     },
     {
       word: "humble",
@@ -108,7 +269,24 @@ const characterTraits: BatchSpec = {
         "The famous singer was ___ and thanked the people who had helped her.",
         "Even after he became the best player on the team, Omar stayed ___ and kind.",
       ],
-      confusions: ["generous", "loyal"],
+      confusions: ["boastful", "generous"],
+      clues: [
+        "a prize winner saying her whole team deserved the credit",
+        "a famous singer thanking everyone who helped her",
+        "the best player on the team staying modest and kind",
+      ],
+      contrast: ["humble stays modest about success; boastful brags loudly", "humble 是成功不骄傲；boastful 是爱吹嘘自夸"],
+      conflicts: [
+        [
+          "boastful means bragging loudly that you are the best, the exact opposite of staying modest about success",
+          "boastful 是四处自夸，与功成不骄、保持谦逊正相反",
+        ],
+        [
+          "generous means giving away money or things, not staying modest and not acting better than others",
+          "generous 侧重施与财物，不指获得成功后保持谦虚低调",
+        ],
+      ],
+      spelling: ["hum · ble", "short u and -ble ending with silent e", "短音 u 和带不发音 e 的 -ble"],
     },
     {
       word: "determined",
@@ -118,7 +296,24 @@ const characterTraits: BatchSpec = {
         "Leila was ___ to learn to ride her bike before the summer ended.",
         "The ___ ant carried a crumb twice its size all the way to its nest.",
       ],
-      confusions: ["stubborn", "cautious"],
+      confusions: ["stubborn", "loyal"],
+      clues: [
+        "a runner getting back up after falling to finish the race",
+        "setting a firm goal to learn bike riding before summer ends",
+        "an ant hauling a giant crumb all the way to its nest",
+      ],
+      contrast: ["determined pushes through obstacles; stubborn refuses sensible advice", "determined 是迎难而上；stubborn 是固执不听劝"],
+      conflicts: [
+        [
+          "stubborn means unreasonably refusing to listen or change your mind, not pushing steadily toward a firm goal",
+          "stubborn 是不讲道理地死犟，不是认准目标、克服困难坚持到底的毅力",
+        ],
+        [
+          "loyal means staying faithful to a friend or group, not having firmly decided to reach a hard goal",
+          "loyal 指对朋友或集体的忠诚，不是下定决心完成艰难目标的坚定",
+        ],
+      ],
+      spelling: ["de · ter · mined", "er saying /ɜːr/ and -mined (not -mand)", "发 /ɜːr/ 的 er 和结尾 -mined"],
     },
   ],
 };
@@ -252,6 +447,24 @@ const plantLife: BatchSpec = {
     "Ten words for how plants grow and make seeds: sprout, nutrient, pollen, wilt and more.",
     "十个关于植物生长和结籽的词：sprout、nutrient、pollen、wilt 等。",
   ),
+  intro: t(
+    "A hummingbird pokes its needle beak deep into a bright flower to sip sweet **nectar**, brushing yellow **pollen** onto its feathers at the same time. Following a plant's life cycle takes ten sharp science words.",
+    "蜂鸟把细长的喙探进花心吸食甜丝丝的花蜜（**nectar**），羽毛顺势沾上了黄色的花粉（**pollen**）。看懂一株植物从发芽到结籽的过程，全靠这十个科学词。",
+  ),
+  watchOut: {
+    meanings: t(
+      "Tell **pollen** (yellow dust that makes seeds) apart from **nectar** (sweet liquid that bees and birds drink).",
+      "分清 **pollen**（帮花结籽的黄色花粉）和 **nectar**（蜜蜂和鸟喝的甜花蜜）。",
+    ),
+    use: t(
+      "**Sprout** and **germinate** both mean starting to grow, while **wilt** means drooping and going limp from lack of water.",
+      "**sprout** 和 **germinate** 都是开始发芽萌发，**wilt** 则是缺水枯萎打蔫——看植物是在长新芽还是在发蔫。",
+    ),
+    spelling: t(
+      "Watch **nutrient** (*u-i-e* in *nu-tri-ent*), **pollen** (double *l*, *-en*), and **germinate** (soft *g* before *e*).",
+      "注意 **nutrient** 里的 **tri-ent**、**pollen** 的双写 **l**，以及 **germinate** 开头读 /dʒ/ 的 **g**。",
+    ),
+  },
   domain: ["how plants grow", "植物的生长"],
   prerequisites: ["context-clues"],
   encompasses: fromClues,
@@ -266,6 +479,26 @@ const plantLife: BatchSpec = {
         "After the spring rain, new leaves began to ___ on every branch.",
       ],
       confusions: ["wilt", "pollinate"],
+      clues: [
+        "planted beans beginning to push out new shoots after a few days",
+        "a potato in a dark cupboard pushing out pale new shoots",
+        "new leaves pushing out on every branch after spring rain",
+      ],
+      contrast: [
+        "sprout pushes out fresh shoots or leaves; wilt droops and goes limp from lack of water",
+        "sprout 是抽出新芽嫩叶；wilt 是缺水枯萎打蔫",
+      ],
+      conflicts: [
+        [
+          "wilt means drooping and going limp from thirst, the exact opposite of pushing out fresh shoots",
+          "wilt 是缺水发蔫下垂，与生机勃勃地长出新芽正相反",
+        ],
+        [
+          "pollinate means carrying pollen from one flower to another, not a plant pushing out new shoots",
+          "pollinate 是花间传粉，不是植物自己长出新芽",
+        ],
+      ],
+      spelling: ["sprout", "spr three-letter blend and ou saying /aʊ/", "开头的 spr 三字母连缀和发 /aʊ/ 的 ou"],
     },
     {
       word: "germinate",
@@ -277,6 +510,26 @@ const plantLife: BatchSpec = {
         "We kept the beans on a wet paper towel to watch them ___.",
       ],
       confusions: ["pollinate", "wilt"],
+      clues: [
+        "seeds needing water and warmth to start growing into plants",
+        "desert seeds waiting years for rain to wake up and grow",
+        "bean seeds kept on a wet paper towel to watch them begin growing",
+      ],
+      contrast: [
+        "germinate is a seed starting to grow into a plant; pollinate moves pollen between flowers",
+        "germinate 是种子吸收水分开始萌发；pollinate 是花间传粉",
+      ],
+      conflicts: [
+        [
+          "pollinate means carrying pollen from flower to flower to make seeds, not a seed waking up and starting to grow",
+          "pollinate 是给花朵传粉，不是种子自己开始萌发生长",
+        ],
+        [
+          "wilt means drooping and going limp from lack of water, not a seed beginning to grow into a plant",
+          "wilt 是缺水发蔫下垂，不是种子开始萌发长成植物",
+        ],
+      ],
+      spelling: ["ger · mi · nate", "soft g (/dʒ/) before er and -nate ending", "er 前读 /dʒ/ 的 g 和结尾 -nate"],
     },
     {
       word: "nutrient",
@@ -288,6 +541,23 @@ const plantLife: BatchSpec = {
         "The farmer added compost so the soil would have every ___ the corn needed.",
       ],
       confusions: ["nectar", "pollen"],
+      clues: [
+        "growth substances that plant roots draw up from the soil",
+        "a mineral like iron that a plant absorbs from soil to grow",
+        "essential growth substances compost puts into soil for corn",
+      ],
+      contrast: ["nutrient feeds growth from soil or food; nectar is sweet flower juice", "nutrient 是土壤食物里的养分；nectar 是花蜜"],
+      conflicts: [
+        [
+          "nectar is sweet liquid inside flowers for bees and birds, not a growth substance a plant takes from soil",
+          "nectar 是花里的甜花蜜，不是植物从土壤里吸收的养分",
+        ],
+        [
+          "pollen is yellow flower powder that helps make seeds, not a substance plants absorb from soil to grow",
+          "pollen 是花朵产生的黄色花粉，不是植物从土壤里吸收的养分",
+        ],
+      ],
+      spelling: ["nu · tri · ent", "tr blend and -ient ending", "中间 tr 连缀和结尾 -ient"],
     },
     {
       word: "pollen",
@@ -298,6 +568,23 @@ const plantLife: BatchSpec = {
         "The wind blew ___ from one pine tree to another.",
       ],
       confusions: ["nectar", "nutrient"],
+      clues: [
+        "yellow flower powder coating a bee's legs",
+        "spring tree powder floating in the air that makes people sneeze",
+        "fine powder blown by wind from one pine tree to another",
+      ],
+      contrast: ["pollen is powdery yellow dust; nectar is sweet liquid", "pollen 是干粉状花粉；nectar 是液体花蜜"],
+      conflicts: [
+        [
+          "nectar is sweet liquid drunk from inside a flower, not powdery dust made by flowers and trees",
+          "nectar 是藏在花心里的液体花蜜，不是花木产生的细小花粉",
+        ],
+        [
+          "nutrient is a growth substance in soil or food, not powdery dust made by flowers and trees",
+          "nutrient 是土壤或食物中的养分，不是花木产生的花粉",
+        ],
+      ],
+      spelling: ["pol · len", "double l and -en ending", "双写 l 和结尾 -en"],
     },
     {
       word: "pollinate",
@@ -309,6 +596,23 @@ const plantLife: BatchSpec = {
         "Some bats ___ flowers that open only at night.",
       ],
       confusions: ["germinate", "sprout"],
+      clues: [
+        "bees and butterflies carrying pollen as they visit flower after flower",
+        "bees helping apple blossoms set fruit by carrying pollen",
+        "bats transferring pollen among night-blooming flowers",
+      ],
+      contrast: ["pollinate moves pollen to make fruit; germinate starts a seed growing", "pollinate 是帮花传粉结果；germinate 是种子发芽"],
+      conflicts: [
+        [
+          "germinate is what a seed does when it starts growing, not carrying pollen from one flower to another",
+          "germinate 是种子自己萌发，不是在花朵之间传递花粉",
+        ],
+        [
+          "sprout means pushing out new shoots or leaves, not carrying pollen from one flower to another",
+          "sprout 是植物长出新芽，不是在花朵之间帮忙传粉",
+        ],
+      ],
+      spelling: ["pol · li · nate", "double l and -inate ending", "双写 l 和结尾 -inate"],
     },
     {
       word: "seedling",
@@ -320,6 +624,20 @@ const plantLife: BatchSpec = {
         "Rabbits ate the young ___ before it could grow into a tree.",
       ],
       confusions: ["petal", "pollen"],
+      clues: [
+        "a tiny baby plant moved from a starter cup into the garden",
+        "a baby plant with just two small leaves ready for planting",
+        "a very young plant eaten by rabbits before becoming a tree",
+      ],
+      contrast: ["seedling is a whole baby plant; petal is just one colored piece of a flower", "seedling 是整棵幼苗；petal 只是一片花瓣"],
+      conflicts: [
+        [
+          "petal is just one colored piece of a flower, not a whole young plant grown from a seed",
+          "petal 只是花朵上的一片花瓣，不是刚从种子长出的整株幼苗",
+        ],
+        ["pollen is yellow flower dust, not a whole very young plant grown from a seed", "pollen 是黄色花粉，不是刚从种子长出来的小幼苗"],
+      ],
+      spelling: ["seed · ling", "seed (ee) + -ling ending", "含 ee 的 seed 加后缀 -ling"],
     },
     {
       word: "wilt",
@@ -331,6 +649,23 @@ const plantLife: BatchSpec = {
         "In the heat wave, the flowers began to ___ by noon.",
       ],
       confusions: ["sprout", "germinate"],
+      clues: [
+        "flower stems drooping when you forget to water them",
+        "lettuce going limp quickly in the hot sun",
+        "flowers drooping by noon during a heat wave",
+      ],
+      contrast: ["wilt droops from thirst; sprout sends up new green shoots", "wilt 是缺水蔫掉；sprout 是抽出新芽"],
+      conflicts: [
+        [
+          "sprout means growing fresh new shoots, the exact opposite of drooping and going limp from heat or thirst",
+          "sprout 是生机勃勃地长出新芽，与缺水受热后下垂发蔫正相反",
+        ],
+        [
+          "germinate means a seed starting to grow into a plant, not a plant drooping and going limp",
+          "germinate 是种子萌发，不是植物变软打蔫",
+        ],
+      ],
+      spelling: ["wilt", "short i followed by lt blend", "短音 i 加结尾 lt"],
     },
     {
       word: "fertile",
@@ -341,6 +676,26 @@ const plantLife: BatchSpec = {
         "Farmers moved to the river because its banks were ___.",
       ],
       confusions: ["nutrient", "seedling"],
+      clues: [
+        "rich dark riverbank soil growing the best crops in the valley",
+        "rich valley fields producing abundant wheat, beans, and melons",
+        "rich riverbanks that attract farmers to plant crops",
+      ],
+      contrast: [
+        "fertile describes rich soil; nutrient is one substance inside the soil",
+        "fertile 是形容土壤肥沃的形容词；nutrient 是具体养分",
+      ],
+      conflicts: [
+        [
+          "nutrient is a noun for one substance inside soil, not an adjective describing land able to grow strong plants",
+          "nutrient 是表示养分的名词，不是形容土地肥沃的形容词",
+        ],
+        [
+          "seedling is a noun for a tiny young plant, not an adjective describing rich land for growing crops",
+          "seedling 是“幼苗”名词，不能作形容词描述肥沃的土地",
+        ],
+      ],
+      spelling: ["fer · tile", "er saying /ɜːr/ and -tile ending", "发 /ɜːr/ 的 er 和结尾 -tile"],
     },
     {
       word: "nectar",
@@ -351,6 +706,20 @@ const plantLife: BatchSpec = {
         "Bees turn the ___ they collect into honey.",
       ],
       confusions: ["pollen", "nutrient"],
+      clues: [
+        "sweet flower liquid drunk by a hummingbird with its long beak",
+        "sweet liquid sipped by butterflies through a straw-like tube",
+        "sweet flower liquid collected by bees and turned into honey",
+      ],
+      contrast: ["nectar is sweet liquid to drink; pollen is yellow dust", "nectar 是能吸食的甜花蜜；pollen 是黄色花粉"],
+      conflicts: [
+        ["pollen is dry yellow powder rather than a sweet liquid inside flowers", "pollen 是干粉末状的花粉，不是花心里的甜液体"],
+        [
+          "nutrient is a general growth substance in soil or food, not specifically the sweet liquid inside flowers",
+          "nutrient 泛指土壤或食物里的养分，不特指花心里的甜汁",
+        ],
+      ],
+      spelling: ["nec · tar", "c saying /k/ and -tar ending (not -ter)", "发 /k/ 的 c 和结尾 -tar（不是 -ter）"],
     },
     {
       word: "petal",
@@ -362,6 +731,20 @@ const plantLife: BatchSpec = {
         "A single white ___ floated on the surface of the pond.",
       ],
       confusions: ["seedling", "pollen"],
+      clues: [
+        "a single red flower piece fallen from a rose onto a table",
+        "a colored flower piece pulled off and counted one by one",
+        "a single white flower piece floating on a pond",
+      ],
+      contrast: ["petal is a colored flower leaf; seedling is a tiny young plant", "petal 是花瓣；seedling 是整株幼苗"],
+      conflicts: [
+        [
+          "seedling is a whole baby plant with roots and leaves, not one single colored piece of a flower",
+          "seedling 是有根有叶的整株小苗，不是花朵上的一片花瓣",
+        ],
+        ["pollen is powdery yellow dust, not a single colored flower piece", "pollen 是黄色粉末，不是花朵周围的一片花瓣"],
+      ],
+      spelling: ["pet · al", "t in the middle (not pedal with d) and -al", "中间是 t（别写成脚踏板 pedal），结尾 -al"],
     },
   ],
 };
@@ -373,6 +756,24 @@ const ancientEgypt: BatchSpec = {
     "Ten words for life and history in ancient Egypt: pharaoh, scribe, papyrus, artifact and more.",
     "十个关于古埃及生活和历史的词：pharaoh、scribe、papyrus、artifact 等。",
   ),
+  intro: t(
+    "Sitting cross-legged by the Nile, a **scribe** paints a tiny owl **hieroglyph** onto a fresh sheet of **papyrus**. Exploring ancient Egypt means learning the exact words for its rulers, tombs, writing, and modern diggers.",
+    "书吏（**scribe**）盘腿坐在尼罗河边，往新压好的纸莎草纸（**papyrus**）上画下一只小猫头鹰象形文字（**hieroglyph**）。走进古埃及，就从这十个词开始。",
+  ),
+  watchOut: {
+    meanings: t(
+      "Tell **papyrus** (the river-reed paper people wrote *on*) apart from **hieroglyph** (a picture sign written on it).",
+      "分清 **papyrus**（写字用的纸莎草纸）和 **hieroglyph**（画在上面的象形文字图形）。",
+    ),
+    use: t(
+      "A **scribe** wrote records long ago in Egypt, while an **archaeologist** is a modern scientist who digs up old walls and pots today.",
+      "**scribe** 是古埃及抄写记录的书吏，**archaeologist** 是今天发掘遗址的考古学家——别把古今身份弄混。",
+    ),
+    spelling: t(
+      "Watch **pharaoh** (*ph* + *-aoh*), **tomb** (silent *b*), and **hieroglyph** (*ie* + *y* + *ph*).",
+      "注意 **pharaoh** 的 **ph** 和结尾 **-aoh**、**tomb** 结尾不发音的 **b**，以及 **hieroglyph** 里的 **ie**、**y** 和 **ph**。",
+    ),
+  },
   domain: ["ancient Egypt", "古埃及"],
   prerequisites: ["context-clues"],
   encompasses: fromClues,
@@ -387,6 +788,23 @@ const ancientEgypt: BatchSpec = {
         "The ___ ordered thousands of workers to build his pyramid.",
       ],
       confusions: ["scribe", "archaeologist"],
+      clues: [
+        "the ruler of all Egypt treated almost like a god",
+        "the Egyptian king whose son inherits the throne",
+        "the royal ruler ordering thousands of workers to build his pyramid",
+      ],
+      contrast: ["pharaoh was Egypt's king; scribe was a trained writer", "pharaoh 是古埃及国王；scribe 是负责书写的书吏"],
+      conflicts: [
+        [
+          "scribe was a trained writer who copied records, not the king who ruled ancient Egypt",
+          "scribe 是抄写记录的书吏，不是统治古埃及的国王",
+        ],
+        [
+          "archaeologist is a modern scientist who digs up ruins today, not an ancient Egyptian king",
+          "archaeologist 是现代考古学家，不是古埃及的国王",
+        ],
+      ],
+      spelling: ["pha · raoh", "ph saying /f/ and silent h in -aoh", "开头读 /f/ 的 ph 和结尾 -aoh"],
     },
     {
       word: "tomb",
@@ -397,7 +815,24 @@ const ancientEgypt: BatchSpec = {
         "Robbers broke into the ___ and stole the king's gold.",
         "Paintings on the walls of the ___ showed the dead man's life.",
       ],
-      confusions: ["dynasty", "mummy"],
+      confusions: ["obelisk", "mummy"],
+      clues: [
+        "a burial chamber deep inside a mountain where a king rests",
+        "a burial room robbers broke into to steal a king's gold",
+        "a burial chamber whose walls are painted with the dead man's life",
+      ],
+      contrast: ["tomb is the burial chamber; obelisk is an outdoor stone pillar", "tomb 是安葬死者的墓室；obelisk 是室外的方尖石柱"],
+      conflicts: [
+        [
+          "obelisk is a solid outdoor four-sided stone pillar, not a burial room or building for the dead",
+          "obelisk 是立在室外的实心石柱，不是用来安葬死者的墓室",
+        ],
+        [
+          "mummy is the wrapped dead body itself, not the room or building where it is buried",
+          "mummy 是裹布防腐的遗体本身，不是用来安葬死者的墓室建筑",
+        ],
+      ],
+      spelling: ["tomb", "o saying /uː/ and silent b at the end", "读 /uː/ 的 o 和结尾不发音的 b"],
     },
     {
       word: "scribe",
@@ -408,7 +843,24 @@ const ancientEgypt: BatchSpec = {
         "The ___ sat cross-legged and counted the sacks of grain in the storehouse.",
         "Boys who wanted to become a ___ spent years copying signs at school.",
       ],
-      confusions: ["pharaoh", "mummy"],
+      confusions: ["pharaoh", "archaeologist"],
+      clues: [
+        "a trained writer who studied for years to write down the king's laws",
+        "a record-keeper sitting cross-legged counting sacks of grain",
+        "boys spending years at school copying writing signs for their future job",
+      ],
+      contrast: ["scribe wrote laws and lists; pharaoh gave the orders", "scribe 负责抄写记录；pharaoh 是下令的国王"],
+      conflicts: [
+        [
+          "pharaoh was the royal king who ruled Egypt, not a person whose job was writing things down",
+          "pharaoh 是统治古埃及的法老国王，不是专门从事书写记录的书吏",
+        ],
+        [
+          "archaeologist is a modern scientist who digs up ancient ruins, not an ancient Egyptian whose job was writing records",
+          "archaeologist 是现代发掘古物的科学家，不是古埃及专门写字记账的书吏",
+        ],
+      ],
+      spelling: ["scribe", "scr three-letter blend and silent e making long i", "开头的 scr 连缀和让 i 读长音的 e"],
     },
     {
       word: "papyrus",
@@ -419,6 +871,26 @@ const ancientEgypt: BatchSpec = {
         "This old letter, written on ___, is more than three thousand years old.",
       ],
       confusions: ["hieroglyph", "artifact"],
+      clues: [
+        "a long sheet made from river reeds that a scribe writes on",
+        "thick river-plant reeds growing along the banks of the Nile",
+        "ancient reed paper carrying a three-thousand-year-old letter",
+      ],
+      contrast: [
+        "papyrus is the reed paper; hieroglyph is a picture sign drawn on it",
+        "papyrus 是纸莎草纸；hieroglyph 是写在上面的象形文字",
+      ],
+      conflicts: [
+        [
+          "hieroglyph is a picture symbol standing for a word or sound, not a river plant or the reed paper made from it",
+          "hieroglyph 是代表字音的图形符号，不是河边植物或用它制成的纸张",
+        ],
+        [
+          "artifact is a general word for any ancient human-made object, not specifically the river plant and writing paper of Egypt",
+          "artifact 泛指古人制作的任何器物，不特指古埃及的纸莎草植物和书写用纸",
+        ],
+      ],
+      spelling: ["pa · py · rus", "y saying long i and -rus ending", "发长 i 音的 y 和结尾 -rus"],
     },
     {
       word: "mummy",
@@ -429,7 +901,21 @@ const ancientEgypt: BatchSpec = {
         "The museum's ___ lies in a glass case, still wrapped in its cloth.",
         "Before a body became a ___, it was dried with salt for many days.",
       ],
-      confusions: ["tomb", "pharaoh"],
+      confusions: ["tomb", "artifact"],
+      clues: [
+        "a preserved body wrapped in hundreds of strips of linen",
+        "a cloth-wrapped ancient body lying inside a museum glass case",
+        "a dead body dried with salt for days to keep it from decaying",
+      ],
+      contrast: ["mummy is the wrapped body; tomb is the room where it is placed", "mummy 是包裹好的遗体；tomb 是墓室"],
+      conflicts: [
+        [
+          "tomb is the burial chamber or building, not a dried dead body wrapped in cloth",
+          "tomb 是安葬死者的墓室建筑，不是经干燥并缠满布条的遗体",
+        ],
+        ["artifact is an object made by human hands, not a preserved dead body", "artifact 指人类制作的器物，不是经防腐处理的死者遗体"],
+      ],
+      spelling: ["mum · my", "double m and y saying long e", "中间双写 m 和结尾 y"],
     },
     {
       word: "dynasty",
@@ -440,7 +926,27 @@ const ancientEgypt: BatchSpec = {
         "Each ___ of Egypt began when a new family took the throne.",
         "The last king of the ___ had no children, so another family took over.",
       ],
-      confusions: ["tomb", "obelisk"],
+      confusions: ["pharaoh", "tomb"],
+      clues: [
+        "kings from the same family ruling for two hundred years in a row",
+        "a new royal family taking the Egyptian throne",
+        "a family line of kings ending when the last ruler has no children",
+      ],
+      contrast: [
+        "dynasty is a whole family line of rulers; pharaoh is one individual king",
+        "dynasty 是同一家族的整个王朝；pharaoh 只是单个国王",
+      ],
+      conflicts: [
+        [
+          "pharaoh is one single Egyptian king, not a whole series of rulers from the same family",
+          "pharaoh 只指一位法老国王，不是同一家族世代相传的整个王朝",
+        ],
+        [
+          "tomb is a burial room for the dead, not a series of rulers from the same family",
+          "tomb 是安葬死者的坟墓，不是执掌王位的同一家族王朝",
+        ],
+      ],
+      spelling: ["dy · nas · ty", "y saying long i in dy and -ty ending", "开头读长 i 的 y 和结尾 -ty"],
     },
     {
       word: "artifact",
@@ -451,7 +957,27 @@ const ancientEgypt: BatchSpec = {
         "Every ___ in this room, from the combs to the sandals, came from one village.",
         "The museum label says this ___ is a toy horse made of wood.",
       ],
-      confusions: ["papyrus", "hieroglyph"],
+      confusions: ["papyrus", "obelisk"],
+      clues: [
+        "an ancient clay cooking pot uncovered in the sand",
+        "old everyday village items like combs and sandals in a museum room",
+        "a wooden toy horse with a museum label from long ago",
+      ],
+      contrast: [
+        "artifact is any old human-made object; papyrus is specifically reed paper",
+        "artifact 泛指古人制作的文物；papyrus 特指纸莎草纸",
+      ],
+      conflicts: [
+        [
+          "papyrus is specifically writing paper made from river reeds, not a general word for an old human-made object",
+          "papyrus 特指纸莎草纸，不是泛指古人制作物品的“文物”",
+        ],
+        [
+          "obelisk is a towering four-sided stone pillar, not a general word for an object made by people long ago",
+          "obelisk 特指高耸的方尖石柱，不是泛指古人制作的文物器皿",
+        ],
+      ],
+      spelling: ["ar · ti · fact", "ar + ti + fact ending in ct", "ar 加 ti 再加以 ct 结尾的 fact"],
     },
     {
       word: "hieroglyph",
@@ -460,9 +986,26 @@ const ancientEgypt: BatchSpec = {
       sentences: [
         "Each ___ on the wall, such as the owl or the eye, stood for a sound or a word.",
         "The scribe painted a ___ shaped like a bird to stand for a sound.",
-        "Each ___ on the stone was carved carefully by hand.",
+        "Each picture ___ on the stone wall was carved carefully to stand for a word.",
       ],
-      confusions: ["papyrus", "scribe"],
+      confusions: ["papyrus", "artifact"],
+      clues: [
+        "a wall picture like an owl or eye standing for a sound or word",
+        "a bird-shaped symbol painted by a scribe to represent a sound",
+        "a carved picture symbol on a stone wall standing for a word",
+      ],
+      contrast: ["hieroglyph is a picture sign; papyrus is the paper sheet", "hieroglyph 是象形文字符号；papyrus 是写字用的纸"],
+      conflicts: [
+        [
+          "papyrus is the flat reed paper people wrote on, not a picture sign standing for a word or sound",
+          "papyrus 是书写用的纸莎草纸，不是代表字词或读音的象形图形",
+        ],
+        [
+          "artifact is a physical object made long ago, not a single picture sign standing for a sound or word",
+          "artifact 指古人制作的实物器皿，不是代表某个读音或词语的文字图形",
+        ],
+      ],
+      spelling: ["hi · er · o · glyph", "ie at the start, y for short i, and ph for /f/", "开头的 ie、发短 i 的 y 和结尾发 /f/ 的 ph"],
     },
     {
       word: "archaeologist",
@@ -474,6 +1017,23 @@ const ancientEgypt: BatchSpec = {
         "After years of digging, the ___ finally found the lost city.",
       ],
       confusions: ["scribe", "pharaoh"],
+      clues: [
+        "a scientist brushing away sand to uncover an ancient wall",
+        "a researcher recording exactly where each pottery piece was found",
+        "a scientist discovering a lost city after years of digging",
+      ],
+      contrast: ["archaeologist digs up history today; scribe wrote records long ago", "archaeologist 是现代考古科学家；scribe 是古代书吏"],
+      conflicts: [
+        [
+          "scribe lived in ancient times writing down records, not a modern scientist digging up what people left behind",
+          "scribe 是古埃及抄写记录的书吏，不是通过发掘遗物研究过去的现代科学家",
+        ],
+        [
+          "pharaoh was an ancient Egyptian king who ruled the country, not a scientist studying the past by digging",
+          "pharaoh 是统治古埃及的国王，不是通过挖掘研究历史的科学家",
+        ],
+      ],
+      spelling: ["ar · chae · ol · o · gist", "ch saying /k/, ae in the middle, and -ologist", "读 /k/ 的 ch、中间的 ae 和结尾 -ologist"],
     },
     {
       word: "obelisk",
@@ -481,10 +1041,27 @@ const ancientEgypt: BatchSpec = {
       meaning: ["a tall stone pillar with four sides and a pointed top", "方尖碑，四面、顶端尖的高石柱"],
       sentences: [
         "In front of the temple stood a tall, pointed ___ carved from a single stone.",
-        "Workers used ramps and ropes to stand the heavy ___ upright.",
+        "Workers used ramps and ropes to stand the towering four-sided stone ___ upright.",
         "The ___ was carved from one block of pink granite and covered in writing.",
       ],
       confusions: ["tomb", "artifact"],
+      clues: [
+        "a tall pointed pillar carved from a single stone outside a temple",
+        "a towering four-sided stone pillar raised upright with ramps and ropes",
+        "a single pink-granite pillar covered in carved writing",
+      ],
+      contrast: ["obelisk is a tall pointed stone pillar; tomb is a burial room", "obelisk 是高耸尖顶石柱；tomb 是安葬墓室"],
+      conflicts: [
+        [
+          "tomb is a hollow room where someone is buried, not a tall solid stone pillar with a pointed top",
+          "tomb 是安葬死者的中空墓室，不是四面尖顶的高大实心石柱",
+        ],
+        [
+          "artifact is a general word for an old human-made object, not specifically a tall four-sided pointed stone pillar",
+          "artifact 泛指古人制作的小件器物，不特指四面尖顶的高大石柱",
+        ],
+      ],
+      spelling: ["ob · e · lisk", "ob + e + lisk ending in sk", "ob 加 e 再加以 sk 结尾的 lisk"],
     },
   ],
 };
@@ -496,6 +1073,24 @@ const weatherScience: BatchSpec = {
     "Ten words for describing and measuring weather: humidity, precipitation, gust, blizzard and more.",
     "十个描述和测量天气的词：humidity、precipitation、gust、blizzard 等。",
   ),
+  intro: t(
+    "Tiny ice pellets bounce off the car roof—too warm for fluffy snow, too cold for rain: that is **sleet**! Weather science names every kind of rain, wind, storm, and measuring tool.",
+    "一颗颗小冰粒砸在车顶上直蹦——下雪太暖、下雨又太冷，这就是冻雨（**sleet**）。气象科学里，每种风雨雪雹和观测仪器都有自己的专名。",
+  ),
+  watchOut: {
+    meanings: t(
+      "Tell **humidity** (invisible water vapor floating in the air) apart from **precipitation** (water actually falling from clouds as rain, snow, or hail).",
+      "分清 **humidity**（空气里看不见的水汽湿度）和 **precipitation**（真正从云里落下来的雨雪冰雹等降水）。",
+    ),
+    use: t(
+      "A **barometer** is the tool that measures air pressure, while a **meteorologist** is the scientist who reads the data and forecasts weather.",
+      "**barometer** 是测气压的仪器，**meteorologist** 是预报天气的气象学家——别把工具和人弄混。",
+    ),
+    spelling: t(
+      "Watch **drizzle** and **blizzard** (both have double *z*) and **meteorologist** (*me-te-or-ol-o-gist*).",
+      "注意 **drizzle** 和 **blizzard** 里的双写 **z**，以及 **meteorologist** 中间的 **eo**（*me-te-or-ol-o-gist*）。",
+    ),
+  },
   domain: ["weather", "天气"],
   prerequisites: ["context-clues"],
   encompasses: fromClues,
@@ -509,6 +1104,26 @@ const weatherScience: BatchSpec = {
         "Desert air has very low ___, so your skin feels dry there.",
       ],
       confusions: ["precipitation", "drizzle"],
+      clues: [
+        "summer air feeling heavy and damp with moisture",
+        "moisture in the air so high that laundry will not dry on the line",
+        "very dry desert air holding almost no water vapor",
+      ],
+      contrast: [
+        "humidity is moisture hanging in the air; precipitation falls from clouds",
+        "humidity 是空气里的湿气；precipitation 是落下的雨雪",
+      ],
+      conflicts: [
+        [
+          "precipitation is water actually falling from clouds as rain, snow, or hail, not invisible water vapor in the air",
+          "precipitation 是从云层落下的雨雪冰雹，不是空气里看不见的水汽",
+        ],
+        [
+          "drizzle is light falling rain, not the amount of invisible water vapor in the air",
+          "drizzle 是飘落的毛毛细雨，不是空气里看不见的湿度水汽",
+        ],
+      ],
+      spelling: ["hu · mid · i · ty", "single m and -ity ending", "单个 m 和结尾 -ity"],
     },
     {
       word: "precipitation",
@@ -516,9 +1131,29 @@ const weatherScience: BatchSpec = {
       sentences: [
         "Rain, snow and sleet are all kinds of ___.",
         "The desert gets less than ten inches of ___ in a whole year.",
-        "The weather report said there was a small chance of ___ this afternoon.",
+        "The weather report said there was a chance of ___, either rain or snow, this afternoon.",
       ],
-      confusions: ["humidity", "monsoon"],
+      confusions: ["humidity", "drizzle"],
+      clues: [
+        "a category covering rain, snow, and sleet falling from clouds",
+        "less than ten inches of falling rain or snow in a desert year",
+        "a weather report's chance of rain or snow falling this afternoon",
+      ],
+      contrast: [
+        "precipitation covers all falling rain, snow, or hail; humidity is invisible vapor in the air",
+        "precipitation 指所有落下的降水；humidity 是空气湿度",
+      ],
+      conflicts: [
+        [
+          "humidity is invisible water vapor floating in the air, not water falling from clouds as rain or snow",
+          "humidity 是空气里的隐形水汽，不是从云中落下的雨雪等降水",
+        ],
+        [
+          "drizzle is only one light kind of rain, too narrow to cover all falling water such as rain, snow, and sleet",
+          "drizzle 只是毛毛细雨这一种，无法概括雨、雪、冻雨等全部降水形式",
+        ],
+      ],
+      spelling: ["pre · cip · i · ta · tion", "soft c (/s/) in cip and -tion ending", "cip 里读 /s/ 的 c 和结尾 -tion"],
     },
     {
       word: "barometer",
@@ -530,6 +1165,23 @@ const weatherScience: BatchSpec = {
         "The needle on the ___ dropped quickly before the hurricane arrived.",
       ],
       confusions: ["meteorologist", "humidity"],
+      clues: [
+        "a weather instrument showing falling air pressure before a storm",
+        "a gauge sailors checked to spot an approaching storm",
+        "an instrument whose needle drops quickly before a hurricane",
+      ],
+      contrast: [
+        "barometer is the air-pressure gauge; meteorologist is the weather scientist",
+        "barometer 是测气压的仪器；meteorologist 是预报天气的科学家",
+      ],
+      conflicts: [
+        [
+          "meteorologist is a human weather scientist, not a tool that measures air pressure",
+          "meteorologist 是气象学家，不是测量气压的仪器",
+        ],
+        ["humidity is water vapor in the air, not an instrument that measures air pressure", "humidity 是空气湿度，不是测量气压的工具"],
+      ],
+      spelling: ["ba · rom · e · ter", "ba + rom + -eter ending", "ba 加 rom 再加结尾 -eter"],
     },
     {
       word: "meteorologist",
@@ -540,7 +1192,27 @@ const weatherScience: BatchSpec = {
         "A ___ studies maps of the wind and clouds to predict the weather.",
         "The ___ warned that the river might flood after three days of rain.",
       ],
-      confusions: ["barometer", "monsoon"],
+      confusions: ["barometer", "precipitation"],
+      clues: [
+        "a weather forecaster on the news predicting snow tomorrow",
+        "a scientist studying wind and cloud maps to forecast weather",
+        "a weather expert warning that three days of rain might flood a river",
+      ],
+      contrast: [
+        "meteorologist is the weather scientist; barometer is one instrument they read",
+        "meteorologist 是科学家；barometer 是仪器",
+      ],
+      conflicts: [
+        [
+          "barometer is an air-pressure tool, not a scientist who studies and predicts the weather",
+          "barometer 是气压表工具，不是研究并预报天气的科学家",
+        ],
+        [
+          "precipitation is falling rain or snow itself, not the scientist who studies and predicts weather",
+          "precipitation 是落下的雨雪本身，不是研究气象并发出预报的科学家",
+        ],
+      ],
+      spelling: ["me · te · or · ol · o · gist", "meteor + -ologist (watch the eo in meteor)", "meteor 加 -ologist（注意 meteor 里的 eo）"],
     },
     {
       word: "gust",
@@ -551,7 +1223,27 @@ const weatherScience: BatchSpec = {
         "A sudden ___ slammed the door shut.",
         "One strong ___ lifted the kite high above the trees.",
       ],
-      confusions: ["tornado", "drizzle"],
+      confusions: ["tornado", "monsoon"],
+      clues: [
+        "a sudden rush of wind blowing a hat right off a head",
+        "a sudden blast of wind slamming a door shut",
+        "one strong burst of wind lifting a kite high above trees",
+      ],
+      contrast: [
+        "gust is a brief burst of wind; tornado is a spinning destructive funnel",
+        "gust 是短暂一阵猛风；tornado 是破坏力极强的旋转龙卷风",
+      ],
+      conflicts: [
+        [
+          "tornado is a destructive spinning wind column from a storm cloud, far stronger than a sudden rush of wind",
+          "tornado 是破坏力极强的旋转龙卷风，不是短暂的一阵强风",
+        ],
+        [
+          "monsoon is a months-long seasonal rainy wind, not a single sudden rush of wind",
+          "monsoon 是持续数周带来雨季的季风，不是瞬间刮起的一阵强风",
+        ],
+      ],
+      spelling: ["gust", "short u followed by st blend", "短音 u 加结尾 st"],
     },
     {
       word: "drizzle",
@@ -561,7 +1253,24 @@ const weatherScience: BatchSpec = {
         "The ___ was so light that it barely wet the sidewalk.",
         "We kept playing soccer in the gentle ___.",
       ],
-      confusions: ["sleet", "blizzard"],
+      confusions: ["sleet", "precipitation"],
+      clues: [
+        "a rain so light that nobody needs an umbrella",
+        "fine tiny rain drops barely wetting the sidewalk",
+        "a gentle light rain players can keep playing soccer in",
+      ],
+      contrast: ["drizzle is tiny soft rain; sleet is frozen ice pellets", "drizzle 是细小毛毛雨；sleet 是冻成冰粒的冻雨"],
+      conflicts: [
+        [
+          "sleet is freezing rain that falls as small ice pellets, not light liquid rain with tiny drops",
+          "sleet 是落成小冰粒的冻雨，不是细软轻柔的液态毛毛雨",
+        ],
+        [
+          "precipitation covers every kind of falling water including snow and hail, not specifically light rain with tiny drops",
+          "precipitation 泛指雨雪冰雹等所有降水，并不特指雨滴很小的毛毛雨",
+        ],
+      ],
+      spelling: ["driz · zle", "dr blend, double z, and -le ending", "dr 连缀、双写 z 和结尾 -le"],
     },
     {
       word: "sleet",
@@ -572,6 +1281,23 @@ const weatherScience: BatchSpec = {
         "It was too warm for snow and too cold for rain, so we got ___.",
       ],
       confusions: ["drizzle", "blizzard"],
+      clues: [
+        "tiny frozen ice pellets bouncing on a car roof",
+        "freezing rain glazing power lines and making roads slippery",
+        "icy pellets falling when it is too warm for snow and too cold for rain",
+      ],
+      contrast: ["sleet falls as tiny ice pellets; drizzle is liquid light rain", "sleet 是下落的小冰粒冻雨；drizzle 是液态毛毛细雨"],
+      conflicts: [
+        [
+          "drizzle is gentle liquid rain, not rain that freezes into tiny pieces of ice as it falls",
+          "drizzle 是细软的液态小雨，不是下落时冻成小冰粒的冻雨",
+        ],
+        [
+          "blizzard is a long heavy snowstorm with strong winds, not falling frozen rain pellets",
+          "blizzard 是伴有强风的漫长暴风雪，不是冻成小冰粒落下的冻雨",
+        ],
+      ],
+      spelling: ["sleet", "sl blend and double e", "sl 连缀和双写 e"],
     },
     {
       word: "blizzard",
@@ -580,9 +1306,26 @@ const weatherScience: BatchSpec = {
       sentences: [
         "During the ___, the wind blew so much snow that no one could see the road.",
         "Schools closed because the ___ had buried the roads in snow.",
-        "The climbers waited in their tent until the ___ ended.",
+        "The climbers waited in their tent until the howling snow of the ___ ended.",
       ],
-      confusions: ["tornado", "sleet"],
+      confusions: ["sleet", "tornado"],
+      clues: [
+        "blinding wind-blown snow hiding the road from view",
+        "a heavy snowstorm burying roads and closing schools",
+        "a howling snowstorm forcing climbers to wait inside their tent",
+      ],
+      contrast: ["blizzard is a severe snowstorm; sleet is small falling ice pellets", "blizzard 是狂风暴雪；sleet 是冻雨冰粒"],
+      conflicts: [
+        [
+          "sleet is falling ice pellets from freezing rain, not a long heavy snowstorm with strong winds",
+          "sleet 只是冻雨冰粒，不是大风卷雪、漫长猛烈的暴风雪",
+        ],
+        [
+          "tornado is a spinning column of wind from a thunderstorm, not a heavy snowstorm with howling snow",
+          "tornado 是雷雨云下的旋转风柱，不是漫天大雪的暴风雪",
+        ],
+      ],
+      spelling: ["bliz · zard", "bl blend, double z, and -ard ending", "bl 连缀、双写 z 和结尾 -ard"],
     },
     {
       word: "tornado",
@@ -594,6 +1337,26 @@ const weatherScience: BatchSpec = {
         "The ___ touched down for only a minute but lifted a barn roof.",
       ],
       confusions: ["gust", "blizzard"],
+      clues: [
+        "a spinning wind column tearing up trees in a narrow path across a field",
+        "a dangerous storm whose siren sends people hurrying to the basement",
+        "a funnel touching down for a minute and lifting a barn roof",
+      ],
+      contrast: [
+        "tornado is a spinning wind funnel; gust is just a quick rush of wind",
+        "tornado 是破坏力极强的旋转气柱；gust 只是突然一阵风",
+      ],
+      conflicts: [
+        [
+          "gust is only a quick, ordinary burst of wind, not a destructive spinning column reaching down from a storm cloud",
+          "gust 只是短暂的一阵普通强风，不是破坏力极强的旋转气柱",
+        ],
+        [
+          "blizzard is a long heavy snowstorm, not a spinning column of wind from a storm cloud",
+          "blizzard 是持续很久的暴风雪，不是旋转气柱状的龙卷风",
+        ],
+      ],
+      spelling: ["tor · na · do", "or in tor and long o at the end", "tor 里的 or 和结尾长音 o"],
     },
     {
       word: "monsoon",
@@ -604,7 +1367,24 @@ const weatherScience: BatchSpec = {
         "Farmers plant their rice when the ___ begins.",
         "During the ___, the streets of the city sometimes turn into rivers.",
       ],
-      confusions: ["precipitation", "tornado"],
+      confusions: ["gust", "tornado"],
+      clues: [
+        "a summer seasonal wind bringing weeks of heavy rain to fill rivers",
+        "the seasonal rainy wind that signals farmers to plant rice",
+        "a rainy season so heavy that city streets turn into rivers",
+      ],
+      contrast: ["monsoon is a seasonal rainy wind; tornado is a brief spinning storm", "monsoon 是带来雨季的季风；tornado 是短促的龙卷风"],
+      conflicts: [
+        [
+          "gust is a single brief rush of wind, not a seasonal wind that brings a whole season of heavy rain",
+          "gust 只是一瞬间的阵风，不是随季节到来、带来整个雨季的季风",
+        ],
+        [
+          "tornado is a brief, narrow spinning funnel, not a seasonal wind bringing a season of heavy rain",
+          "tornado 是短暂狭窄的旋转风柱，不是带来漫长雨季的季节性季风",
+        ],
+      ],
+      spelling: ["mon · soon", "single n in mon and double o in soon", "mon 单个 n，soon 双写 o"],
     },
   ],
 };
@@ -616,6 +1396,24 @@ const animalSurvival: BatchSpec = {
     "Ten words for how animals stay alive: adapt, camouflage, predator, migrate and more.",
     "十个关于动物如何生存的词：adapt、camouflage、predator、migrate 等。",
   ),
+  intro: t(
+    "A brown moth lands on rough tree bark and practically disappears—its **camouflage** hides it from hungry birds. Every animal has built-in ways to stay alive, from **hibernating** in winter to **migrating** thousands of miles.",
+    "一只褐色飞蛾落到粗糙的树皮上，眨眼间就像消失了一样——它的伪装（**camouflage**）躲过了捕食的鸟。从冬眠（**hibernate**）到万里迁徙（**migrate**），动物生存各有绝招。",
+  ),
+  watchOut: {
+    meanings: t(
+      "Do not swap **predator** (the hunter, like an owl or shark) and **prey** (the animal being hunted, like a mouse or rabbit).",
+      "别把 **predator**（捕食者，如猫头鹰、鲨鱼）和 **prey**（猎物，如老鼠、兔子）搞反。",
+    ),
+    use: t(
+      "**Hibernate** means sleeping in one spot all winter, while **migrate** means traveling far away when seasons change.",
+      "**hibernate** 是留在原地冬眠，**migrate** 是随季节长途迁徙——看动物是睡过冬天还是搬家远行。",
+    ),
+    spelling: t(
+      "Watch **camouflage** (*ou* + *-age* saying /ɑːʒ/), **prey** (*ey* says long *a*, not *pray*), and **burrow** (double *r* + *ow*).",
+      "注意 **camouflage** 里的 **ou** 和结尾 **-age**、**prey** 的 **ey**（别写成祈祷 *pray*），以及 **burrow** 的双写 **r**。",
+    ),
+  },
   domain: ["how animals survive", "动物的生存"],
   prerequisites: ["context-clues"],
   encompasses: fromClues,
@@ -630,6 +1428,26 @@ const animalSurvival: BatchSpec = {
         "City pigeons ___ easily to living on buildings instead of cliffs.",
       ],
       confusions: ["migrate", "hibernate"],
+      clues: [
+        "island animals slowly changing over years to handle the cold",
+        "adjusting to a warmer climate instead of having to move north",
+        "city pigeons adjusting easily to living on buildings instead of cliffs",
+      ],
+      contrast: [
+        "adapt changes how an animal lives in place; migrate moves to another region",
+        "adapt 是改变自身来适应环境；migrate 是搬去别处",
+      ],
+      conflicts: [
+        [
+          "migrate means traveling far away when the season changes, not changing how you live to fit a place",
+          "migrate 是随季节长途迁徙，不是改变自身去适应环境",
+        ],
+        [
+          "hibernate means sleeping through the winter, not changing in ways that help you live in a place",
+          "hibernate 是在冬天里沉睡冬眠，不是通过改变来适应环境",
+        ],
+      ],
+      spelling: ["a · dapt", "two a's (not adopt with o) ending in pt", "两个 a（别写成收养 adopt），结尾 pt"],
     },
     {
       word: "camouflage",
@@ -640,6 +1458,26 @@ const animalSurvival: BatchSpec = {
         "A chameleon changes its ___ to match the leaves it sits on.",
       ],
       confusions: ["instinct", "habitat"],
+      clues: [
+        "a moth's brown coloring matching rough tree bark",
+        "a snowy owl's white feathers blending into the Arctic snow",
+        "a chameleon changing its colors to match green leaves",
+      ],
+      contrast: [
+        "camouflage hides an animal's look; habitat is the whole environment it lives in",
+        "camouflage 是保护色伪装；habitat 是栖息环境",
+      ],
+      conflicts: [
+        [
+          "instinct is an inborn behavior an animal knows without being taught, not colors or patterns that blend in",
+          "instinct 是天生会做的行为本能，不是用来隐藏身形的颜色或花纹",
+        ],
+        [
+          "habitat is the whole natural environment an animal lives in, not the colors or patterns that help it blend in",
+          "habitat 指动物居住的整片自然环境，不是帮助融入周围的保护色花纹",
+        ],
+      ],
+      spelling: ["cam · ou · flage", "ou in the middle and -flage ending", "中间的 ou 和结尾 -flage"],
     },
     {
       word: "predator",
@@ -650,7 +1488,24 @@ const animalSurvival: BatchSpec = {
         "The shark is a ___ at the top of the ocean food chain.",
         "A rabbit freezes when it sees a ___ circling overhead.",
       ],
-      confusions: ["prey", "habitat"],
+      confusions: ["prey", "nocturnal"],
+      clues: [
+        "an owl hunting mice at night for food",
+        "a shark hunting at the top of the ocean food chain",
+        "a hunter circling overhead that makes a rabbit freeze",
+      ],
+      contrast: ["predator does the hunting; prey is the animal being hunted", "predator 是捕猎方；prey 是被捕食的猎物"],
+      conflicts: [
+        [
+          "prey is the animal being hunted for food, the exact opposite of the hunter doing the chasing",
+          "prey 是被追捕的猎物，与主动捕猎其他动物的捕食者正相反",
+        ],
+        [
+          "nocturnal is an adjective meaning active at night, not a noun for an animal that hunts other animals",
+          "nocturnal 是“夜行的”形容词，不是指代捕猎动物的名词",
+        ],
+      ],
+      spelling: ["pred · a · tor", "pr blend and -tor ending (not -ter)", "pr 连缀和结尾 -tor（不是 -ter）"],
     },
     {
       word: "prey",
@@ -661,6 +1516,20 @@ const animalSurvival: BatchSpec = {
         "Small fish are ___ for bigger fish, birds and seals.",
       ],
       confusions: ["predator", "burrow"],
+      clues: [
+        "rabbits hunted for food by foxes and hawks",
+        "a small animal spotted from the sky by a hunting hawk",
+        "small fish hunted by bigger fish, birds, and seals",
+      ],
+      contrast: ["prey is hunted for food; predator is the hunter", "prey 是被捕食者；predator 是捕食者"],
+      conflicts: [
+        [
+          "predator is the hunter doing the chasing, the exact opposite of an animal hunted for food",
+          "predator 是主动捕猎的一方，与被其他动物捕食的猎物正相反",
+        ],
+        ["burrow is a dug underground tunnel, not an animal hunted for food", "burrow 是动物挖出来的洞穴，不是被捕食的猎物"],
+      ],
+      spelling: ["prey", "ey spelling long a (not pray)", "发长 a 音的 ey（别写成祈祷 pray）"],
     },
     {
       word: "hibernate",
@@ -672,6 +1541,26 @@ const animalSurvival: BatchSpec = {
         "Some frogs ___ in the mud at the bottom of a pond.",
       ],
       confusions: ["migrate", "adapt"],
+      clues: [
+        "bears sleeping in a den all winter until spring",
+        "groundhogs eating as much as possible before sleeping through winter",
+        "frogs sleeping through winter in pond-bottom mud",
+      ],
+      contrast: [
+        "hibernate sleeps through winter in place; migrate travels far away for warmth",
+        "hibernate 是原地冬眠；migrate 是长途迁徙",
+      ],
+      conflicts: [
+        [
+          "migrate means traveling a long way to a warmer place, not staying asleep through the winter",
+          "migrate 是长途迁往暖和的地方，不是留在原地一睡过冬",
+        ],
+        [
+          "adapt means changing in ways that help you live in a place, not sleeping through the winter",
+          "adapt 是改变自身以适应环境，不是整个冬天沉睡冬眠",
+        ],
+      ],
+      spelling: ["hi · ber · nate", "long i in hi, er, and -nate with silent e", "hi 长音 i、中间 er 和带 e 的 -nate"],
     },
     {
       word: "migrate",
@@ -682,7 +1571,27 @@ const animalSurvival: BatchSpec = {
         "Monarch butterflies ___ thousands of miles to spend the winter in Mexico.",
         "Whales ___ to warm waters to have their babies.",
       ],
-      confusions: ["hibernate", "burrow"],
+      confusions: ["hibernate", "adapt"],
+      clues: [
+        "geese flying south to warmer lakes every autumn",
+        "monarch butterflies traveling thousands of miles to Mexico for winter",
+        "whales traveling long distances to warm waters to give birth",
+      ],
+      contrast: [
+        "migrate travels long distances seasonally; hibernate stays asleep in one shelter",
+        "migrate 是季节性远行；hibernate 是在洞里冬眠",
+      ],
+      conflicts: [
+        [
+          "hibernate means sleeping in one spot all winter, the opposite of traveling a long way when the season changes",
+          "hibernate 是留在原地沉睡过冬，与随季节长途远行迁徙正相反",
+        ],
+        [
+          "adapt means changing how you live in a place, not making a long seasonal journey to a new region",
+          "adapt 是改变自身适应环境，不是随季节长途迁往新地方",
+        ],
+      ],
+      spelling: ["mi · grate", "long i in mi and gr blend with silent e", "mi 长音 i、gr 连缀和词尾 e"],
     },
     {
       word: "habitat",
@@ -694,6 +1603,26 @@ const animalSurvival: BatchSpec = {
         "A pond is the perfect ___ for frogs and dragonflies.",
       ],
       confusions: ["burrow", "camouflage"],
+      clues: [
+        "a whole rainforest serving as the natural home of frogs, birds, and monkeys",
+        "a forest home destroyed for orangutans when trees are cut down",
+        "a pond serving as the natural home of frogs and dragonflies",
+      ],
+      contrast: [
+        "habitat is the whole natural region; burrow is one small dug tunnel",
+        "habitat 是整片自然栖息环境；burrow 只是挖出的小洞穴",
+      ],
+      conflicts: [
+        [
+          "burrow is one single hole or tunnel dug underground, not the whole natural home of animals and plants",
+          "burrow 只是动物挖出的一个地下洞穴，不是整片自然栖息家园",
+        ],
+        [
+          "camouflage is colors or patterns that help an animal blend in, not the natural place where it lives",
+          "camouflage 是隐藏身形的保护色，不是动植物赖以生存的自然家园",
+        ],
+      ],
+      spelling: ["hab · i · tat", "hab + i + tat (three short vowels)", "hab 加 i 加 tat"],
     },
     {
       word: "instinct",
@@ -705,6 +1634,23 @@ const animalSurvival: BatchSpec = {
         "When a puppy sees a ball roll, its ___ is to chase it.",
       ],
       confusions: ["camouflage", "adapt"],
+      clues: [
+        "a baby turtle knowing how to crawl toward the sea without being taught",
+        "a spider knowing how to spin a web without ever learning",
+        "a puppy automatically chasing a rolling ball by built-in urge",
+      ],
+      contrast: ["instinct is built-in behavior from birth; camouflage is body coloring", "instinct 是天生本能；camouflage 是外表伪装"],
+      conflicts: [
+        [
+          "camouflage is colors or patterns that hide an animal, not something an animal knows how to do without being taught",
+          "camouflage 是隐藏外表的花纹颜色，不是动物无须学习天生就会的行为本能",
+        ],
+        [
+          "adapt is a verb for changing to fit a place, not a noun for untaught behavior an animal is born with",
+          "adapt 是表示“适应”的动词，不是动物与生俱来的“本能”名词",
+        ],
+      ],
+      spelling: ["in · stinct", "in- + stinct ending in nct", "in- 加以 nct 结尾的 stinct"],
     },
     {
       word: "burrow",
@@ -716,6 +1662,20 @@ const animalSurvival: BatchSpec = {
         "Prairie dogs stand guard at the mouth of their ___.",
       ],
       confusions: ["habitat", "prey"],
+      clues: [
+        "an underground rabbit hole hidden under a hedge",
+        "a tunnel a fox digs beneath old tree roots",
+        "an underground tunnel whose entrance prairie dogs guard",
+      ],
+      contrast: ["burrow is a dug tunnel home; habitat is the whole surrounding landscape", "burrow 是挖出的洞穴；habitat 是整片栖息地"],
+      conflicts: [
+        [
+          "habitat is the whole natural environment around an animal, not a dug underground hole or tunnel",
+          "habitat 指整片自然栖息环境，不是动物挖出来居住的洞穴或地道",
+        ],
+        ["prey is a hunted animal, not a hole or tunnel an animal digs to live in", "prey 是被捕食的动物，不是动物挖来居住的地下洞穴"],
+      ],
+      spelling: ["bur · row", "double r and ow saying long o (not borrow with o)", "双写 r 和发长 o 的 ow（别写成借用 borrow）"],
     },
     {
       word: "nocturnal",
@@ -725,7 +1685,27 @@ const animalSurvival: BatchSpec = {
         "Owls are ___ hunters that use their sharp hearing in the dark.",
         "Because raccoons are ___, you rarely see them at noon.",
       ],
-      confusions: ["instinct", "predator"],
+      confusions: ["predator", "instinct"],
+      clues: [
+        "bats sleeping all day and flying out after dark",
+        "owls hunting in the dark with sharp hearing",
+        "raccoons active at night so you rarely spot them at noon",
+      ],
+      contrast: [
+        "nocturnal describes night-active habits; predator means any hunter (day or night)",
+        "nocturnal 指夜间活动的习性；predator 泛指捕食者",
+      ],
+      conflicts: [
+        [
+          "predator is a noun for any meat-eating hunter, not an adjective meaning active at night and asleep by day",
+          "predator 是名词“捕食者”（白天黑夜都有），不是形容夜间活动、白天睡觉的形容词",
+        ],
+        [
+          "instinct is a noun for untaught behavior, not an adjective meaning active at night",
+          "instinct 是名词“本能”，不能作形容词描述夜间活动的习性",
+        ],
+      ],
+      spelling: ["noc · tur · nal", "ct in the middle, ur, and -al ending", "中间 ct、ur 和结尾 -al"],
     },
   ],
 };
