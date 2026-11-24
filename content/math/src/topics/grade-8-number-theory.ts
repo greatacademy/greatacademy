@@ -756,6 +756,17 @@ export const theFundamentalTheoremOfArithmetic = withIntro(
           const answer = powers.reduce((total, v) => total * (v + 1), 1);
           const shown = primes.map((p, i) => (powers[i] === 1 ? `${p}` : `${p}^{${powers[i]}}`)).join(" \\times ");
           const sum = powers.reduce((total, v) => total + v, 0);
+          // The check lists the factors when there are few, and otherwise counts them in groups by the first prime.
+          const all = primes
+            .reduce((ds: number[], p, i) => ds.flatMap((d) => Array.from({ length: (powers[i] ?? 0) + 1 }, (_, k) => d * p ** k)), [1])
+            .sort((x, y) => x - y);
+          const listed = all.map((d) => `$${grouped(d)}$`);
+          const first = powers[0] ?? 0;
+          const rest = answer / (first + 1);
+          const restShown = primes
+            .slice(1)
+            .map((p, i) => (powers[i + 1] === 1 ? `${p}` : `${p}^{${powers[i + 1]}}`))
+            .join(" \\times ");
           return valued(
             [
               `A number has the prime factorization $${shown}$. How many positive factors does it have, including 1 and itself?`,
@@ -774,10 +785,12 @@ export const theFundamentalTheoremOfArithmetic = withIntro(
                 [`${powers.map((v) => v + 1).join(" \\times ")} = ${answer}`],
               ],
             ],
-            [
-              "Both ends are counted: using no primes gives $1$, and using all of them gives the number itself.",
-              "两端都算进去了：一个质数都不用得 $1$，全部用上得这个数本身。",
-            ],
+            answer <= 12
+              ? [`List them all: ${listed.join(", ")}. That makes $${answer}$.`, `全部列出来：${listed.join("、")}，一共 $${answer}$ 个。`]
+              : [
+                  `Sort the factors by how many $${primes[0]}$s they use: each of the $${first + 1}$ groups, from $${primes[0]}^{0}$ to $${primes[0]}^{${first}}$, holds the same $${rest}$ factors of $${restShown}$, and $${first + 1} \\times ${rest} = ${answer}$.`,
+                  `按用了几个 $${primes[0]}$ 把因数分组：从 $${primes[0]}^{0}$ 到 $${primes[0]}^{${first}}$ 共 $${first + 1}$ 组，每组都是 $${restShown}$ 的那 $${rest}$ 个因数，$${first + 1} \\times ${rest} = ${answer}$。`,
+                ],
             [
               [sum, "That adds the exponents; the choices multiply.", "这是把指数相加了；选择数要相乘。"],
               [
@@ -958,6 +971,12 @@ export const findingGreatestCommonFactorsUsingPrimeFactorization = withIntro(
           const common = [...new Set(g.map(([p]) => p))];
           const larger = combine(a, b, "lcm").filter(([p]) => common.includes(p));
           const listed = common.map((p) => `$${p}$`);
+          const over = g.length > 1 ? `\\left(${latex(g)}\\right)` : latex(g);
+          // left is what remains of a factorization once the GCF is divided out.
+          const left = (fs: Factors) => {
+            const rest = fs.map(([p, e]) => [p, e - (g.find(([q]) => q === p)?.[1] ?? 0)] as const).filter(([, e]) => e > 0);
+            return rest.length ? latex(rest) : "1";
+          };
           return valued(
             [
               `$A = ${latex(a)}$ and $B = ${latex(b)}$. What is the greatest common factor of $A$ and $B$?`,
@@ -978,8 +997,8 @@ export const findingGreatestCommonFactorsUsingPrimeFactorization = withIntro(
               ],
             ],
             [
-              `Each exponent in $${latex(g)}$ is at most the one in $A$ and the one in $B$, so it divides both.`,
-              `$${latex(g)}$ 的每个指数都不超过 $A$ 和 $B$ 中的指数，所以它能整除两者。`,
+              `Divide it out: $A \\div ${over} = ${left(a)}$ and $B \\div ${over} = ${left(b)}$. These share no prime, so no larger number divides both.`,
+              `把它除掉：$A \\div ${over} = ${left(a)}$，$B \\div ${over} = ${left(b)}$。两者没有公有的质因数，所以没有更大的数能同时整除 $A$ 和 $B$。`,
             ],
             [
               [product(larger), "That uses the larger exponents of the shared primes.", "这是给公有质因数取了较大的指数。"],

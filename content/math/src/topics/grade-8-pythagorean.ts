@@ -308,8 +308,8 @@ const theConverseOfThePythagoreanTheorem = withIntro(
             "当逆定理说明一个三角形是直角三角形时，它的直角是**最长边（斜边）所对的角**。在三角形 $ABC$ 中，$AB = 5$，$BC = 13$，$AC = 12$：$5^2 + 12^2 = 25 + 144 = 169 = 13^2$，所以这是直角三角形。最长边是 $BC$，它所对的角是 $\\angle A$。",
           ],
           [
-            "The two legs, $AB$ and $AC$, both end at $A$, so they meet at the right angle there.",
-            "两条直角边 $AB$ 和 $AC$ 都以 $A$ 为端点，所以它们在 $A$ 处相交成直角。",
+            "Test another vertex: at $B$ the sides are $BC$ and $AB$, and $13^2 + 5^2 = 194$, more than $AC^2 = 144$, so $\\angle B$ is not right. The same happens at $C$, which leaves only $\\angle A$.",
+            "换一个顶点检验：$B$ 处的两边是 $BC$ 和 $AB$，$13^2 + 5^2 = 194$，大于 $AC^2 = 144$，所以 $\\angle B$ 不是直角。$C$ 处也一样，只剩下 $\\angle A$。",
           ],
           [
             "The right angle is not at either end of the longest side. $B$ and $C$ are the ends of $BC$, so neither is the right angle.",
@@ -323,7 +323,10 @@ const theConverseOfThePythagoreanTheorem = withIntro(
           const seg = (i: number) => letters.filter((_, j) => j !== i).join("");
           const [l1, l2] = rng.shuffle([sides[0], sides[1]]) as [Len, Len];
           const others = [0, 1, 2].filter((i) => i !== opp);
-          const len = (i: number) => (i === opp ? sides[2] : i === others[0] ? l1 : l2).tex;
+          const side = (i: number) => (i === opp ? sides[2] : i === others[0] ? l1 : l2);
+          const len = (i: number) => side(i).tex;
+          const [b, c] = others as [number, number];
+          const far = side(opp).sq.add(side(c).sq);
           // The segments in the order AB, BC, AC are opposite C, A and B.
           const [s2, s0, s1] = [seg(2), seg(0), seg(1)];
           const name = letters.join("");
@@ -357,8 +360,8 @@ const theConverseOfThePythagoreanTheorem = withIntro(
               ],
             ],
             [
-              `The two legs, $${seg(others[0]!)}$ and $${seg(others[1]!)}$, both end at $${letters[opp]}$, so they meet at the right angle there.`,
-              `两条直角边 $${seg(others[0]!)}$ 和 $${seg(others[1]!)}$ 都以 $${letters[opp]}$ 为端点，所以它们在那里相交成直角。`,
+              `Test another vertex: at $${letters[b]}$ the sides are $${seg(opp)}$ and $${seg(c)}$, and $${squared(side(opp))} + ${squared(side(c))} = ${qTex(far)}$, more than $${seg(b)}^2 = ${qTex(side(b).sq)}$, so $\\angle ${letters[b]}$ is not right. The same happens at $${letters[c]}$, which leaves only $\\angle ${letters[opp]}$.`,
+              `换一个顶点检验：$${letters[b]}$ 处的两边是 $${seg(opp)}$ 和 $${seg(c)}$，$${squared(side(opp))} + ${squared(side(c))} = ${qTex(far)}$，大于 $${seg(b)}^2 = ${qTex(side(b).sq)}$，所以 $\\angle ${letters[b]}$ 不是直角。$${letters[c]}$ 处也一样，只剩下 $\\angle ${letters[opp]}$。`,
             ],
           );
         },
@@ -1789,6 +1792,10 @@ const findingTheDistanceBetweenTwoPoints = withIntro(
             const best = names[correct]!;
             const lines = pts.map((v, i) => `P${names[i]}^2 = ${Math.abs(v[0] - p[0])}^2 + ${Math.abs(v[1] - p[1])}^2 = ${sq[i]}`);
             const point = (i: number): Pair => [`Point $${names[i]}$`, `点 $${names[i]}$`];
+            const roots = sq.map((v, i) => {
+              const r = Math.sqrt(v);
+              return Number.isInteger(r) ? `$P${names[i]} = ${r}$` : `$P${names[i]} \\approx ${r.toFixed(2)}$`;
+            });
             return chosen(
               rng,
               far
@@ -1823,8 +1830,8 @@ const findingTheDistanceBetweenTwoPoints = withIntro(
                 ],
               ],
               [
-                `Taking square roots keeps the order, so the ${far ? "largest" : "smallest"} square belongs to the ${far ? "longest" : "shortest"} distance, $P${best}$.`,
-                `开平方不改变大小顺序，所以平方${far ? "最大" : "最小"}的 $P${best}$ 就是${far ? "最长" : "最短"}的距离。`,
+                `Find the distances themselves: ${roots.join(", ")}. The ${far ? "longest" : "shortest"} is $P${best}$.`,
+                `直接求出距离：${roots.join("，")}。${far ? "最长" : "最短"}的是 $P${best}$。`,
               ],
               graph(
                 [

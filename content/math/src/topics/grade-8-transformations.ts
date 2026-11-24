@@ -493,6 +493,20 @@ const verifyingPropertiesOfRigidMotions = withIntro(
               "刚体运动把平行线变成平行线，所以 $\\overline{A'B'} \\parallel \\overline{D'C'}$。",
             ],
           ];
+          const traced: Pair[] = [
+            [
+              `Trace $ABCD$ on paper and lay the tracing on $A'B'C'D'$: the paper never stretches, so the traced side $AB$ still covers a length of $${a}$ along $A'B'$.`,
+              `把 $ABCD$ 描在纸上，再把描图盖到 $A'B'C'D'$ 上：纸不会伸缩，所以描下的边 $AB$ 在 $A'B'$ 上仍盖住长 $${a}$ 的一段。`,
+            ],
+            [
+              `Trace $ABCD$ on paper and lay the tracing on $A'B'C'D'$: the paper never bends, so the traced corner at $B$ still opens $${beta}^\\circ$ and fits $\\angle B'$ exactly.`,
+              `把 $ABCD$ 描在纸上，再把描图盖到 $A'B'C'D'$ 上：纸不会弯折，所以描下的 $B$ 处的角仍张开 $${beta}^\\circ$，正好盖住 $\\angle B'$。`,
+            ],
+            [
+              "Trace $ABCD$ on paper and lay the tracing on $A'B'C'D'$: the traced sides $AB$ and $DC$ stay the same distance apart all along, so $\\overline{A'B'}$ and $\\overline{D'C'}$ never meet.",
+              "把 $ABCD$ 描在纸上，再把描图盖到 $A'B'C'D'$ 上：描下的边 $AB$ 与 $DC$ 处处距离相等，所以 $\\overline{A'B'}$ 与 $\\overline{D'C'}$ 永不相交。",
+            ],
+          ];
           return chosen(
             rng,
             [
@@ -508,10 +522,7 @@ const verifyingPropertiesOfRigidMotions = withIntro(
               ],
               [["Apply it", "应用"], reasons[k]!],
             ],
-            [
-              "This statement holds for every rigid motion; each of the others depends on the particular motion or is false.",
-              "这个说法对每一种刚体运动都成立；其他说法要么取决于具体的运动，要么不成立。",
-            ],
+            traced[k]!,
           );
         },
         drawn(gradeDrawings5["verifying-properties-of-rigid-motions#what-a-rigid-motion-keeps"]),

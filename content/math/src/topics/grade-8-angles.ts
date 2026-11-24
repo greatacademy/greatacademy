@@ -715,6 +715,7 @@ const alternateAngles = withIntro(
           const inside = interior(s);
           const kind = inside ? alternateInterior : alternateExterior;
           const answer = kind.partner(s);
+          const c = corresponding.partner(s);
           const option = (x: Slot): Pair => pairOf(angleOption(x));
           return chosen(
             rng,
@@ -753,8 +754,8 @@ const alternateAngles = withIntro(
               ],
             ],
             [
-              `Across the transversal from $${numbered(s)}$, at the other crossing, sits $${numbered(answer)}$: ${positionOf(answer).en}.`,
-              `在另一个交点处、截线另一侧与 $${numbered(s)}$ 相对的是 $${numbered(answer)}$：位于 ${positionOf(answer)["zh-CN"]}。`,
+              `Go another way: $${numbered(s)}$ and $${numbered(c)}$ are corresponding angles, and $${numbered(c)}$ and $${numbered(answer)}$ are vertical angles, so parallel lines would make $${numbered(answer)}$ equal to $${numbered(s)}$, as ${kind.name.en} should be.`,
+              `换一条路：$${numbered(s)}$ 与 $${numbered(c)}$ 是同位角，$${numbered(c)}$ 与 $${numbered(answer)}$ 是对顶角，所以两直线平行时 $${numbered(answer)}$ 等于 $${numbered(s)}$，正是${kind.name["zh-CN"]}应有的关系。`,
             ],
             numberedFigure(pickTheta(rng), false),
           );
@@ -1072,14 +1073,14 @@ const angleCriteriaForParallelLines = withIntro(
               ],
               [["Test the angles", "检验角"], test],
             ],
-            holds
+            kind.equal
               ? [
-                  `So both lines cross the transversal at the same slant, and they run side by side without meeting.`,
-                  `所以两条直线与截线的倾斜程度相同，它们并排延伸、永不相交。`,
+                  `Use the angle next to the $${degTex(b)}$ one instead: it is $180^\\circ - ${degTex(b)} = ${degTex(180 - b)}$, and $${a} + ${180 - b} = ${a + 180 - b}$, ${holds ? "exactly" : "not"} $180$, the same verdict.`,
+                  `改用与 $${degTex(b)}$ 相邻的角：它是 $180^\\circ - ${degTex(b)} = ${degTex(180 - b)}$，而 $${a} + ${180 - b} = ${a + 180 - b}$，${holds ? "正好是" : "不是"} $180$，结论相同。`,
                 ]
               : [
-                  `So the lines are not parallel: parallel lines would make these angles ${need[0]}.`,
-                  `所以两直线不平行：若两直线平行，这两个角应当${need[1]}。`,
+                  `Use the angle next to the $${degTex(b)}$ one instead: it is $180^\\circ - ${degTex(b)} = ${degTex(180 - b)}$, which ${holds ? "equals" : "differs from"} $${degTex(a)}$, the same verdict.`,
+                  `改用与 $${degTex(b)}$ 相邻的角：它是 $180^\\circ - ${degTex(b)} = ${degTex(180 - b)}$，${holds ? "等于" : "不等于"} $${degTex(a)}$，结论相同。`,
                 ],
             holds
               ? [
@@ -1206,6 +1207,16 @@ const angleCriteriaForParallelLines = withIntro(
           const given = kind.equal
             ? `m${numbered(first)} = m${numbered(second)}`
             : `m${numbered(first)} + m${numbered(second)} = 180^\\circ`;
+          // The check goes through the angle that forms a straight angle with the second one and makes a named pair with the first.
+          const [v, i] = second;
+          const same = (a: Slot, b: Slot) => a[0] === b[0] && a[1] === b[1];
+          const fits = (k: PairKind) => k === corresponding || interior(first) === (k === alternateInterior || k === consecutiveInterior);
+          const [n, twin] = (
+            [
+              [v, i ^ 1],
+              [v, 3 - i],
+            ] as Slot[]
+          ).flatMap((c) => criteria.filter((k) => fits(k) && same(k.partner(first), c)).map((k): [Slot, PairKind] => [c, k]))[0]!;
           return chosen(
             rng,
             [
@@ -1245,8 +1256,8 @@ const angleCriteriaForParallelLines = withIntro(
               ],
             ],
             [
-              `Parallel lines would make ${kind.name.en} ${kind.equal ? "equal" : "supplementary"}, which agrees with the given fact.`,
-              `两直线平行时，${kind.name["zh-CN"]}${kind.equal ? "相等" : "互补"}，与已知相符。`,
+              `Another pair agrees: $${numbered(n)}$ forms a straight angle with $${numbered(second)}$, so $${numbered(first)}$ and $${numbered(n)}$, which are ${twin.name.en}, are ${twin.equal ? "equal" : "supplementary"}, and that criterion also gives $\\ell \\parallel m$.`,
+              `换一对角也成立：$${numbered(n)}$ 与 $${numbered(second)}$ 组成平角，所以 $${numbered(first)}$ 与 $${numbered(n)}$ 这对${twin.name["zh-CN"]}${twin.equal ? "相等" : "互补"}，由这条判定同样得到 $\\ell \\parallel m$。`,
             ],
             numberedFigure(pickTheta(rng), false),
           );
@@ -1707,12 +1718,22 @@ const theTriangleInequality = withIntro(
               ],
               [["Compare", "比较"], ["Compare the two shorter sides with the longest:", "把较短的两边之和与最长边比较："], [compare]],
             ],
-            forms
-              ? [
-                  "So the two shorter sides can meet above the longest one, and the triangle closes.",
-                  "所以较短的两边能在最长边上方相交，三角形能够闭合。",
-                ]
-              : ["So the two shorter sides cannot meet above the longest one.", "所以较短的两边无法在最长边上方相交。"],
+            [
+              `Lay the two shorter sides along the $${longest}$ side from its two ends: the $${s2}$ side leaves $${longest} - ${s2} = ${longest - s2}$ to cover, and the ${s1 === s2 ? "other " : ""}$${s1}$ side is ${
+                forms
+                  ? "longer than that, so the sides overlap and must rise to meet above it"
+                  : flat
+                    ? "exactly that long, so the two sides meet only lying flat on it"
+                    : "shorter than that, so the two sides never meet"
+              }.`,
+              `把较短的两边从两端沿长为 $${longest}$ 的边放下：$${s2}$ 这条边还差 $${longest} - ${s2} = ${longest - s2}$ 没盖住，而${s1 === s2 ? "另一条" : ""} $${s1}$ 这条边${
+                forms
+                  ? "比它长，两边会重叠，所以要抬起来在上方相交"
+                  : flat
+                    ? "正好这么长，所以两边只能平躺在这条边上相交"
+                    : "比它短，所以两边永远碰不到"
+              }。`,
+            ],
             forms
               ? [
                   "The two shorter sides add up to more than the longest, which is all a triangle needs.",

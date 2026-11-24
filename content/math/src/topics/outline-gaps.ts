@@ -108,7 +108,11 @@ export const identifyingTheNumberOfSolutionsByInspection = withIntro(
         (rng) => {
           const a = rng.pick([1, 2, 3, 4, 5]);
           const b = rng.pick([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
-          const c = rng.int(-12, 12);
+          // c is a multiple of the common factor of a and b, so the first line passes through a point with whole coordinates.
+          const g = [5, 4, 3, 2, 1].find((d) => a % d === 0 && b % d === 0)!;
+          const c = g * rng.int(Math.ceil(-12 / g), Math.floor(12 / g));
+          const px = [0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5].find((x) => (c - a * x) % b === 0)!;
+          const py = (c - a * px) / b;
           const k = rng.pick([-3, -2, 2, 3, 4, 5]);
           const picked = rng.pick(["one", "none", "many"] as const);
           const a2 = k * a;
@@ -201,8 +205,12 @@ export const identifyingTheNumberOfSolutionsByInspection = withIntro(
                   `两条直线的斜率是 $${Q.of(-a, b).toLatex()}$ 和 $${Q.of(-a2, b2).toLatex()}$，不相等。`,
                 ]
               : [
-                  `Both slopes are $${Q.of(-a, b).toLatex()}$; only the constants decide between parallel and the same line.`,
-                  `两条直线的斜率都是 $${Q.of(-a, b).toLatex()}$；平行还是重合只看常数项。`,
+                  `Test a point: $(${px}, ${py})$ is on the first line, since $${a} \\cdot ${wrapped(px)} + ${wrapped(b)} \\cdot ${wrapped(py)} = ${c}$. In the second, $${a2} \\cdot ${wrapped(px)} + ${wrapped(b2)} \\cdot ${wrapped(py)} = ${a2 * px + b2 * py}$, ${
+                    kind === "many" ? "the same as" : "not"
+                  } $${c2}$, so the lines ${kind === "many" ? "share the point, as one line does" : "miss each other there, as parallel lines do"}.`,
+                  `代入一个点检验：$(${px}, ${py})$ 在第一条直线上，因为 $${a} \\cdot ${wrapped(px)} + ${wrapped(b)} \\cdot ${wrapped(py)} = ${c}$。代入第二个方程，$${a2} \\cdot ${wrapped(px)} + ${wrapped(b2)} \\cdot ${wrapped(py)} = ${a2 * px + b2 * py}$，${
+                    kind === "many" ? "正好等于" : "不等于"
+                  } $${c2}$，所以${kind === "many" ? "两条直线共有这个点，正如同一条直线那样" : "两条直线在这里错开，正如平行线那样"}。`,
                 ],
           );
         },
@@ -436,8 +444,8 @@ export const identifyingMaximumAndMinimumValuesOfAFunction = withIntro(
               ],
             ],
             [
-              `No point of the graph is ${wantMax ? "above" : "below"} the height $${answer}$; the ${wantMax ? "lowest" : "highest"} one is at $${other}$.`,
-              `图象上没有点${wantMax ? "高于" : "低于"} $${answer}$；${wantMax ? "最低点" : "最高点"}的高度是 $${other}$。`,
+              `Read the height of every corner and end of the graph from left to right: ${ys.map((y) => `$${y}$`).join(", ")}. The ${wantMax ? "greatest" : "least"} of them is $${answer}$.`,
+              `从左到右读出图象每个拐点和端点的高度：${ys.map((y) => `$${y}$`).join("、")}。其中${wantMax ? "最大" : "最小"}的是 $${answer}$。`,
             ],
             [
               [at, "That is the input where it happens, not the value.", "这是取得该值的输入，不是函数值。"],
@@ -495,8 +503,8 @@ export const identifyingMaximumAndMinimumValuesOfAFunction = withIntro(
               ],
             ],
             [
-              `At $x = ${answer}$ the graph is at its ${wantMax ? "greatest" : "least"} height, $${value}$.`,
-              `在 $x = ${answer}$ 处，图象达到${wantMax ? "最高" : "最低"}高度 $${value}$。`,
+              `Read every corner and end of the graph from left to right: ${pts.map((q) => `$(${q[0]}, ${q[1]})$`).join(", ")}. The ${wantMax ? "greatest" : "least"} height, $${value}$, belongs to the point with $x = ${answer}$.`,
+              `从左到右读出图象每个拐点和端点：${pts.map((q) => `$(${q[0]}, ${q[1]})$`).join("、")}。其中${wantMax ? "最大" : "最小"}的高度 $${value}$ 属于横坐标为 $${answer}$ 的点。`,
             ],
             [
               [value, "That is the value of the function, not where it happens.", "这是函数值，不是取得它的位置。"],
