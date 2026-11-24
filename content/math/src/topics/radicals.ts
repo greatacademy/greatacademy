@@ -1,10 +1,10 @@
 import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { dec, gcd, num, Q, radical, simplifyRadical } from "@ga/subject-math";
+import { dec, factorizationLatex, gcd, num, primeFactors, Q, radical, simplifyRadical } from "@ga/subject-math";
 
-import { numberProblem, steps } from "../problems.ts";
+import type { Pair, Walk } from "./early-grades-more-kit.ts";
 import { lesson, valued, withIntro } from "./grade-6-kit.ts";
-import { rooted } from "./grade-8-kit.ts";
+import { rooted, tableFigure } from "./grade-8-kit.ts";
 import { areaGridFigure, equalTape, lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** squareFree are the square-free radicands used in generated problems. */
@@ -28,115 +28,332 @@ function radicand(rng: Rng, max: number): number {
   }
 }
 
-export const squareRootsAndCubeRoots: TopicDef = {
-  id: "square-roots-and-cube-roots",
-  title: t("Square Roots and Cube Roots", "平方根与立方根"),
-  summary: t("Take square roots of perfect squares and cube roots of perfect cubes.", "求完全平方数的平方根和完全立方数的立方根。"),
-  prerequisites: ["powers-of-rational-numbers"],
-  encompasses: [{ topic: "powers-of-rational-numbers", weight: 0.3 }],
-  xp: 10,
-  standards: ["CCSS.8.EE.A.2"],
-  knowledgePoints: [
-    {
-      id: "square-roots-of-perfect-squares",
-      title: t("Square roots of perfect squares", "完全平方数的平方根"),
-      explanation: t(
-        "The **square root** $\\sqrt{a}$ is the number $r \\ge 0$ with $r^{2} = a$. So $\\sqrt{49} = 7$ because $7^{2} = 49$. The symbol always means the nonnegative root: $\\sqrt{49}$ is $7$, not $-7$, and $-\\sqrt{49} = -7$.\n\nFor fractions and decimals, take the root of each part: $\\sqrt{\\frac{9}{25}} = \\frac{3}{5}$ and $\\sqrt{0.36} = 0.6$, since $0.6^{2} = 0.36$.",
-        "**平方根** $\\sqrt{a}$ 是满足 $r^{2} = a$ 的非负数 $r$。所以 $\\sqrt{49} = 7$，因为 $7^{2} = 49$。这个符号总是表示非负的根：$\\sqrt{49}$ 是 $7$ 而不是 $-7$，而 $-\\sqrt{49} = -7$。\n\n对分数和小数，分别开方：$\\sqrt{\\frac{9}{25}} = \\frac{3}{5}$，$\\sqrt{0.36} = 0.6$，因为 $0.6^{2} = 0.36$。",
+/** splitPowers writes n as primes, then each exponent divided by k: "144 = 2^{4} \cdot 3^{2}" and "2^{2} \cdot 3 = 12". */
+function splitPowers(n: number, k: 2 | 3): [whole: string, part: string] {
+  const factors = primeFactors(n);
+  const root = Math.round(n ** (1 / k));
+  const part = factorizationLatex(factors.map(([p, e]) => [p, e / k]));
+  return [`${n} = ${factorizationLatex(factors)}`, part === String(root) ? part : `${part} = ${root}`];
+}
+
+/** squareRootsAndCubeRoots takes square roots of perfect squares and cube roots of perfect cubes. */
+export const squareRootsAndCubeRoots: TopicDef = withIntro(
+  {
+    id: "square-roots-and-cube-roots",
+    title: t("Square Roots and Cube Roots", "平方根与立方根"),
+    summary: t("Take square roots of perfect squares and cube roots of perfect cubes.", "求完全平方数的平方根和完全立方数的立方根。"),
+    prerequisites: ["powers-of-rational-numbers"],
+    encompasses: [{ topic: "powers-of-rational-numbers", weight: 0.3 }],
+    xp: 10,
+    standards: ["CCSS.8.EE.A.2"],
+    knowledgePoints: [
+      lesson(
+        "square-roots-of-perfect-squares",
+        ["Square roots of perfect squares", "完全平方数的平方根"],
+        [
+          [
+            "The **square root** $\\sqrt{a}$ is the number $r \\ge 0$ with $r^{2} = a$. So $\\sqrt{49} = 7$ because $7^{2} = 49$: a square of area $49$ has side $7$. For a fraction, take the root of each part, $\\sqrt{\\frac{9}{25}} = \\frac{3}{5}$. For a decimal, take the root of the digits and halve the decimal places, $\\sqrt{0.36} = 0.6$.",
+            "**平方根** $\\sqrt{a}$ 是满足 $r^{2} = a$ 的数 $r \\ge 0$。所以 $\\sqrt{49} = 7$，因为 $7^{2} = 49$：面积为 $49$ 的正方形边长是 $7$。分数分别对分子、分母开方，$\\sqrt{\\frac{9}{25}} = \\frac{3}{5}$。小数先对数字开方，再把小数位数减半，$\\sqrt{0.36} = 0.6$。",
+          ],
+          ["$0.6 \\times 0.6 = 0.36$, so $\\sqrt{0.36} = 0.6$.", "$0.6 \\times 0.6 = 0.36$，所以 $\\sqrt{0.36} = 0.6$。"],
+          [
+            "The symbol $\\sqrt{\\phantom{a}}$ always means the nonnegative root. $\\sqrt{49}$ is $7$, not $-7$, and $-\\sqrt{49} = -7$.",
+            "符号 $\\sqrt{\\phantom{a}}$ 总是表示非负的根。$\\sqrt{49}$ 是 $7$，不是 $-7$；而 $-\\sqrt{49} = -7$。",
+          ],
+        ],
+        (rng) => {
+          const kind = rng.pick(["integer", "integer", "fraction", "decimal"] as const);
+          const negate = rng.bool(0.25);
+          let r: Q;
+          if (kind === "integer") r = Q.of(rng.int(2, 25));
+          else if (kind === "decimal") r = Q.of(rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12]), 10);
+          else {
+            let a: number;
+            let b: number;
+            do {
+              a = rng.int(1, 9);
+              b = rng.int(2, 12);
+            } while (gcd(a, b) !== 1);
+            r = Q.of(a, b);
+          }
+          const sq = r.mul(r);
+          const shown = (v: Q) => (kind === "decimal" ? dec(v) : num(v));
+          const inside = shown(sq);
+          const value = negate ? r.neg() : r;
+          const a = Number(r.n);
+          const b = Number(r.d);
+          const k = Number(r.mul(Q.of(10)).n);
+          const find: Walk =
+            kind === "integer"
+              ? [
+                  ["Find the root", "找出根"],
+                  [`Look for the nonnegative number whose square is $${inside}$:`, `找平方等于 $${inside}$ 的非负数：`],
+                  [`${a}^{2} = ${inside}`],
+                ]
+              : kind === "fraction"
+                ? [
+                    ["Root of each part", "分子分母分别开方"],
+                    [`$${a * a}$ and $${b * b}$ are both perfect squares:`, `$${a * a}$ 和 $${b * b}$ 都是完全平方数：`],
+                    [`\\sqrt{${inside}} = \\frac{\\sqrt{${a * a}}}{\\sqrt{${b * b}}} = ${num(r)}`],
+                  ]
+                : [
+                    ["Root of the digits", "数字开方"],
+                    [
+                      `Take the root of the digits, $\\sqrt{${k * k}} = ${k}$. The number has $2$ decimal places, so its root has $1$:`,
+                      `先对数字开方，$\\sqrt{${k * k}} = ${k}$。这个数有 $2$ 位小数，所以它的根有 $1$ 位：`,
+                    ],
+                    [`\\sqrt{${inside}} = ${dec(r)}`],
+                  ];
+          const check: Pair =
+            kind === "integer"
+              ? (() => {
+                  const [whole, part] = splitPowers(a * a, 2);
+                  return [
+                    `Factor into primes: $${whole}$. Halving each exponent gives $${part}$.`,
+                    `分解质因数：$${whole}$。把每个指数减半，得 $${part}$。`,
+                  ];
+                })()
+              : kind === "fraction"
+                ? [
+                    `Square the root back: $\\left(${num(r)}\\right)^{2} = \\frac{${a * a}}{${b * b}}$.`,
+                    `把根平方回去：$\\left(${num(r)}\\right)^{2} = \\frac{${a * a}}{${b * b}}$。`,
+                  ]
+                : [
+                    `Square the root back: $${dec(r)} \\times ${dec(r)} = ${inside}$.`,
+                    `把根平方回去：$${dec(r)} \\times ${dec(r)} = ${inside}$。`,
+                  ];
+          return valued(
+            [`Evaluate $${negate ? "-" : ""}\\sqrt{${inside}}$.`, `计算 $${negate ? "-" : ""}\\sqrt{${inside}}$。`],
+            value,
+            [
+              find,
+              [
+                ["Read the sign", "确定符号"],
+                negate
+                  ? [
+                      "The root symbol gives the nonnegative root, and the minus sign in front takes its opposite:",
+                      "根号给出非负的根，前面的负号再取它的相反数：",
+                    ]
+                  : ["The root symbol gives the nonnegative root:", "根号给出非负的根："],
+                [`${negate ? "-" : ""}\\sqrt{${inside}} = ${shown(value)}`],
+              ],
+            ],
+            check,
+            [
+              [
+                value.neg(),
+                negate
+                  ? "That drops the minus sign in front of the root."
+                  : "That gives the negative root; the root symbol means the nonnegative one.",
+                negate ? "这是丢掉了根号前面的负号。" : "这是取了负的根；根号表示非负的根。",
+              ],
+              [sq.div(Q.of(2)), "That halves the number instead of taking its root.", "这是把这个数除以 2，而不是开方。"],
+              ...(kind === "decimal"
+                ? [
+                    [
+                      r.mul(Q.of(10)).mul(Q.of(negate ? -1 : 1)),
+                      "That puts the point in the wrong place; the root has half as many decimal places.",
+                      "这是小数点点错了；根的小数位数是原数的一半。",
+                    ] as const,
+                  ]
+                : []),
+            ],
+            kind === "decimal" ? { form: "decimal" } : {},
+          );
+        },
+        tableFigure(
+          ["7"],
+          ["7"],
+          [["49"]],
+          ["A square of area 49 whose sides are each 7 long, since 7 × 7 = 49.", "一个面积为 49 的正方形，每条边长 7，因为 7 × 7 = 49。"],
+        ),
       ),
-      generate(rng) {
-        const kind = rng.pick(["integer", "integer", "fraction", "decimal"] as const);
-        let r: Q;
-        if (kind === "integer") r = Q.of(rng.int(1, 25));
-        else if (kind === "decimal") r = Q.of(rng.int(1, 12), 10);
-        else {
-          let a: number;
-          let b: number;
-          do {
-            a = rng.int(1, 9);
-            b = rng.int(2, 12);
-          } while (gcd(a, b) !== 1);
-          r = Q.of(a, b);
-        }
-        const negate = rng.bool(0.25);
-        const sq = r.mul(r);
-        const inside = kind === "decimal" ? dec(sq) : num(sq);
-        const value = negate ? r.neg() : r;
-        const shown = (v: Q) => (kind === "decimal" ? dec(v) : num(v));
-        return numberProblem({
-          prompt: t(`Evaluate $${negate ? "-" : ""}\\sqrt{${inside}}$.`, `计算 $${negate ? "-" : ""}\\sqrt{${inside}}$。`),
-          answer: value,
-          ...(kind === "decimal" && { form: "decimal" as const }),
-          wrong: [value.neg(), sq.div(Q.of(2)), ...(kind === "decimal" ? [r.mul(Q.of(10))] : [])],
-          solution: t(
-            `$${shown(r)}^{2} = ${inside}$ and $${shown(r)} \\ge 0$, so $\\sqrt{${inside}} = ${shown(r)}$${negate ? ` and $-\\sqrt{${inside}} = ${shown(value)}$` : ""}.`,
-            `$${shown(r)}^{2} = ${inside}$ 且 $${shown(r)} \\ge 0$，所以 $\\sqrt{${inside}} = ${shown(r)}$${negate ? `，$-\\sqrt{${inside}} = ${shown(value)}$` : ""}。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "squaring-a-square-root",
-      title: t("Squaring a square root", "平方根的平方"),
-      explanation: t(
-        "By definition $\\sqrt{a}$ is the nonnegative number whose square is $a$, so squaring it gives $a$ back, even when $\\sqrt{a}$ is not a whole number:\n\n$$\\left(\\sqrt{a}\\right)^{2} = \\sqrt{a} \\cdot \\sqrt{a} = a \\qquad \\left(3\\sqrt{2}\\right)^{2} = 3^{2} \\cdot 2 = 18$$",
-        "按定义，$\\sqrt{a}$ 是平方等于 $a$ 的非负数，所以它的平方就是 $a$，即使 $\\sqrt{a}$ 不是整数：\n\n$$\\left(\\sqrt{a}\\right)^{2} = \\sqrt{a} \\cdot \\sqrt{a} = a \\qquad \\left(3\\sqrt{2}\\right)^{2} = 3^{2} \\cdot 2 = 18$$",
-      ),
-      generate(rng) {
-        const m = rng.pick([...squareFree, 17, 19, 21, 22, 23, 26, 29, 30]);
-        const c = rng.bool(0.5) ? 1 : rng.pick([2, 3, 4, 5, -2, -3]);
-        const value = c * c * m;
-        const expr = c === 1 ? `\\left(\\sqrt{${m}}\\right)^{2}` : `\\left(${root(c, m)}\\right)^{2}`;
-        return numberProblem({
-          prompt: t(`Evaluate $${expr}$.`, `计算 $${expr}$。`),
-          answer: value,
-          form: "integer",
-          wrong: [m * m * c * c, c * m, 2 * c * m, ...(c === 1 ? [] : [c * m * m])],
-          solution: t(
+      lesson(
+        "squaring-a-square-root",
+        ["Squaring a square root", "平方根的平方"],
+        [
+          [
+            "By definition $\\sqrt{a}$ is the nonnegative number whose square is $a$, so squaring it gives $a$ back, even when $\\sqrt{a}$ is not a whole number: $\\left(\\sqrt{7}\\right)^{2} = 7$. With a coefficient, square each factor: $\\left(3\\sqrt{2}\\right)^{2} = 3^{2} \\cdot \\left(\\sqrt{2}\\right)^{2} = 9 \\cdot 2 = 18$.",
+            "按定义，$\\sqrt{a}$ 是平方等于 $a$ 的非负数，所以它的平方就是 $a$，即使 $\\sqrt{a}$ 不是整数：$\\left(\\sqrt{7}\\right)^{2} = 7$。有系数时，每个因数分别平方：$\\left(3\\sqrt{2}\\right)^{2} = 3^{2} \\cdot \\left(\\sqrt{2}\\right)^{2} = 9 \\cdot 2 = 18$。",
+          ],
+          [
+            "$\\sqrt{2} \\approx 1.414$, and $1.414^{2} \\approx 1.999$, very close to $2$.",
+            "$\\sqrt{2} \\approx 1.414$，而 $1.414^{2} \\approx 1.999$，非常接近 $2$。",
+          ],
+          [
+            "Square the coefficient too. $\\left(3\\sqrt{2}\\right)^{2}$ is $18$, not $3 \\cdot 2 = 6$.",
+            "系数也要平方。$\\left(3\\sqrt{2}\\right)^{2}$ 是 $18$，不是 $3 \\cdot 2 = 6$。",
+          ],
+        ],
+        (rng) => {
+          const m = rng.pick([...squareFree, 17, 19, 21, 22, 23, 26, 29, 30]);
+          const c = rng.bool(0.5) ? 1 : rng.pick([2, 3, 4, 5, -2, -3]);
+          const value = c * c * m;
+          const expr = c === 1 ? `\\left(\\sqrt{${m}}\\right)^{2}` : `\\left(${root(c, m)}\\right)^{2}`;
+          const approx = (c * Math.sqrt(m)).toFixed(3);
+          const squared = (Number(approx) * Number(approx)).toFixed(2);
+          return valued(
+            [`Evaluate $${expr}$.`, `计算 $${expr}$。`],
+            value,
             c === 1
-              ? `Squaring a square root gives back the number under it: $${expr} = ${m}$.`
-              : `Square the coefficient and the root separately:${steps(`${expr} = ${c < 0 ? `(${c})` : c}^{2} \\cdot \\left(\\sqrt{${m}}\\right)^{2} = ${c * c} \\cdot ${m} = ${value}`)}`,
-            c === 1
-              ? `平方根的平方就是根号下的数：$${expr} = ${m}$。`
-              : `系数与根式分别平方：${steps(`${expr} = ${c < 0 ? `(${c})` : c}^{2} \\cdot \\left(\\sqrt{${m}}\\right)^{2} = ${c * c} \\cdot ${m} = ${value}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "cube-roots-of-perfect-cubes",
-      title: t("Cube roots of perfect cubes", "完全立方数的立方根"),
-      explanation: t(
-        "The **cube root** $\\sqrt[3]{a}$ is the number whose cube is $a$: $\\sqrt[3]{64} = 4$ because $4^{3} = 64$.\n\nUnlike square roots, cube roots of negative numbers exist, because the cube of a negative number is negative: $\\sqrt[3]{-27} = -3$ since $(-3)^{3} = -27$.",
-        "**立方根** $\\sqrt[3]{a}$ 是立方等于 $a$ 的数：$\\sqrt[3]{64} = 4$，因为 $4^{3} = 64$。\n\n与平方根不同，负数也有立方根，因为负数的立方是负数：$\\sqrt[3]{-27} = -3$，因为 $(-3)^{3} = -27$。",
+              ? [
+                  [
+                    ["Use the meaning", "用定义"],
+                    [`$\\sqrt{${m}}$ is the nonnegative number whose square is $${m}$.`, `$\\sqrt{${m}}$ 是平方等于 $${m}$ 的非负数。`],
+                  ],
+                  [["Square it", "平方"], ["So squaring it gives the number back:", "所以把它平方就得到原来的数："], [`${expr} = ${m}`]],
+                ]
+              : [
+                  [
+                    ["Square each factor", "每个因数分别平方"],
+                    ["The power applies to the coefficient and to the root:", "乘方既作用于系数，也作用于根式："],
+                    [`${expr} = ${c < 0 ? `(${c})` : c}^{2} \\cdot \\left(\\sqrt{${m}}\\right)^{2}`],
+                  ],
+                  [
+                    ["Multiply", "相乘"],
+                    ["Squaring the root gives back the number under it:", "根式的平方就是根号下的数："],
+                    [`${c * c} \\cdot ${m} = ${value}`],
+                  ],
+                ],
+            [
+              `Use a decimal: $${root(c, m)} \\approx ${approx}$, and $${Number(approx) < 0 ? `(${approx})` : approx}^{2} \\approx ${squared}$, very close to $${value}$.`,
+              `用小数估算：$${root(c, m)} \\approx ${approx}$，而 $${Number(approx) < 0 ? `(${approx})` : approx}^{2} \\approx ${squared}$，非常接近 $${value}$。`,
+            ],
+            [
+              [
+                m * m * c * c,
+                "That squares the number under the root as well; squaring the root just undoes it.",
+                "这是把根号下的数也平方了；平方只是把根号去掉。",
+              ],
+              [2 * c * m, "That doubles instead of squaring.", "这是乘 2，而不是平方。"],
+              ...(c === 1
+                ? []
+                : [
+                    [c * m, "That uses the coefficient once; it is squared too.", "这里系数只乘了一次；系数也要平方。"] as const,
+                    ...(c < 0
+                      ? [
+                          [
+                            -value,
+                            "That keeps the minus sign; the square of a negative coefficient is positive.",
+                            "这是保留了负号；负系数的平方是正数。",
+                          ] as const,
+                        ]
+                      : []),
+                  ]),
+            ],
+            { form: "integer" },
+          );
+        },
+        tableFigure(
+          ["√7"],
+          ["√7"],
+          [["7"]],
+          ["A square whose sides are each √7 long; its area is √7 × √7 = 7.", "一个每条边长 √7 的正方形，面积是 √7 × √7 = 7。"],
+        ),
       ),
-      keyPrerequisites: ["powers-of-integers"],
-      generate(rng) {
-        const r = rng.bool(0.75)
-          ? Q.of(rng.nonZero(-10, 10))
-          : (() => {
-              let a: number;
-              let b: number;
+      {
+        ...lesson(
+          "cube-roots-of-perfect-cubes",
+          ["Cube roots of perfect cubes", "完全立方数的立方根"],
+          [
+            [
+              "The **cube root** $\\sqrt[3]{a}$ is the number whose cube is $a$: $\\sqrt[3]{64} = 4$ because $4^{3} = 64$, and a cube of volume $64$ has edge $4$. Unlike square roots, cube roots of negative numbers exist, because the cube of a negative number is negative: $\\sqrt[3]{-27} = -3$ since $(-3)^{3} = -27$.",
+              "**立方根** $\\sqrt[3]{a}$ 是立方等于 $a$ 的数：$\\sqrt[3]{64} = 4$，因为 $4^{3} = 64$，体积为 $64$ 的正方体棱长是 $4$。与平方根不同，负数也有立方根，因为负数的立方是负数：$\\sqrt[3]{-27} = -3$，因为 $(-3)^{3} = -27$。",
+            ],
+            ["$(-3)(-3)(-3) = 9 \\cdot (-3) = -27$.", "$(-3)(-3)(-3) = 9 \\cdot (-3) = -27$。"],
+            [
+              "A cube root is not a third of the number. $\\sqrt[3]{27}$ is $3$, not $9$.",
+              "立方根不是这个数的三分之一。$\\sqrt[3]{27}$ 是 $3$，不是 $9$。",
+            ],
+          ],
+          (rng) => {
+            const whole = rng.bool(0.75);
+            let a: number;
+            let b = 1;
+            if (whole) a = rng.int(2, 10);
+            else {
               do {
                 a = rng.int(1, 5);
                 b = rng.int(2, 6);
               } while (gcd(a, b) !== 1);
-              return Q.of(rng.sign() * a, b);
-            })();
-        const cube = r.pow(3);
-        return numberProblem({
-          prompt: t(`Evaluate $\\sqrt[3]{${num(cube)}}$.`, `计算 $\\sqrt[3]{${num(cube)}}$。`),
-          answer: r,
-          wrong: [r.neg(), cube.div(Q.of(3))],
-          solution: t(
-            `$${r.sign() < 0 || !r.isInteger() ? `\\left(${num(r)}\\right)` : num(r)}^{3} = ${num(cube)}$, so $\\sqrt[3]{${num(cube)}} = ${num(r)}$.`,
-            `$${r.sign() < 0 || !r.isInteger() ? `\\left(${num(r)}\\right)` : num(r)}^{3} = ${num(cube)}$，所以 $\\sqrt[3]{${num(cube)}} = ${num(r)}$。`,
+            }
+            const s = rng.sign();
+            const r = Q.of(s * a, b);
+            const cube = r.pow(3);
+            const size = Q.of(a, b);
+            const check: Pair = whole
+              ? (() => {
+                  const [all, part] = splitPowers(a ** 3, 3);
+                  return [
+                    `Factor the size into primes: $${all}$. A third of each exponent gives $${part}$.`,
+                    `把大小分解质因数：$${all}$。把每个指数除以 3，得 $${part}$。`,
+                  ];
+                })()
+              : [
+                  `Cube the root back one factor at a time: $${num(r)}, \\; ${num(r.pow(2))}, \\; ${num(cube)}$.`,
+                  `把根一个因数一个因数地立方回去：$${num(r)}, \\; ${num(r.pow(2))}, \\; ${num(cube)}$。`,
+                ];
+            return valued(
+              [`Evaluate $\\sqrt[3]{${num(cube)}}$.`, `计算 $\\sqrt[3]{${num(cube)}}$。`],
+              r,
+              [
+                [
+                  ["Settle the sign", "定符号"],
+                  s < 0
+                    ? [
+                        "The number is negative, and three negative factors make a negative product, so the root is negative.",
+                        "这个数是负数，三个负因数的积是负数，所以立方根是负数。",
+                      ]
+                    : ["The number is positive, so the root is positive.", "这个数是正数，所以立方根是正数。"],
+                ],
+                [
+                  ["Find the size", "求大小"],
+                  [`Look for the number whose cube is $${num(size.pow(3))}$:`, `找立方等于 $${num(size.pow(3))}$ 的数：`],
+                  [`${whole ? a : `\\left(${num(size)}\\right)`}^{3} = ${num(size.pow(3))}`, `\\sqrt[3]{${num(cube)}} = ${num(r)}`],
+                ],
+              ],
+              check,
+              [
+                [
+                  r.neg(),
+                  s < 0
+                    ? "That drops the sign; the cube root of a negative number is negative."
+                    : "That adds a minus sign; the cube root of a positive number is positive.",
+                  s < 0 ? "这是丢掉了符号；负数的立方根是负数。" : "这是多了一个负号；正数的立方根是正数。",
+                ],
+                [cube.div(Q.of(3)), "That divides by $3$ instead of taking the cube root.", "这是除以 $3$，而不是开立方。"],
+              ],
+            );
+          },
+          tableFigure(
+            ["1", "2", "3", "4"],
+            ["n³", "∛(n³)"],
+            [
+              ["1", "1"],
+              ["8", "2"],
+              ["27", "3"],
+              ["64", "4"],
+            ],
+            [
+              "A table of the first perfect cubes 1, 8, 27 and 64 beside their cube roots 1, 2, 3 and 4.",
+              "前几个完全立方数 1、8、27、64 及其立方根 1、2、3、4 的表。",
+            ],
           ),
-        });
+        ),
+        keyPrerequisites: ["powers-of-integers"],
       },
-    },
+    ],
+  },
+  [
+    "A square garden covers $49$ m². How long is each side? We need a number that times itself makes $49$.",
+    "一块正方形花园面积 $49$ 平方米。每条边多长？要找一个自乘等于 $49$ 的数。",
   ],
-};
+  ["$7 \\times 7 = 49$, so each side is $7$ m, and $\\sqrt{49} = 7$.", "$7 \\times 7 = 49$，所以每条边长 $7$ 米，$\\sqrt{49} = 7$。"],
+  [
+    "undo squaring and cubing with square roots and cube roots of fractions, decimals and negative numbers.",
+    "学习用平方根和立方根还原平方与立方，包括分数、小数和负数。",
+  ],
+);
 
 /** simplifyingSquareRoots writes square roots in simplest radical form, multiplies them, and moves a whole number under a root. */
 export const simplifyingSquareRoots: TopicDef = withIntro(

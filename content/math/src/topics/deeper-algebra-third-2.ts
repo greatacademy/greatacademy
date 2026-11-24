@@ -7,6 +7,7 @@ import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choose, chooseMath, tableFigure, whole } from "./early-grades-more-kit.ts";
 import { aFractionTimesTheUnknown, storiesWithOneStepEquations, subtractingAGroup } from "./equations.ts";
+import { aNegativeFractionToAPower } from "./exponents.ts";
 import { aFormulaFromAStory, theFactorThatWasPulledOut, thePerimeterAsAnExpression } from "./expressions.ts";
 import { lesson, valued } from "./grade-6-kit.ts";
 import { countingTheIntegersThatWork } from "./inequalities.ts";
@@ -18,7 +19,7 @@ import {
   thePowerOfAPowerOfANegative,
   theSignFromACountOfNegatives,
 } from "./integers.ts";
-import { frac, fraction, integer, signed, skill } from "./third-kit.ts";
+import { frac, integer, signed, skill } from "./third-kit.ts";
 
 /** deeperAlgebraThird2Points holds these third knowledge points, by topic. */
 export const deeperAlgebraThird2Points: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
@@ -75,49 +76,7 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       tableFigure(["4.2 / 0.06", "42 / 0.6", "420 / 6"], [70, 70, 70]),
     ),
   ],
-  "powers-of-rational-numbers": [
-    skill(
-      "a-negative-fraction-to-a-power",
-      ["A negative fraction to a power", "负分数的幂"],
-      [
-        "An odd power of a negative number stays negative, and an even power is positive. The numerator and the denominator are each raised to the power, so settle the sign first.",
-        "负数的奇数次幂仍是负数，偶数次幂是正数。分子和分母都要乘方，所以先确定符号。",
-      ],
-      (rng) => {
-        const [n, d] = rng.pick<[number, number]>([
-          [1, 2],
-          [1, 3],
-          [2, 3],
-          [3, 2],
-          [1, 4],
-          [3, 4],
-          [2, 5],
-          [3, 5],
-          [4, 5],
-          [5, 2],
-          [5, 3],
-          [1, 5],
-          [4, 3],
-          [2, 7],
-          [3, 7],
-          [5, 4],
-        ]);
-        const e = rng.pick([2, 3, 4]);
-        const size = Q.of(n ** e, d ** e);
-        const answer = e % 2 === 0 ? size : Q.of(-(n ** e), d ** e);
-        const other = e % 2 === 0 ? Q.of(-(n ** e), d ** e) : size;
-        return fraction(
-          [`Evaluate $\\left(-${frac(n, d)}\\right)^{${e}}$.`, `计算 $\\left(-${frac(n, d)}\\right)^{${e}}$。`],
-          answer,
-          [other, Q.of(n * e, d * e), Q.of(n ** e, d)],
-          [
-            `The power is ${e % 2 === 0 ? "even, so the result is positive" : "odd, so the result is negative"}, with size $${size.toLatex()}$.`,
-            `指数是${e % 2 === 0 ? "偶数，所以结果为正" : "奇数，所以结果为负"}，大小是 $${size.toLatex()}$。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "powers-of-rational-numbers": [aNegativeFractionToAPower],
   "one-step-equations-addition": [storiesWithOneStepEquations],
   "one-step-equations-multiplication": [aFractionTimesTheUnknown],
   "inequalities-and-solutions": [countingTheIntegersThatWork],

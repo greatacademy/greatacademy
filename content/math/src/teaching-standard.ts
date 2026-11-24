@@ -172,4 +172,6 @@ export const taughtTopics: readonly string[] = [
   "one-step-equations-multiplication",
   "equations-with-parentheses",
   "inequalities-and-solutions",
+  "powers-of-rational-numbers",
+  "square-roots-and-cube-roots",
 ];

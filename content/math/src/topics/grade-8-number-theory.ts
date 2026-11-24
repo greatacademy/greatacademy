@@ -2,8 +2,8 @@ import type { KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { factorizationLatex, gcd, lcm, primeFactors } from "@ga/subject-math";
 
-import { choiceProblem, factorizationProblem, numberProblem, steps, yesNo } from "../problems.ts";
-import type { Pair } from "./early-grades-more-kit.ts";
+import { factorizationProblem, steps, withMistakes } from "../problems.ts";
+import { type Pair, type Walk, walkThrough } from "./early-grades-more-kit.ts";
 import { chosenMath, lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { factorTape } from "./grade-8-kit.ts";
 import { areaGridFigure, equalTape, tapeFigure } from "./upper-grades-kit.ts";
@@ -41,98 +41,202 @@ const latex = (fs: Factors) => factorizationLatex(fs.map(([p, e]) => [p, e]));
 /** product multiplies out a prime factorization. */
 const product = (fs: Factors) => fs.reduce((v, [p, e]) => v * p ** e, 1);
 
-/** verdict is the solution sentence ending for a yes-or-no divisibility question. */
-const verdict = (yes: boolean, n: number, d: number): Text =>
-  yes
-    ? t(`so $${grouped(n)}$ is divisible by $${d}$.`, `所以 $${grouped(n)}$ 能被 $${d}$ 整除。`)
-    : t(`so $${grouped(n)}$ is not divisible by $${d}$.`, `所以 $${grouped(n)}$ 不能被 $${d}$ 整除。`);
-
-/** divisibleQuestion asks whether n is divisible by d, with a solution that gives the reason and the verdict. */
-function divisibleQuestion(n: number, d: number, reason: Text) {
-  const yes = n % d === 0;
-  const v = verdict(yes, n, d);
-  return choiceProblem({
-    prompt: t(`Is $${grouped(n)}$ divisible by $${d}$?`, `$${grouped(n)}$ 能被 $${d}$ 整除吗？`),
-    options: yesNo,
-    correct: yes ? 0 : 1,
-    solution: t(`${reason.en}, ${v.en}`, `${reason["zh-CN"]}，${v["zh-CN"]}`),
-  });
-}
-
-/** multipleOrNot draws a number between lo and hi that is a multiple of d about half the time. */
-function multipleOrNot(rng: Rng, d: number, lo: number, hi: number): number {
-  if (rng.bool()) return d * rng.int(Math.ceil(lo / d), Math.floor(hi / d));
-  const n = rng.int(lo, hi - 1);
-  return n % d === 0 ? n + 1 : n;
-}
-
 // ---------------------------------------------------------------------------
 // Divisibility tests
 
+/** lastDigitWhy says why a number fails the last-digit test for 2, 5 or 10. */
+function lastDigitWhy(m: number, d: number): readonly [string, string, string] {
+  const last = m % 10;
+  if (d === 2) return [grouped(m), `It ends in $${last}$, which is odd.`, `它的末位是 $${last}$，是奇数。`];
+  if (d === 5) return [grouped(m), `It ends in $${last}$, which is neither $0$ nor $5$.`, `它的末位是 $${last}$，既不是 $0$ 也不是 $5$。`];
+  return last === 5
+    ? [grouped(m), "It ends in $5$, so it is divisible by $5$ but not by $10$.", "它的末位是 $5$，所以能被 $5$ 整除，但不能被 $10$ 整除。"]
+    : [grouped(m), `It ends in $${last}$, not $0$.`, `它的末位是 $${last}$，不是 $0$。`];
+}
+
+/** tailOf writes the last two digits of m for 4, or the last three for 8, as a multiple of d plus a remainder. */
+function tailOf(m: number, d: number): string {
+  const k = d === 4 ? 2 : 3;
+  const tail = m % 10 ** k;
+  const r = tail % d;
+  return `${tail} = ${d} \\cdot ${Math.floor(tail / d)}${r === 0 ? "" : ` + ${r}`}`;
+}
+
+/** primeFactored asks for a prime factorization, works it in labelled steps with a check, and answers each wrong factorization with its reason. */
+function primeFactored(prompt: Pair, n: number, walk: readonly Walk[], check: Pair, saids: readonly (readonly [string, string, string])[]) {
+  const problem = factorizationProblem({
+    prompt: t(prompt[0], prompt[1]),
+    value: n,
+    wrong: saids.map(([response]) => response),
+    solution: walkThrough(walk, check),
+  });
+  return withMistakes(
+    problem,
+    saids.filter(([response]) => problem.wrong?.includes(response)).map(([response, en, zh]) => ({ response, why: t(en, zh) })),
+  );
+}
+
 /** divisibilityOfIntegersBy2510_4And8 tests divisibility by 2, 5 and 10 from the last digit and by 4 and 8 from the last two or three. */
-export const divisibilityOfIntegersBy2510_4And8 = topic(
-  "divisibility-of-integers-by-2-5-10-4-and-8",
-  t("Divisibility of Integers by 2, 5, 10, 4, and 8", "整数能否被 2、5、10、4 和 8 整除"),
-  t(
-    "Because 10 is divisible by 2 and 5, only the last digit decides divisibility by 2, 5 and 10. Because 100 is divisible by 4 and 1,000 by 8, only the last two digits decide divisibility by 4, and only the last three decide divisibility by 8.",
-    "因为 10 能被 2 和 5 整除，所以一个数能否被 2、5、10 整除只看末位数字。因为 100 能被 4 整除，1,000 能被 8 整除，所以能否被 4 整除只看末两位，能否被 8 整除只看末三位。",
+export const divisibilityOfIntegersBy2510_4And8 = withIntro(
+  topic(
+    "divisibility-of-integers-by-2-5-10-4-and-8",
+    t("Divisibility of Integers by 2, 5, 10, 4, and 8", "整数能否被 2、5、10、4 和 8 整除"),
+    t(
+      "Because 10 is divisible by 2 and 5, only the last digit decides divisibility by 2, 5 and 10. Because 100 is divisible by 4 and 1,000 by 8, only the last two digits decide divisibility by 4, and only the last three decide divisibility by 8.",
+      "因为 10 能被 2 和 5 整除，所以一个数能否被 2、5、10 整除只看末位数字。因为 100 能被 4 整除，1,000 能被 8 整除，所以能否被 4 整除只看末两位，能否被 8 整除只看末三位。",
+    ),
+    ["divisibility-rules"],
+    ["4.OA.B.4"],
+    [
+      lesson(
+        "divisible-by-2-5-and-10",
+        ["Divisibility by 2, 5 and 10", "被 2、5 和 10 整除"],
+        [
+          [
+            "A whole number is divisible by $2$ when its last digit is even, by $5$ when its last digit is $0$ or $5$, and by $10$ when its last digit is $0$. So $4{,}735$ is divisible by $5$ but not by $2$ or $10$. The other digits do not matter, because every place except the ones place is a multiple of $10$.",
+            "整数的末位数字是偶数时能被 $2$ 整除，末位是 $0$ 或 $5$ 时能被 $5$ 整除，末位是 $0$ 时能被 $10$ 整除。所以 $4{,}735$ 能被 $5$ 整除，但不能被 $2$ 或 $10$ 整除。其他数字无关紧要，因为个位以外的每一位都是 $10$ 的倍数。",
+          ],
+          [
+            "Divide: $4{,}735 = 5 \\times 947$, while $4{,}735 \\div 2$ leaves a remainder of $1$.",
+            "做除法：$4{,}735 = 5 \\times 947$，而 $4{,}735 \\div 2$ 余 $1$。",
+          ],
+          [
+            "Ending in $5$ is enough for $5$ but not for $10$; only a last digit of $0$ gives $10$.",
+            "末位是 $5$ 能被 $5$ 整除，但不能被 $10$ 整除；只有末位是 $0$ 才能被 $10$ 整除。",
+          ],
+        ],
+        (rng) => {
+          const d = rng.pick([2, 5, 10]);
+          const n = d * rng.int(Math.ceil(1000 / d), Math.floor(99999 / d));
+          const others = misses(rng, d, n, d === 10 ? [(m) => m % 5 === 0] : []);
+          const rule: Pair =
+            d === 2
+              ? [`Only $${grouped(n)}$ ends in an even digit, $${n % 10}$.`, `只有 $${grouped(n)}$ 的末位是偶数 $${n % 10}$。`]
+              : d === 5
+                ? [`Only $${grouped(n)}$ ends in $0$ or $5$.`, `只有 $${grouped(n)}$ 的末位是 $0$ 或 $5$。`]
+                : [`Only $${grouped(n)}$ ends in $0$.`, `只有 $${grouped(n)}$ 的末位是 $0$。`];
+          return chosenMath(
+            rng,
+            [`Which of these numbers is divisible by $${d}$?`, `下面哪个数能被 $${d}$ 整除？`],
+            grouped(n),
+            others.map((m) => lastDigitWhy(m, d)),
+            [
+              [
+                ["Read the last digits", "看末位数字"],
+                [
+                  "Every place except the ones place is a multiple of $10$, so only the last digit decides:",
+                  "个位以外的每一位都是 $10$ 的倍数，所以只看末位数字：",
+                ],
+                [n, ...others].map((m) => `${grouped(m)} \\rightarrow ${m % 10}`),
+              ],
+              [["Pick the number", "选出这个数"], rule],
+            ],
+            divided(n, d),
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "4735",
+              pieces: [
+                { size: 6, text: "4730 = 10 · 473" },
+                { size: 1, text: "5", lit: true },
+              ],
+            },
+          ],
+          [
+            "4735 is 4730 + 5: the 4730 is a multiple of 10, so only the last digit 5 decides divisibility by 2, 5 and 10.",
+            "4735 是 4730 + 5：4730 是 10 的倍数，所以能否被 2、5、10 整除只看末位 5。",
+          ],
+        ),
+      ),
+      lesson(
+        "divisible-by-4-and-8",
+        ["Divisibility by 4 and 8", "被 4 和 8 整除"],
+        [
+          [
+            "$7{,}316$ is divisible by $4$ because its last two digits form $16 = 4 \\cdot 4$. For $8$, use the last three digits: $7{,}316$ ends in $316 = 8 \\cdot 39 + 4$, so it is not divisible by $8$. The rest does not matter, since $100$ is a multiple of $4$ and $1{,}000$ a multiple of $8$.",
+            "$7{,}316$ 能被 $4$ 整除，因为它的末两位组成 $16 = 4 \\cdot 4$。判断能否被 $8$ 整除要看末三位：$7{,}316$ 的末三位是 $316 = 8 \\cdot 39 + 4$，所以它不能被 $8$ 整除。其余数位无关紧要，因为 $100$ 是 $4$ 的倍数，$1{,}000$ 是 $8$ 的倍数。",
+          ],
+          [
+            "Divide: $7{,}316 = 4 \\times 1{,}829$, and $1{,}829$ is odd, so $7{,}316$ is not a multiple of $8$.",
+            "做除法：$7{,}316 = 4 \\times 1{,}829$，而 $1{,}829$ 是奇数，所以 $7{,}316$ 不是 $8$ 的倍数。",
+          ],
+          [
+            "An even last digit is not enough for $4$: $7{,}318$ ends in $18$, which is not a multiple of $4$.",
+            "末位是偶数不足以说明能被 $4$ 整除：$7{,}318$ 的末两位是 $18$，不是 $4$ 的倍数。",
+          ],
+        ],
+        (rng) => {
+          const d = rng.pick([4, 8]);
+          const n = d * rng.int(Math.ceil(1000 / d), Math.floor(99999 / d));
+          // An even number that fails for 4, or a multiple of 4 that fails for 8, is the wrong choice most worth having.
+          const others = misses(rng, d, n, d === 4 ? [(m) => m % 2 === 0] : [(m) => m % 4 === 0, (m) => m % 2 === 0]);
+          const [k, kZh] = d === 4 ? ["two", "两"] : ["three", "三"];
+          return chosenMath(
+            rng,
+            [`Which of these numbers is divisible by $${d}$?`, `下面哪个数能被 $${d}$ 整除？`],
+            grouped(n),
+            others.map((m) =>
+              d === 8 && m % 4 === 0
+                ? ([
+                    grouped(m),
+                    `It is divisible by $4$, but its last three digits give $${tailOf(m, 8)}$.`,
+                    `它能被 $4$ 整除，但末三位是 $${tailOf(m, 8)}$。`,
+                  ] as const)
+                : ([grouped(m), `Its last ${k} digits give $${tailOf(m, d)}$.`, `它的末${kZh}位是 $${tailOf(m, d)}$。`] as const),
+            ),
+            [
+              [
+                ["Read the last digits", "看末几位"],
+                [
+                  d === 4
+                    ? "$100$ is a multiple of $4$, so only the last two digits decide:"
+                    : "$1{,}000$ is a multiple of $8$, so only the last three digits decide:",
+                  d === 4 ? "$100$ 是 $4$ 的倍数，所以只看末两位：" : "$1{,}000$ 是 $8$ 的倍数，所以只看末三位：",
+                ],
+                [n, ...others].map((m) => `${grouped(m)} \\rightarrow ${tailOf(m, d)}`),
+              ],
+              [
+                ["Pick the multiple", "选出倍数"],
+                [
+                  `Only the last ${k} digits of $${grouped(n)}$ leave no remainder, so it is divisible by $${d}$.`,
+                  `只有 $${grouped(n)}$ 的末${kZh}位没有余数，所以它能被 $${d}$ 整除。`,
+                ],
+              ],
+            ],
+            divided(n, d),
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "7316",
+              pieces: [
+                { size: 6, text: "7300 = 100 · 73" },
+                { size: 1, text: "16", lit: true },
+              ],
+            },
+          ],
+          [
+            "7316 is 7300 + 16: 7300 is a multiple of 100 and so of 4, so only the last two digits 16 decide divisibility by 4.",
+            "7316 是 7300 + 16：7300 是 100 的倍数，也就是 4 的倍数，所以能否被 4 整除只看末两位 16。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["divisibility-rules"],
-  ["4.OA.B.4"],
   [
-    {
-      id: "divisible-by-2-5-and-10",
-      title: t("Divisibility by 2, 5 and 10", "被 2、5 和 10 整除"),
-      explanation: t(
-        "A whole number is divisible by $2$ when its last digit is even, by $5$ when its last digit is $0$ or $5$, and by $10$ when its last digit is $0$. So $4{,}735$ is divisible by $5$ but not by $2$ or $10$. The other digits do not matter, because every place except the ones place is a multiple of $10$.",
-        "整数的末位数字是偶数时能被 $2$ 整除，末位是 $0$ 或 $5$ 时能被 $5$ 整除，末位是 $0$ 时能被 $10$ 整除。所以 $4{,}735$ 能被 $5$ 整除，但不能被 $2$ 或 $10$ 整除。其他数字无关紧要，因为个位以外的每一位都是 $10$ 的倍数。",
-      ),
-      generate(rng) {
-        const d = rng.pick([2, 5, 10]);
-        const n = multipleOrNot(rng, d, 1000, 99999);
-        const last = n % 10;
-        const reason =
-          d === 2
-            ? t(
-                `The last digit is $${last}$, which is ${last % 2 === 0 ? "" : "not "}even`,
-                `末位数字是 $${last}$，${last % 2 === 0 ? "是" : "不是"}偶数`,
-              )
-            : d === 5
-              ? t(
-                  `The last digit is $${last}$, which is ${last % 5 === 0 ? "" : "neither $0$ nor "}${last % 5 === 0 ? `$0$ or $5$` : "$5$"}`,
-                  `末位数字是 $${last}$，${last % 5 === 0 ? "是 $0$ 或 $5$" : "既不是 $0$ 也不是 $5$"}`,
-                )
-              : t(
-                  last === 0 ? "The last digit is $0$" : `The last digit is $${last}$, not $0$`,
-                  last === 0 ? "末位数字是 $0$" : `末位数字是 $${last}$，不是 $0$`,
-                );
-        return divisibleQuestion(n, d, reason);
-      },
-    },
-    {
-      id: "divisible-by-4-and-8",
-      title: t("Divisibility by 4 and 8", "被 4 和 8 整除"),
-      explanation: t(
-        "$7{,}316$ is divisible by $4$ because its last two digits form $16 = 4 \\cdot 4$. For $8$, use the last three digits: $7{,}316$ ends in $316 = 8 \\cdot 39 + 4$, so it is not divisible by $8$. An even last digit is not enough for $4$: $7{,}318$ ends in $18$, which is not a multiple of $4$.",
-        "$7{,}316$ 能被 $4$ 整除，因为它的末两位组成 $16 = 4 \\cdot 4$。判断能否被 $8$ 整除要看末三位：$7{,}316$ 的末三位是 $316 = 8 \\cdot 39 + 4$，所以它不能被 $8$ 整除。末位是偶数不足以说明能被 $4$ 整除：$7{,}318$ 的末两位是 $18$，不是 $4$ 的倍数。",
-      ),
-      generate(rng) {
-        const d = rng.pick([4, 8]);
-        // Even numbers only, so that the last digit alone does not decide.
-        let n = multipleOrNot(rng, d, 1000, 99999);
-        if (n % 2 === 1) n += 1;
-        const k = d === 4 ? 2 : 3;
-        const tail = n % 10 ** k;
-        const q = Math.floor(tail / d);
-        const r = tail % d;
-        const shown = `${tail}`.padStart(k, "0");
-        const reason = t(
-          `The last ${k === 2 ? "two" : "three"} digits form $${shown}$, and $${tail} = ${d} \\cdot ${q}${r === 0 ? "" : ` + ${r}`}$`,
-          `末${k === 2 ? "两" : "三"}位组成 $${shown}$，而 $${tail} = ${d} \\cdot ${q}${r === 0 ? "" : ` + ${r}`}$`,
-        );
-        return divisibleQuestion(n, d, reason);
-      },
-    },
+    "A baker has $7{,}316$ cookies to pack into boxes of $2$, $4$, $5$, $8$ or $10$, with none left over. Which box sizes work?",
+    "面包师有 $7{,}316$ 块饼干，要平均装进每盒 $2$、$4$、$5$、$8$ 或 $10$ 块的盒子，不能有剩余。哪几种盒子可以？",
+  ],
+  [
+    "It ends in $6$, so $2$ works and $5$ and $10$ do not. Its last two digits $16$ make $4$ work, but $316 = 8 \\cdot 39 + 4$, so $8$ fails.",
+    "末位是 $6$，所以 $2$ 可以，$5$ 和 $10$ 不行。末两位 $16$ 说明 $4$ 可以，但 $316 = 8 \\cdot 39 + 4$，所以 $8$ 不行。",
+  ],
+  [
+    "test for $2$, $5$ and $10$ from the last digit, and for $4$ and $8$ from the last two or three.",
+    "根据末位检验能否被 $2$、$5$、$10$ 整除，根据末两位或末三位检验能否被 $4$、$8$ 整除。",
   ],
 );
 
@@ -486,66 +590,170 @@ function divisions(n: number): string[] {
 }
 
 /** primeFactorsTopic finds the largest prime factor of a number and writes its prime factorization with exponents. */
-export const primeFactorsTopic = topic(
-  "prime-factors",
-  t("Prime Factors", "质因数"),
-  t(
-    "The prime factors of a number are the primes that divide it. Dividing by the smallest prime that goes in, again and again until 1 is left, finds all of them, and writing repeated primes with exponents gives the prime factorization: 360 = 2³ · 3² · 5.",
-    "一个数的质因数是能整除它的质数。反复用能整除它的最小质数去除，直到得 1，就能找出所有质因数；把重复的质数写成幂，就得到质因数分解：360 = 2³ · 3² · 5。",
+export const primeFactorsTopic = withIntro(
+  topic(
+    "prime-factors",
+    t("Prime Factors", "质因数"),
+    t(
+      "The prime factors of a number are the primes that divide it. Dividing by the smallest prime that goes in, again and again until 1 is left, finds all of them, and writing repeated primes with exponents gives the prime factorization: 360 = 2³ · 3² · 5.",
+      "一个数的质因数是能整除它的质数。反复用能整除它的最小质数去除，直到得 1，就能找出所有质因数；把重复的质数写成幂，就得到质因数分解：360 = 2³ · 3² · 5。",
+    ),
+    ["prime-and-composite-numbers"],
+    ["6.NS.B.4"],
+    [
+      lesson(
+        "the-largest-prime-factor",
+        ["The largest prime factor", "最大的质因数"],
+        [
+          [
+            "To find the largest prime factor of $546$, divide by primes in order: $546 \\div 2 = 273$, $273 \\div 3 = 91$, $91 \\div 7 = 13$, and $13$ is prime. So $546 = 2 \\cdot 3 \\cdot 7 \\cdot 13$, and the largest prime factor is $13$.",
+            "求 $546$ 最大的质因数，按顺序用质数去除：$546 \\div 2 = 273$，$273 \\div 3 = 91$，$91 \\div 7 = 13$，而 $13$ 是质数。所以 $546 = 2 \\cdot 3 \\cdot 7 \\cdot 13$，最大的质因数是 $13$。",
+          ],
+          [
+            "Multiply back: $13 \\cdot 7 \\cdot 3 \\cdot 2 = 91 \\cdot 6 = 546$.",
+            "乘回去：$13 \\cdot 7 \\cdot 3 \\cdot 2 = 91 \\cdot 6 = 546$。",
+          ],
+          ["The largest factor other than $546$ itself is $273$, which is not prime.", "除 $546$ 本身以外最大的因数是 $273$，它不是质数。"],
+        ],
+        (rng) => {
+          const fs = drawFactors(rng, 60, 2000, 2);
+          const n = product(fs);
+          const ps = fs.map(([p]) => p);
+          const big = ps[ps.length - 1]!;
+          const second = ps[ps.length - 2]!;
+          const powers = [...fs].reverse().map(([p, e]) => (e === 1 ? `${p}` : `${p}^{${e}}`));
+          const values = [...fs].reverse().map(([p, e]) => `${p ** e}`);
+          return valued(
+            [`What is the largest prime factor of $${grouped(n)}$?`, `$${grouped(n)}$ 最大的质因数是多少？`],
+            big,
+            [
+              [
+                ["Divide by primes", "用质数依次去除"],
+                ["Start with the smallest prime that goes in, again and again:", "从能整除的最小质数开始，反复去除："],
+                divisions(n),
+              ],
+              [
+                ["Read the largest", "找出最大的"],
+                [
+                  `So $${grouped(n)} = ${latex(fs)}$, and the largest prime used is $${big}$.`,
+                  `所以 $${grouped(n)} = ${latex(fs)}$，用到的最大质数是 $${big}$。`,
+                ],
+              ],
+            ],
+            [
+              `Multiply back from the largest. Every factor is a power of a prime, and together they make the number: $${powers.join(" \\cdot ")} = ${values.join(" \\cdot ")} = ${grouped(n)}$.`,
+              `从最大的开始乘回去。每个因数都是质数的幂，合起来正是这个数：$${powers.join(" \\cdot ")} = ${values.join(" \\cdot ")} = ${grouped(n)}$。`,
+            ],
+            [
+              [
+                n / ps[0]!,
+                `That is the largest factor other than $${grouped(n)}$, but it is not prime.`,
+                `这是除 $${grouped(n)}$ 以外最大的因数，但它不是质数。`,
+              ],
+              [ps[0]!, "That is the smallest prime factor.", "这是最小的质因数。"],
+              [second, "That is a prime factor, but not the largest.", "这是一个质因数，但不是最大的。"],
+              [big * second, "That is a product of two primes, so it is not prime.", "这是两个质数的积，所以不是质数。"],
+            ],
+          );
+        },
+        factorTape(
+          [
+            ["2", 1],
+            ["3", 1],
+            ["7", 1],
+            ["13", 1],
+          ],
+          "546",
+          ["546 is 2 · 3 · 7 · 13, and 13 is the largest of these primes.", "546 是 2 · 3 · 7 · 13，其中最大的质数是 13。"],
+        ),
+      ),
+      lesson(
+        "prime-factorization-with-exponents",
+        ["Prime factorization with exponents", "用指数写质因数分解"],
+        [
+          [
+            "$360 \\div 2 = 180$, $180 \\div 2 = 90$, $90 \\div 2 = 45$, $45 \\div 3 = 15$, $15 \\div 3 = 5$, and $5$ is prime. The prime $2$ was used three times and $3$ twice, so $360 = 2^{3} \\cdot 3^{2} \\cdot 5$.",
+            "$360 \\div 2 = 180$，$180 \\div 2 = 90$，$90 \\div 2 = 45$，$45 \\div 3 = 15$，$15 \\div 3 = 5$，而 $5$ 是质数。质数 $2$ 用了三次，$3$ 用了两次，所以 $360 = 2^{3} \\cdot 3^{2} \\cdot 5$。",
+          ],
+          [
+            "Multiply back: $2^{3} \\cdot 3^{2} \\cdot 5 = 8 \\cdot 9 \\cdot 5 = 360$.",
+            "乘回去：$2^{3} \\cdot 3^{2} \\cdot 5 = 8 \\cdot 9 \\cdot 5 = 360$。",
+          ],
+          [
+            "Every factor in the answer must be prime: $2^{3} \\cdot 45$ is not finished.",
+            "答案中的每个因数都必须是质数：$2^{3} \\cdot 45$ 还没有分解完。",
+          ],
+        ],
+        (rng) => {
+          let fs: Factors;
+          do fs = drawFactors(rng, 100, 3000);
+          while (fs.every(([, e]) => e === 1));
+          const n = product(fs);
+          const [p, e] = fs[0]!;
+          const rest = n / p ** e;
+          const restComposite = fs.length > 2 || fs[1]![1] > 1;
+          return primeFactored(
+            [`Write the prime factorization of $${grouped(n)}$ using exponents.`, `用指数形式写出 $${grouped(n)}$ 的质因数分解。`],
+            n,
+            [
+              [
+                ["Divide by primes", "用质数依次去除"],
+                ["Start with the smallest prime that goes in, again and again:", "从能整除的最小质数开始，反复去除："],
+                divisions(n),
+              ],
+              [
+                ["Count each prime", "数出每个质数"],
+                [
+                  `Each prime's exponent is how many times it was used: $${grouped(n)} = ${latex(fs)}$.`,
+                  `每个质数用了几次，指数就是几：$${grouped(n)} = ${latex(fs)}$。`,
+                ],
+              ],
+            ],
+            [
+              `Multiply back: $${latex(fs)} = ${fs.map(([q, f]) => `${q ** f}`).join(" \\cdot ")} = ${grouped(n)}$.`,
+              `乘回去：$${latex(fs)} = ${fs.map(([q, f]) => `${q ** f}`).join(" \\cdot ")} = ${grouped(n)}$。`,
+            ],
+            [
+              ...(restComposite
+                ? ([
+                    [
+                      `${latex([[p, e]])} \\cdot ${rest}`,
+                      `That stops early: $${rest}$ is not prime.`,
+                      `这是分解到一半就停了：$${rest}$ 不是质数。`,
+                    ],
+                  ] as const)
+                : []),
+              [
+                factorizationLatex(fs.map(([q]) => [q, 1])),
+                `That drops the repeated primes; it is $${multiplied(fs.map(([q]) => [q, 1] as const))}$.`,
+                `这是漏掉了重复的质数；它等于 $${multiplied(fs.map(([q]) => [q, 1] as const))}$。`,
+              ],
+            ],
+          );
+        },
+        factorTape(
+          [
+            ["2", 3],
+            ["3", 2],
+            ["5", 1],
+          ],
+          "360",
+          ["360 is three 2s, two 3s and one 5, written 2³ · 3² · 5.", "360 是三个 2、两个 3 和一个 5 相乘，写作 2³ · 3² · 5。"],
+        ),
+      ),
+    ],
   ),
-  ["prime-and-composite-numbers"],
-  ["6.NS.B.4"],
   [
-    {
-      id: "the-largest-prime-factor",
-      title: t("The largest prime factor", "最大的质因数"),
-      explanation: t(
-        "To find the largest prime factor of $546$, divide by primes in order: $546 \\div 2 = 273$, $273 \\div 3 = 91$, $91 \\div 7 = 13$, and $13$ is prime. So $546 = 2 \\cdot 3 \\cdot 7 \\cdot 13$, and the largest prime factor is $13$. The largest factor other than $546$ itself is $273$, which is not prime.",
-        "求 $546$ 最大的质因数，按顺序用质数去除：$546 \\div 2 = 273$，$273 \\div 3 = 91$，$91 \\div 7 = 13$，而 $13$ 是质数。所以 $546 = 2 \\cdot 3 \\cdot 7 \\cdot 13$，最大的质因数是 $13$。除 $546$ 本身以外最大的因数是 $273$，它不是质数。",
-      ),
-      generate(rng) {
-        const fs = drawFactors(rng, 60, 2000, 2);
-        const n = product(fs);
-        const ps = fs.map(([p]) => p);
-        const big = ps[ps.length - 1]!;
-        const second = ps[ps.length - 2]!;
-        return numberProblem({
-          prompt: t(`What is the largest prime factor of $${grouped(n)}$?`, `$${grouped(n)}$ 最大的质因数是多少？`),
-          answer: big,
-          form: "integer",
-          // The largest factor, which is not prime, the smallest prime factor, and the second largest prime factor.
-          wrong: [n / ps[0]!, ps[0]!, second, big * second],
-          solution: t(
-            `Divide by primes, starting with the smallest:${steps(...divisions(n))}So $${grouped(n)} = ${latex(fs)}$, and the largest prime factor is $${big}$.`,
-            `从最小的质数开始依次相除：${steps(...divisions(n))}所以 $${grouped(n)} = ${latex(fs)}$，最大的质因数是 $${big}$。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "prime-factorization-with-exponents",
-      title: t("Prime factorization with exponents", "用指数写质因数分解"),
-      explanation: t(
-        "$360 \\div 2 = 180$, $180 \\div 2 = 90$, $90 \\div 2 = 45$, $45 \\div 3 = 15$, $15 \\div 3 = 5$, and $5$ is prime. The prime $2$ was used three times and $3$ twice, so $360 = 2^{3} \\cdot 3^{2} \\cdot 5$. Every factor in the answer must be prime: $2^{3} \\cdot 45$ is not finished.",
-        "$360 \\div 2 = 180$，$180 \\div 2 = 90$，$90 \\div 2 = 45$，$45 \\div 3 = 15$，$15 \\div 3 = 5$，而 $5$ 是质数。质数 $2$ 用了三次，$3$ 用了两次，所以 $360 = 2^{3} \\cdot 3^{2} \\cdot 5$。答案中的每个因数都必须是质数：$2^{3} \\cdot 45$ 还没有分解完。",
-      ),
-      generate(rng) {
-        const fs = drawFactors(rng, 100, 3000);
-        if (fs.every(([, e]) => e === 1)) return this.generate(rng);
-        const n = product(fs);
-        const [p, e] = fs[0]!;
-        return factorizationProblem({
-          prompt: t(`Write the prime factorization of $${grouped(n)}$ using exponents.`, `用指数形式写出 $${grouped(n)}$ 的质因数分解。`),
-          value: n,
-          // Stopping at a composite factor, and dropping the repeated primes.
-          wrong: [`${latex([[p, e]])} \\cdot ${n / p ** e}`, factorizationLatex(fs.map(([q]) => [q, 1]))],
-          solution: t(
-            `Divide by primes, starting with the smallest:${steps(...divisions(n))}Count how many times each prime was used: $${grouped(n)} = ${latex(fs)}$.`,
-            `从最小的质数开始依次相除：${steps(...divisions(n))}数出每个质数用了几次：$${grouped(n)} = ${latex(fs)}$。`,
-          ),
-        });
-      },
-    },
+    "A secret number was made by multiplying primes, and it came out as $546$. Which primes went in?",
+    "一个秘密数是由几个质数相乘得到的，结果是 $546$。用了哪些质数？",
+  ],
+  [
+    "$546 = 2 \\cdot 273 = 2 \\cdot 3 \\cdot 91 = 2 \\cdot 3 \\cdot 7 \\cdot 13$.",
+    "$546 = 2 \\cdot 273 = 2 \\cdot 3 \\cdot 91 = 2 \\cdot 3 \\cdot 7 \\cdot 13$。",
+  ],
+  [
+    "find the prime factors of a number and write its prime factorization with exponents.",
+    "找出一个数的质因数，并用指数写出它的质因数分解。",
   ],
 );
 
@@ -1380,3 +1588,137 @@ export const grade8NumberTheoryTopics: readonly TopicDef[] = [
   findingGreatestCommonFactorsUsingPrimeFactorization,
   findingLowestCommonMultiplesUsingPrimeFactorization,
 ];
+
+/** theMissingDigitForDivisibilityBy4 finds the smallest digit that makes a number divisible by 4; it is the third point of divisibility-of-integers-by-2-5-10-4-and-8, to take the place of the one in the deeper files. */
+export const theMissingDigitForDivisibilityBy4 = lesson(
+  "the-missing-digit-for-divisibility-by-4",
+  ["The missing digit for divisibility by 4", "能被 4 整除时缺少的数字"],
+  [
+    [
+      "Only the last two digits decide whether a number divides by $4$, since every multiple of $100$ does. So try the digits in order until the last two digits form a multiple of $4$. For $57\\square2$: $02$ is not a multiple of $4$, but $12 = 4 \\cdot 3$ is, so the digit is $1$.",
+      "能否被 $4$ 整除只看最后两位，因为 $100$ 的倍数都能被 $4$ 整除。所以依次试数字，直到最后两位是 $4$ 的倍数。对 $57\\square2$：$02$ 不是 $4$ 的倍数，$12 = 4 \\cdot 3$ 是，所以这个数字是 $1$。",
+    ],
+    ["Divide: $5{,}712 = 4 \\times 1{,}428$.", "做除法：$5{,}712 = 4 \\times 1{,}428$。"],
+    [
+      "The digit in the tens place changes the last two digits by tens, so it matters; copying the ones digit does not help.",
+      "十位上的数字以十为单位改变末两位，所以它很重要；照抄个位数字没有用。",
+    ],
+  ],
+  (rng) => {
+    const head = rng.int(10, 99);
+    const u = rng.pick([0, 2, 4, 6, 8]);
+    let d = 0;
+    while ((10 * d + u) % 4 !== 0) d += 1;
+    const n = head * 100 + 10 * d + u;
+    const tried = Array.from({ length: d + 1 }, (_, i) => {
+      const v = 10 * i + u;
+      return `${`${v}`.padStart(2, "0")} = 4 \\cdot ${Math.floor(v / 4)}${v % 4 === 0 ? "" : ` + ${v % 4}`}`;
+    });
+    return valued(
+      [
+        `What is the smallest digit that can go in the box so that the number divides by $4$? $$${head}\\square${u}$$`,
+        `方框里填什么最小的数字，才能使这个数被 $4$ 整除？$$${head}\\square${u}$$`,
+      ],
+      d,
+      [
+        [
+          ["Look at the last two digits", "看末两位"],
+          ["$100$ is a multiple of $4$, so only the box and the last digit decide.", "$100$ 是 $4$ 的倍数，所以只看方框和末位数字。"],
+        ],
+        [
+          ["Try the digits in order", "依次试数字"],
+          ["Start from $0$ and stop at the first multiple of $4$:", "从 $0$ 开始，试到第一个 $4$ 的倍数为止："],
+          tried,
+        ],
+      ],
+      divided(n, 4),
+      [
+        [
+          d + 1,
+          `That makes the last two digits $${10 * (d + 1) + u}$, which is not a multiple of $4$.`,
+          `这样末两位是 $${10 * (d + 1) + u}$，不是 $4$ 的倍数。`,
+        ],
+        [d + 2, "That digit works, but a smaller one does too.", "这个数字也行，但还有更小的。"],
+        [
+          u,
+          "That copies the last digit; the tens digit is what changes the last two digits.",
+          "这是照抄了末位数字；改变末两位的是十位数字。",
+        ],
+      ],
+    );
+  },
+  tapeFigure(
+    [
+      {
+        total: "5712",
+        pieces: [
+          { size: 6, text: "5700 = 100 · 57" },
+          { size: 1, text: "12", lit: true },
+        ],
+      },
+    ],
+    [
+      "5712 is 5700 + 12: 5700 is a multiple of 4, so the digit in the box only has to make 12.",
+      "5712 是 5700 + 12：5700 是 4 的倍数，所以方框里的数字只需让末两位成为 12。",
+    ],
+  ),
+);
+
+/** theNumberFromItsPrimeFactors multiplies out a prime factorization; it is the third point of prime-factors, to take the place of the one in the deeper files. */
+export const theNumberFromItsPrimeFactors = lesson(
+  "the-number-from-its-prime-factors",
+  ["The number from its prime factors", "由质因数还原这个数"],
+  [
+    [
+      "A prime factorization names exactly one number, so multiplying the powers together recovers it. Each exponent says how many times its prime is used, and it is not a multiplier: $2^{3} \\cdot 5 = 8 \\cdot 5 = 40$.",
+      "质因数分解对应唯一的数，所以把各个幂相乘就能还原。指数表示质数用了几次，不是乘数：$2^{3} \\cdot 5 = 8 \\cdot 5 = 40$。",
+    ],
+    [
+      "Divide back by primes: $40 \\div 2 = 20$, $20 \\div 2 = 10$, $10 \\div 2 = 5$, three $2$s and a $5$.",
+      "用质数除回去：$40 \\div 2 = 20$，$20 \\div 2 = 10$，$10 \\div 2 = 5$，三个 $2$ 和一个 $5$。",
+    ],
+    ["$2^{3}$ is $8$, not $2 \\cdot 3 = 6$.", "$2^{3}$ 是 $8$，不是 $2 \\cdot 3 = 6$。"],
+  ],
+  (rng) => {
+    const a = rng.int(1, 5);
+    const b = rng.int(0, 3);
+    const c = rng.int(1, 2);
+    const q = rng.pick([5, 7, 11]);
+    const n = 2 ** a * 3 ** b * q ** c;
+    const fs: Factors = [[2, a], ...(b > 0 ? ([[3, b]] as const) : []), [q, c]];
+    const powers = fs.map(([p, e]) => `${p ** e}`);
+    return valued(
+      [`What number has the prime factorization $${latex(fs)}$?`, `质因数分解为 $${latex(fs)}$ 的数是多少？`],
+      n,
+      [
+        [
+          ["Work out each power", "算出每个幂"],
+          ["Each exponent says how many times its prime is used:", "指数表示这个质数用了几次："],
+          fs.map(([p, e]) => `${p}^{${e}} = ${p ** e}`),
+        ],
+        [["Multiply", "相乘"], ["Multiply the powers together:", "把各个幂相乘："], [`${powers.join(" \\cdot ")} = ${grouped(n)}`]],
+      ],
+      [
+        `Divide back by primes, starting with the smallest:${steps(...divisions(n))}That uses each prime as often as its exponent says.`,
+        `用质数从小到大除回去：${steps(...divisions(n))}每个质数用的次数正好等于它的指数。`,
+      ],
+      [
+        [
+          fs.reduce((v, [p, e]) => v * p * e, 1),
+          "That multiplies each prime by its exponent instead of raising it to that power.",
+          "这是把每个质数乘以指数，而不是求它的幂。",
+        ],
+        [fs.reduce((v, [p, e]) => v + p ** e, 0), "That adds the powers instead of multiplying them.", "这是把各个幂相加了，而不是相乘。"],
+        [fs.reduce((v, [p]) => v * p, 1), "That ignores the exponents.", "这是忽略了指数。"],
+      ],
+    );
+  },
+  factorTape(
+    [
+      ["2", 3],
+      ["5", 1],
+    ],
+    "40",
+    ["Three 2s and one 5 multiply to 40.", "三个 2 和一个 5 相乘得 40。"],
+  ),
+);

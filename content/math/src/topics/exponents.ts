@@ -2,9 +2,10 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, gcd, num, Q, sci } from "@ga/subject-math";
 
-import { numberProblem, scientificValue, steps } from "../problems.ts";
+import { scientificValue } from "../problems.ts";
+import type { Pair } from "./early-grades-more-kit.ts";
 import { expressed, lesson, type Said, valued, withIntro } from "./grade-6-kit.ts";
-import { factorTape, fractionSteps, scienced, stepDown } from "./grade-8-kit.ts";
+import { factorTape, fractionSteps, scienced, stepDown, tableFigure } from "./grade-8-kit.ts";
 import { lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** mono writes a monomial: mono(6, [["x", 5], ["y", 1]]) is "6x^{5}y". */
@@ -61,83 +62,325 @@ export function mantissa(rng: Rng): Q {
   return rng.bool(0.6) ? Q.of(rng.int(11, 99), 10) : Q.of(rng.int(101, 999), 100);
 }
 
-export const powersOfRationalNumbers: TopicDef = {
-  id: "powers-of-rational-numbers",
-  title: t("Powers of Rational Numbers", "有理数的乘方"),
-  summary: t("Square and cube fractions and decimals, positive or negative.", "求分数和小数（正数或负数）的平方与立方。"),
-  prerequisites: ["powers-of-integers", "multiplying-fractions", "decimal-arithmetic"],
-  encompasses: [
-    { topic: "powers-of-integers", weight: 0.4 },
-    { topic: "multiplying-fractions", weight: 0.2 },
-  ],
-  xp: 10,
-  standards: ["CCSS.6.EE.A.1", "CCSS.7.NS.A.2"],
-  knowledgePoints: [
-    {
-      id: "powers-of-fractions",
-      title: t("Powers of fractions", "分数的乘方"),
-      explanation: t(
-        "A power of a fraction is the power of its numerator over the power of its denominator, because multiplying fractions multiplies the numerators and the denominators:\n\n$$\\left(\\frac{2}{3}\\right)^{3} = \\frac{2}{3} \\cdot \\frac{2}{3} \\cdot \\frac{2}{3} = \\frac{2^{3}}{3^{3}} = \\frac{8}{27}$$\n\nThe parentheses matter: the exponent applies to the whole fraction, denominator included. As with integers, an odd power of a negative fraction is negative and an even power is positive.",
-        "分数的乘方等于分子的乘方除以分母的乘方，因为分数相乘就是分子乘分子、分母乘分母：\n\n$$\\left(\\frac{2}{3}\\right)^{3} = \\frac{2}{3} \\cdot \\frac{2}{3} \\cdot \\frac{2}{3} = \\frac{2^{3}}{3^{3}} = \\frac{8}{27}$$\n\n括号很重要：指数作用于整个分数，包括分母。与整数一样，负分数的奇数次幂为负，偶数次幂为正。",
-      ),
-      keyPrerequisites: ["powers-of-integers", "multiplying-fractions"],
-      generate(rng) {
-        const n = rng.pick([2, 2, 3]);
-        let a: number;
-        let b: number;
-        do {
-          a = rng.int(1, n === 2 ? 9 : 5);
-          b = rng.int(2, n === 2 ? 10 : 5);
-        } while (gcd(a, b) !== 1);
-        const s = rng.bool(0.4) ? -1 : 1;
-        const v = Q.of(s * a, b);
-        const value = v.pow(n);
-        const top = s < 0 ? `(-${a})^{${n}}` : `${a}^{${n}}`;
-        return numberProblem({
-          prompt: t(`Evaluate $${base(v)}^{${n}}$.`, `计算 $${base(v)}^{${n}}$。`),
-          answer: value,
-          wrong: [Q.of((s < 0 && n % 2 === 1 ? -1 : 1) * a ** n, b), value.neg(), Q.of(s * a * n, b * n)],
-          solution: t(
-            `Raise the numerator and the denominator to the power ${n}:${steps(`${base(v)}^{${n}} = \\frac{${top}}{${b}^{${n}}} = ${num(value)}`)}`,
-            `把分子和分母分别乘方 ${n} 次：${steps(`${base(v)}^{${n}} = \\frac{${top}}{${b}^{${n}}} = ${num(value)}`)}`,
+/** inParens writes a rational number, in parentheses when it is negative. */
+const inParens = (v: Q) => (v.sign() < 0 ? `\\left(${num(v)}\\right)` : num(v));
+
+/** fractionBase writes a fraction as a base in parentheses: "\left(-\frac{2}{3}\right)". */
+const fractionBase = (sign: number, a: number, b: number) => `\\left(${sign < 0 ? "-" : ""}\\frac{${a}}{${b}}\\right)`;
+
+/** signSaid tells the sign of a power of a base with the given sign. */
+function signSaid(negative: boolean, n: number): Pair {
+  if (!negative) return ["The base is positive, so every power of it is positive.", "底数是正数，所以它的每个乘方都是正数。"];
+  const odd = n % 2 === 1;
+  return [
+    `There are $${n}$ negative factors, an ${odd ? "odd" : "even"} count, so the result is ${odd ? "negative" : "positive"}.`,
+    `共有 $${n}$ 个负因数，是${odd ? "奇" : "偶"}数个，所以结果为${odd ? "负" : "正"}。`,
+  ];
+}
+
+/** powersOfRationalNumbers squares and cubes fractions and decimals, positive or negative. */
+export const powersOfRationalNumbers: TopicDef = withIntro(
+  {
+    id: "powers-of-rational-numbers",
+    title: t("Powers of Rational Numbers", "有理数的乘方"),
+    summary: t("Square and cube fractions and decimals, positive or negative.", "求分数和小数（正数或负数）的平方与立方。"),
+    prerequisites: ["powers-of-integers", "multiplying-fractions", "decimal-arithmetic"],
+    encompasses: [
+      { topic: "powers-of-integers", weight: 0.4 },
+      { topic: "multiplying-fractions", weight: 0.2 },
+    ],
+    xp: 10,
+    standards: ["CCSS.6.EE.A.1", "CCSS.7.NS.A.2"],
+    knowledgePoints: [
+      {
+        ...lesson(
+          "powers-of-fractions",
+          ["Powers of fractions", "分数的乘方"],
+          [
+            [
+              "A power of a fraction multiplies the fraction by itself, and multiplying fractions multiplies the numerators and the denominators. So the power of a fraction is the power of its numerator over the power of its denominator: $\\left(\\frac{2}{3}\\right)^{3} = \\frac{2^{3}}{3^{3}} = \\frac{8}{27}$. As with integers, settle the sign first: an odd power of a negative fraction is negative and an even power is positive.",
+              "分数的乘方就是分数自乘，而分数相乘就是分子乘分子、分母乘分母。所以分数的乘方等于分子的乘方除以分母的乘方：$\\left(\\frac{2}{3}\\right)^{3} = \\frac{2^{3}}{3^{3}} = \\frac{8}{27}$。与整数一样，先定符号：负分数的奇数次幂为负，偶数次幂为正。",
+            ],
+            [
+              "$\\frac{2}{3} \\cdot \\frac{2}{3} \\cdot \\frac{2}{3} = \\frac{2 \\cdot 2 \\cdot 2}{3 \\cdot 3 \\cdot 3} = \\frac{8}{27}$.",
+              "$\\frac{2}{3} \\cdot \\frac{2}{3} \\cdot \\frac{2}{3} = \\frac{2 \\cdot 2 \\cdot 2}{3 \\cdot 3 \\cdot 3} = \\frac{8}{27}$。",
+            ],
+            [
+              "The exponent applies to the whole fraction, denominator included. $\\left(\\frac{2}{3}\\right)^{2}$ is $\\frac{4}{9}$, not $\\frac{4}{3}$.",
+              "指数作用于整个分数，包括分母。$\\left(\\frac{2}{3}\\right)^{2}$ 是 $\\frac{4}{9}$，不是 $\\frac{4}{3}$。",
+            ],
+          ],
+          (rng) => {
+            const n = rng.pick([2, 2, 3]);
+            let a: number;
+            let b: number;
+            do {
+              a = rng.int(1, n === 2 ? 9 : 5);
+              b = rng.int(2, n === 2 ? 10 : 5);
+            } while (gcd(a, b) !== 1);
+            const s = rng.bool(0.4) ? -1 : 1;
+            const v = Q.of(s * a, b);
+            const value = v.pow(n);
+            const negative = value.sign() < 0;
+            const shown = fractionBase(s, a, b);
+            const back = value.div(v);
+            return valued(
+              [`Evaluate $${shown}^{${n}}$.`, `计算 $${shown}^{${n}}$。`],
+              value,
+              [
+                [["Settle the sign", "定符号"], signSaid(s < 0, n)],
+                [
+                  ["Raise both parts", "分子分母都乘方"],
+                  [
+                    "Raise the numerator and the denominator to the power, then put the sign in front:",
+                    "把分子和分母分别乘方，再写上符号：",
+                  ],
+                  [`${shown}^{${n}} = ${negative ? "-" : ""}\\frac{${a}^{${n}}}{${b}^{${n}}} = ${num(value)}`],
+                ],
+              ],
+              [
+                `Divide by one factor to step back down: $${num(value)} \\div ${inParens(v)} = ${num(back)}$. ${n === 2 ? "That is the fraction itself." : `That is $${shown}^{${n - 1}}$.`}`,
+                `除以一个因数，退回一步：$${num(value)} \\div ${inParens(v)} = ${num(back)}$。${n === 2 ? "这正是这个分数本身。" : `这正是 $${shown}^{${n - 1}}$。`}`,
+              ],
+              [
+                [
+                  Q.of((negative ? -1 : 1) * a ** n, b),
+                  "That raises only the numerator; the exponent applies to the denominator too.",
+                  "这只给分子乘方了；指数也作用于分母。",
+                ],
+                [
+                  value.neg(),
+                  s < 0
+                    ? `That has the wrong sign: $${n}$ negative factors is an ${n % 2 === 1 ? "odd" : "even"} count.`
+                    : "That adds a minus sign; a power of a positive number is positive.",
+                  s < 0 ? `符号错了：$${n}$ 个负因数是${n % 2 === 1 ? "奇" : "偶"}数个。` : "这是多了一个负号；正数的乘方是正数。",
+                ],
+                [
+                  Q.of(s * a * n, b),
+                  "That multiplies the fraction by the exponent; the exponent counts factors.",
+                  "这是拿分数乘指数了；指数表示因数的个数。",
+                ],
+              ],
+            );
+          },
+          tableFigure(
+            ["(2/3)^1", "(2/3)^2", "(2/3)^3"],
+            ["2ⁿ", "3ⁿ"],
+            [
+              ["2", "3"],
+              ["2 × 2 = 4", "3 × 3 = 9"],
+              ["2 × 2 × 2 = 8", "3 × 3 × 3 = 27"],
+            ],
+            [
+              "A table of the powers of 2/3: the numerators 2, 4, 8 and the denominators 3, 9, 27, each row multiplying both by one more factor.",
+              "2/3 的乘方表：分子 2、4、8，分母 3、9、27，每一行都给分子和分母各多乘一个因数。",
+            ],
           ),
-        });
+        ),
+        keyPrerequisites: ["powers-of-integers", "multiplying-fractions"],
       },
-    },
-    {
-      id: "powers-of-decimals",
-      title: t("Powers of decimals", "小数的乘方"),
-      explanation: t(
-        "Multiply the decimal by itself. Each factor brings its decimal places, so $0.3^{2}$ has $1 + 1 = 2$ decimal places:\n\n$$0.3^{2} = 0.3 \\times 0.3 = 0.09$$\n\nA common mistake is to write $0.9$: compute $3 \\times 3 = 9$, then place the decimal point so that the result has two decimal places.",
-        "把这个小数自乘。每个因数都带来它的小数位数，所以 $0.3^{2}$ 有 $1 + 1 = 2$ 位小数：\n\n$$0.3^{2} = 0.3 \\times 0.3 = 0.09$$\n\n常见错误是写成 $0.9$：先算 $3 \\times 3 = 9$，再点上小数点，使结果有两位小数。",
-      ),
-      keyPrerequisites: ["decimal-arithmetic"],
-      generate(rng) {
-        const [k, scale, n] = rng.pick<[number, number, number]>([
-          [rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15]), 10, 2],
-          [rng.int(1, 5), 10, 3],
-          [rng.int(2, 9), 100, 2],
-        ]);
-        const s = rng.bool(0.3) ? -1 : 1;
-        const v = Q.of(s * k, scale);
-        const value = v.pow(n);
-        const places = String(scale).length - 1;
-        const shown = s < 0 ? `\\left(${dec(v)}\\right)` : dec(v);
-        const factors = Array(n).fill(shown).join(" \\times ");
-        return numberProblem({
-          prompt: t(`Evaluate $${shown}^{${n}}$.`, `计算 $${shown}^{${n}}$。`),
-          answer: value,
-          form: "decimal",
-          wrong: [Q.of((n % 2 === 1 ? s : 1) * k ** n, scale), value.neg(), Q.of(s * k * n, scale)],
-          solution: t(
-            `${steps(`${shown}^{${n}} = ${factors} = ${dec(value)}`)}Since $${k}^{${n}} = ${k ** n}$ and the product has $${n} \\times ${places} = ${n * places}$ decimal places, the result is $${dec(value)}$.`,
-            `${steps(`${shown}^{${n}} = ${factors} = ${dec(value)}`)}因为 $${k}^{${n}} = ${k ** n}$，乘积有 $${n} \\times ${places} = ${n * places}$ 位小数，所以结果是 $${dec(value)}$。`,
+      {
+        ...lesson(
+          "powers-of-decimals",
+          ["Powers of decimals", "小数的乘方"],
+          [
+            [
+              "Multiply the decimal by itself. Multiply the digits as whole numbers, then place the point: each factor brings its decimal places, so $0.3^{2}$ has $1 + 1 = 2$ decimal places and $0.3^{2} = 0.09$. A negative decimal follows the sign rule of integers.",
+              "把这个小数自乘。先把数字当作整数相乘，再点小数点：每个因数都带来它的小数位数，所以 $0.3^{2}$ 有 $1 + 1 = 2$ 位小数，$0.3^{2} = 0.09$。负小数的符号与整数的规则相同。",
+            ],
+            [
+              "As fractions, $0.3^{2} = \\left(\\frac{3}{10}\\right)^{2} = \\frac{9}{100} = 0.09$.",
+              "化成分数：$0.3^{2} = \\left(\\frac{3}{10}\\right)^{2} = \\frac{9}{100} = 0.09$。",
+            ],
+            [
+              "Count the decimal places of every factor. $0.3^{2}$ is $0.09$, not $0.9$.",
+              "要数每个因数的小数位数。$0.3^{2}$ 是 $0.09$，不是 $0.9$。",
+            ],
+          ],
+          (rng) => {
+            const [k, scale, n] = rng.pick<[number, number, number]>([
+              [rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15]), 10, 2],
+              [rng.int(1, 5), 10, 3],
+              [rng.int(2, 9), 100, 2],
+            ]);
+            const s = rng.bool(0.3) ? -1 : 1;
+            const v = Q.of(s * k, scale);
+            const value = v.pow(n);
+            const negative = value.sign() < 0;
+            const places = String(scale).length - 1;
+            const shown = s < 0 ? `\\left(${dec(v)}\\right)` : dec(v);
+            const sign: Pair = s < 0 ? signSaid(true, n) : ["", ""];
+            return valued(
+              [`Evaluate $${shown}^{${n}}$.`, `计算 $${shown}^{${n}}$。`],
+              value,
+              [
+                [
+                  ["Multiply the digits", "数字相乘"],
+                  [
+                    `Leave out the point${s < 0 ? " and the sign" : ""} for now. $${n}$ factors of $${k}$:`,
+                    `先不管小数点${s < 0 ? "和符号" : ""}。$${n}$ 个 $${k}$ 相乘：`,
+                  ],
+                  [`${k}^{${n}} = ${k ** n}`],
+                ],
+                [
+                  ["Place the point", "点小数点"],
+                  [
+                    `Each factor has $${places}$ decimal place${places === 1 ? "" : "s"}, so the product has $${n} \\times ${places} = ${n * places}$ decimal places. ${sign[0]}`.trim(),
+                    `每个因数有 $${places}$ 位小数，所以乘积有 $${n} \\times ${places} = ${n * places}$ 位小数。${sign[1]}`,
+                  ],
+                  [`${shown}^{${n}} = ${dec(value)}`],
+                ],
+              ],
+              [
+                `Write the decimal as a fraction: $${fractionBase(s, k, scale)}^{${n}} = ${negative ? "-" : ""}\\frac{${k ** n}}{${scale ** n}} = ${dec(value)}$.`,
+                `把小数写成分数：$${fractionBase(s, k, scale)}^{${n}} = ${negative ? "-" : ""}\\frac{${k ** n}}{${scale ** n}} = ${dec(value)}$。`,
+              ],
+              [
+                [
+                  Q.of((negative ? -1 : 1) * k ** n, scale),
+                  `That gives the product only $${places}$ decimal place${places === 1 ? "" : "s"}; each factor brings its own.`,
+                  `这只给了乘积 $${places}$ 位小数；每个因数都带来自己的小数位数。`,
+                ],
+                [
+                  value.neg(),
+                  s < 0
+                    ? `That has the wrong sign: $${n}$ negative factors is an ${n % 2 === 1 ? "odd" : "even"} count.`
+                    : "That adds a minus sign; a power of a positive number is positive.",
+                  s < 0 ? `符号错了：$${n}$ 个负因数是${n % 2 === 1 ? "奇" : "偶"}数个。` : "这是多了一个负号；正数的乘方是正数。",
+                ],
+                [
+                  Q.of(s * k * n, scale),
+                  "That multiplies the decimal by the exponent; the exponent counts factors.",
+                  "这是拿小数乘指数了；指数表示因数的个数。",
+                ],
+              ],
+              { form: "decimal" },
+            );
+          },
+          tableFigure(
+            ["0.3", "0.3^2", "0.3^3"],
+            ["3ⁿ", "n × 1", "0.3ⁿ"],
+            [
+              ["3", "1", "0.3"],
+              ["3 × 3 = 9", "1 + 1 = 2", "0.09"],
+              ["3 × 3 × 3 = 27", "1 + 1 + 1 = 3", "0.027"],
+            ],
+            [
+              "A table of the powers of 0.3: the digits multiply to 3, 9, 27 while the decimal places add up to 1, 2, 3, giving 0.3, 0.09 and 0.027.",
+              "0.3 的乘方表：数字相乘得 3、9、27，小数位数累加为 1、2、3，得到 0.3、0.09 和 0.027。",
+            ],
           ),
-        });
+        ),
+        keyPrerequisites: ["decimal-arithmetic"],
       },
-    },
+    ],
+  },
+  [
+    "A square tile is $\\frac{2}{3}$ m on each side. Its area is $\\frac{2}{3} \\cdot \\frac{2}{3}$, two thirds of two thirds of a square metre.",
+    "一块正方形瓷砖边长 $\\frac{2}{3}$ 米。它的面积是 $\\frac{2}{3} \\cdot \\frac{2}{3}$，即 1 平方米的三分之二的三分之二。",
   ],
-};
+  [
+    "Split a square metre into $3 \\times 3 = 9$ equal parts; the tile covers $2 \\times 2 = 4$ of them, so its area is $\\left(\\frac{2}{3}\\right)^{2} = \\frac{4}{9}$ m².",
+    "把 1 平方米分成 $3 \\times 3 = 9$ 等份，瓷砖占其中 $2 \\times 2 = 4$ 份，所以面积是 $\\left(\\frac{2}{3}\\right)^{2} = \\frac{4}{9}$ 平方米。",
+  ],
+  [
+    "square and cube fractions and decimals, and settle the sign of a power of a negative number.",
+    "学习求分数和小数的平方与立方，并确定负数乘方的符号。",
+  ],
+);
+
+/** aNegativeFractionToAPower raises a negative fraction to the power 2, 3 or 4. */
+export const aNegativeFractionToAPower = lesson(
+  "a-negative-fraction-to-a-power",
+  ["A negative fraction to a power", "负分数的幂"],
+  [
+    [
+      "Settle the sign first, then the size. An odd power of a negative number stays negative, and an even power is positive. The size is the power of the numerator over the power of the denominator: $\\left(-\\frac{1}{2}\\right)^{3} = -\\frac{1}{8}$ and $\\left(-\\frac{1}{2}\\right)^{4} = \\frac{1}{16}$.",
+      "先定符号，再求大小。负数的奇数次幂仍是负数，偶数次幂是正数。大小等于分子的乘方除以分母的乘方：$\\left(-\\frac{1}{2}\\right)^{3} = -\\frac{1}{8}$，$\\left(-\\frac{1}{2}\\right)^{4} = \\frac{1}{16}$。",
+    ],
+    [
+      "Build it up one factor at a time: $-\\frac{1}{2}$, then $\\frac{1}{4}$, then $-\\frac{1}{8}$, then $\\frac{1}{16}$. The sign flips with every factor.",
+      "一个因数一个因数地乘：$-\\frac{1}{2}$，然后 $\\frac{1}{4}$，然后 $-\\frac{1}{8}$，然后 $\\frac{1}{16}$。每乘一个因数，符号就变一次。",
+    ],
+    [
+      "The minus sign is inside the parentheses, so it is a factor every time. An even power of $-\\frac{a}{b}$ is positive, not negative.",
+      "负号在括号里面，所以每次都要乘它。$-\\frac{a}{b}$ 的偶数次幂是正数，不是负数。",
+    ],
+  ],
+  (rng) => {
+    const [n, d] = rng.pick<[number, number]>([
+      [1, 2],
+      [1, 3],
+      [2, 3],
+      [3, 2],
+      [1, 4],
+      [3, 4],
+      [2, 5],
+      [3, 5],
+      [4, 5],
+      [5, 2],
+      [5, 3],
+      [1, 5],
+      [4, 3],
+      [2, 7],
+      [3, 7],
+      [5, 4],
+    ]);
+    const e = rng.pick([2, 3, 4]);
+    const v = Q.of(-n, d);
+    const answer = v.pow(e);
+    const even = e % 2 === 0;
+    const shown = fractionBase(-1, n, d);
+    const running = Array.from({ length: e }, (_, i) => num(v.pow(i + 1)));
+    return valued(
+      [`Evaluate $${shown}^{${e}}$.`, `计算 $${shown}^{${e}}$。`],
+      answer,
+      [
+        [["Settle the sign", "定符号"], signSaid(true, e)],
+        [
+          ["Find the size", "求大小"],
+          ["Raise the numerator and the denominator, then put the sign in front:", "把分子和分母分别乘方，再写上符号："],
+          [`${shown}^{${e}} = ${even ? "" : "-"}\\frac{${n}^{${e}}}{${d}^{${e}}} = ${num(answer)}`],
+        ],
+      ],
+      [
+        `Multiply one factor at a time, and the sign flips each time: $${running.join(", \\; ")}$.`,
+        `一个因数一个因数地乘，符号每次都变：$${running.join(", \\; ")}$。`,
+      ],
+      [
+        [
+          answer.neg(),
+          `That has the wrong sign: $${e}$ negative factors is an ${even ? "even" : "odd"} count.`,
+          `符号错了：$${e}$ 个负因数是${even ? "偶" : "奇"}数个。`,
+        ],
+        [
+          Q.of(-n * e, d),
+          "That multiplies the fraction by the exponent; the exponent counts factors.",
+          "这是拿分数乘指数了；指数表示因数的个数。",
+        ],
+        [
+          Q.of((even ? 1 : -1) * n ** e, d),
+          "That raises only the numerator; the exponent applies to the denominator too.",
+          "这只给分子乘方了；指数也作用于分母。",
+        ],
+      ],
+    );
+  },
+  tableFigure(
+    ["(−1/2)^1", "(−1/2)^2", "(−1/2)^3", "(−1/2)^4"],
+    ["±", "(−1/2)ⁿ"],
+    [
+      ["−", "−1/2"],
+      ["+", "1/4"],
+      ["−", "−1/8"],
+      ["+", "1/16"],
+    ],
+    [
+      "A table of the powers of −1/2: the sign alternates −, +, −, + while the values are −1/2, 1/4, −1/8 and 1/16.",
+      "−1/2 的乘方表：符号依次为 −、+、−、+，值为 −1/2、1/4、−1/8 和 1/16。",
+    ],
+  ),
+);
 
 /** distinct keeps the wrong responses that differ from the answer and from each other. */
 function distinct(answer: string, saids: readonly Said[]): Said[] {

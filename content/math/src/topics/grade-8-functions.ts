@@ -3,10 +3,9 @@ import { same, t } from "@ga/content";
 import { linear, num, type PlaneMark, plane, Q } from "@ga/subject-math";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
-import { article, pointLatex, steps, verdictChoice } from "../problems.ts";
-import type { Pair } from "./early-grades-more-kit.ts";
-import { mathText, pickChoice } from "./grade-4-fractions.ts";
-import { chosen, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { article, pointLatex, steps } from "../problems.ts";
+import type { Pair, Wrong } from "./early-grades-more-kit.ts";
+import { chosen, decided, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { tableFigure } from "./grade-8-kit.ts";
 import { lineFigure } from "./upper-grades-kit.ts";
 
@@ -142,228 +141,461 @@ const questions: readonly Question[] = [
   },
 ];
 
+/** perHour writes the change per hour on each piece of a graph, as lines such as "t = 0 \to 2: (6 - 0) \div 2 = 3". */
+const perHour = (ps: readonly Piece[]) =>
+  ps.map((p) => `t = ${p.x0} \\to ${p.x1}: \\; (${p.y1} - ${p.y0}) \\div ${p.x1 - p.x0} = ${(p.y1 - p.y0) / (p.x1 - p.x0)}`);
+
+/** pieceWhy says what one piece of a graph does, as the reason an interval is the wrong choice. */
+const pieceWhy = (p: Piece): Wrong => {
+  const name = interval(p.x0, p.x1);
+  return [
+    [name.en, name["zh-CN"]],
+    `There it ${behaviorWords[p.behavior].en}: the value goes from $${p.y0}$ to $${p.y1}$.`,
+    `这段时间里它${behaviorWords[p.behavior]["zh-CN"]}：值从 $${p.y0}$ 变为 $${p.y1}$。`,
+  ];
+};
+
+/** steady checks that a linear function changes by the same amount at x = 0, 1 and 2. */
+function steady(f: (x: number) => Q): Pair {
+  const ys = [0, 1, 2].map(f);
+  const d = ys[1]!.sub(ys[0]!);
+  const shown = ys.map((y) => num(y)).join(", ");
+  return [
+    `Test equal steps: at $x = 0, 1, 2$ it gives $y = ${shown}$. Each step changes $y$ by $${num(d)}$, as a line must.`,
+    `用相等的步长检验：$x = 0, 1, 2$ 时 $y = ${shown}$。每一步 $y$ 都变化 $${num(d)}$，正是直线的样子。`,
+  ];
+}
+
+/** uneven checks that a nonlinear function changes by different amounts at x = 1, 2 and 3. */
+function uneven(f: (x: number) => Q): Pair {
+  const ys = [1, 2, 3].map(f);
+  const [d1, d2] = [ys[1]!.sub(ys[0]!), ys[2]!.sub(ys[1]!)];
+  const shown = ys.map((y) => num(y)).join(", ");
+  return [
+    `Test equal steps: at $x = 1, 2, 3$ it gives $y = ${shown}$. The changes are $${num(d1)}$ and then $${num(d2)}$, which differ, so it is not a line.`,
+    `用相等的步长检验：$x = 1, 2, 3$ 时 $y = ${shown}$。变化量先是 $${num(d1)}$，再是 $${num(d2)}$，并不相同，所以不是直线。`,
+  ];
+}
+
+/** TestedForm is an equation in x and y with the reason it is or is not linear, and a check by values. */
+type TestedForm = readonly [string, Text, Pair];
+
+/** testedLinear are linear functions written in ways that hide the form y = mx + b, each with that form and a check by values. */
+const testedLinear = (rng: Rng): TestedForm[] => {
+  const [m, b, c] = [rng.int(2, 6), rng.nonZero(-7, 7), rng.int(2, 5)];
+  const k = Math.abs(b) + 3;
+  const as = (e: string): Text => same(`$${e}$`);
+  return [
+    [`y = ${m}(${linear(1, b)})`, as(`y = ${linear(m, m * b)}`), steady((x) => Q.of(m * (x + b)))],
+    [`y = \\frac{${linear(1, b)}}{${c}}`, as(`y = ${linear(Q.of(1, c), Q.of(b, c))}`), steady((x) => Q.of(x + b, c))],
+    [`${m}x + y = ${k}`, as(`y = ${linear(-m, k)}`), steady((x) => Q.of(k - m * x))],
+    [`y = ${k} - \\frac{x}{${c}}`, as(`y = ${linear(Q.of(-1, c), k)}`), steady((x) => Q.of(k * c - x, c))],
+  ];
+};
+
+/** testedNonlinear are nonlinear functions, some of which look linear at first sight, each with the reason and a check by values. */
+const testedNonlinear = (rng: Rng): TestedForm[] => {
+  const [m, b, c] = [rng.int(2, 6), rng.int(1, 7), rng.int(2, 5)];
+  return [
+    [`y = ${m}x^{2} + ${b}`, t("$x$ is squared", "$x$ 被平方"), uneven((x) => Q.of(m * x * x + b))],
+    [`y = \\frac{${c}}{x}`, t("$x$ is in the denominator", "$x$ 在分母中"), uneven((x) => Q.of(c, x))],
+    [
+      `y = x(x + ${b})`,
+      t(`it is $y = x^{2} + ${b}x$, with $x$ squared`, `它就是 $y = x^{2} + ${b}x$，$x$ 被平方`),
+      uneven((x) => Q.of(x * (x + b))),
+    ],
+    [`y = ${c}^{x}`, t("$x$ is in the exponent", "$x$ 在指数上"), uneven((x) => Q.of(c ** x))],
+    [
+      `y = ${m}\\sqrt{x}`,
+      t("$x$ is under a square root", "$x$ 在根号下"),
+      [
+        `Test values: at $x = 1, 4, 9$ it gives $y = ${m}, ${2 * m}, ${3 * m}$. $x$ rises by $3$ and then by $5$, while $y$ rises by $${m}$ each time, so the rate is not constant.`,
+        `代入检验：$x = 1, 4, 9$ 时 $y = ${m}, ${2 * m}, ${3 * m}$。$x$ 先增加 $3$，再增加 $5$，而 $y$ 每次都增加 $${m}$，所以变化率不是常数。`,
+      ],
+    ],
+    [`y = \\frac{${b}}{x} + ${m}`, t("$x$ is in the denominator", "$x$ 在分母中"), uneven((x) => Q.of(b + m * x, x))],
+  ];
+};
+
+/** capital starts a sentence with a capital letter. */
+const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 /** describingTheFunctionalRelationshipBetweenTwoQuantitiesFromAGraph describes a relationship qualitatively from its graph. */
-export const describingTheFunctionalRelationshipBetweenTwoQuantitiesFromAGraph = topic(
-  "describing-the-functional-relationship-between-two-quantities-from-a-graph",
-  t("Describing the Functional Relationship Between Two Quantities From a Graph", "根据图像描述两个量之间的函数关系"),
-  t(
-    "A graph shows how one quantity changes as another does. Where the graph rises the quantity increases, where it is horizontal the quantity stays the same, and where it falls the quantity decreases; the steeper the graph, the faster the change.",
-    "图像显示一个量如何随另一个量变化。图像上升的部分表示这个量在增加，水平的部分表示保持不变，下降的部分表示在减少；图像越陡，变化越快。",
+export const describingTheFunctionalRelationshipBetweenTwoQuantitiesFromAGraph = withIntro(
+  topic(
+    "describing-the-functional-relationship-between-two-quantities-from-a-graph",
+    t("Describing the Functional Relationship Between Two Quantities From a Graph", "根据图像描述两个量之间的函数关系"),
+    t(
+      "A graph shows how one quantity changes as another does. Where the graph rises the quantity increases, where it is horizontal the quantity stays the same, and where it falls the quantity decreases; the steeper the graph, the faster the change.",
+      "图像显示一个量如何随另一个量变化。图像上升的部分表示这个量在增加，水平的部分表示保持不变，下降的部分表示在减少；图像越陡，变化越快。",
+    ),
+    ["graphs-of-functions", "slope-of-a-line"],
+    ["8.F.B.5"],
+    [
+      lesson(
+        "reading-the-intervals",
+        ["Finding when the quantity changes in a given way", "找出量以某种方式变化的时段"],
+        [
+          [
+            "Read the graph piece by piece from left to right. A piece that rises means the quantity increases during that time, a horizontal piece means it stays the same, and a piece that falls means it decreases. Of two rising pieces, the steeper one is the faster increase, even if the other one ends higher.",
+            "从左到右逐段读图。上升的线段表示这段时间里量在增加，水平的线段表示量保持不变，下降的线段表示量在减少。两段上升的线段中，更陡的那段增加得更快，即使另一段结束时的位置更高。",
+          ],
+          [
+            "Use the numbers: a rise of $4$ in $2$ hours is $2$ per hour, faster than a rise of $2$ in $4$ hours, which is $0.5$ per hour.",
+            "用数来算：$2$ 小时上升 $4$ 是每小时 $2$，比 $4$ 小时上升 $2$（每小时 $0.5$）快。",
+          ],
+          ["Do not pick the piece that ends highest; the steepest piece is the fastest.", "不要选结束时最高的那段；最陡的那段才最快。"],
+        ],
+        (rng) => {
+          for (;;) {
+            const q = rng.pick(questions);
+            const story = rng.pick(stories);
+            // Four pieces, exactly one of which has the property asked about.
+            const pool: Behavior[] = ["up-fast", "up-slow", "level", "down-fast", "down-slow"];
+            const bs = rng.shuffle(pool).slice(0, 4);
+            if (bs.filter(q.has).length !== 1) continue;
+            const ps = pieces(rng, bs);
+            if (!ps) continue;
+            const hit = ps.find((p) => q.has(p.behavior))!;
+            const rate = (hit.y1 - hit.y0) / (hit.x1 - hit.x0);
+            const name = interval(hit.x0, hit.x1);
+            return chosen(
+              rng,
+              [
+                `The graph shows ${story.quantity.en}, in ${story.unit.en}, $t$ hours after noon. During which time does it ${q.ask.en}?`,
+                `图像表示中午 $t$ 小时后${story.quantity["zh-CN"]}（${story.unit["zh-CN"]}）。在哪段时间里它${q.ask["zh-CN"]}？`,
+              ],
+              [name.en, name["zh-CN"]],
+              ps.filter((p) => p !== hit).map(pieceWhy),
+              [
+                [
+                  ["Read the pieces", "逐段读图"],
+                  [`Go from left to right and look for the piece where ${q.why.en}.`, `从左到右，找出${q.why["zh-CN"]}的那一段。`],
+                ],
+                [
+                  ["Name the time", "说出时段"],
+                  [
+                    `From $t = ${hit.x0}$ to $t = ${hit.x1}$ ${q.why.en}: the value goes from $${hit.y0}$ to $${hit.y1}$.`,
+                    `从 $t = ${hit.x0}$ 到 $t = ${hit.x1}$，${q.why["zh-CN"]}：值从 $${hit.y0}$ 变为 $${hit.y1}$。`,
+                  ],
+                ],
+              ],
+              [
+                `Work out the change per hour on every piece:${steps(...perHour(ps))}Only the piece from $t = ${hit.x0}$ to $t = ${hit.x1}$, with $${rate}$ per hour, fits.`,
+                `算出每一段每小时的变化：${steps(...perHour(ps))}只有从 $t = ${hit.x0}$ 到 $t = ${hit.x1}$ 的那段（每小时 $${rate}$）符合。`,
+              ],
+              pieceGraph(ps, story),
+            );
+          }
+        },
+        drawn(gradeDrawings5["describing-the-functional-relationship-between-two-quantities-from-a-graph#reading-the-intervals"]),
+      ),
+      lesson(
+        "describing-the-whole-graph",
+        ["Describing the whole graph", "描述整个图像"],
+        [
+          [
+            "A graph that rises steeply, then is horizontal, then falls gently describes a quantity that increases quickly, then stays the same, and then decreases slowly. The order matters, and so does the steepness: a gentle fall is a slow decrease.",
+            "图像先陡峭上升，再保持水平，然后缓缓下降，描述的是一个量先迅速增加，然后保持不变，最后缓慢减少。顺序很重要，陡峭程度也很重要：缓缓下降表示缓慢减少。",
+          ],
+          [
+            "Use the numbers: a rise of $5$ in $1$ hour, no change for $3$ hours, then a fall of $5$ over $5$ hours is $+5$, $0$ and $-1$ per hour.",
+            "用数来算：$1$ 小时上升 $5$，$3$ 小时不变，再用 $5$ 小时下降 $5$，就是每小时 $+5$、$0$ 和 $-1$。",
+          ],
+          [
+            "Read from left to right, the way time runs; read backward, the story is reversed.",
+            "要按时间的方向从左往右读；倒着读，故事就反了。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const story = rng.pick(stories);
+            const pool: Behavior[] = ["up-fast", "up-slow", "level", "down-fast", "down-slow"];
+            const bs = rng.shuffle(pool).slice(0, 3);
+            const ps = pieces(rng, bs);
+            if (!ps) continue;
+            // The pieces in reverse order, one speed swapped, and one direction swapped.
+            const speed: Record<Behavior, Behavior> = {
+              "up-fast": "up-slow",
+              "up-slow": "up-fast",
+              level: "level",
+              "down-fast": "down-slow",
+              "down-slow": "down-fast",
+            };
+            const flip: Record<Behavior, Behavior> = {
+              "up-fast": "down-fast",
+              "up-slow": "down-slow",
+              level: "up-slow",
+              "down-fast": "up-fast",
+              "down-slow": "up-slow",
+            };
+            const i = bs.findIndex((b) => b !== "level");
+            const j = rng.int(0, 2);
+            const right = describing(bs);
+            const options: Wrong[] = [
+              [
+                [...bs].reverse(),
+                "That reads the pieces from right to left, against the flow of time.",
+                "这是从右往左读的，与时间的方向相反。",
+              ] as const,
+              [
+                bs.map((b, k) => (k === i ? speed[b] : b)),
+                "That gets the steepness of one piece wrong.",
+                "这是把其中一段的陡峭程度弄错了。",
+              ] as const,
+              [
+                bs.map((b, k) => (k === j ? flip[b] : b)),
+                "That gets the direction of one piece wrong.",
+                "这是把其中一段的方向弄错了。",
+              ] as const,
+            ]
+              .map(([w, en, zh]) => [describing(w), en, zh] as const)
+              .filter(([w], k, all) => w.en !== right.en && all.findIndex(([v]) => v.en === w.en) === k)
+              .map(([w, en, zh]) => [[w.en, w["zh-CN"]], en, zh] as const);
+            return chosen(
+              rng,
+              [
+                `The graph shows ${story.quantity.en}, in ${story.unit.en}, $t$ hours after noon. Which description matches the graph?`,
+                `图像表示中午 $t$ 小时后${story.quantity["zh-CN"]}（${story.unit["zh-CN"]}）。哪个描述与图像相符？`,
+              ],
+              [right.en, right["zh-CN"]],
+              options,
+              [
+                [
+                  ["Read the pieces in order", "按顺序读各段"],
+                  [
+                    `From left to right: ${ps.map((p) => `from $t = ${p.x0}$ to $t = ${p.x1}$ it ${behaviorWords[p.behavior].en}`).join("; ")}.`,
+                    `从左到右：${ps.map((p) => `从 $t = ${p.x0}$ 到 $t = ${p.x1}$，${behaviorWords[p.behavior]["zh-CN"]}`).join("；")}。`,
+                  ],
+                ],
+                [
+                  ["Match the description", "对照描述"],
+                  [
+                    "The description must name the same changes, at the same speeds, in the same order.",
+                    "描述必须按同样的顺序，说出同样的变化和同样的快慢。",
+                  ],
+                ],
+              ],
+              [
+                `Work out the change per hour on each piece:${steps(...perHour(ps))}A change of $3$ or $-3$ per hour is quick, $1$ or $-1$ slow, and $0$ none, which matches the description piece by piece.`,
+                `算出每一段每小时的变化：${steps(...perHour(ps))}每小时变化 $3$ 或 $-3$ 是快，$1$ 或 $-1$ 是慢，$0$ 是不变，与描述逐段相符。`,
+              ],
+              pieceGraph(ps, story),
+            );
+          }
+        },
+        drawn(gradeDrawings5["describing-the-functional-relationship-between-two-quantities-from-a-graph#describing-the-whole-graph"]),
+      ),
+    ],
   ),
-  ["graphs-of-functions", "slope-of-a-line"],
-  ["8.F.B.5"],
   [
-    {
-      id: "reading-the-intervals",
-      figure: gradeDrawings5["describing-the-functional-relationship-between-two-quantities-from-a-graph#reading-the-intervals"],
-      title: t("Finding when the quantity changes in a given way", "找出量以某种方式变化的时段"),
-      explanation: t(
-        "Read the graph piece by piece from left to right. A piece that rises means the quantity increases during that time, a horizontal piece means it stays the same, and a piece that falls means it decreases. Of two rising pieces, the steeper one is the faster increase, even if the other one ends higher.",
-        "从左到右逐段读图。上升的线段表示这段时间里量在增加，水平的线段表示量保持不变，下降的线段表示量在减少。两段上升的线段中，更陡的那段增加得更快，即使另一段结束时的位置更高。",
-      ),
-      generate(rng) {
-        const q = rng.pick(questions);
-        const story = rng.pick(stories);
-        // Four pieces, exactly one of which has the property asked about.
-        const pool: Behavior[] = ["up-fast", "up-slow", "level", "down-fast", "down-slow"];
-        const bs = rng.shuffle(pool).slice(0, 4);
-        if (bs.filter(q.has).length !== 1) return this.generate(rng);
-        const ps = pieces(rng, bs);
-        if (!ps) return this.generate(rng);
-        const hit = ps.find((p) => q.has(p.behavior))!;
-        return pickChoice(
-          rng,
-          t(
-            `The graph shows ${story.quantity.en}, in ${story.unit.en}, $t$ hours after noon. During which time does it ${q.ask.en}?`,
-            `图像表示中午 $t$ 小时后${story.quantity["zh-CN"]}（${story.unit["zh-CN"]}）。在哪段时间里它${q.ask["zh-CN"]}？`,
-          ),
-          interval(hit.x0, hit.x1),
-          ps.filter((p) => p !== hit).map((p) => interval(p.x0, p.x1)),
-          t(
-            `From $t = ${hit.x0}$ to $t = ${hit.x1}$ ${q.why.en}: the value goes from $${hit.y0}$ to $${hit.y1}$.`,
-            `从 $t = ${hit.x0}$ 到 $t = ${hit.x1}$，${q.why["zh-CN"]}：值从 $${hit.y0}$ 变为 $${hit.y1}$。`,
-          ),
-          pieceGraph(ps, story),
-        );
-      },
-    },
-    {
-      id: "describing-the-whole-graph",
-      figure: gradeDrawings5["describing-the-functional-relationship-between-two-quantities-from-a-graph#describing-the-whole-graph"],
-      title: t("Describing the whole graph", "描述整个图像"),
-      explanation: t(
-        "A graph that rises steeply, then is horizontal, then falls gently describes a quantity that increases quickly, then stays the same, and then decreases slowly. The order matters, and so does the steepness: a gentle fall is a slow decrease.",
-        "图像先陡峭上升，再保持水平，然后缓缓下降，描述的是一个量先迅速增加，然后保持不变，最后缓慢减少。顺序很重要，陡峭程度也很重要：缓缓下降表示缓慢减少。",
-      ),
-      generate(rng) {
-        const story = rng.pick(stories);
-        const pool: Behavior[] = ["up-fast", "up-slow", "level", "down-fast", "down-slow"];
-        const bs = rng.shuffle(pool).slice(0, 3);
-        const ps = pieces(rng, bs);
-        if (!ps) return this.generate(rng);
-        // The pieces in reverse order, one speed swapped, and one direction swapped.
-        const speed: Record<Behavior, Behavior> = {
-          "up-fast": "up-slow",
-          "up-slow": "up-fast",
-          level: "level",
-          "down-fast": "down-slow",
-          "down-slow": "down-fast",
-        };
-        const flip: Record<Behavior, Behavior> = {
-          "up-fast": "down-fast",
-          "up-slow": "down-slow",
-          level: "up-slow",
-          "down-fast": "up-fast",
-          "down-slow": "up-slow",
-        };
-        const i = bs.findIndex((b) => b !== "level");
-        const j = rng.int(0, 2);
-        const wrong = [[...bs].reverse(), bs.map((b, k) => (k === i ? speed[b] : b)), bs.map((b, k) => (k === j ? flip[b] : b))];
-        return pickChoice(
-          rng,
-          t(
-            `The graph shows ${story.quantity.en}, in ${story.unit.en}, $t$ hours after noon. Which description matches the graph?`,
-            `图像表示中午 $t$ 小时后${story.quantity["zh-CN"]}（${story.unit["zh-CN"]}）。哪个描述与图像相符？`,
-          ),
-          describing(bs),
-          wrong.map(describing),
-          t(
-            `Read the pieces from left to right: ${ps.map((p) => `from $t = ${p.x0}$ to $t = ${p.x1}$ it ${behaviorWords[p.behavior].en}`).join("; ")}.`,
-            `从左到右读各段：${ps.map((p) => `从 $t = ${p.x0}$ 到 $t = ${p.x1}$，${behaviorWords[p.behavior]["zh-CN"]}`).join("；")}。`,
-          ),
-          pieceGraph(ps, story),
-        );
-      },
-    },
+    "A cyclist rides out quickly, stops for lunch, then rides slowly home. A graph of her distance from home against time tells this story without words.",
+    "一位骑车人快速骑出去，停下来吃午饭，再慢慢骑回家。她离家的距离随时间变化的图像，不用文字就能讲出这个故事。",
+  ],
+  [
+    "The graph rises steeply, is flat during lunch, then falls gently back to $0$.",
+    "图像先陡峭上升，午饭时保持水平，然后缓缓下降回到 $0$。",
+  ],
+  [
+    "read where a graph rises, stays level or falls, and how fast, and describe the whole story.",
+    "读出图像在哪里上升、保持水平或下降，以及变化的快慢，并描述整个过程。",
   ],
 );
 
 // ---------------------------------------------------------------------------
 // Linear and nonlinear functions
 
-/** Form is an equation in x and y with the reason it is or is not linear. */
-type Form = readonly [string, Text];
-
-/** linearForms are linear functions written in ways that hide the form y = mx + b, each with that form. */
-const linearForms = (rng: Rng): Form[] => {
-  const [m, b, c] = [rng.int(2, 6), rng.nonZero(-7, 7), rng.int(2, 5)];
-  const k = Math.abs(b) + 3;
-  const as = (e: string): Text => same(`$${e}$`);
-  return [
-    [`y = ${m}(${linear(1, b)})`, as(`y = ${linear(m, m * b)}`)],
-    [`y = \\frac{${linear(1, b)}}{${c}}`, as(`y = ${linear(Q.of(1, c), Q.of(b, c))}`)],
-    [`${m}x + y = ${k}`, as(`y = ${linear(-m, k)}`)],
-    [`y = ${k} - \\frac{x}{${c}}`, as(`y = ${linear(Q.of(-1, c), k)}`)],
-  ];
-};
-
-/** nonlinearForms are nonlinear functions, some of which look linear at first sight, each with the reason. */
-const nonlinearForms = (rng: Rng): Form[] => {
-  const [m, b, c] = [rng.int(2, 6), rng.int(1, 7), rng.int(2, 5)];
-  return [
-    [`y = ${m}x^{2} + ${b}`, t("$x$ is squared", "$x$ 被平方")],
-    [`y = \\frac{${c}}{x}`, t("$x$ is in the denominator", "$x$ 在分母中")],
-    [`y = x(x + ${b})`, t(`it is $y = x^{2} + ${b}x$, with $x$ squared`, `它就是 $y = x^{2} + ${b}x$，$x$ 被平方`)],
-    [`y = ${c}^{x}`, t("$x$ is in the exponent", "$x$ 在指数上")],
-    [`y = ${m}\\sqrt{x}`, t("$x$ is under a square root", "$x$ 在根号下")],
-    [`y = \\frac{${b}}{x} + ${m}`, t("$x$ is in the denominator", "$x$ 在分母中")],
-  ];
-};
-
 /** linearFunctionsVersusNonlinearFunctions tells linear functions from nonlinear ones by their equations and tables. */
-export const linearFunctionsVersusNonlinearFunctions = topic(
-  "linear-functions-versus-nonlinear-functions",
-  t("Linear Functions Versus Nonlinear Functions", "一次函数与非线性函数"),
-  t(
-    "A linear function can be written as y = mx + b: its graph is a straight line, and equal steps in x always change y by the same amount. A function whose equation has x squared, x in a denominator, under a root or in an exponent is nonlinear.",
-    "一次函数可以写成 y = mx + b 的形式：它的图像是直线，x 每增加相同的量，y 的变化量总是相同的。方程中含有 x 的平方、分母含 x、根号下含 x 或指数含 x 的函数是非线性函数。",
+export const linearFunctionsVersusNonlinearFunctions = withIntro(
+  topic(
+    "linear-functions-versus-nonlinear-functions",
+    t("Linear Functions Versus Nonlinear Functions", "一次函数与非线性函数"),
+    t(
+      "A linear function can be written as y = mx + b: its graph is a straight line, and equal steps in x always change y by the same amount. A function whose equation has x squared, x in a denominator, under a root or in an exponent is nonlinear.",
+      "一次函数可以写成 y = mx + b 的形式：它的图像是直线，x 每增加相同的量，y 的变化量总是相同的。方程中含有 x 的平方、分母含 x、根号下含 x 或指数含 x 的函数是非线性函数。",
+    ),
+    ["graphs-of-functions", "slope-intercept-form"],
+    ["8.F.A.3"],
+    [
+      lesson(
+        "linear-from-the-equation",
+        ["Deciding from the equation", "由方程判断"],
+        [
+          [
+            "$y = 3(x - 2)$ is linear: it is $y = 3x - 6$. So are $y = \\frac{x + 1}{2} = \\frac{1}{2}x + \\frac{1}{2}$ and $4x + y = 9$, which is $y = -4x + 9$. But $y = x(x + 1) = x^{2} + x$ is not, and neither is $y = \\frac{2}{x}$.",
+            "$y = 3(x - 2)$ 是一次函数：它就是 $y = 3x - 6$。$y = \\frac{x + 1}{2} = \\frac{1}{2}x + \\frac{1}{2}$ 和 $4x + y = 9$（即 $y = -4x + 9$）也是。但 $y = x(x + 1) = x^{2} + x$ 不是，$y = \\frac{2}{x}$ 也不是。",
+          ],
+          [
+            "Test equal steps: $y = x(x + 1)$ gives $2, 6, 12$ at $x = 1, 2, 3$. The changes $4$ and $6$ differ, so it is not a line.",
+            "用相等的步长检验：$y = x(x + 1)$ 在 $x = 1, 2, 3$ 时得 $2, 6, 12$。变化量 $4$ 和 $6$ 不同，所以不是直线。",
+          ],
+          [
+            "Rewrite before deciding: $y = x(x + 1)$ looks simple but hides $x^{2}$.",
+            "先变形再判断：$y = x(x + 1)$ 看起来简单，却藏着 $x^{2}$。",
+          ],
+        ],
+        (rng) => {
+          const askLinear = rng.bool();
+          const lin = rng.shuffle(testedLinear(rng));
+          const non = rng.shuffle(testedNonlinear(rng));
+          const [correct, others] = askLinear ? [lin[0]!, non.slice(0, 3)] : [non[0]!, lin.slice(0, 3)];
+          const [eq, why, check] = correct;
+          return chosen(
+            rng,
+            askLinear
+              ? ["Which equation defines a linear function?", "哪个方程定义的是一次函数？"]
+              : ["Which equation does not define a linear function?", "哪个方程定义的不是一次函数？"],
+            [`$${eq}$`, `$${eq}$`],
+            others.map(([e, w]) =>
+              askLinear
+                ? ([[`$${e}$`, `$${e}$`], `${capital(w.en)}, so it is not linear.`, `${w["zh-CN"]}，所以不是一次函数。`] as const)
+                : ([
+                    [`$${e}$`, `$${e}$`],
+                    `It is linear. It can be rewritten as ${w.en}.`,
+                    `它是一次函数，可以化成 ${w["zh-CN"]}。`,
+                  ] as const),
+            ),
+            [
+              [
+                ["Rewrite each equation", "把每个方程变形"],
+                [
+                  "Solve for $y$ and multiply out, to see whether $x$ appears only to the first power and not in a denominator, root or exponent.",
+                  "解出 $y$ 并去括号，看 $x$ 是否只以一次方出现，而不在分母、根号或指数中。",
+                ],
+              ],
+              [
+                ["Decide", "判断"],
+                askLinear
+                  ? [
+                      `It has the form $y = mx + b$ once rewritten: $${eq}$ becomes ${why.en}.`,
+                      `变形后具有 $y = mx + b$ 的形式：$${eq}$ 化成 ${why["zh-CN"]}。`,
+                    ]
+                  : [`In $${eq}$, ${why.en}, so it is not linear.`, `在 $${eq}$ 中，${why["zh-CN"]}，所以它不是一次函数。`],
+              ],
+            ],
+            check,
+          );
+        },
+        tableFigure(
+          ["y = 3(x − 2)", "y = x(x + 1)"],
+          ["x = 1", "x = 2", "x = 3"],
+          [
+            ["−3", "0", "3"],
+            ["2", "6", "12"],
+          ],
+          [
+            "A table: y = 3(x − 2) gives −3, 0, 3, changing by 3 each step; y = x(x + 1) gives 2, 6, 12, changing by 4 then 6.",
+            "一张表：y = 3(x − 2) 得 −3、0、3，每步变化 3；y = x(x + 1) 得 2、6、12，先变化 4，再变化 6。",
+          ],
+        ),
+      ),
+      lesson(
+        "linear-from-a-table",
+        ["Deciding from a table", "由表格判断"],
+        [
+          [
+            "When $x$ goes up in equal steps, a linear function changes $y$ by the same amount every time. For $x = 0, 1, 2, 3$ and $y = 5, 8, 11, 14$ the differences are all $3$: linear. For $y = 1, 2, 4, 8$ the differences are $1, 2, 4$: nonlinear.",
+            "当 $x$ 以相等的步长增加时，一次函数的 $y$ 每次变化的量都相同。对于 $x = 0, 1, 2, 3$ 和 $y = 5, 8, 11, 14$，差都是 $3$：是一次函数。对于 $y = 1, 2, 4, 8$，差是 $1, 2, 4$：不是一次函数。",
+          ],
+          [
+            "Fit a line through the first two points: $y = 3x + 5$. It gives $11$ and $14$ at $x = 2$ and $3$, as the table does.",
+            "过前两个点作直线：$y = 3x + 5$。它在 $x = 2$ 和 $3$ 时得 $11$ 和 $14$，与表格一致。",
+          ],
+          ["Check every difference: a table can start like a line and then bend.", "要检查每一个差：表格可能开头像直线，后面却弯曲了。"],
+        ],
+        (rng) => {
+          for (;;) {
+            const step = rng.pick([1, 2, 3]);
+            const x0 = rng.int(-2, 3);
+            const xs = [0, 1, 2, 3].map((i) => x0 + i * step);
+            const m = rng.nonZero(-5, 5);
+            const b = rng.int(-6, 9);
+            const kind = rng.pick(["linear", "linear", "square", "bend"] as const);
+            const ys =
+              kind === "linear"
+                ? xs.map((x) => m * x + b)
+                : kind === "square"
+                  ? xs.map((x) => x * x + b)
+                  : xs.map((x, i) => m * x + b + (i === 3 ? rng.sign() * rng.int(1, 3) : 0));
+            const diffs = ys.slice(1).map((y, i) => y - ys[i]!);
+            if (kind === "square" && new Set(diffs).size === 1) continue;
+            const isLinear = new Set(diffs).size === 1;
+            const row = (name: string, vs: number[]) => `${name} & ${vs.map((v) => num(v)).join(" & ")}`;
+            const table = `\\begin{array}{c|cccc} ${row("x", xs)} \\\\ \\hline ${row("y", ys)} \\end{array}`;
+            // The line through the first two points, and where it puts the other two.
+            const rate = Q.of(diffs[0]!, step);
+            const start = Q.of(ys[0]!).sub(rate.mul(Q.of(xs[0]!)));
+            const at = (x: number) => rate.mul(Q.of(x)).add(start);
+            const [p2, p3] = [at(xs[2]!), at(xs[3]!)];
+            const misses = [2, 3].filter((i) => !at(xs[i]!).eq(Q.of(ys[i]!)));
+            const firstMiss = misses[0] ?? 3;
+            return decided(
+              rng,
+              [`Could this table come from a linear function?${steps(table)}`, `这个表格可能来自一次函数吗？${steps(table)}`],
+              isLinear,
+              [
+                [
+                  ["Check the steps in x", "看 x 的步长"],
+                  [`The $x$-values go up by $${step}$ each time.`, `$x$ 每次增加 $${step}$。`],
+                ],
+                [
+                  ["Compare the changes in y", "比较 y 的变化量"],
+                  isLinear
+                    ? [
+                        `The $y$-values change by $${diffs[0]}$ every time, so the table fits a linear function.`,
+                        `$y$ 每次都变化 $${diffs[0]}$，所以表格符合一次函数。`,
+                      ]
+                    : [
+                        `The changes in $y$ are $${diffs.join(", ")}$, which are not all equal, so the function is not linear.`,
+                        `$y$ 的变化量是 $${diffs.join(", ")}$，并不都相等，所以不是一次函数。`,
+                      ],
+                ],
+              ],
+              isLinear
+                ? [
+                    `Fit a line through the first two points: $y = ${linear(rate, start)}$. It gives $${num(p2)}$ and $${num(p3)}$ at $x = ${xs[2]}$ and $${xs[3]}$, as the table does.`,
+                    `过前两个点作直线：$y = ${linear(rate, start)}$。它在 $x = ${xs[2]}$ 和 $${xs[3]}$ 时得 $${num(p2)}$ 和 $${num(p3)}$，与表格一致。`,
+                  ]
+                : [
+                    `Fit a line through the first two points: $y = ${linear(rate, start)}$. At $x = ${xs[firstMiss]}$ it gives $${num(at(xs[firstMiss]!))}$, but the table has $${ys[firstMiss]}$.`,
+                    `过前两个点作直线：$y = ${linear(rate, start)}$。它在 $x = ${xs[firstMiss]}$ 时得 $${num(at(xs[firstMiss]!))}$，而表格中是 $${ys[firstMiss]}$。`,
+                  ],
+              isLinear
+                ? [
+                    "$y$ changes by the same amount at every equal step in $x$, and that is all a linear function needs; $y$ need not be a multiple of $x$.",
+                    "$x$ 每增加相同的量，$y$ 都变化相同的量，这正是一次函数所需要的；$y$ 不必是 $x$ 的倍数。",
+                  ]
+                : [
+                    `Equal steps in $x$ are not enough: the changes in $y$, $${diffs.join(", ")}$, must all be equal too.`,
+                    `$x$ 的步长相等还不够：$y$ 的变化量 $${diffs.join(", ")}$ 也必须都相等。`,
+                  ],
+            );
+          }
+        },
+        tableFigure(
+          ["y", "Δy"],
+          ["x = 0", "x = 1", "x = 2", "x = 3"],
+          [
+            ["5", "8", "11", "14"],
+            ["", "+3", "+3", "+3"],
+          ],
+          [
+            "A table with x = 0, 1, 2, 3 and y = 5, 8, 11, 14: y changes by +3 at every step, so the table fits a line.",
+            "一张表：x = 0、1、2、3，y = 5、8、11、14：y 每一步都变化 +3，所以符合直线。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["graphs-of-functions", "slope-intercept-form"],
-  ["8.F.A.3"],
   [
-    {
-      id: "linear-from-the-equation",
-      title: t("Deciding from the equation", "由方程判断"),
-      explanation: t(
-        "$y = 3(x - 2)$ is linear: it is $y = 3x - 6$. So are $y = \\frac{x + 1}{2} = \\frac{1}{2}x + \\frac{1}{2}$ and $4x + y = 9$, which is $y = -4x + 9$. But $y = x(x + 1) = x^{2} + x$ is not, and neither is $y = \\frac{2}{x}$: rewrite before deciding.",
-        "$y = 3(x - 2)$ 是一次函数：它就是 $y = 3x - 6$。$y = \\frac{x + 1}{2} = \\frac{1}{2}x + \\frac{1}{2}$ 和 $4x + y = 9$（即 $y = -4x + 9$）也是。但 $y = x(x + 1) = x^{2} + x$ 不是，$y = \\frac{2}{x}$ 也不是：先变形再判断。",
-      ),
-      generate(rng) {
-        const askLinear = rng.bool();
-        const lin = rng.shuffle(linearForms(rng));
-        const non = rng.shuffle(nonlinearForms(rng));
-        const [correct, others] = askLinear ? [lin[0]!, non.slice(0, 3)] : [non[0]!, lin.slice(0, 3)];
-        const listed = rng.shuffle([correct, ...others]).map(([e]) => `$${e}$`);
-        const [en, zh] = [`${listed.slice(0, 3).join(", ")} or ${listed[3]}`, `${listed.slice(0, 3).join("、")} 还是 ${listed[3]}`];
-        const [eq, why] = correct;
-        return pickChoice(
-          rng,
-          askLinear
-            ? t(`Which equation defines a linear function: ${en}?`, `哪个方程定义的是一次函数：${zh}？`)
-            : t(`Which equation does not define a linear function: ${en}?`, `哪个方程定义的不是一次函数：${zh}？`),
-          mathText(eq),
-          others.map(([e]) => mathText(e)),
-          askLinear
-            ? t(
-                `$${eq}$ can be rewritten as ${why.en}, which has the form $y = mx + b$, so it is linear. In the others: ${others.map(([e, w]) => `in $${e}$, ${w.en}`).join("; ")}.`,
-                `$${eq}$ 可以化成 ${why["zh-CN"]}，具有 $y = mx + b$ 的形式，所以是一次函数。其他方程中：${others.map(([e, w]) => `在 $${e}$ 中，${w["zh-CN"]}`).join("；")}。`,
-              )
-            : t(
-                `In $${eq}$, ${why.en}, so it is not linear. Each of the others can be rewritten in the form $y = mx + b$.`,
-                `在 $${eq}$ 中，${why["zh-CN"]}，所以它不是一次函数。其他方程都可以化成 $y = mx + b$ 的形式。`,
-              ),
-        );
-      },
-    },
-    {
-      id: "linear-from-a-table",
-      title: t("Deciding from a table", "由表格判断"),
-      explanation: t(
-        "When $x$ goes up in equal steps, a linear function changes $y$ by the same amount every time. For $x = 0, 1, 2, 3$ and $y = 5, 8, 11, 14$ the differences are all $3$: linear. For $y = 1, 2, 4, 8$ the differences are $1, 2, 4$: nonlinear. Check every difference: a table can start like a line and then bend.",
-        "当 $x$ 以相等的步长增加时，一次函数的 $y$ 每次变化的量都相同。对于 $x = 0, 1, 2, 3$ 和 $y = 5, 8, 11, 14$，差都是 $3$：是一次函数。对于 $y = 1, 2, 4, 8$，差是 $1, 2, 4$：不是一次函数。要检查每一个差：表格可能开头像直线，后面却弯曲了。",
-      ),
-      generate(rng) {
-        const step = rng.pick([1, 2, 3]);
-        const x0 = rng.int(-2, 3);
-        const xs = [0, 1, 2, 3].map((i) => x0 + i * step);
-        const m = rng.nonZero(-5, 5);
-        const b = rng.int(-6, 9);
-        const kind = rng.pick(["linear", "linear", "square", "bend"] as const);
-        const ys =
-          kind === "linear"
-            ? xs.map((x) => m * x + b)
-            : kind === "square"
-              ? xs.map((x) => x * x + b)
-              : xs.map((x, i) => m * x + b + (i === 3 ? rng.sign() * rng.int(1, 3) : 0));
-        const diffs = ys.slice(1).map((y, i) => y - ys[i]!);
-        if (kind === "square" && new Set(diffs).size === 1) return this.generate(rng);
-        const isLinear = new Set(diffs).size === 1;
-        const row = (name: string, vs: number[]) => `${name} & ${vs.map((v) => num(v)).join(" & ")}`;
-        const table = `\\begin{array}{c|cccc} ${row("x", xs)} \\\\ \\hline ${row("y", ys)} \\end{array}`;
-        const shownDiffs = isLinear ? [diffs[0]!, diffs[1]!, diffs[2]! + 1] : diffs;
-        return verdictChoice(rng, {
-          prompt: t(`Could this table come from a linear function?${steps(table)}`, `这个表格可能来自一次函数吗？${steps(table)}`),
-          holds: isLinear,
-          yes: t(`$y$ changes by $${diffs[0]}$ at every step`, `$y$ 每一步都变化 $${diffs[0]}$`),
-          no: t(
-            `the changes in $y$ are $${shownDiffs.join(", ")}$, not all equal`,
-            `$y$ 的变化量是 $${shownDiffs.join(", ")}$，并不都相等`,
-          ),
-          yesWrong: t("the $x$-values go up in equal steps", "$x$ 以相等的步长增加"),
-          noWrong: t("$y$ is not a constant multiple of $x$", "$y$ 不是 $x$ 的常数倍"),
-          solution: isLinear
-            ? t(
-                `The $x$-values go up by $${step}$ each time, and the $y$-values change by $${diffs[0]}$ every time, so the table fits a linear function.`,
-                `$x$ 每次增加 $${step}$，$y$ 每次都变化 $${diffs[0]}$，所以表格符合一次函数。`,
-              )
-            : t(
-                `The $x$-values go up by $${step}$ each time, but the changes in $y$ are $${diffs.join(", ")}$, which are not all equal, so the function is not linear.`,
-                `$x$ 每次增加 $${step}$，但 $y$ 的变化量是 $${diffs.join(", ")}$，并不都相等，所以不是一次函数。`,
-              ),
-        });
-      },
-    },
+    "A phone plan charges $5$ dollars plus $3$ dollars a gigabyte. Another plan doubles its price with every gigabyte. Only one of these grows along a straight line.",
+    "一种手机套餐收 $5$ 美元，再加每 GB $3$ 美元；另一种套餐每多用 1 GB 价格就翻一倍。只有一种是沿着直线增长的。",
   ],
+  [
+    "The first gives $5, 8, 11, 14$ for $0$ to $3$ gigabytes, always $3$ more. The second at $1, 2, 4, 8$ does not change evenly.",
+    "第一种在 $0$ 到 $3$ GB 时是 $5, 8, 11, 14$，每次多 $3$。第二种 $1, 2, 4, 8$ 的变化并不均匀。",
+  ],
+  ["tell linear functions from nonlinear ones by their equations and their tables.", "根据方程和表格区分一次函数与非线性函数。"],
 );
 
 // ---------------------------------------------------------------------------
@@ -1001,3 +1233,141 @@ export const grade8FunctionTopics: readonly TopicDef[] = [
   interpretingRateOfChangeAndInitialValueInContext,
   comparingPropertiesOfTwoFunctionsRepresentedDifferently,
 ];
+
+/** theFastestPartOfATrip finds the hour with the largest change in a table of distances; it is the third point of describing-the-functional-relationship-between-two-quantities-from-a-graph, to take the place of the one in the deeper files. */
+export const theFastestPartOfATrip = lesson(
+  "the-fastest-part-of-a-trip",
+  ["The fastest part of a trip", "行程中最快的一段"],
+  [
+    [
+      "On a graph of distance against time, a steeper part means more distance in the same time. In a table with equal time steps, the largest change between neighbors is the fastest part.",
+      "在路程与时间的图像上，越陡表示相同时间走得越远。在时间间隔相同的表中，相邻变化最大的一段最快。",
+    ],
+    [
+      "The changes add back to the whole trip: for distances $0, 2, 6, 8$ they are $2, 4, 2$, and $2 + 4 + 2 = 8$.",
+      "各段变化加起来就是整个行程：对于距离 $0, 2, 6, 8$，变化是 $2, 4, 2$，$2 + 4 + 2 = 8$。",
+    ],
+    [
+      "Do not pick the hour that ends farthest from home; pick the largest change.",
+      "不要选结束时离家最远的那一小时；要选变化最大的一小时。",
+    ],
+  ],
+  (rng) => {
+    const steps4 = rng.sample([2, 4, 6, 9, 11, 13, 15, 18], 4) as number[];
+    let run = rng.int(0, 9);
+    const start = run;
+    const totals = [run, ...steps4.map((s) => (run += s))];
+    const best = steps4.indexOf(Math.max(...steps4));
+    const hour = (i: number): Pair => [`Hour ${i + 1}`, `第 ${i + 1} 小时`];
+    return chosen(
+      rng,
+      [
+        `A cyclist's distance from home, in km, at the start of each hour and at the end was ${totals.join(", ")}. In which hour was the cyclist fastest?`,
+        `骑车人每小时开始时和最后离家的距离（千米）依次是 ${totals.join("、")}。哪一小时骑得最快？`,
+      ],
+      hour(best),
+      [0, 1, 2, 3]
+        .filter((i) => i !== best)
+        .map(
+          (i) =>
+            [
+              hour(i),
+              `In that hour the cyclist went $${steps4[i]}$ km, less than the $${steps4[best]}$ km of hour ${best + 1}.`,
+              `那一小时骑了 $${steps4[i]}$ 千米，少于第 ${best + 1} 小时的 $${steps4[best]}$ 千米。`,
+            ] as const,
+        ),
+      [
+        [
+          ["Find each hour's change", "求每小时的变化"],
+          ["Subtract each distance from the next:", "用后一个距离减去前一个："],
+          steps4.map((s, i) => `${totals[i + 1]} - ${totals[i]} = ${s}`),
+        ],
+        [
+          ["Pick the largest", "选出最大的"],
+          [
+            `The largest change is $${steps4[best]}$ km, in hour ${best + 1}.`,
+            `最大的变化是 $${steps4[best]}$ 千米，在第 ${best + 1} 小时。`,
+          ],
+        ],
+      ],
+      [
+        `The changes add back to the whole trip: $${steps4.join(" + ")} = ${run - start}$, which is $${run} - ${start}$. So they were read correctly, and $${steps4[best]}$ is the largest of them.`,
+        `各段变化加起来就是整个行程：$${steps4.join(" + ")} = ${run - start}$，正是 $${run} - ${start}$。所以变化都读对了，其中最大的是 $${steps4[best]}$。`,
+      ],
+    );
+  },
+  drawn(gradeDrawings5["describing-the-functional-relationship-between-two-quantities-from-a-graph#the-fastest-part-of-a-trip"]),
+);
+
+/** theMissingValueInALinearTable fills in a missing output of a linear function from a table with uneven input steps; it is the third point of linear-functions-versus-nonlinear-functions, to take the place of the one in the deeper files. */
+export const theMissingValueInALinearTable = lesson(
+  "the-missing-value-in-a-linear-table",
+  ["The missing value in a linear table", "线性表中缺失的值"],
+  [
+    [
+      "A linear function changes by the same amount for each step of $1$. A table may skip inputs, so divide the output change by the input change first, and then step to the missing value. For $x = 1, 3, 4$ and $y = 5, 11, \\square$: $(11 - 5) \\div 2 = 3$ per step, so the box is $11 + 3 = 14$.",
+      "线性函数每增加 $1$，变化量相同。表格可能跳过输入，所以先用输出变化除以输入变化，再走到缺失的值。对于 $x = 1, 3, 4$ 和 $y = 5, 11, \\square$：每步 $(11 - 5) \\div 2 = 3$，所以方框里是 $11 + 3 = 14$。",
+    ],
+    [
+      "Write the rule: $y = 3x + 2$ gives $5$ at $x = 1$, $11$ at $x = 3$ and $14$ at $x = 4$.",
+      "写出规律：$y = 3x + 2$ 在 $x = 1$ 时得 $5$，$x = 3$ 时得 $11$，$x = 4$ 时得 $14$。",
+    ],
+    [
+      "The inputs may not go up by $1$: adding the whole change $6$ again gives the wrong $17$.",
+      "输入不一定每次增加 $1$：再加一次整个变化量 $6$ 会得到错误的 $17$。",
+    ],
+  ],
+  (rng) => {
+    const m = rng.int(-9, 9) || 3;
+    const b = rng.int(-9, 12);
+    const x0 = rng.int(0, 3);
+    const x1 = x0 + rng.int(2, 3);
+    const x2 = x1 + rng.int(1, 3);
+    const f = (x: number) => m * x + b;
+    const table = `\\begin{array}{|c|c|c|c|}\\hline x & ${x0} & ${x1} & ${x2} \\\\ \\hline y & ${f(x0)} & ${f(x1)} & \\square \\\\ \\hline\\end{array}`;
+    return valued(
+      [
+        `The table comes from a linear function. What value goes in the box? $$${table}$$`,
+        `表格来自一个线性函数。方框里是什么值？$$${table}$$`,
+      ],
+      f(x2),
+      [
+        [
+          ["Find the change per step", "求每步的变化"],
+          [`$x$ goes up by $${x1 - x0}$ while $y$ changes by $${f(x1) - f(x0)}$:`, `$x$ 增加 $${x1 - x0}$，$y$ 变化 $${f(x1) - f(x0)}$：`],
+          [`${f(x1) - f(x0)} \\div ${x1 - x0} = ${m}`],
+        ],
+        [
+          ["Step to the missing value", "走到缺失的值"],
+          [
+            `From $x = ${x1}$ to $x = ${x2}$ is $${x2 - x1}$ step${x2 - x1 === 1 ? "" : "s"}:`,
+            `从 $x = ${x1}$ 到 $x = ${x2}$ 是 $${x2 - x1}$ 步：`,
+          ],
+          [`${f(x1)} + ${x2 - x1} \\cdot ${paren(m)} = ${f(x2)}`],
+        ],
+      ],
+      [
+        `Write the rule instead: $y = ${linear(m, b)}$ gives $${f(x0)}$ at $x = ${x0}$ and $${f(x1)}$ at $x = ${x1}$, and at $x = ${x2}$ it gives $${f(x2)}$.`,
+        `改为写出规律：$y = ${linear(m, b)}$ 在 $x = ${x0}$ 时得 $${f(x0)}$，在 $x = ${x1}$ 时得 $${f(x1)}$，在 $x = ${x2}$ 时得 $${f(x2)}$。`,
+      ],
+      [
+        [
+          f(x1) + (f(x1) - f(x0)),
+          "That adds the whole change again, as if the inputs went up by the same amount.",
+          "这是又加了一次整个变化量，好像输入增加的量相同。",
+        ],
+        [f(x1) + x2 - x1, "That adds the change in $x$, not the change in $y$.", "这是加了 $x$ 的变化量，而不是 $y$ 的变化量。"],
+        [f(x2) + m, "That takes one step too many.", "这是多走了一步。"],
+      ],
+    );
+  },
+  tableFigure(
+    ["y"],
+    ["x = 1", "x = 3", "x = 4"],
+    [["5", "11", "14"]],
+    [
+      "A table with x = 1, 3, 4 and y = 5, 11, 14: the 6 from x = 1 to 3 is 3 per step, so one more step adds 3.",
+      "一张表：x = 1、3、4，y = 5、11、14：从 x = 1 到 3 变化 6，每步 3，所以再走一步加 3。",
+    ],
+  ),
+);

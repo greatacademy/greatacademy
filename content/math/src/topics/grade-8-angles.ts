@@ -4,10 +4,9 @@ import { type Compass, linear, type Mark, type Point, Q, sketch } from "@ga/subj
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
-import { numberProblem, steps } from "../problems.ts";
 import { polygonName } from "./angles.ts";
 import type { Pair, Walk } from "./early-grades-more-kit.ts";
-import { mathText, pickChoice } from "./grade-4-fractions.ts";
+import { mathText } from "./grade-4-fractions.ts";
 import { chosen, decided, drawn, lesson, type Off, valued, withIntro } from "./grade-6-kit.ts";
 import { tableFigure } from "./grade-8-kit.ts";
 import { lineFigure, tapeFigure } from "./upper-grades-kit.ts";
@@ -584,95 +583,238 @@ const nonAdjacentComplementaryAngles = withIntro(
 /** pickSlot picks one of the eight angles. */
 const pickSlot = (rng: Rng): Slot => slotOf(rng.int(1, 8));
 
-const correspondingAngles = topic(
-  "corresponding-angles",
-  t("Corresponding Angles", "同位角"),
-  t(
-    "Corresponding angles sit in the same position at the two crossings of a transversal. When the lines are parallel they are equal, which, with vertical angles and linear pairs, finds every angle in the figure.",
-    "同位角在截线的两个交点处位置相同。两直线平行时同位角相等，再结合对顶角和邻补角，就能求出图中的每个角。",
-  ),
-  ["vertical-angles"],
-  ["8.G.A.5"],
-  [
-    {
-      id: "identifying-corresponding-angles",
-      figure: gradeDrawings3["corresponding-angles#identifying-corresponding-angles"],
-      title: t("Identifying corresponding angles", "识别同位角"),
-      explanation: t(
-        "A **transversal** crosses two lines and makes four angles at each crossing. **Corresponding angles** are in the same position at the two crossings: both above their line and right of the transversal, for example.\n\nTo find the angle corresponding to $\\angle 2$ (above $\\ell$, right of the transversal), look at the crossing with $m$ for the angle above $m$ and right of the transversal: $\\angle 6$.",
-        "**截线**与两条直线相交，在每个交点处形成四个角。**同位角**在两个交点处的位置相同，例如都在各自直线的上方、截线的右侧。\n\n要找与 $\\angle 2$（$\\ell$ 的上方、截线的右侧）同位的角，就在截线与 $m$ 的交点处找 $m$ 的上方、截线右侧的角：$\\angle 6$。",
+const correspondingAngles = withIntro(
+  topic(
+    "corresponding-angles",
+    t("Corresponding Angles", "同位角"),
+    t(
+      "Corresponding angles sit in the same position at the two crossings of a transversal. When the lines are parallel they are equal, which, with vertical angles and linear pairs, finds every angle in the figure.",
+      "同位角在截线的两个交点处位置相同。两直线平行时同位角相等，再结合对顶角和邻补角，就能求出图中的每个角。",
+    ),
+    ["vertical-angles"],
+    ["8.G.A.5"],
+    [
+      lesson(
+        "identifying-corresponding-angles",
+        ["Identifying corresponding angles", "识别同位角"],
+        [
+          [
+            "A **transversal** crosses two lines and makes four angles at each crossing. **Corresponding angles** are in the same position at the two crossings: both above their line and right of the transversal, for example. To find the angle corresponding to $\\angle 2$, which is above $\\ell$ and right of the transversal, look at the crossing with $m$ for the angle above $m$ and right of the transversal: $\\angle 6$.",
+            "**截线**与两条直线相交，在每个交点处形成四个角。**同位角**在两个交点处的位置相同，例如都在各自直线的上方、截线的右侧。$\\angle 2$ 在 $\\ell$ 的上方、截线的右侧，要找与它同位的角，就在截线与 $m$ 的交点处找 $m$ 的上方、截线右侧的角：$\\angle 6$。",
+          ],
+          [
+            "Slide the crossing at $\\ell$ down the transversal onto the crossing at $m$. Then $\\angle 2$ lands on $\\angle 6$.",
+            "把 $\\ell$ 处的交点沿截线滑到 $m$ 处的交点上，$\\angle 2$ 正好落在 $\\angle 6$ 上。",
+          ],
+          [
+            "Keep both the side of the line and the side of the transversal. Changing either one gives an alternate or a consecutive angle, not the corresponding one.",
+            "直线的哪一侧和截线的哪一侧都要保持不变。改变其中任何一个，得到的是错角或同旁角，不是同位角。",
+          ],
+        ],
+        (rng) => {
+          const s = pickSlot(rng);
+          const answer = corresponding.partner(s);
+          const option = (x: Slot): Pair => pairOf(angleOption(x));
+          return chosen(
+            rng,
+            [
+              `A transversal crosses lines $\\ell$ and $m$. Which angle corresponds to $${numbered(s)}$?`,
+              `一条截线与直线 $\\ell$、$m$ 相交。哪个角与 $${numbered(s)}$ 是同位角？`,
+            ],
+            option(answer),
+            [
+              [
+                option(alternateInterior.partner(s)),
+                "That is on the other side of the transversal and of its line: an alternate angle.",
+                "它在截线的另一侧，也在直线的另一侧：是错角。",
+              ],
+              [
+                option(consecutiveInterior.partner(s)),
+                "That is on the same side of the transversal but on the other side of its line: a consecutive angle.",
+                "它在截线的同一侧，却在直线的另一侧：是同旁角。",
+              ],
+              [option([s[0], (s[1] + 2) % 4]), "That is at the same crossing: a vertical angle.", "它在同一个交点处：是对顶角。"],
+            ],
+            [
+              [
+                ["Place the angle", "确定角的位置"],
+                [`$${numbered(s)}$ is ${positionOf(s).en}.`, `$${numbered(s)}$ 在 ${positionOf(s)["zh-CN"]}。`],
+              ],
+              [
+                ["Go to the other crossing", "到另一个交点"],
+                [
+                  `Its corresponding angle is in the same position at the other crossing, ${positionOf(answer).en}: $${numbered(answer)}$.`,
+                  `与它同位的角在另一个交点处的相同位置，即 ${positionOf(answer)["zh-CN"]}：$${numbered(answer)}$。`,
+                ],
+              ],
+            ],
+            [
+              `Slide the crossing with $${numbered(s)}$ along the transversal onto the other crossing. Each angle lands on the angle in its own position, and $${numbered(s)}$ lands on $${numbered(answer)}$.`,
+              `把 $${numbered(s)}$ 所在的交点沿截线滑到另一个交点上。每个角都落在相同位置的角上，$${numbered(s)}$ 落在 $${numbered(answer)}$ 上。`,
+            ],
+            numberedFigure(pickTheta(rng), false),
+          );
+        },
+        drawn(gradeDrawings3["corresponding-angles#identifying-corresponding-angles"]),
       ),
-      generate(rng) {
-        const s = pickSlot(rng);
-        const answer = corresponding.partner(s);
-        return pickChoice(
-          rng,
-          t(
-            `A transversal crosses lines $\\ell$ and $m$. Which angle corresponds to $${numbered(s)}$?`,
-            `一条截线与直线 $\\ell$、$m$ 相交。哪个角与 $${numbered(s)}$ 是同位角？`,
-          ),
-          angleOption(answer),
-          [angleOption(alternateInterior.partner(s)), angleOption(consecutiveInterior.partner(s)), angleOption([s[0], (s[1] + 2) % 4])],
-          t(
-            `$${numbered(s)}$ is ${positionOf(s).en}. Its corresponding angle is in the same position at the other crossing, ${positionOf(answer).en}: $${numbered(answer)}$.`,
-            `$${numbered(s)}$ 在 ${positionOf(s)["zh-CN"]}。与它同位的角在另一个交点处的相同位置，即 ${positionOf(answer)["zh-CN"]}：$${numbered(answer)}$。`,
-          ),
-          numberedFigure(pickTheta(rng), false),
-        );
-      },
-    },
-    {
-      id: "using-corresponding-angles",
-      figure: gradeDrawings3["corresponding-angles#using-corresponding-angles"],
-      title: t("Using corresponding angles", "利用同位角求角"),
-      explanation: t(
-        "When the lines are parallel, corresponding angles are **equal**. Combined with what you know at one crossing (vertical angles are equal, a linear pair adds up to $180^\\circ$), one angle gives all eight.\n\nIf $\\ell \\parallel m$ and the angle above $\\ell$, right of the transversal, is $65^\\circ$, then the corresponding angle at $m$ is $65^\\circ$, and the angle beside it on $m$ (a linear pair) is $180^\\circ - 65^\\circ = 115^\\circ$.",
-        "两直线平行时，同位角**相等**。再结合一个交点处的关系（对顶角相等，邻补角之和为 $180^\\circ$），由一个角就能求出全部八个角。\n\n若 $\\ell \\parallel m$，$\\ell$ 上方、截线右侧的角是 $65^\\circ$，则 $m$ 处与它同位的角也是 $65^\\circ$，而 $m$ 上与它相邻的角（邻补角）是 $180^\\circ - 65^\\circ = 115^\\circ$。",
-      ),
-      generate(rng) {
-        const theta = pickTheta(rng);
-        const known = pickSlot(rng);
-        const step = corresponding.partner(known);
-        const target: Slot = [step[0], (known[1] + rng.int(1, 3)) % 4];
-        const m = measureAt(known, theta);
-        const answer = measureAt(target, theta);
-        const vertical = (target[1] - step[1] + 4) % 4 === 2;
-        const second = vertical
-          ? t(`it and $x$ are vertical angles, so $x = ${degTex(m)}$`, `它与 $x$ 是对顶角，所以 $x = ${degTex(m)}$`)
-          : t(
-              `it and $x$ form a linear pair, so $x = 180^\\circ - ${degTex(m)} = ${degTex(180 - m)}$`,
-              `它与 $x$ 是邻补角，所以 $x = 180^\\circ - ${degTex(m)} = ${degTex(180 - m)}$`,
-            );
-        return {
-          ...numberProblem({
-            prompt: t(
+      lesson(
+        "using-corresponding-angles",
+        ["Using corresponding angles", "利用同位角求角"],
+        [
+          [
+            "When the lines are parallel, corresponding angles are **equal**. Combine this with what you know at one crossing: vertical angles are equal, and a linear pair adds up to $180^\\circ$. Then one angle gives all eight. If $\\ell \\parallel m$ and the angle above $\\ell$, right of the transversal, is $65^\\circ$, then the corresponding angle at $m$ is $65^\\circ$. The angle beside it on $m$ forms a linear pair with it, so it is $180^\\circ - 65^\\circ = 115^\\circ$.",
+            "两直线平行时，同位角**相等**。再结合一个交点处的关系：对顶角相等，邻补角之和为 $180^\\circ$。这样由一个角就能求出全部八个角。若 $\\ell \\parallel m$，$\\ell$ 上方、截线右侧的角是 $65^\\circ$，则 $m$ 处与它同位的角也是 $65^\\circ$。$m$ 上与它相邻的角和它是邻补角，所以是 $180^\\circ - 65^\\circ = 115^\\circ$。",
+          ],
+          [
+            "The other way round: beside the $65^\\circ$ angle on $\\ell$ is $115^\\circ$, and its corresponding angle at $m$ is $115^\\circ$ too.",
+            "换一条路：$\\ell$ 上与 $65^\\circ$ 相邻的角是 $115^\\circ$，它在 $m$ 处的同位角也是 $115^\\circ$。",
+          ],
+          [
+            "Check whether the last step is a vertical pair or a linear pair. Vertical angles are equal, and a linear pair adds up to $180^\\circ$.",
+            "看清最后一步是对顶角还是邻补角。对顶角相等，邻补角之和为 $180^\\circ$。",
+          ],
+        ],
+        (rng) => {
+          const theta = pickTheta(rng);
+          const known = pickSlot(rng);
+          const step = corresponding.partner(known);
+          const target: Slot = [step[0], (known[1] + rng.int(1, 3)) % 4];
+          const m = measureAt(known, theta);
+          const answer = measureAt(target, theta);
+          const vertical = (target[1] - step[1] + 4) % 4 === 2;
+          return valued(
+            [
               `Lines $\\ell$ and $m$ are parallel, and one angle measures $${degTex(m)}$. Find $x$.`,
               `直线 $\\ell$ 与 $m$ 平行，一个角是 $${degTex(m)}$。求 $x$。`,
-            ),
-            answer,
-            form: "integer",
-            unit: "°",
-            wrong: [180 - answer, 360 - m, Math.abs(90 - m)],
-            solution: t(
-              `The angle corresponding to the $${degTex(m)}$ angle, ${positionOf(step).en}, also measures $${degTex(m)}$. At that crossing, ${second.en}.`,
-              `与 $${degTex(m)}$ 的角同位的角在 ${positionOf(step)["zh-CN"]}，也是 $${degTex(m)}$。在这个交点处，${second["zh-CN"]}。`,
-            ),
-          }),
-          figure: transversalFigure(
-            theta,
-            0,
-            [
-              [known, deg(m)],
-              [target, "x"],
             ],
-            true,
-            `Parallel lines ℓ and m cut by a transversal. One angle measures ${m}°; an angle at the other crossing, in a different position, is x.`,
-            `平行线 ℓ 与 m 被一条截线所截。一个角是 ${m}°；另一个交点处位置不同的一个角是 x。`,
-          ),
-        };
-      },
-    },
+            answer,
+            [
+              [
+                ["Use corresponding angles", "利用同位角"],
+                [
+                  `The angle corresponding to the $${degTex(m)}$ angle is ${positionOf(step).en}. Parallel lines make it $${degTex(m)}$ too.`,
+                  `与 $${degTex(m)}$ 的角同位的角在 ${positionOf(step)["zh-CN"]}。两直线平行，所以它也是 $${degTex(m)}$。`,
+                ],
+              ],
+              [
+                ["Finish at that crossing", "在这个交点处求出 x"],
+                vertical
+                  ? ["It and $x$ are vertical angles, so they are equal:", "它与 $x$ 是对顶角，所以相等："]
+                  : ["It and $x$ form a linear pair, so they add up to $180^\\circ$:", "它与 $x$ 是邻补角，和为 $180^\\circ$："],
+                [vertical ? `x = ${degTex(m)}` : `x = 180^\\circ - ${degTex(m)} = ${degTex(answer)}`],
+              ],
+            ],
+            [
+              `Go the other way round. At the first crossing, the angle in the same position as $x$ ${vertical ? "is vertical to" : "forms a linear pair with"} the $${degTex(m)}$ angle, so it measures $${degTex(answer)}$. It corresponds to $x$, so $x = ${degTex(answer)}$.`,
+              `换一条路。在第一个交点处，与 $x$ 位置相同的角和 $${degTex(m)}$ 的角是${vertical ? "对顶角" : "邻补角"}，所以它是 $${degTex(answer)}$。它与 $x$ 是同位角，所以 $x = ${degTex(answer)}$。`,
+            ],
+            [
+              vertical
+                ? [
+                    180 - m,
+                    "That treats $x$ as a linear pair; it is vertical to the corresponding angle, so they are equal.",
+                    "这是把 $x$ 当成了邻补角；它与那个同位角是对顶角，应当相等。",
+                  ]
+                : [
+                    m,
+                    "That takes $x$ as equal; it forms a linear pair with the corresponding angle, so they add up to $180^\\circ$.",
+                    "这是把 $x$ 当成相等的角；它与那个同位角是邻补角，和为 $180^\\circ$。",
+                  ],
+              [
+                360 - m,
+                "That subtracts from $360^\\circ$; a linear pair adds up to $180^\\circ$.",
+                "这是用 $360^\\circ$ 去减；邻补角之和是 $180^\\circ$。",
+              ],
+              [
+                Math.abs(90 - m),
+                "That uses $90^\\circ$; none of these angles are complementary.",
+                "这是用了 $90^\\circ$；这些角都不互余。",
+              ],
+            ],
+            {
+              unit: "°",
+              figure: transversalFigure(
+                theta,
+                0,
+                [
+                  [known, deg(m)],
+                  [target, "x"],
+                ],
+                true,
+                `Parallel lines ℓ and m cut by a transversal. One angle measures ${m}°; an angle at the other crossing, in a different position, is x.`,
+                `平行线 ℓ 与 m 被一条截线所截。一个角是 ${m}°；另一个交点处位置不同的一个角是 x。`,
+              ),
+            },
+          );
+        },
+        drawn(gradeDrawings3["corresponding-angles#using-corresponding-angles"]),
+      ),
+    ],
+  ),
+  [
+    "Two parallel streets are crossed by a straight avenue. At the first corner the avenue makes a $70^\\circ$ angle with the street. What angle does it make at the same corner of the next street?",
+    "一条笔直的大道穿过两条平行的街道。在第一个路口，大道与街道成 $70^\\circ$ 角。在下一条街道的相同位置，它们成多少度的角？",
   ],
+  [
+    "Also $70^\\circ$: the two are corresponding angles, and parallel streets make them equal.",
+    "也是 $70^\\circ$：这两个角是同位角，街道平行，所以它们相等。",
+  ],
+  [
+    "identify corresponding angles and use them, with vertical angles and linear pairs, to find angles between parallel lines.",
+    "识别同位角，并结合对顶角和邻补角，求平行线间的角。",
+  ],
+);
+
+/** theValueThatMakesLinesParallel finds the x that makes two corresponding angles equal, so that the lines are parallel. */
+export const theValueThatMakesLinesParallel = lesson(
+  "the-value-that-makes-lines-parallel",
+  ["The value that makes lines parallel", "使两线平行的值"],
+  [
+    [
+      "The converse also holds: when corresponding angles are equal, the lines are parallel. So setting the two expressions equal finds the value that makes the lines parallel. If corresponding angles measure $(3x + 10)^\\circ$ and $(x + 50)^\\circ$, then $3x + 10 = x + 50$, so $2x = 40$ and $x = 20$.",
+      "逆命题也成立：同位角相等时，两直线平行。所以令两个式子相等，就能求出使两线平行的值。若同位角分别为 $(3x + 10)^\\circ$ 和 $(x + 50)^\\circ$，则 $3x + 10 = x + 50$，所以 $2x = 40$，$x = 20$。",
+    ],
+    [
+      "At $x = 20$ both angles measure $3 \\cdot 20 + 10 = 70^\\circ$ and $20 + 50 = 70^\\circ$.",
+      "$x = 20$ 时，两个角分别是 $3 \\cdot 20 + 10 = 70^\\circ$ 和 $20 + 50 = 70^\\circ$。",
+    ],
+    [
+      "Corresponding angles must be equal, not supplementary. Setting their sum to $180$ finds a different value.",
+      "同位角要相等，不是互补。令它们的和等于 $180$ 会得到另一个值。",
+    ],
+  ],
+  (rng) => {
+    const c = rng.int(2, 5);
+    const a = c + rng.int(1, 4);
+    const x = rng.int(3, 15);
+    const drawnAngle = rng.int(30, 150);
+    const angle = drawnAngle === a * x || drawnAngle === c * x ? a * x + c * x : drawnAngle;
+    const e1: Linear = [a, angle - a * x];
+    const e2: Linear = [c, angle - c * x];
+    const sum = Q.of(180 - e1[1] - e2[1], a + c);
+    return valued(
+      [
+        `A transversal crosses lines $\\ell$ and $m$. Corresponding angles measure $${angleTex(e1)}$ and $${angleTex(e2)}$. For what value of $x$ are $\\ell$ and $m$ parallel?`,
+        `一条截线与直线 $\\ell$、$m$ 相交。同位角分别是 $${angleTex(e1)}$ 和 $${angleTex(e2)}$。$x$ 为何值时 $\\ell$ 与 $m$ 平行？`,
+      ],
+      x,
+      solving(equalSteps(e1, e2), [
+        "If corresponding angles are equal, the lines are parallel. So set the two angles equal:",
+        "同位角相等，两直线平行。所以令两个角相等：",
+      ]),
+      [
+        `Substituting $x = ${x}$ gives $${subst(e1, x)} = ${angle}$ and $${subst(e2, x)} = ${angle}$, so the corresponding angles are equal.`,
+        `代入 $x = ${x}$，得 $${subst(e1, x)} = ${angle}$，$${subst(e2, x)} = ${angle}$，同位角相等。`,
+      ],
+      [
+        ...equalOffs(e1, e2),
+        [angle, "That is the measure of the angles, not $x$.", "这是角的度数，不是 $x$。"],
+        [sum, "That sets the sum to $180$; corresponding angles must be equal.", "这是令和等于 $180$；同位角要相等。"],
+      ],
+      { solveFor: "x" },
+    );
+  },
+  drawn(gradeDrawings5["corresponding-angles#the-value-that-makes-lines-parallel"]),
 );
 
 /** pairEquation picks x, the measure m of the angle at P (so that the figure is not close to a right angle) and an expression for it. */
@@ -907,83 +1049,118 @@ const alternateAngles = withIntro(
   ],
 );
 
-const consecutiveAngles = topic(
-  "consecutive-angles",
-  t("Consecutive Angles", "同旁内角与同旁外角"),
-  t(
-    "Consecutive angles lie on the same side of a transversal at its two crossings, both between the lines or both outside them. When the lines are parallel, consecutive angles are supplementary.",
-    "同旁角位于截线同一侧的两个交点处，都在两条直线之间（同旁内角）或都在两条直线之外（同旁外角）。两直线平行时，同旁角互补。",
-  ),
-  ["alternate-angles"],
-  ["8.G.A.5"],
-  [
-    {
-      id: "consecutive-angles-are-supplementary",
-      figure: gradeDrawings5["consecutive-angles#consecutive-angles-are-supplementary"],
-      title: t("Consecutive angles are supplementary", "同旁角互补"),
-      explanation: t(
-        "**Consecutive interior angles** are both between the lines, on the same side of the transversal; **consecutive exterior angles** are both outside the lines, on the same side. When the lines are parallel, each pair is **supplementary**: the two angles add up to $180^\\circ$.\n\nWhy: one of the pair equals the angle corresponding to the other's linear-pair partner. If $\\ell \\parallel m$ and $\\angle 4 = 70^\\circ$, its consecutive interior partner is $\\angle 6 = 180^\\circ - 70^\\circ = 110^\\circ$.",
-        "**同旁内角**都在两条直线之间、截线同一侧；**同旁外角**都在两条直线之外、截线同一侧。两直线平行时，每一对都**互补**：两个角之和为 $180^\\circ$。\n\n理由：其中一个角等于另一个角的邻补角的同位角。若 $\\ell \\parallel m$，$\\angle 4 = 70^\\circ$，则与它构成同旁内角的 $\\angle 6 = 180^\\circ - 70^\\circ = 110^\\circ$。",
-      ),
-      generate(rng) {
-        const theta = pickTheta(rng);
-        const s = pickSlot(rng);
-        const kind = interior(s) ? consecutiveInterior : consecutiveExterior;
-        const partner = kind.partner(s);
-        const m = measureAt(s, theta);
-        return {
-          ...numberProblem({
-            prompt: t(
+const consecutiveAngles = withIntro(
+  topic(
+    "consecutive-angles",
+    t("Consecutive Angles", "同旁内角与同旁外角"),
+    t(
+      "Consecutive angles lie on the same side of a transversal at its two crossings, both between the lines or both outside them. When the lines are parallel, consecutive angles are supplementary.",
+      "同旁角位于截线同一侧的两个交点处，都在两条直线之间（同旁内角）或都在两条直线之外（同旁外角）。两直线平行时，同旁角互补。",
+    ),
+    ["alternate-angles"],
+    ["8.G.A.5"],
+    [
+      lesson(
+        "consecutive-angles-are-supplementary",
+        ["Consecutive angles are supplementary", "同旁角互补"],
+        [
+          [
+            "**Consecutive interior angles** are both between the lines, on the same side of the transversal. **Consecutive exterior angles** are both outside the lines, on the same side. When the lines are parallel, each pair is **supplementary**: the two angles add up to $180^\\circ$. If $\\ell \\parallel m$ and $\\angle 4 = 70^\\circ$, its consecutive interior partner is $\\angle 6 = 180^\\circ - 70^\\circ = 110^\\circ$.",
+            "**同旁内角**都在两条直线之间、截线同一侧。**同旁外角**都在两条直线之外、截线同一侧。两直线平行时，每一对都**互补**：两个角之和为 $180^\\circ$。若 $\\ell \\parallel m$，$\\angle 4 = 70^\\circ$，则与它构成同旁内角的 $\\angle 6 = 180^\\circ - 70^\\circ = 110^\\circ$。",
+          ],
+          [
+            "Why: $\\angle 4$ corresponds to $\\angle 8$, so $\\angle 8 = 70^\\circ$. $\\angle 8$ and $\\angle 6$ form a linear pair, so $\\angle 6 = 110^\\circ$.",
+            "理由：$\\angle 4$ 与 $\\angle 8$ 是同位角，所以 $\\angle 8 = 70^\\circ$。$\\angle 8$ 与 $\\angle 6$ 是邻补角，所以 $\\angle 6 = 110^\\circ$。",
+          ],
+          [
+            "Consecutive angles are supplementary, not equal. Only when both are $90^\\circ$ do they match.",
+            "同旁角互补，不是相等。只有两个角都是 $90^\\circ$ 时它们才相等。",
+          ],
+        ],
+        (rng) => {
+          const theta = pickTheta(rng);
+          const s = pickSlot(rng);
+          const inside = interior(s);
+          const kind = inside ? consecutiveInterior : consecutiveExterior;
+          const partner = kind.partner(s);
+          const c = corresponding.partner(s);
+          const m = measureAt(s, theta);
+          return valued(
+            [
               `Lines $\\ell$ and $m$ are parallel and $m${numbered(s)} = ${degTex(m)}$. Find $m${numbered(partner)}$.`,
               `直线 $\\ell$ 与 $m$ 平行，$m${numbered(s)} = ${degTex(m)}$。求 $m${numbered(partner)}$。`,
-            ),
-            answer: 180 - m,
-            form: "integer",
-            unit: "°",
-            wrong: [m, Math.abs(90 - m), 360 - m],
-            solution: t(
-              `$${numbered(s)}$ and $${numbered(partner)}$ are both ${interior(s) ? "between" : "outside"} the lines, on the same side of the transversal: they are ${kind.name.en}. Parallel lines make them supplementary:${steps(`m${numbered(partner)} = 180^\\circ - ${degTex(m)} = ${degTex(180 - m)}`)}`,
-              `$${numbered(s)}$ 与 $${numbered(partner)}$ 都在两条直线${interior(s) ? "之间" : "之外"}、截线同一侧：它们是${kind.name["zh-CN"]}。两直线平行，所以它们互补：${steps(`m${numbered(partner)} = 180^\\circ - ${degTex(m)} = ${degTex(180 - m)}`)}`,
-            ),
-          }),
-          figure: numberedFigure(theta, true),
-        };
-      },
-    },
-    {
-      id: "consecutive-angle-equations",
-      figure: gradeDrawings3["consecutive-angles#consecutive-angle-equations"],
-      title: t("Equations from consecutive angles", "由同旁角列方程"),
-      explanation: t(
-        "When the lines are parallel and consecutive angles are written with a variable, their sum is $180^\\circ$.\n\nIf consecutive interior angles measure $(2x + 15)^\\circ$ and $(3x - 10)^\\circ$, then $(2x + 15) + (3x - 10) = 180$, so $5x + 5 = 180$, $5x = 175$ and $x = 35$. The angles are $85^\\circ$ and $95^\\circ$, which do add up to $180^\\circ$.",
-        "两直线平行且同旁角用含变量的式子表示时，它们的和为 $180^\\circ$。\n\n若一对同旁内角为 $(2x + 15)^\\circ$ 和 $(3x - 10)^\\circ$，则 $(2x + 15) + (3x - 10) = 180$，所以 $5x + 5 = 180$，$5x = 175$，$x = 35$。两个角分别是 $85^\\circ$ 和 $95^\\circ$，和确实是 $180^\\circ$。",
+            ],
+            180 - m,
+            [
+              [
+                ["Name the pair", "认出这对角"],
+                [
+                  `$${numbered(s)}$ and $${numbered(partner)}$ are both ${inside ? "between" : "outside"} the lines, on the same side of the transversal. They are ${kind.name.en}.`,
+                  `$${numbered(s)}$ 与 $${numbered(partner)}$ 都在两条直线${inside ? "之间" : "之外"}、截线同一侧。它们是${kind.name["zh-CN"]}。`,
+                ],
+              ],
+              [
+                ["Use the sum", "利用和"],
+                ["Parallel lines make them supplementary:", "两直线平行，所以它们互补："],
+                [`m${numbered(partner)} = 180^\\circ - ${degTex(m)} = ${degTex(180 - m)}`],
+              ],
+            ],
+            [
+              `Go another way: $${numbered(c)}$ corresponds to $${numbered(s)}$, so it is $${degTex(m)}$. It forms a linear pair with $${numbered(partner)}$, which leaves $180^\\circ - ${degTex(m)} = ${degTex(180 - m)}$.`,
+              `换一条路：$${numbered(c)}$ 与 $${numbered(s)}$ 是同位角，所以它是 $${degTex(m)}$。它与 $${numbered(partner)}$ 是邻补角，剩下 $180^\\circ - ${degTex(m)} = ${degTex(180 - m)}$。`,
+            ],
+            [
+              [m, "That takes the angles as equal; consecutive angles are supplementary.", "这是把两个角当成相等；同旁角互补。"],
+              [
+                Math.abs(90 - m),
+                "That uses $90^\\circ$; consecutive angles add up to $180^\\circ$.",
+                "这是用了 $90^\\circ$；同旁角之和是 $180^\\circ$。",
+              ],
+              [
+                360 - m,
+                "That subtracts from $360^\\circ$; the pair adds up to $180^\\circ$.",
+                "这是用 $360^\\circ$ 去减；这对角之和是 $180^\\circ$。",
+              ],
+            ],
+            { unit: "°", figure: numberedFigure(theta, true) },
+          );
+        },
+        drawn(gradeDrawings5["consecutive-angles#consecutive-angles-are-supplementary"]),
       ),
-      generate(rng) {
-        const { x, m, e1 } = pairEquation(rng);
-        const e2 = expressionFor(rng, 180 - m, x);
-        const i = rng.int(0, 3);
-        const s: Slot = ["P", i];
-        const kind = interior(s) ? consecutiveInterior : consecutiveExterior;
-        const theta = i % 2 === 0 ? m : 180 - m;
-        const askX = rng.bool();
-        const solve = steps(...sumSteps([e1, e2], 180));
-        return {
-          ...numberProblem({
-            prompt: askX
-              ? t(`Lines $\\ell$ and $m$ are parallel. Find $x$.`, `直线 $\\ell$ 与 $m$ 平行。求 $x$。`)
-              : t(
-                  `Lines $\\ell$ and $m$ are parallel. Find the measure of the angle marked $${angleTex(e1)}$.`,
-                  `直线 $\\ell$ 与 $m$ 平行。求标为 $${angleTex(e1)}$ 的角的度数。`,
-                ),
-            answer: askX ? x : m,
-            ...(askX ? { solveFor: "x" } : { unit: "°" }),
-            wrong: askX ? [...sumWrong([e1, e2], 180, 90), ...(e1[0] !== e2[0] ? equalWrong(e1, e2) : [])] : [x, 180 - m, Math.abs(90 - m)],
-            solution: t(
-              `The marked angles are ${kind.name.en}, and parallel lines make them supplementary:${solve}${askX ? "" : `So the angle measures $${subst(e1, x)} = ${degTex(m)}$.`}`,
-              `标出的两个角是${kind.name["zh-CN"]}，两直线平行，所以它们互补：${solve}${askX ? "" : `所以这个角是 $${subst(e1, x)} = ${degTex(m)}$。`}`,
-            ),
-          }),
-          figure: transversalFigure(
+      lesson(
+        "consecutive-angle-equations",
+        ["Equations from consecutive angles", "由同旁角列方程"],
+        [
+          [
+            "When the lines are parallel and consecutive angles are written with a variable, their sum is $180^\\circ$. If consecutive interior angles measure $(2x + 15)^\\circ$ and $(3x - 10)^\\circ$, then $(2x + 15) + (3x - 10) = 180$. So $5x + 5 = 180$, $5x = 175$ and $x = 35$.",
+            "两直线平行且同旁角用含变量的式子表示时，它们的和为 $180^\\circ$。若一对同旁内角为 $(2x + 15)^\\circ$ 和 $(3x - 10)^\\circ$，则 $(2x + 15) + (3x - 10) = 180$。所以 $5x + 5 = 180$，$5x = 175$，$x = 35$。",
+          ],
+          [
+            "The angles are $2 \\cdot 35 + 15 = 85^\\circ$ and $3 \\cdot 35 - 10 = 95^\\circ$, which add up to $180^\\circ$.",
+            "两个角分别是 $2 \\cdot 35 + 15 = 85^\\circ$ 和 $3 \\cdot 35 - 10 = 95^\\circ$，和是 $180^\\circ$。",
+          ],
+          [
+            "Consecutive angles add up to $180^\\circ$. Setting them equal, as for alternate angles, gives the wrong equation.",
+            "同旁角之和是 $180^\\circ$。像错角那样令它们相等，列出的方程就错了。",
+          ],
+        ],
+        (rng) => {
+          const { x, m, e1 } = pairEquation(rng);
+          const e2 = expressionFor(rng, 180 - m, x);
+          const i = rng.int(0, 3);
+          const s: Slot = ["P", i];
+          const kind = interior(s) ? consecutiveInterior : consecutiveExterior;
+          const theta = i % 2 === 0 ? m : 180 - m;
+          const askX = rng.bool();
+          const walk = solving(sumSteps([e1, e2], 180), [
+            `The marked angles are ${kind.name.en}, and parallel lines make them supplementary:`,
+            `标出的两个角是${kind.name["zh-CN"]}，两直线平行，所以它们互补：`,
+          ]);
+          const check: Pair = [
+            `Substituting $x = ${x}$ gives $${subst(e1, x)} = ${m}$ and $${subst(e2, x)} = ${180 - m}$, and $${m} + ${180 - m} = 180$.`,
+            `代入 $x = ${x}$，得 $${subst(e1, x)} = ${m}$，$${subst(e2, x)} = ${180 - m}$，而 $${m} + ${180 - m} = 180$。`,
+          ];
+          const figure = transversalFigure(
             theta,
             0,
             [
@@ -993,11 +1170,145 @@ const consecutiveAngles = topic(
             true,
             `Parallel lines ℓ and m cut by a transversal, with ${kind.name.en} marked ${angleLabel(e1)} and ${angleLabel(e2)}.`,
             `平行线 ℓ 与 m 被一条截线所截，一对${kind.name["zh-CN"]}分别标为 ${angleLabel(e1)} 和 ${angleLabel(e2)}。`,
-          ),
-        };
-      },
-    },
+          );
+          if (askX) {
+            return valued(
+              ["Lines $\\ell$ and $m$ are parallel. Find $x$.", "直线 $\\ell$ 与 $m$ 平行。求 $x$。"],
+              x,
+              walk,
+              check,
+              [
+                ...sumOffs([e1, e2], 180, 90),
+                ...(e1[0] === e2[0]
+                  ? []
+                  : [
+                      [
+                        Q.of(e2[1] - e1[1], e1[0] - e2[0]),
+                        "That sets the angles equal; consecutive angles are supplementary.",
+                        "这是令两个角相等；同旁角是互补的。",
+                      ] as const,
+                    ]),
+                [m, "That is the measure of an angle, not $x$.", "这是角的度数，不是 $x$。"],
+              ],
+              { solveFor: "x", figure },
+            );
+          }
+          return valued(
+            [
+              `Lines $\\ell$ and $m$ are parallel. Find the measure of the angle marked $${angleTex(e1)}$.`,
+              `直线 $\\ell$ 与 $m$ 平行。求标为 $${angleTex(e1)}$ 的角的度数。`,
+            ],
+            m,
+            [...walk, [["Find the angle", "求角"], ["Put $x$ back in:", "把 $x$ 代回："], [`${subst(e1, x)} = ${degTex(m)}`]]],
+            check,
+            [
+              [x, "That is $x$; put it back into the expression for the angle.", "这是 $x$；还要代回角的式子。"],
+              [180 - m, "That is the other angle of the pair.", "这是这对角中的另一个角。"],
+              [
+                Math.abs(90 - m),
+                "That uses $90^\\circ$; consecutive angles add up to $180^\\circ$.",
+                "这是用了 $90^\\circ$；同旁角之和是 $180^\\circ$。",
+              ],
+            ],
+            { unit: "°", figure },
+          );
+        },
+        drawn(gradeDrawings3["consecutive-angles#consecutive-angle-equations"]),
+      ),
+    ],
+  ),
+  [
+    "A ladder leans between two parallel shelves. Where it meets the lower shelf it makes a $65^\\circ$ angle on the inside. What angle does it make with the upper shelf, on the same side?",
+    "一架梯子斜靠在两层平行的搁板之间。它在下层搁板处，内侧成 $65^\\circ$ 角。它在上层搁板的同一侧成多少度的角？",
   ],
+  [
+    "$180^\\circ - 65^\\circ = 115^\\circ$: the two are consecutive interior angles, and parallel shelves make them supplementary.",
+    "$180^\\circ - 65^\\circ = 115^\\circ$：这两个角是同旁内角，搁板平行，所以它们互补。",
+  ],
+  [
+    "identify consecutive angles, use that they are supplementary, and solve equations and ratios built on them.",
+    "识别同旁角，利用它们互补，解由它们列出的方程和比例问题。",
+  ],
+);
+
+/** consecutiveAnglesInARatio splits 180° in a ratio to find one of two consecutive interior angles. */
+export const consecutiveAnglesInARatio = lesson(
+  "consecutive-angles-in-a-ratio",
+  ["Consecutive angles in a ratio", "成比例的同旁内角"],
+  [
+    [
+      "Consecutive interior angles between parallel lines add up to $180^\\circ$. So a ratio splits $180^\\circ$ into equal shares, and each angle is a number of those shares. In the ratio $2 : 3$ there are $5$ shares of $180 \\div 5 = 36$ degrees, so the angles are $72^\\circ$ and $108^\\circ$.",
+      "两平行线间的同旁内角之和是 $180^\\circ$。所以比把 $180^\\circ$ 分成若干等份，每个角占若干份。比为 $2 : 3$ 时共 $5$ 份，每份 $180 \\div 5 = 36$ 度，所以两个角是 $72^\\circ$ 和 $108^\\circ$。",
+    ],
+    ["$72 + 108 = 180$, and $72 : 108 = 2 : 3$.", "$72 + 108 = 180$，而 $72 : 108 = 2 : 3$。"],
+    [
+      "Divide $180$ by the total number of shares, not by one part of the ratio. Then multiply by the shares of the angle asked for.",
+      "要用 $180$ 除以总份数，不是除以比中的一项。再乘所求角占的份数。",
+    ],
+  ],
+  (rng) => {
+    const [p, q] = rng.pick<[number, number]>([
+      [1, 2],
+      [1, 3],
+      [1, 4],
+      [1, 5],
+      [2, 3],
+      [1, 8],
+      [4, 5],
+      [1, 9],
+      [7, 8],
+      [5, 7],
+      [1, 11],
+      [3, 7],
+      [2, 7],
+      [1, 14],
+      [1, 17],
+      [5, 13],
+      [7, 11],
+      [9, 11],
+      [3, 17],
+      [7, 13],
+    ]);
+    const each = 180 / (p + q);
+    const large = rng.bool();
+    const [k, j] = large ? [q, p] : [p, q];
+    return valued(
+      [
+        `Two consecutive interior angles between parallel lines are in the ratio $${p} : ${q}$. What is the ${large ? "larger" : "smaller"} angle, in degrees?`,
+        `两平行线间的同旁内角之比是 $${p} : ${q}$。较${large ? "大" : "小"}的角是多少度？`,
+      ],
+      k * each,
+      [
+        [
+          ["Find one share", "求一份"],
+          [
+            `The angles add up to $180^\\circ$, split into $${p} + ${q} = ${p + q}$ equal shares:`,
+            `两个角之和是 $180^\\circ$，分成 $${p} + ${q} = ${p + q}$ 等份：`,
+          ],
+          [`180 \\div ${p + q} = ${each}`],
+        ],
+        [
+          ["Take the shares of the angle", "取这个角的份数"],
+          [`The ${large ? "larger" : "smaller"} angle is $${k}$ share${k === 1 ? "" : "s"}:`, `较${large ? "大" : "小"}的角占 $${k}$ 份：`],
+          [`${k} \\times ${each} = ${k * each}`],
+        ],
+      ],
+      [
+        `The other angle is $${j} \\times ${each} = ${j * each}$, and $${k * each} + ${j * each} = 180$, as consecutive interior angles must be.`,
+        `另一个角是 $${j} \\times ${each} = ${j * each}$，而 $${k * each} + ${j * each} = 180$，正符合同旁内角互补。`,
+      ],
+      [
+        [j * each, `That is the ${large ? "smaller" : "larger"} angle.`, `这是较${large ? "小" : "大"}的角。`],
+        [each, `That is one share; the angle is $${k}$ shares.`, `这是一份；这个角占 $${k}$ 份。`],
+        [
+          90,
+          "That splits $180^\\circ$ in half; the angles are in a ratio, not equal.",
+          "这是把 $180^\\circ$ 平分；两个角成比例，并不相等。",
+        ],
+      ],
+    );
+  },
+  drawn(gradeDrawings5["consecutive-angles#consecutive-angles-in-a-ratio"]),
 );
 
 /** criteria are the pair kinds that show two lines are parallel. */

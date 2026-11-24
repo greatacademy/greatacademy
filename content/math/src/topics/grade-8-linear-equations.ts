@@ -1,11 +1,11 @@
 import type { KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
-import { linear, num, poly, Q } from "@ga/subject-math";
+import { linear, num, paren, poly, Q } from "@ga/subject-math";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
-import { choiceProblem, numberProblem, pointLatex, steps } from "../problems.ts";
-import type { Pair } from "./early-grades-more-kit.ts";
-import { mathText, pickChoice } from "./grade-4-fractions.ts";
+import { graphFigure } from "../graph-figures.ts";
+import { pointLatex } from "../problems.ts";
+import type { Pair, Wrong } from "./early-grades-more-kit.ts";
 import { chosen, chosenMath, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { tableFigure } from "./grade-8-kit.ts";
 import { equalTape, tapeFigure } from "./upper-grades-kit.ts";
@@ -39,9 +39,6 @@ type Count = 0 | 1 | 2;
 
 /** countOptions are the answers to "how many solutions", indexed by Count. */
 const countOptions: readonly Text[] = [t("Exactly one", "恰有一个"), t("Infinitely many", "无穷多个"), t("None", "无解")];
-
-/** lowerFirst lowercases the first letter of a sentence so that it can continue another. */
-const _lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 /** cancelling says how to remove the term ax from both sides, as the start of a sentence. */
 const cancelling = (a: number): Text =>
@@ -91,70 +88,211 @@ function expandedEquation(rng: Rng, kind: Count) {
 // ---------------------------------------------------------------------------
 // Infinitely many solutions and no solutions
 
+/** sidesAt checks the number of solutions of ax + b = cx + d another way, by comparing the two sides at x = 0 and x = 1. */
+function sidesAt(a: number, b: number, c: number, d: number): Pair {
+  const [l1, r1] = [a + b, c + d];
+  if (a !== c)
+    return [
+      `Compare the two sides at $x = 0$ and $x = 1$. The left side goes from $${b}$ to $${l1}$, and the right side from $${d}$ to $${r1}$. The gap between them changes from $${b - d}$ to $${l1 - r1}$, so it closes for exactly one value of $x$.`,
+      `比较 $x = 0$ 和 $x = 1$ 时的两边。左边从 $${b}$ 变到 $${l1}$，右边从 $${d}$ 变到 $${r1}$。两边的差从 $${b - d}$ 变成 $${l1 - r1}$，所以恰好有一个 $x$ 使差为零。`,
+    ];
+  return b === d
+    ? [
+        `Compare the two sides at $x = 0$ and $x = 1$. Both sides give $${b}$, then both give $${l1}$. Two straight-line expressions that agree at two values agree everywhere, so every number works.`,
+        `比较 $x = 0$ 和 $x = 1$ 时的两边。两边都得 $${b}$，然后都得 $${l1}$。两个一次式在两个值处相等，就处处相等，所以任何数都是解。`,
+      ]
+    : [
+        `Compare the two sides at $x = 0$ and $x = 1$. The left side gives $${b}$, then $${l1}$, and the right side $${d}$, then $${r1}$. The gap stays $${b - d}$, so it never closes.`,
+        `比较 $x = 0$ 和 $x = 1$ 时的两边。左边得 $${b}$，然后得 $${l1}$；右边得 $${d}$，然后得 $${r1}$。两边的差始终是 $${b - d}$，永远不会为零。`,
+      ];
+}
+
+/** countWhy gives the reason each wrong count is wrong for ax + b = cx + d, as wrong options of a choice. */
+function countWhy(a: number, b: number, c: number, d: number): Wrong[] {
+  const right = countOf(a, b, c, d);
+  const why: [string, string][] =
+    right === 0
+      ? [
+          ["", ""],
+          ["The $x$-terms differ, so the two sides are not the same expression.", "含 $x$ 的项不同，所以两边不是同一个式子。"],
+          [
+            "The $x$-terms differ, so they do not cancel, and one value of $x$ balances the sides.",
+            "含 $x$ 的项不同，不会抵消，有一个 $x$ 能使两边相等。",
+          ],
+        ]
+      : right === 1
+        ? [
+            ["The $x$-terms cancel, so no single value is singled out.", "含 $x$ 的项抵消了，不会只有一个值。"],
+            ["", ""],
+            [`The constants match too, so what is left, $${b} = ${d}$, is true.`, `常数项也相同，剩下的 $${b} = ${d}$ 成立。`],
+          ]
+        : [
+            ["The $x$-terms cancel, so no single value is singled out.", "含 $x$ 的项抵消了，不会只有一个值。"],
+            [`The constants differ, so what is left, $${b} = ${d}$, is false.`, `常数项不同，剩下的 $${b} = ${d}$ 不成立。`],
+            ["", ""],
+          ];
+  return [0, 1, 2]
+    .filter((i) => i !== right)
+    .map((i) => [[countOptions[i]!.en, countOptions[i]!["zh-CN"]], why[i]![0], why[i]![1]] as const);
+}
+
 /** linearEquationsWithInfinitelyManySolutions finds the numbers that make a linear equation an identity. */
-export const linearEquationsWithInfinitelyManySolutions = topic(
-  "linear-equations-with-infinitely-many-solutions",
-  t("Linear Equations With Infinitely Many Solutions", "有无穷多个解的一元一次方程"),
-  t(
-    "A linear equation has infinitely many solutions when its two sides simplify to the same expression: the x-terms match and so do the constants. Then every number is a solution.",
-    "当一元一次方程的两边化简后是同一个式子时，即含 x 的项相同、常数项也相同，方程有无穷多个解：任何数都是它的解。",
+export const linearEquationsWithInfinitelyManySolutions = withIntro(
+  topic(
+    "linear-equations-with-infinitely-many-solutions",
+    t("Linear Equations With Infinitely Many Solutions", "有无穷多个解的一元一次方程"),
+    t(
+      "A linear equation has infinitely many solutions when its two sides simplify to the same expression: the x-terms match and so do the constants. Then every number is a solution.",
+      "当一元一次方程的两边化简后是同一个式子时，即含 x 的项相同、常数项也相同，方程有无穷多个解：任何数都是它的解。",
+    ),
+    ["equations-with-parentheses"],
+    ["8.EE.C.7.A"],
+    [
+      lesson(
+        "choosing-the-constant",
+        ["Choosing the constant", "确定常数项"],
+        [
+          [
+            "For which $k$ does $3(x - 4) + 2x = 5x + k$ have infinitely many solutions? Expand the left side: $3x - 12 + 2x = 5x - 12$. The $x$-terms already match, so the sides are the same exactly when $k = -12$.",
+            "$k$ 取何值时，$3(x - 4) + 2x = 5x + k$ 有无穷多个解？展开左边：$3x - 12 + 2x = 5x - 12$。含 $x$ 的项已经相同，所以当且仅当 $k = -12$ 时两边相同。",
+          ],
+          [
+            "Try two values of $x$ with $k = -12$. At $x = 0$ both sides give $-12$, and at $x = 4$ both give $8$.",
+            "取 $k = -12$，试两个 $x$ 的值。$x = 0$ 时两边都得 $-12$，$x = 4$ 时两边都得 $8$。",
+          ],
+          [
+            "Multiply every term in the parentheses: forgetting to multiply the $-4$ by $3$ gives the wrong $k = -4$.",
+            "括号里的每一项都要乘：忘记把 $-4$ 乘以 $3$ 会得到错误的 $k = -4$。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const a = rng.sign() * rng.int(2, 7);
+            const p = rng.nonZero(-9, 9);
+            const c = rng.nonZero(-6, 6);
+            if (a + c === 0) continue;
+            const k = a * p;
+            const left = plus(times(a, 1, p), c, "x");
+            const eq = `${left} = ${linear(a + c, 0)} + k`;
+            const at1 = a * (1 + p) + c;
+            return valued(
+              [`For what value of $k$ does $${eq}$ have infinitely many solutions?`, `$k$ 取何值时，方程 $${eq}$ 有无穷多个解？`],
+              k,
+              [
+                [
+                  ["Simplify the left side", "化简左边"],
+                  ["Multiply out the parentheses and collect the $x$-terms:", "去括号，再合并含 $x$ 的项："],
+                  [`${left} = ${plus(linear(a, k), c, "x")} = ${linear(a + c, k)}`],
+                ],
+                [
+                  ["Match the constants", "使常数项相同"],
+                  [
+                    `The $x$-terms already match, so the sides are the same expression exactly when $k = ${k}$.`,
+                    `含 $x$ 的项已经相同，所以当且仅当 $k = ${k}$ 时两边是同一个式子。`,
+                  ],
+                ],
+              ],
+              [
+                `Try two values of $x$ in the original equation with $k = ${k}$. At $x = 0$ both sides give $${k}$. At $x = 1$ the left side gives $${at1}$, and the right side $${a + c} + ${paren(k)} = ${at1}$ as well.`,
+                `取 $k = ${k}$，把两个 $x$ 的值代入原方程。$x = 0$ 时两边都得 $${k}$。$x = 1$ 时左边得 $${at1}$，右边 $${a + c} + ${paren(k)} = ${at1}$，也相同。`,
+              ],
+              [
+                [p, `That forgets to multiply $${p}$ by $${a}$.`, `这是忘了把 $${p}$ 乘以 $${a}$。`],
+                [a + p, "That adds the numbers instead of multiplying them.", "这是把两个数相加了，而不是相乘。"],
+                [-k, "That has the wrong sign; the constants must be equal, not opposite.", "符号错了；常数项必须相等，而不是相反。"],
+              ],
+            );
+          }
+        },
+        tapeFigure(
+          [
+            {
+              total: "3(x − 4) + 2x",
+              pieces: [
+                { size: 5, text: "5x" },
+                { size: 2, text: "−12" },
+              ],
+            },
+            {
+              total: "5x + k",
+              pieces: [
+                { size: 5, text: "5x" },
+                { size: 2, text: "k = −12", lit: true },
+              ],
+            },
+          ],
+          [
+            "Two bars: the left side simplifies to 5x − 12, and the right side is 5x + k, so they are the same bar when k = −12.",
+            "两个长条：左边化简为 5x − 12，右边是 5x + k，所以当 k = −12 时两个长条完全相同。",
+          ],
+        ),
+      ),
+      lesson(
+        "choosing-the-multiplier",
+        ["Choosing the multiplier", "确定括号外的系数"],
+        [
+          [
+            "For which $k$ does $k(2x - 3) = 8x - 12$ have infinitely many solutions? Expanding gives $2kx - 3k$. Matching the $x$-terms, $2k = 8$, so $k = 4$. Both parts must match: if the constant were $-10$, no value of $k$ would work.",
+            "$k$ 取何值时，$k(2x - 3) = 8x - 12$ 有无穷多个解？展开得 $2kx - 3k$。比较含 $x$ 的项，$2k = 8$，所以 $k = 4$。两部分都必须相同：如果常数项是 $-10$，$k$ 取任何值都不行。",
+          ],
+          ["Match the constants instead: $-3k = -12$ also gives $k = 4$.", "改为比较常数项：$-3k = -12$，同样得 $k = 4$。"],
+          ["The answer is $k$, not the coefficient $8$ of $x$ on the right.", "答案是 $k$，不是右边 $x$ 的系数 $8$。"],
+        ],
+        (rng) => {
+          const k = rng.sign() * rng.int(2, 6);
+          const b = rng.int(2, 5);
+          const p = rng.nonZero(-7, 7);
+          const eq = `k(${linear(b, p)}) = ${linear(k * b, k * p)}`;
+          return valued(
+            [`For what value of $k$ does $${eq}$ have infinitely many solutions?`, `$k$ 取何值时，方程 $${eq}$ 有无穷多个解？`],
+            k,
+            [
+              [
+                ["Expand the left side", "展开左边"],
+                ["Multiply each term in the parentheses by $k$:", "括号里的每一项都乘以 $k$："],
+                [`k(${linear(b, p)}) = ${poly([b, "kx"])} ${p < 0 ? "-" : "+"} ${poly([Math.abs(p), "k"])}`],
+              ],
+              [
+                ["Match the x-terms", "使含 x 的项相同"],
+                [`The coefficients of $x$ must be equal:`, "两边 $x$ 的系数必须相等："],
+                [`${b}k = ${k * b}`, `k = ${k}`],
+              ],
+            ],
+            [
+              `Match the constants instead: $${p} \\cdot k = ${k * p}$ gives $k = ${k * p} \\div ${paren(p)} = ${k}$ as well, so both parts agree.`,
+              `改为比较常数项：$${p} \\cdot k = ${k * p}$，得 $k = ${k * p} \\div ${paren(p)} = ${k}$，两部分一致。`,
+            ],
+            [
+              [k * b, "That is the coefficient of $x$ on the right, not $k$.", "这是右边 $x$ 的系数，不是 $k$。"],
+              [k * b - b, "That subtracts instead of dividing.", "这是相减了，而不是相除。"],
+              [k * p, "That is the constant on the right, not $k$.", "这是右边的常数项，不是 $k$。"],
+            ],
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "k(2x − 3)",
+              pieces: [
+                { size: 2, text: "2x − 3", lit: true },
+                { size: 2, text: "2x − 3", lit: true },
+                { size: 2, text: "2x − 3", lit: true },
+                { size: 2, text: "2x − 3", lit: true },
+              ],
+            },
+            { total: "8x − 12", pieces: [{ size: 8, text: "8x − 12" }] },
+          ],
+          ["Four copies of 2x − 3 make 8x − 12, so k = 4.", "四个 2x − 3 合起来是 8x − 12，所以 k = 4。"],
+        ),
+      ),
+    ],
   ),
-  ["equations-with-parentheses"],
-  ["8.EE.C.7.A"],
   [
-    {
-      id: "choosing-the-constant",
-      title: t("Choosing the constant", "确定常数项"),
-      explanation: t(
-        "For which $k$ does $3(x - 4) + 2x = 5x + k$ have infinitely many solutions? Expand the left side: $3x - 12 + 2x = 5x - 12$. The $x$-terms already match, so the sides are the same exactly when $k = -12$. Forgetting to multiply the $-4$ by $3$ gives the wrong $k = -4$.",
-        "$k$ 取何值时，$3(x - 4) + 2x = 5x + k$ 有无穷多个解？展开左边：$3x - 12 + 2x = 5x - 12$。含 $x$ 的项已经相同，所以当且仅当 $k = -12$ 时两边相同。忘记把 $-4$ 乘以 $3$ 会得到错误的 $k = -4$。",
-      ),
-      generate(rng) {
-        const a = rng.sign() * rng.int(2, 7);
-        const p = rng.nonZero(-9, 9);
-        const c = rng.nonZero(-6, 6);
-        if (a + c === 0) return this.generate(rng);
-        const k = a * p;
-        const eq = `${plus(times(a, 1, p), c, "x")} = ${linear(a + c, 0)} + k`;
-        return numberProblem({
-          prompt: t(`For what value of $k$ does $${eq}$ have infinitely many solutions?`, `$k$ 取何值时，方程 $${eq}$ 有无穷多个解？`),
-          answer: k,
-          form: "integer",
-          // Not distributing, adding instead of multiplying, and a sign slip.
-          wrong: [p, a + p, -k],
-          solution: t(
-            `Simplify the left side:${steps(`${plus(times(a, 1, p), c, "x")} = ${plus(linear(a, k), c, "x")} = ${linear(a + c, k)}`)}The $x$-terms match, so the two sides are the same expression exactly when $k = ${k}$.`,
-            `化简左边：${steps(`${plus(times(a, 1, p), c, "x")} = ${plus(linear(a, k), c, "x")} = ${linear(a + c, k)}`)}含 $x$ 的项相同，所以当且仅当 $k = ${k}$ 时两边是同一个式子。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "choosing-the-multiplier",
-      title: t("Choosing the multiplier", "确定括号外的系数"),
-      explanation: t(
-        "For which $k$ does $k(2x - 3) = 8x - 12$ have infinitely many solutions? Expanding gives $2kx - 3k$. Matching the $x$-terms, $2k = 8$, so $k = 4$; check the constants: $-3 \\cdot 4 = -12$. ✓ Both parts must match: if the constant were $-10$, no value of $k$ would work.",
-        "$k$ 取何值时，$k(2x - 3) = 8x - 12$ 有无穷多个解？展开得 $2kx - 3k$。比较含 $x$ 的项，$2k = 8$，所以 $k = 4$；再检验常数项：$-3 \\cdot 4 = -12$。✓ 两部分都必须相同：如果常数项是 $-10$，$k$ 取任何值都不行。",
-      ),
-      generate(rng) {
-        const k = rng.sign() * rng.int(2, 6);
-        const b = rng.int(2, 5);
-        const p = rng.nonZero(-7, 7);
-        const eq = `k(${linear(b, p)}) = ${linear(k * b, k * p)}`;
-        return numberProblem({
-          prompt: t(`For what value of $k$ does $${eq}$ have infinitely many solutions?`, `$k$ 取何值时，方程 $${eq}$ 有无穷多个解？`),
-          answer: k,
-          form: "integer",
-          // The coefficient of x itself, a difference instead of a quotient, and the constant itself.
-          wrong: [k * b, k * b - b, k * p],
-          solution: t(
-            `Expanding the left side gives $${poly([b, "kx"])} ${p < 0 ? "-" : "+"} ${poly([Math.abs(p), "k"])}$. Match the $x$-terms, then check the constants:${steps(`${b}k = ${k * b} \\Rightarrow k = ${k}`, `${num(p)} \\cdot ${k < 0 ? `(${k})` : k} = ${k * p}`)}`,
-            `展开左边得 $${poly([b, "kx"])} ${p < 0 ? "-" : "+"} ${poly([Math.abs(p), "k"])}$。先比较含 $x$ 的项，再检验常数项：${steps(`${b}k = ${k * b} \\Rightarrow k = ${k}`, `${num(p)} \\cdot ${k < 0 ? `(${k})` : k} = ${k * p}`)}`,
-          ),
-        });
-      },
-    },
+    "Two phone plans cost $3(x - 4) + 2x$ and $5x + k$ dollars for $x$ gigabytes. For which $k$ do they cost the same, whatever $x$ is?",
+    "两种手机套餐用 $x$ GB 流量分别花 $3(x - 4) + 2x$ 美元和 $5x + k$ 美元。$k$ 是多少时，无论 $x$ 是多少，两种套餐都花一样多？",
   ],
+  ["The first is $5x - 12$, so $k = -12$.", "第一种是 $5x - 12$，所以 $k = -12$。"],
+  ["find the number that makes the two sides of a linear equation the same expression.", "求使一元一次方程两边成为同一个式子的数。"],
 );
 
 /** twoSides draws the two sides of an equation as bars, with the same x-term and different constants. */
@@ -393,70 +531,200 @@ export const linearEquationsWithNoSolutions = withIntro(
 );
 
 /** determiningTheNumberOfSolutionsOfALinearEquation simplifies both sides to decide between one, none and infinitely many. */
-export const determiningTheNumberOfSolutionsOfALinearEquation = topic(
-  "determining-the-number-of-solutions-of-a-linear-equation",
-  t("Determining the Number of Solutions of a Linear Equation", "判断一元一次方程解的个数"),
-  t(
-    "Simplify both sides to the form ax + b = cx + d. If a ≠ c, there is exactly one solution. If a = c and b = d, there are infinitely many. If a = c but b ≠ d, there is none.",
-    "把两边化简成 ax + b = cx + d 的形式。若 a ≠ c，恰有一个解；若 a = c 且 b = d，有无穷多个解；若 a = c 而 b ≠ d，无解。",
+export const determiningTheNumberOfSolutionsOfALinearEquation = withIntro(
+  topic(
+    "determining-the-number-of-solutions-of-a-linear-equation",
+    t("Determining the Number of Solutions of a Linear Equation", "判断一元一次方程解的个数"),
+    t(
+      "Simplify both sides to the form ax + b = cx + d. If a ≠ c, there is exactly one solution. If a = c and b = d, there are infinitely many. If a = c but b ≠ d, there is none.",
+      "把两边化简成 ax + b = cx + d 的形式。若 a ≠ c，恰有一个解；若 a = c 且 b = d，有无穷多个解；若 a = c 而 b ≠ d，无解。",
+    ),
+    ["linear-equations-with-no-solutions"],
+    ["8.EE.C.7.A"],
+    [
+      lesson(
+        "counting-solutions-after-expanding",
+        ["Counting solutions after expanding both sides", "两边展开后判断解的个数"],
+        [
+          [
+            "$4(x - 1) + 2x = 3(2x + 1) - 7$. The left side is $6x - 4$ and the right side is $6x + 3 - 7 = 6x - 4$, so the sides are the same and there are infinitely many solutions.",
+            "$4(x - 1) + 2x = 3(2x + 1) - 7$。左边是 $6x - 4$，右边是 $6x + 3 - 7 = 6x - 4$，两边相同，所以有无穷多个解。",
+          ],
+          ["Try $x = 0$ and $x = 1$: both sides give $-4$, then both give $2$.", "试 $x = 0$ 和 $x = 1$：两边都得 $-4$，然后都得 $2$。"],
+          [
+            "Equal $x$-terms alone do not decide it: the constants must be compared too.",
+            "仅凭含 $x$ 的项相同还不能下结论：还要比较常数项。",
+          ],
+        ],
+        (rng) => {
+          const kind = rng.pick([0, 1, 2] as const);
+          const { equation, a, b, c, d } = expandedEquation(rng, kind);
+          const right = countOptions[countOf(a, b, c, d)]!;
+          return chosen(
+            rng,
+            [`How many solutions does $${equation}$ have?`, `方程 $${equation}$ 有几个解？`],
+            [right.en, right["zh-CN"]],
+            countWhy(a, b, c, d),
+            [
+              [
+                ["Simplify each side", "化简两边"],
+                ["Multiply out the parentheses and collect like terms:", "去括号，合并同类项："],
+                [`${linear(a, b)} = ${linear(c, d)}`],
+              ],
+              [
+                ["Compare", "比较"],
+                [verdictOf(a, b, c, d).en, verdictOf(a, b, c, d)["zh-CN"]],
+              ],
+            ],
+            sidesAt(a, b, c, d),
+          );
+        },
+        twoSides(6, 4, 4, [
+          "Two bars that simplify to the same 6x and the same constant: the sides match for every x.",
+          "两个长条化简后都是 6x 加同样的常数：对任何 x 两边都相等。",
+        ]),
+      ),
+      lesson(
+        "solving-or-classifying",
+        ["Solving when there is one solution", "恰有一个解时求出它"],
+        [
+          [
+            "$5x - 2(x + 4) = x + 6$ simplifies to $3x - 8 = x + 6$. The $x$-terms differ, so there is exactly one solution: $2x = 14$, $x = 7$.",
+            "$5x - 2(x + 4) = x + 6$ 化简为 $3x - 8 = x + 6$。含 $x$ 的项不同，所以恰有一个解：$2x = 14$，$x = 7$。",
+          ],
+          [
+            "Substitute $x = 7$: $5 \\cdot 7 - 2 \\cdot 11 = 13$ and $7 + 6 = 13$.",
+            "代入 $x = 7$：$5 \\cdot 7 - 2 \\cdot 11 = 13$，$7 + 6 = 13$。",
+          ],
+          [
+            "When the $x$-terms cancel, the answer is no solution or infinitely many, never a particular number.",
+            "如果含 $x$ 的项被消去，答案就是无解或有无穷多个解，而不是某个具体的数。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const kind = rng.pick([0, 0, 1, 2] as const);
+            const { equation, a, b, c, d } = expandedEquation(rng, kind);
+            const x = a !== c ? Q.of(d - b, a - c) : Q.zero;
+            if (!x.isInteger()) continue;
+            const one = (v: Q): Pair => [`Exactly one: $x = ${num(v)}$`, `恰有一个：$x = ${num(v)}$`];
+            // A sign slip in moving the constant, or for the other kinds the tempting x = 0.
+            const slip = a !== c ? Q.of(d + b, a - c) : Q.of(d - b);
+            const slipped = slip.eq(x) ? x.add(Q.one) : slip;
+            const count = countOf(a, b, c, d);
+            const xi = Number(x.n);
+            const many: Wrong = [
+              [countOptions[1]!.en, countOptions[1]!["zh-CN"]],
+              ...(count === 2
+                ? ([
+                    `The constants differ, so what is left, $${b} = ${d}$, is false.`,
+                    `常数项不同，剩下的 $${b} = ${d}$ 不成立。`,
+                  ] as const)
+                : ([
+                    "The $x$-terms differ, so the two sides are not the same expression.",
+                    "含 $x$ 的项不同，所以两边不是同一个式子。",
+                  ] as const)),
+            ];
+            const none: Wrong = [
+              [countOptions[2]!.en, countOptions[2]!["zh-CN"]],
+              ...(count === 1
+                ? ([
+                    `The constants match too, so what is left, $${b} = ${d}$, is true.`,
+                    `常数项也相同，剩下的 $${b} = ${d}$ 成立。`,
+                  ] as const)
+                : ([
+                    "The $x$-terms differ, so one value of $x$ balances the sides.",
+                    "含 $x$ 的项不同，有一个 $x$ 能使两边相等。",
+                  ] as const)),
+            ];
+            const singled: Wrong[] =
+              count === 0
+                ? [[one(slipped), "That moves the constant across with the wrong sign.", "这是移项时常数项的符号弄错了。"]]
+                : [
+                    [one(x), "The $x$-terms cancel, so no single number is the answer.", "含 $x$ 的项抵消了，所以答案不是某个具体的数。"],
+                    [
+                      one(slipped),
+                      "The $x$-terms cancel, so no single number is the answer.",
+                      "含 $x$ 的项抵消了，所以答案不是某个具体的数。",
+                    ],
+                  ];
+            const named = countOptions[count]!;
+            const correct: Pair = count === 0 ? one(x) : [named.en, named["zh-CN"]];
+            const wrongs = [...singled, ...(count === 1 ? [] : [many]), ...(count === 2 ? [] : [none])].slice(0, 3);
+            return chosen(
+              rng,
+              [`Solve $${equation}$.`, `解方程 $${equation}$。`],
+              correct,
+              wrongs,
+              a !== c
+                ? [
+                    [
+                      ["Simplify each side", "化简两边"],
+                      ["Multiply out the parentheses and collect like terms:", "去括号，合并同类项："],
+                      [`${linear(a, b)} = ${linear(c, d)}`],
+                    ],
+                    [
+                      ["Solve", "解方程"],
+                      [
+                        "The $x$-terms differ, so there is exactly one solution. Gather the $x$-terms on the left:",
+                        "含 $x$ 的项不同，所以恰有一个解。把含 $x$ 的项移到左边：",
+                      ],
+                      [`${poly([a - c, "x"])} = ${d - b}`, `x = ${num(x)}`],
+                    ],
+                  ]
+                : [
+                    [
+                      ["Simplify each side", "化简两边"],
+                      ["Multiply out the parentheses and collect like terms:", "去括号，合并同类项："],
+                      [`${linear(a, b)} = ${linear(c, d)}`],
+                    ],
+                    [
+                      ["Compare", "比较"],
+                      [verdictOf(a, b, c, d).en, verdictOf(a, b, c, d)["zh-CN"]],
+                    ],
+                  ],
+              a !== c
+                ? [
+                    `Substitute $x = ${xi}$ into the simplified sides: $${a} \\cdot ${paren(xi)} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${a * xi + b}$ and $${c} \\cdot ${paren(xi)} ${d < 0 ? "-" : "+"} ${Math.abs(d)} = ${c * xi + d}$.`,
+                    `把 $x = ${xi}$ 代入化简后的两边：$${a} \\cdot ${paren(xi)} ${b < 0 ? "-" : "+"} ${Math.abs(b)} = ${a * xi + b}$，$${c} \\cdot ${paren(xi)} ${d < 0 ? "-" : "+"} ${Math.abs(d)} = ${c * xi + d}$。`,
+                  ]
+                : sidesAt(a, b, c, d),
+            );
+          }
+        },
+        tapeFigure(
+          [
+            {
+              total: "3x − 8",
+              pieces: [
+                { size: 3, text: "3x", lit: true },
+                { size: 1, text: "−8", dashed: true },
+              ],
+            },
+            {
+              total: "x + 6",
+              pieces: [
+                { size: 1, text: "x" },
+                { size: 1, text: "6" },
+              ],
+            },
+          ],
+          [
+            "The sides 3x − 8 and x + 6 have different x-terms, so they balance for one x only, x = 7.",
+            "两边 3x − 8 和 x + 6 含 x 的项不同，所以只有一个 x 能使它们相等，即 x = 7。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["linear-equations-with-no-solutions"],
-  ["8.EE.C.7.A"],
   [
-    {
-      id: "counting-solutions-after-expanding",
-      title: t("Counting solutions after expanding both sides", "两边展开后判断解的个数"),
-      explanation: t(
-        "$4(x - 1) + 2x = 3(2x + 1) - 7$. The left side is $6x - 4$ and the right side is $6x + 3 - 7 = 6x - 4$, so the sides are the same and there are infinitely many solutions. Equal $x$-terms alone do not decide it: the constants must be compared too.",
-        "$4(x - 1) + 2x = 3(2x + 1) - 7$。左边是 $6x - 4$，右边是 $6x + 3 - 7 = 6x - 4$，两边相同，所以有无穷多个解。仅凭含 $x$ 的项相同还不能下结论：还要比较常数项。",
-      ),
-      generate(rng) {
-        const kind = rng.pick([0, 1, 2] as const);
-        const { equation, a, b, c, d } = expandedEquation(rng, kind);
-        return choiceProblem({
-          prompt: t(`How many solutions does $${equation}$ have?`, `方程 $${equation}$ 有几个解？`),
-          options: countOptions,
-          correct: countOf(a, b, c, d),
-          solution: t(
-            `Simplify each side:${steps(`${linear(a, b)} = ${linear(c, d)}`)}${verdictOf(a, b, c, d).en}`,
-            `化简两边：${steps(`${linear(a, b)} = ${linear(c, d)}`)}${verdictOf(a, b, c, d)["zh-CN"]}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "solving-or-classifying",
-      title: t("Solving when there is one solution", "恰有一个解时求出它"),
-      explanation: t(
-        "$5x - 2(x + 4) = x + 6$ simplifies to $3x - 8 = x + 6$. The $x$-terms differ, so there is exactly one solution: $2x = 14$, $x = 7$. When the $x$-terms cancel instead, the answer is no solution or infinitely many, never a particular number.",
-        "$5x - 2(x + 4) = x + 6$ 化简为 $3x - 8 = x + 6$。含 $x$ 的项不同，所以恰有一个解：$2x = 14$，$x = 7$。如果含 $x$ 的项被消去，答案就是无解或有无穷多个解，而不是某个具体的数。",
-      ),
-      generate(rng) {
-        const kind = rng.pick([0, 0, 1, 2] as const);
-        const { equation, a, b, c, d } = expandedEquation(rng, kind);
-        const one = (x: Q) => t(`Exactly one: $x = ${num(x)}$`, `恰有一个：$x = ${num(x)}$`);
-        const x = a !== c ? Q.of(d - b, a - c) : Q.zero;
-        if (!x.isInteger) return this.generate(rng);
-        // A sign slip in moving the constant, or for the other kinds the tempting x = 0.
-        const slip = a !== c ? Q.of(d + b, a - c) : Q.of(d - b);
-        const options = [one(x), one(slip.eq(x) ? x.add(Q.one) : slip), countOptions[1]!, countOptions[2]!];
-        const correct = countOf(a, b, c, d) === 0 ? 0 : countOf(a, b, c, d) === 1 ? 2 : 3;
-        const work =
-          a !== c
-            ? steps(`${linear(a, b)} = ${linear(c, d)}`, `${poly([a - c, "x"])} = ${d - b}`, `x = ${num(x)}`)
-            : steps(`${linear(a, b)} = ${linear(c, d)}`);
-        return pickChoice(
-          rng,
-          t(`Solve $${equation}$.`, `解方程 $${equation}$。`),
-          options[correct]!,
-          options.filter((_, i) => i !== correct),
-          t(
-            `Simplify each side:${work}${a !== c ? "" : verdictOf(a, b, c, d).en}`,
-            `化简两边：${work}${a !== c ? "" : verdictOf(a, b, c, d)["zh-CN"]}`,
-          ),
-        );
-      },
-    },
+    "Two savings plans grow as $4(x - 1) + 2x$ and $3(2x + 1) - 7$ dollars after $x$ weeks. Are they ever equal, always equal, or equal just once?",
+    "两个储蓄计划 $x$ 周后分别有 $4(x - 1) + 2x$ 美元和 $3(2x + 1) - 7$ 美元。它们从不相等、总是相等，还是只相等一次？",
+  ],
+  ["Both simplify to $6x - 4$, so they are always equal.", "两者都化简为 $6x - 4$，所以总是相等。"],
+  [
+    "simplify both sides to tell one solution, none or infinitely many, and solve when there is one.",
+    "化简两边，判断方程有一个解、无解还是有无穷多个解，恰有一个解时求出它。",
   ],
 );
 
@@ -464,97 +732,256 @@ export const determiningTheNumberOfSolutionsOfALinearEquation = topic(
 // Horizontal and vertical lines
 
 /** horizontalAndVerticalLines writes the lines x = a and y = b and finds the points on them. */
-export const horizontalAndVerticalLines = topic(
-  "horizontal-and-vertical-lines",
-  t("Horizontal and Vertical Lines", "水平直线和竖直直线"),
-  t(
-    "Every point of a vertical line has the same x-coordinate, so its equation is x = a. Every point of a horizontal line has the same y-coordinate, so its equation is y = b.",
-    "竖直直线上每个点的横坐标都相同，所以它的方程是 x = a。水平直线上每个点的纵坐标都相同，所以它的方程是 y = b。",
+export const horizontalAndVerticalLines = withIntro(
+  topic(
+    "horizontal-and-vertical-lines",
+    t("Horizontal and Vertical Lines", "水平直线和竖直直线"),
+    t(
+      "Every point of a vertical line has the same x-coordinate, so its equation is x = a. Every point of a horizontal line has the same y-coordinate, so its equation is y = b.",
+      "竖直直线上每个点的横坐标都相同，所以它的方程是 x = a。水平直线上每个点的纵坐标都相同，所以它的方程是 y = b。",
+    ),
+    ["graphing-linear-equations"],
+    ["8.EE.B.6"],
+    [
+      lesson(
+        "the-line-through-two-points",
+        ["The line through two points", "过两点的直线"],
+        [
+          [
+            "$(3, -1)$ and $(3, 4)$ have the same $x$-coordinate, so the line through them is vertical. Its equation is $x = 3$: every point on it has $x = 3$, whatever $y$ is. $(-2, 5)$ and $(6, 5)$ share the $y$-coordinate, so the line through them is horizontal: $y = 5$.",
+            "$(3, -1)$ 和 $(3, 4)$ 的横坐标相同，所以过这两点的直线是竖直的。它的方程是 $x = 3$：无论 $y$ 是多少，直线上每个点都有 $x = 3$。$(-2, 5)$ 和 $(6, 5)$ 的纵坐标相同，所以过它们的直线是水平的：$y = 5$。",
+          ],
+          [
+            "From $(3, -1)$ to $(3, 4)$ you move straight up by $5$ and never sideways, so the line is vertical.",
+            "从 $(3, -1)$ 到 $(3, 4)$ 是笔直向上移动 $5$，从不左右移动，所以这条直线是竖直的。",
+          ],
+          [
+            "The equation names the coordinate that stays the same. The vertical line through $(3, -1)$ and $(3, 4)$ is $x = 3$, not $y = 3$.",
+            "方程写出的是保持不变的那个坐标。过 $(3, -1)$ 和 $(3, 4)$ 的竖直直线是 $x = 3$，不是 $y = 3$。",
+          ],
+        ],
+        (rng) => {
+          const vertical = rng.bool();
+          const same = rng.nonZero(-9, 9);
+          const [u, v] = rng.sample(
+            Array.from({ length: 19 }, (_, i) => i - 9).filter((n) => n !== same && n !== -same),
+            2,
+          ) as [number, number];
+          const [p1, p2] = vertical
+            ? [
+                [same, u],
+                [same, v],
+              ]
+            : [
+                [u, same],
+                [v, same],
+              ];
+          const [axis, other] = vertical ? ["x", "y"] : ["y", "x"];
+          const way: Pair = vertical ? (v > u ? ["up", "向上"] : ["down", "向下"]) : v > u ? ["right", "向右"] : ["left", "向左"];
+          return chosenMath(
+            rng,
+            [
+              `Which is the equation of the line through $${pointLatex(p1)}$ and $${pointLatex(p2)}$?`,
+              `过点 $${pointLatex(p1)}$ 和 $${pointLatex(p2)}$ 的直线的方程是哪一个？`,
+            ],
+            `${axis} = ${same}`,
+            [
+              [
+                `${other} = ${same}`,
+                `That uses the wrong letter; the shared number is the $${axis}$-coordinate.`,
+                `这是字母用错了；相同的数是 $${axis}$ 坐标。`,
+              ],
+              [
+                `${other} = ${u}`,
+                `That is the ${vertical ? "horizontal" : "vertical"} line through the first point; it misses the second point.`,
+                `这是过第一个点的${vertical ? "水平" : "竖直"}直线；它不经过第二个点。`,
+              ],
+              [
+                `${axis} = ${u}`,
+                "That uses a coordinate that changes from one point to the other.",
+                "这用的是从一个点到另一个点会变化的坐标。",
+              ],
+            ],
+            [
+              [
+                ["Compare the coordinates", "比较坐标"],
+                [
+                  `Both points have $${axis} = ${same}$. Their $${other}$-coordinates, $${u}$ and $${v}$, differ.`,
+                  `两点都有 $${axis} = ${same}$。它们的 $${other}$ 坐标 $${u}$ 和 $${v}$ 不同。`,
+                ],
+              ],
+              [
+                ["Name the line", "写出直线"],
+                [
+                  `So the line is ${vertical ? "vertical" : "horizontal"}, and every point on it has $${axis} = ${same}$:`,
+                  `所以这条直线是${vertical ? "竖直" : "水平"}的，直线上每个点都有 $${axis} = ${same}$：`,
+                ],
+                [`${axis} = ${same}`],
+              ],
+            ],
+            [
+              `Picture it: from $${pointLatex(p1)}$ to $${pointLatex(p2)}$ you move straight ${way[0]} by $${Math.abs(v - u)}$ and never ${vertical ? "sideways" : "up or down"}. The line $${axis} = ${same}$ runs exactly that way.`,
+              `画出来看：从 $${pointLatex(p1)}$ 到 $${pointLatex(p2)}$ 是笔直${way[1]}移动 $${Math.abs(v - u)}$，从不${vertical ? "左右" : "上下"}移动。$${axis} = ${same}$ 这条直线正是这个方向。`,
+            ],
+          );
+        },
+        graphFigure(
+          { xMin: -4, xMax: 8, yMin: -3, yMax: 7 },
+          [
+            { kind: "line", a: [3, -1], b: [3, 4], accent: true },
+            { kind: "line", a: [-2, 5], b: [6, 5], tone: "action" },
+            { kind: "point", at: [3, -1], label: "(3, −1)", dir: "e", accent: true },
+            { kind: "point", at: [3, 4], label: "(3, 4)", dir: "e", accent: true },
+            { kind: "point", at: [-2, 5], label: "(−2, 5)", dir: "n", tone: "action" },
+            { kind: "point", at: [6, 5], label: "(6, 5)", dir: "n", tone: "action" },
+          ],
+          "The vertical line x = 3 through (3, −1) and (3, 4), and the horizontal line y = 5 through (−2, 5) and (6, 5).",
+          "过 (3, −1) 和 (3, 4) 的竖直直线 x = 3，以及过 (−2, 5) 和 (6, 5) 的水平直线 y = 5。",
+        ),
+      ),
+      lesson(
+        "points-on-a-horizontal-or-vertical-line",
+        ["Points on the line", "直线上的点"],
+        [
+          [
+            "The line $y = -2$ is horizontal, and a point lies on it exactly when its $y$-coordinate is $-2$, whatever its $x$-coordinate. So $(7, -2)$ is on it, but $(-2, 7)$ is not. The line $x = 4$ is vertical, and a point lies on it exactly when its $x$-coordinate is $4$.",
+            "直线 $y = -2$ 是水平的，一个点在这条直线上当且仅当它的纵坐标是 $-2$，横坐标是多少都可以。所以 $(7, -2)$ 在直线上，而 $(-2, 7)$ 不在。直线 $x = 4$ 是竖直的，一个点在它上面当且仅当它的横坐标是 $4$。",
+          ],
+          [
+            "Start where $y = -2$ crosses the $y$-axis, at $(0, -2)$, and move $7$ to the right along the line: you reach $(7, -2)$.",
+            "从 $y = -2$ 与 $y$ 轴的交点 $(0, -2)$ 出发，沿直线向右移动 $7$：就到了 $(7, -2)$。",
+          ],
+          [
+            "Look at the right coordinate. On $y = -2$ the $y$-coordinate is $-2$; a point with $x = -2$, such as $(-2, 7)$, is not on it.",
+            "要看对坐标。在 $y = -2$ 上，纵坐标是 $-2$；横坐标为 $-2$ 的点，如 $(-2, 7)$，不在这条直线上。",
+          ],
+        ],
+        (rng) => {
+          const vertical = rng.bool();
+          const c = rng.nonZero(-8, 8);
+          let k = rng.nonZero(-8, 8);
+          if (Math.abs(k) === Math.abs(c)) k = Math.abs(c) === 8 ? 1 : Math.abs(c) + 1;
+          const pt = (x: number, y: number) => pointLatex([x, y]);
+          const [correct, swapped, negated, zero] = vertical
+            ? [pt(c, k), pt(k, c), pt(-c, k), pt(0, c)]
+            : [pt(k, c), pt(c, k), pt(k, -c), pt(c, 0)];
+          const [axis, other] = vertical ? ["x", "y"] : ["y", "x"];
+          const line = `${axis} = ${c}`;
+          const start = vertical ? pt(c, 0) : pt(0, c);
+          const way: Pair = vertical ? (k > 0 ? ["up", "向上"] : ["down", "向下"]) : k > 0 ? ["right", "向右"] : ["left", "向左"];
+          return chosenMath(
+            rng,
+            [`Which point lies on the line $${line}$?`, `哪个点在直线 $${line}$ 上？`],
+            correct,
+            [
+              [
+                swapped,
+                `That swaps the coordinates; its $${axis}$-coordinate is $${k}$.`,
+                `这是把坐标交换了；它的 $${axis}$ 坐标是 $${k}$。`,
+              ],
+              [
+                negated,
+                `Its $${axis}$-coordinate is $${-c}$, the opposite of $${c}$.`,
+                `它的 $${axis}$ 坐标是 $${-c}$，是 $${c}$ 的相反数。`,
+              ],
+              [
+                zero,
+                `That puts $${c}$ in the $${other}$-coordinate; this point is on $${other} = ${c}$.`,
+                `这是把 $${c}$ 放在了 $${other}$ 坐标上；这个点在 $${other} = ${c}$ 上。`,
+              ],
+            ],
+            [
+              [
+                ["Read the line", "看懂直线"],
+                [
+                  `$${line}$ is ${vertical ? "vertical" : "horizontal"}. A point is on it exactly when its $${axis}$-coordinate is $${c}$; its $${other}$-coordinate can be anything.`,
+                  `$${line}$ 是${vertical ? "竖直" : "水平"}的。一个点在它上面当且仅当它的 $${axis}$ 坐标是 $${c}$；$${other}$ 坐标是多少都可以。`,
+                ],
+              ],
+              [["Test the points", "检查各点"], [`Only one choice has $${axis} = ${c}$:`, `只有一个选项的 $${axis} = ${c}$：`], [correct]],
+            ],
+            [
+              `Start where the line crosses the $${axis}$-axis, at $${start}$, and move ${way[0]} by $${Math.abs(k)}$ along it. You reach $${correct}$ without leaving the line.`,
+              `从直线与 $${axis}$ 轴的交点 $${start}$ 出发，沿直线${way[1]}移动 $${Math.abs(k)}$，就到了 $${correct}$，始终没有离开直线。`,
+            ],
+          );
+        },
+        drawn(gradeDrawings5["horizontal-and-vertical-lines#points-on-a-horizontal-or-vertical-line"]),
+      ),
+    ],
   ),
-  ["graphing-linear-equations"],
-  ["8.EE.B.6"],
   [
-    {
-      id: "the-line-through-two-points",
-      title: t("The line through two points", "过两点的直线"),
-      explanation: t(
-        "$(3, -1)$ and $(3, 4)$ have the same $x$-coordinate, so the line through them is vertical and its equation is $x = 3$: every point on it has $x = 3$, whatever $y$ is. $(-2, 5)$ and $(6, 5)$ share the $y$-coordinate, so the line through them is horizontal: $y = 5$. A common slip is to write $y = 3$ for the vertical line.",
-        "$(3, -1)$ 和 $(3, 4)$ 的横坐标相同，所以过这两点的直线是竖直的，方程为 $x = 3$：无论 $y$ 是多少，直线上每个点都有 $x = 3$。$(-2, 5)$ 和 $(6, 5)$ 的纵坐标相同，所以过它们的直线是水平的：$y = 5$。常见的错误是把竖直直线写成 $y = 3$。",
-      ),
-      generate(rng) {
-        const vertical = rng.bool();
-        const same = rng.nonZero(-9, 9);
-        const [u, v] = rng.sample(
-          Array.from({ length: 19 }, (_, i) => i - 9).filter((n) => n !== same && n !== -same),
-          2,
-        );
-        const [p1, p2] = vertical
-          ? [
-              [same, u!],
-              [same, v!],
-            ]
-          : [
-              [u!, same],
-              [v!, same],
-            ];
-        const [axis, other] = vertical ? ["x", "y"] : ["y", "x"];
-        return pickChoice(
-          rng,
-          t(
-            `Which is the equation of the line through $${pointLatex(p1)}$ and $${pointLatex(p2)}$?`,
-            `过点 $${pointLatex(p1)}$ 和 $${pointLatex(p2)}$ 的直线的方程是哪一个？`,
-          ),
-          mathText(`${axis} = ${same}`),
-          // The wrong letter, and the coordinate that changes.
-          [`${other} = ${same}`, `${other} = ${u}`, `${axis} = ${u}`].map(mathText),
-          vertical
-            ? t(
-                `Both points have $x$-coordinate $${same}$, so the line is vertical: $x = ${same}$.`,
-                `两点的横坐标都是 $${same}$，所以直线是竖直的：$x = ${same}$。`,
-              )
-            : t(
-                `Both points have $y$-coordinate $${same}$, so the line is horizontal: $y = ${same}$.`,
-                `两点的纵坐标都是 $${same}$，所以直线是水平的：$y = ${same}$。`,
-              ),
-        );
-      },
-    },
-    {
-      id: "points-on-a-horizontal-or-vertical-line",
-      figure: gradeDrawings5["horizontal-and-vertical-lines#points-on-a-horizontal-or-vertical-line"],
-      title: t("Points on the line", "直线上的点"),
-      explanation: t(
-        "The line $y = -2$ is horizontal, and a point lies on it exactly when its $y$-coordinate is $-2$: $(7, -2)$ is on it, but $(-2, 7)$ is not. The line $x = 4$ is vertical, and it is parallel to the $y$-axis, not the $x$-axis.",
-        "直线 $y = -2$ 是水平的，一个点在这条直线上当且仅当它的纵坐标是 $-2$：$(7, -2)$ 在直线上，而 $(-2, 7)$ 不在。直线 $x = 4$ 是竖直的，它平行于 $y$ 轴，而不是 $x$ 轴。",
-      ),
-      generate(rng) {
-        const vertical = rng.bool();
-        const c = rng.nonZero(-8, 8);
-        let k = rng.nonZero(-8, 8);
-        if (Math.abs(k) === Math.abs(c)) k = Math.abs(c) === 8 ? 1 : Math.abs(c) + 1;
-        const point = (x: number, y: number) => mathText(pointLatex([x, y]));
-        const [correct, swapped, negated, zero] = vertical
-          ? [point(c, k), point(k, c), point(-c, k), point(0, c)]
-          : [point(k, c), point(c, k), point(k, -c), point(c, 0)];
-        const line = vertical ? `x = ${c}` : `y = ${c}`;
-        return pickChoice(
-          rng,
-          t(`Which point lies on the line $${line}$?`, `哪个点在直线 $${line}$ 上？`),
-          correct,
-          [swapped, negated, zero],
-          vertical
-            ? t(
-                `The line $${line}$ is vertical: a point is on it exactly when its $x$-coordinate is $${c}$. Only ${correct.en} has $x = ${c}$.`,
-                `直线 $${line}$ 是竖直的：一个点在直线上当且仅当它的横坐标是 $${c}$。只有 ${correct["zh-CN"]} 的 $x = ${c}$。`,
-              )
-            : t(
-                `The line $${line}$ is horizontal: a point is on it exactly when its $y$-coordinate is $${c}$. Only ${correct.en} has $y = ${c}$.`,
-                `直线 $${line}$ 是水平的：一个点在直线上当且仅当它的纵坐标是 $${c}$。只有 ${correct["zh-CN"]} 的 $y = ${c}$。`,
-              ),
-        );
-      },
-    },
+    "On a city map, Fifth Street runs straight north and south. The bakery is at $(3, -1)$ and the library at $(3, 4)$, both on Fifth Street.",
+    "在城市地图上，第五街笔直地南北走向。面包店在 $(3, -1)$，图书馆在 $(3, 4)$，都在第五街上。",
   ],
+  [
+    "Both places have $x = 3$, and so does every point of the street. Its equation is $x = 3$.",
+    "两个地方都有 $x = 3$，这条街上的每个点也都是这样。它的方程是 $x = 3$。",
+  ],
+  [
+    "write the equations of horizontal and vertical lines, and tell which points lie on them.",
+    "写出水平直线和竖直直线的方程，并判断哪些点在它们上面。",
+  ],
+);
+
+/** theRectangleInsideFourLines finds the area of the rectangle that two vertical and two horizontal lines enclose. */
+export const theRectangleInsideFourLines = lesson(
+  "the-rectangle-inside-four-lines",
+  ["The rectangle inside four lines", "四条直线围成的长方形"],
+  [
+    [
+      "Two vertical and two horizontal lines enclose a rectangle. Its width is the distance between the vertical lines, found by subtracting their $x$-values. Its height is the distance between the horizontal lines. The lines $x = -1$, $x = 4$, $y = 2$ and $y = 5$ enclose a rectangle $4 - (-1) = 5$ wide and $5 - 2 = 3$ high, with area $15$.",
+      "两条竖直线和两条水平线围成一个长方形。宽是两条竖直线的距离，用它们的 $x$ 值相减求出。高是两条水平线的距离。直线 $x = -1$、$x = 4$、$y = 2$ 和 $y = 5$ 围成的长方形宽 $4 - (-1) = 5$，高 $5 - 2 = 3$，面积是 $15$。",
+    ],
+    ["$15 \\div 5 = 3$, the height.", "$15 \\div 5 = 3$，正是高。"],
+    [
+      "Use the side lengths, not the coordinates of a corner. Subtracting a negative value adds its size: $4 - (-1) = 5$.",
+      "要用边长，不是某个顶点的坐标。减去负数等于加上它的大小：$4 - (-1) = 5$。",
+    ],
+  ],
+  (rng) => {
+    const x1 = rng.int(-9, 3);
+    const w = rng.int(2, 12);
+    const y1 = rng.int(-9, 3);
+    const h = rng.int(2, 12);
+    const [x2, y2] = [x1 + w, y1 + h];
+    const area = w * h;
+    return valued(
+      [
+        `What is the area of the rectangle enclosed by $x = ${x1}$, $x = ${x2}$, $y = ${y1}$ and $y = ${y2}$?`,
+        `$x = ${x1}$、$x = ${x2}$、$y = ${y1}$ 和 $y = ${y2}$ 围成的长方形面积是多少？`,
+      ],
+      area,
+      [
+        [
+          ["Find the width", "求宽"],
+          ["The width is the distance between the vertical lines:", "宽是两条竖直线之间的距离："],
+          [`${x2} - ${paren(x1)} = ${w}`],
+        ],
+        [
+          ["Find the height", "求高"],
+          ["The height is the distance between the horizontal lines:", "高是两条水平线之间的距离："],
+          [`${y2} - ${paren(y1)} = ${h}`],
+        ],
+        [["Multiply", "相乘"], ["The area is the width times the height:", "面积等于宽乘高："], [`${w} \\times ${h} = ${area}`]],
+      ],
+      [
+        `Divide back: $${area} \\div ${w} = ${h}$, which is the distance from $y = ${y1}$ up to $y = ${y2}$.`,
+        `除回去：$${area} \\div ${w} = ${h}$，正是从 $y = ${y1}$ 到 $y = ${y2}$ 的距离。`,
+      ],
+      [
+        [2 * (w + h), "That is the perimeter, not the area.", "这是周长，不是面积。"],
+        [w + h, "That adds the width and the height instead of multiplying them.", "这是把宽和高相加了，而不是相乘。"],
+        [
+          Math.abs(x2) * Math.abs(y2),
+          "That multiplies the coordinates of one corner instead of the side lengths.",
+          "这是用一个顶点的坐标相乘，而不是用边长。",
+        ],
+      ],
+      { form: "integer" },
+    );
+  },
+  drawn(gradeDrawings5["horizontal-and-vertical-lines#the-rectangle-inside-four-lines"]),
 );
 
 // ---------------------------------------------------------------------------
@@ -866,3 +1293,153 @@ export const grade8LinearEquationTopics: readonly TopicDef[] = [
   horizontalAndVerticalLines,
   slopeAsAUnitRateInProportionalRelationships,
 ];
+
+/** choosingAValueForNoSolution finds the coefficient that makes a linear equation have no solution; it is the third point of linear-equations-with-infinitely-many-solutions, to take the place of the one in the deeper files. */
+export const choosingAValueForNoSolution = lesson(
+  "choosing-a-value-for-no-solution",
+  ["Choosing a value for no solution", "选值使方程无解"],
+  [
+    [
+      "When both sides have the same coefficient of $x$, the variable terms cancel. With different constants the equation then says something false, so it has no solution at all. For $3(x + 2) = kx + 7$, the left side is $3x + 6$; with $k = 3$ the $x$-terms cancel and leave $6 = 7$.",
+      "两边 $x$ 的系数相同时，含变量的项相互抵消。常数不同时方程成了假命题，所以无解。对于 $3(x + 2) = kx + 7$，左边是 $3x + 6$；$k = 3$ 时 $x$ 项抵消，剩下 $6 = 7$。",
+    ],
+    [
+      "Try another value: $k = 4$ gives $3x + 6 = 4x + 7$, so $x = -1$ is a solution. Only $k = 3$ removes every solution.",
+      "换一个值试试：$k = 4$ 时 $3x + 6 = 4x + 7$，$x = -1$ 就是解。只有 $k = 3$ 才让方程无解。",
+    ],
+    ["The answer multiplies $x$. The constant $6$ is not the coefficient of $x$.", "答案是与 $x$ 相乘的数。常数 $6$ 不是 $x$ 的系数。"],
+  ],
+  (rng) => {
+    const a = rng.int(2, 12);
+    const b = rng.int(1, 9);
+    const c = a * b + rng.int(1, 9);
+    return valued(
+      [`For what value of $k$ does $${a}(x + ${b}) = kx + ${c}$ have no solution?`, `$k$ 为何值时，$${a}(x + ${b}) = kx + ${c}$ 无解？`],
+      a,
+      [
+        [
+          ["Expand the left side", "展开左边"],
+          [`$${a}(x + ${b}) = ${a}x + ${a * b}$.`, `$${a}(x + ${b}) = ${a}x + ${a * b}$。`],
+        ],
+        [
+          ["Cancel the x-terms", "消去含 x 的项"],
+          [`With $k = ${a}$ the $x$-terms cancel, and what is left is false:`, `$k = ${a}$ 时 $x$ 项抵消，剩下的式子不成立：`],
+          [`${a * b} = ${c}`],
+        ],
+      ],
+      [
+        `Try another value: $k = ${a + 1}$ gives $${a}x + ${a * b} = ${a + 1}x + ${c}$, so $x = ${a * b - c}$ is a solution. Only $k = ${a}$ removes every solution.`,
+        `换一个值试试：$k = ${a + 1}$ 时 $${a}x + ${a * b} = ${a + 1}x + ${c}$，$x = ${a * b - c}$ 就是解。只有 $k = ${a}$ 才让方程无解。`,
+      ],
+      [
+        [a * b, "That is the constant of the left side; it does not multiply $x$.", "这是左边的常数项；它不与 $x$ 相乘。"],
+        [c, "That is the constant of the right side; it does not multiply $x$.", "这是右边的常数项；它不与 $x$ 相乘。"],
+        [a + b, "That adds the numbers in the parentheses instead of matching the $x$-terms.", "这是把数相加了，而不是使含 $x$ 的项相同。"],
+      ],
+    );
+  },
+  tapeFigure(
+    [
+      {
+        total: "3x + 6",
+        pieces: [
+          { size: 3, text: "3x" },
+          { size: 6, text: "6" },
+        ],
+      },
+      {
+        total: "3x + 7",
+        pieces: [
+          { size: 3, text: "3x" },
+          { size: 7, text: "7", lit: true },
+        ],
+      },
+    ],
+    ["With k = 3 both sides have 3x, and 6 never equals 7.", "k = 3 时两边都有 3x，而 6 永远不等于 7。"],
+  ),
+);
+
+/** readingWhatIsLeft decides the number of solutions from what is left after the variable cancels or remains; it is the third point of determining-the-number-of-solutions-of-a-linear-equation, to take the place of the one in the deeper files. */
+export const readingWhatIsLeft = lesson(
+  "reading-what-is-left",
+  ["Reading what is left", "读懂剩下的式子"],
+  [
+    [
+      "When the variable cancels, what is left decides the matter. A true statement such as $5 = 5$ means every number works, a false one such as $5 = 8$ means no number does, and a surviving variable such as $3x = 5$ means exactly one solution.",
+      "变量抵消后，由剩下的式子决定。像 $5 = 5$ 这样成立的式子表示每个数都是解，像 $5 = 8$ 这样不成立的式子表示没有解；像 $3x = 5$ 这样变量还在则恰有一个解。",
+    ],
+    [
+      "$3x = 5$ has the one solution $x = \\frac{5}{3}$: $3 \\cdot \\frac{5}{3} = 5$.",
+      "$3x = 5$ 有唯一的解 $x = \\frac{5}{3}$：$3 \\cdot \\frac{5}{3} = 5$。",
+    ],
+    ["A linear equation never has exactly two solutions.", "一元一次方程不会恰有两个解。"],
+  ],
+  (rng) => {
+    const kind = rng.int(0, 2);
+    const a = rng.int(1, 40);
+    const b = kind === 1 ? a + rng.int(1, 20) : a;
+    const k = rng.int(2, 9);
+    const text = kind === 2 ? `${k}x = ${a}` : `${a} = ${b}`;
+    const options: Pair[] = [
+      ["Infinitely many solutions", "无穷多个解"],
+      ["No solution", "没有解"],
+      ["Exactly one solution", "恰有一个解"],
+    ];
+    const reasons: Pair[] = [
+      [`$${text}$ holds whatever $x$ is, so every number is a solution.`, `无论 $x$ 是多少，$${text}$ 都成立，所以每个数都是解。`],
+      [`$${text}$ is false whatever $x$ is, so no number is a solution.`, `无论 $x$ 是多少，$${text}$ 都不成立，所以没有解。`],
+      [`The variable remains, so one value of $x$ makes it true.`, "变量还在，所以有一个 $x$ 能使它成立。"],
+    ];
+    const x = Q.of(a, k);
+    return chosen(
+      rng,
+      [
+        `Solving a linear equation leads to $${text}$. How many solutions does the equation have?`,
+        `解一元一次方程得到 $${text}$。这个方程有几个解？`,
+      ],
+      options[kind]!,
+      [
+        ...[0, 1, 2].filter((i) => i !== kind).map((i) => [options[i]!, ...reasons[kind]!] as const),
+        [
+          ["Exactly two solutions", "恰有两个解"],
+          "A linear equation never has exactly two solutions.",
+          "一元一次方程不会恰有两个解。",
+        ] as const,
+      ],
+      [
+        [
+          ["Look for the variable", "看变量还在不在"],
+          kind === 2
+            ? ["The variable $x$ is still there.", "变量 $x$ 还在。"]
+            : ["The variable has cancelled; only numbers are left.", "变量已经抵消，只剩下数。"],
+        ],
+        [["Decide", "判断"], reasons[kind]!],
+      ],
+      kind === 2
+        ? [
+            `Solve it: $x = ${num(x)}$, and $${k} \\cdot ${x.isInteger() ? num(x) : `\\left(${num(x)}\\right)`} = ${a}$. Any other $x$ makes $${k}x$ a different number.`,
+            `解出来：$x = ${num(x)}$，$${k} \\cdot ${x.isInteger() ? num(x) : `\\left(${num(x)}\\right)`} = ${a}$。其他任何 $x$ 都会让 $${k}x$ 变成别的数。`,
+          ]
+        : [
+            `Try two values: with $x = 0$ or $x = 1$ there is no $x$ left to change, and $${a} = ${b}$ stays ${kind === 0 ? "true" : "false"} both times.`,
+            `试两个值：无论 $x = 0$ 还是 $x = 1$，式子里都没有 $x$，$${a} = ${b}$ 两次都${kind === 0 ? "成立" : "不成立"}。`,
+          ],
+    );
+  },
+  tapeFigure(
+    [
+      { total: "5 = 5", pieces: [{ size: 5, text: "5" }] },
+      {
+        total: "5 = 8",
+        pieces: [
+          { size: 5, text: "5" },
+          { size: 3, text: "?", dashed: true, lit: true },
+        ],
+      },
+    ],
+    [
+      "Two comparisons: 5 = 5 always holds, so every number is a solution; 5 = 8 never holds, so there is none.",
+      "两个比较：5 = 5 总成立，所以每个数都是解；5 = 8 永不成立，所以无解。",
+    ],
+  ),
+);
