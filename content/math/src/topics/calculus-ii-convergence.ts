@@ -2047,8 +2047,8 @@ function rootCase(rng: Rng): RootCase {
               `改为与等比级数比较。在 $n = 1000$ 处底数的大小约为 $${dec(at, 4)}$，已经接近 $${L.toLatex()}$。从某一项起它始终小于 $${rho.toLatex()}$，所以 $|a_n| < \\left(${rho.toLatex()}\\right)^{n}$，是收敛的等比级数的项。`,
             )
           : t(
-              `The test leaves the series open, so look at the size of the terms. Far out the base has size exactly $${near}$, so $|a_n| \\to ${power.isZero() ? "1" : (power.eq(Q.one) ? "e" : `e^{${power.toLatex()}}`)}$, which is not $0$. The series diverges by the $n$th term test.`,
-              `判别法无法下结论，所以看各项的大小。在很靠后的位置，底数的大小恰为 $${near}$，所以 $|a_n| \\to ${power.isZero() ? "1" : (power.eq(Q.one) ? "e" : `e^{${power.toLatex()}}`)}$，不为 $0$。由第 $n$ 项判别法，级数发散。`,
+              `The test leaves the series open, so look at the size of the terms. Far out the base has size exactly $${near}$, so $|a_n| \\to ${power.isZero() ? "1" : power.eq(Q.one) ? "e" : `e^{${power.toLatex()}}`}$, which is not $0$. The series diverges by the $n$th term test.`,
+              `判别法无法下结论，所以看各项的大小。在很靠后的位置，底数的大小恰为 $${near}$，所以 $|a_n| \\to ${power.isZero() ? "1" : power.eq(Q.one) ? "e" : `e^{${power.toLatex()}}`}$，不为 $0$。由第 $n$ 项判别法，级数发散。`,
             );
     const mistakes: Mistake[] = [
       slip(
