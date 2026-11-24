@@ -5,9 +5,35 @@ import type { KnowledgePointDef } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 import { mixedLatex } from "../problems.ts";
 
-import { chooseMath, tableFigure, whole } from "./early-grades-more-kit.ts";
+import { chooseMath, tableFigure } from "./early-grades-more-kit.ts";
 import { chosenMath, lesson, valued } from "./grade-6-kit.ts";
-import { decimal, frac, fraction, gcd, integer, signed, skill, tenths } from "./third-kit.ts";
+import {
+  aLongSumOfPowers,
+  aNegativePowerTurnsTheFractionOver,
+  theExponentInsideTheParentheses,
+  theMissingExponentInAQuotient,
+  theNegativeExponentThatFits,
+  thePowerThatDoesNotMatch,
+} from "./grade-8-exponents.ts";
+import { theMissingDigitForDivisibilityBy4, theNumberFromItsPrimeFactors } from "./grade-8-number-theory.ts";
+import {
+  countingTheSurds,
+  sumsOfCubeRoots,
+  theMissingNumberInAQuotientOfRoots,
+  theMissingNumberUnderARoot,
+  theRootOfANegativeSquared,
+  theRootOfASum,
+} from "./grade-8-radicals.ts";
+import {
+  aDifferenceBelowOne,
+  aSumAsADecimal,
+  matchingThePowersFirst,
+  theGreatestOfFourInScientificNotation,
+  thePowerAfterTidyingTheProduct,
+  whenTheSmallerHardlyMatters,
+  zerosAtTheEnd,
+} from "./grade-8-scientific-notation.ts";
+import { frac, gcd, integer, signed, skill, tenths } from "./third-kit.ts";
 import { areaGridFigure, lineFigure, stripsFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** deeperMiddleSchoolThirdPoints holds these third knowledge points, by topic. */
@@ -766,61 +792,8 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
     ),
   ],
 
-  "divisibility-of-integers-by-2-5-10-4-and-8": [
-    skill(
-      "the-missing-digit-for-divisibility-by-4",
-      ["The missing digit for divisibility by 4", "能被 4 整除时缺少的数字"],
-      [
-        "Only the last two digits decide whether a number divides by $4$, since every multiple of $100$ does. So try the digits in order until the last two digits form a multiple of $4$.",
-        "能否被 $4$ 整除只看最后两位，因为 $100$ 的倍数都能被 $4$ 整除。所以依次试数字，直到最后两位是 $4$ 的倍数。",
-      ],
-      (rng) => {
-        const head = rng.int(10, 99);
-        const u = rng.pick([0, 2, 4, 6, 8]);
-        let d = 0;
-        while ((10 * d + u) % 4 !== 0) d += 1;
-        return whole(
-          [
-            `What is the smallest digit that can go in the box so that the number divides by $4$? $$${head}\\square${u}$$`,
-            `方框里填什么最小的数字，才能使这个数被 $4$ 整除？$$${head}\\square${u}$$`,
-          ],
-          d,
-          [d + 1, d + 2, u],
-          [
-            `The last two digits must form a multiple of $4$, and $${10 * d + u} \\div 4 = ${(10 * d + u) / 4}$.`,
-            `最后两位必须是 $4$ 的倍数，$${10 * d + u} \\div 4 = ${(10 * d + u) / 4}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "prime-factors": [
-    skill(
-      "the-number-from-its-prime-factors",
-      ["The number from its prime factors", "由质因数还原这个数"],
-      [
-        "A prime factorization names exactly one number, so multiplying the powers together recovers it. Each exponent says how many times its prime is used, and it is not a multiplier.",
-        "质因数分解对应唯一的数，所以把各个幂相乘就能还原。指数表示质数用了几次，不是乘数。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 5);
-        const b = rng.int(0, 3);
-        const c = rng.int(1, 2);
-        const q = rng.pick([5, 7, 11]);
-        const n = 2 ** a * 3 ** b * q ** c;
-        const parts = [`2^{${a}}`, ...(b > 0 ? [`3^{${b}}`] : []), `${q}^{${c}}`];
-        return whole(
-          [`What number has the prime factorization $${parts.join(" \\cdot ")}$?`, `质因数分解为 $${parts.join(" \\cdot ")}$ 的数是多少？`],
-          n,
-          [2 * a * (b > 0 ? 3 * b : 1) * q * c, 2 ** a + 3 ** b + q ** c, n * 2],
-          [
-            `Multiply the powers: $${[2 ** a, ...(b > 0 ? [3 ** b] : []), q ** c].join(" \\times ")} = ${n}$.`,
-            `把各个幂相乘：$${[2 ** a, ...(b > 0 ? [3 ** b] : []), q ** c].join(" \\times ")} = ${n}$。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "divisibility-of-integers-by-2-5-10-4-and-8": [theMissingDigitForDivisibilityBy4],
+  "prime-factors": [theNumberFromItsPrimeFactors],
   "cubing-rational-numbers": [
     lesson(
       "the-greatest-of-the-powers",
@@ -921,357 +894,18 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
     ),
   ],
 
-  "powers-of-negative-one": [
-    skill(
-      "a-long-sum-of-powers",
-      ["A long sum of powers", "一长串幂的和"],
-      [
-        "Consecutive powers of $-1$ alternate, so each odd power and the next even power cancel. A sum with an even number of terms is $0$, and with an odd number of terms it is $-1$.",
-        "$-1$ 的连续幂交替出现，所以一个奇次幂和下一个偶次幂相互抵消。偶数项之和是 $0$，奇数项之和是 $-1$。",
-      ],
-      (rng) => {
-        const n = rng.int(5, 120);
-        const answer = n % 2 === 0 ? 0 : -1;
-        return integer(
-          [
-            `Evaluate $(-1)^{1} + (-1)^{2} + (-1)^{3} + \\cdots + (-1)^{${n}}$.`,
-            `计算 $(-1)^{1} + (-1)^{2} + (-1)^{3} + \\cdots + (-1)^{${n}}$。`,
-          ],
-          answer,
-          [n, -n, 1],
-          [
-            `The terms cancel in pairs, and $${n}$ terms leave ${n % 2 === 0 ? "nothing over, so the sum is 0" : "one $-1$ over"}.`,
-            `各项两两抵消，$${n}$ 项${n % 2 === 0 ? "没有剩余，所以和是 0" : "剩下一个 $-1$"}。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "the-quotient-rule-for-exponents": [
-    skill(
-      "the-missing-exponent-in-a-quotient",
-      ["The missing exponent in a quotient", "商中缺失的指数"],
-      [
-        "A quotient of powers subtracts the exponents, so a missing exponent in the denominator is the top exponent minus the result. A negative result only means the denominator had the larger power.",
-        "幂的商是指数相减，所以分母中缺失的指数等于分子指数减结果。结果为负，只说明分母的幂更大。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 15);
-        const c = rng.int(-9, 12);
-        const v = rng.pick(["x", "y", "a", "t"]);
-        return integer(
-          [
-            `What number goes in the box? $$${frac(`${v}^{${a}}`, `${v}^{\\square}`)} = ${v}^{${c}}$$`,
-            `方框里是什么数？$$${frac(`${v}^{${a}}`, `${v}^{\\square}`)} = ${v}^{${c}}$$`,
-          ],
-          a - c,
-          [a + c, c - a, a],
-          [
-            `$${a} - \\square = ${c}$, so the exponent is $${a} - ${c < 0 ? `(${c})` : c} = ${a - c}$.`,
-            `$${a} - \\square = ${c}$，所以指数是 $${a} - ${c < 0 ? `(${c})` : c} = ${a - c}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "the-power-of-product-rule-for-exponents": [
-    skill(
-      "the-exponent-inside-the-parentheses",
-      ["The exponent inside the parentheses", "括号内的指数"],
-      [
-        "Raising a product to a power applies that power to every factor. So a missing exponent inside is the outer result divided by the outer power, while the coefficient is raised to it.",
-        "积的乘方要把每个因数都乘方。所以括号内缺失的指数等于结果的指数除以外面的指数，而系数要乘方。",
-      ],
-      (rng) => {
-        const k = rng.int(2, 5);
-        const a = rng.int(2, 8);
-        const n = rng.int(2, 4);
-        return whole(
-          [
-            `What number goes in the box? $$(${k}x^{\\square})^{${n}} = ${k ** n}x^{${a * n}}$$`,
-            `方框里是什么数？$$(${k}x^{\\square})^{${n}} = ${k ** n}x^{${a * n}}$$`,
-          ],
-          a,
-          [a * n - n, a * n, a + n],
-          [`$\\square \\times ${n} = ${a * n}$, so the exponent is ${a}.`, `$\\square \\times ${n} = ${a * n}$，所以指数是 ${a}。`],
-        );
-      },
-    ),
-  ],
-  "the-power-of-quotient-rule-for-exponents": [
-    skill(
-      "a-negative-power-turns-the-fraction-over",
-      ["A negative power turns the fraction over", "负指数把分数颠倒"],
-      [
-        "A negative exponent means the reciprocal, so a fraction to a negative power is the turned-over fraction to the positive power. The result is not negative because of the exponent's sign.",
-        "负指数表示倒数，所以分数的负次幂等于颠倒后的分数的正次幂。结果并不因指数为负而成为负数。",
-      ],
-      (rng) => {
-        const [a, b] = rng.pick<[number, number]>([
-          [2, 3],
-          [3, 4],
-          [2, 5],
-          [3, 5],
-          [4, 5],
-          [1, 2],
-          [1, 3],
-          [5, 6],
-          [3, 7],
-          [2, 7],
-          [5, 7],
-          [1, 4],
-          [3, 8],
-          [5, 8],
-          [4, 7],
-        ]);
-        const n = rng.int(1, 3) === 3 ? 3 : 2;
-        return fraction(
-          [`Evaluate $\\left(${frac(a, b)}\\right)^{-${n}}$.`, `计算 $\\left(${frac(a, b)}\\right)^{-${n}}$。`],
-          Q.of(b ** n, a ** n),
-          [Q.of(a ** n, b ** n), Q.of(-(a ** n), b ** n), Q.of(b * n, a * n)],
-          [
-            `Turn the fraction over: $\\left(${frac(b, a)}\\right)^{${n}} = ${frac(b ** n, a ** n)}$.`,
-            `把分数颠倒：$\\left(${frac(b, a)}\\right)^{${n}} = ${frac(b ** n, a ** n)}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "combining-the-rules-of-exponents": [
-    skill(
-      "the-power-that-does-not-match",
-      ["The power that does not match", "不相等的幂"],
-      [
-        "Multiplying powers adds exponents and raising a power to a power multiplies them. Mixing these two rules up is the usual slip, so check which operation each form really has.",
-        "幂相乘是指数相加，幂的乘方是指数相乘。把这两条规则混淆是常见错误，所以要看清每个式子是哪种运算。",
-      ],
-      (rng) => {
-        const [p, q] = rng.pick<[number, number]>([
-          [2, 3],
-          [2, 4],
-          [2, 5],
-          [3, 4],
-          [2, 6],
-          [3, 5],
-          [2, 7],
-          [3, 6],
-          [4, 5],
-          [3, 7],
-        ]);
-        const n = p * q;
-        const k = rng.int(2, 9);
-        const r = rng.int(2, n - 2);
-        const v = rng.pick(["x", "y", "a", "m"]);
-        return chooseMath(
-          rng,
-          [`Which of these is not equal to $${v}^{${n}}$?`, `哪个不等于 $${v}^{${n}}$？`],
-          `${v}^{${p}} \\cdot ${v}^{${q}}`,
-          [`(${v}^{${p}})^{${q}}`, `${v}^{${r}} \\cdot ${v}^{${n - r}}`, frac(`${v}^{${n + k}}`, `${v}^{${k}}`)],
-          [
-            `$${v}^{${p}} \\cdot ${v}^{${q}} = ${v}^{${p + q}}$, since multiplying adds the exponents.`,
-            `$${v}^{${p}} \\cdot ${v}^{${q}} = ${v}^{${p + q}}$，因为相乘是指数相加。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "converting-scientific-notation-to-standard-notation": [
-    skill(
-      "zeros-at-the-end",
-      ["Zeros at the end", "末尾的零"],
-      [
-        "The power of ten counts the places the point moves, and some of those places are filled by the digits already after the point. Only the places left over become zeros.",
-        "$10$ 的指数表示小数点移动的位数，其中一些位由小数点后已有的数字占据。只有剩下的位才变成零。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 9);
-        const b = rng.int(1, 9);
-        const two = rng.bool();
-        const c = rng.int(1, 9);
-        const n = rng.int(4, 12);
-        const text = two ? `${a}.${b}${c}` : `${a}.${b}`;
-        const zeros = n - (two ? 2 : 1);
-        return whole(
-          [
-            `How many zeros does $${text} \\times 10^{${n}}$ end with when written in standard notation?`,
-            `$${text} \\times 10^{${n}}$ 写成普通形式后，末尾有几个零？`,
-          ],
-          zeros,
-          [n, n + 1, zeros - 1],
-          [
-            `The point moves $${n}$ places and ${two ? "$2$ of them are" : "$1$ of them is"} taken by digits, leaving $${zeros}$ ${zeros === 1 ? "zero" : "zeros"}.`,
-            `小数点移动 $${n}$ 位，其中 $${two ? 2 : 1}$ 位由数字占据，剩下 $${zeros}$ 个零。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "comparing-numbers-in-scientific-notation": [
-    skill(
-      "the-greatest-of-four-in-scientific-notation",
-      ["The greatest of four", "四个数中最大的"],
-      [
-        "In scientific notation, the power of ten decides first, and the leading number decides only between equal powers. This holds for negative powers too, where a power closer to zero is greater.",
-        "科学记数法中先看 10 的指数，指数相同时才比较前面的数。负指数也是如此，离零更近的指数更大。",
-      ],
-      (rng) => {
-        const n = rng.int(-9, 9);
-        const big = rng.int(2, 9);
-        const low = () => rng.int(11, 99);
-        return chooseMath(
-          rng,
-          ["Which number is the greatest?", "哪个数最大？"],
-          `${big}.${rng.int(1, 9)} \\times 10^{${n}}`,
-          [`${tenths(low())} \\times 10^{${n - 1}}`, `${tenths(low())} \\times 10^{${n - 2}}`, `1.${rng.int(1, 9)} \\times 10^{${n}}`],
-          [
-            `The greatest power of ten is $10^{${n}}$, and between the two numbers with it, the one with the larger leading number wins.`,
-            `最大的指数是 $10^{${n}}$；有这个指数的两个数中，前面的数大的更大。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "addition-and-subtraction-in-scientific-notation": [
-    skill(
-      "a-difference-below-one",
-      ["A difference below 1", "差小于 1"],
-      [
-        "When a difference of the leading numbers falls below $1$, the answer is not yet in scientific notation. Multiply the leading number by ten and lower the power of ten by one.",
-        "前面的数之差小于 $1$ 时，结果还不是科学记数法。把前面的数乘 $10$，同时把 $10$ 的指数减 $1$。",
-      ],
-      (rng) => {
-        const d = rng.int(1, 9);
-        const a = rng.int(11, 80);
-        const n = rng.int(3, 15);
-        return chooseMath(
-          rng,
-          [
-            `Find $${tenths(a + d)} \\times 10^{${n}} - ${tenths(a)} \\times 10^{${n}}$ in scientific notation.`,
-            `用科学记数法表示 $${tenths(a + d)} \\times 10^{${n}} - ${tenths(a)} \\times 10^{${n}}$。`,
-          ],
-          `${d} \\times 10^{${n - 1}}`,
-          [`${d} \\times 10^{${n}}`, `0.${d} \\times 10^{${n}}`, `${d} \\times 10^{${n + 1}}`],
-          [
-            `The difference is $0.${d} \\times 10^{${n}}$, and moving to a leading number of at least $1$ gives $${d} \\times 10^{${n - 1}}$.`,
-            `差是 $0.${d} \\times 10^{${n}}$，把前面的数变成至少为 $1$，得 $${d} \\times 10^{${n - 1}}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "addition-in-scientific-notation-with-different-powers-of-ten": [
-    skill(
-      "matching-the-powers-first",
-      ["Matching the powers first", "先统一指数"],
-      [
-        "Numbers can be added only when their powers of ten match. Raising the power by one means making the leading number ten times smaller, so the value stays the same.",
-        "10 的指数相同时才能相加。指数加 1 时，前面的数要缩小为十分之一，这样值不变。",
-      ],
-      (rng) => {
-        const a = rng.int(11, 99);
-        const n = rng.int(2, 15);
-        return decimal(
-          [
-            `What number goes in the box? $$${tenths(a)} \\times 10^{${n}} = \\square \\times 10^{${n + 1}}$$`,
-            `方框里是什么数？$$${tenths(a)} \\times 10^{${n}} = \\square \\times 10^{${n + 1}}$$`,
-          ],
-          Q.of(a, 100),
-          [Q.of(a, 1), Q.of(a, 10), Q.of(a, 1000)],
-          [
-            `A power one higher needs a leading number ten times smaller: $${(a / 100).toFixed(2)}$.`,
-            `指数大 1，前面的数要缩小为十分之一：$${(a / 100).toFixed(2)}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "subtraction-in-scientific-notation-with-different-powers-of-ten": [
-    skill(
-      "when-the-smaller-hardly-matters",
-      ["When the smaller hardly matters", "小数几乎不起作用时"],
-      [
-        "When two powers of ten are far apart, the smaller number barely changes the larger one. So the difference is very close to the larger number, which is a quick way to check an answer.",
-        "两个指数相差很大时，小数几乎不改变大数。所以差非常接近大数，可以用来快速检验答案。",
-      ],
-      (rng) => {
-        const a = rng.int(11, 99);
-        let b = rng.int(11, 99);
-        if (b === a) b = a === 99 ? 98 : a + 1;
-        const n = rng.int(4, 12);
-        const gap = rng.int(6, 9);
-        return chooseMath(
-          rng,
-          [
-            `Which is closest to $${tenths(a)} \\times 10^{${n}} - ${tenths(b)} \\times 10^{${n - gap}}$?`,
-            `哪个最接近 $${tenths(a)} \\times 10^{${n}} - ${tenths(b)} \\times 10^{${n - gap}}$？`,
-          ],
-          `${tenths(a)} \\times 10^{${n}}`,
-          [`${tenths(a)} \\times 10^{${n - gap}}`, `${tenths(b)} \\times 10^{${n}}`, `${tenths(a)} \\times 10^{${n - 1}}`],
-          [
-            `The second number is about $10^{${gap}}$ times smaller, so taking it away changes almost nothing.`,
-            `第二个数大约小 $10^{${gap}}$ 倍，减去它几乎没有变化。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "further-addition-in-scientific-notation-with-different-powers-of-ten": [
-    skill(
-      "a-sum-as-a-decimal",
-      ["A sum as a decimal", "和写成小数"],
-      [
-        "Negative powers of ten name decimal places, so they can be read directly into a decimal. Each number fills its own place, and the sum can be written down digit by digit.",
-        "$10$ 的负指数对应小数位，可以直接读成小数。每个数占自己的数位，和可以逐位写出。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 9);
-        const b = rng.int(1, 9);
-        const n = rng.int(1, 3);
-        const answer = Q.of(a * 10 + b, 10 ** (n + 1));
-        return decimal(
-          [
-            `Write $${a} \\times 10^{-${n}} + ${b} \\times 10^{-${n + 1}}$ as a decimal.`,
-            `把 $${a} \\times 10^{-${n}} + ${b} \\times 10^{-${n + 1}}$ 写成小数。`,
-          ],
-          answer,
-          [Q.of(a + b, 10 ** n), Q.of(a + b, 10 ** (n + 1)), Q.of(a * 10 + b, 10 ** n)],
-          [
-            `The digit $${a}$ goes in place $${n}$ after the point and $${b}$ in the place after it: $${((a * 10 + b) / 10 ** (n + 1)).toFixed(n + 1)}$.`,
-            `数字 $${a}$ 在小数点后第 $${n}$ 位，$${b}$ 在下一位：$${((a * 10 + b) / 10 ** (n + 1)).toFixed(n + 1)}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "multiplying-numbers-in-scientific-notation": [
-    skill(
-      "the-power-after-tidying-the-product",
-      ["The power after tidying the product", "整理积后的指数"],
-      [
-        "Multiplying adds the powers of ten, but the product of the leading numbers may reach $10$. Then it must be tidied, which raises the power of ten by one more.",
-        "相乘时指数相加，但前面的数之积可能达到 $10$。这时要整理，指数还要再加 $1$。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 9);
-        const b = rng.int(Math.ceil(10 / a), 9);
-        const m = rng.int(-9, 12);
-        const n = rng.int(2, 12);
-        const power = m + n + 1;
-        return integer(
-          [
-            `In scientific notation, $(${a} \\times 10^{${m}})(${b} \\times 10^{${n}}) = c \\times 10^{k}$ with $c$ between $1$ and $10$. What is $k$?`,
-            `用科学记数法表示，$(${a} \\times 10^{${m}})(${b} \\times 10^{${n}}) = c \\times 10^{k}$，其中 $c$ 在 $1$ 和 $10$ 之间。$k$ 是多少？`,
-          ],
-          power,
-          [m + n, m * n, m + n + 2],
-          [
-            `$${a} \\times ${b} = ${a * b}$ needs tidying, so $k = ${m} + ${n} + 1 = ${power}$.`,
-            `$${a} \\times ${b} = ${a * b}$ 需要整理，所以 $k = ${m} + ${n} + 1 = ${power}$。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "powers-of-negative-one": [aLongSumOfPowers],
+  "the-quotient-rule-for-exponents": [theMissingExponentInAQuotient],
+  "the-power-of-product-rule-for-exponents": [theExponentInsideTheParentheses],
+  "the-power-of-quotient-rule-for-exponents": [aNegativePowerTurnsTheFractionOver],
+  "combining-the-rules-of-exponents": [thePowerThatDoesNotMatch],
+  "converting-scientific-notation-to-standard-notation": [zerosAtTheEnd],
+  "comparing-numbers-in-scientific-notation": [theGreatestOfFourInScientificNotation],
+  "addition-and-subtraction-in-scientific-notation": [aDifferenceBelowOne],
+  "addition-in-scientific-notation-with-different-powers-of-ten": [matchingThePowersFirst],
+  "subtraction-in-scientific-notation-with-different-powers-of-ten": [whenTheSmallerHardlyMatters],
+  "further-addition-in-scientific-notation-with-different-powers-of-ten": [aSumAsADecimal],
+  "multiplying-numbers-in-scientific-notation": [thePowerAfterTidyingTheProduct],
   "evaluating-rational-number-expressions-without-exponents": [
     lesson(
       "where-the-parentheses-go",
@@ -1370,105 +1004,10 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
     ),
   ],
 
-  "evaluating-expressions-with-integer-exponents": [
-    skill(
-      "the-negative-exponent-that-fits",
-      ["The negative exponent that fits", "符合的负指数"],
-      [
-        "A fraction with 1 over a power can be written with a negative exponent. So a missing exponent is found by writing the denominator as a power of the base and then changing the sign.",
-        "分子为 1、分母为幂的分数可以写成负指数。所以缺失的指数这样求：把分母写成底数的幂，再改变符号。",
-      ],
-      (rng) => {
-        const b = rng.pick([2, 3, 4, 5, 10]);
-        const n = rng.int(1, 4);
-        const k = rng.int(1, 9);
-        const lhs = k === 1 ? "" : `${k} \\cdot `;
-        return integer(
-          [
-            `What number goes in the box? $$${lhs}${b}^{\\square} = ${frac(k, b ** n)}$$`,
-            `方框里是什么数？$$${lhs}${b}^{\\square} = ${frac(k, b ** n)}$$`,
-          ],
-          -n,
-          [n, b ** n, -(b ** n)],
-          [`$${b ** n} = ${b}^{${n}}$, so its reciprocal is $${b}^{-${n}}$.`, `$${b ** n} = ${b}^{${n}}$，所以它的倒数是 $${b}^{-${n}}$。`],
-        );
-      },
-    ),
-  ],
-  "the-square-root-of-a-perfect-square": [
-    skill(
-      "the-root-of-a-sum",
-      ["The root of a sum", "和的平方根"],
-      [
-        "The square root of a sum is not the sum of the square roots. Work out what is under the root first, and only then take the root, as the root sign acts like parentheses.",
-        "和的平方根不等于平方根的和。先算出根号下的值，再开方，因为根号的作用类似于括号。",
-      ],
-      (rng) => {
-        const [a, b, c] = rng.pick<[number, number, number]>([
-          [3, 4, 5],
-          [5, 12, 13],
-          [8, 15, 17],
-          [7, 24, 25],
-          [20, 21, 29],
-        ]);
-        const k = rng.int(1, 6);
-        const p = a * k;
-        const q = b * k;
-        return whole(
-          [`Evaluate $\\sqrt{${p * p} + ${q * q}}$.`, `计算 $\\sqrt{${p * p} + ${q * q}}$。`],
-          c * k,
-          [p + q, p * q, c * k + 1],
-          [
-            `$${p * p} + ${q * q} = ${(c * k) ** 2}$, and $\\sqrt{${(c * k) ** 2}} = ${c * k}$.`,
-            `$${p * p} + ${q * q} = ${(c * k) ** 2}$，$\\sqrt{${(c * k) ** 2}} = ${c * k}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "squaring-a-square-root": [
-    skill(
-      "the-root-of-a-negative-squared",
-      ["The root of a negative squared", "负数平方后的根"],
-      [
-        "Squaring and then taking the root does not always return the start. The square makes a negative number positive, and the square root sign means the root that is not negative.",
-        "先平方再开方不一定回到原数。平方把负数变成正数，而根号表示非负的那个根。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 60);
-        return integer(
-          [`Evaluate $\\sqrt{(-${a})^{2}}$.`, `计算 $\\sqrt{(-${a})^{2}}$。`],
-          a,
-          [-a, a * a, -a * a],
-          [`$(-${a})^{2} = ${a * a}$, whose square root is ${a}.`, `$(-${a})^{2} = ${a * a}$，它的平方根是 ${a}。`],
-        );
-      },
-    ),
-  ],
-  "the-cube-root-of-a-perfect-cube": [
-    skill(
-      "sums-of-cube-roots",
-      ["Sums of cube roots", "立方根的和"],
-      [
-        "A negative number has a negative cube root, because three negative factors multiply to a negative number. So each cube root in a sum carries its own sign.",
-        "负数的立方根是负数，因为三个负因数的积是负数。所以和中的每个立方根都带着自己的符号。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 10);
-        const b = rng.int(2, 10);
-        const k = rng.int(2, 6);
-        return integer(
-          [`Evaluate $${k}\\sqrt[3]{${b ** 3}} + \\sqrt[3]{-${a ** 3}}$.`, `计算 $${k}\\sqrt[3]{${b ** 3}} + \\sqrt[3]{-${a ** 3}}$。`],
-          k * b - a,
-          [k * b + a, b - a, k * (b - a)],
-          [
-            `$\\sqrt[3]{${b ** 3}} = ${b}$ and $\\sqrt[3]{-${a ** 3}} = -${a}$, so $${k * b} - ${a} = ${k * b - a}$.`,
-            `$\\sqrt[3]{${b ** 3}} = ${b}$，$\\sqrt[3]{-${a ** 3}} = -${a}$，所以 $${k * b} - ${a} = ${k * b - a}$。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "evaluating-expressions-with-integer-exponents": [theNegativeExponentThatFits],
+  "the-square-root-of-a-perfect-square": [theRootOfASum],
+  "squaring-a-square-root": [theRootOfANegativeSquared],
+  "the-cube-root-of-a-perfect-cube": [sumsOfCubeRoots],
   "classifying-rational-and-irrational-numbers": [
     skill(
       "irrationals-that-become-rational",
@@ -1493,99 +1032,9 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
       },
     ),
   ],
-  surds: [
-    skill(
-      "counting-the-surds",
-      ["Counting the surds", "数一数根式"],
-      [
-        "A surd is a root that cannot be written as a fraction. Roots of perfect squares and perfect cubes are whole numbers in disguise, so simplify each root before counting it.",
-        "根式是不能写成分数的根。完全平方数和完全立方数的根其实是整数，所以先化简再计数。",
-      ],
-      (rng) => {
-        const draw = () => {
-          const kind = rng.int(0, 3);
-          if (kind === 0) return { latex: `\\sqrt{${rng.int(2, 15) ** 2}}`, surd: false };
-          if (kind === 1) return { latex: `\\sqrt[3]{${rng.int(2, 6) ** 3}}`, surd: false };
-          if (kind === 2) return { latex: `\\sqrt{${rng.pick([2, 3, 5, 6, 7, 10, 11, 13, 15, 17])}}`, surd: true };
-          return { latex: `\\sqrt[3]{${rng.pick([2, 3, 4, 5, 6, 7, 9, 10, 15, 25])}}`, surd: true };
-        };
-        const size = rng.int(4, 6);
-        const items: { latex: string; surd: boolean }[] = [];
-        while (items.length < size) {
-          const item = draw();
-          if (!items.some((x) => x.latex === item.latex)) items.push(item);
-        }
-        const surds = items.filter((x) => x.surd).map((x) => x.latex);
-        const count = surds.length;
-        const list = items.map((x) => x.latex).join(",\\quad ");
-        return whole(
-          [`How many of these are surds? $$${list}$$`, `其中有几个根式（不能化为有理数）？$$${list}$$`],
-          count,
-          [items.length, items.length - count, count + 1],
-          [
-            count === 0
-              ? "Each of these is a root of a perfect square or a perfect cube, so each is a whole number and there are $0$ surds."
-              : `Roots of perfect squares and cubes are whole numbers, which leaves $${surds.join(",\\;")}$: that is $${count}$ ${count === 1 ? "surd" : "surds"}.`,
-            count === 0
-              ? "这些都是完全平方数或完全立方数的根，都是整数，所以有 $0$ 个根式。"
-              : `完全平方数和完全立方数的根是整数，剩下 $${surds.join(",\\;")}$，共 $${count}$ 个根式。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "the-product-rule-for-radicals": [
-    skill(
-      "the-missing-number-under-a-root",
-      ["The missing number under a root", "根号下缺少的数"],
-      [
-        "A product of square roots is the root of the product. So if the result is a whole number, its square is the product under the root, and division gives the missing number.",
-        "平方根的积等于积的平方根。所以结果是整数时，它的平方就是根号下的积，用除法求缺少的数。",
-      ],
-      (rng) => {
-        const k = rng.pick([2, 3, 5, 6, 7, 10, 11]);
-        const m = rng.int(2, 9);
-        return whole(
-          [
-            `What number goes in the box? $$\\sqrt{${k}} \\cdot \\sqrt{\\square} = ${k * m}$$`,
-            `方框里是什么数？$$\\sqrt{${k}} \\cdot \\sqrt{\\square} = ${k * m}$$`,
-          ],
-          k * m * m,
-          [m, k * m, m * m],
-          [
-            `Square both sides: $${k} \\cdot \\square = ${(k * m) ** 2}$, so the box holds $${k * m * m}$.`,
-            `两边平方：$${k} \\cdot \\square = ${(k * m) ** 2}$，所以方框里是 $${k * m * m}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "the-quotient-rule-for-radicals": [
-    skill(
-      "the-missing-number-in-a-quotient-of-roots",
-      ["The missing number in a quotient of roots", "根式商中缺少的数"],
-      [
-        "A quotient of square roots is the root of the quotient. Squaring the result gives that quotient, and multiplying by the number under the lower root gives the number under the upper one.",
-        "平方根的商等于商的平方根。把结果平方得到这个商，再乘分母根号下的数，就得到分子根号下的数。",
-      ],
-      (rng) => {
-        const a = rng.pick([2, 3, 5, 6, 7, 10, 11, 13]);
-        const b = rng.int(2, 10);
-        return whole(
-          [
-            `What number goes in the box? $$${frac("\\sqrt{\\square}", `\\sqrt{${a}}`)} = ${b}$$`,
-            `方框里是什么数？$$${frac("\\sqrt{\\square}", `\\sqrt{${a}}`)} = ${b}$$`,
-          ],
-          a * b * b,
-          [a * b, b * b, a + b * b],
-          [
-            `Square both sides: the quotient is $${b * b}$, and $${a} \\times ${b * b} = ${a * b * b}$.`,
-            `两边平方：商是 $${b * b}$，$${a} \\times ${b * b} = ${a * b * b}$。`,
-          ],
-        );
-      },
-    ),
-  ],
+  surds: [countingTheSurds],
+  "the-product-rule-for-radicals": [theMissingNumberUnderARoot],
+  "the-quotient-rule-for-radicals": [theMissingNumberInAQuotientOfRoots],
   "evaluating-rational-expressions": [
     skill(
       "when-it-has-no-value",

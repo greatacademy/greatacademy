@@ -2653,7 +2653,7 @@ export const howLongItTakes = lesson(
   tapeFigure(
     [
       {
-        total: "8 × 10⁹ bytes",
+        total: "8 × 10⁹",
         pieces: [
           { size: 1, text: "2 × 10⁶" },
           { size: 1, text: "2 × 10⁶", lit: true },

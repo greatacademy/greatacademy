@@ -5,12 +5,17 @@ import type { KnowledgePointDef } from "@ga/content";
 import { t } from "@ga/content";
 import { plane, Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
-import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
-import { choose, chooseMath, type Pair, tableFigure, type Wrong, whole } from "./early-grades-more-kit.ts";
+import { choose, type Pair, tableFigure, type Wrong, whole } from "./early-grades-more-kit.ts";
 import { chosen, chosenMath, drawn, lesson, valued } from "./grade-6-kit.ts";
 import { cutBoxFigure, rightPrismFigure } from "./grade-7-measurement.ts";
-import { frac, fraction, integer, signed, skill } from "./third-kit.ts";
+import { consecutiveAnglesInARatio, theValueThatMakesLinesParallel } from "./grade-8-angles.ts";
+import { theFastestPartOfATrip, theMissingValueInALinearTable } from "./grade-8-functions.ts";
+import { choosingAValueForNoSolution, readingWhatIsLeft, theRectangleInsideFourLines } from "./grade-8-linear-equations.ts";
+import { aCoefficientBeforeTheCubeRoot, aCubeOfASum, theVolumeFromTheSurfaceArea } from "./grade-8-radicals.ts";
+import { aMultipleOfARoot, integersBetweenTwoRoots, theSmallestMultiplierForARationalCubeRoot } from "./grade-8-real-numbers.ts";
+import { howLongItTakes } from "./grade-8-scientific-notation.ts";
+import { frac, fraction, signed, skill } from "./third-kit.ts";
 import { tapeFigure } from "./upper-grades-kit.ts";
 
 /** money writes a count of cents as dollars. */
@@ -298,33 +303,7 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
 
-  "linear-equations-with-infinitely-many-solutions": [
-    skill(
-      "choosing-a-value-for-no-solution",
-      ["Choosing a value for no solution", "选值使方程无解"],
-      [
-        "When both sides have the same coefficient of $x$, the variable terms cancel. With different constants the equation then says something false, so it has no solution at all.",
-        "两边 $x$ 的系数相同时，含变量的项相互抵消。常数不同时方程成了假命题，所以无解。",
-      ],
-      (rng) => {
-        const a = rng.int(2, 12);
-        const b = rng.int(1, 9);
-        const c = a * b + rng.int(1, 9);
-        return whole(
-          [
-            `For what value of $k$ does $${a}(x + ${b}) = kx + ${c}$ have no solution?`,
-            `$k$ 为何值时，$${a}(x + ${b}) = kx + ${c}$ 无解？`,
-          ],
-          a,
-          [a * b, c, a + b],
-          [
-            `The left side is $${a}x + ${a * b}$. With $k = ${a}$ the $x$ terms cancel, leaving $${a * b} = ${c}$, which is false.`,
-            `左边是 $${a}x + ${a * b}$。$k = ${a}$ 时 $x$ 项抵消，剩下 $${a * b} = ${c}$，不成立。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "linear-equations-with-infinitely-many-solutions": [choosingAValueForNoSolution],
   "verifying-solutions-of-linear-inequalities": [
     lesson(
       "how-many-values-work",
@@ -592,37 +571,7 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
       tableFigure(["x", "y"], [4, 0]),
     ),
   ],
-  "horizontal-and-vertical-lines": [
-    {
-      ...skill(
-        "the-rectangle-inside-four-lines",
-        ["The rectangle inside four lines", "四条直线围成的长方形"],
-        [
-          "Two vertical and two horizontal lines enclose a rectangle. Its width is the distance between the vertical lines and its height is the distance between the horizontal ones.",
-          "两条竖直线和两条水平线围成一个长方形。宽是两条竖直线的距离，高是两条水平线的距离。",
-        ],
-        (rng) => {
-          const x1 = rng.int(-9, 3);
-          const w = rng.int(2, 12);
-          const y1 = rng.int(-9, 3);
-          const h = rng.int(2, 12);
-          return whole(
-            [
-              `What is the area of the rectangle enclosed by $x = ${x1}$, $x = ${x1 + w}$, $y = ${y1}$ and $y = ${y1 + h}$?`,
-              `$x = ${x1}$、$x = ${x1 + w}$、$y = ${y1}$ 和 $y = ${y1 + h}$ 围成的长方形面积是多少？`,
-            ],
-            w * h,
-            [2 * (w + h), w + h, Math.abs(x1 + w) * Math.abs(y1 + h) === w * h ? w * h + 1 : Math.abs(x1 + w) * Math.abs(y1 + h)],
-            [
-              `The width is $${w}$ and the height is $${h}$, and $${w} \\times ${h} = ${w * h}$.`,
-              `宽是 $${w}$，高是 $${h}$，$${w} \\times ${h} = ${w * h}$。`,
-            ],
-          );
-        },
-      ),
-      figure: gradeDrawings5["horizontal-and-vertical-lines#the-rectangle-inside-four-lines"],
-    },
-  ],
+  "horizontal-and-vertical-lines": [theRectangleInsideFourLines],
   "measures-of-segments": [
     lesson(
       "adding-segments-with-algebra",
@@ -938,96 +887,8 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
 
-  "corresponding-angles": [
-    {
-      ...skill(
-        "the-value-that-makes-lines-parallel",
-        ["The value that makes lines parallel", "使两线平行的值"],
-        [
-          "The converse also holds: when corresponding angles are equal, the lines are parallel. So setting the two expressions equal finds the value that makes the lines parallel.",
-          "逆命题也成立：同位角相等时两直线平行。所以令两个表达式相等，就能求出使两线平行的值。",
-        ],
-        (rng) => {
-          const c = rng.int(2, 5);
-          const a = c + rng.int(1, 4);
-          const x = rng.int(3, 15);
-          const drawn = rng.int(30, 150);
-          const angle = drawn === a * x || drawn === c * x ? a * x + c * x : drawn;
-          const b = angle - a * x;
-          const d = angle - c * x;
-          return whole(
-            [
-              `A transversal crosses lines $\\ell$ and $m$. Corresponding angles measure $(${a}x${signed(b)})^\\circ$ and $(${c}x${signed(d)})^\\circ$. For what value of $x$ are $\\ell$ and $m$ parallel?`,
-              `一条截线与直线 $\\ell$、$m$ 相交。同位角分别是 $(${a}x${signed(b)})^\\circ$ 和 $(${c}x${signed(d)})^\\circ$。$x$ 为何值时 $\\ell$ 与 $m$ 平行？`,
-            ],
-            x,
-            [angle, x + a - c, 180 - angle],
-            [
-              `Corresponding angles must be equal: $${a}x${signed(b)} = ${c}x${signed(d)}$, so $${a - c === 1 ? "" : a - c}x = ${d - b}$ and $x = ${x}$.`,
-              `同位角必须相等：$${a}x${signed(b)} = ${c}x${signed(d)}$，所以 $${a - c === 1 ? "" : a - c}x = ${d - b}$，$x = ${x}$。`,
-            ],
-          );
-        },
-      ),
-      figure: gradeDrawings5["corresponding-angles#the-value-that-makes-lines-parallel"],
-    },
-  ],
-  "consecutive-angles": [
-    {
-      ...skill(
-        "consecutive-angles-in-a-ratio",
-        ["Consecutive angles in a ratio", "成比例的同旁内角"],
-        [
-          "Consecutive interior angles between parallel lines add up to $180$ degrees. So a ratio splits $180$ degrees into equal shares, and each angle is a number of those shares.",
-          "两平行线间的同旁内角之和是 $180$ 度。所以比把 $180$ 度分成若干等份，每个角占若干份。",
-        ],
-        (rng) => {
-          const [p, q] = rng.pick<[number, number]>([
-            [1, 2],
-            [1, 3],
-            [1, 4],
-            [1, 5],
-            [2, 3],
-            [1, 8],
-            [4, 5],
-            [1, 9],
-            [7, 8],
-            [5, 7],
-            [1, 11],
-            [3, 7],
-            [2, 7],
-            [1, 14],
-            [1, 17],
-            [5, 13],
-            [7, 11],
-            [9, 11],
-            [3, 17],
-            [7, 13],
-          ]);
-          const each = 180 / (p + q);
-          const large = rng.bool();
-          return whole(
-            large
-              ? [
-                  `Two consecutive interior angles between parallel lines are in the ratio $${p} : ${q}$. What is the larger angle, in degrees?`,
-                  `两平行线间的同旁内角之比是 $${p} : ${q}$。较大的角是多少度？`,
-                ]
-              : [
-                  `Two consecutive interior angles between parallel lines are in the ratio $${p} : ${q}$. What is the smaller angle, in degrees?`,
-                  `两平行线间的同旁内角之比是 $${p} : ${q}$。较小的角是多少度？`,
-                ],
-            (large ? q : p) * each,
-            [(large ? p : q) * each, each, 90],
-            [
-              `One share is $180 \\div ${p + q} = ${each}$${(large ? q : p) === 1 ? ", and the smaller angle is one share" : `, and $${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$`}.`,
-              `一份是 $180 \\div ${p + q} = ${each}$${(large ? q : p) === 1 ? "，较小的角就是一份" : `，$${large ? q : p} \\times ${each} = ${(large ? q : p) * each}$`}。`,
-            ],
-          );
-        },
-      ),
-      figure: gradeDrawings5["consecutive-angles#consecutive-angles-in-a-ratio"],
-    },
-  ],
+  "corresponding-angles": [theValueThatMakesLinesParallel],
+  "consecutive-angles": [consecutiveAnglesInARatio],
   "comparing-data-sets-using-range-and-quartiles": [
     skill(
       "at-least-half-from-the-medians",
@@ -1939,288 +1800,14 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
       },
     ),
   ],
-  "classifying-square-roots-and-cube-roots-as-rational-or-irrational": [
-    skill(
-      "the-smallest-multiplier-for-a-rational-cube-root",
-      ["The smallest multiplier for a rational cube root", "使立方根为有理数的最小乘数"],
-      [
-        "A cube root is rational when every prime in the number appears a multiple of three times. So the multiplier supplies exactly the copies of each prime that are still missing.",
-        "每个质因数出现的次数都是 3 的倍数时，立方根才是有理数。所以乘数正好补上每个质因数缺少的次数。",
-      ],
-      (rng) => {
-        const p = rng.pick([2, 3, 5, 7]);
-        const q = rng.pick([2, 3, 5, 7].filter((x) => x !== p));
-        const form = rng.int(0, 2);
-        const m = rng.int(1, 3);
-        const base = form === 0 ? p : form === 1 ? p * p : p * q;
-        const k = form === 0 ? p * p : form === 1 ? p : p * p * q * q;
-        const a = m === 1 || (m % p !== 0 && m % q !== 0) ? base * m ** 3 : base;
-        return whole(
-          [
-            `What is the smallest positive whole number $k$ for which $\\sqrt[3]{${a}k}$ is a whole number?`,
-            `使 $\\sqrt[3]{${a}k}$ 为整数的最小正整数 $k$ 是多少？`,
-          ],
-          k,
-          [base, form === 2 ? p * q * p : k * p, a],
-          [
-            `$${a} \\times ${k} = ${a * k}$, a perfect cube, and no smaller multiplier gives one.`,
-            `$${a} \\times ${k} = ${a * k}$ 是完全立方数，更小的乘数都不行。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "comparing-and-ordering-real-numbers": [
-    skill(
-      "integers-between-two-roots",
-      ["Integers between two roots", "两个根之间的整数"],
-      [
-        "Square roots can be placed by looking at the perfect squares around them. So an integer lies between two roots exactly when its square lies between the numbers under the roots.",
-        "平方根可以通过附近的完全平方数定位。所以一个整数在两个根之间，当且仅当它的平方在两个被开方数之间。",
-      ],
-      (rng) => {
-        const lo = rng.int(2, 9);
-        const n = rng.int(2, 8);
-        const a = lo * lo + rng.int(1, 2 * lo - 1);
-        const hi = lo + n;
-        const b = hi * hi + rng.int(1, 2 * hi - 1);
-        return whole(
-          [`How many integers lie between $\\sqrt{${a}}$ and $\\sqrt{${b}}$?`, `$\\sqrt{${a}}$ 和 $\\sqrt{${b}}$ 之间有多少个整数？`],
-          n,
-          [n + 1, n - 1, b - a],
-          [
-            `$\\sqrt{${a}}$ is just above ${lo} and $\\sqrt{${b}}$ is just above ${hi}, so the integers run from ${lo + 1} to ${hi}.`,
-            `$\\sqrt{${a}}$ 略大于 ${lo}，$\\sqrt{${b}}$ 略大于 ${hi}，所以整数从 ${lo + 1} 到 ${hi}。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "estimating-expressions-with-irrational-numbers": [
-    skill(
-      "a-multiple-of-a-root",
-      ["A multiple of a root", "根的倍数"],
-      [
-        "Rounding a root before multiplying can lose accuracy. Writing the multiple as a single root first, by squaring the multiplier, and then comparing with perfect squares gives a better estimate.",
-        "先把根取整再相乘，可能损失精度。先把乘数平方，写成一个根，再与完全平方数比较，估计更准确。",
-      ],
-      (rng) => {
-        const k = rng.int(2, 6);
-        const n = rng.pick([2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20]);
-        const inside = k * k * n;
-        const low = Math.floor(Math.sqrt(inside));
-        return whole(
-          [
-            `$${k}\\sqrt{${n}}$ lies between two consecutive whole numbers. What is the smaller one?`,
-            `$${k}\\sqrt{${n}}$ 在两个相邻整数之间。较小的那个是多少？`,
-          ],
-          low,
-          [low + 1, k * Math.round(Math.sqrt(n)) === low ? low - 1 : k * Math.round(Math.sqrt(n)), k * n],
-          [
-            `$${k}\\sqrt{${n}} = \\sqrt{${inside}}$, and $${low}^{2} = ${low * low}$ while $${low + 1}^{2} = ${(low + 1) ** 2}$.`,
-            `$${k}\\sqrt{${n}} = \\sqrt{${inside}}$，$${low}^{2} = ${low * low}$，$${low + 1}^{2} = ${(low + 1) ** 2}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "estimating-and-comparing-real-world-quantities-using-scientific-notation": [
-    skill(
-      "how-long-it-takes",
-      ["How long it takes", "需要多长时间"],
-      [
-        "Dividing a total by a rate gives a time, and in scientific notation this means dividing the leading numbers and subtracting the powers of ten. The size of the answer shows if it is sensible.",
-        "总量除以速率得到时间，在科学记数法中就是前面的数相除、指数相减。答案的大小可以检验是否合理。",
-      ],
-      (rng) => {
-        const q = rng.int(2, 4);
-        const r = rng.int(2, 4);
-        const m = rng.int(7, 12);
-        const n = rng.int(2, 6);
-        return chooseMath(
-          rng,
-          [
-            `A file of $${q * r} \\times 10^{${m}}$ bytes downloads at $${r} \\times 10^{${n}}$ bytes per second. How many seconds does it take?`,
-            `一个 $${q * r} \\times 10^{${m}}$ 字节的文件以每秒 $${r} \\times 10^{${n}}$ 字节下载。需要多少秒？`,
-          ],
-          `${q} \\times 10^{${m - n}}`,
-          [`${q} \\times 10^{${m + n}}`, `${q * r * r} \\times 10^{${m - n}}`, `${q} \\times 10^{${m - n + 1}}`],
-          [`$${q * r} \\div ${r} = ${q}$, and $${m} - ${n} = ${m - n}$.`, `$${q * r} \\div ${r} = ${q}$，$${m} - ${n} = ${m - n}$。`],
-        );
-      },
-    ),
-  ],
-  "solving-equations-using-cube-roots": [
-    skill(
-      "a-cube-of-a-sum",
-      ["A cube of a sum", "和的立方"],
-      [
-        "When an expression in parentheses is cubed, taking the cube root leaves the expression. Then one more step finds $x$, and a cube has only one real root, unlike a square.",
-        "括号内的式子立方时，开立方后剩下这个式子。再走一步求出 $x$；与平方不同，立方只有一个实数根。",
-      ],
-      (rng) => {
-        const a = rng.int(1, 15);
-        const b = rng.int(1, 6);
-        const neg = rng.bool();
-        const value = neg ? -(b ** 3) : b ** 3;
-        const root = neg ? -b : b;
-        return integer(
-          [`Solve $(x + ${a})^{3} = ${value}$.`, `解方程 $(x + ${a})^{3} = ${value}$。`],
-          root - a,
-          [root + a, -root - a, value - a],
-          [`The cube root gives $x + ${a} = ${root}$, so $x = ${root - a}$.`, `开立方得 $x + ${a} = ${root}$，所以 $x = ${root - a}$。`],
-        );
-      },
-    ),
-  ],
-  "solving-radical-equations-with-cube-roots": [
-    skill(
-      "a-coefficient-before-the-cube-root",
-      ["A coefficient before the cube root", "立方根前的系数"],
-      [
-        "Isolate the cube root completely before cubing, which means taking away any added number and then dividing by the coefficient. Cubing too early would cube the coefficient as well.",
-        "立方之前要把立方根完全分离：先减去加上的数，再除以系数。过早立方会把系数也立方。",
-      ],
-      (rng) => {
-        const k = rng.int(2, 6);
-        const r = rng.int(-5, 6) || 2;
-        const a = rng.int(1, 20);
-        return integer(
-          [`Solve $${k}\\sqrt[3]{x} + ${a} = ${k * r + a}$.`, `解方程 $${k}\\sqrt[3]{x} + ${a} = ${k * r + a}$。`],
-          r ** 3,
-          [r, k * r, (k * r) ** 3],
-          [
-            `$\\sqrt[3]{x} = ${r}$ after both steps, and cubing gives $x = ${r ** 3}$.`,
-            `两步之后 $\\sqrt[3]{x} = ${r}$，立方得 $x = ${r ** 3}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "finding-side-lengths-of-squares-and-cubes-from-area-or-volume": [
-    skill(
-      "the-volume-from-the-surface-area",
-      ["The volume from the surface area", "由表面积求体积"],
-      [
-        "A cube has six equal square faces, so one face is a sixth of the surface area. Its square root gives the edge, and the cube of the edge gives the volume.",
-        "立方体有六个相等的正方形面，所以一个面是表面积的六分之一。开平方得棱长，棱长的立方就是体积。",
-      ],
-      (rng) => {
-        const s = rng.int(2, 30);
-        return whole(
-          [
-            `A cube has a surface area of ${6 * s * s} square centimeters. What is its volume, in cubic centimeters?`,
-            `一个立方体的表面积是 ${6 * s * s} 平方厘米。它的体积是多少立方厘米？`,
-          ],
-          s ** 3,
-          [s * s, 6 * s, 6 * s ** 3],
-          [
-            `One face is ${s * s}, so the edge is ${s}, and $${s}^{3} = ${s ** 3}$.`,
-            `一个面是 ${s * s}，棱长是 ${s}，$${s}^{3} = ${s ** 3}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "determining-the-number-of-solutions-of-a-linear-equation": [
-    skill(
-      "reading-what-is-left",
-      ["Reading what is left", "读懂剩下的式子"],
-      [
-        "When the variable cancels, what is left decides the matter. A true statement means every number works, a false one means no number does, and a surviving variable means exactly one solution.",
-        "变量抵消后，由剩下的式子决定。成立表示每个数都是解，不成立表示没有解；变量还在则恰有一个解。",
-      ],
-      (rng) => {
-        const kind = rng.int(0, 2);
-        const a = rng.int(1, 40);
-        const b = kind === 1 ? a + rng.int(1, 20) : a;
-        const k = rng.int(2, 9);
-        const text = kind === 2 ? `${k}x = ${a}` : `${a} = ${b}`;
-        const options: [string, string][] = [
-          ["Infinitely many solutions", "无穷多个解"],
-          ["No solution", "没有解"],
-          ["Exactly one solution", "恰有一个解"],
-          ["Exactly two solutions", "恰有两个解"],
-        ];
-        return choose(
-          rng,
-          [
-            `Solving a linear equation leads to $${text}$. How many solutions does the equation have?`,
-            `解一元一次方程得到 $${text}$。这个方程有几个解？`,
-          ],
-          options[kind]!,
-          options.filter((_, i) => i !== kind),
-          kind === 0
-            ? [`$${text}$ is always true, so every number is a solution.`, `$${text}$ 恒成立，所以每个数都是解。`]
-            : kind === 1
-              ? [`$${text}$ is false, so no number is a solution.`, `$${text}$ 不成立，所以没有解。`]
-              : [`The variable remains, and $x = ${frac(a, k)}$ is the only solution.`, `变量还在，$x = ${frac(a, k)}$ 是唯一的解。`],
-        );
-      },
-    ),
-  ],
-  "describing-the-functional-relationship-between-two-quantities-from-a-graph": [
-    {
-      ...skill(
-        "the-fastest-part-of-a-trip",
-        ["The fastest part of a trip", "行程中最快的一段"],
-        [
-          "On a graph of distance against time, a steeper part means more distance in the same time. In a table with equal time steps, the largest change between neighbors is the fastest part.",
-          "在路程与时间的图像上，越陡表示相同时间走得越远。在时间间隔相同的表中，相邻变化最大的一段最快。",
-        ],
-        (rng) => {
-          const steps = rng.sample([2, 4, 6, 9, 11, 13, 15, 18], 4) as number[];
-          let run = rng.int(0, 9);
-          const totals = [run, ...steps.map((s) => (run += s))];
-          const best = steps.indexOf(Math.max(...steps));
-          const hour = (i: number): [string, string] => [`Hour ${i + 1}`, `第 ${i + 1} 小时`];
-          return choose(
-            rng,
-            [
-              `A cyclist's distance from home, in km, at the start of each hour and at the end was ${totals.join(", ")}. In which hour was the cyclist fastest?`,
-              `骑车人每小时开始时和最后离家的距离（千米）依次是 ${totals.join("、")}。哪一小时骑得最快？`,
-            ],
-            hour(best),
-            [0, 1, 2, 3].filter((i) => i !== best).map(hour),
-            [
-              `The hourly changes are ${steps.join(", ")}, and ${steps[best]} is the largest.`,
-              `每小时的变化是 ${steps.join("、")}，${steps[best]} 最大。`,
-            ],
-          );
-        },
-      ),
-      figure: gradeDrawings5["describing-the-functional-relationship-between-two-quantities-from-a-graph#the-fastest-part-of-a-trip"],
-    },
-  ],
-  "linear-functions-versus-nonlinear-functions": [
-    skill(
-      "the-missing-value-in-a-linear-table",
-      ["The missing value in a linear table", "线性表中缺失的值"],
-      [
-        "A linear function changes by the same amount for each step of 1. A table may skip inputs, so divide the output change by the input change first, and then step to the missing value.",
-        "线性函数每增加 1，变化量相同。表格可能跳过输入，所以先用输出变化除以输入变化，再走到缺失的值。",
-      ],
-      (rng) => {
-        const m = rng.int(-9, 9) || 3;
-        const b = rng.int(-9, 12);
-        const x0 = rng.int(0, 3);
-        const x1 = x0 + rng.int(2, 3);
-        const x2 = x1 + rng.int(1, 3);
-        const f = (x: number) => m * x + b;
-        const table = `\\begin{array}{|c|c|c|c|}\\hline x & ${x0} & ${x1} & ${x2} \\\\ \\hline y & ${f(x0)} & ${f(x1)} & \\square \\\\ \\hline\\end{array}`;
-        return integer(
-          [
-            `The table comes from a linear function. What value goes in the box? $$${table}$$`,
-            `表格来自一个线性函数。方框里是什么值？$$${table}$$`,
-          ],
-          f(x2),
-          [f(x1) + (f(x1) - f(x0)), f(x1) + x2 - x1, f(x2) + m],
-          [
-            `$y$ changes by $${f(x1) - f(x0)} \\div ${x1 - x0} = ${m}$ per step, and at $x = ${x2}$ it is ${f(x2)}.`,
-            `每增加 1，$y$ 变化 $${f(x1) - f(x0)} \\div ${x1 - x0} = ${m}$，$x = ${x2}$ 时是 ${f(x2)}。`,
-          ],
-        );
-      },
-    ),
-  ],
+  "classifying-square-roots-and-cube-roots-as-rational-or-irrational": [theSmallestMultiplierForARationalCubeRoot],
+  "comparing-and-ordering-real-numbers": [integersBetweenTwoRoots],
+  "estimating-expressions-with-irrational-numbers": [aMultipleOfARoot],
+  "estimating-and-comparing-real-world-quantities-using-scientific-notation": [howLongItTakes],
+  "solving-equations-using-cube-roots": [aCubeOfASum],
+  "solving-radical-equations-with-cube-roots": [aCoefficientBeforeTheCubeRoot],
+  "finding-side-lengths-of-squares-and-cubes-from-area-or-volume": [theVolumeFromTheSurfaceArea],
+  "determining-the-number-of-solutions-of-a-linear-equation": [readingWhatIsLeft],
+  "describing-the-functional-relationship-between-two-quantities-from-a-graph": [theFastestPartOfATrip],
+  "linear-functions-versus-nonlinear-functions": [theMissingValueInALinearTable],
 };
