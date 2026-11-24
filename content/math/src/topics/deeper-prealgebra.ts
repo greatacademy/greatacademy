@@ -1426,82 +1426,181 @@ const extremeInteger = lesson(
   },
   drawn(gradeDrawings4["solving-multi-step-inequalities#the-extreme-integer-solution-of-an-inequality"]),
 );
-const wholeWithRootBetween: KnowledgePointDef = {
-  id: "whole-numbers-with-a-root-between-two-integers",
-  title: t("Whole numbers with a root between two integers", "平方根在两个整数之间的整数"),
-  explanation: t(
-    "A square root grows as the number under it grows, so bounds on a root turn into bounds on the number when everything is squared. Squaring the two integer bounds gives a range of whole numbers to count. Whether the ends belong depends on the signs: a strict sign leaves out the perfect squares at each end, and an inclusive sign keeps them. Counting a range of whole numbers is the last step, and it is where an error of one is easy to make.",
-    "平方根随被开方数增大而增大，所以把所有部分都平方后，平方根的范围就变成了这个数的范围。把两个整数边界平方，得到要数的整数范围。两端是否算在内取决于符号：严格的符号不包括两端的完全平方数，包含等号的符号则包括。最后一步是数这个范围内的整数，这里很容易差一个。",
-  ),
-  generate(rng) {
+const wholeWithRootBetween: KnowledgePointDef = lesson(
+  "whole-numbers-with-a-root-between-two-integers",
+  ["Whole numbers with a root between two integers", "平方根在两个整数之间的整数"],
+  [
+    [
+      "A square root grows as the number under it grows, so square every part: $3 < \\sqrt{n} < 5$ becomes $9 < n < 25$. Then $n$ runs from $10$ to $24$, which is $24 - 10 + 1 = 15$ whole numbers. With $\\le$ signs instead, the ends $9$ and $25$ count too, which makes $17$.",
+      "平方根随被开方数增大而增大，所以把每一部分都平方：$3 < \\sqrt{n} < 5$ 变成 $9 < n < 25$。于是 $n$ 从 $10$ 到 $24$，共 $24 - 10 + 1 = 15$ 个整数。如果是 $\\le$ 号，两端的 $9$ 和 $25$ 也算，共 $17$ 个。",
+    ],
+    [
+      "Count everything from $9$ to $25$: $17$ numbers. Taking off the two ends leaves $15$.",
+      "把 $9$ 到 $25$ 全数上：$17$ 个。去掉两端剩 $15$ 个。",
+    ],
+    [
+      "To count from one number to another, subtract and add $1$; a strict $<$ leaves out the perfect squares at the ends.",
+      "从一个数数到另一个数，要相减再加 $1$；严格的 $<$ 不包括两端的完全平方数。",
+    ],
+  ],
+  (rng) => {
     const p = rng.int(2, 15);
     const q = p + rng.int(1, 4);
     const strict = rng.bool();
     const gap = q * q - p * p;
     const answer = strict ? gap - 1 : gap + 1;
     const sign = strict ? "<" : "\\le";
-    return numberProblem({
-      prompt: t(
+    const [first, last] = strict ? [p * p + 1, q * q - 1] : [p * p, q * q];
+    return valued(
+      [
         `How many whole numbers $n$ satisfy $${p} ${sign} \\sqrt{n} ${sign} ${q}$?`,
         `有多少个整数 $n$ 满足 $${p} ${sign} \\sqrt{n} ${sign} ${q}$？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [gap, strict ? gap + 1 : gap - 1, q - p, q * q, p + q],
-      solution: t(
-        `Squaring gives $${p * p} ${sign} n ${sign} ${q * q}$. ${strict ? `So $n$ runs from ${p * p + 1} to ${q * q - 1}` : `So $n$ runs from ${p * p} to ${q * q}, ends included`}, which is ${answer} whole numbers.`,
-        `平方得 $${p * p} ${sign} n ${sign} ${q * q}$。${strict ? `所以 $n$ 从 ${p * p + 1} 到 ${q * q - 1}` : `所以 $n$ 从 ${p * p} 到 ${q * q}，包括两端`}，共 ${answer} 个整数。`,
-      ),
-    });
+      [
+        [
+          ["Square every part", "把每一部分平方"],
+          ["The root grows with $n$, so squaring keeps the order:", "平方根随 $n$ 增大而增大，所以平方后大小顺序不变："],
+          [`${p * p} ${sign} n ${sign} ${q * q}`],
+        ],
+        [
+          ["Count the whole numbers", "数出整数"],
+          [
+            strict
+              ? `The signs are strict, so $n$ runs from $${first}$ to $${last}$:`
+              : `The signs keep the ends, so $n$ runs from $${first}$ to $${last}$:`,
+            strict ? `是严格的不等号，所以 $n$ 从 $${first}$ 到 $${last}$：` : `不等号包括两端，所以 $n$ 从 $${first}$ 到 $${last}$：`,
+          ],
+          [`${last} - ${first} + 1 = ${answer}`],
+        ],
+      ],
+      strict
+        ? [
+            `Count all of $${p * p}$ to $${q * q}$: $${gap} + 1 = ${gap + 1}$ numbers; leaving out the two ends gives $${gap + 1} - 2 = ${answer}$.`,
+            `把 $${p * p}$ 到 $${q * q}$ 全数上：$${gap} + 1 = ${gap + 1}$ 个；去掉两端得 $${gap + 1} - 2 = ${answer}$。`,
+          ]
+        : [
+            `Count the numbers strictly between, $${q * q} - ${p * p} - 1 = ${gap - 1}$, and add back the two ends: $${gap - 1} + 2 = ${answer}$.`,
+            `先数两端之间的数：$${q * q} - ${p * p} - 1 = ${gap - 1}$，再加回两端：$${gap - 1} + 2 = ${answer}$。`,
+          ],
+      [
+        [gap, "That subtracts the ends but does not add $1$ to count from one to the other.", "这是两端相减了，但没有加 $1$。"],
+        strict
+          ? [gap + 1, "That keeps both perfect squares, but the signs are strict.", "这是把两端的完全平方数也算进去了，但不等号是严格的。"]
+          : [gap - 1, "That leaves out both perfect squares, but $\\le$ keeps them.", "这是去掉了两端的完全平方数，但 $\\le$ 包括它们。"],
+        [q - p, "That counts whole-number roots, not the numbers $n$.", "这是数平方根的个数，不是 $n$ 的个数。"],
+        [q * q, "That is the largest square, not how many numbers there are.", "这是较大的那个平方数，不是数的个数。"],
+      ],
+    );
   },
-};
+  lineFigure({ lo: 9, hi: 25, step: 1, labels: [9, 10, 24, 25], marks: [{ at: 10 }, { at: 24 }] }, [
+    "A number line from 9 to 25 with 10 and 24 marked: the whole numbers strictly between 9 and 25.",
+    "一条从 9 到 25 的数轴，标出了 10 和 24：严格位于 9 和 25 之间的整数。",
+  ]),
+);
 
-const fencePosts: KnowledgePointDef = {
-  id: "fence-posts-along-a-border",
-  title: t("Fence posts along a border", "沿边界立的栅栏柱"),
-  explanation: t(
-    "Evenly spaced posts divide a border into equal gaps, and counting posts means counting gaps with care. On a closed loop such as the border of a field, the path returns to where it began, so there are just as many posts as gaps. On a straight line with a post at each end, there is one more post than gaps. So the perimeter is used for a loop, and the length of the line for a straight fence.",
-    "等距的柱子把边界分成相等的间隔，数柱子就是要仔细地数间隔。在封闭的回路上，比如田地的边界，路径会回到起点，所以柱子数和间隔数一样多。在两端都有柱子的直线上，柱子比间隔多一根。所以回路要用周长，而直线栅栏要用线段的长度。",
-  ),
-  generate(rng) {
+const fencePosts: KnowledgePointDef = lesson(
+  "fence-posts-along-a-border",
+  ["Fence posts along a border", "沿边界立的栅栏柱"],
+  [
+    [
+      "Posts spaced evenly split a border into equal gaps. On a straight fence with a post at each end, there is one more post than gaps: a $12$ m fence with posts $3$ m apart has $12 \\div 3 = 4$ gaps and $5$ posts. On a closed loop, such as the border of a field, the last gap ends at the first post, so there are as many posts as gaps.",
+      "等距的柱子把边界分成相等的间隔。两端都有柱子的直栅栏上，柱子比间隔多一根：$12$ 米长、每隔 $3$ 米一根的栅栏有 $12 \\div 3 = 4$ 个间隔、$5$ 根柱子。在封闭的回路上，比如田地的边界，最后一个间隔在第一根柱子处结束，所以柱子数等于间隔数。",
+    ],
+    [
+      "List where the posts stand: $0$, $3$, $6$, $9$, $12$ m, which is $5$ posts.",
+      "列出柱子的位置：$0$、$3$、$6$、$9$、$12$ 米，共 $5$ 根。",
+    ],
+    [
+      "Do not count the corner posts of a field twice: each corner post ends one side and starts the next.",
+      "不要把田地角上的柱子数两遍：每根角柱既是一边的终点，又是下一边的起点。",
+    ],
+  ],
+  (rng) => {
     const gap = rng.pick([2, 3, 4, 5, 6, 8, 10]);
     const length = gap * rng.int(5, 20);
     const width = gap * rng.int(2, 12);
-    const closed = rng.bool();
-    if (closed) {
+    if (rng.bool()) {
       const perimeter = 2 * (length + width);
       const answer = perimeter / gap;
-      return numberProblem({
-        prompt: t(
+      const [along, across] = [length / gap - 1, width / gap - 1];
+      return valued(
+        [
           `A rectangular field is $${length}$ m long and $${width}$ m wide. Posts stand all the way around its border, $${gap}$ m apart, with one at each corner. How many posts are there?`,
           `一块长方形田地长 $${length}$ 米、宽 $${width}$ 米。沿边界一圈立柱子，间隔 $${gap}$ 米，每个角上都有一根。一共有多少根柱子？`,
-        ),
+        ],
         answer,
-        form: "integer",
-        wrong: [answer + 1, answer + 4, (length + width) / gap, Q.of(length * width, gap)],
-        solution: t(
-          `The border is $2(${length} + ${width}) = ${perimeter}$ m long. On a closed loop there are as many posts as gaps, and $${perimeter} \\div ${gap} = ${answer}$.`,
-          `边界长 $2(${length} + ${width}) = ${perimeter}$ 米。封闭回路上柱子数等于间隔数，$${perimeter} \\div ${gap} = ${answer}$。`,
-        ),
-      });
+        [
+          [
+            ["Find the border", "求边界长"],
+            ["The border is the perimeter:", "边界长就是周长："],
+            [`2(${length} + ${width}) = ${perimeter}`],
+          ],
+          [
+            ["Count the gaps", "数间隔"],
+            ["On a closed loop there are as many posts as gaps:", "封闭回路上柱子数等于间隔数："],
+            [`${perimeter} \\div ${gap} = ${answer}`],
+          ],
+        ],
+        [
+          `Count side by side: each long side has $${along}$ posts between its corners, each short side $${across}$, plus $4$ corners: $2 \\cdot ${along} + 2 \\cdot ${across} + 4 = ${answer}$.`,
+          `一条边一条边地数：每条长边两角之间有 $${along}$ 根，每条短边有 $${across}$ 根，再加 $4$ 根角柱：$2 \\cdot ${along} + 2 \\cdot ${across} + 4 = ${answer}$。`,
+        ],
+        [
+          [
+            answer + 1,
+            "That adds an end post as on a straight fence, but the loop comes back to the first post.",
+            "这是像直栅栏那样多加了一根，但回路会回到第一根柱子。",
+          ],
+          [answer + 4, "That counts each corner post twice, once for each side.", "这是把每根角柱数了两遍，每条边各一遍。"],
+          [(length + width) / gap, "That uses only half of the border, one length and one width.", "这只用了边界的一半，一个长加一个宽。"],
+          [
+            Q.of(length * width, gap),
+            "That divides the area, but the posts stand along the border.",
+            "这是用面积来除，但柱子是沿边界立的。",
+          ],
+        ],
+      );
     }
     const gaps = length / gap;
-    return numberProblem({
-      prompt: t(
+    return valued(
+      [
         `A straight fence is $${length}$ m long. Posts stand along it, $${gap}$ m apart, with one at each end. How many posts are there?`,
         `一道直栅栏长 $${length}$ 米。沿栅栏立柱子，间隔 $${gap}$ 米，两端都有一根。一共有多少根柱子？`,
-      ),
-      answer: gaps + 1,
-      form: "integer",
-      wrong: [gaps, gaps - 1, gaps + 2, length - gap],
-      solution: t(
-        `There are $${length} \\div ${gap} = ${gaps}$ gaps. With a post at each end, a straight line has one more post than gaps, which makes $${gaps + 1}$.`,
-        `共有 $${length} \\div ${gap} = ${gaps}$ 个间隔。两端都有柱子时，直线上的柱子比间隔多一根，所以是 $${gaps + 1}$ 根。`,
-      ),
-    });
+      ],
+      gaps + 1,
+      [
+        [["Count the gaps", "数间隔"], ["Divide the length by the spacing:", "用长度除以间隔："], [`${length} \\div ${gap} = ${gaps}`]],
+        [
+          ["Add the end post", "加上末端的柱子"],
+          [
+            "Each gap has a post at its start, and the last gap also needs one at its end:",
+            "每个间隔起点有一根柱子，最后一个间隔的终点还要一根：",
+          ],
+          [`${gaps} + 1 = ${gaps + 1}`],
+        ],
+      ],
+      [
+        `List where the posts stand: $0, ${gap}, ${2 * gap}, \\ldots, ${length}$ m, which is $${gaps}$ steps of $${gap}$ after the first post, so $${gaps + 1}$ posts.`,
+        `列出柱子的位置：$0, ${gap}, ${2 * gap}, \\ldots, ${length}$ 米，第一根之后走了 $${gaps}$ 步，每步 $${gap}$ 米，所以共 $${gaps + 1}$ 根。`,
+      ],
+      [
+        [gaps, "That counts the gaps; a straight fence needs one more post than gaps.", "这是间隔数；直栅栏的柱子比间隔多一根。"],
+        [gaps - 1, "That leaves out both end posts.", "这是漏掉了两端的柱子。"],
+        [gaps + 2, "That adds two extra posts, but only the end needs one more.", "这是多加了两根，但只有末端需要多一根。"],
+        [length - gap, "That subtracts the spacing instead of dividing by it.", "这是减去间隔，应该用间隔去除。"],
+      ],
+      { figure: equalTape(gaps, `${gap} m`, `${length} m`) },
+    );
   },
-};
-
+  tapeFigure(
+    [{ total: "12 m", pieces: [1, 2, 3, 4].map(() => ({ size: 1, text: "3 m" })) }],
+    [
+      "A 12 m fence cut into 4 gaps of 3 m; posts stand at the 5 ends of the gaps.",
+      "一道 12 米长的栅栏分成 4 个 3 米的间隔；柱子立在这些间隔的 5 个端点上。",
+    ],
+  ),
+);
 /** deeperPrealgebraPoints maps topics of Prealgebra to further knowledge points. */
 export const deeperPrealgebraPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "mixed-numbers": [wholesBetweenFractions],

@@ -7,6 +7,8 @@ import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { isTerminating, numberProblem, steps, yesNo } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
+import { lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { tableFigure } from "./grade-8-kit.ts";
 
 // 7th Grade Math, statistics: estimating from samples, bias, survey results and margins of error,
 // joint and cumulative frequency tables, the mean, median and mode of tabulated and grouped data,
@@ -966,115 +968,257 @@ export function jointTable(w: TwoWay, c: readonly (readonly number[])[], hide: r
 /** jointCounts draws the counts of a 2 by 3 two-way table. */
 const jointCounts = (rng: Rng) => [0, 1].map(() => [0, 1, 2].map(() => rng.int(3, 40)));
 
+/** jointFigure draws a two-way table with rows A and B, columns X, Y and Z, and the totals under Σ; a cell named in hide shows as a blank and the one at ask as "?". */
+function jointFigure(c: readonly (readonly number[])[], hide: readonly string[], ask: string): Figure {
+  const show = (key: string, v: number) => (key === ask ? "?" : hide.includes(key) ? "" : String(v));
+  const colTotals = [0, 1, 2].map((j) => c[0]![j]! + c[1]![j]!);
+  const inside = [
+    ...c.map((r, i) => [...r.map((v, j) => show(`${i}${j}`, v)), show(`${i}T`, sum(r))]),
+    [...colTotals.map((v, j) => show(`T${j}`, v)), show("TT", sum(colTotals))],
+  ];
+  return tableFigure(["A", "B", "Σ"], ["X", "Y", "Z", "Σ"], inside, [
+    "A two-way table: rows A and B, columns X, Y and Z, with the totals of each row and column under Σ.",
+    "一张双向表：行是 A 和 B，列是 X、Y、Z，Σ 下面是每行、每列的合计。",
+  ]);
+}
+
 /** jointFrequencyTables reads, completes and turns into relative frequencies the entries of two-way tables. */
-export const jointFrequencyTables = topic(
-  "joint-frequency-tables",
-  t("Joint Frequency Tables", "联合频数表"),
-  t(
-    "A joint frequency table (a two-way table) counts the data by two categories at once: each cell is a joint frequency, such as the number of 7th graders who prefer dogs. The totals at the ends of the rows and columns are the marginal frequencies, and every row and column adds up to its total. Dividing a joint frequency by the grand total gives a joint relative frequency.",
-    "联合频数表（双向表）同时按两个类别统计数据：每个单元格是一个联合频数，比如喜欢狗的七年级学生人数。行末和列末的合计是边缘频数，每一行、每一列加起来都等于它的合计。用联合频数除以总计，得到联合频率。",
-  ),
-  ["frequency-tables"],
-  ["8.SP.A.4"],
-  [
-    {
-      id: "reading-joint-frequencies",
-      title: t("Reading joint frequencies", "读联合频数"),
-      explanation: t(
-        "In a two-way table, find the row of one category and the column of the other: the cell where they meet is the joint frequency. A total at the end of a row counts the whole row, whatever the answer, and the grand total in the corner counts everyone.",
-        "在双向表中，找到一个类别所在的行和另一个类别所在的列，它们相交的单元格就是联合频数。行末的合计统计整行（不论回答是什么），右下角的总计统计所有人。",
-      ),
-      generate(rng) {
-        const w = rng.pick(twoWays);
-        const c = jointCounts(rng);
-        const [i, j] = [rng.int(0, 1), rng.int(0, 2)];
-        const v = c[i]![j]!;
-        return numberProblem({
-          prompt: t(
-            `${w.intro.en}${jointTable(w, c, [], "", 0)}${w.cell(w.rows[i]!, w.cols[j]!).en}`,
-            `${w.intro["zh-CN"]}${jointTable(w, c, [], "", 1)}${w.cell(w.rows[i]!, w.cols[j]!)["zh-CN"]}`,
-          ),
-          answer: v,
-          form: "integer",
-          // The other row, the column total, and the row total.
-          wrong: [c[1 - i]![j]!, c[0]![j]! + c[1]![j]!, sum(c[i]!)],
-          solution: t(
-            `Read the cell in the row “${w.rows[i]![0]}” and the column “${w.cols[j]![0]}”: it is $${v}$.`,
-            `读“${w.rows[i]![1]}”这一行与“${w.cols[j]![1]}”这一列相交的单元格：是 $${v}$。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "completing-a-joint-frequency-table",
-      title: t("Completing a joint frequency table", "补全联合频数表"),
-      explanation: t(
-        "Every row and every column adds up to its total, so a missing entry is a total minus the other entries. If a row total is missing too, find it first from the grand total. With a grand total of $120$ and one row total of $70$, the other row has $120 - 70 = 50$; if that row’s other cells are $18$ and $12$, the missing cell is $50 - 18 - 12 = 20$.",
-        "每一行、每一列加起来都等于它的合计，所以缺少的数等于合计减去其他各数。如果行合计也缺少，先用总计求出它。总计为 $120$、一行的合计为 $70$ 时，另一行合计为 $120 - 70 = 50$；如果这一行的另两个单元格是 $18$ 和 $12$，缺少的单元格就是 $50 - 18 - 12 = 20$。",
-      ),
-      generate(rng) {
-        const w = rng.pick(twoWays);
-        const c = jointCounts(rng);
-        const [i, j] = [rng.int(0, 1), rng.int(0, 2)];
-        const v = c[i]![j]!;
-        // Hide the asked cell's row total and the cell below or above it, so two steps are needed.
-        const hide = [`${i}T`, `${1 - i}${j}`, `T${j}`];
-        const others = c[i]!.filter((_, k) => k !== j);
-        const rowTotal = sum(c[i]!);
-        const grand = sum(c.flat());
-        const otherTotal = sum(c[1 - i]!);
-        return numberProblem({
-          prompt: t(
-            `${w.intro.en} Some entries of the table are missing.${jointTable(w, c, hide, `${i}${j}`, 0)}${w.cell(w.rows[i]!, w.cols[j]!).en}`,
-            `${w.intro["zh-CN"]}表格中有些数缺失了。${jointTable(w, c, hide, `${i}${j}`, 1)}${w.cell(w.rows[i]!, w.cols[j]!)["zh-CN"]}`,
-          ),
-          answer: v,
-          form: "integer",
-          // Subtracting the known cells from the grand total, or stopping at the row total.
-          wrong: [grand - sum(others), rowTotal, otherTotal - sum(others)].filter((x) => x > 0),
-          solution: t(
-            `First find the row total for “${w.rows[i]![0]}” from the grand total and the other row’s total:${steps(`${grand} - ${otherTotal} = ${rowTotal}`)}Then subtract the other entries of the row:${steps(`${rowTotal} - ${others.join(" - ")} = ${v}`)}`,
-            `先用总计和另一行的合计求出“${w.rows[i]![1]}”这一行的合计：${steps(`${grand} - ${otherTotal} = ${rowTotal}`)}再减去这一行的其他各数：${steps(`${rowTotal} - ${others.join(" - ")} = ${v}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "joint-relative-frequencies",
-      title: t("Joint relative frequencies", "联合频率"),
-      explanation: t(
-        "A joint relative frequency is a joint frequency divided by the grand total: the fraction of everyone surveyed who are in both categories. If $24$ of $160$ students are 8th graders who prefer cats, the joint relative frequency is $\\frac{24}{160} = 0.15 = 15\\%$. Divide by the grand total, not by a row or column total.",
-        "联合频率等于联合频数除以总计：同时属于两个类别的人占全部受访者的比例。如果 $160$ 名学生中有 $24$ 名是喜欢猫的八年级学生，联合频率就是 $\\frac{24}{160} = 0.15 = 15\\%$。要除以总计，而不是行合计或列合计。",
-      ),
-      generate(rng) {
-        const w = rng.pick(twoWays);
-        for (;;) {
+export const jointFrequencyTables = withIntro(
+  topic(
+    "joint-frequency-tables",
+    t("Joint Frequency Tables", "联合频数表"),
+    t(
+      "A joint frequency table (a two-way table) counts the data by two categories at once: each cell is a joint frequency, such as the number of 7th graders who prefer dogs. The totals at the ends of the rows and columns are the marginal frequencies, and every row and column adds up to its total. Dividing a joint frequency by the grand total gives a joint relative frequency.",
+      "联合频数表（双向表）同时按两个类别统计数据：每个单元格是一个联合频数，比如喜欢狗的七年级学生人数。行末和列末的合计是边缘频数，每一行、每一列加起来都等于它的合计。用联合频数除以总计，得到联合频率。",
+    ),
+    ["frequency-tables"],
+    ["8.SP.A.4"],
+    [
+      lesson(
+        "reading-joint-frequencies",
+        ["Reading joint frequencies", "读联合频数"],
+        [
+          [
+            "In a two-way table, find the row of one category and the column of the other: the cell where they meet is the joint frequency. A total at the end of a row counts the whole row, whatever the answer, and the grand total in the corner counts everyone.",
+            "在双向表中，找到一个类别所在的行和另一个类别所在的列，它们相交的单元格就是联合频数。行末的合计统计整行（不论回答是什么），右下角的总计统计所有人。",
+          ],
+          [
+            "The row adds up to its total, so the cell is also the row total minus the other cells of the row: in row A, $26 - 9 - 5 = 12$.",
+            "每一行加起来等于它的合计，所以这个单元格也等于行合计减去这一行的其他单元格：在 A 行，$26 - 9 - 5 = 12$。",
+          ],
+          [
+            "The totals sit at the ends; the joint frequency is the cell inside where the row and the column meet.",
+            "合计在表的边上；联合频数是行与列在表内相交的那个单元格。",
+          ],
+        ],
+        (rng) => {
+          const w = rng.pick(twoWays);
           const c = jointCounts(rng);
-          const grand = sum(c.flat());
           const [i, j] = [rng.int(0, 1), rng.int(0, 2)];
           const v = c[i]![j]!;
-          const pct = Q.of(100 * v, grand);
-          if (!pct.isInteger()) continue;
+          const others = c[i]!.filter((_, k) => k !== j);
+          const row = w.rows[i]!;
+          const col = w.cols[j]!;
+          return valued(
+            [
+              `${w.intro.en}${jointTable(w, c, [], "", 0)}${w.cell(row, col).en}`,
+              `${w.intro["zh-CN"]}${jointTable(w, c, [], "", 1)}${w.cell(row, col)["zh-CN"]}`,
+            ],
+            v,
+            [
+              [
+                ["Find the row", "找到行"],
+                [`The row is “${row[0]}”.`, `行是“${row[1]}”。`],
+              ],
+              [
+                ["Find the column and read the cell", "找到列并读出单元格"],
+                [`The column is “${col[0]}”; where they meet the cell says $${v}$.`, `列是“${col[1]}”；两者相交的单元格是 $${v}$。`],
+              ],
+            ],
+            [
+              `The row adds up to its total: $${sum(c[i]!)} - ${others.join(" - ")} = ${v}$.`,
+              `这一行加起来等于它的合计：$${sum(c[i]!)} - ${others.join(" - ")} = ${v}$。`,
+            ],
+            [
+              [c[1 - i]![j]!, "That is the cell of the other row in the same column.", "这是同一列中另一行的单元格。"],
+              [c[0]![j]! + c[1]![j]!, "That is the column total, both rows together.", "这是列合计，两行加在一起。"],
+              [sum(c[i]!), "That is the row total, whatever the answer.", "这是行合计，包括了所有回答。"],
+            ],
+            { form: "integer" },
+          );
+        },
+        jointFigure(
+          [
+            [12, 9, 5],
+            [8, 15, 7],
+          ],
+          [],
+          "",
+        ),
+      ),
+      lesson(
+        "completing-a-joint-frequency-table",
+        ["Completing a joint frequency table", "补全联合频数表"],
+        [
+          [
+            "Every row and every column adds up to its total, so a missing entry is a total minus the other entries. If a row total is missing too, find it first from the grand total. With a grand total of $120$ and one row total of $70$, the other row has $120 - 70 = 50$; if that row’s other cells are $18$ and $12$, the missing cell is $50 - 18 - 12 = 20$.",
+            "每一行、每一列加起来都等于它的合计，所以缺少的数等于合计减去其他各数。如果行合计也缺少，先用总计求出它。总计为 $120$、一行的合计为 $70$ 时，另一行合计为 $120 - 70 = 50$；如果这一行的另两个单元格是 $18$ 和 $12$，缺少的单元格就是 $50 - 18 - 12 = 20$。",
+          ],
+          [
+            "Put the answer back: $18 + 12 + 20 = 50$, and the two rows give $50 + 70 = 120$, the grand total.",
+            "把答案放回去：$18 + 12 + 20 = 50$，两行合起来 $50 + 70 = 120$，正是总计。",
+          ],
+          [
+            "Take the other cells away from the row’s own total, not from the grand total.",
+            "要从这一行自己的合计中减去其他单元格，不是从总计中减。",
+          ],
+        ],
+        (rng) => {
+          const w = rng.pick(twoWays);
+          const c = jointCounts(rng);
+          const [i, j] = [rng.int(0, 1), rng.int(0, 2)];
+          const v = c[i]![j]!;
+          // Hide the asked cell's row total and the cell below or above it, so two steps are needed.
+          const hide = [`${i}T`, `${1 - i}${j}`, `T${j}`];
+          const others = c[i]!.filter((_, k) => k !== j);
           const rowTotal = sum(c[i]!);
-          const colTotal = c[0]![j]! + c[1]![j]!;
-          return numberProblem({
-            prompt: t(
-              `${w.intro.en}${jointTable(w, c, [], "", 0)}What percent of everyone surveyed are ${w.who(w.rows[i]!, w.cols[j]!).en}?`,
-              `${w.intro["zh-CN"]}${jointTable(w, c, [], "", 1)}${w.who(w.rows[i]!, w.cols[j]!)["zh-CN"]}占全部受访者的百分之几？`,
-            ),
-            answer: pct,
-            percent: true,
-            // Dividing by the row total or the column total.
-            wrong: [Q.of(100 * v, rowTotal), Q.of(100 * v, colTotal)].filter(clean),
-            solution: t(
-              `Divide the joint frequency by the grand total of $${grand}$:${steps(`\\frac{${v}}{${grand}} = ${dec(Q.of(v, grand))} = ${pct.toLatex()}\\%`)}`,
-              `用联合频数除以总计 $${grand}$：${steps(`\\frac{${v}}{${grand}} = ${dec(Q.of(v, grand))} = ${pct.toLatex()}\\%`)}`,
-            ),
-          });
-        }
-      },
-    },
+          const grand = sum(c.flat());
+          const otherTotal = sum(c[1 - i]!);
+          const offs: [number, string, string][] = [
+            [
+              grand - sum(others),
+              "That takes the other cells away from the grand total, which counts both rows.",
+              "这是从总计中减去其他单元格，但总计包括了两行。",
+            ],
+            [
+              rowTotal,
+              "That is the row total; the other cells of the row still have to be taken away.",
+              "这是行合计；还要减去这一行的其他单元格。",
+            ],
+            [otherTotal - sum(others), "That uses the other row’s total.", "这是用了另一行的合计。"],
+          ];
+          return valued(
+            [
+              `${w.intro.en} Some entries of the table are missing.${jointTable(w, c, hide, `${i}${j}`, 0)}${w.cell(w.rows[i]!, w.cols[j]!).en}`,
+              `${w.intro["zh-CN"]}表格中有些数缺失了。${jointTable(w, c, hide, `${i}${j}`, 1)}${w.cell(w.rows[i]!, w.cols[j]!)["zh-CN"]}`,
+            ],
+            v,
+            [
+              [
+                ["Find the row total", "求行合计"],
+                [
+                  `The grand total minus the other row’s total gives the total for “${w.rows[i]![0]}”:`,
+                  `总计减去另一行的合计，得到“${w.rows[i]![1]}”这一行的合计：`,
+                ],
+                [`${grand} - ${otherTotal} = ${rowTotal}`],
+              ],
+              [
+                ["Take away the other cells", "减去其他单元格"],
+                ["Subtract the other entries of the row:", "减去这一行的其他各数："],
+                [`${rowTotal} - ${others.join(" - ")} = ${v}`],
+              ],
+            ],
+            [
+              `Put $${v}$ back: $${[...others, v].join(" + ")} = ${rowTotal}$, and $${rowTotal} + ${otherTotal} = ${grand}$, the grand total.`,
+              `把 $${v}$ 放回去：$${[...others, v].join(" + ")} = ${rowTotal}$，$${rowTotal} + ${otherTotal} = ${grand}$，正是总计。`,
+            ],
+            offs.filter(([x]) => x > 0),
+            { form: "integer" },
+          );
+        },
+        jointFigure(
+          [
+            [18, 12, 20],
+            [25, 30, 15],
+          ],
+          ["0T", "10", "T2"],
+          "02",
+        ),
+      ),
+      lesson(
+        "joint-relative-frequencies",
+        ["Joint relative frequencies", "联合频率"],
+        [
+          [
+            "A joint relative frequency is a joint frequency divided by the grand total: the fraction of everyone surveyed who are in both categories. If $24$ of $160$ students are 8th graders who prefer cats, the joint relative frequency is $\\frac{24}{160} = 0.15 = 15\\%$.",
+            "联合频率等于联合频数除以总计：同时属于两个类别的人占全部受访者的比例。如果 $160$ 名学生中有 $24$ 名是喜欢猫的八年级学生，联合频率就是 $\\frac{24}{160} = 0.15 = 15\\%$。",
+          ],
+          [
+            "Go back from the percent: $15\\%$ of $160$ is $0.15 \\cdot 160 = 24$, the count in the cell.",
+            "从百分数倒推：$160$ 的 $15\\%$ 是 $0.15 \\cdot 160 = 24$，正是单元格中的数。",
+          ],
+          ["Divide by the grand total, not by a row or column total.", "要除以总计，而不是行合计或列合计。"],
+        ],
+        (rng) => {
+          const w = rng.pick(twoWays);
+          for (;;) {
+            const c = jointCounts(rng);
+            const grand = sum(c.flat());
+            const [i, j] = [rng.int(0, 1), rng.int(0, 2)];
+            const v = c[i]![j]!;
+            const pct = Q.of(100 * v, grand);
+            if (!pct.isInteger()) continue;
+            const rowTotal = sum(c[i]!);
+            const colTotal = c[0]![j]! + c[1]![j]!;
+            const offs: [Q, string, string][] = [
+              [
+                Q.of(100 * v, rowTotal),
+                "That divides by the row total; a joint relative frequency divides by the grand total.",
+                "这是除以行合计；联合频率要除以总计。",
+              ],
+              [
+                Q.of(100 * v, colTotal),
+                "That divides by the column total; a joint relative frequency divides by the grand total.",
+                "这是除以列合计；联合频率要除以总计。",
+              ],
+              [Q.of(v), "That is the count in the cell, not a percent of everyone.", "这是单元格中的人数，不是占全部人数的百分比。"],
+            ];
+            return valued(
+              [
+                `${w.intro.en}${jointTable(w, c, [], "", 0)}What percent of everyone surveyed are ${w.who(w.rows[i]!, w.cols[j]!).en}?`,
+                `${w.intro["zh-CN"]}${jointTable(w, c, [], "", 1)}${w.who(w.rows[i]!, w.cols[j]!)["zh-CN"]}占全部受访者的百分之几？`,
+              ],
+              pct,
+              [
+                [
+                  ["Read the cell and the grand total", "读出单元格和总计"],
+                  [`The cell is $${v}$ and the grand total is $${grand}$.`, `单元格是 $${v}$，总计是 $${grand}$。`],
+                ],
+                [
+                  ["Divide and write as a percent", "相除并写成百分数"],
+                  ["The joint frequency over the grand total:", "联合频数除以总计："],
+                  [`\\frac{${v}}{${grand}} = ${dec(Q.of(v, grand))} = ${pct.toLatex()}\\%`],
+                ],
+              ],
+              [
+                `Go back from the percent: $${pct.toLatex()}\\%$ of $${grand}$ is $${dec(Q.of(v, grand))} \\cdot ${grand} = ${v}$, the count in the cell.`,
+                `从百分数倒推：$${grand}$ 的 $${pct.toLatex()}\\%$ 是 $${dec(Q.of(v, grand))} \\cdot ${grand} = ${v}$，正是单元格中的数。`,
+              ],
+              offs.filter(([x]) => clean(x)),
+              { percent: true },
+            );
+          }
+        },
+        jointFigure(
+          [
+            [30, 24, 26],
+            [20, 24, 36],
+          ],
+          [],
+          "",
+        ),
+      ),
+    ],
+  ),
+  [
+    "A class votes on a trip: the zoo, the museum or the beach. The teacher writes the votes of boys and of girls in a table, so she can see both at once.",
+    "全班投票决定去哪里郊游：动物园、博物馆还是海边。老师把男生和女生的票分别填进一张表，两样一眼就能看清。",
   ],
+  [
+    "Each row adds up to its total, each column too, and both ways give the same grand total.",
+    "每一行加起来等于行合计，每一列也一样，两种方法得到同一个总计。",
+  ],
+  ["read, complete and turn into percents the counts in two-way tables.", "学习读双向表中的数，补全双向表，并把其中的数化成百分数。"],
 );
 
 /** Tally is a frequency table of whole-number values: its story and labels. */

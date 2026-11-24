@@ -4,11 +4,11 @@ import { type Compass, dec, linear, type Mark, type Point, Q, sketch } from "@ga
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
-import { choiceProblem, numberProblem, pointLatex, steps, unitLatex, verdictChoice, yesNo } from "../problems.ts";
+import { pointLatex, unitLatex } from "../problems.ts";
 import { rectangle, scaleneTriangle, sides } from "./area.ts";
-import type { Pair, Walk } from "./early-grades-more-kit.ts";
-import { mathText, pickChoice } from "./grade-4-fractions.ts";
-import { chosenMath, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
+import type { MathWrong, Pair, Walk } from "./early-grades-more-kit.ts";
+import { mathText } from "./grade-4-fractions.ts";
+import { chosenMath, decided, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
 
 // 7th Grade Math, geometry: segments, angles, polygons, perimeter, scale drawings, circles and prisms.
 
@@ -109,6 +109,12 @@ function sumWrong(terms: readonly Linear[], total: number, wrongTotal: number): 
 function equalWrong([c1, d1]: Linear, [c2, d2]: Linear): Q[] {
   return [Q.of(d2 + d1, c1 - c2), Q.of(d2 - d1, c1 + c2)];
 }
+
+/** collecting says how to finish solving for x from the lines that remain: divide only when a step is left after collecting. */
+const collecting = (rest: readonly string[]): Pair =>
+  rest.length > 1
+    ? ["Collect $x$ on one side, then divide:", "把 $x$ 集中到一边，再相除："]
+    : ["Collect $x$ on one side:", "把 $x$ 集中到一边："];
 
 /** awayFrom is the compass direction from c toward p, used to put a vertex name outside a figure. */
 function awayFrom(p: Point, c: Point): Compass {
@@ -878,11 +884,7 @@ export const midpoints = withIntro(
               x,
               [
                 [solveStep[0], ["The halves are congruent:", "两半全等："], equalSteps(e1, e2).slice(0, 1)],
-                [
-                  ["Solve for x", "解出 x"],
-                  ["Collect $x$ on one side, then divide:", "把 $x$ 集中到一边，再相除："],
-                  equalSteps(e1, e2).slice(1),
-                ],
+                [["Solve for x", "解出 x"], collecting(equalSteps(e1, e2).slice(1)), equalSteps(e1, e2).slice(1)],
               ],
               check,
               [
@@ -961,292 +963,549 @@ export const midpoints = withIntro(
     "学习在数轴上和平面上求中点与缺少的端点，并用方程解中点问题。",
   ],
 );
-export const collinearPoints = topic(
-  "collinear-points",
-  t("Collinear Points", "共线的点"),
-  t(
-    "Points that lie on one line are collinear; points that do not all lie on one line are noncollinear. Any two points are collinear, since there is exactly one line through them, so the question is whether a third point lies on that line too. In the coordinate plane, points with the same x-coordinate lie on a vertical line and points with the same y-coordinate on a horizontal line; points reached from one another by repeating the same step, such as 2 right and 3 up, also lie on one line.",
-    "在同一条直线上的点叫共线的点；不全在同一条直线上的点叫不共线的点。任意两点都共线，因为过两点有且只有一条直线，所以关键是第三个点是否也在这条直线上。在坐标平面中，横坐标相同的点在一条竖直线上，纵坐标相同的点在一条水平线上；从一个点出发，重复同样的一步（例如向右 2、向上 3）所到达的点也在同一条直线上。",
-  ),
-  ["the-cartesian-coordinate-system"],
-  ["4.G.A.1"],
+/** Crossing is two lines through X: three points on the first, one or two on the second, and one point off both. */
+type Crossing = {
+  readonly t1: number;
+  readonly t2: number;
+  readonly on1: readonly number[];
+  readonly on2: readonly number[];
+  readonly mid: number;
+};
+
+/** CrossPoint is a named point of a crossing figure and the line it is on: 0 for the crossing, 3 for neither line. */
+type CrossPoint = { readonly p: Point; readonly line: number; readonly name: string; readonly d: Compass };
+
+/** crossingPoints names the points of a crossing with the given letters. */
+function crossingPoints({ t1, t2, on1, on2, mid }: Crossing, letters: readonly string[]): CrossPoint[] {
+  const X: Point = [0, 0];
+  const off = dir(mid, 3);
+  const normal = (deg: number, p: Point): Compass => awayFrom(dir(deg + 90, 1, p), p);
+  return [
+    { p: X, line: 0, name: letters[0]!, d: awayFrom(dir(mid + 180, 1), X) },
+    ...on1.map((s, i) => ({ p: dir(t1, s), line: 1, name: letters[1 + i]!, d: normal(t1, dir(t1, s)) })),
+    ...on2.map((s, i) => ({ p: dir(t2, s), line: 2, name: letters[4 + i]!, d: normal(t2, dir(t2, s)) })),
+    { p: off, line: 3, name: letters[6]!, d: awayFrom(off, X) },
+  ];
+}
+
+/** crossingFigure draws the two lines of a crossing and its named points. */
+function crossingFigure(c: Crossing, pts: readonly CrossPoint[]): Figure {
+  const named = (line: number) => pts.filter((q) => q.line === line).map((q) => q.name);
+  return fig(
+    [seg(dir(c.t1, -5.5), dir(c.t1, 5.5)), seg(dir(c.t2, -4.5), dir(c.t2, 4.5)), ...pts.flatMap((q) => dot(q.p, q.name, q.d))],
+    `Two lines crossing at ${named(0)[0]}. Points ${named(1).join(", ")} lie on one line, ${named(2).join(" and ")} on the other, and ${named(3)[0]} on neither.`,
+    `两条直线相交于 ${named(0)[0]}。点 ${named(1).join("、")} 在一条直线上，${named(2).join("、")} 在另一条直线上，${named(3)[0]} 不在这两条直线上。`,
+  );
+}
+
+/** sampleCrossing is the crossing drawn beside the lesson on collinear points in a figure. */
+const sampleCrossing: Crossing = { t1: 20, t2: 105, on1: [-4, 2, 4], on2: [-3, 3], mid: 242.5 };
+
+/** CoordinateSlip moves a point off the line and says how a learner gets there. */
+type CoordinateSlip = readonly [move: (p: readonly [number, number]) => readonly [number, number], en: string, zh: string];
+
+/** coordinateSlips are the usual ways a learner picks a point beside the line. */
+const coordinateSlips: readonly CoordinateSlip[] = [
+  [([x, y]) => [y, x], "That swaps the $x$- and $y$-coordinates of a point on the line.", "这是把直线上一点的横、纵坐标交换了。"],
   [
-    {
-      id: "identifying-collinear-points",
-      title: t("Collinear points in a figure", "图中共线的点"),
-      explanation: t(
-        "Two lines cross at a point. Three points on the same line are collinear, including the crossing point. If two of the points are on one line and the third is on the other line, but not at the crossing point, the three are not collinear: no single line passes through all of them.",
-        "两条直线相交于一点。在同一条直线上的三个点共线，交点也算在两条直线上。如果其中两点在一条直线上，第三点在另一条直线上且不是交点，这三点就不共线：没有一条直线同时经过它们。",
+    ([x, y]) => [x + 1, y],
+    "That is one unit to the right of a point on the line, so it misses the line.",
+    "这是直线上一点向右偏了 $1$ 个单位，所以不在直线上。",
+  ],
+  [
+    ([x, y]) => [x, y + 1],
+    "That is one unit above a point on the line, so it misses the line.",
+    "这是直线上一点向上偏了 $1$ 个单位，所以不在直线上。",
+  ],
+  [
+    ([x, y]) => [x - 1, y],
+    "That is one unit to the left of a point on the line, so it misses the line.",
+    "这是直线上一点向左偏了 $1$ 个单位，所以不在直线上。",
+  ],
+  [
+    ([x, y]) => [x, y - 1],
+    "That is one unit below a point on the line, so it misses the line.",
+    "这是直线上一点向下偏了 $1$ 个单位，所以不在直线上。",
+  ],
+  [
+    ([x, y]) => [-x, y],
+    "That changes the sign of the $x$-coordinate, which moves the point off the line.",
+    "这是把横坐标的符号变了，点就离开了直线。",
+  ],
+  [
+    ([x, y]) => [x, -y],
+    "That changes the sign of the $y$-coordinate, which moves the point off the line.",
+    "这是把纵坐标的符号变了，点就离开了直线。",
+  ],
+];
+
+/** collinearPoints decides whether points lie on one line, in a figure and in the coordinate plane. */
+export const collinearPoints = withIntro(
+  topic(
+    "collinear-points",
+    t("Collinear Points", "共线的点"),
+    t(
+      "Points that lie on one line are collinear; points that do not all lie on one line are noncollinear. Any two points are collinear, since there is exactly one line through them, so the question is whether a third point lies on that line too. In the coordinate plane, points with the same x-coordinate lie on a vertical line and points with the same y-coordinate on a horizontal line; points reached from one another by repeating the same step, such as 2 right and 3 up, also lie on one line.",
+      "在同一条直线上的点叫共线的点；不全在同一条直线上的点叫不共线的点。任意两点都共线，因为过两点有且只有一条直线，所以关键是第三个点是否也在这条直线上。在坐标平面中，横坐标相同的点在一条竖直线上，纵坐标相同的点在一条水平线上；从一个点出发，重复同样的一步（例如向右 2、向上 3）所到达的点也在同一条直线上。",
+    ),
+    ["the-cartesian-coordinate-system"],
+    ["4.G.A.1"],
+    [
+      lesson(
+        "identifying-collinear-points",
+        ["Collinear points in a figure", "图中共线的点"],
+        [
+          [
+            "To test three points, take the line through two of them and ask whether it passes through the third. In the figure, $A$, $B$ and $C$ are on one line, so they are collinear, and so is the crossing point $X$ with them. $B$, $C$ and $D$ are not: $D$ is on the other line, away from the crossing.",
+            "检验三个点时，先取经过其中两点的直线，再看它是否经过第三点。图中 $A$、$B$、$C$ 在同一条直线上，所以共线；交点 $X$ 也和它们共线。$B$、$C$、$D$ 不共线：$D$ 在另一条直线上，又不是交点。",
+          ],
+          [
+            "Start from a different pair: the line through $B$ and $D$ is neither drawn line, and it misses $C$ too, so the answer does not change.",
+            "换一对点开始：经过 $B$ 和 $D$ 的直线不是图中任何一条，它也不经过 $C$，结论不变。",
+          ],
+          [
+            "Any three points can be joined by segments into a path, but they are collinear only when one straight line holds all three.",
+            "任意三个点都能用线段连成折线，但只有一条直线同时经过三点时，它们才共线。",
+          ],
+        ],
+        (rng) => {
+          const t1 = rng.int(0, 35) * 5;
+          const t2 = t1 + rng.int(10, 26) * 5;
+          const c: Crossing = {
+            t1,
+            t2,
+            on1: rng.shuffle([-4, -2, 2, 4]).slice(0, 3),
+            on2: rng.shuffle([-3, 3]).slice(0, rng.int(1, 2)),
+            mid: (t1 + t2) / 2 + (rng.bool() ? 0 : 180),
+          };
+          const pts = crossingPoints(c, rng.shuffle([..."ABCDEFGH"]));
+          const line1 = pts.filter((q) => q.line === 1 || q.line === 0);
+          const kind = rng.int(0, 2);
+          const pair = rng.shuffle(kind === 0 ? line1 : pts.filter((q) => q.line === 1)).slice(0, 2);
+          const third =
+            kind === 0 ? rng.pick(line1.filter((q) => !pair.includes(q))) : rng.pick(pts.filter((q) => q.line === (kind === 1 ? 2 : 3)));
+          const trio = rng.shuffle([...pair, third]).map((q) => q.name);
+          const [p, q] = [pair[0]!.name, pair[1]!.name];
+          const z = third.name;
+          const where: Pair =
+            kind === 0
+              ? [`$${z}$ is on that same line.`, `$${z}$ 也在这条直线上。`]
+              : kind === 1
+                ? [
+                    `$${z}$ is on the other line, away from the crossing, so that line misses it.`,
+                    `$${z}$ 在另一条直线上，又不是交点，所以这条直线不经过它。`,
+                  ]
+                : [`$${z}$ is on neither line, so that line misses it.`, `$${z}$ 不在任何一条直线上，所以这条直线不经过它。`];
+          return decided(
+            rng,
+            [`Are points $${trio[0]}$, $${trio[1]}$ and $${trio[2]}$ collinear?`, `点 $${trio[0]}$、$${trio[1]}$、$${trio[2]}$ 共线吗？`],
+            kind === 0,
+            [
+              [
+                ["Take two points", "先取两点"],
+                [`$${p}$ and $${q}$ lie on one drawn line.`, `$${p}$ 和 $${q}$ 在同一条画出的直线上。`],
+              ],
+              [["Test the third", "检验第三点"], where],
+            ],
+            kind === 0
+              ? [
+                  `Start from $${z}$ and $${p}$ instead: their line is the same drawn line, and it passes through $${q}$ too.`,
+                  `改从 $${z}$ 和 $${p}$ 开始：它们确定的还是这条画出的直线，它也经过 $${q}$。`,
+                ]
+              : [
+                  `Start from $${z}$ and $${p}$ instead: their line is not a drawn line, and it misses $${q}$.`,
+                  `改从 $${z}$ 和 $${p}$ 开始：它们确定的直线不是画出的直线，它不经过 $${q}$。`,
+                ],
+            kind === 0
+              ? ["All three points sit on one drawn line, so no point is off it.", "三个点都在同一条画出的直线上，没有哪个点在直线外。"]
+              : [
+                  `Three points can be joined by segments, but no single straight line holds $${z}$ with the other two.`,
+                  `三个点能用线段连起来，但没有一条直线同时经过 $${z}$ 和另外两点。`,
+                ],
+            crossingFigure(c, pts),
+          );
+        },
+        crossingFigure(sampleCrossing, crossingPoints(sampleCrossing, [..."XABCDEF"])),
       ),
-      generate(rng) {
-        const t1 = rng.int(0, 35) * 5;
-        const t2 = t1 + rng.int(10, 26) * 5;
-        const X: Point = [0, 0];
-        const on1 = rng.shuffle([-4, -2, 2, 4]).slice(0, 3);
-        const on2 = rng.shuffle([-3, 3]).slice(0, rng.int(1, 2));
-        const mid = (t1 + t2) / 2 + (rng.bool() ? 0 : 180);
-        const off = dir(mid, 3);
-        const letters = rng.shuffle([..."ABCDEFGH"]);
-        type Named = { p: Point; line: number; name: string; d: Compass };
-        const normal = (deg: number, p: Point): Compass => awayFrom(dir(deg + 90, 1, p), p);
-        const pts: Named[] = [
-          { p: X, line: 0, name: letters[0]!, d: awayFrom(dir(mid + 180, 1), X) },
-          ...on1.map((s, i) => ({ p: dir(t1, s), line: 1, name: letters[1 + i]!, d: normal(t1, dir(t1, s)) })),
-          ...on2.map((s, i) => ({ p: dir(t2, s), line: 2, name: letters[4 + i]!, d: normal(t2, dir(t2, s)) })),
-          { p: off, line: 3, name: letters[6]!, d: awayFrom(off, X) },
-        ];
-        const line1 = pts.filter((q) => q.line === 1 || q.line === 0);
-        const kind = rng.int(0, 2);
-        const pick =
-          kind === 0
-            ? rng.shuffle(line1).slice(0, 3)
-            : [...rng.shuffle(pts.filter((q) => q.line === 1)).slice(0, 2), rng.pick(pts.filter((q) => q.line === (kind === 1 ? 2 : 3)))];
-        const trio = rng.shuffle(pick).map((q) => q.name);
-        const list = `$${trio[0]}$, $${trio[1]}$ and $${trio[2]}$`;
-        const listZh = `$${trio[0]}$、$${trio[1]}$、$${trio[2]}$`;
-        const outsider = pick.find((q) => q.line > 1);
-        const suspect = outsider?.name ?? trio[2]!;
-        return {
-          ...verdictChoice(rng, {
-            prompt: t(`Are points ${list} collinear?`, `点 ${listZh} 共线吗？`),
-            holds: kind === 0,
-            yes: t("all three lie on one straight line", "三个点都在同一条直线上"),
-            no: t(`$${suspect}$ is not on the line through the other two`, `$${suspect}$ 不在经过另外两点的直线上`),
-            yesWrong: t("any three points can be joined by straight segments", "任意三个点都可以用线段连起来"),
-            noWrong: t("the three points are not evenly spaced", "这三个点的间距不相等"),
-            solution:
-              kind === 0
-                ? t(`All three lie on the same line, so they are collinear.`, `三个点都在同一条直线上，所以它们共线。`)
-                : t(
-                    `The line through the other two points does not pass through $${outsider!.name}$, so the three points are not collinear.`,
-                    `经过另外两点的直线不经过 $${outsider!.name}$，所以这三点不共线。`,
-                  ),
-          }),
-          figure: fig(
-            [seg(dir(t1, -5.5), dir(t1, 5.5)), seg(dir(t2, -4.5), dir(t2, 4.5)), ...pts.flatMap((q) => dot(q.p, q.name, q.d))],
-            `Two lines crossing at ${pts[0]!.name}. Points ${line1
-              .slice(1)
-              .map((q) => q.name)
-              .join(", ")} lie on one line, ${pts
-              .filter((q) => q.line === 2)
-              .map((q) => q.name)
-              .join(" and ")} on the other, and ${off ? pts[pts.length - 1]!.name : ""} on neither.`,
-            `两条直线相交于 ${pts[0]!.name}。点 ${line1
-              .slice(1)
-              .map((q) => q.name)
-              .join("、")} 在一条直线上，${pts
-              .filter((q) => q.line === 2)
-              .map((q) => q.name)
-              .join("、")} 在另一条直线上，${pts[pts.length - 1]!.name} 不在这两条直线上。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "collinear-points-in-the-coordinate-plane",
-      figure: gradeDrawings3["collinear-points#collinear-points-in-the-coordinate-plane"],
-      title: t("Collinear points in the coordinate plane", "坐标平面中的共线点"),
-      explanation: t(
-        "$A(3, -2)$ and $B(3, 4)$ have the same $x$-coordinate, so they lie on a vertical line, and every point with $x$-coordinate $3$, such as $(3, 9)$, is collinear with them. $P(1, 1)$ and $Q(3, 4)$ are $2$ right and $3$ up from each other; repeating that step from $Q$ gives $(5, 7)$, which is on the same line.",
-        "$A(3, -2)$ 与 $B(3, 4)$ 的横坐标相同，所以它们在一条竖直线上，横坐标为 $3$ 的点，例如 $(3, 9)$，都与它们共线。从 $P(1, 1)$ 到 $Q(3, 4)$ 是向右 $2$、向上 $3$；从 $Q$ 再走同样的一步得到 $(5, 7)$，它在同一条直线上。",
+      lesson(
+        "collinear-points-in-the-coordinate-plane",
+        ["Collinear points in the coordinate plane", "坐标平面中的共线点"],
+        [
+          [
+            "$A(3, -2)$ and $B(3, 4)$ have the same $x$-coordinate, so they lie on a vertical line, and every point with $x$-coordinate $3$, such as $(3, 9)$, is collinear with them. $P(1, 1)$ and $Q(3, 4)$ are $2$ right and $3$ up from each other; repeating that step from $Q$ gives $(5, 7)$, which is on the same line.",
+            "$A(3, -2)$ 与 $B(3, 4)$ 的横坐标相同，所以它们在一条竖直线上，横坐标为 $3$ 的点，例如 $(3, 9)$，都与它们共线。从 $P(1, 1)$ 到 $Q(3, 4)$ 是向右 $2$、向上 $3$；从 $Q$ 再走同样的一步得到 $(5, 7)$，它在同一条直线上。",
+          ],
+          [
+            "From $P(1, 1)$ to $(5, 7)$ is $4$ right and $6$ up, which is the step $2$ right, $3$ up taken twice.",
+            "从 $P(1, 1)$ 到 $(5, 7)$ 是向右 $4$、向上 $6$，正是“向右 $2$、向上 $3$”走两次。",
+          ],
+          [
+            "Changing only one coordinate by $1$ moves a point off a slanted line: $(5, 6)$ is not on the line through $P$ and $Q$.",
+            "只把一个坐标改动 $1$，点就会离开斜线：$(5, 6)$ 不在经过 $P$、$Q$ 的直线上。",
+          ],
+        ],
+        (rng) => {
+          const kind = rng.int(0, 2);
+          const [x0, y0] = [rng.int(-6, 6), rng.int(-6, 6)];
+          const step: [number, number] =
+            kind === 0 ? [0, rng.nonZero(-5, 5)] : kind === 1 ? [rng.nonZero(-5, 5), 0] : [rng.int(1, 3), rng.nonZero(-4, 4)];
+          const A: [number, number] = [x0, y0];
+          const B: [number, number] = [x0 + step[0], y0 + step[1]];
+          const m = rng.pick([2, 3, -1, -2]);
+          const C: [number, number] = [x0 + m * step[0], y0 + m * step[1]];
+          const cross = (p: readonly number[]) => (B[0] - A[0]) * (p[1]! - A[1]) - (B[1] - A[1]) * (p[0]! - A[0]);
+          const seen = new Set([pointLatex(C)]);
+          const wrong: MathWrong[] = [];
+          for (const [move, en, zh] of rng.shuffle([...coordinateSlips])) {
+            const p = move(C);
+            if (cross(p) === 0 || seen.has(pointLatex(p)) || wrong.length === 3) continue;
+            seen.add(pointLatex(p));
+            wrong.push([pointLatex(p), en, zh]);
+          }
+          const back =
+            m > 0
+              ? [`$${m}$ times from $A$`, `从 $A$ 沿这一步走 $${m}$ 次`]
+              : [`$${-m}$ time${m === -1 ? "" : "s"} backward from $A$`, `从 $A$ 反方向走 $${-m}$ 次`];
+          const walk: Walk[] =
+            kind === 0
+              ? [
+                  [
+                    ["Compare A and B", "比较 A 和 B"],
+                    [
+                      `$A$ and $B$ have the same $x$-coordinate, $${x0}$, so the line through them is vertical.`,
+                      `$A$ 与 $B$ 的横坐标都是 $${x0}$，所以经过它们的直线是竖直的。`,
+                    ],
+                  ],
+                  [
+                    ["Match the choice", "找出选项"],
+                    [`The point on it has $x$-coordinate $${x0}$: $${pointLatex(C)}$.`, `直线上的点横坐标是 $${x0}$：$${pointLatex(C)}$。`],
+                  ],
+                ]
+              : kind === 1
+                ? [
+                    [
+                      ["Compare A and B", "比较 A 和 B"],
+                      [
+                        `$A$ and $B$ have the same $y$-coordinate, $${y0}$, so the line through them is horizontal.`,
+                        `$A$ 与 $B$ 的纵坐标都是 $${y0}$，所以经过它们的直线是水平的。`,
+                      ],
+                    ],
+                    [
+                      ["Match the choice", "找出选项"],
+                      [
+                        `The point on it has $y$-coordinate $${y0}$: $${pointLatex(C)}$.`,
+                        `直线上的点纵坐标是 $${y0}$：$${pointLatex(C)}$。`,
+                      ],
+                    ],
+                  ]
+                : [
+                    [
+                      ["Find the step", "找出一步"],
+                      [
+                        `From $A$ to $B$ is $${step[0]}$ right and $${Math.abs(step[1])}$ ${step[1] > 0 ? "up" : "down"}.`,
+                        `从 $A$ 到 $B$ 是向右 $${step[0]}$、向${step[1] > 0 ? "上" : "下"} $${Math.abs(step[1])}$。`,
+                      ],
+                    ],
+                    [
+                      ["Repeat the step", "重复这一步"],
+                      [`Taking it ${back[0]} gives $${pointLatex(C)}$.`, `${back[1]}，得到 $${pointLatex(C)}$。`],
+                    ],
+                  ];
+          const dx = C[0] - B[0];
+          const dy = C[1] - B[1];
+          return chosenMath(
+            rng,
+            [
+              `Which point is collinear with $A${pointLatex(A)}$ and $B${pointLatex(B)}$?`,
+              `哪个点与 $A${pointLatex(A)}$、$B${pointLatex(B)}$ 共线？`,
+            ],
+            pointLatex(C),
+            wrong,
+            walk,
+            [
+              `From $B$ to $${pointLatex(C)}$ is a change of $${dx}$ in $x$ and $${dy}$ in $y$, which is $${m - 1}$ times the step from $A$ to $B$, so all three are on one line.`,
+              `从 $B$ 到 $${pointLatex(C)}$，$x$ 变化 $${dx}$，$y$ 变化 $${dy}$，是从 $A$ 到 $B$ 那一步的 $${m - 1}$ 倍，所以三点在同一条直线上。`,
+            ],
+          );
+        },
+        drawn(gradeDrawings3["collinear-points#collinear-points-in-the-coordinate-plane"]),
       ),
-      generate(rng) {
-        const kind = rng.int(0, 2);
-        const [x0, y0] = [rng.int(-6, 6), rng.int(-6, 6)];
-        const step: [number, number] =
-          kind === 0 ? [0, rng.nonZero(-5, 5)] : kind === 1 ? [rng.nonZero(-5, 5), 0] : [rng.int(1, 3), rng.nonZero(-4, 4)];
-        const A = [x0, y0];
-        const B = [x0 + step[0], y0 + step[1]];
-        const m = rng.pick([2, 3, -1, -2]);
-        const C = [x0 + m * step[0], y0 + m * step[1]];
-        const cross = (p: readonly number[]) => (B[0]! - A[0]!) * (p[1]! - A[1]!) - (B[1]! - A[1]!) * (p[0]! - A[0]!);
-        const candidates = [
-          [C[1]!, C[0]!],
-          [C[0]! + 1, C[1]!],
-          [C[0]!, C[1]! + 1],
-          [C[0]! - 1, C[1]!],
-          [C[0]!, C[1]! - 1],
-          [-C[0]!, C[1]!],
-          [C[0]!, -C[1]!],
-        ].filter((p) => cross(p) !== 0);
-        const wrong = [...new Map(candidates.map((p) => [pointLatex(p), p])).values()].slice(0, 3);
-        const opt = (p: readonly number[]) => t(`$${pointLatex(p)}$`, `$${pointLatex(p)}$`);
-        const why =
-          kind === 0
-            ? t(
-                `$A$ and $B$ have the same $x$-coordinate, $${x0}$, so the line through them is vertical. The only choice with $x$-coordinate $${x0}$ is $${pointLatex(C)}$.`,
-                `$A$ 与 $B$ 的横坐标都是 $${x0}$，所以经过它们的直线是竖直的。选项中只有 $${pointLatex(C)}$ 的横坐标是 $${x0}$。`,
-              )
-            : kind === 1
-              ? t(
-                  `$A$ and $B$ have the same $y$-coordinate, $${y0}$, so the line through them is horizontal. The only choice with $y$-coordinate $${y0}$ is $${pointLatex(C)}$.`,
-                  `$A$ 与 $B$ 的纵坐标都是 $${y0}$，所以经过它们的直线是水平的。选项中只有 $${pointLatex(C)}$ 的纵坐标是 $${y0}$。`,
-                )
-              : t(
-                  `From $A$ to $B$ is $${step[0]}$ right and $${Math.abs(step[1])}$ ${step[1] > 0 ? "up" : "down"}. Taking that step ${m > 0 ? `$${m}$ times from $A$` : `$${-m}$ time${m === -1 ? "" : "s"} backward from $A$`} gives $${pointLatex(C)}$, so it is on the line through $A$ and $B$.`,
-                  `从 $A$ 到 $B$ 是向右 $${step[0]}$、向${step[1] > 0 ? "上" : "下"} $${Math.abs(step[1])}$。从 $A$ ${m > 0 ? `沿这一步走 $${m}$ 次` : `反方向走 $${-m}$ 次`}得到 $${pointLatex(C)}$，所以它在经过 $A$、$B$ 的直线上。`,
-                );
-        return pickChoice(
-          rng,
-          t(
-            `Which point is collinear with $A${pointLatex(A)}$ and $B${pointLatex(B)}$?`,
-            `哪个点与 $A${pointLatex(A)}$、$B${pointLatex(B)}$ 共线？`,
-          ),
-          opt(C),
-          wrong.map(opt),
-          why,
-        );
-      },
-    },
+    ],
+  ),
+  [
+    "Three fence posts are set with a tight string along them. If the string touches all three, they stand in one straight row.",
+    "三根篱笆桩用一根拉紧的绳子比一比。如果绳子碰到全部三根，它们就站成一条直线。",
+  ],
+  [
+    "Move one post a little to the side and the string can no longer touch all three.",
+    "把其中一根桩往旁边挪一点，绳子就不能同时碰到三根了。",
+  ],
+  [
+    "decide whether points are collinear in a figure and in the coordinate plane, and find a coordinate that keeps points on one line.",
+    "学习判断图中和坐标平面中的点是否共线，并求使点保持在同一条直线上的坐标。",
   ],
 );
-
-export const theSegmentAdditionPostulate = topic(
-  "the-segment-addition-postulate",
-  t("The Segment Addition Postulate", "线段加法公理"),
-  t(
-    "If point B lies on segment AC, between A and C, then AB + BC = AC: the two parts add up to the whole. So a part is the whole minus the other part. When the lengths are expressions, the postulate gives an equation: if AB = 2x + 3, BC = 3x − 1 and AC = 32, then 5x + 2 = 32 and x = 6.",
-    "如果点 B 在线段 AC 上、位于 A 与 C 之间，那么 AB + BC = AC：两部分之和等于整条线段。所以一部分等于整条线段减去另一部分。长度用式子表示时，由这个公理可以列出方程：若 AB = 2x + 3，BC = 3x − 1，AC = 32，则 5x + 2 = 32，x = 6。",
-  ),
-  ["measures-of-segments", "two-step-equations"],
-  ["7.G.A.1"],
-  [
-    {
-      id: "parts-and-wholes",
-      title: t("Parts and wholes", "部分与整体"),
-      explanation: t(
-        "$A$, $B$, $C$ and $D$ lie on a line in that order, $AC = 15$, $BD = 12$ and $AD = 20$. Then $AB = AD - BD = 20 - 12 = 8$, and $BC = AC - AB = 15 - 8 = 7$. Adding $AC + BD = 27$ counts $\\overline{BC}$ twice, which is why it is more than $AD$.",
-        "$A$、$B$、$C$、$D$ 依次在一条直线上，$AC = 15$，$BD = 12$，$AD = 20$。则 $AB = AD - BD = 20 - 12 = 8$，$BC = AC - AB = 15 - 8 = 7$。$AC + BD = 27$ 把 $\\overline{BC}$ 算了两次，所以比 $AD$ 大。",
-      ),
-      generate(rng) {
-        const u = pickUnit(rng);
-        const tex = (v: Q) => `${result(v)}\\text{ ${u}}`;
-        if (rng.bool()) {
-          const ab = rng.bool() ? Q.of(rng.int(3, 30)) : halves(rng, 2, 25);
-          const bc = Q.of(rng.int(3, 30));
-          const ac = ab.add(bc);
-          return {
-            ...numberProblem({
-              prompt: t(
+/** theSegmentAdditionPostulate adds and subtracts the parts of a segment, with numbers and with expressions. */
+export const theSegmentAdditionPostulate = withIntro(
+  topic(
+    "the-segment-addition-postulate",
+    t("The Segment Addition Postulate", "线段加法公理"),
+    t(
+      "If point B lies on segment AC, between A and C, then AB + BC = AC: the two parts add up to the whole. So a part is the whole minus the other part. When the lengths are expressions, the postulate gives an equation: if AB = 2x + 3, BC = 3x − 1 and AC = 32, then 5x + 2 = 32 and x = 6.",
+      "如果点 B 在线段 AC 上、位于 A 与 C 之间，那么 AB + BC = AC：两部分之和等于整条线段。所以一部分等于整条线段减去另一部分。长度用式子表示时，由这个公理可以列出方程：若 AB = 2x + 3，BC = 3x − 1，AC = 32，则 5x + 2 = 32，x = 6。",
+    ),
+    ["measures-of-segments", "two-step-equations"],
+    ["7.G.A.1"],
+    [
+      lesson(
+        "parts-and-wholes",
+        ["Parts and wholes", "部分与整体"],
+        [
+          [
+            "When $B$ lies on $\\overline{AC}$, the parts add up to the whole: $AB + BC = AC$. So a part is the whole minus the other part. With $A$, $B$, $C$, $D$ in that order, $AC = 15$, $BD = 12$ and $AD = 20$: first $AB = AD - BD = 20 - 12 = 8$, then $BC = AC - AB = 15 - 8 = 7$.",
+            "当 $B$ 在 $\\overline{AC}$ 上时，两部分之和等于整体：$AB + BC = AC$。所以一部分等于整体减去另一部分。$A$、$B$、$C$、$D$ 依次排列，$AC = 15$，$BD = 12$，$AD = 20$：先求 $AB = AD - BD = 20 - 12 = 8$，再求 $BC = AC - AB = 15 - 8 = 7$。",
+          ],
+          [
+            "$CD = AD - AC = 20 - 15 = 5$, and $BC + CD = 7 + 5 = 12$, which is $BD$.",
+            "$CD = AD - AC = 20 - 15 = 5$，$BC + CD = 7 + 5 = 12$，正是 $BD$。",
+          ],
+          [
+            "$AC + BD = 27$ is more than $AD = 20$, because adding the two long pieces counts $\\overline{BC}$ twice.",
+            "$AC + BD = 27$ 比 $AD = 20$ 大，因为把两条长线段相加，$\\overline{BC}$ 被算了两次。",
+          ],
+        ],
+        (rng) => {
+          const u = pickUnit(rng);
+          const tex = (v: Q) => `${result(v)}\\text{ ${u}}`;
+          if (rng.bool()) {
+            const ab = rng.bool() ? Q.of(rng.int(3, 30)) : halves(rng, 2, 25);
+            const bc = Q.of(rng.int(3, 30));
+            const ac = ab.add(bc);
+            return valued(
+              [
                 `Point $B$ lies on $${over("AC")}$. $AC = ${tex(ac)}$ and $AB = ${tex(ab)}$. Find $BC$.`,
                 `点 $B$ 在 $${over("AC")}$ 上。$AC = ${tex(ac)}$，$AB = ${tex(ab)}$。求 $BC$。`,
-              ),
-              answer: bc,
-              unit: u,
-              wrong: [ac.add(ab), ac.div(Q.of(2)), ab],
-              solution: t(
-                `By the segment addition postulate, $AB + BC = AC$:${steps(`BC = AC - AB = ${result(ac)} - ${result(ab)} = ${tex(bc)}`)}`,
-                `由线段加法公理，$AB + BC = AC$：${steps(`BC = AC - AB = ${result(ac)} - ${result(ab)} = ${tex(bc)}`)}`,
-              ),
-            }),
-            figure: fig(
-              rowFigure(
+              ],
+              bc,
+              [
+                [["Write the postulate", "写出公理"], ["The two parts make the whole:", "两部分组成整体："], ["AB + BC = AC"]],
                 [
-                  [0, "A"],
-                  [ab.toNumber(), "B"],
-                  [ac.toNumber(), "C"],
+                  ["Subtract the known part", "减去已知部分"],
+                  ["Take $AB$ away from the whole:", "从整体中去掉 $AB$："],
+                  [`BC = ${result(ac)} - ${result(ab)} = ${tex(bc)}`],
                 ],
-                [],
-              ),
-              "Points A, B and C in that order on a segment.",
-              "线段上依次排列的点 A、B、C。",
-            ),
-          };
-        }
-        const [ab, bc, cd] = [rng.int(3, 15), rng.int(3, 15), rng.int(3, 15)];
-        const [ac, bd, ad] = [ab + bc, bc + cd, ab + bc + cd];
-        return {
-          ...numberProblem({
-            prompt: t(
+              ],
+              [
+                `Add the parts back: $${result(ab)} + ${result(bc)} = ${result(ac)}$, which is $AC$.`,
+                `把两部分加回去：$${result(ab)} + ${result(bc)} = ${result(ac)}$，正是 $AC$。`,
+              ],
+              [
+                [ac.add(ab), "That adds $AB$ to the whole instead of taking it away.", "这是把 $AB$ 加到整体上，而不是从中减去。"],
+                [ac.div(Q.of(2)), "That halves $AC$, but $B$ need not be the midpoint.", "这是把 $AC$ 取一半，但 $B$ 不一定是中点。"],
+                [ab, "That is $AB$, the other part.", "这是另一部分 $AB$。"],
+              ],
+              {
+                unit: u,
+                figure: fig(
+                  rowFigure(
+                    [
+                      [0, "A"],
+                      [ab.toNumber(), "B"],
+                      [ac.toNumber(), "C"],
+                    ],
+                    [],
+                  ),
+                  "Points A, B and C in that order on a segment.",
+                  "线段上依次排列的点 A、B、C。",
+                ),
+              },
+            );
+          }
+          const [ab, bc, cd] = [rng.int(3, 15), rng.int(3, 15), rng.int(3, 15)];
+          const [ac, bd, ad] = [ab + bc, bc + cd, ab + bc + cd];
+          return valued(
+            [
               `Points $A$, $B$, $C$ and $D$ lie on a line in that order. $AC = ${ac}\\text{ ${u}}$, $BD = ${bd}\\text{ ${u}}$ and $AD = ${ad}\\text{ ${u}}$. Find $BC$.`,
               `点 $A$、$B$、$C$、$D$ 依次在一条直线上。$AC = ${ac}\\text{ ${u}}$，$BD = ${bd}\\text{ ${u}}$，$AD = ${ad}\\text{ ${u}}$。求 $BC$。`,
-            ),
-            answer: bc,
-            unit: u,
-            wrong: [ad - ac, ad - bd, ac + bd],
-            solution: t(
-              `First find a part next to $${over("BC")}$, then subtract it:${steps(`AB = AD - BD = ${ad} - ${bd} = ${ab}`, `BC = AC - AB = ${ac} - ${ab} = ${bc}\\text{ ${u}}`)}`,
-              `先求出与 $${over("BC")}$ 相邻的一段，再相减：${steps(`AB = AD - BD = ${ad} - ${bd} = ${ab}`, `BC = AC - AB = ${ac} - ${ab} = ${bc}\\text{ ${u}}`)}`,
-            ),
-          }),
-          figure: fig(
-            rowFigure(
+            ],
+            bc,
+            [
               [
-                [0, "A"],
-                [ab, "B"],
-                [ac, "C"],
-                [ad, "D"],
+                ["Find a part next to BC", "求与 BC 相邻的一段"],
+                ["$AB$ is what is left of $AD$ after $BD$:", "$AD$ 去掉 $BD$ 剩下 $AB$："],
+                [`AB = ${ad} - ${bd} = ${ab}`],
               ],
-              [],
-            ),
-            "Points A, B, C and D in that order on a segment.",
-            "线段上依次排列的点 A、B、C、D。",
-          ),
-        };
-      },
-    },
-    {
-      id: "segment-addition-with-algebra",
-      title: t("Segment addition with algebra", "用方程解线段加法问题"),
-      explanation: t(
-        "By the segment addition postulate, if $B$ lies on $\\overline{AC}$, then $AB + BC = AC$. When the lengths are expressions, write that equation, solve for the variable, and substitute back to find each length.\n\n$B$ lies on $\\overline{AC}$, $AB = 2x + 3$, $BC = 3x - 1$ and $AC = 32$. Then $(2x + 3) + (3x - 1) = 32$, so $5x + 2 = 32$, $5x = 30$ and $x = 6$. The parts are $AB = 15$ and $BC = 17$, and $15 + 17 = 32$ checks.",
-        "由线段加法公设，若 $B$ 在 $\\overline{AC}$ 上，则 $AB + BC = AC$。当长度用式子表示时，列出这个方程，解出未知数，再代回去求出每段长度。\n\n$B$ 在 $\\overline{AC}$ 上，$AB = 2x + 3$，$BC = 3x - 1$，$AC = 32$。则 $(2x + 3) + (3x - 1) = 32$，所以 $5x + 2 = 32$，$5x = 30$，$x = 6$。两部分是 $AB = 15$ 和 $BC = 17$，$15 + 17 = 32$，检验正确。",
-      ),
-      generate(rng) {
-        const x = rng.int(2, 12);
-        const [l1, l2] = [rng.int(x + 3, 40), rng.int(x + 3, 40)];
-        const e1 = expressionFor(rng, l1, x);
-        const e2 = expressionFor(rng, l2, x);
-        const total = l1 + l2;
-        const u = pickUnit(rng);
-        const ask = rng.int(0, 2);
-        const solve = steps(...sumSteps([e1, e2], total));
-        const figure = fig(
+              [
+                ["Subtract it", "再相减"],
+                ["$BC$ is what is left of $AC$ after $AB$:", "$AC$ 去掉 $AB$ 剩下 $BC$："],
+                [`BC = ${ac} - ${ab} = ${bc}\\text{ ${u}}`],
+              ],
+            ],
+            [
+              `Go from the other end: $CD = ${ad} - ${ac} = ${cd}$, and $BC = BD - CD = ${bd} - ${cd} = ${bc}$ again.`,
+              `从另一端算：$CD = ${ad} - ${ac} = ${cd}$，$BC = BD - CD = ${bd} - ${cd} = ${bc}$，结果相同。`,
+            ],
+            [
+              [ad - ac, "That is $CD$, the part after $C$.", "这是 $C$ 之后的一段 $CD$。"],
+              [ad - bd, "That is $AB$, the part before $B$.", "这是 $B$ 之前的一段 $AB$。"],
+              [ac + bd, "That adds the two long pieces, which counts $BC$ twice.", "这是把两条长线段相加，把 $BC$ 算了两次。"],
+            ],
+            {
+              unit: u,
+              figure: fig(
+                rowFigure(
+                  [
+                    [0, "A"],
+                    [ab, "B"],
+                    [ac, "C"],
+                    [ad, "D"],
+                  ],
+                  [],
+                ),
+                "Points A, B, C and D in that order on a segment.",
+                "线段上依次排列的点 A、B、C、D。",
+              ),
+            },
+          );
+        },
+        fig(
           rowFigure(
             [
               [0, "A"],
-              [l1, "B"],
-              [total, "C"],
+              [8, "B"],
+              [15, "C"],
+              [20, "D"],
             ],
             [
-              [0, l1, plain(...e1)],
-              [l1, total, plain(...e2)],
+              [0, 8, "8"],
+              [8, 15, "7"],
+              [15, 20, "5"],
             ],
-            String(total),
+            "20",
           ),
-          `Segment AC of length ${total} with B on it; AB = ${plain(...e1)} and BC = ${plain(...e2)}.`,
-          `长为 ${total} 的线段 AC，B 在它上面；AB = ${plain(...e1)}，BC = ${plain(...e2)}。`,
-        );
-        const given = t(
-          `$B$ lies on $${over("AC")}$, $AB = ${linear(...e1)}$, $BC = ${linear(...e2)}$ and $AC = ${total}$, in ${unitWords[u]}.`,
-          `$B$ 在 $${over("AC")}$ 上，$AB = ${linear(...e1)}$，$BC = ${linear(...e2)}$，$AC = ${total}$（单位：${u}）。`,
-        );
-        if (ask === 0)
-          return {
-            ...numberProblem({
-              prompt: t(`${given.en} Find $x$.`, `${given["zh-CN"]}求 $x$。`),
-              answer: x,
-              wrong: sumWrong([e1, e2], total, 2 * total),
-              solution: t(`The parts add up to the whole:${solve}`, `两部分之和等于整条线段：${solve}`),
-            }),
-            figure,
-          };
-        const [name, e, v] = ask === 1 ? ["AB", e1, l1] : ["BC", e2, l2];
-        return {
-          ...numberProblem({
-            prompt: t(`${given.en} How long is $${over(name)}$?`, `${given["zh-CN"]}$${over(name)}$ 有多长？`),
-            answer: v,
-            unit: u,
-            wrong: [x, total - v, Q.of(total, 2)],
-            solution: t(
-              `The parts add up to the whole:${solve}So $${name} = ${subst(e, x)} = ${v}\\text{ ${u}}$.`,
-              `两部分之和等于整条线段：${solve}所以 $${name} = ${subst(e, x)} = ${v}\\text{ ${u}}$。`,
+          "Points A, B, C and D in that order; AB = 8, BC = 7, CD = 5 and AD = 20.",
+          "依次排列的点 A、B、C、D；AB = 8，BC = 7，CD = 5，AD = 20。",
+        ),
+      ),
+      lesson(
+        "segment-addition-with-algebra",
+        ["Segment addition with algebra", "用方程解线段加法问题"],
+        [
+          [
+            "When the lengths are expressions, the postulate gives an equation. $B$ lies on $\\overline{AC}$, $AB = 2x + 3$, $BC = 3x - 1$ and $AC = 32$: $(2x + 3) + (3x - 1) = 32$, so $5x + 2 = 32$, $5x = 30$ and $x = 6$. Then $AB = 15$ and $BC = 17$.",
+            "长度用式子表示时，由公理可以列出方程。$B$ 在 $\\overline{AC}$ 上，$AB = 2x + 3$，$BC = 3x - 1$，$AC = 32$：$(2x + 3) + (3x - 1) = 32$，所以 $5x + 2 = 32$，$5x = 30$，$x = 6$。于是 $AB = 15$，$BC = 17$。",
+          ],
+          ["$15 + 17 = 32$, which is $AC$.", "$15 + 17 = 32$，正是 $AC$。"],
+          [
+            "$x = 6$ is not a length: put it back into $AB$ or $BC$ to find the part that is asked for.",
+            "$x = 6$ 不是长度：要把它代回 $AB$ 或 $BC$，才能求出所问的那一段。",
+          ],
+        ],
+        (rng) => {
+          const x = rng.int(2, 12);
+          const [l1, l2] = [rng.int(x + 3, 40), rng.int(x + 3, 40)];
+          const e1 = expressionFor(rng, l1, x);
+          const e2 = expressionFor(rng, l2, x);
+          const total = l1 + l2;
+          const u = pickUnit(rng);
+          const ask = rng.int(0, 2);
+          const lines = sumSteps([e1, e2], total);
+          const figure = fig(
+            rowFigure(
+              [
+                [0, "A"],
+                [l1, "B"],
+                [total, "C"],
+              ],
+              [
+                [0, l1, plain(...e1)],
+                [l1, total, plain(...e2)],
+              ],
+              String(total),
             ),
-          }),
-          figure,
-        };
-      },
-    },
+            `Segment AC of length ${total} with B on it; AB = ${plain(...e1)} and BC = ${plain(...e2)}.`,
+            `长为 ${total} 的线段 AC，B 在它上面；AB = ${plain(...e1)}，BC = ${plain(...e2)}。`,
+          );
+          const given: Pair = [
+            `$B$ lies on $${over("AC")}$, $AB = ${linear(...e1)}$, $BC = ${linear(...e2)}$ and $AC = ${total}$, in ${unitWords[u]}.`,
+            `$B$ 在 $${over("AC")}$ 上，$AB = ${linear(...e1)}$，$BC = ${linear(...e2)}$，$AC = ${total}$（单位：${u}）。`,
+          ];
+          const write: Walk = [
+            ["Write the equation", "列方程"],
+            ["The parts add up to the whole:", "两部分之和等于整体："],
+            lines.slice(0, 1),
+          ];
+          const solve: Walk = [
+            ["Solve for x", "解出 x"],
+            ["Combine like terms, then undo each operation:", "合并同类项，再逐步还原："],
+            lines.slice(1),
+          ];
+          const check: Pair = [
+            `At $x = ${x}$: $AB = ${subst(e1, x)} = ${l1}$ and $BC = ${subst(e2, x)} = ${l2}$, and $${l1} + ${l2} = ${total}$, which is $AC$.`,
+            `$x = ${x}$ 时：$AB = ${subst(e1, x)} = ${l1}$，$BC = ${subst(e2, x)} = ${l2}$，$${l1} + ${l2} = ${total}$，正是 $AC$。`,
+          ];
+          const [signSlip, doubleSlip] = sumWrong([e1, e2], total, 2 * total) as [Q, Q];
+          if (ask === 0)
+            return valued(
+              [`${given[0]} Find $x$.`, `${given[1]}求 $x$。`],
+              x,
+              [write, solve],
+              check,
+              [
+                [signSlip, "That moves the constant across with the wrong sign.", "移项时常数的符号弄错了。"],
+                [doubleSlip, "That sets the two parts equal to twice $AC$.", "这是让两部分之和等于 $AC$ 的两倍。"],
+                [l1, "That is the length of $AB$, not $x$.", "这是 $AB$ 的长度，不是 $x$。"],
+              ],
+              { figure },
+            );
+          const [name, e, v] = ask === 1 ? (["AB", e1, l1] as const) : (["BC", e2, l2] as const);
+          return valued(
+            [`${given[0]} How long is $${over(name)}$?`, `${given[1]}$${over(name)}$ 有多长？`],
+            v,
+            [
+              [write[0], write[1], [...lines.slice(0, 1), ...lines.slice(1)]],
+              [
+                ["Substitute", "代入"],
+                [`Put $x = ${x}$ into $${name}$:`, `把 $x = ${x}$ 代入 $${name}$：`],
+                [`${name} = ${subst(e, x)} = ${v}`],
+              ],
+            ],
+            check,
+            [
+              [x, "That is $x$, not a length: put it into the expression.", "这是 $x$，不是长度：要代入式子。"],
+              [total - v, "That is the other part of $AC$.", "这是 $AC$ 的另一部分。"],
+              [Q.of(total, 2), "That halves $AC$, but $B$ is not the midpoint.", "这是把 $AC$ 取一半，但 $B$ 不是中点。"],
+            ],
+            { unit: u, figure },
+          );
+        },
+        fig(
+          rowFigure(
+            [
+              [0, "A"],
+              [15, "B"],
+              [32, "C"],
+            ],
+            [
+              [0, 15, "2x + 3"],
+              [15, 32, "3x − 1"],
+            ],
+            "32",
+          ),
+          "Segment AC of length 32 with B on it; AB = 2x + 3 and BC = 3x − 1.",
+          "长为 32 的线段 AC，B 在它上面；AB = 2x + 3，BC = 3x − 1。",
+        ),
+      ),
+    ],
+  ),
+  [
+    "A $12$ km trail runs from the gate to the lake, and a hut stands $5$ km along it. From the hut to the lake is the rest: $12 - 5 = 7$ km.",
+    "一条从大门到湖边的小路长 $12$ 千米，小屋在路上 $5$ 千米处。从小屋到湖边是剩下的部分：$12 - 5 = 7$ 千米。",
+  ],
+  ["$5 + 7 = 12$, the whole trail.", "$5 + 7 = 12$，正是整条小路。"],
+  [
+    "add the parts of a segment to get the whole, subtract to find a missing part, and solve equations when the parts are expressions.",
+    "学习把线段的各部分相加得到整体，用减法求缺少的部分，并在各部分用式子表示时解方程。",
   ],
 );
 
@@ -1277,171 +1536,318 @@ function bisectorFigure(a: number, withP: readonly [string, string] | null, halv
   return marks;
 }
 
-export const segmentBisectorsAndThePerpendicularBisectorTheorem = topic(
-  "segment-bisectors-and-the-perpendicular-bisector-theorem",
-  t("Segment Bisectors and the Perpendicular Bisector Theorem", "线段的平分线与垂直平分线定理"),
-  t(
-    "A segment bisector is a line, ray or segment through the midpoint of a segment: it cuts the segment into two congruent halves. A bisector that is also perpendicular to the segment is its perpendicular bisector. The perpendicular bisector theorem says that every point on the perpendicular bisector of AB is the same distance from A and from B: PA = PB. Conversely, a point the same distance from A and B lies on the perpendicular bisector.",
-    "经过线段中点的直线、射线或线段叫线段的平分线：它把线段分成两条全等的线段。垂直于线段的平分线叫这条线段的垂直平分线。垂直平分线定理：线段 AB 的垂直平分线上的每一点到 A 和 B 的距离相等，即 PA = PB。反过来，到 A 和 B 距离相等的点在线段的垂直平分线上。",
-  ),
-  ["midpoints", "parallel-and-perpendicular-lines"],
-  ["7.G.A.2"],
-  [
-    {
-      id: "bisectors-of-segments",
-      title: t("Segment bisectors", "线段的平分线"),
-      explanation: t(
-        "Line $\\ell$ bisects $\\overline{AB}$ at $M$, $AB = 5x - 2$ and $AM = 2x + 3$. The whole is twice each half, so $5x - 2 = 2(2x + 3) = 4x + 6$, which gives $x = 8$. Then $AM = 19$ and $AB = 38$. Setting $5x - 2 = 2x + 3$ would treat the whole as equal to a half.",
-        "直线 $\\ell$ 在 $M$ 处平分 $\\overline{AB}$，$AB = 5x - 2$，$AM = 2x + 3$。整条线段是每一半的两倍，所以 $5x - 2 = 2(2x + 3) = 4x + 6$，得 $x = 8$。于是 $AM = 19$，$AB = 38$。若列成 $5x - 2 = 2x + 3$，就把整条线段当成了一半。",
+/** segmentBisectorsAndThePerpendicularBisectorTheorem uses bisectors of segments and the equal distances from points of a perpendicular bisector. */
+export const segmentBisectorsAndThePerpendicularBisectorTheorem = withIntro(
+  topic(
+    "segment-bisectors-and-the-perpendicular-bisector-theorem",
+    t("Segment Bisectors and the Perpendicular Bisector Theorem", "线段的平分线与垂直平分线定理"),
+    t(
+      "A segment bisector is a line, ray or segment through the midpoint of a segment: it cuts the segment into two congruent halves. A bisector that is also perpendicular to the segment is its perpendicular bisector. The perpendicular bisector theorem says that every point on the perpendicular bisector of AB is the same distance from A and from B: PA = PB. Conversely, a point the same distance from A and B lies on the perpendicular bisector.",
+      "经过线段中点的直线、射线或线段叫线段的平分线：它把线段分成两条全等的线段。垂直于线段的平分线叫这条线段的垂直平分线。垂直平分线定理：线段 AB 的垂直平分线上的每一点到 A 和 B 的距离相等，即 PA = PB。反过来，到 A 和 B 距离相等的点在线段的垂直平分线上。",
+    ),
+    ["midpoints", "parallel-and-perpendicular-lines"],
+    ["7.G.A.2"],
+    [
+      lesson(
+        "bisectors-of-segments",
+        ["Segment bisectors", "线段的平分线"],
+        [
+          [
+            "A bisector cuts a segment at its midpoint, so the whole is twice each half. Line $\\ell$ bisects $\\overline{AB}$ at $M$, $AB = 5x - 2$ and $AM = 2x + 3$: $5x - 2 = 2(2x + 3) = 4x + 6$, so $x = 8$. Then $AM = 19$ and $AB = 38$.",
+            "平分线在中点处截线段，所以整条线段是每一半的两倍。直线 $\\ell$ 在 $M$ 处平分 $\\overline{AB}$，$AB = 5x - 2$，$AM = 2x + 3$：$5x - 2 = 2(2x + 3) = 4x + 6$，所以 $x = 8$。于是 $AM = 19$，$AB = 38$。",
+          ],
+          ["$38$ is twice $19$, so $M$ really is halfway.", "$38$ 是 $19$ 的两倍，$M$ 确实在正中间。"],
+          [
+            "Setting $5x - 2 = 2x + 3$ treats the whole segment as if it were one half.",
+            "若列成 $5x - 2 = 2x + 3$，就把整条线段当成了一半。",
+          ],
+        ],
+        (rng) => {
+          const x = rng.int(2, 12);
+          const L = rng.int(x + 4, 40);
+          const half = expressionFor(rng, L, x, [3, 4, 5, 6]);
+          const whole = expressionFor(rng, 2 * L, x, [2 * half[0], half[0]]);
+          const doubled: Linear = [2 * half[0], 2 * half[1]];
+          const u = pickUnit(rng);
+          const askX = rng.bool();
+          const figure = fig(
+            bisectorFigure(rng.pick([60, 70, 110, 120]), null, [plain(...half), null]),
+            `Line ℓ crosses segment AB at its midpoint M; AM = ${plain(...half)}.`,
+            `直线 ℓ 经过线段 AB 的中点 M；AM = ${plain(...half)}。`,
+          );
+          const given: Pair = [
+            `Line $\\ell$ bisects $${over("AB")}$ at $M$. $AB = ${linear(...whole)}$ and $AM = ${linear(...half)}$, in ${unitWords[u]}.`,
+            `直线 $\\ell$ 在 $M$ 处平分 $${over("AB")}$。$AB = ${linear(...whole)}$，$AM = ${linear(...half)}$（单位：${u}）。`,
+          ];
+          const setUp: Walk = [
+            ["Double the half", "把一半乘 2"],
+            ["$M$ is the midpoint, so $AB = 2 \\cdot AM$:", "$M$ 是中点，所以 $AB = 2 \\cdot AM$："],
+            [`${linear(...whole)} = 2(${linear(...half)}) = ${linear(...doubled)}`],
+          ];
+          const solve: Walk = [
+            ["Solve for x", "解出 x"],
+            ["Collect $x$ on one side:", "把 $x$ 集中到一边："],
+            equalSteps(whole, doubled).slice(1),
+          ];
+          const check: Pair = [
+            `At $x = ${x}$: $AM = ${subst(half, x)} = ${L}$ and $AB = ${subst(whole, x)} = ${2 * L}$, which is twice $${L}$.`,
+            `$x = ${x}$ 时：$AM = ${subst(half, x)} = ${L}$，$AB = ${subst(whole, x)} = ${2 * L}$，正是 $${L}$ 的两倍。`,
+          ];
+          if (askX)
+            return valued(
+              [`${given[0]} Find $x$.`, `${given[1]}求 $x$。`],
+              x,
+              [setUp, solve],
+              check,
+              [
+                [
+                  Q.of(half[1] - whole[1], whole[0] - half[0]),
+                  "That sets $AB$ equal to $AM$, as if the whole were one half.",
+                  "这是让 $AB$ 等于 $AM$，把整条线段当成了一半。",
+                ],
+                [equalWrong(whole, doubled)[0]!, "That moves a constant across with the wrong sign.", "移项时常数的符号弄错了。"],
+                [L, "That is the length of $AM$, not $x$.", "这是 $AM$ 的长度，不是 $x$。"],
+              ],
+              { figure },
+            );
+          return valued(
+            [`${given[0]} How long is $${over("AB")}$?`, `${given[1]}$${over("AB")}$ 有多长？`],
+            2 * L,
+            [
+              [setUp[0], setUp[1], [...(setUp[2] ?? []), ...equalSteps(whole, doubled).slice(1)]],
+              [["Substitute", "代入"], [`Put $x = ${x}$ into $AB$:`, `把 $x = ${x}$ 代入 $AB$：`], [`AB = ${subst(whole, x)} = ${2 * L}`]],
+            ],
+            check,
+            [
+              [L, "That is only the half $AM$.", "这只是一半 $AM$。"],
+              [x, "That is $x$, not a length.", "这是 $x$，不是长度。"],
+              [4 * L, "That doubles the whole length instead of the half.", "这是把整条线段再乘 $2$，而不是把一半乘 $2$。"],
+            ],
+            { unit: u, figure },
+          );
+        },
+        fig(
+          bisectorFigure(70, null, ["2x + 3", null]),
+          "Line ℓ crosses segment AB at its midpoint M; AM = 2x + 3.",
+          "直线 ℓ 经过线段 AB 的中点 M；AM = 2x + 3。",
+        ),
       ),
-      generate(rng) {
-        const x = rng.int(2, 12);
-        const L = rng.int(x + 4, 40);
-        const half = expressionFor(rng, L, x, [3, 4, 5, 6]);
-        const whole = expressionFor(rng, 2 * L, x, [2 * half[0], half[0]]);
-        const doubled: Linear = [2 * half[0], 2 * half[1]];
-        const u = pickUnit(rng);
-        const askX = rng.bool();
-        const solve = steps(`${linear(...whole)} = 2(${linear(...half)})`, ...equalSteps(whole, doubled));
-        const figure = fig(
-          bisectorFigure(rng.pick([60, 70, 110, 120]), null, [plain(...half), null]),
-          `Line ℓ crosses segment AB at its midpoint M; AM = ${plain(...half)}.`,
-          `直线 ℓ 经过线段 AB 的中点 M；AM = ${plain(...half)}。`,
-        );
-        const given = t(
-          `Line $\\ell$ bisects $${over("AB")}$ at $M$. $AB = ${linear(...whole)}$ and $AM = ${linear(...half)}$, in ${unitWords[u]}.`,
-          `直线 $\\ell$ 在 $M$ 处平分 $${over("AB")}$。$AB = ${linear(...whole)}$，$AM = ${linear(...half)}$（单位：${u}）。`,
-        );
-        return {
-          ...numberProblem({
-            prompt: askX
-              ? t(`${given.en} Find $x$.`, `${given["zh-CN"]}求 $x$。`)
-              : t(`${given.en} How long is $${over("AB")}$?`, `${given["zh-CN"]}$${over("AB")}$ 有多长？`),
-            answer: askX ? x : 2 * L,
-            ...(!askX && { unit: u }),
-            wrong: askX ? [...equalWrong(whole, half), Q.of(half[1] - whole[1], whole[0] - half[0])] : [L, x, 4 * L],
-            solution: t(
-              `$M$ is the midpoint, so $AB = 2 \\cdot AM$:${solve}${askX ? "" : `So $AB = ${subst(whole, x)} = ${2 * L}\\text{ ${u}}$.`}`,
-              `$M$ 是中点，所以 $AB = 2 \\cdot AM$：${solve}${askX ? "" : `所以 $AB = ${subst(whole, x)} = ${2 * L}\\text{ ${u}}$。`}`,
-            ),
-          }),
-          figure,
-        };
-      },
-    },
-    {
-      id: "the-perpendicular-bisector-theorem",
-      figure: gradeDrawings3["segment-bisectors-and-the-perpendicular-bisector-theorem#the-perpendicular-bisector-theorem"],
-      title: t("The perpendicular bisector theorem", "垂直平分线定理"),
-      explanation: t(
-        "Line $\\ell$ is the perpendicular bisector of $\\overline{AB}$, and $P$ is on $\\ell$. By the theorem, $PA = PB$. If $PA = 4x - 3$ and $PB = 2x + 9$, then $4x - 3 = 2x + 9$, so $x = 6$ and $PA = PB = 21$.",
-        "直线 $\\ell$ 是 $\\overline{AB}$ 的垂直平分线，$P$ 在 $\\ell$ 上。由定理，$PA = PB$。若 $PA = 4x - 3$，$PB = 2x + 9$，则 $4x - 3 = 2x + 9$，所以 $x = 6$，$PA = PB = 21$。",
-      ),
-      generate(rng) {
-        const u = pickUnit(rng);
-        if (rng.bool()) {
-          const [am, pm, pa] = rng.pick([
-            [3, 4, 5],
-            [5, 12, 13],
-            [6, 8, 10],
-            [8, 6, 10],
-            [9, 12, 15],
-            [8, 15, 17],
-            [12, 5, 13],
-            [12, 9, 15],
-            [7, 24, 25],
-            [15, 8, 17],
-          ] as const);
-          const k = rng.pick([1, 2, 3]);
-          const [AM, PM, PA] = [am * k, pm * k, pa * k];
-          return {
-            ...numberProblem({
-              prompt: t(
+      lesson(
+        "the-perpendicular-bisector-theorem",
+        ["The perpendicular bisector theorem", "垂直平分线定理"],
+        [
+          [
+            "Every point of the perpendicular bisector of $\\overline{AB}$ is the same distance from $A$ and from $B$. If $P$ is on it, $PA = 4x - 3$ and $PB = 2x + 9$, then $4x - 3 = 2x + 9$, so $x = 6$ and $PA = PB = 21$.",
+            "$\\overline{AB}$ 的垂直平分线上的每一点到 $A$ 和 $B$ 的距离相等。若 $P$ 在它上面，$PA = 4x - 3$，$PB = 2x + 9$，则 $4x - 3 = 2x + 9$，所以 $x = 6$，$PA = PB = 21$。",
+          ],
+          [
+            "Fold the page along $\\ell$: $A$ lands on $B$, so $\\overline{PA}$ lands on $\\overline{PB}$, and $2(6) + 9 = 21$ too.",
+            "沿 $\\ell$ 把纸对折：$A$ 落在 $B$ 上，所以 $\\overline{PA}$ 落在 $\\overline{PB}$ 上；$2(6) + 9 = 21$ 也对。",
+          ],
+          [
+            "$PM$ is the distance from $P$ to the segment, along $\\ell$; it is not $PA$ or $PB$.",
+            "$PM$ 是 $P$ 沿 $\\ell$ 到线段的距离，不是 $PA$ 或 $PB$。",
+          ],
+        ],
+        (rng) => {
+          const u = pickUnit(rng);
+          if (rng.bool()) {
+            const [am, pm, pa] = rng.pick([
+              [3, 4, 5],
+              [5, 12, 13],
+              [6, 8, 10],
+              [8, 6, 10],
+              [9, 12, 15],
+              [8, 15, 17],
+              [12, 5, 13],
+              [12, 9, 15],
+              [7, 24, 25],
+              [15, 8, 17],
+            ] as const);
+            const k = rng.pick([1, 2, 3]);
+            const [AM, PM, PA] = [am * k, pm * k, pa * k];
+            return valued(
+              [
                 `Line $\\ell$ is the perpendicular bisector of $${over("AB")}$ and meets it at $M$. Point $P$ is on $\\ell$, $PA = ${PA}\\text{ ${u}}$, $PM = ${PM}\\text{ ${u}}$ and $AM = ${AM}\\text{ ${u}}$. Find $PB$.`,
                 `直线 $\\ell$ 是 $${over("AB")}$ 的垂直平分线，与它交于 $M$。点 $P$ 在 $\\ell$ 上，$PA = ${PA}\\text{ ${u}}$，$PM = ${PM}\\text{ ${u}}$，$AM = ${AM}\\text{ ${u}}$。求 $PB$。`,
-              ),
-              answer: PA,
-              unit: u,
-              wrong: [PM, AM, 2 * AM],
-              solution: t(
-                `$P$ is on the perpendicular bisector of $${over("AB")}$, so it is the same distance from $A$ and $B$: $PB = PA = ${PA}\\text{ ${u}}$.`,
-                `$P$ 在 $${over("AB")}$ 的垂直平分线上，所以它到 $A$、$B$ 的距离相等：$PB = PA = ${PA}\\text{ ${u}}$。`,
-              ),
-            }),
-            figure: fig(
-              bisectorFigure(90, [`${PA} ${u}`, "?"], [`${AM} ${u}`, null]),
-              `Line ℓ is perpendicular to AB at its midpoint M. P is on ℓ; PA = ${PA} ${u} and AM = ${AM} ${u}.`,
-              `直线 ℓ 在 AB 的中点 M 处与 AB 垂直。P 在 ℓ 上；PA = ${PA} ${u}，AM = ${AM} ${u}。`,
-            ),
-          };
-        }
-        const x = rng.int(2, 12);
-        const L = rng.int(x + 5, 40);
-        const e1 = expressionFor(rng, L, x);
-        const e2 = expressionFor(rng, L, x, [e1[0]]);
-        const askX = rng.bool();
-        const solve = steps(...equalSteps(e1, e2));
-        return {
-          ...numberProblem({
-            prompt: t(
+              ],
+              PA,
+              [
+                [
+                  ["Place P", "确定 P 的位置"],
+                  [`$P$ is on the perpendicular bisector of $${over("AB")}$.`, `$P$ 在 $${over("AB")}$ 的垂直平分线上。`],
+                ],
+                [
+                  ["Use the theorem", "用定理"],
+                  ["So $P$ is the same distance from both ends:", "所以 $P$ 到两端的距离相等："],
+                  [`PB = PA = ${PA}\\text{ ${u}}`],
+                ],
+              ],
+              [
+                `Fold along $\\ell$: $M$ stays put and $A$ lands on $B$, since $MB = AM = ${AM}$, so $\\overline{PA}$ lands on $\\overline{PB}$ and they have the same length.`,
+                `沿 $\\ell$ 对折：$M$ 不动，$A$ 落在 $B$ 上，因为 $MB = AM = ${AM}$，所以 $\\overline{PA}$ 落在 $\\overline{PB}$ 上，两者等长。`,
+              ],
+              [
+                [PM, "That is $PM$, the distance from $P$ down to the segment.", "这是 $PM$，$P$ 到线段的距离。"],
+                [AM, "That is half of $AB$, not a distance from $P$.", "这是 $AB$ 的一半，不是从 $P$ 出发的距离。"],
+                [2 * AM, "That is the length of $AB$.", "这是 $AB$ 的长度。"],
+              ],
+              {
+                unit: u,
+                figure: fig(
+                  bisectorFigure(90, [`${PA} ${u}`, "?"], [`${AM} ${u}`, null]),
+                  `Line ℓ is perpendicular to AB at its midpoint M. P is on ℓ; PA = ${PA} ${u} and AM = ${AM} ${u}.`,
+                  `直线 ℓ 在 AB 的中点 M 处与 AB 垂直。P 在 ℓ 上；PA = ${PA} ${u}，AM = ${AM} ${u}。`,
+                ),
+              },
+            );
+          }
+          const x = rng.int(2, 12);
+          const L = rng.int(x + 5, 40);
+          const e1 = expressionFor(rng, L, x);
+          const e2 = expressionFor(rng, L, x, [e1[0]]);
+          const askX = rng.bool();
+          const lines = equalSteps(e1, e2);
+          const [slip1, slip2] = equalWrong(e1, e2) as [Q, Q];
+          return valued(
+            [
               `Line $\\ell$ is the perpendicular bisector of $${over("AB")}$, and $P$ is on $\\ell$. $PA = ${linear(...e1)}$ and $PB = ${linear(...e2)}$, in ${unitWords[u]}. ${askX ? "Find $x$." : `How long is $${over("PA")}$?`}`,
               `直线 $\\ell$ 是 $${over("AB")}$ 的垂直平分线，$P$ 在 $\\ell$ 上。$PA = ${linear(...e1)}$，$PB = ${linear(...e2)}$（单位：${u}）。${askX ? "求 $x$。" : `$${over("PA")}$ 有多长？`}`,
-            ),
-            answer: askX ? x : L,
-            ...(!askX && { unit: u }),
-            wrong: askX ? equalWrong(e1, e2) : [x, 2 * L, at(e1, x + 1)],
-            solution: t(
-              `$P$ is on the perpendicular bisector, so $PA = PB$:${solve}${askX ? "" : `So $PA = ${subst(e1, x)} = ${L}\\text{ ${u}}$.`}`,
-              `$P$ 在垂直平分线上，所以 $PA = PB$：${solve}${askX ? "" : `所以 $PA = ${subst(e1, x)} = ${L}\\text{ ${u}}$。`}`,
-            ),
-          }),
-          figure: fig(
-            bisectorFigure(90, [plain(...e1), plain(...e2)], [null, null]),
-            `Line ℓ is perpendicular to AB at its midpoint M. P is on ℓ; PA = ${plain(...e1)} and PB = ${plain(...e2)}.`,
-            `直线 ℓ 在 AB 的中点 M 处与 AB 垂直。P 在 ℓ 上；PA = ${plain(...e1)}，PB = ${plain(...e2)}。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "the-converse",
-      figure: gradeDrawings4["segment-bisectors-and-the-perpendicular-bisector-theorem#the-converse"],
-      title: t("Points the same distance from both ends", "到两端距离相等的点"),
-      explanation: t(
-        "The converse of the theorem: a point that is the same distance from $A$ and from $B$ lies on the perpendicular bisector of $\\overline{AB}$. If $PA = PB = 7.5$ cm, then $P$ is on it. If $PA = 7.5$ cm and $PB = 8$ cm, it is not, however close the two distances are.",
-        "这个定理的逆定理：到 $A$ 和 $B$ 距离相等的点在 $\\overline{AB}$ 的垂直平分线上。若 $PA = PB = 7.5$ 厘米，则 $P$ 在垂直平分线上。若 $PA = 7.5$ 厘米，$PB = 8$ 厘米，则不在，无论这两个距离多么接近。",
+            ],
+            askX ? x : L,
+            [
+              [
+                ["Set PA equal to PB", "让 PA 等于 PB"],
+                ["$P$ is on the perpendicular bisector, so $PA = PB$:", "$P$ 在垂直平分线上，所以 $PA = PB$："],
+                lines.slice(0, 1),
+              ],
+              askX
+                ? [["Solve for x", "解出 x"], ["Collect $x$ on one side:", "把 $x$ 集中到一边："], lines.slice(1)]
+                : [
+                    ["Solve and substitute", "求解并代入"],
+                    [`Solve, then put $x$ into $PA$:`, "解方程，再把 $x$ 代入 $PA$："],
+                    [...lines.slice(1), `PA = ${subst(e1, x)} = ${L}`],
+                  ],
+            ],
+            [
+              `At $x = ${x}$: $PA = ${subst(e1, x)} = ${L}$ and $PB = ${subst(e2, x)} = ${L}$, the same distance.`,
+              `$x = ${x}$ 时：$PA = ${subst(e1, x)} = ${L}$，$PB = ${subst(e2, x)} = ${L}$，距离相等。`,
+            ],
+            askX
+              ? [
+                  [slip1, "That moves a constant across with the wrong sign.", "移项时常数的符号弄错了。"],
+                  [
+                    slip2,
+                    "That adds the $x$ terms instead of subtracting one from both sides.",
+                    "这是把含 $x$ 的项相加了，应在两边同时减去其中一项。",
+                  ],
+                  [L, "That is the length of $PA$, not $x$.", "这是 $PA$ 的长度，不是 $x$。"],
+                ]
+              : [
+                  [x, "That is $x$, not a length: put it into $PA$.", "这是 $x$，不是长度：要代入 $PA$。"],
+                  [2 * L, "That adds $PA$ and $PB$ instead of finding one of them.", "这是把 $PA$ 和 $PB$ 相加了，只需求其中一个。"],
+                  [at(e1, x + 1), "That puts the wrong value of $x$ into $PA$.", "代入 $PA$ 的 $x$ 值不对。"],
+                ],
+            {
+              ...(!askX && { unit: u }),
+              figure: fig(
+                bisectorFigure(90, [plain(...e1), plain(...e2)], [null, null]),
+                `Line ℓ is perpendicular to AB at its midpoint M. P is on ℓ; PA = ${plain(...e1)} and PB = ${plain(...e2)}.`,
+                `直线 ℓ 在 AB 的中点 M 处与 AB 垂直。P 在 ℓ 上；PA = ${plain(...e1)}，PB = ${plain(...e2)}。`,
+              ),
+            },
+          );
+        },
+        drawn(gradeDrawings3["segment-bisectors-and-the-perpendicular-bisector-theorem#the-perpendicular-bisector-theorem"]),
       ),
-      generate(rng) {
-        const u = pickUnit(rng);
-        const pa = rng.bool() ? Q.of(rng.int(4, 40)) : halves(rng, 3, 30);
-        const kind = rng.int(0, 2);
-        const pb = kind === 0 ? pa : pa.add(rng.pick([Q.of(1, 2), Q.of(1), Q.of(-1, 2), Q.of(2), Q.of(-1)]));
-        const ab = Q.of(rng.int(4, Math.max(5, Math.floor(pa.toNumber()))));
-        const tex = (v: Q) => `${result(v)}\\text{ ${u}}`;
-        const name = rng.pick(["P", "Q", "R"]);
-        return choiceProblem({
-          prompt: t(
-            `$AB = ${tex(ab)}$. Point $${name}$ is $${tex(pa)}$ from $A$ and $${tex(pb)}$ from $B$. Does $${name}$ lie on the perpendicular bisector of $${over("AB")}$?`,
-            `$AB = ${tex(ab)}$。点 $${name}$ 到 $A$ 的距离是 $${tex(pa)}$，到 $B$ 的距离是 $${tex(pb)}$。$${name}$ 在 $${over("AB")}$ 的垂直平分线上吗？`,
-          ),
-          options: yesNo,
-          correct: kind === 0 ? 0 : 1,
-          solution:
+      lesson(
+        "the-converse",
+        ["Points the same distance from both ends", "到两端距离相等的点"],
+        [
+          [
+            "The converse of the theorem: a point that is the same distance from $A$ and from $B$ lies on the perpendicular bisector of $\\overline{AB}$. If $PA = PB = 7.5$ cm, then $P$ is on it.",
+            "这个定理的逆定理：到 $A$ 和 $B$ 距离相等的点在 $\\overline{AB}$ 的垂直平分线上。若 $PA = PB = 7.5$ 厘米，则 $P$ 在垂直平分线上。",
+          ],
+          [
+            "The midpoint $M$ is also the same distance from both ends, and the line through $M$ and $P$ is the perpendicular bisector.",
+            "中点 $M$ 到两端的距离也相等，经过 $M$ 和 $P$ 的直线就是垂直平分线。",
+          ],
+          [
+            "Close is not equal: with $PA = 7.5$ cm and $PB = 8$ cm, $P$ is not on the perpendicular bisector.",
+            "接近不等于相等：$PA = 7.5$ 厘米，$PB = 8$ 厘米时，$P$ 不在垂直平分线上。",
+          ],
+        ],
+        (rng) => {
+          const u = pickUnit(rng);
+          const pa = rng.bool() ? Q.of(rng.int(4, 40)) : halves(rng, 3, 30);
+          const kind = rng.int(0, 2);
+          const pb = kind === 0 ? pa : pa.add(rng.pick([Q.of(1, 2), Q.of(1), Q.of(-1, 2), Q.of(2), Q.of(-1)]));
+          const ab = Q.of(rng.int(4, Math.max(5, Math.floor(pa.toNumber()))));
+          const tex = (v: Q) => `${result(v)}\\text{ ${u}}`;
+          const name = rng.pick(["P", "Q", "R"]);
+          const gap = result(pb.sub(pa).abs());
+          return decided(
+            rng,
+            [
+              `$AB = ${tex(ab)}$. Point $${name}$ is $${tex(pa)}$ from $A$ and $${tex(pb)}$ from $B$. Does $${name}$ lie on the perpendicular bisector of $${over("AB")}$?`,
+              `$AB = ${tex(ab)}$。点 $${name}$ 到 $A$ 的距离是 $${tex(pa)}$，到 $B$ 的距离是 $${tex(pb)}$。$${name}$ 在 $${over("AB")}$ 的垂直平分线上吗？`,
+            ],
+            kind === 0,
+            [
+              [
+                ["Compare the distances", "比较距离"],
+                [`$${name}A = ${tex(pa)}$ and $${name}B = ${tex(pb)}$.`, `$${name}A = ${tex(pa)}$，$${name}B = ${tex(pb)}$。`],
+              ],
+              kind === 0
+                ? [
+                    ["Use the converse", "用逆定理"],
+                    [`They are equal, so $${name}$ lies on the perpendicular bisector.`, `它们相等，所以 $${name}$ 在垂直平分线上。`],
+                  ]
+                : [
+                    ["Use the theorem", "用定理"],
+                    [
+                      `They differ by $${gap}$, so $${name}$ is not on the perpendicular bisector.`,
+                      `它们相差 $${gap}$，所以 $${name}$ 不在垂直平分线上。`,
+                    ],
+                  ],
+            ],
             kind === 0
-              ? t(
-                  `$${name}A = ${name}B$, so $${name}$ is the same distance from both endpoints and lies on the perpendicular bisector.`,
-                  `$${name}A = ${name}B$，$${name}$ 到两个端点的距离相等，所以在垂直平分线上。`,
-                )
-              : t(
-                  `$${name}A \\ne ${name}B$: every point of the perpendicular bisector is the same distance from $A$ and $B$, so $${name}$ is not on it.`,
-                  `$${name}A \\ne ${name}B$：垂直平分线上的每一点到 $A$、$B$ 的距离都相等，所以 $${name}$ 不在它上面。`,
-                ),
-        });
-      },
-    },
+              ? [
+                  `The midpoint $M$ is $${result(ab.div(Q.of(2)))}$ from each end, also equal, and the line through $M$ and $${name}$ is the perpendicular bisector.`,
+                  `中点 $M$ 到两端都是 $${result(ab.div(Q.of(2)))}$，也相等，经过 $M$ 和 $${name}$ 的直线就是垂直平分线。`,
+                ]
+              : [
+                  `If $${name}$ were on it, folding along the bisector would carry $\\overline{${name}A}$ onto $\\overline{${name}B}$ and make them equal, but they are not.`,
+                  `如果 $${name}$ 在上面，沿平分线对折会把 $\\overline{${name}A}$ 叠到 $\\overline{${name}B}$ 上，二者应相等，但它们不相等。`,
+                ],
+            kind === 0
+              ? [
+                  `$${name}A$ and $${name}B$ are equal, and any point equally far from $A$ and $B$ is on the bisector.`,
+                  `$${name}A$ 与 $${name}B$ 相等，到 $A$、$B$ 距离相等的点都在平分线上。`,
+                ]
+              : [
+                  "The distances are close, but a point on the bisector must be exactly the same distance from both ends.",
+                  "两个距离很接近，但平分线上的点到两端的距离必须完全相等。",
+                ],
+          );
+        },
+        drawn(gradeDrawings4["segment-bisectors-and-the-perpendicular-bisector-theorem#the-converse"]),
+      ),
+    ],
+  ),
+  [
+    "Two friends live at $A$ and $B$ and want a meeting spot the same walk from both homes. Every spot on the line that crosses $\\overline{AB}$ at a right angle through its middle works.",
+    "两个朋友分别住在 $A$ 和 $B$，想找一个到两家路程相同的见面地点。经过 $\\overline{AB}$ 中点、并与它垂直的直线上的每个地点都可以。",
+  ],
+  [
+    "The middle of $\\overline{AB}$ itself is on that line, and it is half of $AB$ from each home.",
+    "$\\overline{AB}$ 的中点本身就在这条直线上，它到两家的距离都是 $AB$ 的一半。",
+  ],
+  [
+    "use segment bisectors to find lengths, and use the perpendicular bisector theorem and its converse.",
+    "学习用线段的平分线求长度，并运用垂直平分线定理及其逆定理。",
   ],
 );
-
 // ---------------------------------------------------------------------------
 // Angles
 
@@ -2154,117 +2560,252 @@ function bisectedAngle(start: number, total: number): Mark[] {
 const ray = (name: string) => `\\overrightarrow{${name}}`;
 
 /** angleBisectors uses a bisector to find half or all of an angle, also with expressions. */
-export const angleBisectors = topic(
-  "angle-bisectors",
-  t("Angle Bisectors", "角平分线"),
-  t(
-    "A ray that bisects an angle splits it into two congruent angles, each half of the whole. If BD bisects ∠ABC, then m∠ABD = m∠DBC and m∠ABC = 2 · m∠ABD.",
-    "平分一个角的射线把它分成两个全等的角，每个都是原角的一半。若 BD 平分 ∠ABC，则 m∠ABD = m∠DBC，m∠ABC = 2 · m∠ABD。",
-  ),
-  ["congruent-angles"],
-  ["7.G.B.5", "HSG.CO.D.12"],
-  [
-    {
-      id: "halves-and-wholes",
-      figure: gradeDrawings3["angle-bisectors#halves-and-wholes"],
-      title: t("Halves and wholes", "一半与整体"),
-      explanation: t(
-        "If $\\overrightarrow{BD}$ bisects $\\angle ABC$ and $m\\angle ABC = 84^\\circ$, then each half is $84 \\div 2 = 42^\\circ$. If instead $m\\angle DBC = 42^\\circ$ is given, the whole angle is $2 \\cdot 42 = 84^\\circ$.",
-        "若 $\\overrightarrow{BD}$ 平分 $\\angle ABC$，$m\\angle ABC = 84^\\circ$，则每一半是 $84 \\div 2 = 42^\\circ$。若已知 $m\\angle DBC = 42^\\circ$，则整个角是 $2 \\cdot 42 = 84^\\circ$。",
-      ),
-      generate(rng) {
-        const half = rng.int(12, 85);
-        const whole = 2 * half;
-        const start = rng.pick([0, 10, 20, 180 - whole]);
-        const fromWhole = rng.bool();
-        const part = rng.pick(["ABD", "DBC"]);
-        return {
-          ...numberProblem({
-            prompt: fromWhole
-              ? t(
-                  `$${ray("BD")}$ bisects $${angleName("ABC")}$, and $${measure("ABC")} = ${degTex(whole)}$. Find $${measure(part)}$.`,
-                  `$${ray("BD")}$ 平分 $${angleName("ABC")}$，$${measure("ABC")} = ${degTex(whole)}$。求 $${measure(part)}$。`,
-                )
-              : t(
-                  `$${ray("BD")}$ bisects $${angleName("ABC")}$, and $${measure(part)} = ${degTex(half)}$. Find $${measure("ABC")}$.`,
-                  `$${ray("BD")}$ 平分 $${angleName("ABC")}$，$${measure(part)} = ${degTex(half)}$。求 $${measure("ABC")}$。`,
-                ),
-            answer: fromWhole ? half : whole,
-            form: "integer",
-            unit: "°",
-            wrong: fromWhole ? [whole, 2 * whole, 180 - whole] : [half, 180 - half, 90 - half].filter((w) => w > 0),
-            solution: fromWhole
-              ? t(
-                  `The bisector splits $${angleName("ABC")}$ into two congruent halves:${steps(`${measure(part)} = ${whole} \\div 2 = ${degTex(half)}`)}`,
-                  `角平分线把 $${angleName("ABC")}$ 分成两个全等的部分：${steps(`${measure(part)} = ${whole} \\div 2 = ${degTex(half)}`)}`,
-                )
-              : t(
-                  `$${measure(part)}$ is half of $${measure("ABC")}$:${steps(`${measure("ABC")} = 2 \\cdot ${half} = ${degTex(whole)}`)}`,
-                  `$${measure(part)}$ 是 $${measure("ABC")}$ 的一半：${steps(`${measure("ABC")} = 2 \\cdot ${half} = ${degTex(whole)}`)}`,
-                ),
-          }),
-          figure: fig(
+export const angleBisectors = withIntro(
+  topic(
+    "angle-bisectors",
+    t("Angle Bisectors", "角平分线"),
+    t(
+      "A ray that bisects an angle splits it into two congruent angles, each half of the whole. If BD bisects ∠ABC, then m∠ABD = m∠DBC and m∠ABC = 2 · m∠ABD.",
+      "平分一个角的射线把它分成两个全等的角，每个都是原角的一半。若 BD 平分 ∠ABC，则 m∠ABD = m∠DBC，m∠ABC = 2 · m∠ABD。",
+    ),
+    ["congruent-angles"],
+    ["7.G.B.5", "HSG.CO.D.12"],
+    [
+      lesson(
+        "halves-and-wholes",
+        ["Halves and wholes", "一半与整体"],
+        [
+          [
+            "A bisector splits an angle into two congruent halves. If $\\overrightarrow{BD}$ bisects $\\angle ABC$ and $m\\angle ABC = 84^\\circ$, each half is $84 \\div 2 = 42^\\circ$. Going the other way, a half of $42^\\circ$ means the whole angle is $2 \\cdot 42 = 84^\\circ$.",
+            "角平分线把一个角分成两个全等的部分。若 $\\overrightarrow{BD}$ 平分 $\\angle ABC$，$m\\angle ABC = 84^\\circ$，每一半是 $84 \\div 2 = 42^\\circ$。反过来，一半是 $42^\\circ$，整个角就是 $2 \\cdot 42 = 84^\\circ$。",
+          ],
+          ["$42 + 42 = 84$: the two halves fill the whole angle.", "$42 + 42 = 84$：两半正好合成整个角。"],
+          [
+            "Read which angle is given: from the whole, divide by $2$; from a half, multiply by $2$.",
+            "看清已知的是哪个角：已知整个角就除以 $2$，已知一半就乘 $2$。",
+          ],
+        ],
+        (rng) => {
+          const half = rng.int(12, 85);
+          const whole = 2 * half;
+          const start = rng.pick([0, 10, 20, 180 - whole]);
+          const fromWhole = rng.bool();
+          const part = rng.pick(["ABD", "DBC"]);
+          const given: Pair = [`$${ray("BD")}$ bisects $${angleName("ABC")}$`, `$${ray("BD")}$ 平分 $${angleName("ABC")}$`];
+          const figure = fig(
             bisectedAngle(start, whole),
             "Angle ABC with ray BD splitting it into two equal angles.",
             "射线 BD 把角 ABC 分成两个相等的角。",
-          ),
-        };
-      },
-    },
-    {
-      id: "bisectors-with-algebra",
-      figure: gradeDrawings4["angle-bisectors#bisectors-with-algebra"],
-      title: t("Bisectors with algebra", "用方程解角平分线问题"),
-      explanation: t(
-        "Write an equation from the bisector. If $m\\angle ABD = (2x + 5)^\\circ$ and $m\\angle DBC = (4x - 15)^\\circ$, the halves are equal: $2x + 5 = 4x - 15$, so $x = 10$. If $m\\angle ABC = (6x + 4)^\\circ$ and $m\\angle ABD = (2x + 12)^\\circ$, the whole is twice the half: $6x + 4 = 2(2x + 12)$, so $x = 10$.",
-        "由角平分线列方程。若 $m\\angle ABD = (2x + 5)^\\circ$，$m\\angle DBC = (4x - 15)^\\circ$，两半相等：$2x + 5 = 4x - 15$，所以 $x = 10$。若 $m\\angle ABC = (6x + 4)^\\circ$，$m\\angle ABD = (2x + 12)^\\circ$，整个角是一半的两倍：$6x + 4 = 2(2x + 12)$，所以 $x = 10$。",
+          );
+          if (fromWhole)
+            return valued(
+              [
+                `${given[0]}, and $${measure("ABC")} = ${degTex(whole)}$. Find $${measure(part)}$.`,
+                `${given[1]}，$${measure("ABC")} = ${degTex(whole)}$。求 $${measure(part)}$。`,
+              ],
+              half,
+              [
+                [
+                  ["Split in two", "分成两半"],
+                  [
+                    `The bisector cuts $${angleName("ABC")}$ into two congruent angles, and $${angleName(part)}$ is one of them.`,
+                    `平分线把 $${angleName("ABC")}$ 分成两个全等的角，$${angleName(part)}$ 是其中之一。`,
+                  ],
+                ],
+                [
+                  ["Halve", "取一半"],
+                  ["Divide the whole by $2$:", "把整个角除以 $2$："],
+                  [`${measure(part)} = ${whole} \\div 2 = ${degTex(half)}`],
+                ],
+              ],
+              [`The two halves fill the angle: $${half} + ${half} = ${whole}$.`, `两半合成整个角：$${half} + ${half} = ${whole}$。`],
+              [
+                [whole, "That is the whole angle, not one half.", "这是整个角，不是一半。"],
+                [2 * whole, "That doubles the angle instead of halving it.", "这是把角乘 $2$，应该除以 $2$。"],
+                [180 - whole, "That is the supplement of the angle, which the bisector does not use.", "这是这个角的补角，与平分线无关。"],
+              ],
+              { unit: "°", figure },
+            );
+          return valued(
+            [
+              `${given[0]}, and $${measure(part)} = ${degTex(half)}$. Find $${measure("ABC")}$.`,
+              `${given[1]}，$${measure(part)} = ${degTex(half)}$。求 $${measure("ABC")}$。`,
+            ],
+            whole,
+            [
+              [
+                ["Name the halves", "找出两半"],
+                [
+                  `$${angleName("ABD")}$ and $${angleName("DBC")}$ are congruent halves, each $${degTex(half)}$.`,
+                  `$${angleName("ABD")}$ 与 $${angleName("DBC")}$ 是全等的两半，各为 $${degTex(half)}$。`,
+                ],
+              ],
+              [
+                ["Double", "乘 2"],
+                ["The whole is two halves:", "整个角是两半之和："],
+                [`${measure("ABC")} = 2 \\cdot ${half} = ${degTex(whole)}`],
+              ],
+            ],
+            [`Halve it back: $${whole} \\div 2 = ${half}$, the given half.`, `再取一半：$${whole} \\div 2 = ${half}$，正是已知的一半。`],
+            [
+              [half, "That is only one half of the angle.", "这只是角的一半。"],
+              [180 - half, "That is the supplement of the half.", "这是那一半的补角。"],
+              ...(half < 90 ? [[90 - half, "That is the complement of the half.", "这是那一半的余角。"] as const] : []),
+            ],
+            { unit: "°", figure },
+          );
+        },
+        drawn(gradeDrawings3["angle-bisectors#halves-and-wholes"]),
       ),
-      keyPrerequisites: ["congruent-angles"],
-      generate(rng) {
-        const x = rng.int(3, 15);
-        const half = rng.int(15, 80);
-        const whole = 2 * half;
-        const askX = rng.bool();
-        if (rng.bool()) {
-          const e1 = expressionFor(rng, half, x);
-          const e2 = expressionFor(rng, half, x, [e1[0]]);
-          const solve = steps(...equalSteps(e1, e2));
-          return numberProblem({
-            prompt: t(
+      lesson(
+        "bisectors-with-algebra",
+        ["Bisectors with algebra", "用方程解角平分线问题"],
+        [
+          [
+            "Write an equation from the bisector. If $m\\angle ABD = (2x + 5)^\\circ$ and $m\\angle DBC = (4x - 15)^\\circ$, the halves are equal: $2x + 5 = 4x - 15$, so $x = 10$. If $m\\angle ABC = (6x + 4)^\\circ$ and $m\\angle ABD = (2x + 12)^\\circ$, the whole is twice the half: $6x + 4 = 2(2x + 12)$, so $x = 10$.",
+            "由角平分线列方程。若 $m\\angle ABD = (2x + 5)^\\circ$，$m\\angle DBC = (4x - 15)^\\circ$，两半相等：$2x + 5 = 4x - 15$，所以 $x = 10$。若 $m\\angle ABC = (6x + 4)^\\circ$，$m\\angle ABD = (2x + 12)^\\circ$，整个角是一半的两倍：$6x + 4 = 2(2x + 12)$，所以 $x = 10$。",
+          ],
+          [
+            "At $x = 10$: $2(10) + 5 = 25$ and $4(10) - 15 = 25$, equal halves; $6(10) + 4 = 64 = 2 \\cdot 32$.",
+            "$x = 10$ 时：$2(10) + 5 = 25$，$4(10) - 15 = 25$，两半相等；$6(10) + 4 = 64 = 2 \\cdot 32$。",
+          ],
+          [
+            "The whole angle is not equal to a half: when one expression is the whole, double the half before setting them equal.",
+            "整个角不等于一半：如果一个式子表示整个角，要先把一半乘 $2$ 再列等式。",
+          ],
+        ],
+        (rng) => {
+          const x = rng.int(3, 15);
+          const half = rng.int(15, 80);
+          const whole = 2 * half;
+          const askX = rng.bool();
+          if (rng.bool()) {
+            const e1 = expressionFor(rng, half, x);
+            const e2 = expressionFor(rng, half, x, [e1[0]]);
+            const lines = equalSteps(e1, e2);
+            const [slip1, slip2] = equalWrong(e1, e2) as [Q, Q];
+            const prompt: Pair = [
               `$${ray("BD")}$ bisects $${angleName("ABC")}$, $${measure("ABD")} = ${angleTex(...e1)}$ and $${measure("DBC")} = ${angleTex(...e2)}$. ${askX ? "Find $x$." : `Find $${measure("ABC")}$.`}`,
               `$${ray("BD")}$ 平分 $${angleName("ABC")}$，$${measure("ABD")} = ${angleTex(...e1)}$，$${measure("DBC")} = ${angleTex(...e2)}$。${askX ? "求 $x$。" : `求 $${measure("ABC")}$。`}`,
-            ),
-            answer: askX ? x : whole,
-            ...(askX ? {} : { unit: "°" }),
-            wrong: askX ? equalWrong(e1, e2) : [half, x, 4 * half],
-            solution: t(
-              `The two halves are congruent:${solve}${askX ? "" : `So $${measure("ABD")} = ${subst(e1, x)} = ${degTex(half)}$ and $${measure("ABC")} = 2 \\cdot ${half} = ${degTex(whole)}$.`}`,
-              `两半全等：${solve}${askX ? "" : `所以 $${measure("ABD")} = ${subst(e1, x)} = ${degTex(half)}$，$${measure("ABC")} = 2 \\cdot ${half} = ${degTex(whole)}$。`}`,
-            ),
-          });
-        }
-        const eh = expressionFor(rng, half, x);
-        const ew = expressionFor(rng, whole, x, [2 * eh[0]]);
-        const doubled: Linear = [2 * eh[0], 2 * eh[1]];
-        const solve = steps(`${linear(...ew)} = 2(${linear(...eh)})`, ...equalSteps(ew, doubled));
-        return numberProblem({
-          prompt: t(
+            ];
+            const check: Pair = [
+              `At $x = ${x}$: $${measure("ABD")} = ${subst(e1, x)} = ${half}$ and $${measure("DBC")} = ${subst(e2, x)} = ${half}$, equal halves.`,
+              `$x = ${x}$ 时：$${measure("ABD")} = ${subst(e1, x)} = ${half}$，$${measure("DBC")} = ${subst(e2, x)} = ${half}$，两半相等。`,
+            ];
+            if (askX)
+              return valued(
+                prompt,
+                x,
+                [
+                  [["Set the halves equal", "让两半相等"], ["The two halves are congruent:", "两半全等："], lines.slice(0, 1)],
+                  [["Solve for x", "解出 x"], collecting(lines.slice(1)), lines.slice(1)],
+                ],
+                check,
+                [
+                  [slip1, "That moves a constant across with the wrong sign.", "移项时常数的符号弄错了。"],
+                  [
+                    slip2,
+                    "That adds the $x$ terms instead of subtracting one from both sides.",
+                    "这是把含 $x$ 的项相加了，应在两边同时减去其中一项。",
+                  ],
+                  [half, "That is the measure of each half, not $x$.", "这是每一半的度数，不是 $x$。"],
+                ],
+              );
+            return valued(
+              prompt,
+              whole,
+              [
+                [["Set the halves equal and solve", "让两半相等并求解"], ["The two halves are congruent:", "两半全等："], lines],
+                [
+                  ["Substitute and double", "代入并乘 2"],
+                  [`Put $x = ${x}$ into $${measure("ABD")}$, then double:`, `把 $x = ${x}$ 代入 $${measure("ABD")}$，再乘 $2$：`],
+                  [`${measure("ABD")} = ${subst(e1, x)} = ${half}`, `${measure("ABC")} = 2 \\cdot ${half} = ${degTex(whole)}`],
+                ],
+              ],
+              check,
+              [
+                [half, "That is only one half, $\\angle ABD$.", "这只是一半，$\\angle ABD$。"],
+                [x, "That is $x$, not an angle.", "这是 $x$，不是角的度数。"],
+                [4 * half, "That doubles the whole angle again.", "这是把整个角又乘了 $2$。"],
+              ],
+              { unit: "°" },
+            );
+          }
+          const eh = expressionFor(rng, half, x);
+          const ew = expressionFor(rng, whole, x, [2 * eh[0]]);
+          const doubled: Linear = [2 * eh[0], 2 * eh[1]];
+          const lines = [`${linear(...ew)} = 2(${linear(...eh)}) = ${linear(...doubled)}`, ...equalSteps(ew, doubled).slice(1)];
+          const prompt: Pair = [
             `$${ray("BD")}$ bisects $${angleName("ABC")}$, $${measure("ABC")} = ${angleTex(...ew)}$ and $${measure("ABD")} = ${angleTex(...eh)}$. ${askX ? "Find $x$." : `Find $${measure("ABD")}$.`}`,
             `$${ray("BD")}$ 平分 $${angleName("ABC")}$，$${measure("ABC")} = ${angleTex(...ew)}$，$${measure("ABD")} = ${angleTex(...eh)}$。${askX ? "求 $x$。" : `求 $${measure("ABD")}$。`}`,
-          ),
-          answer: askX ? x : half,
-          ...(askX ? {} : { unit: "°" }),
-          // Setting the whole equal to the half, or to half of the half, are the usual slips.
-          wrong: askX
-            ? [...(ew[0] !== eh[0] ? [Q.of(eh[1] - ew[1], ew[0] - eh[0])] : []), Q.of(2 * eh[1] - ew[1], ew[0] - 2 * eh[0]).neg()]
-            : [whole, x, Math.floor(half / 2)],
-          solution: t(
-            `The whole angle is twice each half:${solve}${askX ? "" : `So $${measure("ABD")} = ${subst(eh, x)} = ${degTex(half)}$.`}`,
-            `整个角是每一半的两倍：${solve}${askX ? "" : `所以 $${measure("ABD")} = ${subst(eh, x)} = ${degTex(half)}$。`}`,
-          ),
-        });
-      },
-    },
+          ];
+          const check: Pair = [
+            `At $x = ${x}$: $${measure("ABD")} = ${subst(eh, x)} = ${half}$ and $${measure("ABC")} = ${subst(ew, x)} = ${whole}$, which is twice $${half}$.`,
+            `$x = ${x}$ 时：$${measure("ABD")} = ${subst(eh, x)} = ${half}$，$${measure("ABC")} = ${subst(ew, x)} = ${whole}$，正是 $${half}$ 的两倍。`,
+          ];
+          if (askX)
+            return valued(
+              prompt,
+              x,
+              [
+                [["Double the half", "把一半乘 2"], ["The whole angle is twice each half:", "整个角是每一半的两倍："], lines.slice(0, 1)],
+                [["Solve for x", "解出 x"], collecting(lines.slice(1)), lines.slice(1)],
+              ],
+              check,
+              [
+                ...(ew[0] !== eh[0]
+                  ? [
+                      [
+                        Q.of(eh[1] - ew[1], ew[0] - eh[0]),
+                        "That sets the whole angle equal to the half.",
+                        "这是让整个角等于一半。",
+                      ] as const,
+                    ]
+                  : []),
+                [
+                  Q.of(2 * eh[1] - ew[1], ew[0] - 2 * eh[0]).neg(),
+                  "That moves a constant across with the wrong sign.",
+                  "移项时常数的符号弄错了。",
+                ],
+                [half, "That is the measure of the half, not $x$.", "这是一半的度数，不是 $x$。"],
+              ],
+            );
+          return valued(
+            prompt,
+            half,
+            [
+              [
+                ["Double the half and solve", "把一半乘 2 并求解"],
+                ["The whole angle is twice each half:", "整个角是每一半的两倍："],
+                lines,
+              ],
+              [
+                ["Substitute", "代入"],
+                [`Put $x = ${x}$ into $${measure("ABD")}$:`, `把 $x = ${x}$ 代入 $${measure("ABD")}$：`],
+                [`${measure("ABD")} = ${subst(eh, x)} = ${degTex(half)}`],
+              ],
+            ],
+            check,
+            [
+              [whole, "That is the whole angle, $\\angle ABC$.", "这是整个角 $\\angle ABC$。"],
+              [x, "That is $x$, not an angle.", "这是 $x$，不是角的度数。"],
+              [Math.floor(half / 2), "That halves the half again.", "这是把一半又取了一半。"],
+            ],
+            { unit: "°" },
+          );
+        },
+        drawn(gradeDrawings4["angle-bisectors#bisectors-with-algebra"]),
+      ),
+    ],
+  ),
+  [
+    "A paper fan opened to $120^\\circ$ has a middle rib that splits it fairly: each side opens $60^\\circ$.",
+    "一把打开成 $120^\\circ$ 的纸扇，中间的扇骨把它平分：每一边张开 $60^\\circ$。",
+  ],
+  ["$60 + 60 = 120$, and the two sides match.", "$60 + 60 = 120$，两边一样大。"],
+  [
+    "use an angle bisector to find a half or the whole angle, and solve equations when the angles are expressions.",
+    "学习用角平分线求一半或整个角，并在角用式子表示时解方程。",
   ],
 );
 
@@ -2326,131 +2867,259 @@ function crossWithPerpendicular(a: number): Mark[] {
 }
 
 /** solvingProblemsWithAngles combines angle facts: angles on a line, around a point, vertical and complementary angles. */
-export const solvingProblemsWithAngles = topic(
-  "solving-problems-with-angles",
-  t("Solving Problems With Angles", "解角的问题"),
-  t(
-    "Angles that fill a straight line add up to 180°, and angles that fill the space around a point add up to 360°. In harder figures, chain several facts together: right angles, complements, supplements and vertical angles.",
-    "合起来组成一条直线的角之和为 180°，合起来围成一周的角之和为 360°。在较复杂的图中，要把几个事实连起来用：直角、余角、补角和对顶角。",
-  ),
-  ["supplementary-angles", "complementary-angles", "vertical-angles"],
-  ["7.G.B.5"],
-  [
-    {
-      id: "angles-on-a-line-and-around-a-point",
-      figure: gradeDrawings3["solving-problems-with-angles#angles-on-a-line-and-around-a-point"],
-      title: t("Angles on a line and around a point", "直线上与一点周围的角"),
-      explanation: t(
-        "Rays from a point on a line split the straight angle: if the parts are $40^\\circ$, $x^\\circ$ and $65^\\circ$, then $x = 180 - 40 - 65 = 75$. Rays from a point split the full turn: if the angles are $90^\\circ$, $120^\\circ$, $85^\\circ$ and $x^\\circ$, then $x = 360 - 90 - 120 - 85 = 65$.",
-        "从直线上一点引出的射线把平角分成几部分：若各部分为 $40^\\circ$、$x^\\circ$、$65^\\circ$，则 $x = 180 - 40 - 65 = 75$。从一点引出的射线把周角分成几部分：若各角为 $90^\\circ$、$120^\\circ$、$85^\\circ$、$x^\\circ$，则 $x = 360 - 90 - 120 - 85 = 65$。",
-      ),
-      generate(rng) {
-        if (rng.bool()) {
-          let a: number;
-          let b: number;
-          do {
-            a = rng.int(20, 100);
-            b = rng.int(20, 100);
-          } while (180 - a - b < 20);
-          const x = 180 - a - b;
-          return {
-            ...numberProblem({
-              prompt: t("Points $A$, $O$ and $B$ lie on a line. Find $x$.", "点 $A$、$O$、$B$ 在同一条直线上。求 $x$。"),
-              answer: x,
-              form: "integer",
-              wrong: [360 - a - b, 90 - a - b, a + b].filter((w) => w > 0 && w !== x),
-              solution: t(
-                `The three angles fill the straight angle at $O$, so they add up to $${degTex(180)}$:${steps(`${a} + x + ${b} = 180`, `x = 180 - ${a + b} = ${x}`)}`,
-                `三个角合起来是 $O$ 处的平角，和为 $${degTex(180)}$：${steps(`${a} + x + ${b} = 180`, `x = 180 - ${a + b} = ${x}`)}`,
+export const solvingProblemsWithAngles = withIntro(
+  topic(
+    "solving-problems-with-angles",
+    t("Solving Problems With Angles", "解角的问题"),
+    t(
+      "Angles that fill a straight line add up to 180°, and angles that fill the space around a point add up to 360°. In harder figures, chain several facts together: right angles, complements, supplements and vertical angles.",
+      "合起来组成一条直线的角之和为 180°，合起来围成一周的角之和为 360°。在较复杂的图中，要把几个事实连起来用：直角、余角、补角和对顶角。",
+    ),
+    ["supplementary-angles", "complementary-angles", "vertical-angles"],
+    ["7.G.B.5"],
+    [
+      lesson(
+        "angles-on-a-line-and-around-a-point",
+        ["Angles on a line and around a point", "直线上与一点周围的角"],
+        [
+          [
+            "Angles that fill a straight line add up to $180^\\circ$: if the parts are $40^\\circ$, $x^\\circ$ and $65^\\circ$, then $x = 180 - 40 - 65 = 75$. Angles that fill the turn around a point add up to $360^\\circ$: with $90^\\circ$, $120^\\circ$, $85^\\circ$ and $x^\\circ$, $x = 360 - 295 = 65$.",
+            "合成一条直线的角和为 $180^\\circ$：若各部分为 $40^\\circ$、$x^\\circ$、$65^\\circ$，则 $x = 180 - 40 - 65 = 75$。围成一周的角和为 $360^\\circ$：若各角为 $90^\\circ$、$120^\\circ$、$85^\\circ$、$x^\\circ$，则 $x = 360 - 295 = 65$。",
+          ],
+          [
+            "Add all the parts back: $40 + 75 + 65 = 180$ and $90 + 120 + 85 + 65 = 360$.",
+            "把各部分加回去：$40 + 75 + 65 = 180$，$90 + 120 + 85 + 65 = 360$。",
+          ],
+          [
+            "Look at what the angles fill: a straight line is $180^\\circ$, a whole turn is $360^\\circ$.",
+            "看清这些角合成的是什么：一条直线是 $180^\\circ$，一整圈是 $360^\\circ$。",
+          ],
+        ],
+        (rng) => {
+          if (rng.bool()) {
+            let a: number;
+            let b: number;
+            do {
+              a = rng.int(20, 100);
+              b = rng.int(20, 100);
+            } while (180 - a - b < 20);
+            const x = 180 - a - b;
+            return valued(
+              ["Points $A$, $O$ and $B$ lie on a line. Find $x$.", "点 $A$、$O$、$B$ 在同一条直线上。求 $x$。"],
+              x,
+              [
+                [
+                  ["Add the known angles", "把已知角相加"],
+                  [`The three angles fill the straight angle at $O$; the known ones make`, `三个角合成 $O$ 处的平角；已知的两个角之和是`],
+                  [`${a} + ${b} = ${a + b}`],
+                ],
+                [
+                  ["Subtract from 180°", "用 180° 相减"],
+                  ["The rest of the straight angle is $x$:", "平角剩下的部分就是 $x$："],
+                  [`x = 180 - ${a + b} = ${x}`],
+                ],
+              ],
+              [`$${a} + ${x} + ${b} = 180$, a straight angle.`, `$${a} + ${x} + ${b} = 180$，正是平角。`],
+              [
+                [
+                  360 - a - b,
+                  "That uses a whole turn, but the angles fill only a straight line.",
+                  "这是用一整圈来算，但这些角只合成一条直线。",
+                ],
+                ...(90 - a - b > 0
+                  ? [[90 - a - b, "That uses a right angle instead of a straight angle.", "这是用直角来算，而不是平角。"] as const]
+                  : []),
+                [a + b, "That is the sum of the known angles, not what is left.", "这是已知角的和，不是剩下的部分。"],
+              ],
+              {
+                figure: fig(
+                  raysFromLine(a, b, [deg(a), "x°", deg(b)]),
+                  `Line AB with rays OC and OD above it. Angle AOC is ${a}°, angle COD is x° and angle DOB is ${b}°.`,
+                  `直线 AB 上方有射线 OC、OD。角 AOC 为 ${a}°，角 COD 为 x°，角 DOB 为 ${b}°。`,
+                ),
+              },
+            );
+          }
+          let parts: number[];
+          do parts = [rng.int(40, 130), rng.int(40, 130), rng.int(40, 130)];
+          while (360 - parts[0]! - parts[1]! - parts[2]! < 35 || 360 - parts[0]! - parts[1]! - parts[2]! > 150);
+          const x = 360 - parts[0]! - parts[1]! - parts[2]!;
+          const start = rng.int(0, 60);
+          const dirs = [start, start + parts[0]!, start + parts[0]! + parts[1]!, start + parts[0]! + parts[1]! + parts[2]!];
+          const sum = parts[0]! + parts[1]! + parts[2]!;
+          return valued(
+            ["Four rays start at the same point. Find $x$.", "四条射线从同一点出发。求 $x$。"],
+            x,
+            [
+              [
+                ["Add the known angles", "把已知角相加"],
+                ["The four angles fill the whole turn; the known ones make", "四个角合成一整圈；已知的三个角之和是"],
+                [`${parts.join(" + ")} = ${sum}`],
+              ],
+              [
+                ["Subtract from 360°", "用 360° 相减"],
+                ["The rest of the turn is $x$:", "一整圈剩下的部分就是 $x$："],
+                [`x = 360 - ${sum} = ${x}`],
+              ],
+            ],
+            [`$${parts.join(" + ")} + ${x} = 360$, a whole turn.`, `$${parts.join(" + ")} + ${x} = 360$，正是一整圈。`],
+            [
+              [sum, "That is the sum of the known angles, not what is left.", "这是已知角的和，不是剩下的部分。"],
+              [360 - parts[0]! - parts[1]!, "That leaves out one of the known angles.", "这是漏掉了一个已知角。"],
+              [
+                90,
+                "That shares the turn equally among four angles, but these angles are not equal.",
+                "这是把一整圈平均分给四个角，但这些角并不相等。",
+              ],
+            ],
+            {
+              figure: fig(
+                raysAroundPoint(dirs, [...parts.map(deg), "x°"]),
+                `Four rays from one point, making angles of ${parts.join("°, ")}° and x°.`,
+                `从一点出发的四条射线，构成 ${parts.join("°、")}° 和 x° 的角。`,
               ),
-            }),
-            figure: fig(
-              raysFromLine(a, b, [deg(a), "x°", deg(b)]),
-              `Line AB with rays OC and OD above it. Angle AOC is ${a}°, angle COD is x° and angle DOB is ${b}°.`,
-              `直线 AB 上方有射线 OC、OD。角 AOC 为 ${a}°，角 COD 为 x°，角 DOB 为 ${b}°。`,
-            ),
-          };
-        }
-        let parts: number[];
-        do parts = [rng.int(40, 130), rng.int(40, 130), rng.int(40, 130)];
-        while (360 - parts[0]! - parts[1]! - parts[2]! < 35 || 360 - parts[0]! - parts[1]! - parts[2]! > 150);
-        const x = 360 - parts[0]! - parts[1]! - parts[2]!;
-        const start = rng.int(0, 60);
-        const dirs = [start, start + parts[0]!, start + parts[0]! + parts[1]!, start + parts[0]! + parts[1]! + parts[2]!];
-        const sum = parts[0]! + parts[1]! + parts[2]!;
-        return {
-          ...numberProblem({
-            prompt: t("Four rays start at the same point. Find $x$.", "四条射线从同一点出发。求 $x$。"),
-            answer: x,
-            form: "integer",
-            wrong: [sum, 360 - parts[0]! - parts[1]!, 180 - x].filter((w) => w > 0 && w !== x),
-            solution: t(
-              `The four angles fill the full turn around the point, so they add up to $${degTex(360)}$:${steps(`${parts.join(" + ")} + x = 360`, `x = 360 - ${sum} = ${x}`)}`,
-              `四个角合起来是一个周角，和为 $${degTex(360)}$：${steps(`${parts.join(" + ")} + x = 360`, `x = 360 - ${sum} = ${x}`)}`,
-            ),
-          }),
-          figure: fig(
-            raysAroundPoint(dirs, [...parts.map(deg), "x°"]),
-            `Four rays from one point, making angles of ${parts.join("°, ")}° and x°.`,
-            `从一点出发的四条射线，构成 ${parts.join("°、")}° 和 x° 的角。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "chaining-angle-relationships",
-      figure: gradeDrawings3["solving-problems-with-angles#chaining-angle-relationships"],
-      title: t("Chaining angle relationships", "连用多个角的关系"),
-      explanation: t(
-        "Lines $AB$ and $CD$ cross at $O$, and $\\overrightarrow{OE} \\perp \\overline{AB}$. If $m\\angle COE = 30^\\circ$, then $\\angle AOC$ is the rest of the right angle $\\angle AOE$: $90 - 30 = 60^\\circ$. Its vertical angle $\\angle BOD$ is also $60^\\circ$, and $\\angle AOD$, its supplement along line $CD$, is $180 - 60 = 120^\\circ$.",
-        "直线 $AB$ 与 $CD$ 相交于 $O$，$\\overrightarrow{OE} \\perp \\overline{AB}$。若 $m\\angle COE = 30^\\circ$，则 $\\angle AOC$ 是直角 $\\angle AOE$ 剩下的部分：$90 - 30 = 60^\\circ$。它的对顶角 $\\angle BOD$ 也是 $60^\\circ$；$\\angle AOD$ 与它在直线 $CD$ 上互补，是 $180 - 60 = 120^\\circ$。",
+            },
+          );
+        },
+        drawn(gradeDrawings3["solving-problems-with-angles#angles-on-a-line-and-around-a-point"]),
       ),
-      generate(rng) {
-        const a = rng.int(12, 78);
-        const ask = rng.pick(["AOC", "BOD", "AOD", "BOC"] as const);
-        const small = 90 - a;
-        const answer = ask === "AOC" || ask === "BOD" ? small : 90 + a;
-        const sol: Record<typeof ask, Text> = {
-          AOC: t(
-            `$\\angle AOE$ is a right angle, and $\\angle COE$ is part of it:${steps(`${measure("AOC")} = 90 - ${a} = ${degTex(small)}`)}`,
-            `$\\angle AOE$ 是直角，$\\angle COE$ 是它的一部分：${steps(`${measure("AOC")} = 90 - ${a} = ${degTex(small)}`)}`,
-          ),
-          BOD: t(
-            `First, $\\angle AOC$ is the rest of the right angle $\\angle AOE$: $${measure("AOC")} = 90 - ${a} = ${degTex(small)}$. Then $\\angle BOD$ and $\\angle AOC$ are vertical angles, so $${measure("BOD")} = ${degTex(small)}$.`,
-            `先求 $\\angle AOC$，它是直角 $\\angle AOE$ 剩下的部分：$${measure("AOC")} = 90 - ${a} = ${degTex(small)}$。$\\angle BOD$ 与 $\\angle AOC$ 是对顶角，所以 $${measure("BOD")} = ${degTex(small)}$。`,
-          ),
-          AOD: t(
-            `First, $${measure("AOC")} = 90 - ${a} = ${degTex(small)}$, the rest of the right angle $\\angle AOE$. Then $\\angle AOC$ and $\\angle AOD$ form a straight angle along line $CD$:${steps(`${measure("AOD")} = 180 - ${small} = ${degTex(answer)}`)}`,
-            `先求 $${measure("AOC")} = 90 - ${a} = ${degTex(small)}$，它是直角 $\\angle AOE$ 剩下的部分。$\\angle AOC$ 与 $\\angle AOD$ 在直线 $CD$ 上组成平角：${steps(`${measure("AOD")} = 180 - ${small} = ${degTex(answer)}`)}`,
-          ),
-          BOC: t(
-            `$\\angle BOC$ is made of the right angle $\\angle BOE$ and $\\angle EOC$:${steps(`${measure("BOC")} = 90 + ${a} = ${degTex(answer)}`)}`,
-            `$\\angle BOC$ 由直角 $\\angle BOE$ 和 $\\angle EOC$ 组成：${steps(`${measure("BOC")} = 90 + ${a} = ${degTex(answer)}`)}`,
-          ),
-        };
-        return {
-          ...numberProblem({
-            prompt: t(
+      lesson(
+        "chaining-angle-relationships",
+        ["Chaining angle relationships", "连用多个角的关系"],
+        [
+          [
+            "Lines $AB$ and $CD$ cross at $O$, and $\\overrightarrow{OE} \\perp \\overline{AB}$. If $m\\angle COE = 30^\\circ$, then $\\angle AOC$ is the rest of the right angle $\\angle AOE$: $90 - 30 = 60^\\circ$. Its vertical angle $\\angle BOD$ is also $60^\\circ$, and $\\angle AOD$, beside it on line $CD$, is $180 - 60 = 120^\\circ$.",
+            "直线 $AB$ 与 $CD$ 相交于 $O$，$\\overrightarrow{OE} \\perp \\overline{AB}$。若 $m\\angle COE = 30^\\circ$，则 $\\angle AOC$ 是直角 $\\angle AOE$ 剩下的部分：$90 - 30 = 60^\\circ$。它的对顶角 $\\angle BOD$ 也是 $60^\\circ$；$\\angle AOD$ 与它在直线 $CD$ 上相邻，是 $180 - 60 = 120^\\circ$。",
+          ],
+          [
+            "$\\angle BOC$ is the right angle $\\angle BOE$ plus $30^\\circ$, which is $120^\\circ$, the vertical angle of $\\angle AOD$.",
+            "$\\angle BOC$ 是直角 $\\angle BOE$ 加 $30^\\circ$，得 $120^\\circ$，它是 $\\angle AOD$ 的对顶角。",
+          ],
+          [
+            "Each fact needs the right kind of angle: $\\angle COE$ sits inside a right angle, so it is taken from $90^\\circ$, not $180^\\circ$.",
+            "每一步都要用对角的关系：$\\angle COE$ 在直角里面，所以要从 $90^\\circ$ 里减，而不是 $180^\\circ$。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.int(12, 78);
+          const ask = rng.pick(["AOC", "BOD", "AOD", "BOC"] as const);
+          const small = 90 - a;
+          const big = 90 + a;
+          const answer = ask === "AOC" || ask === "BOD" ? small : big;
+          const findAOC: Walk = [
+            ["Use the right angle", "用直角"],
+            [`$\\angle AOE$ is a right angle, and $\\angle COE$ is part of it:`, `$\\angle AOE$ 是直角，$\\angle COE$ 是它的一部分：`],
+            [`${measure("AOC")} = 90 - ${a} = ${degTex(small)}`],
+          ];
+          const walks: Record<typeof ask, Walk[]> = {
+            AOC: [
+              [
+                ["Find the right angle", "找出直角"],
+                [
+                  "$\\overrightarrow{OE} \\perp \\overline{AB}$, so $\\angle AOE$ is $90^\\circ$.",
+                  "$\\overrightarrow{OE} \\perp \\overline{AB}$，所以 $\\angle AOE$ 是 $90^\\circ$。",
+                ],
+              ],
+              [
+                ["Subtract the known part", "减去已知部分"],
+                ["$\\angle COE$ is part of it:", "$\\angle COE$ 是它的一部分："],
+                [`${measure("AOC")} = 90 - ${a} = ${degTex(small)}`],
+              ],
+            ],
+            BOD: [
+              findAOC,
+              [
+                ["Use vertical angles", "用对顶角"],
+                [
+                  "$\\angle BOD$ and $\\angle AOC$ are vertical angles, so they are equal:",
+                  "$\\angle BOD$ 与 $\\angle AOC$ 是对顶角，所以相等：",
+                ],
+                [`${measure("BOD")} = ${degTex(small)}`],
+              ],
+            ],
+            AOD: [
+              findAOC,
+              [
+                ["Use the straight line", "用直线"],
+                [
+                  "$\\angle AOC$ and $\\angle AOD$ fill a straight angle along line $CD$:",
+                  "$\\angle AOC$ 与 $\\angle AOD$ 在直线 $CD$ 上合成平角：",
+                ],
+                [`${measure("AOD")} = 180 - ${small} = ${degTex(big)}`],
+              ],
+            ],
+            BOC: [
+              [
+                ["Split the angle", "拆开这个角"],
+                [
+                  "$\\angle BOC$ is the right angle $\\angle BOE$ together with $\\angle EOC$.",
+                  "$\\angle BOC$ 由直角 $\\angle BOE$ 和 $\\angle EOC$ 组成。",
+                ],
+              ],
+              [["Add", "相加"], ["Add the two parts:", "把两部分相加："], [`${measure("BOC")} = 90 + ${a} = ${degTex(big)}`]],
+            ],
+          };
+          const checks: Record<typeof ask, Pair> = {
+            AOC: [
+              `$\\angle AOC$ and $\\angle COE$ fill the right angle: $${small} + ${a} = 90$.`,
+              `$\\angle AOC$ 与 $\\angle COE$ 合成直角：$${small} + ${a} = 90$。`,
+            ],
+            BOD: [
+              `$\\angle BOD$ and $\\angle BOC = 90^\\circ + ${a}^\\circ = ${big}^\\circ$ fill line $CD$: $${small} + ${big} = 180$.`,
+              `$\\angle BOD$ 与 $\\angle BOC = 90^\\circ + ${a}^\\circ = ${big}^\\circ$ 合成直线 $CD$：$${small} + ${big} = 180$。`,
+            ],
+            AOD: [
+              `$\\angle AOD$ is the vertical angle of $\\angle BOC$, which is the right angle $\\angle BOE$ plus $${a}^\\circ$: $90 + ${a} = ${big}$.`,
+              `$\\angle AOD$ 是 $\\angle BOC$ 的对顶角，而 $\\angle BOC$ 是直角 $\\angle BOE$ 加 $${a}^\\circ$：$90 + ${a} = ${big}$。`,
+            ],
+            BOC: [
+              `$\\angle BOC$ and $\\angle AOC = 90^\\circ - ${a}^\\circ = ${small}^\\circ$ fill line $AB$: $${big} + ${small} = 180$.`,
+              `$\\angle BOC$ 与 $\\angle AOC = 90^\\circ - ${a}^\\circ = ${small}^\\circ$ 合成直线 $AB$：$${big} + ${small} = 180$。`,
+            ],
+          };
+          return valued(
+            [
               `Lines $AB$ and $CD$ cross at $O$, and $${ray("OE")} \\perp \\overline{AB}$. Find $${measure(ask)}$.`,
               `直线 $AB$ 与 $CD$ 相交于 $O$，$${ray("OE")} \\perp \\overline{AB}$。求 $${measure(ask)}$。`,
-            ),
+            ],
             answer,
-            form: "integer",
-            unit: "°",
-            wrong: [answer === small ? 90 + a : small, a, 180 - a],
-            solution: sol[ask],
-          }),
-          figure: fig(
-            crossWithPerpendicular(a),
-            `Lines AB and CD cross at O. Ray OE is perpendicular to AB, and angle COE is ${a}°.`,
-            `直线 AB 与 CD 相交于 O。射线 OE 垂直于 AB，角 COE 为 ${a}°。`,
-          ),
-        };
-      },
-    },
+            walks[ask],
+            checks[ask],
+            [
+              answer === small
+                ? [big, "That is the angle on the other side of line $CD$, which is obtuse.", "这是直线 $CD$ 另一侧的角，是钝角。"]
+                : [small, "That is the smaller angle at $O$; the angle asked for is obtuse.", "这是 $O$ 处较小的角；所求的角是钝角。"],
+              [a, "That is $\\angle COE$, the angle given.", "这是已知的 $\\angle COE$。"],
+              [
+                180 - a,
+                "That takes $\\angle COE$ from $180^\\circ$, but it sits inside the right angle.",
+                "这是从 $180^\\circ$ 里减去 $\\angle COE$，但它在直角里面。",
+              ],
+            ],
+            {
+              unit: "°",
+              figure: fig(
+                crossWithPerpendicular(a),
+                `Lines AB and CD cross at O. Ray OE is perpendicular to AB, and angle COE is ${a}°.`,
+                `直线 AB 与 CD 相交于 O。射线 OE 垂直于 AB，角 COE 为 ${a}°。`,
+              ),
+            },
+          );
+        },
+        drawn(gradeDrawings3["solving-problems-with-angles#chaining-angle-relationships"]),
+      ),
+    ],
+  ),
+  [
+    "Three slices of a round pizza are cut at $100^\\circ$, $120^\\circ$ and $90^\\circ$. The last slice is what is left of the whole turn: $360 - 310 = 50^\\circ$.",
+    "一张圆披萨切成几块，其中三块分别是 $100^\\circ$、$120^\\circ$ 和 $90^\\circ$。最后一块是一整圈剩下的部分：$360 - 310 = 50^\\circ$。",
+  ],
+  ["$100 + 120 + 90 + 50 = 360$, the whole pizza.", "$100 + 120 + 90 + 50 = 360$，正好是整张披萨。"],
+  [
+    "find angles on a line and around a point, and chain right angles, supplements and vertical angles to find unknown angles.",
+    "学习求直线上和一点周围的角，并把直角、补角和对顶角连起来求未知角。",
   ],
 );
-
 // ---------------------------------------------------------------------------
 // Polygons
 
@@ -2510,124 +3179,260 @@ function threeHeights(rng: Rng): Mark[] {
 }
 
 /** heightsOfTriangles finds the height of a triangle to a given base, inside or outside the triangle. */
-export const heightsOfTriangles = topic(
-  "heights-of-triangles",
-  t("Heights of Triangles", "三角形的高"),
-  t(
-    "A height of a triangle is the perpendicular segment from a vertex to the line containing the opposite side, which is then called the base. Every triangle has three heights, one for each choice of base; in an obtuse triangle two of them fall outside the triangle.",
-    "三角形的高是从一个顶点到对边所在直线的垂线段，这条对边叫作底。每个三角形有三条高，每选一条边作底就有一条；钝角三角形有两条高落在三角形外。",
+export const heightsOfTriangles = withIntro(
+  topic(
+    "heights-of-triangles",
+    t("Heights of Triangles", "三角形的高"),
+    t(
+      "A height of a triangle is the perpendicular segment from a vertex to the line containing the opposite side, which is then called the base. Every triangle has three heights, one for each choice of base; in an obtuse triangle two of them fall outside the triangle.",
+      "三角形的高是从一个顶点到对边所在直线的垂线段，这条对边叫作底。每个三角形有三条高，每选一条边作底就有一条；钝角三角形有两条高落在三角形外。",
+    ),
+    ["classifying-triangles", "polygons-in-the-coordinate-plane"],
+    ["6.G.A.1", "7.G.A.2"],
+    [
+      lesson(
+        "recognizing-a-height",
+        ["Recognizing a height", "认出三角形的高"],
+        [
+          [
+            "The height to base $\\overline{BC}$ starts at the opposite vertex $A$ and meets the line through $B$ and $C$ at a right angle. It is usually not a side, and it usually does not go to the midpoint of $\\overline{BC}$. If the angle at $B$ or $C$ is obtuse, the height falls outside the triangle: extend $\\overline{BC}$ and drop the perpendicular from $A$ to the extension.",
+            "底边 $\\overline{BC}$ 上的高从对面的顶点 $A$ 出发，与经过 $B$、$C$ 的直线成直角。它一般不是三角形的边，也一般不经过 $\\overline{BC}$ 的中点。若 $B$ 或 $C$ 处的角是钝角，高落在三角形外：延长 $\\overline{BC}$，从 $A$ 向延长线作垂线。",
+          ],
+          [
+            "The height is the shortest way from $A$ to line $BC$: every other segment from $A$ to that line is slanted and longer.",
+            "高是从 $A$ 到直线 $BC$ 最短的路：从 $A$ 到这条直线的其他线段都是斜的，也更长。",
+          ],
+          [
+            "Look for the right-angle mark, not the middle of the base: a segment to the midpoint is a median, not a height.",
+            "要找直角标记，而不是底边的中点：连到中点的线段是中线，不是高。",
+          ],
+        ],
+        (rng) => {
+          const obtuse = rng.bool();
+          const ax = obtuse ? rng.pick([-3, -2, 10, 11]) : rng.pick([1.5, 2, 2.5, 5.5, 6, 6.5]);
+          const h = rng.pick([4, 5, 6]);
+          const at = ax < 0 ? "B" : "C";
+          const [foot, mid] = rng.sample(["D", "E", "H", "M", "N", "P"], 2) as [string, string];
+          const where: Pair = obtuse
+            ? [
+                ` The angle at $${at}$ is obtuse, so $${foot}$ lies outside the triangle, on $${over("BC")}$ extended.`,
+                `$${at}$ 处的角是钝角，所以 $${foot}$ 在三角形外，落在 $${over("BC")}$ 的延长线上。`,
+              ]
+            : ["", ""];
+          return chosenMath(
+            rng,
+            [
+              "Which segment is the height of $\\triangle ABC$ to the base $\\overline{BC}$?",
+              "哪条线段是 $\\triangle ABC$ 底边 $\\overline{BC}$ 上的高？",
+            ],
+            over(`A${foot}`),
+            [
+              [
+                over(`A${mid}`),
+                `That goes to the midpoint $${mid}$ of the base, but it does not meet line $BC$ at a right angle.`,
+                `它连到底边的中点 $${mid}$，但不与直线 $BC$ 成直角。`,
+              ],
+              [over("AB"), "That is a side of the triangle; it is slanted to line $BC$.", "这是三角形的一条边，它与直线 $BC$ 是斜的。"],
+              [over("AC"), "That is a side of the triangle; it is slanted to line $BC$.", "这是三角形的一条边，它与直线 $BC$ 是斜的。"],
+            ],
+            [
+              [
+                ["Find the opposite vertex", "找出对面的顶点"],
+                [
+                  "The base is $\\overline{BC}$, so the height starts at the vertex not on it, $A$.",
+                  "底边是 $\\overline{BC}$，所以高从不在它上面的顶点 $A$ 出发。",
+                ],
+              ],
+              [
+                ["Find the right angle", "找出直角"],
+                [
+                  `$${over(`A${foot}`)}$ meets line $BC$ at a right angle at $${foot}$, so it is the height.${where[0]}`,
+                  `$${over(`A${foot}`)}$ 在 $${foot}$ 处与直线 $BC$ 成直角，所以它是高。${where[1]}`,
+                ],
+              ],
+            ],
+            [
+              `$${over(`A${foot}`)}$ is also the shortest of the four segments from $A$ to line $BC$; the others are slanted.`,
+              `$${over(`A${foot}`)}$ 也是从 $A$ 到直线 $BC$ 的四条线段中最短的；其他几条都是斜的。`,
+            ],
+            fig(
+              heightOrMedian(ax, h, foot, mid),
+              `Triangle ABC on base BC. A${foot} is perpendicular to line BC at ${foot}${obtuse ? ", outside the triangle" : ""}, and A${mid} goes to the midpoint ${mid} of BC.`,
+              `底边为 BC 的三角形 ABC。A${foot} 在 ${foot} 处垂直于直线 BC${obtuse ? `，${foot} 在三角形外` : ""}，A${mid} 连到 BC 的中点 ${mid}。`,
+            ),
+          );
+        },
+        drawn(gradeDrawings3["heights-of-triangles#recognizing-a-height"]),
+      ),
+      lesson(
+        "heights-for-each-base",
+        ["A height for each base", "每条底边上的高"],
+        [
+          [
+            "Any side can be the base, and each base has its own height from the opposite vertex: the height to $\\overline{BC}$ comes from $A$, the height to $\\overline{CA}$ from $B$, and the height to $\\overline{AB}$ from $C$. First find the vertex that is not on the base, then the segment from it that is perpendicular to the base.",
+            "任何一条边都可以作底，每条底边都有自己的高，从对面的顶点出发：$\\overline{BC}$ 上的高从 $A$ 出发，$\\overline{CA}$ 上的高从 $B$ 出发，$\\overline{AB}$ 上的高从 $C$ 出发。先找出不在底边上的顶点，再找从它出发、与底边垂直的线段。",
+          ],
+          [
+            "The height ends on the base: its foot is on $\\overline{BC}$ (or its extension) exactly when it starts at $A$.",
+            "高的另一端落在底边上：垂足在 $\\overline{BC}$（或它的延长线）上，正好说明它从 $A$ 出发。",
+          ],
+          [
+            "A height never starts at an end of its own base: a segment from $B$ cannot be the height to $\\overline{BC}$.",
+            "高不会从自己底边的端点出发：从 $B$ 出发的线段不可能是 $\\overline{BC}$ 上的高。",
+          ],
+        ],
+        (rng) => {
+          const [base, apex, answer, foot] = rng.pick([
+            ["BC", "A", "AD", "D"],
+            ["AC", "B", "BE", "E"],
+            ["AB", "C", "CF", "F"],
+          ] as const);
+          const heights: [string, string, string][] = [
+            ["AD", "BC", "A"],
+            ["BE", "AC", "B"],
+            ["CF", "AB", "C"],
+          ];
+          const side = `${apex}${base[0]}`;
+          return chosenMath(
+            rng,
+            [
+              `$${over("AD")}$, $${over("BE")}$ and $${over("CF")}$ are the heights of $\\triangle ABC$. Which one is the height to the base $${over(base)}$?`,
+              `$${over("AD")}$、$${over("BE")}$、$${over("CF")}$ 是 $\\triangle ABC$ 的高。哪一条是底边 $${over(base)}$ 上的高？`,
+            ],
+            over(answer),
+            [
+              ...heights
+                .filter(([s]) => s !== answer)
+                .map(
+                  ([s, b, v]): MathWrong => [
+                    over(s),
+                    `That is the height to $${over(b)}$, from $${v}$.`,
+                    `这是从 $${v}$ 出发、$${over(b)}$ 上的高。`,
+                  ],
+                ),
+              [over(side), "That is a side of the triangle, not perpendicular to the base.", "这是三角形的一条边，不与底边垂直。"],
+            ],
+            [
+              [
+                ["Find the opposite vertex", "找出对面的顶点"],
+                [
+                  `$${over(base)}$ joins $${base[0]}$ and $${base[1]}$, so the vertex not on it is $${apex}$.`,
+                  `$${over(base)}$ 连接 $${base[0]}$ 和 $${base[1]}$，所以不在它上面的顶点是 $${apex}$。`,
+                ],
+              ],
+              [
+                ["Pick its height", "找出它的高"],
+                [
+                  `The height from $${apex}$ is $${over(answer)}$, perpendicular to $${over(base)}$ at $${foot}$.`,
+                  `从 $${apex}$ 出发的高是 $${over(answer)}$，在 $${foot}$ 处与 $${over(base)}$ 垂直。`,
+                ],
+              ],
+            ],
+            [
+              `The foot $${foot}$ lies on $${over(base)}$, and the other heights end on the other two sides.`,
+              `垂足 $${foot}$ 在 $${over(base)}$ 上，另外两条高都落在另外两条边上。`,
+            ],
+            fig(
+              threeHeights(rng),
+              "Triangle ABC with heights AD to BC, BE to CA and CF to AB.",
+              "三角形 ABC 及其三条高：AD 垂直于 BC，BE 垂直于 CA，CF 垂直于 AB。",
+            ),
+          );
+        },
+        drawn(gradeDrawings4["heights-of-triangles#heights-for-each-base"]),
+      ),
+      lesson(
+        "heights-in-the-coordinate-plane",
+        ["Heights in the coordinate plane", "坐标平面中的高"],
+        [
+          [
+            "When the base is horizontal, the height is vertical, so its length is the difference of the $y$-coordinates of the opposite vertex and the base. For $A(1, 2)$, $B(7, 2)$ and $C(9, 6)$, the height to $\\overline{AB}$ is $6 - 2 = 4$, even though $C$ is not above $\\overline{AB}$. When the base is vertical, the height is horizontal: use the $x$-coordinates.",
+            "底边水平时，高是竖直的，它的长等于对面顶点与底边的 $y$ 坐标之差。对于 $A(1, 2)$、$B(7, 2)$、$C(9, 6)$，$\\overline{AB}$ 上的高是 $6 - 2 = 4$，即使 $C$ 不在 $\\overline{AB}$ 的正上方。底边竖直时，高是水平的：用 $x$ 坐标。",
+          ],
+          ["Count up from the line $y = 2$: $3, 4, 5, 6$ is $4$ steps.", "从直线 $y = 2$ 往上数：$3, 4, 5, 6$，共 $4$ 格。"],
+          [
+            "The height is not the length of the base, and not the distance from $A$ to $C$: it is straight across from $C$ to the line of the base.",
+            "高不是底边的长，也不是 $A$ 到 $C$ 的距离：它是从 $C$ 笔直地到底边所在直线的距离。",
+          ],
+        ],
+        (rng) => {
+          const y0 = rng.int(-6, 4);
+          const x1 = rng.int(-8, 0);
+          const x2 = x1 + rng.int(3, 9);
+          const x3 = rng.bool() ? rng.int(x1 + 1, x2 - 1) : rng.pick([x1 - rng.int(2, 4), x2 + rng.int(2, 4)]);
+          const y3 = y0 + rng.pick([-1, 1]) * rng.int(2, 8);
+          const h = Math.abs(y3 - y0);
+          const vertical = rng.bool();
+          // A vertical base swaps the roles of x and y.
+          const pt = (x: number, y: number) => pointLatex(vertical ? [y, x] : [x, y]);
+          const coord = vertical ? "x" : "y";
+          const other = vertical ? "y" : "x";
+          const diff = `|${y3} - ${y0 < 0 ? `(${y0})` : y0}|`;
+          const lineTex = `${coord} = ${y0}`;
+          return valued(
+            [
+              `$\\triangle ABC$ has vertices $A${pt(x1, y0)}$, $B${pt(x2, y0)}$ and $C${pt(x3, y3)}$. What is the height of the triangle to the base $${over("AB")}$?`,
+              `$\\triangle ABC$ 的顶点是 $A${pt(x1, y0)}$、$B${pt(x2, y0)}$、$C${pt(x3, y3)}$。三角形底边 $${over("AB")}$ 上的高是多少？`,
+            ],
+            h,
+            [
+              [
+                ["See how the base lies", "看底边的方向"],
+                [
+                  `$A$ and $B$ have the same $${coord}$-coordinate, $${y0}$, so $${over("AB")}$ is ${vertical ? "vertical" : "horizontal"} and the height from $C$ is ${vertical ? "horizontal" : "vertical"}.`,
+                  `$A$ 与 $B$ 的 $${coord}$ 坐标相同，都是 $${y0}$，所以 $${over("AB")}$ 是${vertical ? "竖直" : "水平"}的，从 $C$ 出发的高是${vertical ? "水平" : "竖直"}的。`,
+                ],
+              ],
+              [
+                ["Subtract the coordinates", "坐标相减"],
+                [
+                  `The height is the difference of the $${coord}$-coordinates of $C$ and the base:`,
+                  `高等于 $C$ 与底边的 $${coord}$ 坐标之差：`,
+                ],
+                [`${diff} = ${h}`],
+              ],
+            ],
+            [
+              `Count from the line $${lineTex}$ to $C$, one unit at a time: it takes $${h}$ steps to reach $${coord} = ${y3}$.`,
+              `从直线 $${lineTex}$ 一格一格数到 $C$：要 $${h}$ 格才到 $${coord} = ${y3}$。`,
+            ],
+            [
+              [x2 - x1, "That is the length of the base, not the height.", "这是底边的长，不是高。"],
+              [
+                Math.abs(x3 - x1),
+                `That is how far apart $A$ and $C$ are in $${other}$, along the base, not across to it.`,
+                `这是 $A$ 与 $C$ 的 $${other}$ 坐标之差，是沿着底边量的，不是到底边的距离。`,
+              ],
+              ...(y3 !== 0
+                ? [
+                    [
+                      Math.abs(y3),
+                      `That is how far $C$ is from the ${other}-axis, not from the base.`,
+                      `这是 $C$ 到 ${other} 轴的距离，不是到底边的距离。`,
+                    ] as const,
+                  ]
+                : []),
+            ],
+            { form: "integer" },
+          );
+        },
+        drawn(gradeDrawings3["heights-of-triangles#heights-in-the-coordinate-plane"]),
+      ),
+    ],
   ),
-  ["classifying-triangles", "polygons-in-the-coordinate-plane"],
-  ["6.G.A.1", "7.G.A.2"],
   [
-    {
-      id: "recognizing-a-height",
-      figure: gradeDrawings3["heights-of-triangles#recognizing-a-height"],
-      title: t("Recognizing a height", "认出三角形的高"),
-      explanation: t(
-        "The height to base $\\overline{BC}$ starts at the opposite vertex $A$ and meets the line through $B$ and $C$ at a right angle. It is usually not a side and usually does not go to the midpoint of $\\overline{BC}$.\n\nIf the angle at $B$ or $C$ is obtuse, the height falls outside the triangle: extend $\\overline{BC}$ and drop the perpendicular from $A$ to the extension.",
-        "底边 $\\overline{BC}$ 上的高从对面的顶点 $A$ 出发，与经过 $B$、$C$ 的直线成直角。它一般不是三角形的边，也一般不经过 $\\overline{BC}$ 的中点。\n\n若 $B$ 或 $C$ 处的角是钝角，高落在三角形外：延长 $\\overline{BC}$，从 $A$ 向延长线作垂线。",
-      ),
-      generate(rng) {
-        const obtuse = rng.bool();
-        const ax = obtuse ? rng.pick([-3, -2, 10, 11]) : rng.pick([1.5, 2, 2.5, 5.5, 6, 6.5]);
-        const h = rng.pick([4, 5, 6]);
-        const at = ax < 0 ? "B" : "C";
-        const [foot, mid] = rng.sample(["D", "E", "H", "M", "N", "P"], 2) as [string, string];
-        return pickChoice(
-          rng,
-          t(
-            "Which segment is the height of $\\triangle ABC$ to the base $\\overline{BC}$?",
-            "哪条线段是 $\\triangle ABC$ 底边 $\\overline{BC}$ 上的高？",
-          ),
-          mathText(over(`A${foot}`)),
-          [`A${mid}`, "AB", "AC"].map((s) => mathText(over(s))),
-          t(
-            `A height goes from the opposite vertex to the line containing the base and meets it at a right angle. $${over(`A${foot}`)}$ meets line $BC$ at a right angle at $${foot}$, so it is the height. $${over(`A${mid}`)}$ goes to the midpoint of $${over("BC")}$ but is not perpendicular to it, and $${over("AB")}$ and $${over("AC")}$ are sides.${obtuse ? ` Because the angle at $${at}$ is obtuse, the foot $${foot}$ lies outside the triangle, on the base extended.` : ""}`,
-            `高从底边所对的顶点出发，与底边所在的直线成直角。$${over(`A${foot}`)}$ 在 $${foot}$ 处与直线 $BC$ 垂直，所以它是高。$${over(`A${mid}`)}$ 连到 $${over("BC")}$ 的中点，但不与它垂直；$${over("AB")}$ 和 $${over("AC")}$ 是三角形的边。${obtuse ? `因为 $${at}$ 处的角是钝角，垂足 $${foot}$ 在三角形外，落在底边的延长线上。` : ""}`,
-          ),
-          fig(
-            heightOrMedian(ax, h, foot, mid),
-            `Triangle ABC on base BC. A${foot} is perpendicular to line BC at ${foot}${obtuse ? ", outside the triangle" : ""}, and A${mid} goes to the midpoint ${mid} of BC.`,
-            `底边为 BC 的三角形 ABC。A${foot} 在 ${foot} 处垂直于直线 BC${obtuse ? `，${foot} 在三角形外` : ""}，A${mid} 连到 BC 的中点 ${mid}。`,
-          ),
-        );
-      },
-    },
-    {
-      id: "heights-for-each-base",
-      figure: gradeDrawings4["heights-of-triangles#heights-for-each-base"],
-      title: t("A height for each base", "每条底边上的高"),
-      explanation: t(
-        "Any side can be the base. Each choice of base has its own height, from the opposite vertex: the height to $\\overline{BC}$ comes from $A$, the height to $\\overline{CA}$ from $B$, and the height to $\\overline{AB}$ from $C$. Find the vertex that is not on the base, then the segment from it that is perpendicular to the base.",
-        "任何一条边都可以作底。每选一条底边就有一条高，从对面的顶点出发：$\\overline{BC}$ 上的高从 $A$ 出发，$\\overline{CA}$ 上的高从 $B$ 出发，$\\overline{AB}$ 上的高从 $C$ 出发。先找出不在底边上的顶点，再找从它出发、与底边垂直的线段。",
-      ),
-      generate(rng) {
-        const [base, apex, answer] = rng.pick([
-          ["BC", "A", "AD"],
-          ["AC", "B", "BE"],
-          ["AB", "C", "CF"],
-        ] as const);
-        const others = ["AD", "BE", "CF"].filter((s) => s !== answer);
-        return pickChoice(
-          rng,
-          t(
-            `$${over("AD")}$, $${over("BE")}$ and $${over("CF")}$ are the heights of $\\triangle ABC$. Which one is the height to the base $${over(base)}$?`,
-            `$${over("AD")}$、$${over("BE")}$、$${over("CF")}$ 是 $\\triangle ABC$ 的高。哪一条是底边 $${over(base)}$ 上的高？`,
-          ),
-          mathText(over(answer)),
-          [...others.map((s) => mathText(over(s))), mathText(over(`${apex}${base[0]}`))],
-          t(
-            `The height to $${over(base)}$ starts at the vertex not on that base, $${apex}$, and is perpendicular to $${over(base)}$. That is $${over(answer)}$.`,
-            `$${over(base)}$ 上的高从不在这条底边上的顶点 $${apex}$ 出发，并与 $${over(base)}$ 垂直，所以是 $${over(answer)}$。`,
-          ),
-          fig(
-            threeHeights(rng),
-            "Triangle ABC with heights AD to BC, BE to CA and CF to AB.",
-            "三角形 ABC 及其三条高：AD 垂直于 BC，BE 垂直于 CA，CF 垂直于 AB。",
-          ),
-        );
-      },
-    },
-    {
-      id: "heights-in-the-coordinate-plane",
-      figure: gradeDrawings3["heights-of-triangles#heights-in-the-coordinate-plane"],
-      title: t("Heights in the coordinate plane", "坐标平面中的高"),
-      explanation: t(
-        "When the base is horizontal, the height is vertical, so its length is the difference of the $y$-coordinates of the opposite vertex and the base. For $A(1, 2)$, $B(7, 2)$ and $C(9, 6)$, the height to $\\overline{AB}$ is $6 - 2 = 4$. It does not matter that $C$ is not above $\\overline{AB}$: the height falls outside the triangle.\n\nWhen the base is vertical, the height is horizontal and is the difference of the $x$-coordinates.",
-        "底边水平时，高是竖直的，它的长等于对面顶点与底边的 $y$ 坐标之差。对于 $A(1, 2)$、$B(7, 2)$、$C(9, 6)$，$\\overline{AB}$ 上的高是 $6 - 2 = 4$。$C$ 不在 $\\overline{AB}$ 的正上方也没关系：这时高落在三角形外。\n\n底边竖直时，高是水平的，它的长等于 $x$ 坐标之差。",
-      ),
-      keyPrerequisites: ["polygons-in-the-coordinate-plane"],
-      generate(rng) {
-        const y0 = rng.int(-6, 4);
-        const x1 = rng.int(-8, 0);
-        const x2 = x1 + rng.int(3, 9);
-        const x3 = rng.bool() ? rng.int(x1 + 1, x2 - 1) : rng.pick([x1 - rng.int(2, 4), x2 + rng.int(2, 4)]);
-        const y3 = y0 + rng.pick([-1, 1]) * rng.int(2, 8);
-        const h = Math.abs(y3 - y0);
-        const vertical = rng.bool();
-        // A vertical base swaps the roles of x and y.
-        const pt = (x: number, y: number) => pointLatex(vertical ? [y, x] : [x, y]);
-        const coord = vertical ? "x" : "y";
-        const diff = `|${y3} - ${y0 < 0 ? `(${y0})` : y0}|`;
-        return numberProblem({
-          prompt: t(
-            `$\\triangle ABC$ has vertices $A${pt(x1, y0)}$, $B${pt(x2, y0)}$ and $C${pt(x3, y3)}$. What is the height of the triangle to the base $${over("AB")}$?`,
-            `$\\triangle ABC$ 的顶点是 $A${pt(x1, y0)}$、$B${pt(x2, y0)}$、$C${pt(x3, y3)}$。三角形底边 $${over("AB")}$ 上的高是多少？`,
-          ),
-          answer: h,
-          form: "integer",
-          wrong: [x2 - x1, Math.abs(x3 - x1), Math.abs(y3)].filter((w) => w !== h && w > 0),
-          solution: t(
-            `$A$ and $B$ have the same $${coord}$-coordinate, $${y0}$, so $${over("AB")}$ is ${vertical ? "vertical" : "horizontal"} and the height from $C$ is ${vertical ? "horizontal" : "vertical"}. Its length is the difference of the $${coord}$-coordinates:${steps(`${diff} = ${h}`)}`,
-            `$A$ 与 $B$ 的 $${coord}$ 坐标相同，都是 $${y0}$，所以 $${over("AB")}$ 是${vertical ? "竖直" : "水平"}的，从 $C$ 出发的高是${vertical ? "水平" : "竖直"}的。它的长是 $${coord}$ 坐标之差：${steps(`${diff} = ${h}`)}`,
-          ),
-        });
-      },
-    },
+    "A tent stands on flat ground. To find how tall it is, hang a weight on a string from the top of the tent: the string falls straight down and meets the ground at a right angle. That string is a height of the triangle the tent makes.",
+    "一顶帐篷立在平地上。想知道它有多高，就从帐篷顶上挂一根系着重物的线：线笔直地垂下，和地面成直角。这根线就是帐篷这个三角形的高。",
+  ],
+  [
+    "Any slanted line from the top to the ground is longer than the string; the straight-down one is the shortest.",
+    "从顶上到地面的任何斜线都比这根线长；笔直向下的那条最短。",
+  ],
+  [
+    "find the height of a triangle for any base, inside or outside the triangle, and in the coordinate plane.",
+    "学习找出三角形任一底边上的高，无论高在三角形内还是外，也包括在坐标平面中。",
   ],
 );
-
 /** rectangleWithDiagonals draws rectangle ABCD, l by w, with diagonals meeting at E. */
 function rectangleWithDiagonals(l: number, w: number, extra: readonly Mark[] = []): Mark[] {
   const pts = rectangle(l, w);
@@ -2661,207 +3466,427 @@ const diagonalCases: readonly DiagonalCase[] = [
   { first: "BD", second: "AE", whole: true },
 ];
 
+/** Named is a measure written in LaTeX together with the expression it equals. */
+type Named = readonly [name: string, expression: Linear];
+
+/** matched asks for x, or for the first measure, when two expressions name equal measures; it works the equation in labelled steps, checks by putting x back into both, and gives each slip its reason. */
+function matched(
+  prompt: Pair,
+  [n1, e1]: Named,
+  [n2, e2]: Named,
+  x: number,
+  value: number,
+  askX: boolean,
+  why: Pair,
+  options: { unit?: string; angle?: boolean; figure?: Figure } = {},
+): Problem {
+  const lines = equalSteps(e1, e2);
+  const [sign, added] = equalWrong(e1, e2) as [Q, Q];
+  const show = (v: number) => (options.angle ? degTex(v) : `${v}`);
+  const check: Pair = [
+    `At $x = ${x}$: $${n1} = ${subst(e1, x)} = ${value}$ and $${n2} = ${subst(e2, x)} = ${value}$, equal as they should be.`,
+    `$x = ${x}$ 时：$${n1} = ${subst(e1, x)} = ${value}$，$${n2} = ${subst(e2, x)} = ${value}$，正好相等。`,
+  ];
+  const extra = { ...(options.figure && { figure: options.figure }) };
+  if (askX)
+    return valued(
+      prompt,
+      x,
+      [
+        [["Set them equal", "让它们相等"], why, lines.slice(0, 1)],
+        [["Solve for x", "解出 x"], collecting(lines.slice(1)), lines.slice(1)],
+      ],
+      check,
+      [
+        [sign, "That moves a number across the equals sign without changing its sign.", "移项时没有改变数的符号。"],
+        [added, "That adds the $x$ terms instead of taking one from both sides.", "这是把含 $x$ 的项相加了，应在两边同时减去其中一项。"],
+        [value, `That is $${n1}$, not $x$.`, `这是 $${n1}$，不是 $x$。`],
+      ],
+      { ...extra, solveFor: "x" },
+    );
+  return valued(
+    prompt,
+    value,
+    [
+      [["Set them equal and solve", "让它们相等并求解"], why, lines],
+      [
+        ["Substitute", "代入"],
+        [`Put $x = ${x}$ into $${n1}$:`, `把 $x = ${x}$ 代入 $${n1}$：`],
+        [`${n1} = ${subst(e1, x)} = ${show(value)}`],
+      ],
+    ],
+    check,
+    [
+      [x, "That is $x$; put it back into the expression to get the measure.", "这是 $x$；还要把它代回式子才得到所求的量。"],
+      [2 * value, "That adds the two equal measures together.", "这是把两个相等的量加在一起了。"],
+    ],
+    { ...extra, ...(options.unit && { unit: options.unit }) },
+  );
+}
+
 /** propertiesOfRectanglesAndSquares uses the right angles and the diagonals of rectangles and squares. */
-export const propertiesOfRectanglesAndSquares = topic(
-  "properties-of-rectangles-and-squares",
-  t("Properties of Rectangles and Squares", "长方形和正方形的性质"),
-  t(
-    "A rectangle has four right angles, and its diagonals are congruent and bisect each other, so they cut into four equal parts. A square is a rectangle with four equal sides; its diagonals are also perpendicular and split each corner into two 45° angles.",
-    "长方形有四个直角，两条对角线相等且互相平分，所以被分成相等的四段。正方形是四条边都相等的长方形；它的对角线还互相垂直，并把每个角分成两个 45° 的角。",
-  ),
-  ["classifying-quadrilaterals", "angles-of-a-triangle"],
-  ["7.G.A.2", "HSG.CO.C.11"],
-  [
-    {
-      id: "diagonals-of-rectangles",
-      figure: gradeDrawings3["properties-of-rectangles-and-squares#diagonals-of-rectangles"],
-      title: t("Diagonals of rectangles", "长方形的对角线"),
-      explanation: t(
-        "In rectangle $ABCD$ with diagonals meeting at $E$, the diagonals are congruent and bisect each other, so\n\n$$AE = BE = CE = DE \\quad\\text{and}\\quad AC = BD = 2 \\cdot AE.$$\n\nIf $AE = 2x + 3$ and $DE = 4x - 7$, then $2x + 3 = 4x - 7$, so $x = 5$ and $AE = 13$. If instead $AC = 5x + 2$ and $BE = 2x + 4$, then $5x + 2 = 2(2x + 4)$, so $x = 6$.",
-        "在对角线交于 $E$ 的长方形 $ABCD$ 中，两条对角线相等且互相平分，所以\n\n$$AE = BE = CE = DE \\quad\\text{且}\\quad AC = BD = 2 \\cdot AE.$$\n\n若 $AE = 2x + 3$，$DE = 4x - 7$，则 $2x + 3 = 4x - 7$，$x = 5$，$AE = 13$。若 $AC = 5x + 2$，$BE = 2x + 4$，则 $5x + 2 = 2(2x + 4)$，$x = 6$。",
-      ),
-      generate(rng) {
-        const c = rng.pick(diagonalCases);
-        const x = rng.int(2, 12);
-        const half = rng.int(5, 30);
-        const u = pickUnit(rng);
-        const askX = rng.bool();
-        const pic = fig(
-          rectangleWithDiagonals(8, 5),
-          "Rectangle ABCD with diagonals AC and BD meeting at E.",
-          "长方形 ABCD 的对角线 AC 与 BD 交于 E。",
-        );
-        if (!c.whole) {
-          const e1 = expressionFor(rng, half, x);
-          const e2 = expressionFor(rng, half, x, [e1[0]]);
-          return {
-            ...numberProblem({
-              prompt: t(
+export const propertiesOfRectanglesAndSquares = withIntro(
+  topic(
+    "properties-of-rectangles-and-squares",
+    t("Properties of Rectangles and Squares", "长方形和正方形的性质"),
+    t(
+      "A rectangle has four right angles, and its diagonals are congruent and bisect each other, so they cut into four equal parts. A square is a rectangle with four equal sides; its diagonals are also perpendicular and split each corner into two 45° angles.",
+      "长方形有四个直角，两条对角线相等且互相平分，所以被分成相等的四段。正方形是四条边都相等的长方形；它的对角线还互相垂直，并把每个角分成两个 45° 的角。",
+    ),
+    ["classifying-quadrilaterals", "angles-of-a-triangle"],
+    ["7.G.A.2", "HSG.CO.C.11"],
+    [
+      lesson(
+        "diagonals-of-rectangles",
+        ["Diagonals of rectangles", "长方形的对角线"],
+        [
+          [
+            "In rectangle $ABCD$ with diagonals meeting at $E$, the diagonals are the same length and cut each other in half, so $AE = BE = CE = DE$, and a whole diagonal is $2 \\cdot AE$. If $AE = 2x + 3$ and $DE = 4x - 7$, then $2x + 3 = 4x - 7$, so $x = 5$ and $AE = 13$. If $AC = 5x + 2$ and $BE = 2x + 4$, then $5x + 2 = 2(2x + 4)$, so $x = 6$.",
+            "在对角线交于 $E$ 的长方形 $ABCD$ 中，两条对角线一样长，并且互相平分，所以 $AE = BE = CE = DE$，整条对角线是 $2 \\cdot AE$。若 $AE = 2x + 3$，$DE = 4x - 7$，则 $2x + 3 = 4x - 7$，$x = 5$，$AE = 13$。若 $AC = 5x + 2$，$BE = 2x + 4$，则 $5x + 2 = 2(2x + 4)$，$x = 6$。",
+          ],
+          [
+            "At $x = 5$: $2(5) + 3 = 13$ and $4(5) - 7 = 13$. At $x = 6$: $AC = 32$ and $BE = 16$, half of it.",
+            "$x = 5$ 时：$2(5) + 3 = 13$，$4(5) - 7 = 13$。$x = 6$ 时：$AC = 32$，$BE = 16$，正好是它的一半。",
+          ],
+          [
+            "A whole diagonal such as $AC$ is twice a piece such as $BE$; only the four pieces are equal to each other.",
+            "像 $AC$ 这样的整条对角线是像 $BE$ 这样一段的两倍；只有四小段彼此相等。",
+          ],
+        ],
+        (rng) => {
+          const c = rng.pick(diagonalCases);
+          const x = rng.int(2, 12);
+          const half = rng.int(5, 30);
+          const u = pickUnit(rng);
+          const askX = rng.bool();
+          const figure = fig(
+            rectangleWithDiagonals(8, 5),
+            "Rectangle ABCD with diagonals AC and BD meeting at E.",
+            "长方形 ABCD 的对角线 AC 与 BD 交于 E。",
+          );
+          if (!c.whole) {
+            const e1 = expressionFor(rng, half, x);
+            const e2 = expressionFor(rng, half, x, [e1[0]]);
+            return matched(
+              [
                 `In rectangle $ABCD$, the diagonals meet at $E$, $${c.first} = ${linear(...e1)}$ and $${c.second} = ${linear(...e2)}$. ${askX ? "Find $x$." : `Find $${c.first}$.`}`,
                 `长方形 $ABCD$ 的对角线交于 $E$，$${c.first} = ${linear(...e1)}$，$${c.second} = ${linear(...e2)}$。${askX ? "求 $x$。" : `求 $${c.first}$。`}`,
-              ),
-              answer: askX ? x : half,
-              ...(!askX && { unit: u }),
-              wrong: askX ? equalWrong(e1, e2) : [2 * half, x],
-              solution: t(
-                `The diagonals of a rectangle are congruent and bisect each other, so $AE = BE = CE = DE$:${steps(...equalSteps(e1, e2))}${askX ? "" : `So $${c.first} = ${subst(e1, x)} = ${half}$.`}`,
-                `长方形的对角线相等且互相平分，所以 $AE = BE = CE = DE$：${steps(...equalSteps(e1, e2))}${askX ? "" : `所以 $${c.first} = ${subst(e1, x)} = ${half}$。`}`,
-              ),
-            }),
-            figure: pic,
-          };
-        }
-        const eh = expressionFor(rng, half, x);
-        const ew = expressionFor(rng, 2 * half, x, [2 * eh[0]]);
-        const doubled: Linear = [2 * eh[0], 2 * eh[1]];
-        return {
-          ...numberProblem({
-            prompt: t(
-              `In rectangle $ABCD$, the diagonals meet at $E$, $${c.first} = ${linear(...ew)}$ and $${c.second} = ${linear(...eh)}$. ${askX ? "Find $x$." : `Find $${c.first}$.`}`,
-              `长方形 $ABCD$ 的对角线交于 $E$，$${c.first} = ${linear(...ew)}$，$${c.second} = ${linear(...eh)}$。${askX ? "求 $x$。" : `求 $${c.first}$。`}`,
-            ),
-            answer: askX ? x : 2 * half,
-            ...(!askX && { unit: u }),
-            // Setting the whole diagonal equal to the half is the usual slip.
-            wrong: askX ? [...(ew[0] !== eh[0] ? [Q.of(eh[1] - ew[1], ew[0] - eh[0])] : []), ...equalWrong(ew, doubled)] : [half, 4 * half],
-            solution: t(
-              `The diagonals are congruent and bisect each other, so $${c.second}$ is half of a diagonal and $${c.first} = 2 \\cdot ${c.second}$:${steps(`${linear(...ew)} = 2(${linear(...eh)})`, ...equalSteps(ew, doubled))}${askX ? "" : `So $${c.first} = ${subst(ew, x)} = ${2 * half}$.`}`,
-              `对角线相等且互相平分，所以 $${c.second}$ 是对角线的一半，$${c.first} = 2 \\cdot ${c.second}$：${steps(`${linear(...ew)} = 2(${linear(...eh)})`, ...equalSteps(ew, doubled))}${askX ? "" : `所以 $${c.first} = ${subst(ew, x)} = ${2 * half}$。`}`,
-            ),
-          }),
-          figure: pic,
-        };
-      },
-    },
-    {
-      id: "angles-in-rectangles",
-      figure: gradeDrawings3["properties-of-rectangles-and-squares#angles-in-rectangles"],
-      title: t("Angles in rectangles", "长方形中的角"),
-      explanation: t(
-        "Each corner of a rectangle is $90^\\circ$, and a diagonal cuts the rectangle into two right triangles. If diagonal $\\overline{AC}$ makes $m\\angle BAC = 35^\\circ$, then\n\n- $m\\angle CAD = 90 - 35 = 55^\\circ$, the rest of the corner at $A$;\n- $m\\angle BCA = 180 - 90 - 35 = 55^\\circ$, from the angles of $\\triangle ABC$;\n- $m\\angle ACD = 90 - 55 = 35^\\circ$, the rest of the corner at $C$.",
-        "长方形的每个角都是 $90^\\circ$，一条对角线把它分成两个直角三角形。若对角线 $\\overline{AC}$ 使 $m\\angle BAC = 35^\\circ$，则\n\n- $m\\angle CAD = 90 - 35 = 55^\\circ$，是 $A$ 处直角剩下的部分；\n- $m\\angle BCA = 180 - 90 - 35 = 55^\\circ$，由 $\\triangle ABC$ 的内角和得出；\n- $m\\angle ACD = 90 - 55 = 35^\\circ$，是 $C$ 处直角剩下的部分。",
-      ),
-      generate(rng) {
-        let a: number;
-        do a = rng.int(25, 65);
-        while (a === 45);
-        const ask = rng.pick(["CAD", "BCA", "ACD"] as const);
-        const rest = 90 - a;
-        const answer = ask === "ACD" ? a : rest;
-        const l = 8;
-        const w = l * Math.tan(rad(a));
-        const A: Point = [0, 0];
-        const B: Point = [l, 0];
-        const C: Point = [l, w];
-        const sol: Record<typeof ask, Text> = {
-          CAD: t(
-            `The corner at $A$ is a right angle, and $\\angle BAC$ is part of it:${steps(`${measure("CAD")} = 90 - ${a} = ${degTex(rest)}`)}`,
-            `$A$ 处是直角，$\\angle BAC$ 是它的一部分：${steps(`${measure("CAD")} = 90 - ${a} = ${degTex(rest)}`)}`,
-          ),
-          BCA: t(
-            `In $\\triangle ABC$, $\\angle B$ is a right angle, and the angles of a triangle add up to $${degTex(180)}$:${steps(`${measure("BCA")} = 180 - 90 - ${a} = ${degTex(rest)}`)}`,
-            `在 $\\triangle ABC$ 中，$\\angle B$ 是直角，三角形的内角和为 $${degTex(180)}$：${steps(`${measure("BCA")} = 180 - 90 - ${a} = ${degTex(rest)}`)}`,
-          ),
-          ACD: t(
-            `In $\\triangle ABC$, $${measure("BCA")} = 180 - 90 - ${a} = ${degTex(rest)}$. The corner at $C$ is a right angle, so${steps(`${measure("ACD")} = 90 - ${rest} = ${degTex(a)}`)}`,
-            `在 $\\triangle ABC$ 中，$${measure("BCA")} = 180 - 90 - ${a} = ${degTex(rest)}$。$C$ 处是直角，所以${steps(`${measure("ACD")} = 90 - ${rest} = ${degTex(a)}`)}`,
-          ),
-        };
-        const pts = rectangle(l, w);
-        return {
-          ...numberProblem({
-            prompt: t(`$ABCD$ is a rectangle. Find $${measure(ask)}$.`, `$ABCD$ 是长方形。求 $${measure(ask)}$。`),
-            answer,
-            form: "integer",
-            unit: "°",
-            wrong: [answer === a ? rest : a, 180 - a, 180 - 2 * a].filter((w) => w > 0 && w !== answer),
-            solution: sol[ask],
-          }),
-          figure: fig(
+              ],
+              [c.first, e1],
+              [c.second, e2],
+              x,
+              half,
+              askX,
+              [
+                "The diagonals of a rectangle are equal and cut each other in half, so all four pieces are equal:",
+                "长方形的对角线相等且互相平分，所以四小段都相等：",
+              ],
+              { unit: u, figure },
+            );
+          }
+          const eh = expressionFor(rng, half, x);
+          const ew = expressionFor(rng, 2 * half, x, [2 * eh[0]]);
+          const doubled: Linear = [2 * eh[0], 2 * eh[1]];
+          const lines = [`${linear(...ew)} = 2(${linear(...eh)}) = ${linear(...doubled)}`, ...equalSteps(ew, doubled).slice(1)];
+          const prompt: Pair = [
+            `In rectangle $ABCD$, the diagonals meet at $E$, $${c.first} = ${linear(...ew)}$ and $${c.second} = ${linear(...eh)}$. ${askX ? "Find $x$." : `Find $${c.first}$.`}`,
+            `长方形 $ABCD$ 的对角线交于 $E$，$${c.first} = ${linear(...ew)}$，$${c.second} = ${linear(...eh)}$。${askX ? "求 $x$。" : `求 $${c.first}$。`}`,
+          ];
+          const why: Pair = [
+            `The diagonals are equal and cut each other in half, so $${c.second}$ is half a diagonal and $${c.first} = 2 \\cdot ${c.second}$:`,
+            `对角线相等且互相平分，所以 $${c.second}$ 是对角线的一半，$${c.first} = 2 \\cdot ${c.second}$：`,
+          ];
+          const check: Pair = [
+            `At $x = ${x}$: $${c.second} = ${subst(eh, x)} = ${half}$ and $${c.first} = ${subst(ew, x)} = ${2 * half}$, twice as long.`,
+            `$x = ${x}$ 时：$${c.second} = ${subst(eh, x)} = ${half}$，$${c.first} = ${subst(ew, x)} = ${2 * half}$，正好是两倍。`,
+          ];
+          if (askX)
+            return valued(
+              prompt,
+              x,
+              [
+                [["Double the piece", "把一段乘 2"], why, lines.slice(0, 1)],
+                [["Solve for x", "解出 x"], collecting(lines.slice(1)), lines.slice(1)],
+              ],
+              check,
+              [
+                ...(ew[0] !== eh[0]
+                  ? [
+                      [
+                        Q.of(eh[1] - ew[1], ew[0] - eh[0]),
+                        `That sets $${c.first}$ equal to $${c.second}$, but a whole diagonal is twice a piece.`,
+                        `这是让 $${c.first}$ 等于 $${c.second}$，但整条对角线是一段的两倍。`,
+                      ] as const,
+                    ]
+                  : []),
+                [
+                  Q.of(2 * eh[1] - ew[1], ew[0] - 2 * eh[0]).neg(),
+                  "That moves a number across the equals sign without changing its sign.",
+                  "移项时没有改变数的符号。",
+                ],
+                [half, `That is $${c.second}$, not $x$.`, `这是 $${c.second}$，不是 $x$。`],
+              ],
+              { figure, solveFor: "x" },
+            );
+          return valued(
+            prompt,
+            2 * half,
             [
-              { kind: "polygon", points: pts },
-              seg(A, C),
-              // Right-angle marks only at B and D, clear of the diagonal and the labeled angle at A.
-              { kind: "right", vertex: B, from: C, to: A },
-              { kind: "right", vertex: pts[3]!, from: A, to: C },
-              arc(A, B, C, deg(a)),
-              ...names(pts, "ABCD"),
+              [["Double the piece and solve", "把一段乘 2 并求解"], why, lines],
+              [
+                ["Substitute", "代入"],
+                [`Put $x = ${x}$ into $${c.first}$:`, `把 $x = ${x}$ 代入 $${c.first}$：`],
+                [`${c.first} = ${subst(ew, x)} = ${2 * half}`],
+              ],
             ],
-            `Rectangle ABCD with diagonal AC. Angle BAC is ${a}°.`,
-            `长方形 ABCD 及对角线 AC。角 BAC 为 ${a}°。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "diagonals-of-squares",
-      figure: gradeDrawings3["properties-of-rectangles-and-squares#diagonals-of-squares"],
-      title: t("Diagonals of squares", "正方形的对角线"),
-      explanation: t(
-        "In square $ABCD$ with diagonals meeting at $E$:\n\n- the four segments $AE$, $BE$, $CE$ and $DE$ are equal, as in any rectangle;\n- the diagonals are perpendicular, so $m\\angle AEB = 90^\\circ$;\n- each diagonal splits a corner in half, so $m\\angle BAC = 45^\\circ$.\n\nIf $m\\angle ABD = (3x + 6)^\\circ$, then $3x + 6 = 45$ and $x = 13$.",
-        "在对角线交于 $E$ 的正方形 $ABCD$ 中：\n\n- 和所有长方形一样，$AE$、$BE$、$CE$、$DE$ 四段相等；\n- 两条对角线互相垂直，所以 $m\\angle AEB = 90^\\circ$；\n- 每条对角线把一个角平分，所以 $m\\angle BAC = 45^\\circ$。\n\n若 $m\\angle ABD = (3x + 6)^\\circ$，则 $3x + 6 = 45$，$x = 13$。",
+            check,
+            [
+              [half, `That is $${c.second}$, half of a diagonal.`, `这是 $${c.second}$，对角线的一半。`],
+              [4 * half, "That doubles the whole diagonal again.", "这是把整条对角线又乘了 $2$。"],
+              [x, "That is $x$; put it back into the expression to get the length.", "这是 $x$；还要把它代回式子才得到长度。"],
+            ],
+            { unit: u, figure },
+          );
+        },
+        drawn(gradeDrawings3["properties-of-rectangles-and-squares#diagonals-of-rectangles"]),
       ),
-      generate(rng) {
-        const x = rng.int(3, 14);
-        const pic = fig(
-          rectangleWithDiagonals(6, 6),
-          "Square ABCD with diagonals AC and BD meeting at E.",
-          "正方形 ABCD 的对角线 AC 与 BD 交于 E。",
-        );
-        const kind = rng.pick(["corner", "center", "lengths"] as const);
-        if (kind === "lengths") {
-          const half = rng.int(4, 25);
-          const [p, q] = rng.pick([
-            ["AE", "BE"],
-            ["CE", "DE"],
-            ["AE", "DE"],
-          ] as const);
-          const e1 = expressionFor(rng, half, x);
-          const e2 = expressionFor(rng, half, x, [e1[0]]);
-          return {
-            ...numberProblem({
-              prompt: t(
+      lesson(
+        "angles-in-rectangles",
+        ["Angles in rectangles", "长方形中的角"],
+        [
+          [
+            "Each corner of a rectangle is $90^\\circ$, and a diagonal cuts the rectangle into two right triangles. If diagonal $\\overline{AC}$ makes $m\\angle BAC = 35^\\circ$, then $m\\angle CAD = 90 - 35 = 55^\\circ$, the rest of the corner at $A$; $m\\angle BCA = 180 - 90 - 35 = 55^\\circ$, from the angles of $\\triangle ABC$; and $m\\angle ACD = 90 - 55 = 35^\\circ$, the rest of the corner at $C$.",
+            "长方形的每个角都是 $90^\\circ$，一条对角线把它分成两个直角三角形。若对角线 $\\overline{AC}$ 使 $m\\angle BAC = 35^\\circ$，则 $m\\angle CAD = 90 - 35 = 55^\\circ$，是 $A$ 处直角剩下的部分；$m\\angle BCA = 180 - 90 - 35 = 55^\\circ$，由 $\\triangle ABC$ 的内角和得出；$m\\angle ACD = 90 - 55 = 35^\\circ$，是 $C$ 处直角剩下的部分。",
+          ],
+          ["In $\\triangle ACD$: $90 + 55 + 35 = 180$.", "在 $\\triangle ACD$ 中：$90 + 55 + 35 = 180$。"],
+          [
+            "A corner of the rectangle is $90^\\circ$, not $180^\\circ$: take the known part from $90$.",
+            "长方形的一个角是 $90^\\circ$，不是 $180^\\circ$：要从 $90$ 里减去已知部分。",
+          ],
+        ],
+        (rng) => {
+          let a: number;
+          do a = rng.int(25, 65);
+          while (a === 45);
+          const ask = rng.pick(["CAD", "BCA", "ACD"] as const);
+          const rest = 90 - a;
+          const answer = ask === "ACD" ? a : rest;
+          const l = 8;
+          const w = l * Math.tan(rad(a));
+          const A: Point = [0, 0];
+          const B: Point = [l, 0];
+          const C: Point = [l, w];
+          const triangle: Walk = [
+            ["Use triangle ABC", "用三角形 ABC"],
+            [
+              `$\\angle B$ is a right angle, and the angles of $\\triangle ABC$ add up to $180^\\circ$:`,
+              `$\\angle B$ 是直角，$\\triangle ABC$ 的内角和是 $180^\\circ$：`,
+            ],
+            [`${measure("BCA")} = 180 - 90 - ${a} = ${degTex(rest)}`],
+          ];
+          const walks: Record<typeof ask, Walk[]> = {
+            CAD: [
+              [
+                ["Find the corner", "找出直角"],
+                [
+                  "The corner at $A$ is $90^\\circ$, and diagonal $\\overline{AC}$ splits it into $\\angle BAC$ and $\\angle CAD$.",
+                  "$A$ 处是 $90^\\circ$ 的直角，对角线 $\\overline{AC}$ 把它分成 $\\angle BAC$ 和 $\\angle CAD$。",
+                ],
+              ],
+              [
+                ["Subtract", "相减"],
+                ["Take the known part from the corner:", "从直角中减去已知部分："],
+                [`${measure("CAD")} = 90 - ${a} = ${degTex(rest)}`],
+              ],
+            ],
+            BCA: [
+              [
+                ["Find the right triangle", "找出直角三角形"],
+                [
+                  "Diagonal $\\overline{AC}$ makes $\\triangle ABC$, with a right angle at $B$.",
+                  "对角线 $\\overline{AC}$ 构成 $\\triangle ABC$，$B$ 处是直角。",
+                ],
+              ],
+              triangle,
+            ],
+            ACD: [
+              triangle,
+              [
+                ["Use the corner at C", "用 C 处的直角"],
+                ["The corner at $C$ is $90^\\circ$:", "$C$ 处是 $90^\\circ$："],
+                [`${measure("ACD")} = 90 - ${rest} = ${degTex(a)}`],
+              ],
+            ],
+          };
+          const checks: Record<typeof ask, Pair> = {
+            CAD: [
+              `In $\\triangle ACD$, $\\angle D = 90^\\circ$ and $${measure("ACD")} = 90 - ${measure("BCA")} = 90 - ${rest} = ${a}$, so $${measure("CAD")} = 180 - 90 - ${a} = ${rest}$.`,
+              `在 $\\triangle ACD$ 中，$\\angle D = 90^\\circ$，$${measure("ACD")} = 90 - ${measure("BCA")} = 90 - ${rest} = ${a}$，所以 $${measure("CAD")} = 180 - 90 - ${a} = ${rest}$。`,
+            ],
+            BCA: [
+              `The corner at $A$ gives $${measure("CAD")} = 90 - ${a} = ${rest}$, and in $\\triangle ACD$ the corner at $C$ keeps $180 - 90 - ${rest} = ${a}$ for $\\angle ACD$, leaving $90 - ${a} = ${rest}$ for $\\angle BCA$.`,
+              `$A$ 处的直角给出 $${measure("CAD")} = 90 - ${a} = ${rest}$；在 $\\triangle ACD$ 中 $\\angle ACD = 180 - 90 - ${rest} = ${a}$，所以 $C$ 处剩下的 $\\angle BCA = 90 - ${a} = ${rest}$。`,
+            ],
+            ACD: [
+              `The corner at $A$ gives $${measure("CAD")} = 90 - ${a} = ${rest}$, and in $\\triangle ACD$: $${measure("ACD")} = 180 - 90 - ${rest} = ${a}$.`,
+              `$A$ 处的直角给出 $${measure("CAD")} = 90 - ${a} = ${rest}$；在 $\\triangle ACD$ 中：$${measure("ACD")} = 180 - 90 - ${rest} = ${a}$。`,
+            ],
+          };
+          const pts = rectangle(l, w);
+          return valued(
+            [`$ABCD$ is a rectangle. Find $${measure(ask)}$.`, `$ABCD$ 是长方形。求 $${measure(ask)}$。`],
+            answer,
+            walks[ask],
+            checks[ask],
+            [
+              [answer === a ? rest : a, "That is the other sharp angle of the right triangle.", "这是直角三角形中另一个锐角。"],
+              [
+                180 - a,
+                `That takes $${a}^\\circ$ from $180^\\circ$, but a corner of the rectangle is $90^\\circ$.`,
+                `这是从 $180^\\circ$ 里减去 $${a}^\\circ$，但长方形的一个角是 $90^\\circ$。`,
+              ],
+              [a + 90, "That adds the right angle instead of taking the known angle away.", "这是加上了直角，应该减去已知的角。"],
+            ],
+            {
+              unit: "°",
+              figure: fig(
+                [
+                  { kind: "polygon", points: pts },
+                  seg(A, C),
+                  // Right-angle marks only at B and D, clear of the diagonal and the labeled angle at A.
+                  { kind: "right", vertex: B, from: C, to: A },
+                  { kind: "right", vertex: pts[3]!, from: A, to: C },
+                  arc(A, B, C, deg(a)),
+                  ...names(pts, "ABCD"),
+                ],
+                `Rectangle ABCD with diagonal AC. Angle BAC is ${a}°.`,
+                `长方形 ABCD 及对角线 AC。角 BAC 为 ${a}°。`,
+              ),
+            },
+          );
+        },
+        drawn(gradeDrawings3["properties-of-rectangles-and-squares#angles-in-rectangles"]),
+      ),
+      lesson(
+        "diagonals-of-squares",
+        ["Diagonals of squares", "正方形的对角线"],
+        [
+          [
+            "In square $ABCD$ with diagonals meeting at $E$, the four pieces $AE$, $BE$, $CE$ and $DE$ are equal, as in any rectangle. The diagonals also cross at a right angle, so $m\\angle AEB = 90^\\circ$, and each diagonal cuts a corner in half, so $m\\angle BAC = 45^\\circ$. If $m\\angle ABD = (3x + 6)^\\circ$, then $3x + 6 = 45$ and $x = 13$.",
+            "在对角线交于 $E$ 的正方形 $ABCD$ 中，和所有长方形一样，$AE$、$BE$、$CE$、$DE$ 四段相等。两条对角线还互相垂直，所以 $m\\angle AEB = 90^\\circ$；每条对角线把一个角平分，所以 $m\\angle BAC = 45^\\circ$。若 $m\\angle ABD = (3x + 6)^\\circ$，则 $3x + 6 = 45$，$x = 13$。",
+          ],
+          [
+            "At $x = 13$: $3 \\cdot 13 + 6 = 45$, half of the $90^\\circ$ corner.",
+            "$x = 13$ 时：$3 \\cdot 13 + 6 = 45$，正好是 $90^\\circ$ 直角的一半。",
+          ],
+          [
+            "An angle at a corner, such as $\\angle ABD$, is $45^\\circ$; an angle at the center $E$, such as $\\angle AEB$, is $90^\\circ$.",
+            "角的顶点在正方形的角上（如 $\\angle ABD$）是 $45^\\circ$；顶点在中心 $E$（如 $\\angle AEB$）是 $90^\\circ$。",
+          ],
+        ],
+        (rng) => {
+          const x = rng.int(3, 14);
+          const figure = fig(
+            rectangleWithDiagonals(6, 6),
+            "Square ABCD with diagonals AC and BD meeting at E.",
+            "正方形 ABCD 的对角线 AC 与 BD 交于 E。",
+          );
+          const kind = rng.pick(["corner", "center", "lengths"] as const);
+          if (kind === "lengths") {
+            const half = rng.int(4, 25);
+            const [p, q] = rng.pick([
+              ["AE", "BE"],
+              ["CE", "DE"],
+              ["AE", "DE"],
+            ] as const);
+            const e1 = expressionFor(rng, half, x);
+            const e2 = expressionFor(rng, half, x, [e1[0]]);
+            return matched(
+              [
                 `In square $ABCD$, the diagonals meet at $E$, $${p} = ${linear(...e1)}$ and $${q} = ${linear(...e2)}$. Find $x$.`,
                 `正方形 $ABCD$ 的对角线交于 $E$，$${p} = ${linear(...e1)}$，$${q} = ${linear(...e2)}$。求 $x$。`,
-              ),
-              answer: x,
-              wrong: equalWrong(e1, e2),
-              solution: t(
-                `The diagonals of a square are congruent and bisect each other, so $${p} = ${q}$:${steps(...equalSteps(e1, e2))}`,
-                `正方形的对角线相等且互相平分，所以 $${p} = ${q}$：${steps(...equalSteps(e1, e2))}`,
-              ),
-            }),
-            figure: pic,
-          };
-        }
-        const total = kind === "corner" ? 45 : 90;
-        const name = kind === "corner" ? rng.pick(["BAC", "ABD", "CDB", "DCA"]) : rng.pick(["AEB", "BEC", "CED", "AED"]);
-        const e = expressionFor(rng, total, x);
-        const why =
-          kind === "corner"
-            ? t("each diagonal of a square splits a right-angle corner in half", "正方形的每条对角线把直角平分")
-            : t("the diagonals of a square are perpendicular", "正方形的两条对角线互相垂直");
-        return {
-          ...numberProblem({
-            prompt: t(
+              ],
+              [p, e1],
+              [q, e2],
+              x,
+              half,
+              true,
+              [
+                `The diagonals of a square are equal and cut each other in half, so $${p} = ${q}$:`,
+                `正方形的对角线相等且互相平分，所以 $${p} = ${q}$：`,
+              ],
+              { figure },
+            );
+          }
+          const total = kind === "corner" ? 45 : 90;
+          const name = kind === "corner" ? rng.pick(["BAC", "ABD", "CDB", "DCA"]) : rng.pick(["AEB", "BEC", "CED", "AED"]);
+          const e = expressionFor(rng, total, x);
+          const why: Pair =
+            kind === "corner"
+              ? [
+                  `Each diagonal of a square cuts a $90^\\circ$ corner in half, so $${measure(name)} = 45^\\circ$:`,
+                  `正方形的每条对角线把 $90^\\circ$ 的角平分，所以 $${measure(name)} = 45^\\circ$：`,
+                ]
+              : [
+                  `The diagonals of a square cross at a right angle, so $${measure(name)} = 90^\\circ$:`,
+                  `正方形的两条对角线互相垂直，所以 $${measure(name)} = 90^\\circ$：`,
+                ];
+          const solve =
+            e[0] === 1 ? [`x = ${total} - ${e[1] < 0 ? `(${e[1]})` : e[1]} = ${x}`] : [`${linear(e[0], 0)} = ${total - e[1]}`, `x = ${x}`];
+          return valued(
+            [
               `In square $ABCD$, the diagonals meet at $E$ and $${measure(name)} = ${angleTex(...e)}$. Find $x$.`,
               `正方形 $ABCD$ 的对角线交于 $E$，$${measure(name)} = ${angleTex(...e)}$。求 $x$。`,
-            ),
-            answer: x,
-            // Using 90° for a half corner or 45° for the angle between the diagonals, and moving the constant the wrong way.
-            wrong: [Q.of(135 - total - e[1], e[0]), Q.of(total + e[1], e[0])],
-            solution: t(
-              `$${measure(name)} = ${degTex(total)}$, because ${why.en}:${steps(`${linear(...e)} = ${total}`, `${linear(e[0], 0)} = ${total - e[1]}`, `x = ${x}`)}`,
-              `因为${why["zh-CN"]}，所以 $${measure(name)} = ${degTex(total)}$：${steps(`${linear(...e)} = ${total}`, `${linear(e[0], 0)} = ${total - e[1]}`, `x = ${x}`)}`,
-            ),
-          }),
-          figure: pic,
-        };
-      },
-    },
+            ],
+            x,
+            [
+              [["Name the angle", "确定这个角"], why, [`${linear(...e)} = ${total}`]],
+              [
+                ["Solve for x", "解出 x"],
+                [
+                  e[0] === 1 ? "Undo the added number:" : "Undo the added number, then divide:",
+                  e[0] === 1 ? "消去加上的数：" : "先消去加上的数，再相除：",
+                ],
+                solve,
+              ],
+            ],
+            [`At $x = ${x}$: $${subst(e, x)} = ${total}$.`, `$x = ${x}$ 时：$${subst(e, x)} = ${total}$。`],
+            [
+              [
+                Q.of(135 - total - e[1], e[0]),
+                kind === "corner"
+                  ? "That uses $90^\\circ$, the whole corner, but the diagonal takes half of it."
+                  : "That uses $45^\\circ$, half a corner, but the diagonals meet at a right angle.",
+                kind === "corner"
+                  ? "这是用了整个角 $90^\\circ$，但对角线只取它的一半。"
+                  : "这是用了半个角 $45^\\circ$，但两条对角线成直角。",
+              ],
+              [
+                Q.of(total + e[1], e[0]),
+                "That moves the number across the equals sign without changing its sign.",
+                "移项时没有改变数的符号。",
+              ],
+            ],
+            { figure, solveFor: "x" },
+          );
+        },
+        drawn(gradeDrawings3["properties-of-rectangles-and-squares#diagonals-of-squares"]),
+      ),
+    ],
+  ),
+  [
+    "A door is a rectangle. Stretch two strings from corner to corner: they are the same length, and they cross exactly at the middle of each string.",
+    "门是一个长方形。从对角拉两根绳子：它们一样长，而且正好在各自的中点交叉。",
+  ],
+  [
+    "Measure from each corner to the crossing: all four pieces match, each half a string.",
+    "从每个角量到交叉点：四段一样长，每段都是一根绳子的一半。",
+  ],
+  [
+    "use the right angles and the equal, halving diagonals of rectangles and squares to find lengths, angles and $x$.",
+    "学习利用长方形和正方形的直角，以及相等且互相平分的对角线，求长度、角和 $x$。",
   ],
 );
-
 /** trapezoidPoints is trapezoid ABCD with AB ∥ DC, bottom base l, height h and the top corners set in by o1 at D and o2 at C. */
 const trapezoidPoints = (l: number, h: number, o1: number, o2: number): Point[] => [
   [0, 0],
@@ -2881,185 +3906,253 @@ function parallelMarks(pts: readonly Point[], isosceles: boolean): Mark[] {
 }
 
 /** propertiesOfTrapezoids uses the parallel bases of a trapezoid, the symmetry of an isosceles trapezoid and the midsegment. */
-export const propertiesOfTrapezoids = topic(
-  "properties-of-trapezoids",
-  t("Properties of Trapezoids", "梯形的性质"),
-  t(
-    "The two angles along each leg of a trapezoid add up to 180°, because the bases are parallel. An isosceles trapezoid has congruent legs, congruent base angles and congruent diagonals. The midsegment, which joins the midpoints of the legs, is the average of the bases.",
-    "梯形的底互相平行，所以每条腰上的两个角之和为 180°。等腰梯形的两腰相等，同一底上的两个底角相等，两条对角线也相等。连接两腰中点的中位线等于两底的平均数。",
-  ),
-  ["classifying-quadrilaterals", "supplementary-angles", "equations-with-variables-on-both-sides"],
-  ["7.G.A.2", "HSG.CO.C.11"],
-  [
-    {
-      id: "angles-of-trapezoids",
-      figure: gradeDrawings4["properties-of-trapezoids#angles-of-trapezoids"],
-      title: t("Angles of trapezoids", "梯形的角"),
-      explanation: t(
-        "In trapezoid $ABCD$ with $\\overline{AB} \\parallel \\overline{DC}$, the angles at the two ends of a leg are supplementary: $m\\angle A + m\\angle D = 180^\\circ$ and $m\\angle B + m\\angle C = 180^\\circ$.\n\nIn an isosceles trapezoid, the two angles on the same base are also equal: $m\\angle A = m\\angle B$ and $m\\angle C = m\\angle D$. So if $m\\angle A = 70^\\circ$, then $m\\angle B = 70^\\circ$ and $m\\angle C = m\\angle D = 110^\\circ$.",
-        "在 $\\overline{AB} \\parallel \\overline{DC}$ 的梯形 $ABCD$ 中，一条腰两端的角互补：$m\\angle A + m\\angle D = 180^\\circ$，$m\\angle B + m\\angle C = 180^\\circ$。\n\n在等腰梯形中，同一底上的两个角还相等：$m\\angle A = m\\angle B$，$m\\angle C = m\\angle D$。所以若 $m\\angle A = 70^\\circ$，则 $m\\angle B = 70^\\circ$，$m\\angle C = m\\angle D = 110^\\circ$。",
-      ),
-      generate(rng) {
-        const isosceles = rng.bool();
-        const a = rng.int(48, 80);
-        const b = isosceles ? a : rng.int(48, 80);
-        const h = 5;
-        const pts = trapezoidPoints(14, h, h / Math.tan(rad(a)), h / Math.tan(rad(b)));
-        const [A, B, C, D] = [pts[0]!, pts[1]!, pts[2]!, pts[3]!];
-        const fromB = !isosceles && rng.bool();
-        const ask = isosceles ? rng.pick(["B", "C", "D"] as const) : fromB ? "C" : "D";
-        const given = fromB ? b : a;
-        const answer = ask === "B" ? a : 180 - given;
-        const head = isosceles
-          ? t(
-              `$ABCD$ is an isosceles trapezoid with $${over("AB")} \\parallel ${over("DC")}$ and $AD = BC$.`,
-              `$ABCD$ 是等腰梯形，$${over("AB")} \\parallel ${over("DC")}$，$AD = BC$。`,
-            )
-          : t(
-              `$ABCD$ is a trapezoid with $${over("AB")} \\parallel ${over("DC")}$.`,
-              `$ABCD$ 是梯形，$${over("AB")} \\parallel ${over("DC")}$。`,
-            );
-        const leg = t(
-          `$\\angle ${fromB ? "B" : "A"}$ and $\\angle ${ask}$ are at the two ends of leg $${over(fromB ? "BC" : "AD")}$, between the parallel bases, so they are supplementary:${steps(`m\\angle ${ask} = 180 - ${given} = ${degTex(answer)}`)}`,
-          `$\\angle ${fromB ? "B" : "A"}$ 与 $\\angle ${ask}$ 在腰 $${over(fromB ? "BC" : "AD")}$ 的两端、两条平行的底之间，所以互补：${steps(`m\\angle ${ask} = 180 - ${given} = ${degTex(answer)}`)}`,
-        );
-        const sol: Record<"B" | "C" | "D", Text> = {
-          B: t(
-            `In an isosceles trapezoid the two angles on the same base are equal, so $m\\angle B = m\\angle A = ${degTex(a)}$.`,
-            `等腰梯形同一底上的两个角相等，所以 $m\\angle B = m\\angle A = ${degTex(a)}$。`,
-          ),
-          C: isosceles
-            ? t(
-                `The angles on the base $${over("AB")}$ are equal, so $m\\angle B = ${degTex(a)}$. Then $\\angle B$ and $\\angle C$ are at the ends of leg $${over("BC")}$, so they are supplementary:${steps(`m\\angle C = 180 - ${a} = ${degTex(answer)}`)}`,
-                `底 $${over("AB")}$ 上的两个角相等，所以 $m\\angle B = ${degTex(a)}$。$\\angle B$ 与 $\\angle C$ 在腰 $${over("BC")}$ 的两端，所以互补：${steps(`m\\angle C = 180 - ${a} = ${degTex(answer)}`)}`,
-              )
-            : leg,
-          D: leg,
-        };
-        return {
-          ...numberProblem({
-            prompt: t(
-              `${head.en} If $m\\angle ${fromB ? "B" : "A"} = ${degTex(given)}$, find $m\\angle ${ask}$.`,
-              `${head["zh-CN"]}若 $m\\angle ${fromB ? "B" : "A"} = ${degTex(given)}$，求 $m\\angle ${ask}$。`,
-            ),
-            answer,
-            form: "integer",
-            unit: "°",
-            // Taking supplementary angles for equal ones, or the other way round, and confusing 180° with 90°.
-            wrong: [ask === "B" ? 180 - a : given, 90 - given],
-            solution: sol[ask],
-          }),
-          figure: fig(
+export const propertiesOfTrapezoids = withIntro(
+  topic(
+    "properties-of-trapezoids",
+    t("Properties of Trapezoids", "梯形的性质"),
+    t(
+      "The two angles along each leg of a trapezoid add up to 180°, because the bases are parallel. An isosceles trapezoid has congruent legs, congruent base angles and congruent diagonals. The midsegment, which joins the midpoints of the legs, is the average of the bases.",
+      "梯形的底互相平行，所以每条腰上的两个角之和为 180°。等腰梯形的两腰相等，同一底上的两个底角相等，两条对角线也相等。连接两腰中点的中位线等于两底的平均数。",
+    ),
+    ["classifying-quadrilaterals", "supplementary-angles", "equations-with-variables-on-both-sides"],
+    ["7.G.A.2", "HSG.CO.C.11"],
+    [
+      lesson(
+        "angles-of-trapezoids",
+        ["Angles of trapezoids", "梯形的角"],
+        [
+          [
+            "In trapezoid $ABCD$ with $\\overline{AB} \\parallel \\overline{DC}$, the two angles at the ends of a leg add up to $180^\\circ$: $m\\angle A + m\\angle D = 180^\\circ$ and $m\\angle B + m\\angle C = 180^\\circ$. In an isosceles trapezoid, the two angles on the same base are also equal. So if $m\\angle A = 70^\\circ$, then $m\\angle B = 70^\\circ$ and $m\\angle C = m\\angle D = 180 - 70 = 110^\\circ$.",
+            "在 $\\overline{AB} \\parallel \\overline{DC}$ 的梯形 $ABCD$ 中，一条腰两端的两个角之和是 $180^\\circ$：$m\\angle A + m\\angle D = 180^\\circ$，$m\\angle B + m\\angle C = 180^\\circ$。在等腰梯形中，同一底上的两个角还相等。所以若 $m\\angle A = 70^\\circ$，则 $m\\angle B = 70^\\circ$，$m\\angle C = m\\angle D = 180 - 70 = 110^\\circ$。",
+          ],
+          [
+            "The four angles of a quadrilateral add up to $360^\\circ$: $70 + 70 + 110 + 110 = 360$.",
+            "四边形的四个角之和是 $360^\\circ$：$70 + 70 + 110 + 110 = 360$。",
+          ],
+          [
+            "Angles along a leg add up to $180^\\circ$; only angles on the same base of an isosceles trapezoid are equal.",
+            "同一条腰上的两个角之和是 $180^\\circ$；只有等腰梯形同一底上的两个角才相等。",
+          ],
+        ],
+        (rng) => {
+          const isosceles = rng.bool();
+          const a = rng.int(48, 80);
+          const b = isosceles ? a : rng.int(48, 80);
+          const h = 5;
+          const pts = trapezoidPoints(14, h, h / Math.tan(rad(a)), h / Math.tan(rad(b)));
+          const [A, B, C, D] = [pts[0]!, pts[1]!, pts[2]!, pts[3]!];
+          const fromB = !isosceles && rng.bool();
+          const ask = isosceles ? rng.pick(["B", "C", "D"] as const) : fromB ? "C" : "D";
+          const from = fromB ? "B" : "A";
+          const given = fromB ? b : a;
+          const answer = ask === "B" ? a : 180 - given;
+          const head: Pair = isosceles
+            ? [
+                `$ABCD$ is an isosceles trapezoid with $${over("AB")} \\parallel ${over("DC")}$ and $AD = BC$.`,
+                `$ABCD$ 是等腰梯形，$${over("AB")} \\parallel ${over("DC")}$，$AD = BC$。`,
+              ]
+            : [
+                `$ABCD$ is a trapezoid with $${over("AB")} \\parallel ${over("DC")}$.`,
+                `$ABCD$ 是梯形，$${over("AB")} \\parallel ${over("DC")}$。`,
+              ];
+          const along = (p: string, q: string, leg: string, v: number): Walk => [
+            ["Use the leg", "用腰"],
             [
-              { kind: "polygon", points: pts },
-              ...parallelMarks(pts, isosceles),
-              fromB ? arc(B, C, A, deg(b)) : arc(A, B, D, deg(a)),
-              ...names(pts, "ABCD"),
+              `$\\angle ${p}$ and $\\angle ${q}$ are at the two ends of leg $${over(leg)}$, between the parallel bases, so they add up to $180^\\circ$:`,
+              `$\\angle ${p}$ 与 $\\angle ${q}$ 在腰 $${over(leg)}$ 的两端、两条平行的底之间，所以和为 $180^\\circ$：`,
             ],
-            `${isosceles ? "Isosceles trapezoid" : "Trapezoid"} ABCD with AB parallel to DC. Angle ${fromB ? "B" : "A"} is ${given}°.`,
-            `${isosceles ? "等腰梯形" : "梯形"} ABCD，AB 平行于 DC。角 ${fromB ? "B" : "A"} 为 ${given}°。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "isosceles-trapezoids-with-algebra",
-      figure: gradeDrawings3["properties-of-trapezoids#isosceles-trapezoids-with-algebra"],
-      title: t("Isosceles trapezoids with algebra", "用方程解等腰梯形问题"),
-      explanation: t(
-        "In an isosceles trapezoid $ABCD$ with bases $\\overline{AB}$ and $\\overline{DC}$, the legs are congruent, $AD = BC$, and so are the diagonals, $AC = BD$. If $AC = 3x - 4$ and $BD = x + 10$, then $3x - 4 = x + 10$, so $x = 7$ and each diagonal is $17$.",
-        "在底为 $\\overline{AB}$ 和 $\\overline{DC}$ 的等腰梯形 $ABCD$ 中，两腰相等，$AD = BC$；两条对角线也相等，$AC = BD$。若 $AC = 3x - 4$，$BD = x + 10$，则 $3x - 4 = x + 10$，$x = 7$，每条对角线长 $17$。",
+            [`m\\angle ${q} = 180 - ${v} = ${degTex(180 - v)}`],
+          ];
+          const same: Walk = [
+            ["Use the equal base angles", "用相等的底角"],
+            ["In an isosceles trapezoid the two angles on the same base are equal:", "等腰梯形同一底上的两个角相等："],
+            [`m\\angle B = m\\angle A = ${degTex(a)}`],
+          ];
+          const walks: Record<"B" | "C" | "D", Walk[]> = {
+            B: [
+              [
+                ["Find the base", "找出底"],
+                [
+                  "$\\angle A$ and $\\angle B$ both sit on base $\\overline{AB}$.",
+                  "$\\angle A$ 与 $\\angle B$ 都在底 $\\overline{AB}$ 上。",
+                ],
+              ],
+              same,
+            ],
+            C: isosceles
+              ? [same, along("B", "C", "BC", a)]
+              : [
+                  [
+                    ["Find the leg", "找出腰"],
+                    [`$\\angle B$ and $\\angle C$ share leg $${over("BC")}$.`, `$\\angle B$ 与 $\\angle C$ 共用腰 $${over("BC")}$。`],
+                  ],
+                  along("B", "C", "BC", b),
+                ],
+            D: [
+              [
+                ["Find the leg", "找出腰"],
+                [`$\\angle A$ and $\\angle D$ share leg $${over("AD")}$.`, `$\\angle A$ 与 $\\angle D$ 共用腰 $${over("AD")}$。`],
+              ],
+              along("A", "D", "AD", a),
+            ],
+          };
+          const check: Pair = isosceles
+            ? [
+                `The four angles add up to $360^\\circ$: $${a} + ${a} + ${180 - a} + ${180 - a} = 360$.`,
+                `四个角之和是 $360^\\circ$：$${a} + ${a} + ${180 - a} + ${180 - a} = 360$。`,
+              ]
+            : [
+                `Add the two angles along the leg back together: $${given} + ${answer} = 180$, so they fill the space between the parallel bases.`,
+                `把这条腰上的两个角加回去：$${given} + ${answer} = 180$，正好填满两条平行底之间。`,
+              ];
+          return valued(
+            [
+              `${head[0]} If $m\\angle ${from} = ${degTex(given)}$, find $m\\angle ${ask}$.`,
+              `${head[1]}若 $m\\angle ${from} = ${degTex(given)}$，求 $m\\angle ${ask}$。`,
+            ],
+            answer,
+            walks[ask],
+            check,
+            ask === "B"
+              ? [
+                  [
+                    180 - a,
+                    "That treats $\\angle A$ and $\\angle B$ as adding to $180^\\circ$, but they sit on the same base, so they are equal.",
+                    "这是把 $\\angle A$ 与 $\\angle B$ 当成和为 $180^\\circ$，但它们在同一底上，所以相等。",
+                  ],
+                  [
+                    90 - a,
+                    "That takes the angle from $90^\\circ$; the angles on a base are equal.",
+                    "这是从 $90^\\circ$ 里减；同一底上的两个角相等。",
+                  ],
+                ]
+              : [
+                  [
+                    given,
+                    `That makes $\\angle ${ask}$ equal to $\\angle ${from}$, but angles along a leg add up to $180^\\circ$.`,
+                    `这是让 $\\angle ${ask}$ 等于 $\\angle ${from}$，但同一条腰上的两个角之和是 $180^\\circ$。`,
+                  ],
+                  [
+                    90 - given,
+                    "That takes the angle from $90^\\circ$ instead of $180^\\circ$.",
+                    "这是从 $90^\\circ$ 里减，应该从 $180^\\circ$ 里减。",
+                  ],
+                  [
+                    360 - given,
+                    "That takes the angle from $360^\\circ$, the total of all four angles.",
+                    "这是从 $360^\\circ$ 里减，那是四个角的总和。",
+                  ],
+                ],
+            {
+              unit: "°",
+              figure: fig(
+                [
+                  { kind: "polygon", points: pts },
+                  ...parallelMarks(pts, isosceles),
+                  fromB ? arc(B, C, A, deg(b)) : arc(A, B, D, deg(a)),
+                  ...names(pts, "ABCD"),
+                ],
+                `${isosceles ? "Isosceles trapezoid" : "Trapezoid"} ABCD with AB parallel to DC. Angle ${from} is ${given}°.`,
+                `${isosceles ? "等腰梯形" : "梯形"} ABCD，AB 平行于 DC。角 ${from} 为 ${given}°。`,
+              ),
+            },
+          );
+        },
+        drawn(gradeDrawings4["properties-of-trapezoids#angles-of-trapezoids"]),
       ),
-      generate(rng) {
-        const x = rng.int(2, 12);
-        const v = rng.int(6, 30);
-        const legs = rng.bool();
-        const [p, q] = legs ? (["AD", "BC"] as const) : (["AC", "BD"] as const);
-        const e1 = expressionFor(rng, v, x);
-        const e2 = expressionFor(rng, v, x, [e1[0]]);
-        const askX = rng.bool();
-        const u = pickUnit(rng);
-        const pts = trapezoidPoints(12, 5, 3, 3);
-        const fact = legs ? t("the legs are congruent", "两腰相等") : t("the diagonals are congruent", "两条对角线相等");
-        return {
-          ...numberProblem({
-            prompt: t(
+      lesson(
+        "isosceles-trapezoids-with-algebra",
+        ["Isosceles trapezoids with algebra", "用方程解等腰梯形问题"],
+        [
+          [
+            "In an isosceles trapezoid $ABCD$ with bases $\\overline{AB}$ and $\\overline{DC}$, the legs are equal, $AD = BC$, and so are the diagonals, $AC = BD$. If $AC = 3x - 4$ and $BD = x + 10$, then $3x - 4 = x + 10$, so $2x = 14$, $x = 7$, and each diagonal is $17$.",
+            "在底为 $\\overline{AB}$ 和 $\\overline{DC}$ 的等腰梯形 $ABCD$ 中，两腰相等，$AD = BC$；两条对角线也相等，$AC = BD$。若 $AC = 3x - 4$，$BD = x + 10$，则 $3x - 4 = x + 10$，$2x = 14$，$x = 7$，每条对角线长 $17$。",
+          ],
+          ["At $x = 7$: $3 \\cdot 7 - 4 = 17$ and $7 + 10 = 17$.", "$x = 7$ 时：$3 \\cdot 7 - 4 = 17$，$7 + 10 = 17$。"],
+          [
+            "The bases of a trapezoid are not equal; only the legs and the diagonals of an isosceles trapezoid are.",
+            "梯形的两底不相等；只有等腰梯形的两腰、两条对角线才相等。",
+          ],
+        ],
+        (rng) => {
+          const x = rng.int(2, 12);
+          const v = rng.int(6, 30);
+          const legs = rng.bool();
+          const [p, q] = legs ? (["AD", "BC"] as const) : (["AC", "BD"] as const);
+          const e1 = expressionFor(rng, v, x);
+          const e2 = expressionFor(rng, v, x, [e1[0]]);
+          const askX = rng.bool();
+          const u = pickUnit(rng);
+          const pts = trapezoidPoints(12, 5, 3, 3);
+          return matched(
+            [
               `$ABCD$ is an isosceles trapezoid with bases $${over("AB")}$ and $${over("DC")}$, $${p} = ${linear(...e1)}$ and $${q} = ${linear(...e2)}$. ${askX ? "Find $x$." : `Find $${p}$.`}`,
               `$ABCD$ 是等腰梯形，底为 $${over("AB")}$ 和 $${over("DC")}$，$${p} = ${linear(...e1)}$，$${q} = ${linear(...e2)}$。${askX ? "求 $x$。" : `求 $${p}$。`}`,
-            ),
-            answer: askX ? x : v,
-            ...(!askX && { unit: u }),
-            wrong: askX ? equalWrong(e1, e2) : [x, 2 * v],
-            solution: t(
-              `In an isosceles trapezoid ${fact.en}, so $${p} = ${q}$:${steps(...equalSteps(e1, e2))}${askX ? "" : `So $${p} = ${subst(e1, x)} = ${v}$.`}`,
-              `等腰梯形${fact["zh-CN"]}，所以 $${p} = ${q}$：${steps(...equalSteps(e1, e2))}${askX ? "" : `所以 $${p} = ${subst(e1, x)} = ${v}$。`}`,
-            ),
-          }),
-          figure: fig(
-            [
-              { kind: "polygon", points: pts },
-              ...parallelMarks(pts, true),
-              ...(legs ? [] : [seg(pts[0]!, pts[2]!), seg(pts[1]!, pts[3]!)]),
-              ...names(pts, "ABCD"),
             ],
-            `Isosceles trapezoid ABCD with AB parallel to DC${legs ? "" : " and diagonals AC and BD"}.`,
-            `等腰梯形 ABCD，AB 平行于 DC${legs ? "" : "，画出了对角线 AC 和 BD"}。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "the-midsegment-of-a-trapezoid",
-      figure: gradeDrawings3["properties-of-trapezoids#the-midsegment-of-a-trapezoid"],
-      title: t("The midsegment of a trapezoid", "梯形的中位线"),
-      explanation: t(
-        "The **midsegment** of a trapezoid joins the midpoints of its legs. It is parallel to the bases, and its length is their average:\n\n$$m = \\frac{b_1 + b_2}{2}.$$\n\nWith bases $10$ and $16$, the midsegment is $\\frac{10 + 16}{2} = 13$. With one base $10$ and midsegment $13$, the other base is $2 \\cdot 13 - 10 = 16$.",
-        "梯形的**中位线**连接两腰的中点。它平行于两底，长度是两底的平均数：\n\n$$m = \\frac{b_1 + b_2}{2}.$$\n\n两底为 $10$ 和 $16$ 时，中位线是 $\\frac{10 + 16}{2} = 13$。一底为 $10$、中位线为 $13$ 时，另一底是 $2 \\cdot 13 - 10 = 16$。",
+            [p, e1],
+            [q, e2],
+            x,
+            v,
+            askX,
+            legs
+              ? [`An isosceles trapezoid has equal legs, so $${p} = ${q}$:`, `等腰梯形的两腰相等，所以 $${p} = ${q}$：`]
+              : [`An isosceles trapezoid has equal diagonals, so $${p} = ${q}$:`, `等腰梯形的两条对角线相等，所以 $${p} = ${q}$：`],
+            {
+              unit: u,
+              figure: fig(
+                [
+                  { kind: "polygon", points: pts },
+                  ...parallelMarks(pts, true),
+                  ...(legs ? [] : [seg(pts[0]!, pts[2]!), seg(pts[1]!, pts[3]!)]),
+                  ...names(pts, "ABCD"),
+                ],
+                `Isosceles trapezoid ABCD with AB parallel to DC${legs ? "" : " and diagonals AC and BD"}.`,
+                `等腰梯形 ABCD，AB 平行于 DC${legs ? "" : "，画出了对角线 AC 和 BD"}。`,
+              ),
+            },
+          );
+        },
+        drawn(gradeDrawings3["properties-of-trapezoids#isosceles-trapezoids-with-algebra"]),
       ),
-      generate(rng) {
-        let long: number;
-        let short: number;
-        do {
-          long = rng.int(10, 40);
-          short = rng.int(4, long - 2);
-        } while ((long + short) % 2 !== 0);
-        const m = (long + short) / 2;
-        const u = pickUnit(rng);
-        const ask = rng.pick(["mid", "short", "long"] as const);
-        const scale = 12 / long;
-        const o = (long - short) * scale * rng.pick([0.3, 0.5, 0.7]);
-        const pts = trapezoidPoints(long * scale, 5, o, (long - short) * scale - o);
-        const [A, B, C, D] = [pts[0]!, pts[1]!, pts[2]!, pts[3]!];
-        const P = lerp(A, D, 0.5);
-        const R = lerp(B, C, 0.5);
-        const shown = (k: typeof ask, v: number) => (ask === k ? "?" : `${v} ${u}`);
-        const answer = ask === "mid" ? m : ask === "short" ? short : long;
-        const known = ask === "short" ? long : short;
-        return {
-          ...numberProblem({
-            prompt: t(
-              `$${over("PR")}$ is the midsegment of trapezoid $ABCD$. Find ${ask === "mid" ? "$PR$" : ask === "short" ? "$DC$" : "$AB$"}.`,
-              `$${over("PR")}$ 是梯形 $ABCD$ 的中位线。求 ${ask === "mid" ? "$PR$" : ask === "short" ? "$DC$" : "$AB$"}。`,
-            ),
-            answer,
-            form: "integer",
-            unit: u,
-            wrong:
-              ask === "mid"
-                ? [long + short, (long - short) / 2]
-                : [Math.abs(m - known), (m + known) / 2].filter((w) => Number.isInteger(w) && w > 0 && w !== answer),
-            solution:
-              ask === "mid"
-                ? t(
-                    `The midsegment is the average of the bases:${steps(`PR = \\frac{${long} + ${short}}{2} = \\frac{${long + short}}{2} = ${lenTex(m, u)}`)}`,
-                    `中位线等于两底的平均数：${steps(`PR = \\frac{${long} + ${short}}{2} = \\frac{${long + short}}{2} = ${lenTex(m, u)}`)}`,
-                  )
-                : t(
-                    `The midsegment is the average of the bases, so the bases add up to twice the midsegment:${steps(`${known} + b = 2 \\cdot ${m} = ${2 * m}`, `b = ${2 * m} - ${known} = ${lenTex(answer, u)}`)}`,
-                    `中位线等于两底的平均数，所以两底之和是中位线的两倍：${steps(`${known} + b = 2 \\cdot ${m} = ${2 * m}`, `b = ${2 * m} - ${known} = ${lenTex(answer, u)}`)}`,
-                  ),
-          }),
-          figure: fig(
+      lesson(
+        "the-midsegment-of-a-trapezoid",
+        ["The midsegment of a trapezoid", "梯形的中位线"],
+        [
+          [
+            "The **midsegment** of a trapezoid joins the midpoints of its legs. It is parallel to the bases, and its length is their average: $m = \\frac{b_1 + b_2}{2}$. With bases $10$ and $16$, the midsegment is $\\frac{10 + 16}{2} = 13$. With one base $10$ and midsegment $13$, the bases add up to $2 \\cdot 13 = 26$, so the other base is $26 - 10 = 16$.",
+            "梯形的**中位线**连接两腰的中点。它平行于两底，长度是两底的平均数：$m = \\frac{b_1 + b_2}{2}$。两底为 $10$ 和 $16$ 时，中位线是 $\\frac{10 + 16}{2} = 13$。一底为 $10$、中位线为 $13$ 时，两底之和是 $2 \\cdot 13 = 26$，所以另一底是 $26 - 10 = 16$。",
+          ],
+          [
+            "The midsegment is halfway between the bases in length: $13 - 10 = 3$ and $16 - 13 = 3$.",
+            "中位线的长度正好在两底中间：$13 - 10 = 3$，$16 - 13 = 3$。",
+          ],
+          [
+            "To find a base, double the midsegment before subtracting: $13 - 10 = 3$ is not the other base.",
+            "求底时，要先把中位线乘 $2$ 再减：$13 - 10 = 3$ 不是另一底。",
+          ],
+        ],
+        (rng) => {
+          let long: number;
+          let short: number;
+          do {
+            long = rng.int(10, 40);
+            short = rng.int(4, long - 2);
+          } while ((long + short) % 2 !== 0);
+          const m = (long + short) / 2;
+          const u = pickUnit(rng);
+          const ask = rng.pick(["mid", "short", "long"] as const);
+          const scale = 12 / long;
+          const o = (long - short) * scale * rng.pick([0.3, 0.5, 0.7]);
+          const pts = trapezoidPoints(long * scale, 5, o, (long - short) * scale - o);
+          const [A, B, C, D] = [pts[0]!, pts[1]!, pts[2]!, pts[3]!];
+          const P = lerp(A, D, 0.5);
+          const R = lerp(B, C, 0.5);
+          const shown = (k: typeof ask, v: number) => (ask === k ? "?" : `${v} ${u}`);
+          const answer = ask === "mid" ? m : ask === "short" ? short : long;
+          const known = ask === "short" ? long : short;
+          const target = ask === "mid" ? "PR" : ask === "short" ? "DC" : "AB";
+          const gap = (long - short) / 2;
+          const figure = fig(
             [
               { kind: "polygon", points: pts },
               ...parallelMarks(pts, false),
@@ -3077,13 +4170,87 @@ export const propertiesOfTrapezoids = topic(
             ],
             `Trapezoid ABCD with bases AB = ${shown("long", long)} and DC = ${shown("short", short)}, and midsegment PR = ${shown("mid", m)}.`,
             `梯形 ABCD，底 AB = ${shown("long", long)}，DC = ${shown("short", short)}，中位线 PR = ${shown("mid", m)}。`,
-          ),
-        };
-      },
-    },
+          );
+          const prompt: Pair = [
+            `$${over("PR")}$ is the midsegment of trapezoid $ABCD$. Find $${target}$.`,
+            `$${over("PR")}$ 是梯形 $ABCD$ 的中位线。求 $${target}$。`,
+          ];
+          if (ask === "mid")
+            return valued(
+              prompt,
+              m,
+              [
+                [
+                  ["Add the bases", "把两底相加"],
+                  ["The midsegment is the average of the bases; first add them:", "中位线是两底的平均数；先把两底相加："],
+                  [`${long} + ${short} = ${long + short}`],
+                ],
+                [["Halve", "取一半"], ["Divide the sum by $2$:", "把和除以 $2$："], [`PR = ${long + short} \\div 2 = ${lenTex(m, u)}`]],
+              ],
+              [
+                `$PR$ is the same amount from each base: $${m} - ${short} = ${gap}$ and $${long} - ${m} = ${gap}$.`,
+                `$PR$ 与两底相差一样多：$${m} - ${short} = ${gap}$，$${long} - ${m} = ${gap}$。`,
+              ],
+              [
+                [long + short, "That adds the bases but does not halve the sum.", "这是把两底相加了，但没有除以 $2$。"],
+                [gap, "That halves the difference of the bases, not their sum.", "这是把两底的差取一半，应该是把和取一半。"],
+                [long - short, "That subtracts the bases instead of averaging them.", "这是把两底相减了，应该求平均数。"],
+              ],
+              { unit: u, figure },
+            );
+          return valued(
+            prompt,
+            answer,
+            [
+              [
+                ["Double the midsegment", "把中位线乘 2"],
+                [
+                  "The midsegment is the average of the bases, so the bases add up to twice the midsegment:",
+                  "中位线是两底的平均数，所以两底之和是中位线的两倍：",
+                ],
+                [`2 \\cdot ${m} = ${2 * m}`],
+              ],
+              [
+                ["Subtract the known base", "减去已知的底"],
+                ["Take away the base you know:", "减去已知的底："],
+                [`${target} = ${2 * m} - ${known} = ${lenTex(answer, u)}`],
+              ],
+            ],
+            [
+              `Average the bases: $\\frac{${known} + ${answer}}{2} = \\frac{${known + answer}}{2} = ${m}$, the midsegment.`,
+              `求两底的平均数：$\\frac{${known} + ${answer}}{2} = \\frac{${known + answer}}{2} = ${m}$，正是中位线。`,
+            ],
+            [
+              [
+                Math.abs(m - known),
+                "That subtracts the base from the midsegment without doubling the midsegment first.",
+                "这是没有先把中位线乘 $2$，就直接和底相减了。",
+              ],
+              ...((m + known) % 2 === 0
+                ? [[(m + known) / 2, "That averages the midsegment with the known base.", "这是求了中位线与已知底的平均数。"] as const]
+                : []),
+              [2 * m, "That is the sum of both bases, not the missing one.", "这是两底之和，不是所求的底。"],
+            ],
+            { unit: u, figure },
+          );
+        },
+        drawn(gradeDrawings3["properties-of-trapezoids#the-midsegment-of-a-trapezoid"]),
+      ),
+    ],
+  ),
+  [
+    "A bucket seen from the side is a trapezoid: the rim at the top and the bottom are the parallel bases, and the two slanting sides are the legs.",
+    "从侧面看，水桶是一个梯形：桶口和桶底是互相平行的两底，两条斜斜的侧边是腰。",
+  ],
+  [
+    "Halfway up, the bucket is as wide as the average of the rim and the bottom: with $30$ cm and $20$ cm, it is $25$ cm, $5$ cm from each.",
+    "在一半高的地方，水桶的宽是桶口和桶底的平均数：$30$ 厘米和 $20$ 厘米时，是 $25$ 厘米，与两者都相差 $5$ 厘米。",
+  ],
+  [
+    "use the parallel bases of a trapezoid, the equal parts of an isosceles trapezoid, and the midsegment to find angles and lengths.",
+    "学习利用梯形平行的两底、等腰梯形相等的部分以及中位线求角和长度。",
   ],
 );
-
 /** Congruence is a congruence statement between two polygons, with the vertices of the second in corresponding order. */
 interface Congruence {
   readonly first: string;
@@ -3146,192 +4313,345 @@ function angleAt(p: Point, q: Point, r: Point): number {
   return d > 180 ? 360 - d : d;
 }
 
+/** backward is the part of the first polygon that matches part of the second, named by its letters. */
+const backward = (c: Congruence, part: string) => [...part].map((ch) => c.first[c.second.indexOf(ch)]!).join("");
+
 /** congruentPolygons reads corresponding parts from a congruence statement and uses them to find measures. */
-export const congruentPolygons = topic(
-  "congruent-polygons",
-  t("Congruent Polygons", "全等的多边形"),
-  t(
-    "Congruent polygons have the same size and shape: one can be moved onto the other. A congruence statement lists corresponding vertices in the same order, so corresponding sides and angles can be read from it, and corresponding parts have equal measures.",
-    "全等的多边形大小和形状都相同：一个可以移动到与另一个重合。全等式按对应顺序写出顶点，所以从中可以读出对应的边和角，对应部分的度量相等。",
-  ),
-  ["polygons", "congruent-segments", "congruent-angles"],
-  ["8.G.A.2", "HSG.CO.B.7"],
-  [
-    {
-      id: "corresponding-parts",
-      figure: gradeDrawings4["congruent-polygons#corresponding-parts"],
-      title: t("Corresponding parts", "对应部分"),
-      explanation: t(
-        "In $\\triangle ABC \\cong \\triangle RPQ$, the vertices are matched by position: $A \\leftrightarrow R$, $B \\leftrightarrow P$ and $C \\leftrightarrow Q$. So $\\overline{BC}$ corresponds to $\\overline{PQ}$, and $\\angle B \\cong \\angle P$. The letters of the second triangle are not in alphabetical order, so read each one from its position in the statement.",
-        "在 $\\triangle ABC \\cong \\triangle RPQ$ 中，顶点按位置对应：$A \\leftrightarrow R$，$B \\leftrightarrow P$，$C \\leftrightarrow Q$。所以 $\\overline{BC}$ 对应 $\\overline{PQ}$，$\\angle B \\cong \\angle P$。第二个三角形的字母不按字母表顺序排列，要按它们在全等式中的位置来读。",
-      ),
-      generate(rng) {
-        const n = rng.pick([3, 3, 4] as const);
-        const c = congruence(rng, n);
-        const st = statement(c);
-        if (rng.bool()) {
-          const i = rng.int(0, n - 1);
-          const side = `${c.first[i]}${c.first[(i + 1) % n]}`;
-          const answer = corresponding(c, side);
-          const others = [...Array(n).keys()]
-            .map((j) => `${c.second[j]}${c.second[(j + 1) % n]}`)
-            .filter((s) => s !== answer && s !== [...answer].reverse().join(""));
-          return pickChoice(
-            rng,
-            t(`${st.en}. Which segment corresponds to $${over(side)}$?`, `${st["zh-CN"]}。哪条线段与 $${over(side)}$ 对应？`),
-            mathText(over(answer)),
-            rng
-              .shuffle(others)
-              .slice(0, 3)
-              .map((s) => mathText(over(s))),
-            t(
-              `Read the statement by position: $${side[0]}$ is matched with $${answer[0]}$ and $${side[1]}$ with $${answer[1]}$, so $${over(side)}$ corresponds to $${over(answer)}$.`,
-              `按位置读全等式：$${side[0]}$ 对应 $${answer[0]}$，$${side[1]}$ 对应 $${answer[1]}$，所以 $${over(side)}$ 对应 $${over(answer)}$。`,
-            ),
-          );
-        }
-        const i = rng.int(0, n - 1);
-        const v = c.first[i]!;
-        const answer = c.second[i]!;
-        return pickChoice(
-          rng,
-          t(`${st.en}. Which angle is congruent to $\\angle ${v}$?`, `${st["zh-CN"]}。哪个角与 $\\angle ${v}$ 全等？`),
-          mathText(`\\angle ${answer}`),
-          [...c.second]
-            .filter((ch) => ch !== answer)
-            .slice(0, 3)
-            .map((ch) => mathText(`\\angle ${ch}`)),
-          t(
-            `$${v}$ is in position ${i + 1} of $${c.first}$, and position ${i + 1} of $${c.second}$ is $${answer}$. Corresponding angles are congruent, so $\\angle ${v} \\cong \\angle ${answer}$.`,
-            `$${v}$ 在 $${c.first}$ 的第 ${i + 1} 位，$${c.second}$ 的第 ${i + 1} 位是 $${answer}$。对应角全等，所以 $\\angle ${v} \\cong \\angle ${answer}$。`,
-          ),
-        );
-      },
-    },
-    {
-      id: "measures-of-congruent-triangles",
-      figure: gradeDrawings4["congruent-polygons#measures-of-congruent-triangles"],
-      title: t("Measures of congruent triangles", "全等三角形的度量"),
-      explanation: t(
-        "Corresponding parts of congruent figures have equal measures. If $\\triangle ABC \\cong \\triangle FDE$ and $BC = 9$, then $DE = 9$, because $B \\leftrightarrow D$ and $C \\leftrightarrow E$.\n\nTo find an angle that is not given, first find the third angle of the triangle you know, then carry it across: if $m\\angle A = 50^\\circ$ and $m\\angle B = 60^\\circ$, then $m\\angle C = 70^\\circ$, so $m\\angle E = 70^\\circ$.",
-        "全等图形的对应部分度量相等。若 $\\triangle ABC \\cong \\triangle FDE$，$BC = 9$，则 $DE = 9$，因为 $B \\leftrightarrow D$，$C \\leftrightarrow E$。\n\n要求没有给出的角，先求已知三角形的第三个角，再对应过去：若 $m\\angle A = 50^\\circ$，$m\\angle B = 60^\\circ$，则 $m\\angle C = 70^\\circ$，所以 $m\\angle E = 70^\\circ$。",
-      ),
-      generate(rng) {
-        const c = congruence(rng, 3);
-        const [pts, [c0, a0, b0]] = scaleneTriangle(rng);
-        // scaleneTriangle lists the sides from the bottom, counterclockwise: first-second, second-third, third-first.
-        const lengths = [c0!, a0!, b0!];
-        const second = placed(pts, rng.pick([90, 150, 200, 250, 300]), rng.bool(), Math.max(...pts.map((p) => p[0])) + 4);
-        const u = pickUnit(rng);
-        const marksFirst: Mark[] = [{ kind: "polygon", points: pts }, ...names(pts, c.first)];
-        const marksSecond: Mark[] = [{ kind: "polygon", points: second }, ...names(second, c.second)];
-        if (rng.bool()) {
-          const i = rng.int(0, 2);
-          const side = corresponding(c, `${c.first[i]}${c.first[(i + 1) % 3]}`);
-          const answer = lengths[i]!;
-          return {
-            ...numberProblem({
-              prompt: t(
-                `$${polygonName(c.first)} \\cong ${polygonName(c.second)}$. Find $${side}$.`,
-                `$${polygonName(c.first)} \\cong ${polygonName(c.second)}$。求 $${side}$。`,
-              ),
-              answer,
-              form: "integer",
-              unit: u,
-              wrong: lengths.filter((l) => l !== answer),
-              solution: t(
-                `$${side[0]}$ corresponds to $${c.first[c.second.indexOf(side[0]!)]}$ and $${side[1]}$ to $${c.first[c.second.indexOf(side[1]!)]}$, so $${over(side)}$ corresponds to $${over(`${c.first[i]}${c.first[(i + 1) % 3]}`)}$ and has the same length, $${lenTex(answer, u)}$.`,
-                `$${side[0]}$ 对应 $${c.first[c.second.indexOf(side[0]!)]}$，$${side[1]}$ 对应 $${c.first[c.second.indexOf(side[1]!)]}$，所以 $${over(side)}$ 与 $${over(`${c.first[i]}${c.first[(i + 1) % 3]}`)}$ 对应，长度相同，为 $${lenTex(answer, u)}$。`,
-              ),
-            }),
-            figure: fig(
+export const congruentPolygons = withIntro(
+  topic(
+    "congruent-polygons",
+    t("Congruent Polygons", "全等的多边形"),
+    t(
+      "Congruent polygons have the same size and shape: one can be moved onto the other. A congruence statement lists corresponding vertices in the same order, so corresponding sides and angles can be read from it, and corresponding parts have equal measures.",
+      "全等的多边形大小和形状都相同：一个可以移动到与另一个重合。全等式按对应顺序写出顶点，所以从中可以读出对应的边和角，对应部分的度量相等。",
+    ),
+    ["polygons", "congruent-segments", "congruent-angles"],
+    ["8.G.A.2", "HSG.CO.B.7"],
+    [
+      lesson(
+        "corresponding-parts",
+        ["Corresponding parts", "对应部分"],
+        [
+          [
+            "In $\\triangle ABC \\cong \\triangle RPQ$, the vertices are matched by position: $A \\leftrightarrow R$, $B \\leftrightarrow P$ and $C \\leftrightarrow Q$. So $\\overline{BC}$ corresponds to $\\overline{PQ}$, and $\\angle B \\cong \\angle P$.",
+            "在 $\\triangle ABC \\cong \\triangle RPQ$ 中，顶点按位置对应：$A \\leftrightarrow R$，$B \\leftrightarrow P$，$C \\leftrightarrow Q$。所以 $\\overline{BC}$ 对应 $\\overline{PQ}$，$\\angle B \\cong \\angle P$。",
+          ],
+          [
+            "Read it backwards: $P$ and $Q$ are 2nd and 3rd in $RPQ$, and so are $B$ and $C$ in $ABC$.",
+            "倒过来读：$P$、$Q$ 是 $RPQ$ 的第 2、3 个字母，$B$、$C$ 也是 $ABC$ 的第 2、3 个字母。",
+          ],
+          [
+            "The letters of the second name are not in alphabetical order: match each letter by its place in the statement, not by the alphabet.",
+            "第二个名称的字母不按字母表顺序排列：要按它们在全等式中的位置配对，而不是按字母表。",
+          ],
+        ],
+        (rng) => {
+          const n = rng.pick([3, 3, 4] as const);
+          const c = congruence(rng, n);
+          const st = statement(c);
+          const ord = (k: number): Pair => [["1st", "2nd", "3rd", "4th"][k]!, `第 ${k + 1} 个`];
+          if (rng.bool()) {
+            const i = rng.int(0, n - 1);
+            const j = (i + 1) % n;
+            const side = `${c.first[i]}${c.first[j]}`;
+            const answer = corresponding(c, side);
+            const others = [...Array(n).keys()]
+              .map((k) => `${c.second[k]}${c.second[(k + 1) % n]}`)
+              .filter((s) => s !== answer && s !== [...answer].reverse().join(""));
+            return chosenMath(
+              rng,
+              [`${st.en}. Which segment corresponds to $${over(side)}$?`, `${st["zh-CN"]}。哪条线段与 $${over(side)}$ 对应？`],
+              over(answer),
+              rng
+                .shuffle(others)
+                .slice(0, 3)
+                .map(
+                  (s): MathWrong => [
+                    over(s),
+                    `That segment corresponds to $${over(backward(c, s))}$.`,
+                    `这条线段对应的是 $${over(backward(c, s))}$。`,
+                  ],
+                ),
               [
-                ...marksFirst,
-                ...sides(
-                  pts,
-                  lengths.map((l) => `${l} ${u}`),
-                ),
-                ...marksSecond,
+                [
+                  ["Match the first letter", "配对第一个字母"],
+                  [
+                    `$${side[0]}$ is ${ord(i)[0]} in $${c.first}$, and the ${ord(i)[0]} letter of $${c.second}$ is $${answer[0]}$.`,
+                    `$${side[0]}$ 是 $${c.first}$ 的${ord(i)[1]}字母，$${c.second}$ 的${ord(i)[1]}字母是 $${answer[0]}$。`,
+                  ],
+                ],
+                [
+                  ["Match the second letter", "配对第二个字母"],
+                  [
+                    `$${side[1]}$ is ${ord(j)[0]}, and the ${ord(j)[0]} letter of $${c.second}$ is $${answer[1]}$. So $${over(side)}$ corresponds to $${over(answer)}$.`,
+                    `$${side[1]}$ 是${ord(j)[1]}字母，$${c.second}$ 的${ord(j)[1]}字母是 $${answer[1]}$。所以 $${over(side)}$ 对应 $${over(answer)}$。`,
+                  ],
+                ],
               ],
-              `Triangle ${c.first} with sides ${c.first.slice(0, 2)} = ${lengths[0]}, ${c.first.slice(1)} = ${lengths[1]} and ${c.first[2]}${c.first[0]} = ${lengths[2]} ${u}, and triangle ${c.second} drawn in another position.`,
-              `三角形 ${c.first} 的边 ${c.first.slice(0, 2)} = ${lengths[0]}，${c.first.slice(1)} = ${lengths[1]}，${c.first[2]}${c.first[0]} = ${lengths[2]} ${u}；另有位置不同的三角形 ${c.second}。`,
-            ),
-          };
-        }
-        const angles = [angleAt(pts[0]!, pts[1]!, pts[2]!), angleAt(pts[1]!, pts[2]!, pts[0]!)].map(Math.round);
-        const [g0, g1] = [angles[0]!, angles[1]!];
-        const third = 180 - g0 - g1;
-        const target = rng.int(0, 2);
-        const value = [g0, g1, third][target]!;
-        const name = c.second[target]!;
-        const known = target < 2;
-        return {
-          ...numberProblem({
-            prompt: t(
-              `$${polygonName(c.first)} \\cong ${polygonName(c.second)}$. Find $m\\angle ${name}$.`,
-              `$${polygonName(c.first)} \\cong ${polygonName(c.second)}$。求 $m\\angle ${name}$。`,
-            ),
-            answer: value,
-            form: "integer",
-            unit: "°",
-            wrong: [g0, g1, third, 180 - value].filter((w) => w !== value),
-            solution: known
-              ? t(
-                  `$${name}$ corresponds to $${c.first[target]}$, so $m\\angle ${name} = m\\angle ${c.first[target]} = ${degTex(value)}$.`,
-                  `$${name}$ 对应 $${c.first[target]}$，所以 $m\\angle ${name} = m\\angle ${c.first[target]} = ${degTex(value)}$。`,
-                )
-              : t(
-                  `$${name}$ corresponds to $${c.first[2]}$. The angles of $${polygonName(c.first)}$ add up to $${degTex(180)}$:${steps(`m\\angle ${c.first[2]} = 180 - ${g0} - ${g1} = ${degTex(third)}`)}So $m\\angle ${name} = ${degTex(third)}$.`,
-                  `$${name}$ 对应 $${c.first[2]}$。$${polygonName(c.first)}$ 的内角和为 $${degTex(180)}$：${steps(`m\\angle ${c.first[2]} = 180 - ${g0} - ${g1} = ${degTex(third)}`)}所以 $m\\angle ${name} = ${degTex(third)}$。`,
-                ),
-          }),
-          figure: fig(
-            [...marksFirst, arc(pts[0]!, pts[1]!, pts[2]!, deg(g0)), arc(pts[1]!, pts[2]!, pts[0]!, deg(g1)), ...marksSecond],
-            `Triangle ${c.first} with angle ${c.first[0]} = ${g0}° and angle ${c.first[1]} = ${g1}°, and triangle ${c.second} drawn in another position.`,
-            `三角形 ${c.first} 中角 ${c.first[0]} = ${g0}°，角 ${c.first[1]} = ${g1}°；另有位置不同的三角形 ${c.second}。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "congruent-polygons-with-algebra",
-      figure: gradeDrawings4["congruent-polygons#congruent-polygons-with-algebra"],
-      title: t("Congruent polygons with algebra", "用方程解全等多边形问题"),
-      explanation: t(
-        "When corresponding parts are given as expressions, set them equal. If $\\triangle ABC \\cong \\triangle DEF$, $AB = 2x + 5$ and $DE = 4x - 3$, then $\\overline{AB}$ corresponds to $\\overline{DE}$, so $2x + 5 = 4x - 3$ and $x = 4$. Check that you matched corresponding parts: $\\overline{AB}$ does not correspond to $\\overline{EF}$.",
-        "对应部分用式子表示时，令它们相等。若 $\\triangle ABC \\cong \\triangle DEF$，$AB = 2x + 5$，$DE = 4x - 3$，则 $\\overline{AB}$ 与 $\\overline{DE}$ 对应，所以 $2x + 5 = 4x - 3$，$x = 4$。要检查配对的确实是对应部分：$\\overline{AB}$ 不与 $\\overline{EF}$ 对应。",
+              [
+                `Read it backwards: in $${c.second}$, $${answer[0]}$ and $${answer[1]}$ are matched with $${side[0]}$ and $${side[1]}$ of $${c.first}$.`,
+                `倒过来读：$${c.second}$ 中的 $${answer[0]}$、$${answer[1]}$ 正好对应 $${c.first}$ 中的 $${side[0]}$、$${side[1]}$。`,
+              ],
+            );
+          }
+          const i = rng.int(0, n - 1);
+          const v = c.first[i]!;
+          const answer = c.second[i]!;
+          return chosenMath(
+            rng,
+            [`${st.en}. Which angle is congruent to $\\angle ${v}$?`, `${st["zh-CN"]}。哪个角与 $\\angle ${v}$ 全等？`],
+            `\\angle ${answer}`,
+            [...c.second]
+              .filter((ch) => ch !== answer)
+              .slice(0, 3)
+              .map(
+                (ch): MathWrong => [
+                  `\\angle ${ch}`,
+                  `$\\angle ${ch}$ corresponds to $\\angle ${backward(c, ch)}$.`,
+                  `$\\angle ${ch}$ 对应的是 $\\angle ${backward(c, ch)}$。`,
+                ],
+              ),
+            [
+              [
+                ["Find the place", "找出位置"],
+                [`$${v}$ is the ${ord(i)[0]} letter of $${c.first}$.`, `$${v}$ 是 $${c.first}$ 的${ord(i)[1]}字母。`],
+              ],
+              [
+                ["Read the partner", "读出对应的字母"],
+                [
+                  `The ${ord(i)[0]} letter of $${c.second}$ is $${answer}$, and corresponding angles are congruent: $\\angle ${v} \\cong \\angle ${answer}$.`,
+                  `$${c.second}$ 的${ord(i)[1]}字母是 $${answer}$，对应角全等：$\\angle ${v} \\cong \\angle ${answer}$。`,
+                ],
+              ],
+            ],
+            [
+              `Read it backwards: $${answer}$ in $${c.second}$ sits where $${v}$ sits in $${c.first}$.`,
+              `倒过来读：$${answer}$ 在 $${c.second}$ 中的位置，正是 $${v}$ 在 $${c.first}$ 中的位置。`,
+            ],
+          );
+        },
+        drawn(gradeDrawings4["congruent-polygons#corresponding-parts"]),
       ),
-      generate(rng) {
-        const n = rng.pick([3, 4] as const);
-        const c = congruence(rng, n);
-        const x = rng.int(2, 12);
-        const angle = rng.bool();
-        const v = angle ? rng.int(35, 130) : rng.int(6, 30);
-        const e1 = expressionFor(rng, v, x);
-        const e2 = expressionFor(rng, v, x, [e1[0]]);
-        const i = rng.int(0, n - 1);
-        const [p, q] = angle
-          ? [`m\\angle ${c.first[i]}`, `m\\angle ${c.second[i]}`]
-          : [`${c.first[i]}${c.first[(i + 1) % n]}`, corresponding(c, `${c.first[i]}${c.first[(i + 1) % n]}`)];
-        const show = (e: Linear) => (angle ? angleTex(...e) : linear(...e));
-        const st = statement(c);
-        return numberProblem({
-          prompt: t(
-            `${st.en}, $${p} = ${show(e1)}$ and $${q} = ${show(e2)}$. Find $x$.`,
-            `${st["zh-CN"]}，$${p} = ${show(e1)}$，$${q} = ${show(e2)}$。求 $x$。`,
-          ),
-          answer: x,
-          wrong: equalWrong(e1, e2),
-          solution: t(
-            `${angle ? `$\\angle ${c.first[i]}$ and $\\angle ${c.second[i]}$ are in the same position` : `$${over(p)}$ and $${over(q)}$ are in the same positions`} in the statement, so they are corresponding parts and have equal measures:${steps(...equalSteps(e1, e2))}`,
-            `${angle ? `$\\angle ${c.first[i]}$ 与 $\\angle ${c.second[i]}$ 在全等式中位置相同` : `$${over(p)}$ 与 $${over(q)}$ 在全等式中位置相同`}，所以它们是对应部分，度量相等：${steps(...equalSteps(e1, e2))}`,
-          ),
-        });
-      },
-    },
+      lesson(
+        "measures-of-congruent-triangles",
+        ["Measures of congruent triangles", "全等三角形的度量"],
+        [
+          [
+            "Corresponding parts of congruent figures have equal measures. If $\\triangle ABC \\cong \\triangle FDE$ and $BC = 9$, then $DE = 9$, because $B \\leftrightarrow D$ and $C \\leftrightarrow E$. To find an angle that is not given, first find the third angle of the triangle you know, then carry it across: if $m\\angle A = 50^\\circ$ and $m\\angle B = 60^\\circ$, then $m\\angle C = 70^\\circ$, so $m\\angle E = 70^\\circ$.",
+            "全等图形的对应部分度量相等。若 $\\triangle ABC \\cong \\triangle FDE$，$BC = 9$，则 $DE = 9$，因为 $B \\leftrightarrow D$，$C \\leftrightarrow E$。要求没有给出的角，先求已知三角形的第三个角，再对应过去：若 $m\\angle A = 50^\\circ$，$m\\angle B = 60^\\circ$，则 $m\\angle C = 70^\\circ$，所以 $m\\angle E = 70^\\circ$。",
+          ],
+          [
+            "Work inside $\\triangle FDE$ instead: $\\angle F = 50^\\circ$ and $\\angle D = 60^\\circ$ copy across, so $\\angle E = 180 - 50 - 60 = 70^\\circ$.",
+            "也可以在 $\\triangle FDE$ 里算：$\\angle F = 50^\\circ$，$\\angle D = 60^\\circ$ 对应过来，所以 $\\angle E = 180 - 50 - 60 = 70^\\circ$。",
+          ],
+          [
+            "The second triangle may be turned or flipped: match parts through the statement, not by where they sit in the picture.",
+            "第二个三角形可能被旋转或翻折过：要按全等式配对，而不是看它们在图中的位置。",
+          ],
+        ],
+        (rng) => {
+          const c = congruence(rng, 3);
+          const [pts, [c0, a0, b0]] = scaleneTriangle(rng);
+          // scaleneTriangle lists the sides from the bottom, counterclockwise: first-second, second-third, third-first.
+          const lengths = [c0!, a0!, b0!];
+          const second = placed(pts, rng.pick([90, 150, 200, 250, 300]), rng.bool(), Math.max(...pts.map((p) => p[0])) + 4);
+          const u = pickUnit(rng);
+          const marksFirst: Mark[] = [{ kind: "polygon", points: pts }, ...names(pts, c.first)];
+          const marksSecond: Mark[] = [{ kind: "polygon", points: second }, ...names(second, c.second)];
+          const firstSide = (k: number) => `${c.first[k]}${c.first[(k + 1) % 3]}`;
+          const prompt = (what: string): Pair => [
+            `$${polygonName(c.first)} \\cong ${polygonName(c.second)}$. Find $${what}$.`,
+            `$${polygonName(c.first)} \\cong ${polygonName(c.second)}$。求 $${what}$。`,
+          ];
+          if (rng.bool()) {
+            const i = rng.int(0, 2);
+            const mine = firstSide(i);
+            const side = corresponding(c, mine);
+            const answer = lengths[i]!;
+            return valued(
+              prompt(side),
+              answer,
+              [
+                [
+                  ["Match the vertices", "配对顶点"],
+                  [
+                    `In the statement, $${side[0]}$ is matched with $${mine[0]}$ and $${side[1]}$ with $${mine[1]}$, so $${over(side)}$ corresponds to $${over(mine)}$.`,
+                    `全等式中，$${side[0]}$ 对应 $${mine[0]}$，$${side[1]}$ 对应 $${mine[1]}$，所以 $${over(side)}$ 对应 $${over(mine)}$。`,
+                  ],
+                ],
+                [
+                  ["Copy the length", "照搬长度"],
+                  ["Corresponding sides are equal:", "对应边相等："],
+                  [`${side} = ${mine} = ${lenTex(answer, u)}`],
+                ],
+              ],
+              [
+                `By position: $${over(mine)}$ uses places ${i + 1} and ${((i + 1) % 3) + 1} of $${c.first}$, and places ${i + 1} and ${((i + 1) % 3) + 1} of $${c.second}$ are $${side[0]}$ and $${side[1]}$.`,
+                `按位置看：$${over(mine)}$ 用的是 $${c.first}$ 的第 ${i + 1}、${((i + 1) % 3) + 1} 个字母，$${c.second}$ 的第 ${i + 1}、${((i + 1) % 3) + 1} 个字母正是 $${side[0]}$、$${side[1]}$。`,
+              ],
+              [0, 1, 2]
+                .filter((k) => k !== i)
+                .map(
+                  (k) =>
+                    [
+                      lengths[k]!,
+                      `That is $${over(firstSide(k))}$, which matches $${over(corresponding(c, firstSide(k)))}$, not $${over(side)}$.`,
+                      `这是 $${over(firstSide(k))}$，它对应的是 $${over(corresponding(c, firstSide(k)))}$，不是 $${over(side)}$。`,
+                    ] as const,
+                ),
+              {
+                unit: u,
+                figure: fig(
+                  [
+                    ...marksFirst,
+                    ...sides(
+                      pts,
+                      lengths.map((l) => `${l} ${u}`),
+                    ),
+                    ...marksSecond,
+                  ],
+                  `Triangle ${c.first} with sides ${c.first.slice(0, 2)} = ${lengths[0]}, ${c.first.slice(1)} = ${lengths[1]} and ${c.first[2]}${c.first[0]} = ${lengths[2]} ${u}, and triangle ${c.second} drawn in another position.`,
+                  `三角形 ${c.first} 的边 ${c.first.slice(0, 2)} = ${lengths[0]}，${c.first.slice(1)} = ${lengths[1]}，${c.first[2]}${c.first[0]} = ${lengths[2]} ${u}；另有位置不同的三角形 ${c.second}。`,
+                ),
+              },
+            );
+          }
+          const angles = [angleAt(pts[0]!, pts[1]!, pts[2]!), angleAt(pts[1]!, pts[2]!, pts[0]!)].map(Math.round);
+          const [g0, g1] = [angles[0]!, angles[1]!];
+          const third = 180 - g0 - g1;
+          const all = [g0, g1, third];
+          const target = rng.int(0, 2);
+          const value = all[target]!;
+          const name = c.second[target]!;
+          const partner = c.first[target]!;
+          const match: Walk = [
+            ["Find the partner", "找出对应的角"],
+            [
+              `$${name}$ is matched with $${partner}$ in the statement, so $\\angle ${name} \\cong \\angle ${partner}$.`,
+              `全等式中 $${name}$ 对应 $${partner}$，所以 $\\angle ${name} \\cong \\angle ${partner}$。`,
+            ],
+          ];
+          const walk: Walk[] =
+            target < 2
+              ? [
+                  match,
+                  [
+                    ["Copy the angle", "照搬角的度数"],
+                    ["Corresponding angles are equal:", "对应角相等："],
+                    [`m\\angle ${name} = m\\angle ${partner} = ${degTex(value)}`],
+                  ],
+                ]
+              : [
+                  match,
+                  [
+                    ["Find the third angle", "求第三个角"],
+                    [
+                      `$m\\angle ${partner}$ is not given; the angles of $${polygonName(c.first)}$ add up to $180^\\circ$:`,
+                      `$m\\angle ${partner}$ 没有给出；$${polygonName(c.first)}$ 的内角和是 $180^\\circ$：`,
+                    ],
+                    [`m\\angle ${name} = m\\angle ${partner} = 180 - ${g0} - ${g1} = ${degTex(third)}`],
+                  ],
+                ];
+          const [o1, o2] = [0, 1, 2].filter((k) => k !== target) as [number, number];
+          const check: Pair = [
+            `Work inside $${polygonName(c.second)}$: $\\angle ${c.second[o1]}$ and $\\angle ${c.second[o2]}$ copy $${all[o1]}^\\circ$ and $${all[o2]}^\\circ$ across, so $m\\angle ${name} = 180 - ${all[o1]} - ${all[o2]} = ${value}$.`,
+            `在 $${polygonName(c.second)}$ 里算：$\\angle ${c.second[o1]}$ 和 $\\angle ${c.second[o2]}$ 分别是 $${all[o1]}^\\circ$ 和 $${all[o2]}^\\circ$，所以 $m\\angle ${name} = 180 - ${all[o1]} - ${all[o2]} = ${value}$。`,
+          ];
+          return valued(
+            prompt(`m\\angle ${name}`),
+            value,
+            walk,
+            check,
+            [
+              ...[o1, o2].map(
+                (k) =>
+                  [
+                    all[k]!,
+                    `That is the angle at $${c.first[k]}$, which matches $\\angle ${c.second[k]}$.`,
+                    `这是 $${c.first[k]}$ 处的角，它对应的是 $\\angle ${c.second[k]}$。`,
+                  ] as const,
+              ),
+              [180 - value, "That is the supplement of the angle, not the angle itself.", "这是这个角的补角，不是这个角。"],
+            ],
+            {
+              unit: "°",
+              figure: fig(
+                [...marksFirst, arc(pts[0]!, pts[1]!, pts[2]!, deg(g0)), arc(pts[1]!, pts[2]!, pts[0]!, deg(g1)), ...marksSecond],
+                `Triangle ${c.first} with angle ${c.first[0]} = ${g0}° and angle ${c.first[1]} = ${g1}°, and triangle ${c.second} drawn in another position.`,
+                `三角形 ${c.first} 中角 ${c.first[0]} = ${g0}°，角 ${c.first[1]} = ${g1}°；另有位置不同的三角形 ${c.second}。`,
+              ),
+            },
+          );
+        },
+        drawn(gradeDrawings4["congruent-polygons#measures-of-congruent-triangles"]),
+      ),
+      lesson(
+        "congruent-polygons-with-algebra",
+        ["Congruent polygons with algebra", "用方程解全等多边形问题"],
+        [
+          [
+            "When corresponding parts are given as expressions, set them equal. If $\\triangle ABC \\cong \\triangle DEF$, $AB = 2x + 5$ and $DE = 4x - 3$, then $\\overline{AB}$ corresponds to $\\overline{DE}$, so $2x + 5 = 4x - 3$, $8 = 2x$ and $x = 4$.",
+            "对应部分用式子表示时，令它们相等。若 $\\triangle ABC \\cong \\triangle DEF$，$AB = 2x + 5$，$DE = 4x - 3$，则 $\\overline{AB}$ 与 $\\overline{DE}$ 对应，所以 $2x + 5 = 4x - 3$，$8 = 2x$，$x = 4$。",
+          ],
+          ["At $x = 4$: $2 \\cdot 4 + 5 = 13$ and $4 \\cdot 4 - 3 = 13$.", "$x = 4$ 时：$2 \\cdot 4 + 5 = 13$，$4 \\cdot 4 - 3 = 13$。"],
+          [
+            "Set equal only parts that correspond: $\\overline{AB}$ matches $\\overline{DE}$, not $\\overline{EF}$.",
+            "只有对应的部分才能列等式：$\\overline{AB}$ 对应 $\\overline{DE}$，而不是 $\\overline{EF}$。",
+          ],
+        ],
+        (rng) => {
+          const n = rng.pick([3, 4] as const);
+          const c = congruence(rng, n);
+          const x = rng.int(2, 12);
+          const angle = rng.bool();
+          const v = angle ? rng.int(35, 130) : rng.int(6, 30);
+          const e1 = expressionFor(rng, v, x);
+          const e2 = expressionFor(rng, v, x, [e1[0]]);
+          const i = rng.int(0, n - 1);
+          const [p, q] = angle
+            ? [`m\\angle ${c.first[i]}`, `m\\angle ${c.second[i]}`]
+            : [`${c.first[i]}${c.first[(i + 1) % n]}`, corresponding(c, `${c.first[i]}${c.first[(i + 1) % n]}`)];
+          const show = (e: Linear) => (angle ? angleTex(...e) : linear(...e));
+          const st = statement(c);
+          return matched(
+            [
+              `${st.en}, $${p} = ${show(e1)}$ and $${q} = ${show(e2)}$. Find $x$.`,
+              `${st["zh-CN"]}，$${p} = ${show(e1)}$，$${q} = ${show(e2)}$。求 $x$。`,
+            ],
+            [p, e1],
+            [q, e2],
+            x,
+            v,
+            true,
+            angle
+              ? [
+                  `$\\angle ${c.first[i]}$ and $\\angle ${c.second[i]}$ sit in the same place in the statement, so they are corresponding angles and are equal:`,
+                  `$\\angle ${c.first[i]}$ 与 $\\angle ${c.second[i]}$ 在全等式中位置相同，是对应角，所以相等：`,
+                ]
+              : [
+                  `$${over(p)}$ and $${over(q)}$ sit in the same places in the statement, so they are corresponding sides and are equal:`,
+                  `$${over(p)}$ 与 $${over(q)}$ 在全等式中位置相同，是对应边，所以相等：`,
+                ],
+            { angle },
+          );
+        },
+        drawn(gradeDrawings4["congruent-polygons#congruent-polygons-with-algebra"]),
+      ),
+    ],
+  ),
+  [
+    "Two cookies cut with the same cutter are congruent: lay one on top of the other, even upside down, and every edge and corner lines up with its partner.",
+    "用同一个模具压出的两块饼干是全等的：把一块叠在另一块上，即使翻过来，每条边、每个角都和对应的那个对齐。",
+  ],
+  [
+    "Measure any edge of one cookie and the matching edge of the other: the lengths are the same.",
+    "量一块饼干的任意一条边，再量另一块上对应的边：长度一样。",
+  ],
+  [
+    "read corresponding sides and angles from a congruence statement, and use their equal measures to find lengths, angles and $x$.",
+    "学习从全等式中读出对应的边和角，并利用它们度量相等求长度、角和 $x$。",
   ],
 );
-
 // END OF TOPICS
 
 /** grade7GeometryTopics lists the 7th grade topics on segments, angles, polygons, scale drawings, circles and prisms. */

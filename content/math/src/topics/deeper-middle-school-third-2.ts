@@ -2,12 +2,14 @@
 // shared by Prealgebra and 7th and 8th Grade Math.
 
 import type { KnowledgePointDef } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { t } from "@ga/content";
+import { plane, Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choose, chooseMath, type Pair, tableFigure, type Wrong, whole } from "./early-grades-more-kit.ts";
 import { chosen, chosenMath, drawn, lesson, valued } from "./grade-6-kit.ts";
+import { cutBoxFigure, rightPrismFigure } from "./grade-7-measurement.ts";
 import { frac, fraction, integer, signed, skill } from "./third-kit.ts";
 import { tapeFigure } from "./upper-grades-kit.ts";
 
@@ -768,12 +770,22 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
   ],
 
   "collinear-points": [
-    skill(
+    lesson(
       "the-coordinate-that-makes-points-collinear",
       ["The coordinate that makes points collinear", "使三点共线的坐标"],
       [
-        "Points are collinear when equal steps across always bring equal steps up. So the rise per unit from two known points fixes the height of a third point on that line.",
-        "三点共线时，横向走相同的步，纵向变化也相同。所以由两个已知点得到每单位的变化，就确定了第三点的高度。",
+        [
+          "Points are collinear when equal steps across always bring equal steps up. $(1, 3)$ and $(2, 5)$ rise $2$ for each $1$ across, so the point of the line at $x = 5$ is $3$ steps past $(2, 5)$: $y = 5 + 3 \\times 2 = 11$.",
+          "三点共线时，横向走相同的步，纵向变化也相同。$(1, 3)$ 到 $(2, 5)$ 横向每走 $1$，纵向升 $2$，所以直线上 $x = 5$ 的点在 $(2, 5)$ 之后再走 $3$ 步：$y = 5 + 3 \\times 2 = 11$。",
+        ],
+        [
+          "Count from $(1, 3)$ instead: $4$ steps of $2$ give $3 + 8 = 11$, the same height.",
+          "改从 $(1, 3)$ 数：走 $4$ 步，每步升 $2$，得 $3 + 8 = 11$，高度相同。",
+        ],
+        [
+          "Each step across brings the rise of the line, not $1$: going from $x = 2$ to $x = 5$ adds $3 \\times 2$, not $3$.",
+          "横向每走一步，纵向变化的是直线的升高量，不是 $1$：从 $x = 2$ 到 $x = 5$ 要加 $3 \\times 2$，不是加 $3$。",
+        ],
       ],
       (rng) => {
         const m = rng.int(-6, 6) || 2;
@@ -781,18 +793,73 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const x1 = rng.int(0, 3);
         const x2 = x1 + rng.int(1, 3);
         const x3 = x2 + rng.int(1, 5);
-        return integer(
+        const [y1, y2, y3] = [m * x1 + b, m * x2 + b, m * x3 + b];
+        const w = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+        return valued(
           [
-            `The points $(${x1}, ${m * x1 + b})$, $(${x2}, ${m * x2 + b})$ and $(${x3}, y)$ are collinear. What is $y$?`,
-            `点 $(${x1}, ${m * x1 + b})$、$(${x2}, ${m * x2 + b})$ 和 $(${x3}, y)$ 共线。$y$ 是多少？`,
+            `The points $(${x1}, ${y1})$, $(${x2}, ${y2})$ and $(${x3}, y)$ are collinear. What is $y$?`,
+            `点 $(${x1}, ${y1})$、$(${x2}, ${y2})$ 和 $(${x3}, y)$ 共线。$y$ 是多少？`,
           ],
-          m * x3 + b,
-          [m * x2 + b + (x3 - x2), m * x3, m * x3 + b + m],
+          y3,
           [
-            `$y$ changes by $${m}$ for each $1$ of $x$, so at $x = ${x3}$ it is $${m * x3 + b}$.`,
-            `$x$ 每增加 $1$，$y$ 变化 $${m}$，所以 $x = ${x3}$ 时 $y$ 是 $${m * x3 + b}$。`,
+            [
+              ["Find the rise per step", "求每步的变化"],
+              [
+                `From $x = ${x1}$ to $x = ${x2}$, $y$ changes by $${y2} - ${w(y1)} = ${y2 - y1}$ over $${x2 - x1}$ step${x2 - x1 === 1 ? "" : "s"}:`,
+                `从 $x = ${x1}$ 到 $x = ${x2}$，$y$ 变化 $${y2} - ${w(y1)} = ${y2 - y1}$，共 $${x2 - x1}$ 步：`,
+              ],
+              [`\\frac{${y2 - y1}}{${x2 - x1}} = ${m}`],
+            ],
+            [
+              ["Walk to the new x", "走到新的 x"],
+              [
+                `From $x = ${x2}$ to $x = ${x3}$ is $${x3 - x2}$ more step${x3 - x2 === 1 ? "" : "s"}:`,
+                `从 $x = ${x2}$ 到 $x = ${x3}$ 还要走 $${x3 - x2}$ 步：`,
+              ],
+              [`y = ${y2} + ${x3 - x2} \\times ${w(m)} = ${y3}`],
+            ],
           ],
+          [
+            `Count from the first point instead: $${y1} + ${x3 - x1} \\times ${w(m)} = ${y3}$, the same height.`,
+            `改从第一个点数：$${y1} + ${x3 - x1} \\times ${w(m)} = ${y3}$，高度相同。`,
+          ],
+          [
+            [
+              y2 + (x3 - x2),
+              "That adds $1$ for each step across instead of the rise of the line.",
+              "这是横向每走一步只加 $1$，而不是加直线的升高量。",
+            ],
+            [
+              m * x3,
+              "That multiplies $x$ by the rise but leaves out where the line starts.",
+              "这是用 $x$ 乘每步的变化，却漏掉了直线的起始高度。",
+            ],
+            [y3 + m, "That takes one step too many.", "这是多走了一步。"],
+            [y2 + m, "That takes only one step from the second point.", "这是从第二个点只走了一步。"],
+          ],
+          {
+            figure: {
+              svg: plane({ xMin: -1, xMax: x3 + 1, yMin: Math.min(0, y1, y3) - 2, yMax: Math.max(0, y1, y3) + 2, step: 1, labelEvery: 2 }, [
+                { kind: "point", at: [x1, y1], label: `(${x1}, ${y1})`, dir: "e" },
+                { kind: "point", at: [x2, y2], label: `(${x2}, ${y2})`, dir: "e" },
+                { kind: "line", a: [x3, Math.min(0, y1, y3) - 2], b: [x3, Math.max(0, y1, y3) + 2], dashed: true },
+              ]),
+              alt: t(
+                `A coordinate grid with the points (${x1}, ${y1}) and (${x2}, ${y2}) and a dashed vertical line at x = ${x3}.`,
+                `坐标网格上有点 (${x1}, ${y1}) 和 (${x2}, ${y2})，以及 x = ${x3} 处的一条竖直虚线。`,
+              ),
+            },
+          },
         );
+      },
+      {
+        svg: plane({ xMin: -1, xMax: 6, yMin: -1, yMax: 12, step: 1, labelEvery: 2 }, [
+          { kind: "line", a: [-0.5, 0], b: [5.5, 12], accent: true },
+          { kind: "point", at: [1, 3], label: "(1, 3)", dir: "e" },
+          { kind: "point", at: [2, 5], label: "(2, 5)", dir: "e" },
+          { kind: "point", at: [5, 11], label: "(5, 11)", dir: "e" },
+        ]),
+        alt: t("A line through (1, 3), (2, 5) and (5, 11) on a coordinate grid.", "坐标网格上一条经过 (1, 3)、(2, 5) 和 (5, 11) 的直线。"),
       },
     ),
   ],
@@ -1357,44 +1424,81 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
   ],
 
   "volumes-of-triangular-prisms": [
-    {
-      ...skill(
-        "a-house-shaped-prism",
-        ["A house-shaped prism", "房子形状的棱柱"],
+    lesson(
+      "a-house-shaped-prism",
+      ["A house-shaped prism", "房子形状的棱柱"],
+      [
         [
-          "Any prism has a volume of base area times length, whatever shape its cross-section has. A house shape is a rectangle with a triangle on top, so add those two areas first.",
-          "任何棱柱的体积都是底面积乘长度，不管截面是什么形状。房子形状是长方形上面加三角形，所以先把两个面积相加。",
+          "Any prism has a volume of base area times length, whatever shape its cross-section has. A house shape is a rectangle with a triangle on top, so add those two areas first. An end $6$ m wide and $3$ m high with a roof $2$ m high has area $18 + 6 = 24$; a shed $10$ m long holds $240\\text{ m}^3$.",
+          "任何棱柱的体积都是底面积乘长度，不管截面是什么形状。房子形状是长方形上面加三角形，所以先把两个面积相加。端面宽 $6$ 米、高 $3$ 米，屋顶高 $2$ 米，面积是 $18 + 6 = 24$；棚屋长 $10$ 米，体积是 $240\\text{ m}^3$。",
         ],
-        (rng) => {
-          const w = rng.int(2, 12) * 2;
-          const h = rng.int(3, 12);
-          const roof = rng.int(2, 9);
-          const l = rng.int(5, 25);
-          const area = w * h + (w * roof) / 2;
-          return whole(
+        [
+          "Split the shed into a box and a roof: the box is $6 \\cdot 3 \\cdot 10 = 180$ and the roof is half of $6 \\cdot 2 \\cdot 10$, which is $60$: $180 + 60 = 240$.",
+          "把棚屋分成长方体和屋顶：长方体是 $6 \\cdot 3 \\cdot 10 = 180$，屋顶是 $6 \\cdot 2 \\cdot 10$ 的一半，即 $60$：$180 + 60 = 240$。",
+        ],
+        ["The roof is a triangle, so its area is half of width times roof height.", "屋顶是三角形，面积是宽乘屋顶高的一半。"],
+      ],
+      (rng) => {
+        const w = rng.int(2, 12) * 2;
+        const h = rng.int(3, 12);
+        const roof = rng.int(2, 9);
+        const l = rng.int(5, 25);
+        const tri = (w * roof) / 2;
+        const area = w * h + tri;
+        return valued(
+          [
+            `A shed is a prism $${l}$ m long. Its end is a rectangle $${w}$ m wide and $${h}$ m high, with a triangular roof $${roof}$ m high on top. What is its volume?`,
+            `一个棚屋是长 $${l}$ 米的棱柱。端面是宽 $${w}$ 米、高 $${h}$ 米的长方形，上面有高 $${roof}$ 米的三角形屋顶。它的体积是多少？`,
+          ],
+          area * l,
+          [
             [
-              `A shed is a prism ${l} m long. Its end is a rectangle ${w} m wide and ${h} m high, with a triangular roof ${roof} m high on top. What is its volume, in cubic meters?`,
-              `一个棚屋是长 ${l} 米的棱柱。端面是宽 ${w} 米、高 ${h} 米的长方形，上面有高 ${roof} 米的三角形屋顶。它的体积是多少立方米？`,
+              ["Find the area of the end", "求端面面积"],
+              ["The rectangle plus the triangle:", "长方形加三角形："],
+              [`${w} \\cdot ${h} + \\tfrac{1}{2} \\cdot ${w} \\cdot ${roof} = ${w * h} + ${tri} = ${area}`],
             ],
-            area * l,
-            [(w * h + w * roof) * l, w * h * l, w * (h + roof) * l],
             [
-              `The end has area $${w * h} + ${(w * roof) / 2} = ${area}$, and $${area} \\times ${l} = ${area * l}$.`,
-              `端面面积是 $${w * h} + ${(w * roof) / 2} = ${area}$，$${area} \\times ${l} = ${area * l}$。`,
+              ["Multiply by the length", "乘长度"],
+              ["Base area times length:", "底面积乘长度："],
+              [`${area} \\cdot ${l} = ${area * l}\\text{ m}^3`],
             ],
-          );
-        },
-      ),
-      figure: gradeDrawings4["volumes-of-triangular-prisms#a-house-shaped-prism"],
-    },
+          ],
+          [
+            `Split the shed into a box and a roof: the box is $${w} \\cdot ${h} \\cdot ${l} = ${w * h * l}$ and the roof is half of $${w} \\cdot ${roof} \\cdot ${l}$, which is $${tri * l}$: $${w * h * l} + ${tri * l} = ${area * l}$.`,
+            `把棚屋分成长方体和屋顶：长方体是 $${w} \\cdot ${h} \\cdot ${l} = ${w * h * l}$，屋顶是 $${w} \\cdot ${roof} \\cdot ${l}$ 的一半，即 $${tri * l}$：$${w * h * l} + ${tri * l} = ${area * l}$。`,
+          ],
+          [
+            [
+              (w * h + w * roof) * l,
+              "That treats the roof as a rectangle; a triangle is only half of it.",
+              "这是把屋顶当成长方形了；三角形只有它的一半。",
+            ],
+            [w * h * l, "That leaves out the roof.", "这是漏掉了屋顶。"],
+            [area, "That is the area of the end; multiply it by the length to get the volume.", "这是端面的面积；还要乘长度才是体积。"],
+          ],
+          { form: "integer", unit: "m^3" },
+        );
+      },
+      drawn(gradeDrawings4["volumes-of-triangular-prisms#a-house-shaped-prism"]),
+    ),
   ],
   "surface-areas-of-triangular-prisms": [
-    skill(
+    lesson(
       "the-surface-without-the-floor",
       ["The surface without the floor", "不含底面的表面积"],
       [
-        "Real objects often leave out a face, as a tent's floor may be open. Add only the faces that are asked for, which here are the two triangular ends and the two sloping or upright sides.",
-        "实际物体常常少一个面，比如帐篷可以没有底。只加题目要求的面，这里是两个三角形端面和另外两个侧面。",
+        [
+          "Real objects often leave out a face, as a tent's floor may be open. Add only the faces that are asked for, which here are the two triangular ends and the two sloping or upright sides.",
+          "实际物体常常少一个面，比如帐篷可以没有底。只加题目要求的面，这里是两个三角形端面和另外两个侧面。",
+        ],
+        [
+          "Or find the whole surface area and take the floor away: what is left is the same total.",
+          "也可以先求整个表面积，再减去底面：剩下的总数一样。",
+        ],
+        [
+          "The two triangular ends together make one rectangle of the two legs: $p \\cdot q$, not half of it.",
+          "两个三角形端面合起来是一个两直角边构成的长方形：$p \\cdot q$，不是它的一半。",
+        ],
       ],
       (rng) => {
         const [p, q, r] = rng.pick<[number, number, number]>([
@@ -1405,46 +1509,102 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
           [8, 15, 17],
         ]);
         const l = rng.int(4, 25);
-        return whole(
+        const total = p * q + p * l + r * l;
+        const whole = p * q + (p + q + r) * l;
+        return valued(
           [
-            `A right triangular prism is ${l} m long, and its ends are right triangles with legs ${p} m and ${q} m and hypotenuse ${r} m. It rests on the face with the ${q} m leg. What is the surface area without that face, in square meters?`,
-            `一个直角三棱柱长 ${l} 米，端面是直角三角形，两条直角边为 ${p} 米和 ${q} 米，斜边 ${r} 米。它放在含 ${q} 米直角边的面上。不含这个面的表面积是多少平方米？`,
+            `A right triangular prism is $${l}$ m long, and its ends are right triangles with legs $${p}$ m and $${q}$ m and hypotenuse $${r}$ m. It rests on the face with the $${q}$ m leg. What is the surface area without that face?`,
+            `一个直角三棱柱长 $${l}$ 米，端面是直角三角形，两条直角边为 $${p}$ 米和 $${q}$ 米，斜边 $${r}$ 米。它放在含 $${q}$ 米直角边的面上。不含这个面的表面积是多少？`,
           ],
-          p * q + p * l + r * l,
-          [p * q + (p + q + r) * l, (p * q) / 2 + p * l + r * l, (p + r) * l],
+          total,
           [
-            `The two ends total $${p} \\times ${q} = ${p * q}$, and the two faces left are $${p} \\times ${l}$ and $${r} \\times ${l}$.`,
-            `两个端面共 $${p} \\times ${q} = ${p * q}$，剩下的两个面是 $${p} \\times ${l}$ 和 $${r} \\times ${l}$。`,
+            [
+              ["Add the two ends", "两个端面相加"],
+              ["Two right triangles make one rectangle of the legs:", "两个直角三角形合成一个以两直角边为边的长方形："],
+              [`2 \\cdot \\tfrac{1}{2} \\cdot ${p} \\cdot ${q} = ${p * q}`],
+            ],
+            [
+              ["Add the two faces left", "加上剩下的两个面"],
+              ["The upright face and the sloping face:", "竖直的面和倾斜的面："],
+              [`${p * q} + ${p} \\cdot ${l} + ${r} \\cdot ${l} = ${p * q} + ${p * l} + ${r * l} = ${total}\\text{ m}^2`],
+            ],
           ],
+          [
+            `Find the whole surface and take the floor away: $${p * q} + (${p} + ${q} + ${r}) \\cdot ${l} = ${whole}$ and $${whole} - ${q} \\cdot ${l} = ${total}$.`,
+            `先求整个表面积，再减去底面：$${p * q} + (${p} + ${q} + ${r}) \\cdot ${l} = ${whole}$，$${whole} - ${q} \\cdot ${l} = ${total}$。`,
+          ],
+          [
+            [whole, "That keeps the floor, which the question leaves out.", "这是把底面也算进去了，但题目不含底面。"],
+            [
+              (p * q) / 2 + p * l + r * l,
+              "That counts only one triangular end; there is one at each end.",
+              "这只算了一个三角形端面；两头各有一个。",
+            ],
+            [(p + r) * l, "That leaves out the two triangular ends.", "这是漏掉了两个三角形端面。"],
+          ],
+          { form: "integer", unit: "m^2", figure: rightPrismFigure(p, q, r, l, "m") },
         );
       },
+      rightPrismFigure(3, 4, 5, 10, "m"),
     ),
   ],
   "cross-sections-of-three-dimensional-shapes": [
-    skill(
+    lesson(
       "the-new-surface-from-a-cut",
       ["The new surface from a cut", "切割产生的新表面"],
       [
-        "A cut creates two new faces, one on each piece, each equal to the cross-section. So the total surface area of the pieces rises by twice the area of the cross-section.",
-        "切一刀产生两个新面，每块一个，都等于截面。所以各块的总表面积增加截面积的两倍。",
+        [
+          "A cut creates two new faces, one on each piece, each equal to the cross-section. So the total surface area of the pieces rises by twice the area of the cross-section. Cutting a $5 \\times 4 \\times 6$ box parallel to its $5 \\times 4$ face adds $2 \\cdot 20 = 40$.",
+          "切一刀产生两个新面，每块一个，都等于截面。所以各块的总表面积增加截面积的两倍。把 $5 \\times 4 \\times 6$ 的长方体平行于 $5 \\times 4$ 的面切开，表面积增加 $2 \\cdot 20 = 40$。",
+        ],
+        [
+          "Cut it into a piece $1$ deep and one $5$ deep: the pieces have $58 + 130 = 188$, the whole box had $148$, and $188 - 148 = 40$.",
+          "切成厚 $1$ 和厚 $5$ 的两块：两块的表面积是 $58 + 130 = 188$，原来的长方体是 $148$，$188 - 148 = 40$。",
+        ],
+        ["Each piece gets its own new face, so the cross-section counts twice.", "每一块都多出一个新面，所以截面要算两次。"],
       ],
       (rng) => {
         const a = rng.int(2, 15);
         const b = rng.int(2, 15);
         const c = rng.int(2, 15);
-        return whole(
+        const k = rng.int(1, c - 1);
+        const box = (z: number) => 2 * (a * b + a * z + b * z);
+        const [one, two, all] = [box(k), box(c - k), box(c)];
+        return valued(
           [
-            `A box ${a} cm by ${b} cm by ${c} cm is cut into two pieces parallel to its ${a} cm by ${b} cm face. By how many square cm does the total surface area increase?`,
-            `一个 ${a} 厘米 × ${b} 厘米 × ${c} 厘米的盒子，平行于 ${a} 厘米 × ${b} 厘米的面切成两块。总表面积增加多少平方厘米？`,
+            `A box $${a}$ cm by $${b}$ cm by $${c}$ cm is cut into two pieces parallel to its $${a}$ cm by $${b}$ cm face. By how much does the total surface area increase?`,
+            `一个 $${a}$ 厘米 × $${b}$ 厘米 × $${c}$ 厘米的长方体，平行于 $${a}$ 厘米 × $${b}$ 厘米的面切成两块。总表面积增加多少？`,
           ],
           2 * a * b,
-          [a * b, 2 * a * b * c, 2 * (a + b)],
           [
-            `Two new faces appear, each of area $${a} \\times ${b} = ${a * b}$, for ${2 * a * b} in all.`,
-            `出现两个新面，每个面积 $${a} \\times ${b} = ${a * b}$，共 ${2 * a * b}。`,
+            [
+              ["Find the cross-section", "求截面"],
+              [`It is a copy of the $${a} \\times ${b}$ face:`, `它与 $${a} \\times ${b}$ 的面相同：`],
+              [`${a} \\cdot ${b} = ${a * b}`],
+            ],
+            [
+              ["Count the new faces", "数新面"],
+              ["One new face on each piece:", "每块多出一个新面："],
+              [`2 \\cdot ${a * b} = ${2 * a * b}\\text{ cm}^2`],
+            ],
           ],
+          [
+            `Say the cut is $${k}$ cm from the front. The pieces have $${one} + ${two} = ${one + two}$, the whole box had $${all}$, and $${one + two} - ${all} = ${2 * a * b}$.`,
+            `设切口离前面 $${k}$ 厘米。两块的表面积是 $${one} + ${two} = ${one + two}$，原来的长方体是 $${all}$，$${one + two} - ${all} = ${2 * a * b}$。`,
+          ],
+          [
+            [a * b, "That counts only one new face, but each piece gets one.", "这只算了一个新面，但每块都多出一个。"],
+            [
+              2 * a * b * c,
+              "That multiplies by the length too; the new faces are flat and have no depth.",
+              "这是又乘了长度；新面是平面，没有厚度。",
+            ],
+            [2 * (a + b), "That is the distance around the cut, not its area.", "这是截面的周长，不是面积。"],
+          ],
+          { form: "integer", unit: "cm^2", figure: cutBoxFigure(a, b, c, "cm") },
         );
       },
+      cutBoxFigure(5, 4, 6, "cm"),
     ),
   ],
   "biased-and-unbiased-samples": [

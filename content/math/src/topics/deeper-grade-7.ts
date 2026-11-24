@@ -8,8 +8,10 @@ import { dec, Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { numberProblem } from "../problems.ts";
+import type { Pair } from "./early-grades-more-kit.ts";
 import { tableFigure } from "./early-grades-more-kit.ts";
 import { drawn, lesson, valued } from "./grade-6-kit.ts";
+import { cubeRowFigure } from "./grade-7-measurement.ts";
 import { lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** gcd7 is the greatest common factor of two positive integers. */
@@ -1143,154 +1145,358 @@ const anglesInRatio: KnowledgePointDef = lesson(
   drawn(gradeDrawings4["angles-of-a-triangle#triangle-angles-in-a-ratio"]),
 );
 
-const bisectorsOfNeighbors: KnowledgePointDef = {
-  id: "the-angle-between-two-bisectors",
-  figure: gradeDrawings4["angle-bisectors#the-angle-between-two-bisectors"],
-  title: t("The angle between two bisectors", "两条角平分线的夹角"),
-  explanation: t(
-    "When two angles share a side and each is bisected, the angle between the two bisectors is made of one half from each angle. So it is half of the two angles together, and the separate sizes do not matter. If the two angles form a straight line, the bisectors are always at a right angle, which is a neat result. The same reasoning works for any pair of adjacent angles, and a sketch with the halves marked makes it clear.",
-    "两个角有公共边，分别作平分线时，两条平分线的夹角由两个角的各一半组成。所以它是两个角之和的一半，与各自的大小无关。如果两个角组成一条直线，两条平分线总是成直角，这是个很漂亮的结论。同样的推理适用于任何一对相邻的角，画一个标出一半的草图就很清楚。",
-  ),
-  generate(rng) {
+const bisectorsOfNeighbors: KnowledgePointDef = lesson(
+  "the-angle-between-two-bisectors",
+  ["The angle between two bisectors", "两条角平分线的夹角"],
+  [
+    [
+      "Two angles share a side, and each one is bisected. The angle between the two bisectors is half of one angle plus half of the other, so it is half of the two angles together. With $40^\\circ$ and $80^\\circ$: $20^\\circ + 40^\\circ = 60^\\circ$. When the two angles make a straight line, the bisectors always meet at $90^\\circ$.",
+      "两个角有一条公共边，分别作它们的平分线。两条平分线的夹角是一个角的一半加上另一个角的一半，所以等于两个角之和的一半。$40^\\circ$ 和 $80^\\circ$ 时：$20^\\circ + 40^\\circ = 60^\\circ$。如果两个角合成一条直线，两条平分线总是成 $90^\\circ$。",
+    ],
+    ["Half of the total: $(40 + 80) \\div 2 = 60$, the same.", "总和的一半：$(40 + 80) \\div 2 = 60$，结果相同。"],
+    [
+      "Each bisector keeps only the half next to the shared side, so add the two halves, not the whole angles.",
+      "每条平分线只取靠近公共边的那一半，所以要把两个一半相加，而不是两个整角相加。",
+    ],
+  ],
+  (rng) => {
     const a = 2 * rng.int(10, 60);
     const b = 2 * rng.int(10, 60);
     const answer = (a + b) / 2;
-    return numberProblem({
-      prompt: t(
-        `Two adjacent angles measure $${a}^\\circ$ and $${b}^\\circ$, and each one is bisected. What is the angle between the two bisectors, in degrees?`,
-        `两个相邻的角分别是 $${a}^\\circ$ 和 $${b}^\\circ$，各作一条角平分线。两条平分线的夹角是多少度？`,
-      ),
+    return valued(
+      [
+        `Two angles sit side by side and share a side. They measure $${a}^\\circ$ and $${b}^\\circ$, and each one is bisected. What is the angle between the two bisectors?`,
+        `两个角并排放着，有一条公共边，分别是 $${a}^\\circ$ 和 $${b}^\\circ$，各作一条角平分线。两条平分线的夹角是多少度？`,
+      ],
       answer,
-      form: "integer",
-      wrong: [a + b, Math.abs(a - b) / 2, a / 2, b / 2, answer + 10],
-      solution: t(
-        `The angle is made of half of each one: $${a / 2}^\\circ + ${b / 2}^\\circ = ${answer}^\\circ$.`,
-        `这个角由两个角的各一半组成：$${a / 2}^\\circ + ${b / 2}^\\circ = ${answer}^\\circ$。`,
-      ),
-    });
+      [
+        [
+          ["Halve each angle", "把每个角取一半"],
+          [
+            "Each bisector cuts its angle in two; the half next to the shared side is",
+            "每条平分线把所在的角分成两半；靠近公共边的一半分别是",
+          ],
+          [`${a} \\div 2 = ${a / 2}`, `${b} \\div 2 = ${b / 2}`],
+        ],
+        [
+          ["Add the halves", "把两个一半相加"],
+          ["The angle between the bisectors is made of these two halves:", "两条平分线的夹角由这两个一半组成："],
+          [`${a / 2} + ${b / 2} = ${answer}^\\circ`],
+        ],
+      ],
+      [
+        `Halve the total instead: $(${a} + ${b}) \\div 2 = ${a + b} \\div 2 = ${answer}$.`,
+        `改为把总和取一半：$(${a} + ${b}) \\div 2 = ${a + b} \\div 2 = ${answer}$。`,
+      ],
+      [
+        [
+          a + b,
+          "That adds the whole angles, but each bisector keeps only half of its angle.",
+          "这是两个整角相加，但每条平分线只取所在角的一半。",
+        ],
+        [Math.abs(a - b) / 2, "That subtracts the halves instead of adding them.", "这是把两个一半相减了，应该相加。"],
+        [a / 2, "That is only half of the first angle.", "这只是第一个角的一半。"],
+        [b / 2, "That is only half of the second angle.", "这只是第二个角的一半。"],
+      ],
+      { unit: "°" },
+    );
   },
-};
+  drawn(gradeDrawings4["angle-bisectors#the-angle-between-two-bisectors"]),
+);
 
-const clockAtAnyTime: KnowledgePointDef = {
-  id: "clock-angles-between-the-hours",
-  figure: gradeDrawings4["solving-problems-with-angles#clock-angles-between-the-hours"],
-  title: t("Clock angles between the hours", "非整点时的钟面夹角"),
-  explanation: t(
-    "On a clock, the minute hand turns $6$ degrees each minute, and the hour hand turns only half a degree each minute. So between the hours, the hour hand lies part of the way from one mark to the next, and forgetting this is the usual mistake. Measure both hands from $12$, subtract, and if the result is more than $180$ degrees, subtract it from $360$ to get the smaller of the two angles.",
-    "钟面上，分针每分钟转 $6$ 度，时针每分钟只转半度。所以在两个整点之间，时针位于两个刻度之间的某处，忘记这一点是常见的差错。从 $12$ 开始分别量两针的角度，相减，如果结果大于 $180$ 度，就用 $360$ 减去它，得到两个角中较小的一个。",
-  ),
-  generate(rng) {
+const clockAtAnyTime: KnowledgePointDef = lesson(
+  "clock-angles-between-the-hours",
+  ["Clock angles between the hours", "非整点时的钟面夹角"],
+  [
+    [
+      "The minute hand turns $6^\\circ$ each minute, and the hour hand turns $0.5^\\circ$ each minute, so between the hours the hour hand sits part of the way to the next number. At $3:20$ the minute hand is at $20 \\times 6 = 120^\\circ$ from $12$, and the hour hand is at $3 \\times 30 + 20 \\times 0.5 = 100^\\circ$. The angle between them is $120 - 100 = 20^\\circ$. If a difference is more than $180^\\circ$, take it from $360^\\circ$ to get the smaller angle.",
+      "分针每分钟转 $6^\\circ$，时针每分钟转 $0.5^\\circ$，所以在两个整点之间，时针停在去往下一个数字的途中。$3:20$ 时，分针离 $12$ 有 $20 \\times 6 = 120^\\circ$，时针离 $12$ 有 $3 \\times 30 + 20 \\times 0.5 = 100^\\circ$。两针夹角是 $120 - 100 = 20^\\circ$。如果差大于 $180^\\circ$，就用 $360^\\circ$ 减去它，得到较小的角。",
+    ],
+    [
+      "At $3:00$ the hands are $90^\\circ$ apart, and each minute the minute hand gains $6 - 0.5 = 5.5^\\circ$: $20 \\times 5.5 = 110$, and $110 - 90 = 20^\\circ$.",
+      "$3:00$ 时两针相差 $90^\\circ$，每分钟分针比时针多转 $6 - 0.5 = 5.5^\\circ$：$20 \\times 5.5 = 110$，$110 - 90 = 20^\\circ$。",
+    ],
+    [
+      "The hour hand is not on the $3$ at $3:20$: it has moved $10^\\circ$ toward the $4$.",
+      "$3:20$ 时时针并不指着 $3$：它已经朝 $4$ 走了 $10^\\circ$。",
+    ],
+  ],
+  (rng) => {
     const hour = rng.int(1, 12);
     const minute = 10 * rng.int(1, 5);
     const hourAngle = (hour % 12) * 30 + minute / 2;
     const minuteAngle = minute * 6;
     const gap = Math.abs(hourAngle - minuteAngle);
     const answer = Math.min(gap, 360 - gap);
-    return numberProblem({
-      prompt: t(
-        `What is the smaller angle between the hands of a clock at $${hour}:${minute}$, in degrees?`,
+    const start = (hour % 12) * 30;
+    const gain = Q.of(11 * minute, 2);
+    const relative = Math.abs(start - gain.toNumber());
+    const still = Math.abs(start - minuteAngle);
+    const smaller: Pair =
+      gap > 180
+        ? [
+            `That is more than $180^\\circ$, so the smaller angle is $360 - ${gap} = ${answer}^\\circ$.`,
+            `它大于 $180^\\circ$，所以较小的角是 $360 - ${gap} = ${answer}^\\circ$。`,
+          ]
+        : ["That is not more than $180^\\circ$, so it is the smaller angle.", "它不大于 $180^\\circ$，所以就是较小的角。"];
+    return valued(
+      [
+        `What is the smaller angle between the hands of a clock at $${hour}:${minute}$?`,
         `$${hour}:${minute}$ 时，钟面上两针所成的较小的角是多少度？`,
-      ),
-      answer,
-      form: "integer",
-      wrong: [
-        Math.min(Math.abs((hour % 12) * 30 - minuteAngle), 360 - Math.abs((hour % 12) * 30 - minuteAngle)),
-        360 - answer,
-        answer + 5,
-        answer + 30,
-        minuteAngle,
       ],
-      solution: t(
-        `From 12, the minute hand is at $${minute} \\times 6^\\circ = ${minuteAngle}^\\circ$, and the hour hand is at $${hourAngle}^\\circ$. They differ by $${gap}^\\circ$${gap > 180 ? `, and the smaller angle is $360^\\circ - ${gap}^\\circ = ${answer}^\\circ$` : ""}.`,
-        `从 12 算起，分针在 $${minute} \\times 6^\\circ = ${minuteAngle}^\\circ$，时针在 $${hourAngle}^\\circ$。两者相差 $${gap}^\\circ$${gap > 180 ? `，较小的角是 $360^\\circ - ${gap}^\\circ = ${answer}^\\circ$` : ""}。`,
-      ),
-    });
+      answer,
+      [
+        [
+          ["Place each hand", "确定两针的位置"],
+          [
+            "Measure both hands from $12$, the minute hand first, then the hour hand, which has moved past its number by half a degree a minute:",
+            "从 $12$ 起先量分针，再量时针；时针每分钟走半度，已经越过了它的数字：",
+          ],
+          [`${minute} \\times 6 = ${minuteAngle}^\\circ`, `${hour % 12} \\times 30 + ${minute} \\times 0.5 = ${hourAngle}^\\circ`],
+        ],
+        [
+          ["Subtract", "相减"],
+          [`The hands are $${gap}^\\circ$ apart. ${smaller[0]}`, `两针相差 $${gap}^\\circ$。${smaller[1]}`],
+          [`|${minuteAngle} - ${hourAngle}| = ${gap}^\\circ`],
+        ],
+      ],
+      [
+        `At $${hour}:00$ the hands are $${start}^\\circ$ apart, and the minute hand gains $5.5^\\circ$ a minute: $|${start} - ${minute} \\times 5.5| = ${relative}$, and the smaller of $${relative}^\\circ$ and $${360 - relative}^\\circ$ is $${answer}^\\circ$.`,
+        `$${hour}:00$ 时两针相差 $${start}^\\circ$，分针每分钟多转 $5.5^\\circ$：$|${start} - ${minute} \\times 5.5| = ${relative}$，$${relative}^\\circ$ 与 $${360 - relative}^\\circ$ 中较小的是 $${answer}^\\circ$。`,
+      ],
+      [
+        [
+          Math.min(still, 360 - still),
+          "That leaves the hour hand on its number, but it moves half a degree each minute.",
+          "这是让时针停在数字上，但时针每分钟都在走半度。",
+        ],
+        [360 - answer, "That is the larger angle between the hands.", "这是两针所成的较大的角。"],
+        [minuteAngle, "That is where the minute hand is, measured from $12$.", "这是分针离 $12$ 的角度。"],
+        [hourAngle, "That is where the hour hand is, measured from $12$.", "这是时针离 $12$ 的角度。"],
+      ],
+      { unit: "°" },
+    );
   },
-};
-
-const midpointsOfParts: KnowledgePointDef = {
-  id: "the-gap-between-two-midpoints",
-  title: t("The gap between two midpoints", "两个中点之间的距离"),
-  explanation: t(
-    "Let a segment be split into two parts by a point, and mark the midpoint of each part. The distance between those midpoints is made of half of one part and half of the other. So it equals half of the whole segment, however the point divides it. The segment addition postulate gives this directly, and a labeled sketch with each half marked shows it clearly. No separate lengths are needed to find the result.",
-    "一个点把线段分成两部分，再标出每部分的中点。这两个中点之间的距离，由一部分的一半和另一部分的一半组成。所以不管这个点怎样分，它都等于整条线段的一半。线段相加公理直接给出这个结果，画一个标出各半段的草图就看得很清楚。不需要各段的长度就能求出结果。",
-  ),
-  generate(rng) {
+  drawn(gradeDrawings4["solving-problems-with-angles#clock-angles-between-the-hours"]),
+);
+const midpointsOfParts: KnowledgePointDef = lesson(
+  "the-gap-between-two-midpoints",
+  ["The gap between two midpoints", "两个中点之间的距离"],
+  [
+    [
+      "A point $B$ splits $\\overline{AC}$ into two parts, and $M$ and $N$ are the midpoints of the parts. $\\overline{MN}$ is half of one part plus half of the other, so it is half of the whole, wherever $B$ is. With $AB = 6$ and $AC = 20$: $MB = 3$, $BN = 7$ and $MN = 10$.",
+      "点 $B$ 把 $\\overline{AC}$ 分成两部分，$M$、$N$ 分别是这两部分的中点。$\\overline{MN}$ 由一部分的一半和另一部分的一半组成，所以不论 $B$ 在哪里，它都是整条线段的一半。$AB = 6$，$AC = 20$ 时：$MB = 3$，$BN = 7$，$MN = 10$。",
+    ],
+    ["Half of the whole is $20 \\div 2 = 10$, the same.", "整条线段的一半是 $20 \\div 2 = 10$，结果相同。"],
+    [
+      "$MN$ is a sum of two halves, not their difference: $7 - 3 = 4$ is not the gap.",
+      "$MN$ 是两个一半之和，不是它们的差：$7 - 3 = 4$ 不是这段距离。",
+    ],
+  ],
+  (rng) => {
     const whole = 2 * rng.int(6, 60);
     const part = rng.int(2, whole - 2);
     const answer = whole / 2;
-    return numberProblem({
-      prompt: t(
-        `Point $B$ lies on segment $AC$, with $AB = ${part}$ and $AC = ${whole}$. Point $M$ is the midpoint of $AB$, and $N$ is the midpoint of $BC$. What is $MN$?`,
-        `点 $B$ 在线段 $AC$ 上，$AB = ${part}$，$AC = ${whole}$。点 $M$ 是 $AB$ 的中点，$N$ 是 $BC$ 的中点。$MN$ 是多少？`,
-      ),
+    const [mb, bn] = [Q.of(part, 2), Q.of(whole - part, 2)];
+    const show = (v: Q) => (v.isInteger() ? v.toLatex() : dec(v));
+    return valued(
+      [
+        `Point $B$ lies on $\\overline{AC}$, with $AB = ${part}$ and $AC = ${whole}$. Point $M$ is the midpoint of $\\overline{AB}$, and $N$ is the midpoint of $\\overline{BC}$. What is $MN$?`,
+        `点 $B$ 在 $\\overline{AC}$ 上，$AB = ${part}$，$AC = ${whole}$。点 $M$ 是 $\\overline{AB}$ 的中点，$N$ 是 $\\overline{BC}$ 的中点。$MN$ 是多少？`,
+      ],
       answer,
-      form: "integer",
-      wrong: [whole, Math.round(part / 2), whole - part, Math.round(Math.abs(whole - 2 * part) / 2), answer + 1],
-      solution: t(
-        `We have $MB = ${part / 2}$ and $BN = ${(whole - part) / 2}$. So $MN$ is half of $AB$ plus half of $BC$, which is half of $AC$: $${answer}$.`,
-        `$MB = ${part / 2}$，$BN = ${(whole - part) / 2}$。所以 $MN$ 是 $AB$ 的一半加 $BC$ 的一半，也就是 $AC$ 的一半：$${answer}$。`,
-      ),
-    });
+      [
+        [
+          ["Halve each part", "把每部分取一半"],
+          ["$BC = AC - AB$, and each midpoint takes half of its part:", "$BC = AC - AB$，每个中点取所在部分的一半："],
+          [`BC = ${whole} - ${part} = ${whole - part}`, `MB = ${part} \\div 2 = ${show(mb)}`, `BN = ${whole - part} \\div 2 = ${show(bn)}`],
+        ],
+        [
+          ["Add the halves", "把两半相加"],
+          [
+            "$\\overline{MN}$ is made of $\\overline{MB}$ and $\\overline{BN}$:",
+            "$\\overline{MN}$ 由 $\\overline{MB}$ 和 $\\overline{BN}$ 组成：",
+          ],
+          [`MN = ${show(mb)} + ${show(bn)} = ${answer}`],
+        ],
+      ],
+      [
+        `Halve the whole directly: $${whole} \\div 2 = ${answer}$, the same.`,
+        `直接把整体取一半：$${whole} \\div 2 = ${answer}$，结果相同。`,
+      ],
+      [
+        [whole, "That is all of $AC$, but each midpoint cuts off half of a part.", "这是整条 $AC$，但每个中点都截去了所在部分的一半。"],
+        [mb, "That is only $MB$, the half of $AB$.", "这只是 $MB$，$AB$ 的一半。"],
+        [whole - part, "That is $BC$, a whole part.", "这是整段 $BC$。"],
+        [bn.sub(mb).abs(), "That subtracts the two halves instead of adding them.", "这是把两个一半相减了，应该相加。"],
+        [answer + 1, "That counts one unit too many.", "这是多算了 $1$。"],
+      ],
+      {
+        figure: tapeFigure(
+          [
+            {
+              pieces: [
+                { size: part / 2, text: "" },
+                { size: part / 2, text: show(mb), lit: true },
+                { size: (whole - part) / 2, text: show(bn), lit: true },
+                { size: (whole - part) / 2, text: "" },
+              ],
+              total: `AC = ${whole}`,
+            },
+          ],
+          [
+            `A bar for AC = ${whole} cut at B, with the halves MB and BN next to B shaded.`,
+            `表示 AC = ${whole} 的长条在 B 处分开，B 两侧的 MB 和 BN 涂上了颜色。`,
+          ],
+        ),
+      },
+    );
   },
-};
-
-const areaWithPercentSides: KnowledgePointDef = {
-  id: "the-area-after-percent-changes-to-the-sides",
-  figure: gradeDrawings4["area-of-rectangles-and-squares#the-area-after-percent-changes-to-the-sides"],
-  title: t("The area after percent changes to the sides", "边按百分比变化后的面积"),
-  explanation: t(
-    "Area is a product of two lengths, and so changes in the sides combine by multiplying and not by adding. Raising the length by one percent and lowering the width by another does not change the area by the difference of the two. Write each change as a multiplier, multiply the two, and read the overall change. Choosing a simple rectangle, such as one with sides of $100$ and $100$, is a good way to confirm the answer.",
-    "面积是两个长度的积，所以边的变化是相乘，不是相加。把长增加一个百分数、宽减少另一个百分数，面积的变化并不等于这两个百分数的差。把每个变化写成乘数，相乘，再读出总的变化。选一个简单的长方形，比如边长都是 $100$，可以用来确认答案。",
+  tapeFigure(
+    [
+      {
+        pieces: [
+          { size: 3, text: "3" },
+          { size: 3, text: "3", lit: true },
+          { size: 7, text: "7", lit: true },
+          { size: 7, text: "7" },
+        ],
+        total: "AC = 20",
+      },
+    ],
+    [
+      "A bar for AC = 20 cut at B after 6; the shaded halves 3 and 7 on each side of B make MN = 10.",
+      "表示 AC = 20 的长条在 6 处的 B 分开；B 两侧涂色的 3 和 7 合成 MN = 10。",
+    ],
   ),
-  generate(rng) {
+);
+const areaWithPercentSides: KnowledgePointDef = lesson(
+  "the-area-after-percent-changes-to-the-sides",
+  ["The area after percent changes to the sides", "边按百分比变化后的面积"],
+  [
+    [
+      "Area is length times width, so changes to the sides multiply; they do not add. Write each change as a multiplier: up $20\\%$ is $\\times 1.2$ and down $10\\%$ is $\\times 0.9$. The area is multiplied by $1.2 \\times 0.9 = 1.08$, so an area of $500$ becomes $500 \\times 1.08 = 540$.",
+      "面积是长乘宽，所以边的变化要相乘，而不是相加。把每个变化写成乘数：增加 $20\\%$ 是 $\\times 1.2$，减少 $10\\%$ 是 $\\times 0.9$。面积乘以 $1.2 \\times 0.9 = 1.08$，所以面积 $500$ 变成 $500 \\times 1.08 = 540$。",
+    ],
+    [
+      "Change one side at a time: $500 \\times 1.2 = 600$, then $600 \\times 0.9 = 540$.",
+      "一次改一条边：$500 \\times 1.2 = 600$，再 $600 \\times 0.9 = 540$。",
+    ],
+    [
+      "Up $20\\%$ and down $10\\%$ is not up $10\\%$: the second change acts on the already changed area.",
+      "增加 $20\\%$ 再减少 $10\\%$ 并不是增加 $10\\%$：第二次变化作用在已经变过的面积上。",
+    ],
+  ],
+  (rng) => {
     const up = 10 * rng.int(1, 6);
     const down = 10 * rng.int(1, 5);
+    const [f1, f2] = [(100 + up) / 100, (100 - down) / 100];
     const factor = (100 + up) * (100 - down);
     const area = 100 * rng.int(2, 40);
     const answer = (area * factor) / 10000;
-    return numberProblem({
-      prompt: t(
+    const middle = (area * (100 + up)) / 100;
+    return valued(
+      [
         `A rectangle has an area of $${area}$ square centimeters. Its length is increased by $${up}\\%$ and its width is decreased by $${down}\\%$. What is the new area, in square centimeters?`,
         `一个长方形的面积是 $${area}$ 平方厘米。长增加 $${up}\\%$，宽减少 $${down}\\%$。新的面积是多少平方厘米？`,
-      ),
+      ],
       answer,
-      wrong: [(area * (100 + up - down)) / 100, area, (area * (100 + up)) / 100, (area * (100 - down)) / 100, answer + 10],
-      solution: t(
-        `The area is multiplied by $${(100 + up) / 100} \\times ${(100 - down) / 100} = ${factor / 10000}$. So the new area is $${area} \\times ${factor / 10000} = ${answer}$.`,
-        `面积乘以 $${(100 + up) / 100} \\times ${(100 - down) / 100} = ${factor / 10000}$。所以新的面积是 $${area} \\times ${factor / 10000} = ${answer}$。`,
-      ),
-    });
+      [
+        [
+          ["Write the multipliers", "写出乘数"],
+          [
+            `Up $${up}\\%$ multiplies the length by $${f1}$, and down $${down}\\%$ multiplies the width by $${f2}$; together the area is multiplied by`,
+            `增加 $${up}\\%$ 是把长乘 $${f1}$，减少 $${down}\\%$ 是把宽乘 $${f2}$；合起来面积乘以`,
+          ],
+          [`${f1} \\times ${f2} = ${factor / 10000}`],
+        ],
+        [
+          ["Multiply the area", "把面积相乘"],
+          ["Apply it to the old area:", "用它乘原来的面积："],
+          [`${area} \\times ${factor / 10000} = ${answer}`],
+        ],
+      ],
+      [
+        `Change one side at a time: $${area} \\times ${f1} = ${middle}$, then $${middle} \\times ${f2} = ${answer}$.`,
+        `一次改一条边：$${area} \\times ${f1} = ${middle}$，再 $${middle} \\times ${f2} = ${answer}$。`,
+      ],
+      [
+        [
+          (area * (100 + up - down)) / 100,
+          `That adds the percents, $${up} - ${down}$, but the changes multiply.`,
+          `这是把百分数相加减，$${up} - ${down}$，但变化应该相乘。`,
+        ],
+        [area, "That assumes the changes cancel out.", "这是以为两个变化抵消了。"],
+        [middle, "That uses only the change to the length.", "这只用了长的变化。"],
+        [(area * (100 - down)) / 100, "That uses only the change to the width.", "这只用了宽的变化。"],
+      ],
+    );
   },
-};
-
-const cubesInARow: KnowledgePointDef = {
-  id: "the-surface-of-cubes-in-a-row",
-  title: t("The surface of cubes in a row", "排成一行的立方体的表面积"),
-  explanation: t(
-    "When solids are glued together, the faces that touch are no longer on the outside. Each join removes two faces, one from each solid. So the surface area of a row of cubes is less than the sum of the separate surfaces. Count the faces that remain: 4 faces along the row for each cube, plus 2 faces at the ends. Multiply this count by the area of one face to get the total surface area.",
-    "几个立体粘在一起时，相接触的面就不在外面了。每个接合处减少两个面，每个立体各一个。所以一排立方体的表面积小于各自表面积的和。数一数剩下的面：每个立方体沿着这排有 4 个面，两端再加 2 个面。用这个数乘以一个面的面积，就得到总表面积。",
-  ),
-  generate(rng) {
+  drawn(gradeDrawings4["area-of-rectangles-and-squares#the-area-after-percent-changes-to-the-sides"]),
+);
+const cubesInARow = lesson(
+  "the-surface-of-cubes-in-a-row",
+  ["The surface of cubes in a row", "排成一行的立方体的表面积"],
+  [
+    [
+      "When solids are glued together, the faces that touch are no longer on the outside. Each join hides two faces, one on each cube. Count the faces that remain: $4$ along the row for each cube, plus $2$ at the ends. For $3$ cubes with edges of $2$ cm: $4 \\cdot 3 + 2 = 14$ faces of $4\\text{ cm}^2$, which is $56\\text{ cm}^2$.",
+      "几个立体粘在一起时，相接触的面就不在外面了。每个接合处遮住两个面，两个立方体各一个。数一数剩下的面：每个立方体沿着这一排有 $4$ 个面，两端再加 $2$ 个面。$3$ 个棱长 $2$ 厘米的立方体：$4 \\cdot 3 + 2 = 14$ 个面，每个 $4\\text{ cm}^2$，共 $56\\text{ cm}^2$。",
+    ],
+    [
+      "See the row as one long box $6 \\times 2 \\times 2$: four long faces of $6 \\cdot 2 = 12$ and two ends of $4$: $48 + 8 = 56$.",
+      "把这一排看成一个 $6 \\times 2 \\times 2$ 的长方体：四个长面各 $6 \\cdot 2 = 12$，两个端面各 $4$：$48 + 8 = 56$。",
+    ],
+    ["Each join hides two faces, not one: one on each cube.", "每个接合处遮住两个面，不是一个：两个立方体各一个。"],
+  ],
+  (rng) => {
     const n = rng.int(2, 15);
     const s = rng.int(1, 9);
     const faces = 4 * n + 2;
     const answer = faces * s * s;
-    return numberProblem({
-      prompt: t(
-        `${n} cubes with edges of ${s} cm are glued face to face in a straight row. What is the surface area of the solid, in square centimeters?`,
-        `${n} 个棱长 ${s} 厘米的立方体面对面粘成一排。这个立体的表面积是多少平方厘米？`,
-      ),
+    return valued(
+      [
+        `$${n}$ cubes with edges of $${s}$ cm are glued face to face in a straight row. What is the surface area of the solid?`,
+        `$${n}$ 个棱长 $${s}$ 厘米的立方体面对面粘成一排。这个立体的表面积是多少？`,
+      ],
       answer,
-      form: "integer",
-      wrong: [6 * n * s * s, (6 * n - 2) * s * s, n * s * s * s, 4 * n * s * s, answer + s * s],
-      solution: t(
-        `${n} cubes have ${6 * n} faces, and the ${n - 1} ${n === 2 ? "join removes" : "joins remove"} ${2 * (n - 1)} of them, which leaves ${faces}. Each face is ${s * s} square cm, so the total is ${answer}.`,
-        `${n} 个立方体有 ${6 * n} 个面，${n - 1} 个接合处减少 ${2 * (n - 1)} 个面，剩下 ${faces} 个。每个面 ${s * s} 平方厘米，总共 ${answer}。`,
-      ),
-    });
+      [
+        [
+          ["Count the faces left", "数剩下的面"],
+          [
+            `$${n}$ cubes have $${6 * n}$ faces, and the $${n - 1}$ joins hide two each:`,
+            `$${n}$ 个立方体有 $${6 * n}$ 个面，$${n - 1}$ 个接合处各遮住两个：`,
+          ],
+          [`${6 * n} - 2 \\cdot ${n - 1} = ${faces}`],
+        ],
+        [
+          ["Multiply by the area of one face", "乘一个面的面积"],
+          [`Each face is $${s} \\times ${s}$:`, `每个面是 $${s} \\times ${s}$：`],
+          [`${faces} \\cdot ${s * s} = ${answer}\\text{ cm}^2`],
+        ],
+      ],
+      [
+        `See the row as one long box $${n * s} \\times ${s} \\times ${s}$: four long faces of $${n * s} \\cdot ${s} = ${n * s * s}$ and two ends of $${s * s}$: $${4 * n * s * s} + ${2 * s * s} = ${answer}$.`,
+        `把这一排看成一个 $${n * s} \\times ${s} \\times ${s}$ 的长方体：四个长面各 $${n * s} \\cdot ${s} = ${n * s * s}$，两个端面各 $${s * s}$：$${4 * n * s * s} + ${2 * s * s} = ${answer}$。`,
+      ],
+      [
+        [
+          6 * n * s * s,
+          "That adds every face of every cube, but the faces that touch are hidden.",
+          "这是把每个立方体的所有面都加上了，但相接触的面被遮住了。",
+        ],
+        [
+          (5 * n + 1) * s * s,
+          "That hides only one face at each join, but each join hides one face on each cube.",
+          "这是每个接合处只去掉一个面，但每个接合处两个立方体各被遮住一个面。",
+        ],
+        [n * s * s * s, "That is the volume of the row, not its surface area.", "这是这一排的体积，不是表面积。"],
+        [4 * n * s * s, "That leaves out the two end faces.", "这是漏掉了两个端面。"],
+      ],
+      { form: "integer", unit: "cm^2", figure: cubeRowFigure(n, `${s} cm`) },
+    );
   },
-};
+  cubeRowFigure(3, "2 cm"),
+);
 
 const combinedMean: KnowledgePointDef = {
   id: "the-mean-of-two-groups-together",

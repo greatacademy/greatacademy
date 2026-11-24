@@ -4,10 +4,11 @@ import { linear, type Mark, type Point, sketch } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
+import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { remainingDrawings10 } from "../explanation-drawings-remaining-10.ts";
-import { article, choiceProblem, numberProblem, steps } from "../problems.ts";
-import { type Pair, picked, type Walk } from "./early-grades-more-kit.ts";
+import { article, numberProblem, steps } from "../problems.ts";
+import { type Pair, picked, type Walk, type Wrong } from "./early-grades-more-kit.ts";
 import { chosen, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { answered, point } from "./upper-grades-kit.ts";
 
@@ -33,6 +34,12 @@ function angleTex(c: number, d: number): string {
 function angleLabel(c: number, d: number): string {
   return d === 0 && c === 1 ? "x°" : `(${plain(c, d)})°`;
 }
+
+/** collecting says how to finish solving for x from the lines that remain: divide only when a step is left after collecting. */
+const collecting = (rest: readonly string[]): Pair =>
+  rest.length > 1
+    ? ["Collect $x$ on one side, then divide:", "把 $x$ 集中到一边，再相除："]
+    : ["Collect $x$ on one side:", "把 $x$ 集中到一边："];
 
 const figure = (marks: readonly Mark[], en: string, zh: string): Figure => ({ svg: sketch(marks), alt: t(en, zh) });
 
@@ -290,10 +297,8 @@ export const equalAnglesInAnAngle = point(
   gradeDrawings2["angles-and-angle-measures#an-angle-cut-into-equal-angles"]!,
 );
 
-/** splitAngleFor draws a right or straight angle split in two: the known part labeled a°, the other x, in either order. */
-function splitAngleFor(rng: Rng, total: 90 | 180, a: number): Figure {
-  const base = total === 180 ? 0 : rng.pick([0, 15, 30]);
-  const knownFirst = rng.bool();
+/** splitAngle draws a right or straight angle split in two from direction base: the known part labeled a°, the other x, the known one first or second. */
+function splitAngle(total: 90 | 180, a: number, base: number, knownFirst: boolean): Figure {
   const first = knownFirst ? a : total - a;
   const o: Point = [0, 0];
   const [p, q, r] = [dir(base), dir(base + first), dir(base + total)];
@@ -309,102 +314,136 @@ function splitAngleFor(rng: Rng, total: 90 | 180, a: number): Figure {
   return figure(marks, `A ${kind[0]} angle split into an angle of ${a}° and an angle x.`, `一个${kind[1]}被分成 ${a}° 的角和角 x。`);
 }
 
-export const complementaryAndSupplementaryAngles: TopicDef = {
-  id: "complementary-and-supplementary-angles",
-  title: t("Complementary and Supplementary Angles", "互余与互补的角"),
-  summary: t("Find the complement and the supplement of an angle.", "求一个角的余角和补角。"),
-  prerequisites: ["angles-and-angle-measures"],
-  encompasses: [],
-  xp: 8,
-  standards: ["CCSS.7.G.B.5"],
-  knowledgePoints: [
-    {
-      id: "complementary-angles",
-      title: t("Complementary angles", "互余的角"),
-      explanation: t(
-        "Two angles are **complementary** when their measures add up to $90^\\circ$; each is the **complement** of the other. Two adjacent complementary angles together form a right angle.\n\nThe complement of $35^\\circ$ is $90^\\circ - 35^\\circ = 55^\\circ$.",
-        "和为 $90^\\circ$ 的两个角**互余**，每个角是另一个角的**余角**。两个相邻的互余角合起来是一个直角。\n\n$35^\\circ$ 的余角是 $90^\\circ - 35^\\circ = 55^\\circ$。",
+/** splitAngleFor draws a right or straight angle split in two: the known part labeled a°, the other x, in either order. */
+function splitAngleFor(rng: Rng, total: 90 | 180, a: number): Figure {
+  const base = total === 180 ? 0 : rng.pick([0, 15, 30]);
+  return splitAngle(total, a, base, rng.bool());
+}
+
+/** partnerProblem asks for the complement or supplement of a°, as a number or from a split figure, in labelled steps with a check. */
+function partnerProblem(rng: Rng, total: 90 | 180, a: number, offs: readonly (readonly [number, string, string])[]) {
+  const [word, wordZh, whole, wholeZh] =
+    total === 90 ? ["complement", "余角", "right", "直角"] : ["supplement", "补角", "straight", "平角"];
+  const pairWord = total === 90 ? ["Complementary", "互余"] : ["Supplementary", "互补"];
+  const inFigure = rng.bool();
+  const walk: Walk[] = [
+    [
+      ["Use the total", "用总和"],
+      inFigure
+        ? [
+            `The two angles make a ${whole} angle, so they add up to $${total}^\\circ$.`,
+            `两个角合成一个${wholeZh}，所以和为 $${total}^\\circ$。`,
+          ]
+        : [`${pairWord[0]} angles add up to $${total}^\\circ$.`, `${pairWord[1]}的两个角和为 $${total}^\\circ$。`],
+    ],
+    [
+      ["Subtract the known angle", "减去已知角"],
+      ["Take the known angle away from the total:", "从总和中减去已知角："],
+      [`${inFigure ? "x = " : ""}${total}^\\circ - ${a}^\\circ = ${total - a}^\\circ`],
+    ],
+  ];
+  return valued(
+    inFigure
+      ? [`The two angles in the figure form a ${whole} angle. Find $x$.`, `图中两个角合起来是一个${wholeZh}。求 $x$。`]
+      : [`What is the ${word} of ${article(a)} $${a}^\\circ$ angle?`, `$${a}^\\circ$ 的角的${wordZh}是多少度？`],
+    total - a,
+    walk,
+    [
+      `Add the two angles back: $${a}^\\circ + ${total - a}^\\circ = ${total}^\\circ$.`,
+      `把两个角加回去：$${a}^\\circ + ${total - a}^\\circ = ${total}^\\circ$。`,
+    ],
+    offs,
+    { unit: "°", ...(inFigure && { figure: splitAngleFor(rng, total, a) }) },
+  );
+}
+
+/** complementaryAndSupplementaryAngles finds the complement and the supplement of an angle. */
+export const complementaryAndSupplementaryAngles: TopicDef = withIntro(
+  {
+    id: "complementary-and-supplementary-angles",
+    title: t("Complementary and Supplementary Angles", "互余与互补的角"),
+    summary: t("Find the complement and the supplement of an angle.", "求一个角的余角和补角。"),
+    prerequisites: ["angles-and-angle-measures"],
+    encompasses: [],
+    xp: 8,
+    standards: ["CCSS.7.G.B.5"],
+    knowledgePoints: [
+      lesson(
+        "complementary-angles",
+        ["Complementary angles", "互余的角"],
+        [
+          [
+            "Two angles are **complementary** when their measures add up to $90^\\circ$; each is the **complement** of the other. Side by side, they make a right angle. The complement of $35^\\circ$ is $90^\\circ - 35^\\circ = 55^\\circ$.",
+            "和为 $90^\\circ$ 的两个角**互余**，每个角是另一个角的**余角**。两个角并排放在一起，合成一个直角。$35^\\circ$ 的余角是 $90^\\circ - 35^\\circ = 55^\\circ$。",
+          ],
+          ["$35^\\circ + 55^\\circ = 90^\\circ$, a right angle.", "$35^\\circ + 55^\\circ = 90^\\circ$，正好是直角。"],
+          [
+            "The complement comes from $90^\\circ$, not $180^\\circ$: $180^\\circ - 35^\\circ$ is the supplement.",
+            "余角是从 $90^\\circ$ 里减，不是 $180^\\circ$：$180^\\circ - 35^\\circ$ 是补角。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.int(8, 82);
+          return partnerProblem(rng, 90, a, [
+            [180 - a, "That is the supplement, taken from $180^\\circ$.", "这是补角，是从 $180^\\circ$ 里减的。"],
+            [a, "That is the given angle itself.", "这是已知角本身。"],
+            [90 + a, "That adds the angle to $90^\\circ$ instead of subtracting it.", "这是把这个角加到 $90^\\circ$ 上，而不是减去它。"],
+          ]);
+        },
+        splitAngle(90, 35, 15, true),
       ),
-      generate(rng) {
-        const a = rng.int(8, 82);
-        const wrong = [180 - a, a, 90 + a];
-        const solution = t(
-          `Complementary angles add up to $90^\\circ$:${steps(`x = 90^\\circ - ${a}^\\circ = ${90 - a}^\\circ`)}`,
-          `互余的两角和为 $90^\\circ$：${steps(`x = 90^\\circ - ${a}^\\circ = ${90 - a}^\\circ`)}`,
-        );
-        if (rng.bool()) {
-          return numberProblem({
-            prompt: t(`What is the complement of ${article(a)} $${a}^\\circ$ angle?`, `$${a}^\\circ$ 的角的余角是多少度？`),
-            answer: 90 - a,
-            form: "integer",
-            unit: "°",
-            wrong,
-            solution: t(
-              `The complement of $${a}^\\circ$ is:${steps(`90^\\circ - ${a}^\\circ = ${90 - a}^\\circ`)}`,
-              `$${a}^\\circ$ 的余角是：${steps(`90^\\circ - ${a}^\\circ = ${90 - a}^\\circ`)}`,
-            ),
-          });
-        }
-        return {
-          ...numberProblem({
-            prompt: t("The two angles in the figure form a right angle. Find $x$.", "图中两个角合起来是一个直角。求 $x$。"),
-            answer: 90 - a,
-            form: "integer",
-            unit: "°",
-            wrong,
-            solution,
-          }),
-          figure: splitAngleFor(rng, 90, a),
-        };
-      },
-    },
-    {
-      id: "supplementary-angles",
-      title: t("Supplementary angles", "互补的角"),
-      explanation: t(
-        "Two angles are **supplementary** when their measures add up to $180^\\circ$; each is the **supplement** of the other. Two adjacent supplementary angles together form a straight angle: they make a **linear pair**.\n\nThe supplement of $35^\\circ$ is $180^\\circ - 35^\\circ = 145^\\circ$.",
-        "和为 $180^\\circ$ 的两个角**互补**，每个角是另一个角的**补角**。两个相邻的互补角合起来是一个平角，称为**邻补角**。\n\n$35^\\circ$ 的补角是 $180^\\circ - 35^\\circ = 145^\\circ$。",
+      lesson(
+        "supplementary-angles",
+        ["Supplementary angles", "互补的角"],
+        [
+          [
+            "Two angles are **supplementary** when their measures add up to $180^\\circ$; each is the **supplement** of the other. Side by side, they make a straight angle, a **linear pair**. The supplement of $35^\\circ$ is $180^\\circ - 35^\\circ = 145^\\circ$.",
+            "和为 $180^\\circ$ 的两个角**互补**，每个角是另一个角的**补角**。两个角并排放在一起，合成一个平角，称为**邻补角**。$35^\\circ$ 的补角是 $180^\\circ - 35^\\circ = 145^\\circ$。",
+          ],
+          ["$35^\\circ + 145^\\circ = 180^\\circ$, a straight line.", "$35^\\circ + 145^\\circ = 180^\\circ$，正好是一条直线。"],
+          [
+            "A straight angle is $180^\\circ$, not $360^\\circ$: a whole turn is two straight angles.",
+            "平角是 $180^\\circ$，不是 $360^\\circ$：一整圈是两个平角。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.int(10, 170);
+          return partnerProblem(rng, 180, a, [
+            ...(a < 90
+              ? [[90 - a, "That is the complement, taken from $90^\\circ$.", "这是余角，是从 $90^\\circ$ 里减的。"] as const]
+              : []),
+            [a, "That is the given angle itself.", "这是已知角本身。"],
+            [
+              360 - a,
+              "That takes the angle from a whole turn, $360^\\circ$, not from a straight angle.",
+              "这是从一整圈 $360^\\circ$ 里减，而不是从平角里减。",
+            ],
+          ]);
+        },
+        splitAngle(180, 35, 0, true),
       ),
-      generate(rng) {
-        const a = rng.int(10, 170);
-        const wrong = [...(a < 90 ? [90 - a] : []), a, 360 - a];
-        if (rng.bool()) {
-          return numberProblem({
-            prompt: t(`What is the supplement of ${article(a)} $${a}^\\circ$ angle?`, `$${a}^\\circ$ 的角的补角是多少度？`),
-            answer: 180 - a,
-            form: "integer",
-            unit: "°",
-            wrong,
-            solution: t(
-              `The supplement of $${a}^\\circ$ is:${steps(`180^\\circ - ${a}^\\circ = ${180 - a}^\\circ`)}`,
-              `$${a}^\\circ$ 的补角是：${steps(`180^\\circ - ${a}^\\circ = ${180 - a}^\\circ`)}`,
-            ),
-          });
-        }
-        return {
-          ...numberProblem({
-            prompt: t("The two angles in the figure form a straight angle. Find $x$.", "图中两个角合起来是一个平角。求 $x$。"),
-            answer: 180 - a,
-            form: "integer",
-            unit: "°",
-            wrong,
-            solution: t(
-              `Angles that form a straight angle add up to $180^\\circ$:${steps(`x = 180^\\circ - ${a}^\\circ = ${180 - a}^\\circ`)}`,
-              `合成平角的两角和为 $180^\\circ$：${steps(`x = 180^\\circ - ${a}^\\circ = ${180 - a}^\\circ`)}`,
-            ),
-          }),
-          figure: splitAngleFor(rng, 180, a),
-        };
-      },
-    },
+    ],
+  },
+  [
+    "A door opened $30^\\circ$ from the wall leaves $60^\\circ$ to swing before it stands square to the wall at $90^\\circ$.",
+    "一扇门从墙边打开了 $30^\\circ$，再转 $60^\\circ$ 就和墙成 $90^\\circ$ 的直角。",
   ],
-};
+  ["$30^\\circ + 60^\\circ = 90^\\circ$.", "$30^\\circ + 60^\\circ = 90^\\circ$。"],
+  [
+    "find the complement and the supplement of an angle, and split right and straight angles.",
+    "学习求一个角的余角和补角，并把直角和平角分开计算。",
+  ],
+);
 
 /** chain writes solution steps, dropping a line that repeats the one before it. */
 const chain = (...lines: string[]) => steps(...lines.filter((l, i) => l !== lines[i - 1]));
 
 /** intOr is a / b when it is a whole number, and fallback otherwise. */
 const intOr = (a: number, b: number, fallback: number) => (b !== 0 && Number.isInteger(a / b) ? a / b : fallback);
+
+/** whenWhole lists a / b with its reason only when it is a whole number. */
+const whenWhole = (a: number, b: number, en: string, zh: string): (readonly [number, string, string])[] =>
+  b !== 0 && Number.isInteger(a / b) ? [[a / b, en, zh]] : [];
 
 /** equalSteps solves c1·x + d1 = c2·x + d2 (c1 ≠ c2), collecting x on the side with the larger coefficient. */
 function equalSteps(c1: number, d1: number, c2: number, d2: number): string[] {
@@ -435,140 +474,330 @@ function crossingLines(base: number, a: number, arcs: readonly (readonly [number
 
 const crossingBases = [0, 10, 20, 160, 170];
 
-export const verticalAngles: TopicDef = {
-  id: "vertical-angles",
-  title: t("Vertical Angles", "对顶角"),
-  summary: t(
-    "Use vertical angles and linear pairs to find unknown angles where two lines cross.",
-    "利用对顶角和邻补角求两直线相交处的未知角。",
-  ),
-  prerequisites: ["complementary-and-supplementary-angles", "equations-with-variables-on-both-sides"],
-  encompasses: [],
-  xp: 10,
-  standards: ["CCSS.7.G.B.5"],
-  knowledgePoints: [
-    {
-      id: "vertical-angles-and-linear-pairs",
-      figure: gradeDrawings3["vertical-angles#vertical-angles-and-linear-pairs"],
-      title: t("Vertical angles and linear pairs", "对顶角与邻补角"),
-      explanation: t(
-        "Two crossing lines form four angles. Opposite angles are **vertical angles**, and they are equal. Neighboring angles form a linear pair, so they are supplementary.\n\nIf one of the four angles is $50^\\circ$, the angle opposite it is also $50^\\circ$, and each of the other two is $180^\\circ - 50^\\circ = 130^\\circ$.",
-        "两条相交直线形成四个角。相对的两个角是**对顶角**，它们相等。相邻的两个角是邻补角，所以互补。\n\n若四个角中有一个是 $50^\\circ$，它的对顶角也是 $50^\\circ$，另外两个角都是 $180^\\circ - 50^\\circ = 130^\\circ$。",
-      ),
-      generate(rng) {
-        const a = rng.pick([rng.int(30, 80), rng.int(100, 150)]);
-        const known = rng.int(0, 3);
-        const opposite = rng.bool();
-        const asked = (known + (opposite ? 2 : rng.pick([1, 3]))) % 4;
-        const m = known % 2 === 0 ? a : 180 - a;
-        const answer = opposite ? m : 180 - m;
-        return {
-          ...numberProblem({
-            prompt: t("Two lines cross as shown. Find $x$.", "两条直线如图相交。求 $x$。"),
+/** subst writes c·x + d with a number put in for x: "3 \\cdot 20 + 10". */
+function subst(c: number, d: number, x: number): string {
+  const head = c === 1 ? `${x}` : `${c} \\cdot ${x}`;
+  return d === 0 ? head : `${head} ${d < 0 ? "-" : "+"} ${Math.abs(d)}`;
+}
+
+/** verticalAngles finds angles where two lines cross, from vertical angles and linear pairs. */
+export const verticalAngles: TopicDef = withIntro(
+  {
+    id: "vertical-angles",
+    title: t("Vertical Angles", "对顶角"),
+    summary: t(
+      "Use vertical angles and linear pairs to find unknown angles where two lines cross.",
+      "利用对顶角和邻补角求两直线相交处的未知角。",
+    ),
+    prerequisites: ["complementary-and-supplementary-angles", "equations-with-variables-on-both-sides"],
+    encompasses: [],
+    xp: 10,
+    standards: ["CCSS.7.G.B.5"],
+    knowledgePoints: [
+      lesson(
+        "vertical-angles-and-linear-pairs",
+        ["Vertical angles and linear pairs", "对顶角与邻补角"],
+        [
+          [
+            "Two crossing lines form four angles. Opposite angles are **vertical angles**, and they are equal. Neighboring angles form a linear pair, so they add up to $180^\\circ$. If one angle is $50^\\circ$, the one opposite is $50^\\circ$, and each of the other two is $180^\\circ - 50^\\circ = 130^\\circ$.",
+            "两条相交直线形成四个角。相对的两个角是**对顶角**，它们相等。相邻的两个角是邻补角，和为 $180^\\circ$。若一个角是 $50^\\circ$，它的对顶角也是 $50^\\circ$，另外两个角都是 $180^\\circ - 50^\\circ = 130^\\circ$。",
+          ],
+          ["All four add up to a whole turn: $50 + 130 + 50 + 130 = 360$.", "四个角加起来是一整圈：$50 + 130 + 50 + 130 = 360$。"],
+          [
+            "Vertical angles sit across the crossing from each other, not side by side; side by side they add to $180^\\circ$.",
+            "对顶角隔着交点相对，不是并排的；并排的两个角和为 $180^\\circ$。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.pick([rng.int(30, 80), rng.int(100, 150)]);
+          const known = rng.int(0, 3);
+          const opposite = rng.bool();
+          const asked = (known + (opposite ? 2 : rng.pick([1, 3]))) % 4;
+          const m = known % 2 === 0 ? a : 180 - a;
+          const answer = opposite ? m : 180 - m;
+          return valued(
+            ["Two lines cross as shown. Find $x$.", "两条直线如图相交。求 $x$。"],
             answer,
-            form: "integer",
-            unit: "°",
-            wrong: [opposite ? 180 - m : m, ...(m < 90 ? [90 - m] : []), 360 - m],
-            solution: opposite
-              ? t(
-                  `The angle $x$ is opposite the $${m}^\\circ$ angle. Vertical angles are equal, so $x = ${m}^\\circ$.`,
-                  `角 $x$ 与 $${m}^\\circ$ 的角是对顶角。对顶角相等，所以 $x = ${m}^\\circ$。`,
-                )
-              : t(
-                  `The angle $x$ and the $${m}^\\circ$ angle form a linear pair, so they are supplementary:${steps(`x = 180^\\circ - ${m}^\\circ = ${180 - m}^\\circ`)}`,
-                  `角 $x$ 与 $${m}^\\circ$ 的角是邻补角，所以互补：${steps(`x = 180^\\circ - ${m}^\\circ = ${180 - m}^\\circ`)}`,
-                ),
-          }),
-          figure: crossingLines(
-            rng.pick(crossingBases),
+            opposite
+              ? [
+                  [
+                    ["Name the pair", "判断角的关系"],
+                    [
+                      `$x$ is across the crossing from the $${m}^\\circ$ angle, so they are vertical angles.`,
+                      `$x$ 与 $${m}^\\circ$ 的角隔着交点相对，所以是对顶角。`,
+                    ],
+                  ],
+                  [["Use equal angles", "用相等关系"], ["Vertical angles are equal:", "对顶角相等："], [`x = ${m}^\\circ`]],
+                ]
+              : [
+                  [
+                    ["Name the pair", "判断角的关系"],
+                    [
+                      `$x$ sits beside the $${m}^\\circ$ angle on a straight line, so they form a linear pair.`,
+                      `$x$ 与 $${m}^\\circ$ 的角在一条直线上并排，所以是邻补角。`,
+                    ],
+                  ],
+                  [
+                    ["Subtract from 180°", "用 180° 相减"],
+                    ["A linear pair adds up to $180^\\circ$:", "邻补角和为 $180^\\circ$："],
+                    [`x = 180^\\circ - ${m}^\\circ = ${180 - m}^\\circ`],
+                  ],
+                ],
+            opposite
+              ? [
+                  `The angle between them makes a linear pair with each: it is $${180 - m}^\\circ$, and $180^\\circ - ${180 - m}^\\circ = ${m}^\\circ$.`,
+                  `夹在中间的角与它们都是邻补角：它是 $${180 - m}^\\circ$，$180^\\circ - ${180 - m}^\\circ = ${m}^\\circ$。`,
+                ]
+              : [
+                  `$${m}^\\circ + ${180 - m}^\\circ = 180^\\circ$, a straight line.`,
+                  `$${m}^\\circ + ${180 - m}^\\circ = 180^\\circ$，正好是一条直线。`,
+                ],
+            [
+              opposite
+                ? [
+                    180 - m,
+                    "That is the neighboring angle; $x$ is across the crossing, so it is equal.",
+                    "这是相邻的角；$x$ 隔着交点相对，所以相等。",
+                  ]
+                : [m, "That treats $x$ as opposite the known angle, but it is beside it.", "这是把 $x$ 当成了对顶角，但它与已知角相邻。"],
+              ...(m < 90
+                ? [
+                    [
+                      90 - m,
+                      "That is the complement, but the angles here meet on a straight line.",
+                      "这是余角，但这里的角是在一条直线上相接的。",
+                    ] as const,
+                  ]
+                : []),
+              [360 - m, "That takes the angle from a whole turn instead of a straight line.", "这是从一整圈里减，而不是从一条直线里减。"],
+            ],
+            {
+              unit: "°",
+              figure: crossingLines(
+                rng.pick(crossingBases),
+                a,
+                [
+                  [known, deg(m)],
+                  [asked, "x"],
+                ],
+                `Two lines crossing at a point. One of the four angles measures ${m}°; the angle ${opposite ? "opposite" : "next to"} it is x.`,
+                `两条直线相交于一点。四个角中有一个是 ${m}°，与它${opposite ? "相对" : "相邻"}的角是 x。`,
+              ),
+            },
+          );
+        },
+        drawn(gradeDrawings3["vertical-angles#vertical-angles-and-linear-pairs"]),
+      ),
+      lesson(
+        "equations-from-crossing-lines",
+        ["Equations from crossing lines", "由相交直线列方程"],
+        [
+          [
+            "When angles are written with a variable, the angle relationships give equations: vertical angles are equal, and a linear pair adds up to $180^\\circ$. If vertical angles measure $(3x + 10)^\\circ$ and $(5x - 30)^\\circ$, then $3x + 10 = 5x - 30$, so $40 = 2x$ and $x = 20$.",
+            "当角用含变量的式子表示时，角之间的关系给出方程：对顶角相等，邻补角之和为 $180^\\circ$。若一对对顶角为 $(3x + 10)^\\circ$ 和 $(5x - 30)^\\circ$，则 $3x + 10 = 5x - 30$，所以 $40 = 2x$，$x = 20$。",
+          ],
+          [
+            "Both angles come out equal at $x = 20$: $3 \\cdot 20 + 10 = 70$ and $5 \\cdot 20 - 30 = 70$.",
+            "$x = 20$ 时两个角相等：$3 \\cdot 20 + 10 = 70$，$5 \\cdot 20 - 30 = 70$。",
+          ],
+          [
+            "Check which pair you have first: setting a linear pair equal, or adding vertical angles to $180^\\circ$, gives the wrong equation.",
+            "先看清是哪一种角：把邻补角设为相等，或把对顶角加成 $180^\\circ$，列出的方程都是错的。",
+          ],
+        ],
+        (rng) => {
+          const base = rng.pick(crossingBases);
+          const known = rng.int(0, 3);
+          const vertical = rng.bool();
+          const { x, c1, d1, c2, d2, m } = expressionPair(rng, vertical);
+          const a = known % 2 === 0 ? m : 180 - m;
+          const fig = crossingLines(
+            base,
             a,
             [
-              [known, deg(m)],
-              [asked, "x"],
+              [known, angleLabel(c1, d1)],
+              [(known + (vertical ? 2 : 1)) % 4, angleLabel(c2, d2)],
             ],
-            `Two lines crossing at a point. One of the four angles measures ${m}°; the angle ${opposite ? "opposite" : "next to"} it is x.`,
-            `两条直线相交于一点。四个角中有一个是 ${m}°，与它${opposite ? "相对" : "相邻"}的角是 x。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "equations-from-crossing-lines",
-      figure: gradeDrawings3["vertical-angles#equations-from-crossing-lines"],
-      title: t("Equations from crossing lines", "由相交直线列方程"),
-      explanation: t(
-        "When angles are written with a variable, the angle relationships give equations: vertical angles are equal, and a linear pair adds up to $180^\\circ$.\n\nIf vertical angles measure $(3x + 10)^\\circ$ and $(5x - 30)^\\circ$, then $3x + 10 = 5x - 30$, so $40 = 2x$ and $x = 20$. Each angle is $3 \\cdot 20 + 10 = 70^\\circ$.",
-        "当角用含变量的式子表示时，角之间的关系给出方程：对顶角相等，邻补角之和为 $180^\\circ$。\n\n若一对对顶角为 $(3x + 10)^\\circ$ 和 $(5x - 30)^\\circ$，则 $3x + 10 = 5x - 30$，所以 $40 = 2x$，$x = 20$。每个角都是 $3 \\cdot 20 + 10 = 70^\\circ$。",
+            `Two lines crossing at a point, with two ${vertical ? "opposite" : "neighboring"} angles marked ${angleLabel(c1, d1)} and ${angleLabel(c2, d2)}.`,
+            `两条直线相交于一点，两个${vertical ? "相对" : "相邻"}的角分别标为 ${angleLabel(c1, d1)} 和 ${angleLabel(c2, d2)}。`,
+          );
+          const pair = [`$${angleTex(c1, d1)}$ and $${angleTex(c2, d2)}$`, `$${angleTex(c1, d1)}$ 和 $${angleTex(c2, d2)}$`];
+          const lines = vertical
+            ? equalSteps(c1, d1, c2, d2)
+            : sumSteps(
+                [
+                  [c1, d1],
+                  [c2, d2],
+                ],
+                180,
+              );
+          const other = vertical ? m : 180 - m;
+          return valued(
+            ["Two lines cross as shown. Find $x$.", "两条直线如图相交。求 $x$。"],
+            x,
+            [
+              vertical
+                ? [
+                    ["Write the equation", "列方程"],
+                    [`${pair[0]} are vertical angles, so they are equal:`, `${pair[1]} 是对顶角，所以相等：`],
+                    lines.slice(0, 1),
+                  ]
+                : [
+                    ["Write the equation", "列方程"],
+                    [`${pair[0]} form a linear pair, so they add up to $180^\\circ$:`, `${pair[1]} 是邻补角，和为 $180^\\circ$：`],
+                    lines.slice(0, 1),
+                  ],
+              [
+                ["Solve for x", "解出 x"],
+                ["Collect the $x$ terms and undo each operation:", "合并含 $x$ 的项，再逐步还原："],
+                lines.slice(1).filter((l, i, all) => l !== (i === 0 ? lines[0] : all[i - 1])),
+              ],
+            ],
+            [
+              `At $x = ${x}$: $${subst(c1, d1, x)} = ${m}$ and $${subst(c2, d2, x)} = ${other}$, ${vertical ? "equal, as vertical angles must be" : `and $${m} + ${other} = 180$`}.`,
+              `$x = ${x}$ 时：$${subst(c1, d1, x)} = ${m}$，$${subst(c2, d2, x)} = ${other}$，${vertical ? "两者相等，符合对顶角" : `$${m} + ${other} = 180$`}。`,
+            ],
+            vertical
+              ? [
+                  [m, "That is the measure of the angles, not $x$.", "这是角的度数，不是 $x$。"],
+                  ...whenWhole(
+                    180 - d1 - d2,
+                    c1 + c2,
+                    "That adds the angles to $180^\\circ$, but vertical angles are equal.",
+                    "这是让两角之和为 $180^\\circ$，但对顶角是相等的。",
+                  ),
+                  ...whenWhole(d1 - d2, c1 - c2, "That moves the constants across with the wrong signs.", "移项时常数的符号弄错了。"),
+                ]
+              : [
+                  [m, "That is the measure of an angle, not $x$.", "这是一个角的度数，不是 $x$。"],
+                  ...whenWhole(
+                    d2 - d1,
+                    c1 - c2,
+                    "That sets the angles equal, but a linear pair adds up to $180^\\circ$.",
+                    "这是让两角相等，但邻补角之和为 $180^\\circ$。",
+                  ),
+                  ...whenWhole(
+                    90 - d1 - d2,
+                    c1 + c2,
+                    "That adds the angles to $90^\\circ$, but a linear pair makes a straight line.",
+                    "这是让两角之和为 $90^\\circ$，但邻补角合成一条直线。",
+                  ),
+                ],
+            { solveFor: "x", figure: fig },
+          );
+        },
+        drawn(gradeDrawings3["vertical-angles#equations-from-crossing-lines"]),
       ),
-      keyPrerequisites: ["equations-with-variables-on-both-sides"],
-      generate(rng) {
-        const base = rng.pick(crossingBases);
-        const known = rng.int(0, 3);
-        const vertical = rng.bool();
-        const { x, c1, d1, c2, d2, m } = expressionPair(rng, vertical);
-        const a = known % 2 === 0 ? m : 180 - m;
-        const fig = crossingLines(
-          base,
-          a,
-          [
-            [known, angleLabel(c1, d1)],
-            [(known + (vertical ? 2 : 1)) % 4, angleLabel(c2, d2)],
-          ],
-          `Two lines crossing at a point, with two ${vertical ? "opposite" : "neighboring"} angles marked ${angleLabel(c1, d1)} and ${angleLabel(c2, d2)}.`,
-          `两条直线相交于一点，两个${vertical ? "相对" : "相邻"}的角分别标为 ${angleLabel(c1, d1)} 和 ${angleLabel(c2, d2)}。`,
-        );
-        const pair = `$${angleTex(c1, d1)}$, $${angleTex(c2, d2)}$`;
-        if (vertical) {
-          return {
-            ...numberProblem({
-              prompt: t(`Two lines cross as shown. Find $x$.`, `两条直线如图相交。求 $x$。`),
-              answer: x,
-              form: "integer",
-              solveFor: "x",
-              wrong: [m, intOr(180 - d1 - d2, c1 + c2, -x), -x],
-              solution: t(
-                `The angles ${pair} are vertical angles, so they are equal:${chain(...equalSteps(c1, d1, c2, d2))}`,
-                `角 ${pair} 是对顶角，所以相等：${chain(...equalSteps(c1, d1, c2, d2))}`,
-              ),
-            }),
-            figure: fig,
-          };
-        }
-        return {
-          ...numberProblem({
-            prompt: t(`Two lines cross as shown. Find $x$.`, `两条直线如图相交。求 $x$。`),
-            answer: x,
-            form: "integer",
-            solveFor: "x",
-            wrong: [m, c1 === c2 ? -x : intOr(d2 - d1, c1 - c2, -x), intOr(90 - d1 - d2, c1 + c2, -x)],
-            solution: t(
-              `The angles ${pair} form a linear pair, so they add up to $180^\\circ$:${chain(
-                ...sumSteps(
-                  [
-                    [c1, d1],
-                    [c2, d2],
-                  ],
-                  180,
-                ),
-              )}`,
-              `角 ${pair} 是邻补角，和为 $180^\\circ$：${chain(
-                ...sumSteps(
-                  [
-                    [c1, d1],
-                    [c2, d2],
-                  ],
-                  180,
-                ),
-              )}`,
-            ),
-          }),
-          figure: fig,
-        };
-      },
-    },
+    ],
+  },
+  [
+    "Two straight roads cross at a junction. The corner one driver sees and the corner across the junction from it open by the same amount.",
+    "两条笔直的路在路口相交。一个司机看到的那个角，和路口对面的那个角张开的大小一样。",
   ],
-};
+  [
+    "Each of those corners and the corner between them fill a straight road: both are $180^\\circ$ minus the same angle.",
+    "这两个角都和夹在中间的角合成一条直路：它们都是 $180^\\circ$ 减去同一个角。",
+  ],
+  [
+    "use vertical angles and linear pairs to find angles where two lines cross, and solve equations from them.",
+    "学习利用对顶角和邻补角求两直线相交处的角，并由它们列方程求解。",
+  ],
+);
 
+/** theAnglesAroundACrossing is the third knowledge point of vertical angles: the four angles at a crossing from the sum of one vertical pair. */
+export const theAnglesAroundACrossing = lesson(
+  "the-angles-around-a-crossing",
+  ["The angles around a crossing", "交点周围的角"],
+  [
+    [
+      "Two crossing lines make four angles that total $360^\\circ$, in two equal pairs. If one vertical pair adds up to $100^\\circ$, each of those angles is $50^\\circ$, each of the other two is $180^\\circ - 50^\\circ = 130^\\circ$, and those two add up to $260^\\circ$.",
+      "两条相交直线形成四个角，总和 $360^\\circ$，并且两两相等。若一对对顶角之和是 $100^\\circ$，这两个角各是 $50^\\circ$，另外两个角各是 $180^\\circ - 50^\\circ = 130^\\circ$，它们的和是 $260^\\circ$。",
+    ],
+    ["The whole turn checks it: $100 + 260 = 360$.", "用一整圈检验：$100 + 260 = 360$。"],
+    ["The sum of the pair is two angles; halve it before using the linear pair.", "这一对的和是两个角的和；先取一半，再用邻补角关系。"],
+  ],
+  (rng) => {
+    const each = rng.int(16, 80);
+    const askEach = rng.bool();
+    const answer = askEach ? 180 - each : 360 - 2 * each;
+    return valued(
+      [
+        `Two lines cross, and one pair of vertical angles has a sum of $${2 * each}^\\circ$. What is ${askEach ? "the measure of each of the other two angles" : "the sum of the other two angles"}?`,
+        `两条直线相交，一对对顶角的和是 $${2 * each}^\\circ$。另外两个角${askEach ? "各是多少度" : "的和是多少度"}？`,
+      ],
+      answer,
+      [
+        [
+          ["Halve the pair", "把这一对取一半"],
+          ["Vertical angles are equal, so each is half the sum:", "对顶角相等，所以每个是和的一半："],
+          [`${2 * each}^\\circ \\div 2 = ${each}^\\circ`],
+        ],
+        [
+          ["Use the linear pair", "用邻补角"],
+          ["Each other angle sits beside one of these on a straight line:", "其余每个角都与其中一个角在一条直线上相邻："],
+          [
+            `180^\\circ - ${each}^\\circ = ${180 - each}^\\circ`,
+            ...(askEach ? [] : [`2 \\times ${180 - each}^\\circ = ${360 - 2 * each}^\\circ`]),
+          ],
+        ],
+      ],
+      askEach
+        ? [
+            `All four angles make a whole turn: $${each} + ${180 - each} + ${each} + ${180 - each} = 360$.`,
+            `四个角合成一整圈：$${each} + ${180 - each} + ${each} + ${180 - each} = 360$。`,
+          ]
+        : [
+            `The whole turn is $360^\\circ$: $360 - ${2 * each} = ${360 - 2 * each}$.`,
+            `一整圈是 $360^\\circ$：$360 - ${2 * each} = ${360 - 2 * each}$。`,
+          ],
+      askEach
+        ? [
+            [each, "That is an angle of the given pair, not one of the other two.", "这是已知那一对中的角，不是另外两个角。"],
+            [
+              180 - 2 * each,
+              "That takes the whole pair from $180^\\circ$ instead of one angle.",
+              "这是从 $180^\\circ$ 里减去整对角，而不是减去一个角。",
+            ],
+            [360 - 2 * each, "That is the sum of the other two, not each one.", "这是另外两个角的和，不是每一个。"],
+          ]
+        : [
+            [2 * each, "That is the sum of the given pair.", "这是已知那一对的和。"],
+            [180 - each, "That is only one of the other two angles.", "这只是另外两个角中的一个。"],
+            [
+              180 - 2 * each,
+              "That takes the pair from $180^\\circ$ instead of from a whole turn.",
+              "这是从 $180^\\circ$ 里减，而不是从一整圈里减。",
+            ],
+          ],
+      {
+        unit: "°",
+        figure: crossingLines(
+          10,
+          each,
+          [
+            [0, "a"],
+            [2, "a"],
+            [1, "?"],
+          ],
+          "Two lines crossing at a point, with the vertical pair marked a and a neighboring angle marked with a question mark.",
+          "两条直线相交于一点，一对对顶角标为 a，与它们相邻的一个角标为问号。",
+        ),
+      },
+    );
+  },
+  crossingLines(
+    10,
+    50,
+    [
+      [0, "50°"],
+      [1, "130°"],
+      [2, "50°"],
+      [3, "130°"],
+    ],
+    "Two lines crossing with angles of 50°, 130°, 50° and 130° around the point.",
+    "两条直线相交，交点周围的角依次是 50°、130°、50°、130°。",
+  ),
+);
 /** expressionPair picks x and angle expressions c1·x + d1 and c2·x + d2 that are equal (or supplementary) at x; m is the first angle's measure. */
 function expressionPair(
   rng: Rng,
@@ -884,11 +1113,7 @@ export const parallelLinesAndTransversals: TopicDef = withIntro(
               x,
               [
                 [["Write the equation", "列方程"], [`${rule.en}:`, `${rule["zh-CN"]}：`], work.slice(0, pair.equal ? 1 : 2)],
-                [
-                  ["Solve", "求解"],
-                  ["Collect $x$ on one side, then divide:", "把 $x$ 集中到一边，再相除："],
-                  work.slice(pair.equal ? 1 : 2),
-                ],
+                [["Solve", "求解"], collecting(work.slice(pair.equal ? 1 : 2)), work.slice(pair.equal ? 1 : 2)],
               ],
               [
                 `Put $x = ${x}$ in: $${worked(c1, d1, x)}$ and $${worked(c2, d2, x)}$, ${pair.equal ? "the same measure" : `and $${m} + ${m2} = 180$`}.`,
@@ -1453,113 +1678,347 @@ function triangleBySides(a: number, b: number, c: number): [Point, Point, Point]
 const sideKinds: readonly Text[] = [t("Equilateral", "等边三角形"), t("Isosceles", "等腰三角形"), t("Scalene", "不等边三角形")];
 const angleKindsOfTriangles: readonly Text[] = [t("Acute", "锐角三角形"), t("Right", "直角三角形"), t("Obtuse", "钝角三角形")];
 
-export const classifyingTriangles: TopicDef = {
-  id: "classifying-triangles",
-  title: t("Classifying Triangles", "三角形的分类"),
-  summary: t("Classify triangles by their sides and by their angles.", "按边和按角给三角形分类。"),
-  prerequisites: ["angles-and-angle-measures"],
-  encompasses: [],
-  xp: 6,
-  standards: ["CCSS.4.G.A.2"],
-  knowledgePoints: [
-    {
-      id: "classifying-by-sides",
-      figure: gradeDrawings3["classifying-triangles#classifying-by-sides"],
-      title: t("Classifying by sides", "按边分类"),
-      explanation: t(
-        "By its sides, a triangle is\n\n- **equilateral** when all three sides are equal;\n- **isosceles** when at least two sides are equal;\n- **scalene** when no two sides are equal.\n\nEqual sides are often marked with matching tick marks. Every equilateral triangle is also isosceles; we name it by the more specific word.",
-        "按边分，三角形可以是\n\n- **等边三角形**：三条边都相等；\n- **等腰三角形**：至少两条边相等；\n- **不等边三角形**：任意两条边都不相等。\n\n相等的边常用相同的短线标出。等边三角形也是等腰三角形；我们用更具体的名称称呼它。",
-      ),
-      generate(rng) {
-        const kind = rng.int(0, 2);
-        let sides: [number, number, number];
-        for (;;) {
-          const s = rng.int(4, 15);
-          const u = rng.int(4, 15);
-          const v = rng.int(4, 15);
-          sides = kind === 0 ? [s, s, s] : kind === 1 ? (rng.shuffle([s, s, u]) as [number, number, number]) : [s, u, v];
-          const [p, q, r] = sides;
+/** classifyingTriangles names a triangle by its sides and by its angles. */
+export const classifyingTriangles: TopicDef = withIntro(
+  {
+    id: "classifying-triangles",
+    title: t("Classifying Triangles", "三角形的分类"),
+    summary: t("Classify triangles by their sides and by their angles.", "按边和按角给三角形分类。"),
+    prerequisites: ["angles-and-angle-measures"],
+    encompasses: [],
+    xp: 6,
+    standards: ["CCSS.4.G.A.2"],
+    knowledgePoints: [
+      lesson(
+        "classifying-by-sides",
+        ["Classifying by sides", "按边分类"],
+        [
+          [
+            "By its sides, a triangle is **equilateral** when all three sides are equal, **isosceles** when at least two sides are equal, and **scalene** when no two sides are equal. Sides $5$, $5$, $5$ make an equilateral triangle; $5$, $5$, $8$ an isosceles one; $5$, $6$, $8$ a scalene one. Every equilateral triangle is also isosceles, and we call it by the more exact name, equilateral.",
+            "按边分，三条边都相等的是**等边三角形**，至少两条边相等的是**等腰三角形**，任意两条边都不相等的是**不等边三角形**。边长 $5$、$5$、$5$ 是等边三角形；$5$、$5$、$8$ 是等腰三角形；$5$、$6$、$8$ 是不等边三角形。等边三角形也是等腰三角形，我们用更准确的名称叫它等边三角形。",
+          ],
+          [
+            "Count the different lengths: one length means equilateral, two mean isosceles, three mean scalene.",
+            "数一数有几种不同的长度：一种是等边，两种是等腰，三种是不等边。",
+          ],
+          [
+            "Matching tick marks show equal sides; read the numbers too, not only how the sides look.",
+            "相同的短线表示边相等；也要看边上的数，不能只看样子。",
+          ],
+        ],
+        (rng) => {
+          const kind = rng.int(0, 2);
+          let sides: [number, number, number];
+          for (;;) {
+            const s = rng.int(4, 15);
+            const u = rng.int(4, 15);
+            const v = rng.int(4, 15);
+            sides = kind === 0 ? [s, s, s] : kind === 1 ? (rng.shuffle([s, s, u]) as [number, number, number]) : [s, u, v];
+            const [p, q, r] = sides;
+            const sorted = [...sides].sort((m, n) => m - n);
+            if (sorted[0]! + sorted[1]! <= sorted[2]! + 1) continue;
+            if (kind === 1 && u === s) continue;
+            if (kind === 2 && (p === q || q === r || p === r)) continue;
+            if (Math.max(p, q, r) > 2.2 * Math.min(p, q, r)) continue;
+            break;
+          }
+          const [a, b, c] = sides;
+          const points = triangleBySides(a, b, c);
+          const [pa, pb, pc] = points;
           const sorted = [...sides].sort((m, n) => m - n);
-          if (sorted[0]! + sorted[1]! <= sorted[2]! + 1) continue;
-          if (kind === 1 && u === s) continue;
-          if (kind === 2 && (p === q || q === r || p === r)) continue;
-          if (Math.max(p, q, r) > 2.2 * Math.min(p, q, r)) continue;
-          break;
-        }
-        const [a, b, c] = sides;
-        const points = triangleBySides(a, b, c);
-        const [pa, pb, pc] = points;
-        const reason = [
-          t("all three sides are equal", "三条边都相等"),
-          t("exactly two sides are equal", "恰有两条边相等"),
-          t("no two sides are equal", "任意两条边都不相等"),
-        ][kind]!;
-        return {
-          ...choiceProblem({
-            prompt: t("Classify the triangle by its sides.", "按边给这个三角形分类。"),
-            options: sideKinds,
-            correct: kind,
-            solution: t(
-              `The sides are $${c}$, $${a}$ and $${b}$: ${reason.en}. The triangle is ${sideKinds[kind]!.en.toLowerCase()}.`,
-              `三条边是 $${c}$、$${a}$、$${b}$：${reason["zh-CN"]}，所以是${sideKinds[kind]!["zh-CN"]}。`,
-            ),
-          }),
-          figure: figure(
+          const twin = sorted[1] === sorted[0] ? sorted[0]! : sorted[1]!;
+          const name = (k: number): Pair => [sideKinds[k]!.en, sideKinds[k]!["zh-CN"]];
+          const compare: Pair[] = [
+            ["All three sides are equal.", "三条边都相等。"],
+            [`Exactly two sides are equal: two of them are $${twin}$.`, `恰有两条边相等：有两条都是 $${twin}$。`],
+            ["No two sides are equal.", "任意两条边都不相等。"],
+          ];
+          const reasons: Record<number, Pair> =
+            kind === 0
+              ? {
+                  1: [
+                    "Isosceles is true, but all three sides are equal, so the more exact name is equilateral.",
+                    "等腰也对，但三条边都相等，更准确的名称是等边三角形。",
+                  ],
+                  2: ["All three sides are equal, so it is not scalene.", "三条边都相等，所以不是不等边三角形。"],
+                }
+              : kind === 1
+                ? {
+                    0: [`Only two sides are $${twin}$; the third side is different.`, `只有两条边是 $${twin}$，第三条边不同。`],
+                    2: [`Two sides are both $${twin}$, so it is not scalene.`, `有两条边都是 $${twin}$，所以不是不等边三角形。`],
+                  }
+                : {
+                    0: ["The three sides are all different, so they are not all equal.", "三条边各不相同，所以不是三条边都相等。"],
+                    1: ["No two sides are equal, so it has no pair of equal sides.", "任意两条边都不相等，所以没有一对相等的边。"],
+                  };
+          const count = new Set(sides).size;
+          return chosen(
+            rng,
+            ["Classify the triangle by its sides.", "按边给这个三角形分类。"],
+            name(kind),
+            [0, 1, 2].filter((k) => k !== kind).map((k): Wrong => [name(k), reasons[k]![0], reasons[k]![1]]),
             [
-              { kind: "polygon", points },
-              { kind: "side", a: pa, b: pb, text: `${c}` },
-              { kind: "side", a: pb, b: pc, text: `${a}` },
-              { kind: "side", a: pc, b: pa, text: `${b}` },
+              [
+                ["Read the sides", "读出三条边"],
+                [`The sides are $${c}$, $${a}$ and $${b}$.`, `三条边是 $${c}$、$${a}$、$${b}$。`],
+              ],
+              [
+                ["Compare them", "比较它们"],
+                [
+                  `${compare[kind]![0]} The triangle is ${sideKinds[kind]!.en.toLowerCase()}.`,
+                  `${compare[kind]![1]}所以是${sideKinds[kind]!["zh-CN"]}。`,
+                ],
+              ],
             ],
-            `A triangle with sides ${c}, ${a} and ${b}.`,
-            `一个三角形，三条边分别是 ${c}、${a}、${b}。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "classifying-by-angles",
-      figure: gradeDrawings3["classifying-triangles#classifying-by-angles"],
-      title: t("Classifying by angles", "按角分类"),
-      explanation: t(
-        "By its largest angle, a triangle is\n\n- **acute** when all three angles are acute;\n- **right** when one angle is a right angle;\n- **obtuse** when one angle is obtuse.\n\nA triangle cannot have two right or obtuse angles, so its largest angle decides.",
-        "按最大的角分，三角形可以是\n\n- **锐角三角形**：三个角都是锐角；\n- **直角三角形**：有一个角是直角；\n- **钝角三角形**：有一个角是钝角。\n\n三角形不可能有两个直角或钝角，所以由最大的角决定。",
+            [
+              `There ${count === 1 ? "is $1$ different length" : `are $${count}$ different lengths`}, which means ${sideKinds[kind]!.en.toLowerCase()}.`,
+              `一共有 $${count}$ 种不同的长度，说明是${sideKinds[kind]!["zh-CN"]}。`,
+            ],
+            figure(
+              [
+                { kind: "polygon", points },
+                { kind: "side", a: pa, b: pb, text: `${c}` },
+                { kind: "side", a: pb, b: pc, text: `${a}` },
+                { kind: "side", a: pc, b: pa, text: `${b}` },
+              ],
+              `A triangle with sides ${c}, ${a} and ${b}.`,
+              `一个三角形，三条边分别是 ${c}、${a}、${b}。`,
+            ),
+          );
+        },
+        drawn(gradeDrawings3["classifying-triangles#classifying-by-sides"]),
       ),
-      generate(rng) {
-        const kind = rng.int(0, 2);
-        let angles: number[];
-        for (;;) {
-          const big = [rng.int(61, 89), 90, rng.int(95, 140)][kind]!;
-          const a = rng.int(15, 180 - big - 15);
-          const b = 180 - big - a;
-          if (b < 15 || b > big || a > big || (kind === 0 && (a === 90 || b === 90))) continue;
-          angles = rng.shuffle([big, a, b]);
-          break;
-        }
-        const list = angles.map((m) => `$${m}^\\circ$`);
-        const largest = Math.max(...angles);
-        const reason = [
-          t(`every angle is less than $90^\\circ$`, `每个角都小于 $90^\\circ$`),
-          t(`one angle is $90^\\circ$`, `有一个角是 $90^\\circ$`),
-          t(`the $${largest}^\\circ$ angle is obtuse`, `$${largest}^\\circ$ 的角是钝角`),
-        ][kind]!;
-        return choiceProblem({
-          prompt: t(
-            `A triangle has angles of ${list.join(", ")}. Classify it by its angles.`,
-            `一个三角形的三个角是 ${list.join("、")}。按角给它分类。`,
-          ),
-          options: angleKindsOfTriangles,
-          correct: kind,
-          solution: t(
-            `The triangle is ${angleKindsOfTriangles[kind]!.en.toLowerCase()}: ${reason.en}.`,
-            `这是${angleKindsOfTriangles[kind]!["zh-CN"]}：${reason["zh-CN"]}。`,
-          ),
-        });
-      },
-    },
+      lesson(
+        "classifying-by-angles",
+        ["Classifying by angles", "按角分类"],
+        [
+          [
+            "By its angles, a triangle is **acute** when all three angles are less than $90^\\circ$, **right** when one angle is $90^\\circ$, and **obtuse** when one angle is more than $90^\\circ$. A triangle can have at most one right or obtuse angle, so look at the largest angle: $50^\\circ$, $60^\\circ$, $70^\\circ$ is acute; $30^\\circ$, $60^\\circ$, $90^\\circ$ is right; $20^\\circ$, $40^\\circ$, $120^\\circ$ is obtuse.",
+            "按角分，三个角都小于 $90^\\circ$ 的是**锐角三角形**，有一个角等于 $90^\\circ$ 的是**直角三角形**，有一个角大于 $90^\\circ$ 的是**钝角三角形**。三角形最多只有一个直角或钝角，所以看最大的角：$50^\\circ$、$60^\\circ$、$70^\\circ$ 是锐角三角形；$30^\\circ$、$60^\\circ$、$90^\\circ$ 是直角三角形；$20^\\circ$、$40^\\circ$、$120^\\circ$ 是钝角三角形。",
+          ],
+          [
+            "Add the two smaller angles instead: more than $90^\\circ$ means acute, exactly $90^\\circ$ means right, less than $90^\\circ$ means obtuse. For $20^\\circ$ and $40^\\circ$: $60 < 90$, obtuse.",
+            "也可以把两个较小的角相加：大于 $90^\\circ$ 是锐角三角形，等于 $90^\\circ$ 是直角三角形，小于 $90^\\circ$ 是钝角三角形。$20^\\circ$ 和 $40^\\circ$：$60 < 90$，是钝角三角形。",
+          ],
+          [
+            "Every triangle has acute angles, even a right or an obtuse one. Name it by its largest angle, not by its smaller ones.",
+            "每个三角形都有锐角，直角三角形和钝角三角形也有。要按最大的角来命名，而不是按较小的角。",
+          ],
+        ],
+        (rng) => {
+          const kind = rng.int(0, 2);
+          let angles: number[];
+          let big: number;
+          for (;;) {
+            big = [rng.int(61, 89), 90, rng.int(95, 140)][kind]!;
+            const a = rng.int(15, 180 - big - 15);
+            const b = 180 - big - a;
+            if (b < 15 || b > big || a > big || (kind === 0 && (a === 90 || b === 90))) continue;
+            angles = rng.shuffle([big, a, b]);
+            break;
+          }
+          const list = angles.map((m) => `$${m}^\\circ$`);
+          const rest = 180 - big;
+          const name = (k: number): Pair => [angleKindsOfTriangles[k]!.en, angleKindsOfTriangles[k]!["zh-CN"]];
+          const compare: Pair = [
+            [
+              `$${big}^\\circ$ is less than $90^\\circ$, so every angle is acute.`,
+              `$${big}^\\circ$ is exactly a right angle.`,
+              `$${big}^\\circ$ is more than $90^\\circ$, so it is obtuse.`,
+            ][kind]!,
+            [
+              `$${big}^\\circ$ 小于 $90^\\circ$，所以每个角都是锐角。`,
+              `$${big}^\\circ$ 正好是直角。`,
+              `$${big}^\\circ$ 大于 $90^\\circ$，是钝角。`,
+            ][kind]!,
+          ];
+          const reasons: Pair[] = [
+            [
+              `The largest angle, $${big}^\\circ$, is not less than $90^\\circ$; the smaller angles being acute is not enough.`,
+              `最大的角 $${big}^\\circ$ 不小于 $90^\\circ$；只有较小的角是锐角还不够。`,
+            ],
+            [
+              `No angle is exactly $90^\\circ$; the largest is $${big}^\\circ$.`,
+              `没有哪个角正好是 $90^\\circ$；最大的角是 $${big}^\\circ$。`,
+            ],
+            [
+              `No angle is more than $90^\\circ$; the largest is $${big}^\\circ$.`,
+              `没有哪个角大于 $90^\\circ$；最大的角是 $${big}^\\circ$。`,
+            ],
+          ];
+          const [p, q, r] = angles as [number, number, number];
+          const points = triangleByAngles(p, q);
+          const label = (m: number) => (m === 90 ? "90" : deg(m));
+          return chosen(
+            rng,
+            [
+              `A triangle has angles of ${list.join(", ")}. Classify it by its angles.`,
+              `一个三角形的三个角是 ${list.join("、")}。按角给它分类。`,
+            ],
+            name(kind),
+            [0, 1, 2].filter((k) => k !== kind).map((k): Wrong => [name(k), reasons[k]![0], reasons[k]![1]]),
+            [
+              [
+                ["Find the largest angle", "找出最大的角"],
+                [`The largest of ${list.join(", ")} is $${big}^\\circ$.`, `${list.join("、")} 中最大的是 $${big}^\\circ$。`],
+              ],
+              [
+                ["Compare it with 90°", "和 90° 比较"],
+                [
+                  `${compare[0]} The triangle is ${angleKindsOfTriangles[kind]!.en.toLowerCase()}.`,
+                  `${compare[1]}这是${angleKindsOfTriangles[kind]!["zh-CN"]}。`,
+                ],
+              ],
+            ],
+            [
+              `The other two angles add up to $180 - ${big} = ${rest}$, which is ${["more than", "exactly", "less than"][kind]} $90$, so the triangle is ${angleKindsOfTriangles[kind]!.en.toLowerCase()}.`,
+              `另外两个角的和是 $180 - ${big} = ${rest}$，${["大于", "正好等于", "小于"][kind]} $90$，所以是${angleKindsOfTriangles[kind]!["zh-CN"]}。`,
+            ],
+            figure(
+              [{ kind: "polygon", points }, ...triangleArcs(points, [label(p), label(q), label(r)])],
+              `A triangle with angles of ${p}°, ${q}° and ${r}°.`,
+              `一个三角形，三个角分别是 ${p}°、${q}°、${r}°。`,
+            ),
+          );
+        },
+        drawn(gradeDrawings3["classifying-triangles#classifying-by-angles"]),
+      ),
+    ],
+  },
+  [
+    "A coat hanger has two equal sloping sides and a long bottom bar, so by its sides it is an isosceles triangle. Its top angle is wide, more than $90^\\circ$, so by its angles it is an obtuse triangle.",
+    "衣架有两条一样长的斜边和一根长长的底杆，所以按边分它是等腰三角形。它顶上的角很宽，大于 $90^\\circ$，所以按角分它是钝角三角形。",
   ],
-};
+  [
+    "The two bottom angles of the hanger are equal and small, and together they leave more than $90^\\circ$ for the top angle.",
+    "衣架底下的两个角相等而且很小，合起来给顶角留下了超过 $90^\\circ$。",
+  ],
+  [
+    "name a triangle by its sides, as equilateral, isosceles or scalene, and by its angles, as acute, right or obtuse.",
+    "学习按边把三角形分为等边、等腰、不等边三角形，按角分为锐角、直角、钝角三角形。",
+  ],
+);
 
+/** whatATriangleMustBe is the third knowledge point of classifying triangles: which pairs of a side name and an angle name cannot happen. */
+export const whatATriangleMustBe = lesson(
+  "what-a-triangle-must-be",
+  ["What a triangle must be", "三角形一定是什么"],
+  [
+    [
+      "A triangle has one name by its sides and one by its angles, and some pairs cannot happen. An equilateral triangle has three equal angles that share $180^\\circ$, so each is $60^\\circ$: it is always acute, never right or obtuse. Two right or obtuse angles are also impossible, because together they already use up $180^\\circ$ or more.",
+      "三角形按边有一个名称，按角也有一个名称，有些组合不可能出现。等边三角形的三个角相等，共分 $180^\\circ$，所以每个都是 $60^\\circ$：它总是锐角三角形，不可能是直角或钝角三角形。两个直角或两个钝角也不可能，因为它们合起来已经用掉 $180^\\circ$ 或更多。",
+    ],
+    [
+      "Try to build an equilateral right triangle: its three equal angles would each be $90^\\circ$, and $3 \\times 90 = 270$ is not $180$.",
+      "试着画一个等边直角三角形：三个相等的角都得是 $90^\\circ$，而 $3 \\times 90 = 270$ 不等于 $180$。",
+    ],
+    [
+      "Isosceles triangles can be acute, right or obtuse: two equal sides do not make every angle $60^\\circ$. Only three equal sides do.",
+      "等腰三角形可以是锐角、直角或钝角三角形：两条边相等并不要求角是 $60^\\circ$。只有等边三角形才这样。",
+    ],
+  ],
+  (rng) => {
+    const impossible: [Pair, Pair, Pair][] = [
+      [
+        ["An equilateral right triangle", "等边直角三角形"],
+        [
+          "All three angles of an equilateral triangle are $60^\\circ$, so none is a right angle.",
+          "等边三角形的三个角都是 $60^\\circ$，所以没有直角。",
+        ],
+        [
+          "Three equal $90^\\circ$ angles would total $270^\\circ$, not $180^\\circ$.",
+          "三个相等的 $90^\\circ$ 角合起来是 $270^\\circ$，不是 $180^\\circ$。",
+        ],
+      ],
+      [
+        ["An equilateral obtuse triangle", "等边钝角三角形"],
+        [
+          "All three angles of an equilateral triangle are $60^\\circ$, so none is obtuse.",
+          "等边三角形的三个角都是 $60^\\circ$，所以没有钝角。",
+        ],
+        [
+          "Three equal angles, each more than $90^\\circ$, would total more than $270^\\circ$.",
+          "三个相等的角都大于 $90^\\circ$，合起来会超过 $270^\\circ$。",
+        ],
+      ],
+      [
+        ["A right triangle with an obtuse angle", "有一个钝角的直角三角形"],
+        ["The right angle and the obtuse angle alone add up to more than $180^\\circ$.", "直角和钝角加起来已经超过 $180^\\circ$。"],
+        [
+          "Even the smallest obtuse angle, just over $90^\\circ$, plus $90^\\circ$ is over $180^\\circ$, which leaves nothing for the third angle.",
+          "最小的钝角也比 $90^\\circ$ 大，再加 $90^\\circ$ 就超过 $180^\\circ$，第三个角没有度数可用了。",
+        ],
+      ],
+      [
+        ["A triangle with two right angles", "有两个直角的三角形"],
+        [
+          "Two right angles already add up to $180^\\circ$, which leaves $0^\\circ$ for the third angle.",
+          "两个直角的和已经是 $180^\\circ$，第三个角只剩 $0^\\circ$。",
+        ],
+        [
+          "Two sides standing straight up from the same base never lean toward each other, so they never meet.",
+          "从同一条底边垂直竖起的两条边不会互相靠近，所以永远不会相交。",
+        ],
+      ],
+    ];
+    const possible: [Pair, string, string][] = [
+      [
+        ["An isosceles right triangle", "等腰直角三角形"],
+        "It exists: angles $45^\\circ$, $45^\\circ$, $90^\\circ$ with two equal legs.",
+        "它存在：角为 $45^\\circ$、$45^\\circ$、$90^\\circ$，两条直角边相等。",
+      ],
+      [
+        ["An isosceles obtuse triangle", "等腰钝角三角形"],
+        "It exists: angles $30^\\circ$, $30^\\circ$, $120^\\circ$.",
+        "它存在：角为 $30^\\circ$、$30^\\circ$、$120^\\circ$。",
+      ],
+      [
+        ["A scalene right triangle", "不等边直角三角形"],
+        "It exists: sides $3$, $4$, $5$ make a right angle.",
+        "它存在：边长 $3$、$4$、$5$ 构成直角。",
+      ],
+      [
+        ["A scalene obtuse triangle", "不等边钝角三角形"],
+        "It exists: angles $20^\\circ$, $40^\\circ$, $120^\\circ$.",
+        "它存在：角为 $20^\\circ$、$40^\\circ$、$120^\\circ$。",
+      ],
+      [
+        ["An isosceles acute triangle", "等腰锐角三角形"],
+        "It exists: angles $50^\\circ$, $50^\\circ$, $80^\\circ$.",
+        "它存在：角为 $50^\\circ$、$50^\\circ$、$80^\\circ$。",
+      ],
+      [
+        ["A scalene acute triangle", "不等边锐角三角形"],
+        "It exists: angles $50^\\circ$, $60^\\circ$, $70^\\circ$.",
+        "它存在：角为 $50^\\circ$、$60^\\circ$、$70^\\circ$。",
+      ],
+      [
+        ["An equilateral acute triangle", "等边锐角三角形"],
+        "It exists: every equilateral triangle has three $60^\\circ$ angles, so it is acute.",
+        "它存在：每个等边三角形都有三个 $60^\\circ$ 的角，所以是锐角三角形。",
+      ],
+    ];
+    const [bad, why, again] = rng.pick(impossible);
+    return chosen(
+      rng,
+      ["Which of these triangles cannot exist?", "下面哪种三角形不可能存在？"],
+      bad,
+      rng.sample(possible, 3),
+      [
+        [
+          ["Use the angle sum", "用内角和"],
+          ["The three angles of any triangle add up to $180^\\circ$.", "任何三角形的三个角之和都是 $180^\\circ$。"],
+        ],
+        [
+          ["Test the impossible one", "检验不可能的那个"],
+          [`${bad[0]} cannot exist. ${why[0]}`, `${bad[1]}不可能存在。${why[1]}`],
+        ],
+      ],
+      again,
+    );
+  },
+  drawn(gradeDrawings4["classifying-triangles#what-a-triangle-must-be"]),
+);
 export const isoscelesTriangles: TopicDef = {
   id: "isosceles-triangles",
   title: t("The Isosceles Triangle Theorem", "等腰三角形定理"),

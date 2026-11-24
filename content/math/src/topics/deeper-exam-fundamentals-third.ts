@@ -6,6 +6,7 @@ import { Q } from "@ga/subject-math";
 import { choose, tableFigure } from "./early-grades-more-kit.ts";
 import { lesson, valued } from "./grade-6-kit.ts";
 import { chooseFilled, decimal, fraction, integer, signed, skill } from "./third-kit.ts";
+import { tapeFigure } from "./upper-grades-kit.ts";
 
 /** Rng is the random source a generator receives. */
 type Rng = Parameters<KnowledgePointDef["generate"]>[0];
@@ -2281,12 +2282,19 @@ export const deeperExamFundamentalsThirdPoints: Readonly<Record<string, readonly
 /** deeperAlgebraFundamentalsThirdPoints holds these third knowledge points, by topic in the algebra shard. */
 export const deeperAlgebraFundamentalsThirdPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "complementary-and-supplementary-angles": [
-    skill(
+    lesson(
       "angles-in-a-given-ratio",
       ["Angles in a given ratio", "成给定比例的角"],
       [
-        "If two angles add up to a known total and are in a given ratio, each part is the total divided by the number of parts. So multiply that by the larger number in the ratio.",
-        "如果两个角的和已知且比例给定，每份就是总和除以份数。所以再乘比中较大的数，就得到较大的角。",
+        [
+          "When two angles add up to a known total and are in a given ratio, split the total into equal parts. Two supplementary angles in the ratio $2 : 3$ make $5$ parts of $180^\\circ \\div 5 = 36^\\circ$, so they are $2 \\times 36^\\circ = 72^\\circ$ and $3 \\times 36^\\circ = 108^\\circ$.",
+          "两个角的和已知、比也给定时，把总和分成相等的份。比为 $2 : 3$ 的两个互补角共 $5$ 份，每份 $180^\\circ \\div 5 = 36^\\circ$，所以两角是 $2 \\times 36^\\circ = 72^\\circ$ 和 $3 \\times 36^\\circ = 108^\\circ$。",
+        ],
+        ["$72 + 108 = 180$, and $72 : 108$ simplifies to $2 : 3$.", "$72 + 108 = 180$，$72 : 108$ 化简后是 $2 : 3$。"],
+        [
+          "$36^\\circ$ is one part, not an angle: multiply it by the angle's number of parts.",
+          "$36^\\circ$ 只是一份，不是角：要乘这个角所占的份数。",
+        ],
       ],
       (rng) => {
         const [p, q, total, name] = rng.pick<[number, number, number, [string, string]]>([
@@ -2311,16 +2319,82 @@ export const deeperAlgebraFundamentalsThirdPoints: Readonly<Record<string, reado
         ]);
         const unit = total / (p + q);
         const askLarge = rng.bool();
-        return integer(
+        const [mine, other] = askLarge ? [q, p] : [p, q];
+        return valued(
           [
-            `Two ${name[0]} angles are in the ratio $${p} : ${q}$. What is the measure of the ${askLarge ? "larger" : "smaller"} angle, in degrees?`,
+            `Two ${name[0]} angles are in the ratio $${p} : ${q}$. What is the measure of the ${askLarge ? "larger" : "smaller"} angle?`,
             `两个${name[1]}的角的比是 $${p} : ${q}$。${askLarge ? "较大" : "较小"}的角是多少度？`,
           ],
-          askLarge ? q * unit : p * unit,
-          [askLarge ? p * unit : q * unit, unit, total - unit],
-          [`One part is $${total} \\div ${p + q} = ${unit}$ degrees.`, `一份是 $${total} \\div ${p + q} = ${unit}$ 度。`],
+          mine * unit,
+          [
+            [
+              ["Find one part", "求一份"],
+              [
+                `${name[0] === "complementary" ? "Complementary" : "Supplementary"} angles add up to $${total}^\\circ$, shared in $${p} + ${q} = ${p + q}$ parts:`,
+                `${name[1]}的两个角和为 $${total}^\\circ$，共 $${p} + ${q} = ${p + q}$ 份：`,
+              ],
+              [`${total}^\\circ \\div ${p + q} = ${unit}^\\circ`],
+            ],
+            [
+              ["Take the parts", "取对应的份数"],
+              [
+                `The ${askLarge ? "larger" : "smaller"} angle has $${mine}$ part${mine === 1 ? "" : "s"}:`,
+                `${askLarge ? "较大" : "较小"}的角占 $${mine}$ 份：`,
+              ],
+              [`${mine} \\times ${unit}^\\circ = ${mine * unit}^\\circ`],
+            ],
+          ],
+          [
+            `The other angle is $${other} \\times ${unit}^\\circ = ${other * unit}^\\circ$, and $${mine * unit} + ${other * unit} = ${total}$.`,
+            `另一个角是 $${other} \\times ${unit}^\\circ = ${other * unit}^\\circ$，$${mine * unit} + ${other * unit} = ${total}$。`,
+          ],
+          [
+            [other * unit, `That is the ${askLarge ? "smaller" : "larger"} angle.`, `这是${askLarge ? "较小" : "较大"}的角。`],
+            [unit, "That is one part, not the whole angle.", "这只是一份，不是整个角。"],
+            [
+              total - unit,
+              "That takes one part from the total instead of counting the angle's parts.",
+              "这是从总和中减去一份，而不是数出这个角的份数。",
+            ],
+          ],
+          {
+            unit: "°",
+            figure: tapeFigure(
+              [
+                {
+                  pieces: [
+                    ...Array.from({ length: p }, () => ({ size: 1, text: "", lit: !askLarge })),
+                    ...Array.from({ length: q }, () => ({ size: 1, text: "", lit: askLarge })),
+                  ],
+                  total: `${total}°`,
+                },
+              ],
+              [
+                `A bar for ${total}° cut into ${p} parts and ${q} parts, with the ${askLarge ? "larger" : "smaller"} angle's parts shaded.`,
+                `表示 ${total}° 的长条分成 ${p} 份和 ${q} 份，${askLarge ? "较大" : "较小"}的角所占的份涂上了颜色。`,
+              ],
+            ),
+          },
         );
       },
+      tapeFigure(
+        [
+          {
+            pieces: [
+              { size: 1, text: "36°", lit: true },
+              { size: 1, text: "36°", lit: true },
+              { size: 1, text: "36°" },
+              { size: 1, text: "36°" },
+              { size: 1, text: "36°" },
+            ],
+            total: "180°",
+          },
+        ],
+        [
+          "A bar for 180° cut into 5 parts of 36°: 2 shaded parts and 3 plain parts.",
+          "表示 180° 的长条分成 5 份，每份 36°：2 份涂色，3 份不涂色。",
+        ],
+      ),
     ),
   ],
   "mean-of-a-data-set": [
