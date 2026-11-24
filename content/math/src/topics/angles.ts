@@ -2,9 +2,12 @@ import type { Figure, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, type Mark, type Point, sketch } from "@ga/subject-math";
 import { gradeDrawings } from "../explanation-drawings-grades.ts";
+import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { article, choiceProblem, numberProblem, steps, why } from "../problems.ts";
+import { type Pair, picked } from "./early-grades-more-kit.ts";
+import { answered, point } from "./upper-grades-kit.ts";
 
 const rad = (d: number) => (d * Math.PI) / 180;
 
@@ -56,16 +59,19 @@ export const anglesAndAngleMeasures: TopicDef = {
   encompasses: [],
   xp: 8,
   standards: ["CCSS.4.MD.C.5", "CCSS.4.MD.C.7"],
+  intro: t(
+    "The hands of a clock, the blades of a pair of scissors and the covers of a book all make angles. The wider they open, the bigger the angle.\n\nCheck: a book opened flat on the table makes a straight angle, $180^\\circ$.\n\nIn this lesson we name angles by their size and add and subtract angles that sit side by side.",
+    "钟面的指针、剪刀的两片刀刃、书的两面封皮都能组成角。张得越开，角就越大。\n\n检验：书摊平在桌上，两面封皮组成平角，$180^\\circ$。\n\n本课我们按大小给角命名，并对并排的角做加减。",
+  ),
   knowledgePoints: [
-    {
-      id: "classifying-angles",
-      figure: gradeDrawings["classifying-angles"],
-      title: t("Kinds of angles", "角的分类"),
-      explanation: t(
-        "An **angle** is formed by two rays from a common point, its **vertex**. Its measure, in **degrees** ($^\\circ$), tells how far one ray turns to reach the other; a full turn is $360^\\circ$.\n\n- An **acute** angle measures less than $90^\\circ$.\n- A **right** angle measures exactly $90^\\circ$; it is marked with a small square.\n- An **obtuse** angle measures between $90^\\circ$ and $180^\\circ$.\n- A **straight** angle measures $180^\\circ$: its rays form a line.",
-        "**角**由从同一点出发的两条射线组成，这个点叫**顶点**。角的度数（单位为**度**，$^\\circ$）表示一条射线转到另一条射线转过了多少；转一整圈是 $360^\\circ$。\n\n- **锐角**小于 $90^\\circ$。\n- **直角**恰好是 $90^\\circ$，用一个小正方形标出。\n- **钝角**大于 $90^\\circ$ 而小于 $180^\\circ$。\n- **平角**是 $180^\\circ$：两条射线成一条直线。",
-      ),
-      generate(rng) {
+    point(
+      "classifying-angles",
+      ["Kinds of angles", "角的分类"],
+      [
+        "Open scissors a little and the blades make an acute angle, less than $90^\\circ$. The corner of a book is a right angle, exactly $90^\\circ$, marked with a small square. A laptop opened wide makes an obtuse angle, between $90^\\circ$ and $180^\\circ$. A book laid open flat makes a straight angle, $180^\\circ$.\n\nCheck: $50^\\circ$ is less than $90^\\circ$, so a $50^\\circ$ angle is acute.\n\n> **Watch out.** Compare the angle with $90^\\circ$. How long the rays are drawn does not matter.",
+        "剪刀张开一点，两片刀刃组成锐角，小于 $90^\\circ$。书的角是直角，正好 $90^\\circ$，用小正方形标出。笔记本电脑张得很开，组成钝角，在 $90^\\circ$ 和 $180^\\circ$ 之间。书摊平，两面封皮组成平角，$180^\\circ$。\n\n检验：$50^\\circ$ 小于 $90^\\circ$，所以 $50^\\circ$ 的角是锐角。\n\n> **注意。** 要拿角和 $90^\\circ$ 比，边画得长短没有关系。",
+      ],
+      (rng) => {
         const kind = rng.int(0, 3);
         const m = [rng.int(10, 80), 90, rng.int(100, 170), 180][kind]!;
         const base = rng.pick([0, 15, 30, 45, 60, 75, 90]) * (kind === 3 ? 0 : 1);
@@ -77,39 +83,70 @@ export const anglesAndAngleMeasures: TopicDef = {
           m === 90 ? { kind: "right", vertex: o, from: a, to: b } : { kind: "arc", vertex: o, from: a, to: b, label: deg(m), accent: true },
           { kind: "dot", at: o },
         ];
-        const reason = [
-          t(`$${m}^\\circ$ is less than $90^\\circ$`, `$${m}^\\circ$ 小于 $90^\\circ$`),
-          t("the square marks a right angle, $90^\\circ$", "小正方形标出的是直角，即 $90^\\circ$"),
-          t(`$${m}^\\circ$ is between $90^\\circ$ and $180^\\circ$`, `$${m}^\\circ$ 在 $90^\\circ$ 与 $180^\\circ$ 之间`),
-          t("the two rays form a line, $180^\\circ$", "两条射线成一条直线，即 $180^\\circ$"),
-        ][kind]!;
-        return {
-          ...choiceProblem({
-            prompt: t("What kind of angle is shown?", "图中是什么角？"),
-            options: angleKinds,
-            correct: kind,
-            solution: t(
-              `The angle is ${angleKinds[kind]!.en.toLowerCase()}: ${reason.en}.`,
-              `这是${angleKinds[kind]!["zh-CN"]}：${reason["zh-CN"]}。`,
-            ),
-          }),
-          figure: figure(
+        const opt = (i: number): Pair => [angleKinds[i]!.en, angleKinds[i]!["zh-CN"]];
+        const defs: readonly Pair[] = [
+          ["An acute angle is less than 90°.", "锐角小于 90°。"],
+          ["A right angle is exactly 90°, marked with a small square.", "直角正好是 90°，用小正方形标出。"],
+          ["An obtuse angle is between 90° and 180°.", "钝角在 90° 和 180° 之间。"],
+          ["A straight angle is 180°: its rays make a line.", "平角是 180°：两条边成一条直线。"],
+        ];
+        const look: readonly Pair[] = [
+          [`The angle is $${m}^\\circ$, less than $90^\\circ$.`, `这个角是 $${m}^\\circ$，小于 $90^\\circ$。`],
+          ["The small square marks exactly $90^\\circ$.", "小正方形表示正好 $90^\\circ$。"],
+          [
+            `The angle is $${m}^\\circ$, more than $90^\\circ$ and less than $180^\\circ$.`,
+            `这个角是 $${m}^\\circ$，大于 $90^\\circ$，小于 $180^\\circ$。`,
+          ],
+          ["The two rays make one straight line, $180^\\circ$.", "两条边成一条直线，$180^\\circ$。"],
+        ];
+        const name: readonly Pair[] = [
+          ["So it is an acute angle.", "所以它是锐角。"],
+          ["So it is a right angle.", "所以它是直角。"],
+          ["So it is an obtuse angle.", "所以它是钝角。"],
+          ["So it is a straight angle.", "所以它是平角。"],
+        ];
+        const check: readonly Pair[] = [
+          [`It is $${90 - m}^\\circ$ short of a right angle.`, `它比直角少 $${90 - m}^\\circ$。`],
+          [
+            "Two such angles side by side make a straight line: $90^\\circ + 90^\\circ = 180^\\circ$.",
+            "两个这样的角并在一起成一条直线：$90^\\circ + 90^\\circ = 180^\\circ$。",
+          ],
+          [
+            `It is $${m - 90}^\\circ$ more than a right angle and $${180 - m}^\\circ$ less than a straight angle.`,
+            `它比直角多 $${m - 90}^\\circ$，比平角少 $${180 - m}^\\circ$。`,
+          ],
+          [
+            "It is two right angles side by side: $90^\\circ + 90^\\circ = 180^\\circ$.",
+            "它是两个直角并在一起：$90^\\circ + 90^\\circ = 180^\\circ$。",
+          ],
+        ];
+        return picked(
+          rng,
+          ["What kind of angle is shown?", "图中是什么角？"],
+          opt(kind),
+          [0, 1, 2, 3].filter((i) => i !== kind).map((i) => [opt(i), defs[i]![0], defs[i]![1]] as const),
+          [
+            [["Compare with $90^\\circ$", "和 $90^\\circ$ 比"], look[kind]!],
+            [["Name it", "说出名称"], name[kind]!],
+          ],
+          check[kind]!,
+          figure(
             marks,
             m === 90 ? "An angle marked as a right angle." : `An angle of ${m}°.`,
             m === 90 ? "一个标有直角记号的角。" : `一个 ${m}° 的角。`,
           ),
-        };
+        );
       },
-    },
-    {
-      id: "adjacent-angles",
-      figure: gradeDrawings["adjacent-angles"],
-      title: t("Adjacent angles", "相邻的角"),
-      explanation: t(
-        "Angles that share a vertex and a side, without overlapping, are **adjacent**. Their measures add: if ray $OB$ lies inside $\\angle AOC$, then $\\angle AOB + \\angle BOC = \\angle AOC$.\n\nSo if $\\angle AOC = 110^\\circ$ and $\\angle AOB = 45^\\circ$, then $\\angle BOC = 110^\\circ - 45^\\circ = 65^\\circ$.",
-        "有公共顶点和一条公共边、且互不重叠的两个角叫**相邻的角**。它们的度数相加：若射线 $OB$ 在 $\\angle AOC$ 内部，则 $\\angle AOB + \\angle BOC = \\angle AOC$。\n\n所以若 $\\angle AOC = 110^\\circ$，$\\angle AOB = 45^\\circ$，则 $\\angle BOC = 110^\\circ - 45^\\circ = 65^\\circ$。",
-      ),
-      generate(rng) {
+      gradeDrawings["classifying-angles"]!,
+    ),
+    point(
+      "adjacent-angles",
+      ["Adjacent angles", "相邻的角"],
+      [
+        "Two slices of pie sit side by side with their points together at $O$. One slice is $\\angle AOB = 45^\\circ$ and the other is $\\angle BOC = 65^\\circ$. Together they make $\\angle AOC = 45^\\circ + 65^\\circ = 110^\\circ$.\n\nCheck: $110^\\circ - 45^\\circ = 65^\\circ$.\n\n> **Watch out.** $\\angle AOC$ is the whole. To find a part, subtract the other part from it. Do not add.",
+        "两块馅饼尖对尖并排放着，尖都在 $O$ 点。一块是 $\\angle AOB = 45^\\circ$，另一块是 $\\angle BOC = 65^\\circ$。合起来是 $\\angle AOC = 45^\\circ + 65^\\circ = 110^\\circ$。\n\n检验：$110^\\circ - 45^\\circ = 65^\\circ$。\n\n> **注意。** $\\angle AOC$ 是整个角。求其中一部分，要用它减去另一部分，不能相加。",
+      ],
+      (rng) => {
         const a = rng.int(20, 90);
         const b = rng.int(20, 170 - a);
         const base = rng.pick([0, 10, 20, 30]);
@@ -129,45 +166,127 @@ export const anglesAndAngleMeasures: TopicDef = {
           "从点 O 出发的射线 OA、OB、OC，OB 在 OA 与 OC 之间。",
         );
         if (rng.bool()) {
-          return {
-            ...numberProblem({
-              prompt: t(
-                `In the figure, $\\angle AOB = ${a}^\\circ$ and $\\angle BOC = ${b}^\\circ$. Find $\\angle AOC$.`,
-                `如图，$\\angle AOB = ${a}^\\circ$，$\\angle BOC = ${b}^\\circ$。求 $\\angle AOC$。`,
-              ),
-              answer: a + b,
-              form: "integer",
-              unit: "°",
-              wrong: [Math.abs(a - b), 180 - a - b, 180 - a],
-              solution: t(
-                `$OB$ lies inside $\\angle AOC$, so the two angles add:${steps(`\\angle AOC = ${a}^\\circ + ${b}^\\circ = ${a + b}^\\circ`)}`,
-                `$OB$ 在 $\\angle AOC$ 内部，所以两角相加：${steps(`\\angle AOC = ${a}^\\circ + ${b}^\\circ = ${a + b}^\\circ`)}`,
-              ),
-            }),
-            figure: fig,
-          };
+          return answered(
+            [
+              `In the figure, $\\angle AOB = ${a}^\\circ$ and $\\angle BOC = ${b}^\\circ$. Find $\\angle AOC$.`,
+              `如图，$\\angle AOB = ${a}^\\circ$，$\\angle BOC = ${b}^\\circ$。求 $\\angle AOC$。`,
+            ],
+            a + b,
+            [
+              [
+                ["See the parts", "看清各部分"],
+                [
+                  "$OB$ lies inside $\\angle AOC$, so it splits it into $\\angle AOB$ and $\\angle BOC$.",
+                  "$OB$ 在 $\\angle AOC$ 内部，把它分成 $\\angle AOB$ 和 $\\angle BOC$。",
+                ],
+              ],
+              [
+                ["Add", "相加"],
+                [
+                  `$\\angle AOC = ${a}^\\circ + ${b}^\\circ = ${a + b}^\\circ$.`,
+                  `$\\angle AOC = ${a}^\\circ + ${b}^\\circ = ${a + b}^\\circ$。`,
+                ],
+              ],
+            ],
+            [`Subtract back: $${a + b}^\\circ - ${a}^\\circ = ${b}^\\circ$.`, `减回去：$${a + b}^\\circ - ${a}^\\circ = ${b}^\\circ$。`],
+            [
+              [Math.abs(a - b), "That subtracts the two parts. Parts side by side add.", "这是把两部分相减了。并排的角要相加。"],
+              [
+                180 - a - b,
+                "That takes the parts from a straight angle, but $\\angle AOC$ is not a straight angle.",
+                "这是用平角减去两部分，但 $\\angle AOC$ 不是平角。",
+              ],
+              [180 - a, "That takes $\\angle AOB$ from a straight angle.", "这是用平角减去 $\\angle AOB$。"],
+            ],
+            { form: "integer", unit: "°", figure: fig },
+          );
         }
-        return {
-          ...numberProblem({
-            prompt: t(
-              `In the figure, $\\angle AOC = ${a + b}^\\circ$ and $\\angle AOB = ${a}^\\circ$. Find $\\angle BOC$.`,
-              `如图，$\\angle AOC = ${a + b}^\\circ$，$\\angle AOB = ${a}^\\circ$。求 $\\angle BOC$。`,
-            ),
-            answer: b,
-            form: "integer",
-            unit: "°",
-            wrong: [2 * a + b, 180 - a - b, 180 - a],
-            solution: t(
-              `$\\angle AOB + \\angle BOC = \\angle AOC$, so:${steps(`\\angle BOC = ${a + b}^\\circ - ${a}^\\circ = ${b}^\\circ`)}`,
-              `$\\angle AOB + \\angle BOC = \\angle AOC$，所以：${steps(`\\angle BOC = ${a + b}^\\circ - ${a}^\\circ = ${b}^\\circ`)}`,
-            ),
-          }),
-          figure: fig,
-        };
+        return answered(
+          [
+            `In the figure, $\\angle AOC = ${a + b}^\\circ$ and $\\angle AOB = ${a}^\\circ$. Find $\\angle BOC$.`,
+            `如图，$\\angle AOC = ${a + b}^\\circ$，$\\angle AOB = ${a}^\\circ$。求 $\\angle BOC$。`,
+          ],
+          b,
+          [
+            [
+              ["See the whole", "看清整体"],
+              [
+                "$\\angle AOC$ is the whole, made of $\\angle AOB$ and $\\angle BOC$.",
+                "$\\angle AOC$ 是整个角，由 $\\angle AOB$ 和 $\\angle BOC$ 组成。",
+              ],
+            ],
+            [
+              ["Subtract", "相减"],
+              [
+                `$\\angle BOC = ${a + b}^\\circ - ${a}^\\circ = ${b}^\\circ$.`,
+                `$\\angle BOC = ${a + b}^\\circ - ${a}^\\circ = ${b}^\\circ$。`,
+              ],
+            ],
+          ],
+          [`Add back: $${a}^\\circ + ${b}^\\circ = ${a + b}^\\circ$.`, `加回去：$${a}^\\circ + ${b}^\\circ = ${a + b}^\\circ$。`],
+          [
+            [2 * a + b, "That adds the part to the whole instead of subtracting.", "这是把部分加到整体上了，应该相减。"],
+            [a + b, "That is the whole angle, not the part.", "这是整个角，不是要求的部分。"],
+            [180 - a - b, "That takes the whole from a straight angle.", "这是用平角减去整个角。"],
+          ],
+          { form: "integer", unit: "°", figure: fig },
+        );
       },
-    },
+      gradeDrawings["adjacent-angles"]!,
+    ),
   ],
 };
+
+/** equalAnglesInAnAngle shares an angle among equal smaller angles cut by rays from its vertex. */
+export const equalAnglesInAnAngle = point(
+  "an-angle-cut-into-equal-angles",
+  ["An angle cut into equal angles", "把角平均分"],
+  [
+    "A paper fan opens to $120^\\circ$ and has 4 equal sections. The sections fill the whole fan, so each one is $120^\\circ \\div 4 = 30^\\circ$.\n\nCheck: $4 \\times 30^\\circ = 120^\\circ$.\n\n> **Watch out.** Divide by the number of equal angles, not by the number of rays. 4 sections have 5 rays.",
+    "一把纸扇打开到 $120^\\circ$，分成 4 个相等的扇面。扇面合起来是整把扇子，所以每个是 $120^\\circ \\div 4 = 30^\\circ$。\n\n检验：$4 \\times 30^\\circ = 120^\\circ$。\n\n> **注意。** 要除以相等的角的个数，不是射线的条数。4 个扇面有 5 条边。",
+  ],
+  (rng) => {
+    const k = rng.int(2, 6);
+    const each = rng.int(5, 30);
+    const whole = k * each;
+    return answered(
+      [
+        `Rays from the vertex cut an angle of $${whole}^\\circ$ into $${k}$ equal angles. What is the measure of each, in degrees?`,
+        `从顶点引出的射线把 $${whole}^\\circ$ 的角分成 $${k}$ 个相等的角。每个角是多少度？`,
+      ],
+      each,
+      [
+        [
+          ["The parts fill the whole", "各部分合成整体"],
+          [`The ${k} equal angles together make $${whole}^\\circ$.`, `${k} 个相等的角合起来是 $${whole}^\\circ$。`],
+        ],
+        [
+          ["Divide", "相除"],
+          [`$${whole} \\div ${k} = ${each}$.`, `$${whole} \\div ${k} = ${each}$。`],
+        ],
+      ],
+      [
+        `Add the equal angles: $${Array.from({ length: k }, () => each).join(" + ")} = ${whole}$.`,
+        `把相等的角加起来：$${Array.from({ length: k }, () => each).join(" + ")} = ${whole}$。`,
+      ],
+      [
+        ...(whole % (k + 1) === 0
+          ? ([
+              [
+                whole / (k + 1),
+                `That divides by the ${k + 1} rays, not the ${k} angles.`,
+                `这是除以 ${k + 1} 条射线，应该除以 ${k} 个角。`,
+              ],
+            ] as const)
+          : []),
+        [whole - k, `That subtracts ${k} instead of dividing.`, `这是减去 ${k}，应该相除。`],
+        [whole * k, `That multiplies by ${k} instead of dividing.`, `这是乘 ${k}，应该相除。`],
+      ],
+      { form: "integer", unit: "°" },
+    );
+  },
+  gradeDrawings2["angles-and-angle-measures#an-angle-cut-into-equal-angles"]!,
+);
 
 /** splitAngleFor draws a right or straight angle split in two: the known part labeled a°, the other x, in either order. */
 function splitAngleFor(rng: Rng, total: 90 | 180, a: number): Figure {

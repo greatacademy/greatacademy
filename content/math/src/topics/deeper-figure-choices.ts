@@ -1204,38 +1204,41 @@ Take $y = 2\\sin x - 1$. The middle line is $y = -1$, and the wave runs from $-3
     ),
   ],
   "fractions-on-the-number-line": [
-    skill(
-      "choosing-the-number-line-of-a-fraction",
-      ["Choosing the number line of a fraction", "选出分数在数轴上的位置"],
-      [
-        "To place a fraction between 0 and 1, the denominator says how many equal parts to cut the line into, and the numerator says how many parts to count from 0. Count the spaces between tick marks, not the tick marks themselves: a line cut into 4 parts has 5 tick marks.",
-        "要在 0 和 1 之间标出一个分数，分母表示把这段数轴平均分成几份，分子表示从 0 开始数几份。要数刻度之间的空隙，而不是刻度本身：分成 4 份的线段有 5 个刻度。",
-      ],
-      (rng) => {
-        const d = rng.int(3, 8);
-        const n = rng.int(1, d - 1);
-        const other = n === d - 1 ? n - 1 : n + 1;
-        return figureChoice(rng, {
-          prompt: t(`Which number line has a dot at $\\frac{${n}}{${d}}$?`, `哪条数轴上的点表示 $\\frac{${n}}{${d}}$？`),
-          correct: partsFigure(d, n),
-          wrong: [partsFigure(d + 1, n), partsFigure(d, other), partsFigure(d - 1 === n ? d + 2 : d - 1, n)],
-          whys: [
-            t(
-              "This line is cut into too many parts: it counts the tick marks, not the spaces.",
-              "这条线分得太多了：它数的是刻度，不是空隙。",
+    {
+      ...skill(
+        "choosing-the-number-line-of-a-fraction",
+        ["Choosing the number line of a fraction", "选出分数在数轴上的位置"],
+        [
+          "Place $\\frac{3}{4}$. The denominator 4 cuts the line from 0 to 1 into 4 equal spaces, which takes 5 tick marks. The numerator 3 says to count 3 spaces from 0.\n\nCheck: the dot is 1 space short of 1, and $\\frac{3}{4} + \\frac{1}{4} = 1$.\n\n> **Watch out.** Count the spaces between the tick marks, not the tick marks.",
+          "标出 $\\frac{3}{4}$。分母 4 把 0 到 1 平均分成 4 格，需要 5 个刻度。分子 3 表示从 0 开始数 3 格。\n\n检验：点离 1 还差 1 格，$\\frac{3}{4} + \\frac{1}{4} = 1$。\n\n> **注意。** 要数刻度之间的格，不是数刻度。",
+        ],
+        (rng) => {
+          const d = rng.int(3, 8);
+          const n = rng.int(1, d - 1);
+          const other = n === d - 1 ? n - 1 : n + 1;
+          return figureChoice(rng, {
+            prompt: t(`Which number line has a dot at $\\frac{${n}}{${d}}$?`, `哪条数轴上的点表示 $\\frac{${n}}{${d}}$？`),
+            correct: partsFigure(d, n),
+            wrong: [partsFigure(d + 1, n), partsFigure(d, other), partsFigure(d - 1 === n ? d + 2 : d - 1, n)],
+            whys: [
+              t(
+                "This line is cut into too many parts: it counts the tick marks, not the spaces.",
+                "这条线分得太多了：它数的是刻度，不是格。",
+              ),
+              t("This line is cut correctly, but the dot is the wrong number of parts from $0$.", "这条线分得对，但点离 $0$ 的格数不对。"),
+              t(
+                "This line is cut into the wrong number of parts: the denominator is the number of equal parts.",
+                "这条线分的份数不对：分母就是平均分成的份数。",
+              ),
+            ],
+            solution: t(
+              `${stepLabel(1, "count the spaces", "数格").en} The denominator $${d}$ cuts the line from $0$ to $1$ into $${d}$ equal spaces, which takes $${d + 1}$ tick marks.\n\n${stepLabel(2, "count from 0", "从 0 开始数").en} The numerator $${n}$ puts the dot $${n}$ space${n === 1 ? "" : "s"} from $0$.\n\n**Check.** The dot is $${d - n}$ space${d - n === 1 ? "" : "s"} short of $1$, and $\\frac{${n}}{${d}} + \\frac{${d - n}}{${d}} = 1$.`,
+              `${stepLabel(1, "count the spaces", "数格")["zh-CN"]}分母 $${d}$ 把 $0$ 到 $1$ 平均分成 $${d}$ 格，需要 $${d + 1}$ 个刻度。\n\n${stepLabel(2, "count from 0", "从 0 开始数")["zh-CN"]}分子 $${n}$ 表示点离 $0$ 有 $${n}$ 格。\n\n**检验。**点离 $1$ 还差 $${d - n}$ 格，$\\frac{${n}}{${d}} + \\frac{${d - n}}{${d}} = 1$。`,
             ),
-            t("This line is cut correctly, but the dot is the wrong number of parts from $0$.", "这条线分得对，但点离 $0$ 的份数不对。"),
-            t(
-              "This line is cut into the wrong number of parts: the denominator is the number of equal parts.",
-              "这条线分的份数不对：分母就是平均分成的份数。",
-            ),
-          ],
-          solution: t(
-            `The denominator $${d}$ means the line from $0$ to $1$ is cut into $${d}$ equal parts, which takes $${d + 1}$ tick marks. The numerator $${n}$ means the dot is $${n}$ part${n === 1 ? "" : "s"} from $0$.`,
-            `分母 $${d}$ 表示把 $0$ 到 $1$ 平均分成 $${d}$ 份，需要 $${d + 1}$ 个刻度。分子 $${n}$ 表示点距 $0$ 有 $${n}$ 份。`,
-          ),
-        });
-      },
-    ),
+          });
+        },
+      ),
+      figure: partsFigure(4, 3),
+    },
   ],
 };

@@ -3,6 +3,8 @@ import { t } from "@ga/content";
 import { gcd, lcm, num, Q, q } from "@ga/subject-math";
 
 import { mixedLatex, numberProblem, steps, why } from "../problems.ts";
+import { pickedMath } from "./early-grades-more-kit.ts";
+import { answered, point, tapeFigure } from "./upper-grades-kit.ts";
 
 /** properFraction draws a fraction in lowest terms between 0 and 1 with a denominator in [2, maxDen]. */
 function properFraction(rng: Rng, maxDen = 12): Q {
@@ -25,6 +27,13 @@ const parenFrac = (v: Q) => (v.sign() < 0 ? `\\left(${num(v)}\\right)` : num(v))
 /** improper writes a mixed number's value as an improper fraction: "\frac{7}{3}". */
 const improper = (v: Q) => fracOf(v.n, v.d);
 
+/** fractionBars draws fractions as bars of the same length, each cut into its bottom number of pieces with its top number shaded. */
+const fractionBars = (fractions: readonly (readonly [number, number])[], en: string, zh: string) =>
+  tapeFigure(
+    fractions.map(([n, d]) => ({ pieces: Array.from({ length: d }, (_, i) => ({ size: 1 / d, text: "", lit: i < n })) })),
+    [en, zh],
+  );
+
 export const equivalentFractions: TopicDef = {
   id: "equivalent-fractions",
   title: t("Equivalent Fractions", "等值分数"),
@@ -36,76 +45,226 @@ export const equivalentFractions: TopicDef = {
   encompasses: [{ topic: "greatest-common-factor", weight: 0.2 }],
   xp: 10,
   standards: ["CCSS.4.NF.A.1"],
+  intro: t(
+    "Two friends have pizzas of the same size. Mia cuts hers into 4 slices and eats 2. Leo cuts his into 8 slices and eats 4. They ate the same amount: $\\frac{2}{4} = \\frac{4}{8}$.\n\nCheck: 2 of 4 slices and 4 of 8 slices are both half a pizza.\n\nIn this lesson we make equal fractions by multiplying, simplify fractions by dividing, and spot a fraction that is not equal.",
+    "两个朋友各有一张同样大的比萨。米娅把她的切成 4 块，吃了 2 块。利奥把他的切成 8 块，吃了 4 块。他们吃得一样多：$\\frac{2}{4} = \\frac{4}{8}$。\n\n检验：4 块中的 2 块和 8 块中的 4 块都是半张比萨。\n\n本课我们用乘法写出相等的分数，用除法约分，并找出不相等的分数。",
+  ),
   knowledgePoints: [
-    {
-      id: "missing-terms",
-      title: t("Finding equivalent fractions", "求等值分数"),
-      explanation: t(
-        "Multiplying the numerator and the denominator of a fraction by the same nonzero number gives an **equivalent fraction**: one with the same value.\n\n$$\\frac{3}{4} = \\frac{3 \\cdot 5}{4 \\cdot 5} = \\frac{15}{20}$$\n\nTo find a missing term, ask what the known denominator (or numerator) was multiplied by, then multiply the other term by the same number.",
-        "分数的分子和分母同时乘同一个不为零的数，得到**等值分数**：值相同的分数。\n\n$$\\frac{3}{4} = \\frac{3 \\cdot 5}{4 \\cdot 5} = \\frac{15}{20}$$\n\n求缺少的项时，先看已知的分母（或分子）乘了几，再把另一项乘同一个数。",
-      ),
-      generate(rng) {
+    point(
+      "missing-terms",
+      ["Finding equivalent fractions", "求等值分数"],
+      [
+        "Mia cuts a cake into 4 pieces and eats 3, so she eats $\\frac{3}{4}$. Leo cuts the same cake into 8 pieces. Each of Mia's pieces is 2 of his, so the same amount is $\\frac{3 \\times 2}{4 \\times 2} = \\frac{6}{8}$.\n\nCheck: the shaded parts of the two bars are the same length.\n\n> **Watch out.** Multiply the top and the bottom by the same number. Adding the same number to both changes the fraction.",
+        "米娅把一个蛋糕切成 4 块，吃了 3 块，也就是 $\\frac{3}{4}$。利奥把同样的蛋糕切成 8 块。米娅的每一块是利奥的 2 块，所以同样多是 $\\frac{3 \\times 2}{4 \\times 2} = \\frac{6}{8}$。\n\n检验：两个长条涂色的部分一样长。\n\n> **注意。** 分子和分母要同时乘同一个数。同时加同一个数，分数就变了。",
+      ],
+      (rng) => {
         const f = properFraction(rng);
         const k = rng.int(2, 9);
         const n = Number(f.n);
         const d = Number(f.d);
+        const figure =
+          d * k <= 24
+            ? fractionBars(
+                [
+                  [n, d],
+                  [0, d * k],
+                ],
+                `A bar cut into ${d} equal parts with ${n} shaded, above a bar of the same length cut into ${d * k} equal parts.`,
+                `一个长条平均分成 ${d} 份，涂色 ${n} 份；下面是同样长的长条，平均分成 ${d * k} 份。`,
+              )
+            : undefined;
         if (rng.bool()) {
-          return numberProblem({
-            prompt: t(
-              `Find the missing numerator: $$${num(f)} = \\frac{?}{${d * k}}$$`,
-              `求缺少的分子：$$${num(f)} = \\frac{?}{${d * k}}$$`,
-            ),
-            answer: n * k,
-            form: "integer",
-            wrong: [n + (d * k - d), n * d],
-            solution: t(
-              `$${d} \\cdot ${k} = ${d * k}$, so multiply the numerator by $${k}$ too: $${n} \\cdot ${k} = ${n * k}$.`,
-              `$${d} \\cdot ${k} = ${d * k}$，所以分子也乘 $${k}$：$${n} \\cdot ${k} = ${n * k}$。`,
-            ),
-          });
+          return answered(
+            [`Find the missing top number: $${num(f)} = \\frac{?}{${d * k}}$.`, `求缺少的分子：$${num(f)} = \\frac{?}{${d * k}}$。`],
+            n * k,
+            [
+              [
+                ["Find the multiplier", "找出乘的数"],
+                [
+                  `$${d} \\times ${k} = ${d * k}$, so the bottom was multiplied by ${k}.`,
+                  `$${d} \\times ${k} = ${d * k}$，所以分母乘了 ${k}。`,
+                ],
+              ],
+              [
+                ["Multiply the top", "分子也乘"],
+                [
+                  `$${n} \\times ${k} = ${n * k}$, so $${num(f)} = ${fracOf(n * k, d * k)}$.`,
+                  `$${n} \\times ${k} = ${n * k}$，所以 $${num(f)} = ${fracOf(n * k, d * k)}$。`,
+                ],
+              ],
+            ],
+            [
+              `Divide the top and the bottom of $${fracOf(n * k, d * k)}$ by ${k}: $${n * k} \\div ${k} = ${n}$ and $${d * k} \\div ${k} = ${d}$.`,
+              `把 $${fracOf(n * k, d * k)}$ 的分子和分母同时除以 ${k}：$${n * k} \\div ${k} = ${n}$，$${d * k} \\div ${k} = ${d}$。`,
+            ],
+            [
+              [
+                n + d * k - d,
+                `That adds ${d * k - d} to the top, as was added to the bottom. Adding changes the fraction.`,
+                `这是分子也加了 ${d * k - d}，和分母加的一样。加法会改变分数的值。`,
+              ],
+              [k, "That is the number the bottom was multiplied by, not the new top.", "这是分母乘的数，不是新的分子。"],
+              [n + k, `That adds ${k} to the top instead of multiplying by it.`, `这是分子加 ${k}，应该乘 ${k}。`],
+            ],
+            { form: "integer", ...(figure && { figure }) },
+          );
         }
-        return numberProblem({
-          prompt: t(
-            `Find the missing denominator: $$${num(f)} = \\frac{${n * k}}{?}$$`,
-            `求缺少的分母：$$${num(f)} = \\frac{${n * k}}{?}$$`,
-          ),
-          answer: d * k,
-          form: "integer",
-          wrong: [d + (n * k - n), d * n],
-          solution: t(
-            `$${n} \\cdot ${k} = ${n * k}$, so multiply the denominator by $${k}$ too: $${d} \\cdot ${k} = ${d * k}$.`,
-            `$${n} \\cdot ${k} = ${n * k}$，所以分母也乘 $${k}$：$${d} \\cdot ${k} = ${d * k}$。`,
-          ),
-        });
+        return answered(
+          [`Find the missing bottom number: $${num(f)} = \\frac{${n * k}}{?}$.`, `求缺少的分母：$${num(f)} = \\frac{${n * k}}{?}$。`],
+          d * k,
+          [
+            [
+              ["Find the multiplier", "找出乘的数"],
+              [`$${n} \\times ${k} = ${n * k}$, so the top was multiplied by ${k}.`, `$${n} \\times ${k} = ${n * k}$，所以分子乘了 ${k}。`],
+            ],
+            [
+              ["Multiply the bottom", "分母也乘"],
+              [
+                `$${d} \\times ${k} = ${d * k}$, so $${num(f)} = ${fracOf(n * k, d * k)}$.`,
+                `$${d} \\times ${k} = ${d * k}$，所以 $${num(f)} = ${fracOf(n * k, d * k)}$。`,
+              ],
+            ],
+          ],
+          [
+            `Divide the top and the bottom of $${fracOf(n * k, d * k)}$ by ${k}: $${n * k} \\div ${k} = ${n}$ and $${d * k} \\div ${k} = ${d}$.`,
+            `把 $${fracOf(n * k, d * k)}$ 的分子和分母同时除以 ${k}：$${n * k} \\div ${k} = ${n}$，$${d * k} \\div ${k} = ${d}$。`,
+          ],
+          [
+            [
+              d + n * k - n,
+              `That adds ${n * k - n} to the bottom, as was added to the top. Adding changes the fraction.`,
+              `这是分母也加了 ${n * k - n}，和分子加的一样。加法会改变分数的值。`,
+            ],
+            [k, "That is the number the top was multiplied by, not the new bottom.", "这是分子乘的数，不是新的分母。"],
+            [d + k, `That adds ${k} to the bottom instead of multiplying by it.`, `这是分母加 ${k}，应该乘 ${k}。`],
+          ],
+          { form: "integer", ...(figure && { figure }) },
+        );
       },
-    },
-    {
-      id: "simplifying-fractions",
-      title: t("Simplifying fractions", "约分"),
-      explanation: t(
-        "A fraction is in **lowest terms** when its numerator and denominator have no common factor other than $1$. To simplify a fraction, divide both by their greatest common factor:\n\n$$\\frac{18}{24} = \\frac{18 \\div 6}{24 \\div 6} = \\frac{3}{4}$$\n\nDividing by a smaller common factor also works, but then you must repeat until no common factor is left.",
-        "分子和分母除 $1$ 以外没有公因数的分数是**最简分数**。约分时，把分子和分母同时除以它们的最大公因数：\n\n$$\\frac{18}{24} = \\frac{18 \\div 6}{24 \\div 6} = \\frac{3}{4}$$\n\n也可以先除以较小的公因数，但要重复进行，直到没有公因数为止。",
+      fractionBars(
+        [
+          [3, 4],
+          [6, 8],
+        ],
+        "Two bars of the same length. The first is cut into 4 equal parts with 3 shaded; the second into 8 equal parts with 6 shaded. The shaded parts are the same length.",
+        "两个同样长的长条。第一个平均分成 4 份，涂色 3 份；第二个平均分成 8 份，涂色 6 份。涂色部分一样长。",
       ),
-      generate(rng) {
+    ),
+    point(
+      "simplifying-fractions",
+      ["Simplifying fractions", "约分"],
+      [
+        "Sam has $\\frac{6}{8}$ of a pizza. Every 2 eighths make a quarter, so 6 eighths are 3 quarters: $\\frac{6 \\div 2}{8 \\div 2} = \\frac{3}{4}$. Only 1 divides both 3 and 4, so $\\frac{3}{4}$ is in lowest terms.\n\nCheck: $\\frac{3 \\times 2}{4 \\times 2} = \\frac{6}{8}$.\n\n> **Watch out.** Divide the top and the bottom by the same number. Keep going until only 1 divides both.",
+        "萨姆有 $\\frac{6}{8}$ 张比萨。每 2 个八分之一合成一个四分之一，所以 6 个八分之一是 3 个四分之一：$\\frac{6 \\div 2}{8 \\div 2} = \\frac{3}{4}$。3 和 4 的公因数只有 1，所以 $\\frac{3}{4}$ 是最简分数。\n\n检验：$\\frac{3 \\times 2}{4 \\times 2} = \\frac{6}{8}$。\n\n> **注意。** 分子和分母要同时除以同一个数，一直除到公因数只剩 1 为止。",
+      ],
+      (rng) => {
         const f = properFraction(rng);
         const k = rng.pick([2, 3, 4, 5, 6, 8, 9, 10, 12]);
-        const n = Number(f.n) * k;
-        const d = Number(f.d) * k;
-        const halfway = k % 2 === 0 && k > 2 ? fracOf(n / 2, d / 2) : undefined;
-        return numberProblem({
-          prompt: t(`Simplify $${fracOf(n, d)}$ to lowest terms.`, `把 $${fracOf(n, d)}$ 化成最简分数。`),
-          answer: f,
-          form: "fraction",
-          wrong: [q(n - 1, d - 1)],
-          solution: t(
-            `The greatest common factor of $${n}$ and $${d}$ is $${k}$:${steps(`${fracOf(n, d)} = \\frac{${n} \\div ${k}}{${d} \\div ${k}} = ${num(f)}`)}${halfway ? `Dividing by $2$ first gives $${halfway}$, which still has a common factor.` : ""}`,
-            `$${n}$ 和 $${d}$ 的最大公因数是 $${k}$：${steps(`${fracOf(n, d)} = \\frac{${n} \\div ${k}}{${d} \\div ${k}} = ${num(f)}`)}${halfway ? `如果只除以 $2$，得到的 $${halfway}$ 还有公因数。` : ""}`,
-          ),
-        });
+        const [a, b] = [Number(f.n), Number(f.d)];
+        const n = a * k;
+        const d = b * k;
+        return answered(
+          [`Simplify $${fracOf(n, d)}$ to lowest terms.`, `把 $${fracOf(n, d)}$ 化成最简分数。`],
+          f,
+          [
+            [
+              ["Find the greatest common factor", "找最大公因数"],
+              [`The greatest number that divides both ${n} and ${d} is ${k}.`, `同时能整除 ${n} 和 ${d} 的最大的数是 ${k}。`],
+            ],
+            [
+              ["Divide both", "同时除"],
+              [
+                `$${fracOf(n, d)} = \\frac{${n} \\div ${k}}{${d} \\div ${k}} = ${num(f)}$. Only 1 divides both ${a} and ${b}.`,
+                `$${fracOf(n, d)} = \\frac{${n} \\div ${k}}{${d} \\div ${k}} = ${num(f)}$。${a} 和 ${b} 的公因数只有 1。`,
+              ],
+            ],
+          ],
+          [
+            `Multiply back: $\\frac{${a} \\times ${k}}{${b} \\times ${k}} = ${fracOf(n, d)}$.`,
+            `乘回去：$\\frac{${a} \\times ${k}}{${b} \\times ${k}} = ${fracOf(n, d)}$。`,
+          ],
+          [
+            [
+              q(n - 1, d - 1),
+              "That takes 1 from the top and the bottom. Subtracting changes the fraction.",
+              "这是分子分母同时减 1，减法会改变分数的值。",
+            ],
+            [q(n, b), `That divides only the bottom by ${k}.`, `这只把分母除以了 ${k}。`],
+            [q(a, d), `That divides only the top by ${k}.`, `这只把分子除以了 ${k}。`],
+          ],
+          { form: "fraction" },
+        );
       },
-    },
+      fractionBars(
+        [
+          [6, 8],
+          [3, 4],
+        ],
+        "Two bars of the same length. The first is cut into 8 equal parts with 6 shaded; the second into 4 equal parts with 3 shaded. The shaded parts are the same length.",
+        "两个同样长的长条。第一个平均分成 8 份，涂色 6 份；第二个平均分成 4 份，涂色 3 份。涂色部分一样长。",
+      ),
+    ),
   ],
 };
+
+/** oddFractionOut finds the fraction in a list that is not equal to the others: it adds the same number to the top and bottom. */
+export const oddFractionOut = point(
+  "the-fraction-that-does-not-belong",
+  ["The fraction that does not belong", "找出不相等的分数"],
+  [
+    "Mia writes $\\frac{2}{3}$, $\\frac{4}{6}$, $\\frac{6}{9}$ and $\\frac{3}{4}$. The first three come from multiplying 2 and 3 by the same number, by 2 and by 3. But $\\frac{3}{4}$ adds 1 to both, so it does not belong.\n\nCheck: on bars of the same length, $\\frac{3}{4}$ is longer than $\\frac{2}{3}$.\n\n> **Watch out.** Adding the same number to the top and the bottom changes the fraction.",
+    "米娅写了 $\\frac{2}{3}$、$\\frac{4}{6}$、$\\frac{6}{9}$ 和 $\\frac{3}{4}$。前三个都是把 2 和 3 同时乘同一个数得到的，分别乘 2 和乘 3。$\\frac{3}{4}$ 却是同时加 1，所以它和别的不相等。\n\n检验：在同样长的长条上，$\\frac{3}{4}$ 比 $\\frac{2}{3}$ 长。\n\n> **注意。** 分子和分母同时加同一个数，分数就变了。",
+  ],
+  (rng) => {
+    const d = rng.int(3, 9);
+    const n = rng.int(1, d - 1);
+    const add = rng.int(1, 5);
+    const [a, b, c] = rng.sample([2, 3, 4, 5, 6], 3) as [number, number, number];
+    const odd = fracOf(n + add, d + add);
+    const big = d * (d + add);
+    const times = (m: number) =>
+      [
+        fracOf(n * m, d * m),
+        `This is $${fracOf(n, d)}$ with the top and the bottom multiplied by ${m}.`,
+        `这是把 $${fracOf(n, d)}$ 的分子和分母同时乘 ${m}。`,
+      ] as const;
+    return pickedMath(
+      rng,
+      [`Which fraction is not equal to $${fracOf(n, d)}$?`, `哪个分数不等于 $${fracOf(n, d)}$？`],
+      odd,
+      [times(a), times(b), times(c)],
+      [
+        [
+          ["Look for a multiplier", "找乘的数"],
+          [
+            `For each fraction, ask what $${fracOf(n, d)}$ was multiplied by to get it.`,
+            `看每个分数是 $${fracOf(n, d)}$ 的分子分母同时乘几得到的。`,
+          ],
+        ],
+        [
+          ["Find the odd one", "找出不相等的"],
+          [
+            `The fraction $${odd}$ adds ${add} to both numbers instead. No one number times ${n} and ${d} gives ${n + add} and ${d + add}.`,
+            `$${odd}$ 却是分子分母同时加 ${add}。没有一个数能把 ${n} 和 ${d} 同时乘成 ${n + add} 和 ${d + add}。`,
+          ],
+        ],
+      ],
+      [
+        `Give both the bottom ${big}. Then $${fracOf(n, d)}$ is $${fracOf(n * (d + add), big)}$, but $${odd}$ is $${fracOf(d * (n + add), big)}$, and ${n * (d + add)} is not ${d * (n + add)}.`,
+        `把两个分数的分母都化成 ${big}。$${fracOf(n, d)}$ 是 $${fracOf(n * (d + add), big)}$，而 $${odd}$ 是 $${fracOf(d * (n + add), big)}$，${n * (d + add)} 和 ${d * (n + add)} 不相等。`,
+      ],
+    );
+  },
+  fractionBars(
+    [
+      [2, 3],
+      [4, 6],
+      [3, 4],
+    ],
+    "Three bars of the same length showing 2/3, 4/6 and 3/4. The shaded parts of 2/3 and 4/6 are the same length; 3/4 is longer.",
+    "三个同样长的长条，分别表示 2/3、4/6 和 3/4。2/3 和 4/6 的涂色部分一样长，3/4 的更长。",
+  ),
+);
 
 export const addingAndSubtractingFractions: TopicDef = {
   id: "adding-and-subtracting-fractions",
