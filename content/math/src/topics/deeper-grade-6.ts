@@ -3,13 +3,13 @@
 // of one step, or a fact used in a new setting. See `deeperGrade6Points`.
 
 import type { Figure, KnowledgePointDef } from "@ga/content";
-import { t } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 import { earlyNames } from "../early-grades-kit.ts";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { remainingDrawings2 } from "../explanation-drawings-remaining-2.ts";
-import { mixedLatex, numberProblem } from "../problems.ts";
+import { mixedLatex } from "../problems.ts";
 import { type Pair, tableFigure } from "./early-grades-more-kit.ts";
+import { theFirstPowerAboveANumber, theMissingExponentOfAFraction } from "./grade-5-decimals.ts";
 import { drawn, lesson, type Off, valued } from "./grade-6-kit.ts";
 import { equalTape, lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
@@ -805,73 +805,6 @@ const cornerFromArea = lesson(
   },
   drawn(gradeDrawings4["finding-areas-and-perimeters-in-the-coordinate-plane#a-missing-corner-from-the-area"]),
 );
-
-const firstPowerAbove: KnowledgePointDef = {
-  id: "the-first-power-above-a-number",
-  title: t("The first power above a number", "第一个超过某数的幂"),
-  explanation: t(
-    "Powers of a whole number greater than 1 grow quickly, and each one is the previous one times the base. To find the first power beyond a given number, list the powers in order until one passes it. Exponents and values are easy to mix up here: the question asks for the exponent, not the value of the power. The answer is usually small, even for a large target, because of how fast powers grow.",
-    "大于 1 的整数的幂增长很快，每一个都是前一个乘以底数。要找第一个超过给定数的幂，就按顺序列出各个幂，直到超过为止。这里容易把指数和值弄混：问题问的是指数，不是幂的值。由于幂增长得很快，即使目标很大，答案通常也很小。",
-  ),
-  generate(rng) {
-    const base = rng.pick([2, 3, 4, 5, 6, 7]);
-    const k = rng.int(2, base === 2 ? 12 : base === 3 ? 8 : 5);
-    const low = base ** k;
-    const high = base ** (k + 1);
-    const n = rng.int(low, high - 1);
-    const answer = k + 1;
-    return numberProblem({
-      prompt: t(`What is the smallest whole number $n$ for which $${base}^n > ${n}$?`, `使 $${base}^n > ${n}$ 成立的最小整数 $n$ 是多少？`),
-      answer,
-      form: "integer",
-      wrong: [k, k + 2, high, Math.floor(n / base), k + 3],
-      solution: t(
-        `We have $${base}^{${k}} = ${low}$, which is not greater than ${n}, and $${base}^{${k + 1}} = ${high}$, which is. So $n = ${answer}$.`,
-        `$${base}^{${k}} = ${low}$ 不大于 ${n}，而 $${base}^{${k + 1}} = ${high}$ 大于它。所以 $n = ${answer}$。`,
-      ),
-    });
-  },
-};
-
-const fractionalBaseExponent: KnowledgePointDef = {
-  id: "the-missing-exponent-of-a-fraction",
-  title: t("The missing exponent of a fraction", "分数底数缺失的指数"),
-  explanation: t(
-    "A power of a fraction raises the numerator and the denominator separately. So when the value is known, an unknown exponent can be found from the top or the bottom on its own, by counting how many factors make it. Both must give the same count, so the second is a check on the first. When the fraction is less than 1, higher exponents give smaller values, which is the opposite of what happens for whole numbers.",
-    "分数的幂是把分子和分母分别乘方。所以知道值后，只看分子或只看分母，数一数由多少个因数组成，就能求出未知的指数。两者必须得到相同的个数，所以第二个可以检验第一个。分数小于 1 时，指数越大值越小，这与整数的情况相反。",
-  ),
-  generate(rng) {
-    const [p, q] = rng.pick([
-      [1, 2],
-      [1, 3],
-      [2, 3],
-      [3, 2],
-      [1, 4],
-      [3, 4],
-      [1, 5],
-      [2, 5],
-      [3, 5],
-      [5, 2],
-      [4, 3],
-    ]) as [number, number];
-    const answer = rng.int(2, 6);
-    const top = p ** answer;
-    const bottom = q ** answer;
-    return numberProblem({
-      prompt: t(
-        `Find the missing exponent: $$\\left(\\frac{${p}}{${q}}\\right)^{\\square} = \\frac{${top}}{${bottom}}$$`,
-        `求缺失的指数：$$\\left(\\frac{${p}}{${q}}\\right)^{\\square} = \\frac{${top}}{${bottom}}$$`,
-      ),
-      answer,
-      form: "integer",
-      wrong: [answer + 1, answer - 1, answer * 2, answer + 2, Math.floor(bottom / q), answer + 3],
-      solution: t(
-        `Multiplying ${q} by itself to reach ${bottom} takes ${answer} factors, so the exponent is ${answer}.`,
-        `${q} 连乘到 ${bottom} 要用 ${answer} 个因数，所以指数是 ${answer}。`,
-      ),
-    });
-  },
-};
 
 const changeInLinearExpression: KnowledgePointDef = lesson(
   "how-much-an-expression-grows",
@@ -1675,8 +1608,8 @@ export const deeperGrade6Points: Readonly<Record<string, readonly KnowledgePoint
   "identifying-rational-numbers-on-a-number-line": [halfwayPoint],
   "reflections-of-points-in-the-coordinate-plane": [distanceToReflection],
   "finding-areas-and-perimeters-in-the-coordinate-plane": [cornerFromArea],
-  "comparing-exponents": [firstPowerAbove],
-  "evaluating-exponents-with-fractional-bases": [fractionalBaseExponent],
+  "comparing-exponents": [theFirstPowerAboveANumber],
+  "evaluating-exponents-with-fractional-bases": [theMissingExponentOfAFraction],
   "evaluating-linear-expressions": [changeInLinearExpression],
   "simplifying-linear-expressions": [perimeterExpression],
   "one-step-multiplication-equations": [anotherMultiple],

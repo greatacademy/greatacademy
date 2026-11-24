@@ -2,9 +2,11 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, lcm, num, Q, q } from "@ga/subject-math";
 
-import { mixedLatex, numberProblem, steps, why } from "../problems.ts";
-import { pickedMath } from "./early-grades-more-kit.ts";
-import { answered, point, tapeFigure } from "./upper-grades-kit.ts";
+import { mixedLatex, numberProblem, steps } from "../problems.ts";
+import { pickedMath, type Walk } from "./early-grades-more-kit.ts";
+import { barFigure, twoBarsFigure } from "./grade-4-fractions.ts";
+import { groupedBarsFigure, partsTape, productGrid } from "./grade-5-fractions.ts";
+import { answered, equalTape, point, tapeFigure } from "./upper-grades-kit.ts";
 
 /** properFraction draws a fraction in lowest terms between 0 and 1 with a denominator in [2, maxDen]. */
 function properFraction(rng: Rng, maxDen = 12): Q {
@@ -266,6 +268,15 @@ export const oddFractionOut = point(
   ),
 );
 
+/** simplestStep is the walk step that writes n/d in simplest form, or no step when it already is. */
+const simplestStep = (n: number, d: number): Walk[] => {
+  const v = q(n, d);
+  const last = v.isInteger() || v.cmp(Q.one) < 0 ? num(v) : `${improper(v)} = ${mixedLatex(v)}`;
+  return fracOf(n, d) === last
+    ? []
+    : [[["Simplify", "化简"], ["Write the answer in simplest form.", "把结果写成最简形式。"], [`${fracOf(n, d)} = ${last}`]]];
+};
+
 export const addingAndSubtractingFractions: TopicDef = {
   id: "adding-and-subtracting-fractions",
   title: t("Adding and Subtracting Fractions", "分数加减法"),
@@ -278,72 +289,151 @@ export const addingAndSubtractingFractions: TopicDef = {
   xp: 14,
   standards: ["CCSS.5.NF.A.1"],
   knowledgePoints: [
-    {
-      id: "like-denominators",
-      title: t("Like denominators", "同分母"),
-      explanation: t(
-        "Fractions with the same denominator count pieces of the same size, so add or subtract the numerators and keep the denominator:\n\n$$\\frac{5}{9} + \\frac{1}{9} = \\frac{6}{9} = \\frac{2}{3}$$\n\nAlways simplify the result. Never add the denominators: $\\frac{5}{9} + \\frac{1}{9}$ is not $\\frac{6}{18}$.",
-        "同分母的分数表示同样大小的份数，所以分子相加减，分母不变：\n\n$$\\frac{5}{9} + \\frac{1}{9} = \\frac{6}{9} = \\frac{2}{3}$$\n\n结果要约分。分母不能相加：$\\frac{5}{9} + \\frac{1}{9}$ 不等于 $\\frac{6}{18}$。",
-      ),
-      generate(rng) {
-        const d = rng.int(3, 15);
-        const a = rng.int(1, d - 1);
+    point(
+      "like-denominators",
+      ["Like denominators", "同分母"],
+      [
+        "$\\frac{5}{9} + \\frac{1}{9} = \\frac{6}{9} = \\frac{2}{3}$. The parts are all ninths, so add the tops and keep the bottom.\n\nCheck: $\\frac{6}{9} - \\frac{1}{9} = \\frac{5}{9}$.\n\n> **Watch out.** Keep the bottom. $\\frac{6}{18}$ adds the bottoms too.",
+        "$\\frac{5}{9} + \\frac{1}{9} = \\frac{6}{9} = \\frac{2}{3}$。每份都是九分之一，所以分子相加，分母不变。\n\n检验：$\\frac{6}{9} - \\frac{1}{9} = \\frac{5}{9}$。\n\n> **注意。** 分母不变。$\\frac{6}{18}$ 把分母也加起来了。",
+      ],
+      (rng) => {
+        const d = rng.int(3, 12);
         const add = rng.bool();
-        const b = add ? rng.int(1, d - 1) : rng.int(1, a);
-        if (!add && a === b) return this.generate(rng);
-        const result = add ? q(a + b, d) : q(a - b, d);
+        const a = rng.int(add ? 1 : 2, d - 1);
+        const b = add ? rng.int(1, d - 1) : rng.int(1, a - 1);
         const raw = add ? a + b : a - b;
         const op = add ? "+" : "-";
-        return numberProblem({
-          prompt: t(`Evaluate $${fracOf(a, d)} ${op} ${fracOf(b, d)}$.`, `计算 $${fracOf(a, d)} ${op} ${fracOf(b, d)}$。`),
-          answer: result,
-          form: "fraction",
-          wrong: [q(raw, 2 * d)],
-          solution: t(
-            `The denominators are equal, so ${add ? "add" : "subtract"} the numerators:${steps(`${fracOf(a, d)} ${op} ${fracOf(b, d)} = ${fracOf(raw, d)}${result.d === BigInt(d) ? "" : ` = ${num(result)}`}`)}`,
-            `分母相同，分子相${add ? "加" : "减"}：${steps(`${fracOf(a, d)} ${op} ${fracOf(b, d)} = ${fracOf(raw, d)}${result.d === BigInt(d) ? "" : ` = ${num(result)}`}`)}`,
-          ),
-        });
+        const undo = add ? "-" : "+";
+        return answered(
+          [`Find $${fracOf(a, d)} ${op} ${fracOf(b, d)}$.`, `计算 $${fracOf(a, d)} ${op} ${fracOf(b, d)}$。`],
+          q(raw, d),
+          [
+            [
+              add ? ["Add the tops", "分子相加"] : ["Subtract the tops", "分子相减"],
+              [
+                `Both count parts of $${fracOf(1, d)}$, so the bottom stays ${d}.`,
+                `两个分数都是几个 $${fracOf(1, d)}$，所以分母还是 ${d}。`,
+              ],
+              [`${fracOf(a, d)} ${op} ${fracOf(b, d)} = ${fracOf(raw, d)}`],
+            ],
+            ...simplestStep(raw, d),
+          ],
+          [
+            `Undo it: $${fracOf(raw, d)} ${undo} ${fracOf(b, d)} = ${fracOf(a, d)}$.`,
+            `倒过来算：$${fracOf(raw, d)} ${undo} ${fracOf(b, d)} = ${fracOf(a, d)}$。`,
+          ],
+          add
+            ? [
+                [q(raw, 2 * d), "That adds the bottoms too. The bottom stays the same.", "这是把分母也加起来了。分母应该不变。"],
+                [q(Math.abs(a - b), d), "That subtracts instead of adding.", "这是做成减法了。"],
+                [raw, "That is only the top. The bottom is missing.", "这只是分子，漏掉了分母。"],
+              ]
+            : [
+                [q(a + b, d), "That adds instead of subtracting.", "这是做成加法了。"],
+                [raw, "That is only the top. The bottom is missing.", "这只是分子，漏掉了分母。"],
+                [q(d - raw, d), "That is what is left to make 1.", "这是凑成 1 还差的部分。"],
+              ],
+          {
+            form: "fraction",
+            figure: fractionBars(
+              [
+                [a, d],
+                [b, d],
+              ],
+              `Two bars cut into ${d} equal parts, with ${a} and ${b} parts shaded.`,
+              `两个长条都平均分成 ${d} 份，分别涂了 ${a} 份和 ${b} 份。`,
+            ),
+          },
+        );
       },
-    },
-    {
-      id: "unlike-denominators",
-      title: t("Unlike denominators", "异分母"),
-      explanation: t(
-        "To add or subtract fractions with different denominators, first rewrite them as equivalent fractions with a **common denominator**. The least common multiple of the denominators keeps the numbers smallest.\n\nFor $\\frac{3}{4} - \\frac{1}{6}$: the LCM of $4$ and $6$ is $12$, so\n\n$$\\frac{3}{4} - \\frac{1}{6} = \\frac{9}{12} - \\frac{2}{12} = \\frac{7}{12}$$",
-        "异分母分数相加减，先把它们通分成**公分母**相同的等值分数。用分母的最小公倍数作公分母，数最小。\n\n例如 $\\frac{3}{4} - \\frac{1}{6}$：$4$ 和 $6$ 的最小公倍数是 $12$，所以\n\n$$\\frac{3}{4} - \\frac{1}{6} = \\frac{9}{12} - \\frac{2}{12} = \\frac{7}{12}$$",
+      fractionBars(
+        [
+          [5, 9],
+          [1, 9],
+        ],
+        "Two bars cut into 9 equal parts, with 5 and 1 parts shaded.",
+        "两个长条都平均分成 9 份，分别涂了 5 份和 1 份。",
       ),
-      generate(rng) {
+    ),
+    point(
+      "unlike-denominators",
+      ["Unlike denominators", "异分母"],
+      [
+        "For $\\frac{3}{4} - \\frac{1}{6}$, use twelfths: $\\frac{9}{12} - \\frac{2}{12} = \\frac{7}{12}$.\n\nCheck: $\\frac{7}{12} + \\frac{2}{12} = \\frac{9}{12} = \\frac{3}{4}$.\n\n> **Watch out.** Change both fractions to the same bottom first. Do not subtract the tops right away.",
+        "计算 $\\frac{3}{4} - \\frac{1}{6}$，都化成十二分之几：$\\frac{9}{12} - \\frac{2}{12} = \\frac{7}{12}$。\n\n检验：$\\frac{7}{12} + \\frac{2}{12} = \\frac{9}{12} = \\frac{3}{4}$。\n\n> **注意。** 先把两个分数化成同分母，不能直接把分子相减。",
+      ],
+      (rng) => {
         let x = properFraction(rng, 10);
         let y = properFraction(rng, 10);
         while (x.d === y.d) y = properFraction(rng, 10);
         const add = rng.bool();
         if (!add && x.cmp(y) < 0) [x, y] = [y, x];
         const op = add ? "+" : "-";
-        const L = lcm(Number(x.d), Number(y.d));
-        const xn = (Number(x.n) * L) / Number(x.d);
-        const yn = (Number(y.n) * L) / Number(y.d);
-        const raw = add ? xn + yn : xn - yn;
-        const result = add ? x.add(y) : x.sub(y);
-        return numberProblem({
-          prompt: t(`Evaluate $${num(x)} ${op} ${num(y)}$.`, `计算 $${num(x)} ${op} ${num(y)}$。`),
-          answer: result,
-          form: "fraction",
-          mistakes: [
-            why(
-              q(add ? Number(x.n) + Number(y.n) : Number(x.n) - Number(y.n), Number(x.d) + Number(y.d)),
-              "You added the denominators. Rewrite both fractions over a common denominator; then only the numerators combine.",
-              "你把分母也相加了。先通分；通分后只有分子相加减。",
-            ),
+        const undo = add ? "-" : "+";
+        const [xn, xd, yn, yd] = [Number(x.n), Number(x.d), Number(y.n), Number(y.d)];
+        const L = lcm(xd, yd);
+        const [xs, ys] = [(xn * L) / xd, (yn * L) / yd];
+        const raw = add ? xs + ys : xs - ys;
+        return answered(
+          [`Find $${num(x)} ${op} ${num(y)}$.`, `计算 $${num(x)} ${op} ${num(y)}$。`],
+          q(raw, L),
+          [
+            [
+              ["Find a common bottom", "通分"],
+              [`${L} is the smallest number that both ${xd} and ${yd} go into.`, `${L} 是 ${xd} 和 ${yd} 的最小公倍数。`],
+              [`${num(x)} = ${fracOf(xs, L)}`, `${num(y)} = ${fracOf(ys, L)}`],
+            ],
+            [
+              add ? ["Add the tops", "分子相加"] : ["Subtract the tops", "分子相减"],
+              [`Now both count parts of $${fracOf(1, L)}$.`, `现在两个分数都是几个 $${fracOf(1, L)}$。`],
+              [`${fracOf(xs, L)} ${op} ${fracOf(ys, L)} = ${fracOf(raw, L)}`],
+            ],
+            ...simplestStep(raw, L),
           ],
-          solution: t(
-            `The least common multiple of $${x.d}$ and $${y.d}$ is $${L}$:${steps(`${num(x)} ${op} ${num(y)} = ${fracOf(xn, L)} ${op} ${fracOf(yn, L)} = ${fracOf(raw, L)}${result.d === BigInt(L) ? "" : ` = ${num(result)}`}`)}`,
-            `$${x.d}$ 和 $${y.d}$ 的最小公倍数是 $${L}$：${steps(`${num(x)} ${op} ${num(y)} = ${fracOf(xn, L)} ${op} ${fracOf(yn, L)} = ${fracOf(raw, L)}${result.d === BigInt(L) ? "" : ` = ${num(result)}`}`)}`,
-          ),
-        });
+          [
+            `Undo it: $${fracOf(raw, L)} ${undo} ${fracOf(ys, L)} = ${fracOf(xs, L)} = ${num(x)}$.`,
+            `倒过来算：$${fracOf(raw, L)} ${undo} ${fracOf(ys, L)} = ${fracOf(xs, L)} = ${num(x)}$。`,
+          ],
+          [
+            [
+              q(add ? xn + yn : xn - yn, xd + yd),
+              "That works on the tops and the bottoms as they are. Find a common bottom first.",
+              "这是直接把分子、分母分别相加减了。要先通分。",
+            ],
+            [q(add ? xn + yn : xn - yn, L), "That changes the bottoms but not the tops.", "这里只改了分母，没有改分子。"],
+            [
+              add ? q(Math.abs(xs - ys), L) : q(xs + ys, L),
+              add ? "That subtracts instead of adding." : "That adds instead of subtracting.",
+              add ? "这是做成减法了。" : "这是做成加法了。",
+            ],
+          ],
+          {
+            form: "fraction",
+            figure: fractionBars(
+              [
+                [xn, xd],
+                [yn, yd],
+              ],
+              `Two bars of the same length showing ${xn}/${xd} and ${yn}/${yd}.`,
+              `两个同样长的长条，分别表示 ${xn}/${xd} 和 ${yn}/${yd}。`,
+            ),
+          },
+        );
       },
-    },
+      fractionBars(
+        [
+          [3, 4],
+          [1, 6],
+        ],
+        "Two bars of the same length showing 3/4 and 1/6.",
+        "两个同样长的长条，分别表示 3/4 和 1/6。",
+      ),
+    ),
   ],
+  intro: t(
+    "Mia eats $\\frac{1}{4}$ of a pizza and Leo eats $\\frac{1}{3}$. In twelfths that is $\\frac{3}{12} + \\frac{4}{12} = \\frac{7}{12}$ of the pizza.\n\nCheck: $\\frac{7}{12} - \\frac{4}{12} = \\frac{3}{12} = \\frac{1}{4}$, which is Mia's part.\n\nIn this lesson we add and subtract fractions with the same or different bottoms.",
+    "米娅吃了一个比萨饼的 $\\frac{1}{4}$，利奥吃了 $\\frac{1}{3}$。化成十二分之几，就是 $\\frac{3}{12} + \\frac{4}{12} = \\frac{7}{12}$ 个比萨饼。\n\n检验：$\\frac{7}{12} - \\frac{4}{12} = \\frac{3}{12} = \\frac{1}{4}$，正是米娅吃的部分。\n\n本课我们做同分母和异分母分数的加减法。",
+  ),
 };
 
 export const mixedNumbers: TopicDef = {
@@ -426,69 +516,94 @@ export const multiplyingFractions: TopicDef = {
   xp: 10,
   standards: ["CCSS.5.NF.B.4", "CCSS.5.NF.B.6"],
   knowledgePoints: [
-    {
-      id: "fraction-times-fraction",
-      title: t("Fraction times fraction", "分数乘分数"),
-      explanation: t(
-        "To multiply fractions, multiply the numerators and multiply the denominators:\n\n$$\\frac{2}{3} \\cdot \\frac{9}{10} = \\frac{2 \\cdot 9}{3 \\cdot 10} = \\frac{18}{30} = \\frac{3}{5}$$\n\nYou can simplify before multiplying by cancelling a factor shared by any numerator and any denominator: $\\frac{2}{3} \\cdot \\frac{9}{10} = \\frac{1}{1} \\cdot \\frac{3}{5}$ after cancelling $2$ and $3$.",
-        "分数相乘，分子乘分子，分母乘分母：\n\n$$\\frac{2}{3} \\cdot \\frac{9}{10} = \\frac{2 \\cdot 9}{3 \\cdot 10} = \\frac{18}{30} = \\frac{3}{5}$$\n\n也可以先约分再乘：任一分子与任一分母的公因数都可以约去。$\\frac{2}{3} \\cdot \\frac{9}{10}$ 约去 $2$ 和 $3$ 后得 $\\frac{1}{1} \\cdot \\frac{3}{5}$。",
-      ),
-      generate(rng) {
-        const x = properFraction(rng);
-        const y = properFraction(rng);
-        const p = x.mul(y);
-        const rawN = x.n * y.n;
-        const rawD = x.d * y.d;
-        return numberProblem({
-          prompt: t(`Evaluate $${num(x)} \\cdot ${num(y)}$.`, `计算 $${num(x)} \\cdot ${num(y)}$。`),
-          answer: p,
-          form: "fraction",
-          mistakes: [
-            why(x.add(y), "You added the fractions. Here they are multiplied.", "你把两个分数相加了。这里要相乘。"),
-            why(
-              Q.of(x.n * y.d, x.d * y.n),
-              "You divided: that flips the second fraction. To multiply, keep both as they are.",
-              "你做的是除法，把第二个分数颠倒了。相乘时两个分数都不颠倒。",
-            ),
+    point(
+      "fraction-times-fraction",
+      ["Fraction times fraction", "分数乘分数"],
+      [
+        "$\\frac{2}{3} \\times \\frac{3}{5} = \\frac{2 \\times 3}{3 \\times 5} = \\frac{6}{15} = \\frac{2}{5}$.\n\nCheck: in a square cut into 3 rows and 5 columns, 2 rows and 3 columns overlap in 6 of the 15 boxes.\n\n> **Watch out.** Multiply the tops and multiply the bottoms. Do not add the fractions.",
+        "$\\frac{2}{3} \\times \\frac{3}{5} = \\frac{2 \\times 3}{3 \\times 5} = \\frac{6}{15} = \\frac{2}{5}$。\n\n检验：把正方形分成 3 行 5 列，涂 2 行和 3 列，重叠的是 15 格中的 6 格。\n\n> **注意。** 分子乘分子，分母乘分母。不要把两个分数相加。",
+      ],
+      (rng) => {
+        const x = properFraction(rng, 9);
+        const y = properFraction(rng, 9);
+        const [a, b, c, d] = [Number(x.n), Number(x.d), Number(y.n), Number(y.d)];
+        return answered(
+          [`Find $${num(x)} \\times ${num(y)}$.`, `计算 $${num(x)} \\times ${num(y)}$。`],
+          x.mul(y),
+          [
+            [
+              ["Multiply the tops", "分子相乘"],
+              ["The tops give the boxes shaded twice.", "分子相乘，得到涂了两次的格数。"],
+              [`${a} \\times ${c} = ${a * c}`],
+            ],
+            [
+              ["Multiply the bottoms", "分母相乘"],
+              ["The bottoms give all the boxes.", "分母相乘，得到一共的格数。"],
+              [`${b} \\times ${d} = ${b * d}`, `${num(x)} \\times ${num(y)} = ${fracOf(a * c, b * d)}`],
+            ],
+            ...simplestStep(a * c, b * d),
           ],
-          solution: t(
-            `Multiply the numerators and the denominators:${steps(`${num(x)} \\cdot ${num(y)} = ${fracOf(rawN, rawD)}${p.d === rawD ? "" : ` = ${num(p)}`}`)}`,
-            `分子乘分子，分母乘分母：${steps(`${num(x)} \\cdot ${num(y)} = ${fracOf(rawN, rawD)}${p.d === rawD ? "" : ` = ${num(p)}`}`)}`,
-          ),
-        });
+          [
+            `Count in the grid: ${a * c} of the ${b * d} small boxes are shaded twice, which is $${fracOf(a * c, b * d)}$.`,
+            `在方格中数一数：${b * d} 个小格中有 ${a * c} 个涂了两次，就是 $${fracOf(a * c, b * d)}$。`,
+          ],
+          [
+            [x.add(y), "That adds the fractions instead of multiplying.", "这是把两个分数相加了，应该相乘。"],
+            [x.div(y), "That flips the second fraction, which divides.", "这是把第二个分数倒过来了，那是除法。"],
+            [q(a * c, b + d), "That adds the bottoms. Multiply them.", "这是把分母相加了，应该相乘。"],
+          ],
+          { form: "fraction", figure: productGrid(c, d, a, b) },
+        );
       },
-    },
-    {
-      id: "fraction-of-a-whole-number",
-      title: t("A fraction of a whole number", "求整数的几分之几"),
-      explanation: t(
-        '"$\\frac{3}{4}$ of $20$" means $\\frac{3}{4} \\cdot 20$. Divide by the denominator to find one part, then multiply by the numerator:\n\n$$\\frac{3}{4} \\cdot 20 = \\frac{3 \\cdot 20}{4} = 3 \\cdot 5 = 15$$',
-        "“$20$ 的 $\\frac{3}{4}$”就是 $\\frac{3}{4} \\cdot 20$。先除以分母求出一份，再乘分子：\n\n$$\\frac{3}{4} \\cdot 20 = \\frac{3 \\cdot 20}{4} = 3 \\cdot 5 = 15$$",
-      ),
-      generate(rng) {
-        const f = properFraction(rng);
-        const w = Number(f.d) * rng.int(2, 15);
-        const part = w / Number(f.d);
-        const answer = part * Number(f.n);
-        return numberProblem({
-          prompt: t(`What is $${num(f)}$ of $${w}$?`, `$${w}$ 的 $${num(f)}$ 是多少？`),
+      productGrid(3, 5, 2, 3),
+    ),
+    point(
+      "fraction-of-a-whole-number",
+      ["A fraction of a whole number", "求整数的几分之几"],
+      [
+        "$\\frac{3}{4}$ of 20: one fourth of 20 is $20 \\div 4 = 5$, so three fourths is $3 \\times 5 = 15$.\n\nCheck: $\\frac{3 \\times 20}{4} = \\frac{60}{4} = 15$.\n\n> **Watch out.** Divide by the bottom too. $3 \\times 20 = 60$ is far too big.",
+        "求 20 的 $\\frac{3}{4}$：20 的四分之一是 $20 \\div 4 = 5$，所以四分之三是 $3 \\times 5 = 15$。\n\n检验：$\\frac{3 \\times 20}{4} = \\frac{60}{4} = 15$。\n\n> **注意。** 还要除以分母。$3 \\times 20 = 60$ 太大了。",
+      ],
+      (rng) => {
+        const f = properFraction(rng, 9);
+        const [n, d] = [Number(f.n), Number(f.d)];
+        const part = rng.int(2, 12);
+        const w = d * part;
+        const answer = n * part;
+        return answered(
+          [`What is $${num(f)}$ of ${w}?`, `${w} 的 $${num(f)}$ 是多少？`],
           answer,
-          wrong: [part],
-          mistakes: [
-            why(
-              w * Number(f.n),
-              "You multiplied by the numerator only. Divide by the denominator as well.",
-              "你只乘了分子，还要除以分母。",
-            ),
+          [
+            [
+              ["Find one part", "求一份"],
+              [`Split ${w} into ${d} equal parts.`, `把 ${w} 平均分成 ${d} 份。`],
+              [`${w} \\div ${d} = ${part}`],
+            ],
+            [
+              ["Take the parts you need", "取需要的份数"],
+              [`Take ${n} of the parts.`, `取其中 ${n} 份。`],
+              [`${n} \\times ${part} = ${answer}`],
+            ],
           ],
-          solution: t(
-            `${steps(`${num(f)} \\cdot ${w} = ${f.n} \\cdot (${w} \\div ${f.d}) = ${f.n} \\cdot ${part} = ${answer}`)}`,
-            `${steps(`${num(f)} \\cdot ${w} = ${f.n} \\cdot (${w} \\div ${f.d}) = ${f.n} \\cdot ${part} = ${answer}`)}`,
-          ),
-        });
+          [
+            `Multiply first: $${n} \\times ${w} = ${n * w}$, and $${n * w} \\div ${d} = ${answer}$.`,
+            `先乘：$${n} \\times ${w} = ${n * w}$，再算 $${n * w} \\div ${d} = ${answer}$。`,
+          ],
+          [
+            [part, "That is only one part.", "这只是一份。"],
+            [n * w, `That forgets to divide by ${d}.`, `这里忘了除以 ${d}。`],
+            [w - answer, "That is the part that is left over.", "这是剩下的部分。"],
+          ],
+          { figure: equalTape(d, String(part), String(w), n) },
+        );
       },
-    },
+      equalTape(4, "5", "20", 3),
+    ),
   ],
+  intro: t(
+    "Half of a garden has flowers, and $\\frac{2}{3}$ of the flower bed is roses. Roses cover $\\frac{2}{3} \\times \\frac{1}{2} = \\frac{2}{6} = \\frac{1}{3}$ of the garden.\n\nCheck: cut the garden into 6 equal boxes. The flowers fill 3 boxes, and the roses fill 2 of them, which is $\\frac{2}{6}$.\n\nIn this lesson we multiply fractions and find a fraction of a whole number.",
+    "一个花园的一半种了花，花坛的 $\\frac{2}{3}$ 是玫瑰。玫瑰占整个花园的 $\\frac{2}{3} \\times \\frac{1}{2} = \\frac{2}{6} = \\frac{1}{3}$。\n\n检验：把花园平均分成 6 格。花占 3 格，其中玫瑰占 2 格，就是 $\\frac{2}{6}$。\n\n本课我们学习分数乘分数，以及求一个整数的几分之几。",
+  ),
 };
 
 export const dividingFractions: TopicDef = {
@@ -500,69 +615,146 @@ export const dividingFractions: TopicDef = {
   xp: 12,
   standards: ["CCSS.6.NS.A.1"],
   knowledgePoints: [
-    {
-      id: "reciprocals",
-      title: t("Reciprocals", "倒数"),
-      explanation: t(
-        "Two numbers are **reciprocals** when their product is $1$. The reciprocal of $\\frac{a}{b}$ is $\\frac{b}{a}$: flip the fraction. The reciprocal of a whole number $n$ is $\\frac{1}{n}$, and the reciprocal of $\\frac{1}{n}$ is $n$. The number $0$ has no reciprocal.",
-        "乘积为 $1$ 的两个数互为**倒数**。$\\frac{a}{b}$ 的倒数是 $\\frac{b}{a}$：把分数倒过来。整数 $n$ 的倒数是 $\\frac{1}{n}$，$\\frac{1}{n}$ 的倒数是 $n$。$0$ 没有倒数。",
-      ),
-      generate(rng) {
-        const v = rng.bool(0.3)
-          ? Q.of(rng.int(2, 20))
-          : rng.bool(0.5)
-            ? properFraction(rng, 15)
-            : properFraction(rng, 9).add(Q.of(rng.int(1, 4)));
-        const r = Q.one.div(v);
-        const shown = v.isInteger() ? num(v) : v.cmp(Q.one) > 0 && rng.bool() ? mixedLatex(v) : improper(v);
-        return numberProblem({
-          prompt: t(`Find the reciprocal of $${shown}$.`, `求 $${shown}$ 的倒数。`),
-          answer: r,
-          form: "fraction",
-          wrong: [v.neg()],
-          solution: t(
-            `${shown === improper(v) ? "" : `Write it as a fraction: $${shown} = ${improper(v)}$. `}Flip it: the reciprocal is $${num(r)}$, because $${improper(v)} \\cdot ${num(r)} = 1$.`,
-            `${shown === improper(v) ? "" : `先写成分数：$${shown} = ${improper(v)}$。`}把它倒过来，倒数是 $${num(r)}$，因为 $${improper(v)} \\cdot ${num(r)} = 1$。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "dividing-by-a-fraction",
-      title: t("Dividing by a fraction", "除以分数"),
-      explanation: t(
-        "Dividing by a number is the same as multiplying by its reciprocal:\n\n$$\\frac{3}{4} \\div \\frac{2}{5} = \\frac{3}{4} \\cdot \\frac{5}{2} = \\frac{15}{8}$$\n\nThis works because $\\frac{15}{8} \\cdot \\frac{2}{5} = \\frac{3}{4}$: the quotient times the divisor gives back the dividend. Only the divisor (the second number) is flipped.",
-        "除以一个数等于乘它的倒数：\n\n$$\\frac{3}{4} \\div \\frac{2}{5} = \\frac{3}{4} \\cdot \\frac{5}{2} = \\frac{15}{8}$$\n\n这是因为 $\\frac{15}{8} \\cdot \\frac{2}{5} = \\frac{3}{4}$：商乘除数等于被除数。只把除数（第二个数）倒过来。",
-      ),
-      generate(rng) {
-        const x = rng.bool(0.2) ? Q.of(rng.int(2, 9)) : properFraction(rng, 10);
-        const y = properFraction(rng, 10);
-        if (x.eq(y)) return this.generate(rng);
-        const result = x.div(y);
-        return numberProblem({
-          prompt: t(`Evaluate $${num(x)} \\div ${num(y)}$.`, `计算 $${num(x)} \\div ${num(y)}$。`),
-          answer: result,
-          form: "fraction",
-          mistakes: [
-            why(
-              x.mul(y),
-              "You multiplied without flipping. To divide, multiply by the reciprocal of the divisor.",
-              "你没有颠倒就相乘了。除以一个数，等于乘以它的倒数。",
-            ),
-            why(
-              y.div(x),
-              "You flipped the wrong fraction. Only the divisor, the second fraction, is flipped.",
-              "你颠倒错了分数。只颠倒除数，也就是第二个分数。",
-            ),
+    point(
+      "reciprocals",
+      ["Reciprocals", "倒数"],
+      [
+        "The reciprocal of $\\frac{4}{7}$ is $\\frac{7}{4}$. The reciprocal of 6 is $\\frac{1}{6}$. For $2\\frac{1}{3} = \\frac{7}{3}$, it is $\\frac{3}{7}$.\n\nCheck: $\\frac{4}{7} \\times \\frac{7}{4} = \\frac{28}{28} = 1$.\n\n> **Watch out.** Change a mixed number to a fraction before you flip it.",
+        "$\\frac{4}{7}$ 的倒数是 $\\frac{7}{4}$。6 的倒数是 $\\frac{1}{6}$。$2\\frac{1}{3} = \\frac{7}{3}$，它的倒数是 $\\frac{3}{7}$。\n\n检验：$\\frac{4}{7} \\times \\frac{7}{4} = \\frac{28}{28} = 1$。\n\n> **注意。** 带分数要先化成假分数，再倒过来。",
+      ],
+      (rng) => {
+        const kind = rng.int(0, 2);
+        if (kind === 0) {
+          const n = rng.int(2, 12);
+          return answered(
+            [`Find the reciprocal of ${n}.`, `求 ${n} 的倒数。`],
+            q(1, n),
+            [
+              [["Write a fraction", "写成分数"], [`${n} is ${n} wholes.`, `${n} 就是 ${n} 个整体。`], [`${n} = ${fracOf(n, 1)}`]],
+              [["Flip", "倒过来"], ["Swap the top and the bottom.", "交换分子和分母。"], [`${fracOf(n, 1)} \\to ${fracOf(1, n)}`]],
+            ],
+            [
+              `Multiply: $${n} \\times ${fracOf(1, n)} = ${fracOf(n, n)} = 1$.`,
+              `相乘：$${n} \\times ${fracOf(1, n)} = ${fracOf(n, n)} = 1$。`,
+            ],
+            [
+              [n, "That is the same number. It is not flipped.", "这还是原来的数，没有倒过来。"],
+              [1, `That writes ${n} on the top and the bottom, which is 1.`, `这是分子分母都写 ${n}，等于 1。`],
+              [q(n - 1, n), `That is what is left after taking $${fracOf(1, n)}$ from 1.`, `这是 1 减去 $${fracOf(1, n)}$ 剩下的部分。`],
+            ],
+            { form: "fraction", figure: barFigure(n, 1) },
+          );
+        }
+        if (kind === 1) {
+          const f = properFraction(rng, 12);
+          const [a, b] = [Number(f.n), Number(f.d)];
+          return answered(
+            [`Find the reciprocal of $${num(f)}$.`, `求 $${num(f)}$ 的倒数。`],
+            q(b, a),
+            [
+              [
+                ["Flip", "倒过来"],
+                [`The top ${a} goes to the bottom, and the bottom ${b} goes to the top.`, `分子 ${a} 换到下面，分母 ${b} 换到上面。`],
+                [`${fracOf(a, b)} \\to ${fracOf(b, a)}`],
+              ],
+            ],
+            [
+              `Multiply: $${fracOf(a, b)} \\times ${fracOf(b, a)} = ${fracOf(a * b, a * b)} = 1$.`,
+              `相乘：$${fracOf(a, b)} \\times ${fracOf(b, a)} = ${fracOf(a * b, a * b)} = 1$。`,
+            ],
+            [
+              [f, "That is the same number. It is not flipped.", "这还是原来的数，没有倒过来。"],
+              [q(b - a, b), "That is what is left to make 1.", "这是凑成 1 还差的部分。"],
+              [a * b, "That multiplies the top and the bottom.", "这是把分子和分母相乘了。"],
+              [b + 1, "That adds 1 to the bottom.", "这是给分母加了 1。"],
+            ],
+            { form: "fraction", figure: groupedBarsFigure(1, b, a) },
+          );
+        }
+        const w = rng.int(1, 4);
+        const f = properFraction(rng, 8);
+        const [a, b] = [Number(f.n), Number(f.d)];
+        const top = w * b + a;
+        return answered(
+          [`Find the reciprocal of $${w}${num(f)}$.`, `求 $${w}${num(f)}$ 的倒数。`],
+          q(b, top),
+          [
+            [
+              ["Write a fraction", "化成假分数"],
+              [
+                `${w} wholes are ${w * b} parts of $${fracOf(1, b)}$, and ${a} more makes ${top}.`,
+                `${w} 个整体是 ${w * b} 个 $${fracOf(1, b)}$，再加 ${a} 个是 ${top} 个。`,
+              ],
+              [`${w}${num(f)} = ${fracOf(top, b)}`],
+            ],
+            [["Flip", "倒过来"], ["Swap the top and the bottom.", "交换分子和分母。"], [`${fracOf(top, b)} \\to ${fracOf(b, top)}`]],
           ],
-          solution: t(
-            `Multiply by the reciprocal of $${num(y)}$:${steps(`${num(x)} \\div ${num(y)} = ${num(x)} \\cdot ${improper(Q.one.div(y))} = ${num(result)}`)}`,
-            `乘 $${num(y)}$ 的倒数：${steps(`${num(x)} \\div ${num(y)} = ${num(x)} \\cdot ${improper(Q.one.div(y))} = ${num(result)}`)}`,
-          ),
-        });
+          [
+            `Multiply: $${fracOf(top, b)} \\times ${fracOf(b, top)} = ${fracOf(top * b, top * b)} = 1$.`,
+            `相乘：$${fracOf(top, b)} \\times ${fracOf(b, top)} = ${fracOf(top * b, top * b)} = 1$。`,
+          ],
+          [
+            [
+              q(w * a + b, a),
+              `That flips only the fraction part to get $${w}${fracOf(b, a)}$.`,
+              `这只把分数部分倒过来，得到 $${w}${fracOf(b, a)}$。`,
+            ],
+            [q(b, a), `That flips $${num(f)}$ and drops the ${w}.`, `这只把 $${num(f)}$ 倒过来，丢掉了 ${w}。`],
+            [q(top, b), "That is the same number written as a fraction.", "这只是把原来的数写成了假分数。"],
+          ],
+          { form: "fraction", figure: barFigure(b, top, w + 1) },
+        );
       },
-    },
+      barFigure(7, 4),
+    ),
+    point(
+      "dividing-by-a-fraction",
+      ["Dividing by a fraction", "除以分数"],
+      [
+        "Keep the first fraction, flip the second, and multiply: $\\frac{3}{4} \\div \\frac{2}{5} = \\frac{3}{4} \\times \\frac{5}{2} = \\frac{15}{8} = 1\\frac{7}{8}$. The answer is bigger than $\\frac{3}{4}$, since we divide by a number less than 1.\n\nCheck: multiply back: $\\frac{15}{8} \\times \\frac{2}{5} = \\frac{30}{40} = \\frac{3}{4}$.\n\n> **Watch out.** Flip only the second fraction. Flipping $\\frac{3}{4}$ gives the wrong answer.",
+        "第一个分数不变，把第二个倒过来，再相乘：$\\frac{3}{4} \\div \\frac{2}{5} = \\frac{3}{4} \\times \\frac{5}{2} = \\frac{15}{8} = 1\\frac{7}{8}$。除以一个小于 1 的数，结果比 $\\frac{3}{4}$ 大。\n\n检验：乘回去：$\\frac{15}{8} \\times \\frac{2}{5} = \\frac{30}{40} = \\frac{3}{4}$。\n\n> **注意。** 只把第二个分数倒过来。把 $\\frac{3}{4}$ 倒过来就错了。",
+      ],
+      (rng) => {
+        const whole = rng.bool(0.2);
+        const x = whole ? Q.of(rng.int(2, 6)) : properFraction(rng, 10);
+        let y = properFraction(rng, 10);
+        while (x.eq(y)) y = properFraction(rng, 10);
+        const [a, b, c, d] = [Number(x.n), Number(x.d), Number(y.n), Number(y.d)];
+        return answered(
+          [`Find $${num(x)} \\div ${num(y)}$.`, `计算 $${num(x)} \\div ${num(y)}$。`],
+          x.div(y),
+          [
+            [
+              ["Flip the divisor", "除数变成倒数"],
+              [`Dividing by $${num(y)}$ is multiplying by $${fracOf(d, c)}$.`, `除以 $${num(y)}$ 等于乘 $${fracOf(d, c)}$。`],
+              [`${num(x)} \\div ${num(y)} = ${num(x)} \\times ${fracOf(d, c)}`],
+            ],
+            [
+              ["Multiply", "相乘"],
+              ["Multiply the tops and the bottoms.", "分子乘分子，分母乘分母。"],
+              [`${num(x)} \\times ${fracOf(d, c)} = ${fracOf(a * d, b * c)}`],
+            ],
+            ...simplestStep(a * d, b * c),
+          ],
+          [
+            `Multiply back: $${fracOf(a * d, b * c)} \\times ${num(y)} = ${fracOf(a * d * c, b * c * d)} = ${num(x)}$.`,
+            `乘回去：$${fracOf(a * d, b * c)} \\times ${num(y)} = ${fracOf(a * d * c, b * c * d)} = ${num(x)}$。`,
+          ],
+          [
+            [x.mul(y), "That multiplies without flipping.", "这里没有倒过来就相乘了。"],
+            [y.div(x), "That flips the wrong fraction. Only the second one is flipped.", "这里倒错了分数。只有第二个分数要倒过来。"],
+            [Q.one.div(x.mul(y)), "That flips both fractions.", "这是把两个分数都倒过来了。"],
+          ],
+          { form: "mixed", figure: whole ? groupedBarsFigure(a, d, c) : twoBarsFigure(b, a, d, c) },
+        );
+      },
+      twoBarsFigure(4, 3, 5, 2),
+    ),
   ],
+  intro: t(
+    "Jo has $\\frac{3}{4}$ pound of beads and fills bags of $\\frac{1}{8}$ pound. $\\frac{3}{4} \\div \\frac{1}{8} = \\frac{3}{4} \\times 8 = 6$ bags.\n\nCheck: $6 \\times \\frac{1}{8} = \\frac{6}{8} = \\frac{3}{4}$.\n\nIn this lesson we find reciprocals and divide by a fraction by multiplying by its reciprocal.",
+    "乔有 $\\frac{3}{4}$ 磅珠子，每袋装 $\\frac{1}{8}$ 磅。$\\frac{3}{4} \\div \\frac{1}{8} = \\frac{3}{4} \\times 8 = 6$ 袋。\n\n检验：$6 \\times \\frac{1}{8} = \\frac{6}{8} = \\frac{3}{4}$。\n\n本课我们求倒数，并用乘倒数的方法除以分数。",
+  ),
 };
 
 export const operationsWithRationalNumbers: TopicDef = {
@@ -651,3 +843,93 @@ export const fractionTopics: readonly TopicDef[] = [
   dividingFractions,
   operationsWithRationalNumbers,
 ];
+
+/** aFractionOfAFractionOfANumber takes one fraction of a number and then a second fraction of the result. */
+export const aFractionOfAFractionOfANumber = point(
+  "a-fraction-of-a-fraction-of-a-number",
+  ["A fraction of a fraction of a number", "一个数的几分之几的几分之几"],
+  [
+    "A class has 24 kids. $\\frac{3}{4}$ of them walk to school, and $\\frac{1}{3}$ of the walkers walk with a parent. $\\frac{3}{4}$ of 24 is 18, and $\\frac{1}{3}$ of 18 is 6.\n\nCheck: $\\frac{1}{3} \\times \\frac{3}{4} = \\frac{1}{4}$, and $\\frac{1}{4}$ of 24 is 6.\n\n> **Watch out.** Take the second fraction of the walkers, 18, not of all 24 kids.",
+    "一个班有 24 个孩子。其中 $\\frac{3}{4}$ 步行上学，步行的孩子中有 $\\frac{1}{3}$ 由家长陪同。24 的 $\\frac{3}{4}$ 是 18，18 的 $\\frac{1}{3}$ 是 6。\n\n检验：$\\frac{1}{3} \\times \\frac{3}{4} = \\frac{1}{4}$，24 的 $\\frac{1}{4}$ 是 6。\n\n> **注意。** 第二个分数是步行人数 18 的几分之几，不是全部 24 人的。",
+  ],
+  (rng) => {
+    const a = rng.int(2, 5);
+    const b = rng.pick([3, 4, 5, 6]);
+    const c = rng.int(1, b - 1);
+    const unit = rng.int(1, 6);
+    const n = a * b * unit;
+    const first = (n * c) / b;
+    const answer = first / a;
+    return answered(
+      [
+        `A school has ${n} students. $${fracOf(c, b)}$ of them walk to school, and $${fracOf(1, a)}$ of the walkers walk with a parent. How many students walk with a parent?`,
+        `一所学校有 ${n} 名学生。其中 $${fracOf(c, b)}$ 步行上学，步行的学生中有 $${fracOf(1, a)}$ 由家长陪同。由家长陪同步行的学生有多少名？`,
+      ],
+      answer,
+      [
+        [
+          ["Find the walkers", "求步行的人数"],
+          [`Take $${fracOf(c, b)}$ of ${n}.`, `求 ${n} 的 $${fracOf(c, b)}$。`],
+          [`${n} \\div ${b} \\times ${c} = ${first}`],
+        ],
+        [
+          ["Find those with a parent", "求有家长陪同的人数"],
+          [`Take $${fracOf(1, a)}$ of the ${first} walkers.`, `求 ${first} 名步行学生的 $${fracOf(1, a)}$。`],
+          [`${first} \\div ${a} = ${answer}`],
+        ],
+      ],
+      [
+        `Multiply the fractions first: $${fracOf(1, a)} \\times ${fracOf(c, b)} = ${fracOf(c, a * b)}$. Then $${n} \\div ${a * b} \\times ${c} = ${answer}$.`,
+        `先把两个分数相乘：$${fracOf(1, a)} \\times ${fracOf(c, b)} = ${fracOf(c, a * b)}$。再算 $${n} \\div ${a * b} \\times ${c} = ${answer}$。`,
+      ],
+      [
+        [first, "That is all the walkers, not those with a parent.", "这是全部步行的人数，不是有家长陪同的人数。"],
+        [n - first, "That is the students who do not walk.", "这是不步行的学生人数。"],
+        [n / a, `That takes $${fracOf(1, a)}$ of all the students.`, `这是求全部学生的 $${fracOf(1, a)}$。`],
+      ],
+      { figure: equalTape(b, String(n / b), String(n), c) },
+    );
+  },
+  equalTape(4, "6", "24", 3),
+);
+
+/** theWholeFromAFractionOfIt finds a number from a known fraction of it, one part at a time. */
+export const theWholeFromAFractionOfIt = point(
+  "the-whole-from-a-fraction-of-it",
+  ["The whole from a fraction of it", "由几分之几求整体"],
+  [
+    "$\\frac{2}{5}$ of a number is 12. One fifth is $12 \\div 2 = 6$, so the number is $5 \\times 6 = 30$.\n\nCheck: $\\frac{2}{5}$ of 30 is $30 \\div 5 \\times 2 = 12$.\n\n> **Watch out.** The number is bigger than 12. Do not take $\\frac{2}{5}$ of 12.",
+    "一个数的 $\\frac{2}{5}$ 是 12。五分之一是 $12 \\div 2 = 6$，所以这个数是 $5 \\times 6 = 30$。\n\n检验：30 的 $\\frac{2}{5}$ 是 $30 \\div 5 \\times 2 = 12$。\n\n> **注意。** 这个数比 12 大。不要去求 12 的 $\\frac{2}{5}$。",
+  ],
+  (rng) => {
+    const d = rng.int(3, 10);
+    let n = rng.int(2, d - 1);
+    while (gcd(n, d) !== 1) n--;
+    const part = rng.int(2, 12);
+    const known = n * part;
+    const answer = d * part;
+    return answered(
+      [`$${fracOf(n, d)}$ of a number is ${known}. What is the number?`, `一个数的 $${fracOf(n, d)}$ 是 ${known}。这个数是多少？`],
+      answer,
+      [
+        [["Find one part", "求一份"], [`${n} parts make ${known}.`, `${n} 份是 ${known}。`], [`${known} \\div ${n} = ${part}`]],
+        [["Find the whole", "求整体"], [`The number has ${d} parts.`, `这个数有 ${d} 份。`], [`${d} \\times ${part} = ${answer}`]],
+      ],
+      [
+        `Take $${fracOf(n, d)}$ of ${answer}: $${answer} \\div ${d} \\times ${n} = ${known}$.`,
+        `求 ${answer} 的 $${fracOf(n, d)}$：$${answer} \\div ${d} \\times ${n} = ${known}$。`,
+      ],
+      [
+        [
+          q(known * n, d),
+          `That takes $${fracOf(n, d)}$ of ${known}, which is too small.`,
+          `这是求 ${known} 的 $${fracOf(n, d)}$，太小了。`,
+        ],
+        [part, "That is one part, not the whole number.", "这只是一份，不是整个数。"],
+        [known * d, `That multiplies by ${d} but forgets to divide by ${n}.`, `这里乘了 ${d}，但忘了除以 ${n}。`],
+      ],
+      { figure: partsTape("?", n, d) },
+    );
+  },
+  partsTape("?", 2, 5),
+);

@@ -9,6 +9,7 @@ import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { numberProblem } from "../problems.ts";
 import { tableFigure } from "./early-grades-more-kit.ts";
+import { convertingSquareAndCubicUnits } from "./grade-5-measurement.ts";
 import { lesson, type Off, valued } from "./grade-6-kit.ts";
 import { equalTape, tapeFigure } from "./upper-grades-kit.ts";
 
@@ -1051,64 +1052,6 @@ const fencePosts: KnowledgePointDef = {
   },
 };
 
-const squareUnits: KnowledgePointDef = {
-  id: "converting-square-and-cubic-units",
-  title: t("Converting square and cubic units", "换算平方单位和立方单位"),
-  explanation: t(
-    "A unit of area is a square, so converting it uses the length conversion twice: once along each side. A unit of volume is a cube, so its length conversion is used three times. Picturing one large square filled with small squares shows why. A single row holds as many small squares as the length conversion, and there are that many rows. Using the length conversion only once is the most common mistake here, and it gives an answer far too small.",
-    "面积单位是一个正方形，所以换算时要用两次长度换算：每条边各一次。体积单位是一个立方体，所以要用三次长度换算。想象一个大正方形里铺满小正方形，就能看出原因。一行里的小正方形个数等于长度换算的系数，而这样的行也有那么多。只用一次长度换算是这里最常见的错误，得到的结果会小得多。",
-  ),
-  generate(rng) {
-    const [big, small, bigZh, smallZh, factor] = rng.pick([
-      ["m", "cm", "米", "厘米", 100],
-      ["cm", "mm", "厘米", "毫米", 10],
-      ["ft", "in", "英尺", "英寸", 12],
-      ["yd", "ft", "码", "英尺", 3],
-    ]) as [string, string, string, string, number];
-    const power = rng.pick([2, 3]);
-    const scale = factor ** power;
-    const n = rng.int(2, 40);
-    const down = rng.bool();
-    const nameEn = power === 2 ? "area" : "volume";
-    const nameZh = power === 2 ? "面积" : "体积";
-    const unitBig = `\\text{${big}}^{${power}}`;
-    const unitSmall = `\\text{${small}}^{${power}}`;
-    const wordZh = power === 2 ? "平方" : "立方";
-    const subjectEn = power === 2 ? "A region has" : "A tank has";
-    const subjectZh = power === 2 ? "一块区域" : "一个水箱";
-    if (down) {
-      const answer = n * scale;
-      return numberProblem({
-        prompt: t(
-          `${subjectEn} ${nameEn} $${n} \\ ${unitBig}$. What is this ${nameEn} in $${unitSmall}$?`,
-          `${subjectZh}的${nameZh}是 $${n} \\ ${unitBig}$。这个${nameZh}是多少 $${unitSmall}$？`,
-        ),
-        answer,
-        form: "integer",
-        wrong: [n * factor, n * factor ** (5 - power), Q.of(n, scale), n * factor * power],
-        solution: t(
-          `One ${big} is $${factor}$ ${small}, so one $${unitBig}$ is $${factor}^{${power}} = ${scale}$ $${unitSmall}$. Then $${n} \\times ${scale} = ${answer}$.`,
-          `$1$ ${bigZh}等于 $${factor}$ ${smallZh}，所以 $1$ ${wordZh}${bigZh}等于 $${factor}^{${power}} = ${scale}$ ${wordZh}${smallZh}。于是 $${n} \\times ${scale} = ${answer}$。`,
-        ),
-      });
-    }
-    const start = n * scale;
-    return numberProblem({
-      prompt: t(
-        `${subjectEn} ${nameEn} $${start} \\ ${unitSmall}$. What is this ${nameEn} in $${unitBig}$?`,
-        `${subjectZh}的${nameZh}是 $${start} \\ ${unitSmall}$。这个${nameZh}是多少 $${unitBig}$？`,
-      ),
-      answer: n,
-      form: "integer",
-      wrong: [Q.of(start, factor), Q.of(start, factor ** (5 - power)), start * scale, Q.of(start, factor * power)],
-      solution: t(
-        `One $${unitBig}$ is $${factor}^{${power}} = ${scale}$ $${unitSmall}$, so divide: $${start} \\div ${scale} = ${n}$.`,
-        `$1$ ${wordZh}${bigZh}等于 $${factor}^{${power}} = ${scale}$ ${wordZh}${smallZh}，所以做除法：$${start} \\div ${scale} = ${n}$。`,
-      ),
-    });
-  },
-};
-
 /** deeperPrealgebraPoints maps topics of Prealgebra to further knowledge points. */
 export const deeperPrealgebraPoints: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "mixed-numbers": [wholesBetweenFractions],
@@ -1132,5 +1075,5 @@ export const deeperPrealgebraPoints: Readonly<Record<string, readonly KnowledgeP
   "solving-multi-step-inequalities": [extremeInteger],
   "approximating-square-roots": [wholeWithRootBetween],
   perimeter: [fencePosts],
-  "units-of-area-and-volume": [squareUnits],
+  "units-of-area-and-volume": [convertingSquareAndCubicUnits],
 };

@@ -1,11 +1,51 @@
-import type { TopicDef } from "@ga/content";
+import type { Figure, TopicDef } from "@ga/content";
 import { t, tierRange } from "@ga/content";
 import { num, paren } from "@ga/subject-math";
-import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { remainingDrawings4 } from "../explanation-drawings-remaining-4.ts";
-import { choiceProblem, numberProblem, steps, why } from "../problems.ts";
+import { numberProblem, steps, why } from "../problems.ts";
+import { compared, type Pair, type Walk, walkThrough } from "./early-grades-more-kit.ts";
+import { answered, lineFigure, point } from "./upper-grades-kit.ts";
 
 const abs = Math.abs;
+
+/** intLine draws a number line of integers from lo to hi with 0 and the marked points labeled, and jumps as arcs. */
+const intLine = (lo: number, hi: number, marks: readonly number[], jumps: readonly (readonly [number, number])[] = []): Figure =>
+  lineFigure(
+    {
+      lo,
+      hi,
+      step: 1,
+      labels: [...new Set([lo, 0, hi, ...marks])].filter((v) => v >= lo && v <= hi),
+      label: (v) => (v < 0 ? `−${-v}` : String(v)),
+      marks: marks.map((at) => ({ at })),
+      jumps,
+    },
+    [
+      `A number line from ${lo} to ${hi}${marks.length ? ` with ${marks.join(" and ")} marked` : ""}.`,
+      `一条从 ${lo} 到 ${hi} 的数轴${marks.length ? `，标出了 ${marks.join(" 和 ")}` : ""}。`,
+    ],
+  );
+
+/** signedAnswer asks for an integer that may be negative, works it in labelled steps with a check, and says why each listed wrong value is wrong. */
+const signedAnswer = (
+  prompt: Pair,
+  answer: number,
+  walk: readonly Walk[],
+  check: Pair,
+  misses: readonly (readonly [number, string, string])[],
+  figure: Figure,
+) => ({
+  ...numberProblem({
+    prompt: t(prompt[0], prompt[1]),
+    answer,
+    form: "integer",
+    mistakes: misses
+      .filter(([v], i) => v !== answer && misses.findIndex(([w]) => w === v) === i)
+      .map(([value, en, zh]) => ({ value, why: t(en, zh) })),
+    solution: walkThrough(walk, check),
+  }),
+  figure,
+});
 
 export const integersAndOpposites: TopicDef = {
   id: "integers-and-opposites",
@@ -16,67 +56,129 @@ export const integersAndOpposites: TopicDef = {
   xp: 10,
   standards: ["CCSS.6.NS.C.5", "CCSS.6.NS.C.6", "CCSS.6.NS.C.7"],
   knowledgePoints: [
-    {
-      id: "opposites",
-      figure: gradeDrawings.opposites,
-      title: t("Opposites", "相反数"),
-      explanation: t(
-        "The **integers** are the whole numbers $0, 1, 2, 3, \\dots$ together with their negatives $-1, -2, -3, \\dots$. On a number line, negative numbers lie to the left of $0$.\n\nTwo numbers are **opposites** if they are the same distance from $0$ on opposite sides. The opposite of $a$ is written $-a$. For example, the opposite of $5$ is $-5$, and the opposite of $-5$ is $-(-5) = 5$. The opposite of $0$ is $0$.",
-        "**整数**由自然数 $0, 1, 2, 3, \\dots$ 和它们的相反数 $-1, -2, -3, \\dots$ 组成。在数轴上，负数位于 $0$ 的左边。\n\n如果两个数到 $0$ 的距离相等且位于 $0$ 的两侧，它们就互为**相反数**。$a$ 的相反数记作 $-a$。例如 $5$ 的相反数是 $-5$，$-5$ 的相反数是 $-(-5) = 5$。$0$ 的相反数是 $0$。",
-      ),
-      generate(rng) {
-        const a = rng.nonZero(-40, 40);
+    point(
+      "opposites",
+      ["Opposites", "相反数"],
+      [
+        "The opposite of 7 is $-7$: both are 7 steps from 0, on different sides. The opposite of $-3$ is 3, so $-(-3) = 3$.\n\nCheck: on a number line, $-3$ and 3 are each 3 steps from 0.\n\n> **Watch out.** The opposite of a negative number is positive. The opposite of $-3$ is not $-3$.",
+        "7 的相反数是 $-7$：它们离 0 都是 7 格，在 0 的两边。$-3$ 的相反数是 3，所以 $-(-3) = 3$。\n\n检验：在数轴上，$-3$ 和 3 离 0 都是 3 格。\n\n> **注意。** 负数的相反数是正数。$-3$ 的相反数不是 $-3$。",
+      ],
+      (rng) => {
+        const a = rng.nonZero(-12, 12);
+        const n = abs(a) + 2;
         if (rng.bool()) {
-          return numberProblem({
-            prompt: t(`What is the opposite of $${num(a)}$?`, `$${num(a)}$ 的相反数是多少？`),
-            answer: -a,
-            wrong: [a],
-            solution: t(
-              `$${num(-a)}$ is the same distance from $0$ as $${num(a)}$, on the other side, so the opposite of $${num(a)}$ is $${num(-a)}$.`,
-              `$${num(-a)}$ 与 $${num(a)}$ 到 $0$ 的距离相等，且位于 $0$ 的另一侧，所以 $${num(a)}$ 的相反数是 $${num(-a)}$。`,
-            ),
-          });
+          return signedAnswer(
+            [`What is the opposite of $${num(a)}$?`, `$${num(a)}$ 的相反数是多少？`],
+            -a,
+            [
+              [
+                ["Find the distance", "找距离"],
+                [`$${num(a)}$ is ${abs(a)} steps from 0.`, `$${num(a)}$ 离 0 有 ${abs(a)} 格。`],
+              ],
+              [
+                ["Go to the other side", "到另一边"],
+                [`Go ${abs(a)} steps from 0 the other way.`, `从 0 往另一边走 ${abs(a)} 格。`],
+                [`-(${num(a)}) = ${num(-a)}`],
+              ],
+            ],
+            [`Both $${num(a)}$ and $${num(-a)}$ are ${abs(a)} steps from 0.`, `$${num(a)}$ 和 $${num(-a)}$ 离 0 都是 ${abs(a)} 格。`],
+            [
+              [a, "That is the same number. Its opposite is on the other side of 0.", "这还是原来的数。相反数在 0 的另一边。"],
+              [0, "0 is the middle point, not the opposite.", "0 是中间的点，不是相反数。"],
+              [-a + Math.sign(-a), "That is one step too far from 0.", "这离 0 多走了一格。"],
+            ],
+            intLine(-n, n, [a, -a]),
+          );
         }
         const b = abs(a);
-        return numberProblem({
-          prompt: t(`Evaluate $-(-${b})$.`, `计算 $-(-${b})$。`),
-          answer: b,
-          wrong: [-b],
-          solution: t(`$-(-${b})$ is the opposite of $-${b}$, which is $${b}$.`, `$-(-${b})$ 是 $-${b}$ 的相反数，即 $${b}$。`),
-        });
+        return signedAnswer(
+          [`Find $-(-${b})$.`, `计算 $-(-${b})$。`],
+          b,
+          [
+            [
+              ["Read it", "读懂算式"],
+              [`$-(-${b})$ means the opposite of $-${b}$.`, `$-(-${b})$ 表示 $-${b}$ 的相反数。`],
+            ],
+            [
+              ["Go to the other side", "到另一边"],
+              [
+                `$-${b}$ is ${b} steps left of 0, so its opposite is ${b} steps right.`,
+                `$-${b}$ 在 0 左边 ${b} 格，它的相反数在 0 右边 ${b} 格。`,
+              ],
+              [`-(-${b}) = ${b}`],
+            ],
+          ],
+          [`Both $-${b}$ and ${b} are ${b} steps from 0, on opposite sides.`, `$-${b}$ 和 ${b} 离 0 都是 ${b} 格，在 0 的两边。`],
+          [
+            [-b, "That keeps the minus sign. The opposite of a negative number is positive.", "这里保留了负号。负数的相反数是正数。"],
+            [0, "That cancels the numbers out. The answer is a point, not 0.", "这是把两个数抵消成 0 了。结果是另一个点，不是 0。"],
+            [b + 1, "That is one step too far from 0.", "这离 0 多走了一格。"],
+          ],
+          intLine(-b - 2, b + 2, [-b, b]),
+        );
       },
-    },
-    {
-      id: "comparing-integers",
-      figure: gradeDrawings["comparing-integers"],
-      title: t("Comparing integers", "比较整数大小"),
-      explanation: t(
-        "On a number line, numbers increase from left to right. Of two integers, the one further to the right is greater.\n\nSo every positive number is greater than every negative number, and among negative numbers, the one closer to $0$ is greater: $-2 > -7$ because $-2$ lies to the right of $-7$.",
-        "在数轴上，数从左到右逐渐增大。两个整数中，位置更靠右的那个更大。\n\n因此，正数都大于负数；在负数之间，离 $0$ 越近的越大：$-2 > -7$，因为 $-2$ 在 $-7$ 的右边。",
-      ),
-      generate(rng) {
-        const a = rng.int(-30, 30);
-        const b = rng.bool(0.1) ? a : rng.bool(0.6) ? -rng.int(1, 30) : rng.int(-30, 30);
-        const correct = a < b ? 0 : a > b ? 1 : 2;
-        const reason =
+      intLine(-5, 5, [-3, 3]),
+    ),
+    point(
+      "comparing-integers",
+      ["Comparing integers", "比较整数大小"],
+      [
+        "$-2 > -7$, because $-2$ is to the right of $-7$ on the number line.\n\nCheck: start at $-7$ and count up 5 steps to reach $-2$.\n\n> **Watch out.** For negative numbers, the one closer to 0 is greater. $-7$ is less than $-2$, even though 7 is more than 2.",
+        "$-2 > -7$，因为在数轴上 $-2$ 在 $-7$ 的右边。\n\n检验：从 $-7$ 往右数 5 格就到 $-2$。\n\n> **注意。** 两个负数比较，离 0 近的那个大。$-7$ 比 $-2$ 小，尽管 7 比 2 大。",
+      ],
+      (rng) => {
+        const a = rng.int(-12, 12);
+        const b = rng.bool(0.1) ? a : rng.bool(0.6) ? -rng.int(1, 12) : rng.int(-12, 12);
+        const rel = a < b ? 0 : a === b ? 1 : 2;
+        const [lo, hi] = [Math.min(a, b), Math.max(a, b)];
+        const bothNegative = a < 0 && b < 0;
+        const left: Pair =
+          bothNegative && a > b
+            ? [
+                `$${num(a)}$ is closer to 0 than $${num(b)}$, so it is not less, even though ${abs(a)} is less than ${abs(b)}.`,
+                `$${num(a)}$ 比 $${num(b)}$ 离 0 近，所以它不小，尽管 ${abs(a)} 比 ${abs(b)} 小。`,
+              ]
+            : [`$${num(a)}$ is not to the left of $${num(b)}$.`, `$${num(a)}$ 不在 $${num(b)}$ 的左边。`];
+        const right: Pair =
+          bothNegative && a < b
+            ? [
+                `$${num(a)}$ is farther left than $${num(b)}$, so it is less, even though ${abs(a)} is more than ${abs(b)}.`,
+                `$${num(a)}$ 在 $${num(b)}$ 的左边更远处，所以它更小，尽管 ${abs(a)} 比 ${abs(b)} 大。`,
+              ]
+            : [`$${num(a)}$ is not to the right of $${num(b)}$.`, `$${num(a)}$ 不在 $${num(b)}$ 的右边。`];
+        return compared(
+          num(a),
+          num(b),
+          rel,
+          [
+            [
+              ["Find both points", "找到两个点"],
+              [`Find $${num(a)}$ and $${num(b)}$ on the number line.`, `在数轴上找到 $${num(a)}$ 和 $${num(b)}$。`],
+            ],
+            [
+              ["Compare", "比较"],
+              a === b
+                ? ["They are the same point.", "它们是同一个点。"]
+                : [`$${num(lo)}$ is to the left, so it is less.`, `$${num(lo)}$ 在左边，所以它小。`],
+            ],
+          ],
           a === b
-            ? t(`The two numbers are equal.`, `两个数相等。`)
-            : a < b
-              ? t(`$${num(a)}$ lies to the left of $${num(b)}$ on the number line.`, `在数轴上，$${num(a)}$ 位于 $${num(b)}$ 的左边。`)
-              : t(`$${num(a)}$ lies to the right of $${num(b)}$ on the number line.`, `在数轴上，$${num(a)}$ 位于 $${num(b)}$ 的右边。`);
-        const symbol = ["<", ">", "="][correct];
-        return choiceProblem({
-          prompt: t(
-            `Which symbol makes the statement true? $$${num(a)} \\;\\square\\; ${num(b)}$$`,
-            `哪个符号能使下式成立？$$${num(a)} \\;\\square\\; ${num(b)}$$`,
-          ),
-          options: [t("$<$", "$<$"), t("$>$", "$>$"), t("$=$", "$=$")],
-          correct,
-          solution: t(`${reason.en} So $${num(a)} ${symbol} ${num(b)}$.`, `${reason["zh-CN"]}所以 $${num(a)} ${symbol} ${num(b)}$。`),
-        });
+            ? ["The two numbers are written the same way.", "两个数写法完全一样。"]
+            : [
+                `Start at $${num(lo)}$ and count up ${hi - lo} steps to reach $${num(hi)}$.`,
+                `从 $${num(lo)}$ 往右数 ${hi - lo} 格就到 $${num(hi)}$。`,
+              ],
+          [left, ["The two numbers are at different points.", "两个数在不同的点上。"], right],
+          intLine(-13, 13, a === b ? [a] : [a, b]),
+        );
       },
-    },
+      intLine(-8, 2, [-7, -2], [[-7, -2]]),
+    ),
   ],
+  intro: t(
+    "On a cold morning it is $-5$ degrees. At noon it is 5 degrees. $-5$ and 5 are the same distance from 0, on opposite sides, so they are opposites.\n\nCheck: on a number line, both are 5 steps from 0.\n\nIn this lesson we put integers on a number line, find opposites and compare integers.",
+    "一个寒冷的早上气温是 $-5$ 度，中午是 5 度。$-5$ 和 5 到 0 的距离相同，分别在 0 的两边，所以它们互为相反数。\n\n检验：在数轴上，它们离 0 都是 5 格。\n\n本课我们在数轴上表示整数，求相反数，并比较整数的大小。",
+  ),
 };
 
 export const absoluteValue: TopicDef = {
@@ -88,72 +190,129 @@ export const absoluteValue: TopicDef = {
   xp: 8,
   standards: ["CCSS.6.NS.C.7.C"],
   knowledgePoints: [
-    {
-      id: "evaluating-absolute-values",
-      figure: gradeDrawings["evaluating-absolute-values"],
-      title: t("Evaluating absolute values", "求绝对值"),
-      explanation: t(
-        "The **absolute value** of a number is its distance from $0$ on the number line, written $|a|$. A distance is never negative, so $|7| = 7$ and $|-7| = 7$. In general, $|a| = a$ when $a \\ge 0$, and $|a| = -a$ when $a < 0$.",
-        "一个数的**绝对值**是它在数轴上到 $0$ 的距离，记作 $|a|$。距离不可能是负数，所以 $|7| = 7$，$|-7| = 7$。一般地，当 $a \\ge 0$ 时 $|a| = a$，当 $a < 0$ 时 $|a| = -a$。",
-      ),
-      generate(rng) {
-        const a = rng.bool(0.75) ? -rng.int(1, 60) : rng.int(0, 60);
-        return numberProblem({
-          prompt: t(`Evaluate $|${num(a)}|$.`, `计算 $|${num(a)}|$。`),
-          answer: abs(a),
-          wrong: [-abs(a)],
-          solution: t(
-            `$${num(a)}$ is $${abs(a)}$ units from $0$, so $|${num(a)}| = ${abs(a)}$.`,
-            `$${num(a)}$ 到 $0$ 的距离是 $${abs(a)}$，所以 $|${num(a)}| = ${abs(a)}$。`,
-          ),
-        });
+    point(
+      "evaluating-absolute-values",
+      ["Evaluating absolute values", "求绝对值"],
+      [
+        "$|-8| = 8$, because $-8$ is 8 steps from 0.\n\nCheck: 8 is also 8 steps from 0, so $|8| = 8$ too.\n\n> **Watch out.** A distance is never negative. $|-8|$ is not $-8$.",
+        "$|-8| = 8$，因为 $-8$ 离 0 有 8 格。\n\n检验：8 离 0 也是 8 格，所以 $|8| = 8$。\n\n> **注意。** 距离不会是负数。$|-8|$ 不等于 $-8$。",
+      ],
+      (rng) => {
+        const a = rng.bool(0.75) ? -rng.int(1, 15) : rng.int(1, 15);
+        return signedAnswer(
+          [`Find $|${num(a)}|$.`, `计算 $|${num(a)}|$。`],
+          abs(a),
+          [
+            [
+              ["Find the point", "找到这个点"],
+              [`$${num(a)}$ is ${a < 0 ? "left" : "right"} of 0.`, `$${num(a)}$ 在 0 的${a < 0 ? "左" : "右"}边。`],
+            ],
+            [
+              ["Count the steps to 0", "数到 0 的格数"],
+              [`It is ${abs(a)} steps from 0.`, `它离 0 有 ${abs(a)} 格。`],
+              [`|${num(a)}| = ${abs(a)}`],
+            ],
+          ],
+          [
+            `Its opposite $${num(-a)}$ is just as far from 0, and $|${num(-a)}| = ${abs(a)}$ too.`,
+            `它的相反数 $${num(-a)}$ 离 0 一样远，$|${num(-a)}|$ 也等于 ${abs(a)}。`,
+          ],
+          [
+            [-abs(a), "That keeps a minus sign. A distance is never negative.", "这里带了负号。距离不会是负数。"],
+            [abs(a) - 1, "That is one step short.", "这里少数了一格。"],
+            [abs(a) + 1, "That counts 0 as a step too.", "这里把 0 也多数了一格。"],
+          ],
+          intLine(-16, 16, [a], [[0, a]]),
+        );
       },
-    },
-    {
-      id: "expressions-with-absolute-values",
-      title: t("Expressions with absolute values", "含绝对值的式子"),
-      explanation: t(
-        "Treat absolute value bars like parentheses: evaluate each absolute value first, then do the remaining operations. A minus sign outside the bars applies after the absolute value is taken, so $-|-4| = -4$.",
-        "绝对值符号的作用类似括号：先求出每个绝对值，再进行其余运算。绝对值符号外面的负号要在求出绝对值之后再作用，所以 $-|-4| = -4$。",
-      ),
-      generate(rng) {
-        const a = rng.nonZero(-25, 25);
-        const b = rng.nonZero(-25, 25);
+      intLine(-10, 10, [-8], [[0, -8]]),
+    ),
+    point(
+      "expressions-with-absolute-values",
+      ["Expressions with absolute values", "含绝对值的式子"],
+      [
+        "$|-4| + |3| = 4 + 3 = 7$. Find each absolute value first, then add.\n\nCheck: $-4$ is 4 steps from 0 and 3 is 3 steps from 0, which makes 7 steps in all.\n\n> **Watch out.** Find the absolute values before you add. $-4 + 3 = -1$ is a different question.",
+        "$|-4| + |3| = 4 + 3 = 7$。先求出每个绝对值，再相加。\n\n检验：$-4$ 离 0 有 4 格，3 离 0 有 3 格，一共 7 格。\n\n> **注意。** 先求绝对值，再相加。$-4 + 3 = -1$ 是另一个问题。",
+      ],
+      (rng) => {
+        const a = rng.nonZero(-12, 12);
+        const b = rng.nonZero(-12, 12);
+        const [x, y] = [abs(a), abs(b)];
+        const find: Walk = [
+          ["Find each absolute value", "先求绝对值"],
+          ["Count each number's steps from 0.", "数一数每个数离 0 有几格。"],
+          [`|${num(a)}| = ${x}`, `|${num(b)}| = ${y}`],
+        ];
         switch (rng.int(0, 2)) {
           case 0:
-            return numberProblem({
-              prompt: t(`Evaluate $-|${num(a)}|$.`, `计算 $-|${num(a)}|$。`),
-              answer: -abs(a),
-              wrong: [abs(a)],
-              solution: t(
-                `First $|${num(a)}| = ${abs(a)}$, then take the opposite: $-|${num(a)}| = ${num(-abs(a))}$.`,
-                `先求 $|${num(a)}| = ${abs(a)}$，再取相反数：$-|${num(a)}| = ${num(-abs(a))}$。`,
-              ),
-            });
+            return signedAnswer(
+              [`Find $-|${num(a)}|$.`, `计算 $-|${num(a)}|$。`],
+              -x,
+              [
+                [
+                  ["Find the absolute value", "先求绝对值"],
+                  [`$${num(a)}$ is ${x} steps from 0.`, `$${num(a)}$ 离 0 有 ${x} 格。`],
+                  [`|${num(a)}| = ${x}`],
+                ],
+                [
+                  ["Take the opposite", "取相反数"],
+                  ["The minus sign outside the bars comes last.", "绝对值外面的负号最后再算。"],
+                  [`-|${num(a)}| = ${num(-x)}`],
+                ],
+              ],
+              [
+                `On the number line, $${num(-x)}$ is ${x} steps left of 0, the opposite of ${x}.`,
+                `在数轴上，$${num(-x)}$ 在 0 左边 ${x} 格，是 ${x} 的相反数。`,
+              ],
+              [
+                [x, "That forgets the minus sign outside the bars.", "这里忘了绝对值外面的负号。"],
+                [0, "That cancels the signs. The answer is a point, not 0.", "这是把符号抵消成 0 了。结果是另一个点，不是 0。"],
+                [-x - 1, "That is one step too far from 0.", "这离 0 多走了一格。"],
+              ],
+              intLine(-13, 13, [a, -x]),
+            );
           case 1:
-            return numberProblem({
-              prompt: t(`Evaluate $|${num(a)}| + |${num(b)}|$.`, `计算 $|${num(a)}| + |${num(b)}|$。`),
-              answer: abs(a) + abs(b),
-              wrong: [a + b, abs(a + b)],
-              solution: t(
-                `Evaluate each absolute value first, then add: $|${num(a)}| + |${num(b)}| = ${abs(a)} + ${abs(b)} = ${abs(a) + abs(b)}$.`,
-                `先求出每个绝对值，再相加：$|${num(a)}| + |${num(b)}| = ${abs(a)} + ${abs(b)} = ${abs(a) + abs(b)}$。`,
-              ),
-            });
+            return signedAnswer(
+              [`Find $|${num(a)}| + |${num(b)}|$.`, `计算 $|${num(a)}| + |${num(b)}|$。`],
+              x + y,
+              [find, [["Add", "相加"], ["Add the two distances.", "把两个距离相加。"], [`${x} + ${y} = ${x + y}`]]],
+              [`Add in the other order: $${y} + ${x} = ${x + y}$.`, `换个顺序相加：$${y} + ${x} = ${x + y}$。`],
+              [
+                [a + b, "That adds the numbers before finding the absolute values.", "这是先把两个数相加了，没有先求绝对值。"],
+                [abs(a + b), "That adds first and then takes the absolute value.", "这是先相加，再求绝对值。"],
+                [x - y, "That subtracts instead of adding.", "这是做成减法了。"],
+              ],
+              intLine(-13, 13, [a, b]),
+            );
           default:
-            return numberProblem({
-              prompt: t(`Evaluate $|${num(a)}| - |${num(b)}|$.`, `计算 $|${num(a)}| - |${num(b)}|$。`),
-              answer: abs(a) - abs(b),
-              wrong: [a - b, abs(a - b), abs(b) - abs(a)],
-              solution: t(
-                `Evaluate each absolute value first, then subtract: $|${num(a)}| - |${num(b)}| = ${abs(a)} - ${abs(b)} = ${num(abs(a) - abs(b))}$.`,
-                `先求出每个绝对值，再相减：$|${num(a)}| - |${num(b)}| = ${abs(a)} - ${abs(b)} = ${num(abs(a) - abs(b))}$。`,
-              ),
-            });
+            return signedAnswer(
+              [`Find $|${num(a)}| - |${num(b)}|$.`, `计算 $|${num(a)}| - |${num(b)}|$。`],
+              x - y,
+              [
+                find,
+                [
+                  ["Subtract", "相减"],
+                  ["Take the second distance from the first.", "用第一个距离减去第二个距离。"],
+                  [`${x} - ${y} = ${num(x - y)}`],
+                ],
+              ],
+              [`Add back: $${num(x - y)} + ${y} = ${x}$.`, `加回去：$${num(x - y)} + ${y} = ${x}$。`],
+              [
+                [a - b, "That subtracts the numbers before finding the absolute values.", "这是先把两个数相减了，没有先求绝对值。"],
+                [abs(a - b), "That subtracts first and then takes the absolute value.", "这是先相减，再求绝对值。"],
+                [y - x, "That subtracts in the wrong order.", "这是减的顺序反了。"],
+              ],
+              intLine(-13, 13, [a, b]),
+            );
         }
       },
-    },
+      intLine(-5, 5, [-4, 3]),
+    ),
   ],
+  intro: t(
+    "A diver is 6 meters below the sea, at $-6$. A bird is 6 meters above it, at 6. Both are 6 meters from the surface: $|-6| = 6$ and $|6| = 6$.\n\nCheck: on a number line, count 6 steps from 0 to $-6$.\n\nIn this lesson we find absolute values, the distance of a number from 0.",
+    "一个潜水员在海面下 6 米，记作 $-6$。一只鸟在海面上 6 米，记作 6。它们离海面都是 6 米：$|-6| = 6$，$|6| = 6$。\n\n检验：在数轴上，从 0 数到 $-6$ 是 6 格。\n\n本课我们求绝对值，也就是一个数到 0 的距离。",
+  ),
 };
 
 export const addingIntegers: TopicDef = {
@@ -640,3 +799,86 @@ export const integerTopics: readonly TopicDef[] = [
   powersOfIntegers,
   orderOfOperationsWithIntegers,
 ];
+
+/** integersBetweenANegativeAndAPositive counts the integers strictly between a negative and a positive number. */
+export const integersBetweenANegativeAndAPositive = point(
+  "counting-integers-between-a-negative-and-a-positive",
+  ["Counting integers between a negative and a positive", "数一个负数和一个正数之间的整数"],
+  [
+    "Between $-3$ and 2 lie $-2, -1, 0, 1$, which is 4 integers. The distance is $3 + 2 = 5$, and there is one fewer integer inside.\n\nCheck: count them on the number line: $-2, -1, 0, 1$.\n\n> **Watch out.** Do not count the two ends. 5 is one too many.",
+    "$-3$ 和 2 之间有 $-2, -1, 0, 1$，共 4 个整数。两端的距离是 $3 + 2 = 5$，中间的整数比它少 1 个。\n\n检验：在数轴上数一数：$-2, -1, 0, 1$。\n\n> **注意。** 两端的数不算。5 多算了一个。",
+  ],
+  (rng) => {
+    const a = rng.int(2, 12);
+    const b = rng.int(2, 12);
+    const answer = a + b - 1;
+    return answered(
+      [`How many integers lie strictly between $-${a}$ and ${b}?`, `严格在 $-${a}$ 和 ${b} 之间的整数有多少个？`],
+      answer,
+      [
+        [
+          ["Find the distance", "求距离"],
+          [`From $-${a}$ to 0 is ${a}, and from 0 to ${b} is ${b}.`, `从 $-${a}$ 到 0 是 ${a}，从 0 到 ${b} 是 ${b}。`],
+          [`${a} + ${b} = ${a + b}`],
+        ],
+        [
+          ["Leave out the ends", "去掉两端"],
+          ["The integers inside are one fewer than the steps.", "中间的整数比格数少 1。"],
+          [`${a + b} - 1 = ${answer}`],
+        ],
+      ],
+      [
+        `Count by sides: ${a - 1} on the negative side, ${b - 1} on the positive side, and 0. That makes $${a - 1} + ${b - 1} + 1 = ${answer}$.`,
+        `分两边数：负数一侧 ${a - 1} 个，正数一侧 ${b - 1} 个，再加上 0。一共 $${a - 1} + ${b - 1} + 1 = ${answer}$ 个。`,
+      ],
+      [
+        [a + b, "That is the distance. It counts one end too.", "这是两端的距离，多算了一端。"],
+        [a + b + 1, "That counts both ends.", "这是把两端都算进去了。"],
+        [Math.abs(a - b), "That subtracts the numbers instead of adding the distances.", "这是把两个数相减了，应该把两段距离相加。"],
+      ],
+      { figure: intLine(-a, b, [-a, b]) },
+    );
+  },
+  intLine(-4, 3, [-3, 2]),
+);
+
+/** countingIntegersWithASmallAbsoluteValue counts the integers whose distance from 0 is less than, or at most, a number. */
+export const countingIntegersWithASmallAbsoluteValue = point(
+  "counting-integers-with-small-absolute-value",
+  ["Counting integers with a small absolute value", "数绝对值较小的整数"],
+  [
+    "The integers with absolute value less than 3 are $-2, -1, 0, 1, 2$. That is $2 \\times 2 + 1 = 5$.\n\nCheck: count them on the number line, from $-2$ to 2.\n\n> **Watch out.** Do not forget 0. Its absolute value is 0.",
+    "绝对值小于 3 的整数有 $-2, -1, 0, 1, 2$，共 $2 \\times 2 + 1 = 5$ 个。\n\n检验：在数轴上从 $-2$ 数到 2。\n\n> **注意。** 不要忘了 0，它的绝对值是 0。",
+  ],
+  (rng) => {
+    const n = rng.int(2, 15);
+    const inclusive = rng.bool();
+    const k = inclusive ? n : n - 1;
+    const answer = 2 * k + 1;
+    return answered(
+      [
+        `How many integers have an absolute value ${inclusive ? "of at most" : "less than"} ${n}?`,
+        `有多少个整数的绝对值${inclusive ? "不超过" : "小于"} ${n}？`,
+      ],
+      answer,
+      [
+        [
+          ["Count one side", "数一边"],
+          [`On the positive side they are 1 to ${k}: ${k} of them.`, `正数一侧是 1 到 ${k}，共 ${k} 个。`],
+        ],
+        [["Double it", "乘 2"], ["The negative side has just as many.", "负数一侧也有这么多。"], [`2 \\times ${k} = ${2 * k}`]],
+        [["Add 0", "加上 0"], ["0 is one of them too.", "0 也在其中。"], [`${2 * k} + 1 = ${answer}`]],
+      ],
+      [`Count from $${num(-k)}$ to ${k}: $${k} + 1 + ${k} = ${answer}$.`, `从 $${num(-k)}$ 数到 ${k}：$${k} + 1 + ${k} = ${answer}$。`],
+      [
+        [2 * k, "That forgets 0.", "这里忘了 0。"],
+        [k, "That counts only the positive side.", "这只数了正数一侧。"],
+        inclusive
+          ? [2 * n - 1, `That leaves out $-${n}$ and ${n}, but "at most" includes them.`, `这里漏掉了 $-${n}$ 和 ${n}，“不超过”包括它们。`]
+          : [2 * n + 1, `That counts $-${n}$ and ${n}, but "less than" leaves them out.`, `这里算上了 $-${n}$ 和 ${n}，“小于”不包括它们。`],
+      ],
+      { figure: intLine(-n - 1, n + 1, [-k, k]) },
+    );
+  },
+  intLine(-4, 4, [-2, 2]),
+);
