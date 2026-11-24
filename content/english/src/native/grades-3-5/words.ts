@@ -1717,6 +1717,24 @@ const bodySystems: BatchSpec = {
     "Ten words for the parts of the body and how they work: organ, tissue, artery, pulse and more.",
     "十个关于身体部位及其功能的词：organ、tissue、artery、pulse 等。",
   ),
+  intro: t(
+    "Press two fingers gently against your wrist after running upstairs and feel your **pulse** racing—each beat pushes blood through an **artery** away from your heart. Ten science words map how your body's systems work together.",
+    "跑完楼梯后用两根手指轻按手腕，就能摸到扑通直跳的脉搏（**pulse**）——每一次心跳都在把血液送进动脉（**artery**）。这十个科学词带你认识人体各系统如何协作。",
+  ),
+  watchOut: {
+    meanings: t(
+      "Do not swap **artery** (carries blood *away* from the heart) and **vein** (carries blood *back* to the heart)—remember **A** for **A**way.",
+      "别把 **artery**（把血带离心脏的动脉）和 **vein**（把血送回心脏的静脉）弄混——记 **A** 对应 **A**way。",
+    ),
+    use: t(
+      "Tell **skeleton** (all the bones of the whole body) apart from **spine** (just the single row of bones down your back).",
+      "分清 **skeleton**（全身所有骨头组成的骨骼）和 **spine**（只是背部中间那一串脊柱骨）。",
+    ),
+    spelling: t(
+      "Watch **vein** (*ei* says long *a*, not *vain*), **tissue** (double *s* + *-ue*), and **ligament** (*lig-a-ment*).",
+      "注意 **vein** 里的 **ei**（别写成 *vain*）、**tissue** 的双写 **s** 加 **-ue**，以及 **ligament** 中间的 **a**。",
+    ),
+  },
   domain: ["the human body", "人体"],
   prerequisites: ["context-clues"],
   encompasses: fromClues,
@@ -1731,6 +1749,26 @@ const bodySystems: BatchSpec = {
         "The heart is the ___ that pumps blood.",
       ],
       confusions: ["tissue", "skeleton"],
+      clues: [
+        "the stomach doing the special job of breaking down food",
+        "the skin as the largest working body part",
+        "the heart doing the special job of pumping blood",
+      ],
+      contrast: [
+        "organ is a whole body part with a special job; tissue is a group of matching cells",
+        "organ 是完成专门工作的完整器官；tissue 是同类细胞群",
+      ],
+      conflicts: [
+        [
+          "tissue is a group of similar cells working together, not a whole body part like the heart or stomach",
+          "tissue 是同类细胞组成的组织，不是心脏、胃这类完整的身体器官",
+        ],
+        [
+          "skeleton is all the body's bones joined together, not one individual working body part",
+          "skeleton 是全身连在一起的骨骼框架，不是单个承担特定功能的器官",
+        ],
+      ],
+      spelling: ["or · gan", "or at the start and -gan ending", "开头 or 加结尾 -gan"],
     },
     {
       word: "skeleton",
@@ -1738,10 +1776,30 @@ const bodySystems: BatchSpec = {
       meaning: ["all the bones of a body joined together", "骨骼，全身连在一起的骨头"],
       sentences: [
         "Your ___ holds your body up and protects the soft parts inside.",
-        "A shark's ___ is made of rubbery cartilage instead of bone.",
+        "A shark's whole ___ of head, ribs, and fins is made of rubbery cartilage instead of bone.",
         "The museum showed the whole ___ of a dinosaur.",
       ],
       confusions: ["spine", "organ"],
+      clues: [
+        "the full bony frame holding the body up and protecting soft parts inside",
+        "a shark's entire frame of head, ribs, and fins made of cartilage",
+        "the entire bony frame of a dinosaur on display",
+      ],
+      contrast: [
+        "skeleton is all the bones in the whole body; spine is only the row of back bones",
+        "skeleton 是全身骨骼；spine 只指背部脊柱",
+      ],
+      conflicts: [
+        [
+          "spine is only the single row of bones down the back, not all the bones of the whole body joined together",
+          "spine 只是背部中间那一串骨头，不是全身连在一起的整副骨骼",
+        ],
+        [
+          "organ is a soft working body part like the heart or stomach, not the bony framework of the whole body",
+          "organ 是心脏、胃这类器官，不是支撑全身的整副骨骼",
+        ],
+      ],
+      spelling: ["skel · e · ton", "sk at the start and -eton ending", "开头 sk 和结尾 -eton"],
     },
     {
       word: "tissue",
@@ -1753,6 +1811,26 @@ const bodySystems: BatchSpec = {
         "Bone ___ is hard because it contains a lot of calcium.",
       ],
       confusions: ["organ", "ligament"],
+      clues: [
+        "a group of long muscle cells working together to pull",
+        "new body cells growing back to close a finger cut",
+        "hard bone cells packed with calcium",
+      ],
+      contrast: [
+        "tissue is a group of matching cells; organ is a whole body part made of tissues",
+        "tissue 是同类细胞群；organ 是由多种组织构成的完整器官",
+      ],
+      conflicts: [
+        [
+          "organ is a whole body part with a special job, not a group of matching cells that form muscles, bone, or healing skin",
+          "organ 是承担专门功能的完整器官，不是组成肌肉或愈合伤口的同类细胞群",
+        ],
+        [
+          "ligament is a tough band tying two bones at a joint, not a general group of similar cells",
+          "ligament 是连接关节两块骨头的韧带，不是泛指的同类细胞组织",
+        ],
+      ],
+      spelling: ["tis · sue", "double s saying /ʃ/ and -ue ending", "双写读 /ʃ/ 的 s 和结尾 -ue"],
     },
     {
       word: "artery",
@@ -1761,9 +1839,29 @@ const bodySystems: BatchSpec = {
       sentences: [
         "Each beat of the heart pushes blood out into the ___ that leaves it.",
         "The biggest ___ in the body leaves the heart and carries blood down to the legs.",
-        "The doctor felt the ___ in my neck to check how fast my heart was beating.",
+        "The doctor felt the pulsing ___ carrying blood away from the heart in my neck.",
       ],
       confusions: ["vein", "spine"],
+      clues: [
+        "the blood tube receiving blood pushed out from the heart",
+        "the largest blood tube leaving the heart toward the legs",
+        "a pulsing neck blood tube carrying blood away from the heart",
+      ],
+      contrast: [
+        "artery carries blood away from the heart; vein carries blood back to the heart",
+        "artery 把血液带离心脏；vein 把血液送回心脏",
+      ],
+      conflicts: [
+        [
+          "vein carries blood back toward the heart, the exact opposite direction of a tube carrying blood away from it",
+          "vein 是把血液送回心脏的静脉，与把血运离心脏的方向正相反",
+        ],
+        [
+          "spine is the row of bones down your back, not a tube carrying blood away from the heart",
+          "spine 是背部的脊柱骨，不是输送血液离开心脏的血管",
+        ],
+      ],
+      spelling: ["ar · ter · y", "ar + ter + y ending", "ar 加 ter 再加结尾 y"],
     },
     {
       word: "vein",
@@ -1771,21 +1869,58 @@ const bodySystems: BatchSpec = {
       meaning: ["a tube that carries blood back to the heart", "静脉，把血液送回心脏的血管"],
       sentences: [
         "The blue line under the skin of your wrist is a ___ taking blood back to your heart.",
-        "The nurse took a little blood from a ___ in my arm.",
+        "The nurse took a little blood from a blue ___ near the skin returning blood to my heart.",
         "Blood in a ___ is on its way back to the heart.",
       ],
-      confusions: ["spine", "ligament"],
+      confusions: ["artery", "ligament"],
+      clues: [
+        "the blue blood tube under wrist skin returning blood to the heart",
+        "a blue blood tube near the skin carrying blood back to the heart",
+        "a blood tube whose blood is returning to the heart",
+      ],
+      contrast: [
+        "vein carries blood back to the heart; artery carries blood away from the heart",
+        "vein 把血液送回心脏；artery 把血液带离心脏",
+      ],
+      conflicts: [
+        [
+          "artery carries blood away from the heart, the opposite direction of a tube returning blood to it",
+          "artery 把血液运离心脏，与把血液送回心脏的方向正相反",
+        ],
+        [
+          "ligament is a tough band holding two bones together at a joint, not a tube carrying blood back to the heart",
+          "ligament 是连接骨头的韧带，不是把血液送回心脏的血管",
+        ],
+      ],
+      spelling: ["vein", "ei spelling long a (not vain)", "发长 a 音的 ei（别写成 vain）"],
     },
     {
       word: "spine",
       forms: ["spines"],
       meaning: ["the row of bones down the middle of your back", "脊柱，背部中间的一串骨头"],
       sentences: [
-        "Sit up straight so that your ___ is not bent over the desk.",
+        "Sit up straight so that the row of bones in your ___ down your back is not bent over the desk.",
         "Each bone of your ___ has a hole in it for the nerves to pass through.",
         "Animals with a ___, such as fish and birds, are called vertebrates.",
       ],
       confusions: ["skeleton", "vein"],
+      clues: [
+        "the row of back bones you keep straight when sitting at a desk",
+        "the row of back bones with nerve holes running down the middle",
+        "the backbone that defines vertebrates like fish and birds",
+      ],
+      contrast: ["spine is the row of back bones; skeleton is all the bones of the whole body", "spine 只指背部脊柱；skeleton 是全身骨骼"],
+      conflicts: [
+        [
+          "skeleton means all the bones of the whole body together, not specifically the row of bones down the back",
+          "skeleton 指全身所有骨头，不专指背部中间那一串脊柱骨",
+        ],
+        [
+          "vein is a soft tube carrying blood back to the heart, not a row of bones down the back",
+          "vein 是输送血液回心的血管，不是背部中间的一串骨头",
+        ],
+      ],
+      spelling: ["spine", "sp blend and silent e making long i", "sp 连缀和让 i 读长音的词尾 e"],
     },
     {
       word: "saliva",
@@ -1796,6 +1931,23 @@ const bodySystems: BatchSpec = {
         "Dogs use ___ to keep their mouths wet when they pant.",
       ],
       confusions: ["pulse", "tissue"],
+      clues: [
+        "mouth liquid mixed into food during chewing to soften it",
+        "mouth liquid triggered by the smell of baking bread",
+        "mouth liquid keeping a panting dog's mouth wet",
+      ],
+      contrast: ["saliva is mouth liquid; pulse is the heartbeat felt at wrist or neck", "saliva 是口腔液体；pulse 是血液跳动的脉搏"],
+      conflicts: [
+        [
+          "pulse is the rhythmic beat of blood in your wrist or neck, not liquid inside your mouth",
+          "pulse 是手腕或颈部摸到的脉搏跳动，不是口腔里的液体",
+        ],
+        [
+          "tissue is a solid group of matching body cells, not a liquid in your mouth",
+          "tissue 是同类细胞组成的实体组织，不是口中湿润食物的液体",
+        ],
+      ],
+      spelling: ["sa · li · va", "long i in li and -va ending", "li 里的长音 i 和结尾 -va"],
     },
     {
       word: "pulse",
@@ -1803,9 +1955,26 @@ const bodySystems: BatchSpec = {
       sentences: [
         "After the race, the nurse pressed two fingers on my wrist to count my ___.",
         "My ___ was fast after I ran up the stairs.",
-        "You can feel your ___ by pressing gently on the side of your neck.",
+        "You can feel the steady beat of your ___ by pressing gently on the side of your neck.",
       ],
       confusions: ["saliva", "vein"],
+      clues: [
+        "the rhythmic blood beat counted with two fingers on the wrist",
+        "the blood beat speeding up after running upstairs",
+        "the steady blood beat felt by pressing gently on the neck",
+      ],
+      contrast: ["pulse is the beat you feel; vein is a blood-carrying tube", "pulse 是能摸到的跳动节拍；vein 是血管"],
+      conflicts: [
+        [
+          "saliva is liquid inside your mouth, not a blood beat felt at your wrist or neck",
+          "saliva 是口腔里的唾液，不是在手腕或颈部能摸到的跳动",
+        ],
+        [
+          "vein is a physical tube carrying blood, not the rhythmic beat you count and feel",
+          "vein 是输送血液的管道，不是能数次数、感觉快慢的脉搏跳动",
+        ],
+      ],
+      spelling: ["pulse", "short u, lse ending with silent e", "短音 u 加带不发音 e 的 -lse"],
     },
     {
       word: "immune",
@@ -1817,6 +1986,26 @@ const bodySystems: BatchSpec = {
         "Some people are ___ to the cold that everyone else in the class caught.",
       ],
       confusions: ["saliva", "pulse"],
+      clues: [
+        "being protected from catching chickenpox again after having it once",
+        "a vaccine helping protect the body against a disease",
+        "staying protected from a cold everyone else caught",
+      ],
+      contrast: [
+        "immune is an adjective meaning protected from sickness; saliva and pulse are body nouns",
+        "immune 是形容词“有免疫力的”；saliva 和 pulse 是名词",
+      ],
+      conflicts: [
+        [
+          "saliva is a noun for liquid in your mouth, not an adjective meaning protected from a sickness",
+          "saliva 是表示“唾液”的名词，不是形容不受疾病侵害的形容词",
+        ],
+        [
+          "pulse is a noun for the beat of blood, not an adjective meaning protected from a disease",
+          "pulse 是表示“脉搏”的名词，不是形容对疾病有免疫力的形容词",
+        ],
+      ],
+      spelling: ["im · mune", "double m and silent e making long u", "双写 m 和让 u 读长音的词尾 e"],
     },
     {
       word: "ligament",
@@ -1828,6 +2017,26 @@ const bodySystems: BatchSpec = {
         "A ___ is like a strong rope that ties bones together.",
       ],
       confusions: ["tissue", "vein"],
+      clues: [
+        "a strong ankle band stretched when holding bones together",
+        "a strong band inside a knee joint torn during soccer",
+        "a strong rope-like band tying two bones together",
+      ],
+      contrast: [
+        "ligament is a tough band tying bones at a joint; tissue is any group of similar cells",
+        "ligament 特指连接关节骨头的韧带；tissue 泛指同类细胞组织",
+      ],
+      conflicts: [
+        [
+          "tissue is a general uncountable word for similar cells, not a single strong band holding two bones together at a joint",
+          "tissue 泛指同类细胞群，不是特指在关节处把两块骨头拴在一起的韧带",
+        ],
+        [
+          "vein is a soft tube carrying blood back to the heart, not a strong band tying bones together",
+          "vein 是输送血液的静脉，不是连接骨头的坚韧带子",
+        ],
+      ],
+      spelling: ["lig · a · ment", "lig + a + -ment ending", "lig 加中间 a 再加 -ment"],
     },
   ],
 };
@@ -1839,6 +2048,24 @@ const earthScience: BatchSpec = {
     "Ten words for how the land is made and changed: erode, sediment, magma, dormant and more.",
     "十个关于陆地如何形成和改变的词：erode、sediment、magma、dormant 等。",
   ),
+  intro: t(
+    "A giant **boulder** tumbles from a cliff that ocean waves slowly **erode**, while far below a quiet volcano, red-hot **magma** waits in the dark. Earth science names both the slow sculpting and the sudden drama of our planet.",
+    "海浪常年冲刷侵蚀（**erode**）着悬崖，巨石（**boulder**）轰然滚落；而在沉寂的火山深处，炽热的岩浆（**magma**）正蓄势待发。这十个词带你读懂地球缓慢又剧烈的变化。",
+  ),
+  watchOut: {
+    meanings: t(
+      "Tell **molten** (adjective: melted by great heat, like *molten glass* or *molten lava*) apart from **magma** (noun: melted rock specifically deep underground).",
+      "分清 **molten**（形容词“熔化的”，可修饰熔岩、玻璃、铁水）和 **magma**（名词“岩浆”，特指地下深处的熔岩）。",
+    ),
+    use: t(
+      "Compare sizes carefully: a **boulder** is a huge rock as big as a car, while a **pebble** is a small smooth stone that fits in your pocket or shoe.",
+      "注意大小差距：**boulder** 是像汽车甚至房子一样大的巨石，**pebble** 是能揣进口袋或硌脚的小鹅卵石。",
+    ),
+    spelling: t(
+      "Watch **boulder** (*ou* saying long *o*), **pebble** (double *b* + *-le*), and **dormant** (*dor-mant*, ending in *-ant*).",
+      "注意 **boulder** 里发长 o 的 **ou**、**pebble** 的双写 **b**，以及 **dormant** 结尾的 **-ant**。",
+    ),
+  },
   domain: ["how the earth changes", "地球的变化"],
   prerequisites: ["context-clues"],
   encompasses: fromClues,
@@ -1853,6 +2080,26 @@ const earthScience: BatchSpec = {
         "Without roots to hold it, the soil on the hill will ___ in the rain.",
       ],
       confusions: ["tremor", "sediment"],
+      clues: [
+        "ocean waves slowly wearing a cliff farther back year after year",
+        "wind and sand slowly carving soft rock into strange shapes",
+        "rain slowly washing away unprotected hillside soil",
+      ],
+      contrast: [
+        "erode is the verb for slowly wearing land away; sediment is the sand and mud left behind",
+        "erode 是“侵蚀磨损”的动词；sediment 是被搬运沉积下来的泥沙",
+      ],
+      conflicts: [
+        [
+          "tremor is a noun for a small shaking of the ground, not a verb meaning to wear away slowly",
+          "tremor 是表示轻微地震的名词，不是表示慢慢侵蚀磨损的动词",
+        ],
+        [
+          "sediment is a noun for bits of sand and mud carried by water or wind, not the verb for wearing rock or soil away",
+          "sediment 是名词“沉积物”，不能作动词表示水风慢慢侵蚀岩石和土壤",
+        ],
+      ],
+      spelling: ["e · rode", "long e at the start and silent e making long o", "开头长音 e 和让 o 读长音的词尾 e"],
     },
     {
       word: "sediment",
@@ -1864,6 +2111,26 @@ const earthScience: BatchSpec = {
         "The muddy river carries ___ all the way to the sea.",
       ],
       confusions: ["magma", "pebble"],
+      clues: [
+        "a layer of river-carried mud and sand dropped near the sea",
+        "layers of settled sand and mud at a lake bottom hardening into rock",
+        "bits of mud and sand carried downstream by a muddy river",
+      ],
+      contrast: [
+        "sediment is loose bits of sand and mud carried by water or wind; magma is hot melted rock underground",
+        "sediment 是水风搬运沉积的泥沙碎屑；magma 是地下炽热的岩浆",
+      ],
+      conflicts: [
+        [
+          "magma is hot melted rock deep underground, not bits of sand and mud carried and dropped by water",
+          "magma 是地下深处高温熔化的岩浆，不是河流搬运沉积的泥沙碎石",
+        ],
+        [
+          "pebble is one single small smooth stone, not whole layers of fine sand, mud, and rock bits",
+          "pebble 只是一颗小鹅卵石，不是成层沉积或随浑浊河水冲走的泥沙碎屑",
+        ],
+      ],
+      spelling: ["sed · i · ment", "sed + i + -ment ending", "sed 加中间 i 再加 -ment"],
     },
     {
       word: "magma",
@@ -1874,6 +2141,26 @@ const earthScience: BatchSpec = {
         "Deep below the volcano is a chamber full of ___.",
       ],
       confusions: ["sediment", "boulder"],
+      clues: [
+        "hot melted rock rising deep inside Earth beneath a volcano",
+        "melted underground rock cooling slowly into crystal-rich stone",
+        "melted rock filling a chamber deep below a volcano",
+      ],
+      contrast: [
+        "magma is hot melted rock underground; sediment is loose surface sand and mud",
+        "magma 是地下高温熔岩；sediment 是地表泥沙沉积物",
+      ],
+      conflicts: [
+        [
+          "sediment is loose bits of sand and mud moved by wind or water, not hot melted rock deep underground",
+          "sediment 是风和水搬运的泥沙碎屑，不是地下深处滚烫的熔化岩石",
+        ],
+        [
+          "boulder is one huge solid rock on the surface, not hot melted rock deep beneath a volcano",
+          "boulder 是地表的一块固体巨石，不是地下深处熔化的岩浆",
+        ],
+      ],
+      spelling: ["mag · ma", "mag + ma (g before m)", "mag 加 ma（注意 m 前的 g）"],
     },
     {
       word: "tremor",
@@ -1885,6 +2172,26 @@ const earthScience: BatchSpec = {
         "One ___ followed another all night after the big earthquake.",
       ],
       confusions: ["crater", "landform"],
+      clues: [
+        "a small ground shake that rattled dishes without breaking anything",
+        "a tiny ground vibration recorded by instruments though unfelt by people",
+        "small repeated ground shakes continuing after a big earthquake",
+      ],
+      contrast: [
+        "tremor is a small shaking motion of the ground; crater is a bowl-shaped hole",
+        "tremor 是地面的轻微晃动；crater 是碗状坑洞",
+      ],
+      conflicts: [
+        [
+          "crater is a bowl-shaped hole in the ground or on a volcano, not a small shaking motion",
+          "crater 是火山口或撞击坑，不是能感觉到或被仪器录下的地面轻微震动",
+        ],
+        [
+          "landform is a permanent natural shape like a hill or valley, not a brief shaking of the ground",
+          "landform 是山谷高原等固定地貌，不是短暂晃动的地面震动",
+        ],
+      ],
+      spelling: ["trem · or", "tr blend and -or ending (not -er)", "开头 tr 和结尾 -or（不是 -er）"],
     },
     {
       word: "crater",
@@ -1896,6 +2203,23 @@ const earthScience: BatchSpec = {
         "Rain filled the old ___ at the top of the volcano and made a lake.",
       ],
       confusions: ["boulder", "tremor"],
+      clues: [
+        "the bowl-shaped opening at a volcano's top sending up smoke",
+        "a huge bowl-shaped hole punched into the desert by a space rock",
+        "an old bowl-shaped volcano top holding rainwater like a lake",
+      ],
+      contrast: ["crater is a hollowed bowl-shaped hole; boulder is a solid giant rock", "crater 是凹下去的碗状坑口；boulder 是实心巨石"],
+      conflicts: [
+        [
+          "boulder is a huge solid rock, not a bowl-shaped hollow opening that smoke rises from or rain fills",
+          "boulder 是实心的巨大岩石，不是凹下去的碗状火山口或陨石坑",
+        ],
+        [
+          "tremor is a brief shaking of the ground, not a bowl-shaped hole in rock or earth",
+          "tremor 是地面轻微震动，不是实体凹陷的碗状坑洞",
+        ],
+      ],
+      spelling: ["cra · ter", "cr blend, long a, and -ter ending", "cr 连缀、长音 a 和结尾 -ter"],
     },
     {
       word: "boulder",
@@ -1904,9 +2228,23 @@ const earthScience: BatchSpec = {
       sentences: [
         "A ___ as big as a car had rolled down the hill and blocked the road.",
         "The children climbed onto a giant ___ to look out over the valley.",
-        "The glacier carried that ___ for hundreds of miles before the ice melted.",
+        "The glacier carried that huge house-sized ___ for hundreds of miles before the ice melted.",
       ],
       confusions: ["pebble", "crater"],
+      clues: [
+        "a car-sized rock blocking a road after rolling downhill",
+        "a giant rock large enough for children to climb onto",
+        "a house-sized rock hauled hundreds of miles by a glacier",
+      ],
+      contrast: ["boulder is a huge rock; pebble is a tiny smooth stone", "boulder 是巨大岩石；pebble 是小鹅卵石"],
+      conflicts: [
+        [
+          "pebble is a tiny smooth stone that fits in a hand or shoe, the opposite of a gigantic rock",
+          "pebble 是能握在手里的小鹅卵石，与庞大无比的巨石正相反",
+        ],
+        ["crater is a hollowed bowl-shaped hole, not a massive solid rock", "crater 是凹陷的碗状坑洞，不是一整块庞大的固体巨石"],
+      ],
+      spelling: ["boul · der", "ou saying long o and -der ending", "发长 o 音的 ou 和结尾 -der"],
     },
     {
       word: "pebble",
@@ -1918,6 +2256,20 @@ const earthScience: BatchSpec = {
         "A ___ in my shoe made every step hurt.",
       ],
       confusions: ["boulder", "sediment"],
+      clues: [
+        "a small smooth round beach stone that fits into a pocket",
+        "a small flat smooth stone skipping across a pond",
+        "a tiny stone stuck inside a shoe hurting each step",
+      ],
+      contrast: ["pebble is a tiny smooth stone; boulder is a huge rock", "pebble 是小鹅卵石；boulder 是大巨石"],
+      conflicts: [
+        ["boulder is a very large rock, the exact opposite of a small, smooth stone", "boulder 是庞大无比的巨石，与小巧光滑的鹅卵石正相反"],
+        [
+          "sediment is loose uncountable sand and mud, not one single small smooth stone",
+          "sediment 是成片松散的泥沙沉积物，不是一颗单独的小鹅卵石",
+        ],
+      ],
+      spelling: ["peb · ble", "double b and -le ending", "双写 b 和结尾 -le"],
     },
     {
       word: "molten",
@@ -1928,6 +2280,26 @@ const earthScience: BatchSpec = {
         "Deep inside the earth, iron is so hot that it is ___.",
       ],
       confusions: ["dormant", "magma"],
+      clues: [
+        "red-orange flowing lava melted by intense heat",
+        "liquid-hot glass poured into a bottle mold",
+        "iron deep inside Earth heated so high that it melts",
+      ],
+      contrast: [
+        "molten is an adjective meaning melted by great heat; magma is a noun for underground melted rock",
+        "molten 是形容词“熔化的”；magma 是名词“地下岩浆”",
+      ],
+      conflicts: [
+        [
+          "dormant means quiet and inactive for now, not melted into glowing liquid by great heat",
+          "dormant 指暂时沉寂休眠，不是被高温熔化成炽热液态",
+        ],
+        [
+          "magma is a noun for melted rock underground, not an adjective describing something melted by great heat",
+          "magma 是名词“岩浆”，不能作形容词表示“被高温熔化的”",
+        ],
+      ],
+      spelling: ["mol · ten", "long o in mol and -ten ending", "mol 里的长 o 和结尾 -ten"],
     },
     {
       word: "dormant",
@@ -1938,6 +2310,26 @@ const earthScience: BatchSpec = {
         "The bulbs stay ___ under the frozen ground all winter.",
       ],
       confusions: ["molten", "crater"],
+      clues: [
+        "a volcano quiet for two hundred years yet still able to erupt again",
+        "a volcano resting quietly for centuries before waking up",
+        "plant bulbs resting inactive underground all winter until spring",
+      ],
+      contrast: [
+        "dormant means quiet and resting for now; molten means glowing hot and melted",
+        "dormant 是暂时休眠静止；molten 是高温熔化",
+      ],
+      conflicts: [
+        [
+          "molten means melted by extreme heat, the opposite of resting quietly or sleeping through winter",
+          "molten 指被高温熔化，与安静沉寂、过冬休眠正相反",
+        ],
+        [
+          "crater is a noun for a bowl-shaped hole, not an adjective meaning inactive for now",
+          "crater 是表示坑洞的名词，不是形容暂时休眠不活动的形容词",
+        ],
+      ],
+      spelling: ["dor · mant", "or in dor and -mant ending (not -ment)", "dor 里的 or 和结尾 -mant（不是 -ment）"],
     },
     {
       word: "landform",
@@ -1949,6 +2341,26 @@ const earthScience: BatchSpec = {
         "Which ___ is shaped like a triangle where a river meets the sea?",
       ],
       confusions: ["crater", "sediment"],
+      clues: [
+        "a valley as a natural low-lying shape between hills or mountains",
+        "a plateau as a natural flat, high shape with steep sides",
+        "a triangular natural land shape formed where a river meets the sea",
+      ],
+      contrast: [
+        "landform is any natural shape of the land; crater is specifically a bowl-shaped hole",
+        "landform 泛指山谷高原等各类自然地貌；crater 特指碗状坑口",
+      ],
+      conflicts: [
+        [
+          "crater is specifically a bowl-shaped hole, not a general word covering valleys, plateaus, and river deltas",
+          "crater 特指碗状火山口或陨石坑，不能泛指山谷、高原、三角洲等各类地貌",
+        ],
+        [
+          "sediment is loose bits of sand and mud, not a natural shape of the land like a valley or plateau",
+          "sediment 是松散的泥沙碎石，不是山谷、高原这类陆地自然地貌",
+        ],
+      ],
+      spelling: ["land · form", "compound word: land + form", "合成词：land 加 form"],
     },
   ],
 };
