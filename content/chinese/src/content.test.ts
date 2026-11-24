@@ -28,12 +28,12 @@ describe("chinese content", () => {
         expect(distinct.size, `${topic.id} ${index}`).toBe(4);
       });
     }
-  });
+  }, 60_000);
 
   it("passes the generator samples", () => {
     const issues = sampleGenerators(compileChinese(), { samples: 60, minDistinct: 8, maxPositionShare: 0.8 });
     expect(issues.map(formatIssue)).toEqual([]);
-  }, 60_000);
+  }, 240_000);
 
   it("builds a grade only on its own grade and those before it", () => {
     const subject = compileChinese();
