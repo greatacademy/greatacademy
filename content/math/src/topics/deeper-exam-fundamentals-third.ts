@@ -3,7 +3,8 @@
 import type { KnowledgePointDef } from "@ga/content";
 import { Q } from "@ga/subject-math";
 
-import { choose } from "./early-grades-more-kit.ts";
+import { choose, tableFigure } from "./early-grades-more-kit.ts";
+import { lesson, valued } from "./grade-6-kit.ts";
 import { chooseFilled, decimal, fraction, integer, signed, skill } from "./third-kit.ts";
 
 /** Rng is the random source a generator receives. */
@@ -2323,29 +2324,62 @@ export const deeperAlgebraFundamentalsThirdPoints: Readonly<Record<string, reado
     ),
   ],
   "mean-of-a-data-set": [
-    skill(
+    lesson(
       "the-mean-from-a-frequency-list",
       ["The mean from a frequency list", "由频数表求平均数"],
       [
-        "A value repeated several times counts that many times toward the total. So multiply each value by its frequency, add these products, and divide by the sum of the frequencies, not by the number of different values.",
-        "重复出现的值要按出现次数计入总和。所以把每个值乘它的频数，把乘积相加，再除以频数之和，而不是除以不同值的个数。",
+        [
+          "A value repeated several times counts that many times toward the total. So multiply each value by its frequency, add these products, and divide by the sum of the frequencies. If $4$ appears twice, $5$ once and $6$ twice, the total is $2 \\times 4 + 5 + 2 \\times 6 = 25$ over $2 + 1 + 2 = 5$ values, so the mean is $5$.",
+          "重复出现的值要按出现次数计入总和。所以把每个值乘它的频数，把乘积相加，再除以频数之和。如果 $4$ 出现两次，$5$ 出现一次，$6$ 出现两次，总和是 $2 \\times 4 + 5 + 2 \\times 6 = 25$，共 $2 + 1 + 2 = 5$ 个值，所以平均数是 $5$。",
+        ],
+        [
+          "Each $4$ is $1$ below $5$ and each $6$ is $1$ above, and there are two of each, so they balance at $5$.",
+          "每个 $4$ 比 $5$ 小 $1$，每个 $6$ 比 $5$ 大 $1$，各有两个，所以正好平衡在 $5$。",
+        ],
+        [
+          "Divide by the number of values, $5$, not by the number of different values, $3$.",
+          "要除以数据的个数 $5$，不是不同值的个数 $3$。",
+        ],
       ],
       (rng) => {
         const m = rng.int(4, 30);
         const d = rng.int(1, 3);
         const f = rng.int(2, 6);
         const g = rng.int(1, 6);
-        const total = 2 * f + g;
-        return integer(
+        const count = 2 * f + g;
+        const total = m * count;
+        return valued(
           [
-            `In a data set, the value ${m - d} appears ${f} times, the value ${m} appears ${g} ${g === 1 ? "time" : "times"} and the value ${m + d} appears ${f} times. What is the mean?`,
-            `数据组中，值 ${m - d} 出现 ${f} 次，值 ${m} 出现 ${g} 次，值 ${m + d} 出现 ${f} 次。平均数是多少？`,
+            `In a data set, the value $${m - d}$ appears $${f}$ times, the value $${m}$ appears $${g}$ ${g === 1 ? "time" : "times"} and the value $${m + d}$ appears $${f}$ times. What is the mean?`,
+            `数据中，$${m - d}$ 出现 $${f}$ 次，$${m}$ 出现 $${g}$ 次，$${m + d}$ 出现 $${f}$ 次。平均数是多少？`,
           ],
           m,
-          [m + d, m * total, m + 1 + d],
-          [`The total is ${m * total} over ${total} values, which gives ${m}.`, `总和是 ${m * total}，共 ${total} 个值，得 ${m}。`],
+          [
+            [
+              ["Find the total", "求总和"],
+              ["Multiply each value by its frequency and add:", "每个值乘它的频数再相加："],
+              [`${f} \\times ${m - d} + ${g} \\times ${m} + ${f} \\times ${m + d} = ${total}`],
+            ],
+            [["Count the values", "数个数"], ["Add the frequencies:", "把频数相加："], [`${f} + ${g} + ${f} = ${count}`]],
+            [["Divide", "相除"], ["Total over count:", "总和除以个数："], [`${total} \\div ${count} = ${m}`]],
+          ],
+          [
+            `Each $${m - d}$ is $${d}$ below $${m}$ and each $${m + d}$ is $${d}$ above it, $${f}$ of each, so they balance at $${m}$.`,
+            `每个 $${m - d}$ 比 $${m}$ 小 $${d}$，每个 $${m + d}$ 比 $${m}$ 大 $${d}$，各有 $${f}$ 个，所以正好平衡在 $${m}$。`,
+          ],
+          [
+            [
+              Q.of(total, 3),
+              "That divides by the $3$ different values, not by the number of values.",
+              "这是除以 $3$ 个不同的值，不是除以数据的个数。",
+            ],
+            [total, "That is the total; divide it by the number of values.", "这是总和，还要除以个数。"],
+            [m + d, "That is the largest value, not the mean.", "这是最大的值，不是平均数。"],
+            [Q.of(3 * m, count), "That adds each value once but divides by all the values.", "这是每个值只加一次，却除以全部个数。"],
+          ],
         );
       },
+      tableFigure(["4", "5", "6"], [2, 1, 2]),
     ),
   ],
 };

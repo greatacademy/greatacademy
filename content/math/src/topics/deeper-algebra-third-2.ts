@@ -1,41 +1,67 @@
 // A third knowledge point for the foundations topics that Prealgebra and Algebra Foundations share with Algebra I.
 
 import type { KnowledgePointDef } from "@ga/content";
-import { Q } from "@ga/subject-math";
+import { dec, Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
-import { choose, chooseMath, whole } from "./early-grades-more-kit.ts";
+import { choose, chooseMath, tableFigure, whole } from "./early-grades-more-kit.ts";
+import { lesson, valued } from "./grade-6-kit.ts";
 import { frac, fraction, integer, signed, skill } from "./third-kit.ts";
 
 /** deeperAlgebraThird2Points holds these third knowledge points, by topic. */
 export const deeperAlgebraThird2Points: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "decimal-arithmetic": [
-    skill(
+    lesson(
       "dividing-by-a-decimal",
       ["Dividing by a decimal", "除以小数"],
       [
-        "Moving the decimal point of both numbers by the same number of places multiplies them by the same power of ten, so the quotient does not change. This turns the divisor into a whole number.",
-        "把两个数的小数点移动相同的位数，相当于乘同一个 $10$ 的幂，商不变。这样除数就变成了整数。",
+        [
+          "Multiplying both numbers of a division by the same power of ten does not change the quotient. So move both decimal points until the divisor is a whole number. $4.2 \\div 0.06$: multiply both by $100$ to get $420 \\div 6 = 70$.",
+          "把除法中的两个数同乘一个 $10$ 的幂，商不变。所以把两个小数点同时移动，直到除数变成整数。$4.2 \\div 0.06$：两个数都乘 $100$，得 $420 \\div 6 = 70$。",
+        ],
+        ["$70 \\times 0.06 = 4.2$.", "$70 \\times 0.06 = 4.2$。"],
+        [
+          "Move both points the same number of places. Moving only the divisor's makes the answer $100$ times too big.",
+          "两个小数点要移动相同的位数。只移动除数的小数点，答案会大 $100$ 倍。",
+        ],
       ],
       (rng) => {
-        const divisor = rng.int(2, 95);
-        const q = rng.int(2, 60);
+        let divisor = rng.int(2, 95);
+        while (divisor % 10 === 0) divisor = rng.int(2, 95);
+        const quotient = rng.int(2, 60);
         const places = rng.pick([1, 2]);
         const scale = 10 ** places;
-        return whole(
+        const shownA = dec(Q.of(divisor * quotient, scale));
+        const shownB = dec(Q.of(divisor, scale));
+        return valued(
+          [`Evaluate $${shownA} \\div ${shownB}$.`, `计算 $${shownA} \\div ${shownB}$。`],
+          quotient,
           [
-            `Evaluate $${(divisor * q) / scale} \\div ${(divisor / scale).toFixed(places)}$.`,
-            `计算 $${(divisor * q) / scale} \\div ${(divisor / scale).toFixed(places)}$。`,
+            [
+              ["Make the divisor whole", "把除数变成整数"],
+              [`Multiply both numbers by $${scale}$:`, `两个数都乘 $${scale}$：`],
+              [`${shownA} \\div ${shownB} = ${divisor * quotient} \\div ${divisor}`],
+            ],
+            [
+              ["Divide", "相除"],
+              ["Now divide whole numbers:", "现在是整数除法："],
+              [`${divisor * quotient} \\div ${divisor} = ${quotient}`],
+            ],
           ],
-          q,
-          [q * scale, q * 10 ** (places + 1), q + 1],
+          [`$${quotient} \\times ${shownB} = ${shownA}$.`, `$${quotient} \\times ${shownB} = ${shownA}$。`],
           [
-            `Multiply both by $${scale}$: $${divisor * q} \\div ${divisor} = ${q}$.`,
-            `两个数都乘 $${scale}$：$${divisor * q} \\div ${divisor} = ${q}$。`,
+            [
+              quotient * scale,
+              "That moves only the divisor's point, so the answer is too big.",
+              "这只移动了除数的小数点，所以答案太大了。",
+            ],
+            [quotient * 10 ** (places + 1), "That moves the points by different numbers of places.", "这是两个小数点移动的位数不同。"],
+            [Q.of(quotient, scale), "That moves the point the wrong way.", "这是把小数点向错误的方向移动了。"],
           ],
         );
       },
+      tableFigure(["4.2 / 0.06", "42 / 0.6", "420 / 6"], [70, 70, 70]),
     ),
   ],
   "powers-of-rational-numbers": [

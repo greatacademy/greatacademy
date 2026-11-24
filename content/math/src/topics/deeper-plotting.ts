@@ -3,7 +3,7 @@
 
 import type { KnowledgePointDef, Rng, Text } from "@ga/content";
 import { t } from "@ga/content";
-import { type PlaneMark, type PlaneView, poly } from "@ga/subject-math";
+import { type PlaneMark, type PlaneView, plane, poly } from "@ga/subject-math";
 
 import { plotProblem } from "../problems.ts";
 import { stepLabel } from "../solution-kit.ts";
@@ -171,29 +171,49 @@ The walk ends at $${tex([x, y])}$: mark it there.
     ),
   ],
   "rational-numbers-in-the-coordinate-plane": [
-    skill(
-      "marking-a-point-with-halves",
-      ["Marking a point with halves", "标出坐标含二分之一的点"],
-      [
-        "A coordinate need not be a whole number. Grid lines here are half a unit apart, so $(1.5, -2)$ sits halfway between $x = 1$ and $x = 2$, on the line $y = -2$. Move across first, then up or down, counting two grid lines for each whole unit.",
-        "坐标不一定是整数。这里网格线之间相距半个单位，所以 $(1.5, -2)$ 位于 $x = 1$ 和 $x = 2$ 的正中间，在直线 $y = -2$ 上。先水平移动，再上下移动，每一个单位数两条网格线。",
-      ],
-      (rng) => {
-        const view: PlaneView = { xMin: -4, xMax: 4, yMin: -4, yMax: 4, step: 0.5, labelEvery: 2 };
-        const half = () => rng.sign() * (rng.int(0, 3) + 0.5);
-        const whole = nonzero(rng, 3);
-        const p: Pt = rng.bool() ? [half(), whole] : [whole, half()];
-        return markingPoint(view, 0.5, p);
+    {
+      ...skill(
+        "marking-a-point-with-halves",
+        ["Marking a point with halves", "标出坐标含二分之一的点"],
+        [
+          "A coordinate need not be a whole number. Grid lines here are half a unit apart, so $(1.5, -2)$ sits halfway between $x = 1$ and $x = 2$, on the line $y = -2$. Move across first, then up or down, counting two grid lines for each whole unit.\n\nCheck: $1.5$ is $3$ half units, so the point is $3$ lines right of the $y$-axis and $4$ lines below the $x$-axis.\n\n> **Watch out.** Each grid line is only half a unit: $1.5$ is $3$ lines, not $1$ or $5$.",
+          "坐标不一定是整数。这里网格线之间相距半个单位，所以 $(1.5, -2)$ 位于 $x = 1$ 和 $x = 2$ 的正中间，在直线 $y = -2$ 上。先水平移动，再上下移动，每一个单位数两条网格线。\n\n检验：$1.5$ 是 $3$ 个半单位，所以这个点在 $y$ 轴右边第 $3$ 条线、$x$ 轴下方第 $4$ 条线上。\n\n> **注意。** 每格只有半个单位：$1.5$ 是 $3$ 格，不是 $1$ 格或 $5$ 格。",
+        ],
+        (rng) => {
+          const view: PlaneView = { xMin: -4, xMax: 4, yMin: -4, yMax: 4, step: 0.5, labelEvery: 2 };
+          const half = () => rng.sign() * (rng.int(0, 3) + 0.5);
+          const whole = nonzero(rng, 3);
+          const p: Pt = rng.bool() ? [half(), whole] : [whole, half()];
+          const [x, y] = p;
+          const lines = (v: number) => Math.abs(v) * 2;
+          const between = (v: number): Pair => {
+            const [lo, hi] = [Math.floor(v), Math.ceil(v)];
+            return [`$${v}$ is halfway between $${lo}$ and $${hi}$`, `$${v}$ 在 $${lo}$ 和 $${hi}$ 的正中间`];
+          };
+          const halfOne = Number.isInteger(x) ? y : x;
+          const [en, zh] = between(halfOne);
+          return {
+            ...markingPoint(view, 0.5, p),
+            solution: t(
+              `${stepLabel(1, "Move across", "水平移动").en} $${x}$ is $${lines(x)}$ half units, so go $${lines(x)}$ grid lines ${x < 0 ? "left" : "right"} from the origin.\n\n${stepLabel(2, "Move up or down", "上下移动").en} $${y}$ is $${lines(y)}$ half units, so go $${lines(y)}$ grid lines ${y < 0 ? "down" : "up"}. Mark $${tex(p)}$ there.\n\n**Check.** ${en} on its axis, and the point sits on a half-unit line just there.`,
+              `${stepLabel(1, "Move across", "水平移动")["zh-CN"]}$${x}$ 是 $${lines(x)}$ 个半单位，所以从原点向${x < 0 ? "左" : "右"}走 $${lines(x)}$ 格。\n\n${stepLabel(2, "Move up or down", "上下移动")["zh-CN"]}$${y}$ 是 $${lines(y)}$ 个半单位，所以再向${y < 0 ? "下" : "上"}走 $${lines(y)}$ 格。在那里标出 $${tex(p)}$。\n\n**检验。** ${zh}，这个点正好在那条半单位的网格线上。`,
+            ),
+          };
+        },
+      ),
+      figure: {
+        svg: plane({ xMin: -4, xMax: 4, yMin: -4, yMax: 4, step: 0.5, labelEvery: 2 }, [dot([1.5, -2], "P")]),
+        alt: t("The point P at (1.5, −2) on a grid with lines every half unit.", "每半个单位一条线的网格上的点 P(1.5, −2)。"),
       },
-    ),
+    },
   ],
   "reflections-of-points-in-the-coordinate-plane": [
     skill(
       "marking-a-reflected-point",
       ["Marking a reflected point", "标出反射后的点"],
       [
-        "A reflection across an axis keeps a point at the same distance from that axis, on the other side. Across the $x$-axis the point moves up or down, so its second coordinate changes sign and its first stays. Across the $y$-axis it moves left or right, so its first coordinate changes sign and its second stays.",
-        "关于坐标轴的反射使点到这条轴的距离不变，并落到另一侧。关于 $x$ 轴反射时，点上下移动，所以第二个坐标变号，第一个不变。关于 $y$ 轴反射时，点左右移动，所以第一个坐标变号，第二个不变。",
+        "A reflection across an axis keeps a point at the same distance from that axis, on the other side. Across the $x$-axis the point moves up or down, so its second coordinate changes sign and its first stays. Across the $y$-axis it moves left or right, so its first coordinate changes sign and its second stays. Across the $y$-axis, $(-4, 1)$ goes to $(4, 1)$.\n\nCheck: $(-4, 1)$ is $4$ left of the $y$-axis and $(4, 1)$ is $4$ right of it, at the same height.\n\n> **Watch out.** Change only one sign: changing both turns the point halfway round the origin instead.",
+        "关于坐标轴的反射使点到这条轴的距离不变，并落到另一侧。关于 $x$ 轴反射时，点上下移动，所以第二个坐标变号，第一个不变。关于 $y$ 轴反射时，点左右移动，所以第一个坐标变号，第二个不变。$(-4, 1)$ 关于 $y$ 轴反射后是 $(4, 1)$。\n\n检验：$(-4, 1)$ 在 $y$ 轴左边 $4$，$(4, 1)$ 在 $y$ 轴右边 $4$，高度相同。\n\n> **注意。** 只改变一个符号：两个都变就成了绕原点转半圈。",
       ],
       (rng) => {
         const p = apart(rng, 5);
@@ -221,8 +241,8 @@ The walk ends at $${tex([x, y])}$: mark it there.
             },
           ],
           solution: t(
-            `The ${overX ? "$x$" : "$y$"}-axis is the mirror, so $P$ goes straight across it to the same distance on the other side: $${tex(p)} \\to ${tex(image)}$.`,
-            `${overX ? "$x$" : "$y$"} 轴是镜面，所以 $P$ 垂直越过它，到另一侧相同距离处：$${tex(p)} \\to ${tex(image)}$。`,
+            `${stepLabel(1, "Find the distance", "量距离").en} $P${tex(p)}$ is $${Math.abs(overX ? p[1] : p[0])}$ ${overX ? (p[1] > 0 ? "above" : "below") : p[0] > 0 ? "right of" : "left of"} the ${overX ? "$x$" : "$y$"}-axis.\n\n${stepLabel(2, "Cross the mirror", "越过镜面").en} Go straight across the axis to the same distance on the other side; the ${overX ? "second" : "first"} coordinate changes sign: $${tex(p)} \\to ${tex(image)}$. Mark it there.\n\n**Check.** The ${overX ? "first" : "second"} coordinate, $${overX ? p[0] : p[1]}$, did not change, and the axis is halfway between $P$ and its image.`,
+            `${stepLabel(1, "Find the distance", "量距离")["zh-CN"]}$P${tex(p)}$ 在 ${overX ? "$x$" : "$y$"} 轴${overX ? (p[1] > 0 ? "上方" : "下方") : p[0] > 0 ? "右边" : "左边"} $${Math.abs(overX ? p[1] : p[0])}$ 处。\n\n${stepLabel(2, "Cross the mirror", "越过镜面")["zh-CN"]}垂直越过这条轴，到另一侧相同距离处；${overX ? "第二" : "第一"}个坐标变号：$${tex(p)} \\to ${tex(image)}$。在那里标点。\n\n**检验。** ${overX ? "第一" : "第二"}个坐标 $${overX ? p[0] : p[1]}$ 没有变，而且这条轴在 $P$ 和它的像的正中间。`,
           ),
           solutionAlt: t(`P at ${tex(p)} and its image at ${tex(image)}.`, `P 在 ${tex(p)}，它的像在 ${tex(image)}。`),
           solutionMarks: [{ kind: "segment", a: p, b: image, dashed: true, tone: "action" }],

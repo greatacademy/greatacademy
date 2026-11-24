@@ -2,83 +2,115 @@ import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
 import { choiceProblem, numberProblem } from "../problems.ts";
+import { lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { histogramSvg } from "./grade-7-statistics.ts";
+import { equalTape } from "./upper-grades-kit.ts";
 
 /** unitPricesAndSpeed computes unit rates, prices per unit, and constant speed. */
-export const unitPricesAndSpeed: TopicDef = {
-  id: "unit-prices-and-speed",
-  title: t("Unit Prices and Speed", "单价与速度"),
-  summary: t("Calculate and compare unit rates including price per unit and speed.", "计算并比较单位费率，包括单价与速度。"),
-  prerequisites: ["unit-rates"],
-  encompasses: [],
-  xp: 8,
-  standards: ["CCSS.6.RP.A.2", "CCSS.7.RP.A.1"],
-  knowledgePoints: [
-    {
-      id: "unit-price-calculation",
-      title: t("Calculating Unit Price", "计算单价"),
-      explanation: t(
-        "Dividing the total cost by the number of units gives the price of one unit, which makes packages of different sizes easy to compare. The lower unit price is the better buy.\n\nA **unit price** is the cost per single unit of an item: $\\text{Unit Price} = \\frac{\\text{Total Cost}}{\\text{Quantity}}$.",
-        "用总价除以数量得到一个单位的价钱，这样不同大小的包装就容易比较了。单价越低越划算。\n\n**单价**指物品每单件的价格：$\\text{单价} = \\frac{\\text{总价}}{\\text{数量}}$。",
+export const unitPricesAndSpeed: TopicDef = withIntro(
+  {
+    id: "unit-prices-and-speed",
+    title: t("Unit Prices and Speed", "单价与速度"),
+    summary: t("Calculate and compare unit rates including price per unit and speed.", "计算并比较单位费率，包括单价与速度。"),
+    prerequisites: ["unit-rates"],
+    encompasses: [],
+    xp: 8,
+    standards: ["CCSS.6.RP.A.2", "CCSS.7.RP.A.1"],
+    knowledgePoints: [
+      lesson(
+        "unit-price-calculation",
+        ["Calculating Unit Price", "计算单价"],
+        [
+          [
+            "A **unit price** is the cost of one item: divide the total cost by the number of items. A pack of $4$ notebooks for $\\$12$ has a unit price of $12 \\div 4 = \\$3$. The lower unit price is the better buy.",
+            "**单价**是一件物品的价钱：用总价除以数量。$4$ 本一包的笔记本卖 $12$ 美元，单价是 $12 \\div 4 = 3$ 美元。单价越低越划算。",
+          ],
+          ["$4 \\times \\$3 = \\$12$.", "$4 \\times 3 = 12$ 美元。"],
+          [
+            "Divide the cost by the number, not the number by the cost. $4 \\div 12$ is notebooks per dollar.",
+            "要用总价除以数量，不是用数量除以总价。$4 \\div 12$ 是每美元能买的本数。",
+          ],
+        ],
+        (rng) => {
+          const qty = rng.pick([3, 4, 5, 6, 8, 10]);
+          const each = rng.int(2, 18);
+          const total = qty * each;
+          return valued(
+            [
+              `A store sells a pack of $${qty}$ notebooks for a total of $\\$${total}$. What is the unit price per notebook in dollars?`,
+              `商店里一包 $${qty}$ 本笔记本总价为 $${total}$ 美元。每本笔记本的单价是多少美元？`,
+            ],
+            each,
+            [
+              [["Set up the rate", "列出比率"], ["Dollars per notebook:", "每本多少美元："], [`\\frac{${total}}{${qty}}`]],
+              [["Divide", "相除"], ["Share the cost among the notebooks:", "把总价平均分给每本："], [`${total} \\div ${qty} = ${each}`]],
+            ],
+            [`$${qty} \\times ${each} = ${total}$.`, `$${qty} \\times ${each} = ${total}$。`],
+            [
+              [qty, "That is the number of notebooks, not the price of one.", "这是本数，不是单价。"],
+              [total, "That is the price of the whole pack.", "这是整包的价钱。"],
+              [total - qty, "That subtracts instead of dividing.", "这是相减，不是相除。"],
+            ],
+            { unit: "$" },
+          );
+        },
+        equalTape(4, "3", "12", 0),
       ),
-      generate(rng) {
-        const qty = rng.pick([3, 4, 5, 6, 8, 10]);
-        const pricePerUnit = rng.int(2, 18);
-        const totalCost = qty * pricePerUnit;
-
-        const prompt = t(
-          `A store sells a pack of $${qty}$ notebooks for a total of $\\$${totalCost}$. What is the unit price per notebook in dollars?`,
-          `商店里一包 $${qty}$ 本笔记本总价为 $${totalCost}$ 美元。每本笔记本的单价是多少美元？`,
-        );
-        const solution = t(
-          `Divide the total cost by the number of notebooks: $\\frac{\\$${totalCost}}{${qty}} = \\$${pricePerUnit}$ per notebook.`,
-          `用总价除以笔记本数量：$\\frac{\\$${totalCost}}{${qty}} = \\$${pricePerUnit}$/本。`,
-        );
-
-        return numberProblem({
-          prompt,
-          answer: pricePerUnit,
-          form: "integer",
-          unit: "$",
-          wrong: [pricePerUnit + 1, pricePerUnit - 1, qty],
-          solution,
-        });
-      },
-    },
-    {
-      id: "constant-speed-calculation",
-      title: t("Calculating Speed as a Unit Rate", "计算恒定速度"),
-      explanation: t(
-        "Divide the distance by the time it took to get the distance covered in one unit of time. The units of speed combine both, such as miles per hour.\n\nSpeed is a unit rate representing distance traveled per unit of time: $\\text{Speed} = \\frac{\\text{Distance}}{\\text{Time}}$.",
-        "用路程除以所用的时间，得到单位时间内走过的路程。速度的单位由两者组成，比如英里每小时。\n\n速度是表示单位时间内行进距离的单位率：$\\text{速度} = \\frac{\\text{距离}}{\\text{时间}}$。",
+      lesson(
+        "constant-speed-calculation",
+        ["Calculating Speed as a Unit Rate", "计算恒定速度"],
+        [
+          [
+            "Speed is a unit rate: the distance covered in one unit of time. Divide the distance by the time. A train that goes $150$ miles in $3$ hours has a speed of $150 \\div 3 = 50$ miles per hour.",
+            "速度是一种单位率：单位时间内走过的路程。用路程除以时间。火车 $3$ 小时行 $150$ 英里，速度是 $150 \\div 3 = 50$ 英里每小时。",
+          ],
+          ["$50 \\times 3 = 150$ miles.", "$50 \\times 3 = 150$ 英里。"],
+          [
+            "Divide distance by time, not time by distance. $3 \\div 150$ is hours per mile.",
+            "要用路程除以时间，不能反过来。$3 \\div 150$ 是每英里用的小时数。",
+          ],
+        ],
+        (rng) => {
+          const speed = rng.int(35, 75);
+          const hours = rng.int(2, 6);
+          const distance = speed * hours;
+          return valued(
+            [
+              `A train travels $${distance}$ miles in $${hours}$ hours at a constant speed. What is the train's speed in miles per hour?`,
+              `一列火车以恒定速度在 $${hours}$ 小时内行驶了 $${distance}$ 英里。这列火车的时速是多少英里？`,
+            ],
+            speed,
+            [
+              [["Set up the rate", "列出比率"], ["Miles per hour:", "每小时多少英里："], [`\\frac{${distance}}{${hours}}`]],
+              [
+                ["Divide", "相除"],
+                ["Share the distance among the hours:", "把路程平均分到每小时："],
+                [`${distance} \\div ${hours} = ${speed}`],
+              ],
+            ],
+            [`$${speed} \\times ${hours} = ${distance}$ miles.`, `$${speed} \\times ${hours} = ${distance}$ 英里。`],
+            [
+              [distance, "That is the whole distance, not the distance in one hour.", "这是全程，不是一小时走的路程。"],
+              [distance * hours, "That multiplies by the hours instead of dividing.", "这是乘小时数，不是除以小时数。"],
+              [distance - hours, "That subtracts the hours instead of dividing.", "这是减去小时数，不是除以小时数。"],
+            ],
+            { unit: "mph" },
+          );
+        },
+        equalTape(3, "50", "150", 0),
       ),
-      generate(rng) {
-        const speed = rng.int(35, 75);
-        const hours = rng.int(2, 6);
-        const distance = speed * hours;
-
-        const prompt = t(
-          `A train travels $${distance}$ miles in $${hours}$ hours at a constant speed. What is the train's speed in miles per hour?`,
-          `一列火车以恒定速度在 $${hours}$ 小时内行驶了 $${distance}$ 英里。这列火车的时速是多少英里？`,
-        );
-        const solution = t(
-          `Divide the total distance by the time: $\\frac{${distance}\\text{ miles}}{${hours}\\text{ hours}} = ${speed}\\text{ miles per hour}$.`,
-          `用总距离除以时间：$\\frac{${distance}\\text{ 英里}}{${hours}\\text{ 小时}} = ${speed}\\text{ 英里/小时}$。`,
-        );
-
-        return numberProblem({
-          prompt,
-          answer: speed,
-          form: "integer",
-          unit: "mph",
-          wrong: [speed + 5, speed - 5, speed + hours],
-          solution,
-        });
-      },
-    },
+    ],
+  },
+  [
+    "A cyclist rides $36$ miles in $3$ hours, and a store sells $3$ bottles of water for $\\$6$. Both are rates.",
+    "一个骑车人 $3$ 小时骑了 $36$ 英里，一家商店 $3$ 瓶水卖 $6$ 美元。两者都是比率。",
   ],
-};
-
+  [
+    "$36 \\div 3 = 12$ miles each hour, and $6 \\div 3 = 2$ dollars each bottle.",
+    "$36 \\div 3 = 12$，每小时 $12$ 英里；$6 \\div 3 = 2$，每瓶 $2$ 美元。",
+  ],
+  ["find the price of one item and the speed in one hour by dividing.", "用除法求一件物品的价钱和一小时走的路程。"],
+);
 /** percentApplicationsInterestAndDiscounts computes simple interest, taxes, and discounts. */
 export const percentApplicationsInterestAndDiscounts: TopicDef = {
   id: "percent-applications-interest-and-discounts",
@@ -543,112 +575,174 @@ const contestFreqs = (rng: Rng) => rng.sample([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 const histogramExample = contestFigure([3, 7, 10, 6, 2]);
 
 /** histograms reads and interprets frequency distributions in histograms. */
-export const histograms: TopicDef = {
-  id: "histograms",
-  title: t("Histograms", "直方图"),
-  summary: t(
-    "Interpret frequency distributions and count data displayed across intervals in histograms.",
-    "解读直方图中按区间展示的频数分布并统计数据。",
-  ),
-  prerequisites: ["dot-plots"],
-  encompasses: [],
-  xp: 8,
-  standards: ["CCSS.6.SP.B.4"],
-  knowledgePoints: [
-    {
-      id: "reading-histograms",
-      title: t("Reading Frequencies from Histograms", "识读直方图的频数"),
-      explanation: t(
-        "A **histogram** groups numerical data into intervals of equal width, called bins, that sit side by side with no gaps. The height of each bar is the frequency: how many data values fall in that bin. In the histogram shown, the bar over $40$ to $60$ reaches $10$, so $10$ students scored at least $40$ but less than $60$. To count the values in several bins, add their bar heights.",
-        "**直方图**把数值数据分成宽度相等、彼此相邻且没有空隙的区间，称为组。每根柱子的高度是频数：落在该组中的数据个数。在图中的直方图里，$40$ 到 $60$ 上方的柱子高到 $10$，所以有 $10$ 名学生的成绩不低于 $40$ 且低于 $60$。要统计几个组中数据的个数，就把这些柱子的高度相加。",
-      ),
-      figure: histogramExample,
-      generate(rng) {
-        const freqs = contestFreqs(rng);
-        const [c1, c2, c3, c4, c5] = freqs as [number, number, number, number, number];
-        const answer = c3 + c4 + c5;
-        return {
-          ...numberProblem({
-            prompt: t(
+export const histograms: TopicDef = withIntro(
+  {
+    id: "histograms",
+    title: t("Histograms", "直方图"),
+    summary: t(
+      "Interpret frequency distributions and count data displayed across intervals in histograms.",
+      "解读直方图中按区间展示的频数分布并统计数据。",
+    ),
+    prerequisites: ["dot-plots"],
+    encompasses: [],
+    xp: 8,
+    standards: ["CCSS.6.SP.B.4"],
+    knowledgePoints: [
+      lesson(
+        "reading-histograms",
+        ["Reading Frequencies from Histograms", "识读直方图的频数"],
+        [
+          [
+            "A **histogram** groups data into intervals of equal width, called bins, drawn side by side. The height of a bar is how many values fall in that bin. In the histogram shown, the bar over $40$ to $60$ reaches $10$, so $10$ students scored at least $40$ but less than $60$. To count several bins, add their heights.",
+            "**直方图**把数据分成宽度相等、彼此相邻的区间，称为组。柱子的高度是落在该组中的数据个数。图中 $40$ 到 $60$ 上方的柱子高到 $10$，所以有 $10$ 名学生的成绩不低于 $40$ 且低于 $60$。要统计几个组，就把它们的高度相加。",
+          ],
+          [
+            "Scores of $40$ or more: $10 + 6 + 2 = 18$, and those below $40$ are $3 + 7 = 10$, which make all $28$.",
+            "$40$ 分及以上：$10 + 6 + 2 = 18$；$40$ 分以下：$3 + 7 = 10$；合起来正好是全部 $28$ 人。",
+          ],
+          [
+            "A bin holds its left edge but not its right. A score of $60$ is in the $60$ to $80$ bin.",
+            "每组包含左端点，不包含右端点。$60$ 分属于 $60$ 到 $80$ 这一组。",
+          ],
+        ],
+        (rng) => {
+          const freqs = contestFreqs(rng);
+          const [c1, c2, c3, c4, c5] = freqs as [number, number, number, number, number];
+          const answer = c3 + c4 + c5;
+          const all = c1 + c2 + answer;
+          return valued(
+            [
               "The histogram shows the scores of the students in a math contest. Each bin includes its left edge but not its right edge. How many students scored $40$ or higher?",
               "直方图显示了一次数学竞赛中学生的成绩。每组包含左端点，不包含右端点。有多少名学生的成绩在 $40$ 分及以上？",
-            ),
+            ],
             answer,
-            form: "integer",
-            wrong: [c4 + c5, c1 + c2, c3 + c4],
-            solution: t(
-              `The bins from $40$ up are $40$ to $60$, $60$ to $80$ and $80$ to $100$, with bar heights $${c3}$, $${c4}$ and $${c5}$. Add them: $${c3} + ${c4} + ${c5} = ${answer}$ students.`,
-              `从 $40$ 分起的组是 $40$ 到 $60$、$60$ 到 $80$ 和 $80$ 到 $100$，柱子高度分别为 $${c3}$、$${c4}$ 和 $${c5}$。相加：$${c3} + ${c4} + ${c5} = ${answer}$ 名学生。`,
-            ),
-          }),
-          figure: contestFigure(freqs),
-        };
-      },
-    },
-    {
-      id: "total-count-from-a-histogram",
-      title: t("Finding the total count", "求数据总数"),
-      explanation: t(
-        "Every data value falls in exactly one bin, so the total number of values is the sum of all the bar heights. In the histogram shown, $3 + 7 + 10 + 6 + 2 = 28$ students took the contest. A histogram does not show the individual values, only how many fall in each bin, so the total is found by adding, not by counting bars.",
-        "每个数据恰好落在一个组中，所以数据总数等于所有柱子高度之和。在图中的直方图里，参加竞赛的学生有 $3 + 7 + 10 + 6 + 2 = 28$ 名。直方图不显示各个具体数据，只显示每组有多少个数据，所以总数要靠把高度相加求得，而不是数柱子的根数。",
+            [
+              [
+                ["Pick the bins", "找出这些组"],
+                [
+                  "From $40$ up the bins are $40$–$60$, $60$–$80$ and $80$–$100$, with heights:",
+                  "$40$ 分起的组是 $40$–$60$、$60$–$80$ 和 $80$–$100$，高度是：",
+                ],
+                [`${c3}, \\ ${c4}, \\ ${c5}`],
+              ],
+              [["Add", "相加"], ["Add the heights:", "把高度相加："], [`${c3} + ${c4} + ${c5} = ${answer}`]],
+            ],
+            [
+              `All the bars add to $${all}$, and the two bins below $40$ hold $${c1} + ${c2} = ${c1 + c2}$; $${all} - ${c1 + c2} = ${answer}$.`,
+              `所有柱子加起来是 $${all}$，$40$ 分以下的两组有 $${c1} + ${c2} = ${c1 + c2}$；$${all} - ${c1 + c2} = ${answer}$。`,
+            ],
+            [
+              [c4 + c5, "That leaves out the $40$ to $60$ bin.", "这漏掉了 $40$ 到 $60$ 这一组。"],
+              [c1 + c2, "That counts the students below $40$.", "这是 $40$ 分以下的人数。"],
+              [c3 + c4, "That leaves out the $80$ to $100$ bin.", "这漏掉了 $80$ 到 $100$ 这一组。"],
+              [all, "That counts every student.", "这是全部学生的人数。"],
+            ],
+            { figure: contestFigure(freqs) },
+          );
+        },
+        histogramExample,
       ),
-      figure: histogramExample,
-      generate(rng) {
-        const freqs = contestFreqs(rng);
-        const answer = freqs.reduce((a, b) => a + b, 0);
-        return {
-          ...numberProblem({
-            prompt: t(
+      lesson(
+        "total-count-from-a-histogram",
+        ["Finding the total count", "求数据总数"],
+        [
+          [
+            "Every value falls in exactly one bin, so the total number of values is the sum of all the bar heights. In the histogram shown, $3 + 7 + 10 + 6 + 2 = 28$ students took the contest.",
+            "每个数据恰好落在一个组中，所以数据总数等于所有柱子高度之和。图中参加竞赛的学生有 $3 + 7 + 10 + 6 + 2 = 28$ 名。",
+          ],
+          ["In pairs: $3 + 7 = 10$, $6 + 2 = 8$, and $10 + 10 + 8 = 28$.", "凑整相加：$3 + 7 = 10$，$6 + 2 = 8$，$10 + 10 + 8 = 28$。"],
+          [
+            "Add the heights; do not count the bars. Five bars can hold many more than five students.",
+            "要把高度相加，不是数柱子的根数。五根柱子可以代表远多于五名学生。",
+          ],
+        ],
+        (rng) => {
+          const freqs = contestFreqs(rng);
+          const answer = freqs.reduce((a, b) => a + b, 0);
+          const [c1, c2, c3, c4, c5] = freqs as [number, number, number, number, number];
+          return valued(
+            [
               "The histogram shows the scores of the students in a math contest. How many students took the contest?",
               "直方图显示了一次数学竞赛中学生的成绩。共有多少名学生参加了竞赛？",
-            ),
+            ],
             answer,
-            form: "integer",
-            wrong: [freqs.length, Math.max(...freqs), answer - freqs[0]!],
-            solution: t(
-              `Add the heights of all the bars: $${freqs.join(" + ")} = ${answer}$ students.`,
-              `把所有柱子的高度相加：$${freqs.join(" + ")} = ${answer}$ 名学生。`,
-            ),
-          }),
-          figure: contestFigure(freqs),
-        };
-      },
-    },
-    {
-      id: "comparing-bins",
-      title: t("Comparing bins", "比较各组"),
-      explanation: t(
-        "The tallest bar marks the bin that holds the most data values, and the shortest bar the bin that holds the fewest. In the histogram shown, the tallest bar is over $40$ to $60$, so more students scored in that range than in any other; the shortest is over $80$ to $100$. To compare two bins, subtract their bar heights.",
-        "最高的柱子标出包含数据最多的组，最矮的柱子标出包含数据最少的组。在图中的直方图里，最高的柱子在 $40$ 到 $60$ 上方，所以成绩在这个范围内的学生比其他任何范围都多；最矮的柱子在 $80$ 到 $100$ 上方。要比较两个组，就把它们的柱子高度相减。",
+            [
+              [["Read each bar", "读出每根柱子"], ["The five heights are:", "五根柱子的高度是："], [freqs.join(", \\ ")]],
+              [["Add", "相加"], ["Every student is in one bin:", "每名学生都在某一组中："], [`${freqs.join(" + ")} = ${answer}`]],
+            ],
+            [
+              `The first two bins hold $${c1 + c2}$ and the last three $${c3 + c4 + c5}$, and $${c1 + c2} + ${c3 + c4 + c5} = ${answer}$.`,
+              `前两组有 $${c1 + c2}$ 人，后三组有 $${c3 + c4 + c5}$ 人，$${c1 + c2} + ${c3 + c4 + c5} = ${answer}$。`,
+            ],
+            [
+              [freqs.length, "That counts the bars, not the students.", "这是柱子的根数，不是学生人数。"],
+              [Math.max(...freqs), "That is only the tallest bar.", "这只是最高的柱子。"],
+              [answer - c1, "That leaves out the first bin.", "这漏掉了第一组。"],
+            ],
+            { figure: contestFigure(freqs) },
+          );
+        },
+        histogramExample,
       ),
-      figure: histogramExample,
-      generate(rng) {
-        const freqs = contestFreqs(rng);
-        const most = freqs.indexOf(Math.max(...freqs));
-        const fewest = freqs.indexOf(Math.min(...freqs));
-        const answer = freqs[most]! - freqs[fewest]!;
-        const bin = (i: number) => `$${contestEdges[i]}$–$${contestEdges[i + 1]}$`;
-        return {
-          ...numberProblem({
-            prompt: t(
+      lesson(
+        "comparing-bins",
+        ["Comparing bins", "比较各组"],
+        [
+          [
+            "The tallest bar marks the bin with the most values, and the shortest the bin with the fewest. In the histogram shown, the tallest is over $40$ to $60$ with $10$ and the shortest over $80$ to $100$ with $2$. To compare two bins, subtract their heights: $10 - 2 = 8$.",
+            "最高的柱子标出数据最多的组，最矮的柱子标出数据最少的组。图中最高的在 $40$ 到 $60$ 上方，有 $10$ 人；最矮的在 $80$ 到 $100$ 上方，有 $2$ 人。比较两组时，把高度相减：$10 - 2 = 8$。",
+          ],
+          ["$2 + 8 = 10$.", "$2 + 8 = 10$。"],
+          [
+            "Compare the heights, not the bins' positions or the scores along the bottom.",
+            "比较的是柱子的高度，不是组的位置或底下的分数。",
+          ],
+        ],
+        (rng) => {
+          const freqs = contestFreqs(rng);
+          const most = freqs.indexOf(Math.max(...freqs));
+          const fewest = freqs.indexOf(Math.min(...freqs));
+          const hi = freqs[most] as number;
+          const lo = freqs[fewest] as number;
+          const answer = hi - lo;
+          const bin = (i: number) => `$${contestEdges[i]}$–$${contestEdges[i + 1]}$`;
+          return valued(
+            [
               "The histogram shows the scores of the students in a math contest. How many more students scored in the bin with the most students than in the bin with the fewest?",
               "直方图显示了一次数学竞赛中学生的成绩。人数最多的组比人数最少的组多多少名学生？",
-            ),
+            ],
             answer,
-            form: "integer",
-            wrong: [freqs[most]!, freqs[most]! + freqs[fewest]!, Math.abs(most - fewest)],
-            solution: t(
-              `The tallest bar is over ${bin(most)} with height $${freqs[most]}$, and the shortest is over ${bin(fewest)} with height $${freqs[fewest]}$. The difference is $${freqs[most]} - ${freqs[fewest]} = ${answer}$ students.`,
-              `最高的柱子在 ${bin(most)} 上方，高度为 $${freqs[most]}$；最矮的在 ${bin(fewest)} 上方，高度为 $${freqs[fewest]}$。相差 $${freqs[most]} - ${freqs[fewest]} = ${answer}$ 名学生。`,
-            ),
-          }),
-          figure: contestFigure(freqs),
-        };
-      },
-    },
+            [
+              [
+                ["Find the tallest and shortest", "找出最高和最矮的柱子"],
+                [`Tallest over ${bin(most)}, shortest over ${bin(fewest)}:`, `最高的在 ${bin(most)} 上方，最矮的在 ${bin(fewest)} 上方：`],
+                [`${hi} \\text{ and } ${lo}`],
+              ],
+              [["Subtract", "相减"], ["How many more:", "多多少："], [`${hi} - ${lo} = ${answer}`]],
+            ],
+            [`$${lo} + ${answer} = ${hi}$.`, `$${lo} + ${answer} = ${hi}$。`],
+            [
+              [hi, "That is the tallest bar alone, not the difference.", "这只是最高的柱子，不是差。"],
+              [hi + lo, "That adds the two bars instead of subtracting.", "这是把两根柱子相加，不是相减。"],
+              [Math.abs(most - fewest), "That counts the bins between them, not the students.", "这是两组之间相隔的组数，不是人数。"],
+            ],
+            { figure: contestFigure(freqs) },
+          );
+        },
+        histogramExample,
+      ),
+    ],
+  },
+  [
+    "A teacher has the scores of $28$ students. Instead of listing them all, she counts how many fall between $0$ and $20$, $20$ and $40$, and so on, and draws a bar for each.",
+    "一位老师有 $28$ 名学生的成绩。她没有一一列出，而是数出 $0$ 到 $20$、$20$ 到 $40$ 等各段各有多少人，再为每段画一根柱子。",
   ],
-};
-
+  [
+    "The bars are $3$, $7$, $10$, $6$ and $2$ tall, and $3 + 7 + 10 + 6 + 2 = 28$.",
+    "柱子高 $3$、$7$、$10$、$6$ 和 $2$，而 $3 + 7 + 10 + 6 + 2 = 28$。",
+  ],
+  ["read bars of a histogram, find the total count and compare bins.", "读出直方图中柱子的高度，求数据总数，并比较各组。"],
+);
 /** grade6to8FoundationTopics are the foundational topics bridging Middle School mathematics. */
 export const grade6to8FoundationTopics: readonly TopicDef[] = [
   unitPricesAndSpeed,

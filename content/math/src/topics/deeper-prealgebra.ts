@@ -8,6 +8,9 @@ import { dec, Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { numberProblem } from "../problems.ts";
+import { tableFigure } from "./early-grades-more-kit.ts";
+import { lesson, type Off, valued } from "./grade-6-kit.ts";
+import { equalTape, tapeFigure } from "./upper-grades-kit.ts";
 
 /** gcdPre is the greatest common factor of two positive integers. */
 const gcdPre = (a: number, b: number): number => (b === 0 ? a : gcdPre(b, a % b));
@@ -68,14 +71,24 @@ const wholesBetweenFractions: KnowledgePointDef = {
   },
 };
 
-const farDigit: KnowledgePointDef = {
-  id: "a-far-digit-of-a-repeating-decimal",
-  title: t("A far digit of a repeating decimal", "循环小数中很远的一位"),
-  explanation: t(
-    "Dividing the numerator by the denominator shows a block of digits that repeats forever, so a digit far along the decimal never needs to be written out. Divide its position by the length of the block. The remainder tells which digit of the block sits at that position. Take care with a remainder of zero: the position then falls at the end of a complete block, so the digit is the last one in the block, not the first.",
-    "用分子除以分母，会出现一段不断重复的数字，所以很远位置上的数字不必真的写出来。用这个位置除以循环节的长度，余数说明它是循环节中的第几个数字。要小心余数为零的情况：这时该位置正好落在一个完整循环节的末尾，所以这个数字是循环节的最后一个，而不是第一个。",
-  ),
-  generate(rng) {
+const farDigit = lesson(
+  "a-far-digit-of-a-repeating-decimal",
+  ["A far digit of a repeating decimal", "循环小数中很远的一位"],
+  [
+    [
+      "A repeating decimal repeats one block of digits forever, so a far digit can be found without writing them all. Divide the position by the length of the block; the remainder says which digit of the block it is. $\\frac{1}{7} = 0.\\overline{142857}$, and $20 \\div 6 = 3$ R $2$, so the $20$th digit is the $2$nd of the block, $4$.",
+      "循环小数不断重复同一个循环节，所以很远的一位不必全写出来。用位置除以循环节的长度，余数说明是循环节中的第几个数字。$\\frac{1}{7} = 0.\\overline{142857}$，$20 \\div 6 = 3$ 余 $2$，所以第 $20$ 位是循环节的第 $2$ 个数字，即 $4$。",
+    ],
+    [
+      "Three full blocks fill $18$ places; places $19$ and $20$ are $1$ and $4$.",
+      "三个完整的循环节占 $18$ 位；第 $19$、$20$ 位是 $1$ 和 $4$。",
+    ],
+    [
+      "A remainder of $0$ means the place ends a full block, so the digit is the last of the block, not the first.",
+      "余数是 $0$ 表示这一位正好是一个完整循环节的末尾，所以是循环节的最后一个数字，不是第一个。",
+    ],
+  ],
+  (rng) => {
     const d = rng.pick([7, 13, 27, 37]);
     const n = rng.pick([1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12].filter((v) => v < d && gcdPre(v, d) === 1));
     const block = repeatingBlock(n, d);
@@ -84,41 +97,72 @@ const farDigit: KnowledgePointDef = {
     const remainder = position % size;
     const index = (remainder + size - 1) % size;
     const answer = block[index] as number;
-    const others = block.filter((v) => v !== answer);
-    return numberProblem({
-      prompt: t(
+    const full = Math.floor(position / size);
+    const block1 = Math.ceil(position / size);
+    const start = (block1 - 1) * size + 1;
+    const offs: Off[] = [
+      [block[remainder % size] as number, "That is the digit one place further along the block.", "这是循环节中再往后一位的数字。"],
+      [
+        remainder,
+        "That is the remainder, a place in the block, not the digit there.",
+        "这是余数，表示循环节中的位置，不是那一位上的数字。",
+      ],
+      [size, "That is the length of the block.", "这是循环节的长度。"],
+      [block[0] as number, "That is the first digit of the block.", "这是循环节的第一个数字。"],
+      [block[size - 1] as number, "That is the last digit of the block.", "这是循环节的最后一个数字。"],
+    ];
+    return valued(
+      [
         `What is the ${ordinalEn(position)} digit after the decimal point in the decimal form of $\\frac{${n}}{${d}}$?`,
         `$\\frac{${n}}{${d}}$ 写成小数后，小数点后第 $${position}$ 位上的数字是多少？`,
-      ),
-      answer,
-      form: "integer",
-      wrong: [
-        block[remainder] as number,
-        block[0] as number,
-        block[size - 1] as number,
-        ...others,
-        remainder,
-        remainder + 1,
-        size,
-        position % 10,
-        Math.floor(position / size),
       ],
-      solution: t(
-        `The decimal is $0.\\overline{${block.join("")}}$, with a block of $${size}$ digits. Since $${position}$ leaves remainder $${remainder}$ on division by $${size}$, ${remainder === 0 ? "the position ends a complete block, so the digit is the last one in the block" : `the digit is number ${remainder} in the block`}: it is $${answer}$.`,
-        `这个小数是 $0.\\overline{${block.join("")}}$，循环节有 $${size}$ 位。$${position}$ 除以 $${size}$ 余 $${remainder}$，${remainder === 0 ? "这一位正好是一个完整循环节的末尾，所以是循环节的最后一个数字" : `所以是循环节的第 ${remainder} 个数字`}：$${answer}$。`,
-      ),
-    });
+      answer,
+      [
+        [
+          ["Find the block", "找出循环节"],
+          [`Divide $${n}$ by $${d}$; the block has $${size}$ digits:`, `用 $${n}$ 除以 $${d}$，循环节有 $${size}$ 位：`],
+          [`\\frac{${n}}{${d}} = 0.\\overline{${block.join("")}}`],
+        ],
+        [
+          ["Divide the place", "用位置除"],
+          ["By the length of the block:", "除以循环节的长度："],
+          [`${position} \\div ${size} = ${full} \\text{ R } ${remainder}`],
+        ],
+        [
+          ["Read the digit", "读出数字"],
+          remainder === 0
+            ? ["Remainder $0$ ends a full block, so take the last digit:", "余数是 $0$，正好是完整循环节的末尾，取最后一个数字："]
+            : [
+                `Remainder $${remainder}$ means digit number $${remainder}$ of the block:`,
+                `余数是 $${remainder}$，就是循环节的第 $${remainder}$ 个数字：`,
+              ],
+          [`${answer}`],
+        ],
+      ],
+      [
+        `Block number $${block1}$ fills places $${start}$ to $${start + size - 1}$, and place $${position}$ is its digit number $${index + 1}$: in $${block.join("")}$ that is $${answer}$.`,
+        `第 $${block1}$ 个循环节占第 $${start}$ 到第 $${start + size - 1}$ 位，第 $${position}$ 位是其中的第 $${index + 1}$ 个数字：在 $${block.join("")}$ 中是 $${answer}$。`,
+      ],
+      offs,
+    );
   },
-};
-
-const joiningRatios: KnowledgePointDef = {
-  id: "joining-two-ratios-through-a-shared-part",
-  title: t("Joining two ratios through a shared part", "通过共同部分连接两个比"),
-  explanation: t(
-    "Two ratios that share a quantity can be joined into one, but only after the shared quantity has the same number in both. Scale each ratio so that the shared part becomes a common multiple of its two values. Then the three quantities can be read in a single line, and the size of one group gives the scale for the rest. Connecting the outer numbers without this step is a common error, as the two shared values measure different units.",
-    "两个比如果有一个共同的量，就可以连成一个比，但必须先让这个共同的量在两个比中对应的数相同。把每个比放大，使共同部分变成它的两个值的公倍数。这样三个量就能写成一行，再由其中一组的大小得到其他各组的倍数。不做这一步就直接连接外侧两个数是常见的错误，因为两个共同的值所代表的单位不同。",
-  ),
-  generate(rng) {
+  tableFigure(["1", "2", "3", "4", "5", "6"], [1, 4, 2, 8, 5, 7]),
+);
+const joiningRatios = lesson(
+  "joining-two-ratios-through-a-shared-part",
+  ["Joining two ratios through a shared part", "通过共同部分连接两个比"],
+  [
+    [
+      "Two ratios that share an amount can be joined into one, once the shared amount has the same number in both. Scale each ratio so the shared part becomes a common multiple. Cats to dogs $2 : 3$ and dogs to rabbits $4 : 5$: make the dogs $12$, giving $8 : 12$ and $12 : 15$, so cats, dogs and rabbits are $8 : 12 : 15$.",
+      "两个比如果有一个共同的量，先让这个量在两个比中对应的数相同，就能连成一个比。把每个比都扩大，使共同部分变成公倍数。猫和狗是 $2 : 3$，狗和兔子是 $4 : 5$：让狗变成 $12$，得到 $8 : 12$ 和 $12 : 15$，所以猫、狗、兔子的比是 $8 : 12 : 15$。",
+    ],
+    ["$8 : 12 = 2 : 3$ and $12 : 15 = 4 : 5$.", "$8 : 12 = 2 : 3$，$12 : 15 = 4 : 5$。"],
+    [
+      "Do not join the outer numbers straight away. $2 : 5$ is wrong, because the $3$ dogs and the $4$ dogs are different sizes of group.",
+      "不能直接把外侧两个数连起来。$2 : 5$ 是错的，因为 $3$ 份狗和 $4$ 份狗的每份大小不同。",
+    ],
+  ],
+  (rng) => {
     const firstPairs: readonly (readonly [number, number])[] = [
       [2, 3],
       [3, 4],
@@ -136,36 +180,83 @@ const joiningRatios: KnowledgePointDef = {
     const first = (scale * p * common) / q;
     const middle = scale * common;
     const last = (scale * s * common) / r;
+    const pa = (p * common) / q;
+    const sc = (s * common) / r;
     const [a, b, c, aZh, bZh, cZh, measure] = rng.pick([
       ["cats", "dogs", "rabbits", "猫", "狗", "兔子", "只"],
       ["violins", "cellos", "flutes", "小提琴", "大提琴", "长笛", "件"],
       ["apples", "pears", "plums", "苹果", "梨", "李子", "个"],
       ["red beads", "blue beads", "green beads", "红珠子", "蓝珠子", "绿珠子", "颗"],
     ]) as [string, string, string, string, string, string, string];
-    return numberProblem({
-      prompt: t(
-        `The ratio of ${a} to ${b} is $${p} : ${q}$, and the ratio of ${b} to ${c} is $${r} : ${s}$. There are ${last} ${c}. How many ${a} are there?`,
-        `${aZh}和${bZh}的比是 $${p} : ${q}$，${bZh}和${cZh}的比是 $${r} : ${s}$。${cZh}有 ${last} ${measure}。${aZh}有多少${measure}？`,
-      ),
-      answer: first,
-      form: "integer",
-      wrong: [Q.of(last * p, s), middle, Q.of(last * r * q, s * p), first + scale, first + middle],
-      solution: t(
-        `Make the ${b} match: the two ratios become $${(p * common) / q} : ${common}$ and $${common} : ${(s * common) / r}$. So ${a}, ${b} and ${c} are in the ratio $${(p * common) / q} : ${common} : ${(s * common) / r}$. With ${last} ${c}, there are ${first} ${a}.`,
-        `先让${bZh}对应的数相同：两个比变成 $${(p * common) / q} : ${common}$ 和 $${common} : ${(s * common) / r}$。所以${aZh}、${bZh}、${cZh}的比是 $${(p * common) / q} : ${common} : ${(s * common) / r}$。${cZh}有 ${last} ${measure}，所以${aZh}有 ${first} ${measure}。`,
-      ),
-    });
+    return valued(
+      [
+        `The ratio of ${a} to ${b} is $${p} : ${q}$, and the ratio of ${b} to ${c} is $${r} : ${s}$. There are $${last}$ ${c}. How many ${a} are there?`,
+        `${aZh}和${bZh}的比是 $${p} : ${q}$，${bZh}和${cZh}的比是 $${r} : ${s}$。${cZh}有 $${last}$ ${measure}。${aZh}有多少${measure}？`,
+      ],
+      first,
+      [
+        [
+          ["Match the shared part", "统一共同部分"],
+          [`Make the ${b} $${common}$ in both ratios:`, `让${bZh}在两个比中都是 $${common}$：`],
+          [`${p} : ${q} = ${pa} : ${common}`, `${r} : ${s} = ${common} : ${sc}`],
+        ],
+        [["Join them", "连成一个比"], [`${a}, ${b} and ${c}:`, `${aZh}、${bZh}、${cZh}：`], [`${pa} : ${common} : ${sc}`]],
+        [
+          ["Scale up", "按倍数扩大"],
+          [
+            `$${last}$ ${c} is $${last} \\div ${sc} = ${scale}$ times $${sc}$:`,
+            `${cZh} $${last}$ ${measure}是 $${sc}$ 的 $${last} \\div ${sc} = ${scale}$ 倍：`,
+          ],
+          [`${pa} \\times ${scale} = ${first}`],
+        ],
+      ],
+      [
+        `Then there are $${middle}$ ${b}: $${first} : ${middle} = ${p} : ${q}$ and $${middle} : ${last} = ${r} : ${s}$.`,
+        `这时${bZh}有 $${middle}$ ${measure}：$${first} : ${middle} = ${p} : ${q}$，$${middle} : ${last} = ${r} : ${s}$。`,
+      ],
+      [
+        [
+          Q.of(last * p, s),
+          `That joins $${p}$ and $${s}$ directly, before matching the ${b}.`,
+          `这是没有统一${bZh}就直接连接 $${p}$ 和 $${s}$。`,
+        ],
+        [middle, `That is the number of ${b}, not ${a}.`, `这是${bZh}的数量，不是${aZh}的。`],
+        [first + middle, `That adds the ${b} to the ${a}.`, `这是把${bZh}加到了${aZh}上。`],
+        [first + scale, "That is one group too many.", "这多算了一组。"],
+      ],
+    );
   },
-};
-
-const ratioFromFraction: KnowledgePointDef = {
-  id: "the-ratio-of-parts-from-a-fraction-of-the-whole",
-  title: t("The ratio of parts from a fraction of the whole", "由占整体的分数求两部分的比"),
-  explanation: t(
-    "A fraction of a group compares one part with the whole, while a ratio of parts compares one part with the other. To move between them, imagine the whole split into as many equal shares as the denominator says. The numerator counts the shares of the first part, and all the other shares belong to the second part. The two counts together give the ratio of the parts, and the size of the group does not matter at all.",
-    "占整体的分数是把一部分和整体比较，而两部分的比是把一部分和另一部分比较。要在两者之间转换，可以想象把整体分成分母所说的那么多等份。分子是第一部分的份数，其余的份数都属于第二部分。这两个份数合起来就给出两部分的比，而整体有多大完全没有关系。",
+  tapeFigure(
+    [
+      { total: "8", pieces: [{ size: 8, text: "8" }] },
+      { total: "12", pieces: [{ size: 12, text: "12", lit: true }] },
+      { total: "15", pieces: [{ size: 15, text: "15" }] },
+    ],
+    [
+      "With the middle amount made 12 in both ratios, 2 : 3 and 4 : 5 join as 8 : 12 : 15.",
+      "让中间的量在两个比中都是 12，2 : 3 和 4 : 5 就连成 8 : 12 : 15。",
+    ],
   ),
-  generate(rng) {
+);
+
+const ratioFromFraction = lesson(
+  "the-ratio-of-parts-from-a-fraction-of-the-whole",
+  ["The ratio of parts from a fraction of the whole", "由占整体的分数求两部分的比"],
+  [
+    [
+      "A fraction of a group compares a part with the whole; a ratio of parts compares one part with the other. Split the whole into as many shares as the denominator. If $\\frac{2}{5}$ of a class are girls, girls take $2$ shares and boys the other $5 - 2 = 3$, so girls to boys is $\\frac{2}{3}$.",
+      "占整体的分数是部分和整体比；两部分的比是一部分和另一部分比。把整体分成分母那么多份。如果全班的 $\\frac{2}{5}$ 是女生，女生占 $2$ 份，男生占其余的 $5 - 2 = 3$ 份，所以女生和男生的比是 $\\frac{2}{3}$。",
+    ],
+    [
+      "In a class of $30$: $12$ girls and $18$ boys, and $\\frac{12}{18} = \\frac{2}{3}$.",
+      "如果全班 $30$ 人：女生 $12$ 人，男生 $18$ 人，$\\frac{12}{18} = \\frac{2}{3}$。",
+    ],
+    [
+      "The denominator is the whole, not the other part. $\\frac{2}{5}$ compares girls with the whole class, not with the boys.",
+      "分母是整体，不是另一部分。$\\frac{2}{5}$ 是女生和全班比，不是和男生比。",
+    ],
+  ],
+  (rng) => {
     const q = rng.pick([5, 7, 8, 9, 10, 11, 12, 13, 15, 16]);
     const p = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].filter((v) => v <= q - 2 && gcdPre(v, q) === 1));
     const rest = q - p;
@@ -176,32 +267,58 @@ const ratioFromFraction: KnowledgePointDef = {
       ["trees in a park", "oaks", "maples", "公园里的树", "橡树", "枫树"],
       ["books on a shelf", "novels", "atlases", "书架上的书", "小说", "地图册"],
     ]) as [string, string, string, string, string, string];
-    const answer = reversed ? Q.of(rest, p) : Q.of(p, rest);
-    return numberProblem({
-      prompt: t(
+    const [top, bottom] = reversed ? [rest, p] : [p, rest];
+    const answer = Q.of(top, bottom);
+    const size = q * rng.int(2, 4);
+    return valued(
+      [
         `Of the ${item}, $\\frac{${p}}{${q}}$ are ${one} and the rest are ${other}. Write the ratio of ${reversed ? `${other} to ${one}` : `${one} to ${other}`} as a fraction in simplest form.`,
         `${itemZh}中，$\\frac{${p}}{${q}}$ 是${oneZh}，其余是${otherZh}。把${reversed ? `${otherZh}和${oneZh}` : `${oneZh}和${otherZh}`}的比写成最简分数。`,
-      ),
+      ],
       answer,
-      form: "fraction",
-      wrong: [Q.of(p, q), Q.of(rest, q), reversed ? Q.of(p, rest) : Q.of(rest, p), Q.of(p, p + q), reversed ? Q.of(q, p) : Q.of(q, rest)],
-      solution: t(
-        `Out of every $${q}$ equal shares, $${p}$ are $${one}$ and $${q} - ${p} = ${rest}$ are $${other}$. The ratio is $${answer.toLatex()}$.`,
-        `每 $${q}$ 等份中，${oneZh}占 $${p}$ 份，${otherZh}占 $${q} - ${p} = ${rest}$ 份。所以比是 $${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        [
+          ["Count the shares", "数份数"],
+          [`Split the whole into $${q}$ shares; ${one} take $${p}$:`, `把整体分成 $${q}$ 份，${oneZh}占 $${p}$ 份：`],
+          [`${q} - ${p} = ${rest}`],
+        ],
+        [
+          ["Compare the parts", "两部分相比"],
+          [reversed ? `${other} to ${one}:` : `${one} to ${other}:`, reversed ? `${otherZh}比${oneZh}：` : `${oneZh}比${otherZh}：`],
+          [`\\frac{${top}}{${bottom}} = ${answer.toLatex()}`],
+        ],
+      ],
+      [
+        `With $${size}$ in all there are $${(size * p) / q}$ ${one} and $${(size * rest) / q}$ ${other}, and the ratio is again $${answer.toLatex()}$.`,
+        `如果总数是 $${size}$，${oneZh}有 $${(size * p) / q}$，${otherZh}有 $${(size * rest) / q}$，比仍是 $${answer.toLatex()}$。`,
+      ],
+      [
+        [Q.of(p, q), `That is the ${one} out of the whole, not out of the ${other}.`, `这是${oneZh}占整体的分数，不是和${otherZh}的比。`],
+        [Q.of(rest, q), `That is the ${other} out of the whole.`, `这是${otherZh}占整体的分数。`],
+        [Q.of(bottom, top), "That is upside down: the order of the words sets the order.", "这颠倒了：比的顺序按题目里的先后。"],
+        [reversed ? Q.of(q, p) : Q.of(q, rest), "That compares the whole with a part.", "这是整体和一部分的比。"],
+      ],
+      { form: "fraction" },
+    );
   },
-};
-
-const rateUnits: KnowledgePointDef = {
-  id: "changing-the-units-of-a-rate",
-  title: t("Changing the units of a rate", "换算比率的单位"),
-  explanation: t(
-    "A rate has two units, and changing them means handling the top and the bottom separately. Converting the quantity on top multiplies by the conversion, as there are more of the smaller unit. Converting the time below works the other way, as the same amount now shares a different length of time. So a smaller unit on the bottom gives a smaller rate. Doing one change and forgetting the other is the mistake to look out for.",
-    "比率有两个单位，换算时要把上面和下面分开处理。换算上面的量时要乘以换算系数，因为较小的单位数量更多。换算下面的时间则相反，因为同样的量现在对应的时间长度不同。所以下面换成较小的单位，比率就变小。只换一个单位而忘了另一个，是需要留意的错误。",
-  ),
-  generate(rng) {
-    const [value, top, bottom, en, enTo, zh, zhTo] = rng.pick([
+  equalTape(5, "1", "5", 2),
+);
+const rateUnits = lesson(
+  "changing-the-units-of-a-rate",
+  ["Changing the units of a rate", "换算比率的单位"],
+  [
+    [
+      "A rate has a unit on top and a unit below, and each is changed on its own. A train at $90$ km per hour: $90$ km is $90{,}000$ m, and an hour is $60$ minutes, so it goes $90{,}000 \\div 60 = 1{,}500$ m per minute.",
+      "比率上面有一个单位，下面有一个单位，要分别换算。火车每小时行 $90$ 千米：$90$ 千米是 $90000$ 米，$1$ 小时是 $60$ 分钟，所以每分钟行 $90000 \\div 60 = 1500$ 米。",
+    ],
+    ["$1{,}500 \\times 60 = 90{,}000$ m, which is $90$ km in an hour.", "$1500 \\times 60 = 90000$ 米，就是每小时 $90$ 千米。"],
+    [
+      "Change both units. Turning km into m but keeping hours gives $90{,}000$ m per hour, not per minute.",
+      "两个单位都要换。只把千米换成米而不换小时，得到的是每小时 $90000$ 米，不是每分钟。",
+    ],
+  ],
+  (rng) => {
+    const [value, top, bottom, en, enTo, zh, zhTo, upEn, upZh, downEn, downZh] = rng.pick([
       [
         6 * rng.int(8, 50),
         1000,
@@ -210,6 +327,10 @@ const rateUnits: KnowledgePointDef = {
         "meters per minute",
         "一列火车的速度是每小时 {v} 千米",
         "每分钟多少米",
+        "A kilometer is $1000$ meters:",
+        "$1$ 千米是 $1000$ 米：",
+        "An hour is $60$ minutes:",
+        "$1$ 小时是 $60$ 分钟：",
       ],
       [
         5 * rng.int(2, 8),
@@ -219,6 +340,10 @@ const rateUnits: KnowledgePointDef = {
         "kilometers per hour",
         "一辆汽车的速度是每秒 {v} 米",
         "每小时多少千米",
+        "An hour is $3600$ seconds:",
+        "$1$ 小时是 $3600$ 秒：",
+        "A kilometer is $1000$ meters:",
+        "$1$ 千米是 $1000$ 米：",
       ],
       [
         3 * rng.int(3, 30),
@@ -228,6 +353,10 @@ const rateUnits: KnowledgePointDef = {
         "cents per minute",
         "一名工人每小时挣 {v} 美元",
         "每分钟多少美分",
+        "A dollar is $100$ cents:",
+        "$1$ 美元是 $100$ 美分：",
+        "An hour is $60$ minutes:",
+        "$1$ 小时是 $60$ 分钟：",
       ],
       [
         3 * rng.int(1, 20),
@@ -237,6 +366,10 @@ const rateUnits: KnowledgePointDef = {
         "milliliters per second",
         "一根水管每分钟出水 {v} 升",
         "每秒多少毫升",
+        "A liter is $1000$ milliliters:",
+        "$1$ 升是 $1000$ 毫升：",
+        "A minute is $60$ seconds:",
+        "$1$ 分钟是 $60$ 秒：",
       ],
       [
         50 * rng.int(1, 6),
@@ -246,31 +379,49 @@ const rateUnits: KnowledgePointDef = {
         "kilometers per hour",
         "一名跑步者每分钟跑 {v} 米",
         "每小时多少千米",
+        "An hour is $60$ minutes:",
+        "$1$ 小时是 $60$ 分钟：",
+        "A kilometer is $1000$ meters:",
+        "$1$ 千米是 $1000$ 米：",
       ],
-    ]) as [number, number, number, string, string, string, string];
+    ]) as [number, number, number, string, string, string, string, string, string, string, string];
     const answer = Q.of(value * top, bottom);
-    const statement = en.replace("{v}", `${value}`);
-    const statementZh = zh.replace("{v}", `${value}`);
-    return numberProblem({
-      prompt: t(`${statement}. What is this rate in ${enTo}?`, `${statementZh}。这个比率相当于${zhTo}？`),
+    return valued(
+      [`${en.replace("{v}", `$${value}$`)}. What is this rate in ${enTo}?`, `${zh.replace("{v}", `$${value}$`)}。这个比率相当于${zhTo}？`],
       answer,
-      wrong: [Q.of(value * top), Q.of(value, bottom), Q.of(value * bottom, top), Q.of(value * top * bottom)],
-      solution: t(
-        `Change the quantity and the time separately, which multiplies by $${top}$ and divides by $${bottom}$: $${value} \\times ${top} \\div ${bottom} = ${answer.toLatex()}$.`,
-        `把量和时间分开换算，也就是乘以 $${top}$ 再除以 $${bottom}$：$${value} \\times ${top} \\div ${bottom} = ${answer.toLatex()}$。`,
-      ),
-    });
+      [
+        [["Multiply", "乘"], [upEn, upZh], [`${value} \\times ${top} = ${value * top}`]],
+        [["Divide", "除"], [downEn, downZh], [`${value * top} \\div ${bottom} = ${answer.toLatex()}`]],
+      ],
+      [
+        `Back again: $${answer.toLatex()} \\times ${bottom} \\div ${top} = ${value}$.`,
+        `换回去：$${answer.toLatex()} \\times ${bottom} \\div ${top} = ${value}$。`,
+      ],
+      [
+        [Q.of(value * top), "That changes only one unit; the other is left as it was.", "这只换了一个单位，另一个没换。"],
+        [Q.of(value, bottom), "That only divides; the multiplying step is missing.", "这只做了除法，漏了乘的那一步。"],
+        [Q.of(value * bottom, top), "That multiplies and divides the wrong way round.", "这把乘和除弄反了。"],
+        [Q.of(value * top * bottom), "That multiplies by both numbers; one of them should divide.", "这是两个数都乘了，其中一个应该除。"],
+      ],
+    );
   },
-};
-
-const percentOfPercent: KnowledgePointDef = {
-  id: "a-percent-of-a-percent-of-a-group",
-  title: t("A percent of a percent of a group", "一个群体的百分数的百分数"),
-  explanation: t(
-    "When a percent describes only part of a group, it must be applied to that part and not to the whole group. So work in two stages. First use the first percent to find the size of the smaller group. Then use the second percent on that smaller number. Adding the two percents, or using both of them on the full group, gives an amount that does not match the wording. Reading which group each percent refers to is the key step.",
-    "当一个百分数只描述群体的一部分时，必须把它用在这一部分上，而不是整个群体上。所以要分两步。先用第一个百分数求出较小群体的人数。再对这个较小的数使用第二个百分数。把两个百分数相加，或者都用在整个群体上，得到的数都与题意不符。读清每个百分数指的是哪个群体，是关键的一步。",
-  ),
-  generate(rng) {
+  tableFigure(["1", "60"], [1500, 90000]),
+);
+const percentOfPercent = lesson(
+  "a-percent-of-a-percent-of-a-group",
+  ["A percent of a percent of a group", "一个群体的百分数的百分数"],
+  [
+    [
+      "When a second percent is about part of a group, use it on that part, not on the whole group. Work in two steps. A school has $200$ students and $40\\%$ are in the band, so $80$ are in the band. If $25\\%$ of the band play brass, that is $25\\%$ of $80$, which is $20$.",
+      "当第二个百分数说的是群体的一部分时，要把它用在这一部分上，而不是整个群体上。分两步做。一所学校有 $200$ 名学生，$40\\%$ 在乐队里，所以乐队有 $80$ 人。如果乐队中 $25\\%$ 演奏铜管乐器，就是 $80$ 的 $25\\%$，即 $20$ 人。",
+    ],
+    ["$40\\% \\times 25\\% = 10\\%$, and $10\\%$ of $200$ is $20$.", "$40\\% \\times 25\\% = 10\\%$，$200$ 的 $10\\%$ 是 $20$。"],
+    [
+      "Do not add the percents. $40\\% + 25\\% = 65\\%$ of the school would be $130$, far more than the band.",
+      "不能把两个百分数相加。全校的 $40\\% + 25\\% = 65\\%$ 是 $130$ 人，比乐队人数还多。",
+    ],
+  ],
+  (rng) => {
     const k = rng.int(1, 10);
     const j = rng.int(1, 5);
     const total = 200 * k;
@@ -280,35 +431,77 @@ const percentOfPercent: KnowledgePointDef = {
     const answer = (part * q) / 100;
     const [en, enFirst, enSecond, zh, zhFirst, zhSecond] = rng.pick(
       [
-        ["A school has", "students", "are in the band", "play brass instruments", "一所学校有", "学生", "在乐队里", "演奏铜管乐器"],
-        ["A club has", "members", "joined the hiking group", "own a tent", "一个俱乐部有", "成员", "参加了徒步小组", "有帐篷"],
-        ["A town has", "households", "own a car", "own an electric car", "一个小镇有", "家庭", "有汽车", "有电动汽车"],
-      ].map(([a, b, c, d, e, f, g, h]) => [`${a} ${total} ${b}`, c, d, `${e} ${total} 个${f}`, g, h]),
+        ["A school has", "students", "are in the band", "play brass instruments", "一所学校有", "名学生", "在乐队里", "演奏铜管乐器"],
+        ["A club has", "members", "joined the hiking group", "own a tent", "一个俱乐部有", "名成员", "参加了徒步小组", "有帐篷"],
+        ["A town has", "households", "own a car", "own an electric car", "一个小镇有", "户家庭", "有汽车", "有电动汽车"],
+      ].map(([a, b, c, d, e, f, g, h]) => [`${a} $${total}$ ${b}`, c, d, `${e} $${total}$ ${f}`, g, h]),
     ) as [string, string, string, string, string, string];
-    return numberProblem({
-      prompt: t(
+    return valued(
+      [
         `${en}. Of these, $${p}\\%$ ${enFirst}, and $${q}\\%$ of that group ${enSecond}. How many are in this last group?`,
-        `${zh}。其中 $${p}\\%$ ${zhFirst}，这部分中又有 $${q}\\%$ ${zhSecond}。最后这部分有多少个？`,
-      ),
+        `${zh}。其中 $${p}\\%$ ${zhFirst}，这部分中又有 $${q}\\%$ ${zhSecond}。最后这部分有多少？`,
+      ],
       answer,
-      form: "integer",
-      wrong: [(total * q) / 100, part, (total * (p + q)) / 100, part - answer, total - answer],
-      solution: t(
-        `First find the smaller group: $${p}\\%$ of $${total}$ is $${part}$. Then $${q}\\%$ of $${part}$ is $${answer}$.`,
-        `先求较小的群体：$${total}$ 的 $${p}\\%$ 是 $${part}$。再求 $${part}$ 的 $${q}\\%$，得 $${answer}$。`,
-      ),
-    });
+      [
+        [
+          ["Find the first group", "求第一部分"],
+          [`$${p}\\%$ of the whole:`, `整体的 $${p}\\%$：`],
+          [`${total} \\times ${dec(Q.of(p, 100))} = ${part}`],
+        ],
+        [
+          ["Take the second percent", "再求第二个百分数"],
+          [`$${q}\\%$ of that group:`, `这部分的 $${q}\\%$：`],
+          [`${part} \\times ${dec(Q.of(q, 100))} = ${answer}`],
+        ],
+      ],
+      [
+        `In one step: $${p}\\% \\times ${q}\\% = ${dec(Q.of(p * q, 100))}\\%$, and $${dec(Q.of(p * q, 100))}\\%$ of $${total}$ is $${answer}$.`,
+        `一步算：$${p}\\% \\times ${q}\\% = ${dec(Q.of(p * q, 100))}\\%$，$${total}$ 的 $${dec(Q.of(p * q, 100))}\\%$ 是 $${answer}$。`,
+      ],
+      [
+        [(total * q) / 100, `That takes $${q}\\%$ of the whole, not of the smaller group.`, `这是整体的 $${q}\\%$，不是那部分的。`],
+        [part, "That is only the first group.", "这只是第一部分。"],
+        [(total * (p + q)) / 100, "That adds the two percents.", "这是把两个百分数相加了。"],
+        [part - answer, "That is the rest of the first group.", "这是第一部分中剩下的。"],
+      ],
+    );
   },
-};
-
-const scoreNeeded: KnowledgePointDef = {
-  id: "correct-answers-needed-for-a-target-percent",
-  title: t("Correct answers needed for a target percent", "达到目标百分比需要答对的题数"),
-  explanation: t(
-    "A percent target for a whole test fixes a total number of correct answers. Find this total by taking the percent of all the questions, not only of the questions still to come. The correct answers already earned count toward that total, so subtract them to see how many more are needed. Applying the percent to the remaining questions alone ignores what has already happened, and the score so far could be either above or below the target.",
-    "整张试卷的百分比目标决定了需要答对的总题数。这个总数要用百分数乘以全部题数来求，而不只是剩下的题数。已经答对的题要算进这个总数，所以减去它们，就知道还需要答对多少题。只对剩下的题使用百分数，就忽略了已经发生的情况，而目前的成绩可能高于目标，也可能低于目标。",
+  tapeFigure(
+    [
+      {
+        total: "200",
+        pieces: [
+          { size: 80, text: "80", lit: true },
+          { size: 120, text: "120" },
+        ],
+      },
+      {
+        total: "80",
+        pieces: [
+          { size: 20, text: "20", lit: true },
+          { size: 60, text: "60" },
+        ],
+      },
+    ],
+    ["40% of 200 is 80, then 25% of those 80 is 20.", "200 的 40% 是 80，这 80 的 25% 是 20。"],
   ),
-  generate(rng) {
+);
+
+const scoreNeeded = lesson(
+  "correct-answers-needed-for-a-target-percent",
+  ["Correct answers needed for a target percent", "达到目标百分比需要答对的题数"],
+  [
+    [
+      "A percent target for a whole test fixes how many answers must be right in all. Take the percent of all the questions, then subtract the ones already right. A test of $40$ questions with a target of $75\\%$ needs $30$ right; with $14$ right so far, $30 - 14 = 16$ more are needed.",
+      "全卷的百分比目标决定了一共要答对多少题。用全部题数求百分数，再减去已经答对的。$40$ 道题、目标 $75\\%$，共需答对 $30$ 道；已经答对 $14$ 道，还需 $30 - 14 = 16$ 道。",
+    ],
+    ["$14 + 16 = 30$, and $\\frac{30}{40} = 75\\%$.", "$14 + 16 = 30$，$\\frac{30}{40} = 75\\%$。"],
+    [
+      "Take the percent of the whole test, not of the questions left. The answers already right count too.",
+      "要用全卷题数求百分数，不是只用剩下的题数。已经答对的题也要算上。",
+    ],
+  ],
+  (rng) => {
     const total = 20 * rng.int(2, 6);
     const target = rng.pick([60, 65, 70, 75, 80, 85, 90]);
     const needed = (total * target) / 100;
@@ -320,22 +513,51 @@ const scoreNeeded: KnowledgePointDef = {
     const answer = needed - right;
     const name = rng.pick(["Mia", "Leo", "Ana", "Sam"]);
     const nameZh = { Mia: "米娅", Leo: "利奥", Ana: "安娜", Sam: "萨姆" }[name] as string;
-    return numberProblem({
-      prompt: t(
+    return valued(
+      [
         `A test has $${total}$ questions. ${name} has finished the first $${done}$ and has $${right}$ of them right. ${name} wants at least $${target}\\%$ on the whole test. What is the fewest of the remaining questions that must be right?`,
         `一场考试有 $${total}$ 道题。${nameZh}做完了前 $${done}$ 道，答对了 $${right}$ 道。${nameZh}希望全卷至少得 $${target}\\%$。剩下的题中至少要答对多少道？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [needed, Q.of(left * target, 100), done - right, left - answer, answer + 1],
-      solution: t(
-        `A score of $${target}\\%$ of $${total}$ needs $${needed}$ correct answers in all. ${name} already has $${right}$, so $${needed} - ${right} = ${answer}$ more are needed.`,
-        `$${total}$ 道题的 $${target}\\%$ 共需答对 $${needed}$ 道。${nameZh}已经答对 $${right}$ 道，所以还要答对 $${needed} - ${right} = ${answer}$ 道。`,
-      ),
-    });
+      [
+        [
+          ["Find the total needed", "求一共要答对的题数"],
+          [`$${target}\\%$ of all $${total}$ questions:`, `全部 $${total}$ 道题的 $${target}\\%$：`],
+          [`${total} \\times ${dec(Q.of(target, 100))} = ${needed}`],
+        ],
+        [
+          ["Subtract what is right", "减去已答对的"],
+          [`${name} already has $${right}$:`, `${nameZh}已经答对 $${right}$ 道：`],
+          [`${needed} - ${right} = ${answer}`],
+        ],
+      ],
+      [
+        `$${right} + ${answer} = ${needed}$, and $\\frac{${needed}}{${total}} = ${target}\\%$; one fewer would give $${needed - 1}$, below the target.`,
+        `$${right} + ${answer} = ${needed}$，$\\frac{${needed}}{${total}} = ${target}\\%$；少答对一道只有 $${needed - 1}$ 道，达不到目标。`,
+      ],
+      [
+        [needed, "That is the total needed; some are already right.", "这是一共要答对的题数，其中一些已经答对了。"],
+        [Q.of(left * target, 100), `That takes $${target}\\%$ of the questions left only.`, `这只求了剩下题数的 $${target}\\%$。`],
+        [done - right, "That is the number wrong so far.", "这是目前答错的题数。"],
+        [left - answer, "That is how many of the rest may be wrong.", "这是剩下的题中最多可以答错的题数。"],
+        [answer + 1, "That is one more than needed.", "这比需要的多了一道。"],
+      ],
+    );
   },
-};
-
+  tapeFigure(
+    [
+      {
+        total: "40",
+        pieces: [
+          { size: 14, text: "14", lit: true },
+          { size: 16, text: "16", lit: true, dashed: true },
+          { size: 10, text: "10" },
+        ],
+      },
+    ],
+    ["75% of 40 is 30: 14 already right and 16 more.", "40 的 75% 是 30：已答对 14 道，还需 16 道。"],
+  ),
+);
 const percentOrDollars: KnowledgePointDef = {
   id: "percent-off-or-dollars-off",
   title: t("Percent off or dollars off", "打折还是减价"),

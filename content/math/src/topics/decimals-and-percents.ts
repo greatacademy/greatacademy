@@ -2,7 +2,10 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, num, Q, q } from "@ga/subject-math";
 
-import { numberProblem, steps, why } from "../problems.ts";
+import { numberProblem, steps } from "../problems.ts";
+import { tableFigure } from "./early-grades-more-kit.ts";
+import { lesson, type Off, valued, withIntro } from "./grade-6-kit.ts";
+import { lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** terminatingFraction draws a fraction in lowest terms whose denominator divides a power of ten, between 0 and 1. */
 function terminatingFraction(rng: Rng): Q {
@@ -34,203 +37,402 @@ function fixed(v: Q, k: number): string {
 /** percent writes a percentage: "12.5\%". */
 const pct = (v: Q) => `${dec(v)}\\%`;
 
-export const fractionsAndDecimals: TopicDef = {
-  id: "fractions-and-decimals",
-  title: t("Fractions and Decimals", "分数与小数"),
-  summary: t("Convert terminating decimals to fractions and fractions to decimals.", "有限小数化分数，分数化小数。"),
-  prerequisites: ["equivalent-fractions"],
-  encompasses: [{ topic: "equivalent-fractions", weight: 0.4 }],
-  xp: 10,
-  standards: ["CCSS.4.NF.C.6", "CCSS.7.NS.A.2.D"],
-  knowledgePoints: [
-    {
-      id: "decimals-to-fractions",
-      title: t("Decimals as fractions", "小数化分数"),
-      explanation: t(
-        "The digits after the decimal point count tenths, hundredths, thousandths, and so on. Read the decimal as a fraction over $10$, $100$ or $1000$, then simplify:\n\n$$0.35 = \\frac{35}{100} = \\frac{7}{20}, \\qquad 2.125 = \\frac{2125}{1000} = \\frac{17}{8}$$\n\nThe number of decimal places is the number of zeros in the denominator.",
-        "小数点后的各位依次表示十分之几、百分之几、千分之几……把小数读成分母为 $10$、$100$ 或 $1000$ 的分数，再约分：\n\n$$0.35 = \\frac{35}{100} = \\frac{7}{20}, \\qquad 2.125 = \\frac{2125}{1000} = \\frac{17}{8}$$\n\n小数有几位，分母中就有几个零。",
+export const fractionsAndDecimals: TopicDef = withIntro(
+  {
+    id: "fractions-and-decimals",
+    title: t("Fractions and Decimals", "分数与小数"),
+    summary: t("Convert terminating decimals to fractions and fractions to decimals.", "有限小数化分数，分数化小数。"),
+    prerequisites: ["equivalent-fractions"],
+    encompasses: [{ topic: "equivalent-fractions", weight: 0.4 }],
+    xp: 10,
+    standards: ["CCSS.4.NF.C.6", "CCSS.7.NS.A.2.D"],
+    knowledgePoints: [
+      lesson(
+        "decimals-to-fractions",
+        ["Decimals as fractions", "小数化分数"],
+        [
+          [
+            "The places after the point count tenths, hundredths and thousandths. Read the decimal as a fraction over $10$, $100$ or $1000$, then simplify: $0.35 = \\frac{35}{100} = \\frac{7}{20}$. The number of decimal places is the number of zeros in the denominator.",
+            "小数点后的各位依次表示十分之几、百分之几、千分之几。把小数读成分母是 $10$、$100$ 或 $1000$ 的分数，再约分：$0.35 = \\frac{35}{100} = \\frac{7}{20}$。小数有几位，分母就有几个零。",
+          ],
+          ["$7 \\div 20 = 0.35$.", "$7 \\div 20 = 0.35$。"],
+          [
+            "Count the places. $0.35$ has two, so it is over $100$, not $10$ or $1000$.",
+            "数清小数位数。$0.35$ 有两位，所以分母是 $100$，不是 $10$ 或 $1000$。",
+          ],
+        ],
+        (rng) => {
+          const v = rng.bool(0.3) ? terminatingFraction(rng).add(Q.of(rng.int(1, 5))) : terminatingFraction(rng);
+          const k = places(v);
+          const scale = 10 ** k;
+          const raw = v.mul(Q.of(scale));
+          const g = Number(raw.n) / Number(v.n);
+          const offs: Off[] = [
+            [q(raw.n, 10 ** (k + 1)), "That has one zero too many in the denominator.", "这个分母多了一个零。"],
+            [q(raw.n, 10 ** (k - 1)), "That has one zero too few in the denominator.", "这个分母少了一个零。"],
+          ];
+          if (v.cmp(Q.one) > 0)
+            offs.push([v.sub(Q.of(Math.floor(Number(v.n) / Number(v.d)))), "That drops the whole number part.", "这丢掉了整数部分。"]);
+          else offs.push([q(v.d, v.n), "That is upside down.", "这颠倒了。"]);
+          return valued(
+            [`Write $${dec(v)}$ as a fraction in lowest terms.`, `把 $${dec(v)}$ 写成最简分数。`],
+            v,
+            [
+              [
+                ["Write over a power of ten", "写成分母是 10 的幂的分数"],
+                [`$${dec(v)}$ has $${k}$ decimal place${k === 1 ? "" : "s"}:`, `$${dec(v)}$ 有 $${k}$ 位小数：`],
+                [`${dec(v)} = \\frac{${raw.n}}{${scale}}`],
+              ],
+              [
+                ["Simplify", "约分"],
+                g > 1 ? [`Divide both by $${g}$:`, `分子分母同除以 $${g}$：`] : ["It is already in lowest terms:", "它已经是最简分数："],
+                [`\\frac{${raw.n}}{${scale}} = ${num(v)}`],
+              ],
+            ],
+            [`$${v.n} \\div ${v.d} = ${dec(v)}$.`, `$${v.n} \\div ${v.d} = ${dec(v)}$。`],
+            offs,
+            { form: "fraction" },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "100",
+              pieces: [
+                { size: 35, text: "35", lit: true },
+                { size: 65, text: "65" },
+              ],
+            },
+          ],
+          ["0.35 is 35 of 100 equal parts, which is 7/20.", "0.35 是 100 等份中的 35 份，即 7/20。"],
+        ),
       ),
-      generate(rng) {
-        const v = rng.bool(0.3) ? terminatingFraction(rng).add(Q.of(rng.int(1, 5))) : terminatingFraction(rng);
-        const k = places(v);
-        const scale = 10 ** k;
-        const raw = v.mul(Q.of(scale));
-        return numberProblem({
-          prompt: t(`Write $${dec(v)}$ as a fraction in lowest terms.`, `把 $${dec(v)}$ 写成最简分数。`),
-          answer: v,
-          form: "fraction",
-          wrong: [q(raw.n, 10 ** (k + 1))],
-          solution: t(
-            `$${dec(v)}$ has ${k} decimal place${k === 1 ? "" : "s"}:${steps(`${dec(v)} = \\frac{${raw.n}}{${scale}} = ${num(v)}`)}`,
-            `$${dec(v)}$ 有 ${k} 位小数：${steps(`${dec(v)} = \\frac{${raw.n}}{${scale}} = ${num(v)}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "fractions-to-decimals",
-      title: t("Fractions as decimals", "分数化小数"),
-      explanation: t(
-        "A fraction is a division: $\\frac{3}{8} = 3 \\div 8 = 0.375$. When the denominator divides $10$, $100$ or $1000$, it is quicker to write an equivalent fraction with that denominator:\n\n$$\\frac{7}{25} = \\frac{7 \\cdot 4}{25 \\cdot 4} = \\frac{28}{100} = 0.28$$",
-        "分数就是除法：$\\frac{3}{8} = 3 \\div 8 = 0.375$。当分母是 $10$、$100$ 或 $1000$ 的因数时，更快的方法是化成以它们为分母的等值分数：\n\n$$\\frac{7}{25} = \\frac{7 \\cdot 4}{25 \\cdot 4} = \\frac{28}{100} = 0.28$$",
+      lesson(
+        "fractions-to-decimals",
+        ["Fractions as decimals", "分数化小数"],
+        [
+          [
+            "When the denominator divides $10$, $100$ or $1000$, write an equivalent fraction with that denominator and read off the decimal: $\\frac{7}{25} = \\frac{28}{100} = 0.28$. Any fraction is also a division: $\\frac{3}{8} = 3 \\div 8 = 0.375$.",
+            "当分母是 $10$、$100$ 或 $1000$ 的因数时，化成以它为分母的等值分数，再读出小数：$\\frac{7}{25} = \\frac{28}{100} = 0.28$。分数也就是除法：$\\frac{3}{8} = 3 \\div 8 = 0.375$。",
+          ],
+          ["$0.28 \\times 25 = 7$.", "$0.28 \\times 25 = 7$。"],
+          [
+            "A fraction is not its two numbers joined by a point. $\\frac{3}{8}$ is $0.375$, not $3.8$.",
+            "分数不是把两个数用小数点连起来。$\\frac{3}{8}$ 是 $0.375$，不是 $3.8$。",
+          ],
+        ],
+        (rng) => {
+          const v = terminatingFraction(rng);
+          const k = Math.max(1, places(v));
+          const scale = 10 ** k;
+          const m = scale / Number(v.d);
+          return valued(
+            [`Write $${num(v)}$ as a decimal.`, `把 $${num(v)}$ 写成小数。`],
+            v,
+            [
+              [
+                ["Scale the denominator", "把分母变成 10 的幂"],
+                [`Multiply top and bottom by $${m}$:`, `分子分母同乘 $${m}$：`],
+                [`${num(v)} = \\frac{${v.n} \\times ${m}}{${v.d} \\times ${m}} = \\frac{${Number(v.n) * m}}{${scale}}`],
+              ],
+              [
+                ["Read the decimal", "读出小数"],
+                [`Over $${scale}$ means $${k}$ decimal place${k === 1 ? "" : "s"}:`, `分母是 $${scale}$，就是 $${k}$ 位小数：`],
+                [`\\frac{${Number(v.n) * m}}{${scale}} = ${dec(v)}`],
+              ],
+            ],
+            [`$${dec(v)} \\times ${v.d} = ${v.n}$.`, `$${dec(v)} \\times ${v.d} = ${v.n}$。`],
+            [
+              [Q.parse(`${v.n}.${v.d}`), "That writes the two numbers with a point between them.", "这是把两个数用小数点连了起来。"],
+              [v.mul(Q.of(10)), "The point is one place too far right.", "小数点向右多移了一位。"],
+              [v.div(Q.of(10)), "The point is one place too far left.", "小数点向左多移了一位。"],
+            ],
+            { form: "decimal" },
+          );
+        },
+        lineFigure({ lo: 0, hi: 1, step: 0.125, marks: [{ at: 0.375, text: "0.375", result: true }] }, [
+          "3/8 sits three eighths of the way from 0 to 1, at 0.375.",
+          "3/8 位于 0 到 1 的八分之三处，即 0.375。",
+        ]),
       ),
-      generate(rng) {
-        const v = terminatingFraction(rng);
-        const k = Math.max(1, places(v));
-        const scale = 10 ** k;
-        const m = scale / Number(v.d);
-        return numberProblem({
-          prompt: t(`Write $${num(v)}$ as a decimal.`, `把 $${num(v)}$ 写成小数。`),
-          answer: v,
-          form: "decimal",
-          // Writing the numerator and denominator side by side: 3/8 as 3.8.
-          wrong: [Q.parse(`${v.n}.${v.d}`)],
-          solution: t(
-            `${steps(`${num(v)} = \\frac{${v.n} \\cdot ${m}}{${v.d} \\cdot ${m}} = \\frac{${Number(v.n) * m}}{${scale}} = ${dec(v)}`)}`,
-            `${steps(`${num(v)} = \\frac{${v.n} \\cdot ${m}}{${v.d} \\cdot ${m}} = \\frac{${Number(v.n) * m}}{${scale}} = ${dec(v)}`)}`,
-          ),
-        });
-      },
-    },
+    ],
+  },
+  [
+    "A recipe asks for $\\frac{3}{4}$ cup of milk, but the measuring jug is marked $0.25$, $0.5$, $0.75$ and $1$.",
+    "食谱要 $\\frac{3}{4}$ 杯牛奶，但量杯上的刻度是 $0.25$、$0.5$、$0.75$ 和 $1$。",
   ],
-};
+  [
+    "$\\frac{3}{4} = \\frac{75}{100} = 0.75$, so fill to the $0.75$ mark.",
+    "$\\frac{3}{4} = \\frac{75}{100} = 0.75$，所以倒到 $0.75$ 的刻度。",
+  ],
+  [
+    "turn decimals into fractions and fractions into decimals, and find a far digit of a repeating decimal.",
+    "把小数化成分数、分数化成小数，并求循环小数中很远的一位。",
+  ],
+);
 
-export const decimalArithmetic: TopicDef = {
-  id: "decimal-arithmetic",
-  title: t("Adding, Subtracting and Multiplying Decimals", "小数的加减乘"),
-  summary: t("Line up decimal points to add and subtract; count decimal places to multiply.", "加减时对齐小数点；乘法时数小数位数。"),
-  prerequisites: [],
-  encompasses: [],
-  xp: 10,
-  standards: ["CCSS.6.NS.B.3"],
-  knowledgePoints: [
-    {
-      id: "adding-and-subtracting-decimals",
-      title: t("Adding and subtracting decimals", "小数加减法"),
-      explanation: t(
-        "Write the numbers in a column with the **decimal points lined up**, so that tenths are added to tenths and hundredths to hundredths. Fill empty places with zeros:\n\n$$12.5 - 3.86 = 12.50 - 3.86 = 8.64$$",
-        "把数竖着写，**小数点对齐**，这样十分位与十分位相加，百分位与百分位相加。空位补零：\n\n$$12.5 - 3.86 = 12.50 - 3.86 = 8.64$$",
+export const decimalArithmetic: TopicDef = withIntro(
+  {
+    id: "decimal-arithmetic",
+    title: t("Adding, Subtracting and Multiplying Decimals", "小数的加减乘"),
+    summary: t("Line up decimal points to add and subtract; count decimal places to multiply.", "加减时对齐小数点；乘法时数小数位数。"),
+    prerequisites: [],
+    encompasses: [],
+    xp: 10,
+    standards: ["CCSS.6.NS.B.3"],
+    knowledgePoints: [
+      lesson(
+        "adding-and-subtracting-decimals",
+        ["Adding and subtracting decimals", "小数加减法"],
+        [
+          [
+            "Write the numbers with the **decimal points lined up**, so tenths go with tenths and hundredths with hundredths. Fill empty places with zeros: $12.5 - 3.86 = 12.50 - 3.86 = 8.64$.",
+            "把数写成**小数点对齐**，这样十分位和十分位相加减，百分位和百分位相加减。空位补零：$12.5 - 3.86 = 12.50 - 3.86 = 8.64$。",
+          ],
+          ["$8.64 + 3.86 = 12.50$.", "$8.64 + 3.86 = 12.50$。"],
+          [
+            "Line up the points, not the last digits. Lining up $5$ with $6$ treats tenths as hundredths.",
+            "要对齐小数点，不是对齐末位。把 $5$ 和 $6$ 对齐，就把十分位当成了百分位。",
+          ],
+        ],
+        (rng) => {
+          let a = decimal(rng, rng.int(1, 2));
+          let b = decimal(rng, rng.int(1, 3), 1);
+          const add = rng.bool();
+          while (a.eq(b)) b = decimal(rng, rng.int(1, 3), 1);
+          if (!add && a.cmp(b) < 0) [a, b] = [b, a];
+          const result = add ? a.add(b) : a.sub(b);
+          const op = add ? "+" : "-";
+          const back = add ? "-" : "+";
+          const k = Math.max(places(a), places(b));
+          return valued(
+            [`Evaluate $${dec(a)} ${op} ${dec(b)}$.`, `计算 $${dec(a)} ${op} ${dec(b)}$。`],
+            result,
+            [
+              [
+                ["Line up the points", "对齐小数点"],
+                [`Write both with $${k}$ decimal place${k === 1 ? "" : "s"}:`, `都写成 $${k}$ 位小数：`],
+                [`${fixed(a, k)} ${op} ${fixed(b, k)}`],
+              ],
+              [
+                [add ? "Add" : "Subtract", add ? "相加" : "相减"],
+                ["Place by place, as with whole numbers:", "像整数一样按位计算："],
+                [`${fixed(a, k)} ${op} ${fixed(b, k)} = ${dec(result)}`],
+              ],
+            ],
+            [`$${dec(result)} ${back} ${dec(b)} = ${dec(a)}$.`, `$${dec(result)} ${back} ${dec(b)} = ${dec(a)}$。`],
+            [
+              [
+                add ? a.add(b.mul(q(1, 10))) : a.sub(b.mul(q(1, 10))),
+                `That shifts $${dec(b)}$ one place to the right before ${add ? "adding" : "subtracting"}.`,
+                `这是把 $${dec(b)}$ 错移了一位再${add ? "加" : "减"}。`,
+              ],
+              [add ? a.mul(q(1, 10)).add(b) : result.mul(Q.of(10)), "The decimal point is in the wrong place.", "小数点的位置错了。"],
+              [
+                add ? (a.cmp(b) >= 0 ? a.sub(b) : b.sub(a)) : a.add(b),
+                add ? "That subtracts instead of adding." : "That adds instead of subtracting.",
+                add ? "这是减，不是加。" : "这是加，不是减。",
+              ],
+            ],
+            { form: "decimal" },
+          );
+        },
+        tableFigure(["12.50", "3.86", "8.64"], [1250, 386, 864]),
       ),
-      generate(rng) {
-        let a = decimal(rng, rng.int(1, 2));
-        let b = decimal(rng, rng.int(1, 3), 1);
-        const add = rng.bool();
-        if (!add && a.cmp(b) < 0) [a, b] = [b, a];
-        if (a.eq(b)) return this.generate(rng);
-        const result = add ? a.add(b) : a.sub(b);
-        const op = add ? "+" : "-";
-        // Misaligned: treating the digits after the point as whole numbers.
-        const k = Math.max(places(a), places(b));
-        return numberProblem({
-          prompt: t(`Evaluate $${dec(a)} ${op} ${dec(b)}$.`, `计算 $${dec(a)} ${op} ${dec(b)}$。`),
-          answer: result,
-          form: "decimal",
-          wrong: [add ? a.add(b.mul(q(1, 10))) : a.sub(b.mul(q(1, 10))), add ? a.mul(q(1, 10)).add(b) : result.mul(Q.of(10))],
-          solution: t(
-            `Line up the decimal points, writing both numbers with ${k} decimal places:${steps(`${fixed(a, k)} ${op} ${fixed(b, k)} = ${dec(result)}`)}`,
-            `对齐小数点，两个数都写成 ${k} 位小数：${steps(`${fixed(a, k)} ${op} ${fixed(b, k)} = ${dec(result)}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "multiplying-decimals",
-      title: t("Multiplying decimals", "小数乘法"),
-      explanation: t(
-        "Multiply as if there were no decimal points, then place the point so that the product has as many decimal places as the two factors together:\n\n$$2.3 \\cdot 0.15: \\quad 23 \\cdot 15 = 345, \\quad 1 + 2 = 3 \\text{ places}, \\quad \\text{so } 2.3 \\cdot 0.15 = 0.345$$",
-        "先忽略小数点，按整数相乘；再点小数点，使积的小数位数等于两个因数的小数位数之和：\n\n$$2.3 \\cdot 0.15: \\quad 23 \\cdot 15 = 345, \\quad 1 + 2 = 3 \\text{ 位}, \\quad \\text{所以 } 2.3 \\cdot 0.15 = 0.345$$",
+      lesson(
+        "multiplying-decimals",
+        ["Multiplying decimals", "小数乘法"],
+        [
+          [
+            "Multiply as if there were no points, then place the point so the product has as many decimal places as the two factors together. $2.3 \\times 0.15$: $23 \\times 15 = 345$, and $1 + 2 = 3$ places, so $2.3 \\times 0.15 = 0.345$.",
+            "先不看小数点，按整数相乘；再点小数点，使积的小数位数等于两个因数的小数位数之和。$2.3 \\times 0.15$：$23 \\times 15 = 345$，$1 + 2 = 3$ 位，所以 $2.3 \\times 0.15 = 0.345$。",
+          ],
+          ["Estimate: $2 \\times 0.15 = 0.3$, close to $0.345$.", "估算：$2 \\times 0.15 = 0.3$，接近 $0.345$。"],
+          [
+            "Count the places of both factors. $2.3 \\times 0.15$ is not $3.45$ or $0.0345$.",
+            "两个因数的小数位数都要数。$2.3 \\times 0.15$ 不是 $3.45$，也不是 $0.0345$。",
+          ],
+        ],
+        (rng) => {
+          const a = decimal(rng, rng.int(1, 2), 1);
+          const b = rng.bool(0.3) ? Q.of(rng.int(2, 30)) : decimal(rng, 1, 1);
+          const p = a.mul(b);
+          const ka = places(a);
+          const kb = places(b);
+          const ia = a.mul(Q.of(10 ** ka));
+          const ib = b.mul(Q.of(10 ** kb));
+          return valued(
+            [`Evaluate $${dec(a)} \\times ${dec(b)}$.`, `计算 $${dec(a)} \\times ${dec(b)}$。`],
+            p,
+            [
+              [
+                ["Multiply whole numbers", "按整数相乘"],
+                ["Ignore the points:", "先不看小数点："],
+                [`${ia.n} \\times ${ib.n} = ${ia.mul(ib).n}`],
+              ],
+              [
+                ["Place the point", "点小数点"],
+                [`The factors have $${ka} + ${kb} = ${ka + kb}$ decimal places:`, `两个因数共有 $${ka} + ${kb} = ${ka + kb}$ 位小数：`],
+                [`${dec(a)} \\times ${dec(b)} = ${dec(p)}`],
+              ],
+            ],
+            [`$${dec(p)} \\div ${dec(b)} = ${dec(a)}$.`, `$${dec(p)} \\div ${dec(b)} = ${dec(a)}$。`],
+            [
+              [p.mul(Q.of(10)), "That has one decimal place too few.", "小数位数少了一位。"],
+              [p.mul(q(1, 10)), "That has one decimal place too many.", "小数位数多了一位。"],
+              [a.add(b), "That adds the numbers instead of multiplying.", "这是加，不是乘。"],
+            ],
+            { form: "decimal" },
+          );
+        },
+        tableFigure(["23 x 15", "2.3 x 0.15"], [345, 0.345]),
       ),
-      generate(rng) {
-        const a = decimal(rng, rng.int(1, 2), 1);
-        const b = rng.bool(0.3) ? Q.of(rng.int(2, 30)) : decimal(rng, 1, 1);
-        const p = a.mul(b);
-        const ka = places(a);
-        const kb = places(b);
-        const ia = a.mul(Q.of(10 ** ka));
-        const ib = b.mul(Q.of(10 ** kb));
-        return numberProblem({
-          prompt: t(`Evaluate $${dec(a)} \\cdot ${dec(b)}$.`, `计算 $${dec(a)} \\cdot ${dec(b)}$。`),
-          answer: p,
-          form: "decimal",
-          wrong: [p.mul(Q.of(10)), p.mul(q(1, 10))],
-          solution: t(
-            `${steps(`${ia.n} \\cdot ${ib.n} = ${ia.mul(ib).n}`)}The factors have $${ka} + ${kb} = ${ka + kb}$ decimal places in all, so $${dec(a)} \\cdot ${dec(b)} = ${dec(p)}$.`,
-            `${steps(`${ia.n} \\cdot ${ib.n} = ${ia.mul(ib).n}`)}两个因数共有 $${ka} + ${kb} = ${ka + kb}$ 位小数，所以 $${dec(a)} \\cdot ${dec(b)} = ${dec(p)}$。`,
-          ),
-        });
-      },
-    },
+    ],
+  },
+  [
+    "Mia buys a pen for $\\$1.25$ and a notebook for $\\$2.40$, then buys $3$ more pens.",
+    "米娅买了一支 $1.25$ 美元的笔和一本 $2.40$ 美元的笔记本，然后又买了 $3$ 支笔。",
   ],
-};
+  [
+    "$1.25 + 2.40 = 3.65$, and $3 \\times 1.25 = 3.75$, so she spends $\\$7.40$ in all.",
+    "$1.25 + 2.40 = 3.65$，$3 \\times 1.25 = 3.75$，所以她一共花了 $7.40$ 美元。",
+  ],
+  [
+    "add and subtract decimals with the points lined up, multiply decimals by counting places, and divide by a decimal.",
+    "对齐小数点做小数加减法，数小数位数做小数乘法，并学会除以小数。",
+  ],
+);
 
-export const percents: TopicDef = {
-  id: "percents",
-  title: t("Percents", "百分数"),
-  summary: t("Convert between percents, decimals and fractions.", "百分数、小数与分数互化。"),
-  prerequisites: ["fractions-and-decimals"],
-  encompasses: [{ topic: "fractions-and-decimals", weight: 0.4 }],
-  xp: 10,
-  standards: ["CCSS.6.RP.A.3.C"],
-  knowledgePoints: [
-    {
-      id: "percents-as-decimals-and-fractions",
-      title: t("Percents as decimals and fractions", "百分数化小数和分数"),
-      explanation: t(
-        '**Percent** means "per hundred": $p\\%$ is $\\frac{p}{100}$. To write a percent as a decimal, divide by $100$, moving the decimal point two places to the left: $35\\% = 0.35$, $7\\% = 0.07$, $120\\% = 1.2$.\n\nAs a fraction, write it over $100$ and simplify: $35\\% = \\frac{35}{100} = \\frac{7}{20}$.',
-        "**百分数**表示“每一百中有多少”：$p\\%$ 就是 $\\frac{p}{100}$。百分数化小数，除以 $100$，即小数点向左移动两位：$35\\% = 0.35$，$7\\% = 0.07$，$120\\% = 1.2$。\n\n化成分数，写成分母为 $100$ 的分数再约分：$35\\% = \\frac{35}{100} = \\frac{7}{20}$。",
+export const percents: TopicDef = withIntro(
+  {
+    id: "percents",
+    title: t("Percents", "百分数"),
+    summary: t("Convert between percents, decimals and fractions.", "百分数、小数与分数互化。"),
+    prerequisites: ["fractions-and-decimals"],
+    encompasses: [{ topic: "fractions-and-decimals", weight: 0.4 }],
+    xp: 10,
+    standards: ["CCSS.6.RP.A.3.C"],
+    knowledgePoints: [
+      lesson(
+        "percents-as-decimals-and-fractions",
+        ["Percents as decimals and fractions", "百分数化小数和分数"],
+        [
+          [
+            '**Percent** means "per hundred": $p\\%$ is $\\frac{p}{100}$. As a decimal, divide by $100$ by moving the point two places left: $35\\% = 0.35$, $7\\% = 0.07$, $120\\% = 1.2$. As a fraction, write it over $100$ and simplify: $35\\% = \\frac{35}{100} = \\frac{7}{20}$.',
+            "**百分数**表示“每一百中有多少”：$p\\%$ 就是 $\\frac{p}{100}$。化成小数要除以 $100$，即小数点向左移两位：$35\\% = 0.35$，$7\\% = 0.07$，$120\\% = 1.2$。化成分数就写成分母是 $100$ 的分数再约分：$35\\% = \\frac{35}{100} = \\frac{7}{20}$。",
+          ],
+          ["$\\frac{7}{20} = 0.35$, the same as the decimal.", "$\\frac{7}{20} = 0.35$，和小数一样。"],
+          ["Move the point two places, not one. $7\\%$ is $0.07$, not $0.7$.", "小数点要移两位，不是一位。$7\\%$ 是 $0.07$，不是 $0.7$。"],
+        ],
+        (rng) => {
+          const p = rng.bool(0.15) ? Q.of(rng.int(101, 250)) : Q.of(rng.int(1, 99));
+          const v = p.div(Q.of(100));
+          if (rng.bool()) {
+            return valued(
+              [`Write $${pct(p)}$ as a decimal.`, `把 $${pct(p)}$ 写成小数。`],
+              v,
+              [
+                [["Divide by 100", "除以 100"], ["Percent means hundredths:", "百分数表示百分之几："], [`${pct(p)} = ${dec(p)} \\div 100`]],
+                [["Move the point", "移动小数点"], ["Two places to the left:", "向左移两位："], [`${dec(p)} \\div 100 = ${dec(v)}`]],
+              ],
+              [`$${dec(v)} \\times 100 = ${dec(p)}$.`, `$${dec(v)} \\times 100 = ${dec(p)}$。`],
+              [
+                [p.div(Q.of(10)), "That moves the point only one place.", "这只把小数点移了一位。"],
+                [p.div(Q.of(1000)), "That moves the point three places.", "这把小数点移了三位。"],
+                [p, "That drops the percent sign without dividing by $100$.", "这只是去掉了百分号，没有除以 $100$。"],
+              ],
+              { form: "decimal" },
+            );
+          }
+          const g = 100 / Number(v.d);
+          return valued(
+            [`Write $${pct(p)}$ as a fraction in lowest terms.`, `把 $${pct(p)}$ 写成最简分数。`],
+            v,
+            [
+              [
+                ["Write over 100", "写成分母 100"],
+                ["Percent means hundredths:", "百分数表示百分之几："],
+                [`${pct(p)} = \\frac{${p.n}}{100}`],
+              ],
+              [
+                ["Simplify", "约分"],
+                g > 1 ? [`Divide both by $${g}$:`, `分子分母同除以 $${g}$：`] : ["It is already in lowest terms:", "它已经是最简分数："],
+                [`\\frac{${p.n}}{100} = ${num(v)}`],
+              ],
+            ],
+            [`$${v.n} \\div ${v.d} = ${dec(v)}$, which is $${pct(p)}$.`, `$${v.n} \\div ${v.d} = ${dec(v)}$，就是 $${pct(p)}$。`],
+            [
+              [p.div(Q.of(10)), "That puts the number over $10$. Percent means over $100$.", "这是写在 $10$ 上面。百分数的分母是 $100$。"],
+              [p.div(Q.of(1000)), "That puts the number over $1000$.", "这是写在 $1000$ 上面。"],
+              [Q.of(100).div(p), "That is upside down.", "这颠倒了。"],
+            ],
+            { form: "fraction" },
+          );
+        },
+        tableFigure(["35%", "7%", "120%"], [0.35, 0.07, 1.2]),
       ),
-      generate(rng) {
-        const p = rng.bool(0.15) ? Q.of(rng.int(101, 250)) : Q.of(rng.int(1, 99));
-        const v = p.div(Q.of(100));
-        if (rng.bool()) {
-          return numberProblem({
-            prompt: t(`Write $${pct(p)}$ as a decimal.`, `把 $${pct(p)}$ 写成小数。`),
-            answer: v,
-            form: "decimal",
-            wrong: [p.div(Q.of(10)), p.div(Q.of(1000))],
-            solution: t(
-              `Divide by $100$: move the decimal point two places to the left. $${pct(p)} = ${dec(v)}$.`,
-              `除以 $100$，即小数点向左移动两位：$${pct(p)} = ${dec(v)}$。`,
-            ),
-          });
-        }
-        const line = v.d === 100n ? `${pct(p)} = \\frac{${p.n}}{100}` : `${pct(p)} = \\frac{${p.n}}{100} = ${num(v)}`;
-        return numberProblem({
-          prompt: t(`Write $${pct(p)}$ as a fraction in lowest terms.`, `把 $${pct(p)}$ 写成最简分数。`),
-          answer: v,
-          form: "fraction",
-          wrong: [p.div(Q.of(10))],
-          solution: t(`${steps(line)}`, `${steps(line)}`),
-        });
-      },
-    },
-    {
-      id: "writing-percents",
-      title: t("Writing decimals and fractions as percents", "小数和分数化百分数"),
-      explanation: t(
-        "To write a number as a percent, multiply it by $100$: $0.625 = 62.5\\%$ and $1.4 = 140\\%$. For a fraction, first write it as a decimal or as a fraction over $100$:\n\n$$\\frac{3}{8} = 0.375 = 37.5\\%, \\qquad \\frac{9}{20} = \\frac{45}{100} = 45\\%$$",
-        "把一个数化成百分数，乘 $100$：$0.625 = 62.5\\%$，$1.4 = 140\\%$。分数要先化成小数，或化成分母为 $100$ 的分数：\n\n$$\\frac{3}{8} = 0.375 = 37.5\\%, \\qquad \\frac{9}{20} = \\frac{45}{100} = 45\\%$$",
+      lesson(
+        "writing-percents",
+        ["Writing decimals and fractions as percents", "小数和分数化百分数"],
+        [
+          [
+            "To write a number as a percent, multiply it by $100$: $0.625 = 62.5\\%$ and $1.4 = 140\\%$. For a fraction, first write it as a decimal: $\\frac{3}{8} = 0.375 = 37.5\\%$.",
+            "把一个数化成百分数，就乘 $100$：$0.625 = 62.5\\%$，$1.4 = 140\\%$。分数要先化成小数：$\\frac{3}{8} = 0.375 = 37.5\\%$。",
+          ],
+          ["$37.5\\% = 37.5 \\div 100 = 0.375$.", "$37.5\\% = 37.5 \\div 100 = 0.375$。"],
+          [
+            "Multiply by $100$, not $10$. $0.625$ is $62.5\\%$, not $6.25\\%$.",
+            "要乘 $100$，不是乘 $10$。$0.625$ 是 $62.5\\%$，不是 $6.25\\%$。",
+          ],
+        ],
+        (rng) => {
+          const v = rng.bool() ? terminatingFraction(rng) : decimal(rng, rng.int(1, 3), 1);
+          const p = v.mul(Q.of(100));
+          const asFraction = !v.mul(Q.of(10)).isInteger() && v.d <= 50n && rng.bool();
+          const shown = asFraction ? num(v) : dec(v);
+          return valued(
+            [`Write $${shown}$ as a percent.`, `把 $${shown}$ 写成百分数。`],
+            p,
+            [
+              asFraction
+                ? [
+                    ["Write a decimal", "化成小数"],
+                    ["Divide the top by the bottom:", "分子除以分母："],
+                    [`${shown} = ${v.n} \\div ${v.d} = ${dec(v)}`],
+                  ]
+                : [["Read the decimal", "读出小数"], ["It is already a decimal:", "它已经是小数："], [`${dec(v)}`]],
+              [
+                ["Multiply by 100", "乘 100"],
+                ["Move the point two places right:", "小数点向右移两位："],
+                [`${dec(v)} \\times 100 = ${dec(p)}`],
+              ],
+            ],
+            [`$${pct(p)} = ${dec(p)} \\div 100 = ${dec(v)}$.`, `$${pct(p)} = ${dec(p)} \\div 100 = ${dec(v)}$。`],
+            [
+              [v.mul(Q.of(10)), "That multiplies by $10$, not $100$.", "这是乘 $10$，不是乘 $100$。"],
+              [v.mul(Q.of(1000)), "That multiplies by $1000$, not $100$.", "这是乘 $1000$，不是乘 $100$。"],
+              [v, "That puts a percent sign on without multiplying by $100$.", "这只是加上百分号，没有乘 $100$。"],
+            ],
+            { form: "decimal", percent: true },
+          );
+        },
+        tableFigure(["0.625", "1.4", "3/8"], [62.5, 140, 37.5]),
       ),
-      generate(rng) {
-        const v = rng.bool() ? terminatingFraction(rng) : decimal(rng, rng.int(1, 3), 1);
-        const p = v.mul(Q.of(100));
-        const asFraction = !v.mul(Q.of(10)).isInteger() && v.d <= 50n && rng.bool();
-        const shown = asFraction ? num(v) : dec(v);
-        return numberProblem({
-          prompt: t(`Write $${shown}$ as a percent.`, `把 $${shown}$ 写成百分数。`),
-          answer: p,
-          form: "decimal",
-          percent: true,
-          wrong: [v.mul(Q.of(10)), v.mul(Q.of(1000))],
-          solution: t(
-            `${asFraction ? `$${shown} = ${dec(v)}$. ` : ""}Multiply by $100$: $${dec(v)} \\cdot 100 = ${dec(p)}$, so it is $${pct(p)}$.`,
-            `${asFraction ? `$${shown} = ${dec(v)}$。` : ""}乘 $100$：$${dec(v)} \\cdot 100 = ${dec(p)}$，所以是 $${pct(p)}$。`,
-          ),
-        });
-      },
-    },
+    ],
+  },
+  [
+    "A sign says $25\\%$ of the seats are taken. Another says $\\frac{1}{4}$ are taken, and a third says $0.25$.",
+    "一块牌子写着 $25\\%$ 的座位有人坐，另一块写着 $\\frac{1}{4}$，第三块写着 $0.25$。",
   ],
-};
+  [
+    "$25\\% = \\frac{25}{100} = \\frac{1}{4} = 0.25$, so all three signs say the same thing.",
+    "$25\\% = \\frac{25}{100} = \\frac{1}{4} = 0.25$，所以三块牌子说的是同一件事。",
+  ],
+  [
+    "turn percents into decimals and fractions, and decimals and fractions into percents.",
+    "把百分数化成小数和分数，再把小数和分数化成百分数。",
+  ],
+);
 
 /** percentPair draws a percentage and a whole whose part is a whole number or has one decimal place. */
 function percentPair(rng: Rng): { p: Q; whole: Q; part: Q } {
@@ -242,121 +444,235 @@ function percentPair(rng: Rng): { p: Q; whole: Q; part: Q } {
   }
 }
 
-export const percentOfANumber: TopicDef = {
-  id: "percent-of-a-number",
-  title: t("Percent of a Number", "求一个数的百分之几"),
-  summary: t(
-    "Find a part from a whole and a percent, a percent from a part and a whole, and a whole from a part and a percent.",
-    "已知整体和百分比求部分，已知部分和整体求百分比，已知部分和百分比求整体。",
-  ),
-  prerequisites: ["percents", "decimal-arithmetic", "multiplying-fractions"],
-  encompasses: [
-    { topic: "percents", weight: 0.5 },
-    { topic: "decimal-arithmetic", weight: 0.3 },
-    { topic: "multiplying-fractions", weight: 0.3 },
+export const percentOfANumber: TopicDef = withIntro(
+  {
+    id: "percent-of-a-number",
+    title: t("Percent of a Number", "求一个数的百分之几"),
+    summary: t(
+      "Find a part from a whole and a percent, a percent from a part and a whole, and a whole from a part and a percent.",
+      "已知整体和百分比求部分，已知部分和整体求百分比，已知部分和百分比求整体。",
+    ),
+    prerequisites: ["percents", "decimal-arithmetic", "multiplying-fractions"],
+    encompasses: [
+      { topic: "percents", weight: 0.5 },
+      { topic: "decimal-arithmetic", weight: 0.3 },
+      { topic: "multiplying-fractions", weight: 0.3 },
+    ],
+    xp: 14,
+    standards: ["CCSS.6.RP.A.3.C"],
+    knowledgePoints: [
+      lesson(
+        "finding-the-part",
+        ["Finding the part", "求部分"],
+        [
+          [
+            "To find $p\\%$ of a number, write the percent as a decimal and multiply: $35\\%$ of $60$ is $0.35 \\times 60 = 21$. Shortcuts help: $10\\%$ is a tenth, $50\\%$ is half, $25\\%$ is a quarter.",
+            "求一个数的 $p\\%$，把百分数写成小数再相乘：$60$ 的 $35\\%$ 是 $0.35 \\times 60 = 21$。捷径很有用：$10\\%$ 是十分之一，$50\\%$ 是一半，$25\\%$ 是四分之一。",
+          ],
+          [
+            "$10\\%$ of $60$ is $6$ and $5\\%$ is $3$, so $35\\% = 3 \\times 6 + 3 = 21$.",
+            "$60$ 的 $10\\%$ 是 $6$，$5\\%$ 是 $3$，所以 $35\\%$ 是 $3 \\times 6 + 3 = 21$。",
+          ],
+          [
+            "Write the percent as a decimal first. $35 \\times 60 = 2100$ is far too big.",
+            "先把百分数写成小数。$35 \\times 60 = 2100$ 太大了。",
+          ],
+        ],
+        (rng) => {
+          const { p, whole, part } = percentPair(rng);
+          const one = whole.div(Q.of(100));
+          return valued(
+            [`What is $${pct(p)}$ of $${dec(whole)}$?`, `$${dec(whole)}$ 的 $${pct(p)}$ 是多少？`],
+            part,
+            [
+              [
+                ["Write a decimal", "化成小数"],
+                ["Divide the percent by $100$:", "百分数除以 $100$："],
+                [`${pct(p)} = ${dec(p.div(Q.of(100)))}`],
+              ],
+              [
+                ["Multiply", "相乘"],
+                ["A part of a number means multiply:", "求一个数的几分之几用乘法："],
+                [`${dec(p.div(Q.of(100)))} \\times ${dec(whole)} = ${dec(part)}`],
+              ],
+            ],
+            [
+              `$1\\%$ of $${dec(whole)}$ is $${dec(one)}$, and $${dec(p)} \\times ${dec(one)} = ${dec(part)}$.`,
+              `$${dec(whole)}$ 的 $1\\%$ 是 $${dec(one)}$，$${dec(p)} \\times ${dec(one)} = ${dec(part)}$。`,
+            ],
+            [
+              [
+                p.mul(whole),
+                "That uses the percent as a whole number. Write it as a decimal first.",
+                "这是把百分数当成了整数。应先写成小数。",
+              ],
+              [
+                whole.div(p).mul(Q.of(100)),
+                "That divides by the percent. To find a part of a number, multiply.",
+                "这是除以百分数。求一个数的一部分要用乘法。",
+              ],
+              [whole.sub(part), "That is what is left after taking the part away.", "这是去掉这部分后剩下的。"],
+            ],
+            { form: "decimal" },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "60",
+              pieces: [
+                { size: 35, text: "21", lit: true },
+                { size: 65, text: "39" },
+              ],
+            },
+          ],
+          ["35% of a bar of 60 is 21.", "长度为 60 的长条的 35% 是 21。"],
+        ),
+      ),
+      lesson(
+        "finding-the-percent",
+        ["Finding the percent", "求百分比"],
+        [
+          [
+            'To find what percent a part is of a whole, divide the part by the whole and multiply by $100$: $\\frac{18}{24} = 0.75 = 75\\%$. The whole is the number after "of": "$18$ is what percent of $24$?"',
+            "求部分占整体的百分之几，用部分除以整体再乘 $100$：$\\frac{18}{24} = 0.75 = 75\\%$。“$18$ 是 $24$ 的百分之几？”中，整体是 $24$。",
+          ],
+          ["$75\\%$ of $24$ is $0.75 \\times 24 = 18$.", "$24$ 的 $75\\%$ 是 $0.75 \\times 24 = 18$。"],
+          [
+            "Part over whole, not whole over part. $\\frac{24}{18}$ is more than $100\\%$.",
+            "是部分除以整体，不是整体除以部分。$\\frac{24}{18}$ 超过了 $100\\%$。",
+          ],
+        ],
+        (rng) => {
+          let pick = percentPair(rng);
+          while (!pick.part.isInteger()) pick = percentPair(rng);
+          const { p, whole, part } = pick;
+          return valued(
+            [`$${dec(part)}$ is what percent of $${dec(whole)}$?`, `$${dec(part)}$ 是 $${dec(whole)}$ 的百分之几？`],
+            p,
+            [
+              [
+                ["Divide", "相除"],
+                ["Part over whole:", "部分除以整体："],
+                [`\\frac{${dec(part)}}{${dec(whole)}} = ${dec(p.div(Q.of(100)))}`],
+              ],
+              [
+                ["Write a percent", "化成百分数"],
+                ["Multiply by $100$:", "乘 $100$："],
+                [`${dec(p.div(Q.of(100)))} \\times 100 = ${dec(p)}`],
+              ],
+            ],
+            [
+              `$${pct(p)}$ of $${dec(whole)}$ is $${dec(p.div(Q.of(100)))} \\times ${dec(whole)} = ${dec(part)}$.`,
+              `$${dec(whole)}$ 的 $${pct(p)}$ 是 $${dec(p.div(Q.of(100)))} \\times ${dec(whole)} = ${dec(part)}$。`,
+            ],
+            [
+              [
+                whole.div(part).mul(Q.of(100)),
+                "That divides the whole by the part. The percent is part over whole.",
+                "这是用整体除以部分。百分比是部分除以整体。",
+              ],
+              [part.div(whole), "That is the decimal. Multiply by $100$ to write it as a percent.", "这是小数，还要乘 $100$ 才是百分数。"],
+              [part, "That is the part itself, not its percent.", "这是部分本身，不是它的百分比。"],
+            ],
+            { form: "decimal", percent: true },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "24",
+              pieces: [
+                { size: 18, text: "18", lit: true },
+                { size: 6, text: "6" },
+              ],
+            },
+          ],
+          ["18 of a bar of 24 is three quarters, 75%.", "长度为 24 的长条中的 18 是四分之三，即 75%。"],
+        ),
+      ),
+      lesson(
+        "finding-the-whole",
+        ["Finding the whole", "求整体"],
+        [
+          [
+            "If $p\\%$ of a number is known, divide that part by the percent written as a decimal. If $40\\%$ of a number is $18$, then $0.4 \\times n = 18$ and $n = 18 \\div 0.4 = 45$.",
+            "已知一个数的 $p\\%$ 是多少，求这个数：用这部分除以写成小数的百分数。如果一个数的 $40\\%$ 是 $18$，那么 $0.4 \\times n = 18$，$n = 18 \\div 0.4 = 45$。",
+          ],
+          ["$40\\%$ of $45$ is $0.4 \\times 45 = 18$.", "$45$ 的 $40\\%$ 是 $0.4 \\times 45 = 18$。"],
+          [
+            "The given number is already the part. Taking $40\\%$ of $18$ goes the wrong way.",
+            "已知的数已经是部分了。求 $18$ 的 $40\\%$ 方向反了。",
+          ],
+        ],
+        (rng) => {
+          const { p, whole, part } = percentPair(rng);
+          const r = p.div(Q.of(100));
+          return valued(
+            [`$${pct(p)}$ of a number is $${dec(part)}$. What is the number?`, `一个数的 $${pct(p)}$ 是 $${dec(part)}$，这个数是多少？`],
+            whole,
+            [
+              [
+                ["Write the equation", "列方程"],
+                ["The percent as a decimal times the number:", "百分数写成小数，乘这个数："],
+                [`${dec(r)} \\times n = ${dec(part)}`],
+              ],
+              [
+                ["Divide", "相除"],
+                [`Divide both sides by $${dec(r)}$:`, `两边同除以 $${dec(r)}$：`],
+                [`n = ${dec(part)} \\div ${dec(r)} = ${dec(whole)}`],
+              ],
+            ],
+            [
+              `$${pct(p)}$ of $${dec(whole)}$ is $${dec(r)} \\times ${dec(whole)} = ${dec(part)}$.`,
+              `$${dec(whole)}$ 的 $${pct(p)}$ 是 $${dec(r)} \\times ${dec(whole)} = ${dec(part)}$。`,
+            ],
+            [
+              [
+                part.mul(r),
+                "That takes the percent of the part. The given number is already the part.",
+                "这是求已知数的百分之几。已知数本身就是部分。",
+              ],
+              [part.div(p), "That divides by the percent without writing it as a decimal first.", "这是直接除以百分数，没有先化成小数。"],
+              [part.add(p), "That adds the percent to the part.", "这是把百分数加到部分上。"],
+            ],
+            { form: "decimal" },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "45",
+              pieces: [
+                { size: 9, text: "9", lit: true },
+                { size: 9, text: "9", lit: true },
+                { size: 9, text: "9" },
+                { size: 9, text: "9" },
+                { size: 9, text: "9" },
+              ],
+            },
+          ],
+          [
+            "40% is two fifths, shaded, and holds 18; each fifth is 9, so the whole is 45.",
+            "40% 是五分之二（涂色部分），等于 18；每一份是 9，所以整体是 45。",
+          ],
+        ),
+      ),
+    ],
+  },
+  [
+    "A jacket costs $\\$60$ and is $35\\%$ off. Mia wants to know how many dollars she saves.",
+    "一件夹克 $60$ 美元，打六五折（减 $35\\%$）。米娅想知道能省多少美元。",
   ],
-  xp: 14,
-  standards: ["CCSS.6.RP.A.3.C"],
-  knowledgePoints: [
-    {
-      id: "finding-the-part",
-      title: t("Finding the part", "求部分"),
-      explanation: t(
-        "To find $p\\%$ of a number, write the percent as a decimal or fraction and multiply:\n\n$$35\\% \\text{ of } 60 = 0.35 \\cdot 60 = 21$$\n\nUseful shortcuts: $10\\%$ of a number is a tenth of it, $50\\%$ is half, $25\\%$ is a quarter.",
-        "求一个数的 $p\\%$，把百分数写成小数或分数再相乘：\n\n$$60 \\text{ 的 } 35\\% = 0.35 \\cdot 60 = 21$$\n\n常用的捷径：一个数的 $10\\%$ 是它的十分之一，$50\\%$ 是一半，$25\\%$ 是四分之一。",
-      ),
-      generate(rng) {
-        const { p, whole, part } = percentPair(rng);
-        return numberProblem({
-          prompt: t(`What is $${pct(p)}$ of $${dec(whole)}$?`, `$${dec(whole)}$ 的 $${pct(p)}$ 是多少？`),
-          answer: part,
-          form: "decimal",
-          mistakes: [
-            why(
-              p.mul(whole),
-              "You used the percent as a whole number. Write it as a decimal or a fraction first.",
-              "你把百分数当成了整数。应先写成小数或分数。",
-            ),
-            why(
-              whole.div(p).mul(Q.of(100)),
-              "You divided by the percent. To find a part of a number, multiply.",
-              "你除以了百分数。求一个数的一部分要用乘法。",
-            ),
-          ],
-          solution: t(
-            `${steps(`${pct(p)} \\cdot ${dec(whole)} = ${dec(p.div(Q.of(100)))} \\cdot ${dec(whole)} = ${dec(part)}`)}`,
-            `${steps(`${pct(p)} \\cdot ${dec(whole)} = ${dec(p.div(Q.of(100)))} \\cdot ${dec(whole)} = ${dec(part)}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "finding-the-percent",
-      title: t("Finding the percent", "求百分比"),
-      explanation: t(
-        'To find what percent a part is of a whole, divide the part by the whole and write the result as a percent:\n\n$$\\frac{18}{24} = 0.75 = 75\\%$$\n\nThe whole is the number after "of": "$18$ is what percent of $24$?"',
-        "求部分占整体的百分之几，用部分除以整体，再把结果写成百分数：\n\n$$\\frac{18}{24} = 0.75 = 75\\%$$\n\n“$18$ 是 $24$ 的百分之几？”中，整体是“的”前面的 $24$。",
-      ),
-      generate(rng) {
-        const { p, whole, part } = percentPair(rng);
-        if (!part.isInteger()) return this.generate(rng);
-        return numberProblem({
-          prompt: t(`$${dec(part)}$ is what percent of $${dec(whole)}$?`, `$${dec(part)}$ 是 $${dec(whole)}$ 的百分之几？`),
-          answer: p,
-          form: "decimal",
-          percent: true,
-          mistakes: [
-            why(
-              whole.div(part).mul(Q.of(100)),
-              "You divided the whole by the part. The percent is the part over the whole.",
-              "你用整体除以部分。百分比是部分除以整体。",
-            ),
-            why(
-              part.div(whole),
-              "That is the fraction as a decimal. Multiply by $100$ to write it as a percent.",
-              "这是小数形式，还要乘以 $100$ 才是百分比。",
-            ),
-          ],
-          solution: t(
-            `Divide the part by the whole:${steps(`\\frac{${dec(part)}}{${dec(whole)}} = ${dec(p.div(Q.of(100)))} = ${pct(p)}`)}`,
-            `用部分除以整体：${steps(`\\frac{${dec(part)}}{${dec(whole)}} = ${dec(p.div(Q.of(100)))} = ${pct(p)}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "finding-the-whole",
-      title: t("Finding the whole", "求整体"),
-      explanation: t(
-        "If $p\\%$ of a number is known, the number is the part divided by the percent written as a decimal. If $40\\%$ of a number is $18$:\n\n$$0.4 \\cdot n = 18, \\qquad n = \\frac{18}{0.4} = 45$$\n\nCheck: $40\\%$ of $45$ is $18$.",
-        "已知一个数的 $p\\%$ 是多少，求这个数：用部分除以百分数（写成小数）。如果一个数的 $40\\%$ 是 $18$：\n\n$$0.4 \\cdot n = 18, \\qquad n = \\frac{18}{0.4} = 45$$\n\n检验：$45$ 的 $40\\%$ 是 $18$。",
-      ),
-      generate(rng) {
-        const { p, whole, part } = percentPair(rng);
-        return numberProblem({
-          prompt: t(
-            `$${pct(p)}$ of a number is $${dec(part)}$. What is the number?`,
-            `一个数的 $${pct(p)}$ 是 $${dec(part)}$，这个数是多少？`,
-          ),
-          answer: whole,
-          form: "decimal",
-          mistakes: [
-            why(
-              part.mul(p).div(Q.of(100)),
-              "You took the percent of the given number. That number is already the part; you are looking for the whole.",
-              "你求的是已知数的百分之几。这个已知数本身就是部分，要求的是整体。",
-            ),
-          ],
-          solution: t(
-            `${steps(`${dec(p.div(Q.of(100)))} \\cdot n = ${dec(part)}`, `n = \\frac{${dec(part)}}{${dec(p.div(Q.of(100)))}} = ${dec(whole)}`)}Check: $${pct(p)}$ of $${dec(whole)}$ is $${dec(part)}$.`,
-            `${steps(`${dec(p.div(Q.of(100)))} \\cdot n = ${dec(part)}`, `n = \\frac{${dec(part)}}{${dec(p.div(Q.of(100)))}} = ${dec(whole)}`)}检验：$${dec(whole)}$ 的 $${pct(p)}$ 是 $${dec(part)}$。`,
-          ),
-        });
-      },
-    },
+  [
+    "$10\\%$ of $60$ is $6$, so $30\\%$ is $18$, $5\\%$ is $3$, and $35\\%$ is $21$ dollars.",
+    "$60$ 的 $10\\%$ 是 $6$，所以 $30\\%$ 是 $18$，$5\\%$ 是 $3$，$35\\%$ 是 $21$ 美元。",
   ],
-};
-
+  [
+    "find a percent of a number, find what percent one number is of another, and find the whole from a part.",
+    "求一个数的百分之几，求一个数是另一个数的百分之几，并由部分求整体。",
+  ],
+);
 export const percentChange: TopicDef = {
   id: "percent-change",
   title: t("Percent Increase and Decrease", "百分比的增加与减少"),

@@ -460,8 +460,8 @@ To choose between drawings, use the signs first: they tell which side of each ax
       "choosing-the-drawing-of-a-reflected-point",
       ["Choosing the drawing of a reflected point", "选出翻折后的点"],
       [
-        "A reflection across an axis keeps a point the same distance from that axis, on the other side. Across the $x$-axis the second number changes sign; across the $y$-axis the first number does. Check a drawing by asking whether the axis is exactly halfway between the point and its image.",
-        "关于坐标轴翻折后，点到这条轴的距离不变，但到了另一侧。关于 $x$ 轴翻折时第二个数变号；关于 $y$ 轴翻折时第一个数变号。检查图时，看这条轴是否恰好在点和它的像的正中间。",
+        "A reflection across an axis keeps a point the same distance from that axis, on the other side. Across the $x$-axis the second number changes sign; across the $y$-axis the first number does. Across the $x$-axis, $P(2, 3)$ lands on $P'(2, -3)$.\n\nCheck: $P$ is $3$ above the $x$-axis and $P'$ is $3$ below it, straight underneath, so the axis is exactly halfway between them.\n\n> **Watch out.** A drawing where both signs changed, or where the numbers swapped places, shows a different move, not this reflection.",
+        "关于坐标轴翻折后，点到这条轴的距离不变，但到了另一侧。关于 $x$ 轴翻折时第二个数变号；关于 $y$ 轴翻折时第一个数变号。$P(2, 3)$ 关于 $x$ 轴翻折后落在 $P'(2, -3)$。\n\n检验：$P$ 在 $x$ 轴上方 $3$，$P'$ 在 $x$ 轴下方 $3$，就在正下方，所以这条轴恰好在两点的正中间。\n\n> **注意。** 两个符号都变了、或两个数交换了位置的图，画的是别的移动，不是这次翻折。",
       ],
       (rng) => {
         const a = nonzero(rng, 5);
@@ -493,8 +493,8 @@ To choose between drawings, use the signs first: they tell which side of each ax
             t("This image swaps the coordinates, which is a reflection across $y = x$.", "这个像把坐标对调了，那是关于 $y = x$ 的反射。"),
           ],
           solution: t(
-            `Across the ${axis[0]}, the ${overX ? "second" : "first"} number changes sign and the other stays, so $P'$ is $${tex(right)}$. The axis is then exactly halfway between the two points.`,
-            `关于${axis[1]}翻折时，${overX ? "第二" : "第一"}个数变号，另一个不变，所以 $P'$ 是 $${tex(right)}$。这时这条轴恰好在两点的正中间。`,
+            `${stepLabel(1, "Keep one number", "保留一个数").en} Across the ${axis[0]}, the point moves ${overX ? "up or down" : "left or right"}, so the ${overX ? "first" : "second"} number stays.\n\n${stepLabel(2, "Change the other sign", "另一个数变号").en} The ${overX ? "second" : "first"} number changes sign: $${tex([a, b])} \\to ${tex(right)}$. Choose the drawing with $P'$ there.\n\n**Check.** $P$ and $P'$ are both $${Math.abs(overX ? b : a)}$ from the ${axis[0]}, on opposite sides, so the axis is exactly halfway between them.`,
+            `${stepLabel(1, "Keep one number", "保留一个数")["zh-CN"]}关于${axis[1]}翻折时，点${overX ? "上下" : "左右"}移动，所以${overX ? "第一" : "第二"}个数不变。\n\n${stepLabel(2, "Change the other sign", "另一个数变号")["zh-CN"]}${overX ? "第二" : "第一"}个数变号：$${tex([a, b])} \\to ${tex(right)}$。选 $P'$ 在这里的图。\n\n**检验。** $P$ 和 $P'$ 到${axis[1]}的距离都是 $${Math.abs(overX ? b : a)}$，分在两侧，所以这条轴恰好在两点的正中间。`,
           ),
         });
       },
