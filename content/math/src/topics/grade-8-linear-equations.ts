@@ -4,7 +4,11 @@ import { linear, num, poly, Q } from "@ga/subject-math";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { choiceProblem, numberProblem, pointLatex, steps } from "../problems.ts";
+import type { Pair } from "./early-grades-more-kit.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
+import { chosen, chosenMath, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { tableFigure } from "./grade-8-kit.ts";
+import { equalTape, tapeFigure } from "./upper-grades-kit.ts";
 
 // 8th Grade Math, linear equations: equations with infinitely many solutions or none, horizontal and vertical lines,
 // and slope as the unit rate of a proportional relationship.
@@ -37,7 +41,7 @@ type Count = 0 | 1 | 2;
 const countOptions: readonly Text[] = [t("Exactly one", "恰有一个"), t("Infinitely many", "无穷多个"), t("None", "无解")];
 
 /** lowerFirst lowercases the first letter of a sentence so that it can continue another. */
-const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+const _lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 /** cancelling says how to remove the term ax from both sides, as the start of a sentence. */
 const cancelling = (a: number): Text =>
@@ -153,81 +157,239 @@ export const linearEquationsWithInfinitelyManySolutions = topic(
   ],
 );
 
+/** twoSides draws the two sides of an equation as bars, with the same x-term and different constants. */
+const twoSides = (m: number, left: number, right: number, alt: Pair) =>
+  tapeFigure(
+    [
+      {
+        total: `${m}x + ${left}`,
+        pieces: [
+          { size: m, text: `${m}x` },
+          { size: left, text: `${left}` },
+        ],
+      },
+      {
+        total: `${m}x + ${right}`,
+        pieces: [
+          { size: m, text: `${m}x` },
+          { size: right, text: `${right}`, lit: true },
+        ],
+      },
+    ],
+    alt,
+  );
+
 /** linearEquationsWithNoSolutions recognizes equations whose x-terms cancel and leave a false statement. */
-export const linearEquationsWithNoSolutions = topic(
-  "linear-equations-with-no-solutions",
-  t("Linear Equations With No Solutions", "无解的一元一次方程"),
-  t(
-    "A linear equation has no solution when, after simplifying, the x-terms on the two sides match but the constants do not. Subtracting the x-terms then leaves a false statement such as 5 = 6.",
-    "当一元一次方程化简后两边含 x 的项相同而常数项不同时，方程无解。两边同时减去含 x 的项，会得到 5 = 6 这样不成立的式子。",
+export const linearEquationsWithNoSolutions = withIntro(
+  topic(
+    "linear-equations-with-no-solutions",
+    t("Linear Equations With No Solutions", "无解的一元一次方程"),
+    t(
+      "A linear equation has no solution when, after simplifying, the x-terms on the two sides match but the constants do not. Subtracting the x-terms then leaves a false statement such as 5 = 6.",
+      "当一元一次方程化简后两边含 x 的项相同而常数项不同时，方程无解。两边同时减去含 x 的项，会得到 5 = 6 这样不成立的式子。",
+    ),
+    ["linear-equations-with-infinitely-many-solutions"],
+    ["8.EE.C.7.A"],
+    [
+      lesson(
+        "choosing-the-coefficient",
+        ["Choosing the coefficient of x", "确定 x 的系数"],
+        [
+          [
+            "A linear equation has no solution when its $x$-terms match but its constants do not. For which $a$ does $ax + 5 = 3(x + 2)$ have no solution? The right side is $3x + 6$. With $a = 3$ the equation is $3x + 5 = 3x + 6$, and subtracting $3x$ leaves $5 = 6$, which is false.",
+            "一元一次方程两边含 $x$ 的项相同、常数项不同时，方程无解。$a$ 取何值时，$ax + 5 = 3(x + 2)$ 无解？右边是 $3x + 6$。当 $a = 3$ 时方程为 $3x + 5 = 3x + 6$，两边减去 $3x$ 得 $5 = 6$，不成立。",
+          ],
+          [
+            "Try another value: $a = 4$ gives $4x + 5 = 3x + 6$, so $x = 1$ is a solution. Only $a = 3$ removes every solution.",
+            "换一个值试试：$a = 4$ 时 $4x + 5 = 3x + 6$，$x = 1$ 就是解。只有 $a = 3$ 才让方程无解。",
+          ],
+          [
+            "The answer multiplies $x$. The constant $6$ is not the coefficient of $x$.",
+            "答案是与 $x$ 相乘的数。常数 $6$ 不是 $x$ 的系数。",
+          ],
+        ],
+        (rng) => {
+          const c = rng.sign() * rng.int(2, 7);
+          const p = rng.nonZero(-8, 8);
+          let q: number;
+          do q = rng.nonZero(-20, 20);
+          while (q === c * p);
+          const eq = `ax ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${times(c, 1, p)}`;
+          return valued(
+            [`For what value of $a$ does $${eq}$ have no solution?`, `$a$ 取何值时，方程 $${eq}$ 无解？`],
+            c,
+            [
+              [
+                ["Expand the right side", "展开右边"],
+                [`$${times(c, 1, p)} = ${linear(c, c * p)}$.`, `$${times(c, 1, p)} = ${linear(c, c * p)}$。`],
+              ],
+              [
+                ["Match the x-terms", "使含 x 的项相同"],
+                [
+                  `With $a = ${c}$ both sides have $${poly([c, "x"])}$, and the constants differ:`,
+                  `当 $a = ${c}$ 时两边都有 $${poly([c, "x"])}$，而常数项不同：`,
+                ],
+                [`${linear(c, q)} = ${linear(c, c * p)}`],
+              ],
+            ],
+            [`${cancelling(c).en} leaves $${q} = ${c * p}$, which is false.`, `${cancelling(c)["zh-CN"]}，得 $${q} = ${c * p}$，不成立。`],
+            [
+              [c * p, "That is the constant of the right side; it does not multiply $x$.", "这是右边的常数项；它不与 $x$ 相乘。"],
+              [-c, "That has the wrong sign; the $x$-terms must match exactly.", "符号错了；两边含 $x$ 的项必须完全相同。"],
+              [p, `That is the number in the parentheses, before multiplying by $${c}$.`, `这是括号里的数，还没有乘以 $${c}$。`],
+            ],
+          );
+        },
+        twoSides(3, 5, 6, [
+          "Both sides have 3x, and 5 can never equal 6, so no x works.",
+          "两边都有 3x，而 5 永远不等于 6，所以没有 x 能满足。",
+        ]),
+      ),
+      lesson(
+        "which-equation-has-no-solution",
+        ["Which equation has no solution", "哪个方程无解"],
+        [
+          [
+            "To decide, simplify each side. $2(x + 3) + x = 3x + 6$ becomes $3x + 6 = 3x + 6$: infinitely many solutions. $2(x + 3) + x = 3x + 5$ becomes $3x + 6 = 3x + 5$: no solution. $2(x + 3) + x = 4x + 5$ has different $x$-terms, so it has exactly one solution.",
+            "要判断，先化简每一边。$2(x + 3) + x = 3x + 6$ 化为 $3x + 6 = 3x + 6$：有无穷多个解。$2(x + 3) + x = 3x + 5$ 化为 $3x + 6 = 3x + 5$：无解。$2(x + 3) + x = 4x + 5$ 两边含 $x$ 的项不同，所以恰有一个解。",
+          ],
+          [
+            "In $2(x + 3) + x = 4x + 5$, $x = 1$ gives $9 = 9$, so it does have a solution.",
+            "在 $2(x + 3) + x = 4x + 5$ 中，$x = 1$ 得 $9 = 9$，所以它确实有解。",
+          ],
+          [
+            "The same $x$-terms are not enough. When the constants match too, every number is a solution, not none.",
+            "只看含 $x$ 的项相同还不够。如果常数项也相同，那么任何数都是解，而不是无解。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.sign() * rng.int(2, 6);
+          const p = rng.nonZero(-6, 6);
+          let q: number;
+          do q = rng.nonZero(-4, 4);
+          while (a + q === 0);
+          const [m, k] = [a + q, a * p];
+          const lhs = plus(times(a, 1, p), q, "x");
+          const off = rng.sign() * rng.int(1, 5);
+          const none = `${lhs} = ${linear(m, k + off)}`;
+          return chosenMath(
+            rng,
+            [
+              `The equations below all have the left side $${lhs}$. Which one has no solution?`,
+              `下面的方程左边都是 $${lhs}$。哪个方程无解？`,
+            ],
+            none,
+            [
+              [
+                `${lhs} = ${linear(m, k)}`,
+                "Its sides simplify to the same expression, so every number is a solution.",
+                "它两边化简后是同一个式子，所以任何数都是解。",
+              ],
+              [
+                `${lhs} = ${linear(m + (m === 1 ? 1 : rng.sign()), k + off)}`,
+                "Its $x$-terms differ, so it has exactly one solution.",
+                "它两边含 $x$ 的项不同，所以恰有一个解。",
+              ],
+              [
+                `${lhs} = ${linear(-m, k + off)}`,
+                "Its $x$-terms have opposite signs, so it has exactly one solution.",
+                "它两边含 $x$ 的项符号相反，所以恰有一个解。",
+              ],
+            ],
+            [
+              [
+                ["Simplify the left side", "化简左边"],
+                ["Every equation has the same left side:", "每个方程的左边都一样："],
+                [`${lhs} = ${linear(m, k)}`],
+              ],
+              [
+                ["Compare the right sides", "比较右边"],
+                [
+                  `Only $${linear(m, k + off)}$ has the same $x$-term, $${poly([m, "x"])}$, with a different constant.`,
+                  `只有 $${linear(m, k + off)}$ 含 $x$ 的项同为 $${poly([m, "x"])}$，而常数项不同。`,
+                ],
+              ],
+            ],
+            [
+              `${cancelling(m).en} leaves $${k} = ${k + off}$, which is false.`,
+              `${cancelling(m)["zh-CN"]}，得 $${k} = ${k + off}$，不成立。`,
+            ],
+          );
+        },
+        twoSides(3, 6, 5, [
+          "2(x + 3) + x simplifies to 3x + 6; against 3x + 5 the x-terms match and the constants never do.",
+          "2(x + 3) + x 化简为 3x + 6；与 3x + 5 相比，含 x 的项相同，常数项永远不同。",
+        ]),
+      ),
+      lesson(
+        "the-value-that-removes-all-solutions",
+        ["The value that removes all solutions", "使方程无解的值"],
+        [
+          [
+            "When an unknown coefficient sits inside parentheses, expand first, so that the coefficient of $x$ shows on each side. Set the two coefficients equal to find the unknown. Then compare the constants: if they differ, there is no solution. For $2(kx + 3) = 8x + 7$: $2k = 8$ gives $k = 4$, and $6 \\ne 7$.",
+            "当未知系数在括号里时，先展开，让两边 $x$ 的系数都显现出来。令这两个系数相等，求出未知数。再比较常数项：如果不同，方程就无解。对 $2(kx + 3) = 8x + 7$：由 $2k = 8$ 得 $k = 4$，而 $6 \\ne 7$。",
+          ],
+          [
+            "With $k = 4$: $8x + 6 = 8x + 7$ would mean $6 = 7$, which never holds.",
+            "当 $k = 4$ 时，$8x + 6 = 8x + 7$ 意味着 $6 = 7$，永远不成立。",
+          ],
+          [
+            "Divide by the number outside. In $2(kx + 3) = 8x + 7$, $k$ is $4$, not $8$.",
+            "要除以括号外的数。在 $2(kx + 3) = 8x + 7$ 中，$k$ 是 $4$，不是 $8$。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.int(2, 6);
+          const answer = rng.int(2, 9);
+          const b = rng.int(1, 9);
+          const m = a * answer;
+          const d = a * b + rng.int(1, 9);
+          return valued(
+            [
+              `For which value of $k$ does $${a}(kx + ${b}) = ${m}x + ${d}$ have no solution?`,
+              `当 $k$ 取何值时，方程 $${a}(kx + ${b}) = ${m}x + ${d}$ 无解？`,
+            ],
+            answer,
+            [
+              [
+                ["Expand", "展开"],
+                ["Multiply both terms in the parentheses by the number outside:", "把括号里的两项都乘以括号外的数："],
+                [`${a}(kx + ${b}) = ${a}kx + ${a * b}`],
+              ],
+              [
+                ["Match the x-terms", "使含 x 的项相同"],
+                [`The $x$-terms cancel when $${a}k = ${m}$:`, `当 $${a}k = ${m}$ 时含 $x$ 的项抵消：`],
+                [`k = ${m} \\div ${a} = ${answer}`],
+              ],
+            ],
+            [
+              `Then $${a * b} = ${d}$ is left, which is false, so no $x$ works.`,
+              `这时剩下 $${a * b} = ${d}$，不成立，所以没有 $x$ 能满足。`,
+            ],
+            [
+              [m, `That is the coefficient after multiplying; divide it by $${a}$.`, `这是乘过之后的系数；还要除以 $${a}$。`],
+              [m - a, `That subtracts $${a}$ instead of dividing by it.`, `这是减去了 $${a}$，而不是除以 $${a}$。`],
+              [
+                d - a * b,
+                "That works with the constants; $k$ must make the $x$-terms match.",
+                "这是用常数项算的；$k$ 要让含 $x$ 的项相同。",
+              ],
+            ],
+          );
+        },
+        twoSides(8, 6, 7, [
+          "With k = 4 the sides are 8x + 6 and 8x + 7: the same x-term, different constants.",
+          "当 k = 4 时两边是 8x + 6 和 8x + 7：含 x 的项相同，常数项不同。",
+        ]),
+      ),
+    ],
   ),
-  ["linear-equations-with-infinitely-many-solutions"],
-  ["8.EE.C.7.A"],
   [
-    {
-      id: "choosing-the-coefficient",
-      title: t("Choosing the coefficient of x", "确定 x 的系数"),
-      explanation: t(
-        "For which $a$ does $ax + 5 = 3(x + 2)$ have no solution? The right side is $3x + 6$. With $a = 3$ the equation is $3x + 5 = 3x + 6$, and subtracting $3x$ leaves $5 = 6$, which is false. Any other $a$ gives exactly one solution. The constant $6$ is not the answer: it does not multiply $x$.",
-        "$a$ 取何值时，$ax + 5 = 3(x + 2)$ 无解？右边是 $3x + 6$。当 $a = 3$ 时方程为 $3x + 5 = 3x + 6$，两边减去 $3x$ 得 $5 = 6$，不成立。$a$ 取其他值时方程恰有一个解。常数 $6$ 不是答案：它不与 $x$ 相乘。",
-      ),
-      generate(rng) {
-        const c = rng.sign() * rng.int(2, 7);
-        const p = rng.nonZero(-8, 8);
-        let q = rng.nonZero(-20, 20);
-        if (q === c * p) q += rng.sign() * rng.int(1, 4);
-        const eq = `ax ${q < 0 ? "-" : "+"} ${Math.abs(q)} = ${times(c, 1, p)}`;
-        return numberProblem({
-          prompt: t(`For what value of $a$ does $${eq}$ have no solution?`, `$a$ 取何值时，方程 $${eq}$ 无解？`),
-          answer: c,
-          form: "integer",
-          // The constant of the right side, its sign changed, and the number in the parentheses.
-          wrong: [c * p, -c, p],
-          solution: t(
-            `The right side is $${linear(c, c * p)}$. With $a = ${c}$ the equation becomes $${linear(c, q)} = ${linear(c, c * p)}$; ${lowerFirst(cancelling(c).en)} leaves $${q} = ${c * p}$, which is false. Any other value of $a$ gives exactly one solution.`,
-            `右边是 $${linear(c, c * p)}$。当 $a = ${c}$ 时方程为 $${linear(c, q)} = ${linear(c, c * p)}$；${cancelling(c)["zh-CN"]}，得 $${q} = ${c * p}$，不成立。$a$ 取其他值时方程恰有一个解。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "which-equation-has-no-solution",
-      title: t("Which equation has no solution", "哪个方程无解"),
-      explanation: t(
-        "To decide, simplify each side. $2(x + 3) + x = 3x + 6$ becomes $3x + 6 = 3x + 6$: infinitely many solutions. $2(x + 3) + x = 3x + 5$ becomes $3x + 6 = 3x + 5$: no solution. $2(x + 3) + x = 4x + 5$ has different $x$-terms, so exactly one solution ($x = 1$).",
-        "要判断，先化简每一边。$2(x + 3) + x = 3x + 6$ 化为 $3x + 6 = 3x + 6$：有无穷多个解。$2(x + 3) + x = 3x + 5$ 化为 $3x + 6 = 3x + 5$：无解。$2(x + 3) + x = 4x + 5$ 两边含 $x$ 的项不同，所以恰有一个解（$x = 1$）。",
-      ),
-      generate(rng) {
-        const a = rng.sign() * rng.int(2, 6);
-        const p = rng.nonZero(-6, 6);
-        const q = rng.nonZero(-4, 4);
-        if (a + q === 0) return this.generate(rng);
-        const [m, k] = [a + q, a * p];
-        const lhs = plus(times(a, 1, p), q, "x");
-        const off = rng.sign() * rng.int(1, 5);
-        // No solution; the same constant (an identity); the x-terms differing; and the constant before multiplying.
-        const none = `${lhs} = ${linear(m, k + off)}`;
-        const all = `${lhs} = ${linear(m, k)}`;
-        const one = `${lhs} = ${linear(m + rng.sign(), k + off)}`;
-        const unexpanded = `${lhs} = ${linear(m, p)}`;
-        const correct = mathText(none);
-        const distractors = [all, one, unexpanded].filter((e) => e !== none);
-        return pickChoice(
-          rng,
-          t(
-            `The equations below all have the left side $${lhs}$. Which one has no solution?`,
-            `下面的方程左边都是 $${lhs}$。哪个方程无解？`,
-          ),
-          correct,
-          distractors.map(mathText),
-          t(
-            `The left side of every equation simplifies to $${linear(m, k)}$. Only in $${none}$ does the right side have the same $x$-term, $${poly([m, "x"])}$, with a different constant, $${k + off}$ instead of $${k}$; ${lowerFirst(cancelling(m).en)} leaves $${k} = ${k + off}$, which is false.`,
-            `每个方程的左边都化简为 $${linear(m, k)}$。只有在 $${none}$ 中，右边含 $x$ 的项同为 $${poly([m, "x"])}$，而常数项不同（$${k + off}$ 而不是 $${k}$）；${cancelling(m)["zh-CN"]}，得 $${k} = ${k + off}$，不成立。`,
-          ),
-        );
-      },
-    },
+    "One phone plan costs $3x + 5$ dollars for $x$ months, and another costs $3x + 6$. After how many months do they cost the same?",
+    "一种话费套餐 $x$ 个月共 $3x + 5$ 美元，另一种共 $3x + 6$ 美元。几个月后两种套餐花费相同？",
   ],
+  ["Never: both grow by $3$ each month, and $5$ never catches up with $6$.", "永远不会：两种每个月都增加 $3$，而 $5$ 永远追不上 $6$。"],
+  ["spot equations with no solution and find the value that makes one.", "识别无解的方程，并求出使方程无解的值。"],
 );
 
 /** determiningTheNumberOfSolutionsOfALinearEquation simplifies both sides to decide between one, none and infinitely many. */
@@ -470,77 +632,230 @@ const rates: readonly Rate[] = [
 ];
 
 /** slopeAsAUnitRateInProportionalRelationships reads the unit rate of a proportional relationship as the slope of its graph. */
-export const slopeAsAUnitRateInProportionalRelationships = topic(
-  "slope-as-a-unit-rate-in-proportional-relationships",
-  t("Slope as a Unit Rate in Proportional Relationships", "比例关系中作为单位比率的斜率"),
-  t(
-    "The graph of a proportional relationship y = kx is a line through the origin whose slope is k, the unit rate: the change in y for each increase of 1 in x. Unit rates let relationships given in different ways be compared.",
-    "比例关系 y = kx 的图像是过原点的直线，它的斜率就是 k，即单位比率：x 每增加 1 时 y 的变化量。借助单位比率，可以比较以不同方式给出的比例关系。",
+export const slopeAsAUnitRateInProportionalRelationships = withIntro(
+  topic(
+    "slope-as-a-unit-rate-in-proportional-relationships",
+    t("Slope as a Unit Rate in Proportional Relationships", "比例关系中作为单位比率的斜率"),
+    t(
+      "The graph of a proportional relationship y = kx is a line through the origin whose slope is k, the unit rate: the change in y for each increase of 1 in x. Unit rates let relationships given in different ways be compared.",
+      "比例关系 y = kx 的图像是过原点的直线，它的斜率就是 k，即单位比率：x 每增加 1 时 y 的变化量。借助单位比率，可以比较以不同方式给出的比例关系。",
+    ),
+    ["slope-of-a-line", "understanding-proportional-relationships-using-graphs"],
+    ["8.EE.B.5"],
+    [
+      lesson(
+        "unit-rate-from-two-points",
+        ["The unit rate from two points on the graph", "由图像上的两点求单位比率"],
+        [
+          [
+            "The graph of a proportional relationship $y = kx$ is a line through the origin, and its slope $k$ is the unit rate. A car's distance $d$ is proportional to the time $t$, and the graph passes through $(2, 110)$ and $(5, 275)$. The slope is $\\frac{275 - 110}{5 - 2} = \\frac{165}{3} = 55$, so the car travels $55$ miles per hour.",
+            "比例关系 $y = kx$ 的图像是过原点的直线，斜率 $k$ 就是单位比率。汽车行驶的路程 $d$ 与时间 $t$ 成正比，图像经过 $(2, 110)$ 和 $(5, 275)$。斜率为 $\\frac{275 - 110}{5 - 2} = \\frac{165}{3} = 55$，所以汽车每小时行驶 $55$ 英里。",
+          ],
+          [
+            "$110 \\div 2 = 55$ and $275 \\div 5 = 55$: each point gives the same ratio.",
+            "$110 \\div 2 = 55$，$275 \\div 5 = 55$：每个点给出的比都一样。",
+          ],
+          [
+            "Divide the change in $y$ by the change in $x$. $\\frac{3}{165}$ is hours per mile, not miles per hour.",
+            "要用 $y$ 的变化量除以 $x$ 的变化量。$\\frac{3}{165}$ 是每英里所需的小时数，不是每小时的英里数。",
+          ],
+        ],
+        (rng) => {
+          const c = rng.pick(rates);
+          const k = rng.int(c.lo, c.hi);
+          const [x1, x2] = rng.sample([1, 2, 3, 4, 5, 6, 7, 8], 2).sort((a, b) => a - b) as [number, number];
+          const [y1, y2] = [k * x1, k * x2];
+          const thing = t(c.thing.en.toLowerCase(), c.thing["zh-CN"]);
+          return valued(
+            [
+              `The ${c.quantity.en} $${c.y}$ (${c.yUnit.en}) of a ${thing.en} ${c.quantity.en === "earnings" ? "are" : "is"} proportional to the time $${c.x}$ (${c.xUnit.en}), and the graph passes through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$. What is the slope of the graph, in ${c.rate.en}?`,
+              `某${thing["zh-CN"]}的${c.quantity["zh-CN"]} $${c.y}$（${c.yUnit["zh-CN"]}）与时间 $${c.x}$（${c.xUnit["zh-CN"]}）成正比，图像经过 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$。图像的斜率是多少（单位：${c.rate["zh-CN"]}）？`,
+            ],
+            k,
+            [
+              [
+                ["Find the changes", "求变化量"],
+                [`Subtract the coordinates of the two points:`, "把两点的坐标分别相减："],
+                [`${y2} - ${y1} = ${y2 - y1}`, `${x2} - ${x1} = ${x2 - x1}`],
+              ],
+              [
+                ["Divide", "相除"],
+                [`The slope is the change in $${c.y}$ over the change in $${c.x}$:`, `斜率等于 $${c.y}$ 的变化量除以 $${c.x}$ 的变化量：`],
+                [`\\frac{${y2 - y1}}{${x2 - x1}} = ${k}`],
+              ],
+            ],
+            [
+              `The line passes through the origin, so one point gives the same rate: $${y1} \\div ${x1} = ${k}$.`,
+              `直线过原点，所以只用一个点也得到同样的比率：$${y1} \\div ${x1} = ${k}$。`,
+            ],
+            [
+              [
+                Q.of(x2 - x1, y2 - y1),
+                "That divides the change in time by the other change; it is the rate the other way round.",
+                "这是用时间的变化量去除另一个变化量；是反过来的比率。",
+              ],
+              [
+                y2 - y1,
+                "That is the change on the vertical axis alone; divide it by the change in time.",
+                "这只是纵轴上的变化量；还要除以时间的变化量。",
+              ],
+              [y2, "That is a coordinate of a point, not a rate.", "这是一个点的坐标，不是比率。"],
+            ],
+          );
+        },
+        drawn(gradeDrawings5["slope-as-a-unit-rate-in-proportional-relationships#unit-rate-from-two-points"]),
+      ),
+      lesson(
+        "comparing-unit-rates",
+        ["Comparing two proportional relationships", "比较两个比例关系"],
+        [
+          [
+            "To compare two proportional relationships, find both unit rates. Car A travels $d = 52t$ miles in $t$ hours, so its rate is $52$ miles per hour. Car B travels $165$ miles in $3$ hours at a constant speed, so its rate is $165 \\div 3 = 55$. Since $55 > 52$, car B is faster.",
+            "比较两个比例关系，要先求出两者的单位比率。汽车 A 在 $t$ 小时内行驶 $d = 52t$ 英里，所以它的比率是每小时 $52$ 英里。汽车 B 匀速行驶，$3$ 小时行驶 $165$ 英里，所以它的比率是 $165 \\div 3 = 55$。因为 $55 > 52$，所以汽车 B 更快。",
+          ],
+          [
+            "In $3$ hours car A covers $52 \\times 3 = 156$ miles, less than car B's $165$.",
+            "$3$ 小时内汽车 A 行驶 $52 \\times 3 = 156$ 英里，比汽车 B 的 $165$ 英里少。",
+          ],
+          [
+            "Compare unit rates, not the numbers as written. $165$ is a total for $3$ hours, not a rate.",
+            "要比较单位比率，不是直接比较题目中写出的数。$165$ 是 $3$ 小时的总量，不是比率。",
+          ],
+        ],
+        (rng) => {
+          const c = rng.pick(rates);
+          const ka = rng.int(c.lo, c.hi);
+          let kb: number;
+          do kb = rng.int(c.lo, c.hi);
+          while (kb === ka);
+          const x = rng.int(3, 8);
+          const y = kb * x;
+          const a: Pair = [`${c.thing.en} A`, `${c.thing["zh-CN"]} A`];
+          const b: Pair = [`${c.thing.en} B`, `${c.thing["zh-CN"]} B`];
+          const [fast, slow] = ka > kb ? [a, b] : [b, a];
+          const [high, low] = [Math.max(ka, kb), Math.min(ka, kb)];
+          return chosen(
+            rng,
+            [
+              `${a[0]} ${c.verb.en} $${c.y} = ${ka}${c.x}$ ${c.yUnit.en} in $${c.x}$ ${c.xUnit.en}. ${b[0]} works at a constant rate and ${c.verb.en} $${y}$ ${c.yUnit.en} in $${x}$ ${c.xUnit.en}. ${c.question.en}`,
+              `${a[1]} 在 $${c.x}$ ${c.xUnit["zh-CN"]}内${c.verb["zh-CN"]} $${c.y} = ${ka}${c.x}$ ${c.yUnit["zh-CN"]}。${b[1]} 匀速工作，$${x}$ ${c.xUnit["zh-CN"]}内${c.verb["zh-CN"]} $${y}$ ${c.yUnit["zh-CN"]}。${c.question["zh-CN"]}`,
+            ],
+            fast,
+            [
+              [
+                slow,
+                `Its unit rate, $${low}$ ${c.rate.en}, is lower than $${high}$.`,
+                `它的单位比率是 $${low}$ ${c.rate["zh-CN"]}，低于 $${high}$。`,
+              ],
+            ],
+            [
+              [
+                ["Read the first rate", "读出第一个比率"],
+                [
+                  `In $${c.y} = ${ka}${c.x}$, the coefficient $${ka}$ is the unit rate of ${a[0]}.`,
+                  `在 $${c.y} = ${ka}${c.x}$ 中，系数 $${ka}$ 就是${a[1]}的单位比率。`,
+                ],
+              ],
+              [
+                ["Find the second rate", "求第二个比率"],
+                [`${b[0]}: $${y} \\div ${x} = ${kb}$ ${c.rate.en}.`, `${b[1]}：$${y} \\div ${x} = ${kb}$ ${c.rate["zh-CN"]}。`],
+              ],
+              [
+                ["Compare", "比较"],
+                [`$${high} > ${low}$, so the answer is ${fast[0]}.`, `$${high} > ${low}$，所以答案是${fast[1]}。`],
+              ],
+            ],
+            [
+              `Over $${x}$ ${c.xUnit.en}, ${a[0]} reaches $${ka * x}$ and ${b[0]} reaches $${y}$.`,
+              `$${x}$ ${c.xUnit["zh-CN"]}内，${a[1]}达到 $${ka * x}$，${b[1]}达到 $${y}$。`,
+            ],
+            equalTape(x, "?", `${y}`),
+          );
+        },
+        equalTape(3, "55", "165"),
+      ),
+      lesson(
+        "another-point-on-a-line-through-the-origin",
+        ["Another point on a line through the origin", "过原点的直线上的另一个点"],
+        [
+          [
+            "A line through the origin shows a proportional relationship, so every point on it has the same ratio $\\frac{y}{x}$: the slope. One known point gives the slope, and the slope gives the missing coordinate of any other point. Through $(6, 9)$ the slope is $\\frac{3}{2}$, so at $x = 10$, $y = 15$.",
+            "过原点的直线表示正比例关系，所以线上每个点的比 $\\frac{y}{x}$ 都相同，就是斜率。一个已知的点给出斜率，斜率又给出其他点缺少的坐标。经过 $(6, 9)$ 时斜率是 $\\frac{3}{2}$，所以 $x = 10$ 时 $y = 15$。",
+          ],
+          ["$\\frac{15}{10} = \\frac{3}{2} = \\frac{9}{6}$.", "$\\frac{15}{10} = \\frac{3}{2} = \\frac{9}{6}$。"],
+          [
+            "Points on the line differ by a factor, not by a sum. Adding $4$ to each coordinate of $(6, 9)$ gives $(10, 13)$, which is off the line.",
+            "线上的点之间是倍数关系，不是相加关系。给 $(6, 9)$ 的两个坐标都加 $4$ 得 $(10, 13)$，它不在直线上。",
+          ],
+        ],
+        (rng) => {
+          const [p, q] = rng.pick([
+            [2, 3],
+            [3, 4],
+            [3, 2],
+            [5, 2],
+            [4, 3],
+            [5, 3],
+            [2, 5],
+            [3, 5],
+            [5, 4],
+            [7, 2],
+          ]) as [number, number];
+          const u = rng.int(2, 9);
+          const v = rng.pick([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter((w) => w !== u));
+          const [a, b, c] = [q * u, p * u, q * v];
+          const answer = p * v;
+          return valued(
+            [
+              `A line through the origin passes through $(${a}, ${b})$ and $(${c}, y)$. Find $y$.`,
+              `一条过原点的直线经过 $(${a}, ${b})$ 和 $(${c}, y)$。求 $y$。`,
+            ],
+            answer,
+            [
+              [
+                ["Find the slope", "求斜率"],
+                ["Through the origin, the slope is $y$ over $x$ at any point:", "直线过原点，斜率等于任一点的 $y$ 除以 $x$："],
+                [`\\frac{${b}}{${a}} = \\frac{${p}}{${q}}`],
+              ],
+              [
+                ["Use the slope", "用斜率求 y"],
+                [`Multiply $${c}$ by the slope:`, `用 $${c}$ 乘以斜率：`],
+                [`y = \\frac{${p}}{${q}} \\times ${c} = ${answer}`],
+              ],
+            ],
+            [
+              `The new point gives the same ratio: $\\frac{${answer}}{${c}} = \\frac{${p}}{${q}}$.`,
+              `新的点给出同样的比：$\\frac{${answer}}{${c}} = \\frac{${p}}{${q}}$。`,
+            ],
+            [
+              [
+                b + c - a,
+                "That adds the same amount to both coordinates; the change must multiply.",
+                "这是给两个坐标加了同样的量；变化应该是相乘。",
+              ],
+              [Q.of(a * c, b), "That uses the ratio upside down, $x$ over $y$.", "这是把比倒过来了，用了 $x$ 除以 $y$。"],
+              [c, "That copies the $x$-coordinate.", "这是照抄了 $x$ 坐标。"],
+            ],
+          );
+        },
+        tableFigure(
+          ["x", "y"],
+          ["P", "Q"],
+          [
+            ["6", "10"],
+            ["9", "15"],
+          ],
+          ["A table of two points on the line: P is (6, 9) and Q is (10, 15).", "直线上两个点的数值表：P 是 (6, 9)，Q 是 (10, 15)。"],
+        ),
+      ),
+    ],
   ),
-  ["slope-of-a-line", "understanding-proportional-relationships-using-graphs"],
-  ["8.EE.B.5"],
   [
-    {
-      id: "unit-rate-from-two-points",
-      figure: gradeDrawings5["slope-as-a-unit-rate-in-proportional-relationships#unit-rate-from-two-points"],
-      title: t("The unit rate from two points on the graph", "由图像上的两点求单位比率"),
-      explanation: t(
-        "A car's distance $d$ (miles) is proportional to the time $t$ (hours), and the graph passes through $(2, 110)$ and $(5, 275)$. The slope is $\\frac{275 - 110}{5 - 2} = \\frac{165}{3} = 55$, so the car travels $55$ miles per hour. Dividing the other way, $\\frac{3}{165}$, gives hours per mile instead.",
-        "汽车行驶的路程 $d$（英里）与时间 $t$（小时）成正比，图像经过 $(2, 110)$ 和 $(5, 275)$。斜率为 $\\frac{275 - 110}{5 - 2} = \\frac{165}{3} = 55$，所以汽车每小时行驶 $55$ 英里。反过来相除得 $\\frac{3}{165}$，那是每英里所需的小时数。",
-      ),
-      generate(rng) {
-        const c = rng.pick(rates);
-        const k = rng.int(c.lo, c.hi);
-        const [x1, x2] = rng.sample([1, 2, 3, 4, 5, 6, 7, 8], 2).sort((a, b) => a - b) as [number, number];
-        const [y1, y2] = [k * x1, k * x2];
-        const thing = t(c.thing.en.toLowerCase(), c.thing["zh-CN"]);
-        return numberProblem({
-          prompt: t(
-            `The ${c.quantity.en} $${c.y}$ (${c.yUnit.en}) of a ${thing.en} ${c.quantity.en === "earnings" ? "are" : "is"} proportional to the time $${c.x}$ (${c.xUnit.en}), and the graph passes through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$. What is the slope of the graph, in ${c.rate.en}?`,
-            `某${thing["zh-CN"]}的${c.quantity["zh-CN"]} $${c.y}$（${c.yUnit["zh-CN"]}）与时间 $${c.x}$（${c.xUnit["zh-CN"]}）成正比，图像经过 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$。图像的斜率是多少（单位：${c.rate["zh-CN"]}）？`,
-          ),
-          answer: k,
-          form: "integer",
-          // The rate the other way round, the change in y alone, and the second y-coordinate.
-          wrong: [Q.of(x2 - x1, y2 - y1), y2 - y1, y2],
-          solution: t(
-            `The slope is the change in $${c.y}$ divided by the change in $${c.x}$:${steps(`\\frac{${y2} - ${y1}}{${x2} - ${x1}} = ${x2 - x1 === 1 ? "" : `\\frac{${y2 - y1}}{${x2 - x1}} = `}${k}`)}So the unit rate is $${k}$ ${c.rate.en}.`,
-            `斜率等于 $${c.y}$ 的变化量除以 $${c.x}$ 的变化量：${steps(`\\frac{${y2} - ${y1}}{${x2} - ${x1}} = ${x2 - x1 === 1 ? "" : `\\frac{${y2 - y1}}{${x2 - x1}} = `}${k}`)}所以单位比率是 $${k}$ ${c.rate["zh-CN"]}。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "comparing-unit-rates",
-      title: t("Comparing two proportional relationships", "比较两个比例关系"),
-      explanation: t(
-        "Car A travels $d = 52t$ miles in $t$ hours. Car B travels $165$ miles in $3$ hours at a constant speed, so its unit rate is $165 \\div 3 = 55$ miles per hour. Since $55 > 52$, car B is faster. Compare the unit rates, not the numbers as they are written.",
-        "汽车 A 在 $t$ 小时内行驶 $d = 52t$ 英里。汽车 B 匀速行驶，$3$ 小时行驶 $165$ 英里，所以它的单位比率是 $165 \\div 3 = 55$ 英里每小时。因为 $55 > 52$，所以汽车 B 更快。要比较的是单位比率，而不是题目中直接写出的数。",
-      ),
-      generate(rng) {
-        const c = rng.pick(rates);
-        const ka = rng.int(c.lo, c.hi);
-        let kb = rng.int(c.lo, c.hi);
-        if (kb === ka) kb += rng.sign() * rng.int(1, 3);
-        const x = rng.int(3, 8);
-        const y = kb * x;
-        const [a, b] = [t(`${c.thing.en} A`, `${c.thing["zh-CN"]} A`), t(`${c.thing.en} B`, `${c.thing["zh-CN"]} B`)];
-        const faster = ka > kb ? a : b;
-        return choiceProblem({
-          prompt: t(
-            `${a.en} ${c.verb.en} $${c.y} = ${ka}${c.x}$ ${c.yUnit.en} in $${c.x}$ ${c.xUnit.en}. ${b.en} works at a constant rate and ${c.verb.en} $${y}$ ${c.yUnit.en} in $${x}$ ${c.xUnit.en}. ${c.question.en}`,
-            `${a["zh-CN"]} 在 $${c.x}$ ${c.xUnit["zh-CN"]}内${c.verb["zh-CN"]} $${c.y} = ${ka}${c.x}$ ${c.yUnit["zh-CN"]}。${b["zh-CN"]} 匀速工作，$${x}$ ${c.xUnit["zh-CN"]}内${c.verb["zh-CN"]} $${y}$ ${c.yUnit["zh-CN"]}。${c.question["zh-CN"]}`,
-          ),
-          options: [a, b],
-          correct: ka > kb ? 0 : 1,
-          solution: t(
-            `The unit rate of ${a.en} is the coefficient $${ka}$ ${c.rate.en}. The unit rate of ${b.en} is $${y} \\div ${x} = ${kb}$ ${c.rate.en}. Since $${Math.max(ka, kb)} > ${Math.min(ka, kb)}$, the answer is ${faster.en}.`,
-            `${a["zh-CN"]} 的单位比率是系数 $${ka}$ ${c.rate["zh-CN"]}。${b["zh-CN"]} 的单位比率是 $${y} \\div ${x} = ${kb}$ ${c.rate["zh-CN"]}。因为 $${Math.max(ka, kb)} > ${Math.min(ka, kb)}$，所以答案是${faster["zh-CN"]}。`,
-          ),
-        });
-      },
-    },
+    "A car's trip is graphed as distance against time: a straight line from the origin through $(2, 110)$.",
+    "一辆汽车的行程画成路程随时间变化的图像：一条从原点出发、经过 $(2, 110)$ 的直线。",
   ],
+  ["The slope is $110 \\div 2 = 55$, so the car covers $55$ miles each hour.", "斜率是 $110 \\div 2 = 55$，所以汽车每小时行驶 $55$ 英里。"],
+  ["read unit rates as slopes, compare them, and find other points on the line.", "把单位比率看作斜率，比较单位比率，并求直线上的其他点。"],
 );
 
 /** grade8LinearEquationTopics lists the 8th grade topics on linear equations and lines. */

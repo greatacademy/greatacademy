@@ -4,6 +4,9 @@ import { linear, num, paren, poly, Q } from "@ga/subject-math";
 
 import { choiceProblem, expressionProblem, numberProblem, steps } from "../problems.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
+import { chosenMath, lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { rooted, surdExpressed } from "./grade-8-kit.ts";
+import { areaGridFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 // SAT Math Fundamentals, algebra: radical expressions, linear equations solved by structure, systems, optimizing over
 // ranges, linear functions given by tables, and translations of functions.
@@ -50,159 +53,500 @@ const coef = (c: number) => (c === 1 ? "" : c === -1 ? "-" : String(c));
 // Radicals
 
 /** simplifyingExpressionsWithSurds simplifies sums and products of surds. */
-export const simplifyingExpressionsWithSurds = topic(
-  "simplifying-expressions-with-surds",
-  t("Simplifying Expressions With Surds", "化简含根式的表达式"),
-  t(
-    "Simplify sums and products of square roots by taking out square factors and combining like surds.",
-    "提取平方因数、合并同类根式，从而化简平方根的和与积。",
+export const simplifyingExpressionsWithSurds = withIntro(
+  topic(
+    "simplifying-expressions-with-surds",
+    t("Simplifying Expressions With Surds", "化简含根式的表达式"),
+    t(
+      "Simplify sums and products of square roots by taking out square factors and combining like surds.",
+      "提取平方因数、合并同类根式，从而化简平方根的和与积。",
+    ),
+    ["adding-and-subtracting-radicals", "the-product-rule-for-radicals"],
+    ["8.EE.A.2", "HSN.RN.A.2"],
+    [
+      lesson(
+        "sums-of-surds-with-square-factors",
+        ["Sums of surds with square factors", "含平方因数的根式之和"],
+        [
+          [
+            "Surds add only when the numbers under their roots match. So first take every square factor out of each root. Then the terms are like terms, and their coefficients add: $3\\sqrt{12} + \\sqrt{27} = 6\\sqrt{3} + 3\\sqrt{3} = 9\\sqrt{3}$.",
+            "只有被开方数相同的根式才能相加。所以先把每个根式里的平方因数都提出来。这样各项就成了同类项，系数相加即可：$3\\sqrt{12} + \\sqrt{27} = 6\\sqrt{3} + 3\\sqrt{3} = 9\\sqrt{3}$。",
+          ],
+          [
+            "Estimate: $3\\sqrt{12} \\approx 10.4$ and $\\sqrt{27} \\approx 5.2$, which make $15.6$. And $9\\sqrt{3} \\approx 15.6$ too.",
+            "估算一下：$3\\sqrt{12} \\approx 10.4$，$\\sqrt{27} \\approx 5.2$，合起来约 $15.6$。而 $9\\sqrt{3}$ 也约为 $15.6$。",
+          ],
+          [
+            "Roots do not add under one bar. $\\sqrt{12} + \\sqrt{27}$ is not $\\sqrt{39}$.",
+            "根号里的数不能直接相加。$\\sqrt{12} + \\sqrt{27}$ 不等于 $\\sqrt{39}$。",
+          ],
+        ],
+        (rng) => {
+          const m = rng.pick(squareFree);
+          let k1: number;
+          let k2: number;
+          let p: number;
+          let q: number;
+          do {
+            [k1, k2] = rng.sample([2, 3, 4, 5], 2) as [number, number];
+            p = rng.int(1, 4);
+            q = rng.nonZero(-4, 4);
+          } while (p * k1 + q * k2 === 0);
+          const c = p * k1 + q * k2;
+          const sign = q < 0 ? "-" : "+";
+          const expr = `${coef(p)}\\sqrt{${k1 * k1 * m}} ${sign} ${coef(Math.abs(q))}\\sqrt{${k2 * k2 * m}}`;
+          const middle = `${p * k1}\\sqrt{${m}} ${sign} ${Math.abs(q * k2)}\\sqrt{${m}}`;
+          const answer = surd(0, c, m);
+          return surdExpressed(
+            [`Simplify $${expr}$.`, `化简 $${expr}$。`],
+            answer,
+            [
+              [
+                ["Take out the square factors", "提出平方因数"],
+                [
+                  `$${k1 * k1 * m} = ${k1}^{2} \\cdot ${m}$ and $${k2 * k2 * m} = ${k2}^{2} \\cdot ${m}$, so both roots become multiples of $\\sqrt{${m}}$:`,
+                  `$${k1 * k1 * m} = ${k1}^{2} \\cdot ${m}$，$${k2 * k2 * m} = ${k2}^{2} \\cdot ${m}$，所以两个根式都化成 $\\sqrt{${m}}$ 的倍数：`,
+                ],
+                [`${expr} = ${middle}`],
+              ],
+              [
+                ["Combine like surds", "合并同类根式"],
+                [
+                  `Combine the numbers in front of $\\sqrt{${m}}$: $${p * k1} ${sign} ${Math.abs(q * k2)} = ${c}$.`,
+                  `把 $\\sqrt{${m}}$ 前面的数合并：$${p * k1} ${sign} ${Math.abs(q * k2)} = ${c}$。`,
+                ],
+                [`${middle} = ${answer}`],
+              ],
+            ],
+            [
+              `Square back each root: $${k1}^{2} \\cdot ${m} = ${k1 * k1 * m}$ and $${k2}^{2} \\cdot ${m} = ${k2 * k2 * m}$.`,
+              `把每个根式平方回去：$${k1}^{2} \\cdot ${m} = ${k1 * k1 * m}$，$${k2}^{2} \\cdot ${m} = ${k2 * k2 * m}$。`,
+            ],
+            [
+              [
+                surd(0, p + q, m),
+                "That adds the numbers in front without taking out the square factors first.",
+                "这是没提出平方因数就把根号前的数相加了。",
+              ],
+              [surd(0, p * k1 - q * k2, m), "That changes the sign of the second term.", "这是把第二项的符号弄反了。"],
+              [
+                surd(0, p * k1 * k1 + q * k2 * k2, m),
+                "That takes out each square itself instead of its square root.",
+                "这是把平方数本身移了出来，而不是它的平方根。",
+              ],
+              [
+                surd(0, p + q, k1 * k1 * m + k2 * k2 * m),
+                "That adds the numbers under the roots; only like surds combine.",
+                "这是把根号里的数相加了；只有同类根式才能合并。",
+              ],
+            ],
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "9√3",
+              pieces: [
+                { size: 6, text: "6√3" },
+                { size: 3, text: "3√3", lit: true },
+              ],
+            },
+          ],
+          ["3√12 is 6√3 and √27 is 3√3; together they make 9√3.", "3√12 是 6√3，√27 是 3√3，合起来是 9√3。"],
+        ),
+      ),
+      lesson(
+        "products-of-surds",
+        ["Products of surds", "根式的乘积"],
+        [
+          [
+            "To multiply terms with roots, multiply the numbers in front, and multiply the numbers under the roots. Then simplify the new root by taking out its square factors: $(2\\sqrt{6})(3\\sqrt{10}) = 6\\sqrt{60} = 12\\sqrt{15}$.",
+            "相乘含根式的项时，根号外的数相乘，根号里的数相乘。再把所得根式里的平方因数提出来：$(2\\sqrt{6})(3\\sqrt{10}) = 6\\sqrt{60} = 12\\sqrt{15}$。",
+          ],
+          [
+            "$\\sqrt{4} \\cdot \\sqrt{9} = 2 \\cdot 3 = 6$, and $\\sqrt{36} = 6$ as well.",
+            "$\\sqrt{4} \\cdot \\sqrt{9} = 2 \\cdot 3 = 6$，而 $\\sqrt{36}$ 也等于 $6$。",
+          ],
+          [
+            "Simplify at the end. $6\\sqrt{60}$ is not finished, since $60$ still holds the square $4$.",
+            "最后要化简。$6\\sqrt{60}$ 还没算完，因为 $60$ 里还有平方数 $4$。",
+          ],
+        ],
+        (rng) => {
+          const [x, y, r] = rng.pick([
+            [6, 10, [2, 15]],
+            [6, 15, [3, 10]],
+            [10, 15, [5, 6]],
+            [2, 6, [2, 3]],
+            [3, 6, [3, 2]],
+            [5, 10, [5, 2]],
+            [2, 14, [2, 7]],
+            [3, 15, [3, 5]],
+            [7, 14, [7, 2]],
+            [6, 21, [3, 14]],
+          ] as const);
+          const [k, m] = r;
+          const a = rng.int(2, 5);
+          const b = rng.int(2, 5);
+          const answer = surd(0, a * b * k, m);
+          const product = `${a * b}\\sqrt{${x * y}}`;
+          return rooted(
+            [`Simplify $(${a}\\sqrt{${x}})(${b}\\sqrt{${y}})$.`, `化简 $(${a}\\sqrt{${x}})(${b}\\sqrt{${y}})$。`],
+            [a * b * k, m],
+            [
+              [
+                ["Multiply", "相乘"],
+                ["Multiply the numbers in front and the numbers under the roots:", "根号外的数相乘，根号里的数相乘："],
+                [`(${a}\\sqrt{${x}})(${b}\\sqrt{${y}}) = ${product}`],
+              ],
+              [
+                ["Simplify", "化简"],
+                [
+                  `$${x * y} = ${k * k} \\cdot ${m}$, so $${k}$ comes out of the root:`,
+                  `$${x * y} = ${k * k} \\cdot ${m}$，所以 $${k}$ 移到根号外：`,
+                ],
+                [`${product} = ${a * b} \\cdot ${k}\\sqrt{${m}} = ${answer}`],
+              ],
+            ],
+            [
+              `Square both forms: $${(a * b) ** 2} \\cdot ${x * y}$ and $${(a * b * k) ** 2} \\cdot ${m}$ are both $${(a * b) ** 2 * x * y}$.`,
+              `把两种写法都平方：$${(a * b) ** 2} \\cdot ${x * y}$ 和 $${(a * b * k) ** 2} \\cdot ${m}$ 都等于 $${(a * b) ** 2 * x * y}$。`,
+            ],
+            [
+              [product, "That multiplies correctly but stops before simplifying the root.", "乘法没错，但根式还没有化简。"],
+              [
+                surd(0, a * b * k * k, m),
+                `That takes out $${k * k}$ itself instead of its square root $${k}$.`,
+                `这是把 $${k * k}$ 本身移了出来，而不是它的平方根 $${k}$。`,
+              ],
+              [surd(0, a + b, x * y), "That adds the numbers in front; they multiply.", "这是把根号外的数相加了；它们要相乘。"],
+              [surd(0, a * b * k, x + y), "That adds the numbers under the roots; they multiply.", "这是把根号里的数相加了；它们要相乘。"],
+            ],
+          );
+        },
+        areaGridFigure(["2√6"], ["3√10"], [["12√15"]]),
+      ),
+      lesson(
+        "the-product-of-conjugate-surds",
+        ["The product of conjugate surds", "共轭根式的积"],
+        [
+          [
+            "A sum times a difference of the same two terms is a difference of squares: $(a + b)(a - b) = a^{2} - b^{2}$. With a surd as one term, squaring it removes the root. So $(5 + \\sqrt{3})(5 - \\sqrt{3}) = 25 - 3 = 22$, a whole number.",
+            "同样两项的和乘以差，等于平方差：$(a + b)(a - b) = a^{2} - b^{2}$。若其中一项是根式，把它平方就去掉了根号。所以 $(5 + \\sqrt{3})(5 - \\sqrt{3}) = 25 - 3 = 22$，是一个整数。",
+          ],
+          [
+            "$(3 + \\sqrt{2})(3 - \\sqrt{2}) = 9 - 2 = 7$, and $4.41 \\times 1.59 \\approx 7.0$.",
+            "$(3 + \\sqrt{2})(3 - \\sqrt{2}) = 9 - 2 = 7$，而 $4.41 \\times 1.59 \\approx 7.0$。",
+          ],
+          [
+            "Square the whole surd. $(2\\sqrt{3})^{2}$ is $4 \\cdot 3 = 12$, not $4$.",
+            "要把整个根式平方。$(2\\sqrt{3})^{2}$ 是 $4 \\cdot 3 = 12$，不是 $4$。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.int(2, 12);
+          const r = rng.pick(squareFree);
+          const k = rng.int(1, 4);
+          const answer = a * a - k * k * r;
+          const shown = `${coef(k)}\\sqrt{${r}}`;
+          const cross = `${a * k}\\sqrt{${r}}`;
+          return chosenMath(
+            rng,
+            [`Simplify $(${a} + ${shown})(${a} - ${shown})$.`, `化简 $(${a} + ${shown})(${a} - ${shown})$。`],
+            `${answer}`,
+            [
+              [
+                `${a * a + k * k * r}`,
+                "That adds the squares; a sum times a difference gives a difference.",
+                "这是把两个平方相加了；和乘以差得到的是差。",
+              ],
+              [
+                `${(a - k) * (a + k)}`,
+                `That treats $(${shown})^{2}$ as $${k * k}$, dropping the root; it is $${k * k * r}$.`,
+                `这是把 $(${shown})^{2}$ 当成了 $${k * k}$，丢掉了根号；它其实是 $${k * k * r}$。`,
+              ],
+              [
+                `${a * a} - 2 \\cdot ${a} \\cdot ${shown}`,
+                "That is the pattern for a squared difference, not a sum times a difference.",
+                "这是差的平方的公式，不是和乘以差。",
+              ],
+            ],
+            [
+              [
+                ["Spot the pattern", "找出规律"],
+                ["A sum times a difference of the same two terms is a difference of squares:", "同样两项的和乘以差，等于平方差："],
+                [`(${a} + ${shown})(${a} - ${shown}) = ${a}^{2} - (${shown})^{2}`],
+              ],
+              [
+                ["Square each term", "把每项平方"],
+                [
+                  `$(${shown})^{2} = ${k * k} \\cdot ${r} = ${k * k * r}$, so no root is left:`,
+                  `$(${shown})^{2} = ${k * k} \\cdot ${r} = ${k * k * r}$，根号消失了：`,
+                ],
+                [`${a * a} - ${k * k * r} = ${answer}`],
+              ],
+            ],
+            [
+              `Expand all four products: $${a * a} - ${cross} + ${cross} - ${k * k * r}$. The middle terms cancel.`,
+              `把四个乘积都展开：$${a * a} - ${cross} + ${cross} - ${k * k * r}$。中间两项相互抵消。`,
+            ],
+          );
+        },
+        areaGridFigure(
+          ["5", "√3"],
+          ["5", "−√3"],
+          [
+            ["25", "−5√3"],
+            ["5√3", "−3"],
+          ],
+        ),
+      ),
+    ],
   ),
-  ["adding-and-subtracting-radicals", "the-product-rule-for-radicals"],
-  ["8.EE.A.2", "HSN.RN.A.2"],
   [
-    kp(
-      "sums-of-surds-with-square-factors",
-      t("Sums of surds with square factors", "含平方因数的根式之和"),
-      t(
-        "Surds can only be added when they have the same number under the root, so first take every square factor out of each root. Then the terms become like terms and their coefficients add.\n\n$$3\\sqrt{12} + \\sqrt{27} = 3 \\cdot 2\\sqrt{3} + 3\\sqrt{3} = 9\\sqrt{3}$$",
-        "只有被开方数相同的根式才能相加，所以先把每个根式里的平方因数都提出来。这样各项就成为同类项，系数可以相加。\n\n$$3\\sqrt{12} + \\sqrt{27} = 3 \\cdot 2\\sqrt{3} + 3\\sqrt{3} = 9\\sqrt{3}$$",
-      ),
-      (rng) => {
-        const m = rng.pick(squareFree);
-        const [k1, k2] = rng.sample([2, 3, 4, 5], 2) as [number, number];
-        const p = rng.int(1, 4);
-        const q = rng.nonZero(-4, 4);
-        const c = p * k1 + q * k2;
-        const expr = `${coef(p)}\\sqrt{${k1 * k1 * m}}${q < 0 ? " - " : " + "}${coef(Math.abs(q))}\\sqrt{${k2 * k2 * m}}`;
-        const answer = surd(0, c, m);
-        return expressionProblem({
-          prompt: t(`Simplify $${expr}$.`, `化简 $${expr}$。`),
-          answer,
-          radical: true,
-          wrong: [surd(0, p + q, m), surd(0, p * k1 - q * k2, m), surd(0, c, 2 * m), surd(0, p + q, k1 * k1 * m + k2 * k2 * m)],
-          solution: t(
-            `Take the square factors out of each root: $\\sqrt{${k1 * k1 * m}} = ${k1}\\sqrt{${m}}$ and $\\sqrt{${k2 * k2 * m}} = ${k2}\\sqrt{${m}}$. Then combine like surds:${steps(`${expr} = ${p * k1}\\sqrt{${m}} ${q < 0 ? "-" : "+"} ${Math.abs(q * k2)}\\sqrt{${m}} = ${answer}`)}`,
-            `把每个根式里的平方因数提出来：$\\sqrt{${k1 * k1 * m}} = ${k1}\\sqrt{${m}}$，$\\sqrt{${k2 * k2 * m}} = ${k2}\\sqrt{${m}}$。再合并同类根式：${steps(`${expr} = ${p * k1}\\sqrt{${m}} ${q < 0 ? "-" : "+"} ${Math.abs(q * k2)}\\sqrt{${m}} = ${answer}`)}`,
-          ),
-        });
-      },
-    ),
-    kp(
-      "products-of-surds",
-      t("Products of surds", "根式的乘积"),
-      t(
-        "To multiply terms with roots, multiply the numbers in front together and the numbers under the roots together, then simplify the root that results by taking out its square factors.\n\n$$(2\\sqrt{6})(3\\sqrt{10}) = 6\\sqrt{60} = 6 \\cdot 2\\sqrt{15} = 12\\sqrt{15}$$",
-        "相乘含根式的项时，根号外的数与数相乘，根号内的数与数相乘，再把所得根式中的平方因数提出来化简。\n\n$$(2\\sqrt{6})(3\\sqrt{10}) = 6\\sqrt{60} = 6 \\cdot 2\\sqrt{15} = 12\\sqrt{15}$$",
-      ),
-      (rng) => {
-        const [x, y, r] = rng.pick([
-          [6, 10, [2, 15]],
-          [6, 15, [3, 10]],
-          [10, 15, [5, 6]],
-          [2, 6, [2, 3]],
-          [3, 6, [3, 2]],
-          [5, 10, [5, 2]],
-          [2, 14, [2, 7]],
-          [3, 15, [3, 5]],
-          [7, 14, [7, 2]],
-          [6, 21, [3, 14]],
-        ] as const);
-        const [k, m] = r;
-        const a = rng.int(2, 5);
-        const b = rng.int(2, 5);
-        const answer = surd(0, a * b * k, m);
-        return expressionProblem({
-          prompt: t(`Simplify $(${a}\\sqrt{${x}})(${b}\\sqrt{${y}})$.`, `化简 $(${a}\\sqrt{${x}})(${b}\\sqrt{${y}})$。`),
-          answer,
-          radical: true,
-          wrong: [surd(0, a * b, x * y), surd(0, a * b * k * k, m), surd(0, a + b, x * y), surd(0, a * b * k, x + y)],
-          solution: t(
-            `Multiply outside and inside the roots, then simplify:${steps(`(${a}\\sqrt{${x}})(${b}\\sqrt{${y}}) = ${a * b}\\sqrt{${x * y}} = ${a * b} \\cdot ${k}\\sqrt{${m}} = ${answer}`)}`,
-            `根号外与根号内分别相乘，再化简：${steps(`(${a}\\sqrt{${x}})(${b}\\sqrt{${y}}) = ${a * b}\\sqrt{${x * y}} = ${a * b} \\cdot ${k}\\sqrt{${m}} = ${answer}`)}`,
-          ),
-        });
-      },
-    ),
+    "One tile is $3\\sqrt{12}$ cm wide and the next is $\\sqrt{27}$ cm wide. Laid side by side, how wide are they together?",
+    "一块瓷砖宽 $3\\sqrt{12}$ 厘米，旁边一块宽 $\\sqrt{27}$ 厘米。并排放好，一共有多宽？",
+  ],
+  [
+    "$3\\sqrt{12} = 6\\sqrt{3}$ and $\\sqrt{27} = 3\\sqrt{3}$, so the width is $9\\sqrt{3}$ cm.",
+    "$3\\sqrt{12} = 6\\sqrt{3}$，$\\sqrt{27} = 3\\sqrt{3}$，所以总宽是 $9\\sqrt{3}$ 厘米。",
+  ],
+  [
+    "add surds after taking out square factors, multiply surds, and multiply conjugate pairs.",
+    "先提出平方因数再把根式相加，做根式乘法，并计算共轭根式的积。",
   ],
 );
 
 /** evaluatingNumericalExpressionsContainingRadicals evaluates expressions with perfect roots and squared roots. */
-export const evaluatingNumericalExpressionsContainingRadicals = topic(
-  "evaluating-numerical-expressions-containing-radicals",
-  t("Evaluating Numerical Expressions Containing Radicals", "计算含根式的数值表达式"),
-  t(
-    "Evaluate expressions that contain square and cube roots of perfect powers and squares of surds, following the order of operations.",
-    "按运算顺序计算含完全平方数、完全立方数的根式以及根式平方的表达式。",
-  ),
-  ["the-cube-root-of-a-perfect-cube", "squaring-a-square-root"],
-  ["8.EE.A.2"],
-  [
-    kp(
-      "expressions-with-perfect-roots",
-      t("Expressions with perfect roots", "含完全方根的表达式"),
-      t(
-        "A root of a perfect square or a perfect cube is a whole number, so replace each root by its value first. A root acts like a pair of parentheses: work out what is under it before taking the root, and then finish with the order of operations.\n\n$$2\\sqrt{25} - \\sqrt[3]{8} = 2 \\cdot 5 - 2 = 8$$",
-        "完全平方数或完全立方数的方根是整数，所以先把每个根式换成它的值。根号的作用像括号：先算根号里面的部分，再开方，最后按运算顺序完成计算。\n\n$$2\\sqrt{25} - \\sqrt[3]{8} = 2 \\cdot 5 - 2 = 8$$",
-      ),
-      (rng) => {
-        const a = rng.int(2, 12);
-        const b = rng.int(2, 5);
-        const p = rng.int(2, 6);
-        const q = rng.int(2, 4);
-        const inner = rng.int(1, 4);
-        // √(a² ) multiplied, cube root subtracted, and a root of a sum
-        const s = rng.pick([
-          [9, 16, 5],
-          [36, 64, 10],
-          [16, 9, 5],
-          [25, 144, 13],
-          [64, 36, 10],
-        ] as const);
-        const value = p * a - q * b + inner * s[2];
-        const expr = `${p}\\sqrt{${a * a}} - ${q}\\sqrt[3]{${b ** 3}} + ${coef(inner)}\\sqrt{${s[0]} + ${s[1]}}`;
-        return numberProblem({
-          prompt: t(`Evaluate $${expr}$.`, `计算 $${expr}$。`),
-          answer: value,
-          form: "integer",
-          wrong: [
-            p * a - q * b + inner * (Math.sqrt(s[0]) + Math.sqrt(s[1])),
-            p * a * a - q * b + inner * s[2],
-            p * a - q * b * b + inner * s[2],
+export const evaluatingNumericalExpressionsContainingRadicals = withIntro(
+  topic(
+    "evaluating-numerical-expressions-containing-radicals",
+    t("Evaluating Numerical Expressions Containing Radicals", "计算含根式的数值表达式"),
+    t(
+      "Evaluate expressions that contain square and cube roots of perfect powers and squares of surds, following the order of operations.",
+      "按运算顺序计算含完全平方数、完全立方数的根式以及根式平方的表达式。",
+    ),
+    ["the-cube-root-of-a-perfect-cube", "squaring-a-square-root"],
+    ["8.EE.A.2"],
+    [
+      lesson(
+        "expressions-with-perfect-roots",
+        ["Expressions with perfect roots", "含完全方根的表达式"],
+        [
+          [
+            "A root of a perfect square or a perfect cube is a whole number, so replace each root by its value first. A root acts like a pair of parentheses: work out what is under it before taking the root. Then finish with the order of operations: $2\\sqrt{25} - \\sqrt[3]{8} = 2 \\cdot 5 - 2 = 8$.",
+            "完全平方数或完全立方数的方根是整数，所以先把每个根式换成它的值。根号的作用像括号：先算根号里面的部分，再开方。最后按运算顺序算完：$2\\sqrt{25} - \\sqrt[3]{8} = 2 \\cdot 5 - 2 = 8$。",
           ],
-          solution: t(
-            `Work out each root: $\\sqrt{${a * a}} = ${a}$, $\\sqrt[3]{${b ** 3}} = ${b}$ and $\\sqrt{${s[0]} + ${s[1]}} = \\sqrt{${s[0] + s[1]}} = ${s[2]}$. Then${steps(`${p} \\cdot ${a} - ${q} \\cdot ${b} + ${inner === 1 ? s[2] : `${inner} \\cdot ${s[2]}`} = ${value}`)}The root of a sum is not the sum of the roots.`,
-            `先求每个根式：$\\sqrt{${a * a}} = ${a}$，$\\sqrt[3]{${b ** 3}} = ${b}$，$\\sqrt{${s[0]} + ${s[1]}} = \\sqrt{${s[0] + s[1]}} = ${s[2]}$。于是${steps(`${p} \\cdot ${a} - ${q} \\cdot ${b} + ${inner === 1 ? s[2] : `${inner} \\cdot ${s[2]}`} = ${value}`)}和的平方根不等于平方根的和。`,
-          ),
-        });
-      },
-    ),
-    kp(
-      "expressions-with-squared-surds",
-      t("Expressions with squared surds", "含根式平方的表达式"),
-      t(
-        "Squaring a term with a root squares both factors: $(a\\sqrt{m})^2 = a^2 m$, so the root disappears. A product of two equal roots works the same way, since $\\sqrt{m} \\cdot \\sqrt{m} = m$. Replace these by whole numbers, then evaluate as usual.\n\n$$(3\\sqrt{2})^2 - \\sqrt{5}\\sqrt{5} = 18 - 5 = 13$$",
-        "把含根式的项平方，就是把两个因数分别平方：$(a\\sqrt{m})^2 = a^2 m$，根号随之消失。两个相同根式相乘也一样，因为 $\\sqrt{m} \\cdot \\sqrt{m} = m$。把这些换成整数，再照常计算。\n\n$$(3\\sqrt{2})^2 - \\sqrt{5}\\sqrt{5} = 18 - 5 = 13$$",
+          ["Raise back: $5^{2} = 25$ and $2^{3} = 8$, so both roots are right.", "乘方回去：$5^{2} = 25$，$2^{3} = 8$，两个方根都对。"],
+          ["A cube root undoes a cube. $\\sqrt[3]{8}$ is $2$, not $4$.", "立方根抵消立方。$\\sqrt[3]{8}$ 是 $2$，不是 $4$。"],
+        ],
+        (rng) => {
+          const a = rng.int(2, 12);
+          const b = rng.int(2, 5);
+          const p = rng.int(2, 6);
+          const q = rng.int(2, 4);
+          const inner = rng.int(1, 4);
+          const [s0, s1, s2] = rng.pick([
+            [9, 16, 5],
+            [36, 64, 10],
+            [16, 9, 5],
+            [25, 144, 13],
+            [64, 36, 10],
+          ] as const);
+          const value = p * a - q * b + inner * s2;
+          const expr = `${p}\\sqrt{${a * a}} - ${q}\\sqrt[3]{${b ** 3}} + ${coef(inner)}\\sqrt{${s0} + ${s1}}`;
+          return valued(
+            [`Evaluate $${expr}$.`, `计算 $${expr}$。`],
+            value,
+            [
+              [
+                ["Work out each root", "求出每个根式"],
+                ["Add under the last root before taking it:", "最后一个根号下先求和，再开方："],
+                [`\\sqrt{${a * a}} = ${a}`, `\\sqrt[3]{${b ** 3}} = ${b}`, `\\sqrt{${s0} + ${s1}} = \\sqrt{${s0 + s1}} = ${s2}`],
+              ],
+              [
+                ["Use the order of operations", "按运算顺序计算"],
+                ["Multiply first, then add and subtract from left to right:", "先乘，再从左到右加减："],
+                [`${p} \\cdot ${a} - ${q} \\cdot ${b} + ${inner === 1 ? s2 : `${inner} \\cdot ${s2}`} = ${value}`],
+              ],
+            ],
+            [
+              `Raise back: $${a}^{2} = ${a * a}$, $${b}^{3} = ${b ** 3}$ and $${s2}^{2} = ${s0 + s1}$.`,
+              `乘方回去：$${a}^{2} = ${a * a}$，$${b}^{3} = ${b ** 3}$，$${s2}^{2} = ${s0 + s1}$。`,
+            ],
+            [
+              [
+                p * a - q * b + inner * (Math.sqrt(s0) + Math.sqrt(s1)),
+                "That takes the root of each number in the sum; add under the root first.",
+                "这是对和里的每个数分别开方了；要先把根号下的数相加。",
+              ],
+              [
+                p * a * a - q * b + inner * s2,
+                `That leaves $\\sqrt{${a * a}}$ as $${a * a}$; take its root.`,
+                `这是把 $\\sqrt{${a * a}}$ 当成了 $${a * a}$；要开方。`,
+              ],
+              [
+                p * a - q * b * b + inner * s2,
+                `That uses $${b * b}$ for $\\sqrt[3]{${b ** 3}}$; the cube root is $${b}$.`,
+                `这是把 $\\sqrt[3]{${b ** 3}}$ 当成了 $${b * b}$；立方根是 $${b}$。`,
+              ],
+            ],
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "10",
+              pieces: [
+                { size: 8, text: "8" },
+                { size: 2, text: "2", dashed: true },
+              ],
+            },
+          ],
+          ["2√25 is 10; taking away ∛8, which is 2, leaves 8.", "2√25 是 10，减去 ∛8 也就是 2，剩下 8。"],
+        ),
       ),
-      (rng) => {
-        const a = rng.int(2, 5);
-        const m = rng.pick(squareFree);
-        const n = rng.pick(squareFree.filter((x) => x !== m));
-        const b = rng.int(2, 4);
-        const value = a * a * m - b * n;
-        const expr = `(${a}\\sqrt{${m}})^2 - ${b}\\sqrt{${n}} \\cdot \\sqrt{${n}}`;
-        return numberProblem({
-          prompt: t(`Evaluate $${expr}$.`, `计算 $${expr}$。`),
-          answer: value,
-          form: "integer",
-          wrong: [a * m - b * n, a * a * m - b * b * n, 2 * a * m - b * n, a * a * m * m - b * n],
-          solution: t(
-            `Square both factors of $${a}\\sqrt{${m}}$ and multiply the equal roots:${steps(`(${a}\\sqrt{${m}})^2 = ${a * a} \\cdot ${m} = ${a * a * m}`, `${b}\\sqrt{${n}} \\cdot \\sqrt{${n}} = ${b} \\cdot ${n} = ${b * n}`)}So the value is $${a * a * m} - ${b * n} = ${value}$.`,
-            `把 $${a}\\sqrt{${m}}$ 的两个因数分别平方，并把相同根式相乘：${steps(`(${a}\\sqrt{${m}})^2 = ${a * a} \\cdot ${m} = ${a * a * m}`, `${b}\\sqrt{${n}} \\cdot \\sqrt{${n}} = ${b} \\cdot ${n} = ${b * n}`)}所以结果是 $${a * a * m} - ${b * n} = ${value}$。`,
-          ),
-        });
-      },
-    ),
+      lesson(
+        "expressions-with-squared-surds",
+        ["Expressions with squared surds", "含根式平方的表达式"],
+        [
+          [
+            "Squaring a term with a root squares both factors: $(a\\sqrt{m})^{2} = a^{2} m$, so the root disappears. A product of two equal roots works the same way, since $\\sqrt{m} \\cdot \\sqrt{m} = m$. Replace these by whole numbers, then evaluate as usual.",
+            "把含根式的项平方，就是把两个因数分别平方：$(a\\sqrt{m})^{2} = a^{2} m$，根号随之消失。两个相同根式相乘也一样，因为 $\\sqrt{m} \\cdot \\sqrt{m} = m$。把这些换成整数，再照常计算。",
+          ],
+          [
+            "$(3\\sqrt{2})^{2} = 3\\sqrt{2} \\cdot 3\\sqrt{2} = 9 \\cdot 2 = 18$, written out as a product.",
+            "写成乘积：$(3\\sqrt{2})^{2} = 3\\sqrt{2} \\cdot 3\\sqrt{2} = 9 \\cdot 2 = 18$。",
+          ],
+          [
+            "Square the number in front as well. $(3\\sqrt{2})^{2}$ is $18$, not $6$.",
+            "根号前面的数也要平方。$(3\\sqrt{2})^{2}$ 是 $18$，不是 $6$。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.int(2, 5);
+          const m = rng.pick(squareFree);
+          const n = rng.pick(squareFree.filter((x) => x !== m));
+          const b = rng.int(2, 4);
+          const value = a * a * m - b * n;
+          const expr = `(${a}\\sqrt{${m}})^2 - ${b}\\sqrt{${n}} \\cdot \\sqrt{${n}}`;
+          return valued(
+            [`Evaluate $${expr}$.`, `计算 $${expr}$。`],
+            value,
+            [
+              [
+                ["Square the term", "把这一项平方"],
+                [`Square both factors of $${a}\\sqrt{${m}}$:`, `把 $${a}\\sqrt{${m}}$ 的两个因数分别平方：`],
+                [`(${a}\\sqrt{${m}})^2 = ${a * a} \\cdot ${m} = ${a * a * m}`],
+              ],
+              [
+                ["Multiply the equal roots", "相同根式相乘"],
+                [`$\\sqrt{${n}} \\cdot \\sqrt{${n}} = ${n}$, so`, `$\\sqrt{${n}} \\cdot \\sqrt{${n}} = ${n}$，所以`],
+                [`${b}\\sqrt{${n}} \\cdot \\sqrt{${n}} = ${b * n}`, `${a * a * m} - ${b * n} = ${value}`],
+              ],
+            ],
+            [
+              `Undo the square: $${a * a * m} = ${a}^{2} \\cdot ${m}$, so $\\sqrt{${a * a * m}} = ${a}\\sqrt{${m}}$.`,
+              `把平方还原：$${a * a * m} = ${a}^{2} \\cdot ${m}$，所以 $\\sqrt{${a * a * m}} = ${a}\\sqrt{${m}}$。`,
+            ],
+            [
+              [a * m - b * n, `That leaves $${a}$ unsquared; square both factors.`, `这是没有把 $${a}$ 平方；两个因数都要平方。`],
+              [
+                a * a * m - b * b * n,
+                `That squares $${b}$ too; only $\\sqrt{${n}}$ appears twice.`,
+                `这是把 $${b}$ 也平方了；出现两次的只有 $\\sqrt{${n}}$。`,
+              ],
+              [2 * a * m - b * n, "That doubles the term instead of squaring it.", "这是把这一项乘以 2，而不是平方。"],
+              [
+                a * a * m * m - b * n,
+                `That squares $${m}$; $(\\sqrt{${m}})^{2}$ is just $${m}$.`,
+                `这是把 $${m}$ 平方了；$(\\sqrt{${m}})^{2}$ 就是 $${m}$。`,
+              ],
+            ],
+          );
+        },
+        areaGridFigure(["3√2"], ["3√2"], [["18"]]),
+      ),
+      lesson(
+        "a-root-over-a-whole-expression",
+        ["A root over a whole expression", "覆盖整个式子的根号"],
+        [
+          [
+            "The bar of a root groups everything beneath it. So work out the whole expression under the bar first, and only then take the root: $\\sqrt{9 + 16} = \\sqrt{25} = 5$.",
+            "根号的横线把下面的内容都括在一起。所以先算出横线下的整个式子，再开方：$\\sqrt{9 + 16} = \\sqrt{25} = 5$。",
+          ],
+          ["$5^{2} = 25 = 9 + 16$, so the root is right.", "$5^{2} = 25 = 9 + 16$，所以开方正确。"],
+          [
+            "The root of a sum is not the sum of the roots. $\\sqrt{9 + 16}$ is $5$, not $3 + 4 = 7$.",
+            "和的平方根不等于平方根的和。$\\sqrt{9 + 16}$ 是 $5$，不是 $3 + 4 = 7$。",
+          ],
+        ],
+        (rng) => {
+          const [a, b, c] = rng.pick<[number, number, number]>([
+            [3, 4, 5],
+            [6, 8, 10],
+            [5, 12, 13],
+            [8, 15, 17],
+            [9, 12, 15],
+            [7, 24, 25],
+            [20, 21, 29],
+            [12, 16, 20],
+            [15, 20, 25],
+            [10, 24, 26],
+          ]);
+          const k = rng.int(2, 7);
+          const add = rng.int(1, 30);
+          const value = k * c + add;
+          return valued(
+            [`Evaluate $${k}\\sqrt{${a * a} + ${b * b}} + ${add}$.`, `计算 $${k}\\sqrt{${a * a} + ${b * b}} + ${add}$。`],
+            value,
+            [
+              [
+                ["Work under the bar", "先算横线下"],
+                ["The bar groups the sum, so add first and then take the root:", "横线把和括在一起，所以先相加，再开方："],
+                [`\\sqrt{${a * a} + ${b * b}} = \\sqrt{${c * c}} = ${c}`],
+              ],
+              [["Finish", "算完"], ["Multiply, then add:", "先乘，再加："], [`${k} \\cdot ${c} + ${add} = ${value}`]],
+            ],
+            [
+              `$${c}^{2} = ${c * c} = ${a * a} + ${b * b}$, so the root is right.`,
+              `$${c}^{2} = ${c * c} = ${a * a} + ${b * b}$，所以开方正确。`,
+            ],
+            [
+              [
+                k * (a + b) + add,
+                "That takes the root of each square separately; add under the bar first.",
+                "这是对两个平方数分别开方了；要先把横线下的数相加。",
+              ],
+              [k * c, `That forgets to add $${add}$ at the end.`, `这是最后忘了加 $${add}$。`],
+              [c + add, `That leaves out the factor $${k}$ in front of the root.`, `这是漏掉了根号前的因数 $${k}$。`],
+            ],
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "25",
+              pieces: [
+                { size: 9, text: "9" },
+                { size: 16, text: "16", lit: true },
+              ],
+            },
+          ],
+          ["9 and 16 sit under one root; their sum 25 has the root 5.", "9 和 16 在同一个根号下；它们的和 25 开方得 5。"],
+        ),
+      ),
+    ],
+  ),
+  [
+    "A puzzle on the class board says: work out $2\\sqrt{25} - \\sqrt[3]{8}$. Two friends get different answers, and both are sure.",
+    "班级黑板上有一道题：计算 $2\\sqrt{25} - \\sqrt[3]{8}$。两个朋友算出的答案不一样，都觉得自己对。",
   ],
+  [
+    "$\\sqrt{25} = 5$ and $\\sqrt[3]{8} = 2$, so the value is $10 - 2 = 8$.",
+    "$\\sqrt{25} = 5$，$\\sqrt[3]{8} = 2$，所以结果是 $10 - 2 = 8$。",
+  ],
+  ["evaluate perfect roots, squared surds, and roots over a whole expression.", "计算完全方根、根式的平方，以及覆盖整个式子的根号。"],
 );
 
 /** applyingTheDistributiveLawToRadicalExpressions expands products of sums containing surds. */

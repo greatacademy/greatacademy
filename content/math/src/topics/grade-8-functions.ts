@@ -3,8 +3,12 @@ import { same, t } from "@ga/content";
 import { linear, num, type PlaneMark, plane, Q } from "@ga/subject-math";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
-import { article, choiceProblem, numberProblem, pointLatex, steps, verdictChoice } from "../problems.ts";
+import { article, pointLatex, steps, verdictChoice } from "../problems.ts";
+import type { Pair } from "./early-grades-more-kit.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
+import { chosen, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { tableFigure } from "./grade-8-kit.ts";
+import { lineFigure } from "./upper-grades-kit.ts";
 
 // 8th Grade Math, functions: describing a relationship from its graph, telling linear functions from nonlinear ones,
 // interpreting the rate of change and initial value, and comparing functions given in different ways.
@@ -442,65 +446,262 @@ function twoReadings(rng: Rng) {
   return { s, rate, start, x1, x2, y1, y2, given };
 }
 
+/** paren writes a number in parentheses when it is negative, for use after an operation sign. */
+const paren = (n: number) => (n < 0 ? `(${n})` : `${n}`);
+
+/** candleLine draws the candle's two readings on a time line, with the step between them or back to the start. */
+const candleLine = (back: boolean) =>
+  lineFigure(
+    {
+      lo: 0,
+      hi: 6,
+      step: 1,
+      labels: [0, 2, 5, 6],
+      marks: [...(back ? [{ at: 0, text: "?", result: true }] : []), { at: 2, text: "21 cm" }, { at: 5, text: "15 cm" }],
+      jumps: [back ? [2, 0] : [2, 5]],
+    },
+    back
+      ? [
+          "A time line in hours with 21 cm at 2 and 15 cm at 5, and a jump back from 2 to an unknown height at 0.",
+          "以小时为单位的时间线，2 处标 21 厘米，5 处标 15 厘米，从 2 跳回 0，0 处高度未知。",
+        ]
+      : [
+          "A time line in hours with 21 cm at 2 and 15 cm at 5, and a jump from 2 to 5.",
+          "以小时为单位的时间线，2 处标 21 厘米，5 处标 15 厘米，从 2 跳到 5。",
+        ],
+  );
+
 /** interpretingRateOfChangeAndInitialValueInContext finds the rate and the starting value of a linear situation. */
-export const interpretingRateOfChangeAndInitialValueInContext = topic(
-  "interpreting-rate-of-change-and-initial-value-in-context",
-  t("Interpreting Rate of Change and Initial Value in Context", "在情境中理解变化率和初始值"),
-  t(
-    "For a quantity that changes at a constant rate, the rate of change is the change in the quantity divided by the change in time, with units such as dollars per week; it is negative when the quantity decreases. The initial value is the quantity at time 0.",
-    "对于以恒定速率变化的量，变化率等于这个量的变化量除以时间的变化量，单位如“美元每周”；量减少时变化率为负。初始值是时间为 0 时这个量的值。",
+export const interpretingRateOfChangeAndInitialValueInContext = withIntro(
+  topic(
+    "interpreting-rate-of-change-and-initial-value-in-context",
+    t("Interpreting Rate of Change and Initial Value in Context", "在情境中理解变化率和初始值"),
+    t(
+      "For a quantity that changes at a constant rate, the rate of change is the change in the quantity divided by the change in time, with units such as dollars per week; it is negative when the quantity decreases. The initial value is the quantity at time 0.",
+      "对于以恒定速率变化的量，变化率等于这个量的变化量除以时间的变化量，单位如“美元每周”；量减少时变化率为负。初始值是时间为 0 时这个量的值。",
+    ),
+    ["modeling-with-linear-functions"],
+    ["8.F.B.4"],
+    [
+      lesson(
+        "the-rate-of-change-from-two-readings",
+        ["The rate of change from two readings", "由两次读数求变化率"],
+        [
+          [
+            "The rate of change is the change in the quantity divided by the change in time. A candle is $21$ cm tall after $2$ hours and $15$ cm tall after $5$ hours. Its rate is $\\frac{15 - 21}{5 - 2} = \\frac{-6}{3} = -2$ centimeters per hour.",
+            "变化率等于量的变化量除以时间的变化量。一支蜡烛点燃 $2$ 小时后高 $21$ 厘米，$5$ 小时后高 $15$ 厘米。它的变化率是 $\\frac{15 - 21}{5 - 2} = \\frac{-6}{3} = -2$ 厘米每小时。",
+          ],
+          [
+            "Going on from $21$ cm for $3$ hours at $-2$ cm per hour gives $21 - 6 = 15$ cm, the second reading.",
+            "从 $21$ 厘米出发，以每小时 $-2$ 厘米变化 $3$ 小时，得 $21 - 6 = 15$ 厘米，正是第二次读数。",
+          ],
+          ["Keep the sign. The candle gets shorter, so its rate is negative.", "要保留符号。蜡烛越来越短，所以变化率是负数。"],
+        ],
+        (rng) => {
+          const { s, rate, x1, x2, y1, y2, given } = twoReadings(rng);
+          return valued(
+            [`${given.en} What is the rate of change, in ${s.rate.en}?`, `${given["zh-CN"]}变化率是多少（单位：${s.rate["zh-CN"]}）？`],
+            rate,
+            [
+              [
+                ["Find the changes", "求变化量"],
+                [
+                  `The quantity changes by $${y2} - ${y1} = ${y2 - y1}$ while the ${s.input.en} changes by $${x2} - ${x1} = ${x2 - x1}$.`,
+                  `量变化了 $${y2} - ${y1} = ${y2 - y1}$，同时${s.input["zh-CN"]}变化了 $${x2} - ${x1} = ${x2 - x1}$。`,
+                ],
+              ],
+              [
+                ["Divide", "相除"],
+                [`Divide the change in the quantity by the change in ${s.input.en}:`, `用量的变化量除以${s.input["zh-CN"]}的变化量：`],
+                [`\\frac{${y2 - y1}}{${x2 - x1}} = ${rate}`],
+              ],
+            ],
+            [
+              `Going on from the first reading: $${y1} + ${x2 - x1} \\cdot ${paren(rate)} = ${y2}$, the second reading.`,
+              `从第一次读数往后推：$${y1} + ${x2 - x1} \\cdot ${paren(rate)} = ${y2}$，正是第二次读数。`,
+            ],
+            [
+              s.sign < 0
+                ? [
+                    -rate,
+                    "That drops the minus sign, but the quantity falls, so the rate is negative.",
+                    "这是丢了负号，但量在减少，所以变化率是负数。",
+                  ]
+                : [
+                    -rate,
+                    "That adds a minus sign, but the quantity grows, so the rate is positive.",
+                    "这是多了负号，但量在增加，所以变化率是正数。",
+                  ],
+              [
+                y2 - y1,
+                `That is the change in the quantity; divide it by the change in ${s.input.en}.`,
+                `这是量的变化量；还要除以${s.input["zh-CN"]}的变化量。`,
+              ],
+              [
+                Q.of(x2 - x1, y2 - y1),
+                `That divides the other way, ${s.input.en} over the quantity.`,
+                `这是除反了，用${s.input["zh-CN"]}除以量。`,
+              ],
+            ],
+          );
+        },
+        candleLine(false),
+      ),
+      lesson(
+        "the-initial-value-from-two-readings",
+        ["The initial value from two readings", "由两次读数求初始值"],
+        [
+          [
+            "The initial value is the quantity at time $0$. Work back to it from a reading, using the rate. The candle loses $2$ cm per hour, so $2$ hours before the first reading it was $2 \\cdot 2 = 4$ cm taller. It was $21 + 4 = 25$ cm when it was lit.",
+            "初始值是时间为 $0$ 时的量。用变化率从某次读数倒推回去。蜡烛每小时变短 $2$ 厘米，所以在第一次读数前 $2$ 小时，它高出 $2 \\cdot 2 = 4$ 厘米。刚点燃时高 $21 + 4 = 25$ 厘米。",
+          ],
+          [
+            "Going forward from $25$ cm for $5$ hours gives $25 - 5 \\cdot 2 = 15$ cm, the second reading.",
+            "从 $25$ 厘米往后推 $5$ 小时，得 $25 - 5 \\cdot 2 = 15$ 厘米，正是第二次读数。",
+          ],
+          [
+            "Go back all the way to time $0$. One hour back gives $23$ cm, which is not the starting height.",
+            "要一直倒推到时间 $0$。只往回推一小时得 $23$ 厘米，那不是起始高度。",
+          ],
+        ],
+        (rng) => {
+          const { s, rate, start, x1, x2, y1, y2, given } = twoReadings(rng);
+          return valued(
+            [`${given.en} ${s.start.en}`, `${given["zh-CN"]}${s.start["zh-CN"]}`],
+            start,
+            [
+              [
+                ["Find the rate", "求变化率"],
+                [`The rate of change is ${s.rate.en}:`, `变化率（${s.rate["zh-CN"]}）是：`],
+                [`\\frac{${y2} - ${y1}}{${x2} - ${x1}} = ${rate}`],
+              ],
+              [
+                ["Work back to zero", "倒推到零"],
+                [`Undo $${x1}$ steps of the rate from the first reading:`, `从第一次读数撤回 $${x1}$ 步变化：`],
+                [`${y1} - ${x1} \\cdot ${paren(rate)} = ${start}`],
+              ],
+            ],
+            [
+              `Going forward from $${start}$: $${start} + ${x2} \\cdot ${paren(rate)} = ${y2}$, the second reading.`,
+              `从 $${start}$ 往后推：$${start} + ${x2} \\cdot ${paren(rate)} = ${y2}$，正是第二次读数。`,
+            ],
+            [
+              [
+                y1 - rate,
+                `That goes back one step only, not all the way to ${s.input.en} $0$.`,
+                `这是只往回推了一步，没有推到${s.input["zh-CN"]}为 $0$。`,
+              ],
+              [
+                y1 + rate * x1,
+                "That applies the rate the wrong way; going back undoes the change.",
+                "这是把变化率用反了；倒推要撤回变化。",
+              ],
+              [rate, "That is the rate of change, not the starting value.", "这是变化率，不是起始值。"],
+              [
+                y1,
+                `That is the first reading, taken at ${s.input.en} $${x1}$, not $0$.`,
+                `这是第一次读数，是${s.input["zh-CN"]}为 $${x1}$ 时的，不是 $0$ 时的。`,
+              ],
+            ],
+          );
+        },
+        candleLine(true),
+      ),
+      lesson(
+        "when-a-linear-model-reaches-zero",
+        ["When a linear model reaches zero", "线性模型何时变为零"],
+        [
+          [
+            "Two readings fix the whole linear model. To find when the quantity runs out, divide the amount left at a reading by the rate. Then add the time of that reading. A tank holds $60$ liters at $4$ minutes and $40$ liters at $9$ minutes. It loses $4$ liters per minute, so the $40$ liters last $10$ more minutes: it is empty at $9 + 10 = 19$ minutes.",
+            "两次读数就确定了整个线性模型。要知道这个量何时用完，用某次读数时剩下的量除以变化率，再加上那次读数的时间。一个水箱 $4$ 分钟时有 $60$ 升，$9$ 分钟时有 $40$ 升。它每分钟少 $4$ 升，所以这 $40$ 升还能放 $10$ 分钟：在 $9 + 10 = 19$ 分钟时放空。",
+          ],
+          ["At $19$ minutes the tank holds $40 - 10 \\cdot 4 = 0$ liters.", "在 $19$ 分钟时，水箱里有 $40 - 10 \\cdot 4 = 0$ 升。"],
+          [
+            "Add the time of the reading. The $10$ minutes are counted from the reading, not from the start.",
+            "要加上读数的时间。这 $10$ 分钟是从那次读数算起的，不是从开始算起的。",
+          ],
+        ],
+        (rng) => {
+          const rate = rng.int(2, 12);
+          const answer = rng.int(15, 60);
+          const t1 = rng.int(2, 6);
+          const t2 = t1 + rng.int(2, 8);
+          const v1 = rate * (answer - t1);
+          const v2 = rate * (answer - t2);
+          return valued(
+            [
+              `A tank drains at a steady rate. After $${t1}$ minutes it holds $${v1}$ liters, and after $${t2}$ minutes it holds $${v2}$ liters. How many minutes after the start is it empty?`,
+              `一个水箱匀速放水。$${t1}$ 分钟后还有 $${v1}$ 升，$${t2}$ 分钟后还有 $${v2}$ 升。开始后多少分钟水箱放空？`,
+            ],
+            answer,
+            [
+              [
+                ["Find the rate", "求变化率"],
+                ["The tank loses this many liters per minute:", "水箱每分钟减少的升数："],
+                [`(${v1} - ${v2}) \\div ${t2 - t1} = ${rate}`],
+              ],
+              [
+                ["Time left after the reading", "读数之后还能放多久"],
+                [`The $${v2}$ liters left at $${t2}$ minutes last:`, `$${t2}$ 分钟时剩下的 $${v2}$ 升还能放：`],
+                [`${v2} \\div ${rate} = ${answer - t2}`],
+              ],
+              [
+                ["Add the time of the reading", "加上读数的时间"],
+                ["Count from the start:", "从开始算起："],
+                [`${t2} + ${answer - t2} = ${answer}`],
+              ],
+            ],
+            [
+              `At $${answer}$ minutes the tank holds $${v2} - ${answer - t2} \\cdot ${rate} = 0$ liters.`,
+              `在 $${answer}$ 分钟时，水箱里有 $${v2} - ${answer - t2} \\cdot ${rate} = 0$ 升。`,
+            ],
+            [
+              [
+                answer - t2,
+                `That is the time after the $${t2}$-minute reading, not since the start.`,
+                `这是从 $${t2}$ 分钟那次读数算起的时间，不是从开始算起的。`,
+              ],
+              [
+                answer - t1,
+                `That is the time after the $${t1}$-minute reading, not since the start.`,
+                `这是从 $${t1}$ 分钟那次读数算起的时间，不是从开始算起的。`,
+              ],
+              [rate, "That is the rate in liters per minute, not a time.", "这是每分钟的升数，不是时间。"],
+            ],
+          );
+        },
+        lineFigure(
+          {
+            lo: 0,
+            hi: 20,
+            step: 1,
+            labels: [0, 4, 9, 19],
+            marks: [
+              { at: 4, text: "60 L" },
+              { at: 9, text: "40 L" },
+              { at: 19, text: "0 L", result: true },
+            ],
+            jumps: [[9, 19]],
+          },
+          [
+            "A time line in minutes with 60 liters at 4, 40 liters at 9, and a jump from 9 to 0 liters at 19.",
+            "以分钟为单位的时间线，4 处标 60 升，9 处标 40 升，从 9 跳到 19，19 处为 0 升。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["modeling-with-linear-functions"],
-  ["8.F.B.4"],
   [
-    {
-      id: "the-rate-of-change-from-two-readings",
-      title: t("The rate of change from two readings", "由两次读数求变化率"),
-      explanation: t(
-        "A candle is $21$ cm tall after $2$ hours and $15$ cm tall after $5$ hours. The rate of change is $\\frac{15 - 21}{5 - 2} = \\frac{-6}{3} = -2$ centimeters per hour. The sign matters: the candle gets shorter, so the rate is negative.",
-        "一支蜡烛点燃 $2$ 小时后高 $21$ 厘米，$5$ 小时后高 $15$ 厘米。变化率为 $\\frac{15 - 21}{5 - 2} = \\frac{-6}{3} = -2$ 厘米每小时。符号很重要：蜡烛越来越短，所以变化率是负数。",
-      ),
-      generate(rng) {
-        const { s, rate, x1, x2, y1, y2, given } = twoReadings(rng);
-        return numberProblem({
-          prompt: t(
-            `${given.en} What is the rate of change, in ${s.rate.en}?`,
-            `${given["zh-CN"]}变化率是多少（单位：${s.rate["zh-CN"]}）？`,
-          ),
-          answer: rate,
-          form: "integer",
-          // The sign dropped, the change in the quantity alone, and the quotient upside down.
-          wrong: [-rate, y2 - y1, Q.of(x2 - x1, y2 - y1)],
-          solution: t(
-            `Divide the change in the quantity by the change in ${s.input.en}:${steps(`\\frac{${y2} - ${y1}}{${x2} - ${x1}} = ${x2 - x1 === 1 ? "" : `\\frac{${y2 - y1}}{${x2 - x1}} = `}${rate}`)}The rate of change is $${rate}$ ${s.rate.en}.`,
-            `用量的变化量除以${s.input["zh-CN"]}的变化量：${steps(`\\frac{${y2} - ${y1}}{${x2} - ${x1}} = ${x2 - x1 === 1 ? "" : `\\frac{${y2 - y1}}{${x2 - x1}} = `}${rate}`)}变化率是 $${rate}$ ${s.rate["zh-CN"]}。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "the-initial-value-from-two-readings",
-      title: t("The initial value from two readings", "由两次读数求初始值"),
-      explanation: t(
-        "For the same candle, the rate is $-2$ cm per hour, so $2$ hours before the first reading it was $2 \\cdot 2 = 4$ cm taller: $21 + 4 = 25$ cm when it was lit. Going back one hour only, or adding $-4$ instead of subtracting it, are the usual slips.",
-        "还是这支蜡烛，变化率是 $-2$ 厘米每小时，所以在第一次读数前 $2$ 小时，它高出 $2 \\cdot 2 = 4$ 厘米：刚点燃时高 $21 + 4 = 25$ 厘米。只往回推一小时，或者加上 $-4$ 而不是减去它，都是常见的错误。",
-      ),
-      generate(rng) {
-        const { s, rate, start, x1, x2, y1, y2, given } = twoReadings(rng);
-        if (x1 === 1) return this.generate(rng);
-        return numberProblem({
-          prompt: t(`${given.en} ${s.start.en}`, `${given["zh-CN"]}${s.start["zh-CN"]}`),
-          answer: start,
-          form: "integer",
-          // Going back one step only, the rate applied the wrong way, and the rate itself.
-          wrong: [y1 - rate, y1 + rate * x1, rate],
-          solution: t(
-            `The rate of change is $\\frac{${y2} - ${y1}}{${x2} - ${x1}} = ${rate}$ ${s.rate.en}. Work back from the first reading to ${s.input.en} $0$:${steps(`${y1} - ${x1} \\cdot ${rate < 0 ? `(${rate})` : rate} = ${start}`)}`,
-            `变化率为 $\\frac{${y2} - ${y1}}{${x2} - ${x1}} = ${rate}$ ${s.rate["zh-CN"]}。从第一次读数倒推到${s.input["zh-CN"]}为 $0$：${steps(`${y1} - ${x1} \\cdot ${rate < 0 ? `(${rate})` : rate} = ${start}`)}`,
-          ),
-        });
-      },
-    },
+    "A candle is $21$ cm tall after $2$ hours and $15$ cm tall after $5$ hours. How fast does it burn, and how tall was it when it was lit?",
+    "一支蜡烛点燃 $2$ 小时后高 $21$ 厘米，$5$ 小时后高 $15$ 厘米。它烧得多快？刚点燃时有多高？",
+  ],
+  [
+    "It loses $6$ cm in $3$ hours, $2$ cm per hour, so it started at $21 + 2 \\cdot 2 = 25$ cm.",
+    "它 $3$ 小时变短 $6$ 厘米，每小时 $2$ 厘米，所以起始高度是 $21 + 2 \\cdot 2 = 25$ 厘米。",
+  ],
+  [
+    "find the rate of change and the initial value from two readings, and tell when a quantity runs out.",
+    "由两次读数求变化率和初始值，并判断一个量何时用完。",
   ],
 );
 
@@ -512,89 +713,284 @@ const tableOf = (m: number, b: number, xs: readonly number[]) =>
   `\\begin{array}{c|ccc} x & ${xs.join(" & ")} \\\\ \\hline y & ${xs.map((x) => num(m * x + b)).join(" & ")} \\end{array}`;
 
 /** comparingPropertiesOfTwoFunctionsRepresentedDifferently compares rates of change and initial values across representations. */
-export const comparingPropertiesOfTwoFunctionsRepresentedDifferently = topic(
-  "comparing-properties-of-two-functions-represented-differently",
-  t("Comparing Properties of Two Functions Represented Differently", "比较以不同方式表示的两个函数的性质"),
-  t(
-    "To compare two linear functions given in different ways, such as an equation and a table, find the same property of each: the rate of change from the coefficient or from the differences, and the initial value from the constant term or by working back to x = 0.",
-    "比较以不同方式（如方程和表格）给出的两个一次函数时，先分别求出各自的同一性质：变化率可由系数或差求得，初始值可由常数项或倒推到 x = 0 求得。",
+export const comparingPropertiesOfTwoFunctionsRepresentedDifferently = withIntro(
+  topic(
+    "comparing-properties-of-two-functions-represented-differently",
+    t("Comparing Properties of Two Functions Represented Differently", "比较以不同方式表示的两个函数的性质"),
+    t(
+      "To compare two linear functions given in different ways, such as an equation and a table, find the same property of each: the rate of change from the coefficient or from the differences, and the initial value from the constant term or by working back to x = 0.",
+      "比较以不同方式（如方程和表格）给出的两个一次函数时，先分别求出各自的同一性质：变化率可由系数或差求得，初始值可由常数项或倒推到 x = 0 求得。",
+    ),
+    ["interpreting-rate-of-change-and-initial-value-in-context", "representations-of-functions"],
+    ["8.F.A.2"],
+    [
+      lesson(
+        "comparing-rates-of-change",
+        ["Comparing rates of change", "比较变化率"],
+        [
+          [
+            "To compare two functions given in different ways, find the same property of each. An equation gives its rate as the coefficient of $x$. A table gives it as the change in $y$ over the change in $x$. Function A is $y = -2x + 7$. Function B has $y = 4, -8, -20$ at $x = 1, 3, 5$, so its rate is $\\frac{-8 - 4}{3 - 1} = -6$. Since $-2 > -6$, A has the greater rate of change.",
+            "比较以不同方式给出的两个函数时，要求出各自的同一性质。方程的变化率是 $x$ 的系数。表格的变化率是 $y$ 的变化量除以 $x$ 的变化量。函数 A 是 $y = -2x + 7$。函数 B 在 $x = 1, 3, 5$ 时 $y = 4, -8, -20$，所以变化率是 $\\frac{-8 - 4}{3 - 1} = -6$。因为 $-2 > -6$，所以 A 的变化率更大。",
+          ],
+          [
+            "From $x = 3$ to $x = 5$, B goes from $-8$ to $-20$, again $-12$ over $2$, or $-6$.",
+            "从 $x = 3$ 到 $x = 5$，B 从 $-8$ 变到 $-20$，同样是 $2$ 步变化 $-12$，即 $-6$。",
+          ],
+          [
+            "Compare the rates as signed numbers. A rate of $-6$ is less than $-2$, though it is larger in size: B falls faster.",
+            "要按带符号的数比较变化率。$-6$ 小于 $-2$，尽管它的绝对值更大：B 减少得更快。",
+          ],
+        ],
+        (rng) => {
+          // Half the time both rates are negative, so that comparing their sizes gives the wrong answer.
+          const negative = rng.bool();
+          const [ma, picked] = rng.sample([1, 2, 3, 4, 5, 6], 2).map((m) => (negative || rng.bool() ? -m : m)) as [number, number];
+          const mb = rng.bool(0.2) ? ma : picked;
+          const [ba, bb] = [rng.int(-9, 9), rng.int(-9, 9)];
+          const step = rng.int(1, 3);
+          const x0 = rng.int(-1, 2);
+          const xs = [x0, x0 + step, x0 + 2 * step];
+          const tableFirst = rng.bool();
+          const [eqName, tableName] = tableFirst ? ["B", "A"] : ["A", "B"];
+          const [mEq, mTable] = tableFirst ? [mb, ma] : [ma, mb];
+          const [bEq, bTable] = tableFirst ? [bb, ba] : [ba, bb];
+          const [y0, y1, y2] = xs.map((x) => mTable * x + bTable) as [number, number, number];
+          const fA: Pair = ["Function A", "函数 A"];
+          const fB: Pair = ["Function B", "函数 B"];
+          const equal: Pair = ["The two rates of change are equal", "两个变化率相等"];
+          const unknown: Pair = ["It cannot be determined from an equation and a table", "只凭一个方程和一个表格无法判断"];
+          const cannot = [
+            unknown,
+            "The coefficient and the differences each give a rate, so the two can be compared.",
+            "系数和差各给出一个变化率，所以可以比较。",
+          ] as const;
+          const [hi, lo] = ma > mb ? ["A", "B"] : ["B", "A"];
+          const [mHi, mLo] = [Math.max(ma, mb), Math.min(ma, mb)];
+          const lesser: [Pair, string, string] = [
+            hi === "A" ? fB : fA,
+            `Function ${lo}'s rate is $${mLo}$, which is less than $${mHi}$${mLo < 0 && -mLo > Math.abs(mHi) ? "; it is only larger in size" : ""}.`,
+            `函数 ${lo} 的变化率是 $${mLo}$，小于 $${mHi}$${mLo < 0 && -mLo > Math.abs(mHi) ? "；只是它的绝对值更大" : ""}。`,
+          ];
+          const [correct, wrong]: [Pair, [Pair, string, string][]] =
+            ma === mb
+              ? [
+                  equal,
+                  [
+                    [fA, `Both rates are $${ma}$, so A's is not greater.`, `两个变化率都是 $${ma}$，A 的并不更大。`],
+                    [fB, `Both rates are $${ma}$, so B's is not greater.`, `两个变化率都是 $${ma}$，B 的并不更大。`],
+                    [...cannot],
+                  ],
+                ]
+              : [
+                  hi === "A" ? fA : fB,
+                  [
+                    lesser,
+                    [equal, `The rates are $${ma}$ and $${mb}$, which differ.`, `两个变化率是 $${ma}$ 和 $${mb}$，并不相等。`],
+                    [...cannot],
+                  ],
+                ];
+          return chosen(
+            rng,
+            [
+              `Function ${eqName} is $y = ${linear(mEq, bEq)}$. Function ${tableName} is linear, with this table of values:${steps(tableOf(mTable, bTable, xs))}Which function has the greater rate of change?`,
+              `函数 ${eqName} 是 $y = ${linear(mEq, bEq)}$。函数 ${tableName} 是一次函数，其数值表如下：${steps(tableOf(mTable, bTable, xs))}哪个函数的变化率更大？`,
+            ],
+            correct,
+            wrong,
+            [
+              [
+                ["Read the equation", "读方程"],
+                [`The rate of function ${eqName} is the coefficient of $x$, $${mEq}$.`, `函数 ${eqName} 的变化率是 $x$ 的系数 $${mEq}$。`],
+              ],
+              [
+                ["Read the table", "读表格"],
+                [
+                  `For function ${tableName}, divide the change in $y$ by the change in $x$:`,
+                  `函数 ${tableName} 的变化率等于 $y$ 的变化量除以 $x$ 的变化量：`,
+                ],
+                [`\\frac{${num(y1)} - ${paren(y0)}}{${step}} = ${mTable}`],
+              ],
+              [
+                ["Compare", "比较"],
+                ma === mb
+                  ? ["The two rates are equal.", "两个变化率相等。"]
+                  : [
+                      `Since $${mHi} > ${mLo}$, function ${hi} has the greater rate of change.`,
+                      `因为 $${mHi} > ${mLo}$，所以函数 ${hi} 的变化率更大。`,
+                    ],
+              ],
+            ],
+            [
+              `The next value in the table also fits: $${num(y1)} + ${step} \\cdot ${paren(mTable)} = ${num(y2)}$.`,
+              `表格里的下一个值也相符：$${num(y1)} + ${step} \\cdot ${paren(mTable)} = ${num(y2)}$。`,
+            ],
+          );
+        },
+        tableFigure(
+          ["y"],
+          ["x = 1", "x = 3", "x = 5"],
+          [["4", "−8", "−20"]],
+          [
+            "A table of function B: y is 4 at x = 1, −8 at x = 3 and −20 at x = 5.",
+            "函数 B 的数值表：x = 1 时 y = 4，x = 3 时 y = −8，x = 5 时 y = −20。",
+          ],
+        ),
+      ),
+      lesson(
+        "comparing-initial-values",
+        ["Comparing initial values", "比较初始值"],
+        [
+          [
+            "The initial value is the value at $x = 0$. An equation shows it as the constant term. From two points, find the rate and work back to $x = 0$. Function A is $y = 3x - 4$, so its initial value is $-4$. Function B passes through $(2, 9)$ and $(5, 15)$. Its rate is $\\frac{15 - 9}{5 - 2} = 2$, so at $x = 0$ it is $9 - 2 \\cdot 2 = 5$.",
+            "初始值是 $x = 0$ 时的值。方程的初始值就是常数项。已知两个点时，先求变化率，再倒推到 $x = 0$。函数 A 是 $y = 3x - 4$，所以它的初始值是 $-4$。函数 B 经过 $(2, 9)$ 和 $(5, 15)$。它的变化率是 $\\frac{15 - 9}{5 - 2} = 2$，所以当 $x = 0$ 时，$y = 9 - 2 \\cdot 2 = 5$。",
+          ],
+          [
+            "B's initial value is greater by $5 - (-4) = 9$, and B gives $5 + 5 \\cdot 2 = 15$ at $x = 5$, as it should.",
+            "B 的初始值大 $5 - (-4) = 9$，而且 B 在 $x = 5$ 时得 $5 + 5 \\cdot 2 = 15$，与已知相符。",
+          ],
+          [
+            "The first given point is at $x = 2$, not $x = 0$. So its $y$-value $9$ is not B's initial value.",
+            "第一个已知点在 $x = 2$，不在 $x = 0$。所以它的纵坐标 $9$ 不是 B 的初始值。",
+          ],
+        ],
+        (rng) => {
+          const ma = rng.nonZero(-5, 5);
+          const mb = rng.nonZero(-5, 5);
+          const ba = rng.int(-9, 6);
+          const bb = ba + rng.int(1, 9);
+          const [x1, x2] = rng.sample([1, 2, 3, 4, 5], 2).sort((a, b) => a - b) as [number, number];
+          const [y1, y2] = [mb * x1 + bb, mb * x2 + bb];
+          return valued(
+            [
+              `Function A is $y = ${linear(ma, ba)}$. Function B is linear, and its graph passes through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$. The initial value of B is greater than that of A. By how much?`,
+              `函数 A 是 $y = ${linear(ma, ba)}$。函数 B 是一次函数，图像经过 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$。B 的初始值比 A 的大。大多少？`,
+            ],
+            bb - ba,
+            [
+              [
+                ["Read A's initial value", "读出 A 的初始值"],
+                [`The constant term of A is $${ba}$.`, `A 的常数项是 $${ba}$。`],
+              ],
+              [
+                ["Find B's rate", "求 B 的变化率"],
+                ["Divide the change in $y$ by the change in $x$:", "用 $y$ 的变化量除以 $x$ 的变化量："],
+                [`\\frac{${num(y2)} - ${paren(y1)}}{${x2} - ${x1}} = ${mb}`],
+              ],
+              [
+                ["Work back and subtract", "倒推再相减"],
+                ["Go back to $x = 0$, then compare:", "倒推到 $x = 0$，再比较："],
+                [`${num(y1)} - ${x1} \\cdot ${paren(mb)} = ${bb}`, `${bb} - ${paren(ba)} = ${bb - ba}`],
+              ],
+            ],
+            [
+              `Adding $${bb - ba}$ to A's initial value $${ba}$ gives $${bb}$, and B is $${bb} + ${x1} \\cdot ${paren(mb)} = ${y1}$ at $x = ${x1}$.`,
+              `A 的初始值 $${ba}$ 加上 $${bb - ba}$ 得 $${bb}$，而 B 在 $x = ${x1}$ 时是 $${bb} + ${x1} \\cdot ${paren(mb)} = ${y1}$。`,
+            ],
+            [
+              [y1 - ba, `That uses B's $y$-value at $x = ${x1}$ as its initial value.`, `这是把 B 在 $x = ${x1}$ 时的值当成了初始值。`],
+              [bb + ba, "That adds A's initial value instead of subtracting it.", "这是加上了 A 的初始值，而不是减去它。"],
+              [bb, "That is B's initial value alone; subtract A's.", "这只是 B 的初始值；还要减去 A 的。"],
+            ],
+          );
+        },
+        drawn(gradeDrawings5["comparing-properties-of-two-functions-represented-differently#comparing-initial-values"]),
+      ),
+      lesson(
+        "when-two-plans-cost-the-same",
+        ["When two plans cost the same", "两种方案花费相同的时刻"],
+        [
+          [
+            "Put both functions in the same form, a starting value plus a rate times the input. Then set them equal. Plan A costs $20$ dollars to join and $9$ dollars per month. Plan B's total is $33$ after $1$ month and $48$ after $4$. B rises $15 \\div 3 = 5$ per month, so its fee is $33 - 5 = 28$. Then $20 + 9m = 28 + 5m$ gives $4m = 8$ and $m = 2$.",
+            "把两个函数写成同样的形式：起始值加上变化率乘以输入。再令它们相等。方案 A 入会费 $20$ 美元，每月 $9$ 美元。方案 B $1$ 个月后总额 $33$ 美元，$4$ 个月后 $48$ 美元。B 每月增加 $15 \\div 3 = 5$ 美元，所以入会费是 $33 - 5 = 28$ 美元。于是 $20 + 9m = 28 + 5m$，得 $4m = 8$，$m = 2$。",
+          ],
+          [
+            "After $2$ months A costs $20 + 18 = 38$ dollars and B costs $28 + 10 = 38$ dollars.",
+            "$2$ 个月后，A 花费 $20 + 18 = 38$ 美元，B 花费 $28 + 10 = 38$ 美元。",
+          ],
+          [
+            "Find B's joining fee first. Its total after $1$ month, $33$, is not the fee.",
+            "先求出 B 的入会费。它 $1$ 个月后的总额 $33$ 不是入会费。",
+          ],
+        ],
+        (rng) => {
+          const q = rng.int(3, 15);
+          const r = q + rng.int(1, 12);
+          const answer = rng.int(3, 24);
+          const a = rng.int(5, 40);
+          const b = a + (r - q) * answer;
+          const t1 = rng.int(1, 3);
+          const t2 = t1 + rng.int(2, 6);
+          const y1 = b + q * t1;
+          const y2 = b + q * t2;
+          const gap = r - q;
+          return valued(
+            [
+              `Plan A costs $${a}$ dollars to join and $${r}$ dollars per month. Plan B also has a joining fee and a fixed monthly price: its total is $${y1}$ dollars after $${t1}$ ${t1 === 1 ? "month" : "months"} and $${y2}$ dollars after $${t2}$ months. After how many months do the two plans have the same total?`,
+              `方案 A 入会费 $${a}$ 美元，每月 $${r}$ 美元。方案 B 也有入会费和固定月费：$${t1}$ 个月后总额是 $${y1}$ 美元，$${t2}$ 个月后总额是 $${y2}$ 美元。多少个月后两种方案的总额相同？`,
+            ],
+            answer,
+            [
+              [
+                ["Find B's monthly price", "求 B 的月费"],
+                ["B rises this much per month:", "B 每月增加："],
+                [`(${y2} - ${y1}) \\div ${t2 - t1} = ${q}`],
+              ],
+              [
+                ["Find B's joining fee", "求 B 的入会费"],
+                [`Take $${t1}$ ${t1 === 1 ? "month" : "months"} off the first total:`, `从第一个总额中去掉 $${t1}$ 个月的费用：`],
+                [`${y1} - ${t1} \\cdot ${q} = ${b}`],
+              ],
+              [
+                ["Set the totals equal", "令总额相等"],
+                ["Solve for the number of months $m$:", "解出月数 $m$："],
+                [`${a} + ${r}m = ${b} + ${q}m`, ...(gap === 1 ? [] : [`${gap}m = ${b - a}`]), `m = ${answer}`],
+              ],
+            ],
+            [
+              `After $${answer}$ months, A costs $${a} + ${r} \\cdot ${answer} = ${a + r * answer}$ and B costs $${b} + ${q} \\cdot ${answer} = ${b + q * answer}$.`,
+              `$${answer}$ 个月后，A 花费 $${a} + ${r} \\cdot ${answer} = ${a + r * answer}$ 美元，B 花费 $${b} + ${q} \\cdot ${answer} = ${b + q * answer}$ 美元。`,
+            ],
+            [
+              [
+                b - a,
+                "That is the difference of the joining fees; divide it by the difference of the monthly prices.",
+                "这是入会费之差；还要除以月费之差。",
+              ],
+              [
+                Q.of(y1 - a, gap),
+                `That takes B's total after $${t1}$ ${t1 === 1 ? "month" : "months"} as its joining fee.`,
+                `这是把 B $${t1}$ 个月后的总额当成了入会费。`,
+              ],
+              [Q.of(b - a, r + q), "That adds the monthly prices instead of subtracting them.", "这是把两个月费相加了，而不是相减。"],
+            ],
+          );
+        },
+        tableFigure(
+          ["A", "B"],
+          ["m = 0", "1", "2", "3", "4"],
+          [
+            ["20", "29", "38", "47", "56"],
+            ["28", "33", "38", "43", "48"],
+          ],
+          [
+            "A table of the two plans' totals in dollars for 0 to 4 months: A is 20, 29, 38, 47, 56 and B is 28, 33, 38, 43, 48, equal at 2 months.",
+            "两种方案 0 到 4 个月的总额（美元）：A 是 20、29、38、47、56，B 是 28、33、38、43、48，在 2 个月时相等。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["interpreting-rate-of-change-and-initial-value-in-context", "representations-of-functions"],
-  ["8.F.A.2"],
   [
-    {
-      id: "comparing-rates-of-change",
-      title: t("Comparing rates of change", "比较变化率"),
-      explanation: t(
-        "Function A is $y = -2x + 7$; function B has the table $x = 1, 3, 5$, $y = 4, -8, -20$. B's rate of change is $\\frac{-8 - 4}{3 - 1} = -6$. Since $-2 > -6$, A has the greater rate of change, although B's rate is larger in size: B decreases faster.",
-        "函数 A 是 $y = -2x + 7$；函数 B 的表格为 $x = 1, 3, 5$，$y = 4, -8, -20$。B 的变化率为 $\\frac{-8 - 4}{3 - 1} = -6$。因为 $-2 > -6$，所以 A 的变化率更大，尽管 B 的变化率绝对值更大：B 减少得更快。",
-      ),
-      generate(rng) {
-        // Half the time both rates are negative, so that comparing their sizes gives the wrong answer.
-        const negative = rng.bool();
-        const [ma, picked] = rng.sample([1, 2, 3, 4, 5, 6], 2).map((m) => (negative || rng.bool() ? -m : m)) as [number, number];
-        const mb = rng.bool(0.2) ? ma : picked;
-        const [ba, bb] = [rng.int(-9, 9), rng.int(-9, 9)];
-        const step = rng.int(1, 3);
-        const x0 = rng.int(-1, 2);
-        const xs = [x0, x0 + step, x0 + 2 * step];
-        const tableFirst = rng.bool();
-        const [eqName, tableName] = tableFirst ? ["B", "A"] : ["A", "B"];
-        const [mEq, mTable] = tableFirst ? [mb, ma] : [ma, mb];
-        const [bEq, bTable] = tableFirst ? [bb, ba] : [ba, bb];
-        const options = [
-          t("Function A", "函数 A"),
-          t("Function B", "函数 B"),
-          t("The two rates of change are equal", "两个变化率相等"),
-          t("It cannot be determined from an equation and a table", "只凭一个方程和一个表格无法判断"),
-        ];
-        const greaterIsA = ma > mb;
-        const [y0, y1] = [mTable * xs[0]! + bTable, mTable * xs[1]! + bTable];
-        return choiceProblem({
-          prompt: t(
-            `Function ${eqName} is $y = ${linear(mEq, bEq)}$. Function ${tableName} is linear, with this table of values:${steps(tableOf(mTable, bTable, xs))}Which function has the greater rate of change?`,
-            `函数 ${eqName} 是 $y = ${linear(mEq, bEq)}$。函数 ${tableName} 是一次函数，其数值表如下：${steps(tableOf(mTable, bTable, xs))}哪个函数的变化率更大？`,
-          ),
-          options,
-          correct: ma === mb ? 2 : greaterIsA ? 0 : 1,
-          solution: t(
-            `The rate of change of function ${eqName} is the coefficient of $x$, $${mEq}$. For function ${tableName}, $\\frac{${num(y1)} - ${y0 < 0 ? `(${y0})` : y0}}{${step}} = ${mTable}$. ${ma === mb ? "The two rates are equal." : `Since $${Math.max(ma, mb)} > ${Math.min(ma, mb)}$, function ${greaterIsA ? "A" : "B"} has the greater rate of change.`}`,
-            `函数 ${eqName} 的变化率是 $x$ 的系数 $${mEq}$。函数 ${tableName} 的变化率为 $\\frac{${num(y1)} - ${y0 < 0 ? `(${y0})` : y0}}{${step}} = ${mTable}$。${ma === mb ? "两个变化率相等。" : `因为 $${Math.max(ma, mb)} > ${Math.min(ma, mb)}$，所以函数 ${greaterIsA ? "A" : "B"} 的变化率更大。`}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "comparing-initial-values",
-      figure: gradeDrawings5["comparing-properties-of-two-functions-represented-differently#comparing-initial-values"],
-      title: t("Comparing initial values", "比较初始值"),
-      explanation: t(
-        "Function A is $y = 3x - 4$, so its initial value is $-4$. Function B is linear and its graph passes through $(2, 9)$ and $(5, 15)$: its rate of change is $\\frac{15 - 9}{5 - 2} = 2$, so at $x = 0$ it is $9 - 2 \\cdot 2 = 5$. B's initial value is greater by $5 - (-4) = 9$.",
-        "函数 A 是 $y = 3x - 4$，所以它的初始值是 $-4$。函数 B 是一次函数，图像经过 $(2, 9)$ 和 $(5, 15)$：它的变化率是 $\\frac{15 - 9}{5 - 2} = 2$，所以当 $x = 0$ 时，$y = 9 - 2 \\cdot 2 = 5$。B 的初始值比 A 的大 $5 - (-4) = 9$。",
-      ),
-      generate(rng) {
-        const ma = rng.nonZero(-5, 5);
-        const mb = rng.nonZero(-5, 5);
-        const ba = rng.int(-9, 6);
-        const bb = ba + rng.int(1, 9);
-        const [x1, x2] = rng.sample([1, 2, 3, 4, 5], 2).sort((a, b) => a - b) as [number, number];
-        const [y1, y2] = [mb * x1 + bb, mb * x2 + bb];
-        return numberProblem({
-          prompt: t(
-            `Function A is $y = ${linear(ma, ba)}$. Function B is linear, and its graph passes through $${pointLatex([x1, y1])}$ and $${pointLatex([x2, y2])}$. The initial value of B is greater than that of A. By how much?`,
-            `函数 A 是 $y = ${linear(ma, ba)}$。函数 B 是一次函数，图像经过 $${pointLatex([x1, y1])}$ 和 $${pointLatex([x2, y2])}$。B 的初始值比 A 的大。大多少？`,
-          ),
-          answer: bb - ba,
-          form: "integer",
-          // Using B's first y-value as its initial value, a sign slip, and B's initial value alone.
-          wrong: [y1 - ba, bb + ba, bb],
-          solution: t(
-            `The initial value of A is its constant term, $${ba}$. For B, the rate of change is $\\frac{${num(y2)} - ${y1 < 0 ? `(${y1})` : y1}}{${x2} - ${x1}} = ${mb}$, so going back to $x = 0$:${steps(`${num(y1)} - ${x1} \\cdot ${mb < 0 ? `(${mb})` : mb} = ${bb}`, `${bb} - ${ba < 0 ? `(${ba})` : ba} = ${bb - ba}`)}`,
-            `A 的初始值是常数项 $${ba}$。B 的变化率为 $\\frac{${num(y2)} - ${y1 < 0 ? `(${y1})` : y1}}{${x2} - ${x1}} = ${mb}$，所以倒推到 $x = 0$：${steps(`${num(y1)} - ${x1} \\cdot ${mb < 0 ? `(${mb})` : mb} = ${bb}`, `${bb} - ${ba < 0 ? `(${ba})` : ba} = ${bb - ba}`)}`,
-          ),
-        });
-      },
-    },
+    "Plan A costs $y = 3x + 10$ dollars for $x$ months. Plan B's table shows $16$ dollars after $1$ month and $28$ dollars after $3$. Which plan's cost rises faster?",
+    "方案 A 用 $x$ 个月花费 $y = 3x + 10$ 美元。方案 B 的表格显示 $1$ 个月后 $16$ 美元，$3$ 个月后 $28$ 美元。哪种方案的花费增加得更快？",
+  ],
+  [
+    "Plan B rises $\\frac{28 - 16}{3 - 1} = 6$ dollars a month, faster than A's $3$.",
+    "方案 B 每月增加 $\\frac{28 - 16}{3 - 1} = 6$ 美元，比 A 的 $3$ 美元快。",
+  ],
+  [
+    "compare rates of change and initial values of functions given in different ways, and find when two of them are equal.",
+    "比较以不同方式给出的函数的变化率和初始值，并求出两个函数何时相等。",
   ],
 );
 

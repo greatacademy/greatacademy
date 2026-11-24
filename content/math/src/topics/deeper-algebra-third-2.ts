@@ -107,65 +107,6 @@ export const deeperAlgebraThird2Points: Readonly<Record<string, readonly Knowled
       },
     ),
   ],
-  "rationalizing-denominators": [
-    skill(
-      "a-coefficient-beside-the-root",
-      ["A coefficient beside the root", "根号旁的系数"],
-      [
-        "When the denominator is a number times a root, only the root needs removing, so multiply the top and bottom by that root alone. Then cancel any common factor that appears.",
-        "分母是数乘根号时，只需去掉根号，所以分子分母只乘这个根号。然后约去出现的公因数。",
-      ],
-      (rng) => {
-        const r = rng.pick([2, 3, 5, 6, 7, 10, 11, 13]);
-        const c = rng.int(2, 6);
-        const k = rng.int(1, 5);
-        const top = c * r * k;
-        return chooseMath(
-          rng,
-          [
-            `Rationalize the denominator and simplify: $${frac(top, `${c}\\sqrt{${r}}`)}$.`,
-            `将分母有理化并化简：$${frac(top, `${c}\\sqrt{${r}}`)}$。`,
-          ],
-          k === 1 ? `\\sqrt{${r}}` : `${k}\\sqrt{${r}}`,
-          [`${c * k}\\sqrt{${r}}`, `${frac(k, r)}\\sqrt{${r}}`, `${top}\\sqrt{${r}}`],
-          [
-            `Multiply by $${frac(`\\sqrt{${r}}`, `\\sqrt{${r}}`)}$: the bottom becomes $${c * r}$, and $${top} \\div ${c * r} = ${k}$.`,
-            `乘 $${frac(`\\sqrt{${r}}`, `\\sqrt{${r}}`)}$：分母变成 $${c * r}$，$${top} \\div ${c * r} = ${k}$。`,
-          ],
-        );
-      },
-    ),
-  ],
-  "adding-and-subtracting-radicals": [
-    skill(
-      "a-perimeter-with-radicals",
-      ["A perimeter with radicals", "含根号的周长"],
-      [
-        "Radical lengths add the way like terms do once they are simplified to the same root. So simplify each side first, and then add the coefficients of the matching root.",
-        "根号长度化简成同一个根后，可以像同类项一样相加。所以先化简每条边，再把相同根号的系数相加。",
-      ],
-      (rng) => {
-        const r = rng.pick([2, 3, 5, 6, 7]);
-        const a = rng.int(2, 5);
-        const drawn = rng.int(2, 5);
-        const b = drawn === a ? (a === 5 ? 4 : a + 1) : drawn;
-        const total = 2 * (a + b);
-        return chooseMath(
-          rng,
-          [
-            `A rectangle has sides $\\sqrt{${a * a * r}}$ and $\\sqrt{${b * b * r}}$. What is its perimeter?`,
-            `长方形的两边是 $\\sqrt{${a * a * r}}$ 和 $\\sqrt{${b * b * r}}$。周长是多少？`,
-          ],
-          `${total}\\sqrt{${r}}`,
-          [`${a + b}\\sqrt{${r}}`, `2\\sqrt{${(a * a + b * b) * r}}`, `${total}\\sqrt{${2 * r}}`],
-          [
-            `The sides are $${a}\\sqrt{${r}}$ and $${b}\\sqrt{${r}}$, and $2(${a} + ${b}) = ${total}$.`,
-            `两边是 $${a}\\sqrt{${r}}$ 和 $${b}\\sqrt{${r}}$，$2(${a} + ${b}) = ${total}$。`,
-          ],
-        );
-      },
-    ),
-  ],
   "one-step-equations-addition": [
     skill(
       "stories-with-one-step-equations",

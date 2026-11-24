@@ -3,7 +3,9 @@ import { t } from "@ga/content";
 import { dec, gcd, num, paren, Q, radical, simplifyRadical } from "@ga/subject-math";
 
 import { numberProblem, radicalProblem, steps } from "../problems.ts";
-import { mathText, pickChoice } from "./grade-4-fractions.ts";
+import type { Pair } from "./early-grades-more-kit.ts";
+import { chosenMath, lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 // 8th Grade Math, radicals: square roots and cube roots of perfect squares and cubes, surds, the product and quotient
 // rules for radicals, equations solved with square and cube roots, and side lengths of squares and cubes.
@@ -315,70 +317,170 @@ const surdRoots: readonly RootChoice[] = [
 ];
 
 /** surds identifies roots whose values are irrational and makes a root rational with the smallest factor. */
-export const surds = topic(
-  "surds",
-  t("Surds", "不尽根数"),
-  t(
-    "A surd is a root whose value is irrational, such as √2 or ∛10. Roots that simplify to rational numbers, such as √0.25 = 0.5 or ∛(−8) = −2, are not surds. A square root of a whole number is a surd exactly when some prime appears in the number an odd number of times.",
-    "值为无理数的根式叫作不尽根数，例如 √2 或 ∛10。能化为有理数的根式，例如 √0.25 = 0.5 或 ∛(−8) = −2，不是不尽根数。一个整数的平方根是不尽根数，当且仅当这个整数中有某个质因数出现奇数次。",
+export const surds = withIntro(
+  topic(
+    "surds",
+    t("Surds", "不尽根数"),
+    t(
+      "A surd is a root whose value is irrational, such as √2 or ∛10. Roots that simplify to rational numbers, such as √0.25 = 0.5 or ∛(−8) = −2, are not surds. A square root of a whole number is a surd exactly when some prime appears in the number an odd number of times.",
+      "值为无理数的根式叫作不尽根数，例如 √2 或 ∛10。能化为有理数的根式，例如 √0.25 = 0.5 或 ∛(−8) = −2，不是不尽根数。一个整数的平方根是不尽根数，当且仅当这个整数中有某个质因数出现奇数次。",
+    ),
+    ["the-cube-root-of-a-perfect-cube", "classifying-square-roots-and-cube-roots-as-rational-or-irrational"],
+    ["8.NS.A.1", "8.EE.A.2"],
+    [
+      lesson(
+        "identifying-surds",
+        ["Identifying surds", "识别不尽根数"],
+        [
+          [
+            "A **surd** is a root whose value is irrational, like $\\sqrt{2}$ or $\\sqrt[3]{10}$. To test a root, simplify the number under it. Then ask whether it is a perfect square, or a perfect cube for a cube root. $\\sqrt{\\frac{50}{2}} = \\sqrt{25} = 5$ is not a surd, but $\\sqrt{0.4} = \\sqrt{\\frac{2}{5}}$ is.",
+            "值为无理数的根式叫作**不尽根数**，例如 $\\sqrt{2}$ 或 $\\sqrt[3]{10}$。判断时，先化简根号里的数，再看它是不是完全平方数；立方根就看是不是完全立方数。$\\sqrt{\\frac{50}{2}} = \\sqrt{25} = 5$ 不是不尽根数，而 $\\sqrt{0.4} = \\sqrt{\\frac{2}{5}}$ 是。",
+          ],
+          ["$5^{2} = 25$, but no fraction squared gives $\\frac{2}{5}$.", "$5^{2} = 25$，但没有哪个分数的平方等于 $\\frac{2}{5}$。"],
+          [
+            "Match the test to the root. $16$ is a perfect square, but $\\sqrt[3]{16}$ is still a surd.",
+            "判断要看根指数。$16$ 是完全平方数，但 $\\sqrt[3]{16}$ 仍是不尽根数。",
+          ],
+        ],
+        (rng) => {
+          const surd = rng.pick(surdRoots);
+          const others = rng.sample(rationalRoots, 3);
+          const cube = surd.latex.includes("[3]");
+          return chosenMath(
+            rng,
+            ["Which of these is a surd?", "下面哪一个是不尽根数？"],
+            surd.latex,
+            others.map(
+              (r) => [r.latex, `That one is rational: $${r.latex} = ${r.value}$.`, `它是有理数：$${r.latex} = ${r.value}$。`] as const,
+            ),
+            [
+              [
+                ["Simplify each root", "化简每个根式"],
+                ["Three of them come out exact:", "其中三个能开尽："],
+                others.map((r) => `${r.latex} = ${r.value}`),
+              ],
+              [
+                ["Find the surd", "找出不尽根数"],
+                [
+                  `The number under $${surd.latex}$ is not a perfect ${cube ? "cube" : "square"} of a rational number, so it is a surd.`,
+                  `$${surd.latex}$ 根号里的数不是有理数的${cube ? "立方" : "平方"}，所以它是不尽根数。`,
+                ],
+              ],
+            ],
+            [
+              "Raise each exact value to the root's power and you get back the number under its root. No rational number does that for the surd.",
+              "把每个开尽的值按根指数乘方，都能得回根号里的数。没有哪个有理数能对不尽根数做到这一点。",
+            ],
+          );
+        },
+        lineFigure(
+          {
+            lo: 0,
+            hi: 3,
+            step: 0.5,
+            labels: [0, 1, 2, 3],
+            marks: [
+              { at: Math.SQRT2, text: "√2", result: true },
+              { at: 2, text: "√4" },
+            ],
+          },
+          [
+            "A number line from 0 to 3: √4 lands on the whole number 2, while √2 falls between 1 and 2.",
+            "一条从 0 到 3 的数轴：√4 正好落在整数 2 上，而 √2 落在 1 和 2 之间。",
+          ],
+        ),
+      ),
+      lesson(
+        "making-a-square-root-rational",
+        ["Making a square root rational", "使平方根成为有理数"],
+        [
+          [
+            "$\\sqrt{12}$ is a surd because $12 = 2^{2} \\cdot 3$ has the prime $3$ only once. Multiply $12$ by $3$ and you get $36 = 6^{2}$. So the smallest whole number $k$ that makes $\\sqrt{12k}$ rational is $3$.",
+            "$\\sqrt{12}$ 是不尽根数，因为 $12 = 2^{2} \\cdot 3$ 中质因数 $3$ 只出现一次。$12$ 乘以 $3$ 得 $36 = 6^{2}$。所以使 $\\sqrt{12k}$ 为有理数的最小正整数 $k$ 是 $3$。",
+          ],
+          ["$\\sqrt{12 \\cdot 3} = \\sqrt{36} = 6$.", "$\\sqrt{12 \\cdot 3} = \\sqrt{36} = 6$。"],
+          [
+            "Multiplying by $12$ also works, but it is not the smallest. Use only the primes that have no partner.",
+            "乘以 $12$ 也可以，但不是最小的。只补上没有配对的质因数。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const m = rng.pick([2, 3, 5, 6, 7, 10, 11, 14, 15]);
+            const s = rng.pick([1, 2, 3, 4, 5, 6]);
+            const n = s * s * m;
+            if (n === m && rng.bool(0.7)) continue;
+            return valued(
+              [
+                `What is the smallest positive whole number $k$ for which $\\sqrt{${n}k}$ is rational?`,
+                `使 $\\sqrt{${n}k}$ 为有理数的最小正整数 $k$ 是多少？`,
+              ],
+              m,
+              [
+                [
+                  ["Split off the squares", "分出平方因数"],
+                  s > 1
+                    ? [
+                        `$${n} = ${s * s} \\cdot ${m}$, and $${s * s} = ${s}^{2}$ is already a perfect square.`,
+                        `$${n} = ${s * s} \\cdot ${m}$，而 $${s * s} = ${s}^{2}$ 已经是完全平方数。`,
+                      ]
+                    : [`$${n}$ has no square factor at all.`, `$${n}$ 没有平方因数。`],
+                ],
+                [
+                  ["Pair the rest", "给其余的配对"],
+                  [
+                    `$${m}$ has no square factor, so it needs one more $${m}$. Take $k = ${m}$:`,
+                    `$${m}$ 没有平方因数，还需要再乘一个 $${m}$。取 $k = ${m}$：`,
+                  ],
+                  [`\\sqrt{${n} \\cdot ${m}} = \\sqrt{${n * m}} = ${s * m}`],
+                ],
+              ],
+              [`Square the root back: $${s * m} \\cdot ${s * m} = ${n * m}$.`, `把结果平方回去：$${s * m} \\cdot ${s * m} = ${n * m}$。`],
+              [
+                [n, "That works, but it is not the smallest choice.", "这样也可以，但不是最小的。"],
+                ...(s > 1
+                  ? [
+                      [
+                        s * s,
+                        "That is the square factor; it is already paired and does not help.",
+                        "这是平方因数；它已经配好对，乘它没有用。",
+                      ] as const,
+                    ]
+                  : []),
+                [2, "That doubles the number, which does not pair every prime.", "这是乘以 $2$，并不能让每个质因数都配对。"],
+              ],
+            );
+          }
+        },
+        tapeFigure(
+          [
+            {
+              total: "36 = 6²",
+              pieces: [
+                { size: 2, text: "2" },
+                { size: 2, text: "2" },
+                { size: 3, text: "3" },
+                { size: 3, text: "3", lit: true },
+              ],
+            },
+          ],
+          [
+            "A bar of the factors of 12 · 3: 2, 2, 3 and a shaded extra 3. Every prime now has a partner, so the product 36 is 6².",
+            "一个表示 12 · 3 各因数的长条：2、2、3，以及涂色的另一个 3。每个质因数都配了对，所以乘积 36 是 6²。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["the-cube-root-of-a-perfect-cube", "classifying-square-roots-and-cube-roots-as-rational-or-irrational"],
-  ["8.NS.A.1", "8.EE.A.2"],
   [
-    {
-      id: "identifying-surds",
-      title: t("Identifying surds", "识别不尽根数"),
-      explanation: t(
-        "To decide whether a root is a surd, simplify what is under it and check for a perfect square or cube. $\\sqrt{\\frac{50}{2}} = \\sqrt{25} = 5$ is not a surd, while $\\sqrt{0.4} = \\sqrt{\\frac{2}{5}}$ is a surd. $\\sqrt[3]{16}$ is a surd even though $16$ is a perfect square.",
-        "要判断一个根式是不是不尽根数，先化简根号内的数，再看它是不是完全平方数或完全立方数。$\\sqrt{\\frac{50}{2}} = \\sqrt{25} = 5$ 不是不尽根数，而 $\\sqrt{0.4} = \\sqrt{\\frac{2}{5}}$ 是不尽根数。$\\sqrt[3]{16}$ 是不尽根数，尽管 $16$ 是完全平方数。",
-      ),
-      generate(rng) {
-        const surd = rng.pick(surdRoots);
-        const others = rng.sample(rationalRoots, 3);
-        const values = others.map((r) => `$${r.latex} = ${r.value}$`);
-        const list = rng.shuffle([surd, ...others]).map((r) => `$${r.latex}$`);
-        return pickChoice(
-          rng,
-          t(`Which of these is a surd? ${list.join(", ")}`, `下面哪一个是不尽根数？${list.join("、")}`),
-          mathText(surd.latex),
-          others.map((r) => mathText(r.latex)),
-          t(
-            `The other roots are rational: ${values.join(", ")}. The number under $${surd.latex}$ is not a perfect ${surd.latex.includes("[3]") ? "cube" : "square"} of a rational number, so $${surd.latex}$ is a surd.`,
-            `其他根式都是有理数：${values.join("，")}。$${surd.latex}$ 根号内的数不是有理数的${surd.latex.includes("[3]") ? "立方" : "平方"}，所以 $${surd.latex}$ 是不尽根数。`,
-          ),
-        );
-      },
-    },
-    {
-      id: "making-a-square-root-rational",
-      title: t("Making a square root rational", "使平方根成为有理数"),
-      explanation: t(
-        "$\\sqrt{12}$ is a surd because $12 = 2^{2} \\cdot 3$ has the prime $3$ only once. Multiplying $12$ by $3$ gives $36 = 6^{2}$, so the smallest whole number $k$ that makes $\\sqrt{12k}$ rational is $3$. Multiplying by $12$ also works, but it is not the smallest.",
-        "$\\sqrt{12}$ 是不尽根数，因为 $12 = 2^{2} \\cdot 3$ 中质因数 $3$ 只出现一次。$12$ 乘以 $3$ 得 $36 = 6^{2}$，所以使 $\\sqrt{12k}$ 为有理数的最小正整数 $k$ 是 $3$。乘以 $12$ 也可以，但不是最小的。",
-      ),
-      generate(rng) {
-        const m = rng.pick([2, 3, 5, 6, 7, 10, 11, 14, 15]);
-        const s = rng.pick([1, 2, 3, 4, 5, 6]);
-        const n = s * s * m;
-        if (n === m && rng.bool(0.7)) return this.generate(rng);
-        const [k] = simplifyRadical(n);
-        return numberProblem({
-          prompt: t(
-            `What is the smallest positive whole number $k$ for which $\\sqrt{${n}k}$ is rational?`,
-            `使 $\\sqrt{${n}k}$ 为有理数的最小正整数 $k$ 是多少？`,
-          ),
-          answer: m,
-          form: "integer",
-          // The number itself, which always works but is not the smallest, and its square factor.
-          wrong: [n, ...(s > 1 ? [s * s] : []), 2],
-          solution: t(
-            `${s > 1 ? `$${n} = ${s * s} \\cdot ${m}$, and $${s * s} = ${s}^{2}$ is already a perfect square. ` : ""}$${m}$ has no square factor, so the smallest choice is $k = ${m}$:${steps(`\\sqrt{${n} \\cdot ${m}} = \\sqrt{${n * m}} = ${k * m}`)}`,
-            `${s > 1 ? `$${n} = ${s * s} \\cdot ${m}$，而 $${s * s} = ${s}^{2}$ 已经是完全平方数。` : ""}$${m}$ 没有平方因数，所以最小取 $k = ${m}$：${steps(`\\sqrt{${n} \\cdot ${m}} = \\sqrt{${n * m}} = ${k * m}`)}`,
-          ),
-        });
-      },
-    },
+    "Mia draws a square with an area of $4$ cm². Its side is $\\sqrt{4} = 2$ cm. Then she draws one with an area of $2$ cm². Its side is $\\sqrt{2}$ cm, and no fraction is exactly that long.",
+    "小米画了一个面积为 $4$ 平方厘米的正方形，边长是 $\\sqrt{4} = 2$ 厘米。她又画了一个面积为 $2$ 平方厘米的正方形，边长是 $\\sqrt{2}$ 厘米，没有哪个分数正好这么长。",
   ],
+  [
+    "$1.4^{2} = 1.96$ and $1.5^{2} = 2.25$, so $\\sqrt{2}$ is between $1.4$ and $1.5$.",
+    "$1.4^{2} = 1.96$，$1.5^{2} = 2.25$，所以 $\\sqrt{2}$ 在 $1.4$ 和 $1.5$ 之间。",
+  ],
+  ["tell surds from roots that come out exact, and make a square root rational.", "区分不尽根数和能开尽的根式，并使平方根成为有理数。"],
 );
 
 // ---------------------------------------------------------------------------
@@ -539,85 +641,245 @@ const signed = (b: number) => (b < 0 ? `- ${-b}` : `+ ${b}`);
 const linearLatex = (a: number, b: number) => `${a === 1 ? "" : a}x ${signed(b)}`;
 
 /** solvingRadicalEquationsWithSquareRoots isolates a square root and squares both sides. */
-export const solvingRadicalEquationsWithSquareRoots = topic(
-  "solving-radical-equations-with-square-roots",
-  t("Solving Radical Equations With Square Roots", "解含平方根的方程"),
-  t(
-    "To solve an equation with the unknown under a square root, first isolate the root, then square both sides, since (√x)² = x. A square root is never negative, so an equation such as √x = −3 has no solution; always check the answer in the original equation.",
-    "未知数在平方根号内的方程，先把根式单独留在一边，再两边平方，因为 (√x)² = x。平方根不会是负数，所以像 √x = −3 这样的方程无解；最后总要把答案代回原方程检验。",
+export const solvingRadicalEquationsWithSquareRoots = withIntro(
+  topic(
+    "solving-radical-equations-with-square-roots",
+    t("Solving Radical Equations With Square Roots", "解含平方根的方程"),
+    t(
+      "To solve an equation with the unknown under a square root, first isolate the root, then square both sides, since (√x)² = x. A square root is never negative, so an equation such as √x = −3 has no solution; always check the answer in the original equation.",
+      "未知数在平方根号内的方程，先把根式单独留在一边，再两边平方，因为 (√x)² = x。平方根不会是负数，所以像 √x = −3 这样的方程无解；最后总要把答案代回原方程检验。",
+    ),
+    ["solving-equations-with-square-roots", "squaring-a-square-root"],
+    ["8.EE.A.2"],
+    [
+      lesson(
+        "isolating-the-square-root",
+        ["Isolating the square root", "把根式单独留在一边"],
+        [
+          [
+            "Get the root alone first, then square both sides, since $(\\sqrt{x})^{2} = x$. For $\\sqrt{x} + 4 = 11$, subtract $4$ to get $\\sqrt{x} = 7$. Then $x = 49$. For $3\\sqrt{x} = 12$, divide by $3$: $\\sqrt{x} = 4$, so $x = 16$.",
+            "先把根式单独留在一边，再两边平方，因为 $(\\sqrt{x})^{2} = x$。对于 $\\sqrt{x} + 4 = 11$，两边减 $4$ 得 $\\sqrt{x} = 7$，于是 $x = 49$。对于 $3\\sqrt{x} = 12$，两边除以 $3$：$\\sqrt{x} = 4$，所以 $x = 16$。",
+          ],
+          ["$\\sqrt{49} + 4 = 7 + 4 = 11$.", "$\\sqrt{49} + 4 = 7 + 4 = 11$。"],
+          [
+            "Do not square before the root is alone. $(\\sqrt{x} + 4)^{2}$ is not $x + 16$.",
+            "根式还没单独留下时不要平方。$(\\sqrt{x} + 4)^{2}$ 不等于 $x + 16$。",
+          ],
+        ],
+        (rng) => {
+          const r = rng.int(2, 15);
+          const kind = rng.pick(["plain", "plus", "minus", "times"] as const);
+          const b = rng.int(1, 12);
+          const c = rng.int(2, 6);
+          const [eq, isolate]: [string, Pair] =
+            kind === "plain"
+              ? [`\\sqrt{x} = ${r}`, ["The root is already alone.", "根式已经单独在一边。"]]
+              : kind === "plus"
+                ? [
+                    `\\sqrt{x} + ${b} = ${r + b}`,
+                    [`Subtract $${b}$ from both sides: $\\sqrt{x} = ${r}$.`, `两边减 $${b}$：$\\sqrt{x} = ${r}$。`],
+                  ]
+                : kind === "minus"
+                  ? [
+                      `\\sqrt{x} - ${b} = ${r - b}`,
+                      [`Add $${b}$ to both sides: $\\sqrt{x} = ${r}$.`, `两边加 $${b}$：$\\sqrt{x} = ${r}$。`],
+                    ]
+                  : [
+                      `${c}\\sqrt{x} = ${c * r}`,
+                      [`Divide both sides by $${c}$: $\\sqrt{x} = ${r}$.`, `两边除以 $${c}$：$\\sqrt{x} = ${r}$。`],
+                    ];
+          const rhs = kind === "plain" ? r : kind === "plus" ? r + b : kind === "minus" ? r - b : c * r;
+          return valued(
+            [`Solve $${eq}$.`, `解方程 $${eq}$。`],
+            r * r,
+            [
+              [["Isolate the root", "把根式单独留下"], isolate],
+              [["Square both sides", "两边平方"], ["Squaring undoes the root:", "平方消去根号："], [`x = ${r}^{2} = ${r * r}`]],
+            ],
+            [
+              `Put $${r * r}$ back: $\\sqrt{${r * r}} = ${r}$, so the equation holds.`,
+              `把 $${r * r}$ 代回去：$\\sqrt{${r * r}} = ${r}$，方程成立。`,
+            ],
+            [
+              [r, "That forgets to square; $x$ is under the root.", "这是忘了平方；$x$ 在根号里。"],
+              ...(kind === "plain"
+                ? []
+                : [[rhs * rhs, "That squares before the root is alone.", "这是在根式单独留下之前就平方了。"] as const]),
+              [2 * r, "That doubles instead of squaring.", "这是乘以 $2$，而不是平方。"],
+              ...(kind === "times"
+                ? [
+                    [
+                      Q.of(rhs * rhs, c),
+                      `That divides by $${c}$ after squaring; divide first.`,
+                      `这是平方之后才除以 $${c}$；要先除。`,
+                    ] as const,
+                  ]
+                : []),
+            ],
+            { solveFor: "x" },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "11",
+              pieces: [
+                { size: 7, text: "√x" },
+                { size: 4, text: "4", lit: true },
+              ],
+            },
+          ],
+          ["A bar of 11 made of √x and 4, so √x is 7.", "一个长度为 11 的长条，由 √x 和 4 组成，所以 √x 是 7。"],
+        ),
+      ),
+      lesson(
+        "expressions-under-the-square-root",
+        ["Expressions under the root", "根号内是式子"],
+        [
+          [
+            "In $\\sqrt{2x + 3} = 5$ the root is already alone, so the first step is to square both sides. That gives $2x + 3 = 25$. Then $2x = 22$ and $x = 11$.",
+            "在 $\\sqrt{2x + 3} = 5$ 中，根式已经单独在一边，所以第一步就是两边平方，得 $2x + 3 = 25$。于是 $2x = 22$，$x = 11$。",
+          ],
+          ["$\\sqrt{2 \\cdot 11 + 3} = \\sqrt{25} = 5$.", "$\\sqrt{2 \\cdot 11 + 3} = \\sqrt{25} = 5$。"],
+          [
+            "Square the right side too. Solving $2x + 3 = 5$ gives the wrong $x = 1$.",
+            "右边也要平方。解 $2x + 3 = 5$ 会得到错误的 $x = 1$。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const a = rng.int(1, 5);
+            const x = rng.int(-6, 15);
+            const b = rng.int(-15, 15);
+            const inside = a * x + b;
+            if (b === 0 || !isSquare(inside) || inside === 0) continue;
+            const c = Math.sqrt(inside);
+            if (c === 1) continue;
+            const eq = `\\sqrt{${linearLatex(a, b)}} = ${c}`;
+            const move: Pair = b > 0 ? [`Subtract $${b}$`, `两边减 $${b}$`] : [`Add $${-b}$`, `两边加 $${-b}$`];
+            return valued(
+              [`Solve $${eq}$.`, `解方程 $${eq}$。`],
+              x,
+              [
+                [
+                  ["Square both sides", "两边平方"],
+                  ["The root is alone, so square both sides:", "根式已经单独在一边，两边平方："],
+                  [`${linearLatex(a, b)} = ${c * c}`],
+                ],
+                [
+                  ["Solve", "解方程"],
+                  a === 1 ? [`${move[0]}:`, `${move[1]}：`] : [`${move[0]}, then divide by $${a}$:`, `${move[1]}，再除以 $${a}$：`],
+                  a === 1 ? [`x = ${x}`] : [`${a}x = ${c * c - b}`, `x = ${x}`],
+                ],
+              ],
+              [
+                `Put it back: $\\sqrt{${a === 1 ? "" : `${a} \\cdot `}${paren(x)} ${signed(b)}} = \\sqrt{${c * c}} = ${c}$.`,
+                `代回去：$\\sqrt{${a === 1 ? "" : `${a} \\cdot `}${paren(x)} ${signed(b)}} = \\sqrt{${c * c}} = ${c}$。`,
+              ],
+              [
+                [Q.of(c - b, a), "That leaves the right side unsquared.", "这是右边没有平方。"],
+                [Q.of(c * c + b, a), "That moves the constant across without changing its sign.", "这是移项时没有改变常数的符号。"],
+                [Q.of(2 * c - b, a), "That doubles the right side instead of squaring it.", "这是把右边乘以 $2$，而不是平方。"],
+              ],
+              { solveFor: "x" },
+            );
+          }
+        },
+        tapeFigure(
+          [
+            {
+              total: "25",
+              pieces: [
+                { size: 22, text: "2x" },
+                { size: 3, text: "3", lit: true },
+              ],
+            },
+          ],
+          ["After squaring, a bar of 25 made of 2x and 3, so 2x is 22.", "平方之后，一个长度为 25 的长条由 2x 和 3 组成，所以 2x 是 22。"],
+        ),
+      ),
+      lesson(
+        "two-square-roots-set-equal",
+        ["Two square roots set equal", "两个相等的平方根"],
+        [
+          [
+            "When one square root equals another, square both sides. Both roots go away at once. For $\\sqrt{5x + 2} = \\sqrt{3x + 8}$, that gives $5x + 2 = 3x + 8$. So $2x = 6$ and $x = 3$.",
+            "一个平方根等于另一个平方根时，两边平方，两个根号同时去掉。对于 $\\sqrt{5x + 2} = \\sqrt{3x + 8}$，得到 $5x + 2 = 3x + 8$。所以 $2x = 6$，$x = 3$。",
+          ],
+          [
+            "Both sides become $\\sqrt{17}$: $5 \\cdot 3 + 2 = 3 \\cdot 3 + 8 = 17$.",
+            "两边都变成 $\\sqrt{17}$：$5 \\cdot 3 + 2 = 3 \\cdot 3 + 8 = 17$。",
+          ],
+          [
+            "Check that the number under each root is not negative. A value that makes it negative is not a solution.",
+            "要检验每个根号里的数不是负数。使它为负的值不是解。",
+          ],
+        ],
+        (rng) => {
+          const answer = rng.int(2, 12);
+          const c = rng.int(2, 7);
+          const a = c + rng.int(1, 5);
+          const b = rng.int(1, 30);
+          const d = (a - c) * answer + b;
+          const value = a * answer + b;
+          const gap = a - c === 1 ? "" : `${a - c}`;
+          const root = Math.sqrt(value);
+          return valued(
+            [`Solve $\\sqrt{${a}x + ${b}} = \\sqrt{${c}x + ${d}}$.`, `解方程 $\\sqrt{${a}x + ${b}} = \\sqrt{${c}x + ${d}}$。`],
+            answer,
+            [
+              [["Square both sides", "两边平方"], ["Both roots go away:", "两个根号都去掉："], [`${a}x + ${b} = ${c}x + ${d}`]],
+              [
+                ["Solve", "解方程"],
+                [`Subtract $${c}x$ and $${b}$ from both sides:`, `两边减去 $${c}x$ 和 $${b}$：`],
+                a - c === 1 ? [`x = ${d - b}`] : [`${gap}x = ${d - b}`, `x = ${answer}`],
+              ],
+            ],
+            [
+              `Both sides have $${value}$ under the root, which is not negative: $${a} \\cdot ${answer} + ${b} = ${c} \\cdot ${answer} + ${d} = ${value}$.`,
+              `两边根号里都是 $${value}$，不是负数：$${a} \\cdot ${answer} + ${b} = ${c} \\cdot ${answer} + ${d} = ${value}$。`,
+            ],
+            [
+              [-answer, "That gets the sign wrong when moving the terms.", "这是移项时符号弄错了。"],
+              [Q.of(d - b, a + c), "That adds the $x$ terms instead of subtracting them.", "这是把含 $x$ 的项相加了，而不是相减。"],
+              [value, "That is the number under the roots, not $x$.", "这是根号里的数，不是 $x$。"],
+              ...(Number.isInteger(root) ? [[root, "That is the value of each root, not $x$.", "这是根式的值，不是 $x$。"] as const] : []),
+            ],
+            { solveFor: "x" },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "17",
+              pieces: [
+                { size: 15, text: "5x" },
+                { size: 2, text: "2", lit: true },
+              ],
+            },
+            {
+              pieces: [
+                { size: 9, text: "3x" },
+                { size: 8, text: "8", lit: true },
+              ],
+            },
+          ],
+          [
+            "Two bars of 17 when x = 3: one made of 5x and 2, the other of 3x and 8.",
+            "x = 3 时两个长度都是 17 的长条：一个由 5x 和 2 组成，另一个由 3x 和 8 组成。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["solving-equations-with-square-roots", "squaring-a-square-root"],
-  ["8.EE.A.2"],
   [
-    {
-      id: "isolating-the-square-root",
-      title: t("Isolating the square root", "把根式单独留在一边"),
-      explanation: t(
-        "$\\sqrt{x} + 4 = 11$: subtract $4$ to get $\\sqrt{x} = 7$, then square: $x = 49$. Squaring before isolating is a common mistake: $(\\sqrt{x} + 4)^{2}$ is not $x + 16$. For $3\\sqrt{x} = 12$, divide by $3$ first: $\\sqrt{x} = 4$, so $x = 16$.",
-        "$\\sqrt{x} + 4 = 11$：两边减 $4$ 得 $\\sqrt{x} = 7$，再平方：$x = 49$。在根式单独留下之前就平方是常见错误：$(\\sqrt{x} + 4)^{2}$ 不等于 $x + 16$。对于 $3\\sqrt{x} = 12$，先两边除以 $3$：$\\sqrt{x} = 4$，所以 $x = 16$。",
-      ),
-      generate(rng) {
-        const r = rng.int(2, 15);
-        const kind = rng.pick(["plain", "plus", "minus", "times"] as const);
-        const b = rng.int(1, 12);
-        const c = rng.int(2, 6);
-        const [eq, isolate]: [string, [string, string]] =
-          kind === "plain"
-            ? [`\\sqrt{x} = ${r}`, ["The root is already isolated.", "根式已经单独在一边。"]]
-            : kind === "plus"
-              ? [
-                  `\\sqrt{x} + ${b} = ${r + b}`,
-                  [`Subtract $${b}$ from both sides: $\\sqrt{x} = ${r}$.`, `两边减 $${b}$：$\\sqrt{x} = ${r}$。`],
-                ]
-              : kind === "minus"
-                ? [`\\sqrt{x} - ${b} = ${r - b}`, [`Add $${b}$ to both sides: $\\sqrt{x} = ${r}$.`, `两边加 $${b}$：$\\sqrt{x} = ${r}$。`]]
-                : [
-                    `${c}\\sqrt{x} = ${c * r}`,
-                    [`Divide both sides by $${c}$: $\\sqrt{x} = ${r}$.`, `两边除以 $${c}$：$\\sqrt{x} = ${r}$。`],
-                  ];
-        const rhs = kind === "plain" ? r : kind === "plus" ? r + b : kind === "minus" ? r - b : c * r;
-        return numberProblem({
-          prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
-          answer: r * r,
-          solveFor: "x",
-          // Not squaring, squaring before isolating, and doubling instead of squaring.
-          wrong: [r, ...(kind === "plain" ? [] : [rhs * rhs]), 2 * r, ...(kind === "times" ? [Q.of(rhs * rhs, c)] : [])],
-          solution: t(
-            `${isolate[0]} Square both sides:${steps(`x = ${r}^{2} = ${r * r}`)}Check: $\\sqrt{${r * r}} = ${r}$.`,
-            `${isolate[1]}两边平方：${steps(`x = ${r}^{2} = ${r * r}`)}检验：$\\sqrt{${r * r}} = ${r}$。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "expressions-under-the-square-root",
-      title: t("Expressions under the root", "根号内是式子"),
-      explanation: t(
-        "$\\sqrt{2x + 3} = 5$: squaring both sides gives $2x + 3 = 25$, so $2x = 22$ and $x = 11$. Check: $\\sqrt{2 \\cdot 11 + 3} = \\sqrt{25} = 5$. Square the right side before solving the linear equation; solving $2x + 3 = 5$ gives the wrong $x = 1$.",
-        "$\\sqrt{2x + 3} = 5$：两边平方得 $2x + 3 = 25$，所以 $2x = 22$，$x = 11$。检验：$\\sqrt{2 \\cdot 11 + 3} = \\sqrt{25} = 5$。要先把右边平方，再解一次方程；解 $2x + 3 = 5$ 会得到错误的 $x = 1$。",
-      ),
-      generate(rng) {
-        const a = rng.int(1, 5);
-        const x = rng.int(-6, 15);
-        const b = rng.int(-15, 15);
-        const inside = a * x + b;
-        if (b === 0 || !isSquare(inside) || inside === 0) return this.generate(rng);
-        const c = Math.sqrt(inside);
-        if (c === 1) return this.generate(rng);
-        const eq = `\\sqrt{${linearLatex(a, b)}} = ${c}`;
-        return numberProblem({
-          prompt: t(`Solve $${eq}$.`, `解方程 $${eq}$。`),
-          answer: x,
-          solveFor: "x",
-          // Not squaring the right side, squaring it with the wrong sign of b, and doubling instead of squaring.
-          wrong: [Q.of(c - b, a), Q.of(c * c + b, a), Q.of(2 * c - b, a)],
-          solution: t(
-            `Square both sides, then solve:${steps(`${linearLatex(a, b)} = ${c * c}`, ...(a === 1 ? [] : [`${a}x = ${c * c - b}`]), `x = ${x}`)}Check: $\\sqrt{${a === 1 ? "" : `${a} \\cdot `}${paren(x)} ${signed(b)}} = \\sqrt{${c * c}} = ${c}$.`,
-            `两边平方，再解方程：${steps(`${linearLatex(a, b)} = ${c * c}`, ...(a === 1 ? [] : [`${a}x = ${c * c - b}`]), `x = ${x}`)}检验：$\\sqrt{${a === 1 ? "" : `${a} \\cdot `}${paren(x)} ${signed(b)}} = \\sqrt{${c * c}} = ${c}$。`,
-          ),
-        });
-      },
-    },
+    "A square garden has an area of $x$ m². Its side is $\\sqrt{x}$ m. With a path $4$ m wide along one side, the garden and path measure $11$ m across.",
+    "一个正方形花园的面积是 $x$ 平方米，边长是 $\\sqrt{x}$ 米。沿一边修了一条宽 $4$ 米的小路，花园加小路共宽 $11$ 米。",
+  ],
+  ["The side is $11 - 4 = 7$ m, so the area is $7^{2} = 49$ m².", "边长是 $11 - 4 = 7$ 米，所以面积是 $7^{2} = 49$ 平方米。"],
+  [
+    "solve equations with square roots by getting the root alone and squaring both sides.",
+    "解含平方根的方程：先把根式单独留下，再两边平方。",
   ],
 );
 
@@ -877,3 +1139,96 @@ export const grade8RadicalTopics: readonly TopicDef[] = [
   solvingRadicalEquationsWithCubeRoots,
   findingSideLengthsOfSquaresAndCubesFromAreaOrVolume,
 ];
+
+/** countingTheSurds counts the surds in a list of roots; it is the third point of surds, to take the place of the one in the deeper files. */
+export const countingTheSurds = lesson(
+  "counting-the-surds",
+  ["Counting the surds", "数一数不尽根数"],
+  [
+    [
+      "A surd is a root that cannot be written as a fraction. Roots of perfect squares and perfect cubes are whole numbers in disguise: $\\sqrt{49} = 7$ and $\\sqrt[3]{27} = 3$. So simplify each root before you count it.",
+      "不能写成分数的根式叫作不尽根数。完全平方数和完全立方数的根其实是整数：$\\sqrt{49} = 7$，$\\sqrt[3]{27} = 3$。所以先化简每个根式，再计数。",
+    ],
+    ["$7^{2} = 49$ and $3^{3} = 27$, so neither of them is a surd.", "$7^{2} = 49$，$3^{3} = 27$，所以它们都不是不尽根数。"],
+    [
+      "Match the test to the root. $\\sqrt[3]{25}$ is a surd, even though $25$ is a perfect square.",
+      "判断要看根指数。$\\sqrt[3]{25}$ 是不尽根数，尽管 $25$ 是完全平方数。",
+    ],
+  ],
+  (rng) => {
+    const draw = () => {
+      const kind = rng.int(0, 3);
+      if (kind === 0) {
+        const r = rng.int(2, 15);
+        return { latex: `\\sqrt{${r ** 2}}`, value: r };
+      }
+      if (kind === 1) {
+        const r = rng.int(2, 6);
+        return { latex: `\\sqrt[3]{${r ** 3}}`, value: r };
+      }
+      if (kind === 2) return { latex: `\\sqrt{${rng.pick([2, 3, 5, 6, 7, 10, 11, 13, 15, 17])}}` };
+      return { latex: `\\sqrt[3]{${rng.pick([2, 3, 4, 5, 6, 7, 9, 10, 15, 25])}}` };
+    };
+    const size = rng.int(4, 6);
+    const items: { latex: string; value?: number }[] = [];
+    while (items.length < size) {
+      const item = draw();
+      if (!items.some((x) => x.latex === item.latex)) items.push(item);
+    }
+    const exact = items.filter((x) => x.value !== undefined);
+    const surds = items.filter((x) => x.value === undefined).map((x) => x.latex);
+    const count = surds.length;
+    const list = items.map((x) => x.latex).join(",\\quad ");
+    return valued(
+      [`How many of these are surds? $$${list}$$`, `其中有几个不尽根数？$$${list}$$`],
+      count,
+      [
+        exact.length === 0
+          ? [
+              ["Find the exact roots", "找出能开尽的根式"],
+              ["None of them come out exact.", "没有一个能开尽。"],
+            ]
+          : [
+              ["Find the exact roots", "找出能开尽的根式"],
+              ["These are roots of perfect squares or perfect cubes:", "这些是完全平方数或完全立方数的根："],
+              exact.map((x) => `${x.latex} = ${x.value}`),
+            ],
+        count === 0
+          ? [
+              ["Count the rest", "数剩下的"],
+              ["Nothing is left, so there are no surds.", "没有剩下的，所以一个不尽根数也没有。"],
+            ]
+          : [
+              ["Count the rest", "数剩下的"],
+              [`The others are surds. There ${count === 1 ? "is" : "are"} $${count}$:`, `其余的是不尽根数，共 $${count}$ 个：`],
+              [surds.join(",\\;")],
+            ],
+      ],
+      [
+        `Every root is counted once: $${exact.length}$ exact and $${count}$ surds make $${size}$.`,
+        `每个根式都只数一次：$${exact.length}$ 个能开尽，$${count}$ 个不尽根数，共 $${size}$ 个。`,
+      ],
+      [
+        [size, "That counts every root; some of them come out exact.", "这是把每个根式都算上了；有些能开尽。"],
+        [size - count, "That counts the exact roots instead of the surds.", "这是数了能开尽的根式，而不是不尽根数。"],
+        [count + 1, "That counts one exact root as a surd.", "这是把一个能开尽的根式算成了不尽根数。"],
+      ],
+    );
+  },
+  lineFigure(
+    {
+      lo: 6,
+      hi: 8,
+      step: 0.5,
+      labels: [6, 7, 8],
+      marks: [
+        { at: 7, text: "√49" },
+        { at: Math.sqrt(55), text: "√55", result: true },
+      ],
+    },
+    [
+      "A number line from 6 to 8: √49 lands on 7, while √55 falls between 7 and 8.",
+      "一条从 6 到 8 的数轴：√49 正好落在 7 上，而 √55 落在 7 和 8 之间。",
+    ],
+  ),
+);

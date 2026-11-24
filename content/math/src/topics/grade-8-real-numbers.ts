@@ -1,9 +1,12 @@
-import type { KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, KnowledgePointDef, Problem, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, num, Q } from "@ga/subject-math";
 
 import { choiceProblem, numberProblem, steps } from "../problems.ts";
+import type { Pair } from "./early-grades-more-kit.ts";
 import { compareProblem, mathText, pickChoice } from "./grade-4-fractions.ts";
+import { lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { lineFigure } from "./upper-grades-kit.ts";
 
 // 8th Grade Math, the real number system: classifying roots as rational or irrational, approximating roots, comparing
 // and ordering real numbers, and estimating expressions with irrational numbers.
@@ -198,73 +201,254 @@ function nonPower(rng: Rng, lo: number, hi: number, k: 2 | 3): number {
   return iroot(n, k) ** k === n ? nonPower(rng, lo, hi, k) : n;
 }
 
+/** rootLine draws a number line from lo to hi with ticks every step, text under the given ticks, and one point with its text. */
+function rootLine(
+  lo: number,
+  hi: number,
+  step: number,
+  labels: readonly number[],
+  at: number,
+  text: string,
+  alt: Pair,
+  places = 1,
+): Figure {
+  return lineFigure(
+    { lo, hi, step, labels, label: (v) => v.toFixed(places).replace(/\.0+$/, ""), marks: [{ at, text, result: true }] },
+    alt,
+  );
+}
+
 /** approximatingSquareRootsAndCubeRoots finds the nearest integer and the nearest tenth of an irrational root. */
-export const approximatingSquareRootsAndCubeRoots = topic(
-  "approximating-square-roots-and-cube-roots",
-  t("Approximating Square Roots and Cube Roots", "估算平方根和立方根"),
-  t(
-    "An irrational root can be located between consecutive integers by finding the perfect squares or perfect cubes on either side of the number under the root. Squaring numbers with one decimal place narrows the root down to the nearest tenth.",
-    "找出根号内的数两侧的完全平方数或完全立方数，就能确定无理根在哪两个连续整数之间。再把一位小数平方，就能把根精确到十分位。",
+export const approximatingSquareRootsAndCubeRoots = withIntro(
+  topic(
+    "approximating-square-roots-and-cube-roots",
+    t("Approximating Square Roots and Cube Roots", "估算平方根和立方根"),
+    t(
+      "An irrational root can be located between consecutive integers by finding the perfect squares or perfect cubes on either side of the number under the root. Squaring numbers with one decimal place narrows the root down to the nearest tenth.",
+      "找出根号内的数两侧的完全平方数或完全立方数，就能确定无理根在哪两个连续整数之间。再把一位小数平方，就能把根精确到十分位。",
+    ),
+    ["classifying-square-roots-and-cube-roots-as-rational-or-irrational"],
+    ["8.NS.A.2"],
+    [
+      lesson(
+        "nearest-whole-number",
+        ["The nearest whole number", "最接近的整数"],
+        [
+          [
+            "A square rug has an area of $41$ square feet, so its side is $\\sqrt{41}$ feet. $6^{2} = 36$ and $7^{2} = 49$, so the side is between $6$ and $7$. The halfway value $6.5$ has $6.5^{2} = 42.25$. $41$ is less than that, so $\\sqrt{41}$ is closer to $6$.",
+            "一块正方形地毯的面积是 $41$ 平方英尺，所以边长是 $\\sqrt{41}$ 英尺。$6^{2} = 36$，$7^{2} = 49$，所以边长在 $6$ 和 $7$ 之间。中间值 $6.5$ 的平方是 $6.5^{2} = 42.25$。$41$ 比它小，所以 $\\sqrt{41}$ 更接近 $6$。",
+          ],
+          [
+            "$41$ is $5$ above $36$ but $8$ below $49$, so it sits nearer $6^{2}$.",
+            "$41$ 比 $36$ 大 $5$，比 $49$ 小 $8$，所以离 $6^{2}$ 更近。",
+          ],
+          [
+            "Do not halve the number. $41 \\div 2 = 20.5$ is far from $\\sqrt{41}$.",
+            "不要把这个数除以 2。$41 \\div 2 = 20.5$ 和 $\\sqrt{41}$ 差得很远。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const k = rng.bool(0.65) ? 2 : 3;
+            const n = k === 2 ? nonPower(rng, 5, 230, 2) : nonPower(rng, 3, 700, 3);
+            const lo = iroot(n, k);
+            const [a, b] = [lo ** k, (lo + 1) ** k];
+            const up = n > (lo + 0.5) ** k;
+            // The check compares distances, which must agree with the halfway value.
+            if (up !== b - n < n - a || b - n === n - a) continue;
+            const ans = up ? lo + 1 : lo;
+            const expr = rootLatex(String(n), k);
+            const mid = dec(Q.of((2 * lo + 1) ** k, 2 ** k));
+            const word = k === 2 ? ["perfect squares", "完全平方数"] : ["perfect cubes", "完全立方数"];
+            return valued(
+              [`Which whole number is closest to $${expr}$?`, `哪个整数最接近 $${expr}$？`],
+              ans,
+              [
+                [
+                  [`Find the ${word[0]} on each side`, `找出两边的${word[1]}`],
+                  [`$${lo}^{${k}} = ${a}$ and $${lo + 1}^{${k}} = ${b}$, so:`, `$${lo}^{${k}} = ${a}$，$${lo + 1}^{${k}} = ${b}$，所以：`],
+                  [`${lo} < ${expr} < ${lo + 1}`],
+                ],
+                [
+                  ["Test the halfway value", "检验中间值"],
+                  [
+                    `$${lo}.5^{${k}} = ${mid}$, and $${n}$ is ${up ? "more" : "less"} than that, so the root is ${up ? "above" : "below"} $${lo}.5$.`,
+                    `$${lo}.5^{${k}} = ${mid}$，$${n}$ 比它${up ? "大" : "小"}，所以这个根${up ? "大于" : "小于"} $${lo}.5$。`,
+                  ],
+                ],
+              ],
+              [
+                `Compare distances: $${n}$ is $${n - a}$ above $${a}$ and $${b - n}$ below $${b}$, so it is nearer $${ans}^{${k}}$.`,
+                `比较距离：$${n}$ 比 $${a}$ 大 $${n - a}$，比 $${b}$ 小 $${b - n}$，所以离 $${ans}^{${k}}$ 更近。`,
+              ],
+              [
+                [up ? lo : lo + 1, "That is the farther of the two neighbors.", "这是两个相邻整数中离得较远的那个。"],
+                [Math.round(n / k), `That divides by ${k} instead of taking the root.`, `这是除以 ${k}，而不是开方。`],
+              ],
+            );
+          }
+        },
+        rootLine(6, 7, 0.1, [6, 6.5, 7], Math.sqrt(41), "√41", [
+          "A number line from 6 to 7 in tenths, with 6.5 marked and √41 plotted left of 6.5.",
+          "一条从 6 到 7、以十分之一为刻度的数轴，标出 6.5，√41 在 6.5 的左边。",
+        ]),
+      ),
+      lesson(
+        "nearest-tenth",
+        ["The nearest tenth", "精确到十分位"],
+        [
+          [
+            "$\\sqrt{20}$ is between $4$ and $5$. Now square tenths: $4.4^{2} = 19.36$ and $4.5^{2} = 20.25$. So $\\sqrt{20}$ is between $4.4$ and $4.5$. The halfway value has $4.45^{2} = 19.8025$, which is less than $20$. So $\\sqrt{20}$ rounds up to $4.5$.",
+            "$\\sqrt{20}$ 在 $4$ 和 $5$ 之间。再把一位小数平方：$4.4^{2} = 19.36$，$4.5^{2} = 20.25$。所以 $\\sqrt{20}$ 在 $4.4$ 和 $4.5$ 之间。中间值的平方 $4.45^{2} = 19.8025$ 小于 $20$，所以 $\\sqrt{20}$ 约等于 $4.5$。",
+          ],
+          [
+            "$4.5^{2} = 20.25$ is $0.25$ from $20$, but $4.4^{2} = 19.36$ is $0.64$ away.",
+            "$4.5^{2} = 20.25$ 离 $20$ 差 $0.25$，而 $4.4^{2} = 19.36$ 差 $0.64$。",
+          ],
+          [
+            "Do not stop at the first tenth whose square is too small. $4.4^{2}$ is below $20$, but $4.5$ is nearer.",
+            "不要停在平方偏小的那个一位小数上。$4.4^{2}$ 小于 $20$，但 $4.5$ 更接近。",
+          ],
+        ],
+        (rng) => {
+          const n = nonPower(rng, 3, 120, 2);
+          const a = iroot(100 * n, 2);
+          const up = 100 * n > a * a + a;
+          const [lo, hi] = [Q.of(a, 10), Q.of(a + 1, 10)];
+          const mid = Q.of(2 * a + 1, 20);
+          const ans = up ? hi : lo;
+          const [sl, sh] = [lo.mul(lo), hi.mul(hi)];
+          return valued(
+            [`Find $\\sqrt{${n}}$ to the nearest tenth.`, `求 $\\sqrt{${n}}$ 的近似值，精确到十分位。`],
+            ans,
+            [
+              [
+                ["Trap it between tenths", "夹在两个一位小数之间"],
+                [`Square tenths until one is too big:`, `把一位小数平方，直到超过 $${n}$：`],
+                [`${dec(lo)}^{2} = ${dec(sl)},\\quad ${dec(hi)}^{2} = ${dec(sh)}`],
+              ],
+              [
+                ["Test the halfway value", "检验中间值"],
+                [
+                  `$${dec(mid)}^{2} = ${dec(mid.mul(mid))}$ is ${up ? "less" : "more"} than $${n}$, so $\\sqrt{${n}}$ rounds to $${dec(ans)}$.`,
+                  `$${dec(mid)}^{2} = ${dec(mid.mul(mid))}$ ${up ? "小于" : "大于"} $${n}$，所以 $\\sqrt{${n}} \\approx ${dec(ans)}$。`,
+                ],
+              ],
+            ],
+            [
+              `Compare distances: $${dec(sh)}$ is $${dec(sh.sub(Q.of(n)))}$ above $${n}$ and $${dec(sl)}$ is $${dec(Q.of(n).sub(sl))}$ below, so $${dec(ans)}$ is nearer.`,
+              `比较距离：$${dec(sh)}$ 比 $${n}$ 大 $${dec(sh.sub(Q.of(n)))}$，$${dec(sl)}$ 比它小 $${dec(Q.of(n).sub(sl))}$，所以 $${dec(ans)}$ 更接近。`,
+            ],
+            [
+              [up ? lo : hi, "That rounds the wrong way: the halfway square decides.", "这是舍入方向错了：要看中间值的平方。"],
+              [
+                Q.of(Math.round(n * 5), 10),
+                "That halves the number instead of taking its square root.",
+                "这是把这个数除以 2，而不是开平方。",
+              ],
+            ],
+            { form: "decimal" },
+          );
+        },
+        rootLine(
+          4.4,
+          4.5,
+          0.01,
+          [4.4, 4.45, 4.5],
+          Math.sqrt(20),
+          "√20",
+          [
+            "A number line from 4.4 to 4.5 in hundredths, with 4.45 marked and √20 plotted right of 4.45.",
+            "一条从 4.4 到 4.5、以百分之一为刻度的数轴，标出 4.45，√20 在 4.45 的右边。",
+          ],
+          2,
+        ),
+      ),
+      lesson(
+        "whole-numbers-between-two-roots",
+        ["Whole numbers between two roots", "两个根之间的整数"],
+        [
+          [
+            "How many whole numbers lie between $\\sqrt{10}$ and $\\sqrt{50}$? $9 < 10 < 16$, so $\\sqrt{10}$ is between $3$ and $4$. $49 < 50 < 64$, so $\\sqrt{50}$ is between $7$ and $8$. The whole numbers between them are $4, 5, 6, 7$: there are $7 - 3 = 4$.",
+            "$\\sqrt{10}$ 和 $\\sqrt{50}$ 之间有多少个整数？$9 < 10 < 16$，所以 $\\sqrt{10}$ 在 $3$ 和 $4$ 之间。$49 < 50 < 64$，所以 $\\sqrt{50}$ 在 $7$ 和 $8$ 之间。它们之间的整数是 $4, 5, 6, 7$，共 $7 - 3 = 4$ 个。",
+          ],
+          [
+            "Square each one: $16, 25, 36, 49$ are all between $10$ and $50$, and $64$ is not.",
+            "把每个数平方：$16, 25, 36, 49$ 都在 $10$ 和 $50$ 之间，$64$ 不在。",
+          ],
+          [
+            "Do not subtract the numbers under the roots. $50 - 10 = 40$ counts something else.",
+            "不要用根号里的数相减。$50 - 10 = 40$ 数的是别的东西。",
+          ],
+        ],
+        (rng) => {
+          const low = rng.int(2, 15);
+          const high = low + rng.int(2, 9);
+          const a = low * low + rng.int(1, 2 * low);
+          const b = high * high + rng.int(1, 2 * high);
+          const answer = high - low;
+          return valued(
+            [
+              `How many whole numbers lie between $\\sqrt{${a}}$ and $\\sqrt{${b}}$?`,
+              `$\\sqrt{${a}}$ 和 $\\sqrt{${b}}$ 之间有多少个整数？`,
+            ],
+            answer,
+            [
+              [
+                ["Place each root", "确定每个根的位置"],
+                [`The perfect squares on each side show where the roots are:`, `两边的完全平方数说明了根的位置：`],
+                [
+                  `${low * low} < ${a} < ${(low + 1) ** 2} \\Rightarrow ${low} < \\sqrt{${a}} < ${low + 1}`,
+                  `${high * high} < ${b} < ${(high + 1) ** 2} \\Rightarrow ${high} < \\sqrt{${b}} < ${high + 1}`,
+                ],
+              ],
+              [
+                ["Count", "数一数"],
+                [`The whole numbers are $${low + 1}$ to $${high}$:`, `这些整数是 $${low + 1}$ 到 $${high}$：`],
+                [`${high} - ${low} = ${answer}`],
+              ],
+            ],
+            [
+              `Square the end ones: $${low + 1}^{2} = ${(low + 1) ** 2}$ is above $${a}$, and $${high}^{2} = ${high * high}$ is below $${b}$.`,
+              `把两端的数平方：$${low + 1}^{2} = ${(low + 1) ** 2}$ 大于 $${a}$，$${high}^{2} = ${high * high}$ 小于 $${b}$。`,
+            ],
+            [
+              [answer + 1, `That also counts $${low}$, which is below $\\sqrt{${a}}$.`, `这把 $${low}$ 也算上了，它比 $\\sqrt{${a}}$ 小。`],
+              [answer - 1, `That leaves out one end, $${low + 1}$ or $${high}$.`, `这漏掉了一端的 $${low + 1}$ 或 $${high}$。`],
+              [b - a, "That subtracts the numbers under the roots.", "这是用根号里的数相减。"],
+            ],
+          );
+        },
+        lineFigure(
+          {
+            lo: 3,
+            hi: 8,
+            step: 1,
+            labels: [3, 4, 5, 6, 7, 8],
+            marks: [
+              { at: Math.sqrt(10), text: "√10" },
+              { at: Math.sqrt(50), text: "√50" },
+            ],
+          },
+          [
+            "A number line from 3 to 8 with √10 just above 3 and √50 just above 7; the whole numbers 4 to 7 lie between them.",
+            "一条从 3 到 8 的数轴，√10 略大于 3，√50 略大于 7；整数 4 到 7 在它们之间。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["classifying-square-roots-and-cube-roots-as-rational-or-irrational"],
-  ["8.NS.A.2"],
   [
-    {
-      id: "nearest-whole-number",
-      title: t("The nearest whole number", "最接近的整数"),
-      explanation: t(
-        "$\\sqrt{41}$: since $36 < 41 < 49$, $6 < \\sqrt{41} < 7$. $41$ is $5$ above $36$ and $8$ below $49$, so $\\sqrt{41}$ is closer to $6$. For $\\sqrt[3]{100}$: $64 < 100 < 125$, so it is between $4$ and $5$, and $100$ is closer to $125$, so $\\sqrt[3]{100}$ is closer to $5$. When the number is very close to the middle, check the square of the halfway value, such as $6.5^{2} = 42.25$.",
-        "$\\sqrt{41}$：因为 $36 < 41 < 49$，所以 $6 < \\sqrt{41} < 7$。$41$ 比 $36$ 大 $5$，比 $49$ 小 $8$，所以 $\\sqrt{41}$ 更接近 $6$。对于 $\\sqrt[3]{100}$：$64 < 100 < 125$，所以它在 $4$ 和 $5$ 之间，而 $100$ 更接近 $125$，所以 $\\sqrt[3]{100}$ 更接近 $5$。当这个数很接近中间时，检验中间值的平方，例如 $6.5^{2} = 42.25$。",
-      ),
-      generate(rng) {
-        const k = rng.bool(0.65) ? 2 : 3;
-        const n = k === 2 ? nonPower(rng, 5, 230, 2) : nonPower(rng, 3, 700, 3);
-        const lo = iroot(n, k);
-        // The root is nearer lo + 1 exactly when n is at least (lo + 1/2)^k.
-        const up = n > (lo + 0.5) ** k;
-        const ans = up ? lo + 1 : lo;
-        const expr = rootLatex(String(n), k);
-        return numberProblem({
-          prompt: t(`Which whole number is closest to $${expr}$?`, `哪个整数最接近 $${expr}$？`),
-          answer: ans,
-          form: "integer",
-          // The other neighbor, and dividing by the index instead of taking a root.
-          wrong: [up ? lo : lo + 1, Math.round(n / k)],
-          solution: t(
-            `$${lo}^{${k}} = ${lo ** k}$ and $${lo + 1}^{${k}} = ${(lo + 1) ** k}$, so $${lo} < ${expr} < ${lo + 1}$. The halfway value has $${lo}.5^{${k}} = ${dec(Q.of((2 * lo + 1) ** k, 2 ** k))}$, and $${n} ${up ? ">" : "<"} ${dec(Q.of((2 * lo + 1) ** k, 2 ** k))}$, so $${expr}$ is closest to $${ans}$.`,
-            `$${lo}^{${k}} = ${lo ** k}$，$${lo + 1}^{${k}} = ${(lo + 1) ** k}$，所以 $${lo} < ${expr} < ${lo + 1}$。中间值 $${lo}.5^{${k}} = ${dec(Q.of((2 * lo + 1) ** k, 2 ** k))}$，而 $${n} ${up ? ">" : "<"} ${dec(Q.of((2 * lo + 1) ** k, 2 ** k))}$，所以 $${expr}$ 最接近 $${ans}$。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "nearest-tenth",
-      title: t("The nearest tenth", "精确到十分位"),
-      explanation: t(
-        "$\\sqrt{20}$ is between $4$ and $5$. Square tenths: $4.4^{2} = 19.36$ and $4.5^{2} = 20.25$, so $4.4 < \\sqrt{20} < 4.5$. To round, square the halfway value: $4.45^{2} = 19.8025 < 20$, so $\\sqrt{20}$ is above $4.45$ and rounds to $4.5$.",
-        "$\\sqrt{20}$ 在 $4$ 和 $5$ 之间。把一位小数平方：$4.4^{2} = 19.36$，$4.5^{2} = 20.25$，所以 $4.4 < \\sqrt{20} < 4.5$。要四舍五入，就把中间值平方：$4.45^{2} = 19.8025 < 20$，所以 $\\sqrt{20}$ 大于 $4.45$，约等于 $4.5$。",
-      ),
-      generate(rng) {
-        const n = nonPower(rng, 3, 120, 2);
-        // a/10 ≤ √n < (a + 1)/10, and √n rounds up exactly when 100n > (a + 1/2)², that is when 100n > a² + a.
-        const a = iroot(100 * n, 2);
-        const up = 100 * n > a * a + a;
-        const [lo, hi] = [Q.of(a, 10), Q.of(a + 1, 10)];
-        const mid = Q.of(2 * a + 1, 20);
-        const ans = up ? hi : lo;
-        return numberProblem({
-          prompt: t(`Find $\\sqrt{${n}}$ to the nearest tenth.`, `求 $\\sqrt{${n}}$ 的近似值（精确到十分位）。`),
-          answer: ans,
-          form: "decimal",
-          // Rounding the wrong way, and halving the number.
-          wrong: [up ? lo : hi, Q.of(Math.round(n * 5), 10)],
-          solution: t(
-            `$${dec(lo)}^{2} = ${dec(lo.mul(lo))}$ and $${dec(hi)}^{2} = ${dec(hi.mul(hi))}$, so $${dec(lo)} < \\sqrt{${n}} < ${dec(hi)}$. The halfway value has $${dec(mid)}^{2} = ${dec(mid.mul(mid))}$, which is ${up ? "less" : "more"} than $${n}$, so $\\sqrt{${n}} \\approx ${dec(ans)}$.`,
-            `$${dec(lo)}^{2} = ${dec(lo.mul(lo))}$，$${dec(hi)}^{2} = ${dec(hi.mul(hi))}$，所以 $${dec(lo)} < \\sqrt{${n}} < ${dec(hi)}$。中间值 $${dec(mid)}^{2} = ${dec(mid.mul(mid))}$，${up ? "小于" : "大于"} $${n}$，所以 $\\sqrt{${n}} \\approx ${dec(ans)}$。`,
-          ),
-        });
-      },
-    },
+    "A square garden has an area of $30$ square meters. How long is each side? $5 \\times 5 = 25$ is too small, and $6 \\times 6 = 36$ is too big.",
+    "一个正方形花园的面积是 $30$ 平方米。每条边有多长？$5 \\times 5 = 25$ 太小，$6 \\times 6 = 36$ 太大。",
+  ],
+  [
+    "So the side $\\sqrt{30}$ is between $5$ and $6$, and $25 < 30 < 36$ agrees.",
+    "所以边长 $\\sqrt{30}$ 在 $5$ 和 $6$ 之间，$25 < 30 < 36$ 也说明了这一点。",
+  ],
+  [
+    "trap square roots and cube roots between whole numbers and find them to the nearest tenth.",
+    "把平方根和立方根夹在两个整数之间，并求出精确到十分位的近似值。",
   ],
 );
 

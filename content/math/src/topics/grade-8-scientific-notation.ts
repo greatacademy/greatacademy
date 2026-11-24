@@ -3,8 +3,12 @@ import { t } from "@ga/content";
 import { dec, Q, sci } from "@ga/subject-math";
 
 import { numberProblem, scientificProblem, scientificValue, steps } from "../problems.ts";
+import type { Pair, Walk } from "./early-grades-more-kit.ts";
 import { mantissa, normalize, standard } from "./exponents.ts";
 import { compareProblem } from "./grade-4-fractions.ts";
+import { lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { scienced } from "./grade-8-kit.ts";
+import { lineFigure, type Tape, tapeFigure } from "./upper-grades-kit.ts";
 
 // 8th Grade Math, scientific notation: writing numbers in scientific notation and back, comparing them, adding,
 // subtracting, multiplying and dividing them, and estimating and comparing real-world quantities.
@@ -68,69 +72,233 @@ const places = (n: number) => `${n} place${n === 1 ? "" : "s"}`;
 // ---------------------------------------------------------------------------
 // Writing and comparing numbers in scientific notation
 
+/** signed writes an integer for use after an operator: "(-3)" or "3". */
+const signed = (n: number) => (n < 0 ? `(${n})` : String(n));
+
+/** timesTen draws a bar of a first factor followed by shaded pieces, one for each factor of ten, with the value over it. */
+function timesTen(first: string, size: number, count: number, each: string, total: string): Tape {
+  return { total, pieces: [{ size, text: first }, ...Array.from({ length: count }, () => ({ size: 1, text: each, lit: true }))] };
+}
+
+/** placed writes v in scientific notation in two labelled steps: place the point, then count the places. */
+function placed(v: Q, s: Sci): readonly [Walk[], Pair] {
+  const k = Math.abs(s.n);
+  const way = s.n > 0 ? (["left", "左"] as const) : (["right", "右"] as const);
+  const back = s.n > 0 ? (["right", "右"] as const) : (["left", "左"] as const);
+  return [
+    [
+      [
+        ["Place the point", "点小数点"],
+        [`Put the point after the first nonzero digit: $${dec(s.a)}$.`, `把小数点放在第一个非零数字后面：$${dec(s.a)}$。`],
+      ],
+      [
+        ["Count the places", "数位数"],
+        [
+          `The point moved $${k}$ ${k === 1 ? "place" : "places"} to the ${way[0]}, so the exponent is $${s.n}$:`,
+          `小数点向${way[1]}移动了 $${k}$ 位，所以指数是 $${s.n}$：`,
+        ],
+        [`${standard(v)} = ${show(s)}`],
+      ],
+    ],
+    [
+      `Move the point back $${k}$ ${k === 1 ? "place" : "places"} to the ${back[0]}, and you get $${standard(v)}$ again.`,
+      `把小数点向${back[1]}移回 $${k}$ 位，又得到 $${standard(v)}$。`,
+    ],
+  ];
+}
+
 /** writingNumbersInScientificNotation writes large and small numbers as a × 10^n. */
-export const writingNumbersInScientificNotation = topic(
-  "writing-numbers-in-scientific-notation",
-  t("Writing Numbers in Scientific Notation", "用科学记数法表示数"),
-  t(
-    "A number is in scientific notation when it is written a × 10ⁿ with 1 ≤ a < 10 and n an integer. Move the decimal point until exactly one nonzero digit is in front of it; n is the number of places moved, positive for a number of 10 or more and negative for a number less than 1.",
-    "把数写成 a × 10ⁿ 的形式，其中 1 ≤ a < 10，n 为整数，就是科学记数法。移动小数点，使它前面恰好有一个非零数字；n 是移动的位数，数大于或等于 10 时为正，小于 1 时为负。",
+export const writingNumbersInScientificNotation = withIntro(
+  topic(
+    "writing-numbers-in-scientific-notation",
+    t("Writing Numbers in Scientific Notation", "用科学记数法表示数"),
+    t(
+      "A number is in scientific notation when it is written a × 10ⁿ with 1 ≤ a < 10 and n an integer. Move the decimal point until exactly one nonzero digit is in front of it; n is the number of places moved, positive for a number of 10 or more and negative for a number less than 1.",
+      "把数写成 a × 10ⁿ 的形式，其中 1 ≤ a < 10，n 为整数，就是科学记数法。移动小数点，使它前面恰好有一个非零数字；n 是移动的位数，数大于或等于 10 时为正，小于 1 时为负。",
+    ),
+    ["negative-exponents"],
+    ["8.EE.A.3"],
+    [
+      lesson(
+        "writing-large-numbers",
+        ["Large numbers", "大数"],
+        [
+          [
+            "For $45{,}000$, move the decimal point $4$ places to the left to get $4.5$. That number is between $1$ and $10$. Moving left divided by $10^{4}$, so multiply back: $45{,}000 = 4.5 \\times 10^{4}$.",
+            "对于 $45{,}000$，把小数点向左移动 $4$ 位，得到 $4.5$。这个数在 $1$ 和 $10$ 之间。向左移动相当于除以 $10^{4}$，所以要乘回来：$45{,}000 = 4.5 \\times 10^{4}$。",
+          ],
+          ["$4.5 \\times 10{,}000 = 45{,}000$.", "$4.5 \\times 10{,}000 = 45{,}000$。"],
+          [
+            "The first factor must be less than $10$. $45 \\times 10^{3}$ has the right value, but it is not scientific notation.",
+            "前面的因数必须小于 $10$。$45 \\times 10^{3}$ 的值虽然对，但不是科学记数法。",
+          ],
+        ],
+        (rng) => {
+          const s = draw(rng, 3, 10);
+          const v = value(s);
+          const [walk, check] = placed(v, s);
+          return scienced(
+            [`Write $${standard(v)}$ in scientific notation.`, `用科学记数法表示 $${standard(v)}$。`],
+            s.a,
+            s.n,
+            walk,
+            check,
+            [
+              [s.a, s.n + 1, "That counts the digits, not the places the point moves.", "这是数了数字的个数，而不是小数点移动的位数。"],
+              [s.a, s.n - 1, "That counts one place too few.", "这是少数了一位。"],
+              [
+                s.a,
+                -s.n,
+                "That has the wrong sign; a number of $10$ or more has a positive exponent.",
+                "这是符号错了；大于或等于 $10$ 的数指数是正的。",
+              ],
+            ],
+          );
+        },
+        tapeFigure(
+          [timesTen("4.5", 2, 4, "×10", "45 000")],
+          [
+            "A bar: 4.5 followed by four shaded pieces ×10, with 45 000 over the whole bar.",
+            "一个长条：4.5 后面跟着四段涂色的 ×10，整个长条上方标着 45 000。",
+          ],
+        ),
+      ),
+      lesson(
+        "writing-small-numbers",
+        ["Small numbers", "小数"],
+        [
+          [
+            "For $0.00032$, move the decimal point $4$ places to the right, past the first nonzero digit, to get $3.2$. Moving right multiplied by $10^{4}$. To undo it, multiply by $10^{-4}$: $0.00032 = 3.2 \\times 10^{-4}$.",
+            "对于 $0.00032$，把小数点向右移过第一个非零数字，共移动 $4$ 位，得到 $3.2$。向右移动相当于乘以 $10^{4}$。要还原，就乘以 $10^{-4}$：$0.00032 = 3.2 \\times 10^{-4}$。",
+          ],
+          [
+            "Divide by $10$ four times: $3.2 \\div 10 \\div 10 \\div 10 \\div 10 = 0.00032$.",
+            "除以四次 $10$：$3.2 \\div 10 \\div 10 \\div 10 \\div 10 = 0.00032$。",
+          ],
+          [
+            "Count the places the point moves, not the zeros. $0.00032$ has $3$ zeros after the point, but the point moves $4$ places.",
+            "要数小数点移动的位数，而不是 $0$ 的个数。$0.00032$ 的小数点后面有 $3$ 个 $0$，但小数点移动了 $4$ 位。",
+          ],
+        ],
+        (rng) => {
+          const s = draw(rng, -8, -2);
+          const v = value(s);
+          const [walk, check] = placed(v, s);
+          return scienced(
+            [`Write $${standard(v)}$ in scientific notation.`, `用科学记数法表示 $${standard(v)}$。`],
+            s.a,
+            s.n,
+            walk,
+            check,
+            [
+              [
+                s.a,
+                -s.n,
+                "That has the wrong sign; a number less than $1$ has a negative exponent.",
+                "这是符号错了；小于 $1$ 的数指数是负的。",
+              ],
+              [
+                s.a,
+                s.n + 1,
+                "That counts only the zeros after the point; the point moves one place more.",
+                "这是只数了小数点后面的 $0$；小数点还要多移一位。",
+              ],
+              [s.a, s.n - 1, "That counts one place too many.", "这是多数了一位。"],
+            ],
+          );
+        },
+        tapeFigure(
+          [timesTen("3.2", 2, 4, "÷10", "0.00032")],
+          [
+            "A bar: 3.2 followed by four shaded pieces ÷10, with 0.00032 over the whole bar.",
+            "一个长条：3.2 后面跟着四段涂色的 ÷10，整个长条上方标着 0.00032。",
+          ],
+        ),
+      ),
+      lesson(
+        "fixing-a-coefficient-outside-the-range",
+        ["Fixing a coefficient outside the range", "调整超出范围的系数"],
+        [
+          [
+            "$34 \\times 10^{5}$ is not in scientific notation, because $34$ is $10$ or more. Write $34$ as $3.4 \\times 10$. Then $34 \\times 10^{5} = 3.4 \\times 10^{6}$. When the first factor gets smaller, the exponent gets larger by the number of places the point moves.",
+            "$34 \\times 10^{5}$ 不是科学记数法，因为 $34$ 不小于 $10$。把 $34$ 写成 $3.4 \\times 10$，于是 $34 \\times 10^{5} = 3.4 \\times 10^{6}$。前面的因数变小，指数就变大，变大的数等于小数点移动的位数。",
+          ],
+          [
+            "Both are $3{,}400{,}000$: $34 \\times 100{,}000$ and $3.4 \\times 1{,}000{,}000$.",
+            "两个都是 $3{,}400{,}000$：$34 \\times 100{,}000$ 和 $3.4 \\times 1{,}000{,}000$。",
+          ],
+          [
+            "The exponent moves the other way from the first factor. $34 \\times 10^{5}$ is $3.4 \\times 10^{6}$, not $3.4 \\times 10^{4}$.",
+            "指数和前面的因数朝相反方向变。$34 \\times 10^{5}$ 是 $3.4 \\times 10^{6}$，不是 $3.4 \\times 10^{4}$。",
+          ],
+        ],
+        (rng) => {
+          const digits = rng.pick([...Array(89).keys()].map((i) => i + 11).filter((v) => v % 10 !== 0));
+          const shift = rng.pick([-3, -2, -1, 1, 2, 3]);
+          const exponent = rng.pick([-9, -8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8, 9]);
+          const proper = Q.of(digits, 10);
+          const shown = shift > 0 ? proper.mul(Q.of(10 ** shift)) : proper.div(Q.of(10 ** -shift));
+          const answer = exponent + shift;
+          const k = Math.abs(shift);
+          const unit = k === 1 ? "place" : "places";
+          return valued(
+            [
+              `Write $${dec(shown)} \\times 10^{${exponent}}$ in scientific notation as $a \\times 10^{k}$. What is $k$?`,
+              `把 $${dec(shown)} \\times 10^{${exponent}}$ 写成科学记数法 $a \\times 10^{k}$。$k$ 是多少？`,
+            ],
+            answer,
+            [
+              [
+                ["Fix the first factor", "调整前面的因数"],
+                [
+                  `It must become $${dec(proper)}$, so the point moves $${k}$ ${unit} to the ${shift > 0 ? "left" : "right"}.`,
+                  `它要变成 $${dec(proper)}$，所以小数点向${shift > 0 ? "左" : "右"}移动 $${k}$ 位。`,
+                ],
+              ],
+              [
+                ["Change the exponent", "调整指数"],
+                [
+                  `To keep the value, the exponent ${shift > 0 ? "rises" : "falls"} by $${k}$:`,
+                  `为了保持数值不变，指数${shift > 0 ? "增加" : "减少"} $${k}$：`,
+                ],
+                [`k = ${exponent} ${shift > 0 ? "+" : "-"} ${k} = ${answer}`],
+              ],
+            ],
+            [
+              `Write the first factor with a power of ten: $${dec(shown)} = ${dec(proper)} \\times 10^{${shift}}$, and $${exponent} + ${signed(shift)} = ${answer}$.`,
+              `把前面的因数写成带 $10$ 的幂的形式：$${dec(shown)} = ${dec(proper)} \\times 10^{${shift}}$，而 $${exponent} + ${signed(shift)} = ${answer}$。`,
+            ],
+            [
+              [
+                exponent - shift,
+                "That moves the exponent the same way as the first factor; it moves the other way.",
+                "这是让指数和前面的因数朝同一方向变；它们应当相反。",
+              ],
+              [exponent, "That fixes the first factor but leaves the exponent as it was.", "这是调整了前面的因数，却没有改指数。"],
+              [answer + 1, "That changes the exponent by one place too many.", "这是指数多变了 $1$。"],
+              [answer - 1, "That changes the exponent by one place too few.", "这是指数少变了 $1$。"],
+            ],
+            { solveFor: "k" },
+          );
+        },
+        tapeFigure(
+          [timesTen("34", 3, 5, "×10", "3 400 000"), timesTen("3.4", 2, 6, "×10", "3 400 000")],
+          [
+            "Two bars of the same length, both 3 400 000: one is 34 followed by five pieces ×10, the other is 3.4 followed by six pieces ×10.",
+            "两个一样长的长条，都是 3 400 000：一个是 34 后面跟着五段 ×10，另一个是 3.4 后面跟着六段 ×10。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["negative-exponents"],
-  ["8.EE.A.3"],
   [
-    {
-      id: "writing-large-numbers",
-      title: t("Large numbers", "大数"),
-      explanation: t(
-        "For $45{,}000$, move the decimal point $4$ places left to get $4.5$, which is between $1$ and $10$. Moving left divided by $10^{4}$, so multiply back: $45{,}000 = 4.5 \\times 10^{4}$. Writing $45 \\times 10^{3}$ has the right value but is not scientific notation, because $45 \\ge 10$.",
-        "对于 $45{,}000$，把小数点向左移动 $4$ 位得到 $4.5$，它在 $1$ 和 $10$ 之间。向左移动相当于除以 $10^{4}$，所以要乘回来：$45{,}000 = 4.5 \\times 10^{4}$。写成 $45 \\times 10^{3}$ 虽然值相等，但不是科学记数法，因为 $45 \\ge 10$。",
-      ),
-      generate(rng) {
-        const s = draw(rng, 3, 10);
-        const v = value(s);
-        return sciProblem(
-          t(`Write $${standard(v)}$ in scientific notation.`, `用科学记数法表示 $${standard(v)}$。`),
-          v,
-          t(
-            `Move the decimal point ${places(s.n)} to the left to get $${dec(s.a)}$:${steps(`${standard(v)} = ${show(s)}`)}`,
-            `把小数点向左移动 ${s.n} 位得到 $${dec(s.a)}$：${steps(`${standard(v)} = ${show(s)}`)}`,
-          ),
-          // Counting the digits instead of the places, one place short, and the wrong sign.
-          [
-            { a: s.a, n: s.n + 1 },
-            { a: s.a, n: s.n - 1 },
-            { a: s.a, n: -s.n },
-          ],
-        );
-      },
-    },
-    {
-      id: "writing-small-numbers",
-      title: t("Small numbers", "小数"),
-      explanation: t(
-        "For $0.00032$, move the decimal point $4$ places right, past the first nonzero digit, to get $3.2$. Moving right multiplied by $10^{4}$, so multiply by $10^{-4}$ to undo it: $0.00032 = 3.2 \\times 10^{-4}$. Count the places moved, not the zeros after the decimal point, which are one fewer.",
-        "对于 $0.00032$，把小数点向右移过第一个非零数字，共移动 $4$ 位，得到 $3.2$。向右移动相当于乘以 $10^{4}$，所以要乘以 $10^{-4}$ 还原：$0.00032 = 3.2 \\times 10^{-4}$。要数移动的位数，而不是小数点后面 $0$ 的个数，后者少一个。",
-      ),
-      generate(rng) {
-        const s = draw(rng, -8, -2);
-        const v = value(s);
-        return sciProblem(
-          t(`Write $${standard(v)}$ in scientific notation.`, `用科学记数法表示 $${standard(v)}$。`),
-          v,
-          t(
-            `Move the decimal point ${places(-s.n)} to the right, past the first nonzero digit, to get $${dec(s.a)}$:${steps(`${standard(v)} = ${show(s)}`)}`,
-            `把小数点向右移过第一个非零数字，共移动 ${-s.n} 位，得到 $${dec(s.a)}$：${steps(`${standard(v)} = ${show(s)}`)}`,
-          ),
-          // A positive exponent, and counting only the zeros after the decimal point.
-          [
-            { a: s.a, n: -s.n },
-            { a: s.a, n: s.n + 1 },
-            { a: s.a, n: s.n - 1 },
-          ],
-        );
-      },
-    },
+    "A store sells $45{,}000$ pencils a year. A grain of sand is about $0.00032$ m wide. Both numbers are easier to read as a short number times a power of ten.",
+    "一家商店一年卖出 $45{,}000$ 支铅笔。一粒沙子大约宽 $0.00032$ 米。把它们写成一个简短的数乘 $10$ 的幂，读起来就容易多了。",
+  ],
+  ["$45{,}000 = 4.5 \\times 10{,}000$, and $10{,}000 = 10^{4}$.", "$45{,}000 = 4.5 \\times 10{,}000$，而 $10{,}000 = 10^{4}$。"],
+  [
+    "write large and small numbers in scientific notation, and fix a first factor that is too big or too small.",
+    "用科学记数法表示大数和小数，并调整过大或过小的前面因数。",
   ],
 );
 
@@ -631,79 +799,270 @@ export const multiplyingNumbersInScientificNotation = topic(
 );
 
 /** dividingNumbersInScientificNotation divides the first factors and subtracts the exponents. */
-export const dividingNumbersInScientificNotation = topic(
-  "dividing-numbers-in-scientific-notation",
-  t("Dividing Numbers in Scientific Notation", "科学记数法的除法"),
-  t(
-    "To divide numbers in scientific notation, divide the first factors and subtract the exponents: (a × 10ᵐ) ÷ (b × 10ⁿ) = (a ÷ b) × 10ᵐ⁻ⁿ. If a ÷ b is less than 1, move the decimal point one place right and lower the exponent by 1.",
-    "科学记数法的数相除时，前面的因数相除，指数相减：(a × 10ᵐ) ÷ (b × 10ⁿ) = (a ÷ b) × 10ᵐ⁻ⁿ。如果 a ÷ b 小于 1，就把小数点向右移动一位，指数减 1。",
+export const dividingNumbersInScientificNotation = withIntro(
+  topic(
+    "dividing-numbers-in-scientific-notation",
+    t("Dividing Numbers in Scientific Notation", "科学记数法的除法"),
+    t(
+      "To divide numbers in scientific notation, divide the first factors and subtract the exponents: (a × 10ᵐ) ÷ (b × 10ⁿ) = (a ÷ b) × 10ᵐ⁻ⁿ. If a ÷ b is less than 1, move the decimal point one place right and lower the exponent by 1.",
+      "科学记数法的数相除时，前面的因数相除，指数相减：(a × 10ᵐ) ÷ (b × 10ⁿ) = (a ÷ b) × 10ᵐ⁻ⁿ。如果 a ÷ b 小于 1，就把小数点向右移动一位，指数减 1。",
+    ),
+    ["multiplying-numbers-in-scientific-notation", "the-quotient-rule-for-exponents"],
+    ["8.EE.A.4"],
+    [
+      lesson(
+        "dividing-with-quotients-of-at-least-one",
+        ["Quotients of 1 or more", "因数之商大于或等于 1"],
+        [
+          [
+            "Divide the first factors. Divide the powers of ten by subtracting the exponents. When the first quotient is $1$ or more, the answer is already in scientific notation: $\\frac{8.4 \\times 10^{9}}{2 \\times 10^{3}} = \\frac{8.4}{2} \\times 10^{9 - 3} = 4.2 \\times 10^{6}$.",
+            "前面的因数相除，$10$ 的幂相除时指数相减。如果前面因数的商大于或等于 $1$，结果已经是科学记数法：$\\frac{8.4 \\times 10^{9}}{2 \\times 10^{3}} = \\frac{8.4}{2} \\times 10^{9 - 3} = 4.2 \\times 10^{6}$。",
+          ],
+          ["Multiply back: $4.2 \\times 2 = 8.4$, and $6 + 3 = 9$.", "乘回去验证：$4.2 \\times 2 = 8.4$，$6 + 3 = 9$。"],
+          [
+            "Take the divisor's exponent from the dividend's, not the other way round. Here it is $9 - 3 = 6$, not $3 - 9 = -6$.",
+            "用被除数的指数减去除数的指数，不能反过来。这里是 $9 - 3 = 6$，不是 $3 - 9 = -6$。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const b = Q.of(rng.pick([12, 15, 20, 25, 30, 40]), 10);
+            const q = Q.of(rng.int(11, 39), 10);
+            const a = b.mul(q);
+            if (a.cmp(Q.of(10)) >= 0 || !a.mul(Q.of(100)).isInteger()) continue;
+            const [m, n] = [exponent(rng, -6, 12), exponent(rng, -6, 10)];
+            return scienced(
+              [
+                `Find $\\frac{${sci(a, m)}}{${sci(b, n)}}$. Give the answer in scientific notation.`,
+                `计算 $\\frac{${sci(a, m)}}{${sci(b, n)}}$，结果用科学记数法表示。`,
+              ],
+              q,
+              m - n,
+              [
+                [
+                  ["Divide the first factors", "前面的因数相除"],
+                  [`$${dec(a)} \\div ${dec(b)} = ${dec(q)}$.`, `$${dec(a)} \\div ${dec(b)} = ${dec(q)}$。`],
+                ],
+                [
+                  ["Subtract the exponents", "指数相减"],
+                  ["Take the exponent of the divisor from that of the dividend:", "用被除数的指数减去除数的指数："],
+                  [`\\frac{${dec(a)}}{${dec(b)}} \\times 10^{${m} - ${signed(n)}} = ${sci(q, m - n)}`],
+                ],
+              ],
+              [
+                `Multiply back: $${dec(q)} \\times ${dec(b)} = ${dec(a)}$, and $${m - n} + ${signed(n)} = ${m}$.`,
+                `乘回去验证：$${dec(q)} \\times ${dec(b)} = ${dec(a)}$，$${m - n} + ${signed(n)} = ${m}$。`,
+              ],
+              [
+                [q, n - m, "That subtracts the exponents the wrong way round.", "这是把指数减反了。"],
+                [q, m + n, "That adds the exponents; dividing subtracts them.", "这是把指数相加了；相除时指数相减。"],
+              ],
+            );
+          }
+        },
+        lineFigure(
+          {
+            lo: 0,
+            hi: 9,
+            step: 1,
+            labels: [0, 3, 6, 9],
+            marks: [
+              { at: 9, text: "10⁹" },
+              { at: 6, text: "10⁶", result: true },
+            ],
+            jumps: [[9, 6]],
+          },
+          [
+            "A number line of exponents from 0 to 9: a jump back 3 places from 10⁹ lands on 10⁶.",
+            "一条从 0 到 9 的指数数轴：从 10⁹ 向回跳 3 格，落在 10⁶。",
+          ],
+        ),
+      ),
+      lesson(
+        "dividing-with-quotients-less-than-one",
+        ["Quotients less than 1", "因数之商小于 1"],
+        [
+          [
+            "When the first quotient is less than $1$, the answer is not yet in scientific notation. Multiply the first factor by $10$ and lower the exponent by $1$, so the value stays the same: $\\frac{2.4 \\times 10^{5}}{6 \\times 10^{2}} = 0.4 \\times 10^{3} = 4 \\times 10^{2}$.",
+            "如果前面因数的商小于 $1$，结果还不是科学记数法。把前面的因数乘以 $10$，同时把指数减 $1$，数值不变：$\\frac{2.4 \\times 10^{5}}{6 \\times 10^{2}} = 0.4 \\times 10^{3} = 4 \\times 10^{2}$。",
+          ],
+          ["Both are $400$: $0.4 \\times 1000$ and $4 \\times 100$.", "两个都是 $400$：$0.4 \\times 1000$ 和 $4 \\times 100$。"],
+          [
+            "Lower the exponent when the first factor grows. $0.4 \\times 10^{3}$ is $4 \\times 10^{2}$, not $4 \\times 10^{4}$.",
+            "前面的因数变大时，指数要减小。$0.4 \\times 10^{3}$ 是 $4 \\times 10^{2}$，不是 $4 \\times 10^{4}$。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const b = Q.of(rng.int(4, 9));
+            const q = Q.of(rng.int(2, 9), 10).add(rng.bool(0.4) ? Q.of(rng.int(1, 9), 100) : Q.zero);
+            const a = b.mul(q);
+            if (a.cmp(Q.one) < 0 || q.cmp(Q.one) >= 0) continue;
+            const [m, n] = [exponent(rng, -6, 12), exponent(rng, -6, 10)];
+            const s = normalize(scientificValue(q, m - n));
+            return scienced(
+              [
+                `Find $\\frac{${sci(a, m)}}{${sci(b, n)}}$. Give the answer in scientific notation.`,
+                `计算 $\\frac{${sci(a, m)}}{${sci(b, n)}}$，结果用科学记数法表示。`,
+              ],
+              s.a,
+              s.n,
+              [
+                [
+                  ["Divide the first factors", "前面的因数相除"],
+                  [`$${dec(a)} \\div ${dec(b)} = ${dec(q)}$.`, `$${dec(a)} \\div ${dec(b)} = ${dec(q)}$。`],
+                ],
+                [
+                  ["Subtract the exponents", "指数相减"],
+                  ["Take the exponent of the divisor from that of the dividend:", "用被除数的指数减去除数的指数："],
+                  [`\\frac{${dec(a)}}{${dec(b)}} \\times 10^{${m} - ${signed(n)}} = ${sci(q, m - n)}`],
+                ],
+                [
+                  ["Fix the first factor", "调整前面的因数"],
+                  [
+                    `It is less than $1$, so move the point one place right and lower the exponent by $1$:`,
+                    `它小于 $1$，所以把小数点向右移一位，指数减 $1$：`,
+                  ],
+                  [`${sci(q, m - n)} = ${sci(s.a, s.n)}`],
+                ],
+              ],
+              [
+                `The first factor grew ten times and the power of ten shrank ten times: $${dec(q)} \\times 10 = ${dec(s.a)}$, and $${m - n} - 1 = ${s.n}$.`,
+                `前面的因数扩大十倍，$10$ 的幂缩小十倍：$${dec(q)} \\times 10 = ${dec(s.a)}$，$${m - n} - 1 = ${s.n}$。`,
+              ],
+              [
+                [
+                  s.a,
+                  m - n,
+                  "That moves the point but keeps the exponent; lower it by $1$.",
+                  "这是移了小数点，却没有改指数；指数要减 $1$。",
+                ],
+                [
+                  s.a,
+                  m - n + 1,
+                  "That raises the exponent; it goes down when the first factor grows.",
+                  "这是把指数加大了；前面的因数变大时，指数要减小。",
+                ],
+                [s.a, n - m - 1, "That subtracts the exponents the wrong way round.", "这是把指数减反了。"],
+              ],
+            );
+          }
+        },
+        tapeFigure(
+          [timesTen("0.4", 1, 3, "×10", "400"), timesTen("4", 2, 2, "×10", "400")],
+          [
+            "Two bars of the same length, both 400: one is 0.4 followed by three pieces ×10, the other is 4 followed by two pieces ×10.",
+            "两个一样长的长条，都是 400：一个是 0.4 后面跟着三段 ×10，另一个是 4 后面跟着两段 ×10。",
+          ],
+        ),
+      ),
+      lesson(
+        "a-travel-time-in-scientific-notation",
+        ["A travel time in scientific notation", "用科学记数法算行程时间"],
+        [
+          [
+            "Time is distance divided by speed. Distances in space are huge, so both are often written in scientific notation. Divide the first factors and subtract the exponents, then write the power of ten out: $\\frac{6 \\times 10^{8}}{3 \\times 10^{5}} = 2 \\times 10^{3} = 2000$.",
+            "时间等于路程除以速度。太空中的距离非常大，所以两者常用科学记数法表示。前面的因数相除，指数相减，再把 $10$ 的幂写出来：$\\frac{6 \\times 10^{8}}{3 \\times 10^{5}} = 2 \\times 10^{3} = 2000$。",
+          ],
+          [
+            "Multiply back: $2000$ hours at $3 \\times 10^{5}$ km per hour is $6 \\times 10^{8}$ km.",
+            "乘回去验证：以每小时 $3 \\times 10^{5}$ 千米的速度飞 $2000$ 小时，正好是 $6 \\times 10^{8}$ 千米。",
+          ],
+          [
+            "Subtract the exponent of the speed, do not add it. Adding gives $2 \\times 10^{13}$ hours, which is far too long.",
+            "要减去速度的指数，不能加上。相加会得到 $2 \\times 10^{13}$ 小时，这太长了。",
+          ],
+        ],
+        (rng) => {
+          const [speedTenths, ratio] = rng.pick<[number, number]>([
+            [12, 2],
+            [12, 3],
+            [12, 4],
+            [12, 5],
+            [15, 2],
+            [15, 3],
+            [15, 4],
+            [15, 6],
+            [20, 2],
+            [20, 3],
+            [20, 4],
+            [25, 2],
+            [25, 3],
+            [30, 2],
+            [30, 3],
+            [40, 2],
+          ]);
+          const q = rng.int(3, 8);
+          const gap = rng.int(1, 5);
+          const p = q + gap;
+          const distance = Q.of(speedTenths * ratio, 10);
+          const speed = Q.of(speedTenths, 10);
+          const answer = ratio * 10 ** gap;
+          const powerLatex = gap === 1 ? "10" : `10^{${gap}}`;
+          return valued(
+            [
+              `A probe travels $${dec(distance)} \\times 10^{${p}}$ km at a steady $${dec(speed)} \\times 10^{${q}}$ km per hour. How many hours does the trip take?`,
+              `一个探测器以每小时 $${dec(speed)} \\times 10^{${q}}$ 千米的速度匀速飞行 $${dec(distance)} \\times 10^{${p}}$ 千米。这段旅程要多少小时？`,
+            ],
+            answer,
+            [
+              [
+                ["Set up the division", "列出除法"],
+                ["Time is distance divided by speed:", "时间等于路程除以速度："],
+                [`\\frac{${dec(distance)} \\times 10^{${p}}}{${dec(speed)} \\times 10^{${q}}}`],
+              ],
+              [
+                ["Divide", "相除"],
+                [
+                  `The first factors give $${ratio}$, and the exponents give $${p} - ${q} = ${gap}$:`,
+                  `前面的因数相除得 $${ratio}$，指数相减得 $${p} - ${q} = ${gap}$：`,
+                ],
+                [`${ratio} \\times ${powerLatex} = ${answer}`],
+              ],
+            ],
+            [
+              `Multiply back: $${answer} \\times ${dec(speed)} \\times 10^{${q}} = ${dec(distance)} \\times 10^{${p}}$.`,
+              `乘回去验证：$${answer} \\times ${dec(speed)} \\times 10^{${q}} = ${dec(distance)} \\times 10^{${p}}$。`,
+            ],
+            [
+              [ratio * 10 ** (gap + 1), "That writes one zero too many.", "这是多写了一个 $0$。"],
+              [ratio * 10 ** (gap - 1), "That writes one zero too few.", "这是少写了一个 $0$。"],
+              [(ratio + 1) * 10 ** gap, "That divides the first factors wrongly.", "这是前面的因数除错了。"],
+            ],
+            { unit: "h" },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "6 × 10⁸ km",
+              pieces: [
+                { size: 1, text: "3 × 10⁵" },
+                { size: 1, text: "3 × 10⁵", lit: true },
+                { size: 1, text: "3 × 10⁵" },
+                { size: 2, text: "…", dashed: true },
+              ],
+            },
+          ],
+          [
+            "A bar of 6 × 10⁸ km cut into pieces of 3 × 10⁵ km, one for each hour of the trip; there are 2000 of them.",
+            "一个表示 6 × 10⁸ 千米的长条，切成每段 3 × 10⁵ 千米的小段，每段是一小时的路程，共有 2000 段。",
+          ],
+        ),
+      ),
+    ],
   ),
-  ["multiplying-numbers-in-scientific-notation", "the-quotient-rule-for-exponents"],
-  ["8.EE.A.4"],
   [
-    {
-      id: "dividing-with-quotients-of-at-least-one",
-      title: t("Quotients of 1 or more", "因数之商大于或等于 1"),
-      explanation: t(
-        "To divide numbers in scientific notation, divide the coefficients and divide the powers of ten. When the quotient of the coefficients is at least $1$, the answer is already in scientific notation.\n\n$\\frac{8.4 \\times 10^{9}}{2 \\times 10^{3}} = \\frac{8.4}{2} \\times 10^{9 - 3} = 4.2 \\times 10^{6}$. Subtract the exponent of the divisor from the exponent of the dividend.",
-        "科学记数法表示的数相除时，系数与系数相除，10 的幂与 10 的幂相除。如果系数之商大于或等于 $1$，结果已经是科学记数法。\n\n$\\frac{8.4 \\times 10^{9}}{2 \\times 10^{3}} = \\frac{8.4}{2} \\times 10^{9 - 3} = 4.2 \\times 10^{6}$。用被除数的指数减去除数的指数。",
-      ),
-      generate(rng) {
-        const b = Q.of(rng.pick([12, 15, 2, 25, 3, 4].map((v) => (v < 10 ? v * 10 : v))), 10);
-        const q = Q.of(rng.int(11, 39), 10);
-        const a = b.mul(q);
-        if (a.cmp(Q.of(10)) >= 0 || !a.mul(Q.of(100)).isInteger()) return this.generate(rng);
-        const [m, n] = [exponent(rng, -6, 12), exponent(rng, -6, 10)];
-        return sciProblem(
-          t(
-            `Find $\\frac{${sci(a, m)}}{${sci(b, n)}}$. Give the answer in scientific notation.`,
-            `计算 $\\frac{${sci(a, m)}}{${sci(b, n)}}$，结果用科学记数法表示。`,
-          ),
-          scientificValue(q, m - n),
-          t(
-            `Divide the first factors and subtract the exponents:${steps(`\\frac{${dec(a)}}{${dec(b)}} \\times 10^{${m} - ${n < 0 ? `(${n})` : n}} = ${sci(q, m - n)}`)}`,
-            `前面的因数相除，指数相减：${steps(`\\frac{${dec(a)}}{${dec(b)}} \\times 10^{${m} - ${n < 0 ? `(${n})` : n}} = ${sci(q, m - n)}`)}`,
-          ),
-          // Subtracting the exponents the other way, and adding them.
-          [
-            { a: q, n: n - m },
-            { a: q, n: m + n },
-          ],
-        );
-      },
-    },
-    {
-      id: "dividing-with-quotients-less-than-one",
-      title: t("Quotients less than 1", "因数之商小于 1"),
-      explanation: t(
-        "When the quotient of the coefficients is less than $1$, it is not yet scientific notation. Multiply the coefficient by $10$ and lower the exponent by $1$ to keep the same value.\n\n$\\frac{2.4 \\times 10^{5}}{6 \\times 10^{2}} = 0.4 \\times 10^{3}$. Since $0.4 < 1$, write $0.4 = 4 \\times 10^{-1}$, so the quotient is $4 \\times 10^{2}$.",
-        "如果系数之商小于 $1$，结果还不是科学记数法。把系数乘以 $10$，同时把指数减 $1$，数值保持不变。\n\n$\\frac{2.4 \\times 10^{5}}{6 \\times 10^{2}} = 0.4 \\times 10^{3}$。由于 $0.4 < 1$，写成 $0.4 = 4 \\times 10^{-1}$，所以商为 $4 \\times 10^{2}$。",
-      ),
-      generate(rng) {
-        const b = Q.of(rng.int(4, 9));
-        const q = Q.of(rng.int(2, 9), 10).add(rng.bool(0.4) ? Q.of(rng.int(1, 9), 100) : Q.zero);
-        const a = b.mul(q);
-        if (a.cmp(Q.one) < 0 || q.cmp(Q.one) >= 0) return this.generate(rng);
-        const [m, n] = [exponent(rng, -6, 12), exponent(rng, -6, 10)];
-        const s = normalize(scientificValue(q, m - n));
-        return sciProblem(
-          t(
-            `Find $\\frac{${sci(a, m)}}{${sci(b, n)}}$. Give the answer in scientific notation.`,
-            `计算 $\\frac{${sci(a, m)}}{${sci(b, n)}}$，结果用科学记数法表示。`,
-          ),
-          scientificValue(q, m - n),
-          t(
-            `Divide the first factors and subtract the exponents, then adjust, since $${dec(q)} < 1$:${steps(`\\frac{${dec(a)}}{${dec(b)}} \\times 10^{${m} - ${n < 0 ? `(${n})` : n}} = ${sci(q, m - n)}${renormalize(q, m - n)}`)}`,
-            `前面的因数相除，指数相减；由于 $${dec(q)} < 1$，还要调整：${steps(`\\frac{${dec(a)}}{${dec(b)}} \\times 10^{${m} - ${n < 0 ? `(${n})` : n}} = ${sci(q, m - n)}${renormalize(q, m - n)}`)}`,
-          ),
-          // Not lowering the exponent, and subtracting the exponents the other way.
-          [
-            { a: s.a, n: m - n },
-            { a: s.a, n: n - m - 1 },
-          ],
-        );
-      },
-    },
+    "Light travels about $3 \\times 10^{5}$ km each second. The Sun is about $1.5 \\times 10^{8}$ km away. To find how long sunlight takes to reach us, we divide.",
+    "光每秒大约走 $3 \\times 10^{5}$ 千米。太阳离我们大约 $1.5 \\times 10^{8}$ 千米。要知道阳光多久照到地球，就要做除法。",
+  ],
+  [
+    "$1.5 \\div 3 = 0.5$ and $8 - 5 = 3$. So it takes $0.5 \\times 10^{3} = 500$ seconds.",
+    "$1.5 \\div 3 = 0.5$，$8 - 5 = 3$。所以要 $0.5 \\times 10^{3} = 500$ 秒。",
+  ],
+  [
+    "divide numbers in scientific notation, fix a first factor less than $1$, and find travel times.",
+    "做科学记数法的除法，调整小于 $1$ 的前面因数，并计算行程时间。",
   ],
 );
 
