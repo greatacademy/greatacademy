@@ -7,6 +7,7 @@ import { t } from "@ga/content";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
 import { numberProblem } from "../problems.ts";
+import { drawn, lesson, valued } from "./grade-6-kit.ts";
 
 const combinationWithoutSolving: KnowledgePointDef = {
   id: "a-combination-without-solving-the-system",
@@ -70,42 +71,102 @@ ${gap === 1 ? `**直接读出。** 左边已经是 $x - y$，所以 $x - y = ${a
   },
 };
 
-const isoscelesExterior: KnowledgePointDef = {
-  id: "an-exterior-angle-of-an-isosceles-triangle",
-  figure: gradeDrawings5["exterior-angles-of-triangles#an-exterior-angle-of-an-isosceles-triangle"],
-  title: t("An exterior angle of an isosceles triangle", "等腰三角形的外角"),
-  explanation: t(
-    "An exterior angle equals the sum of the two interior angles that are not next to it. In an isosceles triangle, this has a useful form. At the apex, the two opposite angles are the equal base angles, so the exterior angle is twice one of them. At a base vertex, the exterior angle is next to one base angle, which is found first, and the base angles then give the apex by the angle sum.",
-    "外角等于和它不相邻的两个内角之和。在等腰三角形中，这有一个很有用的形式。在顶点处，不相邻的两个角是相等的底角，所以外角是一个底角的两倍。在底角的顶点处，外角和一个底角相邻，先求出这个底角，再由内角和从两个底角求出顶角。",
-  ),
-  generate(rng) {
-    const atApex = rng.bool();
-    const exterior = atApex ? 2 * rng.int(20, 85) : 2 * rng.int(48, 85);
-    const answer = atApex ? exterior / 2 : 2 * exterior - 180;
-    return numberProblem({
-      prompt: atApex
-        ? t(
-            `An exterior angle at the apex of an isosceles triangle measures $${exterior}^\\circ$. What is each base angle, in degrees?`,
-            `等腰三角形顶角处的一个外角是 $${exterior}^\\circ$。每个底角是多少度？`,
-          )
-        : t(
-            `An exterior angle at a base vertex of an isosceles triangle measures $${exterior}^\\circ$. What is the apex angle, in degrees?`,
-            `等腰三角形一个底角处的外角是 $${exterior}^\\circ$。顶角是多少度？`,
-          ),
+const isoscelesExterior: KnowledgePointDef = lesson(
+  "an-exterior-angle-of-an-isosceles-triangle",
+  ["An exterior angle of an isosceles triangle", "等腰三角形的外角"],
+  [
+    [
+      "An exterior angle equals the sum of the two interior angles that are not next to it. In an isosceles triangle, this has a useful form. At the apex, the two opposite angles are the equal base angles, so the exterior angle is twice one of them. At a base vertex, the exterior angle is next to one base angle, which is found first, and the base angles then give the apex by the angle sum.\n\nAn exterior angle of $110^\\circ$ at the apex gives base angles of $55^\\circ$. An exterior angle of $110^\\circ$ at a base vertex gives base angles of $70^\\circ$ and an apex of $40^\\circ$.",
+      "外角等于和它不相邻的两个内角之和。在等腰三角形中，这有一个很有用的形式。在顶点处，不相邻的两个角是相等的底角，所以外角是一个底角的两倍。在底角的顶点处，外角和一个底角相邻，先求出这个底角，再由内角和从两个底角求出顶角。\n\n顶点处的外角是 $110^\\circ$，则底角是 $55^\\circ$。底角顶点处的外角是 $110^\\circ$，则底角是 $70^\\circ$，顶角是 $40^\\circ$。",
+    ],
+    [
+      "At a base vertex, the exterior angle is the apex plus the other base angle: $40 + 70 = 110$.",
+      "在底角顶点处，外角等于顶角加另一个底角：$40 + 70 = 110$。",
+    ],
+    [
+      "Notice where the exterior angle is. Halving it gives a base angle only when it is at the apex.",
+      "注意外角在哪个顶点。只有外角在顶点（顶角处）时，把它减半才得到底角。",
+    ],
+  ],
+  (rng) => {
+    if (rng.bool()) {
+      const exterior = 2 * rng.int(20, 85);
+      const base = exterior / 2;
+      return valued(
+        [
+          `An exterior angle at the apex of an isosceles triangle measures $${exterior}^\\circ$. What is each base angle, in degrees?`,
+          `等腰三角形顶角处的一个外角是 $${exterior}^\\circ$。每个底角是多少度？`,
+        ],
+        base,
+        [
+          [
+            ["Find the remote angles", "找出不相邻的内角"],
+            [
+              "The two interior angles not next to the apex are the base angles, and they are equal. So the exterior angle is twice a base angle.",
+              "与顶点不相邻的两个内角是两个底角，它们相等。所以外角是底角的两倍。",
+            ],
+          ],
+          [["Halve it", "减半"], ["Share the exterior angle equally:", "把外角平均分成两份："], [`${exterior} \\div 2 = ${base}`]],
+        ],
+        [
+          `The apex angle is $180 - ${exterior} = ${180 - exterior}$, and the base angles share the rest: $(180 - ${180 - exterior}) \\div 2 = ${base}$.`,
+          `顶角是 $180 - ${exterior} = ${180 - exterior}$，两个底角平分剩下的部分：$(180 - ${180 - exterior}) \\div 2 = ${base}$。`,
+        ],
+        [
+          [
+            180 - exterior,
+            "That is the apex angle, beside the exterior angle. The base angles are the remote ones.",
+            "这是与外角相邻的顶角。底角是与外角不相邻的角。",
+          ],
+          [exterior, "That is both base angles together. Each base angle is half of it.", "这是两个底角的和。每个底角是它的一半。"],
+          [180 - base, "That is the exterior angle at a base vertex, not the base angle itself.", "这是底角顶点处的外角，不是底角本身。"],
+        ],
+        { form: "integer", unit: "°" },
+      );
+    }
+    const exterior = 2 * rng.int(48, 85);
+    const base = 180 - exterior;
+    const answer = 2 * exterior - 180;
+    return valued(
+      [
+        `An exterior angle at a base vertex of an isosceles triangle measures $${exterior}^\\circ$. What is the apex angle, in degrees?`,
+        `等腰三角形一个底角处的外角是 $${exterior}^\\circ$。顶角是多少度？`,
+      ],
       answer,
-      form: "integer",
-      wrong: [180 - exterior, exterior, atApex ? (180 - exterior) / 2 + 45 : exterior - 90, answer + 10, 360 - exterior],
-      solution: t(
-        atApex
-          ? `The exterior angle equals the sum of the two equal base angles, so each is $${exterior}^\\circ \\div 2 = ${answer}^\\circ$.`
-          : `Each base angle is $180^\\circ - ${exterior}^\\circ = ${180 - exterior}^\\circ$. So the apex is $180^\\circ - 2 \\times ${180 - exterior}^\\circ = ${answer}^\\circ$.`,
-        atApex
-          ? `外角等于两个相等的底角之和，所以每个底角是 $${exterior}^\\circ \\div 2 = ${answer}^\\circ$。`
-          : `每个底角是 $180^\\circ - ${exterior}^\\circ = ${180 - exterior}^\\circ$。所以顶角是 $180^\\circ - 2 \\times ${180 - exterior}^\\circ = ${answer}^\\circ$。`,
-      ),
-    });
+      [
+        [
+          ["Find a base angle", "求底角"],
+          ["The base angle next to the exterior angle forms a linear pair with it:", "与外角相邻的底角和它组成邻补角："],
+          [`180 - ${exterior} = ${base}`],
+        ],
+        [
+          ["Use the angle sum", "用内角和"],
+          ["Both base angles are equal, so take two of them from $180$:", "两个底角相等，从 $180$ 中减去两个底角："],
+          [`180 - 2 \\cdot ${base} = ${answer}`],
+        ],
+      ],
+      [
+        `The exterior angle equals the apex plus the other base angle: $${answer} + ${base} = ${exterior}$.`,
+        `外角等于顶角加另一个底角：$${answer} + ${base} = ${exterior}$。`,
+      ],
+      [
+        [base, "That is a base angle. The question asks for the apex.", "这是底角。题目问的是顶角。"],
+        [
+          exterior / 2,
+          "You halved the exterior angle. That works only for an exterior angle at the apex.",
+          "你把外角减半了。只有顶点处的外角才能这样做。",
+        ],
+        [
+          exterior,
+          "You took only one base angle from $180$, which gives back the exterior angle. Both base angles come off.",
+          "你只从 $180$ 中减去了一个底角，结果又回到外角。两个底角都要减去。",
+        ],
+      ],
+      { form: "integer", unit: "°" },
+    );
   },
-};
+  drawn(gradeDrawings5["exterior-angles-of-triangles#an-exterior-angle-of-an-isosceles-triangle"]),
+);
 
 /** deeperGrade8Points maps topics of 8th Grade Math to further knowledge points. */
 export const deeperGrade8Points: Readonly<Record<string, readonly KnowledgePointDef[]>> = {

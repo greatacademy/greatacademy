@@ -5,7 +5,7 @@ import type { KnowledgePointDef } from "@ga/content";
 import { dec, Q } from "@ga/subject-math";
 import { mixedLatex } from "../problems.ts";
 
-import { chooseMath, tableFigure } from "./early-grades-more-kit.ts";
+import { tableFigure } from "./early-grades-more-kit.ts";
 import { chosenMath, lesson, valued } from "./grade-6-kit.ts";
 import {
   aLongSumOfPowers,
@@ -15,6 +15,7 @@ import {
   theNegativeExponentThatFits,
   thePowerThatDoesNotMatch,
 } from "./grade-8-exponents.ts";
+import { tableFigure as valueTable } from "./grade-8-kit.ts";
 import { theMissingDigitForDivisibilityBy4, theNumberFromItsPrimeFactors } from "./grade-8-number-theory.ts";
 import {
   countingTheSurds,
@@ -33,7 +34,7 @@ import {
   whenTheSmallerHardlyMatters,
   zerosAtTheEnd,
 } from "./grade-8-scientific-notation.ts";
-import { frac, gcd, integer, signed, skill, tenths } from "./third-kit.ts";
+import { frac, gcd, signed, tenths } from "./third-kit.ts";
 import { areaGridFigure, lineFigure, stripsFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** deeperMiddleSchoolThirdPoints holds these third knowledge points, by topic. */
@@ -1009,54 +1010,160 @@ export const deeperMiddleSchoolThirdPoints: Readonly<Record<string, readonly Kno
   "squaring-a-square-root": [theRootOfANegativeSquared],
   "the-cube-root-of-a-perfect-cube": [sumsOfCubeRoots],
   "classifying-rational-and-irrational-numbers": [
-    skill(
+    lesson(
       "irrationals-that-become-rational",
       ["Irrationals that become rational", "变成有理数的无理数"],
       [
-        "Adding or multiplying an irrational number by a nonzero rational keeps it irrational. Squaring a square root removes the root, though, so the result is a rational number.",
-        "无理数加上有理数或乘非零有理数，仍是无理数。但平方根再平方就消去了根号，结果是有理数。",
+        [
+          "Adding or multiplying an irrational number by a nonzero rational keeps it irrational. Squaring a square root removes the root, though, so the result is a rational number.\n\nSo $\\sqrt{2} + 3$ and $3\\sqrt{2}$ are irrational, but $(\\sqrt{2})^2 + 3 = 2 + 3 = 5$ is rational.",
+          "无理数加上有理数或乘非零有理数，仍是无理数。但平方根再平方就消去了根号，结果是有理数。\n\n所以 $\\sqrt{2} + 3$ 和 $3\\sqrt{2}$ 是无理数，而 $(\\sqrt{2})^2 + 3 = 2 + 3 = 5$ 是有理数。",
+        ],
+        [
+          "Square an estimate: $\\sqrt{2} \\approx 1.414$ and $1.414^2 \\approx 2.00$, so the sum is about $5$.",
+          "把近似值平方：$\\sqrt{2} \\approx 1.414$，$1.414^2 \\approx 2.00$，所以和约为 $5$。",
+        ],
+        [
+          "If $\\sqrt{2} + 3$ were a fraction, taking $3$ away would make $\\sqrt{2}$ a fraction too. Adding a rational never removes the root.",
+          "如果 $\\sqrt{2} + 3$ 是分数，减去 $3$ 后 $\\sqrt{2}$ 也会是分数。加上有理数永远消不掉根号。",
+        ],
       ],
       (rng) => {
         const n = rng.pick([2, 3, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19, 21, 22, 23]);
         const k = rng.int(2, 12);
-        return chooseMath(
+        const approx = Math.sqrt(n).toFixed(3);
+        return chosenMath(
           rng,
           ["Which of these numbers is rational?", "哪个数是有理数？"],
           `(\\sqrt{${n}})^{2} + ${k}`,
-          [`\\sqrt{${n}} + ${k}`, `${k}\\sqrt{${n}}`, frac(`\\sqrt{${n}}`, k)],
           [
-            `$(\\sqrt{${n}})^{2} = ${n}$, so the sum is $${n + k}$. The others still contain $\\sqrt{${n}}$.`,
-            `$(\\sqrt{${n}})^{2} = ${n}$，所以和是 $${n + k}$。其他的仍含 $\\sqrt{${n}}$。`,
+            [
+              `\\sqrt{${n}} + ${k}`,
+              `Adding $${k}$ keeps $\\sqrt{${n}}$ irrational: the root is still there.`,
+              `加上 $${k}$ 后 $\\sqrt{${n}}$ 仍是无理数：根号还在。`,
+            ],
+            [`${k}\\sqrt{${n}}`, `A whole number times $\\sqrt{${n}}$ stays irrational.`, `整数乘 $\\sqrt{${n}}$ 仍是无理数。`],
+            [frac(`\\sqrt{${n}}`, k), `Dividing $\\sqrt{${n}}$ by $${k}$ keeps it irrational.`, `$\\sqrt{${n}}$ 除以 $${k}$ 仍是无理数。`],
+          ],
+          [
+            [
+              ["Square the root", "根号平方"],
+              [`Squaring a square root removes it: $(\\sqrt{${n}})^{2} = ${n}$.`, `平方根再平方就消去根号：$(\\sqrt{${n}})^{2} = ${n}$。`],
+            ],
+            [
+              ["Add", "相加"],
+              [
+                `So the number is $${n} + ${k} = ${n + k}$, a whole number. The others still contain $\\sqrt{${n}}$.`,
+                `所以这个数是 $${n} + ${k} = ${n + k}$，是整数。其他的仍含 $\\sqrt{${n}}$。`,
+              ],
+            ],
+          ],
+          [
+            `Square an estimate: $\\sqrt{${n}} \\approx ${approx}$ and $${approx}^2 \\approx ${(Number(approx) ** 2).toFixed(2)}$, so the number is about $${n + k}$.`,
+            `把近似值平方：$\\sqrt{${n}} \\approx ${approx}$，$${approx}^2 \\approx ${(Number(approx) ** 2).toFixed(2)}$，所以这个数约为 $${n + k}$。`,
           ],
         );
       },
+      lineFigure(
+        {
+          lo: 0,
+          hi: 6,
+          step: 1,
+          labels: [0, 1, 2, 3, 4, 5, 6],
+          marks: [
+            { at: Math.SQRT2, text: "√2" },
+            { at: 5, text: "(√2)² + 3", result: true },
+          ],
+        },
+        ["A number line from 0 to 6 with √2 and (√2)² + 3 at 5 marked.", "一条从 0 到 6 的数轴，标出 √2 和位于 5 的 (√2)² + 3。"],
+      ),
     ),
   ],
   surds: [countingTheSurds],
   "the-product-rule-for-radicals": [theMissingNumberUnderARoot],
   "the-quotient-rule-for-radicals": [theMissingNumberInAQuotientOfRoots],
   "evaluating-rational-expressions": [
-    skill(
+    lesson(
       "when-it-has-no-value",
       ["When it has no value", "什么时候没有值"],
       [
-        "Division by zero has no meaning, so a rational expression has no value where its denominator is zero. A zero numerator causes no trouble, as it only makes the whole fraction zero.",
-        "除以零没有意义，所以分母为零时有理式没有值。分子为零没有问题，只是整个分数为零。",
+        [
+          "Division by zero has no meaning, so a rational expression has no value where its denominator is zero. A zero numerator causes no trouble, as it only makes the whole fraction zero.\n\nFor $\\frac{x + 3}{2x - 8}$, the denominator is zero when $2x - 8 = 0$, that is when $x = 4$.",
+          "除以零没有意义，所以分母为零时有理式没有值。分子为零没有问题，只是整个分数为零。\n\n对于 $\\frac{x + 3}{2x - 8}$，当 $2x - 8 = 0$，即 $x = 4$ 时，分母为零。",
+        ],
+        [
+          "Put $x = 4$ in: the numerator is $7$ and the denominator is $2(4) - 8 = 0$.",
+          "代入 $x = 4$：分子是 $7$，分母是 $2(4) - 8 = 0$。",
+        ],
+        [
+          "Look for the zero of the denominator, not of the numerator: at $x = -3$ the fraction is $\\frac{0}{-14} = 0$, which is a value.",
+          "要找使分母为零的值，而不是使分子为零的值：$x = -3$ 时分数是 $\\frac{0}{-14} = 0$，这是有值的。",
+        ],
       ],
       (rng) => {
-        const a = rng.int(1, 20);
-        const b = rng.int(1, 20);
-        const k = rng.int(2, 6);
-        const neg = rng.bool();
-        const den = neg ? `${k}x + ${k * b}` : `${k}x - ${k * b}`;
-        const answer = neg ? -b : b;
-        return integer(
-          [`For what value of $x$ does $${frac(`x + ${a}`, den)}$ have no value?`, `$x$ 为何值时，$${frac(`x + ${a}`, den)}$ 没有值？`],
-          answer,
-          [-answer, -a, k * b],
-          [`The denominator is zero when $${den} = 0$, which gives $x = ${answer}$.`, `当 $${den} = 0$ 时分母为零，得 $x = ${answer}$。`],
-        );
+        for (;;) {
+          const a = rng.int(1, 20);
+          const b = rng.int(1, 20);
+          if (a === b) continue;
+          const k = rng.int(2, 6);
+          const neg = rng.bool();
+          const den = neg ? `${k}x + ${k * b}` : `${k}x - ${k * b}`;
+          const answer = neg ? -b : b;
+          return valued(
+            [`For what value of $x$ does $${frac(`x + ${a}`, den)}$ have no value?`, `$x$ 为何值时，$${frac(`x + ${a}`, den)}$ 没有值？`],
+            answer,
+            [
+              [
+                ["Set the denominator to zero", "令分母为零"],
+                [
+                  "Division by zero has no meaning, so the expression has no value where the denominator is zero:",
+                  "除以零没有意义，所以分母为零时式子没有值：",
+                ],
+                [`${den} = 0`],
+              ],
+              [
+                ["Solve", "求解"],
+                [`Move the constant across, then divide by $${k}$:`, `把常数移到另一边，再除以 $${k}$：`],
+                [`${k}x = ${k * answer}`, `x = ${answer}`],
+              ],
+            ],
+            [
+              `Put $x = ${answer}$ in: the denominator is $${k}(${answer}) ${neg ? "+" : "-"} ${k * b} = 0$, while the numerator is $${answer + a}$.`,
+              `代入 $x = ${answer}$：分母是 $${k}(${answer}) ${neg ? "+" : "-"} ${k * b} = 0$，分子是 $${answer + a}$。`,
+            ],
+            [
+              [-answer, "The sign is wrong. Moving the constant across changes its sign.", "符号错了。常数移到另一边要变号。"],
+              [
+                -a,
+                "That makes the numerator zero. The fraction is then $0$, which is a value.",
+                "这使分子为零。此时分数等于 $0$，是有值的。",
+              ],
+              [k * answer, `You stopped before dividing by $${k}$.`, `你没有除以 $${k}$。`],
+            ],
+            {
+              form: "integer",
+              solveFor: "x",
+              figure: valueTable(
+                [`x + ${a}`, den.replace(" - ", " − ")],
+                [`x = ${answer}`.replace("-", "−")],
+                [[`${answer + a}`.replace("-", "−")], ["0"]],
+                [
+                  `A table: at x = ${answer}, the numerator x + ${a} is ${answer + a} and the denominator ${den} is 0.`,
+                  `一个表格：x = ${answer} 时，分子 x + ${a} 是 ${answer + a}，分母 ${den} 是 0。`,
+                ],
+              ),
+            },
+          );
+        }
       },
+      valueTable(
+        ["x + 3", "2x − 8"],
+        ["x = 4"],
+        [["7"], ["0"]],
+        [
+          "A table: at x = 4, the numerator x + 3 is 7 and the denominator 2x − 8 is 0.",
+          "一个表格：x = 4 时，分子 x + 3 是 7，分母 2x − 8 是 0。",
+        ],
+      ),
     ),
   ],
   "the-distributive-law-with-three-terms": [

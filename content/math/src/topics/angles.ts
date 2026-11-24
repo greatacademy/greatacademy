@@ -7,7 +7,7 @@ import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 import { remainingDrawings10 } from "../explanation-drawings-remaining-10.ts";
-import { article, numberProblem, steps } from "../problems.ts";
+import { article } from "../problems.ts";
 import { type Pair, picked, type Walk, type Wrong } from "./early-grades-more-kit.ts";
 import { chosen, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { answered, point } from "./upper-grades-kit.ts";
@@ -434,12 +434,6 @@ export const complementaryAndSupplementaryAngles: TopicDef = withIntro(
     "学习求一个角的余角和补角，并把直角和平角分开计算。",
   ],
 );
-
-/** chain writes solution steps, dropping a line that repeats the one before it. */
-const chain = (...lines: string[]) => steps(...lines.filter((l, i) => l !== lines[i - 1]));
-
-/** intOr is a / b when it is a whole number, and fallback otherwise. */
-const intOr = (a: number, b: number, fallback: number) => (b !== 0 && Number.isInteger(a / b) ? a / b : fallback);
 
 /** whenWhole lists a / b with its reason only when it is a whole number. */
 const whenWhole = (a: number, b: number, en: string, zh: string): (readonly [number, string, string])[] =>
@@ -1536,134 +1530,258 @@ function exteriorFigure(a: number, b: number, labels: readonly [string, string, 
   );
 }
 
-export const exteriorAnglesOfTriangles: TopicDef = {
-  id: "exterior-angles-of-triangles",
-  title: t("Exterior Angles of Triangles", "三角形的外角"),
-  summary: t("Find exterior angles of a triangle from the two remote interior angles.", "由两个不相邻的内角求三角形的外角。"),
-  prerequisites: ["angles-of-a-triangle"],
-  encompasses: [{ topic: "angles-of-a-triangle", weight: 0.5 }],
-  xp: 8,
-  standards: ["CCSS.8.G.A.5"],
-  knowledgePoints: [
-    {
-      id: "the-exterior-angle-theorem",
-      figure: gradeDrawings3["exterior-angles-of-triangles#the-exterior-angle-theorem"],
-      title: t("The exterior angle theorem", "外角定理"),
-      explanation: t(
-        "Extending one side of a triangle forms an **exterior angle**. It forms a linear pair with the interior angle beside it, and the other two interior angles are its **remote interior angles**.\n\nAn exterior angle equals the sum of its two remote interior angles: both it and their sum are $180^\\circ$ minus the interior angle beside it. If the remote interior angles are $45^\\circ$ and $60^\\circ$, the exterior angle is $45^\\circ + 60^\\circ = 105^\\circ$.",
-        "延长三角形的一边，就形成一个**外角**。它与相邻的内角是邻补角，另外两个内角是与它**不相邻的内角**。\n\n外角等于与它不相邻的两个内角之和：外角和这两个内角之和都等于 $180^\\circ$ 减去与外角相邻的内角。若不相邻的两个内角是 $45^\\circ$ 和 $60^\\circ$，外角是 $45^\\circ + 60^\\circ = 105^\\circ$。",
-      ),
-      generate(rng) {
-        for (;;) {
-          const a = rng.int(25, 100);
-          const c = rng.int(25, 100);
-          const b = 180 - a - c;
-          if (b < 25 || b === 90 || a === 90 || c === 90) continue;
-          const e = a + c;
-          const findExterior = rng.bool();
-          if (findExterior) {
-            return {
-              ...numberProblem({
-                prompt: t("Find the exterior angle $x$.", "求外角 $x$。"),
-                answer: e,
+export const exteriorAnglesOfTriangles: TopicDef = withIntro(
+  {
+    id: "exterior-angles-of-triangles",
+    title: t("Exterior Angles of Triangles", "三角形的外角"),
+    summary: t("Find exterior angles of a triangle from the two remote interior angles.", "由两个不相邻的内角求三角形的外角。"),
+    prerequisites: ["angles-of-a-triangle"],
+    encompasses: [{ topic: "angles-of-a-triangle", weight: 0.5 }],
+    xp: 8,
+    standards: ["CCSS.8.G.A.5"],
+    knowledgePoints: [
+      lesson(
+        "the-exterior-angle-theorem",
+        ["The exterior angle theorem", "外角定理"],
+        [
+          [
+            "Extending one side of a triangle forms an **exterior angle**. It forms a linear pair with the interior angle beside it, and the other two interior angles are its **remote interior angles**.\n\nAn exterior angle equals the sum of its two remote interior angles: both it and their sum are $180^\\circ$ minus the interior angle beside it. If the remote interior angles are $45^\\circ$ and $60^\\circ$, the exterior angle is $45^\\circ + 60^\\circ = 105^\\circ$.",
+            "延长三角形的一边，就形成一个**外角**。它与相邻的内角是邻补角，另外两个内角是与它**不相邻的内角**。\n\n外角等于与它不相邻的两个内角之和：外角和这两个内角之和都等于 $180^\\circ$ 减去与外角相邻的内角。若不相邻的两个内角是 $45^\\circ$ 和 $60^\\circ$，外角是 $45^\\circ + 60^\\circ = 105^\\circ$。",
+          ],
+          [
+            "Go through the angle beside it: the third interior angle is $180^\\circ - 45^\\circ - 60^\\circ = 75^\\circ$, and $180^\\circ - 75^\\circ = 105^\\circ$.",
+            "借助相邻的内角：第三个内角是 $180^\\circ - 45^\\circ - 60^\\circ = 75^\\circ$，而 $180^\\circ - 75^\\circ = 105^\\circ$。",
+          ],
+          [
+            "Add the two angles that are not beside the exterior angle. The interior angle beside it is its partner in a linear pair, not a part of the sum.",
+            "要加的是与外角不相邻的两个角。与外角相邻的内角和它组成邻补角，不在这个和里。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const a = rng.int(25, 100);
+            const c = rng.int(25, 100);
+            const b = 180 - a - c;
+            if (b < 25 || b === 90 || a === 90 || c === 90) continue;
+            const e = a + c;
+            if (rng.bool()) {
+              return valued(
+                ["Find the exterior angle $x$.", "求外角 $x$。"],
+                e,
+                [
+                  [
+                    ["Find the remote angles", "找出不相邻的内角"],
+                    [
+                      `The exterior angle at $B$ is not beside the angles at $A$ and $C$, which are $${a}^\\circ$ and $${c}^\\circ$.`,
+                      `$B$ 处的外角与 $A$、$C$ 处的角不相邻，它们是 $${a}^\\circ$ 和 $${c}^\\circ$。`,
+                    ],
+                  ],
+                  [["Add them", "相加"], ["The exterior angle equals their sum:", "外角等于它们的和："], [`x = ${a} + ${c} = ${e}`]],
+                ],
+                [
+                  `The interior angle at $B$ is $180 - ${a} - ${c} = ${b}$, and its linear pair is $180 - ${b} = ${e}$.`,
+                  `$B$ 处的内角是 $180 - ${a} - ${c} = ${b}$，与它组成邻补角的角是 $180 - ${b} = ${e}$。`,
+                ],
+                [
+                  [
+                    b,
+                    "That is the interior angle at $B$, beside the exterior angle. The exterior angle is its linear pair.",
+                    "这是 $B$ 处与外角相邻的内角。外角和它组成邻补角。",
+                  ],
+                  [
+                    360 - e,
+                    "You took the sum from $360^\\circ$. The exterior angle is the sum itself.",
+                    "你用 $360^\\circ$ 减去了这个和。外角就等于这个和本身。",
+                  ],
+                  [
+                    Math.abs(a - c),
+                    "You subtracted the remote angles. The exterior angle is their sum.",
+                    "你把两个不相邻的内角相减了。外角等于它们的和。",
+                  ],
+                ],
+                {
+                  form: "integer",
+                  unit: "°",
+                  figure: exteriorFigure(
+                    a,
+                    b,
+                    [deg(a), deg(c), "x"],
+                    `A triangle with one side extended. The remote interior angles are ${a}° and ${c}°; the exterior angle is x.`,
+                    `一个三角形的一边被延长。不相邻的两个内角是 ${a}° 和 ${c}°，外角是 x。`,
+                  ),
+                },
+              );
+            }
+            const xAtA = rng.bool();
+            const [known, asked] = xAtA ? [c, a] : [a, c];
+            return valued(
+              ["Find $x$.", "求 $x$。"],
+              asked,
+              [
+                [
+                  ["Use the theorem", "用外角定理"],
+                  [
+                    "The exterior angle equals the sum of the two remote interior angles, $x$ and the known one:",
+                    "外角等于与它不相邻的两个内角之和，即 $x$ 与已知的那个角：",
+                  ],
+                  [`x + ${known} = ${e}`],
+                ],
+                [
+                  ["Subtract", "相减"],
+                  [`Take $${known}$ from both sides:`, `两边同时减去 $${known}$：`],
+                  [`x = ${e} - ${known} = ${asked}`],
+                ],
+              ],
+              [
+                `The interior angle at $B$ is $180 - ${e} = ${b}$, and the triangle's angles give $x = 180 - ${known} - ${b} = ${asked}$.`,
+                `$B$ 处的内角是 $180 - ${e} = ${b}$，再由内角和得 $x = 180 - ${known} - ${b} = ${asked}$。`,
+              ],
+              [
+                [
+                  e + known,
+                  "You added the known angle. It is part of the exterior angle, so subtract it.",
+                  "你把已知角加上了。它是外角的一部分，应当减去。",
+                ],
+                [
+                  180 - known,
+                  "You treated the known angle and $x$ as a linear pair. They add up to the exterior angle, not to $180^\\circ$.",
+                  "你把已知角和 $x$ 当成了邻补角。它们的和是外角，不是 $180^\\circ$。",
+                ],
+                [b, "That is the interior angle at $B$, beside the exterior angle, not $x$.", "这是 $B$ 处与外角相邻的内角，不是 $x$。"],
+              ],
+              {
                 form: "integer",
                 unit: "°",
-                wrong: [b, 180 - e, 360 - e],
-                solution: t(
-                  `The exterior angle equals the sum of the two remote interior angles:${steps(`x = ${a}^\\circ + ${c}^\\circ = ${e}^\\circ`)}`,
-                  `外角等于与它不相邻的两个内角之和：${steps(`x = ${a}^\\circ + ${c}^\\circ = ${e}^\\circ`)}`,
+                figure: exteriorFigure(
+                  a,
+                  b,
+                  xAtA ? ["x", deg(c), deg(e)] : [deg(a), "x", deg(e)],
+                  `A triangle with one side extended. The exterior angle is ${e}°; one remote interior angle is ${known}° and the other is x.`,
+                  `一个三角形的一边被延长。外角是 ${e}°，一个不相邻的内角是 ${known}°，另一个是 x。`,
                 ),
-              }),
-              figure: exteriorFigure(
-                a,
-                b,
-                [deg(a), deg(c), "x"],
-                `A triangle with one side extended. The remote interior angles are ${a}° and ${c}°; the exterior angle is x.`,
-                `一个三角形的一边被延长。不相邻的两个内角是 ${a}° 和 ${c}°，外角是 x。`,
-              ),
-            };
+              },
+            );
           }
-          const xAtA = rng.bool();
-          const [known, asked] = xAtA ? [c, a] : [a, c];
-          return {
-            ...numberProblem({
-              prompt: t("Find $x$.", "求 $x$。"),
-              answer: asked,
-              form: "integer",
-              unit: "°",
-              wrong: [e + known, 180 - e, 180 - known, b],
-              solution: t(
-                `The exterior angle equals the sum of the two remote interior angles, so $${e}^\\circ = x + ${known}^\\circ$:${steps(`x = ${e}^\\circ - ${known}^\\circ = ${asked}^\\circ`)}`,
-                `外角等于与它不相邻的两个内角之和，所以 $${e}^\\circ = x + ${known}^\\circ$：${steps(`x = ${e}^\\circ - ${known}^\\circ = ${asked}^\\circ`)}`,
-              ),
-            }),
-            figure: exteriorFigure(
-              a,
-              b,
-              xAtA ? ["x", deg(c), deg(e)] : [deg(a), "x", deg(e)],
-              `A triangle with one side extended. The exterior angle is ${e}°; one remote interior angle is ${known}° and the other is x.`,
-              `一个三角形的一边被延长。外角是 ${e}°，一个不相邻的内角是 ${known}°，另一个是 x。`,
-            ),
-          };
-        }
-      },
-    },
-    {
-      id: "exterior-angle-equations",
-      figure: gradeDrawings3["exterior-angles-of-triangles#exterior-angle-equations"],
-      title: t("Equations from exterior angles", "由外角列方程"),
-      explanation: t(
-        "When the angles are written with a variable, the theorem gives an equation: the exterior angle equals the sum of the remote interior angles.\n\nIf the remote interior angles are $x^\\circ$ and $(2x + 5)^\\circ$ and the exterior angle is $110^\\circ$, then $x + (2x + 5) = 110$, so $3x = 105$ and $x = 35$.",
-        "当角用含变量的式子表示时，外角定理给出方程：外角等于与它不相邻的两个内角之和。\n\n若不相邻的两个内角是 $x^\\circ$ 和 $(2x + 5)^\\circ$，外角是 $110^\\circ$，则 $x + (2x + 5) = 110$，所以 $3x = 105$，$x = 35$。",
+        },
+        drawn(gradeDrawings3["exterior-angles-of-triangles#the-exterior-angle-theorem"]),
       ),
-      keyPrerequisites: ["angles-of-a-triangle"],
-      generate(rng) {
-        for (;;) {
-          const x = rng.int(5, 30);
-          const a = rng.int(25, 100);
-          const c = rng.int(25, 100);
-          const b = 180 - a - c;
-          if (b < 25 || [a, b, c].includes(90)) continue;
-          const k1 = a % x === 0 && a / x <= 4 && rng.bool(0.5) ? a / x : rng.int(1, 4);
-          const k2 = rng.int(1, 4);
-          const [d1, d2] = [a - k1 * x, c - k2 * x];
-          if (Math.abs(d1) > 50 || Math.abs(d2) > 50) continue;
-          const e = a + c;
-          const work = sumSteps(
+      {
+        ...lesson(
+          "exterior-angle-equations",
+          ["Equations from exterior angles", "由外角列方程"],
+          [
             [
-              [k1, d1],
-              [k2, d2],
+              "When the angles are written with a variable, the theorem gives an equation: the exterior angle equals the sum of the remote interior angles.\n\nIf the remote interior angles are $x^\\circ$ and $(2x + 5)^\\circ$ and the exterior angle is $110^\\circ$, then $x + (2x + 5) = 110$, so $3x = 105$ and $x = 35$.",
+              "当角用含变量的式子表示时，外角定理给出方程：外角等于与它不相邻的两个内角之和。\n\n若不相邻的两个内角是 $x^\\circ$ 和 $(2x + 5)^\\circ$，外角是 $110^\\circ$，则 $x + (2x + 5) = 110$，所以 $3x = 105$，$x = 35$。",
             ],
-            e,
-          );
-          return {
-            ...numberProblem({
-              prompt: t(
-                `In the figure, $\\angle A = ${angleTex(k1, d1)}$, $\\angle C = ${angleTex(k2, d2)}$ and the exterior angle $\\angle CBD = ${e}^\\circ$. Find $x$.`,
-                `如图，$\\angle A = ${angleTex(k1, d1)}$，$\\angle C = ${angleTex(k2, d2)}$，外角 $\\angle CBD = ${e}^\\circ$。求 $x$。`,
-              ),
-              answer: x,
-              form: "integer",
-              solveFor: "x",
-              wrong: [intOr(180 - d1 - d2, k1 + k2, -x), intOr(180 - e - d1 - d2, k1 + k2, -x), b],
-              solution: t(
-                `The exterior angle equals the sum of the two remote interior angles:${chain(...work)}`,
-                `外角等于与它不相邻的两个内角之和：${chain(...work)}`,
-              ),
-            }),
-            figure: exteriorFigure(
-              a,
-              b,
-              ["", "", deg(e)],
-              `Triangle ABC with side AB extended past B to D, forming the exterior angle CBD of ${e}°.`,
-              `三角形 ABC，边 AB 延长到 D，形成外角 CBD，为 ${e}°。`,
-            ),
-          };
-        }
+            [
+              "Put $x = 35$ into the angles: $35^\\circ$ and $75^\\circ$, and $35 + 75 = 110$.",
+              "把 $x = 35$ 代入两个角：$35^\\circ$ 和 $75^\\circ$，$35 + 75 = 110$。",
+            ],
+            [
+              "Set the sum equal to the exterior angle, not to $180$: the angle sum of the triangle would also need the angle at $B$.",
+              "令和等于外角，而不是 $180$：三角形的内角和还要包括 $B$ 处的角。",
+            ],
+          ],
+          (rng) => {
+            for (;;) {
+              const x = rng.int(5, 30);
+              const a = rng.int(25, 100);
+              const c = rng.int(25, 100);
+              const b = 180 - a - c;
+              if (b < 25 || [a, b, c].includes(90)) continue;
+              const k1 = a % x === 0 && a / x <= 4 && rng.bool(0.5) ? a / x : rng.int(1, 4);
+              const k2 = rng.int(1, 4);
+              const [d1, d2] = [a - k1 * x, c - k2 * x];
+              if (Math.abs(d1) > 50 || Math.abs(d2) > 50 || (d1 === 0 && d2 === 0)) continue;
+              const e = a + c;
+              const work = sumSteps(
+                [
+                  [k1, d1],
+                  [k2, d2],
+                ],
+                e,
+              ).filter((l, i, all) => l !== all[i - 1]);
+              const [ks, ds] = [k1 + k2, d1 + d2];
+              return valued(
+                [
+                  `In the figure, $\\angle A = ${angleTex(k1, d1)}$, $\\angle C = ${angleTex(k2, d2)}$ and the exterior angle $\\angle CBD = ${e}^\\circ$. Find $x$.`,
+                  `如图，$\\angle A = ${angleTex(k1, d1)}$，$\\angle C = ${angleTex(k2, d2)}$，外角 $\\angle CBD = ${e}^\\circ$。求 $x$。`,
+                ],
+                x,
+                [
+                  [
+                    ["Write the equation", "列方程"],
+                    [
+                      "The exterior angle equals the sum of the remote interior angles $A$ and $C$:",
+                      "外角等于与它不相邻的内角 $A$ 与 $C$ 之和：",
+                    ],
+                    work.slice(0, 2),
+                  ],
+                  [
+                    ["Solve for x", "解出 x"],
+                    ["Undo the constant, then divide by the coefficient of $x$:", "先抵消常数，再除以 $x$ 的系数："],
+                    work.slice(2),
+                  ],
+                ],
+                [
+                  `Put $x = ${x}$ into the angles: $\\angle A = ${a}^\\circ$ and $\\angle C = ${c}^\\circ$, and $${a} + ${c} = ${e}$.`,
+                  `把 $x = ${x}$ 代入：$\\angle A = ${a}^\\circ$，$\\angle C = ${c}^\\circ$，$${a} + ${c} = ${e}$。`,
+                ],
+                [
+                  ...whenWhole(
+                    180 - ds,
+                    ks,
+                    "You set the two angles equal to $180$. They add up to the exterior angle.",
+                    "你令两个角之和等于 $180$。它们的和等于外角。",
+                  ),
+                  ...whenWhole(
+                    b - ds,
+                    ks,
+                    "You set the two angles equal to the interior angle at $B$. They add up to the exterior angle beside it.",
+                    "你令两个角之和等于 $B$ 处的内角。它们的和等于与它相邻的外角。",
+                  ),
+                  ...whenWhole(
+                    e + ds,
+                    ks,
+                    "You moved the constant with the wrong sign. Undo it by doing the opposite.",
+                    "移项时常数的符号弄错了。要做相反的运算。",
+                  ),
+                  [a, "That is $m\\angle A$, an angle, not $x$.", "这是 $m\\angle A$，是角的度数，不是 $x$。"],
+                ],
+                {
+                  form: "integer",
+                  solveFor: "x",
+                  figure: exteriorFigure(
+                    a,
+                    b,
+                    ["", "", deg(e)],
+                    `Triangle ABC with side AB extended past B to D, forming the exterior angle CBD of ${e}°.`,
+                    `三角形 ABC，边 AB 延长到 D，形成外角 CBD，为 ${e}°。`,
+                  ),
+                },
+              );
+            }
+          },
+          drawn(gradeDrawings3["exterior-angles-of-triangles#exterior-angle-equations"]),
+        ),
+        keyPrerequisites: ["angles-of-a-triangle"],
       },
-    },
+    ],
+  },
+  [
+    "Walk along one side of a triangle and keep going straight past a corner. The angle you would have to turn to head along the next side is an exterior angle, and it is exactly as large as the two corners you have not reached.",
+    "沿三角形的一条边走，过了一个顶点继续直走。要转向下一条边所需转过的角就是外角，它正好等于另外两个还没走到的角之和。",
   ],
-};
+  [
+    "In an equilateral triangle each exterior angle is $60 + 60 = 120$ degrees, and $120 + 60 = 180$.",
+    "在等边三角形中，每个外角是 $60 + 60 = 120$ 度，且 $120 + 60 = 180$。",
+  ],
+  [
+    "find an exterior angle from the remote interior angles, solve equations with it, and use it in isosceles triangles.",
+    "由不相邻的内角求外角，用外角列方程求解，并在等腰三角形中运用它。",
+  ],
+);
 
 /** triangleBySides places a triangle with sides a = BC, b = CA, c = AB, with AB along the bottom, counterclockwise. */
 function triangleBySides(a: number, b: number, c: number): [Point, Point, Point] {
@@ -2019,154 +2137,308 @@ export const whatATriangleMustBe = lesson(
   },
   drawn(gradeDrawings4["classifying-triangles#what-a-triangle-must-be"]),
 );
-export const isoscelesTriangles: TopicDef = {
-  id: "isosceles-triangles",
-  title: t("The Isosceles Triangle Theorem", "等腰三角形定理"),
-  summary: t(
-    "Use equal base angles to find the angles of isosceles and equilateral triangles.",
-    "利用底角相等求等腰三角形和等边三角形的角。",
-  ),
-  prerequisites: ["classifying-triangles", "angles-of-a-triangle"],
-  encompasses: [{ topic: "angles-of-a-triangle", weight: 0.6 }],
-  xp: 10,
-  standards: ["CCSS.8.G.A.5"],
-  knowledgePoints: [
-    {
-      id: "base-angles",
-      figure: gradeDrawings3["isosceles-triangles#base-angles"],
-      title: t("Base angles", "底角"),
-      explanation: t(
-        "In an isosceles triangle the two equal sides are the **legs**; the angle between them is the **vertex angle**, and the other two are the **base angles**. The base angles are equal.\n\nIf the vertex angle is $40^\\circ$, the base angles share $180^\\circ - 40^\\circ = 140^\\circ$, so each is $70^\\circ$. If a base angle is $70^\\circ$, the vertex angle is $180^\\circ - 2 \\cdot 70^\\circ = 40^\\circ$. In an equilateral triangle all three angles are equal, so each is $60^\\circ$.",
-        "等腰三角形中相等的两边叫**腰**；两腰的夹角叫**顶角**，另外两个角叫**底角**。两个底角相等。\n\n若顶角是 $40^\\circ$，两个底角共占 $180^\\circ - 40^\\circ = 140^\\circ$，所以每个是 $70^\\circ$。若底角是 $70^\\circ$，顶角是 $180^\\circ - 2 \\cdot 70^\\circ = 40^\\circ$。等边三角形的三个角都相等，所以每个都是 $60^\\circ$。",
-      ),
-      generate(rng) {
-        const base = rng.int(25, 80);
-        const vertex = 180 - 2 * base;
-        const points = triangleByAngles(base, base);
-        const ticks: Mark[] = [
-          { kind: "ticks", a: points[1], b: points[2], count: 1 },
-          { kind: "ticks", a: points[2], b: points[0], count: 1 },
-        ];
-        if (base === 60 || rng.bool(0.5)) {
-          return {
-            ...numberProblem({
-              prompt: t("The triangle is isosceles. Find the vertex angle $x$.", "这个三角形是等腰三角形。求顶角 $x$。"),
-              answer: vertex,
-              form: "integer",
-              unit: "°",
-              wrong: [180 - base, 90 - base, 180 - 3 * base > 0 ? 180 - 3 * base : base],
-              solution: t(
-                `The base angles are equal, so both are $${base}^\\circ$:${steps(`x = 180^\\circ - 2 \\cdot ${base}^\\circ = ${vertex}^\\circ`)}`,
-                `两个底角相等，都是 $${base}^\\circ$：${steps(`x = 180^\\circ - 2 \\cdot ${base}^\\circ = ${vertex}^\\circ`)}`,
-              ),
-            }),
-            figure: figure(
-              [{ kind: "polygon", points }, ...ticks, ...triangleArcs(points, [deg(base), "", "x"])],
-              `An isosceles triangle with its equal sides marked. One base angle is ${base}°; the vertex angle is x.`,
-              `一个等腰三角形，相等的两边已标出。一个底角是 ${base}°，顶角是 x。`,
-            ),
-          };
-        }
-        return {
-          ...numberProblem({
-            prompt: t("The triangle is isosceles. Find the base angle $x$.", "这个三角形是等腰三角形。求底角 $x$。"),
-            answer: base,
-            form: "integer",
-            unit: "°",
-            wrong: [180 - vertex, 180 - 2 * vertex > 0 ? 180 - 2 * vertex : vertex, 90 - vertex > 0 ? 90 - vertex : 2 * base],
-            solution: t(
-              `The two base angles are equal and share $180^\\circ - ${vertex}^\\circ = ${2 * base}^\\circ$:${steps(`x = ${2 * base}^\\circ \\div 2 = ${base}^\\circ`)}`,
-              `两个底角相等，共占 $180^\\circ - ${vertex}^\\circ = ${2 * base}^\\circ$：${steps(`x = ${2 * base}^\\circ \\div 2 = ${base}^\\circ`)}`,
-            ),
-          }),
-          figure: figure(
-            [{ kind: "polygon", points }, ...ticks, ...triangleArcs(points, rng.bool() ? ["x", "", deg(vertex)] : ["", "x", deg(vertex)])],
-            `An isosceles triangle with its equal sides marked. The vertex angle is ${vertex}°; a base angle is x.`,
-            `一个等腰三角形，相等的两边已标出。顶角是 ${vertex}°，一个底角是 x。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "isosceles-angle-equations",
-      figure: gradeDrawings5["isosceles-triangles#isosceles-angle-equations"],
-      title: t("Equations in isosceles triangles", "等腰三角形中的方程"),
-      explanation: t(
-        "Equal base angles let one variable describe all three angles. If each base angle is $x^\\circ$ and the vertex angle is $(2x + 20)^\\circ$, then $x + x + (2x + 20) = 180$, so $4x + 20 = 180$, $4x = 160$ and $x = 40$.\n\nA relationship stated in words works the same way: if the vertex angle is three times a base angle $x$, then $x + x + 3x = 180$ and $x = 36$.",
-        "底角相等，所以一个变量就能表示三个角。若每个底角是 $x^\\circ$，顶角是 $(2x + 20)^\\circ$，则 $x + x + (2x + 20) = 180$，所以 $4x + 20 = 180$，$4x = 160$，$x = 40$。\n\n用文字给出的关系也一样：若顶角是底角 $x$ 的三倍，则 $x + x + 3x = 180$，$x = 36$。",
-      ),
-      keyPrerequisites: ["angles-of-a-triangle"],
-      generate(rng) {
-        for (;;) {
-          const x = rng.int(25, 80);
-          const vertex = 180 - 2 * x;
-          if (rng.bool(0.4)) {
-            const k = rng.pick([2, 3, 4, 5, 6, 7, 8]);
-            if (180 % (k + 2) !== 0) continue;
-            const base = 180 / (k + 2);
-            const work = sumSteps(
+/** isoscelesFigure draws an isosceles triangle with base angles base, its legs ticked, and the arcs labeled at the two base corners and the vertex. */
+function isoscelesFigure(base: number, labels: readonly [string, string, string], en: string, zh: string): Figure {
+  const points = triangleByAngles(base, base);
+  return figure(
+    [
+      { kind: "polygon", points },
+      { kind: "ticks", a: points[1], b: points[2], count: 1 },
+      { kind: "ticks", a: points[2], b: points[0], count: 1 },
+      ...triangleArcs(points, labels),
+    ],
+    en,
+    zh,
+  );
+}
+
+export const isoscelesTriangles: TopicDef = withIntro(
+  {
+    id: "isosceles-triangles",
+    title: t("The Isosceles Triangle Theorem", "等腰三角形定理"),
+    summary: t(
+      "Use equal base angles to find the angles of isosceles and equilateral triangles.",
+      "利用底角相等求等腰三角形和等边三角形的角。",
+    ),
+    prerequisites: ["classifying-triangles", "angles-of-a-triangle"],
+    encompasses: [{ topic: "angles-of-a-triangle", weight: 0.6 }],
+    xp: 10,
+    standards: ["CCSS.8.G.A.5"],
+    knowledgePoints: [
+      lesson(
+        "base-angles",
+        ["Base angles", "底角"],
+        [
+          [
+            "In an isosceles triangle the two equal sides are the **legs**; the angle between them is the **vertex angle**, and the other two are the **base angles**. The base angles are equal.\n\nIf the vertex angle is $40^\\circ$, the base angles share $180^\\circ - 40^\\circ = 140^\\circ$, so each is $70^\\circ$. If a base angle is $70^\\circ$, the vertex angle is $180^\\circ - 2 \\cdot 70^\\circ = 40^\\circ$. In an equilateral triangle all three angles are equal, so each is $60^\\circ$.",
+            "等腰三角形中相等的两边叫**腰**；两腰的夹角叫**顶角**，另外两个角叫**底角**。两个底角相等。\n\n若顶角是 $40^\\circ$，两个底角共占 $180^\\circ - 40^\\circ = 140^\\circ$，所以每个是 $70^\\circ$。若底角是 $70^\\circ$，顶角是 $180^\\circ - 2 \\cdot 70^\\circ = 40^\\circ$。等边三角形的三个角都相等，所以每个都是 $60^\\circ$。",
+          ],
+          ["Add all three angles: $70 + 70 + 40 = 180$.", "把三个角加起来：$70 + 70 + 40 = 180$。"],
+          [
+            "The equal angles are the ones opposite the equal sides, at the ends of the base. The angle between the two marked sides is the odd one out.",
+            "相等的角是相等的两边所对的角，位于底边两端。两条标记边之间的夹角是那个不同的角。",
+          ],
+        ],
+        (rng) => {
+          const base = rng.int(25, 80);
+          const vertex = 180 - 2 * base;
+          const check: Pair = [
+            `Add all three angles: $${base} + ${base} + ${vertex} = 180$.`,
+            `把三个角加起来：$${base} + ${base} + ${vertex} = 180$。`,
+          ];
+          if (base === 60 || rng.bool(0.5)) {
+            return valued(
+              ["The triangle is isosceles. Find the vertex angle $x$.", "这个三角形是等腰三角形。求顶角 $x$。"],
+              vertex,
               [
-                [1, 0],
-                [1, 0],
-                [k, 0],
+                [
+                  ["Find the other base angle", "找出另一个底角"],
+                  [
+                    `The base angles sit opposite the equal sides, so both are $${base}^\\circ$.`,
+                    `底角是相等两边所对的角，所以两个都是 $${base}^\\circ$。`,
+                  ],
+                ],
+                [
+                  ["Use the angle sum", "用内角和"],
+                  ["Take both base angles from $180$:", "用 $180$ 减去两个底角："],
+                  [`x = 180 - 2 \\cdot ${base} = ${vertex}`],
+                ],
               ],
-              180,
+              check,
+              [
+                [
+                  180 - base,
+                  "You took only one base angle from $180$. The other base angle is equal and must come off too.",
+                  "你只从 $180$ 中减去了一个底角。另一个底角与它相等，也要减去。",
+                ],
+                [
+                  base,
+                  "That is the other base angle. The vertex angle is between the two marked sides.",
+                  "这是另一个底角。顶角在两条标记边之间。",
+                ],
+                ...(180 - 3 * base > 0
+                  ? [
+                      [
+                        180 - 3 * base,
+                        "You took three base angles from $180$. Only two angles are base angles.",
+                        "你从 $180$ 中减去了三个底角。只有两个角是底角。",
+                      ] as const,
+                    ]
+                  : []),
+              ],
+              {
+                form: "integer",
+                unit: "°",
+                figure: isoscelesFigure(
+                  base,
+                  [deg(base), "", "x"],
+                  `An isosceles triangle with its equal sides marked. One base angle is ${base}°; the vertex angle is x.`,
+                  `一个等腰三角形，相等的两边已标出。一个底角是 ${base}°，顶角是 x。`,
+                ),
+              },
             );
-            return numberProblem({
-              prompt: t(
-                `In an isosceles triangle, the vertex angle is $${k}$ times a base angle. Find a base angle $x$.`,
-                `在一个等腰三角形中，顶角是底角的 $${k}$ 倍。求底角 $x$。`,
-              ),
-              answer: base,
+          }
+          return valued(
+            ["The triangle is isosceles. Find the base angle $x$.", "这个三角形是等腰三角形。求底角 $x$。"],
+            base,
+            [
+              [
+                ["Find what the base angles share", "求两个底角的和"],
+                ["The two base angles take what the vertex angle leaves of $180$:", "两个底角分享顶角从 $180$ 中剩下的部分："],
+                [`180 - ${vertex} = ${2 * base}`],
+              ],
+              [["Halve it", "平分"], ["The base angles are equal:", "两个底角相等："], [`x = ${2 * base} \\div 2 = ${base}`]],
+            ],
+            check,
+            [
+              [
+                180 - vertex,
+                "That is what both base angles share. Each base angle is half of it.",
+                "这是两个底角的和。每个底角是它的一半。",
+              ],
+              [vertex, "That is the vertex angle. The base angles sit at the ends of the base.", "这是顶角。底角在底边的两端。"],
+              [
+                vertex / 2,
+                "You halved the vertex angle. Halve what remains of $180$ after the vertex angle.",
+                "你把顶角平分了。应把 $180$ 减去顶角后剩下的部分平分。",
+              ],
+            ],
+            {
               form: "integer",
               unit: "°",
-              wrong: [intOr(180, k, k * base), intOr(180, k + 1, k * base), k * base],
-              solution: t(
-                `The angles are $x$, $x$ and $${k}x$, and they add up to $180^\\circ$:${chain(...work)}`,
-                `三个角是 $x$、$x$、$${k}x$，和为 $180^\\circ$：${chain(...work)}`,
+              figure: isoscelesFigure(
+                base,
+                rng.bool() ? ["x", "", deg(vertex)] : ["", "x", deg(vertex)],
+                `An isosceles triangle with its equal sides marked. The vertex angle is ${vertex}°; a base angle is x.`,
+                `一个等腰三角形，相等的两边已标出。顶角是 ${vertex}°，一个底角是 x。`,
               ),
-            });
-          }
-          const k = rng.int(1, 4);
-          const d = vertex - k * x;
-          if (Math.abs(d) > 60 || d === 0) continue;
-          const work = sumSteps(
-            [
-              [1, 0],
-              [1, 0],
-              [k, d],
-            ],
-            180,
+            },
           );
-          const points = triangleByAngles(x, x);
-          return {
-            ...numberProblem({
-              prompt: t("The triangle is isosceles. Find $x$.", "这个三角形是等腰三角形。求 $x$。"),
-              answer: x,
-              form: "integer",
-              solveFor: "x",
-              wrong: [intOr(180 - d, k + 1, -x), intOr(180 - d, k, -x), vertex],
-              solution: t(
-                `The base angles are both $x^\\circ$, and the three angles add up to $180^\\circ$:${chain(...work)}`,
-                `两个底角都是 $x^\\circ$，三个角之和为 $180^\\circ$：${chain(...work)}`,
-              ),
-            }),
-            figure: figure(
-              [
-                { kind: "polygon", points },
-                { kind: "ticks", a: points[1], b: points[2], count: 1 },
-                { kind: "ticks", a: points[2], b: points[0], count: 1 },
-                ...triangleArcs(points, ["x°", "", angleLabel(k, d)]),
-              ],
-              `An isosceles triangle with its equal sides marked. A base angle is x°; the vertex angle is ${angleLabel(k, d)}.`,
-              `一个等腰三角形，相等的两边已标出。一个底角是 x°，顶角是 ${angleLabel(k, d)}。`,
-            ),
-          };
-        }
+        },
+        drawn(gradeDrawings3["isosceles-triangles#base-angles"]),
+      ),
+      {
+        ...lesson(
+          "isosceles-angle-equations",
+          ["Equations in isosceles triangles", "等腰三角形中的方程"],
+          [
+            [
+              "Equal base angles let one variable describe all three angles. If each base angle is $x^\\circ$ and the vertex angle is $(2x + 20)^\\circ$, then $x + x + (2x + 20) = 180$, so $4x + 20 = 180$, $4x = 160$ and $x = 40$.\n\nA relationship stated in words works the same way: if the vertex angle is three times a base angle $x$, then $x + x + 3x = 180$ and $x = 36$.",
+              "底角相等，所以一个变量就能表示三个角。若每个底角是 $x^\\circ$，顶角是 $(2x + 20)^\\circ$，则 $x + x + (2x + 20) = 180$，所以 $4x + 20 = 180$，$4x = 160$，$x = 40$。\n\n用文字给出的关系也一样：若顶角是底角 $x$ 的三倍，则 $x + x + 3x = 180$，$x = 36$。",
+            ],
+            [
+              "Put $x = 40$ back: the angles are $40^\\circ$, $40^\\circ$ and $100^\\circ$, and $40 + 40 + 100 = 180$.",
+              "把 $x = 40$ 代回：三个角是 $40^\\circ$、$40^\\circ$、$100^\\circ$，$40 + 40 + 100 = 180$。",
+            ],
+            [
+              "Count the base angle twice. Writing only $x + (2x + 20) = 180$ leaves out the second base angle.",
+              "底角要算两次。只写 $x + (2x + 20) = 180$ 就漏掉了第二个底角。",
+            ],
+          ],
+          (rng) => {
+            for (;;) {
+              const x = rng.int(25, 80);
+              const vertex = 180 - 2 * x;
+              if (rng.bool(0.4)) {
+                const k = rng.pick([2, 3, 4, 5, 6, 7, 8]);
+                if (180 % (k + 2) !== 0) continue;
+                const base = 180 / (k + 2);
+                const work = sumSteps(
+                  [
+                    [1, 0],
+                    [1, 0],
+                    [k, 0],
+                  ],
+                  180,
+                ).filter((l, i, all) => l !== all[i - 1]);
+                return valued(
+                  [
+                    `In an isosceles triangle, the vertex angle is $${k}$ times a base angle. Find a base angle $x$.`,
+                    `在一个等腰三角形中，顶角是底角的 $${k}$ 倍。求底角 $x$。`,
+                  ],
+                  base,
+                  [
+                    [
+                      ["Name the angles", "用 x 表示各角"],
+                      [
+                        `Both base angles are $x$, and the vertex angle is $${k}x$. The three add up to $180$:`,
+                        `两个底角都是 $x$，顶角是 $${k}x$。三个角之和为 $180$：`,
+                      ],
+                      work.slice(0, 2),
+                    ],
+                    [["Divide", "相除"], [`Divide both sides by $${k + 2}$:`, `两边同时除以 $${k + 2}$：`], work.slice(2)],
+                  ],
+                  [
+                    `The vertex angle is $${k} \\cdot ${base} = ${k * base}$, and $${base} + ${base} + ${k * base} = 180$.`,
+                    `顶角是 $${k} \\cdot ${base} = ${k * base}$，且 $${base} + ${base} + ${k * base} = 180$。`,
+                  ],
+                  [
+                    ...whenWhole(
+                      180,
+                      k + 1,
+                      "You counted only one base angle. There are two equal base angles.",
+                      "你只算了一个底角。两个底角相等，都要算上。",
+                    ),
+                    [k * base, "That is the vertex angle. The question asks for a base angle.", "这是顶角。题目问的是底角。"],
+                    ...whenWhole(
+                      180,
+                      k,
+                      "You divided $180$ by the multiple alone. Add the angles first: $x + x$ and the vertex.",
+                      "你只用 $180$ 除以倍数。应先把各角相加：$x + x$ 再加顶角。",
+                    ),
+                  ],
+                  {
+                    form: "integer",
+                    unit: "°",
+                    figure: isoscelesFigure(
+                      base,
+                      ["x", "x", `${k}x`],
+                      `An isosceles triangle with its equal sides marked. The base angles are x and the vertex angle is ${k}x.`,
+                      `一个等腰三角形，相等的两边已标出。两个底角都是 x，顶角是 ${k}x。`,
+                    ),
+                  },
+                );
+              }
+              const k = rng.int(1, 4);
+              const d = vertex - k * x;
+              if (Math.abs(d) > 60 || d === 0) continue;
+              const work = sumSteps(
+                [
+                  [1, 0],
+                  [1, 0],
+                  [k, d],
+                ],
+                180,
+              ).filter((l, i, all) => l !== all[i - 1]);
+              return valued(
+                ["The triangle is isosceles. Find $x$.", "这个三角形是等腰三角形。求 $x$。"],
+                x,
+                [
+                  [
+                    ["Add the angles", "把三个角相加"],
+                    [
+                      `Both base angles are $x^\\circ$, and the vertex angle is $${angleTex(k, d)}$. The three add up to $180^\\circ$:`,
+                      `两个底角都是 $x^\\circ$，顶角是 $${angleTex(k, d)}$。三个角之和为 $180^\\circ$：`,
+                    ],
+                    work.slice(0, 2),
+                  ],
+                  [
+                    ["Solve for x", "解出 x"],
+                    ["Undo the constant, then divide by the coefficient of $x$:", "先抵消常数，再除以 $x$ 的系数："],
+                    work.slice(2),
+                  ],
+                ],
+                [
+                  `The vertex angle is $${subst(k, d, x)} = ${vertex}$, and $${x} + ${x} + ${vertex} = 180$.`,
+                  `顶角是 $${subst(k, d, x)} = ${vertex}$，且 $${x} + ${x} + ${vertex} = 180$。`,
+                ],
+                [
+                  ...whenWhole(
+                    180 - d,
+                    k + 1,
+                    "You counted the base angle once. Both base angles are $x$.",
+                    "你只算了一个底角。两个底角都是 $x$。",
+                  ),
+                  ...whenWhole(
+                    180 + d,
+                    k + 2,
+                    "You moved the constant with the wrong sign. Undo it by doing the opposite.",
+                    "移项时常数的符号弄错了。要做相反的运算。",
+                  ),
+                  [vertex, "That is the vertex angle, not $x$.", "这是顶角的度数，不是 $x$。"],
+                ],
+                {
+                  form: "integer",
+                  solveFor: "x",
+                  figure: isoscelesFigure(
+                    x,
+                    ["x°", "", angleLabel(k, d)],
+                    `An isosceles triangle with its equal sides marked. A base angle is x°; the vertex angle is ${angleLabel(k, d)}.`,
+                    `一个等腰三角形，相等的两边已标出。一个底角是 x°，顶角是 ${angleLabel(k, d)}。`,
+                  ),
+                },
+              );
+            }
+          },
+          drawn(gradeDrawings5["isosceles-triangles#isosceles-angle-equations"]),
+        ),
+        keyPrerequisites: ["angles-of-a-triangle"],
       },
-    },
+    ],
+  },
+  [
+    "Fold an isosceles triangle along the line from its vertex to the middle of its base. The two halves match exactly, so the two base angles land on each other: they are equal.",
+    "把等腰三角形沿顶点到底边中点的线对折，两半完全重合，两个底角也叠在一起：它们相等。",
   ],
-};
+  [
+    "An equilateral triangle is isosceles in every direction, so all three angles are equal: $180 \\div 3 = 60$.",
+    "等边三角形从哪个方向看都是等腰的，所以三个角都相等：$180 \\div 3 = 60$。",
+  ],
+  [
+    "use equal base angles to find the vertex or a base angle, solve equations, and try both cases when the given angle could be either.",
+    "利用底角相等求顶角或底角、解方程，并在已知角可能是底角也可能是顶角时考虑两种情况。",
+  ],
+);
 
 const polygonNames: Record<number, Text> = {
   3: t("triangle", "三角形"),
@@ -2191,193 +2463,397 @@ function interiorAngle(points: readonly Point[], i: number): number {
   return ((a * 180) / Math.PI + 720) % 360;
 }
 
-export const anglesOfPolygons: TopicDef = {
-  id: "angles-of-polygons",
-  title: t("Interior Angles of Polygons", "多边形的内角"),
-  summary: t(
-    "Find the angle sum of a polygon, the angles of regular polygons, and missing angles.",
-    "求多边形的内角和、正多边形的角以及未知角。",
-  ),
-  prerequisites: ["angles-of-a-triangle"],
-  encompasses: [],
-  xp: 12,
-  knowledgePoints: [
-    {
-      id: "the-angle-sum-of-a-polygon",
-      title: t("The angle sum of a polygon", "多边形的内角和"),
-      explanation: t(
-        "The diagonals from one vertex of a polygon with $n$ sides cut it into $n - 2$ triangles, and the triangles' angles together make up the polygon's angles. So the interior angles of an $n$-sided polygon add up to\n\n$$(n - 2) \\cdot 180^\\circ.$$\n\nA quadrilateral's angles add up to $2 \\cdot 180^\\circ = 360^\\circ$; a hexagon's add up to $4 \\cdot 180^\\circ = 720^\\circ$.",
-        "从 $n$ 边形的一个顶点出发的对角线把它分成 $n - 2$ 个三角形，这些三角形的角合起来正好组成多边形的角。所以 $n$ 边形的内角和是\n\n$$(n - 2) \\cdot 180^\\circ.$$\n\n四边形的内角和是 $2 \\cdot 180^\\circ = 360^\\circ$；六边形的内角和是 $4 \\cdot 180^\\circ = 720^\\circ$。",
-      ),
-      figure: (() => {
-        const points = [0, 1, 2, 3, 4, 5].map((i) => dir(90 + 60 * i, 3));
-        return figure(
+export const anglesOfPolygons: TopicDef = withIntro(
+  {
+    id: "angles-of-polygons",
+    title: t("Interior Angles of Polygons", "多边形的内角"),
+    summary: t(
+      "Find the angle sum of a polygon, the angles of regular polygons, and missing angles.",
+      "求多边形的内角和、正多边形的角以及未知角。",
+    ),
+    prerequisites: ["angles-of-a-triangle"],
+    encompasses: [],
+    xp: 12,
+    knowledgePoints: [
+      lesson(
+        "the-angle-sum-of-a-polygon",
+        ["The angle sum of a polygon", "多边形的内角和"],
+        [
           [
-            { kind: "polygon", points },
-            ...[2, 3, 4].map((i): Mark => ({ kind: "segment", a: points[0]!, b: points[i]!, accent: true, dashed: true })),
+            "The diagonals from one vertex of a polygon with $n$ sides cut it into $n - 2$ triangles, and the triangles' angles together make up the polygon's angles. So the interior angles of an $n$-sided polygon add up to\n\n$$(n - 2) \\cdot 180^\\circ.$$\n\nA quadrilateral's angles add up to $2 \\cdot 180^\\circ = 360^\\circ$; a hexagon's add up to $4 \\cdot 180^\\circ = 720^\\circ$.",
+            "从 $n$ 边形的一个顶点出发的对角线把它分成 $n - 2$ 个三角形，这些三角形的角合起来正好组成多边形的角。所以 $n$ 边形的内角和是\n\n$$(n - 2) \\cdot 180^\\circ.$$\n\n四边形的内角和是 $2 \\cdot 180^\\circ = 360^\\circ$；六边形的内角和是 $4 \\cdot 180^\\circ = 720^\\circ$。",
           ],
-          "A hexagon with the three diagonals from one vertex drawn, cutting it into four triangles.",
-          "一个六边形，从一个顶点画出三条对角线，把它分成四个三角形。",
-        );
-      })(),
-      generate(rng) {
-        const n = rng.bool(0.5) ? rng.pick([4, 5, 6, 7, 8, 9, 10, 12]) : rng.int(11, 40);
-        const sum = (n - 2) * 180;
-        const name = polygonName(n);
-        if (rng.bool(0.3)) {
-          return numberProblem({
-            prompt: t(
-              `The interior angles of a polygon add up to $${sum}^\\circ$. How many sides does it have?`,
-              `一个多边形的内角和是 $${sum}^\\circ$。它有几条边？`,
-            ),
-            answer: n,
-            form: "integer",
-            wrong: [n - 2, n - 1, sum / 180],
-            solution: t(
-              `The polygon splits into $${sum}^\\circ \\div 180^\\circ = ${n - 2}$ triangles, two fewer than its sides:${steps(`n = ${n - 2} + 2 = ${n}`)}`,
-              `这个多边形可以分成 $${sum}^\\circ \\div 180^\\circ = ${n - 2}$ 个三角形，比边数少 2：${steps(`n = ${n - 2} + 2 = ${n}`)}`,
-            ),
-          });
-        }
-        const named = polygonNames[n] !== undefined && rng.bool(0.7);
-        return numberProblem({
-          prompt: named
-            ? t(
-                `What is the sum of the interior angles of ${/^[aeio]/.test(name.en) ? "an" : "a"} ${name.en}?`,
-                `${name["zh-CN"]}的内角和是多少度？`,
-              )
-            : t(`What is the sum of the interior angles of a polygon with $${n}$ sides?`, `一个 $${n}$ 边形的内角和是多少度？`),
-          answer: sum,
-          form: "integer",
-          unit: "°",
-          wrong: [n * 180, (n - 1) * 180, 360, intOr(sum, n, n * 360)],
-          solution: t(
-            `A polygon with $${n}$ sides splits into $${n - 2}$ triangles:${steps(`(${n} - 2) \\cdot 180^\\circ = ${sum}^\\circ`)}`,
-            `$${n}$ 边形可以分成 $${n - 2}$ 个三角形：${steps(`(${n} - 2) \\cdot 180^\\circ = ${sum}^\\circ`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "angles-of-regular-polygons",
-      figure: gradeDrawings5["angles-of-polygons#angles-of-regular-polygons"],
-      title: t("Regular polygons", "正多边形"),
-      explanation: t(
-        "A **regular** polygon has equal sides and equal angles, so each interior angle is the angle sum divided by $n$:\n\n$$\\frac{(n - 2) \\cdot 180^\\circ}{n}.$$\n\nAn **exterior angle** forms a linear pair with an interior angle. Walking around any convex polygon turns you once around, so its exterior angles add up to $360^\\circ$; in a regular polygon each is $360^\\circ \\div n$. For a regular octagon, each exterior angle is $45^\\circ$ and each interior angle is $180^\\circ - 45^\\circ = 135^\\circ$.",
-        "**正多边形**的各边相等、各角相等，所以每个内角等于内角和除以 $n$：\n\n$$\\frac{(n - 2) \\cdot 180^\\circ}{n}.$$\n\n**外角**与相邻的内角是邻补角。沿任何凸多边形走一圈正好转一整圈，所以它的外角和是 $360^\\circ$；正多边形的每个外角是 $360^\\circ \\div n$。正八边形每个外角是 $45^\\circ$，每个内角是 $180^\\circ - 45^\\circ = 135^\\circ$。",
-      ),
-      generate(rng) {
-        const n = rng.pick([3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36]);
-        const exterior = 360 / n;
-        const interior = 180 - exterior;
-        const name = polygonName(n);
-        const kind = rng.int(0, 2);
-        if (kind === 0) {
-          return numberProblem({
-            prompt: t(`What is the measure of each interior angle of a regular ${name.en}?`, `正${name["zh-CN"]}的每个内角是多少度？`),
-            answer: interior,
-            form: "integer",
-            unit: "°",
-            wrong: [exterior, (n - 2) * 180, intOr(n * 180, n - 2, exterior)],
-            solution: t(
-              `The angle sum is $(${n} - 2) \\cdot 180^\\circ = ${(n - 2) * 180}^\\circ$, shared by $${n}$ equal angles:${steps(`${(n - 2) * 180}^\\circ \\div ${n} = ${interior}^\\circ`)}`,
-              `内角和是 $(${n} - 2) \\cdot 180^\\circ = ${(n - 2) * 180}^\\circ$，由 $${n}$ 个相等的角平分：${steps(`${(n - 2) * 180}^\\circ \\div ${n} = ${interior}^\\circ`)}`,
-            ),
-          });
-        }
-        if (kind === 1) {
-          return numberProblem({
-            prompt: t(`What is the measure of each exterior angle of a regular ${name.en}?`, `正${name["zh-CN"]}的每个外角是多少度？`),
-            answer: exterior,
-            form: "integer",
-            unit: "°",
-            wrong: [interior, intOr(180, n, 360), 360 - exterior],
-            solution: t(
-              `The exterior angles add up to $360^\\circ$ and are equal:${steps(`360^\\circ \\div ${n} = ${exterior}^\\circ`)}`,
-              `外角和是 $360^\\circ$，且各外角相等：${steps(`360^\\circ \\div ${n} = ${exterior}^\\circ`)}`,
-            ),
-          });
-        }
-        return numberProblem({
-          prompt: t(
-            `Each interior angle of a regular polygon measures $${interior}^\\circ$. How many sides does it have?`,
-            `一个正多边形的每个内角是 $${interior}^\\circ$。它有几条边？`,
-          ),
-          answer: n,
-          form: "integer",
-          wrong: [intOr(360, interior, n + 2), intOr(180, exterior, n + 1), n + 2],
-          solution: t(
-            `Each exterior angle is $180^\\circ - ${interior}^\\circ = ${exterior}^\\circ$, and the exterior angles add up to $360^\\circ$:${steps(`n = 360^\\circ \\div ${exterior}^\\circ = ${n}`)}`,
-            `每个外角是 $180^\\circ - ${interior}^\\circ = ${exterior}^\\circ$，外角和是 $360^\\circ$：${steps(`n = 360^\\circ \\div ${exterior}^\\circ = ${n}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "missing-angles-in-polygons",
-      figure: gradeDrawings3["angles-of-polygons#missing-angles-in-polygons"],
-      title: t("Missing angles in polygons", "多边形中的未知角"),
-      explanation: t(
-        "To find a missing angle of a polygon, subtract the known angles from the angle sum.\n\nThe angles of a quadrilateral add up to $360^\\circ$, so if three of them are $80^\\circ$, $95^\\circ$ and $110^\\circ$, the fourth is $360^\\circ - 80^\\circ - 95^\\circ - 110^\\circ = 75^\\circ$.",
-        "求多边形的未知角，用内角和减去已知的角。\n\n四边形的内角和是 $360^\\circ$，所以若其中三个角是 $80^\\circ$、$95^\\circ$、$110^\\circ$，第四个角是 $360^\\circ - 80^\\circ - 95^\\circ - 110^\\circ = 75^\\circ$。",
-      ),
-      generate(rng) {
-        for (;;) {
-          const n = rng.pick([4, 4, 5]);
-          const turns = Array.from({ length: n }, () => rng.int(50, 100));
-          const total = turns.reduce((s, v) => s + v, 0);
-          let phi = rng.int(0, 359);
-          const points = turns.map((v) => {
-            phi += (v * 360) / total;
-            return dir(phi, 1, [0, 0]);
-          });
-          const shape = points.map(([px, py]): Point => [px * 5, py * 3.5]);
-          const angles = shape.map((_, i) => Math.round(interiorAngle(shape, i)));
+          [
+            "Cut from a point inside instead: a hexagon makes $6$ triangles, and the full turn of $360^\\circ$ around the point is not part of the hexagon, so $6 \\cdot 180 - 360 = 720$.",
+            "也可以从内部一点出发切分：六边形分成 $6$ 个三角形，中心那一点周围的 $360^\\circ$ 不属于六边形的内角，所以 $6 \\cdot 180 - 360 = 720$。",
+          ],
+          [
+            "The diagonals from one vertex make two fewer triangles than sides, not one per side. A triangle itself is one triangle: $(3 - 2) \\cdot 180 = 180$.",
+            "从一个顶点出发的对角线分出的三角形比边数少 2，不是每条边一个。三角形本身只有一个三角形：$(3 - 2) \\cdot 180 = 180$。",
+          ],
+        ],
+        (rng) => {
+          const n = rng.bool(0.5) ? rng.pick([4, 5, 6, 7, 8, 9, 10, 12]) : rng.int(11, 40);
           const sum = (n - 2) * 180;
-          const asked = rng.int(0, n - 1);
-          const known = angles.filter((_, i) => i !== asked);
-          const knownSum = known.reduce((s, v) => s + v, 0);
-          const answer = sum - knownSum;
-          if ([...known, answer].some((m) => m < 45 || m > 165 || m === 90 || m === 180)) continue;
-          const labels = angles.map((m, i) => (i === asked ? "x" : deg(m)));
-          const marks: Mark[] = [
-            { kind: "polygon", points: shape },
-            ...shape.map(
-              (v, i): Mark => ({
-                kind: "arc",
-                vertex: v,
-                from: shape[(i + 1) % n]!,
-                to: shape[(i + n - 1) % n]!,
-                label: labels[i]!,
-                accent: i === asked,
-              }),
-            ),
-          ];
           const name = polygonName(n);
-          const knownTex = known.map((m) => `${m}^\\circ`).join(" - ");
-          return {
-            ...numberProblem({
-              prompt: t("Find $x$.", "求 $x$。"),
-              answer,
-              form: "integer",
-              unit: "°",
-              wrong: [360 - knownSum, (n - 1) * 180 - knownSum, 180 - answer],
-              solution: t(
-                `The angles of a ${name.en} add up to $(${n} - 2) \\cdot 180^\\circ = ${sum}^\\circ$:${steps(`x = ${sum}^\\circ - ${knownTex} = ${answer}^\\circ`)}`,
-                `${name["zh-CN"]}的内角和是 $(${n} - 2) \\cdot 180^\\circ = ${sum}^\\circ$：${steps(`x = ${sum}^\\circ - ${knownTex} = ${answer}^\\circ`)}`,
+          const check: Pair = [
+            `Cut from a point inside instead: $${n}$ triangles, less the full turn around the point, give $${n} \\cdot 180 - 360 = ${sum}$.`,
+            `也可以从内部一点切分：$${n}$ 个三角形，减去该点周围的一整圈，得 $${n} \\cdot 180 - 360 = ${sum}$。`,
+          ];
+          if (rng.bool(0.3)) {
+            return valued(
+              [
+                `The interior angles of a polygon add up to $${sum}^\\circ$. How many sides does it have?`,
+                `一个多边形的内角和是 $${sum}^\\circ$。它有几条边？`,
+              ],
+              n,
+              [
+                [
+                  ["Count the triangles", "数三角形"],
+                  ["Each triangle from one vertex holds $180^\\circ$:", "从一个顶点分出的每个三角形含 $180^\\circ$："],
+                  [`${sum} \\div 180 = ${n - 2}`],
+                ],
+                [
+                  ["Add two", "加 2"],
+                  ["A polygon has two more sides than triangles:", "多边形的边数比三角形个数多 2："],
+                  [`n = ${n - 2} + 2 = ${n}`],
+                ],
+              ],
+              check,
+              [
+                [
+                  n - 2,
+                  "That is the number of triangles. The polygon has two more sides than that.",
+                  "这是三角形的个数。多边形的边数比它多 2。",
+                ],
+                [
+                  n - 1,
+                  "You added one. A polygon has two more sides than triangles from one vertex.",
+                  "你只加了 1。多边形的边数比从一个顶点分出的三角形个数多 2。",
+                ],
+                ...whenWhole(
+                  sum,
+                  360,
+                  "You divided by $360$. Each triangle holds $180^\\circ$.",
+                  "你除以了 $360$。每个三角形含 $180^\\circ$。",
+                ),
+              ],
+              { form: "integer" },
+            );
+          }
+          const named = polygonNames[n] !== undefined && rng.bool(0.7);
+          return valued(
+            named
+              ? [
+                  `What is the sum of the interior angles of ${/^[aeio]/.test(name.en) ? "an" : "a"} ${name.en}?`,
+                  `${name["zh-CN"]}的内角和是多少度？`,
+                ]
+              : [`What is the sum of the interior angles of a polygon with $${n}$ sides?`, `一个 $${n}$ 边形的内角和是多少度？`],
+            sum,
+            [
+              [
+                ["Count the triangles", "数三角形"],
+                [
+                  `The diagonals from one vertex cut a polygon with $${n}$ sides into two fewer triangles:`,
+                  `从一个顶点出发的对角线把 $${n}$ 边形分成的三角形比边数少 2：`,
+                ],
+                [`${n} - 2 = ${n - 2}`],
+              ],
+              [
+                ["Multiply", "相乘"],
+                ["Each triangle holds $180^\\circ$:", "每个三角形含 $180^\\circ$："],
+                [`${n - 2} \\cdot 180 = ${sum}`],
+              ],
+            ],
+            check,
+            [
+              [
+                n * 180,
+                "You counted one triangle per side. The diagonals from one vertex make two fewer.",
+                "你按每条边一个三角形来算。从一个顶点出发的对角线分出的三角形少 2 个。",
+              ],
+              [
+                (n - 1) * 180,
+                "You counted one triangle too many. There are two fewer triangles than sides.",
+                "你多算了一个三角形。三角形比边数少 2 个。",
+              ],
+              [
+                360,
+                "That is the sum for a quadrilateral, or of the exterior angles. Count the triangles for this polygon.",
+                "这是四边形的内角和，或外角和。应数出这个多边形的三角形个数。",
+              ],
+            ],
+            { form: "integer", unit: "°" },
+          );
+        },
+        (() => {
+          const points = [0, 1, 2, 3, 4, 5].map((i) => dir(90 + 60 * i, 3));
+          return figure(
+            [
+              { kind: "polygon", points },
+              ...[2, 3, 4].map((i): Mark => ({ kind: "segment", a: points[0]!, b: points[i]!, accent: true, dashed: true })),
+            ],
+            "A hexagon with the three diagonals from one vertex drawn, cutting it into four triangles.",
+            "一个六边形，从一个顶点画出三条对角线，把它分成四个三角形。",
+          );
+        })(),
+      ),
+      lesson(
+        "angles-of-regular-polygons",
+        ["Regular polygons", "正多边形"],
+        [
+          [
+            "A **regular** polygon has equal sides and equal angles, so each interior angle is the angle sum divided by $n$:\n\n$$\\frac{(n - 2) \\cdot 180^\\circ}{n}.$$\n\nAn **exterior angle** forms a linear pair with an interior angle. Walking around any convex polygon turns you once around, so its exterior angles add up to $360^\\circ$; in a regular polygon each is $360^\\circ \\div n$. For a regular octagon, each exterior angle is $45^\\circ$ and each interior angle is $180^\\circ - 45^\\circ = 135^\\circ$.",
+            "**正多边形**的各边相等、各角相等，所以每个内角等于内角和除以 $n$：\n\n$$\\frac{(n - 2) \\cdot 180^\\circ}{n}.$$\n\n**外角**与相邻的内角是邻补角。沿任何凸多边形走一圈正好转一整圈，所以它的外角和是 $360^\\circ$；正多边形的每个外角是 $360^\\circ \\div n$。正八边形每个外角是 $45^\\circ$，每个内角是 $180^\\circ - 45^\\circ = 135^\\circ$。",
+          ],
+          [
+            "Share the angle sum instead: an octagon's angles add up to $6 \\cdot 180 = 1080$, and $1080 \\div 8 = 135$.",
+            "也可以平分内角和：八边形的内角和是 $6 \\cdot 180 = 1080$，$1080 \\div 8 = 135$。",
+          ],
+          [
+            "Keep interior and exterior angles apart: they add up to $180^\\circ$ at each vertex, and only the exterior angles add up to $360^\\circ$.",
+            "分清内角和外角：每个顶点处二者之和是 $180^\\circ$，只有外角之和是 $360^\\circ$。",
+          ],
+        ],
+        (rng) => {
+          const n = rng.pick([3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36]);
+          const exterior = 360 / n;
+          const interior = 180 - exterior;
+          const sum = (n - 2) * 180;
+          const name = polygonName(n);
+          const kind = rng.int(0, 2);
+          if (kind === 0) {
+            return valued(
+              [`What is the measure of each interior angle of a regular ${name.en}?`, `正${name["zh-CN"]}的每个内角是多少度？`],
+              interior,
+              [
+                [
+                  ["Find the angle sum", "求内角和"],
+                  [`A polygon with $${n}$ sides has angles adding up to`, `$${n}$ 边形的内角和是`],
+                  [`(${n} - 2) \\cdot 180 = ${sum}`],
+                ],
+                [["Share it", "平分"], [`The $${n}$ angles are equal:`, `$${n}$ 个角相等：`], [`${sum} \\div ${n} = ${interior}`]],
+              ],
+              [
+                `Use the exterior angles: each is $360 \\div ${n} = ${exterior}$, and $180 - ${exterior} = ${interior}$.`,
+                `用外角：每个外角是 $360 \\div ${n} = ${exterior}$，$180 - ${exterior} = ${interior}$。`,
+              ],
+              [
+                [
+                  exterior,
+                  "That is each exterior angle. The interior angle is $180^\\circ$ minus it.",
+                  "这是每个外角。内角等于 $180^\\circ$ 减去它。",
+                ],
+                [sum, "That is the sum of all the angles. Share it among the equal angles.", "这是所有角的和。要平分给各个相等的角。"],
+                ...whenWhole(
+                  (n - 1) * 180,
+                  n,
+                  "You took $n - 1$ triangles in place of $n - 2$.",
+                  "你用了 $n - 1$ 个三角形，应为 $n - 2$ 个。",
+                ),
+              ],
+              { form: "integer", unit: "°" },
+            );
+          }
+          if (kind === 1) {
+            return valued(
+              [`What is the measure of each exterior angle of a regular ${name.en}?`, `正${name["zh-CN"]}的每个外角是多少度？`],
+              exterior,
+              [
+                [
+                  ["Use the full turn", "用一整圈"],
+                  [
+                    "Walking around the polygon turns you once around, so the exterior angles add up to $360^\\circ$.",
+                    "沿多边形走一圈正好转一整圈，所以外角和是 $360^\\circ$。",
+                  ],
+                ],
+                [["Share it", "平分"], [`The $${n}$ exterior angles are equal:`, `$${n}$ 个外角相等：`], [`360 \\div ${n} = ${exterior}`]],
+              ],
+              [
+                `Go through an interior angle: $${sum} \\div ${n} = ${interior}$, and $180 - ${interior} = ${exterior}$.`,
+                `借助内角：$${sum} \\div ${n} = ${interior}$，$180 - ${interior} = ${exterior}$。`,
+              ],
+              [
+                [
+                  interior,
+                  "That is each interior angle. The exterior angle is $180^\\circ$ minus it.",
+                  "这是每个内角。外角等于 $180^\\circ$ 减去它。",
+                ],
+                ...whenWhole(
+                  180,
+                  n,
+                  "You shared $180^\\circ$. The exterior angles add up to $360^\\circ$.",
+                  "你平分的是 $180^\\circ$。外角和是 $360^\\circ$。",
+                ),
+                [
+                  360 - exterior,
+                  "You took the share from $360$. The exterior angle is the share itself.",
+                  "你用 $360$ 减去了每份。外角就是每一份本身。",
+                ],
+              ],
+              { form: "integer", unit: "°" },
+            );
+          }
+          return valued(
+            [
+              `Each interior angle of a regular polygon measures $${interior}^\\circ$. How many sides does it have?`,
+              `一个正多边形的每个内角是 $${interior}^\\circ$。它有几条边？`,
+            ],
+            n,
+            [
+              [
+                ["Find an exterior angle", "求外角"],
+                ["An exterior angle forms a linear pair with the interior angle:", "外角与内角组成邻补角："],
+                [`180 - ${interior} = ${exterior}`],
+              ],
+              [
+                ["Count the turns", "数转角"],
+                ["The exterior angles add up to $360^\\circ$:", "外角和是 $360^\\circ$："],
+                [`n = 360 \\div ${exterior} = ${n}`],
+              ],
+            ],
+            [
+              `With $${n}$ sides the angles add up to $(${n} - 2) \\cdot 180 = ${sum}$, and $${sum} \\div ${n} = ${interior}$.`,
+              `$${n}$ 条边时内角和是 $(${n} - 2) \\cdot 180 = ${sum}$，而 $${sum} \\div ${n} = ${interior}$。`,
+            ],
+            [
+              ...whenWhole(
+                360,
+                interior,
+                "You divided $360$ by the interior angle. Divide it by the exterior angle.",
+                "你用 $360$ 除以内角。应除以外角。",
               ),
-            }),
-            figure: figure(
-              marks,
-              `A ${name.en} with angles ${known.map((m) => `${m}°`).join(", ")} and x.`,
-              `一个${name["zh-CN"]}，各角为 ${known.map((m) => `${m}°`).join("、")} 和 x。`,
-            ),
-          };
-        }
-      },
-    },
+              ...whenWhole(
+                180,
+                exterior,
+                "You divided $180$ by the exterior angle. The exterior angles add up to $360^\\circ$.",
+                "你用 $180$ 除以外角。外角和是 $360^\\circ$。",
+              ),
+              [
+                exterior,
+                "That is each exterior angle. The number of sides is how many of them fill $360^\\circ$.",
+                "这是每个外角。边数是多少个外角合成 $360^\\circ$。",
+              ],
+            ],
+            { form: "integer" },
+          );
+        },
+        drawn(gradeDrawings5["angles-of-polygons#angles-of-regular-polygons"]),
+      ),
+      lesson(
+        "missing-angles-in-polygons",
+        ["Missing angles in polygons", "多边形中的未知角"],
+        [
+          [
+            "To find a missing angle of a polygon, subtract the known angles from the angle sum.\n\nThe angles of a quadrilateral add up to $360^\\circ$, so if three of them are $80^\\circ$, $95^\\circ$ and $110^\\circ$, the fourth is $360^\\circ - 80^\\circ - 95^\\circ - 110^\\circ = 75^\\circ$.",
+            "求多边形的未知角，用内角和减去已知的角。\n\n四边形的内角和是 $360^\\circ$，所以若其中三个角是 $80^\\circ$、$95^\\circ$、$110^\\circ$，第四个角是 $360^\\circ - 80^\\circ - 95^\\circ - 110^\\circ = 75^\\circ$。",
+          ],
+          [
+            "Use the exterior angles: $100 + 85 + 70 = 255$, so the fourth exterior angle is $360 - 255 = 105$, and $180 - 105 = 75$.",
+            "用外角：$100 + 85 + 70 = 255$，所以第四个外角是 $360 - 255 = 105$，而 $180 - 105 = 75$。",
+          ],
+          [
+            "Use the angle sum of this polygon: $360^\\circ$ belongs to a quadrilateral only, and a pentagon's angles add up to $540^\\circ$.",
+            "要用这个多边形的内角和：$360^\\circ$ 只属于四边形，五边形的内角和是 $540^\\circ$。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const n = rng.pick([4, 4, 5]);
+            const turns = Array.from({ length: n }, () => rng.int(50, 100));
+            const total = turns.reduce((s, v) => s + v, 0);
+            let phi = rng.int(0, 359);
+            const points = turns.map((v) => {
+              phi += (v * 360) / total;
+              return dir(phi, 1, [0, 0]);
+            });
+            const shape = points.map(([px, py]): Point => [px * 5, py * 3.5]);
+            const angles = shape.map((_, i) => Math.round(interiorAngle(shape, i)));
+            const sum = (n - 2) * 180;
+            const asked = rng.int(0, n - 1);
+            const known = angles.filter((_, i) => i !== asked);
+            const knownSum = known.reduce((s, v) => s + v, 0);
+            const answer = sum - knownSum;
+            if ([...known, answer].some((m) => m < 45 || m > 165 || m === 90 || m === 180)) continue;
+            const labels = angles.map((m, i) => (i === asked ? "x" : deg(m)));
+            const marks: Mark[] = [
+              { kind: "polygon", points: shape },
+              ...shape.map(
+                (v, i): Mark => ({
+                  kind: "arc",
+                  vertex: v,
+                  from: shape[(i + 1) % n]!,
+                  to: shape[(i + n - 1) % n]!,
+                  label: labels[i]!,
+                  accent: i === asked,
+                }),
+              ),
+            ];
+            const name = polygonName(n);
+            const knownTex = known.join(" - ");
+            const outside = known.map((m) => 180 - m);
+            const outsideSum = outside.reduce((s, v) => s + v, 0);
+            return valued(
+              ["Find $x$.", "求 $x$。"],
+              answer,
+              [
+                [
+                  ["Find the angle sum", "求内角和"],
+                  [`The figure is a ${name.en}, with $${n}$ sides:`, `这是一个${name["zh-CN"]}，有 $${n}$ 条边：`],
+                  [`(${n} - 2) \\cdot 180 = ${sum}`],
+                ],
+                [
+                  ["Subtract", "相减"],
+                  ["Take the known angles from the sum:", "用内角和减去已知的角："],
+                  [`x = ${sum} - ${knownTex} = ${answer}`],
+                ],
+              ],
+              [
+                `Use the exterior angles: $${outside.join(" + ")} = ${outsideSum}$, so the exterior angle at $x$ is $360 - ${outsideSum} = ${360 - outsideSum}$, and $180 - ${360 - outsideSum} = ${answer}$.`,
+                `用外角：$${outside.join(" + ")} = ${outsideSum}$，所以 $x$ 处的外角是 $360 - ${outsideSum} = ${360 - outsideSum}$，而 $180 - ${360 - outsideSum} = ${answer}$。`,
+              ],
+              [
+                [
+                  360 - knownSum,
+                  `You used $360$, but a ${name.en} has angles adding up to $${sum}^\\circ$.`,
+                  `你用了 $360$，但${name["zh-CN"]}的内角和是 $${sum}^\\circ$。`,
+                ],
+                [
+                  (n - 1) * 180 - knownSum,
+                  "You counted one triangle too many: the angle sum is $(n - 2) \\cdot 180^\\circ$.",
+                  "你多算了一个三角形：内角和是 $(n - 2) \\cdot 180^\\circ$。",
+                ],
+                [180 - answer, "That is the exterior angle at $x$, not the interior angle.", "这是 $x$ 处的外角，不是内角。"],
+              ],
+              {
+                form: "integer",
+                unit: "°",
+                figure: figure(
+                  marks,
+                  `A ${name.en} with angles ${known.map((m) => `${m}°`).join(", ")} and x.`,
+                  `一个${name["zh-CN"]}，各角为 ${known.map((m) => `${m}°`).join("、")} 和 x。`,
+                ),
+              },
+            );
+          }
+        },
+        drawn(gradeDrawings3["angles-of-polygons#missing-angles-in-polygons"]),
+      ),
+    ],
+  },
+  [
+    "Draw any polygon and pick one corner. The diagonals from that corner cut it into triangles, and every angle of every triangle lands inside one of the polygon's angles, so the triangles count the angle sum for us.",
+    "画任意一个多边形，选一个顶点。从这个顶点出发的对角线把它切成若干三角形，每个三角形的每个角都落在多边形的某个角里，所以三角形帮我们数出了内角和。",
   ],
-};
+  [
+    "A square has four right angles: $4 \\cdot 90 = 360 = (4 - 2) \\cdot 180$.",
+    "正方形有四个直角：$4 \\cdot 90 = 360 = (4 - 2) \\cdot 180$。",
+  ],
+  [
+    "find the angle sum of any polygon, the angles of regular polygons and their number of sides, and missing angles.",
+    "求任意多边形的内角和、正多边形的角和边数，以及未知角。",
+  ],
+);
 
 /** angleTopics are the topics on angles, triangles and polygons. */
 export const angleTopics: readonly TopicDef[] = [

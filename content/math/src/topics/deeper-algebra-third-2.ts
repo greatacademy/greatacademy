@@ -9,7 +9,7 @@ import { choose, chooseMath, tableFigure, whole } from "./early-grades-more-kit.
 import { aFractionTimesTheUnknown, storiesWithOneStepEquations, subtractingAGroup } from "./equations.ts";
 import { aNegativeFractionToAPower } from "./exponents.ts";
 import { aFormulaFromAStory, theFactorThatWasPulledOut, thePerimeterAsAnExpression } from "./expressions.ts";
-import { lesson, valued } from "./grade-6-kit.ts";
+import { drawn, lesson, valued } from "./grade-6-kit.ts";
 import { countingTheIntegersThatWork } from "./inequalities.ts";
 import {
   addingALongList,
@@ -130,36 +130,91 @@ Say $(2, 3)$ solves $x + y = 5$ and $kx - y = 7$. Putting $x = 2$ and $y = 3$ in
   "vertical-angles": [theAnglesAroundACrossing],
   "classifying-triangles": [whatATriangleMustBe],
   "isosceles-triangles": [
-    {
-      ...skill(
-        "two-cases-for-the-given-angle",
-        ["Two cases for the given angle", "已知角的两种情况"],
+    lesson(
+      "two-cases-for-the-given-angle",
+      ["Two cases for the given angle", "已知角的两种情况"],
+      [
         [
-          "If the known angle of an isosceles triangle could be a base angle or the vertex, both cases must be tried. An angle of 90 degrees or more can only be the vertex, because two of them would be too large.",
-          "如果等腰三角形的已知角可能是底角也可能是顶角，两种情况都要试。90 度或以上的角只能是顶角，因为两个这样的角太大了。",
+          "If the known angle of an isosceles triangle could be a base angle or the vertex, both cases must be tried. An angle of 90 degrees or more can only be the vertex, because two of them would be too large.\n\nTake an angle of $40^\\circ$. As a base angle, the angles are $40^\\circ$, $40^\\circ$ and $100^\\circ$. As the vertex, the base angles share $140^\\circ$, so the angles are $40^\\circ$, $70^\\circ$ and $70^\\circ$.",
+          "如果等腰三角形的已知角可能是底角也可能是顶角，两种情况都要试。90 度或以上的角只能是顶角，因为两个这样的角太大了。\n\n以 $40^\\circ$ 的角为例。作为底角，三个角是 $40^\\circ$、$40^\\circ$、$100^\\circ$。作为顶角，两个底角共占 $140^\\circ$，三个角是 $40^\\circ$、$70^\\circ$、$70^\\circ$。",
         ],
-        (rng) => {
-          const drawn = rng.int(5, 40) * 2;
-          const even = drawn === 60 ? 58 : drawn;
-          const e = 180 - 2 * even;
-          const v = (180 - even) / 2;
-          const answer = Math.max(even, e, v);
-          return whole(
+        [
+          "Each case adds up: $40 + 40 + 100 = 180$ and $40 + 70 + 70 = 180$.",
+          "每种情况都满足内角和：$40 + 40 + 100 = 180$，$40 + 70 + 70 = 180$。",
+        ],
+        [
+          "Do not stop after the first case that works. The question asks about every triangle the given angle allows.",
+          "不要在第一种可行的情况后就停下。题目问的是已知角允许的所有三角形。",
+        ],
+      ],
+      (rng) => {
+        const drawnAngle = rng.int(5, 40) * 2;
+        const even = drawnAngle === 60 ? 58 : drawnAngle;
+        const e = 180 - 2 * even;
+        const v = (180 - even) / 2;
+        const answer = Math.max(even, e, v);
+        const fromBase = Math.max(even, e);
+        return valued(
+          [
+            `One angle of an isosceles triangle is $${even}^\\circ$. What is the greatest possible measure of another angle of the triangle, in degrees?`,
+            `等腰三角形的一个角是 $${even}^\\circ$。另一个角最大可能是多少度？`,
+          ],
+          answer,
+          [
             [
-              `One angle of an isosceles triangle is $${even}^\\circ$. What is the greatest possible measure of another angle of the triangle, in degrees?`,
-              `等腰三角形的一个角是 $${even}^\\circ$。另一个角最大可能是多少度？`,
+              ["Try it as a base angle", "当作底角"],
+              [
+                `The other base angle is also $${even}^\\circ$, and the vertex takes the rest:`,
+                `另一个底角也是 $${even}^\\circ$，顶角是剩下的部分：`,
+              ],
+              [`180 - 2 \\cdot ${even} = ${e}`],
             ],
-            answer,
-            [180 - even, 2 * even, Math.min(e, v)],
             [
-              `As a base angle, it leaves a vertex of $${e}^\\circ$. As the vertex, it leaves base angles of $${v}^\\circ$. ${answer === even ? `As a base angle, it also has an equal partner of $${even}^\\circ$, so the` : "The"} greatest measure is $${answer}^\\circ$.`,
-              `作为底角，顶角是 $${e}^\\circ$。作为顶角，底角是 $${v}^\\circ$。${answer === even ? `作为底角时，另一个底角也是 $${even}^\\circ$，所以` : ""}最大的是 $${answer}^\\circ$。`,
+              ["Try it as the vertex", "当作顶角"],
+              ["The two equal base angles share the rest:", "两个相等的底角平分剩下的部分："],
+              [`(180 - ${even}) \\div 2 = ${v}`],
             ],
-          );
-        },
-      ),
-      figure: gradeDrawings5["isosceles-triangles#two-cases-for-the-given-angle"],
-    },
+            [
+              ["Compare", "比较"],
+              [
+                `The other angles can be $${even}^\\circ$ and $${e}^\\circ$, or $${v}^\\circ$ and $${v}^\\circ$. The greatest is $${answer}^\\circ$.`,
+                `另外的角可以是 $${even}^\\circ$ 和 $${e}^\\circ$，或者 $${v}^\\circ$ 和 $${v}^\\circ$。最大的是 $${answer}^\\circ$。`,
+              ],
+            ],
+          ],
+          [
+            `Both triangles are real: $${even} + ${even} + ${e} = 180$ and $${even} + ${v} + ${v} = 180$.`,
+            `两个三角形都成立：$${even} + ${even} + ${e} = 180$，$${even} + ${v} + ${v} = 180$。`,
+          ],
+          [
+            [180 - even, "That is what the two other angles share together, not one angle.", "这是另外两个角的和，不是一个角。"],
+            [
+              2 * even,
+              "You doubled the given angle. Two equal base angles add up to that, but no single angle does.",
+              "你把已知角乘了 2。两个相等底角之和是它，但没有哪一个角是它。",
+            ],
+            answer === v
+              ? [
+                  fromBase,
+                  "You tried the given angle only as a base angle. As the vertex, it gives a greater angle.",
+                  "你只把已知角当作底角。当作顶角时，得到的角更大。",
+                ]
+              : [
+                  v,
+                  "You tried the given angle only as the vertex. As a base angle, it gives a greater angle.",
+                  "你只把已知角当作顶角。当作底角时，得到的角更大。",
+                ],
+            [
+              Math.min(e, v),
+              "That is the smaller of the two cases. The question asks for the greatest.",
+              "这是两种情况中较小的。题目问的是最大的。",
+            ],
+          ],
+          { form: "integer", unit: "°" },
+        );
+      },
+      drawn(gradeDrawings5["isosceles-triangles#two-cases-for-the-given-angle"]),
+    ),
   ],
   "area-of-parallelograms": [twoHeightsOfOneParallelogram],
   "area-of-trapezoids": [theMissingBaseOfATrapezoid],

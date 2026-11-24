@@ -238,4 +238,11 @@ export const taughtTopics: readonly string[] = [
   "area-of-parallelograms",
   "area-of-trapezoids",
   "composite-shapes",
+  "exterior-angles-of-triangles",
+  "isosceles-triangles",
+  "angles-of-polygons",
+  "mixed-numbers",
+  "approximating-square-roots",
+  "classifying-rational-and-irrational-numbers",
+  "evaluating-rational-expressions",
 ];

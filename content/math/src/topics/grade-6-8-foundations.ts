@@ -1,10 +1,11 @@
 import type { Figure, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 
-import { choiceProblem, numberProblem } from "../problems.ts";
-import { lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { numberProblem } from "../problems.ts";
+import type { MathWrong, Pair } from "./early-grades-more-kit.ts";
+import { chosenMath, lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { histogramSvg } from "./grade-7-statistics.ts";
-import { equalTape, tapeFigure } from "./upper-grades-kit.ts";
+import { equalTape, lineFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 /** unitPricesAndSpeed computes unit rates, prices per unit, and constant speed. */
 export const unitPricesAndSpeed: TopicDef = withIntro(
@@ -350,165 +351,408 @@ export const scaleDrawingsAndScaleFactor: TopicDef = {
   ],
 };
 
+/** squareBounds gives the whole number k with k² < n < (k + 1)², for n not a perfect square. */
+const squareBounds = (n: number) => Math.floor(Math.sqrt(n));
+
 /** classifyingRationalAndIrrationalNumbers distinguishes rational numbers from irrational numbers. */
-export const classifyingRationalAndIrrationalNumbers: TopicDef = {
-  id: "classifying-rational-and-irrational-numbers",
-  title: t("Classifying Rational and Irrational Numbers", "区分有理数与无理数"),
-  summary: t(
-    "Identify and classify numbers, square roots, and cube roots as rational or irrational.",
-    "识别并将数、平方根与立方根分类为有理数或无理数。",
-  ),
-  prerequisites: ["square-roots-and-cube-roots"],
-  encompasses: [],
-  xp: 8,
-  standards: ["CCSS.8.NS.A.1"],
-  knowledgePoints: [
-    {
-      id: "rational-vs-irrational",
-      title: t("Rational and Irrational Numbers", "有理数与无理数"),
-      explanation: t(
-        "A **rational number** can be written as a ratio of two integers $\\frac{a}{b}$ (where $b \\neq 0$). Its decimal form either terminates or repeats.\n\nAn **irrational number** cannot be written as a fraction of integers. Its decimal expansion goes on forever without repeating. Examples include $\\pi$, $\\sqrt{2}$, $\\sqrt{3}$, and $\\sqrt{5}$. The square root of any non-perfect square is irrational.",
-        "**有理数**可以写成两个整数的比 $\\frac{a}{b}$（其中 $b \\neq 0$）。其小数形式要么有限，要么无限循环。\n\n**无理数**不能写成整数分数形式，其小数展开是无限不循环的。例如 $\\pi$、$\\sqrt{2}$、$\\sqrt{3}$ 与 $\\sqrt{5}$。任何非完全平方数的算术平方根都是无理数。",
+export const classifyingRationalAndIrrationalNumbers: TopicDef = withIntro(
+  {
+    id: "classifying-rational-and-irrational-numbers",
+    title: t("Classifying Rational and Irrational Numbers", "区分有理数与无理数"),
+    summary: t(
+      "Identify and classify numbers, square roots, and cube roots as rational or irrational.",
+      "识别并将数、平方根与立方根分类为有理数或无理数。",
+    ),
+    prerequisites: ["square-roots-and-cube-roots"],
+    encompasses: [],
+    xp: 8,
+    standards: ["CCSS.8.NS.A.1"],
+    knowledgePoints: [
+      lesson(
+        "rational-vs-irrational",
+        ["Rational and Irrational Numbers", "有理数与无理数"],
+        [
+          [
+            "A **rational number** can be written as a ratio of two integers $\\frac{a}{b}$ (where $b \\neq 0$). Its decimal form either terminates or repeats.\n\nAn **irrational number** cannot be written as a fraction of integers. Its decimal expansion goes on forever without repeating. Examples include $\\pi$, $\\sqrt{2}$, $\\sqrt{3}$, and $\\sqrt{5}$. The square root of any whole number that is not a perfect square is irrational.",
+            "**有理数**可以写成两个整数的比 $\\frac{a}{b}$（其中 $b \\neq 0$）。其小数形式要么有限，要么无限循环。\n\n**无理数**不能写成整数分数形式，其小数展开是无限不循环的。例如 $\\pi$、$\\sqrt{2}$、$\\sqrt{3}$ 与 $\\sqrt{5}$。任何不是完全平方数的整数，其算术平方根都是无理数。",
+          ],
+          [
+            "Write each rational one as a fraction: $\\sqrt{9} = \\frac{3}{1}$ and $0.25 = \\frac{25}{100}$. No such fraction exists for $\\sqrt{2}$, which lies strictly between $1$ and $2$.",
+            "把每个有理数写成分数：$\\sqrt{9} = \\frac{3}{1}$，$0.25 = \\frac{25}{100}$。$\\sqrt{2}$ 严格位于 $1$ 和 $2$ 之间，找不到这样的分数。",
+          ],
+          [
+            "A root sign alone does not make a number irrational: $\\sqrt{49} = 7$. Simplify first, then decide.",
+            "有根号不一定是无理数：$\\sqrt{49} = 7$。先化简，再判断。",
+          ],
+        ],
+        (rng) => {
+          const nonSquare = rng.pick([2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20]);
+          const root = rng.int(2, 10);
+          const fracNum = rng.int(1, 9);
+          const fracDen = rng.int(2, 10);
+          const hundredths = rng.int(12, 98);
+          const decVal = `0.${hundredths}`;
+          const k = squareBounds(nonSquare);
+          return chosenMath(
+            rng,
+            ["Which of these numbers is irrational?", "下面哪个数是无理数？"],
+            `\\sqrt{${nonSquare}}`,
+            [
+              [
+                `\\sqrt{${root * root}}`,
+                `$\\sqrt{${root * root}} = ${root}$, a whole number, so it is rational.`,
+                `$\\sqrt{${root * root}} = ${root}$，是整数，所以是有理数。`,
+              ],
+              [
+                `\\frac{${fracNum}}{${fracDen}}`,
+                "It is already a ratio of two integers, so it is rational.",
+                "它本身就是两个整数之比，所以是有理数。",
+              ],
+              [
+                decVal,
+                `The decimal ends: $${decVal} = \\frac{${hundredths}}{100}$, so it is rational.`,
+                `这个小数是有限小数：$${decVal} = \\frac{${hundredths}}{100}$，所以是有理数。`,
+              ],
+            ],
+            [
+              [
+                ["Simplify what you can", "能化简的先化简"],
+                [
+                  `$\\sqrt{${root * root}} = ${root}$, $\\frac{${fracNum}}{${fracDen}}$ is a fraction already, and $${decVal} = \\frac{${hundredths}}{100}$. All three are ratios of integers.`,
+                  `$\\sqrt{${root * root}} = ${root}$，$\\frac{${fracNum}}{${fracDen}}$ 本身是分数，$${decVal} = \\frac{${hundredths}}{100}$。三个都是整数之比。`,
+                ],
+              ],
+              [
+                ["Look at the root", "看剩下的根"],
+                [
+                  `$${nonSquare}$ is not a perfect square, so $\\sqrt{${nonSquare}}$ is irrational.`,
+                  `$${nonSquare}$ 不是完全平方数，所以 $\\sqrt{${nonSquare}}$ 是无理数。`,
+                ],
+              ],
+            ],
+            [
+              `Since $${k * k} < ${nonSquare} < ${(k + 1) * (k + 1)}$, $\\sqrt{${nonSquare}}$ lies strictly between $${k}$ and $${k + 1}$, so it is not whole, and the root of a whole number is either whole or irrational.`,
+              `因为 $${k * k} < ${nonSquare} < ${(k + 1) * (k + 1)}$，$\\sqrt{${nonSquare}}$ 严格位于 $${k}$ 和 $${k + 1}$ 之间，不是整数；而整数的平方根要么是整数，要么是无理数。`,
+            ],
+          );
+        },
+        lineFigure(
+          {
+            lo: 0,
+            hi: 4,
+            step: 1,
+            labels: [0, 1, 2, 3, 4],
+            marks: [
+              { at: Math.SQRT2, text: "√2" },
+              { at: 2.5, text: "2.5" },
+              { at: Math.PI, text: "π" },
+            ],
+          },
+          ["A number line from 0 to 4 with √2, 2.5 and π marked.", "一条从 0 到 4 的数轴，标出 √2、2.5 和 π。"],
+        ),
       ),
-      generate(rng) {
-        const nonSquare = rng.pick([2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20]);
-        const perfectSquare = rng.pick([4, 9, 16, 25, 36, 49, 64, 81, 100]);
-        const fracNum = rng.int(1, 9);
-        const fracDen = rng.int(2, 10);
-        const decVal = `0.${rng.int(12, 98)}`;
-
-        const irrational = `\\sqrt{${nonSquare}}`;
-        const numbers = rng.shuffle([irrational, `\\sqrt{${perfectSquare}}`, `\\frac{${fracNum}}{${fracDen}}`, decVal]);
-        const options = numbers.map((x) => t(`$${x}$`, `$${x}$`));
-        const [a, b, c, d] = numbers.map((x) => `$${x}$`);
-
-        const prompt = t(
-          `Which of the following numbers is irrational: ${a}, ${b}, ${c}, or ${d}?`,
-          `下列哪个数是无理数：${a}、${b}、${c} 还是 ${d}？`,
-        );
-        const solution = t(
-          `$\\sqrt{${nonSquare}}$ is irrational because $${nonSquare}$ is not a perfect square. The other options are rational: $\\sqrt{${perfectSquare}} = ${Math.round(Math.sqrt(perfectSquare))}$, $\\frac{${fracNum}}{${fracDen}}$ is a ratio of integers, and terminating decimals are rational.`,
-          `$\\sqrt{${nonSquare}}$ 是无理数，因为 $${nonSquare}$ 不是完全平方数。其他选项都是有理数：$\\sqrt{${perfectSquare}} = ${Math.round(Math.sqrt(perfectSquare))}$，$\\frac{${fracNum}}{${fracDen}}$ 是整数比，有限小数也是有理数。`,
-        );
-
-        return choiceProblem({
-          prompt,
-          options,
-          correct: numbers.indexOf(irrational),
-          solution,
-        });
-      },
-    },
-    {
-      id: "rational-numbers-in-disguise",
-      title: t("Recognizing Rational Numbers That Look Irrational", "识别看似无理的有理数"),
-      explanation: t(
-        "Some numbers look irrational but are not, so simplify before deciding. A root of a perfect power is an integer: $\\sqrt{49} = 7$ and $\\sqrt[3]{27} = 3$. A repeating decimal such as $0.\\overline{3} = \\frac{1}{3}$ is rational, because its digits repeat in a fixed block.\n\nOn the other hand, $\\pi$, the square root of a non-square such as $\\sqrt{8}$, and the cube root of a non-cube such as $\\sqrt[3]{10}$ stay irrational, as does a nonzero rational multiple of one of them, like $3\\sqrt{2}$.",
-        "有些数看起来是无理数，其实不是，所以要先化简再判断。完全幂的方根是整数：$\\sqrt{49} = 7$，$\\sqrt[3]{27} = 3$。像 $0.\\overline{3} = \\frac{1}{3}$ 这样的循环小数是有理数，因为它的数字按固定的段重复。\n\n另一方面，$\\pi$、非完全平方数的平方根（如 $\\sqrt{8}$）以及非完全立方数的立方根（如 $\\sqrt[3]{10}$）仍是无理数，它们的非零有理倍数（如 $3\\sqrt{2}$）也是无理数。",
+      lesson(
+        "rational-numbers-in-disguise",
+        ["Recognizing Rational Numbers That Look Irrational", "识别看似无理的有理数"],
+        [
+          [
+            "Some numbers look irrational but are not, so simplify before deciding. A root of a perfect power is an integer: $\\sqrt{49} = 7$ and $\\sqrt[3]{27} = 3$. A repeating decimal such as $0.\\overline{3} = \\frac{1}{3}$ is rational, because its digits repeat in a fixed block.\n\nOn the other hand, $\\pi$, the square root of a non-square such as $\\sqrt{8}$, and the cube root of a non-cube such as $\\sqrt[3]{10}$ stay irrational, as does a nonzero rational multiple of one of them, like $3\\sqrt{2}$.",
+            "有些数看起来是无理数，其实不是，所以要先化简再判断。完全幂的方根是整数：$\\sqrt{49} = 7$，$\\sqrt[3]{27} = 3$。像 $0.\\overline{3} = \\frac{1}{3}$ 这样的循环小数是有理数，因为它的数字按固定的段重复。\n\n另一方面，$\\pi$、非完全平方数的平方根（如 $\\sqrt{8}$）以及非完全立方数的立方根（如 $\\sqrt[3]{10}$）仍是无理数，它们的非零有理倍数（如 $3\\sqrt{2}$）也是无理数。",
+          ],
+          [
+            "Multiply back: $7 \\cdot 7 = 49$, $3 \\cdot 3 \\cdot 3 = 27$, and $1 \\div 3 = 0.333\\ldots$.",
+            "乘回去验证：$7 \\cdot 7 = 49$，$3 \\cdot 3 \\cdot 3 = 27$，$1 \\div 3 = 0.333\\ldots$。",
+          ],
+          [
+            "A decimal that goes on forever is rational when it repeats. Only a decimal that never repeats, like that of $\\pi$, is irrational.",
+            "无限小数如果循环，就是有理数。只有不循环的无限小数（如 $\\pi$）才是无理数。",
+          ],
+        ],
+        (rng) => {
+          const kind = rng.int(0, 2);
+          const square = rng.int(4, 15);
+          const cube = rng.int(2, 6);
+          const digit = rng.int(1, 8);
+          const rational = [`\\sqrt{${square * square}}`, `\\sqrt[3]{${cube ** 3}}`, `0.\\overline{${digit}}`][kind]!;
+          const whys: Pair[] = [
+            [`$\\sqrt{${square * square}} = ${square}$.`, `$\\sqrt{${square * square}} = ${square}$。`],
+            [`$\\sqrt[3]{${cube ** 3}} = ${cube}$.`, `$\\sqrt[3]{${cube ** 3}} = ${cube}$。`],
+            [`$0.\\overline{${digit}} = \\frac{${digit}}{9}$.`, `$0.\\overline{${digit}} = \\frac{${digit}}{9}$。`],
+          ];
+          const why = whys[kind]!;
+          const backs: Pair[] = [
+            [`$${square} \\cdot ${square} = ${square * square}$`, `$${square} \\cdot ${square} = ${square * square}$`],
+            [`$${cube} \\cdot ${cube} \\cdot ${cube} = ${cube ** 3}$`, `$${cube} \\cdot ${cube} \\cdot ${cube} = ${cube ** 3}$`],
+            [`$${digit} \\div 9 = 0.${`${digit}`.repeat(3)}\\ldots$`, `$${digit} \\div 9 = 0.${`${digit}`.repeat(3)}\\ldots$`],
+          ];
+          const back = backs[kind]!;
+          const nonSquare = rng.pick([2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20]);
+          const nonCube = rng.pick([2, 3, 4, 5, 6, 7, 9, 10, 12, 15, 20, 25]);
+          const multiple = rng.int(2, 9);
+          const otherNonSquare = rng.pick([2, 3, 5, 7].filter((n) => n !== nonSquare));
+          const irrationals: MathWrong[] = rng.sample(
+            [
+              [
+                `\\sqrt{${nonSquare}}`,
+                `$${nonSquare}$ is not a perfect square, so its square root is irrational.`,
+                `$${nonSquare}$ 不是完全平方数，所以它的平方根是无理数。`,
+              ],
+              [
+                `\\sqrt[3]{${nonCube}}`,
+                `$${nonCube}$ is not a perfect cube, so its cube root is irrational.`,
+                `$${nonCube}$ 不是完全立方数，所以它的立方根是无理数。`,
+              ],
+              [
+                "\\pi",
+                "The decimal of $\\pi$ never ends and never repeats, so it is irrational.",
+                "$\\pi$ 的小数既不终止也不循环，所以是无理数。",
+              ],
+              [
+                `${multiple}\\sqrt{${otherNonSquare}}`,
+                `A whole number times the irrational $\\sqrt{${otherNonSquare}}$ stays irrational.`,
+                `整数乘无理数 $\\sqrt{${otherNonSquare}}$ 仍是无理数。`,
+              ],
+            ],
+            3,
+          );
+          return chosenMath(
+            rng,
+            ["Which of these numbers is rational?", "下面哪个数是有理数？"],
+            rational,
+            irrationals,
+            [
+              [
+                ["Simplify", "化简"],
+                [`Simplify the one that can be simplified: ${why[0]}`, `把能化简的化简：${why[1]}`],
+              ],
+              [
+                ["Decide", "判断"],
+                [
+                  "That is a ratio of integers, so it is rational. The others keep $\\pi$ or a root of a number that is not a perfect power.",
+                  "这是整数之比，所以是有理数。其他各数仍含 $\\pi$ 或非完全幂的方根。",
+                ],
+              ],
+            ],
+            [`Work backwards: ${back[0]}.`, `反过来验证：${back[1]}。`],
+          );
+        },
+        lineFigure(
+          {
+            lo: 0,
+            hi: 4,
+            step: 1,
+            labels: [0, 1, 2, 3, 4],
+            marks: [
+              { at: 1 / 3, text: "0.3̅" },
+              { at: 3, text: "∛27" },
+              { at: Math.sqrt(8), text: "√8" },
+            ],
+          },
+          [
+            "A number line from 0 to 4 with 0.3 repeating, the cube root of 27 at 3, and √8 marked.",
+            "一条从 0 到 4 的数轴，标出 0.3 循环、位于 3 的 27 的立方根，以及 √8。",
+          ],
+        ),
       ),
-      generate(rng) {
-        const kind = rng.int(0, 2);
-        const square = rng.int(4, 15);
-        const cube = rng.int(2, 6);
-        const digit = rng.int(1, 8);
-        const rational = [`\\sqrt{${square * square}}`, `\\sqrt[3]{${cube ** 3}}`, `0.\\overline{${digit}}`][kind]!;
-        const why = [
-          t(`$\\sqrt{${square * square}} = ${square}$`, `$\\sqrt{${square * square}} = ${square}$`),
-          t(`$\\sqrt[3]{${cube ** 3}} = ${cube}$`, `$\\sqrt[3]{${cube ** 3}} = ${cube}$`),
-          t(`$0.\\overline{${digit}} = \\frac{${digit}}{9}$`, `$0.\\overline{${digit}} = \\frac{${digit}}{9}$`),
-        ][kind]!;
-        const nonSquare = rng.pick([2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20]);
-        const nonCube = rng.pick([2, 3, 4, 5, 6, 7, 9, 10, 12, 15, 20, 25]);
-        const multiple = rng.int(2, 9);
-        const otherNonSquare = rng.pick([2, 3, 5, 7].filter((n) => n !== nonSquare));
-        const irrationals = rng.sample(
-          [`\\sqrt{${nonSquare}}`, `\\sqrt[3]{${nonCube}}`, `\\pi`, `${multiple}\\sqrt{${otherNonSquare}}`],
-          3,
-        );
-        const numbers = rng.shuffle([rational, ...irrationals]);
-        const listed = numbers.map((x) => `$${x}$`);
-        return choiceProblem({
-          prompt: t(`Which of these numbers is rational: ${listed.join(", ")}?`, `下列哪个数是有理数：${listed.join("、")}？`),
-          options: numbers.map((x) => t(`$${x}$`, `$${x}$`)),
-          correct: numbers.indexOf(rational),
-          solution: t(
-            `${why.en}, which is a ratio of integers, so it is rational. The others cannot be simplified to a ratio of integers: they involve $\\pi$ or a root of a number that is not a perfect power.`,
-            `${why["zh-CN"]}，是整数之比，所以是有理数。其他各数都不能化成整数之比：它们含有 $\\pi$ 或非完全幂的方根。`,
-          ),
-        });
-      },
-    },
+    ],
+  },
+  [
+    "Measure the diagonal of a square with sides of $1$ metre. Its length squared is $1 + 1 = 2$, so it is $\\sqrt{2}$ metres, a length that no fraction of a metre can name exactly.",
+    "量一个边长为 $1$ 米的正方形的对角线。它的长度的平方是 $1 + 1 = 2$，所以长 $\\sqrt{2}$ 米，没有哪个分数能准确表示这个长度。",
   ],
-};
+  [
+    "$1.4^2 = 1.96$ and $1.5^2 = 2.25$, so $\\sqrt{2}$ lies between $1.4$ and $1.5$.",
+    "$1.4^2 = 1.96$，$1.5^2 = 2.25$，所以 $\\sqrt{2}$ 在 $1.4$ 和 $1.5$ 之间。",
+  ],
+  [
+    "sort numbers into rational and irrational, find rational numbers hidden under roots and repeating decimals, and see when an irrational becomes rational.",
+    "把数分成有理数和无理数，找出藏在根号和循环小数中的有理数，并看看无理数什么时候会变成有理数。",
+  ],
+);
 
 /** approximatingSquareRoots estimates values of non-perfect square roots between integers. */
-export const approximatingSquareRoots: TopicDef = {
-  id: "approximating-square-roots",
-  title: t("Approximating Square Roots", "近似平方根"),
-  summary: t("Estimate square roots of non-perfect squares between consecutive integers.", "在两个连续整数之间估算非完全平方数的平方根。"),
-  prerequisites: ["square-roots-and-cube-roots"],
-  encompasses: [],
-  xp: 8,
-  standards: ["CCSS.8.NS.A.2"],
-  knowledgePoints: [
-    {
-      id: "consecutive-integer-bounds",
-      title: t("Consecutive Integer Bounds for Square Roots", "平方根的连续整数界限"),
-      explanation: t(
-        "To estimate a square root $\\sqrt{N}$ where $N$ is not a perfect square, find the two consecutive perfect squares that bracket $N$.\n\nFor example, $49 < 54 < 64$, so $7 < \\sqrt{54} < 8$.",
-        "要估算非完全平方数 $N$ 的平方根 $\\sqrt{N}$，找出夹住 $N$ 的两个连续完全平方数。\n\n例如，因为 $49 < 54 < 64$，所以 $7 < \\sqrt{54} < 8$。",
+export const approximatingSquareRoots: TopicDef = withIntro(
+  {
+    id: "approximating-square-roots",
+    title: t("Approximating Square Roots", "近似平方根"),
+    summary: t(
+      "Estimate square roots of non-perfect squares between consecutive integers.",
+      "在两个连续整数之间估算非完全平方数的平方根。",
+    ),
+    prerequisites: ["square-roots-and-cube-roots"],
+    encompasses: [],
+    xp: 8,
+    standards: ["CCSS.8.NS.A.2"],
+    knowledgePoints: [
+      lesson(
+        "consecutive-integer-bounds",
+        ["Consecutive Integer Bounds for Square Roots", "平方根的连续整数界限"],
+        [
+          [
+            "To estimate a square root $\\sqrt{N}$ where $N$ is not a perfect square, find the two consecutive perfect squares that bracket $N$.\n\nFor example, $49 < 54 < 64$, so $7 < \\sqrt{54} < 8$.",
+            "要估算非完全平方数 $N$ 的平方根 $\\sqrt{N}$，找出夹住 $N$ 的两个连续完全平方数。\n\n例如，因为 $49 < 54 < 64$，所以 $7 < \\sqrt{54} < 8$。",
+          ],
+          [
+            "A calculator gives $\\sqrt{54} \\approx 7.35$, which is between $7$ and $8$.",
+            "计算器给出 $\\sqrt{54} \\approx 7.35$，确实在 $7$ 和 $8$ 之间。",
+          ],
+          [
+            "Compare $N$ with squares, not with doubles: $\\sqrt{54}$ is not near $27$, because $27^2 = 729$.",
+            "要把 $N$ 和平方数比较，而不是和它的一半比较：$\\sqrt{54}$ 并不接近 $27$，因为 $27^2 = 729$。",
+          ],
+        ],
+        (rng) => {
+          const k = rng.int(3, 11);
+          const lowerSq = k * k;
+          const upperSq = (k + 1) * (k + 1);
+          const n = rng.int(lowerSq + 1, upperSq - 1);
+          return valued(
+            [
+              `The value of $\\sqrt{${n}}$ lies between two consecutive integers $k$ and $k + 1$. What is the value of $k$?`,
+              `$\\sqrt{${n}}$ 的值介于两个连续整数 $k$ 与 $k + 1$ 之间。$k$ 的值是多少？`,
+            ],
+            k,
+            [
+              [
+                ["Find the squares around it", "找出两边的平方数"],
+                [
+                  `The perfect squares on either side of $${n}$ are $${lowerSq}$ and $${upperSq}$:`,
+                  `$${n}$ 两边的完全平方数是 $${lowerSq}$ 和 $${upperSq}$：`,
+                ],
+                [`${lowerSq} < ${n} < ${upperSq}`],
+              ],
+              [
+                ["Take square roots", "开平方"],
+                ["Square roots keep the order:", "开平方后大小顺序不变："],
+                [`${k} < \\sqrt{${n}} < ${k + 1}`],
+              ],
+            ],
+            [
+              `A calculator gives $\\sqrt{${n}} \\approx ${Math.sqrt(n).toFixed(2)}$, which is between $${k}$ and $${k + 1}$.`,
+              `计算器给出 $\\sqrt{${n}} \\approx ${Math.sqrt(n).toFixed(2)}$，确实在 $${k}$ 和 $${k + 1}$ 之间。`,
+            ],
+            [
+              [k + 1, `That is $k + 1$, the integer above. $k$ is the smaller one.`, `这是上面的整数 $k + 1$。$k$ 是较小的那个。`],
+              [k - 1, `Too low: $${k}^2 = ${lowerSq}$ is already below $${n}$.`, `太小了：$${k}^2 = ${lowerSq}$ 已经小于 $${n}$。`],
+              ...(n % 2 === 0
+                ? [
+                    [
+                      n / 2,
+                      "You halved the number. A square root is the number that squares to it.",
+                      "你把这个数除以了 2。平方根是平方后等于它的数。",
+                    ] as const,
+                  ]
+                : []),
+            ],
+            {
+              form: "integer",
+              figure: lineFigure(
+                { lo: k - 1, hi: k + 2, step: 1, labels: [k - 1, k, k + 1, k + 2], marks: [{ at: Math.sqrt(n), text: `√${n}` }] },
+                [`A number line from ${k - 1} to ${k + 2} with √${n} marked.`, `一条从 ${k - 1} 到 ${k + 2} 的数轴，标出 √${n}。`],
+              ),
+            },
+          );
+        },
+        lineFigure({ lo: 6, hi: 9, step: 1, labels: [6, 7, 8, 9], marks: [{ at: Math.sqrt(54), text: "√54" }] }, [
+          "A number line from 6 to 9 with √54 marked between 7 and 8.",
+          "一条从 6 到 9 的数轴，在 7 和 8 之间标出 √54。",
+        ]),
       ),
-      generate(rng) {
-        const k = rng.int(3, 11);
-        const lowerSq = k * k;
-        const upperSq = (k + 1) * (k + 1);
-        const n = rng.int(lowerSq + 1, upperSq - 1);
-
-        const prompt = t(
-          `The value of $\\sqrt{${n}}$ lies between two consecutive integers $k$ and $k + 1$. What is the value of $k$?`,
-          `$\\sqrt{${n}}$ 的值介于两个连续整数 $k$ 与 $k + 1$ 之间。$k$ 的值是多少？`,
-        );
-        const solution = t(
-          `Identify the nearest perfect squares: $${lowerSq} < ${n} < ${upperSq}$. Taking square roots gives $\\sqrt{${lowerSq}} < \\sqrt{${n}} < \\sqrt{${upperSq}}$, so $${k} < \\sqrt{${n}} < ${k + 1}$. Therefore $k = ${k}$.`,
-          `找出最接近的完全平方数：$${lowerSq} < ${n} < ${upperSq}$。开平方可得 $\\sqrt{${lowerSq}} < \\sqrt{${n}} < \\sqrt{${upperSq}}$，即 $${k} < \\sqrt{${n}} < ${k + 1}$。因此 $k = ${k}$。`,
-        );
-
-        return numberProblem({
-          prompt,
-          answer: k,
-          form: "integer",
-          wrong: [k - 1, k + 1, k + 2],
-          solution,
-        });
-      },
-    },
-    {
-      id: "nearest-integer-to-a-square-root",
-      title: t("The Nearest Integer to a Square Root", "最接近平方根的整数"),
-      explanation: t(
-        "Knowing that $\\sqrt{N}$ lies between $k$ and $k + 1$ does not say which one it is closer to. The halfway point is $k + \\frac{1}{2}$, and $(k + \\frac{1}{2})^2 = k^2 + k + \\frac{1}{4}$. So $\\sqrt{N}$ is closer to $k$ when $N \\le k^2 + k$ and closer to $k + 1$ when $N \\ge k^2 + k + 1$.\n\nFor $\\sqrt{54}$: $k = 7$ and $7^2 + 7 = 56$. Since $54 \\le 56$, $\\sqrt{54}$ is closer to $7$ (indeed $\\sqrt{54} \\approx 7.35$). Comparing distances to the perfect squares, $54 - 49 = 5$ against $64 - 54 = 10$, gives the same answer here, but the halfway square is the reliable test.",
-        "知道 $\\sqrt{N}$ 在 $k$ 与 $k + 1$ 之间，并不能说明它更接近哪一个。两者的中点是 $k + \\frac{1}{2}$，而 $(k + \\frac{1}{2})^2 = k^2 + k + \\frac{1}{4}$。因此当 $N \\le k^2 + k$ 时 $\\sqrt{N}$ 更接近 $k$，当 $N \\ge k^2 + k + 1$ 时更接近 $k + 1$。\n\n对于 $\\sqrt{54}$：$k = 7$，$7^2 + 7 = 56$。因为 $54 \\le 56$，所以 $\\sqrt{54}$ 更接近 $7$（实际上 $\\sqrt{54} \\approx 7.35$）。比较到两个完全平方数的距离 $54 - 49 = 5$ 与 $64 - 54 = 10$，这里也得到同样的结论，但用中点的平方判断才可靠。",
+      lesson(
+        "nearest-integer-to-a-square-root",
+        ["The Nearest Integer to a Square Root", "最接近平方根的整数"],
+        [
+          [
+            "Knowing that $\\sqrt{N}$ lies between $k$ and $k + 1$ does not say which one it is closer to. The halfway point is $k + \\frac{1}{2}$, and $(k + \\frac{1}{2})^2 = k^2 + k + \\frac{1}{4}$. So $\\sqrt{N}$ is closer to $k$ when $N \\le k^2 + k$ and closer to $k + 1$ when $N \\ge k^2 + k + 1$.\n\nFor $\\sqrt{54}$: $k = 7$ and $7^2 + 7 = 56$. Since $54 \\le 56$, $\\sqrt{54}$ is closer to $7$.",
+            "知道 $\\sqrt{N}$ 在 $k$ 与 $k + 1$ 之间，并不能说明它更接近哪一个。两者的中点是 $k + \\frac{1}{2}$，而 $(k + \\frac{1}{2})^2 = k^2 + k + \\frac{1}{4}$。因此当 $N \\le k^2 + k$ 时 $\\sqrt{N}$ 更接近 $k$，当 $N \\ge k^2 + k + 1$ 时更接近 $k + 1$。\n\n对于 $\\sqrt{54}$：$k = 7$，$7^2 + 7 = 56$。因为 $54 \\le 56$，所以 $\\sqrt{54}$ 更接近 $7$。",
+          ],
+          [
+            "A calculator gives $\\sqrt{54} \\approx 7.35$, which rounds to $7$.",
+            "计算器给出 $\\sqrt{54} \\approx 7.35$，四舍五入是 $7$。",
+          ],
+          [
+            "The halfway point between the roots is not the halfway point between the squares: $7.5^2 = 56.25$, not $56.5$.",
+            "两个根之间的中点不对应两个平方数之间的中点：$7.5^2 = 56.25$，不是 $56.5$。",
+          ],
+        ],
+        (rng) => {
+          const k = rng.int(3, 14);
+          const n = rng.int(k * k + 1, (k + 1) * (k + 1) - 1);
+          const mid = k * k + k;
+          const nearest = n <= mid ? k : k + 1;
+          const other = nearest === k ? k + 1 : k;
+          return valued(
+            [`Which whole number is closest to $\\sqrt{${n}}$?`, `哪个整数最接近 $\\sqrt{${n}}$？`],
+            nearest,
+            [
+              [
+                ["Bound it", "确定范围"],
+                ["Find the perfect squares on either side:", "找出两边的完全平方数："],
+                [`${k * k} < ${n} < ${(k + 1) * (k + 1)}`, `${k} < \\sqrt{${n}} < ${k + 1}`],
+              ],
+              [
+                ["Compare with the halfway square", "和中点的平方比较"],
+                [
+                  `The halfway point $${k}.5$ has square $${mid}.25$, and $${n}$ is ${n <= mid ? "below" : "above"} it. So $\\sqrt{${n}}$ is closer to $${nearest}$.`,
+                  `中点 $${k}.5$ 的平方是 $${mid}.25$，$${n}$ ${n <= mid ? "小于" : "大于"}它。所以 $\\sqrt{${n}}$ 更接近 $${nearest}$。`,
+                ],
+              ],
+            ],
+            [
+              `A calculator gives $\\sqrt{${n}} \\approx ${Math.sqrt(n).toFixed(2)}$, which rounds to $${nearest}$.`,
+              `计算器给出 $\\sqrt{${n}} \\approx ${Math.sqrt(n).toFixed(2)}$，四舍五入是 $${nearest}$。`,
+            ],
+            [
+              [
+                other,
+                `That is the other integer around it. The halfway square $${mid}.25$ decides between them.`,
+                `这是另一边的整数。由中点的平方 $${mid}.25$ 来决定更接近哪个。`,
+              ],
+              [
+                nearest === k ? k - 1 : k + 2,
+                `$\\sqrt{${n}}$ is not even between that and its neighbour: it lies between $${k}$ and $${k + 1}$.`,
+                `$\\sqrt{${n}}$ 并不在这个数附近：它在 $${k}$ 和 $${k + 1}$ 之间。`,
+              ],
+              [nearest * nearest, "That is the perfect square nearby, not its square root.", "这是附近的完全平方数，不是它的平方根。"],
+            ],
+            {
+              form: "integer",
+              figure: lineFigure(
+                {
+                  lo: k,
+                  hi: k + 1,
+                  step: 0.5,
+                  labels: [k, k + 0.5, k + 1],
+                  marks: [{ at: Math.sqrt(n), text: `√${n}` }],
+                },
+                [
+                  `A number line from ${k} to ${k + 1}, with its midpoint ${k}.5 and √${n} marked.`,
+                  `一条从 ${k} 到 ${k + 1} 的数轴，标出中点 ${k}.5 和 √${n}。`,
+                ],
+              ),
+            },
+          );
+        },
+        lineFigure({ lo: 7, hi: 8, step: 0.5, labels: [7, 7.5, 8], marks: [{ at: Math.sqrt(54), text: "√54" }] }, [
+          "A number line from 7 to 8 with its midpoint 7.5 and √54 marked left of it.",
+          "一条从 7 到 8 的数轴，标出中点 7.5，√54 在中点左边。",
+        ]),
       ),
-      generate(rng) {
-        const k = rng.int(3, 14);
-        const n = rng.int(k * k + 1, (k + 1) * (k + 1) - 1);
-        const mid = k * k + k;
-        const nearest = n <= mid ? k : k + 1;
-        const other = nearest === k ? k + 1 : k;
-        return numberProblem({
-          prompt: t(`Which whole number is closest to $\\sqrt{${n}}$?`, `哪个整数最接近 $\\sqrt{${n}}$？`),
-          answer: nearest,
-          form: "integer",
-          wrong: [other, nearest + (nearest === k ? -1 : 1)],
-          solution: t(
-            `$${k * k} < ${n} < ${(k + 1) * (k + 1)}$, so $${k} < \\sqrt{${n}} < ${k + 1}$. The halfway point $${k}.5$ has square $${mid}.25$, and $${n}$ is ${n <= mid ? "below" : "above"} it, so $\\sqrt{${n}}$ is closest to $${nearest}$.`,
-            `$${k * k} < ${n} < ${(k + 1) * (k + 1)}$，所以 $${k} < \\sqrt{${n}} < ${k + 1}$。中点 $${k}.5$ 的平方是 $${mid}.25$，$${n}$ ${n <= mid ? "小于" : "大于"}它，所以 $\\sqrt{${n}}$ 最接近 $${nearest}$。`,
-          ),
-        });
-      },
-    },
+    ],
+  },
+  [
+    "A square garden has an area of $54$ square metres. A side of $7$ metres would give only $49$, and $8$ metres would give $64$, so the side is somewhere between $7$ and $8$ metres.",
+    "一块正方形花园的面积是 $54$ 平方米。边长 $7$ 米只有 $49$，$8$ 米则是 $64$，所以边长在 $7$ 米和 $8$ 米之间。",
   ],
-};
+  [
+    "$7.3^2 = 53.29$ and $7.4^2 = 54.76$, so the side is between $7.3$ and $7.4$ metres.",
+    "$7.3^2 = 53.29$，$7.4^2 = 54.76$，所以边长在 $7.3$ 米和 $7.4$ 米之间。",
+  ],
+  [
+    "trap a square root between two whole numbers, find the nearest whole number, and count the whole numbers whose square root falls in a range.",
+    "把平方根夹在两个整数之间，找出最接近的整数，并数出平方根落在某个范围内的整数。",
+  ],
+);
 
 /** twoWayLatex writes a two-way table with row and column totals; a null cell is shown as a blank to fill. */
 function twoWayLatex(

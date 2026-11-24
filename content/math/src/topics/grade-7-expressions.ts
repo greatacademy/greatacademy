@@ -1,10 +1,10 @@
-import type { KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
+import type { Figure, KnowledgePointDef, Rng, Text, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { linear, num, paren, poly, Q } from "@ga/subject-math";
 
-import { numberProblem, steps } from "../problems.ts";
 import type { Pair, Walk } from "./early-grades-more-kit.ts";
 import { chosenMath, expressed, lesson, valued, withIntro } from "./grade-6-kit.ts";
+import { tableFigure as valueTable } from "./grade-8-kit.ts";
 import { areaGridFigure, stripsFigure, tapeFigure } from "./upper-grades-kit.ts";
 
 // 7th Grade Math: rewriting linear expressions with the distributive law, subtracted groups and fractional
@@ -1267,99 +1267,216 @@ const plusTimes = (k: number, y: number) => `${k < 0 ? "-" : "+"} ${times(Math.a
 /** fraction writes a LaTeX fraction. */
 const fraction = (n: string, d: string) => `\\frac{${n}}{${d}}`;
 
-export const evaluatingRationalExpressions = topic(
-  "evaluating-rational-expressions",
-  t("Evaluating Rational Expressions", "分式求值"),
-  t(
-    "A rational expression is a fraction whose numerator and denominator are expressions, such as $\\frac{3x + 4}{x - 2}$. To evaluate it, substitute the value into the numerator and the denominator, evaluate each, then divide: for $x = 5$, $\\frac{3(5) + 4}{5 - 2} = \\frac{19}{3}$. The fraction bar groups the numerator and the denominator, so you cannot cancel single terms across it.",
-    "分子和分母都是式子的分数叫做分式，例如 $\\frac{3x + 4}{x - 2}$。求值时，把值分别代入分子和分母，分别算出结果，再相除：当 $x = 5$ 时，$\\frac{3(5) + 4}{5 - 2} = \\frac{19}{3}$。分数线把分子、分母各自看作一个整体，所以不能把分子和分母中的单项约掉。",
-  ),
-  ["evaluating-expressions", "operations-with-rational-numbers"],
-  ["7.EE.B.3", "6.EE.A.2.C"],
-  [
-    {
-      id: "linear-numerator-and-denominator",
-      title: t("A linear numerator and denominator", "分子和分母都是一次式"),
-      explanation: t(
-        "Evaluate the numerator and the denominator separately, then simplify the fraction:\n\n$$x = -3: \\quad \\frac{2x - 4}{x + 5} = \\frac{2(-3) - 4}{(-3) + 5} = \\frac{-10}{2} = -5.$$\n\nIf the quotient is not a whole number, give it as a fraction in lowest terms.",
-        "分别计算分子和分母，再化简分数：\n\n$$x = -3: \\quad \\frac{2x - 4}{x + 5} = \\frac{2(-3) - 4}{(-3) + 5} = \\frac{-10}{2} = -5.$$\n\n如果商不是整数，就写成最简分数。",
-      ),
-      keyPrerequisites: ["evaluating-expressions"],
-      generate(rng) {
-        for (;;) {
-          const v = pickVar(rng);
-          const a = rng.nonZero(-6, 6);
-          const b = rng.nonZero(-12, 12);
-          const c = rng.bool(0.6) ? 1 : rng.nonZero(-4, 4);
-          const d = rng.nonZero(-9, 9);
-          const x = rng.nonZero(-8, 8);
-          const top = a * x + b;
-          const bottom = c * x + d;
-          if (bottom === 0 || top === 0) continue;
-          if (top % bottom !== 0 && rng.bool(0.6)) continue;
-          const expr = fraction(linear(a, b, v), linear(c, d, v));
-          const answer = Q.of(top, bottom);
-          const flipped = -c * x + d;
-          return numberProblem({
-            prompt: t(`Evaluate $${expr}$ when $${v} = ${num(x)}$.`, `当 $${v} = ${num(x)}$ 时，求 $${expr}$ 的值。`),
-            answer,
-            wrong: [...(flipped !== 0 ? [Q.of(-a * x + b, flipped)] : []), Q.of(bottom, top), ...(c + d !== 0 ? [Q.of(a + b, c + d)] : [])],
-            solution: t(
-              `Substitute $${num(x)}$ for $${v}$ in the numerator and the denominator: ${steps(`${fraction(substituted(a, x, b), substituted(c, x, d))} = ${fraction(num(top), num(bottom))} = ${num(answer)}`)}`,
-              `把分子和分母中的 $${v}$ 都换成 $${num(x)}$：${steps(`${fraction(substituted(a, x, b), substituted(c, x, d))} = ${fraction(num(top), num(bottom))} = ${num(answer)}`)}`,
-            ),
-          });
-        }
-      },
-    },
-    {
-      id: "powers-and-two-variables",
-      title: t("Powers and two variables", "乘方与两个变量"),
-      explanation: t(
-        "Substitute every variable in parentheses before computing; this matters most for squares of negative numbers. For $x = -2$ and $y = 3$:\n\n$$\\frac{x^2 + y}{2x - y} = \\frac{(-2)^2 + 3}{2(-2) - 3} = \\frac{7}{-7} = -1.$$",
-        "代入时给每个变量的值加上括号再计算；负数的平方尤其要注意。当 $x = -2$，$y = 3$ 时：\n\n$$\\frac{x^2 + y}{2x - y} = \\frac{(-2)^2 + 3}{2(-2) - 3} = \\frac{7}{-7} = -1.$$",
-      ),
-      keyPrerequisites: ["powers-of-integers"],
-      generate(rng) {
-        for (;;) {
-          const square = rng.bool(0.6);
-          const x = square && rng.bool(0.7) ? -rng.int(1, 5) : rng.nonZero(-5, 5);
-          const y = rng.nonZero(-6, 6);
-          const a = rng.nonZero(-4, 4);
-          const b = rng.nonZero(-4, 4);
-          // Numerator x² + a·y or a·x + b·y; denominator x + b·y or x·y.
-          const top = square ? x * x + a * y : a * x + b * y;
-          const bottom = square ? x + b * y : x * y;
-          if (bottom === 0 || top === 0) continue;
-          if (top % bottom !== 0 && rng.bool(0.5)) continue;
-          const numer = square ? poly([1, "x^2"], [a, "y"]) : poly([a, "x"], [b, "y"]);
-          const denom = square ? poly([1, "x"], [b, "y"]) : "xy";
-          const expr = fraction(numer, denom);
-          const subTop = square ? `${inParens(x)}^2 ${plusTimes(a, y)}` : `${times(a, x)} ${plusTimes(b, y)}`;
-          const subBottom = square ? `${inParens(x)} ${plusTimes(b, y)}` : `(${num(x)})(${num(y)})`;
-          const answer = Q.of(top, bottom);
-          const slip = square ? -x * x + a * y : a * x - b * y;
-          const swapped = square ? y * y + a * x : a * y + b * x;
-          const swappedBottom = square ? y + b * x : x * y;
-          return numberProblem({
-            prompt: t(
-              `Evaluate $${expr}$ when $x = ${num(x)}$ and $y = ${num(y)}$.`,
-              `当 $x = ${num(x)}$，$y = ${num(y)}$ 时，求 $${expr}$ 的值。`,
-            ),
-            answer,
-            wrong: [
-              ...(square ? [Q.of(slip, bottom), Q.of(2 * x + a * y, bottom)] : [Q.of(slip, bottom)]),
-              ...(swappedBottom !== 0 ? [Q.of(swapped, swappedBottom)] : []),
-              Q.of(bottom, top),
+/** plainOf writes a LaTeX expression for a figure: true minus signs and a superscript square. */
+const plainOf = (s: string) => s.replace(/\^2/g, "²").replace(/ - /g, " − ").replace(/^-/, "−");
+
+/** evaluationTable shows the numerator and the denominator of a rational expression and their values at the given values. */
+function evaluationTable(numer: string, denom: string, at: string, top: number, bottom: number): Figure {
+  return valueTable(
+    [plainOf(numer), plainOf(denom)],
+    [plainOf(at).replace(/-/g, "−")],
+    [[plainOf(num(top))], [plainOf(num(bottom))]],
+    [
+      `A table: at ${plainOf(at)}, the numerator ${plainOf(numer)} is ${plainOf(num(top))} and the denominator ${plainOf(denom)} is ${plainOf(num(bottom))}.`,
+      `一个表格：${plainOf(at)} 时，分子 ${plainOf(numer)} 等于 ${plainOf(num(top))}，分母 ${plainOf(denom)} 等于 ${plainOf(num(bottom))}。`,
+    ],
+  );
+}
+
+/** backCheck checks a quotient by multiplying it by the denominator to give the numerator. */
+const backCheck = (answer: Q, top: number, bottom: number): Pair => [
+  `Multiply back: $${num(answer)} \\cdot ${inParens(bottom)} = ${num(top)}$, the numerator.`,
+  `乘回去：$${num(answer)} \\cdot ${inParens(bottom)} = ${num(top)}$，正是分子。`,
+];
+
+export const evaluatingRationalExpressions = withIntro(
+  topic(
+    "evaluating-rational-expressions",
+    t("Evaluating Rational Expressions", "分式求值"),
+    t(
+      "A rational expression is a fraction whose numerator and denominator are expressions, such as $\\frac{3x + 4}{x - 2}$. To evaluate it, substitute the value into the numerator and the denominator, evaluate each, then divide: for $x = 5$, $\\frac{3(5) + 4}{5 - 2} = \\frac{19}{3}$. The fraction bar groups the numerator and the denominator, so you cannot cancel single terms across it.",
+      "分子和分母都是式子的分数叫做分式，例如 $\\frac{3x + 4}{x - 2}$。求值时，把值分别代入分子和分母，分别算出结果，再相除：当 $x = 5$ 时，$\\frac{3(5) + 4}{5 - 2} = \\frac{19}{3}$。分数线把分子、分母各自看作一个整体，所以不能把分子和分母中的单项约掉。",
+    ),
+    ["evaluating-expressions", "operations-with-rational-numbers"],
+    ["7.EE.B.3", "6.EE.A.2.C"],
+    [
+      {
+        ...lesson(
+          "linear-numerator-and-denominator",
+          ["A linear numerator and denominator", "分子和分母都是一次式"],
+          [
+            [
+              "Evaluate the numerator and the denominator separately, then simplify the fraction:\n\n$$x = -3: \\quad \\frac{2x - 4}{x + 5} = \\frac{2(-3) - 4}{(-3) + 5} = \\frac{-10}{2} = -5.$$\n\nIf the quotient is not a whole number, give it as a fraction in lowest terms.",
+              "分别计算分子和分母，再化简分数：\n\n$$x = -3: \\quad \\frac{2x - 4}{x + 5} = \\frac{2(-3) - 4}{(-3) + 5} = \\frac{-10}{2} = -5.$$\n\n如果商不是整数，就写成最简分数。",
             ],
-            solution: t(
-              `Substitute both values, writing negative values in parentheses: ${steps(`${fraction(subTop, subBottom)} = ${fraction(num(top), num(bottom))} = ${num(answer)}`)}`,
-              `代入两个值（负数要加括号）：${steps(`${fraction(subTop, subBottom)} = ${fraction(num(top), num(bottom))} = ${num(answer)}`)}`,
-            ),
-          });
-        }
+            ["Multiply back: $-5 \\cdot 2 = -10$, the numerator.", "乘回去：$-5 \\cdot 2 = -10$，正是分子。"],
+            [
+              "Do not cancel terms across the fraction bar: $\\frac{2x - 4}{x + 5}$ is not $\\frac{2 - 4}{5}$. Work out the whole numerator and the whole denominator first.",
+              "不要跨过分数线约去单项：$\\frac{2x - 4}{x + 5}$ 不等于 $\\frac{2 - 4}{5}$。先把整个分子和整个分母算出来。",
+            ],
+          ],
+          (rng) => {
+            for (;;) {
+              const v = pickVar(rng);
+              const a = rng.nonZero(-6, 6);
+              const b = rng.nonZero(-12, 12);
+              const c = rng.bool(0.6) ? 1 : rng.nonZero(-4, 4);
+              const d = rng.nonZero(-9, 9);
+              const x = rng.nonZero(-8, 8);
+              const top = a * x + b;
+              const bottom = c * x + d;
+              if (bottom === 0 || top === 0) continue;
+              if (top % bottom !== 0 && rng.bool(0.6)) continue;
+              const [numer, denom] = [linear(a, b, v), linear(c, d, v)];
+              const expr = fraction(numer, denom);
+              const answer = Q.of(top, bottom);
+              const flipped = -c * x + d;
+              return valued(
+                [`Evaluate $${expr}$ when $${v} = ${num(x)}$.`, `当 $${v} = ${num(x)}$ 时，求 $${expr}$ 的值。`],
+                answer,
+                [
+                  [
+                    ["Evaluate the numerator", "计算分子"],
+                    [`Substitute $${num(x)}$ for $${v}$:`, `把 $${v}$ 换成 $${num(x)}$：`],
+                    [`${substituted(a, x, b)} = ${num(top)}`],
+                  ],
+                  [
+                    ["Evaluate the denominator", "计算分母"],
+                    ["Substitute the same value below the bar:", "在分数线下面代入同一个值："],
+                    [`${substituted(c, x, d)} = ${num(bottom)}`],
+                  ],
+                  [["Divide", "相除"], ["Divide and simplify:", "相除并化简："], [`${fraction(num(top), num(bottom))} = ${num(answer)}`]],
+                ],
+                backCheck(answer, top, bottom),
+                [
+                  ...(flipped !== 0
+                    ? [
+                        [
+                          Q.of(-a * x + b, flipped),
+                          `You used $${num(-x)}$ for $${v}$. Substitute the value with its sign, in parentheses.`,
+                          `你把 $${v}$ 换成了 $${num(-x)}$。代入时要连同符号，并加括号。`,
+                        ] as const,
+                      ]
+                    : []),
+                  [
+                    Q.of(bottom, top),
+                    "You divided the denominator by the numerator. The numerator goes on top.",
+                    "你用分母除以了分子。分子在上面。",
+                  ],
+                  [
+                    Q.of(b, d),
+                    `You cancelled the $${v}$-terms across the fraction bar. Evaluate the whole numerator and denominator first.`,
+                    `你跨过分数线约去了含 $${v}$ 的项。应先算出整个分子和分母。`,
+                  ],
+                ],
+                { figure: evaluationTable(numer, denom, `${v} = ${num(x)}`, top, bottom) },
+              );
+            }
+          },
+          evaluationTable("2x - 4", "x + 5", "x = -3", -10, 2),
+        ),
+        keyPrerequisites: ["evaluating-expressions"],
       },
-    },
+      {
+        ...lesson(
+          "powers-and-two-variables",
+          ["Powers and two variables", "乘方与两个变量"],
+          [
+            [
+              "Substitute every variable in parentheses before computing; this matters most for squares of negative numbers. For $x = -2$ and $y = 3$:\n\n$$\\frac{x^2 + y}{2x - y} = \\frac{(-2)^2 + 3}{2(-2) - 3} = \\frac{7}{-7} = -1.$$",
+              "代入时给每个变量的值加上括号再计算；负数的平方尤其要注意。当 $x = -2$，$y = 3$ 时：\n\n$$\\frac{x^2 + y}{2x - y} = \\frac{(-2)^2 + 3}{2(-2) - 3} = \\frac{7}{-7} = -1.$$",
+            ],
+            ["Multiply back: $-1 \\cdot (-7) = 7$, the numerator.", "乘回去：$-1 \\cdot (-7) = 7$，正是分子。"],
+            [
+              "Square the whole value: $(-2)^2 = 4$, but $-2^2$ means $-(2^2) = -4$. Without parentheses the sign is lost.",
+              "要对整个值平方：$(-2)^2 = 4$，而 $-2^2$ 表示 $-(2^2) = -4$。不加括号就会丢掉符号。",
+            ],
+          ],
+          (rng) => {
+            for (;;) {
+              const square = rng.bool(0.6);
+              const x = square && rng.bool(0.7) ? -rng.int(1, 5) : rng.nonZero(-5, 5);
+              const y = rng.nonZero(-6, 6);
+              const a = rng.nonZero(-4, 4);
+              const b = rng.nonZero(-4, 4);
+              // Numerator x² + a·y or a·x + b·y; denominator x + b·y or x·y.
+              const top = square ? x * x + a * y : a * x + b * y;
+              const bottom = square ? x + b * y : x * y;
+              if (bottom === 0 || top === 0) continue;
+              if (top % bottom !== 0 && rng.bool(0.5)) continue;
+              const numer = square ? poly([1, "x^2"], [a, "y"]) : poly([a, "x"], [b, "y"]);
+              const denom = square ? poly([1, "x"], [b, "y"]) : "xy";
+              const expr = fraction(numer, denom);
+              const subTop = square ? `${inParens(x)}^2 ${plusTimes(a, y)}` : `${times(a, x)} ${plusTimes(b, y)}`;
+              const subBottom = square ? `${inParens(x)} ${plusTimes(b, y)}` : `(${num(x)})(${num(y)})`;
+              const answer = Q.of(top, bottom);
+              const slip = square ? -x * x + a * y : a * x - b * y;
+              const swapped = square ? y * y + a * x : a * y + b * x;
+              const swappedBottom = square ? y + b * x : x * y;
+              return valued(
+                [
+                  `Evaluate $${expr}$ when $x = ${num(x)}$ and $y = ${num(y)}$.`,
+                  `当 $x = ${num(x)}$，$y = ${num(y)}$ 时，求 $${expr}$ 的值。`,
+                ],
+                answer,
+                [
+                  [
+                    ["Evaluate the numerator", "计算分子"],
+                    ["Substitute both values, writing negative values in parentheses:", "代入两个值，负数要加括号："],
+                    [`${subTop} = ${num(top)}`],
+                  ],
+                  [
+                    ["Evaluate the denominator", "计算分母"],
+                    ["Substitute the same values below the bar:", "在分数线下面代入同样的值："],
+                    [`${subBottom} = ${num(bottom)}`],
+                  ],
+                  [["Divide", "相除"], ["Divide and simplify:", "相除并化简："], [`${fraction(num(top), num(bottom))} = ${num(answer)}`]],
+                ],
+                backCheck(answer, top, bottom),
+                [
+                  ...(square
+                    ? [
+                        [
+                          Q.of(slip, bottom),
+                          "You made the square negative. A square of a nonzero number is always positive.",
+                          "你把平方算成了负数。非零数的平方总是正的。",
+                        ] as const,
+                        [Q.of(2 * x + a * y, bottom), "You doubled $x$ instead of squaring it.", "你把 $x$ 乘了 2，而不是平方。"] as const,
+                      ]
+                    : [
+                        [
+                          Q.of(slip, bottom),
+                          "You lost the sign of the $y$-term. Keep each term with its sign.",
+                          "你弄丢了 $y$ 项的符号。每一项都要带着符号。",
+                        ] as const,
+                      ]),
+                  ...(swappedBottom !== 0
+                    ? [[Q.of(swapped, swappedBottom), "You swapped the values of $x$ and $y$.", "你把 $x$ 和 $y$ 的值弄反了。"] as const]
+                    : []),
+                  [
+                    Q.of(bottom, top),
+                    "You divided the denominator by the numerator. The numerator goes on top.",
+                    "你用分母除以了分子。分子在上面。",
+                  ],
+                ],
+                { figure: evaluationTable(numer, denom, `x = ${num(x)}, y = ${num(y)}`, top, bottom) },
+              );
+            }
+          },
+          evaluationTable("x^2 + y", "2x - y", "x = -2, y = 3", 7, -7),
+        ),
+        keyPrerequisites: ["powers-of-integers"],
+      },
+    ],
+  ),
+  [
+    "Five friends share a bill: a meal of $8$ euros each and a tip of $10$ euros. With $x$ friends each pays $\\frac{8x + 10}{x}$ euros, and for $x = 5$ that is $\\frac{50}{5} = 10$ euros.",
+    "五个朋友分摊账单：每人一份 $8$ 欧元的餐，再加 $10$ 欧元小费。$x$ 个人时每人付 $\\frac{8x + 10}{x}$ 欧元，$x = 5$ 时是 $\\frac{50}{5} = 10$ 欧元。",
+  ],
+  ["$10 \\cdot 5 = 50$, which is $8 \\cdot 5 + 10$.", "$10 \\cdot 5 = 50$，正是 $8 \\cdot 5 + 10$。"],
+  [
+    "evaluate rational expressions with one or two variables and find where a rational expression has no value.",
+    "求含一个或两个变量的分式的值，并找出分式没有值的地方。",
   ],
 );
 

@@ -3,11 +3,10 @@
 // condition, or a word problem built on the idea. See `deeperPrealgebraPoints`.
 
 import type { Figure, KnowledgePointDef } from "@ga/content";
-import { t } from "@ga/content";
 import { dec, paren, Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
+import { remainingDrawings4 } from "../explanation-drawings-remaining-4.ts";
 
-import { numberProblem } from "../problems.ts";
 import { tableFigure } from "./early-grades-more-kit.ts";
 import { convertingSquareAndCubicUnits } from "./grade-5-measurement.ts";
 import { drawn, lesson, type Off, valued } from "./grade-6-kit.ts";
@@ -39,14 +38,24 @@ function repeatingBlock(n: number, d: number): number[] {
   return digits;
 }
 
-const wholesBetweenFractions: KnowledgePointDef = {
-  id: "whole-numbers-between-two-improper-fractions",
-  title: t("Whole numbers between two improper fractions", "两个假分数之间的整数"),
-  explanation: t(
-    "Improper fractions with different denominators are hard to compare by their numerators, but as mixed numbers they sit clearly on the number line. The whole part of a mixed number tells which two whole numbers it lies between. So rewrite both fractions and list the whole numbers above the smaller one and up to the whole part of the larger one. The whole part of the smaller fraction is below it, so it does not count.",
-    "分母不同的假分数很难只看分子来比较，但化成带分数后，它们在数轴上的位置就很清楚了。带分数的整数部分说明它位于哪两个整数之间。所以把两个分数都改写，然后列出比较小的数大、且不超过较大数的整数部分的所有整数。较小分数的整数部分比它本身小，所以不算在内。",
-  ),
-  generate(rng) {
+const wholesBetweenFractions: KnowledgePointDef = lesson(
+  "whole-numbers-between-two-improper-fractions",
+  ["Whole numbers between two improper fractions", "两个假分数之间的整数"],
+  [
+    [
+      "Improper fractions with different denominators are hard to compare by their numerators, but as mixed numbers they sit clearly on the number line. The whole part of a mixed number tells which two whole numbers it lies between. So rewrite both fractions and list the whole numbers above the smaller one and up to the whole part of the larger one. The whole part of the smaller fraction is below it, so it does not count.\n\nBetween $\\frac{17}{5} = 3\\frac{2}{5}$ and $\\frac{31}{4} = 7\\frac{3}{4}$ lie $4$, $5$, $6$ and $7$: four whole numbers.",
+      "分母不同的假分数很难只看分子来比较，但化成带分数后，它们在数轴上的位置就很清楚了。带分数的整数部分说明它位于哪两个整数之间。所以把两个分数都改写，然后列出比较小的数大、且不超过较大数的整数部分的所有整数。较小分数的整数部分比它本身小，所以不算在内。\n\n在 $\\frac{17}{5} = 3\\frac{2}{5}$ 和 $\\frac{31}{4} = 7\\frac{3}{4}$ 之间有 $4$、$5$、$6$、$7$，共四个整数。",
+    ],
+    [
+      "Test the ends with whole numbers written as fractions: $\\frac{20}{5} = 4$ is above $\\frac{17}{5}$, and $\\frac{28}{4} = 7$ is below $\\frac{31}{4}$.",
+      "把端点处的整数写成分数来检验：$\\frac{20}{5} = 4$ 大于 $\\frac{17}{5}$，$\\frac{28}{4} = 7$ 小于 $\\frac{31}{4}$。",
+    ],
+    [
+      "Count from the whole number just above the smaller fraction, not from its whole part, which lies below it.",
+      "要从比较小的分数大的第一个整数开始数，而不是从它的整数部分开始，那个数在它的下方。",
+    ],
+  ],
+  (rng) => {
     const d = rng.pick([3, 4, 5, 7, 8]);
     const e = rng.pick([3, 4, 5, 7, 8]);
     const low = rng.int(2, 9);
@@ -56,21 +65,73 @@ const wholesBetweenFractions: KnowledgePointDef = {
     const a = d * low + r;
     const b = e * high + s;
     const answer = high - low;
-    return numberProblem({
-      prompt: t(
+    return valued(
+      [
         `How many whole numbers lie strictly between $\\frac{${a}}{${d}}$ and $\\frac{${b}}{${e}}$?`,
         `严格位于 $\\frac{${a}}{${d}}$ 和 $\\frac{${b}}{${e}}$ 之间的整数有多少个？`,
-      ),
+      ],
       answer,
-      form: "integer",
-      wrong: [answer + 1, answer - 1, high, b - a, answer + 2],
-      solution: t(
-        `As mixed numbers they are $${low}\\frac{${r}}{${d}}$ and $${high}\\frac{${s}}{${e}}$. The whole numbers between them run from $${low + 1}$ to $${high}$, and that makes $${answer}$ of them.`,
-        `化成带分数是 $${low}\\frac{${r}}{${d}}$ 和 $${high}\\frac{${s}}{${e}}$。它们之间的整数从 $${low + 1}$ 到 $${high}$，一共 $${answer}$ 个。`,
-      ),
-    });
+      [
+        [
+          ["Write mixed numbers", "化成带分数"],
+          ["Divide each numerator by its denominator:", "用分子除以分母："],
+          [`\\frac{${a}}{${d}} = ${low}\\frac{${r}}{${d}}`, `\\frac{${b}}{${e}} = ${high}\\frac{${s}}{${e}}`],
+        ],
+        [
+          ["Count", "计数"],
+          [`The whole numbers between them run from $${low + 1}$ up to $${high}$:`, `它们之间的整数从 $${low + 1}$ 到 $${high}$：`],
+          [`${high} - ${low + 1} + 1 = ${answer}`],
+        ],
+      ],
+      [
+        `Test the ends: $${low + 1} = \\frac{${(low + 1) * d}}{${d}}$ is above $\\frac{${a}}{${d}}$, and $${high} = \\frac{${high * e}}{${e}}$ is below $\\frac{${b}}{${e}}$.`,
+        `检验端点：$${low + 1} = \\frac{${(low + 1) * d}}{${d}}$ 大于 $\\frac{${a}}{${d}}$，$${high} = \\frac{${high * e}}{${e}}$ 小于 $\\frac{${b}}{${e}}$。`,
+      ],
+      [
+        [
+          answer + 1,
+          `You counted $${low}$, the whole part of the smaller fraction. It lies below that fraction.`,
+          `你把 $${low}$ 也数进去了，它是较小分数的整数部分，在那个分数的下方。`,
+        ],
+        [
+          answer - 1,
+          `You left out $${high}$. It is below $\\frac{${b}}{${e}}$, so it counts.`,
+          `你漏掉了 $${high}$。它小于 $\\frac{${b}}{${e}}$，应当算上。`,
+        ],
+        [
+          high,
+          `That is the whole part of the larger fraction, not how many whole numbers there are.`,
+          `这是较大分数的整数部分，不是整数的个数。`,
+        ],
+        [
+          b - a,
+          "You subtracted the numerators, but the denominators differ. Write mixed numbers first.",
+          "你把分子相减了，但分母不同。应先化成带分数。",
+        ],
+      ],
+      {
+        form: "integer",
+        figure: lineFigure(
+          {
+            lo: low,
+            hi: high + 1,
+            step: 1,
+            labels: Array.from({ length: high - low + 2 }, (_, i) => low + i),
+            marks: [
+              { at: a / d, text: `${a}/${d}` },
+              { at: b / e, text: `${b}/${e}` },
+            ],
+          },
+          [
+            `A number line from ${low} to ${high + 1} with ${a}/${d} and ${b}/${e} marked.`,
+            `一条从 ${low} 到 ${high + 1} 的数轴，标出 ${a}/${d} 和 ${b}/${e}。`,
+          ],
+        ),
+      },
+    );
   },
-};
+  drawn(remainingDrawings4["mixed-numbers#whole-numbers-between-two-improper-fractions"]),
+);
 
 const farDigit = lesson(
   "a-far-digit-of-a-repeating-decimal",

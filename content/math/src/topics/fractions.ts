@@ -2,7 +2,7 @@ import type { Figure, Problem, Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { gcd, lcm, num, Q, q } from "@ga/subject-math";
 
-import { mixedLatex, numberProblem, steps } from "../problems.ts";
+import { mixedLatex } from "../problems.ts";
 import { pickedMath, type Walk } from "./early-grades-more-kit.ts";
 import { barFigure, twoBarsFigure } from "./grade-4-fractions.ts";
 import { groupedBarsFigure, partsTape, productGrid } from "./grade-5-fractions.ts";
@@ -437,76 +437,243 @@ export const addingAndSubtractingFractions: TopicDef = {
   ),
 };
 
-export const mixedNumbers: TopicDef = {
-  id: "mixed-numbers",
-  title: t("Mixed Numbers", "带分数"),
-  summary: t(
-    "Convert between mixed numbers and improper fractions, and add and subtract mixed numbers.",
-    "带分数与假分数互化，带分数的加减。",
-  ),
-  prerequisites: ["adding-and-subtracting-fractions"],
-  encompasses: [],
-  xp: 12,
-  standards: ["CCSS.4.NF.B.3.C", "CCSS.5.NF.A.1"],
-  knowledgePoints: [
-    {
-      id: "improper-to-mixed",
-      title: t("Improper fractions as mixed numbers", "假分数化带分数"),
-      explanation: t(
-        "A fraction whose numerator is at least its denominator is **improper**. It can be written as a **mixed number**: a whole number and a proper fraction. Divide the numerator by the denominator; the quotient is the whole number and the remainder is the new numerator.\n\n$$\\frac{17}{5}: \\quad 17 \\div 5 = 3 \\text{ remainder } 2, \\quad \\text{so } \\frac{17}{5} = 3\\frac{2}{5}$$\n\nIn the other direction, $3\\frac{2}{5} = \\frac{3 \\cdot 5 + 2}{5} = \\frac{17}{5}$.",
-        "分子大于或等于分母的分数是**假分数**，可以写成**带分数**：一个整数加一个真分数。用分子除以分母，商是整数部分，余数是新的分子。\n\n$$\\frac{17}{5}: \\quad 17 \\div 5 = 3 \\text{ 余 } 2, \\quad \\text{所以 } \\frac{17}{5} = 3\\frac{2}{5}$$\n\n反过来，$3\\frac{2}{5} = \\frac{3 \\cdot 5 + 2}{5} = \\frac{17}{5}$。",
+/** signedPart writes W + F for a whole number W and a fraction F of either sign: "3 - \frac{5}{12}". */
+const signedPart = (w: Q, f: Q) => (f.sign() < 0 ? `${num(w)} - ${num(f.neg())}` : `${num(w)} + ${num(f)}`);
+
+export const mixedNumbers: TopicDef = withIntro(
+  {
+    id: "mixed-numbers",
+    title: t("Mixed Numbers", "带分数"),
+    summary: t(
+      "Convert between mixed numbers and improper fractions, and add and subtract mixed numbers.",
+      "带分数与假分数互化，带分数的加减。",
+    ),
+    prerequisites: ["adding-and-subtracting-fractions"],
+    encompasses: [],
+    xp: 12,
+    standards: ["CCSS.4.NF.B.3.C", "CCSS.5.NF.A.1"],
+    knowledgePoints: [
+      lesson(
+        "improper-to-mixed",
+        ["Improper fractions as mixed numbers", "假分数化带分数"],
+        [
+          [
+            "A fraction whose numerator is at least its denominator is **improper**. It can be written as a **mixed number**: a whole number and a proper fraction. Divide the numerator by the denominator; the quotient is the whole number and the remainder is the new numerator.\n\n$$\\frac{17}{5}: \\quad 17 \\div 5 = 3 \\text{ remainder } 2, \\quad \\text{so } \\frac{17}{5} = 3\\frac{2}{5}$$",
+            "分子大于或等于分母的分数是**假分数**，可以写成**带分数**：一个整数加一个真分数。用分子除以分母，商是整数部分，余数是新的分子。\n\n$$\\frac{17}{5}: \\quad 17 \\div 5 = 3 \\text{ 余 } 2, \\quad \\text{所以 } \\frac{17}{5} = 3\\frac{2}{5}$$",
+          ],
+          [
+            "Go back the other way: $3\\frac{2}{5} = \\frac{3 \\cdot 5 + 2}{5} = \\frac{17}{5}$.",
+            "反过来算：$3\\frac{2}{5} = \\frac{3 \\cdot 5 + 2}{5} = \\frac{17}{5}$。",
+          ],
+          [
+            "The remainder goes over the old denominator, not over the numerator, and the quotient is the whole number, not the new numerator.",
+            "余数放在原来的分母上面，而不是分子上面；商是整数部分，不是新的分子。",
+          ],
+        ],
+        (rng) => {
+          const f = properFraction(rng);
+          const w = rng.int(1, 9);
+          const v = f.add(Q.of(w));
+          const d = Number(f.d);
+          const r = Number(f.n);
+          const n = Number(v.n);
+          return valued(
+            [`Write $${improper(v)}$ as a mixed number.`, `把 $${improper(v)}$ 写成带分数。`],
+            v,
+            [
+              [
+                ["Divide", "相除"],
+                ["Divide the numerator by the denominator:", "用分子除以分母："],
+                [`${n} \\div ${d} = ${w} \\text{ R } ${r}`],
+              ],
+              [
+                ["Write the mixed number", "写成带分数"],
+                [
+                  `The quotient $${w}$ is the whole number, and the remainder $${r}$ goes over $${d}$:`,
+                  `商 $${w}$ 是整数部分，余数 $${r}$ 放在 $${d}$ 上面：`,
+                ],
+                [`${improper(v)} = ${mixedLatex(v)}`],
+              ],
+            ],
+            [
+              `Go back: $${w} \\cdot ${d} + ${r} = ${n}$, so $${mixedLatex(v)} = ${improper(v)}$.`,
+              `反过来算：$${w} \\cdot ${d} + ${r} = ${n}$，所以 $${mixedLatex(v)} = ${improper(v)}$。`,
+            ],
+            [
+              ...(r < d && w < d && r !== w
+                ? [
+                    [
+                      Q.of(r).add(q(w, d)),
+                      "You swapped the quotient and the remainder. The quotient is the whole number.",
+                      "你把商和余数弄反了。商是整数部分。",
+                    ] as const,
+                  ]
+                : []),
+              [
+                Q.of(w).add(q(r, n)),
+                "You put the remainder over the numerator. It goes over the denominator.",
+                "你把余数放在了分子上面。余数应放在分母上面。",
+              ],
+              [
+                Q.of(w).add(q(d - r, d)),
+                "You wrote what is missing to the next whole number. The fraction part is the remainder.",
+                "你写的是到下一个整数还差的部分。分数部分应是余数。",
+              ],
+              [
+                Q.of(w + 1).add(q(r, d)),
+                "You took one whole too many. Count the whole number from the quotient.",
+                "你多算了一个整数。整数部分应是商。",
+              ],
+            ],
+            { form: "mixed", figure: barFigure(d, n, w + 1) },
+          );
+        },
+        barFigure(5, 17, 4),
       ),
-      generate(rng) {
-        const f = properFraction(rng);
-        const w = rng.int(1, 9);
-        const v = f.add(Q.of(w));
-        const d = Number(f.d);
-        const r = Number(f.n);
-        return numberProblem({
-          prompt: t(`Write $${improper(v)}$ as a mixed number.`, `把 $${improper(v)}$ 写成带分数。`),
-          answer: v,
-          form: "mixed",
-          // Swapping the quotient and the remainder.
-          wrong: r < d && w < d ? [Q.of(r).add(q(w, d))] : [],
-          solution: t(
-            `$${v.n} \\div ${d} = ${w}$ remainder $${r}$, so $${improper(v)} = ${mixedLatex(v)}$.`,
-            `$${v.n} \\div ${d} = ${w}$ 余 $${r}$，所以 $${improper(v)} = ${mixedLatex(v)}$。`,
-          ),
-        });
-      },
-    },
-    {
-      id: "adding-and-subtracting-mixed-numbers",
-      title: t("Adding and subtracting mixed numbers", "带分数的加减"),
-      explanation: t(
-        "One reliable method: write each mixed number as an improper fraction, add or subtract, then write the result as a mixed number.\n\n$$2\\frac{1}{3} + 1\\frac{3}{4} = \\frac{7}{3} + \\frac{7}{4} = \\frac{28}{12} + \\frac{21}{12} = \\frac{49}{12} = 4\\frac{1}{12}$$",
-        "一种可靠的方法：把带分数都化成假分数，计算加减，再把结果写成带分数。\n\n$$2\\frac{1}{3} + 1\\frac{3}{4} = \\frac{7}{3} + \\frac{7}{4} = \\frac{28}{12} + \\frac{21}{12} = \\frac{49}{12} = 4\\frac{1}{12}$$",
+      lesson(
+        "adding-and-subtracting-mixed-numbers",
+        ["Adding and subtracting mixed numbers", "带分数的加减"],
+        [
+          [
+            "One reliable method: write each mixed number as an improper fraction, add or subtract, then write the result as a mixed number.\n\n$$2\\frac{1}{3} + 1\\frac{3}{4} = \\frac{7}{3} + \\frac{7}{4} = \\frac{28}{12} + \\frac{21}{12} = \\frac{49}{12} = 4\\frac{1}{12}$$",
+            "一种可靠的方法：把带分数都化成假分数，计算加减，再把结果写成带分数。\n\n$$2\\frac{1}{3} + 1\\frac{3}{4} = \\frac{7}{3} + \\frac{7}{4} = \\frac{28}{12} + \\frac{21}{12} = \\frac{49}{12} = 4\\frac{1}{12}$$",
+          ],
+          [
+            "Add the parts separately: $(2 + 1) + \\left(\\frac{1}{3} + \\frac{3}{4}\\right) = 3 + \\frac{13}{12} = 4\\frac{1}{12}$.",
+            "分别加整数部分和分数部分：$(2 + 1) + \\left(\\frac{1}{3} + \\frac{3}{4}\\right) = 3 + \\frac{13}{12} = 4\\frac{1}{12}$。",
+          ],
+          [
+            "Keep the fraction parts: adding only the whole numbers loses them. When the fractions add up to more than $1$, the extra whole moves into the whole part.",
+            "不要丢掉分数部分：只加整数部分会把它们漏掉。分数部分之和超过 $1$ 时，多出的整数要并入整数部分。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            let x = properFraction(rng, 8).add(Q.of(rng.int(1, 6)));
+            let y = properFraction(rng, 8).add(Q.of(rng.int(1, 6)));
+            const add = rng.bool();
+            if (!add && x.cmp(y) <= 0) [x, y] = [y, x];
+            if (x.eq(y)) continue;
+            const op = add ? "+" : "-";
+            const result = add ? x.add(y) : x.sub(y);
+            const big = Number(lcm(Number(x.d), Number(y.d)));
+            const [a, b] = [x.n * BigInt(big / Number(x.d)), y.n * BigInt(big / Number(y.d))];
+            const c = add ? a + b : a - b;
+            const wholes = (v: Q) => Q.of(v.n / v.d);
+            const [wx, wy] = [wholes(x), wholes(y)];
+            const [fx, fy] = [x.sub(wx), y.sub(wy)];
+            const w = add ? wx.add(wy) : wx.sub(wy);
+            const f = add ? fx.add(fy) : fx.sub(fy);
+            const shown = result.isInteger() || result.cmp(Q.one) < 0 ? num(result) : mixedLatex(result);
+            const sameBottom = x.d === y.d;
+            const offs = [
+              [w, "You combined only the whole numbers and left the fractions out.", "你只算了整数部分，把分数部分漏掉了。"],
+              ...(add
+                ? [
+                    [
+                      w.add(q(Number(fx.n + fy.n), Number(fx.d + fy.d))),
+                      "You added the tops and the bottoms of the fractions. Use a common denominator and add the tops only.",
+                      "你把分子和分母分别相加了。应先通分，只把分子相加。",
+                    ] as const,
+                  ]
+                : f.sign() < 0
+                  ? [
+                      [
+                        w.add(f.neg()),
+                        "You took the smaller fraction from the larger one. Regroup: borrow $1$ from the whole number instead.",
+                        "你用较大的分数减去了较小的分数。应从整数部分借 $1$ 来退位。",
+                      ] as const,
+                    ]
+                  : []),
+              [
+                add ? x.sub(y).abs() : x.add(y),
+                add ? "You subtracted. The sign asks you to add." : "You added. The sign asks you to subtract.",
+                add ? "你做了减法。题目要求相加。" : "你做了加法。题目要求相减。",
+              ],
+            ] as const;
+            return valued(
+              [`Evaluate $${mixedLatex(x)} ${op} ${mixedLatex(y)}$.`, `计算 $${mixedLatex(x)} ${op} ${mixedLatex(y)}$。`],
+              result,
+              [
+                [
+                  ["Write improper fractions", "化成假分数"],
+                  ["Write both mixed numbers as improper fractions:", "把两个带分数都化成假分数："],
+                  [`${mixedLatex(x)} ${op} ${mixedLatex(y)} = ${improper(x)} ${op} ${improper(y)}`],
+                ],
+                [
+                  sameBottom ? ["Combine", "计算"] : ["Use a common denominator", "通分"],
+                  sameBottom
+                    ? [
+                        `The denominators are both $${big}$, so ${add ? "add" : "subtract"} the numerators:`,
+                        `分母都是 $${big}$，所以把分子${add ? "相加" : "相减"}：`,
+                      ]
+                    : [
+                        `Rewrite both over $${big}$, then ${add ? "add" : "subtract"} the numerators:`,
+                        `都化成分母为 $${big}$ 的分数，再把分子${add ? "相加" : "相减"}：`,
+                      ],
+                  [`${fracOf(a, big)} ${op} ${fracOf(b, big)} = ${fracOf(c, big)}`],
+                ],
+                [
+                  ["Write the result", "写出结果"],
+                  ["Simplify and write the result as a mixed number:", "化简并写成带分数："],
+                  [`${fracOf(c, big)} = ${shown}`],
+                ],
+              ],
+              [
+                `Work with the parts. The whole numbers give $${num(wx)} ${op} ${num(wy)} = ${num(w)}$ and the fractions give $${num(fx)} ${op} ${num(fy)} = ${num(f)}$. Together they make $${signedPart(w, f)} = ${shown}$.`,
+                `分别计算各部分。整数部分 $${num(wx)} ${op} ${num(wy)} = ${num(w)}$，分数部分 $${num(fx)} ${op} ${num(fy)} = ${num(f)}$。合起来是 $${signedPart(w, f)} = ${shown}$。`,
+              ],
+              offs,
+              {
+                form: "fraction",
+                figure: lineFigure(
+                  {
+                    lo: 0,
+                    hi: Math.ceil(Math.max(x.toNumber(), result.toNumber())),
+                    step: 1,
+                    labels: Array.from({ length: Math.ceil(Math.max(x.toNumber(), result.toNumber())) + 1 }, (_, i) => i),
+                    marks: [{ at: x.toNumber() }, { at: result.toNumber(), result: true }],
+                    jumps: [[x.toNumber(), result.toNumber()]],
+                  },
+                  [
+                    `A number line with a jump of ${y.n}/${y.d} ${add ? "to the right" : "to the left"} from the first number to the result.`,
+                    `一条数轴，从第一个数${add ? "向右" : "向左"}跳 ${y.n}/${y.d} 到结果。`,
+                  ],
+                ),
+              },
+            );
+          }
+        },
+        lineFigure(
+          {
+            lo: 0,
+            hi: 5,
+            step: 1,
+            labels: [0, 1, 2, 3, 4, 5],
+            marks: [
+              { at: 7 / 3, text: "7/3" },
+              { at: 49 / 12, text: "49/12", result: true },
+            ],
+            jumps: [[7 / 3, 49 / 12]],
+          },
+          ["A number line from 0 to 5 with a jump of 7/4 from 7/3 to 49/12.", "一条从 0 到 5 的数轴，从 7/3 跳 7/4 到 49/12。"],
+        ),
       ),
-      generate(rng) {
-        let x = properFraction(rng, 8).add(Q.of(rng.int(1, 6)));
-        let y = properFraction(rng, 8).add(Q.of(rng.int(1, 6)));
-        const add = rng.bool();
-        if (!add && x.cmp(y) <= 0) [x, y] = [y, x];
-        if (x.eq(y)) return this.generate(rng);
-        const op = add ? "+" : "-";
-        const result = add ? x.add(y) : x.sub(y);
-        // A common mistake: combining the whole numbers and the fractions separately without regrouping.
-        const wholes = (v: Q) => Q.of(v.n / v.d);
-        const naive = add ? wholes(x).add(wholes(y)) : wholes(x).sub(wholes(y));
-        return numberProblem({
-          prompt: t(`Evaluate $${mixedLatex(x)} ${op} ${mixedLatex(y)}$.`, `计算 $${mixedLatex(x)} ${op} ${mixedLatex(y)}$。`),
-          answer: result,
-          form: "fraction",
-          wrong: [naive],
-          solution: t(
-            `Write both as improper fractions:${steps(`${mixedLatex(x)} ${op} ${mixedLatex(y)} = ${improper(x)} ${op} ${improper(y)} = ${num(result)}${result.isInteger() || result.cmp(Q.one) < 0 ? "" : ` = ${mixedLatex(result)}`}`)}`,
-            `先化成假分数：${steps(`${mixedLatex(x)} ${op} ${mixedLatex(y)} = ${improper(x)} ${op} ${improper(y)} = ${num(result)}${result.isInteger() || result.cmp(Q.one) < 0 ? "" : ` = ${mixedLatex(result)}`}`)}`,
-          ),
-        });
-      },
-    },
+    ],
+  },
+  [
+    "A baker has $2\\frac{1}{3}$ trays of rolls and bakes $1\\frac{3}{4}$ more. Counting whole trays and the pieces of trays separately, the pieces make more than one full tray, so one more whole tray appears.",
+    "面包师有 $2\\frac{1}{3}$ 盘面包，又烤了 $1\\frac{3}{4}$ 盘。整盘和零散的部分分开数，零散的部分合起来超过一整盘，于是又多出一个整盘。",
   ],
-};
+  [
+    "$2\\frac{1}{3} + 1\\frac{3}{4} = 4\\frac{1}{12}$, and $4\\frac{1}{12} - 1\\frac{3}{4} = 2\\frac{1}{3}$.",
+    "$2\\frac{1}{3} + 1\\frac{3}{4} = 4\\frac{1}{12}$，且 $4\\frac{1}{12} - 1\\frac{3}{4} = 2\\frac{1}{3}$。",
+  ],
+  [
+    "write improper fractions as mixed numbers, add and subtract mixed numbers, and count the whole numbers between two fractions.",
+    "把假分数写成带分数，计算带分数的加减，并数出两个分数之间的整数。",
+  ],
+);
 
 export const multiplyingFractions: TopicDef = {
   id: "multiplying-fractions",
