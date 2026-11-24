@@ -6,7 +6,9 @@ import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 
 import { choiceProblem, numberProblem, pointLatex, steps, unitLatex, verdictChoice, yesNo } from "../problems.ts";
 import { rectangle, scaleneTriangle, sides } from "./area.ts";
+import type { Pair, Walk } from "./early-grades-more-kit.ts";
 import { mathText, pickChoice } from "./grade-4-fractions.ts";
+import { chosenMath, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
 
 // 7th Grade Math, geometry: segments, angles, polygons, perimeter, scale drawings, circles and prisms.
 
@@ -194,102 +196,200 @@ const segmentNames = [
   ["J", "K"],
 ] as const;
 
-export const measuresOfSegments = topic(
-  "measures-of-segments",
-  t("Measures of Segments", "线段的长度"),
-  t(
-    "The measure of a segment is its length, the distance between its endpoints; the length of segment AB is written AB, without the bar. On a ruler or a number line, subtract the coordinates of the endpoints: a segment from the 2 cm mark to the 7.5 cm mark is 7.5 − 2 = 5.5 cm long, and points at −4 and 3 are 3 − (−4) = 7 units apart.",
-    "线段的长度就是两个端点之间的距离；线段 AB 的长度记作 AB，不加横线。在尺子或数轴上，用两个端点的读数相减：从 2 厘米刻度到 7.5 厘米刻度的线段长 7.5 − 2 = 5.5 厘米，位于 −4 和 3 的两点相距 3 − (−4) = 7 个单位。",
+/** rulerMarks draws a ruler from 0 to n cm, marked every half centimeter, with segment pq above it from x0 to x1. */
+function rulerMarks(n: number, x0: number, x1: number, p: string, q: string): Mark[] {
+  const marks: Mark[] = [{ kind: "polygon", points: rectangle(n + 0.8, 1.6).map(([x, y]): Point => [x - 0.4, y - 1.6]) }];
+  for (let i = 0; i <= 2 * n; i++) {
+    marks.push(seg([i / 2, 0], [i / 2, i % 2 === 0 ? -0.5 : -0.3]));
+    if (i % 2 === 0) marks.push({ kind: "label", at: [i / 2, -0.5], text: String(i / 2), dir: "s" });
+  }
+  marks.push(
+    { kind: "segment", a: [x0, 0.7], b: [x0, 0], dashed: true },
+    { kind: "segment", a: [x1, 0.7], b: [x1, 0], dashed: true },
+    seg([x0, 0.7], [x1, 0.7], true),
+    ...dot([x0, 0.7], p, "n"),
+    ...dot([x1, 0.7], q, "n"),
+  );
+  return marks;
+}
+
+export const measuresOfSegments = withIntro(
+  topic(
+    "measures-of-segments",
+    t("Measures of Segments", "线段的长度"),
+    t(
+      "The measure of a segment is its length, the distance between its endpoints; the length of segment AB is written AB, without the bar. On a ruler or a number line, subtract the coordinates of the endpoints: a segment from the 2 cm mark to the 7.5 cm mark is 7.5 − 2 = 5.5 cm long, and points at −4 and 3 are 3 − (−4) = 7 units apart.",
+      "线段的长度就是两个端点之间的距离；线段 AB 的长度记作 AB，不加横线。在尺子或数轴上，用两个端点的读数相减：从 2 厘米刻度到 7.5 厘米刻度的线段长 7.5 − 2 = 5.5 厘米，位于 −4 和 3 的两点相距 3 − (−4) = 7 个单位。",
+    ),
+    ["points-lines-rays-and-segments", "absolute-value"],
+    ["7.G.A.1"],
+    [
+      lesson(
+        "lengths-on-a-ruler",
+        ["Measuring with a ruler", "用尺子量长度"],
+        [
+          [
+            "A segment that does not start at the $0$ mark of a ruler is measured by subtracting the two readings. If $\\overline{PQ}$ runs from the $3$ cm mark to the $8.5$ cm mark, then $PQ = 8.5 - 3 = 5.5$ cm.",
+            "线段的起点不在尺子的 $0$ 刻度时，用两端的读数相减。若 $\\overline{PQ}$ 从 $3$ 厘米刻度到 $8.5$ 厘米刻度，则 $PQ = 8.5 - 3 = 5.5$ 厘米。",
+          ],
+          [
+            "Count the half-centimeter gaps from $3$ to $8.5$: there are $11$ of them, and $11 \\times 0.5 = 5.5$ cm.",
+            "数一数从 $3$ 到 $8.5$ 有几个半厘米的小格：共 $11$ 格，$11 \\times 0.5 = 5.5$ 厘米。",
+          ],
+          [
+            "The short marks between the numbers are half centimeters, so each gap counts $0.5$ cm, not $1$ cm.",
+            "数字之间的短刻度是半厘米，每一小格是 $0.5$ 厘米，而不是 $1$ 厘米。",
+          ],
+        ],
+        (rng) => {
+          const n = rng.int(8, 12);
+          const a2 = rng.int(1, 2 * n - 5);
+          const b2 = rng.int(a2 + 3, 2 * n);
+          const [a, b] = [Q.of(a2, 2), Q.of(b2, 2)];
+          const len = b.sub(a);
+          const [p, q] = rng.pick(segmentNames);
+          const gaps = b2 - a2;
+          return valued(
+            [`The ruler is marked in centimeters. How long is $${over(p + q)}$?`, `尺子的刻度以厘米为单位。$${over(p + q)}$ 有多长？`],
+            len,
+            [
+              [
+                ["Read both ends", "读出两端"],
+                [
+                  `$${p}$ is at the $${dec(a)}$ cm mark and $${q}$ is at the $${dec(b)}$ cm mark, so the segment does not start at $0$:`,
+                  `$${p}$ 在 $${dec(a)}$ 厘米刻度，$${q}$ 在 $${dec(b)}$ 厘米刻度，线段的起点不在 $0$：`,
+                ],
+                [`${dec(a)}\\text{ cm},\\ ${dec(b)}\\text{ cm}`],
+              ],
+              [
+                ["Subtract", "相减"],
+                ["Subtract the smaller reading from the larger:", "用较大的读数减去较小的读数："],
+                [`${p}${q} = ${dec(b)} - ${dec(a)} = ${dec(len)}\\text{ cm}`],
+              ],
+            ],
+            [
+              `Count the half-centimeter gaps from $${dec(a)}$ to $${dec(b)}$: there are $${gaps}$, and $${gaps} \\times 0.5 = ${dec(len)}$ cm.`,
+              `数一数从 $${dec(a)}$ 到 $${dec(b)}$ 的半厘米小格：共 $${gaps}$ 格，$${gaps} \\times 0.5 = ${dec(len)}$ 厘米。`,
+            ],
+            [
+              [
+                b,
+                `That is the reading at $${q}$. The segment starts at $${dec(a)}$, not at $0$.`,
+                `这是 $${q}$ 处的读数。线段的起点在 $${dec(a)}$，不在 $0$。`,
+              ],
+              [a.add(b), "That adds the two readings. The length is their difference.", "这是把两个读数相加了。长度是它们的差。"],
+              [
+                len.mul(Q.of(2)),
+                "That counts each half-centimeter gap as $1$ cm. Each gap is $0.5$ cm.",
+                "这是把每个半厘米小格当成了 $1$ 厘米。每一小格是 $0.5$ 厘米。",
+              ],
+            ],
+            {
+              form: "decimal",
+              unit: "cm",
+              figure: fig(
+                rulerMarks(n, a.toNumber(), b.toNumber(), p, q),
+                `A ruler from 0 to ${n} cm, marked every half centimeter. Segment ${p}${q} runs from the ${dec(a)} cm mark to the ${dec(b)} cm mark.`,
+                `一把 0 到 ${n} 厘米的尺子，每半厘米一个刻度。线段 ${p}${q} 从 ${dec(a)} 厘米刻度到 ${dec(b)} 厘米刻度。`,
+              ),
+            },
+          );
+        },
+        fig(
+          rulerMarks(9, 3, 8.5, "P", "Q"),
+          "A ruler from 0 to 9 cm, marked every half centimeter. Segment PQ runs from the 3 cm mark to the 8.5 cm mark.",
+          "一把 0 到 9 厘米的尺子，每半厘米一个刻度。线段 PQ 从 3 厘米刻度到 8.5 厘米刻度。",
+        ),
+      ),
+      lesson(
+        "lengths-on-a-number-line",
+        ["Lengths on a number line", "数轴上的长度"],
+        [
+          [
+            "On a number line, the length of a segment is the larger coordinate minus the smaller one. For $A$ at $-6$ and $B$ at $2$, $AB = 2 - (-6) = 8$.",
+            "在数轴上，线段的长度等于较大的坐标减去较小的坐标。$A$ 在 $-6$，$B$ 在 $2$，则 $AB = 2 - (-6) = 8$。",
+          ],
+          [
+            "Count in two parts: from $-6$ to $0$ is $6$ units and from $0$ to $2$ is $2$ more, so $6 + 2 = 8$.",
+            "分两段数：从 $-6$ 到 $0$ 是 $6$ 个单位，从 $0$ 到 $2$ 又是 $2$ 个，共 $6 + 2 = 8$。",
+          ],
+          [
+            "Subtracting $6 - 2 = 4$ is wrong: when the points sit on both sides of $0$, the two distances add.",
+            "算成 $6 - 2 = 4$ 是错的：两点在 $0$ 的两侧时，两段距离要相加。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.int(-10, 8);
+          const b = rng.int(a + 2, 10);
+          const [p, q] = rng.pick(segmentNames);
+          const len = b - a;
+          const sub = a < 0 ? `${b} - (${a})` : `${b} - ${a}`;
+          const across = a < 0 && b > 0;
+          return valued(
+            [`Find $${p}${q}$.`, `求 $${p}${q}$。`],
+            len,
+            [
+              [
+                ["Read the coordinates", "读出坐标"],
+                [
+                  `$${p}$ is at $${a}$ and $${q}$ is at $${b}$, so $${q}$ has the larger coordinate:`,
+                  `$${p}$ 在 $${a}$，$${q}$ 在 $${b}$，所以 $${q}$ 的坐标较大：`,
+                ],
+                [`${b} > ${a}`],
+              ],
+              [
+                ["Subtract", "相减"],
+                ["Subtract the smaller coordinate from the larger:", "用较大的坐标减去较小的坐标："],
+                [`${p}${q} = ${sub} = ${len}`],
+              ],
+            ],
+            across
+              ? [
+                  `Count in two parts: from $${a}$ to $0$ is $${-a}$ units and from $0$ to $${b}$ is $${b}$ more, so $${-a} + ${b} = ${len}$.`,
+                  `分两段数：从 $${a}$ 到 $0$ 是 $${-a}$ 个单位，从 $0$ 到 $${b}$ 又是 $${b}$ 个，共 $${-a} + ${b} = ${len}$。`,
+                ]
+              : [
+                  `Count up from $${p}$: moving $${len}$ units right from $${a}$ lands on $${a} + ${len} = ${b}$, where $${q}$ is.`,
+                  `从 $${p}$ 往右数：从 $${a}$ 向右走 $${len}$ 个单位，到达 $${a} + ${len} = ${b}$，正是 $${q}$ 的位置。`,
+                ],
+            [
+              [
+                Math.abs(Math.abs(b) - Math.abs(a)),
+                "That subtracts the distances from $0$. When the points sit on both sides of $0$, add those distances.",
+                "这是把到 $0$ 的距离相减了。两点在 $0$ 的两侧时，要把这两段距离相加。",
+              ],
+              [
+                a + b,
+                "That adds the coordinates. The length is the larger one minus the smaller one.",
+                "这是把坐标相加了。长度是较大的坐标减去较小的坐标。",
+              ],
+              [len + 1, "That counts the tick marks, not the gaps between them.", "这是数了刻度线的条数，而不是刻度之间的间隔。"],
+            ],
+            {
+              form: "integer",
+              figure: fig(
+                numberLine(-10, 10, [
+                  [a, p],
+                  [b, q],
+                ]),
+                `A number line from −10 to 10 with ${p} at ${minus(a)} and ${q} at ${minus(b)}.`,
+                `一条从 −10 到 10 的数轴，${p} 在 ${minus(a)}，${q} 在 ${minus(b)}。`,
+              ),
+            },
+          );
+        },
+        drawn(gradeDrawings3["measures-of-segments#lengths-on-a-number-line"]),
+      ),
+    ],
   ),
-  ["points-lines-rays-and-segments", "absolute-value"],
-  ["7.G.A.1"],
   [
-    {
-      id: "lengths-on-a-ruler",
-      title: t("Measuring with a ruler", "用尺子量长度"),
-      explanation: t(
-        "A segment that does not start at the $0$ mark of a ruler is measured by subtracting the two readings. If $\\overline{PQ}$ runs from the $3$ cm mark to the $8.5$ cm mark, then $PQ = 8.5 - 3 = 5.5$ cm. The short marks between the numbers are half centimeters, so each one counts $0.5$ cm, not $1$ cm.",
-        "线段的起点不在尺子的 $0$ 刻度时，用两端的读数相减。若 $\\overline{PQ}$ 从 $3$ 厘米刻度到 $8.5$ 厘米刻度，则 $PQ = 8.5 - 3 = 5.5$ 厘米。数字之间的短刻度是半厘米，每一格是 $0.5$ 厘米，而不是 $1$ 厘米。",
-      ),
-      generate(rng) {
-        const n = rng.int(8, 12);
-        const a2 = rng.int(1, 2 * n - 5);
-        const b2 = rng.int(a2 + 3, 2 * n);
-        const [a, b] = [Q.of(a2, 2), Q.of(b2, 2)];
-        const len = b.sub(a);
-        const [p, q] = rng.pick(segmentNames);
-        const [x0, x1] = [a.toNumber(), b.toNumber()];
-        const marks: Mark[] = [{ kind: "polygon", points: rectangle(n + 0.8, 1.6).map(([x, y]): Point => [x - 0.4, y - 1.6]) }];
-        for (let i = 0; i <= 2 * n; i++) {
-          marks.push(seg([i / 2, 0], [i / 2, i % 2 === 0 ? -0.5 : -0.3]));
-          if (i % 2 === 0) marks.push({ kind: "label", at: [i / 2, -0.5], text: String(i / 2), dir: "s" });
-        }
-        marks.push(
-          { kind: "segment", a: [x0, 0.7], b: [x0, 0], dashed: true },
-          { kind: "segment", a: [x1, 0.7], b: [x1, 0], dashed: true },
-          seg([x0, 0.7], [x1, 0.7], true),
-          ...dot([x0, 0.7], p, "n"),
-          ...dot([x1, 0.7], q, "n"),
-        );
-        return {
-          ...numberProblem({
-            prompt: t(
-              `The ruler is marked in centimeters. How long is $${over(p + q)}$?`,
-              `尺子的刻度以厘米为单位。$${over(p + q)}$ 有多长？`,
-            ),
-            answer: len,
-            form: "decimal",
-            unit: "cm",
-            wrong: [b, a.add(b), len.mul(Q.of(2))],
-            solution: t(
-              `$${over(p + q)}$ starts at the $${dec(a)}$ cm mark, not at $0$, so subtract the readings:${steps(`${p}${q} = ${dec(b)} - ${dec(a)} = ${dec(len)}\\text{ cm}`)}`,
-              `$${over(p + q)}$ 的起点在 $${dec(a)}$ 厘米刻度，而不是 $0$，所以用两端的读数相减：${steps(`${p}${q} = ${dec(b)} - ${dec(a)} = ${dec(len)}\\text{ cm}`)}`,
-            ),
-          }),
-          figure: fig(
-            marks,
-            `A ruler from 0 to ${n} cm, marked every half centimeter. Segment ${p}${q} runs from the ${dec(a)} cm mark to the ${dec(b)} cm mark.`,
-            `一把 0 到 ${n} 厘米的尺子，每半厘米一个刻度。线段 ${p}${q} 从 ${dec(a)} 厘米刻度到 ${dec(b)} 厘米刻度。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "lengths-on-a-number-line",
-      figure: gradeDrawings3["measures-of-segments#lengths-on-a-number-line"],
-      title: t("Lengths on a number line", "数轴上的长度"),
-      explanation: t(
-        "On a number line, the length of a segment is the larger coordinate minus the smaller one. For $A$ at $-6$ and $B$ at $2$, $AB = 2 - (-6) = 8$. Counting the units from $-6$ to $0$ and from $0$ to $2$ gives the same $6 + 2 = 8$; subtracting $6 - 2 = 4$ would be wrong.",
-        "在数轴上，线段的长度等于较大的坐标减去较小的坐标。$A$ 在 $-6$，$B$ 在 $2$，则 $AB = 2 - (-6) = 8$。从 $-6$ 数到 $0$ 再数到 $2$，也得到 $6 + 2 = 8$；算成 $6 - 2 = 4$ 就错了。",
-      ),
-      generate(rng) {
-        const a = rng.int(-10, 8);
-        const b = rng.int(a + 2, 10);
-        const [p, q] = rng.pick(segmentNames);
-        const len = b - a;
-        const sub = a < 0 ? `${b} - (${a})` : `${b} - ${a}`;
-        return {
-          ...numberProblem({
-            prompt: t(`Find $${p}${q}$.`, `求 $${p}${q}$。`),
-            answer: len,
-            form: "integer",
-            wrong: [Math.abs(Math.abs(b) - Math.abs(a)), a + b, len + 1],
-            solution: t(
-              `$${p}$ is at $${a}$ and $${q}$ is at $${b}$. Subtract the smaller coordinate from the larger:${steps(`${p}${q} = ${sub} = ${len}`)}`,
-              `$${p}$ 在 $${a}$，$${q}$ 在 $${b}$。用较大的坐标减去较小的坐标：${steps(`${p}${q} = ${sub} = ${len}`)}`,
-            ),
-          }),
-          figure: fig(
-            numberLine(-10, 10, [
-              [a, p],
-              [b, q],
-            ]),
-            `A number line from −10 to 10 with ${p} at ${minus(a)} and ${q} at ${minus(b)}.`,
-            `一条从 −10 到 10 的数轴，${p} 在 ${minus(a)}，${q} 在 ${minus(b)}。`,
-          ),
-        };
-      },
-    },
+    "A pencil lies on a ruler from the $2$ cm mark to the $9$ cm mark. It is not $9$ cm long: it starts at $2$, so it is $9 - 2 = 7$ cm long.",
+    "一支铅笔放在尺子上，从 $2$ 厘米刻度到 $9$ 厘米刻度。它不是 $9$ 厘米长：它从 $2$ 开始，所以长 $9 - 2 = 7$ 厘米。",
+  ],
+  ["Slide the pencil back to start at $0$: its end moves to $9 - 2 = 7$.", "把铅笔往回移到从 $0$ 开始：它的另一端移到 $9 - 2 = 7$。"],
+  [
+    "measure segments on a ruler and on a number line by subtracting the readings at their ends.",
+    "用两端读数相减的方法，在尺子和数轴上量线段的长度。",
   ],
 );
 
@@ -298,9 +398,13 @@ const pairName = (letters: string, i: number, j: number) => `${letters[Math.min(
 
 /** twoSegments draws two segments marked congruent: AB horizontal and CD slanted, with labels. */
 function twoSegments(rng: Rng, labelAB: string, labelCD: string, count = 1): Mark[] {
+  return twoSegmentsAt(rng.pick([25, 35, 145, 155]), labelAB, labelCD, count);
+}
+
+/** twoSegmentsAt draws two segments marked congruent: AB horizontal and CD slanted at the given turn, with labels. */
+function twoSegmentsAt(turn: number, labelAB: string, labelCD: string, count = 1): Mark[] {
   const a: Point = [0, 0];
   const b: Point = [8, 0];
-  const turn = rng.pick([25, 35, 145, 155]);
   const c: Point = [12, turn < 90 ? -1 : 4];
   const d = dir(turn, 8, c);
   const [lo, hi] = d[0] > c[0] ? [c, d] : [d, c];
@@ -318,115 +422,232 @@ function twoSegments(rng: Rng, labelAB: string, labelCD: string, count = 1): Mar
   ];
 }
 
-export const congruentSegments = topic(
-  "congruent-segments",
-  t("Congruent Segments", "全等线段"),
-  t(
-    "Segments with the same length are congruent. AB ≅ CD (read “segment AB is congruent to segment CD”) means AB = CD. In a figure, congruent segments are marked with the same number of tick marks. When congruent segments have lengths written as expressions, set the expressions equal and solve.",
-    "长度相等的线段叫全等线段。AB ≅ CD（读作“线段 AB 全等于线段 CD”）表示 AB = CD。在图中，全等的线段用相同数量的短竖线标出。全等线段的长度用式子表示时，令两个式子相等，再解方程。",
-  ),
-  ["measures-of-segments", "equations-with-variables-on-both-sides"],
-  ["7.G.A.1"],
-  [
-    {
-      id: "identifying-congruent-segments",
-      title: t("Finding congruent segments", "找出全等线段"),
-      explanation: t(
-        "To decide whether two segments are congruent, compare their lengths. With $A$ at $-5$, $B$ at $-1$, $C$ at $2$ and $D$ at $6$: $AB = -1 - (-5) = 4$ and $CD = 6 - 2 = 4$, so $\\overline{AB} \\cong \\overline{CD}$. Segments can be congruent without sharing an endpoint, and two segments that share an endpoint need not be congruent.",
-        "判断两条线段是否全等，就比较它们的长度。$A$ 在 $-5$，$B$ 在 $-1$，$C$ 在 $2$，$D$ 在 $6$：$AB = -1 - (-5) = 4$，$CD = 6 - 2 = 4$，所以 $\\overline{AB} \\cong \\overline{CD}$。全等的线段不一定有公共端点，有公共端点的两条线段也不一定全等。",
+/** wrapped writes a coordinate for a subtraction, in parentheses when it is negative. */
+const wrapped = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+
+export const congruentSegments = withIntro(
+  topic(
+    "congruent-segments",
+    t("Congruent Segments", "全等线段"),
+    t(
+      "Segments with the same length are congruent. AB ≅ CD (read “segment AB is congruent to segment CD”) means AB = CD. In a figure, congruent segments are marked with the same number of tick marks. When congruent segments have lengths written as expressions, set the expressions equal and solve.",
+      "长度相等的线段叫全等线段。AB ≅ CD（读作“线段 AB 全等于线段 CD”）表示 AB = CD。在图中，全等的线段用相同数量的短竖线标出。全等线段的长度用式子表示时，令两个式子相等，再解方程。",
+    ),
+    ["measures-of-segments", "equations-with-variables-on-both-sides"],
+    ["7.G.A.1"],
+    [
+      lesson(
+        "identifying-congruent-segments",
+        ["Finding congruent segments", "找出全等线段"],
+        [
+          [
+            "To decide whether two segments are congruent, compare their lengths. With $A$ at $-5$, $B$ at $-1$, $C$ at $2$ and $D$ at $6$: $AB = -1 - (-5) = 4$ and $CD = 6 - 2 = 4$, so $\\overline{AB} \\cong \\overline{CD}$.",
+            "判断两条线段是否全等，就比较它们的长度。$A$ 在 $-5$，$B$ 在 $-1$，$C$ 在 $2$，$D$ 在 $6$：$AB = -1 - (-5) = 4$，$CD = 6 - 2 = 4$，所以 $\\overline{AB} \\cong \\overline{CD}$。",
+          ],
+          [
+            "Slide $\\overline{AB}$ right by $7$: its ends move from $-5$ and $-1$ to $2$ and $6$, exactly onto $\\overline{CD}$.",
+            "把 $\\overline{AB}$ 向右平移 $7$：两端从 $-5$ 和 $-1$ 移到 $2$ 和 $6$，正好与 $\\overline{CD}$ 重合。",
+          ],
+          [
+            "Segments can be congruent without sharing an endpoint, and two segments that share an endpoint need not be congruent. Only the lengths decide.",
+            "全等的线段不一定有公共端点，有公共端点的两条线段也不一定全等。只看长度。",
+          ],
+        ],
+        (rng) => {
+          for (;;) {
+            const L = rng.int(2, 7);
+            const p = rng.int(-9, 9 - L);
+            const q = rng.int(-9, 9 - L);
+            const r = rng.int(-9, 9);
+            const coords = [p, p + L, q, q + L, r];
+            if (new Set(coords).size < 5) continue;
+            const sorted = [...coords].sort((x, y) => x - y);
+            const letters = "ABCDE";
+            const index = (v: number) => sorted.indexOf(v);
+            const target = pairName(letters, index(p), index(p + L));
+            const correct = pairName(letters, index(q), index(q + L));
+            const others: string[] = [];
+            for (let i = 0; i < 5; i++)
+              for (let j = i + 1; j < 5; j++) if (sorted[j]! - sorted[i]! !== L) others.push(pairName(letters, i, j));
+            if (others.length < 3) continue;
+            const ends = (n: string): [number, number] => [sorted[letters.indexOf(n[0]!)]!, sorted[letters.indexOf(n[1]!)]!];
+            const measured = (n: string) => {
+              const [lo, hi] = ends(n);
+              return `${n} = ${hi} - ${wrapped(lo)} = ${hi - lo}`;
+            };
+            const wrong = rng.shuffle(others).slice(0, 3);
+            const shift = q - p;
+            return chosenMath(
+              rng,
+              [`Which segment is congruent to $${over(target)}$?`, `哪条线段与 $${over(target)}$ 全等？`],
+              over(correct),
+              wrong.map((w) => {
+                const [lo, hi] = ends(w);
+                return [over(w), `$${w} = ${hi - lo}$, not $${L}$.`, `$${w} = ${hi - lo}$，不是 $${L}$。`] as const;
+              }),
+              [
+                [
+                  ["Measure the given segment", "量出给定的线段"],
+                  ["Subtract the coordinates of its ends:", "用两端的坐标相减："],
+                  [measured(target)],
+                ],
+                [
+                  ["Find the same length", "找出同样长的线段"],
+                  [`Of the choices, only one segment is also $${L}$ long:`, `选项中只有一条线段也长 $${L}$：`],
+                  [measured(correct)],
+                ],
+              ],
+              [
+                `Slide $${over(target)}$ ${shift > 0 ? "right" : "left"} by $${Math.abs(shift)}$: its ends move from $${p}$ and $${p + L}$ to $${q}$ and $${q + L}$, exactly onto $${over(correct)}$.`,
+                `把 $${over(target)}$ 向${shift > 0 ? "右" : "左"}平移 $${Math.abs(shift)}$：两端从 $${p}$ 和 $${p + L}$ 移到 $${q}$ 和 $${q + L}$，正好与 $${over(correct)}$ 重合。`,
+              ],
+              fig(
+                numberLine(
+                  -10,
+                  10,
+                  sorted.map((v, i) => [v, letters[i]!] as const),
+                ),
+                `A number line from −10 to 10 with points ${sorted.map((v, i) => `${letters[i]} at ${minus(v)}`).join(", ")}.`,
+                `一条从 −10 到 10 的数轴，${sorted.map((v, i) => `${letters[i]} 在 ${minus(v)}`).join("，")}。`,
+              ),
+            );
+          }
+        },
+        fig(
+          numberLine(-10, 10, [
+            [-5, "A"],
+            [-1, "B"],
+            [2, "C"],
+            [6, "D"],
+          ]),
+          "A number line from −10 to 10 with A at −5, B at −1, C at 2 and D at 6.",
+          "一条从 −10 到 10 的数轴，A 在 −5，B 在 −1，C 在 2，D 在 6。",
+        ),
       ),
-      generate(rng) {
-        const L = rng.int(2, 7);
-        const p = rng.int(-9, 9 - L);
-        const q = rng.int(-9, 9 - L);
-        const r = rng.int(-9, 9);
-        const coords = [p, p + L, q, q + L, r];
-        if (new Set(coords).size < 5) return this.generate(rng);
-        const sorted = [...coords].sort((x, y) => x - y);
-        const letters = "ABCDE";
-        const index = (v: number) => sorted.indexOf(v);
-        const target = pairName(letters, index(p), index(p + L));
-        const correct = pairName(letters, index(q), index(q + L));
-        const others: string[] = [];
-        for (let i = 0; i < 5; i++) for (let j = i + 1; j < 5; j++) if (sorted[j]! - sorted[i]! !== L) others.push(pairName(letters, i, j));
-        if (others.length < 3) return this.generate(rng);
-        const opt = (n: string) => t(`$${over(n)}$`, `$${over(n)}$`);
-        const lengthOf = (n: string) => sorted[letters.indexOf(n[1]!)]! - sorted[letters.indexOf(n[0]!)]!;
-        const wrong = rng.shuffle(others).slice(0, 3);
-        return pickChoice(
-          rng,
-          t(`Which segment is congruent to $${over(target)}$?`, `哪条线段与 $${over(target)}$ 全等？`),
-          opt(correct),
-          wrong.map(opt),
-          t(
-            `$${target} = ${L}$. Of the choices, only $${correct} = ${L}$; the others are ${wrong.map((w) => `$${w} = ${lengthOf(w)}$`).join(", ")}. So $${over(target)} \\cong ${over(correct)}$.`,
-            `$${target} = ${L}$。选项中只有 $${correct} = ${L}$；其余是 ${wrong.map((w) => `$${w} = ${lengthOf(w)}$`).join("，")}。所以 $${over(target)} \\cong ${over(correct)}$。`,
-          ),
-          fig(
-            numberLine(
-              -10,
-              10,
-              sorted.map((v, i) => [v, letters[i]!] as const),
-            ),
-            `A number line from −10 to 10 with points ${sorted.map((v, i) => `${letters[i]} at ${minus(v)}`).join(", ")}.`,
-            `一条从 −10 到 10 的数轴，${sorted.map((v, i) => `${letters[i]} 在 ${minus(v)}`).join("，")}。`,
-          ),
-        );
-      },
-    },
-    {
-      id: "congruent-segments-with-algebra",
-      title: t("Congruent segments with algebra", "用方程求全等线段"),
-      explanation: t(
-        "In the figure, $\\overline{AB} \\cong \\overline{CD}$, $AB = 3x + 4$ and $CD = 5x - 6$. Congruent segments have equal lengths, so $3x + 4 = 5x - 6$, which gives $10 = 2x$ and $x = 5$. Then $AB = 3 \\cdot 5 + 4 = 19$, and $CD = 5 \\cdot 5 - 6 = 19$ checks.",
-        "如图，$\\overline{AB} \\cong \\overline{CD}$，$AB = 3x + 4$，$CD = 5x - 6$。全等线段长度相等，所以 $3x + 4 = 5x - 6$，得 $10 = 2x$，$x = 5$。于是 $AB = 3 \\cdot 5 + 4 = 19$，再用 $CD = 5 \\cdot 5 - 6 = 19$ 检验。",
-      ),
-      generate(rng) {
-        const x = rng.int(2, 12);
-        const L = rng.int(x + 8, 60);
-        const e1 = expressionFor(rng, L, x);
-        const e2 = expressionFor(rng, L, x, [e1[0]]);
-        const askX = rng.bool();
-        const u = pickUnit(rng);
-        const figure = fig(
-          twoSegments(rng, `${plain(...e1)}`, `${plain(...e2)}`),
-          `Segments AB and CD marked congruent, with AB = ${plain(...e1)} and CD = ${plain(...e2)}.`,
-          `线段 AB 和 CD 标为全等，AB = ${plain(...e1)}，CD = ${plain(...e2)}。`,
-        );
-        const given = `$AB = ${linear(...e1)}$`;
-        const given2 = `$CD = ${linear(...e2)}$`;
-        const solve = steps(...equalSteps(e1, e2));
-        if (askX)
-          return {
-            ...numberProblem({
-              prompt: t(
+      lesson(
+        "congruent-segments-with-algebra",
+        ["Congruent segments with algebra", "用方程求全等线段"],
+        [
+          [
+            "In the figure, $\\overline{AB} \\cong \\overline{CD}$, $AB = 3x + 4$ and $CD = 5x - 6$. Congruent segments have equal lengths, so $3x + 4 = 5x - 6$, which gives $10 = 2x$ and $x = 5$. Then $AB = 3 \\cdot 5 + 4 = 19$.",
+            "如图，$\\overline{AB} \\cong \\overline{CD}$，$AB = 3x + 4$，$CD = 5x - 6$。全等线段长度相等，所以 $3x + 4 = 5x - 6$，得 $10 = 2x$，$x = 5$。于是 $AB = 3 \\cdot 5 + 4 = 19$。",
+          ],
+          [
+            "Put $x = 5$ into the other segment: $CD = 5 \\cdot 5 - 6 = 19$, the same length.",
+            "把 $x = 5$ 代入另一条线段：$CD = 5 \\cdot 5 - 6 = 19$，长度相同。",
+          ],
+          [
+            "$x = 5$ is not the length. When the question asks how long a segment is, put $x$ back into its expression.",
+            "$x = 5$ 不是长度。题目问线段有多长时，要把 $x$ 代回它的式子。",
+          ],
+        ],
+        (rng) => {
+          const x = rng.int(2, 12);
+          const L = rng.int(x + 8, 60);
+          const e1 = expressionFor(rng, L, x);
+          const e2 = expressionFor(rng, L, x, [e1[0]]);
+          const askX = rng.bool();
+          const u = pickUnit(rng);
+          const figure = fig(
+            twoSegments(rng, `${plain(...e1)}`, `${plain(...e2)}`),
+            `Segments AB and CD marked congruent, with AB = ${plain(...e1)} and CD = ${plain(...e2)}.`,
+            `线段 AB 和 CD 标为全等，AB = ${plain(...e1)}，CD = ${plain(...e2)}。`,
+          );
+          const given = `$AB = ${linear(...e1)}$`;
+          const given2 = `$CD = ${linear(...e2)}$`;
+          const [first, ...rest] = equalSteps(e1, e2);
+          const [signSlip, addSlip] = equalWrong(e1, e2);
+          const check: Pair = [
+            `$AB = ${subst(e1, x)} = ${L}$ and $CD = ${subst(e2, x)} = ${L}$: the lengths match.`,
+            `$AB = ${subst(e1, x)} = ${L}$，$CD = ${subst(e2, x)} = ${L}$：两条线段一样长。`,
+          ];
+          const equal: Walk = [
+            ["Set the lengths equal", "令长度相等"],
+            ["Congruent segments have equal lengths:", "全等线段的长度相等："],
+            [first as string],
+          ];
+          const solved: Walk = [
+            ["Solve for x", "解出 x"],
+            rest.length > 1
+              ? ["Collect $x$ on the side with the larger coefficient, then divide:", "把 $x$ 集中到系数较大的一边，再相除："]
+              : ["Collect $x$ on the side with the larger coefficient:", "把 $x$ 集中到系数较大的一边："],
+            rest,
+          ];
+          if (askX)
+            return valued(
+              [
                 `In the figure, $${over("AB")} \\cong ${over("CD")}$, ${given} and ${given2}. Find $x$.`,
                 `如图，$${over("AB")} \\cong ${over("CD")}$，${given}，${given2}。求 $x$。`,
-              ),
-              answer: x,
-              wrong: equalWrong(e1, e2),
-              solution: t(`Congruent segments have equal lengths:${solve}`, `全等线段的长度相等：${solve}`),
-            }),
-            figure,
-          };
-        return {
-          ...numberProblem({
-            prompt: t(
+              ],
+              x,
+              [equal, solved],
+              check,
+              [
+                [
+                  signSlip as Q,
+                  "That moves a constant with the wrong sign. Undo it by doing the opposite.",
+                  "这是把常数移项时符号弄错了。移项要做相反的运算。",
+                ],
+                [
+                  addSlip as Q,
+                  "That adds the $x$ terms. To collect them on one side, subtract one from both sides.",
+                  "这是把含 $x$ 的项相加了。要把它们集中到一边，应在两边同时减去其中一项。",
+                ],
+                [L, "That is the length of each segment, not $x$.", "这是每条线段的长度，不是 $x$。"],
+              ],
+              { figure },
+            );
+          return valued(
+            [
               `In the figure, $${over("AB")} \\cong ${over("CD")}$, ${given} and ${given2}, in ${unitWords[u]}. How long is $${over("AB")}$?`,
               `如图，$${over("AB")} \\cong ${over("CD")}$，${given}，${given2}（单位：${u}）。$${over("AB")}$ 有多长？`,
-            ),
-            answer: L,
-            unit: u,
-            wrong: [x, 2 * L, at(e1, x + 1)],
-            solution: t(
-              `Congruent segments have equal lengths:${solve}Then $AB = ${subst(e1, x)} = ${L}\\text{ ${u}}$.`,
-              `全等线段的长度相等：${solve}于是 $AB = ${subst(e1, x)} = ${L}\\text{ ${u}}$。`,
-            ),
-          }),
-          figure,
-        };
-      },
-    },
+            ],
+            L,
+            [
+              [equal[0], equal[1], [first as string, ...rest]],
+              [
+                ["Substitute", "代入"],
+                [`Put $x = ${x}$ into $AB$:`, `把 $x = ${x}$ 代入 $AB$：`],
+                [`AB = ${subst(e1, x)} = ${L}\\text{ ${u}}`],
+              ],
+            ],
+            check,
+            [
+              [x, "That is $x$, not the length: put it into the expression for $AB$.", "这是 $x$ 的值，不是长度：要把它代入 $AB$ 的式子。"],
+              [
+                2 * L,
+                "That adds $AB$ and $CD$. Each segment has the length on its own.",
+                "这是把 $AB$ 和 $CD$ 相加了。题目只问一条线段的长度。",
+              ],
+              ...((addSlip as Q).isInteger()
+                ? [
+                    [
+                      at(e1, (addSlip as Q).toNumber()),
+                      "That uses the $x$ found by adding the $x$ terms. Subtract one from both sides instead.",
+                      "这是用了把含 $x$ 的项相加得到的 $x$。应在两边同时减去其中一项。",
+                    ] as const,
+                  ]
+                : []),
+            ],
+            { unit: u, figure },
+          );
+        },
+        fig(
+          twoSegmentsAt(25, "3x + 4", "5x − 6"),
+          "Segments AB and CD marked congruent, with AB = 3x + 4 and CD = 5x − 6.",
+          "线段 AB 和 CD 标为全等，AB = 3x + 4，CD = 5x − 6。",
+        ),
+      ),
+    ],
+  ),
+  [
+    "Two shelves are each $80$ cm long. One hangs higher and is tilted, but their lengths match, so the shelves are congruent.",
+    "两块搁板都长 $80$ 厘米。一块挂得更高，还有点斜，但它们一样长，所以这两块搁板全等。",
+  ],
+  ["Measure both: $80$ cm and $80$ cm, the same length.", "量一量：都是 $80$ 厘米，长度相同。"],
+  [
+    "find congruent segments by comparing their lengths, and set equal lengths equal to write and solve equations.",
+    "通过比较长度找出全等线段，并利用长度相等列方程、解方程。",
   ],
 );
 
@@ -1108,101 +1329,217 @@ function openAngle(o: Point, start: number, d: number, letters: string, label: s
 const angleSets = ["ABC", "DEF", "GHI", "JKL"] as const;
 
 /** congruentAngles recognizes congruent angles by their measures and solves for an unknown in congruent angles. */
-export const congruentAngles = topic(
-  "congruent-angles",
-  t("Congruent Angles", "全等的角"),
-  t(
-    "Angles are congruent when they have the same measure, however long their arms are drawn and however they are turned. If ∠A ≅ ∠B and their measures are written as expressions, set the expressions equal and solve.",
-    "度数相等的角是全等的角，与边画得多长、朝哪个方向无关。若 ∠A ≅ ∠B，且它们的度数用式子表示，就令两个式子相等，再解方程。",
+export const congruentAngles = withIntro(
+  topic(
+    "congruent-angles",
+    t("Congruent Angles", "全等的角"),
+    t(
+      "Angles are congruent when they have the same measure, however long their arms are drawn and however they are turned. If ∠A ≅ ∠B and their measures are written as expressions, set the expressions equal and solve.",
+      "度数相等的角是全等的角，与边画得多长、朝哪个方向无关。若 ∠A ≅ ∠B，且它们的度数用式子表示，就令两个式子相等，再解方程。",
+    ),
+    ["angles-and-angle-measures", "equations-with-variables-on-both-sides"],
+    ["7.G.A.2", "8.G.A.2"],
+    [
+      lesson(
+        "identifying-congruent-angles",
+        ["Identifying congruent angles", "辨认全等的角"],
+        [
+          [
+            "Two angles are **congruent**, written $\\angle ABC \\cong \\angle DEF$, when $m\\angle ABC = m\\angle DEF$. Only the opening between the arms matters: an angle of $40^\\circ$ with long arms is congruent to an angle of $40^\\circ$ with short arms that points the other way.",
+            "两个角的度数相等时，它们是**全等**的，记作 $\\angle ABC \\cong \\angle DEF$，即 $m\\angle ABC = m\\angle DEF$。只有两边张开的大小有关：边很长的 $40^\\circ$ 角与边很短、朝向相反的 $40^\\circ$ 角全等。",
+          ],
+          [
+            "Turn the short angle around and lay it on the long one, vertex on vertex: the arms point the same way, so the openings match.",
+            "把边短的角转过来，顶点对顶点放在边长的角上：两条边的方向一致，所以张开的大小相同。",
+          ],
+          [
+            "Do not judge by the length of the arms or by the way the angle points. Compare the measures.",
+            "不要看边的长短，也不要看角的朝向。要比较度数。",
+          ],
+        ],
+        (rng) => {
+          const a = rng.int(25, 150);
+          const near = rng.shuffle(
+            [...new Set([a + 10, a - 10, a + 15, a - 15, 180 - a])].filter((v) => v > 10 && v < 170 && Math.abs(v - a) >= 10),
+          );
+          const others = [a, near[0]!, near[1]!];
+          const order = rng.shuffle([0, 1, 2]);
+          const spots: Point[] = [
+            [11, 0],
+            [0, -9],
+            [11, -9],
+          ];
+          const marks: Mark[] = [...openAngle([0, 0], rng.int(0, 40), a, "ABC", deg(a), 4)];
+          order.forEach((k, i) => {
+            const d = others[k]!;
+            // The congruent angle gets different arms and a different turn, so its look does not give it away.
+            const r = k === 0 ? rng.pick([2.8, 5]) : 4;
+            marks.push(...openAngle(spots[i]!, rng.int(0, 180 - d), d, angleSets[i + 1]!, deg(d), r));
+          });
+          const match = angleSets[order.indexOf(0) + 1]!;
+          const measureOf = (s: string) => others[order[angleSets.indexOf(s as (typeof angleSets)[number]) - 1]!]!;
+          const rest = angleSets.slice(1).filter((s) => s !== match);
+          const desc = order.map((k, i) => `${angleSets[i + 1]} measures ${others[k]}°`).join(", ");
+          const descZh = order.map((k, i) => `${angleSets[i + 1]} 为 ${others[k]}°`).join("，");
+          return chosenMath(
+            rng,
+            [`Which angle is congruent to $${angleName("ABC")}$?`, `哪个角与 $${angleName("ABC")}$ 全等？`],
+            angleName(match),
+            rest.map(
+              (s) =>
+                [
+                  angleName(s),
+                  `$${measure(s)} = ${degTex(measureOf(s))}$, not $${degTex(a)}$.`,
+                  `$${measure(s)} = ${degTex(measureOf(s))}$，不是 $${degTex(a)}$。`,
+                ] as const,
+            ),
+            [
+              [
+                ["Read the given angle", "读出给定的角"],
+                ["Read its measure from the figure:", "从图中读出它的度数："],
+                [`${measure("ABC")} = ${degTex(a)}`],
+              ],
+              [
+                ["Find the same measure", "找出度数相同的角"],
+                [
+                  "Only one other angle opens just as wide, whatever its arms and its turn:",
+                  "只有一个角张开得一样大，不管它的边多长、朝向如何：",
+                ],
+                [`${measure(match)} = ${degTex(a)}`],
+              ],
+            ],
+            [
+              `Subtract each measure from $${degTex(a)}$: only $${angleName(match)}$ gives $0$, while ${rest.map((s) => `$${angleName(s)}$ gives $${a - measureOf(s)}$`).join(" and ")}.`,
+              `用 $${degTex(a)}$ 减去每个角的度数：只有 $${angleName(match)}$ 得 $0$，${rest.map((s) => `$${angleName(s)}$ 得 $${a - measureOf(s)}$`).join("，")}。`,
+            ],
+            fig(marks, `Four angles. ABC measures ${a}°, ${desc}.`, `四个角。ABC 为 ${a}°，${descZh}。`),
+          );
+        },
+        drawn(gradeDrawings3["congruent-angles#identifying-congruent-angles"]),
+      ),
+      {
+        ...lesson(
+          "congruent-angles-with-algebra",
+          ["Congruent angles with algebra", "用方程求全等的角"],
+          [
+            [
+              "If $\\angle P \\cong \\angle Q$ with $m\\angle P = (3x + 12)^\\circ$ and $m\\angle Q = (5x - 20)^\\circ$, the measures are equal:\n\n$$3x + 12 = 5x - 20 \\;\\Rightarrow\\; 32 = 2x \\;\\Rightarrow\\; x = 16.$$\n\nEach angle measures $3 \\cdot 16 + 12 = 60^\\circ$.",
+              "若 $\\angle P \\cong \\angle Q$，$m\\angle P = (3x + 12)^\\circ$，$m\\angle Q = (5x - 20)^\\circ$，则两个度数相等：\n\n$$3x + 12 = 5x - 20 \\;\\Rightarrow\\; 32 = 2x \\;\\Rightarrow\\; x = 16.$$\n\n每个角都是 $3 \\cdot 16 + 12 = 60^\\circ$。",
+            ],
+            [
+              "Put $x = 16$ into the other angle: $5 \\cdot 16 - 20 = 60^\\circ$, the same measure.",
+              "把 $x = 16$ 代入另一个角：$5 \\cdot 16 - 20 = 60^\\circ$，度数相同。",
+            ],
+            [
+              "Congruent angles are equal, not supplementary: set the expressions equal to each other, not their sum to $180^\\circ$.",
+              "全等的角相等，不是互补：要令两个式子相等，而不是令它们的和等于 $180^\\circ$。",
+            ],
+          ],
+          (rng) => {
+            const x = rng.int(4, 18);
+            const v = rng.int(30, 140);
+            const e1 = expressionFor(rng, v, x);
+            const e2 = expressionFor(rng, v, x, [e1[0]]);
+            const askX = rng.bool();
+            const [p, q] = rng.pick([
+              ["P", "Q"],
+              ["A", "B"],
+              ["R", "S"],
+            ] as const);
+            const head: Pair = [
+              `$${angleName(p)} \\cong ${angleName(q)}$, $${measure(p)} = ${angleTex(...e1)}$ and $${measure(q)} = ${angleTex(...e2)}$.`,
+              `$${angleName(p)} \\cong ${angleName(q)}$，$${measure(p)} = ${angleTex(...e1)}$，$${measure(q)} = ${angleTex(...e2)}$。`,
+            ];
+            const [first, ...rest] = equalSteps(e1, e2);
+            const [signSlip, addSlip] = equalWrong(e1, e2);
+            const check: Pair = [
+              `$${measure(p)} = ${subst(e1, x)} = ${degTex(v)}$ and $${measure(q)} = ${subst(e2, x)} = ${degTex(v)}$: the measures match.`,
+              `$${measure(p)} = ${subst(e1, x)} = ${degTex(v)}$，$${measure(q)} = ${subst(e2, x)} = ${degTex(v)}$：两个角度数相同。`,
+            ];
+            const equal: Walk = [
+              ["Set the measures equal", "令度数相等"],
+              ["Congruent angles have equal measures:", "全等的角度数相等："],
+              [first as string],
+            ];
+            if (askX)
+              return valued(
+                [`${head[0]} Find $x$.`, `${head[1]}求 $x$。`],
+                x,
+                [
+                  equal,
+                  [
+                    ["Solve for x", "解出 x"],
+                    rest.length > 1
+                      ? ["Collect $x$ on the side with the larger coefficient, then divide:", "把 $x$ 集中到系数较大的一边，再相除："]
+                      : ["Collect $x$ on the side with the larger coefficient:", "把 $x$ 集中到系数较大的一边："],
+                    rest,
+                  ],
+                ],
+                check,
+                [
+                  [
+                    signSlip as Q,
+                    "That moves a constant with the wrong sign. Undo it by doing the opposite.",
+                    "这是把常数移项时符号弄错了。移项要做相反的运算。",
+                  ],
+                  [
+                    addSlip as Q,
+                    "That adds the $x$ terms. To collect them on one side, subtract one from both sides.",
+                    "这是把含 $x$ 的项相加了。要把它们集中到一边，应在两边同时减去其中一项。",
+                  ],
+                  [v, "That is the measure of each angle, not $x$.", "这是每个角的度数，不是 $x$。"],
+                ],
+              );
+            return valued(
+              [`${head[0]} Find $${measure(p)}$.`, `${head[1]}求 $${measure(p)}$。`],
+              v,
+              [
+                [equal[0], equal[1], [first as string, ...rest]],
+                [
+                  ["Substitute", "代入"],
+                  [`Put $x = ${x}$ into $${measure(p)}$:`, `把 $x = ${x}$ 代入 $${measure(p)}$：`],
+                  [`${measure(p)} = ${subst(e1, x)} = ${degTex(v)}`],
+                ],
+              ],
+              check,
+              [
+                [
+                  x,
+                  `That is $x$, not the angle: put it into $${angleTex(...e1)}$.`,
+                  `这是 $x$ 的值，不是角的度数：要代入 $${angleTex(...e1)}$。`,
+                ],
+                [
+                  180 - v,
+                  "That is the supplement of the angle. Congruent angles are equal, not supplementary.",
+                  "这是这个角的补角。全等的角相等，不是互补。",
+                ],
+                ...(v < 90
+                  ? [
+                      [
+                        90 - v,
+                        "That is the complement of the angle. Congruent angles are equal.",
+                        "这是这个角的余角。全等的角是相等的。",
+                      ] as const,
+                    ]
+                  : []),
+              ],
+              { unit: "°" },
+            );
+          },
+          drawn(gradeDrawings4["congruent-angles#congruent-angles-with-algebra"]),
+        ),
+        keyPrerequisites: ["equations-with-variables-on-both-sides"],
+      },
+    ],
   ),
-  ["angles-and-angle-measures", "equations-with-variables-on-both-sides"],
-  ["7.G.A.2", "8.G.A.2"],
   [
-    {
-      id: "identifying-congruent-angles",
-      figure: gradeDrawings3["congruent-angles#identifying-congruent-angles"],
-      title: t("Identifying congruent angles", "辨认全等的角"),
-      explanation: t(
-        "Two angles are **congruent**, written $\\angle ABC \\cong \\angle DEF$, when $m\\angle ABC = m\\angle DEF$. Only the opening between the arms matters: an angle of $40^\\circ$ with long arms is congruent to an angle of $40^\\circ$ with short arms that points the other way.",
-        "两个角的度数相等时，它们是**全等**的，记作 $\\angle ABC \\cong \\angle DEF$，即 $m\\angle ABC = m\\angle DEF$。只有两边张开的大小有关：边很长的 $40^\\circ$ 角与边很短、朝向相反的 $40^\\circ$ 角全等。",
-      ),
-      generate(rng) {
-        const a = rng.int(25, 150);
-        const near = rng.shuffle(
-          [...new Set([a + 10, a - 10, a + 15, a - 15, 180 - a])].filter((v) => v > 10 && v < 170 && Math.abs(v - a) >= 10),
-        );
-        const others = [a, near[0]!, near[1]!];
-        const order = rng.shuffle([0, 1, 2]);
-        const spots: Point[] = [
-          [11, 0],
-          [0, -9],
-          [11, -9],
-        ];
-        const marks: Mark[] = [...openAngle([0, 0], rng.int(0, 40), a, "ABC", deg(a), 4)];
-        order.forEach((k, i) => {
-          const d = others[k]!;
-          // The congruent angle gets different arms and a different turn, so its look does not give it away.
-          const r = k === 0 ? rng.pick([2.8, 5]) : 4;
-          marks.push(...openAngle(spots[i]!, rng.int(0, 180 - d), d, angleSets[i + 1]!, deg(d), r));
-        });
-        const match = angleSets[order.indexOf(0) + 1]!;
-        const desc = order.map((k, i) => `${angleSets[i + 1]} measures ${others[k]}°`).join(", ");
-        const descZh = order.map((k, i) => `${angleSets[i + 1]} 为 ${others[k]}°`).join("，");
-        return pickChoice(
-          rng,
-          t(`Which angle is congruent to $${angleName("ABC")}$?`, `哪个角与 $${angleName("ABC")}$ 全等？`),
-          mathText(angleName(match)),
-          angleSets
-            .slice(1)
-            .filter((s) => s !== match)
-            .map((s) => mathText(angleName(s))),
-          t(
-            `Congruent angles have equal measures. $${measure("ABC")} = ${degTex(a)}$ and $${measure(match)} = ${degTex(a)}$, so $${angleName("ABC")} \\cong ${angleName(match)}$. The lengths of the arms and the way the angle is turned do not matter.`,
-            `全等的角度数相等。$${measure("ABC")} = ${degTex(a)}$，$${measure(match)} = ${degTex(a)}$，所以 $${angleName("ABC")} \\cong ${angleName(match)}$。边的长短和角的朝向都没有关系。`,
-          ),
-          fig(marks, `Four angles. ABC measures ${a}°, ${desc}.`, `四个角。ABC 为 ${a}°，${descZh}。`),
-        );
-      },
-    },
-    {
-      id: "congruent-angles-with-algebra",
-      figure: gradeDrawings4["congruent-angles#congruent-angles-with-algebra"],
-      title: t("Congruent angles with algebra", "用方程求全等的角"),
-      explanation: t(
-        "If $\\angle P \\cong \\angle Q$ with $m\\angle P = (3x + 12)^\\circ$ and $m\\angle Q = (5x - 20)^\\circ$, the measures are equal:\n\n$$3x + 12 = 5x - 20 \\;\\Rightarrow\\; 32 = 2x \\;\\Rightarrow\\; x = 16.$$\n\nEach angle measures $3 \\cdot 16 + 12 = 60^\\circ$. Substitute into both expressions to check.",
-        "若 $\\angle P \\cong \\angle Q$，$m\\angle P = (3x + 12)^\\circ$，$m\\angle Q = (5x - 20)^\\circ$，则两个度数相等：\n\n$$3x + 12 = 5x - 20 \\;\\Rightarrow\\; 32 = 2x \\;\\Rightarrow\\; x = 16.$$\n\n每个角都是 $3 \\cdot 16 + 12 = 60^\\circ$。把 $x$ 代入两个式子检验。",
-      ),
-      keyPrerequisites: ["equations-with-variables-on-both-sides"],
-      generate(rng) {
-        const x = rng.int(4, 18);
-        const v = rng.int(30, 140);
-        const e1 = expressionFor(rng, v, x);
-        const e2 = expressionFor(rng, v, x, [e1[0]]);
-        const askX = rng.bool();
-        const [p, q] = rng.pick([
-          ["P", "Q"],
-          ["A", "B"],
-          ["R", "S"],
-        ] as const);
-        const head = t(
-          `$${angleName(p)} \\cong ${angleName(q)}$, $${measure(p)} = ${angleTex(...e1)}$ and $${measure(q)} = ${angleTex(...e2)}$.`,
-          `$${angleName(p)} \\cong ${angleName(q)}$，$${measure(p)} = ${angleTex(...e1)}$，$${measure(q)} = ${angleTex(...e2)}$。`,
-        );
-        const solve = steps(...equalSteps(e1, e2));
-        return numberProblem({
-          prompt: askX
-            ? t(`${head.en} Find $x$.`, `${head["zh-CN"]}求 $x$。`)
-            : t(`${head.en} Find $${measure(p)}$.`, `${head["zh-CN"]}求 $${measure(p)}$。`),
-          answer: askX ? x : v,
-          ...(askX ? {} : { unit: "°" }),
-          wrong: askX ? equalWrong(e1, e2) : [x, 180 - v, 90 - v].filter((w) => w > 0),
-          solution: t(
-            `Congruent angles have equal measures:${solve}${askX ? "" : `So $${measure(p)} = ${subst(e1, x)} = ${degTex(v)}$.`}`,
-            `全等的角度数相等：${solve}${askX ? "" : `所以 $${measure(p)} = ${subst(e1, x)} = ${degTex(v)}$。`}`,
-          ),
-        });
-      },
-    },
+    "Open small scissors until the blades make $30^\\circ$, then open big garden shears to $30^\\circ$ too. The blades are different lengths, but the openings are the same, so the two angles are congruent.",
+    "把小剪刀张开到 $30^\\circ$，再把大园艺剪也张开到 $30^\\circ$。刀刃长短不同，但张开的大小一样，所以这两个角全等。",
+  ],
+  ["A protractor reads $30^\\circ$ on both, and $30 = 30$.", "用量角器量，两个都是 $30^\\circ$，$30 = 30$。"],
+  [
+    "recognize congruent angles by their measures, and set equal measures equal to solve for an unknown.",
+    "通过度数辨认全等的角，并利用度数相等求出未知数。",
   ],
 );
 
@@ -1232,203 +1569,421 @@ interface PairKind {
 const complementary: PairKind = { total: 90, word: t("complementary", "互余"), other: t("complement", "余角") };
 const supplementary: PairKind = { total: 180, word: t("supplementary", "互补"), other: t("supplement", "补角") };
 
+/** wholeName names the angle that a pair of complementary or supplementary angles makes up, in both languages. */
+const wholeName = (total: 90 | 180): Pair => (total === 90 ? ["right angle", "直角"] : ["straight angle", "平角"]);
+
 /** pairFigureProblem finds the unknown part of a right angle or a straight angle split by a ray. */
 function pairFigureProblem(rng: Rng, kind: PairKind): Problem {
   const total = kind.total;
+  const otherTotal = total === 90 ? 180 : 90;
   const a = total === 90 ? rng.int(12, 78) : rng.int(20, 160);
   const start = total === 90 ? rng.pick([0, 15, 30, 90, 180, 200]) : rng.pick([0, 5, 10, 350, 355]);
   const x = total - a;
   const firstKnown = rng.bool();
   const [first, labels]: [number, [string, string]] = firstKnown ? [a, [deg(a), "x°"]] : [x, ["x°", deg(a)]];
-  const given =
+  const [wholeEn, wholeZh] = wholeName(total);
+  return valued(
     total === 90
-      ? t(`$${angleName("ABC")}$ is a right angle. Find $x$.`, `$${angleName("ABC")}$ 是直角。求 $x$。`)
-      : t("Points $A$, $B$ and $C$ lie on a line. Find $x$.", "点 $A$、$B$、$C$ 在同一条直线上。求 $x$。");
-  return {
-    ...numberProblem({
-      prompt: given,
-      answer: x,
+      ? [`$${angleName("ABC")}$ is a right angle. Find $x$.`, `$${angleName("ABC")}$ 是直角。求 $x$。`]
+      : ["Points $A$, $B$ and $C$ lie on a line. Find $x$.", "点 $A$、$B$、$C$ 在同一条直线上。求 $x$。"],
+    x,
+    [
+      [
+        ["Write the sum", "写出和"],
+        [
+          `The two angles make up the ${wholeEn}, so they are ${kind.word.en} and add up to $${degTex(total)}$:`,
+          `两个角合起来是${wholeZh}，所以它们${kind.word["zh-CN"]}，和为 $${degTex(total)}$：`,
+        ],
+        [`x + ${a} = ${total}`],
+      ],
+      [["Subtract", "相减"], [`Take $${a}$ away from $${total}$:`, `用 $${total}$ 减去 $${a}$：`], [`x = ${total} - ${a} = ${x}`]],
+    ],
+    [`$${x} + ${a} = ${total}$, a whole ${wholeEn}.`, `$${x} + ${a} = ${total}$，正好是一个${wholeZh}。`],
+    [
+      [a, `That is the angle already marked. $x$ is the other part.`, `这是图中已经标出的角。$x$ 是另一部分。`],
+      ...(otherTotal - a > 0
+        ? [
+            [
+              otherTotal - a,
+              `That takes $${a}$ from $${otherTotal}$, but a ${wholeEn} is $${degTex(total)}$.`,
+              `这是用 $${otherTotal}$ 减去 $${a}$，但${wholeZh}是 $${degTex(total)}$。`,
+            ] as const,
+          ]
+        : []),
+      [total + a, `That adds the marked angle to $${total}$. Subtract it instead.`, `这是把已知角加到了 $${total}$ 上。应该相减。`],
+    ],
+    {
       form: "integer",
-      wrong: [a, (total === 90 ? 180 : 90) - a].filter((w) => w > 0),
-      solution: t(
-        `The two angles make up ${total === 90 ? "the right angle" : "the straight angle"}, so they are ${kind.word.en} and add up to $${degTex(total)}$:${steps(`x + ${a} = ${total}`, `x = ${total} - ${a} = ${x}`)}`,
-        `两个角合起来是${total === 90 ? "直角" : "平角"}，所以它们${kind.word["zh-CN"]}，和为 $${degTex(total)}$：${steps(`x + ${a} = ${total}`, `x = ${total} - ${a} = ${x}`)}`,
+      figure: fig(
+        splitAngle(start, total, first, labels),
+        `${total === 90 ? "A right angle ABC" : "A straight angle ABC"} split by ray BD into angles of ${firstKnown ? `${a}° and x°` : `x° and ${a}°`}.`,
+        `射线 BD 把${total === 90 ? "直角" : "平角"} ABC 分成 ${firstKnown ? `${a}° 和 x°` : `x° 和 ${a}°`} 两个角。`,
       ),
-    }),
-    figure: fig(
-      splitAngle(start, total, first, labels),
-      `${total === 90 ? "A right angle ABC" : "A straight angle ABC"} split by ray BD into angles of ${firstKnown ? `${a}° and x°` : `x° and ${a}°`}.`,
-      `射线 BD 把${total === 90 ? "直角" : "平角"} ABC 分成 ${firstKnown ? `${a}° 和 x°` : `x° 和 ${a}°`} 两个角。`,
-    ),
-  };
+    },
+  );
 }
 
 /** pairAlgebraProblem solves for x when two angles given as expressions are complementary or supplementary. */
 function pairAlgebraProblem(rng: Rng, kind: PairKind): Problem {
   const total = kind.total;
+  const otherTotal = total === 90 ? 180 : 90;
   const x = rng.int(3, 15);
   const p = total === 90 ? rng.int(20, 70) : rng.int(35, 145);
   const e1 = expressionFor(rng, p, x);
   const e2 = expressionFor(rng, total - p, x);
   const askX = rng.bool();
-  const head = t(
+  const head: Pair = [
     `$${angleName("P")}$ and $${angleName("Q")}$ are ${kind.word.en}, $${measure("P")} = ${angleTex(...e1)}$ and $${measure("Q")} = ${angleTex(...e2)}$.`,
     `$${angleName("P")}$ 与 $${angleName("Q")}$ ${kind.word["zh-CN"]}，$${measure("P")} = ${angleTex(...e1)}$，$${measure("Q")} = ${angleTex(...e2)}$。`,
+  ];
+  const lines = sumSteps([e1, e2], total).filter((line, i, all) => i === 0 || line !== all[i - 1]);
+  const [signSlip, totalSlip] = sumWrong([e1, e2], total, otherTotal);
+  const Kind = `${kind.word.en[0]!.toUpperCase()}${kind.word.en.slice(1)}`;
+  const add: Walk = [
+    ["Add the angles", "把两个角相加"],
+    [`${Kind} angles add up to $${degTex(total)}$:`, `${kind.word["zh-CN"]}的两个角之和为 $${degTex(total)}$：`],
+    lines.slice(0, 2),
+  ];
+  const solve: Walk = [
+    ["Solve for x", "解出 x"],
+    ["Undo the constant, then divide by the coefficient of $x$:", "先抵消常数，再除以 $x$ 的系数："],
+    lines.slice(2),
+  ];
+  const check: Pair = [
+    `$${measure("P")} = ${subst(e1, x)} = ${degTex(p)}$ and $${measure("Q")} = ${subst(e2, x)} = ${degTex(total - p)}$, and $${p} + ${total - p} = ${total}$.`,
+    `$${measure("P")} = ${subst(e1, x)} = ${degTex(p)}$，$${measure("Q")} = ${subst(e2, x)} = ${degTex(total - p)}$，$${p} + ${total - p} = ${total}$。`,
+  ];
+  if (askX)
+    return valued([`${head[0]} Find $x$.`, `${head[1]}求 $x$。`], x, [add, solve], check, [
+      [
+        signSlip as Q,
+        "That moves the constant with the wrong sign. Undo it by doing the opposite.",
+        "这是把常数移项时符号弄错了。移项要做相反的运算。",
+      ],
+      [
+        totalSlip as Q,
+        `That sets the sum to $${otherTotal}$, but ${kind.word.en} angles add up to $${total}$.`,
+        `这是令和等于 $${otherTotal}$，但${kind.word["zh-CN"]}的两个角之和是 $${total}$。`,
+      ],
+      [p, `That is $${measure("P")}$, not $x$.`, `这是 $${measure("P")}$，不是 $x$。`],
+    ]);
+  return valued(
+    [`${head[0]} Find $${measure("P")}$.`, `${head[1]}求 $${measure("P")}$。`],
+    p,
+    [
+      add,
+      solve,
+      [
+        ["Substitute", "代入"],
+        [`Put $x = ${x}$ into $${measure("P")}$:`, `把 $x = ${x}$ 代入 $${measure("P")}$：`],
+        [`${measure("P")} = ${subst(e1, x)} = ${degTex(p)}`],
+      ],
+    ],
+    check,
+    [
+      [x, `That is $x$, not the angle: put it into $${angleTex(...e1)}$.`, `这是 $x$ 的值，不是角的度数：要代入 $${angleTex(...e1)}$。`],
+      [total - p, `That is $${measure("Q")}$, the other angle.`, `这是另一个角 $${measure("Q")}$。`],
+      ...(otherTotal - p > 0
+        ? [
+            [
+              otherTotal - p,
+              `That uses $${otherTotal}$ as the total, but ${kind.word.en} angles add up to $${total}$.`,
+              `这是把和当成了 $${otherTotal}$，但${kind.word["zh-CN"]}的两个角之和是 $${total}$。`,
+            ] as const,
+          ]
+        : []),
+    ],
+    { unit: "°" },
   );
-  const solve = steps(...sumSteps([e1, e2], total));
-  return numberProblem({
-    prompt: askX
-      ? t(`${head.en} Find $x$.`, `${head["zh-CN"]}求 $x$。`)
-      : t(`${head.en} Find $${measure("P")}$.`, `${head["zh-CN"]}求 $${measure("P")}$。`),
-    answer: askX ? x : p,
-    ...(askX ? {} : { unit: "°" }),
-    wrong: askX ? sumWrong([e1, e2], total, total === 90 ? 180 : 90) : [x, total - p, (total === 90 ? 180 : 90) - p].filter((w) => w > 0),
-    solution: t(
-      `${kind.word.en[0]!.toUpperCase()}${kind.word.en.slice(1)} angles add up to $${degTex(total)}$:${solve}${askX ? "" : `So $${measure("P")} = ${subst(e1, x)} = ${degTex(p)}$.`}`,
-      `${kind.word["zh-CN"]}的两个角之和为 $${degTex(total)}$：${solve}${askX ? "" : `所以 $${measure("P")} = ${subst(e1, x)} = ${degTex(p)}$。`}`,
-    ),
-  });
 }
 
 /** pairWordProblem finds an angle described by its relation to its complement or supplement. */
 function pairWordProblem(rng: Rng, kind: PairKind): Problem {
   const total = kind.total;
+  const otherTotal = total === 90 ? 180 : 90;
+  const [oEn, oZh] = [kind.other.en, kind.other["zh-CN"]];
   if (rng.bool()) {
     const ks = total === 90 ? [2, 4, 5, 8, 9] : [2, 3, 4, 5, 8, 9, 11];
     const k = rng.pick(ks);
     const other = total / (k + 1);
     const angle = k * other;
-    return numberProblem({
-      prompt: t(
-        `An angle measures ${k} times its ${kind.other.en}. What is the measure of the angle?`,
-        `一个角是它的${kind.other["zh-CN"]}的 ${k} 倍。这个角是多少度？`,
-      ),
-      answer: angle,
-      form: "integer",
-      unit: "°",
-      wrong: [other, Math.round(total / k), ((total === 90 ? 180 : 90) * k) / (k + 1)].filter((w) => Number.isInteger(w)),
-      solution: t(
-        `Let the ${kind.other.en} be $x$; the angle is $${k}x$. Together they make $${degTex(total)}$:${steps(`x + ${k}x = ${total}`, `${k + 1}x = ${total}`, `x = ${other}`)}The angle is $${k} \\cdot ${other} = ${degTex(angle)}$. Check: $${angle} + ${other} = ${total}$.`,
-        `设${kind.other["zh-CN"]}为 $x$，则这个角是 $${k}x$。两者之和为 $${degTex(total)}$：${steps(`x + ${k}x = ${total}`, `${k + 1}x = ${total}`, `x = ${other}`)}这个角是 $${k} \\cdot ${other} = ${degTex(angle)}$。检验：$${angle} + ${other} = ${total}$。`,
-      ),
-    });
+    const slip = (otherTotal * k) / (k + 1);
+    return valued(
+      [`An angle measures ${k} times its ${oEn}. What is the measure of the angle?`, `一个角是它的${oZh}的 ${k} 倍。这个角是多少度？`],
+      angle,
+      [
+        [
+          ["Write the equation", "列方程"],
+          [
+            `Let the ${oEn} be $x$; the angle is $${k}x$, and together they make $${degTex(total)}$:`,
+            `设${oZh}为 $x$，这个角就是 $${k}x$，两者之和为 $${degTex(total)}$：`,
+          ],
+          [`x + ${k}x = ${total}`, `${k + 1}x = ${total}`],
+        ],
+        [
+          ["Solve", "求解"],
+          [`Divide by $${k + 1}$, then take $${k}$ times the ${oEn}:`, `除以 $${k + 1}$，再求${oZh}的 $${k}$ 倍：`],
+          [`x = ${other}`, `${k} \\cdot ${other} = ${degTex(angle)}`],
+        ],
+      ],
+      [
+        `$${angle} + ${other} = ${total}$, and $${angle} \\div ${other} = ${k}$.`,
+        `$${angle} + ${other} = ${total}$，并且 $${angle} \\div ${other} = ${k}$。`,
+      ],
+      [
+        [other, `That is the ${oEn}, $x$. The angle is $${k}$ times it.`, `这是${oZh} $x$。这个角是它的 $${k}$ 倍。`],
+        [
+          Math.round(total / k),
+          `That splits $${total}$ into $${k}$ parts, but the angle and its ${oEn} together make $${k + 1}$ equal parts.`,
+          `这是把 $${total}$ 分成了 $${k}$ 份，但这个角和它的${oZh}合起来是 $${k + 1}$ 份。`,
+        ],
+        ...(Number.isInteger(slip)
+          ? [
+              [
+                slip,
+                `That uses $${otherTotal}$ as the total, but the angles add up to $${total}$.`,
+                `这是把和当成了 $${otherTotal}$，但两个角之和是 $${total}$。`,
+              ] as const,
+            ]
+          : []),
+      ],
+      { form: "integer", unit: "°" },
+    );
   }
   const d = 2 * (total === 90 ? rng.int(4, 35) : rng.int(5, 70));
   const angle = (total + d) / 2;
   const other = angle - d;
   const more = rng.bool();
   const asked = more ? angle : other;
-  return numberProblem({
-    prompt: more
-      ? t(
-          `An angle measures $${degTex(d)}$ more than its ${kind.other.en}. What is the measure of the angle?`,
-          `一个角比它的${kind.other["zh-CN"]}大 $${degTex(d)}$。这个角是多少度？`,
-        )
-      : t(
-          `An angle measures $${degTex(d)}$ less than its ${kind.other.en}. What is the measure of the angle?`,
-          `一个角比它的${kind.other["zh-CN"]}小 $${degTex(d)}$。这个角是多少度？`,
-        ),
-    answer: asked,
-    form: "integer",
-    unit: "°",
-    wrong: [more ? other : angle, total - d, ((total === 90 ? 180 : 90) + (more ? d : -d)) / 2].filter((w) => Number.isInteger(w) && w > 0),
-    solution: more
-      ? t(
-          `Let the ${kind.other.en} be $x$; the angle is $x + ${d}$. Together they make $${degTex(total)}$:${steps(`x + (x + ${d}) = ${total}`, `2x = ${total - d}`, `x = ${other}`)}The angle is $${other} + ${d} = ${degTex(angle)}$.`,
-          `设${kind.other["zh-CN"]}为 $x$，则这个角是 $x + ${d}$。两者之和为 $${degTex(total)}$：${steps(`x + (x + ${d}) = ${total}`, `2x = ${total - d}`, `x = ${other}`)}这个角是 $${other} + ${d} = ${degTex(angle)}$。`,
-        )
-      : t(
-          `Let the ${kind.other.en} be $x$; the angle is $x - ${d}$. Together they make $${degTex(total)}$:${steps(`x + (x - ${d}) = ${total}`, `2x = ${total + d}`, `x = ${angle}`)}The angle is $${angle} - ${d} = ${degTex(other)}$.`,
-          `设${kind.other["zh-CN"]}为 $x$，则这个角是 $x - ${d}$。两者之和为 $${degTex(total)}$：${steps(`x + (x - ${d}) = ${total}`, `2x = ${total + d}`, `x = ${angle}`)}这个角是 $${angle} - ${d} = ${degTex(other)}$。`,
-        ),
-  });
+  const slip = (otherTotal + (more ? d : -d)) / 2;
+  return valued(
+    more
+      ? [
+          `An angle measures $${degTex(d)}$ more than its ${oEn}. What is the measure of the angle?`,
+          `一个角比它的${oZh}大 $${degTex(d)}$。这个角是多少度？`,
+        ]
+      : [
+          `An angle measures $${degTex(d)}$ less than its ${oEn}. What is the measure of the angle?`,
+          `一个角比它的${oZh}小 $${degTex(d)}$。这个角是多少度？`,
+        ],
+    asked,
+    more
+      ? [
+          [
+            ["Write the equation", "列方程"],
+            [
+              `Let the ${oEn} be $x$; the angle is $x + ${d}$, and together they make $${degTex(total)}$:`,
+              `设${oZh}为 $x$，这个角就是 $x + ${d}$，两者之和为 $${degTex(total)}$：`,
+            ],
+            [`x + (x + ${d}) = ${total}`, `2x = ${total - d}`],
+          ],
+          [
+            ["Solve", "求解"],
+            [`Halve, then add $${d}$ for the angle:`, `除以 $2$，再加上 $${d}$ 得到这个角：`],
+            [`x = ${other}`, `${other} + ${d} = ${degTex(angle)}`],
+          ],
+        ]
+      : [
+          [
+            ["Write the equation", "列方程"],
+            [
+              `Let the ${oEn} be $x$; the angle is $x - ${d}$, and together they make $${degTex(total)}$:`,
+              `设${oZh}为 $x$，这个角就是 $x - ${d}$，两者之和为 $${degTex(total)}$：`,
+            ],
+            [`x + (x - ${d}) = ${total}`, `2x = ${total + d}`],
+          ],
+          [
+            ["Solve", "求解"],
+            [`Halve, then take away $${d}$ for the angle:`, `除以 $2$，再减去 $${d}$ 得到这个角：`],
+            [`x = ${angle}`, `${angle} - ${d} = ${degTex(other)}`],
+          ],
+        ],
+    [
+      `$${angle} + ${other} = ${total}$, and $${angle} - ${other} = ${d}$.`,
+      `$${angle} + ${other} = ${total}$，并且 $${angle} - ${other} = ${d}$。`,
+    ],
+    [
+      [more ? other : angle, `That is the ${oEn}, not the angle.`, `这是${oZh}，不是这个角。`],
+      [
+        total - d,
+        `That takes $${d}$ from $${total}$ but does not split what is left between the two angles.`,
+        `这是用 $${total}$ 减去 $${d}$，但没有把剩下的分给两个角。`,
+      ],
+      ...(Number.isInteger(slip) && slip > 0
+        ? [
+            [
+              slip,
+              `That uses $${otherTotal}$ as the total, but the angles add up to $${total}$.`,
+              `这是把和当成了 $${otherTotal}$，但两个角之和是 $${total}$。`,
+            ] as const,
+          ]
+        : []),
+    ],
+    { form: "integer", unit: "°" },
+  );
 }
 
 /** complementaryAngles finds unknown angles that add up to 90°. */
-export const complementaryAngles = topic(
-  "complementary-angles",
-  t("Complementary Angles", "互余的角"),
-  t(
-    "Two angles are complementary when their measures add up to 90°. When a ray splits a right angle, the two parts are complementary; when their measures are expressions, add them and set the sum equal to 90.",
-    "两个角的度数之和为 90° 时，它们互余。一条射线把直角分成的两个角互余；两个角的度数用式子表示时，把它们相加，令和等于 90。",
+export const complementaryAngles = withIntro(
+  topic(
+    "complementary-angles",
+    t("Complementary Angles", "互余的角"),
+    t(
+      "Two angles are complementary when their measures add up to 90°. When a ray splits a right angle, the two parts are complementary; when their measures are expressions, add them and set the sum equal to 90.",
+      "两个角的度数之和为 90° 时，它们互余。一条射线把直角分成的两个角互余；两个角的度数用式子表示时，把它们相加，令和等于 90。",
+    ),
+    ["complementary-and-supplementary-angles", "two-step-equations"],
+    ["7.G.B.5"],
+    [
+      lesson(
+        "complements-in-a-figure",
+        ["Complements in a figure", "图中的余角"],
+        [
+          [
+            "A small square at a vertex marks a right angle. If a ray splits a right angle into a $35^\\circ$ angle and an angle $x^\\circ$, then $x + 35 = 90$, so $x = 55$.",
+            "顶点处的小正方形表示直角。若一条射线把直角分成 $35^\\circ$ 的角和 $x^\\circ$ 的角，则 $x + 35 = 90$，所以 $x = 55$。",
+          ],
+          ["Add the parts back: $55 + 35 = 90$, the whole right angle.", "把两部分加回去：$55 + 35 = 90$，正好是整个直角。"],
+          [
+            "A right angle is $90^\\circ$, not $180^\\circ$: subtract from $90$.",
+            "直角是 $90^\\circ$，不是 $180^\\circ$：要用 $90$ 去减。",
+          ],
+        ],
+        (rng) => pairFigureProblem(rng, complementary),
+        drawn(gradeDrawings3["complementary-angles#complements-in-a-figure"]),
+      ),
+      lesson(
+        "equations-for-complementary-angles",
+        ["Equations for complementary angles", "互余的角的方程"],
+        [
+          [
+            "Complementary angles add up to $90^\\circ$. When their measures are given as expressions, set the sum of the expressions equal to $90$, solve for the variable, and substitute it back to find each angle.\n\nIf $\\angle P$ and $\\angle Q$ are complementary with $m\\angle P = (2x + 10)^\\circ$ and $m\\angle Q = (3x + 5)^\\circ$, then\n\n$$(2x + 10) + (3x + 5) = 90 \\;\\Rightarrow\\; 5x + 15 = 90 \\;\\Rightarrow\\; x = 15,$$\n\nand $m\\angle P = 2 \\cdot 15 + 10 = 40^\\circ$.",
+            "互余的两个角之和是 $90^\\circ$。当角的度数用式子表示时，令两个式子之和等于 $90$，解出未知数，再代回去求出每个角。\n\n若 $\\angle P$ 与 $\\angle Q$ 互余，$m\\angle P = (2x + 10)^\\circ$，$m\\angle Q = (3x + 5)^\\circ$，则\n\n$$(2x + 10) + (3x + 5) = 90 \\;\\Rightarrow\\; 5x + 15 = 90 \\;\\Rightarrow\\; x = 15,$$\n\n$m\\angle P = 2 \\cdot 15 + 10 = 40^\\circ$。",
+          ],
+          [
+            "$m\\angle Q = 3 \\cdot 15 + 5 = 50^\\circ$, and $40 + 50 = 90$.",
+            "$m\\angle Q = 3 \\cdot 15 + 5 = 50^\\circ$，$40 + 50 = 90$。",
+          ],
+          [
+            "$x = 15$ is not an angle. When the question asks for $m\\angle P$, put $x$ into its expression.",
+            "$x = 15$ 不是角的度数。题目问 $m\\angle P$ 时，要把 $x$ 代入它的式子。",
+          ],
+        ],
+        (rng) => pairAlgebraProblem(rng, complementary),
+        drawn(gradeDrawings4["complementary-angles#equations-for-complementary-angles"]),
+      ),
+      lesson(
+        "an-angle-and-its-complement",
+        ["An angle and its complement", "一个角与它的余角"],
+        [
+          [
+            "Call the complement $x$ and write the angle in terms of $x$. If an angle is $4$ times its complement, then $x + 4x = 90$, so $x = 18$ and the angle is $72^\\circ$. If an angle is $20^\\circ$ more than its complement, then $x + (x + 20) = 90$, so $x = 35$ and the angle is $55^\\circ$.",
+            "设余角为 $x$，用 $x$ 表示这个角。若一个角是它的余角的 $4$ 倍，则 $x + 4x = 90$，$x = 18$，这个角是 $72^\\circ$。若一个角比它的余角大 $20^\\circ$，则 $x + (x + 20) = 90$，$x = 35$，这个角是 $55^\\circ$。",
+          ],
+          [
+            "$72 + 18 = 90$ and $72 = 4 \\cdot 18$; $55 + 35 = 90$ and $55 - 35 = 20$.",
+            "$72 + 18 = 90$，$72 = 4 \\cdot 18$；$55 + 35 = 90$，$55 - 35 = 20$。",
+          ],
+          [
+            "$x$ is the complement. The question asks for the angle, so finish with $4x$ or $x + 20$.",
+            "$x$ 是余角。题目问的是这个角，所以最后要算出 $4x$ 或 $x + 20$。",
+          ],
+        ],
+        (rng) => pairWordProblem(rng, complementary),
+        drawn(gradeDrawings4["complementary-angles#an-angle-and-its-complement"]),
+      ),
+    ],
   ),
-  ["complementary-and-supplementary-angles", "two-step-equations"],
-  ["7.G.B.5"],
   [
-    {
-      id: "complements-in-a-figure",
-      figure: gradeDrawings3["complementary-angles#complements-in-a-figure"],
-      title: t("Complements in a figure", "图中的余角"),
-      explanation: t(
-        "A small square at a vertex marks a right angle. If a ray splits a right angle into a $35^\\circ$ angle and an angle $x^\\circ$, then $x + 35 = 90$, so $x = 55$.",
-        "顶点处的小正方形表示直角。若一条射线把直角分成 $35^\\circ$ 的角和 $x^\\circ$ 的角，则 $x + 35 = 90$，所以 $x = 55$。",
-      ),
-      generate: (rng) => pairFigureProblem(rng, complementary),
-    },
-    {
-      id: "equations-for-complementary-angles",
-      figure: gradeDrawings4["complementary-angles#equations-for-complementary-angles"],
-      title: t("Equations for complementary angles", "互余的角的方程"),
-      explanation: t(
-        "Complementary angles add up to $90^\\circ$. When their measures are given as expressions, set the sum of the expressions equal to $90$, solve for the variable, and substitute it back to find each angle.\n\nIf $\\angle P$ and $\\angle Q$ are complementary with $m\\angle P = (2x + 10)^\\circ$ and $m\\angle Q = (3x + 5)^\\circ$, then\n\n$$(2x + 10) + (3x + 5) = 90 \\;\\Rightarrow\\; 5x + 15 = 90 \\;\\Rightarrow\\; x = 15,$$\n\nand $m\\angle P = 2 \\cdot 15 + 10 = 40^\\circ$.",
-        "互余的两个角之和是 $90^\\circ$。当角的度数用式子表示时，令两个式子之和等于 $90$，解出未知数，再代回去求出每个角。\n\n若 $\\angle P$ 与 $\\angle Q$ 互余，$m\\angle P = (2x + 10)^\\circ$，$m\\angle Q = (3x + 5)^\\circ$，则\n\n$$(2x + 10) + (3x + 5) = 90 \\;\\Rightarrow\\; 5x + 15 = 90 \\;\\Rightarrow\\; x = 15,$$\n\n$m\\angle P = 2 \\cdot 15 + 10 = 40^\\circ$。",
-      ),
-      generate: (rng) => pairAlgebraProblem(rng, complementary),
-    },
-    {
-      id: "an-angle-and-its-complement",
-      figure: gradeDrawings4["complementary-angles#an-angle-and-its-complement"],
-      title: t("An angle and its complement", "一个角与它的余角"),
-      explanation: t(
-        "Call the complement $x$ and write the angle in terms of $x$. If an angle is $4$ times its complement, then $x + 4x = 90$, so $x = 18$ and the angle is $72^\\circ$. If an angle is $20^\\circ$ more than its complement, then $x + (x + 20) = 90$, so $x = 35$ and the angle is $55^\\circ$.",
-        "设余角为 $x$，用 $x$ 表示这个角。若一个角是它的余角的 $4$ 倍，则 $x + 4x = 90$，$x = 18$，这个角是 $72^\\circ$。若一个角比它的余角大 $20^\\circ$，则 $x + (x + 20) = 90$，$x = 35$，这个角是 $55^\\circ$。",
-      ),
-      generate: (rng) => pairWordProblem(rng, complementary),
-    },
+    "The corner of a book is a right angle. A bookmark laid across the corner from its tip splits it into $30^\\circ$ and the rest, so the rest is $90 - 30 = 60^\\circ$.",
+    "书的一角是直角。一枚书签从角尖斜放，把这个角分成 $30^\\circ$ 和剩下的部分，剩下的是 $90 - 30 = 60^\\circ$。",
+  ],
+  ["The two parts fill the corner again: $30 + 60 = 90$.", "两部分合起来又是整个角：$30 + 60 = 90$。"],
+  [
+    "find angles that add up to $90^\\circ$, in a figure, with expressions, and from a description.",
+    "在图中、用式子、根据文字描述，求和为 $90^\\circ$ 的角。",
   ],
 );
 
 /** supplementaryAngles finds unknown angles that add up to 180°. */
-export const supplementaryAngles = topic(
-  "supplementary-angles",
-  t("Supplementary Angles", "互补的角"),
-  t(
-    "Two angles are supplementary when their measures add up to 180°. Angles that together form a straight line are supplementary; when their measures are expressions, add them and set the sum equal to 180.",
-    "两个角的度数之和为 180° 时，它们互补。合起来组成一条直线的两个角互补；两个角的度数用式子表示时，把它们相加，令和等于 180。",
+export const supplementaryAngles = withIntro(
+  topic(
+    "supplementary-angles",
+    t("Supplementary Angles", "互补的角"),
+    t(
+      "Two angles are supplementary when their measures add up to 180°. Angles that together form a straight line are supplementary; when their measures are expressions, add them and set the sum equal to 180.",
+      "两个角的度数之和为 180° 时，它们互补。合起来组成一条直线的两个角互补；两个角的度数用式子表示时，把它们相加，令和等于 180。",
+    ),
+    ["complementary-and-supplementary-angles", "two-step-equations"],
+    ["7.G.B.5"],
+    [
+      lesson(
+        "supplements-in-a-figure",
+        ["Supplements in a figure", "图中的补角"],
+        [
+          [
+            "A straight angle measures $180^\\circ$. If a ray from a point on a line splits the straight angle into a $112^\\circ$ angle and an angle $x^\\circ$, then $x + 112 = 180$, so $x = 68$.",
+            "平角是 $180^\\circ$。若从直线上一点引出的射线把平角分成 $112^\\circ$ 的角和 $x^\\circ$ 的角，则 $x + 112 = 180$，所以 $x = 68$。",
+          ],
+          ["Add the parts back: $68 + 112 = 180$, the whole straight angle.", "把两部分加回去：$68 + 112 = 180$，正好是整个平角。"],
+          [
+            "A straight angle is $180^\\circ$, not $90^\\circ$: subtract from $180$.",
+            "平角是 $180^\\circ$，不是 $90^\\circ$：要用 $180$ 去减。",
+          ],
+        ],
+        (rng) => pairFigureProblem(rng, supplementary),
+        drawn(gradeDrawings3["supplementary-angles#supplements-in-a-figure"]),
+      ),
+      lesson(
+        "equations-for-supplementary-angles",
+        ["Equations for supplementary angles", "互补的角的方程"],
+        [
+          [
+            "Supplementary angles add up to $180^\\circ$. When their measures are given as expressions, set the sum of the expressions equal to $180$, solve for the variable, and substitute it back to find each angle.\n\nIf $\\angle P$ and $\\angle Q$ are supplementary with $m\\angle P = (4x - 6)^\\circ$ and $m\\angle Q = (2x + 6)^\\circ$, then\n\n$$(4x - 6) + (2x + 6) = 180 \\;\\Rightarrow\\; 6x = 180 \\;\\Rightarrow\\; x = 30,$$\n\nand $m\\angle P = 4 \\cdot 30 - 6 = 114^\\circ$.",
+            "互补的两个角之和是 $180^\\circ$。当角的度数用式子表示时，令两个式子之和等于 $180$，解出未知数，再代回去求出每个角。\n\n若 $\\angle P$ 与 $\\angle Q$ 互补，$m\\angle P = (4x - 6)^\\circ$，$m\\angle Q = (2x + 6)^\\circ$，则\n\n$$(4x - 6) + (2x + 6) = 180 \\;\\Rightarrow\\; 6x = 180 \\;\\Rightarrow\\; x = 30,$$\n\n$m\\angle P = 4 \\cdot 30 - 6 = 114^\\circ$。",
+          ],
+          [
+            "$m\\angle Q = 2 \\cdot 30 + 6 = 66^\\circ$, and $114 + 66 = 180$.",
+            "$m\\angle Q = 2 \\cdot 30 + 6 = 66^\\circ$，$114 + 66 = 180$。",
+          ],
+          [
+            "$x = 30$ is not an angle. When the question asks for $m\\angle P$, put $x$ into its expression.",
+            "$x = 30$ 不是角的度数。题目问 $m\\angle P$ 时，要把 $x$ 代入它的式子。",
+          ],
+        ],
+        (rng) => pairAlgebraProblem(rng, supplementary),
+        drawn(gradeDrawings4["supplementary-angles#equations-for-supplementary-angles"]),
+      ),
+      lesson(
+        "an-angle-and-its-supplement",
+        ["An angle and its supplement", "一个角与它的补角"],
+        [
+          [
+            "Call the supplement $x$ and write the angle in terms of $x$. If an angle is $3$ times its supplement, then $x + 3x = 180$, so $x = 45$ and the angle is $135^\\circ$. If an angle is $40^\\circ$ less than its supplement, then $x + (x - 40) = 180$, so $x = 110$ and the angle is $70^\\circ$.",
+            "设补角为 $x$，用 $x$ 表示这个角。若一个角是它的补角的 $3$ 倍，则 $x + 3x = 180$，$x = 45$，这个角是 $135^\\circ$。若一个角比它的补角小 $40^\\circ$，则 $x + (x - 40) = 180$，$x = 110$，这个角是 $70^\\circ$。",
+          ],
+          [
+            "$135 + 45 = 180$ and $135 = 3 \\cdot 45$; $70 + 110 = 180$ and $110 - 70 = 40$.",
+            "$135 + 45 = 180$，$135 = 3 \\cdot 45$；$70 + 110 = 180$，$110 - 70 = 40$。",
+          ],
+          [
+            "$x$ is the supplement. The question asks for the angle, so finish with $3x$ or $x - 40$.",
+            "$x$ 是补角。题目问的是这个角，所以最后要算出 $3x$ 或 $x - 40$。",
+          ],
+        ],
+        (rng) => pairWordProblem(rng, supplementary),
+        drawn(gradeDrawings4["supplementary-angles#an-angle-and-its-supplement"]),
+      ),
+    ],
   ),
-  ["complementary-and-supplementary-angles", "two-step-equations"],
-  ["7.G.B.5"],
   [
-    {
-      id: "supplements-in-a-figure",
-      figure: gradeDrawings3["supplementary-angles#supplements-in-a-figure"],
-      title: t("Supplements in a figure", "图中的补角"),
-      explanation: t(
-        "A straight angle measures $180^\\circ$. If a ray from a point on a line splits the straight angle into a $112^\\circ$ angle and an angle $x^\\circ$, then $x + 112 = 180$, so $x = 68$.",
-        "平角是 $180^\\circ$。若从直线上一点引出的射线把平角分成 $112^\\circ$ 的角和 $x^\\circ$ 的角，则 $x + 112 = 180$，所以 $x = 68$。",
-      ),
-      generate: (rng) => pairFigureProblem(rng, supplementary),
-    },
-    {
-      id: "equations-for-supplementary-angles",
-      figure: gradeDrawings4["supplementary-angles#equations-for-supplementary-angles"],
-      title: t("Equations for supplementary angles", "互补的角的方程"),
-      explanation: t(
-        "Supplementary angles add up to $180^\\circ$. When their measures are given as expressions, set the sum of the expressions equal to $180$, solve for the variable, and substitute it back to find each angle.\n\nIf $\\angle P$ and $\\angle Q$ are supplementary with $m\\angle P = (4x - 6)^\\circ$ and $m\\angle Q = (2x + 6)^\\circ$, then\n\n$$(4x - 6) + (2x + 6) = 180 \\;\\Rightarrow\\; 6x = 180 \\;\\Rightarrow\\; x = 30,$$\n\nand $m\\angle P = 4 \\cdot 30 - 6 = 114^\\circ$.",
-        "互补的两个角之和是 $180^\\circ$。当角的度数用式子表示时，令两个式子之和等于 $180$，解出未知数，再代回去求出每个角。\n\n若 $\\angle P$ 与 $\\angle Q$ 互补，$m\\angle P = (4x - 6)^\\circ$，$m\\angle Q = (2x + 6)^\\circ$，则\n\n$$(4x - 6) + (2x + 6) = 180 \\;\\Rightarrow\\; 6x = 180 \\;\\Rightarrow\\; x = 30,$$\n\n$m\\angle P = 4 \\cdot 30 - 6 = 114^\\circ$。",
-      ),
-      generate: (rng) => pairAlgebraProblem(rng, supplementary),
-    },
-    {
-      id: "an-angle-and-its-supplement",
-      figure: gradeDrawings4["supplementary-angles#an-angle-and-its-supplement"],
-      title: t("An angle and its supplement", "一个角与它的补角"),
-      explanation: t(
-        "Call the supplement $x$ and write the angle in terms of $x$. If an angle is $3$ times its supplement, then $x + 3x = 180$, so $x = 45$ and the angle is $135^\\circ$. If an angle is $40^\\circ$ less than its supplement, then $x + (x - 40) = 180$, so $x = 110$ and the angle is $70^\\circ$.",
-        "设补角为 $x$，用 $x$ 表示这个角。若一个角是它的补角的 $3$ 倍，则 $x + 3x = 180$，$x = 45$，这个角是 $135^\\circ$。若一个角比它的补角小 $40^\\circ$，则 $x + (x - 40) = 180$，$x = 110$，这个角是 $70^\\circ$。",
-      ),
-      generate: (rng) => pairWordProblem(rng, supplementary),
-    },
+    "A ladder leans on a wall and makes a $70^\\circ$ angle with the flat ground on one side. The ground is a straight line, so the angle on the other side of the ladder is $180 - 70 = 110^\\circ$.",
+    "一架梯子靠在墙上，与一侧平地成 $70^\\circ$ 角。地面是一条直线，所以梯子另一侧的角是 $180 - 70 = 110^\\circ$。",
+  ],
+  ["The two angles fill the straight line: $70 + 110 = 180$.", "两个角合起来正好是一条直线：$70 + 110 = 180$。"],
+  [
+    "find angles that add up to $180^\\circ$, in a figure, with expressions, and from a description.",
+    "在图中、用式子、根据文字描述，求和为 $180^\\circ$ 的角。",
   ],
 );
 

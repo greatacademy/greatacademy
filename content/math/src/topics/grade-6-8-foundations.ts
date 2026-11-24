@@ -4,7 +4,7 @@ import { t } from "@ga/content";
 import { choiceProblem, numberProblem } from "../problems.ts";
 import { lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { histogramSvg } from "./grade-7-statistics.ts";
-import { equalTape } from "./upper-grades-kit.ts";
+import { equalTape, tapeFigure } from "./upper-grades-kit.ts";
 
 /** unitPricesAndSpeed computes unit rates, prices per unit, and constant speed. */
 export const unitPricesAndSpeed: TopicDef = withIntro(
@@ -112,84 +112,162 @@ export const unitPricesAndSpeed: TopicDef = withIntro(
   ["find the price of one item and the speed in one hour by dividing.", "用除法求一件物品的价钱和一小时走的路程。"],
 );
 /** percentApplicationsInterestAndDiscounts computes simple interest, taxes, and discounts. */
-export const percentApplicationsInterestAndDiscounts: TopicDef = {
-  id: "percent-applications-interest-and-discounts",
-  title: t("Percent Applications: Interest and Discounts", "百分数应用：利息与折扣"),
-  summary: t(
-    "Solve real-world problems involving simple interest, sales tax, markups, and discounts.",
-    "求解涉及单利、销售税、加价与折扣的实际问题。",
-  ),
-  prerequisites: ["percent-of-a-number"],
-  encompasses: [],
-  xp: 8,
-  standards: ["CCSS.7.RP.A.3"],
-  knowledgePoints: [
-    {
-      id: "simple-interest",
-      title: t("Simple Interest Formula", "单利计算公式"),
-      explanation: t(
-        "**Simple interest** is calculated using the formula $I = P \\cdot r \\cdot t$, where $P$ is the principal, $r$ is the annual interest rate (as a decimal), and $t$ is the time in years.",
-        "**单利**使用公式 $I = P \\cdot r \\cdot t$ 计算，其中 $P$ 是本金，$r$ 是年利率（化为小数），$t$ 是以年为单位的时间。",
+export const percentApplicationsInterestAndDiscounts: TopicDef = withIntro(
+  {
+    id: "percent-applications-interest-and-discounts",
+    title: t("Percent Applications: Interest and Discounts", "百分数应用：利息与折扣"),
+    summary: t(
+      "Solve real-world problems involving simple interest, sales tax, markups, and discounts.",
+      "求解涉及单利、销售税、加价与折扣的实际问题。",
+    ),
+    prerequisites: ["percent-of-a-number"],
+    encompasses: [],
+    xp: 8,
+    standards: ["CCSS.7.RP.A.3"],
+    knowledgePoints: [
+      lesson(
+        "simple-interest",
+        ["Simple Interest Formula", "单利计算公式"],
+        [
+          [
+            "Simple interest is found with $I = P \\times r \\times t$: $P$ is the principal, the money put in; $r$ is the yearly rate as a decimal; $t$ is the time in years. $\\$300$ at $5\\%$ for $2$ years earns $I = 300 \\times 0.05 \\times 2 = \\$30$.",
+            "单利用 $I = P \\times r \\times t$ 计算：$P$ 是本金，也就是存入的钱；$r$ 是写成小数的年利率；$t$ 是年数。$\\$300$ 按 $5\\%$ 存 $2$ 年，利息 $I = 300 \\times 0.05 \\times 2 = \\$30$。",
+          ],
+          ["Each year earns $0.05 \\times 300 = 15$, and $2 \\times 15 = 30$.", "每年得 $0.05 \\times 300 = 15$，$2 \\times 15 = 30$。"],
+          [
+            "Do not forget the time: $300 \\times 0.05 = 15$ is only one year of interest.",
+            "别忘了乘年数：$300 \\times 0.05 = 15$ 只是一年的利息。",
+          ],
+        ],
+        (rng) => {
+          const principal = rng.int(2, 20) * 100;
+          const ratePercent = rng.int(2, 8);
+          const years = rng.int(2, 5);
+          const year = (principal * ratePercent) / 100;
+          const interest = year * years;
+          const r = (ratePercent / 100).toFixed(2);
+          return valued(
+            [
+              `Elena deposits $\\$${principal}$ into a savings account that earns $${ratePercent}\\%$ simple annual interest. How much interest in dollars will she earn after $${years}$ years?`,
+              `埃琳娜将 $\\$${principal}$ 存入一个年单利率为 $${ratePercent}\\%$ 的储蓄账户。$${years}$ 年后她将获得多少美元利息？`,
+            ],
+            interest,
+            [
+              [["The rate", "利率"], ["Write the rate as a decimal:", "把利率写成小数："], [`${ratePercent}\\% = ${r}`]],
+              [
+                ["Multiply", "相乘"],
+                ["Use $I = P \\times r \\times t$:", "用 $I = P \\times r \\times t$："],
+                [`I = ${principal} \\times ${r} \\times ${years} = ${interest}`],
+              ],
+            ],
+            [
+              `One year earns $${r} \\times ${principal} = ${year}$, and $${years} \\times ${year} = ${interest}$.`,
+              `一年得 $${r} \\times ${principal} = ${year}$，$${years} \\times ${year} = ${interest}$。`,
+            ],
+            [
+              [year, "That is the interest for one year only; multiply by the years too.", "这只是一年的利息；还要乘年数。"],
+              [principal + interest, "That is the balance; the question asks for the interest alone.", "这是本息和；问题只问利息。"],
+              [
+                principal * ratePercent * years,
+                `That uses $${ratePercent}$ instead of $${r}$ for the rate.`,
+                `这是把利率当成 $${ratePercent}$，而不是 $${r}$。`,
+              ],
+            ],
+            { form: "integer", unit: "$" },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "30",
+              pieces: [
+                { size: 15, text: "15", lit: true },
+                { size: 15, text: "15", lit: true },
+              ],
+            },
+          ],
+          ["Two equal pieces of 15, one each year, making 30 of interest.", "两段相等的 15，每年一段，利息共 30。"],
+        ),
       ),
-      generate(rng) {
-        const principal = rng.int(2, 20) * 100;
-        const ratePercent = rng.int(2, 8);
-        const years = rng.int(1, 5);
-        const interest = Math.round((principal * ratePercent * years) / 100);
-
-        const prompt = t(
-          `Elena deposits $\\$${principal}$ into a savings account that earns $${ratePercent}\\%$ simple annual interest. How much interest in dollars will she earn after $${years}$ ${years === 1 ? "year" : "years"}?`,
-          `埃琳娜将 $\\$${principal}$ 存入一个年单利率为 $${ratePercent}\\%$ 的储蓄账户。$${years}$ 年后她将获得多少美元利息？`,
-        );
-        const solution = t(
-          `Use the simple interest formula $I = P \\cdot r \\cdot t$:\n$$I = ${principal} \\times \\frac{${ratePercent}}{100} \\times ${years} = ${principal} \\times ${(ratePercent / 100).toFixed(2)} \\times ${years} = \\$${interest}$$`,
-          `利用单利公式 $I = P \\cdot r \\cdot t$：\n$$I = ${principal} \\times \\frac{${ratePercent}}{100} \\times ${years} = ${principal} \\times ${(ratePercent / 100).toFixed(2)} \\times ${years} = \\$${interest}$$`,
-        );
-
-        return numberProblem({
-          prompt,
-          answer: interest,
-          form: "integer",
-          unit: "$",
-          wrong: [interest + 20, interest - 10, Math.round(principal * (ratePercent / 100))],
-          solution,
-        });
-      },
-    },
-    {
-      id: "discounts-and-sales",
-      title: t("Discounts and Sale Prices", "折扣与折后售价"),
-      explanation: t(
-        "A **discount** is an amount deducted from the regular price. If the regular price is $P$ and the discount is $d\\%$, the discount amount is $P \\times \\frac{d}{100}$ and the sale price is $P - \\text{discount}$.",
-        "**折扣**是从原价中扣除的金额。如果原价为 $P$，折扣率为 $d\\%$，则折扣金额为 $P \\times \\frac{d}{100}$，折后售价为 $P - \\text{折扣金额}$。",
+      lesson(
+        "discounts-and-sales",
+        ["Discounts and Sale Prices", "折扣与折后售价"],
+        [
+          [
+            "A discount is an amount taken off the regular price. For a price $P$ and a discount of $d\\%$, the discount is $P \\times \\frac{d}{100}$, and the sale price is the price minus the discount. A $\\$80$ jacket at $25\\%$ off: the discount is $80 \\times 0.25 = \\$20$, so it sells for $80 - 20 = \\$60$.",
+            "折扣是从原价中减去的金额。原价为 $P$、折扣率为 $d\\%$ 时，折扣金额是 $P \\times \\frac{d}{100}$，折后售价等于原价减去折扣金额。$\\$80$ 的夹克优惠 $25\\%$：折扣金额 $80 \\times 0.25 = \\$20$，所以售价 $80 - 20 = \\$60$。",
+          ],
+          ["You pay $75\\%$ of the price: $80 \\times 0.75 = 60$.", "要付原价的 $75\\%$：$80 \\times 0.75 = 60$。"],
+          ["The $\\$20$ is the money saved; the sale price is what is left.", "$\\$20$ 是省下的钱；售价是剩下的部分。"],
+        ],
+        (rng) => {
+          const originalPrice = rng.int(4, 25) * 20;
+          const discountPct = rng.pick([10, 20, 30, 40, 50]);
+          const discountAmount = (originalPrice * discountPct) / 100;
+          const salePrice = originalPrice - discountAmount;
+          const r = (discountPct / 100).toFixed(1);
+          return valued(
+            [
+              `A jacket has an original price of $\\$${originalPrice}$. During a holiday sale, it is discounted by $${discountPct}\\%$. What is the sale price of the jacket in dollars?`,
+              `一件夹克原价为 $\\$${originalPrice}$。在节日促销期间，它优惠 $${discountPct}\\%$ 出售。这件夹克的折后售价是多少美元？`,
+            ],
+            salePrice,
+            [
+              [
+                ["Find the discount", "求折扣金额"],
+                ["Multiply the price by the rate:", "用原价乘折扣率："],
+                [`${originalPrice} \\times ${r} = ${discountAmount}`],
+              ],
+              [
+                ["Subtract", "相减"],
+                ["Take the discount off the price:", "从原价中减去折扣金额："],
+                [`${originalPrice} - ${discountAmount} = ${salePrice}`],
+              ],
+            ],
+            [
+              `You pay $${100 - discountPct}\\%$ of the price: $${originalPrice} \\times ${((100 - discountPct) / 100).toFixed(1)} = ${salePrice}$.`,
+              `要付原价的 $${100 - discountPct}\\%$：$${originalPrice} \\times ${((100 - discountPct) / 100).toFixed(1)} = ${salePrice}$。`,
+            ],
+            [
+              [discountAmount, "That is the discount, the money saved, not the sale price.", "这是折扣金额，也就是省下的钱，不是售价。"],
+              [originalPrice + discountAmount, "That adds the discount instead of taking it off.", "这是把折扣金额加上了，应该减去。"],
+              [
+                originalPrice - discountPct,
+                `That takes off $${discountPct}$ dollars, not $${discountPct}\\%$ of the price.`,
+                `这是减去 $${discountPct}$ 美元，而不是原价的 $${discountPct}\\%$。`,
+              ],
+            ],
+            { form: "integer", unit: "$" },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "80",
+              pieces: [
+                { size: 60, text: "60", lit: true },
+                { size: 20, text: "20", dashed: true },
+              ],
+            },
+          ],
+          ["A bar of 80 with the discount 20 taken off, leaving the sale price 60.", "长条 80 减去折扣 20，剩下售价 60。"],
+        ),
       ),
-      generate(rng) {
-        const originalPrice = rng.int(4, 25) * 20;
-        const discountPct = rng.pick([10, 20, 30, 40, 50]);
-        const discountAmount = Math.round((originalPrice * discountPct) / 100);
-        const salePrice = originalPrice - discountAmount;
-
-        const prompt = t(
-          `A jacket has an original price of $\\$${originalPrice}$. During a holiday sale, it is discounted by $${discountPct}\\%$. What is the sale price of the jacket in dollars?`,
-          `一件夹克原价为 $\\$${originalPrice}$。在节日促销期间，它按 $${discountPct}\\%$ 折扣出售。这件夹克的折后售价是多少美元？`,
-        );
-        const solution = t(
-          `The discount amount is $${originalPrice} \\times \\frac{${discountPct}}{100} = \\$${discountAmount}$. Subtract the discount from the original price: $\\$${originalPrice} - \\$${discountAmount} = \\$${salePrice}$.`,
-          `折扣金额为 $${originalPrice} \\times \\frac{${discountPct}}{100} = \\$${discountAmount}$。从原价中减去折扣金额：$\\$${originalPrice} - \\$${discountAmount} = \\$${salePrice}$。`,
-        );
-
-        return numberProblem({
-          prompt,
-          answer: salePrice,
-          form: "integer",
-          unit: "$",
-          wrong: [discountAmount, originalPrice + discountAmount, salePrice + 10],
-          solution,
-        });
-      },
-    },
+    ],
+  },
+  [
+    "Elena puts $\\$300$ in a savings account at $5\\%$ simple interest. How much interest does she earn in $2$ years?",
+    "埃琳娜把 $\\$300$ 存进单利年利率 $5\\%$ 的储蓄账户。$2$ 年能得多少利息？",
   ],
-};
+  [
+    "$I = 300 \\times 0.05 \\times 2 = \\$30$; each year earns $\\$15$, and $2 \\times 15 = 30$.",
+    "$I = 300 \\times 0.05 \\times 2 = \\$30$；每年得 $\\$15$，$2 \\times 15 = 30$。",
+  ],
+  [
+    "find simple interest with $I = P \\times r \\times t$ and find sale prices after a discount.",
+    "用 $I = P \\times r \\times t$ 求单利，并求打折后的售价。",
+  ],
+);
 
 /** scaleDrawingsAndScaleFactor computes actual lengths and dimensions using scale factors. */
 export const scaleDrawingsAndScaleFactor: TopicDef = {

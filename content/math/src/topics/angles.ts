@@ -5,8 +5,10 @@ import { gradeDrawings } from "../explanation-drawings-grades.ts";
 import { gradeDrawings2 } from "../explanation-drawings-grades-2.ts";
 import { gradeDrawings3 } from "../explanation-drawings-grades-3.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
-import { article, choiceProblem, numberProblem, steps, why } from "../problems.ts";
-import { type Pair, picked } from "./early-grades-more-kit.ts";
+import { remainingDrawings10 } from "../explanation-drawings-remaining-10.ts";
+import { article, choiceProblem, numberProblem, steps } from "../problems.ts";
+import { type Pair, picked, type Walk } from "./early-grades-more-kit.ts";
+import { chosen, drawn, lesson, valued, withIntro } from "./grade-6-kit.ts";
 import { answered, point } from "./upper-grades-kit.ts";
 
 const rad = (d: number) => (d * Math.PI) / 180;
@@ -642,148 +644,323 @@ function pairRule(pair: AnglePair): Text {
 /** pickTheta picks the transversal's angle with the lines, at least 15° from a right angle. */
 const pickTheta = (rng: Rng) => rng.pick([rng.int(50, 75), rng.int(105, 130)]);
 
-export const parallelLinesAndTransversals: TopicDef = {
-  id: "parallel-lines-and-transversals",
-  title: t("Parallel Lines and Transversals", "平行线与截线"),
-  summary: t(
-    "Name the angle pairs a transversal forms with two parallel lines, and use them to find angles.",
-    "认识截线与两条平行线形成的角对，并用它们求角。",
-  ),
-  prerequisites: ["vertical-angles"],
-  encompasses: [],
-  xp: 12,
-  standards: ["CCSS.8.G.A.5"],
-  knowledgePoints: [
-    {
-      id: "naming-angle-pairs",
-      title: t("Angle pairs", "角对的名称"),
-      explanation: t(
-        "A **transversal** is a line that crosses two other lines, forming eight angles. The angles between the two lines are **interior**; the others are **exterior**. Pairs of angles at the two crossings have names:\n\n- **Corresponding angles** are in the same position at each crossing.\n- **Alternate interior angles** are between the lines, on opposite sides of the transversal.\n- **Alternate exterior angles** are outside the lines, on opposite sides of the transversal.\n- **Consecutive interior angles** are between the lines, on the same side of the transversal.",
-        "**截线**是与另外两条直线都相交的直线，共形成八个角。两条直线之间的角是**内角**，其余的是**外角**。两个交点处的角组成的角对各有名称：\n\n- **同位角**：在两个交点处位置相同。\n- **内错角**：在两条直线之间，分别在截线两侧。\n- **外错角**：在两条直线之外，分别在截线两侧。\n- **同旁内角**：在两条直线之间，在截线同一侧。",
-      ),
-      generate(rng) {
-        const pair = rng.pick(anglePairs);
-        const correct = anglePairNames.indexOf(pair.name);
-        const [first, second] = rng.bool() ? (["P", "Q"] as const) : (["Q", "P"] as const);
-        const index = { P: pair.p, Q: pair.q };
-        return {
-          ...choiceProblem({
-            prompt: t(
+/** pairTests are, for each kind of angle pair, what both angles must be, in both languages. */
+const pairTests: readonly Pair[] = [
+  ["Corresponding angles sit in the same position at each crossing", "同位角在两个交点处的位置相同"],
+  ["Alternate interior angles are both between the lines, on opposite sides of the transversal", "内错角都在两条直线之间，分别在截线两侧"],
+  ["Alternate exterior angles are both outside the lines, on opposite sides of the transversal", "外错角都在两条直线之外，分别在截线两侧"],
+  ["Consecutive interior angles are both between the lines, on the same side of the transversal", "同旁内角都在两条直线之间，在截线同一侧"],
+];
+
+/** pairChecks confirm a kind of angle pair another way: by a slide, a half turn or a straight line. */
+const pairChecks: readonly Pair[] = [
+  [
+    "Slide one crossing along the transversal onto the other: the two angles land on each other.",
+    "把一个交点沿截线平移到另一个交点上：两个角正好重合。",
+  ],
+  [
+    "Give the figure a half turn about the middle of the transversal between the lines: angle $1$ lands on angle $2$.",
+    "把图形绕截线在两线之间部分的中点旋转半周：角 $1$ 正好落到角 $2$ 上。",
+  ],
+  [
+    "Give the figure a half turn about the middle of the transversal between the lines: angle $1$ lands on angle $2$.",
+    "把图形绕截线在两线之间部分的中点旋转半周：角 $1$ 正好落到角 $2$ 上。",
+  ],
+  [
+    "Slide one crossing along the transversal onto the other: the two angles land side by side and make a straight line.",
+    "把一个交点沿截线平移到另一个交点上：两个角并排拼成一条直线。",
+  ],
+];
+
+/** interior tells whether the angle with index i at a crossing lies between the two lines: above m at P, below ℓ at Q. */
+const interior = (v: "P" | "Q", i: number) => (v === "P" ? i < 2 : i >= 2);
+
+/** rightSide tells whether the angle with index i lies to the right of the transversal. */
+const rightSide = (i: number) => i === 0 || i === 3;
+
+/** pairOf names a kind of angle pair as an answer option. */
+const pairOf = (i: number): Pair => [anglePairNames[i]!.en, anglePairNames[i]!["zh-CN"]];
+
+/** worked writes c·x + d with x put in, worked out: "3 \cdot 20 + 15 = 75". */
+const worked = (c: number, d: number, x: number) =>
+  `${c === 1 ? "" : `${c} \\cdot `}${x}${d === 0 ? "" : d > 0 ? ` + ${d}` : ` - ${-d}`} = ${c * x + d}`;
+
+export const parallelLinesAndTransversals: TopicDef = withIntro(
+  {
+    id: "parallel-lines-and-transversals",
+    title: t("Parallel Lines and Transversals", "平行线与截线"),
+    summary: t(
+      "Name the angle pairs a transversal forms with two parallel lines, and use them to find angles.",
+      "认识截线与两条平行线形成的角对，并用它们求角。",
+    ),
+    prerequisites: ["vertical-angles"],
+    encompasses: [],
+    xp: 12,
+    standards: ["CCSS.8.G.A.5"],
+    knowledgePoints: [
+      lesson(
+        "naming-angle-pairs",
+        ["Angle pairs", "角对的名称"],
+        [
+          [
+            "A **transversal** is a line that crosses two other lines, forming eight angles. The angles between the two lines are **interior**; the others are **exterior**. Pairs of angles at the two crossings have names:\n\n- **Corresponding angles** are in the same position at each crossing.\n- **Alternate interior angles** are between the lines, on opposite sides of the transversal.\n- **Alternate exterior angles** are outside the lines, on opposite sides of the transversal.\n- **Consecutive interior angles** are between the lines, on the same side of the transversal.",
+            "**截线**是与另外两条直线都相交的直线，共形成八个角。两条直线之间的角是**内角**，其余的是**外角**。两个交点处的角组成的角对各有名称：\n\n- **同位角**：在两个交点处位置相同。\n- **内错角**：在两条直线之间，分别在截线两侧。\n- **外错角**：在两条直线之外，分别在截线两侧。\n- **同旁内角**：在两条直线之间，在截线同一侧。",
+          ],
+          [
+            "Slide one crossing along the transversal onto the other: corresponding angles land on each other, while a half turn swaps alternate angles.",
+            "把一个交点沿截线平移到另一个交点上，同位角会重合；而旋转半周会让内错角或外错角互换位置。",
+          ],
+          [
+            "Interior means between the two lines, not inside a shape. Decide that first, then look at the sides of the transversal.",
+            "内角指在两条直线之间，不是在某个图形里面。先判断这一点，再看在截线的哪一侧。",
+          ],
+        ],
+        (rng) => {
+          const pair = rng.pick(anglePairs);
+          const correct = anglePairNames.indexOf(pair.name);
+          const [first, second] = rng.bool() ? (["P", "Q"] as const) : (["Q", "P"] as const);
+          const index = { P: pair.p, Q: pair.q };
+          const [i1, i2] = [index[first], index[second]];
+          const place = (v: "P" | "Q", i: number): Pair =>
+            interior(v, i) ? ["between the lines", "在两条直线之间"] : ["outside the lines", "在两条直线之外"];
+          const side = (i: number): Pair => (rightSide(i) ? ["right", "右"] : ["left", "左"]);
+          const [p1, p2, s1, s2] = [place(first, i1), place(second, i2), side(i1), side(i2)];
+          return chosen(
+            rng,
+            [
               "A transversal crosses two lines. What kind of pair are angles $1$ and $2$?",
               "一条截线与两条直线相交。角 $1$ 与角 $2$ 是什么角对？",
-            ),
-            options: anglePairNames,
-            correct,
-            solution: t(
-              `${[
-                "The two angles are in the same position at their crossings",
-                "Both angles are between the lines, on opposite sides of the transversal",
-                "Both angles are outside the lines, on opposite sides of the transversal",
-                "Both angles are between the lines, on the same side of the transversal",
-              ][correct]!}: they are ${pair.name.en.toLowerCase()}.`,
-              `${["两个角在各自交点处的位置相同", "两个角都在两条直线之间，分别在截线两侧", "两个角都在两条直线之外，分别在截线两侧", "两个角都在两条直线之间，在截线同一侧"][correct]!}：它们是${pair.name["zh-CN"]}。`,
-            ),
-          }),
-          figure: transversal(
-            pickTheta(rng),
-            [
-              [first, index[first], "1"],
-              [second, index[second], "2"],
             ],
-            "Two lines cut by a transversal, with angle 1 at one crossing and angle 2 at the other.",
-            "两条直线被一条截线所截，角 1 在一个交点处，角 2 在另一个交点处。",
-          ),
-        };
-      },
-    },
-    {
-      id: "angles-from-parallel-lines",
-      title: t("Finding angles with parallel lines", "利用平行线求角"),
-      explanation: t(
-        "When the two lines are **parallel** (marked with matching arrows), the angle pairs are related:\n\n- corresponding, alternate interior and alternate exterior angles are **equal**;\n- consecutive interior angles are **supplementary**.\n\nIn fact all eight angles take only two values, which add up to $180^\\circ$: if one angle is $65^\\circ$, every angle is $65^\\circ$ or $115^\\circ$.",
-        "当两条直线**平行**（用相同的箭头标出）时，角对之间有如下关系：\n\n- 同位角、内错角、外错角都**相等**；\n- 同旁内角**互补**。\n\n其实八个角只有两种度数，且两者之和为 $180^\\circ$：若一个角是 $65^\\circ$，那么每个角不是 $65^\\circ$ 就是 $115^\\circ$。",
-      ),
-      generate(rng) {
-        const pair = rng.pick(anglePairs);
-        const theta = pickTheta(rng);
-        const knownAtP = rng.bool();
-        const [kv, ki, xv, xi] = knownAtP ? (["P", pair.p, "Q", pair.q] as const) : (["Q", pair.q, "P", pair.p] as const);
-        const m = ki % 2 === 0 ? theta : 180 - theta;
-        const answer = pair.equal ? m : 180 - m;
-        const rule = pairRule(pair);
-        return {
-          ...numberProblem({
-            prompt: t("Lines $\\ell$ and $m$ are parallel. Find $x$.", "直线 $\\ell$ 与 $m$ 平行。求 $x$。"),
-            answer,
-            form: "integer",
-            unit: "°",
-            wrong: [pair.equal ? 180 - m : m, ...(m < 90 ? [90 - m] : []), 360 - m],
-            solution: pair.equal
-              ? t(`${rule.en}:${steps(`x = ${m}^\\circ`)}`, `${rule["zh-CN"]}：${steps(`x = ${m}^\\circ`)}`)
-              : t(
-                  `${rule.en}:${steps(`x = 180^\\circ - ${m}^\\circ = ${180 - m}^\\circ`)}`,
-                  `${rule["zh-CN"]}：${steps(`x = 180^\\circ - ${m}^\\circ = ${180 - m}^\\circ`)}`,
-                ),
-          }),
-          figure: transversal(
-            theta,
+            pairOf(correct),
+            [0, 1, 2, 3]
+              .filter((i) => i !== correct)
+              .map((i) => [pairOf(i), `${pairTests[i]![0]}; these are not.`, `${pairTests[i]![1]}，这两个角不是。`] as const),
             [
-              [kv, ki, deg(m)],
-              [xv, xi, "x"],
-            ],
-            `Parallel lines ℓ and m cut by a transversal. One angle measures ${m}°; another angle, at the other crossing, is x.`,
-            `平行线 ℓ 与 m 被一条截线所截。一个角是 ${m}°，另一个交点处的一个角是 x。`,
-          ),
-        };
-      },
-    },
-    {
-      id: "equations-from-parallel-lines",
-      title: t("Equations from parallel lines", "由平行线列方程"),
-      explanation: t(
-        "When the angles are written with a variable, the pair's relationship gives an equation: equal angles give $A = B$, supplementary angles give $A + B = 180$.\n\nIf consecutive interior angles measure $(2x + 15)^\\circ$ and $(3x - 10)^\\circ$, then $(2x + 15) + (3x - 10) = 180$, so $5x + 5 = 180$, $5x = 175$ and $x = 35$.",
-        "当角用含变量的式子表示时，角对的关系给出方程：相等的角得 $A = B$，互补的角得 $A + B = 180$。\n\n若一对同旁内角为 $(2x + 15)^\\circ$ 和 $(3x - 10)^\\circ$，则 $(2x + 15) + (3x - 10) = 180$，所以 $5x + 5 = 180$，$5x = 175$，$x = 35$。",
-      ),
-      keyPrerequisites: ["vertical-angles"],
-      generate(rng) {
-        const pair = rng.pick(anglePairs);
-        const { x, c1, d1, c2, d2, m } = expressionPair(rng, pair.equal, 45, 135);
-        const theta = pair.p % 2 === 0 ? m : 180 - m;
-        const rule = pairRule(pair);
-        const work = pair.equal
-          ? equalSteps(c1, d1, c2, d2)
-          : sumSteps(
               [
-                [c1, d1],
-                [c2, d2],
+                ["Between or outside", "在两线之间还是之外"],
+                [`Angle $1$ is ${p1[0]}, and angle $2$ is ${p2[0]}.`, `角 $1$ ${p1[1]}，角 $2$ ${p2[1]}。`],
               ],
-              180,
-            );
-        return {
-          ...numberProblem({
-            prompt: t("Lines $\\ell$ and $m$ are parallel. Find $x$.", "直线 $\\ell$ 与 $m$ 平行。求 $x$。"),
-            answer: x,
-            form: "integer",
-            solveFor: "x",
-            wrong: pair.equal
-              ? [m, intOr(180 - d1 - d2, c1 + c2, -x), -x]
-              : [m, c1 === c2 ? -x : intOr(d2 - d1, c1 - c2, -x), intOr(90 - d1 - d2, c1 + c2, -x)],
-            solution: t(`${rule.en}:${chain(...work)}`, `${rule["zh-CN"]}：${chain(...work)}`),
-          }),
-          figure: transversal(
-            theta,
-            [
-              ["P", pair.p, angleLabel(c1, d1)],
-              ["Q", pair.q, angleLabel(c2, d2)],
+              [
+                ["Sides of the transversal", "截线的哪一侧"],
+                [
+                  `Angle $1$ is to the ${s1[0]} of the transversal and angle $2$ to the ${s2[0]}, so they are ${pair.name.en.toLowerCase()}.`,
+                  `角 $1$ 在截线${s1[1]}侧，角 $2$ 在截线${s2[1]}侧，所以它们是${pair.name["zh-CN"]}。`,
+                ],
+              ],
             ],
-            `Parallel lines ℓ and m cut by a transversal, with angles marked ${angleLabel(c1, d1)} and ${angleLabel(c2, d2)} at the two crossings.`,
-            `平行线 ℓ 与 m 被一条截线所截，两个交点处的角分别标为 ${angleLabel(c1, d1)} 和 ${angleLabel(c2, d2)}。`,
-          ),
-        };
+            pairChecks[correct]!,
+            transversal(
+              pickTheta(rng),
+              [
+                [first, i1, "1"],
+                [second, i2, "2"],
+              ],
+              "Two lines cut by a transversal, with angle 1 at one crossing and angle 2 at the other.",
+              "两条直线被一条截线所截，角 1 在一个交点处，角 2 在另一个交点处。",
+            ),
+          );
+        },
+        drawn(remainingDrawings10["parallel-lines-and-transversals#naming-angle-pairs"]),
+      ),
+      lesson(
+        "angles-from-parallel-lines",
+        ["Finding angles with parallel lines", "利用平行线求角"],
+        [
+          [
+            "When the two lines are **parallel** (marked with matching arrows), the angle pairs are related:\n\n- corresponding, alternate interior and alternate exterior angles are **equal**;\n- consecutive interior angles are **supplementary**.",
+            "当两条直线**平行**（用相同的箭头标出）时，角对之间有如下关系：\n\n- 同位角、内错角、外错角都**相等**；\n- 同旁内角**互补**。",
+          ],
+          [
+            "All eight angles take only two values, which add up to $180^\\circ$: if one angle is $65^\\circ$, every acute angle is $65^\\circ$ and every obtuse one is $115^\\circ$.",
+            "八个角只有两种度数，且两者之和为 $180^\\circ$：若一个角是 $65^\\circ$，那么每个锐角都是 $65^\\circ$，每个钝角都是 $115^\\circ$。",
+          ],
+          ["Consecutive interior angles are not equal: they add up to $180^\\circ$.", "同旁内角不相等：它们的和是 $180^\\circ$。"],
+        ],
+        (rng) => {
+          const pair = rng.pick(anglePairs);
+          const theta = pickTheta(rng);
+          const knownAtP = rng.bool();
+          const [kv, ki, xv, xi] = knownAtP ? (["P", pair.p, "Q", pair.q] as const) : (["Q", pair.q, "P", pair.p] as const);
+          const m = ki % 2 === 0 ? theta : 180 - theta;
+          const answer = pair.equal ? m : 180 - m;
+          const rule = pairRule(pair);
+          const acute = answer < 90;
+          return valued(
+            ["Lines $\\ell$ and $m$ are parallel. Find $x$.", "直线 $\\ell$ 与 $m$ 平行。求 $x$。"],
+            answer,
+            [
+              [
+                ["Name the pair", "说出角对"],
+                [`${rule.en}.`, `${rule["zh-CN"]}。`],
+              ],
+              pair.equal
+                ? [["Find x", "求 x"], ["So $x$ equals the marked angle:", "所以 $x$ 等于标出的角："], [`x = ${m}`]]
+                : [
+                    ["Find x", "求 x"],
+                    ["So $x$ and the marked angle add up to $180^\\circ$:", "所以 $x$ 与标出的角之和为 $180^\\circ$："],
+                    [`x + ${m} = 180`, `x = ${180 - m}`],
+                  ],
+            ],
+            [
+              `Angle $x$ looks ${acute ? "acute" : "obtuse"} in the figure. Of the only two sizes, $${m}^\\circ$ and $${180 - m}^\\circ$, the ${acute ? "smaller" : "larger"} is $${answer}^\\circ$.`,
+              `图中角 $x$ 看起来是${acute ? "锐角" : "钝角"}。所有角只有 $${m}^\\circ$ 和 $${180 - m}^\\circ$ 两种，其中${acute ? "较小" : "较大"}的是 $${answer}^\\circ$。`,
+            ],
+            [
+              [
+                pair.equal ? 180 - m : m,
+                pair.equal ? "These angles are equal, not supplementary." : "Consecutive interior angles are supplementary, not equal.",
+                pair.equal ? "这两个角相等，不是互补。" : "同旁内角互补，不相等。",
+              ],
+              ...(m < 90
+                ? [
+                    [
+                      90 - m,
+                      "That is the complement of the marked angle. Parallel lines give equal or supplementary angles.",
+                      "这是标出的角的余角。平行线给出的是相等或互补的角。",
+                    ] as const,
+                  ]
+                : []),
+              [
+                360 - m,
+                "That subtracts from $360^\\circ$. Angle pairs here are equal or add up to $180^\\circ$.",
+                "这是用 $360^\\circ$ 去减。这里的角对要么相等，要么和为 $180^\\circ$。",
+              ],
+            ],
+            {
+              form: "integer",
+              unit: "°",
+              figure: transversal(
+                theta,
+                [
+                  [kv, ki, deg(m)],
+                  [xv, xi, "x"],
+                ],
+                `Parallel lines ℓ and m cut by a transversal. One angle measures ${m}°; another angle, at the other crossing, is x.`,
+                `平行线 ℓ 与 m 被一条截线所截。一个角是 ${m}°，另一个交点处的一个角是 x。`,
+              ),
+            },
+          );
+        },
+        drawn(remainingDrawings10["parallel-lines-and-transversals#angles-from-parallel-lines"]),
+      ),
+      {
+        ...lesson(
+          "equations-from-parallel-lines",
+          ["Equations from parallel lines", "由平行线列方程"],
+          [
+            [
+              "When the angles are written with a variable, the pair's relationship gives an equation: equal angles give $A = B$, supplementary angles give $A + B = 180$.\n\nIf consecutive interior angles measure $(2x + 15)^\\circ$ and $(3x - 10)^\\circ$, then $(2x + 15) + (3x - 10) = 180$, so $5x + 5 = 180$, $5x = 175$ and $x = 35$.",
+              "当角用含变量的式子表示时，角对的关系给出方程：相等的角得 $A = B$，互补的角得 $A + B = 180$。\n\n若一对同旁内角为 $(2x + 15)^\\circ$ 和 $(3x - 10)^\\circ$，则 $(2x + 15) + (3x - 10) = 180$，所以 $5x + 5 = 180$，$5x = 175$，$x = 35$。",
+            ],
+            [
+              "Put $x = 35$ in: $2 \\cdot 35 + 15 = 85$ and $3 \\cdot 35 - 10 = 95$, and $85 + 95 = 180$.",
+              "代入 $x = 35$：$2 \\cdot 35 + 15 = 85$，$3 \\cdot 35 - 10 = 95$，$85 + 95 = 180$。",
+            ],
+            [
+              "Name the pair before writing the equation: setting supplementary angles equal gives a wrong $x$.",
+              "列方程前先说出是哪种角对：把互补的角当成相等，会得到错误的 $x$。",
+            ],
+          ],
+          (rng) => {
+            const pair = rng.pick(anglePairs);
+            const { x, c1, d1, c2, d2, m } = expressionPair(rng, pair.equal, 45, 135);
+            const theta = pair.p % 2 === 0 ? m : 180 - m;
+            const rule = pairRule(pair);
+            const work = (
+              pair.equal
+                ? equalSteps(c1, d1, c2, d2)
+                : sumSteps(
+                    [
+                      [c1, d1],
+                      [c2, d2],
+                    ],
+                    180,
+                  )
+            ).filter((l, i, all) => l !== all[i - 1]);
+            const m2 = c2 * x + d2;
+            const whole = (top: number, bottom: number) => bottom !== 0 && Number.isInteger(top / bottom);
+            return valued(
+              ["Lines $\\ell$ and $m$ are parallel. Find $x$.", "直线 $\\ell$ 与 $m$ 平行。求 $x$。"],
+              x,
+              [
+                [["Write the equation", "列方程"], [`${rule.en}:`, `${rule["zh-CN"]}：`], work.slice(0, pair.equal ? 1 : 2)],
+                [
+                  ["Solve", "求解"],
+                  ["Collect $x$ on one side, then divide:", "把 $x$ 集中到一边，再相除："],
+                  work.slice(pair.equal ? 1 : 2),
+                ],
+              ],
+              [
+                `Put $x = ${x}$ in: $${worked(c1, d1, x)}$ and $${worked(c2, d2, x)}$, ${pair.equal ? "the same measure" : `and $${m} + ${m2} = 180$`}.`,
+                `代入 $x = ${x}$：$${worked(c1, d1, x)}$，$${worked(c2, d2, x)}$，${pair.equal ? "度数相同" : `$${m} + ${m2} = 180$`}。`,
+              ],
+              [
+                [m, "That is the measure of an angle, not $x$.", "这是角的度数，不是 $x$。"],
+                ...(pair.equal
+                  ? whole(180 - d1 - d2, c1 + c2)
+                    ? [
+                        [
+                          (180 - d1 - d2) / (c1 + c2),
+                          "That adds the angles to $180$, but these angles are equal.",
+                          "这是令两角之和为 $180$，但这两个角相等。",
+                        ] as const,
+                      ]
+                    : []
+                  : [
+                      ...(whole(d2 - d1, c1 - c2)
+                        ? [
+                            [
+                              (d2 - d1) / (c1 - c2),
+                              "That sets the angles equal, but consecutive interior angles are supplementary.",
+                              "这是令两角相等，但同旁内角互补。",
+                            ] as const,
+                          ]
+                        : []),
+                      ...(whole(90 - d1 - d2, c1 + c2)
+                        ? [
+                            [
+                              (90 - d1 - d2) / (c1 + c2),
+                              "That uses $90$ as the sum, but supplementary angles add up to $180$.",
+                              "这是把和当成了 $90$，但互补的角之和是 $180$。",
+                            ] as const,
+                          ]
+                        : []),
+                    ]),
+              ],
+              {
+                form: "integer",
+                solveFor: "x",
+                figure: transversal(
+                  theta,
+                  [
+                    ["P", pair.p, angleLabel(c1, d1)],
+                    ["Q", pair.q, angleLabel(c2, d2)],
+                  ],
+                  `Parallel lines ℓ and m cut by a transversal, with angles marked ${angleLabel(c1, d1)} and ${angleLabel(c2, d2)} at the two crossings.`,
+                  `平行线 ℓ 与 m 被一条截线所截，两个交点处的角分别标为 ${angleLabel(c1, d1)} 和 ${angleLabel(c2, d2)}。`,
+                ),
+              },
+            );
+          },
+          drawn(remainingDrawings10["parallel-lines-and-transversals#equations-from-parallel-lines"]),
+        ),
+        keyPrerequisites: ["vertical-angles"],
       },
-    },
+    ],
+  },
+  [
+    "Railway tracks are parallel lines, and a straight road crossing them is a transversal. The road meets both tracks at the same slant, so the angles in matching positions are equal.",
+    "铁轨是平行线，横穿铁轨的一条直路是截线。这条路与两条铁轨的倾斜程度相同，所以位置对应的角相等。",
   ],
-};
+  [
+    "Measure where the road meets each track: the same angle, say $60^\\circ$, at both.",
+    "量一量路与每条铁轨相交处的角：两处一样，比如都是 $60^\\circ$。",
+  ],
+  [
+    "name the angle pairs a transversal makes with two lines, and use parallel lines to find angles and solve equations.",
+    "认识截线与两条直线形成的角对，并利用平行线求角、解方程。",
+  ],
+);
 
 /** triangleArcs marks the angles of triangle ABC (counterclockwise) with the given labels; an empty label leaves the angle unmarked, "90" marks a right angle. */
 function triangleArcs([a, b, c]: readonly [Point, Point, Point], labels: readonly [string, string, string]): Mark[] {
@@ -842,190 +1019,278 @@ function namedTriangle(points: [Point, Point, Point]): Figure {
 const proofTriangle = triangleByAngles(50, 70);
 const apex = proofTriangle[2];
 
-export const anglesOfATriangle: TopicDef = {
-  id: "angles-of-a-triangle",
-  title: t("Interior Angles of Triangles", "三角形的内角"),
-  summary: t("Use the fact that the angles of a triangle add up to 180° to find unknown angles.", "利用三角形内角和为 180° 求未知角。"),
-  prerequisites: ["parallel-lines-and-transversals"],
-  encompasses: [],
-  xp: 10,
-  standards: ["CCSS.8.G.A.5"],
-  knowledgePoints: [
-    {
-      id: "the-third-angle",
-      title: t("The angle sum of a triangle", "三角形的内角和"),
-      explanation: t(
-        "The three angles of every triangle add up to $180^\\circ$. To see why, draw the line through one vertex parallel to the opposite side. The three angles at that vertex form a straight angle, and by alternate interior angles the outer two equal the triangle's other two angles.\n\nSo if two angles of a triangle are $50^\\circ$ and $70^\\circ$, the third is $180^\\circ - 50^\\circ - 70^\\circ = 60^\\circ$. In a right triangle the two other angles add up to $90^\\circ$.",
-        "任何三角形的三个内角之和都是 $180^\\circ$。要说明这一点，过一个顶点作对边的平行线。该顶点处的三个角合成一个平角，由内错角相等，两侧的两个角分别等于三角形的另外两个角。\n\n所以若三角形的两个角是 $50^\\circ$ 和 $70^\\circ$，第三个角是 $180^\\circ - 50^\\circ - 70^\\circ = 60^\\circ$。直角三角形中另外两个角之和为 $90^\\circ$。",
-      ),
-      figure: figure(
+export const anglesOfATriangle: TopicDef = withIntro(
+  {
+    id: "angles-of-a-triangle",
+    title: t("Interior Angles of Triangles", "三角形的内角"),
+    summary: t("Use the fact that the angles of a triangle add up to 180° to find unknown angles.", "利用三角形内角和为 180° 求未知角。"),
+    prerequisites: ["parallel-lines-and-transversals"],
+    encompasses: [],
+    xp: 10,
+    standards: ["CCSS.8.G.A.5"],
+    knowledgePoints: [
+      lesson(
+        "the-third-angle",
+        ["The angle sum of a triangle", "三角形的内角和"],
         [
-          { kind: "polygon", points: proofTriangle },
-          { kind: "segment", a: dir(180, 3, apex), b: dir(0, 3, apex), dashed: true },
-          ...triangleArcs(proofTriangle, ["1", "2", "3"]),
-          { kind: "arc", vertex: apex, from: dir(180, 1, apex), to: proofTriangle[0], label: "1", accent: true },
-          { kind: "arc", vertex: apex, from: proofTriangle[1], to: dir(0, 1, apex), label: "2", accent: true },
+          [
+            "The three angles of every triangle add up to $180^\\circ$. To see why, draw the line through one vertex parallel to the opposite side. The three angles at that vertex form a straight angle, and by alternate interior angles the outer two equal the triangle's other two angles.\n\nSo if two angles of a triangle are $50^\\circ$ and $70^\\circ$, the third is $180^\\circ - 50^\\circ - 70^\\circ = 60^\\circ$.",
+            "任何三角形的三个内角之和都是 $180^\\circ$。要说明这一点，过一个顶点作对边的平行线。该顶点处的三个角合成一个平角，由内错角相等，两侧的两个角分别等于三角形的另外两个角。\n\n所以若三角形的两个角是 $50^\\circ$ 和 $70^\\circ$，第三个角是 $180^\\circ - 50^\\circ - 70^\\circ = 60^\\circ$。",
+          ],
+          ["Add all three: $50 + 70 + 60 = 180$.", "三个角加起来：$50 + 70 + 60 = 180$。"],
+          [
+            "In a right triangle, do not forget the right angle: the two other angles add up to $90^\\circ$, not $180^\\circ$.",
+            "在直角三角形中，别忘了直角：另外两个角之和是 $90^\\circ$，不是 $180^\\circ$。",
+          ],
         ],
-        "A triangle with angles 1, 2 and 3, and a dashed line through the top vertex parallel to the base. At the top vertex, angles equal to 1 and 2 sit on either side of angle 3 and together form a straight angle.",
-        "一个三角形，三个角标为 1、2、3；过顶点作底边的平行线（虚线）。顶点处，等于角 1 和角 2 的两个角在角 3 两侧，三者合成一个平角。",
-      ),
-      generate(rng) {
-        if (rng.bool(0.3)) {
-          const a = rng.int(20, 70);
-          return {
-            ...numberProblem({
-              prompt: t("Find $x$ in the right triangle.", "求直角三角形中的 $x$。"),
-              answer: 90 - a,
-              form: "integer",
-              unit: "°",
-              mistakes: [
-                why(
+        (rng) => {
+          if (rng.bool(0.3)) {
+            const a = rng.int(20, 70);
+            return valued(
+              ["Find $x$ in the right triangle.", "求直角三角形中的 $x$。"],
+              90 - a,
+              [
+                [
+                  ["Use the angle sum", "用内角和"],
+                  ["The angles add up to $180^\\circ$, and one of them is the right angle:", "三个角之和为 $180^\\circ$，其中一个是直角："],
+                  [`x + 90 + ${a} = 180`],
+                ],
+                [
+                  ["Subtract", "相减"],
+                  ["Take both known angles from $180$:", "用 $180$ 减去两个已知角："],
+                  [`x = 180 - 90 - ${a} = ${90 - a}`],
+                ],
+              ],
+              [
+                `The two acute angles share the other $90^\\circ$: $${a} + ${90 - a} = 90$.`,
+                `两个锐角分享剩下的 $90^\\circ$：$${a} + ${90 - a} = 90$。`,
+              ],
+              [
+                [
                   180 - a,
                   "You forgot the right angle. In a right triangle the two other angles add to $90^\\circ$.",
                   "你忘了直角。直角三角形中另外两个角之和是 $90^\\circ$。",
-                ),
-                why(
+                ],
+                [
                   90 + a,
                   "You added. The two acute angles add to $90^\\circ$, so subtract from $90^\\circ$.",
                   "你做了加法。两个锐角之和是 $90^\\circ$，应该从 $90^\\circ$ 中减去。",
-                ),
-                why(
+                ],
+                [
                   180 - 2 * a,
                   "You treated the two acute angles as equal. Subtract the given angle from $90^\\circ$.",
                   "你把两个锐角当成相等了。应从 $90^\\circ$ 中减去已知角。",
-                ),
+                ],
               ],
-              solution: t(
-                `The angles add up to $180^\\circ$, and one of them is $90^\\circ$:${steps(`x = 180^\\circ - 90^\\circ - ${a}^\\circ = ${90 - a}^\\circ`)}`,
-                `三个角之和为 $180^\\circ$，其中一个是 $90^\\circ$：${steps(`x = 180^\\circ - 90^\\circ - ${a}^\\circ = ${90 - a}^\\circ`)}`,
-              ),
-            }),
-            figure: triangleFigure(
-              [a, 90],
-              [deg(a), "90", "x"],
-              rng.bool(),
-              `A right triangle with one acute angle of ${a}° and the other marked x.`,
-              `一个直角三角形，一个锐角是 ${a}°，另一个锐角标为 x。`,
-            ),
-          };
-        }
-        for (;;) {
-          const a = rng.int(25, 110);
-          const b = rng.int(25, 110);
-          const c = 180 - a - b;
-          if (c < 25 || a === 90 || b === 90 || c === 90) continue;
-          const solution = t(
-            `The angles of a triangle add up to $180^\\circ$:${steps(`x = 180^\\circ - ${a}^\\circ - ${b}^\\circ = ${c}^\\circ`)}`,
-            `三角形内角和为 $180^\\circ$：${steps(`x = 180^\\circ - ${a}^\\circ - ${b}^\\circ = ${c}^\\circ`)}`,
-          );
-          const problem = {
-            answer: c,
-            form: "integer",
-            unit: "°",
-            mistakes: [
-              why(
+              {
+                form: "integer",
+                unit: "°",
+                figure: triangleFigure(
+                  [a, 90],
+                  [deg(a), "90", "x"],
+                  rng.bool(),
+                  `A right triangle with one acute angle of ${a}° and the other marked x.`,
+                  `一个直角三角形，一个锐角是 ${a}°，另一个锐角标为 x。`,
+                ),
+              },
+            );
+          }
+          for (;;) {
+            const a = rng.int(25, 110);
+            const b = rng.int(25, 110);
+            const c = 180 - a - b;
+            if (c < 25 || a === 90 || b === 90 || c === 90) continue;
+            const walk: Walk[] = [
+              [
+                ["Use the angle sum", "用内角和"],
+                ["The angles of a triangle add up to $180^\\circ$:", "三角形内角和为 $180^\\circ$："],
+                [`x + ${a} + ${b} = 180`],
+              ],
+              [["Subtract", "相减"], ["Take both known angles from $180$:", "用 $180$ 减去两个已知角："], [`x = 180 - ${a} - ${b} = ${c}`]],
+            ];
+            const check: Pair = [
+              `Add the known angles first: $${a} + ${b} = ${a + b}$, and $180 - ${a + b} = ${c}$.`,
+              `先把两个已知角相加：$${a} + ${b} = ${a + b}$，$180 - ${a + b} = ${c}$。`,
+            ];
+            const offs = [
+              [
                 a + b,
                 "That is the sum of the two known angles. The third is what remains of $180^\\circ$.",
                 "这是两个已知角的和。第三个角是 $180^\\circ$ 减去它后剩下的部分。",
-              ),
-              why(
+              ],
+              [
                 360 - a - b,
                 "You used $360^\\circ$. The angles of a triangle add to $180^\\circ$.",
                 "你用了 $360^\\circ$。三角形内角和是 $180^\\circ$。",
-              ),
-              why(
+              ],
+              [
                 Math.abs(a - b),
                 "You subtracted the two known angles. Subtract both from $180^\\circ$.",
                 "你把两个已知角相减了。应从 $180^\\circ$ 中减去这两个角。",
+              ],
+            ] as const;
+            if (rng.bool(0.3))
+              return valued(
+                [
+                  `Two angles of a triangle measure $${a}^\\circ$ and $${b}^\\circ$. What is the third angle?`,
+                  `三角形的两个角分别是 $${a}^\\circ$ 和 $${b}^\\circ$。第三个角是多少度？`,
+                ],
+                c,
+                walk,
+                check,
+                offs,
+                { form: "integer", unit: "°" },
+              );
+            // x may sit at any corner: the drawing is the same triangle, turned.
+            const [shape, labels] = rng.pick([
+              [
+                [a, b],
+                [deg(a), deg(b), "x"],
+              ],
+              [
+                [c, a],
+                ["x", deg(a), deg(b)],
+              ],
+              [
+                [b, c],
+                [deg(b), "x", deg(a)],
+              ],
+            ] as const);
+            return valued(["Find $x$.", "求 $x$。"], c, walk, check, offs, {
+              form: "integer",
+              unit: "°",
+              figure: triangleFigure(
+                shape,
+                labels,
+                rng.bool(),
+                `A triangle with two angles of ${a}° and ${b}°; the third is marked x.`,
+                `一个三角形，两个角分别是 ${a}° 和 ${b}°，第三个角标为 x。`,
               ),
-            ],
-            solution,
-          } as const;
-          if (rng.bool(0.3)) {
-            return numberProblem({
-              prompt: t(
-                `Two angles of a triangle measure $${a}^\\circ$ and $${b}^\\circ$. What is the third angle?`,
-                `三角形的两个角分别是 $${a}^\\circ$ 和 $${b}^\\circ$。第三个角是多少度？`,
-              ),
-              ...problem,
             });
           }
-          // x may sit at any corner: the drawing is the same triangle, turned.
-          const [drawn, labels] = rng.pick([
-            [
-              [a, b],
-              [deg(a), deg(b), "x"],
-            ],
-            [
-              [c, a],
-              ["x", deg(a), deg(b)],
-            ],
-            [
-              [b, c],
-              [deg(b), "x", deg(a)],
-            ],
-          ] as const);
-          return {
-            ...numberProblem({ prompt: t("Find $x$.", "求 $x$。"), ...problem }),
-            figure: triangleFigure(
-              drawn,
-              labels,
-              rng.bool(),
-              `A triangle with two angles of ${a}° and ${b}°; the third is marked x.`,
-              `一个三角形，两个角分别是 ${a}° 和 ${b}°，第三个角标为 x。`,
-            ),
-          };
-        }
-      },
-    },
-    {
-      id: "triangle-angle-equations",
-      figure: gradeDrawings3["angles-of-a-triangle#triangle-angle-equations"],
-      title: t("Equations from the angle sum", "由内角和列方程"),
-      explanation: t(
-        "When the angles of a triangle are written with a variable, their sum gives an equation. Add the angles, set the sum equal to $180$, and solve.\n\nIf the angles are $x^\\circ$, $(2x + 10)^\\circ$ and $(3x - 10)^\\circ$, then $x + (2x + 10) + (3x - 10) = 180$, so $6x = 180$ and $x = 30$. The angles are $30^\\circ$, $70^\\circ$ and $80^\\circ$; check that they add up to $180^\\circ$.",
-        "当三角形的角用含变量的式子表示时，它们的和给出一个方程：把三个角相加，令和等于 $180$，再求解。\n\n若三个角为 $x^\\circ$、$(2x + 10)^\\circ$、$(3x - 10)^\\circ$，则 $x + (2x + 10) + (3x - 10) = 180$，所以 $6x = 180$，$x = 30$。三个角是 $30^\\circ$、$70^\\circ$、$80^\\circ$；验算它们的和是 $180^\\circ$。",
+        },
+        figure(
+          [
+            { kind: "polygon", points: proofTriangle },
+            { kind: "segment", a: dir(180, 3, apex), b: dir(0, 3, apex), dashed: true },
+            ...triangleArcs(proofTriangle, ["1", "2", "3"]),
+            { kind: "arc", vertex: apex, from: dir(180, 1, apex), to: proofTriangle[0], label: "1", accent: true },
+            { kind: "arc", vertex: apex, from: proofTriangle[1], to: dir(0, 1, apex), label: "2", accent: true },
+          ],
+          "A triangle with angles 1, 2 and 3, and a dashed line through the top vertex parallel to the base. At the top vertex, angles equal to 1 and 2 sit on either side of angle 3 and together form a straight angle.",
+          "一个三角形，三个角标为 1、2、3；过顶点作底边的平行线（虚线）。顶点处，等于角 1 和角 2 的两个角在角 3 两侧，三者合成一个平角。",
+        ),
       ),
-      keyPrerequisites: ["two-step-equations", "combining-like-terms"],
-      generate(rng) {
-        for (;;) {
-          const x = rng.int(5, 30);
-          const a = rng.int(25, 110);
-          const b = rng.int(25, 110);
-          const c = 180 - a - b;
-          if (c < 25 || [a, b, c].includes(90)) continue;
-          const terms = [a, b, c].map((m): [number, number] => {
-            if (m % x === 0 && m / x <= 4 && rng.bool(0.5)) return [m / x, 0];
-            const k = rng.int(1, 4);
-            return [k, m - k * x];
-          });
-          if (terms.some(([, d]) => Math.abs(d) > 50) || terms.every(([, d]) => d === 0)) continue;
-          if (new Set(terms.map(([k, d]) => `${k},${d}`)).size < 3) continue;
-          const [ta, tb, tc] = terms.map(([k, d]) => angleTex(k, d));
-          const [cs, ds] = [terms.reduce((s, [k]) => s + k, 0), terms.reduce((s, [, d]) => s + d, 0)];
-          const work = sumSteps(terms, 180);
-          return {
-            ...numberProblem({
-              prompt: t(
-                `In $\\triangle ABC$, $\\angle A = ${ta}$, $\\angle B = ${tb}$ and $\\angle C = ${tc}$. Find $x$.`,
-                `在 $\\triangle ABC$ 中，$\\angle A = ${ta}$，$\\angle B = ${tb}$，$\\angle C = ${tc}$。求 $x$。`,
-              ),
-              answer: x,
-              form: "integer",
-              solveFor: "x",
-              wrong: [intOr(360 - ds, cs, -x), intOr(90 - ds, cs, -x), intOr(180 + ds, cs, -x)],
-              solution: t(
-                `The angles of a triangle add up to $180^\\circ$:${chain(...work)}`,
-                `三角形内角和为 $180^\\circ$：${chain(...work)}`,
-              ),
-            }),
-            figure: namedTriangle(triangleByAngles(a, b)),
-          };
-        }
+      {
+        ...lesson(
+          "triangle-angle-equations",
+          ["Equations from the angle sum", "由内角和列方程"],
+          [
+            [
+              "When the angles of a triangle are written with a variable, their sum gives an equation. Add the angles, set the sum equal to $180$, and solve.\n\nIf the angles are $x^\\circ$, $(2x + 10)^\\circ$ and $(3x - 10)^\\circ$, then $x + (2x + 10) + (3x - 10) = 180$, so $6x = 180$ and $x = 30$.",
+              "当三角形的角用含变量的式子表示时，它们的和给出一个方程：把三个角相加，令和等于 $180$，再求解。\n\n若三个角为 $x^\\circ$、$(2x + 10)^\\circ$、$(3x - 10)^\\circ$，则 $x + (2x + 10) + (3x - 10) = 180$，所以 $6x = 180$，$x = 30$。",
+            ],
+            [
+              "Put $x = 30$ into each angle: $30^\\circ$, $70^\\circ$ and $80^\\circ$, and $30 + 70 + 80 = 180$.",
+              "把 $x = 30$ 代入每个角：$30^\\circ$、$70^\\circ$、$80^\\circ$，$30 + 70 + 80 = 180$。",
+            ],
+            [
+              "Add the constants too: $+10$ and $-10$ cancel here, but usually they change the right side.",
+              "常数也要相加：这里 $+10$ 和 $-10$ 抵消了，但一般它们会改变右边的数。",
+            ],
+          ],
+          (rng) => {
+            for (;;) {
+              const x = rng.int(5, 30);
+              const a = rng.int(25, 110);
+              const b = rng.int(25, 110);
+              const c = 180 - a - b;
+              if (c < 25 || [a, b, c].includes(90)) continue;
+              const terms = [a, b, c].map((m): [number, number] => {
+                if (m % x === 0 && m / x <= 4 && rng.bool(0.5)) return [m / x, 0];
+                const k = rng.int(1, 4);
+                return [k, m - k * x];
+              });
+              if (terms.some(([, d]) => Math.abs(d) > 50) || terms.every(([, d]) => d === 0)) continue;
+              if (new Set(terms.map(([k, d]) => `${k},${d}`)).size < 3) continue;
+              const [ta, tb, tc] = terms.map(([k, d]) => angleTex(k, d));
+              const [cs, ds] = [terms.reduce((s, [k]) => s + k, 0), terms.reduce((s, [, d]) => s + d, 0)];
+              const work = sumSteps(terms, 180).filter((l, i, all) => l !== all[i - 1]);
+              const maybe = (top: number, en: string, zh: string) => (Number.isInteger(top / cs) ? [[top / cs, en, zh] as const] : []);
+              return valued(
+                [
+                  `In $\\triangle ABC$, $\\angle A = ${ta}$, $\\angle B = ${tb}$ and $\\angle C = ${tc}$. Find $x$.`,
+                  `在 $\\triangle ABC$ 中，$\\angle A = ${ta}$，$\\angle B = ${tb}$，$\\angle C = ${tc}$。求 $x$。`,
+                ],
+                x,
+                [
+                  [
+                    ["Add the angles", "把三个角相加"],
+                    ["The angles of a triangle add up to $180^\\circ$:", "三角形内角和为 $180^\\circ$："],
+                    work.slice(0, 2),
+                  ],
+                  [
+                    ["Solve for x", "解出 x"],
+                    ds === 0
+                      ? ["Divide by the coefficient of $x$:", "除以 $x$ 的系数："]
+                      : ["Undo the constant, then divide by the coefficient of $x$:", "先抵消常数，再除以 $x$ 的系数："],
+                    work.slice(2),
+                  ],
+                ],
+                [
+                  `Put $x = ${x}$ into each angle: $${a}^\\circ$, $${b}^\\circ$ and $${c}^\\circ$, and $${a} + ${b} + ${c} = 180$.`,
+                  `把 $x = ${x}$ 代入每个角：$${a}^\\circ$、$${b}^\\circ$、$${c}^\\circ$，$${a} + ${b} + ${c} = 180$。`,
+                ],
+                [
+                  ...maybe(
+                    360 - ds,
+                    "That uses $360$ as the sum. The angles of a triangle add up to $180^\\circ$.",
+                    "这是把和当成了 $360$。三角形内角和是 $180^\\circ$。",
+                  ),
+                  ...maybe(
+                    90 - ds,
+                    "That uses $90$ as the sum. The angles of a triangle add up to $180^\\circ$.",
+                    "这是把和当成了 $90$。三角形内角和是 $180^\\circ$。",
+                  ),
+                  ...maybe(
+                    180 + ds,
+                    "That moves the constant with the wrong sign. Undo it by doing the opposite.",
+                    "这是把常数移项时符号弄错了。移项要做相反的运算。",
+                  ),
+                  ...(ds === 0
+                    ? []
+                    : maybe(
+                        180,
+                        `That leaves out the constants. They add up to $${ds}$, which must come off $180$ first.`,
+                        `这是漏掉了常数。它们的和是 $${ds}$，要先从 $180$ 中去掉。`,
+                      )),
+                  [a, "That is $m\\angle A$, an angle, not $x$.", "这是 $m\\angle A$，是角的度数，不是 $x$。"],
+                  [
+                    60,
+                    "That shares $180$ equally among the three angles, but the angles are not equal.",
+                    "这是把 $180$ 平均分给三个角，但这三个角并不相等。",
+                  ],
+                ],
+                { form: "integer", solveFor: "x", figure: namedTriangle(triangleByAngles(a, b)) },
+              );
+            }
+          },
+          drawn(gradeDrawings3["angles-of-a-triangle#triangle-angle-equations"]),
+        ),
+        keyPrerequisites: ["two-step-equations", "combining-like-terms"],
       },
-    },
+    ],
+  },
+  [
+    "Tear the three corners off a paper triangle and line them up point to point. Whatever the triangle, they always make a straight line, so the three angles add up to $180^\\circ$.",
+    "把纸三角形的三个角撕下来，顶点对顶点拼在一起。不管是什么样的三角形，它们总是拼成一条直线，所以三个角之和是 $180^\\circ$。",
   ],
-};
+  ["An equilateral triangle has three equal angles: $60 + 60 + 60 = 180$.", "等边三角形的三个角相等：$60 + 60 + 60 = 180$。"],
+  [
+    "use the $180^\\circ$ angle sum to find a missing angle, to solve equations, and to share $180^\\circ$ in a ratio.",
+    "利用 $180^\\circ$ 的内角和求未知角、解方程，以及按比分配 $180^\\circ$。",
+  ],
+);
 
 /** exteriorFigure draws triangle ABC with AB extended past B to D, marking the angles at A and C and the exterior angle CBD; an empty label leaves an angle's arc unlabeled. */
 function exteriorFigure(a: number, b: number, labels: readonly [string, string, string], en: string, zh: string): Figure {

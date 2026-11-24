@@ -6,8 +6,10 @@ import { Q } from "@ga/subject-math";
 import { gradeDrawings4 } from "../explanation-drawings-grades-4.ts";
 import { gradeDrawings5 } from "../explanation-drawings-grades-5.ts";
 
-import { choose, chooseMath, whole } from "./early-grades-more-kit.ts";
+import { choose, chooseMath, type Pair, tableFigure, type Wrong, whole } from "./early-grades-more-kit.ts";
+import { chosen, chosenMath, drawn, lesson, valued } from "./grade-6-kit.ts";
 import { frac, fraction, integer, signed, skill } from "./third-kit.ts";
+import { tapeFigure } from "./upper-grades-kit.ts";
 
 /** money writes a count of cents as dollars. */
 const money = (cents: number) => (cents / 100).toFixed(2);
@@ -15,12 +17,22 @@ const money = (cents: number) => (cents / 100).toFixed(2);
 /** deeperMiddleSchoolThird2Points holds these third knowledge points, by topic. */
 export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly KnowledgePointDef[]>> = {
   "solving-linear-equations-with-fractional-coefficients": [
-    skill(
+    lesson(
       "a-fraction-of-a-number-in-a-story",
       ["A fraction of a number in a story", "故事中一个数的几分之几"],
       [
-        "A story about part of an unknown number gives an equation with a fractional coefficient. Undo the addition first, and then multiply by the reciprocal of the fraction to find the number.",
-        "关于未知数一部分的故事，会得到分数系数的方程。先还原加法，再乘分数的倒数，求出这个数。",
+        [
+          "A story about part of an unknown number gives an equation with a fractional coefficient. Undo the addition first, then multiply by the reciprocal of the fraction. If $\\frac{2}{3}$ of a number increased by $5$ is $17$, then $\\frac{2}{3}x = 12$ and $x = 12 \\times \\frac{3}{2} = 18$.",
+          "关于未知数一部分的故事，会得到分数系数的方程。先还原加法，再乘分数的倒数。如果一个数的 $\\frac{2}{3}$ 加上 $5$ 得 $17$，那么 $\\frac{2}{3}x = 12$，$x = 12 \\times \\frac{3}{2} = 18$。",
+        ],
+        [
+          "Go through the story with $18$: $\\frac{2}{3}$ of $18$ is $12$, and $12 + 5 = 17$.",
+          "用 $18$ 把故事走一遍：$18$ 的 $\\frac{2}{3}$ 是 $12$，$12 + 5 = 17$。",
+        ],
+        [
+          "$12$ is only $\\frac{2}{3}$ of the number; multiply by $\\frac{3}{2}$ to find the whole number.",
+          "$12$ 只是这个数的 $\\frac{2}{3}$；还要乘 $\\frac{3}{2}$ 才得到整个数。",
+        ],
       ],
       (rng) => {
         const [n, d] = rng.pick<[number, number]>([
@@ -44,56 +56,144 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         ]);
         const k = rng.int(2, 15);
         const add = rng.int(2, 30);
-        return whole(
+        return valued(
           [
             `When $${frac(n, d)}$ of a number is increased by $${add}$, the result is $${n * k + add}$. What is the number?`,
             `一个数的 $${frac(n, d)}$ 加上 $${add}$，结果是 $${n * k + add}$。这个数是多少？`,
           ],
           d * k,
-          [n * k, n * k + add, d * k + add],
           [
-            `$${frac(n, d)}x = ${n * k}$, so $x = ${n * k} \\times ${frac(d, n)} = ${d * k}$.`,
-            `$${frac(n, d)}x = ${n * k}$，所以 $x = ${n * k} \\times ${frac(d, n)} = ${d * k}$。`,
+            [
+              ["Undo the addition", "还原加法"],
+              [`Take away $${add}$ from both sides:`, `两边同时减去 $${add}$：`],
+              [`${frac(n, d)}x = ${n * k + add} - ${add} = ${n * k}`],
+            ],
+            [
+              ["Multiply by the reciprocal", "乘以倒数"],
+              [`Multiply by $${frac(d, n)}$:`, `乘以 $${frac(d, n)}$：`],
+              [`x = ${n * k} \\times ${frac(d, n)} = ${d * k}`],
+            ],
+          ],
+          [
+            `Go through the story with $${d * k}$: $${frac(n, d)}$ of $${d * k}$ is $${n * k}$, and $${n * k} + ${add} = ${n * k + add}$.`,
+            `用 $${d * k}$ 把故事走一遍：$${d * k}$ 的 $${frac(n, d)}$ 是 $${n * k}$，$${n * k} + ${add} = ${n * k + add}$。`,
+          ],
+          [
+            [
+              n * k,
+              `That is $${frac(n, d)}$ of the number; multiply by $${frac(d, n)}$ to find the whole number.`,
+              `这只是这个数的 $${frac(n, d)}$；还要乘 $${frac(d, n)}$ 才得到整个数。`,
+            ],
+            [n * k + add, "That is the result in the story, not the number.", "这是故事中的结果，不是这个数。"],
+            [
+              d * k + add,
+              `That adds $${add}$ to the number; it was added after taking the fraction.`,
+              `这是把 $${add}$ 加到了这个数上；它是在取分数之后才加的。`,
+            ],
           ],
         );
       },
+      tapeFigure(
+        [
+          {
+            pieces: [
+              { size: 1, text: "6", lit: true },
+              { size: 1, text: "6", lit: true },
+              { size: 1, text: "6", dashed: true },
+            ],
+            total: "x = 18",
+          },
+        ],
+        ["A tape for x cut into three equal parts of 6; two of them make 12.", "表示 x 的纸条平均分成三份，每份 6；其中两份合起来是 12。"],
+      ),
     ),
   ],
   "solving-linear-equations-with-decimal-coefficients": [
-    skill(
+    lesson(
       "a-fee-and-a-decimal-rate",
       ["A fee and a decimal rate", "固定费用和小数单价"],
       [
-        "Prices often give equations with decimal coefficients. Taking away the fee first leaves the part paid per unit, and multiplying through by $100$ can clear the decimals before dividing.",
-        "价格常常得到小数系数的方程。先减去固定费用，剩下按单位计算的部分；除之前可以同乘 $100$ 去掉小数。",
+        [
+          "Prices often give equations with decimal coefficients. Take away the fee first; what is left is paid per unit, so divide it by the rate. A ride that costs $2.00$ dollars plus $1.50$ dollars per mile and comes to $8.00$ dollars gives $2 + 1.5n = 8$, so $1.5n = 6$ and $n = 4$.",
+          "价格常常得到小数系数的方程。先减去固定费用，剩下的部分按单位计算，再除以单价。起步价 $2.00$ 美元、每英里 $1.50$ 美元、一共 $8.00$ 美元的行程，得到 $2 + 1.5n = 8$，所以 $1.5n = 6$，$n = 4$。",
+        ],
+        [
+          "Price the ride: $2.00 + 4 \\times 1.50 = 2.00 + 6.00 = 8.00$ dollars.",
+          "算一算车费：$2.00 + 4 \\times 1.50 = 2.00 + 6.00 = 8.00$ 美元。",
+        ],
+        [
+          "Take away the fee before dividing: $8.00 \\div 1.50$ counts the fee as miles too.",
+          "要先减去起步价再除：$8.00 \\div 1.50$ 把起步价也算成了里程。",
+        ],
       ],
       (rng) => {
         const rate = rng.int(5, 95) * 5;
         const fee = rng.int(1, 12) * 100;
         const n = rng.int(3, 40);
         const total = fee + rate * n;
-        return whole(
+        return valued(
           [
             `A taxi charges $${money(fee)}$ dollars plus $${money(rate)}$ dollars per mile. A ride costs $${money(total)}$ dollars. How many miles was it?`,
             `出租车起步价 $${money(fee)}$ 美元，每英里 $${money(rate)}$ 美元。一次乘车花了 $${money(total)}$ 美元。行驶了多少英里？`,
           ],
           n,
-          [Math.round(total / rate), n + fee / 100, n - 1],
           [
-            `$${money(total)} - ${money(fee)} = ${money(total - fee)}$, and $${money(total - fee)} \\div ${money(rate)} = ${n}$.`,
-            `$${money(total)} - ${money(fee)} = ${money(total - fee)}$，$${money(total - fee)} \\div ${money(rate)} = ${n}$。`,
+            [
+              ["Take away the fee", "减去起步价"],
+              ["The part paid by the mile is:", "按里程付的部分是："],
+              [`${money(total)} - ${money(fee)} = ${money(total - fee)}`],
+            ],
+            [
+              ["Divide by the rate", "除以单价"],
+              [`Each mile costs $${money(rate)}$ dollars:`, `每英里 $${money(rate)}$ 美元：`],
+              [`${money(total - fee)} \\div ${money(rate)} = ${n}`],
+            ],
+          ],
+          [
+            `Price the ride: $${money(fee)} + ${n} \\times ${money(rate)} = ${money(fee)} + ${money(rate * n)} = ${money(total)}$ dollars.`,
+            `算一算车费：$${money(fee)} + ${n} \\times ${money(rate)} = ${money(fee)} + ${money(rate * n)} = ${money(total)}$ 美元。`,
+          ],
+          [
+            [
+              Math.round(total / rate),
+              "That divides the whole cost, fee included; take away the fee first.",
+              "这是用全部车费去除，包括了起步价；应该先减去起步价。",
+            ],
+            [n + fee / 100, "That counts each dollar of the fee as a mile.", "这是把起步价的每一美元都算成了一英里。"],
+            [
+              n - 1,
+              `That is one mile short: $${n - 1}$ miles cost $${money(fee + rate * (n - 1))}$ dollars.`,
+              `少算了一英里：$${n - 1}$ 英里的车费是 $${money(fee + rate * (n - 1))}$ 美元。`,
+            ],
           ],
         );
       },
+      tapeFigure(
+        [
+          {
+            pieces: [
+              { size: 2, text: "2.00", lit: true },
+              { size: 6, text: "1.50n" },
+            ],
+            total: "8.00",
+          },
+        ],
+        ["A tape of 8.00 made of a fee of 2.00 and 1.50 for each mile.", "一条表示 8.00 的纸条，由起步价 2.00 和每英里 1.50 的部分组成。"],
+      ),
     ),
   ],
+
   "solving-linear-equations-by-clearing-a-rational-expression": [
-    skill(
+    lesson(
       "a-fraction-on-each-side",
       ["A fraction on each side", "两边各有一个分数"],
       [
-        "With a fraction on each side, multiply both sides by both denominators to clear them. Every term in each numerator gets multiplied, so write the numerators in parentheses first.",
-        "两边各有一个分数时，两边同乘两个分母来去分母。分子的每一项都要乘，所以先给分子加上括号。",
+        [
+          "With a fraction on each side, multiply both sides by both denominators to clear them. Every term of each numerator gets multiplied, so put the numerators in parentheses first. For $\\frac{x + 1}{2} = \\frac{x + 3}{3}$, multiply by $6$: $3(x + 1) = 2(x + 3)$, so $3x + 3 = 2x + 6$ and $x = 3$.",
+          "两边各有一个分数时，两边同乘两个分母来去分母。分子的每一项都要乘，所以先给分子加上括号。对于 $\\frac{x + 1}{2} = \\frac{x + 3}{3}$，乘以 $6$：$3(x + 1) = 2(x + 3)$，所以 $3x + 3 = 2x + 6$，$x = 3$。",
+        ],
+        ["Put $x = 3$ back: $\\frac{4}{2} = 2$ and $\\frac{6}{3} = 2$.", "把 $x = 3$ 代回去：$\\frac{4}{2} = 2$，$\\frac{6}{3} = 2$。"],
+        ["Multiply the whole numerator: $3(x + 1)$ is $3x + 3$, not $3x + 1$.", "要乘整个分子：$3(x + 1)$ 是 $3x + 3$，不是 $3x + 1$。"],
       ],
       (rng) => {
         const b = rng.int(2, 6);
@@ -104,42 +204,98 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const a = b * value - x;
         const c = d * value - x;
         const top = (n: number) => (n === 0 ? "x" : `x${signed(n)}`);
-        return integer(
-          [`Solve $${frac(top(a), b)} = ${frac(top(c), d)}$.`, `解方程 $${frac(top(a), b)} = ${frac(top(c), d)}$。`],
+        const term = (k: number, n: number) => `${k === 1 ? "" : k === -1 ? "-" : k}x${n === 0 ? "" : signed(n)}`;
+        const eq = `${frac(top(a), b)} = ${frac(top(c), d)}`;
+        const side = (n: number, den: number) => Q.of(x + 1 + n, den).toLatex();
+        return valued(
+          [`Solve $${eq}$.`, `解方程 $${eq}$。`],
           x,
-          [-x, x + 1, a - c],
           [
-            `Multiply both sides by $${b * d}$: $${d}(${top(a)}) = ${b}(${top(c)})$. Collecting terms gives $x = ${x}$.`,
-            `两边同乘 $${b * d}$：$${d}(${top(a)}) = ${b}(${top(c)})$。合并后得 $x = ${x}$。`,
+            [
+              ["Clear both denominators", "去掉两个分母"],
+              [`Multiply both sides by $${b * d}$, then expand:`, `两边同乘 $${b * d}$，再展开：`],
+              [`${d}(${top(a)}) = ${b}(${top(c)})`, `${term(d, d * a)} = ${term(b, b * c)}`],
+            ],
+            [
+              ["Collect and solve", "移项并求解"],
+              ["Collect the $x$-terms on the left and the numbers on the right:", "把含 $x$ 的项移到左边，数移到右边："],
+              d - b === 1 ? [`x = ${x}`] : [`${term(d - b, 0)} = ${b * c - d * a}`, `x = ${x}`],
+            ],
+          ],
+          [
+            `Put $x = ${x}$ back: $${frac(x + a, b)} = ${value}$ and $${frac(x + c, d)} = ${value}$.`,
+            `把 $x = ${x}$ 代回去：$${frac(x + a, b)} = ${value}$，$${frac(x + c, d)} = ${value}$。`,
+          ],
+          [
+            [-x, "The sign is wrong: check which side each term moved to.", "符号错了：看看每一项移到了哪一边。"],
+            [
+              x + 1,
+              `Put it back: the two sides become $${side(a, b)}$ and $${side(c, d)}$, which are not equal.`,
+              `代回去：两边分别是 $${side(a, b)}$ 和 $${side(c, d)}$，并不相等。`,
+            ],
+            [a - c, "That subtracts the numbers in the numerators and drops the denominators.", "这是把分子中的数相减，却丢掉了分母。"],
           ],
         );
       },
+      tableFigure(["(x + 1)/2", "(x + 3)/3", "x"], [2, 2, 3]),
     ),
   ],
+
   "solving-two-variable-equations": [
-    skill(
+    lesson(
       "solving-for-x-instead",
       ["Solving for x instead", "改为求 x"],
       [
-        "Any letter in an equation can be isolated with the same steps. To solve for $x$, treat $y$ like a number: move it to the other side and then divide by the coefficient of $x$.",
-        "方程中任何字母都可以用同样的步骤单独放一边。解 $x$ 时把 $y$ 当作数：移到另一边，再除以 $x$ 的系数。",
+        [
+          "Any letter in an equation can be isolated with the same steps. To solve for $x$, treat $y$ like a number: move it to the other side, then divide the whole other side by the coefficient of $x$. $3x + y = 12$ gives $3x = 12 - y$, so $x = \\frac{12 - y}{3}$.",
+          "方程中任何字母都可以用同样的步骤单独放一边。解 $x$ 时把 $y$ 当作数：先移到另一边，再用 $x$ 的系数去除整个另一边。由 $3x + y = 12$ 得 $3x = 12 - y$，所以 $x = \\frac{12 - y}{3}$。",
+        ],
+        [
+          "Put in $y = 6$: $x = \\frac{12 - 6}{3} = 2$, and $3(2) + 6 = 12$.",
+          "代入 $y = 6$：$x = \\frac{12 - 6}{3} = 2$，而 $3(2) + 6 = 12$。",
+        ],
+        [
+          "Divide the whole right side: $\\frac{12 - y}{3}$ is not $\\frac{12}{3} - y$.",
+          "要除整个右边：$\\frac{12 - y}{3}$ 不是 $\\frac{12}{3} - y$。",
+        ],
       ],
       (rng) => {
         const a = rng.int(2, 9);
         const c = rng.int(2, 30);
-        return chooseMath(
+        const answer = `x = ${frac(`${c} - y`, a)}`;
+        const y = c - a;
+        const py = y < 0 ? `(${y})` : `${y}`;
+        return chosenMath(
           rng,
           [`Solve $${a}x + y = ${c}$ for $x$.`, `解 $${a}x + y = ${c}$，用 $y$ 表示 $x$。`],
-          `x = ${frac(`${c} - y`, a)}`,
-          [`x = ${frac(`${c} + y`, a)}`, `x = ${frac(c, a)} - y`, `x = ${c} - ${a}y`],
+          answer,
           [
-            `$${a}x = ${c} - y$, and dividing the whole right side by $${a}$ gives $x = ${frac(`${c} - y`, a)}$.`,
-            `$${a}x = ${c} - y$，整个右边除以 $${a}$，得 $x = ${frac(`${c} - y`, a)}$。`,
+            [`x = ${frac(`${c} + y`, a)}`, "That moves $y$ without changing its sign.", "这是移动 $y$ 时没有变号。"],
+            [
+              `x = ${frac(c, a)} - y`,
+              `That divides only $${c}$ by $${a}$; divide the whole right side.`,
+              `这是只把 $${c}$ 除以了 $${a}$；要除整个右边。`,
+            ],
+            [
+              `x = ${c} - ${a}y`,
+              `That moves the $${a}$ onto $y$; divide the right side by $${a}$ instead.`,
+              `这是把 $${a}$ 移到了 $y$ 上；应该用 $${a}$ 去除右边。`,
+            ],
+          ],
+          [
+            [["Move y", "移走 y"], ["Subtract $y$ from both sides:", "两边同时减去 $y$："], [`${a}x = ${c} - y`]],
+            [["Divide", "相除"], [`Divide the whole right side by $${a}$:`, `用 $${a}$ 去除整个右边：`], [answer]],
+          ],
+          [
+            `Put in $y = ${y}$: $x = ${frac(`${c} - ${py}`, a)} = 1$, and $${a}(1) + ${py} = ${c}$.`,
+            `代入 $y = ${y}$：$x = ${frac(`${c} - ${py}`, a)} = 1$，而 $${a}(1) + ${py} = ${c}$。`,
           ],
         );
       },
+      tableFigure(["x", "y", "3x + y"], [2, 6, 12]),
     ),
   ],
+
   "linear-equations-with-infinitely-many-solutions": [
     skill(
       "choosing-a-value-for-no-solution",
@@ -168,12 +324,22 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "verifying-solutions-of-linear-inequalities": [
-    skill(
+    lesson(
       "how-many-values-work",
       ["How many values work", "有几个值符合"],
       [
-        "An inequality has many solutions, and each candidate can be tested by substituting it. Pay attention to whether the boundary value counts, which depends on the symbol used.",
-        "不等式有很多解，每个候选值都可以代入检验。要注意边界值是否算解，这取决于所用的符号。",
+        [
+          "An inequality has many solutions, and each candidate can be tested by substituting it. First find the boundary, where the two sides are equal, and decide whether it counts: it does for $\\ge$ and $\\le$, but not for $>$ and $<$. For $2x + 1 \\ge 5$ the boundary is $x = 2$, and it counts.",
+          "不等式有很多解，每个候选值都可以代入检验。先找出边界，也就是两边相等的地方，再判断它算不算：$\\ge$ 和 $\\le$ 算，$>$ 和 $<$ 不算。对于 $2x + 1 \\ge 5$，边界是 $x = 2$，它算解。",
+        ],
+        [
+          "Test $1, 2, 3$ in $2x + 1 \\ge 5$: they give $3, 5, 7$, and only $5$ and $7$ are at least $5$, so two values work.",
+          "把 $1, 2, 3$ 代入 $2x + 1 \\ge 5$：得 $3, 5, 7$，只有 $5$ 和 $7$ 不小于 $5$，所以有两个值符合。",
+        ],
+        [
+          "Look at the symbol at the boundary: with $>$, the value that makes both sides equal does not work.",
+          "要看边界处的符号：对于 $>$，使两边相等的值不符合。",
+        ],
       ],
       (rng) => {
         const a = rng.int(2, 6);
@@ -183,22 +349,56 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const c = a * bound + b;
         const start = bound - rng.int(1, 3);
         const values = [start, start + 1, start + 2, start + 3, start + 4, start + 5];
-        const count = values.filter((v) => (strict ? a * v + b > c : a * v + b >= c)).length;
-        return whole(
+        const works = values.filter((v) => (strict ? a * v + b > c : a * v + b >= c));
+        const count = works.length;
+        const sym = strict ? ">" : "\\ge";
+        return valued(
           [
-            `How many of the values ${values.join(", ")} are solutions of $${a}x + ${b} ${strict ? ">" : "\\ge"} ${c}$?`,
-            `${values.join("、")} 中有几个是 $${a}x + ${b} ${strict ? ">" : "\\ge"} ${c}$ 的解？`,
+            `How many of the values ${values.join(", ")} are solutions of $${a}x + ${b} ${sym} ${c}$?`,
+            `${values.join("、")} 中有几个是 $${a}x + ${b} ${sym} ${c}$ 的解？`,
           ],
           count,
-          [6 - count, count + (strict ? 1 : -1), 6],
           [
-            `The boundary is $x = ${bound}$, which ${strict ? "does not count" : "counts"}, so $${count}$ values work.`,
-            `边界是 $x = ${bound}$，它${strict ? "不算" : "算"}解，所以有 $${count}$ 个值符合。`,
+            [
+              ["Find the boundary", "找出边界"],
+              [
+                `The two sides are equal when $${a}x = ${c - b}$, and the boundary ${strict ? "does not count" : "counts"}:`,
+                `当 $${a}x = ${c - b}$ 时两边相等，这个边界${strict ? "不算" : "算"}解：`,
+              ],
+              [`x = ${bound}`],
+            ],
+            [
+              ["Count the values", "数出符合的值"],
+              [
+                `The values ${strict ? "greater than" : "at least"} $${bound}$ work:`,
+                `${strict ? "大于" : "不小于"} $${bound}$ 的值符合：`,
+              ],
+              [`${works.join(",\\ ")}`],
+            ],
+          ],
+          [
+            `Test them all: the left side takes the values $${values.map((v) => a * v + b).join(",\\ ")}$, and $${count}$ of them are ${strict ? "greater than" : "at least"} $${c}$.`,
+            `逐个检验：左边的值依次是 $${values.map((v) => a * v + b).join(",\\ ")}$，其中有 $${count}$ 个${strict ? "大于" : "不小于"} $${c}$。`,
+          ],
+          [
+            [6 - count, "That counts the values that do not work.", "这是数了不符合的值。"],
+            [
+              count + (strict ? 1 : -1),
+              `That counts the boundary the wrong way: $x = ${bound}$ ${strict ? "does not count with $>$" : "counts with $\\ge$"}.`,
+              `这是把边界算错了：$x = ${bound}$ ${strict ? "对于 $>$ 不算" : "对于 $\\ge$ 算"}。`,
+            ],
+            [
+              6,
+              `Not every value works: $x = ${start}$ gives $${a * start + b}$, which is less than $${c}$.`,
+              `并不是每个值都符合：$x = ${start}$ 得 $${a * start + b}$，小于 $${c}$。`,
+            ],
           ],
         );
       },
+      tableFigure(["x = 1", "x = 2", "x = 3"], [3, 5, 7]),
     ),
   ],
+
   "representing-solutions-to-inequalities-on-number-lines": [
     {
       ...skill(
@@ -234,12 +434,22 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     },
   ],
   "further-solving-linear-inequalities": [
-    skill(
+    lesson(
       "negative-terms-on-both-sides",
       ["Negative terms on both sides", "两边都有负项"],
       [
-        "Moving the variable terms so that the coefficient stays positive avoids dividing by a negative. Either way gives the same solutions, as long as the symbol reverses whenever a negative divides.",
-        "移项时让系数保持为正，可以避免除以负数。两种做法结果相同，只要除以负数时不等号反向。",
+        [
+          "Moving the variable terms so that the coefficient stays positive avoids dividing by a negative. For $-5x + 1 \\le -3x - 3$, add $5x$ to both sides: $1 \\le 2x - 3$, so $4 \\le 2x$ and $x \\ge 2$.",
+          "移项时让系数保持为正，可以避免除以负数。对于 $-5x + 1 \\le -3x - 3$，两边加上 $5x$：$1 \\le 2x - 3$，所以 $4 \\le 2x$，$x \\ge 2$。",
+        ],
+        [
+          "The other way: $-2x \\le -4$, and dividing by $-2$ reverses the symbol, so again $x \\ge 2$.",
+          "换一种做法：$-2x \\le -4$，除以 $-2$ 时不等号改变方向，同样得 $x \\ge 2$。",
+        ],
+        [
+          "$4 \\le 2x$ means $x \\ge 2$: read it from $x$'s side, and the symbol turns around with it.",
+          "$4 \\le 2x$ 就是 $x \\ge 2$：从 $x$ 这一边读，不等号也要跟着掉头。",
+        ],
       ],
       (rng) => {
         const c = rng.int(1, 6);
@@ -249,19 +459,47 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const b = rng.int(1, 20);
         const d = k * x + b;
         const dText = d === 0 ? "" : signed(d);
-        return chooseMath(
+        const kx = `${k === 1 ? "" : k}x`;
+        const other = -x === x ? x + 1 : -x;
+        return chosenMath(
           rng,
           [`Solve $-${a}x${dText} \\le -${c}x + ${b}$.`, `解 $-${a}x${dText} \\le -${c}x + ${b}$。`],
           `x \\ge ${x}`,
-          [`x \\le ${x}`, `x \\ge ${-x === x ? x + 1 : -x}`, `x \\le ${-x === x ? x + 1 : -x}`],
           [
-            `$${d} - ${b} \\le ${k}x$ after adding $${a}x$ and taking away $${b}$, so $x \\ge ${x}$.`,
-            `两边加 $${a}x$，再减 $${b}$，得 $${d} - ${b} \\le ${k}x$，所以 $x \\ge ${x}$。`,
+            [
+              `x \\le ${x}`,
+              `The symbol points the wrong way: $${d - b} \\le ${kx}$ means $x$ is at least $${x}$.`,
+              `不等号方向错了：$${d - b} \\le ${kx}$ 表示 $x$ 不小于 $${x}$。`,
+            ],
+            [`x \\ge ${other}`, `The boundary is wrong: $${d - b} \\div ${k} = ${x}$.`, `边界错了：$${d - b} \\div ${k} = ${x}$。`],
+            [
+              `x \\le ${other}`,
+              `Both the boundary and the symbol are wrong: $${d - b} \\le ${kx}$ gives $x \\ge ${x}$.`,
+              `边界和不等号方向都错了：$${d - b} \\le ${kx}$ 得 $x \\ge ${x}$。`,
+            ],
+          ],
+          [
+            [
+              ["Keep the coefficient positive", "让系数保持为正"],
+              [`Add $${a}x$ to both sides, then take away $${b}$:`, `两边加上 $${a}x$，再减去 $${b}$：`],
+              [`${d} \\le ${kx} + ${b}`, `${d - b} \\le ${kx}`],
+            ],
+            [
+              ["Divide", "相除"],
+              [`Divide by $${k}$, a positive number, and read it from $x$'s side:`, `除以正数 $${k}$，再从 $x$ 这一边读：`],
+              [`x \\ge ${x}`],
+            ],
+          ],
+          [
+            `The other way: $-${kx} \\le ${b - d}$, and dividing by $-${k}$ reverses the symbol, so again $x \\ge ${x}$.`,
+            `换一种做法：$-${kx} \\le ${b - d}$，除以 $-${k}$ 时不等号改变方向，同样得 $x \\ge ${x}$。`,
           ],
         );
       },
+      tableFigure(["-5x + 1", "-3x - 3", "x"], [-9, -9, 2]),
     ),
   ],
+
   "graphing-linear-equations": [
     skill(
       "where-the-line-crosses-the-x-axis",
@@ -319,12 +557,19 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     },
   ],
   "measures-of-segments": [
-    skill(
+    lesson(
       "adding-segments-with-algebra",
       ["Adding segments with algebra", "用代数加线段"],
       [
-        "When a point lies between two others, the two short segments add up to the long one. Writing this as an equation gives the unknown, and substituting it back gives each length.",
-        "一点在另外两点之间时，两条短线段之和等于长线段。写成方程求出未知数，再代回去得到各段长度。",
+        [
+          "When a point lies between two others, the two short segments add up to the long one. Writing this as an equation gives the unknown, and substituting it back gives each length. If $AB = 2x + 1$, $BC = x + 4$ and $AC = 14$, then $3x + 5 = 14$, so $x = 3$ and $AB = 2 \\cdot 3 + 1 = 7$.",
+          "一点在另外两点之间时，两条短线段之和等于长线段。写成方程求出未知数，再代回去得到各段长度。若 $AB = 2x + 1$，$BC = x + 4$，$AC = 14$，则 $3x + 5 = 14$，所以 $x = 3$，$AB = 2 \\cdot 3 + 1 = 7$。",
+        ],
+        ["The other part is $BC = 3 + 4 = 7$, and $7 + 7 = 14$, which is $AC$.", "另一段 $BC = 3 + 4 = 7$，$7 + 7 = 14$，正是 $AC$。"],
+        [
+          "$x = 3$ is not a length. Put it into the expression for $AB$ to get the length.",
+          "$x = 3$ 不是长度。要把它代入 $AB$ 的式子，才得到长度。",
+        ],
       ],
       (rng) => {
         const a = rng.int(2, 6);
@@ -332,28 +577,72 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const x = rng.int(2, 12);
         const b = rng.int(1, 9);
         const d = rng.int(1, 9);
-        return whole(
+        const ab = a * x + b;
+        const bc = c * x + d;
+        const ac = ab + bc;
+        const cx = c === 1 ? "x" : `${c}x`;
+        return valued(
           [
-            `$B$ lies between $A$ and $C$. If $AB = ${a}x + ${b}$, $BC = ${c}x + ${d}$ and $AC = ${(a + c) * x + b + d}$, how long is $AB$?`,
-            `$B$ 在 $A$ 和 $C$ 之间。若 $AB = ${a}x + ${b}$，$BC = ${c}x + ${d}$，$AC = ${(a + c) * x + b + d}$，$AB$ 有多长？`,
+            `$B$ lies between $A$ and $C$. If $AB = ${a}x + ${b}$, $BC = ${cx} + ${d}$ and $AC = ${ac}$, how long is $AB$?`,
+            `$B$ 在 $A$ 和 $C$ 之间。若 $AB = ${a}x + ${b}$，$BC = ${cx} + ${d}$，$AC = ${ac}$，$AB$ 有多长？`,
           ],
-          a * x + b,
-          [x, c * x + d === a * x + b ? a * x + b + 1 : c * x + d, (a + c) * x + b + d],
+          ab,
           [
-            `$${a + c}x + ${b + d} = ${(a + c) * x + b + d}$ gives $x = ${x}$, so $AB = ${a * x + b}$.`,
-            `$${a + c}x + ${b + d} = ${(a + c) * x + b + d}$，得 $x = ${x}$，所以 $AB = ${a * x + b}$。`,
+            [
+              ["Add the parts", "把两段相加"],
+              ["The two parts make the whole, $AB + BC = AC$:", "两段合起来是整条线段，$AB + BC = AC$："],
+              [`${a}x + ${b} + ${cx} + ${d} = ${ac}`, `${a + c}x + ${b + d} = ${ac}`],
+            ],
+            [
+              ["Solve and substitute", "求解并代入"],
+              [
+                `Take $${b + d}$ from both sides, divide by $${a + c}$, then put $x$ into $AB$:`,
+                `两边减去 $${b + d}$，再除以 $${a + c}$，然后把 $x$ 代入 $AB$：`,
+              ],
+              [`x = ${x}`, `AB = ${a} \\cdot ${x} + ${b} = ${ab}`],
+            ],
           ],
+          [
+            `The other part is $BC = ${c === 1 ? "" : `${c} \\cdot `}${x} + ${d} = ${bc}$, and $${ab} + ${bc} = ${ac}$, which is $AC$.`,
+            `另一段 $BC = ${c === 1 ? "" : `${c} \\cdot `}${x} + ${d} = ${bc}$，$${ab} + ${bc} = ${ac}$，正是 $AC$。`,
+          ],
+          [
+            [x, `That is $x$, not a length: put it into $${a}x + ${b}$.`, `这是 $x$ 的值，不是长度：要把它代入 $${a}x + ${b}$。`],
+            [bc, "That is $BC$, the other part of the segment.", "这是 $BC$，线段的另一部分。"],
+            [ac, "That is $AC$, the whole segment, which was already given.", "这是 $AC$，整条线段，题目已经给出了。"],
+            [a * x, `That leaves out the $+ ${b}$ in $AB = ${a}x + ${b}$.`, `这是漏掉了 $AB = ${a}x + ${b}$ 中的 $+ ${b}$。`],
+          ],
+          { form: "integer" },
         );
       },
+      tapeFigure(
+        [
+          {
+            pieces: [
+              { size: 7, text: "2x + 1", lit: true },
+              { size: 7, text: "x + 4" },
+            ],
+            total: "14",
+          },
+        ],
+        ["A bar of length 14 cut into two parts, 2x + 1 and x + 4.", "一条长 14 的线段分成两部分：2x + 1 和 x + 4。"],
+      ),
     ),
   ],
   "congruent-segments": [
-    skill(
+    lesson(
       "the-whole-segment-from-its-midpoint",
       ["The whole segment from its midpoint", "由中点求整条线段"],
       [
-        "A midpoint cuts a segment into two congruent parts, which gives an equation. Solving it is not the end, as the whole length still needs the value substituted and then doubled.",
-        "中点把线段分成两条相等的部分，由此得到方程。解出来还没结束，要把值代入，再乘 2 才是整条长度。",
+        [
+          "A midpoint cuts a segment into two congruent parts, which gives an equation. Solving it is not the end, as the whole length still needs the value substituted and then doubled. If $M$ is the midpoint of $\\overline{AB}$ with $AM = 3x - 2$ and $MB = x + 8$, then $3x - 2 = x + 8$, so $2x = 10$, $x = 5$, $AM = 13$ and $AB = 26$.",
+          "中点把线段分成两条相等的部分，由此得到方程。解出来还没结束，要把值代入，再乘 2 才是整条长度。若 $M$ 是 $\\overline{AB}$ 的中点，$AM = 3x - 2$，$MB = x + 8$，则 $3x - 2 = x + 8$，所以 $2x = 10$，$x = 5$，$AM = 13$，$AB = 26$。",
+        ],
+        ["$MB = 5 + 8 = 13$, the same as $AM$, and $13 + 13 = 26$.", "$MB = 5 + 8 = 13$，与 $AM$ 相等，$13 + 13 = 26$。"],
+        [
+          "$AM = 13$ is only half the segment. The question asks for $AB$, so double it.",
+          "$AM = 13$ 只是线段的一半。题目问的是 $AB$，所以要乘 2。",
+        ],
       ],
       (rng) => {
         const c = rng.int(1, 5);
@@ -363,21 +652,56 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         if (d === (a - c) * x) d += 1;
         const b = d - (a - c) * x;
         const half = a * x + b;
-        return whole(
+        const cx = c === 1 ? "x" : `${c}x`;
+        const k = a - c;
+        return valued(
           [
-            `$M$ is the midpoint of $\\overline{AB}$, with $AM = ${a}x${signed(b)}$ and $MB = ${c}x + ${d}$. How long is $\\overline{AB}$?`,
-            `$M$ 是 $\\overline{AB}$ 的中点，$AM = ${a}x${signed(b)}$，$MB = ${c}x + ${d}$。$\\overline{AB}$ 有多长？`,
+            `$M$ is the midpoint of $\\overline{AB}$, with $AM = ${a}x${signed(b)}$ and $MB = ${cx} + ${d}$. How long is $\\overline{AB}$?`,
+            `$M$ 是 $\\overline{AB}$ 的中点，$AM = ${a}x${signed(b)}$，$MB = ${cx} + ${d}$。$\\overline{AB}$ 有多长？`,
           ],
           2 * half,
-          [half, x, 2 * x],
           [
-            `$${a}x${signed(b)} = ${c}x + ${d}$ gives $x = ${x}$, so $AM = ${half}$ and $AB = ${2 * half}$.`,
-            `$${a}x${signed(b)} = ${c}x + ${d}$，得 $x = ${x}$，所以 $AM = ${half}$，$AB = ${2 * half}$。`,
+            [
+              ["Set the halves equal", "令两半相等"],
+              [
+                `$M$ is the midpoint, so $AM = MB$. Take $${cx}$ from both sides and solve:`,
+                `$M$ 是中点，所以 $AM = MB$。两边减去 $${cx}$ 再求解：`,
+              ],
+              [`${a}x${signed(b)} = ${cx} + ${d}`, ...(k === 1 ? [] : [`${k}x = ${d - b}`]), `x = ${x}`],
+            ],
+            [
+              ["Find the whole", "求整条线段"],
+              ["Put $x$ into $AM$, then double it:", "把 $x$ 代入 $AM$，再乘 2："],
+              [`AM = ${a} \\cdot ${x}${signed(b)} = ${half}`, `AB = 2 \\cdot ${half} = ${2 * half}`],
+            ],
           ],
+          [
+            `$MB = ${c === 1 ? "" : `${c} \\cdot `}${x} + ${d} = ${half}$, the same as $AM$, and $${half} + ${half} = ${2 * half}$.`,
+            `$MB = ${c === 1 ? "" : `${c} \\cdot `}${x} + ${d} = ${half}$，与 $AM$ 相等，$${half} + ${half} = ${2 * half}$。`,
+          ],
+          [
+            [half, "That is $AM$, only half of $\\overline{AB}$: double it.", "这是 $AM$，只是 $\\overline{AB}$ 的一半：要乘 2。"],
+            [x, `That is $x$, not a length: put it into $AM$ and double.`, `这是 $x$ 的值，不是长度：要代入 $AM$ 再乘 2。`],
+            [2 * x, "That doubles $x$, not the length $AM$.", "这是把 $x$ 乘了 2，而不是把长度 $AM$ 乘 2。"],
+          ],
+          { form: "integer" },
         );
       },
+      tapeFigure(
+        [
+          {
+            pieces: [
+              { size: 13, text: "3x - 2", lit: true },
+              { size: 13, text: "x + 8" },
+            ],
+            total: "AB",
+          },
+        ],
+        ["Segment AB cut at its midpoint into two equal parts, 3x - 2 and x + 8.", "线段 AB 在中点处分成相等的两部分：3x - 2 和 x + 8。"],
+      ),
     ),
   ],
+
   "collinear-points": [
     skill(
       "the-coordinate-that-makes-points-collinear",
@@ -408,38 +732,80 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "congruent-angles": [
-    {
-      ...skill(
-        "the-whole-angle-from-its-bisector",
-        ["The whole angle from its bisector", "由角平分线求整个角"],
+    lesson(
+      "the-whole-angle-from-its-bisector",
+      ["The whole angle from its bisector", "由角平分线求整个角"],
+      [
         [
-          "A bisector cuts an angle into two congruent angles, which gives an equation. The measure of the whole angle comes from substituting the solution and then doubling.",
-          "角平分线把角分成两个相等的角，由此得到方程。把解代入后再乘 2，才是整个角的度数。",
+          "A bisector cuts an angle into two congruent angles, which gives an equation. The measure of the whole angle comes from substituting the solution and then doubling. If ray $BD$ bisects $\\angle ABC$ with $m\\angle ABD = (3x + 5)^\\circ$ and $m\\angle DBC = (x + 25)^\\circ$, then $3x + 5 = x + 25$, so $x = 10$, each part is $35^\\circ$ and $m\\angle ABC = 70^\\circ$.",
+          "角平分线把角分成两个相等的角，由此得到方程。把解代入后再乘 2，才是整个角的度数。若射线 $BD$ 平分 $\\angle ABC$，$m\\angle ABD = (3x + 5)^\\circ$，$m\\angle DBC = (x + 25)^\\circ$，则 $3x + 5 = x + 25$，所以 $x = 10$，每部分是 $35^\\circ$，$m\\angle ABC = 70^\\circ$。",
         ],
-        (rng) => {
-          const c = rng.int(1, 5);
-          const a = c + rng.int(1, 4);
-          const x = rng.int(3, 12);
-          const half = rng.int(15, 80);
-          const b = half - a * x;
-          const d = half - c * x;
-          return whole(
+        [
+          "$m\\angle DBC = 10 + 25 = 35^\\circ$, the same as $m\\angle ABD$, and $35 + 35 = 70$.",
+          "$m\\angle DBC = 10 + 25 = 35^\\circ$，与 $m\\angle ABD$ 相等，$35 + 35 = 70$。",
+        ],
+        [
+          "$35^\\circ$ is only one of the two parts. The whole angle is twice as big.",
+          "$35^\\circ$ 只是两部分中的一个。整个角是它的两倍。",
+        ],
+      ],
+      (rng) => {
+        const c = rng.int(1, 5);
+        const a = c + rng.int(1, 4);
+        const x = rng.int(3, 12);
+        const half = rng.int(15, 80);
+        const b = half - a * x;
+        const d = half - c * x;
+        const k = a - c;
+        const cx = c === 1 ? "x" : `${c}x`;
+        return valued(
+          [
+            `Ray $BD$ bisects $\\angle ABC$, with $m\\angle ABD = (${a}x${signed(b)})^\\circ$ and $m\\angle DBC = (${cx}${signed(d)})^\\circ$. What is $m\\angle ABC$, in degrees?`,
+            `射线 $BD$ 平分 $\\angle ABC$，$m\\angle ABD = (${a}x${signed(b)})^\\circ$，$m\\angle DBC = (${cx}${signed(d)})^\\circ$。$m\\angle ABC$ 是多少度？`,
+          ],
+          2 * half,
+          [
             [
-              `Ray $BD$ bisects $\\angle ABC$, with $m\\angle ABD = (${a}x${signed(b)})^\\circ$ and $m\\angle DBC = (${c}x${signed(d)})^\\circ$. What is $m\\angle ABC$, in degrees?`,
-              `射线 $BD$ 平分 $\\angle ABC$，$m\\angle ABD = (${a}x${signed(b)})^\\circ$，$m\\angle DBC = (${c}x${signed(d)})^\\circ$。$m\\angle ABC$ 是多少度？`,
+              ["Set the parts equal", "令两部分相等"],
+              [
+                `The bisector makes the two parts equal. Take $${cx}$ from both sides and solve:`,
+                `角平分线使两部分相等。两边减去 $${cx}$ 再求解：`,
+              ],
+              [`${a}x${signed(b)} = ${cx}${signed(d)}`, ...(k === 1 ? [] : [`${k}x = ${d - b}`]), `x = ${x}`],
             ],
-            2 * half,
-            [half, x, 180 - half],
             [
-              `Setting them equal gives $x = ${x}$, so each part is $${half}^\\circ$ and the whole is $${2 * half}^\\circ$.`,
-              `令两者相等，得 $x = ${x}$，每部分是 $${half}^\\circ$，整个角是 $${2 * half}^\\circ$。`,
+              ["Find the whole", "求整个角"],
+              ["Put $x$ into one part, then double it:", "把 $x$ 代入其中一部分，再乘 2："],
+              [
+                `m\\angle ABD = ${a} \\cdot ${x}${signed(b)} = ${half}^\\circ`,
+                `m\\angle ABC = 2 \\cdot ${half}^\\circ = ${2 * half}^\\circ`,
+              ],
             ],
-          );
-        },
-      ),
-      figure: gradeDrawings4["congruent-angles#the-whole-angle-from-its-bisector"],
-    },
+          ],
+          [
+            `$m\\angle DBC = ${c === 1 ? "" : `${c} \\cdot `}${x}${signed(d)} = ${half}^\\circ$, the same as $m\\angle ABD$, and $${half} + ${half} = ${2 * half}$.`,
+            `$m\\angle DBC = ${c === 1 ? "" : `${c} \\cdot `}${x}${signed(d)} = ${half}^\\circ$，与 $m\\angle ABD$ 相等，$${half} + ${half} = ${2 * half}$。`,
+          ],
+          [
+            [
+              half,
+              "That is one part, $m\\angle ABD$: the whole angle is twice as big.",
+              "这是其中一部分 $m\\angle ABD$：整个角是它的两倍。",
+            ],
+            [x, "That is $x$, not an angle: put it into a part and double.", "这是 $x$ 的值，不是角的度数：要代入其中一部分再乘 2。"],
+            [
+              180 - half,
+              `That takes one part from $180^\\circ$, but the two parts are not a straight angle. Double $${half}^\\circ$ instead.`,
+              `这是用 $180^\\circ$ 减去了一部分，但两部分合起来不是平角。应把 $${half}^\\circ$ 乘 2。`,
+            ],
+          ],
+          { form: "integer" },
+        );
+      },
+      drawn(gradeDrawings4["congruent-angles#the-whole-angle-from-its-bisector"]),
+    ),
   ],
+
   "corresponding-angles": [
     {
       ...skill(
@@ -630,35 +996,83 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
     ),
   ],
   "finding-unit-prices": [
-    skill(
+    lesson(
       "the-best-buy",
       ["The best buy", "最划算的选择"],
       [
-        "A larger pack is not always cheaper per item. Comparing prices means finding each unit price first, and the lowest unit price is the best buy whatever the pack size.",
-        "大包装不一定每件更便宜。比较价格要先求单价，单价最低的最划算，不管包装多大。",
+        [
+          "With several offers, find the unit price of each: its price divided by its number of cans. The lowest unit price is the best buy, whatever the pack size. $3$ cans for $\\$1.50$ is $\\$0.50$ a can, and $8$ cans for $\\$4.40$ is $\\$0.55$ a can, so the $3$-can offer is better.",
+          "有好几种优惠时，先求每种的单价：价钱除以罐数。单价最低的最划算，不管包装多大。$3$ 罐 $\\$1.50$ 是每罐 $\\$0.50$，$8$ 罐 $\\$4.40$ 是每罐 $\\$0.55$，所以 $3$ 罐装更划算。",
+        ],
+        [
+          "At $\\$0.50$ a can, $8$ cans would cost only $\\$4.00$, less than $\\$4.40$.",
+          "按每罐 $\\$0.50$ 算，$8$ 罐只要 $\\$4.00$，比 $\\$4.40$ 便宜。",
+        ],
+        [
+          "The lowest total price is not the best buy when the packs hold different numbers of cans.",
+          "包装罐数不同时，总价最低的不一定最划算。",
+        ],
       ],
       (rng) => {
-        const [u1, u2, u3, u4] = rng.sample([40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90], 4) as [number, number, number, number];
-        const sorted = [u1, u2, u3, u4].sort((a, b) => a - b);
-        const pack = (u: number): [string, string] => {
-          const n = rng.pick([2, 3, 4, 5, 6, 8, 10, 12]);
-          return [`${n} cans for ${money(n * u)} dollars`, `${n} 罐 ${money(n * u)} 美元`];
-        };
-        const best = sorted[0]!;
-        return choose(rng, ["Which offer has the lowest price per can?", "哪种优惠每罐最便宜？"], pack(best), sorted.slice(1).map(pack), [
-          `Divide each price by its number of cans. The lowest result is ${money(best)} dollars per can.`,
-          `每个价格除以罐数。最低的是每罐 ${money(best)} 美元。`,
-        ]);
+        const rates = (rng.sample([40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90], 4) as number[]).sort((a, b) => a - b);
+        const packs = rng.sample([2, 3, 4, 5, 6, 8, 10, 12], 4) as number[];
+        const offer = (i: number): Pair => [
+          `${packs[i]} cans for ${money(packs[i]! * rates[i]!)} dollars`,
+          `${packs[i]} 罐 ${money(packs[i]! * rates[i]!)} 美元`,
+        ];
+        const best = rates[0]!;
+        return chosen(
+          rng,
+          ["Which offer has the lowest price per can?", "哪种优惠每罐最便宜？"],
+          offer(0),
+          [1, 2, 3].map(
+            (i): Wrong => [
+              offer(i),
+              `It costs ${money(rates[i]!)} dollars per can, more than ${money(best)}.`,
+              `它每罐 ${money(rates[i]!)} 美元，比 ${money(best)} 贵。`,
+            ],
+          ),
+          [
+            [
+              ["Unit prices", "求单价"],
+              ["Divide each price by its number of cans:", "每个价钱除以罐数："],
+              [0, 1, 2, 3].map((i) => `${money(packs[i]! * rates[i]!)} \\div ${packs[i]} = ${money(rates[i]!)}`),
+            ],
+            [
+              ["Compare", "比较"],
+              [
+                `The lowest is $${money(best)}$ dollars per can, from ${packs[0]} cans.`,
+                `最低的是每罐 $${money(best)}$ 美元，来自 ${packs[0]} 罐装。`,
+              ],
+            ],
+          ],
+          [
+            `At $${money(best)}$ dollars a can, ${packs[1]} cans would cost $${money(packs[1]! * best)}$, less than the $${money(packs[1]! * rates[1]!)}$ asked.`,
+            `按每罐 $${money(best)}$ 美元算，${packs[1]} 罐只要 $${money(packs[1]! * best)}$，比标价 $${money(packs[1]! * rates[1]!)}$ 便宜。`,
+          ],
+        );
       },
+      tableFigure(["1.50 / 3", "4.40 / 8"], [0.5, 0.55]),
     ),
   ],
+
   "unit-rates-associated-with-ratios-of-mixed-numbers": [
-    skill(
+    lesson(
       "pounds-for-one-dollar",
       ["Pounds for one dollar", "一美元能买多少磅"],
       [
-        "A price can be read two ways, as dollars per pound or as pounds per dollar. Writing the mixed numbers as improper fractions first makes either division routine.",
-        "价格有两种读法：每磅多少美元，或每美元多少磅。先把带分数化成假分数，哪种除法都很常规。",
+        [
+          "A price can be read two ways: dollars per pound, or pounds per dollar. For pounds per dollar, divide the pounds by the dollars, after writing the mixed numbers as improper fractions. $2\\frac{1}{2}$ pounds for $5$ dollars: $\\frac{5}{2} \\div 5 = \\frac{1}{2}$ pound per dollar.",
+          "价格有两种读法：每磅多少美元，或每美元多少磅。求每美元多少磅，就用磅数除以美元数，带分数先化成假分数。$5$ 美元买 $2\\frac{1}{2}$ 磅：$\\frac{5}{2} \\div 5 = \\frac{1}{2}$ 磅/美元。",
+        ],
+        [
+          "$5$ dollars at $\\frac{1}{2}$ pound each buy $5 \\times \\frac{1}{2} = 2\\frac{1}{2}$ pounds.",
+          "$5$ 美元、每美元 $\\frac{1}{2}$ 磅，共 $5 \\times \\frac{1}{2} = 2\\frac{1}{2}$ 磅。",
+        ],
+        [
+          "Pounds per dollar puts the pounds on top; dollars per pound is the reciprocal.",
+          "每美元的磅数要把磅数作被除数；每磅的美元数是它的倒数。",
+        ],
       ],
       (rng) => {
         const a = rng.int(1, 6);
@@ -667,28 +1081,63 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const d = rng.pick([2, 4, 5]);
         const pounds = Q.of(a * b + 1, b);
         const dollars = Q.of(c * d + 1, d);
-        return fraction(
+        const answer = pounds.div(dollars);
+        return valued(
           [
             `$${a}${frac(1, b)}$ pounds of apples cost $${c}${frac(1, d)}$ dollars. How many pounds can be bought per dollar?`,
             `$${a}${frac(1, b)}$ 磅苹果售价 $${c}${frac(1, d)}$ 美元。每美元能买多少磅？`,
           ],
-          pounds.div(dollars),
-          [dollars.div(pounds), pounds.mul(dollars), pounds],
+          answer,
           [
-            `Pounds divided by dollars: $${frac(a * b + 1, b)} \\div ${frac(c * d + 1, d)}$.`,
-            `磅数除以美元数：$${frac(a * b + 1, b)} \\div ${frac(c * d + 1, d)}$。`,
+            [
+              ["Improper fractions", "化成假分数"],
+              ["Write both mixed numbers as improper fractions:", "把两个带分数化成假分数："],
+              [`${a}${frac(1, b)} = ${frac(a * b + 1, b)}`, `${c}${frac(1, d)} = ${frac(c * d + 1, d)}`],
+            ],
+            [
+              ["Divide", "相除"],
+              ["Pounds per dollar is the pounds divided by the dollars:", "每美元的磅数等于磅数除以美元数："],
+              [
+                `${frac(a * b + 1, b)} \\div ${frac(c * d + 1, d)} = ${frac(a * b + 1, b)} \\times ${frac(d, c * d + 1)} = ${answer.toLatex()}`,
+              ],
+            ],
+          ],
+          [
+            `Multiply back: $${answer.toLatex()} \\times ${dollars.toLatex()} = ${pounds.toLatex()}$, the pounds bought.`,
+            `乘回去：$${answer.toLatex()} \\times ${dollars.toLatex()} = ${pounds.toLatex()}$，正是买到的磅数。`,
+          ],
+          [
+            [dollars.div(pounds), "That is dollars per pound, the rate the other way.", "这是每磅的美元数，是反过来的比率。"],
+            [pounds.mul(dollars), "That multiplies the pounds by the dollars instead of dividing.", "这是磅数乘美元数，而不是相除。"],
+            [pounds, "That is all the pounds, not the pounds for one dollar.", "这是全部的磅数，不是一美元能买的磅数。"],
           ],
         );
       },
+      tapeFigure(
+        [
+          {
+            total: "5/2",
+            pieces: [1, 2, 3, 4, 5].map((i) => ({ size: 1, text: "1/2", lit: i === 1 })),
+          },
+        ],
+        ["Five dollars buy 5/2 pounds, 1/2 pound for each dollar.", "五美元买 5/2 磅，每美元 1/2 磅。"],
+      ),
     ),
   ],
   "solving-unit-rate-problems-using-ratios-of-mixed-numbers": [
-    skill(
+    lesson(
       "how-much-faster",
       ["How much faster", "快多少"],
       [
-        "Two rates can be compared only after each is written per one unit. Subtracting them then says how much more one covers in a single unit, and subtracting the raw distances would not.",
-        "两个比率要先都写成每单位，才能比较。相减后得到一方每单位多走多少；直接减路程则不行。",
+        [
+          "Two rates can be compared only once each is written per one unit. Find each unit rate, then subtract them to see how much more one covers in a single unit. Ann walks $7\\frac{1}{2}$ miles in $1\\frac{1}{2}$ hours, $5$ miles per hour; Ben walks $5\\frac{1}{4}$ miles in $1\\frac{3}{4}$ hours, $3$ miles per hour. Ann walks $5 - 3 = 2$ more miles per hour.",
+          "两个比率要先都写成每一个单位，才能比较。先求各自的单位率，再相减，就知道一方每单位多走多少。Ann $1\\frac{1}{2}$ 小时走 $7\\frac{1}{2}$ 英里，每小时 $5$ 英里；Ben $1\\frac{3}{4}$ 小时走 $5\\frac{1}{4}$ 英里，每小时 $3$ 英里。Ann 每小时多走 $5 - 3 = 2$ 英里。",
+        ],
+        [
+          "In one hour Ann walks $5$ miles and Ben $3$; Ben plus $2$ makes $5$.",
+          "一小时 Ann 走 $5$ 英里，Ben 走 $3$ 英里；$3$ 加 $2$ 正是 $5$。",
+        ],
+        ["Subtracting the distances does not work when the times differ.", "时间不同时，直接把路程相减是不对的。"],
       ],
       (rng) => {
         const r1 = rng.int(4, 9);
@@ -697,54 +1146,113 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         const t2 = Q.of(4 * rng.int(1, 4) + 1, 4);
         const d1 = t1.mul(Q.of(r1));
         const d2 = t2.mul(Q.of(r2));
-        return whole(
+        return valued(
           [
             `Ann walks $${d1.toLatex()}$ miles in $${t1.toLatex()}$ hours, and Ben walks $${d2.toLatex()}$ miles in $${t2.toLatex()}$ hours. How many more miles per hour does Ann walk?`,
             `Ann $${t1.toLatex()}$ 小时走 $${d1.toLatex()}$ 英里，Ben $${t2.toLatex()}$ 小时走 $${d2.toLatex()}$ 英里。Ann 每小时比 Ben 多走多少英里？`,
           ],
           r1 - r2,
-          [r1, r2, r1 + r2],
           [
-            `Ann's rate is ${r1} miles per hour and Ben's is ${r2}, and $${r1} - ${r2} = ${r1 - r2}$.`,
-            `Ann 每小时 ${r1} 英里，Ben 每小时 ${r2} 英里，$${r1} - ${r2} = ${r1 - r2}$。`,
+            [
+              ["Unit rates", "求单位率"],
+              ["Divide each distance by its time:", "每人的路程除以时间："],
+              [`${d1.toLatex()} \\div ${t1.toLatex()} = ${r1}`, `${d2.toLatex()} \\div ${t2.toLatex()} = ${r2}`],
+            ],
+            [["Subtract", "相减"], ["Subtract the unit rates:", "把两个单位率相减："], [`${r1} - ${r2} = ${r1 - r2}`]],
+          ],
+          [
+            `Ben's ${r2} plus ${r1 - r2} is ${r1}, and $${r1} \\times ${t1.toLatex()} = ${d1.toLatex()}$ gives back Ann's distance.`,
+            `Ben 的 ${r2} 加 ${r1 - r2} 是 ${r1}，而 $${r1} \\times ${t1.toLatex()} = ${d1.toLatex()}$，正是 Ann 走的路程。`,
+          ],
+          [
+            [r1, "That is Ann's rate, not how much faster she is.", "这是 Ann 的速度，不是她快多少。"],
+            [r2, "That is Ben's rate.", "这是 Ben 的速度。"],
+            [r1 + r2, "That adds the two rates instead of subtracting.", "这是把两个速度相加，而不是相减。"],
           ],
         );
       },
+      tapeFigure(
+        [
+          {
+            pieces: [
+              { size: 3, text: "3" },
+              { size: 2, text: "2", lit: true },
+            ],
+          },
+          { pieces: [{ size: 3, text: "3" }] },
+        ],
+        ["Ann's 5 miles per hour is Ben's 3 plus 2 more.", "Ann 每小时 5 英里，等于 Ben 的 3 英里再多 2 英里。"],
+      ),
     ),
   ],
+
   "interpreting-products-and-quotients-of-rational-numbers": [
-    skill(
+    lesson(
       "going-back-in-time",
       ["Going back in time", "回到过去"],
       [
-        "A negative rate times a negative time gives a positive change. It says that a falling quantity was higher in the past, which is what the sign rule means in a story.",
-        "负的变化率乘负的时间得正的变化。它表示下降的量在过去更高，这就是符号规则在故事中的含义。",
+        [
+          "Time in the past can be written as a negative number of days. A negative rate times a negative time gives a positive change: a falling quantity was higher in the past. A tank changes by $-5$ liters a day; $3$ days ago is a time of $-3$, and $(-5) \\times (-3) = 15$, so the level was $15$ liters higher.",
+          "过去的时间可以写成负的天数。负的变化率乘负的时间得正的变化：一个不断下降的量，过去更高。水箱每天变化 $-5$ 升；$3$ 天前就是时间 $-3$，$(-5) \\times (-3) = 15$，所以那时水量多 $15$ 升。",
+        ],
+        [
+          "Count forward instead: from $3$ days ago to now the level falls $3 \\times 5 = 15$ liters.",
+          "换个方向数：从 $3$ 天前到现在，水量下降了 $3 \\times 5 = 15$ 升。",
+        ],
+        ["The level was higher in the past, so the answer is positive, not $-15$.", "过去的水量更多，所以答案是正数，不是 $-15$。"],
       ],
       (rng) => {
         const a = rng.int(2, 20);
         const b = rng.int(2, 15);
-        return whole(
+        return valued(
           [
-            `A tank's level changes by $-${a}$ liters each day. How many liters higher was the level ${b} days ago than it is now?`,
-            `水箱的水量每天变化 $-${a}$ 升。${b} 天前的水量比现在多多少升？`,
+            `A tank's level changes by $-${a}$ liters each day. How many liters higher was the level $${b}$ days ago than it is now?`,
+            `水箱的水量每天变化 $-${a}$ 升。$${b}$ 天前的水量比现在多多少升？`,
           ],
           a * b,
-          [a + b, a, b],
           [
-            `$(-${a}) \\times (-${b}) = ${a * b}$, so it was ${a * b} liters higher.`,
-            `$(-${a}) \\times (-${b}) = ${a * b}$，所以多 ${a * b} 升。`,
+            [
+              ["Signed numbers", "写成带符号的数"],
+              [
+                `The rate is $-${a}$ liters a day, and $${b}$ days ago is a time of $-${b}$ days.`,
+                `变化率是每天 $-${a}$ 升，$${b}$ 天前就是时间 $-${b}$ 天。`,
+              ],
+            ],
+            [
+              ["Multiply", "相乘"],
+              ["Two negatives give a positive change:", "两个负数相乘得正的变化："],
+              [`(-${a}) \\times (-${b}) = ${a * b}`],
+            ],
+          ],
+          [
+            `Count forward: from $${b}$ days ago to now the level falls $${b} \\times ${a} = ${a * b}$ liters.`,
+            `往后数：从 $${b}$ 天前到现在，水量下降了 $${b} \\times ${a} = ${a * b}$ 升。`,
+          ],
+          [
+            [a + b, "That adds the rate and the days; the change is a product.", "这是把变化率和天数相加；变化量是乘积。"],
+            [a, "That is the change for one day only.", "这只是一天的变化。"],
+            [b, "That is the number of days, not the change in liters.", "这是天数，不是水量的变化。"],
           ],
         );
       },
+      tableFigure(["(-5)(-3)", "3 × 5"], [15, 15]),
     ),
   ],
+
   "solving-multistep-problems-with-rational-numbers": [
-    skill(
+    lesson(
       "the-mean-of-signed-values",
       ["The mean of signed values", "带符号数值的平均数"],
       [
-        "A mean is the sum divided by the count, and negative values reduce the sum. Ignoring their signs is the usual slip, and it gives a mean that is too high.",
-        "平均数是总和除以个数，负数会使总和减小。忽略符号是常见错误，会使平均数偏高。",
+        [
+          "A mean is the sum divided by the count. Negative values make the sum smaller, so add every value with its sign. The temperatures $-4$, $3$ and $-5$ degrees add to $-6$, and $-6 \\div 3 = -2$, so the mean is $-2$ degrees.",
+          "平均数是总和除以个数。负数会使总和变小，所以每个值都要带着符号相加。气温 $-4$、$3$ 和 $-5$ 度的和是 $-6$，$-6 \\div 3 = -2$，所以平均气温是 $-2$ 度。",
+        ],
+        ["Multiply back: $3 \\times (-2) = -6$, the sum of the three values.", "乘回去：$3 \\times (-2) = -6$，正是三个值的和。"],
+        [
+          "Ignoring the signs gives $(4 + 3 + 5) \\div 3 = 4$, a mean that is far too high.",
+          "忽略符号会得到 $(4 + 3 + 5) \\div 3 = 4$，平均数就偏高很多。",
+        ],
       ],
       (rng) => {
         const n = rng.pick([4, 5, 6]);
@@ -756,18 +1264,33 @@ export const deeperMiddleSchoolThird2Points: Readonly<Record<string, readonly Kn
         }
         const mean = total / n;
         const abs = xs.reduce((s, x) => s + Math.abs(x), 0);
-        return integer(
+        const sum = xs.map((v, i) => (i === 0 ? `${v}` : v < 0 ? `- ${-v}` : `+ ${v}`)).join(" ");
+        const p = (v: number) => (v < 0 ? `(${v})` : `${v}`);
+        return valued(
           [
             `The temperatures on ${n} days were ${xs.join(", ")} degrees. What was the mean temperature, in degrees?`,
             `${n} 天的气温分别是 ${xs.join("、")} 度。平均气温是多少度？`,
           ],
           mean,
-          [Math.round(abs / n), total, -mean],
-          [`The sum is ${total}, and $${total} \\div ${n} = ${mean}$.`, `总和是 ${total}，$${total} \\div ${n} = ${mean}$。`],
+          [
+            [["The sum", "求和"], ["Add the values with their signs:", "带着符号把各个值相加："], [`${sum} = ${total}`]],
+            [["Divide", "相除"], [`Divide the sum by the ${n} days:`, `用总和除以 ${n} 天：`], [`${p(total)} \\div ${n} = ${mean}`]],
+          ],
+          [
+            `Multiply back: $${n} \\times ${p(mean)} = ${total}$, the sum of the values.`,
+            `乘回去：$${n} \\times ${p(mean)} = ${total}$，正是各个值的和。`,
+          ],
+          [
+            [Math.round(abs / n), "That ignores the signs; negative values make the sum smaller.", "这是忽略了符号；负数会使总和变小。"],
+            [total, `That is the sum; divide it by the ${n} days.`, `这是总和；还要除以 ${n} 天。`],
+            [-mean, "The sign is wrong.", "符号错了。"],
+          ],
         );
       },
+      tableFigure(["-4+3-5", "-6/3"], [-6, -2]),
     ),
   ],
+
   "volumes-of-triangular-prisms": [
     {
       ...skill(

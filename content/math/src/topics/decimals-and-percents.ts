@@ -2,7 +2,6 @@ import type { Rng, TopicDef } from "@ga/content";
 import { t } from "@ga/content";
 import { dec, num, Q, q } from "@ga/subject-math";
 
-import { numberProblem, steps } from "../problems.ts";
 import { tableFigure } from "./early-grades-more-kit.ts";
 import { lesson, type Off, valued, withIntro } from "./grade-6-kit.ts";
 import { lineFigure, tapeFigure } from "./upper-grades-kit.ts";
@@ -673,73 +672,168 @@ export const percentOfANumber: TopicDef = withIntro(
     "求一个数的百分之几，求一个数是另一个数的百分之几，并由部分求整体。",
   ],
 );
-export const percentChange: TopicDef = {
-  id: "percent-change",
-  title: t("Percent Increase and Decrease", "百分比的增加与减少"),
-  summary: t(
-    "Apply a percent increase or decrease, and find the percent change between two values.",
-    "按百分比增加或减少，求两个值之间的百分比变化。",
-  ),
-  prerequisites: ["percent-of-a-number"],
-  encompasses: [{ topic: "percent-of-a-number", weight: 0.6 }],
-  xp: 12,
-  standards: ["CCSS.7.RP.A.3"],
-  knowledgePoints: [
-    {
-      id: "applying-percent-changes",
-      title: t("Applying an increase or decrease", "按百分比增减"),
-      explanation: t(
-        "An increase of $p\\%$ multiplies a value by $1 + \\frac{p}{100}$; a decrease of $p\\%$ multiplies it by $1 - \\frac{p}{100}$. A price of $80$ after a $15\\%$ discount is\n\n$$80 \\cdot (1 - 0.15) = 80 \\cdot 0.85 = 68$$\n\nThis is the same as finding $15\\%$ of $80$, which is $12$, and subtracting it.",
-        "增加 $p\\%$ 就是乘 $1 + \\frac{p}{100}$；减少 $p\\%$ 就是乘 $1 - \\frac{p}{100}$。原价 $80$ 打八五折（减少 $15\\%$）后是\n\n$$80 \\cdot (1 - 0.15) = 80 \\cdot 0.85 = 68$$\n\n这与先求 $80$ 的 $15\\%$（即 $12$）再减去它是一样的。",
+export const percentChange: TopicDef = withIntro(
+  {
+    id: "percent-change",
+    title: t("Percent Increase and Decrease", "百分比的增加与减少"),
+    summary: t(
+      "Apply a percent increase or decrease, and find the percent change between two values.",
+      "按百分比增加或减少，求两个值之间的百分比变化。",
+    ),
+    prerequisites: ["percent-of-a-number"],
+    encompasses: [{ topic: "percent-of-a-number", weight: 0.6 }],
+    xp: 12,
+    standards: ["CCSS.7.RP.A.3"],
+    knowledgePoints: [
+      lesson(
+        "applying-percent-changes",
+        ["Applying an increase or decrease", "按百分比增减"],
+        [
+          [
+            "An increase of $p\\%$ multiplies a value by $1 + \\frac{p}{100}$; a decrease of $p\\%$ multiplies it by $1 - \\frac{p}{100}$. A price of $80$ after a $15\\%$ discount is $80 \\times (1 - 0.15) = 80 \\times 0.85 = 68$.",
+            "增加 $p\\%$ 就是乘 $1 + \\frac{p}{100}$；减少 $p\\%$ 就是乘 $1 - \\frac{p}{100}$。原价 $80$ 减少 $15\\%$ 后是 $80 \\times (1 - 0.15) = 80 \\times 0.85 = 68$。",
+          ],
+          ["$15\\%$ of $80$ is $12$, and $80 - 12 = 68$.", "$80$ 的 $15\\%$ 是 $12$，$80 - 12 = 68$。"],
+          ["$12$ is only the amount taken off; the answer is what is left, $68$.", "$12$ 只是减掉的量；答案是剩下的 $68$。"],
+        ],
+        (rng) => {
+          const { p, whole, part } = percentPair(rng);
+          const up = p.cmp(Q.of(100)) > 0 ? true : rng.bool();
+          const result = up ? whole.add(part) : whole.sub(part);
+          const r = p.div(Q.of(100));
+          const m = up ? Q.one.add(r) : Q.one.sub(r);
+          return valued(
+            up
+              ? [`Increase $${dec(whole)}$ by $${pct(p)}$.`, `把 $${dec(whole)}$ 增加 $${pct(p)}$。`]
+              : [`Decrease $${dec(whole)}$ by $${pct(p)}$.`, `把 $${dec(whole)}$ 减少 $${pct(p)}$。`],
+            result,
+            [
+              [
+                ["The multiplier", "倍数"],
+                [`${up ? "Add" : "Subtract"} $${dec(r)}$ ${up ? "to" : "from"} $1$:`, `用 $1$ ${up ? "加" : "减"} $${dec(r)}$：`],
+                [`1 ${up ? "+" : "-"} ${dec(r)} = ${dec(m)}`],
+              ],
+              [
+                ["Multiply", "相乘"],
+                [`Multiply $${dec(whole)}$ by it:`, `用 $${dec(whole)}$ 乘它：`],
+                [`${dec(whole)} \\times ${dec(m)} = ${dec(result)}`],
+              ],
+            ],
+            [
+              `$${pct(p)}$ of $${dec(whole)}$ is $${dec(part)}$, and $${dec(whole)} ${up ? "+" : "-"} ${dec(part)} = ${dec(result)}$.`,
+              `$${dec(whole)}$ 的 $${pct(p)}$ 是 $${dec(part)}$，$${dec(whole)} ${up ? "+" : "-"} ${dec(part)} = ${dec(result)}$。`,
+            ],
+            [
+              [
+                part,
+                `That is only the ${up ? "increase" : "decrease"}, not the new value.`,
+                `这只是${up ? "增加" : "减少"}的量，不是新的值。`,
+              ],
+              [
+                up ? whole.sub(part) : whole.add(part),
+                `That ${up ? "decreases" : "increases"} instead of ${up ? "increasing" : "decreasing"}.`,
+                `这是${up ? "减少" : "增加"}了，方向反了。`,
+              ],
+              [
+                up ? whole.add(p) : whole.sub(p),
+                `That ${up ? "adds" : "subtracts"} the number $${dec(p)}$, not $${pct(p)}$ of $${dec(whole)}$.`,
+                `这是${up ? "加" : "减"}了数 $${dec(p)}$，而不是 $${dec(whole)}$ 的 $${pct(p)}$。`,
+              ],
+            ],
+            { form: "decimal" },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "80",
+              pieces: [
+                { size: 68, text: "68", lit: true },
+                { size: 12, text: "12", dashed: true },
+              ],
+            },
+          ],
+          ["A bar of 80 with 12 taken away, 15 percent of 80, leaving 68.", "长条 80 去掉它的 15%，即 12，剩下 68。"],
+        ),
       ),
-      generate(rng) {
-        const { p, whole, part } = percentPair(rng);
-        const up = p.cmp(Q.of(100)) > 0 ? true : rng.bool();
-        const result = up ? whole.add(part) : whole.sub(part);
-        return numberProblem({
-          prompt: up
-            ? t(`Increase $${dec(whole)}$ by $${pct(p)}$.`, `把 $${dec(whole)}$ 增加 $${pct(p)}$。`)
-            : t(`Decrease $${dec(whole)}$ by $${pct(p)}$.`, `把 $${dec(whole)}$ 减少 $${pct(p)}$。`),
-          answer: result,
-          form: "decimal",
-          wrong: [part, up ? whole.sub(part) : whole.add(part)],
-          solution: t(
-            `${steps(`${dec(whole)} \\cdot (1 ${up ? "+" : "-"} ${dec(p.div(Q.of(100)))}) = ${dec(whole)} \\cdot ${dec(up ? Q.one.add(p.div(Q.of(100))) : Q.one.sub(p.div(Q.of(100))))} = ${dec(result)}`)}`,
-            `${steps(`${dec(whole)} \\cdot (1 ${up ? "+" : "-"} ${dec(p.div(Q.of(100)))}) = ${dec(whole)} \\cdot ${dec(up ? Q.one.add(p.div(Q.of(100))) : Q.one.sub(p.div(Q.of(100))))} = ${dec(result)}`)}`,
-          ),
-        });
-      },
-    },
-    {
-      id: "calculating-percent-change",
-      title: t("Calculating the percent change", "求百分比变化"),
-      explanation: t(
-        "The percent change from an old value to a new value is the change divided by the **old** value:\n\n$$\\text{percent change} = \\frac{\\text{new} - \\text{old}}{\\text{old}} \\cdot 100\\%$$\n\nFrom $40$ to $50$ is a $25\\%$ increase, but from $50$ to $40$ is a $20\\%$ decrease: the old values differ.",
-        "从旧值变为新值的百分比变化，是变化量除以**旧值**：\n\n$$\\text{百分比变化} = \\frac{\\text{新值} - \\text{旧值}}{\\text{旧值}} \\cdot 100\\%$$\n\n从 $40$ 到 $50$ 增加了 $25\\%$，但从 $50$ 到 $40$ 减少了 $20\\%$：旧值不同。",
+      lesson(
+        "calculating-percent-change",
+        ["Calculating the percent change", "求百分比变化"],
+        [
+          [
+            "The percent change is the change divided by the old value. From $40$ to $50$ the change is $10$, and $\\frac{10}{40} = 25\\%$, an increase. From $50$ to $40$ the change is also $10$, but $\\frac{10}{50} = 20\\%$, a decrease: the old values differ.",
+            "百分比变化是变化量除以旧值。从 $40$ 到 $50$，变化量是 $10$，$\\frac{10}{40} = 25\\%$，是增加。从 $50$ 到 $40$，变化量也是 $10$，但 $\\frac{10}{50} = 20\\%$，是减少：旧值不同。",
+          ],
+          ["$40 \\times 1.25 = 50$ and $50 \\times 0.8 = 40$.", "$40 \\times 1.25 = 50$，$50 \\times 0.8 = 40$。"],
+          ["Divide by the old value, not the new one.", "要除以旧值，不是新值。"],
+        ],
+        (rng) => {
+          let pick = percentPair(rng);
+          while (!pick.part.isInteger() || pick.p.cmp(Q.of(100)) >= 0) pick = percentPair(rng);
+          const { p, whole, part } = pick;
+          const up = rng.bool();
+          const now = up ? whole.add(part) : whole.sub(part);
+          const r = p.div(Q.of(100));
+          const m = up ? Q.one.add(r) : Q.one.sub(r);
+          return valued(
+            [
+              `A value changes from $${dec(whole)}$ to $${dec(now)}$. By what percent did it ${up ? "increase" : "decrease"}?`,
+              `一个量从 $${dec(whole)}$ 变为 $${dec(now)}$，它${up ? "增加" : "减少"}了百分之几？`,
+            ],
+            p,
+            [
+              [
+                ["The change", "变化量"],
+                ["Subtract the smaller value from the larger:", "用大的值减去小的值："],
+                [`${dec(up ? now : whole)} - ${dec(up ? whole : now)} = ${dec(part)}`],
+              ],
+              [
+                ["Divide by the old value", "除以旧值"],
+                [`Divide by the old value, $${dec(whole)}$:`, `除以旧值 $${dec(whole)}$：`],
+                [`\\frac{${dec(part)}}{${dec(whole)}} = ${dec(r)} = ${pct(p)}`],
+              ],
+            ],
+            [
+              `$${dec(whole)} \\times ${dec(m)} = ${dec(now)}$, the new value.`,
+              `$${dec(whole)} \\times ${dec(m)} = ${dec(now)}$，正是新值。`,
+            ],
+            [
+              [part.div(now).mul(Q.of(100)), "That divides by the new value; divide by the old value.", "这是除以新值；应该除以旧值。"],
+              [part, "That is the change itself, not a percent.", "这是变化量本身，不是百分比。"],
+              [
+                now.div(whole).mul(Q.of(100)),
+                "That is the new value as a percent of the old, not the change.",
+                "这是新值占旧值的百分比，不是变化的百分比。",
+              ],
+            ],
+            { form: "decimal", percent: true },
+          );
+        },
+        tapeFigure(
+          [
+            {
+              total: "50",
+              pieces: [
+                { size: 40, text: "40" },
+                { size: 10, text: "10", lit: true },
+              ],
+            },
+          ],
+          ["A bar of 40 with 10 more, making 50; the 10 is compared with the old 40.", "长条 40 再加 10，共 50；用 10 和旧值 40 比较。"],
+        ),
       ),
-      generate(rng) {
-        const { p, whole, part } = percentPair(rng);
-        if (!part.isInteger() || p.cmp(Q.of(100)) >= 0) return this.generate(rng);
-        const up = rng.bool();
-        const now = up ? whole.add(part) : whole.sub(part);
-        return numberProblem({
-          prompt: t(
-            `A value changes from $${dec(whole)}$ to $${dec(now)}$. By what percent did it ${up ? "increase" : "decrease"}?`,
-            `一个量从 $${dec(whole)}$ 变为 $${dec(now)}$，它${up ? "增加" : "减少"}了百分之几？`,
-          ),
-          answer: p,
-          form: "decimal",
-          percent: true,
-          wrong: [part.div(now).mul(Q.of(100)), part],
-          solution: t(
-            `The change is $${dec(part)}$; divide by the old value:${steps(`\\frac{${dec(part)}}{${dec(whole)}} = ${dec(p.div(Q.of(100)))} = ${pct(p)}`)}`,
-            `变化量是 $${dec(part)}$，除以旧值：${steps(`\\frac{${dec(part)}}{${dec(whole)}} = ${dec(p.div(Q.of(100)))} = ${pct(p)}`)}`,
-          ),
-        });
-      },
-    },
+    ],
+  },
+  ["A $\\$80$ jacket is $15\\%$ off. What does it cost now?", "一件 $\\$80$ 的夹克减价 $15\\%$。现在要多少钱？"],
+  [
+    "$80 \\times 0.85 = \\$68$; and $15\\%$ of $80$ is $12$, $80 - 12 = 68$.",
+    "$80 \\times 0.85 = \\$68$；而 $80$ 的 $15\\%$ 是 $12$，$80 - 12 = 68$。",
   ],
-};
+  [
+    "increase or decrease a value by a percent, and find the percent change from an old value to a new one.",
+    "按百分比增加或减少一个值，并求从旧值到新值的百分比变化。",
+  ],
+);
 
 /** decimalAndPercentTopics are the topics on decimals and percents. */
 export const decimalAndPercentTopics: readonly TopicDef[] = [
