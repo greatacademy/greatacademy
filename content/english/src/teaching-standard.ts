@@ -866,6 +866,24 @@ export const taughtTopics: readonly string[] = [
   "words-of-modern-history",
   "words-for-poetic-form",
   "words-for-reflection",
+  // Grades 6 to 8 theme vocabulary
+  "words-from-myths",
+  "words-for-tone-and-feeling",
+  "words-of-ancient-rome",
+  "words-of-argument",
+  "words-of-ecosystems",
+  "words-for-character-and-motive",
+  "words-of-technology",
+  "words-of-exploration",
+  // College vocabulary
+  "words-of-academic-discourse",
+  "words-of-research",
+  "words-of-evidence-and-inference",
+  "words-of-scholarly-argument",
+  "words-often-misused",
+  "words-of-statistics",
+  "words-of-the-workplace",
+  "words-of-planning-and-proposals",
   // CEFR level vocabulary
   "a2-words-pets",
   // Word parts of grades 6 to 12
