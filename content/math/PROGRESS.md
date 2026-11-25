@@ -205,7 +205,13 @@ Stage 2: AP Calculus AB and BC, Calculus I and II. Counts are topics of these co
 
 Stage 3 is done: 1st to 8th Grade Math and Prealgebra are held to the standard as whole courses, and `taughtTopics` is empty. Third knowledge points written outside a helper's files were exported from the topic's own file and wired into the `deeper-*.ts` entry by whoever coordinates.
 
-Stages 4 and 5 are paused and are not to be claimed until they are reopened.
+### University courses
+
+Stages 4 and 5 were reopened on 2026-11-25 and are written by whoever coordinates, without helpers. Stage 4 goes course by course in the order of prerequisites: Methods of Proof, Linear Algebra, Multivariable Calculus, Differential Equations, Discrete Mathematics, Probability & Statistics, Abstract Algebra, Number Theory, Real Analysis, Complex Analysis, Linear Programming, Partial Differential Equations and Machine Learning. Stage 5, SAT and ACT, follows, starting with the gate's variant for practice-only topics. Each file's topics go into `taughtTopics` when it is committed, and a finished course moves into `taughtCourses`.
+
+| File | Topics | Status | Owner | Notes |
+| :--- | ---: | :--- | :--- | :--- |
+| `methods-of-proof-logic.ts` | 13 | in progress | coordinator |  |
 
 ## Open Gaps
 
